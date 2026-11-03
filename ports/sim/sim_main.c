@@ -116,6 +116,7 @@ static int finalize(const char *status) {
     sim_audio_report();
     sim_assets_report();
     sim_power_report();
+    if (sim_board_present()) sim_tca9555_report();
     sim_trace_close();
     char path[600];
     snprintf(path, sizeof path, "%s/metrics.json", g_sim.out_dir);
@@ -137,6 +138,7 @@ static void boot_task(void *arg) {
     (void)arg;
     const char *prev = osal_mem_tag("platform");
     sim_i2c_init();
+    sim_board_init();
     sim_power_init();
     sim_storage_init();
     sim_display_init();

@@ -28,6 +28,7 @@
 #include <string.h>
 
 #include "ink/hal_input.h"
+#include "board/metalio_board.h"
 #include "ink/rotation.h"
 #include "sim.h"
 
@@ -135,6 +136,16 @@ void sim_i2c_transfer(const char *who, int bytes) {
 
 void sim_i2c_hold(const char *who, uint64_t ns) { bus_run(who, ns); }
 
+/* GPIO2 fell: the expander's INT (keys) or the accelerometer's INT1, wired together. Any context. */
+void sim_gpio2_changed(void) {
+    bool isr = vtk_in_isr();
+    if (!isr) vtk_lock();
+    IN.exp_irq = true;
+    if (isr) vtk_isr_wake_one(&IN.wq);
+    else vtk_wake_one_locked(&IN.wq);
+    if (!isr) vtk_unlock();
+}
+
 /* -------------------------------------------------------------- physical */
 
 static void touch_irq_cb(void *arg) { /* ISR: controller raises INT */
@@ -224,8 +235,13 @@ void sim_input_key(hal_key_t key, bool pressed) {
             IN.exp_pending[IN.exp_n].t = vtk_isr_now();
             IN.exp_n++;
         }
-        IN.exp_irq = true;
-        vtk_isr_wake_one(&IN.wq);
+        uint8_t bit = key == HAL_KEY_POWER ? MB_P1_POWER_KEY : key == HAL_KEY_VOL_UP ? MB_P1_VOL_UP : key == HAL_KEY_VOL_DOWN ? MB_P1_VOL_DOWN : 0;
+        if (sim_board_present() && bit) {
+            sim_tca_input(1, bit, pressed ? 0 : bit); /* key pulls its pin low; the expander raises INT (GPIO2) */
+        } else {
+            IN.exp_irq = true;
+            vtk_isr_wake_one(&IN.wq);
+        }
         return;
     }
     if (g_profile.key_source[key] == 2 && g_profile.has_touch) { /* cover key: the touch controller sees a finger */
@@ -317,14 +333,17 @@ static void input_task(void *arg) {
         bool irq = IN.irq, exp_irq = IN.exp_irq, exp_confirm = IN.exp_confirm;
         IN.irq = IN.exp_irq = IN.exp_confirm = false;
         vtk_unlock();
-        if (exp_irq) { /* read the expander's input ports (clears its INT), confirm after the debounce time */
-            sim_i2c_transfer("io-expander", 2);
+        uint8_t p1;
+        if (exp_irq) { /* read the expander's input port (clears its INT), confirm after the debounce time */
+            if (metalio_board_ready()) metalio_board_read(1, &p1);
+            else sim_i2c_transfer("io-expander", 2);
             vtk_lock();
             vtk_event_after(SIM_US(g_profile.key_debounce_us), expander_confirm_cb, NULL);
             vtk_unlock();
         }
         if (exp_confirm) {
-            sim_i2c_transfer("io-expander", 2);
+            if (metalio_board_ready()) metalio_board_read(1, &p1);
+            else sim_i2c_transfer("io-expander", 2);
             for (int i = 0; i < IN.exp_n; i++) deliver_key(IN.exp_pending[i].key, IN.exp_pending[i].pressed, IN.exp_pending[i].t);
             IN.exp_n = 0;
         }

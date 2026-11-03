@@ -31,6 +31,8 @@ typedef enum {
 } sim_gui_phase_t;
 sim_gui_phase_t sim_gui_phase(void);
 const char *sim_gui_crash_reason(void);
+/** Why the device lost power ("shutdown", power-off pulses...), or NULL. */
+const char *sim_gui_off_reason(void);
 
 typedef struct {
     unsigned seq;              /* bumped for every sample */

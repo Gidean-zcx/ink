@@ -52,6 +52,7 @@ sim_gui_phase_t sim_gui_phase(void) {
 }
 
 const char *sim_gui_crash_reason(void) { return G.crash; }
+const char *sim_gui_off_reason(void) { return sim_power_off_reason(); }
 const char *sim_gui_out_dir(void) { return g_sim.out_dir; }
 
 /* Inject only while the kernel runs (its queue exists before vtk_run and is never drained after). */

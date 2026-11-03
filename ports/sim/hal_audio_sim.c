@@ -31,6 +31,7 @@
 
 #include "ink/hal_audio.h"
 #include "ink/hal_power.h"
+#include "board/metalio_board.h"
 #include "sim.h"
 
 typedef enum { MIC_SPEECH = 0, MIC_SILENCE, MIC_NOISE } mic_src_t;
@@ -316,7 +317,8 @@ int hal_audio_play_start(void) {
     osal_mem_tag(prev);
     if (!A.tx_dma) return -1;
     hal_power_request(HAL_PWR_AUDIO_OUT, true);
-    if (g_profile.flash_stalls_cpu) sim_i2c_transfer("io-expander", 3); /* amplifier enable (TCA9555 P0.4) */
+    if (metalio_board_ready()) metalio_board_set(0, MB_P0_AMP, MB_P0_AMP); /* amplifier enable (TCA9555 P04) */
+    else if (g_profile.flash_stalls_cpu) sim_i2c_transfer("io-expander", 3);
     vtk_lock();
     A.out_on = true;
     A.draining = false;
@@ -386,7 +388,8 @@ void hal_audio_play_stop(bool drain) {
     vtk_unlock();
     osal_free(A.tx_dma);
     A.tx_dma = NULL;
-    if (g_profile.flash_stalls_cpu) sim_i2c_transfer("io-expander", 3); /* amplifier off */
+    if (metalio_board_ready()) metalio_board_set(0, MB_P0_AMP, 0); /* amplifier off */
+    else if (g_profile.flash_stalls_cpu) sim_i2c_transfer("io-expander", 3);
     hal_power_request(HAL_PWR_AUDIO_OUT, false);
 }
 

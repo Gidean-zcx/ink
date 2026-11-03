@@ -50,6 +50,7 @@
 #include <string.h>
 #include <sys/stat.h>
 
+#include "board/metalio_board.h"
 #include "board/metalio_epd_power.h"
 #include "ink/hal_display.h"
 #include "ink/hal_i2c.h"
@@ -403,7 +404,6 @@ static void feeder_task(void *arg) {
 /* Panel power with display.pmic = "tps65185": the board driver (drivers/board) runs against the chip
  * models in dev_epd_power.c, so the sequence and its timing are the driver's own. Otherwise a fixed
  * power_up_us stands in for it. */
-static tca9555_t g_ioexp;
 static epd_power_t g_epd;
 static bool g_pmic_warned;
 
@@ -413,13 +413,10 @@ static void gate_output(void *ctx, bool on) {
 }
 
 static void board_init(void) {
-    /* port 0: P00-P05 outputs (PMIC pins, motor, amplifier, camera/screen power), P06-P07 inputs;
-     * port 1: P12-P14 outputs (touch reset, power-off pulse, modem power), the rest inputs (keys, RTC) */
-    static const uint8_t out[2] = {0x00, 0x14}, dir[2] = {0xC0, 0xE3};
+    /* the expander is the board's (metalio_board.c, set up at boot); the PMIC answers from here on */
     sim_epd_chips_init();
-    if (tca9555_init(&g_ioexp, hal_i2c_device(0, TCA9555_ADDR_BASE, "io-expander"), out, dir) != HAL_I2C_OK)
-        sim_warn("display: TCA9555 init failed");
-    g_epd = (epd_power_t){.ioexp = &g_ioexp,
+    if (!metalio_board_ready()) sim_warn("display: board IO expander not ready");
+    g_epd = (epd_power_t){.ioexp = metalio_ioexp(),
                           .pmic = hal_i2c_device(0, TPS65185_ADDR, "pmic"),
                           .vcom_mv = METALIO_EPD_VCOM_MV,
                           .gate_output = gate_output};
@@ -438,7 +435,7 @@ static void power_up(void) {
     uint64_t t0 = vtk_now();
     if (g_profile.pmic_tps65185) {
         /* first use, in the driver task that runs the sequence anyway (keeps I2C off the boot stack) */
-        if (!g_ioexp.dev) board_init();
+        if (!g_epd.ioexp) board_init();
         epd_power_result_t r = epd_power_on(&g_epd);
         sim_metric_sample("display.power_up_ms", (double)(vtk_now() - t0) / 1e6);
         if (r != EPD_POWER_OK) {

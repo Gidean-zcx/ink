@@ -365,10 +365,14 @@ struct Dev {
     ImVec2 at(float x, float y) const { return ImVec2(o.x + x * s, o.y + y * s); }
 };
 
+/* The device is off (shutdown or power-off pulses): pressing POWER starts it again. */
+bool powered_off() { return sim_gui_phase() == SIM_GUI_STOPPED && sim_gui_off_reason(); }
+
 bool key_button(const char *id, ImVec2 a, ImVec2 b, int key) {
     ImGui::SetCursorScreenPos(a);
     ImGui::InvisibleButton(id, ImVec2(b.x - a.x, b.y - a.y));
     bool active = ImGui::IsItemActive();
+    if (key == HAL_KEY_POWER && ImGui::IsItemActivated() && powered_off()) g_restart = true;
     if (ImGui::IsItemActivated() || ImGui::IsItemDeactivated()) {
         g_mouse_key[key] = active;
         sync_key(key);
@@ -528,7 +532,11 @@ void draw_device(ImVec2 area_pos, ImVec2 area_size, float fb_scale) {
 
     /* state over the panel */
     if (phase != SIM_GUI_RUNNING) {
-        const char *msg = phase == SIM_GUI_CRASHED ? "设备崩溃" : phase == SIM_GUI_STOPPED ? "设备已停止" : g_sim_done ? "启动失败" : "开机中…";
+        const char *msg = phase == SIM_GUI_CRASHED ? "设备崩溃"
+                          : powered_off()             ? "已关机（按电源键开机）"
+                          : phase == SIM_GUI_STOPPED  ? "设备已停止"
+                          : g_sim_done                ? "启动失败"
+                                                      : "开机中…";
         ImVec2 ts = ImGui::CalcTextSize(msg);
         ImVec2 c((sa.x + sb.x) / 2, (sa.y + sb.y) / 2);
         dl->AddRectFilled(ImVec2(c.x - ts.x / 2 - 18, c.y - ts.y / 2 - 12), ImVec2(c.x + ts.x / 2 + 18, c.y + ts.y / 2 + 12),
@@ -886,6 +894,7 @@ int main(int argc, char **argv) {
             if (ev.type == SDL_WINDOWEVENT && ev.window.event == SDL_WINDOWEVENT_CLOSE) quit = true;
             if ((ev.type == SDL_KEYDOWN || ev.type == SDL_KEYUP) && !ev.key.repeat && !io.WantTextInput) {
                 int k = key_for(ev.key.keysym.sym);
+                if (k == HAL_KEY_POWER && ev.type == SDL_KEYDOWN && powered_off()) g_restart = true;
                 if (k != HAL_KEY_NONE && (!g_paused || ev.type == SDL_KEYUP)) {
                     g_kb_key[k] = ev.type == SDL_KEYDOWN;
                     sync_key(k);

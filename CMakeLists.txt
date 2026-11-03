@@ -60,8 +60,10 @@ add_library(ink_port_sim STATIC
   drivers/tps65185/tps65185.c
   drivers/nt26/nt26.c
   drivers/board/metalio_epd_power.c
+  drivers/board/metalio_board.c
   ports/sim/hal_i2c_sim.c
   ports/sim/dev_epd_power.c
+  ports/sim/dev_tca9555.c
   ports/sim/osal_sim.c
   ports/sim/metrics.c
   ports/sim/trace.c
@@ -260,6 +262,12 @@ add_test(NAME selftest-sim-slots
           --budget ${CMAKE_SOURCE_DIR}/tests/sim/cell.budget.json
           --out ${CMAKE_BINARY_DIR}/test-out/selftest-sim-slots --quiet --end 45s --no-random-outages)
 set_tests_properties(selftest-sim-slots PROPERTIES ENVIRONMENT "INK_SELFTEST_CELL=1")
+# The Plus board's IO expander wiring: motor, shared reset and supply of the modem, power-off pulses.
+add_test(NAME selftest-board-wiring
+  COMMAND sim-selftest --profile ${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json
+          --budget ${CMAKE_SOURCE_DIR}/tests/sim/board.budget.json
+          --out ${CMAKE_BINARY_DIR}/test-out/selftest-board --quiet --end 30s --no-random-outages)
+set_tests_properties(selftest-board-wiring PROPERTIES ENVIRONMENT "INK_SELFTEST_BOARD=1")
 add_test(NAME determinism
   COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:sim-selftest>
           -DPROFILE=${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json

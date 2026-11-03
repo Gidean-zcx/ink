@@ -2,11 +2,7 @@
  * Register-level models of the Plus panel power chips, answering the real
  * board drivers through hal_i2c (D-41).
  *
- *   TCA9555 @0x20  16-bit I/O expander. Port 0 bits 0..2 drive the PMIC's
- *                  VCOM_CTRL, PWRUP and WAKEUP (pins left as inputs read
- *                  low: assumed pull-downs); bit 7 reads its PWR_GOOD.
- *                  Writing a register then continues with the other
- *                  register of its pair, as on the chip.
+ *   (the TCA9555 that drives its pins is modelled in dev_tca9555.c)
  *   TPS65185 @0x68 e-paper PMIC. SLEEP while WAKEUP is low (no I2C answer,
  *                  registers back to reset values); a PWRUP rising edge
  *                  starts the rails, which are good after the four UPSEQ1
@@ -28,7 +24,6 @@
 #include "board/metalio_epd_power.h"
 #include "ink/hal_i2c.h"
 #include "sim.h"
-#include "tca9555/tca9555.h"
 #include "tps65185/tps65185.h"
 
 #define WAKE_US 3000       /* (est.) WAKEUP high -> I2C answers */
@@ -148,55 +143,16 @@ void sim_tps65185_gate(bool oe) {
     T.oe = oe;
 }
 
-/* -------------------------------------------------------------- TCA9555 */
-
-static struct {
-    uint8_t out[2], pol[2], cfg[2], ext[2], ptr;
-} X = {.out = {0xFF, 0xFF}, .cfg = {0xFF, 0xFF}, .ext = {0x00, 0xB7}}; /* ext: idle input levels (P1 from
-                                                                          the factory boot log) */
-
-static uint8_t tca_levels(int port) {
-    uint8_t ext = X.ext[port];
-    if (port == 0) ext = (uint8_t)((ext & ~EPD_PWR_GOOD) | (rails_good(vtk_now()) ? EPD_PWR_GOOD : 0));
-    return (uint8_t)((X.out[port] & ~X.cfg[port]) | (ext & X.cfg[port]));
-}
-
-static int tca_xfer(void *state, const uint8_t *w, size_t wlen, uint8_t *r, size_t rlen) {
-    (void)state;
-    if (wlen) X.ptr = w[0] & 7;
-    for (size_t i = 1; i < wlen; i++, X.ptr ^= 1) {
-        int port = X.ptr & 1;
-        switch (X.ptr >> 1) {
-        case 1: X.out[port] = w[i]; break;
-        case 2: X.pol[port] = w[i]; break;
-        case 3: X.cfg[port] = w[i]; break;
-        default: break; /* input registers are read-only */
-        }
-    }
-    if (wlen > 1) {
-        uint8_t l = tca_levels(0);
-        tps_pins(l & EPD_PWR_WAKEUP, l & EPD_PWR_PWRUP, l & EPD_PWR_VCOM_CTRL);
-    }
-    for (size_t i = 0; i < rlen; i++, X.ptr ^= 1) {
-        int port = X.ptr & 1;
-        switch (X.ptr >> 1) {
-        case 0: r[i] = tca_levels(port) ^ X.pol[port]; break;
-        case 1: r[i] = X.out[port]; break;
-        case 2: r[i] = X.pol[port]; break;
-        default: r[i] = X.cfg[port]; break;
-        }
-    }
-    return HAL_I2C_OK;
-}
-
 /* ------------------------------------------------------------------ setup */
 
 void sim_epd_chips_init(void) {
-    static const sim_i2c_model_t tca = {tca_xfer}, tps = {tps_xfer};
+    static const sim_i2c_model_t tps = {tps_xfer};
     memcpy(T.reg, TPS_RESET, sizeof T.reg);
-    sim_i2c_attach(0, TCA9555_ADDR_BASE, &tca, NULL);
     sim_i2c_attach(0, TPS65185_ADDR, &tps, NULL);
 }
+
+void sim_tps65185_pins(bool wakeup, bool pwrup, bool vcom_ctrl) { tps_pins(wakeup, pwrup, vcom_ctrl); }
+bool sim_tps65185_rails_good(void) { return rails_good(vtk_now()); }
 
 void sim_tps65185_report(void) {
     sim_metric_set("display.pmic.power_ups", T.power_ups);

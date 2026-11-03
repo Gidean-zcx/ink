@@ -17,7 +17,9 @@
 #include "ink/hal_input.h"
 #include "ink/hal_storage.h"
 #include "ink/osal.h"
+#include "board/metalio_board.h"
 #include "ink/hal_net.h"
+#include "ink/hal_power.h"
 #include "ink/probe.h"
 #include "nt26/nt26.h"
 #include "sim.h" /* the self-test may peek at the profile to compute expectations */
@@ -566,6 +568,39 @@ static void cell_task(void *arg) {
     ink_probe_mark("cell-done");
 }
 
+/* INK_SELFTEST_BOARD=1: the Plus board's IO expander wiring (config.h @690a023) through our board
+ * driver: the motor on P03, the shared touch + 4G reset on P12 and the shared supply on P14 acting
+ * on the modem, then the official power-off pulse train on P13, which ends the run. */
+static void board_task(void *arg) {
+    (void)arg;
+    CHECK(metalio_board_ready(), "the board's expander is set up at boot");
+    uint8_t p1 = 0;
+    CHECK(metalio_board_read(1, &p1) == HAL_I2C_OK && (p1 & MB_P1_KEYS) == MB_P1_KEYS && (p1 & MB_P1_SHARED_RST) && (p1 & MB_P1_SHARED_PWR),
+          "port 1 idles with keys released and the shared reset and supply high (0x%02x)", p1);
+    hal_haptic_pulse(50);
+    osal_task_delay_us(20000);
+    CHECK(sim_board_motor_on(), "a haptic pulse switches the motor on (P03)");
+    osal_task_delay_us(80000);
+    CHECK(!sim_board_motor_on(), "and off again after the pulse");
+
+    char resp[64];
+    bool reg = false;
+    CHECK(nt26_registered(&reg) == NT26_OK && reg, "the modem is registered");
+    metalio_board_set(1, MB_P1_SHARED_RST, 0); /* resetting the touch controller resets the modem too */
+    CHECK(hal_modem_at("AT", resp, sizeof resp, 500) == HAL_AT_TIMEOUT && !lte_up(), "P12 low holds the 4G modem in reset");
+    metalio_board_set(1, MB_P1_SHARED_RST, MB_P1_SHARED_RST);
+    osal_task_delay_us(4000000);
+    CHECK(nt26_registered(&reg) == NT26_OK && reg && lte_up(), "after P12 goes high the modem boots and registers");
+    metalio_board_set(1, MB_P1_SHARED_PWR, 0);
+    CHECK(hal_modem_at("AT", resp, sizeof resp, 500) == HAL_AT_TIMEOUT && !lte_up(), "P14 off powers the modem down");
+    metalio_board_set(1, MB_P1_SHARED_PWR, MB_P1_SHARED_PWR);
+    osal_task_delay_us(4000000);
+    CHECK(nt26_registered(&reg) == NT26_OK && reg, "P14 back on: the modem registers again");
+    ink_probe_mark("board-shutdown");
+    hal_power_shutdown(); /* 15 pulses on P13: the run ends at the last one */
+    CHECK(0, "hal_power_shutdown returned while the device should be off");
+}
+
 /* INK_SELFTEST_AGE=1 with --flash-image: leave /user 50-60 % full and fragmented (written to 80 %,
  * every third file deleted, some rewritten), so scenarios run on an aged filesystem where writes
  * trigger block reclaim and metadata compaction. */
@@ -609,6 +644,11 @@ static void age_task(void *arg) {
 }
 
 void ink_main(void) {
+    if (getenv("INK_SELFTEST_BOARD")) {
+        osal_task_cfg_t cfg = {.name = "board", .fn = board_task, .stack_bytes = 4096, .priority = OSAL_PRIO_NORMAL, .core = -1};
+        osal_task_create(&cfg, NULL);
+        return;
+    }
     if (getenv("INK_SELFTEST_CELL")) {
         osal_task_cfg_t cfg = {.name = "cell", .fn = cell_task, .stack_bytes = 4096, .priority = OSAL_PRIO_NORMAL, .core = -1};
         osal_task_create(&cfg, NULL);

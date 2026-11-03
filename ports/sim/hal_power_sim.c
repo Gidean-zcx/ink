@@ -20,6 +20,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "board/metalio_board.h"
 #include "ink/hal_device.h"
 #include "ink/hal_power.h"
 #include "sim.h"
@@ -119,12 +120,55 @@ void hal_light_set(int cold_permille, int warm_permille) {
 }
 
 bool hal_haptic_available(void) { return g_profile.info.has_haptics; }
+/* The motor hangs on TCA9555 P03: a small task switches it on, waits, and off (upstream uses an
+ * esp_timer callback for the same I2C writes). */
+static osal_queue_t *g_haptic_q;
+
+static void haptic_task(void *arg) {
+    (void)arg;
+    for (;;) {
+        int ms;
+        if (osal_queue_recv(g_haptic_q, &ms, OSAL_WAIT_FOREVER) != OSAL_OK) continue;
+        metalio_board_set(0, MB_P0_MOTOR, MB_P0_MOTOR);
+        osal_task_delay_us((uint64_t)ms * 1000u);
+        metalio_board_set(0, MB_P0_MOTOR, 0);
+    }
+}
+
 void hal_haptic_pulse(int ms) {
     if (!g_profile.info.has_haptics) return;
+    if (ms <= 0) ms = MB_MOTOR_PULSE_MS;
     sim_metric_add("haptics.pulses", 1);
     PW.haptic_pulses++;
-    uint64_t until = vtk_now() + SIM_MS(ms > 0 ? ms : 50); /* upstream short pulse: 50 ms on TCA9555 P03 */
+    uint64_t until = vtk_now() + SIM_MS(ms);
     if (until > PW.haptic_until) PW.haptic_until = until;
+    if (!metalio_board_ready()) return;
+    if (!g_haptic_q) {
+        const char *prev = osal_mem_tag("haptics");
+        g_haptic_q = osal_queue_create(sizeof(int), 4);
+        osal_task_cfg_t c = {.name = "haptic", .fn = haptic_task, .stack_bytes = 2048, .priority = 5, .core = -1};
+        if (!g_haptic_q || osal_task_create(&c, NULL) != OSAL_OK) osal_panic("haptics: cannot start the motor task");
+        osal_mem_tag(prev);
+    }
+    osal_queue_send(g_haptic_q, &ms, 0);
+}
+
+static const char *g_off_reason;
+
+void sim_power_off(const char *reason) { /* any context: the power chip cut the battery */
+    if (g_off_reason) return;
+    g_off_reason = reason;
+    sim_metric_set("power.off", 1);
+    sim_note("power off: %s", reason);
+    sim_trace_instant("power", "POWER OFF", vtk_in_isr() ? vtk_isr_now() : vtk_now(), NULL);
+    vtk_stop();
+}
+
+const char *sim_power_off_reason(void) { return g_off_reason; }
+
+void hal_power_shutdown(void) {
+    if (metalio_board_ready()) metalio_power_off(); /* the expander model cuts power at the last pulse */
+    sim_power_off("shutdown");
 }
 
 void sim_power_gui_state(sim_power_gui_t *out) { /* ISR context (desktop simulator) */
@@ -138,7 +182,7 @@ void sim_power_gui_state(sim_power_gui_t *out) { /* ISR context (desktop simulat
     out->state = (int)PW.state;
     out->sleeping = sim_power_sleeping();
     out->haptic_pulses = PW.haptic_pulses;
-    out->haptic_on = vtk_isr_now() < PW.haptic_until;
+    out->haptic_on = sim_board_present() ? sim_board_motor_on() : vtk_isr_now() < PW.haptic_until;
 }
 
 static double total_mah(void) {

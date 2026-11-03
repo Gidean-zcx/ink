@@ -82,6 +82,11 @@ typedef struct {
  */
 uint32_t hal_power_sleep(const hal_sleep_cfg_t *cfg);
 
+/** Turn the device off (the Plus: the official power-off pulse train to the power chip through the
+ *  IO expander). Does not return once the power is gone; in the simulator the run ends. Task
+ *  context. */
+void hal_power_shutdown(void);
+
 /* Front light (cold/warm), 0..1000 each; no-op where absent. */
 void hal_light_set(int cold_permille, int warm_permille);
 

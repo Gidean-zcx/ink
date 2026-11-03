@@ -146,6 +146,8 @@ void sim_power_report(void);
 void sim_power_set_battery(int percent, bool charging);
 /** Track a power consumer: name, current in mA while on. ISR-safe. */
 void sim_power_consumer(const char *name, bool on, double ma);
+void sim_power_off(const char *reason);   /* the battery is cut (power-off pulses, shutdown): the run ends */
+const char *sim_power_off_reason(void);   /* NULL while powered */
 typedef struct {
     int percent, millivolts;
     bool charging;
@@ -175,6 +177,19 @@ void sim_epd_chips_init(void);
 bool sim_tps65185_panel_ready(void); /* rails good and VCOM driven; checks VCOM against the panel's */
 void sim_tps65185_gate(bool oe);     /* EPD XOE level, for the power-down order check */
 void sim_tps65185_report(void);
+void sim_tps65185_pins(bool wakeup, bool pwrup, bool vcom_ctrl); /* from the TCA9555 model */
+bool sim_tps65185_rails_good(void);
+
+/* Board IO expander (dev_tca9555.c, pins per drivers/board/metalio_board.h) */
+bool sim_board_present(void);             /* this profile has the Metalio board's expander */
+void sim_board_init(void);                /* task context (boot): models + metalio_board_init() */
+void sim_tca9555_init(void);
+void sim_tca9555_report(void);
+void sim_tca_input(int port, uint8_t mask, uint8_t value); /* physical input levels (keys, RTC INT); ISR or locked */
+bool sim_tca_int_low(void);
+bool sim_board_motor_on(void);
+bool sim_board_amp_on(void);
+void sim_gpio2_changed(void);             /* GPIO2 fell (expander INT / accelerometer INT1); any context */
 
 /* ---- audio (I2S rings) + stand-in codec ---- */
 void sim_display_plan_info(const hal_rect_t *area, uint64_t *phase_ns, uint64_t *busy0_ns, uint64_t *busy1_ns,
@@ -212,6 +227,9 @@ typedef struct {
 } sim_cell_state_t;
 void sim_net_cell_state(sim_cell_state_t *out);                    /* ISR */
 void sim_net_set_card(int slot, bool present, bool sms, bool voice); /* ISR (script, window) or locked */
+void sim_net_modem_hold_reset(bool held);  /* board P12 (shared touch + 4G reset); any context */
+void sim_net_modem_power(bool on);         /* board P14 (shared 4G + BT audio + amplifier supply) */
+bool sim_net_modem_registered(void);
 void sim_net_hub_send(struct hal_ws *ws, uint64_t t_send, const void *data, size_t len, bool binary); /* ISR */
 int sim_hub_load(const char *path, char *err, size_t errlen);
 void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t len, bool binary); /* ISR */

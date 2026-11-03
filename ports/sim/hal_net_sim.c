@@ -174,8 +174,10 @@ static struct {
     bool radio;                /* AT+CFUN=1 */
     bool present[2], sms[2], voice[2];
     bool registered;
-    uint64_t deaf_until;       /* rebooting after AT+ECRST */
+    uint64_t deaf_until;       /* rebooting after AT+ECRST, or held down (VTK_TIME_INF) */
     vtk_event_id_t reg_ev;     /* registration pending */
+    vtk_event_id_t boot_ev;    /* coming back from a reset or power-up */
+    bool held, unpowered;      /* board: P12 shared reset low, P14 shared supply off */
     uint32_t slot_changes, resets;
 } CELL;
 
@@ -274,8 +276,39 @@ static void cell_radio(bool on, uint64_t at) { /* ISR or locked */
 
 static void cell_reset_done_cb(void *arg) { /* ISR: the modem rebooted, radio on */
     (void)arg;
+    CELL.boot_ev = 0;
     cell_radio(true, vtk_isr_now());
 }
+
+/* The board holds the modem in reset (P12 low) or cuts its supply (P14 low): deaf, radio off; when
+ * both are released it boots like after AT+ECRST. Any context. */
+static void modem_gate(void) {
+    bool down = CELL.held || CELL.unpowered;
+    uint64_t now = now_any();
+    if (down && CELL.deaf_until != VTK_TIME_INF) {
+        if (CELL.boot_ev) vtk_event_cancel(CELL.boot_ev);
+        CELL.boot_ev = 0;
+        cell_radio(false, now);
+        CELL.deaf_until = VTK_TIME_INF;
+    } else if (!down && CELL.deaf_until == VTK_TIME_INF) {
+        CELL.deaf_until = now + SIM_MS(CELL_RESET_MS);
+        CELL.resets++;
+        CELL.boot_ev = vtk_event_at(CELL.deaf_until, cell_reset_done_cb, NULL);
+    }
+}
+
+static void modem_board_pin(bool *pin, bool value) {
+    if (!g_profile.lte.present) return;
+    bool isr = vtk_in_isr();
+    if (!isr) vtk_lock();
+    *pin = value;
+    modem_gate();
+    if (!isr) vtk_unlock();
+}
+
+void sim_net_modem_hold_reset(bool held) { modem_board_pin(&CELL.held, held); }
+void sim_net_modem_power(bool on) { modem_board_pin(&CELL.unpowered, !on); }
+bool sim_net_modem_registered(void) { return g_profile.lte.present && cell_ok(); }
 
 hal_at_result_t hal_modem_at(const char *cmd, char *resp, size_t resp_cap, uint32_t timeout_ms) {
     if (resp && resp_cap) resp[0] = 0;
@@ -294,8 +327,8 @@ hal_at_result_t hal_modem_at(const char *cmd, char *resp, size_t resp_cap, uint3
     else if (!strcmp(cmd, "AT+CEREG?")) k = K_CEREG;
     else if (!strcmp(cmd, "AT+ECRST")) k = K_RST;
     uint64_t t0 = vtk_now(), limit = t0 + SIM_MS(timeout_ms);
-    uint64_t done = (t0 > CELL.deaf_until ? t0 : CELL.deaf_until) + SIM_MS(lat_ms);
-    if (done > limit) { /* deaf (rebooting) or slower than the caller waits: the command is lost */
+    uint64_t done = CELL.deaf_until == VTK_TIME_INF ? VTK_TIME_INF : (t0 > CELL.deaf_until ? t0 : CELL.deaf_until) + SIM_MS(lat_ms);
+    if (done > limit) { /* deaf (in reset, unpowered, rebooting) or slower than the caller waits: lost */
         vtk_sleep_ns(limit - t0);
         return HAL_AT_TIMEOUT;
     }
@@ -333,7 +366,7 @@ hal_at_result_t hal_modem_at(const char *cmd, char *resp, size_t resp_cap, uint3
         cell_radio(false, vtk_now());
         CELL.deaf_until = vtk_now() + SIM_MS(CELL_RESET_MS);
         CELL.resets++;
-        vtk_event_at(CELL.deaf_until, cell_reset_done_cb, NULL);
+        CELL.boot_ev = vtk_event_at(CELL.deaf_until, cell_reset_done_cb, NULL);
         break;
     case K_BAD: r = HAL_AT_ERROR; break;
     }
