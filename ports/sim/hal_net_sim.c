@@ -211,15 +211,80 @@ static void set_link(hal_link_type_t t, bool up) { /* ISR or locked task context
     wake_conns();
 }
 
+/* ------------------------------------------------------------- environment and the system's choice
+ * The simulator only says what is around the device: a known Wi-Fi network in range (and how
+ * strong), cellular coverage (and how strong), outages. Which link carries the traffic is the
+ * system's choice (hal_net_use); until it chooses, the profile's default_link stands for the choice
+ * it saved last time (upstream keeps it in NVS). Joining Wi-Fi takes WIFI_JOIN_MS (ESTIMATE: scan,
+ * association, DHCP); LTE needs a registered card (cellular section). Signal strength is shown, not
+ * yet used by the link model. */
+#define WIFI_JOIN_MS 2500
+
+static struct {
+    bool wifi, cell;
+    int wifi_rssi, cell_rsrp;
+    bool outage;
+    uint64_t joining_until;
+} E;
+
+static bool env_ok(hal_link_type_t t) {
+    if (E.outage) return false;
+    if (t == HAL_LINK_WIFI) return E.wifi && now_any() >= E.joining_until;
+    if (t == HAL_LINK_LTE) return E.cell;
+    return false;
+}
+
+static void relink(void) { set_link(N.type, env_ok(N.type)); } /* ISR or locked */
+
 static void outage_end_cb(void *arg) { /* ISR */
-    hal_link_type_t t = (hal_link_type_t)(intptr_t)arg;
-    set_link(t, true);
+    (void)arg;
+    E.outage = false;
+    relink();
     sim_metric_add("net.outages_ended", 1);
 }
 
-void sim_net_set_link(const char *name) { /* ISR (script) */
-    hal_link_type_t t = !strcmp(name, "lte") ? HAL_LINK_LTE : !strcmp(name, "wifi") ? HAL_LINK_WIFI : HAL_LINK_NONE;
-    set_link(t, t != HAL_LINK_NONE);
+static void joined_cb(void *arg) { /* ISR: Wi-Fi association done */
+    (void)arg;
+    relink();
+}
+
+void sim_net_set_link(const char *name) { /* ISR (script "net"): legacy shorthand for the environment */
+    if (!strcmp(name, "none")) E.wifi = E.cell = false;
+    else if (!strcmp(name, "wifi")) E.wifi = true;
+    else if (!strcmp(name, "lte")) E.cell = true;
+    relink();
+}
+
+void sim_net_env(int which, bool on, int level) { /* ISR (script, window): 0 Wi-Fi, 1 cellular */
+    if (which == 0) {
+        E.wifi = on;
+        if (level) E.wifi_rssi = level;
+    } else {
+        E.cell = on;
+        if (level) E.cell_rsrp = level;
+    }
+    relink();
+}
+
+void sim_net_env_state(bool *wifi, int *rssi, bool *cell, int *rsrp, int *chosen) { /* ISR */
+    *wifi = E.wifi;
+    *rssi = E.wifi_rssi;
+    *cell = E.cell;
+    *rsrp = E.cell_rsrp;
+    *chosen = (int)N.type;
+}
+
+void hal_net_use(hal_link_type_t t) {
+    vtk_lock();
+    if (t != N.type) {
+        N.type = t;
+        if (t == HAL_LINK_WIFI) {
+            E.joining_until = vtk_now() + SIM_MS(WIFI_JOIN_MS);
+            vtk_event_at(E.joining_until, joined_cb, NULL);
+        }
+        relink();
+    }
+    vtk_unlock();
 }
 
 const char *sim_net_link(bool *up) { /* ISR */
@@ -250,8 +315,9 @@ static void cell_load_on_host(void *arg) {
     fclose(f);
 }
 
+static void relink(void);
 static void cell_relink(void) { /* ISR or locked */
-    if (N.type == HAL_LINK_LTE) set_link(HAL_LINK_LTE, N.want);
+    if (N.type == HAL_LINK_LTE) relink();
 }
 
 static void cell_registered_cb(void *arg) { /* ISR: the card in use attached, or there is none */
@@ -690,17 +756,17 @@ void sim_net_set_card(int slot, bool present, bool sms, bool voice) { /* ISR (sc
 }
 
 void sim_net_outage(uint64_t ns) { /* ISR (script) */
-    hal_link_type_t t = N.type;
-    if (t == HAL_LINK_NONE) return;
-    set_link(t, false);
+    if (N.type == HAL_LINK_NONE || E.outage) return;
+    E.outage = true;
+    relink();
     sim_metric_add("net.outages", 1);
-    vtk_event_after(ns, outage_end_cb, (void *)(intptr_t)t);
+    vtk_event_after(ns, outage_end_cb, NULL);
 }
 
 void hal_net_link_status(hal_link_status_t *out) {
     out->type = N.type;
     out->up = N.up;
-    out->signal_dbm = N.type == HAL_LINK_LTE ? -100 : N.type == HAL_LINK_WIFI ? -60 : 0;
+    out->signal_dbm = N.type == HAL_LINK_LTE ? (E.cell ? E.cell_rsrp : 0) : N.type == HAL_LINK_WIFI ? (E.wifi ? E.wifi_rssi : 0) : 0;
 }
 
 void hal_net_set_link_callback(hal_link_cb cb, void *ctx) {
@@ -1047,8 +1113,12 @@ void sim_net_init(void) {
     CELL.active = CELL.selected;
     CELL.radio = true;
     CELL.registered = CELL.present[CELL.active]; /* registered at boot (no boot-time delay modelled) */
+    E.wifi = g_profile.wifi.present;
+    E.cell = g_profile.lte.present;
+    E.wifi_rssi = -60;
+    E.cell_rsrp = -100;
     N.type = t;
-    N.want = t != HAL_LINK_NONE;
+    N.want = env_ok(t);
     N.up = N.want && (t != HAL_LINK_LTE || !g_profile.lte.present || cell_ok());
     N.L = t == HAL_LINK_LTE ? &g_profile.lte : t == HAL_LINK_WIFI ? &g_profile.wifi : NULL;
     if (N.up) sim_power_consumer(t == HAL_LINK_LTE ? "modem" : "wifi", true,

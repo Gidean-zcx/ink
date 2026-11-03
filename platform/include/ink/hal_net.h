@@ -37,6 +37,9 @@ typedef struct {
 } hal_link_status_t;
 
 void hal_net_link_status(hal_link_status_t *out);
+/** The system's choice of link for IP traffic (Wi-Fi, LTE or none). Joining Wi-Fi takes a few
+ *  seconds; the link comes up once the chosen network is there. Task context. */
+void hal_net_use(hal_link_type_t type);
 
 typedef void (*hal_link_cb)(void *ctx, const hal_link_status_t *st);
 /** Notified when the link changes (comes up, goes down, switches Wi-Fi/LTE). */

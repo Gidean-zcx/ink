@@ -595,6 +595,33 @@ static void cell_task(void *arg) {
     vtk_unlock();
     CHECK(hal_modem_urc(urc, sizeof urc, 1000) > 0 && !strcmp(urc, "NO CARRIER"), "the caller hangs up (%s)", urc);
 
+    /* the environment says what is around; the system picks the link (hal_net_use) */
+    hal_link_status_t ls;
+    vtk_lock();
+    sim_net_env(0, false, 0); /* no Wi-Fi around */
+    vtk_unlock();
+    CHECK(lte_up(), "losing Wi-Fi around does not touch the LTE link in use");
+    hal_net_use(HAL_LINK_WIFI);
+    hal_net_link_status(&ls);
+    CHECK(ls.type == HAL_LINK_WIFI && !ls.up, "choosing Wi-Fi with none around: no link");
+    vtk_lock();
+    sim_net_env(0, true, -55);
+    vtk_unlock();
+    osal_task_delay_us(3000000);
+    hal_net_link_status(&ls);
+    CHECK(ls.type == HAL_LINK_WIFI && ls.up && ls.signal_dbm == -55, "Wi-Fi in range: joined after a few seconds (%d dBm)", ls.signal_dbm);
+    vtk_lock();
+    sim_net_env(1, false, 0); /* no cellular coverage */
+    vtk_unlock();
+    hal_net_use(HAL_LINK_LTE);
+    hal_net_link_status(&ls);
+    CHECK(ls.type == HAL_LINK_LTE && !ls.up, "choosing LTE without coverage: no link");
+    vtk_lock();
+    sim_net_env(1, true, -108);
+    vtk_unlock();
+    hal_net_link_status(&ls);
+    CHECK(ls.up && ls.signal_dbm == -108, "coverage back: LTE up on the registered card (%d dBm)", ls.signal_dbm);
+
     CHECK(hal_modem_at("AT+ECRST", resp, sizeof resp, 1000) == HAL_AT_OK, "AT+ECRST is acknowledged");
     CHECK(hal_modem_at("AT", resp, sizeof resp, 300) == HAL_AT_TIMEOUT && !lte_up(), "the rebooting modem does not answer");
     osal_task_delay_us(4000000);

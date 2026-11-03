@@ -259,6 +259,8 @@ void sim_net_report(void);
 void sim_net_set_link(const char *name); /* ISR (script): "lte" | "wifi" | "none" */
 void sim_net_outage(uint64_t ns);        /* ISR (script) */
 const char *sim_net_link(bool *up);      /* ISR: "lte" | "wifi" | "none" */
+void sim_net_env(int which, bool on, int level_dbm);  /* ISR: 0 Wi-Fi in range, 1 cellular coverage */
+void sim_net_env_state(bool *wifi, int *rssi, bool *cell, int *rsrp, int *chosen);
 typedef struct {
     bool modem;
     int selected;                        /* slot setting: 0 external card slot, 1 internal card */

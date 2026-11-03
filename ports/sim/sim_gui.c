@@ -111,6 +111,7 @@ static void poll_on_host(void *arg) {
     st.sim_searching = cs.searching;
     st.volte = cs.volte;
     st.call = sim_net_call(st.call_number, sizeof st.call_number);
+    sim_net_env_state(&st.env_wifi, &st.env_rssi, &st.env_cell, &st.env_rsrp, &st.link_chosen);
     st.sms_sent = sim_net_sent_sms(-1, NULL, 0, NULL, 0);
     if (st.sms_sent > 0) sim_net_sent_sms(st.sms_sent - 1, st.last_sms_number, sizeof st.last_sms_number, st.last_sms_text, sizeof st.last_sms_text);
     if (sim_board_present()) {
@@ -178,7 +179,7 @@ void sim_gui_get_stats(sim_gui_stats_t *out) {
 
 /* ------------------------------------------------------------------ actions */
 
-typedef enum { C_TOUCH, C_KEY, C_BATTERY, C_NET, C_OUTAGE, C_MIC, C_SNAP, C_POWERCUT, C_SIM_CARD, C_ORIENT, C_SHAKE, C_SMS_IN, C_CALL_IN, C_REMOTE, C_AUTO_ANSWER } cmd_kind_t;
+typedef enum { C_TOUCH, C_KEY, C_BATTERY, C_NET, C_OUTAGE, C_MIC, C_SNAP, C_POWERCUT, C_SIM_CARD, C_ORIENT, C_SHAKE, C_SMS_IN, C_CALL_IN, C_REMOTE, C_AUTO_ANSWER, C_ENV } cmd_kind_t;
 
 typedef struct {
     cmd_kind_t kind;
@@ -210,6 +211,7 @@ static void cmd_event(void *arg) { /* ISR context, like the script's actions */
         else sim_net_remote_hangup();
         break;
     case C_AUTO_ANSWER: sim_net_auto_answer(c->a != 0); break;
+    case C_ENV: sim_net_env(c->a, c->b != 0, c->c); break;
     }
     vtk_host_call(free_on_host, c);
 }
@@ -250,6 +252,7 @@ void sim_gui_sms_to_device(const char *number, const char *text) { send_num(C_SM
 void sim_gui_call_device(const char *number) { send_num(C_CALL_IN, number, NULL); }
 void sim_gui_remote(bool answer) { send(C_REMOTE, answer, 0, 0, NULL); }
 void sim_gui_auto_answer(bool on) { send(C_AUTO_ANSWER, on, 0, 0, NULL); }
+void sim_gui_env(int which, bool on, int level) { send(C_ENV, which, on, level, NULL); }
 
 void sim_gui_stop(void) {
     if (sim_gui_phase() == SIM_GUI_RUNNING) vtk_stop();

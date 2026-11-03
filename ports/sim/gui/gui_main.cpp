@@ -719,15 +719,20 @@ void draw_panel(ImVec2 pos, ImVec2 size) {
         ImGui::TextDisabled("电量计 BQ27220、充电 CX25601N（开机设 1 A，实际 960 mA），按寄存器模拟。");
     }
     if (ImGui::CollapsingHeader("网络", ImGuiTreeNodeFlags_DefaultOpen)) {
-        static const char *names[] = {"4G（NT26）", "Wi-Fi", "无网络"};
-        static const char *ids[] = {"lte", "wifi", "none"};
-        for (int i = 0; i < 3; i++) {
-            if (i) ImGui::SameLine();
-            if (ImGui::RadioButton(names[i], !strcmp(g_st.link, ids[i]))) sim_gui_net(ids[i]);
-        }
-        if (ImGui::Button("断网 5 秒")) sim_gui_outage(5000);
+        bool wifi = g_st.env_wifi, cell = g_st.env_cell;
+        static int rssi = -60, rsrp = -100;
+        if (ImGui::Checkbox("附近有已知的 Wi-Fi", &wifi)) sim_gui_env(0, wifi, rssi);
         ImGui::SameLine();
-        ImGui::TextDisabled("当前：%s%s", g_st.link, g_st.link_up ? "，在线" : "，断开");
+        ImGui::SetNextItemWidth(130);
+        if (ImGui::SliderInt("##rssi", &rssi, -90, -30, "%d dBm")) sim_gui_env(0, wifi, rssi);
+        if (ImGui::Checkbox("有 4G 信号", &cell)) sim_gui_env(1, cell, rsrp);
+        ImGui::SameLine();
+        ImGui::SetNextItemWidth(130);
+        if (ImGui::SliderInt("##rsrp", &rsrp, -125, -70, "%d dBm")) sim_gui_env(1, cell, rsrp);
+        static const char *chosen[] = {"不联网", "Wi-Fi", "4G"};
+        ImGui::Text("系统选用：%s · %s", chosen[g_st.link_chosen >= 0 && g_st.link_chosen <= 2 ? g_st.link_chosen : 0], g_st.link_up ? "在线" : "不通");
+        ImGui::TextDisabled("这里只设周围的信号；用哪条网络由系统决定（开机沿用档案里的默认）。");
+        if (ImGui::Button("断网 5 秒")) sim_gui_outage(5000);
         if (g_st.cell_modem) {
             ImGui::SeparatorText("4G 卡（两张卡，同一时间只用一张）");
             static const char *kinds[] = {"没有卡", "只有流量", "流量 + 短信", "流量 + 短信 + 通话"};

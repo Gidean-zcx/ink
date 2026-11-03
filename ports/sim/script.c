@@ -12,7 +12,9 @@
  *   +3s      powercut                 # tear in-flight flash op, save image, stop
  *   +3s      powercut write 2         # cut during the 2nd flash program/erase from now
  *   +1s      mic   speech|silence|noise  # what the microphone hears
- *   +0       net   wifi | lte | none   # switch the network link
+ *   +0       net   wifi | lte | none   # shorthand for the environment: that network appears (none: all gone)
+ *   +0       wifi  on|off [rssi]        # a known Wi-Fi network in range, e.g. wifi on -70
+ *   +0       cell  on|off [rsrp]        # cellular coverage, e.g. cell on -105
  *   +0       outage 5s                 # link drops for a while (dead connection noticed later)
  *   +0       sim   external|internal none|data|sms|voice  # card in a SIM slot (what its plan allows)
  *   +0       orient portrait|upside_down|landscape_left|landscape_right|face_up|face_down
@@ -37,7 +39,7 @@
 #include "ink/rotation.h"
 #include "sim.h"
 
-typedef enum { A_TOUCH, A_KEY, A_SNAP, A_MARK, A_NOTE, A_BATTERY, A_POWERCUT, A_END, A_NET, A_OUTAGE, A_MIC, A_SIM, A_ORIENT, A_SHAKE, A_RTC_LOST, A_SMS_IN, A_CALL_IN, A_REMOTE } akind_t;
+typedef enum { A_TOUCH, A_KEY, A_SNAP, A_MARK, A_NOTE, A_BATTERY, A_POWERCUT, A_END, A_NET, A_OUTAGE, A_MIC, A_SIM, A_ORIENT, A_SHAKE, A_RTC_LOST, A_SMS_IN, A_CALL_IN, A_REMOTE, A_ENV } akind_t;
 
 typedef struct {
     uint64_t t;
@@ -222,6 +224,14 @@ int sim_script_load(const char *path, char *err, size_t errlen) {
         } else if (!strcmp(cmd, "rtc")) {
             ok = n >= 3 && !strcmp(tok[2], "lost");
             if (ok) push(t, A_RTC_LOST);
+        } else if (!strcmp(cmd, "wifi") || !strcmp(cmd, "cell")) {
+            ok = n >= 3 && (!strcmp(tok[2], "on") || !strcmp(tok[2], "off"));
+            if (ok) {
+                action_t *a = push(t, A_ENV);
+                a->a = !strcmp(cmd, "cell");
+                a->b = !strcmp(tok[2], "on");
+                a->c = n >= 4 ? atoi(tok[3]) : 0;
+            }
         } else if (!strcmp(cmd, "sms-in")) {
             ok = n >= 4;
             if (ok) {
@@ -300,6 +310,7 @@ static void run_action(void *arg) { /* ISR context */
     case A_CALL_IN:
         if (!sim_net_incoming_call(a->num)) sim_note("script: call to the device not put through");
         break;
+    case A_ENV: sim_net_env(a->a, a->b != 0, a->c); break;
     case A_REMOTE:
         if (a->a) sim_net_remote_answer();
         else sim_net_remote_hangup();

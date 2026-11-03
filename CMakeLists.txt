@@ -287,7 +287,7 @@ set_tests_properties(selftest-psram-stack-flash-access-crashes PROPERTIES
 add_test(NAME selftest-sim-slots
   COMMAND sim-selftest --profile ${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json
           --budget ${CMAKE_SOURCE_DIR}/tests/sim/cell.budget.json
-          --out ${CMAKE_BINARY_DIR}/test-out/selftest-sim-slots --quiet --end 45s --no-random-outages)
+          --out ${CMAKE_BINARY_DIR}/test-out/selftest-sim-slots --quiet --end 60s --no-random-outages)
 set_tests_properties(selftest-sim-slots PROPERTIES ENVIRONMENT "INK_SELFTEST_CELL=1")
 # The Plus board's IO expander wiring: motor, shared reset and supply of the modem, power-off pulses.
 add_test(NAME selftest-board-wiring

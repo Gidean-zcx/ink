@@ -70,6 +70,10 @@ typedef struct {
     char call_number[24];
     int sms_sent;               /* messages the device sent */
     char last_sms_number[24], last_sms_text[400];
+    /* network environment and the system's choice */
+    bool env_wifi, env_cell;
+    int env_rssi, env_rsrp;
+    int link_chosen;            /* hal_link_type_t */
 } sim_gui_stats_t;
 
 /** Ask for a fresh sample and, if the panel image changed, a new frame. At most one request is
@@ -83,7 +87,8 @@ void sim_gui_get_stats(sim_gui_stats_t *out);
 void sim_gui_touch(bool down, int x, int y);
 void sim_gui_key(int key, bool pressed);
 void sim_gui_battery(int percent, bool charging);
-void sim_gui_net(const char *link);  /* "lte" | "wifi" | "none" */
+void sim_gui_net(const char *link);  /* legacy: "lte" | "wifi" | "none" network appears */
+void sim_gui_env(int which, bool on, int level_dbm); /* 0 Wi-Fi in range, 1 cellular coverage */
 void sim_gui_outage(int ms);
 void sim_gui_mic(const char *source); /* "speech" | "silence" | "noise" */
 void sim_gui_sim_card(int slot, int kind); /* put a card in a slot or take it out (kind as sim_card) */
