@@ -944,17 +944,20 @@ static void cut_panel_task(void *arg) {
     metalio_board_set(0, EPD_PWR_VCOM_CTRL | EPD_PWR_PWRUP | EPD_PWR_WAKEUP, 0); /* PMIC pins low mid-waveform */
 }
 
-/* a blip on the PMIC's pins that is back before the waveform ends (audit AUD4-001): PWRUP (the rails
- * restart; VCOM enabled again by hand, as an outside writer could) or VCOM_CTRL alone (PWR_GOOD does
- * not move) */
+/* a blip that is back before the waveform ends (audit AUD4-001): PWRUP (the rails restart; VCOM
+ * enabled again by hand, as an outside writer could), VCOM_CTRL alone (PWR_GOOD does not move), or
+ * the screen's power P05 */
+static const uint8_t BLIP_PIN[3] = {EPD_PWR_PWRUP, EPD_PWR_VCOM_CTRL, MB_P0_CAM_SCR};
+static const char *const BLIP_NAME[3] = {"supply (PWRUP)", "VCOM (VCOM_CTRL)", "screen power (P05)"};
+
 static void blip_task(void *arg) {
-    const bool vcom_only = arg != NULL;
+    const int kind = (int)(intptr_t)arg;
     for (int i = 0; i < 2000 && !sim_display_playing(); i++) osal_task_delay_us(1000);
     osal_task_delay_us(5000); /* a phase or so in */
-    metalio_board_set(0, vcom_only ? EPD_PWR_VCOM_CTRL : EPD_PWR_PWRUP, 0);
+    metalio_board_set(0, BLIP_PIN[kind], 0);
     osal_task_delay_us(20000);
-    metalio_board_set(0, vcom_only ? EPD_PWR_VCOM_CTRL : EPD_PWR_PWRUP, vcom_only ? EPD_PWR_VCOM_CTRL : EPD_PWR_PWRUP);
-    if (!vcom_only) {
+    metalio_board_set(0, BLIP_PIN[kind], BLIP_PIN[kind]);
+    if (kind == 0) {
         hal_i2c_dev_t *pmic = hal_i2c_device(0, TPS65185_ADDR, "pmic");
         tps65185_write(pmic, TPS_REG_ENABLE, 0);
         tps65185_write(pmic, TPS_REG_ENABLE, TPS_ENABLE_ALL_RAILS);
@@ -982,14 +985,13 @@ static void display_cut_checks(void) {
     if (g_profile.display_driver != 1)
         CHECK(sim_display_version() == v0, "and the panel does not show it");
     CHECK(update_and_wait(px, &area) && g_upd_ok && sim_display_version() != v0, "the next update powers the panel up again and works");
-    for (int b = 0; b < 2; b++) {
-        memset(px, b ? 0x00 : 0xFF, sizeof px); /* new content: both pipelines drive their full phases */
-        osal_task_cfg_t cb = {.name = "panel_blip", .fn = blip_task, .arg = b ? (void *)1 : NULL, .stack_bytes = 2048,
+    for (int b = 0; b < 3; b++) {
+        memset(px, b & 1 ? 0x00 : 0xFF, sizeof px); /* new content: both pipelines drive their full phases */
+        osal_task_cfg_t cb = {.name = "panel_blip", .fn = blip_task, .arg = (void *)(intptr_t)b, .stack_bytes = 2048,
                               .priority = OSAL_PRIO_NORMAL + 2, .core = -1};
         osal_task_create(&cb, NULL);
         bool ok = update_and_wait(px, &area);
-        CHECK(ok && !g_upd_ok, "an update whose %s blips part way fails, although it is back before the end",
-              b ? "VCOM (VCOM_CTRL)" : "supply (PWRUP)");
+        CHECK(ok && !g_upd_ok, "an update whose %s blips part way fails, although it is back before the end", BLIP_NAME[b]);
     }
     CHECK(update_and_wait(px, &area) && g_upd_ok, "after a blip the next update powers up from the start and works");
 }

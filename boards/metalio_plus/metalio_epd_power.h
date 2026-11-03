@@ -26,6 +26,7 @@ extern "C" {
 #define EPD_PWR_PWRUP 0x02     /* P01 */
 #define EPD_PWR_WAKEUP 0x04    /* P02 */
 #define EPD_PWR_GOOD 0x80      /* P07, input: TPS65185 PWR_GOOD */
+#define EPD_PWR_SCREEN 0x20    /* P05: camera / screen power (upstream EPD_IO_CAM_SCR_EN; MB_P0_CAM_SCR) */
 #define EPD_PWR_RETRIES 3      /* full power cycles after a failed first attempt */
 
 /* VCOM of the E0470A14-AF panel on this board: upstream config.h EPD_VCOM_MV; the factory firmware
@@ -73,8 +74,9 @@ void epd_power_sleep(epd_power_t *p);
  *  supply loss; a PMIC that lost WAKEUP does not answer at all). */
 bool epd_power_good(epd_power_t *p);
 
-/** Has anyone changed the PMIC's pins (WAKEUP, PWRUP, VCOM_CTRL) since epd_power_on brought the
- *  rails up? Even a blip that came back cut or restarted the rails or VCOM. No bus traffic. */
+/** Has anyone changed the PMIC's pins (WAKEUP, PWRUP, VCOM_CTRL) or the screen's power (P05) since
+ *  epd_power_on brought the rails up? Even a blip that came back cut or restarted the rails, VCOM or
+ *  the screen's supply. No bus traffic. */
 bool epd_power_pins_touched(epd_power_t *p);
 
 /** At the end of a waveform: did the panel keep its supply all the way? The pins untouched since

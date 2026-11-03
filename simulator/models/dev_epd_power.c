@@ -7,7 +7,10 @@
  *                  registers back to reset values); a PWRUP rising edge
  *                  starts the rails, which are good after the four UPSEQ1
  *                  strobe delays; VCOM is driven once VCOM_CTRL is high and
- *                  ENABLE has VCOM_EN.
+ *                  ENABLE has VCOM_EN. The panel responds only while P05
+ *                  (upstream: camera / screen power) is on as well; which
+ *                  of the screen's supplies it switches, the board's
+ *                  schematic would say (not public).
  *
  * Checks that would otherwise only show up on the device, some as damage:
  *   - VCOM driven at a value other than the panel's (profile panel_vcom_mv,
@@ -134,7 +137,7 @@ static int tps_xfer(void *state, const uint8_t *w, size_t wlen, uint8_t *r, size
 
 bool sim_tps65185_panel_ready(void) {
     uint64_t now = vtk_now();
-    bool ready = vcom_driven(now) && now >= T.t_vcom_en + SIM_US(VCOM_SETTLE_US);
+    bool ready = vcom_driven(now) && now >= T.t_vcom_en + SIM_US(VCOM_SETTLE_US) && sim_board_cam_power();
     if (ready) T.vcom_seen_mv = vcom_mv();
     if (ready && vcom_mv() != g_profile.panel_vcom_mv) {
         T.vcom_mismatches++;

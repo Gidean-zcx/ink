@@ -5,6 +5,7 @@
 
 #define TICK_US 10000 /* upstream's vTaskDelay(1): one FreeRTOS tick at HZ = 100 */
 #define PIN_MASK (EPD_PWR_VCOM_CTRL | EPD_PWR_PWRUP | EPD_PWR_WAKEUP)
+#define WATCH_MASK (PIN_MASK | EPD_PWR_SCREEN) /* what the panel's supply depends on */
 
 static void io_lock(epd_power_t *p) {
     if (p->io_lock) p->io_lock();
@@ -81,7 +82,7 @@ static epd_power_result_t power_on_once(epd_power_t *p) {
     }
     if (p->gate_output) p->gate_output(p->ctx, true);
     io_lock(p);
-    p->ioexp->changed[0] &= (uint8_t)~PIN_MASK; /* from here a change of the pins is someone else's */
+    p->ioexp->changed[0] &= (uint8_t)~WATCH_MASK; /* from here a change of these pins is someone else's */
     io_unlock(p);
     return EPD_POWER_OK;
 }
@@ -120,7 +121,7 @@ bool epd_power_good(epd_power_t *p) {
 
 bool epd_power_pins_touched(epd_power_t *p) {
     io_lock(p);
-    bool touched = p->ioexp->changed[0] & PIN_MASK;
+    bool touched = p->ioexp->changed[0] & WATCH_MASK;
     io_unlock(p);
     return touched;
 }
