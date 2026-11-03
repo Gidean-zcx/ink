@@ -32,6 +32,7 @@
 
 #include "ink/hal_input.h"
 #include "metalio_plus/metalio_board.h"
+#include "metalio_plus/metalio_epd_power.h"
 #include "metalio_plus/metalio_touch.h"
 #include "ft6336u/ft6336u.h"
 #include "ink/rotation.h"
@@ -612,7 +613,9 @@ static void service_expander_locked(bool edge, bool confirm) {
     }
     if (edge) {
         bool ok = metalio_board_read(1, &p1) == HAL_I2C_OK;
-        metalio_board_read(0, &p0);  /* releases an INT raised by port 0 */
+        /* reading port 0 releases an INT it raised; PWR_GOOD (P07) low there while the panel should
+         * be powered means its supply went away: the display port stops the waveform */
+        if (metalio_board_read(0, &p0) == HAL_I2C_OK && !(p0 & EPD_PWR_GOOD)) sim_display_supply_low();
         sim_sensors_service_gpio2(); /* the accelerometer shares GPIO2 */
         if (ok && !g_keys_pending && (p1 & MB_P1_KEYS) != g_keys_last) {
             g_keys_first = p1 & MB_P1_KEYS;

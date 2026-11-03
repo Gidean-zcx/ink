@@ -481,11 +481,11 @@ static bool power_up_locked(void) {
 static void power_down_locked(void) {
     if (!D.rails_on) return;
     uint64_t t0 = vtk_now();
+    D.rails_on = false; /* first: PWR_GOOD falling from here on is expected (sim_display_supply_low) */
     if (g_profile.pmic_tps65185)
         epd_power_off(&g_epd);
     else
         vtk_sleep_ns(SIM_US(g_profile.power_down_us));
-    D.rails_on = false;
     sim_power_consumer("display.rails", false, 0);
     sim_trace_span("display", "power-down", t0, vtk_now(), NULL);
 }
@@ -501,6 +501,34 @@ static void power_down(void) {
     osal_mutex_lock(g_pwr_lock, OSAL_WAIT_FOREVER);
     power_down_locked();
     osal_mutex_unlock(g_pwr_lock);
+}
+
+/* PWR_GOOD (P07) read low by whoever serves GPIO2 (the input task; the device port's GPIO2 handler
+ * the same): while the rails should be up, the supply went away. Counted, so a drive in progress
+ * notices at its next phase. D.rails_on is read without the lock: a stale read costs one check. */
+static unsigned g_supply_drops;
+
+void sim_display_supply_low(void) {
+    if (D.rails_on) __atomic_add_fetch(&g_supply_drops, 1, __ATOMIC_SEQ_CST);
+}
+
+static unsigned supply_drops(void) { return __atomic_load_n(&g_supply_drops, __ATOMIC_SEQ_CST); }
+
+/* After a waveform: did the panel keep its supply all the way? (The board driver reads PWR_GOOD and
+ * the PMIC; the device port does the same.) If not, the rails are gone: the next update powers up
+ * again. Display task. */
+static bool power_kept(void) {
+    if (!g_profile.pmic_tps65185) return true;
+    osal_mutex_lock(g_pwr_lock, OSAL_WAIT_FOREVER);
+    bool good = D.rails_on && epd_power_good(&g_epd);
+    if (!good && D.rails_on) {
+        D.rails_on = false;
+        sim_power_consumer("display.rails", false, 0);
+        sim_metric_add("display.power_lost_during_waveform", 1);
+        sim_note("display: the panel supply went away during a waveform; the update fails, the image is not as asked");
+    }
+    osal_mutex_unlock(g_pwr_lock);
+    return good;
 }
 
 /* Before light sleep (the port's sleep sequence; upstream tps_enter_sleep): rails down if a hold
@@ -713,6 +741,15 @@ static void execute(req_t *r) {
         }
         done = vtk_now();
         sim_power_consumer("display.refresh", false, g_profile.ma_display_refresh);
+        if (!power_kept()) { /* the panel lost its supply part way: it does not show what was asked */
+            res.ok = false;
+            res.started_us = started / 1000;
+            res.done_us = done / 1000;
+            D.pending--;
+            hal_cpu_boost_release(g_boost);
+            if (r->done) r->done(r->ctx, &res);
+            return;
+        }
         back_copy(&r->area);
         sim_i2c_transfer("io-expander", 3);
     }
@@ -1128,11 +1165,19 @@ static void pq_after_phase(uint32_t now, uint64_t scan_end) {
             }
         }
     }
+    int checked = 0; /* 1 = the supply is still good, -1 = it went away; asked once, when an update finishes */
     for (int i = 0; i < PQ.nu;) {
         pq_upd_t *u = &PQ.u[i];
         bool cleaning = PQ.clean_stage && i == PQ.clean_idx;
         bool waiting = u->after_clean && PQ.clean_stage;
         if (!cleaning && !waiting && pq_area_still(u->tx0, u->ty0, u->tx1, u->ty1, now + 1)) {
+            if (!checked) checked = power_kept() ? 1 : -1;
+            if (checked < 0) { /* every update in flight fails; the drive stops (pq_drive) */
+                for (int k = 0; k < PQ.nu; k++) pq_finish(&PQ.u[k], vtk_now(), false);
+                PQ.nu = 0;
+                PQ.clean_stage = 0;
+                return;
+            }
             pq_finish(u, u->started_ns ? scan_end : vtk_now(), true);
             PQ.u[i] = PQ.u[--PQ.nu]; /* swap-remove: only the last entry moves (to i) */
             if (PQ.clean_stage && PQ.clean_idx == PQ.nu) PQ.clean_idx = i;
@@ -1170,10 +1215,21 @@ static void pq_drive(void) {
     D.playing = true;
     if (!PQ.planned) pq_advance_idle();
     uint64_t t_start = vtk_now(), t0 = vtk_now(), last_scan = 0;
+    const unsigned drops0 = supply_drops();
     const hal_rect_t all = {0, 0, D.W, D.H};
     double worst = 1e9;
     bool plan_running = false;
     for (;;) {
+        if (supply_drops() != drops0) { /* PWR_GOOD fell: no further phase reaches the panel */
+            if (plan_running) osal_sem_take(PQ.plan_done, OSAL_WAIT_FOREVER);
+            plan_running = false;
+            PQ.planned = false;
+            (void)power_kept(); /* confirms through the driver; the rails count as off */
+            for (int k = 0; k < PQ.nu; k++) pq_finish(&PQ.u[k], vtk_now(), false);
+            PQ.nu = 0;
+            PQ.clean_stage = 0;
+            break;
+        }
         pq_drain_requests();
         if (PQ.pause_req) { /* a flash operation: hold still between phases */
             if (plan_running) {
@@ -1262,6 +1318,12 @@ static void pq_drive(void) {
         sim_metric_sample("display.phase_ms", (p.next_start - t0) / 1e6);
         sim_metric_sample("display.prefill_ms", (p.scan_start - t0) / 1e6);
         pq_after_phase(now, p.scan_end);
+        if (!D.rails_on) { /* the supply went away: pq_after_phase failed the updates; stop driving */
+            if (plan_running) osal_sem_take(PQ.plan_done, OSAL_WAIT_FOREVER);
+            plan_running = false;
+            PQ.planned = false;
+            break;
+        }
         uint64_t tn = vtk_now();
         if (tn < p.next_start) vtk_sleep_ns(p.next_start - tn);
         if (plan_running) {

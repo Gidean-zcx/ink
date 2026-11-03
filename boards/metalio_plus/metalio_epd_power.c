@@ -105,6 +105,12 @@ void epd_power_off(epd_power_t *p) {
     pins(p, 0); /* WAKEUP low: SLEEP */
 }
 
+bool epd_power_good(epd_power_t *p) {
+    uint8_t levels = 0, pg = 0;
+    if (read_port0(p, &levels) != HAL_I2C_OK || !(levels & EPD_PWR_GOOD)) return false;
+    return tps65185_read(p->pmic, TPS_REG_PG, &pg) == HAL_I2C_OK && (pg & TPS_PG_ALL_GOOD) == TPS_PG_ALL_GOOD;
+}
+
 void epd_power_sleep(epd_power_t *p) {
     uint8_t out0 = shadow_port0(p);
     if (out0 & PIN_MASK) {

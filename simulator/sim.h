@@ -247,6 +247,7 @@ void sim_accel_orientation(int g[3]);
 void sim_display_plan_info(const hal_rect_t *area, uint64_t *phase_ns, uint64_t *busy0_ns, uint64_t *busy1_ns,
                            double *slack_lines); /* task context */
 bool sim_display_playing(void);
+void sim_display_supply_low(void); /* PWR_GOOD read low while serving GPIO2 (input task) */
 uint64_t sim_display_ipc_wait_ns(uint64_t now); /* task context */
 bool sim_power_sleeping(void);
 bool sim_power_waking(void);  /* asleep, but a wake source already fired */

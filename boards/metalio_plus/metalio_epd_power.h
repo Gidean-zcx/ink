@@ -68,6 +68,12 @@ void epd_power_off(epd_power_t *p);
 /** Before deep sleep: PMIC to SLEEP with the datasheet waits. */
 void epd_power_sleep(epd_power_t *p);
 
+/** Are the rails and VCOM still good? PWR_GOOD (P07) through the expander, then the PMIC's PG
+ *  register; false if either says no or a read fails (a PMIC that lost WAKEUP does not answer).
+ *  At the end of a waveform: false means the supply went away meanwhile and the panel did not get
+ *  the whole waveform. */
+bool epd_power_good(epd_power_t *p);
+
 const char *epd_power_result_name(epd_power_result_t r);
 
 #ifdef __cplusplus

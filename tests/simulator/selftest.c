@@ -20,6 +20,7 @@
 #include "ink/osal.h"
 #include "bh1098g/bh1098g.h"
 #include "metalio_plus/metalio_board.h"
+#include "metalio_plus/metalio_epd_power.h"
 #include "ink/hal_net.h"
 #include "ink/hal_power.h"
 #include "ink/probe.h"
@@ -787,6 +788,45 @@ static void sleep_checks(void) {
     hal_input_set_sink(NULL, NULL);
 }
 
+/* A panel update whose supply goes away part way fails, and the panel does not take it; the next
+ * update powers the panel up again (audit AUD3-003). */
+static volatile bool g_upd_done, g_upd_ok;
+
+static void upd_done(void *ctx, const hal_display_result_t *r) {
+    (void)ctx;
+    g_upd_ok = r->ok;
+    g_upd_done = true;
+}
+
+static void cut_panel_task(void *arg) {
+    (void)arg;
+    for (int i = 0; i < 2000 && !sim_display_playing(); i++) osal_task_delay_us(1000);
+    metalio_board_set(0, EPD_PWR_VCOM_CTRL | EPD_PWR_PWRUP | EPD_PWR_WAKEUP, 0); /* PMIC pins low mid-waveform */
+}
+
+static bool update_and_wait(const uint8_t *px, const hal_rect_t *area) {
+    g_upd_done = false;
+    hal_display_update(area, px, area->w, HAL_WF_GL16, 0, upd_done, NULL);
+    for (int i = 0; i < 500 && !g_upd_done; i++) osal_task_delay_us(10000);
+    return g_upd_done;
+}
+
+static void display_cut_checks(void) {
+    static uint8_t px[64 * 64];
+    hal_rect_t area = {0, 0, 64, 64};
+    memset(px, 0, sizeof px);
+    uint32_t v0 = sim_display_version();
+    osal_task_cfg_t c = {.name = "panel_cut", .fn = cut_panel_task, .stack_bytes = 2048, .priority = OSAL_PRIO_NORMAL + 2, .core = -1};
+    osal_task_create(&c, NULL);
+    bool done = update_and_wait(px, &area);
+    CHECK(done && !g_upd_ok, "an update whose panel supply goes away part way fails (ok %d)", g_upd_ok);
+    /* EPDiy's model shows the image at the end of the waveform, PQ-BN phase by phase: the phases
+     * driven before the cut did reach the panel there */
+    if (g_profile.display_driver != 1)
+        CHECK(sim_display_version() == v0, "and the panel does not show it");
+    CHECK(update_and_wait(px, &area) && g_upd_ok && sim_display_version() != v0, "the next update powers the panel up again and works");
+}
+
 static void board_task(void *arg) {
     (void)arg;
     CHECK(metalio_board_ready(), "the board's expander is set up at boot");
@@ -885,6 +925,7 @@ static void board_task(void *arg) {
     CHECK(nt26_registered(&reg) == NT26_OK && reg, "P14 back on: the modem registers again");
     CHECK(hal_audio_play_start() == 0 && sim_bt_audio_mode() == 1, "the audio port sets conversation mode again after the power cycle");
     hal_audio_play_stop(false);
+    display_cut_checks();
     sleep_checks();
     ink_probe_mark("board-shutdown");
     hal_power_shutdown(); /* 15 pulses on P13: the run ends at the last one */
