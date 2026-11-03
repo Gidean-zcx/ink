@@ -957,6 +957,32 @@ static void board_task(void *arg) {
     vtk_lock();
     sim_input_key(HAL_KEY_VOL_UP, false);
     vtk_unlock();
+    osal_task_delay_us(60000);
+
+    /* a failed read of the accelerometer's latch leaves INT1 holding GPIO2 low, and GPIO2 interrupts
+     * on the falling edge: the driver task looks again while the line stays low, so once the bus
+     * answers the latch is read and the keys on the shared line work again */
+    hal_input_set_sink(board_sink, NULL);
+    sim_i2c_set_faults(1.0, "accel");
+    vtk_lock();
+    sim_accel_orient("portrait");
+    vtk_unlock();
+    osal_task_delay_us(30000);
+    CHECK(sim_accel_int_low() && sim_gpio2_low(), "a turn while the accelerometer's bus fails: its latch stays set, GPIO2 low");
+    sim_i2c_set_faults(0, NULL);
+    g_vol_events = 0;
+    vtk_lock();
+    vtk_event_after(SIM_MS(10), vol_up, (void *)1);
+    vtk_event_after(SIM_MS(200), vol_up, NULL);
+    vtk_unlock();
+    osal_task_delay_us(1500000);
+    CHECK(!sim_accel_int_low() && g_vol_events == 2, "once the bus answers the latch is read and a key press gets through (%d VOL+ events)",
+          g_vol_events);
+    hal_input_set_sink(NULL, NULL);
+    vtk_lock();
+    sim_accel_orient("landscape_left"); /* back as before, for the sleep checks */
+    vtk_unlock();
+    osal_task_delay_us(50000);
 
     /* camera (GC2145): a VGA RGB565 picture after the warm-up frames; no answer without P05 */
     hal_camera_info_t ci;

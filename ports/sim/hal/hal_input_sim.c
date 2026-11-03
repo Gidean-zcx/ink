@@ -80,6 +80,9 @@ static struct {
     /* the wake could not restore the expander (bus errors): the input task retries */
     bool restore_keys, restore_rails, restore_due;
     unsigned restore_tries;
+    /* GPIO2 still low after a service: looked at again later */
+    bool recheck_armed;
+    unsigned rechecks;
 } IN;
 
 void sim_power_input_lost(void);
@@ -163,6 +166,34 @@ void sim_gpio2_update(void) {
     IN.exp_irq = true;
     if (vtk_in_isr()) vtk_isr_wake_one(&IN.wq);
     else vtk_wake_one_locked(&IN.wq);
+}
+
+/* GPIO2 interrupts on the falling edge. A read that failed leaves the expander's INT or the
+ * accelerometer's latch asserted, and while the line stays low no further edge comes: no key would
+ * get through again. So while the line is still low after a service the task looks again, after the
+ * debounce time and backing off to once a second (on the device: the GPIO2 level after the service).
+ * Not while the sleep sequence has the keys: the wake starts from the levels anyway. Locked. */
+static void gpio2_recheck_cb(void *arg) { /* ISR */
+    (void)arg;
+    IN.recheck_armed = false;
+    if (!g_gpio2_low) return;
+    IN.gpio2_fell = vtk_isr_now();
+    IN.exp_irq = true;
+    vtk_isr_wake_one(&IN.wq);
+}
+
+static void gpio2_recheck_locked(void) {
+    if (!g_gpio2_low) {
+        IN.rechecks = 0;
+        return;
+    }
+    if (IN.recheck_armed || IN.sampling_off) return;
+    uint64_t gap = SIM_US(g_profile.key_debounce_us) << (IN.rechecks < 6 ? IN.rechecks : 6);
+    if (gap > SIM_MS(1000)) gap = SIM_MS(1000);
+    IN.rechecks++;
+    IN.recheck_armed = true;
+    vtk_event_after(gap, gpio2_recheck_cb, NULL);
+    sim_metric_add("input.gpio2_rechecks", 1);
 }
 
 /* -------------------------------------------------------------- physical */
@@ -598,6 +629,7 @@ static void keys_resume_locked(void) {
         g_keys_t = vtk_now();
     }
     IN.sampling_off = false;
+    gpio2_recheck_locked(); /* an INT left from the masked time */
     vtk_wake_one_locked(&IN.wq);
     vtk_unlock();
     if (!ok) confirm_later();
@@ -738,6 +770,11 @@ static void input_task(void *arg) {
         vtk_unlock();
         if (restore) restore_try();
         if (exp_irq || exp_confirm) service_expander(exp_irq, exp_confirm);
+        if (exp_irq || exp_confirm || restore) {
+            vtk_lock();
+            gpio2_recheck_locked();
+            vtk_unlock();
+        }
         deliver_gpio_keys(true);
         if (!irq) continue;
         /* touch session: read, then poll while any finger is down; keys keep being served */
@@ -750,7 +787,12 @@ static void input_task(void *arg) {
             exp_confirm = IN.exp_confirm;
             IN.exp_irq = IN.exp_confirm = false;
             vtk_unlock();
-            if (exp_irq || exp_confirm) service_expander(exp_irq, exp_confirm);
+            if (exp_irq || exp_confirm) {
+                service_expander(exp_irq, exp_confirm);
+                vtk_lock();
+                gpio2_recheck_locked();
+                vtk_unlock();
+            }
             deliver_gpio_keys(false);
         } while (1);
     }
