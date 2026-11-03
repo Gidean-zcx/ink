@@ -636,6 +636,7 @@ struct osal_timer {
     uint64_t period_ns, due;
     vtk_event_id_t ev;
     bool active, pending;
+    bool deleting;    /* osal_timer_delete is under way: start refuses (a callback cannot re-arm it) */
     uint32_t backlog; /* firings not yet dispatched (esp_timer catches up on missed periods) */
     struct osal_timer *next_pending;
 };
@@ -734,6 +735,10 @@ osal_err_t osal_timer_start(osal_timer_t *t, uint64_t delay_us, uint64_t period_
     require_task("osal_timer_start");
     charge_kernel_op();
     vtk_lock();
+    if (t->deleting) { /* its callback re-arming it while another task deletes it */
+        vtk_unlock();
+        return OSAL_INVALID;
+    }
     if (t->ev) vtk_event_cancel(t->ev);
     unlink_pending(t);
     t->period_ns = period_us * 1000ull;
@@ -756,19 +761,27 @@ osal_err_t osal_timer_stop(osal_timer_t *t) {
     return OSAL_OK;
 }
 
+static void disarm_locked(osal_timer_t *t) {
+    if (t->ev) vtk_event_cancel(t->ev);
+    t->ev = 0;
+    t->active = false;
+    unlink_pending(t);
+}
+
 void osal_timer_delete(osal_timer_t *t) {
     if (!t) return;
-    if (vtk_self() && !vtk_in_isr()) {
-        osal_timer_stop(t);
-        if (osal_task_self() != TS.task) { /* from the timer task it cannot be running anyway */
-            vtk_lock();
-            while (TS.running == t) vtk_block_locked(&TS.done_wq, VTK_TIME_INF);
-            vtk_unlock();
-        }
-    } else {
-        if (t->ev) vtk_event_cancel(t->ev);
-        unlink_pending(t);
+    bool task = vtk_self() && !vtk_in_isr();
+    if (task) {
+        charge_kernel_op();
+        vtk_lock();
     }
+    t->deleting = true; /* from here osal_timer_start refuses it */
+    disarm_locked(t);
+    if (task && osal_task_self() != TS.task) { /* from the timer task it cannot be running anyway */
+        while (TS.running == t) vtk_block_locked(&TS.done_wq, VTK_TIME_INF);
+        disarm_locked(t); /* belt and braces: nothing can have armed it meanwhile */
+    }
+    if (task) vtk_unlock();
     pools_free(t->mem);
     sim_host_free(t);
 }

@@ -508,6 +508,31 @@ static void test_timer_delete(void) {
     if (g_profile.cores > 1) CHECK(was_running, "on two cores the delete really met a running callback");
 }
 
+/* A callback that re-arms its own timer while another task deletes it (audit AUD3-001): the delete
+ * wins, nothing fires afterwards (it would touch freed memory; the ASan build in CI sees that). */
+static osal_timer_t *g_rearm;
+static volatile bool g_rearm_in;
+static volatile int g_rearm_calls, g_rearm_rc = 99;
+
+static void rearm_cb(void *arg) {
+    (void)arg;
+    if (++g_rearm_calls == 1) {
+        g_rearm_in = true;
+        sim_charge_ns_always(SIM_MS(2)); /* on two cores the delete arrives meanwhile */
+        g_rearm_rc = osal_timer_start(g_rearm, 1000, 0);
+    }
+}
+
+static void test_timer_rearm_delete(void) {
+    g_rearm = osal_timer_create("rearm", rearm_cb, NULL);
+    osal_timer_start(g_rearm, 1000, 0);
+    for (int i = 0; !g_rearm_in && i < 1000; i++) sim_charge_ns_always(SIM_US(50));
+    osal_timer_delete(g_rearm);
+    osal_task_delay_us(20000); /* a re-armed firing would land here */
+    CHECK(g_rearm_calls == 1, "a timer deleted while its callback re-arms it does not fire again (%d calls)", g_rearm_calls);
+    if (g_profile.cores > 1) CHECK(g_rearm_rc == OSAL_INVALID, "re-arming a timer that is being deleted is refused (%d)", g_rearm_rc);
+}
+
 static void selftest_task(void *arg) {
     (void)arg;
     hal_input_set_sink(sink, NULL);
@@ -526,6 +551,7 @@ static void selftest_task(void *arg) {
     test_sd();
     test_speaker();
     test_timer_delete();
+    test_timer_rearm_delete();
     /* the script taps at 4.0 s and 4.5 s and presses NEXT at 5 s */
     uint64_t now = osal_now_us();
     if (now < 6500000) osal_task_delay_us(6500000 - now);
