@@ -174,6 +174,10 @@ add_library(ink_system STATIC
   system/ui/ui_task.c)
 target_include_directories(ink_system PUBLIC system/include PRIVATE system/services/display third_party/jsmn)
 target_link_libraries(ink_system PUBLIC ink_platform ink_lvgl)
+# The system calls the HAL; in this build the simulator port implements it. Link-only (no headers
+# leak into the system or the apps), and it puts the port after the system on every link line, which
+# GNU ld needs for HAL functions only the system references (e.g. hal_cell_*).
+target_link_libraries(ink_system INTERFACE $<LINK_ONLY:ink_port_sim>)
 target_compile_options(ink_system PRIVATE ${INK_WARN})
 
 add_library(ink_apps STATIC apps/home/home.c apps/reader/reader.c)
