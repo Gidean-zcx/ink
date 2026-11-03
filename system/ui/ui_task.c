@@ -22,6 +22,7 @@
 #define UI_STACK 10240
 #define UI_PRIO 5
 #define UI_QUEUE_LEN 24
+#define INPUT_BATCH_MAX UI_QUEUE_LEN /* queued input handled before the next frame is drawn */
 #define STRIP_ROWS 96
 #define MAX_HINTS 8
 #define MAX_DIRTY 24
@@ -81,6 +82,9 @@ static struct {
      * whether LVGL has a refresh requested that it has not rendered yet */
     int posts;
     bool render_pending;
+    /* a posted call taken from the queue while collecting queued input: handled first next round */
+    umsg_t held;
+    bool has_held;
     /* styles */
     lv_style_t st_screen, st_btn, st_btn_pr;
 } UI;
@@ -431,6 +435,8 @@ bool ink_ui_busy(void) {
     return __atomic_load_n(&UI.render_pending, __ATOMIC_SEQ_CST);
 }
 
+bool ink_ui_queue_pending(void) { return __atomic_load_n(&UI.posts, __ATOMIC_SEQ_CST) > 0; }
+
 static void note_render_pending(void) { /* UI task */
     lv_timer_t *t = lv_display_get_refr_timer(UI.disp);
     __atomic_store_n(&UI.render_pending, t && !lv_timer_get_paused(t), __ATOMIC_SEQ_CST);
@@ -513,6 +519,53 @@ static void handle_input(const umsg_t *m) {
 
 static const ink_activity_t *g_home;
 
+/* Handle one message; *first_cause keeps the first action of the round (a key press, swipe, tap
+ * release or posted call that set a cause; pointer presses and moves are not actions by themselves,
+ * as for a single tap, which counts from its release). */
+static void handle(const umsg_t *m, uint64_t *first_cause, const char **first_tag) {
+    uint64_t before = UI.cause_us;
+    if (m->type == UM_INPUT) handle_input(m);
+    else if (m->type == UM_CALL && m->fn) m->fn(m->arg);
+    bool action = !(m->type == UM_INPUT && m->ev.kind == INK_EV_POINTER && m->ev.phase != INK_PTR_RELEASE);
+    if (action && !*first_cause && UI.cause_us && UI.cause_us != before) {
+        *first_cause = UI.cause_us;
+        *first_tag = UI.cause_tag;
+    }
+}
+
+/* One round of messages, drawn as one frame. Input that queued up while the task was busy (during a
+ * waveform the feeders hold both cores, and drawing a page can take as long as the waveform) is
+ * handled together before anything is drawn, so a burst of page turns shows its last page instead
+ * of every page in turn, and the wait after the last input stays bounded (found by the 2026-11
+ * audit, AUD-002: four turns a second queued up five seconds). A posted call ends the batch: it may
+ * need the frame drawn first ("open with feedback"). The frame counts from the batch's first action. */
+static void handle_round(const umsg_t *first) {
+    uint64_t cause = 0;
+    const char *tag = NULL;
+    int handled = 1;
+    handle(first, &cause, &tag);
+    if (first->type == UM_INPUT) {
+        umsg_t m;
+        while (handled < INPUT_BATCH_MAX && osal_queue_recv(UI.q, &m, 0) == OSAL_OK) {
+            if (m.type != UM_INPUT) {
+                UI.held = m; /* still counted in posts until handled */
+                UI.has_held = true;
+                break;
+            }
+            handle(&m, &cause, &tag);
+            handled++;
+        }
+    }
+    const ink_activity_t *top = UI.depth ? UI.stack[UI.depth - 1].a : NULL;
+    if (top && top->settle) top->settle();
+    if (cause && handled > 1) { /* later input of the batch set newer causes: the frame counts from the first */
+        UI.cause_us = cause;
+        UI.cause_tag = tag;
+    }
+    note_render_pending(); /* before the count drops: see ink_ui_busy */
+    __atomic_sub_fetch(&UI.posts, handled, __ATOMIC_SEQ_CST);
+}
+
 static void ui_task(void *arg) {
     (void)arg;
     lv_init();
@@ -564,11 +617,13 @@ static void ui_task(void *arg) {
             }
         }
         umsg_t m;
-        if (osal_queue_recv(UI.q, &m, timeout) != OSAL_OK) continue;
-        if (m.type == UM_INPUT) handle_input(&m);
-        else if (m.type == UM_CALL && m.fn) m.fn(m.arg);
-        note_render_pending(); /* before the count drops: see ink_ui_busy */
-        __atomic_sub_fetch(&UI.posts, 1, __ATOMIC_SEQ_CST);
+        if (UI.has_held) {
+            m = UI.held;
+            UI.has_held = false;
+        } else if (osal_queue_recv(UI.q, &m, timeout) != OSAL_OK) {
+            continue;
+        }
+        handle_round(&m);
     }
 }
 

@@ -1,0 +1,32 @@
+{
+  "_doc": "Fast page flipping (audit AUD-002): queued turns are merged, the last page is drawn once. Reading at a normal pace is unchanged (reader_basic).",
+  "reader.page_turns": {
+    "min": 60,
+    "max": 60,
+    "why": "every press turns exactly one page: none is lost while the UI is busy"
+  },
+  "reader.turns_coalesced": {
+    "min": 1,
+    "why": "turns that queued up during a waveform were merged (only the last page was rendered)"
+  },
+  "ui.action_to_visible_ms.TEXT.max": {
+    "max": 2500,
+    "why": "bounded wait: the page is stable within 2.5 s of any press, however long the burst (about 2 s with merging; before it grew with the burst, 5-6 s here)"
+  },
+  "ui.action_to_first_change_ms.p95": {
+    "max": 2000,
+    "why": "the panel starts changing within 2 s of a press during the burst"
+  },
+  "display.underruns": {
+    "max": 0,
+    "optional": true
+  },
+  "panic.count": {
+    "max": 0,
+    "optional": true
+  },
+  "warnings.count": {
+    "max": 0,
+    "optional": true
+  }
+}

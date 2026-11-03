@@ -216,7 +216,7 @@ profiles/        设备档案：Plus 悲观档（CI 门槛）、Plus 16 MB、Plu
 | 第一次 | 3 高 8 中 7 低 | [平台与模拟器 §5.2](system/platform-and-simulator.md) |
 | 第二次 | 2 高 3 中、若干低，另 1 个系统缺陷。最重要：送行任务的算力几乎刚好等于扫描速度，照搬上游代码配小队列会花屏，由此提出 D-35 | 同上 §5.3 |
 | 第三次（刷新算法集成） | 1 高：规划不能与扫描重叠。模拟器 3 处缺陷，另有若干低。顺带发现盖板键同时按住时主页键丢失 | [集成报告](research/eink-refresh-integration.md) |
-| 外部全面审计（Codex，2026-11） | 19 条：高 10、中 7、低 2。本机复核全部成立，11 条已修复、3 条部分修复、5 条列为后续事项；复核另有 3 条新发现 | [审计记录](audits/README.md) |
+| 外部全面审计（Codex，2026-11） | 19 条：高 10、中 7、低 2。本机复核全部成立，12 条已修复、3 条部分修复、4 条列为后续事项；复核另有 3 条新发现 | [审计记录](audits/README.md) |
 
 ## 9. 墨水屏刷新：两条路线
 
@@ -268,7 +268,7 @@ PQ-BN 各配置的对比见 [system-comparison.md](research/eink-refresh/integra
 **命令**
 
 ```bash
-cmake -S . -B build && cmake --build build -j && ctest --test-dir build --output-on-failure   # 29 项
+cmake -S . -B build && cmake --build build -j && ctest --test-dir build --output-on-failure   # 30 项
 cmake -S . -B build-werror -DINK_WERROR=ON && cmake --build build-werror -j && ctest --test-dir build-werror
 cmake -S . -B build-asan -DINK_SANITIZE=ON && cmake --build build-asan -j && ctest --test-dir build-asan   # ASan + UBSan
 
@@ -283,12 +283,12 @@ python3 tools/simreport/simreport.py out/reader --lang zh    # HTML 报告：刷
 
 - GitHub Actions（`.github/workflows/sim.yml`）在每次推送 main、`claude/**` 和每个 PR 时运行：带 `-Werror` 的构建与全部测试，再跑 ASan/UBSan。
 - `s31-size.yml` 只能手动触发，用 ESP-IDF 编译基线与上游固件，看静态内存占用。
-- 29 项测试的组成见 [平台与模拟器 §3](system/platform-and-simulator.md)：
+- 30 项测试的组成见 [平台与模拟器 §3](system/platform-and-simulator.md)：
   - 模拟器自检（4 个档案）、死亡测试、两项确定性；
   - 主页、阅读、AI 提问、AI 工具调用、待机等场景；
   - 老化文件系统 + 最坏擦写、断电、上游管线复现、可移植性冒烟；
   - PQ-BN 档案上的场景、两个盖板键同时按住；
-  - 审计复核加的三个回归场景：连续阅读也要落盘、关闭 AI 面板后不放迟到的语音、打不开的书上翻页不崩溃；
+  - 审计复核加的四个回归场景：连续阅读也要落盘、连续快速翻页、关闭 AI 面板后不放迟到的语音、打不开的书上翻页不崩溃；
   - ISS 自检。
 - 预算文件在 `tests/scenarios/*.budget.json`，每条门槛写了理由（`why`）。
 
@@ -307,7 +307,7 @@ python3 tools/simreport/simreport.py out/reader --lang zh    # HTML 报告：刷
 
 **外部审计的后续事项**
 
-- 资源准入与降级、连续翻页的积压、写入回执、内容 ID 与版本、取消贯穿各层、页面版本与请求幂等、听书时的写入等，见[审计记录](audits/README.md) F-1～F-11。
+- 资源准入与降级、写入回执、内容 ID 与版本、取消贯穿各层、页面版本与请求幂等、听书时的写入等，见[审计记录](audits/README.md) F-1～F-11（F-2 连续翻页的积压已完成）。
 
 **估算项与未核实的硬件**
 

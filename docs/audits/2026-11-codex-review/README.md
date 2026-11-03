@@ -34,4 +34,4 @@ cc -std=c11 -Iplatform/include -Isystem/include -Ithird_party/jsmn -I$L -Isystem
 
 复核时（修复前）两个变异都通过了全部预算；补上 `display.pqbn.idle_advance_phases` 与 `input.key_delivery_ms.max` 两条门槛后都会失败。
 
-**另外三个复现已经变成 CI 场景**：`tests/scenarios/reader_continuous`（AUD-004）、`ai_dismiss`（AUD-006）、`reader_empty`（AUD-009，内容目录 `tests/content-bad`）。在修复前的代码上，它们分别是“没有落盘”、“关闭后仍播放 10740 ms”、SIGSEGV 退出。
+**另外四个复现已经变成 CI 场景**：`tests/scenarios/reader_continuous`（AUD-004）、`reader_rapid`（AUD-002）、`ai_dismiss`（AUD-006）、`reader_empty`（AUD-009，内容目录 `tests/content-bad`）。在修复前的代码上，它们分别是“没有落盘”、“60 次只翻了 47 页、最长等 5855 ms”、“关闭后仍播放 10740 ms”、SIGSEGV 退出。
