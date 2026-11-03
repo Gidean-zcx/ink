@@ -1039,9 +1039,12 @@ static void display_cut_checks(void) {
     /* the screen's power left off (audit AUD5-001): updates keep failing until it is back; the
      * power-up does not take P05 over (upstream's camera path leaves the shared outputs alone too) */
     metalio_board_set(0, MB_P0_CAM_SCR, 0);
+    uint64_t t_off = osal_now_us();
     bool off1 = update_and_wait(px, &area) && !g_upd_ok;
     bool off2 = update_and_wait(px, &area) && !g_upd_ok;
-    CHECK(off1 && off2, "with the screen's power P05 left off, update after update fails");
+    uint64_t took_off = osal_now_us() - t_off; /* no wait for P05 when no wake is restoring it (AUD7-004) */
+    CHECK(off1 && off2 && took_off < 250000, "with the screen's power P05 left off, update after update fails, at once (%llu ms for two)",
+          (unsigned long long)(took_off / 1000));
     metalio_board_set(0, MB_P0_CAM_SCR, MB_P0_CAM_SCR);
     CHECK(update_and_wait(px, &area) && g_upd_ok, "and they work again once P05 is back");
     /* after a drive that lost its supply the panel's state is unknown: the next update redraws the

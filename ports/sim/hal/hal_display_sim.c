@@ -434,7 +434,8 @@ static void board_init(void) {
                           .io_unlock = metalio_board_unlock,
                           .pmic = hal_i2c_device(0, TPS65185_ADDR, "pmic"),
                           .vcom_mv = METALIO_EPD_VCOM_MV,
-                          .gate_output = gate_output};
+                          .gate_output = gate_output,
+                          .screen_coming = metalio_board_rails_cut};
 }
 
 /* At waveform start: the panel must see good rails and VCOM (checked by the PMIC model). */

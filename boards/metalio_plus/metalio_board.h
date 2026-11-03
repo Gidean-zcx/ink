@@ -68,6 +68,8 @@ hal_i2c_status_t metalio_board_cut_rails(bool keep_shared_power);
 hal_i2c_status_t metalio_board_restore_keys(uint8_t *p0, uint8_t *p1);
 /** The shared rails back in the official order: P14, then P05 (upstream sleep_restore_rails). */
 hal_i2c_status_t metalio_board_restore_rails(void);
+/** Cut by metalio_board_cut_rails and not restored yet: a wake's restore is (or will be) under way. */
+bool metalio_board_rails_cut(void);
 /** The output latch of a port as last written (locked). */
 uint8_t metalio_board_output(int port);
 /** Changes each time P14 comes back on (any context): the modem, the Bluetooth audio chip and the

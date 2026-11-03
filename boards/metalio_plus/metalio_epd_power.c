@@ -48,13 +48,17 @@ static epd_power_result_t power_on_once(epd_power_t *p) {
 
     /* the screen's power, on from here to the end of the waveform or the record says otherwise. Right
      * after a wake the keys come back before the rails (as upstream) and an early power-up (a wake-up
-     * hint) can be here first: wait for P05 a little, on what the driver last wrote (no bus traffic) */
+     * hint) can be here first: while the board says the rails are on their way back, wait for P05 up
+     * to SCREEN_WAIT_MS, on what the driver last wrote (no bus traffic) */
+    const uint64_t until = osal_now_us() + SCREEN_WAIT_MS * 1000ull;
     bool written_on = false;
-    for (int i = 0; i < SCREEN_WAIT_MS / 10 && !written_on; i++) {
+    for (;;) {
         io_lock(p);
         written_on = p->ioexp->out[0] & EPD_PWR_SCREEN;
         io_unlock(p);
-        if (!written_on) osal_task_delay_us(10000);
+        uint64_t now = osal_now_us();
+        if (written_on || now >= until || !p->screen_coming || !p->screen_coming()) break;
+        osal_task_delay_us(until - now < 10000 ? until - now : 10000);
     }
     io_lock(p);
     p->ioexp->changed[0] &= (uint8_t)~EPD_PWR_SCREEN;
