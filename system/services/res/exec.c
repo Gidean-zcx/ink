@@ -15,7 +15,7 @@
 #define MEDIA_STACK 8192 /* image decoding helpers; PSRAM */
 #define MEDIA_PRIO 4     /* below the UI: input stays responsive while a remote screen decodes */
 #define MEDIA_QUEUE 8
-#define BG_STACK 6144
+#define BG_STACK 8192 /* PSRAM: AT replies (settings applied here) and job steps; gcc host estimates reach ~6.8 KiB */
 #define BG_PRIO 1 /* above idle only */
 #define BG_QUEUE 16
 

@@ -19,7 +19,7 @@
 #include "ink/sys/settings.h"
 #include "ink/sys/state.h"
 
-#define COMM_STACK 6144 /* PSRAM: never touches the flash; AT replies and SMS text are parsed on it */
+#define COMM_STACK 8192 /* PSRAM: never touches the flash; AT replies and SMS text are parsed on it */
 #define COMM_PRIO 3
 #define MSG_KEEP 16
 #define STATUS_DELAY_US 5000000ull /* first look at the modem, after it had time to register */

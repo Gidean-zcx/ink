@@ -694,6 +694,6 @@ static void systest_task(void *arg) {
 }
 
 void ink_main(void) {
-    osal_task_cfg_t cfg = {.name = "systest", .fn = systest_task, .stack_bytes = 6144, .priority = OSAL_PRIO_NORMAL, .core = -1};
+    osal_task_cfg_t cfg = {.name = "systest", .fn = systest_task, .stack_bytes = 8192, .priority = OSAL_PRIO_NORMAL, .core = -1};
     CHECK(osal_task_create(&cfg, NULL) == OSAL_OK, "create the system test task");
 }
