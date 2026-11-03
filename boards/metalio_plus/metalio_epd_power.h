@@ -63,7 +63,8 @@ typedef struct {
 
 /** Rails and VCOM up, gate output enabled; retries a failed attempt up to EPD_PWR_RETRIES times.
  *  Needs the screen's power P05 on and leaves it alone otherwise (upstream's camera path does the same
- *  with the shared outputs): EPD_POWER_NO_SCREEN, at once. */
+ *  with the shared outputs): waits up to 300 ms for it (a wake restores the keys first, then the
+ *  rails), then EPD_POWER_NO_SCREEN, without retries. */
 epd_power_result_t epd_power_on(epd_power_t *p);
 
 /** Gate output off, rails down, PMIC to SLEEP. */
