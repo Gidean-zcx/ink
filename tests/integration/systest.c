@@ -674,6 +674,22 @@ static void lz4_checks(void) {
     CHECK(ink_lz4_decode(zero, sizeof zero, dec, sizeof dec) < 0, "a zero offset is refused");
 }
 
+/* ---- step 8: the hub's directory (detailed design §9) ---- */
+
+static void dir_checks(void) {
+    for (int w = 0; w < 100 && !ink_cap_available("tts.speak"); w++) osal_task_delay_us(100000);
+    CHECK(ink_cap_available("tts.speak") && ink_cap_available("hub/echo") && ink_cap_available("browser.session"),
+          "the hub's server capabilities are available while it is reachable");
+    CHECK(!ink_cap_available("hub/nope") && !ink_cap_available("nope"), "what neither has is not");
+    ink_args_t a;
+    ink_args_init(&a);
+    ink_args_str(&a, "q", "hi");
+    ink_call_opts_t o = {.src = INK_SRC_APP, .reply_exec = INK_EXEC_DIRECT, .done = bus_done};
+    int before = g_bus_done;
+    CHECK(ink_cap_call("echo", &a, &o) == 0 && wait_done(before + 1, 15000000) && g_bus_rc.status == INK_RC_DONE && strstr(g_bus_rc.say, "\"q\":\"hi\""),
+          "a capability only the hub has is called by its bare name (%s)", g_bus_rc.say);
+}
+
 /* Children: last, a child cannot switch back to an adult without the PIN. */
 static void child_checks(void) {
     ink_receipt_t rc;
@@ -692,7 +708,7 @@ static void systest_task(void *arg) {
     (void)arg;
     if (ink_display_init() != 0 || ink_storage_init() != 0 || ink_cap_init() != 0 || ink_exec_init() != 0 || ink_res_init() != 0 || ink_storage_reclaimable() != 0 || ink_state_init() != 0 ||
         ink_settings_init() != 0 || ink_power_init() != 0 || ink_net_init() != 0 || ink_light_init() != 0 ||
-        ink_hub_init("wss://hub.local/v1/device") != 0 || ink_rt_init() != 0 || ink_audio_init() != 0 || ink_camera_init() != 0 || ink_comm_init() != 0) {
+        ink_hub_init("wss://hub.local/v1/device") != 0 || ink_rt_init() != 0 || ink_tools_init() != 0 || ink_audio_init() != 0 || ink_camera_init() != 0 || ink_comm_init() != 0) {
         CHECK(0, "the system services start");
         return;
     }
@@ -708,6 +724,7 @@ static void systest_task(void *arg) {
     res_checks();
     rt_checks();
     lz4_checks();
+    dir_checks();
     child_checks();
     ink_probe_mark("systest-done");
 }

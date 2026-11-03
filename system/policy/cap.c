@@ -44,9 +44,15 @@ const ink_cap_t *ink_cap_find(const char *id) {
 
 static bool on_its_page(const ink_cap_t *c) { return !c->activity || !strcmp(ink_ui_top_name(), c->activity); }
 
+static bool in_directory(const char *id); /* the hub's directory, below */
+
+/* Local first; otherwise what the hub offers, while it is reachable (architecture §4.6: the
+ * device's capability set is its own plus the hub's, as of now). */
 bool ink_cap_available(const char *id) {
+    if (!strncmp(id, "hub/", 4)) return ink_hub_online() && in_directory(id + 4);
     const ink_cap_t *c = ink_cap_find(id);
-    return c && on_its_page(c);
+    if (c) return on_its_page(c);
+    return ink_hub_online() && in_directory(id);
 }
 
 /* Who may see it: the AI and the hub only what is exposed to them; touch, keys and the system
@@ -136,10 +142,19 @@ typedef struct {
     ink_receipt_t rc;
 } seen_t;
 
+#define DIR_MAX 32 /* server capabilities the hub offers (architecture §5.3) */
+
+typedef struct {
+    char id[40];
+    uint8_t form;
+} remote_cap_t;
+
 static struct {
     osal_mutex_t *lock;
     pending_t *pool;
     seen_t *seen;
+    remote_cap_t *dir; /* DIR_MAX, PSRAM: the hub's directory as last fetched */
+    int ndir;
     int seen_next;
     osal_timer_t *timer;
     uint64_t timer_due;
@@ -148,16 +163,26 @@ static struct {
 
 static void timeout_cb(void *arg);
 
+static bool in_directory(const char *id) {
+    if (!CB.lock) return false;
+    osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+    bool hit = false;
+    for (int i = 0; i < CB.ndir && !hit; i++) hit = !strcmp(CB.dir[i].id, id);
+    osal_mutex_unlock(CB.lock);
+    return hit;
+}
+
 int ink_cap_init(void) {
     if (CB.pool) return 0;
     const char *prev = osal_mem_tag("cap");
     CB.lock = osal_mutex_create();
     CB.pool = osal_calloc(POOL_N, sizeof(pending_t), OSAL_MEM_EXTERNAL);
     CB.seen = osal_calloc(SEEN_N, sizeof(seen_t), OSAL_MEM_EXTERNAL);
+    CB.dir = osal_calloc(DIR_MAX, sizeof(remote_cap_t), OSAL_MEM_EXTERNAL);
     CB.timer = osal_timer_create("cap", timeout_cb, NULL);
     osal_mem_tag(prev);
     CB.boot_tag = (uint32_t)(osal_wall_us() / 1000000);
-    return CB.lock && CB.pool && CB.seen && CB.timer ? 0 : -1;
+    return CB.lock && CB.pool && CB.seen && CB.dir && CB.timer ? 0 : -1;
 }
 
 static pending_t *alloc(void) {
@@ -362,6 +387,7 @@ int ink_cap_call(const char *addr, const ink_args_t *args, const ink_call_opts_t
     if (!strncmp(addr, "hub/", 4)) return remote_call(addr + 4, args, o);
     if (o->request_id && replay(o->request_id, o)) return 0;
     const ink_cap_t *c = ink_cap_find(addr);
+    if (!c && in_directory(addr)) return remote_call(addr, args, o); /* not here, but the hub has it */
     pending_t *p = prepare(addr, c, args, o);
     if (!p) return -1;
     ink_exec_t e = c ? c->exec : INK_EXEC_DIRECT;
@@ -726,4 +752,49 @@ static void on_tools(void *ctx, int64_t id, const char *method, const ink_json_t
     ink_ui_post(tool_run, t);
 }
 
-int ink_tools_init(void) { return ink_hub_on_request("tools/", on_tools, NULL); }
+/* ------------------------------------------------------------ the hub's directory (step 8) */
+
+static void dir_reply(void *ctx, int status, const ink_json_t *j, int result) { /* hub task */
+    (void)ctx;
+    if (status != INK_HUB_OK) {
+        ink_probe_count("cap.directory_failed");
+        return;
+    }
+    int list = ink_json_find(j, result, "tools");
+    if (list < 0 || j->tok[list].type != 2) return;
+    remote_cap_t got[DIR_MAX];
+    int n = 0, t = list + 1;
+    for (int k = 0; k < j->tok[list].size && t < j->ntok && n < DIR_MAX; k++) {
+        int end = j->tok[t].end, next = t + 1;
+        while (next < j->ntok && j->tok[next].start < end) next++;
+        char form[12] = "";
+        if (ink_json_str(j, ink_json_find(j, t, "name"), got[n].id, sizeof got[n].id) > 0) {
+            ink_json_str(j, ink_json_find(j, t, "form"), form, sizeof form);
+            got[n].form = !strcmp(form, "session") ? INK_FORM_SESSION : !strcmp(form, "stream") ? INK_FORM_STREAM : INK_FORM_CALL;
+            n++;
+        }
+        t = next;
+    }
+    osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+    memcpy(CB.dir, got, sizeof got[0] * (size_t)n);
+    CB.ndir = n;
+    osal_mutex_unlock(CB.lock);
+    ink_probe_value("cap.directory_size", n);
+}
+
+static void dir_fetch(void *ctx) { /* hub task: on every (re)connection */
+    (void)ctx;
+    ink_hub_call("caps/list", "{}", 10000000, dir_reply, NULL);
+}
+
+static void on_caps_changed(void *ctx, const char *method, const ink_json_t *j, int params) { /* hub task */
+    (void)ctx;
+    (void)j;
+    (void)params;
+    if (!strcmp(method, "caps/changed")) dir_fetch(NULL);
+}
+
+int ink_tools_init(void) {
+    if (ink_hub_on_online(dir_fetch, NULL) || ink_hub_subscribe("caps/", on_caps_changed, NULL)) return -1;
+    return ink_hub_on_request("tools/", on_tools, NULL);
+}

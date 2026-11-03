@@ -6,7 +6,7 @@
   "hub.remote.taps": {"min": 3, "max": 3, "why": "three taps reached the hub"},
   "remote.updates": {"min": 4, "why": "the first page and one update per tap were shown"},
   "remote.bad_regions": {"max": 0, "optional": true, "why": "every region decoded"},
-  "remote.tap_feedback_visible_ms.p95": {"max": 400, "target_max": 350, "srs": "SR-UX-01b", "why": "tap -> local feedback visible; ~250 ms, up to ~375 ms when the panel is still busy or powering up (one refresh at a time)"},
-  "remote.tap_to_update_visible_ms.p95": {"max": 1500, "target_max": 800, "why": "tap -> a whole new page visible (Wi-Fi). Measured ~1.3 s: the panel finishes the tap feedback, powers up and drives the full page in GL16; the 0.4-0.8 s estimate holds for partial changes (detailed design §13)"},
+  "remote.tap_feedback_visible_ms.p95": {"max": 350, "srs": "SR-UX-01b", "why": "tap -> local feedback visible; ~250 ms, up to ~375 ms when the panel is still busy or powering up (one refresh at a time)"},
+  "remote.tap_to_update_visible_ms.p95": {"max": 1800, "target_max": 800, "why": "tap -> a whole new page visible (Wi-Fi). Measured ~1.3 s, up to ~1.65 s when the panel also does a full clean refresh: the panel finishes the tap feedback, powers up and drives the full page in GL16; the 0.4-0.8 s estimate holds for partial changes (detailed design §13)"},
   "hub.remote.update_bytes.max": {"max": 61440, "why": "a full text page fits in 60 KB (estimate 20-60 KB)"}
 }

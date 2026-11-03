@@ -3,9 +3,9 @@
 # answered locally at once and by the hub after its render.
 @3s      mic   speech
 +0       key   ai 1200ms         # "打开网页看看今天的新闻" -> the hub calls remote.open
-+14s     snap  remote-first      # the answer sheet covers the lower half; the links are above it
-+0       tap   560 85            # the "next" link
-+3s      snap  remote-next
-+0       tap   560 85            # next again
-+3s      tap   100 85            # the "previous" link
-+4s      end
++17s     snap  remote-first      # the answer sheet covers the lower half; the links are above it
++0       tap   560 85 150ms      # the "next" link (held 150 ms: the touch controller may be in its slow scan)
++6s      snap  remote-next       # (taps 6 s apart: each finds the panel idle)
++0       tap   560 85 150ms      # next again
++6s      tap   100 85 150ms      # the "previous" link
++6s      end
