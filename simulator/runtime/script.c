@@ -11,7 +11,7 @@
  *   +0       battery 15 [charging]
  *   +3s      powercut                 # tear in-flight flash op, save image, stop
  *   +3s      powercut write 2         # cut during the 2nd flash program/erase from now
- *   +1s      mic   speech|silence|noise  # what the microphone hears
+ *   +1s      mic   speech|silence|noise|wake  # what the microphone hears (wake: the wake word, said like speech)
  *   +0       net   wifi | lte | none   # shorthand for the environment: that network appears (none: all gone)
  *   +0       wifi  on|off [rssi]        # a known Wi-Fi network in range, e.g. wifi on -70
  *   +0       cell  on|off [rsrp]        # cellular coverage, e.g. cell on -105
@@ -201,7 +201,7 @@ int sim_script_load(const char *path, char *err, size_t errlen) {
             ok = n >= 3 && (!strcmp(tok[2], "lte") || !strcmp(tok[2], "wifi") || !strcmp(tok[2], "none"));
             if (ok) snprintf(push(t, A_NET)->text, 16, "%s", tok[2]);
         } else if (!strcmp(cmd, "mic")) {
-            ok = n >= 3 && (!strcmp(tok[2], "speech") || !strcmp(tok[2], "silence") || !strcmp(tok[2], "noise"));
+            ok = n >= 3 && (!strcmp(tok[2], "speech") || !strcmp(tok[2], "silence") || !strcmp(tok[2], "noise") || !strcmp(tok[2], "wake"));
             if (ok) snprintf(push(t, A_MIC)->text, 16, "%s", tok[2]);
         } else if (!strcmp(cmd, "sim")) {
             static const char *const kinds[] = {"none", "data", "sms", "voice"};

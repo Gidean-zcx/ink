@@ -99,7 +99,7 @@ static const cJSON *rule_for(const char *method) {
 
 static void send_json(struct hal_ws *ws, uint64_t t, cJSON *msg) {
     char *txt = cJSON_PrintUnformatted(msg);
-    sim_net_hub_send(ws, t, txt, strlen(txt), false);
+    sim_net_hub_send_at(ws, t, txt, strlen(txt), false);
     sim_host_free(txt);
 }
 
@@ -182,7 +182,7 @@ static void finish_listen(int i, uint64_t at) {
             pkt[8] = pkt[9] = 0;
             double syl = 0.5 + 0.5 * sin(seq * 0.9); /* syllable rhythm */
             int n = sim_opus_fake_packet(pkt + 10, 200, 170.0 + 40.0 * sin(seq * 0.23), 1500.0 + 4000.0 * syl, 180, seq * 2654435761u);
-            sim_net_hub_send(ws, tts_at, pkt, (size_t)(10 + n), true);
+            sim_net_hub_send_at(ws, tts_at, pkt, (size_t)(10 + n), true);
             tts_at += (uint64_t)(SIM_MS(60) / speed);
             seq++;
         }

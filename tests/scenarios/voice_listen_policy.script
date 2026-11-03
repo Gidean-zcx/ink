@@ -1,0 +1,6 @@
+# When the device listens (D-52, default "while the screen is on"): it listens
+# from start-up; locked, it stops listening and may light-sleep; woken, it
+# listens again. Hands-free profile (voice front end modelled).
+@3s      key   power             # lock
++20s     key   power             # wake up
++5s      end

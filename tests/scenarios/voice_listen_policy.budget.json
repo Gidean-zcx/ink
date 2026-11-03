@@ -1,0 +1,8 @@
+{
+  "_doc": "Hands-free listening follows the setting voice.handsfree (default screen_on) and the lock (D-52).",
+  "panic.count": {"max": 0, "optional": true},
+  "warnings.count": {"max": 0, "optional": true},
+  "audio.listen_on": {"min": 2, "max": 2, "why": "listening at start-up and again after the wake"},
+  "audio.listen_off": {"min": 1, "max": 1, "why": "not listening while locked"},
+  "power.sleeps": {"min": 1, "why": "locked and not listening, the chip light-sleeps"}
+}

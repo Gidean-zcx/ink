@@ -25,7 +25,10 @@
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/cap.h"
+#include "ink/sys/exec.h"
 #include "ink/sys/rt.h"
+#include "ink/sys/settings.h"
+#include "ink/sys/state.h"
 #include "ink/sys/ai.h"
 #include "ink/sys/audio.h"
 #include "ink/sys/font.h"
@@ -431,6 +434,9 @@ static int request(const char *method, bool voice) {
 
 static bool voice_ok(void) { return ink_audio_has_mic(); }
 
+/* What the listening tone measures: from the key press, or from the wake word / the interruption. */
+static const char *tone_probe = "ai.press_to_tone_heard_ms";
+
 static const ink_rt_handler_t AI_RT = {.on_frame = on_rt_frame};
 
 void ink_ai_key(bool pressed, uint64_t t_us) {
@@ -446,7 +452,7 @@ void ink_ai_key(bool pressed, uint64_t t_us) {
         osal_mutex_unlock(AI.lock);
         AI.mic_failed = AI.speech_failed = false;
         ink_audio_stop_all(); /* talking over the previous answer interrupts it */
-        ink_audio_tone(INK_TONE_LISTEN, t_us, "ai.press_to_tone_heard_ms");
+        ink_audio_tone(INK_TONE_LISTEN, t_us, tone_probe);
         ink_hub_demand(); /* pre-connect while the user speaks */
         if (AI.open && !AI.asking) {
             lv_label_set_text(AI.answer, "");
@@ -508,6 +514,58 @@ void ink_ai_key(bool pressed, uint64_t t_us) {
     AI.req_id = request("ai.ask", false);
 }
 
+/* ------------------------------------------------------------- hands-free (R-047) */
+
+typedef struct {
+    ink_listen_ev_t ev;
+    uint64_t t;
+} listen_job_t;
+
+static bool g_handsfree_turn; /* UI task: this turn began with the wake word or an interruption */
+
+static void listen_job(void *arg) { /* UI task: the voice front end's events drive the same turn as the AI key */
+    listen_job_t *j = arg;
+    if (j->ev == INK_LISTEN_WAKE && g_handsfree_turn) j->ev = INK_LISTEN_SPEECH; /* already listening to this one */
+    if (j->ev == INK_LISTEN_WAKE || j->ev == INK_LISTEN_BARGE) {
+        g_handsfree_turn = true;
+        ink_probe_count(j->ev == INK_LISTEN_WAKE ? "ai.wakes" : "ai.barge_ins");
+        tone_probe = j->ev == INK_LISTEN_WAKE ? "ai.wake_to_tone_heard_ms" : "ai.barge_to_tone_heard_ms";
+        ink_ai_key(true, j->t);
+        tone_probe = "ai.press_to_tone_heard_ms";
+    } else if (j->ev == INK_LISTEN_QUIET && g_handsfree_turn) { /* said what they wanted: like releasing the key */
+        g_handsfree_turn = false;
+        ink_ai_key(false, j->t);
+    }
+    osal_free(j);
+}
+
+static void on_listen(void *ctx, ink_listen_ev_t ev, uint64_t t_us) { /* audio task */
+    (void)ctx;
+    if (ev == INK_LISTEN_SPEECH) return; /* speech without the wake word is not for the device */
+    listen_job_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
+    if (!j) return;
+    j->ev = ev;
+    j->t = t_us;
+    if (ink_exec_post(INK_EXEC_UI, listen_job, j) != 0) osal_free(j);
+}
+
+/* Listen when the setting says so (D-52: by default while the screen is on and unlocked). */
+static void listen_policy(void *unused) {
+    (void)unused;
+    int64_t mode = ink_setting_get("voice.handsfree"); /* 0 screen on, 1 always, 2 off */
+    char ps[16] = "";
+    ink_state_get_str(ink_state_find("power.state"), ps, sizeof ps);
+    bool want = ink_audio_can_listen() && mode != 2 && (mode == 1 || strcmp(ps, "locked") != 0);
+    ink_audio_listen(want, on_listen, NULL);
+}
+
+static void on_listen_inputs(void *ctx, int h, const char *id) { /* power.state or voice.handsfree changed */
+    (void)ctx;
+    (void)h;
+    (void)id;
+    if (ink_exec_post(INK_EXEC_UI, listen_policy, NULL) != 0) listen_policy(NULL);
+}
+
 int ink_ai_init(void) {
     const char *prev = osal_mem_tag("ai");
     AI.answer_text = osal_malloc(ANSWER_CAP, OSAL_MEM_EXTERNAL);
@@ -517,5 +575,8 @@ int ink_ai_init(void) {
     AI.answer_text[0] = 0;
     AI.tts_for = AI.tts_done_for = -1;
     ink_audio_on_stream_failed(on_speech_failed, NULL);
+    ink_state_watch("power.state", on_listen_inputs, NULL, INK_EXEC_DIRECT);
+    ink_settings_watch("voice.handsfree", on_listen_inputs, NULL, INK_EXEC_DIRECT);
+    listen_policy(NULL);
     return ink_hub_subscribe("ai.", on_notify, NULL);
 }

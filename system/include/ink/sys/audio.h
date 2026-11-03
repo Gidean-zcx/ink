@@ -73,6 +73,19 @@ void ink_audio_on_stream_failed(ink_audio_fail_fn fn, void *ctx);
  * under that name (e.g. "ai.press_to_tone_heard_ms").
  */
 void ink_audio_tone(ink_tone_t tone, uint64_t cause_us, const char *probe);
+/*
+ * Hands-free listening (R-047, D-52): the microphone stays open and the voice front end (hal_afe)
+ * hears the wake word and speech, also while an answer plays (echo cancelled). While a voice
+ * answer plays, speech stops it at once, here in the audio task (barge-in), and BARGE follows.
+ * A capture begun while listening shares the microphone and starts from that moment. Events run
+ * in the audio task: keep them short. The chip stays awake while listening.
+ */
+typedef enum { INK_LISTEN_WAKE = 1, INK_LISTEN_SPEECH, INK_LISTEN_QUIET, INK_LISTEN_BARGE } ink_listen_ev_t;
+typedef void (*ink_audio_listen_fn)(void *ctx, ink_listen_ev_t ev, uint64_t t_us);
+/** The device can listen hands-free (a microphone and a voice front end). */
+bool ink_audio_can_listen(void);
+int ink_audio_listen(bool on, ink_audio_listen_fn fn, void *ctx);
+
 /** Speaker volume 0..100 (software gain). */
 void ink_audio_set_volume(int percent);
 

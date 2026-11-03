@@ -1,0 +1,12 @@
+# Hands-free voice (R-047, D-52): the wake word starts a turn without a key, the
+# end of speech ends it; speaking while the answer plays stops it at once and
+# starts the next turn (barge-in). Hands-free profile (voice front end modelled).
+@3s      mic   silence
++1s      mic   wake              # the wake word ...
++700ms   mic   speech            # ... then the question
++1500ms  mic   silence           # done: the turn ends after the voice activity hangover
++5s      snap  first-answer
++0       mic   speech            # talking over the answer interrupts it
++1500ms  mic   silence
++9s      snap  second-answer
++20s     end

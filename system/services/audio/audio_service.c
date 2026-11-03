@@ -42,6 +42,7 @@
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/audio.h"
+#include "ink/hal_afe.h"
 #include "ink/sys/settings.h"
 #include "ink/sys/state.h"
 #include "ink/sys/power.h"
@@ -76,6 +77,12 @@ static struct {
     ink_audio_frame_fn cap_fn;
     void *cap_ctx;
     int16_t *ring; /* CAP_RING samples, PSRAM */
+    /* hands-free listening (R-047): the microphone stays open for the voice front end */
+    bool listen_on, afe_speech;
+    ink_audio_listen_fn listen_fn;
+    void *listen_ctx;
+    int16_t *ref_ring;  /* CAP_RING samples of what the speaker played, PSRAM (allocated on first listen) */
+    int16_t *ref_frame; /* FRAME samples */
     uint32_t rd, wr; /* sample counters (mod CAP_RING when indexing) */
     uint32_t cap_seq;
     hal_opus_enc_t *enc;
@@ -106,7 +113,7 @@ static struct {
     const char *stream_probe; /* the current stream's "first sample heard" probe (until used) */
     uint64_t stream_cause;
     uint64_t heard_cause;
-    bool holding_writes;
+    bool holding_writes, holding_awake;
     bool boosting;
     hal_cpu_boost_t *boost;
 } AU;
@@ -122,8 +129,9 @@ static void capture_cb(void *ctx, const int16_t *mic, const int16_t *ref, int sa
     (void)ref;
     (void)t_us;
     lock();
-    if (AU.cap_on && !AU.cap_ending) {
+    if ((AU.cap_on && !AU.cap_ending) || AU.listen_on) {
         if (lost > 0) ink_probe_value("audio.capture_gap_ms", lost * 1000.0 / HAL_AUDIO_RATE);
+        bool with_ref = AU.listen_on && AU.ref_ring;
         for (int pass = 0; pass < 2; pass++) {
             int n = pass ? samples : (lost > CAP_RING / 4 ? CAP_RING / 4 : lost);
             for (int i = 0; i < n; i++) {
@@ -131,6 +139,7 @@ static void capture_cb(void *ctx, const int16_t *mic, const int16_t *ref, int sa
                     AU.rd++; /* ring full (the encoder fell 2 s behind): drop the oldest */
                     ink_probe_count("audio.capture_overflow_samples");
                 }
+                if (with_ref) AU.ref_ring[AU.wr % CAP_RING] = pass && ref ? ref[i] : 0;
                 AU.ring[AU.wr++ % CAP_RING] = pass ? mic[i] : 0;
             }
         }
@@ -141,8 +150,43 @@ static void capture_cb(void *ctx, const int16_t *mic, const int16_t *ref, int sa
 
 static bool take_frame(int16_t *out) { /* under lock */
     if (AU.wr - AU.rd < FRAME) return false;
-    for (int i = 0; i < FRAME; i++) out[i] = AU.ring[AU.rd++ % CAP_RING];
+    bool ref = AU.listen_on && AU.ref_ring;
+    for (int i = 0; i < FRAME; i++) {
+        if (ref) AU.ref_frame[i] = AU.ref_ring[AU.rd % CAP_RING];
+        out[i] = AU.ring[AU.rd++ % CAP_RING];
+    }
     return true;
+}
+
+static void close_output(bool drain);
+static void free_jb(void);
+
+static void listen_event(ink_listen_ev_t ev, uint64_t t_us) {
+    if (AU.listen_fn) AU.listen_fn(AU.listen_ctx, ev, t_us);
+}
+
+/* One frame through the voice front end: wake word, speech edges, barge-in. Audio task. */
+static void afe_step(const int16_t *frame) {
+    hal_afe_result_t r;
+    uint64_t now = osal_now_us();
+    hal_afe_feed(frame, AU.ref_frame, FRAME, now, &r);
+    if (r.wake) listen_event(INK_LISTEN_WAKE, now);
+    if (r.speech && !AU.afe_speech) {
+        lock();
+        bool answer = AU.stream && AU.prio == INK_AUDIO_PRIO_VOICE; /* an answer is playing: speech interrupts it */
+        if (answer) {
+            free_jb();
+            AU.stream = 0;
+            AU.finishing = AU.started = false;
+        }
+        unlock();
+        if (answer) {
+            close_output(false); /* stop now, not after the DMA ring drained */
+            ink_probe_value("ai.barge_to_stop_ms", (double)(osal_now_us() - r.speech_since_us) / 1000.0);
+            listen_event(INK_LISTEN_BARGE, r.speech_since_us);
+        } else listen_event(INK_LISTEN_SPEECH, r.speech_since_us);
+    } else if (!r.speech && AU.afe_speech) listen_event(INK_LISTEN_QUIET, now);
+    AU.afe_speech = r.speech;
 }
 
 static void encode_and_deliver(const int16_t *frame) {
@@ -154,19 +198,18 @@ static void encode_and_deliver(const int16_t *frame) {
 /* Encode one frame, or finish an ending capture. Returns true if there may be more to encode. */
 static bool capture_step(int16_t *scratch) {
     lock();
-    bool on = AU.cap_on, ending = AU.cap_ending, got = on && take_frame(scratch);
+    bool on = AU.cap_on, ending = AU.cap_ending, listen = AU.listen_on, got = (on || listen) && take_frame(scratch);
     uint32_t left = AU.wr - AU.rd;
-    if (!got && on && ending) { /* flush the tail (padded) and signal the end */
+    if (!got && on && ending && !listen) { /* flush the tail (padded) and signal the end */
         for (int i = 0; i < FRAME; i++) scratch[i] = i < (int)left ? AU.ring[AU.rd++ % CAP_RING] : 0;
     }
     unlock();
-    if (got) {
-        encode_and_deliver(scratch);
-        return true;
-    }
+    if (got && listen) afe_step(scratch);
+    if (got && on) encode_and_deliver(scratch);
+    if (got && !(on && ending && listen)) return true; /* listening: the capture ends right here */
     if (on && ending) {
-        if (left) encode_and_deliver(scratch);
-        hal_audio_capture_stop();
+        if (!got && !listen && left) encode_and_deliver(scratch);
+        if (!listen) hal_audio_capture_stop(); /* listening keeps the microphone */
         if (AU.cap_fn) AU.cap_fn(AU.cap_ctx, NULL, 0, AU.cap_seq);
         lock();
         AU.cap_on = AU.cap_ending = false;
@@ -419,12 +462,16 @@ static void service_playback(void) {
 static void update_write_hold(void) {
     lock();
     bool want = AU.cap_on || AU.stream || AU.out_open;
-    bool codec = AU.cap_on || AU.stream;
+    bool awake = want || AU.listen_on; /* listening keeps the chip up but lets the flash be written (a gap, not a stop) */
+    bool codec = AU.cap_on || AU.stream || AU.listen_on;
     unlock();
     if (want != AU.holding_writes) {
         AU.holding_writes = want;
         ink_storage_hold_writes(want);
-        if (want) ink_power_hold(INK_NEED_AUDIO);
+    }
+    if (awake != AU.holding_awake) {
+        AU.holding_awake = awake;
+        if (awake) ink_power_hold(INK_NEED_AUDIO);
         else ink_power_release(INK_NEED_AUDIO);
     }
     if (codec != AU.boosting) {
@@ -460,7 +507,7 @@ static void audio_task(void *arg) {
     if (!scratch) osal_panic("audio: no memory for the capture scratch buffer");
     for (;;) {
         lock();
-        bool active = AU.cap_on || AU.stream || AU.tone_pending || AU.out_open || AU.pcm_off < AU.pcm_len;
+        bool active = AU.cap_on || AU.listen_on || AU.stream || AU.tone_pending || AU.out_open || AU.pcm_off < AU.pcm_len;
         unlock();
         osal_sem_take(AU.wake, active ? AU_TICK_US : OSAL_WAIT_FOREVER);
         /* the speaker first and again after every encoded frame: the 60 ms DMA ring must not wait
@@ -511,6 +558,50 @@ int ink_audio_init(void) {
     return osal_task_create(&cfg, &AU.task) == OSAL_OK ? 0 : -1;
 }
 
+bool ink_audio_can_listen(void) { return AU.info.has_mic && AU.task && hal_afe_available(); }
+
+int ink_audio_listen(bool on, ink_audio_listen_fn fn, void *ctx) {
+    if (!ink_audio_can_listen()) return -1;
+    lock();
+    bool was = AU.listen_on, mic = AU.cap_on;
+    unlock();
+    if (on == was) return 0;
+    if (on) {
+        if (!AU.ref_ring) {
+            const char *prev = osal_mem_tag("audio");
+            AU.ref_ring = osal_malloc(CAP_RING * sizeof(int16_t), OSAL_MEM_EXTERNAL);
+            AU.ref_frame = osal_malloc(FRAME * sizeof(int16_t), OSAL_MEM_EXTERNAL);
+            osal_mem_tag(prev);
+        }
+        if (!AU.ref_ring || !AU.ref_frame || hal_afe_start() != 0) return -1;
+        lock();
+        AU.listen_fn = fn;
+        AU.listen_ctx = ctx;
+        AU.afe_speech = false;
+        if (!mic) AU.rd = AU.wr = 0;
+        AU.listen_on = true;
+        unlock();
+        if (!mic && hal_audio_capture_start(capture_cb, NULL) != 0) {
+            lock();
+            AU.listen_on = false;
+            unlock();
+            hal_afe_stop();
+            return -1;
+        }
+    } else {
+        lock();
+        AU.listen_on = false;
+        mic = AU.cap_on;
+        unlock();
+        if (!mic) hal_audio_capture_stop();
+        hal_afe_stop();
+    }
+    ink_state_set_bool(h_listening, on);
+    ink_probe_count(on ? "audio.listen_on" : "audio.listen_off");
+    osal_sem_give(AU.wake);
+    return 0;
+}
+
 bool ink_audio_has_speaker(void) { return AU.info.has_speaker; }
 bool ink_audio_has_mic(void) { return AU.info.has_mic; }
 
@@ -523,15 +614,16 @@ int ink_audio_capture_begin(ink_audio_frame_fn fn, void *ctx) {
     hal_opus_enc_t *enc = hal_opus_enc_new(BITRATE, 0);
     if (!enc) return -1;
     lock();
+    bool listening = AU.listen_on; /* the microphone already runs: the capture starts from now */
     AU.enc = enc;
     AU.cap_fn = fn;
     AU.cap_ctx = ctx;
     AU.cap_seq = 0;
-    AU.rd = AU.wr = 0;
+    if (!listening) AU.rd = AU.wr = 0;
     AU.cap_on = true;
     AU.cap_ending = false;
     unlock();
-    if (hal_audio_capture_start(capture_cb, NULL) != 0) {
+    if (!listening && hal_audio_capture_start(capture_cb, NULL) != 0) {
         lock();
         AU.cap_on = false;
         AU.cap_fn = NULL;

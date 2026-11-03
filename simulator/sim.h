@@ -267,7 +267,8 @@ bool sim_audio_busy(void);
 double sim_audio_played_ms(void); /* what the speaker has played so far (tests) */
 void sim_audio_init(void);            /* task context (boot) */
 void sim_audio_report(void);
-void sim_audio_mic_source(const char *name); /* ISR (script): "speech" | "silence" | "noise" | "host" (window) */
+void sim_audio_mic_source(const char *name); /* ISR (script): "speech" | "silence" | "noise" | "wake" | "host" (window) */
+int sim_audio_mic_state(uint64_t *since_ns); /* 0 quiet, 1 speaks, 2 says the wake word; since when */
 void sim_audio_speaker_counters(uint64_t *underruns, double *underrun_ms, double *idle_ms); /* self-test */
 /** Build a stand-in Opus packet (level, pitch) the simulated decoder turns into a tone. */
 int sim_opus_fake_packet(uint8_t *out, int cap, double freq, double level, int bytes, uint32_t seed);
@@ -303,6 +304,8 @@ void sim_net_auto_answer(bool on);
 int sim_net_call(char *number, size_t cap);                     /* 0 idle, 1 active, 3 ringing out, 4 ringing in */
 int sim_net_sent_sms(int i, char *number, size_t ncap, char *text, size_t tcap); /* returns how many were sent */
 void sim_net_hub_send(struct hal_ws *ws, uint64_t t_send, const void *data, size_t len, bool binary); /* ISR */
+/* The same, entering the stream at t_send (later sends by the hub: think time, speech being synthesised). ISR. */
+void sim_net_hub_send_at(struct hal_ws *ws, uint64_t t_send, const void *data, size_t len, bool binary);
 int sim_hub_load(const char *path, char *err, size_t errlen);
 void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t len, bool binary); /* ISR */
 

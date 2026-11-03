@@ -104,6 +104,7 @@ add_library(ink_port_sim STATIC
   ports/sim/hal/hal_net_sim.c
   ports/sim/hal/hal_audio_sim.c
   ports/sim/hal/hal_cellular_sim.c
+  ports/sim/hal/hal_afe_sim.c
   ports/sim/hal/hal_codec_sim.c
   simulator/models/dev_epd_power.c
   simulator/models/dev_tca9555.c
@@ -405,6 +406,9 @@ if(INK_HAVE_FONTS)
   ink_scenario(reader_rapid metalio-plus)
   ink_scenario(ai_dismiss metalio-plus)
   ink_scenario(ai_dismiss_held metalio-plus)
+  # hands-free voice and barge-in (R-047), and when the device listens (D-52): voice front end modelled
+  ink_scenario(voice_handsfree metalio-plus-handsfree)
+  ink_scenario(voice_listen_policy metalio-plus-handsfree)
   # the microphone cannot start (the expander, and with it the audio chip, not set up): AUD5-003
   add_test(NAME scenario-ai_mic_unavailable-metalio-plus
     COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json

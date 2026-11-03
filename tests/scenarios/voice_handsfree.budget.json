@@ -1,0 +1,14 @@
+{
+  "_doc": "Hands-free turn and barge-in on the Plus profile with the voice front end modelled (estimates). Targets: architecture v1.0 §9.4.",
+  "panic.count": {"max": 0, "optional": true},
+  "warnings.count": {"max": 0, "optional": true},
+  "afe.wakes": {"min": 1, "max": 1, "why": "one wake word in the script"},
+  "ai.wakes": {"min": 1, "max": 1, "why": "the wake word started exactly one turn"},
+  "ai.barge_ins": {"min": 1, "max": 1, "why": "speaking over the answer interrupted it once"},
+  "ai.answers": {"min": 1, "max": 1, "why": "the interrupted answer never completes; the second one does"},
+  "hub.requests.ai.listen": {"min": 2, "max": 2, "why": "privacy: only the wake word and the interruption start an upload, nothing before"},
+  "ai.wake_to_tone_heard_ms.p95": {"max": 150, "srs": "SR-UX-01a", "why": "wake word detected -> listening tone heard"},
+  "ai.barge_to_stop_ms.max": {"max": 200, "why": "the person starts talking -> the answer stops (architecture §9.4: <= 200 ms)"},
+  "ai.release_to_first_text_visible_ms.p95": {"max": 3500, "target_max": 3000, "srs": "SR-UX-06a", "why": "end of speech -> first answer text"},
+  "ai.release_to_first_audio_heard_ms.p95": {"max": 4000, "srs": "SR-UX-06b", "why": "end of speech -> first answer sound"}
+}

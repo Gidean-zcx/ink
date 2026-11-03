@@ -42,7 +42,7 @@
 #include "metalio_plus/metalio_board.h"
 #include "sim.h"
 
-typedef enum { MIC_SPEECH = 0, MIC_SILENCE, MIC_NOISE, MIC_HOST } mic_src_t;
+typedef enum { MIC_SPEECH = 0, MIC_SILENCE, MIC_NOISE, MIC_HOST, MIC_WAKE } mic_src_t; /* WAKE: the wake word, then speech */
 
 static struct {
     bool init;
@@ -66,6 +66,7 @@ static struct {
     void *rx_dma;
     int16_t *mic, *ref;
     mic_src_t src;
+    uint64_t src_since; /* when the person last changed what they do (ns) */
     uint64_t cap_lost_samples, cap_samples, cap_overruns;
     /* speaker */
     bool out_on;
@@ -148,6 +149,7 @@ static int16_t mic_sample(uint64_t n) {
     case MIC_HOST: return host_mic_sample();
     case MIC_SILENCE: return (int16_t)((int)((n * 2654435761u) >> 27) - 16); /* room noise, a few LSB */
     case MIC_NOISE: return (int16_t)((int)((n * 2654435761u) >> 19) - 4096);
+    case MIC_WAKE: /* the wake word sounds like speech */
     default: {
         /* voiced speech-like: pitch around 150 Hz with drift, ~4 syllables per second */
         double env = 0.5 + 0.5 * sin(2 * M_PI * 4.0 * t);
@@ -210,7 +212,15 @@ static void audio_task(void *arg) {
 }
 
 void sim_audio_mic_source(const char *name) { /* ISR (script) */
-    A.src = !strcmp(name, "silence") ? MIC_SILENCE : !strcmp(name, "noise") ? MIC_NOISE : !strcmp(name, "host") ? MIC_HOST : MIC_SPEECH;
+    A.src = !strcmp(name, "silence") ? MIC_SILENCE : !strcmp(name, "noise") ? MIC_NOISE : !strcmp(name, "host") ? MIC_HOST
+          : !strcmp(name, "wake")    ? MIC_WAKE
+                                     : MIC_SPEECH;
+    A.src_since = vtk_now();
+}
+
+int sim_audio_mic_state(uint64_t *since_ns) { /* what the person does now: 0 quiet, 1 speaks, 2 says the wake word */
+    if (since_ns) *since_ns = A.src_since;
+    return A.src == MIC_WAKE ? 2 : A.src == MIC_SPEECH || A.src == MIC_HOST ? 1 : 0;
 }
 
 /* ---------------------------------------------------------------- speaker */

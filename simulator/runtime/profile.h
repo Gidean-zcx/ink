@@ -183,6 +183,14 @@ typedef struct {
     uint32_t audio_start_us, audio_stop_us; /* output path up (I2S + amplifier settle) / down */
     uint32_t audio_task_stack;
     int audio_task_prio;
+    struct { /* voice front end (hal_afe): absent unless the profile says so (ESP-SR on S31 unverified) */
+        bool present;
+        double cycles_per_sample;  /* AEC + NS + VAD + WakeNet, ESTIMATE */
+        uint32_t wake_delay_us;    /* wake word start -> detection */
+        uint32_t vad_on_us, vad_off_us;
+        double echo_false_per_min; /* residual echo heard as speech while the speaker plays */
+        size_t ram_bytes;          /* models and buffers (PSRAM) */
+    } afe;
     size_t opus_enc_bytes, opus_dec_bytes; /* codec state (external RAM) */
 
     /* power (estimates until measured) */

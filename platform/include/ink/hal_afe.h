@@ -1,0 +1,34 @@
+/*
+ * Voice front end (architecture v1.0 §9.4): echo cancellation against the
+ * speaker reference, noise suppression, voice activity and the wake word.
+ * On the device this wraps ESP-SR (AFE and WakeNet; its S31 support is
+ * preliminary and unverified on hardware); the simulator models its results
+ * and costs. Called from the audio service's task only.
+ */
+#ifndef INK_HAL_AFE_H
+#define INK_HAL_AFE_H
+
+#include <stdbool.h>
+#include <stdint.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+typedef struct {
+    bool speech;              /* someone speaks (after echo cancellation) */
+    bool wake;                /* the wake word was just heard (once per utterance) */
+    uint64_t speech_since_us; /* when the current speech began (valid while speech) */
+} hal_afe_result_t;
+
+/** This device can listen hands-free (front end and wake word model present). */
+bool hal_afe_available(void);
+int hal_afe_start(void);
+void hal_afe_stop(void);
+/** One block of capture: the microphone and what the speaker played, `t_us` its start. */
+void hal_afe_feed(const int16_t *mic, const int16_t *ref, int samples, uint64_t t_us, hal_afe_result_t *out);
+
+#ifdef __cplusplus
+}
+#endif
+#endif

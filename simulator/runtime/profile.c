@@ -353,6 +353,14 @@ int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
     p->audio_task_prio = (int)num(au, "task_prio", 8);
     p->opus_enc_bytes = (size_t)(num(au, "opus_enc_kib", 30) * 1024);
     p->opus_dec_bytes = (size_t)(num(au, "opus_dec_kib", 27) * 1024);
+    const cJSON *fe = obj(au, "voice_frontend");
+    p->afe.present = flag(fe, "present", false);
+    p->afe.cycles_per_sample = num(fe, "cycles_per_sample", 5000);
+    p->afe.wake_delay_us = (uint32_t)(num(fe, "wake_delay_ms", 250) * 1000);
+    p->afe.vad_on_us = (uint32_t)(num(fe, "vad_on_ms", 60) * 1000);
+    p->afe.vad_off_us = (uint32_t)(num(fe, "vad_off_ms", 300) * 1000);
+    p->afe.echo_false_per_min = num(fe, "echo_false_per_min", 0);
+    p->afe.ram_bytes = (size_t)(num(fe, "ram_kib", 220) * 1024);
     if (p->audio_dma_desc < 2) p->audio_dma_desc = 2;
     if (p->audio_dma_frames < 16) p->audio_dma_frames = 16;
 

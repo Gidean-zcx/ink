@@ -822,6 +822,41 @@ static void deliver_cb(void *arg) { /* ISR */
 }
 
 /* The hub sends `len` bytes at server time t_send (ISR context, from sim_hub). */
+/* A message the hub sends later (a reply after its think time, speech it is still synthesising):
+ * it enters the TCP stream at that time, not now, so whatever the hub sends meanwhile is not
+ * queued behind it. */
+typedef struct {
+    struct hal_ws *ws;
+    uint64_t gen;
+    bool binary;
+    size_t len;
+    uint8_t data[];
+} later_t;
+
+void sim_net_hub_send(struct hal_ws *w, uint64_t t_send, const void *data, size_t len, bool binary);
+
+static void later_cb(void *arg) { /* ISR */
+    later_t *l = arg;
+    if (l->ws->gen == l->gen) sim_net_hub_send(l->ws, vtk_now(), l->data, l->len, l->binary);
+    else sim_metric_add("net.dropped_downlink", 1);
+    sim_host_free(l);
+}
+
+void sim_net_hub_send_at(struct hal_ws *w, uint64_t t_send, const void *data, size_t len, bool binary) {
+    if (!w || t_send <= vtk_now()) {
+        sim_net_hub_send(w, t_send, data, len, binary);
+        return;
+    }
+    later_t *l = sim_host_malloc(sizeof *l + len);
+    if (!l) abort();
+    l->ws = w;
+    l->gen = w->gen;
+    l->binary = binary;
+    l->len = len;
+    memcpy(l->data, data, len);
+    vtk_event_at(t_send, later_cb, l);
+}
+
 void sim_net_hub_send(struct hal_ws *w, uint64_t t_send, const void *data, size_t len, bool binary) {
     if (!w || w->state != 1 || w->dead || !N.up) {
         sim_metric_add("net.dropped_downlink", 1);
