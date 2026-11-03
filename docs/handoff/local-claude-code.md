@@ -34,7 +34,7 @@
 
 ```bash
 cmake -S . -B build -DINK_CJK_FONT=<字体文件> -DINK_CJK_FACE=<简体中文字形在集合里的序号，单个 OTF 填 0>
-cmake --build build -j && ctest --test-dir build --output-on-failure    # 应为 26 项
+cmake --build build -j && ctest --test-dir build --output-on-failure    # 应为 29 项（2026-11-03 审计复核前为 26 项）
 ```
 
 注意：

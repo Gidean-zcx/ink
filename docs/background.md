@@ -1,6 +1,6 @@
 # 项目全貌与背景（接手与审计必读）
 
-更新：2026-11-03（第 0 步实机结果）。本文把散在各处的背景集中交代一遍：项目为什么存在、用户要什么、已经定了什么、做出了什么、哪些只是估算，以及怎么构建、怎么验证。细节都链接到唯一维护位置，本文不重复维护数据；两处说法不一致时，以被链接的源文档为准，并请把不一致记为问题。
+更新：2026-11-03（第 0 步实机结果；外部审计复核）。本文把散在各处的背景集中交代一遍：项目为什么存在、用户要什么、已经定了什么、做出了什么、哪些只是估算，以及怎么构建、怎么验证。细节都链接到唯一维护位置，本文不重复维护数据；两处说法不一致时，以被链接的源文档为准，并请把不一致记为问题。
 
 外部审计请同时阅读 [审计任务说明](audits/codex-audit-prompt.md)。
 
@@ -53,7 +53,7 @@
 | 部件 | 内容 | 核实程度 |
 | --- | --- | --- |
 | 主控 | ESP32-S31：双核 RV32（RV32IMAFC），320 MHz，ESP-IDF 6.1，FreeRTOS（HZ=100）；芯片版本 v0.0 | 上游文档与代码；芯片版本、主频为实测 |
-| 内存 | **PSRAM 16 MB**（AP Memory 八线，200 MHz）。内部 SRAM：出厂固件的 `heap_init` 是 265 KiB + 16 KiB 两段，另有 31 KiB RTC RAM，其中 64 KiB 预留给 DMA；出厂固件静态占用 226.7 KiB。模拟器档案现取 3 段各 32 KiB + 64 KiB 预留，尚未按实测改 | PSRAM 与出厂固件的内存布局是**实测**（[第 0 步](hardware/2026-11-03-phase0.md)）；本项目固件的静态占用未测 |
+| 内存 | **PSRAM 16 MB**（AP Memory 八线，200 MHz）。内部 SRAM：出厂固件的 `heap_init` 是 265 KiB + 16 KiB 两段，另有 31 KiB RTC RAM，其中 64 KiB 预留给 DMA；出厂固件静态占用 226.7 KiB。模拟器档案已按实测结构改为 80 + 16 KiB 两段 + 64 KiB 预留，总量 96 KiB 仍是估计（[平台与模拟器 §5.7](system/platform-and-simulator.md)） | PSRAM 与出厂固件的内存布局是**实测**（[第 0 步](hardware/2026-11-03-phase0.md)）；本项目固件的静态占用未测 |
 | 屏幕 | 4.7 英寸 1216×684 墨水屏，16 级灰，297 dpi。TPS65185 供电；LCD 外设并行驱动，EPDiy 式管线：每行 17 µs、688 行、每相至少 12 ms | 上游代码；波形与面板响应未实测 |
 | 存储 | Flash：Puya PY25Q128HA，16 MB，DIO 80 MHz（手册支持挂起，ESP-IDF v6.1 不对它开启）。内部 Flash 用户分区 1408 KiB（LittleFS），资源分区约 6 MiB；TF 卡 | Flash 型号为实测；分区按上游，出厂分区表已实测核对一致 |
 | 通信 | 4G 模组（NT26 路径）+ Wi-Fi。4G、蓝牙音频、功放共用一路电源 | 上游代码；短信与通话完整链路未核实 |
@@ -65,7 +65,7 @@
 
 - 整机（含 4G）2026-11-03 到货，比预计的 12 月初早（D-00）；已用 USB 连到用户的 Mac。上机步骤与结果见 [实机记录](hardware/README.md)。
 - 不另买开发板（D-27）。
-- **第 0 步已完成**（2026-11-03，只读，没有写设备）：硬件识别、整片备份、出厂固件的启动与运行日志，见 [第 0 步记录](hardware/2026-11-03-phase0.md)。我们自己的代码还没有在实机上跑过；实测值尚未写回模拟器档案。
+- **第 0 步已完成**（2026-11-03，只读，没有写设备）：硬件识别、整片备份、出厂固件的启动与运行日志，见 [第 0 步记录](hardware/2026-11-03-phase0.md)。我们自己的代码还没有在实机上跑过；PSRAM 容量、内部堆区段和 Flash 擦写时间已写回模拟器档案（[平台与模拟器 §5.7](system/platform-and-simulator.md)）。
 
 ## 4. 时间线
 
@@ -209,13 +209,14 @@ profiles/        设备档案：Plus 悲观档（CI 门槛）、Plus 16 MB、Plu
 | 助手设计 | 底座架构、端口设计（D-35）、刷新策略、电源策略、PQ-BN 集成方式 |
 | 实机 | 第 0 步：芯片、Flash、PSRAM、安全状态、分区，以及出厂固件的内存布局、启动时间和刷新时序（[记录](hardware/2026-11-03-phase0.md)）。出厂固件整屏每相 15.1 ms，与“上游管线复现”的预测一致。我们自己的代码还没有实测数据 |
 
-**独立评审**（三次，问题全部已处理）
+**独立评审与外部审计**（三次评审的问题全部已处理）
 
 | 评审 | 结果 | 详见 |
 | --- | --- | --- |
 | 第一次 | 3 高 8 中 7 低 | [平台与模拟器 §5.2](system/platform-and-simulator.md) |
 | 第二次 | 2 高 3 中、若干低，另 1 个系统缺陷。最重要：送行任务的算力几乎刚好等于扫描速度，照搬上游代码配小队列会花屏，由此提出 D-35 | 同上 §5.3 |
 | 第三次（刷新算法集成） | 1 高：规划不能与扫描重叠。模拟器 3 处缺陷，另有若干低。顺带发现盖板键同时按住时主页键丢失 | [集成报告](research/eink-refresh-integration.md) |
+| 外部全面审计（Codex，2026-11） | 19 条：高 10、中 7、低 2。本机复核全部成立，11 条已修复、3 条部分修复、5 条列为后续事项；复核另有 3 条新发现 | [审计记录](audits/README.md) |
 
 ## 9. 墨水屏刷新：两条路线
 
@@ -267,7 +268,7 @@ PQ-BN 各配置的对比见 [system-comparison.md](research/eink-refresh/integra
 **命令**
 
 ```bash
-cmake -S . -B build && cmake --build build -j && ctest --test-dir build --output-on-failure   # 26 项
+cmake -S . -B build && cmake --build build -j && ctest --test-dir build --output-on-failure   # 29 项
 cmake -S . -B build-werror -DINK_WERROR=ON && cmake --build build-werror -j && ctest --test-dir build-werror
 cmake -S . -B build-asan -DINK_SANITIZE=ON && cmake --build build-asan -j && ctest --test-dir build-asan   # ASan + UBSan
 
@@ -282,11 +283,12 @@ python3 tools/simreport/simreport.py out/reader --lang zh    # HTML 报告：刷
 
 - GitHub Actions（`.github/workflows/sim.yml`）在每次推送 main、`claude/**` 和每个 PR 时运行：带 `-Werror` 的构建与全部测试，再跑 ASan/UBSan。
 - `s31-size.yml` 只能手动触发，用 ESP-IDF 编译基线与上游固件，看静态内存占用。
-- 26 项测试的组成见 [平台与模拟器 §3](system/platform-and-simulator.md)：
+- 29 项测试的组成见 [平台与模拟器 §3](system/platform-and-simulator.md)：
   - 模拟器自检（4 个档案）、死亡测试、两项确定性；
   - 主页、阅读、AI 提问、AI 工具调用、待机等场景；
   - 老化文件系统 + 最坏擦写、断电、上游管线复现、可移植性冒烟；
   - PQ-BN 档案上的场景、两个盖板键同时按住；
+  - 审计复核加的三个回归场景：连续阅读也要落盘、关闭 AI 面板后不放迟到的语音、打不开的书上翻页不崩溃；
   - ISS 自检。
 - 预算文件在 `tests/scenarios/*.budget.json`，每条门槛写了理由（`why`）。
 
@@ -297,10 +299,15 @@ python3 tools/simreport/simreport.py out/reader --lang zh    # HTML 报告：刷
 **PQ-BN**
 
 - “规划跟在扫描后面逐带进行”（或 tile 状态双缓冲）尚未实现。档案里的 `plan_during_scan=true` 只是假设这项改造已完成的时序。
+- 相时钟跨静止推进时没有补做被跳过相号的时间戳维护，长时间使用后 10 位时间戳会回绕（审计 AUD-011，[后续事项](audits/README.md) F-8）。
 
 **内存余量**
 
 - AI 场景内部 RAM 最低余量 38 KiB（PQ-BN 档案 35 KiB），预算 32 KiB，偏紧。内部堆总量 96 KiB 仍是估计，要等本项目固件的 `idf.py size`。
+
+**外部审计的后续事项**
+
+- 资源准入与降级、连续翻页的积压、写入回执、内容 ID 与版本、取消贯穿各层、页面版本与请求幂等、听书时的写入等，见[审计记录](audits/README.md) F-1～F-11。
 
 **估算项与未核实的硬件**
 
