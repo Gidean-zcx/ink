@@ -1,0 +1,66 @@
+[
+  {
+    "id": "AUD3-001",
+    "severity": "高",
+    "area": "B 平台接口 / D 模拟器内核",
+    "title": "定时器删除等待期间允许回调重新启动，删除后事件访问已释放对象",
+    "evidence_type": "复现、代码核查",
+    "locations": [
+      "ports/sim/osal_sim.c:733",
+      "ports/sim/osal_sim.c:759",
+      "ports/sim/osal_sim.c:650",
+      "platform/include/ink/osal.h:165"
+    ],
+    "impact": "新的静默删除保证仍不成立。回调运行中，另一任务 delete 先 stop 再等待；回调按允许的契约 start 自身，delete 随后释放对象却留下新事件。下一次到期触发宿主堆 use-after-free，可终止模拟器。本轮普通探针退出 0，ASan 才报告错误，说明现有绿色测试不足。",
+    "recommendation": "为 timer 加入受同一锁保护的 deleting 状态，拒绝删除期间重新 start，并在回调退出后再次取消事件、移除 pending，最后释放；补覆盖回调自重启与外部删除的交错测试，明确自身删除和重启的契约。",
+    "reproduce": "先按 experiments/README.md 的 ASan 配置构建，再运行 python3 docs/audits/2026-11-03-codex-r2/experiments/run.py --asan r2_timer_rearm_delete。回调只做有界 CPU 工作及允许的 API，不阻塞等待。输出：timer delete begins → timer callback rearmed its timer → timer delete returned calls=1 → AddressSanitizer: heap-use-after-free，栈顶 timer_fire，子进程 exit=-6。完整日志在 build-audit/r2-probes/r2_timer_rearm_delete-asan/run.log，摘要在 experiments/results.json。"
+  },
+  {
+    "id": "AUD3-002",
+    "severity": "高",
+    "area": "B 平台接口 / C 板级睡眠",
+    "title": "唤醒恢复的 I2C 错误被忽略，故障消失后按键方向仍未恢复",
+    "evidence_type": "复现、代码核查",
+    "locations": [
+      "ports/sim/hal_power_sim.c:361",
+      "drivers/board/metalio_board.c:91",
+      "ports/sim/hal_input_sim.c:575"
+    ],
+    "impact": "在真实按键唤醒时短暂注入总线错误，hal_power_sleep 仍报告 POWER 唤醒并恢复输入任务，但 TCA9555 保持睡眠配置 00,80。总线恢复后音量键仍被配置为输出而完全无事件；POWER 只上报按下，释放丢失。正常运行路径没有重试恢复，单次暂态故障可留下持续输入失效；恢复供电步骤也只计数不处理错误。",
+    "recommendation": "将板级恢复视为可失败的事务：恢复并确认方向与电源后才恢复采样和对外宣告完成；为暂态错误增加有界重试及明确的故障状态/后续恢复机制。读失败时保留需重新采样状态，并配对处理已合成的唤醒按键。",
+    "reproduce": "运行 experiments/run.py r2_wake_read_fault r2_wake_control。故障组在睡眠后 400 ms 按 POWER、401–650 ms 注入 io-expander 错误、450 ms 松键；返回后 config=00,80 keys=1；总线恢复后再按 VOL，仍 keys=1。无故障对照为 config=c0,e3 keys=2，VOL 后 keys=4。两组 exit=0；摘要见 experiments/results.json。"
+  },
+  {
+    "id": "AUD3-003",
+    "severity": "严重",
+    "area": "C 显示驱动 / D 器件模型",
+    "title": "波形执行中失去屏电源仍绘制完整目标图并回调成功",
+    "evidence_type": "复现、代码核查",
+    "locations": [
+      "ports/sim/hal_display_sim.c:682",
+      "ports/sim/hal_display_sim.c:690",
+      "ports/sim/hal_display_sim.c:726",
+      "ports/sim/dev_epd_power.c:75"
+    ],
+    "impact": "AUD2-017 修复了启动阶段重试耗尽，但显示就绪只在波形前检查。波形开始后经板级驱动拉低 PMIC 控制脚，模型已确认 panel_ready=0，执行器仍完成 apply_area 并回调 ok=1。4096 个像素被改变，形成供电丢失时仍可成功刷屏的假阳性；会误导上层故障恢复与显示验收。",
+    "recommendation": "将电源/复位代次与正在执行的波形关联；执行中失电必须终止或标记失败，不能继续提交完整目标图。供电模型通知显示器状态失效；补启动失败、波形中断电及复电后的重新初始化覆盖。",
+    "reproduce": "运行 experiments/run.py r2_display_cut，再运行 experiments/evidence.py。探针等待 sim_display_playing 后用 metalio_board_set(0,7,0) 拉低屏 PMIC 控制脚；输出 cut rc=0 ready=0，callback_ok=1 ready=0；前后 PNG 有 4096 个像素变化。日志及图片只在 build-audit/r2-probes/r2_display_cut，摘要见 experiments/driver-evidence.json。"
+  },
+  {
+    "id": "AUD3-004",
+    "severity": "高",
+    "area": "B 音频接口 / C 板级睡眠",
+    "title": "进入睡眠期间启动音频未被互斥，复电后启动成功却持续无样本",
+    "evidence_type": "复现、代码核查",
+    "locations": [
+      "ports/sim/hal_audio_sim.c:299",
+      "ports/sim/hal_audio_sim.c:347",
+      "ports/sim/hal_audio_sim.c:501",
+      "ports/sim/hal_power_sim.c:318",
+      "ports/sim/hal_power_sim.c:427"
+    ],
+    "impact": "睡眠调用时音频空闲，进入序列让出执行权后另一个任务开始采集。启动先等待 BH1098G，却直到等待完成才置 cap_on；睡眠的第二次忙检查仍认为空闲，切断 P14。启动沿用旧代次/就绪时间，模式命令在芯片再次就绪前丢失，仍返回 0 并保留 busy=1，之后没有采样和自动重试。本次是 HAL 交错复现，没有声称在产品 UI 或真实硬件上观察到同一故障。",
+    "recommendation": "从音频启动第一步直到停止持有共享电源/睡眠准入租约，睡眠转换与新工作开始必须互斥，不能仅对 cap_on/out_on 做事后检查。模式设置后核对 P14 代次是否改变；发生切电时重走完整启动或返回失败并清理资源。添加睡眠进入期间开始录音/播放的有界交错回归。",
+    "reproduce": "运行 experiments/run.py r2_audio_sleep_entry r2_audio_sleep_late r2_audio_sleep_race。entry 组先调用 sleep（1.741 s，audio_busy=0），在其进入延时中才开始采集（1.770 s）；sleep 返回 TIMER，3.630 s capture_start 返回 0 但 mode=0 clock=0，4.980 s samples=0 busy=1。late 组同样失败；10 ms 较早交错对照能恢复 mode=1 并取得 18000 样本。均 exit=0，见 experiments/results.json。"
+  }
+]

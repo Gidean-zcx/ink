@@ -1,0 +1,59 @@
+{
+  "table_compare": {
+    "files": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-2/drivers/gc2145/gc2145_vga_table.h",
+      "/Users/bytedance/Documents/Workspace/ink-hw/upstream/Metalio-E-INK4-Plus/main/boards/common/camera/gc2145_vga_settings.h"
+    ],
+    "pairs": [
+      586,
+      586
+    ],
+    "equal": true,
+    "sha256_register_value_bytes": [
+      "a676ce4d31726d85b99054124d9e6ddbca9c7a64a0ca369cf565fea13fb42067",
+      "a676ce4d31726d85b99054124d9e6ddbca9c7a64a0ca369cf565fea13fb42067"
+    ]
+  },
+  "memory": {
+    "build_command": [
+      "cc",
+      "-O2",
+      "-std=gnu11",
+      "-Iplatform/include",
+      "-Isim",
+      "-Isim/vtk",
+      "-Isim/mem",
+      "-Ithird_party/tlsf",
+      "/Users/bytedance/Documents/Workspace/ink-audit-2/docs/audits/2026-11-03-codex-r2/experiments/memory_probe.c",
+      "third_party/tlsf/tlsf.c",
+      "-o",
+      "build-audit/r2-memory-probe"
+    ],
+    "build_exit": 0,
+    "exit_code": 0,
+    "output": [
+      "external_plus_dma: returned_pool=2 (0=internal,2=external)",
+      "100 allocations: reported_free=58336 tlsf_free=58336 overstatement=0 largest=58336",
+      "configured_dma=0 reported_total=0",
+      "alternating frees: reported_free=61936 tlsf_free=61536 overstatement=400",
+      "allocation_map_after_100000_alloc_free: capacity=4096 entries_counter=0 live=0 host_bytes=65536 failed_allocs=0"
+    ]
+  },
+  "panel_cut": {
+    "size": [
+      684,
+      1216
+    ],
+    "changed_pixels": 4096,
+    "before_0_0": [
+      255,
+      255,
+      255
+    ],
+    "after_0_0": [
+      255,
+      255,
+      255
+    ]
+  }
+}

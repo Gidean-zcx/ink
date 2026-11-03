@@ -1,0 +1,140 @@
+[
+  {
+    "id": "AUD2-001",
+    "verdict": "已修复",
+    "evidence_type": "复现、代码核查",
+    "note": "ai_service.c:132–158、449–451：dismiss 调用幂等 end_capture(true)，清队列并置 drop_frames；松键先清理再判断界面。scenario-ai_dismiss_held-metalio-plus 通过，录音受 ≤2000 ms 门槛约束；关闭后迟到语音场景亦通过。跨轮完整取消仍属原有后续事项 F-5。"
+  },
+  {
+    "id": "AUD2-002",
+    "verdict": "已修复",
+    "evidence_type": "复现、代码核查",
+    "note": "storage_service.c:113–155、191–227：过大/OOM 缓存失效；读优先选最新 seq 的排队或在写版本；预取读后有更新则不缓存。storage_cache 探针：落盘 1200 B，读出 16 B 的 NNN，pending=failed=0；systest-services 通过。"
+  },
+  {
+    "id": "AUD2-003",
+    "verdict": "已修复",
+    "evidence_type": "代码核查、复现",
+    "note": "hub_link.c:111–119、493–533：状态原子访问，64 位 demand 受锁，发送额度先预留、分配失败退回；连接事件有代次。ws_cb 入队等待已限为 500 ms（132–147），close_ws 不持 tx_lock，未见该链路无限互等。现有 AI/断网场景通过；VTK 不构成真实 SMP 数据竞争验证。"
+  },
+  {
+    "id": "AUD2-004",
+    "verdict": "部分修复",
+    "evidence_type": "复现、代码核查",
+    "note": "hal_net.h:64–95、osal.h:165–181 补齐契约；hal_ws_free 等 task_done，普通 timer delete 等在途回调。但 timer 回调可在 delete 等待期间重新 start，删除未再次取消事件；ASan 复现 timer_fire heap-use-after-free，见 AUD3-001。"
+  },
+  {
+    "id": "AUD2-005",
+    "verdict": "已修复",
+    "evidence_type": "复现、代码核查",
+    "note": "sim/mem/pools.c:261–269 优先处理 EXTERNAL，EXTERNAL|DMA 不再强制内池；memory_probe 返回 pool=2（external）。这里只确认能力标志路由，实机 DMA 缓存一致性与对齐仍需设备端验证。"
+  },
+  {
+    "id": "AUD2-006",
+    "verdict": "已修复",
+    "evidence_type": "复现、代码核查",
+    "note": "drivers/tca9555/tca9555.c:29–63：输出写成功才提交影子，失败置 stale，下次 RMW 先读回。tca_shadow：失败电机写返回 -2，随后成功写放大器，电机始终为 0；未见失败值被下一次写重放。"
+  },
+  {
+    "id": "AUD2-007",
+    "verdict": "已修复",
+    "evidence_type": "代码核查、复现",
+    "note": "metalio_epd_power.c:16–33 的 pin/read/shadow 通过 io_lock；hal_display_sim.c:432 绑定板级唯一锁，长延时和重试不持锁。常规与 ASan 的 sim-selftest、显示场景均通过；本轮未发现绕过板锁的 TCA9555 RMW。"
+  },
+  {
+    "id": "AUD2-008",
+    "verdict": "已修复",
+    "evidence_type": "代码核查、复现",
+    "note": "gc2145_start 加载完整 VGA 表；evidence.py 与官方 690a023 逐项比较 586 对寄存器/值完全一致。dev_camera.c:41–90、122–145 校验供电、复位、格式、裁剪、PLL 和逐帧输出；现有完整采集、掉电、超时自测通过。这是 SCCB 与帧时序模型，未声称验证实际 DVP 电信号、图像 ISP 或 20 MHz MCLK。"
+  },
+  {
+    "id": "AUD2-009",
+    "verdict": "已修复",
+    "evidence_type": "复现、代码核查",
+    "note": "drivers/nt26/nt26.c 的 UTF-16/UTF-8 转换加入代理对、残缺输入、过长编码与范围校验；nt26_unicode 探针的 D8000041、DC00、004、C080 均返回 -1，现有合法中英文与 emoji 自测通过。"
+  },
+  {
+    "id": "AUD2-010",
+    "verdict": "部分修复",
+    "evidence_type": "复现、代码核查",
+    "note": "sim/mem/pools.c:163、231–240、295–306：零容量池确实保持 0，连续分配时 free 与 TLSF 一致；但 free 时无条件回加块头，碎片场景仍高估。100 个 64 B 分配后隔个释放 50 个，reported_free=61936、tlsf_free=61536，多报 400 B。需按实际空闲块求和或正确计入分裂/合并块头；不重复设 AUD3 编号。"
+  },
+  {
+    "id": "AUD2-011",
+    "verdict": "已修复",
+    "evidence_type": "复现、代码核查",
+    "note": "sim/mem/pools.c:54–108 将 live 与 tombstone 分开，容量按同时存活项决定，墓碑占多则原容量重散列。100000 次分配/释放后 capacity=4096、live=0、host_bytes=65536、failed_allocs=0，未按历史累计增长。"
+  },
+  {
+    "id": "AUD2-012",
+    "verdict": "部分修复",
+    "evidence_type": "复现、代码核查",
+    "note": "正常初始化后，实体键已从成功的 TCA 寄存器读值去抖，RTC 只通过 P16→INT→GPIO2，input_fault 零事件，board 自测含 RTC/P16 高低电平通过。但 hal_input_sim.c:601–611 把 board_ready=false 当成无模型而退回直接送事件。r2_input_boot_fault 从开机起 100% io-expander 故障，board_present=1、board_ready=0，仍上报 POWER 按下（keys=1）；初始化失败旁路未消除，沿用本编号。"
+  },
+  {
+    "id": "AUD2-013",
+    "verdict": "已修复",
+    "evidence_type": "复现、代码核查",
+    "note": "hal_input_sim.c:656 起的触摸轮询每轮服务 expander，不再等抬手；touch_blocks_power 在持续触摸期间收齐 POWER 按下/释放，延迟均约 50.736 ms，keys=2。"
+  },
+  {
+    "id": "AUD2-014",
+    "verdict": "部分修复",
+    "evidence_type": "复现、代码核查",
+    "note": "hal_power_sim.c:341–489 与 board 驱动已按上游执行停屏、静音、方向切换、P05→P14 断电、唤醒恢复；board 自测验证真实引脚、RTC、短按与长按无重复，电机开启拒绝睡眠。剩余：恢复 I2C 错误被吞掉（AUD3-002），进入阶段没有与音频启动互斥（AUD3-004），均已复现；电流仍为估计，不是续航证据。"
+  },
+  {
+    "id": "AUD2-015",
+    "verdict": "部分修复",
+    "evidence_type": "复现、代码核查",
+    "note": "I2S 的采集与播放已依赖 BH powered/ready/mode；audio_unpowered 500 ms 内 samples=0；board 自测验证复电后重设 mode=1、无时钟时队列超时。新增恢复窗口：ensure_bt_mode 在睡眠切换期间使用旧代次和 ready 时间，启动未计 busy，返回成功但无时钟/零样本（AUD3-004）。"
+  },
+  {
+    "id": "AUD2-016",
+    "verdict": "部分修复",
+    "evidence_type": "复现、代码核查",
+    "note": "dev_camera.c:122–145 已逐帧检查 streaming，中途断 P05 返回 -5（board 自测）；初始化中掉电也失败。整次截止时间仍未传给 gc2145_start 的 586 项写入/延时：r2_camera_deadline 的 timeout_ms=0/1/100 实耗 390.383/392.549/399.990 ms 才报 -4。现有 300 ms 自测只断言返回错误，未检查耗时；需在初始化循环中检查剩余预算。"
+  },
+  {
+    "id": "AUD2-017",
+    "verdict": "部分修复",
+    "evidence_type": "复现、代码核查",
+    "note": "metalio_epd_power_up 返回失败，hal_display_sim.c:682 拒绝执行波形并回调 ok=false；display_fault 输出 callback_ok=0、panel_ready=0，panel_power_dead 场景通过。波形执行中丢失电源仍更新目标图并 ok=true，见 AUD3-003。"
+  },
+  {
+    "id": "AUD2-018",
+    "verdict": "已修复",
+    "evidence_type": "代码核查、复现",
+    "note": "sim/vtk/vtk.c:87、734–739 的 stop_req 已原子化；sim_gui.c:122 在内核 host 回调采集 camera_captures，再通过 Gm 保护的快照给 GUI，gui_main.cpp:816 不再跨线程直读。gui-smoke 及 4 次启动/3 次 exec 重启观察完成；没有执行 TSan，结论限于原报告两个共享字段。"
+  },
+  {
+    "id": "AUD2-019",
+    "verdict": "部分修复",
+    "evidence_type": "代码核查",
+    "note": "host_camera_linux.c:103–155 已验证 S_FMT/映射/入队/启动并统一清理，使用 bytesperline，g_run 原子化。残留：31–46 短帧仅提前返回，67–68 仍置 g_have=true，首帧可能含未填充 malloc 区域；硬 DQBUF 错误退出 reader（60）仍显示工作中，重排队错误（72）未处理。原有严重映射越界路径已处理，但不能宣称缓冲/错误路径完整修复；未连接 Linux 摄像头。"
+  },
+  {
+    "id": "AUD2-020",
+    "verdict": "部分修复",
+    "evidence_type": "代码核查",
+    "note": "host_camera_mac.m:44–100、115–131 采用串行 ctl 队列与 gen，close 使迟到授权无效并排空帧回调，原生命周期缺口已处理。g_status 仍在 ctl 写、133 的 getter 在 GUI 线程直接读，未建立同一队列/锁/原子关系（gui_main.cpp:816）；原报告的状态数据竞争仍在。未申请摄像头权限或打开真实设备。"
+  },
+  {
+    "id": "AUD2-021",
+    "verdict": "已修复",
+    "evidence_type": "复现、代码核查",
+    "note": "gui_main.cpp:109–143、1186–1188：pipe 读端和备份 fd 设 CLOEXEC，exec 前恢复 stdout/stderr。SDL dummy 的 4 次启动（3 次重启）lsof 每次均 pipe_fds=4，无累计泄漏；观察完成后仅 SIGTERM 本探针子进程，见 experiments/gui-restart-results.json。"
+  },
+  {
+    "id": "AUD2-022",
+    "verdict": "已修复",
+    "evidence_type": "复现、代码核查",
+    "note": "CMakeLists.txt:9–11 在 FetchContent 前启用 OBJC；完全按 TASK 本地依赖路径，SDL2_DIR-NOTFOUND 的源码 SDL 分支配置/构建 exit=0，38/38 测试通过（含 GUI）。新 macOS CI 已配置，但安装系统 SDL2，未持续覆盖源码 SDL 分支；本轮未联网查看远端 CI 运行。"
+  },
+  {
+    "id": "AUD2-023",
+    "verdict": "部分修复",
+    "evidence_type": "文档核查、代码核查",
+    "note": "hardware-parity.md 已分列接线/行为/故障/实机，22 项=9 一致+13 部分，标明 RTC/SRDY/电流等假设；R-034 不再写网络音频未做。但 R-034:88 仍概括 AUD2 已修复，与本轮残留不符；对照表第 3/7 项的故障一致判断须按显示断电和初始化失败旁路下调。第 19 项称睡后重新挂载，hal_power_sim.c:485 只是 sd_remount_us 延时；不能当作实际 SD 状态验证。沿用本编号，不另设文档问题。"
+  }
+]
