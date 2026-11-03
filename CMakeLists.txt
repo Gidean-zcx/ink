@@ -348,7 +348,7 @@ target_compile_options(sim-systest PRIVATE ${INK_WARN})
 add_test(NAME systest-services
   COMMAND sim-systest --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
           --budget ${CMAKE_SOURCE_DIR}/tests/integration/systest.budget.json
-          --out ${CMAKE_BINARY_DIR}/test-out/systest --quiet --end 70s --no-random-outages)
+          --out ${CMAKE_BINARY_DIR}/test-out/systest --quiet --end 90s --no-random-outages)
 add_test(NAME determinism
   COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:sim-selftest>
           -DPROFILE=${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json

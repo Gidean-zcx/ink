@@ -27,7 +27,8 @@
  * output that stops taking samples for STALL_US lost its clock (the chip lost
  * its supply or mode under the stream): it is closed and opened again the same
  * way, which sets the chip up again; the give-up time counts from the first
- * stall until samples flow again.
+ * stall until samples flow again. What was already in the DMA ring then (about
+ * one ring, 60-70 ms) is lost, and counted (audio.stall_lost_ms).
  *
  * The staging buffer belongs to the service task; the API only changes the
  * stream and the task drops staged audio of a stream that is gone.
@@ -333,6 +334,7 @@ static void output_stalled(void) {
     }
     if (now - AU.stall_since < STALL_US) return;
     ink_probe_count("audio.output_stalls");
+    ink_probe_value("audio.stall_lost_ms", hal_audio_play_delay_us() / 1000.0); /* queued in the ring, never heard */
     AU.stall_since = 0;
     close_output(false);
     if (!AU.staged_stream) AU.pcm_off = AU.pcm_len = 0;
@@ -341,17 +343,28 @@ static void output_stalled(void) {
     if (now - AU.open_failing_since >= OPEN_GIVE_UP_US) stream_failed();
 }
 
-static void service_playback(void) {
+/* Is the staged audio still wanted? A stream aborted or replaced meanwhile (also while an open blocked
+ * in the loop below) loses its staged samples. Service task. */
+static bool staged_wanted(void) {
     lock();
-    bool tone = AU.tone_pending;
-    ink_tone_t which = AU.tone;
-    const char *probe = AU.tone_probe;
-    uint64_t cause = AU.tone_cause;
-    AU.tone_pending = false;
-    if (AU.staged_stream && AU.staged_stream != AU.stream) { /* aborted or replaced: drop its staged audio */
+    bool wanted = !AU.staged_stream || AU.staged_stream == AU.stream;
+    if (!wanted) {
         AU.pcm_off = AU.pcm_len = 0;
         AU.staged_stream = 0;
     }
+    unlock();
+    return wanted;
+}
+
+static void service_playback(void) {
+    (void)staged_wanted();
+    lock();
+    /* a tone takes the staging buffer: a stream frame staged there goes out first */
+    bool tone = AU.tone_pending && !(AU.staged_stream && AU.pcm_off < AU.pcm_len);
+    ink_tone_t which = AU.tone;
+    const char *probe = AU.tone_probe;
+    uint64_t cause = AU.tone_cause;
+    if (tone) AU.tone_pending = false;
     unlock();
     if (tone) {
         if (open_output()) {
@@ -367,6 +380,8 @@ static void service_playback(void) {
             if (!stream_wants_output() || !output_for_stream() || !stage_next()) break;
         } else if (!output_for_stream()) {
             break; /* staged samples wait for the output */
+        } else if (!staged_wanted()) {
+            continue; /* the open blocked and the stream went meanwhile */
         }
         AU.waiting_since = 0;
         if (AU.heard_probe) { /* first samples of a probed tone go out now: when will they be heard? */
