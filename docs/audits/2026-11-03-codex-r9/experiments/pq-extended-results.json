@@ -1,0 +1,68 @@
+[
+  {
+    "label": "compile",
+    "sanitizer": false,
+    "command": [
+      "cc",
+      "-O1",
+      "-g",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-std=c11",
+      "-Idrivers/display/pqbn",
+      "/Users/bytedance/Documents/Workspace/ink-audit-9/docs/audits/2026-11-03-codex-r9/experiments/pq_extended.c",
+      "drivers/display/pqbn/pqbn_v4.c",
+      "-lm",
+      "-o",
+      "/Users/bytedance/Documents/Workspace/ink-audit-9/build-audit/r9-pq-extended"
+    ],
+    "exit_code": 0,
+    "output": []
+  },
+  {
+    "label": "run",
+    "sanitizer": false,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-9/build-audit/r9-pq-extended"
+    ],
+    "exit_code": 0,
+    "output": [
+      "extended_failed=0 total=552 direct=540 periodic=12"
+    ]
+  },
+  {
+    "label": "compile",
+    "sanitizer": true,
+    "command": [
+      "cc",
+      "-O1",
+      "-g",
+      "-Wall",
+      "-Wextra",
+      "-Werror",
+      "-std=c11",
+      "-Idrivers/display/pqbn",
+      "/Users/bytedance/Documents/Workspace/ink-audit-9/docs/audits/2026-11-03-codex-r9/experiments/pq_extended.c",
+      "drivers/display/pqbn/pqbn_v4.c",
+      "-lm",
+      "-o",
+      "/Users/bytedance/Documents/Workspace/ink-audit-9/build-audit/r9-pq-extended-asan",
+      "-fsanitize=address,undefined",
+      "-fno-omit-frame-pointer"
+    ],
+    "exit_code": 0,
+    "output": []
+  },
+  {
+    "label": "run",
+    "sanitizer": true,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-9/build-audit/r9-pq-extended-asan"
+    ],
+    "exit_code": 0,
+    "output": [
+      "extended_failed=0 total=552 direct=540 periodic=12"
+    ]
+  }
+]

@@ -492,17 +492,74 @@ static void ts_sweep(pqbn_v4_ctx *C, uint32_t now) {
     }
 }
 
+static void age_clamp(pqbn_v4_ctx *C, uint32_t now) { // at multiples of 4096: tile ages must not wrap (u16)
+    for (int i = 0; i < C->ntx * C->nty; i++)
+        if ((uint16_t)(now - C->tile_plan[i]) > 8192) C->tile_plan[i] = (uint16_t)(now - 8192);
+    for (int ty = 0; ty < C->nty; ty++)
+        if ((int16_t)(C->band[2 * ty] - (uint16_t)now) <= 0) C->band[2 * ty] = (uint16_t)now;
+}
+
+// A rest longer than TS_SWEEP phases, in one pass: where the phases would have run, a settled pixel's
+// timestamp ends as (the last phase its row was swept in) - 256 if its age exceeded 256 then, and a tile's
+// plan age is clamped at the last multiple of 4096. The true ages at `from` are unambiguous (the sweeps
+// keep timestamps younger than 256 + TS_SWEEP, the clamps keep tile ages below 8192 + 4096), so the
+// final state follows from them without running the phases.
+static void skip_long(pqbn_v4_ctx *C, uint32_t from, uint32_t to) {
+    const int W = C->W, Wh = W >> 1;
+    for (int i = 0; i < TS_SWEEP; i++) {
+        const int r0 = i * C->H / TS_SWEEP, r1 = (i + 1) * C->H / TS_SWEEP;
+        if (r0 == r1) continue;
+        const uint32_t last = to - ((to - (uint32_t)i) & (TS_SWEEP - 1)); // the last phase of sweep index i
+        for (int y = r0; y < r1; y++) {
+            const uint32_t *hw = (const uint32_t *)(C->hot + (size_t)y * Wh);
+            uint16_t *cr = C->cold + (size_t)y * W;
+            const uint8_t *tn = C->tile_nmax + (y / TPY) * C->ntx;
+            for (int w = 0; w < W / 8; w++) {
+                const uint32_t H = hw[w];
+                const uint32_t s7 = ((H & 0x77777777u) + 0x11111111u) & 0x88888888u;
+                if (!s7 || (tn[w >> 2] & T_MOT)) continue;
+                for (int j = 0; j < 8; j++) {
+                    if (!((s7 >> (4 * j + 3)) & 1)) continue;
+                    uint16_t *cp = &cr[w * 8 + j];
+                    const int s = *cp, ts = (s & 255) | ((s >> 5) & 0x300);
+                    if ((uint64_t)((from - (uint32_t)ts) & 1023) + (last - from) > 256) {
+                        const int nt = (int)((last - 256) & 1023);
+                        *cp = (uint16_t)((s & 0x9F00) | (nt & 255) | ((nt >> 8) << 13));
+                    }
+                }
+            }
+        }
+    }
+    const uint32_t mark = to & ~4095u; // the last multiple of 4096 the rest passed, if any
+    if (to - mark >= to - from) return;
+    for (int t = 0; t < C->ntx * C->nty; t++)
+        if ((uint64_t)(uint16_t)(from - C->tile_plan[t]) + (mark - from) > 8192) C->tile_plan[t] = (uint16_t)(mark - 8192);
+    for (int ty = 0; ty < C->nty; ty++)
+        if ((int64_t)(int16_t)(C->band[2 * ty] - (uint16_t)from) - (int64_t)(mark - from) <= 0) C->band[2 * ty] = (uint16_t)mark;
+}
+
+int pqbn_v4_skip(pqbn_v4_ctx *C, uint32_t from, uint32_t to) {
+    const uint32_t n = to - from;
+    if (n > TS_SWEEP) {
+        skip_long(C, from, to);
+        return C->H; // every row once
+    }
+    int rows = 0;
+    for (uint32_t p = from + 1; p != to + 1; p++) {
+        if ((p & 4095) == 0) age_clamp(C, p);
+        ts_sweep(C, p);
+        const int i = (int)(p & (TS_SWEEP - 1));
+        rows += (i + 1) * C->H / TS_SWEEP - i * C->H / TS_SWEEP;
+    }
+    return rows;
+}
+
 int pqbn_v4_phase(pqbn_v4_ctx *C, uint32_t now) {
     const int ntx = C->ntx, Wq = C->W >> 2;
     int words = 0;
     int16_t cum[4][16];                                    // distance covered by n pushes starting in class c
     for (int c = 0; c < 4; c++) { cum[c][0] = 0; for (int n = 1; n < 16; n++) cum[c][n] = (int16_t)(C->step[c] + (n - 1) * C->step[0]); }
-    if ((now & 4095) == 0) {                               // tile ages must not wrap (u16)
-        for (int i = 0; i < ntx * C->nty; i++)
-            if ((uint16_t)(now - C->tile_plan[i]) > 8192) C->tile_plan[i] = (uint16_t)(now - 8192);
-        for (int ty = 0; ty < C->nty; ty++)
-            if ((int16_t)(C->band[2 * ty] - (uint16_t)now) <= 0) C->band[2 * ty] = (uint16_t)now;
-    }
+    if ((now & 4095) == 0) age_clamp(C, now);
     ts_sweep(C, now);
     // planning: tiles the UI changed, and tiles whose capped plan just finished; resumes at the cursor.
     // Tile rows without a UI mark or a tile needing attention are skipped after a byte scan.

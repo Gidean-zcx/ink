@@ -1,0 +1,13 @@
+[
+  {
+    "id": "AUD8-001",
+    "severity": "中",
+    "area": "音频 / 提示音调度",
+    "title": "防覆盖修复让正常播放中的提示音等到整段语音结束",
+    "evidence_type": "复现、代码核查",
+    "locations": ["system/services/audio/audio_service.c:363", "system/services/audio/audio_service.c:378", "system/services/audio/audio_service.c:380", "system/include/ink/sys/audio.h:8", "docs/audits/README.md:27"],
+    "impact": "正常无故障的300帧（18000ms）语音，播到120ms时请求提示音。旧版audit.tone_ms=69.029ms（但覆盖60ms语音），当前17940.750ms，最终18060ms全部播出。防覆盖条件仅在service_playback开头判断；暂存帧写完后循环立即取下一帧，直到DMA满时退出，下一次仍有未写完的流帧，因此提示音等整段结束。持续供帧可长期推迟提示音（代码推断）。没有证明所有AI按键受影响：当前AI新按键先stop_all，正常AI场景另作对照。定中：影响音频服务提示路径，有先停止流的绕过办法。",
+    "recommendation": "暂存流帧写完后，在取下一帧之前调度待播提示音，保持现有帧数据；明确故障期间提示音的过期或丢弃规则。增加正常长流插入提示音时的响应时间和完整样本量双重断言。",
+    "reproduce": "AUDIT_END=60s python3 docs/audits/2026-11-03-codex-r7/experiments/run.py r7_audio_tone_normal；同命令加--before链接8c38f17。两版exit=0，1s时当前heard_count=0、旧版1；最终audit.tone_ms分别17940.750和69.029。"
+  }
+]

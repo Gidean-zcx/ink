@@ -210,6 +210,9 @@ int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
             p->pqbn.plan_motion_tile = num(c, "plan_motion_tile", 2125);
             p->pqbn.plan_exit_tile = num(c, "plan_exit_tile", 9305);
             p->pqbn.plan_idle = num(c, "plan_idle", 110000);
+            p->pqbn.skip_row = num(c, "skip_row", 55000);
+            p->pqbn.skip_call = num(c, "skip_call", 42500);
+            p->pqbn.skip_clamp = num(c, "skip_clamp", 38500);
             p->panel.async_updates = true;
         }
     }

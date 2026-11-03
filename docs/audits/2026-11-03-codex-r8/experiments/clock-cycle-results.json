@@ -1,0 +1,65 @@
+[
+  {
+    "old_idle_algorithm": true,
+    "label": "compile",
+    "command": [
+      "cc",
+      "-O2",
+      "-std=c11",
+      "-Idrivers/display/pqbn",
+      "docs/audits/2026-11-03-codex-r8/experiments/clock_cycles.c",
+      "drivers/display/pqbn/pqbn_v4.c",
+      "-lm",
+      "-o",
+      "build-audit/r8-clock-old",
+      "-DAUDIT_OLD_SKIP"
+    ],
+    "exit_code": 0,
+    "output": []
+  },
+  {
+    "old_idle_algorithm": true,
+    "label": "run",
+    "command": [
+      "build-audit/r8-clock-old",
+      "20",
+      "3"
+    ],
+    "exit_code": 1,
+    "output": [
+      "drive=20 phases, cycles=3, clock=826 phases (true rest of every pixel >= 825)",
+      "settled pixels: 32768, reconstructed dwell level != 7 (rest wrapped below 64): 30208 (92.2%), first row 0"
+    ]
+  },
+  {
+    "old_idle_algorithm": false,
+    "label": "compile",
+    "command": [
+      "cc",
+      "-O2",
+      "-std=c11",
+      "-Idrivers/display/pqbn",
+      "docs/audits/2026-11-03-codex-r8/experiments/clock_cycles.c",
+      "drivers/display/pqbn/pqbn_v4.c",
+      "-lm",
+      "-o",
+      "build-audit/r8-clock-new"
+    ],
+    "exit_code": 0,
+    "output": []
+  },
+  {
+    "old_idle_algorithm": false,
+    "label": "run",
+    "command": [
+      "build-audit/r8-clock-new",
+      "20",
+      "3"
+    ],
+    "exit_code": 0,
+    "output": [
+      "drive=20 phases, cycles=3, clock=826 phases (true rest of every pixel >= 825)",
+      "settled pixels: 32768, reconstructed dwell level != 7 (rest wrapped below 64): 0 (0.0%), first row -1"
+    ]
+  }
+]

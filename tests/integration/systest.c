@@ -133,8 +133,9 @@ static void audio_checks(void) {
     metalio_board_set(1, MB_P1_SHARED_PWR, MB_P1_SHARED_PWR);
     osal_task_delay_us(8000000);
     played = sim_audio_played_ms() - played0;
-    CHECK(was_playing && sim_metric_value("audio.output_stalls") > stalls0 && played >= 2800 && !sim_audio_busy() && g_failed_id == 0,
-          "a supply cut under a playing stream: it stalls, is opened again and the rest plays (%.0f ms of 3000)", played);
+    CHECK(was_playing && sim_metric_value("audio.output_stalls") > stalls0 && played >= 3000 - 61 && played <= 3000 && !sim_audio_busy() &&
+              g_failed_id == 0,
+          "a supply cut under a playing stream: it stalls, is opened again and all but the ring's 60 ms plays (%.0f ms of 3000)", played);
     played0 = sim_audio_played_ms();
     id = ink_audio_stream_open(INK_AUDIO_PRIO_VOICE, 0, NULL);
     push_frames(id, 50);
@@ -146,6 +147,39 @@ static void audio_checks(void) {
     CHECK(g_failed_id == id && !sim_audio_busy(), "cut for good: the stream fails, its owner is told and the output is off (%d, %d)", g_failed_id,
           id);
     metalio_board_set(1, MB_P1_SHARED_PWR, MB_P1_SHARED_PWR);
+    osal_task_delay_us(2000000);
+
+    /* cancelled while its stalled output is being opened again (that waits for the chip to boot and take
+     * its mode, ~1.4 s): nothing more of it plays (audit AUD7-003) */
+    played0 = sim_audio_played_ms();
+    id = ink_audio_stream_open(INK_AUDIO_PRIO_VOICE, 0, NULL);
+    push_frames(id, 50);
+    ink_audio_stream_finish(id);
+    bool playing = playing_for(played0, 200);
+    metalio_board_set(0, MB_P0_AMP, 0);
+    metalio_board_set(1, MB_P1_SHARED_PWR, 0);
+    osal_task_delay_us(1300000); /* stalled and closed; opening fails while P14 is off */
+    metalio_board_set(1, MB_P1_SHARED_PWR, MB_P1_SHARED_PWR);
+    osal_task_delay_us(500000); /* the next try is waiting for the chip */
+    double at_cancel = sim_audio_played_ms();
+    ink_audio_stop_all();
+    osal_task_delay_us(3000000);
+    CHECK(playing && sim_audio_played_ms() == at_cancel && !sim_audio_busy(),
+          "a stream cancelled while its output is opened again plays nothing more (%.0f ms after the cancel)",
+          sim_audio_played_ms() - at_cancel);
+
+    /* a tone while a long stream plays normally: it goes out after the frame staged now, not after the
+     * stream (audit AUD8-001), and none of the stream is lost to it */
+    played0 = sim_audio_played_ms();
+    id = ink_audio_stream_open(INK_AUDIO_PRIO_VOICE, 0, NULL);
+    push_frames(id, 50);
+    ink_audio_stream_finish(id);
+    bool streaming = playing_for(played0, 300);
+    ink_audio_tone(INK_TONE_DONE, osal_now_us(), "systest.tone_heard_ms");
+    osal_task_delay_us(5000000);
+    double heard = sim_metric_last("systest.tone_heard_ms"), total = sim_audio_played_ms() - played0;
+    CHECK(streaming && heard > 0 && heard < 200 && total >= 3060 - 2 && total <= 3060 + 2,
+          "a tone in a playing stream is heard after %.0f ms, and the stream plays in full (%.0f ms of 3000 + 60)", heard, total);
     ink_audio_on_stream_failed(NULL, NULL);
 }
 

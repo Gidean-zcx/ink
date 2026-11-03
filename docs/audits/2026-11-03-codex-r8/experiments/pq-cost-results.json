@@ -1,0 +1,228 @@
+[
+  {
+    "label": "compile",
+    "command": [
+      "/Users/bytedance/esp/.espressif/tools/riscv32-esp-elf/esp-15.2.0_20251204/riscv32-esp-elf/bin/riscv32-esp-elf-gcc",
+      "-march=rv32imafc_zicsr_zifencei_zaamo_zalrsc",
+      "-mabi=ilp32f",
+      "-mtune=esp-base",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-fstrict-volatile-bitfields",
+      "-std=gnu17",
+      "-O2",
+      "-fno-jump-tables",
+      "-fno-tree-switch-conversion",
+      "-DPQBN_HOT=__attribute__((section(\".iram.text\"),noinline))",
+      "-Itools/iss/rt",
+      "-Idrivers/display/pqbn",
+      "-nostartfiles",
+      "-Ltools/iss/rt",
+      "-Wl,--gc-sections",
+      "-Wl,--no-warn-rwx-segments",
+      "-T",
+      "xip.ld",
+      "tools/iss/rt/crt0.S",
+      "tools/iss/rt/syscalls.c",
+      "/Users/bytedance/Documents/Workspace/ink-audit-8/docs/audits/2026-11-03-codex-r8/experiments/pq_cost.c",
+      "drivers/display/pqbn/pqbn_v4.c",
+      "-lc",
+      "-lm",
+      "-lgcc",
+      "-o",
+      "/Users/bytedance/Documents/Workspace/ink-audit-8/build-audit/r8-pq-cost.elf"
+    ],
+    "exit_code": 1,
+    "output": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-8/docs/audits/2026-11-03-codex-r8/experiments/pq_cost.c: In function 'main':",
+      "/Users/bytedance/Documents/Workspace/ink-audit-8/docs/audits/2026-11-03-codex-r8/experiments/pq_cost.c:7:11: error: expected identifier before numeric constant",
+      "    7 | #define W 1216",
+      "      |           ^~~~",
+      "/Users/bytedance/Documents/Workspace/ink-audit-8/docs/audits/2026-11-03-codex-r8/experiments/pq_cost.c:12:7: note: in expansion of macro 'W'",
+      "   12 |     c.W=W;c.H=H;c.ntx=W/32;c.nty=H/4;c.line_mode=1;",
+      "      |       ^",
+      "/Users/bytedance/Documents/Workspace/ink-audit-8/docs/audits/2026-11-03-codex-r8/experiments/pq_cost.c:8:11: error: expected identifier before numeric constant",
+      "    8 | #define H 684",
+      "      |           ^~~",
+      "/Users/bytedance/Documents/Workspace/ink-audit-8/docs/audits/2026-11-03-codex-r8/experiments/pq_cost.c:12:13: note: in expansion of macro 'H'",
+      "   12 |     c.W=W;c.H=H;c.ntx=W/32;c.nty=H/4;c.line_mode=1;",
+      "      |             ^"
+    ]
+  },
+  {
+    "label": "compile",
+    "command": [
+      "/Users/bytedance/esp/.espressif/tools/riscv32-esp-elf/esp-15.2.0_20251204/riscv32-esp-elf/bin/riscv32-esp-elf-gcc",
+      "-march=rv32imafc_zicsr_zifencei_zaamo_zalrsc",
+      "-mabi=ilp32f",
+      "-mtune=esp-base",
+      "-ffunction-sections",
+      "-fdata-sections",
+      "-fstrict-volatile-bitfields",
+      "-std=gnu17",
+      "-O2",
+      "-fno-jump-tables",
+      "-fno-tree-switch-conversion",
+      "-DPQBN_HOT=__attribute__((section(\".iram.text\"),noinline))",
+      "-Itools/iss/rt",
+      "-Idrivers/display/pqbn",
+      "-nostartfiles",
+      "-Ltools/iss/rt",
+      "-Wl,--gc-sections",
+      "-Wl,--no-warn-rwx-segments",
+      "-T",
+      "xip.ld",
+      "tools/iss/rt/crt0.S",
+      "tools/iss/rt/syscalls.c",
+      "/Users/bytedance/Documents/Workspace/ink-audit-8/docs/audits/2026-11-03-codex-r8/experiments/pq_cost.c",
+      "drivers/display/pqbn/pqbn_v4.c",
+      "-lc",
+      "-lm",
+      "-lgcc",
+      "-o",
+      "/Users/bytedance/Documents/Workspace/ink-audit-8/build-audit/r8-pq-cost.elf"
+    ],
+    "exit_code": 0,
+    "output": []
+  },
+  {
+    "label": "fitted",
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-8/build-audit/iss",
+      "-c",
+      "tools/iss/out/esp32s31.fitted.cfg",
+      "-o",
+      "/Users/bytedance/Documents/Workspace/ink-audit-8/build-audit/r8-pq-cost-fitted.json",
+      "/Users/bytedance/Documents/Workspace/ink-audit-8/build-audit/r8-pq-cost.elf"
+    ],
+    "exit_code": 0,
+    "output": [
+      "skip-white-255 rows=340 model_cycles=14620",
+      "skip-gray-255 rows=340 model_cycles=14620",
+      "skip-white-cross4096 rows=340 model_cycles=14620",
+      "skip-white-1 rows=1 model_cycles=43",
+      "exec_row=0",
+      "iss: exit 0, 128138402 instructions, 180088999 cycles, CPI 1.405"
+    ],
+    "regions": [
+      {
+        "name": "skip-white-255",
+        "units": 340,
+        "aux_units": 255,
+        "cycles": 11881481.6171875,
+        "cycles_per_unit": 34945.534168,
+        "instret": 7881837
+      },
+      {
+        "name": "skip-gray-255",
+        "units": 340,
+        "aux_units": 255,
+        "cycles": 1022540.5234375,
+        "cycles_per_unit": 3007.472128,
+        "instret": 491597
+      },
+      {
+        "name": "skip-white-cross4096",
+        "units": 340,
+        "aux_units": 255,
+        "cycles": 11945464.41796875,
+        "cycles_per_unit": 35133.718876,
+        "instret": 7935206
+      },
+      {
+        "name": "skip-white-1",
+        "units": 1,
+        "aux_units": 1,
+        "cycles": 75294.07421875,
+        "cycles_per_unit": 75294.074219,
+        "instret": 46365
+      },
+      {
+        "name": "executor-idle-row",
+        "units": 1,
+        "aux_units": 0,
+        "cycles": 31,
+        "cycles_per_unit": 31.0,
+        "instret": 27
+      }
+    ]
+  },
+  {
+    "label": "slow",
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-8/build-audit/iss",
+      "-c",
+      "tools/iss/out/esp32s31.fitted.cfg",
+      "-o",
+      "/Users/bytedance/Documents/Workspace/ink-audit-8/build-audit/r8-pq-cost-slow.json",
+      "-s",
+      "lat.load_sub=3",
+      "-s",
+      "lat.mul=2",
+      "-s",
+      "br.mispredict=3",
+      "-s",
+      "br.jal_nobtb=3",
+      "-s",
+      "dcache.hit_extra=1",
+      "-s",
+      "mem.sram_extra=1",
+      "-s",
+      "psram.fill=287.6",
+      "-s",
+      "psram.writeback=328.6",
+      "/Users/bytedance/Documents/Workspace/ink-audit-8/build-audit/r8-pq-cost.elf"
+    ],
+    "exit_code": 0,
+    "output": [
+      "skip-white-255 rows=340 model_cycles=14620",
+      "skip-gray-255 rows=340 model_cycles=14620",
+      "skip-white-cross4096 rows=340 model_cycles=14620",
+      "skip-white-1 rows=1 model_cycles=43",
+      "exec_row=0",
+      "iss: exit 0, 128138402 instructions, 284950384 cycles, CPI 2.224"
+    ],
+    "regions": [
+      {
+        "name": "skip-white-255",
+        "units": 340,
+        "aux_units": 255,
+        "cycles": 18590900.3359375,
+        "cycles_per_unit": 54679.118635,
+        "instret": 7881837
+      },
+      {
+        "name": "skip-gray-255",
+        "units": 340,
+        "aux_units": 255,
+        "cycles": 1544765.046875,
+        "cycles_per_unit": 4543.426608,
+        "instret": 491597
+      },
+      {
+        "name": "skip-white-cross4096",
+        "units": 340,
+        "aux_units": 255,
+        "cycles": 18682598.5859375,
+        "cycles_per_unit": 54948.81937,
+        "instret": 7935206
+      },
+      {
+        "name": "skip-white-1",
+        "units": 1,
+        "aux_units": 1,
+        "cycles": 97444.1484375,
+        "cycles_per_unit": 97444.148438,
+        "instret": 46365
+      },
+      {
+        "name": "executor-idle-row",
+        "units": 1,
+        "aux_units": 0,
+        "cycles": 38,
+        "cycles_per_unit": 38.0,
+        "instret": 27
+      }
+    ]
+  }
+]

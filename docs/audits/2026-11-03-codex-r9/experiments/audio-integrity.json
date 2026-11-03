@@ -1,0 +1,83 @@
+{
+  "note": "模拟 codec PCM；288000 个语音样本及流间两段各 32000 个静音样本。HAL 将每次关输出后的间隔最多记录为 2 s（hal_audio_sim.c:108–129）。未验证真实声学或 Opus。",
+  "runs": [
+    {
+      "name": "r9_concurrent_control-pqbn",
+      "params": [
+        1,
+        2,
+        16000
+      ],
+      "samples": 352000,
+      "played_ms": 18000,
+      "underruns": 0,
+      "sha256": "af5c0ed0d1120cbdbf1335476ae5ef2aee2e2f9fe66f0c6dc64dc9f91ea7d122",
+      "equal_to_control": true
+    },
+    {
+      "name": "r9_concurrent-pqbn",
+      "params": [
+        1,
+        2,
+        16000
+      ],
+      "samples": 352000,
+      "played_ms": 18000,
+      "underruns": 0,
+      "sha256": "af5c0ed0d1120cbdbf1335476ae5ef2aee2e2f9fe66f0c6dc64dc9f91ea7d122",
+      "equal_to_control": true
+    },
+    {
+      "name": "r9_concurrent-pqbn-before",
+      "params": [
+        1,
+        2,
+        16000
+      ],
+      "samples": 352000,
+      "played_ms": 18000,
+      "underruns": 0,
+      "sha256": "af5c0ed0d1120cbdbf1335476ae5ef2aee2e2f9fe66f0c6dc64dc9f91ea7d122",
+      "equal_to_control": true
+    },
+    {
+      "name": "r9_concurrent",
+      "params": [
+        1,
+        2,
+        16000
+      ],
+      "samples": 352000,
+      "played_ms": 18000,
+      "underruns": 0,
+      "sha256": "af5c0ed0d1120cbdbf1335476ae5ef2aee2e2f9fe66f0c6dc64dc9f91ea7d122",
+      "equal_to_control": true
+    },
+    {
+      "name": "r9_concurrent-before",
+      "params": [
+        1,
+        2,
+        16000
+      ],
+      "samples": 352000,
+      "played_ms": 18000,
+      "underruns": 0,
+      "sha256": "af5c0ed0d1120cbdbf1335476ae5ef2aee2e2f9fe66f0c6dc64dc9f91ea7d122",
+      "equal_to_control": true
+    },
+    {
+      "name": "r9_concurrent-pqbn-asan",
+      "params": [
+        1,
+        2,
+        16000
+      ],
+      "samples": 352000,
+      "played_ms": 18000,
+      "underruns": 0,
+      "sha256": "af5c0ed0d1120cbdbf1335476ae5ef2aee2e2f9fe66f0c6dc64dc9f91ea7d122",
+      "equal_to_control": true
+    }
+  ]
+}

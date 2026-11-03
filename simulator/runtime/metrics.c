@@ -96,6 +96,21 @@ double sim_metric_value(const char *name) {
     return q.v;
 }
 
+static void last_on_host(void *p) {
+    query_t *q = p;
+    for (size_t i = 0; i < nM; i++)
+        if (!strcmp(M[i].name, q->name)) {
+            q->v = M[i].kind == M_DIST ? (M[i].n ? M[i].samples[M[i].n - 1] : 0) : M[i].value;
+            return;
+        }
+}
+
+double sim_metric_last(const char *name) {
+    query_t q = {name, 0};
+    vtk_host_call(last_on_host, &q);
+    return q.v;
+}
+
 void sim_metric_sample(const char *name, double v) { update(name, M_DIST, v); }
 void sim_metric_add(const char *name, double v) { update(name, M_COUNTER, v); }
 void sim_metric_set(const char *name, double v) { update(name, M_GAUGE, v); }

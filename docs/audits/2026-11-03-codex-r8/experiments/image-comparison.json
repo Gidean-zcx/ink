@@ -1,0 +1,18 @@
+[
+  {
+    "name": "reader_basic-metalio-plus-pqbn",
+    "pixels": 831744,
+    "changed": 76,
+    "mean_abs_diff": 0.002963652277623884,
+    "max_abs_diff": 34,
+    "pixels_over_16": 76
+  },
+  {
+    "name": "ai_ask-metalio-plus-pqbn",
+    "pixels": 831744,
+    "changed": 1166,
+    "mean_abs_diff": 0.03078110572483841,
+    "max_abs_diff": 34,
+    "pixels_over_16": 1166
+  }
+]

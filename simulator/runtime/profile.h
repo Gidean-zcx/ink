@@ -103,6 +103,7 @@ typedef struct {
         /* CPU cycles (ISS, tools/iss/bench/run_pqbn.sh): scan rows and planner */
         double row_idle, row_band, row_tile;
         double plan_base, plan_px, plan_motion_tile, plan_exit_tile, plan_idle;
+        double skip_row, skip_call, skip_clamp; /* a rest's upkeep (pqbn_v4_skip): per row swept, per call, per 4096 mark crossed */
     } pqbn;
     int line_count;             /* lines scanned per phase (panel lines + blanking) */
     uint32_t line_ns;           /* scan time of one line */

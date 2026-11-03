@@ -434,7 +434,8 @@ static void board_init(void) {
                           .io_unlock = metalio_board_unlock,
                           .pmic = hal_i2c_device(0, TPS65185_ADDR, "pmic"),
                           .vcom_mv = METALIO_EPD_VCOM_MV,
-                          .gate_output = gate_output};
+                          .gate_output = gate_output,
+                          .screen_coming = metalio_board_rails_cut};
 }
 
 /* At waveform start: the panel must see good rails and VCOM (checked by the PMIC model). */
@@ -846,6 +847,7 @@ typedef struct {
     int tx0, ty0, tx1, ty1;   /* tiles covered, inclusive */
     uint64_t started_ns;      /* first push in the area */
     bool after_clean;         /* overlaps the area of a clean in progress: done only after it */
+    bool after_redraw;        /* overlaps an area a supply loss left to redraw (g_redraw): done only after that redraw */
 } pq_upd_t;
 
 static struct {
@@ -1018,6 +1020,10 @@ static void pq_ingest(const req_t *r) {
         return;
     }
     u->after_clean = PQ.clean_stage && rect_overlap(&r->area, &PQ.clean_area);
+    if (g_redraw) { /* the panel there is unknown until the redraw clean has run (pq_redraw_check) */
+        const hal_rect_t lost = g_redraw_area.w > 0 ? g_redraw_area : (hal_rect_t){0, 0, D.W, D.H};
+        u->after_redraw = rect_overlap(&r->area, &lost);
+    }
     pq_target(&r->area, -1, true);
 }
 
@@ -1087,14 +1093,13 @@ static void pq_advance_idle(void) {
     if (!j) return;
     sim_metric_add("display.pqbn.idle_advance_phases", (double)j); /* budgets check the clock moves across rests */
     const uint32_t from = PQ.now, to = PQ.now + (uint32_t)j;
-    if ((from >> 12) != (to >> 12)) {
-        const uint32_t m = to & ~4095u;
-        const int nt = PQ.ntx * PQ.nty;
-        for (int i = 0; i < nt; i++)
-            if ((uint16_t)(m - PQ.C.tile_plan[i]) > 8192) PQ.C.tile_plan[i] = (uint16_t)(m - 8192);
-        for (int ty = 0; ty < PQ.nty; ty++)
-            if ((int16_t)(PQ.C.band[2 * ty] - (uint16_t)m) <= 0) PQ.C.band[2 * ty] = (uint16_t)m;
-    }
+    /* the skipped phases' upkeep (timestamp sweep, tile ages), as if they had run with nothing to drive:
+     * without it the settled pixels' 10-bit timestamps wrapped after a few drive/rest cycles (AUD-011) */
+    const int rows = pqbn_v4_skip(&PQ.C, from, to);
+    double cyc = g_profile.pqbn.skip_call + (double)rows * g_profile.pqbn.skip_row; /* ISS, settled rows: pessimistic */
+    if ((from >> 12) != (to >> 12)) cyc += g_profile.pqbn.skip_clamp; /* the tile-age clamp at a multiple of 4096 */
+    sim_charge_cycles(cyc);
+    sim_metric_sample("display.pqbn.rest_upkeep_ms", sim_cycles_ns(cyc) / 1e6);
     PQ.now = to;
 }
 
@@ -1225,7 +1230,7 @@ static void pq_after_phase(uint32_t now, uint64_t scan_end) {
     for (int i = 0; i < PQ.nu;) {
         pq_upd_t *u = &PQ.u[i];
         bool cleaning = PQ.clean_stage && i == PQ.clean_idx;
-        bool waiting = u->after_clean && PQ.clean_stage;
+        bool waiting = (u->after_clean && PQ.clean_stage) || (u->after_redraw && g_redraw);
         if (!cleaning && !waiting && pq_area_still(u->tx0, u->ty0, u->tx1, u->ty1, now + 1)) {
             if (!checked) checked = power_kept() ? 1 : -1;
             if (checked < 0) { /* every update in flight fails; the drive stops (pq_drive) */
@@ -1262,7 +1267,10 @@ static void pq_redraw_check(void) {
         pq_ingest(&rc);
     }
     for (int i = 0; i < PQ.nu; i++) /* what was asked there is done when the clean has shown it */
-        if (i != PQ.clean_idx && rect_overlap(&PQ.u[i].r.area, &a)) PQ.u[i].after_clean = true;
+        if (i != PQ.clean_idx && rect_overlap(&PQ.u[i].r.area, &a)) {
+            PQ.u[i].after_clean = true; /* now: until this clean is done */
+            PQ.u[i].after_redraw = false;
+        }
     g_redraw = false; /* set again if this drive loses its supply too */
     g_redraw_area = (hal_rect_t){0, 0, 0, 0};
     sim_metric_add("display.redraws_after_supply_loss", 1);

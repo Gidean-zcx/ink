@@ -1,0 +1,41 @@
+{
+  "control_samples": 48000,
+  "with_tones_samples": 52800,
+  "insertions": [
+    {
+      "control_sample": 3840,
+      "tone_sample": 3840,
+      "samples": 960
+    },
+    {
+      "control_sample": 8640,
+      "tone_sample": 9600,
+      "samples": 960
+    },
+    {
+      "control_sample": 14400,
+      "tone_sample": 16320,
+      "samples": 960
+    },
+    {
+      "control_sample": 20160,
+      "tone_sample": 23040,
+      "samples": 960
+    },
+    {
+      "control_sample": 25920,
+      "tone_sample": 29760,
+      "samples": 960
+    }
+  ],
+  "all_48000_voice_samples_identical": true,
+  "fault_cancel_tail_is_tone": true,
+  "fault_replace_tail_is_new_stream": true,
+  "hashes": {
+    "control": "e9d9bad6b8ce3b3981c13a21323113fd4850e10db18211860e664cd507e6f314",
+    "tones": "4c041ca1e58608b386221d77c34d5d2ebee19c8c334db7319f26feca0b401dbe",
+    "cancel": "1d1f64c43f99519b547450f2e29c75572d5ee45946f9b6d9da68e5e2a0d1e7e3",
+    "replace": "28254b5adcdb0bb89464cc0d93f60eba708f82b8a8751ee611224147e14942eb"
+  },
+  "note": "WAV from simulator codec; not acoustic quality or real Opus validation. Fault WAV includes clock-loss silence; played_ms is separate."
+}
