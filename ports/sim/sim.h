@@ -204,6 +204,7 @@ void sim_tca_input(int port, uint8_t mask, uint8_t value); /* physical input lev
 bool sim_tca_int_low(void);
 bool sim_board_motor_on(void);
 bool sim_board_amp_on(void);
+bool sim_board_shared_reset_held(void);   /* P12 low: touch controller and modem in reset */
 void sim_gpio2_update(void);              /* GPIO2 = expander INT AND accelerometer INT1 (wired); any context */
 /* RTC + accelerometer models (dev_rtc_accel.c) and their HALs (hal_sensors_sim.c) */
 void sim_rtc_accel_init(void);
@@ -272,6 +273,7 @@ bool sim_script_has_end(void);
 void sim_gui_started(void);
 void sim_gui_finished(void);
 void sim_gui_crashed(const char *reason) __attribute__((noreturn));
+void sim_gui_audio_push(const int16_t *pcm, int n); /* speaker samples (16 kHz mono) for the window */
 void sim_fatal(const char *reason) __attribute__((noreturn));
 /** Entry point of the simulated system (provided by the system/app under test). */
 void ink_main(void);

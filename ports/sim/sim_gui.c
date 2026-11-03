@@ -227,3 +227,31 @@ void sim_gui_stop(void) {
 
 void sim_gui_set_speed(double speed) { vtk_set_realtime_speed(speed); }
 void sim_gui_set_paused(bool paused) { vtk_set_paused(paused); }
+
+/* ------------------------------------------------------------------ speaker -> computer */
+
+#define AUDIO_RING 16000 /* one second at 16 kHz */
+static struct {
+    int16_t buf[AUDIO_RING];
+    int head, count;
+} AU;
+
+void sim_gui_audio_push(const int16_t *pcm, int n) { /* simulation side (play tick) */
+    pthread_mutex_lock(&Gm);
+    for (int i = 0; i < n; i++) {
+        AU.buf[(AU.head + AU.count) % AUDIO_RING] = pcm[i];
+        if (AU.count < AUDIO_RING) AU.count++;
+        else AU.head = (AU.head + 1) % AUDIO_RING; /* the computer fell behind: drop the oldest */
+    }
+    pthread_mutex_unlock(&Gm);
+}
+
+int sim_gui_audio_pull(int16_t *out, int n) {
+    pthread_mutex_lock(&Gm);
+    int k = n < AU.count ? n : AU.count;
+    for (int i = 0; i < k; i++) out[i] = AU.buf[(AU.head + i) % AUDIO_RING];
+    AU.head = (AU.head + k) % AUDIO_RING;
+    AU.count -= k;
+    pthread_mutex_unlock(&Gm);
+    return k;
+}

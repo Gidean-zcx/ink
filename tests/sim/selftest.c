@@ -21,6 +21,7 @@
 #include "ink/hal_net.h"
 #include "ink/hal_power.h"
 #include "ink/probe.h"
+#include "ft6336u/ft6336u.h"
 #include "nt26/nt26.h"
 #include "sim.h" /* the self-test may peek at the profile to compute expectations */
 
@@ -620,6 +621,9 @@ static void board_task(void *arg) {
     CHECK(nt26_registered(&reg) == NT26_OK && reg, "the modem is registered");
     metalio_board_set(1, MB_P1_SHARED_RST, 0); /* resetting the touch controller resets the modem too */
     CHECK(hal_modem_at("AT", resp, sizeof resp, 500) == HAL_AT_TIMEOUT && !lte_up(), "P12 low holds the 4G modem in reset");
+    uint8_t chip = 0, reg_id = 0xA3;
+    CHECK(hal_i2c_write_read(hal_i2c_device(0, FT6336U_ADDR, "touch"), &reg_id, 1, &chip, 1) == HAL_I2C_NACK,
+          "and the touch controller with it");
     metalio_board_set(1, MB_P1_SHARED_RST, MB_P1_SHARED_RST);
     osal_task_delay_us(4000000);
     CHECK(nt26_registered(&reg) == NT26_OK && reg && lte_up(), "after P12 goes high the modem boots and registers");

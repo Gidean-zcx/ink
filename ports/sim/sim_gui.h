@@ -89,6 +89,10 @@ void sim_gui_set_speed(double speed); /* virtual seconds per wall second */
 void sim_gui_set_paused(bool paused);
 const char *sim_gui_out_dir(void);
 
+/** Speaker samples the device played (16 kHz mono), for the computer's audio output; returns how
+ *  many were copied (the rest is silence). Any thread. */
+int sim_gui_audio_pull(int16_t *out, int n);
+
 #ifdef __cplusplus
 }
 #endif

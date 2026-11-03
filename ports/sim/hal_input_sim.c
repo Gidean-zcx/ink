@@ -377,6 +377,7 @@ static uint8_t ft_reg(uint8_t reg) {
 
 static int ft_xfer(void *state, const uint8_t *w, size_t wlen, uint8_t *r, size_t rlen) {
     (void)state;
+    if (sim_board_shared_reset_held()) return HAL_I2C_NACK; /* P12 low holds it in reset */
     if (wlen) FT.ptr = w[0];
     for (size_t i = 1; i < wlen; i++, FT.ptr++)
         if (FT.ptr == 0xA4) FT.int_mode = w[i];

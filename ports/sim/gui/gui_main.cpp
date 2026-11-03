@@ -268,6 +268,31 @@ void upload_frame() {
     SDL_UnlockTexture(g_tex);
 }
 
+/* ------------------------------------------------------------------ speaker -> computer */
+
+std::atomic<bool> g_sound{true};
+
+void audio_cb(void *, Uint8 *stream, int len) { /* SDL's audio thread */
+    int16_t *out = reinterpret_cast<int16_t *>(stream);
+    int n = len / 2, got = g_sound ? sim_gui_audio_pull(out, n) : 0;
+    if (!g_sound) sim_gui_audio_pull(out, n); /* keep the ring moving while muted */
+    for (int i = got; i < n; i++) out[i] = 0;
+}
+
+SDL_AudioDeviceID open_audio() {
+    if (SDL_InitSubSystem(SDL_INIT_AUDIO) != 0) return 0;
+    SDL_AudioSpec want, have;
+    SDL_zero(want);
+    want.freq = 16000; /* the device's I2S rate */
+    want.format = AUDIO_S16SYS;
+    want.channels = 1;
+    want.samples = 512;
+    want.callback = audio_cb;
+    SDL_AudioDeviceID dev = SDL_OpenAudioDevice(nullptr, 0, &want, &have, 0);
+    if (dev) SDL_PauseAudioDevice(dev, 0);
+    return dev;
+}
+
 /* ------------------------------------------------------------------ device keys */
 
 bool g_mouse_key[HAL_KEY_COUNT], g_kb_key[HAL_KEY_COUNT], g_sent_key[HAL_KEY_COUNT];
@@ -609,6 +634,8 @@ void draw_panel(ImVec2 pos, ImVec2 size) {
         if (ImGui::Button("重启设备")) g_restart = true;
         ImGui::SameLine();
         ImGui::Checkbox("适应窗口", &g_fit);
+        bool snd = g_sound;
+        if (ImGui::Checkbox("喇叭声音放到电脑上", &snd)) g_sound = snd;
         ImGui::TextDisabled("时间按真机节奏走；暂停时整台设备冻结。");
     }
 
@@ -888,6 +915,7 @@ int main(int argc, char **argv) {
     ImGui_ImplSDLRenderer2_Init(g_ren);
     load_font(fb_scale);
     build_lut(0, 0);
+    SDL_AudioDeviceID audio = headless ? 0 : open_audio();
 
     sim_gui_enable();
     pthread_attr_t attr;
@@ -1016,6 +1044,7 @@ int main(int argc, char **argv) {
         sync_key(k);
     }
     stop_simulation();
+    if (audio) SDL_CloseAudioDevice(audio);
     ImGui_ImplSDLRenderer2_Shutdown();
     ImGui_ImplSDL2_Shutdown();
     ImGui::DestroyContext();

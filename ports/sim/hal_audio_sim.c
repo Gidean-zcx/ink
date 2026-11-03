@@ -112,6 +112,7 @@ static void wav_put(const int16_t *pcm, int n, uint64_t t_ns) {
     }
     fwrite(pcm, 2, (size_t)n, A.wav);
     A.wav_samples += (uint64_t)n;
+    if (g_sim.interactive) sim_gui_audio_push(pcm, n); /* the desktop simulator plays it on the computer */
     A.wav_end_ns = t_ns + (uint64_t)n * 1000000000ull / HAL_AUDIO_RATE;
 }
 

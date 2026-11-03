@@ -54,6 +54,7 @@ static void update_int(void) {
 bool sim_tca_int_low(void) { return X.int_low; }
 bool sim_board_motor_on(void) { return X.motor; }
 bool sim_board_amp_on(void) { return X.amp; }
+bool sim_board_shared_reset_held(void) { return !(levels(1) & MB_P1_SHARED_RST); }
 
 void sim_tca_input(int port, uint8_t mask, uint8_t value) { /* ISR or locked */
     X.ext[port] = (uint8_t)((X.ext[port] & ~mask) | (value & mask));
