@@ -297,17 +297,26 @@ static void play_tick(void *arg) { /* ISR: the DMA needs the next descriptor */
 /* Conversation mode on the BH1098G unless it still has it from this P14 power cycle: waits for the
  * chip to boot (BH1098G_BOOT_US after P14 came on) and sends the mode (~0.7 s). Task context. */
 static void ensure_bt_mode(void) {
-    if (!A.bt_lock || !(metalio_board_output(1) & MB_P1_SHARED_PWR)) return; /* unpowered: no clock */
+    if (!A.bt_lock) return;
     osal_mutex_lock(A.bt_lock, OSAL_WAIT_FOREVER);
-    unsigned epoch = metalio_board_shared_power_epoch();
-    if (!A.bt_mode_set || A.bt_epoch != epoch) {
+    for (int tries = 0; tries < 3; tries++) {
+        if (!(metalio_board_output(1) & MB_P1_SHARED_PWR)) break; /* unpowered: no clock */
+        unsigned epoch = metalio_board_shared_power_epoch();
+        if (A.bt_mode_set && A.bt_epoch == epoch) break;
         uint64_t ready = metalio_board_shared_power_since_us() + BH1098G_BOOT_US, now = osal_now_us();
         if (ready > now) osal_task_delay_us(ready - now);
         hal_uart_t *u = hal_uart_open(BH1098G_UART_PORT, BH1098G_BAUD);
-        A.bt_mode_set = u && bh1098g_set_mode(u, 1) == 0;
+        bool ok = u && bh1098g_set_mode(u, 1) == 0;
+        if (metalio_board_shared_power_epoch() != epoch || !(metalio_board_output(1) & MB_P1_SHARED_PWR)) {
+            A.bt_mode_set = false; /* P14 went away meanwhile: the chip lost the mode again */
+            sim_metric_add("audio.bt_mode_power_cycled", 1);
+            continue;
+        }
+        A.bt_mode_set = ok;
         A.bt_epoch = epoch;
-        if (!A.bt_mode_set) sim_warn("audio: BH1098G mode 1 not set");
+        if (!ok) sim_warn("audio: BH1098G mode 1 not set");
         else sim_metric_add("audio.bt_mode_sets", 1);
+        break;
     }
     osal_mutex_unlock(A.bt_lock);
 }
@@ -347,10 +356,14 @@ void hal_audio_get_info(hal_audio_info_t *out) {
 int hal_audio_capture_start(hal_audio_capture_cb cb, void *ctx) {
     lazy_init();
     if (!g_profile.info.has_audio_in || A.cap_on || !cb) return -1;
+    sim_power_lease(true); /* from the first step the chip does not go to sleep under it (AUD3-004) */
     const char *prev = osal_mem_tag("i2s-rx");
     A.rx_dma = osal_malloc(A.ring_bytes, OSAL_MEM_DMA);
     osal_mem_tag(prev);
-    if (!A.rx_dma) return -1;
+    if (!A.rx_dma) {
+        sim_power_lease(false);
+        return -1;
+    }
     hal_power_request(HAL_PWR_AUDIO_IN, true);
     ensure_bt_mode();
     A.cb = cb;
@@ -380,6 +393,7 @@ void hal_audio_capture_stop(void) {
     osal_free(A.rx_dma);
     A.rx_dma = NULL;
     hal_power_request(HAL_PWR_AUDIO_IN, false);
+    sim_power_lease(false);
     sim_trace_instant("audio", "mic off", vtk_now(), NULL);
 }
 
@@ -387,10 +401,14 @@ int hal_audio_play_start(void) {
     lazy_init();
     if (!g_profile.info.has_audio_out) return -1;
     if (A.out_on) return 0;
+    sim_power_lease(true); /* from the first step the chip does not go to sleep under it (AUD3-004) */
     const char *prev = osal_mem_tag("i2s-tx");
     A.tx_dma = osal_malloc(A.ring_bytes, OSAL_MEM_DMA);
     osal_mem_tag(prev);
-    if (!A.tx_dma) return -1;
+    if (!A.tx_dma) {
+        sim_power_lease(false);
+        return -1;
+    }
     hal_power_request(HAL_PWR_AUDIO_OUT, true);
     ensure_bt_mode();
     amp(true);
@@ -473,6 +491,7 @@ void hal_audio_play_stop(bool drain) {
     A.tx_dma = NULL;
     amp(false);
     hal_power_request(HAL_PWR_AUDIO_OUT, false);
+    sim_power_lease(false);
 }
 
 /* ------------------------------------------------------------- simulator */

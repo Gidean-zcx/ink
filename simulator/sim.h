@@ -255,6 +255,7 @@ void sim_power_input_lost(void);
 void sim_input_set_power_state(hal_power_state_t s);
 bool sim_power_wake(uint32_t cause); /* a direct wake line fired (ISR or locked); true if it woke the chip */
 void sim_power_gpio2_low(void);      /* GPIO2 is low (ISR or locked): wakes the chip if the sleep armed it */
+void sim_power_lease(bool take);     /* a peripheral starting / stopped: no sleep transition meanwhile (task) */
 /* the port's light-sleep sequence (hal_power_sleep) through the other HALs; task context */
 void sim_display_park(void);         /* rails down, TPS65185 to SLEEP */
 void sim_input_sleep_begin(void);    /* stop reading the expander's keys */

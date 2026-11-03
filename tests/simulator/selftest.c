@@ -698,6 +698,19 @@ static struct {
     unsigned accel_moves;
 } SLP;
 static int g_power_presses, g_power_releases, g_vol_events;
+static volatile unsigned g_mic_samples;
+static volatile int g_cap_rc = 99;
+
+static void board_mic(void *ctx, const int16_t *mic, const int16_t *ref, int samples, int lost, uint64_t t_us) {
+    (void)ctx, (void)mic, (void)ref, (void)lost, (void)t_us;
+    g_mic_samples += (unsigned)samples;
+}
+
+static void capture_late_task(void *arg) { /* starts recording while the sleep entry is under way */
+    (void)arg;
+    osal_task_delay_us(20000);
+    g_cap_rc = hal_audio_capture_start(board_mic, NULL);
+}
 
 static void board_sink(const hal_input_event_t *e, void *ctx) {
     (void)ctx;
@@ -829,6 +842,20 @@ static void sleep_checks(void) {
     vtk_unlock();
     osal_task_delay_us(500000);
     CHECK(g_vol_events == 2, "and the keys work again (%d VOL+ events)", g_vol_events);
+
+    /* recording started while the sleep entry is under way (audit AUD3-004): it waits for the sleep
+     * to finish instead of losing P14 under it, sets the Bluetooth chip's mode again, and records */
+    hal_sleep_cfg_t sc2 = {.max_us = 1000000, .wake_mask = HAL_WAKE_POWER_KEY}; /* P14 is cut */
+    osal_task_cfg_t ct = {.name = "cap_late", .fn = capture_late_task, .stack_bytes = 3072, .priority = OSAL_PRIO_NORMAL + 1, .core = -1};
+    osal_task_create(&ct, NULL);
+    g_mic_samples = 0;
+    cause = hal_power_sleep(&sc2);
+    osal_task_delay_us(2500000);
+    CHECK(cause == HAL_WAKE_TIMER && g_cap_rc == 0 && sim_bt_audio_mode() == 1 && g_mic_samples > 0,
+          "recording started during the sleep entry works after the wake (cause %u, rc %d, mode %d, %u samples)", (unsigned)cause,
+          g_cap_rc, sim_bt_audio_mode(), g_mic_samples);
+    hal_audio_capture_stop();
+    osal_task_delay_us(4000000); /* the modem boots and registers again */
 
     /* P16 held low by something else (the factory log reads it so on the board in hand): it cannot
      * signal, so the sleep does not arm it and the timer ends the slice instead of an endless wake */

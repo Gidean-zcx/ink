@@ -322,7 +322,7 @@ set_tests_properties(selftest-sim-slots PROPERTIES ENVIRONMENT "INK_SELFTEST_CEL
 add_test(NAME selftest-board-wiring
   COMMAND sim-selftest --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
           --budget ${CMAKE_SOURCE_DIR}/tests/simulator/board.budget.json
-          --out ${CMAKE_BINARY_DIR}/test-out/selftest-board --quiet --end 40s --no-random-outages)
+          --out ${CMAKE_BINARY_DIR}/test-out/selftest-board --quiet --end 60s --no-random-outages)
 set_tests_properties(selftest-board-wiring PROPERTIES ENVIRONMENT "INK_SELFTEST_BOARD=1")
 # System service checks (storage cache versions; tests/integration/systest.c), on the services themselves.
 add_executable(sim-systest simulator/runtime/sim_main.c tests/integration/systest.c)

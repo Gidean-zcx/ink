@@ -315,7 +315,10 @@ static void slice_cb(void *arg) { /* ISR: the sleep timer expired */
 
 /* Peripherals that must be idle before the rails go (upstream: no active capture, shared-power
  * operation or display work); the system quiesces them, the HAL refuses otherwise. */
+static int g_leases;
+
 static const char *busy_reason(void) {
+    if (g_leases > 0) return "starting"; /* a peripheral on its way up (sim_power_lease) */
     if (hal_display_pending() > 0 || sim_display_playing()) return "display";
     if (sim_audio_busy()) return "audio";
     if (sim_camera_busy()) return "camera";
@@ -422,9 +425,31 @@ static bool rtc_line_idle(void) {
     return metalio_board_read(1, &p1) == HAL_I2C_OK && (p1 & MB_P1_RTC_INT);
 }
 
+/* Sleep admission (audit AUD3-004): a sleep transition and the start of peripheral work exclude
+ * each other. hal_power_sleep holds g_admission from its first check until the hardware is back; a
+ * peripheral starting takes a lease under it first (sim_power_lease) and keeps it until it stops,
+ * so a sleep either sees the lease and refuses, or finishes before the start goes on. */
+static osal_mutex_t *g_admission;
+
+void sim_power_lease(bool take) { /* task context */
+    if (g_admission) osal_mutex_lock(g_admission, OSAL_WAIT_FOREVER);
+    g_leases += take ? 1 : -1;
+    if (g_leases < 0) g_leases = 0;
+    if (g_admission) osal_mutex_unlock(g_admission);
+}
+
+static uint32_t sleep_admitted(const hal_sleep_cfg_t *cfg);
+
 uint32_t hal_power_sleep(const hal_sleep_cfg_t *cfg) {
     if (vtk_in_isr() || !vtk_self()) osal_panic("hal_power_sleep must be called from a task");
     if (!cfg) return 0;
+    if (g_admission) osal_mutex_lock(g_admission, OSAL_WAIT_FOREVER);
+    uint32_t cause = sleep_admitted(cfg);
+    if (g_admission) osal_mutex_unlock(g_admission);
+    return cause;
+}
+
+static uint32_t sleep_admitted(const hal_sleep_cfg_t *cfg) {
     const char *busy = busy_reason();
     if (busy) { /* the system must quiesce first */
         refused("power.sleep_busy", busy); /* (power.sleep_refused is the system's count of 0 returns) */
@@ -567,6 +592,8 @@ void sim_power_set_battery(int percent, bool charging) {
 }
 
 void sim_power_init(void) {
+    g_admission = osal_mutex_create();
+    if (!g_admission) osal_panic("power: no memory for the sleep admission lock");
     PW.soc = 0.8;
     find("display.rails");
     PW.state = HAL_PWR_STATE_ACTIVE;
