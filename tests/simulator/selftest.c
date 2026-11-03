@@ -982,11 +982,15 @@ static double panel_mean(const hal_rect_t *a) {
     return sum / ((double)a->w * a->h);
 }
 
-static bool update_and_wait_for(const uint8_t *px, const hal_rect_t *area, int max_ms) {
+static bool update_wf_and_wait(const uint8_t *px, const hal_rect_t *area, hal_waveform_t wf, int max_ms) {
     g_upd_done = false;
-    hal_display_update(area, px, area->w, HAL_WF_GL16, 0, upd_done, NULL);
+    hal_display_update(area, px, area->w, wf, 0, upd_done, NULL);
     for (int i = 0; i < max_ms / 10 && !g_upd_done; i++) osal_task_delay_us(10000);
     return g_upd_done;
+}
+
+static bool update_and_wait_for(const uint8_t *px, const hal_rect_t *area, int max_ms) {
+    return update_wf_and_wait(px, area, HAL_WF_GL16, max_ms);
 }
 
 static bool update_and_wait(const uint8_t *px, const hal_rect_t *area) { return update_and_wait_for(px, area, 5000); }
@@ -1037,6 +1041,25 @@ static void display_cut_checks(void) {
     double mean = panel_mean(&area);
     CHECK(lost && again && mean < 25 && (uint32_t)sim_metric_value("display.redraws_after_supply_loss") == redraws + 1,
           "after a supply loss the same image sent again is on the panel, redrawn in full (mean %.0f)", mean);
+
+    /* a full-screen update that loses its supply, then a full GC16 (the system's own recovery): that GC16
+     * is the redraw, the next small update is not held up by a second full one (audit AUD6-002) */
+    hal_panel_info_t pi;
+    hal_display_get_info(&pi);
+    hal_rect_t all = {0, 0, pi.width, pi.height};
+    uint8_t *full = osal_malloc((size_t)pi.width * pi.height, OSAL_MEM_EXTERNAL);
+    if (full) memset(full, 0x80, (size_t)pi.width * pi.height);
+    osal_task_create(&cb, NULL);
+    bool lost2 = full && update_wf_and_wait(full, &all, HAL_WF_GL16, 20000) && !g_upd_ok;
+    if (full) memset(full, 0xFF, (size_t)pi.width * pi.height);
+    bool full_ok = full && update_wf_and_wait(full, &all, HAL_WF_GC16, 20000) && g_upd_ok;
+    memset(px, 0x00, sizeof px);
+    uint64_t t_small = osal_now_us();
+    bool small = update_and_wait(px, &area) && g_upd_ok;
+    uint64_t took = osal_now_us() - t_small;
+    CHECK(lost2 && full_ok && small && took < 2000000, "after a supply loss and a full GC16, a small update takes its usual time (%llu ms)",
+          (unsigned long long)(took / 1000));
+    osal_free(full);
 }
 
 static void board_task(void *arg) {
