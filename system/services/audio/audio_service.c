@@ -356,27 +356,32 @@ static bool staged_wanted(void) {
     return wanted;
 }
 
-static void service_playback(void) {
-    (void)staged_wanted();
+/* The staging buffer is free: a pending tone takes it, ahead of the stream's next frame (a frame
+ * staged there always goes out first, so the tone waits at most one frame). True if it did. */
+static bool take_tone(void) {
     lock();
-    /* a tone takes the staging buffer: a stream frame staged there goes out first */
-    bool tone = AU.tone_pending && !(AU.staged_stream && AU.pcm_off < AU.pcm_len);
+    bool tone = AU.tone_pending;
     ink_tone_t which = AU.tone;
     const char *probe = AU.tone_probe;
     uint64_t cause = AU.tone_cause;
-    if (tone) AU.tone_pending = false;
+    AU.tone_pending = false;
     unlock();
-    if (tone) {
-        if (open_output()) {
-            make_tone(which);
-            AU.heard_probe = probe;
-            AU.heard_cause = cause;
-        } else {
-            ink_probe_count("audio.tones_dropped"); /* a prompt played late would mislead */
-        }
+    if (!tone) return false;
+    if (!open_output()) {
+        ink_probe_count("audio.tones_dropped"); /* a prompt played late would mislead */
+        return false;
     }
+    make_tone(which);
+    AU.heard_probe = probe;
+    AU.heard_cause = cause;
+    return true;
+}
+
+static void service_playback(void) {
+    (void)staged_wanted();
     for (;;) {
-        if (AU.pcm_off >= AU.pcm_len) { /* nothing staged: take the next frame only when it can play */
+        if (AU.pcm_off >= AU.pcm_len) { /* nothing staged: a tone first, else the stream's next frame when it can play */
+            if (take_tone()) continue;
             if (!stream_wants_output() || !output_for_stream() || !stage_next()) break;
         } else if (!output_for_stream()) {
             break; /* staged samples wait for the output */

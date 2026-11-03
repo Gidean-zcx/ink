@@ -153,6 +153,19 @@ static void audio_checks(void) {
     CHECK(playing && sim_audio_played_ms() == at_cancel && !sim_audio_busy(),
           "a stream cancelled while its output is opened again plays nothing more (%.0f ms after the cancel)",
           sim_audio_played_ms() - at_cancel);
+
+    /* a tone while a long stream plays normally: it goes out after the frame staged now, not after the
+     * stream (audit AUD8-001), and none of the stream is lost to it */
+    played0 = sim_audio_played_ms();
+    id = ink_audio_stream_open(INK_AUDIO_PRIO_VOICE, 0, NULL);
+    push_frames(id, 50);
+    ink_audio_stream_finish(id);
+    bool streaming = playing_for(played0, 300);
+    ink_audio_tone(INK_TONE_DONE, osal_now_us(), "systest.tone_heard_ms");
+    osal_task_delay_us(5000000);
+    double heard = sim_metric_last("systest.tone_heard_ms"), total = sim_audio_played_ms() - played0;
+    CHECK(streaming && heard > 0 && heard < 200 && total >= 3060 - 2 && total <= 3060 + 2,
+          "a tone in a playing stream is heard after %.0f ms, and the stream plays in full (%.0f ms of 3000 + 60)", heard, total);
     ink_audio_on_stream_failed(NULL, NULL);
 }
 
