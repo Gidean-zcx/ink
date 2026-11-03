@@ -7,6 +7,7 @@
  *           [--flash-image user.bin] [--sd-dir dir] [--seed N] [--quiet]
  *
  * Exit status: 0 ok, 1 budget violated, 2 panic, 3 usage/config error.
+ * The desktop simulator (ports/sim/gui) runs the same sim_main() on a thread of its own.
  * Outputs in --out: metrics.json, final.png, snap-*.png, frames/ (with
  * --frames), trace.json (with --trace; open in https://ui.perfetto.dev).
  */
@@ -17,6 +18,7 @@
 #include <sys/stat.h>
 
 #include "sim.h"
+#include "sim_gui.h"
 
 sim_options_t g_sim;
 
@@ -127,6 +129,7 @@ static int finalize(const char *status) {
 void sim_fatal(const char *reason) {
     finalize(reason);
     fflush(NULL);
+    if (g_sim.interactive) sim_gui_crashed(reason); /* the window keeps the dead device on screen */
     exit(2);
 }
 
@@ -154,7 +157,7 @@ static void sampler(void *arg) { /* ISR: periodic heap fragmentation sampling */
     vtk_event_after(SIM_MS(50), sampler, NULL);
 }
 
-int main(int argc, char **argv) {
+int sim_main(int argc, char **argv) {
     g_sim.out_dir = "sim-out";
     g_sim.cpu_mode = VTK_CPU_ANNOTATED;
     g_sim.realtime_speed = 1.0;
@@ -209,6 +212,7 @@ int main(int argc, char **argv) {
         else { fprintf(stderr, "unknown option %s\n", a); usage(); return 3; }
     }
     if (!g_sim.profile_path) { usage(); return 3; }
+    if (g_sim.interactive) g_sim.realtime = true;
     if (!g_sim.nasset_dirs) g_sim.asset_dirs[g_sim.nasset_dirs++] = "assets";
     rng_state = g_sim.seed ? g_sim.seed * 2654435761u : 0x9e3779b9u;
 
@@ -241,7 +245,7 @@ int main(int argc, char **argv) {
         fprintf(stderr, "script: %s\n", err);
         return 3;
     }
-    if (!g_sim.end_ns && !sim_script_has_end()) {
+    if (!g_sim.end_ns && !sim_script_has_end() && !g_sim.interactive) {
         g_sim.end_ns = 30ull * 1000000000ull;
         if (!g_sim.quiet) fprintf(stderr, "ink-sim: no --end and no 'end' in the script: stopping at 30 s\n");
     }
@@ -287,8 +291,14 @@ int main(int argc, char **argv) {
     }
     if (g_sim.script_path) sim_script_start();
     vtk_event_at(SIM_MS(50), sampler, NULL);
+    if (g_sim.interactive) sim_gui_started();
     vtk_run();
     int v = finalize("ok");
     fflush(NULL);
+    if (g_sim.interactive) sim_gui_finished();
     return v ? 1 : 0;
 }
+
+#ifndef INK_SIM_NO_MAIN
+int main(int argc, char **argv) { return sim_main(argc, argv); }
+#endif

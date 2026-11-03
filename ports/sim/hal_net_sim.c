@@ -182,6 +182,11 @@ void sim_net_set_link(const char *name) { /* ISR (script) */
     set_link(t, t != HAL_LINK_NONE);
 }
 
+const char *sim_net_link(bool *up) { /* ISR */
+    if (up) *up = N.up;
+    return N.type == HAL_LINK_LTE ? "lte" : N.type == HAL_LINK_WIFI ? "wifi" : "none";
+}
+
 void sim_net_outage(uint64_t ns) { /* ISR (script) */
     hal_link_type_t t = N.type;
     if (t == HAL_LINK_NONE) return;

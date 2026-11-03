@@ -1,0 +1,79 @@
+/*
+ * Bridge between the desktop simulator window (ports/sim/gui) and the simulation.
+ *
+ * The window runs on the host's main thread; the simulation runs sim_main() on another thread in
+ * realtime mode. Everything here may be called from the window's thread: requests reach the
+ * simulation as external events (vtk_inject_external), so simulated code still runs one piece at a
+ * time, and results come back through a lock. Actions are the physical ones a person does to the
+ * device (touch, keys, cable, network, power), in the same terms as the scenario scripts.
+ */
+#ifndef INK_SIM_GUI_H
+#define INK_SIM_GUI_H
+
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/** The simulator (ports/sim/sim_main.c); returns its exit status. */
+int sim_main(int argc, char **argv);
+/** Before sim_main: interactive mode (realtime, no default end time, a panic keeps the window). */
+void sim_gui_enable(void);
+
+typedef enum {
+    SIM_GUI_STARTING = 0,
+    SIM_GUI_RUNNING,
+    SIM_GUI_STOPPED, /* sim_main returned: end, stop, power cut, or a configuration error */
+    SIM_GUI_CRASHED, /* the simulated device panicked; sim_gui_crash_reason() says why */
+} sim_gui_phase_t;
+sim_gui_phase_t sim_gui_phase(void);
+const char *sim_gui_crash_reason(void);
+
+typedef struct {
+    unsigned seq;              /* bumped for every sample */
+    uint64_t now_ns;           /* virtual time */
+    int ncores;
+    uint64_t core_busy_ns[4];  /* cumulative, for load over an interval */
+    int battery_percent, battery_mv;
+    bool charging;
+    int light_cold, light_warm; /* front light, permille (set by the system) */
+    int power_state;            /* hal_power_state_t */
+    bool sleeping;              /* light sleep */
+    unsigned haptic_pulses;
+    bool haptic_on;
+    bool display_busy;          /* a refresh is being driven */
+    char link[8];               /* "lte" | "wifi" | "none" */
+    bool link_up;
+    size_t internal_total, internal_free, internal_min_free;
+    size_t external_total, external_free, external_min_free;
+} sim_gui_stats_t;
+
+/** Ask for a fresh sample and, if the panel image changed, a new frame. At most one request is
+ *  outstanding; while the simulation is paused or busy it is answered later. */
+void sim_gui_poll(void);
+/** Copy the newest frame (logical orientation, 8-bit gray) if it changed since the last call. */
+bool sim_gui_take_frame(uint8_t *buf, size_t cap, int *w, int *h);
+void sim_gui_get_stats(sim_gui_stats_t *out);
+
+/* Physical actions. Coordinates are logical panel pixels; keys are hal_key_t values. */
+void sim_gui_touch(bool down, int x, int y);
+void sim_gui_key(int key, bool pressed);
+void sim_gui_battery(int percent, bool charging);
+void sim_gui_net(const char *link);  /* "lte" | "wifi" | "none" */
+void sim_gui_outage(int ms);
+void sim_gui_mic(const char *source); /* "speech" | "silence" | "noise" */
+void sim_gui_snapshot(const char *name); /* <out>/snap-<name>.png */
+void sim_gui_power_cut(void);         /* pull the battery: tears an in-flight flash write, stops */
+void sim_gui_stop(void);              /* clean stop (saves the flash image) */
+void sim_gui_set_speed(double speed); /* virtual seconds per wall second */
+void sim_gui_set_paused(bool paused);
+const char *sim_gui_out_dir(void);
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif

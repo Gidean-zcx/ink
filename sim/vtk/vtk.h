@@ -143,6 +143,11 @@ void vtk_set_sleeper_locked(vtk_task_t *t);
 /** Thread-safe from ANY host thread (e.g. an SDL or network thread): run fn in event
  *  context at the current virtual time. Only meaningful in realtime mode. */
 void vtk_inject_external(vtk_event_fn fn, void *arg);
+/** Realtime mode, any host thread: change the pace (virtual ns per wall ns) from now on. */
+void vtk_set_realtime_speed(double speed);
+/** Realtime mode, any host thread: freeze the simulation at its next idle point (external input
+ *  waits) or let it run again; virtual time continues where it stopped. */
+void vtk_set_paused(bool paused);
 
 /* ---- diagnostics ---- */
 /** Run fn(arg) on the calling task's host thread, but outside the part of its host stack that the

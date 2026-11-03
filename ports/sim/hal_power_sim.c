@@ -41,6 +41,8 @@ static struct {
     double soc; /* state of charge 0..1 */
     bool charging;
     int light_cold, light_warm;
+    unsigned haptic_pulses;
+    uint64_t haptic_until;
     double cpu_mah;
     /* clock and sleep */
     hal_power_state_t state;
@@ -118,8 +120,25 @@ void hal_light_set(int cold_permille, int warm_permille) {
 
 bool hal_haptic_available(void) { return g_profile.info.has_haptics; }
 void hal_haptic_pulse(int ms) {
-    (void)ms;
-    if (g_profile.info.has_haptics) sim_metric_add("haptics.pulses", 1);
+    if (!g_profile.info.has_haptics) return;
+    sim_metric_add("haptics.pulses", 1);
+    PW.haptic_pulses++;
+    uint64_t until = vtk_now() + SIM_MS(ms > 0 ? ms : 50); /* upstream short pulse: 50 ms on TCA9555 P03 */
+    if (until > PW.haptic_until) PW.haptic_until = until;
+}
+
+void sim_power_gui_state(sim_power_gui_t *out) { /* ISR context (desktop simulator) */
+    hal_battery_t b;
+    hal_power_battery(&b);
+    out->percent = b.percent;
+    out->millivolts = b.millivolts;
+    out->charging = b.charging;
+    out->light_cold = PW.light_cold;
+    out->light_warm = PW.light_warm;
+    out->state = (int)PW.state;
+    out->sleeping = sim_power_sleeping();
+    out->haptic_pulses = PW.haptic_pulses;
+    out->haptic_on = vtk_isr_now() < PW.haptic_until;
 }
 
 static double total_mah(void) {

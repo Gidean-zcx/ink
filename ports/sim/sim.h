@@ -45,6 +45,7 @@ typedef struct {
     bool quiet;
     bool realtime;
     double realtime_speed;
+    bool interactive;         /* desktop simulator window (sim_gui.h): realtime, no default end */
     vtk_cpu_mode_t cpu_mode;
     double host_to_target;    /* MEASURED mode factor (0 = profile default) */
     uint64_t end_ns;          /* stop time (0 = when idle / script end) */
@@ -116,6 +117,11 @@ void sim_display_report(void);
 void sim_display_snapshot(const char *name);
 /** Mean absolute residual ghosting over the panel (0..255), for budgets. */
 double sim_display_ghost_level(void);
+/* Desktop simulator (ISR context or host work): change counter, refresh in progress, and a copy of
+ * the visible image in logical orientation (cap >= panel pixels; false before the display exists). */
+uint32_t sim_display_version(void);
+bool sim_display_busy(void);
+bool sim_display_visible(uint8_t *out, size_t cap, int *lw, int *lh);
 
 void sim_input_init(void);            /* task context (boot) */
 /* Physical actions in logical (UI-orientation) coordinates; called from script events (ISR ctx). */
@@ -140,6 +146,16 @@ void sim_power_report(void);
 void sim_power_set_battery(int percent, bool charging);
 /** Track a power consumer: name, current in mA while on. ISR-safe. */
 void sim_power_consumer(const char *name, bool on, double ma);
+typedef struct {
+    int percent, millivolts;
+    bool charging;
+    int light_cold, light_warm; /* front light, permille */
+    int state;                  /* hal_power_state_t */
+    bool sleeping;              /* light sleep */
+    unsigned haptic_pulses;     /* vibration pulses so far */
+    bool haptic_on;             /* motor running now */
+} sim_power_gui_t;
+void sim_power_gui_state(sim_power_gui_t *out); /* ISR context (desktop simulator) */
 
 /* Shared I2C bus model (touch, PMIC, fuel gauge, RTC). Task context. */
 void sim_i2c_init(void);
@@ -185,6 +201,7 @@ void sim_net_init(void);              /* task context (boot) */
 void sim_net_report(void);
 void sim_net_set_link(const char *name); /* ISR (script): "lte" | "wifi" | "none" */
 void sim_net_outage(uint64_t ns);        /* ISR (script) */
+const char *sim_net_link(bool *up);      /* ISR: "lte" | "wifi" | "none" */
 void sim_net_hub_send(struct hal_ws *ws, uint64_t t_send, const void *data, size_t len, bool binary); /* ISR */
 int sim_hub_load(const char *path, char *err, size_t errlen);
 void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t len, bool binary); /* ISR */
@@ -195,6 +212,10 @@ void sim_script_start(void);          /* schedule script events (before vtk_run)
 bool sim_script_has_end(void);
 
 /* ---- runner ---- */
+/* Desktop simulator bridge (sim_gui.c), called by the runner */
+void sim_gui_started(void);
+void sim_gui_finished(void);
+void sim_gui_crashed(const char *reason) __attribute__((noreturn));
 void sim_fatal(const char *reason) __attribute__((noreturn));
 /** Entry point of the simulated system (provided by the system/app under test). */
 void ink_main(void);

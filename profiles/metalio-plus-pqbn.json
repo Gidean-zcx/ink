@@ -193,7 +193,8 @@
     "audio_out": true,
     "audio_in": true,
     "frontlight": true,
-    "haptics": false,
+    "haptics": true,
+    "_notes_haptics": "Vibration motor on TCA9555 P03, active high, 50 ms short pulse (upstream config.h L70/L80 @690a023, checked 2026-11-03; docs/research/simulator/hardware-parity.md).",
     "rtc": true
   },
   "costs_cycles": {

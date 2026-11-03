@@ -73,7 +73,8 @@ add_library(ink_port_sim STATIC
   ports/sim/hal_net_sim.c
   ports/sim/hal_audio_sim.c
   ports/sim/hal_codec_sim.c
-  ports/sim/sim_hub.c)
+  ports/sim/sim_hub.c
+  ports/sim/sim_gui.c)
 target_include_directories(ink_port_sim PUBLIC ports/sim platform/include drivers/epd drivers)
 target_link_libraries(ink_port_sim PUBLIC ink_sim_core ink_littlefs ink_stb)
 target_compile_options(ink_port_sim PRIVATE ${INK_WARN})
@@ -166,6 +167,74 @@ add_custom_target(ink_test_content ALL DEPENDS ${INK_TEST_CONTENT}/books/测试�
 add_executable(ink-sim ports/sim/sim_main.c)
 target_link_libraries(ink-sim PRIVATE ink_system ink_lvgl ink_port_sim)
 target_compile_options(ink-sim PRIVATE ${INK_WARN})
+
+# ---------------------------------------------------------------- desktop simulator (R-042, D-43)
+# ink-sim-gui: the same simulation in a window (SDL2 + Dear ImGui). Uses the system's SDL2 when
+# installed (Debian/Ubuntu: libsdl2-dev; macOS: brew install sdl2), otherwise builds a pinned SDL2.
+option(INK_GUI "Build the desktop simulator ink-sim-gui" ON)
+if(INK_GUI)
+  enable_language(CXX)
+  set(CMAKE_CXX_STANDARD 17)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+  set(INK_FETCH_SYSTEM)
+  if(CMAKE_VERSION VERSION_GREATER_EQUAL 3.25)
+    set(INK_FETCH_SYSTEM SYSTEM)
+  endif()
+  find_package(SDL2 CONFIG QUIET)
+  if(SDL2_FOUND AND TARGET SDL2::SDL2)
+    set(INK_SDL2 SDL2::SDL2)
+    message(STATUS "ink-sim-gui: SDL2 ${SDL2_VERSION} from the system")
+  else()
+    message(STATUS "ink-sim-gui: no SDL2 installed, building release-2.32.10 from source")
+    foreach(opt SDL_SHARED SDL_TEST SDL_TESTS SDL_TEST_LIBRARY SDL_JOYSTICK SDL_HAPTIC SDL_HIDAPI SDL_SENSOR)
+      set(${opt} OFF CACHE BOOL "" FORCE)
+    endforeach()
+    set(SDL_STATIC ON CACHE BOOL "" FORCE)
+    set(SDL2_DISABLE_INSTALL ON CACHE BOOL "" FORCE)
+    FetchContent_Declare(sdl2
+      GIT_REPOSITORY https://github.com/libsdl-org/SDL.git
+      GIT_TAG release-2.32.10
+      GIT_SHALLOW TRUE
+      ${INK_FETCH_SYSTEM})
+    FetchContent_MakeAvailable(sdl2)
+    set(INK_SDL2 SDL2::SDL2-static)
+  endif()
+  FetchContent_Declare(imgui
+    GIT_REPOSITORY https://github.com/ocornut/imgui.git
+    GIT_TAG v1.91.9b
+    GIT_SHALLOW TRUE)
+  FetchContent_MakeAvailable(imgui)
+  add_library(ink_imgui STATIC
+    ${imgui_SOURCE_DIR}/imgui.cpp
+    ${imgui_SOURCE_DIR}/imgui_draw.cpp
+    ${imgui_SOURCE_DIR}/imgui_tables.cpp
+    ${imgui_SOURCE_DIR}/imgui_widgets.cpp
+    ${imgui_SOURCE_DIR}/backends/imgui_impl_sdl2.cpp
+    ${imgui_SOURCE_DIR}/backends/imgui_impl_sdlrenderer2.cpp)
+  target_include_directories(ink_imgui SYSTEM PUBLIC ${imgui_SOURCE_DIR} ${imgui_SOURCE_DIR}/backends)
+  target_link_libraries(ink_imgui PUBLIC ${INK_SDL2})
+  target_compile_options(ink_imgui PRIVATE -w)
+
+  # Every character the window's labels use goes into its font atlas.
+  set(INK_GUI_GLYPHS ${CMAKE_BINARY_DIR}/gui/gui_glyphs.h)
+  if(Python3_FOUND)
+    add_custom_command(OUTPUT ${INK_GUI_GLYPHS}
+      COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/gui
+      COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/ports/sim/gui/glyphs.py -o ${INK_GUI_GLYPHS}
+              ${CMAKE_SOURCE_DIR}/ports/sim/gui/gui_main.cpp
+      DEPENDS ${CMAKE_SOURCE_DIR}/ports/sim/gui/glyphs.py ${CMAKE_SOURCE_DIR}/ports/sim/gui/gui_main.cpp
+      COMMENT "ink-sim-gui: glyphs used by the window")
+  else()
+    file(WRITE ${INK_GUI_GLYPHS} "static const char kGuiGlyphs[] = \"\";\n")
+  endif()
+  add_executable(ink-sim-gui ports/sim/sim_main.c ports/sim/gui/gui_main.cpp ${INK_GUI_GLYPHS})
+  target_compile_definitions(ink-sim-gui PRIVATE INK_SIM_NO_MAIN
+    INK_SOURCE_DIR="${CMAKE_SOURCE_DIR}" INK_BINARY_DIR="${CMAKE_BINARY_DIR}"
+    INK_GUI_FONT="${INK_CJK_FONT}" INK_GUI_FONT_FACE=${INK_CJK_FACE})
+  target_include_directories(ink-sim-gui PRIVATE ${CMAKE_BINARY_DIR}/gui)
+  target_link_libraries(ink-sim-gui PRIVATE ink_system ink_lvgl ink_port_sim ink_imgui)
+  target_compile_options(ink-sim-gui PRIVATE ${INK_WARN})
+endif()
 
 # ---------------------------------------------------------------- tests
 enable_testing()
@@ -320,3 +389,11 @@ foreach(t iss iss-selftest)
   target_link_libraries(${t} PRIVATE m)
 endforeach()
 add_test(NAME iss-selftest COMMAND iss-selftest)
+
+# The desktop simulator, headless: boot, clicks on the panel and a cover key reach the system.
+if(INK_GUI AND INK_HAVE_FONTS)
+  add_test(NAME gui-smoke
+    COMMAND ${CMAKE_COMMAND} -DGUI=$<TARGET_FILE:ink-sim-gui> -DOUT=${CMAKE_BINARY_DIR}/test-out/gui-smoke
+            -P ${CMAKE_SOURCE_DIR}/tests/sim/gui_smoke.cmake)
+  set_tests_properties(gui-smoke PROPERTIES TIMEOUT 180)
+endif()

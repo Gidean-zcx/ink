@@ -28,18 +28,19 @@
 
 - CMake、Python 3，Python 包 Pillow；
 - Noto Sans CJK 字体：Homebrew 的字体 cask 或 notofonts 发布包都可以；
-- 首次配置会从 GitHub 拉取 LVGL v9.5.0。
+- 首次配置会从 GitHub 拉取 LVGL v9.5.0；桌面模拟器还会拉取 Dear ImGui，电脑上没装 SDL2 时也拉取 SDL2 源码编译（第一次多一两分钟）。
 
 字体路径默认按 Debian 写的，在 Mac 上要指定：
 
 ```bash
 cmake -S . -B build -DINK_CJK_FONT=<字体文件> -DINK_CJK_FACE=<简体中文字形在集合里的序号，单个 OTF 填 0>
-cmake --build build -j && ctest --test-dir build --output-on-failure    # 应为 32 项（2026-11-03：原 26 项，审计复核 +3，连续翻页 +1，屏幕电源链路 +2）
+cmake --build build -j && ctest --test-dir build --output-on-failure    # 应为 33 项（2026-11-03：原 26 项，审计复核 +3，连续翻页 +1，屏幕电源链路 +2，桌面模拟器 +1）
 ```
 
 注意：
 
-- 模拟器只在 Linux 上验证过（GitHub Actions 的 Linux CI 是基准）。代码只用了标准 pthread、mmap、clock_gettime，大概率能在 macOS 编过，但没试过。
+- 2026-11-03 起 macOS 上全部通过（D-42），Linux CI 仍是基准。本机 `cmake` 若不带 `ctest`，用 pip 装的 cmake。
+- 桌面模拟器：`./build/ink-sim-gui`，用法见[平台与模拟器 §3.1](../system/platform-and-simulator.md)。
 - 编不过时，小的可移植性修复可以直接做，系统要能迁移到别的平台本来就是 R-035 的要求；但不要为了编过而改变模型行为。确实麻烦就用 Linux 容器跑。
 - `tools/iss` 的编译选项里有 `-frounding-math`，Apple clang 可能对它告警。
 
@@ -108,7 +109,7 @@ git clone -b v6.1 --recursive https://github.com/espressif/esp-idf ~/esp/esp-idf
   - PQ-BN“规划跟着扫描走”；
   - 调制解调器服务与短信/来电唤醒；
   - 设备上的确认卡片与成员 PIN；
-  - `ports/posix` + SDL 等。
+  - 桌面模拟器按[硬件对照](../research/simulator/hardware-parity.md)补芯片模型（R-043）。
 - 界面视觉设计按用户要求放在底座之后。
 
 ## 规则

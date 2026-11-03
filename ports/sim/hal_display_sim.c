@@ -96,6 +96,7 @@ static struct {
     /* feeders */
     vtk_waitq_t feed_wq;
     bool playing;
+    uint32_t version;      /* bumped whenever the visible image may have changed (desktop simulator) */
     uint32_t phase_seq;    /* bumped for every phase the feeders work on */
     struct plan *plan;     /* the current phase (feeders read it) */
     bool stall_dirty;      /* a flash stall was reported while playing: re-plan */
@@ -176,6 +177,15 @@ void sim_display_snapshot(const char *name) {
     snprintf(path, sizeof path, "%s/snap-%s.png", g_sim.out_dir, name);
     write_png(path);
     sim_note("snapshot %s", path);
+}
+
+uint32_t sim_display_version(void) { return D.version; }
+bool sim_display_busy(void) { return D.playing; }
+
+bool sim_display_visible(uint8_t *out, size_t cap, int *lw, int *lh) {
+    if (!D.screen || cap < (size_t)D.W * D.H) return false;
+    visible_image(out, lw, lh);
+    return true;
 }
 
 double sim_display_ghost_level(void) {
@@ -479,6 +489,7 @@ static void apply_area(const req_t *r, hal_waveform_t wf) {
             }
             D.screen[i] = nv;
         }
+    D.version++;
 }
 
 /* Play `phases` phases of an update of native area `a`. Returns false if a line was late (upstream
@@ -996,6 +1007,7 @@ static void pq_apply(uint32_t now) {
             D.screen[i] = (uint8_t)(PQ.opt[i] >> 8);
         }
     }
+    D.version++;
 }
 
 typedef struct {
@@ -1378,6 +1390,7 @@ void sim_display_init(void) {
     if (!D.target || !D.screen || !D.applying || !D.residual) abort();
     memset(D.target, 255, n);
     memset(D.screen, 255, n);
+    D.version++;
     D.temperature = 25;
 
     /* The real driver's buffers come out of the device heaps, as separate blocks (a block can

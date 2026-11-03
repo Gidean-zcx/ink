@@ -104,6 +104,8 @@ static struct {
     pthread_cond_t ext_cv;
     ext_item_t *ext_head, *ext_tail;
     struct timespec rt_start;
+    uint64_t rt_wall0, rt_virt0; /* realtime anchor: virtual rt_virt0 at wall rt_wall0 (speed changes, pause) */
+    bool rt_paused;
     vtk_warn_fn warn;
     vtk_switch_hook_fn hook;
     vtk_task_t *stack_probe;
@@ -426,20 +428,25 @@ static void pull_external_locked(uint64_t at) {
 
 /* Pace to wall clock or wait for external input. Returns the (possibly earlier) time to advance to. */
 static uint64_t realtime_wait_locked(uint64_t target) {
-    double speed = K.cfg.realtime_speed > 0 ? K.cfg.realtime_speed : 1.0;
     for (;;) {
-        uint64_t wall_v = (uint64_t)(wall_ns_since_start() * speed);
+        double speed = K.cfg.realtime_speed > 0 ? K.cfg.realtime_speed : 1.0;
+        uint64_t wall = wall_ns_since_start();
+        uint64_t wall_v = K.rt_virt0 + (uint64_t)((double)(wall > K.rt_wall0 ? wall - K.rt_wall0 : 0) * speed);
         pthread_mutex_lock(&K.ext_m);
         bool have_ext = K.ext_head != NULL;
         pthread_mutex_unlock(&K.ext_m);
+        if (K.rt_paused && !K.stop_req) {
+            wall_v = 0; /* frozen: no time passes and external input waits */
+            have_ext = false;
+        }
         if (have_ext) {
             uint64_t at = wall_v < target ? wall_v : target;
             if (at < min_now()) at = min_now();
             pull_external_locked(at);
             return at;
         }
-        if (wall_v >= target || K.stop_req) return target;
-        uint64_t wait_ns = (uint64_t)((double)(target - wall_v) / speed);
+        if (K.stop_req || (!K.rt_paused && wall_v >= target)) return target;
+        uint64_t wait_ns = K.rt_paused ? 50000000ull : (uint64_t)((double)(target - wall_v) / speed);
         if (wait_ns > 50000000ull) wait_ns = 50000000ull;
         struct timespec ts;
         clock_gettime(CLOCK_REALTIME, &ts);
@@ -713,6 +720,8 @@ static vtk_task_t *task_create(const char *name, vtk_task_fn fn, void *arg, int 
 void vtk_run(void) {
     clock_gettime(CLOCK_MONOTONIC, &K.rt_start);
     pthread_mutex_lock(&K.m);
+    K.rt_wall0 = 0;
+    K.rt_virt0 = min_now();
     K.running = true;
     schedule_locked(NULL);
     while (!K.finished) pthread_cond_wait(&K.main_cv, &K.m);
@@ -728,6 +737,36 @@ void vtk_stop(void) {
 }
 
 bool vtk_stopping(void) { return K.stop_req || K.finished; }
+
+static void realtime_kick(void) {
+    pthread_mutex_lock(&K.ext_m);
+    pthread_cond_broadcast(&K.ext_cv);
+    pthread_mutex_unlock(&K.ext_m);
+}
+
+/* Virtual time continues from where the simulation is now, at the new rate. */
+static void realtime_anchor_locked(void) {
+    K.rt_wall0 = wall_ns_since_start();
+    K.rt_virt0 = min_now();
+}
+
+void vtk_set_realtime_speed(double speed) {
+    pthread_mutex_lock(&K.m);
+    if (K.running) realtime_anchor_locked();
+    K.cfg.realtime_speed = speed > 0 ? speed : 1.0;
+    pthread_mutex_unlock(&K.m);
+    realtime_kick();
+}
+
+void vtk_set_paused(bool paused) {
+    pthread_mutex_lock(&K.m);
+    if (K.rt_paused != paused) {
+        K.rt_paused = paused;
+        if (K.running) realtime_anchor_locked();
+    }
+    pthread_mutex_unlock(&K.m);
+    realtime_kick();
+}
 
 uint64_t vtk_now(void) {
     if (K.in_isr) return K.isr_now;
