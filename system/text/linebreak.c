@@ -33,6 +33,9 @@ uint32_t ink_utf8_next(const char *s, size_t len, size_t *i) {
         c = (c << 6) | (b & 0x3F);
     }
     *i = k + (size_t)n + 1;
+    /* overlong forms, UTF-16 surrogates and values past U+10FFFF are not characters */
+    static const uint32_t MIN[4] = {0, 0x80, 0x800, 0x10000};
+    if (c < MIN[n] || (c >= 0xD800 && c <= 0xDFFF) || c > 0x10FFFF) return 0xFFFD;
     return c;
 }
 

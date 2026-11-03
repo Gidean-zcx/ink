@@ -1,0 +1,46 @@
+# AUD-002 control: the same 40 NEXT presses, 1.5 s apart
+@3s      tap   116dp 160dp
++2500ms  tap   50% 228dp
++3s      snap  page1
++3s      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++1500ms      key   next
++10s     snap  drained
++500ms   end

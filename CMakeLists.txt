@@ -212,6 +212,16 @@ if(INK_HAVE_FONTS)
   ink_scenario(reader_basic metalio-plus-psram16)
   ink_scenario(ai_ask metalio-plus)
   ink_scenario(standby metalio-plus)
+  # regressions from the 2026-11 audit review (docs/audits/README.md): position saved while reading
+  # on, late AI speech after the sheet is closed, a book that cannot be opened
+  ink_scenario(reader_continuous metalio-plus)
+  ink_scenario(ai_dismiss metalio-plus)
+  add_test(NAME scenario-reader_empty-metalio-plus
+    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json
+            --script ${CMAKE_SOURCE_DIR}/tests/scenarios/reader_empty.script
+            --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/reader_empty.budget.json
+            --assets ${INK_ASSETS_DIR} --content ${CMAKE_SOURCE_DIR}/tests/content-bad
+            --out ${CMAKE_BINARY_DIR}/test-out/reader_empty-metalio-plus --quiet --trace --frames --no-random-outages)
   # PQ-BN direct drive (research PR #7) on the same scenarios and budgets, plus its flash pause
   add_test(NAME scenario-reader_basic-metalio-plus-pqbn
     COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/profiles/metalio-plus-pqbn.json

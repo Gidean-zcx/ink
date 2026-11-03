@@ -1,0 +1,32 @@
+{
+  "_doc": "A book that cannot be opened (audit AUD-009): actions on it are refused, nothing crashes, HOME works.",
+  "action.user.reader.next_page": {
+    "min": 2,
+    "why": "the NEXT key and the right-side tap reached the action and were refused"
+  },
+  "action.user.reader.prev_page": {
+    "min": 1,
+    "why": "the PREV key reached the action and was refused"
+  },
+  "reader.page_turns": {
+    "max": 0,
+    "optional": true,
+    "why": "there is no page to turn to"
+  },
+  "ui.open_to_stable_ms.count": {
+    "min": 2,
+    "why": "the shelf and the book screen (with its message) opened"
+  },
+  "ui.action_to_visible_ms.FLASH_UI.count": {
+    "min": 1,
+    "why": "HOME brought the home screen back"
+  },
+  "panic.count": {
+    "max": 0,
+    "optional": true
+  },
+  "warnings.count": {
+    "max": 0,
+    "optional": true
+  }
+}

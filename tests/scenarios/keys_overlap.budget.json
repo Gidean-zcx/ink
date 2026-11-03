@@ -21,5 +21,9 @@
   "warnings.count": {
     "max": 0,
     "optional": true
+  },
+  "input.key_delivery_ms.max": {
+    "max": 30,
+    "why": "HOME, pressed while NEXT is held, is reported at once: each cover key is its own touch point (with one point for all cover keys it waited for NEXT's release, ~41 ms; audit AUD-012)"
   }
 }

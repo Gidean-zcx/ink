@@ -275,6 +275,8 @@ static void poll_touch_once(void) {
         hal_input_event_t e = {.type = HAL_IN_TOUCH};
         e.touch.id = i;
         if (p->down && !IN.reported[i].down) {
+            /* fingers and cover keys share the controller's points: a finger beyond them waits */
+            if (points_reported() >= g_profile.touch_points) continue;
             e.touch.phase = HAL_TOUCH_DOWN;
             e.t_us = p->t_change / 1000;
         } else if (p->down && (p->nx != IN.reported[i].nx || p->ny != IN.reported[i].ny)) {

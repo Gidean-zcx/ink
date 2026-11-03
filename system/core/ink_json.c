@@ -1,5 +1,7 @@
 /* JSON helpers over jsmn (no heap). */
+#include <errno.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #define JSMN_STATIC
@@ -97,10 +99,13 @@ int ink_json_str(const ink_json_t *j, int t, char *out, size_t cap) {
             s += 4;
             if (cp >= 0xD800 && cp <= 0xDBFF && e - s >= 6 && s[0] == '\\' && s[1] == 'u') { /* surrogate pair */
                 int lo = 0;
-                for (int k = 0; k < 4; k++) lo = lo * 16 + hexv(s[2 + k]);
-                cp = 0x10000 + ((cp - 0xD800) << 10) + (lo - 0xDC00);
-                s += 6;
+                for (int k = 0; k < 4 && lo >= 0; k++) lo = hexv(s[2 + k]) < 0 ? -1 : lo * 16 + hexv(s[2 + k]);
+                if (lo >= 0xDC00 && lo <= 0xDFFF) {
+                    cp = 0x10000 + ((cp - 0xD800) << 10) + (lo - 0xDC00);
+                    s += 6;
+                }
             }
+            if (cp >= 0xD800 && cp <= 0xDFFF) cp = 0xFFFD; /* a lone surrogate is not a character */
             char tmp[4];
             int n = cp < 0x80 ? 1 : cp < 0x800 ? 2 : cp < 0x10000 ? 3 : 4;
             if (n == 1) tmp[0] = (char)cp;
@@ -119,6 +124,7 @@ int ink_json_str(const ink_json_t *j, int t, char *out, size_t cap) {
     return (int)o;
 }
 
+/* An integer token only: "1.5", "1e9", "12abc" and values outside int64 are not integers. */
 bool ink_json_int(const ink_json_t *j, int t, int64_t *out) {
     if (t < 0 || t >= j->ntok || j->tok[t].type != JSMN_PRIMITIVE) return false;
     char tmp[24];
@@ -126,8 +132,11 @@ bool ink_json_int(const ink_json_t *j, int t, int64_t *out) {
     if (n <= 0 || n >= (int)sizeof tmp) return false;
     memcpy(tmp, j->text + j->tok[t].start, (size_t)n);
     tmp[n] = 0;
-    long long v;
-    if (sscanf(tmp, "%lld", &v) != 1) return false;
+    if (!(tmp[0] == '-' ? tmp[1] >= '0' && tmp[1] <= '9' : tmp[0] >= '0' && tmp[0] <= '9')) return false;
+    char *end;
+    errno = 0;
+    long long v = strtoll(tmp, &end, 10);
+    if (errno == ERANGE || *end) return false;
     *out = (int64_t)v;
     return true;
 }

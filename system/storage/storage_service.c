@@ -77,6 +77,7 @@ static struct {
     job_t *jobs;             /* MAX_JOBS, external RAM */
     read_req_t *rreq;        /* pending read (under lock) */
     int pending;
+    int failed; /* writes that failed (e.g. /user full) since boot */
     int holds;
     uint32_t seq;
     centry_t *cache; /* CACHE_MAX, external RAM */
@@ -136,9 +137,12 @@ static int write_now(const job_t *j) {
     hal_file_t *f = hal_fs_open(tmp, HAL_O_WRITE | HAL_O_CREATE | HAL_O_TRUNC);
     if (!f) return -1;
     ssize_t n = hal_fs_write(f, j->data, j->len);
-    int ok = n == (ssize_t)j->len && hal_fs_close(f) == 0;
-    if (!ok) return -1;
-    return hal_fs_rename(tmp, j->path);
+    int closed = hal_fs_close(f); /* on every path: an open /user file holds internal RAM */
+    if (n != (ssize_t)j->len || closed != 0 || hal_fs_rename(tmp, j->path) != 0) {
+        hal_fs_remove(tmp); /* the old content stays in place; a partial temp file would only take space */
+        return -1;
+    }
+    return 0;
 }
 
 static int read_now(const char *path, void *buf, size_t cap) { /* storage task, flash guard held */
@@ -292,7 +296,18 @@ static void storage_task(void *arg) {
             ink_display_flash_guard(false);
             ink_probe_value("storage.write_ms", (double)(osal_now_us() - t0) / 1000.0);
             ink_probe_value("storage.wait_for_idle_ms", (double)(t0 - t_wait) / 1000.0);
-            if (r != 0) ink_probe_count("storage.write_errors");
+            if (r != 0) {
+                /* not stored: reads of this path must show what the flash holds, not the lost content */
+                ink_probe_count("storage.write_errors");
+                osal_mutex_lock(ST.lock, OSAL_WAIT_FOREVER);
+                ST.failed++;
+                centry_t *e = cache_find(job.path);
+                if (e) {
+                    osal_free(e->path);
+                    *e = (centry_t){0};
+                }
+                osal_mutex_unlock(ST.lock);
+            }
             finish_job(slot);
         }
     }
@@ -397,6 +412,13 @@ void ink_storage_hold_writes(bool hold) {
 int ink_storage_pending(void) {
     osal_mutex_lock(ST.lock, OSAL_WAIT_FOREVER);
     int n = ST.pending;
+    osal_mutex_unlock(ST.lock);
+    return n;
+}
+
+int ink_storage_failed(void) {
+    osal_mutex_lock(ST.lock, OSAL_WAIT_FOREVER);
+    int n = ST.failed;
     osal_mutex_unlock(ST.lock);
     return n;
 }
