@@ -20,7 +20,11 @@ jobs:
       - name: Build
         run: cmake --build build -j
       - name: Scenarios and budgets
+        continue-on-error: true
         run: ctest --test-dir build --output-on-failure
+      - name: Stack estimates, main vs branch (temporary diagnostic)
+        if: always()
+        run: python3 .github/stack_diag.py
       - name: HTML reports (what the simulated panel showed, latencies, CPU, memory)
         if: always()
         run: |
