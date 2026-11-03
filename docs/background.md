@@ -63,9 +63,9 @@
 
 **实物状态**
 
-- 用户已订购整机（含 4G），约 12 月初到货（D-00）。
-- 不另买开发板，到货前尽量靠模拟（D-27）。
-- **本项目至今没有任何实机测量数据。**
+- 整机（含 4G）2026-11-03 到货，比预计的 12 月初早（D-00）；已用 USB 连到用户的 Mac。上机步骤与结果见 [实机记录](hardware/README.md)。
+- 不另买开发板（D-27）。
+- **截至本文更新，还没有实机测量数据。** 第 0 步（只读识别、整片备份、出厂固件日志）正在进行。
 
 ## 4. 时间线
 
@@ -340,6 +340,7 @@ python3 tools/simreport/simreport.py out/reader --lang zh    # HTML 报告：刷
 | S0 调研（参考库） | [briefs/README.md](briefs/README.md)、[research/interaction-library/README.md](research/interaction-library/README.md) |
 | 协作规则（含 Codex 路由约定） | [AGENTS.md](../AGENTS.md) |
 | 外部审计 | [audits/codex-audit-prompt.md](audits/codex-audit-prompt.md) |
+| 实机上机步骤与实测结果 | [hardware/README.md](hardware/README.md) |
 
 ## 14. PR 与分支
 
