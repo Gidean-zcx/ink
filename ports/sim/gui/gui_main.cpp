@@ -504,7 +504,7 @@ void draw_device(ImVec2 area_pos, ImVec2 area_size, float fb_scale) {
     badge(g_st.light_cold + g_st.light_warm > 0, "前光", IM_COL32(255, 230, 170, 255));
     char batt[48];
     const char *net = !strcmp(g_st.link, "wifi") ? (g_st.link_up ? "Wi-Fi" : "Wi-Fi 断开")
-                      : !strcmp(g_st.link, "lte")  ? (g_st.sim_switching ? "4G 切卡中" : !g_st.sim_registered ? "4G 无卡" : g_st.link_up ? "4G" : "4G 断开")
+                      : !strcmp(g_st.link, "lte")  ? (!g_st.sim_registered ? (g_st.sim_searching ? "4G 注册中" : "4G 无服务") : g_st.link_up ? "4G" : "4G 断开")
                                                    : "无网络";
     snprintf(batt, sizeof batt, "%d%%  %s", g_st.battery_percent, net);
     ImVec2 bts = ImGui::CalcTextSize(batt);
@@ -634,17 +634,14 @@ void draw_panel(ImVec2 pos, ImVec2 size) {
                 if (ImGui::Combo(slot_names[i], &k, kinds, 4)) sim_gui_sim_card(i, k);
                 ImGui::PopID();
             }
-            const char *state = g_st.sim_switching    ? "正在切换"
+            const char *state = !g_st.modem_radio     ? "射频关"
                                 : g_st.sim_registered ? (g_st.volte ? "已注册，可通话" : "已注册，不能通话")
-                                                      : "未注册（这个卡槽没卡，或刚插卡还没重新识别）";
-            ImGui::Text("模组在用：%s · %s", g_st.sim_selected ? "内置卡" : "外置卡", state);
-            ImGui::BeginDisabled(g_st.sim_switching);
-            if (ImGui::Button(g_st.sim_selected ? "让模组切到外置卡" : "让模组切到内置卡")) sim_gui_sim_select(1 - g_st.sim_selected);
-            ImGui::EndDisabled();
-            if (ImGui::IsItemHovered(ImGuiHoveredFlags_AllowWhenDisabled))
-                tooltip("开发用：替系统发切卡命令（关射频 → 设卡槽 → 开射频，约 5 秒，期间 4G 断开）。"
-                        "官方固件在 设置 → 网络 → 4G 里切换，选择会存在模组里，重启后不变。");
-            ImGui::TextDisabled("插卡后要切换或重启才识别：模组是否支持热插拔还没确认。");
+                                : g_st.sim_searching  ? "正在注册"
+                                                      : "未注册（这张卡不在）";
+            ImGui::Text("模组：卡槽设置 %s · 在用 %s · %s", g_st.sim_selected ? "内置卡" : "外置卡",
+                        g_st.sim_active ? "内置卡" : "外置卡", state);
+            ImGui::TextDisabled("切卡由系统发 AT 命令完成，这里只模拟模组和卡本身。");
+            ImGui::TextDisabled("插卡后要等模组重新开射频才识别：是否支持热插拔还没确认。");
         }
     }
     if (ImGui::CollapsingHeader("麦克风", ImGuiTreeNodeFlags_DefaultOpen)) {

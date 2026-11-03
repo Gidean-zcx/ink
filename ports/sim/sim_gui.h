@@ -49,11 +49,13 @@ typedef struct {
     bool link_up;
     size_t internal_total, internal_free, internal_min_free;
     size_t external_total, external_free, external_min_free;
-    /* cellular SIM: slot 0 external card slot, 1 internal card */
+    /* cellular modem: slot 0 external card slot, 1 internal card */
     bool cell_modem;
-    int sim_selected;
+    int sim_selected;           /* the modem's slot setting */
+    int sim_active;             /* slot whose card the radio uses */
+    bool modem_radio;
     int sim_card[2];            /* 0 none, 1 data, 2 data + SMS, 3 data + SMS + voice */
-    bool sim_switching, sim_registered, volte;
+    bool sim_registered, sim_searching, volte;
 } sim_gui_stats_t;
 
 /** Ask for a fresh sample and, if the panel image changed, a new frame. At most one request is
@@ -71,8 +73,6 @@ void sim_gui_net(const char *link);  /* "lte" | "wifi" | "none" */
 void sim_gui_outage(int ms);
 void sim_gui_mic(const char *source); /* "speech" | "silence" | "noise" */
 void sim_gui_sim_card(int slot, int kind); /* put a card in a slot or take it out (kind as sim_card) */
-void sim_gui_sim_select(int slot);         /* developer: make the modem switch cards, as the system's
-                                              settings will (radio off, set slot, radio on) */
 void sim_gui_snapshot(const char *name); /* <out>/snap-<name>.png */
 void sim_gui_power_cut(void);         /* pull the battery: tears an in-flight flash write, stops */
 void sim_gui_stop(void);              /* clean stop (saves the flash image) */

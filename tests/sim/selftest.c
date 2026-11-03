@@ -19,6 +19,7 @@
 #include "ink/osal.h"
 #include "ink/hal_net.h"
 #include "ink/probe.h"
+#include "nt26/nt26.h"
 #include "sim.h" /* the self-test may peek at the profile to compute expectations */
 
 #define CHECK(cond, ...)                                       \
@@ -514,9 +515,10 @@ static void bad_psram_task(void *arg) {
     sim_warn("death test: a PSRAM-stack task read /user without crashing the device");
 }
 
-/* INK_SELFTEST_CELL=1: the modem's two SIM slots (external card slot, internal card) and an online
- * switch (radio off, set the slot, radio on), as on the Plus: LTE goes down during the switch and
- * comes back on the new card; an empty slot leaves it down and can be left again. */
+/* INK_SELFTEST_CELL=1: the 4G modem model (two SIM slots, AT commands) driven by our NT26 driver.
+ * Online switches keep the device running; LTE goes down for the switch and comes back on the new
+ * card; an empty slot leaves it down and can be left again; AT+ECRST makes the modem deaf for a
+ * while and it re-registers by itself. */
 static bool lte_up(void) {
     hal_link_status_t st;
     hal_net_link_status(&st);
@@ -525,41 +527,42 @@ static bool lte_up(void) {
 
 static void cell_task(void *arg) {
     (void)arg;
-    const uint64_t settle = 6000000; /* a switch takes ~5 s in the model */
-    hal_cell_info_t ci;
-    hal_cell_info(&ci);
-    if (!ci.modem) {
-        CHECK(!hal_cell_select_sim(HAL_SIM_INTERNAL), "no modem: a SIM switch is refused");
+    char resp[64];
+    if (hal_modem_at("AT", resp, sizeof resp, 1000) == HAL_AT_NO_MODEM) {
+        nt26_slot_t s0;
+        CHECK(nt26_sim_slot(&s0) == NT26_NO_MODEM, "no modem: the driver says so");
         ink_probe_mark("cell-done");
         return;
     }
-    CHECK((int)ci.selected == g_profile.sim_selected && ci.registered && lte_up(), "boots on the profile's card with LTE up");
-    CHECK(!hal_cell_select_sim(ci.selected), "selecting the card in use is refused");
-    CHECK(hal_cell_select_sim(HAL_SIM_INTERNAL), "a switch to the internal card starts");
-    hal_cell_info(&ci);
-    CHECK(ci.switching && !ci.registered && !lte_up(), "LTE is down while the modem switches cards");
-    CHECK(!hal_cell_select_sim(HAL_SIM_EXTERNAL), "a second switch is refused while one runs");
-    osal_task_delay_us(settle);
-    hal_cell_info(&ci);
-    CHECK(!ci.switching && ci.selected == HAL_SIM_INTERNAL && ci.registered && lte_up() && !ci.volte,
-          "the internal card registers without a reboot (data only: no VoLTE)");
+    nt26_slot_t slot = NT26_INTERNAL_CARD;
+    bool reg = false;
+    CHECK(nt26_sim_slot(&slot) == NT26_OK && (int)slot == g_profile.sim_selected, "the slot setting reads back (AT+ECSIMCFG?)");
+    CHECK(nt26_registered(&reg) == NT26_OK && reg && lte_up(), "registered at boot, LTE up");
+    CHECK(hal_modem_at("AT+FOO", resp, sizeof resp, 1000) == HAL_AT_ERROR, "an unknown command answers ERROR");
+
+    uint64_t t0 = osal_now_us();
+    nt26_result_t r = nt26_select_sim(NT26_INTERNAL_CARD, 30000);
+    uint64_t took = osal_now_us() - t0;
+    CHECK(r == NT26_OK && nt26_sim_slot(&slot) == NT26_OK && slot == NT26_INTERNAL_CARD && lte_up(),
+          "online switch to the internal card registers without a reboot (%s)", nt26_result_name(r));
+    CHECK(took > 3000000 && took < 10000000, "the switch takes a few seconds (%llu ms)", (unsigned long long)(took / 1000));
+
     vtk_lock();
-    sim_net_set_card(HAL_SIM_INTERNAL, false, false, false); /* the card is taken away */
+    sim_net_set_card(NT26_INTERNAL_CARD, false, false, false); /* the card in use is taken away */
     vtk_unlock();
-    hal_cell_info(&ci);
-    CHECK(!ci.registered && !lte_up(), "losing the active card drops LTE");
-    CHECK(hal_cell_select_sim(HAL_SIM_EXTERNAL), "a switch back to the external card starts");
-    osal_task_delay_us(settle);
-    hal_cell_info(&ci);
-    CHECK(ci.selected == HAL_SIM_EXTERNAL && ci.registered && lte_up() && ci.volte, "the external card registers, with VoLTE");
-    CHECK(hal_cell_select_sim(HAL_SIM_INTERNAL), "a switch to the now empty internal slot starts");
-    osal_task_delay_us(settle);
-    hal_cell_info(&ci);
-    CHECK(ci.selected == HAL_SIM_INTERNAL && !ci.registered && !lte_up(), "an empty slot leaves LTE down");
-    CHECK(hal_cell_select_sim(HAL_SIM_EXTERNAL), "switching away from an empty slot still works");
-    osal_task_delay_us(settle);
-    hal_cell_info(&ci);
-    CHECK(ci.registered && lte_up(), "back on the external card");
+    CHECK(nt26_registered(&reg) == NT26_OK && !reg && !lte_up(), "losing the card in use drops LTE");
+    r = nt26_select_sim(NT26_EXTERNAL_SLOT, 30000);
+    CHECK(r == NT26_OK && lte_up(), "switch back to the external card (%s)", nt26_result_name(r));
+
+    r = nt26_select_sim(NT26_INTERNAL_CARD, 8000);
+    CHECK(r == NT26_NOT_REGISTERED && !lte_up(), "a switch to the empty slot reports it (%s)", nt26_result_name(r));
+    r = nt26_select_sim(NT26_EXTERNAL_SLOT, 30000);
+    CHECK(r == NT26_OK && lte_up(), "switching away from the empty slot works (%s)", nt26_result_name(r));
+
+    CHECK(hal_modem_at("AT+ECRST", resp, sizeof resp, 1000) == HAL_AT_OK, "AT+ECRST is acknowledged");
+    CHECK(hal_modem_at("AT", resp, sizeof resp, 300) == HAL_AT_TIMEOUT && !lte_up(), "the rebooting modem does not answer");
+    osal_task_delay_us(4000000);
+    CHECK(nt26_registered(&reg) == NT26_OK && reg && lte_up(), "after its reboot the modem re-registers by itself");
     ink_probe_mark("cell-done");
 }
 

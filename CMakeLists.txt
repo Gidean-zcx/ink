@@ -58,6 +58,7 @@ add_library(ink_port_sim STATIC
   drivers/epd/pqbn_v4.c
   drivers/tca9555/tca9555.c
   drivers/tps65185/tps65185.c
+  drivers/nt26/nt26.c
   drivers/board/metalio_epd_power.c
   ports/sim/hal_i2c_sim.c
   ports/sim/dev_epd_power.c
@@ -257,7 +258,7 @@ set_tests_properties(selftest-psram-stack-flash-access-crashes PROPERTIES
 add_test(NAME selftest-sim-slots
   COMMAND sim-selftest --profile ${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json
           --budget ${CMAKE_SOURCE_DIR}/tests/sim/cell.budget.json
-          --out ${CMAKE_BINARY_DIR}/test-out/selftest-sim-slots --quiet --end 30s --no-random-outages)
+          --out ${CMAKE_BINARY_DIR}/test-out/selftest-sim-slots --quiet --end 45s --no-random-outages)
 set_tests_properties(selftest-sim-slots PROPERTIES ENVIRONMENT "INK_SELFTEST_CELL=1")
 add_test(NAME determinism
   COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:sim-selftest>

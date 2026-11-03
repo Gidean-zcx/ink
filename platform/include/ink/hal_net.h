@@ -42,25 +42,15 @@ typedef void (*hal_link_cb)(void *ctx, const hal_link_status_t *st);
 /** Notified when the link changes (comes up, goes down, switches Wi-Fi/LTE). */
 void hal_net_set_link_callback(hal_link_cb cb, void *ctx);
 
-/* ---- cellular SIM ----
- * The Plus's modem has an external card slot and an internal (soldered) card; one is active at a
- * time, chosen by a modem setting that survives reboots. Values match the modem's SimSlot. */
-typedef enum { HAL_SIM_EXTERNAL = 0, HAL_SIM_INTERNAL = 1 } hal_sim_slot_t;
+/* ---- cellular modem AT channel ----
+ * The modem's AT command port (the Plus: NT26 over the UART-Ethernet link, multiplexed with the
+ * data frames). Drivers (drivers/nt26) build features such as switching SIM cards on it. */
+typedef enum { HAL_AT_OK = 0, HAL_AT_ERROR = -1, HAL_AT_TIMEOUT = -2, HAL_AT_NO_MODEM = -3 } hal_at_result_t;
 
-typedef struct {
-    bool modem;               /* false: no cellular modem on this device */
-    hal_sim_slot_t selected;  /* the modem's setting */
-    bool present[2];          /* a card in each slot (internal: fitted and activated), by hal_sim_slot_t */
-    bool switching;           /* a switch is in progress */
-    bool registered;          /* on the network with the selected card */
-    bool volte;               /* voice (IMS) registered: calls possible */
-} hal_cell_info_t;
-
-void hal_cell_info(hal_cell_info_t *out);
-/** Switch the modem to another card: radio off, set the slot, radio on, register (several
- *  seconds; the LTE link is down meanwhile and stays down if that slot has no card). Returns
- *  false if there is no modem, a switch is running, or the slot is already selected. */
-bool hal_cell_select_sim(hal_sim_slot_t slot);
+/** Send one command (no CR/LF) and wait up to timeout_ms for its final result code. resp receives
+ *  the information line before it (e.g. "+CEREG: 0,1"), or "" if none. Task context; callers
+ *  serialize (one command at a time, as on the real link). */
+hal_at_result_t hal_modem_at(const char *cmd, char *resp, size_t resp_cap, uint32_t timeout_ms);
 
 typedef struct hal_ws hal_ws_t;
 

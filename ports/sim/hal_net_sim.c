@@ -145,27 +145,41 @@ static void wake_conns(void) {
     }
 }
 
-/* ------------------------------------------------------------- cellular SIM
- * Plus: NT26 (EC718PM) with an external card slot (SimSlot 0) and an internal card (SimSlot 1); one
- * active at a time, chosen by a modem setting that survives reboots (kept next to --flash-image).
- * A switch follows upstream settings_network_tab.cc @690a023: AT+CFUN=0, 500 ms, AT+ECSIMCFG=
- * SimSlot,n, 500 ms, AT+CFUN=1, then the card registers. Durations are ESTIMATES (upstream allows
- * 8 s / 5 s / 15 s for the three commands; the factory boot log registered ~1 s after the SIM
- * check). LTE is up only while the selected card is present and registered. Removing the active
- * card drops the registration at once; a card put in is seen at the next radio-on (a switch or a
- * reboot): whether the modem detects hot plug is not confirmed. */
+/* ------------------------------------------------------------- cellular modem (AT level)
+ * Plus: NT26 (EC718PM per the factory boot log) with an external card slot (SimSlot 0) and an
+ * internal card (SimSlot 1). Only the modem is modelled here, answering the AT commands drivers
+ * send through hal_modem_at; how the system switches cards is driver code (drivers/nt26).
+ *  - AT+ECSIMCFG=SimSlot,n changes the slot setting, which the modem keeps across reboots (kept
+ *    next to --flash-image). The card in use follows the setting when the radio next comes on
+ *    (AT+CFUN=1, end of AT+ECRST): ASSUMPTION, upstream only sets the slot with the radio off.
+ *  - AT+CFUN=0 drops the registration; after AT+CFUN=1 the card in use registers CELL_REG_MS later
+ *    if it is there. AT+ECRST answers OK, then the modem is deaf for CELL_RESET_MS and comes back
+ *    with the radio on.
+ *  - Latencies are ESTIMATES within the timeouts upstream allows (CFUN=0 8 s, ECSIMCFG 5 s,
+ *    CFUN=1 15 s, settings_network_tab.cc @690a023); the factory boot log registered ~2 s after
+ *    the SIM check, and the modem answered ~1.5 s after AT+ECRST (uart_eth_modem.cc).
+ * LTE carries data only while the card in use is present and registered. Taking out the card in
+ * use drops the registration at once; a card put in is seen at the next radio-on (whether the
+ * modem detects hot plug is not confirmed). */
+#define CELL_AT_MS 20
 #define CELL_CFUN0_MS 800
-#define CELL_GAP_MS 500
+#define CELL_CFUN1_MS 500
 #define CELL_SLOT_MS 200
-#define CELL_REG_MS 3000
+#define CELL_REG_MS 2000
+#define CELL_RESET_MS 1500
 
 static struct {
-    int selected, target;
+    int selected;              /* slot setting (AT+ECSIMCFG) */
+    int active;                /* slot whose card the radio uses: `selected` at the last radio-on */
+    bool radio;                /* AT+CFUN=1 */
     bool present[2], sms[2], voice[2];
-    bool registered, switching;
+    bool registered;
+    uint64_t deaf_until;       /* rebooting after AT+ECRST */
+    vtk_event_id_t reg_ev;     /* registration pending */
+    uint32_t slot_changes, resets;
 } CELL;
 
-static bool cell_ok(void) { return CELL.registered && CELL.present[CELL.selected]; }
+static bool cell_ok(void) { return CELL.radio && CELL.registered && CELL.present[CELL.active]; }
 
 static void set_link(hal_link_type_t t, bool up) { /* ISR or locked task context */
     hal_link_type_t old = N.type;
@@ -238,67 +252,110 @@ static void cell_relink(void) { /* ISR or locked */
     if (N.type == HAL_LINK_LTE) set_link(HAL_LINK_LTE, N.want);
 }
 
-static void cell_slot_set_cb(void *arg) { /* ISR: AT+ECSIMCFG answered OK */
+static void cell_registered_cb(void *arg) { /* ISR: the card in use attached, or there is none */
     (void)arg;
-    CELL.selected = CELL.target;
-    vtk_host_call(cell_save_on_host, NULL);
-    sim_trace_instant("net", CELL.selected ? "sim slot: internal" : "sim slot: external", vtk_isr_now(), NULL);
-}
-
-static void cell_radio_on_cb(void *arg) { /* ISR: AT+CFUN=1 done, the new card registered (or not) */
-    (void)arg;
-    CELL.switching = false;
-    CELL.registered = CELL.present[CELL.selected];
-    sim_metric_add("net.sim_switches", 1);
+    CELL.reg_ev = 0;
+    CELL.registered = CELL.radio && CELL.present[CELL.active];
+    sim_trace_instant("net", CELL.registered ? "lte registered" : "lte: no card", vtk_isr_now(), NULL);
     cell_relink();
 }
 
-static bool cell_select(int slot) { /* ISR or locked */
-    if (!g_profile.lte.present || CELL.switching || slot < 0 || slot > 1 || slot == CELL.selected) return false;
-    uint64_t t = now_any();
-    CELL.switching = true;
-    CELL.target = slot;
+static void cell_radio(bool on, uint64_t at) { /* ISR or locked */
+    if (CELL.reg_ev) vtk_event_cancel(CELL.reg_ev);
+    CELL.reg_ev = 0;
+    CELL.radio = on;
     CELL.registered = false;
+    if (on) {
+        CELL.active = CELL.selected;
+        CELL.reg_ev = vtk_event_at(at + SIM_MS(CELL_REG_MS), cell_registered_cb, NULL);
+    }
     cell_relink();
-    vtk_event_at(t + SIM_MS(CELL_CFUN0_MS + CELL_GAP_MS + CELL_SLOT_MS), cell_slot_set_cb, NULL);
-    vtk_event_at(t + SIM_MS(CELL_CFUN0_MS + 2 * CELL_GAP_MS + CELL_SLOT_MS + CELL_REG_MS), cell_radio_on_cb, NULL);
-    return true;
 }
 
-bool hal_cell_select_sim(hal_sim_slot_t slot) {
+static void cell_reset_done_cb(void *arg) { /* ISR: the modem rebooted, radio on */
+    (void)arg;
+    cell_radio(true, vtk_isr_now());
+}
+
+hal_at_result_t hal_modem_at(const char *cmd, char *resp, size_t resp_cap, uint32_t timeout_ms) {
+    if (resp && resp_cap) resp[0] = 0;
+    if (!g_profile.lte.present) return HAL_AT_NO_MODEM;
+    enum { K_AT, K_CFUN_Q, K_CFUN0, K_CFUN1, K_SLOT_Q, K_SLOT_SET, K_CPIN, K_CEREG, K_RST, K_BAD } k = K_BAD;
+    unsigned lat_ms = CELL_AT_MS;
+    int slot = -1;
+    if (!strcmp(cmd, "AT")) k = K_AT;
+    else if (!strcmp(cmd, "AT+CFUN?")) k = K_CFUN_Q;
+    else if (!strcmp(cmd, "AT+CFUN=0")) k = K_CFUN0, lat_ms = CELL_CFUN0_MS;
+    else if (!strcmp(cmd, "AT+CFUN=1")) k = K_CFUN1, lat_ms = CELL_CFUN1_MS;
+    else if (!strcmp(cmd, "AT+ECSIMCFG?")) k = K_SLOT_Q;
+    else if (sscanf(cmd, "AT+ECSIMCFG=SimSlot,%d", &slot) == 1 || sscanf(cmd, "AT+ECSIMCFG=\"SimSlot\",%d", &slot) == 1)
+        k = K_SLOT_SET, lat_ms = CELL_SLOT_MS;
+    else if (!strcmp(cmd, "AT+CPIN?")) k = K_CPIN;
+    else if (!strcmp(cmd, "AT+CEREG?")) k = K_CEREG;
+    else if (!strcmp(cmd, "AT+ECRST")) k = K_RST;
+    uint64_t t0 = vtk_now(), limit = t0 + SIM_MS(timeout_ms);
+    uint64_t done = (t0 > CELL.deaf_until ? t0 : CELL.deaf_until) + SIM_MS(lat_ms);
+    if (done > limit) { /* deaf (rebooting) or slower than the caller waits: the command is lost */
+        vtk_sleep_ns(limit - t0);
+        return HAL_AT_TIMEOUT;
+    }
+    vtk_sleep_ns(done - t0);
+    hal_at_result_t r = HAL_AT_OK;
+    char line[48] = "";
     vtk_lock();
-    bool ok = cell_select((int)slot);
+    switch (k) {
+    case K_AT: break;
+    case K_CFUN_Q: snprintf(line, sizeof line, "+CFUN: %d", CELL.radio ? 1 : 0); break;
+    case K_CFUN0: cell_radio(false, vtk_now()); break;
+    case K_CFUN1:
+        if (!CELL.radio) cell_radio(true, vtk_now());
+        break;
+    case K_SLOT_Q: snprintf(line, sizeof line, "+ECSIMCFG: \"SimSlot\",%d", CELL.selected); break;
+    case K_SLOT_SET:
+        if (slot != 0 && slot != 1) {
+            r = HAL_AT_ERROR;
+        } else if (slot != CELL.selected) {
+            CELL.selected = slot;
+            CELL.slot_changes++;
+            vtk_host_call(cell_save_on_host, NULL);
+        }
+        break;
+    case K_CPIN: /* the card is powered only with the radio on (ASSUMPTION) */
+        if (CELL.radio && CELL.present[CELL.active]) snprintf(line, sizeof line, "+CPIN: READY");
+        else r = HAL_AT_ERROR;
+        break;
+    case K_CEREG: {
+        int stat = cell_ok() ? 1 : CELL.radio && CELL.present[CELL.active] && CELL.reg_ev ? 2 : 0;
+        snprintf(line, sizeof line, "+CEREG: 0,%d", stat);
+        break;
+    }
+    case K_RST:
+        cell_radio(false, vtk_now());
+        CELL.deaf_until = vtk_now() + SIM_MS(CELL_RESET_MS);
+        CELL.resets++;
+        vtk_event_at(CELL.deaf_until, cell_reset_done_cb, NULL);
+        break;
+    case K_BAD: r = HAL_AT_ERROR; break;
+    }
     vtk_unlock();
-    return ok;
-}
-
-bool sim_net_cell_select(int slot) { return cell_select(slot); } /* ISR (window) */
-
-void hal_cell_info(hal_cell_info_t *out) {
-    memset(out, 0, sizeof *out);
-    out->modem = g_profile.lte.present;
-    if (!out->modem) return;
-    out->selected = (hal_sim_slot_t)CELL.selected;
-    out->present[0] = CELL.present[0];
-    out->present[1] = CELL.present[1];
-    out->switching = CELL.switching;
-    out->registered = cell_ok();
-    out->volte = out->registered && CELL.voice[CELL.selected];
+    if (resp && resp_cap) snprintf(resp, resp_cap, "%s", line);
+    return r;
 }
 
 void sim_net_cell_state(sim_cell_state_t *out) { /* ISR */
-    hal_cell_info_t ci;
-    hal_cell_info(&ci);
-    out->modem = ci.modem;
+    memset(out, 0, sizeof *out);
+    out->modem = g_profile.lte.present;
     out->selected = CELL.selected;
+    out->active = CELL.active;
+    out->radio = CELL.radio;
     for (int i = 0; i < 2; i++) {
         out->present[i] = CELL.present[i];
         out->sms[i] = CELL.sms[i];
         out->voice[i] = CELL.voice[i];
     }
-    out->switching = ci.switching;
-    out->registered = ci.registered;
-    out->volte = ci.volte;
+    out->registered = cell_ok();
+    out->searching = CELL.radio && CELL.present[CELL.active] && CELL.reg_ev;
+    out->volte = out->registered && CELL.voice[CELL.active];
 }
 
 void sim_net_set_card(int slot, bool present, bool sms, bool voice) { /* ISR (script, window) or locked */
@@ -307,7 +364,7 @@ void sim_net_set_card(int slot, bool present, bool sms, bool voice) { /* ISR (sc
     CELL.present[slot] = present;
     CELL.sms[slot] = present && sms;
     CELL.voice[slot] = present && voice;
-    if (slot == CELL.selected && was && !present && !CELL.switching) {
+    if (slot == CELL.active && was && !present) {
         CELL.registered = false; /* stays off until the next radio-on, even if the card comes back */
         cell_relink();
     }
@@ -668,7 +725,9 @@ void sim_net_init(void) {
         CELL.voice[i] = g_profile.sim_card[i].voice;
     }
     vtk_host_call(cell_load_on_host, NULL); /* the modem kept its slot setting */
-    CELL.registered = CELL.present[CELL.selected]; /* registered at boot (no boot-time delay modelled) */
+    CELL.active = CELL.selected;
+    CELL.radio = true;
+    CELL.registered = CELL.present[CELL.active]; /* registered at boot (no boot-time delay modelled) */
     N.type = t;
     N.want = t != HAL_LINK_NONE;
     N.up = N.want && (t != HAL_LINK_LTE || !g_profile.lte.present || cell_ok());
@@ -695,6 +754,10 @@ void sim_net_init(void) {
 }
 
 void sim_net_report(void) {
+    if (g_profile.lte.present) {
+        sim_metric_set("modem.slot_changes", (double)CELL.slot_changes);
+        sim_metric_set("modem.resets", (double)CELL.resets);
+    }
     sim_metric_set("net.bytes_up", (double)N.bytes_up);
     sim_metric_set("net.bytes_down", (double)N.bytes_down);
     sim_metric_set("net.messages_up", (double)N.msgs_up);

@@ -99,9 +99,11 @@ static void poll_on_host(void *arg) {
     sim_net_cell_state(&cs);
     st.cell_modem = cs.modem;
     st.sim_selected = cs.selected;
+    st.sim_active = cs.active;
+    st.modem_radio = cs.radio;
     for (int i = 0; i < 2; i++) st.sim_card[i] = !cs.present[i] ? 0 : cs.voice[i] ? 3 : cs.sms[i] ? 2 : 1;
-    st.sim_switching = cs.switching;
     st.sim_registered = cs.registered;
+    st.sim_searching = cs.searching;
     st.volte = cs.volte;
 
     pthread_mutex_lock(&Gm);
@@ -160,7 +162,7 @@ void sim_gui_get_stats(sim_gui_stats_t *out) {
 
 /* ------------------------------------------------------------------ actions */
 
-typedef enum { C_TOUCH, C_KEY, C_BATTERY, C_NET, C_OUTAGE, C_MIC, C_SNAP, C_POWERCUT, C_SIM_CARD, C_SIM_SELECT } cmd_kind_t;
+typedef enum { C_TOUCH, C_KEY, C_BATTERY, C_NET, C_OUTAGE, C_MIC, C_SNAP, C_POWERCUT, C_SIM_CARD } cmd_kind_t;
 
 typedef struct {
     cmd_kind_t kind;
@@ -182,7 +184,6 @@ static void cmd_event(void *arg) { /* ISR context, like the script's actions */
     case C_SNAP: sim_display_snapshot(c->text); break;
     case C_POWERCUT: sim_storage_power_cut(); break;
     case C_SIM_CARD: sim_net_set_card(c->a, c->b > 0, c->b >= 2, c->b == 3); break;
-    case C_SIM_SELECT: sim_net_cell_select(c->a); break;
     }
     vtk_host_call(free_on_host, c);
 }
@@ -207,7 +208,6 @@ void sim_gui_mic(const char *source) { send(C_MIC, 0, 0, 0, source); }
 void sim_gui_snapshot(const char *name) { send(C_SNAP, 0, 0, 0, name); }
 void sim_gui_power_cut(void) { send(C_POWERCUT, 0, 0, 0, NULL); }
 void sim_gui_sim_card(int slot, int kind) { send(C_SIM_CARD, slot, kind, 0, NULL); }
-void sim_gui_sim_select(int slot) { send(C_SIM_SELECT, slot, 0, 0, NULL); }
 
 void sim_gui_stop(void) {
     if (sim_gui_phase() == SIM_GUI_RUNNING) vtk_stop();
