@@ -1,6 +1,6 @@
 /*
  * Metrics registry, warnings and CI budget evaluation for the simulator.
- * All functions are ISR-safe (no OSAL/vtk calls), see sim.h.
+ * All functions are ISR-safe (no OSAL calls; vtk_host_call only), see sim.h.
  */
 #include <math.h>
 #include <stdarg.h>
@@ -45,27 +45,42 @@ static metric_t *find(const char *name, mkind_t kind) {
     return m;
 }
 
-void sim_metric_sample(const char *name, double v) {
-    metric_t *m = find(name, M_DIST);
-    if (m->n == m->cap) {
-        m->cap = m->cap ? m->cap * 2 : 32;
-        m->samples = realloc(m->samples, m->cap * sizeof(double));
-        if (!m->samples) abort();
+typedef struct {
+    const char *name;
+    mkind_t kind;
+    double v;
+} update_t;
+
+static void update_on_host(void *p) {
+    const update_t *u = p;
+    metric_t *m = find(u->name, u->kind);
+    switch (u->kind) {
+    case M_COUNTER: m->value += u->v; break;
+    case M_GAUGE: m->value = u->v; break;
+    case M_MAX: if (u->v > m->value) m->value = u->v; break;
+    case M_MIN: if (u->v < m->value) m->value = u->v; break;
+    case M_DIST:
+        if (m->n == m->cap) {
+            m->cap = m->cap ? m->cap * 2 : 32;
+            m->samples = realloc(m->samples, m->cap * sizeof(double));
+            if (!m->samples) abort();
+        }
+        m->samples[m->n++] = u->v;
+        break;
     }
-    m->samples[m->n++] = v;
 }
 
-void sim_metric_add(const char *name, double v) { find(name, M_COUNTER)->value += v; }
-void sim_metric_set(const char *name, double v) { find(name, M_GAUGE)->value = v; }
-void sim_metric_max(const char *name, double v) {
-    metric_t *m = find(name, M_MAX);
-    if (v > m->value) m->value = v;
+/* The registry's host allocations are not the calling task's stack use. */
+static void update(const char *name, mkind_t kind, double v) {
+    update_t u = {name, kind, v};
+    vtk_host_call(update_on_host, &u);
 }
 
-void sim_metric_min(const char *name, double v) {
-    metric_t *m = find(name, M_MIN);
-    if (v < m->value) m->value = v;
-}
+void sim_metric_sample(const char *name, double v) { update(name, M_DIST, v); }
+void sim_metric_add(const char *name, double v) { update(name, M_COUNTER, v); }
+void sim_metric_set(const char *name, double v) { update(name, M_GAUGE, v); }
+void sim_metric_max(const char *name, double v) { update(name, M_MAX, v); }
+void sim_metric_min(const char *name, double v) { update(name, M_MIN, v); }
 
 static void stamp(char *buf, size_t n) {
     uint64_t t = vtk_now();
@@ -73,12 +88,15 @@ static void stamp(char *buf, size_t n) {
              (unsigned long long)(t / 1000000ull % 1000ull));
 }
 
-void sim_warn(const char *fmt, ...) {
+typedef struct {
+    const char *fmt;
+    va_list *ap;
+} message_t;
+
+static void warn_on_host(void *p) {
+    const message_t *m = p;
     char msg[600], ts[32];
-    va_list ap;
-    va_start(ap, fmt);
-    vsnprintf(msg, sizeof msg, fmt, ap);
-    va_end(ap);
+    vsnprintf(msg, sizeof msg, m->fmt, *m->ap);
     stamp(ts, sizeof ts);
     if (!g_sim.quiet) fprintf(stderr, "[%10ss] WARN %s\n", ts, msg);
     nW_total++;
@@ -90,15 +108,29 @@ void sim_warn(const char *fmt, ...) {
     }
 }
 
-void sim_note(const char *fmt, ...) {
-    if (g_sim.quiet) return;
-    char msg[600], ts[32];
+void sim_warn(const char *fmt, ...) {
     va_list ap;
     va_start(ap, fmt);
-    vsnprintf(msg, sizeof msg, fmt, ap);
+    message_t m = {fmt, &ap};
+    vtk_host_call(warn_on_host, &m);
     va_end(ap);
+}
+
+static void note_on_host(void *p) {
+    const message_t *m = p;
+    char msg[600], ts[32];
+    vsnprintf(msg, sizeof msg, m->fmt, *m->ap);
     stamp(ts, sizeof ts);
     fprintf(stderr, "[%10ss] %s\n", ts, msg);
+}
+
+void sim_note(const char *fmt, ...) {
+    if (g_sim.quiet) return;
+    va_list ap;
+    va_start(ap, fmt);
+    message_t m = {fmt, &ap};
+    vtk_host_call(note_on_host, &m);
+    va_end(ap);
 }
 
 static int cmp_d(const void *a, const void *b) {

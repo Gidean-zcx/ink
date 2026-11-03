@@ -47,6 +47,7 @@ static struct {
     const uint8_t *op_data;
     uint64_t op_t0, op_t1;
     bool cut;
+    bool loaded; /* started from --flash-image */
 } FL;
 
 static void maybe_cut_during_op(void);
@@ -351,17 +352,17 @@ hal_file_t *hal_fs_open(const char *path, int flags) {
     char p[512];
     vol_t v = route(path, p, sizeof p);
     if (v == VOL_BAD) return NULL;
-    hal_file_t *f = calloc(1, sizeof *f);
+    hal_file_t *f = sim_host_calloc(1, sizeof *f);
     if (!f) abort();
     f->vol = v;
     if (v == VOL_USER) {
         if (!U.mounted) {
-            free(f);
+            sim_host_free(f);
             return NULL;
         }
         f->cache = osal_malloc(LFS_CACHE, OSAL_MEM_INTERNAL); /* CONFIG_LITTLEFS_MALLOC_STRATEGY_INTERNAL */
         if (!f->cache) {
-            free(f);
+            sim_host_free(f);
             return NULL;
         }
         f->fcfg.buffer = f->cache;
@@ -377,7 +378,7 @@ hal_file_t *hal_fs_open(const char *path, int flags) {
         unlock_user();
         if (r < 0) {
             osal_free(f->cache);
-            free(f);
+            sim_host_free(f);
             return NULL;
         }
         return f;
@@ -391,14 +392,14 @@ hal_file_t *hal_fs_open(const char *path, int flags) {
     if (flags & HAL_O_APPEND) of |= O_APPEND;
     f->fat_fil = osal_malloc(560, OSAL_MEM_DEFAULT);
     if (!f->fat_fil) {
-        free(f);
+        sim_host_free(f);
         return NULL;
     }
     sd_cost(0, false); /* directory lookup */
     f->fd = open(p, of, 0644);
     if (f->fd < 0) {
         osal_free(f->fat_fil);
-        free(f);
+        sim_host_free(f);
         return NULL;
     }
     return f;
@@ -478,7 +479,7 @@ int hal_fs_close(hal_file_t *f) {
         r = close(f->fd);
         osal_free(f->fat_fil);
     }
-    free(f);
+    sim_host_free(f);
     return r < 0 ? -1 : 0;
 }
 
@@ -553,11 +554,43 @@ struct hal_dir {
     char base[512];
 };
 
+/* The host directory behind /content and /cache is host work: opendir allocates, readdir refills. */
+static void sd_opendir_on_host(void *p) {
+    hal_dir_t *d = p;
+    d->hd = opendir(d->base);
+}
+
+static void sd_closedir_on_host(void *p) { closedir(((hal_dir_t *)p)->hd); }
+
+typedef struct {
+    hal_dir_t *d;
+    hal_dirent_t *out;
+    int r;
+} sd_readdir_t;
+
+static void sd_readdir_on_host(void *p) {
+    sd_readdir_t *a = p;
+    a->r = 0;
+    struct dirent *e;
+    while ((e = readdir(a->d->hd))) {
+        if (!strcmp(e->d_name, ".") || !strcmp(e->d_name, "..")) continue;
+        char full[1024];
+        struct stat st;
+        snprintf(full, sizeof full, "%s/%s", a->d->base, e->d_name);
+        if (stat(full, &st) < 0) continue;
+        snprintf(a->out->name, sizeof a->out->name, "%s", e->d_name);
+        a->out->is_dir = S_ISDIR(st.st_mode);
+        a->out->size = st.st_size;
+        a->r = 1;
+        return;
+    }
+}
+
 hal_dir_t *hal_fs_opendir(const char *path) {
     char p[512];
     vol_t v = route(path, p, sizeof p);
     if (v == VOL_BAD) return NULL;
-    hal_dir_t *d = calloc(1, sizeof *d);
+    hal_dir_t *d = sim_host_calloc(1, sizeof *d);
     if (!d) abort();
     d->vol = v;
     snprintf(d->base, sizeof d->base, "%s", p);
@@ -566,15 +599,15 @@ hal_dir_t *hal_fs_opendir(const char *path) {
         int r = lfs_dir_open(&U.lfs, &d->ld, p);
         unlock_user();
         if (r < 0) {
-            free(d);
+            sim_host_free(d);
             return NULL;
         }
         return d;
     }
     sd_cost(512, false);
-    d->hd = opendir(p);
+    vtk_host_call(sd_opendir_on_host, d);
     if (!d->hd) {
-        free(d);
+        sim_host_free(d);
         return NULL;
     }
     return d;
@@ -596,20 +629,10 @@ int hal_fs_readdir(hal_dir_t *d, hal_dirent_t *out) {
             return 1;
         }
     }
-    for (;;) {
-        struct dirent *e = readdir(d->hd);
-        if (!e) return 0;
-        if (!strcmp(e->d_name, ".") || !strcmp(e->d_name, "..")) continue;
-        char full[1024];
-        struct stat st;
-        snprintf(full, sizeof full, "%s/%s", d->base, e->d_name);
-        if (stat(full, &st) < 0) continue;
-        snprintf(out->name, sizeof out->name, "%s", e->d_name);
-        out->is_dir = S_ISDIR(st.st_mode);
-        out->size = st.st_size;
-        sim_charge_cycles(20000); /* FAT directory entry parsing (LFN) */
-        return 1;
-    }
+    sd_readdir_t a = {d, out, 0};
+    vtk_host_call(sd_readdir_on_host, &a);
+    if (a.r) sim_charge_cycles(20000); /* FAT directory entry parsing (LFN) */
+    return a.r;
 }
 
 void hal_fs_closedir(hal_dir_t *d) {
@@ -619,9 +642,9 @@ void hal_fs_closedir(hal_dir_t *d) {
         lfs_dir_close(&U.lfs, &d->ld);
         unlock_user();
     } else if (d->hd) {
-        closedir(d->hd);
+        vtk_host_call(sd_closedir_on_host, d);
     }
-    free(d);
+    sim_host_free(d);
 }
 
 int hal_fs_volume_info(const char *volume, hal_fs_volume_info_t *out) {
@@ -676,19 +699,21 @@ static void copy_tree(const char *src, const char *dst) {
             continue;
         }
         FILE *in = fopen(a, "rb"), *out = fopen(b, "wb");
-        char *buf = malloc(65536); /* host-side copy: keep it off the simulated task's stack */
+        char *buf = sim_host_malloc(65536); /* host-side copy: keep it off the simulated task's stack */
         if (in && out && buf) {
             size_t n;
             while ((n = fread(buf, 1, 65536, in)) > 0) fwrite(buf, 1, n, out);
         }
-        free(buf);
+        sim_host_free(buf);
         if (in) fclose(in);
         if (out) fclose(out);
     }
     closedir(d);
 }
 
-void sim_storage_init(void) {
+/* The card and the flash as they are at power-on, from host files: host work, not the boot task's stack. */
+static void power_on_contents(void *arg) {
+    (void)arg;
     /* SD card */
     if (g_sim.sd_dir) snprintf(SD.root, sizeof SD.root, "%s", g_sim.sd_dir);
     else snprintf(SD.root, sizeof SD.root, "%s/sd", g_sim.out_dir ? g_sim.out_dir : ".");
@@ -705,8 +730,8 @@ void sim_storage_init(void) {
     /* internal flash */
     FL.sector = g_profile.flash_sector ? g_profile.flash_sector : 4096;
     FL.size = g_profile.flash_user_bytes / FL.sector * FL.sector;
-    FL.img = malloc(FL.size);
-    FL.erase_count = calloc(FL.size / FL.sector, sizeof(uint32_t));
+    FL.img = sim_host_malloc(FL.size);
+    FL.erase_count = sim_host_calloc(FL.size / FL.sector, sizeof(uint32_t));
     if (!FL.img || !FL.erase_count) abort();
     memset(FL.img, 0xff, FL.size);
     bool loaded = false;
@@ -718,6 +743,12 @@ void sim_storage_init(void) {
             if (!loaded) sim_warn("flash image %s has the wrong size; starting erased", g_sim.flash_image);
         }
     }
+    FL.loaded = loaded;
+}
+
+void sim_storage_init(void) {
+    vtk_host_call(power_on_contents, NULL);
+    bool loaded = FL.loaded;
 
     const char *prev = osal_mem_tag("littlefs");
     U.lock = osal_mutex_create();

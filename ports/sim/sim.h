@@ -67,6 +67,17 @@ void sim_charge_ns_always(uint64_t ns);
 uint32_t sim_rand(void);
 double sim_rand01(void);
 
+/* ---- host work in task context ----
+ * The stack estimate measures what a task's code uses on its host stack. Simulator work that the
+ * device does not do (host heap for the simulator's own objects, host files and directories,
+ * metrics, traces, messages) goes through vtk_host_call, which runs it outside that part: the host
+ * allocator and libc then neither inflate the estimate nor make it vary between runs. ISR-safe. */
+void *sim_host_malloc(size_t size);
+void *sim_host_calloc(size_t n, size_t size);
+void sim_host_free(void *p);
+/** Bounded string copy without the host's printf machinery (names on hot paths). */
+void sim_copy_name(char *dst, size_t n, const char *src);
+
 /* ---- metrics (ISR-safe) ---- */
 void sim_metric_sample(const char *name, double v); /* distribution */
 void sim_metric_add(const char *name, double v);    /* counter */

@@ -21,14 +21,9 @@ static struct {
 static int nAS;
 static size_t total_bytes;
 
-const void *hal_asset_map(const char *name, size_t *size) {
-    for (int i = 0; i < nAS; i++)
-        if (!strcmp(AS[i].name, name)) {
-            AS[i].maps++;
-            if (size) *size = AS[i].size;
-            return AS[i].data;
-        }
-    if (nAS >= MAX_ASSETS || strstr(name, "..")) return NULL;
+/* Reads the asset into AS[nAS] from the first --assets directory that has it.
+ * Returns 1 if loaded, 0 if not found, -1 on a read error. */
+static int load(const char *name) {
     for (int d = 0; d < g_sim.nasset_dirs; d++) {
         char path[600];
         snprintf(path, sizeof path, "%s/%s", g_sim.asset_dirs[d], name);
@@ -37,25 +32,54 @@ const void *hal_asset_map(const char *name, size_t *size) {
         fseek(f, 0, SEEK_END);
         long n = ftell(f);
         fseek(f, 0, SEEK_SET);
-        void *buf = malloc((size_t)n ? (size_t)n : 1);
+        void *buf = sim_host_malloc((size_t)n ? (size_t)n : 1);
         if (!buf || fread(buf, 1, (size_t)n, f) != (size_t)n) {
             fclose(f);
-            free(buf);
-            return NULL;
+            sim_host_free(buf);
+            return -1;
         }
         fclose(f);
         snprintf(AS[nAS].name, sizeof AS[nAS].name, "%s", name);
         AS[nAS].data = buf;
         AS[nAS].size = (size_t)n;
         AS[nAS].maps = 1;
+        return 1;
+    }
+    return 0;
+}
+
+typedef struct {
+    const char *name;
+    int result;
+} load_t;
+
+static void load_on_host(void *p) {
+    load_t *l = p;
+    l->result = load(l->name);
+}
+
+const void *hal_asset_map(const char *name, size_t *size) {
+    for (int i = 0; i < nAS; i++)
+        if (!strcmp(AS[i].name, name)) {
+            AS[i].maps++;
+            if (size) *size = AS[i].size;
+            return AS[i].data;
+        }
+    if (nAS >= MAX_ASSETS || strstr(name, "..")) return NULL;
+    load_t l = {name, 0};
+    vtk_host_call(load_on_host, &l); /* reading the host file is not the caller's stack */
+    if (l.result < 0) return NULL;
+    if (l.result > 0) {
+        void *buf = AS[nAS].data;
+        size_t n = AS[nAS].size;
         nAS++;
-        total_bytes += (size_t)n;
+        total_bytes += n;
         sim_metric_set("assets.mapped_bytes", (double)total_bytes);
         if (g_profile.assets_partition_bytes && total_bytes > g_profile.assets_partition_bytes)
             sim_warn("assets: %zu KiB mapped exceeds the %zu KiB assets partition of this device", total_bytes / 1024,
                      g_profile.assets_partition_bytes / 1024);
         sim_charge_ns_always(SIM_US(200)); /* partition table lookup + MMU mapping */
-        if (size) *size = (size_t)n;
+        if (size) *size = n;
         return buf;
     }
     sim_warn("asset '%s' not found in the --assets directories", name);
@@ -78,8 +102,8 @@ static void dc_init(void) {
     if (DC.tag || !g_profile.dcache_bytes) return;
     DC.sets = g_profile.dcache_bytes / g_profile.dcache_line / DC_WAYS;
     if (!DC.sets) return;
-    DC.tag = calloc((size_t)DC.sets * DC_WAYS, sizeof *DC.tag);
-    DC.lru = calloc(DC.sets, 1);
+    DC.tag = sim_host_calloc((size_t)DC.sets * DC_WAYS, sizeof *DC.tag);
+    DC.lru = sim_host_calloc(DC.sets, 1);
     if (!DC.tag || !DC.lru) abort();
 }
 

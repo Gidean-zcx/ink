@@ -145,6 +145,11 @@ void vtk_set_sleeper_locked(vtk_task_t *t);
 void vtk_inject_external(vtk_event_fn fn, void *arg);
 
 /* ---- diagnostics ---- */
+/** Run fn(arg) on the calling task's host thread, but outside the part of its host stack that the
+ *  stack estimate measures (directly outside tasks). For simulator work done in task context that
+ *  the device does not do: metrics, traces, warnings, logs, host files. Any context. */
+void vtk_host_call(void (*fn)(void *), void *arg);
+
 typedef void (*vtk_warn_fn)(const char *msg);
 void vtk_set_warn_sink(vtk_warn_fn fn);
 

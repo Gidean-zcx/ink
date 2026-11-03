@@ -173,9 +173,9 @@ struct hal_cpu_boost {
 };
 
 hal_cpu_boost_t *hal_cpu_boost_create(const char *name) {
-    hal_cpu_boost_t *b = calloc(1, sizeof *b);
+    hal_cpu_boost_t *b = sim_host_calloc(1, sizeof *b);
     if (!b) abort();
-    snprintf(b->name, sizeof b->name, "%s", name ? name : "boost");
+    sim_copy_name(b->name, sizeof b->name, name ? name : "boost");
     return b;
 }
 
@@ -355,9 +355,13 @@ void hal_device_get_info(hal_device_info_t *out) { *out = g_profile.info; }
 
 const char *hal_device_reset_reason(void) { return g_sim.reset_reason ? g_sim.reset_reason : "poweron"; }
 
-void hal_log_write(const char *line) {
-    if (g_sim.quiet) return;
+static void log_on_host(void *line) {
     uint64_t t = now_ns();
     fprintf(stdout, "[%6llu.%03llu] %s\n", (unsigned long long)(t / 1000000000ull),
-            (unsigned long long)(t / 1000000ull % 1000ull), line);
+            (unsigned long long)(t / 1000000ull % 1000ull), (const char *)line);
+}
+
+void hal_log_write(const char *line) {
+    if (g_sim.quiet) return;
+    vtk_host_call(log_on_host, (void *)line); /* host stdout, not the caller's stack (--quiet must not change it) */
 }

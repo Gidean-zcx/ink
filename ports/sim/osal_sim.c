@@ -226,9 +226,9 @@ osal_err_t osal_task_create(const osal_task_cfg_t *cfg, osal_task_t **out) {
     int core = cfg->core;
     if (core >= g_profile.cores) core = -1;
 
-    osal_task_t *t = calloc(1, sizeof *t);
+    osal_task_t *t = sim_host_calloc(1, sizeof *t);
     if (!t) abort();
-    snprintf(t->name, sizeof t->name, "%s", cfg->name ? cfg->name : "task");
+    sim_copy_name(t->name, sizeof t->name, cfg->name ? cfg->name : "task");
     t->fn = cfg->fn;
     t->arg = cfg->arg;
     t->stack_bytes = cfg->stack_bytes;
@@ -243,7 +243,7 @@ osal_err_t osal_task_create(const osal_task_cfg_t *cfg, osal_task_t **out) {
         sim_warn("task '%s' not created: no %s memory for TCB+stack (%u bytes)", t->name, ext ? "external" : "internal",
                  cfg->stack_bytes + g_profile.tcb_bytes);
         if (t->tcb_mem) pools_free(t->tcb_mem);
-        free(t);
+        sim_host_free(t);
         return OSAL_NO_MEM;
     }
     uint32_t vflags = 0;
@@ -251,7 +251,7 @@ osal_err_t osal_task_create(const osal_task_cfg_t *cfg, osal_task_t **out) {
     if (!vt) {
         pools_free(t->stack_mem);
         pools_free(t->tcb_mem);
-        free(t);
+        sim_host_free(t);
         sim_warn("task '%s' not created: simulator task table full", cfg->name ? cfg->name : "?");
         return OSAL_NO_MEM;
     }
@@ -352,12 +352,12 @@ struct osal_queue {
 osal_queue_t *osal_queue_create(size_t item_size, size_t length) {
     if (vtk_in_isr()) osal_panic("osal_queue_create from ISR context");
     if (!item_size || !length) return NULL;
-    osal_queue_t *q = calloc(1, sizeof *q);
+    osal_queue_t *q = sim_host_calloc(1, sizeof *q);
     if (!q) abort();
     size_t bytes = g_profile.sync_obj_bytes + item_size * length;
     q->storage = pools_alloc(bytes, OSAL_MEM_INTERNAL, sim_current_owner());
     if (!q->storage) {
-        free(q);
+        sim_host_free(q);
         return NULL;
     }
     q->items = q->storage + g_profile.sync_obj_bytes;
@@ -370,7 +370,7 @@ void osal_queue_delete(osal_queue_t *q) {
     if (!q) return;
     if (q->senders.head || q->receivers.head) osal_panic("osal_queue_delete with blocked tasks");
     pools_free(q->storage);
-    free(q);
+    sim_host_free(q);
 }
 
 static osal_err_t queue_send(osal_queue_t *q, const void *item, int64_t timeout_us, bool front) {
@@ -445,11 +445,11 @@ struct osal_mutex {
 
 osal_mutex_t *osal_mutex_create(void) {
     if (vtk_in_isr()) osal_panic("osal_mutex_create from ISR context");
-    osal_mutex_t *m = calloc(1, sizeof *m);
+    osal_mutex_t *m = sim_host_calloc(1, sizeof *m);
     if (!m) abort();
     m->mem = pools_alloc(g_profile.sync_obj_bytes, OSAL_MEM_INTERNAL, sim_current_owner());
     if (!m->mem) {
-        free(m);
+        sim_host_free(m);
         return NULL;
     }
     return m;
@@ -459,7 +459,7 @@ void osal_mutex_delete(osal_mutex_t *m) {
     if (!m) return;
     if (m->owner || m->wq.head) osal_panic("osal_mutex_delete of a held mutex");
     pools_free(m->mem);
-    free(m);
+    sim_host_free(m);
 }
 
 static void hold_add(vtk_task_t *vt, osal_mutex_t *m) {
@@ -479,17 +479,23 @@ static void hold_remove(vtk_task_t *vt, osal_mutex_t *m) {
         }
 }
 
+static vtk_task_t *next_owner(vtk_task_t *o) {
+    osal_task_t *ot = task_of(o);
+    return (ot && ot->waiting_on) ? ot->waiting_on->owner : NULL;
+}
+
+/* A simulator check (FreeRTOS has none): the chain is only formatted when it is a deadlock. */
 static void check_deadlock_locked(osal_mutex_t *m, vtk_task_t *self) {
+    int depth = 0;
+    vtk_task_t *o = m->owner;
+    while (o && o != self && ++depth < 16) o = next_owner(o);
+    if (o != self) return;
     char chain[400];
     int n = snprintf(chain, sizeof chain, "%s", vtk_task_name(self));
-    vtk_task_t *o = m->owner;
-    for (int depth = 0; o && depth < 16; depth++) {
+    o = m->owner;
+    for (int d = 0; d <= depth && (size_t)n < sizeof chain; d++, o = next_owner(o))
         n += snprintf(chain + n, sizeof chain - (size_t)n, " -> %s", vtk_task_name(o));
-        if (o == self) osal_panic("deadlock: %s", chain);
-        osal_task_t *ot = task_of(o);
-        o = (ot && ot->waiting_on) ? ot->waiting_on->owner : NULL;
-        if ((size_t)n >= sizeof chain) break;
-    }
+    osal_panic("deadlock: %s", chain);
 }
 
 /* FreeRTOS xTaskPriorityInherit: raise the holder to the waiter's priority. Only the
@@ -570,11 +576,11 @@ struct osal_sem {
 osal_sem_t *osal_sem_create(uint32_t initial, uint32_t max) {
     if (vtk_in_isr()) osal_panic("osal_sem_create from ISR context");
     if (!max || initial > max) return NULL;
-    osal_sem_t *s = calloc(1, sizeof *s);
+    osal_sem_t *s = sim_host_calloc(1, sizeof *s);
     if (!s) abort();
     s->mem = pools_alloc(g_profile.sync_obj_bytes, OSAL_MEM_INTERNAL, sim_current_owner());
     if (!s->mem) {
-        free(s);
+        sim_host_free(s);
         return NULL;
     }
     s->count = initial;
@@ -586,7 +592,7 @@ void osal_sem_delete(osal_sem_t *s) {
     if (!s) return;
     if (s->wq.head) osal_panic("osal_sem_delete with blocked tasks");
     pools_free(s->mem);
-    free(s);
+    sim_host_free(s);
 }
 
 osal_err_t osal_sem_take(osal_sem_t *s, int64_t timeout_us) {
@@ -703,14 +709,14 @@ static void timer_task(void *arg) {
 osal_timer_t *osal_timer_create(const char *name, osal_timer_fn fn, void *arg) {
     if (vtk_in_isr()) osal_panic("osal_timer_create from ISR context");
     if (!fn) return NULL;
-    osal_timer_t *t = calloc(1, sizeof *t);
+    osal_timer_t *t = sim_host_calloc(1, sizeof *t);
     if (!t) abort();
     t->mem = pools_alloc(g_profile.sync_obj_bytes, OSAL_MEM_INTERNAL, sim_current_owner());
     if (!t->mem) {
-        free(t);
+        sim_host_free(t);
         return NULL;
     }
-    snprintf(t->name, sizeof t->name, "%s", name ? name : "timer");
+    sim_copy_name(t->name, sizeof t->name, name ? name : "timer");
     t->fn = fn;
     t->arg = arg;
     return t;
@@ -751,17 +757,20 @@ void osal_timer_delete(osal_timer_t *t) {
         unlink_pending(t);
     }
     pools_free(t->mem);
-    free(t);
+    sim_host_free(t);
 }
 
 /* ---------------------------------------------------------------- misc */
 
-void osal_panic(const char *fmt, ...) {
+typedef struct {
+    const char *fmt;
+    va_list *ap;
+} panic_t;
+
+static void panic_on_host(void *p) {
+    const panic_t *a = p;
     char msg[512];
-    va_list ap;
-    va_start(ap, fmt);
-    vsnprintf(msg, sizeof msg, fmt, ap);
-    va_end(ap);
+    vsnprintf(msg, sizeof msg, a->fmt, *a->ap);
     const char *who = vtk_in_isr() ? "isr" : (vtk_self() ? vtk_task_name(vtk_self()) : "main");
     fprintf(stderr, "PANIC in %s at %.6f s: %s\n", who, (double)vtk_now() / 1e9, msg);
     sim_metric_add("panic.count", 1);
@@ -769,15 +778,35 @@ void osal_panic(const char *fmt, ...) {
     sim_fatal("panic");
 }
 
+void osal_panic(const char *fmt, ...) {
+    va_list ap;
+    va_start(ap, fmt);
+    panic_t a = {fmt, &ap};
+    vtk_host_call(panic_on_host, &a); /* the final report runs here too: not the panicking task's stack */
+    va_end(ap);
+    abort(); /* not reached: sim_fatal exits */
+}
+
 /* --------------------------------------------------------------- probes */
 
-void ink_probe_value(const char *metric, double value) {
-    sim_metric_sample(metric, value);
+typedef struct {
+    const char *metric;
+    double value;
+} probe_t;
+
+static void probe_value_on_host(void *p) {
+    const probe_t *pr = p;
+    sim_metric_sample(pr->metric, pr->value);
     if (sim_trace_enabled()) {
         char args[96];
-        snprintf(args, sizeof args, "{\"value\":%.3f}", value);
-        sim_trace_instant("probes", metric, vtk_now(), args);
+        snprintf(args, sizeof args, "{\"value\":%.3f}", pr->value);
+        sim_trace_instant("probes", pr->metric, vtk_now(), args);
     }
+}
+
+void ink_probe_value(const char *metric, double value) {
+    probe_t pr = {metric, value};
+    vtk_host_call(probe_value_on_host, &pr);
 }
 
 void ink_probe_count(const char *metric) { sim_metric_add(metric, 1); }

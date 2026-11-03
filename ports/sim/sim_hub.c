@@ -69,13 +69,13 @@ int sim_hub_load(const char *path, char *err, size_t errlen) {
         fseek(f, 0, SEEK_END);
         long n = ftell(f);
         fseek(f, 0, SEEK_SET);
-        txt = malloc((size_t)n + 1);
+        txt = sim_host_malloc((size_t)n + 1);
         size_t got = fread(txt, 1, (size_t)n, f);
         txt[got] = 0;
         fclose(f);
     }
     cJSON *root = cJSON_Parse(txt ? txt : DEFAULT_SCRIPT);
-    free(txt);
+    sim_host_free(txt);
     if (!root || !cJSON_IsArray(cJSON_GetObjectItemCaseSensitive(root, "rules"))) {
         snprintf(err, errlen, "hub script: invalid JSON or no \"rules\" array");
         cJSON_Delete(root);
@@ -99,7 +99,7 @@ static const cJSON *rule_for(const char *method) {
 static void send_json(struct hal_ws *ws, uint64_t t, cJSON *msg) {
     char *txt = cJSON_PrintUnformatted(msg);
     sim_net_hub_send(ws, t, txt, strlen(txt), false);
-    free(txt);
+    sim_host_free(txt);
 }
 
 /* ------------------------------------------------------------ voice turns */

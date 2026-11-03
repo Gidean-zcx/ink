@@ -46,13 +46,13 @@ int sim_opus_fake_packet(uint8_t *out, int cap, double freq, double level, int b
 
 hal_opus_enc_t *hal_opus_enc_new(int bitrate, int complexity) {
     (void)complexity;
-    hal_opus_enc_t *e = calloc(1, sizeof *e);
+    hal_opus_enc_t *e = sim_host_calloc(1, sizeof *e);
     if (!e) abort();
     const char *prev = osal_mem_tag("opus");
     e->state = osal_malloc(g_profile.opus_enc_bytes ? g_profile.opus_enc_bytes : 1, OSAL_MEM_EXTERNAL);
     osal_mem_tag(prev);
     if (!e->state) {
-        free(e);
+        sim_host_free(e);
         return NULL;
     }
     e->bitrate = bitrate > 0 ? bitrate : 24000;
@@ -77,17 +77,17 @@ int hal_opus_encode(hal_opus_enc_t *e, const int16_t *pcm, uint8_t *out, int cap
 void hal_opus_enc_free(hal_opus_enc_t *e) {
     if (!e) return;
     osal_free(e->state);
-    free(e);
+    sim_host_free(e);
 }
 
 hal_opus_dec_t *hal_opus_dec_new(void) {
-    hal_opus_dec_t *d = calloc(1, sizeof *d);
+    hal_opus_dec_t *d = sim_host_calloc(1, sizeof *d);
     if (!d) abort();
     const char *prev = osal_mem_tag("opus");
     d->state = osal_malloc(g_profile.opus_dec_bytes ? g_profile.opus_dec_bytes : 1, OSAL_MEM_EXTERNAL);
     osal_mem_tag(prev);
     if (!d->state) {
-        free(d);
+        sim_host_free(d);
         return NULL;
     }
     return d;
@@ -118,5 +118,5 @@ int hal_opus_decode(hal_opus_dec_t *d, const uint8_t *pkt, int len, int16_t *pcm
 void hal_opus_dec_free(hal_opus_dec_t *d) {
     if (!d) return;
     osal_free(d->state);
-    free(d);
+    sim_host_free(d);
 }
