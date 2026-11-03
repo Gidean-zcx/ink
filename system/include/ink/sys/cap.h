@@ -99,6 +99,8 @@ struct ink_cap {
     void (*run)(ink_call_t *call);
 };
 
+/** Allocate the call pool (PSRAM). Before the first call. */
+int ink_cap_init(void);
 /** Register a static table (it must outlive the program). 0, or -1 when the registry is full. */
 int ink_cap_register(const ink_cap_t *table, int n);
 const ink_cap_t *ink_cap_find(const char *id);
@@ -106,12 +108,40 @@ const ink_cap_t *ink_cap_find(const char *id);
 bool ink_cap_available(const char *id);
 
 /**
- * Invoke (UI task). `args` may be NULL. `page_gen`, if not 0, is the page generation the caller
- * saw: page-bound capabilities on a newer page are refused as stale. Returns rc->status.
+ * Invoke and wait (UI task). `args` may be NULL. `page_gen`, if not 0, is the page generation the
+ * caller saw: page-bound capabilities on a newer page are refused as stale. Returns rc->status.
+ * A capability that runs elsewhere or completes later answers INK_RC_QUEUED here; use
+ * ink_cap_call to hear its receipt.
  */
 ink_rc_t ink_cap_invoke(const char *id, const ink_args_t *args, ink_source_t src, uint32_t page_gen, ink_receipt_t *rc);
 /** The same with JSON arguments (the AI's, the hub's): converted and checked against the schema. */
 ink_rc_t ink_cap_invoke_json(const char *id, const char *args_json, ink_source_t src, uint32_t page_gen, ink_receipt_t *rc);
+
+/*
+ * The soft bus (architecture §5.1, detailed design §3): one way to call a capability wherever it
+ * is. An address without a node ("reader.next_page") is this device; "hub/<id>" is a capability
+ * of the family hub, reached through the remote proxy (JSON-RPC "tools/call"). The handler runs
+ * on the capability's executor; the receipt comes back on the caller's.
+ */
+typedef void (*ink_cap_done_fn)(void *ctx, const ink_receipt_t *rc);
+typedef struct {
+    ink_source_t src;
+    uint32_t page_gen;      /* the page the caller saw (AI, hub); 0 = not page-bound */
+    const char *request_id; /* a repeated id gets the first receipt again (a retry after a reconnect); NULL = none */
+    const char *args_json;  /* JSON arguments instead of a table (the AI's, the hub's): checked after the gate */
+    ink_exec_t reply_exec;  /* where `done` runs */
+    ink_cap_done_fn done;   /* may be NULL */
+    void *ctx;
+} ink_call_opts_t;
+
+/** Call a capability (any task). 0: `done` will run exactly once, on reply_exec. -1: not accepted
+ *  (the call pool is full, or the arguments do not fit): `done` is not called. */
+int ink_cap_call(const char *addr, const ink_args_t *args, const ink_call_opts_t *o);
+/** In a handler: the receipt comes later, from ink_cap_done (any task). The call object stays
+ *  valid until then. A call not done by its deadline is answered "failed: timed out"; its late
+ *  ink_cap_done is then ignored. */
+void ink_cap_defer(ink_call_t *call);
+void ink_cap_done(ink_call_t *call);
 
 /** The tool list for the hub and the model: JSON array of what the current member may use now. */
 int ink_cap_manifest_json(char *out, size_t cap);

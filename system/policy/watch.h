@@ -31,14 +31,15 @@ typedef struct {
 } watch_t;
 
 struct watch_list {
-    osal_mutex_t *lock;
+    osal_mutex_t *lock; /* the table's own lock (shared: one mutex per table) */
     int n;
     watch_t w[WATCH_MAX];
     const char *(*id_of)(int idx);
     const char *probe_dropped; /* counted when a delivery cannot be posted */
 };
 
-int watch_list_init(watch_list_t *l, const char *(*id_of)(int idx), const char *probe_dropped);
+/** `lock`: the table's mutex; watch_changed must be called without holding it. */
+int watch_list_init(watch_list_t *l, osal_mutex_t *lock, const char *(*id_of)(int idx), const char *probe_dropped);
 int watch_add(watch_list_t *l, const char *prefix, watch_fn fn, void *ctx, ink_exec_t exec);
 /** Item `idx` (named `id`) changed: mark it for every matching watcher and schedule delivery. Any task. */
 void watch_changed(watch_list_t *l, int idx, const char *id);

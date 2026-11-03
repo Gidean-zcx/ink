@@ -259,6 +259,33 @@ static bool on_device_response(struct hal_ws *ws, uint64_t t, cJSON *msg) {
     return false;
 }
 
+/* Server capabilities the device calls through its remote proxy ("tools/call" to the hub, the
+ * answer an MCP CallToolResult whose structuredContent is a receipt). "echo" returns its arguments
+ * (tests of the proxy). Unknown names fall through to the script's rules. */
+static bool server_tool(struct hal_ws *ws, uint64_t t, cJSON *req, cJSON *id) {
+    const cJSON *pr = cJSON_GetObjectItemCaseSensitive(req, "params");
+    const char *name = cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(pr, "name"));
+    if (!name || strcmp(name, "echo")) return false;
+    char *args = cJSON_PrintUnformatted(cJSON_GetObjectItemCaseSensitive(pr, "arguments"));
+    cJSON *res = cJSON_CreateObject();
+    cJSON_AddStringToObject(res, "jsonrpc", "2.0");
+    cJSON_AddItemToObject(res, "id", cJSON_Duplicate(id, 1));
+    cJSON *r = cJSON_AddObjectToObject(res, "result");
+    cJSON *content = cJSON_AddArrayToObject(r, "content");
+    cJSON *text = cJSON_CreateObject();
+    cJSON_AddStringToObject(text, "type", "text");
+    cJSON_AddStringToObject(text, "text", args ? args : "{}");
+    cJSON_AddItemToArray(content, text);
+    cJSON *sc = cJSON_AddObjectToObject(r, "structuredContent");
+    cJSON_AddStringToObject(sc, "status", "done");
+    cJSON_AddStringToObject(sc, "say", args ? args : "{}");
+    send_json(ws, t + SIM_MS(20), res);
+    cJSON_Delete(res);
+    cJSON_free(args);
+    sim_metric_add("hub.tools.echo", 1);
+    return true;
+}
+
 void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t len, bool binary) {
     if (binary) { /* microphone frames of a voice turn */
         sim_metric_add("hub.binary_bytes", (double)len);
@@ -292,6 +319,10 @@ void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t 
         int stream = (int)num_or(pr, "stream", -1);
         for (int i = 0; i < MAX_LISTEN; i++)
             if (LS[i].used && LS[i].ws == ws && LS[i].stream == stream) answer_listen(i, t);
+        cJSON_Delete(req);
+        return;
+    }
+    if (id && !strcmp(method, "tools/call") && server_tool(ws, t, req, id)) {
         cJSON_Delete(req);
         return;
     }

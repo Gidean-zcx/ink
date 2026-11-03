@@ -11,6 +11,8 @@
 #include "ink/sys/audio.h"
 #include "ink/sys/cap.h"
 #include "ink/sys/display.h"
+#include "ink/sys/exec.h"
+#include "ink/sys/hub.h"
 #include "ink/sys/json.h"
 #include "cJSON.h"
 #include "ink/sys/members.h"
@@ -307,6 +309,80 @@ static void settings_checks(void) {
           (long long)ink_setting_get("test.bad"));
 }
 
+/* ---- step 2: the soft bus and the executors (detailed design §3.5) ---- */
+
+static volatile int g_bus_done;
+static ink_receipt_t g_bus_rc;
+static bool g_bus_on_bg;
+static uint64_t g_bus_t;
+static int g_counted;
+static ink_call_t *g_parked;
+
+static void bus_done(void *ctx, const ink_receipt_t *rc) {
+    (void)ctx;
+    g_bus_rc = *rc;
+    g_bus_on_bg = ink_exec_is_current(INK_EXEC_BG);
+    g_bus_t = osal_now_us();
+    g_bus_done++;
+}
+
+static void t_where(ink_call_t *c) { c->rc.revision = ink_exec_is_current(INK_EXEC_BG) ? 1 : ink_exec_is_current(INK_EXEC_MEDIA) ? 2 : 0; }
+static void t_count(ink_call_t *c) { c->rc.revision = (uint32_t)++g_counted; }
+static void t_park(ink_call_t *c) {
+    g_parked = c;
+    ink_cap_defer(c);
+}
+
+static const ink_cap_t BUS_CAPS[] = {
+    {.id = "test.on_bg", .title = "后台", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_BG, .run = t_where},
+    {.id = "test.on_media", .title = "媒体", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_MEDIA, .run = t_where},
+    {.id = "test.count", .title = "计数", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = t_count},
+    {.id = "test.park", .title = "不回", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .timeout_ms = 200, .run = t_park},
+};
+
+static bool wait_done(int n, uint64_t max_us) {
+    for (uint64_t w = 0; g_bus_done < n && w < max_us; w += 1000) osal_task_delay_us(1000);
+    return g_bus_done >= n;
+}
+
+static void bus_checks(void) {
+    CHECK(ink_cap_register(BUS_CAPS, (int)(sizeof BUS_CAPS / sizeof BUS_CAPS[0])) == 0, "bus test capabilities register");
+    ink_call_opts_t o = {.src = INK_SRC_APP, .reply_exec = INK_EXEC_DIRECT, .done = bus_done};
+    uint64_t t0 = osal_now_us();
+    CHECK(ink_cap_call("test.count", NULL, &o) == 0 && g_bus_done == 1 && g_bus_rc.revision == 1, "a direct call is answered at once");
+    CHECK(g_bus_t - t0 < 200, "within 0.2 ms (%llu us)", (unsigned long long)(g_bus_t - t0));
+    o.reply_exec = INK_EXEC_BG;
+    t0 = osal_now_us();
+    CHECK(ink_cap_call("test.on_bg", NULL, &o) == 0 && wait_done(2, 100000) && g_bus_rc.revision == 1 && g_bus_on_bg,
+          "a background capability runs on exec.bg and its receipt comes back where asked");
+    CHECK(g_bus_t - t0 < 2000, "across tasks in < 2 ms (%llu us)", (unsigned long long)(g_bus_t - t0));
+    o.reply_exec = INK_EXEC_DIRECT;
+    CHECK(ink_cap_call("test.on_media", NULL, &o) == 0 && wait_done(3, 100000) && g_bus_rc.revision == 2, "a media capability runs on exec.media");
+    o.request_id = "rq-1";
+    CHECK(ink_cap_call("test.count", NULL, &o) == 0 && ink_cap_call("test.count", NULL, &o) == 0 && wait_done(5, 100000) && g_counted == 2 &&
+              g_bus_rc.revision == 2,
+          "a repeated request id runs once and gets the same receipt (%d runs)", g_counted);
+    o.request_id = NULL;
+    CHECK(ink_cap_call("test.park", NULL, &o) == 0 && g_bus_done == 5, "a deferred call is not answered at once");
+    osal_task_delay_us(300000);
+    CHECK(g_bus_done == 6 && g_bus_rc.status == INK_RC_FAILED && strstr(g_bus_rc.detail, "timed out"), "after its deadline: failed, timed out (%s)",
+          g_bus_rc.detail);
+    ink_cap_done(g_parked); /* late: dropped (budget: cap.late == 1) */
+    osal_task_delay_us(1000);
+    CHECK(g_bus_done == 6, "its late completion is dropped");
+    ink_receipt_t rc;
+    CHECK(ink_cap_invoke("test.on_bg", NULL, INK_SRC_APP, 0, &rc) == INK_RC_QUEUED, "waiting on a background capability answers queued");
+
+    /* the remote proxy: a capability of the (simulated) hub */
+    ink_args_t a;
+    ink_args_init(&a);
+    ink_args_int(&a, "x", 42);
+    CHECK(ink_cap_call("hub/echo", &a, &o) == 0 && wait_done(7, 15000000) && g_bus_rc.status == INK_RC_DONE && strstr(g_bus_rc.say, "\"x\":42"),
+          "a hub capability through the remote proxy (%s, %s)", ink_rc_name(g_bus_rc.status), g_bus_rc.say);
+    CHECK(ink_cap_call("hub/nope", NULL, &o) == 0 && wait_done(8, 15000000) && g_bus_rc.status == INK_RC_FAILED && g_bus_rc.detail[0],
+          "an unknown hub capability fails with the hub's reason (%s)", g_bus_rc.detail);
+}
+
 /* Children: last, a child cannot switch back to an adult without the PIN. */
 static void child_checks(void) {
     ink_receipt_t rc;
@@ -323,9 +399,9 @@ static void child_checks(void) {
 
 static void systest_task(void *arg) {
     (void)arg;
-    if (ink_display_init() != 0 || ink_storage_init() != 0 || ink_state_init() != 0 || ink_settings_init() != 0 || ink_power_init() != 0 ||
-        ink_audio_init() != 0) {
-        CHECK(0, "the display, storage, state, settings, power and audio services start");
+    if (ink_display_init() != 0 || ink_storage_init() != 0 || ink_cap_init() != 0 || ink_exec_init() != 0 || ink_state_init() != 0 ||
+        ink_settings_init() != 0 || ink_power_init() != 0 || ink_hub_init("wss://hub.local/v1/device") != 0 || ink_audio_init() != 0) {
+        CHECK(0, "the display, storage, bus, state, settings, power, hub and audio services start");
         return;
     }
     storage_checks();
@@ -333,6 +409,7 @@ static void systest_task(void *arg) {
     cap_checks();
     state_checks();
     settings_checks();
+    bus_checks();
     child_checks();
     ink_probe_mark("systest-done");
 }

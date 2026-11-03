@@ -128,7 +128,7 @@ int ink_settings_init(void) {
     if (!SE.lock) {
         SE.lock = osal_mutex_create();
         SE.save_timer = osal_timer_create("settings", save_cb, NULL);
-        if (!SE.lock || !SE.save_timer || watch_list_init(&SE.watch, id_of, "settings.watch_dropped")) return -1;
+        if (!SE.lock || !SE.save_timer || watch_list_init(&SE.watch, SE.lock, id_of, "settings.watch_dropped")) return -1;
     }
     load();
     if (!SE.caps) {

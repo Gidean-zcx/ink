@@ -4,12 +4,11 @@
 #include "ink/probe.h"
 #include "watch.h"
 
-int watch_list_init(watch_list_t *l, const char *(*id_of)(int idx), const char *probe_dropped) {
-    if (l->lock) return 0;
-    l->lock = osal_mutex_create();
+int watch_list_init(watch_list_t *l, osal_mutex_t *lock, const char *(*id_of)(int idx), const char *probe_dropped) {
+    l->lock = lock;
     l->id_of = id_of;
     l->probe_dropped = probe_dropped;
-    return l->lock ? 0 : -1;
+    return lock ? 0 : -1;
 }
 
 int watch_add(watch_list_t *l, const char *prefix, watch_fn fn, void *ctx, ink_exec_t exec) {

@@ -37,7 +37,7 @@ int ink_state_init(void) {
     if (ST.lock) return 0;
     ST.lock = osal_mutex_create();
     ST.timer = osal_timer_create("state", timer_cb, NULL);
-    if (!ST.lock || !ST.timer || watch_list_init(&ST.watch, id_of, "state.watch_dropped")) return -1;
+    if (!ST.lock || !ST.timer || watch_list_init(&ST.watch, ST.lock, id_of, "state.watch_dropped")) return -1;
     return 0;
 }
 
