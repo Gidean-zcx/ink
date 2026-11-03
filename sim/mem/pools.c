@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "tlsf.h"
+#include "vtk.h"
 
 #define MAX_REGIONS 8
 
@@ -226,6 +227,22 @@ static void *try_alloc(heap_pool_t *p, size_t size) {
     return ptr;
 }
 
+typedef struct {
+    size_t size;
+    uint32_t caps;
+    const char *owner;
+    heap_pool_t *pool;
+} failure_t;
+
+static void warn_failure(void *arg) {
+    const failure_t *f = arg;
+    heap_pool_t *p = f->pool;
+    char msg[200];
+    snprintf(msg, sizeof msg, "allocation of %zu bytes failed (caps=0x%x, owner=%s, %s free=%zu largest=%zu)", f->size,
+             f->caps, f->owner ? f->owner : "?", p->name, p->usable > p->used ? p->usable - p->used : 0, largest_free(p));
+    g_warn(msg);
+}
+
 void *pools_alloc(size_t size, uint32_t caps, const char *owner) {
     heap_pool_t *order[4] = {0};
     int n = 0;
@@ -255,11 +272,8 @@ void *pools_alloc(size_t size, uint32_t caps, const char *owner) {
     }
     order[0]->failed++;
     if (g_warn) {
-        char msg[200];
-        snprintf(msg, sizeof msg, "allocation of %zu bytes failed (caps=0x%x, owner=%s, %s free=%zu largest=%zu)",
-                 size, caps, owner ? owner : "?", order[0]->name,
-                 order[0]->usable > order[0]->used ? order[0]->usable - order[0]->used : 0, largest_free(order[0]));
-        g_warn(msg);
+        failure_t f = {size, caps, owner, order[0]};
+        vtk_host_call(warn_failure, &f); /* simulator output, not the allocating task's stack */
     }
     return NULL;
 }

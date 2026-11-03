@@ -394,9 +394,9 @@ void hal_audio_play_stop(bool drain) {
 
 void sim_audio_init(void) {
     lazy_init();
-    A.mic = calloc((size_t)A.chunk, sizeof *A.mic);
-    A.ref = calloc((size_t)A.chunk, sizeof *A.ref);
-    A.slots = calloc((size_t)A.N * (size_t)A.chunk, sizeof *A.slots);
+    A.mic = sim_host_calloc((size_t)A.chunk, sizeof *A.mic);
+    A.ref = sim_host_calloc((size_t)A.chunk, sizeof *A.ref);
+    A.slots = sim_host_calloc((size_t)A.N * (size_t)A.chunk, sizeof *A.slots);
     if (!A.mic || !A.ref || !A.slots) abort();
     if (!g_profile.info.has_audio_in && !g_profile.info.has_audio_out) return;
     const char *prev = osal_mem_tag("audio-driver");

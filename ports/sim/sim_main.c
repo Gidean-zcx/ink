@@ -32,6 +32,41 @@ uint32_t sim_rand(void) {
 
 double sim_rand01(void) { return (double)(sim_rand() >> 8) / (double)(1u << 24); }
 
+typedef struct {
+    size_t n, size;
+    bool zeroed;
+    void *p;
+} host_alloc_t;
+
+static void alloc_on_host(void *a) {
+    host_alloc_t *h = a;
+    h->p = h->zeroed ? calloc(h->n, h->size) : malloc(h->size);
+}
+
+void *sim_host_malloc(size_t size) {
+    host_alloc_t h = {1, size, false, NULL};
+    vtk_host_call(alloc_on_host, &h);
+    return h.p;
+}
+
+void *sim_host_calloc(size_t n, size_t size) {
+    host_alloc_t h = {n, size, true, NULL};
+    vtk_host_call(alloc_on_host, &h);
+    return h.p;
+}
+
+static void free_on_host(void *p) { free(p); }
+void sim_host_free(void *p) {
+    if (p) vtk_host_call(free_on_host, p);
+}
+
+void sim_copy_name(char *dst, size_t n, const char *src) {
+    if (!n) return;
+    size_t i = 0;
+    for (; src && src[i] && i + 1 < n; i++) dst[i] = src[i];
+    dst[i] = 0;
+}
+
 static void usage(void) {
     fprintf(stderr,
             "usage: ink-sim --profile P.json [--script S] [--out DIR] [--budget B.json] [--trace] [--frames]\n"

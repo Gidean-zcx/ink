@@ -85,34 +85,59 @@ void sim_trace_close(void) {
 
 bool sim_trace_enabled(void) { return TF != NULL; }
 
+/* Writing the trace is host work (vtk_host_call): it must not count as the calling task's stack. */
+typedef struct {
+    const char *track, *name, *args_json;
+    uint64_t t0_ns, t1_ns;
+    double value;
+} event_t;
+
+static void span_on_host(void *p) {
+    const event_t *e = p;
+    int tid = track_id(e->track);
+    char buf[700], esc[160];
+    json_escape(esc, sizeof esc, e->name);
+    snprintf(buf, sizeof buf, "{\"ph\":\"X\",\"pid\":2,\"tid\":%d,\"name\":\"%s\",\"ts\":%.3f,\"dur\":%.3f%s%s%s}", tid, esc,
+             e->t0_ns / 1000.0, (e->t1_ns > e->t0_ns ? e->t1_ns - e->t0_ns : 0) / 1000.0, e->args_json ? ",\"args\":" : "",
+             e->args_json ? e->args_json : "", "");
+    emit_raw(buf);
+}
+
 void sim_trace_span(const char *track, const char *name, uint64_t t0_ns, uint64_t t1_ns, const char *args_json) {
     if (!TF) return;
-    int tid = track_id(track);
+    event_t e = {.track = track, .name = name, .args_json = args_json, .t0_ns = t0_ns, .t1_ns = t1_ns};
+    vtk_host_call(span_on_host, &e);
+}
+
+static void instant_on_host(void *p) {
+    const event_t *e = p;
+    int tid = track_id(e->track);
     char buf[700], esc[160];
-    json_escape(esc, sizeof esc, name);
-    snprintf(buf, sizeof buf, "{\"ph\":\"X\",\"pid\":2,\"tid\":%d,\"name\":\"%s\",\"ts\":%.3f,\"dur\":%.3f%s%s%s}", tid, esc,
-             t0_ns / 1000.0, (t1_ns > t0_ns ? t1_ns - t0_ns : 0) / 1000.0, args_json ? ",\"args\":" : "",
-             args_json ? args_json : "", "");
+    json_escape(esc, sizeof esc, e->name);
+    snprintf(buf, sizeof buf, "{\"ph\":\"i\",\"s\":\"t\",\"pid\":2,\"tid\":%d,\"name\":\"%s\",\"ts\":%.3f%s%s}", tid, esc,
+             e->t0_ns / 1000.0, e->args_json ? ",\"args\":" : "", e->args_json ? e->args_json : "");
     emit_raw(buf);
 }
 
 void sim_trace_instant(const char *track, const char *name, uint64_t t_ns, const char *args_json) {
     if (!TF) return;
-    int tid = track_id(track);
-    char buf[700], esc[160];
-    json_escape(esc, sizeof esc, name);
-    snprintf(buf, sizeof buf, "{\"ph\":\"i\",\"s\":\"t\",\"pid\":2,\"tid\":%d,\"name\":\"%s\",\"ts\":%.3f%s%s}", tid, esc,
-             t_ns / 1000.0, args_json ? ",\"args\":" : "", args_json ? args_json : "");
+    event_t e = {.track = track, .name = name, .args_json = args_json, .t0_ns = t_ns};
+    vtk_host_call(instant_on_host, &e);
+}
+
+static void counter_on_host(void *p) {
+    const event_t *e = p;
+    char buf[300], esc[100];
+    json_escape(esc, sizeof esc, e->name);
+    snprintf(buf, sizeof buf, "{\"ph\":\"C\",\"pid\":2,\"name\":\"%s\",\"ts\":%.3f,\"args\":{\"value\":%.3f}}", esc,
+             e->t0_ns / 1000.0, e->value);
     emit_raw(buf);
 }
 
 void sim_trace_counter(const char *name, uint64_t t_ns, double value) {
     if (!TF) return;
-    char buf[300], esc[100];
-    json_escape(esc, sizeof esc, name);
-    snprintf(buf, sizeof buf, "{\"ph\":\"C\",\"pid\":2,\"name\":\"%s\",\"ts\":%.3f,\"args\":{\"value\":%.3f}}", esc,
-             t_ns / 1000.0, value);
-    emit_raw(buf);
+    event_t e = {.name = name, .t0_ns = t_ns, .value = value};
+    vtk_host_call(counter_on_host, &e);
 }
 
 void sim_trace_switch_hook(int core, const vtk_task_t *t, bool running, uint64_t t_ns) {

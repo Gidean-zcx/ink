@@ -11,6 +11,7 @@
 #define _GNU_SOURCE
 #include "vtk.h"
 
+#include <alloca.h>
 #include <errno.h>
 #include <pthread.h>
 #include <stdarg.h>
@@ -23,6 +24,7 @@
 
 #define STACK_PATTERN 0xA5u
 #define MIN_HOST_STACK (64u * 1024u)
+#define KERNEL_ZONE (64u * 1024u) /* host stack below each task's own zone, where the kernel runs (in_kernel_zone) */
 
 struct vtk_task {
     int id;
@@ -51,11 +53,14 @@ struct vtk_task {
     uint64_t pending_ns;
     uint64_t run_since;
     unsigned burst_warns;
-    /* stack */
+    /* stack: [guard][kernel zone][own zone], see in_kernel_zone */
     uint8_t *stack_mem;
     size_t stack_total;
     size_t guard;
     uint32_t stack_target;
+    uint8_t *own_lo;     /* lowest byte of the task's own zone */
+    uint8_t *entry;      /* stack position when the task function was entered */
+    size_t used_at_exit; /* own_stack_used() when the task exited */
 };
 
 typedef struct {
@@ -111,6 +116,25 @@ static __thread vtk_task_t *tls_self;
 
 /* ------------------------------------------------------------------ utils */
 
+/* Everything the kernel does on a task's host thread (pthread waits, event callbacks, trace
+ * hooks, creating tasks, the exit path) runs in a zone at the bottom of that thread's stack,
+ * below the task's own zone. The stack estimate then sees only the task's code: it does not
+ * depend on host timing (which pthread paths run) or on how deep the host's libc goes. */
+__attribute__((noinline)) static void in_zone_of(const vtk_task_t *t, void (*fn)(void *), void *arg) {
+    uint8_t *here = __builtin_frame_address(0);
+    if (!t || here <= t->own_lo) { /* main thread, or already in the kernel zone */
+        fn(arg);
+        return;
+    }
+    uint8_t *volatile gap = alloca((size_t)(here - t->own_lo)); /* moves the stack pointer, writes nothing */
+    fn(arg);
+    (void)gap; /* used after the call, so fn is not a tail call and does run below the gap */
+}
+
+static void in_kernel_zone(void (*fn)(void *), void *arg) { in_zone_of(tls_self, fn, arg); }
+
+void vtk_host_call(void (*fn)(void *), void *arg) { in_kernel_zone(fn, arg); }
+
 static void default_warn(const char *msg) { fprintf(stderr, "[vtk] %s\n", msg); }
 
 static void warnf(const char *fmt, ...) {
@@ -149,12 +173,15 @@ static bool ev_less(const vtk_ev_t *a, const vtk_ev_t *b) {
     return a->t < b->t || (a->t == b->t && a->seq < b->seq);
 }
 
+static void heap_grow(void *arg) {
+    (void)arg;
+    K.capheap = K.capheap ? K.capheap * 2 : 256;
+    K.heap = realloc(K.heap, K.capheap * sizeof(vtk_ev_t));
+    if (!K.heap) abort();
+}
+
 static void heap_push(vtk_ev_t e) {
-    if (K.nheap == K.capheap) {
-        K.capheap = K.capheap ? K.capheap * 2 : 256;
-        K.heap = realloc(K.heap, K.capheap * sizeof(vtk_ev_t));
-        if (!K.heap) abort();
-    }
+    if (K.nheap == K.capheap) in_kernel_zone(heap_grow, NULL);
     size_t i = K.nheap++;
     K.heap[i] = e;
     while (i > 0) {
@@ -252,6 +279,25 @@ static void make_ready_locked(vtk_task_t *t, uint64_t at) {
     t->ready_seq = K.seq++;
 }
 
+typedef struct {
+    int core;
+    const vtk_task_t *t;
+    bool running;
+    uint64_t t_ns;
+} switch_args_t;
+
+static void switch_hook_in_zone(void *p) {
+    const switch_args_t *a = p;
+    K.hook(a->core, a->t, a->running, a->t_ns);
+}
+
+/* Also reached from task context (a task blocks or yields): the hook writes the trace. */
+static void switch_hook(int c, const vtk_task_t *t, bool running, uint64_t t_ns) {
+    if (!K.hook) return;
+    switch_args_t a = {c, t, running, t_ns};
+    in_kernel_zone(switch_hook_in_zone, &a);
+}
+
 static void start_on_core_locked(vtk_task_t *t, int c) {
     uint64_t delay = K.now[c] - t->ready_at;
     if (delay > t->preempt_delay_max_ns) t->preempt_delay_max_ns = delay;
@@ -267,7 +313,7 @@ static void start_on_core_locked(vtk_task_t *t, int c) {
     t->switches++;
     K.cur[c] = t;
     K.slice_start[c] = slice_from;
-    if (K.hook) K.hook(c, t, true, slice_from);
+    switch_hook(c, t, true, slice_from);
 }
 
 /* The task running on core c stops running (blocks, is preempted, sleeps or exits). */
@@ -275,7 +321,7 @@ static void core_release_locked(int c) {
     vtk_task_t *t = K.cur[c];
     if (!t) return;
     K.busy[c] += K.now[c] - K.slice_start[c];
-    if (K.hook) K.hook(c, t, false, K.now[c]);
+    switch_hook(c, t, false, K.now[c]);
     K.cur[c] = NULL;
 }
 
@@ -499,20 +545,36 @@ static void charge_locked(vtk_task_t *t, uint64_t host_now, bool kernel_call) {
     }
 }
 
-static void kenter_ex(vtk_task_t *self, bool kernel_call) {
+typedef struct {
+    vtk_task_t *self;
+    bool kernel_call;
+} kenter_args_t;
+
+static void kenter_in_zone(void *p) {
+    const kenter_args_t *a = p;
     uint64_t h = (K.cfg.cpu_mode == VTK_CPU_MEASURED) ? host_cpu_ns() : 0;
     pthread_mutex_lock(&K.m);
-    charge_locked(self, h, kernel_call);
+    charge_locked(a->self, h, a->kernel_call);
+}
+
+static void kenter_ex(vtk_task_t *self, bool kernel_call) {
+    kenter_args_t a = {self, kernel_call};
+    in_kernel_zone(kenter_in_zone, &a);
 }
 
 /* A real RTOS call: charges the kernel overhead. */
 static void kenter(vtk_task_t *self) { kenter_ex(self, true); }
 
-static void kexit(vtk_task_t *self) {
+static void schedule_in_zone(void *self) { schedule_locked(self); }
+
+static void kexit_in_zone(void *p) {
+    vtk_task_t *self = p;
     schedule_locked(self);
     if (K.cfg.cpu_mode == VTK_CPU_MEASURED) self->last_host_cpu_ns = host_cpu_ns();
     pthread_mutex_unlock(&K.m);
 }
+
+static void kexit(vtk_task_t *self) { in_kernel_zone(kexit_in_zone, self); }
 
 /* ------------------------------------------------------------ public */
 
@@ -543,20 +605,50 @@ uint64_t vtk_core_busy_ns(int core) {
 int vtk_task_index(const vtk_task_t *t) { return t ? t->id : -1; }
 bool vtk_in_isr(void) { return K.in_isr; }
 
-static void *task_thread(void *p) {
+static void first_baton_in_zone(void *p) {
     vtk_task_t *t = p;
-    tls_self = t;
+    tls_self = t; /* Apple platforms allocate a thread's TLS on first use (dyld + malloc) */
     pthread_mutex_lock(&K.m);
     wait_baton_locked(t);
     if (K.finished) park_forever_locked(t);
     if (K.cfg.cpu_mode == VTK_CPU_MEASURED) t->last_host_cpu_ns = host_cpu_ns();
     pthread_mutex_unlock(&K.m);
+}
+
+static void *task_thread(void *p) {
+    vtk_task_t *t = p;
+    in_zone_of(t, first_baton_in_zone, t);
+    t->entry = __builtin_frame_address(0);
     t->fn(t->arg);
     vtk_task_exit();
 }
 
+typedef struct {
+    const char *name;
+    vtk_task_fn fn;
+    void *arg;
+    int priority, core;
+    uint32_t flags, stack_target_bytes;
+    vtk_task_t *created;
+} create_args_t;
+
+static vtk_task_t *task_create(const char *name, vtk_task_fn fn, void *arg, int priority, int core, uint32_t flags,
+                               uint32_t stack_target_bytes);
+
+static void task_create_in_zone(void *p) {
+    create_args_t *a = p;
+    a->created = task_create(a->name, a->fn, a->arg, a->priority, a->core, a->flags, a->stack_target_bytes);
+}
+
 vtk_task_t *vtk_task_create(const char *name, vtk_task_fn fn, void *arg, int priority, int core,
                             uint32_t flags, uint32_t stack_target_bytes) {
+    create_args_t a = {name, fn, arg, priority, core, flags, stack_target_bytes, NULL};
+    in_kernel_zone(task_create_in_zone, &a); /* from a task: host allocations and pthread_create are not its stack */
+    return a.created;
+}
+
+static vtk_task_t *task_create(const char *name, vtk_task_fn fn, void *arg, int priority, int core, uint32_t flags,
+                               uint32_t stack_target_bytes) {
     vtk_task_t *t = calloc(1, sizeof *t);
     if (!t) return NULL;
     snprintf(t->name, sizeof t->name, "%s", name ? name : "task");
@@ -573,14 +665,15 @@ vtk_task_t *vtk_task_create(const char *name, vtk_task_fn fn, void *arg, int pri
     if (want < MIN_HOST_STACK) want = MIN_HOST_STACK;
     want = (want + (size_t)page - 1) & ~((size_t)page - 1);
     t->guard = (size_t)page;
-    t->stack_total = want + t->guard;
+    t->stack_total = t->guard + KERNEL_ZONE + want;
     t->stack_mem = mmap(NULL, t->stack_total, PROT_READ | PROT_WRITE, MAP_PRIVATE | MAP_ANONYMOUS, -1, 0);
     if (t->stack_mem == MAP_FAILED) {
         free(t);
         return NULL;
     }
     mprotect(t->stack_mem, t->guard, PROT_NONE);
-    memset(t->stack_mem + t->guard, STACK_PATTERN, want);
+    t->own_lo = t->stack_mem + t->guard + KERNEL_ZONE;
+    memset(t->own_lo, STACK_PATTERN, want);
 
     bool from_task = tls_self != NULL;
     if (from_task) kenter(tls_self);
@@ -601,7 +694,7 @@ vtk_task_t *vtk_task_create(const char *name, vtk_task_fn fn, void *arg, int pri
 
     pthread_attr_t attr;
     pthread_attr_init(&attr);
-    pthread_attr_setstack(&attr, t->stack_mem + t->guard, want);
+    pthread_attr_setstack(&attr, t->stack_mem + t->guard, KERNEL_ZONE + want);
     int rc = pthread_create(&t->th, &attr, task_thread, t);
     pthread_attr_destroy(&attr);
     if (rc != 0) {
@@ -645,16 +738,23 @@ int vtk_current_core(void) { return tls_self && !K.in_isr ? tls_self->core : -1;
 const char *vtk_task_name(const vtk_task_t *t) { return t ? t->name : "?"; }
 int vtk_task_count(void) { return K.ntasks; }
 
-static size_t host_stack_used(const vtk_task_t *t) {
-    const uint8_t *p = t->stack_mem + t->guard;
-    size_t n = t->stack_total - t->guard, i = 0;
+/* Host bytes the task's own code has used below its entry point (pattern scan of its own zone). */
+static size_t own_stack_used(const vtk_task_t *t) {
+    if (!t->entry) return 0; /* never ran */
+    const uint8_t *p = t->own_lo;
+    size_t n = (size_t)(t->entry - p), i = 0;
     while (i < n && p[i] == STACK_PATTERN) i++;
     return n - i;
 }
 
-/* Target stack estimate: host bytes above the baseline (thread start + kernel frames,
- * measured on an empty probe task) scaled by the host/target ratio. Rough; the real
- * check is -fstack-usage on the RISC-V build. */
+static size_t host_stack_used(const vtk_task_t *t) {
+    return t->state == VTK_ST_DONE ? t->used_at_exit : own_stack_used(t);
+}
+
+/* Target stack estimate: host bytes the task's code used below its entry point, minus what an
+ * empty probe task needs to reach the kernel, scaled by the host/target ratio. Thread start,
+ * the kernel and the exit path are not counted (in_kernel_zone). Rough; the real check is
+ * -fstack-usage on the RISC-V build. */
 static uint32_t stack_used_est(const vtk_task_t *t) {
     size_t used_host = host_stack_used(t);
     size_t base = K.stack_probe ? host_stack_used(K.stack_probe) : 0;
@@ -755,7 +855,7 @@ bool vtk_block_locked(vtk_waitq_t *wq, uint64_t timeout_ns) {
         self->timeout_ev = event_at_locked(when, timeout_cb, self);
     }
     core_release_locked(c);
-    schedule_locked(self);
+    in_kernel_zone(schedule_in_zone, self);
     if (self->timeout_ev) {
         event_cancel_locked(self->timeout_ev);
         self->timeout_ev = 0;
@@ -819,14 +919,21 @@ void vtk_sleep_ns(uint64_t ns) {
 
 void vtk_yield(void) { vtk_sleep_ns(0); }
 
-void vtk_task_exit(void) {
-    vtk_task_t *self = tls_self;
+static void task_exit_in_zone(void *p) {
+    vtk_task_t *self = p;
     kenter(self);
     self->state = VTK_ST_DONE;
     core_release_locked(self->core);
     schedule_locked(self);
     pthread_mutex_unlock(&K.m);
     pthread_exit(NULL);
+}
+
+void vtk_task_exit(void) {
+    vtk_task_t *self = tls_self;
+    self->used_at_exit = own_stack_used(self); /* glibc's pthread_exit unwinds back up into the task's zone */
+    in_kernel_zone(task_exit_in_zone, self);
+    abort(); /* not reached */
 }
 
 void vtk_set_priority(vtk_task_t *t, int prio) { t->prio = prio; }

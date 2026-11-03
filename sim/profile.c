@@ -5,6 +5,7 @@
 #include <string.h>
 
 #include "cJSON.h"
+#include "vtk.h"
 
 sim_profile_t g_profile;
 
@@ -396,6 +397,12 @@ int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
 static void (*g_cost_warn)(const char *msg);
 void profile_set_warn(void (*fn)(const char *msg)) { g_cost_warn = fn; }
 
+static void warn_missing(void *name) {
+    char msg[160];
+    snprintf(msg, sizeof msg, "profile has no cost class '%s': that work is charged 0 cycles", (const char *)name);
+    g_cost_warn(msg);
+}
+
 double profile_cost(const char *name) {
     for (int i = 0; i < g_profile.ncosts; i++)
         if (!strcmp(g_profile.costs[i].name, name)) return g_profile.costs[i].cycles;
@@ -405,10 +412,6 @@ double profile_cost(const char *name) {
     for (int i = 0; i < nwarned; i++)
         if (warned[i] == name || !strcmp(warned[i], name)) return 0;
     if (nwarned < 32) warned[nwarned++] = name;
-    if (g_cost_warn) {
-        char msg[160];
-        snprintf(msg, sizeof msg, "profile has no cost class '%s': that work is charged 0 cycles", name);
-        g_cost_warn(msg);
-    }
+    if (g_cost_warn) vtk_host_call(warn_missing, (void *)name); /* reached deep in task code: not its stack */
     return 0;
 }

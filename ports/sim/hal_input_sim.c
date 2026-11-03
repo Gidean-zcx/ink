@@ -99,14 +99,25 @@ void sim_i2c_init(void) {
     if (!I2C.bus) osal_panic("i2c init: no memory");
 }
 
+typedef struct {
+    const char *who;
+    double ms;
+} bus_wait_t;
+
+static void sample_wait_on_host(void *p) {
+    const bus_wait_t *w = p;
+    char key[64];
+    snprintf(key, sizeof key, "i2c.wait_ms.%s", w->who);
+    sim_metric_sample(key, w->ms);
+}
+
 static void bus_run(const char *who, uint64_t ns) {
     uint64_t t_req = vtk_now();
     osal_mutex_lock(I2C.bus, OSAL_WAIT_FOREVER);
     uint64_t t0 = vtk_now();
     if (t0 > t_req) {
-        char key[64];
-        snprintf(key, sizeof key, "i2c.wait_ms.%s", who);
-        sim_metric_sample(key, (t0 - t_req) / 1e6);
+        bus_wait_t w = {who, (t0 - t_req) / 1e6};
+        vtk_host_call(sample_wait_on_host, &w); /* bookkeeping, not the driver's stack */
     }
     sim_charge_ns_always(SIM_US(15)); /* driver setup + ISR work */
     vtk_sleep_ns(ns);

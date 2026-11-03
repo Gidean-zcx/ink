@@ -230,8 +230,8 @@ static void deliver_cb(void *arg) { /* ISR */
     arrival_t *a = arg;
     struct hal_ws *w = a->ws;
     if (w->gen != a->gen || w->state != 1 || w->dead) {
-        free(a->m);
-        free(a);
+        sim_host_free(a->m);
+        sim_host_free(a);
         sim_metric_add("net.dropped_downlink", 1);
         return;
     }
@@ -240,7 +240,7 @@ static void deliver_cb(void *arg) { /* ISR */
     else w->rx_head = a->m;
     w->rx_tail = a->m;
     vtk_isr_wake_one(&w->wq);
-    free(a);
+    sim_host_free(a);
 }
 
 /* The hub sends `len` bytes at server time t_send (ISR context, from sim_hub). */
@@ -261,13 +261,13 @@ void sim_net_hub_send(struct hal_ws *w, uint64_t t_send, const void *data, size_
     /* one TCP stream: nothing overtakes an earlier message (a retransmission holds back what follows) */
     if (arrive < w->down_last) arrive = w->down_last;
     w->down_last = arrive;
-    sim_msg_t *m = malloc(sizeof *m + len + 1);
+    sim_msg_t *m = sim_host_malloc(sizeof *m + len + 1);
     if (!m) abort();
     m->binary = binary;
     m->len = len;
     memcpy(m->data, data, len);
     m->data[len] = 0;
-    arrival_t *a = malloc(sizeof *a);
+    arrival_t *a = sim_host_malloc(sizeof *a);
     if (!a) abort();
     a->ws = w;
     a->gen = w->gen;
@@ -289,8 +289,8 @@ static void hub_arrive_cb(void *arg) { /* ISR: an uplink message reached the hub
         sim_hub_receive(u->ws, vtk_isr_now(), u->m->data, u->m->len, u->m->binary);
     else
         sim_metric_add("net.dropped_uplink", 1);
-    free(u->m);
-    free(u);
+    sim_host_free(u->m);
+    sim_host_free(u);
 }
 
 /* --------------------------------------------------------- connection task */
@@ -371,7 +371,7 @@ static void ws_task(void *arg) {
             if (!w->rx_head) w->rx_tail = NULL;
             sim_charge_cycles(profile_cost("net.byte") * (double)m->len);
             w->cb(w->ctx, m->binary ? HAL_WS_BINARY : HAL_WS_TEXT, m->data, m->len);
-            free(m);
+            sim_host_free(m);
             continue;
         }
         if (w->tx_head) {
@@ -392,7 +392,7 @@ static void ws_task(void *arg) {
             }
             if (arrive < w->up_last) arrive = w->up_last; /* in order, as above */
             w->up_last = arrive;
-            uplink_t *u = malloc(sizeof *u);
+            uplink_t *u = sim_host_malloc(sizeof *u);
             if (!u) abort();
             u->ws = w;
             u->gen = w->gen;
@@ -409,12 +409,12 @@ static void ws_task(void *arg) {
     while (w->rx_head) {
         sim_msg_t *m = w->rx_head;
         w->rx_head = m->next;
-        free(m);
+        sim_host_free(m);
     }
     while (w->tx_head) {
         sim_msg_t *m = w->tx_head;
         w->tx_head = m->next;
-        free(m);
+        sim_host_free(m);
     }
     w->rx_tail = w->tx_tail = NULL;
     w->task_done = true;
@@ -425,7 +425,7 @@ static void ws_task(void *arg) {
 
 hal_ws_t *hal_ws_open(const char *url, hal_ws_cb cb, void *ctx) {
     if (vtk_in_isr() || !vtk_self()) osal_panic("hal_ws_open must be called from a task");
-    struct hal_ws *w = calloc(1, sizeof *w);
+    struct hal_ws *w = sim_host_calloc(1, sizeof *w);
     if (!w) abort();
     snprintf(w->url, sizeof w->url, "%s", url);
     w->cb = cb;
@@ -440,7 +440,7 @@ hal_ws_t *hal_ws_open(const char *url, hal_ws_cb cb, void *ctx) {
                  g_profile.tls_internal_bytes, g_profile.tls_external_bytes);
         osal_free(w->tls_int);
         osal_free(w->tls_ext);
-        free(w);
+        sim_host_free(w);
         return NULL;
     }
     /* esp_websocket_client: CONFIG_ESP_WS_CLIENT_TASK_STACK_IN_EXT_RAM puts the stack in PSRAM (TCB stays internal) */
@@ -449,7 +449,7 @@ hal_ws_t *hal_ws_open(const char *url, hal_ws_cb cb, void *ctx) {
     if (osal_task_create(&cfg, &w->task) != OSAL_OK) {
         osal_free(w->tls_int);
         osal_free(w->tls_ext);
-        free(w);
+        sim_host_free(w);
         return NULL;
     }
     vtk_lock();
@@ -474,7 +474,7 @@ int hal_ws_send(hal_ws_t *w, bool binary, const void *data, size_t len, int64_t 
         vtk_unlock();
         return -1;
     }
-    sim_msg_t *m = malloc(sizeof *m + len + 1);
+    sim_msg_t *m = sim_host_malloc(sizeof *m + len + 1);
     if (!m) abort();
     m->next = NULL;
     m->binary = binary;

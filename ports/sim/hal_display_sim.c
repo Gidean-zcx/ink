@@ -155,14 +155,17 @@ static void visible_image(uint8_t *out_logical, int *lw, int *lh) {
         }
 }
 
-static void write_png(const char *path) {
+static void png_on_host(void *path) {
     int lw, lh;
-    uint8_t *img = malloc((size_t)D.W * D.H);
+    uint8_t *img = sim_host_malloc((size_t)D.W * D.H);
     if (!img) return;
     visible_image(img, &lw, &lh);
-    if (!stbi_write_png(path, lw, lh, 1, img, lw)) sim_warn("cannot write %s", path);
-    free(img);
+    if (!stbi_write_png(path, lw, lh, 1, img, lw)) sim_warn("cannot write %s", (const char *)path);
+    sim_host_free(img);
 }
+
+/* Host work (--frames, snapshots): not the calling task's stack. */
+static void write_png(const char *path) { vtk_host_call(png_on_host, (void *)path); }
 
 void sim_display_snapshot(const char *name) {
     if (!g_sim.out_dir || !D.screen) return;
@@ -521,6 +524,34 @@ static void back_copy(const hal_rect_t *a) {
 
 static hal_cpu_boost_t *g_boost; /* the driver keeps the CPU at full speed while it refreshes */
 
+typedef struct {
+    const req_t *r;
+    hal_waveform_t wf;
+    uint64_t t_pick, started, done;
+} finished_t;
+
+static void record_finished(void *p) {
+    const finished_t *f = p;
+    const req_t *r = f->r;
+    char key[80], args[200];
+    snprintf(key, sizeof key, "display.updates.%s", WFN[f->wf]);
+    sim_metric_add(key, 1);
+    snprintf(key, sizeof key, "display.update_ms.%s", WFN[f->wf]);
+    sim_metric_sample(key, (f->done - r->queued_ns) / 1e6);
+    sim_metric_sample("display.queue_wait_ms", (f->t_pick - r->queued_ns) / 1e6);
+    double ghost = sim_display_ghost_level();
+    sim_metric_max("display.ghost_level_max", ghost);
+    snprintf(args, sizeof args, "{\"id\":%u,\"x\":%d,\"y\":%d,\"w\":%d,\"h\":%d,\"ghost\":%.2f}", r->id, r->area.x,
+             r->area.y, r->area.w, r->area.h, ghost);
+    if (f->t_pick > r->queued_ns) sim_trace_span("display", "queued", r->queued_ns, f->t_pick, NULL);
+    sim_trace_span("display", WFN[f->wf], f->started, f->done, args);
+    if (g_sim.frames && g_sim.out_dir) {
+        char path[512];
+        snprintf(path, sizeof path, "%s/frames/%05u_%08.1fms_%s.png", g_sim.out_dir, r->id, f->done / 1e6, WFN[f->wf]);
+        write_png(path);
+    }
+}
+
 static void execute(req_t *r) {
     hal_display_result_t res = {.id = r->id, .ok = true, .queued_us = r->queued_ns / 1000};
     if (!g_boost) g_boost = hal_cpu_boost_create("epd");
@@ -583,24 +614,8 @@ static void execute(req_t *r) {
     res.started_us = started / 1000;
     res.done_us = done / 1000;
     D.busy_ns += vtk_now() - t_pick;
-
-    char key[80], args[200];
-    snprintf(key, sizeof key, "display.updates.%s", WFN[wf]);
-    sim_metric_add(key, 1);
-    snprintf(key, sizeof key, "display.update_ms.%s", WFN[wf]);
-    sim_metric_sample(key, (done - r->queued_ns) / 1e6);
-    sim_metric_sample("display.queue_wait_ms", (t_pick - r->queued_ns) / 1e6);
-    double ghost = sim_display_ghost_level();
-    sim_metric_max("display.ghost_level_max", ghost);
-    snprintf(args, sizeof args, "{\"id\":%u,\"x\":%d,\"y\":%d,\"w\":%d,\"h\":%d,\"ghost\":%.2f}", r->id, r->area.x,
-             r->area.y, r->area.w, r->area.h, ghost);
-    if (t_pick > r->queued_ns) sim_trace_span("display", "queued", r->queued_ns, t_pick, NULL);
-    sim_trace_span("display", WFN[wf], started, done, args);
-    if (g_sim.frames && g_sim.out_dir) {
-        char path[512];
-        snprintf(path, sizeof path, "%s/frames/%05u_%08.1fms_%s.png", g_sim.out_dir, r->id, done / 1e6, WFN[wf]);
-        write_png(path);
-    }
+    finished_t f = {r, wf, t_pick, started, done};
+    vtk_host_call(record_finished, &f); /* metrics, trace, --frames: not the driver task's stack */
     D.pending--;
     hal_cpu_boost_release(g_boost);
     if (r->done) r->done(r->ctx, &res);
@@ -725,11 +740,11 @@ static void pq_init(void) {
     /* the panel starts white and settled */
     memset((uint8_t *)PQ.C.fb4, 0xff, npx / 2);
     pqbn_v4_init(&PQ.C, 0);
-    PQ.line = malloc(line_bytes);
-    PQ.opt = malloc(npx * sizeof *PQ.opt);
-    PQ.last_push = calloc(npx, sizeof *PQ.last_push);
-    PQ.mob = malloc(npx);
-    PQ.line_cost = malloc(sizeof *PQ.line_cost * (size_t)(g_profile.line_count > H ? g_profile.line_count : H));
+    PQ.line = sim_host_malloc(line_bytes);
+    PQ.opt = sim_host_malloc(npx * sizeof *PQ.opt);
+    PQ.last_push = sim_host_calloc(npx, sizeof *PQ.last_push);
+    PQ.mob = sim_host_malloc(npx);
+    PQ.line_cost = sim_host_malloc(sizeof *PQ.line_cost * (size_t)(g_profile.line_count > H ? g_profile.line_count : H));
     if (!PQ.line || !PQ.opt || !PQ.last_push || !PQ.mob || !PQ.line_cost) abort();
     for (size_t i = 0; i < npx; i++) {
         PQ.opt[i] = 255 << 8;
@@ -930,23 +945,36 @@ static void pq_apply(uint32_t now) {
     }
 }
 
-static void pq_finish(pq_upd_t *u, uint64_t done_ns) {
-    hal_display_result_t res = {.id = u->r.id, .ok = true, .waveform = u->r.wf, .queued_us = u->r.queued_ns / 1000};
-    res.started_us = (u->started_ns ? u->started_ns : done_ns) / 1000;
-    res.done_us = done_ns / 1000;
+typedef struct {
+    const pq_upd_t *u;
+    uint64_t done_ns;
+} pq_finished_t;
+
+static void pq_record_finished(void *p) {
+    const pq_finished_t *f = p;
+    const pq_upd_t *u = f->u;
     char key[80], args[160];
     snprintf(key, sizeof key, "display.updates.%s", WFN[u->r.wf]);
     sim_metric_add(key, 1);
     snprintf(key, sizeof key, "display.update_ms.%s", WFN[u->r.wf]);
-    sim_metric_sample(key, (done_ns - u->r.queued_ns) / 1e6);
+    sim_metric_sample(key, (f->done_ns - u->r.queued_ns) / 1e6);
     snprintf(args, sizeof args, "{\"id\":%u,\"x\":%d,\"y\":%d,\"w\":%d,\"h\":%d}", u->r.id, u->r.area.x, u->r.area.y,
              u->r.area.w, u->r.area.h);
-    sim_trace_span("display", WFN[u->r.wf], u->started_ns ? u->started_ns : done_ns, done_ns, args);
+    sim_trace_span("display", WFN[u->r.wf], u->started_ns ? u->started_ns : f->done_ns, f->done_ns, args);
     if (g_sim.frames && g_sim.out_dir) {
         char path[512];
-        snprintf(path, sizeof path, "%s/frames/%05u_%08.1fms_%s.png", g_sim.out_dir, u->r.id, done_ns / 1e6, WFN[u->r.wf]);
+        snprintf(path, sizeof path, "%s/frames/%05u_%08.1fms_%s.png", g_sim.out_dir, u->r.id, f->done_ns / 1e6,
+                 WFN[u->r.wf]);
         write_png(path);
     }
+}
+
+static void pq_finish(pq_upd_t *u, uint64_t done_ns) {
+    hal_display_result_t res = {.id = u->r.id, .ok = true, .waveform = u->r.wf, .queued_us = u->r.queued_ns / 1000};
+    res.started_us = (u->started_ns ? u->started_ns : done_ns) / 1000;
+    res.done_us = done_ns / 1000;
+    pq_finished_t f = {u, done_ns};
+    vtk_host_call(pq_record_finished, &f); /* metrics, trace, --frames: not the driver task's stack */
     D.pending--;
     if (u->r.done) u->r.done(u->r.ctx, &res);
 }
@@ -1289,10 +1317,10 @@ void sim_display_init(void) {
     D.W = D.info.width;
     D.H = D.info.height;
     size_t n = (size_t)D.W * D.H;
-    D.target = malloc(n);
-    D.screen = malloc(n);
-    D.applying = malloc(n);
-    D.residual = calloc(n, sizeof(float));
+    D.target = sim_host_malloc(n);
+    D.screen = sim_host_malloc(n);
+    D.applying = sim_host_malloc(n);
+    D.residual = sim_host_calloc(n, sizeof(float));
     if (!D.target || !D.screen || !D.applying || !D.residual) abort();
     memset(D.target, 255, n);
     memset(D.screen, 255, n);
