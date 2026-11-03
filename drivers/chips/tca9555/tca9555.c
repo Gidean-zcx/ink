@@ -11,6 +11,7 @@ hal_i2c_status_t tca9555_init(tca9555_t *t, hal_i2c_dev_t *dev, const uint8_t ou
     t->dev = dev;
     hal_i2c_status_t first = HAL_I2C_OK;
     for (int port = 0; port < 2; port++) {
+        t->changed[port] |= (uint8_t)(t->out[port] ^ out[port]); /* a set-up again counts as a write too */
         t->out[port] = out[port];
         t->dir[port] = dir[port];
         t->stale[port] = false;
