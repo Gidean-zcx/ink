@@ -1,0 +1,41 @@
+{
+  "_doc": "Reader on the pessimistic Plus profile with 2 % of hal_i2c transfers timing out (--i2c-faults 0.02). The panel power driver (drivers/board/metalio_epd_power.c) must recover by its retries, as the factory firmware did once on the device (docs/hardware/2026-11-03-phase0.md, section 6). Latency is not judged here: every retry costs about 0.25 s.",
+  "i2c.timeouts": {
+    "min": 1,
+    "why": "the injected faults must actually reach the panel power path"
+  },
+  "display.pmic.retries": {
+    "min": 1,
+    "why": "at least one power-up needed a retry, so the retry path ran"
+  },
+  "display.power_failures": {
+    "max": 0,
+    "optional": true,
+    "why": "every power-up recovers within 3 retries (otherwise the device would enter safe mode)"
+  },
+  "display.unpowered_waveforms": {
+    "max": 0,
+    "optional": true,
+    "why": "no waveform may start without good rails and VCOM"
+  },
+  "display.pmic.order_warnings": {
+    "max": 0,
+    "why": "power-down order: XOE low >= 12 us before the rails go off, PWRUP before WAKEUP"
+  },
+  "display.pmic.vcom_mismatches": {
+    "max": 0,
+    "why": "VCOM driven at the panel's value"
+  },
+  "display.underruns": {
+    "max": 0,
+    "optional": true
+  },
+  "panic.count": {
+    "max": 0,
+    "optional": true
+  },
+  "warnings.count": {
+    "max": 0,
+    "why": "retries are expected; a simulator warning is not"
+  }
+}

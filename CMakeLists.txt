@@ -51,6 +51,11 @@ target_compile_options(ink_stb PRIVATE -w)
 
 add_library(ink_port_sim STATIC
   drivers/epd/pqbn_v4.c
+  drivers/tca9555/tca9555.c
+  drivers/tps65185/tps65185.c
+  drivers/board/metalio_epd_power.c
+  ports/sim/hal_i2c_sim.c
+  ports/sim/dev_epd_power.c
   ports/sim/osal_sim.c
   ports/sim/metrics.c
   ports/sim/trace.c
@@ -64,7 +69,7 @@ add_library(ink_port_sim STATIC
   ports/sim/hal_audio_sim.c
   ports/sim/hal_codec_sim.c
   ports/sim/sim_hub.c)
-target_include_directories(ink_port_sim PUBLIC ports/sim platform/include drivers/epd)
+target_include_directories(ink_port_sim PUBLIC ports/sim platform/include drivers/epd drivers)
 target_link_libraries(ink_port_sim PUBLIC ink_sim_core ink_littlefs ink_stb)
 target_compile_options(ink_port_sim PRIVATE ${INK_WARN})
 
@@ -192,6 +197,15 @@ function(ink_scenario name profile)
 endfunction()
 ink_scenario(home_basic metalio-plus)
 ink_scenario(home_basic metalio-plus-psram16)
+# Panel power safety (D-41): the board driver against the PMIC model must flag a VCOM that differs
+# from the panel's (here a panel labelled 1.50 V while the board drives 1.20 V).
+add_test(NAME selftest-panel-vcom-mismatch
+  COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json
+          --script ${CMAKE_SOURCE_DIR}/tests/scenarios/home_basic.script
+          --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+          --out ${CMAKE_BINARY_DIR}/test-out/selftest-vcom --no-random-outages --panel-vcom-mv 1500 --end 8s)
+set_tests_properties(selftest-panel-vcom-mismatch PROPERTIES
+  PASS_REGULAR_EXPRESSION "VCOM driven at -1200 mV but the panel needs -1500 mV")
 if(INK_HAVE_FONTS)
   ink_scenario(reader_basic metalio-plus)
   ink_scenario(keys_overlap metalio-plus)
@@ -259,6 +273,15 @@ if(INK_HAVE_FONTS)
             "-DEXTRA=--flash-timing max --no-random-outages --trace"
             -P ${CMAKE_SOURCE_DIR}/tests/scenarios/aged_image.cmake)
   set_tests_properties(scenario-reader_basic-aged-flash-max PROPERTIES FIXTURES_REQUIRED aged_user)
+  # Shared-bus faults on the panel power path (D-41): 2 % of hal_i2c transfers time out, as one did on
+  # the device in phase 0; the driver must recover by its retries and never scan an unpowered panel.
+  add_test(NAME scenario-reader_basic-panel-power-faults
+    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/profiles/metalio-plus.json
+            --script ${CMAKE_SOURCE_DIR}/tests/scenarios/reader_basic.script
+            --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/panel_power_faults.budget.json
+            --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+            --out ${CMAKE_BINARY_DIR}/test-out/reader_basic-panel-power-faults --quiet --no-random-outages
+            --i2c-faults 0.02)
 endif()
 # Portability smoke runs: same system, other panels/classes (budget: no panic, input works)
 foreach(p pinenote-rk3566 desktop-lcd metalio-plus-pqbn)

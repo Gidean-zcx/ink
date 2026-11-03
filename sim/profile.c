@@ -160,6 +160,8 @@ int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
     p->power_up_us = (uint32_t)num(d, "power_up_us", 140000);
     p->power_down_us = (uint32_t)num(d, "power_down_us", 2000);
     p->touch_pause_us = (uint32_t)num(d, "touch_pause_during_power_us", 0);
+    p->pmic_tps65185 = !strcmp(str(d, "pmic", "none"), "tps65185");
+    p->panel_vcom_mv = (unsigned)(p->pmic_tps65185 ? num(d, "panel_vcom_mv", 1200) : num_opt(d, "panel_vcom_mv", 1200));
     p->lcd_frame_us = p->panel.tech == HAL_PANEL_LCD ? (uint32_t)num(d, "lcd_frame_us", 16667) : 16667;
     p->line_count = (int)num(d, "line_count", 688);
     p->line_ns = (uint32_t)(num(d, "line_time_us", 17) * 1000);

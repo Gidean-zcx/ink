@@ -37,7 +37,8 @@ static void usage(void) {
             "usage: ink-sim --profile P.json [--script S] [--out DIR] [--budget B.json] [--trace] [--frames]\n"
             "               [--end 20s] [--cpu annotated|measured[:factor]] [--realtime[=speed]]\n"
             "               [--flash-image F] [--sd-dir D] [--assets DIR]... [--content DIR] [--hub F.json]\n"
-            "               [--no-random-outages] [--seed N] [--flash-timing typ|max|tail] [--quiet]\n");
+            "               [--no-random-outages] [--seed N] [--flash-timing typ|max|tail] [--quiet]\n"
+            "               [--i2c-faults RATE] [--panel-vcom-mv MV]\n");
 }
 
 static int parse_time(const char *s, uint64_t *ns) {
@@ -149,6 +150,8 @@ int main(int argc, char **argv) {
         else if (!strcmp(a, "--no-random-outages")) g_sim.no_random_outages = true;
         else if (!strcmp(a, "--seed")) { NEEDV(); g_sim.seed = (uint32_t)strtoul(v, NULL, 0); }
         else if (!strcmp(a, "--flash-timing")) { NEEDV(); g_sim.flash_timing = v; }
+        else if (!strcmp(a, "--i2c-faults")) { NEEDV(); g_sim.i2c_faults = strtod(v, NULL); }
+        else if (!strcmp(a, "--panel-vcom-mv")) { NEEDV(); g_sim.panel_vcom_mv = (unsigned)strtoul(v, NULL, 0); }
         else if (!strcmp(a, "--reset-reason")) { NEEDV(); g_sim.reset_reason = v; }
         else if (!strcmp(a, "--trace")) g_sim.trace = true;
         else if (!strcmp(a, "--frames")) g_sim.frames = true;
@@ -182,6 +185,8 @@ int main(int argc, char **argv) {
     if (g_profile.ndefaults && !g_sim.quiet)
         fprintf(stderr, "ink-sim: profile leaves %d values at simulator defaults: %s\n", g_profile.ndefaults,
                 g_profile.defaults_used);
+    if (g_sim.panel_vcom_mv) g_profile.panel_vcom_mv = g_sim.panel_vcom_mv;
+    sim_i2c_set_faults(g_sim.i2c_faults);
     if (g_sim.flash_timing) {
         const char *ft = g_sim.flash_timing;
         if (!strcmp(ft, "typ")) g_profile.flash_pessimism = 0;
