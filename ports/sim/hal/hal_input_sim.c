@@ -77,6 +77,9 @@ static struct {
     uint32_t bg_poll_ms;
     osal_mutex_t *sample_lock; /* expander sampling vs the sleep sequence (upstream g_sample_mu) */
     bool sampling_off;         /* the sleep sequence masked the expander: no key reads */
+    /* the wake could not restore the expander (bus errors): the input task retries */
+    bool restore_keys, restore_rails, restore_due;
+    unsigned restore_tries;
 } IN;
 
 void sim_power_input_lost(void);
@@ -573,28 +576,86 @@ static void queue_key(hal_key_t key, bool pressed, uint64_t t_ns) { /* locked */
     e->key.pressed = pressed;
 }
 
-void sim_input_sleep_end(hal_key_t woke_by, uint64_t t_wake_ns) {
+/* The expander is back in its normal setup: take the levels now as the baseline, report what
+ * differs from what was reported (a key released meanwhile, one held now), read keys again. A failed
+ * read: check again after the debounce time. Sample lock held. */
+static void keys_resume_locked(void) {
     static const struct { uint8_t bit; hal_key_t key; } K[] = {
         {MB_P1_POWER_KEY, HAL_KEY_POWER}, {MB_P1_VOL_UP, HAL_KEY_VOL_UP}, {MB_P1_VOL_DOWN, HAL_KEY_VOL_DOWN}};
-    if (!IN.sample_lock) return;
-    osal_mutex_lock(IN.sample_lock, OSAL_WAIT_FOREVER);
     uint8_t p1 = 0;
     bool ok = metalio_board_read(1, &p1) == HAL_I2C_OK;
     vtk_lock();
-    IN.exp_irq = IN.exp_confirm = false; /* edges while masked or asleep: covered below */
-    if (woke_by == HAL_KEY_POWER && (g_keys_last & MB_P1_POWER_KEY)) {
-        queue_key(HAL_KEY_POWER, true, t_wake_ns);
-        g_keys_last &= (uint8_t)~MB_P1_POWER_KEY;
+    IN.exp_irq = IN.exp_confirm = false; /* edges while masked or asleep: covered here */
+    if (ok) {
+        uint8_t now = (uint8_t)(p1 & MB_P1_KEYS);
+        for (unsigned i = 0; i < sizeof K / sizeof K[0]; i++)
+            if ((now ^ g_keys_last) & K[i].bit) queue_key(K[i].key, !(now & K[i].bit), vtk_now());
+        g_keys_last = now;
+        g_keys_pending = false;
+    } else { /* keep what was reported and look again soon: a release meanwhile still gets reported */
+        g_keys_first = g_keys_last;
+        g_keys_pending = true;
+        g_keys_t = vtk_now();
     }
-    uint8_t now = ok ? (uint8_t)(p1 & MB_P1_KEYS) : g_keys_last; /* a failed read: the next INT tells */
-    for (unsigned i = 0; i < sizeof K / sizeof K[0]; i++)
-        if ((now ^ g_keys_last) & K[i].bit) queue_key(K[i].key, !(now & K[i].bit), vtk_now());
-    g_keys_last = now;
-    g_keys_pending = false;
     IN.sampling_off = false;
     vtk_wake_one_locked(&IN.wq);
     vtk_unlock();
+    if (!ok) confirm_later();
+}
+
+void sim_input_sleep_end(hal_key_t woke_by, uint64_t t_wake_ns, bool keys_back) {
+    if (!IN.sample_lock) return;
+    osal_mutex_lock(IN.sample_lock, OSAL_WAIT_FOREVER);
+    vtk_lock();
+    if (woke_by == HAL_KEY_POWER && (g_keys_last & MB_P1_POWER_KEY)) { /* the wake key, whatever the bus does */
+        queue_key(HAL_KEY_POWER, true, t_wake_ns);
+        g_keys_last &= (uint8_t)~MB_P1_POWER_KEY;
+        vtk_wake_one_locked(&IN.wq);
+    }
+    vtk_unlock();
+    if (keys_back) keys_resume_locked(); /* else sampling stays off until sim_input_restore_later succeeds */
     osal_mutex_unlock(IN.sample_lock);
+}
+
+static void restore_due_cb(void *arg) { /* ISR: time for another try */
+    (void)arg;
+    IN.restore_due = true;
+    vtk_isr_wake_one(&IN.wq);
+}
+
+static void restore_retry_later(void) { /* backs off to one try a second */
+    uint64_t gap = SIM_MS(50) << (IN.restore_tries < 4 ? IN.restore_tries : 4);
+    if (gap > SIM_MS(1000)) gap = SIM_MS(1000);
+    vtk_lock();
+    vtk_event_after(gap, restore_due_cb, NULL);
+    vtk_unlock();
+}
+
+/* After a wake whose restore failed (power HAL, task context): what is still to do; the input task
+ * retries until the bus answers. Until the keys are back no key is read from the expander. */
+void sim_input_restore_later(bool keys, bool rails) {
+    if (!IN.sample_lock) return;
+    osal_mutex_lock(IN.sample_lock, OSAL_WAIT_FOREVER);
+    IN.restore_keys |= keys;
+    IN.restore_rails |= rails;
+    IN.restore_tries = 0;
+    osal_mutex_unlock(IN.sample_lock);
+    restore_retry_later();
+}
+
+static void restore_try(void) { /* input task */
+    osal_mutex_lock(IN.sample_lock, OSAL_WAIT_FOREVER);
+    if (IN.restore_rails && metalio_board_restore_rails() == HAL_I2C_OK) IN.restore_rails = false;
+    if (IN.restore_keys && metalio_board_restore_keys(NULL, NULL) == HAL_I2C_OK) {
+        IN.restore_keys = false;
+        osal_task_delay_us(20000); /* inputs settle before the baseline */
+        keys_resume_locked();
+    }
+    bool more = IN.restore_keys || IN.restore_rails;
+    if (more) IN.restore_tries++;
+    else if (IN.restore_tries) sim_metric_add("input.expander_restored_late", 1);
+    osal_mutex_unlock(IN.sample_lock);
+    if (more) restore_retry_later();
 }
 
 static void service_expander_locked(bool edge, bool confirm) {
@@ -660,10 +721,11 @@ static void input_task(void *arg) {
     (void)arg;
     for (;;) {
         vtk_lock();
-        while (!IN.irq && IN.kn == 0 && !IN.exp_irq && !IN.exp_confirm) vtk_block_locked(&IN.wq, VTK_TIME_INF);
-        bool irq = IN.irq, exp_irq = IN.exp_irq, exp_confirm = IN.exp_confirm;
-        IN.irq = IN.exp_irq = IN.exp_confirm = false;
+        while (!IN.irq && IN.kn == 0 && !IN.exp_irq && !IN.exp_confirm && !IN.restore_due) vtk_block_locked(&IN.wq, VTK_TIME_INF);
+        bool irq = IN.irq, exp_irq = IN.exp_irq, exp_confirm = IN.exp_confirm, restore = IN.restore_due;
+        IN.irq = IN.exp_irq = IN.exp_confirm = IN.restore_due = false;
         vtk_unlock();
+        if (restore) restore_try();
         if (exp_irq || exp_confirm) service_expander(exp_irq, exp_confirm);
         deliver_gpio_keys(true);
         if (!irq) continue;

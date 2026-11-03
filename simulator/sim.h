@@ -258,7 +258,8 @@ void sim_power_gpio2_low(void);      /* GPIO2 is low (ISR or locked): wakes the 
 /* the port's light-sleep sequence (hal_power_sleep) through the other HALs; task context */
 void sim_display_park(void);         /* rails down, TPS65185 to SLEEP */
 void sim_input_sleep_begin(void);    /* stop reading the expander's keys */
-void sim_input_sleep_end(hal_key_t woke_by, uint64_t t_wake_ns); /* key baseline; report the wake key */
+void sim_input_sleep_end(hal_key_t woke_by, uint64_t t_wake_ns, bool keys_back); /* report the wake key; baseline */
+void sim_input_restore_later(bool keys, bool rails); /* the wake's restore failed: the input task retries */
 hal_power_state_t sim_power_state(void);
 bool sim_audio_busy(void);
 void sim_audio_init(void);            /* task context (boot) */

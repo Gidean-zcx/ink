@@ -358,13 +358,33 @@ static const char *board_enter(const hal_sleep_cfg_t *cfg, bool power_key, bool 
 
 /* After the wake or an aborted entry, upstream's order: keys (inputs back, settle, baseline), rails
  * P14 then P05, then the rest. woke_by: the key reported as the cause (HAL_KEY_NONE: none). */
-static void board_exit(int applied, hal_key_t woke_by) {
-    if (applied & APPLIED_KEYS) {
-        if (metalio_board_restore_keys(NULL, NULL) != HAL_I2C_OK) sim_metric_add("power.sleep_restore_errors", 1);
-        osal_task_delay_us(20000); /* upstream: inputs settle before the key baseline */
-        sim_input_sleep_end(woke_by, PW.wake_t);
+#define RESTORE_TRIES 3
+#define RESTORE_GAP_US 10000
+
+static bool restore_keys(void) { return metalio_board_restore_keys(NULL, NULL) == HAL_I2C_OK; }
+static bool restore_rails(void) { return metalio_board_restore_rails() == HAL_I2C_OK; }
+
+static bool with_retries(bool (*step)(void)) { /* a short bus fault must not leave the sleep setup behind */
+    for (int i = 0; i < RESTORE_TRIES; i++) {
+        if (i) osal_task_delay_us(RESTORE_GAP_US);
+        if (step()) return true;
+        sim_metric_add("power.sleep_restore_retries", 1);
     }
-    if ((applied & APPLIED_RAILS) && metalio_board_restore_rails() != HAL_I2C_OK) sim_metric_add("power.sleep_restore_errors", 1);
+    return false;
+}
+
+static void board_exit(int applied, hal_key_t woke_by) {
+    bool keys = true, rails = true;
+    if (applied & APPLIED_KEYS) {
+        keys = with_retries(restore_keys);
+        if (keys) osal_task_delay_us(20000); /* upstream: inputs settle before the key baseline */
+        sim_input_sleep_end(woke_by, PW.wake_t, keys); /* keys not back: no key reads until they are */
+    }
+    if (applied & APPLIED_RAILS) rails = with_retries(restore_rails);
+    if (!keys || !rails) { /* the bus stayed bad: the input task keeps trying (sim_input_restore_later) */
+        sim_metric_add("power.sleep_restore_errors", 1);
+        sim_input_restore_later(!keys, !rails);
+    }
     sim_sensors_resume();
 }
 

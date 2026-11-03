@@ -697,7 +697,7 @@ static struct {
     bool cam, p14, bt, modem, light;
     unsigned accel_moves;
 } SLP;
-static int g_power_presses, g_power_releases;
+static int g_power_presses, g_power_releases, g_vol_events;
 
 static void board_sink(const hal_input_event_t *e, void *ctx) {
     (void)ctx;
@@ -705,6 +705,7 @@ static void board_sink(const hal_input_event_t *e, void *ctx) {
         if (e->key.pressed) g_power_presses++;
         else g_power_releases++;
     }
+    if (e->type == HAL_IN_KEY && e->key.key == HAL_KEY_VOL_UP) g_vol_events++;
 }
 
 static void sample_asleep(void *arg) { /* ISR */
@@ -734,6 +735,15 @@ static void vol_up_release(void *arg) { /* ISR */
 static void power_press(void *arg) { /* ISR */
     sim_input_key(HAL_KEY_POWER, arg != NULL);
 }
+
+static void expander_faults(void *arg) { /* ISR: every expander transfer fails while on */
+    sim_i2c_set_faults(arg ? 1.0 : 0.0, arg ? "io-expander" : NULL);
+}
+
+static void vol_up(void *arg) { /* ISR */
+    sim_input_key(HAL_KEY_VOL_UP, arg != NULL);
+}
+
 
 static void sleep_checks(void) {
     hal_input_set_sink(board_sink, NULL);
@@ -796,6 +806,29 @@ static void sleep_checks(void) {
     osal_task_delay_us(100000);
     CHECK(g_power_presses == 0 && g_power_releases == 1, "its press was reported before the sleep and not again, the release after (%d %d)",
           g_power_presses, g_power_releases);
+
+    /* a POWER wake while the expander's bus fails for 250 ms (audit AUD3-002): the restore is retried
+     * until the bus answers, the wake key is reported pressed and released, keys work afterwards */
+    vtk_lock();
+    vtk_event_after(SIM_MS(400), power_press, (void *)1);
+    vtk_event_after(SIM_MS(401), expander_faults, (void *)1);
+    vtk_event_after(SIM_MS(450), power_press, NULL);
+    vtk_event_after(SIM_MS(650), expander_faults, NULL);
+    vtk_unlock();
+    g_power_presses = g_power_releases = g_vol_events = 0;
+    cause = hal_power_sleep(&sc);
+    osal_task_delay_us(1500000);
+    CHECK(cause == HAL_WAKE_POWER_KEY && sim_tca_config(0) == 0xC0 && sim_tca_config(1) == 0xE3,
+          "after a wake whose expander bus failed for a while, its directions are restored (cause %u, cfg %02x %02x)", (unsigned)cause,
+          sim_tca_config(0), sim_tca_config(1));
+    CHECK(g_power_presses == 1 && g_power_releases == 1, "and the wake key is reported pressed and released (%d %d)", g_power_presses,
+          g_power_releases);
+    vtk_lock();
+    vtk_event_after(SIM_MS(10), vol_up, (void *)1);
+    vtk_event_after(SIM_MS(200), vol_up, NULL);
+    vtk_unlock();
+    osal_task_delay_us(500000);
+    CHECK(g_vol_events == 2, "and the keys work again (%d VOL+ events)", g_vol_events);
 
     /* P16 held low by something else (the factory log reads it so on the board in hand): it cannot
      * signal, so the sleep does not arm it and the timer ends the slice instead of an endless wake */
