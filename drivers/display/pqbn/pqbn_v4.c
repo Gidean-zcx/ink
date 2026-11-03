@@ -544,11 +544,14 @@ int pqbn_v4_skip(pqbn_v4_ctx *C, uint32_t from, uint32_t to) {
         skip_long(C, from, to);
         return C->H; // every row once
     }
+    int rows = 0;
     for (uint32_t p = from + 1; p != to + 1; p++) {
         if ((p & 4095) == 0) age_clamp(C, p);
         ts_sweep(C, p);
+        const int i = (int)(p & (TS_SWEEP - 1));
+        rows += (i + 1) * C->H / TS_SWEEP - i * C->H / TS_SWEEP;
     }
-    return (int)(n * (uint32_t)C->H / TS_SWEEP);
+    return rows;
 }
 
 int pqbn_v4_phase(pqbn_v4_ctx *C, uint32_t now) {

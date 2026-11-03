@@ -79,7 +79,7 @@ int pqbn_v4_phase(pqbn_v4_ctx *C, uint32_t now);
 /* A rest: the phase clock moves from `from` to `to` without driving. Does the upkeep the skipped
  * phases would have done (the settled pixels' timestamp sweep, the tile-age clamp at multiples of
  * 4096), so a rest is equivalent to running those phases with nothing to drive. Returns the rows
- * swept (for the cost). */
+ * swept (for the cost; a rest longer than 512 phases sweeps every row once). */
 int pqbn_v4_skip(pqbn_v4_ctx *C, uint32_t from, uint32_t to);
 /* Line mode: drive line of row y for phase now (after pqbn_v4_phase). Returns 0 for a zero line. */
 PQBN_HOT int pqbn_v4_exec_row(const pqbn_v4_ctx *C, uint32_t now, int y, uint8_t *line);
