@@ -1244,6 +1244,30 @@ static void pq_after_phase(uint32_t now, uint64_t scan_end) {
     }
 }
 
+static bool rect_contains(const hal_rect_t *outer, const hal_rect_t *in) {
+    return outer->x <= in->x && outer->y <= in->y && outer->x + outer->w >= in->x + in->w && outer->y + outer->h >= in->y + in->h;
+}
+
+/* After a supply loss (g_redraw): a clean of the area that was being driven resyncs it. A clean under
+ * way that covers it (e.g. a full GC16 the system asked for) does the job; one that does not, gets
+ * this one after it. At drive start and after every phase. */
+static void pq_redraw_check(void) {
+    if (!g_redraw) return;
+    const hal_rect_t a = g_redraw_area.w > 0 ? g_redraw_area : (hal_rect_t){0, 0, D.W, D.H};
+    if (PQ.clean_stage) {
+        if (!rect_contains(&PQ.clean_area, &a)) return; /* after this clean */
+    } else {
+        req_t rc = {.id = ++D.next_id, .area = a, .wf = HAL_WF_GC16, .queued_ns = vtk_now()};
+        D.pending++;
+        pq_ingest(&rc);
+    }
+    for (int i = 0; i < PQ.nu; i++) /* what was asked there is done when the clean has shown it */
+        if (i != PQ.clean_idx && rect_overlap(&PQ.u[i].r.area, &a)) PQ.u[i].after_clean = true;
+    g_redraw = false; /* set again if this drive loses its supply too */
+    g_redraw_area = (hal_rect_t){0, 0, 0, 0};
+    sim_metric_add("display.redraws_after_supply_loss", 1);
+}
+
 static void pq_drain_requests(void) {
     req_t r;
     while (osal_queue_recv(D.q, &r, 0) == OSAL_OK) {
@@ -1269,17 +1293,7 @@ static void pq_drive(void) {
     check_panel_power();
     sim_i2c_transfer("io-expander", 3);
     sim_power_consumer("display.refresh", true, g_profile.ma_display_refresh);
-    if (g_redraw && PQ.clean_stage == 0) { /* after a supply loss: a clean resyncs what was being driven */
-        const hal_rect_t a = g_redraw_area.w > 0 ? g_redraw_area : (hal_rect_t){0, 0, D.W, D.H};
-        req_t rc = {.id = ++D.next_id, .area = a, .wf = HAL_WF_GC16, .queued_ns = vtk_now()};
-        D.pending++;
-        pq_ingest(&rc);
-        for (int i = 0; i < PQ.nu; i++) /* what was asked there is done when the clean has shown it */
-            if (i != PQ.clean_idx && rect_overlap(&PQ.u[i].r.area, &a)) PQ.u[i].after_clean = true;
-        g_redraw = false; /* set again if this drive loses its supply too */
-        g_redraw_area = (hal_rect_t){0, 0, 0, 0};
-        sim_metric_add("display.redraws_after_supply_loss", 1);
-    }
+    pq_redraw_check(); /* after a supply loss: resync what was being driven */
     D.playing = true;
     if (!PQ.planned) pq_advance_idle();
     uint64_t t_start = vtk_now(), t0 = vtk_now(), last_scan = 0;
@@ -1386,6 +1400,7 @@ static void pq_drive(void) {
         sim_metric_sample("display.phase_ms", (p.next_start - t0) / 1e6);
         sim_metric_sample("display.prefill_ms", (p.scan_start - t0) / 1e6);
         pq_after_phase(now, p.scan_end);
+        if (D.rails_on) pq_redraw_check(); /* a redraw that waited for another clean */
         if (!D.rails_on) { /* the supply went away: pq_after_phase failed the updates; stop driving */
             if (plan_running) osal_sem_take(PQ.plan_done, OSAL_WAIT_FOREVER);
             plan_running = false;

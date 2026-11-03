@@ -23,7 +23,11 @@
  * whose supply is still being restored): a stream's frames stay queued and the
  * open is tried again, backing off to once a second; after OPEN_GIVE_UP_US the
  * stream fails, its frames are dropped and its owner is told
- * (ink_audio_on_stream_failed). A tone that cannot play is dropped.
+ * (ink_audio_on_stream_failed). A tone that cannot play is dropped. An open
+ * output that stops taking samples for STALL_US lost its clock (the chip lost
+ * its supply or mode under the stream): it is closed and opened again the same
+ * way, which sets the chip up again; the give-up time counts from the first
+ * stall until samples flow again.
  *
  * The staging buffer belongs to the service task; the API only changes the
  * stream and the task drops staged audio of a stream that is gone.
@@ -52,7 +56,8 @@
 #define PLC_MAX 3                     /* conceal at most this many missing frames in a row */
 #define BITRATE 24000
 #define WAIT_HOLD_US 300000 /* a stream waiting for data keeps the output open this long, then it closes */
-#define OPEN_GIVE_UP_US 8000000 /* a stream whose output cannot open for this long fails */
+#define OPEN_GIVE_UP_US 8000000 /* a stream whose output cannot open (or play) for this long fails */
+#define STALL_US 1000000        /* an open output that takes nothing this long has lost its clock (the ring drains in 60 ms) */
 #define FRAME HAL_OPUS_FRAME_SAMPLES
 
 typedef struct {
@@ -87,7 +92,8 @@ static struct {
     int staged_stream; /* stream the staged samples belong to (0 = a tone) */
     bool out_open;
     uint64_t waiting_since; /* output open, the stream has nothing ready since (0 = not waiting) */
-    uint64_t open_failing_since, open_retry_at; /* the output did not open for the stream (0 = not failing) */
+    uint64_t open_failing_since, open_retry_at; /* the output did not open or play for the stream (0 = it plays) */
+    uint64_t stall_since;                       /* the open output stopped taking samples (0 = it takes them) */
     unsigned open_tries;
     ink_audio_fail_fn fail_fn; /* told when a stream fails */
     void *fail_ctx;
@@ -281,23 +287,8 @@ static bool stream_wants_output(void) {
     return want;
 }
 
-/* The output for the stream: open, or tried again later (the frames wait); after OPEN_GIVE_UP_US the
- * stream fails. Service task. */
-static bool output_for_stream(void) {
-    if (AU.out_open) return true;
-    uint64_t now = osal_now_us();
-    if (now < AU.open_retry_at) return false;
-    if (open_output()) {
-        AU.open_failing_since = AU.open_retry_at = 0;
-        AU.open_tries = 0;
-        return true;
-    }
-    if (!AU.open_failing_since) AU.open_failing_since = now;
-    uint64_t gap = 100000ull << (AU.open_tries < 4 ? AU.open_tries : 4);
-    AU.open_retry_at = now + (gap > 1000000 ? 1000000 : gap);
-    AU.open_tries++;
-    ink_probe_count("audio.output_open_failures");
-    if (now - AU.open_failing_since < OPEN_GIVE_UP_US) return false;
+/* The stream could not play for OPEN_GIVE_UP_US: it fails, its frames go, its owner is told. */
+static void stream_failed(void) {
     lock();
     int id = AU.stream;
     free_jb();
@@ -306,11 +297,50 @@ static bool output_for_stream(void) {
     ink_audio_fail_fn fn = AU.fail_fn;
     void *ctx = AU.fail_ctx;
     unlock();
-    AU.open_failing_since = AU.open_retry_at = 0;
+    AU.open_failing_since = AU.open_retry_at = AU.stall_since = 0;
     AU.open_tries = 0;
+    if (AU.staged_stream == id) AU.pcm_off = AU.pcm_len = 0;
     ink_probe_count("audio.play_failed");
     if (fn && id) fn(ctx, id);
+}
+
+/* The output for the stream: open, or tried again later (the frames wait); after OPEN_GIVE_UP_US of
+ * trouble the stream fails. Service task. */
+static bool output_for_stream(void) {
+    if (AU.out_open) return true;
+    uint64_t now = osal_now_us();
+    if (now < AU.open_retry_at) return false;
+    if (open_output()) { /* the trouble ends when samples flow again (service_playback) */
+        AU.open_retry_at = 0;
+        AU.open_tries = 0;
+        return true;
+    }
+    if (!AU.open_failing_since) AU.open_failing_since = now;
+    uint64_t gap = 100000ull << (AU.open_tries < 4 ? AU.open_tries : 4);
+    AU.open_retry_at = now + (gap > 1000000 ? 1000000 : gap);
+    AU.open_tries++;
+    ink_probe_count("audio.output_open_failures");
+    if (now - AU.open_failing_since >= OPEN_GIVE_UP_US) stream_failed();
     return false;
+}
+
+/* The open output took nothing for STALL_US although its ring drains every 60 ms: its clock is gone.
+ * Closed and opened again (output_for_stream), which sets the audio chip up again; a stream's staged
+ * samples wait, a tone's are dropped. Service task. */
+static void output_stalled(void) {
+    uint64_t now = osal_now_us();
+    if (!AU.stall_since) {
+        AU.stall_since = now;
+        return;
+    }
+    if (now - AU.stall_since < STALL_US) return;
+    ink_probe_count("audio.output_stalls");
+    AU.stall_since = 0;
+    close_output(false);
+    if (!AU.staged_stream) AU.pcm_off = AU.pcm_len = 0;
+    if (!AU.open_failing_since) AU.open_failing_since = now;
+    AU.open_retry_at = now + 100000;
+    if (now - AU.open_failing_since >= OPEN_GIVE_UP_US) stream_failed();
 }
 
 static void service_playback(void) {
@@ -348,7 +378,11 @@ static void service_playback(void) {
         }
         int w = hal_audio_play_write(AU.pcm + AU.pcm_off, AU.pcm_len - AU.pcm_off, 0);
         AU.pcm_off += w;
-        if (AU.pcm_off < AU.pcm_len) break; /* DMA ring full: come back next tick */
+        if (w > 0) AU.stall_since = AU.open_failing_since = 0; /* it plays */
+        if (AU.pcm_off < AU.pcm_len) { /* DMA ring full: come back next tick */
+            if (!w) output_stalled();
+            break;
+        }
     }
     lock();
     bool drained = AU.pcm_off >= AU.pcm_len;

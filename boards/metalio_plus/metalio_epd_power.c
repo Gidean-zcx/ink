@@ -6,6 +6,7 @@
 #define TICK_US 10000 /* upstream's vTaskDelay(1): one FreeRTOS tick at HZ = 100 */
 #define PIN_MASK (EPD_PWR_VCOM_CTRL | EPD_PWR_PWRUP | EPD_PWR_WAKEUP)
 #define WATCH_MASK (PIN_MASK | EPD_PWR_SCREEN) /* what the panel's supply depends on */
+#define SCREEN_WAIT_MS 300                     /* how long a power-up waits for P05 (a wake's restore) */
 
 static void io_lock(epd_power_t *p) {
     if (p->io_lock) p->io_lock();
@@ -45,12 +46,21 @@ static epd_power_result_t power_on_once(epd_power_t *p) {
     p->attempts++;
     if (p->gate_output) p->gate_output(p->ctx, false);
 
-    /* the screen's power: on from here to the end of the waveform, or the record says otherwise */
+    /* the screen's power, on from here to the end of the waveform or the record says otherwise. Right
+     * after a wake the keys come back before the rails (as upstream) and an early power-up (a wake-up
+     * hint) can be here first: wait for P05 a little, on what the driver last wrote (no bus traffic) */
+    bool written_on = false;
+    for (int i = 0; i < SCREEN_WAIT_MS / 10 && !written_on; i++) {
+        io_lock(p);
+        written_on = p->ioexp->out[0] & EPD_PWR_SCREEN;
+        io_unlock(p);
+        if (!written_on) osal_task_delay_us(10000);
+    }
     io_lock(p);
     p->ioexp->changed[0] &= (uint8_t)~EPD_PWR_SCREEN;
     io_unlock(p);
     uint8_t levels0 = 0;
-    if (read_port0_tries(p, &levels0) != HAL_I2C_OK || !(levels0 & EPD_PWR_SCREEN)) return EPD_POWER_NO_SCREEN;
+    if (!written_on || read_port0_tries(p, &levels0) != HAL_I2C_OK || !(levels0 & EPD_PWR_SCREEN)) return EPD_POWER_NO_SCREEN;
 
     /* STANDBY (WAKEUP high, PWRUP and VCOM_CTRL low); let the PMIC wake before any I2C */
     pins(p, EPD_PWR_WAKEUP);

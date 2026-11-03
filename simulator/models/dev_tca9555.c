@@ -163,11 +163,14 @@ bool sim_board_present(void) {
 void sim_board_init(void) { /* task context (boot) */
     if (!sim_board_present()) return;
     sim_tca9555_init();
+    /* the shared supply P14 reads high from power-on (pins come up as inputs, pulled high: X.ext), so
+     * the Bluetooth chip starts booting now, before the driver sets the expander up; started later,
+     * its boot ended after the time the port waits for (power-up + BH1098G_BOOT_US) */
+    sim_bt_audio_init();
     if (metalio_board_init() != HAL_I2C_OK) sim_warn("board: TCA9555 init failed");
     sim_power_chips_init();
     sim_sensors_init();
     sim_camera_init();
-    sim_bt_audio_init();
 }
 
 void sim_tca9555_init(void) {

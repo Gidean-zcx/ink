@@ -1,0 +1,72 @@
+{
+  "head": "0dbf9aaa97a354c6d62eeaef2b4dfbfd1e8237f3",
+  "product_tracked_diff_empty": true,
+  "staged_diff_empty": true,
+  "all_untracked_files_under_audit": true,
+  "file_bytes": {
+    "TASK.md": 7916,
+    "experiments/README.md": 8980,
+    "experiments/comparison.json": 57010,
+    "experiments/legacy_probe.c": 10011,
+    "experiments/metrics-evidence.json": 116669,
+    "experiments/probe.c": 11547,
+    "experiments/results.json": 79393,
+    "experiments/run.py": 3757,
+    "experiments/suite-evidence.json": 47648,
+    "experiments/summarize.py": 5621,
+    "experiments/validate.py": 4720,
+    "findings.json": 5055,
+    "report.md": 21056,
+    "verification.json": 3105
+  },
+  "verification_counts": {
+    "部分修复": 3,
+    "已修复": 3
+  },
+  "new_finding_counts": {
+    "高": 2,
+    "中": 1
+  },
+  "validated_source_locations": [
+    "system/services/audio/audio_service.c:284",
+    "system/services/audio/audio_service.c:347",
+    "system/services/audio/audio_service.c:385",
+    "ports/sim/hal/hal_audio_sim.c:257",
+    "ports/sim/hal/hal_audio_sim.c:302",
+    "ports/sim/hal/hal_display_sim.c:1272",
+    "ports/sim/hal/hal_display_sim.c:1279",
+    "ports/sim/hal/hal_display_sim.c:1210",
+    "ports/sim/hal/hal_display_sim.c:1012",
+    "system/services/display/refresh_policy.c:109",
+    "system/services/display/refresh_policy.c:151",
+    "system/services/ai/ai_service.c:194",
+    "system/services/ai/ai_service.c:198",
+    "system/services/ai/ai_service.c:253"
+  ],
+  "validated_local_links": [
+    "docs/audits/2026-11-03-codex-r5/experiments/README.md",
+    "docs/audits/2026-11-03-codex-r5/experiments/comparison.json",
+    "docs/audits/2026-11-03-codex-r5/experiments/results.json",
+    "docs/audits/2026-11-03-codex-r5/experiments/metrics-evidence.json",
+    "docs/audits/2026-11-03-codex-r5/experiments/suite-evidence.json",
+    "docs/audits/2026-11-03-codex-r5/experiments/README.md",
+    "docs/audits/2026-11-03-codex-r5/experiments/results.json",
+    "docs/audits/2026-11-03-codex-r5/experiments/artifact-validation.json"
+  ],
+  "unique_probe_combinations": 53,
+  "probe_processes_exit_zero": 53,
+  "note": "探针进程完成不等于行为通过；3条新问题均在exit=0的反例中观察到。",
+  "sanitizer_logs_checked": [
+    "build-audit/r5-probes/r5_ai_speaker_fail-asan/run.log",
+    "build-audit/r5-probes/r5_service_midcut-asan/run.log",
+    "build-audit/r5-probes/r5_service_timeout-asan/run.log",
+    "build-audit/r5-probes/r5_service_replace-asan/run.log",
+    "build-audit/r5-probes/r5_redraw_twice-asan/run.log",
+    "build-audit/r5-probes/r5_display_service-asan/run.log",
+    "build-audit/r5-probes/r5_system_redraw-pqbn-asan/run.log",
+    "build-audit/r5-probes/r5_redraw_twice-pqbn-asan/run.log",
+    "build-audit/r5-probes/r5_redraw_overlap-pqbn-asan/run.log",
+    "build-audit-asan/Testing/Temporary/LastTest.log"
+  ],
+  "sanitizer_error_matches": 0
+}

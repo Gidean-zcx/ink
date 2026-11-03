@@ -64,6 +64,7 @@ static struct {
     bool drop_frames;   /* the sheet was closed while capturing: the rest of this turn's audio is dropped */
     bool capturing;     /* UI task: this turn's microphone is on */
     bool mic_failed;    /* UI task: this turn's microphone did not start: nothing is heard, nothing asked */
+    bool speech_failed; /* UI task: this turn's answer could not be spoken: the status keeps saying so */
     lv_timer_t *flush_timer;
     /* voice downlink (hub task; with `stream`, changed under `lock`) */
     int tts_stream;   /* audio stream playing the current turn's speech (0 none) */
@@ -193,11 +194,12 @@ static void ui_apply(void *arg) { /* UI task */
             ink_ui_cause(AI.t_release, "ai.release_to_first_text_visible_ms");
         }
     } else if (p->kind == 4) { /* the speaker could not start for the answer (the text is on the sheet) */
-        set_status("声音没能播放：扬声器没打开，文字回答在上面");
+        AI.speech_failed = true;
+        set_status(AI.asking ? "声音没能播放：扬声器没打开，文字回答在上面" : "回答完成 · 声音没能播放（扬声器没打开）· 按 AI 键继续问");
         ink_probe_count("ai.speech_failed");
     } else if (p->kind == 1) {
         AI.asking = false;
-        set_status("回答完成 · 按 AI 键继续问，按 HOME 关闭");
+        set_status(AI.speech_failed ? "回答完成 · 声音没能播放（扬声器没打开）· 按 AI 键继续问" : "回答完成 · 按 AI 键继续问，按 HOME 关闭");
         ink_ui_cause(AI.t_release, "ai.release_to_done_visible_ms");
         ink_probe_count("ai.answers");
     } else {
@@ -433,7 +435,7 @@ void ink_ai_key(bool pressed, uint64_t t_us) {
         AI.tts_stream = AI.tts_opened = 0;
         AI.tts_for = AI.tts_done_for = -1;
         osal_mutex_unlock(AI.lock);
-        AI.mic_failed = false;
+        AI.mic_failed = AI.speech_failed = false;
         ink_audio_stop_all(); /* talking over the previous answer interrupts it */
         ink_audio_tone(INK_TONE_LISTEN, t_us, "ai.press_to_tone_heard_ms");
         ink_hub_demand(); /* pre-connect while the user speaks */

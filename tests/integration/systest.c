@@ -87,6 +87,11 @@ static int push_frames(int id, int n) {
     return ok;
 }
 
+static bool playing_for(double since, double ms) { /* waits up to 4 s until `ms` more were played */
+    for (int i = 0; i < 400 && sim_audio_played_ms() - since < ms; i++) osal_task_delay_us(10000);
+    return sim_audio_played_ms() - since >= ms;
+}
+
 static void audio_checks(void) {
     ink_audio_on_stream_failed(on_failed, NULL);
     metalio_board_set(1, MB_P1_SHARED_PWR, 0);
@@ -106,6 +111,37 @@ static void audio_checks(void) {
     osal_task_delay_us(10000000);
     CHECK(g_failed_id == id && push_frames(id, 1) == 0, "a stream whose speaker stays off fails after a while, its owner is told (%d, %d)",
           g_failed_id, id);
+    metalio_board_set(1, MB_P1_SHARED_PWR, MB_P1_SHARED_PWR);
+    osal_task_delay_us(2000000);
+
+    /* the chip's supply going away under a stream that plays, and coming back (audit AUD6-001): the
+     * output stalls, is opened again (the chip set up again) and the rest plays; gone for good, the
+     * stream fails and nothing keeps the device awake (amplifier off first, as the wiring needs) */
+    g_failed_id = 0;
+    played0 = sim_audio_played_ms();
+    id = ink_audio_stream_open(INK_AUDIO_PRIO_VOICE, 0, NULL);
+    push_frames(id, 50); /* 3 s */
+    ink_audio_stream_finish(id);
+    bool was_playing = playing_for(played0, 200);
+    double stalls0 = sim_metric_value("audio.output_stalls");
+    metalio_board_set(0, MB_P0_AMP, 0);
+    metalio_board_set(1, MB_P1_SHARED_PWR, 0);
+    osal_task_delay_us(1000000);
+    metalio_board_set(1, MB_P1_SHARED_PWR, MB_P1_SHARED_PWR);
+    osal_task_delay_us(8000000);
+    played = sim_audio_played_ms() - played0;
+    CHECK(was_playing && sim_metric_value("audio.output_stalls") > stalls0 && played >= 2800 && !sim_audio_busy() && g_failed_id == 0,
+          "a supply cut under a playing stream: it stalls, is opened again and the rest plays (%.0f ms of 3000)", played);
+    played0 = sim_audio_played_ms();
+    id = ink_audio_stream_open(INK_AUDIO_PRIO_VOICE, 0, NULL);
+    push_frames(id, 50);
+    ink_audio_stream_finish(id);
+    CHECK(playing_for(played0, 200), "the next stream plays");
+    metalio_board_set(0, MB_P0_AMP, 0);
+    metalio_board_set(1, MB_P1_SHARED_PWR, 0);
+    osal_task_delay_us(11000000);
+    CHECK(g_failed_id == id && !sim_audio_busy(), "cut for good: the stream fails, its owner is told and the output is off (%d, %d)", g_failed_id,
+          id);
     metalio_board_set(1, MB_P1_SHARED_PWR, MB_P1_SHARED_PWR);
     ink_audio_on_stream_failed(NULL, NULL);
 }
@@ -433,8 +469,7 @@ static void service_checks(void) {
     CHECK(ink_cap_call("camera.capture", NULL, &o) == 0 && wait_done(before + 2, 6000000) && !strcmp(g_bus_rc.object, "photo:2"),
           "a second one queues behind it (%s)", g_bus_rc.object);
 
-    /* text messages */
-    CHECK(ink_cap_subscribe("message.", on_message, NULL, INK_EXEC_DIRECT) == 0, "subscribe to message events");
+    /* text messages (subscribed at the start: the script's message may come before these checks) */
     ink_args_t a;
     ink_args_init(&a);
     ink_args_str(&a, "to", "10086");
@@ -479,6 +514,7 @@ static void systest_task(void *arg) {
         CHECK(0, "the system services start");
         return;
     }
+    CHECK(ink_cap_subscribe("message.", on_message, NULL, INK_EXEC_DIRECT) == 0, "subscribe to message events");
     storage_checks();
     audio_checks();
     cap_checks();
