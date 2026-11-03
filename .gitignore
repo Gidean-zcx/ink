@@ -21,3 +21,8 @@
 
 # Python 字节码
 __pycache__/
+
+# hw-probe (ESP-IDF) build output and generated config
+/tools/hw-probe/build/
+/tools/hw-probe/sdkconfig
+/tools/hw-probe/sdkconfig.old
