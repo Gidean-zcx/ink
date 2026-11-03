@@ -341,6 +341,10 @@ target_include_directories(pools-test PRIVATE simulator/memory simulator/kernel/
 target_link_libraries(pools-test PRIVATE ink_platform ink_tlsf)
 target_compile_options(pools-test PRIVATE ${INK_WARN})
 add_test(NAME unit-pools COMMAND pools-test)
+add_executable(pqbn-clock-test tests/unit/pqbn_clock_test.c)
+target_link_libraries(pqbn-clock-test PRIVATE ink_drivers)
+target_compile_options(pqbn-clock-test PRIVATE ${INK_WARN})
+add_test(NAME unit-pqbn-clock COMMAND pqbn-clock-test)
 # System service checks (storage cache versions; tests/integration/systest.c), on the services themselves.
 add_executable(sim-systest simulator/runtime/sim_main.c tests/integration/systest.c)
 target_link_libraries(sim-systest PRIVATE ink_system ink_port_sim)

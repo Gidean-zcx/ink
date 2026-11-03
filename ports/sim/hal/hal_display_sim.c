@@ -1093,14 +1093,10 @@ static void pq_advance_idle(void) {
     if (!j) return;
     sim_metric_add("display.pqbn.idle_advance_phases", (double)j); /* budgets check the clock moves across rests */
     const uint32_t from = PQ.now, to = PQ.now + (uint32_t)j;
-    if ((from >> 12) != (to >> 12)) {
-        const uint32_t m = to & ~4095u;
-        const int nt = PQ.ntx * PQ.nty;
-        for (int i = 0; i < nt; i++)
-            if ((uint16_t)(m - PQ.C.tile_plan[i]) > 8192) PQ.C.tile_plan[i] = (uint16_t)(m - 8192);
-        for (int ty = 0; ty < PQ.nty; ty++)
-            if ((int16_t)(PQ.C.band[2 * ty] - (uint16_t)m) <= 0) PQ.C.band[2 * ty] = (uint16_t)m;
-    }
+    /* the skipped phases' upkeep (timestamp sweep, tile ages), as if they had run with nothing to drive:
+     * without it the settled pixels' 10-bit timestamps wrapped after a few drive/rest cycles (AUD-011) */
+    const int rows = pqbn_v4_skip(&PQ.C, from, to);
+    sim_charge_cycles((double)rows * g_profile.pqbn.row_idle);
     PQ.now = to;
 }
 

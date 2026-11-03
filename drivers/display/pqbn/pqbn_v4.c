@@ -492,17 +492,31 @@ static void ts_sweep(pqbn_v4_ctx *C, uint32_t now) {
     }
 }
 
+static void age_clamp(pqbn_v4_ctx *C, uint32_t now) { // at multiples of 4096: tile ages must not wrap (u16)
+    for (int i = 0; i < C->ntx * C->nty; i++)
+        if ((uint16_t)(now - C->tile_plan[i]) > 8192) C->tile_plan[i] = (uint16_t)(now - 8192);
+    for (int ty = 0; ty < C->nty; ty++)
+        if ((int16_t)(C->band[2 * ty] - (uint16_t)now) <= 0) C->band[2 * ty] = (uint16_t)now;
+}
+
+int pqbn_v4_skip(pqbn_v4_ctx *C, uint32_t from, uint32_t to) {
+    const uint32_t n = to - from;
+    // every sweep index comes up within TS_SWEEP phases: a longer rest needs only its last TS_SWEEP
+    const uint32_t first = n > TS_SWEEP ? to - TS_SWEEP + 1 : from + 1;
+    for (uint32_t p = first; p != to + 1; p++) {
+        if ((p & 4095) == 0) age_clamp(C, p);
+        ts_sweep(C, p);
+    }
+    if (n > TS_SWEEP && (from >> 12) != ((first - 1) >> 12)) age_clamp(C, (first - 1) & ~4095u); // a 4096 mark before them
+    return (int)((n > TS_SWEEP ? TS_SWEEP : n) * (uint32_t)C->H / TS_SWEEP);
+}
+
 int pqbn_v4_phase(pqbn_v4_ctx *C, uint32_t now) {
     const int ntx = C->ntx, Wq = C->W >> 2;
     int words = 0;
     int16_t cum[4][16];                                    // distance covered by n pushes starting in class c
     for (int c = 0; c < 4; c++) { cum[c][0] = 0; for (int n = 1; n < 16; n++) cum[c][n] = (int16_t)(C->step[c] + (n - 1) * C->step[0]); }
-    if ((now & 4095) == 0) {                               // tile ages must not wrap (u16)
-        for (int i = 0; i < ntx * C->nty; i++)
-            if ((uint16_t)(now - C->tile_plan[i]) > 8192) C->tile_plan[i] = (uint16_t)(now - 8192);
-        for (int ty = 0; ty < C->nty; ty++)
-            if ((int16_t)(C->band[2 * ty] - (uint16_t)now) <= 0) C->band[2 * ty] = (uint16_t)now;
-    }
+    if ((now & 4095) == 0) age_clamp(C, now);
     ts_sweep(C, now);
     // planning: tiles the UI changed, and tiles whose capped plan just finished; resumes at the cursor.
     // Tile rows without a UI mark or a tile needing attention are skipped after a byte scan.
