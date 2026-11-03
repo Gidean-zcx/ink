@@ -108,6 +108,11 @@ static void poll_on_host(void *arg) {
     st.sim_registered = cs.registered;
     st.sim_searching = cs.searching;
     st.volte = cs.volte;
+    if (sim_board_present()) {
+        st.rtc_s = sim_rtc_now_s();
+        sim_accel_orientation(st.accel_mg);
+        st.accel_motions = sim_accel_motions();
+    }
 
     pthread_mutex_lock(&Gm);
     st.seq = G.stats.seq + 1;
@@ -165,7 +170,7 @@ void sim_gui_get_stats(sim_gui_stats_t *out) {
 
 /* ------------------------------------------------------------------ actions */
 
-typedef enum { C_TOUCH, C_KEY, C_BATTERY, C_NET, C_OUTAGE, C_MIC, C_SNAP, C_POWERCUT, C_SIM_CARD } cmd_kind_t;
+typedef enum { C_TOUCH, C_KEY, C_BATTERY, C_NET, C_OUTAGE, C_MIC, C_SNAP, C_POWERCUT, C_SIM_CARD, C_ORIENT, C_SHAKE } cmd_kind_t;
 
 typedef struct {
     cmd_kind_t kind;
@@ -187,6 +192,8 @@ static void cmd_event(void *arg) { /* ISR context, like the script's actions */
     case C_SNAP: sim_display_snapshot(c->text); break;
     case C_POWERCUT: sim_storage_power_cut(); break;
     case C_SIM_CARD: sim_net_set_card(c->a, c->b > 0, c->b >= 2, c->b == 3); break;
+    case C_ORIENT: sim_accel_orient(c->text); break;
+    case C_SHAKE: sim_accel_shake(); break;
     }
     vtk_host_call(free_on_host, c);
 }
@@ -211,6 +218,8 @@ void sim_gui_mic(const char *source) { send(C_MIC, 0, 0, 0, source); }
 void sim_gui_snapshot(const char *name) { send(C_SNAP, 0, 0, 0, name); }
 void sim_gui_power_cut(void) { send(C_POWERCUT, 0, 0, 0, NULL); }
 void sim_gui_sim_card(int slot, int kind) { send(C_SIM_CARD, slot, kind, 0, NULL); }
+void sim_gui_orient(const char *name) { send(C_ORIENT, 0, 0, 0, name); }
+void sim_gui_shake(void) { send(C_SHAKE, 0, 0, 0, NULL); }
 
 void sim_gui_stop(void) {
     if (sim_gui_phase() == SIM_GUI_RUNNING) vtk_stop();

@@ -15,6 +15,9 @@
  *   +0       net   wifi | lte | none   # switch the network link
  *   +0       outage 5s                 # link drops for a while (dead connection noticed later)
  *   +0       sim   external|internal none|data|sms|voice  # card in a SIM slot (what its plan allows)
+ *   +0       orient portrait|upside_down|landscape_left|landscape_right|face_up|face_down
+ *   +0       shake                    # a movement the accelerometer notices
+ *   +0       rtc lost                 # the RTC's backup supply failed: its time is invalid
  *   +5s      end
  *
  * Times: "@t" absolute, "+t" relative to the previous line; units us/ms/s/m
@@ -31,7 +34,7 @@
 #include "ink/rotation.h"
 #include "sim.h"
 
-typedef enum { A_TOUCH, A_KEY, A_SNAP, A_MARK, A_NOTE, A_BATTERY, A_POWERCUT, A_END, A_NET, A_OUTAGE, A_MIC, A_SIM } akind_t;
+typedef enum { A_TOUCH, A_KEY, A_SNAP, A_MARK, A_NOTE, A_BATTERY, A_POWERCUT, A_END, A_NET, A_OUTAGE, A_MIC, A_SIM, A_ORIENT, A_SHAKE, A_RTC_LOST } akind_t;
 
 typedef struct {
     uint64_t t;
@@ -204,6 +207,17 @@ int sim_script_load(const char *path, char *err, size_t errlen) {
                 a->a = slot;
                 a->b = kind;
             }
+        } else if (!strcmp(cmd, "orient")) {
+            static const char *const o[] = {"portrait", "upside_down", "landscape_left", "landscape_right", "face_up", "face_down"};
+            ok = false;
+            for (int k = 0; k < 6 && n >= 3; k++)
+                if (!strcmp(tok[2], o[k])) ok = true;
+            if (ok) snprintf(push(t, A_ORIENT)->text, 16, "%s", tok[2]);
+        } else if (!strcmp(cmd, "shake")) {
+            push(t, A_SHAKE);
+        } else if (!strcmp(cmd, "rtc")) {
+            ok = n >= 3 && !strcmp(tok[2], "lost");
+            if (ok) push(t, A_RTC_LOST);
         } else if (!strcmp(cmd, "outage")) {
             uint64_t dur;
             ok = n >= 3 && !parse_dur(tok[2], &dur);
@@ -256,6 +270,9 @@ static void run_action(void *arg) { /* ISR context */
     case A_OUTAGE: sim_net_outage(SIM_MS(a->c)); break;
     case A_MIC: sim_audio_mic_source(a->text); break;
     case A_SIM: sim_net_set_card(a->a, a->b > 0, a->b >= 2, a->b == 3); break;
+    case A_ORIENT: sim_accel_orient(a->text); break;
+    case A_SHAKE: sim_accel_shake(); break;
+    case A_RTC_LOST: sim_rtc_lose_time(); break;
     }
 }
 

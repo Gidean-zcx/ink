@@ -45,6 +45,18 @@ void hal_device_get_info(hal_device_info_t *out);
 /** Reset reason of the last boot, e.g. "poweron", "panic", "watchdog". */
 const char *hal_device_reset_reason(void);
 
+/* ---- real-time clock (the Plus: PCF8563 on its own backup supply) ----
+ * UTC seconds. Task context. */
+bool hal_rtc_get(int64_t *unix_s);      /* false if there is no RTC or it lost its time */
+bool hal_rtc_set(int64_t unix_s);
+/** Alarm at that minute: the RTC interrupt fires (wake source HAL_WAKE_RTC). */
+bool hal_rtc_set_alarm(int64_t unix_s);
+void hal_rtc_clear_alarm(void);
+
+/* ---- accelerometer (the Plus: SC7A20H) ---- Task context. */
+bool hal_accel_read(int *x_mg, int *y_mg, int *z_mg); /* gravity + movement, device axes */
+uint32_t hal_accel_motion_count(void);                /* movement interrupts seen since boot */
+
 /** Platform log sink (UART on device, stdout/file elsewhere). */
 void hal_log_write(const char *line);
 

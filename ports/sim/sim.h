@@ -204,7 +204,20 @@ void sim_tca_input(int port, uint8_t mask, uint8_t value); /* physical input lev
 bool sim_tca_int_low(void);
 bool sim_board_motor_on(void);
 bool sim_board_amp_on(void);
-void sim_gpio2_changed(void);             /* GPIO2 fell (expander INT / accelerometer INT1); any context */
+void sim_gpio2_update(void);              /* GPIO2 = expander INT AND accelerometer INT1 (wired); any context */
+/* RTC + accelerometer models (dev_rtc_accel.c) and their HALs (hal_sensors_sim.c) */
+void sim_rtc_accel_init(void);
+void sim_rtc_accel_report(void);
+void sim_sensors_init(void);              /* task context (boot) */
+void sim_sensors_service_gpio2(void);     /* task context: read the accelerometer's latch on GPIO2 */
+void sim_rtc_lose_time(void);             /* ISR (script) */
+int64_t sim_rtc_now_s(void);
+unsigned sim_rtc_alarms(void);
+bool sim_accel_int_low(void);
+unsigned sim_accel_motions(void);
+void sim_accel_orient(const char *name);  /* ISR (script, window): portrait, upside_down, landscape_left/right, face_up/down */
+void sim_accel_shake(void);               /* ISR (script, window) */
+void sim_accel_orientation(int g[3]);
 
 /* ---- audio (I2S rings) + stand-in codec ---- */
 void sim_display_plan_info(const hal_rect_t *area, uint64_t *phase_ns, uint64_t *busy0_ns, uint64_t *busy1_ns,

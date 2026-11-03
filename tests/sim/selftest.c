@@ -582,6 +582,39 @@ static void board_task(void *arg) {
     osal_task_delay_us(80000);
     CHECK(!sim_board_motor_on(), "and off again after the pulse");
 
+    /* RTC (PCF8563): the boot time, setting it, an alarm that pulls P16 low and wakes the chip */
+    int64_t now_s = 0;
+    CHECK(hal_rtc_get(&now_s) && now_s >= g_sim.wall_start_us / 1000000 && now_s < g_sim.wall_start_us / 1000000 + 60,
+          "the RTC keeps the simulated wall time (%lld)", (long long)now_s);
+    const int64_t t_set = 1798761598; /* 2026-12-31 23:59:58 UTC */
+    CHECK(hal_rtc_set(t_set) && hal_rtc_get(&now_s) && now_s >= t_set && now_s <= t_set + 1, "the RTC takes a new time (%lld)", (long long)now_s);
+    CHECK(hal_rtc_set_alarm(t_set + 2), "an alarm for the next minute is set");
+    hal_sleep_cfg_t sc = {.max_us = 10000000, .wake_mask = HAL_WAKE_RTC};
+    uint32_t cause = hal_power_sleep(&sc);
+    CHECK(cause == HAL_WAKE_RTC && sim_rtc_alarms() == 1, "the RTC alarm wakes the chip from light sleep (cause %u)", (unsigned)cause);
+    CHECK(metalio_board_read(1, &p1) == HAL_I2C_OK && !(p1 & MB_P1_RTC_INT), "the alarm holds TCA9555 P16 low");
+    hal_rtc_clear_alarm();
+    CHECK(metalio_board_read(1, &p1) == HAL_I2C_OK && (p1 & MB_P1_RTC_INT), "clearing the alarm releases P16");
+
+    /* accelerometer (SC7A20H): gravity in portrait, a turn, the movement interrupt on GPIO2 */
+    int ax = 0, ay = 0, az = 0;
+    CHECK(hal_accel_read(&ax, &ay, &az) && ax == 0 && ay == 1000 && az == 0, "upright in portrait: gravity on +y (%d %d %d)", ax, ay, az);
+    uint32_t moves = hal_accel_motion_count();
+    vtk_lock();
+    sim_accel_orient("landscape_left");
+    vtk_unlock();
+    osal_task_delay_us(50000);
+    CHECK(hal_accel_read(&ax, &ay, &az) && ax == 1000 && ay == 0, "turned left: gravity on +x (%d %d %d)", ax, ay, az);
+    CHECK(hal_accel_motion_count() == moves + 1 && !sim_accel_int_low(), "the turn raised INT1 on GPIO2 and the driver task cleared it");
+    vtk_lock();
+    sim_input_key(HAL_KEY_VOL_UP, true); /* with INT1 serviced, a key on the shared line still gets through */
+    vtk_unlock();
+    osal_task_delay_us(60000);
+    CHECK(metalio_board_read(1, &p1) == HAL_I2C_OK && !(p1 & MB_P1_VOL_UP), "a key press after the movement reaches the expander");
+    vtk_lock();
+    sim_input_key(HAL_KEY_VOL_UP, false);
+    vtk_unlock();
+
     char resp[64];
     bool reg = false;
     CHECK(nt26_registered(&reg) == NT26_OK && reg, "the modem is registered");

@@ -665,6 +665,22 @@ void draw_panel(ImVec2 pos, ImVec2 size) {
         }
         ImGui::TextDisabled("按住 AI 键时麦克风听到的声音（BH1098G 经 I2S）。");
     }
+    if (ImGui::CollapsingHeader("姿态与时钟", ImGuiTreeNodeFlags_DefaultOpen)) {
+        static const char *names[] = {"竖着", "倒过来", "向左横放", "向右横放", "平放，屏幕朝上", "平放，屏幕朝下"};
+        static const char *ids[] = {"portrait", "upside_down", "landscape_left", "landscape_right", "face_up", "face_down"};
+        static int orient = 0;
+        ImGui::SetNextItemWidth(170);
+        if (ImGui::Combo("设备朝向", &orient, names, 6)) sim_gui_orient(ids[orient]);
+        ImGui::SameLine();
+        if (ImGui::Button("晃一下")) sim_gui_shake();
+        ImGui::TextDisabled("加速度计读数：x %d，y %d，z %d mg；运动中断 %u 次", g_st.accel_mg[0], g_st.accel_mg[1], g_st.accel_mg[2], g_st.accel_motions);
+        int64_t days = g_st.rtc_s / 86400, rem = g_st.rtc_s % 86400;
+        int64_t z = days + 719468, era = (z >= 0 ? z : z - 146096) / 146097, doe = z - era * 146097;
+        int64_t yoe = (doe - doe / 1460 + doe / 36524 - doe / 146096) / 365, doy = doe - (365 * yoe + yoe / 4 - yoe / 100);
+        int64_t mp = (5 * doy + 2) / 153, d = doy - (153 * mp + 2) / 5 + 1, m = mp < 10 ? mp + 3 : mp - 9, y = yoe + era * 400 + (m <= 2);
+        ImGui::TextDisabled("时钟芯片 PCF8563：%04lld-%02lld-%02lld %02lld:%02lld:%02lld UTC", (long long)y, (long long)m, (long long)d,
+                            (long long)(rem / 3600), (long long)(rem / 60 % 60), (long long)(rem % 60));
+    }
     if (ImGui::CollapsingHeader("前光与振动")) {
         char b[32];
         snprintf(b, sizeof b, "冷光 %d‰", g_st.light_cold);

@@ -139,14 +139,17 @@ void sim_i2c_transfer(const char *who, int bytes) {
 
 void sim_i2c_hold(const char *who, uint64_t ns) { bus_run(who, ns); }
 
-/* GPIO2 fell: the expander's INT (keys) or the accelerometer's INT1, wired together. Any context. */
-void sim_gpio2_changed(void) {
-    bool isr = vtk_in_isr();
-    if (!isr) vtk_lock();
+/* GPIO2 = the expander's INT and the accelerometer's INT1, wired together (low = asserted). A
+ * falling edge wakes the driver task, which services both. ISR or locked task context. */
+static bool g_gpio2_low;
+void sim_gpio2_update(void) {
+    bool low = sim_tca_int_low() || sim_accel_int_low();
+    bool fell = low && !g_gpio2_low;
+    g_gpio2_low = low;
+    if (!fell) return;
     IN.exp_irq = true;
-    if (isr) vtk_isr_wake_one(&IN.wq);
+    if (vtk_in_isr()) vtk_isr_wake_one(&IN.wq);
     else vtk_wake_one_locked(&IN.wq);
-    if (!isr) vtk_unlock();
 }
 
 /* -------------------------------------------------------------- physical */
@@ -499,6 +502,7 @@ static void input_task(void *arg) {
         if (exp_irq) { /* read the expander's input port (clears its INT), confirm after the debounce time */
             if (metalio_board_ready()) metalio_board_read(1, &p1);
             else sim_i2c_transfer("io-expander", 2);
+            sim_sensors_service_gpio2(); /* the accelerometer shares GPIO2 */
             vtk_lock();
             vtk_event_after(SIM_US(g_profile.key_debounce_us), expander_confirm_cb, NULL);
             vtk_unlock();

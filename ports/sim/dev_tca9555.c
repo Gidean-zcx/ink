@@ -45,8 +45,10 @@ static uint8_t levels(int port) {
 
 static void update_int(void) {
     bool low = (levels(1) & X.cfg[1]) != (X.seen1 & X.cfg[1]);
-    if (low && !X.int_low) sim_gpio2_changed();
-    X.int_low = low;
+    if (low != X.int_low) {
+        X.int_low = low;
+        sim_gpio2_update();
+    }
 }
 
 bool sim_tca_int_low(void) { return X.int_low; }
@@ -129,7 +131,9 @@ static int tca_xfer(void *state, const uint8_t *w, size_t wlen, uint8_t *r, size
         default: r[i] = X.cfg[port]; break;
         }
     }
+    vtk_lock(); /* the output hooks above lock for themselves */
     update_int();
+    vtk_unlock();
     return HAL_I2C_OK;
 }
 
@@ -145,6 +149,7 @@ void sim_board_init(void) { /* task context (boot) */
     sim_tca9555_init();
     if (metalio_board_init() != HAL_I2C_OK) sim_warn("board: TCA9555 init failed");
     sim_power_chips_init();
+    sim_sensors_init();
 }
 
 void sim_tca9555_init(void) {
@@ -153,6 +158,7 @@ void sim_tca9555_init(void) {
 }
 
 void sim_tca9555_report(void) {
+    sim_rtc_accel_report();
     sim_metric_set("board.motor_starts", X.motor_starts);
     sim_metric_set("board.shared_reset_warnings", X.shared_rst_warn);
     sim_metric_set("board.shared_power_warnings", X.shared_pwr_warn);

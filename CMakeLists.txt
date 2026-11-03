@@ -65,10 +65,14 @@ add_library(ink_port_sim STATIC
   drivers/ft6336u/ft6336u.c
   drivers/bq27220/bq27220.c
   drivers/cx25601n/cx25601n.c
+  drivers/pcf8563/pcf8563.c
+  drivers/sc7a20h/sc7a20h.c
   ports/sim/hal_i2c_sim.c
   ports/sim/dev_epd_power.c
   ports/sim/dev_tca9555.c
   ports/sim/dev_power_chips.c
+  ports/sim/dev_rtc_accel.c
+  ports/sim/hal_sensors_sim.c
   ports/sim/osal_sim.c
   ports/sim/metrics.c
   ports/sim/trace.c

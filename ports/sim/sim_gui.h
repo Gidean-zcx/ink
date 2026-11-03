@@ -59,6 +59,10 @@ typedef struct {
     bool modem_radio;
     int sim_card[2];            /* 0 none, 1 data, 2 data + SMS, 3 data + SMS + voice */
     bool sim_registered, sim_searching, volte;
+    /* RTC and accelerometer */
+    int64_t rtc_s;              /* UTC seconds the RTC shows */
+    int accel_mg[3];            /* gravity the accelerometer reports */
+    unsigned accel_motions;
 } sim_gui_stats_t;
 
 /** Ask for a fresh sample and, if the panel image changed, a new frame. At most one request is
@@ -76,6 +80,8 @@ void sim_gui_net(const char *link);  /* "lte" | "wifi" | "none" */
 void sim_gui_outage(int ms);
 void sim_gui_mic(const char *source); /* "speech" | "silence" | "noise" */
 void sim_gui_sim_card(int slot, int kind); /* put a card in a slot or take it out (kind as sim_card) */
+void sim_gui_orient(const char *name);     /* portrait, upside_down, landscape_left/right, face_up/down */
+void sim_gui_shake(void);
 void sim_gui_snapshot(const char *name); /* <out>/snap-<name>.png */
 void sim_gui_power_cut(void);         /* pull the battery: tears an in-flight flash write, stops */
 void sim_gui_stop(void);              /* clean stop (saves the flash image) */
