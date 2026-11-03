@@ -1,0 +1,2084 @@
+[
+  {
+    "name": "r3_display_transient",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r3_display_transient/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.phase_ms": {
+        "count": 74,
+        "mean": 12,
+        "min": 12,
+        "p50": 12,
+        "p95": 12,
+        "p99": 12,
+        "max": 12
+      },
+      "display.pmic.attempts": 2,
+      "display.pmic.order_warnings": 1,
+      "display.power_lost_during_waveform": 1,
+      "display.power_ups": 2,
+      "i2c.busy_ms": 147.9,
+      "task.input.cpu_ms": 0.814
+    },
+    "warnings": [
+      "1.930s display: TPS65185 rails went down while the gate output (XOE) was low for 12 us (panel spec 6.1)"
+    ],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 10,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 36,
+      "i2c.wait_ms.pmic": 29,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r3_display_vcom",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r3_display_vcom/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.phase_ms": {
+        "count": 74,
+        "mean": 12,
+        "min": 12,
+        "p50": 12,
+        "p95": 12,
+        "p99": 12,
+        "max": 12
+      },
+      "display.pmic.attempts": 2,
+      "display.pmic.order_warnings": 0,
+      "display.power_lost_during_waveform": 1,
+      "display.power_ups": 2,
+      "i2c.busy_ms": 143.94,
+      "task.input.cpu_ms": 0.53
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 10,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 32,
+      "i2c.wait_ms.pmic": 27,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r3_display_multi",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r3_display_multi/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.phase_ms": {
+        "count": 185,
+        "mean": 12,
+        "min": 12,
+        "p50": 12,
+        "p95": 12,
+        "p99": 12,
+        "max": 12
+      },
+      "display.pmic.attempts": 5,
+      "display.pmic.order_warnings": 1,
+      "display.power_lost_during_waveform": 1,
+      "display.power_ups": 5,
+      "i2c.busy_ms": 195.18,
+      "task.input.cpu_ms": 1.302
+    },
+    "warnings": [
+      "1.930s display: TPS65185 rails went down while the gate output (XOE) was low for 12 us (panel spec 6.1)"
+    ],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 10,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 70,
+      "i2c.wait_ms.pmic": 69,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r3_display_p05",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r3_display_p05/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.phase_ms": {
+        "count": 74,
+        "mean": 12,
+        "min": 12,
+        "p50": 12,
+        "p95": 12,
+        "p99": 12,
+        "max": 12
+      },
+      "display.pmic.attempts": 2,
+      "display.pmic.order_warnings": 0,
+      "display.power_lost_during_waveform": 1,
+      "display.power_ups": 2,
+      "display.unpowered_waveforms": 1,
+      "i2c.busy_ms": 143.34,
+      "task.input.cpu_ms": 0.53
+    },
+    "warnings": [
+      "2.520s display: waveform started without panel power (rails or VCOM not good)"
+    ],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 10,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 31,
+      "i2c.wait_ms.pmic": 27,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r3_wake_touch",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r3_wake_touch/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.pmic.attempts": 0,
+      "display.pmic.order_warnings": 0,
+      "i2c.busy_ms": 675.1,
+      "i2c.timeouts": 5,
+      "power.sleep_restore_errors": 1,
+      "power.sleep_restore_retries": 4,
+      "task.input.cpu_ms": 6.62
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 26,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 34,
+      "i2c.wait_ms.touch": 167
+    }
+  },
+  {
+    "name": "r3_wake_audio",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r3_wake_audio/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "audio.start_without_chip": 1,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.pmic.attempts": 0,
+      "display.pmic.order_warnings": 0,
+      "i2c.busy_ms": 751.11,
+      "i2c.timeouts": 12,
+      "input.expander_restored_late": 1,
+      "power.sleep_restore_errors": 1,
+      "power.sleep_restore_retries": 6,
+      "task.input.cpu_ms": 0.7935
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 42,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 52,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r3_boot_audio",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r3_boot_audio/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 2505,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.pmic.attempts": 0,
+      "display.pmic.order_warnings": 0,
+      "i2c.busy_ms": 232.75,
+      "i2c.timeouts": 2,
+      "task.input.cpu_ms": 0.5195
+    },
+    "warnings": [
+      "0.100s board: TCA9555 init failed"
+    ],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 26,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 28,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r3_audio_oom",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r3_audio_oom/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.pmic.attempts": 0,
+      "display.pmic.order_warnings": 0,
+      "i2c.busy_ms": 129.99,
+      "task.input.cpu_ms": 0.05
+    },
+    "warnings": [
+      "1.740s allocation of 1024 bytes failed (caps=0x1, owner=main, internal free=216 largest=176)",
+      "1.740s allocation of 7680 bytes failed (caps=0x4, owner=i2s-rx, internal free=216 largest=176)",
+      "1.740s allocation of 7680 bytes failed (caps=0x4, owner=i2s-tx, internal free=216 largest=176)"
+    ],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 26,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 22,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r3_play_sleep_entry",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r3_play_sleep_entry/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 2,
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 150,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.pmic.attempts": 0,
+      "display.pmic.order_warnings": 0,
+      "i2c.busy_ms": 145.95,
+      "task.input.cpu_ms": 0.088
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 42,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 35,
+      "i2c.wait_ms.io-expander": 44,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r3_display_transient",
+    "sanitizer": false,
+    "pqbn": true,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r3_display_transient-pqbn/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.phase_ms": {
+        "count": 7,
+        "mean": 12,
+        "min": 12,
+        "p50": 12,
+        "p95": 12,
+        "p99": 12,
+        "max": 12
+      },
+      "display.pmic.attempts": 2,
+      "display.pmic.order_warnings": 1,
+      "display.power_lost_during_waveform": 1,
+      "display.power_ups": 2,
+      "display.pqbn.phases": 7,
+      "display.unpowered_phases": 1,
+      "i2c.busy_ms": 145.74,
+      "task.input.cpu_ms": 0.55
+    },
+    "warnings": [
+      "1.920s display: TPS65185 rails went down while the gate output (XOE) was low for 12 us (panel spec 6.1)"
+    ],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 10,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 33,
+      "i2c.wait_ms.pmic": 29,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r3_display_vcom",
+    "sanitizer": false,
+    "pqbn": true,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r3_display_vcom-pqbn/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.phase_ms": {
+        "count": 7,
+        "mean": 12,
+        "min": 12,
+        "p50": 12,
+        "p95": 12,
+        "p99": 12,
+        "max": 12
+      },
+      "display.pmic.attempts": 2,
+      "display.pmic.order_warnings": 0,
+      "display.power_lost_during_waveform": 1,
+      "display.power_ups": 2,
+      "display.pqbn.phases": 7,
+      "display.unpowered_phases": 1,
+      "i2c.busy_ms": 144.54,
+      "task.input.cpu_ms": 0.53
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 10,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 33,
+      "i2c.wait_ms.pmic": 27,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r3_display_multi",
+    "sanitizer": false,
+    "pqbn": true,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r3_display_multi-pqbn/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.phase_ms": {
+        "count": 18,
+        "mean": 12.017683333333332,
+        "min": 12,
+        "p50": 12,
+        "p95": 12.110592,
+        "p99": 12.110592,
+        "max": 12.110592
+      },
+      "display.pmic.attempts": 2,
+      "display.pmic.order_warnings": 1,
+      "display.power_lost_during_waveform": 1,
+      "display.power_ups": 2,
+      "display.pqbn.phases": 18,
+      "display.unpowered_phases": 1,
+      "i2c.busy_ms": 143.94,
+      "task.input.cpu_ms": 0.54
+    },
+    "warnings": [
+      "1.920s display: TPS65185 rails went down while the gate output (XOE) was low for 12 us (panel spec 6.1)"
+    ],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 10,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 32,
+      "i2c.wait_ms.pmic": 27,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r3_display_p05",
+    "sanitizer": false,
+    "pqbn": true,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r3_display_p05-pqbn/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.phase_ms": {
+        "count": 7,
+        "mean": 12,
+        "min": 12,
+        "p50": 12,
+        "p95": 12,
+        "p99": 12,
+        "max": 12
+      },
+      "display.pmic.attempts": 2,
+      "display.pmic.order_warnings": 0,
+      "display.power_lost_during_waveform": 1,
+      "display.power_ups": 2,
+      "display.pqbn.phases": 7,
+      "display.unpowered_phases": 5,
+      "display.unpowered_waveforms": 1,
+      "i2c.busy_ms": 143.94,
+      "task.input.cpu_ms": 0.53
+    },
+    "warnings": [
+      "2.100s display: waveform started without panel power (rails or VCOM not good)"
+    ],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 10,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 32,
+      "i2c.wait_ms.pmic": 27,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r4_normal",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r4_normal/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 2,
+      "audio.mic.captured_ms": 1200,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 300,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.phase_ms": {
+        "count": 333,
+        "mean": 12,
+        "min": 12,
+        "p50": 12,
+        "p95": 12,
+        "p99": 12,
+        "max": 12
+      },
+      "display.pmic.attempts": 9,
+      "display.pmic.order_warnings": 0,
+      "display.power_ups": 9,
+      "i2c.busy_ms": 329.37,
+      "task.input.cpu_ms": 2.412
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 58,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 178,
+      "i2c.wait_ms.pmic": 126,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r4_normal_activity",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r4_normal_activity/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 2,
+      "audio.mic.captured_ms": 1200,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 360,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "camera.captures": 1,
+      "display.phase_ms": {
+        "count": 333,
+        "mean": 12,
+        "min": 12,
+        "p50": 12,
+        "p95": 12,
+        "p99": 12,
+        "max": 12
+      },
+      "display.pmic.attempts": 9,
+      "display.pmic.order_warnings": 0,
+      "display.power_ups": 9,
+      "i2c.busy_ms": 683.46,
+      "task.input.cpu_ms": 2.462
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 58,
+      "i2c.wait_ms.camera": 590,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 37,
+      "i2c.wait_ms.io-expander": 182,
+      "i2c.wait_ms.pmic": 126,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r4_p05_preoff",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r4_p05_preoff/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.phase_ms": {
+        "count": 148,
+        "mean": 12,
+        "min": 12,
+        "p50": 12,
+        "p95": 12,
+        "p99": 12,
+        "max": 12
+      },
+      "display.pmic.attempts": 4,
+      "display.pmic.order_warnings": 0,
+      "display.power_ups": 4,
+      "display.unpowered_waveforms": 3,
+      "i2c.busy_ms": 180.48,
+      "task.input.cpu_ms": 1.028
+    },
+    "warnings": [
+      "1.880s display: waveform started without panel power (rails or VCOM not good)"
+    ],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 10,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 60,
+      "i2c.wait_ms.pmic": 56,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r4_touch_restore",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r4_touch_restore/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 2,
+      "audio.mic.captured_ms": 600,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 150,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "audio.start_without_chip": 2,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.pmic.attempts": 0,
+      "display.pmic.order_warnings": 0,
+      "i2c.busy_ms": 984.22,
+      "i2c.timeouts": 11,
+      "input.expander_restored_late": 1,
+      "power.sleep_restore_errors": 1,
+      "power.sleep_restore_retries": 6,
+      "task.input.cpu_ms": 6.8815
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 42,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 37,
+      "i2c.wait_ms.io-expander": 60,
+      "i2c.wait_ms.touch": 161
+    }
+  },
+  {
+    "name": "r4_audio_restore",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r4_audio_restore/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 2,
+      "audio.mic.captured_ms": 600,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 150,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "audio.start_without_chip": 2,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.pmic.attempts": 0,
+      "display.pmic.order_warnings": 0,
+      "i2c.busy_ms": 754.56,
+      "i2c.timeouts": 12,
+      "input.expander_restored_late": 1,
+      "power.sleep_restore_errors": 1,
+      "power.sleep_restore_retries": 6,
+      "task.input.cpu_ms": 1.1725
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 42,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 37,
+      "i2c.wait_ms.io-expander": 61,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r4_gpio2_accel",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r4_gpio2_accel/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.pmic.attempts": 0,
+      "display.pmic.order_warnings": 0,
+      "i2c.busy_ms": 630.17,
+      "i2c.timeouts": 10,
+      "input.gpio2_rechecks": 10,
+      "task.input.cpu_ms": 2.046
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 21,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 34,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r4_gpio2_normal",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r4_gpio2_normal/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.pmic.attempts": 0,
+      "display.pmic.order_warnings": 0,
+      "i2c.busy_ms": 116.37,
+      "task.input.cpu_ms": 0.556
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 11,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 14,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r4_tca_init_change",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r4_tca_init_change/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.pmic.attempts": 0,
+      "display.pmic.order_warnings": 0,
+      "i2c.busy_ms": 133.44,
+      "task.input.cpu_ms": 0.276
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 10,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 29,
+      "i2c.wait_ms.pmic": 14,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r4_service_failed",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r4_service_failed/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "audio.start_without_chip": 9,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.pmic.attempts": 0,
+      "display.pmic.order_warnings": 0,
+      "i2c.busy_ms": 64.05,
+      "task.input.cpu_ms": 0.012
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 10,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 19,
+      "i2c.wait_ms.io-expander": 8,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r4_service_normal",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r4_service_normal/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 120,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 480,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "audit.play_heard_ms": {
+        "count": 1,
+        "mean": 32.887,
+        "min": 32.887,
+        "p50": 32.887,
+        "p95": 32.887,
+        "p99": 32.887,
+        "max": 32.887
+      },
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.pmic.attempts": 0,
+      "display.pmic.order_warnings": 0,
+      "i2c.busy_ms": 64.05,
+      "task.input.cpu_ms": 0.012
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 10,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 19,
+      "i2c.wait_ms.io-expander": 8,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r4_ai_failed",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r4_ai_failed/metrics.json",
+    "metrics": {
+      "ai.answers": 1,
+      "ai.mic_unavailable": 1,
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "audio.start_without_chip": 2,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.phase_ms": {
+        "count": 276,
+        "mean": 12.221071829710175,
+        "min": 12,
+        "p50": 12.018285,
+        "p95": 12.8636,
+        "p99": 12.8636,
+        "max": 12.8636
+      },
+      "display.pmic.attempts": 7,
+      "display.pmic.order_warnings": 0,
+      "display.power_ups": 7,
+      "hub.requests.ai.ask": 1,
+      "i2c.busy_ms": 212.58,
+      "task.input.cpu_ms": 1.95
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 10,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 28,
+      "i2c.wait_ms.io-expander": 105,
+      "i2c.wait_ms.pmic": 100,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r4_normal",
+    "sanitizer": false,
+    "pqbn": true,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r4_normal-pqbn/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 2,
+      "audio.mic.captured_ms": 1200,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 300,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.phase_ms": {
+        "count": 92,
+        "mean": 12,
+        "min": 12,
+        "p50": 12,
+        "p95": 12,
+        "p99": 12,
+        "max": 12
+      },
+      "display.pmic.attempts": 9,
+      "display.pmic.order_warnings": 0,
+      "display.power_ups": 9,
+      "display.pqbn.phases": 92,
+      "i2c.busy_ms": 329.37,
+      "task.input.cpu_ms": 2.432
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 58,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 178,
+      "i2c.wait_ms.pmic": 126,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r4_normal_activity",
+    "sanitizer": false,
+    "pqbn": true,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r4_normal_activity-pqbn/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 2,
+      "audio.mic.captured_ms": 1200,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 360,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "camera.captures": 1,
+      "display.phase_ms": {
+        "count": 92,
+        "mean": 12,
+        "min": 12,
+        "p50": 12,
+        "p95": 12,
+        "p99": 12,
+        "max": 12
+      },
+      "display.pmic.attempts": 9,
+      "display.pmic.order_warnings": 0,
+      "display.power_ups": 9,
+      "display.pqbn.phases": 92,
+      "i2c.busy_ms": 685.95,
+      "task.input.cpu_ms": 2.472
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 58,
+      "i2c.wait_ms.camera": 590,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 182,
+      "i2c.wait_ms.pmic": 126,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r4_p05_preoff",
+    "sanitizer": false,
+    "pqbn": true,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r4_p05_preoff-pqbn/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.phase_ms": {
+        "count": 34,
+        "mean": 12,
+        "min": 12,
+        "p50": 12,
+        "p95": 12,
+        "p99": 12,
+        "max": 12
+      },
+      "display.pmic.attempts": 4,
+      "display.pmic.order_warnings": 0,
+      "display.power_ups": 4,
+      "display.pqbn.phases": 34,
+      "display.unpowered_phases": 31,
+      "display.unpowered_waveforms": 3,
+      "i2c.busy_ms": 180.48,
+      "task.input.cpu_ms": 1.048
+    },
+    "warnings": [
+      "1.880s display: waveform started without panel power (rails or VCOM not good)"
+    ],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 10,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 60,
+      "i2c.wait_ms.pmic": 56,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r3_display_transient",
+    "sanitizer": true,
+    "pqbn": false,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r3_display_transient-asan/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.phase_ms": {
+        "count": 74,
+        "mean": 12,
+        "min": 12,
+        "p50": 12,
+        "p95": 12,
+        "p99": 12,
+        "max": 12
+      },
+      "display.pmic.attempts": 2,
+      "display.pmic.order_warnings": 1,
+      "display.power_lost_during_waveform": 1,
+      "display.power_ups": 2,
+      "i2c.busy_ms": 147.9,
+      "task.input.cpu_ms": 0.814
+    },
+    "warnings": [
+      "1.930s display: TPS65185 rails went down while the gate output (XOE) was low for 12 us (panel spec 6.1)"
+    ],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 10,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 36,
+      "i2c.wait_ms.pmic": 29,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r3_boot_audio",
+    "sanitizer": true,
+    "pqbn": false,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r3_boot_audio-asan/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 2505,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.pmic.attempts": 0,
+      "display.pmic.order_warnings": 0,
+      "i2c.busy_ms": 232.75,
+      "i2c.timeouts": 2,
+      "task.input.cpu_ms": 0.5195
+    },
+    "warnings": [
+      "0.100s board: TCA9555 init failed"
+    ],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 26,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 28,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r4_touch_restore",
+    "sanitizer": true,
+    "pqbn": false,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r4_touch_restore-asan/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 2,
+      "audio.mic.captured_ms": 600,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 150,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "audio.start_without_chip": 2,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.pmic.attempts": 0,
+      "display.pmic.order_warnings": 0,
+      "i2c.busy_ms": 984.22,
+      "i2c.timeouts": 11,
+      "input.expander_restored_late": 1,
+      "power.sleep_restore_errors": 1,
+      "power.sleep_restore_retries": 6,
+      "task.input.cpu_ms": 6.8815
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 42,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 37,
+      "i2c.wait_ms.io-expander": 60,
+      "i2c.wait_ms.touch": 161
+    }
+  },
+  {
+    "name": "r4_audio_restore",
+    "sanitizer": true,
+    "pqbn": false,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r4_audio_restore-asan/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 2,
+      "audio.mic.captured_ms": 600,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 150,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "audio.start_without_chip": 2,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.pmic.attempts": 0,
+      "display.pmic.order_warnings": 0,
+      "i2c.busy_ms": 754.56,
+      "i2c.timeouts": 12,
+      "input.expander_restored_late": 1,
+      "power.sleep_restore_errors": 1,
+      "power.sleep_restore_retries": 6,
+      "task.input.cpu_ms": 1.1725
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 42,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 37,
+      "i2c.wait_ms.io-expander": 61,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r4_p05_preoff",
+    "sanitizer": true,
+    "pqbn": false,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r4_p05_preoff-asan/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.phase_ms": {
+        "count": 148,
+        "mean": 12,
+        "min": 12,
+        "p50": 12,
+        "p95": 12,
+        "p99": 12,
+        "max": 12
+      },
+      "display.pmic.attempts": 4,
+      "display.pmic.order_warnings": 0,
+      "display.power_ups": 4,
+      "display.unpowered_waveforms": 3,
+      "i2c.busy_ms": 180.48,
+      "task.input.cpu_ms": 1.028
+    },
+    "warnings": [
+      "1.880s display: waveform started without panel power (rails or VCOM not good)"
+    ],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 10,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 60,
+      "i2c.wait_ms.pmic": 56,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r4_service_failed",
+    "sanitizer": true,
+    "pqbn": false,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r4_service_failed-asan/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "audio.start_without_chip": 9,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.pmic.attempts": 0,
+      "display.pmic.order_warnings": 0,
+      "i2c.busy_ms": 64.05,
+      "task.input.cpu_ms": 0.012
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 10,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 19,
+      "i2c.wait_ms.io-expander": 8,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r4_ai_failed",
+    "sanitizer": true,
+    "pqbn": false,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r4_ai_failed-asan/metrics.json",
+    "metrics": {
+      "ai.answers": 1,
+      "ai.mic_unavailable": 1,
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "audio.start_without_chip": 2,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.phase_ms": {
+        "count": 276,
+        "mean": 12.221071829710175,
+        "min": 12,
+        "p50": 12.018285,
+        "p95": 12.8636,
+        "p99": 12.8636,
+        "max": 12.8636
+      },
+      "display.pmic.attempts": 7,
+      "display.pmic.order_warnings": 0,
+      "display.power_ups": 7,
+      "hub.requests.ai.ask": 1,
+      "i2c.busy_ms": 212.58,
+      "task.input.cpu_ms": 1.95
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 10,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 28,
+      "i2c.wait_ms.io-expander": 105,
+      "i2c.wait_ms.pmic": 100,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r4_normal",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": true,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r4_normal-before/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 2,
+      "audio.mic.captured_ms": 1200,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 300,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.phase_ms": {
+        "count": 333,
+        "mean": 12,
+        "min": 12,
+        "p50": 12,
+        "p95": 12,
+        "p99": 12,
+        "max": 12
+      },
+      "display.pmic.attempts": 9,
+      "display.pmic.order_warnings": 0,
+      "display.power_ups": 9,
+      "i2c.busy_ms": 329.37,
+      "task.input.cpu_ms": 2.37
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 58,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 178,
+      "i2c.wait_ms.pmic": 126,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r4_normal_activity",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": true,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r4_normal_activity-before/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 2,
+      "audio.mic.captured_ms": 1200,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 360,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "camera.captures": 1,
+      "display.phase_ms": {
+        "count": 333,
+        "mean": 12,
+        "min": 12,
+        "p50": 12,
+        "p95": 12,
+        "p99": 12,
+        "max": 12
+      },
+      "display.pmic.attempts": 9,
+      "display.pmic.order_warnings": 0,
+      "display.power_ups": 9,
+      "i2c.busy_ms": 683.46,
+      "task.input.cpu_ms": 2.42
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 58,
+      "i2c.wait_ms.camera": 590,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 37,
+      "i2c.wait_ms.io-expander": 182,
+      "i2c.wait_ms.pmic": 126,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r4_service_normal",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": true,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r4_service_normal-before/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 120,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 480,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "audit.play_heard_ms": {
+        "count": 1,
+        "mean": 32.887,
+        "min": 32.887,
+        "p50": 32.887,
+        "p95": 32.887,
+        "p99": 32.887,
+        "max": 32.887
+      },
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.pmic.attempts": 0,
+      "display.pmic.order_warnings": 0,
+      "i2c.busy_ms": 64.05,
+      "task.input.cpu_ms": 0.012
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 10,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 19,
+      "i2c.wait_ms.io-expander": 8,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r4_service_failed",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": true,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r4_service_failed-before/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "audit.play_heard_ms": {
+        "count": 1,
+        "mean": 32.231,
+        "min": 32.231,
+        "p50": 32.231,
+        "p95": 32.231,
+        "p99": 32.231,
+        "max": 32.231
+      },
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.pmic.attempts": 0,
+      "display.pmic.order_warnings": 0,
+      "i2c.busy_ms": 64.05,
+      "task.input.cpu_ms": 0.012
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 10,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 19,
+      "i2c.wait_ms.io-expander": 8,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r4_ai_failed",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": true,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r4_ai_failed-before/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 2,
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 7350,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.phase_ms": {
+        "count": 329,
+        "mean": 12.185402857142881,
+        "min": 12,
+        "p50": 12,
+        "p95": 12.8636,
+        "p99": 12.8636,
+        "max": 12.8636
+      },
+      "display.pmic.attempts": 7,
+      "display.pmic.order_warnings": 0,
+      "display.power_ups": 7,
+      "hub.requests.ai.listen": 1,
+      "hub.requests.ai.listen.end": 1,
+      "i2c.busy_ms": 236.7,
+      "task.input.cpu_ms": 1.812
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 10,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 104,
+      "i2c.wait_ms.pmic": 100,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r3_display_transient",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": true,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r3_display_transient-before/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.phase_ms": {
+        "count": 74,
+        "mean": 12,
+        "min": 12,
+        "p50": 12,
+        "p95": 12,
+        "p99": 12,
+        "max": 12
+      },
+      "display.pmic.attempts": 2,
+      "display.pmic.order_warnings": 1,
+      "display.power_ups": 2,
+      "i2c.busy_ms": 149.88,
+      "task.input.cpu_ms": 0.802
+    },
+    "warnings": [
+      "1.930s display: TPS65185 rails went down while the gate output (XOE) was low for 12 us (panel spec 6.1)"
+    ],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 10,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 38,
+      "i2c.wait_ms.pmic": 30,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r3_display_vcom",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": true,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r3_display_vcom-before/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.phase_ms": {
+        "count": 74,
+        "mean": 12,
+        "min": 12,
+        "p50": 12,
+        "p95": 12,
+        "p99": 12,
+        "max": 12
+      },
+      "display.pmic.attempts": 2,
+      "display.pmic.order_warnings": 0,
+      "display.power_ups": 2,
+      "i2c.busy_ms": 145.92,
+      "task.input.cpu_ms": 0.522
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 10,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 34,
+      "i2c.wait_ms.pmic": 28,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r3_wake_permanent",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r3_wake_permanent/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.pmic.attempts": 0,
+      "display.pmic.order_warnings": 0,
+      "i2c.busy_ms": 2324.92,
+      "i2c.timeouts": 44,
+      "power.sleep_restore_errors": 1,
+      "power.sleep_restore_retries": 6,
+      "task.input.cpu_ms": 2.3755
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 26,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 59,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r2_wake_control",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r2_wake_control/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.pmic.attempts": 0,
+      "display.pmic.order_warnings": 0,
+      "i2c.busy_ms": 136.89,
+      "task.input.cpu_ms": 0.659
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 26,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 32,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r2_audio_sleep_entry",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r2_audio_sleep_entry/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 2,
+      "audio.mic.captured_ms": 600,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.pmic.attempts": 0,
+      "display.pmic.order_warnings": 0,
+      "i2c.busy_ms": 129.3,
+      "task.input.cpu_ms": 0.05
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 26,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 37,
+      "i2c.wait_ms.io-expander": 25,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r2_audio_sleep_late",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r2_audio_sleep_late/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 2,
+      "audio.mic.captured_ms": 1185,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.pmic.attempts": 0,
+      "display.pmic.order_warnings": 0,
+      "i2c.busy_ms": 111.36,
+      "task.input.cpu_ms": 0.012
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 10,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 8,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r2_audio_sleep_race",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r2_audio_sleep_race/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 2,
+      "audio.mic.captured_ms": 600,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.pmic.attempts": 0,
+      "display.pmic.order_warnings": 0,
+      "i2c.busy_ms": 111.36,
+      "task.input.cpu_ms": 0.012
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 10,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 8,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r4_normal",
+    "sanitizer": false,
+    "pqbn": true,
+    "before": true,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r4_normal-pqbn-before/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 2,
+      "audio.mic.captured_ms": 1200,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 300,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.phase_ms": {
+        "count": 92,
+        "mean": 12,
+        "min": 12,
+        "p50": 12,
+        "p95": 12,
+        "p99": 12,
+        "max": 12
+      },
+      "display.pmic.attempts": 9,
+      "display.pmic.order_warnings": 0,
+      "display.power_ups": 9,
+      "display.pqbn.phases": 92,
+      "i2c.busy_ms": 329.37,
+      "task.input.cpu_ms": 2.39
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 58,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 178,
+      "i2c.wait_ms.pmic": 126,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r4_normal_activity",
+    "sanitizer": false,
+    "pqbn": true,
+    "before": true,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r4_normal_activity-pqbn-before/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 2,
+      "audio.mic.captured_ms": 1200,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 360,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "camera.captures": 1,
+      "display.phase_ms": {
+        "count": 92,
+        "mean": 12,
+        "min": 12,
+        "p50": 12,
+        "p95": 12,
+        "p99": 12,
+        "max": 12
+      },
+      "display.pmic.attempts": 9,
+      "display.pmic.order_warnings": 0,
+      "display.power_ups": 9,
+      "display.pqbn.phases": 92,
+      "i2c.busy_ms": 685.95,
+      "task.input.cpu_ms": 2.42
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 58,
+      "i2c.wait_ms.camera": 590,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 182,
+      "i2c.wait_ms.pmic": 126,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r3_display_vcom",
+    "sanitizer": false,
+    "pqbn": true,
+    "before": true,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r3_display_vcom-pqbn-before/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.phase_ms": {
+        "count": 13,
+        "mean": 12,
+        "min": 12,
+        "p50": 12,
+        "p95": 12,
+        "p99": 12,
+        "max": 12
+      },
+      "display.pmic.attempts": 2,
+      "display.pmic.order_warnings": 0,
+      "display.power_ups": 2,
+      "display.pqbn.phases": 13,
+      "i2c.busy_ms": 145.92,
+      "task.input.cpu_ms": 0.532
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 10,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 34,
+      "i2c.wait_ms.pmic": 28,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r3_wake_touch",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": true,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r3_wake_touch-before/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.pmic.attempts": 0,
+      "display.pmic.order_warnings": 0,
+      "i2c.busy_ms": 672.73,
+      "i2c.timeouts": 5,
+      "power.sleep_restore_errors": 1,
+      "power.sleep_restore_retries": 4,
+      "task.input.cpu_ms": 6.288
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 26,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 28,
+      "i2c.wait_ms.touch": 168
+    }
+  },
+  {
+    "name": "r3_wake_audio",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": true,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r3_wake_audio-before/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.pmic.attempts": 0,
+      "display.pmic.order_warnings": 0,
+      "i2c.busy_ms": 751.11,
+      "i2c.timeouts": 12,
+      "input.expander_restored_late": 1,
+      "power.sleep_restore_errors": 1,
+      "power.sleep_restore_retries": 6,
+      "task.input.cpu_ms": 0.7815
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 42,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 52,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r3_boot_audio",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": true,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r3_boot_audio-before/metrics.json",
+    "metrics": {
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.pmic.attempts": 0,
+      "display.pmic.order_warnings": 0,
+      "i2c.busy_ms": 232.75,
+      "i2c.timeouts": 2,
+      "task.input.cpu_ms": 0.5115
+    },
+    "warnings": [
+      "0.100s board: TCA9555 init failed"
+    ],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 26,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 28,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r4_held_supply",
+    "sanitizer": false,
+    "pqbn": false,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r4_held_supply/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.phase_ms": {
+        "count": 148,
+        "mean": 12,
+        "min": 12,
+        "p50": 12,
+        "p95": 12,
+        "p99": 12,
+        "max": 12
+      },
+      "display.pmic.attempts": 3,
+      "display.pmic.order_warnings": 0,
+      "display.power_recycled": 2,
+      "display.power_ups": 3,
+      "i2c.busy_ms": 169.38,
+      "task.input.cpu_ms": 0.774
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 10,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 56,
+      "i2c.wait_ms.pmic": 43,
+      "i2c.wait_ms.touch": 3
+    }
+  },
+  {
+    "name": "r4_held_supply",
+    "sanitizer": false,
+    "pqbn": true,
+    "before": false,
+    "exit_code": 0,
+    "metrics_file": "build-audit/r4-probes/r4_held_supply-pqbn/metrics.json",
+    "metrics": {
+      "audio.bt_mode_sets": 1,
+      "audio.mic.captured_ms": 0,
+      "audio.mic.lost_ms": 0,
+      "audio.speaker.played_ms": 0,
+      "audio.speaker.underrun_ms": 0,
+      "audio.speaker.underruns": 0,
+      "board.shared_power_warnings": 0,
+      "board.shared_reset_warnings": 0,
+      "display.phase_ms": {
+        "count": 42,
+        "mean": 12,
+        "min": 12,
+        "p50": 12,
+        "p95": 12,
+        "p99": 12,
+        "max": 12
+      },
+      "display.pmic.attempts": 3,
+      "display.pmic.order_warnings": 0,
+      "display.power_recycled": 2,
+      "display.power_ups": 3,
+      "display.pqbn.phases": 42,
+      "i2c.busy_ms": 169.38,
+      "task.input.cpu_ms": 0.774
+    },
+    "warnings": [],
+    "i2c_transfers": {
+      "i2c.wait_ms.accel": 10,
+      "i2c.wait_ms.charger": 6,
+      "i2c.wait_ms.fuel-gauge": 38,
+      "i2c.wait_ms.io-expander": 56,
+      "i2c.wait_ms.pmic": 43,
+      "i2c.wait_ms.touch": 3
+    }
+  }
+]

@@ -1,0 +1,261 @@
+{
+  "audit_commit": "89b112620730902f0fa1594e83ffb146b08749be",
+  "purpose": "Audit package consistency only; confirmed product defects remain open",
+  "all_checks_passed": true,
+  "checks": [
+    {
+      "name": "object_and_read_only_scope",
+      "passed": true,
+      "detail": {
+        "head": "89b112620730902f0fa1594e83ffb146b08749be",
+        "detached": true,
+        "diff_exit": 0,
+        "index_diff_exit": 0,
+        "status_lines": [
+          "?? docs/audits/2026-11-03-codex-r4/TASK.md",
+          "?? docs/audits/2026-11-03-codex-r4/experiments/README.md",
+          "?? docs/audits/2026-11-03-codex-r4/experiments/board-results.json",
+          "?? docs/audits/2026-11-03-codex-r4/experiments/checkpoints.py",
+          "?? docs/audits/2026-11-03-codex-r4/experiments/comparison.json",
+          "?? docs/audits/2026-11-03-codex-r4/experiments/image-evidence.json",
+          "?? docs/audits/2026-11-03-codex-r4/experiments/legacy_probe.c",
+          "?? docs/audits/2026-11-03-codex-r4/experiments/metrics-evidence.json",
+          "?? docs/audits/2026-11-03-codex-r4/experiments/probe.c",
+          "?? docs/audits/2026-11-03-codex-r4/experiments/record.py",
+          "?? docs/audits/2026-11-03-codex-r4/experiments/results.json",
+          "?? docs/audits/2026-11-03-codex-r4/experiments/run.py",
+          "?? docs/audits/2026-11-03-codex-r4/experiments/summarize.py",
+          "?? docs/audits/2026-11-03-codex-r4/experiments/validate.py",
+          "?? docs/audits/2026-11-03-codex-r4/findings.json",
+          "?? docs/audits/2026-11-03-codex-r4/report.md",
+          "?? docs/audits/2026-11-03-codex-r4/verification.json"
+        ],
+        "ignored_build_outputs_excluded": true
+      }
+    },
+    {
+      "name": "verification_schema_and_coverage",
+      "passed": true,
+      "detail": {
+        "部分修复": 3,
+        "已修复": 5
+      }
+    },
+    {
+      "name": "findings_schema_and_severity",
+      "passed": true,
+      "detail": {
+        "严重": 1,
+        "高": 2,
+        "中": 1
+      }
+    },
+    {
+      "name": "source_locations_resolve",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "report_matches_structured_rows",
+      "passed": true,
+      "detail": "8 verification rows; 4 unique finding headings"
+    },
+    {
+      "name": "report_complete",
+      "passed": true,
+      "detail": "No initial placeholders or duplicate sections"
+    },
+    {
+      "name": "local_markdown_links",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "experiment_inventory",
+      "passed": true,
+      "detail": {
+        "total": 54,
+        "current_regular": 34,
+        "sanitizer": 7,
+        "before": 13
+      }
+    },
+    {
+      "name": "metric_inventory",
+      "passed": true,
+      "detail": "One metric summary per experiment configuration"
+    },
+    {
+      "name": "runtime_evidence_matches",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "selected_sanitizer_runs",
+      "passed": true,
+      "detail": {
+        "runs": 7,
+        "diagnostics": [],
+        "leak_sanitizer": false,
+        "thread_sanitizer": false
+      }
+    },
+    {
+      "name": "AUD5_001_recorded_counterexample",
+      "passed": true,
+      "detail": "Both profiles: three false successes; PQ-BN restored same-target update has zero waveform latency"
+    },
+    {
+      "name": "AUD5_002_recorded_counterexample",
+      "passed": true,
+      "detail": {
+        "failed_played_ms": 0,
+        "normal_played_ms": 480
+      }
+    },
+    {
+      "name": "AUD5_003_recorded_counterexample",
+      "passed": true,
+      "detail": "Zero capture with one ai.ask and answer"
+    },
+    {
+      "name": "AUD5_004_recorded_counterexample",
+      "passed": true,
+      "detail": [
+        {
+          "path": "build-audit/r4-board-pqbn/metrics.json",
+          "test_pass": 65,
+          "test_fail": 0,
+          "budget_violations": 1
+        },
+        {
+          "path": "build-audit/test-out/selftest-board/metrics.json",
+          "test_pass": 66,
+          "test_fail": 0,
+          "budget_violations": 0
+        }
+      ]
+    },
+    {
+      "name": "restore_observations",
+      "passed": true,
+      "detail": "Failure releases resources; later restore and retry succeed"
+    },
+    {
+      "name": "gpio2_observations",
+      "passed": true,
+      "detail": "Fault: 10 rechecks; normal: 0"
+    },
+    {
+      "name": "normal_path_comparisons",
+      "passed": true,
+      "detail": "Five before/after pairs; identical final PNG bytes and no warnings"
+    },
+    {
+      "name": "image_evidence_integrity",
+      "passed": true,
+      "detail": "Image SHA-256 values match local PNGs; recorded pixel statistics match reported claims"
+    },
+    {
+      "name": "original_ctest_summaries",
+      "passed": true,
+      "detail": "40 regular and 39 ASan/UBSan; not evidence against untested counterexamples"
+    },
+    {
+      "name": "artifact_size_and_content_scope",
+      "passed": true,
+      "detail": {
+        "files_excluding_this_validation": 17,
+        "largest_bytes": 75011,
+        "build_logs_included": false
+      }
+    }
+  ],
+  "manifest": [
+    {
+      "path": "TASK.md",
+      "bytes": 8214,
+      "sha256": "840ce2ae407e3ebb9c0be3d32adc8acfc774fece361d5fdca09ceda8ae9c40e6"
+    },
+    {
+      "path": "experiments/README.md",
+      "bytes": 8659,
+      "sha256": "f5a4c59901a71419faa7d81d1cfc1042ded7993a1b95ea95bdccc02f869b2266"
+    },
+    {
+      "path": "experiments/board-results.json",
+      "bytes": 275,
+      "sha256": "04f4262b28e4ef449374dafa3290d2eb8ad5419a78acfe6fd24169e09cfb3f02"
+    },
+    {
+      "path": "experiments/checkpoints.py",
+      "bytes": 15702,
+      "sha256": "9630a2f593e74a7db3ad1afb4411902e742051c25f48743becaba609b67ab092"
+    },
+    {
+      "path": "experiments/comparison.json",
+      "bytes": 20774,
+      "sha256": "e3481dbf0435c8447a47170dcc1c6fe1cbbdd8aab8eb412964bae67cc989a13f"
+    },
+    {
+      "path": "experiments/image-evidence.json",
+      "bytes": 1258,
+      "sha256": "51e7016254ca725fb37cbe180371e02fedb5d60024908c9d4945e1980ffd851f"
+    },
+    {
+      "path": "experiments/legacy_probe.c",
+      "bytes": 8411,
+      "sha256": "050e0c62b2980dbbe078c095d370c5e53494710b070c7ccb61f153f19e29c4b4"
+    },
+    {
+      "path": "experiments/metrics-evidence.json",
+      "bytes": 58779,
+      "sha256": "04f04ce17cf95ba777ec2ce71b8fab64be062da75d329b6f5df779744523b591"
+    },
+    {
+      "path": "experiments/probe.c",
+      "bytes": 9974,
+      "sha256": "340ba3b21452c2244fb95288fbdd47b3a8737107aad1e0b318c34c966ad5ecb4"
+    },
+    {
+      "path": "experiments/record.py",
+      "bytes": 2524,
+      "sha256": "63ebd934cf99bc77c43a1467db21921a064c8a1abcc1da5c91c260412735b2ff"
+    },
+    {
+      "path": "experiments/results.json",
+      "bytes": 75011,
+      "sha256": "4e3c815ef4dfc20a1010b02358ff1743213d2aac4f50129716eb836e8df3ebf1"
+    },
+    {
+      "path": "experiments/run.py",
+      "bytes": 3591,
+      "sha256": "34e97757fd97875b331cd375e0b4b120c53fdcdebe61a5dd17e70ddac8eed019"
+    },
+    {
+      "path": "experiments/summarize.py",
+      "bytes": 4689,
+      "sha256": "d2b4f283795c692b05f68264da7776a9a9195295647ce1cfb2f61f6eace33559"
+    },
+    {
+      "path": "experiments/validate.py",
+      "bytes": 10495,
+      "sha256": "7d47691ebf7c0e8a256d203f32ae59ddf67c1bb011fd675cc536852c87cbc463"
+    },
+    {
+      "path": "findings.json",
+      "bytes": 6610,
+      "sha256": "bb1905328e392a1ff9e9cd0e3c92281f66776a94703a0c9a7330bcb69cdd7f81"
+    },
+    {
+      "path": "report.md",
+      "bytes": 21982,
+      "sha256": "f5da882933e3bbd9d108b04d08e42a88417f7e921263c20a07120d95d546f8e8"
+    },
+    {
+      "path": "verification.json",
+      "bytes": 3863,
+      "sha256": "e026f571c17e6da5014aac6c689fc871ea3cf56ccb867c920d590c0feba0c9a0"
+    }
+  ]
+}

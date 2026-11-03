@@ -1,0 +1,14 @@
+[
+  {
+    "path": "build-audit/r4-board-pqbn/metrics.json",
+    "test_pass": 65,
+    "test_fail": 0,
+    "budget_violations": 1
+  },
+  {
+    "path": "build-audit/test-out/selftest-board/metrics.json",
+    "test_pass": 66,
+    "test_fail": 0,
+    "budget_violations": 0
+  }
+]

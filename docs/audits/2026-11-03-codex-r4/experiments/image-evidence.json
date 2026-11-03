@@ -1,0 +1,44 @@
+[
+  {
+    "name": "r4_p05_preoff",
+    "size": [
+      684,
+      1216
+    ],
+    "comparisons": [
+      {
+        "file": "build-audit/r4-probes/r4_p05_preoff/snap-p05-unpowered.png",
+        "sha256": "9fcc09084974ae2d8f4f922016a2c73a217c5243333853ee8cbe5efa25ce44f4",
+        "pixels_changed_from_before": 16384,
+        "mean_gray": 249.9769159741459
+      },
+      {
+        "file": "build-audit/r4-probes/r4_p05_preoff/snap-p05-restored.png",
+        "sha256": "9fcc09084974ae2d8f4f922016a2c73a217c5243333853ee8cbe5efa25ce44f4",
+        "pixels_changed_from_before": 16384,
+        "mean_gray": 249.9769159741459
+      }
+    ]
+  },
+  {
+    "name": "r4_p05_preoff-pqbn",
+    "size": [
+      684,
+      1216
+    ],
+    "comparisons": [
+      {
+        "file": "build-audit/r4-probes/r4_p05_preoff-pqbn/snap-p05-unpowered.png",
+        "sha256": "086e4b79986678849deef1891ba2ac3331b20756f78e0c2cc3b95cf0cecf813b",
+        "pixels_changed_from_before": 0,
+        "mean_gray": 255.0
+      },
+      {
+        "file": "build-audit/r4-probes/r4_p05_preoff-pqbn/snap-p05-restored.png",
+        "sha256": "086e4b79986678849deef1891ba2ac3331b20756f78e0c2cc3b95cf0cecf813b",
+        "pixels_changed_from_before": 0,
+        "mean_gray": 255.0
+      }
+    ]
+  }
+]

@@ -1,0 +1,50 @@
+[
+  {
+    "id": "AUD4-001",
+    "verdict": "部分修复",
+    "evidence_type": "复现、代码核查",
+    "note": "第三轮 r3_display_transient/vcom 在 EPDiy、PQ-BN 均由误报成功改为 ok=0，重新上电后请求成功；multi 各 ID 回调一次。P05 变化能使首次刷新失败，但 P05 保持低时第二次刷新两档均 ok=1、panel_ready=0（AUD5-001）；PQ-BN复电后重交同图仍空白。changed 记录不覆盖初始化写（补充API级探针）；正常外设并行动作、睡眠后刷新未见误判。"
+  },
+  {
+    "id": "AUD4-002",
+    "verdict": "已修复",
+    "evidence_type": "复现、代码核查",
+    "note": "hal_input_sim.c:788–798 的触摸循环服务 restore_due。原 r3_wake_touch 恢复后 cfg=c0,e3、键共4个；r4_touch_restore 延长故障至1.4s，确认睡眠先返回 cfg=00,80，再在手指仍按住时补 POWER 松开、恢复输入方向与音量按/松，共4个，无需抬手。"
+  },
+  {
+    "id": "AUD4-003",
+    "verdict": "部分修复",
+    "evidence_type": "复现、代码核查",
+    "note": "原 HAL 假启动已修复：r3_wake_audio/r4_audio_restore/r4_touch_restore 在 P14 未恢复时录音、播放均 -1、busy=0；恢复后手动重试 cap=play=0、write=2400、samples=9600，停止后能睡眠。hal_audio_sim.c:302–330、365–435 失败分支释放 DMA/租约。但上层仍静默丢播放帧（AUD5-002），AI 将录音失败变成固定问题（AUD5-003），端到端处理未闭环。"
+  },
+  {
+    "id": "AUD4-004",
+    "verdict": "已修复",
+    "evidence_type": "复现、代码核查",
+    "note": "hal_audio_sim.c:534–538 按 sim_board_present 创建 bt_lock/任务，不再依赖开机 board_ready；r3_boot_audio：ready=0→1、键2个，第一次录音 rc=0、mode=clock=1、40080样本；停止后可睡眠。selftest-expander-dead 在普通及ASan套件通过。"
+  },
+  {
+    "id": "AUD2-019",
+    "verdict": "已修复",
+    "evidence_type": "代码核查",
+    "note": "simulator/desktop/gui/host_camera_linux.c:32、65–85：bytesused 直接作有效载荷长度，0/短帧不发布；V4L2_BUF_FLAG_ERROR 被过滤；无效帧仍归还 QBUF，DQBUF/QBUF 硬错误清 g_have 并标记停止。既有映射容量与行跨度检查保留。本机为 macOS，本轮未编译/运行 Linux 后端或真实摄像头，不将此前开发方 Linux CI 记录当成本轮运行证据。"
+  },
+  {
+    "id": "AUD2-023",
+    "verdict": "部分修复",
+    "evidence_type": "文档核查、代码核查、复现",
+    "note": "R-034（requirements.md:88）与对照表已统一为8项一致/14项部分；INT1/INT2未建模、SD仅延时、PQ-BN仅完成时查PG均已明确。但 audits/README.md:23、25 所称屏供电修复完整、音频服务已处理失败被AUD5-001～003反例推翻；“每次写输出”也不覆盖tca9555_init。原预算的PQ-BN整板命令实际exit=1（AUD5-004），不能表述为两档完整验证均通过。"
+  },
+  {
+    "id": "AUD3-002",
+    "verdict": "已修复",
+    "evidence_type": "复现、代码核查",
+    "note": "hal_input_sim.c:658–690：50ms倍增后以1s封顶，输入恢复在 sample_lock 内，触摸循环同样重试。长故障 r4_touch_restore/audio_restore 由 cfg=00,80 恢复 c0,e3、POWER/VOL共4事件；正常三次睡眠后均能刷新与录音。此行核实唤醒恢复及退避；音频上层问题另列 AUD5-002/003。"
+  },
+  {
+    "id": "N3-3",
+    "verdict": "已修复",
+    "evidence_type": "复现、代码核查",
+    "note": "hal_input_sim.c:177–197、773–796：GPIO2保持低时单个重查定时器，按去抖时间倍增、1s封顶，高电平后停止并重置。r4_gpio2_accel：加速度计故障5s触发10次重查/10次超时，恢复后 GPIO2=0（不低）、音量2事件；无故障转动 r4_gpio2_normal 重查0次，未见正常空闲忙轮询。"
+  }
+]
