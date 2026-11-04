@@ -1,0 +1,438 @@
+[
+  {
+    "name": "ai_close",
+    "build": "build-audit",
+    "description": "Focused R4 boundary probe; unmodified product code included verbatim",
+    "source": "docs/audits/2026-11-04-codex-system-r4/experiments/ai_close.c",
+    "expected_exit": 0,
+    "log": "build-audit/audit-r4/ai_close.log",
+    "extra_compiler_inputs": [],
+    "compile_exit": 0,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/r4_ai_close",
+      "--profile",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/simulator/profiles/metalio-plus.json",
+      "--script",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/docs/audits/2026-11-04-codex-system-r4/experiments/ai_close.script",
+      "--budget",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/tests/integration/hal_switch.budget.json",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/test-content",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/audit-r4/ai_close",
+      "--quiet",
+      "--no-random-outages"
+    ],
+    "exit": 0,
+    "metrics": {
+      "ai.answers": 1,
+      "ai.capture_cancelled": 1,
+      "ai.failures": 1,
+      "ai.press_to_listening_visible_ms": {
+        "count": 2,
+        "mean": 574.925,
+        "min": 523.394,
+        "p50": 523.394,
+        "p95": 626.456,
+        "p99": 626.456,
+        "max": 626.456
+      },
+      "ai.press_to_tone_heard_ms": {
+        "count": 2,
+        "mean": 31.072,
+        "min": 31.065,
+        "p50": 31.065,
+        "p95": 31.079,
+        "p99": 31.079,
+        "max": 31.079
+      },
+      "ai.presses": 2,
+      "ai.release_to_done_visible_ms": {
+        "count": 1,
+        "mean": 12793.534,
+        "min": 12793.534,
+        "p50": 12793.534,
+        "p95": 12793.534,
+        "p99": 12793.534,
+        "max": 12793.534
+      },
+      "ai.release_to_first_text_visible_ms": {
+        "count": 1,
+        "mean": 2053.457,
+        "min": 2053.457,
+        "p50": 2053.457,
+        "p95": 2053.457,
+        "p99": 2053.457,
+        "max": 2053.457
+      },
+      "ai.release_to_question_visible_ms": {
+        "count": 1,
+        "mean": 1023.016,
+        "min": 1023.016,
+        "p50": 1023.016,
+        "p95": 1023.016,
+        "p99": 1023.016,
+        "max": 1023.016
+      },
+      "ai.release_to_upload_done_ms": {
+        "count": 1,
+        "mean": 8.951,
+        "min": 8.951,
+        "p50": 8.951,
+        "p95": 8.951,
+        "p99": 8.951,
+        "max": 8.951
+      },
+      "cap.directory_size": {
+        "count": 1,
+        "mean": 6,
+        "min": 6,
+        "p50": 6,
+        "p95": 6,
+        "p99": 6,
+        "max": 6
+      },
+      "rt.closed": 2,
+      "rt.frames_without_session": 335,
+      "rt.opened": 2,
+      "test.finished": 1,
+      "test.pass": 34
+    },
+    "warnings": [],
+    "observations": [
+      "AUDIT_AI_CLOSE held failures=1 capture=0 session=0 status=出了点问题，请再试一次",
+      "AUDIT_AI_CLOSE uploaded answers=1 failures=1 rt=0 status=回答完成 · 按 AI 键继续问，按 HOME 关闭"
+    ],
+    "expected_result": true
+  },
+  {
+    "name": "remote_locked",
+    "build": "build-audit",
+    "description": "Focused R4 boundary probe; unmodified product code included verbatim",
+    "source": "docs/audits/2026-11-04-codex-system-r4/experiments/remote_locked.c",
+    "expected_exit": 0,
+    "log": "build-audit/audit-r4/remote_locked.log",
+    "extra_compiler_inputs": [],
+    "compile_exit": 0,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/r4_remote_locked",
+      "--profile",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/simulator/profiles/metalio-plus.json",
+      "--script",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/docs/audits/2026-11-04-codex-system-r4/experiments/remote_locked.script",
+      "--budget",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/tests/integration/hal_switch.budget.json",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/test-content",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/audit-r4/remote_locked",
+      "--quiet",
+      "--no-random-outages"
+    ],
+    "exit": 0,
+    "metrics": {
+      "cap.directory_size": {
+        "count": 1,
+        "mean": 6,
+        "min": 6,
+        "p50": 6,
+        "p95": 6,
+        "p99": 6,
+        "max": 6
+      },
+      "remote.open_to_first_visible_ms": {
+        "count": 1,
+        "mean": 3794.254,
+        "min": 3794.254,
+        "p50": 3794.254,
+        "p95": 3794.254,
+        "p99": 3794.254,
+        "max": 3794.254
+      },
+      "remote.region_bytes": {
+        "count": 71,
+        "mean": 670.2535211267606,
+        "min": 58,
+        "p50": 236,
+        "p95": 2560,
+        "p99": 2560,
+        "max": 2560
+      },
+      "remote.updates": 1,
+      "rt.closed": 1,
+      "rt.opened": 1,
+      "test.finished": 1,
+      "test.pass": 21
+    },
+    "warnings": [],
+    "observations": [
+      "AUDIT_REMOTE_LOCK suspended=1 sid=0 rt=0",
+      "AUDIT_REMOTE_UNLOCK suspended=0 sid=1 updates=1 rt=1",
+      "AUDIT_REMOTE_LOCK suspended=1 sid=0 rt=0"
+    ],
+    "expected_result": true
+  },
+  {
+    "name": "comm_deadline",
+    "build": "build-audit",
+    "description": "Focused R4 boundary probe; unmodified product code included verbatim",
+    "source": "docs/audits/2026-11-04-codex-system-r4/experiments/comm_deadline.c",
+    "expected_exit": 0,
+    "log": "build-audit/audit-r4/comm_deadline.log",
+    "extra_compiler_inputs": [],
+    "compile_exit": 0,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/r4_comm_deadline",
+      "--profile",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/simulator/profiles/metalio-plus.json",
+      "--script",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/docs/audits/2026-11-04-codex-system-r4/experiments/comm_deadline.script",
+      "--budget",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/tests/integration/hal_switch.budget.json",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/test-content",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/audit-r4/comm_deadline",
+      "--quiet",
+      "--no-random-outages"
+    ],
+    "exit": 0,
+    "metrics": {
+      "cap.expired": 1,
+      "cap.timeouts": 1,
+      "test.finished": 1,
+      "test.pass": 23
+    },
+    "warnings": [],
+    "observations": [
+      "AUDIT_COMM call.answer replies=1 rc=done elapsed_ms=20039.963 state=1 detail=",
+      "AUDIT_COMM call.hangup replies=1 rc=done elapsed_ms=20040.115 state=0 detail=",
+      "AUDIT_COMM expired replies=1 elapsed_ms=25000.086 executed=0 detail=timed out before it started"
+    ],
+    "expected_result": true
+  },
+  {
+    "name": "ai_close",
+    "build": "build-audit-asan",
+    "description": "Same focused boundary probe under ASan/UBSan; product code unchanged",
+    "source": "docs/audits/2026-11-04-codex-system-r4/experiments/ai_close.c",
+    "expected_exit": 0,
+    "log": "build-audit-asan/audit-r4/ai_close.log",
+    "extra_compiler_inputs": [],
+    "compile_exit": 0,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit-asan/r4_ai_close",
+      "--profile",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/simulator/profiles/metalio-plus.json",
+      "--script",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/docs/audits/2026-11-04-codex-system-r4/experiments/ai_close.script",
+      "--budget",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/tests/integration/hal_switch.budget.json",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit-asan/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit-asan/test-content",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit-asan/audit-r4/ai_close",
+      "--quiet",
+      "--no-random-outages"
+    ],
+    "exit": 0,
+    "metrics": {
+      "ai.answers": 1,
+      "ai.capture_cancelled": 1,
+      "ai.failures": 1,
+      "ai.press_to_listening_visible_ms": {
+        "count": 2,
+        "mean": 574.925,
+        "min": 523.394,
+        "p50": 523.394,
+        "p95": 626.456,
+        "p99": 626.456,
+        "max": 626.456
+      },
+      "ai.press_to_tone_heard_ms": {
+        "count": 2,
+        "mean": 31.072,
+        "min": 31.065,
+        "p50": 31.065,
+        "p95": 31.079,
+        "p99": 31.079,
+        "max": 31.079
+      },
+      "ai.presses": 2,
+      "ai.release_to_done_visible_ms": {
+        "count": 1,
+        "mean": 12793.534,
+        "min": 12793.534,
+        "p50": 12793.534,
+        "p95": 12793.534,
+        "p99": 12793.534,
+        "max": 12793.534
+      },
+      "ai.release_to_first_text_visible_ms": {
+        "count": 1,
+        "mean": 2053.457,
+        "min": 2053.457,
+        "p50": 2053.457,
+        "p95": 2053.457,
+        "p99": 2053.457,
+        "max": 2053.457
+      },
+      "ai.release_to_question_visible_ms": {
+        "count": 1,
+        "mean": 1023.016,
+        "min": 1023.016,
+        "p50": 1023.016,
+        "p95": 1023.016,
+        "p99": 1023.016,
+        "max": 1023.016
+      },
+      "ai.release_to_upload_done_ms": {
+        "count": 1,
+        "mean": 8.951,
+        "min": 8.951,
+        "p50": 8.951,
+        "p95": 8.951,
+        "p99": 8.951,
+        "max": 8.951
+      },
+      "cap.directory_size": {
+        "count": 1,
+        "mean": 6,
+        "min": 6,
+        "p50": 6,
+        "p95": 6,
+        "p99": 6,
+        "max": 6
+      },
+      "rt.closed": 2,
+      "rt.frames_without_session": 335,
+      "rt.opened": 2,
+      "test.finished": 1,
+      "test.pass": 34
+    },
+    "warnings": [],
+    "observations": [
+      "AUDIT_AI_CLOSE held failures=1 capture=0 session=0 status=出了点问题，请再试一次",
+      "AUDIT_AI_CLOSE uploaded answers=1 failures=1 rt=0 status=回答完成 · 按 AI 键继续问，按 HOME 关闭"
+    ],
+    "expected_result": true
+  },
+  {
+    "name": "remote_locked",
+    "build": "build-audit-asan",
+    "description": "Same focused boundary probe under ASan/UBSan; product code unchanged",
+    "source": "docs/audits/2026-11-04-codex-system-r4/experiments/remote_locked.c",
+    "expected_exit": 0,
+    "log": "build-audit-asan/audit-r4/remote_locked.log",
+    "extra_compiler_inputs": [],
+    "compile_exit": 0,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit-asan/r4_remote_locked",
+      "--profile",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/simulator/profiles/metalio-plus.json",
+      "--script",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/docs/audits/2026-11-04-codex-system-r4/experiments/remote_locked.script",
+      "--budget",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/tests/integration/hal_switch.budget.json",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit-asan/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit-asan/test-content",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit-asan/audit-r4/remote_locked",
+      "--quiet",
+      "--no-random-outages"
+    ],
+    "exit": 0,
+    "metrics": {
+      "cap.directory_size": {
+        "count": 1,
+        "mean": 6,
+        "min": 6,
+        "p50": 6,
+        "p95": 6,
+        "p99": 6,
+        "max": 6
+      },
+      "remote.open_to_first_visible_ms": {
+        "count": 1,
+        "mean": 3794.254,
+        "min": 3794.254,
+        "p50": 3794.254,
+        "p95": 3794.254,
+        "p99": 3794.254,
+        "max": 3794.254
+      },
+      "remote.region_bytes": {
+        "count": 71,
+        "mean": 670.2535211267606,
+        "min": 58,
+        "p50": 236,
+        "p95": 2560,
+        "p99": 2560,
+        "max": 2560
+      },
+      "remote.updates": 1,
+      "rt.closed": 1,
+      "rt.opened": 1,
+      "test.finished": 1,
+      "test.pass": 21
+    },
+    "warnings": [],
+    "observations": [
+      "AUDIT_REMOTE_LOCK suspended=1 sid=0 rt=0",
+      "AUDIT_REMOTE_UNLOCK suspended=0 sid=1 updates=1 rt=1",
+      "AUDIT_REMOTE_LOCK suspended=1 sid=0 rt=0"
+    ],
+    "expected_result": true
+  },
+  {
+    "name": "comm_deadline",
+    "build": "build-audit-asan",
+    "description": "Same focused boundary probe under ASan/UBSan; product code unchanged",
+    "source": "docs/audits/2026-11-04-codex-system-r4/experiments/comm_deadline.c",
+    "expected_exit": 0,
+    "log": "build-audit-asan/audit-r4/comm_deadline.log",
+    "extra_compiler_inputs": [],
+    "compile_exit": 0,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit-asan/r4_comm_deadline",
+      "--profile",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/simulator/profiles/metalio-plus.json",
+      "--script",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/docs/audits/2026-11-04-codex-system-r4/experiments/comm_deadline.script",
+      "--budget",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/tests/integration/hal_switch.budget.json",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit-asan/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit-asan/test-content",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit-asan/audit-r4/comm_deadline",
+      "--quiet",
+      "--no-random-outages"
+    ],
+    "exit": 0,
+    "metrics": {
+      "cap.expired": 1,
+      "cap.timeouts": 1,
+      "test.finished": 1,
+      "test.pass": 23
+    },
+    "warnings": [],
+    "observations": [
+      "AUDIT_COMM call.answer replies=1 rc=done elapsed_ms=20039.963 state=1 detail=",
+      "AUDIT_COMM call.hangup replies=1 rc=done elapsed_ms=20040.115 state=0 detail=",
+      "AUDIT_COMM expired replies=1 elapsed_ms=25000.086 executed=0 detail=timed out before it started"
+    ],
+    "expected_result": true
+  }
+]

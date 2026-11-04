@@ -1,0 +1,174 @@
+{
+  "commit": "99495a8da3903077117f3a181994e3824177d825",
+  "baseline": "9cf64adc9ea0a7ce54d1e8f6e05603928e7f17a5",
+  "date": "2026-11-04",
+  "evidence_type": "【复现】",
+  "runs": [
+    {
+      "build": "build-audit",
+      "configure_command": [
+        "cmake",
+        "-S",
+        ".",
+        "-B",
+        "build-audit",
+        "-DINK_WERROR=ON",
+        "-DINK_CJK_FONT=/Users/bytedance/Documents/Workspace/ink/build-deps/fonts/NotoSansCJK-Regular.ttc",
+        "-DINK_CJK_FACE=2",
+        "-DPython3_EXECUTABLE=/Users/bytedance/Documents/Workspace/ink/build-deps/pyenv/bin/python",
+        "-DFETCHCONTENT_SOURCE_DIR_LVGL=/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src",
+        "-DFETCHCONTENT_SOURCE_DIR_IMGUI=/Users/bytedance/Documents/Workspace/ink/build/_deps/imgui-src",
+        "-DFETCHCONTENT_SOURCE_DIR_SDL2=/Users/bytedance/Documents/Workspace/ink/build/_deps/sdl2-src",
+        "-DFETCHCONTENT_FULLY_DISCONNECTED=ON"
+      ],
+      "configure_exit": 0,
+      "build_command": [
+        "cmake",
+        "--build",
+        "build-audit",
+        "-j",
+        "8"
+      ],
+      "build_exit": 0,
+      "ctest_command": [
+        "/Users/bytedance/Documents/Workspace/ink/build-deps/pyenv/bin/ctest",
+        "--test-dir",
+        "build-audit",
+        "-j",
+        "8",
+        "--timeout",
+        "300",
+        "--output-on-failure"
+      ],
+      "ctest_exit": 0,
+      "passed": 57,
+      "total": 57,
+      "seconds": 28.39,
+      "focused_tests": [
+        {
+          "name": "ai_race",
+          "metrics": {
+            "test.finished": 1,
+            "test.pass": 10
+          },
+          "warnings": [],
+          "budget_violations": 0
+        },
+        {
+          "name": "lifecycle",
+          "metrics": {
+            "test.finished": 1,
+            "test.pass": 114
+          },
+          "warnings": [],
+          "budget_violations": 0
+        },
+        {
+          "name": "net_auto",
+          "metrics": {
+            "test.finished": 1,
+            "test.pass": 26
+          },
+          "warnings": [],
+          "budget_violations": 0
+        },
+        {
+          "name": "hal_switch",
+          "metrics": {
+            "test.finished": 1,
+            "test.pass": 3
+          },
+          "warnings": [],
+          "budget_violations": 0
+        }
+      ]
+    },
+    {
+      "build": "build-audit-asan",
+      "configure_command": [
+        "cmake",
+        "-S",
+        ".",
+        "-B",
+        "build-audit-asan",
+        "-DINK_WERROR=ON",
+        "-DINK_CJK_FONT=/Users/bytedance/Documents/Workspace/ink/build-deps/fonts/NotoSansCJK-Regular.ttc",
+        "-DINK_CJK_FACE=2",
+        "-DPython3_EXECUTABLE=/Users/bytedance/Documents/Workspace/ink/build-deps/pyenv/bin/python",
+        "-DFETCHCONTENT_SOURCE_DIR_LVGL=/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src",
+        "-DFETCHCONTENT_SOURCE_DIR_IMGUI=/Users/bytedance/Documents/Workspace/ink/build/_deps/imgui-src",
+        "-DFETCHCONTENT_SOURCE_DIR_SDL2=/Users/bytedance/Documents/Workspace/ink/build/_deps/sdl2-src",
+        "-DFETCHCONTENT_FULLY_DISCONNECTED=ON",
+        "-DINK_SANITIZE=ON",
+        "-DINK_GUI=OFF"
+      ],
+      "configure_exit": 0,
+      "build_command": [
+        "cmake",
+        "--build",
+        "build-audit-asan",
+        "-j",
+        "8"
+      ],
+      "build_exit": 0,
+      "ctest_command": [
+        "/Users/bytedance/Documents/Workspace/ink/build-deps/pyenv/bin/ctest",
+        "--test-dir",
+        "build-audit-asan",
+        "-j",
+        "8",
+        "--timeout",
+        "300",
+        "--output-on-failure"
+      ],
+      "ctest_exit": 0,
+      "passed": 56,
+      "total": 56,
+      "seconds": 13.92,
+      "focused_tests": [
+        {
+          "name": "ai_race",
+          "metrics": {
+            "test.finished": 1,
+            "test.pass": 10
+          },
+          "warnings": [],
+          "budget_violations": 0
+        },
+        {
+          "name": "lifecycle",
+          "metrics": {
+            "test.finished": 1,
+            "test.pass": 114
+          },
+          "warnings": [],
+          "budget_violations": 0
+        },
+        {
+          "name": "net_auto",
+          "metrics": {
+            "test.finished": 1,
+            "test.pass": 26
+          },
+          "warnings": [],
+          "budget_violations": 0
+        },
+        {
+          "name": "hal_switch",
+          "metrics": {
+            "test.finished": 1,
+            "test.pass": 3
+          },
+          "warnings": [],
+          "budget_violations": 0
+        }
+      ]
+    }
+  ],
+  "image": {
+    "source": "build-audit/test-out/remote_reconnect-metalio-plus/frames/00011_023127.6ms_GL16.png",
+    "copy": "remote-offline-visible.png",
+    "sha256": "d379571d763bff0b5b5785c971b585e01d9370dfc2e357d5a3cab549c2b0cb4d",
+    "observation": "人工检查：顶部重连文字可见，底部 AI 回答面板同时打开。"
+  }
+}

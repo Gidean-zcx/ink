@@ -1,0 +1,26 @@
+[
+  {
+    "id": "AUD13-001",
+    "verdict": "已修复",
+    "evidence": "【代码核查】hal_net_sim.c:332-343、net_service.c:55-58、66-112；【复现】integration-net-auto 26 项通过；mut_cell_notify exit 1、test.fail=1。",
+    "note": "蜂窝注册完成会唤醒自动选网；去掉未选中蜂窝网络的通知后，同一回归在 452.010 s 无法切到 LTE。"
+  },
+  {
+    "id": "AUD13-002",
+    "verdict": "已修复",
+    "evidence": "【代码核查】ai_service.c:201-205、239-245、589-607；【复现】integration-ai-race 10 项通过；分别撤回停采集和松键保护的两个负对照均 exit 1、test.fail=1。",
+    "note": "长按跨过断线检测时停止采集、关闭会话；松键保留失败提示，恢复网络后的下一轮正常。原跨轮会话关闭检查仍通过。"
+  },
+  {
+    "id": "AUD13-003",
+    "verdict": "已修复",
+    "evidence": "【代码核查】remote.c:139-175；【复现】integration-lifecycle 114 项通过；mut_remote_restore exit 1，前画布像素错误地变为 0（应为 255）。",
+    "note": "恢复反显仅操作前画布；在部分 B 已解码、LAST 尚未收到时不再提前展示 B。"
+  },
+  {
+    "id": "AUD13-004",
+    "verdict": "已修复",
+    "evidence": "【代码核查】remote.c:494-503、ai_service.c:103-115；【复现】lifecycle 的提示坐标断言通过；mut_remote_note exit 1；人工检查 remote_reconnect 的 23.1276 s 实际帧。",
+    "note": "顶部断线提示在 AI 回答面板打开时可见。几何断言能检出旧位置，补充实际绘制帧确认。"
+  }
+]

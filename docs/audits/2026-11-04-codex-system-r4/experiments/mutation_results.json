@@ -1,0 +1,499 @@
+[
+  {
+    "name": "mut_cell_notify",
+    "build": "build-audit",
+    "description": "AUD13-001: remove only the notification for an unselected cellular network",
+    "source": "tests/integration/net_auto.c",
+    "expected_exit": 1,
+    "log": "build-audit/audit-r4/mut_cell_notify.log",
+    "extra_compiler_inputs": [
+      {
+        "source": "ports/sim/hal/hal_net_sim.c",
+        "sha256": "1c423553b02eb30b65fae4ef4e41d3f5f4ff7f75b78d2eb61633773289a1b153"
+      }
+    ],
+    "compile_exit": 0,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/r4_mut_cell_notify",
+      "--profile",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/simulator/profiles/metalio-plus.json",
+      "--script",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/tests/integration/net_auto.script",
+      "--budget",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/tests/integration/net_auto.budget.json",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/test-content",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/audit-r4/mut_cell_notify",
+      "--quiet",
+      "--no-random-outages"
+    ],
+    "exit": 1,
+    "metrics": {
+      "rt.closed": 1,
+      "rt.opened": 1,
+      "test.fail": 1,
+      "test.finished": 1,
+      "test.pass": 25
+    },
+    "warnings": [
+      "452.010s CHECK FAILED (/Users/bytedance/Documents/Workspace/ink-audit-13/tests/integration/net_auto.c:142) when the card has registered, auto uses it: no other change is needed to notice"
+    ],
+    "observations": [],
+    "expected_result": true
+  },
+  {
+    "name": "mut_ai_capture",
+    "build": "build-audit",
+    "description": "AUD13-002: leave capture running when the turn ends",
+    "source": "tests/integration/ai_race.c",
+    "expected_exit": 1,
+    "log": "build-audit/audit-r4/mut_ai_capture.log",
+    "test_compiler_input_sha256": "72ac349ea02489d13bd082f2f0ea91285f50168e5e1a65255e1080f6d038a225",
+    "extra_compiler_inputs": [],
+    "compile_exit": 0,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/r4_mut_ai_capture",
+      "--profile",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/simulator/profiles/metalio-plus.json",
+      "--script",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/tests/integration/ai_race.script",
+      "--budget",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/tests/integration/ai_race.budget.json",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/test-content",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/audit-r4/mut_ai_capture",
+      "--quiet",
+      "--no-random-outages"
+    ],
+    "exit": 1,
+    "metrics": {
+      "ai.answers": 3,
+      "ai.failures": 1,
+      "ai.press_to_listening_visible_ms": {
+        "count": 4,
+        "mean": 528.759,
+        "min": 473.097,
+        "p50": 504.848,
+        "p95": 626.456,
+        "p99": 626.456,
+        "max": 626.456
+      },
+      "ai.press_to_tone_heard_ms": {
+        "count": 4,
+        "mean": 48.436,
+        "min": 31.065,
+        "p50": 31.102,
+        "p95": 72.763,
+        "p99": 72.763,
+        "max": 72.763
+      },
+      "ai.presses": 4,
+      "ai.release_to_done_visible_ms": {
+        "count": 2,
+        "mean": 12888.577,
+        "min": 12833.553,
+        "p50": 12833.553,
+        "p95": 12943.601,
+        "p99": 12943.601,
+        "max": 12943.601
+      },
+      "ai.release_to_error_visible_ms": {
+        "count": 1,
+        "mean": 22425.631,
+        "min": 22425.631,
+        "p50": 22425.631,
+        "p95": 22425.631,
+        "p99": 22425.631,
+        "max": 22425.631
+      },
+      "ai.release_to_first_audio_heard_ms": {
+        "count": 3,
+        "mean": 2795.7843333333335,
+        "min": 2418.8,
+        "p50": 2462.346,
+        "p95": 3506.207,
+        "p99": 3506.207,
+        "max": 3506.207
+      },
+      "ai.release_to_first_text_visible_ms": {
+        "count": 3,
+        "mean": 2462.202,
+        "min": 2089.207,
+        "p50": 2129.34,
+        "p95": 3168.059,
+        "p99": 3168.059,
+        "max": 3168.059
+      },
+      "ai.release_to_question_visible_ms": {
+        "count": 3,
+        "mean": 1326.1486666666667,
+        "min": 1023.035,
+        "p50": 1023.083,
+        "p95": 1932.328,
+        "p99": 1932.328,
+        "max": 1932.328
+      },
+      "ai.release_to_upload_done_ms": {
+        "count": 3,
+        "mean": 333.4116666666667,
+        "min": 0.352,
+        "p50": 8.951,
+        "p95": 990.932,
+        "p99": 990.932,
+        "max": 990.932
+      },
+      "cap.directory_size": {
+        "count": 2,
+        "mean": 6,
+        "min": 6,
+        "p50": 6,
+        "p95": 6,
+        "p99": 6,
+        "max": 6
+      },
+      "rt.closed": 4,
+      "rt.opened": 4,
+      "test.fail": 1,
+      "test.finished": 1,
+      "test.pass": 9
+    },
+    "warnings": [
+      "41.120s CHECK FAILED (/Users/bytedance/Documents/Workspace/ink-audit-13/tests/integration/ai_race.c:74) the microphone goes off, the session closes (1, 0)"
+    ],
+    "observations": [],
+    "expected_result": true
+  },
+  {
+    "name": "mut_ai_release",
+    "build": "build-audit",
+    "description": "AUD13-002: allow key release to overwrite a finished turn's status",
+    "source": "tests/integration/ai_race.c",
+    "expected_exit": 1,
+    "log": "build-audit/audit-r4/mut_ai_release.log",
+    "test_compiler_input_sha256": "7f15dfac07e7a0fd517402021f7104d58e64bff81fe19e871f7192e401a914ae",
+    "extra_compiler_inputs": [],
+    "compile_exit": 0,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/r4_mut_ai_release",
+      "--profile",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/simulator/profiles/metalio-plus.json",
+      "--script",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/tests/integration/ai_race.script",
+      "--budget",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/tests/integration/ai_race.budget.json",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/test-content",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/audit-r4/mut_ai_release",
+      "--quiet",
+      "--no-random-outages"
+    ],
+    "exit": 1,
+    "metrics": {
+      "ai.answers": 3,
+      "ai.capture_cancelled": 1,
+      "ai.failures": 1,
+      "ai.press_to_listening_visible_ms": {
+        "count": 4,
+        "mean": 528.759,
+        "min": 473.097,
+        "p50": 504.848,
+        "p95": 626.456,
+        "p99": 626.456,
+        "max": 626.456
+      },
+      "ai.press_to_tone_heard_ms": {
+        "count": 4,
+        "mean": 48.436,
+        "min": 31.065,
+        "p50": 31.102,
+        "p95": 72.763,
+        "p99": 72.763,
+        "max": 72.763
+      },
+      "ai.presses": 4,
+      "ai.release_to_done_visible_ms": {
+        "count": 2,
+        "mean": 12888.577,
+        "min": 12833.553,
+        "p50": 12833.553,
+        "p95": 12943.601,
+        "p99": 12943.601,
+        "max": 12943.601
+      },
+      "ai.release_to_error_visible_ms": {
+        "count": 1,
+        "mean": 22425.621,
+        "min": 22425.621,
+        "p50": 22425.621,
+        "p95": 22425.621,
+        "p99": 22425.621,
+        "max": 22425.621
+      },
+      "ai.release_to_first_audio_heard_ms": {
+        "count": 3,
+        "mean": 2795.7843333333335,
+        "min": 2418.8,
+        "p50": 2462.346,
+        "p95": 3506.207,
+        "p99": 3506.207,
+        "max": 3506.207
+      },
+      "ai.release_to_first_text_visible_ms": {
+        "count": 3,
+        "mean": 2462.202,
+        "min": 2089.207,
+        "p50": 2129.34,
+        "p95": 3168.059,
+        "p99": 3168.059,
+        "max": 3168.059
+      },
+      "ai.release_to_question_visible_ms": {
+        "count": 3,
+        "mean": 1326.1486666666667,
+        "min": 1023.035,
+        "p50": 1023.083,
+        "p95": 1932.328,
+        "p99": 1932.328,
+        "max": 1932.328
+      },
+      "ai.release_to_upload_done_ms": {
+        "count": 3,
+        "mean": 333.4116666666667,
+        "min": 0.352,
+        "p50": 8.951,
+        "p95": 990.932,
+        "p99": 990.932,
+        "max": 990.932
+      },
+      "cap.directory_size": {
+        "count": 2,
+        "mean": 6,
+        "min": 6,
+        "p50": 6,
+        "p95": 6,
+        "p99": 6,
+        "max": 6
+      },
+      "rt.closed": 4,
+      "rt.opened": 4,
+      "test.fail": 1,
+      "test.finished": 1,
+      "test.pass": 9
+    },
+    "warnings": [
+      "41.630s CHECK FAILED (/Users/bytedance/Documents/Workspace/ink-audit-13/tests/integration/ai_race.c:79) the release does not say it is thinking (没听到，请再按 AI 键说一遍)"
+    ],
+    "observations": [],
+    "expected_result": true
+  },
+  {
+    "name": "mut_remote_restore",
+    "build": "build-audit",
+    "description": "AUD13-003: restore the feedback region from the incomplete back canvas",
+    "source": "tests/integration/lifecycle.c",
+    "expected_exit": 1,
+    "log": "build-audit/audit-r4/mut_remote_restore.log",
+    "test_compiler_input_sha256": "659e054f2342b727efedf8ba328f2e379a27a4923b41bc5664a82a387744af0e",
+    "extra_compiler_inputs": [],
+    "compile_exit": 0,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/r4_mut_remote_restore",
+      "--profile",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/simulator/profiles/metalio-plus-handsfree.json",
+      "--script",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/tests/integration/lifecycle.script",
+      "--budget",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/tests/integration/lifecycle.budget.json",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/test-content",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/audit-r4/mut_remote_restore",
+      "--quiet",
+      "--no-random-outages"
+    ],
+    "exit": 1,
+    "metrics": {
+      "cap.busy": 2,
+      "cap.directory_size": {
+        "count": 3,
+        "mean": 6,
+        "min": 6,
+        "p50": 6,
+        "p95": 6,
+        "p99": 6,
+        "max": 6
+      },
+      "cap.expired": 1,
+      "cap.late": 1,
+      "cap.replayed": 3,
+      "cap.timeouts": 2,
+      "remote.feedback_restored": 1,
+      "remote.offline_shown": 3,
+      "remote.open_to_first_visible_ms": {
+        "count": 1,
+        "mean": 3645.274,
+        "min": 3645.274,
+        "p50": 3645.274,
+        "p95": 3645.274,
+        "p99": 3645.274,
+        "max": 3645.274
+      },
+      "remote.region_bytes": {
+        "count": 494,
+        "mean": 652.1437246963562,
+        "min": 11,
+        "p50": 221,
+        "p95": 2560,
+        "p99": 2560,
+        "max": 2560
+      },
+      "remote.resynced": 3,
+      "remote.updates": 9,
+      "rt.closed": 3,
+      "rt.frames_without_session": 62,
+      "rt.opened": 3,
+      "rt.reannounced": 2,
+      "test.fail": 1,
+      "test.finished": 1,
+      "test.pass": 113
+    },
+    "warnings": [
+      "24.200s CHECK FAILED (/Users/bytedance/Documents/Workspace/ink-audit-13/tests/integration/lifecycle.c:590) the spot under a tap comes back as it was shown, nothing of B (0)"
+    ],
+    "observations": [],
+    "expected_result": true
+  },
+  {
+    "name": "mut_remote_note",
+    "build": "build-audit",
+    "description": "AUD13-004: put the note back beneath the answer sheet",
+    "source": "tests/integration/lifecycle.c",
+    "expected_exit": 1,
+    "log": "build-audit/audit-r4/mut_remote_note.log",
+    "test_compiler_input_sha256": "278d1022cd0b5396fcf9aed3eeee301bf202cfde0bc5dcbeeba4f5693f683a34",
+    "extra_compiler_inputs": [],
+    "compile_exit": 0,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/r4_mut_remote_note",
+      "--profile",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/simulator/profiles/metalio-plus-handsfree.json",
+      "--script",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/tests/integration/lifecycle.script",
+      "--budget",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/tests/integration/lifecycle.budget.json",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/test-content",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/audit-r4/mut_remote_note",
+      "--quiet",
+      "--no-random-outages"
+    ],
+    "exit": 1,
+    "metrics": {
+      "cap.busy": 2,
+      "cap.directory_size": {
+        "count": 3,
+        "mean": 6,
+        "min": 6,
+        "p50": 6,
+        "p95": 6,
+        "p99": 6,
+        "max": 6
+      },
+      "cap.expired": 1,
+      "cap.late": 1,
+      "cap.replayed": 3,
+      "cap.timeouts": 2,
+      "remote.feedback_restored": 1,
+      "remote.offline_shown": 3,
+      "remote.open_to_first_visible_ms": {
+        "count": 1,
+        "mean": 3645.274,
+        "min": 3645.274,
+        "p50": 3645.274,
+        "p95": 3645.274,
+        "p99": 3645.274,
+        "max": 3645.274
+      },
+      "remote.region_bytes": {
+        "count": 494,
+        "mean": 652.1437246963562,
+        "min": 11,
+        "p50": 221,
+        "p95": 2560,
+        "p99": 2560,
+        "max": 2560
+      },
+      "remote.resynced": 3,
+      "remote.updates": 9,
+      "rt.closed": 3,
+      "rt.frames_without_session": 62,
+      "rt.opened": 3,
+      "rt.reannounced": 2,
+      "test.fail": 1,
+      "test.finished": 1,
+      "test.pass": 113
+    },
+    "warnings": [
+      "65.040s CHECK FAILED (/Users/bytedance/Documents/Workspace/ink-audit-13/tests/integration/lifecycle.c:626) the page says so, above where the answer sheet reaches (1185 of 1216)"
+    ],
+    "observations": [],
+    "expected_result": true
+  },
+  {
+    "name": "mut_hal_switch",
+    "build": "build-audit",
+    "description": "HAL regression: overwrite the old network type before invalidating its sockets",
+    "source": "tests/integration/hal_switch.c",
+    "expected_exit": 1,
+    "log": "build-audit/audit-r4/mut_hal_switch.log",
+    "extra_compiler_inputs": [
+      {
+        "source": "ports/sim/hal/hal_net_sim.c",
+        "sha256": "c8864942ea35218fb95c813b381c76c76aa4817d15fad1740353503ff481d4ff"
+      }
+    ],
+    "compile_exit": 0,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/r4_mut_hal_switch",
+      "--profile",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/simulator/profiles/metalio-plus.json",
+      "--script",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/tests/integration/hal_switch.script",
+      "--budget",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/tests/integration/hal_switch.budget.json",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/test-content",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-13/build-audit/audit-r4/mut_hal_switch",
+      "--quiet",
+      "--no-random-outages"
+    ],
+    "exit": 1,
+    "metrics": {
+      "test.fail": 1,
+      "test.finished": 1,
+      "test.pass": 2
+    },
+    "warnings": [
+      "9.830s CHECK FAILED (/Users/bytedance/Documents/Workspace/ink-audit-13/tests/integration/hal_switch.c:42) moved to LTE, with Wi-Fi still around: it ends"
+    ],
+    "observations": [],
+    "expected_result": true
+  }
+]

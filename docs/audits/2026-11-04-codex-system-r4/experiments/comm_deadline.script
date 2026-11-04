@@ -1,0 +1,5 @@
+# Synthetic call only; no hardware or real network access.
+@0 sim external voice
+@0 sim internal voice
+@5s call-in 10086
+@80s end
