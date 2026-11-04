@@ -117,8 +117,8 @@
 | PostgreSQL + [pgvector](https://github.com/pgvector/pgvector) | PostgreSQL 许可证，2.4 万星 | 备选。多一个常驻服务、多一份备份流程；几十个家庭以内用不上 |
 | [sqlite-vec](https://github.com/asg017/sqlite-vec) | Apache-2.0，8 千星，v0.1.9（2026-03）还在 1.0 之前 | 暂不用。一家的记忆只有几千到几万条，向量取出来暴力比较就够快〔估算〕 |
 | [jieba](https://github.com/fxsjy/jieba) | MIT，最后推送 2024-08 | 中文分词后写入 FTS5；词典够用，不活跃但稳定 |
-| [restic](https://github.com/restic/restic) | BSD-2，3.7 万星 | 采用，异地备份，客户端加密，支持 S3 兼容存储 |
-| [Litestream](https://github.com/benbjohnson/litestream) | Apache-2.0，1.5 万星，v0.5.18 | 以后可选（持续复制，丢得更少）；首版设备上还有一份数据，每天一次够用 |
+| [restic](https://github.com/restic/restic) | BSD-2，3.7 万星，v0.19.1（2026-07-05） | 采用，复制数据库快照到对象存储，客户端加密，按内容去重，支持 S3 兼容存储 |
+| [Litestream](https://github.com/benbjohnson/litestream) | Apache-2.0，1.5 万星，v0.5.18（2026-11-03） | 现在不用。能几秒复制一次，但 v0.5 不支持客户端加密：配 `age` 会拒绝启动，只有存储方那边的 SSE-C、SSE-KMS；一个库一个副本，也不保证多个库同一时刻。v0.3.14 有 `age`，但项目已转向 v0.5。恢复客户端加密后可以再看（〔文档〕[配置](https://litestream.io/reference/config/)、[迁移指南](https://litestream.io/docs/migration/)） |
 | [rclone](https://github.com/rclone/rclone) | MIT，6.1 万星 | restic 接不上的存储可以经它转 |
 
 任务队列：[Huey](https://github.com/coleifer/huey)（MIT，支持 SQLite）可用；但底座设计 §5.6 的作业有阶段、幂等键、回执，这些要自己的表，所以〔建议〕直接写一个小的。
@@ -151,8 +151,10 @@
 | 海外模型 | Anthropic 的支持地区列表里没有中国内地（官方页面），也没有香港（第三方整理）；OpenAI 2024-07 起停止向中国内地和香港提供 API（报道）。所以默认候选只列国内厂商 | 〔文档〕[Anthropic Supported Regions](https://www.anthropic.com/legal/supported-regions)；〔报道〕[Medianama](https://www.medianama.com/2025/09/223-anthropic-service-policy-update-bans-ai-access-chinese-firms/)、[整理文章](https://blog.eimoon.com/p/anthropic-supported-countries-regions-2026-04/) |
 | 配网 | 乐鑫推荐 `network_provisioning` 组件（SoftAP 或蓝牙，官方配手机 App）；手机扫 `WIFI:` 二维码加入热点并弹出页面的行为，这次没有查到权威资料，要实机试 | 〔文档〕[乐鑫组件](https://components.espressif.com/components/espressif/network_provisioning/versions/1.2.4/examples/wifi_prov) |
 | 穿透 | [frp](https://github.com/fatedier/frp)，Apache-2.0，11 万星 | 〔GitHub〕 |
+| SQLite 能不能放在远程存储上跑 | 官方不建议跨网络运行：网络文件系统的锁和同步不可靠，可能损坏数据库；WAL 模式不能用在网络文件系统上。官方建议是数据库放一台机器，别的机器经它访问。对象存储官方没有专门说，它连文件锁都没有 | 〔文档〕[SQLite Over a Network](https://sqlite.org/useovernet.html)（经搜索结果和镜像读到，直接抓取被拦） |
+| 对象存储价格 | Cloudflare R2：$0.015/GB·月，A 类操作 $4.50/百万次，B 类 $0.36/百万次，不收流出费；免费额度 10 GB·月、100 万次 A 类、1000 万次 B 类（免费额度来自第三方）。阿里云 OSS 国内约 0.09 元/GB·月，流出 0.25～0.5 元/GB（第三方整理）。东京地域的价格没查到，开户时看 | 〔文档〕[R2 价格](https://developers.cloudflare.com/r2/pricing/)（经搜索结果读到）；〔报道〕[阿里云社区](https://developer.aliyun.com/article/1688156) |
 | 上海到东京的延迟 | WonderNetwork 的一对探针最近两周（约 2026-10-21 至 11-04）平均 132～293 ms，查的时候约 155 ms；同一来源东京到新加坡平均 65～74 ms；商家文章写从日本到上海 45～70 ms（未必代表普通线路）。没有权威的、分运营商和晚高峰的数据，要自己量 | 〔实测，第三方〕[WonderNetwork 上海—东京](https://wondernetwork.com/pings/Shanghai/Tokyo)、[东京—新加坡](https://wondernetwork.com/pings/Tokyo/Singapore)；〔报道〕[Varidata](https://www.varidata.com/blog/japan-servers-latency-to-various-regions-in-mainland-china/) |
-| 百炼的地域 | 北京、新加坡、法兰克福、东京、香港、弗吉尼亚六个地域；每个地域的密钥、地址、模型列表互相独立，不能混用；地域决定请求数据存在哪；东京只支持业务空间专属域名；第三方直供模型只在北京。实时语音合成的指南只列了新加坡和北京；价格页的东京部分只看到文本模型。**东京有没有实时语音没查到，要在控制台确认** | 〔文档〕[地域](https://www.alibabacloud.com/help/zh/model-studio/regions/)、[OpenAI 兼容](https://help.aliyun.com/zh/model-studio/developer-reference/compatibility-of-openai-with-dashscope)、[实时合成](https://www.alibabacloud.com/help/zh/model-studio/realtime-tts-user-guide)、[价格](https://www.alibabacloud.com/help/zh/model-studio/model-pricing) |
+| 百炼的地域 | 北京、新加坡、法兰克福、东京、香港、弗吉尼亚六个地域；每个地域的密钥、地址、模型列表互相独立，不能混用；地域决定请求数据存在哪；东京只支持业务空间专属域名；第三方直供模型只在北京。实时语音合成的指南只列了新加坡和北京，fun-asr-realtime 也列了新加坡；官方把接入地域和服务部署范围分开；价格页的东京部分只看到文本模型。**东京有没有实时语音没查到，要在控制台确认** | 〔文档〕[地域](https://www.alibabacloud.com/help/zh/model-studio/regions/)、[OpenAI 兼容](https://help.aliyun.com/zh/model-studio/developer-reference/compatibility-of-openai-with-dashscope)、[实时合成](https://www.alibabacloud.com/help/zh/model-studio/realtime-tts-user-guide)、[价格](https://www.alibabacloud.com/help/zh/model-studio/model-pricing) |
 | 豆包语音的地址 | 官方文档给的是 `wss://openspeech.bytedance.com/api/v3/sauc/bigmodel`；海外接入、BytePlus 有没有对应服务这次没查到 | 〔文档〕[火山引擎](https://www.volcengine.com/docs/6561/1354869) |
 | DeepSeek 的数据 | 隐私政策（2026-02-10）：境内运营收集和产生的个人信息存在中国境内；输入输出可能经加密和去标识后用于训练，关闭入口写的是账号设置里的“数据用于优化体验”，有没有覆盖 API 没写；不主动收集 14 岁以下儿童的个人信息。开放平台条款（2026-04-22）：没有列受限地区，没写 API 内容是否用于训练，也没写保留多久。**api.deepseek.com 实际在哪处理、从海外连有多慢，没查到** | 〔文档〕[隐私政策](https://cdn.deepseek.com/policies/zh-CN/deepseek-privacy-policy.html)、[开放平台条款](https://cdn.deepseek.com/policies/zh-CN/deepseek-open-platform-terms-of-service.html) |
 
@@ -253,4 +255,4 @@ DeepSeek 的忙时是工作日白天，一家人晚上和周末用得多，实�
 
 ## 修订记录
 
-- 2026-11-04：初稿。按用户要求去掉服务器价格。同日按 Codex 设计审查补充：费用的敏感性、模型语义差异、Caddy 的 IP 证书、SQLite 快照。用户选了日本服务器和混搭厂商后，补充：上海到东京的延迟、百炼的地域和国际价格、豆包语音的地址、DeepSeek 的数据条款、按用户方向的费用。
+- 2026-11-04：初稿。按用户要求去掉服务器价格。同日按 Codex 设计审查补充：费用的敏感性、模型语义差异、Caddy 的 IP 证书、SQLite 快照。用户选了日本服务器和混搭厂商后，补充：上海到东京的延迟、百炼的地域和国际价格、豆包语音的地址、DeepSeek 的数据条款、按用户方向的费用。用户要求服务器只是运行时后，补充：Litestream 的加密现状、SQLite 跨网络、对象存储价格。

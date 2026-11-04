@@ -227,7 +227,7 @@
 ```
 
 - 回答 `{"token":17}`（卡片排进去了）或错误。设备回到“待确认”的表，满了回错误。`parent:true` 时要成人 PIN（系统服务 §7 第 6 条）。
-- 带 `_meta.member`、`_meta.epoch`（§3.3）。
+- 带 `_meta.member`、`_meta.epoch`（§3.3）。`token` 要跨重启不复用，绑定成员和 `digest`（现在的计数器只在内存里）。
 - 用户操作后发 `device/event` 的 `confirm.result`，带 `token`、`decision`。`digest` 原样带回。
 - 设备的 `ink_hub_on_request` 要加 `confirm/` 前缀。
 
@@ -269,6 +269,7 @@
 - `upload` 是数字，只在这条连接上有效。设备最多领先 ack 两段。
 - 断线后 `blob/put.begin` 同样的 `sha256` 回答已落盘的 `offset`，接着传。重复或越界的块丢弃。
 - 超过家庭配额回错误。没传完的 24 小时后清掉。
+- `blob/put.end` 的回答只说明中枢收到了。文件写进对象存储才算备份完成（[概要设计 §4.5](hub-architecture.md)）。设备要删本地原件之前，先 `blob/status {"id":"sha256:…"}` → `{"durable":true}`。
 
 ### 3.9 同步
 
@@ -287,24 +288,25 @@
 
 回答 `{"acked_ver":126}`（中枢已落盘），设备 `ink_db_ack(126)`。同一批重发不重复写入（去重键 `dataset + id + ver`）。旧 `dataset` 的推送被拒绝。单条消息 ≤ 32 KiB，放不下的分批。`body` 是 JSON 集合就直接嵌，二进制集合 base64。`from_ver` 接不上时中枢回错误 `sync_gap`。
 
-**`sync/status`（设备 → 中枢）**：`{"collection","member","dataset","hub_instance","last_ver","history_gap","complete","from_snapshot"?}` → `{"acked_ver","action":"continue"|"manifest"|"restore","session"?}`。设备开机对账，或换机后知道从哪继续。`history_gap` 是墓碑被挤掉（每集合最多 256 条）。
+**`sync/status`（设备 → 中枢）**：`{"collection","member","dataset","hub_instance","last_ver","history_gap","complete","from_snapshot"?}` → `{"acked_ver","action":"continue"|"manifest"|"snapshot"|"wait","session"?}`。设备开机对账，或换机后知道从哪继续。`history_gap` 是墓碑被挤掉（每集合最多 256 条）。
 
-| 设备报上来的 | `action` |
+| 设备报上来的（从上往下，审查 HUB3-002） | `action` |
 | --- | --- |
+| `complete` 为假 | `wait` |
 | `dataset` 认识，`hub_instance` 一样，没有 `history_gap` | `continue` |
 | `dataset` 认识，`hub_instance` 不一样或有 `history_gap` | `manifest` |
-| 不认识，`from_snapshot` 是中枢给这个“设备 × 集合 × 成员”的快照 | `manifest`，提交后它成为当前的，旧的被拒绝 |
-| 不认识，`hub_instance` 不为空也不是当前的（中枢恢复时忘了它） | `manifest` |
-| 不认识，`hub_instance` 为空，中枢这边没有数据 | `continue`，从 0 开始 |
-| 不认识，其他情况，中枢这边有数据 | `restore`。**不动中枢的数据**，由用户看预览后决定 |
-| `complete` 为假 | `restore` |
+| 不认识，`from_snapshot` 是中枢给这个“设备 × 集合 × 成员”最新的快照 | `manifest`，提交后它成为当前的，旧的被拒绝 |
+| 不认识，中枢这边没有数据 | `continue`，从 0 开始 |
+| 不认识，其他情况 | `wait`。**不动中枢的数据** |
+
+`wait` 时设备照常本地用，这个数据集先不同步，过一会再问。用户看预览后决定，下一次 `sync/status` 回 `manifest`（用设备的）或 `snapshot`（用中枢的，然后走 `sync/snapshot`）。旧的 `hub_instance` 只说明发生过恢复或搬家，不能当作可以按缺项删除的证明。
 
 **全量对账会话**（审查 HUB2-005）：`action:"manifest"` 时：
 
-1. 设备在锁内取一致清单和水位 `V`（已落盘的版本），作为文件上传（`blob/put`，每行 `id`、`ver`、`hash`）。
+1. 设备取已落盘版本 `V` 对应的一致清单（内存里接受了、还没落盘的不算），作为文件上传（`blob/put`，每行 `id`、`ver`、`hash`）。
 2. `sync/manifest {"session","dataset","v":V,"count","blob","complete":true}`。
 3. `sync/need {"session","cursor"?}` → `{"need":[id,…],"nextCursor"?}`：分页取要补的记录编号，一页不超过 100 个（128 词法单元的限制）。
-4. 设备用 `sync/push {"session",…}` 补这些记录。这些记录暂存，不影响现有副本。这条记录如果已经又改了，就发当前版本（比 `V` 新）。对账期间这个数据集不发增量。
+4. 设备用 `sync/push {"session",…}` 补这些记录。这些记录暂存，不影响现有副本。这条记录如果已经又改了，就发当前版本（比 `V` 新），已经删了就发墓碑。对账期间这个数据集不发增量。
 5. `sync/commit {"session","v":V}` → `{"acked_ver":V}`。中枢在一个事务里应用：清单里没有的移到历史（可找回），不一致的以设备为准。重发同一个提交返回同样的结果。
 6. 设备 `ink_db_ack(V)`。`V` 之后的改动接着增量同步，不会被吞。中途断了，整个会话作废重来。
 
@@ -447,4 +449,4 @@ JSON-RPC `error.code`：
 
 - v0.1（2026-11-04）：初稿，对照提交 `9b3c24a` 的实现。同日补听写 `asr.stream`（§3.11）。
 - v0.2（2026-11-04）：按 Codex 设计审查修改，并对照系统服务分支 `a81c1b8`：现状补 45 秒、2048 字节、`ai.ask` 文字被忽略、`rt.open` 不等回答；配对改成两阶段，认领网址由设备拼；成员代次；`caps/list` 按词法单元切页；事件统一成 `device/event` 并加序号；确认改成单独方法并绑定记录；块传输按段拉取，上传编号改成数字；同步加数据代次和全量对账；听写的结束条件分开；新增 §3.12～§3.14。
-- v0.3（2026-11-04）：按 Codex 第二轮复核修改：电脑认领要核对码，待生效令牌 7 天和 `pending_token_expired`；`hub_instance`、`dataset` 随机编号，`sync/status` 的判断表，全量对账会话；`actions` 空数组当作不知道；`confirm.status`；`_meta.epoch` 是交付时的代次；`budget_ms`（§3.15）。
+- v0.3（2026-11-04）：按 Codex 第二轮复核修改：电脑认领要核对码，待生效令牌 7 天和 `pending_token_expired`；`hub_instance`、`dataset` 随机编号，`sync/status` 的判断表，全量对账会话；`actions` 空数组当作不知道；`confirm.status`；`_meta.epoch` 是交付时的代次；`budget_ms`（§3.15）。同日按用户的要求（服务器只是运行时，D-98）加 `blob/status`；按 Codex 第三轮改 `sync/status` 的判断表（`wait`、`snapshot`）。

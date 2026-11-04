@@ -18,6 +18,7 @@
 | 2026-11-04 第十三轮（系统层，小范围复核） | `claude/system-layer` 99495a8（第十二轮处理之后，只看 `9cf64ad..99495a8`） | [2026-11-04-codex-system-r4/TASK.md](2026-11-04-codex-system-r4/TASK.md) | [report.md](2026-11-04-codex-system-r4/report.md) | **没有新问题**；AUD13-001～004 已修复；可以合入 main |
 | 2026-11-04 家庭中枢设计审查（Codex，gpt-6-astra，推理 max） | `claude/hub-design-8fd433` 6d10d95（设计 v0.1，含语音输入） | [2026-11-04-codex-hub-design/TASK.md](2026-11-04-codex-hub-design/TASK.md) | [report.md](2026-11-04-codex-hub-design/report.md)、[findings.json](2026-11-04-codex-hub-design/findings.json)、[experiments/](2026-11-04-codex-hub-design/experiments/README.md) | 严重 3、高 12、中 9、低 1；逐条核实都成立，设计改到 v0.2，处理见下 |
 | 2026-11-04 家庭中枢设计复核（同上，第二轮） | `claude/hub-design-8fd433` a740294（设计 v0.2） | [2026-11-04-codex-hub-design-r2/TASK.md](2026-11-04-codex-hub-design-r2/TASK.md) | [report.md](2026-11-04-codex-hub-design-r2/report.md)、[verification.json](2026-11-04-codex-hub-design-r2/verification.json)、[findings.json](2026-11-04-codex-hub-design-r2/findings.json)、[experiments/](2026-11-04-codex-hub-design-r2/experiments/README.md) | 原 25 条：已解决 15、部分 9、改出新问题 1；新问题严重 3、高 7。都成立，设计改到 v0.3，处理见下 |
+| 2026-11-04 家庭中枢设计复核（第三轮，小范围） | `claude/hub-design-8fd433` 1b7635a（设计 v0.4） | [2026-11-04-codex-hub-design-r3/TASK.md](2026-11-04-codex-hub-design-r3/TASK.md) | [report.md](2026-11-04-codex-hub-design-r3/report.md)、[verification.json](2026-11-04-codex-hub-design-r3/verification.json)、[findings.json](2026-11-04-codex-hub-design-r3/findings.json)、[experiments/](2026-11-04-codex-hub-design-r3/experiments/README.md) | 第二轮 10 条：已解决 7、部分 2、改出新问题 1；新问题严重 1、高 2。都成立，设计改到 v0.5，处理见下 |
 
 此前的三次独立评审都由助手发起的子代理完成。问题与处理分别记在：
 
@@ -25,6 +26,20 @@
 - [刷新算法集成报告](../research/eink-refresh-integration.md)。
 
 审计报告回来后，逐条核实，再决定修复、记录或不处理，结果写回本表和相关文档。
+
+## 2026-11-04 家庭中枢设计复核（第三轮）：处理
+
+对象是设计 v0.4。Codex 的结论：可以作为第 1 步本机、合成数据的骨架开发依据，还不能通过同步恢复和 AI 自动浏览的最终验收。助手重跑了 `state_checks.py`，前两条能复现；第三条是推理，道理成立，**都接受**。处理都在[概要设计 v0.5](../hub/hub-architecture.md)和[设备协议](../hub/device-protocol.md)。第三轮审的时候用户还没有要求“服务器只是运行时”（D-98），这部分它没看过。
+
+| 编号 | 级别 | 问题 | 处理 | 位置 |
+| --- | --- | --- | --- | --- |
+| HUB3-001 | 严重 | 异地日志的旧前缀链是对的，恢复程序发现不了末尾没传上去 | 写成功才告诉用户“已完成”，只有写上去的才承诺；每次恢复都由成人核对一页，显示日志到哪、最后联系时间和当前名单，确认才开放 | 概要 §4.5 |
+| HUB3-002 | 高 | 旧 `hub_instance` 被当作设备可以覆盖中枢的证明，搬家后设备回旧备份会误判 | 不认识的数据集一律先看预览，`complete` 为假放第一行；`sync/status` 改成 `continue`、`manifest`、`snapshot`、`wait`；D-98 之后快照最多旧 5 分钟，走预览的情况很少 | 概要 §5.8；协议 §3.9 |
+| HUB3-003 | 高 | 没有登录状态也可能带授权（网址本身带权限），匿名点击的例外不闭合 | 去掉例外：AI 能读和翻页，点击、填写和提交一律要确认；读公开网页用 `web.fetch`，网址不能由模型自己拼。AI 仍能发起，由人确认，不算砍功能 | 概要 §3.3、§5.6、§5.7 |
+
+顺手看到的也一起改了：儿童首字预算 1.57 秒，原写 1.6 秒，改成 1.5 秒；量第一个能显示的回答 token；每轮多的时间改成 0.4～0.7 秒；第 0 步用合成语音帧重放，只用来筛线路；只合成来得及发完的句子；确认的 `token` 跨重启不复用；清单要对应已落盘版本；DeepSeek 忙闲时按北京时间和法定节假日；百炼的接入地域和部署范围分开。
+
+助手接着自查新方案（D-98），补了：同时只能有一台（旧服务器活过来时停止服务）；恢复时检查还没确认的文件；最后几分钟轮换过令牌的设备退回旧令牌。
 
 ## 2026-11-04 家庭中枢设计复核（第二轮）：处理
 
