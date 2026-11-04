@@ -25,7 +25,7 @@ static void show_dots(void) {
     memset(s, '*', P.n);
     s[P.n] = 0;
     if (P.dots) {
-        lv_label_set_text(P.dots, P.n ? s : "请输入 PIN");
+        lv_label_set_text(P.dots, P.n ? s : "请输入密码");
         ink_ui_hint_obj(P.dots, INK_REFRESH_FAST);
     }
 }

@@ -612,7 +612,7 @@ static void afe_transition(void) {
 
 /* System state: what plays (published on change only), and whether the device listens (hands-free, step 6). */
 static const ink_state_def_t ST_PLAYING = {.id = "audio.now_playing", .type = INK_ST_STR, .title = "正在播放"};
-static const ink_state_def_t ST_LISTENING = {.id = "audio.listening", .type = INK_ST_BOOL, .title = "在听（免按键）"};
+static const ink_state_def_t ST_LISTENING = {.id = "audio.listening", .type = INK_ST_BOOL, .title = "在等人叫名字"};
 static const ink_state_def_t ST_ROUTE = {.id = "audio.route", .type = INK_ST_STR, .title = "声音从哪儿出来（speaker、bt_headset）"};
 
 static void publish_playing(void) { /* audio task */
@@ -692,7 +692,7 @@ static const char *const HANDSFREE[] = {"screen_on", "always", "off", NULL};
 static const ink_setting_def_t AUDIO_SETTINGS[] = {
     {.id = "audio.volume", .title = "音量", .type = INK_SET_INT, .min = 0, .max = 100, .def = 70, .child_may_change = true,
      .apply = volume_apply, .apply_exec = INK_EXEC_DIRECT},
-    {.id = "voice.handsfree", .title = "免按键（什么时候在听）", .type = INK_SET_ENUM, .def = 0, .choices = HANDSFREE},
+    {.id = "voice.handsfree", .title = "叫名字（什么时候在等）", .type = INK_SET_ENUM, .def = 0, .choices = HANDSFREE},
     {.id = "audio.child_max", .title = "孩子的音量上限", .type = INK_SET_INT, .min = 10, .max = 100, .def = 60, .apply = child_max_apply, .apply_exec = INK_EXEC_DIRECT},
 };
 

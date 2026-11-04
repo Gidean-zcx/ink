@@ -140,7 +140,7 @@ static const ink_cap_t TEXT_CAPS[] = {
     {.id = "text.state", .title = "现在有没有文本框在输入，里面是什么（密码不给看）", .output = "{\"type\":\"object\"}", .effect = INK_FX_READ, .child_ok = true, .run = cap_state},
     {.id = "text.insert", .title = "往有焦点的文本框里写字（等于替用户打字）", .input = "{\"type\":\"object\",\"properties\":{\"text\":{\"type\":\"string\",\"maxLength\":300}},\"required\":[\"text\"]}", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = cap_insert},
     {.id = "text.submit", .title = "按回车（完成、发送、搜索）", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = cap_submit},
-    {.id = "text.voice_start", .title = "打开语音输入：说的话变成文字进文本框", .ask = "打开语音输入（声音会发给家庭中枢）", .effect = INK_FX_EXTERNAL, .child_ok = true, .run = cap_voice_start},
+    {.id = "text.voice_start", .title = "打开语音输入：说的话变成文字进文本框", .ask = "打开语音输入（声音会发给家庭服务器）", .effect = INK_FX_EXTERNAL, .child_ok = true, .run = cap_voice_start},
     {.id = "text.voice_finish", .title = "说完了，结束语音输入", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = cap_voice_finish},
     {.id = "text.voice_cancel", .title = "取消语音输入，什么都不写进去", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = cap_voice_cancel},
     {.id = "text.voice_ended", .title = "语音输入结束了", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},

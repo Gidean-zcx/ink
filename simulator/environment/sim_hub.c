@@ -604,7 +604,7 @@ void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t 
             "{\"tools\":[{\"name\":\"echo\",\"title\":\"回声（测试）\"},{\"name\":\"asr.transcribe\",\"title\":\"语音识别\"},"
             "{\"name\":\"tts.speak\",\"title\":\"朗读\"},{\"name\":\"llm.ask\",\"title\":\"问大模型\"},"
             "{\"name\":\"voice.chat\",\"title\":\"语音对话\",\"form\":\"session\"},"
-            "{\"name\":\"browser.session\",\"title\":\"浏览器（远程画面）\",\"form\":\"session\"}]}";
+            "{\"name\":\"browser.session\",\"title\":\"浏览器（网页）\",\"form\":\"session\"}]}";
         cJSON *res = cJSON_CreateObject();
         cJSON_AddStringToObject(res, "jsonrpc", "2.0");
         cJSON_AddItemToObject(res, "id", cJSON_Duplicate(id, 1));

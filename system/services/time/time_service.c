@@ -621,10 +621,10 @@ static void apply_zone(void *ctx, int64_t v) {
 
 static const ink_setting_def_t TIME_SETTINGS[] = {
     {.id = "time.zone", .title = "时区", .type = INK_SET_ENUM, .def = 0, .choices = ZONE_NAMES, .apply = apply_zone, .apply_exec = INK_EXEC_DIRECT},
-    {.id = "time.auto", .title = "自动校时（听中枢的）", .type = INK_SET_BOOL, .def = 1},
+    {.id = "time.auto", .title = "自动校时（听家庭服务器的）", .type = INK_SET_BOOL, .def = 1},
 };
 
-static const ink_state_def_t ST_SYNCED = {.id = "time.synced", .type = INK_ST_BOOL, .title = "时间和中枢对过"};
+static const ink_state_def_t ST_SYNCED = {.id = "time.synced", .type = INK_ST_BOOL, .title = "时间和家庭服务器对过"};
 static const ink_state_def_t ST_ZONE = {.id = "time.zone", .type = INK_ST_STR, .title = "时区"};
 static const ink_state_def_t ST_MINUTE = {.id = "time.minute", .type = INK_ST_INT, .title = "本地时间（当天第几分钟）"};
 static const ink_state_def_t ST_RINGING = {.id = "alarm.ringing", .type = INK_ST_INT, .title = "正在响的闹钟数"};

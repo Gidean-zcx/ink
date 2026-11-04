@@ -997,9 +997,9 @@ static void on_usb(void *ctx) { /* the platform's event task */
 
 /* ------------------------------------------------------------ start */
 
-static const ink_state_def_t ST_FREE = {.id = "storage.free", .type = INK_ST_INT, .title = "TF 卡剩余空间（字节）", .min_interval_ms = 60000};
-static const ink_state_def_t ST_CARD = {.id = "storage.card", .type = INK_ST_BOOL, .title = "TF 卡在且能用"};
-static const ink_state_def_t ST_MODE = {.id = "storage.mode", .type = INK_ST_STR, .title = "TF 卡在哪（normal 系统用，usb 借给电脑）"};
+static const ink_state_def_t ST_FREE = {.id = "storage.free", .type = INK_ST_INT, .title = "存储卡剩余空间（字节）", .min_interval_ms = 60000};
+static const ink_state_def_t ST_CARD = {.id = "storage.card", .type = INK_ST_BOOL, .title = "存储卡在且能用"};
+static const ink_state_def_t ST_MODE = {.id = "storage.mode", .type = INK_ST_STR, .title = "存储卡在哪（normal 系统用，usb 借给电脑）"};
 static const ink_state_def_t ST_USB = {.id = "usb.connected", .type = INK_ST_BOOL, .title = "连着电脑"};
 
 int ink_file_service_init(void) {

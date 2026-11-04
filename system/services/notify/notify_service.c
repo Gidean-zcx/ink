@@ -617,7 +617,7 @@ static void on_usb(void *ctx, const char *id, const ink_args_t *p) { /* exec.bg 
     ink_args_get_bool(p, "connected", &connected);
     ink_args_get_bool(p, "lent", &lent);
     if (connected && !lent) {
-        ink_notify_t n = {.channel = "system", .title = "连接了电脑", .body = "可以把 TF 卡当 U 盘用", .tag = "usb", .action = "usb.mount", .prio = INK_NOTIFY_NORMAL, .src = INK_SRC_SYSTEM};
+        ink_notify_t n = {.channel = "system", .title = "连接了电脑", .body = "可以把存储卡当 U 盘用", .tag = "usb", .action = "usb.mount", .prio = INK_NOTIFY_NORMAL, .src = INK_SRC_SYSTEM};
         ink_notify_post(&n, NULL);
     } else ink_notify_cancel_tag("usb");
 }

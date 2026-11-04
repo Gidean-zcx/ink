@@ -214,7 +214,7 @@ static void settings_list(ink_call_t *c) {
 
 static const ink_cap_t SYSTEM_ACTIONS[] = {
     {.id = "system.home", .title = "回到主页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = go_home},
-    {.id = "system.full_refresh", .title = "整屏刷新（清残影）", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = full_refresh},
+    {.id = "system.full_refresh", .title = "刷新屏幕", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = full_refresh},
     {.id = "system.set_volume",
      .title = "调音量",
      .input = "{\"type\":\"object\",\"properties\":{\"percent\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":100}},"
@@ -223,14 +223,14 @@ static const ink_cap_t SYSTEM_ACTIONS[] = {
      .child_ok = true,
      .run = set_volume},
     {.id = "system.switch_member",
-     .title = "切换成员",
+     .title = "切换家人",
      .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\"}},\"required\":[\"id\"]}",
      .effect = INK_FX_NAVIGATE,
      .child_ok = true,
      .run = switch_member},
     {.id = "state.list", .title = "系统现在的状态（电量、网络、前台应用……）", .output = "{\"type\":\"object\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = state_list},
     {.id = "settings.list", .title = "所有设置，各自的类型、取值范围和现在的值", .output = "{\"type\":\"array\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = settings_list},
-    {.id = "system.factory_reset", .title = "恢复出厂设置（清掉所有成员的数据，不能撤销）", .ask = "恢复出厂设置：清掉所有成员的数据，不能撤销", .effect = INK_FX_SYSTEM, .parent_pin = true, .child_ok = false, .exec = INK_EXEC_BG, .run = factory_reset},
+    {.id = "system.factory_reset", .title = "清空这台设备（清掉所有家人的数据，不能撤销）", .ask = "清空这台设备：清掉所有家人的数据，不能撤销", .effect = INK_FX_SYSTEM, .parent_pin = true, .child_ok = false, .exec = INK_EXEC_BG, .run = factory_reset},
     {.id = "system.reboot", .title = "重启", .effect = INK_FX_SYSTEM, .child_ok = true, .while_locked = true, .exec = INK_EXEC_BG, .run = cap_reboot},
 };
 

@@ -52,7 +52,7 @@ typedef struct __attribute__((packed)) {
 } stored_t;
 
 /* Hashes and salts: no AI, no hub, no app reads this. */
-static const ink_db_def_t TABLE = {.name = "member.table", .title = "成员表", .scope = INK_DB_DEVICE, .schema = 1, .max_records = INK_MEMBERS_MAX};
+static const ink_db_def_t TABLE = {.name = "member.table", .title = "家人名单", .scope = INK_DB_DEVICE, .schema = 1, .max_records = INK_MEMBERS_MAX};
 
 static struct {
     slot_t s[INK_MEMBERS_MAX];
@@ -75,8 +75,8 @@ static slot_t *find(const char *id) {
     return NULL;
 }
 
-static const ink_state_def_t ST_MEMBER = {.id = "member.current", .type = INK_ST_STR, .title = "当前成员"};
-static const ink_state_def_t ST_AUTHED = {.id = "member.authed", .type = INK_ST_BOOL, .title = "这位成员的空间开着"};
+static const ink_state_def_t ST_MEMBER = {.id = "member.current", .type = INK_ST_STR, .title = "现在是哪位家人"};
+static const ink_state_def_t ST_AUTHED = {.id = "member.authed", .type = INK_ST_BOOL, .title = "这位家人的空间开着"};
 static int g_published; /* handles start at 0: this says they are there */
 
 static void publish(void) {
@@ -570,25 +570,25 @@ static void cap_set_pin(ink_call_t *c) {
 }
 
 static const ink_cap_t MEMBER_CAPS[] = {
-    {.id = "member.list", .title = "家里有哪些成员", .output = "{\"type\":\"array\"}", .effect = INK_FX_READ, .child_ok = true, .while_locked = true, .exec = INK_EXEC_DIRECT, .run = cap_list},
-    {.id = "member.add", .title = "加一位成员", .ask = "加一位成员：{name}（{role}）",
+    {.id = "member.list", .title = "家里有哪些人", .output = "{\"type\":\"array\"}", .effect = INK_FX_READ, .child_ok = true, .while_locked = true, .exec = INK_EXEC_DIRECT, .run = cap_list},
+    {.id = "member.add", .title = "加一位家人", .ask = "加一位家人：{name}（{role}）",
      .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":15},\"name\":{\"type\":\"string\",\"maxLength\":31},\"role\":{\"type\":\"string\",\"enum\":[\"adult\",\"child\"]}},\"required\":[\"id\"]}",
      .effect = INK_FX_SYSTEM, .exec = INK_EXEC_BG, .run = cap_add},
-    {.id = "member.remove", .title = "删除一位成员和他们的全部数据（不能撤销）", .ask = "删除成员 {id} 和他们的全部数据，不能撤销",
+    {.id = "member.remove", .title = "删除一位家人和他们的全部数据（不能撤销）", .ask = "删除家人 {id} 和他们的全部数据，不能撤销",
      .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":15}},\"required\":[\"id\"]}",
      .effect = INK_FX_SYSTEM, .parent_pin = true, .exec = INK_EXEC_BG, .run = cap_remove},
     /* a PIN goes through no one's hands but the person's */
-    {.id = "member.unlock", .title = "输 PIN 进入成员空间（只能在设备上）",
+    {.id = "member.unlock", .title = "输密码进入家人的空间（只能在设备上）",
      .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":15},\"pin\":{\"type\":\"string\",\"maxLength\":8}},\"required\":[\"id\",\"pin\"]}",
      .effect = INK_FX_NAVIGATE, .child_ok = true, .while_locked = true, .expose = INK_EXPOSE_OWNER, .exec = INK_EXEC_DIRECT, .run = cap_unlock},
-    {.id = "member.set_pin", .title = "设置或修改 PIN（只能在设备上）",
+    {.id = "member.set_pin", .title = "设置或修改密码（只能在设备上）",
      .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":15},\"old_pin\":{\"type\":\"string\",\"maxLength\":8},\"new_pin\":{\"type\":\"string\",\"maxLength\":8}},\"required\":[\"id\",\"new_pin\"]}",
      .effect = INK_FX_LOCAL_WRITE, .expose = INK_EXPOSE_OWNER, .exec = INK_EXEC_DIRECT, .run = cap_set_pin},
-    {.id = "member.changed", .title = "成员有变化（加了、删了）", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},
+    {.id = "member.changed", .title = "家人有变化（加了、删了）", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},
 };
 
 static const ink_setting_def_t MEMBER_SETTINGS[] = {
-    {.id = "member.idle_return_s", .title = "成人空间闲置多久后要重新输 PIN（秒）", .type = INK_SET_INT, .min = 30, .max = 3600, .def = IDLE_RETURN_S},
+    {.id = "member.idle_return_s", .title = "大人的空间闲置多久后要重新输密码（秒）", .type = INK_SET_INT, .min = 30, .max = 3600, .def = IDLE_RETURN_S},
 };
 
 int ink_members_start(void) {

@@ -345,7 +345,7 @@ static void session_closed(void *arg) { /* UI task: the hub refused or ended it:
     (void)arg;
     if (!RS.img) return;
     RS.ended = true;
-    note_set("远程画面已结束，按返回键退出", "The remote screen ended - press back");
+    note_set("网页结束了，按返回键退出", "The remote screen ended - press back");
     ink_probe_count("remote.closed_by_hub");
 }
 
@@ -567,7 +567,7 @@ static bool remote_key(hal_key_t key, bool long_press) {
 }
 
 static int remote_snapshot(char *buf, size_t cap) { /* the hub has the page's text itself (R-039) */
-    return snprintf(buf, cap, "远程画面（由中枢渲染，内容由中枢提供给 AI）");
+    return snprintf(buf, cap, "网页（家庭服务器渲染，内容由家庭服务器提供给 AI）");
 }
 
 const ink_activity_t ink_app_remote = {
@@ -586,12 +586,12 @@ static void cap_open(ink_call_t *c) { /* UI task */
     snprintf(g_url, sizeof g_url, "%s", n < 0 ? "about:home" : url);
     ink_ui_push(&ink_app_remote, g_url);
     snprintf(c->rc.object, sizeof c->rc.object, "screen:remote");
-    snprintf(c->rc.say, sizeof c->rc.say, "打开远程画面");
+    snprintf(c->rc.say, sizeof c->rc.say, "打开网页");
 }
 
 static const ink_cap_t REMOTE_CAPS[] = {
     {.id = "remote.open",
-     .title = "打开网页（远程画面）",
+     .title = "打开网页",
      .input = "{\"type\":\"object\",\"properties\":{\"url\":{\"type\":\"string\",\"maxLength\":120}}}",
      .effect = INK_FX_NAVIGATE,
      .child_ok = true,

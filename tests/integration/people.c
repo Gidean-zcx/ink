@@ -342,7 +342,7 @@ static void reset1(void) {
     CHECK(ink_confirm_list(&v, 1) == 1 && v.parent, "it takes a parent");
     delay_ms(600);
     on_ui(read_screen);
-    CHECK(strstr(g_snap, "清掉所有成员的数据"), "the card says what (%s)", g_snap);
+    CHECK(strstr(g_snap, "清掉所有家人的数据"), "the card says what (%s)", g_snap);
     ink_probe_count("test.finished"); /* the device restarts on the yes */
     CHECK(ink_confirm_accept_with_pin(token, "1234", NULL, NULL) == 0, "yes");
     CHECK(WAIT_FOR(g_reset_results > results + 0, 5000) && !strcmp(g_reset_status, "done") && strstr(g_reset_say, "马上重启"), "it says so (%s, %s)", g_reset_status, g_reset_say);

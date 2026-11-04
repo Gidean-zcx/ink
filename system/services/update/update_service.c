@@ -960,11 +960,11 @@ void ink_update_boot_check(void) { /* boot task */
 
 static const ink_cap_t UPDATE_CAPS[] = {
     {.id = "update.status", .title = "系统版本和升级进度", .output = "{\"type\":\"object\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_status},
-    {.id = "update.check", .title = "问中枢有没有新版本", .output = "{\"type\":\"object\"}", .effect = INK_FX_READ, .child_ok = true, .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .run = cap_check},
-    {.id = "update.download", .title = "把新版本下载到 TF 卡（不安装）", .effect = INK_FX_LOCAL_WRITE, .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .run = cap_download},
+    {.id = "update.check", .title = "问家庭服务器有没有新版本", .output = "{\"type\":\"object\"}", .effect = INK_FX_READ, .child_ok = true, .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .run = cap_check},
+    {.id = "update.download", .title = "把新版本下载到存储卡（不安装）", .effect = INK_FX_LOCAL_WRITE, .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .run = cap_download},
     /* a person installs: not even listed for the AI (foundation §6.2; the policy gate has the same rule by name) */
     {.id = "system.upgrade", .title = "安装下载好的新系统（安装时不能用设备，会重启）", .ask = "安装新系统，装完重启", .ask_by_hand = true, .effect = INK_FX_SYSTEM, .expose = INK_EXPOSE_OWNER, .timeout_ms = 600000, .exec = INK_EXEC_BG, .run = cap_upgrade},
-    {.id = "system.upgrade_from_card", .title = "安装 TF 卡上的新系统（update 文件夹里，会重启）", .ask = "从 TF 卡安装新系统，装完重启", .ask_by_hand = true,
+    {.id = "system.upgrade_from_card", .title = "安装存储卡上的新系统（update 文件夹里，会重启）", .ask = "从存储卡安装新系统，装完重启", .ask_by_hand = true,
      .input = "{\"type\":\"object\",\"properties\":{\"file\":{\"type\":\"string\",\"maxLength\":63}}}", .effect = INK_FX_SYSTEM, .expose = INK_EXPOSE_OWNER, .timeout_ms = 600000, .exec = INK_EXEC_BG, .run = cap_upgrade_card},
     {.id = "update.available", .title = "发现了新版本", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},
     {.id = "update.result", .title = "升级的结果", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},

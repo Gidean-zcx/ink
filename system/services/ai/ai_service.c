@@ -253,7 +253,7 @@ static void ui_apply(void *arg) { /* UI task */
     } else {
         turn_over();
         const char *msg = p->status == INK_HUB_ERR_OFFLINE ? "现在没有网络，稍后再问我"
-                          : p->status == INK_HUB_ERR_TIMEOUT ? "中枢没有回应，请再试一次"
+                          : p->status == INK_HUB_ERR_TIMEOUT ? "家庭服务器没有回应，请再试一次"
                           : p->status == INK_HUB_ERR_LOST    ? "网络断了，回答没收全，请再试一次"
                                                              : "出了点问题，请再试一次";
         set_status(msg);

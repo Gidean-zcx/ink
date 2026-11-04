@@ -35,7 +35,7 @@ static void told_job(void *arg) { /* UI task */
     if (r == INK_PIN_OK || !C.pad) return; /* the card goes by itself */
     char s[48];
     if (C.pin_wait) snprintf(s, sizeof s, "请等 %u 秒再试", (unsigned)C.pin_wait);
-    else snprintf(s, sizeof s, "PIN 不对");
+    else snprintf(s, sizeof s, "密码不对");
     shell_pinpad_clear();
     shell_pinpad_say(s);
 }

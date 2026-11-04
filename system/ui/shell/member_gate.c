@@ -28,7 +28,7 @@ static struct {
 static void sync_gate(void *arg);
 
 static int snapshot(char *buf, size_t cap) {
-    int n = snprintf(buf, cap, "设备被锁定：请选择成员，或输入 PIN。");
+    int n = snprintf(buf, cap, "设备锁着：请选择家人，或输入密码。");
     return n < 0 ? 0 : (size_t)n < cap ? n : (int)cap - 1;
 }
 
@@ -39,7 +39,7 @@ static void result_job(void *arg) { /* UI task */
     if (G.result == INK_PIN_OK) return; /* the state changes, the gate goes */
     char s[48];
     if (G.result == INK_PIN_WAIT || G.wait_s) snprintf(s, sizeof s, "请等 %u 秒再试", (unsigned)G.wait_s);
-    else snprintf(s, sizeof s, "PIN 不对");
+    else snprintf(s, sizeof s, "密码不对");
     shell_pinpad_clear();
     shell_pinpad_say(s);
 }

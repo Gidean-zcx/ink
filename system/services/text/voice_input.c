@@ -331,7 +331,7 @@ static void done_job(void *arg) {
 static void error_job(void *arg) {
     if ((int)(intptr_t)arg != VS.sid) return;
     const char *c = VS.error_code;
-    fail_with(!strcmp(c, "budget") ? "今天的额度用完了，用键盘吧" : !strcmp(c, "not_allowed") ? "这位成员不能用语音输入" : !strcmp(c, "too_long") ? "一次说得太长了，先到这里" : "语音输入暂时用不了");
+    fail_with(!strcmp(c, "budget") ? "今天的额度用完了，用键盘吧" : !strcmp(c, "not_allowed") ? "这位家人不能用语音输入" : !strcmp(c, "too_long") ? "一次说得太长了，先到这里" : "语音输入暂时用不了");
 }
 
 static void closed_job(void *arg) {
