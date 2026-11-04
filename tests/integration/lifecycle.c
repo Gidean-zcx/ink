@@ -502,6 +502,17 @@ static void open_remote(void) {
 }
 static void close_remote(void) { ink_exec_post(INK_EXEC_UI, &g_ui_job, pop_job, NULL); }
 
+/* Where the note about a lost connection is: the AI's answer sheet covers the lower 58% of the screen (AUD13-004). */
+static volatile int g_note_bottom = -1, g_note_visible;
+static ink_exec_job_t g_note_job;
+static void note_job(void *arg) {
+    (void)arg;
+    lv_area_t a;
+    lv_obj_get_coords(RS.note, &a);
+    g_note_bottom = a.y2;
+    g_note_visible = !lv_obj_has_flag(RS.note, LV_OBJ_FLAG_HIDDEN) && a.y2 > a.y1;
+}
+
 static bool net_lost(void) { return !ink_hub_online(); }
 static bool is_ready(void) { return RS.sid && ink_rt_ready(RS.sid); }
 
@@ -541,6 +552,8 @@ static void overlap_setup(void *arg) {
     RS.img = lv_obj_create(lv_screen_active());
     RS.credit_timer = lv_timer_create(overlap_noop, 1000, NULL);
     lv_timer_pause(RS.credit_timer);
+    RS.spot_timer = lv_timer_create(overlap_noop, 1000, NULL);
+    lv_timer_pause(RS.spot_timer);
     RS.first_shown = true;
     RS.owed = 0;
     g_overlap_ready = 1;
@@ -552,10 +565,20 @@ static void overlap_block(void *arg) { /* the UI task is busy for a while */
     osal_sem_take(g_overlap_gate, OSAL_WAIT_FOREVER);
 }
 
+static void spot_job(void *arg) { /* a tap's feedback on (1, 0), then its timer runs out */
+    (void)arg;
+    RS.spot = (lv_area_t){1, 0, 1, 0};
+    RS.spot_on = true;
+    RS.px[1] ^= 0xFF;
+    spot_expired(RS.spot_timer);
+    g_overlap_ready = 4;
+}
+
 static void overlap_clean(void *arg) {
     (void)arg;
     lv_timer_delete(RS.credit_timer);
-    RS.credit_timer = NULL;
+    lv_timer_delete(RS.spot_timer);
+    RS.credit_timer = RS.spot_timer = NULL;
     lv_obj_delete(RS.img);
     RS.img = NULL;
     g_overlap_ready = 3;
@@ -591,6 +614,7 @@ static void overlap_check(void) { /* no page is open: the host's parts stand alo
     ink_exec_post(INK_EXEC_UI, &g_overlap_block, overlap_block, NULL);
     while (g_overlap_ready != 2) osal_task_delay_us(1000);
     unsigned updates = RS.updates;
+
     queue_region(0, true);  /* update A, whole */
     queue_region(1, false); /* the first region of update B */
     osal_task_delay_us(50000);
@@ -598,10 +622,16 @@ static void overlap_check(void) { /* no page is open: the host's parts stand alo
     osal_sem_give(g_overlap_gate);
     osal_task_delay_us(50000);
     CHECK(RS.px[0] == 0 && RS.px[1] == 0xFF && RS.updates == updates + 1 && RS.owed == 1, "A is shown, nothing of B (%d %d, %u, owed %d)", RS.px[0], RS.px[1], RS.updates - updates, RS.owed);
+    /* B's first region is in `back` now, not complete: a tap's feedback going away must not show it (AUD13-003) */
+    CHECK(RS.back[1] == 0, "B's first region has been decoded");
+    ink_exec_post(INK_EXEC_UI, &g_overlap_show, spot_job, NULL);
+    while (g_overlap_ready != 4) osal_task_delay_us(1000);
+    CHECK(RS.px[1] == 0xFF, "the spot under a tap comes back as it was shown, nothing of B (%d)", RS.px[1]);
     queue_region(2, true); /* the rest of B */
     osal_task_delay_us(50000);
     CHECK(RS.px[1] == 0 && RS.px[2] == 0 && RS.updates == updates + 2 && RS.owed == 2, "then all of B, each with its credit (%d %d, %u, owed %d)", RS.px[1], RS.px[2], RS.updates - updates, RS.owed);
-    ink_exec_post(INK_EXEC_UI, &g_overlap_show, overlap_clean, NULL);
+    static ink_exec_job_t clean_job;
+    ink_exec_post(INK_EXEC_UI, &clean_job, overlap_clean, NULL);
     while (g_overlap_ready != 3) osal_task_delay_us(1000);
     RS.active = false;
     release_canvas(NULL);
@@ -628,6 +658,12 @@ static void remote_checks(void) {
         for (int w = 0; w < 30000 && !net_lost(); w++) osal_task_delay_us(1000);
         CHECK(net_lost(), "round %d: the link drops", round);
         remote_tap(560, 85); /* lost, said so */
+        if (!round) {
+            for (int w = 0; w < 15000 && !RS.down_shown; w++) osal_task_delay_us(1000);
+            ink_exec_post(INK_EXEC_UI, &g_note_job, note_job, NULL);
+            osal_task_delay_us(20000);
+            CHECK(RS.down_shown && g_note_visible && g_note_bottom >= 0 && g_note_bottom < RS.h * 42 / 100, "the page says so, above where the answer sheet reaches (%d of %d)", g_note_bottom, RS.h);
+        }
         for (int w = 0; w < 30000 && (sim_metric_value("remote.resynced") == before || !is_ready()); w++) osal_task_delay_us(1000);
         g_want_updates = updates + 1;
         CHECK(sim_metric_value("remote.resynced") == before + 1 && wait_until(shown_enough, 8000000), "round %d: reconnected, it pulls again and a picture comes", round);

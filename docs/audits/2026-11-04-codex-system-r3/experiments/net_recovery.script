@@ -1,0 +1,4 @@
+@0       wifi on -60
+@0       sim internal sms
+@10.5s   wifi off
+@46s     end

@@ -14,6 +14,7 @@
 | 2026-11-04 第九轮复审（同上） | `claude/restructure` 31642df（第八轮处理之后） | [2026-11-03-codex-r9/TASK.md](2026-11-03-codex-r9/TASK.md) | [report.md](2026-11-03-codex-r9/report.md)、[verification.json](2026-11-03-codex-r9/verification.json)、[findings.json](2026-11-03-codex-r9/findings.json)、[experiments/](2026-11-03-codex-r9/experiments/) | **除待定的 F-6 外没有严重或高**；仅有的一条中级已处理，见下 |
 | 2026-11-04 第十轮（系统层，同上） | `claude/system-layer` ebf05c8（底层系统十步与 F-6 修复之后） | [2026-11-04-codex-system/TASK.md](2026-11-04-codex-system/TASK.md) | [report.md](2026-11-04-codex-system/report.md)（中途被服务方的内容分类器切断，未覆盖的范围标“待核查”，由下一轮补） | 已处理，见下 |
 | 2026-11-04 第十一轮（系统层，同上） | `claude/system-layer` c95f48c（第十轮处理之后） | [2026-11-04-codex-system-r2/TASK.md](2026-11-04-codex-system-r2/TASK.md) | [report.md](2026-11-04-codex-system-r2/report.md) | 已处理，见下 |
+| 2026-11-04 第十二轮（系统层，同上） | `claude/system-layer` 9cf64ad（第十一轮处理之后） | [2026-11-04-codex-system-r3/TASK.md](2026-11-04-codex-system-r3/TASK.md) | [report.md](2026-11-04-codex-system-r3/report.md) | **没有严重和高**；4 条中级已处理，见下 |
 
 此前的三次独立评审都由助手发起的子代理完成。问题与处理分别记在：
 
@@ -21,6 +22,19 @@
 - [刷新算法集成报告](../research/eink-refresh-integration.md)。
 
 审计报告回来后，逐条核实，再决定修复、记录或不处理，结果写回本表和相关文档。
+
+## 2026-11-04 第十二轮（系统层）：处理
+
+对象 9cf64ad。**结论：没有严重或高级别的问题，按约定的门槛可以合入 main。** 上轮 8 项里 6 项已修复、2 项部分修复（剩下的边界就是下面的 AUD13-001、002）。报告还做了负对照：把修复改回去，大部分回归测试确实失败；只有 `integration-net-auto` 看不出模拟器切网的旧缺陷，已补一个测试。
+
+| 编号 | 级别 | 问题 | 处理 | 测试 |
+| --- | --- | --- | --- | --- |
+| AUD13-001 | 中 | Wi-Fi 消失时 4G 正在注册，注册完没有通知，自动选网一直离线 | 已修复：没在用的网络变化也通知（报告回来之前自查已发现） | `integration-net-auto`：同样的时序；确认过去掉修复时失败 |
+| AUD13-002 | 中 | 按住说话时断线，这一轮失败了麦克风还开着，松键把错误改成一直显示“正在想…” | 已修复：回答或失败时麦克风马上关，松键不再改状态 | `integration-ai-race`：按键跨过断线：麦克风关、会话关，松键后提示不变，下一轮正常 |
+| AUD13-003 | 中 | 恢复反显时从后画布拷，可能带上没完整的单元的像素 | 已修复：再反一次，不读后画布 | `integration-lifecycle`：解码到一半时反显到期：恢复成原样 |
+| AUD13-004 | 中 | 断线提示在页面下方，AI 回答面板盖住了；测试只看计数，以为显示了 | 已修复：提示放到页面上方 | `integration-lifecycle` 检查提示可见且在面板够不到的地方；看过 `remote_reconnect` 那一帧 |
+
+测试有效性：`integration-hal-switch` 单独验证切网时旧连接失效（`integration-net-auto` 里中枢连接自己先关了，验不到这一层）。
 
 ## 2026-11-04 第十一轮（系统层）：处理
 

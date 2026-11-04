@@ -286,13 +286,13 @@ python3 tools/simreport/simreport.py out/reader --lang zh    # HTML 报告：刷
 
 - GitHub Actions（`.github/workflows/sim.yml`）在每次推送 main、`claude/**` 和每个 PR 时运行：带 `-Werror` 的构建与全部测试，再跑 ASan/UBSan。
 - `s31-size.yml` 只能手动触发，用 ESP-IDF 编译基线与上游固件，看静态内存占用。
-- 56 项测试的组成见 [平台与模拟器 §3](system/platform-and-simulator.md)：
+- 57 项测试的组成见 [平台与模拟器 §3](system/platform-and-simulator.md)：
   - 模拟器自检（4 个档案）、死亡测试、两项确定性；
   - 主页、阅读、AI 提问、AI 工具调用、待机等场景；
   - 老化文件系统 + 最坏擦写、断电、上游管线复现、可移植性冒烟；
   - PQ-BN 档案上的场景、两个盖板键同时按住；
   - 审计复核加的四个回归场景：连续阅读也要落盘、连续快速翻页、关闭 AI 面板后不放迟到的语音、打不开的书上翻页不崩溃；
-  - 底层系统：`systest-services`（系统服务 144 项检查）、`integration-lifecycle`（调用、任务、采集和远程画面在各种时序下的生命周期）、`integration-net-auto`（自动选网）、`integration-starts`、`integration-ai-race`、语音（免按键、打断、一轮结束）、远程画面（浏览、重连）、离线意图；
+  - 底层系统：`systest-services`（系统服务 144 项检查）、`integration-lifecycle`（调用、任务、采集和远程画面在各种时序下的生命周期）、`integration-net-auto`（自动选网）、`integration-hal-switch`、`integration-starts`、`integration-ai-race`、语音（免按键、打断、一轮结束）、远程画面（浏览、重连）、离线意图；
   - ISS 自检。
 - 预算文件在 `tests/scenarios/*.budget.json`，每条门槛写了理由（`why`）。
 

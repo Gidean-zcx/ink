@@ -1,0 +1,46 @@
+[
+  {
+    "id": "AUD13-001",
+    "severity": "中",
+    "area": "net / simulator",
+    "title": "未选中的蜂窝网络重新注册不发通知，自动选网可持续停在已消失的 Wi-Fi",
+    "evidence_type": "【复现】【代码核查】",
+    "locations": ["system/services/net/net_service.c:69", "system/services/net/net_service.c:111", "ports/sim/hal/hal_net_sim.c:332", "ports/sim/hal/hal_net_sim.c:336", "platform/include/ink/hal_net.h:48"],
+    "impact": "Wi-Fi 消失时 LTE 恰在切卡/重新注册，服务发现两个网络都不可用后停止定时重查；LTE 随后注册成功但仅对所选 LTE 调用 relink，Wi-Fi 仍是所选类型，因而不会再决策。网络恢复后设备仍离线，需再设一次 auto 或其他网络事件唤醒。需要两种网络状态交叠，按中级；不把普通 Wi-Fi 消失时已可用的 LTE 切换误判为未实现。",
+    "recommendation": "蜂窝可用性变化也应通知 HAL 的链路/可用网络监听者，即使未选中 LTE；或者在自动且离线时保留有界重查。补充 Wi-Fi 消失早于蜂窝注册完成的回归。",
+    "reproduce": "模拟器运行 experiments/net_recovery.c 与 net_recovery.script：原样产品启动、公开设置切卡，无代码失败注入。11.010 s type=wifi up=0 lte_available=0；17.000 s 与 40.000 s 均 type=wifi up=0 lte_available=1；40 s 再设 auto 后 44 s type=lte up=1。普通与 ASan/UBSan 构建均 exit 0、audit.finished=1，现象一致。命令与摘录见 experiments/README.md、experiments/results.json。"
+  },
+  {
+    "id": "AUD13-002",
+    "severity": "中",
+    "area": "AI / voice lifecycle",
+    "title": "按住说话时收到断线失败仍继续采集，松键会把错误覆盖成持续的“正在想”",
+    "evidence_type": "【复现】【代码核查】【文档核查】",
+    "locations": ["system/services/ai/ai_service.c:316", "system/services/ai/ai_service.c:236", "system/services/ai/ai_service.c:495", "system/services/ai/ai_service.c:580", "tests/scenarios/ai_turn_lost.script:4", "docs/system/system-detailed-design.md:657"],
+    "impact": "断线回复会清会话并丢弃后续帧，但不终止 AI.capturing；用户松键时 was_capturing 仍为真，无条件将状态改为“正在想…”。这一轮已无待回请求，网络恢复也不会改回错误。必须重按/关闭恢复；需在松键前收到失败，限于失败轮次的采集与提示，按中级。既有 ai_turn_lost 在 7 s 松键、约 10.5 s 才发现断线，没有覆盖此顺序。",
+    "recommendation": "失败/会话关闭时向 UI 投递携带轮次的统一结束操作，停止该轮采集并保留失败状态；松键先判断轮次是否已失败或结束，不能再进入思考。增加长按跨过断线检测时刻的场景。",
+    "reproduce": "模拟器运行 experiments/ai_lost_capture.c 与 ai_lost_capture.script：3 s 按住 AI 键 14 s，5.5 s 断网 20 s。13 s session=0 capturing=1 asking=0 failures=1，提示网络断开；19.010 s 和 28.010 s session=0 asking=0，提示却为“正在想…”。原样产品代码，无锁交错注入；普通与 ASan/UBSan 构建均 exit 0、audit.finished=1，现象一致。持续状态的判断另有代码依据；实验观察截至下一次按键前。命令见 experiments/README.md。"
+  },
+  {
+    "id": "AUD13-003",
+    "severity": "中",
+    "area": "remote / update boundary",
+    "title": "反显恢复直接读未完成的后画布，局部区域可在 LAST 之前显示",
+    "evidence_type": "【复现】【代码核查】",
+    "locations": ["system/apps/remote/remote.c:140", "system/apps/remote/remote.c:154", "system/apps/remote/remote.c:243", "system/apps/remote/remote.c:431", "docs/system/system-detailed-design.md:551"],
+    "impact": "holding 修复了完整单元 A 等待显示时混入 B 的原问题，但 spot_restore 会直接把 back 拷到 px。若新单元已解码部分区域、尚未收到 LAST，此时上一次点按的 2 秒反显到期或用户再次点按，恢复的局部方块就含有未完成单元的像素。影响最多为反显区域，需帧间延迟或再次点击，按中级；没有发现越界或跨会话内存破坏。",
+    "recommendation": "保存反显前的前画布像素，或在独立于解码中的 back 的已提交画面上恢复反显。补充 LAST 延迟跨过反显超时/第二次点击的测试。",
+    "reproduce": "experiments/remote_feedback.c 原样包含 lifecycle.c 及产品 remote.c，用 4×4 合法画布复用现有集成夹具：仅解码 B 的首块（x=1 黑，未带 LAST），调用真实 spot_expired。输出 after_restore display=0 expected_display=255 complete=0 updates=0 owed=0；补上 LAST 后 updates=1 owed=1。普通与 ASan/UBSan 构建均 exit 0、audit.finished=1，无警告。此为组件级帧顺序实验，不声称实网发生率；命令见 experiments/README.md。"
+  },
+  {
+    "id": "AUD13-004",
+    "severity": "中",
+    "area": "remote / UI / test evidence",
+    "title": "AI 打开的远程页面断网提示被回答面板遮住，重连测试仍声称提示已显示",
+    "evidence_type": "【复现】【代码核查】【文档核查】",
+    "locations": ["system/apps/remote/remote.c:130", "system/apps/remote/remote.c:401", "system/apps/remote/remote.c:496", "system/services/ai/ai_service.c:104", "tests/scenarios/remote_reconnect.script:4", "tests/scenarios/remote_reconnect.budget.json:5"],
+    "impact": "现有正常场景由 AI 打开远程页面后保留底部 58% 的回答面板；远程 note 是页面底部子对象，位于 lv_layer_top 的面板下面。断网期间用户看不到重连提示，预算却仅凭 remote.offline_shown=1 判定已显示。有限的状态提示与测试覆盖缺口，按中级；不会阻止重连、锁屏关闭或恢复画面，不夸大为这些能力失效。",
+    "recommendation": "让断线提示位于用户当前能看见的位置，或打开页面后明确处理 AI 面板的遮挡；场景应在提示期间验证实际绘制结果，另覆盖面板打开与关闭两种情况。计数名称/断言区分“请求显示”和“用户已看见”。",
+    "reproduce": "普通 CTest 的原 scenario-remote_reconnect-metalio-plus 已复现，无补丁或故障注入：remote.offline_shown=1，23.1276 s 的 00011_023127.6ms_GL16.png 屏幕下半部仅显示 AI 回答，未出现断线文字；已人工查看该帧及 28.9135 s 恢复帧。截图归档 experiments/remote-offline-covered.png；原场景 exit 0，预算通过。"
+  }
+]

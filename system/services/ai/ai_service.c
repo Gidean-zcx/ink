@@ -72,6 +72,7 @@ static struct {
     bool dismissed;     /* the sheet was closed during this turn */
     bool drop_frames;   /* the sheet was closed while capturing: the rest of this turn's audio is dropped */
     bool capturing;     /* UI task: this turn's microphone is on */
+    bool turn_over;     /* UI task: answered or failed, also if the key is still held: what the sheet says stands */
     bool mic_failed;    /* UI task: this turn's microphone did not start: nothing is heard, nothing asked */
     bool speech_failed; /* UI task: this turn's answer could not be spoken: the status keeps saying so */
     lv_timer_t *flush_timer;
@@ -196,6 +197,13 @@ bool ink_ai_dismiss(void) {
 
 /* -------------------------------------------------------------- results */
 
+/* Nothing more happens in this turn, even if the key is still held: the microphone goes off. */
+static void turn_over(void) {
+    AI.asking = false;
+    AI.turn_over = true;
+    end_capture(true);
+}
+
 static void ui_apply(void *arg) { /* UI task */
     ai_post_t *p = arg;
     bool match = (p->kind == 0 || p->kind == 3) ? p->req_id == AI.req_id
@@ -229,12 +237,12 @@ static void ui_apply(void *arg) { /* UI task */
         set_status(AI.asking ? "声音没能播放：扬声器没打开，文字回答在上面" : "回答完成 · 声音没能播放（扬声器没打开）· 按 AI 键继续问");
         ink_probe_count("ai.speech_failed");
     } else if (p->kind == 1) {
-        AI.asking = false;
+        turn_over();
         set_status(AI.speech_failed ? "回答完成 · 声音没能播放（扬声器没打开）· 按 AI 键继续问" : "回答完成 · 按 AI 键继续问，按 HOME 关闭");
         ink_ui_cause(AI.t_release, "ai.release_to_done_visible_ms");
         ink_probe_count("ai.answers");
     } else {
-        AI.asking = false;
+        turn_over();
         const char *msg = p->status == INK_HUB_ERR_OFFLINE ? "现在没有网络，稍后再问我"
                           : p->status == INK_HUB_ERR_TIMEOUT ? "中枢没有回应，请再试一次"
                           : p->status == INK_HUB_ERR_LOST    ? "网络断了，回答没收全，请再试一次"
@@ -492,12 +500,13 @@ static bool voice_ok(void) { return ink_audio_has_mic(); }
 /* What the listening tone measures: from the key press, or from the wake word / the interruption. */
 static const char *tone_probe = "ai.press_to_tone_heard_ms";
 
-/* The hub refused or ended this turn's session (hub task): nothing can be sent or heard any more. */
+/* The hub refused or ended this turn's session (hub task): nothing more can be sent or heard. If it
+ * had not heard the whole utterance the turn has failed; otherwise its answer still decides. */
 static void on_rt_closed(void *ctx, int sid, int reason) {
     (void)ctx;
     (void)reason;
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
-    bool current = sid == AI.session;
+    bool current = sid == AI.session, failed = current && AI.up_open;
     int turn = AI.session_seq;
     if (current) {
         AI.session = 0;
@@ -506,7 +515,7 @@ static void on_rt_closed(void *ctx, int sid, int reason) {
         AI.drop_frames = true;
     }
     osal_mutex_unlock(AI.lock);
-    if (current && turn) post(turn, 2, INK_HUB_ERR_REMOTE, NULL);
+    if (failed && turn) post(turn, 2, INK_HUB_ERR_REMOTE, NULL);
 }
 
 static const ink_rt_handler_t AI_RT = {.on_frame = on_rt_frame, .on_closed = on_rt_closed};
@@ -529,7 +538,7 @@ void ink_ai_key(bool pressed, uint64_t t_us) {
             close_session();
             sid = -1;
         }
-        AI.mic_failed = AI.speech_failed = false;
+        AI.mic_failed = AI.speech_failed = AI.turn_over = false;
         ink_audio_stop_all(); /* talking over the previous answer interrupts it */
         ink_audio_tone(INK_TONE_LISTEN, t_us, tone_probe);
         ink_hub_demand(); /* pre-connect while the user speaks */
@@ -583,6 +592,7 @@ void ink_ai_key(bool pressed, uint64_t t_us) {
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
     AI.t_release = t_us; /* the hub task reads it for the first-audio probe */
     osal_mutex_unlock(AI.lock);
+    if (AI.turn_over) return; /* it ended while the key was held */
     if (AI.mic_failed) { /* the microphone did not start: the user's words were not heard */
         set_status("没听到：没能开始听，请稍后再按 AI 键");
         return;

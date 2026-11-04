@@ -1,0 +1,325 @@
+{
+  "commit": "9cf64adc9ea0a7ce54d1e8f6e05603928e7f17a5",
+  "host": "macOS arm64",
+  "cmake": "3.28.3",
+  "builds": [
+    {
+      "directory": "build-audit",
+      "configure_exit": 0,
+      "build_exit": 0,
+      "ctest_exit": 0,
+      "passed": 56,
+      "total": 56,
+      "seconds": 27.9
+    },
+    {
+      "directory": "build-audit-asan",
+      "configure_exit": 0,
+      "build_exit": 0,
+      "ctest_exit": 0,
+      "passed": 55,
+      "total": 55,
+      "seconds": 14.6,
+      "flags": [
+        "-fsanitize=address,undefined",
+        "-fno-omit-frame-pointer"
+      ],
+      "note": "INK_GUI=OFF excludes gui-smoke"
+    }
+  ],
+  "scenarios": [
+    {
+      "name": "lifecycle",
+      "source": "build-audit/test-out/lifecycle/metrics.json",
+      "status": "ok",
+      "budget_violations": 0,
+      "srs_gaps": 0,
+      "metrics": {
+        "mem.dma.min_free_bytes": 40664,
+        "mem.internal_total.min_free_bytes": 40864,
+        "remote.offline_shown": 3,
+        "remote.open_to_first_visible_ms": {
+          "count": 1,
+          "mean": 3647.263,
+          "min": 3647.263,
+          "p50": 3647.263,
+          "p95": 3647.263,
+          "p99": 3647.263,
+          "max": 3647.263
+        },
+        "remote.region_bytes": {
+          "count": 494,
+          "mean": 652.1437246963562,
+          "min": 11,
+          "p50": 221,
+          "p95": 2560,
+          "p99": 2560,
+          "max": 2560
+        },
+        "remote.resynced": 3,
+        "remote.updates": 9,
+        "rt.closed": 3,
+        "rt.frames_without_session": 62,
+        "rt.opened": 3,
+        "rt.reannounced": 2,
+        "test.finished": 1,
+        "test.pass": 111
+      }
+    },
+    {
+      "name": "starts",
+      "source": "build-audit/test-out/starts/metrics.json",
+      "status": "ok",
+      "budget_violations": 0,
+      "srs_gaps": 0,
+      "metrics": {
+        "mem.dma.min_free_bytes": 44736,
+        "mem.internal_total.min_free_bytes": 44936,
+        "rt.closed": 3,
+        "rt.opened": 3,
+        "rt.reannounced": 2,
+        "rt.refused": 2,
+        "test.finished": 1,
+        "test.pass": 13
+      }
+    },
+    {
+      "name": "ai_ask-metalio-plus-pqbn",
+      "source": "build-audit/test-out/ai_ask-metalio-plus-pqbn/metrics.json",
+      "status": "ok",
+      "budget_violations": 0,
+      "srs_gaps": 1,
+      "metrics": {
+        "ai.answers": 2,
+        "ai.failures": 1,
+        "mem.dma.min_free_bytes": 28928,
+        "mem.internal_total.min_free_bytes": 33504,
+        "rt.closed": 3,
+        "rt.opened": 3
+      }
+    },
+    {
+      "name": "remote_browse-metalio-plus",
+      "source": "build-audit/test-out/remote_browse-metalio-plus/metrics.json",
+      "status": "ok",
+      "budget_violations": 0,
+      "srs_gaps": 1,
+      "metrics": {
+        "ai.answers": 1,
+        "mem.dma.min_free_bytes": 31432,
+        "mem.internal_total.min_free_bytes": 35696,
+        "net.switches": 1,
+        "remote.feedback_restored": 3,
+        "remote.open_to_first_visible_ms": {
+          "count": 1,
+          "mean": 1865.186,
+          "min": 1865.186,
+          "p50": 1865.186,
+          "p95": 1865.186,
+          "p99": 1865.186,
+          "max": 1865.186
+        },
+        "remote.region_bytes": {
+          "count": 272,
+          "mean": 669.7132352941177,
+          "min": 22,
+          "p50": 236,
+          "p95": 2560,
+          "p99": 2560,
+          "max": 2560
+        },
+        "remote.tap_feedback_visible_ms": {
+          "count": 3,
+          "mean": 259.40566666666666,
+          "min": 247.37,
+          "p50": 247.37,
+          "p95": 283.477,
+          "p99": 283.477,
+          "max": 283.477
+        },
+        "remote.tap_to_update_visible_ms": {
+          "count": 3,
+          "mean": 1365.2153333333333,
+          "min": 1362.9,
+          "p50": 1363.872,
+          "p95": 1368.874,
+          "p99": 1368.874,
+          "max": 1368.874
+        },
+        "remote.taps": 3,
+        "remote.updates": 4,
+        "rt.closed": 1,
+        "rt.opened": 2
+      }
+    },
+    {
+      "name": "remote_reconnect-metalio-plus",
+      "source": "build-audit/test-out/remote_reconnect-metalio-plus/metrics.json",
+      "status": "ok",
+      "budget_violations": 0,
+      "srs_gaps": 0,
+      "metrics": {
+        "ai.answers": 1,
+        "mem.dma.min_free_bytes": 31432,
+        "mem.internal_total.min_free_bytes": 35696,
+        "net.switches": 1,
+        "remote.feedback_restored": 2,
+        "remote.offline_shown": 1,
+        "remote.open_to_first_visible_ms": {
+          "count": 1,
+          "mean": 1865.186,
+          "min": 1865.186,
+          "p50": 1865.186,
+          "p95": 1865.186,
+          "p99": 1865.186,
+          "max": 1865.186
+        },
+        "remote.region_bytes": {
+          "count": 280,
+          "mean": 666.1214285714286,
+          "min": 22,
+          "p50": 230,
+          "p95": 2560,
+          "p99": 2560,
+          "max": 2560
+        },
+        "remote.resynced": 2,
+        "remote.tap_feedback_visible_ms": {
+          "count": 2,
+          "mean": 247.37,
+          "min": 247.37,
+          "p50": 247.37,
+          "p95": 247.37,
+          "p99": 247.37,
+          "max": 247.37
+        },
+        "remote.tap_to_update_visible_ms": {
+          "count": 2,
+          "mean": 7987.0525,
+          "min": 1352.152,
+          "p50": 1352.152,
+          "p95": 14621.953,
+          "p99": 14621.953,
+          "max": 14621.953
+        },
+        "remote.taps": 2,
+        "remote.updates": 4,
+        "rt.closed": 3,
+        "rt.opened": 3,
+        "rt.reannounced": 1
+      }
+    },
+    {
+      "name": "ai_turn_end-metalio-plus",
+      "source": "build-audit/test-out/ai_turn_end-metalio-plus/metrics.json",
+      "status": "ok",
+      "budget_violations": 0,
+      "srs_gaps": 0,
+      "metrics": {
+        "ai.answers": 1,
+        "hub.idle_disconnects": 1,
+        "mem.dma.min_free_bytes": 31592,
+        "mem.internal_total.min_free_bytes": 36168,
+        "rt.closed": 1,
+        "rt.opened": 1
+      }
+    },
+    {
+      "name": "ai_turn_lost-metalio-plus",
+      "source": "build-audit/test-out/ai_turn_lost-metalio-plus/metrics.json",
+      "status": "ok",
+      "budget_violations": 0,
+      "srs_gaps": 0,
+      "metrics": {
+        "ai.answers": 1,
+        "ai.failures": 1,
+        "mem.dma.min_free_bytes": 31592,
+        "mem.internal_total.min_free_bytes": 36168,
+        "rt.closed": 2,
+        "rt.opened": 2
+      }
+    },
+    {
+      "name": "net_auto",
+      "source": "build-audit/test-out/net_auto/metrics.json",
+      "status": "ok",
+      "budget_violations": 0,
+      "srs_gaps": 0,
+      "metrics": {
+        "hub.link_switched": 4,
+        "net.switches": 11,
+        "rt.closed": 1,
+        "rt.opened": 1,
+        "test.finished": 1,
+        "test.pass": 23
+      }
+    },
+    {
+      "name": "ai_race",
+      "source": "build-audit/test-out/ai_race/metrics.json",
+      "status": "ok",
+      "budget_violations": 0,
+      "srs_gaps": 0,
+      "metrics": {
+        "rt.closed": 2,
+        "rt.opened": 2,
+        "test.finished": 1,
+        "test.pass": 6
+      }
+    }
+  ],
+  "remote_browse_link_events": [
+    {
+      "ph": "i",
+      "s": "t",
+      "pid": 2,
+      "tid": 4,
+      "name": "link down",
+      "ts": 197663.448,
+      "args": {
+        "link": "wifi",
+        "up": false
+      }
+    },
+    {
+      "ph": "i",
+      "s": "t",
+      "pid": 2,
+      "tid": 4,
+      "name": "link up",
+      "ts": 2697663.448,
+      "args": {
+        "link": "wifi",
+        "up": true
+      }
+    }
+  ],
+  "host_stack_inventory": [
+    "2640 static system/util/ink_json.c:13:ink_json_parse",
+    "1440 static system/policy/cap.c:853:dir_reply",
+    "1376 static apps/reader/reader.c:206:render_into",
+    "1376 static apps/reader/reader.c:181:find_page_start",
+    "960 static system/services/ai/ai_service.c:432:request",
+    "784 static system/apps/remote/remote.c:159:show_update",
+    "672 static system/services/ai/ai_service.c:199:ui_apply",
+    "576 static system/services/ai/ai_service.c:263:on_notify",
+    "576 static system/policy/cap.c:330:timeout_cb",
+    "544 static apps/reader/reader.c:69:scan_library",
+    "528 static system/services/audio/audio_service.c:562:audio_task"
+  ],
+  "host_static_inventory": [
+    "system/apps/remote/remote.c _RS 1288",
+    "system/policy/cap.c _REG 792",
+    "system/policy/cap.c _SUBS 640",
+    "system/policy/settings.c _SE 4552",
+    "system/policy/state.c _ST 4544",
+    "system/services/comm/comm_service.c _CM 5192",
+    "system/services/display/display_service.c _DS 1672",
+    "system/services/hub/hub_link.c _H 2224",
+    "system/services/hub/rt.c _RT 1328",
+    "system/services/res/res.c _R 1800",
+    "system/ui/ui_task.c _UI 1096",
+    "apps/reader/reader.c _LIB 4104"
+  ],
+  "inventory_limit": "Host compiler single-frame stack sizes and Mach-O BSS symbol spans. Neither a target linker map nor target stack high-water measurements; not deducted from the simulated heap."
+}

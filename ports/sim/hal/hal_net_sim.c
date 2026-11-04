@@ -331,6 +331,7 @@ static void cell_load_on_host(void *arg) {
 static void relink(void);
 static void cell_relink(void) { /* ISR or locked */
     if (N.type == HAL_LINK_LTE) relink();
+    else notify_link_locked(); /* not in use, but what is around changed (hal_net_available) */
 }
 
 static void cell_registered_cb(void *arg) { /* ISR: the card in use attached, or there is none */

@@ -1,0 +1,5 @@
+@3s     mic speech
+@3s     key ai 14s
+@5.5s   outage 20s
+@30s    key ai 1200ms
+@45s    end

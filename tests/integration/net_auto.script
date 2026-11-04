@@ -7,4 +7,6 @@
 @180s    cell  off
 @190s    cell  on -100
 @195s    wifi  broken
-@425s    end
+@420s    wifi  on -60
+@441500ms wifi  off
+@460s    end

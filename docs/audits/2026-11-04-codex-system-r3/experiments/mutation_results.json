@@ -1,0 +1,229 @@
+[
+  {
+    "name": "mut_sms_buffer",
+    "exit": 1,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/mut_sms_buffer",
+      "--profile",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/simulator/profiles/metalio-plus-handsfree.json",
+      "--script",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/tests/integration/lifecycle.script",
+      "--budget",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/tests/integration/lifecycle.budget.json",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/test-content",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/audit12/mut_sms_buffer",
+      "--quiet",
+      "--no-random-outages"
+    ],
+    "observations": {
+      "test.fail": 3,
+      "test.finished": 1,
+      "test.pass": 108
+    },
+    "log": "/tmp/ink-audit12-mut_sms_buffer.log",
+    "excerpts": [
+      "21.950s CHECK FAILED (/Users/bytedance/Documents/Workspace/ink-audit-12/tests/integration/lifecycle.c:421) the modem has all of it (1 messages, 319 bytes)",
+      "22.010s CHECK FAILED (/Users/bytedance/Documents/Workspace/ink-audit-12/tests/integration/lifecycle.c:431) and arrives whole (failed, 319 bytes)",
+      "22.030s CHECK FAILED (/Users/bytedance/Documents/Workspace/ink-audit-12/tests/integration/lifecycle.c:440) it is refused, nothing goes out (text is longer than 118 characters)"
+    ]
+  },
+  {
+    "name": "mut_rt_nomem",
+    "exit": 1,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/mut_rt_nomem",
+      "--profile",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/simulator/profiles/metalio-plus.json",
+      "--script",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/tests/integration/starts.script",
+      "--budget",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/tests/integration/starts.budget.json",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/test-content",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/audit12/mut_rt_nomem",
+      "--quiet",
+      "--no-random-outages"
+    ],
+    "observations": {
+      "test.fail": 4,
+      "test.finished": 1,
+      "test.pass": 9
+    },
+    "log": "/tmp/ink-audit12-mut_rt_nomem.log",
+    "excerpts": [
+      "0.400s CHECK FAILED (/Users/bytedance/Documents/Workspace/ink-audit-12/tests/integration/starts.c:95) no memory for the request: the open says so",
+      "0.400s CHECK FAILED (/Users/bytedance/Documents/Workspace/ink-audit-12/tests/integration/starts.c:96) nothing stays open, the owner has its answer (1)",
+      "2.050s CHECK FAILED (/Users/bytedance/Documents/Workspace/ink-audit-12/tests/integration/starts.c:104) announcing it again fails: closed, the owner told (1)",
+      "2.380s CHECK FAILED (/Users/bytedance/Documents/Workspace/ink-audit-12/tests/integration/starts.c:112) and closes"
+    ]
+  },
+  {
+    "name": "mut_exec_yield",
+    "timeout_seconds": 50,
+    "log": "/tmp/ink-audit12-mut_exec_yield.log"
+  },
+  {
+    "name": "mut_ai_close_current",
+    "exit": 1,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/mut_ai_close_current",
+      "--profile",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/simulator/profiles/metalio-plus.json",
+      "--script",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/tests/integration/ai_race.script",
+      "--budget",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/tests/integration/ai_race.budget.json",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/test-content",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/audit12/mut_ai_close_current",
+      "--quiet",
+      "--no-random-outages"
+    ],
+    "observations": {
+      "test.fail": 2,
+      "test.pass": 2
+    },
+    "log": "/tmp/ink-audit12-mut_ai_close_current.log",
+    "excerpts": [
+      "17.990s CHECK FAILED (/Users/bytedance/Documents/Workspace/ink-audit-12/tests/integration/ai_race.c:53) the old reply closed its own session only (2, 0, 0)",
+      "19.000s CHECK FAILED (/Users/bytedance/Documents/Workspace/ink-audit-12/tests/integration/ai_race.c:56) and its session is up"
+    ]
+  },
+  {
+    "name": "mut_remote_holding",
+    "exit": 1,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/mut_remote_holding",
+      "--profile",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/simulator/profiles/metalio-plus-handsfree.json",
+      "--script",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/tests/integration/lifecycle.script",
+      "--budget",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/tests/integration/lifecycle.budget.json",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/test-content",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/audit12/mut_remote_holding",
+      "--quiet",
+      "--no-random-outages"
+    ],
+    "observations": {
+      "test.fail": 2,
+      "test.finished": 1,
+      "test.pass": 109
+    },
+    "log": "/tmp/ink-audit12-mut_remote_holding.log",
+    "excerpts": [
+      "24.130s CHECK FAILED (/Users/bytedance/Documents/Workspace/ink-audit-12/tests/integration/lifecycle.c:558) while A waits to be shown B is not decoded into its picture",
+      "24.190s CHECK FAILED (/Users/bytedance/Documents/Workspace/ink-audit-12/tests/integration/lifecycle.c:561) A is shown, nothing of B (0 0, 1, owed 1)"
+    ]
+  },
+  {
+    "name": "mut_net_auto",
+    "exit": 1,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/mut_net_auto",
+      "--profile",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/simulator/profiles/metalio-plus.json",
+      "--script",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/tests/integration/net_auto.script",
+      "--budget",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/tests/integration/net_auto.budget.json",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/test-content",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/audit12/mut_net_auto",
+      "--quiet",
+      "--no-random-outages"
+    ],
+    "observations": {
+      "test.fail": 6,
+      "test.finished": 1,
+      "test.pass": 17
+    },
+    "log": "/tmp/ink-audit12-mut_net_auto.log",
+    "excerpts": [
+      "14.010s CHECK FAILED (/Users/bytedance/Documents/Workspace/ink-audit-12/tests/integration/net_auto.c:85) Wi-Fi appeared: moved to it and joined",
+      "85.010s CHECK FAILED (/Users/bytedance/Documents/Workspace/ink-audit-12/tests/integration/net_auto.c:96) then back on Wi-Fi",
+      "164.010s CHECK FAILED (/Users/bytedance/Documents/Workspace/ink-audit-12/tests/integration/net_auto.c:107) the session closed: Wi-Fi",
+      "188.010s CHECK FAILED (/Users/bytedance/Documents/Workspace/ink-audit-12/tests/integration/net_auto.c:118) back to auto: at once to what is there",
+      "274.010s CHECK FAILED (/Users/bytedance/Documents/Workspace/ink-audit-12/tests/integration/net_auto.c:126) it tries Wi-Fi again (still around)",
+      "415.010s CHECK FAILED (/Users/bytedance/Documents/Workspace/ink-audit-12/tests/integration/net_auto.c:133) then it is tried again"
+    ]
+  },
+  {
+    "name": "mut_hal_switch",
+    "exit": 0,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/mut_hal_switch",
+      "--profile",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/simulator/profiles/metalio-plus.json",
+      "--script",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/tests/integration/net_auto.script",
+      "--budget",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/tests/integration/net_auto.budget.json",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/test-content",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/audit12/mut_hal_switch",
+      "--quiet",
+      "--no-random-outages"
+    ],
+    "observations": {
+      "hub.link_switched": 4,
+      "test.finished": 1,
+      "test.pass": 23
+    },
+    "log": "/tmp/ink-audit12-mut_hal_switch.log",
+    "excerpts": []
+  },
+  {
+    "name": "sms_twenty_digits",
+    "exit": 1,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/sms_twenty_digits",
+      "--profile",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/simulator/profiles/metalio-plus-handsfree.json",
+      "--script",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/tests/integration/lifecycle.script",
+      "--budget",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/tests/integration/lifecycle.budget.json",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/test-content",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/audit12/sms_twenty_digits",
+      "--quiet",
+      "--no-random-outages"
+    ],
+    "observations": {
+      "test.fail": 3,
+      "test.finished": 1,
+      "test.pass": 108
+    },
+    "log": "/tmp/ink-audit12-sms_twenty_digits.log",
+    "excerpts": [
+      "21.950s CHECK FAILED (<stdin>:426) what the schema allows fits the arguments, with the longest number",
+      "21.970s CHECK FAILED (<stdin>:431) and arrives whole (invalid, 321 bytes)",
+      "21.990s CHECK FAILED (<stdin>:440) it is refused, nothing goes out (text is longer than 118 characters)"
+    ],
+    "note": "Exploratory fixture was mislabeled: the original number is 20 digits; the variant is 21. Argument rejection is expected, not a product finding."
+  }
+]

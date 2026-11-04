@@ -1,0 +1,414 @@
+[
+  {
+    "build": "build-audit-asan",
+    "probe": "net_recovery",
+    "exit": 0,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit-asan/net_recovery",
+      "--profile",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/simulator/profiles/metalio-plus.json",
+      "--script",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/docs/audits/2026-11-04-codex-system-r3/experiments/net_recovery.script",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit-asan/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit-asan/test-content",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit-asan/audit12/net_recovery",
+      "--quiet",
+      "--no-random-outages"
+    ],
+    "log": "/tmp/ink-audit12-asan-net-recovery.log",
+    "observations": [
+      "AUDIT_NET before_switch at=8.010 type=1 up=1 wifi_available=1 lte_available=1 down_since=0 hub=0",
+      "AUDIT_NET wifi_gone_card_registering at=11.010 type=1 up=0 wifi_available=0 lte_available=0 down_since=10501128 hub=1",
+      "AUDIT_NET card_registered at=17.000 type=1 up=0 wifi_available=0 lte_available=1 down_since=10501128 hub=0",
+      "AUDIT_NET still_waiting at=40.000 type=1 up=0 wifi_available=0 lte_available=1 down_since=10501128 hub=0",
+      "AUDIT_NET same_auto_set_again at=44.000 type=2 up=1 wifi_available=0 lte_available=1 down_since=0 hub=0"
+    ],
+    "metrics": {
+      "audit.finished": 1
+    },
+    "warnings": [],
+    "budget_violations": 0
+  },
+  {
+    "build": "build-audit-asan",
+    "probe": "ai_lost_capture",
+    "exit": 0,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit-asan/ai_lost_capture",
+      "--profile",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/simulator/profiles/metalio-plus.json",
+      "--script",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/docs/audits/2026-11-04-codex-system-r3/experiments/ai_lost_capture.script",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit-asan/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit-asan/test-content",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit-asan/audit12/ai_lost_capture",
+      "--quiet",
+      "--no-random-outages"
+    ],
+    "log": "/tmp/ink-audit12-asan-ai-lost-capture.log",
+    "observations": [
+      "AUDIT_AI speaking at=5.010 session=1 seq=1 capturing=1 asking=1 up_open=1 drop=0 rt=1 failures=0 answers=0 status=正在听…松开 AI 键结束",
+      "AUDIT_AI lost_while_held at=13.000 session=0 seq=1 capturing=1 asking=0 up_open=0 drop=1 rt=0 failures=1 answers=0 status=网络断了，回答没收全，请再试一次",
+      "AUDIT_AI after_release at=19.010 session=0 seq=1 capturing=0 asking=0 up_open=0 drop=1 rt=0 failures=1 answers=0 status=正在想…",
+      "AUDIT_AI network_back at=28.010 session=0 seq=1 capturing=0 asking=0 up_open=0 drop=1 rt=0 failures=1 answers=0 status=正在想…",
+      "AUDIT_AI next_turn at=43.000 session=2 seq=2 capturing=0 asking=1 up_open=0 drop=0 rt=1 failures=1 answers=0 status=回答中"
+    ],
+    "metrics": {
+      "audit.finished": 1
+    },
+    "warnings": [],
+    "budget_violations": 0
+  },
+  {
+    "build": "build-audit-asan",
+    "probe": "ui_queue_probe",
+    "exit": 0,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit-asan/ui_queue_probe",
+      "--profile",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/simulator/profiles/metalio-plus.json",
+      "--script",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/docs/audits/2026-11-04-codex-system-r3/experiments/audio_failed_start.script",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit-asan/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit-asan/test-content",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit-asan/audit12/ui_queue",
+      "--quiet",
+      "--no-random-outages"
+    ],
+    "log": "/tmp/ink-audit12-asan-ui-queue.log",
+    "observations": [
+      "AUDIT ui blocked wake_queue=24 busy=1 waiting=1",
+      "AUDIT ui drained count=80 fifo=1 busy_during_jobs=1 waiting=0"
+    ],
+    "metrics": {},
+    "warnings": [],
+    "budget_violations": 0
+  },
+  {
+    "build": "build-audit-asan",
+    "probe": "audio_failed_start",
+    "exit": 0,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit-asan/audio_failed_start",
+      "--profile",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/simulator/profiles/metalio-plus-handsfree.json",
+      "--script",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/docs/audits/2026-11-04-codex-system-r3/experiments/audio_failed_start.script",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit-asan/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit-asan/test-content",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit-asan/audit12/audio_failed_start",
+      "--quiet",
+      "--no-random-outages"
+    ],
+    "log": "/tmp/ink-audit12-asan-audio-failed-start.log",
+    "observations": [
+      "AUDIT_AUDIO after_failed_frontend capture_result=-1 cap_on=0 listen_on=0 frames_before=0 frames_after=0",
+      "AUDIT_AUDIO fresh_capture result=0 cap_on=1 frames=16"
+    ],
+    "metrics": {
+      "audit.finished": 1
+    },
+    "warnings": [],
+    "budget_violations": 0
+  },
+  {
+    "build": "build-audit",
+    "probe": "net_recovery",
+    "exit": 0,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/net_recovery",
+      "--profile",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/simulator/profiles/metalio-plus.json",
+      "--script",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/docs/audits/2026-11-04-codex-system-r3/experiments/net_recovery.script",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/test-content",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/audit12/net_recovery",
+      "--quiet",
+      "--no-random-outages"
+    ],
+    "log": "/tmp/ink-audit12-net-recovery.log",
+    "observations": [
+      "AUDIT_NET before_switch at=8.010 type=1 up=1 wifi_available=1 lte_available=1 down_since=0 hub=0",
+      "AUDIT_NET wifi_gone_card_registering at=11.010 type=1 up=0 wifi_available=0 lte_available=0 down_since=10501128 hub=1",
+      "AUDIT_NET card_registered at=17.000 type=1 up=0 wifi_available=0 lte_available=1 down_since=10501128 hub=0",
+      "AUDIT_NET still_waiting at=40.000 type=1 up=0 wifi_available=0 lte_available=1 down_since=10501128 hub=0",
+      "AUDIT_NET same_auto_set_again at=44.000 type=2 up=1 wifi_available=0 lte_available=1 down_since=0 hub=0"
+    ],
+    "metrics": {
+      "audit.finished": 1
+    },
+    "warnings": [],
+    "budget_violations": 0
+  },
+  {
+    "build": "build-audit",
+    "probe": "ai_lost_capture",
+    "exit": 0,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/ai_lost_capture",
+      "--profile",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/simulator/profiles/metalio-plus.json",
+      "--script",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/docs/audits/2026-11-04-codex-system-r3/experiments/ai_lost_capture.script",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/test-content",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/audit12/ai_lost_capture",
+      "--quiet",
+      "--no-random-outages"
+    ],
+    "log": "/tmp/ink-audit12-ai-lost-capture.log",
+    "observations": [
+      "AUDIT_AI speaking at=5.010 session=1 seq=1 capturing=1 asking=1 up_open=1 drop=0 rt=1 failures=0 answers=0 status=正在听…松开 AI 键结束",
+      "AUDIT_AI lost_while_held at=13.000 session=0 seq=1 capturing=1 asking=0 up_open=0 drop=1 rt=0 failures=1 answers=0 status=网络断了，回答没收全，请再试一次",
+      "AUDIT_AI after_release at=19.010 session=0 seq=1 capturing=0 asking=0 up_open=0 drop=1 rt=0 failures=1 answers=0 status=正在想…",
+      "AUDIT_AI network_back at=28.010 session=0 seq=1 capturing=0 asking=0 up_open=0 drop=1 rt=0 failures=1 answers=0 status=正在想…",
+      "AUDIT_AI next_turn at=43.000 session=2 seq=2 capturing=0 asking=1 up_open=0 drop=0 rt=1 failures=1 answers=0 status=回答中"
+    ],
+    "metrics": {
+      "audit.finished": 1
+    },
+    "warnings": [],
+    "budget_violations": 0
+  },
+  {
+    "build": "build-audit",
+    "probe": "remote_feedback",
+    "exit": 0,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/remote_feedback",
+      "--profile",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/simulator/profiles/metalio-plus.json",
+      "--script",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/docs/audits/2026-11-04-codex-system-r3/experiments/short.script",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/test-content",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/audit12/remote_feedback",
+      "--quiet",
+      "--no-random-outages"
+    ],
+    "log": "/tmp/ink-audit12-remote-feedback.log",
+    "observations": [
+      "AUDIT_REMOTE before_restore display=0 partial_back=0 complete=0 updates=0",
+      "AUDIT_REMOTE after_restore display=0 expected_display=255 complete=0 updates=0 owed=0",
+      "AUDIT_REMOTE after_LAST display=0 updates=1 owed=1"
+    ],
+    "metrics": {
+      "audit.finished": 1
+    },
+    "warnings": [],
+    "budget_violations": 0
+  },
+  {
+    "build": "build-audit",
+    "probe": "ui_queue_probe",
+    "exit": 0,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/ui_queue_probe",
+      "--profile",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/simulator/profiles/metalio-plus.json",
+      "--script",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/docs/audits/2026-11-04-codex-system-r3/experiments/audio_failed_start.script",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/test-content",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/audit12/ui_queue",
+      "--quiet",
+      "--no-random-outages"
+    ],
+    "log": "/tmp/ink-audit12-ui-queue.log",
+    "observations": [
+      "AUDIT ui blocked wake_queue=24 busy=1 waiting=1",
+      "AUDIT ui drained count=80 fifo=1 busy_during_jobs=1 waiting=0"
+    ],
+    "metrics": {},
+    "warnings": [],
+    "budget_violations": 0
+  },
+  {
+    "build": "build-audit",
+    "probe": "audio_failed_start",
+    "exit": 0,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/audio_failed_start",
+      "--profile",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/simulator/profiles/metalio-plus-handsfree.json",
+      "--script",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/docs/audits/2026-11-04-codex-system-r3/experiments/audio_failed_start.script",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/test-content",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/audit12/audio_failed_start",
+      "--quiet",
+      "--no-random-outages"
+    ],
+    "log": "/tmp/ink-audit12-audio-failed-start.log",
+    "observations": [
+      "AUDIT_AUDIO after_failed_frontend capture_result=-1 cap_on=0 listen_on=0 frames_before=0 frames_after=0",
+      "AUDIT_AUDIO fresh_capture result=0 cap_on=1 frames=16"
+    ],
+    "metrics": {
+      "audit.finished": 1
+    },
+    "warnings": [],
+    "budget_violations": 0
+  },
+  {
+    "build": "build-audit",
+    "probe": "hal_switch",
+    "exit": 0,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/hal_switch",
+      "--profile",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/simulator/profiles/metalio-plus.json",
+      "--script",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/docs/audits/2026-11-04-codex-system-r3/experiments/hal_switch.script",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/test-content",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/audit12/hal_switch",
+      "--quiet",
+      "--no-random-outages",
+      "--budget",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/docs/audits/2026-11-04-codex-system-r3/experiments/hal_switch.budget.json"
+    ],
+    "log": "/tmp/ink-audit12-hal-switch.log",
+    "observations": [
+      "AUDIT_HAL before_switch type=1 up=1 connected=1 closed=0",
+      "AUDIT_HAL after_switch type=2 up=1 connected=1 closed=1 wait=0"
+    ],
+    "metrics": {
+      "audit.finished": 1,
+      "audit.pass": 1
+    },
+    "warnings": [],
+    "budget_violations": 0
+  },
+  {
+    "build": "build-audit",
+    "probe": "hal_switch_mutant",
+    "exit": 1,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/hal_switch_mutant",
+      "--profile",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/simulator/profiles/metalio-plus.json",
+      "--script",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/docs/audits/2026-11-04-codex-system-r3/experiments/hal_switch.script",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/test-content",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit/audit12/hal_switch_mutant",
+      "--quiet",
+      "--no-random-outages",
+      "--budget",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/docs/audits/2026-11-04-codex-system-r3/experiments/hal_switch.budget.json"
+    ],
+    "log": "/tmp/ink-audit12-hal-switch-mutant.log",
+    "observations": [
+      "AUDIT_HAL before_switch type=1 up=1 connected=1 closed=0",
+      "AUDIT_HAL after_switch type=2 up=1 connected=1 closed=0 wait=-1"
+    ],
+    "metrics": {
+      "audit.fail": 1,
+      "audit.finished": 1,
+      "warnings.count": 1
+    },
+    "warnings": [
+      "9.830s old WebSocket survived a change between two available networks"
+    ],
+    "budget_violations": 3
+  },
+  {
+    "build": "build-audit-asan",
+    "probe": "hal_switch",
+    "exit": 0,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit-asan/hal_switch",
+      "--profile",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/simulator/profiles/metalio-plus.json",
+      "--script",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/docs/audits/2026-11-04-codex-system-r3/experiments/hal_switch.script",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit-asan/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit-asan/test-content",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit-asan/audit12/hal_switch",
+      "--quiet",
+      "--no-random-outages",
+      "--budget",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/docs/audits/2026-11-04-codex-system-r3/experiments/hal_switch.budget.json"
+    ],
+    "log": "/tmp/ink-audit12-asan-hal-switch.log",
+    "observations": [
+      "AUDIT_HAL before_switch type=1 up=1 connected=1 closed=0",
+      "AUDIT_HAL after_switch type=2 up=1 connected=1 closed=1 wait=0"
+    ],
+    "metrics": {
+      "audit.finished": 1,
+      "audit.pass": 1
+    },
+    "warnings": [],
+    "budget_violations": 0
+  },
+  {
+    "build": "build-audit-asan",
+    "probe": "remote_feedback",
+    "exit": 0,
+    "command": [
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit-asan/remote_feedback",
+      "--profile",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/simulator/profiles/metalio-plus.json",
+      "--script",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/docs/audits/2026-11-04-codex-system-r3/experiments/short.script",
+      "--assets",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit-asan/assets",
+      "--content",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit-asan/test-content",
+      "--out",
+      "/Users/bytedance/Documents/Workspace/ink-audit-12/build-audit-asan/audit12/remote_feedback",
+      "--quiet",
+      "--no-random-outages"
+    ],
+    "log": "/tmp/ink-audit12-asan-remote-feedback.log",
+    "observations": [
+      "AUDIT_REMOTE before_restore display=0 partial_back=0 complete=0 updates=0",
+      "AUDIT_REMOTE after_restore display=0 expected_display=255 complete=0 updates=0 owed=0",
+      "AUDIT_REMOTE after_LAST display=0 updates=1 owed=1"
+    ],
+    "metrics": {
+      "audit.finished": 1
+    },
+    "warnings": [],
+    "budget_violations": 0
+  }
+]

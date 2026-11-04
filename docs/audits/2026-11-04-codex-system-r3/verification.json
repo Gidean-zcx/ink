@@ -1,0 +1,50 @@
+[
+  {
+    "id": "AUD12-001",
+    "verdict": "部分修复",
+    "evidence": "【复现】integration-net-auto 23 项检查通过；补充 net_recovery 的普通与 ASan/UBSan 运行都复现 AUD13-001，见 experiments/results.json。【代码核查】net_service.c:66-112、hal_net_sim.c:296-341。",
+    "note": "普通自动切网已实现，原高问题已消除。Wi-Fi 消失与 LTE 注册重叠时仍可一直离线；残留为中级 AUD13-001。"
+  },
+  {
+    "id": "AUD12-002",
+    "verdict": "已修复",
+    "evidence": "【复现】integration-lifecycle 的 sms_checks（lifecycle.c:406-440）通过；【代码核查】comm_service.c:182-203、249-260。 负对照恢复 text[320] 后 lifecycle exit 1、test.fail=3。",
+    "note": "109 字混合短信与 118 字正文加 20 位号码全文比对通过，119 字拒绝。4 字节字符还受参数表字节容量限制，代码明确拒绝而非截断。"
+  },
+  {
+    "id": "AUD12-003",
+    "verdict": "已修复",
+    "evidence": "【复现】integration-starts 13 项检查通过，含首次打开和重新登记的同步 NOMEM；【代码核查】rt.c:90-110、129-154、191-195。 去掉同步 announce 失败清理后 starts exit 1、test.fail=4。",
+    "note": "首次失败返回 -1 并归还会话，重登记失败通知拥有者；后续新会话正常。"
+  },
+  {
+    "id": "AUD12-004",
+    "verdict": "已修复",
+    "evidence": "【复现】integration-ai-race 6 项检查通过，旧回答锁边界上开始新一轮后，新会话仍可获回答；【代码核查】ai_service.c:148-158、316-334、366-379。 恢复“解锁后关闭当前会话”后 ai_race exit 1、test.fail=2，新会话丢失。",
+    "note": "同一临界区取走旧 sid，解锁后只关该 sid；flush_uplink 的收尾也匹配 stream。"
+  },
+  {
+    "id": "AUD12-005",
+    "verdict": "已修复",
+    "evidence": "【复现】integration-net-auto 通过；独立 hal_switch 在普通与 ASan/UBSan 下都观察到旧连接 CLOSED，恢复旧 N.type 赋值后 exit 1、closed=0。【代码核查】hal_net_sim.c:189-215、284-293，hub_link.c:419-428。",
+    "note": "HAL 与 hub 两层修复有效。现有 hub.link_switched 断言只证明 hub 主动关闭；恢复 HAL 缺陷时 net_auto 仍通过，不能单独作为 HAL 行为的回归证据。"
+  },
+  {
+    "id": "AUD12-006",
+    "verdict": "已修复",
+    "evidence": "【复现】integration-lifecycle 的 overlap_check（lifecycle.c:579-604）通过；【代码核查】remote.c:159-199、250-270。 去掉 holding 门控后 lifecycle exit 1、test.fail=2。",
+    "note": "原 A 完整、B 未结束的交错与合并配额问题已修复。独立的反显恢复路径仍可提前显示局部像素，另记中级 AUD13-003。"
+  },
+  {
+    "id": "AUD12-007",
+    "verdict": "已修复",
+    "evidence": "【复现】integration-starts 的两个高优先级调用者和低优先级初始化者均完成；【代码核查】exec.c:63-93。 换回 c95f48c 的初始化代码后 starts 在墙钟 50 s 内无法完成，被超时终止。",
+    "note": "初始化改用 g_starting 互斥；不再通过 yield 等待初始化任务。"
+  },
+  {
+    "id": "AUD11-005",
+    "verdict": "部分修复",
+    "evidence": "【复现】ai_turn_end、ai_turn_lost、dismiss 等场景通过；ai_lost_capture 的普通与 ASan/UBSan 运行均复现 AUD13-002。【代码核查】ai_service.c:316-334、495-510、580-593。",
+    "note": "原正常结束的会话泄漏及 AUD12-004 的跨轮关闭已修复。失败发生于松键前时仍采集且松键覆盖错误提示，属于中级残留；既有 ai_turn_lost 的松键顺序未覆盖此路径。"
+  }
+]

@@ -58,6 +58,11 @@ static void hooked_unlock(osal_mutex_t *m) {
 
 static void key_job(void *pressed) { ink_ai_key(pressed != NULL, osal_now_us()); }
 
+static void until_s(int s) {
+    uint64_t t = (uint64_t)s * 1000000u, now = osal_now_us();
+    if (t > now) osal_task_delay_us(t - now);
+}
+
 static void race_task(void *arg) {
     (void)arg;
     osal_task_delay_us(3000000);
@@ -78,6 +83,26 @@ static void race_task(void *arg) {
     CHECK(sim_metric_value("ai.answers") == 2, "the new turn is answered");
     osal_task_delay_us(200000);
     CHECK(ink_rt_open_count() == 0, "and nothing stays open (%d)", ink_rt_open_count());
+
+    /* the key held across a lost connection (AUD13-002): @36 the link drops for 20 s */
+    until_s(35);
+    ink_exec_post(INK_EXEC_UI, &g_key_job, key_job, (void *)1);
+    for (int w = 0; w < 2000 && sim_metric_value("ai.failures") < 1; w++) osal_task_delay_us(10000);
+    osal_task_delay_us(100000);
+    CHECK(sim_metric_value("ai.failures") == 1, "the turn fails while the key is held");
+    CHECK(!AI.capturing && ink_rt_open_count() == 0, "the microphone goes off, the session closes (%d, %d)", AI.capturing, ink_rt_open_count());
+    char said[96];
+    snprintf(said, sizeof said, "%s", lv_label_get_text(AI.status));
+    ink_exec_post(INK_EXEC_UI, &g_key_job, key_job, NULL); /* released */
+    osal_task_delay_us(500000);
+    CHECK(!strcmp(lv_label_get_text(AI.status), said) && !AI.asking, "the release does not say it is thinking (%s)", lv_label_get_text(AI.status));
+    until_s(60); /* the link is back */
+    double answers = sim_metric_value("ai.answers");
+    ink_exec_post(INK_EXEC_UI, &g_key_job, key_job, (void *)1);
+    osal_task_delay_us(1200000);
+    ink_exec_post(INK_EXEC_UI, &g_key_job, key_job, NULL);
+    for (int w = 0; w < 3000 && sim_metric_value("ai.answers") == answers; w++) osal_task_delay_us(10000);
+    CHECK(sim_metric_value("ai.answers") == answers + 1, "the next turn works");
     ink_probe_count("test.finished");
 }
 

@@ -1,3 +1,4 @@
-# Speech for both turns (tests/integration/ai_race.c).
+# Speech for every turn; the link drops while a key is held (tests/integration/ai_race.c).
 @1s      mic   speech
-@40s     end
+@36s     outage 20s
+@90s     end

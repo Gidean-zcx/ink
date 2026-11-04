@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "ink/hal_cellular.h"
 #include "ink/hal_net.h"
 #include "ink/osal.h"
 #include "ink/probe.h"
@@ -131,6 +132,14 @@ static void net_task(void *arg) {
     until_s(415); /* 120 s after the failed try */
     hal_net_link_status(&st);
     CHECK(st.type == HAL_LINK_WIFI, "then it is tried again");
+
+    /* @420 the network works again; the card goes through a switch, and registers only after Wi-Fi is gone */
+    until_s(435);
+    CHECK(on_link(HAL_LINK_WIFI, true), "the known network works again");
+    until_s(440);
+    CHECK(hal_cell_select_sim(HAL_CELL_SLOT_INTERNAL, 1) != 0 || !hal_net_available(HAL_LINK_LTE), "the card is registering (its radio just came back)");
+    until_s(452); /* @441.5, radio off: Wi-Fi gone with nothing to go to; the card registers about 3 s later */
+    CHECK(on_link(HAL_LINK_LTE, true), "when the card has registered, auto uses it: no other change is needed to notice");
     ink_probe_count("test.finished");
 }
 

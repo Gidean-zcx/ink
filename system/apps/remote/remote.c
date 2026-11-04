@@ -136,24 +136,22 @@ static void note_set(const char *zh, const char *en) {
     ink_ui_hint_obj(RS.note, INK_REFRESH_UI);
 }
 
-/* The picture under the tap comes back: the hub's next update, or nothing came. UI task. */
-static void spot_restore(bool mark) {
+/* The picture under the tap comes back: the hub's next update, or nothing came. Inverted once more,
+ * not copied from `back`: that may hold part of an update not complete yet. UI task. */
+static void spot_restore(void) {
     if (!RS.spot_on) return;
     RS.spot_on = false;
     lv_timer_pause(RS.spot_timer);
-    osal_mutex_lock(RS.lock, OSAL_WAIT_FOREVER);
-    copy_rect(RS.px, RS.back, &RS.spot);
-    osal_mutex_unlock(RS.lock);
-    if (mark) {
-        ink_ui_hint_area(&RS.spot, INK_REFRESH_UI);
-        lv_obj_invalidate_area(RS.img, &RS.spot);
-        ink_probe_count("remote.feedback_restored");
-    }
+    for (int y = RS.spot.y1; y <= RS.spot.y2; y++)
+        for (int x = RS.spot.x1; x <= RS.spot.x2; x++) RS.px[(size_t)y * (size_t)RS.w + (size_t)x] ^= 0xFF;
+    ink_ui_hint_area(&RS.spot, INK_REFRESH_UI);
+    lv_obj_invalidate_area(RS.img, &RS.spot);
+    ink_probe_count("remote.feedback_restored");
 }
 
 static void spot_expired(lv_timer_t *t) { /* UI task */
     (void)t;
-    spot_restore(true);
+    spot_restore();
 }
 
 static void show_update(void *arg) { /* UI task */
@@ -163,7 +161,7 @@ static void show_update(void *arg) { /* UI task */
     bool complete = RS.holding && RS.img; /* else it came too late: an older picture's, already given up */
     osal_mutex_unlock(RS.lock);
     if (!complete) return;
-    spot_restore(true);
+    spot_restore();
     osal_mutex_lock(RS.lock, OSAL_WAIT_FOREVER);
     int n = RS.ndirty;
     memcpy(d, RS.dirty, sizeof d[0] * (size_t)n);
@@ -428,7 +426,7 @@ static void tapped(lv_event_t *e) { /* UI task */
     lv_point_t pt;
     lv_indev_get_point(lv_indev_active(), &pt);
     RS.tap_us = osal_now_us();
-    spot_restore(true);
+    spot_restore();
     lv_area_t a = {pt.x - FEEDBACK, pt.y - FEEDBACK, pt.x + FEEDBACK, pt.y + FEEDBACK};
     if (a.x1 < 0) a.x1 = 0;
     if (a.y1 < 0) a.y1 = 0;
@@ -501,7 +499,7 @@ static void remote_create(lv_obj_t *scr, void *arg) {
     lv_obj_set_style_text_font(RS.note, cjk ? ink_font_lvgl(cjk) : ink_ui_font(2), 0);
     lv_obj_set_style_bg_color(RS.note, lv_color_white(), 0);
     lv_obj_set_style_bg_opa(RS.note, LV_OPA_COVER, 0);
-    lv_obj_align(RS.note, LV_ALIGN_BOTTOM_MID, 0, -ink_dp(16));
+    lv_obj_align(RS.note, LV_ALIGN_TOP_MID, 0, ink_dp(16)); /* at the top: the AI's answer sheet may cover the lower part */
     lv_obj_add_flag(RS.note, LV_OBJ_FLAG_HIDDEN);
     RS.credit_timer = lv_timer_create(credit_check, 40, NULL);
     lv_timer_pause(RS.credit_timer); /* until the hub confirmed the session */
@@ -523,7 +521,11 @@ static void remote_create(lv_obj_t *scr, void *arg) {
     ink_jw_str(&w, url);
     ink_jw_raw(&w, "}");
     if (w.overflow) snprintf(RS.params, sizeof RS.params, "{\"w\":%d,\"h\":%d,\"gray\":16}", RS.w, RS.h); /* too long: the hub's start page */
-    session_open();
+    char ps[16] = "";
+    ink_state_get_str(ink_state_find("power.state"), ps, sizeof ps);
+    RS.suspended = !strcmp(ps, "locked"); /* opened while locked (a tool call): the session waits for the unlock */
+    if (RS.suspended) lv_timer_pause(RS.link_timer);
+    else session_open();
 }
 
 /* After the regions still queued (on the same executor): the canvases go back, unless the host was

@@ -393,6 +393,15 @@ add_test(NAME integration-starts
           --budget ${CMAKE_SOURCE_DIR}/tests/integration/starts.budget.json
           --script ${CMAKE_SOURCE_DIR}/tests/integration/starts.script
           --out ${CMAKE_BINARY_DIR}/test-out/starts --quiet --no-random-outages)
+# A connection does not survive a move to the other network (tests/integration/hal_switch.c).
+add_executable(sim-hal-switch simulator/runtime/sim_main.c tests/integration/hal_switch.c)
+target_link_libraries(sim-hal-switch PRIVATE ink_system ink_port_sim)
+target_compile_options(sim-hal-switch PRIVATE ${INK_WARN})
+add_test(NAME integration-hal-switch
+  COMMAND sim-hal-switch --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+          --budget ${CMAKE_SOURCE_DIR}/tests/integration/hal_switch.budget.json
+          --script ${CMAKE_SOURCE_DIR}/tests/integration/hal_switch.script
+          --out ${CMAKE_BINARY_DIR}/test-out/hal_switch --quiet --no-random-outages)
 # Which network "auto" uses as networks come and go (tests/integration/net_auto.c).
 add_executable(sim-net-auto simulator/runtime/sim_main.c tests/integration/net_auto.c)
 target_link_libraries(sim-net-auto PRIVATE ink_system ink_port_sim)
