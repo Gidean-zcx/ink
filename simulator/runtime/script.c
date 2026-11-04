@@ -15,6 +15,7 @@
  *   +0       mic   say 下一页         # speech with these words (the device's command words may know them)
  *   +0       net   wifi | lte | none   # shorthand for the environment: that network appears (none: all gone)
  *   +0       wifi  on|off [rssi]        # a known Wi-Fi network in range, e.g. wifi on -70
+ *   +0       wifi  broken               # in range, but joining it never works (a changed password)
  *   +0       cell  on|off [rsrp]        # cellular coverage, e.g. cell on -105
  *   +0       outage 5s                 # link drops for a while (dead connection noticed later)
  *   +0       sim   external|internal none|data|sms|voice  # card in a SIM slot (what its plan allows)
@@ -230,11 +231,12 @@ int sim_script_load(const char *path, char *err, size_t errlen) {
             ok = n >= 3 && !strcmp(tok[2], "lost");
             if (ok) push(t, A_RTC_LOST);
         } else if (!strcmp(cmd, "wifi") || !strcmp(cmd, "cell")) {
-            ok = n >= 3 && (!strcmp(tok[2], "on") || !strcmp(tok[2], "off"));
+            bool broken = !strcmp(cmd, "wifi") && n >= 3 && !strcmp(tok[2], "broken");
+            ok = n >= 3 && (!strcmp(tok[2], "on") || !strcmp(tok[2], "off") || broken);
             if (ok) {
                 action_t *a = push(t, A_ENV);
-                a->a = !strcmp(cmd, "cell");
-                a->b = !strcmp(tok[2], "on");
+                a->a = broken ? 2 : !strcmp(cmd, "cell");
+                a->b = broken || !strcmp(tok[2], "on");
                 a->c = n >= 4 ? atoi(tok[3]) : 0;
             }
         } else if (!strcmp(cmd, "sms-in")) {

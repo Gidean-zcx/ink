@@ -39,6 +39,8 @@ typedef struct {
 
 static struct {
     osal_mutex_t *lock;
+    osal_mutex_t *at; /* the modem takes one AT command at a time, and some requests are several: the comm task
+                       * and exec.bg both talk to it. Held while a request runs, up to the seconds it takes */
     msg_t msg[MSG_KEEP]; /* newest last */
     int nmsg;
     bool ringing;
@@ -64,7 +66,10 @@ static void utf8_clip(char *s) {
 
 /* Publish what the modem says now. False when it does not answer. */
 static bool refresh_status(hal_cell_status_t *st) {
-    if (!hal_cell_status(st)) {
+    osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
+    bool up = hal_cell_status(st);
+    osal_mutex_unlock(CM.at);
+    if (!up) {
         ink_state_set_bool(CM.h_registered, false);
         ink_state_set_str(CM.h_sim, "none");
         return false;
@@ -77,7 +82,10 @@ static bool refresh_status(hal_cell_status_t *st) {
 static void on_sms(int index) { /* comm task */
     msg_t *m = &CM.rx;
     ink_args_t *a = &CM.rx_args;
-    if (hal_cell_sms_take(index, m->from, sizeof m->from, m->text, sizeof m->text) < 0) {
+    osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
+    int got = hal_cell_sms_take(index, m->from, sizeof m->from, m->text, sizeof m->text);
+    osal_mutex_unlock(CM.at);
+    if (got < 0) {
         ink_probe_count("comm.sms_read_failed");
         return;
     }
@@ -118,11 +126,12 @@ static void sim_switch(void *arg) { /* exec.bg: the switch takes seconds */
     (void)arg;
     hal_cell_slot_t want = wanted_slot();
     hal_cell_status_t st;
+    osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
     int r = hal_cell_status(&st) ? 0 : -1;
-    if (r == 0 && st.slot != want) {
-        r = hal_cell_select_sim(want, 60000);
-        ink_probe_count(r == 0 ? "comm.sim_switched" : r == 1 ? "comm.sim_switched_unregistered" : "comm.sim_switch_failed");
-    }
+    bool switched = r == 0 && st.slot != want;
+    if (switched) r = hal_cell_select_sim(want, 60000);
+    osal_mutex_unlock(CM.at);
+    if (switched) ink_probe_count(r == 0 ? "comm.sim_switched" : r == 1 ? "comm.sim_switched_unregistered" : "comm.sim_switch_failed");
     refresh_status(&st);
     sim_retry(r != 0); /* 1: on the new card, not registered yet: cell.registered is looked at again too */
 }
@@ -171,16 +180,20 @@ static void comm_task(void *arg) {
 /* ------------------------------------------------------------ capabilities */
 
 static void cap_send(ink_call_t *c) { /* exec.bg */
-    char to[24], text[320];
+    char to[24], text[INK_ARGS_TEXT]; /* a message is never cut: 118 Chinese characters fit in the arguments (INK_ARGS_TEXT);
+                                       * with other 4-byte characters the arguments may refuse it, also never cut */
     ink_args_get_str(&c->args, "to", to, sizeof to);
     ink_args_get_str(&c->args, "text", text, sizeof text);
-    uint32_t left = ink_cap_time_left_ms(c); /* the time it waited for this executor counts */
-    if (left < SMS_MIN_LEFT_MS) {
+    osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
+    uint32_t left = ink_cap_time_left_ms(c); /* the time it waited for this executor and the modem counts */
+    int r = left < SMS_MIN_LEFT_MS ? 1 : hal_cell_sms_send(to, text, left < 20000 ? left : 20000);
+    osal_mutex_unlock(CM.at);
+    if (r > 0) {
         c->rc.status = INK_RC_FAILED;
         snprintf(c->rc.detail, sizeof c->rc.detail, "not sent: no time left");
         return;
     }
-    if (hal_cell_sms_send(to, text, left < 20000 ? left : 20000) != 0) {
+    if (r != 0) {
         c->rc.status = INK_RC_FAILED;
         snprintf(c->rc.detail, sizeof c->rc.detail, "the message was not sent");
         return;
@@ -211,23 +224,32 @@ static void call_result(ink_call_t *c, int r, const char *ok, const char *fail) 
 static void cap_dial(ink_call_t *c) {
     char number[24];
     ink_args_get_str(&c->args, "number", number, sizeof number);
-    call_result(c, hal_cell_dial(number), "正在拨号", "the call could not be placed");
+    osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
+    int r = hal_cell_dial(number);
+    osal_mutex_unlock(CM.at);
+    call_result(c, r, "正在拨号", "the call could not be placed");
 }
 
 static void cap_answer(ink_call_t *c) {
     CM.ringing = false;
-    call_result(c, hal_cell_answer(), "接通了", "nothing to answer");
+    osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
+    int r = hal_cell_answer();
+    osal_mutex_unlock(CM.at);
+    call_result(c, r, "接通了", "nothing to answer");
 }
 
 static void cap_hangup(ink_call_t *c) {
     CM.ringing = false;
-    call_result(c, hal_cell_hangup(), "挂断了", "no call to end");
+    osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
+    int r = hal_cell_hangup();
+    osal_mutex_unlock(CM.at);
+    call_result(c, r, "挂断了", "no call to end");
 }
 
 static const ink_cap_t COMM_CAPS[] = {
     {.id = "message.send",
      .title = "发短信",
-     .input = "{\"type\":\"object\",\"properties\":{\"to\":{\"type\":\"string\",\"maxLength\":20},\"text\":{\"type\":\"string\",\"maxLength\":300}},"
+     .input = "{\"type\":\"object\",\"properties\":{\"to\":{\"type\":\"string\",\"maxLength\":20},\"text\":{\"type\":\"string\",\"maxLength\":118}},"
               "\"required\":[\"to\",\"text\"]}",
      .effect = INK_FX_EXTERNAL,
      .child_ok = true, /* children like adults (D-25); the AI still waits for confirmation */
@@ -273,7 +295,8 @@ static const ink_setting_def_t COMM_SETTINGS[] = {
 
 int ink_comm_init(void) {
     CM.lock = osal_mutex_create();
-    if (!CM.lock) return -1;
+    CM.at = osal_mutex_create();
+    if (!CM.lock || !CM.at) return -1;
     CM.h_registered = ink_state_define(&ST_REGISTERED);
     CM.h_sim = ink_state_define(&ST_SIM);
     ink_settings_define(COMM_SETTINGS, 1);

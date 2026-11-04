@@ -16,7 +16,7 @@
 
 #define MAX_CAPS 96
 
-static const ink_cap_t *REG[MAX_CAPS];
+static const ink_cap_t *REG[MAX_CAPS] INK_PSRAM_BSS;
 static int nreg;
 
 static const char *RC_NAME[] = {"done",     "partial", "queued", "pending_confirmation", "rejected",
@@ -608,7 +608,7 @@ static struct {
     ink_event_fn fn;
     void *ctx;
     ink_exec_t exec;
-} SUBS[SUBS_MAX];
+} SUBS[SUBS_MAX] INK_PSRAM_BSS;
 static int nsubs;
 
 typedef struct {

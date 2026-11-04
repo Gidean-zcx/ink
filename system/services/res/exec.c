@@ -20,8 +20,10 @@ static struct {
     ink_exec_job_t *jobs; /* newest first: any task pushes, the executor takes them all */
     osal_sem_t *wake;
     osal_task_t *task;
-    int state; /* 0 off, 1 allowed (ink_exec_init), 2 starting, 3 running, -1 failed to start */
+    int state; /* 0 off, 1 allowed (ink_exec_init), 3 running, -1 failed to start */
 } EX[INK_EXEC_COUNT];
+
+static osal_mutex_t *g_starting; /* a task waiting for a start lends its priority to the one doing it */
 
 static const struct {
     const char *name;
@@ -61,7 +63,9 @@ static void exec_task(void *arg) {
 static bool running(ink_exec_t e) {
     int st = __atomic_load_n(&EX[e].state, __ATOMIC_ACQUIRE);
     if (st == 3) return true;
-    if (st == 1 && __atomic_compare_exchange_n(&EX[e].state, &st, 2, false, __ATOMIC_ACQ_REL, __ATOMIC_ACQUIRE)) {
+    if (st != 1) return false;
+    osal_mutex_lock(g_starting, OSAL_WAIT_FOREVER);
+    if (EX[e].state == 1) {
         const char *prev = osal_mem_tag("exec");
         EX[e].wake = osal_sem_create(0, 1);
         osal_mem_tag(prev);
@@ -69,13 +73,19 @@ static bool running(ink_exec_t e) {
                                .priority = CFG[e].prio, .core = -1, .flags = OSAL_TASK_STACK_EXTERNAL};
         bool ok = EX[e].wake && osal_task_create(&cfg, &EX[e].task) == OSAL_OK;
         __atomic_store_n(&EX[e].state, ok ? 3 : -1, __ATOMIC_RELEASE);
-        return ok;
     }
-    while ((st = __atomic_load_n(&EX[e].state, __ATOMIC_ACQUIRE)) == 2) osal_task_yield(); /* another task is starting it */
+    st = EX[e].state;
+    osal_mutex_unlock(g_starting);
     return st == 3;
 }
 
 int ink_exec_init(void) {
+    if (!g_starting) {
+        const char *prev = osal_mem_tag("exec");
+        g_starting = osal_mutex_create();
+        osal_mem_tag(prev);
+    }
+    if (!g_starting) return -1;
     for (int e = INK_EXEC_MEDIA; e <= INK_EXEC_BG; e++) {
         int off = 0;
         __atomic_compare_exchange_n(&EX[e].state, &off, 1, false, __ATOMIC_ACQ_REL, __ATOMIC_ACQUIRE);

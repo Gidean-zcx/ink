@@ -1,5 +1,5 @@
 {
-  "_doc": "Remote screen on the Plus profile over Wi-Fi with the simulated hub's browser.session (generated pages). Targets: architecture v1.0 §9.5 (estimates).",
+  "_doc": "Remote screen on the Plus profile, on Wi-Fi (the script says it is around, auto moves to it), with the simulated hub's browser.session (generated pages). Targets: architecture v1.0 §9.5 (estimates).",
   "panic.count": {"max": 0, "optional": true},
   "warnings.count": {"max": 0, "optional": true},
   "hub.remote.sessions": {"min": 1, "max": 1, "why": "the AI opened one remote screen"},
@@ -7,7 +7,8 @@
   "remote.updates": {"min": 4, "why": "the first page and one update per tap were shown"},
   "remote.bad_regions": {"max": 0, "optional": true, "why": "every region decoded"},
   "remote.tap_feedback_visible_ms.p95": {"max": 350, "srs": "SR-UX-01b", "why": "tap -> local feedback visible; ~250 ms, up to ~375 ms when the panel is still busy or powering up (one refresh at a time)"},
-  "remote.tap_to_update_visible_ms.p95": {"max": 1900, "target_max": 800, "why": "tap -> a whole new page visible (Wi-Fi). Measured ~1.47 s, up to ~1.8 s when the panel also does a full clean refresh: the panel finishes the tap feedback, powers up and drives the full page in GL16, the touched spot put back in the same refresh; the 0.4-0.8 s estimate holds for partial changes (detailed design §13)"},
+  "remote.tap_to_update_visible_ms.p95": {"max": 1500, "target_max": 800, "why": "tap -> a whole new page visible, on Wi-Fi. Measured ~1.36 s (on the 4G model ~1.47 s, up to ~1.8 s): the panel finishes the tap feedback, powers up and drives the full page in GL16, the touched spot put back in the same refresh; the 0.4-0.8 s estimate holds for partial changes (detailed design §13)"},
   "remote.feedback_restored": {"min": 3, "why": "the touched spot goes back with each update"},
-  "hub.remote.update_bytes.max": {"max": 61440, "why": "a full text page fits in 60 KB (estimate 20-60 KB)"}
+  "hub.remote.update_bytes.max": {"max": 61440, "why": "a full text page fits in 60 KB (estimate 20-60 KB)"},
+  "net.switches": {"min": 1, "max": 1, "why": "it did move to Wi-Fi: the figures are for that link"}
 }

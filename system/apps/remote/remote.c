@@ -14,7 +14,9 @@
  * Two canvases in PSRAM, 8-bit gray. Regions are decoded on the media executor
  * into `back`, the picture as the hub knows it; when an update is complete the
  * UI task copies what changed to `px`, the only one LVGL reads, and marks those
- * areas with the refresh hint they came with. A generation number follows the
+ * areas with the refresh hint they came with. Regions of the next update wait
+ * meanwhile: what is shown is always a whole update, one for each credit. A
+ * generation number follows the
  * picture: closing the page, reopening it or a new connection (that hub starts
  * from a white screen) start a new one, and regions of an older one are
  * dropped, also when they are found mid-way.
@@ -53,7 +55,7 @@ static struct {
     uint32_t gen;  /* the picture's generation (under the lock) */
     bool active;   /* between create and destroy (under the lock): the canvases stay */
     bool repaint;  /* a new picture: the next update shows all of `back` (under the lock) */
-    uint32_t complete_gen; /* the generation of the update just completed: what show_update may show (under the lock) */
+    bool holding;  /* an update is complete and waits for the UI task: `back` stays as it is, the next one waits (under the lock) */
     struct {
         lv_area_t a;
         uint8_t hint;
@@ -96,6 +98,7 @@ typedef struct region_job {
 static region_job_t *g_head, *g_tail;
 
 static void region_lost(void);
+static void drain(void *arg);
 
 static void copy_rect(uint8_t *dst, const uint8_t *src, const lv_area_t *a) { /* canvases of the same size */
     size_t w = (size_t)(a->x2 - a->x1 + 1);
@@ -155,11 +158,9 @@ static void spot_expired(lv_timer_t *t) { /* UI task */
 
 static void show_update(void *arg) { /* UI task */
     (void)arg;
-    if (!RS.img) return;
     typeof(RS.dirty[0]) d[DIRTY_MAX];
     osal_mutex_lock(RS.lock, OSAL_WAIT_FOREVER);
-    bool complete = RS.complete_gen == RS.gen; /* not an update of an older connection, come too late */
-    RS.complete_gen = 0;
+    bool complete = RS.holding && RS.img; /* else it came too late: an older picture's, already given up */
     osal_mutex_unlock(RS.lock);
     if (!complete) return;
     spot_restore(true);
@@ -172,7 +173,9 @@ static void show_update(void *arg) { /* UI task */
     if (all) memcpy(RS.px, RS.back, (size_t)RS.w * (size_t)RS.h);
     else
         for (int i = 0; i < n; i++) copy_rect(RS.px, RS.back, &d[i].a);
+    RS.holding = false;
     osal_mutex_unlock(RS.lock);
+    ink_exec_post(INK_EXEC_MEDIA, &RS.drain_job, drain, NULL); /* the next update's regions */
     if (all) { /* after a new connection: nothing of the old picture stays */
         lv_area_t whole = {0, 0, RS.w - 1, RS.h - 1};
         ink_ui_hint_area(&whole, INK_REFRESH_FULL);
@@ -245,7 +248,7 @@ static void decode_region(region_job_t *j) { /* exec.media */
             } else RS.repaint = true; /* too many: show all of it */
         }
         show = j->flags & INK_RT_F_LAST;
-        if (show) RS.complete_gen = j->gen;
+        if (show) RS.holding = true;
     }
     osal_mutex_unlock(RS.lock);
     if (ok) ink_probe_value("remote.region_bytes", (double)j->len);
@@ -257,7 +260,7 @@ static void drain(void *arg) { /* exec.media */
     (void)arg;
     for (;;) {
         osal_mutex_lock(RS.lock, OSAL_WAIT_FOREVER);
-        region_job_t *j = g_head;
+        region_job_t *j = RS.holding ? NULL : g_head; /* show_update starts this again */
         if (j) {
             g_head = j->next;
             if (!g_head) g_tail = NULL;
@@ -304,6 +307,12 @@ static void on_frame(void *ctx, int sid, uint8_t kind, const uint8_t *payload, s
     else if (ink_exec_post(INK_EXEC_MEDIA, &RS.drain_job, drain, NULL) != 0) region_lost();
 }
 
+static void new_picture(void) { /* under the lock: what is queued or waiting to be shown no longer counts */
+    RS.gen++;
+    RS.ndirty = 0;
+    RS.holding = false;
+}
+
 /* UI task. The hub confirmed the session: this connection's hub knows nothing of what the device
  * shows and starts from a white screen. Regions still queued from before are dropped, what stays on
  * the panel until the first update comes is the old picture. */
@@ -313,13 +322,13 @@ static void session_ready(void *arg) {
     bool ours = RS.img && RS.ready_sid == RS.sid;
     RS.ready_sid = 0;
     if (ours) {
-        RS.gen++;
+        new_picture();
         memset(RS.back, 0xFF, (size_t)RS.w * (size_t)RS.h);
-        RS.ndirty = 0;
         RS.repaint = RS.pulled; /* some of an older picture may be on the panel */
     }
     osal_mutex_unlock(RS.lock);
     if (!ours) return;
+    ink_exec_post(INK_EXEC_MEDIA, &RS.drain_job, drain, NULL); /* what was queued goes, as old */
     if (RS.pulled) ink_probe_count("remote.resynced");
     RS.owed = 2;
     RS.waiting_display = false;
@@ -359,17 +368,17 @@ static void session_open(void) { /* UI task */
     osal_mutex_lock(RS.lock, OSAL_WAIT_FOREVER);
     RS.sid = sid > 0 ? sid : 0;
     osal_mutex_unlock(RS.lock);
-    if (sid <= 0) session_closed(NULL);
+    if (sid <= 0 || !ink_rt_is_open(sid)) session_closed(NULL);
 }
 
 static void session_close(void) { /* UI task: what is queued no longer lands anywhere */
     osal_mutex_lock(RS.lock, OSAL_WAIT_FOREVER);
     int sid = RS.sid;
     RS.sid = 0;
-    RS.gen++;
-    RS.ndirty = 0;
+    new_picture();
     osal_mutex_unlock(RS.lock);
     if (sid > 0) ink_rt_close(sid);
+    ink_exec_post(INK_EXEC_MEDIA, &RS.drain_job, drain, NULL);
 }
 
 static void session_restart(void *arg) { /* UI task */
@@ -403,8 +412,13 @@ static void on_power_state(void *ctx, int h, const char *id) {
     bool locked = !strcmp(s, "locked");
     if (!RS.img || RS.ended || locked == RS.suspended) return;
     RS.suspended = locked;
-    if (locked) session_close();
-    else session_open();
+    if (locked) {
+        lv_timer_pause(RS.link_timer);
+        session_close();
+    } else {
+        lv_timer_resume(RS.link_timer);
+        session_open();
+    }
 }
 
 /* ------------------------------------------------------------ up: input */
@@ -459,8 +473,8 @@ static void remote_create(lv_obj_t *scr, void *arg) {
         memset(RS.back, 0xFF, size);
     }
     RS.ndirty = 0;
+    RS.holding = false;
     RS.repaint = false;
-    RS.complete_gen = 0;
     RS.ready_sid = 0;
     osal_mutex_unlock(RS.lock);
     if (!ok) {
@@ -557,10 +571,17 @@ static int remote_snapshot(char *buf, size_t cap) { /* the hub has the page's te
 const ink_activity_t ink_app_remote = {
     .name = "remote", .create = remote_create, .destroy = remote_destroy, .on_key = remote_key, .snapshot = remote_snapshot};
 
-static char g_url[128];
+static char g_url[180]; /* so that the session's parameters always hold it (RS.params) */
 
 static void cap_open(ink_call_t *c) { /* UI task */
-    if (ink_args_get_str(&c->args, "url", g_url, sizeof g_url) < 0) snprintf(g_url, sizeof g_url, "about:home");
+    char url[sizeof g_url];
+    int n = ink_args_get_str(&c->args, "url", url, sizeof url);
+    if (n >= (int)sizeof url) { /* opening something else than was asked for would be worse */
+        c->rc.status = INK_RC_INVALID;
+        snprintf(c->rc.detail, sizeof c->rc.detail, "the address is too long");
+        return;
+    }
+    snprintf(g_url, sizeof g_url, "%s", n < 0 ? "about:home" : url);
     ink_ui_push(&ink_app_remote, g_url);
     snprintf(c->rc.object, sizeof c->rc.object, "screen:remote");
     snprintf(c->rc.say, sizeof c->rc.say, "打开远程画面");

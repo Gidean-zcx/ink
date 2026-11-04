@@ -41,8 +41,9 @@ typedef struct {
 } ink_rt_handler_t;
 
 int ink_rt_init(void);
-/** Open a session with a remote capability: its id (1..255), or -1 (all INK_RT_MAX in use, or
- *  parameters longer than INK_RT_PARAMS). */
+/** Open a session with a remote capability: its id (1..255), or -1 (all INK_RT_MAX in use, parameters
+ *  longer than INK_RT_PARAMS, no memory for the request). The handlers may run before this returns:
+ *  an owner keeps the id, then looks with ink_rt_is_open that the session did not end already. */
 int ink_rt_open(const char *cap, const char *params_json, const ink_rt_handler_t *h);
 /** One frame (copied). 0, or < 0 (no such session, not ready yet, queue full). */
 int ink_rt_send(int sid, uint8_t kind, const void *payload, size_t len, uint8_t flags);
@@ -51,6 +52,8 @@ int ink_rt_control(int sid, const char *method, const char *params_json);
 void ink_rt_close(int sid);
 /** The hub confirmed the session on the current connection: frames can go. */
 bool ink_rt_ready(int sid);
+/** Not closed, by its owner or the hub. */
+bool ink_rt_is_open(int sid);
 int ink_rt_open_count(void);
 
 #ifdef __cplusplus

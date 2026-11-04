@@ -12,6 +12,11 @@
 #include <stddef.h>
 #include <stdint.h>
 
+/* A large table of an app, zero-initialised, kept out of the scarce internal RAM (see ink/osal.h). */
+#ifndef INK_PSRAM_BSS
+#define INK_PSRAM_BSS
+#endif
+
 #ifdef __cplusplus
 extern "C" {
 #endif

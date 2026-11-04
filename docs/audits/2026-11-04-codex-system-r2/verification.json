@@ -1,0 +1,68 @@
+[
+  {
+    "id": "AUD11-001",
+    "verdict": "已修复",
+    "evidence": "【复现】普通 CTest 52/52；integration-lifecycle 拥塞检查通过；补充 UI 实验 wake_queue=24、80 个节点 FIFO 执行且运行中 busy=1。【代码核查】exec.c:96-110、cap.c:449-463、settings.c:210-226、watch.c:27-51。",
+    "note": "原队列容量导致的回执、apply、通知丢失已消除；节点归工作对象所有，批量积压与合并通过。首次启动存在另一条较少见的调度活锁，单列 AUD12-007；不将它混作旧容量问题仍未修复。"
+  },
+  {
+    "id": "AUD11-002",
+    "verdict": "已修复",
+    "evidence": "【复现】integration-lifecycle 的 deadline_checks 通过。【代码核查】cap.c:329-400、407-446；comm_service.c:173-190。",
+    "note": "截止时间覆盖排队和阻塞：未开始的过期不再运行，已开始的先回超时、迟到结果丢弃。"
+  },
+  {
+    "id": "AUD11-006",
+    "verdict": "已修复",
+    "evidence": "【复现】integration-lifecycle 的 dedupe_checks 两个锁边界重发检查通过。【代码核查】cap.c:217-242、260-268。",
+    "note": "查重与占槽、最终回执与去重环写入分别在同一次持锁完成。"
+  },
+  {
+    "id": "AUD11-009",
+    "verdict": "已修复",
+    "evidence": "【复现】integration-lifecycle 的 early_checks 通过。【代码核查】cap.c:247-255、360-400、489-507。",
+    "note": "finished、answered、refs 三个条件共同决定回收；run 返回前或 invoke 等待期间不复用槽位。"
+  },
+  {
+    "id": "AUD11-003",
+    "verdict": "已修复",
+    "evidence": "【复现】integration-lifecycle 的 sim_checks：预存 slot=1 开机应用、外部改成 slot=0 后再次设置同值纠正，普通与 ASan 均通过。【代码核查】system/services/comm/comm_service.c:117、131、139、262；system/policy/settings.c:210。",
+    "note": "启动延迟查询和失败退避重试已有实现；同值设置仍提交 apply。有限次失败后放弃并计数，后续设置可重新启动。"
+  },
+  {
+    "id": "AUD11-004",
+    "verdict": "已修复",
+    "evidence": "【复现】integration-lifecycle 的 capture_checks，在独立采集和监听两种模式下均检查结束中的重开被拒绝、最终回调一次、下一次采集正常。【代码核查】system/services/audio/audio_service.c:219、233、625、683。",
+    "note": "编码器与回调先取走、清理、通知，最后才清 cap_on；mic_lock 保护麦克风归属。没有把本轮 AI 的换轮关闭竞态混作此采集资源问题。"
+  },
+  {
+    "id": "AUD11-005",
+    "verdict": "部分修复",
+    "evidence": "【复现】ai_turn_end、ai_dismiss、ai_dismiss_held、ai_mic_unavailable 均通过；新增 ai_race_probe 在真实回复与 UI 新按键交错时得到 current_session=0 capturing=1 up_open=1 rt_count=0。【代码核查】system/services/ai/ai_service.c:147、310、326。",
+    "note": "原正常结束不关会话的泄漏已消除；新关闭路径按解锁后的当前 sid 操作，可误关下一轮，见高问题 AUD12-004，尚不能整体验收。"
+  },
+  {
+    "id": "AUD11-007",
+    "verdict": "已修复",
+    "evidence": "【复现】remote_reconnect、integration-lifecycle 两次断线、恢复配额和恢复后的点按通过；lifecycle 比较图像（JPEG 替身区域除外）。【代码核查】system/apps/remote/remote.c:104、281、300；system/services/hub/rt.c:102、118。",
+    "note": "重连回调清后画布、递增代次、重新发配额并全屏重绘；配额发送失败保留 owed 重试。JPEG 区域不在逐像素一致检查内，不能称全画面逐像素验证。"
+  },
+  {
+    "id": "AUD11-008",
+    "verdict": "已修复",
+    "evidence": "【复现】integration-lifecycle 的 stale_region_check 在解码中换代，旧区域不写画布、不投递 UI；立即关闭重开及最终资源释放通过。【代码核查】system/apps/remote/remote.c:137、185、217、328、343。",
+    "note": "back 与 px 分离，解码提交前重新确认代次，UI 任务才写 px；延迟释放也检查 active。对原跨会话写入/读写冲突问题成立，更新单元的提交边界另查。"
+  },
+  {
+    "id": "AUD11-010",
+    "verdict": "已修复",
+    "evidence": "【代码核查】system/services/comm/comm_service.c:40-52：rx、rx_args、ev_args 均已移入 CM INK_PSRAM_BSS；platform/include/ink/osal.h:91-96 目前只提供可覆盖的空宏，注释指定未来设备端使用 EXT_RAM_BSS_ATTR。",
+    "note": "源码层漏标记的 1392 B 已消除；当前仓库尚无目标端宏映射和链接段验收，模拟器仍不计静态区。结论限于本次模拟器/便携源码修复，不能称已验证设备上的 PSRAM 放置。"
+  },
+  {
+    "id": "AUD-007/F-6",
+    "verdict": "已修复",
+    "evidence": "【复现】ai_page_version 的过期工具调用与重复请求检查通过；integration-lifecycle 的两个去重锁边界通过。【代码核查】apps/reader/reader.c:258；system/ui/ui_task.c:98、363；system/policy/cap.c:113、217、260。",
+    "note": "内容版本与输入消息页面代次分离，翻页递增内容版本、回执带新版本；请求号查重/占槽及完成/缓存原子完成。保留当前协议约定的有界去重窗口和可选 page_gen 语义。"
+  }
+]

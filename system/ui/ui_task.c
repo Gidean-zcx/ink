@@ -89,7 +89,7 @@ static struct {
     bool has_held;
     /* styles */
     lv_style_t st_screen, st_btn, st_btn_pr;
-} UI;
+} UI INK_PSRAM_BSS;
 
 /* ---------------------------------------------------------------- helpers */
 

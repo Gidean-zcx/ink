@@ -2,6 +2,6 @@
 # while the remote picture is on screen.
 @0       sim   external sms
 +0       sim   internal sms
-@45s     outage 3s
 @60s     outage 3s
-@90s     end
+@75s     outage 3s
+@110s    end

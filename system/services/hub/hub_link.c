@@ -88,6 +88,7 @@ static struct {
     osal_task_t *task;
     osal_mutex_t *id_lock;
     hal_ws_t *ws;
+    hal_link_type_t ws_link; /* hub task: the link it was made on */
     uint32_t ws_gen; /* hub task: the current connection's number (its callback's ctx) */
     hub_state_t state; /* written by the hub task only (set_state), read by any task (atomic) */
     pending_t pend[MAX_PENDING];
@@ -120,7 +121,7 @@ static struct {
         void *ctx;
     } reqs[4];
     int nreqs;
-} H;
+} H INK_PSRAM_BSS;
 
 static void set_state(hub_state_t s) { __atomic_store_n(&H.state, s, __ATOMIC_RELEASE); }
 static hub_state_t get_state(void) { return __atomic_load_n(&H.state, __ATOMIC_ACQUIRE); }
@@ -253,6 +254,7 @@ static void start_connect(void) {
     hal_link_status_t st;
     hal_net_link_status(&st);
     H.connect_started = osal_now_us();
+    H.ws_link = st.type;
     H.ws = hal_ws_open(H.url, ws_cb, (void *)(uintptr_t)++H.ws_gen);
     set_state(H.ws ? HS_CONNECTING : HS_BACKOFF);
     if (!H.ws) enter_backoff();
@@ -414,7 +416,17 @@ static void hub_task(void *arg) {
             switch (m.type) {
             case HE_CALL: accept_call(m.req, now); break;
             case HE_DEMAND: break;
-            case HE_LINK: break;
+            case HE_LINK: {
+                hal_link_status_t ls;
+                hal_net_link_status(&ls);
+                if (H.ws && ls.type != H.ws_link) { /* moved to another network: not waiting to notice that this one is dead */
+                    fail_all(INK_HUB_ERR_LOST, true);
+                    close_ws();
+                    set_state(HS_DISCONNECTED);
+                    ink_probe_count("hub.link_switched");
+                }
+                break;
+            }
             case HE_TX: break; /* drained below */
             case HE_WS:
                 if (!H.ws || m.ws_gen != H.ws_gen) break; /* from a connection already closed */

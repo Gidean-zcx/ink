@@ -281,9 +281,10 @@ struct hal_ws;
 void sim_net_init(void);              /* task context (boot) */
 void sim_net_report(void);
 void sim_net_set_link(const char *name); /* ISR (script): "lte" | "wifi" | "none" */
+void sim_net_env_init(void); /* before the kernel runs: what is around and in the slots, from the profile */
 void sim_net_outage(uint64_t ns);        /* ISR (script) */
 const char *sim_net_link(bool *up);      /* ISR: "lte" | "wifi" | "none" */
-void sim_net_env(int which, bool on, int level_dbm);  /* ISR: 0 Wi-Fi in range, 1 cellular coverage */
+void sim_net_env(int which, bool on, int level_dbm);  /* ISR: 0 Wi-Fi in range, 2 the same but it cannot be joined, 1 cellular coverage */
 void sim_net_env_state(bool *wifi, int *rssi, bool *cell, int *rsrp, int *chosen);
 typedef struct {
     bool modem;

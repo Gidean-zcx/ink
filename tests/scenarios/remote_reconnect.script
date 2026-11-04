@@ -1,6 +1,7 @@
 # The link drops while a remote page is on screen (audit AUD11-007: the page stayed frozen, nothing
 # asked the new connection for a picture). A tap on nothing gets its feedback back by itself. Locking
 # the device with the page open ends the session (nobody looks, it would hold the link up all night).
+@0       wifi  on -60
 @3s      mic   speech
 +0       key   ai 1200ms         # "打开网页看看今天的新闻" -> the hub calls remote.open
 +17s     snap  before-drop

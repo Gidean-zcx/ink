@@ -384,6 +384,24 @@ add_test(NAME systest-services
 add_executable(sim-lifecycle simulator/runtime/sim_main.c tests/integration/lifecycle.c)
 target_link_libraries(sim-lifecycle PRIVATE ink_system ink_port_sim)
 target_compile_options(sim-lifecycle PRIVATE ${INK_WARN})
+# Starting an executor under a higher-priority caller; a session whose request cannot be made (tests/integration/starts.c).
+add_executable(sim-starts simulator/runtime/sim_main.c tests/integration/starts.c)
+target_link_libraries(sim-starts PRIVATE ink_system ink_port_sim)
+target_compile_options(sim-starts PRIVATE ${INK_WARN})
+add_test(NAME integration-starts
+  COMMAND sim-starts --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+          --budget ${CMAKE_SOURCE_DIR}/tests/integration/starts.budget.json
+          --script ${CMAKE_SOURCE_DIR}/tests/integration/starts.script
+          --out ${CMAKE_BINARY_DIR}/test-out/starts --quiet --no-random-outages)
+# Which network "auto" uses as networks come and go (tests/integration/net_auto.c).
+add_executable(sim-net-auto simulator/runtime/sim_main.c tests/integration/net_auto.c)
+target_link_libraries(sim-net-auto PRIVATE ink_system ink_port_sim)
+target_compile_options(sim-net-auto PRIVATE ${INK_WARN})
+add_test(NAME integration-net-auto
+  COMMAND sim-net-auto --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+          --budget ${CMAKE_SOURCE_DIR}/tests/integration/net_auto.budget.json
+          --script ${CMAKE_SOURCE_DIR}/tests/integration/net_auto.script
+          --out ${CMAKE_BINARY_DIR}/test-out/net_auto --quiet --no-random-outages)
 add_test(NAME determinism
   COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:sim-selftest>
           -DPROFILE=${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
@@ -418,6 +436,16 @@ if(INK_HAVE_FONTS)
   ink_scenario(ai_ask metalio-plus)
   ink_scenario(ai_turn_end metalio-plus)
   ink_scenario(ai_turn_lost metalio-plus)
+  # A voice turn's answer arriving while the next turn starts (tests/integration/ai_race.c): the product, booted.
+  add_executable(sim-ai-race simulator/runtime/sim_main.c tests/integration/ai_race.c)
+  target_link_libraries(sim-ai-race PRIVATE ink_apps ink_system ink_port_sim)
+  target_compile_options(sim-ai-race PRIVATE ${INK_WARN})
+  add_test(NAME integration-ai-race
+    COMMAND sim-ai-race --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+            --budget ${CMAKE_SOURCE_DIR}/tests/integration/ai_race.budget.json
+            --script ${CMAKE_SOURCE_DIR}/tests/integration/ai_race.script
+            --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+            --out ${CMAKE_BINARY_DIR}/test-out/ai_race --quiet --no-random-outages)
   add_test(NAME integration-lifecycle
     COMMAND sim-lifecycle --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus-handsfree.json
             --budget ${CMAKE_SOURCE_DIR}/tests/integration/lifecycle.budget.json

@@ -390,13 +390,54 @@ static void sim_checks(void) {
     CHECK(ink_setting_get("cell.sim_slot") == 1, "the saved card was read");
     CHECK(wait_until(on_internal, 10000000), "the modem is on it soon after start");
     CHECK(sim_metric_value("comm.sim_switched") == 1, "by one online switch");
+    osal_task_delay_us(200000); /* the service has finished talking to the modem */
     CHECK(hal_cell_select_sim(HAL_CELL_SLOT_EXTERNAL, 5000) == 0, "the modem is changed behind the setting's back");
     ink_receipt_t rc;
     CHECK(ink_setting_set("cell.sim_slot", 1, INK_SRC_TOUCH, &rc) == INK_RC_DONE, "the same value set again");
     osal_task_delay_us(1000000);
     for (int w = 0; w < 200 && sim_metric_value("comm.sim_switched") < 2; w++) osal_task_delay_us(100000);
+    osal_task_delay_us(200000);
     hal_cell_status_t st;
     CHECK(sim_metric_value("comm.sim_switched") == 2 && hal_cell_status(&st) && st.slot == HAL_CELL_SLOT_INTERNAL, "corrects it");
+}
+
+/* ---- a text message arrives as it was written (AUD12-002) ---- */
+
+static void sms_checks(void) {
+    static char text[400], sent[400];
+    char number[24];
+    memset(text, 0, sizeof text);
+    for (int i = 0; i < 106; i++) memcpy(text + i * 3, "中", 3);
+    memcpy(text + 318, "abc", 3); /* 109 characters, 321 bytes */
+    ink_args_t a;
+    ink_args_init(&a);
+    CHECK(ink_args_str(&a, "to", "10086") == 0 && ink_args_str(&a, "text", text) == 0, "a long message fits the arguments");
+    ink_call_opts_t o = {.src = INK_SRC_TOUCH, .reply_exec = INK_EXEC_DIRECT, .done = t_reply};
+    int replies = g_replies;
+    CHECK(ink_cap_call("message.send", &a, &o) == 0, "it is accepted");
+    for (int w = 0; w < 3000 && g_replies == replies; w++) osal_task_delay_us(10000);
+    CHECK(g_last.status == INK_RC_DONE, "and sent (%s, %s)", ink_rc_name(g_last.status), g_last.detail);
+    int n = sim_net_sent_sms(0, number, sizeof number, sent, sizeof sent);
+    CHECK(n == 1 && !strcmp(sent, text), "the modem has all of it (%d messages, %d bytes)", n, (int)strlen(sent));
+
+    for (int i = 0; i < 118; i++) memcpy(text + i * 3, "中", 3); /* the limit in the schema */
+    text[118 * 3] = 0;
+    ink_args_init(&a);
+    CHECK(ink_args_str(&a, "to", "10086000000000000000") == 0 && ink_args_str(&a, "text", text) == 0, "what the schema allows fits the arguments, with the longest number");
+    replies = g_replies;
+    CHECK(ink_cap_call("message.send", &a, &o) == 0, "and is accepted");
+    for (int w = 0; w < 3000 && g_replies == replies; w++) osal_task_delay_us(10000);
+    n = sim_net_sent_sms(1, number, sizeof number, sent, sizeof sent);
+    CHECK(g_last.status == INK_RC_DONE && n == 2 && !strcmp(sent, text), "and arrives whole (%s, %d bytes)", ink_rc_name(g_last.status), (int)strlen(sent));
+
+    memcpy(text + 118 * 3, "中", 4); /* one character more */
+    ink_args_init(&a);
+    ink_args_str(&a, "to", "10086");
+    CHECK(ink_args_str(&a, "text", text) == 0, "one character more still fits the table");
+    replies = g_replies;
+    CHECK(ink_cap_call("message.send", &a, &o) == 0, "the schema decides");
+    for (int w = 0; w < 300 && g_replies == replies; w++) osal_task_delay_us(10000);
+    CHECK(g_last.status == INK_RC_INVALID && sim_net_sent_sms(2, number, sizeof number, sent, sizeof sent) == 2, "it is refused, nothing goes out (%s)", g_last.detail);
 }
 
 /* ---- the remote picture: the device's and the hub's stay the same (AUD11-007, AUD11-008) ---- */
@@ -488,8 +529,91 @@ static void stale_region_check(void) { /* no page is open: the host's parts stan
     RS.w = RS.h = 0;
 }
 
+/* A whole update is shown, one for each credit (AUD12-006): two come in while the UI task is busy. */
+static ink_exec_job_t g_overlap_setup, g_overlap_block, g_overlap_show;
+static osal_sem_t *g_overlap_gate;
+static volatile int g_overlap_ready;
+
+static void overlap_noop(lv_timer_t *t) { (void)t; }
+
+static void overlap_setup(void *arg) {
+    (void)arg;
+    RS.img = lv_obj_create(lv_screen_active());
+    RS.credit_timer = lv_timer_create(overlap_noop, 1000, NULL);
+    lv_timer_pause(RS.credit_timer);
+    RS.first_shown = true;
+    RS.owed = 0;
+    g_overlap_ready = 1;
+}
+
+static void overlap_block(void *arg) { /* the UI task is busy for a while */
+    (void)arg;
+    g_overlap_ready = 2;
+    osal_sem_take(g_overlap_gate, OSAL_WAIT_FOREVER);
+}
+
+static void overlap_clean(void *arg) {
+    (void)arg;
+    lv_timer_delete(RS.credit_timer);
+    RS.credit_timer = NULL;
+    lv_obj_delete(RS.img);
+    RS.img = NULL;
+    g_overlap_ready = 3;
+}
+
+static void queue_region(int x, bool last) { /* one black pixel at (x, 0) */
+    uint8_t p[11] = {(uint8_t)x, 0, 0, 0, 1, 0, 1, 0, 0, 1, 0};
+    region_job_t *j = osal_calloc(1, sizeof *j + sizeof p, OSAL_MEM_EXTERNAL);
+    j->gen = RS.gen;
+    j->len = sizeof p;
+    j->flags = last ? INK_RT_F_LAST : 0;
+    memcpy(j->data, p, sizeof p);
+    osal_mutex_lock(RS.lock, OSAL_WAIT_FOREVER);
+    if (g_tail) g_tail->next = j;
+    else g_head = j;
+    g_tail = j;
+    osal_mutex_unlock(RS.lock);
+    ink_exec_post(INK_EXEC_MEDIA, &RS.drain_job, drain, NULL);
+}
+
+static void overlap_check(void) { /* no page is open: the host's parts stand alone */
+    RS.lock = RS.lock ? RS.lock : osal_mutex_create();
+    g_overlap_gate = osal_sem_create(0, 1);
+    RS.w = RS.h = 4;
+    RS.active = true;
+    RS.gen++;
+    RS.px = osal_malloc(16, OSAL_MEM_EXTERNAL);
+    RS.back = osal_malloc(16, OSAL_MEM_EXTERNAL);
+    memset(RS.px, 0xFF, 16);
+    memset(RS.back, 0xFF, 16);
+    ink_exec_post(INK_EXEC_UI, &g_overlap_setup, overlap_setup, NULL);
+    while (g_overlap_ready != 1) osal_task_delay_us(1000);
+    ink_exec_post(INK_EXEC_UI, &g_overlap_block, overlap_block, NULL);
+    while (g_overlap_ready != 2) osal_task_delay_us(1000);
+    unsigned updates = RS.updates;
+    queue_region(0, true);  /* update A, whole */
+    queue_region(1, false); /* the first region of update B */
+    osal_task_delay_us(50000);
+    CHECK(RS.back[1] == 0xFF, "while A waits to be shown B is not decoded into its picture");
+    osal_sem_give(g_overlap_gate);
+    osal_task_delay_us(50000);
+    CHECK(RS.px[0] == 0 && RS.px[1] == 0xFF && RS.updates == updates + 1 && RS.owed == 1, "A is shown, nothing of B (%d %d, %u, owed %d)", RS.px[0], RS.px[1], RS.updates - updates, RS.owed);
+    queue_region(2, true); /* the rest of B */
+    osal_task_delay_us(50000);
+    CHECK(RS.px[1] == 0 && RS.px[2] == 0 && RS.updates == updates + 2 && RS.owed == 2, "then all of B, each with its credit (%d %d, %u, owed %d)", RS.px[1], RS.px[2], RS.updates - updates, RS.owed);
+    ink_exec_post(INK_EXEC_UI, &g_overlap_show, overlap_clean, NULL);
+    while (g_overlap_ready != 3) osal_task_delay_us(1000);
+    RS.active = false;
+    release_canvas(NULL);
+    RS.w = RS.h = 0;
+    RS.updates = 0;
+    RS.owed = 0;
+    RS.first_shown = false;
+}
+
 static void remote_checks(void) {
     stale_region_check();
+    overlap_check();
     open_remote();
     g_want_updates = 1;
     CHECK(wait_until(shown_enough, 10000000), "the first page is shown");
@@ -566,6 +690,7 @@ static void lifecycle_task(void *arg) {
     pool_checks();
     capture_checks();
     sim_checks();
+    sms_checks();
     remote_checks();
     ink_probe_mark("lifecycle-done");
     ink_probe_count("test.finished");

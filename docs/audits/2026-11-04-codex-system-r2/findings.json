@@ -1,0 +1,79 @@
+[
+  {
+    "id": "AUD12-001",
+    "severity": "高",
+    "area": "网络设置 / 服务接入",
+    "title": "net.prefer=auto 没有应用动作，当前链路消失后不会使用可用的另一条网络",
+    "evidence_type": ["复现", "代码核查", "文档核查"],
+    "locations": ["system/services/net/net_service.c:24", "system/services/net/net_service.c:29", "system/services/net/net_service.c:35", "ports/sim/hal/hal_net_sim.c:215", "ports/sim/hal/hal_net_sim.c:238", "docs/system/system-detailed-design.md:308"],
+    "impact": "先选 LTE 再改回自动，设置值为 auto，实际仍固定在 LTE；蜂窝覆盖消失而 Wi-Fi 可用时 net.online/hub 均离线，手动选 Wi-Fi 才恢复。默认 auto 也没有网络变化时的选网逻辑。已对外登记的正常设置不能实现其含义。",
+    "recommendation": "明确并实现自动选网策略及 HAL 的可用网络输入；切回 auto 立即重算，网络变化后也重算。加入双网络可用、当前网络消失、手动切回自动的测试；若暂不支持，先移除 auto 选项并准确说明。",
+    "reproduce": "experiments/service_probe.c 的 net 模式，配 services.script：auto_cell_down_wifi_available prefer=0 type=2 up=0 hub=0；manual_wifi prefer=1 type=1 up=1 hub=1。详见 experiments/README.md。"
+  },
+  {
+    "id": "AUD12-002",
+    "severity": "高",
+    "area": "通信 / 参数 Schema",
+    "title": "合法的长中文短信被截断后仍回执发送成功",
+    "evidence_type": ["复现", "代码核查"],
+    "locations": ["system/services/comm/comm_service.c:173", "system/services/comm/comm_service.c:229", "system/util/ink_args.c:104", "system/util/ink_args.c:180"],
+    "impact": "Schema 按字符允许最多 300 字，cap_send 的 320 字节缓冲只容纳 319 字节，并忽略 ink_args_get_str 返回的原长度。106 个“中”加 abc（109 字、321 字节）通过参数检查，实际送到模拟模组的是 106 个“中”加 a，HAL 成功且回执“短信发出去了”；接收内容与请求不同。截在 UTF-8 中间时还会使本应合法的输入发送失败。",
+    "recommendation": "发送前校验完整字节长度，容量不足明确拒绝；或直接使用有界的完整参数字符串并与驱动编码、短信分段能力统一限制。补充中文/混合文本的边界测试，核对实际发出的全文。",
+    "reproduce": "AUDIT_CASE=sms service_probe：requested_bytes=321 requested_chars=109 args=0/0 schema=0 accepted=0；actual_bytes=319 ends_abc=0 ends_a=1 hal_return=0；final_receipt=done；modem_sent=1 stored_bytes=319 equals_requested=0。无真实短信或设备访问。"
+  },
+  {
+    "id": "AUD12-003",
+    "severity": "中",
+    "area": "实时会话 / 内存失败恢复",
+    "title": "rt.open 同步返回内存不足时 inflight 永不清除，重连也不再登记",
+    "evidence_type": ["复现", "代码核查"],
+    "locations": ["system/services/hub/rt.c:89", "system/services/hub/rt.c:106", "system/services/hub/rt.c:178", "system/services/hub/hub_link.c:507"],
+    "impact": "announce 忽略 ink_hub_call 的同步负返回；该失败不触发 open_reply，留下 used/inflight 和后台作业、hub keep 引用。经过 12 秒并恢复内存后，重连回调仍跳过该会话，既不 ready 也不通知关闭，直至所有者显式关闭。少见的内存压力条件下会话不可用、资源长留。",
+    "recommendation": "处理同步失败并走与异步拒绝一致的清理/通知或有界重试路径；定义好 open 返回值与同步 on_closed 的次序，避免调用方尚未保存 sid 时丢失关闭。",
+    "reproduce": "AUDIT_CASE=rt service_probe：仅对第一次 announce 注入文档化的 INK_HUB_ERR_NOMEM（不调用回调）；sid=1 open=1 inflight=1 calls=1 closed=0；12 秒后调用已注册的 on_online，仍 open=1 ready=0 inflight=1 calls=1 closed=0。此为定点失败注入，不声称随机 OOM 复现。"
+  },
+  {
+    "id": "AUD12-004",
+    "severity": "高",
+    "area": "AI / 实时会话并发",
+    "title": "旧轮回复解锁后关闭当前 session，可误关刚由 UI 开启的新一轮语音",
+    "evidence_type": ["复现", "代码核查"],
+    "locations": ["system/services/ai/ai_service.c:147", "system/services/ai/ai_service.c:310", "system/services/ai/ai_service.c:326", "system/services/ai/ai_service.c:504"],
+    "impact": "on_reply 在锁内确认旧轮仍为 current，但解锁后 close_session 再读 AI.session。期间 UI 响应新一次按键、关闭旧会话并开启新 sid 后，旧回复会关闭新 sid。用户仍看到正在听，采集和 up_open 仍为真，却已没有实时会话，不能上传该轮声音。属于 AUD11-005 修复新增的换轮竞态；无需 OOM、坏输入或断网。",
+    "recommendation": "在确认轮次的同一临界区取出并清除属于该轮的 sid，解锁后只关闭取出的 sid；跨锁异步收尾均携带并再次匹配轮次/会话标识。为回复完成与下一次按键重叠添加回归测试。",
+    "reproduce": "ai_race_probe.c 原样 include AI 和启动源码；真正的 hub 回复在 AI.lock 解锁处暂停，让 UI 任务调用 ink_ai_key(true)，再让旧回复继续。输出 old_sid=1 new_sid=2 seq=2 mic_failed=0 rt_count=1；after_old_reply current_session=0 capturing=1 up_open=1 rt_count=0。为定点并发交错，非随机发生率测量。"
+  },
+  {
+    "id": "AUD12-005",
+    "severity": "中",
+    "area": "网络模拟模型",
+    "title": "Wi-Fi 切到已注册 LTE 时旧 WebSocket 被错误保留，绕过断线与重新握手",
+    "evidence_type": ["复现", "代码核查"],
+    "locations": ["ports/sim/hal/hal_net_sim.c:187", "ports/sim/hal/hal_net_sim.c:194", "ports/sim/hal/hal_net_sim.c:278"],
+    "impact": "hal_net_use 先覆盖 N.type 再 relink，使 set_link 的 old != t 检查恒为假。两条网络都可用时 Wi-Fi→LTE 不让连接失效、不清 DNS/无线状态；旧 TCP/WebSocket 无需重新连接就改用 LTE 时延/带宽。切网场景的连接连续性、恢复时延和资源开销因此失真。范围限于模型的跨网络切换，未据此宣称现有所有时延预算无效。",
+    "recommendation": "保持旧类型直到 set_link 原子完成切换；切换时失效旧连接、清连接相关状态，测试强制切网期间丢失/重连/会话重登记及相应成本。",
+    "reproduce": "service_probe 的 net 模式：wifi 与 wifi_to_lte 两次输出均 hub=1 online_count=1。最终普通构建 Trace 在 5.200103 s 切到 LTE，却只有约 2.70 s 的首次 connect；18 s 真正移除覆盖后才于 23 s connection lost。27.73 s 手动切回 Wi-Fi 后才第二次 connect。"
+  },
+  {
+    "id": "AUD12-006",
+    "severity": "中",
+    "area": "远程画面 / 更新提交",
+    "title": "完成标记只记录连接代次，UI 会把下一单元尚未完成的区域提前显示",
+    "evidence_type": ["复现", "代码核查", "文档核查"],
+    "locations": ["system/apps/remote/remote.c:137", "system/apps/remote/remote.c:148", "system/apps/remote/remote.c:219", "system/apps/remote/remote.c:227", "docs/system/system-detailed-design.md:544"],
+    "impact": "有两份初始配额时，完整更新 A 的 LAST 已排队等 UI，媒体任务还可以把更新 B 的首区域写入同一个 back/dirty。show_update 只检查 complete_gen==gen，随后复制所有 dirty，连尚未收到 LAST 的 B 也显示。可出现短暂的半页/混合画面；若两个 LAST 合并到同一 show_job，还只返还一份配额。原 AUD11-008 的跨会话内存安全修复仍成立，本条是同会话更新原子性遗漏。",
+    "recommendation": "将正在解码单元与已完成待显示单元的像素/脏区边界隔离；LAST 提交一个不可变快照或缓冲所有权，后续单元不可改写它，并按完整消费单元累计配额。",
+    "reproduce": "remote_batch_probe.c：在 UI 忙时，媒体任务先解码 A（x=0 黑，LAST），再解码 B 首块（x=1 黑，无 LAST），随后放行真实 show_update。4×4 画布输出 shown_A=0 shown_partial_B=0 updates=1 owed=1；B 应仍为白色 255。定点合法帧顺序实验，无畸形数据。"
+  },
+  {
+    "id": "AUD12-007",
+    "severity": "中",
+    "area": "执行器 / 首次启动并发",
+    "title": "等待启动状态只调用 yield，高优先级并发调用可饿死初始化任务",
+    "evidence_type": ["复现", "代码核查"],
+    "locations": ["system/services/res/exec.c:62", "system/services/res/exec.c:74", "ports/sim/osal/osal_sim.c:285", "simulator/kernel/vtk/vtk.c:953"],
+    "impact": "低优先级任务把 state 从 1 改为 2 后若被抢占，后来的高优先级调用者会在 state==2 时不断 yield；固定优先级调度不会因此运行低优先级初始化者。双核上两个高优先级等待者即可占满两核，使三次 ready/post 都无法返回。首次启动时需特定并发交错，未在常规场景自然触发，按中级登记；其后影响可持续到重启。",
+    "recommendation": "用可阻塞并带优先级继承的初始化互斥/完成通知，或在明确的初始化阶段建立执行器，避免高优先级纯让出式自旋等待低优先级任务；不要仅在自旋中增加无界重试。",
+    "reproduce": "exec_start_probe.c 原样 include exec.c，state=2 后唤醒优先级 5/6 的两个调用者，初始化者为优先级 3；三者 core=-1，在原双核 metalio-plus 档运行。200 ms 后 state=2 low_done=0 high_done=0，至 1 s 结束仍未建成；两个等待者持续消耗 CPU。仅注入抢占次序，无 OOM。"
+  }
+]

@@ -143,11 +143,17 @@ static void free_buffered(void);
 /* The end of a turn's session (architecture §9.2): the hub answered (it answers last, after the
  * speech), the sheet was closed and the hub knows the utterance ended, a new turn began, or the turn
  * could not start. Whoever sees it first closes it, any task: no background work stays held and the
- * hub link is free to go idle. */
-static void close_session(void) {
-    osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
+ * hub link is free to go idle. The session is taken under the lock in the same step that found this
+ * turn is over; closed afterwards, it cannot be the next turn's. */
+static int take_session(void) { /* under the lock */
     int sid = AI.session;
     AI.session = 0;
+    return sid;
+}
+
+static void close_session(void) {
+    osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
+    int sid = take_session();
     osal_mutex_unlock(AI.lock);
     if (sid) ink_rt_close(sid);
 }
@@ -180,9 +186,9 @@ bool ink_ai_dismiss(void) {
     AI.tts_stream = 0;
     AI.tts_done_for = AI.stream;
     AI.dismissed = true;
-    bool uplink = AI.up_open; /* if so, the session closes when the hub has been told (flush_uplink) */
+    int sid = AI.up_open ? 0 : take_session(); /* else it closes when the hub has been told (flush_uplink) */
     osal_mutex_unlock(AI.lock);
-    if (!uplink) close_session();
+    if (sid) ink_rt_close(sid);
     ink_audio_stop_all();
     ink_ui_hint_frame(INK_REFRESH_FLASH_UI); /* the page underneath comes back cleanly */
     return true;
@@ -314,17 +320,18 @@ static void on_reply(void *ctx, int status, const ink_json_t *j, int result) { /
     post(id, status == INK_HUB_OK ? 1 : 2, status, NULL);
     ink_power_release(INK_NEED_NET); /* the turn is over (answer, error or timeout) */
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
-    bool current = AI.session && id == AI.session_seq; /* nothing more will come for it */
-    if (current) {
+    int sid = 0;
+    if (AI.session && id == AI.session_seq) { /* the current turn: nothing more will come for it */
         free_buffered();
         AI.end_pending = AI.up_open = false;
         AI.drop_frames = true;
         if (AI.tts_stream > 0) ink_audio_stream_finish(AI.tts_stream); /* an answer without an end of speech */
         AI.tts_stream = 0;
         AI.tts_done_for = AI.stream;
+        sid = take_session();
     }
     osal_mutex_unlock(AI.lock);
-    if (current) close_session();
+    if (sid) ink_rt_close(sid);
 }
 
 /* --------------------------------------------------------- voice uplink */
@@ -361,12 +368,15 @@ static void flush_uplink(void) {
         snprintf(params, sizeof params, "{\"stream\":%d,\"frames\":%d}", stream, frames);
         bool told = ink_hub_notify("ai.listen.end", params) == 0;
         osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
-        if (told) AI.up_open = false;
-        else AI.end_pending = true; /* the flush timer tries again: without it the hub waits for the rest */
-        bool close = told && AI.dismissed;
+        int sid = 0;
+        if (AI.stream == stream) { /* still this turn */
+            if (told) AI.up_open = false;
+            else AI.end_pending = true; /* the flush timer tries again: without it the hub waits for the rest */
+            if (told && AI.dismissed) sid = take_session();
+        }
         osal_mutex_unlock(AI.lock);
         if (told) ink_probe_value("ai.release_to_upload_done_ms", (double)(osal_now_us() - AI.t_release) / 1000.0);
-        if (close) close_session();
+        if (sid) ink_rt_close(sid);
     }
 }
 
@@ -515,6 +525,10 @@ void ink_ai_key(bool pressed, uint64_t t_us) {
         AI.tts_stream = AI.tts_opened = 0;
         AI.tts_for = AI.tts_done_for = -1;
         osal_mutex_unlock(AI.lock);
+        if (sid > 0 && !ink_rt_is_open(sid)) { /* it ended already, its handler may have found no session to end */
+            close_session();
+            sid = -1;
+        }
         AI.mic_failed = AI.speech_failed = false;
         ink_audio_stop_all(); /* talking over the previous answer interrupts it */
         ink_audio_tone(INK_TONE_LISTEN, t_us, tone_probe);

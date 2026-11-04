@@ -200,7 +200,7 @@ static nt26_result_t text_mode_ucs2(void) {
 }
 
 nt26_result_t nt26_sms_send(const char *number, const char *utf8, uint32_t timeout_ms) {
-    char num_hex[64], text_hex[1024], cmd[96], resp[64];
+    char num_hex[100], text_hex[1024], cmd[128], resp[64]; /* numbers up to 24 characters, 4 hex digits each */
     nt26_result_t r = text_mode_ucs2();
     if (r != NT26_OK) return r;
     if (nt26_utf8_to_ucs2_hex(number, num_hex, sizeof num_hex) < 0 || nt26_utf8_to_ucs2_hex(utf8, text_hex, sizeof text_hex) < 0)

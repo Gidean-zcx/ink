@@ -37,7 +37,7 @@ static struct {
     book_t books[MAX_BOOKS];
     int nbooks;
     int open; /* index of the open book */
-} LIB;
+} LIB INK_PSRAM_BSS;
 
 static struct {
     char *text;

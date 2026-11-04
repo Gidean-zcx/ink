@@ -1,6 +1,7 @@
 # Remote screen (R-048, D-53): asked by voice, the AI opens a page the hub
 # renders (remote.open); the device shows the changed areas it pulls, a tap is
 # answered locally at once and by the hub after its render.
+@0       wifi  on -60           # the Wi-Fi model: the design's targets are for Wi-Fi; auto moves to it
 @3s      mic   speech
 +0       key   ai 1200ms         # "打开网页看看今天的新闻" -> the hub calls remote.open
 +17s     snap  remote-first      # the answer sheet covers the lower half; the links are above it

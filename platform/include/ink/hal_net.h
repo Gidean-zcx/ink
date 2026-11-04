@@ -40,10 +40,14 @@ void hal_net_link_status(hal_link_status_t *out);
 /** The system's choice of link for IP traffic (Wi-Fi, LTE or none). Joining Wi-Fi takes a few
  *  seconds; the link comes up once the chosen network is there. Task context. */
 void hal_net_use(hal_link_type_t type);
+/** That network is around, whether in use or not: a known Wi-Fi network in range, a registered card
+ *  under coverage. What the system chooses from. Task context, does not wait. */
+bool hal_net_available(hal_link_type_t type);
 
 typedef void (*hal_link_cb)(void *ctx, const hal_link_status_t *st);
-/** Notified when the link changes (comes up, goes down, switches Wi-Fi/LTE). Up to four listeners,
- *  each added once (on the device: esp_event handlers); they run in the platform's event task. */
+/** Notified when the link changes (comes up, goes down, switches Wi-Fi/LTE) and when a network
+ *  appears or goes away. Up to four listeners, each added once (on the device: esp_event handlers);
+ *  they run in the platform's event task. */
 void hal_net_set_link_callback(hal_link_cb cb, void *ctx);
 
 /* ---- cellular modem AT channel ----

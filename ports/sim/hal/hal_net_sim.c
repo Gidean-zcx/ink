@@ -69,6 +69,7 @@ static struct {
     int nlink;
     vtk_waitq_t evt_wq;
     bool link_changed;
+    bool started;                /* sim_net_init ran */
     struct hal_ws *conns;
     uint64_t gen;
     /* stats */
@@ -179,6 +180,7 @@ static struct {
     vtk_event_id_t reg_ev;     /* registration pending */
     vtk_event_id_t boot_ev;    /* coming back from a reset or power-up */
     bool held, unpowered;      /* board: P12 shared reset low, P14 shared supply off */
+    bool at_busy;              /* a command is running */
     uint32_t slot_changes, resets;
 } CELL;
 
@@ -223,6 +225,7 @@ static void set_link(hal_link_type_t t, bool up) { /* ISR or locked task context
 
 static struct {
     bool wifi, cell;
+    bool wifi_broken; /* in range, but joining it never works */
     int wifi_rssi, cell_rsrp;
     bool outage;
     uint64_t joining_until;
@@ -230,12 +233,14 @@ static struct {
 
 static bool env_ok(hal_link_type_t t) {
     if (E.outage) return false;
-    if (t == HAL_LINK_WIFI) return E.wifi && now_any() >= E.joining_until;
+    if (t == HAL_LINK_WIFI) return E.wifi && !E.wifi_broken && now_any() >= E.joining_until;
     if (t == HAL_LINK_LTE) return E.cell;
     return false;
 }
 
-static void relink(void) { set_link(N.type, env_ok(N.type)); } /* ISR or locked */
+static void relink(void) { /* ISR or locked */
+    if (N.started) set_link(N.type, env_ok(N.type)); /* before sim_net_init: it starts from the environment */
+}
 
 static void outage_end_cb(void *arg) { /* ISR */
     (void)arg;
@@ -257,8 +262,9 @@ void sim_net_set_link(const char *name) { /* ISR (script "net"): legacy shorthan
 }
 
 void sim_net_env(int which, bool on, int level) { /* ISR (script, window): 0 Wi-Fi, 1 cellular */
-    if (which == 0) {
+    if (which == 0 || which == 2) {
         E.wifi = on;
+        E.wifi_broken = which == 2;
         if (level) E.wifi_rssi = level;
     } else {
         E.cell = on;
@@ -278,14 +284,20 @@ void sim_net_env_state(bool *wifi, int *rssi, bool *cell, int *rsrp, int *chosen
 void hal_net_use(hal_link_type_t t) {
     vtk_lock();
     if (t != N.type) {
-        N.type = t;
         if (t == HAL_LINK_WIFI) {
             E.joining_until = vtk_now() + SIM_MS(WIFI_JOIN_MS);
             vtk_event_at(E.joining_until, joined_cb, NULL);
         }
-        relink();
+        set_link(t, env_ok(t)); /* from the old link to the new: connections on the old one are dead */
     }
     vtk_unlock();
+}
+
+bool hal_net_available(hal_link_type_t t) {
+    vtk_lock();
+    bool ok = !E.outage && (t == HAL_LINK_WIFI ? E.wifi : t == HAL_LINK_LTE && E.cell && (!g_profile.lte.present || cell_ok()));
+    vtk_unlock();
+    return ok;
 }
 
 const char *sim_net_link(bool *up) { /* ISR */
@@ -532,18 +544,34 @@ static void call_tick(void *arg) { /* ISR: ring again, give up, or the far end a
     }
 }
 
+static hal_at_result_t at_run(const char *cmd, const char *payload, char *resp, size_t resp_cap, uint32_t timeout_ms);
+
 hal_at_result_t hal_modem_at(const char *cmd, char *resp, size_t resp_cap, uint32_t timeout_ms) {
     return hal_modem_at_payload(cmd, NULL, resp, resp_cap, timeout_ms);
 }
 
+/* One command at a time: on the real link a second one would corrupt both (see hal_net.h). */
 hal_at_result_t hal_modem_at_payload(const char *cmd, const char *payload, char *resp, size_t resp_cap, uint32_t timeout_ms) {
+    vtk_lock();
+    bool busy = CELL.at_busy;
+    CELL.at_busy = true;
+    vtk_unlock();
+    if (busy) sim_warn("modem: %s sent while another AT command runs", cmd);
+    hal_at_result_t r = at_run(cmd, payload, resp, resp_cap, timeout_ms);
+    vtk_lock();
+    if (!busy) CELL.at_busy = false;
+    vtk_unlock();
+    return r;
+}
+
+static hal_at_result_t at_run(const char *cmd, const char *payload, char *resp, size_t resp_cap, uint32_t timeout_ms) {
     if (resp && resp_cap) resp[0] = 0;
     if (!g_profile.lte.present) return HAL_AT_NO_MODEM;
     enum { K_AT, K_CFUN_Q, K_CFUN0, K_CFUN1, K_SLOT_Q, K_SLOT_SET, K_CPIN, K_CEREG, K_RST, K_CMGF, K_CSCS, K_CNMI, K_CMGS, K_CMGR,
            K_CMGD, K_ATD, K_ATA, K_CHUP, K_CLCC, K_BAD } k = K_BAD;
     unsigned lat_ms = CELL_AT_MS;
     int slot = -1, idx = -1;
-    char arg[64] = "";
+    char arg[100] = "";
     if (!strcmp(cmd, "AT")) k = K_AT;
     else if (!strcmp(cmd, "AT+CFUN?")) k = K_CFUN_Q;
     else if (!strcmp(cmd, "AT+CFUN=0")) k = K_CFUN0, lat_ms = CELL_CFUN0_MS;
@@ -557,7 +585,7 @@ hal_at_result_t hal_modem_at_payload(const char *cmd, const char *payload, char 
     else if (!strncmp(cmd, "AT+CMGF=", 8)) k = K_CMGF;
     else if (!strncmp(cmd, "AT+CSCS=", 8)) k = K_CSCS;
     else if (!strncmp(cmd, "AT+CNMI=", 8)) k = K_CNMI;
-    else if (sscanf(cmd, "AT+CMGS=\"%63[^\"]\"", arg) == 1) k = K_CMGS, lat_ms = SMS_SEND_MS;
+    else if (sscanf(cmd, "AT+CMGS=\"%99[^\"]\"", arg) == 1) k = K_CMGS, lat_ms = SMS_SEND_MS;
     else if (sscanf(cmd, "AT+CMGR=%d", &idx) == 1) k = K_CMGR;
     else if (sscanf(cmd, "AT+CMGD=%d", &idx) == 1) k = K_CMGD;
     else if (sscanf(cmd, "ATD%23[^;];", arg) == 1) k = K_ATD;
@@ -1146,7 +1174,9 @@ static void idle_forever(void *arg) {
     for (;;) vtk_block_locked(&never, VTK_TIME_INF);
 }
 
-void sim_net_init(void) {
+/* What is around the device and in its slots: set before anything runs, so that a script's first
+ * lines (at 0) change it and are not overwritten when the boot task reaches sim_net_init. */
+void sim_net_env_init(void) {
     hal_link_type_t t = !strcmp(g_profile.default_link, "wifi") ? HAL_LINK_WIFI
                         : !strcmp(g_profile.default_link, "lte") ? HAL_LINK_LTE : HAL_LINK_NONE;
     CELL.selected = g_profile.sim_selected;
@@ -1155,18 +1185,27 @@ void sim_net_init(void) {
         CELL.sms[i] = g_profile.sim_card[i].sms;
         CELL.voice[i] = g_profile.sim_card[i].voice;
     }
-    vtk_host_call(cell_load_on_host, NULL); /* the modem kept its slot setting */
+    cell_load_on_host(NULL); /* the modem kept its slot setting */
     CELL.active = CELL.selected;
     CELL.radio = true;
     CELL.registered = CELL.present[CELL.active]; /* registered at boot (no boot-time delay modelled) */
-    E.wifi = g_profile.wifi.present;
+    /* around at the start: the network of the choice the system saved, and cellular coverage if there
+     * is a modem; a known Wi-Fi network elsewhere comes with the script ("wifi on") */
+    E.wifi = g_profile.wifi.present && t == HAL_LINK_WIFI;
     E.cell = g_profile.lte.present;
     E.wifi_rssi = -60;
     E.cell_rsrp = -100;
+}
+
+void sim_net_init(void) {
+    hal_link_type_t t = !strcmp(g_profile.default_link, "wifi") ? HAL_LINK_WIFI
+                        : !strcmp(g_profile.default_link, "lte") ? HAL_LINK_LTE : HAL_LINK_NONE;
+    CELL.registered = CELL.present[CELL.active]; /* cards the script changed at 0 */
     N.type = t;
     N.want = env_ok(t);
     N.up = N.want && (t != HAL_LINK_LTE || !g_profile.lte.present || cell_ok());
     N.L = t == HAL_LINK_LTE ? &g_profile.lte : t == HAL_LINK_WIFI ? &g_profile.wifi : NULL;
+    N.started = true;
     if (N.up) sim_power_consumer(t == HAL_LINK_LTE ? "modem" : "wifi", true,
                                  t == HAL_LINK_LTE ? g_profile.ma_lte_idle : g_profile.ma_wifi_idle);
     const char *prev = osal_mem_tag("net-driver");

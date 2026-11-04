@@ -1,0 +1,336 @@
+{
+  "commit": "c95f48c5bc398178b512c3babc19e475217fbe18",
+  "baseline": {
+    "normal": {
+      "passed": 52,
+      "total": 52,
+      "seconds": 23.22
+    },
+    "asan_ubsan": {
+      "passed": 51,
+      "total": 51,
+      "seconds": 14.56
+    }
+  },
+  "supplemental_asan": {
+    "sms": {
+      "observations": [
+        "AUDIT sms requested_bytes=321 requested_chars=109 args=0/0 schema=0 accepted=0",
+        "AUDIT sms actual_bytes=319 ends_abc=0 ends_a=1 hal_return=0",
+        "AUDIT sms final_receipt=done say=\u77ed\u4fe1\u53d1\u51fa\u53bb\u4e86",
+        "AUDIT sms modem_sent=1 stored_bytes=319 equals_requested=0"
+      ],
+      "sanitizer_error": false,
+      "simulator_ok": true
+    },
+    "net": {
+      "observations": [
+        "AUDIT net wifi prefer=1 type=1 up=1 hub=1 online_count=1",
+        "AUDIT net wifi_to_lte prefer=2 type=2 up=1 hub=1 online_count=1",
+        "AUDIT net auto prefer=0 type=2 up=1 hub=1 online_count=1",
+        "AUDIT net auto_cell_down_wifi_available prefer=0 type=2 up=0 hub=0 online_count=1",
+        "AUDIT net manual_wifi prefer=1 type=1 up=1 hub=1 online_count=2"
+      ],
+      "sanitizer_error": false,
+      "simulator_ok": true
+    },
+    "rt": {
+      "observations": [
+        "AUDIT rt_nomem sid=1 open=1 inflight=1 calls=1 closed=0",
+        "AUDIT rt_recovered open=1 ready=0 inflight=1 calls=1 closed=0"
+      ],
+      "sanitizer_error": false,
+      "simulator_ok": true
+    },
+    "ai-race": {
+      "observations": [
+        "AUDIT ai inside_new_press old_sid=1 new_sid=2 seq=2 mic_failed=0 rt_count=1",
+        "AUDIT ai after_old_reply hook=1 new_sid=2 new_seq=2 current_session=0 capturing=1 up_open=1 rt_count=0"
+      ],
+      "sanitizer_error": false,
+      "simulator_ok": true
+    },
+    "remote-batch": {
+      "observations": [
+        "AUDIT remote A_finished_B_unfinished shown_A=0 shown_partial_B=0 updates=1 owed=1"
+      ],
+      "sanitizer_error": false,
+      "simulator_ok": true
+    },
+    "exec-start": {
+      "observations": [
+        "AUDIT exec startup state=2 low_done=0 high_done=0"
+      ],
+      "sanitizer_error": false,
+      "simulator_ok": true
+    },
+    "ui-queue": {
+      "observations": [
+        "AUDIT ui blocked wake_queue=24 busy=1 waiting=1",
+        "AUDIT ui drained count=80 fifo=1 busy_during_jobs=1 waiting=0"
+      ],
+      "sanitizer_error": false,
+      "simulator_ok": true
+    }
+  },
+  "metrics": {
+    "ai_ask-metalio-plus-pqbn": {
+      "mem.dma.min_free_bytes": 29240,
+      "mem.internal_total.min_free_bytes": 33816,
+      "rt.closed": 3,
+      "rt.opened": 3
+    },
+    "remote_browse-metalio-plus": {
+      "mem.dma.min_free_bytes": 31904,
+      "mem.internal_total.min_free_bytes": 36480,
+      "remote.open_to_first_visible_ms": {
+        "count": 1,
+        "mean": 1879.765,
+        "min": 1879.765,
+        "p50": 1879.765,
+        "p95": 1879.765,
+        "p99": 1879.765,
+        "max": 1879.765
+      },
+      "remote.tap_to_update_visible_ms": {
+        "count": 3,
+        "mean": 1582.5856666666668,
+        "min": 1469.546,
+        "p50": 1472.388,
+        "p95": 1805.823,
+        "p99": 1805.823,
+        "max": 1805.823
+      },
+      "rt.closed": 1,
+      "rt.opened": 2
+    },
+    "voice_handsfree-metalio-plus-handsfree": {
+      "ai.barge_to_stop_ms": {
+        "count": 1,
+        "mean": 68.686,
+        "min": 68.686,
+        "p50": 68.686,
+        "p95": 68.686,
+        "p99": 68.686,
+        "max": 68.686
+      },
+      "mem.dma.min_free_bytes": 32272,
+      "mem.internal_total.min_free_bytes": 36480,
+      "rt.closed": 2,
+      "rt.opened": 2
+    },
+    "lifecycle": {
+      "mem.dma.min_free_bytes": 41136,
+      "mem.internal_total.min_free_bytes": 41280,
+      "remote.open_to_first_visible_ms": {
+        "count": 1,
+        "mean": 3743.298,
+        "min": 3743.298,
+        "p50": 3743.298,
+        "p95": 3743.298,
+        "p99": 3743.298,
+        "max": 3743.298
+      },
+      "rt.closed": 2,
+      "rt.opened": 2,
+      "test.finished": 1,
+      "test.pass": 92
+    },
+    "systest": {
+      "mem.dma.min_free_bytes": 43176,
+      "mem.internal_total.min_free_bytes": 43408,
+      "rt.closed": 1,
+      "rt.opened": 1,
+      "test.pass": 144
+    }
+  },
+  "host_stack_512_bytes_or_more": [
+    "2640 static system/util/ink_json.c:13:ink_json_parse",
+    "1440 static system/policy/cap.c:852:dir_reply",
+    "1376 static apps/reader/reader.c:206:render_into",
+    "1376 static apps/reader/reader.c:181:find_page_start",
+    "960 static system/services/ai/ai_service.c:422:request",
+    "768 static system/apps/remote/remote.c:137:show_update",
+    "672 static system/services/ai/ai_service.c:193:ui_apply",
+    "576 static system/services/ai/ai_service.c:257:on_notify",
+    "576 static system/policy/cap.c:329:timeout_cb",
+    "544 static apps/reader/reader.c:69:scan_library",
+    "528 static system/services/audio/audio_service.c:562:audio_task"
+  ],
+  "supplemental_normal": {
+    "sms": {
+      "observations": [
+        "AUDIT sms requested_bytes=321 requested_chars=109 args=0/0 schema=0 accepted=0",
+        "AUDIT sms actual_bytes=319 ends_abc=0 ends_a=1 hal_return=0",
+        "AUDIT sms final_receipt=done say=\u77ed\u4fe1\u53d1\u51fa\u53bb\u4e86",
+        "AUDIT sms modem_sent=1 stored_bytes=319 equals_requested=0"
+      ],
+      "simulator_ok": true
+    },
+    "net": {
+      "observations": [
+        "AUDIT net wifi prefer=1 type=1 up=1 hub=1 online_count=1",
+        "AUDIT net wifi_to_lte prefer=2 type=2 up=1 hub=1 online_count=1",
+        "AUDIT net auto prefer=0 type=2 up=1 hub=1 online_count=1",
+        "AUDIT net auto_cell_down_wifi_available prefer=0 type=2 up=0 hub=0 online_count=1",
+        "AUDIT net manual_wifi prefer=1 type=1 up=1 hub=1 online_count=2"
+      ],
+      "simulator_ok": true
+    },
+    "rt": {
+      "observations": [
+        "AUDIT rt_nomem sid=1 open=1 inflight=1 calls=1 closed=0",
+        "AUDIT rt_recovered open=1 ready=0 inflight=1 calls=1 closed=0"
+      ],
+      "simulator_ok": true
+    },
+    "ai-race": {
+      "observations": [
+        "AUDIT ai inside_new_press old_sid=1 new_sid=2 seq=2 mic_failed=0 rt_count=1",
+        "AUDIT ai after_old_reply hook=1 new_sid=2 new_seq=2 current_session=0 capturing=1 up_open=1 rt_count=0"
+      ],
+      "simulator_ok": true
+    },
+    "remote-batch": {
+      "observations": [
+        "AUDIT remote A_finished_B_unfinished shown_A=0 shown_partial_B=0 updates=1 owed=1"
+      ],
+      "simulator_ok": true
+    },
+    "exec-start": {
+      "observations": [
+        "AUDIT exec startup state=2 low_done=0 high_done=0"
+      ],
+      "simulator_ok": true
+    },
+    "ui-queue": {
+      "observations": [
+        "AUDIT ui blocked wake_queue=24 busy=1 waiting=1",
+        "AUDIT ui drained count=80 fifo=1 busy_during_jobs=1 waiting=0"
+      ],
+      "simulator_ok": true
+    }
+  },
+  "normal_net_trace": [
+    {
+      "ph": "i",
+      "s": "t",
+      "pid": 2,
+      "tid": 1,
+      "name": "link down",
+      "ts": 0.0,
+      "args": {
+        "link": "none",
+        "up": false
+      }
+    },
+    {
+      "ph": "i",
+      "s": "t",
+      "pid": 2,
+      "tid": 1,
+      "name": "link down",
+      "ts": 0.0,
+      "args": {
+        "link": "none",
+        "up": false
+      }
+    },
+    {
+      "ph": "i",
+      "s": "t",
+      "pid": 2,
+      "tid": 1,
+      "name": "link down",
+      "ts": 197123.54,
+      "args": {
+        "link": "wifi",
+        "up": false
+      }
+    },
+    {
+      "ph": "i",
+      "s": "t",
+      "pid": 2,
+      "tid": 1,
+      "name": "link up",
+      "ts": 2697123.54,
+      "args": {
+        "link": "wifi",
+        "up": true
+      }
+    },
+    {
+      "ph": "X",
+      "pid": 2,
+      "tid": 1,
+      "name": "connect",
+      "ts": 2697327.414,
+      "dur": 333019.939
+    },
+    {
+      "ph": "i",
+      "s": "t",
+      "pid": 2,
+      "tid": 1,
+      "name": "link up",
+      "ts": 5200103.0,
+      "args": {
+        "link": "lte",
+        "up": true
+      }
+    },
+    {
+      "ph": "i",
+      "s": "t",
+      "pid": 2,
+      "tid": 1,
+      "name": "link down",
+      "ts": 18000000.0,
+      "args": {
+        "link": "lte",
+        "up": false
+      }
+    },
+    {
+      "ph": "i",
+      "s": "t",
+      "pid": 2,
+      "tid": 1,
+      "name": "connection lost",
+      "ts": 23000012.0
+    },
+    {
+      "ph": "i",
+      "s": "t",
+      "pid": 2,
+      "tid": 1,
+      "name": "link down",
+      "ts": 25230087.0,
+      "args": {
+        "link": "wifi",
+        "up": false
+      }
+    },
+    {
+      "ph": "i",
+      "s": "t",
+      "pid": 2,
+      "tid": 1,
+      "name": "link up",
+      "ts": 27730087.0,
+      "args": {
+        "link": "wifi",
+        "up": true
+      }
+    },
+    {
+      "ph": "X",
+      "pid": 2,
+      "tid": 1,
+      "name": "connect",
+      "ts": 27730300.25,
+      "dur": 623897.389
+    }
+  ]
+}

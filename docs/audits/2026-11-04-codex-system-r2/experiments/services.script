@@ -1,0 +1,6 @@
+@0 sim external sms
++0 sim internal sms
++0 wifi on
++0 cell on
+@18s cell off
+@40s end

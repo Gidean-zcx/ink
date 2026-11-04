@@ -675,7 +675,7 @@ static void rt_checks(void) {
     uint64_t t0 = osal_now_us();
     CHECK(ink_rt_send(sid, INK_RT_VOICE_UP, voice, sizeof voice, 0) == 0 && wait_for(&g_echoes, 1, 5000000) && g_echo_kind[0] == INK_RT_VOICE_UP,
           "a frame goes out and comes back");
-    CHECK(g_echo_t[0] - t0 < 200000, "round trip through the hub in %llu ms (Wi-Fi model)", (unsigned long long)((g_echo_t[0] - t0) / 1000));
+    CHECK(g_echo_t[0] - t0 < 200000, "round trip through the hub in %llu ms (4G model)", (unsigned long long)((g_echo_t[0] - t0) / 1000));
 
     /* priorities: background bulk queued first, a voice frame after it, the voice frame leaves first */
     static uint8_t bulk[2048 + INK_RT_HDR];

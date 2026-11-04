@@ -296,6 +296,7 @@ int sim_main(int argc, char **argv) {
         fprintf(stderr, "cannot create the main task\n");
         return 3;
     }
+    sim_net_env_init();
     if (g_sim.script_path) sim_script_start();
     vtk_event_at(SIM_MS(50), sampler, NULL);
     if (g_sim.interactive) sim_gui_started();

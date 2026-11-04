@@ -85,8 +85,9 @@ static void on_notify(void *ctx, const char *method, const ink_json_t *j, int pa
 
 static void open_reply(void *ctx, int status, const ink_json_t *j, int result);
 
-/* Tell the hub about session `sid` (again): on open, and after every reconnect (the hub forgets). */
-static void announce(int sid) {
+/* Tell the hub about session `sid` (again): on open, and after every reconnect (the hub forgets).
+ * < 0: the request could not even be made; nothing will answer it. */
+static int announce(int sid) {
     char params[INK_RT_PARAMS + 64];
     osal_mutex_lock(RT.lock, OSAL_WAIT_FOREVER);
     int i = find(sid);
@@ -96,7 +97,17 @@ static void announce(int sid) {
         snprintf(params, sizeof params, "{\"sid\":%d,\"cap\":\"%s\",\"params\":%s}", sid, RT.s[i].cap, RT.s[i].params);
     }
     osal_mutex_unlock(RT.lock);
-    if (i >= 0) ink_hub_call("rt.open", params, 10000000, open_reply, (void *)(intptr_t)sid);
+    if (i < 0) return 0;
+    int r = ink_hub_call("rt.open", params, 10000000, open_reply, (void *)(intptr_t)sid);
+    return r < 0 ? r : 0;
+}
+
+/* The session cannot go on, and its owner does not know yet. */
+static void lost(int sid) {
+    ink_rt_handler_t h;
+    bool had = handler_of(sid, &h);
+    if (drop(sid) && had && h.on_closed) h.on_closed(h.ctx, sid, -1);
+    ink_probe_count("rt.refused");
 }
 
 static void on_online(void *ctx) { /* hub task: a new connection knows no sessions */
@@ -111,7 +122,7 @@ static void on_online(void *ctx) { /* hub task: a new connection knows no sessio
     osal_mutex_unlock(RT.lock);
     for (int k = 0; k < n; k++) {
         ink_probe_count("rt.reannounced");
-        announce(again[k]);
+        if (announce(again[k]) < 0) lost(again[k]);
     }
 }
 
@@ -137,11 +148,10 @@ static void open_reply(void *ctx, int status, const ink_json_t *j, int result) {
     if (status == INK_HUB_OK) return;
     if (status == INK_HUB_ERR_LOST || status == INK_HUB_ERR_OFFLINE) return; /* the next connection announces it again */
     if (status == INK_HUB_ERR_TIMEOUT) { /* a hub that does not answer: ask again, the request's own wait paces this */
-        if (i >= 0 && ink_hub_online()) announce(sid);
+        if (i >= 0 && ink_hub_online() && announce(sid) < 0) lost(sid);
         return;
     }
-    if (drop(sid) && had && h.on_closed) h.on_closed(h.ctx, sid, -1); /* the hub refused it, or the request could not be made */
-    ink_probe_count("rt.refused");
+    lost(sid); /* the hub refused it, or the request could not be made */
 }
 
 int ink_rt_init(void) {
@@ -177,8 +187,12 @@ int ink_rt_open(const char *cap, const char *params_json, const ink_rt_handler_t
     }
     ink_jobs_hold(true);
     ink_hub_keep(true); /* connected for as long as the session is open (architecture §9.7) */
-    announce(sid);
     ink_probe_count("rt.opened");
+    if (announce(sid) < 0) { /* its owner hears it from the return value */
+        drop(sid);
+        ink_probe_count("rt.refused");
+        return -1;
+    }
     return sid;
 }
 
@@ -228,6 +242,14 @@ bool ink_rt_ready(int sid) {
     bool r = i >= 0 && RT.s[i].ready;
     osal_mutex_unlock(RT.lock);
     return r && ink_hub_online(); /* ready stays set until the next connection confirms it */
+}
+
+bool ink_rt_is_open(int sid) {
+    if (!RT.lock) return false;
+    osal_mutex_lock(RT.lock, OSAL_WAIT_FOREVER);
+    bool r = find(sid) >= 0;
+    osal_mutex_unlock(RT.lock);
+    return r;
 }
 
 int ink_rt_open_count(void) {

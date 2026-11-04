@@ -1,0 +1,3 @@
+# Speech for both turns (tests/integration/ai_race.c).
+@1s      mic   speech
+@40s     end
