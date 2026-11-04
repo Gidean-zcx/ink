@@ -1127,7 +1127,7 @@ sequenceDiagram
 
 ### 6.1 第一次配对：和设计稿对上
 
-设计稿和流程见[界面规范 §7.1](https://github.com/Gidean-zcx/ink/blob/claude/system-layer/docs/product/system-ui-spec.md)（`claude/system-layer` 提交 `de84e3c`）。`FirstBoot` 的字是“用手机设置这台设备 / 连接网络，选好谁来用”，下面一行“在设备上设置”；三个点：连网、加入家庭、谁在用。
+设计稿和流程见[界面规范 §7.1](https://github.com/Gidean-zcx/ink/blob/claude/system-layer/docs/product/system-ui-spec.md)（`claude/system-layer` 提交 `88ac961`）。`FirstBoot` 的字是“用手机设置这台设备 / 连接网络，选好谁来用”，下面一行“在设备上设置”；三个点：连网、加入家庭、谁在用。
 
 **用户看到的词**（界面规范第 0 节，暂定）：手机页面、控制台和设备用同一套词。本文和协议继续用内部术语。
 
@@ -1239,7 +1239,7 @@ sequenceDiagram
 ### 6.2 账号、成员和设备的关系
 
 - 一个家庭可以有多台设备；每台一个令牌。
-- 设备上的成员表来自中枢（`members_rev` 或 `hub_instance` 变了就拉）。第一次开机内置的 `owner`、`kid` 替身在配对后被真实成员替换。连不上中枢时先用起来（`BootNoHub`）写下的备忘属于替身，加入家庭时要归到真实的人：默认归发起加入的大人，按新的数据集同步（§5.8）【建议，要和界面对齐】。
+- 设备上的成员表来自中枢（`members_rev` 或 `hub_instance` 变了就拉）。第一次开机内置的 `owner`、`kid` 替身在配对后被真实成员替换。连不上中枢时先用起来（`BootNoHub`）写下的备忘属于替身，加入家庭时要归到真实的人：归发起加入的大人，`BootConfirm` 上写明（界面规范 §7.1），按新的数据集同步（§5.8）。
 - 在设备上加成员（设计稿 `Members` 有“添加成员”）：走 `member.add` 能力（系统级，确认），同步回中枢。
 - PIN 第一次进成人空间时在设备上设。
 
@@ -1496,6 +1496,8 @@ sequenceDiagram
 - 过关的调用，中枢策略代码填 `_meta.asked:true`，模型碰不到。设备没见到这个标记的对外动作照弹卡；高风险的能力（设备上是 `ask_by_hand`）不管有没有标记都弹。
 
 **发出去收不回的，留几秒**【建议】：发短信、打电话、分享，屏幕和语音先说“3 秒后发给妈妈：……”，不用按就发，说“取消”或点撤销就不发。免按键时电视里的话也可能触发 AI，听错了也来得及拦，这不算确认卡。
+
+**界面**（`claude/system-layer` 提交 `88ac961`）：确认卡收窄成 `ConfirmWeb`（花钱）、`ConfirmSecret`（密码和证件）、`ConfirmDelete`（找不回来的删除）、`ConfirmParent` 和 `ConfirmSetting`（身份和权限）、`Confirm`（把没提到的资料发出去）、`ConfirmCall`（不是人要求的对外动作）；对象不清楚时先问一句，写在 `AiReceipts`；活动记录是 `AiLog`。
 
 **做了什么查得到**：每个自动做的对外动作和设置改动都记进活动记录（`activity.list`，按成员，设备和控制台都能看，保留期和转写一样）；能撤销的给撤销；人开口就能打断。这是少弹卡的代价：**AI 可能做错，事后才知道**，比如听错了内容，或者网页骗它点了同一网站上的按钮。Codex 第二、三轮指出过这个风险（HUB2-010、HUB3-003），用户接受。
 
