@@ -96,6 +96,7 @@
 | 3.8 | 块传输 `blob/*`、帧 kind 6、7 | 双向 | 书、音频、固件、备份文件传不了 | 必须 |
 | 3.9 | 同步 `sync/*` | 设备 → 中枢 | 没有备份 | 必须 |
 | 3.10 | 升级 `update/*` | 设备 → 中枢 | 没有 OTA | 系统服务已定义，这里统一到块传输 |
+| 3.11 | 听写 `asr.stream` | 双向 | 输入法没有语音输入（R-056） | 设备底层会话做；`rt.c` 不用改 |
 
 ### 3.1 `hello` 第 2 版
 
@@ -261,6 +262,40 @@
 
 系统服务 §12.3 定义了 `update/check` 和 `update/fetch`。建议：`update/check` 不变，回答里加 `blob` 字段；下载用 §3.8 的 `blob/fetch`。这样固件和书共用一套可续传的下载代码。如果系统服务那边已经按 `update/fetch` 实现了，中枢两个都支持，`update/fetch {offset,len}` 等价于对最新包的 `blob/fetch`。
 
+### 3.11 听写 `asr.stream`
+
+语音输入（R-056、`claude/system-layer` 上的 D-65）。一路实时会话，不经过 AI。**不加帧类型，设备的 `rt.c` 不用改**：上行用现有语音帧，结果用 `rt.` 开头的通知，走现有的 `on_control`。行为规则见[概要设计 §5.3.1](hub-architecture.md)。这份约定已发给设备底层会话对齐。
+
+```text
+设备  rt.open {sid:9, cap:"asr.stream", params:{"format":"opus","rate":16000,"frame_ms":60,"kind":"text","interim_ms":800}}
+中枢  result {sid:9}
+设备  [kind=1 sid=9 seq=0..n] 语音帧，边说边传
+中枢  rt.asr {sid:9, seg:0, final:false, text:"今晚七点"}
+中枢  rt.asr {sid:9, seg:0, final:true,  text:"今晚七点到家。"}
+中枢  rt.asr {sid:9, seg:1, final:false, text:"给我留"}
+设备  rt.turn {sid:9, op:"end"}                停顿，或用户点“说完了”
+中枢  rt.asr {sid:9, seg:1, final:true,  text:"给我留饭。"}
+中枢  rt.asr.done {sid:9, segs:2, ms:5400}
+设备  rt.close {sid:9}
+```
+
+| 字段 | 含义 |
+| --- | --- |
+| `kind` | `text` 或 `number`（转成数字，打电话号码用）。`password` 一律拒绝 |
+| `interim_ms` | 中间结果的最小间隔。默认 800；0 表示只要定稿 |
+| `seg` | 句子序号，从 0 起。同一个 `seg` 后来的结果替换前面的 |
+| `final` | 这一句定稿了，带标点和数字转写，之后不再变 |
+| `text` | 不超过 480 字节；一句太长时中枢拆成两个 `seg` |
+| `segs`、`ms` | 一共几句、计费的音频时长 |
+
+**出错**：先发 `rt.asr.error {sid, code, message}`，再发 `rt.close {sid}`。`code` 取 `budget`、`vendor`、`not_allowed`、`timeout`、`too_long`。额度不够时也先确认 `rt.open` 再发这个（`open_reply` 不把错误码交给会话）。设备收到后提示，保留已定稿的文字，退回键盘。
+
+**结束和取消**：`rt.asr.done` 之后的 `rt.close` 是正常结束；之前的 `rt.close` 就是取消（用户点“用键盘”），中枢丢掉没发完的结果。可以带 `reason`（§3.5），不是必需。中枢兜底：5 秒没有新文字就自己结束；一路最长 120 秒。
+
+**断线**：不续传。中枢断开厂商连接；设备发现断线就关这个会话并退回键盘。要注意 `on_online` 会把还开着的会话重新登记一遍，听写不该这样，所以设备要先关。
+
+**目录**：`asr.stream` 进 `caps/list`（`form: session`），不进模型工具表。离线或这位成员不允许时设备查不到它，话筒键可以据此变灰或隐藏。
+
 ## 4. 错误码
 
 JSON-RPC `error.code`：
@@ -290,10 +325,10 @@ JSON-RPC `error.code`：
 ## 6. 还没定、开发时再定的
 
 - `ink/context`、`ink/intent`、`resources/read`、`ink/ui`：底座设计 §6.5 列了，现在都不是必需（页面快照放在 `ai.listen` 里）。做选区“解释”和声明式页面时加。
-- `rt.turn`：详细设计写了，代码没用，建议删掉设计里的说法，统一用 `rt.close` 加新会话；要在同一条会话里开多轮时再说。
+- `rt.turn`：详细设计写了，语音对话的代码没用，打断用的是 `rt.close` 加新会话，建议改设计里的说法；听写用它的“说完”（§3.11）。
 - 语音帧的 UDP 通道（D-54）：4G 实测后再定。
 - 设备探针上传的格式。
 
 ## 修订记录
 
-- v0.1（2026-11-04）：初稿，对照提交 `9b3c24a` 的实现。
+- v0.1（2026-11-04）：初稿，对照提交 `9b3c24a` 的实现。同日补听写 `asr.stream`（§3.11）。

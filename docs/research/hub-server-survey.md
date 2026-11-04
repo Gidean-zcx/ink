@@ -188,6 +188,7 @@ DeepSeek 的忙时是北京时间工作日 9:00–12:00 和 14:00–18:00。“�
 | 豆包流式识别 2.0 | 1 元/小时（按量）；另有资源包 | [火山引擎，页面更新于 2026-09-29](https://docs.volcengine.com/docs/6561/1359370) |
 | 豆包语音合成 2.0 | 3 元/万字符（按量） | 同上 |
 | 百炼向量 text-embedding-v4 | 0.5 元/百万 token | [百炼](https://help.aliyun.com/zh/model-studio/text-embedding-v4) |
+| 识别词表（热词） | 百炼：`vocabulary_id`，先建表再引用；Fun-ASR-Realtime 最多 2000 词，paraformer 最多 500 词。标点默认开；VAD 断句静音阈值默认 800 ms（200～6000 ms）。豆包：`boosting_table_id`，每表 5000 词，也能在请求里直传少量词 | [百炼 提升识别准确率](https://help.aliyun.com/zh/model-studio/improve-asr-accuracy)、[Paraformer SDK](https://help.aliyun.com/zh/model-studio/paraformer-real-time-speech-recognition-python-sdk)、[豆包 热词与上下文](https://docs.volcengine.com/docs/DoubaoVoice/hot-words-and-context?lang=zh) |
 | 联网搜索 | DeepSeek 的 Search 5 元/千次；国内搜索接口约从 12 元/千次起 | [DeepSeek](https://api-docs.deepseek.com/zh-cn/quick_start/pricing)；[第三方对比](https://select.keenable.ai/r/web-search-apis-china-market-comparison/3G5FI8ZzfPffaploN_Zmqw) |
 
 一把密钥：百炼一个账号能调 Qwen、DeepSeek、Kimi、GLM 的模型，也有语音和向量（同一张价格表），配置向导最省事。〔建议〕以此起步，见 D-78。
@@ -222,7 +223,7 @@ DeepSeek 的忙时是北京时间工作日 9:00–12:00 和 14:00–18:00。“�
 | qwen3.8-max | 143 | **约 171** | 约 209 |
 | kimi-k3 | 258 | **约 286** | 约 324 |
 
-可选项：报纸朗读预生成（18 万字，18 元）和一本书的朗读（20 万字，20 元）。用豆包语音时朗读是 3 倍价。对话量翻倍，主模型和语音部分也大约翻倍。
+可选项：报纸朗读预生成（18 万字，18 元）和一本书的朗读（20 万字，20 元）。用豆包语音时朗读是 3 倍价。对话量翻倍，主模型和语音部分也大约翻倍。语音输入（听写）没算在内：每天 5 分钟约每月多 3 元（150 分钟 × 0.00033 元/秒）。
 
 判断：D-07 的“每月一两百元”够用；只有 kimi-k3 这一档（在这个用量下）超出。质量差多少要实测，模型选择见 D-78。
 
