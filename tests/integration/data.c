@@ -110,7 +110,7 @@ static void forget(const ink_db_def_t *def, const char *member) {
         if (c->used && c->def == def && !strcmp(c->member, member ? member : "")) {
             CHECK(evictable(c), "%s can be forgotten: closed, nothing to write", def->name);
             c->last_use = 0; /* it is the least recently used now */
-            evict_one();
+            evict_one(NULL);
         }
     }
     unlock();

@@ -657,12 +657,13 @@ static bool evictable(const ink_db_t *c) {
     return c->used && c->loaded && !c->refs && !c->pend_len && !c->fly && !c->in_flight && !c->compacting && !c->compact_wanted;
 }
 
-/* The least recently used closed collection with nothing left to write goes. Under the lock. */
-static size_t evict_one(void) {
+/* The least recently used closed collection with nothing left to write goes, with this many bytes (an empty one counts: its
+ * slot is free). Under the lock. */
+static bool evict_one(size_t *freed) {
     ink_db_t *best = NULL;
     for (int i = 0; i < MAX_COLLECTIONS; i++)
         if (evictable(&DB.c[i]) && (!best || DB.c[i].last_use < best->last_use)) best = &DB.c[i];
-    if (!best) return 0;
+    if (!best) return false;
     size_t before = used_bytes();
     free_records(best);
     ink_svc_cancel(&best->flush_at);
@@ -670,18 +671,16 @@ static size_t evict_one(void) {
     ink_svc_cancel(&best->compact_at);
     memset(best, 0, sizeof *best);
     ink_probe_count("data.evictions");
-    return before - used_bytes();
+    if (freed) *freed = before - used_bytes();
+    return true;
 }
 
 static size_t reclaim(void *ctx, size_t want) { /* never from under the lock: nothing here calls ink_mem_alloc */
     (void)ctx;
     size_t got = 0;
     lock();
-    while (got < want) {
-        size_t n = evict_one();
-        if (!n) break;
-        got += n;
-    }
+    size_t n = 0;
+    while (got < want && evict_one(&n)) got += n;
     unlock();
     return got;
 }
@@ -715,7 +714,7 @@ ink_db_t *ink_db_open(const ink_db_def_t *def, const char *member) {
             unlock();
             return found;
         }
-        if (!slot && evict_one()) {
+        if (!slot && evict_one(NULL)) {
             unlock();
             continue;
         }
@@ -786,7 +785,7 @@ int ink_db_put(ink_db_t *db, const ink_db_write_t *w, uint32_t *out_id) {
     bool is_new = old < 0 || db->idx[old].r->dead;
     size_t old_len = is_new ? 0 : db->idx[old].r->len;
     rec_t *nr;
-    while (!(nr = mem_get(sizeof(rec_t) + w->len)) && evict_one()) {} /* over the store's quota: closed collections go first */
+    while (!(nr = mem_get(sizeof(rec_t) + w->len)) && evict_one(NULL)) {} /* over the store's quota: closed collections go first */
     if (!nr || (old < 0 && !idx_room(db))) {
         mem_put(nr, nr ? sizeof(rec_t) + w->len : 0);
         unlock();
@@ -977,6 +976,28 @@ int ink_db_error(ink_db_t *db) {
     int e = db->err;
     unlock();
     return e;
+}
+
+void ink_data_forget_all(void) { /* factory reset: nothing more goes to the flash */
+    if (!DB.lock) return;
+    lock();
+    for (int i = 0; i < MAX_COLLECTIONS; i++) {
+        ink_db_t *c = &DB.c[i];
+        c->pend_len = 0;
+    }
+    unlock();
+}
+
+void ink_db_forget_member(const char *member) {
+    if (!DB.lock) return;
+    lock();
+    for (int i = 0; i < MAX_COLLECTIONS; i++) {
+        ink_db_t *c = &DB.c[i];
+        if (!c->used || !c->loaded || strcmp(c->member, member) || c->refs || c->fly || c->in_flight || c->compacting) continue;
+        free_records(c);
+        memset(c, 0, sizeof *c);
+    }
+    unlock();
 }
 
 void ink_db_flush_all(void) {

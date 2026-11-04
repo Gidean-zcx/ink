@@ -30,6 +30,8 @@
  *   +0       sd remove|insert|full|free N  # the TF card: taken out, put in, full, N KiB left
  *   +0       usb plug|unplug|eject    # a computer at the other end of the cable; it ejects the USB disk
  *   +0       usb copy-in HOSTFILE PATH  # the computer copies a file onto the USB disk (PATH on the card, from its root)
+ *   +0       ap add NAME -60 [password] # a Wi-Fi network appears (known or not)
+ *   +0       ap del NAME               # it goes away
  *   +0       headset add AA:BB name    # a Bluetooth headset appears, on and in range
  *   +0       headset on|off AA:BB      # it is switched on or off
  *   +0       headset in|out AA:BB      # it comes into range or goes out of it
@@ -50,7 +52,7 @@
 #include "ink/rotation.h"
 #include "sim.h"
 
-typedef enum { A_TOUCH, A_KEY, A_SNAP, A_MARK, A_NOTE, A_BATTERY, A_POWERCUT, A_END, A_NET, A_OUTAGE, A_MIC, A_MIC_SAY, A_SIM, A_ORIENT, A_SHAKE, A_RTC_LOST, A_SMS_IN, A_CALL_IN, A_REMOTE, A_ENV, A_FAULTS, A_SD, A_USB, A_HUB_CLOCK, A_RTC_LINE, A_HEADSET } akind_t;
+typedef enum { A_TOUCH, A_KEY, A_SNAP, A_MARK, A_NOTE, A_BATTERY, A_POWERCUT, A_END, A_NET, A_OUTAGE, A_MIC, A_MIC_SAY, A_SIM, A_ORIENT, A_SHAKE, A_RTC_LOST, A_SMS_IN, A_CALL_IN, A_REMOTE, A_ENV, A_FAULTS, A_SD, A_USB, A_HUB_CLOCK, A_RTC_LINE, A_HEADSET, A_AP } akind_t;
 
 typedef struct {
     uint64_t t;
@@ -234,6 +236,15 @@ int sim_script_load(const char *path, char *err, size_t errlen) {
             for (int k = 0; k < 6 && n >= 3; k++)
                 if (!strcmp(tok[2], o[k])) ok = true;
             if (ok) snprintf(push(t, A_ORIENT)->text, 16, "%s", tok[2]);
+        } else if (!strcmp(cmd, "ap")) {
+            ok = n >= 4 && (!strcmp(tok[2], "del") || (!strcmp(tok[2], "add") && n >= 5));
+            if (ok) {
+                action_t *a = push(t, A_AP);
+                a->a = !strcmp(tok[2], "add");
+                snprintf(a->num, 24, "%s", tok[3]);
+                if (a->a) a->b = atoi(tok[4]);
+                if (n >= 6) snprintf(a->text, 96, "%s", tok[5]);
+            }
         } else if (!strcmp(cmd, "headset")) {
             static const char *const ops[] = {"add", "on", "off", "in", "out"};
             int op = -1;
@@ -364,6 +375,10 @@ static void run_action(void *arg) { /* ISR context */
     case A_RTC_LOST: sim_rtc_lose_time(); break;
     case A_RTC_LINE: sim_rtc_line_stuck_low(); break;
     case A_HUB_CLOCK: sim_hub_clock_offset(a->c); break;
+    case A_AP:
+        if (a->a) sim_wifi_ap_add(a->num, a->b, a->text);
+        else sim_wifi_ap_del(a->num);
+        break;
     case A_HEADSET:
         if (a->a == 0) sim_headset_add(a->num, a->text);
         else if (a->a <= 2) sim_headset_power(a->num, a->a == 1);

@@ -10,6 +10,7 @@
 #define INK_HAL_DEVICE_H
 
 #include <stdbool.h>
+#include <stddef.h>
 #include <stdint.h>
 
 #ifdef __cplusplus
@@ -59,6 +60,9 @@ uint32_t hal_accel_motion_count(void);                /* movement interrupts see
 
 /** Platform log sink (UART on device, stdout/file elsewhere). */
 void hal_log_write(const char *line);
+
+/** Random bytes from the hardware (salts). */
+void hal_random_fill(void *out, size_t n);
 
 #ifdef __cplusplus
 }

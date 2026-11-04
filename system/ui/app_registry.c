@@ -262,7 +262,7 @@ static void on_member(void *ctx, int h, const char *id) {
     (void)ctx;
     (void)h;
     (void)id;
-    if (strcmp(AP.member, ink_member_current()->id)) ink_exec_post(INK_EXEC_UI, &AP.member_job, member_job, NULL);
+    if (strcmp(AP.member, ink_member_current()->id) || !ink_member_space_open()) ink_exec_post(INK_EXEC_UI, &AP.member_job, member_job, NULL);
 }
 
 /* ---- the directory ---- */
@@ -468,7 +468,7 @@ int ink_apps_init(void) {
     ink_state_set_int(AP.h_cards_rev, 0);
     ink_ui_set_top_hook(on_top);
     if (ink_cap_register(APP_CAPS, (int)(sizeof APP_CAPS / sizeof APP_CAPS[0])) != 0 || ink_power_subscribe(on_power, NULL) != 0 || ink_mem_on_pressure(on_pressure, NULL) != 0 ||
-        ink_state_watch("member.current", on_member, NULL, INK_EXEC_DIRECT) != 0)
+        ink_state_watch("member.current", on_member, NULL, INK_EXEC_DIRECT) != 0 || ink_state_watch("member.authed", on_member, NULL, INK_EXEC_DIRECT) != 0)
         return -1;
     AP.ready = true;
     return 0;

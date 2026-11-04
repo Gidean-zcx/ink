@@ -102,6 +102,7 @@ struct ink_cap {
     const char *activity;   /* only meaningful while this activity is on top; NULL = anywhere */
     ink_exec_t exec;        /* where the handler runs (UI task by default) */
     bool while_locked;      /* can be used while an adult's space is locked: stopping an alarm, answering a call */
+    bool parent_pin;        /* whoever asks, an adult's PIN (if one is set) goes with the yes: removing a member, factory reset */
     const char *ask;        /* what the confirmation card says, with {argument}s: "发短信给 {to}：{text}"; NULL = title and arguments */
     void (*run)(ink_call_t *call);
 };

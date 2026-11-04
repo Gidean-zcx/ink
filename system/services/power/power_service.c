@@ -327,6 +327,13 @@ void ink_power_activity(uint64_t t_us) {
     }
 }
 
+uint64_t ink_power_last_activity(void) {
+    lock();
+    uint64_t t = PS.last_activity;
+    unlock();
+    return t;
+}
+
 void ink_power_hold(ink_power_need_t need) {
     if ((unsigned)need >= INK_NEED_COUNT) return;
     lock();

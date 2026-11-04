@@ -120,6 +120,10 @@ int ink_db_wait(ink_db_t *db, uint32_t ver, int64_t timeout_us);
 int ink_db_error(ink_db_t *db);
 /** Everything that waits, of every collection: locking, power off, low battery. Any task. */
 void ink_db_flush_all(void);
+/** Factory reset: what waits to be written does not go any more. */
+void ink_data_forget_all(void);
+/** A member is gone: what is held of theirs goes, unwritten or not. */
+void ink_db_forget_member(const char *member);
 /** Nothing waits to be written, anywhere (the storage service's queue is checked separately). */
 bool ink_db_idle(void);
 /** The state storage.user_free, measured now (blocks, walks the file system: at boot; it follows by itself after each folding). */

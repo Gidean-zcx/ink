@@ -14,6 +14,7 @@
 
 #include "ink/sys/cap.h"
 #include "ink/sys/exec.h"
+#include "ink/sys/members.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -41,6 +42,8 @@ ink_rc_t ink_confirm_hold(const ink_cap_t *c, const ink_args_t *args, ink_source
 int ink_confirm_list(ink_confirm_view_t *out, int max);
 /** A person answered: only touch and keys can. 0, or -1 (not waiting any more, or not a person). */
 int ink_confirm_decide(uint32_t token, bool accept, ink_source_t src);
+/** The yes of a card that needs a parent. Told how the PIN went (exec.bg). 0: it will be told. */
+int ink_confirm_accept_with_pin(uint32_t token, const char *pin, ink_pin_done_fn done, void *ctx);
 /** Whoever asked no longer wants it; a person can drop it too. 0, or -1. */
 int ink_confirm_withdraw(uint32_t token, ink_source_t src);
 void ink_confirm_set_presenter(const ink_confirm_presenter_t *p);

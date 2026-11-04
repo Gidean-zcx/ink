@@ -777,7 +777,20 @@ static void on_listen_inputs(void *ctx, int h, const char *id) { /* power.state 
     ink_exec_post(INK_EXEC_UI, &g_policy_job, listen_policy, NULL);
 }
 
+static bool g_switch_is_mine; /* UI task */
+
+void ink_ai_switching_member(void) { g_switch_is_mine = true; }
+
+static void on_member_changed(void *ctx, int h, const char *id) { /* UI task: what was being asked was someone else's */
+    (void)ctx;
+    (void)h;
+    (void)id;
+    if (!g_switch_is_mine) ink_ai_dismiss(); /* asked for by this very turn: its answer says it is done */
+    g_switch_is_mine = false;
+}
+
 int ink_ai_init(void) {
+    ink_state_watch("member.current", on_member_changed, NULL, INK_EXEC_UI);
     const char *prev = osal_mem_tag("ai");
     AI.answer_text = osal_malloc(ANSWER_CAP, OSAL_MEM_EXTERNAL);
     AI.lock = osal_mutex_create();

@@ -427,6 +427,29 @@ int ink_fs_move(const char *from, const char *to) {
     return INK_FS_OK;
 }
 
+static void wipe_tree(const char *phys, int depth) {
+    if (depth > 8) return;
+    char *path = osal_malloc(PHYS_MAX, OSAL_MEM_EXTERNAL);
+    hal_dirent_t *e = osal_malloc(sizeof *e, OSAL_MEM_EXTERNAL);
+    hal_dir_t *d = path && e ? hal_fs_opendir(phys) : NULL;
+    while (d && hal_fs_readdir(d, e) == 1) {
+        if (!strcmp(e->name, ".") || !strcmp(e->name, "..")) continue;
+        snprintf(path, PHYS_MAX, "%s/%s", phys, e->name);
+        if (e->is_dir) wipe_tree(path, depth + 1);
+        hal_fs_remove(path);
+    }
+    if (d) hal_fs_closedir(d);
+    osal_free(path);
+    osal_free(e);
+}
+
+void ink_fs_wipe_personal(void) {
+    if (FS.usb_lent) return;
+    wipe_tree("/content/.m", 0);
+    wipe_tree("/content/.update", 0);
+    wipe_tree("/cache", 0);
+}
+
 int ink_fs_write_atomic(const char *path, const void *data, size_t n) {
     char phys[PHYS_MAX], tmp[PHYS_MAX + 8];
     int r = fs_resolve(path, true, phys, sizeof phys);

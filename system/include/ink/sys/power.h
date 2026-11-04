@@ -47,6 +47,9 @@ void ink_power_activity(uint64_t t_us);
 void ink_power_hold(ink_power_need_t need);
 void ink_power_release(ink_power_need_t need);
 
+/** The last input. */
+uint64_t ink_power_last_activity(void);
+
 /** Lock now (power key short press). */
 void ink_power_lock(void);
 /** A wake key was pressed at t_us while locked: unlock. Returns false if it was not locked. */

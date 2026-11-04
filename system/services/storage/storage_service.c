@@ -139,6 +139,25 @@ static size_t reclaim(void *ctx, size_t want) {
     return got;
 }
 
+/* Depth first, small steps: a folder at a time. */
+static void wipe_dir(const char *dir, int depth) {
+    if (depth > 6) return;
+    char *path = osal_malloc(160, OSAL_MEM_EXTERNAL);
+    hal_dirent_t *e = osal_malloc(sizeof *e, OSAL_MEM_EXTERNAL);
+    hal_dir_t *d = path && e ? hal_fs_opendir(dir) : NULL;
+    while (d && hal_fs_readdir(d, e) == 1) {
+        if (!strcmp(e->name, ".") || !strcmp(e->name, "..")) continue;
+        snprintf(path, 160, "%s/%s", dir, e->name);
+        if (e->is_dir) wipe_dir(path, depth + 1);
+        hal_fs_remove(path);
+    }
+    if (d) hal_fs_closedir(d);
+    osal_free(path);
+    osal_free(e);
+}
+
+void ink_storage_wipe_user(void) { wipe_dir("/user", 0); }
+
 int ink_storage_reclaimable(void) { return ink_mem_reclaimer("storage-cache", 10, reclaim, NULL); }
 
 /* The content of path is now `data` (len -1: no file): cache it, or forget what was cached. */

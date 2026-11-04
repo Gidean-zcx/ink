@@ -44,6 +44,7 @@ int ink_shell_interrupt_card_init(void);
 int ink_shell_confirm_card_init(void);
 int ink_shell_keyboard_init(void);
 int ink_bt_service_init(void);
+int ink_shell_member_gate_init(void);
 
 void ink_main(void) {
     hal_log_write("ink: starting system services");
@@ -55,7 +56,8 @@ void ink_main(void) {
     if (ink_svc_init() != 0 || ink_confirm_init() != 0 || ink_data_init() != 0) osal_panic("data store failed to start");
     if (ink_power_init() != 0 || ink_file_service_init() != 0) osal_panic("power or file service failed to start");
     ink_members_init();
-    if (ink_net_init() != 0 || ink_light_init() != 0) osal_panic("network or light settings failed to start");
+    if (ink_members_start() != 0) osal_panic("members failed to start");
+    if (ink_net_init() != 0 || ink_wifi_init() != 0 || ink_light_init() != 0) osal_panic("network or light settings failed to start");
     if (ink_hub_init("wss://hub.local/v1/device") != 0 || ink_rt_init() != 0) osal_panic("hub link failed to start");
     if (ink_audio_init() != 0) osal_panic("audio service failed to start");
     /* before time: an alarm that is due now goes off as soon as the time service is up */
@@ -70,7 +72,7 @@ void ink_main(void) {
     if (ink_tools_init() != 0 || ink_system_actions_init() != 0 || ink_reader_actions_init() != 0 || ink_remote_init() != 0)
         osal_panic("action registry failed to start");
     if (ink_apps_init() != 0 || ink_app_register(&ink_appdef_home) != 0 || ink_app_register(&ink_appdef_reader) != 0) osal_panic("app directory failed to start");
-    if (ink_ui_start(&ink_app_home) != 0 || ink_ui_lock_mark_init() != 0 || ink_shell_interrupt_card_init() != 0 || ink_shell_confirm_card_init() != 0 || ink_shell_keyboard_init() != 0) osal_panic("ui failed to start");
+    if (ink_ui_start(&ink_app_home) != 0 || ink_ui_lock_mark_init() != 0 || ink_shell_interrupt_card_init() != 0 || ink_shell_confirm_card_init() != 0 || ink_shell_keyboard_init() != 0 || ink_shell_member_gate_init() != 0) osal_panic("ui failed to start");
     ink_fs_refresh_state(); /* blocks on the card: here, not in anyone's way */
     ink_data_refresh_state();
     ink_power_battery_policy_start();

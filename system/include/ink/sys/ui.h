@@ -55,12 +55,13 @@ typedef struct ink_activity {
  * was already down cannot press what appeared under it. What it looks like is its owner's. */
 typedef struct {
     const char *name;
+    int level; /* the higher is on top: a card asking, then who may use the device, then what cannot wait */
     bool (*on_key)(ink_key_t key, bool long_press); /* NULL: keys do nothing */
     int (*snapshot)(char *buf, size_t cap);
 } ink_ui_overlay_t;
 
-/** On top of the others (up to 3). UI task. */
-void ink_ui_overlay_add(const ink_ui_overlay_t *o);
+/** In its place by level (up to 4), `root` above the lower ones. UI task. */
+void ink_ui_overlay_add(const ink_ui_overlay_t *o, lv_obj_t *root);
 void ink_ui_overlay_remove(const ink_ui_overlay_t *o);
 
 /** Start the UI task with `home` as the root activity. */

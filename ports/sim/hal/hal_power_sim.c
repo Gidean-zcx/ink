@@ -179,6 +179,11 @@ void sim_power_off(const char *reason) { /* any context: the power chip cut the 
 
 const char *sim_power_off_reason(void) { return g_off_reason; }
 
+void hal_power_reboot(void) {
+    sim_metric_set("power.reboot", 1);
+    sim_power_off("reboot");
+}
+
 void hal_power_shutdown(void) {
     if (metalio_board_ready()) metalio_power_off(); /* the expander model cuts power at the last pulse */
     sim_power_off("shutdown");
@@ -645,6 +650,11 @@ void sim_power_report(void) {
 /* ------------------------------------------------------------ device */
 
 void hal_device_get_info(hal_device_info_t *out) { *out = g_profile.info; }
+
+void hal_random_fill(void *out, size_t n) {
+    uint8_t *p = out;
+    for (size_t i = 0; i < n; i++) p[i] = (uint8_t)(sim_rand01() * 256);
+}
 
 const char *hal_device_reset_reason(void) { return g_sim.reset_reason ? g_sim.reset_reason : "poweron"; }
 

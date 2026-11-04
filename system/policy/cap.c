@@ -82,7 +82,9 @@ static ink_confirm_t confirm_for(const ink_cap_t *c, ink_source_t src) {
     case INK_FX_SYSTEM: k = INK_CONFIRM_DEVICE; break;
     default: break;
     }
-    if (src == INK_SRC_TOUCH || src == INK_SRC_KEY || src == INK_SRC_SYSTEM || src == INK_SRC_CONFIRMED) return INK_CONFIRM_NONE;
+    if (src == INK_SRC_CONFIRMED) return INK_CONFIRM_NONE;
+    if (c->parent_pin && ink_member_any_pin()) return INK_CONFIRM_PARENT;
+    if (src == INK_SRC_TOUCH || src == INK_SRC_KEY || src == INK_SRC_SYSTEM) return INK_CONFIRM_NONE;
     return k;
 }
 
@@ -108,6 +110,12 @@ static ink_rc_t gate(const ink_cap_t *c, ink_source_t src, uint32_t page_gen, in
         if (!ink_member_allows(c->id, c->child_ok)) {
             ink_probe_count("policy.rejected");
             return reject(rc, INK_RC_REJECTED, "not on this child's whitelist");
+        }
+    }
+    if (!ink_member_space_open() && src != INK_SRC_SYSTEM) { /* an adult's space, closed: what comes through is what cannot wait, and from a person */
+        if (src == INK_SRC_AI || src == INK_SRC_REMOTE || src == INK_SRC_APP || !c->while_locked) {
+            ink_probe_count("policy.rejected");
+            return reject(rc, INK_RC_REJECTED, "this member's space is locked");
         }
     }
     if (src == INK_SRC_APP && c->permission && !ink_app_foreground_may(c->permission)) {

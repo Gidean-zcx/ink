@@ -32,6 +32,7 @@ typedef struct {
     char member[INK_MEMBER_ID_MAX];
     char detail[160];
     uint64_t expires_us;
+    bool parent;
 } held_t;
 
 static struct {
@@ -220,6 +221,7 @@ ink_rc_t ink_confirm_hold(const ink_cap_t *c, const ink_args_t *args, ink_source
         return rc->status;
     }
     h->used = true;
+    h->parent = c->parent_pin && ink_member_any_pin();
     h->cap = c;
     h->args = *args;
     h->src = src;
@@ -271,6 +273,7 @@ int ink_confirm_list(ink_confirm_view_t *out, int max) {
         snprintf(v->title, sizeof v->title, "%s", first->cap->title);
         snprintf(v->detail, sizeof v->detail, "%s", first->detail);
         v->src = (uint8_t)first->src;
+        v->parent = first->parent;
         v->expires_us = first->expires_us;
     }
     ink_svc_unlock();
@@ -288,11 +291,52 @@ static void confirmed_done(void *ctx, const ink_receipt_t *rc) {
     osal_free(r);
 }
 
+static int decide(uint32_t token, bool accept);
+
 int ink_confirm_decide(uint32_t token, bool accept, ink_source_t src) {
     if (src != INK_SRC_TOUCH && src != INK_SRC_KEY) {
         ink_probe_count("confirm.not_a_person");
         return -1;
     }
+    if (accept) { /* a yes that needs a parent comes with a PIN */
+        bool parent = false;
+        ink_svc_lock();
+        for (int i = 0; i < MAX_HELD; i++)
+            if (CF.held[i].used && CF.held[i].token == token) parent = CF.held[i].parent;
+        ink_svc_unlock();
+        if (parent) {
+            ink_probe_count("confirm.needs_pin");
+            return -1;
+        }
+    }
+    return decide(token, accept);
+}
+
+typedef struct {
+    uint32_t token;
+    ink_pin_done_fn done;
+    void *ctx;
+} pin_answer_t;
+
+static void pin_checked(void *ctx, int result, uint32_t wait_s) { /* exec.bg */
+    pin_answer_t *a = ctx;
+    if (result == INK_PIN_OK) decide(a->token, true);
+    if (a->done) a->done(a->ctx, result, wait_s);
+    osal_free(a);
+}
+
+int ink_confirm_accept_with_pin(uint32_t token, const char *pin, ink_pin_done_fn done, void *ctx) {
+    pin_answer_t *a = osal_malloc(sizeof *a, OSAL_MEM_EXTERNAL);
+    if (!a) return -1;
+    *a = (pin_answer_t){token, done, ctx};
+    if (ink_member_check_parent(pin, pin_checked, a) != 0) {
+        osal_free(a);
+        return -1;
+    }
+    return 0;
+}
+
+static int decide(uint32_t token, bool accept) {
     const char *prev = osal_mem_tag("confirm");
     held_t *h = osal_malloc(sizeof *h, OSAL_MEM_EXTERNAL);
     ran_t *r = osal_malloc(sizeof *r, OSAL_MEM_EXTERNAL);

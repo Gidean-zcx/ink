@@ -26,7 +26,7 @@ static int snapshot(char *buf, size_t cap) {
     return n < 0 ? 0 : (size_t)n < cap ? n : (int)cap - 1;
 }
 
-static const ink_ui_overlay_t OVERLAY = {.name = "interrupt", .snapshot = snapshot}; /* the keys do nothing: only the power key does (in the input service) */
+static const ink_ui_overlay_t OVERLAY = {.name = "interrupt", .level = 3, .snapshot = snapshot}; /* the keys do nothing: only the power key does (in the input service) */
 
 static void show(const ink_interrupt_t *top) { /* UI task */
     if (!top) {
@@ -40,7 +40,7 @@ static void show(const ink_interrupt_t *top) { /* UI task */
     if (same) return; /* only the sound changed */
     if (!C.card.root) {
         shell_card_open(&C.card);
-        ink_ui_overlay_add(&OVERLAY);
+        ink_ui_overlay_add(&OVERLAY, C.card.root);
     }
     shell_card_text(&C.card, C.now.title, C.now.body);
     shell_card_clear_buttons(&C.card);

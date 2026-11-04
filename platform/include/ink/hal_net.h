@@ -44,6 +44,24 @@ void hal_net_use(hal_link_type_t type);
  *  under coverage. What the system chooses from. Task context, does not wait. */
 bool hal_net_available(hal_link_type_t type);
 
+/* ---- Wi-Fi management ---- */
+typedef struct {
+    char ssid[33];
+    int rssi;
+    bool secured;
+} hal_wifi_ap_t;
+typedef struct {
+    char ssid[33];
+    char password[65];
+} hal_wifi_known_t;
+enum { HAL_WIFI_OK = 0, HAL_WIFI_ERR_AUTH = -1, HAL_WIFI_ERR_NOT_FOUND = -2, HAL_WIFI_ERR_TIMEOUT = -3 };
+/** What is around, strongest first (a task; blocks a few seconds). How many (up to max). */
+int hal_wifi_scan(hal_wifi_ap_t *out, int max, uint32_t timeout_ms);
+/** Try this network and these words now (a task; blocks). HAL_WIFI_*. */
+int hal_wifi_connect(const char *ssid, const char *password, uint32_t timeout_ms);
+/** What automatic choosing may join: hal_net_available(WIFI) is one of these in range. Copied. */
+void hal_wifi_set_known(const hal_wifi_known_t *list, int n);
+
 typedef void (*hal_link_cb)(void *ctx, const hal_link_status_t *st);
 /** Notified when the link changes (comes up, goes down, switches Wi-Fi/LTE) and when a network
  *  appears or goes away. Up to four listeners, each added once (on the device: esp_event handlers);

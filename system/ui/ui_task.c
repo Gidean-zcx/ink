@@ -28,7 +28,7 @@
 #define MAX_HINTS 8
 #define MAX_DIRTY 24
 #define MAX_ACTIVITIES 6
-#define MAX_OVERLAYS 3
+#define MAX_OVERLAYS 4
 #define PFIFO 16
 #define INTERACTIVE_IDLE_MS 2500
 
@@ -79,6 +79,7 @@ static struct {
     void (*top_hook)(const char *app);
     lv_obj_t *screen;
     const ink_ui_overlay_t *overlays[MAX_OVERLAYS];
+    lv_obj_t *overlay_root[MAX_OVERLAYS];
     int noverlays;
     bool skip_touch; /* a finger went down before the screen changed under it: nothing until it lifts */
     volatile uint32_t generation;
@@ -461,11 +462,19 @@ static void overlays_changed(void) {
     UI.last_pressed = false;
 }
 
-void ink_ui_overlay_add(const ink_ui_overlay_t *o) {
+void ink_ui_overlay_add(const ink_ui_overlay_t *o, lv_obj_t *root) {
     for (int i = 0; i < UI.noverlays; i++)
         if (UI.overlays[i] == o) return;
     if (UI.noverlays >= MAX_OVERLAYS) return;
-    UI.overlays[UI.noverlays++] = o;
+    int at = UI.noverlays++;
+    while (at > 0 && UI.overlays[at - 1]->level > o->level) {
+        UI.overlays[at] = UI.overlays[at - 1];
+        UI.overlay_root[at] = UI.overlay_root[at - 1];
+        at--;
+    }
+    UI.overlays[at] = o;
+    UI.overlay_root[at] = root;
+    for (int i = at + 1; i < UI.noverlays; i++) lv_obj_move_foreground(UI.overlay_root[i]);
     overlays_changed();
 }
 
@@ -473,6 +482,7 @@ void ink_ui_overlay_remove(const ink_ui_overlay_t *o) {
     for (int i = 0; i < UI.noverlays; i++)
         if (UI.overlays[i] == o) {
             memmove(&UI.overlays[i], &UI.overlays[i + 1], sizeof UI.overlays[0] * (size_t)(UI.noverlays - i - 1));
+            memmove(&UI.overlay_root[i], &UI.overlay_root[i + 1], sizeof UI.overlay_root[0] * (size_t)(UI.noverlays - i - 1));
             UI.noverlays--;
             overlays_changed();
             return;

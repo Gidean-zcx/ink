@@ -83,6 +83,8 @@ int ink_fs_move(const char *from, const char *to);
 /** Replace or create a whole file through a temporary one. */
 int ink_fs_write_atomic(const char *path, const void *data, size_t n);
 int ink_fs_free(uint64_t *free_bytes, uint64_t *total_bytes);
+/** Factory reset: every member's files, what is downloaded and the cache. The family's shared content stays. */
+void ink_fs_wipe_personal(void);
 
 /* Jobs: files and trees that may take minutes, one at a time, on the background executor. */
 typedef enum { INK_FS_JOB_NONE = 0, INK_FS_JOB_RUNNING, INK_FS_JOB_DONE, INK_FS_JOB_FAILED, INK_FS_JOB_CANCELLED } ink_fs_job_state_t;

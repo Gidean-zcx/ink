@@ -9,6 +9,8 @@ extern "C" {
 #endif
 
 int ink_net_init(void);
+/** Wi-Fi management: the networks it knows, the capabilities. After the data store. */
+int ink_wifi_init(void);
 
 #ifdef __cplusplus
 }

@@ -34,6 +34,7 @@ static const char *const FOR_AI[] = {
     "text.state", "text.insert", "text.submit", "clipboard.read", "clipboard.write",
     "media.play", "media.pause", "media.resume", "media.seek", "media.stop", "media.status", "audio.record", "audio.record_stop",
     "bt.scan", "bt.list", "bt.pair", "bt.connect", "bt.disconnect", "bt.forget",
+    "wifi.scan", "wifi.list", "wifi.connect", "wifi.forget", "member.list", "member.add", "member.remove", "system.reboot",
     "camera.capture", "message.send", "message.list", "call.dial", "call.answer", "call.hangup", "remote.open",
     "reader.list_books", "reader.open_book", "reader.next_page", "reader.prev_page", "reader.goto_page", "reader.read_page",
     NULL,
@@ -45,18 +46,20 @@ static const struct {
 } NOT_FOR_AI[] = {
     {"confirm.accept", "only a person on the device can say yes"},
     {"confirm.reject", "only a person on the device answers"},
+    {"member.unlock", "a PIN is entered on the device, it goes through nobody else"},
+    {"member.set_pin", "a PIN is entered on the device, it goes through nobody else"},
     {NULL, NULL},
 };
 
 static const char *const STATES[] = {
     "storage.user_free", "storage.free", "storage.card", "storage.mode", "usb.connected", "time.synced", "time.zone", "time.minute", "alarm.ringing", "notify.unread", "interrupt.active",
-    "confirm.pending", "app.foreground", "app.cards_rev", "power.state", "battery.level", "battery.charging", "battery.low", "member.current", "text.focused", "audio.now_playing", "audio.route", "audio.listening", "audio.recording", "media.state", "bt.connected", "bt.device", "bt.available", NULL,
+    "confirm.pending", "app.foreground", "app.cards_rev", "power.state", "battery.level", "battery.charging", "battery.low", "member.current", "text.focused", "audio.now_playing", "audio.route", "audio.listening", "audio.recording", "media.state", "bt.connected", "bt.device", "bt.available", "wifi.state", "wifi.ssid", "member.authed", NULL,
 };
 
-static const char *const SETTINGS[] = {"notify.dnd", "time.zone", "time.auto", "power.lock_after_s", "audio.volume", "audio.child_max", "voice.handsfree", "ai.read_clipboard", NULL};
+static const char *const SETTINGS[] = {"notify.dnd", "time.zone", "time.auto", "power.lock_after_s", "audio.volume", "audio.child_max", "voice.handsfree", "ai.read_clipboard", "member.idle_return_s", NULL};
 
 /* Events the design promises the AI hears about (the rest of the table by the same rule: registered is forwarded). */
-static const char *const EVENTS[] = {"data.write_failed", "file.changed", "file.job_done", "usb.changed", "alarm.fired", "reminder.fired", "time.changed", "notify.posted", "confirm.result", "app.state", "battery.low", "media.finished", "audio.record_done", "bt.changed", NULL};
+static const char *const EVENTS[] = {"data.write_failed", "file.changed", "file.job_done", "usb.changed", "alarm.fired", "reminder.fired", "time.changed", "notify.posted", "confirm.result", "app.state", "battery.low", "media.finished", "audio.record_done", "bt.changed", "wifi.changed", "member.changed", NULL};
 
 static bool in_list(const char *const *list, const char *id) {
     for (; *list; list++)
