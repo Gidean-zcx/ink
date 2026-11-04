@@ -1,0 +1,7 @@
+# The connection drops in the middle of a voice turn: the turn ends with a message, its session closes
+# and the next press starts cleanly (detailed design §6.6).
+@3s      mic   speech
++0       key   ai 4s
++2500ms  outage 3s
++12s     key   ai 1200ms         # the next turn is answered
++15s     end

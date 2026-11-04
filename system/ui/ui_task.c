@@ -82,6 +82,7 @@ static struct {
     /* busy signal for the power service (atomics): messages posted and not yet handled, and
      * whether LVGL has a refresh requested that it has not rendered yet */
     int posts;
+    int kick_lost; /* a job was posted without a message (ink_ui_kick) */
     bool render_pending;
     /* a posted call taken from the queue while collecting queued input: handled first next round */
     umsg_t held;
@@ -429,13 +430,15 @@ void ink_ui_open(lv_obj_t *from, const ink_activity_t *a, void *arg) {
     ink_exec_post(INK_EXEC_UI, &pending_open.job, do_open, NULL);
 }
 
-/* A job waits: the next round runs it. With the queue full there is no room for this message and no
- * need for it: the task's loop looks for jobs each time it finds the queue empty. */
+/* A job waits: its message brings it into a round, in turn with the input before it. With the queue
+ * full (or before the task runs) there is no room for one: the task's loop then looks for itself. */
 void ink_ui_kick(void) {
-    if (!UI.q) return; /* before the task runs: its loop starts with them */
     umsg_t m = {.type = UM_CALL};
     __atomic_add_fetch(&UI.posts, 1, __ATOMIC_SEQ_CST);
-    if (osal_queue_send(UI.q, &m, 0) != OSAL_OK) __atomic_sub_fetch(&UI.posts, 1, __ATOMIC_SEQ_CST);
+    if (!UI.q || osal_queue_send(UI.q, &m, 0) != OSAL_OK) {
+        __atomic_sub_fetch(&UI.posts, 1, __ATOMIC_SEQ_CST);
+        __atomic_store_n(&UI.kick_lost, 1, __ATOMIC_SEQ_CST);
+    }
 }
 
 /* Read the post count first: the UI task stores render_pending before it lowers the count, and
@@ -633,7 +636,7 @@ static void ui_task(void *arg) {
         if (UI.has_held) {
             m = UI.held;
             UI.has_held = false;
-        } else if (ink_exec_waiting(INK_EXEC_UI) && !osal_queue_count(UI.q)) { /* posted while the queue was full, or before this task ran */
+        } else if (__atomic_exchange_n(&UI.kick_lost, 0, __ATOMIC_SEQ_CST)) { /* a job whose message found no room */
             m = (umsg_t){.type = UM_CALL};
             __atomic_add_fetch(&UI.posts, 1, __ATOMIC_SEQ_CST);
         } else if (osal_queue_recv(UI.q, &m, timeout) != OSAL_OK) {

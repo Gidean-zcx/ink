@@ -269,10 +269,45 @@ static void pressure_checks(void) {
     CHECK(g_applies == 2, "reaches its owner again (it may have to correct the hardware; %d)", g_applies);
 }
 
+/* ---- the same on the UI task, whose message queue can be full ---- */
+
+static ink_exec_job_t g_ui_block_job, g_ui_fill[40];
+static osal_sem_t *g_ui_block;
+static volatile int g_ui_blocking, g_ui_fill_runs, g_ui_order_ok = 1;
+
+static void ui_blocker(void *arg) {
+    (void)arg;
+    g_ui_blocking = 1;
+    osal_sem_take(g_ui_block, OSAL_WAIT_FOREVER);
+    g_ui_blocking = 0;
+}
+static bool ui_blocking(void) { return g_ui_blocking; }
+static void ui_fill(void *arg) {
+    if ((intptr_t)arg != g_ui_fill_runs) g_ui_order_ok = 0;
+    g_ui_fill_runs++;
+}
+static bool ui_filled(void) { return g_ui_fill_runs == 40; }
+
+static void ui_pressure_checks(void) {
+    g_ui_block = osal_sem_create(0, 1);
+    ink_exec_post(INK_EXEC_UI, &g_ui_block_job, ui_blocker, NULL);
+    CHECK(wait_until(ui_blocking, 2000000), "the UI task is busy");
+    uint64_t t0 = osal_now_us();
+    for (intptr_t i = 0; i < 40; i++) ink_exec_post(INK_EXEC_UI, &g_ui_fill[i], ui_fill, (void *)i); /* more than its queue holds */
+    CHECK(osal_now_us() - t0 < 100000, "posting does not wait for it (%llu us)", (unsigned long long)(osal_now_us() - t0));
+    CHECK(ink_ui_busy(), "it counts as busy while jobs wait");
+    osal_sem_give(g_ui_block);
+    CHECK(wait_until(ui_filled, 2000000) && g_ui_order_ok, "all 40 ran, in order (%d)", g_ui_fill_runs);
+}
+
 /* ---- a full pool is said, not hidden (the promise of ink_cap_call) ---- */
 
 static void pool_checks(void) {
     ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .reply_exec = INK_EXEC_DIRECT, .done = t_reply};
+    o.request_id = "";
+    g_runs = 0;
+    CHECK(ink_cap_call("t.once", NULL, &o) == 0 && ink_cap_call("t.once", NULL, &o) == 0 && g_runs == 2, "an empty request id is no request id (%d)", g_runs);
+    o.request_id = NULL;
     g_nparked = g_replies = 0;
     int n = 0;
     for (int i = 0; i < POOL_N; i++) n += ink_cap_call("t.parked", NULL, &o) == 0;
@@ -477,6 +512,13 @@ static void remote_checks(void) {
         CHECK(wait_picture(1) && picture_differs() == 0, "round %d: links work again (%d)", round, picture_differs());
     }
 
+    /* a region could not be kept: the picture starts over */
+    int updates = (int)RS.updates;
+    static ink_exec_job_t restart;
+    ink_exec_post(INK_EXEC_UI, &restart, session_restart, NULL);
+    g_want_updates = updates + 1;
+    CHECK(wait_until(shown_enough, 8000000) && picture_differs() == 0, "after a lost region: a new session, the hub's picture (%d)", picture_differs());
+
     /* closed with an update on its way and opened again: the new page has nothing of the old */
     remote_tap(560, 85);
     osal_task_delay_us(250000);
@@ -520,6 +562,7 @@ static void lifecycle_task(void *arg) {
     early_checks();
     deadline_checks();
     pressure_checks();
+    ui_pressure_checks();
     pool_checks();
     capture_checks();
     sim_checks();

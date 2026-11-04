@@ -227,7 +227,7 @@ bool ink_rt_ready(int sid) {
     int i = find(sid);
     bool r = i >= 0 && RT.s[i].ready;
     osal_mutex_unlock(RT.lock);
-    return r;
+    return r && ink_hub_online(); /* ready stays set until the next connection confirms it */
 }
 
 int ink_rt_open_count(void) {

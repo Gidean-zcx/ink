@@ -35,6 +35,7 @@
 #include "ink/sys/json.h"
 #include "ink/sys/lz4.h"
 #include "ink/sys/rt.h"
+#include "ink/sys/state.h"
 #include "ink/sys/ui.h"
 
 #define DIRTY_MAX 32
@@ -59,11 +60,17 @@ static struct {
     } dirty[DIRTY_MAX];
     int ndirty;
     int ready_sid; /* the session the hub just confirmed (under the lock) */
-    ink_exec_job_t ready_job, show_job, drain_job, release_job, closed_job;
+    ink_exec_job_t ready_job, show_job, drain_job, release_job, closed_job, restart_job;
     /* UI task */
     lv_image_dsc_t dsc;
     lv_obj_t *img, *note;
-    lv_timer_t *credit_timer, *spot_timer;
+    int dpi;
+    lv_timer_t *credit_timer, *spot_timer, *link_timer;
+    char params[INK_RT_PARAMS]; /* what the session is opened with */
+    bool suspended;  /* the device is locked: no session */
+    bool ended;      /* the hub refused or ended it */
+    bool down_shown; /* the note says the connection is gone */
+    int down_ticks;
     lv_area_t spot;
     bool spot_on;
     int owed; /* credits the hub has not been given yet */
@@ -87,6 +94,8 @@ typedef struct region_job {
 
 /* Regions waiting for the media executor: one job drains them all. */
 static region_job_t *g_head, *g_tail;
+
+static void region_lost(void);
 
 static void copy_rect(uint8_t *dst, const uint8_t *src, const lv_area_t *a) { /* canvases of the same size */
     size_t w = (size_t)(a->x2 - a->x1 + 1);
@@ -112,6 +121,16 @@ static void credit_check(lv_timer_t *t) {
     RS.owed = 0;
     RS.waiting_display = false;
     lv_timer_pause(t);
+}
+
+/* A word at the bottom of the page: the picture may be old or will not change any more. NULL: none. */
+static void note_set(const char *zh, const char *en) {
+    if (!RS.note) return;
+    if (zh) {
+        lv_label_set_text(RS.note, ink_font_for_pt(8, RS.dpi) ? zh : en);
+        lv_obj_remove_flag(RS.note, LV_OBJ_FLAG_HIDDEN);
+    } else lv_obj_add_flag(RS.note, LV_OBJ_FLAG_HIDDEN);
+    ink_ui_hint_obj(RS.note, INK_REFRESH_UI);
 }
 
 /* The picture under the tap comes back: the hub's next update, or nothing came. UI task. */
@@ -199,6 +218,7 @@ static void decode_region(region_job_t *j) { /* exec.media */
                 osal_free(RS.tmp);
                 RS.tmp = osal_malloc(px, OSAL_MEM_EXTERNAL);
                 RS.tmp_cap = RS.tmp ? px : 0;
+                if (!RS.tmp) region_lost();
             }
             if (RS.tmp && enc == 2) ok = hal_jpeg_decode_gray(p + 10, j->len - 10, RS.tmp, w, h) == 0; /* 8-bit gray */
             else if (RS.tmp) {
@@ -248,6 +268,15 @@ static void drain(void *arg) { /* exec.media */
     }
 }
 
+static void session_restart(void *arg);
+
+/* A region could not be kept: the hub believes it is shown, and if it ended an update no credit would
+ * ever follow. The picture can only start over: a new session (hub's and device's start from white). */
+static void region_lost(void) {
+    ink_probe_count("remote.regions_dropped");
+    ink_exec_post(INK_EXEC_UI, &RS.restart_job, session_restart, NULL);
+}
+
 static void on_frame(void *ctx, int sid, uint8_t kind, const uint8_t *payload, size_t len, uint16_t seq, uint32_t t_ms, uint8_t flags) {
     (void)ctx;
     (void)seq;
@@ -255,7 +284,7 @@ static void on_frame(void *ctx, int sid, uint8_t kind, const uint8_t *payload, s
     if (kind != INK_RT_SCREEN) return; /* hub task */
     region_job_t *j = osal_malloc(sizeof *j + len, OSAL_MEM_EXTERNAL);
     if (!j) {
-        ink_probe_count("remote.regions_dropped");
+        region_lost();
         return;
     }
     j->next = NULL;
@@ -272,7 +301,7 @@ static void on_frame(void *ctx, int sid, uint8_t kind, const uint8_t *payload, s
     }
     osal_mutex_unlock(RS.lock);
     if (!ours) osal_free(j);
-    else if (ink_exec_post(INK_EXEC_MEDIA, &RS.drain_job, drain, NULL) != 0) ink_probe_count("remote.regions_dropped");
+    else if (ink_exec_post(INK_EXEC_MEDIA, &RS.drain_job, drain, NULL) != 0) region_lost();
 }
 
 /* UI task. The hub confirmed the session: this connection's hub knows nothing of what the device
@@ -307,9 +336,9 @@ static void on_ready(void *ctx, int sid) { /* hub task */
 
 static void session_closed(void *arg) { /* UI task: the hub refused or ended it: this page will not change any more */
     (void)arg;
-    if (!RS.note) return;
-    lv_obj_remove_flag(RS.note, LV_OBJ_FLAG_HIDDEN);
-    ink_ui_hint_obj(RS.note, INK_REFRESH_UI);
+    if (!RS.img) return;
+    RS.ended = true;
+    note_set("远程画面已结束，按返回键退出", "The remote screen ended - press back");
     ink_probe_count("remote.closed_by_hub");
 }
 
@@ -321,6 +350,61 @@ static void on_closed(void *ctx, int sid, int reason) { /* hub task */
     if (ours) RS.sid = 0;
     osal_mutex_unlock(RS.lock);
     if (ours) ink_exec_post(INK_EXEC_UI, &RS.closed_job, session_closed, NULL);
+}
+
+static const ink_rt_handler_t RT;
+
+static void session_open(void) { /* UI task */
+    int sid = ink_rt_open("browser.session", RS.params, &RT); /* the first pull goes out once the hub confirmed it */
+    osal_mutex_lock(RS.lock, OSAL_WAIT_FOREVER);
+    RS.sid = sid > 0 ? sid : 0;
+    osal_mutex_unlock(RS.lock);
+    if (sid <= 0) session_closed(NULL);
+}
+
+static void session_close(void) { /* UI task: what is queued no longer lands anywhere */
+    osal_mutex_lock(RS.lock, OSAL_WAIT_FOREVER);
+    int sid = RS.sid;
+    RS.sid = 0;
+    RS.gen++;
+    RS.ndirty = 0;
+    osal_mutex_unlock(RS.lock);
+    if (sid > 0) ink_rt_close(sid);
+}
+
+static void session_restart(void *arg) { /* UI task */
+    (void)arg;
+    if (!RS.img || RS.suspended || RS.ended) return;
+    session_close();
+    session_open();
+}
+
+/* UI task, once a second while the page is open: the last picture stays; a note says it may be old. */
+static void link_check(lv_timer_t *t) {
+    (void)t;
+    if (RS.suspended || RS.ended) return;
+    int64_t online = 1; /* the link says at once what the connection only notices later */
+    ink_state_get_int(ink_state_find("net.online"), &online);
+    RS.down_ticks = online && ink_rt_ready(RS.sid) ? 0 : RS.down_ticks + 1;
+    bool down = RS.down_ticks >= 3; /* not for the seconds a connection takes */
+    if (down == RS.down_shown) return;
+    RS.down_shown = down;
+    if (down) ink_probe_count("remote.offline_shown");
+    note_set(down ? "连接断了，正在重连…" : NULL, "Connection lost, reconnecting...");
+}
+
+/* UI task. Locked, nobody looks at the page: no session keeps the link up and background work waiting.
+ * Unlocked, a new session: the hub's picture replaces the one left on the panel. */
+static void on_power_state(void *ctx, int h, const char *id) {
+    (void)ctx;
+    (void)id;
+    char s[16] = "";
+    ink_state_get_str(h, s, sizeof s);
+    bool locked = !strcmp(s, "locked");
+    if (!RS.img || RS.ended || locked == RS.suspended) return;
+    RS.suspended = locked;
+    if (locked) session_close();
+    else session_open();
 }
 
 /* ------------------------------------------------------------ up: input */
@@ -398,36 +482,34 @@ static void remote_create(lv_obj_t *scr, void *arg) {
     RS.note = lv_label_create(scr);
     hal_panel_info_t pi;
     hal_display_get_info(&pi);
+    RS.dpi = pi.dpi;
     ink_font_t *cjk = ink_font_for_pt(8, pi.dpi); /* the UI fonts are Latin only */
     lv_obj_set_style_text_font(RS.note, cjk ? ink_font_lvgl(cjk) : ink_ui_font(2), 0);
     lv_obj_set_style_bg_color(RS.note, lv_color_white(), 0);
     lv_obj_set_style_bg_opa(RS.note, LV_OPA_COVER, 0);
-    lv_label_set_text(RS.note, cjk ? "远程画面已结束，按返回键退出" : "The remote screen ended - press back");
     lv_obj_align(RS.note, LV_ALIGN_BOTTOM_MID, 0, -ink_dp(16));
     lv_obj_add_flag(RS.note, LV_OBJ_FLAG_HIDDEN);
     RS.credit_timer = lv_timer_create(credit_check, 40, NULL);
     lv_timer_pause(RS.credit_timer); /* until the hub confirmed the session */
     RS.spot_timer = lv_timer_create(spot_expired, FEEDBACK_MS, NULL);
     lv_timer_pause(RS.spot_timer);
+    RS.link_timer = lv_timer_create(link_check, 1000, NULL);
     RS.spot_on = false;
     RS.owed = 0;
+    RS.suspended = RS.ended = RS.down_shown = false;
+    RS.down_ticks = 0;
     RS.first_shown = RS.waiting_display = RS.pulled = false;
     RS.tap_us = 0;
     RS.opened_us = osal_now_us();
-    char params[INK_RT_PARAMS];
     ink_jw_t w;
-    ink_jw_init(&w, params, sizeof params);
+    ink_jw_init(&w, RS.params, sizeof RS.params);
     char head[48];
     snprintf(head, sizeof head, "{\"w\":%d,\"h\":%d,\"gray\":16,\"url\":", RS.w, RS.h);
     ink_jw_raw(&w, head);
     ink_jw_str(&w, url);
     ink_jw_raw(&w, "}");
-    if (w.overflow) snprintf(params, sizeof params, "{\"w\":%d,\"h\":%d,\"gray\":16}", RS.w, RS.h); /* too long: the hub's start page */
-    int sid = ink_rt_open("browser.session", params, &RT); /* the first pull goes out once the hub confirmed it */
-    osal_mutex_lock(RS.lock, OSAL_WAIT_FOREVER);
-    RS.sid = sid > 0 ? sid : 0;
-    osal_mutex_unlock(RS.lock);
-    if (sid <= 0) session_closed(NULL);
+    if (w.overflow) snprintf(RS.params, sizeof RS.params, "{\"w\":%d,\"h\":%d,\"gray\":16}", RS.w, RS.h); /* too long: the hub's start page */
+    session_open();
 }
 
 /* After the regions still queued (on the same executor): the canvases go back, unless the host was
@@ -448,17 +530,14 @@ static void release_canvas(void *arg) { /* exec.media */
 static void remote_destroy(void) {
     if (RS.credit_timer) lv_timer_delete(RS.credit_timer);
     if (RS.spot_timer) lv_timer_delete(RS.spot_timer);
-    RS.credit_timer = RS.spot_timer = NULL;
+    if (RS.link_timer) lv_timer_delete(RS.link_timer);
+    RS.credit_timer = RS.spot_timer = RS.link_timer = NULL;
     RS.img = RS.note = NULL;
     if (!RS.lock) return;
+    session_close();
     osal_mutex_lock(RS.lock, OSAL_WAIT_FOREVER);
-    int sid = RS.sid;
-    RS.sid = 0;
-    RS.gen++; /* what is queued no longer lands anywhere */
     RS.active = false;
-    RS.ndirty = 0;
     osal_mutex_unlock(RS.lock);
-    if (sid > 0) ink_rt_close(sid);
     if (ink_exec_post(INK_EXEC_MEDIA, &RS.release_job, release_canvas, NULL) != 0) ink_probe_count("remote.canvas_kept");
 }
 
@@ -496,4 +575,7 @@ static const ink_cap_t REMOTE_CAPS[] = {
      .run = cap_open},
 };
 
-int ink_remote_init(void) { return ink_cap_register(REMOTE_CAPS, 1); }
+int ink_remote_init(void) {
+    ink_state_watch("power.state", on_power_state, NULL, INK_EXEC_UI);
+    return ink_cap_register(REMOTE_CAPS, 1);
+}

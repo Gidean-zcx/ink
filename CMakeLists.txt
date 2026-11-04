@@ -417,6 +417,7 @@ if(INK_HAVE_FONTS)
   ink_scenario(reader_basic metalio-plus-psram16)
   ink_scenario(ai_ask metalio-plus)
   ink_scenario(ai_turn_end metalio-plus)
+  ink_scenario(ai_turn_lost metalio-plus)
   add_test(NAME integration-lifecycle
     COMMAND sim-lifecycle --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus-handsfree.json
             --budget ${CMAKE_SOURCE_DIR}/tests/integration/lifecycle.budget.json

@@ -1,12 +1,13 @@
 {
   "_doc": "A remote page survives a dropped link: it pulls from the new connection, whose hub starts from a white screen.",
   "net.outages": {"min": 1, "max": 1},
-  "remote.resynced": {"min": 1, "max": 1, "why": "the page started over with the new connection"},
-  "hub.remote.sessions": {"min": 2, "max": 2, "why": "the session was announced again"},
-  "remote.updates": {"min": 3, "why": "the first page, the page after reconnecting, the link tapped after that"},
+  "remote.resynced": {"min": 2, "max": 2, "why": "the page started over with the new connection, and after the unlock"},
+  "remote.offline_shown": {"min": 1, "max": 1, "why": "while the link was gone the page said so"},
+  "hub.remote.sessions": {"min": 3, "max": 3, "why": "announced again after the outage, opened again after the unlock"},
+  "remote.updates": {"min": 4, "why": "the first page, the page after reconnecting, the link tapped after that, the page after the unlock"},
   "hub.remote.link_hits": {"min": 1, "max": 1, "why": "the tap after reconnecting reached a link"},
   "remote.feedback_restored": {"min": 2, "why": "the spot goes back: with the update, and by itself where no update came"},
-  "rt.closed": {"min": 2, "max": 2, "why": "the voice turn's session, then the page's when it was closed"},
+  "rt.closed": {"min": 3, "max": 3, "why": "the voice turn's session, the page's when the device locked and when it was closed"},
   "panic.count": {"max": 0, "optional": true},
   "warnings.count": {"max": 0, "optional": true}
 }

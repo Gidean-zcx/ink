@@ -217,6 +217,7 @@ static bool in_flight(const char *rid) { /* under the lock */
 static pending_t *claim(const char *rid, bool *repeat) {
     pending_t *p = NULL;
     *repeat = false;
+    if (rid && !*rid) rid = NULL;
     osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
     for (int i = 0; i < POOL_N && !p; i++)
         if (!CB.pool[i].used) p = &CB.pool[i];
