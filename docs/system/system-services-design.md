@@ -74,7 +74,7 @@ flowchart TB
 | 通知 | `notify.post`、`notify.list`、`notify.read`、`notify.dismiss`、`notify.clear`、`notify.channels`、`notify.set_channel` | — | `notify.unread`、`interrupt.active` | `notify.dnd` | `notify.posted` | 打断通道本身（来电、闹钟、低电量由系统拉起，AI 不能假装来电） |
 | 确认卡 | `confirm.list`、`confirm.withdraw`（撤回自己发起的） | `confirm.accept`、`confirm.reject`（只有人在设备上能按） | `confirm.pending` | — | `confirm.result` | — |
 | 应用 | `app.list`、`app.open`、`app.close`、`app.cards` | — | `app.foreground`、`app.cards_rev` | — | `app.state` | 冻结、停止、状态保存的时机 |
-| 文本输入 | `text.state`、`text.insert`、`text.submit`；`clipboard.write`；`clipboard.read`（设置打开才行，默认不读） | 敏感内容（`clipboard.read` 不给）；密码框内容（掩码） | `text.focused` | `ai.read_clipboard` | — | 拼音引擎、词库、候选 |
+| 文本输入 | `text.state`、`text.insert`、`text.submit`；`text.voice_start`（开麦克风，确认）、`text.voice_finish`、`text.voice_cancel`；`clipboard.write`；`clipboard.read`（设置打开才行，默认不读） | 敏感内容（`clipboard.read` 不给）；密码框内容（掩码，也不能听写） | `text.focused`、`text.voice` | `ai.read_clipboard` | `text.voice_ended` | 拼音引擎、词库、候选、停顿判断 |
 | 音频 | `media.play`、`media.pause`、`media.resume`、`media.seek`、`media.stop`、`media.status`、`audio.record`、`audio.record_stop` | — | `audio.now_playing`、`audio.route`、`audio.listening`、`audio.recording`、`media.state` | `audio.volume`、`audio.child_max`、`voice.handsfree` | `media.finished`、`audio.record_done` | 焦点、功放、I2S、模式切换 |
 | 蓝牙 | `bt.scan`、`bt.list`、`bt.pair`、`bt.connect`、`bt.disconnect`、`bt.forget` | — | `bt.connected`、`bt.device`、`bt.available` | — | `bt.changed` | 芯片命令（协议未知） |
 | Wi-Fi | `wifi.scan`、`wifi.list`、`wifi.connect`（系统级，确认）、`wifi.forget`（确认） | — | `wifi.state`、`wifi.ssid` | `net.prefer` | `wifi.changed` | 选网、入网步骤 |
@@ -563,7 +563,42 @@ void ink_clip_clear(void);
 
 ### 9.4 给 AI 的能力
 
-`text.state`（有没有焦点、类型、内容；密码掩码）、`text.insert {text}`（往焦点框里写，等于替用户打字）、`text.submit`（等于按回车）；`clipboard.read`、`clipboard.write`。这样“帮我把这段填到搜索框”不用模拟按键。
+`text.state`（有没有焦点、类型、内容；密码掩码）、`text.insert {text}`（往焦点框里写，等于替用户打字）、`text.submit`（等于按回车）；`clipboard.read`、`clipboard.write`。这样“帮我把这段填到搜索框”不用模拟按键。语音输入见 §9.5。
+
+### 9.5 语音输入（听写，R-056、D-65）
+
+文字来自中枢（`asr.stream`，[中枢协议 §3.11](https://github.com/Gidean-zcx/ink/blob/claude/hub-design-8fd433/docs/hub/device-protocol.md)，在分支 `claude/hub-design-8fd433` 上）：设备自己只有命令词识别，没有中枢就没有听写，这一点要告诉用户。代码在 `system/services/text/voice_input.c`，面板在 `system/ui/shell/keyboard.c`。
+
+```c
+typedef enum { INK_VOICE_IDLE, INK_VOICE_CONNECTING, INK_VOICE_LISTENING, INK_VOICE_FINISHING } ink_voice_state_t;
+bool ink_text_voice_possible(void);      /* 有话筒键吗 */
+int  ink_text_voice_start(void);         /* 0；-1 时 ink_text_voice_notice() 说为什么 */
+void ink_text_voice_finish(void);        /* 说完了 */
+void ink_text_voice_cancel(void);        /* 用键盘：什么都不写进去 */
+const char *ink_text_voice_heard(void);  /* 听到的末尾，给面板的固定小区域 */
+```
+
+- **界面**：候选条右端黑色话筒键；点了键盘区换成同样大小的语音面板（占位外观）：一行状态、固定一小块显示听到的字（快速黑白刷新，中枢按 `interim_ms` 800 节流）、“说完了”“用键盘”。字说完才进输入框，之后和打的字一样能改。键上的提示留到下一次按键。
+- **有没有话筒键**：不是密码框、有麦克风；联网时还要中枢目录里有 `asr.stream`（`ink_cap_available`，这位成员不允许就没有键）。没网时键还在，点了才说为什么。
+- **一路流程**：点键：取音频焦点（语音档，媒体暂停、朗读停）、预连中枢、开实时会话、开麦克风，**从这时起就开始听**，会话没确认前的帧先留着（最多 3 s），确认后一起发。结果（`rt.asr`，同一个 `seg` 后来的替换前面的）只进面板。说完（停顿或点“说完了”）：关麦克风，等采集结束的回调再发 `rt.turn end`，等 `rt.asr.done` 才把定稿的字写进输入框，关会话。一路最长由中枢定（120 s）。
+- **停顿怎么判断**：看每帧的音量（`ink_audio_capture_level`，每帧取 240 个样本的平均绝对值），高于 300 算有声音；有过声音后 1.5 s 没声音就算说完；一直没声音 8 s 也结束，中枢回 0 句，提示“没听清”。阈值是估计，要实机校准（§14.2）。没有用语音前端，因为现在没有档案声明有它（详细设计 §13 第 6 步）；吵的环境可能一直不结束，这时靠“说完了”或中枢的 120 s。
+- **结束和字的去向**：
+
+| 情况 | 字 | 提示 |
+| --- | --- | --- |
+| 说完，中枢 `rt.asr.done` | 定稿的进输入框 | 一句都没有：“没听清” |
+| 点“用键盘”、切页面（输入会话结束）、锁屏、来电、闹钟、换成员、按 AI 键 | **都丢掉**，`rt.close` 等于告诉中枢取消 | — |
+| 中枢 `rt.asr.error`（`budget`、`not_allowed`、`too_long`、`vendor`、`timeout`） | 定稿的留下，没定稿的不要 | “今天的额度用完了，用键盘吧”等 |
+| 中枢拒绝或关掉会话 | 同上 | “语音输入暂时用不了” |
+| 断线、6 s 连不上 | 同上 | “现在连不上，用键盘吧” |
+| 说完后 8 s 没有结果 | 同上 | “语音输入暂时用不了” |
+
+- **断线**：不续传。发现断线（200 ms 看一次，或者同一路第二次收到“会话确认”，那说明已经是新连接）就关会话退回键盘。设备发现之前如果又连上了，`on_online` 会把会话重新登记一次，第二次确认就是用来发现这种情况的。
+- **麦克风只有一个**：录音时不能听写（“正在录音，先停了再说”）；AI 正在听时不能听写；听写时录音失败；听写时**免按键的唤醒词和打断都不生效**（`listen_job` 查状态）；按 AI 键：听写丢掉，等麦克风空出来（最多 200 ms），AI 这一轮照常。AI 键仍然只叫 AI。
+- **数字框**：`kind` 发 `number`，写进去之前只留数字框收的字符。**密码框**：没有话筒键，`ink_text_voice_start` 和 `text.voice_start` 都拒绝。
+- **孩子**：可以用（中枢设计 §5.3.1：它只是打字；D-25 不限制通信），家长要关就在中枢那边，目录里没有就没有键。
+- **给 AI**：`text.voice_start`（副作用按外部算，走确认卡，声音会发给中枢）、`text.voice_finish`、`text.voice_cancel`；`text.state` 带 `voice`、`voice_possible`、`heard`（`ai_hidden` 的框不给）；状态 `text.voice`；事件 `text.voice_ended {how, why}`。标了 `ai_hidden` 的框 AI 不能开。
+- **没做的**：麦克风开着时状态栏的标记归系统壳（状态 `text.voice`、`audio.listening`、`audio.recording` 够它分清）；口语整理（中枢以后做）。
 
 ## 10. 音频
 
@@ -647,6 +682,8 @@ void hal_wifi_set_known(const hal_wifi_known_t *list, int n);          /* 自动
 - 输错递增等待：3 次之后 30 s，再错翻倍，最多 15 分钟；次数落盘，重启不清零。忘了 PIN 由中枢重置（以后）。
 
 ### 11.4 成人空间闲置退回（D-16）
+
+**计时和 D-38 冲突，等用户定（D-95）。** 下面是现在的做法。
 
 `member.authed`：成人解过 PIN 为真。成人闲置 `member.idle_return_s`（默认 120 s）或进入锁屏：`authed` 变假，应用保存、停止，回到成员选择（占位）。`authed` 假时策略关口只放行标了 `while_locked` 的能力（`member.*`、`alarm.dismiss`、`alarm.snooze`、`call.answer`、`call.hangup`），AI 一律拒绝。孩子没有 PIN，不受影响。没设过 PIN 的成人也不受影响（第一次开机）。
 
@@ -733,6 +770,8 @@ OTA 和卡刷只有第一步不同，后面完全一样：同一种包、同一�
 
 另外加大了：状态和设置的监听 24 个（`WATCH_MAX`），`on_online` 6 个。
 
+界面审计（`claude/system-layer` 的[设计审计 §5](../audits/2026-11-04-codex-ui/report.md)）提到的电源键：**长按 1.5 s 是电源菜单**（`system/ui/shell/power_menu.c`，占位外观，关机、重启、取消，按钮走 `system.shutdown`、`system.reboot`）。短按还是锁屏；锁定时长按先唤醒再出菜单；来电和闹钟不响应长按，松开也不算短按；HOME 关菜单；锁屏时菜单收起。谁拿着设备谁能关机：孩子、关着的成人空间都能按，AI 替孩子不行。关机和重启都先写完在等的东西。锁屏标记改成“按电源键或 AI 键唤醒”（D-38）。
+
 明确不做的（以后）：媒体索引、节气、成员级设置（现在设置表是设备级的，音量等都全家一个）、AI 联想、S31 自带蓝牙、配对（首次开机）、无线传输。
 
 ## 14. 决定、实机问题
@@ -766,6 +805,7 @@ OTA 和卡刷只有第一步不同，后面完全一样：同一种包、同一�
 | `lfs_fs_size` 和 `f_getfree` 的实际耗时 | `storage.free` 刷新频率 | 测量固件 |
 | PBKDF2 迭代次数 | PIN 解锁时长 | 测量固件 |
 | 升级时写槽对音频、触摸的影响 | 安装体验 | 用户同意后试一次 |
+| 听写的停顿阈值（音量 300） | 说完要不要等太久，吵的时候结不结束 | 真麦克风录几段，要写设备 |
 | `esp_ota_begin` 擦除要多久、能不能边写边擦 | 存储任务一次不能占太久 | 端口实现时测，要写设备 |
 | 出厂引导程序没开回滚 | 真机上“新系统不行就回去”要等第一次经 USB 装我们的引导程序 | 同第一行 |
 | PQ-BN 下一帧什么时候算“屏刷过一次” | 自检用提交帧数和 `ink_display_busy`，没测过真屏 | 第一次装系统时看 |
@@ -781,7 +821,7 @@ OTA 和卡刷只有第一步不同，后面完全一样：同一种包、同一�
 结果（第 1 阶段结束，a23c5cf 之后）：AI 场景 PQ-BN 档 33192 字节，比基线少 312 字节，比目标多 12 字节，离底线还有 424 字节；干净启动没有新任务；新增两把锁（共用的一把，数据存储自己一把）和一个共用定时器。`exec.bg` 第一次有后台作业才建，闹钟表非空时启动过程里也可能建，所以“启动没有新任务”只对干净启动成立。普通构建和内存检查构建都是 72/72（本机 macOS；Linux CI 见提交记录）。
 
 第 2 阶段和升级之后，这个数字没变（33192）：它们的状态都在 PSRAM，没有新任务。
-普通构建和内存检查构建都是 82/82（本机 macOS）。
+普通构建和内存检查构建都是 85/85（本机 macOS）。
 
 | 项 | 状态 | 提交 | 测试 | 反向对照（撤掉修复后，测试确实失败） |
 | --- | --- | --- | --- | --- |
@@ -830,11 +870,14 @@ OTA 和卡刷只有第一步不同，后面完全一样：同一种包、同一�
 | Wi-Fi、成员、PIN、闲置退回、恢复出厂 | 完成 | 3c1bddb、f2cbc57 | `integration-people`、`integration-people-reset`（重启两次）、`unit-sha256` | 错 PIN 不等；空间关着放行；关着也给 AI；锁屏不关（f2cbc57 之前没测出来：闲置先关了）；闲置不关；PIN 给中枢；切换不要 PIN；旧 PIN 错也改；普通“确认”代替 PIN；删人不清 Flash（f2cbc57 之前没测出来：只查了集合）；不清卡；密码错也记住；Wi-Fi 集合开放给 AI：各自的检查失败 |
 | 系统升级 | 完成 | 4e556d1、7721632 | `integration-update`（17 轮开机，同一个镜像和卡） | 不验签名、产品、版本、最低版本、大小、段哈希；提示前不校验；失败的版本又提示；自检不过还继续；一分钟没超时；从不说好；人不用确认；AI 能看到；移动数据下 AI 能下、自动下；设置不起作用；每次上线都看；写被借出的卡；不持卡安装；通话、低电量不挡；断电没发现；回滚不说；字库重写；断电后资源不接着写；下载的包不清；不续传；没有安装卡：各自的检查或阶段失败 |
 | “一直在听” | 完成 | 7721632、f41d3cc | `integration-listening` | 唤醒词过确认卡；进锁着的空间；“一直”不算锁屏；“关”不关；默认锁屏也听；听的时候不持有唤醒：各自的检查失败 |
+| 语音输入 | 完成 | 23d8a74 | `integration-dictation`、`integration-dictation-handsfree` | 密码框有键、能开、能经能力开；字随时进框；取消还留字；失败丢定稿；不告诉中枢说完；停顿不结束、停一下就结束、一直不说不结束、不提示；断线发现不了；重连后第二次确认发现不了；一直连不上；一直等结果；连接时说的丢了；来电、锁屏、切页面不结束；不取焦点；录音时也能开；数字框收别的字、发错类型；AI 键不取消、不等麦克风；AI 不用确认、能开隐藏框、看到隐藏框的字；不看目录；面板大小变；听写时唤醒词生效：各自的检查失败 |
+| 电源键长按、电源菜单 | 完成 | 4173abe、002df94 | `integration-power-menu`（一个镜像 7 轮） | 松开还锁屏；0.5 s 就算长按；没有长按；来电时也出菜单；HOME 不关；锁屏不收；孩子不能关机；AI 能替孩子关；关着的空间不能关；关机前不写；标记文字：各自的检查失败 |
 | 作业和网络 | 完成 | 7721632、f41d3cc | `systest-services` | 离线也跑（`it has not run (3, 0)`）；联网不启动：测试不通过 |
 | 模块划分、AI 能看到什么 | 完成 | 4e556d1 | `layering`、`integration-ai-surface` | 见 §15.2 AUD15-009 |
 
 顺带发现并修掉的：
 
+- 模拟麦克风的“安静”其实是满幅噪声（64 位相乘没有截到 32 位，`hal_audio_sim.c`）：语音前端的模型只看音源的名字，没人看过样本，写听写的停顿判断时才发现。
 - 唤醒词绕过了确认卡，也能进锁着的成人空间（`listen_job` 直接调 `ink_ai_key`，按键那条路有这两道门），写“一直在听”的测试时发现。
 - 坏的升级包只要头部对就被提示，还盖掉“升级失败”那条通知：提示前先算段哈希，两条通知分开。
 - 空集合 `evict_one` 返回 0 被当成“没释放”（3c1bddb）。
@@ -842,10 +885,26 @@ OTA 和卡刷只有第一步不同，后面完全一样：同一种包、同一�
 
 和设计不一致、已改文档的：`ink_text_cfg_t.ai_hidden`；AI 联想接口没留；`ink_media_play` 没有选项参数；升级的下载现在是 JSON 里放 base64；没有 `hal_ota_rollback`。
 
+### 15.4 和界面约定的对照
+
+界面审计提的跨服务约定（[设计审计 §5.2](../audits/2026-11-04-codex-ui/report.md)），现在做到哪了。**缺的都记在这里，这一轮没有做：**
+
+| 约定 | 现在有 | 还缺 |
+| --- | --- | --- |
+| 保存回执（写进队列不等于已保存；分清本地保存、等待上传、中枢收到） | C 接口：`ink_db_durable_ver`、`ink_db_wait`、`ink_db_error`，事件 `data.write_failed`。能力 `data.put` 回 `revision`，**但不能问这个版本落盘了没有** | 给能力一个问法（比如 `data.status`）；“等待上传”“中枢收到”要等同步（中枢协议 §3.9） |
+| 后台作业（能查进度和结果，界面能显示） | 文件作业 `ink_fs_job_status`、事件 `file.job_done`；升级 `update.status`、`update.progress` | 通用的：`ink_job_*` 只有 `ink_jobs_pending`，没有名字、进度和结果的列表；文件作业的进度没有能力可问（只有结束的事件） |
+| 系统手势仲裁（保留起点，系统先判边缘带；键盘、滑杆、文字选择按下后输入归它们） | 输入事件有 `x`、`y`、`dx`、`dy` 和方向，浮层独占输入，一个已按下的手指不能按到新出现的东西 | 起点没有传给前台，边缘带和“按下后归谁”都没有。归界面框架，和手势一起做 |
+| 编辑会话 | 类型、组合串、候选分页、提交和取消、成员清空、语音输入 | 选区、撤销、光标移动；长文本（现在上限 4 KiB，从末尾追加） |
+| 成员、确认事务 | §7、§11 | 确认结果落盘（中枢协议要求，见下） |
+| 应用状态恢复（D-95 如果定了，“回到原页和原位置”） | `save_state`、`restore_state` 存到 `/user/m/<成员>/`；成人空间关闭时页面栈不动，成员门盖在上面，解锁就回到原页 | §11.4 现在是 120 s 闲置或一锁屏就关。**D-95 等用户定，定了再改计时**，恢复这一半已经够 |
+
+中枢协议 v0.2 要设备改的（[hub-architecture §13](https://github.com/Gidean-zcx/ink/blob/claude/hub-design-8fd433/docs/hub/hub-architecture.md)，服务器设计说还没到做的阶段，先记着）：`device/event` 加 `seq`、`boot`、`member`；`confirm/request`；`ink/member`；块传输（kind 6、7，`update/fetch` 固定包标识，现在是 JSON 里放 base64）；`hub_link` 的配对状态；确认结果落盘、`confirm.status`；同步的快照安装。
+
 还没做、也不属于这一轮的：中枢真正的 `update/*` 协议；正式词库；`ports/esp32s31` 上这些 HAL 全部没有实现（§14.2）；应用权限按前台应用查、事件信封没有成员归属（第十四轮报告的架构节）。
 
 ## 修订记录
 
+- v0.4（2026-11-04）：加语音输入（§9.5）、电源菜单、和界面约定的对照（§15.4）；和其他分支重号的编号改掉。
 - v0.3（2026-11-04）：第 2 阶段和升级完成，第十四轮审计的问题修完；§3、§4、§5、§7～§13 按实际接口改。
 - v0.2（2026-11-04）：第 1 阶段完成，回填验证记录和实现中改的接口。
 - v0.1（2026-11-04）：初稿，含用户补充的 R-057～R-060。
