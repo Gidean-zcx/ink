@@ -96,8 +96,10 @@ static void test_task(void *arg) {
     delay_ms(2000);
     CHECK(listening(), "always: locked too");
     sleeps = sim_power_sleeps();
+    double tries = sim_metric_value("power.sleep_refused");
     delay_ms(70000);
     CHECK(sim_power_sleeps() == sleeps && !strcmp(power_state(), "locked"), "the chip stays up, the screen locked (%d, %s)", sim_power_sleeps() - sleeps, power_state());
+    CHECK(sim_metric_value("power.sleep_refused") == tries, "because it was asked to, not because it keeps trying and failing (%.0f)", sim_metric_value("power.sleep_refused") - tries);
     was = wakes();
     asked = questions();
     say_something();

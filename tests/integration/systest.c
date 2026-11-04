@@ -645,7 +645,7 @@ static void res_checks(void) {
     osal_task_delay_us(2000000);
     CHECK(g_steps == 0 && ink_jobs_pending() == 1, "it has not run (%d, %d)", g_steps, ink_jobs_pending());
     vtk_event_at(vtk_now() + SIM_MS(1), net_on, NULL);
-    CHECK(wait_for(&g_finished, fin + 2, 90000000) && g_steps == 3, "online again it runs, nobody had to ask (%d)", g_steps);
+    CHECK(wait_for(&g_finished, fin + 2, 20000000) && g_steps == 3, "online again it runs, nobody had to ask (%d)", g_steps);
     g_finished = fin; /* what follows counts from here */
 
     /* pressure: reclaim first, then pause background work */
