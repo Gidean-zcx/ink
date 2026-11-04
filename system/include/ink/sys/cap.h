@@ -51,8 +51,9 @@ typedef enum {
     INK_RC_UNDONE,
 } ink_rc_t;
 
-/* Who asks. Touch, keys and the system are the member's own direct manipulation. */
-typedef enum { INK_SRC_TOUCH = 0, INK_SRC_KEY, INK_SRC_AI, INK_SRC_SYSTEM, INK_SRC_APP, INK_SRC_REMOTE } ink_source_t;
+/* Who asks. Touch, keys and the system are the member's own direct manipulation. CONFIRMED: someone else
+ * asked and the member accepted the confirmation card. */
+typedef enum { INK_SRC_TOUCH = 0, INK_SRC_KEY, INK_SRC_AI, INK_SRC_SYSTEM, INK_SRC_APP, INK_SRC_REMOTE, INK_SRC_CONFIRMED } ink_source_t;
 
 typedef enum { INK_FORM_CALL = 0, INK_FORM_STREAM, INK_FORM_EVENT, INK_FORM_SESSION } ink_form_t;
 typedef enum { INK_QOS_INTERACTIVE = 0, INK_QOS_REALTIME, INK_QOS_MEDIA, INK_QOS_NETWORK, INK_QOS_BACKGROUND } ink_qos_t;
@@ -68,6 +69,8 @@ typedef struct {
     char detail[96];   /* why it was rejected / invalid / failed */
     uint32_t page_gen; /* the content version when it finished (ink_ui_content_version): what the next
                         * tool call of the same turn is prepared against */
+    const char *result; /* what was found, as JSON (ink_cap_result), for the done callback only: it does not
+                         * outlive it. NULL = only the fields above. Not kept for repeats of a request id. */
 } ink_receipt_t;
 
 typedef struct ink_cap ink_cap_t;
@@ -130,7 +133,8 @@ typedef void (*ink_cap_done_fn)(void *ctx, const ink_receipt_t *rc);
 typedef struct {
     ink_source_t src;
     uint32_t page_gen;      /* the content version the caller saw (AI, hub); 0 = not page-bound */
-    const char *request_id; /* a repeated id does not run twice: the first receipt again, or "queued" while it runs; NULL = none */
+    const char *request_id; /* a repeated id does not run twice: the first receipt again, or "queued" while it runs; NULL = none.
+                             * A read that gave a result runs again: it has no effect to repeat, and the result is not kept. */
     const char *args_json;  /* JSON arguments instead of a table (the AI's, the hub's): checked after the gate */
     ink_exec_t reply_exec;  /* where `done` runs */
     ink_cap_done_fn done;   /* may be NULL */
@@ -153,6 +157,11 @@ void ink_cap_defer(ink_call_t *call);
 void ink_cap_done(ink_call_t *call);
 /** In a handler that blocks: how long until its deadline (0: past it). What it may still wait for. */
 uint32_t ink_cap_time_left_ms(const ink_call_t *call);
+/** In a handler: what it found, as JSON text (copied), for the AI, the hub and other apps: rc.result. */
+void ink_cap_result(ink_call_t *call, const char *json);
+/** In a handler: this change can be undone for `ms` by running capability `cap` with `args`: the receipt's
+ *  object names it, undo_ms is set, and system.undo with that object does it (same member, in time). */
+void ink_cap_undoable(ink_call_t *call, const char *cap, const ink_args_t *args, uint32_t ms);
 
 /*
  * Events (form INK_FORM_EVENT, e.g. "message.received"): registered like any capability so the
@@ -166,6 +175,9 @@ void ink_cap_emit(const char *id, const ink_args_t *payload);
 
 /** The tool list for the hub and the model: JSON array of what the current member may use now. */
 int ink_cap_manifest_json(char *out, size_t cap);
+/** A page of it, from registry position `start`, only ids starting with `prefix` (may be NULL), as much as
+ *  fits: bytes or -1. *next: where the next page starts, -1 after the last. */
+int ink_cap_manifest_page(int start, const char *prefix, char *out, size_t cap, int *next);
 /** Compact JSON array of the ids available now (for page snapshots). */
 int ink_cap_ids_json(char *out, size_t cap);
 const char *ink_rc_name(ink_rc_t rc);

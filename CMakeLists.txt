@@ -166,6 +166,9 @@ add_library(ink_system STATIC
   system/services/audio/audio_service.c
   system/services/res/exec.c
   system/services/res/res.c
+  system/services/res/svc.c
+  system/services/data/datastore.c
+  system/services/data/data_caps.c
   system/policy/cap.c
   system/policy/members.c
   system/policy/settings.c
@@ -173,7 +176,9 @@ add_library(ink_system STATIC
   system/policy/system_actions.c
   system/policy/watch.c
   system/util/ink_args.c
+  system/util/ink_crc.c
   system/util/ink_json.c
+  system/util/layout.c
   system/text/ink_font.c
   system/text/linebreak.c
   system/text/layout.c
@@ -411,6 +416,21 @@ add_test(NAME integration-net-auto
           --budget ${CMAKE_SOURCE_DIR}/tests/integration/net_auto.budget.json
           --script ${CMAKE_SOURCE_DIR}/tests/integration/net_auto.script
           --out ${CMAKE_BINARY_DIR}/test-out/net_auto --quiet --no-random-outages)
+# The structured data store: records, pages, members, limits, the capabilities (tests/integration/data.c).
+add_executable(sim-data simulator/runtime/sim_main.c tests/integration/data.c)
+target_link_libraries(sim-data PRIVATE ink_system ink_port_sim)
+target_compile_options(sim-data PRIVATE ${INK_WARN})
+add_test(NAME integration-data
+  COMMAND sim-data --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+          --budget ${CMAKE_SOURCE_DIR}/tests/integration/data.budget.json
+          --script ${CMAKE_SOURCE_DIR}/tests/integration/data.script
+          --out ${CMAKE_BINARY_DIR}/test-out/data --quiet --no-random-outages)
+# Power cut at every flash write of a run that adds, replaces, deletes and folds: nothing durable is lost.
+add_test(NAME integration-data-powercut
+  COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:sim-data> -DPROFILE=${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+          -DOUT=${CMAKE_BINARY_DIR}/test-out/data_powercut -DSRC=${CMAKE_SOURCE_DIR}/tests/integration
+          -P ${CMAKE_SOURCE_DIR}/tests/integration/data_powercut.cmake)
+set_tests_properties(integration-data-powercut PROPERTIES TIMEOUT 300)
 add_test(NAME determinism
   COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:sim-selftest>
           -DPROFILE=${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json

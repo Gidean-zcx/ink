@@ -40,6 +40,11 @@ int ink_member_switch(const char *id) {
     return -1;
 }
 
+void ink_member_test_reset(void) {
+    CUR = &FAMILY[0];
+    publish();
+}
+
 bool ink_member_allows(const char *action_id, bool child_ok) {
     if (CUR->role == INK_ROLE_ADULT) return true;
     if (child_ok) return true;

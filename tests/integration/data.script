@@ -1,0 +1,2 @@
+# Environment for the data store checks (tests/integration/data.c): nothing but time.
+@200s    end

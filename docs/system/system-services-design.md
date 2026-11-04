@@ -1,8 +1,8 @@
 # 系统服务详细设计：系统应用和界面依赖的底层能力
 
-起草：2026-11-04。状态：草案，边实现边修订，结果回填 §15。依据：用户要求 R-052～R-057，[底层依赖](ui-dependencies.md)（范围和顺序），[系统架构 v1.0](system-architecture.md)，[底座设计](foundation.md) §4.8、§5.5、§7、§7.1、§8、§10，[底层系统详细设计](system-detailed-design.md) §13 的缺项。
+起草：2026-11-04。状态：草案，边实现边修订，结果回填 §15。依据：用户要求 R-052～R-058，[底层依赖](ui-dependencies.md)（范围和顺序），[系统架构 v1.0](system-architecture.md)，[底座设计](foundation.md) §4.8、§5.5、§7、§7.1、§8、§10，[底层系统详细设计](system-detailed-design.md) §13 的缺项。
 
-证据边界：接口、数据格式和数字都是本文定的设计，只在模拟器里验证；时延、内存来自模拟器的悲观档；实机没有验证，只有实机能回答的列在 §14。设计里的取舍是助手的建议，新决定记为 D-65～D-71（§14），都可逆，按推荐暂定。
+证据边界：接口、数据格式和数字都是本文定的设计，只在模拟器里验证；时延、内存来自模拟器的悲观档；实机没有验证，只有实机能回答的列在 §14。设计里的取舍是助手的建议，新决定记为 D-65～D-72（§14），都可逆，按推荐暂定。
 
 ## 0. 这份文档管什么
 
@@ -69,7 +69,7 @@ flowchart TB
 | 子系统 | AI 可调的能力 | AI 不可调（原因） | 状态 | 设置 | 事件 | 内部机制（不开放） |
 | --- | --- | --- | --- | --- | --- | --- |
 | 数据 | `data.collections`、`data.list`、`data.get`、`data.put`、`data.delete`（集合自己声明开放） | 没声明开放的集合（凭据、PIN 校验值） | `storage.user_free` | — | `data.write_failed` | 日志格式、快照、压缩、存储任务 |
-| 文件 | `file.list`、`file.stat`、`file.read`、`file.write`、`file.mkdir`、`file.move`、`file.delete`、`file.free` | — | `storage.free`、`storage.card`、`storage.mode` | — | `file.changed` | 路径映射、临时文件、U 盘模式互斥 |
+| 文件 | `file.list`、`file.stat`、`file.read`、`file.write`、`file.mkdir`、`file.copy`、`file.move`、`file.delete`（确认）、`file.free`；`usb.status`、`usb.mount`（系统级，确认）、`usb.unmount` | — | `storage.free`、`storage.card`、`storage.mode`、`usb.connected` | — | `file.changed`、`file.job_done`、`usb.changed` | 路径映射、临时文件、U 盘模式互斥、USB 协议 |
 | 时间 | `time.now`、`time.lunar`、`alarm.set`、`alarm.list`、`alarm.cancel`、`alarm.snooze`、`alarm.dismiss`、`reminder.add`、`reminder.list`、`reminder.cancel`；`time.set`（系统级，确认） | — | `time.synced`、`time.zone`、`time.minute`、`alarm.ringing` | `time.zone`、`time.auto` | `alarm.fired`、`reminder.fired`、`time.changed` | RTC 寄存器、唤醒定时 |
 | 通知 | `notify.post`、`notify.list`、`notify.read`、`notify.dismiss`、`notify.clear`、`notify.channels`、`notify.set_channel` | — | `notify.unread`、`interrupt.active` | `notify.dnd` | `notify.posted` | 打断通道本身（来电、闹钟、低电量由系统拉起，AI 不能假装来电） |
 | 确认卡 | `confirm.list`、`confirm.withdraw`（撤回自己发起的） | `confirm.accept`、`confirm.reject`（只有人在设备上能按） | `confirm.pending` | — | `confirm.result` | — |
@@ -277,6 +277,10 @@ int ink_fs_move(const char *from, const char *to);
 int ink_fs_write_atomic(const char *path, const void *data, size_t n); /* 临时文件 + 改名 */
 int ink_fs_free(uint64_t *free_bytes, uint64_t *total_bytes);
 int ink_fs_exclusive(bool on);                              /* U 盘模式：有文件开着就失败；进去之后所有操作返回“忙” */
+int ink_fs_copy_start(const char *from, const char *to);     /* 后台作业，§4.3 */
+int ink_fs_delete_start(const char *path);
+int ink_fs_job_status(int id, ink_fs_job_status_t *out);
+void ink_fs_job_cancel(int id);
 ```
 
 - 任务：TF 卡写不关 CPU 缓存，可以在调用者的任务里做（阻塞几毫秒到几百毫秒，所以大块读写放后台，不放界面任务）。现有的 `ink_file_*` 只读接口保留给阅读器。
@@ -287,9 +291,34 @@ int ink_fs_exclusive(bool on);                              /* U 盘模式：有
 
 模拟器：加 TF 卡的物理动作（脚本 `sd remove|insert|full`），HAL 没卡时返回失败。真机的卡检测有没有引脚**不知道**（§14），所以系统不依赖插拔中断：操作失败时和解锁时查一次。
 
-### 4.3 给 AI 的能力
+### 4.3 拷贝、移动、删除
 
-`file.list {path, cursor, limit}`、`file.stat`、`file.read {path, offset, max_bytes}`（只读文本，最多 2 KiB，不是合法 UTF-8 就说明是二进制）、`file.write {path, text, append}`（已有文件不覆盖，除非 `append`）、`file.mkdir`、`file.move`（可撤销）、`file.delete`（不可逆，走确认）、`file.free`。跑在后台执行队列（卡慢，不占界面）。
+- `ink_fs_move`：同一张卡上就是改名，马上完成，可撤销。目标已存在就失败，不覆盖。
+- `ink_fs_copy_start(from, to)`、`ink_fs_delete_start(path)`：目录连里面的内容一起，单个大文件也可能要几分钟（卡的写速度约 1 MB/s），所以是**后台作业**：每步 64 KiB 或一个目录项，能取消（`ink_fs_job_cancel`），能查进度（`ink_fs_job_status`：已处理的字节和文件数、总量、状态），结束发事件 `file.job_done {id, ok, why}`。同一时刻一个，别的回“忙”。
+- 拷贝先写 `<目标>.part`，写完才改名，断电留下的 `.part` 不算文件（列表不显示，下次开机清理）；空间不够提前拒绝（先算总量）；中途失败或取消，已经完整拷完的留着，正在拷的删掉，并报告。
+- 删除目录：先删里面的，再删目录；中途失败报告还剩什么。删除不可撤销（这一轮没有回收站），AI 发起要确认卡；人在设备上按的，确认由界面做。
+
+### 4.4 U 盘模式（R-058，D-72）
+
+```mermaid
+stateDiagram-v2
+  [*] --> 普通: 开机
+  普通 --> 连着电脑: 插上数据线（usb.changed，发一条通知）
+  连着电脑 --> 普通: 拔掉
+  连着电脑 --> 卡给电脑: usb.mount（人按，或 AI 发起经确认卡；成人）
+  卡给电脑 --> 普通: usb.unmount，或电脑弹出，或拔线
+```
+
+- **开放什么**：只有 TF 卡。U 盘是块设备，电脑看到整个卡的 FAT，单个目录挡不住，所以卡上的 `.m/`（各成员的私人文件）也看得到。系统区、`/user`（设置、PIN 校验值、Wi-Fi 密码、个人数据）在内部 Flash，**永远不开放**。卡上不放凭据（底座设计 §8.1）。
+- **谁能开**：系统级能力：成人才行，孩子被拒绝；成人解过 PIN；AI 发起走确认卡。
+- **进入**：先发事件让持有文件的停下（媒体暂停并存位置，录音收尾），`ink_fs_exclusive(true)` 要求没有打开的文件和后台作业，否则回“忙”并说明谁占着；然后 `hal_usb_msc_start()`。这期间文件服务所有操作回“U 盘模式中”，`storage.mode` = `usb`。持有“别自动锁屏、别睡”。
+- **退出**：`hal_usb_msc_stop()`，重新挂载，查卡是否还好；`storage.mode` = `normal`，发 `file.changed {kind: rescan}`，刷新 `storage.free`，查一下有没有新的升级包（§12.4）。电脑弹出和拔线一样处理；拔线没弹出可能留下脏的 FAT：挂载失败就 `storage.card` 变假并发通知，不自动格式化。
+- **HAL**：`hal_usb.h`：`hal_usb_host_connected()`、回调、`hal_usb_msc_start/stop`。真机是 TinyUSB MSC（上游配置启用，**本项目没有实测**）。S31 的 USB 口平时是串口/JTAG，切 TinyUSB 对下载和串口日志的影响待测（§14）。
+- **模拟器**：脚本 `usb plug|unplug|eject|copy-in <host 文件> <卡上路径>`：模拟“电脑”往卡上拷文件；U 盘模式中系统访问卡的 HAL 调用全部失败，能查出没停干净的地方。
+
+### 4.5 给 AI 的能力
+
+`file.list {path, cursor, limit}`、`file.stat`、`file.read {path, offset, max_bytes}`（只读文本，最多 2 KiB，不是合法 UTF-8 就说明是二进制）、`file.write {path, text, append}`（已有文件不覆盖，除非 `append`）、`file.mkdir`、`file.copy`、`file.move`（可撤销）、`file.delete`（不可逆，走确认）、`file.free`、`usb.status`、`usb.mount`、`usb.unmount`。跑在后台执行队列（卡慢，不占界面）。大文件的拷贝回执“已排队”，对象是作业，结束有事件。
 
 ## 5. 时间服务
 
@@ -692,6 +721,7 @@ OTA 和卡刷只有第一步不同，后面完全一样：同一种包、同一�
 | D-69 | 升级包和 PIN 的密码学 | **A** 包头签名 ECDSA P-256，PIN 用 PBKDF2-HMAC-SHA256；**B** 只靠 TLS 下载不签名（卡刷没有保护）；**C** 开安全启动（不可逆，硬性规则不做） | A |
 | D-70 | 拼音词库来源 | **A** 开源词表（MIT 或类似）生成，放 TF 卡，由中枢或卡刷下发；**B** 只内置常用字（打字慢）；**C** 全放中枢（断网不能打字） | A，具体词表要核许可 |
 | D-71 | 升级包放哪 | **A** 先完整下载到 TF 卡，校验后再写槽；**B** 边下边写槽（不需要卡，但网断了要重来、写之前不能验） | A |
+| D-72 | U 盘模式开放什么 | **A** 整张 TF 卡（上游也是这样，简单；电脑能看到所有成员的卡上文件，所以要成人确认，孩子不能开），系统区和 `/user` 永远不开放；**B** 卡上分两个分区，只开放公共的（要重新分区）；**C** MTP（能按文件开放，但 ESP-IDF 上没有现成的） | A |
 
 ### 14.2 只有实机能回答的问题（不写设备，交给用户决定）
 
@@ -701,6 +731,8 @@ OTA 和卡刷只有第一步不同，后面完全一样：同一种包、同一�
 | P16 一直低（RTC 中断线） | RTC 唤醒能不能用；不能用也靠定时器准时，只是不省电 | 测量固件读 P16、设 RTC 闹钟 |
 | 关机后 RTC 闹钟能不能开机 | 关机闹钟 | 同上，加实际关机 |
 | TF 卡有没有卡检测引脚、拔卡时 HAL 怎么报错 | 卡状态的及时性 | 看原理图或实测 |
+| U 盘模式：S31 的 USB 口平时是串口/JTAG，切 TinyUSB MSC 后下载和串口日志怎样；出厂固件的做法 | R-058，上机调试方式 | 用出厂固件试一次（电脑挂载可能写卡，要用户同意） |
+| 电脑和充电器怎么区分（USB 数据线插上的判断） | 什么时候提示 U 盘模式 | 同上 |
 | FAT 上改名覆盖已有文件 | `ink_fs_write_atomic` 在真机上要先删后改（ESP-IDF 的 FATFS 不允许覆盖），有一小段窗口 | 端口实现时处理，实测 |
 | BH1098G 模式 2：扫描、配对、连接的协议，音质，回采 | 蓝牙耳机（D-63） | 底层依赖 §6 |
 | 通话声音怎么走 | 通话焦点只占位，不出声 | RK-07、SP-06、SP-07，打电话要花钱，用户选 |
@@ -722,4 +754,4 @@ OTA 和卡刷只有第一步不同，后面完全一样：同一种包、同一�
 
 ## 修订记录
 
-- v0.1（2026-11-04）：初稿，含用户补充的 R-055～R-057。
+- v0.1（2026-11-04）：初稿，含用户补充的 R-055～R-058。

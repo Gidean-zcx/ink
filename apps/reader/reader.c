@@ -17,7 +17,9 @@
 #include "ink/probe.h"
 #include "ink/sys/app.h"
 #include "ink/sys/cap.h"
+#include "ink/sys/crc.h"
 #include "ink/sys/font.h"
+#include "ink/sys/layout.h"
 #include "ink/sys/members.h"
 #include "ink/sys/storage.h"
 #include "ink/sys/text.h"
@@ -59,9 +61,12 @@ static struct {
     char member[16];         /* whose reading position this is (the member who opened the book) */
 } RD;
 
-/* Reading positions are kept per member (foundation §5.5, D-03): one small file per member and book. */
+/* Reading positions are kept per member (foundation §5.5, D-03): one small file per member and book,
+ * in the member's data area, named after the book's checksum (titles can be long). */
 static void pos_path(char *out, size_t cap, const char *member, const char *book) {
-    snprintf(out, cap, "/user/apps/reader-%s-%s.pos", member, book);
+    char name[32];
+    snprintf(name, sizeof name, "reader.%08x.pos", (unsigned)ink_crc32(0, book, strlen(book)));
+    if (ink_layout_member(out, cap, member, name) < 0 && cap) out[0] = 0;
 }
 
 /* ------------------------------------------------------------- library */
@@ -247,7 +252,7 @@ static void save_cb(lv_timer_t *t) {
     char path[200], data[64];
     pos_path(path, sizeof path, RD.member, LIB.books[LIB.open].name);
     int n = snprintf(data, sizeof data, "offset=%u\n", (unsigned)RD.starts[RD.page]);
-    if (ink_storage_write_atomic(path, data, (size_t)n) == 0) RD.dirty_pos = false;
+    if (path[0] && ink_storage_write_atomic(path, data, (size_t)n) == 0) RD.dirty_pos = false;
 }
 
 static bool go_to(int target) {
@@ -450,7 +455,7 @@ static void book_create(lv_obj_t *scr, void *arg) {
     char path[200], data[64] = {0};
     pos_path(path, sizeof path, RD.member, LIB.books[LIB.open].name);
     unsigned saved = 0;
-    if (ink_storage_read(path, data, sizeof data - 1) > 0) sscanf(data, "offset=%u", &saved);
+    if (path[0] && ink_storage_read(path, data, sizeof data - 1) > 0) sscanf(data, "offset=%u", &saved);
     while (saved && find_page_start(RD.page + 1) >= 0 && RD.starts[RD.page + 1] <= saved) RD.page++;
     ink_probe_value("reader.restored_page", (double)RD.page);
 

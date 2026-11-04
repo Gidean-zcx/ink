@@ -25,7 +25,7 @@ extern "C" {
 #endif
 
 #define INK_SETTINGS_MAX 32
-#define INK_SETTINGS_PATH "/user/settings.json"
+#define INK_SETTINGS_PATH "/user/sys/settings.json"
 
 typedef enum { INK_SET_BOOL = 1, INK_SET_INT, INK_SET_ENUM } ink_set_type_t;
 

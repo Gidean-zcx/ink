@@ -28,6 +28,8 @@ void ink_members_init(void);
 const ink_member_t *ink_member_current(void);
 /** Switch member. Returns 0, -1 (unknown member) or -2 (child -> adult needs a PIN). */
 int ink_member_switch(const char *id);
+/** Tests only: back to the first member without a PIN. */
+void ink_member_test_reset(void);
 /** Does the current member's policy allow this action (child whitelist)? Adults: always. */
 bool ink_member_allows(const char *action_id, bool child_ok);
 

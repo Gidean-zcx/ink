@@ -1,6 +1,6 @@
 # Apps use the app framework only (architecture v1.0 §7.3, D-48): no HAL, no OSAL, no driver or board
 # header, no HAL or OSAL call. Run: cmake -DSRC=<source dir> -P tests/sdk_boundary.cmake
-set(ALLOWED app ai cap font members settings state storage text ui)
+set(ALLOWED app ai cap crc data file font layout media members notify settings state storage text time ui)
 file(GLOB_RECURSE SOURCES "${SRC}/apps/*.c" "${SRC}/apps/*.h")
 set(bad 0)
 foreach(f ${SOURCES})

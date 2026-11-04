@@ -11,6 +11,7 @@
 #include "ink/sys/audio.h"
 #include "ink/sys/camera.h"
 #include "ink/sys/comm.h"
+#include "ink/sys/data.h"
 #include "ink/sys/display.h"
 #include "ink/sys/exec.h"
 #include "ink/sys/power.h"
@@ -22,6 +23,7 @@
 #include "ink/sys/settings.h"
 #include "ink/sys/state.h"
 #include "ink/sys/storage.h"
+#include "ink/sys/svc.h"
 #include "ink/sys/ui.h"
 
 extern const ink_activity_t ink_app_home;
@@ -38,6 +40,7 @@ void ink_main(void) {
     if (ink_cap_init() != 0 || ink_exec_init() != 0 || ink_res_init() != 0 || ink_storage_reclaimable() != 0)
         osal_panic("capability bus or resource manager failed to start");
     if (ink_state_init() != 0 || ink_settings_init() != 0) osal_panic("state and settings tables failed to start");
+    if (ink_svc_init() != 0 || ink_data_init() != 0) osal_panic("data store failed to start");
     if (ink_power_init() != 0) osal_panic("power service failed to start");
     ink_members_init();
     if (ink_net_init() != 0 || ink_light_init() != 0) osal_panic("network or light settings failed to start");
