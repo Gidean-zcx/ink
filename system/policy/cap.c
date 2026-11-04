@@ -749,10 +749,15 @@ static void send_events(void) { /* hub task */
         at = e->at_s;
         *args = e->args;
         osal_mutex_unlock(CB.lock);
+        /* one that says whose it is goes only while it is theirs who is here: the next one's AI does not hear about it */
+        char whose[INK_MEMBER_ID_MAX] = "";
+        ink_args_get_str(args, "member", whose, sizeof whose);
+        bool theirs = !whose[0] || !strcmp(whose, ink_member_current()->id);
         int head = snprintf(out, EVENT_JSON_CAP, "{\"event\":\"%s\",\"at_s\":%lld,\"args\":", id, (long long)at);
         int body = ink_args_to_json(args, out + head, EVENT_JSON_CAP - (size_t)head - 2);
         int r = 0;
-        if (body >= 0) {
+        if (!theirs) ink_probe_count("cap.event_for_another_member");
+        else if (body >= 0) {
             out[head + body] = '}';
             out[head + body + 1] = 0;
             r = ink_hub_notify("device/event", out);

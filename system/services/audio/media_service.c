@@ -78,8 +78,14 @@ static void set_position(uint32_t ms) {
 
 /* Where the listener is now: what has been played of the stream, as far as it came. */
 static uint32_t heard_ms(void) {
+    if (!M.stream) { /* paused: where the pause was */
+        ink_svc_lock();
+        uint32_t at = M.st.position_ms;
+        ink_svc_unlock();
+        return at;
+    }
     uint32_t played = 0;
-    if (M.stream) ink_audio_stream_progress(M.stream, &played, NULL);
+    ink_audio_stream_progress(M.stream, &played, NULL);
     return M.base_ms + played * OGG_FRAME_MS;
 }
 
@@ -408,9 +414,12 @@ void ink_media_status(ink_media_status_t *out) {
 
 /* ---- what else stops it ---- */
 
+static void rec_member_changed(void);
+
 static void member_job(void *arg) { /* someone else: it stays with the one who was listening */
     (void)arg;
     do_stop();
+    rec_member_changed();
 }
 
 static void on_member(void *ctx, int h, const char *id) {
@@ -443,6 +452,7 @@ static struct {
     bool on, ending;     /* under the service lock */
     ogg_writer_t *w;
     char path[INK_FS_PATH_MAX];
+    char member[INK_MEMBER_ID_MAX]; /* whose it is: what the next one says does not go into it */
     rec_frame_t q[REC_FRAMES];
     uint32_t head, tail; /* under the service lock */
     uint32_t last_sync_ms, max_ms;
@@ -475,6 +485,7 @@ static void rec_finish(const char *why) { /* executor */
     if (a) {
         ink_args_init(a);
         ink_args_str(a, "path", REC.path);
+        ink_args_str(a, "member", REC.member);
         ink_args_int(a, "ms", ms);
         ink_args_str(a, "why", r && !REC.why[0] ? "write_failed" : why);
         ink_cap_emit("audio.record_done", a);
@@ -528,6 +539,7 @@ static void rec_frame(void *ctx, const uint8_t *data, size_t len, uint32_t seq) 
     (void)ctx;
     (void)seq;
     uint8_t *copy = NULL;
+    if (len && strcmp(ink_member_current()->id, REC.member)) return; /* someone else has it now, the end is on its way */
     if (len) {
         copy = osal_malloc(len, OSAL_MEM_EXTERNAL);
         if (!copy) {
@@ -545,6 +557,12 @@ static void rec_frame(void *ctx, const uint8_t *data, size_t len, uint32_t seq) 
         ink_probe_count("media.record_lost_frames");
     }
     ink_exec_post(INK_EXEC_MEDIA, &REC.write_job, rec_write, NULL);
+}
+
+static void rec_member_changed(void) { /* executor */
+    if (!ink_audio_recording() || !strcmp(ink_member_current()->id, REC.member)) return;
+    snprintf(REC.why, sizeof REC.why, "member_changed");
+    ink_audio_capture_end();
 }
 
 static void rec_on_focus(void *ctx, ink_focus_event_t ev, ink_audio_prio_t by) { /* something comes first: what there is, is kept */
@@ -663,6 +681,7 @@ static void cap_record(ink_call_t *c) { /* executor */
         return;
     }
     snprintf(REC.path, sizeof REC.path, "%s", path);
+    snprintf(REC.member, sizeof REC.member, "%s", ink_member_current()->id);
     REC.why[0] = 0;
     REC.last_sync_ms = 0;
     REC.max_ms = max_s > 0 && max_s < REC_MAX_S ? (uint32_t)max_s * 1000u : REC_MAX_S * 1000u;

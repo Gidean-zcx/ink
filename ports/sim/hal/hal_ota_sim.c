@@ -149,6 +149,8 @@ int hal_ota_write_resource(int kind, size_t offset, const void *data, size_t n) 
     (void)kind;
     (void)offset;
     (void)data;
+    const char *fails_from = getenv("INK_SIM_OTA_RESOURCE_FAILS");
+    if (fails_from && (long)O.resource_bytes >= atol(fails_from)) return -1;
     O.resource_bytes += n;
     sim_metric_add("ota.resource_bytes", (double)n);
     osal_task_delay_us(WRITE_US_PER_4K * (n + 4095) / 4096);

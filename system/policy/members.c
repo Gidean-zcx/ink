@@ -31,6 +31,7 @@
 #define FREE_TRIES 3
 #define FIRST_WAIT_S 30
 #define LONGEST_WAIT_S 900
+#define UNREAD_RETRY_S 10
 #define IDLE_RETURN_S 120
 
 typedef struct {
@@ -58,6 +59,8 @@ static struct {
     slot_t *cur;
     bool authed;
     bool table_is_real;
+    bool table_known;  /* registered with the data store */
+    bool table_unread; /* it is there and could not be read: nobody knows who has a PIN, so as if everyone adult had one */
     int h_member, h_authed;
     ink_svc_deadline_t idle_at;
     ink_exec_job_t idle_job;
@@ -97,10 +100,11 @@ const ink_member_t *ink_member_at(int i) {
 
 bool ink_member_has_pin(const char *id) {
     const slot_t *s = find(id);
-    return s && s->has_pin;
+    return s && (s->has_pin || (M.table_unread && s->m.role == INK_ROLE_ADULT));
 }
 
 bool ink_member_any_pin(void) {
+    if (M.table_unread) return true;
     for (int k = 0; k < INK_MEMBERS_MAX; k++)
         if (M.s[k].used && M.s[k].m.role == INK_ROLE_ADULT && M.s[k].has_pin) return true;
     return false;
@@ -108,7 +112,7 @@ bool ink_member_any_pin(void) {
 
 bool ink_member_space_open(void) {
     const slot_t *c = cur();
-    return c->m.role == INK_ROLE_CHILD || !c->has_pin || M.authed;
+    return c->m.role == INK_ROLE_CHILD || M.authed || (!c->has_pin && !M.table_unread);
 }
 
 /* ---- the table on the flash ---- */
@@ -137,6 +141,7 @@ static void save_slot(ink_db_t *db, const slot_t *s) {
 }
 
 static void save_all(void) {
+    if (M.table_unread) return; /* what is here are the defaults: they must not bury what is there */
     ink_db_t *db = ink_db_open(&TABLE, NULL);
     if (!db) return;
     for (int i = 0; i < INK_MEMBERS_MAX; i++)
@@ -146,9 +151,14 @@ static void save_all(void) {
 }
 
 static void load_table(void) {
-    if (ink_db_register(&TABLE) != 0) return; /* some test programs run without the data store */
+    if (!M.table_known && ink_db_register(&TABLE) != 0) return; /* some test programs run without the data store */
+    M.table_known = true;
     ink_db_t *db = ink_db_open(&TABLE, NULL);
-    if (!db) return;
+    M.table_unread = db == NULL;
+    if (!db) {
+        ink_probe_count("members.table_unread");
+        return;
+    }
     ink_db_cursor_t c = {0};
     ink_rec_t r;
     stored_t st;
@@ -171,11 +181,14 @@ static void load_table(void) {
     if (n && fresh) {
         memcpy(M.s, fresh, sizeof M.s);
         M.table_is_real = true;
-        M.cur = NULL;
         /* an adult first, as on the first boot */
+        slot_t *first = &M.s[0];
         for (int i = INK_MEMBERS_MAX - 1; i >= 0; i--)
-            if (M.s[i].used && M.s[i].m.role == INK_ROLE_ADULT) M.cur = &M.s[i];
-        if (!M.cur) M.cur = &M.s[0];
+            if (M.s[i].used && M.s[i].m.role == INK_ROLE_ADULT) first = &M.s[i];
+        M.cur = first;
+    } else if (ink_db_count(db) > 0) { /* records, and none that this can use: not an empty family */
+        M.table_unread = true;
+        ink_probe_count("members.table_unread");
     }
     osal_free(fresh);
     ink_db_close(db);
@@ -190,7 +203,7 @@ int ink_member_switch(const char *id) {
     slot_t *t = find(id);
     if (!t) return -1;
     if (t == cur()) return ink_member_space_open() ? 0 : -2;
-    if (t->has_pin) return -2; /* needs the PIN */
+    if (t->has_pin || (M.table_unread && t->m.role == INK_ROLE_ADULT)) return -2; /* needs the PIN */
     M.cur = t;
     M.authed = false;
     ink_probe_count("members.switches");
@@ -325,6 +338,16 @@ static void pin_job(void *arg) { /* exec.bg: slow by design */
     int r = INK_PIN_NO_MEMBER;
     uint32_t wait_s = 0;
     slot_t *s = NULL;
+    if (M.table_unread) {
+        load_table(); /* maybe it was a moment's trouble */
+        if (M.table_unread) {
+            if (j->done) j->done(j->ctx, INK_PIN_WAIT, UNREAD_RETRY_S);
+            wipe(j);
+            osal_free(j);
+            return;
+        }
+        publish();
+    }
     if (j->kind == JOB_CHECK_PARENT) { /* the one using the device if an adult with a PIN, else the first who has one */
         if (cur()->m.role == INK_ROLE_ADULT && cur()->has_pin) s = cur();
         for (int i = 0; i < INK_MEMBERS_MAX && !s; i++)

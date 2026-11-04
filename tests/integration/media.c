@@ -73,6 +73,11 @@ static ink_exec_job_t g_key_job0;
 static void key_job0(void *pressed) { ink_ai_key(pressed != NULL, osal_now_us()); }
 static void dismiss_sheet(void) { ink_ai_dismiss(); }
 
+static void media_busy(void *arg) {
+    (void)arg;
+    osal_task_delay_us(1000000);
+}
+
 static void recording(void) {
     int done = g_rec_done;
     CHECK(BY_HAND("audio.record", "{\"path\":\"/me/rec/one.opus\"}") && g_rc.status == INK_RC_DONE && strstr(g_rc.object, "one.opus"), "recording starts (%s %s)", ink_rc_name(g_rc.status), g_rc.detail);
@@ -117,6 +122,23 @@ static void recording(void) {
     CHECK(BY_HAND("audio.record", "{\"path\":\"/me/rec/nope.opus\"}") && g_rc.status == INK_RC_FAILED, "and none starts during one");
     ink_audio_focus_release(f);
     CHECK(ink_fs_stat("/me/rec/cut.opus", &fs) == 0 && fs.size > 500, "what there was is on the card");
+
+    /* someone else takes the device (AUD16-003): it ends, what there is stays with the one who recorded it, the next one's voice is not in it */
+    done = g_rec_done;
+    CHECK(BY_HAND("audio.record", "{\"path\":\"/me/rec/whose.opus\"}") && g_rc.status == INK_RC_DONE, "recording, as the owner");
+    delay_ms(1800);
+    static ink_exec_job_t busy; /* the media executor has something else to do first: the microphone goes on meanwhile */
+    ink_exec_post(INK_EXEC_MEDIA, &busy, media_busy, NULL);
+    CHECK(ink_member_switch("kid") == 0, "someone else");
+    CHECK(WAIT_FOR(g_rec_done == done + 1, 2000) && !strcmp(g_rec_why, "member_changed"), "it ends (%s)", g_rec_why);
+    CHECK(!ink_audio_recording() && !bool_state("audio.recording"), "and says so");
+    CHECK(g_rec_ms >= 1500 && g_rec_ms <= 2100, "what was said before, no more (%d ms)", (int)g_rec_ms);
+    CHECK(ink_fs_stat("/me/rec/whose.opus", &fs) == INK_FS_ERR_NOT_FOUND, "not in the new one's files");
+    ink_member_test_reset();
+    delay_ms(300);
+    CHECK(ink_fs_stat("/me/rec/whose.opus", &fs) == 0 && fs.size > 500, "it is the owner's, and it can be played");
+    CHECK(BY_HAND("media.play", "{\"path\":\"/me/rec/whose.opus\",\"start_ms\":0}") && g_rc.status == INK_RC_DONE, "a whole file");
+    BY_HAND("media.stop", NULL);
 
     /* the card fills up */
     done = g_rec_done;
@@ -207,6 +229,15 @@ static void playing(void) {
         ink_fs_close(pf);
     }
     CHECK(pn > 0 && strstr(pbuf, "/me/rec/long.opus"), "of this file (%s)", pbuf);
+    /* paused, then stopped (AUD16-002): the place is where the pause was, not where that stream began */
+    CHECK(BY_HAND("media.play", "{\"path\":\"/me/rec/long.opus\",\"start_ms\":20000}") && g_rc.status == INK_RC_DONE, "from 20 s");
+    delay_ms(4000);
+    CHECK(BY_HAND("media.pause", NULL) && g_rc.status == INK_RC_DONE, "paused");
+    uint32_t paused_at = st().position_ms;
+    CHECK(paused_at >= 23000 && paused_at <= 25000, "at about 24 s (%u)", (unsigned)paused_at);
+    CHECK(BY_HAND("media.stop", NULL) && g_rc.status == INK_RC_DONE, "stopped");
+    CHECK(BY_HAND("media.play", "{\"path\":\"/me/rec/long.opus\"}") && g_rc.status == INK_RC_DONE, "and opened again");
+    CHECK(st().position_ms + 3500 >= paused_at && st().position_ms <= paused_at, "from there, or the little before it that it goes back (%u, %u)", (unsigned)st().position_ms, (unsigned)paused_at);
     /* someone else: it stops, and has its own places */
     fin = g_finished;
     CHECK(ink_member_switch("kid") == 0, "someone else");

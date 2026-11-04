@@ -1,0 +1,3 @@
+# No card at this boot.
+@0       sd remove
+@30s     end

@@ -38,6 +38,7 @@ extern const ink_activity_t ink_app_home;
 extern const ink_app_def_t ink_appdef_home, ink_appdef_reader;
 
 int ink_system_actions_init(void);
+void ink_factory_reset_resume(void);
 int ink_reader_actions_init(void);
 int ink_remote_init(void);
 int ink_ui_lock_mark_init(void);
@@ -53,6 +54,7 @@ void ink_main(void) {
     hal_log_write("ink: starting system services");
     if (ink_display_init() != 0) osal_panic("display service failed to start");
     if (ink_storage_init() != 0) osal_panic("storage service failed to start");
+    ink_factory_reset_resume();
     if (ink_cap_init() != 0 || ink_exec_init() != 0 || ink_res_init() != 0 || ink_storage_reclaimable() != 0)
         osal_panic("capability bus or resource manager failed to start");
     if (ink_state_init() != 0 || ink_settings_init() != 0) osal_panic("state and settings tables failed to start");

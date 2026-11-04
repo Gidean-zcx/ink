@@ -417,6 +417,53 @@ static void res3(void) {
     ink_probe_count("test.finished");
 }
 
+/* AUD16-004, 005: writing them fails, or the package is not what it was: it stays to be done, and nothing bad is written. */
+static void rfail1(void) {
+    ink_probe_count("test.finished");
+    say_yes("system.upgrade_from_card", "{\"file\":\"good-7.inkfw\"}");
+    delay_ms(300000);
+    CHECK(0, "it should have restarted");
+}
+
+static void rfail2(void) { /* the font goes in, then the resource area says no */
+    CHECK(running_code() == 700, "the new one (%u)", (unsigned)running_code());
+    CHECK(WAIT_FOR(sim_metric_value("update.resources_failed") == 1, 60000), "it knows");
+    double wrote = sim_metric_value("ota.resource_bytes");
+    CHECK(wrote >= 8192 && wrote < 409600, "some went in (%.0f)", wrote);
+    char body[120];
+    CHECK(WAIT_FOR(notified("系统更新还差一点", body, sizeof body), 2000), "and says so");
+    CHECK(hal_fs_size("/content/update/good-7.inkfw") > 0, "the package stays");
+    ink_probe_count("test.finished");
+}
+
+static void rbad(void) { /* not what it was: the header is still good, the last section is not */
+    CHECK(running_code() == 700, "it stays (%u)", (unsigned)running_code());
+    CHECK(WAIT_FOR(sim_metric_value("update.resources_failed") == 1, 60000), "it tries, and it sees");
+    CHECK(sim_metric_value("ota.resource_bytes") == 0, "nothing of it is written (%.0f)", sim_metric_value("ota.resource_bytes"));
+    ink_probe_count("test.finished");
+}
+
+static void rother(void) { /* another version under that name: well signed, and not this system's */
+    CHECK(running_code() == 700, "it stays (%u)", (unsigned)running_code());
+    CHECK(WAIT_FOR(sim_metric_value("update.resources_failed") == 1, 60000), "it tries, and it sees");
+    CHECK(sim_metric_value("ota.resource_bytes") == 0, "nothing of it is written (%.0f)", sim_metric_value("ota.resource_bytes"));
+    ink_probe_count("test.finished");
+}
+
+static void rgood(void) { /* the right one again: the rest, the font was done */
+    CHECK(running_code() == 700, "it stays (%u)", (unsigned)running_code());
+    CHECK(WAIT_FOR(sim_metric_value("ota.resource_bytes") >= 409600, 60000), "the resources (%.0f)", sim_metric_value("ota.resource_bytes"));
+    delay_ms(500);
+    CHECK(sim_metric_value("ota.resource_bytes") == 409600 && sim_metric_value("update.resources_failed") == 0, "all of them, once (%.0f)", sim_metric_value("ota.resource_bytes"));
+    ink_probe_count("test.finished");
+}
+
+static void rdone(void) { /* and that was the end of it */
+    delay_ms(3000);
+    CHECK(sim_metric_value("ota.resource_bytes") == 0 && sim_metric_value("update.resources_failed") == 0, "nothing more to do (%.0f)", sim_metric_value("ota.resource_bytes"));
+    ink_probe_count("test.finished");
+}
+
 /* ---- a download across a power cut: from where it stopped ---- */
 
 static void resume1(void) {
@@ -508,6 +555,12 @@ static void test_task(void *arg) {
     else if (!strcmp(phase, "res1")) res1();
     else if (!strcmp(phase, "res2")) res2();
     else if (!strcmp(phase, "res3")) res3();
+    else if (!strcmp(phase, "rfail1")) rfail1();
+    else if (!strcmp(phase, "rfail2")) rfail2();
+    else if (!strcmp(phase, "rbad")) rbad();
+    else if (!strcmp(phase, "rother")) rother();
+    else if (!strcmp(phase, "rgood")) rgood();
+    else if (!strcmp(phase, "rdone")) rdone();
     else if (!strcmp(phase, "auto_wifi")) auto_wifi();
     else if (!strcmp(phase, "auto_mobile")) auto_mobile();
 }

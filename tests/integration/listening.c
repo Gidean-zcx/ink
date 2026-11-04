@@ -152,6 +152,28 @@ static void test_task(void *arg) {
     was = wakes();
     say_something();
     CHECK(wakes() == was + 1, "with it, the wake word works");
+    delay_ms(40000); /* the answer is over */
+
+    /* the space closes in the middle of a turn (AUD16-008): what the microphone hears from then on goes nowhere */
+    was = wakes();
+    mic("wake");
+    delay_ms(700);
+    mic("speech");
+    delay_ms(1500);
+    CHECK(wakes() == was + 1, "someone is asking something (%.0f, %.0f barge, %.0f not now)", wakes() - was, sim_metric_value("ai.barge_ins"), sim_metric_value("ai.wake_not_now"));
+    double closed = sim_metric_value("ai.closed_with_the_space");
+    double sent = sim_metric_value("hub.binary_bytes");
+    delay_ms(500);
+    CHECK(sim_metric_value("hub.binary_bytes") > sent, "and it goes to the hub");
+    lock();
+    CHECK(WAIT_FOR(!ink_member_space_open(), 2000), "the space is closed");
+    CHECK(WAIT_FOR(sim_metric_value("ai.closed_with_the_space") == closed + 1, 1000), "the turn is over");
+    delay_ms(1000); /* what was on its way */
+    sent = sim_metric_value("hub.binary_bytes");
+    delay_ms(2200);
+    CHECK(sim_metric_value("hub.binary_bytes") == sent, "and nothing more goes out (%.0f bytes)", sim_metric_value("hub.binary_bytes") - sent);
+    mic("silence");
+    delay_ms(500);
 
     ink_probe_count("test.finished");
 }

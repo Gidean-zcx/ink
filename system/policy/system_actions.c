@@ -5,6 +5,7 @@
 #include <stdio.h>
 
 #include "ink/hal_power.h"
+#include "ink/hal_storage.h"
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/ai.h"
@@ -15,6 +16,10 @@
 #include "ink/sys/settings.h"
 #include "ink/sys/state.h"
 #include "ink/sys/members.h"
+#include "ink/sys/notify.h"
+#include "ink/sys/power.h"
+#include "ink/sys/svc.h"
+#include "ink/sys/update.h"
 #include "ink/sys/ui.h"
 
 static void go_home(ink_call_t *c) {
@@ -59,26 +64,125 @@ static void switch_member(ink_call_t *c) {
     snprintf(rc->say, sizeof rc->say, "现在是%s的空间", ink_member_current()->name);
 }
 
-/* Everything of the people who used this device; the system and the family's shared content stay (system services design §12.6). */
-static void wipe_user(void *arg) { /* the storage task, guarded */
-    (void)arg;
-    ink_storage_wipe_user();
+/*
+ * Everything of the people who used this device; the system and the family's shared content stay (system services design §11.5).
+ * Here only a mark and a restart. The next boot does the wiping, before any service runs: nothing is still writing, nothing has
+ * read what should be gone. A power cut in the middle of it, and the boot after that does it again, since the mark goes last.
+ * First the flash; the mark then changes its name for the card's part. Without a card that waits: the next boot with one, or
+ * while the device is in use a look every few seconds (no card-detect line is known). Any card: its folders of this product are cleared, whichever device
+ * they came from (§11.5).
+ */
+#define RESET_MARK "/user/sys/reset.pending"
+#define RESET_CARD_MARK "/user/sys/reset.card"
+
+#define CARD_LOOK_US 5000000ull
+
+static bool g_card_waits, g_card_cleared;
+static ink_exec_job_t g_reset_job, g_card_job;
+static ink_svc_deadline_t g_card_at;
+
+static bool write_reset_mark(void) { /* the storage task */
+    hal_fs_mkdir("/user/sys");
+    hal_file_t *f = hal_fs_open(RESET_MARK, HAL_O_WRITE | HAL_O_CREATE | HAL_O_TRUNC);
+    return f && hal_fs_close(f) == 0;
 }
 
-static void factory_reset_job(void *arg) { /* exec.bg */
+static void mark_reset(void *arg) { /* the storage task, guarded */
+    static const char *const KEEP_NOTHING[] = {NULL};
+    if (write_reset_mark()) *(bool *)arg = true;
+    else { /* the flash is full, the very reason for this perhaps: what is there goes now */
+        ink_storage_wipe_user(KEEP_NOTHING);
+        *(bool *)arg = write_reset_mark();
+    }
+}
+
+static void wipe_flash(void *arg) { /* the storage task, guarded */
     (void)arg;
-    ink_probe_count("system.factory_resets");
-    ink_fs_wipe_personal();
-    ink_storage_run(wipe_user, NULL, true);
-    ink_data_forget_all();
+    /* not whose the device was but what it is: which version did not hold, which fonts are half written */
+    static const char *const KEEP[] = {RESET_MARK, INK_UPDATE_STATE_FILE, NULL};
+    ink_storage_wipe_user(KEEP);
+    hal_fs_rename(RESET_MARK, RESET_CARD_MARK);
+}
+
+static void forget_card_mark(void *arg) { /* the storage task, guarded */
+    (void)arg;
+    hal_fs_remove(RESET_CARD_MARK);
+}
+
+void ink_factory_reset_resume(void) { /* boot: nothing else runs yet */
+    bool just_now = ink_storage_size(RESET_MARK) >= 0;
+    if (just_now) {
+        ink_storage_run(wipe_flash, NULL, true);
+        ink_probe_count("system.factory_reset_done");
+    }
+    if (ink_storage_size(RESET_CARD_MARK) < 0) return;
+    g_card_waits = ink_fs_wipe_personal() != INK_FS_OK;
+    if (g_card_waits) return;
+    ink_storage_run(forget_card_mark, NULL, true);
+    ink_probe_count("system.factory_reset_card_at_boot");
+    g_card_cleared = !just_now; /* the person was told it would wait */
+}
+
+static void tell_card_cleared(void) {
+    ink_probe_count("system.factory_reset_card_done");
+    ink_notify_t n = {.channel = "system", .title = "存储卡上的个人文件清掉了", .body = "清空这台设备时没来得及清的，现在清了", .tag = "system.reset_card", .prio = INK_NOTIFY_NORMAL, .src = INK_SRC_SYSTEM};
+    ink_notify_post(&n, NULL);
+}
+
+static void card_look(void *arg);
+
+static void card_job(void *arg) { /* exec.bg */
+    (void)arg;
+    if (!g_card_waits) return;
+    if (hal_fs_card_present() && ink_fs_card_hold() == INK_FS_OK) {
+        bool cleared = ink_fs_wipe_personal() == INK_FS_OK;
+        ink_fs_card_release();
+        if (cleared) {
+            g_card_waits = false;
+            ink_storage_run(forget_card_mark, NULL, true);
+            tell_card_cleared();
+            return;
+        }
+    }
+    if (ink_power_state() != INK_PWR_LOCKED) ink_svc_at(&g_card_at, osal_now_us() + CARD_LOOK_US, card_look, NULL); /* locked: nobody uses it, and the chip sleeps */
+}
+
+static void card_look(void *arg) { /* the timer task: what it does blocks on the card */
+    (void)arg;
+    ink_exec_post(INK_EXEC_BG, &g_card_job, card_job, NULL);
+}
+
+static void on_power_for_card(void *ctx, int h, const char *id) { /* unlocked: looking again */
+    (void)ctx;
+    (void)h;
+    (void)id;
+    card_look(NULL);
+}
+
+static void restart_job(void *arg) { /* exec.bg, after the answer */
+    (void)arg;
+    osal_task_delay_us(300000);
     hal_power_reboot();
 }
 
-static ink_exec_job_t g_reset_job;
-
-static void factory_reset(ink_call_t *c) {
-    snprintf(c->rc.say, sizeof c->rc.say, "恢复出厂，马上重启");
-    ink_exec_post(INK_EXEC_BG, &g_reset_job, factory_reset_job, NULL);
+static void factory_reset(ink_call_t *c) { /* exec.bg */
+    if (ink_usb_disk_active()) { /* nothing can be done about the card from here, and it is the person's to take back */
+        c->rc.status = INK_RC_FAILED;
+        snprintf(c->rc.detail, sizeof c->rc.detail, "the card is lent to a computer: take it back first");
+        snprintf(c->rc.say, sizeof c->rc.say, "存储卡借给电脑了，先收回再清空");
+        return;
+    }
+    bool marked = false;
+    ink_storage_run(mark_reset, &marked, true);
+    if (!marked) {
+        c->rc.status = INK_RC_FAILED;
+        snprintf(c->rc.detail, sizeof c->rc.detail, "cannot write to the flash");
+        snprintf(c->rc.say, sizeof c->rc.say, "这台设备的存储写不进去，没能清空");
+        return;
+    }
+    ink_probe_count("system.factory_resets");
+    snprintf(c->rc.say, sizeof c->rc.say, "%s", hal_fs_card_present() ? "清空这台设备，马上重启" : "清空这台设备，马上重启。存储卡不在，下次插上时再清卡上的");
+    ink_exec_post(INK_EXEC_BG, &g_reset_job, restart_job, NULL);
 }
 
 static void cap_reboot(ink_call_t *c) { /* exec.bg */
@@ -126,10 +230,15 @@ static const ink_cap_t SYSTEM_ACTIONS[] = {
      .run = switch_member},
     {.id = "state.list", .title = "系统现在的状态（电量、网络、前台应用……）", .output = "{\"type\":\"object\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = state_list},
     {.id = "settings.list", .title = "所有设置，各自的类型、取值范围和现在的值", .output = "{\"type\":\"array\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = settings_list},
-    {.id = "system.factory_reset", .title = "恢复出厂设置（清掉所有成员的数据，不能撤销）", .ask = "恢复出厂设置：清掉所有成员的数据，不能撤销", .effect = INK_FX_SYSTEM, .parent_pin = true, .child_ok = false, .exec = INK_EXEC_DIRECT, .run = factory_reset},
+    {.id = "system.factory_reset", .title = "恢复出厂设置（清掉所有成员的数据，不能撤销）", .ask = "恢复出厂设置：清掉所有成员的数据，不能撤销", .effect = INK_FX_SYSTEM, .parent_pin = true, .child_ok = false, .exec = INK_EXEC_BG, .run = factory_reset},
     {.id = "system.reboot", .title = "重启", .effect = INK_FX_SYSTEM, .child_ok = true, .while_locked = true, .exec = INK_EXEC_BG, .run = cap_reboot},
 };
 
 int ink_system_actions_init(void) {
+    if (g_card_cleared) tell_card_cleared();
+    if (g_card_waits) {
+        if (ink_state_watch("power.state", on_power_for_card, NULL, INK_EXEC_DIRECT) != 0) return -1;
+        card_look(NULL);
+    }
     return ink_cap_register(SYSTEM_ACTIONS, (int)(sizeof SYSTEM_ACTIONS / sizeof SYSTEM_ACTIONS[0]));
 }

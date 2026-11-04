@@ -794,6 +794,13 @@ static bool g_switch_is_mine; /* UI task */
 
 void ink_ai_switching_member(void) { g_switch_is_mine = true; }
 
+static void on_space_changed(void *ctx, int h, const char *id) { /* UI task: closed (locked, idle): what the microphone hears goes nowhere */
+    (void)ctx;
+    (void)h;
+    (void)id;
+    if (!ink_member_space_open() && ink_ai_dismiss()) ink_probe_count("ai.closed_with_the_space");
+}
+
 static void on_member_changed(void *ctx, int h, const char *id) { /* UI task: what was being asked was someone else's */
     (void)ctx;
     (void)h;
@@ -804,6 +811,7 @@ static void on_member_changed(void *ctx, int h, const char *id) { /* UI task: wh
 
 int ink_ai_init(void) {
     ink_state_watch("member.current", on_member_changed, NULL, INK_EXEC_UI);
+    ink_state_watch("member.authed", on_space_changed, NULL, INK_EXEC_UI);
     const char *prev = osal_mem_tag("ai");
     AI.answer_text = osal_malloc(ANSWER_CAP, OSAL_MEM_EXTERNAL);
     AI.lock = osal_mutex_create();

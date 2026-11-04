@@ -158,11 +158,12 @@ static uint32_t find_tag(ink_db_t *db, const char *tag) {
     return hit;
 }
 
-static void announce(uint32_t id, const char *channel, const char *title, int prio) {
+static void announce(uint32_t id, const char *channel, const char *title, int prio, const char *who) {
     ink_args_t *a = osal_malloc(sizeof *a, OSAL_MEM_EXTERNAL);
     if (a) {
         ink_args_init(a);
         ink_args_int(a, "id", id);
+        ink_args_str(a, "member", who);
         ink_args_str(a, "channel", channel);
         ink_args_str(a, "title", title);
         ink_args_int(a, "prio", prio);
@@ -287,7 +288,7 @@ int ink_notify_post(const ink_notify_t *n, uint32_t *out_id) {
     mine = !strcmp(who, NS.member);
     ink_svc_unlock();
     if (!mine) return 0; /* someone else came meanwhile: it is in the right inbox, not for them to hear about */
-    announce(wrote, channel, n->title, prio);
+    announce(wrote, channel, n->title, prio, who);
     if (prio >= INK_NOTIFY_HIGH && !ink_setting_get("notify.dnd")) { /* no banner: e-ink would need a refresh for it to go away too */
         ink_probe_count("notify.alerted");
         ink_audio_tone(INK_TONE_DONE, 0, NULL);

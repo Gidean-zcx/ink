@@ -286,7 +286,7 @@ void sim_hub_request_device(const char *method, const char *params_json) { /* ev
 
 const char *sim_hub_device_reply(void) { return g_test_reply; }
 int sim_hub_events_seen(void) { return g_events.n; }
-const char *sim_hub_event_at(int i) { return i >= 0 && i < g_events.n && i < 32 ? g_events.text[i] : NULL; }
+const char *sim_hub_event_at(int i) { return i >= 0 && i < g_events.n && i >= g_events.n - 32 ? g_events.text[i % 32] : NULL; } /* the latest 32 */
 const char *sim_hub_last_ask(void) { return g_last_ask; }
 
 /* ------------------------------------------------------------ dictation (hub protocol §3.11) */
@@ -563,7 +563,7 @@ void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t 
     sim_trace_instant("hub", method ? method : "?", t, NULL);
     g_last_ws = ws;
     if (!strcmp(method, "device/event")) { /* what the device tells: nobody here answers */
-        if (g_events.n < 32) keep_text(&g_events.text[g_events.n], req);
+        keep_text(&g_events.text[g_events.n % 32], req);
         g_events.n++;
         cJSON_Delete(req);
         return;

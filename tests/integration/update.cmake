@@ -88,6 +88,18 @@ run(res1 restart)
 run(res2 off)
 run(res3 done)
 
+# AUD16-004, 005: writing the resources fails, or the package has changed since the restart: they stay to be done, nothing bad goes in.
+pkg(good7 ${u}/good-7.inkfw --version 7.0.0 --code 700 --font 4096 --resources 409600)
+run(rfail1 restart)
+run(rfail2 done INK_SIM_OTA_RESOURCE_FAILS=8192)
+pkg(bad7 ${u}/good-7.inkfw --version 7.0.0 --code 700 --font 4096 --resources 409600 --corrupt-last-section)
+run(rbad done)
+pkg(other7 ${u}/good-7.inkfw --version 8.0.0 --code 800 --font 4096 --resources 409600)
+run(rother done)
+pkg(good7again ${u}/good-7.inkfw --version 7.0.0 --code 700 --font 4096 --resources 409600)
+run(rgood done)
+run(rdone done)
+
 # On a new device, as it were: a download the power cut short.
 file(REMOVE_RECURSE ${OUT}/sd)
 file(MAKE_DIRECTORY ${OUT}/sd/content)

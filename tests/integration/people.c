@@ -9,6 +9,7 @@
 
 #include "ink/hal_storage.h"
 #include "ink/hal_net.h"
+#include "ink/hal_usb.h"
 #include "ink/sys/audio.h"
 #include "ink/sys/confirm.h"
 #include "ink/sys/data.h"
@@ -21,6 +22,7 @@
 #include "ink/sys/settings.h"
 #include "ink/sys/storage.h"
 #include "ink/sys/time.h"
+#include "ink/sys/update.h"
 
 #define ink_main product_main
 #include "../../system/boot/main.c"
@@ -286,12 +288,45 @@ static void reboot_keeps(void) {
 
 /* ---- a factory reset ---- */
 
+static char g_reset_status[20], g_reset_say[96];
+static int g_reset_results;
+
+static void on_reset_result(void *ctx, const char *id, const ink_args_t *a) {
+    (void)ctx;
+    (void)id;
+    ink_args_get_str(a, "status", g_reset_status, sizeof g_reset_status);
+    ink_args_get_str(a, "say", g_reset_say, sizeof g_reset_say);
+    g_reset_results++;
+}
+
+/* The AI asks, a person says yes with the PIN. */
+static void yes_to_reset(void) {
+    CHECK(AI("system.factory_reset", NULL) && g_rc.status == INK_RC_PENDING_CONFIRMATION, "the AI asks (%s)", ink_rc_name(g_rc.status));
+    CHECK(ink_confirm_accept_with_pin(token_of_receipt(), "1234", NULL, NULL) == 0, "yes");
+}
+
 static void reset1(void) {
     CHECK(set_pin("owner", NULL, "1234") == INK_PIN_OK, "a PIN");
     CHECK(unlock("owner", "1111") == INK_PIN_WRONG, "a wrong guess, stored");
     CHECK(unlock("owner", "1234") == INK_PIN_OK, "in");
     ink_receipt_t rc;
     ink_setting_set("audio.volume", 33, INK_SRC_TOUCH, &rc);
+    /* what is about the device, not about anyone */
+    static const char UPDATE_STATE[] = "{\"blocked\":123}";
+    ink_storage_write_atomic(INK_UPDATE_STATE_FILE, UPDATE_STATE, sizeof UPDATE_STATE - 1);
+    /* the card is lent to a computer (AUD16-006): it cannot be cleared from here, so nothing happens at all */
+    CHECK(ink_cap_subscribe("confirm.result", on_reset_result, NULL, INK_EXEC_DIRECT) == 0, "listening");
+    CHECK(WAIT_FOR(hal_usb_host_connected(), 6000), "a cable");
+    CHECK(ink_usb_disk_start() == 0, "the card is lent");
+    int results = g_reset_results;
+    yes_to_reset();
+    CHECK(WAIT_FOR(g_reset_results > results, 5000), "an answer");
+    CHECK(!strcmp(g_reset_status, "failed") && strstr(g_reset_say, "存储卡借给电脑了"), "it says why not (%s, %s)", g_reset_status, g_reset_say);
+    CHECK(ink_storage_size("/user/sys/reset.pending") < 0, "nothing is marked");
+    delay_ms(1000);
+    CHECK(sim_metric_value("system.factory_resets") == 0, "and it does not restart");
+    CHECK(ink_usb_disk_stop() == 0, "taken back");
+    delay_ms(1000);
     /* some of everyone's */
     CHECK(ink_fs_write_atomic("/me/mine.txt", "mine", 4) == 0, "a file");
     CHECK(ink_fs_write_atomic("/family/shared.txt", "shared", 6) == 0, "a shared one");
@@ -299,6 +334,7 @@ static void reset1(void) {
     ink_notify_post(&n, NULL);
     delay_ms(2000);
     while (ink_storage_pending()) delay_ms(50);
+    results = g_reset_results;
     /* the AI asks: a card, with the PIN */
     CHECK(AI("system.factory_reset", NULL) && g_rc.status == INK_RC_PENDING_CONFIRMATION, "the AI asks (%s)", ink_rc_name(g_rc.status));
     uint32_t token = token_of_receipt();
@@ -309,6 +345,8 @@ static void reset1(void) {
     CHECK(strstr(g_snap, "清掉所有成员的数据"), "the card says what (%s)", g_snap);
     ink_probe_count("test.finished"); /* the device restarts on the yes */
     CHECK(ink_confirm_accept_with_pin(token, "1234", NULL, NULL) == 0, "yes");
+    CHECK(WAIT_FOR(g_reset_results > results + 0, 5000) && !strcmp(g_reset_status, "done") && strstr(g_reset_say, "马上重启"), "it says so (%s, %s)", g_reset_status, g_reset_say);
+    CHECK(ink_storage_size("/user/sys/reset.pending") >= 0, "and the mark is there before it says so");
     delay_ms(30000);
     CHECK(0, "it should have restarted");
 }
@@ -321,6 +359,110 @@ static void reset2(void) {
     CHECK(ink_fs_stat("/me/mine.txt", &st) == INK_FS_ERR_NOT_FOUND, "a member's files are gone");
     CHECK(ink_fs_stat("/family/shared.txt", &st) == 0, "the family's are not");
     CHECK(hal_fs_size("/content/books/星星邮差.txt") > 0, "nor the books");
+    CHECK(ink_storage_size("/user/sys/reset.pending") < 0 && ink_storage_size("/user/sys/reset.card") < 0, "nothing waits");
+    char state[32] = "";
+    CHECK(ink_storage_read(INK_UPDATE_STATE_FILE, state, sizeof state - 1) > 0 && strstr(state, "blocked"), "what is about the device stays (%s)", state);
+    ink_probe_count("test.finished");
+}
+
+/* The card is not there (AUD16-006): the flash is cleared, and the card's part waits for it. */
+static void nocard1(void) {
+    CHECK(set_pin("owner", NULL, "1234") == INK_PIN_OK, "a PIN");
+    CHECK(ink_fs_write_atomic("/me/on-card.txt", "mine", 4) == 0, "a file on the card");
+    CHECK(ink_fs_write_atomic("/family/stays.txt", "shared", 6) == 0, "a shared one");
+    CHECK(WAIT_FOR(!hal_fs_card_present(), 15000), "the card is taken out");
+    CHECK(ink_cap_subscribe("confirm.result", on_reset_result, NULL, INK_EXEC_DIRECT) == 0, "listening");
+    ink_probe_count("test.finished");
+    yes_to_reset();
+    CHECK(WAIT_FOR(g_reset_results > 0, 5000), "an answer");
+    CHECK(strstr(g_reset_say, "存储卡不在"), "it says what is left (%s)", g_reset_say);
+    delay_ms(30000);
+    CHECK(0, "it should have restarted");
+}
+
+static void nocard_flash_clean(void) {
+    CHECK(!ink_member_has_pin("owner"), "no PIN any more");
+    CHECK(ink_storage_size("/user/sys/reset.pending") < 0 && ink_storage_size("/user/sys/reset.card") >= 0, "the card's part waits");
+}
+
+static void nocard_card_clean(void) {
+    ink_fs_stat_t st;
+    CHECK(ink_fs_stat("/me/on-card.txt", &st) == INK_FS_ERR_NOT_FOUND, "what was on the card is gone");
+    CHECK(ink_fs_stat("/family/stays.txt", &st) == 0, "the family's stays");
+    CHECK(ink_storage_size("/user/sys/reset.card") < 0, "nothing waits any more");
+    ink_db_cursor_t c = {0};
+    ink_notify_view_t v;
+    bool told = false;
+    while (ink_notify_next(&c, &v) == 1) told = told || strstr(v.title, "存储卡上的个人文件");
+    CHECK(told, "and the person is told");
+    CHECK(ink_fs_write_atomic("/me/new-owner.txt", "new", 3) == 0, "someone new starts");
+}
+
+static void nocard2(void) { /* the script puts it in, while the device runs */
+    nocard_flash_clean();
+    CHECK(!hal_fs_card_present(), "still no card");
+    CHECK(WAIT_FOR(hal_fs_card_present(), 15000), "it is put in");
+    CHECK(WAIT_FOR(sim_metric_value("system.factory_reset_card_done") == 1, 7000), "cleared as soon as it is seen");
+    delay_ms(500);
+    nocard_card_clean();
+    while (ink_storage_pending()) delay_ms(50);
+    delay_ms(500);
+    ink_probe_count("test.finished");
+}
+
+static void nocard3(void) { /* a later boot does not clear what is new */
+    ink_fs_stat_t st;
+    CHECK(sim_metric_value("system.factory_reset_card_done") == 0, "nothing to do any more");
+    CHECK(ink_fs_stat("/me/new-owner.txt", &st) == 0, "what the new one saved stays");
+    ink_probe_count("test.finished");
+}
+
+static void noboot2(void) { /* a boot without it */
+    nocard_flash_clean();
+    CHECK(!hal_fs_card_present(), "still no card");
+    delay_ms(1000);
+    ink_probe_count("test.finished");
+}
+
+static void noboot3(void) { /* a boot with it: before anything could read it */
+    CHECK(sim_metric_value("system.factory_reset_card_at_boot") == 1, "cleared at the boot, before anything could read it");
+    CHECK(sim_metric_value("system.factory_reset_card_done") == 1, "and the person is told");
+    delay_ms(500);
+    nocard_card_clean();
+    ink_probe_count("test.finished");
+}
+
+/* The family's table is there and cannot be read (AUD16-001): nobody gets in as a default adult without a PIN. INK_TEST_TABLE_FAILS. */
+static void table1(void) {
+    CHECK(set_pin("owner", NULL, "1234") == INK_PIN_OK, "a PIN");
+    ink_db_flush_all();
+    CHECK(WAIT_FOR(ink_db_idle() && !ink_storage_pending(), 6000), "stored");
+    ink_probe_count("test.finished");
+}
+
+static void table2(void) { /* two reads fail: the boot's and the first try */
+    CHECK(sim_metric_value("members.table_unread") >= 1, "the boot could not read it");
+    CHECK(ink_member_has_pin("owner") && ink_member_any_pin(), "so an adult may have a PIN");
+    CHECK(!ink_member_space_open(), "the space is closed");
+    CHECK(AI("file.list", "{\"path\":\"/me\"}") && g_rc.status == INK_RC_REJECTED, "the AI does not get in (%s)", ink_rc_name(g_rc.status));
+    CHECK(ink_member_switch("owner") == -2, "no way in without the PIN");
+    CHECK(ink_member_switch("kid") == 0 && ink_member_switch("owner") == -2, "nor by going round through a child");
+    ink_member_test_reset();
+    CHECK(unlock("owner", "1234") == INK_PIN_WAIT, "it cannot tell yet, so it asks to wait");
+    CHECK(!ink_member_space_open(), "still closed");
+    CHECK(unlock("owner", "0000") == INK_PIN_WRONG, "then it can: this one is wrong");
+    CHECK(!ink_member_space_open(), "still closed");
+    CHECK(unlock("owner", "1234") == INK_PIN_OK, "this one is right: nothing was lost");
+    CHECK(ink_member_space_open() && ink_member_has_pin("owner"), "in");
+    ink_db_flush_all();
+    CHECK(WAIT_FOR(ink_db_idle() && !ink_storage_pending(), 6000), "stored");
+    ink_probe_count("test.finished");
+}
+
+static void table3(void) { /* a normal boot: the table as it was */
+    CHECK(sim_metric_value("members.table_unread") == 0, "read");
+    CHECK(ink_member_has_pin("owner") && !ink_member_space_open(), "the PIN is still there");
+    CHECK(unlock("owner", "1234") == INK_PIN_OK, "and it is the same one");
     ink_probe_count("test.finished");
 }
 
@@ -330,6 +472,14 @@ static void test_task(void *arg) {
     const char *phase = getenv("INK_PEOPLE_PHASE");
     if (phase && !strcmp(phase, "reset1")) reset1();
     else if (phase && !strcmp(phase, "reset2")) reset2();
+    else if (phase && !strcmp(phase, "nocard1")) nocard1();
+    else if (phase && !strcmp(phase, "nocard2")) nocard2();
+    else if (phase && !strcmp(phase, "nocard3")) nocard3();
+    else if (phase && !strcmp(phase, "noboot2")) noboot2();
+    else if (phase && !strcmp(phase, "noboot3")) noboot3();
+    else if (phase && !strcmp(phase, "table1")) table1();
+    else if (phase && !strcmp(phase, "table2")) table2();
+    else if (phase && !strcmp(phase, "table3")) table3();
     else {
         wifi();
         members_and_pin();

@@ -29,6 +29,7 @@
 #define TICK_US 200000u
 #define CONNECT_MS 6000u      /* to reach the hub */
 #define FINISH_MS 8000u       /* for the last of the words, once it has been said */
+#define FRAME_MS 60u
 #define PAUSE_MS 1500u        /* a pause this long, after something was said, is the end */
 #define NOTHING_SAID_MS 8000u /* nothing at all */
 #define SPEECH_LEVEL 300      /* mean absolute sample: a quiet room a few, a voice hundreds. To be calibrated on the device */
@@ -62,7 +63,7 @@ static struct {
     frame_t *head, *tail;
     int buffered;
     bool heard;
-    uint32_t last_voice_ms;
+    uint32_t quiet_frames;
     /* what was heard */
     char words[WORDS_MAX + 1];
     size_t nwords;
@@ -146,9 +147,9 @@ static void on_frame(void *ctx, const uint8_t *data, size_t len, uint32_t seq) {
     }
     if (drop) return;
     if (ink_audio_capture_level() >= SPEECH_LEVEL) {
-        __atomic_store_n(&VS.last_voice_ms, (uint32_t)(osal_now_us() / 1000u), __ATOMIC_RELEASE);
+        __atomic_store_n(&VS.quiet_frames, 0, __ATOMIC_RELEASE);
         __atomic_store_n(&VS.heard, true, __ATOMIC_RELEASE);
-    }
+    } else __atomic_add_fetch(&VS.quiet_frames, 1, __ATOMIC_ACQ_REL);
     frame_t *f = osal_malloc(sizeof *f + len, OSAL_MEM_EXTERNAL);
     if (f) {
         f->next = NULL;
@@ -377,7 +378,7 @@ static void tick_job(void *arg) {
             return;
         }
         bool heard = __atomic_load_n(&VS.heard, __ATOMIC_ACQUIRE);
-        uint32_t quiet_ms = (uint32_t)(now / 1000u) - __atomic_load_n(&VS.last_voice_ms, __ATOMIC_ACQUIRE);
+        uint32_t quiet_ms = __atomic_load_n(&VS.quiet_frames, __ATOMIC_ACQUIRE) * FRAME_MS;
         if ((heard && quiet_ms >= PAUSE_MS) || (!heard && in_state_ms >= NOTHING_SAID_MS)) {
             ink_probe_count(heard ? "text.voice_pause_ended" : "text.voice_nothing_said");
             ink_text_voice_finish();
@@ -436,6 +437,7 @@ int ink_text_voice_start(void) {
     snprintf(params, sizeof params, PARAMS, t == INK_TEXT_NUMBER || t == INK_TEXT_PHONE ? "number" : "text");
     __atomic_store_n(&VS.readies, 0, __ATOMIC_RELEASE);
     __atomic_store_n(&VS.heard, false, __ATOMIC_RELEASE);
+    __atomic_store_n(&VS.quiet_frames, 0, __ATOMIC_RELEASE);
     __atomic_store_n(&VS.drop, false, __ATOMIC_RELEASE);
     ink_hub_demand(); /* connected already while the person starts to speak */
     int sid = ink_rt_open(ASR_CAP, params, &RT_HANDLER);

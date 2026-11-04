@@ -9,6 +9,9 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+/* What an upgrade remembers across restarts. A factory reset leaves it: it is about the device, not about anyone */
+#define INK_UPDATE_STATE_FILE "/user/sys/update.json"
+
 #ifdef __cplusplus
 extern "C" {
 #endif

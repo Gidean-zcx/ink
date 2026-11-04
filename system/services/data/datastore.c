@@ -988,16 +988,6 @@ int ink_db_error(ink_db_t *db) {
     return e;
 }
 
-void ink_data_forget_all(void) { /* factory reset: nothing more goes to the flash */
-    if (!DB.lock) return;
-    lock();
-    for (int i = 0; i < MAX_COLLECTIONS; i++) {
-        ink_db_t *c = &DB.c[i];
-        c->pend_len = 0;
-    }
-    unlock();
-}
-
 void ink_db_forget_member(const char *member) {
     if (!DB.lock) return;
     lock();

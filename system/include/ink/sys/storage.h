@@ -74,8 +74,8 @@ int ink_storage_load(const char *path, void **out, size_t *len);
 void ink_storage_free(void *block);
 /** Bytes on the /user volume (blocks; walks the file system: slow, not often). 0 or -1. */
 int ink_storage_volume(uint64_t *total_bytes, uint64_t *free_bytes);
-/** In the storage task only (ink_storage_run): every file and folder on /user is gone. */
-void ink_storage_wipe_user(void);
+/** In the storage task only (ink_storage_run): every file and folder on /user is gone, except the files named in keep (ended by NULL). */
+void ink_storage_wipe_user(const char *const *keep);
 /** Run fn(arg) in the storage task (blocks until it finished), for code that must touch the flash:
  *  with `guarded` the flash guard is held around it. Keep it short: every other flash user waits. */
 void ink_storage_run(void (*fn)(void *arg), void *arg, bool guarded);

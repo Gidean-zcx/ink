@@ -60,12 +60,15 @@ if __name__ == "__main__":
     ap.add_argument("--resources", type=int, default=0)
     ap.add_argument("--font", type=int, default=0)
     ap.add_argument("--corrupt-section", action="store_true")
+    ap.add_argument("--corrupt-last-section", action="store_true")
     ap.add_argument("--corrupt-signature", action="store_true")
     ap.add_argument("--corrupt-header", action="store_true")
     a = ap.parse_args()
     data, hs = build(a.version, a.code, a.product, a.min_from, 1 if a.allow_downgrade else 0, a.app_size, a.resources, a.font)
     if a.corrupt_section:
         data[hs + 100] ^= 0xff
+    if a.corrupt_last_section:
+        data[-1] ^= 0xff
     if a.corrupt_signature:
         data[hs - 64 + 2] ^= 0xff
     if a.corrupt_header:

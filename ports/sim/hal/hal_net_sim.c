@@ -1158,11 +1158,12 @@ static void ws_task(void *arg) {
             u->ws = w;
             u->gen = w->gen;
             u->m = m;
+            size_t len = m->len; /* once it is on its way the message is the event's, which frees it */
             vtk_event_at(arrive, hub_arrive_cb, u);
-            w->tx_bytes -= m->len;
+            w->tx_bytes -= len;
             vtk_wake_all_locked(&w->txwq);
             vtk_unlock();
-            N.bytes_up += m->len;
+            N.bytes_up += len;
             N.msgs_up++;
         }
     }

@@ -1,0 +1,3 @@
+# A family; the card is taken out; the test resets it.
+@8s      sd remove
+@400s    end

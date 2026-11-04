@@ -21,12 +21,12 @@ extern int races_interrupt_top(void);
 
 static osal_sem_t *g_at_moment, *g_other_done, *g_bg_in, *g_bg_go;
 static osal_task_t *g_test_task;
-static int g_mode;
+static int g_mode, g_notify_skip;
 static bool g_notify_armed, g_ring_armed, g_ring_on;
 
 void races_notify_unlock(void) {
     ink_svc_unlock();
-    if (g_notify_armed && osal_task_self() == g_test_task) {
+    if (g_notify_armed && osal_task_self() == g_test_task && g_notify_skip-- == 0) {
         g_notify_armed = false;
         osal_sem_give(g_at_moment);
         CHECK(osal_sem_take(g_other_done, 2000000) == OSAL_OK, "the other task did its part");
@@ -70,20 +70,42 @@ static bool in_inbox(const char *title) {
     return false;
 }
 
-/* AUD15-005: for one member, and the member changes on the way. */
+static bool told_to_ai(int from, const char *title) {
+    for (int i = from; i < sim_hub_events_seen(); i++) {
+        const char *e = sim_hub_event_at(i);
+        CHECK(e != NULL, "the hub still has it");
+        if (e && strstr(e, title)) return true;
+    }
+    return false;
+}
+
+/* AUD15-005, AUD16-007: for one member, and the member changes on the way: at each of the moments there are on the way. */
 static void notification_for_someone(void) {
-    g_mode = 1;
-    g_notify_armed = true;
-    ink_notify_t n = {.member = "owner", .title = "只给主人的", .prio = INK_NOTIFY_LOW};
-    int from = sim_hub_events_seen();
-    CHECK(ink_notify_post(&n, NULL) == 0, "posted");
-    CHECK(!g_notify_armed && !strcmp(ink_member_current()->id, "kid"), "the other came in between");
-    delay_ms(300);
-    CHECK(!in_inbox(n.title), "it is not in the inbox of who came");
-    for (int i = from; i < sim_hub_events_seen(); i++) CHECK(!strstr(sim_hub_event_at(i), n.title), "and not told to their AI");
-    ink_member_test_reset();
-    delay_ms(500);
-    CHECK(in_inbox(n.title), "it is in the inbox of who it is for");
+    int moments = 0;
+    for (int k = 0;; k++) {
+        char title[32];
+        snprintf(title, sizeof title, "只给主人的 %d", k);
+        g_mode = 1;
+        g_notify_skip = k;
+        g_notify_armed = true;
+        ink_notify_t n = {.member = "owner", .title = title, .prio = INK_NOTIFY_LOW};
+        int from = sim_hub_events_seen();
+        CHECK(ink_notify_post(&n, NULL) == 0, "posted");
+        if (g_notify_armed) { /* there was no k-th moment: all of it went by the one it is for, with nobody in between */
+            g_notify_armed = false;
+            CHECK(WAIT_FOR(told_to_ai(from, title), 2000), "with nobody in between, their AI does hear of it");
+            break;
+        }
+        moments++;
+        CHECK(!strcmp(ink_member_current()->id, "kid"), "the other came in between (%d)", k);
+        delay_ms(300);
+        CHECK(!in_inbox(title), "it is not in the inbox of who came (%d)", k);
+        CHECK(!told_to_ai(from, title), "and not told to their AI (%d)", k);
+        ink_member_test_reset();
+        delay_ms(500);
+        CHECK(in_inbox(title), "it is in the inbox of who it is for (%d)", k);
+    }
+    CHECK(moments >= 3, "there were moments to try (%d)", moments);
 }
 
 /* AUD15-006: it ends while the task that raised it is on its way to the audio service. */

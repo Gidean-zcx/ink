@@ -538,7 +538,7 @@ if(INK_HAVE_FONTS)
   ink_scenario(ai_turn_end metalio-plus)
   ink_scenario(ai_turn_lost metalio-plus)
   # Wi-Fi, members and the PIN (tests/integration/people.c).
-  add_executable(sim-people simulator/runtime/sim_main.c tests/integration/people.c)
+  add_executable(sim-people simulator/runtime/sim_main.c tests/integration/people.c tests/integration/people_table.c)
   target_link_libraries(sim-people PRIVATE ink_apps ink_system ink_port_sim)
   target_compile_options(sim-people PRIVATE ${INK_WARN} -Wno-format-truncation)
   add_test(NAME integration-people

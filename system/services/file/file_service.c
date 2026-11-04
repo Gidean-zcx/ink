@@ -451,11 +451,13 @@ static void wipe_tree(const char *phys, int depth) {
     osal_free(e);
 }
 
-void ink_fs_wipe_personal(void) {
-    if (FS.usb_lent) return;
+int ink_fs_wipe_personal(void) {
+    if (FS.usb_lent) return INK_FS_ERR_USB;
+    if (!hal_fs_card_present()) return INK_FS_ERR_NO_CARD;
     wipe_tree("/content/.m", 0);
     wipe_tree("/content/.update", 0);
     wipe_tree("/cache", 0);
+    return INK_FS_OK;
 }
 
 int ink_fs_write_atomic(const char *path, const void *data, size_t n) {

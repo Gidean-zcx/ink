@@ -52,7 +52,6 @@
 #define UPDATE_DIR "/content/.update"
 #define CARD_DIR "/content/update"
 #define PKG_PATH_MAX 160
-#define STATE_FILE "/user/sys/update.json"
 
 enum { SEC_APP = 0, SEC_FONT = 1, SEC_RES = 2 };
 
@@ -138,13 +137,13 @@ static void save_state(void) {
     ink_jw_raw(&w, ",\"blocked\":");
     ink_jw_int(&w, U.st.blocked_code);
     ink_jw_raw(&w, "}");
-    if (!w.overflow) ink_storage_write_atomic(STATE_FILE, buf, w.len);
+    if (!w.overflow) ink_storage_write_atomic(INK_UPDATE_STATE_FILE, buf, w.len);
 }
 
 static void load_state(void) {
     char *buf = osal_malloc(512, OSAL_MEM_EXTERNAL);
     ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
-    int n = buf && j ? ink_storage_read(STATE_FILE, buf, 511) : -1;
+    int n = buf && j ? ink_storage_read(INK_UPDATE_STATE_FILE, buf, 511) : -1;
     if (n > 0 && ink_json_parse(j, buf, (size_t)n) == 0) {
         int64_t v = 0;
         ink_json_str(j, ink_json_find(j, 0, "state"), U.st.state, sizeof U.st.state);
@@ -282,11 +281,12 @@ typedef struct {
     int kind;
     size_t offset, n;
     const void *data;
+    int r;
 } res_op_t;
 
 static void res_write(void *arg) {
     res_op_t *o = arg;
-    hal_ota_write_resource(o->kind, o->offset, o->data, o->n);
+    o->r = hal_ota_write_resource(o->kind, o->offset, o->data, o->n);
 }
 
 static void never_back(void) { /* hal_power_reboot does not come back on the device */
@@ -815,24 +815,35 @@ static void told_result(bool ok, const char *version, const char *why) {
 
 /* What was not in the slot: fonts and resources, after the system has proved itself. From where a power cut left it. */
 static bool write_resources(const char *path) { /* exec.bg, holding the card */
+    if (!path[0]) return true; /* a package with nothing more to write */
     pkg_t *p = osal_malloc(sizeof *p, OSAL_MEM_EXTERNAL);
     uint8_t *buf = osal_malloc(BLOCK, OSAL_MEM_EXTERNAL);
-    hal_file_t *f = path[0] ? hal_fs_open(path, HAL_O_READ) : NULL;
-    bool ok = !path[0]; /* a package with nothing more to write */
-    if (p && buf && f && read_header(path, p) == PKG_OK) {
+    ink_sha256_t *sum = osal_malloc(sizeof *sum, OSAL_MEM_EXTERNAL);
+    hal_file_t *f = hal_fs_open(path, HAL_O_READ);
+    bool ok = false;
+    /* it was checked before the restart, this is after it: another card, or the same file changed. There is no second slot for these */
+    if (p && buf && sum && f && read_header(path, p) == PKG_OK && p->code == U.me.version_code && !strcmp(p->product, U.product) && check_sections(path, p) == PKG_OK) {
         ok = true;
         for (uint32_t i = U.st.res_done_section; i < p->nsec && ok; i++) {
             if (p->sec[i].kind != SEC_APP) {
                 uint64_t done = 0;
-                hal_fs_seek(f, (int64_t)p->sec[i].offset, 0);
+                ink_sha256_init(sum);
+                if (hal_fs_seek(f, (int64_t)p->sec[i].offset, 0) != 0) ok = false;
                 while (done < p->sec[i].size && ok) {
                     ssize_t n = hal_fs_read(f, buf, p->sec[i].size - done < BLOCK ? (size_t)(p->sec[i].size - done) : BLOCK);
                     if (n <= 0) ok = false;
                     else {
-                        res_op_t o = {(int)p->sec[i].kind, (size_t)done, (size_t)n, buf};
+                        ink_sha256_update(sum, buf, (size_t)n);
+                        res_op_t o = {(int)p->sec[i].kind, (size_t)done, (size_t)n, buf, -1};
                         ink_storage_run(res_write, &o, true);
+                        if (o.r != 0) ok = false;
                         done += (uint64_t)n;
                     }
+                }
+                if (ok) {
+                    uint8_t got[32];
+                    ink_sha256_final(sum, got);
+                    ok = !memcmp(got, p->sec[i].sha256, 32);
                 }
             }
             if (ok) {
@@ -842,6 +853,7 @@ static bool write_resources(const char *path) { /* exec.bg, holding the card */
         }
     }
     if (f) hal_fs_close(f);
+    osal_free(sum);
     osal_free(buf);
     osal_free(p);
     return ok;
@@ -854,8 +866,10 @@ static void rest_job(void *arg) { /* exec.bg */
     bool ok = write_resources(U.st.path);
     if (ok && !strncmp(U.st.path, UPDATE_DIR, strlen(UPDATE_DIR))) hal_fs_remove(U.st.path); /* a package the person put on the card is theirs to delete */
     ink_fs_card_release();
-    if (!ok) {
+    if (!ok) { /* it stays to be done: the next boot tries again, from what is on the card */
         ink_probe_count("update.resources_failed");
+        ink_notify_t n = {.channel = "system", .title = "系统更新还差一点", .body = "字库和资源没写好。把升级包放在存储卡上，重启时再试", .tag = "update.result", .prio = INK_NOTIFY_NORMAL, .src = INK_SRC_SYSTEM};
+        ink_notify_post(&n, NULL);
         return;
     }
     U.st.state[0] = 0;
