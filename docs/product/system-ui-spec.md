@@ -43,6 +43,8 @@ D-60：三屏加固定 Dock。
 | 按下任何控件 | 立刻变黑（目标 0.35 秒内），再打开 |
 | 应用里 | 翻页，不滚动，底部胶囊显示第几页 |
 
+语音输入（R-056、D-65）：键盘候选条右端有一个黑色话筒键，点了以后键盘区换成同样大小的语音面板。说的时候字显示在面板的固定小区域，说完才进输入框，之后还能改；停顿会自动结束，也可以点“说完了”结束，或点“用键盘”回到键盘。听写靠中枢，没网时提示并退回键盘。密码框没有话筒。AI 键仍然只叫 AI。
+
 普通通知只改状态栏小图标，不弹横幅（横幅每次消失都要刷新）；来电、闹钟才占全屏。通话时长只到分钟，计时器也不显示跳动的秒。
 
 ## 4. 页面清单
@@ -59,7 +61,7 @@ D-60：三屏加固定 Dock。
 | 备忘、日历、时钟 | `Memo`、`MemoDetail`、`Calendar`、`Clock`（闹钟和计时）、`ClockRing` |
 | 相机、相册、文件、远程 | `Camera`、`Gallery`、`Photo`、`Files`、`FilePicker`、`Transfer`、`Remote` |
 | 设置 | `Settings`、`SetNetwork`、`SetBluetooth`、`SetDisplay`、`SetSound`、`SetVoice`、`SetMembers`、`SetStorage`、`SetAbout` |
-| 输入法 | `ImePinyin`、`ImeAi`、`ImeSymbols`、`ImePassword` |
+| 输入法 | `ImePinyin`、`ImeVoice`、`ImeAi`、`ImeSymbols`、`ImePassword` |
 | 规范 | `Foundation`、`Components`、`IconSheet`、`Interaction` |
 | 公共零件 | `StatusBar`、`TopBar`、`PageBar`、`Seg`、`Toggle`、`Slider`、`Group`、`Keyboard`、`Icon` |
 
