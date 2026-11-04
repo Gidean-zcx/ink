@@ -714,7 +714,7 @@ static void copy_tree(const char *src, const char *dst) {
     mkdirs(dst);
     struct dirent *e;
     while ((e = readdir(d))) {
-        if (e->d_name[0] == '.') continue;
+        if (!strcmp(e->d_name, ".") || !strcmp(e->d_name, "..") || !strcmp(e->d_name, ".DS_Store")) continue; /* the card has hidden folders of its own */
         char a[1024], b[1024];
         snprintf(a, sizeof a, "%s/%s", src, e->d_name);
         snprintf(b, sizeof b, "%s/%s", dst, e->d_name);

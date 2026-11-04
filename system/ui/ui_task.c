@@ -585,6 +585,9 @@ static void handle_input(const umsg_t *m) {
         }
         pointer_push(e->x, e->y, e->phase != INK_PTR_RELEASE);
         break;
+    case INK_EV_LONGPRESS: /* LVGL looks at the clock only when it reads: this is when it finds out, and no click follows */
+        if (!UI.skip_touch && m->generation == UI.generation && UI.last_pressed) lv_indev_read(UI.indev);
+        break;
     case INK_EV_SWIPE:
         if (m->generation != UI.generation) return;
         UI.cause_us = e->t_us;

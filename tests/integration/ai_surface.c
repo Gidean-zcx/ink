@@ -31,6 +31,7 @@ static const char *const FOR_AI[] = {
     "notify.post", "notify.list", "notify.read", "notify.dismiss", "notify.clear", "notify.channels", "notify.set_channel", "interrupt.list", "interrupt.ack",
     "confirm.list", "confirm.withdraw",
     "app.list", "app.open", "app.close", "app.cards",
+    "text.state", "text.insert", "text.submit", "clipboard.read", "clipboard.write",
     "camera.capture", "message.send", "message.list", "call.dial", "call.answer", "call.hangup", "remote.open",
     "reader.list_books", "reader.open_book", "reader.next_page", "reader.prev_page", "reader.goto_page", "reader.read_page",
     NULL,
@@ -47,10 +48,10 @@ static const struct {
 
 static const char *const STATES[] = {
     "storage.user_free", "storage.free", "storage.card", "storage.mode", "usb.connected", "time.synced", "time.zone", "time.minute", "alarm.ringing", "notify.unread", "interrupt.active",
-    "confirm.pending", "app.foreground", "app.cards_rev", "power.state", "battery.level", "battery.charging", "battery.low", "member.current", NULL,
+    "confirm.pending", "app.foreground", "app.cards_rev", "power.state", "battery.level", "battery.charging", "battery.low", "member.current", "text.focused", NULL,
 };
 
-static const char *const SETTINGS[] = {"notify.dnd", "time.zone", "time.auto", "power.lock_after_s", "audio.volume", NULL};
+static const char *const SETTINGS[] = {"notify.dnd", "time.zone", "time.auto", "power.lock_after_s", "audio.volume", "ai.read_clipboard", NULL};
 
 /* Events the design promises the AI hears about (the rest of the table by the same rule: registered is forwarded). */
 static const char *const EVENTS[] = {"data.write_failed", "file.changed", "file.job_done", "usb.changed", "alarm.fired", "reminder.fired", "time.changed", "notify.posted", "confirm.result", "app.state", "battery.low", NULL};

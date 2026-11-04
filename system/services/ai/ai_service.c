@@ -437,6 +437,8 @@ static void flush_timer_cb(lv_timer_t *t) { /* UI task: the link may come up aft
 
 /* ------------------------------------------------------------- requests */
 
+static char g_typed[384] INK_PSRAM_BSS; /* a question in words (ink_ai_ask_text) */
+
 /* Build the request params: page snapshot plus either the stream description or the question. */
 static int request(const char *method, bool voice) {
     AI.answer_len = 0;
@@ -467,7 +469,7 @@ static int request(const char *method, bool voice) {
         ink_jw_raw(&w, head);
     } else {
         ink_jw_raw(&w, "{\"question\":");
-        ink_jw_str(&w, SIM_TRANSCRIPT);
+        ink_jw_str(&w, g_typed[0] ? g_typed : SIM_TRANSCRIPT);
     }
     char gen[48];
     snprintf(gen, sizeof gen, ",\"page_gen\":%u", (unsigned)ink_ui_content_version());
@@ -619,6 +621,29 @@ void ink_ai_key(bool pressed, uint64_t t_us) {
     ink_ui_hint_obj(AI.question, INK_REFRESH_FAST);
     set_status("正在想…");
     AI.req_id = request("ai.ask", false);
+}
+
+void ink_ai_ask_text(const char *text) {
+    close_session();
+    osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
+    AI.stream = 0;
+    AI.session = 0;
+    AI.session_seq = 0;
+    AI.up_open = AI.dismissed = false;
+    AI.tts_stream = AI.tts_opened = 0;
+    AI.tts_for = AI.tts_done_for = -1;
+    osal_mutex_unlock(AI.lock);
+    AI.mic_failed = AI.speech_failed = AI.turn_over = false;
+    ink_audio_stop_all();
+    snprintf(g_typed, sizeof g_typed, "%s", text);
+    ink_hub_demand();
+    sheet_open();
+    lv_label_set_text(AI.answer, "");
+    lv_label_set_text(AI.question, g_typed);
+    ink_ui_hint_obj(AI.sheet, INK_REFRESH_FAST);
+    set_status("正在想…");
+    AI.req_id = request("ai.ask", false);
+    g_typed[0] = 0;
 }
 
 /* ------------------------------------------------------------- hands-free (R-047) */

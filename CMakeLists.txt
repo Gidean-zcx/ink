@@ -178,6 +178,12 @@ add_library(ink_system STATIC
   system/services/notify/notify_service.c
   system/services/notify/notify_caps.c
   system/services/notify/interrupt.c
+  system/services/text/text_service.c
+  system/services/text/pinyin.c
+  system/services/text/clipboard.c
+  system/services/text/text_caps.c
+  system/ui/textfield.c
+  system/ui/shell/keyboard.c
   system/ui/app_registry.c
   system/ui/shell/card.c
   system/ui/shell/interrupt_card.c
@@ -249,7 +255,10 @@ add_custom_command(OUTPUT ${INK_TEST_CONTENT}/books/测试长书.txt
   COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/tests/fixtures/content ${INK_TEST_CONTENT}
   COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/testdata/make_long_book.py
           ${CMAKE_SOURCE_DIR}/tests/fixtures/content/books/星星邮差.txt ${INK_TEST_CONTENT}/books/测试长书.txt 40
+  COMMAND ${CMAKE_COMMAND} -E make_directory ${INK_TEST_CONTENT}/.system/ime
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/imedict/imedict.py ${CMAKE_SOURCE_DIR}/tests/fixtures/ime/mini.tsv ${INK_TEST_CONTENT}/.system/ime/base.ikd
   DEPENDS ${CMAKE_SOURCE_DIR}/tools/testdata/make_long_book.py ${CMAKE_SOURCE_DIR}/tests/fixtures/content/books/星星邮差.txt
+          ${CMAKE_SOURCE_DIR}/tools/imedict/imedict.py ${CMAKE_SOURCE_DIR}/tests/fixtures/ime/mini.tsv
   COMMENT "test content: long book")
 add_custom_target(ink_test_content ALL DEPENDS ${INK_TEST_CONTENT}/books/测试长书.txt)
 
@@ -511,6 +520,19 @@ if(INK_HAVE_FONTS)
   ink_scenario(ai_ask metalio-plus)
   ink_scenario(ai_turn_end metalio-plus)
   ink_scenario(ai_turn_lost metalio-plus)
+  # Text input and the clipboard (tests/integration/textinput.c).
+  add_executable(sim-textinput simulator/runtime/sim_main.c tests/integration/textinput.c)
+  target_link_libraries(sim-textinput PRIVATE ink_apps ink_system ink_port_sim)
+  target_compile_options(sim-textinput PRIVATE ${INK_WARN})
+  foreach(v main nocard baddict)
+    add_test(NAME integration-text-${v}
+      COMMAND ${CMAKE_COMMAND} -E env INK_TEXT_PHASE=${v}
+              $<TARGET_FILE:sim-textinput> --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+              --budget ${CMAKE_SOURCE_DIR}/tests/integration/textinput.budget.json
+              --script ${CMAKE_SOURCE_DIR}/tests/integration/textinput_${v}.script
+              --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+              --out ${CMAKE_BINARY_DIR}/test-out/text-${v} --quiet --no-random-outages)
+  endforeach()
   # What the AI can reach, against the table in the design (tests/integration/ai_surface.c).
   add_executable(sim-ai-surface simulator/runtime/sim_main.c tests/integration/ai_surface.c)
   target_link_libraries(sim-ai-surface PRIVATE ink_apps ink_system ink_port_sim)

@@ -16,6 +16,8 @@ extern "C" {
 int ink_ai_init(void);
 /** UI task: the AI key went down / up at physical time t_us. */
 void ink_ai_key(bool pressed, uint64_t t_us);
+/** UI task: a question in words, about what is on screen; the answer comes on the sheet, as for a spoken one. */
+void ink_ai_ask_text(const char *text);
 /** UI task: close the sheet if open; returns true if it was open. */
 bool ink_ai_dismiss(void);
 
