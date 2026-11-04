@@ -1,5 +1,5 @@
 /*
- * What the AI can reach, on the whole product, against the table in the design (system services design §1.3; R-059):
+ * What the AI can reach, on the whole product, against the table in the design (system services design §1.3; R-061):
  * the tool list as the hub gets it, page by page; state, settings; events reaching the hub; the state that goes with a
  * question. Every capability registered must be in one of the two tables here: for the AI, or not with the reason why.
  * More, fewer, or no title and the test fails, so that nothing new can stay out of the AI's sight by accident.
