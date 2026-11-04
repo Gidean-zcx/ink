@@ -76,6 +76,7 @@ static struct {
     /* activities */
     frame_t stack[MAX_ACTIVITIES];
     int depth;
+    void (*top_hook)(const char *app);
     lv_obj_t *screen;
     const ink_ui_overlay_t *overlays[MAX_OVERLAYS];
     int noverlays;
@@ -381,6 +382,7 @@ static void show_top(void) {
      * drive part of the NEW screen with a binary waveform first (seen in the simulator). */
     UI.nhints = 0;
     UI.frame_intent = INK_REFRESH_FLASH_UI;
+    if (UI.top_hook) UI.top_hook(f->a->app);
     f->a->create(UI.screen, f->arg);
     lv_screen_load(UI.screen);
     if (old) lv_obj_delete(old);
@@ -410,6 +412,41 @@ void ink_ui_pop(void) {
     if (UI.stack[UI.depth - 1].a->destroy) UI.stack[UI.depth - 1].a->destroy();
     UI.depth--;
     show_top(); /* activities rebuild from their own state: only the top one holds a screen */
+}
+
+void ink_ui_restart(void (*between)(void)) {
+    if (UI.depth && UI.stack[UI.depth - 1].a->destroy) UI.stack[UI.depth - 1].a->destroy();
+    if (UI.depth) UI.depth = 1;
+    if (between) between();
+    if (UI.depth) show_top();
+}
+
+bool ink_ui_full(void) { return UI.depth >= MAX_ACTIVITIES; }
+
+void ink_ui_set_top_hook(void (*fn)(const char *app)) { UI.top_hook = fn; }
+
+static bool of_app(const frame_t *f, const char *app) { return f->a->app && !strcmp(f->a->app, app); }
+
+bool ink_ui_bring_up(const char *app) {
+    int at = -1;
+    for (int i = UI.depth - 1; i >= 0 && at < 0; i--)
+        if (of_app(&UI.stack[i], app)) at = i;
+    if (at < 0) return false;
+    if (at == UI.depth - 1) return true;
+    if (UI.stack[UI.depth - 1].a->destroy) UI.stack[UI.depth - 1].a->destroy();
+    UI.depth = at + 1;
+    show_top();
+    return true;
+}
+
+void ink_ui_drop_app(const char *app) {
+    bool was_top = UI.depth && of_app(&UI.stack[UI.depth - 1], app);
+    if (was_top && UI.stack[UI.depth - 1].a->destroy) UI.stack[UI.depth - 1].a->destroy();
+    int kept = 0;
+    for (int i = 0; i < UI.depth; i++)
+        if (!of_app(&UI.stack[i], app)) UI.stack[kept++] = UI.stack[i];
+    UI.depth = kept;
+    if (was_top && UI.depth) show_top();
 }
 
 /* What was aimed at the old content is dropped, as for a new screen. A touch in progress too: the next move of that

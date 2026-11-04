@@ -178,6 +178,7 @@ add_library(ink_system STATIC
   system/services/notify/notify_service.c
   system/services/notify/notify_caps.c
   system/services/notify/interrupt.c
+  system/ui/app_registry.c
   system/ui/shell/card.c
   system/ui/shell/interrupt_card.c
   system/ui/shell/confirm_card.c
@@ -509,6 +510,16 @@ if(INK_HAVE_FONTS)
   ink_scenario(ai_ask metalio-plus)
   ink_scenario(ai_turn_end metalio-plus)
   ink_scenario(ai_turn_lost metalio-plus)
+  # The app directory and lifecycle (tests/integration/apps.c).
+  add_executable(sim-apps simulator/runtime/sim_main.c tests/integration/apps.c)
+  target_link_libraries(sim-apps PRIVATE ink_apps ink_system ink_port_sim)
+  target_compile_options(sim-apps PRIVATE ${INK_WARN})
+  add_test(NAME integration-apps
+    COMMAND sim-apps --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+            --budget ${CMAKE_SOURCE_DIR}/tests/integration/apps.budget.json
+            --script ${CMAKE_SOURCE_DIR}/tests/integration/apps.script
+            --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+            --out ${CMAKE_BINARY_DIR}/test-out/apps --quiet --no-random-outages)
   # The confirmation card: what the AI asks for waits for a person (tests/integration/confirm.c).
   add_executable(sim-confirm simulator/runtime/sim_main.c tests/integration/confirm.c)
   target_link_libraries(sim-confirm PRIVATE ink_apps ink_system ink_port_sim)

@@ -16,6 +16,7 @@
 
 #include "ink/probe.h"
 #include "ink/sys/app.h"
+#include "ink/sys/appreg.h"
 #include "ink/sys/cap.h"
 #include "ink/sys/crc.h"
 #include "ink/sys/font.h"
@@ -138,7 +139,7 @@ static void library_create(lv_obj_t *scr, void *arg) {
     }
 }
 
-const ink_activity_t ink_app_reader = {.name = "reader", .create = library_create};
+const ink_activity_t ink_app_reader = {.name = "reader", .app = "reader", .create = library_create};
 
 static void act_list(ink_call_t *c) {
     ink_receipt_t *rc = &c->rc;
@@ -516,12 +517,27 @@ static int book_snapshot(char *buf, size_t cap) {
 }
 
 const ink_activity_t ink_app_book = {.name = "book",
+                                     .app = "reader",
                                      .create = book_create,
                                      .destroy = book_destroy,
                                      .on_key = book_key,
                                      .on_swipe = book_swipe,
                                      .snapshot = book_snapshot,
                                      .settle = book_settle};
+
+/* What is being read: the card on home, and for the AI. */
+static int reader_card(int index, ink_card_t *out) {
+    if (index != 0 || !RD.text) return 0;
+    snprintf(out->id, sizeof out->id, "reading");
+    snprintf(out->title, sizeof out->title, "在读");
+    snprintf(out->text, sizeof out->text, "《%.60s》第 %d 页", LIB.books[LIB.open].name, RD.page + 1);
+    snprintf(out->action, sizeof out->action, "reader.open_book");
+    out->value = RD.page + 1;
+    out->has_value = true;
+    return 1;
+}
+
+const ink_app_def_t ink_appdef_reader = {.id = "reader", .title = "阅读", .entry = &ink_app_reader, .system_app = true, .child_ok = true, .card = reader_card};
 
 int ink_reader_actions_init(void) {
     int r = ink_cap_register(SHELF_ACTIONS, (int)(sizeof SHELF_ACTIONS / sizeof SHELF_ACTIONS[0]));

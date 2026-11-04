@@ -33,8 +33,9 @@ typedef hal_key_t ink_key_t;
 #define INK_KEY_NEXT HAL_KEY_NEXT
 #define INK_KEY_BACK HAL_KEY_BACK
 
-typedef struct {
+typedef struct ink_activity {
     const char *name;
+    const char *app; /* the app it belongs to (ink/sys/appreg.h); NULL = the system's */
     /* build the screen; `screen` is a fresh LVGL screen owned by the runtime */
     void (*create)(lv_obj_t *screen, void *arg);
     void (*destroy)(void);
@@ -73,6 +74,16 @@ void ink_ui_open(lv_obj_t *from, const ink_activity_t *a, void *arg);
 void ink_ui_pop(void);
 /** Back to the root activity (one rebuild). */
 void ink_ui_home(void);
+/** Close everything above the root activity and build the root afresh, with `between` called when nothing is open. UI task. */
+void ink_ui_restart(void (*between)(void));
+/** The stack has no room for another activity. */
+bool ink_ui_full(void);
+/** An activity of this app is open: it comes to the top (what is above it closes). False: there is none. UI task. */
+bool ink_ui_bring_up(const char *app);
+/** Off the stack with all its activities. UI task. */
+void ink_ui_drop_app(const char *app);
+/** Told before a new top activity is built, with the app it belongs to (the app manager). */
+void ink_ui_set_top_hook(void (*fn)(const char *app));
 /** A job waits for the UI task (ink_exec_post calls this; any task, never waits). */
 void ink_ui_kick(void);
 /** The calling task is the UI task. */

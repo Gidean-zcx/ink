@@ -9,6 +9,7 @@
 
 #include "ink/osal.h"
 #include "ink/probe.h"
+#include "ink/sys/appreg.h"
 #include "ink/sys/cap.h"
 #include "ink/sys/confirm.h"
 #include "ink/sys/hub.h"
@@ -106,6 +107,10 @@ static ink_rc_t gate(const ink_cap_t *c, ink_source_t src, uint32_t page_gen, in
             ink_probe_count("policy.rejected");
             return reject(rc, INK_RC_REJECTED, "not on this child's whitelist");
         }
+    }
+    if (src == INK_SRC_APP && c->permission && !ink_app_foreground_may(c->permission)) {
+        ink_probe_count("policy.rejected");
+        return reject(rc, INK_RC_REJECTED, "the app did not declare this permission");
     }
     bool remote = src == INK_SRC_AI || src == INK_SRC_REMOTE;
     if (remote && strstr(c->id, "upgrade")) { /* the AI never starts an upgrade */

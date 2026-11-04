@@ -468,21 +468,24 @@ typedef struct {
     const char *id, *title, *icon;          /* "reader"，"阅读"，图标编号（视觉另定） */
     const struct ink_activity *entry;       /* 入口页面 */
     bool system_app, child_ok;
+    bool keep;                              /* 内存紧张也不停（主页） */
     uint32_t background;                    /* 声明的后台类型：INK_BG_PLAYBACK / DOWNLOAD / SYNC */
     const char *const *needs;               /* 必需的能力（NULL 结尾），缺了不显示 */
     const char *const *permissions;         /* 这个应用可以用的权限 */
-    size_t psram_quota;
     const ink_app_ops_t *ops;               /* 生命周期回调，都在界面任务 */
     int (*card)(int index, ink_card_t *out);/* 服务卡片 */
 } ink_app_def_t;
-int  ink_app_register(const ink_app_def_t *def);
+int  ink_app_register(const ink_app_def_t *def);                     /* 启动时，界面开始之前 */
 int  ink_app_count(void); const ink_app_def_t *ink_app_at(int i);
+bool ink_app_visible(const ink_app_def_t *def);                      /* 这位成员能不能看到，这台设备有没有它要的能力 */
 ink_app_state_t ink_app_state_of(const char *id);
-int  ink_app_open(const char *id, void *arg);
+int  ink_app_open(const char *id, void *from, void *arg);            /* from：被点的控件，先给反馈；已经开着就把它的页面提上来 */
 int  ink_app_close(const char *id);
 int  ink_app_background(const char *id, uint32_t kind, bool on);     /* 只收声明过的类型 */
-int  ink_app_db_open(const char *app, const char *name, const ink_db_def_t *def); /* 自己的集合 */
+ink_db_t *ink_app_db_open(const char *app, const ink_db_def_t *def); /* 自己的集合：名字要以“应用编号.”开头 */
 ```
+
+前台跟着界面的页面栈走：不管是按钮、AI 还是按键把页面放到最上面，都是同一套转换，在页面建出来之前做完（`ink_ui_set_top_hook`）。一个应用翻到自己的下一页不算变化；上面是不属于任何应用的系统页面时，没有前台应用。占位的主页按目录列按钮，配额（`psram_quota`）留到有第三方应用时再做。
 
 `ink_activity_t` 多一个 `app` 字段（属于哪个应用）。权限检查（详细设计 §2.4 第 4 条）真正生效：来源是应用时，能力要求的权限必须在当前前台应用的清单里。
 
@@ -501,8 +504,8 @@ stateDiagram-v2
 ```
 
 - 应用没有线程，“冻结”的含义是：它答应不再做事（停定时器、放掉缓存）；执行队列的工作由它自己收住。
-- 状态保存：`save_state(buf, cap)` 最多 1 KiB，写到成员数据区 `/user/m/<成员>/<应用>.state`；停止后再打开时 `restore_state`，用户感觉不到。
-- 内存压力接 `ink_mem_on_pressure`：紧张（LOW）冻结所有后台的（播放除外）；危急（CRITICAL）从最久没用的开始停，主页和前台不停。
+- 状态保存：`save_state(buf, cap)` 最多 1 KiB，写到成员数据区 `/user/m/<成员>/<应用>.state`；停止后再打开时 `restore_state`，用户感觉不到。冻结时已经存过，从冻结到停止不再存。
+- 内存压力接 `ink_mem_on_pressure`：紧张（LOW）冻结所有后台的（播放除外）；危急（CRITICAL）从最久没用的开始停，播放的最后停，主页和前台不停，停到不再危急为止。
 - 换成员：全部保存、停止，回主页，文件和数据都换成新成员的。
 
 ### 8.3 服务卡片
