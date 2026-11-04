@@ -1,0 +1,20 @@
+[
+  {
+    "id": "HUB3-001",
+    "verdict": "已解决",
+    "evidence": "【文档核查】docs/hub/hub-architecture.md:422、:423、:424、:425：异地写成功才承诺完成，未完成明确提示；每次恢复均人工核对，不再仅以日志可验证就自动开放。【复现】experiments/state_checks.py 的 check_security_log_and_interval_controls 验证这一规则的有限状态对照。",
+    "note": "已解决指原旧前缀自动放行问题在设计层面关闭，不是产品实测通过。人工核对无法找回未知后缀；未上传操作仍可能丢失。新的双实例路径另列 HUB4-001。"
+  },
+  {
+    "id": "HUB3-002",
+    "verdict": "部分解决",
+    "evidence": "【文档核查】docs/hub/device-protocol.md:295、:298、:300、:302；docs/hub/hub-architecture.md:951。【复现】experiments/state_checks.py 的 check_reused_latest_snapshot 表明旧 hub_instance 单独已不能授权，complete=false 先返回 wait，但重复恢复最新签发快照仍能让未知 dataset 自动 manifest。",
+    "note": "最新签发快照可能早于现行数据，缺少一次性恢复授权及当前水位约束，剩余路径列 HUB4-003。与 HUB3-002 只算一个持续未完全关闭的问题，不重复累计旧编号。"
+  },
+  {
+    "id": "HUB3-003",
+    "verdict": "已解决",
+    "evidence": "【文档核查】docs/hub/hub-architecture.md:255、:855、:906、:1552：匿名上下文点击例外已删除，AI 点击、填写和提交一律确认；公开正文读取使用不执行页面脚本的 web.fetch。",
+    "note": "关闭的是原先用无登录状态证明点击无用户授权的错误例外。不把当前规则当成对任意网页无副作用的实测证明；本轮没有扩大浏览器审计范围。"
+  }
+]

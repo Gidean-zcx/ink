@@ -126,7 +126,7 @@
 ```
 
 - `now_ms`：校时，系统服务分支已经这样读。
-- `pins`、`urls`、`next_token` 都可以没有。`pins` 有两个时表示换密钥的过渡期。
+- `pins`、`urls`、`next_token` 都可以没有。首版不发 `next_token`（不轮换令牌，审查 HUB4-004）。`pins` 有两个时表示换密钥的过渡期。
 - `hub_instance`：中枢每次从备份恢复或导入时换一个新的随机值（§3.9）。`caps_rev`、`members_rev` 只在同一个 `hub_instance` 内比较，变了就整份重新取：恢复后修订号可能涨回同一个数，内容却不一样。
 - `manifest_hash`：固件的能力定义变了才变，用来让中枢的能力字典失效（§3.14）。
 - 错误码见 §4。`revoked` 时设备停止重连。现在任何错误都退避重试，要改。
@@ -269,14 +269,14 @@
 - `upload` 是数字，只在这条连接上有效。设备最多领先 ack 两段。
 - 断线后 `blob/put.begin` 同样的 `sha256` 回答已落盘的 `offset`，接着传。重复或越界的块丢弃。
 - 超过家庭配额回错误。没传完的 24 小时后清掉。
-- `blob/put.end` 的回答只说明中枢收到了。文件写进对象存储才算备份完成（[概要设计 §4.5](hub-architecture.md)）。设备要删本地原件之前，先 `blob/status {"id":"sha256:…"}` → `{"durable":true}`。
+- `blob/put.end` 的回答只说明中枢收到了。设备要删本地原件之前，先 `blob/status {"id":"sha256:…"}` → `{"durable":true}`：内容和包含它目录记录的完整快照都进了对象存储才回真，之前回假（审查 HUB4-002，[概要设计 §4.5](hub-architecture.md)）。
 
 ### 3.9 同步
 
 **两个随机编号，不做加一**（审查 HUB-010、HUB2-004。从备份恢复后加一会重复）：
 
 - `hub_instance`：中枢 128 位随机，每次恢复、导入都换，不进快照的回退范围。`hello` 回答里带。
-- `dataset`：设备 64 位随机，“设备 × 集合 × 成员”建立、恢复、安装快照时换。数据集元数据里还记 `complete`（数据完整）、上次同步的 `hub_instance`（从没同步过为空）、`from_snapshot`（装的是哪份快照）。
+- `dataset`：设备 64 位随机，“设备 × 集合 × 成员”建立、恢复、安装快照时换。数据集元数据里还记 `complete`（数据完整）、上次同步的 `hub_instance`（从没同步过为空）、`restore_token`（装快照时拿到的一次性令牌）。
 
 **`sync/push`（设备 → 中枢，请求）**
 
@@ -288,14 +288,15 @@
 
 回答 `{"acked_ver":126}`（中枢已落盘），设备 `ink_db_ack(126)`。同一批重发不重复写入（去重键 `dataset + id + ver`）。旧 `dataset` 的推送被拒绝。单条消息 ≤ 32 KiB，放不下的分批。`body` 是 JSON 集合就直接嵌，二进制集合 base64。`from_ver` 接不上时中枢回错误 `sync_gap`。
 
-**`sync/status`（设备 → 中枢）**：`{"collection","member","dataset","hub_instance","last_ver","history_gap","complete","from_snapshot"?}` → `{"acked_ver","action":"continue"|"manifest"|"snapshot"|"wait","session"?}`。设备开机对账，或换机后知道从哪继续。`history_gap` 是墓碑被挤掉（每集合最多 256 条）。
+**`sync/status`（设备 → 中枢）**：`{"collection","member","dataset","hub_instance","last_ver","history_gap","complete","restore_token"?}` → `{"acked_ver","action":"continue"|"manifest"|"snapshot"|"wait","session"?}`。设备开机对账，或换机后知道从哪继续。`history_gap` 是墓碑被挤掉（每集合最多 256 条）。
 
-| 设备报上来的（从上往下，审查 HUB3-002） | `action` |
+| 设备报上来的（从上往下，审查 HUB3-002、HUB4-003） | `action` |
 | --- | --- |
+| 用户刚看过预览，对这个数据集做了决定 | 按决定回 `manifest` 或 `snapshot`，决定只管这一次 |
 | `complete` 为假 | `wait` |
 | `dataset` 认识，`hub_instance` 一样，没有 `history_gap` | `continue` |
 | `dataset` 认识，`hub_instance` 不一样或有 `history_gap` | `manifest` |
-| 不认识，`from_snapshot` 是中枢给这个“设备 × 集合 × 成员”最新的快照 | `manifest`，提交后它成为当前的，旧的被拒绝 |
+| 不认识，带着没用过的 `restore_token`，而且中枢副本从发令牌之后没变过 | `continue`，`acked_ver` 等于快照的版本。它成为当前的，旧的被拒绝，令牌作废；同一个 `dataset` 重试返回同样结果 |
 | 不认识，中枢这边没有数据 | `continue`，从 0 开始 |
 | 不认识，其他情况 | `wait`。**不动中枢的数据** |
 
@@ -310,7 +311,7 @@
 5. `sync/commit {"session","v":V}` → `{"acked_ver":V}`。中枢在一个事务里应用：清单里没有的移到历史（可找回），不一致的以设备为准。重发同一个提交返回同样的结果。
 6. 设备 `ink_db_ack(V)`。`V` 之后的改动接着增量同步，不会被吞。中途断了，整个会话作废重来。
 
-**`sync/snapshot`（设备 → 中枢，恢复时用）**：`{"collection","member"}` → `{"snapshot":"sn_…","blob":"sha256:…","size":…,"schema":1,"next_id":…,"last_ver":…,"sha256":"…"}`，用块传输下载。设备校验后**原子安装**，失败退回原状、继续用旧的 `dataset`。成功后生成新的 `dataset`，`complete` 为真，`from_snapshot` 记这个快照号，再走一次 `sync/status`。现有 `ink_db_put` 不保留编号和版本，所以数据存储要加接口。
+**`sync/snapshot`（设备 → 中枢，恢复时用）**：`{"collection","member"}` → `{"snapshot":"sn_…","restore_token":"…","blob":"sha256:…","size":…,"schema":1,"next_id":…,"last_ver":…,"sha256":"…"}`，用块传输下载。设备校验后**原子安装**，失败退回原状、继续用旧的 `dataset`。成功后生成新的 `dataset`，`complete` 为真，记下 `restore_token`，再走一次 `sync/status`。令牌是一次性的，绑定这个“设备 × 集合 × 成员”、这份快照和发令牌时中枢副本的版本。现有 `ink_db_put` 不保留编号和版本，所以数据存储要加接口。
 
 字段对应系统服务 §3.2 的记录模型。
 
@@ -449,4 +450,4 @@ JSON-RPC `error.code`：
 
 - v0.1（2026-11-04）：初稿，对照提交 `9b3c24a` 的实现。同日补听写 `asr.stream`（§3.11）。
 - v0.2（2026-11-04）：按 Codex 设计审查修改，并对照系统服务分支 `a81c1b8`：现状补 45 秒、2048 字节、`ai.ask` 文字被忽略、`rt.open` 不等回答；配对改成两阶段，认领网址由设备拼；成员代次；`caps/list` 按词法单元切页；事件统一成 `device/event` 并加序号；确认改成单独方法并绑定记录；块传输按段拉取，上传编号改成数字；同步加数据代次和全量对账；听写的结束条件分开；新增 §3.12～§3.14。
-- v0.3（2026-11-04）：按 Codex 第二轮复核修改：电脑认领要核对码，待生效令牌 7 天和 `pending_token_expired`；`hub_instance`、`dataset` 随机编号，`sync/status` 的判断表，全量对账会话；`actions` 空数组当作不知道；`confirm.status`；`_meta.epoch` 是交付时的代次；`budget_ms`（§3.15）。同日按用户的要求（服务器只是运行时，D-101）加 `blob/status`；按 Codex 第三轮改 `sync/status` 的判断表（`wait`、`snapshot`）。
+- v0.3（2026-11-04）：按 Codex 第二轮复核修改：电脑认领要核对码，待生效令牌 7 天和 `pending_token_expired`；`hub_instance`、`dataset` 随机编号，`sync/status` 的判断表，全量对账会话；`actions` 空数组当作不知道；`confirm.status`；`_meta.epoch` 是交付时的代次；`budget_ms`（§3.15）。同日按用户的要求（服务器只是运行时，D-101）加 `blob/status`；按 Codex 第三轮改 `sync/status` 的判断表（`wait`、`snapshot`）；按第四轮加 `restore_token`，收紧 `durable`，首版不发 `next_token`。
