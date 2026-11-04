@@ -42,7 +42,9 @@ int ink_hub_subscribe(const char *prefix, ink_hub_notify_fn fn, void *ctx);
 /** User activity: open the connection now if needed and keep it up for a while (pre-connect on key press). */
 void ink_hub_demand(void);
 bool ink_hub_online(void);
-/** fn(ctx) in the hub task each time the connection is (re)established. Up to 2. */
+/** What the hub said the time was when this connection came up, and how long that took to hear. False if it did not say. */
+bool ink_hub_server_time(int64_t *unix_ms, uint32_t *round_trip_ms);
+/** fn(ctx) in the hub task each time the connection is (re)established. Up to 4. */
 int ink_hub_on_online(void (*fn)(void *ctx), void *ctx);
 /** Stay connected while held (reference-counted; realtime sessions hold it). */
 void ink_hub_keep(bool on);

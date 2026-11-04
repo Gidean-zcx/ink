@@ -172,6 +172,9 @@ add_library(ink_system STATIC
   system/services/data/data_caps.c
   system/services/file/file_service.c
   system/services/file/file_caps.c
+  system/services/time/lunar.c
+  system/services/time/time_service.c
+  system/services/time/time_caps.c
   system/policy/cap.c
   system/policy/members.c
   system/policy/settings.c
@@ -438,6 +441,27 @@ add_test(NAME integration-files
           --budget ${CMAKE_SOURCE_DIR}/tests/integration/files.budget.json
           --script ${CMAKE_BINARY_DIR}/test-out/files.script
           --out ${CMAKE_BINARY_DIR}/test-out/files --quiet --no-random-outages)
+# The time service: the clock, zones, alarms and reminders, waking from sleep (tests/integration/timesvc.c).
+add_executable(sim-time simulator/runtime/sim_main.c tests/integration/timesvc.c)
+target_link_libraries(sim-time PRIVATE ink_system ink_port_sim)
+target_compile_options(sim-time PRIVATE ${INK_WARN})
+foreach(v main rtc_lost line_low)
+  add_test(NAME integration-time-${v}
+    COMMAND ${CMAKE_COMMAND} -E env INK_TIME_PHASE=${v}
+            $<TARGET_FILE:sim-time> --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+            --budget ${CMAKE_SOURCE_DIR}/tests/integration/timesvc_${v}.budget.json
+            --script ${CMAKE_SOURCE_DIR}/tests/integration/timesvc_${v}.script
+            --out ${CMAKE_BINARY_DIR}/test-out/time-${v} --quiet --no-random-outages)
+endforeach()
+# Alarms across a power-off: what came due is reported missed, what is ahead still rings.
+add_test(NAME integration-time-reboot
+  COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:sim-time> -DPROFILE=${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+          -DOUT=${CMAKE_BINARY_DIR}/test-out/time_reboot -DSRC=${CMAKE_SOURCE_DIR}/tests/integration
+          -P ${CMAKE_SOURCE_DIR}/tests/integration/timesvc_reboot.cmake)
+add_executable(lunar-test tests/unit/lunar_test.c system/services/time/lunar.c)
+target_include_directories(lunar-test PRIVATE system/include)
+target_compile_options(lunar-test PRIVATE ${INK_WARN})
+add_test(NAME unit-lunar COMMAND lunar-test ${CMAKE_SOURCE_DIR}/tests/fixtures/lunar/chinese_years_apple.txt)
 # Power cut at every flash write of a run that adds, replaces, deletes and folds: nothing durable is lost.
 add_test(NAME integration-data-powercut
   COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:sim-data> -DPROFILE=${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json

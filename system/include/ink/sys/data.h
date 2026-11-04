@@ -96,6 +96,8 @@ void ink_db_close(ink_db_t *db);
 /** Accepted, in memory, on its way to the flash: `ver` of this change is ink_db_last_ver() right after,
  *  durable once ink_db_durable_ver() reaches it. */
 int ink_db_put(ink_db_t *db, const ink_db_write_t *w, uint32_t *out_id);
+/** An id for a record about to be written, for records that carry their own id inside. */
+uint32_t ink_db_new_id(ink_db_t *db);
 int ink_db_del(ink_db_t *db, uint32_t id, uint8_t src);
 /** One record: the first cap bytes of its content into buf (buf may be NULL). 0 or INK_DB_ERR_NOT_FOUND. */
 int ink_db_get(ink_db_t *db, uint32_t id, ink_rec_t *out, void *buf, size_t cap);

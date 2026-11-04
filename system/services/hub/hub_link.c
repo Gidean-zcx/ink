@@ -94,6 +94,9 @@ static struct {
     pending_t pend[MAX_PENDING];
     uint32_t next_id;
     uint32_t hello_id;
+    uint64_t hello_sent_us;
+    int64_t server_ms;     /* the hub's clock when this connection came up, 0 = it did not say */
+    uint32_t hello_rtt_ms;
     uint64_t last_activity, backoff_until, backoff_us, connect_started; /* hub task */
     uint64_t demand_until; /* under tx_lock: 64 bits are not one access on RV32 */
     bool low_power;        /* atomic: device locked, disconnect as soon as idle */
@@ -109,7 +112,7 @@ static struct {
     tx_item_t *tx_free; /* the pool's unused items */
     int keep;           /* realtime sessions open: stay connected (atomic) */
     uint64_t bg_next;   /* hub task: earliest time for the next background message while keep > 0 */
-    void (*online_fn[2])(void *ctx);
+    void (*online_fn[4])(void *ctx);
     void *online_ctx[2];
     int nonline;
     size_t tx_bytes;    /* reserved: queued plus being queued */
@@ -276,6 +279,9 @@ static void on_text(const char *txt, size_t len) {
         if (!ink_json_int(j, id_t, &id)) return;
         if ((uint32_t)id == H.hello_id && H.state == HS_HELLO) {
             if (res_t >= 0) {
+                int64_t ms;
+                H.server_ms = ink_json_int(j, ink_json_find(j, res_t, "now_ms"), &ms) ? ms : 0;
+                H.hello_rtt_ms = (uint32_t)((osal_now_us() - H.hello_sent_us) / 1000u);
                 set_state(HS_ONLINE);
                 H.backoff_us = 0;
                 ink_probe_value("hub.online_ms", (double)(osal_now_us() - H.connect_started) / 1000.0);
@@ -324,6 +330,7 @@ static void send_hello(void) {
     snprintf(params, sizeof params, "{\"proto\":1,\"device\":\"%s\",\"member\":\"default\"}", di.profile_id ? di.profile_id : "?");
     snprintf(hello.method, sizeof hello.method, "hello");
     hello.params = params;
+    H.hello_sent_us = osal_now_us();
     if (send_request(&hello) != 0) enter_backoff();
     else set_state(HS_HELLO);
     hello.params = NULL;
@@ -562,8 +569,15 @@ void ink_hub_demand(void) {
 
 bool ink_hub_online(void) { return get_state() == HS_ONLINE; }
 
+bool ink_hub_server_time(int64_t *unix_ms, uint32_t *round_trip_ms) {
+    if (!H.server_ms) return false;
+    *unix_ms = H.server_ms;
+    *round_trip_ms = H.hello_rtt_ms;
+    return true;
+}
+
 int ink_hub_on_online(void (*fn)(void *ctx), void *ctx) {
-    if (H.nonline >= 2) return -1;
+    if (H.nonline >= 4) return -1;
     H.online_ctx[H.nonline] = ctx;
     H.online_fn[H.nonline++] = fn;
     return 0;

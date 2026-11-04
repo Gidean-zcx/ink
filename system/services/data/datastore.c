@@ -802,6 +802,14 @@ int ink_db_put(ink_db_t *db, const ink_db_write_t *w, uint32_t *out_id) {
     return INK_DB_OK;
 }
 
+uint32_t ink_db_new_id(ink_db_t *db) {
+    if (!db) return 0;
+    lock();
+    uint32_t id = db->next_id++;
+    unlock();
+    return id;
+}
+
 int ink_db_del(ink_db_t *db, uint32_t id, uint8_t src) {
     if (!db) return INK_DB_ERR_ARG;
     lock();

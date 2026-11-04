@@ -39,6 +39,7 @@
 #define SLICE_US 60000000ull
 #define QUIET_POLL_US 200000
 #define WAKE_CONFIRM_US 1000000
+#define WAKE_AT_GRACE_US 5000000 /* something was due: it gets this long to be handled before the chip may sleep again */
 
 static struct {
     osal_mutex_t *lock;
@@ -57,6 +58,7 @@ static struct {
     bool (*checks[6])(void);
     int nchecks;
     uint64_t lock_after_us; /* the setting power.lock_after_s */
+    uint64_t wake_at;       /* ink_power_wake_at */
     int h_state, h_level, h_charging;
 } PS;
 
@@ -128,6 +130,17 @@ static void locked_step(void) {
     lock();
     bool first = PS.locked_at != 0;
     uint64_t locked_at = PS.locked_at;
+    uint64_t wake_at = PS.wake_at;
+    unlock();
+    uint64_t now = osal_now_us();
+    if (wake_at && wake_at <= now + 1000) { /* due now: whoever asked is on its way */
+        if (now - wake_at < WAKE_AT_GRACE_US || wake_at > now) {
+            osal_sem_take(PS.kick, 20000);
+            return;
+        }
+        ink_probe_count("power.wake_at_ignored"); /* its owner did not come: not worth an empty battery */
+    } else if (wake_at && wake_at - now < cfg.max_us) cfg.max_us = wake_at - now;
+    lock();
     PS.locked_at = 0;
     unlock();
     if (first) ink_probe_value("power.lock_to_sleep_ms", (double)(osal_now_us() - locked_at) / 1000.0);
@@ -138,6 +151,7 @@ static void locked_step(void) {
         return;
     }
     ink_probe_count(why & HAL_WAKE_TIMER ? "power.wake.timer" : why & (HAL_WAKE_POWER_KEY | HAL_WAKE_AI_KEY) ? "power.wake.key" : "power.wake.other");
+    if (why & HAL_WAKE_RTC) hal_rtc_clear_alarm(); /* its interrupt stays low until cleared, and it shares a line with the keys */
     if (why & (HAL_WAKE_POWER_KEY | HAL_WAKE_AI_KEY)) osal_sem_take(PS.kick, WAKE_CONFIRM_US); /* the unlock follows */
 }
 
@@ -287,6 +301,13 @@ bool ink_power_unlock(uint64_t t_us) {
         osal_sem_give(PS.kick);
     }
     return was;
+}
+
+void ink_power_wake_at(uint64_t t_us) {
+    lock();
+    PS.wake_at = t_us;
+    unlock();
+    osal_sem_give(PS.kick); /* it may be sleeping towards a later time only after the next slice: the wake below is for a task waiting */
 }
 
 int ink_power_add_busy_check(bool (*busy)(void)) {

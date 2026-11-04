@@ -86,6 +86,8 @@ int sim_hub_load(const char *path, char *err, size_t errlen) {
     return 0;
 }
 
+static int64_t g_hub_clock_offset_s;
+
 static const cJSON *rule_for(const char *method) {
     const cJSON *rules = cJSON_GetObjectItemCaseSensitive(RULES, "rules"), *r, *star = NULL;
     cJSON_ArrayForEach(r, rules) {
@@ -464,7 +466,12 @@ void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t 
     const cJSON *result = cJSON_GetObjectItemCaseSensitive(rule, "result");
     if (err) cJSON_AddItemToObject(res, "error", cJSON_Duplicate(err, 1));
     else cJSON_AddItemToObject(res, "result", result ? cJSON_Duplicate(result, 1) : cJSON_CreateObject());
+    if (!err && !strcmp(method, "hello")) /* the hub's clock (time service): right unless a script moved it */
+        cJSON_AddNumberToObject(cJSON_GetObjectItemCaseSensitive(res, "result"), "now_ms",
+                                (double)(g_sim.wall_start_us / 1000 + (int64_t)(at / 1000000ull) + g_hub_clock_offset_s * 1000));
     send_json(ws, at, res);
     cJSON_Delete(res);
     cJSON_Delete(req);
 }
+
+void sim_hub_clock_offset(int64_t seconds) { g_hub_clock_offset_s = seconds; }

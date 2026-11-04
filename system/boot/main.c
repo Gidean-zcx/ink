@@ -25,6 +25,7 @@
 #include "ink/sys/state.h"
 #include "ink/sys/storage.h"
 #include "ink/sys/svc.h"
+#include "ink/sys/time.h"
 #include "ink/sys/ui.h"
 
 extern const ink_activity_t ink_app_home;
@@ -46,6 +47,7 @@ void ink_main(void) {
     ink_members_init();
     if (ink_net_init() != 0 || ink_light_init() != 0) osal_panic("network or light settings failed to start");
     if (ink_hub_init("wss://hub.local/v1/device") != 0 || ink_rt_init() != 0) osal_panic("hub link failed to start");
+    if (ink_time_init() != 0) osal_panic("time service failed to start");
     if (ink_audio_init() != 0) osal_panic("audio service failed to start");
     hal_device_info_t di;
     hal_device_get_info(&di);

@@ -22,6 +22,8 @@
  *   +0       orient portrait|upside_down|landscape_left|landscape_right|face_up|face_down
  *   +0       shake                    # a movement the accelerometer notices
  *   +0       rtc lost                 # the RTC's backup supply failed: its time is invalid
+ *   +0       rtc line low             # the RTC's interrupt line reads low all the time (as in the factory log)
+ *   +0       hub-clock -3600          # the hub's clock is this many seconds from the true time
  *   +0       sms-in 10086 text...     # a text message arrives (needs a card with SMS)
  *   +0       call-in 13800000000      # an incoming call (needs a card with voice)
  *   +0       remote answer|hangup     # the far end of a call
@@ -45,7 +47,7 @@
 #include "ink/rotation.h"
 #include "sim.h"
 
-typedef enum { A_TOUCH, A_KEY, A_SNAP, A_MARK, A_NOTE, A_BATTERY, A_POWERCUT, A_END, A_NET, A_OUTAGE, A_MIC, A_MIC_SAY, A_SIM, A_ORIENT, A_SHAKE, A_RTC_LOST, A_SMS_IN, A_CALL_IN, A_REMOTE, A_ENV, A_FAULTS, A_SD, A_USB } akind_t;
+typedef enum { A_TOUCH, A_KEY, A_SNAP, A_MARK, A_NOTE, A_BATTERY, A_POWERCUT, A_END, A_NET, A_OUTAGE, A_MIC, A_MIC_SAY, A_SIM, A_ORIENT, A_SHAKE, A_RTC_LOST, A_SMS_IN, A_CALL_IN, A_REMOTE, A_ENV, A_FAULTS, A_SD, A_USB, A_HUB_CLOCK, A_RTC_LINE } akind_t;
 
 typedef struct {
     uint64_t t;
@@ -232,8 +234,11 @@ int sim_script_load(const char *path, char *err, size_t errlen) {
         } else if (!strcmp(cmd, "shake")) {
             push(t, A_SHAKE);
         } else if (!strcmp(cmd, "rtc")) {
-            ok = n >= 3 && !strcmp(tok[2], "lost");
-            if (ok) push(t, A_RTC_LOST);
+            ok = n >= 3 && (!strcmp(tok[2], "lost") || (!strcmp(tok[2], "line") && n >= 4 && !strcmp(tok[3], "low")));
+            if (ok) push(t, !strcmp(tok[2], "lost") ? A_RTC_LOST : A_RTC_LINE);
+        } else if (!strcmp(cmd, "hub-clock")) {
+            ok = n >= 3;
+            if (ok) push(t, A_HUB_CLOCK)->c = atoi(tok[2]);
         } else if (!strcmp(cmd, "wifi") || !strcmp(cmd, "cell")) {
             bool broken = !strcmp(cmd, "wifi") && n >= 3 && !strcmp(tok[2], "broken");
             ok = n >= 3 && (!strcmp(tok[2], "on") || !strcmp(tok[2], "off") || broken);
@@ -342,6 +347,8 @@ static void run_action(void *arg) { /* ISR context */
     case A_ORIENT: sim_accel_orient(a->text); break;
     case A_SHAKE: sim_accel_shake(); break;
     case A_RTC_LOST: sim_rtc_lose_time(); break;
+    case A_RTC_LINE: sim_rtc_line_stuck_low(); break;
+    case A_HUB_CLOCK: sim_hub_clock_offset(a->c); break;
     case A_SMS_IN:
         if (!sim_net_deliver_sms(a->num, a->text)) sim_note("script: sms to the device not delivered (no SMS service)");
         break;

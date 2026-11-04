@@ -248,6 +248,7 @@ void sim_sensors_service_gpio2(void);     /* task context: read the acceleromete
 void sim_sensors_sleep(void);             /* light sleep: accelerometer quiet, INT1 released; task context */
 void sim_sensors_resume(void);            /* after the wake: set up again; task context */
 void sim_rtc_lose_time(void);             /* ISR (script) */
+void sim_rtc_line_stuck_low(void);        /* ISR (script): P16 reads low all the time */
 int64_t sim_rtc_now_s(void);
 unsigned sim_rtc_alarms(void);
 bool sim_accel_int_low(void);
@@ -328,6 +329,7 @@ void sim_remote_close(struct hal_ws *ws, int sid);
 /* The same, entering the stream at t_send (later sends by the hub: think time, speech being synthesised). ISR. */
 void sim_net_hub_send_at(struct hal_ws *ws, uint64_t t_send, const void *data, size_t len, bool binary);
 int sim_hub_load(const char *path, char *err, size_t errlen);
+void sim_hub_clock_offset(int64_t seconds); /* ISR: the hub's clock is this far from the true time */
 void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t len, bool binary); /* ISR */
 
 /* ---- script ---- */
