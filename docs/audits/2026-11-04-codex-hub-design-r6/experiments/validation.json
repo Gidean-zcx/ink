@@ -1,0 +1,75 @@
+{
+  "status": "pass",
+  "review_commit": "4ba1656c7d040cbb2e63d25875c8111fe5e2ce8f",
+  "device_code_commit": "e57fbc5b771f9c3cf5194412d6c868fff6679627",
+  "verification_counts": {
+    "已解决": 3
+  },
+  "finding_counts": {
+    "严重": 1,
+    "高": 1
+  },
+  "git_diff_check_exit": 0,
+  "tracked_changes": [],
+  "all_changes_inside_audit_directory": true,
+  "all_files_below_1mb": true,
+  "json_schema_and_report_counts": "pass",
+  "source_anchors_checked": 7,
+  "references_checked": [
+    "docs/audits/2026-11-04-codex-hub-design-r6/experiments/results.json:asked_authority",
+    "docs/audits/2026-11-04-codex-hub-design-r6/experiments/results.json:private_export",
+    "docs/decisions/README.md:156",
+    "docs/hub/device-protocol.md:178",
+    "docs/hub/device-protocol.md:280",
+    "docs/hub/device-protocol.md:298",
+    "docs/hub/hub-architecture.md:1000",
+    "docs/hub/hub-architecture.md:1003",
+    "docs/hub/hub-architecture.md:1478",
+    "docs/hub/hub-architecture.md:1486",
+    "docs/hub/hub-architecture.md:1493-1496",
+    "docs/hub/hub-architecture.md:1495-1498",
+    "docs/hub/hub-architecture.md:400",
+    "docs/hub/hub-architecture.md:854-856",
+    "docs/hub/hub-architecture.md:965",
+    "system/policy/cap.c:107",
+    "system/policy/cap.c:78",
+    "system/policy/confirm.c:296"
+  ],
+  "local_links_checked": [
+    "docs/audits/2026-11-04-codex-hub-design-r6/experiments/README.md -> results.json",
+    "docs/audits/2026-11-04-codex-hub-design-r6/report.md -> experiments/README.md",
+    "docs/audits/2026-11-04-codex-hub-design-r6/report.md -> experiments/results.json",
+    "docs/audits/2026-11-04-codex-hub-design-r6/report.md -> experiments/results.json",
+    "docs/audits/2026-11-04-codex-hub-design-r6/report.md -> experiments/validation.json"
+  ],
+  "artifact_sizes_excluding_this_result": [
+    {
+      "path": "docs/audits/2026-11-04-codex-hub-design-r6/experiments/README.md",
+      "bytes": 1772
+    },
+    {
+      "path": "docs/audits/2026-11-04-codex-hub-design-r6/experiments/results.json",
+      "bytes": 4181
+    },
+    {
+      "path": "docs/audits/2026-11-04-codex-hub-design-r6/experiments/state_checks.py",
+      "bytes": 7673
+    },
+    {
+      "path": "docs/audits/2026-11-04-codex-hub-design-r6/experiments/validate_artifacts.py",
+      "bytes": 6369
+    },
+    {
+      "path": "docs/audits/2026-11-04-codex-hub-design-r6/findings.json",
+      "bytes": 2393
+    },
+    {
+      "path": "docs/audits/2026-11-04-codex-hub-design-r6/report.md",
+      "bytes": 18982
+    },
+    {
+      "path": "docs/audits/2026-11-04-codex-hub-design-r6/verification.json",
+      "bytes": 1367
+    }
+  ]
+}

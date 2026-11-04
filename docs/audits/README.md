@@ -21,6 +21,7 @@
 | 2026-11-04 家庭中枢设计复核（第三轮，小范围） | `claude/hub-design-8fd433` 1b7635a（设计 v0.4） | [2026-11-04-codex-hub-design-r3/TASK.md](2026-11-04-codex-hub-design-r3/TASK.md) | [report.md](2026-11-04-codex-hub-design-r3/report.md)、[verification.json](2026-11-04-codex-hub-design-r3/verification.json)、[findings.json](2026-11-04-codex-hub-design-r3/findings.json)、[experiments/](2026-11-04-codex-hub-design-r3/experiments/README.md) | 第二轮 10 条：已解决 7、部分 2、改出新问题 1；新问题严重 1、高 2。都成立，设计改到 v0.5，处理见下 |
 | 2026-11-04 家庭中枢设计复核（第四轮，小范围） | `claude/hub-design-8fd433` 2059f32（设计 v0.5） | [2026-11-04-codex-hub-design-r4/TASK.md](2026-11-04-codex-hub-design-r4/TASK.md) | [report.md](2026-11-04-codex-hub-design-r4/report.md)、[verification.json](2026-11-04-codex-hub-design-r4/verification.json)、[findings.json](2026-11-04-codex-hub-design-r4/findings.json)、[experiments/](2026-11-04-codex-hub-design-r4/experiments/README.md) | 第三轮 3 条：已解决 2、部分 1；新问题严重 2、高 2。都成立，设计改到 v0.6，处理见下 |
 | 2026-11-04 家庭中枢设计复核（第五轮，小范围） | `claude/hub-design-8fd433` f7408cd（设计 v0.6） | [2026-11-04-codex-hub-design-r5/TASK.md](2026-11-04-codex-hub-design-r5/TASK.md) | [report.md](2026-11-04-codex-hub-design-r5/report.md)、[verification.json](2026-11-04-codex-hub-design-r5/verification.json)、[findings.json](2026-11-04-codex-hub-design-r5/findings.json)、[experiments/](2026-11-04-codex-hub-design-r5/experiments/README.md) | 第四轮 4 条：已解决 3、改出新问题 1；第三轮余项已解决；新问题严重 1、高 1。都成立，设计改到 v0.7，处理见下 |
+| 2026-11-04 家庭中枢设计复核（第六轮，小范围） | `claude/hub-design-8fd433` 4ba1656（设计 v0.7） | [2026-11-04-codex-hub-design-r6/TASK.md](2026-11-04-codex-hub-design-r6/TASK.md) | [report.md](2026-11-04-codex-hub-design-r6/report.md)、[verification.json](2026-11-04-codex-hub-design-r6/verification.json)、[findings.json](2026-11-04-codex-hub-design-r6/findings.json)、[experiments/](2026-11-04-codex-hub-design-r6/experiments/README.md) | 第五轮 2 条和第四轮余项都已解决；新问题严重 1、高 1。都成立，设计改到 v0.8，处理见下 |
 | 2026-11-04 家庭中枢产品审查（产品负责人视角） | `claude/hub-design-8fd433` 2059f32（设计 v0.5） | [2026-11-04-codex-hub-jobs/TASK.md](2026-11-04-codex-hub-jobs/TASK.md) | [report.md](2026-11-04-codex-hub-jobs/report.md)、[findings.json](2026-11-04-codex-hub-jobs/findings.json) | 必须改 5、应该改 7、可以想 2；只看简单、专注、值得喜欢，处理见下 |
 
 此前的三次独立评审都由助手发起的子代理完成。问题与处理分别记在：
@@ -29,6 +30,17 @@
 - [刷新算法集成报告](../research/eink-refresh-integration.md)。
 
 审计报告回来后，逐条核实，再决定修复、记录或不处理，结果写回本表和相关文档。
+
+## 2026-11-04 家庭中枢设计复核（第六轮）：处理
+
+对象是设计 v0.7，用户已接受的风险没有重报，只看 D-105 的保护措施有没有失效。恢复部分（HUB5-001、HUB5-002、HUB4-003）都判已解决。助手在它审查的提交上重跑了 `state_checks.py`，退出 0，两个反例都成立，**都接受**。
+
+| 编号 | 级别 | 问题 | 处理 | 位置 |
+| --- | --- | --- | --- | --- |
+| HUB6-001 | 严重 | 按原文比对挡不住改写后的家庭资料 | 不再比对文字。替人做事时模型的上下文和工具表里只有人的原话和范围里点名的资料，记忆、历史、听写记录都不带，没法改写后发出去 | 概要 §5.7、§7.5 |
+| HUB6-002 | 高 | 人发起这一轮、提过收件人，不能证明人要求了这个动作 | 先只看人的原话定动作范围（便宜模型，看不到网页、消息、记忆），策略代码比对动作在范围里才填 `_meta.asked`；否定、引用、只读都定不出范围；后台作业继承范围 | 概要 §7.5；协议 §3.3 |
+
+顺手一起改了：3 秒窗口由设备算，切成员、断线、取消就作废，时间不够就不发（`_meta.undo_ms`）；统一了还按旧规则写的几处（§1.2 儿童通信、§5.1 代操作网站、§5.7 孩子）。
 
 ## 2026-11-04 家庭中枢设计复核（第五轮）：处理
 

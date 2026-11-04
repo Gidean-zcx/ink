@@ -1,0 +1,33 @@
+[
+  {
+    "id": "HUB6-001",
+    "severity": "严重",
+    "area": "D-105 家庭资料外发保护",
+    "title": "按原文字面重合检查外发，挡不住改写后的家庭资料",
+    "evidence_type": "【文档核查】【推断】；【复现】仅限合成字面规则模型，不是中枢实现",
+    "locations": [
+      "docs/hub/hub-architecture.md:1486",
+      "docs/hub/hub-architecture.md:1495-1498",
+      "docs/hub/hub-architecture.md:965",
+      "docs/hub/hub-architecture.md:854-856",
+      "docs/audits/2026-11-04-codex-hub-design-r6/experiments/results.json:private_export"
+    ],
+    "impact": "同轮已追踪的私人资料经过翻译或概括后不再包含原文，文字匹配不能证明其没有参与外发。接收方正确且其余高风险检查通过时，受保护的家庭资料仍可能被作为普通动作自动发送或填入网页，造成泄露。",
+    "recommendation": "按私人来源及派生关系绑定外发授权和接收方；未授权来源可能参与的自由生成外发须确认。普通自动外发可使用仅含当前指令、公开资料和已授权来源的独立上下文，不能用没有命中原文作为安全证明。"
+  },
+  {
+    "id": "HUB6-002",
+    "severity": "高",
+    "area": "D-105 asked 授权来源与后台继承",
+    "title": "人发起这一轮、提过收件人不能证明人要求了当前动作",
+    "evidence_type": "【文档核查】【推断】；【复现】仅限合成条件模型，不是模型或中枢实现测试",
+    "locations": [
+      "docs/hub/hub-architecture.md:1478",
+      "docs/hub/hub-architecture.md:1493-1496",
+      "docs/hub/device-protocol.md:178",
+      "docs/audits/2026-11-04-codex-hub-design-r6/experiments/results.json:asked_authority"
+    ],
+    "impact": "仅要求读妈妈消息、解释引用指令或明确说不要发送时，human 来源、唯一收件人匹配和资料检查仍可全部通过。模型无需直接填 asked，只需提出满足条件的调用，策略就可能将非人要求的外发误标为已授权；后台保存发起人不能弥补这个缺口。",
+    "recommendation": "独立保存动作类别、可信指令来源、解析后的对象、数据范围和有效期，并在发放 asked 前核对候选调用。后台和明确设定的定时任务只继承这份受限授权；不能可靠建立范围时就地询问或确认。"
+  }
+]

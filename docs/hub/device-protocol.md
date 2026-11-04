@@ -175,7 +175,9 @@
 
 **`_meta.member`、`_meta.epoch`**：中枢发给设备的 `tools/call`、`confirm/request` 带目标成员和**交付时**的代次；和当前不一致时设备回错误 `-32023 stale_member`，中枢留着等下次。持久结果不绑定发起时的代次：成员回来后中枢重新检查权限，用当前代次交付（审查 HUB2-008）。
 
-**`_meta.asked`**（D-105）：`tools/call` 带 `true` 表示这一步是人亲口要求的，由中枢策略代码判断后填，模型碰不到（[概要设计 §7.5](hub-architecture.md)）。设备对对外动作和系统设置：有它就直接做，没有就弹确认卡；高风险的能力（`ask_by_hand`）一律弹卡。
+**`_meta.asked`**（D-105）：`tools/call` 带 `true` 表示这一步是人亲口要求的，由中枢策略代码比对这次的动作范围后填，模型碰不到（[概要设计 §7.5](hub-architecture.md)）。设备对对外动作和系统设置：有它就直接做，没有就弹确认卡；高风险的能力（`ask_by_hand`）一律弹卡。
+
+**`_meta.undo_ms`**（D-105）：发短信、打电话、分享这类收不回的，带 `3000`。设备把内容显示出来才开始计时，到点才执行，回执在这之后。这期间人取消、切成员、断线、这一轮被取消，都不执行。结果和确认卡记在同一张表（§3.7），查不到就是 `unknown`。中枢要把这 3 秒算进 `budget_ms`，不够就不发。
 
 **`members/list`（设备 → 中枢，请求）**：`{"cursor"?}` → `{"members":[{"id","name","role","mark"}],"nextCursor"?,"rev"}`。一页不超过 8 人（实测 85 词法单元）。读完所有页才替换成员表。
 
@@ -454,4 +456,4 @@ JSON-RPC `error.code`：
 
 - v0.1（2026-11-04）：初稿，对照提交 `9b3c24a` 的实现。同日补听写 `asr.stream`（§3.11）。
 - v0.2（2026-11-04）：按 Codex 设计审查修改，并对照系统服务分支 `a81c1b8`：现状补 45 秒、2048 字节、`ai.ask` 文字被忽略、`rt.open` 不等回答；配对改成两阶段，认领网址由设备拼；成员代次；`caps/list` 按词法单元切页；事件统一成 `device/event` 并加序号；确认改成单独方法并绑定记录；块传输按段拉取，上传编号改成数字；同步加数据代次和全量对账；听写的结束条件分开；新增 §3.12～§3.14。
-- v0.3（2026-11-04）：按 Codex 第二轮复核修改：电脑认领要核对码，待生效令牌 7 天和 `pending_token_expired`；`hub_instance`、`dataset` 随机编号，`sync/status` 的判断表，全量对账会话；`actions` 空数组当作不知道；`confirm.status`；`_meta.epoch` 是交付时的代次；`budget_ms`（§3.15）。同日按用户的要求（服务器只是运行时，D-101）加 `blob/status`；按 Codex 第三轮改 `sync/status` 的判断表（`wait`、`snapshot`）；按第四轮加 `restore_token`，收紧 `durable`，首版不发 `next_token`；按第五轮让 `restore_token` 碰到 `history_gap` 时走 `manifest`，并绑定 `hub_instance`。按用户的要求（D-105）加 `_meta.asked`。
+- v0.3（2026-11-04）：按 Codex 第二轮复核修改：电脑认领要核对码，待生效令牌 7 天和 `pending_token_expired`；`hub_instance`、`dataset` 随机编号，`sync/status` 的判断表，全量对账会话；`actions` 空数组当作不知道；`confirm.status`；`_meta.epoch` 是交付时的代次；`budget_ms`（§3.15）。同日按用户的要求（服务器只是运行时，D-101）加 `blob/status`；按 Codex 第三轮改 `sync/status` 的判断表（`wait`、`snapshot`）；按第四轮加 `restore_token`，收紧 `durable`，首版不发 `next_token`；按第五轮让 `restore_token` 碰到 `history_gap` 时走 `manifest`，并绑定 `hub_instance`。按用户的要求（D-105）加 `_meta.asked`；按第六轮加 `_meta.undo_ms`。
