@@ -22,10 +22,10 @@ static struct {
         ink_rt_handler_t h;
         uint16_t seq[INK_RT_KINDS];
         char cap[24];
-        char params[160];
+        char params[INK_RT_PARAMS];
     } s[INK_RT_MAX];
     int next_sid;
-} RT;
+} RT INK_PSRAM_BSS;
 
 static int find(int sid) { /* under the lock */
     for (int i = 0; i < INK_RT_MAX; i++)
@@ -87,7 +87,7 @@ static void open_reply(void *ctx, int status, const ink_json_t *j, int result);
 
 /* Tell the hub about session `sid` (again): on open, and after every reconnect (the hub forgets). */
 static void announce(int sid) {
-    char params[256];
+    char params[INK_RT_PARAMS + 64];
     osal_mutex_lock(RT.lock, OSAL_WAIT_FOREVER);
     int i = find(sid);
     if (i >= 0) {
@@ -146,7 +146,7 @@ int ink_rt_init(void) {
 }
 
 int ink_rt_open(const char *cap, const char *params_json, const ink_rt_handler_t *h) {
-    if (!RT.lock || !cap || !h) return -1;
+    if (!RT.lock || !cap || !h || (params_json && strlen(params_json) >= INK_RT_PARAMS) || strlen(cap) >= 24) return -1;
     osal_mutex_lock(RT.lock, OSAL_WAIT_FOREVER);
     int slot = -1, sid = -1;
     for (int i = 0; i < INK_RT_MAX && slot < 0; i++)
@@ -200,6 +200,7 @@ int ink_rt_send(int sid, uint8_t kind, const void *payload, size_t len, uint8_t 
 
 int ink_rt_control(int sid, const char *method, const char *params_json) {
     char params[256];
+    if (params_json && strlen(params_json) + 16 > sizeof params) return -1; /* never cut into bad JSON */
     const char *p = params_json && *params_json == '{' ? params_json + 1 : "}";
     snprintf(params, sizeof params, "{\"sid\":%d%s%s", sid, *p != '}' ? "," : "", p);
     return ink_hub_notify(method, params);

@@ -27,7 +27,7 @@ static void on_power(void *ctx, int h, const char *id) { /* after a wake the lig
     (void)ctx;
     (void)id;
     char s[16];
-    if (ink_state_get_str(h, s, sizeof s) > 0 && strcmp(s, "locked")) apply();
+    if (ink_setting_get("display.light") && ink_state_get_str(h, s, sizeof s) > 0 && strcmp(s, "locked")) apply();
 }
 
 static const ink_setting_def_t LIGHT_SETTINGS[] = {

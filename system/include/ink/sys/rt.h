@@ -28,6 +28,7 @@ enum { INK_RT_VOICE_UP = 1, INK_RT_VOICE_DOWN, INK_RT_SCREEN, INK_RT_INPUT, INK_
 enum { INK_RT_F_LAST = 1, INK_RT_F_FULL = 2, INK_RT_F_DISCARDABLE = 4 };
 #define INK_RT_HDR 10
 #define INK_RT_MAX 4
+#define INK_RT_PARAMS 240 /* longest session parameters (JSON) */
 
 typedef struct {
     /* hub task: keep them short, hand the work on */
@@ -38,7 +39,8 @@ typedef struct {
 } ink_rt_handler_t;
 
 int ink_rt_init(void);
-/** Open a session with a remote capability: its id (1..255), or -1 (all INK_RT_MAX in use). */
+/** Open a session with a remote capability: its id (1..255), or -1 (all INK_RT_MAX in use, or
+ *  parameters longer than INK_RT_PARAMS). */
 int ink_rt_open(const char *cap, const char *params_json, const ink_rt_handler_t *h);
 /** One frame (copied). 0, or < 0 (no such session, not ready yet, queue full). */
 int ink_rt_send(int sid, uint8_t kind, const void *payload, size_t len, uint8_t flags);

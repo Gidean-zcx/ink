@@ -25,6 +25,7 @@
 #include "ink/sys/cap.h"
 #include "ink/sys/display.h"
 #include "ink/sys/exec.h"
+#include "ink/sys/json.h"
 #include "ink/sys/lz4.h"
 #include "ink/sys/rt.h"
 #include "ink/sys/ui.h"
@@ -50,7 +51,7 @@ static struct {
     uint64_t opened_us, tap_us;
     bool first_shown, waiting_display, first_pull;
     unsigned updates;
-} RS;
+} RS INK_PSRAM_BSS;
 
 static const ink_refresh_t HINTS[] = {INK_REFRESH_FAST, INK_REFRESH_UI, INK_REFRESH_FULL};
 
@@ -266,8 +267,15 @@ static void remote_create(lv_obj_t *scr, void *arg) {
     RS.ndirty = 0;
     RS.tap_us = 0;
     RS.opened_us = osal_now_us();
-    char params[160];
-    snprintf(params, sizeof params, "{\"w\":%d,\"h\":%d,\"gray\":16,\"url\":\"%s\"}", RS.w, RS.h, url);
+    char params[INK_RT_PARAMS];
+    ink_jw_t w;
+    ink_jw_init(&w, params, sizeof params);
+    char head[48];
+    snprintf(head, sizeof head, "{\"w\":%d,\"h\":%d,\"gray\":16,\"url\":", RS.w, RS.h);
+    ink_jw_raw(&w, head);
+    ink_jw_str(&w, url);
+    ink_jw_raw(&w, "}");
+    if (w.overflow) snprintf(params, sizeof params, "{\"w\":%d,\"h\":%d,\"gray\":16}", RS.w, RS.h); /* too long: the hub's start page */
     int sid = ink_rt_open("browser.session", params, &RT); /* the first pull goes out once the hub confirmed it */
     osal_mutex_lock(RS.lock, OSAL_WAIT_FOREVER);
     RS.sid = sid;

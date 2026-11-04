@@ -37,7 +37,7 @@ static struct {
     watch_list_t watch;
     osal_timer_t *save_timer;
     bool caps;
-} SE;
+} SE INK_PSRAM_BSS;
 
 static const char *id_of(int i) { return i >= 0 && i < SE.n ? SE.it[i].def->id : ""; }
 

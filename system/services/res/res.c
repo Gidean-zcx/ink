@@ -70,7 +70,7 @@ static struct {
     int next_id, cursor, holds;
     bool scheduled;
     int h_online;
-} R;
+} R INK_PSRAM_BSS;
 
 const char *ink_pressure_name(ink_pressure_t p) { return (unsigned)p < 4 ? PRESSURE_NAME[p] : "?"; }
 

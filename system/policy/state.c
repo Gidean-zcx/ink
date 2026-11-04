@@ -27,7 +27,7 @@ static struct {
     watch_list_t watch;
     osal_timer_t *timer;
     uint64_t timer_due; /* when the timer fires (0 = not armed) */
-} ST;
+} ST INK_PSRAM_BSS;
 
 static const char *id_of(int h) { return h >= 0 && h < ST.n ? ST.it[h].def->id : ""; }
 

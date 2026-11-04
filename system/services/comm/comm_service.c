@@ -35,7 +35,7 @@ static struct {
     int nmsg;
     bool ringing;
     int h_registered, h_sim;
-} CM;
+} CM INK_PSRAM_BSS;
 
 /* Cut a UTF-8 string so it does not end inside a character. */
 static void utf8_clip(char *s) {

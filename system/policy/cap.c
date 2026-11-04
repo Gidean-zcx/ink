@@ -658,7 +658,7 @@ int ink_cap_ids_json(char *out, size_t cap) {
     ink_jw_raw(&w, "[");
     bool first = true;
     for (int i = 0; i < nreg; i++) {
-        if (!on_its_page(REG[i]) || !exposed(REG[i], INK_SRC_AI)) continue;
+        if (!on_its_page(REG[i]) || !exposed(REG[i], INK_SRC_AI) || REG[i]->form == INK_FORM_EVENT) continue; /* what can be called */
         if (!first) ink_jw_raw(&w, ",");
         first = false;
         ink_jw_str(&w, REG[i]->id);

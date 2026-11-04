@@ -88,6 +88,13 @@ void osal_mem_stats(uint32_t caps, osal_mem_stats_t *out);
  *  tag. Free on the device (no-op); the simulator reports usage per tag. */
 const char *osal_mem_tag(const char *tag);
 
+/* Zero-initialised tables that may live in PSRAM (EXT_RAM_BSS_ATTR on the device; nothing in the
+ * simulator, which does not charge static data to its pools): large system tables that only tasks
+ * touch, never an interrupt. Internal RAM is the scarcest resource (foundation §3.2). */
+#ifndef INK_PSRAM_BSS
+#define INK_PSRAM_BSS
+#endif
+
 /* ---------- tasks ---------- */
 typedef struct osal_task osal_task_t;
 typedef void (*osal_task_fn)(void *arg);
