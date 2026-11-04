@@ -264,6 +264,7 @@ bool sim_display_playing(void);
 void sim_display_supply_low(void); /* PWR_GOOD read low while serving GPIO2 (input task) */
 uint64_t sim_display_ipc_wait_ns(uint64_t now); /* task context */
 bool sim_power_sleeping(void);
+int sim_power_sleeps(void);    /* light sleeps so far (tests) */
 bool sim_power_waking(void);  /* asleep, but a wake source already fired */
 void sim_power_input_lost(void);
 void sim_input_set_power_state(hal_power_state_t s);

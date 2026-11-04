@@ -285,6 +285,7 @@ void hal_cpu_boost_release(hal_cpu_boost_t *b) {
 #define WAKE_GPIO2 (1u << 16) /* GPIO2 low: classified after the wake */
 
 bool sim_power_sleeping(void) { return PW.sleeping; }
+int sim_power_sleeps(void) { return (int)PW.sleeps; }
 bool sim_power_waking(void) { return PW.sleeping && PW.wake_cause != 0; }
 
 static void wake_cb(void *arg) { /* ISR: the chip is awake: the sleeper continues */

@@ -56,6 +56,9 @@ bool ink_power_unlock(uint64_t t_us);
  *  the owner moves it, for a few seconds at most. 0 = nothing. Any task. */
 void ink_power_wake_at(uint64_t t_us);
 
+/** The system is up, whoever listens for `battery.low` is listening: a low battery is acted on from now on. */
+void ink_power_battery_policy_start(void);
+
 /** State changes, called in the power task after the change. Up to 8 listeners. */
 typedef void (*ink_power_fn)(void *ctx, ink_power_state_t from, ink_power_state_t to, uint64_t cause_us);
 int ink_power_subscribe(ink_power_fn fn, void *ctx);

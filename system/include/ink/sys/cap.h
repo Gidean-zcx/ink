@@ -101,6 +101,7 @@ struct ink_cap {
     uint8_t expose;         /* INK_EXPOSE_* bits; 0 = everyone */
     const char *activity;   /* only meaningful while this activity is on top; NULL = anywhere */
     ink_exec_t exec;        /* where the handler runs (UI task by default) */
+    bool while_locked;      /* can be used while an adult's space is locked: stopping an alarm, answering a call */
     void (*run)(ink_call_t *call);
 };
 

@@ -49,6 +49,19 @@ typedef struct {
     void (*settle)(void);
 } ink_activity_t;
 
+/* A system overlay (an interruption, a confirmation card): over the foreground activity and whatever it drew,
+ * on lv_layer_sys. While one is up it takes the keys and swipes and the AI sees what it says, and a finger that
+ * was already down cannot press what appeared under it. What it looks like is its owner's. */
+typedef struct {
+    const char *name;
+    bool (*on_key)(ink_key_t key, bool long_press); /* NULL: keys do nothing */
+    int (*snapshot)(char *buf, size_t cap);
+} ink_ui_overlay_t;
+
+/** On top of the others (up to 3). UI task. */
+void ink_ui_overlay_add(const ink_ui_overlay_t *o);
+void ink_ui_overlay_remove(const ink_ui_overlay_t *o);
+
 /** Start the UI task with `home` as the root activity. */
 int ink_ui_start(const ink_activity_t *home);
 /** Open an activity on top (UI task only). The new screen is drawn with a flashing refresh. */
@@ -81,9 +94,9 @@ void ink_ui_hint_frame(ink_refresh_t intent);
 /** Attribute the next frame to an earlier action: when it is visible, `tag` (static string)
  *  records the latency from `t_us` (e.g. AI key release -> first answer text). */
 void ink_ui_cause(uint64_t t_us, const char *tag);
-/** Page context of the foreground activity (see ink_activity_t.snapshot). */
+/** Page context of the foreground activity (see ink_activity_t.snapshot), or what the top overlay says. */
 int ink_ui_snapshot(char *buf, size_t cap, const char **activity_name);
-/** Name of the foreground activity ("" if none). */
+/** Name of the foreground activity or the top overlay ("" if none). */
 const char *ink_ui_top_name(void);
 
 /** dp -> pixels for the current panel. */

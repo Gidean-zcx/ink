@@ -1,0 +1,3 @@
+# The next boot, on the charger.
+@0       battery 60 charging
+@10s     end

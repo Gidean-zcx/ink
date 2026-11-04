@@ -369,7 +369,7 @@ static void usb_disk(void) {
     /* one who lets go when told */
     CHECK(ink_fs_on_release(release_cb, NULL) == 0, "a holder listens");
     CHECK(ink_fs_open("/me/tree/three.bin", INK_FS_READ, &g_holder) == 0, "and has a file open");
-    int sleeps0 = (int)sim_metric_value("power.sleeps");
+    int sleeps0 = sim_power_sleeps();
     CHECK(call_as("usb.mount", NULL, INK_SRC_TOUCH) && g_rc.status == INK_RC_DONE && ink_usb_disk_active() && g_release_told == 1 && !g_holder, "it closes it and the card is lent (%s)", g_rc.detail);
     char mode[16] = "";
     ink_state_get_str(ink_state_find("storage.mode"), mode, sizeof mode);
@@ -385,7 +385,7 @@ static void usb_disk(void) {
     /* it keeps the chip awake, locked or not */
     ink_power_lock();
     wait_until_s(49);
-    CHECK((int)sim_metric_value("power.sleeps") == sleeps0, "locking does not put USB to sleep");
+    CHECK(sim_power_sleeps() == sleeps0, "locking does not put USB to sleep");
     ink_power_unlock(osal_now_us());
     /* the computer ejects at 50 s */
     int changed0 = g_changed;

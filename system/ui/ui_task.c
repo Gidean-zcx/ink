@@ -28,6 +28,7 @@
 #define MAX_HINTS 8
 #define MAX_DIRTY 24
 #define MAX_ACTIVITIES 6
+#define MAX_OVERLAYS 3
 #define PFIFO 16
 #define INTERACTIVE_IDLE_MS 2500
 
@@ -76,6 +77,9 @@ static struct {
     frame_t stack[MAX_ACTIVITIES];
     int depth;
     lv_obj_t *screen;
+    const ink_ui_overlay_t *overlays[MAX_OVERLAYS];
+    int noverlays;
+    bool skip_touch; /* a finger went down before the screen changed under it: nothing until it lifts */
     volatile uint32_t generation;
     bool interactive;
     uint64_t last_input_us;
@@ -275,11 +279,19 @@ void ink_ui_cause(uint64_t t_us, const char *tag) {
 }
 
 const char *ink_ui_top_name(void) {
+    if (UI.noverlays) return UI.overlays[UI.noverlays - 1]->name;
     const ink_activity_t *top = UI.depth ? UI.stack[UI.depth - 1].a : NULL;
     return top && top->name ? top->name : "";
 }
 
 int ink_ui_snapshot(char *buf, size_t cap, const char **activity_name) {
+    if (UI.noverlays) {
+        const ink_ui_overlay_t *o = UI.overlays[UI.noverlays - 1];
+        if (activity_name) *activity_name = o->name;
+        if (o->snapshot && cap) return o->snapshot(buf, cap);
+        if (cap) buf[0] = 0;
+        return 0;
+    }
     const ink_activity_t *top = UI.depth ? UI.stack[UI.depth - 1].a : NULL;
     if (activity_name) *activity_name = top ? top->name : "";
     if (!top || !top->snapshot || !cap) {
@@ -399,6 +411,36 @@ void ink_ui_pop(void) {
     show_top(); /* activities rebuild from their own state: only the top one holds a screen */
 }
 
+/* What was aimed at the old content is dropped, as for a new screen. A touch in progress too: the next move of that
+ * finger would press what is under it now, and lifting it would be a tap (a finger down when a call came in, on the
+ * spot where "hang up" appears). */
+static void overlays_changed(void) {
+    UI.generation++;
+    ink_ui_content_changed();
+    lv_indev_reset(UI.indev, NULL);
+    UI.pn = 0;
+    if (UI.last_pressed) UI.skip_touch = true;
+    UI.last_pressed = false;
+}
+
+void ink_ui_overlay_add(const ink_ui_overlay_t *o) {
+    for (int i = 0; i < UI.noverlays; i++)
+        if (UI.overlays[i] == o) return;
+    if (UI.noverlays >= MAX_OVERLAYS) return;
+    UI.overlays[UI.noverlays++] = o;
+    overlays_changed();
+}
+
+void ink_ui_overlay_remove(const ink_ui_overlay_t *o) {
+    for (int i = 0; i < UI.noverlays; i++)
+        if (UI.overlays[i] == o) {
+            memmove(&UI.overlays[i], &UI.overlays[i + 1], sizeof UI.overlays[0] * (size_t)(UI.noverlays - i - 1));
+            UI.noverlays--;
+            overlays_changed();
+            return;
+        }
+}
+
 /* Open with feedback: the tapped control inverts immediately (one FAST refresh, first
  * visible change ~160 ms) and the new activity is built only after that frame was
  * committed — heavy work (loading a book) no longer delays the first visible change. */
@@ -483,6 +525,11 @@ static void handle_input(const umsg_t *m) {
     UI.last_input_us = osal_now_us();
     switch (e->kind) {
     case INK_EV_POINTER:
+        if (UI.skip_touch) {
+            if (e->phase == INK_PTR_RELEASE) UI.skip_touch = false;
+            ink_probe_count("ui.touch_under_overlay_dropped");
+            return;
+        }
         if (m->generation != UI.generation && e->phase != INK_PTR_RELEASE) {
             ink_probe_count("ui.stale_input_dropped");
             return;
@@ -504,13 +551,13 @@ static void handle_input(const umsg_t *m) {
         if (m->generation != UI.generation) return;
         UI.cause_us = e->t_us;
         UI.cause_tag = NULL;
-        if (top && top->on_swipe) top->on_swipe((ink_swipe_dir_t)e->dir);
+        if (!UI.noverlays && top && top->on_swipe) top->on_swipe((ink_swipe_dir_t)e->dir);
         break;
     case INK_EV_KEY:
     case INK_EV_KEY_LONG: {
         bool lng = e->kind == INK_EV_KEY_LONG;
-        if (e->key == HAL_KEY_AI) { /* system-wide: push-to-talk, handled by the AI service */
-            if (e->kind == INK_EV_KEY) ink_ai_key(e->pressed, e->t_us);
+        if (e->key == HAL_KEY_AI) { /* system-wide: push-to-talk, handled by the AI service; an overlay comes first, but one already talking may let go */
+            if (e->kind == INK_EV_KEY && (!UI.noverlays || !e->pressed)) ink_ai_key(e->pressed, e->t_us);
             return;
         }
         if (e->kind == INK_EV_KEY && (!e->pressed || (e->flags & INK_EVF_AFTER_LONG))) {
@@ -519,6 +566,11 @@ static void handle_input(const umsg_t *m) {
         }
         UI.cause_us = e->t_us;
         UI.cause_tag = NULL;
+        if (UI.noverlays) {
+            const ink_ui_overlay_t *o = UI.overlays[UI.noverlays - 1];
+            if (o->on_key) o->on_key((hal_key_t)e->key, lng);
+            return;
+        }
         if ((e->key == HAL_KEY_BACK || e->key == HAL_KEY_HOME) && ink_ai_dismiss()) return;
         if (top && top->on_key && top->on_key((hal_key_t)e->key, lng)) return;
         if (e->key == HAL_KEY_BACK && !lng) ink_ui_pop();

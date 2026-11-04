@@ -40,6 +40,7 @@ static struct {
     uint64_t key_t0;
     osal_timer_t *key_timer;
     hal_key_t swallow_release; /* the release of a key press the power policy consumed */
+    bool (*power_key_hook)(void);
 } IS;
 
 static int mm(int v) { return v * IS.px_per_mm10 / 10; }
@@ -155,7 +156,7 @@ static bool power_filter(const hal_input_event_t *h) {
         return true;
     }
     if (is_key && h->key.key == HAL_KEY_POWER) {
-        if (!h->key.pressed) ink_power_lock();
+        if (!h->key.pressed && !(IS.power_key_hook && IS.power_key_hook())) ink_power_lock();
         return true;
     }
     ink_power_activity(h->t_us);
@@ -170,6 +171,8 @@ static void hal_sink(const hal_input_event_t *h, void *ctx) {
     if (h->type == HAL_IN_TOUCH) on_touch(h);
     else if (h->type == HAL_IN_KEY) on_key(h);
 }
+
+void ink_input_set_power_key_hook(bool (*fn)(void)) { IS.power_key_hook = fn; }
 
 int ink_input_init(ink_input_handler_t handler, void *ctx) {
     IS.handler = handler;

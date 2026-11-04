@@ -48,6 +48,8 @@ typedef struct {
 typedef void (*ink_input_handler_t)(const ink_input_event_t *e, void *ctx);
 
 int ink_input_init(ink_input_handler_t handler, void *ctx);
+/** The power key's short press may be for something on screen first (an interruption): true = used. */
+void ink_input_set_power_key_hook(bool (*fn)(void));
 
 #ifdef __cplusplus
 }

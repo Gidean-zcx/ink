@@ -25,6 +25,7 @@
 #include "ink/hal_power.h"
 #include "ink/osal.h"
 #include "ink/probe.h"
+#include "ink/sys/data.h"
 #include "ink/sys/display.h"
 #include "ink/sys/power.h"
 #include "ink/sys/cap.h"
@@ -40,6 +41,11 @@
 #define QUIET_POLL_US 200000
 #define WAKE_CONFIRM_US 1000000
 #define WAKE_AT_GRACE_US 5000000 /* something was due: it gets this long to be handled before the chip may sleep again */
+#define BATTERY_POLL_US 60000000ull /* awake; asleep every slice is one look */
+#define BATTERY_LOW 15
+#define BATTERY_VERY_LOW 5
+#define BATTERY_OFF 2
+#define BATTERY_OFF_WAIT_US 5000000ull /* what waits to be written gets this long */
 
 static struct {
     osal_mutex_t *lock;
@@ -59,7 +65,12 @@ static struct {
     int nchecks;
     uint64_t lock_after_us; /* the setting power.lock_after_s */
     uint64_t wake_at;       /* ink_power_wake_at */
-    int h_state, h_level, h_charging;
+    uint64_t next_battery_us;
+    bool battery_policy;    /* ink_power_battery_policy_start */
+    int battery_level;      /* what has been told: 0 fine, 1 low, 2 very low, 3 powering off */
+    bool powering_off;
+    uint64_t off_at;
+    int h_state, h_level, h_charging, h_low;
 } PS;
 
 static uint64_t lock_after(void) { return __atomic_load_n(&PS.lock_after_us, __ATOMIC_RELAXED); }
@@ -81,13 +92,47 @@ static hal_power_state_t hal_state(ink_power_state_t s) {
     return s == INK_PWR_ACTIVE ? HAL_PWR_STATE_ACTIVE : s == INK_PWR_IDLE ? HAL_PWR_STATE_IDLE : HAL_PWR_STATE_LOCKED;
 }
 
-/* Battery as system state: read when the state changes, not on a timer (a timer would cut the
- * light-sleep slices while locked). */
+static void tell_battery(int level, int percent) {
+    ink_args_t *a = osal_malloc(sizeof *a, OSAL_MEM_EXTERNAL); /* large for this stack */
+    if (!a) return;
+    ink_args_init(a);
+    ink_args_int(a, "level", level);
+    ink_args_int(a, "percent", percent);
+    ink_cap_emit("battery.low", a);
+    osal_free(a);
+}
+
+/* Battery as system state: read when the state changes, at each sleep slice and once a minute awake.
+ * Low battery (foundation §7.4): a notification, then an interruption; nearly empty, what waits is written and
+ * it powers off. Each level is told once on the way down; the charger starts over. Power task. */
 static void publish_battery(void) {
     hal_battery_t b;
     hal_power_battery(&b);
     ink_state_set_int(PS.h_level, b.percent);
     ink_state_set_bool(PS.h_charging, b.charging);
+    if (!__atomic_load_n(&PS.battery_policy, __ATOMIC_ACQUIRE)) return;
+    int level = b.external_power || b.charging ? 0 : b.percent <= BATTERY_OFF ? 3 : b.percent <= BATTERY_VERY_LOW ? 2 : b.percent <= BATTERY_LOW ? 1 : 0;
+    ink_state_set_bool(PS.h_low, level > 0);
+    if (level > PS.battery_level) {
+        PS.battery_level = level;
+        tell_battery(level, b.percent);
+        ink_probe_count("power.battery_low_told");
+    } else if (!level && PS.battery_level) {
+        PS.battery_level = 0;
+        tell_battery(0, b.percent);
+    }
+    if (level == 3 && !PS.powering_off) {
+        PS.powering_off = true;
+        PS.off_at = osal_now_us() + BATTERY_OFF_WAIT_US;
+        ink_db_flush_all();
+    }
+    if (PS.powering_off) {
+        if (!level) PS.powering_off = false; /* it was plugged in just in time */
+        else if ((ink_db_idle() && ink_storage_pending() == 0) || osal_now_us() >= PS.off_at) {
+            ink_probe_count("power.low_battery_off");
+            hal_power_shutdown();
+        }
+    }
 }
 
 static void notify(ink_power_state_t from, ink_power_state_t to, uint64_t cause) {
@@ -111,6 +156,10 @@ static bool quiet(void) {
 
 /* Sleep while locked, as long as nothing needs the chip. Returns when the state may have changed. */
 static void locked_step(void) {
+    if (PS.powering_off) {
+        osal_sem_take(PS.kick, QUIET_POLL_US);
+        return;
+    }
     lock();
     bool busy = PS.holds[INK_NEED_AUDIO] > 0 || PS.holds[INK_NEED_NET] > 0 || PS.holds[INK_NEED_AWAKE] > 0;
     unlock();
@@ -152,6 +201,7 @@ static void locked_step(void) {
     }
     ink_probe_count(why & HAL_WAKE_TIMER ? "power.wake.timer" : why & (HAL_WAKE_POWER_KEY | HAL_WAKE_AI_KEY) ? "power.wake.key" : "power.wake.other");
     if (why & HAL_WAKE_RTC) hal_rtc_clear_alarm(); /* its interrupt stays low until cleared, and it shares a line with the keys */
+    publish_battery();
     if (why & (HAL_WAKE_POWER_KEY | HAL_WAKE_AI_KEY)) osal_sem_take(PS.kick, WAKE_CONFIRM_US); /* the unlock follows */
 }
 
@@ -185,19 +235,26 @@ static void power_task(void *arg) {
                                                                                 : 0;
         unlock();
         if (from != s) notify(from, s, cause);
+        if (PS.powering_off) publish_battery();
         if (s == INK_PWR_LOCKED) {
             locked_step();
             continue;
         }
         now = osal_now_us();
-        if (!deadline) osal_sem_take(PS.kick, OSAL_WAIT_FOREVER);
-        else if (deadline > now) osal_sem_take(PS.kick, (int64_t)(deadline - now));
+        if (now >= PS.next_battery_us) {
+            publish_battery();
+            PS.next_battery_us = now + BATTERY_POLL_US;
+        }
+        uint64_t next = PS.powering_off ? now + 100000 : PS.next_battery_us;
+        if (!deadline || next < deadline) deadline = next;
+        if (deadline > now) osal_sem_take(PS.kick, (int64_t)(deadline - now));
     }
 }
 
 static const ink_state_def_t ST_STATE = {.id = "power.state", .type = INK_ST_STR, .title = "使用状态（活跃 / 空闲 / 锁屏）"};
 static const ink_state_def_t ST_LEVEL = {.id = "battery.level", .type = INK_ST_INT, .title = "电量（%）"};
 static const ink_state_def_t ST_CHARGING = {.id = "battery.charging", .type = INK_ST_BOOL, .title = "在充电"};
+static const ink_state_def_t ST_LOW = {.id = "battery.low", .type = INK_ST_BOOL, .title = "电量低"};
 
 static void apply_lock_after(void *ctx, int64_t s) {
     (void)ctx;
@@ -224,6 +281,7 @@ int ink_power_init(void) {
     PS.h_state = ink_state_define(&ST_STATE);
     PS.h_level = ink_state_define(&ST_LEVEL);
     PS.h_charging = ink_state_define(&ST_CHARGING);
+    PS.h_low = ink_state_define(&ST_LOW);
     if (ink_settings_define(POWER_SETTINGS, 1) == 0) PS.lock_after_us = (uint64_t)ink_setting_get("power.lock_after_s") * 1000000ull;
     ink_cap_register(POWER_CAPS, 1);
     const char *prev = osal_mem_tag("power");
@@ -242,6 +300,12 @@ int ink_power_init(void) {
     publish_battery();
     osal_task_cfg_t cfg = {.name = "power", .fn = power_task, .stack_bytes = PW_STACK, .priority = PW_PRIO, .core = -1};
     return osal_task_create(&cfg, &PS.task) == OSAL_OK ? 0 : -1;
+}
+
+void ink_power_battery_policy_start(void) {
+    __atomic_store_n(&PS.battery_policy, true, __ATOMIC_RELEASE);
+    PS.next_battery_us = 0;
+    osal_sem_give(PS.kick);
 }
 
 ink_power_state_t ink_power_state(void) {

@@ -389,11 +389,14 @@ int  ink_notify_channel_define(const ink_notify_channel_t *ch);
 来电、闹钟、低电量这类事不能等前台应用，也不能被一次慢刷新或网络请求挡住（底座设计 §7）。所以：
 
 ```c
-typedef struct { const char *label, *cap, *args_json; } ink_int_action_t;
-typedef struct { ink_int_kind_t kind; char title[48], body[96]; ink_int_action_t actions[3]; int nactions; uint64_t t_us; } ink_interrupt_t;
-int  ink_interrupt_raise(const ink_interrupt_t *it, int *out_id); /* 任何任务，不阻塞 */
+/* ink/sys/interrupt.h：只给系统用，应用只有通知（sdk-boundary 测试拦着） */
+typedef struct { const char *label, *cap; char args[64]; } ink_int_action_t;
+typedef struct { int id; ink_int_kind_t kind; uint32_t ref; bool ringing; char title[48], body[96];
+                 ink_int_action_t actions[3]; int nactions; uint64_t raised_us; } ink_interrupt_t;
+int  ink_interrupt_raise(const ink_interrupt_t *it);              /* 任何任务（包括定时器任务），不阻塞；返回编号，满了（4 个）返回 -1 */
 void ink_interrupt_end(int id);
-int  ink_interrupt_action(int id, int index, ink_source_t src);   /* 执行按钮对应的能力 */
+void ink_interrupt_update(int id, const char *body, const ink_int_action_t *a, int n, bool ringing); /* 响铃 -> 通话中 */
+int  ink_interrupt_action(int id, int index, uint8_t src);        /* 执行按钮对应的能力 */
 void ink_interrupt_set_presenter(const ink_int_presenter_t *p);   /* 系统壳登记 */
 ```
 
@@ -401,7 +404,13 @@ void ink_interrupt_set_presenter(const ink_int_presenter_t *p);   /* 系统壳�
 
 1. **电源**：亮屏（锁屏时临时解开，页面被全屏浮层盖住），持有“别睡”；结束后恢复锁屏。
 2. **声音**：按类型拿音频焦点响铃（§10.1），在音频任务里，界面卡住也响。
-3. **界面**：把“显示”投递到界面任务（节点是打断表自己的，不会丢）。这时前台应用的 `on_key`、`on_swipe` 不再收到输入：系统浮层先收，全屏控件挡住触摸。
+3. **界面**：把“显示”投递到界面任务（节点是打断表自己的，不会丢）。这时前台应用的 `on_key`、`on_swipe` 不再收到输入：系统浮层（`ink_ui_overlay_add`，画在 `lv_layer_sys`）先收，全屏控件挡住触摸。浮层出现或消失时，手指已经按着的那次触摸整个作废，否则它接下来一动就按到新出现的按钮，抬手就成了一次点击（比如正好落在“挂断”上）。AI 看到的页面内容变成浮层上的字，只在原页面有效的能力这时不可用。
+
+电源键（`ink_input_set_power_key_hook`）：来电时静音，只静音不挂断；闹钟时稍后再响；低电量时关掉；没有打断时照常锁屏。
+
+锁着时被打断：屏亮，设备“底下还锁着”，最后一个打断结束后重新锁上。打断期间有人（能力、竞争）锁屏：电源服务的订阅里立刻解开，并记下结束后要锁（`interrupt.lock_undone`）。
+
+事件在哪个任务里处理：来电和闹钟在发出事件的任务里直接处理（通信任务、定时器任务），前面不排队；定时器任务栈小，所以闹钟这条路径不发通知、不占大栈。其余（短信、错过、提醒、低电量、写入失败、USB）走后台执行器：电源任务和存储任务的栈是内部 RAM，很小，不能在上面跑这些。
 
 优先级：来电 > 闹钟 > 低电量。高的来了，低的留在表里，等高的结束再显示。AI 面板、确认卡都让路。
 
@@ -419,7 +428,7 @@ void ink_interrupt_set_presenter(const ink_int_presenter_t *p);   /* 系统壳�
 
 ### 6.4 低电量
 
-电源服务在状态变化和锁屏每一片醒来时读电量（不另开定时器，不打断睡眠），亮屏时每分钟读一次。`battery.low`：≤ 15% 发通知；≤ 5% 打断；≤ 2% 且没在充电：`ink_db_flush_all`、等写完、关机（底座设计 §7.4“先保存状态再关机”）。开始充电复位。低电量时不压缩、不下载升级。
+电源服务在状态变化和锁屏每一片醒来时读电量（不另开定时器，不打断睡眠），亮屏时每分钟读一次。事件 `battery.low`（参数 `level`：1 低，2 很低，3 马上关机，0 充上电了）：≤ 15% 发通知；≤ 5% 打断；≤ 2% 且没在充电：`ink_db_flush_all`、等写完（最多 5 秒）、关机（底座设计 §7.4“先保存状态再关机”）。每一档只说一次，开始充电复位；启动完成后才开始判断（`ink_power_battery_policy_start`），这样开机时已经低电的情况也有人听。低电量时不压缩、不下载升级。
 
 ### 6.5 共用的锁和定时器
 

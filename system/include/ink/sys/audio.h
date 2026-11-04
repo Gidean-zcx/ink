@@ -94,6 +94,10 @@ int ink_audio_listen_commands(const char *const *phrases, int n);
 /** Index of the command word last reported by INK_LISTEN_COMMAND. */
 int ink_audio_last_command(void);
 
+/** A call or an alarm rings (generated here, needs no file): it goes on, in this task, whatever the UI does, until
+ *  turned off. It plays over a stream, which waits. Any task, never waits. */
+void ink_audio_ring(bool on);
+
 /** Speaker volume 0..100 (software gain). */
 void ink_audio_set_volume(int percent);
 

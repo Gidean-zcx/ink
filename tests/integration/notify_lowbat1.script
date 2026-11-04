@@ -1,0 +1,3 @@
+# The battery is nearly empty: what waits to be written is written and it powers off.
+@10s     battery 2
+@300s    end

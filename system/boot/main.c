@@ -21,6 +21,7 @@
 #include "ink/sys/hub.h"
 #include "ink/sys/members.h"
 #include "ink/sys/net.h"
+#include "ink/sys/notify.h"
 #include "ink/sys/settings.h"
 #include "ink/sys/state.h"
 #include "ink/sys/storage.h"
@@ -34,6 +35,7 @@ int ink_system_actions_init(void);
 int ink_reader_actions_init(void);
 int ink_remote_init(void);
 int ink_ui_lock_mark_init(void);
+int ink_shell_interrupt_card_init(void);
 
 void ink_main(void) {
     hal_log_write("ink: starting system services");
@@ -47,15 +49,18 @@ void ink_main(void) {
     ink_members_init();
     if (ink_net_init() != 0 || ink_light_init() != 0) osal_panic("network or light settings failed to start");
     if (ink_hub_init("wss://hub.local/v1/device") != 0 || ink_rt_init() != 0) osal_panic("hub link failed to start");
-    if (ink_time_init() != 0) osal_panic("time service failed to start");
     if (ink_audio_init() != 0) osal_panic("audio service failed to start");
+    /* before time: an alarm that is due now goes off as soon as the time service is up */
+    if (ink_notify_init() != 0) osal_panic("notification service failed to start");
+    if (ink_time_init() != 0) osal_panic("time service failed to start");
     hal_device_info_t di;
     hal_device_get_info(&di);
     if (ink_camera_init() != 0 || (di.has_modem && ink_comm_init() != 0)) osal_panic("camera or communication service failed to start");
     if (ink_ai_init() != 0) osal_panic("ai service failed to start");
     if (ink_tools_init() != 0 || ink_system_actions_init() != 0 || ink_reader_actions_init() != 0 || ink_remote_init() != 0)
         osal_panic("action registry failed to start");
-    if (ink_ui_start(&ink_app_home) != 0 || ink_ui_lock_mark_init() != 0) osal_panic("ui failed to start");
+    if (ink_ui_start(&ink_app_home) != 0 || ink_ui_lock_mark_init() != 0 || ink_shell_interrupt_card_init() != 0) osal_panic("ui failed to start");
     ink_fs_refresh_state(); /* blocks on the card: here, not in anyone's way */
+    ink_power_battery_policy_start();
     ink_probe_mark("system-started");
 }

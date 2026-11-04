@@ -116,6 +116,8 @@ static struct {
     const char *stream_probe; /* the current stream's "first sample heard" probe (until used) */
     uint64_t stream_cause;
     uint64_t heard_cause;
+    bool ring_on;    /* a call or an alarm rings */
+    uint32_t ring_t; /* samples since it began */
     bool holding_writes, holding_awake;
     bool boosting;
     hal_cpu_boost_t *boost;
@@ -278,6 +280,22 @@ static void make_tone(ink_tone_t t) {
     AU.pcm_len = n;
     AU.staged_stream = 0;
     apply_volume(AU.pcm, n);
+}
+
+#define RING_LEVEL 7000       /* a fixed level: an alarm must be heard with the volume down */
+#define RING_CHUNK (FRAME * 2) /* 120 ms at a time */
+
+/* Two tones, on and off: 400 ms of each, 800 ms of quiet. Service task. */
+static void make_ring(void) {
+    for (int i = 0; i < RING_CHUNK; i++, AU.ring_t++) {
+        uint32_t ms = AU.ring_t / (HAL_AUDIO_RATE / 1000) % 1600;
+        double f = ms < 400 ? 880.0 : ms < 800 ? 660.0 : 0.0;
+        AU.pcm[i] = f > 0 ? (int16_t)(RING_LEVEL * sin(2 * M_PI * f * AU.ring_t / HAL_AUDIO_RATE)) : 0;
+    }
+    osal_cost_units("tone.sample", RING_CHUNK);
+    AU.pcm_off = 0;
+    AU.pcm_len = RING_CHUNK;
+    AU.staged_stream = 0;
 }
 
 static void free_jb(void) { /* under lock */
@@ -444,9 +462,17 @@ static bool take_tone(void) {
 static void service_playback(void) {
     (void)staged_wanted();
     for (;;) {
-        if (AU.pcm_off >= AU.pcm_len) { /* nothing staged: a tone first, else the stream's next frame when it can play */
-            if (take_tone()) continue;
-            if (!stream_wants_output() || !output_for_stream() || !stage_next()) break;
+        if (AU.pcm_off >= AU.pcm_len) { /* nothing staged: the ringing, a tone, else the stream's next frame when it can play */
+            lock();
+            bool ring = AU.ring_on;
+            unlock();
+            if (ring) {
+                if (!open_output()) break; /* tried again next tick */
+                make_ring();
+            } else {
+                if (take_tone()) continue;
+                if (!stream_wants_output() || !output_for_stream() || !stage_next()) break;
+            }
         } else if (!output_for_stream()) {
             break; /* staged samples wait for the output */
         } else if (!staged_wanted()) {
@@ -469,7 +495,7 @@ static void service_playback(void) {
     lock();
     bool drained = AU.pcm_off >= AU.pcm_len;
     bool done_stream = AU.stream && AU.finishing && AU.jb_count == 0 && drained;
-    bool idle = !AU.stream && drained && !AU.tone_pending;
+    bool idle = !AU.stream && drained && !AU.tone_pending && !AU.ring_on;
     if (done_stream) {
         AU.stream = 0;
         AU.finishing = AU.started = false;
@@ -500,7 +526,7 @@ static void service_playback(void) {
  * awake (also when the device is locked: an audiobook keeps playing) and the codec runs at full clock. */
 static void update_write_hold(void) {
     lock();
-    bool want = AU.cap_on || AU.stream || AU.out_open;
+    bool want = AU.cap_on || AU.stream || AU.out_open || AU.ring_on;
     bool awake = want || AU.listen_on; /* listening keeps the chip up but lets the flash be written (a gap, not a stop) */
     bool codec = AU.cap_on || AU.stream || AU.listen_on;
     unlock();
@@ -567,7 +593,7 @@ static void audio_task(void *arg) {
     if (!scratch) osal_panic("audio: no memory for the capture scratch buffer");
     for (;;) {
         lock();
-        bool active = AU.cap_on || AU.listen_on || AU.stream || AU.tone_pending || AU.out_open || AU.pcm_off < AU.pcm_len;
+        bool active = AU.cap_on || AU.listen_on || AU.stream || AU.tone_pending || AU.out_open || AU.pcm_off < AU.pcm_len || AU.ring_on;
         unlock();
         osal_sem_take(AU.wake, active ? AU_TICK_US : OSAL_WAIT_FOREVER);
         /* the speaker first and again after every encoded frame: the 60 ms DMA ring must not wait
@@ -798,6 +824,15 @@ void ink_audio_tone(ink_tone_t tone, uint64_t cause_us, const char *probe) {
     AU.tone = tone;
     AU.tone_cause = cause_us;
     AU.tone_probe = probe;
+    unlock();
+    osal_sem_give(AU.wake);
+}
+
+void ink_audio_ring(bool on) {
+    if (!AU.info.has_speaker || !AU.task) return;
+    lock();
+    if (on && !AU.ring_on) AU.ring_t = 0;
+    AU.ring_on = on;
     unlock();
     osal_sem_give(AU.wake);
 }

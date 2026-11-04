@@ -175,6 +175,10 @@ add_library(ink_system STATIC
   system/services/time/lunar.c
   system/services/time/time_service.c
   system/services/time/time_caps.c
+  system/services/notify/notify_service.c
+  system/services/notify/notify_caps.c
+  system/services/notify/interrupt.c
+  system/ui/shell/interrupt_card.c
   system/policy/cap.c
   system/policy/members.c
   system/policy/settings.c
@@ -502,6 +506,22 @@ if(INK_HAVE_FONTS)
   ink_scenario(ai_ask metalio-plus)
   ink_scenario(ai_turn_end metalio-plus)
   ink_scenario(ai_turn_lost metalio-plus)
+  # Notifications and interruptions, on the whole product (tests/integration/notify.c).
+  add_executable(sim-notify simulator/runtime/sim_main.c tests/integration/notify.c)
+  target_link_libraries(sim-notify PRIVATE ink_apps ink_system ink_port_sim)
+  target_compile_options(sim-notify PRIVATE ${INK_WARN})
+  add_test(NAME integration-notify
+    COMMAND sim-notify --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+            --budget ${CMAKE_SOURCE_DIR}/tests/integration/notify.budget.json
+            --script ${CMAKE_SOURCE_DIR}/tests/integration/notify.script
+            --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+            --out ${CMAKE_BINARY_DIR}/test-out/notify --quiet --no-random-outages)
+  # A nearly empty battery writes what waits and powers off; it is there at the next boot.
+  add_test(NAME integration-notify-lowbat
+    COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:sim-notify> -DPROFILE=${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+            -DASSETS=${INK_ASSETS_DIR} -DCONTENT=${INK_TEST_CONTENT}
+            -DOUT=${CMAKE_BINARY_DIR}/test-out/notify-lowbat -DSRC=${CMAKE_SOURCE_DIR}/tests/integration
+            -P ${CMAKE_SOURCE_DIR}/tests/integration/notify_lowbat.cmake)
   # A voice turn's answer arriving while the next turn starts (tests/integration/ai_race.c): the product, booted.
   add_executable(sim-ai-race simulator/runtime/sim_main.c tests/integration/ai_race.c)
   target_link_libraries(sim-ai-race PRIVATE ink_apps ink_system ink_port_sim)
