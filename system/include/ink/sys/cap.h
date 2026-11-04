@@ -58,7 +58,7 @@ typedef enum { INK_SRC_TOUCH = 0, INK_SRC_KEY, INK_SRC_AI, INK_SRC_SYSTEM, INK_S
 typedef enum { INK_FORM_CALL = 0, INK_FORM_STREAM, INK_FORM_EVENT, INK_FORM_SESSION } ink_form_t;
 typedef enum { INK_QOS_INTERACTIVE = 0, INK_QOS_REALTIME, INK_QOS_MEDIA, INK_QOS_NETWORK, INK_QOS_BACKGROUND } ink_qos_t;
 typedef enum { INK_OFFLINE_FAIL = 0, INK_OFFLINE_QUEUE, INK_OFFLINE_LOCAL } ink_offline_t;
-enum { INK_EXPOSE_APP = 1, INK_EXPOSE_AI = 2, INK_EXPOSE_REMOTE = 4 }; /* 0 = everyone */
+enum { INK_EXPOSE_APP = 1, INK_EXPOSE_AI = 2, INK_EXPOSE_REMOTE = 4, INK_EXPOSE_OWNER = 8 }; /* 0 = everyone; OWNER: only the member's own touch and keys */
 
 typedef struct {
     ink_rc_t status;
@@ -102,6 +102,7 @@ struct ink_cap {
     const char *activity;   /* only meaningful while this activity is on top; NULL = anywhere */
     ink_exec_t exec;        /* where the handler runs (UI task by default) */
     bool while_locked;      /* can be used while an adult's space is locked: stopping an alarm, answering a call */
+    const char *ask;        /* what the confirmation card says, with {argument}s: "发短信给 {to}：{text}"; NULL = title and arguments */
     void (*run)(ink_call_t *call);
 };
 

@@ -11,6 +11,7 @@
 #include "ink/probe.h"
 #include "ink/sys/json.h"
 #include "ink/sys/members.h"
+#include "ink/sys/confirm.h"
 #include "ink/sys/settings.h"
 #include "ink/sys/storage.h"
 #include "watch.h"
@@ -203,7 +204,7 @@ ink_rc_t ink_setting_set(const char *id, int64_t v, ink_source_t src, ink_receip
         ink_probe_count("policy.rejected");
         return refuse(rc, INK_RC_REJECTED, "children cannot change this setting");
     }
-    if (d->system && (src == INK_SRC_AI || src == INK_SRC_REMOTE)) {
+    if (d->system && (src == INK_SRC_AI || src == INK_SRC_REMOTE || src == INK_SRC_APP)) {
         ink_probe_count("policy.pending_confirmation");
         return refuse(rc, INK_RC_PENDING_CONFIRMATION, "needs confirmation on the device");
     }
@@ -316,7 +317,7 @@ static void cap_set(ink_call_t *c) {
         refuse(&c->rc, INK_RC_INVALID, "value required");
         return;
     }
-    ink_setting_set(id, v, c->src, &c->rc);
+    if (ink_setting_set(id, v, c->src, &c->rc) == INK_RC_PENDING_CONFIRMATION) ink_confirm_hold(c->cap, &c->args, c->src, c->page_gen, &c->rc);
 }
 
 static const ink_cap_t SETTINGS_CAPS[] = {
@@ -328,6 +329,7 @@ static const ink_cap_t SETTINGS_CAPS[] = {
      .run = cap_get},
     {.id = "settings.set",
      .title = "改一项设置",
+     .ask = "把设置 {id} 改成 {value}",
      .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":39},"
               "\"value\":{\"type\":[\"integer\",\"boolean\",\"string\"]}},\"required\":[\"id\",\"value\"]}",
      .effect = INK_FX_LOCAL_WRITE,

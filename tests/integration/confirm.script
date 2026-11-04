@@ -1,0 +1,4 @@
+# Environment for the confirmation checks: a card that can send texts.
+@0       sim   external sms
++0       cell  on -90
+@1500s   end

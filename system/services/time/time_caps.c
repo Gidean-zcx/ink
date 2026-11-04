@@ -242,6 +242,7 @@ static const ink_cap_t TIME_CAPS[] = {
     {.id = "time.now", .title = "现在几点（含时区和农历）", .output = "{\"type\":\"object\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_now},
     {.id = "time.set",
      .title = "改系统时间",
+     .ask = "把系统时间改成 {utc_s}（UTC 秒）",
      .input = "{\"type\":\"object\",\"properties\":{\"utc_s\":{\"type\":\"integer\",\"minimum\":1000000000}},\"required\":[\"utc_s\"]}",
      .effect = INK_FX_SYSTEM, /* children cannot: it would get around time limits (foundation §7.1) */
      .exec = INK_EXEC_BG,

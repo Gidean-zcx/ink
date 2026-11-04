@@ -315,7 +315,7 @@ static const ink_cap_t FILE_CAPS[] = {
      .title = "移动或改名（可撤销）",
      .input = "{\"type\":\"object\",\"properties\":{" PATH_ARG("from") "," PATH_ARG("to") "},\"required\":[\"from\",\"to\"]}",
      .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .permission = "file", .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_move},
-    {.id = "file.delete", .title = "删除文件或目录（不能撤销）", .input = PATH_OBJ("path"),
+    {.id = "file.delete", .title = "删除文件或目录（不能撤销）", .ask = "删除 {path}，不能撤销", .input = PATH_OBJ("path"),
      .effect = INK_FX_LOCAL_DESTRUCTIVE, .child_ok = true, .permission = "file", .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_delete},
     {.id = "file.free", .title = "TF 卡还剩多少空间", .output = "{\"type\":\"object\"}",
      .effect = INK_FX_READ, .child_ok = true, .permission = "file", .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_free},

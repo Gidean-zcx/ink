@@ -98,6 +98,8 @@ void ink_ui_cause(uint64_t t_us, const char *tag);
 int ink_ui_snapshot(char *buf, size_t cap, const char **activity_name);
 /** Name of the foreground activity or the top overlay ("" if none). */
 const char *ink_ui_top_name(void);
+/** Name of the foreground activity, under any overlay ("" if none). */
+const char *ink_ui_page_name(void);
 
 /** dp -> pixels for the current panel. */
 int ink_dp(int dp);

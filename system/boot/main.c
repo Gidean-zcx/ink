@@ -11,6 +11,7 @@
 #include "ink/sys/audio.h"
 #include "ink/sys/camera.h"
 #include "ink/sys/comm.h"
+#include "ink/sys/confirm.h"
 #include "ink/sys/data.h"
 #include "ink/sys/display.h"
 #include "ink/sys/exec.h"
@@ -36,6 +37,7 @@ int ink_reader_actions_init(void);
 int ink_remote_init(void);
 int ink_ui_lock_mark_init(void);
 int ink_shell_interrupt_card_init(void);
+int ink_shell_confirm_card_init(void);
 
 void ink_main(void) {
     hal_log_write("ink: starting system services");
@@ -44,7 +46,7 @@ void ink_main(void) {
     if (ink_cap_init() != 0 || ink_exec_init() != 0 || ink_res_init() != 0 || ink_storage_reclaimable() != 0)
         osal_panic("capability bus or resource manager failed to start");
     if (ink_state_init() != 0 || ink_settings_init() != 0) osal_panic("state and settings tables failed to start");
-    if (ink_svc_init() != 0 || ink_data_init() != 0) osal_panic("data store failed to start");
+    if (ink_svc_init() != 0 || ink_confirm_init() != 0 || ink_data_init() != 0) osal_panic("data store failed to start");
     if (ink_power_init() != 0 || ink_file_service_init() != 0) osal_panic("power or file service failed to start");
     ink_members_init();
     if (ink_net_init() != 0 || ink_light_init() != 0) osal_panic("network or light settings failed to start");
@@ -59,7 +61,7 @@ void ink_main(void) {
     if (ink_ai_init() != 0) osal_panic("ai service failed to start");
     if (ink_tools_init() != 0 || ink_system_actions_init() != 0 || ink_reader_actions_init() != 0 || ink_remote_init() != 0)
         osal_panic("action registry failed to start");
-    if (ink_ui_start(&ink_app_home) != 0 || ink_ui_lock_mark_init() != 0 || ink_shell_interrupt_card_init() != 0) osal_panic("ui failed to start");
+    if (ink_ui_start(&ink_app_home) != 0 || ink_ui_lock_mark_init() != 0 || ink_shell_interrupt_card_init() != 0 || ink_shell_confirm_card_init() != 0) osal_panic("ui failed to start");
     ink_fs_refresh_state(); /* blocks on the card: here, not in anyone's way */
     ink_power_battery_policy_start();
     ink_probe_mark("system-started");

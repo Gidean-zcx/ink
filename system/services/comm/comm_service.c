@@ -250,6 +250,7 @@ static void cap_hangup(ink_call_t *c) {
 static const ink_cap_t COMM_CAPS[] = {
     {.id = "message.send",
      .title = "发短信",
+     .ask = "发短信给 {to}：{text}",
      .input = "{\"type\":\"object\",\"properties\":{\"to\":{\"type\":\"string\",\"maxLength\":20},\"text\":{\"type\":\"string\",\"maxLength\":118}},"
               "\"required\":[\"to\",\"text\"]}",
      .effect = INK_FX_EXTERNAL,
@@ -262,6 +263,7 @@ static const ink_cap_t COMM_CAPS[] = {
     {.id = "message.list", .title = "最近的短信", .effect = INK_FX_READ, .child_ok = true, .permission = "message", .exec = INK_EXEC_DIRECT, .run = cap_list},
     {.id = "call.dial",
      .title = "打电话",
+     .ask = "打电话给 {number}",
      .input = "{\"type\":\"object\",\"properties\":{\"number\":{\"type\":\"string\",\"maxLength\":20}},\"required\":[\"number\"]}",
      .effect = INK_FX_EXTERNAL,
      .child_ok = true,

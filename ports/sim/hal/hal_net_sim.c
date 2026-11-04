@@ -721,6 +721,8 @@ static hal_at_result_t at_run(const char *cmd, const char *payload, char *resp, 
 }
 
 /* The outside world (window, scripts; ISR context) */
+int sim_net_sms_sent(void) { return (int)MS.sms_out; }
+
 bool sim_net_deliver_sms(const char *number, const char *utf8) {
     if (!can_sms()) return false;
     for (int i = 0; i < SMS_SLOTS; i++)

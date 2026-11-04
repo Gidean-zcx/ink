@@ -10,6 +10,7 @@
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/cap.h"
+#include "ink/sys/confirm.h"
 #include "ink/sys/hub.h"
 #include "ink/sys/json.h"
 #include "ink/sys/members.h"
@@ -78,7 +79,7 @@ static ink_confirm_t confirm_for(const ink_cap_t *c, ink_source_t src) {
     case INK_FX_SYSTEM: k = INK_CONFIRM_DEVICE; break;
     default: break;
     }
-    if (src == INK_SRC_TOUCH || src == INK_SRC_KEY || src == INK_SRC_SYSTEM) return INK_CONFIRM_NONE;
+    if (src == INK_SRC_TOUCH || src == INK_SRC_KEY || src == INK_SRC_SYSTEM || src == INK_SRC_CONFIRMED) return INK_CONFIRM_NONE;
     return k;
 }
 
@@ -91,7 +92,8 @@ static ink_rc_t reject(ink_receipt_t *rc, ink_rc_t st, const char *why) {
 /* The policy gate (detailed design §2.4), before anything runs. INK_RC_DONE = may run. */
 static ink_rc_t gate(const ink_cap_t *c, ink_source_t src, uint32_t page_gen, ink_receipt_t *rc) {
     if (!c) return reject(rc, INK_RC_INVALID, "unknown action");
-    if (!on_its_page(c)) return reject(rc, INK_RC_INVALID, "not available on this page");
+    /* the card the member just answered is still over the page it was asked about */
+    if (src == INK_SRC_CONFIRMED ? c->activity && strcmp(ink_ui_page_name(), c->activity) : !on_its_page(c)) return reject(rc, INK_RC_INVALID, "not available on this page");
     if (c->form == INK_FORM_EVENT || !c->run) return reject(rc, INK_RC_INVALID, "an event: subscribe to it");
     if (!exposed(c, src)) return reject(rc, INK_RC_INVALID, "not offered to this caller");
     const ink_member_t *m = ink_member_current();
@@ -111,10 +113,9 @@ static ink_rc_t gate(const ink_cap_t *c, ink_source_t src, uint32_t page_gen, in
         return reject(rc, INK_RC_REJECTED, "upgrades are started by people only");
     }
     /* a tool call prepared for an older page must not act on the new one */
-    if (remote && page_gen && c->activity && page_gen != ink_ui_content_version())
+    if ((remote || src == INK_SRC_CONFIRMED) && page_gen && c->activity && page_gen != ink_ui_content_version())
         return reject(rc, INK_RC_STALE, "the page changed since the request was made");
     if (confirm_for(c, src) != INK_CONFIRM_NONE) {
-        /* the system confirmation card is not built yet: report what would happen */
         ink_probe_count("policy.pending_confirmation");
         return reject(rc, INK_RC_PENDING_CONFIRMATION, "needs confirmation on the device");
     }
@@ -407,11 +408,13 @@ static void start(void *arg) {
     snprintf(key, sizeof key, "action.%s.%s", p->call.src == INK_SRC_AI ? "ai" : "user", p->id);
     ink_probe_count(key);
     bool ran = false;
-    if (gate(c, p->call.src, p->call.page_gen, rc) == INK_RC_DONE) {
+    ink_rc_t verdict = gate(c, p->call.src, p->call.page_gen, rc);
+    if (verdict == INK_RC_DONE || verdict == INK_RC_PENDING_CONFIRMATION) {
         char why[96];
         int bad = p->json ? ink_args_from_json(&p->call.args, p->json, strlen(p->json), c->input, why, sizeof why)
                           : ink_args_check(&p->call.args, c->input, why, sizeof why);
-        if (bad) reject(rc, INK_RC_INVALID, why);
+        if (bad) reject(rc, INK_RC_INVALID, why); /* no card for what could not run anyway */
+        else if (verdict == INK_RC_PENDING_CONFIRMATION) ink_confirm_hold(c, &p->call.args, p->call.src, p->call.page_gen, rc);
         else {
             rc->status = INK_RC_DONE;
             c->run(&p->call);

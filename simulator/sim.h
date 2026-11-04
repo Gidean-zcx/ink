@@ -314,6 +314,7 @@ void sim_net_modem_power(bool on);         /* board P14 (shared 4G + BT audio + 
 bool sim_net_modem_registered(void);
 /* The outside world for SMS and calls (window, scripts; ISR context) */
 bool sim_net_deliver_sms(const char *number, const char *utf8); /* false: no SMS service or store full */
+int sim_net_sms_sent(void); /* messages the device has sent so far (tests) */
 bool sim_net_incoming_call(const char *number);                 /* false: busy or no voice service */
 void sim_net_remote_answer(void);
 void sim_net_remote_hangup(void);

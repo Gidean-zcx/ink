@@ -272,6 +272,7 @@ static const ink_cap_t DATA_CAPS[] = {
      .run = cap_put},
     {.id = "data.delete",
      .title = "删除一条数据",
+     .ask = "从 {collection} 删除第 {id} 条",
      .input = "{\"type\":\"object\",\"properties\":{" COLL ",\"id\":{\"type\":\"integer\",\"minimum\":1}},\"required\":[\"collection\",\"id\"]}",
      .effect = INK_FX_LOCAL_DESTRUCTIVE,
      .child_ok = true,

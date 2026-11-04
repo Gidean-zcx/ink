@@ -278,11 +278,12 @@ void ink_ui_cause(uint64_t t_us, const char *tag) {
     UI.cause_tag = tag;
 }
 
-const char *ink_ui_top_name(void) {
-    if (UI.noverlays) return UI.overlays[UI.noverlays - 1]->name;
+const char *ink_ui_page_name(void) {
     const ink_activity_t *top = UI.depth ? UI.stack[UI.depth - 1].a : NULL;
     return top && top->name ? top->name : "";
 }
+
+const char *ink_ui_top_name(void) { return UI.noverlays ? UI.overlays[UI.noverlays - 1]->name : ink_ui_page_name(); }
 
 int ink_ui_snapshot(char *buf, size_t cap, const char **activity_name) {
     if (UI.noverlays) {
@@ -413,10 +414,10 @@ void ink_ui_pop(void) {
 
 /* What was aimed at the old content is dropped, as for a new screen. A touch in progress too: the next move of that
  * finger would press what is under it now, and lifting it would be a tap (a finger down when a call came in, on the
- * spot where "hang up" appears). */
+ * spot where "hang up" appears). The content version stays: the page under it has not changed, and what is prepared
+ * for it is still right when the overlay goes (while it is up, the gate refuses what belongs to the page). */
 static void overlays_changed(void) {
     UI.generation++;
-    ink_ui_content_changed();
     lv_indev_reset(UI.indev, NULL);
     UI.pn = 0;
     if (UI.last_pressed) UI.skip_touch = true;

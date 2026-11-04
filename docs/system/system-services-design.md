@@ -442,20 +442,22 @@ void ink_interrupt_set_presenter(const ink_int_presenter_t *p);   /* 系统壳�
 策略关口要确认时，不再只回“待确认”：
 
 ```c
-typedef struct { uint32_t token; char cap[48], title[48], detail[160], object[48]; ink_source_t src; uint64_t expires_us; bool parent; } ink_confirm_view_t;
+typedef struct { uint32_t token; char cap[48], title[48], detail[160]; uint8_t src; uint64_t expires_us; bool parent; } ink_confirm_view_t;
+ink_rc_t ink_confirm_hold(const ink_cap_t *c, const ink_args_t *args, ink_source_t src, uint32_t page_gen, ink_receipt_t *rc); /* 关口，或自己才知道要确认的处理函数 */
 int  ink_confirm_list(ink_confirm_view_t *out, int max);
 int  ink_confirm_decide(uint32_t token, bool accept, ink_source_t src); /* 只收触摸和按键 */
+int  ink_confirm_withdraw(uint32_t token, ink_source_t src);
 void ink_confirm_set_presenter(const ink_confirm_presenter_t *p);
 ```
 
-1. 关口发现要确认：把调用（能力、参数、来源、内容版本、成员）存进待确认表（最多 4 条，放 PSRAM），回执“待确认”，`object` 是 `confirm:<token>`，`detail` 说明在等什么。满了回“被拒绝：确认队列满”。重发同一个请求号拿到同一个回执（现有的去重）。
-2. 呈现者显示卡片（系统占位）：能力标题、参数摘要（比如“发短信给 10086：查询余额”；密码类参数不显示）、确认、取消。外框由系统画，页面无法模仿（底座设计 §6.5）。设备锁着时等解锁再显示；有打断时让路。
-3. 用户确认：用来源 `INK_SRC_CONFIRMED` 重新走一遍调用：关口再查一次（成员还是不是那个人、儿童限制、页面版本），只是不再要确认。结果发事件 `confirm.result {token, decision, receipt}`，AI 代理转给中枢。
-4. 取消、过期（60 s）、换成员、AI 撤回（`confirm.withdraw`）：调用作废，同样发 `confirm.result`。
-5. 只有 `INK_SRC_TOUCH`、`INK_SRC_KEY` 能确认。`confirm.accept`、`confirm.reject` 不开放给 AI 和远端。同一个 token 只能决定一次。
+1. 关口发现要确认：先查参数（不合法的当场回“无效”，不弹卡），再把调用（能力、参数、来源、内容版本、成员）存进待确认表（最多 4 条，放 PSRAM），回执“待确认”，`object` 是 `confirm:<token>`，`detail` 说明在等什么。满了回“被拒绝：确认队列满”。参数里带调用者缓冲区的（`BLOB`）不能等，直接拒绝。重发同一个请求号拿到同一个回执（现有的去重）。
+2. 呈现者显示卡片（系统占位）：能力标题、一句话（能力的 `.ask`，比如 `"发短信给 {to}：{text}"`；没写就是参数列表；密码类参数显示 `***`，给 AI 看的列表也一样）、确认、取消。外框由系统画，页面无法模仿（底座设计 §6.5）。设备锁着时等解锁再显示；有打断时让路，打断结束回来。
+3. 用户确认：用来源 `INK_SRC_CONFIRMED` 重新走一遍调用：关口再查一次（成员还是不是那个人、儿童限制、页面版本、页面还在不在，看的是卡片底下的页面），只是不再要确认。结果发事件 `confirm.result {token, cap, decision, status, detail, say, object}`，事件经 AI 代理转给中枢（§1.2 第 3 条）。
+4. 取消、过期（60 s）、换成员、AI 撤回（`confirm.withdraw`）：调用作废，同样发 `confirm.result`。主页键、返回键等于取消。
+5. 只有 `INK_SRC_TOUCH`、`INK_SRC_KEY` 能确认。`confirm.accept`、`confirm.reject` 标 `INK_EXPOSE_OWNER`：不开放给 AI、远端和应用，也不在工具清单里；C 接口也查来源。同一个 token 只能决定一次。撤回只有发起的来源或人能做。
 6. 要家长确认的（`INK_CONFIRM_PARENT`，比如恢复出厂）：卡片上要输成人 PIN（§11.3）。
 
-系统级设置（`settings.set`）走同样的路：设置表回“待确认”时带 token。
+系统级设置（`settings.set`）走同样的路：设置表回“待确认”时，处理函数调用 `ink_confirm_hold`，回执带 token。应用改系统级设置也要确认。
 
 ## 8. 应用注册和生命周期
 
