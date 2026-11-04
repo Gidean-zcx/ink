@@ -83,7 +83,7 @@ static void comm_task(void *arg) {
     uint64_t status_at = osal_now_us() + STATUS_DELAY_US;
     for (;;) {
         hal_cell_event_t ev;
-        if (hal_cell_wait_event(&ev, 1000)) {
+        if (hal_cell_wait_event(&ev, status_at ? 1000 : 60000)) { /* a long wait once the first look is done */
             static ink_args_t a; /* comm task only */
             ink_args_init(&a);
             if (ev.type == HAL_CELL_EV_SMS) on_sms(ev.sms_index);

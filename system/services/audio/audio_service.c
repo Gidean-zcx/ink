@@ -80,6 +80,7 @@ static struct {
     int16_t *ring; /* CAP_RING samples, PSRAM */
     /* hands-free listening (R-047): the microphone stays open for the voice front end */
     bool listen_on, afe_speech;
+    bool afe_on; /* audio task: the front end is started */
     ink_audio_listen_fn listen_fn;
     void *listen_ctx;
     int16_t *ref_ring;  /* CAP_RING samples of what the speaker played, PSRAM (allocated on first listen) */
@@ -211,15 +212,18 @@ static bool capture_step(int16_t *scratch) {
         for (int i = 0; i < FRAME; i++) scratch[i] = i < (int)left ? AU.ring[AU.rd++ % CAP_RING] : 0;
     }
     unlock();
-    if (got && listen) afe_step(scratch);
+    if (got && listen && AU.afe_on) afe_step(scratch); /* afe_on: set in this task, once it started */
     if (got && on) encode_and_deliver(scratch);
     if (got && !(on && ending && listen)) return true; /* listening: the capture ends right here */
     if (on && ending) {
         if (!got && !listen && left) encode_and_deliver(scratch);
-        if (!listen) hal_audio_capture_stop(); /* listening keeps the microphone */
+        lock();
+        bool keep_mic = AU.listen_on; /* asked for just now, maybe: it relies on this microphone */
+        AU.cap_on = AU.cap_ending = false;
+        unlock();
+        if (!keep_mic) hal_audio_capture_stop();
         if (AU.cap_fn) AU.cap_fn(AU.cap_ctx, NULL, 0, AU.cap_seq);
         lock();
-        AU.cap_on = AU.cap_ending = false;
         AU.cap_fn = NULL;
         unlock();
         hal_opus_enc_free(AU.enc);
@@ -508,10 +512,31 @@ static void update_write_hold(void) {
     }
 }
 
+static int h_playing = -1, h_listening = -1;
+
+/* The front end starts and stops in this task (hal_afe.h); a start that fails ends the listening. */
+static void afe_transition(void) {
+    lock();
+    bool want = AU.listen_on;
+    unlock();
+    if (want == AU.afe_on) return;
+    if (want && hal_afe_start() != 0) {
+        lock();
+        AU.listen_on = false;
+        bool mic = AU.cap_on;
+        unlock();
+        if (!mic) hal_audio_capture_stop();
+        ink_probe_count("audio.listen_failed");
+        ink_state_set_bool(h_listening, false);
+        return;
+    }
+    if (!want) hal_afe_stop();
+    AU.afe_on = want;
+}
+
 /* System state: what plays (published on change only), and whether the device listens (hands-free, step 6). */
 static const ink_state_def_t ST_PLAYING = {.id = "audio.now_playing", .type = INK_ST_STR, .title = "正在播放"};
 static const ink_state_def_t ST_LISTENING = {.id = "audio.listening", .type = INK_ST_BOOL, .title = "在听（免按键）"};
-static int h_playing = -1, h_listening = -1;
 
 static void publish_playing(void) { /* audio task */
     static const char *const NAME[] = {"none", "story", "voice", "alert"};
@@ -542,6 +567,7 @@ static void audio_task(void *arg) {
         while (capture_step(scratch)) service_playback();
         update_write_hold();
         publish_playing();
+        afe_transition();
     }
 }
 
@@ -602,7 +628,7 @@ int ink_audio_listen(bool on, ink_audio_listen_fn fn, void *ctx) {
             AU.ref_frame = osal_malloc(FRAME * sizeof(int16_t), OSAL_MEM_EXTERNAL);
             osal_mem_tag(prev);
         }
-        if (!AU.ref_ring || !AU.ref_frame || hal_afe_start() != 0) return -1;
+        if (!AU.ref_ring || !AU.ref_frame) return -1;
         lock();
         AU.listen_fn = fn;
         AU.listen_ctx = ctx;
@@ -614,7 +640,6 @@ int ink_audio_listen(bool on, ink_audio_listen_fn fn, void *ctx) {
             lock();
             AU.listen_on = false;
             unlock();
-            hal_afe_stop();
             return -1;
         }
     } else {
@@ -623,7 +648,6 @@ int ink_audio_listen(bool on, ink_audio_listen_fn fn, void *ctx) {
         mic = AU.cap_on;
         unlock();
         if (!mic) hal_audio_capture_stop();
-        hal_afe_stop();
     }
     ink_state_set_bool(h_listening, on);
     ink_probe_count(on ? "audio.listen_on" : "audio.listen_off");

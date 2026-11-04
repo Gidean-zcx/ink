@@ -58,6 +58,7 @@ static const ink_refresh_t HINTS[] = {INK_REFRESH_FAST, INK_REFRESH_UI, INK_REFR
 
 typedef struct region_job {
     struct region_job *next;
+    int sid; /* the session it came in: a later one must not get its picture */
     uint8_t flags;
     size_t len;
     uint8_t data[];
@@ -116,7 +117,14 @@ static void show_update(void *arg) { /* UI task */
 
 static void decode_region(region_job_t *j) { /* exec.media */
     const uint8_t *p = j->data;
-    if (j->len < 10 || !RS.px) goto out;
+    osal_mutex_lock(RS.lock, OSAL_WAIT_FOREVER);
+    bool current = j->sid == RS.sid && RS.px;
+    osal_mutex_unlock(RS.lock);
+    if (!current) { /* closed meanwhile, or another session already: not on this canvas */
+        osal_free(j);
+        return;
+    }
+    if (j->len < 10) goto out;
     int x = p[0] | p[1] << 8, y = p[2] | p[3] << 8, w = p[4] | p[5] << 8, h = p[6] | p[7] << 8, enc = p[8], hint = p[9];
     if (w <= 0 || h <= 0 || x + w > RS.w || y + h > RS.h) {
         ink_probe_count("remote.bad_regions");
@@ -181,6 +189,7 @@ static void on_frame(void *ctx, int sid, uint8_t kind, const uint8_t *payload, s
     region_job_t *j = osal_malloc(sizeof *j + len, OSAL_MEM_EXTERNAL);
     if (!j) return;
     j->next = NULL;
+    j->sid = sid;
     j->flags = flags;
     j->len = len;
     memcpy(j->data, payload, len);
@@ -230,9 +239,15 @@ static void remote_create(lv_obj_t *scr, void *arg) {
     if (!RS.lock) RS.lock = osal_mutex_create();
     RS.w = lv_display_get_horizontal_resolution(NULL);
     RS.h = lv_display_get_vertical_resolution(NULL);
+    osal_mutex_lock(RS.lock, OSAL_WAIT_FOREVER);
     if (!RS.px) RS.px = osal_malloc((size_t)RS.w * (size_t)RS.h, OSAL_MEM_EXTERNAL);
-    if (!RS.px) return;
-    memset(RS.px, 0xFF, (size_t)RS.w * (size_t)RS.h);
+    uint8_t *px = RS.px;
+    osal_mutex_unlock(RS.lock);
+    if (!px) {
+        ink_probe_count("remote.no_memory");
+        return;
+    }
+    memset(px, 0xFF, (size_t)RS.w * (size_t)RS.h);
     RS.dsc.header.magic = LV_IMAGE_HEADER_MAGIC;
     RS.dsc.header.cf = LV_COLOR_FORMAT_L8;
     RS.dsc.header.w = (uint32_t)RS.w;
@@ -253,15 +268,37 @@ static void remote_create(lv_obj_t *scr, void *arg) {
     RS.opened_us = osal_now_us();
     char params[160];
     snprintf(params, sizeof params, "{\"w\":%d,\"h\":%d,\"gray\":16,\"url\":\"%s\"}", RS.w, RS.h, url);
-    RS.sid = ink_rt_open("browser.session", params, &RT); /* the first pull goes out once the hub confirmed it */
+    int sid = ink_rt_open("browser.session", params, &RT); /* the first pull goes out once the hub confirmed it */
+    osal_mutex_lock(RS.lock, OSAL_WAIT_FOREVER);
+    RS.sid = sid;
+    osal_mutex_unlock(RS.lock);
+}
+
+/* After the regions still queued (a job behind them on the same executor): the canvas goes back,
+ * unless the host was opened again meanwhile. */
+static void release_canvas(void *arg) { /* exec.media */
+    (void)arg;
+    osal_mutex_lock(RS.lock, OSAL_WAIT_FOREVER);
+    if (!RS.sid) {
+        osal_free(RS.px);
+        osal_free(RS.tmp);
+        RS.px = RS.tmp = NULL;
+        RS.tmp_cap = 0;
+    }
+    osal_mutex_unlock(RS.lock);
 }
 
 static void remote_destroy(void) {
-    if (RS.sid > 0) ink_rt_close(RS.sid);
-    RS.sid = 0;
     if (RS.credit_timer) lv_timer_delete(RS.credit_timer);
     RS.credit_timer = NULL;
     RS.img = NULL;
+    if (RS.sid > 0) ink_rt_close(RS.sid);
+    if (RS.lock) {
+        osal_mutex_lock(RS.lock, OSAL_WAIT_FOREVER);
+        RS.sid = 0;
+        osal_mutex_unlock(RS.lock);
+    }
+    if (ink_exec_post(INK_EXEC_MEDIA, release_canvas, NULL) != 0) ink_probe_count("remote.canvas_kept");
 }
 
 static bool remote_key(hal_key_t key, bool long_press) {

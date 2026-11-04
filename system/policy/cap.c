@@ -135,6 +135,7 @@ typedef struct {
     char *json; /* JSON arguments until the gate passed */
     uint64_t deadline_us;
     bool used, deferred, finished, replied, answered, remote;
+    bool pinned; /* a waiting ink_cap_invoke still looks at it: not released yet */
 } pending_t;
 
 typedef struct {
@@ -219,14 +220,17 @@ static void remember(const char *rid, const ink_receipt_t *rc) {
 static void answered(pending_t *p) {
     osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
     p->answered = true;
-    bool done = p->finished;
+    bool done = p->finished && !p->pinned;
     osal_mutex_unlock(CB.lock);
     if (done) release(p);
 }
 
 static void answer_job(void *arg) {
     pending_t *p = arg;
-    p->o.done(p->o.ctx, &p->out);
+    osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+    ink_cap_done_fn done = p->o.done; /* NULL once a waiting ink_cap_invoke gave up on it */
+    osal_mutex_unlock(CB.lock);
+    if (done) done(p->o.ctx, &p->out);
     answered(p);
 }
 
@@ -234,9 +238,9 @@ static void answer_job(void *arg) {
 static void answer(pending_t *p) {
     if (p->rid[0]) remember(p->rid, &p->out);
     osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
-    ink_cap_done_fn done = p->o.done; /* NULL once a waiting ink_cap_invoke gave up on it */
+    bool nobody = !p->o.done;
     osal_mutex_unlock(CB.lock);
-    if (!done) answered(p);
+    if (nobody) answered(p);
     else if (p->o.reply_exec == INK_EXEC_DIRECT || ink_exec_is_current(p->o.reply_exec)) answer_job(p);
     else if (ink_exec_post(p->o.reply_exec, answer_job, p) != 0) {
         ink_probe_count("cap.reply_dropped");
@@ -248,7 +252,7 @@ static void answer(pending_t *p) {
 static void finish(pending_t *p) {
     osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
     p->finished = true;
-    bool reply = !p->replied, late = p->replied && p->answered;
+    bool reply = !p->replied, late = p->replied && p->answered && !p->pinned;
     if (reply) {
         p->replied = true;
         p->call.rc.page_gen = ink_ui_content_version();
@@ -409,7 +413,16 @@ int ink_cap_call(const char *addr, const ink_args_t *args, const ink_call_opts_t
     return 0;
 }
 
-static void copy_receipt(void *ctx, const ink_receipt_t *rc) { *(ink_receipt_t *)ctx = *rc; }
+typedef struct {
+    ink_receipt_t *rc;
+    int copied;
+} sync_reply_t;
+
+static void copy_receipt(void *ctx, const ink_receipt_t *rc) {
+    sync_reply_t *s = ctx;
+    *s->rc = *rc;
+    __atomic_store_n(&s->copied, 1, __ATOMIC_RELEASE);
+}
 
 /* Run here and wait (the UI task, or a test task): the handler runs inline whatever its executor,
  * except media and background work, which is queued. */
@@ -423,16 +436,25 @@ static ink_rc_t invoke(const char *id, const ink_args_t *args, const char *json,
         rc->status = INK_RC_QUEUED;
         return rc->status;
     }
+    sync_reply_t sync = {.rc = rc};
     o.done = copy_receipt;
-    o.ctx = rc;
+    o.ctx = &sync;
     pending_t *p = CB.pool ? prepare(id, c, args, &o) : NULL;
     if (!p) return reject(rc, INK_RC_FAILED, "busy");
+    p->pinned = true; /* looked at below, however soon it completes */
     start(p);
     osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
-    bool waiting = !p->replied;
-    if (waiting) p->o.done = NULL; /* it completes later: nobody here to tell */
+    bool later = !p->replied;
+    if (later) p->o.done = NULL; /* it completes later: nobody here to tell, rc is about to go out of scope */
     osal_mutex_unlock(CB.lock);
-    if (waiting) {
+    /* answered in another task at this very moment: the copy into rc is on its way */
+    while (!later && !__atomic_load_n(&sync.copied, __ATOMIC_ACQUIRE)) osal_task_yield();
+    osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+    p->pinned = false;
+    bool gone = p->finished && p->answered;
+    osal_mutex_unlock(CB.lock);
+    if (gone) release(p);
+    if (later) {
         rc->status = INK_RC_QUEUED;
         snprintf(rc->detail, sizeof rc->detail, "the result comes later");
     }
