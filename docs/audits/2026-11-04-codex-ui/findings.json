@@ -1,0 +1,598 @@
+[
+  {
+    "id": "AUD-UI-001",
+    "severity": "严重",
+    "area": "F/B",
+    "title": "锁屏旁路没有身份验证边界，能沿设计链接进入私人内容和成员管理",
+    "evidence_type": [
+      "画板",
+      "需求核查",
+      "文档核查",
+      "推断"
+    ],
+    "locations": [
+      "_design/boards/Lock.dc.html:33",
+      "_design/boards/Lock.dc.html:45",
+      "_design/boards/Lock.dc.html:50",
+      "_design/boards/Camera.dc.html:29",
+      "_design/boards/Members.dc.html:52",
+      "_design/boards/SetMembers.dc.html:21",
+      "docs/system/foundation.md:479"
+    ],
+    "impact": "按图实现，未验证的人可从锁屏通知进入 Main、从相机进入完整相册，或从成员选择的添加成员进入含家长控制的 SetMembers。私人数据及家长权限的边界不清。这里确认的是设计路径缺口，不是已证实的产品代码漏洞。",
+    "recommendation": "为锁屏通知、AI、相机、控制中心和添加成员分别标出允许的能力与验证点。成人内容和家长管理先验证，验证后回到原请求；锁屏相机只查看本次拍摄，退出回锁屏。定义锁屏保留原页面时的隐私处理和成人闲置退出。"
+  },
+  {
+    "id": "AUD-UI-002",
+    "severity": "高",
+    "area": "A/F",
+    "title": "儿童成员只有入口，没有儿童主页、受限状态和交接规则",
+    "evidence_type": [
+      "画板",
+      "需求核查",
+      "文档核查"
+    ],
+    "locations": [
+      "_design/boards/Members.dc.html:51",
+      "_design/boards/SetMembers.dc.html:34",
+      "_design/boards/Main.dc.html",
+      "_design/boards/Apps.dc.html",
+      "docs/product/prd.md:22",
+      "docs/system/foundation.md:474"
+    ],
+    "impact": "无法据稿判断孩子进入后看到谁的书、短信、照片和 AI 记忆，哪些设置不可用，时长用完如何退出；家长也无法完整设置限制或查看儿童记录。",
+    "recommendation": "保留既定三屏和 Dock，补儿童数据版本、受限入口、到时提醒/结束、家长验证和切换后的播放/草稿/AI/剪贴板处理。补内容与应用权限、音量上限及记录说明。不要增加儿童短信电话白名单，R-040/D-25 已明确不限制。"
+  },
+  {
+    "id": "AUD-UI-003",
+    "severity": "高",
+    "area": "A/B",
+    "title": "首次开机只有扫码起点，连网、绑定中枢和建立家庭身份没有闭环",
+    "evidence_type": [
+      "画板",
+      "文档核查",
+      "需求核查"
+    ],
+    "locations": [
+      "_design/boards/FirstBoot.dc.html:21",
+      "_design/boards/FirstBoot.dc.html:28",
+      "_design/boards/FirstBoot.dc.html:32",
+      "_design/boards/ImePassword.dc.html",
+      "_design/boards/canvas.json",
+      "docs/system/foundation.md:225"
+    ],
+    "impact": "新设备连接 Wi-Fi 后仍无法按设计完成中枢绑定、创建/选择家庭、创建成人 PIN 或恢复已有设备。没有手机、二维码过期或中枢不可达时缺少可走的路径。",
+    "recommendation": "补扫码后的手机/中枢与设备交接契约、配网中/成功/失败、绑定对象确认、首位成人和 PIN 建立、已有家庭恢复、重试与本地使用入口；明确无手机时怎样完成身份绑定。无需在本轮设计完整服务器管理台。"
+  },
+  {
+    "id": "AUD-UI-004",
+    "severity": "高",
+    "area": "A/B",
+    "title": "备份没有可核对的范围和结果，整机恢复完全缺页",
+    "evidence_type": [
+      "画板",
+      "需求核查",
+      "文档核查"
+    ],
+    "locations": [
+      "_design/boards/SetStorage.dc.html:33",
+      "_design/boards/SetStorage.dc.html:43",
+      "_design/boards/FirstBoot.dc.html",
+      "docs/system/foundation.md:314",
+      "docs/product/prd.md"
+    ],
+    "impact": "初期刷机或升级后最需要的数据恢复无法按稿完成；“今天 03:00 备份过”不能说明哪些成员、哪些数据已上传成功，容易让人以为数据已安全备份。",
+    "recommendation": "首版补整机恢复入口、备份时间/范围/状态、登录后恢复预览、覆盖冲突确认、进度、失败重试及未恢复项目。明确本地保存、等待上传、中枢收到的区别。单 app 恢复和复杂版本挑选可后续。"
+  },
+  {
+    "id": "AUD-UI-005",
+    "severity": "高",
+    "area": "F/B",
+    "title": "文件传输没有访问授权与成员范围，U 盘模式缺安全交接和退出状态",
+    "evidence_type": [
+      "画板",
+      "文档核查",
+      "需求核查",
+      "推断"
+    ],
+    "locations": [
+      "_design/boards/Transfer.dc.html:25",
+      "_design/boards/Transfer.dc.html:34",
+      "_design/boards/Transfer.dc.html:40",
+      "_design/states/Transfer__usb.png",
+      "docs/system/foundation.md:469",
+      "docs/system/ui-dependencies.md"
+    ],
+    "impact": "同一 Wi-Fi 的来访者是否可读写文件没有答案；整张 TF 卡作为 U 盘可能暴露其他成员资料。传输中禁自动锁屏会延长成人会话暴露，直接拔线恢复也未处理未写完、占用文件与重新索引。",
+    "recommendation": "明确无线会话的短期授权/设备确认、允许上传或下载的目录和成员范围、关闭后失效；USB 开启前验证权限、提示整卡暴露范围并暂停持卡业务，补连接中/占用/传输中/安全弹出/恢复索引/失败状态。离开页面和锁屏如何处理传输须明确。"
+  },
+  {
+    "id": "AUD-UI-006",
+    "severity": "高",
+    "area": "A/F/B",
+    "title": "PIN、删除与恢复出厂没有完整确认和恢复流程",
+    "evidence_type": [
+      "画板",
+      "文档核查",
+      "需求核查"
+    ],
+    "locations": [
+      "_design/boards/Pin.dc.html:24",
+      "_design/boards/SetMembers.dc.html:36",
+      "_design/boards/SetAbout.dc.html:31",
+      "_design/boards/MemoDetail.dc.html",
+      "_design/boards/Photo.dc.html",
+      "docs/system/foundation.md:268",
+      "docs/system/foundation.md:472",
+      "docs/system/foundation.md:479"
+    ],
+    "impact": "用户不知道 PIN 错误、忘记 PIN、修改 PIN 怎么继续；删除或恢复出厂会影响哪些本地/中枢数据也不明确。相同的 PIN 画板无法表达登录、改密和出厂恢复三种不同结果。",
+    "recommendation": "补 PIN 校验中/错误/递增等待/中枢重置、创建与修改的新 PIN 二次输入；删除明确对象、是否可撤销；恢复出厂先解释影响范围和备份状态，再验证成人并确认，展示执行结果与解绑失败处理。"
+  },
+  {
+    "id": "AUD-UI-007",
+    "severity": "高",
+    "area": "A/B/D",
+    "title": "离开播放或通话页面后，没有全局控制与返回活动的入口",
+    "evidence_type": [
+      "画板",
+      "需求核查",
+      "文档核查"
+    ],
+    "locations": [
+      "_design/boards/Control.dc.html:73",
+      "_design/boards/StatusBar.dc.html:14",
+      "_design/boards/Lock.dc.html",
+      "_design/boards/PhoneCall.dc.html",
+      "_design/boards/AiHome.dc.html:28",
+      "docs/system/foundation.md:417",
+      "docs/system/system-architecture.md:432"
+    ],
+    "impact": "听书、读报、AI 朗读后按 HOME 或锁屏，用户看不到正在播放什么，也没有可靠的暂停/停止入口；通话切到别页后无法从系统壳回到挂断、静音界面。首版读听闭环因此不完整。",
+    "recommendation": "补统一活动卡或固定状态入口，涵盖播放/暂停/停止/回到内容、通话返回、后台 AI/导入进度与结果；控制中心和锁屏分别给出可用操作。切换成员先保存并暂停旧成员活动。"
+  },
+  {
+    "id": "AUD-UI-008",
+    "severity": "高",
+    "area": "B/D",
+    "title": "来电、闹钟、AI 和键盘的叠加与打断没有状态表",
+    "evidence_type": [
+      "画板",
+      "文档核查",
+      "需求核查"
+    ],
+    "locations": [
+      "_design/boards/PhoneIncoming.dc.html",
+      "_design/boards/PhoneCall.dc.html",
+      "_design/boards/ClockRing.dc.html:29",
+      "_design/boards/Ai.dc.html:83",
+      "_design/boards/Interaction.dc.html:61",
+      "docs/system/foundation.md:421"
+    ],
+    "impact": "来电打断正在录音的 AI、闹钟打断朗读、通话中响闹钟时，谁占屏、谁收音、接听/停止按钮在哪里、之后回到哪里均不明确。“按任意键也能停”还与 HOME、AI、电源、音量的既有含义冲突。",
+    "recommendation": "补四类必测串联：AI/听写→来电；朗读→闹钟；通话→闹钟；确认卡→来电/锁屏。逐项规定屏幕层级、输入归属、音频路由、草稿保存与恢复、是否续播。通话优先于闹钟；具体按键停止/贪睡/静音语义不要只写“停”。"
+  },
+  {
+    "id": "AUD-UI-009",
+    "severity": "高",
+    "area": "A/B/E",
+    "title": "设计几乎只有成功状态，离线与失败时缺少可执行的退路",
+    "evidence_type": [
+      "画板",
+      "需求核查",
+      "文档核查"
+    ],
+    "locations": [
+      "_design/boards/Ai.dc.html:81",
+      "_design/boards/ImeVoice.dc.html:25",
+      "_design/boards/SmsCompose.dc.html",
+      "_design/boards/SetNetwork.dc.html",
+      "_design/boards/Files.dc.html",
+      "_design/boards/Remote.dc.html",
+      "_design/boards/canvas.json",
+      "docs/system/foundation.md:300",
+      "docs/system/foundation.md:370"
+    ],
+    "impact": "设备会联网失败、中枢离线、AI 超时、TF 卡缺失或写满，但用户无法区分仍在等待、已失败或已保存；盲目重试还可能重复发短信、导入或记待办。已下载读听与离线备忘的承诺没有界面保证。",
+    "recommendation": "先补通用状态组件和按业务定制的退路：没网/中枢不可达、AI 超时/取消、配网错误、无 SIM/通话不支持、短信发送中/失败/结果未知、无卡/卡满/只读、远程断连。显示已完成部分，保留草稿，提供重试/取消/本地可用入口；离线语音备忘用“待转写”，听写失败退键盘。"
+  },
+  {
+    "id": "AUD-UI-010",
+    "severity": "高",
+    "area": "B/E/F",
+    "title": "按住说话与点击/唤醒词共用错误结束提示，麦克风常显标记未贯通",
+    "evidence_type": [
+      "画板",
+      "需求核查",
+      "文档核查"
+    ],
+    "locations": [
+      "_design/boards/Ai.dc.html:54",
+      "_design/boards/Ai.dc.html:87",
+      "_design/boards/AiHome.dc.html:51",
+      "_design/boards/StatusBar.dc.html:20",
+      "_design/boards/ImeVoice.dc.html:21",
+      "_design/boards/SetVoice.dc.html:40",
+      "docs/system/system-architecture.md:480"
+    ],
+    "impact": "点屏幕话筒或唤醒词进入时没有按住实体 AI 键，却仍看到“松开 AI 键结束”；用户不清楚怎样结束。普通页面默认免按键在听、锁屏选择“一直”、语音输入/录音时也缺统一采集标记与停录入口，家庭共用时容易误解隐私状态。",
+    "recommendation": "按入口区分按住说话、点击开始、唤醒词对话和听写：给出正确结束/取消方式。统一状态栏，区分本地唤醒监听、正在上传录音、通话/备忘录音及暂停；锁屏同样可见。不要把关闭浮层等同于自动取消所有后台任务。"
+  },
+  {
+    "id": "AUD-UI-011",
+    "severity": "高",
+    "area": "E/B/F",
+    "title": "AI 确认卡只画短信单例，动作执行后的真实结果与上下文交接不足",
+    "evidence_type": [
+      "画板",
+      "文档核查",
+      "需求核查"
+    ],
+    "locations": [
+      "_design/boards/Confirm.dc.html:29",
+      "_design/boards/Confirm.dc.html:38",
+      "_design/boards/AiHome.dc.html:35",
+      "_design/boards/SetVoice.dc.html:50",
+      "_design/boards/Photo.dc.html:26",
+      "_design/boards/Remote.dc.html:42",
+      "docs/system/foundation.md:342",
+      "docs/system/foundation.md:357"
+    ],
+    "impact": "无法据稿实现拨号、删除、批量操作、系统设置等不同确认级别；确认后是否发送成功、部分完成、过期或撤销失败均不明。对照片、设置、键盘、锁屏和远程页面的 AI 上下文也只有入口，缺少可验收的映射。",
+    "recommendation": "补页面×语义数据×有效动作×成员权限的交付表，明确覆盖区域和凭据掩码（D-33）。确认卡展示可核对的目标、参数、范围及当前成员，完整号码可查看，支持返回修改；确认只绑定这次动作，切换成员/过期作废。补各回执状态与结果对象入口，区分关闭、取消、撤销。"
+  },
+  {
+    "id": "AUD-UI-012",
+    "severity": "高",
+    "area": "A/B/D",
+    "title": "输入法缺必要的英文符号、候选翻页和编辑路径",
+    "evidence_type": [
+      "画板",
+      "需求核查",
+      "文档核查"
+    ],
+    "locations": [
+      "_design/boards/Keyboard.dc.html:43",
+      "_design/boards/Keyboard.dc.html:85",
+      "_design/boards/Keyboard.dc.html:125",
+      "_design/boards/Keyboard.dc.html:160",
+      "_design/boards/ImePassword.dc.html:29",
+      "_design/boards/ImeSymbols.dc.html",
+      "_design/boards/ImePinyin.dc.html",
+      "docs/system/foundation.md:220"
+    ],
+    "impact": "按当前键位无法完整输入例如 home_2026! 这样的 Wi-Fi 密码（没有下划线和半角感叹号）；常用 URL 的半角点、斜线等也未提供。候选超过一行、要修改句子中间或复制文本时无路径，语音识别错误只能退删重输。",
+    "recommendation": "明确密码/英文/拼音/数字输入类型，提供 ASCII 符号页及翻页，密码模式保持凭据掩码且禁听写/联想；补候选更多、光标定位/选择/复制粘贴、撤回组合串、长文编辑和草稿保存。听写的“用键盘”须说明保留还是放弃识别稿，并在提交前可改。"
+  },
+  {
+    "id": "AUD-UI-013",
+    "severity": "高",
+    "area": "A/D/H",
+    "title": "“只翻页不滚动”未覆盖长消息、长回答和长表单",
+    "evidence_type": [
+      "画板",
+      "文档核查",
+      "推断"
+    ],
+    "locations": [
+      "_design/boards/Notifications.dc.html:23",
+      "_design/boards/Ai.dc.html:37",
+      "_design/boards/AiHome.dc.html:23",
+      "_design/boards/SmsThread.dc.html:24",
+      "_design/boards/Keyboard.dc.html:22",
+      "_design/boards/FilePicker.dc.html:32",
+      "_design/states/SetDisplay__largest_text.png",
+      "docs/product/system-ui-spec.md:44"
+    ],
+    "impact": "通知多于当前四条、单条短信或 AI 回答超过一屏、文件列表变长、键盘弹出或字号增大时没有可靠的下一页和当前位置，可能裁掉正文或确认按钮。大字号预览已经出现半行被裁。",
+    "recommendation": "制定统一可用高度与分页规则，包含键盘/AI 面板占位、长气泡跨页、选区与光标锚点、末页和返回位置；确认卡正文长时操作区保持可达。补长内容、大字号、长文件名与多通知压力画板。设置预览显示完整若干行或明确省略，不切半行。"
+  },
+  {
+    "id": "AUD-UI-014",
+    "severity": "高",
+    "area": "A/B",
+    "title": "常用的创建、编辑和搜索流程停在入口，部分入口还接错了任务",
+    "evidence_type": [
+      "画板",
+      "需求核查"
+    ],
+    "locations": [
+      "_design/boards/Calendar.dc.html:42",
+      "_design/boards/Clock.dc.html:43",
+      "_design/boards/Memo.dc.html:57",
+      "_design/boards/SmsThread.dc.html:39",
+      "_design/boards/AiHome.dc.html:50",
+      "_design/boards/Phone.dc.html:63",
+      "_design/boards/Main.dc.html:80",
+      "_design/boards/canvas.json"
+    ],
+    "impact": "加提醒、加闹钟、编辑联系人、选择短信收件人、创建清单、管理文件和搜索等只展示入口，没有可交付的后续流程。备忘的写字按钮进入写短信，短信里的话筒进入阅读问答，无法检验任务是否完成或草稿是否保留。",
+    "recommendation": "补创建/编辑/保存/取消/返回原对象的最短闭环，以及必填与无结果状态。语音输入接到当前文本框的听写，AI 提问接到 AI 对话，保留联系人和成员身份。补长按图标菜单、今日卡片添加移除和主页管理规则。闹钟、联系人等可随对应功能的版本交付，备忘和系统搜索先完成。"
+  },
+  {
+    "id": "AUD-UI-015",
+    "severity": "高",
+    "area": "A/B",
+    "title": "传入 EPUB 被画成可以直接打开，缺少转换到设备可读内容的过程",
+    "evidence_type": [
+      "画板",
+      "需求核查",
+      "文档核查"
+    ],
+    "locations": [
+      "_design/boards/FilePicker.dc.html:60",
+      "_design/boards/Transfer.dc.html:32",
+      "_design/boards/Main.dc.html:31",
+      "docs/decisions/README.md",
+      "docs/system/foundation.md:305",
+      "docs/product/system-ui-spec.md:68"
+    ],
+    "impact": "用户把 EPUB 传到 TF 卡后，界面即提供“打开”，却不知道是否仍需中枢转换、是否已能离线读。继续读、读听切换、报纸送达和单词卡虽有主页入口，系统与四个内置应用的交接尚无可验收的约定。",
+    "recommendation": "区分原始文件、等待转换、正在下载、设备可读和离线可用；补转换失败、取消及重新连接中枢的退路。为阅读/听/报纸/单词补系统交接表：打开对象和位置、成员归属、返回位置、离线状态、后台控制、AI 上下文及今日卡片更新。不要求本轮补全四个应用的内部画板。"
+  },
+  {
+    "id": "AUD-UI-016",
+    "severity": "高",
+    "area": "C/G",
+    "title": "高频控件仍从浅灰切到黑色，不能套用纯黑白快刷和统一 0.35 秒承诺",
+    "evidence_type": [
+      "画板",
+      "文档核查",
+      "代码核查",
+      "推断"
+    ],
+    "locations": [
+      "_design/boards/Phone.dc.html:36",
+      "_design/boards/Pin.dc.html:39",
+      "_design/boards/Group.dc.html:14",
+      "_design/boards/PageBar.dc.html:15",
+      "docs/product/system-ui-spec.md:13",
+      "docs/product/system-ui-spec.md:43",
+      "system/services/display/refresh_policy.c:93",
+      "simulator/profiles/metalio-plus.json:44",
+      "docs/hardware/2026-11-03-phase0.md:188"
+    ],
+    "impact": "拨号、PIN 连续输入及灰底列表按下都涉及灰阶旧像素，不能仅因按下结果为黑白就保证 DU/A2 正确。若每次先反色再恢复再换页，刷新次数、残影和等待可能超过当前文档的预期。",
+    "recommendation": "为每类控件定义旧帧→新帧的颜色与刷新区域，动态区域保持可快刷的黑白基底，灰色静态区保留；必要时采用结果反馈并合并多次输入。把 0.35 秒限定为目标与适用条件，区分屏幕空闲、正在刷新和唤醒；按现有 DU20/GL16 路径预算，DU8/A2 只能列待验证优化。"
+  },
+  {
+    "id": "AUD-UI-017",
+    "severity": "高",
+    "area": "C/G",
+    "title": "点阵遮罩实际改动整屏，与“浮层只刷这一块”相矛盾",
+    "evidence_type": [
+      "画板",
+      "文档核查",
+      "推断"
+    ],
+    "locations": [
+      "_design/boards/Confirm.dc.html:21",
+      "_design/boards/FilePicker.dc.html",
+      "_design/boards/PowerMenu.dc.html",
+      "_design/boards/Foundation.dc.html:109",
+      "docs/product/system-ui-spec.md:16",
+      "docs/system/foundation.md:172"
+    ],
+    "impact": "确认卡、电源菜单和文件选择器出现与消失时，浮层外的整屏点阵也改变。底下包含灰色或照片时，恢复不能自动视为黑白快刷；按局部浮层成本排期，会低估刷新面积、清理次数和延迟。",
+    "recommendation": "保留现有浮层风格，但明确遮罩的刷新范围、背景灰阶恢复方式和一次操作的总刷新次数。若保留整屏点阵，就按整屏合成与恢复预算；若要求局部更新，调整遮罩覆盖区域。点阵观感、细密图案残影必须作为待测项，不以“是黑白”直接推导快且不闪。"
+  },
+  {
+    "id": "AUD-UI-018",
+    "severity": "高",
+    "area": "B/C/G",
+    "title": "锁屏上滑、常显时钟和省电模式没有与浅睡唤醒契约对齐",
+    "evidence_type": [
+      "画板",
+      "需求核查",
+      "文档核查",
+      "代码核查"
+    ],
+    "locations": [
+      "_design/boards/Lock.dc.html:25",
+      "_design/boards/Lock.dc.html:48",
+      "_design/boards/Wallpaper.dc.html:77",
+      "_design/boards/Wallpaper.dc.html:93",
+      "docs/decisions/README.md",
+      "system/services/input/input_service.c:150",
+      "system/services/power/power_service.c:124",
+      "system/ui/lock_mark.c:20"
+    ],
+    "impact": "浅睡后用户照“上滑解锁”操作可能没有反应；时钟究竟是冻结在锁定时刻还是每分钟更新也不清楚。把日期待办称为“多刷新一次”无法涵盖持续时钟和通知刷新，现有待机耗电估算不能直接沿用。",
+    "recommendation": "明确已锁但仍醒着、浅睡、唤醒验证三个阶段及允许的输入。浅睡画面提供电源/AI 唤醒提示；唤醒后才支持上滑。为原页/时钟通知/壁纸分别定义时间是否更新、通知何时刷、RTC 唤醒和前光策略，并重新估算耗电。统一默认锁屏时间，明确是否修订 D-38。"
+  },
+  {
+    "id": "AUD-UI-019",
+    "severity": "高",
+    "area": "A/B/C",
+    "title": "低电量、充电、关机和更新安装的关键状态缺失",
+    "evidence_type": [
+      "画板",
+      "文档核查",
+      "代码核查"
+    ],
+    "locations": [
+      "_design/boards/StatusBar.dc.html:14",
+      "_design/boards/PowerMenu.dc.html",
+      "_design/boards/Update.dc.html:28",
+      "_design/boards/SetAbout.dc.html:38",
+      "docs/system/foundation.md:462",
+      "system/services/power/power_service.c:185"
+    ],
+    "impact": "更新只画下载中，无法知道下载后如何确认安装、暂停后怎样续下、失败或回滚怎样恢复。低电量和关机前的数据保存没有提示，电子纸断电后还会保留旧画面，可能让人误以为设备仍可操作。",
+    "recommendation": "补充电/低电量/即将关机、保存中/保存失败、已关机和开机恢复界面；补更新待安装、成人确认、空间/电量不足、校验失败、安装重启、成功/回滚状态。明确通话、传输、备份和录音期间关机或升级怎样处理；不要把下载暂停等同于只退回关于页。"
+  },
+  {
+    "id": "AUD-UI-020",
+    "severity": "中",
+    "area": "A/C",
+    "title": "蓝牙耳机、蓝牙音箱和通话音频被画成通用能力，缺少能力受限时的界面",
+    "evidence_type": [
+      "画板",
+      "需求核查",
+      "文档核查",
+      "代码核查"
+    ],
+    "locations": [
+      "_design/boards/SetBluetooth.dc.html:36",
+      "_design/boards/PhoneCall.dc.html",
+      "_design/states/PhoneCall__muted_headset.png",
+      "docs/system/ui-dependencies.md:35",
+      "platform/include/ink/hal_audio.h"
+    ],
+    "impact": "耳机连接后是否同时支持收音、听书和通话，切到音箱模式后本机 AI/闹钟是否仍能出声，以及翻页器能否连接，都不能从现有证据确认。稿子没有表达这些能力差异，容易把“连接了”理解为所有声音都已可用。",
+    "recommendation": "设计按实际能力显示的连接、配对、路由切换、不可用和断开回退状态；明确耳机与音箱模式的互斥或共存条件。把音频芯片蓝牙、S31 蓝牙和翻页器 HID 的验证分别列项。对应硬件未通过前提供明确不可用状态和已验证的外放路径；不要宣称已支持所有耳机或所有录音路线。"
+  },
+  {
+    "id": "AUD-UI-021",
+    "severity": "中",
+    "area": "D/H",
+    "title": "多个实际触控区小于 82 px，测量报告的键盘豁免没有设计依据",
+    "evidence_type": [
+      "画板",
+      "文档核查",
+      "推断"
+    ],
+    "locations": [
+      "_design/measure.md",
+      "_design/boards/Ai.dc.html:33",
+      "_design/boards/Toggle.dc.html",
+      "_design/boards/Main.dc.html:97",
+      "_design/boards/PageBar.dc.html:31",
+      "_design/boards/TopBar.dc.html:15",
+      "_design/boards/Keyboard.dc.html",
+      "docs/research/system-ui-references.md:50"
+    ],
+    "impact": "AI 关闭、开关、翻页和主页指示点等高频操作违反本项目最小触控尺寸。按 297 dpi 换算，60 px 只有约 5.1 mm、68 px 约 5.8 mm；在儿童和慢刷反馈条件下，可能增加误触与重复操作。",
+    "recommendation": "优先扩展独立按钮的有效热区，开关可让有标签的整行响应，并避免相邻热区重叠。键盘十列无法直接全部放大到 82 px，应明确其例外、布局与候选交互，并安排原尺寸任务验证；测量规则不能因“常规”自动豁免。将状态栏点按视为手势的补充入口，主页点也可只作指示，但要取消错误的可点预期。"
+  },
+  {
+    "id": "AUD-UI-022",
+    "severity": "中",
+    "area": "B/D/G",
+    "title": "设置控件缺少关闭档和应用中状态，开关颜色混用了偏好与实际连接",
+    "evidence_type": [
+      "画板",
+      "代码核查",
+      "需求核查"
+    ],
+    "locations": [
+      "_design/boards/Slider.dc.html:38",
+      "_design/boards/Control.dc.html:93",
+      "_design/states/Control__all_on.png",
+      "_design/boards/SetNetwork.dc.html:28",
+      "_design/boards/SetVoice.dc.html",
+      "system/services/display/light.c:33",
+      "system/services/comm/comm_service.c:125"
+    ],
+    "impact": "前光和音量只有 1～10，用户无法在这些控件里明确关灯或静音；最低值仍有约三分之一黑条，数值与比例感不符。4G 白色表示自动备用而其他白色表示关闭；飞行打开后 4G 仍写自动备用，没有说明蜂窝是否已关闭。SIM 选择即时变黑也不能说明新卡已注册成功。",
+    "recommendation": "为前光/音量补 0 或独立关闭动作，说明音量对应媒体、通话还是闹钟，定义勿扰的例外与实体音量键作用对象。区分用户选项、正在应用、实际连接及失败；4G 区分启用、备用和使用中。SIM 切换期间展示旧/新卡状态和结果；定义飞行模式、Wi-Fi/蓝牙例外，以及免按键快捷开关与三档设置的映射。"
+  },
+  {
+    "id": "AUD-UI-023",
+    "severity": "中",
+    "area": "C/H",
+    "title": "字体、图像和相机预览尚无可落地的资源与降级规格",
+    "evidence_type": [
+      "画板",
+      "文档核查",
+      "代码核查",
+      "推断"
+    ],
+    "locations": [
+      "_design/boards/Camera.dc.html:21",
+      "_design/boards/Gallery.dc.html",
+      "_design/boards/Foundation.dc.html",
+      "docs/product/system-ui-spec.md:74",
+      "docs/system/foundation.md:143",
+      "CMakeLists.txt:202",
+      "system/services/camera/camera_service.c:37"
+    ],
+    "impact": "桌面浏览器可直接使用多字号、多字重字体和图片，但设备尚没有这些资产的容量、解码和并发预算。相机大面积取景如果被理解成实时流畅视频，会引入未验证的刷新、CPU、内存与功耗要求。24 px 灰色小字、细体时钟和细边线的实机可读性也未被截图证明。",
+    "recommendation": "交付字号×字重×字符集清单，区分固定标题子集与任意用户文本，规定缺字和离线回退；先做 SP-05 资产体积核算。图片用预制缩略图、受限解码和可回收缓存，核算与 AI/音频/远程画面并存的峰值。相机明确快照式或低频取景、刷新节流、拍摄中/保存中/失败与扫码结果；未达标时可用拍一张再查看的退路。光学观感留给之后授权的实机验证。"
+  },
+  {
+    "id": "AUD-UI-024",
+    "severity": "中",
+    "area": "E/H",
+    "title": "AI 示例把当前页没有的信息标成“出自这一页”",
+    "evidence_type": [
+      "画板",
+      "需求核查"
+    ],
+    "locations": [
+      "_design/boards/Ai.dc.html:23",
+      "_design/boards/Ai.dc.html:39",
+      "_design/screens/Ai.png",
+      "docs/product/prd.md:18"
+    ],
+    "impact": "阅读辅助的示范把“白天太热”作为原文事实，但屏幕上可核对的原文没有这个原因。即使是示意书，也会把无法核实的解释与引用混在一起，削弱“回答基于当前页”的验收标准。",
+    "recommendation": "把答案改成当前页确实支持的释义；原因若来自别处则给出可定位来源，若只是猜测则明确标为推测。来源入口应能回到相关段落，不能只放通用“出自这一页”标签。"
+  },
+  {
+    "id": "AUD-UI-025",
+    "severity": "中",
+    "area": "B/D",
+    "title": "返回、关闭与边缘手势缺少统一规则，AI 关闭还丢失原页面",
+    "evidence_type": [
+      "画板",
+      "文档核查",
+      "代码核查"
+    ],
+    "locations": [
+      "_design/boards/Ai.dc.html:26",
+      "_design/boards/Ai.dc.html:33",
+      "_design/boards/Control.dc.html:86",
+      "_design/boards/Interaction.dc.html:61",
+      "_design/boards/Interaction.dc.html:67",
+      "_design/boards/Interaction.dc.html:92",
+      "system/ui/ui_task.c:503"
+    ],
+    "impact": "阅读时唤出 AI，关闭链接却到 Main；从任意应用打开 Control 后收起也到 Main。上滑既可翻列表又可回主屏，右滑既可翻主页又可返回，边界区域和优先级没规定。AI 面板实际盖住约 63% 屏幕，规范称只盖下半屏，选中内容被盖住后的处理不清楚。",
+    "recommendation": "规定关闭浮层返回原页面和原位置，返回只退当前层，HOME 按明确优先级先关浮层还是直接回家；取消、结束任务和关界面分开。给出边缘带宽、手势阈值和冲突优先级，键盘/滑杆/文本选择先取得输入归属。明确 AI 面板实际高度与选区保持方式；Plus 没有 BACK，所有返回须有触摸或已存在实体键路径。"
+  },
+  {
+    "id": "AUD-UI-026",
+    "severity": "中",
+    "area": "G",
+    "title": "设计规范与已定决策、当前交付材料存在多处未同步",
+    "evidence_type": [
+      "文档核查",
+      "画板"
+    ],
+    "locations": [
+      "docs/decisions/README.md:62",
+      "docs/decisions/README.md:64",
+      "docs/decisions/README.md:69",
+      "docs/requirements.md:93",
+      "docs/product/system-apps.md:41",
+      "docs/product/system-ui-spec.md:3",
+      "docs/product/system-ui-spec.md:80",
+      "docs/system/ui-dependencies.md:20"
+    ],
+    "impact": "实现者可能分别依据旧文档或新画板，得到不同的按下反馈、锁屏默认值、隐私处理和通知行为；还可能重复询问已经确认的 Dock。当前已有离线导出和运行截图，却仍写源文件不在仓库、没有渲染，审计基线不清。",
+    "recommendation": "维护一次明确的设计版本对照：D-31 与最新“任何控件反色”究竟如何衔接、D-38 是否调整，逐项写变更依据；R-039 更新为 D-33 已定的凭据掩码。分类中的 Dock 待确认改为沿用 D-60，闹钟/紧急呼叫等真正待定项保留。通知表统一普通通知不弹横幅；记录本次离线导出与截图的证据范围。"
+  },
+  {
+    "id": "AUD-UI-027",
+    "severity": "高",
+    "area": "G/A/E",
+    "title": "底层缺口表低估了确认执行、远程交互与恢复能力，开发顺序漏了前置契约",
+    "evidence_type": [
+      "文档核查",
+      "代码核查",
+      "需求核查"
+    ],
+    "locations": [
+      "docs/system/ui-dependencies.md:79",
+      "docs/system/ui-dependencies.md:119",
+      "docs/system/ui-dependencies.md:127",
+      "system/policy/cap.c:115",
+      "system/include/ink/sys/res.h:50",
+      "system/apps/remote/remote.c:424",
+      "system/apps/remote/remote.c:569",
+      "system/include/ink/sys/storage.h:30"
+    ],
+    "impact": "把“待确认”理解成只差一张卡，会漏掉确认后恢复执行与过期验证；把远程画面理解成只换外框，会漏掉地址、分页、历史、输入法和页面语义。备份恢复与传输授权也没有在开发阶段中单列，可能到接界面时才发现缺关键接口。",
+    "recommendation": "按本报告第 5 节修订缺口表：先定身份/权限、保存回执、确认事务、分页数据、浮层和作业状态契约，再并行实现服务与组件。保留已有的异步作业、软总线、网络选择等基础，补缺失的用户可查询进度和持久恢复。给配对、备份恢复、OTA/安全恢复以及远程交互各设验收项，避免“在模拟器里做”被误写成无依赖。"
+  }
+]
