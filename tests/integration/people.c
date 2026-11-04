@@ -196,7 +196,9 @@ static void members_and_pin(void) {
     on_ui(read_screen);
     CHECK(strcmp(g_top, "member_gate"), "the gate is gone (%s)", g_top);
 
-    /* locking closes it */
+    /* locking closes it, long before going idle would */
+    CHECK(ink_setting_set("member.idle_return_s", 3600, INK_SRC_TOUCH, &rc) == INK_RC_DONE, "an hour");
+    ink_power_activity(osal_now_us());
     ink_power_lock();
     CHECK(WAIT_FOR(!ink_member_space_open(), 2000), "locked: closed");
     ink_power_unlock(osal_now_us());
@@ -235,6 +237,8 @@ static void add_and_remove(void) {
     hal_file_t *f = hal_fs_open("/content/.m/grandma/photo.jpg", HAL_O_WRITE | HAL_O_CREATE);
     CHECK(f != NULL, "a file of theirs");
     if (f) hal_fs_close(f);
+    CHECK(ink_storage_write_atomic("/user/m/grandma/reader.state", "page 3", 6) == 0, "what an app kept for them");
+    CHECK(WAIT_FOR(ink_storage_size("/user/m/grandma/reader.state") == 6, 2000), "on the flash");
 
     /* removing someone takes a parent, whoever asks */
     CHECK(BY_HAND("member.remove", "{\"id\":\"grandma\"}") && g_rc.status == INK_RC_PENDING_CONFIRMATION, "by hand too it comes with a card (%s)", ink_rc_name(g_rc.status));
@@ -250,6 +254,7 @@ static void add_and_remove(void) {
     CHECK(WAIT_FOR((AI("member.list", NULL), !strstr(g_result, "奶奶")), 3000), "gone (%s)", g_result);
     CHECK(WAIT_FOR(hal_fs_size("/content/.m/grandma/photo.jpg") < 0, 3000), "their files on the card too");
     CHECK(ink_storage_size("/user/m/grandma/notify.inbox.snap") < 0 && ink_storage_size("/user/m/grandma/notify.inbox.1.log") < 0, "and on the flash");
+    CHECK(ink_storage_size("/user/m/grandma/reader.state") < 0, "what is not a collection too");
     delay_ms(1200);
 
     /* the one in use and the last adult stay */
