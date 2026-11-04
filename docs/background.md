@@ -344,6 +344,7 @@ python3 tools/simreport/simreport.py out/reader --lang zh    # HTML 报告：刷
 | 决策 | [decisions/README.md](decisions/README.md) |
 | 产品定义 | [product/prd.md](product/prd.md)、[product/needs-analysis.md](product/needs-analysis.md) |
 | 系统需求、架构、底座 | [system/srs.md](system/srs.md)、[system/architecture.md](system/architecture.md)、[system/foundation.md](system/foundation.md) |
+| 家庭中枢（服务器端，设计待审核） | [hub/hub-architecture.md](hub/hub-architecture.md)、[hub/device-protocol.md](hub/device-protocol.md)、[research/hub-server-survey.md](research/hub-server-survey.md) |
 | 模拟器与平台抽象 | [system/platform-and-simulator.md](system/platform-and-simulator.md) |
 | 风险与实机验证计划 | [system/risks-and-spikes.md](system/risks-and-spikes.md) |
 | 性能建模、指令级校准 | [research/simulator/](research/simulator/performance-modeling.md) |
