@@ -14,7 +14,7 @@
 4. **渲染用 Playwright + Chromium。** Lightpanda 没有图形渲染，给不了设备要的像素；Browserless 是 SSPL。一路浏览器按约 1 GB 内存算。
 5. **数据库用 SQLite，一家一个文件。** 隔离、备份、搬家、删除都最简单；用不上 PostgreSQL 的并发能力，以后要换也留了路。
 6. **许可证有两个坑**：EbookLib 和 PyMuPDF 都是 AGPL-3.0，内容转换改用 pdfminer.six、pypdfium2 和自己解析 EPUB；TEN 框架和 xiaozhi-server-go 是加了限制条件的 Apache 许可证，不用。
-7. **费用在 D-07 的预算内。** 全家一天 50 轮对话的假设下，模型加语音约每月 50～210 元（§10），主要看主模型选谁。
+7. **费用有条件在 D-07 的预算内。** 全家一天 50 轮对话的假设下，模型加语音约每月 50～210 元（§10），主要看主模型选谁；这个数对假设很敏感（§10.3 末尾），要看真实账本。
 
 ## 1. 小智服务端
 
@@ -81,7 +81,7 @@
 
 〔建议〕自己写薄路由，理由：
 
-- 小智的 README 列出的厂商都能走 OpenAI 兼容接口，几乎只有一种线路格式要处理（再加 Anthropic 格式，共两种）。
+- 小智的 README 列出的厂商都能走 OpenAI 兼容接口，几乎只有一种线路格式要处理（再加 Anthropic 格式，共两种）。但**线路格式相同不等于语义相同**：DeepSeek 官方要求带工具的思考模式把 `reasoning_content` 原样回传，否则报错（[思考模式](https://api-docs.deepseek.com/zh-cn/guides/thinking_mode/)、[工具调用](https://api-docs.deepseek.com/zh-cn/guides/tool_calls/)，Codex 查阅）。所以每个模型要有一张能力表，换模型不是只改配置。
 - 我们要的是“这一轮用哪个角色的模型”“这个成员今天还有多少额度”，现成网关的额度按密钥和团队算，还是要自己记账。
 - 依赖少，内存小；换网关只是改一个地址，决定可逆。
 
@@ -143,7 +143,8 @@
 | 事情 | 内容 | 依据 |
 | --- | --- | --- |
 | IP 证书 | Let's Encrypt 从 2026-01-15 起正式签发 IP 地址证书，必须用 160 小时的短期证书，只能用 HTTP-01 或 TLS-ALPN-01 验证 | 〔文档〕[Let's Encrypt](https://letsencrypt.org/2026/01/15/6day-and-ip-general-availability)；验证方式来自[第三方](https://www.stackscale.com/blog/lets-encrypt-opens-the-door-to-https-by-ip/) |
-| Caddy 用 IP 证书 | 有博客给了配置（`profile shortlived`、建议 v2.10 以上），官方文档没有核实 | 〔报道〕[博客](https://cream-blog.pages.dev/2026/03/31/%E4%BD%BF%E7%94%A8-acme-sh-%E7%94%B3%E8%AF%B7-IP-%E8%AF%81%E4%B9%A6%E5%B9%B6%E9%83%A8%E7%BD%B2%E5%88%B0-Caddy/) |
+| Caddy 用 IP 证书 | Caddy 默认给 IP 用本地 CA，不是公信证书；官方有 ACME `profile` 配置。具体配置有博客（`profile shortlived`、建议 v2.10 以上），没有实际验证 | 〔文档〕[Caddy 自动 HTTPS](https://caddyserver.com/docs/automatic-https)、[Caddy TLS](https://caddyserver.com/docs/caddyfile/directives/tls)（Codex 查阅）；〔报道〕[博客](https://cream-blog.pages.dev/2026/03/31/%E4%BD%BF%E7%94%A8-acme-sh-%E7%94%B3%E8%AF%B7-IP-%E8%AF%81%E4%B9%A6%E5%B9%B6%E9%83%A8%E7%BD%B2%E5%88%B0-Caddy/) |
+| SQLite 快照 | `VACUUM INTO` 只保证单个库一致，中途中断可能留下不完整的目标文件；多个库要自己做同代边界 | 〔文档〕[SQLite](https://sqlite.org/lang_vacuum.html)（Codex 查阅） |
 | 备案 | 阿里云的官方口径：备案要求看域名是否解析到中国内地服务器。未备案域名 80、443 被拦截的说法来自社区，没有查到官方文字；只用 IP、不用域名是否完全不涉及，**信息不足，买服务器时问服务商** | 〔文档〕[阿里云备案流程](https://help.aliyun.com/zh/icp-filing/access-to-the-registration-process)；〔报道〕[腾讯云开发者社区](https://cloud.tencent.com/developer/article/2498643)、[V2EX](https://v2ex.com/t/839643) |
 | Docker Hub | 国内直接拉取不稳定，公开加速地址经常变；建议用自己的镜像仓库（阿里云 ACR 等）。ACR 个人版现在是否免费没有查到 | 〔报道〕[镜像源整理](https://gitcode.csdn.net/6aa0e4011a35784c8420ac85.html)、[博客](https://eastondev.com/blog/zh/posts/dev/20251217-docker-mirror-guide-2025/) |
 | MCP | 现行版本 2026-07-28，无状态，去掉握手和会话；Python SDK 最新 v2.3.0（2026-10-02） | 〔报道〕[AAIF](https://aaif.io/blog/mcp-2026-07-28-whats-changing-and-how-to-migrate)；〔GitHub〕；本仓库更早的整理见[协议调研 §2](foundation/ai-native-protocols.md) |
@@ -200,8 +201,8 @@ DeepSeek 的忙时是北京时间工作日 9:00–12:00 和 14:00–18:00。“�
 - 全家合计每天 50 轮对话，一个月 1500 轮；每轮说 8 秒，朗读 120 字；
 - 每轮 1.3 次主模型调用，每次输入 5000 token（其中 3000 是稳定前缀，有缓存价的按缓存价算），输出 200 token；
 - 每轮一次便宜模型做分类（1000 进 30 出）；每天 10 次记忆整理（3000 进 300 出）；
-- 每天两份报纸（成人、孩子各一份）：40 篇用便宜模型摘要（3000 进 300 出），一次主模型编排（10000 进 2000 出）；
-- 每天 10 次联网搜索；便宜模型用 qwen3.7-flash，语音用百炼。
+- 每天两份报纸（成人、孩子各一份），**每份** 40 篇用便宜模型摘要（3000 进 300 出），一次主模型编排（10000 进 2000 出）；
+- 每天 10 次联网搜索；便宜模型用 qwen3.7-flash，语音用百炼；向量每天 20 条、每条 200 token（量很小，不到 0.1 元）。
 
 | 项目 | 元/月 |
 | --- | --- |
@@ -225,10 +226,16 @@ DeepSeek 的忙时是北京时间工作日 9:00–12:00 和 14:00–18:00。“�
 
 可选项：报纸朗读预生成（18 万字，18 元）和一本书的朗读（20 万字，20 元）。用豆包语音时朗读是 3 倍价。对话量翻倍，主模型和语音部分也大约翻倍。语音输入（听写）没算在内：每天 5 分钟约每月多 3 元（150 分钟 × 0.00033 元/秒）。
 
-判断：D-07 的“每月一两百元”够用；只有 kimi-k3 这一档（在这个用量下）超出。质量差多少要实测，模型选择见 D-78。
+**这组数对假设很敏感**（Codex 用 `docs/audits/2026-11-04-codex-hub-design/experiments/cost_checks.py` 重算过，原假设下的算术基本正确）：
+
+- 5000 输入要装下系统提示、页面快照、全部工具定义、历史、记忆、工具结果和要回传的推理；200 输出要算上按厂商计费的思考 token；3000 的稳定前缀假设全部命中缓存。这些都没有实测。
+- 敏感性：把输入改成 10000、计费输出改成 1000、缓存不命中，其余不变，主模型部分 deepseek-v4-pro 忙时约 **237 元**，doubao-seed-2.1-pro 约 **183 元**，还要再加 28 元。这不是预测，只说明预算对假设敏感。
+- 没有缓存时：doubao-seed-2.0-pro 主模型部分约 41 元，deepseek-v4-pro 闲时约 53 元，doubao-seed-2.1-pro 约 77 元。
+
+判断：D-07 的“每月一两百元”**有条件够用**。不加可选项时只有 kimi-k3 超出；加可选项后 qwen3.8-max 也超过 200 元。上线后记录每次真实用量和缓存命中，用一周的数据重新估。质量差多少要实测，模型选择见 D-78。
 
 **流量**〔估算〕：Opus 语音约 3.5 KB/秒，一轮（上行 8 秒、下行 30 秒，加页面快照）约 140 KB，全走 4G 一个月约 200 MB。一整页远程画面约 50 KB（[详细设计 §13](../system/system-detailed-design.md)，模拟器）。
 
 ## 修订记录
 
-- 2026-11-04：初稿。按用户要求去掉服务器价格。
+- 2026-11-04：初稿。按用户要求去掉服务器价格。同日按 Codex 设计审查补充：费用的敏感性、模型语义差异、Caddy 的 IP 证书、SQLite 快照。
