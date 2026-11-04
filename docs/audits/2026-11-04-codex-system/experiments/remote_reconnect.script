@@ -1,0 +1,9 @@
+@3s mic speech
++0 key ai 1200ms
++17s snap before-drop
++0 outage 3s
++10s tap 560 85 150ms
++6s snap after-reconnect-tap
++0 key home
++1s key home
++3s end

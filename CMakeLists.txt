@@ -380,6 +380,10 @@ add_test(NAME systest-services
           --budget ${CMAKE_SOURCE_DIR}/tests/integration/systest.budget.json
           --script ${CMAKE_SOURCE_DIR}/tests/integration/systest.script
           --out ${CMAKE_BINARY_DIR}/test-out/systest --quiet --no-random-outages)
+# Calls, jobs, captures and the remote picture at awkward moments (tests/integration/lifecycle.c).
+add_executable(sim-lifecycle simulator/runtime/sim_main.c tests/integration/lifecycle.c)
+target_link_libraries(sim-lifecycle PRIVATE ink_system ink_port_sim)
+target_compile_options(sim-lifecycle PRIVATE ${INK_WARN})
 add_test(NAME determinism
   COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:sim-selftest>
           -DPROFILE=${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
@@ -412,6 +416,13 @@ if(INK_HAVE_FONTS)
   ink_scenario(keys_overlap metalio-plus)
   ink_scenario(reader_basic metalio-plus-psram16)
   ink_scenario(ai_ask metalio-plus)
+  ink_scenario(ai_turn_end metalio-plus)
+  add_test(NAME integration-lifecycle
+    COMMAND sim-lifecycle --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus-handsfree.json
+            --budget ${CMAKE_SOURCE_DIR}/tests/integration/lifecycle.budget.json
+            --script ${CMAKE_SOURCE_DIR}/tests/integration/lifecycle.script
+            --assets ${INK_ASSETS_DIR}
+            --out ${CMAKE_BINARY_DIR}/test-out/lifecycle --quiet --no-random-outages)
   ink_scenario(standby metalio-plus)
   # regressions from the 2026-11 audit review (docs/audits/README.md): position saved while reading
   # on, fast page flipping, late AI speech after the sheet is closed, a book that cannot be opened
@@ -466,6 +477,13 @@ if(INK_HAVE_FONTS)
             --hub ${CMAKE_SOURCE_DIR}/tests/scenarios/remote_browse.hub.json
             --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
             --out ${CMAKE_BINARY_DIR}/test-out/remote_browse-metalio-plus --quiet --trace --frames --no-random-outages)
+  add_test(NAME scenario-remote_reconnect-metalio-plus
+    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+            --script ${CMAKE_SOURCE_DIR}/tests/scenarios/remote_reconnect.script
+            --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/remote_reconnect.budget.json
+            --hub ${CMAKE_SOURCE_DIR}/tests/scenarios/remote_browse.hub.json
+            --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+            --out ${CMAKE_BINARY_DIR}/test-out/remote_reconnect-metalio-plus --quiet --trace --frames --no-random-outages)
   add_test(NAME scenario-ai_tools-metalio-plus
     COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/ai_tools.script

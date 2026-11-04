@@ -6,5 +6,6 @@
   "ai.release_to_first_audio_heard_ms.count": {"max": 0, "optional": true, "why": "no answer audio after the sheet was closed"},
   "audio.speaker.played_ms": {"max": 500, "why": "only the listen tone plays"},
   "panic.count": {"max": 0, "optional": true},
-  "warnings.count": {"max": 0, "optional": true}
+  "warnings.count": {"max": 0, "optional": true},
+  "rt.closed": {"min": 1, "max": 1, "why": "also when the sheet was closed with the key still held"}
 }

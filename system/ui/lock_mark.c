@@ -7,15 +7,17 @@
  * paints a whole standby page and must repaint the page under it).
  */
 #include "ink/hal_display.h"
+#include "ink/sys/exec.h"
 #include "ink/sys/font.h"
 #include "ink/sys/power.h"
 #include "ink/sys/ui.h"
 
 static lv_obj_t *g_mark;
 static uint64_t g_unlock_cause; /* written by the power task before posting, read in the UI task */
+static int g_locked;            /* what the mark should show, the newest wins */
+static ink_exec_job_t g_job;
 
-static void show(void *arg) { /* UI task */
-    (void)arg;
+static void show(void) { /* UI task */
     if (g_mark) return;
     g_mark = lv_obj_create(lv_layer_top());
     lv_obj_remove_flag(g_mark, LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_CLICKABLE);
@@ -38,8 +40,7 @@ static void show(void *arg) { /* UI task */
     ink_ui_hint_obj(g_mark, INK_REFRESH_FAST); /* black on white: the fast binary waveform */
 }
 
-static void hide(void *arg) { /* UI task */
-    (void)arg;
+static void hide(void) { /* UI task */
     if (!g_mark) return;
     ink_ui_hint_obj(g_mark, INK_REFRESH_TEXT); /* the page under it comes back with its gray levels */
     ink_ui_cause(g_unlock_cause, "power.unlock_to_visible_ms");
@@ -47,14 +48,21 @@ static void hide(void *arg) { /* UI task */
     g_mark = NULL;
 }
 
+static void sync_mark(void *arg) { /* UI task */
+    (void)arg;
+    if (__atomic_load_n(&g_locked, __ATOMIC_ACQUIRE)) show();
+    else hide();
+}
+
 static void on_power(void *ctx, ink_power_state_t from, ink_power_state_t to, uint64_t cause_us) { /* power task */
     (void)ctx;
     if (to == INK_PWR_LOCKED) {
-        ink_ui_post(show, NULL);
+        __atomic_store_n(&g_locked, 1, __ATOMIC_RELEASE);
     } else if (from == INK_PWR_LOCKED) {
         g_unlock_cause = cause_us;
-        ink_ui_post(hide, NULL);
-    }
+        __atomic_store_n(&g_locked, 0, __ATOMIC_RELEASE);
+    } else return;
+    ink_exec_post(INK_EXEC_UI, &g_job, sync_mark, NULL);
 }
 
 int ink_ui_lock_mark_init(void) {

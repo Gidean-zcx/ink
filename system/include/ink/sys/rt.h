@@ -34,7 +34,9 @@ typedef struct {
     /* hub task: keep them short, hand the work on */
     void (*on_frame)(void *ctx, int sid, uint8_t kind, const uint8_t *payload, size_t len, uint16_t seq, uint32_t t_ms, uint8_t flags);
     void (*on_control)(void *ctx, int sid, const char *method, const ink_json_t *msg, int params);
-    void (*on_closed)(void *ctx, int sid, int reason); /* the hub refused or ended it */
+    void (*on_closed)(void *ctx, int sid, int reason); /* the hub refused or ended it: the session is gone */
+    void (*on_ready)(void *ctx, int sid); /* the hub confirmed it on this connection: also after a reconnect,
+                                           * when that hub knows nothing of what was sent before */
     void *ctx;
 } ink_rt_handler_t;
 

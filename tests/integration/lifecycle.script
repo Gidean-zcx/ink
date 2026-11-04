@@ -1,0 +1,7 @@
+# Environment for tests/integration/lifecycle.c: cards in both slots, and the link dropping twice
+# while the remote picture is on screen.
+@0       sim   external sms
++0       sim   internal sms
+@45s     outage 3s
+@60s     outage 3s
+@90s     end

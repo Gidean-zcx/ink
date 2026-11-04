@@ -1,0 +1,10 @@
+{
+  "_doc": "After a voice turn nothing stays open: the session closes when the hub has answered, the link goes idle after its quiet period.",
+  "ai.answers": {"min": 1, "max": 1, "why": "the turn was answered"},
+  "rt.opened": {"min": 1, "max": 1},
+  "rt.closed": {"min": 1, "max": 1, "why": "closed without a next press"},
+  "hub.rt_closed": {"min": 1, "max": 1, "why": "the hub was told"},
+  "hub.idle_disconnects": {"min": 1, "why": "no session keeps the link up any more (D-24: quiet for 60 s)"},
+  "panic.count": {"max": 0, "optional": true},
+  "warnings.count": {"max": 0, "optional": true}
+}

@@ -43,6 +43,8 @@ bool ink_audio_has_mic(void);
 
 /* One Opus frame (len > 0), or the end of the utterance (data NULL, len 0) after ink_audio_capture_end(). */
 typedef void (*ink_audio_frame_fn)(void *ctx, const uint8_t *data, size_t len, uint32_t seq);
+/** 0, or -1: no microphone, it did not start, or a capture is still running. One that was ended counts
+ *  until its end has been delivered, so -1 also from inside that delivery. */
 int ink_audio_capture_begin(ink_audio_frame_fn fn, void *ctx);
 void ink_audio_capture_end(void);
 

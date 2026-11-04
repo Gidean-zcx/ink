@@ -5,5 +5,6 @@
   "ai.mic_unavailable": {"min": 1, "why": "the first press finds the microphone unable to start"},
   "hub.requests.ai.ask": {"max": 0, "optional": true, "why": "a press whose microphone did not start must not send a question the user did not ask"},
   "ai.answers": {"min": 1, "why": "once the expander and the audio chip set up, the next ask is answered"},
-  "audio.speaker.played_ms": {"min": 500, "why": "and the answer is spoken"}
+  "audio.speaker.played_ms": {"min": 500, "why": "and the answer is spoken"},
+  "rt.closed": {"min": 2, "max": 2, "why": "a turn that could not start leaves no session open, nor does the one answered after it"}
 }

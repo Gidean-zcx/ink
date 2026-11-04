@@ -4,7 +4,7 @@
  *
  * Rules (foundation §3): exactly one task touches LVGL; apps never create
  * threads; long work is posted elsewhere and results come back with
- * ink_ui_post(). Coordinates are logical (UI orientation); sizes use dp
+ * ink_exec_post(INK_EXEC_UI, ...). Coordinates are logical (UI orientation); sizes use dp
  * (1 dp = 1/160 inch) so layouts adapt to any panel density.
  */
 #ifndef INK_SYS_UI_H
@@ -60,17 +60,15 @@ void ink_ui_open(lv_obj_t *from, const ink_activity_t *a, void *arg);
 void ink_ui_pop(void);
 /** Back to the root activity (one rebuild). */
 void ink_ui_home(void);
-/** Run fn(arg) in the UI task (any task). */
-void ink_ui_post(void (*fn)(void *), void *arg);
-/** The UI task has been started (ink_ui_post may be used). */
-bool ink_ui_started(void);
+/** A job waits for the UI task (ink_exec_post calls this; any task, never waits). */
+void ink_ui_kick(void);
 /** The calling task is the UI task. */
 bool ink_ui_is_current(void);
-/** The UI has work that may still change the panel: posted calls or input not handled yet, or a
+/** The UI has work that may still change the panel: posted jobs or input not handled yet, or a
  *  requested LVGL refresh not rendered yet (any task; the power service waits for false before
  *  it sleeps the chip). A rendered frame is reported by ink_display_busy() instead. */
 bool ink_ui_busy(void);
-/** Messages (input or posted calls) are waiting for the UI task: background work in the UI task
+/** Messages (input or posted jobs) are waiting for the UI task: background work in the UI task
  *  (rendering the next page ahead) waits for them (UI task). */
 bool ink_ui_queue_pending(void);
 

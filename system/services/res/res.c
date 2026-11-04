@@ -68,7 +68,7 @@ static struct {
     int checking;
     jslot_t *jobs; /* JOBS_MAX, PSRAM */
     int next_id, cursor, holds;
-    bool scheduled;
+    ink_exec_job_t tick_job;
     int h_online;
 } R INK_PSRAM_BSS;
 
@@ -259,14 +259,8 @@ static void job_kick(void) {
     osal_mutex_lock(R.lock, OSAL_WAIT_FOREVER);
     bool any = false;
     for (int i = 0; i < JOBS_MAX && !any; i++) any = R.jobs[i].used;
-    bool post = any && !R.scheduled; /* no jobs, no executor: exec.bg is created on its first real job */
-    if (post) R.scheduled = true;
     osal_mutex_unlock(R.lock);
-    if (post && ink_exec_post(INK_EXEC_BG, job_tick, NULL) != 0) {
-        osal_mutex_lock(R.lock, OSAL_WAIT_FOREVER);
-        R.scheduled = false;
-        osal_mutex_unlock(R.lock);
-    }
+    if (any) ink_exec_post(INK_EXEC_BG, &R.tick_job, job_tick, NULL); /* no jobs, no executor: exec.bg is created on its first real job */
 }
 
 static void finish_slot(jslot_t *s, ink_job_step_t how, bool cancelled) {
@@ -282,7 +276,6 @@ static void finish_slot(jslot_t *s, ink_job_step_t how, bool cancelled) {
 static void job_tick(void *arg) {
     (void)arg;
     osal_mutex_lock(R.lock, OSAL_WAIT_FOREVER);
-    R.scheduled = false;
     bool held = R.holds > 0 || ink_mem_pressure() >= INK_PRESSURE_LOW;
     jslot_t *s = NULL, *cancelled = NULL;
     for (int k = 0; k < JOBS_MAX && !s; k++) {

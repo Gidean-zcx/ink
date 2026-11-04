@@ -1,0 +1,13 @@
+# The link drops while a remote page is on screen (audit AUD11-007: the page stayed frozen, nothing
+# asked the new connection for a picture). A tap on nothing gets its feedback back by itself.
+@3s      mic   speech
++0       key   ai 1200ms         # "打开网页看看今天的新闻" -> the hub calls remote.open
++17s     snap  before-drop
++0       outage 3s
++10s     tap   560 85 150ms      # the "next" link on the picture after reconnecting
++6s      snap  after-reconnect-tap
++0       tap   300 40 150ms      # the title bar: no link there
++3s      snap  feedback-gone
++0       key   home              # closes the answer sheet
++1s      key   home              # closes the page
++3s      end

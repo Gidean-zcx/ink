@@ -30,7 +30,6 @@ static void deliver(void *arg) { /* on the watcher's executor */
     osal_mutex_lock(l->lock, OSAL_WAIT_FOREVER);
     uint64_t bits = w->pending;
     w->pending = 0;
-    w->scheduled = false;
     osal_mutex_unlock(l->lock);
     for (int i = 0; bits; i++, bits >>= 1)
         if (bits & 1) w->fn(w->ctx, i, l->id_of(i));
@@ -45,17 +44,9 @@ void watch_changed(watch_list_t *l, int idx, const char *id) {
         watch_t *w = &l->w[i];
         if (strncmp(id, w->prefix, w->plen)) continue;
         w->pending |= 1ull << idx;
-        if (!w->scheduled) {
-            w->scheduled = true;
-            post[np++] = w;
-        }
+        post[np++] = w;
     }
     osal_mutex_unlock(l->lock);
-    for (int i = 0; i < np; i++)
-        if (ink_exec_post(post[i]->exec, deliver, post[i]) != 0) {
-            osal_mutex_lock(l->lock, OSAL_WAIT_FOREVER);
-            post[i]->scheduled = false; /* the next change tries again; the bits stay pending */
-            osal_mutex_unlock(l->lock);
-            ink_probe_count(l->probe_dropped);
-        }
+    for (int i = 0; i < np; i++) /* the bits stay until the executor runs: the last change always arrives */
+        if (ink_exec_post(post[i]->exec, &post[i]->job, deliver, post[i]) != 0) ink_probe_count(l->probe_dropped);
 }

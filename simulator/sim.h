@@ -309,6 +309,8 @@ int sim_net_sent_sms(int i, char *number, size_t ncap, char *text, size_t tcap);
 void sim_net_hub_send(struct hal_ws *ws, uint64_t t_send, const void *data, size_t len, bool binary); /* ISR */
 /* The hub's rendering capability "browser.session" (sim_remote.c), ISR: */
 bool sim_remote_open(struct hal_ws *ws, uint64_t t, int sid, int w, int h);
+/* What the hub believes the device shows in session `sid` (8-bit gray); NULL if it has no such session (tests). */
+const uint8_t *sim_remote_shown(int sid, int *w, int *h);
 bool sim_remote_frame(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t len); /* false: not one of its sessions */
 void sim_remote_close(struct hal_ws *ws, int sid);
 /* The same, entering the stream at t_send (later sends by the hub: think time, speech being synthesised). ISR. */

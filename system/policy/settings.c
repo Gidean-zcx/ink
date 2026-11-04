@@ -21,6 +21,7 @@
 typedef struct {
     const ink_setting_def_t *def;
     int64_t v;
+    ink_exec_job_t apply;
 } item_t;
 
 typedef struct {
@@ -206,6 +207,7 @@ ink_rc_t ink_setting_set(const char *id, int64_t v, ink_source_t src, ink_receip
         ink_probe_count("policy.pending_confirmation");
         return refuse(rc, INK_RC_PENDING_CONFIRMATION, "needs confirmation on the device");
     }
+    if (d->apply && ink_exec_ready(d->apply_exec) != 0) return refuse(rc, INK_RC_FAILED, "cannot be applied now"); /* not stored either */
     osal_mutex_lock(SE.lock, OSAL_WAIT_FOREVER);
     bool changed = SE.it[i].v != v;
     SE.it[i].v = v;
@@ -216,9 +218,10 @@ ink_rc_t ink_setting_set(const char *id, int64_t v, ink_source_t src, ink_receip
     char vt[32];
     value_text(d, v, vt, sizeof vt);
     snprintf(rc->say, sizeof rc->say, "%s：%s", d->title, vt);
+    /* also the same value again: its owner looks once more at what the hardware does (the job reads the newest value) */
+    if (d->apply) ink_exec_post(d->apply_exec, &SE.it[i].apply, apply_job, &SE.it[i]);
     if (changed) {
         ink_probe_count("settings.changed");
-        if (d->apply && ink_exec_post(d->apply_exec, apply_job, &SE.it[i]) != 0) ink_probe_count("settings.apply_dropped");
         watch_changed(&SE.watch, i, id);
         osal_timer_start(SE.save_timer, SAVE_DELAY_US, 0); /* re-armed: one write for a burst */
     }

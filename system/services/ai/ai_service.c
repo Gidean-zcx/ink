@@ -62,10 +62,14 @@ static struct {
     size_t answer_len;
     /* voice uplink (touched by the audio task and the UI task) */
     osal_mutex_t *lock;
-    uint8_t stream;
+    uint8_t stream;     /* the turn's id: its realtime session's, also after that was closed */
+    int session;        /* the turn's realtime session while open (0 none): closed once, see close_session */
+    int session_seq;    /* the request (seq) the hub answers last for it */
     frame_t *buf_head, *buf_tail;
     int buffered, frames_sent;
     bool end_pending;
+    bool up_open;       /* the hub still has to be told the utterance ended (ai.listen.end) */
+    bool dismissed;     /* the sheet was closed during this turn */
     bool drop_frames;   /* the sheet was closed while capturing: the rest of this turn's audio is dropped */
     bool capturing;     /* UI task: this turn's microphone is on */
     bool mic_failed;    /* UI task: this turn's microphone did not start: nothing is heard, nothing asked */
@@ -79,6 +83,7 @@ static struct {
 } AI;
 
 typedef struct {
+    ink_exec_job_t job;
     int req_id;
     int kind; /* 0 delta, 1 done, 2 error, 3 stt, 4 the answer's speech could not play */
     int status;
@@ -135,6 +140,18 @@ static void set_status(const char *s) {
 
 static void free_buffered(void);
 
+/* The end of a turn's session (architecture §9.2): the hub answered (it answers last, after the
+ * speech), the sheet was closed and the hub knows the utterance ended, a new turn began, or the turn
+ * could not start. Whoever sees it first closes it, any task: no background work stays held and the
+ * hub link is free to go idle. */
+static void close_session(void) {
+    osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
+    int sid = AI.session;
+    AI.session = 0;
+    osal_mutex_unlock(AI.lock);
+    if (sid) ink_rt_close(sid);
+}
+
 /* Microphone off for this turn (UI task); idempotent. discard: the frames not yet sent and the rest
  * the encoder still delivers are dropped (the end notification still goes out). */
 static void end_capture(bool discard) {
@@ -162,7 +179,10 @@ bool ink_ai_dismiss(void) {
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
     AI.tts_stream = 0;
     AI.tts_done_for = AI.stream;
+    AI.dismissed = true;
+    bool uplink = AI.up_open; /* if so, the session closes when the hub has been told (flush_uplink) */
     osal_mutex_unlock(AI.lock);
+    if (!uplink) close_session();
     ink_audio_stop_all();
     ink_ui_hint_frame(INK_REFRESH_FLASH_UI); /* the page underneath comes back cleanly */
     return true;
@@ -224,14 +244,14 @@ static void ui_apply(void *arg) { /* UI task */
 static void post(int req_id, int kind, int status, const char *text) {
     size_t n = text ? strlen(text) : 0;
     const char *prev = osal_mem_tag("ai");
-    ai_post_t *p = osal_malloc(sizeof *p + n + 1, OSAL_MEM_EXTERNAL);
+    ai_post_t *p = osal_calloc(1, sizeof *p + n + 1, OSAL_MEM_EXTERNAL);
     osal_mem_tag(prev);
     if (!p) return;
     p->req_id = req_id;
     p->kind = kind;
     p->status = status;
     memcpy(p->text, text ? text : "", n + 1);
-    ink_ui_post(ui_apply, p);
+    ink_exec_post(INK_EXEC_UI, &p->job, ui_apply, p);
 }
 
 static void on_notify(void *ctx, const char *method, const ink_json_t *j, int params) { /* hub task */
@@ -293,6 +313,18 @@ static void on_reply(void *ctx, int status, const ink_json_t *j, int result) { /
     int id = (int)(intptr_t)ctx;
     post(id, status == INK_HUB_OK ? 1 : 2, status, NULL);
     ink_power_release(INK_NEED_NET); /* the turn is over (answer, error or timeout) */
+    osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
+    bool current = AI.session && id == AI.session_seq; /* nothing more will come for it */
+    if (current) {
+        free_buffered();
+        AI.end_pending = AI.up_open = false;
+        AI.drop_frames = true;
+        if (AI.tts_stream > 0) ink_audio_stream_finish(AI.tts_stream); /* an answer without an end of speech */
+        AI.tts_stream = 0;
+        AI.tts_done_for = AI.stream;
+    }
+    osal_mutex_unlock(AI.lock);
+    if (current) close_session();
 }
 
 /* --------------------------------------------------------- voice uplink */
@@ -327,8 +359,14 @@ static void flush_uplink(void) {
     if (send_end) {
         char params[64];
         snprintf(params, sizeof params, "{\"stream\":%d,\"frames\":%d}", stream, frames);
-        ink_hub_notify("ai.listen.end", params);
-        ink_probe_value("ai.release_to_upload_done_ms", (double)(osal_now_us() - AI.t_release) / 1000.0);
+        bool told = ink_hub_notify("ai.listen.end", params) == 0;
+        osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
+        if (told) AI.up_open = false;
+        else AI.end_pending = true; /* the flush timer tries again: without it the hub waits for the rest */
+        bool close = told && AI.dismissed;
+        osal_mutex_unlock(AI.lock);
+        if (told) ink_probe_value("ai.release_to_upload_done_ms", (double)(osal_now_us() - AI.t_release) / 1000.0);
+        if (close) close_session();
     }
 }
 
@@ -336,7 +374,7 @@ static void on_frame(void *ctx, const uint8_t *data, size_t len, uint32_t seq) {
     (void)ctx;
     if (!len) { /* end of the utterance */
         osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
-        AI.end_pending = true;
+        AI.end_pending = AI.up_open; /* not if the turn is over already (the hub answered) */
         osal_mutex_unlock(AI.lock);
         flush_uplink();
         return;
@@ -373,7 +411,7 @@ static void on_frame(void *ctx, const uint8_t *data, size_t len, uint32_t seq) {
 static void flush_timer_cb(lv_timer_t *t) { /* UI task: the link may come up after the user stopped talking */
     flush_uplink();
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
-    bool idle = !AI.buf_head && !AI.end_pending;
+    bool idle = !AI.buf_head && !AI.end_pending && !AI.up_open;
     osal_mutex_unlock(AI.lock);
     if (idle && !AI.asking) lv_timer_pause(t); /* resumed at the next key press */
 }
@@ -382,6 +420,14 @@ static void flush_timer_cb(lv_timer_t *t) { /* UI task: the link may come up aft
 
 /* Build the request params: page snapshot plus either the stream description or the question. */
 static int request(const char *method, bool voice) {
+    AI.answer_len = 0;
+    AI.answer_text[0] = 0;
+    AI.first_text_seen = false;
+    AI.asking = true;
+    osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
+    AI.seq++;
+    if (voice) AI.session_seq = AI.seq;
+    osal_mutex_unlock(AI.lock);
     const char *prev = osal_mem_tag("ai");
     char *snap = osal_malloc(SNAPSHOT_CAP, OSAL_MEM_EXTERNAL);
     char *params = osal_malloc(SNAPSHOT_CAP * 2 + 256, OSAL_MEM_EXTERNAL);
@@ -389,6 +435,7 @@ static int request(const char *method, bool voice) {
     if (!snap || !params) {
         osal_free(snap);
         osal_free(params);
+        post(AI.seq, 2, INK_HUB_ERR_NOMEM, NULL);
         return -1;
     }
     const char *app = "";
@@ -417,14 +464,12 @@ static int request(const char *method, bool voice) {
         ink_jw_raw(&w, k > 0 ? ids : "[]");
     }
     ink_jw_raw(&w, "}}");
-    AI.answer_len = 0;
-    AI.answer_text[0] = 0;
-    AI.first_text_seen = false;
-    AI.asking = true;
-    AI.seq++;
     ink_power_hold(INK_NEED_NET); /* no sleep while the answer is on its way */
     int id = ink_hub_call(method, w.overflow ? "{}" : params, ASK_TIMEOUT_US, on_reply, (void *)(intptr_t)AI.seq);
-    if (id < 0) ink_power_release(INK_NEED_NET);
+    if (id < 0) { /* no reply will come: the turn ends here */
+        ink_power_release(INK_NEED_NET);
+        post(AI.seq, 2, id, NULL);
+    }
     osal_free(snap);
     osal_free(params);
     return id;
@@ -437,16 +482,36 @@ static bool voice_ok(void) { return ink_audio_has_mic(); }
 /* What the listening tone measures: from the key press, or from the wake word / the interruption. */
 static const char *tone_probe = "ai.press_to_tone_heard_ms";
 
-static const ink_rt_handler_t AI_RT = {.on_frame = on_rt_frame};
+/* The hub refused or ended this turn's session (hub task): nothing can be sent or heard any more. */
+static void on_rt_closed(void *ctx, int sid, int reason) {
+    (void)ctx;
+    (void)reason;
+    osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
+    bool current = sid == AI.session;
+    int turn = AI.session_seq;
+    if (current) {
+        AI.session = 0;
+        free_buffered();
+        AI.end_pending = AI.up_open = false;
+        AI.drop_frames = true;
+    }
+    osal_mutex_unlock(AI.lock);
+    if (current && turn) post(turn, 2, INK_HUB_ERR_REMOTE, NULL);
+}
+
+static const ink_rt_handler_t AI_RT = {.on_frame = on_rt_frame, .on_closed = on_rt_closed};
 
 void ink_ai_key(bool pressed, uint64_t t_us) {
     if (pressed) {
         AI.t_press = t_us;
         /* a new turn: frames and the speech end of the previous one no longer apply */
-        if (AI.stream) ink_rt_close(AI.stream); /* the previous turn's session */
-        int sid = ink_rt_open("voice.chat", NULL, &AI_RT);
+        close_session(); /* the previous turn's, if the hub has not answered it yet */
+        int sid = voice_ok() ? ink_rt_open("voice.chat", NULL, &AI_RT) : -1; /* a typed question is answered in the reply */
         osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
         AI.stream = sid > 0 ? (uint8_t)sid : 0;
+        AI.session = sid > 0 ? sid : 0;
+        AI.session_seq = 0;
+        AI.up_open = AI.dismissed = false;
         AI.tts_stream = AI.tts_opened = 0;
         AI.tts_for = AI.tts_done_for = -1;
         osal_mutex_unlock(AI.lock);
@@ -471,16 +536,28 @@ void ink_ai_key(bool pressed, uint64_t t_us) {
             AI.frames_sent = 0;
             AI.end_pending = false;
             AI.drop_frames = false;
+            AI.up_open = sid > 0;
             osal_mutex_unlock(AI.lock);
-            if (ink_audio_capture_begin(on_frame, NULL) == 0) {
+            if (sid > 0 && ink_audio_capture_begin(on_frame, NULL) == 0) {
                 AI.capturing = true;
                 AI.req_id = request("ai.listen", true);
+                if (AI.req_id < 0) { /* the hub link took no request: what it says is on the sheet */
+                    end_capture(true);
+                    osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
+                    AI.up_open = false;
+                    osal_mutex_unlock(AI.lock);
+                    close_session();
+                }
                 if (!AI.flush_timer) AI.flush_timer = lv_timer_create(flush_timer_cb, 100, NULL);
                 else lv_timer_resume(AI.flush_timer);
             } else { /* nothing will be heard this turn, so nothing will be asked (audit AUD5-003) */
                 AI.mic_failed = true;
                 ink_probe_count("ai.mic_unavailable");
-                set_status("麦克风没能打开，请稍后再按 AI 键");
+                osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
+                AI.up_open = false;
+                osal_mutex_unlock(AI.lock);
+                close_session();
+                set_status(sid > 0 ? "麦克风没能打开，请稍后再按 AI 键" : "语音通道没能打开，请稍后再按 AI 键");
                 ink_audio_tone(INK_TONE_ERROR, 0, NULL);
             }
         }
@@ -493,7 +570,7 @@ void ink_ai_key(bool pressed, uint64_t t_us) {
     AI.t_release = t_us; /* the hub task reads it for the first-audio probe */
     osal_mutex_unlock(AI.lock);
     if (AI.mic_failed) { /* the microphone did not start: the user's words were not heard */
-        set_status("没听到：麦克风没能打开，请稍后再按 AI 键");
+        set_status("没听到：没能开始听，请稍后再按 AI 键");
         return;
     }
     if (was_capturing || (voice_ok() && AI.asking)) {
@@ -517,6 +594,7 @@ void ink_ai_key(bool pressed, uint64_t t_us) {
 /* ------------------------------------------------------------- hands-free (R-047) */
 
 typedef struct {
+    ink_exec_job_t job;
     ink_listen_ev_t ev;
     uint64_t t;
 } listen_job_t;
@@ -560,14 +638,16 @@ static void listen_job(void *arg) { /* UI task: the voice front end's events dri
 static void on_listen(void *ctx, ink_listen_ev_t ev, uint64_t t_us) { /* audio task */
     (void)ctx;
     if (ev == INK_LISTEN_SPEECH) return; /* speech without the wake word is not for the device */
-    listen_job_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
+    listen_job_t *j = osal_calloc(1, sizeof *j, OSAL_MEM_EXTERNAL);
     if (!j) return;
     j->ev = ev;
     j->t = t_us;
-    if (ink_exec_post(INK_EXEC_UI, listen_job, j) != 0) osal_free(j);
+    ink_exec_post(INK_EXEC_UI, &j->job, listen_job, j);
 }
 
 /* Listen when the setting says so (D-52: by default while the screen is on and unlocked). */
+static ink_exec_job_t g_policy_job;
+
 static void listen_policy(void *unused) {
     (void)unused;
     int64_t mode = ink_setting_get("voice.handsfree"); /* 0 screen on, 1 always, 2 off */
@@ -581,7 +661,7 @@ static void on_listen_inputs(void *ctx, int h, const char *id) { /* power.state 
     (void)ctx;
     (void)h;
     (void)id;
-    if (ink_exec_post(INK_EXEC_UI, listen_policy, NULL) != 0) listen_policy(NULL);
+    ink_exec_post(INK_EXEC_UI, &g_policy_job, listen_policy, NULL);
 }
 
 int ink_ai_init(void) {

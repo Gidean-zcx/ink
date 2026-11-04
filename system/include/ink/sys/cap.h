@@ -137,14 +137,22 @@ typedef struct {
     void *ctx;
 } ink_call_opts_t;
 
-/** Call a capability (any task). 0: `done` will run exactly once, on reply_exec. -1: not accepted
- *  (the call pool is full, or the arguments do not fit): `done` is not called. */
+/**
+ * Call a capability (any task). 0: accepted, `done` will run exactly once on reply_exec (at once,
+ * if the handler may run here and finishes). -1: not accepted (the call pool is full, an executor
+ * it needs cannot run, a request id longer than 39 bytes): `done` is not called.
+ * The deadline counts from here. A call that is still waiting to start when it passes is answered
+ * "failed" and never runs; one already running is answered "failed", "it may still finish".
+ * A request id remembers the last 32 final receipts.
+ */
 int ink_cap_call(const char *addr, const ink_args_t *args, const ink_call_opts_t *o);
-/** In a handler: the receipt comes later, from ink_cap_done (any task). The call object stays
- *  valid until then. A call not done by its deadline is answered "failed: timed out"; its late
- *  ink_cap_done is then ignored. */
+/** In a handler: the receipt comes later, from ink_cap_done (any task, once; it may come before the
+ *  handler returns). The call object stays valid until then. A call not done by its deadline is
+ *  answered "failed: timed out"; its late ink_cap_done is then ignored. */
 void ink_cap_defer(ink_call_t *call);
 void ink_cap_done(ink_call_t *call);
+/** In a handler that blocks: how long until its deadline (0: past it). What it may still wait for. */
+uint32_t ink_cap_time_left_ms(const ink_call_t *call);
 
 /*
  * Events (form INK_FORM_EVENT, e.g. "message.received"): registered like any capability so the

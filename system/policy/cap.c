@@ -126,16 +126,29 @@ static ink_rc_t gate(const ink_cap_t *c, ink_source_t src, uint32_t page_gen, in
 #define SEEN_N 32 /* request ids remembered for retries */
 #define RID_CAP 40
 
+/*
+ * One call, from acceptance to the slot's return. Its deadline counts from acceptance, whatever it
+ * waits for (detailed design §3.3). Three things must have happened before the slot can be used
+ * again, in any order: the provider is through with it (finished: the handler returned without
+ * deferring, ink_cap_done came, or it was never run), the caller has been told (answered), and
+ * no task still looks at it (refs: the one running its handler, a waiting ink_cap_invoke). The last
+ * of them frees it, in unlock_retire().
+ */
 typedef struct {
     ink_call_t call; /* what the handler sees: first, so an ink_call_t * is its pending_t * */
     ink_call_opts_t o;
-    ink_receipt_t out; /* the answer the caller gets (a copy: a late handler may still write call.rc) */
+    ink_receipt_t out; /* the first final receipt, what the caller gets (a late handler may still write call.rc) */
     char id[48];
     char rid[RID_CAP];
     char *json; /* JSON arguments until the gate passed */
     uint64_t deadline_us;
-    bool used, deferred, finished, replied, answered, remote;
-    bool pinned; /* a waiting ink_cap_invoke still looks at it: not released yet */
+    ink_exec_job_t start_job, answer_job;
+    uint8_t refs;
+    bool used;
+    bool accepted; /* fully prepared: the deadline applies */
+    bool remote;   /* the hub link's own timeout is its deadline */
+    bool repeat_safe; /* rid is the caller's: the receipt is kept for retries */
+    bool started, deferred, replied, finished, answered;
 } pending_t;
 
 typedef struct {
@@ -186,43 +199,79 @@ int ink_cap_init(void) {
     return CB.lock && CB.pool && CB.seen && CB.dir && CB.timer ? 0 : -1;
 }
 
-static pending_t *alloc(void) {
+static const seen_t *seen_find(const char *rid) { /* under the lock */
+    for (int i = 0; i < SEEN_N; i++)
+        if (CB.seen[i].rid[0] && !strcmp(CB.seen[i].rid, rid)) return &CB.seen[i];
+    return NULL;
+}
+
+static bool in_flight(const char *rid) { /* under the lock */
+    for (int i = 0; i < POOL_N; i++)
+        if (CB.pool[i].used && !CB.pool[i].replied && !strcmp(CB.pool[i].rid, rid)) return true;
+    return false;
+}
+
+/* A free slot for a request. One hold of the lock decides whether the request id was seen and makes
+ * it taken: of two copies arriving together, one runs and the other is a repeat. A repeat's slot
+ * comes back with its receipt in `out` and *repeat set, ready to be answered. NULL: the pool is full. */
+static pending_t *claim(const char *rid, bool *repeat) {
     pending_t *p = NULL;
+    *repeat = false;
     osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
     for (int i = 0; i < POOL_N && !p; i++)
         if (!CB.pool[i].used) p = &CB.pool[i];
     if (p) {
         memset(p, 0, sizeof *p);
         p->used = true;
+        const seen_t *s = rid ? seen_find(rid) : NULL;
+        if (s) {
+            p->out = s->rc;
+            *repeat = true;
+        } else if (rid && in_flight(rid)) { /* it must not run a second time (a text message would go out twice) */
+            p->out.status = INK_RC_QUEUED;
+            snprintf(p->out.detail, sizeof p->out.detail, "this request is still running");
+            *repeat = true;
+        } else if (rid) {
+            snprintf(p->rid, sizeof p->rid, "%s", rid);
+            p->repeat_safe = true;
+        }
+        if (*repeat) p->started = p->replied = p->finished = true;
     }
     osal_mutex_unlock(CB.lock);
     if (!p) ink_probe_count("cap.busy");
     return p;
 }
 
-static void release(pending_t *p) {
-    osal_free(p->json);
-    osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
-    p->json = NULL;
-    p->used = false;
+/* Releases the lock. Whoever finds all three conditions met frees the slot: only one can, each sets
+ * its own condition under the lock before it comes here. */
+static void unlock_retire(pending_t *p) {
+    char *json = NULL;
+    if (p->finished && p->answered && !p->refs) {
+        json = p->json;
+        p->json = NULL;
+        p->used = false;
+    }
     osal_mutex_unlock(CB.lock);
+    osal_free(json);
 }
 
-static void remember(const char *rid, const ink_receipt_t *rc) {
-    osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+/* Under the lock: `rc` is the call's final receipt. Becoming final and being found by a retry are one
+ * step: there is no moment in which a retry would run it again. */
+static void settle(pending_t *p, const ink_receipt_t *rc) {
+    p->replied = true;
+    p->out = *rc;
+    p->out.page_gen = ink_ui_content_version();
+    if (!p->repeat_safe) return;
     seen_t *s = &CB.seen[CB.seen_next];
     CB.seen_next = (CB.seen_next + 1) % SEEN_N;
-    snprintf(s->rid, sizeof s->rid, "%s", rid);
-    s->rc = *rc;
-    osal_mutex_unlock(CB.lock);
+    snprintf(s->rid, sizeof s->rid, "%s", p->rid);
+    s->rc = p->out;
 }
 
 static void answered(pending_t *p) {
     osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
     p->answered = true;
-    bool done = p->finished && !p->pinned;
-    osal_mutex_unlock(CB.lock);
-    if (done) release(p);
+    unlock_retire(p);
 }
 
 static void answer_job(void *arg) {
@@ -234,51 +283,48 @@ static void answer_job(void *arg) {
     answered(p);
 }
 
-/* p->out is final: tell the caller, on its executor. */
+/* p->out is final: tell the caller, on its executor (ready: checked when the call was accepted). */
 static void answer(pending_t *p) {
-    if (p->rid[0]) remember(p->rid, &p->out);
     osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
     bool nobody = !p->o.done;
     osal_mutex_unlock(CB.lock);
     if (nobody) answered(p);
     else if (p->o.reply_exec == INK_EXEC_DIRECT || ink_exec_is_current(p->o.reply_exec)) answer_job(p);
-    else if (ink_exec_post(p->o.reply_exec, answer_job, p) != 0) {
-        ink_probe_count("cap.reply_dropped");
-        answered(p);
-    }
+    else if (ink_exec_post(p->o.reply_exec, &p->answer_job, answer_job, p) != 0) answered(p);
+}
+
+/* Under the lock: the provider is through with the call. True: the caller must be told now. */
+static bool provider_done(pending_t *p) {
+    if (p->finished) return false; /* a handler that called ink_cap_done without deferring */
+    p->finished = true;
+    if (p->replied) return false;  /* answered "timed out" before: this result comes too late */
+    settle(p, &p->call.rc);
+    return true;
 }
 
 /* The provider is done with the call (any task). */
 static void finish(pending_t *p) {
     osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
-    p->finished = true;
-    bool reply = !p->replied, late = p->replied && p->answered && !p->pinned;
-    if (reply) {
-        p->replied = true;
-        p->call.rc.page_gen = ink_ui_content_version();
-        p->out = p->call.rc;
-    }
-    osal_mutex_unlock(CB.lock);
+    bool late = !p->finished && p->replied, reply = provider_done(p);
+    unlock_retire(p);
     if (reply) answer(p);
-    else if (late) { /* answered "timed out" long ago */
-        ink_probe_count("cap.late");
-        release(p);
-    }
+    else if (late) ink_probe_count("cap.late");
 }
 
 void ink_cap_defer(ink_call_t *call) {
     pending_t *p = (pending_t *)call;
     osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
     p->deferred = true;
-    if (!CB.timer_due || p->deadline_us < CB.timer_due) { /* only ever brought forward */
-        uint64_t now = osal_now_us();
-        CB.timer_due = p->deadline_us;
-        osal_timer_start(CB.timer, p->deadline_us > now ? p->deadline_us - now : 1, 0);
-    }
     osal_mutex_unlock(CB.lock);
 }
 
 void ink_cap_done(ink_call_t *call) { finish((pending_t *)call); }
+
+uint32_t ink_cap_time_left_ms(const ink_call_t *call) {
+    const pending_t *p = (const pending_t *)call;
+    uint64_t now = osal_now_us();
+    return p->deadline_us > now ? (uint32_t)((p->deadline_us - now) / 1000u) : 0;
+}
 
 static void timeout_cb(void *arg) { /* timer task: answer the overdue, re-arm for the rest */
     (void)arg;
@@ -288,12 +334,11 @@ static void timeout_cb(void *arg) { /* timer task: answer the overdue, re-arm fo
     osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
     for (int i = 0; i < POOL_N; i++) {
         pending_t *p = &CB.pool[i];
-        if (!p->used || !p->deferred || p->replied) continue;
+        if (!p->used || !p->accepted || p->remote || p->replied) continue;
         if (p->deadline_us <= now) {
-            p->replied = true;
-            memset(&p->out, 0, sizeof p->out);
-            p->out.status = INK_RC_FAILED;
-            snprintf(p->out.detail, sizeof p->out.detail, "timed out");
+            ink_receipt_t rc = {.status = INK_RC_FAILED};
+            snprintf(rc.detail, sizeof rc.detail, "%s", p->started ? "timed out, it may still finish" : "timed out before it started");
+            settle(p, &rc);
             due[n++] = p;
         } else if (!next || p->deadline_us < next) next = p->deadline_us;
     }
@@ -315,12 +360,26 @@ static uint32_t timeout_ms(const ink_cap_t *c) {
 /* On the provider's executor: gate, arguments, run. */
 static void start(void *arg) {
     pending_t *p = arg;
+    osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+    bool expired = p->replied; /* its deadline passed while it waited: it must not act any more */
+    if (expired) p->finished = true;
+    else {
+        p->started = true;
+        p->refs++; /* the provider may complete it from anywhere while run() is still on this stack */
+    }
+    if (expired) {
+        unlock_retire(p);
+        ink_probe_count("cap.expired");
+        return;
+    }
+    osal_mutex_unlock(CB.lock);
     const ink_cap_t *c = p->call.cap;
     ink_receipt_t *rc = &p->call.rc;
     memset(rc, 0, sizeof *rc);
     char key[64];
     snprintf(key, sizeof key, "action.%s.%s", p->call.src == INK_SRC_AI ? "ai" : "user", p->id);
     ink_probe_count(key);
+    bool ran = false;
     if (gate(c, p->call.src, p->call.page_gen, rc) == INK_RC_DONE) {
         char why[96];
         int bad = p->json ? ink_args_from_json(&p->call.args, p->json, strlen(p->json), c->input, why, sizeof why)
@@ -329,87 +388,78 @@ static void start(void *arg) {
         else {
             rc->status = INK_RC_DONE;
             c->run(&p->call);
-            osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
-            bool deferred = p->deferred;
-            osal_mutex_unlock(CB.lock);
-            if (deferred) return; /* ink_cap_done (or the deadline) answers */
+            ran = true;
         }
     }
-    finish(p);
+    osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+    p->refs--;
+    bool later = ran && p->deferred; /* ink_cap_done or the deadline answers (ink_cap_done may have come already) */
+    bool too_late = !later && !p->finished && p->replied, reply = !later && provider_done(p);
+    unlock_retire(p);
+    if (reply) answer(p);
+    else if (too_late) ink_probe_count("cap.late");
 }
 
 static int remote_call(const char *name, const ink_args_t *args, const ink_call_opts_t *o);
 
-/* A retry of a request already answered: the same receipt again. One still running: "queued",
- * it must not run a second time (a text message would go out twice). */
-static bool replay(const char *rid, const ink_call_opts_t *o) {
-    ink_receipt_t rc;
-    bool hit = false;
-    osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
-    for (int i = 0; i < SEEN_N && !hit; i++)
-        if (CB.seen[i].rid[0] && !strcmp(CB.seen[i].rid, rid)) {
-            rc = CB.seen[i].rc;
-            hit = true;
+/* Accept a call: a slot holding everything the call needs, its deadline running. NULL: not accepted.
+ * A repeat of a request has been answered when this returns NULL with *repeat set. */
+static pending_t *prepare(const char *id, const ink_cap_t *c, const ink_args_t *args, const ink_call_opts_t *o, bool remote, bool *repeat) {
+    char *json = NULL;
+    *repeat = false;
+    if (!args && o->args_json && *o->args_json) {
+        size_t n = strlen(o->args_json);
+        json = osal_malloc(n + 1, OSAL_MEM_EXTERNAL);
+        if (!json) return NULL;
+        memcpy(json, o->args_json, n + 1);
+    }
+    pending_t *p = claim(o->request_id, repeat);
+    if (!p || *repeat) {
+        osal_free(json);
+        if (p) { /* the first receipt again, or "queued": told like any other */
+            ink_probe_count("cap.replayed");
+            p->o = *o;
+            p->o.request_id = p->o.args_json = NULL;
+            answer(p);
         }
-    for (int i = 0; i < POOL_N && !hit; i++)
-        if (CB.pool[i].used && !CB.pool[i].replied && !strcmp(CB.pool[i].rid, rid)) {
-            memset(&rc, 0, sizeof rc);
-            rc.status = INK_RC_QUEUED;
-            snprintf(rc.detail, sizeof rc.detail, "this request is still running");
-            hit = true;
-        }
-    osal_mutex_unlock(CB.lock);
-    if (!hit) return false;
-    ink_probe_count("cap.replayed");
-    pending_t *p = alloc();
-    if (!p) return true; /* answered once already; this copy is lost */
-    p->o = *o;
-    p->out = rc;
-    p->finished = p->replied = true;
-    answer(p);
-    return true;
-}
-
-static pending_t *prepare(const char *id, const ink_cap_t *c, const ink_args_t *args, const ink_call_opts_t *o) {
-    pending_t *p = alloc();
-    if (!p) return NULL;
+        return NULL;
+    }
     p->call.cap = c;
     snprintf(p->id, sizeof p->id, "%s", id);
     if (args) p->call.args = *args;
     else ink_args_init(&p->call.args);
-    if (!args && o->args_json && *o->args_json) {
-        size_t n = strlen(o->args_json);
-        p->json = osal_malloc(n + 1, OSAL_MEM_EXTERNAL);
-        if (!p->json) {
-            release(p);
-            return NULL;
-        }
-        memcpy(p->json, o->args_json, n + 1);
-    }
+    p->json = json;
     p->call.src = o->src;
     p->call.page_gen = o->page_gen;
     p->o = *o;
     p->o.request_id = p->o.args_json = NULL; /* the caller's strings need not outlive the call */
-    if (o->request_id) snprintf(p->rid, sizeof p->rid, "%s", o->request_id);
+    p->remote = remote;
     p->deadline_us = osal_now_us() + (uint64_t)timeout_ms(c) * 1000u;
+    osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+    p->accepted = true;
+    if (!remote && (!CB.timer_due || p->deadline_us < CB.timer_due)) { /* only ever brought forward */
+        uint64_t now = osal_now_us();
+        CB.timer_due = p->deadline_us;
+        osal_timer_start(CB.timer, p->deadline_us > now ? p->deadline_us - now : 1, 0);
+    }
+    osal_mutex_unlock(CB.lock);
     return p;
 }
 
 int ink_cap_call(const char *addr, const ink_args_t *args, const ink_call_opts_t *o) {
     if (!CB.pool || !addr || !o) return -1;
+    if (o->request_id && strlen(o->request_id) >= RID_CAP) return -1; /* cut, it would not be recognised again */
+    if (o->done && ink_exec_ready(o->reply_exec) != 0) return -1;     /* the receipt could not be delivered */
     if (!strncmp(addr, "hub/", 4)) return remote_call(addr + 4, args, o);
-    if (o->request_id && replay(o->request_id, o)) return 0;
     const ink_cap_t *c = ink_cap_find(addr);
     if (!c && in_directory(addr)) return remote_call(addr, args, o); /* not here, but the hub has it */
-    pending_t *p = prepare(addr, c, args, o);
-    if (!p) return -1;
     ink_exec_t e = c ? c->exec : INK_EXEC_DIRECT;
+    if (ink_exec_ready(e) != 0) return -1;
+    bool repeat;
+    pending_t *p = prepare(addr, c, args, o, false, &repeat);
+    if (!p) return repeat ? 0 : -1;
     if (e == INK_EXEC_DIRECT || ink_exec_is_current(e)) start(p);
-    else if (ink_exec_post(e, start, p) != 0) {
-        release(p);
-        ink_probe_count("cap.post_failed");
-        return -1;
-    }
+    else ink_exec_post(e, &p->start_job, start, p);
     return 0;
 }
 
@@ -439,9 +489,12 @@ static ink_rc_t invoke(const char *id, const ink_args_t *args, const char *json,
     sync_reply_t sync = {.rc = rc};
     o.done = copy_receipt;
     o.ctx = &sync;
-    pending_t *p = CB.pool ? prepare(id, c, args, &o) : NULL;
+    bool repeat;
+    pending_t *p = CB.pool ? prepare(id, c, args, &o, false, &repeat) : NULL;
     if (!p) return reject(rc, INK_RC_FAILED, "busy");
-    p->pinned = true; /* looked at below, however soon it completes */
+    osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+    p->refs++; /* looked at below, however soon it completes */
+    osal_mutex_unlock(CB.lock);
     start(p);
     osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
     bool later = !p->replied;
@@ -450,10 +503,8 @@ static ink_rc_t invoke(const char *id, const ink_args_t *args, const char *json,
     /* answered in another task at this very moment: the copy into rc is on its way */
     while (!later && !__atomic_load_n(&sync.copied, __ATOMIC_ACQUIRE)) osal_task_yield();
     osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
-    p->pinned = false;
-    bool gone = p->finished && p->answered;
-    osal_mutex_unlock(CB.lock);
-    if (gone) release(p);
+    p->refs--;
+    unlock_retire(p);
     if (later) {
         rc->status = INK_RC_QUEUED;
         snprintf(rc->detail, sizeof rc->detail, "the result comes later");
@@ -506,16 +557,17 @@ static void remote_reply(void *ctx, int status, const ink_json_t *j, int result)
 }
 
 static int remote_call(const char *name, const ink_args_t *args, const ink_call_opts_t *o) {
-    if (o->request_id && replay(o->request_id, o)) return 0;
-    pending_t *p = prepare(name, NULL, args, o);
-    if (!p) return -1;
-    p->remote = true;
+    bool repeat;
+    pending_t *p = prepare(name, NULL, args, o, true, &repeat);
+    if (!p) return repeat ? 0 : -1;
     if (!p->rid[0]) snprintf(p->rid, sizeof p->rid, "d%08x-%u", (unsigned)CB.boot_tag, (unsigned)__atomic_add_fetch(&CB.next_rid, 1, __ATOMIC_RELAXED));
     const char *prev = osal_mem_tag("cap");
     char *params = osal_malloc(INK_ARGS_TEXT * 2 + 256, OSAL_MEM_EXTERNAL);
     osal_mem_tag(prev);
     if (!params) {
-        release(p);
+        osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+        p->finished = p->answered = true; /* not accepted after all: nobody will be told */
+        unlock_retire(p);
         return -1;
     }
     ink_jw_t w;
@@ -559,6 +611,7 @@ static struct {
 static int nsubs;
 
 typedef struct {
+    ink_exec_job_t job;
     ink_event_fn fn;
     void *ctx;
     char id[48];
@@ -590,7 +643,7 @@ void ink_cap_emit(const char *id, const ink_args_t *payload) {
     for (int i = 0; i < nsubs; i++) {
         if (strncmp(id, SUBS[i].prefix, SUBS[i].plen)) continue;
         const char *prev = osal_mem_tag("cap");
-        event_job_t *e = osal_malloc(sizeof *e, OSAL_MEM_EXTERNAL);
+        event_job_t *e = osal_calloc(1, sizeof *e, OSAL_MEM_EXTERNAL);
         osal_mem_tag(prev);
         if (!e) {
             ink_probe_count("event.dropped");
@@ -601,7 +654,7 @@ void ink_cap_emit(const char *id, const ink_args_t *payload) {
         snprintf(e->id, sizeof e->id, "%s", id);
         if (payload) e->payload = *payload;
         else ink_args_init(&e->payload);
-        if (ink_exec_post(SUBS[i].exec, event_job, e) != 0) {
+        if (ink_exec_post(SUBS[i].exec, &e->job, event_job, e) != 0) {
             ink_probe_count("event.dropped");
             osal_free(e);
         }
@@ -701,6 +754,7 @@ int ink_receipt_json(const ink_receipt_t *rc, char *out, size_t cap) {
 /* ------------------------------------------------------------ hub tools */
 
 typedef struct {
+    ink_exec_job_t job;
     int64_t id;
     bool list;
     uint32_t page_gen;
@@ -759,6 +813,12 @@ static void on_tools(void *ctx, int64_t id, const char *method, const ink_json_t
         ink_hub_respond_error(id, -32601, "unknown tools method");
         return;
     }
+    /* a request id is compared whole: one that does not fit, or is not a string, could run a retry again */
+    int rid_t = list ? -1 : ink_json_find(j, params, "_meta.request_id");
+    if (rid_t >= 0 && (j->tok[rid_t].type != 4 || j->tok[rid_t].end - j->tok[rid_t].start >= RID_CAP)) {
+        ink_hub_respond_error(id, -32602, "request_id must be a short string");
+        return;
+    }
     int args_t = list ? -1 : ink_json_find(j, params, "arguments");
     size_t alen = args_t >= 0 ? (size_t)(j->tok[args_t].end - j->tok[args_t].start) : 0;
     const char *prev = osal_mem_tag("tools");
@@ -784,7 +844,7 @@ static void on_tools(void *ctx, int64_t id, const char *method, const ink_json_t
         if (alen) memcpy(t->args, j->text + j->tok[args_t].start, alen);
         t->args[alen] = 0;
     }
-    ink_ui_post(tool_run, t);
+    ink_exec_post(INK_EXEC_UI, &t->job, tool_run, t);
 }
 
 /* ------------------------------------------------------------ the hub's directory (step 8) */

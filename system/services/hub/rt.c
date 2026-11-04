@@ -126,13 +126,21 @@ static void open_reply(void *ctx, int status, const ink_json_t *j, int result) {
         RT.s[i].ready = status == INK_HUB_OK;
     }
     osal_mutex_unlock(RT.lock);
-    if (status != INK_HUB_ERR_REMOTE) { /* lost or offline: the next connection announces it again */
-        if (status != INK_HUB_OK && i >= 0 && ink_hub_online()) announce(sid);
-        return;
-    }
     ink_rt_handler_t h;
     bool had = handler_of(sid, &h);
-    if (drop(sid) && had && h.on_closed) h.on_closed(h.ctx, sid, -1); /* the hub refused it */
+    if (status == INK_HUB_OK && had && h.on_ready) h.on_ready(h.ctx, sid);
+    if (status == INK_HUB_OK && !had) { /* closed while its rt.open was on the way: the hub has just opened it */
+        char params[24];
+        snprintf(params, sizeof params, "{\"sid\":%d}", sid);
+        ink_hub_notify("rt.close", params);
+    }
+    if (status == INK_HUB_OK) return;
+    if (status == INK_HUB_ERR_LOST || status == INK_HUB_ERR_OFFLINE) return; /* the next connection announces it again */
+    if (status == INK_HUB_ERR_TIMEOUT) { /* a hub that does not answer: ask again, the request's own wait paces this */
+        if (i >= 0 && ink_hub_online()) announce(sid);
+        return;
+    }
+    if (drop(sid) && had && h.on_closed) h.on_closed(h.ctx, sid, -1); /* the hub refused it, or the request could not be made */
     ink_probe_count("rt.refused");
 }
 

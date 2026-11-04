@@ -183,12 +183,13 @@ static void push(rs_t *s, uint64_t t) {
 
 typedef struct {
     rs_t *s;
+    struct hal_ws *ws; /* the connection that asked: nothing for a later one */
     int page;
 } nav_t;
 
 static void navigated(void *arg) { /* ISR: the page is rendered */
     nav_t *n = arg;
-    if (n->s->used) {
+    if (n->s->used && n->s->ws == n->ws) {
         n->s->page = n->page;
         render(n->s);
         push(n->s, vtk_now());
@@ -200,6 +201,7 @@ static void navigate(rs_t *s, uint64_t t, int page, int render_ms) {
     nav_t *n = sim_host_malloc(sizeof *n);
     if (!n) abort();
     n->s = s;
+    n->ws = s->ws;
     n->page = page;
     vtk_event_at(t + SIM_MS(render_ms), navigated, n);
 }
@@ -211,7 +213,13 @@ static rs_t *find(struct hal_ws *ws, int sid) {
 }
 
 bool sim_remote_open(struct hal_ws *ws, uint64_t t, int sid, int w, int h) {
-    if (find(ws, sid)) return true; /* announced again after a reconnect */
+    if (find(ws, sid)) return true;
+    for (int i = 0; i < 2; i++)
+        if (RS[i].used && RS[i].ws != ws) { /* a new connection: the hub has forgotten the old one's sessions */
+            sim_host_free(RS[i].shown);
+            sim_host_free(RS[i].now);
+            RS[i].used = false;
+        }
     for (int i = 0; i < 2; i++)
         if (!RS[i].used) {
             rs_t *s = &RS[i];
@@ -225,6 +233,16 @@ bool sim_remote_open(struct hal_ws *ws, uint64_t t, int sid, int w, int h) {
             return true;
         }
     return false;
+}
+
+const uint8_t *sim_remote_shown(int sid, int *w, int *h) {
+    for (int i = 0; i < 2; i++)
+        if (RS[i].used && RS[i].sid == sid) {
+            *w = RS[i].w;
+            *h = RS[i].h;
+            return RS[i].shown;
+        }
+    return NULL;
 }
 
 void sim_remote_close(struct hal_ws *ws, int sid) {

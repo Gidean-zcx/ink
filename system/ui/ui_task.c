@@ -17,6 +17,7 @@
 #include "ink/probe.h"
 #include "ink/rotation.h"
 #include "ink/sys/ai.h"
+#include "ink/sys/exec.h"
 #include "ink/sys/ui.h"
 
 #define UI_STACK 10240
@@ -36,8 +37,6 @@ typedef struct {
     uint8_t type;
     uint32_t generation;
     ink_input_event_t ev;
-    void (*fn)(void *);
-    void *arg;
 } umsg_t;
 
 typedef struct {
@@ -406,6 +405,7 @@ static struct {
     const ink_activity_t *a;
     void *arg;
     uint64_t cause_us; /* the tap that opened it: end-to-end "tap -> new screen stable" */
+    ink_exec_job_t job;
 } pending_open;
 
 static void do_open(void *unused) {
@@ -426,23 +426,28 @@ void ink_ui_open(lv_obj_t *from, const ink_activity_t *a, void *arg) {
     pending_open.a = a;
     pending_open.arg = arg;
     pending_open.cause_us = UI.cause_us;
-    ink_ui_post(do_open, NULL);
+    ink_exec_post(INK_EXEC_UI, &pending_open.job, do_open, NULL);
 }
 
-void ink_ui_post(void (*fn)(void *), void *arg) {
-    umsg_t m = {.type = UM_CALL, .fn = fn, .arg = arg};
+/* A job waits: the next round runs it. With the queue full there is no room for this message and no
+ * need for it: the task's loop looks for jobs each time it finds the queue empty. */
+void ink_ui_kick(void) {
+    if (!UI.q) return; /* before the task runs: its loop starts with them */
+    umsg_t m = {.type = UM_CALL};
     __atomic_add_fetch(&UI.posts, 1, __ATOMIC_SEQ_CST);
-    osal_queue_send(UI.q, &m, OSAL_WAIT_FOREVER);
+    if (osal_queue_send(UI.q, &m, 0) != OSAL_OK) __atomic_sub_fetch(&UI.posts, 1, __ATOMIC_SEQ_CST);
 }
 
 /* Read the post count first: the UI task stores render_pending before it lowers the count, and
- * a rendered frame reaches the display service (ink_display_busy) before render_pending drops. */
+ * a rendered frame reaches the display service (ink_display_busy) before render_pending drops.
+ * A job taken from the list runs inside a round, whose message is counted until that same point. */
 bool ink_ui_busy(void) {
+    if (ink_exec_waiting(INK_EXEC_UI)) return true;
     if (__atomic_load_n(&UI.posts, __ATOMIC_SEQ_CST) > 0) return true;
     return __atomic_load_n(&UI.render_pending, __ATOMIC_SEQ_CST);
 }
 
-bool ink_ui_queue_pending(void) { return __atomic_load_n(&UI.posts, __ATOMIC_SEQ_CST) > 0; }
+bool ink_ui_queue_pending(void) { return ink_exec_waiting(INK_EXEC_UI) || __atomic_load_n(&UI.posts, __ATOMIC_SEQ_CST) > 0; }
 
 static void note_render_pending(void) { /* UI task */
     lv_timer_t *t = lv_display_get_refr_timer(UI.disp);
@@ -527,12 +532,12 @@ static void handle_input(const umsg_t *m) {
 static const ink_activity_t *g_home;
 
 /* Handle one message; *first_cause keeps the first action of the round (a key press, swipe, tap
- * release or posted call that set a cause; pointer presses and moves are not actions by themselves,
+ * release or posted job that set a cause; pointer presses and moves are not actions by themselves,
  * as for a single tap, which counts from its release). */
 static void handle(const umsg_t *m, uint64_t *first_cause, const char **first_tag) {
     uint64_t before = UI.cause_us;
     if (m->type == UM_INPUT) handle_input(m);
-    else if (m->type == UM_CALL && m->fn) m->fn(m->arg);
+    else if (m->type == UM_CALL) ink_exec_run(INK_EXEC_UI);
     bool action = !(m->type == UM_INPUT && m->ev.kind == INK_EV_POINTER && m->ev.phase != INK_PTR_RELEASE);
     if (action && !*first_cause && UI.cause_us && UI.cause_us != before) {
         *first_cause = UI.cause_us;
@@ -544,7 +549,7 @@ static void handle(const umsg_t *m, uint64_t *first_cause, const char **first_ta
  * waveform the feeders hold both cores, and drawing a page can take as long as the waveform) is
  * handled together before anything is drawn, so a burst of page turns shows its last page instead
  * of every page in turn, and the wait after the last input stays bounded (found by the 2026-11
- * audit, AUD-002: four turns a second queued up five seconds). A posted call ends the batch: it may
+ * audit, AUD-002: four turns a second queued up five seconds). A posted job ends the batch: it may
  * need the frame drawn first ("open with feedback"). The frame counts from the batch's first action. */
 static void handle_round(const umsg_t *first) {
     uint64_t cause = 0;
@@ -628,6 +633,9 @@ static void ui_task(void *arg) {
         if (UI.has_held) {
             m = UI.held;
             UI.has_held = false;
+        } else if (ink_exec_waiting(INK_EXEC_UI) && !osal_queue_count(UI.q)) { /* posted while the queue was full, or before this task ran */
+            m = (umsg_t){.type = UM_CALL};
+            __atomic_add_fetch(&UI.posts, 1, __ATOMIC_SEQ_CST);
         } else if (osal_queue_recv(UI.q, &m, timeout) != OSAL_OK) {
             continue;
         }
@@ -647,7 +655,5 @@ int ink_ui_start(const ink_activity_t *home) {
                            .flags = OSAL_TASK_STACK_EXTERNAL};
     return osal_task_create(&cfg, &UI.task) == OSAL_OK ? 0 : -1;
 }
-
-bool ink_ui_started(void) { return UI.q != NULL; }
 
 bool ink_ui_is_current(void) { return UI.task && osal_task_self() == UI.task; }

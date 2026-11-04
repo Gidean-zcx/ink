@@ -1,0 +1,6 @@
+# A voice turn ends when the hub has answered (it answers last, after the speech): the realtime
+# session closes by itself, background work goes on and the hub link is free to go idle (audit
+# AUD11-005: the session stayed open until the next press, and the link stayed up with it).
+@3s      mic   speech
++0       key   ai 1200ms
++85s     end

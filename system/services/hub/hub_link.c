@@ -24,7 +24,7 @@
 #include "ink/sys/hub.h"
 #include "ink/sys/power.h"
 
-#define HUB_STACK 4096
+#define HUB_STACK 6144 /* PSRAM: replies run here, and what they start (closing a session, the next request) */
 #define HUB_PRIO 6
 #define HUB_QUEUE 16
 #define MAX_PENDING 16
@@ -85,6 +85,7 @@ typedef struct {
 static struct {
     char url[128];
     osal_queue_t *q;
+    osal_task_t *task;
     osal_mutex_t *id_lock;
     hal_ws_t *ws;
     uint32_t ws_gen; /* hub task: the current connection's number (its callback's ctx) */
@@ -172,15 +173,18 @@ static void link_cb(void *ctx, const hal_link_status_t *st) {
 static void finish(pending_t *p, int status, const ink_json_t *msg, int tok) {
     if (!p->used) return;
     p->used = false;
+    char *params = p->params; /* the callback may make a new request, in this slot */
+    p->params = NULL;
+    ink_hub_reply_fn cb = p->cb;
+    void *ctx = p->ctx;
     if (p->sent_at && status == INK_HUB_OK) ink_probe_value("hub.request_ms", (double)(osal_now_us() - p->sent_at) / 1000.0);
     if (status != INK_HUB_OK) {
         char key[48];
         snprintf(key, sizeof key, "hub.errors.%d", -status);
         ink_probe_count(key);
     }
-    if (p->cb) p->cb(p->ctx, status, msg, tok);
-    osal_free(p->params);
-    p->params = NULL;
+    if (cb) cb(ctx, status, msg, tok);
+    osal_free(params);
 }
 
 static int send_request(pending_t *p) {
@@ -377,6 +381,27 @@ static uint64_t next_wakeup(uint64_t now) {
     return t == UINT64_MAX ? 0 : (t > now ? t - now : 1);
 }
 
+/* A request enters the table of requests in flight (hub task). */
+static void accept_call(call_req_t *r, uint64_t now) {
+    pending_t *p = slot_new();
+    if (!p) {
+        if (r->cb) r->cb(r->ctx, INK_HUB_ERR_NOMEM, NULL, -1);
+        osal_free(r->params);
+    } else {
+        memset(p, 0, sizeof *p);
+        p->id = r->id;
+        memcpy(p->method, r->method, sizeof p->method);
+        p->params = r->params;
+        p->deadline = now + (uint64_t)(r->timeout_us > 0 ? r->timeout_us : 20000000);
+        p->cb = r->cb;
+        p->ctx = r->ctx;
+        p->used = true;
+        H.last_activity = now;
+        if (H.state == HS_ONLINE) send_request(p);
+    }
+    osal_free(r);
+}
+
 static void hub_task(void *arg) {
     (void)arg;
     for (;;) {
@@ -387,27 +412,7 @@ static void hub_task(void *arg) {
         now = osal_now_us();
         if (e == OSAL_OK) {
             switch (m.type) {
-            case HE_CALL: {
-                call_req_t *r = m.req;
-                pending_t *p = slot_new();
-                if (!p) {
-                    if (r->cb) r->cb(r->ctx, INK_HUB_ERR_NOMEM, NULL, -1);
-                    osal_free(r->params);
-                } else {
-                    memset(p, 0, sizeof *p);
-                    p->id = r->id;
-                    memcpy(p->method, r->method, sizeof p->method);
-                    p->params = r->params;
-                    p->deadline = now + (uint64_t)(r->timeout_us > 0 ? r->timeout_us : 20000000);
-                    p->cb = r->cb;
-                    p->ctx = r->ctx;
-                    p->used = true;
-                    H.last_activity = now;
-                    if (H.state == HS_ONLINE) send_request(p);
-                }
-                osal_free(r);
-                break;
-            }
+            case HE_CALL: accept_call(m.req, now); break;
             case HE_DEMAND: break;
             case HE_LINK: break;
             case HE_TX: break; /* drained below */
@@ -496,7 +501,7 @@ int ink_hub_init(const char *url) {
     hal_net_set_link_callback(link_cb, NULL);
     osal_task_cfg_t cfg = {.name = "hub", .fn = hub_task, .stack_bytes = HUB_STACK, .priority = HUB_PRIO, .core = -1,
                            .flags = OSAL_TASK_STACK_EXTERNAL};
-    return osal_task_create(&cfg, NULL) == OSAL_OK ? 0 : -1;
+    return osal_task_create(&cfg, &H.task) == OSAL_OK ? 0 : -1;
 }
 
 int ink_hub_call(const char *method, const char *params_json, int64_t timeout_us, ink_hub_reply_fn cb, void *ctx) {
@@ -515,6 +520,10 @@ int ink_hub_call(const char *method, const char *params_json, int64_t timeout_us
     r->cb = cb;
     r->ctx = ctx;
     uint32_t id = r->id;
+    if (osal_task_self() == H.task) { /* from a callback of this task: waiting for room in its own queue would never end */
+        accept_call(r, osal_now_us());
+        return (int)id;
+    }
     hub_msg_t m = {.type = HE_CALL, .req = r};
     osal_queue_send(H.q, &m, OSAL_WAIT_FOREVER);
     return (int)id;

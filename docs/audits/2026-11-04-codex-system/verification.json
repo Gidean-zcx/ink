@@ -1,0 +1,8 @@
+[
+  {
+    "id": "AUD-007/F-6",
+    "verdict": "部分修复",
+    "evidence_type": "复现；受控交错复现；代码核查；文档核查",
+    "note": "ai_page_version场景及ASan通过；换屏show_top、阅读器go_to使用独立内容版本，工具校验与正常最终回执带版本已实现。但finish先replied=true再写seen，跨任务重试窗口可重复执行同号请求，补充实验runs=2。见AUD11-006。"
+  }
+]

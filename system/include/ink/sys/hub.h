@@ -5,7 +5,7 @@
  * period (active long connection, disconnect when idle).
  *
  * Callbacks run in the hub task: keep them short and post work elsewhere
- * (e.g. ink_ui_post for the UI).
+ * (ink_exec_post for the UI or another executor).
  */
 #ifndef INK_SYS_HUB_H
 #define INK_SYS_HUB_H

@@ -27,7 +27,7 @@ typedef struct {
     void *ctx;
     ink_exec_t exec;
     uint64_t pending; /* items changed since the last delivery (bit = item index, < 64) */
-    bool scheduled;
+    ink_exec_job_t job;
 } watch_t;
 
 struct watch_list {
@@ -35,7 +35,7 @@ struct watch_list {
     int n;
     watch_t w[WATCH_MAX];
     const char *(*id_of)(int idx);
-    const char *probe_dropped; /* counted when a delivery cannot be posted */
+    const char *probe_dropped; /* counted when the watcher's executor cannot run at all */
 };
 
 /** `lock`: the table's mutex; watch_changed must be called without holding it. */

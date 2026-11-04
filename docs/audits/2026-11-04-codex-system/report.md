@@ -1,0 +1,109 @@
+# 第十轮软件质量审计（进行中）
+
+审计日期：2026-11-04。对象：`ebf05c8fad460b4231fe4be2cb58c44d45e9f8a4`；比较基线：`560d81a`。
+
+本报告边核查边更新；尚未完成的范围不能视为通过。仅在模拟器和主机上取证，不接触设备、私有实机资料或外部模型，不修改产品代码、现有测试和文档，不提交或推送。
+
+## 1. 一页结论
+
+审计进行中。**已确认 9 条高级问题、1 条中级问题（含 2 条受控交错复现），当前不建议合入 main。** 普通构建 49/49、ASan/UBSan 构建 48/48 现有测试全部通过，但补充实验揭示队列拥塞、超时、设置恢复与音频生命周期缺口。最终范围结论仍待补齐。
+
+## 2. 修复核实
+
+| 编号 | 结论 | 证据 | 说明 |
+| --- | --- | --- | --- |
+| AUD-007/F-6 | 部分修复 | 【复现】【代码核查】原 ai_page_version 通过；受控交错同号执行两次 | 内容版本正常路径已接入；AUD11-006 表明去重状态迁移不原子。 |
+
+## 3. 新问题
+
+### AUD11-001（高）执行队列满后仍报告成功，并永久丢失回执、设置应用和状态通知
+
+- 证据：**【复现】【代码核查】** 运行 experiments/service_probe.c 的 AUDIT_CASE=bus。queued=16, call_return=0, replies=0, setting_rc=done, stored=7, applied=0, watch=0；释放队列并等待1.5秒后仍如此，重设7后applied仍为0。
+- 位置：`system/policy/cap.c:245`、`system/policy/settings.c:209`、`system/policy/settings.c:221`、`system/policy/watch.c:54`。
+- 影响：后台执行器被慢操作占用且16个槽已满时，ink_cap_call返回0却不回调；设置值更新并可持久化但apply未执行，重设相同值也不会重试；状态订阅的最后一次变更可能永不送达。违反已受理调用恰好一次完成和设置生效的约定。
+- 建议：为完成回执保留可靠投递路径；设置apply和通知保留待处理标志并在队列可用时重试/合并，或明确向调用方返回失败且不承诺生效。不要以计数代替恢复。
+
+### AUD11-002（高）只有显式defer的调用才受超时保护，排队和同步阻塞的能力可过期后执行
+
+- 证据：**【复现】【代码核查】** AUDIT_CASE=bus注册timeout_ms=20的后台能力，在阻塞队列后受理；500ms仍无超时回执；解阻后执行并回done，elapsed_ms=510.1，cap.timeouts=0。
+- 位置：`system/policy/cap.c:269`、`system/policy/cap.c:291`、`system/policy/cap.c:315`、`system/policy/cap.c:394`、`system/services/comm/comm_service.c:156`。
+- 影响：相机、短信和通话在媒体/后台队列排队时没有截止检查；例如切卡占用后台队列时，已超时的发短信或挂电话仍会迟到执行，且回执为done。描述中的timeout_ms无法约束这些实际能力。
+- 建议：从受理起启动截止计时，区分未开始、执行中、已完成；过期的未开始调用不得再运行。执行中的阻塞提供者需有取消/完成寿命协议。
+
+### AUD11-003（高）启动时读回了SIM卡设置，却从不切换到已保存的卡槽
+
+- 证据：**【复现】【代码核查】** AUDIT_CASE=sim_boot先经真实存储写入{"cell.sim_slot":1}再启动设置和通信服务。7s后setting=1,status_ok=1,slot=0,published=external；再次设置1回done，slot=0,switched=0。
+- 位置：`system/services/comm/comm_service.c:203`、`system/policy/settings.c:141`、`system/policy/settings.c:210`、`system/include/ink/sys/settings.h:43`。
+- 影响：用户选内置卡并重启后，设置显示internal，模组实际仍用external；没有外置卡时会失去通信。同值重设被视为未变化，无法纠正。
+- 建议：通信服务启动后，在模组可用时应用读回的cell.sim_slot，处理失败与重试，并使设置、硬件状态与回执一致。
+
+### AUD11-004（高）上一段捕获的结束清理会清掉已接受的新捕获编码器和回调
+
+- 证据：**【复现】【代码核查】** AUDIT_CASE=capture在handsfree档案中录音500ms，在len=0的结束回调立即调用ink_audio_capture_begin。首次与重启均返回0；packets_before=8，继续1.5s后packets仍为8。
+- 位置：`system/services/audio/audio_service.c:218`、`system/services/audio/audio_service.c:225`、`system/services/audio/audio_service.c:661`。
+- 影响：cap_on在释放旧编码器、清除旧回调之前变为false；结束回调或另一任务此时发起下一段会返回成功，随后旧清理把新cap_fn清空、释放新AU.enc。新录音不再产生数据，旧编码器也失去引用。
+- 建议：在同一生命周期锁下拆出旧编码器/回调，完整清理旧一代后再公开空闲；结束通知只持有旧局部变量，不能覆盖新一代状态。
+
+
+### AUD11-005（高）语音轮次结束或关闭面板不释放实时会话，后台作业持续暂停
+
+- 证据：**【复现】【代码核查】** 运行experiments/product_probe.c及session.script：真实产品问答后HOME关闭，24s时提交作业，2s后rt_count=1,steps=0,pending=1；实验显式ink_rt_close(1)后rt_count=0,steps=1,pending=0。
+- 位置：`system/services/ai/ai_service.c:153`、`system/services/ai/ai_service.c:290`、`system/services/ai/ai_service.c:446`、`system/services/hub/rt.c:44`、`system/services/hub/rt.c:170`。
+- 影响：正常完成一次语音问答并关闭面板后，voice.chat仍占一个会话、持续持有hub连接并冻结所有后台作业。只有下一次提问才关闭旧会话，但又立即打开新会话；正常使用没有恢复空闲的路径。
+- 建议：定义一轮语音的完整结束条件，在文本/音频结束、错误、关闭面板和启动失败等路径释放对应代次的会话，并平衡jobs_hold和hub_keep。
+
+### AUD11-006（高）完成状态与去重缓存分开提交，同一请求在交错窗口会再次执行
+
+- 证据：**【复现】【代码核查】** interleaving_probe.c包含未修改cap.c，在finish解锁后、remember之前安排同号重试，模拟另一任务合法抢占。普通和ASan均输出first=0,retry=0,runs=2,replies=2；属于确定性交错复现，不是主机SMP随机复现。
+- 位置：`system/policy/cap.c:252`、`system/policy/cap.c:239`、`system/policy/cap.c:345`、`system/policy/cap.c:401`。
+- 影响：finish先把pending.replied置true并解锁，随后answer才写seen；之间的同号重试既不命中完成缓存，也不命中执行中分支，会再次执行短信、翻页等副作用。查重与prepare也分离，首次并发请求存在同类缺口。
+- 建议：将请求号认领、状态迁移和第一张最终回执的可见性做成原子协议；完成但未投递的条目仍须可重放。增加跨执行器交错测试。
+
+### AUD11-007（高）重连重建会话后没有重发拉取额度，远程页面停留在旧画面
+
+- 证据：**【复现】【代码核查】** 未修改ink-sim运行remote_reconnect.script及原remote_browse.hub.json：断网3s，重连后点击并等待6s；rt.reannounced=2,hub.remote.sessions=2,hub.remote.link_hits=1,hub.remote.updates=1,remote.updates=1，无remote.tap_to_update_visible_ms。普通和ASan一致；原场景3次点击均更新。
+- 位置：`system/apps/remote/remote.c:73`、`system/apps/remote/remote.c:78`、`system/apps/remote/remote.c:266`、`system/services/hub/rt.c:102`、`simulator/environment/sim_remote.c:218`。
+- 影响：初始画面显示后credit定时器暂停；断网重连的新服务端会话额度为0，客户端first_pull仍为false且无人重启定时器。点击到达服务端但页面不再更新，必须关闭重开。send_credit失败也被忽略，会造成相同停滞。
+- 建议：将连接代次及ready变化通知宿主，在重新登记后重建额度和完整画面同步；发送失败保留重试状态。
+
+### AUD11-008（高）解码后的提交没有复核会话，旧区域可以写进重新打开的页面
+
+- 证据：**【复现】【代码核查】** interleaving_probe.c包含未修改remote.c，在真实JPEG调用边界模拟UI切换sid=1到2并清空画布；继续旧帧解码后current_sid=2,published_pixels_changed=4,dirty=1,last_flag=0。普通和ASan一致；未声称随机调度下已复现撕裂或越界。
+- 位置：`system/apps/remote/remote.c:121`、`system/apps/remote/remote.c:142`、`system/apps/remote/remote.c:156`、`system/apps/remote/remote.c:166`、`system/apps/remote/remote.c:238`、`system/apps/remote/remote.c:299`。
+- 影响：媒体任务只在解码前检查sid；解码让出CPU期间UI可关闭重开并复用画布。旧任务恢复后写当前RS.px，脏区和不带代次的show_update影响新页面。同时解码直接修改LVGL正在读的画布，LAST前的半更新可被无关刷新读到。
+- 建议：宿主实例、解码作业和UI提交携带同一代次，提交时复核并使用稳定的画布所有权；通过串行提交或缓冲交换避免渲染读取正在修改的区域。
+
+### AUD11-009（高）异步能力提前完成后调用槽可在run返回前复用，旧调用会提前完成新调用
+
+- 证据：**【复现】【代码核查】** AUDIT_CASE=early通过真实API先defer/done，再受理一个被后台阻塞器挡住的新调用；原run返回后before_unblock显示first=0,nested=0,replies=1,ran=0,status=done，解阻后ran=1,late=1。普通及ASan一致；测试没有在done后访问旧call，也没有修改或钩住调用池。
+- 位置：`system/policy/cap.c:189`、`system/policy/cap.c:220`、`system/policy/cap.c:252`、`system/policy/cap.c:331`、`system/include/ink/sys/cap.h:143`。
+- 影响：defer后的done允许来自任意任务，可能早于run返回。finish/answered释放槽位后，原start仍读p->deferred并可能再次finish同一地址；如果槽位已被新调用复用，新调用在尚未执行时就收到done并被释放，队列还持有其指针。以后可出现回执串线或错误释放新一代对象。
+- 建议：run/start返回前单独持有执行引用，provider完成、回执完成、执行栈退出全部满足后才回收；各异步任务应验证槽位代次。补充早完成和完成后立即发起新调用的测试。
+
+### AUD11-010（中）通信服务的三块静态工作缓冲未标记PSRAM，遗漏量大于最紧场景的预算余量
+
+- 证据：**【代码核查】【文档核查】【推断】** clang -target riscv32-unknown-elf -ffreestanding -fsyntax-only -Isystem/include experiments/memory_sizes.c通过静态断言：sizeof(ink_args_t)=584、msg_t=224、总计1392；原ai_ask-metalio-plus-pqbn/metrics.json的mem.internal_total.min_free_bytes=33536。此实验验证ABI大小，不是目标固件链接或实机测量。
+- 位置：`system/services/comm/comm_service.c:63`、`system/services/comm/comm_service.c:87`、`system/include/ink/sys/args.h:24`、`docs/system/system-detailed-design.md:52`、`platform/include/ink/osal.h:92`。
+- 影响：两个static ink_args_t及一个static msg_t没有INK_PSRAM_BSS；RV32布局合计1392字节，属于新增数据缓冲而非设计§1.2所称的少量控制结构。当前最紧产品场景模拟内部总余量33536字节，距离32768底线仅768字节，且静态数据未记账。不能由现有绿色预算得出实机余量合格；实际是否越线仍需目标链接图。
+- 建议：将仅任务使用的通信工作缓冲纳入PSRAM布局或明确计入内部静态账；检查新增普通BSS与调用栈，再以目标编译/链接结果校准堆预算。不要直接从主机池数值宣称实机达标。
+
+## 4. 分范围核查记录
+
+| 范围 | 状态 | 证据与结论 |
+| --- | --- | --- |
+| F-6 页面版本与幂等 | 待核查 | — |
+| 能力、参数、执行器 | 首轮核查完成，继续检查生命周期 | 发现 AUD11-001、002；现有超时测试只覆盖显式 defer。 |
+| 状态、设置、通知 | 首轮核查完成 | AUD11-001 复现通知/应用永久丢失；正常合并与值锁未见新的问题。 |
+| 服务接入与资源管理 | 待核查 | — |
+| 实时会话、语音与打断 | 待核查 | — |
+| 远程画面与解码器 | 待核查 | — |
+| SDK 边界、模拟模型、内存与预算 | 待核查 | — |
+
+## 5. 命令、证据边界与未覆盖项
+
+- 【复现】`git rev-parse HEAD` 返回上述提交；`git diff 560d81a..HEAD --stat` 显示 89 个文件，8152 行增加、599 行删除。
+- 初始 `git status --short` 仅有未跟踪的本次审计目录，内含 `TASK.md`。
+- 任务要求只读与离线，本轮不读取在线决策板或远端 Issue/PR；以检出中的第五、六轮决策为准，不更新项目决策档案。
+- 【复现】按 TASK.md 参数离线配置和构建，普通 CTest **49/49**（27.87 s）；`INK_SANITIZE=ON, INK_GUI=OFF` CTest **48/48**（8.37 s），均通过。构建日志位于 `/tmp/ink-audit10-*.log`，未放入交付目录。
+- 补充实验：`experiments/build_probe.py` 复用构建参数与实际服务库，未修改生产源码；`service_probe.c` 已运行 `bus`、`sim_boot`、`capture` 三种模式，各进程独立输出到 `build-audit/probe-*`。完整命令与证据摘要会在结束时整理。
+- 主机/模拟器证据不等同于目标硬件、多核并发或实机 SRAM 验收。

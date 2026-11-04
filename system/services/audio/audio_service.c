@@ -69,6 +69,7 @@ typedef struct {
 
 static struct {
     osal_mutex_t *lock;
+    osal_mutex_t *mic_lock; /* who wants the microphone and whether it runs change together: held over the HAL's start and stop (never under `lock`) */
     osal_sem_t *wake;
     osal_task_t *task;
     hal_audio_info_t info;
@@ -217,17 +218,25 @@ static bool capture_step(int16_t *scratch) {
     if (got && !(on && ending && listen)) return true; /* listening: the capture ends right here */
     if (on && ending) {
         if (!got && !listen && left) encode_and_deliver(scratch);
+        /* Taken over here, then cleaned up, then the owner told; only after that is the capture over:
+         * a new one cannot begin before this one's end was delivered, nor share anything with it. */
         lock();
-        bool keep_mic = AU.listen_on; /* asked for just now, maybe: it relies on this microphone */
+        hal_opus_enc_t *enc = AU.enc;
+        ink_audio_frame_fn fn = AU.cap_fn;
+        void *ctx = AU.cap_ctx;
+        uint32_t seq = AU.cap_seq;
+        AU.enc = NULL;
+        AU.cap_fn = NULL;
+        unlock();
+        hal_opus_enc_free(enc);
+        if (fn) fn(ctx, NULL, 0, seq);
+        osal_mutex_lock(AU.mic_lock, OSAL_WAIT_FOREVER);
+        lock();
+        bool keep_mic = AU.listen_on; /* listening relies on this microphone */
         AU.cap_on = AU.cap_ending = false;
         unlock();
         if (!keep_mic) hal_audio_capture_stop();
-        if (AU.cap_fn) AU.cap_fn(AU.cap_ctx, NULL, 0, AU.cap_seq);
-        lock();
-        AU.cap_fn = NULL;
-        unlock();
-        hal_opus_enc_free(AU.enc);
-        AU.enc = NULL;
+        osal_mutex_unlock(AU.mic_lock);
     }
     return false;
 }
@@ -598,12 +607,13 @@ int ink_audio_init(void) {
     ink_state_set_bool(h_listening, false);
     const char *prev = osal_mem_tag("audio");
     AU.lock = osal_mutex_create();
+    AU.mic_lock = osal_mutex_create();
     AU.wake = osal_sem_create(0, 1);
     AU.ring = osal_malloc(CAP_RING * sizeof(int16_t), OSAL_MEM_EXTERNAL);
     AU.jb = osal_calloc(JB_MAX, sizeof(jb_frame_t), OSAL_MEM_EXTERNAL);
     AU.pcm = osal_malloc(FRAME * 4 * sizeof(int16_t), OSAL_MEM_EXTERNAL);
     osal_mem_tag(prev);
-    if (!AU.lock || !AU.wake || !AU.ring || !AU.jb || !AU.pcm) return -1;
+    if (!AU.lock || !AU.mic_lock || !AU.wake || !AU.ring || !AU.jb || !AU.pcm) return -1;
     if (!AU.info.has_speaker && !AU.info.has_mic) return 0;
     osal_task_cfg_t cfg = {.name = "audio", .fn = audio_task, .stack_bytes = AU_STACK, .priority = AU_PRIO, .core = -1,
                            .flags = OSAL_TASK_STACK_EXTERNAL};
@@ -615,8 +625,8 @@ int ink_audio_last_command(void) { return __atomic_load_n(&g_last_command, __ATO
 
 bool ink_audio_can_listen(void) { return AU.info.has_mic && AU.task && hal_afe_available(); }
 
-int ink_audio_listen(bool on, ink_audio_listen_fn fn, void *ctx) {
-    if (!ink_audio_can_listen()) return -1;
+/* 1 changed, 0 nothing to do, -1 failed. Under mic_lock. */
+static int listen_locked(bool on, ink_audio_listen_fn fn, void *ctx) {
     lock();
     bool was = AU.listen_on, mic = AU.cap_on;
     unlock();
@@ -645,10 +655,18 @@ int ink_audio_listen(bool on, ink_audio_listen_fn fn, void *ctx) {
     } else {
         lock();
         AU.listen_on = false;
-        mic = AU.cap_on;
         unlock();
         if (!mic) hal_audio_capture_stop();
     }
+    return 1;
+}
+
+int ink_audio_listen(bool on, ink_audio_listen_fn fn, void *ctx) {
+    if (!ink_audio_can_listen()) return -1;
+    osal_mutex_lock(AU.mic_lock, OSAL_WAIT_FOREVER);
+    int r = listen_locked(on, fn, ctx);
+    osal_mutex_unlock(AU.mic_lock);
+    if (r <= 0) return r;
     ink_state_set_bool(h_listening, on);
     ink_probe_count(on ? "audio.listen_on" : "audio.listen_off");
     osal_sem_give(AU.wake);
@@ -658,8 +676,7 @@ int ink_audio_listen(bool on, ink_audio_listen_fn fn, void *ctx) {
 bool ink_audio_has_speaker(void) { return AU.info.has_speaker; }
 bool ink_audio_has_mic(void) { return AU.info.has_mic; }
 
-int ink_audio_capture_begin(ink_audio_frame_fn fn, void *ctx) {
-    if (!AU.info.has_mic || !AU.task) return -1;
+static int capture_begin_locked(ink_audio_frame_fn fn, void *ctx) { /* under mic_lock */
     lock();
     bool busy = AU.cap_on;
     unlock();
@@ -685,8 +702,16 @@ int ink_audio_capture_begin(ink_audio_frame_fn fn, void *ctx) {
         hal_opus_enc_free(enc);
         return -1;
     }
-    osal_sem_give(AU.wake);
     return 0;
+}
+
+int ink_audio_capture_begin(ink_audio_frame_fn fn, void *ctx) {
+    if (!AU.info.has_mic || !AU.task) return -1;
+    osal_mutex_lock(AU.mic_lock, OSAL_WAIT_FOREVER);
+    int r = capture_begin_locked(fn, ctx);
+    osal_mutex_unlock(AU.mic_lock);
+    if (r == 0) osal_sem_give(AU.wake);
+    return r;
 }
 
 void ink_audio_capture_end(void) {
