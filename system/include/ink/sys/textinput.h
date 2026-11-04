@@ -82,6 +82,8 @@ int ink_text_voice_start(void);
 void ink_text_voice_finish(void);
 /** Back to the keyboard, nothing goes in. */
 void ink_text_voice_cancel(void);
+/** UI task. A call, an alarm, the AI key: the microphone goes at once, what was said so far still goes into the field. */
+void ink_text_voice_interrupt(void);
 ink_voice_state_t ink_text_voice_state(void);
 const char *ink_text_voice_state_name(void);
 /** The end of what was heard so far, for the panel's fixed area. */

@@ -589,8 +589,8 @@ static void turn_focus_begin(void) { /* UI task */
 
 void ink_ai_key(bool pressed, uint64_t t_us) {
     if (pressed) {
-        if (ink_text_voice_state() != INK_VOICE_IDLE) { /* the key still means the AI: what was being dictated is dropped, the microphone comes free */
-            ink_text_voice_cancel();
+        if (ink_text_voice_state() != INK_VOICE_IDLE) { /* the key still means the AI: what was said so far goes into the field, the microphone comes free */
+            ink_text_voice_interrupt();
             for (int i = 0; i < 40 && ink_audio_capture_busy(); i++) osal_task_delay_us(5000);
         }
         AI.t_press = t_us;

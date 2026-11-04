@@ -271,12 +271,12 @@ static void cancelled(void) {
 static void hub_says_no(const char *code, const char *told) {
     focus_as(INK_TEXT_PLAIN, "");
     delay_ms(300);
-    sim_hub_asr_script("先说的这句。|后面的", code, 22);
+    sim_hub_asr_script("先说的这句。|后面的", code, 30);
     CHECK(press("话筒"), "%s: the key", code);
     mic("speech");
     CHECK(WAIT_FOR(state_is(INK_VOICE_IDLE), 6000), "%s: it ends", code);
     look();
-    CHECK(!strcmp(g_value, "先说的这句。"), "%s: what was final stays, what was not does not (%s)", code, g_value);
+    CHECK(!strncmp(g_value, "先说的这句。", strlen("先说的这句。")) && strlen(g_value) > strlen("先说的这句。") && strstr("先说的这句。后面的", g_value), "%s: what was said stays, half a sentence too (%s)", code, g_value);
     CHECK(strstr(g_notice, told), "%s: says why (%s)", code, g_notice);
     CHECK(WAIT_FOR(over_and_free(), 1000), "%s: free", code);
     CHECK(there("q"), "%s: the keys", code);
@@ -499,25 +499,58 @@ static void ended_by(void) {
     ink_power_activity(osal_now_us());
     delay_ms(300);
 
-    /* a call */
+    /* a call (system UI spec §8): the microphone goes at once, what was said is not lost, and it can go on afterwards */
     start_talking("来电话了。");
     CHECK(WAIT_FOR((look(), g_heard[0] != 0), 3000), "heard");
     g_hw.num[0] = 0;
     snprintf(g_hw.num, sizeof g_hw.num, "10086");
+    int ended = g_ended;
     hw(HW_CALL, 0, 0);
     CHECK(WAIT_FOR(!strcmp(active_state(), "call"), 5000), "it rings (%s)", active_state());
-    CHECK(WAIT_FOR(state_is(INK_VOICE_IDLE), 2000), "a call: over");
-    look();
-    CHECK(!strcmp(g_value, "锁之前"), "nothing goes in (%s)", g_value);
     CHECK(!ink_audio_capture_busy() || WAIT_FOR(!ink_audio_capture_busy(), 500), "the microphone is free for it");
+    double frames = sim_metric_value("hub.asr_frames");
+    delay_ms(1000);
+    CHECK(sim_metric_value("hub.asr_frames") == frames, "and nothing of the call goes to the hub (%.0f)", sim_metric_value("hub.asr_frames") - frames);
+    CHECK(WAIT_FOR(state_is(INK_VOICE_IDLE), 3000), "a call: over");
+    CHECK(WAIT_FOR(g_ended > ended, 500) && !strcmp(g_ended_how, "interrupted"), "and says how (%s)", g_ended_how);
+    look();
+    CHECK(strstr(g_value, "锁之前") && strstr(g_value, "来电话了。"), "what was said goes in (%s)", g_value);
+    CHECK(strstr(g_notice, "接着说"), "and it can go on (%s)", g_notice);
     hw(HW_HANGUP, 0, 0);
     CHECK(WAIT_FOR(!strcmp(active_state(), "none"), 5000), "it hangs up");
     delay_ms(1000);
+    CHECK(ink_text_focused() && there("话筒"), "back in the field, the key is there");
+    start_talking("接着说的。");
+    CHECK(WAIT_FOR((look(), g_heard[0] != 0), 3000), "heard");
+    CHECK(press("说完了"), "said");
+    CHECK(WAIT_FOR(state_is(INK_VOICE_IDLE), 3000), "over");
+    look();
+    CHECK(strstr(g_value, "来电话了。接着说的。"), "it goes on from there (%s)", g_value);
+    delay_ms(300);
+
+    /* half a sentence, and the hub does not answer any more: what was heard is what there is */
+    sim_hub_asr_script("半句话说到这里", "mute", 12);
+    CHECK(press("话筒"), "the microphone key is there");
+    CHECK(WAIT_FOR(state_is(INK_VOICE_LISTENING), 5000), "listening (%d)", g_state);
+    mic("speech");
+    CHECK(WAIT_FOR((look(), g_heard[0] != 0), 3000), "heard (%s)", g_heard);
+    char half[64];
+    snprintf(half, sizeof half, "%s", g_heard);
+    int by_call = ink_audio_focus_acquire(INK_AUDIO_PRIO_CALL, NULL, NULL, INK_EXEC_DIRECT);
+    CHECK(by_call > 0 && WAIT_FOR(state_is(INK_VOICE_IDLE), 10000), "over, after a while");
+    look();
+    CHECK(strstr(g_value, half), "half a sentence is not lost (%s, %s)", g_value, half);
+    CHECK(strstr(g_notice, "接着说"), "and it is not told about the hub, only that it can go on (%s)", g_notice);
+    ink_audio_focus_release(by_call);
+    delay_ms(300);
 
     /* an alarm's level */
     start_talking("闹钟响了。");
     int alert = ink_audio_focus_acquire(INK_AUDIO_PRIO_ALERT, NULL, NULL, INK_EXEC_DIRECT);
-    CHECK(alert > 0 && WAIT_FOR(state_is(INK_VOICE_IDLE), 2000), "an alarm: over");
+    CHECK(alert > 0 && WAIT_FOR(!ink_audio_capture_busy(), 500), "an alarm: the microphone is free");
+    CHECK(WAIT_FOR(state_is(INK_VOICE_IDLE), 3000), "over");
+    look();
+    CHECK(strstr(g_value, "闹钟响了"), "what was said goes in (%s)", g_value);
     /* under it, or under a call, it does not start */
     on_ui(do_start);
     look();
@@ -576,10 +609,10 @@ static void ended_by(void) {
     start_talking("说到一半。");
     double presses = sim_metric_value("ai.presses"), no_mic = sim_metric_value("ai.mic_unavailable");
     key(HAL_KEY_AI);
-    CHECK(WAIT_FOR(state_is(INK_VOICE_IDLE), 1000), "pressed: what was dictated is dropped");
     CHECK(sim_metric_value("ai.presses") == presses + 1 && sim_metric_value("ai.mic_unavailable") == no_mic, "and the AI has the microphone (%.0f, %.0f)", sim_metric_value("ai.presses") - presses, sim_metric_value("ai.mic_unavailable") - no_mic);
+    CHECK(WAIT_FOR(state_is(INK_VOICE_IDLE), 3000), "pressed: it ends");
     look();
-    CHECK(!strstr(g_value, "说到"), "not in the field (%s)", g_value);
+    CHECK(strstr(g_value, "说到一半。"), "what was said goes into the field (%s)", g_value);
     delay_ms(12000);
     on_ui(do_blur);
     delay_ms(300);

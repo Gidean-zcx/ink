@@ -37,6 +37,7 @@
 #define WORDS_MAX 4095
 #define RESULT_MAX 480        /* the hub's limit for one result */
 #define SHOWN_MAX 240         /* the panel's fixed area */
+#define GO_ON "接着说"         /* after an interruption: what was said is in the field, the key is there */
 
 typedef struct frame {
     struct frame *next;
@@ -56,6 +57,7 @@ static struct {
     int sid, focus, focus_gen;
     bool capturing;   /* until the end of the capture was delivered: the microphone is not free before that */
     bool capture_ended_asked, end_sent;
+    bool interrupted; /* a call, an alarm, the AI key: the person did not mean to stop */
     uint64_t state_since_us;
     int readies;
     /* the audio task's while a capture runs, this task's after it */
@@ -219,12 +221,25 @@ static void commit_words(void) {
     ink_text_commit_utf8(VS.words);
 }
 
-/* It cannot go on: what was final stays, the person hears why, the keyboard comes back. */
+/* The end of a text, whole characters, as far as there is room. */
+static void add_words(const char *text) {
+    size_t n = strlen(text);
+    if (VS.nwords + n > WORDS_MAX) {
+        n = WORDS_MAX - VS.nwords;
+        while (n && ((unsigned char)text[n] & 0xC0) == 0x80) n--;
+    }
+    memcpy(VS.words + VS.nwords, text, n);
+    VS.nwords += n;
+    VS.words[VS.nwords] = 0;
+}
+
+/* It cannot go on: what was heard stays, half a sentence too, the person hears why, the keyboard comes back. */
 static void fail_with(const char *notice) {
+    add_words(VS.interim);
     commit_words();
-    set_notice(notice);
+    set_notice(VS.interrupted ? GO_ON : notice);
     ink_probe_count("text.voice_failed");
-    voice_end("failed");
+    voice_end(VS.interrupted ? "interrupted" : "failed");
 }
 
 static void send_end_if_ready(void) {
@@ -250,6 +265,16 @@ void ink_text_voice_finish(void) {
         VS.capture_ended_asked = true;
         ink_audio_capture_end();
     }
+}
+
+/* The microphone is someone else's at once. What was said so far still goes to the hub, and what comes back goes into the field. */
+void ink_text_voice_interrupt(void) {
+    if (VS.state != INK_VOICE_LISTENING && VS.state != INK_VOICE_CONNECTING) return;
+    VS.interrupted = true;
+    ink_probe_count("text.voice_interrupted");
+    ink_audio_focus_release(VS.focus);
+    VS.focus = 0;
+    ink_text_voice_finish();
 }
 
 void ink_text_voice_cancel(void) {
@@ -281,14 +306,7 @@ static void result_job(void *arg) {
     result_t *r = arg;
     if (r->sid == VS.sid && VS.state != INK_VOICE_IDLE && r->seg >= VS.next_seg) { /* a later result replaces, a final one stays */
         if (r->final) {
-            size_t n = strlen(r->text);
-            if (VS.nwords + n > WORDS_MAX) {
-                n = WORDS_MAX - VS.nwords;
-                while (n && ((unsigned char)r->text[n] & 0xC0) == 0x80) n--;
-            }
-            memcpy(VS.words + VS.nwords, r->text, n);
-            VS.nwords += n;
-            VS.words[VS.nwords] = 0;
+            add_words(r->text);
             VS.next_seg = r->seg + 1;
             VS.interim[0] = 0;
         } else snprintf(VS.interim, sizeof VS.interim, "%s", r->text);
@@ -301,11 +319,13 @@ static void result_job(void *arg) {
 
 static void done_job(void *arg) {
     if ((int)(intptr_t)arg != VS.sid) return;
+    add_words(VS.interim);
     if (VS.nwords) {
         commit_words();
         ink_probe_count("text.voice_committed");
-    } else set_notice("没听清");
-    voice_end("done");
+    } else if (!VS.interrupted) set_notice("没听清");
+    if (VS.interrupted) set_notice(GO_ON);
+    voice_end(VS.interrupted ? "interrupted" : "done");
 }
 
 static void error_job(void *arg) {
@@ -409,7 +429,7 @@ static void on_focus(void *ctx, ink_focus_event_t ev, ink_audio_prio_t by) { /* 
     (void)by;
     if (ev == INK_FOCUS_BACK || (int)(intptr_t)ctx != VS.focus_gen) return; /* not an earlier dictation's */
     VS.focus = 0;
-    ink_text_voice_cancel();
+    ink_text_voice_interrupt();
 }
 
 /* 0, or -1 and a notice (none where there is simply no such thing: no field, a password). */
@@ -449,7 +469,7 @@ int ink_text_voice_start(void) {
     }
     VS.sid = sid;
     VS.focus = focus;
-    VS.capture_ended_asked = VS.end_sent = false;
+    VS.capture_ended_asked = VS.end_sent = VS.interrupted = false;
     VS.interim[0] = VS.shown[0] = 0;
     ink_audio_capture_measure(true);
     if (ink_audio_capture_begin(on_frame, NULL) != 0) {

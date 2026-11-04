@@ -266,7 +266,7 @@ static void sync_voice(ink_voice_state_t vs) {
         ink_ui_hint_obj(K.root, INK_REFRESH_FAST);
     }
     if (!on) return;
-    lv_label_set_text(K.status, vs == INK_VOICE_CONNECTING ? "正在连接，可以说了" : vs == INK_VOICE_LISTENING ? "请说，停一下就结束" : "正在整理…");
+    lv_label_set_text(K.status, vs == INK_VOICE_CONNECTING ? "正在连接，可以说了" : vs == INK_VOICE_LISTENING ? "请说，停一下就结束" : "正在整理成文字");
     lv_label_set_text(K.heard, ink_text_voice_heard());
     ink_ui_hint_obj(K.status, INK_REFRESH_FAST);
     ink_ui_hint_obj(K.heard, INK_REFRESH_FAST);

@@ -360,8 +360,9 @@ static void asr_frame(uint64_t t) {
     if (ASR.done || ASR.silent) return;
     ASR.frames++;
     sim_metric_add("hub.asr_frames", 1);
-    if (ASR.fail_code[0] && ASR.frames >= ASR.fail_after) {
-        asr_fail(t + SIM_MS(10));
+    if (ASR.fail_code[0] && ASR.frames >= ASR.fail_after) { /* "mute": no error, it just does not answer any more */
+        if (!strcmp(ASR.fail_code, "mute")) ASR.silent = true;
+        else asr_fail(t + SIM_MS(10));
         return;
     }
     char text[256];
