@@ -147,7 +147,7 @@ static void wipe_dir(const char *dir, int depth) {
     hal_dir_t *d = path && e ? hal_fs_opendir(dir) : NULL;
     while (d && hal_fs_readdir(d, e) == 1) {
         if (!strcmp(e->name, ".") || !strcmp(e->name, "..")) continue;
-        snprintf(path, 160, "%s/%s", dir, e->name);
+        if (snprintf(path, 160, "%s/%s", dir, e->name) >= 160) continue;
         if (e->is_dir) wipe_dir(path, depth + 1);
         hal_fs_remove(path);
     }

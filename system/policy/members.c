@@ -443,8 +443,8 @@ static void cap_add(ink_call_t *c) { /* exec.bg */
         return;
     }
     memset(s, 0, sizeof *s);
-    snprintf(s->m.id, sizeof s->m.id, "%s", id);
-    snprintf(s->m.name, sizeof s->m.name, "%s", name[0] ? name : id);
+    snprintf(s->m.id, sizeof s->m.id, "%.15s", id);
+    snprintf(s->m.name, sizeof s->m.name, "%.31s", name[0] ? name : id);
     s->m.role = !strcmp(role, "adult") ? INK_ROLE_ADULT : INK_ROLE_CHILD;
     set_allow(s);
     s->used = true;
@@ -463,8 +463,7 @@ static void wipe_member_files(void *arg) { /* the storage task: their data area 
     char path[INK_LAYOUT_PATH_MAX + 64];
     while (hal_fs_readdir(d, &e) == 1) {
         if (e.is_dir) continue;
-        snprintf(path, sizeof path, "%s/%s", dir, e.name);
-        hal_fs_remove(path);
+        if (snprintf(path, sizeof path, "%s/%s", dir, e.name) < (int)sizeof path) hal_fs_remove(path);
     }
     hal_fs_closedir(d);
     hal_fs_remove(dir);

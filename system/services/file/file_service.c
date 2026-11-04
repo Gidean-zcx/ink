@@ -442,7 +442,7 @@ static void wipe_tree(const char *phys, int depth) {
     hal_dir_t *d = path && e ? hal_fs_opendir(phys) : NULL;
     while (d && hal_fs_readdir(d, e) == 1) {
         if (!strcmp(e->name, ".") || !strcmp(e->name, "..")) continue;
-        snprintf(path, PHYS_MAX, "%s/%s", phys, e->name);
+        if (snprintf(path, PHYS_MAX, "%s/%s", phys, e->name) >= PHYS_MAX) continue;
         if (e->is_dir) wipe_tree(path, depth + 1);
         hal_fs_remove(path);
     }

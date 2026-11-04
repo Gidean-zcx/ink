@@ -417,7 +417,7 @@ static bool newest_in(const char *dir, char *best, size_t cap, pkg_t *out) {
     while (p && path && hal_fs_readdir(d, &e) == 1) {
         size_t n = strlen(e.name);
         if (e.is_dir || n < 7 || strcmp(e.name + n - 6, ".inkfw")) continue;
-        snprintf(path, PKG_PATH_MAX, "%s/%s", dir, e.name);
+        if (snprintf(path, PKG_PATH_MAX, "%s/%s", dir, e.name) >= PKG_PATH_MAX) continue;
         if (read_header(path, p) != PKG_OK || check_rules(p) != PKG_OK) {
             ink_probe_count("update.package_ignored");
             continue;
