@@ -312,13 +312,16 @@ static int install(const char *path, const pkg_t *p) { /* exec.bg, holding the c
         if (p->sec[i].kind == SEC_APP) app = &p->sec[i];
     hal_file_t *f = hal_fs_open(path, HAL_O_READ);
     uint8_t *buf = osal_malloc(BLOCK, OSAL_MEM_EXTERNAL);
+    ink_sha256_t *sum = osal_malloc(sizeof *sum, OSAL_MEM_EXTERNAL);
     slot_op_t op = {.n = (size_t)app->size, .r = -1};
-    if (f && buf) ink_storage_run(slot_begin, &op, true);
-    if (!f || !buf || op.r != 0 || hal_fs_seek(f, (int64_t)app->offset, 0) != 0) {
+    if (f && buf && sum) ink_storage_run(slot_begin, &op, true);
+    if (!f || !buf || !sum || op.r != 0 || hal_fs_seek(f, (int64_t)app->offset, 0) != 0) {
         if (f) hal_fs_close(f);
+        osal_free(sum);
         osal_free(buf);
         return -1;
     }
+    ink_sha256_init(sum);
     snprintf(U.st.state, sizeof U.st.state, "writing");
     snprintf(U.st.version, sizeof U.st.version, "%s", p->version);
     U.st.code = p->code;
@@ -336,6 +339,7 @@ static int install(const char *path, const pkg_t *p) { /* exec.bg, holding the c
         ssize_t n = hal_fs_read(f, buf, want);
         if (n <= 0) bad = 1;
         else {
+            ink_sha256_update(sum, buf, (size_t)n);
             op = (slot_op_t){buf, (size_t)n, 0};
             ink_storage_run(slot_write, &op, true); /* between blocks the panel and the readers get their turn */
             if (op.r != 0) bad = 1;
@@ -349,6 +353,14 @@ static int install(const char *path, const pkg_t *p) { /* exec.bg, holding the c
     }
     hal_fs_close(f);
     osal_free(buf);
+    /* what went into the slot is what was checked: the card could have changed since, or read wrong */
+    uint8_t got[32];
+    ink_sha256_final(sum, got);
+    osal_free(sum);
+    if (!bad && memcmp(got, app->sha256, 32)) {
+        ink_probe_count("update.changed_while_written");
+        bad = 1;
+    }
     if (!bad) ink_storage_run(slot_finish, &op, true);
     if (bad || op.r != 0) {
         ink_power_release(INK_NEED_NO_LOCK);

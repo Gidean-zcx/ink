@@ -348,6 +348,48 @@ static void hang3(void) {
     ink_probe_count("test.finished");
 }
 
+/* The package changes while it is being written (a card that reads wrong, another one put in): what was checked is not what
+ * went into the slot, and that is seen before anything depends on it. */
+static void spoil_file(void) {
+    hal_file_t *f = hal_fs_open("/content/update/good-7.inkfw", HAL_O_READ | HAL_O_WRITE);
+    if (f) {
+        hal_fs_seek(f, -16, 2);
+        hal_fs_write(f, "changed!", 8);
+        hal_fs_close(f);
+    }
+}
+
+static void on_progress_spoil(void *ctx, int h, const char *id) {
+    (void)ctx;
+    (void)id;
+    int64_t pct = 0;
+    ink_state_get_int(h, &pct);
+    if (pct >= 40 && !g_cut && !strcmp(state_of("update.state"), "installing")) {
+        g_cut = 1;
+        spoil_file();
+    }
+}
+
+static void swap1(void) {
+    CHECK(running_code() == 200, "version 2 (%u)", (unsigned)running_code());
+    CHECK(ink_state_watch("update.progress", on_progress_spoil, NULL, INK_EXEC_DIRECT) == 0, "watch");
+    int told = g_told;
+    say_yes("system.upgrade_from_card", "{\"file\":\"good-7.inkfw\"}");
+    CHECK(WAIT_FOR(g_told > told, 60000) && !strcmp(g_told_status, "failed"), "it says it could not (%s, %s)", g_told_status, g_told_detail);
+    CHECK(g_cut == 1, "the file did change");
+    CHECK(sim_metric_value("update.changed_while_written") == 1, "and it saw that");
+    CHECK(!strcmp(state_of("update.state"), "failed"), "state (%s)", state_of("update.state"));
+    delay_ms(1000);
+    on_ui(read_screen);
+    CHECK(!strstr(g_snap, "正在安装"), "the card has gone (%s)", g_snap);
+    ink_probe_count("test.finished");
+}
+
+static void swap2(void) {
+    CHECK(running_code() == 200, "the next boot is the old one (%u)", (unsigned)running_code());
+    ink_probe_count("test.finished");
+}
+
 /* The power goes while the fonts are being written, after it has proved itself: the rest at the next boot. */
 static void res1(void) {
     ink_probe_count("test.finished");
@@ -459,6 +501,8 @@ static void test_task(void *arg) {
     else if (!strcmp(phase, "hang1")) hang1();
     else if (!strcmp(phase, "hang2")) hang2();
     else if (!strcmp(phase, "hang3")) hang3();
+    else if (!strcmp(phase, "swap1")) swap1();
+    else if (!strcmp(phase, "swap2")) swap2();
     else if (!strcmp(phase, "resume1")) resume1();
     else if (!strcmp(phase, "resume2")) resume2();
     else if (!strcmp(phase, "res1")) res1();
