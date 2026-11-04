@@ -95,7 +95,7 @@
 | 3.4 | `caps/list` 分页和更多字段 | 设备 → 中枢 | 放不下；离线策略到不了设备 | 超过一页时必须 |
 | 3.5 | `rt.close` 带原因 | 设备 → 中枢 | 打断时历史截断不准 | 可选 |
 | 3.6 | `device/event` 加序号 | 设备 → 中枢 | 事件丢了发现不了 | 必须 |
-| 3.7 | `confirm/request` | 中枢 → 设备 | 中枢能力的外部副作用没法确认 | 做 `browser.act`、`budget.set` 时必须 |
+| 3.7 | `confirm/request` | 中枢 → 设备 | 中枢的高风险能力没法确认 | 做 `budget.set`、支付页上的点击时必须 |
 | 3.8 | 块传输 `blob/*`、帧 kind 6、7 | 双向 | 书、音频、固件、备份文件传不了 | 必须 |
 | 3.9 | 同步 `sync/*` | 设备 → 中枢 | 没有备份 | 必须，数据存储要加原子安装 |
 | 3.10 | 升级 `update/*` | 设备 → 中枢 | 没有 OTA | 系统服务已定义，这里统一到块传输 |
@@ -174,6 +174,8 @@
 切换时设备关掉所有实时会话、`abort` 已排队的声音（`finish` 会接着放）、作废确认卡；中枢取消这些会话和这一轮，丢弃没发出的帧和文字，结束 AI 上下文（审查 HUB-011）。
 
 **`_meta.member`、`_meta.epoch`**：中枢发给设备的 `tools/call`、`confirm/request` 带目标成员和**交付时**的代次；和当前不一致时设备回错误 `-32023 stale_member`，中枢留着等下次。持久结果不绑定发起时的代次：成员回来后中枢重新检查权限，用当前代次交付（审查 HUB2-008）。
+
+**`_meta.asked`**（D-105）：`tools/call` 带 `true` 表示这一步是人亲口要求的，由中枢策略代码判断后填，模型碰不到（[概要设计 §7.5](hub-architecture.md)）。设备对对外动作和系统设置：有它就直接做，没有就弹确认卡；高风险的能力（`ask_by_hand`）一律弹卡。
 
 **`members/list`（设备 → 中枢，请求）**：`{"cursor"?}` → `{"members":[{"id","name","role","mark"}],"nextCursor"?,"rev"}`。一页不超过 8 人（实测 85 词法单元）。读完所有页才替换成员表。
 
@@ -362,7 +364,7 @@
 
 **断线**：不续传。中枢断开厂商连接；设备发现断线就关这个会话并退回键盘，旧的 `seg` 作废。要注意 `on_online` 会把还开着的会话重新登记一遍，而且不先通知拥有者，所以设备要自己看连接状态，先关。
 
-**设备这边**已做完（`claude/system-services` 提交 `23d8a74`）：能力 `text.voice_start`（AI 调要过确认卡）、`text.voice_finish`、`text.voice_cancel`，状态 `text.voice`，事件 `text.voice_ended {how, why}`。麦克风同一时间只有一个拥有者；和 AI 键、唤醒词、来电、录音、锁屏的抢占关系，等采集结束回调后再交接，都是这个能力的前提（设备底层会话）。
+**设备这边**已做完（`claude/system-services` 提交 `23d8a74`）：能力 `text.voice_start`（现在 AI 调要过确认卡，D-105 之后人亲口要求就直接开）、`text.voice_finish`、`text.voice_cancel`，状态 `text.voice`，事件 `text.voice_ended {how, why}`。麦克风同一时间只有一个拥有者；和 AI 键、唤醒词、来电、录音、锁屏的抢占关系，等采集结束回调后再交接，都是这个能力的前提（设备底层会话）。
 
 **目录**：`asr.stream` 进 `caps/list`（`form: session`），不进模型工具表。离线或这位成员不允许时设备查不到它，话筒键可以据此变灰或隐藏。
 
@@ -452,4 +454,4 @@ JSON-RPC `error.code`：
 
 - v0.1（2026-11-04）：初稿，对照提交 `9b3c24a` 的实现。同日补听写 `asr.stream`（§3.11）。
 - v0.2（2026-11-04）：按 Codex 设计审查修改，并对照系统服务分支 `a81c1b8`：现状补 45 秒、2048 字节、`ai.ask` 文字被忽略、`rt.open` 不等回答；配对改成两阶段，认领网址由设备拼；成员代次；`caps/list` 按词法单元切页；事件统一成 `device/event` 并加序号；确认改成单独方法并绑定记录；块传输按段拉取，上传编号改成数字；同步加数据代次和全量对账；听写的结束条件分开；新增 §3.12～§3.14。
-- v0.3（2026-11-04）：按 Codex 第二轮复核修改：电脑认领要核对码，待生效令牌 7 天和 `pending_token_expired`；`hub_instance`、`dataset` 随机编号，`sync/status` 的判断表，全量对账会话；`actions` 空数组当作不知道；`confirm.status`；`_meta.epoch` 是交付时的代次；`budget_ms`（§3.15）。同日按用户的要求（服务器只是运行时，D-101）加 `blob/status`；按 Codex 第三轮改 `sync/status` 的判断表（`wait`、`snapshot`）；按第四轮加 `restore_token`，收紧 `durable`，首版不发 `next_token`。
+- v0.3（2026-11-04）：按 Codex 第二轮复核修改：电脑认领要核对码，待生效令牌 7 天和 `pending_token_expired`；`hub_instance`、`dataset` 随机编号，`sync/status` 的判断表，全量对账会话；`actions` 空数组当作不知道；`confirm.status`；`_meta.epoch` 是交付时的代次；`budget_ms`（§3.15）。同日按用户的要求（服务器只是运行时，D-101）加 `blob/status`；按 Codex 第三轮改 `sync/status` 的判断表（`wait`、`snapshot`）；按第四轮加 `restore_token`，收紧 `durable`，首版不发 `next_token`。按用户的要求（D-105）加 `_meta.asked`。
