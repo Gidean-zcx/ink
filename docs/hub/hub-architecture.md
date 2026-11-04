@@ -248,7 +248,7 @@ flowchart LR
 
 | 子系统 | AI 可调的能力 | 要成人确认才生效 | AI 不可调（原因） | 状态 | 设置 | 事件 | 内部机制 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 语音 | `asr.transcribe`、`tts.speak`；`dictation.list`、`dictation.delete`（听写记录，D-91）；`voice.chat` 由设备打开 | — | `asr.stream`（听写是输入法的管道，只开放给应用；AI 碰输入框用设备的 `text.state`、`text.insert`，语音转文字用 `asr.transcribe`）；别的成员的听写记录（孩子的除外：成人家长可看） | `voice.active` | `voice.tts_voice`、`voice.speed`、`asr.vocab`（按成员）、`dictation.keep_days` | `voice.turn_done` | 断句、流控、打断、Opus、中间结果节流 |
+| 语音 | `asr.transcribe`、`tts.speak`；`dictation.list`、`dictation.delete`（听写记录，D-91）；`voice.chat` 由设备打开 | — | `asr.stream`（听写是输入法的管道，只开放给应用；AI 碰输入框用设备的 `text.state`、`text.insert`，要听写用设备的 `text.voice_start`（要过确认卡），语音转文字用 `asr.transcribe`）；别的成员的听写记录（孩子的除外：成人家长可看） | `voice.active` | `voice.tts_voice`、`voice.speed`、`asr.vocab`（按成员）、`dictation.keep_days` | `voice.turn_done` | 断句、流控、打断、Opus、中间结果节流 |
 | AI 代理 | `llm.ask`、`routine.add`、`routine.list`、`routine.remove`（定时任务，以后） | — | — | — | `ai.style`（按成员） | — | 提示词组装、工具循环、渐进披露 |
 | 模型与费用 | `usage.today`、`usage.month`、`budget.status`、`model.routes.get` | `budget.set`、`model.routes.set` | 模型密钥的值 | `budget.level` | `model.routes`、`budget.*` | `budget.warning` | 回退、熔断、价格表、预留 |
 | 记忆 | `memory.search`、`memory.list`、`memory.add`、`memory.update`、`memory.forget` | — | 别的成员的记忆（孩子的除外：成人家长可看） | — | `memory.auto`（按成员，默认开） | `memory.changed` | 提取、合并、向量 |
@@ -710,7 +710,7 @@ sequenceDiagram
 | 用途 | 和 AI 说话 | 代替打字 |
 | 经过 AI 代理和模型 | 经过 | **不经过** |
 | 写入记忆和对话记录 | 写 | **不写**（定稿文字另存听写记录，D-91） |
-| 谁打开 | AI 键、唤醒词 | 输入框的话筒键（设备能力，按钮和 AI 共用） |
+| 谁打开 | AI 键、唤醒词 | 输入框的话筒键，设备能力 `text.voice_start`，按钮和 AI 共用，AI 调要过确认卡 |
 | 给设备什么 | 文字、朗读、工具调用 | 只有文字 |
 | 识别厂商、账本、额度 | `asr` 角色 | **同一个** `asr` 角色 |
 
@@ -783,11 +783,12 @@ sequenceDiagram
 
 额度不够时也是**先确认 `rt.open` 再发错误**：设备的 `open_reply` 不把错误码交给会话（【实现】`rt.c:129`），这样不用改 `rt.c` 就能说清原因。
 
-**设备这边的前提**（交给设备底层会话）：麦克风同一时间只有一个拥有者（`audio_service.c:679`），听写要定义和 AI 键、唤醒词、来电、录音、锁屏的抢占关系，等采集结束的回调后才交接；断线时要主动关会话，因为 `on_online` 会自动重新登记，而且不先通知拥有者。
+**设备这边**已经按[设备协议 §3.11](device-protocol.md) 做完（`claude/system-services` 提交 `23d8a74`，还没合入）：能力 `text.voice_start`、`text.voice_finish`、`text.voice_cancel`，状态 `text.voice`（idle、connecting、listening、finishing），事件 `text.voice_ended {how, why}`，`text.state` 里带 `voice`、`voice_possible`；模拟中枢有 `asr.stream` 替身。当时的前提是：麦克风同一时间只有一个拥有者（`audio_service.c:679`），听写要定义和 AI 键、唤醒词、来电、录音、锁屏的抢占关系，等采集结束的回调后才交接；断线时要主动关会话，因为 `on_online` 会自动重新登记，而且不先通知拥有者。
 
 **其他规则**：
 
 - **一台设备同时一路**。第二路回 `not_allowed`。切成员时（`ink/member`）立刻结束。
+- **空会话**：设备没连上时发出的 `rt.open`，重连后请求仍会发出，随后马上 `rt.close`（`open_reply` 的既有行为）。中枢会看到一个没有语音帧的会话：按取消处理，不算错误，不计费，不留听写记录，已经连上的厂商连接直接断开。
 - **密码框**：设备上没有话筒；中枢也拒绝 `kind: password`，防止出错时把密码发给厂商。
 - **孩子**：可以用（D-25 不限制通信），不做内容过滤，因为它只是打字，不是 AI 在说话。家长可以在设置里关。
 - **口语整理**（去掉“嗯”“那个”）：以后再做，默认关。它要调 `fast` 模型，费用和延迟都变，而且改了用户的原话；打开时走 `rt.asr` 之后另一步，不影响这条链。
@@ -1747,7 +1748,7 @@ D-73～D-94、D-101～D-104，详情和状态在[决策记录](../decisions/READ
 | `sync/*` 客户端；数据集元数据（`dataset`、`complete`、上次的 `hub_instance`、`restore_token`）；取已落盘版本 V 对应的一致清单；原子安装快照（保留编号和版本）；墓碑被挤掉时报 `history_gap` | §5.8 | 基于 `ink_db_changes`、`ink_db_ack`；数据存储新增接口 |
 | `confirm/request` 方法；`token` 跨重启不复用；确认结果落盘保留，`confirm.status` 能力 | §7.5 | 确认卡服务（系统服务 §7）；`ink_hub_on_request` 加前缀 |
 | `device/event` 加 `seq`、`boot` | §7.6 | 分支上的 `cap.c:745` |
-| 语音面板和 `asr.stream` 客户端 | R-056、D-65 | 设备底层会话做：`rt.asr` 的显示、断线主动关会话并退回键盘、麦克风抢占和交接、听写时暂停唤醒词；打开面板也要是一个能力（按钮和 AI 同一条路）；模拟中枢加替身 |
+| 语音面板和 `asr.stream` 客户端 | R-056、D-65 | **已做**（`claude/system-services` 提交 `23d8a74`，还没合入）。范围是：`rt.asr` 的显示、断线主动关会话并退回键盘、麦克风抢占和交接、听写时暂停唤醒词；打开面板也要是一个能力（按钮和 AI 同一条路）；模拟中枢加替身 |
 | 内容包：阅读器分块读取、定位、离线播放器和句子对齐 | §5.6 | **第 5 步的硬依赖**。现在只读 2 MiB 以内的 TXT |
 | 远程画面补翻页、长按、提交文字 | §5.7 | **第 6 步的硬依赖**。现在只有点按。用户选了首版做（D-85），要提前排 |
 | 模拟器：真中枢桥；真 Opus 和真 JPEG 模式 | §10 | 第 1、2、6 步的前提 |
