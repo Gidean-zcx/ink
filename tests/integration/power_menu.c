@@ -7,8 +7,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "ink/sys/data.h"
 #include "ink/sys/interrupt.h"
-#include "ink/sys/notify.h"
 
 #define ink_main product_main
 #include "../../system/boot/main.c"
@@ -135,9 +135,14 @@ static void test_main(void) {
     ink_member_test_reset();
 }
 
+/* What may wait (a reading position, say): it has to go before the power does. */
+static const ink_db_def_t KEPT = {.name = "test.kept", .scope = INK_DB_DEVICE, .schema = 1};
+
 static void test_off(int button, const char *title) {
-    ink_notify_t n = {.title = title, .prio = INK_NOTIFY_LOW};
-    CHECK(ink_notify_post(&n, NULL) == 0, "something to write");
+    ink_db_register(&KEPT);
+    ink_db_t *db = ink_db_open(&KEPT, NULL);
+    ink_db_write_t w = {.id = (uint32_t)button + 1, .data = title, .len = strlen(title) + 1, .flags = INK_DB_LAZY};
+    CHECK(db && ink_db_put(db, &w, NULL) == INK_DB_OK && ink_db_durable_ver(db) < ink_db_last_ver(db), "something that may wait");
     hold_power();
     release_power();
     delay_ms(600);
@@ -149,12 +154,12 @@ static void test_off(int button, const char *title) {
 }
 
 /* Written before it went. */
-static void test_after(const char *title) {
-    ink_db_cursor_t c = {0};
-    ink_notify_view_t v;
-    bool found = false;
-    while (ink_notify_next(&c, &v) == 1) found = found || !strcmp(v.title, title);
-    CHECK(found, "what was waiting is there after the next boot (%s)", title);
+static void test_after(int button, const char *title) {
+    ink_db_register(&KEPT);
+    ink_db_t *db = ink_db_open(&KEPT, NULL);
+    char got[32] = "";
+    CHECK(db && ink_db_get(db, (uint32_t)button + 1, NULL, got, sizeof got) == INK_DB_OK && !strcmp(got, title), "what was waiting is there after the next boot (%s)", got);
+    ink_db_close(db);
 }
 
 /* Whoever holds the device can turn it off: a child, an adult's closed space. */
@@ -169,6 +174,27 @@ static void test_child(void) {
     tap(g_btn_x[0], g_btn_y[0]);
     delay_ms(60000);
     CHECK(0, "it should have gone by now");
+}
+
+/* The button with this label, on the system cards: there may be more buttons than read_screen keeps. */
+static const char *g_label;
+static int g_label_x, g_label_y;
+static void label_in(lv_obj_t *o) {
+    for (uint32_t i = 0; i < lv_obj_get_child_count(o); i++) {
+        lv_obj_t *c = lv_obj_get_child(o, (int32_t)i);
+        if (lv_obj_check_type(c, &lv_label_class) && !strcmp(lv_label_get_text(c), g_label)) {
+            lv_area_t a;
+            lv_obj_update_layout(c);
+            lv_obj_get_coords(c, &a);
+            g_label_x = (a.x1 + a.x2) / 2;
+            g_label_y = (a.y1 + a.y2) / 2;
+        }
+        label_in(c);
+    }
+}
+static void find_label(void) {
+    g_label_x = -1;
+    label_in(lv_layer_sys());
 }
 
 static volatile int g_pin_done;
@@ -194,7 +220,10 @@ static void test_closed(void) {
     delay_ms(600);
     CHECK(menu_up(), "the menu over it (%s)", g_top);
     ink_probe_count("test.finished");
-    tap(g_btn_x[g_btn_n - 3], g_btn_y[g_btn_n - 3]); /* the gate's buttons come first */
+    g_label = "关机";
+    on_ui(find_label);
+    CHECK(g_label_x >= 0, "its button");
+    tap(g_label_x, g_label_y);
     delay_ms(60000);
     CHECK(0, "it should have gone by now");
 }
@@ -204,9 +233,9 @@ static void test_task(void *arg) {
     delay_ms(1500);
     const char *phase = getenv("INK_MENU_PHASE");
     if (!strcmp(phase, "off")) test_off(0, "关机前的");
-    else if (!strcmp(phase, "off_after")) test_after("关机前的");
+    else if (!strcmp(phase, "off_after")) test_after(0, "关机前的");
     else if (!strcmp(phase, "restart")) test_off(1, "重启前的");
-    else if (!strcmp(phase, "restart_after")) test_after("重启前的");
+    else if (!strcmp(phase, "restart_after")) test_after(1, "重启前的");
     else if (!strcmp(phase, "child")) test_child();
     else if (!strcmp(phase, "closed")) test_closed();
     else test_main();
