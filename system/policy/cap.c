@@ -105,7 +105,7 @@ static ink_rc_t gate(const ink_cap_t *c, ink_source_t src, uint32_t page_gen, in
     if (!exposed(c, src)) return reject(rc, INK_RC_INVALID, "not offered to this caller");
     const ink_member_t *m = ink_member_current();
     if (m->role == INK_ROLE_CHILD) {
-        if (c->effect == INK_FX_SYSTEM) {
+        if (c->effect == INK_FX_SYSTEM && !(c->child_ok && (src == INK_SRC_TOUCH || src == INK_SRC_KEY))) { /* turning it off is anyone's who holds it */
             ink_probe_count("policy.rejected");
             return reject(rc, INK_RC_REJECTED, "children cannot run system actions");
         }

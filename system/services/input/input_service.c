@@ -11,12 +11,14 @@
 #include "ink/rotation.h"
 #include "ink/sys/input.h"
 #include "ink/sys/power.h"
+#include "ink/sys/svc.h"
 
 #define SWIPE_MIN_MM 6
 #define SWIPE_MAX_MS 900
 #define SLOP_MM 3
 #define LONGPRESS_MS 600
 #define KEY_LONG_MS 800
+#define POWER_LONG_MS 1500
 /* Touch and key edges almost always lead to a refresh (feedback first), so
  * start the panel power-up right away; the UI renders meanwhile. */
 #define WAKE_HOLD_MS 1000
@@ -41,6 +43,9 @@ static struct {
     osal_timer_t *key_timer;
     hal_key_t swallow_release; /* the release of a key press the power policy consumed */
     bool (*power_key_hook)(void);
+    void (*power_long_hook)(void);
+    bool power_down, power_long_fired;
+    ink_svc_deadline_t power_at;
 } IS;
 
 static int mm(int v) { return v * IS.px_per_mm10 / 10; }
@@ -139,10 +144,34 @@ static void on_key(const hal_input_event_t *h) {
     emit(&e);
 }
 
+static void power_long_due(void *arg) { /* the timer task */
+    (void)arg;
+    lock();
+    bool fire = IS.power_down;
+    if (fire) IS.power_long_fired = true;
+    unlock();
+    if (fire && IS.power_long_hook) IS.power_long_hook();
+}
+
 /* Power policy first: while locked only a wake key gets through (it unlocks); the power key locks on
- * release (a long press is left for power-off later). Returns true if the event was consumed. */
+ * release, held down it is the power menu (locked too: it wakes, then that). Returns true if the event was consumed. */
 static bool power_filter(const hal_input_event_t *h) {
     bool is_key = h->type == HAL_IN_KEY;
+    if (is_key && h->key.key == HAL_KEY_POWER) {
+        lock();
+        bool was_long = IS.power_long_fired;
+        IS.power_down = h->key.pressed;
+        IS.power_long_fired = false;
+        unlock();
+        if (h->key.pressed) ink_svc_at(&IS.power_at, osal_now_us() + POWER_LONG_MS * 1000ull, power_long_due, NULL);
+        else {
+            ink_svc_cancel(&IS.power_at);
+            if (was_long) {
+                IS.swallow_release = HAL_KEY_NONE;
+                return true;
+            }
+        }
+    }
     if (is_key && !h->key.pressed && IS.swallow_release == h->key.key) {
         IS.swallow_release = HAL_KEY_NONE;
         return true;
@@ -173,6 +202,7 @@ static void hal_sink(const hal_input_event_t *h, void *ctx) {
 }
 
 void ink_input_set_power_key_hook(bool (*fn)(void)) { IS.power_key_hook = fn; }
+void ink_input_set_power_long_hook(void (*fn)(void)) { IS.power_long_hook = fn; }
 
 int ink_input_init(ink_input_handler_t handler, void *ctx) {
     IS.handler = handler;

@@ -35,7 +35,7 @@ static void show(void) { /* UI task */
     ink_font_t *cjk = ink_font_for_pt(8, pi.dpi); /* the UI fonts are Latin only */
     lv_obj_set_style_text_font(l, cjk ? ink_font_lvgl(cjk) : ink_ui_font(2), 0);
     lv_obj_set_style_text_color(l, lv_color_black(), 0);
-    lv_label_set_text(l, cjk ? "已锁定，按电源键唤醒" : "Locked - press power to wake");
+    lv_label_set_text(l, cjk ? "已锁定，按电源键或 AI 键唤醒" : "Locked - press power or AI to wake");
     lv_obj_align(g_mark, LV_ALIGN_BOTTOM_MID, 0, -ink_dp(6));
     ink_ui_hint_obj(g_mark, INK_REFRESH_FAST); /* black on white: the fast binary waveform */
 }

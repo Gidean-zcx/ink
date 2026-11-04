@@ -285,7 +285,12 @@ static void hub_says_no(const char *code, const char *told) {
 }
 
 /* A page that takes its time: the UI task does not get to look at anything. */
-static void ui_busy_for_a_while(void) { delay_ms(6000); }
+static void ui_busy_for_a_while(void) {
+    delay_ms(100);
+    for (int i = 0; i < 1200 && ink_hub_online(); i++) delay_ms(10);
+    for (int i = 0; i < 6000 && !ink_hub_online(); i++) delay_ms(10);
+    delay_ms(1500); /* the new connection has confirmed the session again by now */
+}
 
 static void offline(void) {
     /* no network: said, and back to the keys */

@@ -274,11 +274,13 @@ static const ink_setting_def_t POWER_SETTINGS[] = {
 
 static void cap_shutdown(ink_call_t *c) { /* exec.bg */
     snprintf(c->rc.say, sizeof c->rc.say, "关机");
+    ink_db_flush_all();
+    for (int i = 0; i < 100 && (!ink_db_idle() || ink_storage_pending()); i++) osal_task_delay_us(50000);
     hal_power_shutdown();
 }
 
 static const ink_cap_t POWER_CAPS[] = {
-    {.id = "system.shutdown", .title = "关机", .effect = INK_FX_SYSTEM, .exec = INK_EXEC_BG, .run = cap_shutdown},
+    {.id = "system.shutdown", .title = "关机", .effect = INK_FX_SYSTEM, .child_ok = true, .while_locked = true, .exec = INK_EXEC_BG, .run = cap_shutdown},
 };
 
 int ink_power_init(void) {

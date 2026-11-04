@@ -127,7 +127,7 @@ static const ink_cap_t SYSTEM_ACTIONS[] = {
     {.id = "state.list", .title = "系统现在的状态（电量、网络、前台应用……）", .output = "{\"type\":\"object\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = state_list},
     {.id = "settings.list", .title = "所有设置，各自的类型、取值范围和现在的值", .output = "{\"type\":\"array\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = settings_list},
     {.id = "system.factory_reset", .title = "恢复出厂设置（清掉所有成员的数据，不能撤销）", .ask = "恢复出厂设置：清掉所有成员的数据，不能撤销", .effect = INK_FX_SYSTEM, .parent_pin = true, .child_ok = false, .exec = INK_EXEC_DIRECT, .run = factory_reset},
-    {.id = "system.reboot", .title = "重启", .effect = INK_FX_SYSTEM, .exec = INK_EXEC_BG, .run = cap_reboot},
+    {.id = "system.reboot", .title = "重启", .effect = INK_FX_SYSTEM, .child_ok = true, .while_locked = true, .exec = INK_EXEC_BG, .run = cap_reboot},
 };
 
 int ink_system_actions_init(void) {

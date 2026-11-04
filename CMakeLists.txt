@@ -178,6 +178,7 @@ add_library(ink_system STATIC
   system/services/time/time_service.c
   system/services/update/update_service.c
   system/ui/shell/update_card.c
+  system/ui/shell/power_menu.c
   system/services/time/time_caps.c
   system/services/notify/notify_service.c
   system/services/notify/notify_caps.c
@@ -584,6 +585,15 @@ if(INK_HAVE_FONTS)
             -DASSETS=${INK_ASSETS_DIR} -DCONTENT=${INK_TEST_CONTENT} -DOUT=${CMAKE_BINARY_DIR}/test-out/update
             -DSRC=${CMAKE_SOURCE_DIR}/tests/integration -DPY=${Python3_EXECUTABLE} -DTOOL=${CMAKE_SOURCE_DIR}/tools/inkfw/make_inkfw.py
             -P ${CMAKE_SOURCE_DIR}/tests/integration/update.cmake)
+
+  # The power key held down: the power menu, and what it leaves alone.
+  add_executable(sim-power-menu simulator/runtime/sim_main.c tests/integration/power_menu.c)
+  target_link_libraries(sim-power-menu PRIVATE ink_apps ink_system ink_port_sim)
+  target_compile_options(sim-power-menu PRIVATE ${INK_WARN} -Wno-format-truncation) # a message cut short does no harm
+  add_test(NAME integration-power-menu
+    COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:sim-power-menu> -DPROFILE=${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+            -DASSETS=${INK_ASSETS_DIR} -DCONTENT=${INK_TEST_CONTENT} -DOUT=${CMAKE_BINARY_DIR}/test-out/power_menu
+            -DSRC=${CMAKE_SOURCE_DIR}/tests/integration -P ${CMAKE_SOURCE_DIR}/tests/integration/power_menu.cmake)
 
   # Dictation: the input method's microphone, with the hub's stand-in for asr.stream.
   add_executable(sim-dictation simulator/runtime/sim_main.c tests/integration/dictation.c)
