@@ -50,6 +50,10 @@ static void changed(void) {
     if (TS.presenter) TS.presenter();
 }
 
+void text_presenter_kick(void) {
+    if (TS.presenter) TS.presenter();
+}
+
 static void on_dict_ready(void) { /* UI task: the keyboard asks again */
     TS.cands_valid = false;
     if (TS.session && TS.presenter) TS.presenter();
@@ -58,6 +62,7 @@ static void on_dict_ready(void) { /* UI task: the keyboard asks again */
 int ink_text_focus(const ink_text_cfg_t *cfg, const ink_text_client_t *client, void *ctx) {
     if (!cfg) return -1;
     if (TS.session) ink_text_blur(TS.session);
+    text_voice_clear_notice();
     size_t cap = cfg->max ? (cfg->max < VALUE_MAX ? cfg->max : VALUE_MAX) : VALUE_DEFAULT;
     char *v = osal_malloc(cap + 1, OSAL_MEM_EXTERNAL);
     if (!v) return -1;
@@ -85,6 +90,7 @@ int ink_text_focus(const ink_text_cfg_t *cfg, const ink_text_client_t *client, v
 
 void ink_text_blur(int session) {
     if (!TS.session || (session && session != TS.session)) return;
+    text_voice_on_blur();
     const ink_text_client_t *c = TS.client;
     void *ctx = TS.ctx;
     TS.session = 0;
@@ -200,6 +206,7 @@ static void flush_composing(void) {
 }
 
 void ink_text_pick(int index) {
+    text_voice_clear_notice();
     if (!TS.session) return;
     compute_cands();
     if (index < 0 || index >= TS.ncands) return;
@@ -213,6 +220,7 @@ void ink_text_pick(int index) {
 
 void ink_text_key(char c) {
     if (!TS.session) return;
+    text_voice_clear_notice();
     char one[2] = {c, 0};
     switch (TS.type) {
     case INK_TEXT_PLAIN:
@@ -251,6 +259,7 @@ void ink_text_key(char c) {
 }
 
 void ink_text_backspace(void) {
+    text_voice_clear_notice();
     if (!TS.session) return;
     size_t n = strlen(TS.composing);
     if (n) TS.composing[n - 1] = 0;
@@ -264,6 +273,7 @@ void ink_text_backspace(void) {
 }
 
 void ink_text_enter(void) {
+    text_voice_clear_notice();
     if (!TS.session) return;
     if (TS.composing[0]) { /* the enter key takes the letters as they are */
         flush_composing();
@@ -299,6 +309,7 @@ int ink_text_service_init(void) {
     ink_state_set_bool(TS.h_focused, false);
     py_init();
     clip_init();
+    if (text_voice_init() != 0) return -1;
     if (ink_db_register(&USER_FREQ) != 0 || ink_settings_define(TEXT_SETTINGS, 1) != 0 || ink_state_watch("member.current", on_member, NULL, INK_EXEC_UI) != 0) return -1;
     return text_caps_init();
 }

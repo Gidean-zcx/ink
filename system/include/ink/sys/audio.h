@@ -50,6 +50,12 @@ typedef void (*ink_audio_frame_fn)(void *ctx, const uint8_t *data, size_t len, u
  *  until its end has been delivered, so -1 also from inside that delivery. */
 int ink_audio_capture_begin(ink_audio_frame_fn fn, void *ctx);
 void ink_audio_capture_end(void);
+/** A capture runs, or has not delivered its end yet: ink_audio_capture_begin would say -1. */
+bool ink_audio_capture_busy(void);
+/** Have the level of each frame measured, for whoever decides when someone has stopped talking; it costs a little. */
+void ink_audio_capture_measure(bool on);
+/** The last frame's mean absolute sample, 0..32767. */
+int ink_audio_capture_level(void);
 
 /**
  * Open a playback stream; returns its id (> 0), or -1 if a higher-priority stream owns the

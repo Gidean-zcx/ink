@@ -1,0 +1,4 @@
+# Dictation: the hub stands in for asr.stream; the test says what the microphone hears.
+@0       net   wifi
+@0       mic   speech
+@900s    end

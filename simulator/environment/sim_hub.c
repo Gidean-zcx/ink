@@ -289,6 +289,114 @@ int sim_hub_events_seen(void) { return g_events.n; }
 const char *sim_hub_event_at(int i) { return i >= 0 && i < g_events.n && i < 32 ? g_events.text[i] : NULL; }
 const char *sim_hub_last_ask(void) { return g_last_ask; }
 
+/* ------------------------------------------------------------ dictation (hub protocol §3.11) */
+
+/* What is "said": phrases one after another, a part of each after a while, the whole of it a little later. A test
+ * sets them; `sim_hub_asr_script`. */
+#define ASR_INTERIM_FRAMES 8
+#define ASR_FINAL_FRAMES 16
+static struct {
+    struct hal_ws *ws;
+    int sid;
+    bool open, refuse, hide, done, silent;
+    int frames, seg, fail_after;
+    char phrases[512], fail_code[16], params[128];
+} ASR;
+
+void sim_hub_asr_script(const char *phrases, const char *fail_code, int fail_after_frames) {
+    snprintf(ASR.phrases, sizeof ASR.phrases, "%s", phrases ? phrases : "");
+    snprintf(ASR.fail_code, sizeof ASR.fail_code, "%s", fail_code ? fail_code : "");
+    ASR.fail_after = fail_after_frames;
+    ASR.silent = fail_code && !strcmp(fail_code, "silent");
+}
+void sim_hub_asr_refuse(bool refuse) { ASR.refuse = refuse; }
+void sim_hub_asr_hide(bool hide) { ASR.hide = hide; }
+const char *sim_hub_asr_params(void) { return ASR.params; }
+
+/* The n-th phrase, or NULL. */
+static const char *asr_phrase(int n, char *out, size_t cap) {
+    const char *p = ASR.phrases;
+    while (n-- > 0 && p) {
+        p = strchr(p, '|');
+        if (p) p++;
+    }
+    if (!p || !*p) return NULL;
+    const char *e = strchr(p, '|');
+    size_t len = e ? (size_t)(e - p) : strlen(p);
+    snprintf(out, cap, "%.*s", (int)len, p);
+    return out;
+}
+
+static void asr_send(uint64_t at, const char *method, cJSON *params) {
+    cJSON *m = cJSON_CreateObject();
+    cJSON_AddStringToObject(m, "jsonrpc", "2.0");
+    cJSON_AddStringToObject(m, "method", method);
+    cJSON_AddNumberToObject(params, "sid", ASR.sid);
+    cJSON_AddItemToObject(m, "params", params);
+    send_json(ASR.ws, at, m);
+    cJSON_Delete(m);
+}
+
+static void asr_result(uint64_t at, int seg, bool final, const char *text) {
+    cJSON *p = cJSON_CreateObject();
+    cJSON_AddNumberToObject(p, "seg", seg);
+    cJSON_AddBoolToObject(p, "final", final);
+    cJSON_AddStringToObject(p, "text", text);
+    asr_send(at, "rt.asr", p);
+    sim_metric_add(final ? "hub.asr_finals" : "hub.asr_interims", 1);
+}
+
+static void asr_fail(uint64_t at) {
+    cJSON *p = cJSON_CreateObject();
+    cJSON_AddStringToObject(p, "code", ASR.fail_code);
+    cJSON_AddStringToObject(p, "message", "test");
+    asr_send(at, "rt.asr.error", p);
+    asr_send(at + SIM_MS(1), "rt.close", cJSON_CreateObject());
+    ASR.done = true;
+    sim_metric_add("hub.asr_errors", 1);
+}
+
+static void asr_frame(uint64_t t) {
+    if (ASR.done || ASR.silent) return;
+    ASR.frames++;
+    sim_metric_add("hub.asr_frames", 1);
+    if (ASR.fail_code[0] && ASR.frames >= ASR.fail_after) {
+        asr_fail(t + SIM_MS(10));
+        return;
+    }
+    char text[256];
+    if (!asr_phrase(ASR.seg, text, sizeof text)) return;
+    int at = ASR.frames % ASR_FINAL_FRAMES;
+    if (at == ASR_INTERIM_FRAMES) { /* about half of it, whole characters */
+        size_t n = strlen(text) / 2;
+        while (n && ((unsigned char)text[n] & 0xC0) == 0x80) n--;
+        text[n] = 0;
+        asr_result(t + SIM_MS(100), ASR.seg, false, text);
+    } else if (at == 0) {
+        asr_result(t + SIM_MS(100), ASR.seg, true, text);
+        ASR.seg++;
+    }
+}
+
+static void asr_end(uint64_t t) { /* rt.turn end: what is left, then done */
+    if (ASR.done || ASR.silent) return;
+    char text[256];
+    uint64_t at = t + SIM_MS(100);
+    int ms = ASR.frames * 60;
+    /* only what was started: a phrase gets its first frames before it counts */
+    while (ASR.frames % ASR_FINAL_FRAMES && asr_phrase(ASR.seg, text, sizeof text)) {
+        asr_result(at, ASR.seg++, true, text);
+        at += SIM_MS(10);
+        ASR.frames = 0;
+    }
+    cJSON *p = cJSON_CreateObject();
+    cJSON_AddNumberToObject(p, "segs", ASR.seg);
+    cJSON_AddNumberToObject(p, "ms", ms);
+    asr_send(at + SIM_MS(10), "rt.asr.done", p);
+    ASR.done = true;
+    sim_metric_add("hub.asr_done", 1);
+}
+
 /* What it offers (INK_SIM_UPDATE_PKG, an .inkfw from tools/inkfw): its header says which version; pieces of it in base64. */
 static void update_request(struct hal_ws *ws, uint64_t t, const cJSON *req, const cJSON *id, const char *method) {
     const char *pkg = getenv("INK_SIM_UPDATE_PKG");
@@ -424,6 +532,10 @@ void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t 
             sim_net_hub_send(ws, t + SIM_MS(5), data, len, true);
             return;
         }
+        if (len >= 10 && data[0] == 1 && ASR.open && ASR.ws == ws && ASR.sid == data[1]) {
+            asr_frame(t);
+            return;
+        }
         if (len >= 4 && data[0] == 1)
             for (int i = 0; i < MAX_LISTEN; i++)
                 if (LS[i].used && LS[i].ws == ws && LS[i].stream == data[1]) LS[i].frames++;
@@ -465,14 +577,28 @@ void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t 
         cJSON_Delete(req);
         return;
     }
+    if (!strcmp(method, "rt.turn") && ASR.open && ASR.ws == ws && (int)num_or(cJSON_GetObjectItemCaseSensitive(req, "params"), "sid", 0) == ASR.sid) {
+        const char *op = cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(cJSON_GetObjectItemCaseSensitive(req, "params"), "op"));
+        if (op && !strcmp(op, "end")) {
+            sim_metric_add("hub.asr_turn_end", 1);
+            asr_end(t);
+        }
+        cJSON_Delete(req);
+        return;
+    }
     if (!strcmp(method, "rt.close")) { /* a realtime session ended (device side) */
         sim_metric_add("hub.rt_closed", 1);
+        if (ASR.open && ASR.ws == ws && (int)num_or(cJSON_GetObjectItemCaseSensitive(req, "params"), "sid", 0) == ASR.sid) {
+            ASR.open = false;
+            if (!ASR.done) sim_metric_add("hub.asr_cancelled", 1);
+        }
         echo_set(ws, (int)num_or(cJSON_GetObjectItemCaseSensitive(req, "params"), "sid", 0), false);
         sim_remote_close(ws, (int)num_or(cJSON_GetObjectItemCaseSensitive(req, "params"), "sid", 0));
         cJSON_Delete(req);
         return;
     }
     if (id && !strcmp(method, "caps/list")) { /* the hub's directory of server capabilities (architecture §5.3) */
+        static const char *DIR_ASR = "{\"tools\":[{\"name\":\"asr.stream\",\"title\":\"听写\",\"form\":\"session\"},";
         static const char *DIR =
             "{\"tools\":[{\"name\":\"echo\",\"title\":\"回声（测试）\"},{\"name\":\"asr.transcribe\",\"title\":\"语音识别\"},"
             "{\"name\":\"tts.speak\",\"title\":\"朗读\"},{\"name\":\"llm.ask\",\"title\":\"问大模型\"},"
@@ -481,7 +607,9 @@ void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t 
         cJSON *res = cJSON_CreateObject();
         cJSON_AddStringToObject(res, "jsonrpc", "2.0");
         cJSON_AddItemToObject(res, "id", cJSON_Duplicate(id, 1));
-        cJSON_AddItemToObject(res, "result", cJSON_Parse(DIR));
+        char dir[768];
+        snprintf(dir, sizeof dir, "%s%s", ASR.hide ? "{\"tools\":[" : DIR_ASR, DIR + strlen("{\"tools\":["));
+        cJSON_AddItemToObject(res, "result", cJSON_Parse(dir));
         send_json(ws, t + SIM_MS(10), res);
         cJSON_Delete(res);
         sim_metric_add("hub.caps_list", 1);
@@ -501,6 +629,27 @@ void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t 
         cJSON *r = cJSON_AddObjectToObject(res, "result");
         cJSON_AddNumberToObject(r, "sid", num_or(pr, "sid", 0));
         const char *cap = cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(pr, "cap"));
+        if (cap && !strcmp(cap, "asr.stream")) {
+            sim_metric_add("hub.asr_opened", 1);
+            char *pt = cJSON_PrintUnformatted(cJSON_GetObjectItemCaseSensitive(pr, "params"));
+            snprintf(ASR.params, sizeof ASR.params, "%s", pt ? pt : "");
+            sim_host_free(pt);
+            if (ASR.refuse) {
+                cJSON_DeleteItemFromObject(res, "result");
+                cJSON *er = cJSON_AddObjectToObject(res, "error");
+                cJSON_AddNumberToObject(er, "code", -32001);
+                cJSON_AddStringToObject(er, "message", "not offered");
+                send_json(ws, t + SIM_MS(5), res);
+                cJSON_Delete(res);
+                cJSON_Delete(req);
+                return;
+            }
+            ASR.ws = ws;
+            ASR.sid = (int)num_or(pr, "sid", 0);
+            ASR.open = true;
+            ASR.done = false;
+            ASR.frames = ASR.seg = 0;
+        }
         if (cap && !strcmp(cap, "echo")) echo_set(ws, (int)num_or(pr, "sid", 0), true);
         if (cap && !strcmp(cap, "browser.session")) {
             const cJSON *pp = cJSON_GetObjectItemCaseSensitive(pr, "params");

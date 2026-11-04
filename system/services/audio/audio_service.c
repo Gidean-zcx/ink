@@ -79,6 +79,8 @@ static struct {
     int volume; /* 0..100 */
     /* capture */
     bool cap_on, cap_ending;
+    bool measure;
+    int level;
     ink_audio_frame_fn cap_fn;
     void *cap_ctx;
     int16_t *ring; /* CAP_RING samples, PSRAM */
@@ -227,6 +229,12 @@ static void afe_step(const int16_t *frame) {
 }
 
 static void encode_and_deliver(const int16_t *frame) {
+    if (__atomic_load_n(&AU.measure, __ATOMIC_RELAXED)) {
+        uint32_t sum = 0;
+        for (int i = 0; i < FRAME; i += 4) sum += (uint32_t)(frame[i] < 0 ? -(int32_t)frame[i] : frame[i]);
+        osal_cost_units("audio.mix_sample", FRAME / 4);
+        __atomic_store_n(&AU.level, (int)(sum / (FRAME / 4)), __ATOMIC_RELAXED);
+    }
     uint8_t pkt[HAL_OPUS_MAX_PACKET];
     int n = hal_opus_encode(AU.enc, frame, pkt, sizeof pkt);
     if (n > 0 && AU.cap_fn) AU.cap_fn(AU.cap_ctx, pkt, (size_t)n, AU.cap_seq++);
@@ -811,6 +819,18 @@ int ink_audio_capture_begin(ink_audio_frame_fn fn, void *ctx) {
     if (r == 0) osal_sem_give(AU.wake);
     return r;
 }
+
+bool ink_audio_capture_busy(void) {
+    if (!AU.lock) return false;
+    lock();
+    bool on = AU.cap_on;
+    unlock();
+    return on;
+}
+
+void ink_audio_capture_measure(bool on) { __atomic_store_n(&AU.measure, on, __ATOMIC_RELAXED); }
+
+int ink_audio_capture_level(void) { return __atomic_load_n(&AU.level, __ATOMIC_RELAXED); }
 
 void ink_audio_capture_end(void) {
     lock();

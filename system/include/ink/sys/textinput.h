@@ -67,6 +67,28 @@ int ink_text_service_init(void);
 /** The keyboard: what it shows changed, or there is no session any more. UI task. */
 void ink_text_set_presenter(void (*changed)(void));
 
+/*
+ * Dictation (system services design §9.5): the hub turns speech into words (the device itself only knows command words); they
+ * show in the keyboard's panel as they come and go into the field at the end, to be edited like anything typed. Not for a
+ * password. Over with the session, the lock, a call or an alarm, nothing kept; when it fails, what was final stays and the notice
+ * says why. All in the UI task.
+ */
+typedef enum { INK_VOICE_IDLE = 0, INK_VOICE_CONNECTING, INK_VOICE_LISTENING, INK_VOICE_FINISHING } ink_voice_state_t;
+/** This field has a microphone key: not a password, a microphone there, and (online) the hub offers it to this member. */
+bool ink_text_voice_possible(void);
+/** 0, or -1 and a notice when there is something to say about it. */
+int ink_text_voice_start(void);
+/** Said: what is still on its way comes, and goes into the field. */
+void ink_text_voice_finish(void);
+/** Back to the keyboard, nothing goes in. */
+void ink_text_voice_cancel(void);
+ink_voice_state_t ink_text_voice_state(void);
+const char *ink_text_voice_state_name(void);
+/** The end of what was heard so far, for the panel's fixed area. */
+const char *ink_text_voice_heard(void);
+/** Why it did not go on, until the next key. */
+const char *ink_text_voice_notice(void);
+
 /* ---- the clipboard: one text, not stored, gone with the member ---- */
 
 #define INK_CLIP_MAX 4096

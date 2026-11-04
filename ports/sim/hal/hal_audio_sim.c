@@ -150,8 +150,8 @@ static int16_t mic_sample(uint64_t n) {
     double t = (double)n / HAL_AUDIO_RATE;
     switch (A.src) {
     case MIC_HOST: return host_mic_sample();
-    case MIC_SILENCE: return (int16_t)((int)((n * 2654435761u) >> 27) - 16); /* room noise, a few LSB */
-    case MIC_NOISE: return (int16_t)((int)((n * 2654435761u) >> 19) - 4096);
+    case MIC_SILENCE: return (int16_t)((int)(((uint32_t)n * 2654435761u) >> 27) - 16); /* room noise, a few LSB */
+    case MIC_NOISE: return (int16_t)((int)(((uint32_t)n * 2654435761u) >> 19) - 4096);
     case MIC_WAKE: /* the wake word sounds like speech */
     default: {
         /* voiced speech-like: pitch around 150 Hz with drift, ~4 syllables per second */

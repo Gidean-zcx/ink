@@ -18,8 +18,9 @@
 #define KEY_SHIFT '\2'
 
 static struct {
-    lv_obj_t *root, *cands, *composing;
-    lv_obj_t *cand_btn[INK_TEXT_PAGE], *cand_label[INK_TEXT_PAGE], *more;
+    lv_obj_t *root, *keys, *cands, *composing;
+    lv_obj_t *cand_btn[INK_TEXT_PAGE], *cand_label[INK_TEXT_PAGE], *more, *mic;
+    lv_obj_t *panel, *status, *heard; /* the voice panel: where the keys were, the same size */
     int first;
     int shown;
     bool symbols, shift;
@@ -83,8 +84,24 @@ static lv_obj_t *key(lv_obj_t *row, const char *label, char code, int grow) {
     return b;
 }
 
+static void on_mic(lv_event_t *e) {
+    (void)e;
+    ink_text_voice_start();
+    ink_ui_cause(osal_now_us(), "text.voice_tap_to_panel_ms");
+}
+
+static void on_said(lv_event_t *e) {
+    (void)e;
+    ink_text_voice_finish();
+}
+
+static void on_use_keys(lv_event_t *e) {
+    (void)e;
+    ink_text_voice_cancel();
+}
+
 static lv_obj_t *new_row(void) {
-    lv_obj_t *r = lv_obj_create(K.root);
+    lv_obj_t *r = lv_obj_create(K.keys);
     lv_obj_remove_style_all(r);
     lv_obj_set_size(r, LV_PCT(100), LV_SIZE_CONTENT);
     lv_obj_set_flex_flow(r, LV_FLEX_FLOW_ROW);
@@ -121,7 +138,12 @@ static void build(int kind) {
     lv_obj_set_style_pad_row(K.root, ink_dp(2), 0);
     lv_obj_set_flex_flow(K.root, LV_FLEX_FLOW_COLUMN);
     K.built_for = kind;
-    K.composing = lv_label_create(K.root);
+    K.keys = lv_obj_create(K.root);
+    lv_obj_remove_style_all(K.keys);
+    lv_obj_set_size(K.keys, LV_PCT(100), LV_SIZE_CONTENT);
+    lv_obj_set_style_pad_row(K.keys, ink_dp(2), 0);
+    lv_obj_set_flex_flow(K.keys, LV_FLEX_FLOW_COLUMN);
+    K.composing = lv_label_create(K.keys);
     lv_obj_set_style_text_font(K.composing, font(), 0);
     lv_label_set_text(K.composing, "");
     K.cands = new_row();
@@ -147,6 +169,19 @@ static void build(int kind) {
     lv_obj_set_style_text_font(ml, font(), 0);
     lv_label_set_text(ml, "更多");
     lv_obj_add_flag(K.more, LV_OBJ_FLAG_HIDDEN);
+    /* the microphone: black, at the end of the candidates (the system UI's own look comes later) */
+    K.mic = lv_button_create(K.cands);
+    ink_ui_style_button(K.mic);
+    lv_obj_set_style_bg_color(K.mic, lv_color_black(), 0);
+    lv_obj_set_style_bg_opa(K.mic, LV_OPA_COVER, 0);
+    lv_obj_set_style_pad_all(K.mic, ink_dp(2), 0);
+    lv_obj_set_height(K.mic, ink_dp(40));
+    lv_obj_add_event_cb(K.mic, on_mic, LV_EVENT_CLICKED, NULL);
+    lv_obj_t *mic = lv_label_create(K.mic);
+    lv_obj_set_style_text_font(mic, font(), 0);
+    lv_obj_set_style_text_color(mic, lv_color_white(), 0);
+    lv_label_set_text(mic, "话筒");
+    lv_obj_add_flag(K.mic, LV_OBJ_FLAG_HIDDEN);
     if (kind == 3) {
         char_row("123");
         char_row("456");
@@ -182,7 +217,59 @@ static void build(int kind) {
         key(bottom, "空格", ' ', 5);
         key(bottom, enter_label(), KEY_ENTER, 2);
     }
+    K.panel = lv_obj_create(K.root);
+    lv_obj_remove_style_all(K.panel);
+    lv_obj_set_width(K.panel, LV_PCT(100));
+    lv_obj_set_style_pad_row(K.panel, ink_dp(4), 0);
+    lv_obj_set_flex_flow(K.panel, LV_FLEX_FLOW_COLUMN);
+    K.status = lv_label_create(K.panel);
+    lv_obj_set_style_text_font(K.status, font(), 0);
+    K.heard = lv_label_create(K.panel);
+    lv_obj_set_style_text_font(K.heard, font(), 0);
+    lv_obj_set_width(K.heard, LV_PCT(100));
+    lv_obj_set_flex_grow(K.heard, 1);
+    lv_label_set_long_mode(K.heard, LV_LABEL_LONG_WRAP);
+    lv_label_set_text(K.heard, "");
+    lv_obj_t *row = lv_obj_create(K.panel);
+    lv_obj_remove_style_all(row);
+    lv_obj_set_size(row, LV_PCT(100), LV_SIZE_CONTENT);
+    lv_obj_set_flex_flow(row, LV_FLEX_FLOW_ROW);
+    lv_obj_set_style_pad_column(row, ink_dp(2), 0);
+    for (int i = 0; i < 2; i++) {
+        lv_obj_t *b = lv_button_create(row);
+        ink_ui_style_button(b);
+        lv_obj_set_height(b, ink_dp(44));
+        lv_obj_set_flex_grow(b, 1);
+        lv_obj_add_event_cb(b, i ? on_use_keys : on_said, LV_EVENT_CLICKED, NULL);
+        lv_obj_t *l = lv_label_create(b);
+        lv_obj_set_style_text_font(l, font(), 0);
+        lv_label_set_text(l, i ? "用键盘" : "说完了");
+        lv_obj_center(l);
+    }
+    lv_obj_add_flag(K.panel, LV_OBJ_FLAG_HIDDEN);
     ink_ui_hint_obj(K.root, INK_REFRESH_FAST);
+}
+
+/* The voice panel over the keys, or the keys back: only the fixed area changes while it lasts. */
+static void sync_voice(ink_voice_state_t vs) {
+    bool on = vs != INK_VOICE_IDLE, was = !lv_obj_has_flag(K.panel, LV_OBJ_FLAG_HIDDEN);
+    if (on != was) {
+        if (on) {
+            lv_obj_update_layout(K.root);
+            lv_obj_set_height(K.panel, lv_obj_get_height(K.keys)); /* the same size: nothing above it moves */
+            lv_obj_add_flag(K.keys, LV_OBJ_FLAG_HIDDEN);
+            lv_obj_remove_flag(K.panel, LV_OBJ_FLAG_HIDDEN);
+        } else {
+            lv_obj_add_flag(K.panel, LV_OBJ_FLAG_HIDDEN);
+            lv_obj_remove_flag(K.keys, LV_OBJ_FLAG_HIDDEN);
+        }
+        ink_ui_hint_obj(K.root, INK_REFRESH_FAST);
+    }
+    if (!on) return;
+    lv_label_set_text(K.status, vs == INK_VOICE_CONNECTING ? "正在连接，可以说了" : vs == INK_VOICE_LISTENING ? "请说，停一下就结束" : "正在整理…");
+    lv_label_set_text(K.heard, ink_text_voice_heard());
+    ink_ui_hint_obj(K.status, INK_REFRESH_FAST);
+    ink_ui_hint_obj(K.heard, INK_REFRESH_FAST);
 }
 
 /* What the session says now. */
@@ -202,7 +289,10 @@ static void sync(void) { /* UI task */
     ink_text_type_t type = ink_text_type();
     int kind = type == INK_TEXT_NUMBER || type == INK_TEXT_PHONE ? 3 : K.symbols ? 2 : 1;
     if (!K.root || K.built_for != kind) build(kind);
-    lv_label_set_text(K.composing, ink_text_composing());
+    ink_voice_state_t vs = ink_text_voice_state();
+    sync_voice(vs);
+    if (vs != INK_VOICE_IDLE) return;
+    lv_label_set_text(K.composing, ink_text_composing()[0] ? ink_text_composing() : ink_text_voice_notice());
     ink_text_cand_t c[INK_TEXT_PAGE + 1];
     int n = type == INK_TEXT_PLAIN ? ink_text_candidates(K.first, c, INK_TEXT_PAGE + 1) : 0;
     if (!n && K.first) {
@@ -217,6 +307,8 @@ static void sync(void) { /* UI task */
     }
     if (n > INK_TEXT_PAGE) lv_obj_remove_flag(K.more, LV_OBJ_FLAG_HIDDEN);
     else lv_obj_add_flag(K.more, LV_OBJ_FLAG_HIDDEN);
+    if (ink_text_voice_possible()) lv_obj_remove_flag(K.mic, LV_OBJ_FLAG_HIDDEN);
+    else lv_obj_add_flag(K.mic, LV_OBJ_FLAG_HIDDEN);
     K.shown = n;
     ink_ui_hint_obj(K.cands, INK_REFRESH_FAST);
     ink_ui_hint_obj(K.composing, INK_REFRESH_FAST);

@@ -36,6 +36,7 @@
 #include "ink/sys/font.h"
 #include "ink/sys/power.h"
 #include "ink/sys/hub.h"
+#include "ink/sys/textinput.h"
 #include "ink/sys/json.h"
 #include "ink/sys/ui.h"
 
@@ -588,6 +589,10 @@ static void turn_focus_begin(void) { /* UI task */
 
 void ink_ai_key(bool pressed, uint64_t t_us) {
     if (pressed) {
+        if (ink_text_voice_state() != INK_VOICE_IDLE) { /* the key still means the AI: what was being dictated is dropped, the microphone comes free */
+            ink_text_voice_cancel();
+            for (int i = 0; i < 40 && ink_audio_capture_busy(); i++) osal_task_delay_us(5000);
+        }
         AI.t_press = t_us;
         if (!ink_audio_recording()) turn_focus_begin(); /* a recording is not ended by asking: it says so below */
         /* a new turn: frames and the speech end of the previous one no longer apply */
@@ -734,8 +739,9 @@ static void offline_intent(int k, uint64_t t) { /* UI task, during a hands-free 
 static void listen_job(void *arg) { /* UI task: the voice front end's events drive the same turn as the AI key */
     listen_job_t *j = arg;
     if (j->ev == INK_LISTEN_WAKE && g_handsfree_turn) j->ev = INK_LISTEN_SPEECH; /* already listening to this one */
-    /* the AI key does not get past a system card, and nothing gets into a space that is closed: a voice is no different */
-    if ((j->ev == INK_LISTEN_WAKE || j->ev == INK_LISTEN_BARGE) && (ink_ui_overlay_up() || !ink_member_space_open())) {
+    /* the AI key does not get past a system card, and nothing gets into a space that is closed: a voice is no different.
+     * Nor is what someone dictates a word to the device */
+    if ((j->ev == INK_LISTEN_WAKE || j->ev == INK_LISTEN_BARGE) && (ink_ui_overlay_up() || !ink_member_space_open() || ink_text_voice_state() != INK_VOICE_IDLE)) {
         ink_probe_count("ai.wake_not_now");
         osal_free(j);
         return;

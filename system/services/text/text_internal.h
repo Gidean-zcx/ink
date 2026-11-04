@@ -22,6 +22,13 @@ int py_lookup(const char *composing, py_cand_t *out, int max);
 bool py_dict_loaded(void);
 void py_init(void);
 
+/* Dictation (voice_input.c). */
+int text_voice_init(void);
+void text_voice_on_blur(void);
+void text_voice_clear_notice(void);
+/** The keyboard's: what it shows changed. */
+void text_presenter_kick(void);
+
 int text_caps_init(void);
 void clip_init(void);
 

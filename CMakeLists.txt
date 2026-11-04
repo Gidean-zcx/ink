@@ -193,6 +193,7 @@ add_library(ink_system STATIC
   system/services/text/pinyin.c
   system/services/text/clipboard.c
   system/services/text/text_caps.c
+  system/services/text/voice_input.c
   system/ui/textfield.c
   system/ui/shell/keyboard.c
   system/ui/app_registry.c
@@ -583,6 +584,24 @@ if(INK_HAVE_FONTS)
             -DASSETS=${INK_ASSETS_DIR} -DCONTENT=${INK_TEST_CONTENT} -DOUT=${CMAKE_BINARY_DIR}/test-out/update
             -DSRC=${CMAKE_SOURCE_DIR}/tests/integration -DPY=${Python3_EXECUTABLE} -DTOOL=${CMAKE_SOURCE_DIR}/tools/inkfw/make_inkfw.py
             -P ${CMAKE_SOURCE_DIR}/tests/integration/update.cmake)
+
+  # Dictation: the input method's microphone, with the hub's stand-in for asr.stream.
+  add_executable(sim-dictation simulator/runtime/sim_main.c tests/integration/dictation.c)
+  target_link_libraries(sim-dictation PRIVATE ink_apps ink_system ink_port_sim)
+  target_compile_options(sim-dictation PRIVATE ${INK_WARN} -Wno-format-truncation) # a message cut short does no harm
+  add_test(NAME integration-dictation
+    COMMAND sim-dictation --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+            --budget ${CMAKE_SOURCE_DIR}/tests/integration/dictation.budget.json
+            --script ${CMAKE_SOURCE_DIR}/tests/integration/dictation.script
+            --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+            --out ${CMAKE_BINARY_DIR}/test-out/dictation --quiet --no-random-outages)
+  add_test(NAME integration-dictation-handsfree
+    COMMAND ${CMAKE_COMMAND} -E env INK_DICTATION_PHASE=handsfree
+            $<TARGET_FILE:sim-dictation> --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus-handsfree.json
+            --budget ${CMAKE_SOURCE_DIR}/tests/integration/dictation.budget.json
+            --script ${CMAKE_SOURCE_DIR}/tests/integration/dictation.script
+            --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+            --out ${CMAKE_BINARY_DIR}/test-out/dictation-handsfree --quiet --no-random-outages)
 
   # Hands-free listening, all three settings, on the profile with the voice front end.
   add_executable(sim-listening simulator/runtime/sim_main.c tests/integration/listening.c)

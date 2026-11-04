@@ -346,6 +346,12 @@ const char *sim_hub_device_reply(void);
 int sim_hub_events_seen(void);
 const char *sim_hub_event_at(int i);
 const char *sim_hub_last_ask(void);
+/* Dictation (asr.stream): what is "said" (phrases separated by |); after that many frames it fails with that code
+ * ("silent": it answers nothing at all). What it was opened with. */
+void sim_hub_asr_script(const char *phrases, const char *fail_code, int fail_after_frames);
+void sim_hub_asr_refuse(bool refuse); /* rt.open gets an error */
+void sim_hub_asr_hide(bool hide);     /* not in the directory (this member may not), from the next caps/list */
+const char *sim_hub_asr_params(void);
 
 /* ---- script ---- */
 int sim_script_load(const char *path, char *err, size_t errlen);

@@ -35,8 +35,14 @@ static void cap_state(ink_call_t *c) { /* UI task */
             ink_jw_str(&w, ink_text_value());
             ink_jw_raw(&w, ",\"composing\":");
             ink_jw_str(&w, ink_text_composing());
+            if (ink_text_voice_state() != INK_VOICE_IDLE) {
+                ink_jw_raw(&w, ",\"heard\":");
+                ink_jw_str(&w, ink_text_voice_heard());
+            }
         }
-        ink_jw_raw(&w, "}");
+        ink_jw_raw(&w, ",\"voice\":");
+        ink_jw_str(&w, ink_text_voice_state_name());
+        ink_jw_raw(&w, ink_text_voice_possible() ? ",\"voice_possible\":true}" : "}");
     }
     if (w.overflow) fail(c, INK_RC_FAILED, "too long");
     else ink_cap_result(c, out);
@@ -75,6 +81,30 @@ static void cap_submit(ink_call_t *c) { /* UI task */
     ink_text_enter();
 }
 
+/* What the microphone key does: the AI's comes with a confirmation card, the person's does not. */
+static void cap_voice_start(ink_call_t *c) { /* UI task */
+    if (!ink_text_focused()) {
+        fail(c, INK_RC_FAILED, "no text field has the focus");
+        return;
+    }
+    if (ink_text_type() == INK_TEXT_PASSWORD || (c->src != INK_SRC_TOUCH && c->src != INK_SRC_KEY && ink_text_ai_hidden())) {
+        fail(c, INK_RC_REJECTED, "this field is the person's to fill in");
+        return;
+    }
+    if (ink_text_voice_start() != 0) fail(c, INK_RC_FAILED, ink_text_voice_notice()[0] ? ink_text_voice_notice() : "not now");
+    else snprintf(c->rc.say, sizeof c->rc.say, "请说");
+}
+
+static void cap_voice_finish(ink_call_t *c) { /* UI task */
+    if (ink_text_voice_state() == INK_VOICE_IDLE) fail(c, INK_RC_FAILED, "nobody is dictating");
+    else ink_text_voice_finish();
+}
+
+static void cap_voice_cancel(ink_call_t *c) { /* UI task */
+    if (ink_text_voice_state() == INK_VOICE_IDLE) fail(c, INK_RC_FAILED, "nobody is dictating");
+    else ink_text_voice_cancel();
+}
+
 static void cap_clip_read(ink_call_t *c) {
     char *text = osal_malloc(INK_CLIP_MAX + 1, OSAL_MEM_EXTERNAL);
     char *out = osal_malloc(INK_CLIP_MAX * 2 + 64, OSAL_MEM_EXTERNAL);
@@ -110,6 +140,10 @@ static const ink_cap_t TEXT_CAPS[] = {
     {.id = "text.state", .title = "现在有没有文本框在输入，里面是什么（密码不给看）", .output = "{\"type\":\"object\"}", .effect = INK_FX_READ, .child_ok = true, .run = cap_state},
     {.id = "text.insert", .title = "往有焦点的文本框里写字（等于替用户打字）", .input = "{\"type\":\"object\",\"properties\":{\"text\":{\"type\":\"string\",\"maxLength\":300}},\"required\":[\"text\"]}", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = cap_insert},
     {.id = "text.submit", .title = "按回车（完成、发送、搜索）", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = cap_submit},
+    {.id = "text.voice_start", .title = "打开语音输入：说的话变成文字进文本框", .ask = "打开语音输入（声音会发给家庭中枢）", .effect = INK_FX_EXTERNAL, .child_ok = true, .run = cap_voice_start},
+    {.id = "text.voice_finish", .title = "说完了，结束语音输入", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = cap_voice_finish},
+    {.id = "text.voice_cancel", .title = "取消语音输入，什么都不写进去", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = cap_voice_cancel},
+    {.id = "text.voice_ended", .title = "语音输入结束了", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},
     {.id = "clipboard.read", .title = "读剪贴板（用户在设置里打开才行）", .output = "{\"type\":\"object\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_clip_read},
     {.id = "clipboard.write", .title = "写剪贴板", .input = "{\"type\":\"object\",\"properties\":{\"text\":{\"type\":\"string\",\"maxLength\":300},\"sensitive\":{\"type\":\"boolean\"}},\"required\":[\"text\"]}", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_clip_write},
 };
