@@ -116,6 +116,7 @@ static int finalize(const char *status) {
     sim_audio_report();
     sim_assets_report();
     sim_power_report();
+    sim_usb_report();
     if (sim_board_present()) sim_tca9555_report();
     sim_trace_close();
     char path[600];

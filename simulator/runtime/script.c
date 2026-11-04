@@ -25,6 +25,9 @@
  *   +0       sms-in 10086 text...     # a text message arrives (needs a card with SMS)
  *   +0       call-in 13800000000      # an incoming call (needs a card with voice)
  *   +0       remote answer|hangup     # the far end of a call
+ *   +0       sd remove|insert|full|free N  # the TF card: taken out, put in, full, N KiB left
+ *   +0       usb plug|unplug|eject    # a computer at the other end of the cable; it ejects the USB disk
+ *   +0       usb copy-in HOSTFILE PATH  # the computer copies a file onto the USB disk (PATH on the card, from its root)
  *   +0       faults io-expander 1.0   # that chip's I2C transfers time out at this rate; "faults off" ends it
  *   +5s      end
  *
@@ -42,7 +45,7 @@
 #include "ink/rotation.h"
 #include "sim.h"
 
-typedef enum { A_TOUCH, A_KEY, A_SNAP, A_MARK, A_NOTE, A_BATTERY, A_POWERCUT, A_END, A_NET, A_OUTAGE, A_MIC, A_MIC_SAY, A_SIM, A_ORIENT, A_SHAKE, A_RTC_LOST, A_SMS_IN, A_CALL_IN, A_REMOTE, A_ENV, A_FAULTS } akind_t;
+typedef enum { A_TOUCH, A_KEY, A_SNAP, A_MARK, A_NOTE, A_BATTERY, A_POWERCUT, A_END, A_NET, A_OUTAGE, A_MIC, A_MIC_SAY, A_SIM, A_ORIENT, A_SHAKE, A_RTC_LOST, A_SMS_IN, A_CALL_IN, A_REMOTE, A_ENV, A_FAULTS, A_SD, A_USB } akind_t;
 
 typedef struct {
     uint64_t t;
@@ -50,6 +53,7 @@ typedef struct {
     int a, b, c;
     char text[96];
     char num[24];
+    char path[200];
 } action_t;
 
 static action_t *A;
@@ -269,6 +273,23 @@ int sim_script_load(const char *path, char *err, size_t errlen) {
                     a->c = (int)(atof(tok[3]) * 1000 + 0.5); /* per mille */
                 }
             }
+        } else if (!strcmp(cmd, "sd")) {
+            ok = n >= 3 && (!strcmp(tok[2], "remove") || !strcmp(tok[2], "insert") || !strcmp(tok[2], "full") || (!strcmp(tok[2], "free") && n >= 4));
+            if (ok) {
+                action_t *a = push(t, A_SD);
+                a->a = !strcmp(tok[2], "remove") ? 0 : !strcmp(tok[2], "insert") ? 1 : !strcmp(tok[2], "full") ? 2 : 3;
+                a->c = n >= 4 ? atoi(tok[3]) : 0;
+            }
+        } else if (!strcmp(cmd, "usb")) {
+            ok = n >= 3 && (!strcmp(tok[2], "plug") || !strcmp(tok[2], "unplug") || !strcmp(tok[2], "eject") || (!strcmp(tok[2], "copy-in") && n >= 5));
+            if (ok) {
+                action_t *a = push(t, A_USB);
+                a->a = !strcmp(tok[2], "plug") ? 0 : !strcmp(tok[2], "unplug") ? 1 : !strcmp(tok[2], "eject") ? 2 : 3;
+                if (a->a == 3) {
+                    snprintf(a->path, sizeof a->path, "%s", tok[3]);
+                    snprintf(a->text, sizeof a->text, "%s", tok[4]);
+                }
+            }
         } else if (!strcmp(cmd, "powercut")) {
             action_t *a = push(t, A_POWERCUT);
             a->c = (n >= 3 && !strcmp(tok[2], "write")) ? (n >= 4 ? atoi(tok[3]) : 1) : 0;
@@ -332,6 +353,15 @@ static void run_action(void *arg) { /* ISR context */
     case A_REMOTE:
         if (a->a) sim_net_remote_answer();
         else sim_net_remote_hangup();
+        break;
+    case A_SD:
+        if (a->a <= 1) sim_sd_set_present(a->a == 1);
+        else sim_sd_set_free(a->a == 2 ? 0 : (int64_t)a->c * 1024);
+        break;
+    case A_USB:
+        if (a->a <= 1) sim_usb_plug(a->a == 0);
+        else if (a->a == 2) sim_usb_eject();
+        else sim_usb_copy_in(a->path, a->text);
         break;
     }
 }

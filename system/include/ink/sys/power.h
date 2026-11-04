@@ -34,6 +34,7 @@ typedef enum {
     INK_NEED_AUDIO = 0, /* playing or recording: the chip stays awake (also while locked) */
     INK_NEED_NET,       /* a transfer that must finish (AI turn, sync, download): active (full clock), no sleep until done */
     INK_NEED_NO_LOCK,   /* no automatic locking (USB disk, upgrade screen) */
+    INK_NEED_AWAKE,     /* the chip stays awake, also when locked (USB disk, an interrupt on screen, an upgrade) */
     INK_NEED_COUNT
 } ink_power_need_t;
 

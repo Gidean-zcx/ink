@@ -69,6 +69,10 @@ static struct {
     int nlink;
     vtk_waitq_t evt_wq;
     bool link_changed;
+    struct {
+        void (*fn)(void *);
+        void *ctx;
+    } evt[4]; /* other work for the event task (sim_sys_evt) */
     bool started;                /* sim_net_init ran */
     struct hal_ws *conns;
     uint64_t gen;
@@ -130,6 +134,17 @@ static uint64_t radio_touch(uint64_t t) {
 }
 
 /* ------------------------------------------------------------ link state */
+
+void sim_sys_evt(void (*fn)(void *), void *ctx) { /* ISR or locked */
+    for (int i = 0; i < 4; i++)
+        if (!N.evt[i].fn || N.evt[i].fn == fn) {
+            N.evt[i].fn = fn;
+            N.evt[i].ctx = ctx;
+            break;
+        }
+    if (vtk_in_isr()) vtk_isr_wake_one(&N.evt_wq);
+    else vtk_wake_one_locked(&N.evt_wq);
+}
 
 static void notify_link_locked(void) {
     N.link_changed = true;
@@ -813,11 +828,18 @@ static void sys_evt_task(void *arg) {
     (void)arg;
     for (;;) {
         vtk_lock();
-        while (!N.link_changed) vtk_block_locked(&N.evt_wq, VTK_TIME_INF);
+        bool other = false;
+        while (!N.link_changed && !(other = N.evt[0].fn != NULL)) vtk_block_locked(&N.evt_wq, VTK_TIME_INF);
+        bool link = N.link_changed;
         N.link_changed = false;
+        typeof(N.evt) todo;
+        memcpy(todo, N.evt, sizeof todo);
+        if (other) memset(N.evt, 0, sizeof N.evt);
         vtk_unlock();
         sim_charge_ns_always(SIM_US(40));
-        if (N.nlink) {
+        if (other)
+            for (int i = 0; i < 4 && todo[i].fn; i++) todo[i].fn(todo[i].ctx);
+        if (link && N.nlink) {
             hal_link_status_t st;
             hal_net_link_status(&st);
             for (int i = 0; i < N.nlink; i++) N.link_cb[i](N.link_ctx[i], &st);

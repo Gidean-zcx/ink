@@ -584,6 +584,11 @@ void hal_power_battery(hal_battery_t *out) {
     battery_model(out);
 }
 
+void sim_power_set_cable(bool on) { /* ISR or locked */
+    PW.charging = on;
+    sim_charger_update();
+}
+
 void sim_power_set_battery(int percent, bool charging) {
     double used = total_mah();
     PW.soc = percent / 100.0 + (g_profile.batt_mah > 0 ? used / g_profile.batt_mah : 0);

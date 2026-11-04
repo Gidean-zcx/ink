@@ -275,7 +275,22 @@ static struct {
     char root[480];
     uint64_t written_since_spike;
     uint64_t ops, bytes_read, bytes_written, spikes;
+    bool absent;       /* taken out (script "sd remove") */
+    bool lent;         /* lent to a computer as a USB disk: unmounted */
+    bool dirty;        /* the computer did not eject it: the next mount fails */
+    int64_t free_left; /* < 0: half of the capacity, as a fixed number; else what writes may still use (script "sd full") */
 } SD;
+
+static bool sd_ok(void) { return !SD.absent && !SD.lent && !SD.dirty; }
+
+bool hal_fs_card_present(void) { return sd_ok(); }
+void sim_sd_set_present(bool present) { SD.absent = !present; if (present) SD.dirty = false; } /* ISR (script) */
+void sim_sd_set_free(int64_t bytes) { SD.free_left = bytes; }                                   /* ISR (script); < 0: no limit */
+void sim_sd_lend(bool lent, bool dirty) { /* the USB disk model */
+    SD.lent = lent;
+    if (!lent) SD.dirty = dirty;
+}
+const char *sim_sd_root(void) { return SD.root; }
 
 static void sd_cost(size_t bytes, bool write) {
     double mbps = write ? g_profile.sd_write_mbps : g_profile.sd_read_mbps;
@@ -319,7 +334,7 @@ static vol_t route(const char *path, char *out, size_t outlen) {
     }
     if ((!strncmp(path, "/content", 8) && (path[8] == '/' || path[8] == 0)) ||
         (!strncmp(path, "/cache", 6) && (path[6] == '/' || path[6] == 0))) {
-        if (strstr(path, "..")) return VOL_BAD;
+        if (strstr(path, "..") || !sd_ok()) return VOL_BAD;
         snprintf(out, outlen, "%s%s", SD.root, path);
         return VOL_SD;
     }
@@ -413,6 +428,7 @@ ssize_t hal_fs_read(hal_file_t *f, void *buf, size_t len) {
         unlock_user();
         return r;
     }
+    if (!sd_ok()) return -1; /* taken away while open */
     ssize_t r = read(f->fd, buf, len);
     if (r > 0) sd_cost((size_t)r, false);
     return r;
@@ -426,8 +442,16 @@ ssize_t hal_fs_write(hal_file_t *f, const void *buf, size_t len) {
         unlock_user();
         return r;
     }
+    if (!sd_ok()) return -1;
+    if (SD.free_left >= 0 && (int64_t)len > SD.free_left) { /* the card is full: as much as fits, then nothing */
+        if (!SD.free_left) return -1;
+        len = (size_t)SD.free_left;
+    }
     ssize_t r = write(f->fd, buf, len);
-    if (r > 0) sd_cost((size_t)r, true);
+    if (r > 0) {
+        if (SD.free_left >= 0) SD.free_left -= r;
+        sd_cost((size_t)r, true);
+    }
     return r;
 }
 
@@ -658,8 +682,10 @@ int hal_fs_volume_info(const char *volume, hal_fs_volume_info_t *out) {
         return 0;
     }
     if (!strcmp(volume, "/content") || !strcmp(volume, "/cache")) {
+        if (!sd_ok()) return -1;
         out->total_bytes = (uint64_t)(g_profile.sd_capacity_gib * 1024.0 * 1024.0 * 1024.0);
-        out->free_bytes = out->total_bytes / 2;
+        out->free_bytes = SD.free_left >= 0 ? (uint64_t)SD.free_left : out->total_bytes / 2;
+        sd_cost(512, false); /* the FAT's free count */
         return 0;
     }
     return -1;
@@ -747,6 +773,7 @@ static void power_on_contents(void *arg) {
 }
 
 void sim_storage_init(void) {
+    SD.free_left = -1;
     vtk_host_call(power_on_contents, NULL);
     bool loaded = FL.loaded;
 

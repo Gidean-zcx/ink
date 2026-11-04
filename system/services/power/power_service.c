@@ -110,7 +110,7 @@ static bool quiet(void) {
 /* Sleep while locked, as long as nothing needs the chip. Returns when the state may have changed. */
 static void locked_step(void) {
     lock();
-    bool busy = PS.holds[INK_NEED_AUDIO] > 0 || PS.holds[INK_NEED_NET] > 0;
+    bool busy = PS.holds[INK_NEED_AUDIO] > 0 || PS.holds[INK_NEED_NET] > 0 || PS.holds[INK_NEED_AWAKE] > 0;
     unlock();
     if (busy) { /* e.g. an audiobook: stay awake, locked; a release kicks us */
         osal_sem_take(PS.kick, OSAL_WAIT_FOREVER);

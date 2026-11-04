@@ -14,6 +14,7 @@
 #include "ink/sys/data.h"
 #include "ink/sys/display.h"
 #include "ink/sys/exec.h"
+#include "ink/sys/file.h"
 #include "ink/sys/power.h"
 #include "ink/sys/res.h"
 #include "ink/sys/rt.h"
@@ -41,7 +42,7 @@ void ink_main(void) {
         osal_panic("capability bus or resource manager failed to start");
     if (ink_state_init() != 0 || ink_settings_init() != 0) osal_panic("state and settings tables failed to start");
     if (ink_svc_init() != 0 || ink_data_init() != 0) osal_panic("data store failed to start");
-    if (ink_power_init() != 0) osal_panic("power service failed to start");
+    if (ink_power_init() != 0 || ink_file_service_init() != 0) osal_panic("power or file service failed to start");
     ink_members_init();
     if (ink_net_init() != 0 || ink_light_init() != 0) osal_panic("network or light settings failed to start");
     if (ink_hub_init("wss://hub.local/v1/device") != 0 || ink_rt_init() != 0) osal_panic("hub link failed to start");
@@ -53,5 +54,6 @@ void ink_main(void) {
     if (ink_tools_init() != 0 || ink_system_actions_init() != 0 || ink_reader_actions_init() != 0 || ink_remote_init() != 0)
         osal_panic("action registry failed to start");
     if (ink_ui_start(&ink_app_home) != 0 || ink_ui_lock_mark_init() != 0) osal_panic("ui failed to start");
+    ink_fs_refresh_state(); /* blocks on the card: here, not in anyone's way */
     ink_probe_mark("system-started");
 }

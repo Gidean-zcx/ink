@@ -141,6 +141,17 @@ void sim_storage_power_cut(void);
 /** Cut power in the middle of the n-th flash program/erase that starts from now (ISR ctx). */
 void sim_storage_arm_power_cut(int nth_write);
 void sim_storage_shutdown(void);      /* clean shutdown: save image */
+void sim_sd_set_present(bool present); /* ISR (script): the card taken out, put in */
+void sim_sd_set_free(int64_t bytes);   /* ISR (script): what the card still takes; < 0: no limit */
+void sim_sd_lend(bool lent, bool dirty); /* the USB disk model: unmounted while lent; dirty: the next mount fails */
+const char *sim_sd_root(void);         /* host directory behind /content and /cache */
+/* USB to a computer (hal_usb_sim.c), ISR (script): */
+void sim_usb_plug(bool on);
+void sim_usb_eject(void);
+void sim_usb_copy_in(const char *host_path, const char *card_path);
+void sim_usb_report(void);
+void sim_sys_evt(void (*fn)(void *), void *ctx); /* run fn in the platform's event task; ISR-safe; one at a time per fn */
+void sim_power_set_cable(bool on);    /* ISR or locked: the cable carries power */
 
 /* Mapped-asset D-cache model (hal_assets_sim.c) */
 void sim_assets_cache_pollute(void);  /* a refresh streamed PSRAM through the shared D-cache */

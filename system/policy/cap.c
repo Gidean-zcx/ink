@@ -188,8 +188,11 @@ static bool in_directory(const char *id) {
     return hit;
 }
 
+static int register_bus_caps(void);
+
 int ink_cap_init(void) {
     if (CB.pool) return 0;
+    if (register_bus_caps() != 0) return -1;
     const char *prev = osal_mem_tag("cap");
     CB.lock = osal_mutex_create();
     CB.pool = osal_calloc(POOL_N, sizeof(pending_t), OSAL_MEM_EXTERNAL);
@@ -980,6 +983,8 @@ static const ink_cap_t BUS_CAPS[] = {
      .run = cap_find},
 };
 
+static int register_bus_caps(void) { return ink_cap_register(BUS_CAPS, (int)(sizeof BUS_CAPS / sizeof BUS_CAPS[0])); }
+
 /* ------------------------------------------------------------ hub tools */
 
 typedef struct {
@@ -1129,6 +1134,5 @@ static void on_caps_changed(void *ctx, const char *method, const ink_json_t *j, 
 
 int ink_tools_init(void) {
     if (ink_hub_on_online(dir_fetch, NULL) || ink_hub_subscribe("caps/", on_caps_changed, NULL)) return -1;
-    if (ink_cap_register(BUS_CAPS, (int)(sizeof BUS_CAPS / sizeof BUS_CAPS[0])) != 0) return -1;
     return ink_hub_on_request("tools/", on_tools, NULL);
 }

@@ -103,6 +103,7 @@ add_library(ink_port_sim STATIC
   ports/sim/hal/hal_display_sim.c
   ports/sim/hal/hal_input_sim.c
   ports/sim/hal/hal_storage_sim.c
+  ports/sim/hal/hal_usb_sim.c
   ports/sim/hal/hal_power_sim.c
   ports/sim/hal/hal_assets_sim.c
   ports/sim/hal/hal_net_sim.c
@@ -169,6 +170,8 @@ add_library(ink_system STATIC
   system/services/res/svc.c
   system/services/data/datastore.c
   system/services/data/data_caps.c
+  system/services/file/file_service.c
+  system/services/file/file_caps.c
   system/policy/cap.c
   system/policy/members.c
   system/policy/settings.c
@@ -425,6 +428,16 @@ add_test(NAME integration-data
           --budget ${CMAKE_SOURCE_DIR}/tests/integration/data.budget.json
           --script ${CMAKE_SOURCE_DIR}/tests/integration/data.script
           --out ${CMAKE_BINARY_DIR}/test-out/data --quiet --no-random-outages)
+# The file service: paths, permissions, copy and delete jobs, the USB disk (tests/integration/files.c).
+configure_file(tests/integration/files.script.in ${CMAKE_BINARY_DIR}/test-out/files.script @ONLY)
+add_executable(sim-files simulator/runtime/sim_main.c tests/integration/files.c)
+target_link_libraries(sim-files PRIVATE ink_system ink_port_sim)
+target_compile_options(sim-files PRIVATE ${INK_WARN})
+add_test(NAME integration-files
+  COMMAND sim-files --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+          --budget ${CMAKE_SOURCE_DIR}/tests/integration/files.budget.json
+          --script ${CMAKE_BINARY_DIR}/test-out/files.script
+          --out ${CMAKE_BINARY_DIR}/test-out/files --quiet --no-random-outages)
 # Power cut at every flash write of a run that adds, replaces, deletes and folds: nothing durable is lost.
 add_test(NAME integration-data-powercut
   COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:sim-data> -DPROFILE=${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
