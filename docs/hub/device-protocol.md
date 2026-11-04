@@ -1,6 +1,6 @@
 # 设备—中枢协议：现状和扩展
 
-状态：**待用户审核**，配合[家庭中枢概要设计](hub-architecture.md) §7。这是中枢和设备两边开发时共同遵守的约定；假设备的契约测试按它写。v0.2 按 [Codex 设计审查](../audits/2026-11-04-codex-hub-design/report.md)改过。
+状态：**待用户审核**，配合[家庭中枢概要设计](hub-architecture.md) §7。这是中枢和设备两边开发时共同遵守的约定；假设备的契约测试按它写。v0.2、v0.3 按 Codex 的两轮设计审查（[第一轮](../audits/2026-11-04-codex-hub-design/report.md)、[第二轮](../audits/2026-11-04-codex-hub-design-r2/report.md)）改过。
 
 对照的代码是提交 `9b3c24a`：`system/services/hub/hub_link.c`、`rt.c`，`system/policy/cap.c`，`system/services/ai/ai_service.c`，`system/apps/remote/remote.c`，`simulator/environment/sim_hub.c`、`sim_remote.c`。“系统服务”指分支 `claude/system-services`（提交 `a81c1b8`）上的[系统服务详细设计](https://github.com/Gidean-zcx/ink/blob/claude/system-services/docs/system/system-services-design.md)和代码，还没合入 main。
 
@@ -23,7 +23,7 @@
 | `rt.open` | 设备 → 中枢 | 请求 | `{"sid","cap","params"}` | `result` 内容不校验；`error` 则设备判定会话被拒，错误码不交给拥有者（`rt.c:129`） |
 | `rt.close` | 双向 | 通知 | `{"sid"}` | — |
 | `rt.*`（其他） | 中枢 → 设备 | 通知 | `{"sid",…}` | 交给会话的 `on_control` |
-| `ai.listen` | 设备 → 中枢 | 请求，**45 秒超时，从开始说话算** | `{"stream","format":"opus","rate":16000,"frame_ms":60,"page_gen","page":{"app","text","actions":[…]}}` | 一轮结束时回答，如 `{"done":true,"source":"page"}`；内容不读 |
+| `ai.listen` | 设备 → 中枢 | 请求，**45 秒超时，从创建请求算，没联网也在计时** | `{"stream","format":"opus","rate":16000,"frame_ms":60,"page_gen","page":{"app","text","actions":[…]}}`；`actions` 放不下 768 字节时是 `[]` | 一轮结束时回答，如 `{"done":true,"source":"page"}`；内容不读 |
 | `ai.ask` | 设备 → 中枢 | 请求，45 秒超时 | `{"question","page_gen","page":{…}}` | **回答里的文字被忽略**，文字只能走 `ai.delta` |
 | `ai.listen.end` | 设备 → 中枢 | 通知 | `{"stream","frames"}` | — |
 | `ai.stt` | 中枢 → 设备 | 通知 | `{"id","text"}`，`id` 是 `ai.listen` 的请求号；**替换显示**，多条只留最后一条 | — |
@@ -60,7 +60,7 @@
 | kind | 方向 | 负载 |
 | --- | --- | --- |
 | 1 语音上行 | 设备 → 中枢 | 一个 Opus 包，16 kHz 单声道，60 ms（模拟器是替身格式） |
-| 2 语音下行 | 中枢 → 设备 | 同上。下行缓冲 512 帧（30.72 秒），预缓冲 3 帧 |
+| 2 语音下行 | 中枢 → 设备 | 同上。下行缓冲总共 512 帧（30.72 秒），满了新帧被丢弃；预缓冲 3 帧 |
 | 3 画面区域 | 中枢 → 设备 | `[x u16][y u16][w u16][h u16][编码 u8][刷新提示 u8]` + 数据。编码：0 原始 4 位灰度，1 4 位灰度 + LZ4，2 灰度 JPEG（模拟器是替身）。提示：0 要快，1 要清楚，2 整屏刷新。4 位灰度高半字节在前，灰度 `(v + 8) / 17` |
 | 4 输入 | 设备 → 中枢 | `[type u8]…`。**现在只实现了** `1` 点按 `[x u16][y u16]`；设计里还有 2 长按、3 翻页 `[dir i8]`、4 按键 `[key u8]`、5 提交文字，第 6 步要补 |
 | 5 画面配额 | 设备 → 中枢 | `[credits u8][max_bytes u32]`，现在 `max_bytes` 是 1 MiB |
@@ -73,7 +73,7 @@
 
 1. 发给设备的每条 JSON ≤ 128 词法单元（对象、数组、键、值各算一个）。Codex 用生产解析器实测过边界。**按序列化后的实际数量判断，协议内容按 110 留余量。**
 2. `ai.delta`、`ai.stt` 单条 `text` ≤ 511 字节，按 UTF-8 字符边界切；**`ai.delta` 一轮总共 ≤ 1.8 KB**（设备 2048，留余量）；`ai.stt` 只发一条。
-3. `ai.listen`、`ai.ask` 从设备发出到回答 ≤ 45 秒，中枢按 42 秒倒推（[概要设计 §5.3](hub-architecture.md)）。不等人确认。
+3. `ai.listen`、`ai.ask` 要在设备的 45 秒之内回答：按 `budget_ms` 减 3 秒；没有这个字段按 30 秒算（§3.15，[概要设计 §5.3](hub-architecture.md)）。不等人确认。朗读帧按实时发，领先 ≤ 3 秒，不突发。
 4. 中枢发的请求，`id` 是整数。
 5. 能力名：目录项 ≤ 39 字节；会话能力名 ≤ 23 字节；工具名 ≤ 47 字节。`request_id` ≤ 39 字节（按转义后的原文算）。
 6. 方法名 ≤ 31 字节（设备发送上限；接收上限是 39，协议统一按 31）。设备按前缀订阅（≤ 15 字节）。
@@ -101,7 +101,9 @@
 | 3.10 | 升级 `update/*` | 设备 → 中枢 | 没有 OTA | 系统服务已定义，这里统一到块传输 |
 | 3.11 | 听写 `asr.stream` | 双向 | 输入法没有语音输入（R-056） | 设备底层会话做；`rt.c` 不用改 |
 | 3.12 | 回执里的 `result` | 中枢 → 设备 | 查询能力没有结果 | 系统服务分支已做 |
-| 3.13 | 外发队列 | 中枢 → 设备 | 设备离线时的消息没地方放 | `_meta.member` 检查 |
+| 3.13 | 外发队列 | 中枢 → 设备 | 设备离线时的消息没地方放 | `_meta.member`、`_meta.epoch` 检查 |
+| 3.14 | 定义字典和可用集合 | 中枢 | 工具不全或全丢 | 可选改进 `actions` |
+| 3.15 | `budget_ms` | 设备 → 中枢 | 中枢算不准还剩多少时间 | 必须（没有时按 30 秒） |
 
 ### 3.1 `hello` 第 2 版
 
@@ -118,13 +120,14 @@
 回答：
 
 ```json
-{"session":"s_01","proto":2,"now_ms":1793777018000,
+{"session":"s_01","proto":2,"now_ms":1793777018000,"hub_instance":"7c1e…",
  "caps_rev":18,"members_rev":4,"outbox":2,
  "pins":["sha256/…"],"urls":["wss://…:8443/v1/device"],"next_token":"…"}
 ```
 
 - `now_ms`：校时，系统服务分支已经这样读。
 - `pins`、`urls`、`next_token` 都可以没有。`pins` 有两个时表示换密钥的过渡期。
+- `hub_instance`：中枢每次从备份恢复或导入时换一个新的随机值（§3.9）。`caps_rev`、`members_rev` 只在同一个 `hub_instance` 内比较，变了就整份重新取：恢复后修订号可能涨回同一个数，内容却不一样。
 - `manifest_hash`：固件的能力定义变了才变，用来让中枢的能力字典失效（§3.14）。
 - 错误码见 §4。`revoked` 时设备停止重连。现在任何错误都退避重试，要改。
 - 中枢保存 `fw`、数据格式版本（底座设计 §10.3）。
@@ -135,7 +138,7 @@
 
 只在没有令牌时用；设备用同一个地址，不发 `hello`。
 
-**设备连接的状态**：`UNPAIRED`（有地址，没令牌）→ `PAIRING`（已 `pair/begin`，等认领）→ `COMMITTING`（用户确认了，等令牌）→ `BOUND`（有令牌，走 `hello`）→ `REVOKED`（收到吊销，停止重连）。现在 `hub_link` 一连上就发 `hello`，只有 ONLINE 才能发通知（`hub_link.c:318`、`:577`），所以这里要改。
+**设备连接的状态，持久保存**：`UNPAIRED`（有地址，没令牌）→ `PAIRING`（已 `pair/begin`，等认领）→ `COMMITTING`（用户确认了，等令牌或已存令牌但还没成功 `hello` 过，记着 `txid`）→ `BOUND`（第一次 `hello` 成功）→ `REVOKED`（收到吊销，停止重连）。现在 `hub_link` 一连上就发 `hello`，只有 ONLINE 才能发通知（`hub_link.c:318`、`:577`），所以这里要改。
 
 | 消息 | 方向 | 内容 |
 | --- | --- | --- |
@@ -145,7 +148,9 @@
 | `pair/complete` 请求（整数 id） | 中枢 → 设备 | `{"txid":"t1","device":"dv_8f3a","token":"…","urls":[…],"pins":[…],"members_rev":1,"now_ms":…}`。设备存进 NVS 后回 `{"ok":true}` |
 | `pair/expired` 通知 | 中枢 → 设备 | 认领码过期，设备重新 `pair/begin` |
 
-**认领网址由设备自己拼**：`https://<设备已知的控制台地址>/claim/<code>#s=<观察到的公钥 SHA-256 前 8 字节，base64url>`。中枢的回答里**没有网址**，防止第一次连接被替换时指向别人的网站（审查 HUB-008）。设备同时显示 `code`（给电脑输入）。控制台地址来自配对链接或配对文件；只给了设备地址时，就是同一个主机的 443。
+**认领网址由设备自己拼**：`https://<设备已知的控制台地址>/claim/<code>#s=<观察到的公钥 SHA-256 前 16 字节，base64url>`。中枢的回答里**没有网址**，防止第一次连接被替换时指向别人的网站（审查 HUB-008）。控制台地址来自配对链接或配对文件；只给了设备地址时，就是同一个主机的 443。
+
+**电脑输入也要核对公钥**（审查 HUB2-001）：设备同时显示 `code` 和**核对码**（公钥 SHA-256 的前 60 位，base32，12 个字符，分组显示）。电脑上两个都要填。**控制台一律要求核对**（二维码的 `#s=` 或手输的核对码），不看设备说自己有没有固定公钥，那句话也可能被改。否则中间人可以转发真实认领码，让用户看到正确的家庭名，自己拿走令牌。
 
 **信任规则**：有公钥（固件预置、配对文件、配对链接）就核对，不对就断开。没有公钥时只能走“手机打开用户给的地址，靠可信证书比对公钥”这一条，控制台没有可信证书就不能配对（[概要设计 §6.1](hub-architecture.md)）。
 
@@ -155,7 +160,8 @@
 
 - 中枢先把令牌记成“待生效”，第一次用它 `hello` 成功才生效。`pair/complete` 的确认丢了也没事，设备照样 `hello`。
 - 设备没收到 `pair/complete`：重连时 `pair/begin` 带 `txid`，中枢重发（生成新的待生效令牌，旧的作废）。
-- 超过 10 分钟没生效，整个作废，重新认领。
+- 认领码 10 分钟有效；**待生效的令牌留 7 天**（设备可能存好就断电了）。过期后中枢对它回 `-32013 pending_token_expired`，并记住这个令牌哈希 30 天，好和“令牌不对”区分开。
+- 设备在 `COMMITTING` 收到 `pending_token_expired`（或 `auth_invalid`）：清掉待生效的令牌，回到 `UNPAIRED`，重新认领。在 `BOUND` 收到 `auth_invalid`：不清身份，退避重连并提示。
 
 **配对文件**：`pair/begin` 带 `"preauth":"<一次性码>"`，中枢核对后直接走到 `pair/complete`，不用手机，也不用设备确认（把卡插进去已经是人的动作）。一次性码只能用一次，24 小时过期。
 
@@ -165,9 +171,9 @@
 
 **`ink/member`（设备 → 中枢，通知）**：`{"member":"m_kid","authed":false,"epoch":18}`。设备切成员、解锁、闲置退回时发，`epoch` 递增，也放在 `hello` 里。
 
-切换时设备关掉所有实时会话、作废确认卡；中枢取消这些会话和这一轮，丢弃旧代次没发出的帧和文字，结束 AI 上下文。设备和中枢都丢弃旧代次的输出（审查 HUB-011）。
+切换时设备关掉所有实时会话、`abort` 已排队的声音（`finish` 会接着放）、作废确认卡；中枢取消这些会话和这一轮，丢弃没发出的帧和文字，结束 AI 上下文（审查 HUB-011）。
 
-**`_meta.member`**：中枢发给设备的 `tools/call` 带目标成员；和当前成员不一致时设备回 `rejected`。
+**`_meta.member`、`_meta.epoch`**：中枢发给设备的 `tools/call`、`confirm/request` 带目标成员和**交付时**的代次；和当前不一致时设备回错误 `-32023 stale_member`，中枢留着等下次。持久结果不绑定发起时的代次：成员回来后中枢重新检查权限，用当前代次交付（审查 HUB2-008）。
 
 **`members/list`（设备 → 中枢，请求）**：`{"cursor"?}` → `{"members":[{"id","name","role","mark"}],"nextCursor"?,"rev"}`。一页不超过 8 人（实测 85 词法单元）。读完所有页才替换成员表。
 
@@ -202,7 +208,7 @@
 
 **`device/event`（设备 → 中枢，通知）**：`{"event":"message.received","at_s":1793777018,"args":{…},"seq":120,"boot":3,"member":"m_ba"}`。
 
-- 新加 `seq`、`boot`、`member`。设备只留最近 8 条，老的被挤掉；`boot`（启动序号）加 `seq` 让中枢发现缺口，发现了就查状态（`state.list`、`confirm.list`），不能把唯一结果寄托在事件上。
+- 新加 `seq`、`boot`、`member`。设备只留最近 8 条，老的被挤掉；`boot`（启动序号）加 `seq` 让中枢发现缺口，发现了就查状态（`state.list`、`confirm.status`），不能把唯一结果寄托在事件上。
 - 单条 ≤ 1 KiB（设备 `EVENT_JSON_CAP`）。
 
 **`device/event_ack`（中枢 → 设备，通知）**：`{"boot":3,"upto":120}`，设备才清。
@@ -221,10 +227,16 @@
 ```
 
 - 回答 `{"token":17}`（卡片排进去了）或错误。设备回到“待确认”的表，满了回错误。`parent:true` 时要成人 PIN（系统服务 §7 第 6 条）。
+- 带 `_meta.member`、`_meta.epoch`（§3.3）。
 - 用户操作后发 `device/event` 的 `confirm.result`，带 `token`、`decision`。`digest` 原样带回。
 - 设备的 `ink_hub_on_request` 要加 `confirm/` 前缀。
 
-**中枢的确认记录**：一次性；绑定家庭、目标成员、成员代次、能力、参数的规范化摘要（`digest`）、目标版本（如网页地址和版本）、过期时间。收到结果后逐项重新校验才执行；重复事件不再执行；断线、换人、过期都作废。结果事件没收到时，过期前可以用 `confirm.list` 查。
+**中枢的确认记录**：一次性；绑定家庭、目标成员、成员代次、能力、参数的规范化摘要（`digest`）、目标版本（如网页地址和版本）、过期时间。收到结果后逐项重新校验才执行；重复事件不再执行；断线、换人、过期都作废。
+
+**结果丢了怎么办**（审查 HUB2-007）：`confirm.list` 只列还在等的，查不到不等于没执行。设备保留最近至少 16 条确认结果（要落盘，收到 `device/event_ack` 才能清），新增只读能力 `confirm.status {token}` → `{"state":"pending|accepted|done|failed|rejected|expired|withdrawn|member_changed|unknown","receipt"?:{…}}`。
+
+- 设备执行的能力：执行前先落盘“执行中”，完成后改成 `done` 或 `failed`。重启后还是“执行中”的回 `unknown`；查不到也算 `unknown`。中枢告诉用户请确认，**不自动重试**。
+- 中枢执行的能力（`confirm/request`）：设备这边到 `accepted` 为止。事件丢了，中枢查到 `accepted`，确认记录也还有效才执行；记录已作废就如实说没执行。
 
 ### 3.8 块传输
 
@@ -260,23 +272,43 @@
 
 ### 3.9 同步
 
-**数据代次**（审查 HUB-010）：每个“设备 × 集合 × 成员”有 `epoch`。设备恢复、中枢恢复都换新代次。
+**两个随机编号，不做加一**（审查 HUB-010、HUB2-004。从备份恢复后加一会重复）：
+
+- `hub_instance`：中枢 128 位随机，每次恢复、导入都换，不进快照的回退范围。`hello` 回答里带。
+- `dataset`：设备 64 位随机，“设备 × 集合 × 成员”建立、恢复、安装快照时换。数据集元数据里还记 `complete`（数据完整）、上次同步的 `hub_instance`（从没同步过为空）、`from_snapshot`（装的是哪份快照）。
 
 **`sync/push`（设备 → 中枢，请求）**
 
 ```json
-{"collection":"memo","member":"m_ba","epoch":3,"schema":1,"from_ver":118,"to_ver":126,
+{"collection":"memo","member":"m_ba","dataset":"a1b2c3d4e5f60708","schema":1,"from_ver":118,"to_ver":126,
  "records":[{"id":5,"sort":1793000000,"ver":120,"updated_s":1793000000,"src":"human","schema":1,"body":"…"},
             {"id":7,"ver":126,"del":true}]}
 ```
 
-回答 `{"acked_ver":126}`（中枢已落盘），设备 `ink_db_ack(126)`。同一批重发不重复写入（去重键 `设备 + epoch + collection + member + id + ver`）。单条消息 ≤ 32 KiB，放不下的分批。`body` 是 JSON 集合就直接嵌，二进制集合 base64。`from_ver` 接不上时中枢回错误 `sync_gap`。
+回答 `{"acked_ver":126}`（中枢已落盘），设备 `ink_db_ack(126)`。同一批重发不重复写入（去重键 `dataset + id + ver`）。旧 `dataset` 的推送被拒绝。单条消息 ≤ 32 KiB，放不下的分批。`body` 是 JSON 集合就直接嵌，二进制集合 base64。`from_ver` 接不上时中枢回错误 `sync_gap`。
 
-**`sync/status`（设备 → 中枢）**：`{"collection","member","epoch","last_ver","history_gap"}` → `{"epoch","acked_ver","action":"continue"|"manifest"}`。设备开机对账，或换机后知道从哪继续。`history_gap` 是设备的墓碑被挤掉了（每集合最多 256 条）。中枢恢复过备份时，它的代次变了，这里会要求全量对账。
+**`sync/status`（设备 → 中枢）**：`{"collection","member","dataset","hub_instance","last_ver","history_gap","complete","from_snapshot"?}` → `{"acked_ver","action":"continue"|"manifest"|"restore","session"?}`。设备开机对账，或换机后知道从哪继续。`history_gap` 是墓碑被挤掉（每集合最多 256 条）。
 
-**全量对账**：`action:"manifest"` 时，设备把清单作为文件上传（`blob/put`，每行 `id`、`ver`、`hash`），再 `sync/manifest {"collection","member","epoch","blob"}`。设备为准的数据，中枢以清单为准：没有的移到历史，不一致的以设备为准。**刚刷机的空设备不能用来对账**，要走恢复。
+| 设备报上来的 | `action` |
+| --- | --- |
+| `dataset` 认识，`hub_instance` 一样，没有 `history_gap` | `continue` |
+| `dataset` 认识，`hub_instance` 不一样或有 `history_gap` | `manifest` |
+| 不认识，`from_snapshot` 是中枢给这个“设备 × 集合 × 成员”的快照 | `manifest`，提交后它成为当前的，旧的被拒绝 |
+| 不认识，`hub_instance` 不为空也不是当前的（中枢恢复时忘了它） | `manifest` |
+| 不认识，`hub_instance` 为空，中枢这边没有数据 | `continue`，从 0 开始 |
+| 不认识，其他情况，中枢这边有数据 | `restore`。**不动中枢的数据**，由用户看预览后决定 |
+| `complete` 为假 | `restore` |
 
-**`sync/snapshot`（设备 → 中枢，恢复时用）**：`{"collection","member"}` → `{"blob":"sha256:…","size":…,"schema":1,"epoch":4,"next_id":…,"last_ver":…,"sha256":"…"}`，用块传输下载。设备校验后**原子安装**，失败退回原状。现有 `ink_db_put` 不保留编号和版本，所以数据存储要加接口。
+**全量对账会话**（审查 HUB2-005）：`action:"manifest"` 时：
+
+1. 设备在锁内取一致清单和水位 `V`（已落盘的版本），作为文件上传（`blob/put`，每行 `id`、`ver`、`hash`）。
+2. `sync/manifest {"session","dataset","v":V,"count","blob","complete":true}`。
+3. `sync/need {"session","cursor"?}` → `{"need":[id,…],"nextCursor"?}`：分页取要补的记录编号，一页不超过 100 个（128 词法单元的限制）。
+4. 设备用 `sync/push {"session",…}` 补这些记录。这些记录暂存，不影响现有副本。这条记录如果已经又改了，就发当前版本（比 `V` 新）。对账期间这个数据集不发增量。
+5. `sync/commit {"session","v":V}` → `{"acked_ver":V}`。中枢在一个事务里应用：清单里没有的移到历史（可找回），不一致的以设备为准。重发同一个提交返回同样的结果。
+6. 设备 `ink_db_ack(V)`。`V` 之后的改动接着增量同步，不会被吞。中途断了，整个会话作废重来。
+
+**`sync/snapshot`（设备 → 中枢，恢复时用）**：`{"collection","member"}` → `{"snapshot":"sn_…","blob":"sha256:…","size":…,"schema":1,"next_id":…,"last_ver":…,"sha256":"…"}`，用块传输下载。设备校验后**原子安装**，失败退回原状、继续用旧的 `dataset`。成功后生成新的 `dataset`，`complete` 为真，`from_snapshot` 记这个快照号，再走一次 `sync/status`。现有 `ink_db_put` 不保留编号和版本，所以数据存储要加接口。
 
 字段对应系统服务 §3.2 的记录模型。
 
@@ -350,12 +382,12 @@
 
 ```json
 {"name":"notify.post","arguments":{…},
- "_meta":{"request_id":"o123","member":"m_ba","expires_at_s":1793800000}}
+ "_meta":{"request_id":"o123","member":"m_ba","epoch":19,"expires_at_s":1793800000}}
 ```
 
-- 中枢持久保存，设备 `hello` 后发。当前成员不是目标成员、或者目标是成人但没解锁，就留着不发。
+- 中枢持久保存，设备 `hello` 后发。当前成员不是目标成员、或者目标是成人但没解锁，就留着不发。发送时重新检查权限，带当前的 `_meta.epoch`（§3.3）。
 - `request_id` 去重，设备重启后可能再收到一次，所以外发的能力要能承受重放（设备的去重环只有 32 条）。
-- 外部副作用的不进队列。过期的丢弃并记录。
+- 只有不产生副作用的（通知、显示）才进队列；有副作用的动作不重放。过期的丢弃并记录。
 
 ### 3.14 中枢怎么用 `tools/list`
 
@@ -363,9 +395,15 @@
 
 1. 第一次连上、或 `manifest_hash` 变了，拉一遍 `tools/list`（分页）。
 2. 每轮 `ai.listen` 的 `page.actions` 给出此刻可用的名字。字典里没有的，当场再拉一次 `tools/list`，那时它就在当前页面上。
-3. 给模型的工具 = 定义字典 ∩ `actions` ∩ 成员规则。
+3. **`actions` 是空数组时不算数**（审查 HUB2-006）：设备的 768 字节缓冲放不下时就是 `[]`，Codex 实测 53 个全局能力名就要 780 字节。中枢把它当作“不知道”，拉 `tools/list` 当前视图来定这一轮的可用集合。这时用户还在说话，不影响第一句回答。
+4. 给模型的工具 = 定义字典 ∩ 这一轮的可用集合 ∩ 成员规则。
+5. 这一轮里工具调用让页面变了（回执的 `page_gen` 变了），下一步之前重新确定可用集合。
 
-不需要改设备。以后设备可以加 `{"all":true}` 一次给全部定义，省几次来回。
+不需要改设备就能工作，只是多几个来回。设备可以改进：`actions` 只列绑定当前页面的能力，放不下时带 `"actions_more":true`；`tools/list` 带 `{"all":true}` 一次给全部定义。
+
+### 3.15 `budget_ms`
+
+`ai.listen`、`ai.ask` 加 `"budget_ms":38000`：**实际发送时**这个请求还剩多少毫秒。设备创建请求时就开始计 45 秒，连接要花多久中枢不知道（审查 HUB2-009）。没有这个字段时中枢按 30 秒算。中枢再留 3 秒余量，时间不够就在句子边界停。以后设备可以改成“没有活动才超时”，这个字段就不那么紧了。
 
 ## 4. 错误码
 
@@ -379,9 +417,11 @@ JSON-RPC `error.code`：
 | -32010 | `auth_invalid` 令牌不对 | 退避重连，多次失败提示 |
 | -32011 | `revoked`，`data.wipe` 可选 | 停止重连，提示“已从家庭移除”；`wipe:true` 时走恢复出厂 |
 | -32012 | `proto_unsupported`，`data` 带 `min`、`max` | 停止重连，提示升级（底座设计 §10.3） |
+| -32013 | `pending_token_expired` 待生效的令牌过期了 | `COMMITTING` 时清掉令牌，回 `UNPAIRED` |
 | -32020 | `not_allowed` 成员或儿童规则不允许 | 会话被拒 |
 | -32021 | `unavailable` 这台中枢没装（比如没开浏览器） | 会话被拒 |
 | -32022 | `busy` 路数满了 | 会话被拒，稍后重试 |
+| -32023 | `stale_member` 设备发现成员或代次变了（设备回给中枢） | 中枢留着，等目标成员回来再发 |
 | -32030 | `pair_code_invalid` | 重新 `pair/begin` |
 | -32031 | `pair_expired` | 重新 `pair/begin` |
 | -32040 | `sync_gap` 版本接不上 | `sync/status` 对账 |
@@ -407,3 +447,4 @@ JSON-RPC `error.code`：
 
 - v0.1（2026-11-04）：初稿，对照提交 `9b3c24a` 的实现。同日补听写 `asr.stream`（§3.11）。
 - v0.2（2026-11-04）：按 Codex 设计审查修改，并对照系统服务分支 `a81c1b8`：现状补 45 秒、2048 字节、`ai.ask` 文字被忽略、`rt.open` 不等回答；配对改成两阶段，认领网址由设备拼；成员代次；`caps/list` 按词法单元切页；事件统一成 `device/event` 并加序号；确认改成单独方法并绑定记录；块传输按段拉取，上传编号改成数字；同步加数据代次和全量对账；听写的结束条件分开；新增 §3.12～§3.14。
+- v0.3（2026-11-04）：按 Codex 第二轮复核修改：电脑认领要核对码，待生效令牌 7 天和 `pending_token_expired`；`hub_instance`、`dataset` 随机编号，`sync/status` 的判断表，全量对账会话；`actions` 空数组当作不知道；`confirm.status`；`_meta.epoch` 是交付时的代次；`budget_ms`（§3.15）。
