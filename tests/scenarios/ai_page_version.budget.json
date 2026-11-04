@@ -1,0 +1,9 @@
+{
+  "_doc": "Tool calls are judged against the content version, page turns included; a repeated request id does not run twice (audit F-6).",
+  "panic.count": {"max": 0, "optional": true},
+  "warnings.count": {"max": 0, "optional": true},
+  "reader.page_turns": {"min": 4, "max": 4, "why": "two in turn 1, one by hand, one in turn 3; none for the stale call, none for the retry"},
+  "hub.tool_results.done": {"min": 4, "max": 4, "why": "turn 1 twice, turn 3 twice (the retry gets the first receipt)"},
+  "hub.tool_results.stale": {"min": 1, "max": 1, "why": "the call prepared before the hand turn is refused"},
+  "cap.replayed": {"min": 1, "max": 1, "why": "the retry was answered from the first receipt"}
+}

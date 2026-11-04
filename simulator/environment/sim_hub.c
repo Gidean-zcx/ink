@@ -26,7 +26,7 @@
  *    "tts_first_ms": 500, "tts_chars_per_s": 4.5, "tts_speed": 2},
  *    "think_ms": 1400, "stream": {...}, "result": {...}}
  * A voice rule may list "tools": [{"name": "reader.next_page", "arguments": {},
- * "page_gen_offset": 0}] — after the transcript the hub calls them one by one
+ * "page_gen_offset": 0, "request_id": "r1", "repeat": 2}] — after the transcript the hub calls them one by one
  * ("tools/call", waiting for each receipt) and then answers with the last
  * receipt's "say" (when "say_from_receipt": true) instead of the chunks.
  * {"method": "ai.listen", "turns": [rule, rule, ...]}: the n-th request uses
@@ -115,6 +115,7 @@ static struct {
     bool used;
     int page_gen;
     int next_tool;      /* index of the next tool to call */
+    int tool_sends;     /* times the current tool was sent (its "repeat") */
     int64_t tool_rpc;   /* id of the tools/call in flight (0 = none) */
     char say[256];      /* last receipt's "say" */
 } LS[MAX_LISTEN];
@@ -219,7 +220,10 @@ static void next_tool_or_finish(int i, uint64_t at) {
         finish_listen(i, at + SIM_MS(num_or(LS[i].rule, "think_ms", 1400)));
         return;
     }
-    LS[i].next_tool++;
+    if (++LS[i].tool_sends >= (int)num_or(tool, "repeat", 1)) { /* "repeat": the same request sent again (a retry) */
+        LS[i].next_tool++;
+        LS[i].tool_sends = 0;
+    }
     cJSON *rq = cJSON_CreateObject();
     cJSON_AddStringToObject(rq, "jsonrpc", "2.0");
     LS[i].tool_rpc = ++g_tool_rpc;
@@ -231,6 +235,8 @@ static void next_tool_or_finish(int i, uint64_t at) {
     const cJSON *args = cJSON_GetObjectItemCaseSensitive(tool, "arguments");
     cJSON_AddItemToObject(pr, "arguments", args ? cJSON_Duplicate(args, 1) : cJSON_CreateObject());
     cJSON_AddNumberToObject(pr, "page_gen", LS[i].page_gen + (int)num_or(tool, "page_gen_offset", 0));
+    const char *rid = cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(tool, "request_id"));
+    if (rid) cJSON_AddStringToObject(cJSON_AddObjectToObject(pr, "_meta"), "request_id", rid);
     send_json(LS[i].ws, at + SIM_MS(num_or(tool, "think_ms", 600)), rq);
     cJSON_Delete(rq);
 }
@@ -260,6 +266,8 @@ static bool on_device_response(struct hal_ws *ws, uint64_t t, cJSON *msg) {
         snprintf(key, sizeof key, "hub.tool_results.%s", st ? st : "error");
         sim_metric_add(key, 1);
         snprintf(LS[i].say, sizeof LS[i].say, "%s", say ? say : "");
+        const cJSON *pg = cJSON_GetObjectItemCaseSensitive(res, "page_gen");
+        if (cJSON_IsNumber(pg)) LS[i].page_gen = (int)pg->valuedouble; /* the next tool is prepared against what is on screen now */
         next_tool_or_finish(i, t);
         return true;
     }

@@ -451,6 +451,14 @@ if(INK_HAVE_FONTS)
             --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/pqbn_flash_pause.budget.json
             --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
             --out ${CMAKE_BINARY_DIR}/test-out/pqbn_flash_pause --quiet --trace --no-random-outages)
+  # requests about the screen: content version and retries (audit F-6)
+  add_test(NAME scenario-ai_page_version-metalio-plus
+    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+            --script ${CMAKE_SOURCE_DIR}/tests/scenarios/ai_page_version.script
+            --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/ai_page_version.budget.json
+            --hub ${CMAKE_SOURCE_DIR}/tests/scenarios/ai_page_version.hub.json
+            --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+            --out ${CMAKE_BINARY_DIR}/test-out/ai_page_version-metalio-plus --quiet --trace --frames --no-random-outages)
   add_test(NAME scenario-remote_browse-metalio-plus
     COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/remote_browse.script

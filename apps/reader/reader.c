@@ -255,6 +255,7 @@ static bool go_to(int target) {
     int slot = RD.buf_page[0] == target ? 0 : RD.buf_page[1] == target ? 1 : -1;
     if (RD.show_pending) ink_probe_count("reader.turns_coalesced"); /* the page waiting to be drawn is skipped */
     RD.page = target;
+    ink_ui_content_changed(); /* a tool call prepared for the old page no longer applies (F-6) */
     if (slot >= 0) {
         RD.show_pending = false;
         show_slot(slot);

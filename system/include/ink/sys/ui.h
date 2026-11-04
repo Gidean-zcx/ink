@@ -92,6 +92,13 @@ const char *ink_ui_top_name(void);
 int ink_dp(int dp);
 /** Page generation: increments when the foreground content is replaced (stale input is dropped). */
 uint32_t ink_ui_generation(void);
+/** Content version: what a request about the screen was prepared against. It changes when the
+ *  foreground content changes, a new screen or a turned page (the page generation above only
+ *  changes with a new screen: it drops input aimed at an old one, and a page turn must not).
+ *  A tool call prepared for another version is refused as stale; receipts carry the new one. */
+uint32_t ink_ui_content_version(void);
+/** The foreground activity's content changed without a new screen (a page turned). UI task. */
+void ink_ui_content_changed(void);
 
 /* Shared look for e-ink: white background, black text, inverted press state. */
 void ink_ui_style_screen(lv_obj_t *scr);

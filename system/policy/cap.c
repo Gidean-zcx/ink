@@ -110,7 +110,7 @@ static ink_rc_t gate(const ink_cap_t *c, ink_source_t src, uint32_t page_gen, in
         return reject(rc, INK_RC_REJECTED, "upgrades are started by people only");
     }
     /* a tool call prepared for an older page must not act on the new one */
-    if (remote && page_gen && c->activity && page_gen != ink_ui_generation())
+    if (remote && page_gen && c->activity && page_gen != ink_ui_content_version())
         return reject(rc, INK_RC_STALE, "the page changed since the request was made");
     if (confirm_for(c, src) != INK_CONFIRM_NONE) {
         /* the system confirmation card is not built yet: report what would happen */
@@ -251,6 +251,7 @@ static void finish(pending_t *p) {
     bool reply = !p->replied, late = p->replied && p->answered;
     if (reply) {
         p->replied = true;
+        p->call.rc.page_gen = ink_ui_content_version();
         p->out = p->call.rc;
     }
     osal_mutex_unlock(CB.lock);
@@ -335,7 +336,8 @@ static void start(void *arg) {
 
 static int remote_call(const char *name, const ink_args_t *args, const ink_call_opts_t *o);
 
-/* A retry of a request already answered: the same receipt again. */
+/* A retry of a request already answered: the same receipt again. One still running: "queued",
+ * it must not run a second time (a text message would go out twice). */
 static bool replay(const char *rid, const ink_call_opts_t *o) {
     ink_receipt_t rc;
     bool hit = false;
@@ -343,6 +345,13 @@ static bool replay(const char *rid, const ink_call_opts_t *o) {
     for (int i = 0; i < SEEN_N && !hit; i++)
         if (CB.seen[i].rid[0] && !strcmp(CB.seen[i].rid, rid)) {
             rc = CB.seen[i].rc;
+            hit = true;
+        }
+    for (int i = 0; i < POOL_N && !hit; i++)
+        if (CB.pool[i].used && !CB.pool[i].replied && !strcmp(CB.pool[i].rid, rid)) {
+            memset(&rc, 0, sizeof rc);
+            rc.status = INK_RC_QUEUED;
+            snprintf(rc.detail, sizeof rc.detail, "this request is still running");
             hit = true;
         }
     osal_mutex_unlock(CB.lock);
@@ -658,6 +667,10 @@ int ink_receipt_json(const ink_receipt_t *rc, char *out, size_t cap) {
     if (rc->detail[0]) {
         ink_jw_raw(&w, ",\"detail\":");
         ink_jw_str(&w, rc->detail);
+    }
+    if (rc->page_gen) {
+        ink_jw_raw(&w, ",\"page_gen\":");
+        ink_jw_int(&w, rc->page_gen);
     }
     ink_jw_raw(&w, "}");
     return w.overflow ? -1 : (int)w.len;

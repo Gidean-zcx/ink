@@ -48,6 +48,7 @@ typedef struct {
 static struct {
     osal_queue_t *q;
     osal_task_t *task;
+    uint32_t content_version; /* ink_ui_content_version (atomic) */
     lv_display_t *disp;
     lv_indev_t *indev;
     int lw, lh, nw, nh, rot, dpi;
@@ -94,6 +95,10 @@ static struct {
 
 int ink_dp(int dp) { return (dp * UI.dpi + 80) / 160; }
 uint32_t ink_ui_generation(void) { return UI.generation; }
+
+uint32_t ink_ui_content_version(void) { return __atomic_load_n(&UI.content_version, __ATOMIC_ACQUIRE) + 1; } /* never 0: "not page-bound" */
+
+void ink_ui_content_changed(void) { __atomic_add_fetch(&UI.content_version, 1, __ATOMIC_ACQ_REL); }
 
 static uint32_t tick_cb(void) { return (uint32_t)(osal_now_us() / 1000ull); }
 
@@ -357,6 +362,7 @@ static void show_top(void) {
     UI.screen = lv_obj_create(NULL);
     ink_ui_style_screen(UI.screen);
     UI.generation++;
+    ink_ui_content_changed();
     /* a new screen replaces everything: one flashing clean refresh. Area hints from the old
      * screen (e.g. FAST for the button that was tapped) must not split the frame: they would
      * drive part of the NEW screen with a binary waveform first (seen in the simulator). */

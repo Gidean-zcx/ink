@@ -404,7 +404,9 @@ static void bus_done(void *ctx, const ink_receipt_t *rc) {
 
 static void t_where(ink_call_t *c) { c->rc.revision = ink_exec_is_current(INK_EXEC_BG) ? 1 : ink_exec_is_current(INK_EXEC_MEDIA) ? 2 : 0; }
 static void t_count(ink_call_t *c) { c->rc.revision = (uint32_t)++g_counted; }
+static int g_parks;
 static void t_park(ink_call_t *c) {
+    g_parks++;
     g_parked = c;
     ink_cap_defer(c);
 }
@@ -446,6 +448,15 @@ static void bus_checks(void) {
     ink_cap_done(g_parked); /* late: dropped (budget: cap.late == 1) */
     osal_task_delay_us(1000);
     CHECK(g_bus_done == 6, "its late completion is dropped");
+    /* the same request again while the first still runs: it must not run twice (a message would go out twice) */
+    o.request_id = "rq-2";
+    int runs_before = g_bus_done, parks_before = g_parks;
+    CHECK(ink_cap_call("test.park", NULL, &o) == 0 && g_bus_done == runs_before && g_parks == parks_before + 1, "a request runs and parks");
+    CHECK(ink_cap_call("test.park", NULL, &o) == 0 && g_bus_done == runs_before + 1 && g_bus_rc.status == INK_RC_QUEUED && g_parks == parks_before + 1,
+          "a repeat while it runs is answered queued and does not run (%s)", ink_rc_name(g_bus_rc.status));
+    ink_cap_done(g_parked);
+    CHECK(g_bus_done == runs_before + 2 && g_bus_rc.status == INK_RC_DONE, "the first answers when it completes (%s)", ink_rc_name(g_bus_rc.status));
+    o.request_id = NULL;
     ink_receipt_t rc;
     CHECK(ink_cap_invoke("test.on_bg", NULL, INK_SRC_APP, 0, &rc) == INK_RC_QUEUED, "waiting on a background capability answers queued");
 
@@ -453,9 +464,9 @@ static void bus_checks(void) {
     ink_args_t a;
     ink_args_init(&a);
     ink_args_int(&a, "x", 42);
-    CHECK(ink_cap_call("hub/echo", &a, &o) == 0 && wait_done(7, 15000000) && g_bus_rc.status == INK_RC_DONE && strstr(g_bus_rc.say, "\"x\":42"),
+    CHECK(ink_cap_call("hub/echo", &a, &o) == 0 && wait_done(g_bus_done + 1, 15000000) && g_bus_rc.status == INK_RC_DONE && strstr(g_bus_rc.say, "\"x\":42"),
           "a hub capability through the remote proxy (%s, %s)", ink_rc_name(g_bus_rc.status), g_bus_rc.say);
-    CHECK(ink_cap_call("hub/nope", NULL, &o) == 0 && wait_done(8, 15000000) && g_bus_rc.status == INK_RC_FAILED && g_bus_rc.detail[0],
+    CHECK(ink_cap_call("hub/nope", NULL, &o) == 0 && wait_done(g_bus_done + 1, 15000000) && g_bus_rc.status == INK_RC_FAILED && g_bus_rc.detail[0],
           "an unknown hub capability fails with the hub's reason (%s)", g_bus_rc.detail);
 }
 

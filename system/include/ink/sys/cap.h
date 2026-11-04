@@ -66,6 +66,8 @@ typedef struct {
     uint32_t undo_ms;  /* how long it can be undone (0 = not undoable) */
     char say[160];     /* one sentence the AI may speak without another model call */
     char detail[96];   /* why it was rejected / invalid / failed */
+    uint32_t page_gen; /* the content version when it finished (ink_ui_content_version): what the next
+                        * tool call of the same turn is prepared against */
 } ink_receipt_t;
 
 typedef struct ink_cap ink_cap_t;
@@ -75,7 +77,7 @@ typedef struct {
     const ink_cap_t *cap;
     ink_args_t args;
     ink_source_t src;
-    uint32_t page_gen; /* the page generation the caller saw (AI, hub), 0 = not page-bound */
+    uint32_t page_gen; /* the content version the caller saw (AI, hub), 0 = not page-bound */
     ink_receipt_t rc;
 } ink_call_t;
 
@@ -108,8 +110,9 @@ const ink_cap_t *ink_cap_find(const char *id);
 bool ink_cap_available(const char *id);
 
 /**
- * Invoke and wait (UI task). `args` may be NULL. `page_gen`, if not 0, is the page generation the
- * caller saw: page-bound capabilities on a newer page are refused as stale. Returns rc->status.
+ * Invoke and wait (UI task). `args` may be NULL. `page_gen`, if not 0, is the content version the
+ * caller saw (ink_ui_content_version): page-bound capabilities on newer content are refused as
+ * stale. Returns rc->status.
  * A capability that runs elsewhere or completes later answers INK_RC_QUEUED here; use
  * ink_cap_call to hear its receipt.
  */
@@ -126,8 +129,8 @@ ink_rc_t ink_cap_invoke_json(const char *id, const char *args_json, ink_source_t
 typedef void (*ink_cap_done_fn)(void *ctx, const ink_receipt_t *rc);
 typedef struct {
     ink_source_t src;
-    uint32_t page_gen;      /* the page the caller saw (AI, hub); 0 = not page-bound */
-    const char *request_id; /* a repeated id gets the first receipt again (a retry after a reconnect); NULL = none */
+    uint32_t page_gen;      /* the content version the caller saw (AI, hub); 0 = not page-bound */
+    const char *request_id; /* a repeated id does not run twice: the first receipt again, or "queued" while it runs; NULL = none */
     const char *args_json;  /* JSON arguments instead of a table (the AI's, the hub's): checked after the gate */
     ink_exec_t reply_exec;  /* where `done` runs */
     ink_cap_done_fn done;   /* may be NULL */

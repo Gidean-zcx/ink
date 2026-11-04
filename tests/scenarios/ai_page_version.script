@@ -1,0 +1,15 @@
+# Requests about the screen and its content version (audit F-6 / AUD-007):
+# 1) two "next page" in one turn: both done, the second is prepared against the
+#    first one's receipt;
+# 2) the person turns the page by hand while the hub is preparing "next page":
+#    its call is refused as stale, the page stays where the person put it;
+# 3) the hub sends the same request twice (a retry): the page turns once and
+#    both answers are the same.
+@3s      tap   116dp 160dp        # 阅读
++2500ms  tap   50% 160dp          # 星星邮差
++3s      mic   speech
++0       key   ai 1200ms          # turn 1
++9s      key   ai 1200ms          # turn 2: the tool call comes ~4 s after the press
++2s      key   next               # ... and the person turns the page first
++9s      key   ai 1200ms          # turn 3
++9s      end

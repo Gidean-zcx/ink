@@ -404,7 +404,7 @@ static int request(const char *method, bool voice) {
         ink_jw_str(&w, SIM_TRANSCRIPT);
     }
     char gen[48];
-    snprintf(gen, sizeof gen, ",\"page_gen\":%u", (unsigned)ink_ui_generation());
+    snprintf(gen, sizeof gen, ",\"page_gen\":%u", (unsigned)ink_ui_content_version());
     ink_jw_raw(&w, gen);
     ink_jw_raw(&w, ",\"page\":{\"app\":");
     ink_jw_str(&w, app);
