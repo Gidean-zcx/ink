@@ -102,7 +102,7 @@ static void load_job(void *arg) { /* exec.bg */
             b = NULL;
         }
     }
-    dict_head_t h;
+    dict_head_t h = {0};
     if (b) memcpy(&h, b, sizeof h);
     ink_svc_lock();
     PY.loading = false;

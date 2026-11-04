@@ -498,7 +498,7 @@ static void on_call(void *ctx, const char *id, const ink_args_t *p) { /* the mod
         action(&it.actions[1], "挂断", "call.hangup", NULL);
         ink_svc_lock();
         NS.call_answered = false;
-        snprintf(NS.call_from, sizeof NS.call_from, "%s", it.body);
+        snprintf(NS.call_from, sizeof NS.call_from, "%.23s", it.body); /* a number: it fits */
         ink_svc_unlock();
         ink_interrupt_raise(&it);
     } else if (!strcmp(id, "call.answered")) {
