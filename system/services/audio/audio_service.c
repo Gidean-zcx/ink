@@ -54,7 +54,8 @@
 #define AU_TICK_US 10000
 #define CAP_RING (HAL_AUDIO_RATE * 2) /* 2 s of PCM */
 #define JB_MAX 512                    /* jitter buffer: frames (30 s; hubs send TTS faster than real time) */
-#define JB_PREBUFFER 3                /* 180 ms before a stream starts playing */
+#define JB_PREBUFFER 5                /* 300 ms before a stream starts playing: over the pessimistic LTE profile 180 ms cut into the
+                                       * answer in 2 of 30 random seeds (the frames after the first come late), 300 ms in 0 of 100 */
 #define PLC_MAX 3                     /* conceal at most this many missing frames in a row */
 #define BITRATE 24000
 #define WAIT_HOLD_US 300000 /* a stream waiting for data keeps the output open this long, then it closes */

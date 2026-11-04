@@ -4,8 +4,10 @@
  */
 #include <stdio.h>
 
+#include "ink/osal.h"
 #include "ink/sys/cap.h"
 #include "ink/sys/settings.h"
+#include "ink/sys/state.h"
 #include "ink/sys/members.h"
 #include "ink/sys/ui.h"
 
@@ -55,6 +57,26 @@ static void factory_reset(ink_call_t *c) {
     snprintf(c->rc.detail, sizeof c->rc.detail, "not implemented yet");
 }
 
+#define LIST_CAP 4096
+
+static void state_list(ink_call_t *c) {
+    char *out = osal_malloc(LIST_CAP, OSAL_MEM_EXTERNAL);
+    if (!out || ink_state_json(out, LIST_CAP, INK_EXPOSE_AI) < 0) {
+        c->rc.status = INK_RC_FAILED;
+        snprintf(c->rc.detail, sizeof c->rc.detail, out ? "too long" : "out of memory");
+    } else ink_cap_result(c, out);
+    osal_free(out);
+}
+
+static void settings_list(ink_call_t *c) {
+    char *out = osal_malloc(LIST_CAP * 2, OSAL_MEM_EXTERNAL);
+    if (!out || ink_settings_json(out, LIST_CAP * 2) < 0) {
+        c->rc.status = INK_RC_FAILED;
+        snprintf(c->rc.detail, sizeof c->rc.detail, out ? "too long" : "out of memory");
+    } else ink_cap_result(c, out);
+    osal_free(out);
+}
+
 static const ink_cap_t SYSTEM_ACTIONS[] = {
     {.id = "system.home", .title = "回到主页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = go_home},
     {.id = "system.full_refresh", .title = "整屏刷新（清残影）", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = full_refresh},
@@ -71,6 +93,8 @@ static const ink_cap_t SYSTEM_ACTIONS[] = {
      .effect = INK_FX_NAVIGATE,
      .child_ok = true,
      .run = switch_member},
+    {.id = "state.list", .title = "系统现在的状态（电量、网络、前台应用……）", .output = "{\"type\":\"object\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = state_list},
+    {.id = "settings.list", .title = "所有设置，各自的类型、取值范围和现在的值", .output = "{\"type\":\"array\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = settings_list},
     {.id = "system.factory_reset", .title = "恢复出厂设置", .effect = INK_FX_SYSTEM, .child_ok = false, .run = factory_reset},
 };
 

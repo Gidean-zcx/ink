@@ -46,6 +46,10 @@ bool ink_hub_online(void);
 bool ink_hub_server_time(int64_t *unix_ms, uint32_t *round_trip_ms);
 /** fn(ctx) in the hub task each time the connection is (re)established. Up to 4. */
 int ink_hub_on_online(void (*fn)(void *ctx), void *ctx);
+/** fn() in the hub task, whenever it is awake and online: what waits to go out goes now. One. */
+void ink_hub_set_tick(void (*fn)(void));
+/** Have it look soon (any task, never waits). */
+void ink_hub_wake(void);
 /** Stay connected while held (reference-counted; realtime sessions hold it). */
 void ink_hub_keep(bool on);
 

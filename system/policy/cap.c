@@ -39,6 +39,8 @@ int ink_cap_register(const ink_cap_t *table, int n) {
     return 0;
 }
 
+const ink_cap_t *ink_cap_at(int i) { return i >= 0 && i < nreg ? REG[i] : NULL; }
+
 const ink_cap_t *ink_cap_find(const char *id) {
     for (int i = 0; i < nreg; i++)
         if (!strcmp(REG[i]->id, id)) return REG[i];
@@ -683,10 +685,78 @@ static void event_job(void *arg) {
     osal_free(e);
 }
 
+/* Events to the AI (system services design §1.2 rule 3): what is registered and offered goes to the hub through the
+ * hub task, the latest 8 wait for it to be online. */
+#define EVENTS_KEPT 8
+static struct {
+    uint32_t seq;
+    int64_t at_s;
+    char id[48];
+    ink_args_t args;
+} EV[EVENTS_KEPT] INK_PSRAM_BSS;
+static uint32_t ev_next, ev_sent; /* sequence numbers, under CB.lock */
+
+static void keep_event(const char *id, const ink_args_t *payload) {
+    const ink_cap_t *c = ink_cap_find(id);
+    if (!CB.lock || !c || c->form != INK_FORM_EVENT || !exposed(c, INK_SRC_AI)) return;
+    int64_t wall = osal_wall_us();
+    osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+    uint32_t seq = ++ev_next;
+    typeof(EV[0]) *e = &EV[seq % EVENTS_KEPT];
+    e->seq = seq;
+    e->at_s = wall > 0 ? wall / 1000000 : 0;
+    snprintf(e->id, sizeof e->id, "%s", id);
+    if (payload) e->args = *payload;
+    else ink_args_init(&e->args);
+    if (ev_next - ev_sent > EVENTS_KEPT) {
+        ev_sent = ev_next - EVENTS_KEPT; /* the oldest was just written over */
+        ink_probe_count("cap.events_lost_offline");
+    }
+    osal_mutex_unlock(CB.lock);
+    if (ink_hub_online()) ink_hub_wake();
+}
+
+#define EVENT_JSON_CAP 1024
+
+static void send_events(void) { /* hub task */
+    for (;;) {
+        osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+        bool any = ev_sent != ev_next;
+        osal_mutex_unlock(CB.lock);
+        if (!any) return;
+        char *out = osal_malloc(EVENT_JSON_CAP + sizeof(ink_args_t), OSAL_MEM_EXTERNAL);
+        if (!out) return;
+        ink_args_t *args = (ink_args_t *)(out + EVENT_JSON_CAP);
+        char id[48] = "";
+        int64_t at = 0;
+        osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+        uint32_t seq = ev_sent + 1;
+        const typeof(EV[0]) *e = &EV[seq % EVENTS_KEPT];
+        snprintf(id, sizeof id, "%s", e->id);
+        at = e->at_s;
+        *args = e->args;
+        osal_mutex_unlock(CB.lock);
+        int head = snprintf(out, EVENT_JSON_CAP, "{\"event\":\"%s\",\"at_s\":%lld,\"args\":", id, (long long)at);
+        int body = ink_args_to_json(args, out + head, EVENT_JSON_CAP - (size_t)head - 2);
+        int r = 0;
+        if (body >= 0) {
+            out[head + body] = '}';
+            out[head + body + 1] = 0;
+            r = ink_hub_notify("device/event", out);
+        } else ink_probe_count("cap.event_too_long");
+        osal_free(out);
+        if (r != 0) return; /* the queue is full: the next time round */
+        osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+        if (ev_sent + 1 == seq) ev_sent = seq; /* still the oldest: nothing wrote over it */
+        osal_mutex_unlock(CB.lock);
+    }
+}
+
 void ink_cap_emit(const char *id, const ink_args_t *payload) {
     char key[64];
     snprintf(key, sizeof key, "event.%s", id);
     ink_probe_count(key);
+    keep_event(id, payload);
     for (int i = 0; i < nsubs; i++) {
         if (strncmp(id, SUBS[i].prefix, SUBS[i].plen)) continue;
         const char *prev = osal_mem_tag("cap");
@@ -1142,5 +1212,6 @@ static void on_caps_changed(void *ctx, const char *method, const ink_json_t *j, 
 
 int ink_tools_init(void) {
     if (ink_hub_on_online(dir_fetch, NULL) || ink_hub_subscribe("caps/", on_caps_changed, NULL)) return -1;
+    ink_hub_set_tick(send_events);
     return ink_hub_on_request("tools/", on_tools, NULL);
 }

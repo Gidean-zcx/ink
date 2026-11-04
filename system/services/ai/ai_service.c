@@ -39,6 +39,7 @@
 
 #define ANSWER_CAP 2048
 #define SNAPSHOT_CAP 3072
+#define STATE_CAP 2048 /* the system's state, with every question: what the AI knows without asking */
 #define ASK_TIMEOUT_US (45ull * 1000000ull)
 #define MAX_BUFFERED_FRAMES 512 /* ~30 s of speech captured before the link is online */
 
@@ -448,7 +449,7 @@ static int request(const char *method, bool voice) {
     osal_mutex_unlock(AI.lock);
     const char *prev = osal_mem_tag("ai");
     char *snap = osal_malloc(SNAPSHOT_CAP, OSAL_MEM_EXTERNAL);
-    char *params = osal_malloc(SNAPSHOT_CAP * 2 + 256, OSAL_MEM_EXTERNAL);
+    char *params = osal_malloc(SNAPSHOT_CAP * 2 + STATE_CAP + 256, OSAL_MEM_EXTERNAL);
     osal_mem_tag(prev);
     if (!snap || !params) {
         osal_free(snap);
@@ -459,7 +460,7 @@ static int request(const char *method, bool voice) {
     const char *app = "";
     int n = ink_ui_snapshot(snap, SNAPSHOT_CAP, &app);
     ink_jw_t w;
-    ink_jw_init(&w, params, SNAPSHOT_CAP * 2 + 256);
+    ink_jw_init(&w, params, SNAPSHOT_CAP * 2 + STATE_CAP + 256);
     if (voice) {
         char head[96];
         snprintf(head, sizeof head, "{\"stream\":%d,\"format\":\"opus\",\"rate\":16000,\"frame_ms\":60", AI.stream);
@@ -481,7 +482,12 @@ static int request(const char *method, bool voice) {
         int k = ink_cap_ids_json(ids, sizeof ids);
         ink_jw_raw(&w, k > 0 ? ids : "[]");
     }
-    ink_jw_raw(&w, "}}");
+    ink_jw_raw(&w, "},\"state\":");
+    {
+        int k = ink_state_json(snap, STATE_CAP, INK_EXPOSE_AI); /* the page's text is in params already: its buffer is free */
+        ink_jw_raw(&w, k > 0 ? snap : "{}");
+    }
+    ink_jw_raw(&w, "}");
     ink_power_hold(INK_NEED_NET); /* no sleep while the answer is on its way */
     int id = ink_hub_call(method, w.overflow ? "{}" : params, ASK_TIMEOUT_US, on_reply, (void *)(intptr_t)AI.seq);
     if (id < 0) { /* no reply will come: the turn ends here */

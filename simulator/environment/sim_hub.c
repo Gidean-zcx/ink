@@ -254,10 +254,49 @@ static void answer_listen(int i, uint64_t t) {
     else finish_listen(i, at + SIM_MS(num_or(rule, "think_ms", 1400)));
 }
 
+/* For tests: a request to the device, as the real hub makes it, and what it said; what it told, and what it asked with. */
+#define TEST_RPC_BASE 1000000000
+static struct hal_ws *g_last_ws;
+static int64_t g_test_rpc = TEST_RPC_BASE;
+static char *g_test_reply;
+static struct {
+    char *text[32];
+    int n;
+} g_events;
+static char *g_last_ask;
+
+static void keep_text(char **slot, cJSON *item) {
+    sim_host_free(*slot);
+    *slot = cJSON_PrintUnformatted(item);
+}
+
+void sim_hub_request_device(const char *method, const char *params_json) { /* event context */
+    if (!g_last_ws) return;
+    cJSON *rq = cJSON_CreateObject();
+    cJSON_AddStringToObject(rq, "jsonrpc", "2.0");
+    cJSON_AddNumberToObject(rq, "id", (double)++g_test_rpc);
+    cJSON_AddStringToObject(rq, "method", method);
+    cJSON *pr = cJSON_Parse(params_json ? params_json : "{}");
+    if (pr) cJSON_AddItemToObject(rq, "params", pr);
+    sim_host_free(g_test_reply);
+    g_test_reply = NULL;
+    send_json(g_last_ws, vtk_isr_now() + SIM_MS(1), rq);
+    cJSON_Delete(rq);
+}
+
+const char *sim_hub_device_reply(void) { return g_test_reply; }
+int sim_hub_events_seen(void) { return g_events.n; }
+const char *sim_hub_event_at(int i) { return i >= 0 && i < g_events.n && i < 32 ? g_events.text[i] : NULL; }
+const char *sim_hub_last_ask(void) { return g_last_ask; }
+
 /* A response from the device to one of our tools/call requests. */
 static bool on_device_response(struct hal_ws *ws, uint64_t t, cJSON *msg) {
     const cJSON *id = cJSON_GetObjectItemCaseSensitive(msg, "id");
     if (!cJSON_IsNumber(id)) return false;
+    if ((int64_t)id->valuedouble > TEST_RPC_BASE) {
+        keep_text(&g_test_reply, msg);
+        return true;
+    }
     for (int i = 0; i < MAX_LISTEN; i++) {
         if (!LS[i].used || LS[i].ws != ws || LS[i].tool_rpc != (int64_t)id->valuedouble) continue;
         LS[i].tool_rpc = 0;
@@ -360,6 +399,14 @@ void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t 
     snprintf(key, sizeof key, "hub.requests.%s", method ? method : "?");
     sim_metric_add(key, 1);
     sim_trace_instant("hub", method ? method : "?", t, NULL);
+    g_last_ws = ws;
+    if (!strcmp(method, "device/event")) { /* what the device tells: nobody here answers */
+        if (g_events.n < 32) keep_text(&g_events.text[g_events.n], req);
+        g_events.n++;
+        cJSON_Delete(req);
+        return;
+    }
+    if (!strncmp(method, "ai.ask", 6) || !strcmp(method, "ai.listen")) keep_text(&g_last_ask, req);
     if (method && !strcmp(method, "ai.listen.end")) { /* the device finished uploading an utterance */
         const cJSON *pr = cJSON_GetObjectItemCaseSensitive(req, "params");
         int stream = (int)num_or(pr, "stream", -1);

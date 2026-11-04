@@ -690,6 +690,20 @@ static void battery(void) {
     hw(HW_BATTERY, 13, 0);
     delay_ms(70000);
     CHECK(inbox_count() == 1, "not told again on the way down (%d)", inbox_count());
+    /* the flash work that can wait does */
+    static const ink_db_def_t HEAP = {.name = "test.heap", .scope = INK_DB_DEVICE, .schema = 1};
+    ink_db_register(&HEAP);
+    ink_db_t *heap = ink_db_open(&HEAP, NULL);
+    char filler[400];
+    memset(filler, 'x', sizeof filler);
+    int foldings = (int)sim_metric_value("data.compactions");
+    for (int i = 0; i < 120; i++) {
+        ink_db_write_t w = {.id = 1, .data = filler, .len = sizeof filler};
+        ink_db_put(heap, &w, NULL);
+        delay_ms(20);
+    }
+    delay_ms(45000);
+    CHECK((int)sim_metric_value("data.compactions") == foldings, "a low battery does not fold the log (%d)", (int)sim_metric_value("data.compactions") - foldings);
     hw(HW_BATTERY, 5, 0);
     CHECK(WAIT_FOR(!strcmp(active_state(), "low_battery"), 70000), "5%%: an interruption (%s)", active_state());
     delay_ms(500);
@@ -698,6 +712,8 @@ static void battery(void) {
     hw(HW_BATTERY_CHARGING, 5, 0);
     CHECK(WAIT_FOR(!strcmp(active_state(), "none"), 70000), "charging: it goes away (%s)", active_state());
     CHECK(WAIT_FOR(inbox_count() == 0, 2000) && !battery_low_state(), "with the notification (%d)", inbox_count());
+    CHECK(WAIT_FOR((int)sim_metric_value("data.compactions") > foldings, 60000), "the folding comes after");
+    ink_db_close(heap);
     delay_ms(1500);
 
     hw(HW_BATTERY, 5, 0);

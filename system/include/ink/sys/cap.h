@@ -111,6 +111,8 @@ int ink_cap_init(void);
 /** Register a static table (it must outlive the program). 0, or -1 when the registry is full. */
 int ink_cap_register(const ink_cap_t *table, int n);
 const ink_cap_t *ink_cap_find(const char *id);
+/** All of them, in the order registered: NULL past the last. */
+const ink_cap_t *ink_cap_at(int i);
 /** Registered and usable now (a page-bound capability only while its page is on top). */
 bool ink_cap_available(const char *id);
 

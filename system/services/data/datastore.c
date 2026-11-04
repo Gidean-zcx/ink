@@ -35,6 +35,8 @@
 #include "ink/sys/members.h"
 #include "ink/sys/power.h"
 #include "ink/sys/res.h"
+#include "ink/sys/exec.h"
+#include "ink/sys/state.h"
 #include "ink/sys/storage.h"
 #include "ink/sys/svc.h"
 
@@ -133,6 +135,8 @@ static struct {
     int ndefs;
     size_t used;
     uint32_t clock;
+    ink_exec_job_t free_job;
+    int h_free;
 } DB INK_PSRAM_BSS;
 
 static void lock(void) { osal_mutex_lock(DB.lock, OSAL_WAIT_FOREVER); }
@@ -359,6 +363,11 @@ static bool frame_add(ink_db_t *c, uint8_t op, const rec_t *r, const void *conte
 
 /* ------------------------------------------------------------ folding the log into a snapshot */
 
+static void free_job(void *arg) { /* exec.bg: it walks the file system */
+    (void)arg;
+    ink_data_refresh_state();
+}
+
 static void compact_done(void *ctx, int result) { /* storage task */
     ink_db_t *c = ctx;
     lock();
@@ -381,6 +390,7 @@ static void compact_done(void *ctx, int result) { /* storage task */
     }
     want_compaction(c);
     unlock();
+    if (result == 0) ink_exec_post(INK_EXEC_BG, &DB.free_job, free_job, NULL);
 }
 
 /* Fold it, on exec.bg. Copied under the lock, the checksums outside. */
@@ -475,11 +485,21 @@ static ink_job_step_t compact_step(void *ctx) {
     return INK_JOB_DONE;
 }
 
+static bool battery_low(void) {
+    int64_t low = 0;
+    return ink_state_get_int(ink_state_find("battery.low"), &low) && low;
+}
+
 static void compact_cb(void *arg) { /* timer task */
     ink_db_t *c = arg;
+    bool hold_off = battery_low(); /* it can wait: the flash work is not worth what is left (nothing is lost, the logs are all there) */
     lock();
-    bool go = c->compact_wanted && !c->compacting;
+    bool go = c->compact_wanted && !c->compacting && !hold_off;
     c->compact_wanted = false;
+    if (hold_off) {
+        c->compact_not_before = osal_now_us() + COMPACT_RETRY_US;
+        want_compaction(c);
+    }
     if (go) c->compacting = true;
     unlock();
     if (!go) return;
@@ -1020,12 +1040,20 @@ static void on_power(void *ctx, ink_power_state_t from, ink_power_state_t to, ui
 
 int ink_data_caps_init(void);
 
+static const ink_state_def_t ST_USER_FREE = {.id = "storage.user_free", .type = INK_ST_INT, .title = "内部存储还剩多少字节（设置、通知、备忘这些放在这里）"};
+
+void ink_data_refresh_state(void) {
+    uint64_t total = 0, free_bytes = 0;
+    if (ink_storage_volume(&total, &free_bytes) == 0) ink_state_set_int(DB.h_free, (int64_t)free_bytes);
+}
+
 int ink_data_init(void) {
     if (DB.lock) return 0;
     const char *prev = osal_mem_tag("data");
     DB.lock = osal_mutex_create();
     osal_mem_tag(prev);
     if (!DB.lock) return -1;
+    DB.h_free = ink_state_define(&ST_USER_FREE);
     if (ink_mem_reclaimer("data", 20, reclaim, NULL) != 0 || ink_power_subscribe(on_power, NULL) != 0) return -1;
     return ink_data_caps_init();
 }

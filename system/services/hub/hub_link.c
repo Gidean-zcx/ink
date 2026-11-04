@@ -107,6 +107,7 @@ static struct {
     } subs[MAX_SUBS];
     int nsubs;
     ink_json_t *json; /* parse buffer (PSRAM, ~2 KB): keeps the token array off the stack */
+    void (*tick)(void);
     osal_mutex_t *tx_lock; /* the tx queue, its byte count and demand_until */
     tx_item_t *tx_head[TX_CLASSES], *tx_tail[TX_CLASSES];
     tx_item_t *tx_free; /* the pool's unused items */
@@ -457,6 +458,7 @@ static void hub_task(void *arg) {
             }
             osal_free(m.data);
         }
+        if (H.state == HS_ONLINE && H.tick) H.tick();
         /* queued notifications and binary frames: sent while online, dropped otherwise */
         drain_tx(H.state == HS_ONLINE);
         /* timeouts */
@@ -629,6 +631,13 @@ static int enqueue_tx(bool binary, int cls, const void *data, size_t len) {
     hub_msg_t m = {.type = HE_TX};
     osal_queue_send(H.q, &m, 0); /* a full queue still wakes the task soon: it drains on every wake */
     return 0;
+}
+
+void ink_hub_set_tick(void (*fn)(void)) { H.tick = fn; }
+
+void ink_hub_wake(void) {
+    hub_msg_t m = {.type = HE_TX};
+    if (H.q) osal_queue_send(H.q, &m, 0); /* a full queue wakes the task soon anyway */
 }
 
 int ink_hub_notify(const char *method, const char *params_json) {

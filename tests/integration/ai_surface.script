@@ -1,0 +1,4 @@
+# The hub is reachable over Wi-Fi; the test takes the network away for a while itself.
+@0       net   wifi
+@3s      mic   speech
+@400s    end

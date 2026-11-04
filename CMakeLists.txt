@@ -386,6 +386,7 @@ target_link_libraries(pools-test PRIVATE ink_platform ink_tlsf)
 target_compile_options(pools-test PRIVATE ${INK_WARN})
 add_test(NAME unit-pools COMMAND pools-test)
 add_test(NAME sdk-boundary COMMAND ${CMAKE_COMMAND} -DSRC=${CMAKE_SOURCE_DIR} -P ${CMAKE_SOURCE_DIR}/tests/sdk_boundary.cmake)
+add_test(NAME layering COMMAND ${CMAKE_COMMAND} -DSRC=${CMAKE_SOURCE_DIR} -P ${CMAKE_SOURCE_DIR}/tests/layering.cmake)
 add_executable(pqbn-clock-test tests/unit/pqbn_clock_test.c)
 target_link_libraries(pqbn-clock-test PRIVATE ink_drivers)
 target_compile_options(pqbn-clock-test PRIVATE ${INK_WARN})
@@ -510,6 +511,16 @@ if(INK_HAVE_FONTS)
   ink_scenario(ai_ask metalio-plus)
   ink_scenario(ai_turn_end metalio-plus)
   ink_scenario(ai_turn_lost metalio-plus)
+  # What the AI can reach, against the table in the design (tests/integration/ai_surface.c).
+  add_executable(sim-ai-surface simulator/runtime/sim_main.c tests/integration/ai_surface.c)
+  target_link_libraries(sim-ai-surface PRIVATE ink_apps ink_system ink_port_sim)
+  target_compile_options(sim-ai-surface PRIVATE ${INK_WARN})
+  add_test(NAME integration-ai-surface
+    COMMAND sim-ai-surface --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+            --budget ${CMAKE_SOURCE_DIR}/tests/integration/ai_surface.budget.json
+            --script ${CMAKE_SOURCE_DIR}/tests/integration/ai_surface.script
+            --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+            --out ${CMAKE_BINARY_DIR}/test-out/ai_surface --quiet --no-random-outages)
   # The app directory and lifecycle (tests/integration/apps.c).
   add_executable(sim-apps simulator/runtime/sim_main.c tests/integration/apps.c)
   target_link_libraries(sim-apps PRIVATE ink_apps ink_system ink_port_sim)
@@ -574,6 +585,15 @@ if(INK_HAVE_FONTS)
   ink_scenario(voice_listen_policy metalio-plus-handsfree)
   ink_scenario(ai_offline_intent metalio-plus-handsfree)
   # the microphone cannot start (the expander, and with it the audio chip, not set up): AUD5-003
+  # The spoken answer over a pessimistic LTE link does not depend on one lucky run: seeds where a shorter prebuffer cut into it.
+  foreach(seed 26 29)
+    add_test(NAME scenario-ai_ask-metalio-plus-seed-${seed}
+      COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+              --script ${CMAKE_SOURCE_DIR}/tests/scenarios/ai_ask.script
+              --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/ai_ask.budget.json
+              --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT} --seed ${seed}
+              --out ${CMAKE_BINARY_DIR}/test-out/ai_ask-seed-${seed} --quiet --no-random-outages)
+  endforeach()
   add_test(NAME scenario-ai_mic_unavailable-metalio-plus
     COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/ai_mic_unavailable.script

@@ -122,6 +122,8 @@ int ink_db_error(ink_db_t *db);
 void ink_db_flush_all(void);
 /** Nothing waits to be written, anywhere (the storage service's queue is checked separately). */
 bool ink_db_idle(void);
+/** The state storage.user_free, measured now (blocks, walks the file system: at boot; it follows by itself after each folding). */
+void ink_data_refresh_state(void);
 
 #ifdef __cplusplus
 }
