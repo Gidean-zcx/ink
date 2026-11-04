@@ -575,7 +575,7 @@ int  ink_audio_focus_acquire(ink_audio_prio_t prio, ink_focus_fn fn, void *ctx, 
 void ink_audio_focus_release(int token);
 ```
 
-焦点是内部机制，不是能力。现有的 `ink_audio_stream_open` 不变，内部多一条：同档替换，高的盖低的；被盖的持有者收到回调。响铃：`ink_audio_ring(on)`，音频任务里循环生成，不依赖文件。
+焦点是内部机制，不是能力。现有的 `ink_audio_stream_open` 不变，内部多一条：同档替换，高的盖低的；被盖的持有者收到回调。响铃：`ink_audio_ring(on)`，音频任务里循环生成，不依赖文件，它自己持有闹钟档。来电和去电由通信服务持有通话档。AI 一轮从按键开始持有第 3 档，到回答播完（或 3 s 内没有语音）为止，所以听书的人问一句，书等这一轮结束；AI 按键时如果正在录音，不抢，提示“正在录音”。第 3 档的录音和 AI 互不打断：谁先开始谁用，后来的回“忙”。
 
 ### 10.2 媒体播放（`ink/sys/media.h`）
 
@@ -596,7 +596,7 @@ int  ink_media_status(ink_media_status_t *out); /* 路径、位置、总长、�
 
 ### 10.3 录成文件
 
-`audio.record {path?, max_seconds?}`：默认存 `/me/recordings/<时间>.opus`，回执的对象是文件路径。和 AI 共用一个麦克风：`ink_audio_capture_begin` 只有一个主人，录音时按 AI 键提示“正在录音”，免按键的唤醒词不触发；反过来 AI 这一轮进行时录音回“忙”。来电打断录音（焦点）。帧先进 PSRAM 环，媒体执行队列写文件，1 s 一页，5 s 同步一次；空间不够或到时长自动停并报原因。断电：Ogg 页自带边界，最多丢最后几秒，文件仍可播放（没有结束页也按文件尾结束）。
+`audio.record {path?, max_seconds?}`：默认存 `/me/recordings/<时间>.opus`，回执的对象是文件路径。别人（AI、中枢、应用）要开麦克风，走确认卡（副作用按外部算，用户的隐私）；人自己按不用。和 AI 共用一个麦克风：`ink_audio_capture_begin` 只有一个主人，录音时按 AI 键提示“正在录音”，免按键的唤醒词不触发；反过来 AI 这一轮进行时录音回“忙”。来电打断录音（焦点）。帧先进 PSRAM 环，媒体执行队列写文件，1 s 一页，5 s 同步一次；空间不够或到时长自动停并报原因。断电：Ogg 页自带边界，最多丢最后几秒，文件仍可播放（没有结束页也按文件尾结束）。
 
 ### 10.4 路由和蓝牙耳机
 

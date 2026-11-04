@@ -21,6 +21,7 @@
 #include "ink/sys/res.h"
 #include "ink/sys/rt.h"
 #include "ink/sys/hub.h"
+#include "ink/sys/media.h"
 #include "ink/sys/members.h"
 #include "ink/sys/net.h"
 #include "ink/sys/notify.h"
@@ -42,6 +43,7 @@ int ink_ui_lock_mark_init(void);
 int ink_shell_interrupt_card_init(void);
 int ink_shell_confirm_card_init(void);
 int ink_shell_keyboard_init(void);
+int ink_bt_service_init(void);
 
 void ink_main(void) {
     hal_log_write("ink: starting system services");
@@ -60,6 +62,7 @@ void ink_main(void) {
     if (ink_notify_init() != 0) osal_panic("notification service failed to start");
     if (ink_time_init() != 0) osal_panic("time service failed to start");
     if (ink_text_service_init() != 0) osal_panic("text input failed to start");
+    if (ink_media_init() != 0 || ink_bt_service_init() != 0) osal_panic("media or Bluetooth failed to start");
     hal_device_info_t di;
     hal_device_get_info(&di);
     if (ink_camera_init() != 0 || (di.has_modem && ink_comm_init() != 0)) osal_panic("camera or communication service failed to start");

@@ -104,6 +104,7 @@ add_library(ink_port_sim STATIC
   ports/sim/hal/hal_input_sim.c
   ports/sim/hal/hal_storage_sim.c
   ports/sim/hal/hal_usb_sim.c
+  ports/sim/hal/hal_bt_sim.c
   ports/sim/hal/hal_power_sim.c
   ports/sim/hal/hal_assets_sim.c
   ports/sim/hal/hal_net_sim.c
@@ -178,6 +179,9 @@ add_library(ink_system STATIC
   system/services/notify/notify_service.c
   system/services/notify/notify_caps.c
   system/services/notify/interrupt.c
+  system/services/audio/ogg.c
+  system/services/audio/media_service.c
+  system/services/bt/bt_service.c
   system/services/text/text_service.c
   system/services/text/pinyin.c
   system/services/text/clipboard.c
@@ -520,6 +524,16 @@ if(INK_HAVE_FONTS)
   ink_scenario(ai_ask metalio-plus)
   ink_scenario(ai_turn_end metalio-plus)
   ink_scenario(ai_turn_lost metalio-plus)
+  # Audio focus, media, recording, the headset (tests/integration/media.c).
+  add_executable(sim-media simulator/runtime/sim_main.c tests/integration/media.c)
+  target_link_libraries(sim-media PRIVATE ink_apps ink_system ink_port_sim)
+  target_compile_options(sim-media PRIVATE ${INK_WARN})
+  add_test(NAME integration-media
+    COMMAND sim-media --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+            --budget ${CMAKE_SOURCE_DIR}/tests/integration/media.budget.json
+            --script ${CMAKE_SOURCE_DIR}/tests/integration/media.script
+            --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+            --out ${CMAKE_BINARY_DIR}/test-out/media --quiet --no-random-outages)
   # Text input and the clipboard (tests/integration/textinput.c).
   add_executable(sim-textinput simulator/runtime/sim_main.c tests/integration/textinput.c)
   target_link_libraries(sim-textinput PRIVATE ink_apps ink_system ink_port_sim)

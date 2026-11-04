@@ -279,6 +279,10 @@ void sim_input_restore_later(bool keys, bool rails); /* the wake's restore faile
 hal_power_state_t sim_power_state(void);
 bool sim_audio_busy(void);
 double sim_audio_played_ms(void); /* what the speaker has played so far (tests) */
+double sim_audio_bt_played_ms(void); /* what the headset has played so far (tests) */
+void sim_headset_add(const char *addr, const char *name); /* a Bluetooth headset, switched on, in range */
+void sim_headset_power(const char *addr, bool on);
+void sim_headset_range(const char *addr, bool in);
 void sim_audio_init(void);            /* task context (boot) */
 void sim_audio_report(void);
 void sim_audio_mic_source(const char *name); /* ISR (script): "speech" | "silence" | "noise" | "wake" | "host" (window) */

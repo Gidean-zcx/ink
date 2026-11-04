@@ -28,6 +28,7 @@
 #include "ink/sys/exec.h"
 #include "ink/sys/rt.h"
 #include "ink/sys/settings.h"
+#include "ink/sys/media.h"
 #include "ink/sys/state.h"
 #include "ink/sys/ai.h"
 #include "ink/sys/audio.h"
@@ -175,8 +176,12 @@ static void end_capture(bool discard) {
     ink_audio_capture_end();
 }
 
+static void turn_focus_end(void);
+static void turn_focus_watch(void);
+
 bool ink_ai_dismiss(void) {
     if (!AI.open) return false;
+    turn_focus_end();
     end_capture(true); /* closing while the key is still held ends the recording too */
     lv_obj_delete(AI.sheet);
     AI.sheet = NULL;
@@ -203,6 +208,7 @@ static void turn_over(void) {
     AI.asking = false;
     AI.turn_over = true;
     end_capture(true);
+    turn_focus_watch();
 }
 
 static void ui_apply(void *arg) { /* UI task */
@@ -528,9 +534,61 @@ static void on_rt_closed(void *ctx, int sid, int reason) {
 
 static const ink_rt_handler_t AI_RT = {.on_frame = on_rt_frame, .on_closed = on_rt_closed};
 
+/* A turn has the sound from the key press until it is over: a book being listened to waits (system services design §10.1). */
+static int g_turn_focus;
+
+static void turn_focus_end(void) { /* UI task */
+    ink_audio_focus_release(g_turn_focus);
+    g_turn_focus = 0;
+}
+
+static void on_turn_focus(void *ctx, ink_focus_event_t ev, ink_audio_prio_t by) { /* UI task: a call, an alarm: it ends, the words stay */
+    (void)ctx;
+    (void)by;
+    if (ev != INK_FOCUS_LOST) return;
+    g_turn_focus = 0;
+    osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
+    AI.tts_stream = 0;
+    AI.tts_done_for = AI.stream;
+    osal_mutex_unlock(AI.lock);
+}
+
+/* The words are in, the speech may still be on its way: it ends when that has been heard, or after a while if none comes. */
+#define SPEECH_WAIT_MS 3000
+static lv_timer_t *g_focus_timer;
+static int g_focus_waited_ms;
+
+static void focus_timer_cb(lv_timer_t *t) {
+    (void)t;
+    g_focus_waited_ms += 200;
+    bool heard = AI.tts_opened && ink_audio_stream_progress(AI.tts_opened, NULL, NULL) < 0;
+    if (heard || !g_turn_focus || (!AI.tts_opened && g_focus_waited_ms >= SPEECH_WAIT_MS)) {
+        lv_timer_delete(g_focus_timer);
+        g_focus_timer = NULL;
+        turn_focus_end();
+    }
+}
+
+static void turn_focus_watch(void) { /* UI task */
+    g_focus_waited_ms = 0;
+    if (g_turn_focus && !g_focus_timer) g_focus_timer = lv_timer_create(focus_timer_cb, 200, NULL);
+}
+
+static void turn_focus_begin(void) { /* UI task */
+    if (g_focus_timer) {
+        lv_timer_delete(g_focus_timer);
+        g_focus_timer = NULL;
+    }
+    if (!g_turn_focus) {
+        int t = ink_audio_focus_acquire(INK_AUDIO_PRIO_VOICE, on_turn_focus, NULL, INK_EXEC_UI);
+        g_turn_focus = t > 0 ? t : 0;
+    }
+}
+
 void ink_ai_key(bool pressed, uint64_t t_us) {
     if (pressed) {
         AI.t_press = t_us;
+        if (!ink_audio_recording()) turn_focus_begin(); /* a recording is not ended by asking: it says so below */
         /* a new turn: frames and the speech end of the previous one no longer apply */
         close_session(); /* the previous turn's, if the hub has not answered it yet */
         int sid = voice_ok() ? ink_rt_open("voice.chat", NULL, &AI_RT) : -1; /* a typed question is answered in the reply */
@@ -588,7 +646,7 @@ void ink_ai_key(bool pressed, uint64_t t_us) {
                 AI.up_open = false;
                 osal_mutex_unlock(AI.lock);
                 close_session();
-                set_status(sid > 0 ? "麦克风没能打开，请稍后再按 AI 键" : "语音通道没能打开，请稍后再按 AI 键");
+                set_status(ink_audio_recording() ? "正在录音，先停了再问" : sid > 0 ? "麦克风没能打开，请稍后再按 AI 键" : "语音通道没能打开，请稍后再按 AI 键");
                 ink_audio_tone(INK_TONE_ERROR, 0, NULL);
             }
         }
