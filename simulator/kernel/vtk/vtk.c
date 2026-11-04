@@ -25,7 +25,11 @@
 
 #define STACK_PATTERN 0xA5u
 #define MIN_HOST_STACK (64u * 1024u)
+#if defined(__SANITIZE_ADDRESS__) || (defined(__has_feature) && __has_feature(address_sanitizer))
+#define KERNEL_ZONE (256u * 1024u) /* ASan's pthread_create takes more than 64 KiB of stack on macOS, when a task creates a task */
+#else
 #define KERNEL_ZONE (64u * 1024u) /* host stack below each task's own zone, where the kernel runs (in_kernel_zone) */
+#endif
 
 struct vtk_task {
     int id;
