@@ -122,6 +122,12 @@ static void basics(void) {
     CHECK(ink_fs_stat("/me/notes/deep/a.txt", &st) == 0 && !st.is_dir && st.size == 5 && !strcmp(st.name, "a.txt"), "stat of a file");
     CHECK(ink_fs_stat("/me/notes", &st) == 0 && st.is_dir, "stat of a directory");
     CHECK(listed("/me/notes/deep", "a.txt") && !listed("/me/notes/deep", "a.txt.tmp"), "the temporary file is gone and listed nowhere");
+    /* a copy cut short by a power-off left this: not a file to anyone looking */
+    hal_file_t *stale = hal_fs_open("/content/.m/owner/notes/stale.bin.part", HAL_O_WRITE | HAL_O_CREATE);
+    CHECK(stale != NULL, "what a power cut left");
+    if (stale) hal_fs_close(stale);
+    CHECK(listed("/me/notes", "deep") && !listed("/me/notes", "stale.bin.part"), "does not show in the list");
+    hal_fs_remove("/content/.m/owner/notes/stale.bin.part");
     CHECK(write_text("/me/notes/deep/a.txt", "replaced") == 0 && read_text("/me/notes/deep/a.txt", buf, sizeof buf) == 0 && !strcmp(buf, "replaced"), "an atomic write replaces");
     ink_fs_file_t *f;
     CHECK(ink_fs_open("/me/notes/deep/a.txt", INK_FS_WRITE | INK_FS_CREATE | INK_FS_EXCL, &f) == INK_FS_ERR_EXISTS, "exclusive create refuses an existing file");

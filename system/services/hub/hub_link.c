@@ -114,7 +114,7 @@ static struct {
     int keep;           /* realtime sessions open: stay connected (atomic) */
     uint64_t bg_next;   /* hub task: earliest time for the next background message while keep > 0 */
     void (*online_fn[4])(void *ctx);
-    void *online_ctx[2];
+    void *online_ctx[4];
     int nonline;
     size_t tx_bytes;    /* reserved: queued plus being queued */
     ink_hub_binary_fn bin_fn;

@@ -783,8 +783,9 @@ int vtk_current_core(void) { return tls_self && !K.in_isr ? tls_self->core : -1;
 const char *vtk_task_name(const vtk_task_t *t) { return t ? t->name : "?"; }
 int vtk_task_count(void) { return K.ntasks; }
 
-/* Host bytes the task's own code has used below its entry point (pattern scan of its own zone). */
-static size_t own_stack_used(const vtk_task_t *t) {
+/* Host bytes the task's own code has used below its entry point (pattern scan of its own zone). It reads a stack that
+ * may still be in use: a sanitizer's marks on it are not for this. */
+__attribute__((no_sanitize("address"))) static size_t own_stack_used(const vtk_task_t *t) {
     if (!t->entry) return 0; /* never ran */
     const uint8_t *p = t->own_lo;
     size_t n = (size_t)(t->entry - p), i = 0;
