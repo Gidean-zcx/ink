@@ -901,6 +901,22 @@ static void usb_tell(void) {
     osal_free(block);
 }
 
+int ink_fs_card_hold(void) {
+    int r = INK_FS_OK;
+    ink_svc_lock();
+    if (FS.usb_lent) r = INK_FS_ERR_USB;
+    else if (!hal_fs_card_present()) r = INK_FS_ERR_NO_CARD;
+    else FS.nopen++;
+    ink_svc_unlock();
+    return r;
+}
+
+void ink_fs_card_release(void) {
+    ink_svc_lock();
+    FS.nopen--;
+    ink_svc_unlock();
+}
+
 int ink_usb_disk_start(void) {
     if (FS.usb_lent) return INK_FS_OK;
     if (!hal_usb_host_connected()) return INK_FS_ERR_NO_HOST;

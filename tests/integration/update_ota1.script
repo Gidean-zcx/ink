@@ -1,0 +1,3 @@
+# Over the air: Wi-Fi for the hub, the battery full.
+@0       net   wifi
+@1200s   end

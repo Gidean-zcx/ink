@@ -13,6 +13,7 @@
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/crc.h"
+#include "ink/sys/file.h"
 #include "ink/sys/exec.h"
 #include "ink/sys/res.h"
 #include "ink/sys/svc.h"
@@ -85,7 +86,8 @@ static void ready_job(void *arg) { /* UI task */
 static void load_job(void *arg) { /* exec.bg */
     (void)arg;
     uint8_t *b = NULL;
-    int64_t size = hal_fs_size(PY_DICT_PATH);
+    bool held = ink_fs_card_hold() == INK_FS_OK; /* on a computer now: the small table until next time */
+    int64_t size = held ? hal_fs_size(PY_DICT_PATH) : -1;
     if (size > 0 && size <= DICT_MAX) {
         hal_file_t *f = hal_fs_open(PY_DICT_PATH, HAL_O_READ);
         b = f ? ink_mem_alloc("ime", INK_MEM_PSRAM, (size_t)size) : NULL;
@@ -96,12 +98,15 @@ static void load_job(void *arg) { /* exec.bg */
             got += (size_t)r;
         }
         if (f) hal_fs_close(f);
+        ink_fs_card_release();
+        held = false;
         if (b && (got != (size_t)size || !dict_ok(b, got))) {
             ink_probe_count("text.dict_bad");
             ink_mem_free(b);
             b = NULL;
         }
     }
+    if (held) ink_fs_card_release();
     dict_head_t h = {0};
     if (b) memcpy(&h, b, sizeof h);
     ink_svc_lock();

@@ -32,6 +32,7 @@
 #include "ink/sys/textinput.h"
 #include "ink/sys/time.h"
 #include "ink/sys/ui.h"
+#include "ink/sys/update.h"
 
 extern const ink_activity_t ink_app_home;
 extern const ink_app_def_t ink_appdef_home, ink_appdef_reader;
@@ -45,6 +46,7 @@ int ink_shell_confirm_card_init(void);
 int ink_shell_keyboard_init(void);
 int ink_bt_service_init(void);
 int ink_shell_member_gate_init(void);
+int ink_shell_update_card_init(void);
 
 void ink_main(void) {
     hal_log_write("ink: starting system services");
@@ -65,6 +67,7 @@ void ink_main(void) {
     if (ink_time_init() != 0) osal_panic("time service failed to start");
     if (ink_text_service_init() != 0) osal_panic("text input failed to start");
     if (ink_media_init() != 0 || ink_bt_service_init() != 0) osal_panic("media or Bluetooth failed to start");
+    if (ink_update_init() != 0) osal_panic("system upgrades failed to start");
     hal_device_info_t di;
     hal_device_get_info(&di);
     if (ink_camera_init() != 0 || (di.has_modem && ink_comm_init() != 0)) osal_panic("camera or communication service failed to start");
@@ -72,9 +75,10 @@ void ink_main(void) {
     if (ink_tools_init() != 0 || ink_system_actions_init() != 0 || ink_reader_actions_init() != 0 || ink_remote_init() != 0)
         osal_panic("action registry failed to start");
     if (ink_apps_init() != 0 || ink_app_register(&ink_appdef_home) != 0 || ink_app_register(&ink_appdef_reader) != 0) osal_panic("app directory failed to start");
-    if (ink_ui_start(&ink_app_home) != 0 || ink_ui_lock_mark_init() != 0 || ink_shell_interrupt_card_init() != 0 || ink_shell_confirm_card_init() != 0 || ink_shell_keyboard_init() != 0 || ink_shell_member_gate_init() != 0) osal_panic("ui failed to start");
+    if (ink_ui_start(&ink_app_home) != 0 || ink_ui_lock_mark_init() != 0 || ink_shell_interrupt_card_init() != 0 || ink_shell_confirm_card_init() != 0 || ink_shell_keyboard_init() != 0 || ink_shell_member_gate_init() != 0 || ink_shell_update_card_init() != 0) osal_panic("ui failed to start");
     ink_fs_refresh_state(); /* blocks on the card: here, not in anyone's way */
     ink_data_refresh_state();
     ink_power_battery_policy_start();
+    ink_update_boot_check();
     ink_probe_mark("system-started");
 }

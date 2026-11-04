@@ -113,8 +113,8 @@ static struct {
     tx_item_t *tx_free; /* the pool's unused items */
     int keep;           /* realtime sessions open: stay connected (atomic) */
     uint64_t bg_next;   /* hub task: earliest time for the next background message while keep > 0 */
-    void (*online_fn[4])(void *ctx);
-    void *online_ctx[4];
+    void (*online_fn[6])(void *ctx);
+    void *online_ctx[6];
     int nonline;
     size_t tx_bytes;    /* reserved: queued plus being queued */
     ink_hub_binary_fn bin_fn;
@@ -579,7 +579,7 @@ bool ink_hub_server_time(int64_t *unix_ms, uint32_t *round_trip_ms) {
 }
 
 int ink_hub_on_online(void (*fn)(void *ctx), void *ctx) {
-    if (H.nonline >= 4) return -1;
+    if (H.nonline >= 6) return -1;
     H.online_ctx[H.nonline] = ctx;
     H.online_fn[H.nonline++] = fn;
     return 0;

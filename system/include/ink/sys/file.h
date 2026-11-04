@@ -118,6 +118,10 @@ int ink_usb_disk_start(void);
 /** Take it back. 0, or INK_FS_ERR_NO_CARD when it does not mount again. */
 int ink_usb_disk_stop(void);
 bool ink_usb_disk_active(void);
+/** For the system's own folders on the card, which do not go through a path here: while it is held the card is not lent.
+ *  INK_FS_OK (and then ink_fs_card_release), or INK_FS_ERR_USB, INK_FS_ERR_NO_CARD. Hold it no longer than a file stays open. */
+int ink_fs_card_hold(void);
+void ink_fs_card_release(void);
 
 #ifdef __cplusplus
 }

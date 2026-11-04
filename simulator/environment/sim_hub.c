@@ -289,6 +289,56 @@ int sim_hub_events_seen(void) { return g_events.n; }
 const char *sim_hub_event_at(int i) { return i >= 0 && i < g_events.n && i < 32 ? g_events.text[i] : NULL; }
 const char *sim_hub_last_ask(void) { return g_last_ask; }
 
+/* What it offers (INK_SIM_UPDATE_PKG, an .inkfw from tools/inkfw): its header says which version; pieces of it in base64. */
+static void update_request(struct hal_ws *ws, uint64_t t, const cJSON *req, const cJSON *id, const char *method) {
+    const char *pkg = getenv("INK_SIM_UPDATE_PKG");
+    FILE *f = pkg ? fopen(pkg, "rb") : NULL;
+    cJSON *res = cJSON_CreateObject();
+    cJSON_AddStringToObject(res, "jsonrpc", "2.0");
+    cJSON_AddItemToObject(res, "id", cJSON_Duplicate(id, 1));
+    cJSON *r = cJSON_AddObjectToObject(res, "result");
+    if (!strcmp(method, "update/check")) {
+        char version[25] = "";
+        uint32_t code = 0;
+        long size = 0;
+        if (f) {
+            unsigned char h[76];
+            if (fread(h, 1, sizeof h, f) == sizeof h) {
+                memcpy(version, h + 48, 24);
+                memcpy(&code, h + 72, 4);
+            }
+            fseek(f, 0, SEEK_END);
+            size = ftell(f);
+        }
+        cJSON_AddStringToObject(r, "version", version);
+        cJSON_AddNumberToObject(r, "version_code", code);
+        cJSON_AddNumberToObject(r, "size", (double)size);
+    } else if (f) {
+        const cJSON *pr = cJSON_GetObjectItemCaseSensitive(req, "params");
+        long offset = (long)num_or(pr, "offset", 0), len = (long)num_or(pr, "len", 0);
+        static const char B64[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+        unsigned char *raw = malloc((size_t)len + 3);
+        char *text = malloc((size_t)len * 2 + 8);
+        fseek(f, offset, SEEK_SET);
+        size_t got = fread(raw, 1, (size_t)len, f), o = 0;
+        for (size_t i = 0; i < got; i += 3) {
+            uint32_t v = (uint32_t)raw[i] << 16 | (uint32_t)(i + 1 < got ? raw[i + 1] : 0) << 8 | (uint32_t)(i + 2 < got ? raw[i + 2] : 0);
+            text[o++] = B64[v >> 18 & 63];
+            text[o++] = B64[v >> 12 & 63];
+            text[o++] = i + 1 < got ? B64[v >> 6 & 63] : '=';
+            text[o++] = i + 2 < got ? B64[v & 63] : '=';
+        }
+        text[o] = 0;
+        cJSON_AddStringToObject(r, "data", text);
+        free(raw);
+        free(text);
+    }
+    if (f) fclose(f);
+    /* the link's speed: Wi-Fi of a few hundred kB/s */
+    send_json(ws, t + SIM_MS(20) + SIM_MS(cJSON_GetObjectItemCaseSensitive(r, "data") ? 40 : 0), res);
+    cJSON_Delete(res);
+}
+
 /* A response from the device to one of our tools/call requests. */
 static bool on_device_response(struct hal_ws *ws, uint64_t t, cJSON *msg) {
     const cJSON *id = cJSON_GetObjectItemCaseSensitive(msg, "id");
@@ -435,6 +485,11 @@ void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t 
         send_json(ws, t + SIM_MS(10), res);
         cJSON_Delete(res);
         sim_metric_add("hub.caps_list", 1);
+        cJSON_Delete(req);
+        return;
+    }
+    if (id && !strncmp(method, "update/", 7)) { /* system upgrades: the package a test put there */
+        update_request(ws, t, req, id, method);
         cJSON_Delete(req);
         return;
     }

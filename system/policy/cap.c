@@ -85,6 +85,7 @@ static ink_confirm_t confirm_for(const ink_cap_t *c, ink_source_t src) {
     }
     if (src == INK_SRC_CONFIRMED) return INK_CONFIRM_NONE;
     if (c->parent_pin && ink_member_any_pin()) return INK_CONFIRM_PARENT;
+    if (c->ask_by_hand) return INK_CONFIRM_DEVICE;
     if (src == INK_SRC_TOUCH || src == INK_SRC_KEY || src == INK_SRC_SYSTEM) return INK_CONFIRM_NONE;
     return k;
 }

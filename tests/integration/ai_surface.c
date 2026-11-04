@@ -45,6 +45,7 @@ static const struct {
     {"member.add", "id"}, {"member.remove", "id"}, {"camera.capture", NULL}, {"message.send", "to,text"}, {"message.list", NULL},
     {"call.dial", "number"}, {"call.answer", NULL}, {"call.hangup", NULL}, {"remote.open", ""}, {"reader.list_books", NULL},
     {"reader.open_book", "title"}, {"reader.next_page", NULL}, {"reader.prev_page", NULL}, {"reader.goto_page", "page"}, {"reader.read_page", NULL},
+    {"update.status", NULL}, {"update.check", NULL}, {"update.download", NULL},
     {NULL, NULL},
 };
 
@@ -56,18 +57,20 @@ static const struct {
     {"confirm.reject", "only a person on the device answers", "token"},
     {"member.unlock", "a PIN is entered on the device, it goes through nobody else", "id,pin"},
     {"member.set_pin", "a PIN is entered on the device, it goes through nobody else", "id,new_pin"},
+    {"system.upgrade", "a person installs: it may fetch and tell, the device is gone for minutes (design §12.7)", NULL},
+    {"system.upgrade_from_card", "a person installs: it may fetch and tell, the device is gone for minutes (design §12.7)", ""},
     {NULL, NULL, NULL},
 };
 
 static const char *const STATES[] = {
     "storage.user_free", "storage.free", "storage.card", "storage.mode", "usb.connected", "time.synced", "time.zone", "time.minute", "alarm.ringing", "notify.unread", "interrupt.active",
-    "confirm.pending", "app.foreground", "app.cards_rev", "power.state", "battery.level", "battery.charging", "battery.low", "member.current", "text.focused", "audio.now_playing", "audio.route", "audio.listening", "audio.recording", "media.state", "bt.connected", "bt.device", "bt.available", "wifi.state", "wifi.ssid", "member.authed", NULL,
+    "confirm.pending", "app.foreground", "app.cards_rev", "power.state", "battery.level", "battery.charging", "battery.low", "member.current", "text.focused", "audio.now_playing", "audio.route", "audio.listening", "audio.recording", "media.state", "bt.connected", "bt.device", "bt.available", "wifi.state", "wifi.ssid", "member.authed", "update.state", "update.version", "update.progress", NULL,
 };
 
-static const char *const SETTINGS[] = {"notify.dnd", "time.zone", "time.auto", "power.lock_after_s", "audio.volume", "audio.child_max", "voice.handsfree", "ai.read_clipboard", "member.idle_return_s", NULL};
+static const char *const SETTINGS[] = {"notify.dnd", "time.zone", "time.auto", "power.lock_after_s", "audio.volume", "audio.child_max", "voice.handsfree", "ai.read_clipboard", "member.idle_return_s", "update.auto_download", NULL};
 
 /* Events the design promises the AI hears about (the rest of the table by the same rule: registered is forwarded). */
-static const char *const EVENTS[] = {"data.write_failed", "file.changed", "file.job_done", "usb.changed", "alarm.fired", "reminder.fired", "time.changed", "notify.posted", "confirm.result", "app.state", "battery.low", "media.finished", "audio.record_done", "bt.changed", "wifi.changed", "member.changed", NULL};
+static const char *const EVENTS[] = {"data.write_failed", "file.changed", "file.job_done", "usb.changed", "alarm.fired", "reminder.fired", "time.changed", "notify.posted", "confirm.result", "app.state", "battery.low", "media.finished", "audio.record_done", "bt.changed", "wifi.changed", "member.changed", "update.available", "update.result", NULL};
 
 static int for_ai(const char *id) {
     for (int i = 0; FOR_AI[i].id; i++)

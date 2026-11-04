@@ -105,6 +105,7 @@ add_library(ink_port_sim STATIC
   ports/sim/hal/hal_storage_sim.c
   ports/sim/hal/hal_usb_sim.c
   ports/sim/hal/hal_bt_sim.c
+  ports/sim/hal/hal_ota_sim.c
   ports/sim/hal/hal_power_sim.c
   ports/sim/hal/hal_assets_sim.c
   ports/sim/hal/hal_net_sim.c
@@ -175,6 +176,8 @@ add_library(ink_system STATIC
   system/services/file/file_caps.c
   system/services/time/lunar.c
   system/services/time/time_service.c
+  system/services/update/update_service.c
+  system/ui/shell/update_card.c
   system/services/time/time_caps.c
   system/services/notify/notify_service.c
   system/services/notify/notify_caps.c
@@ -571,6 +574,16 @@ if(INK_HAVE_FONTS)
               --out ${CMAKE_BINARY_DIR}/test-out/text-${v} --quiet --no-random-outages)
   endforeach()
   # What the AI can reach, against the table in the design (tests/integration/ai_surface.c).
+  # System upgrades, boot after boot: over the air, from the card, what goes wrong with each.
+  add_executable(sim-update simulator/runtime/sim_main.c tests/integration/update.c)
+  target_link_libraries(sim-update PRIVATE ink_apps ink_system ink_port_sim)
+  target_compile_options(sim-update PRIVATE ${INK_WARN} -Wno-format-truncation) # a message cut short does no harm
+  add_test(NAME integration-update
+    COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:sim-update> -DPROFILE=${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+            -DASSETS=${INK_ASSETS_DIR} -DCONTENT=${INK_TEST_CONTENT} -DOUT=${CMAKE_BINARY_DIR}/test-out/update
+            -DSRC=${CMAKE_SOURCE_DIR}/tests/integration -DPY=${Python3_EXECUTABLE} -DTOOL=${CMAKE_SOURCE_DIR}/tools/inkfw/make_inkfw.py
+            -P ${CMAKE_SOURCE_DIR}/tests/integration/update.cmake)
+
   # Two tasks at the worst moment: the services built with that moment in them, instead of the library's.
   add_executable(sim-races simulator/runtime/sim_main.c tests/integration/races.c tests/integration/races_notify.c tests/integration/races_interrupt.c)
   target_link_libraries(sim-races PRIVATE ink_apps ink_system ink_port_sim)

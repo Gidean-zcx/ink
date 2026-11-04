@@ -1,0 +1,3 @@
+# On mobile data it does not.
+@0       net   lte
+@300s    end
