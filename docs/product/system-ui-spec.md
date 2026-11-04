@@ -1,6 +1,6 @@
 # 系统界面规范（第一版）
 
-更新日期：2026-11-04。状态：用户已确认视觉方向（“定了，铺开其余页面”）；交互和状态按 [Codex 设计审计](../audits/2026-11-04-codex-ui/report.md)修订过，首版缺的流程已经画了（第 7 节），设计原则按用户要求对齐乔布斯的理念（R-059，第 0 节）。设计稿在[私有画布](https://claude.ai/artifact/PtS48RHTy15aMKa4bgbRVJ)上，共 173 个画板，只有用户能打开，页面源文件也在那里，不在仓库。
+更新日期：2026-11-04。状态：用户已确认视觉方向（“定了，铺开其余页面”）；交互和状态按 [Codex 设计审计](../audits/2026-11-04-codex-ui/report.md)修订过，首版缺的流程已经画了（第 7 节），设计原则按用户要求对齐乔布斯的理念（R-059，第 0 节）。设计稿在[私有画布](https://claude.ai/artifact/PtS48RHTy15aMKa4bgbRVJ)上，共 175 个画板，只有用户能打开，页面源文件也在那里，不在仓库。
 
 相关文档：[界面参考](../research/system-ui-references.md)（依据和具体数值）、[系统应用分类](system-apps.md)、[底层依赖](../system/ui-dependencies.md)（每个界面还缺什么）、[家庭中枢设计](https://github.com/Gidean-zcx/ink/blob/claude/hub-design-8fd433/docs/hub/hub-architecture.md)、[系统服务设计](https://github.com/Gidean-zcx/ink/blob/claude/system-services/docs/system/system-services-design.md)（后两份在分支上，未合入）。
 
@@ -26,6 +26,8 @@
 8. **孩子碰不到墙。** 不能用的东西不显示，不是显示了再拦。
 9. **按钮和 AI 是同一件事。** 每屏说得清当前是谁、在看什么、能做什么、做完怎么呈现（第 10 节）。
 10. **说人话。** 用下面的词，不在屏幕上写说明书。
+
+另外用户定了一条全系统的规则（D-105、R-063，在中枢分支上，[概要设计 §7.5](https://github.com/Gidean-zcx/ink/blob/claude/hub-design-8fd433/docs/hub/hub-architecture.md#75-权限和确认卡)）：**默认自动，确认卡只留给高风险。** 用户原话：“自动帮我点吧 设计上尽量少一些确认卡 非高风险的系统设置都自动完成 非设置类的应该都能自动完成”。人亲口要求的事和非高风险的设置直接做，做完就地说结果，查得到（`AiLog`），能撤销的给撤销。
 
 用户看到的词（D-98，暂定）：
 
@@ -172,7 +174,7 @@ D-38（已定）：默认 10 分钟不操作自动锁屏；锁屏 = 画面保持
 
 ## 4. 页面清单
 
-画布上有 173 个画板，首版的在前面：
+画布上有 175 个画板，首版的在前面：
 
 | 组 | 画板 |
 | --- | --- |
@@ -180,8 +182,8 @@ D-38（已定）：默认 10 分钟不操作自动锁屏；锁屏 = 画面保持
 | 首次开机 | `FirstBoot`、`BootWifi`、`BootWifiPass`、`BootJoining`、`BootJoinFail`、`BootClaim`、`BootNoHub`、`BootConfirm`、`BootRestore`、`BootHello`、`BootRevoked` |
 | 家人和密码 | `Members`、`MembersBack`、`MemberSwitch`、`Pin`、`PinWrong`、`PinWait`、`PinForgot`、`PinSet`、`FactoryReset`、`FactoryDone` |
 | 孩子 | `KidHome`、`KidToday`、`KidApps`、`KidControl`、`KidLimit`、`KidTimeUp`、`SetKid` |
-| AI | `AiListen`、`AiListenTap`、`AiThink`、`Ai`、`AiLong`、`AiSpeak`、`AiOffline`、`AiTimeout`、`AiBudget`、`AiHome`、`AiAsk`、`AiReceipts` |
-| 确认卡 | `Confirm`、`ConfirmCall`、`ConfirmSetting`、`ConfirmWeb`、`ConfirmDelete`、`ConfirmParent`、`ConfirmExpired`、`StressConfirm` |
+| AI | `AiListen`、`AiListenTap`、`AiThink`、`Ai`、`AiLong`、`AiSpeak`、`AiOffline`、`AiTimeout`、`AiBudget`、`AiHome`、`AiAsk`、`AiLog`、`AiReceipts` |
+| 确认卡 | `ConfirmWeb`、`ConfirmSecret`、`ConfirmDelete`、`ConfirmParent`、`ConfirmSetting`、`Confirm`、`ConfirmCall`、`ConfirmExpired`、`StressConfirm` |
 | 键盘和语音 | `ImePinyin`、`ImeCandidates`、`ImeEdit`、`ImeLong`、`ImeSymbols`、`ImeAi`、`ImePassword`、`ImeVoice`、`ImeVoiceStates` |
 | 备忘 | `Memo`、`MemoDetail`、`MemoEdit`、`MemoRecord`、`MemoPending`、`MemoChecklist`、`MemoUndo`、`MemoSaveFail` |
 | 正在进行 | `MainPlaying`、`ControlPlaying`、`LockPlaying`、`MainInCall`、`Tasks` |
@@ -228,7 +230,7 @@ D-38（已定）：默认 10 分钟不操作自动锁屏；锁屏 = 画面保持
 
 ## 6. 没有验证的
 
-- 设计稿已用无头浏览器逐屏渲染（173 个画板，没有溢出，没有脚本错误），主要流程点过一遍。这只说明版面和链接，不说明实机效果。
+- 设计稿已用无头浏览器逐屏渲染（175 个画板，没有溢出，没有脚本错误），主要流程点过一遍。这只说明版面和链接，不说明实机效果。
 - 没有上过实机：浅灰和白能否分清、Outfit 细体的观感、所有刷新时间。
 - 灰底控件（设置分组的行、Dock）从灰变到别的颜色，能不能走快刷，要状态过渡和实机校准。
 - AI 键在机身上的位置资料里没有写，`BootHello` 的箭头要按实机调。
@@ -242,7 +244,7 @@ D-38（已定）：默认 10 分钟不操作自动锁屏；锁屏 = 画面保持
 按家庭中枢的配对设计（D-81，设计 §6.1）。三个点：连网、加入家庭、谁在用。
 
 1. **`FirstBoot`**：一件事，用手机扫码。二维码是设备自己的 Wi-Fi，手机上填网络。下面一行字“在设备上设置”（`BootWifi` → `BootWifiPass` → `BootJoining`，失败 `BootJoinFail`）。存储卡上有配对文件时自动跳过；已知网络和地址时跳过这一步。
-2. **`BootClaim`**：扫码加入家庭。码 10 分钟自动换；“用电脑加入”才露出加入码和确认码（两边数字要相同）。连不上家庭服务器（`BootNoHub`）也能先用起来：能读卡里的书、记备忘。
+2. **`BootClaim`**：扫码加入家庭。码 10 分钟自动换；“用电脑加入”才露出加入码和确认码，两个都填到电脑上，由页面比对（中枢设计 §6.1）。连不上家庭服务器（`BootNoHub`）也能先用起来：能读卡里的书、记备忘；这时记的备忘，加入家庭后归发起加入的大人（中枢设计 §6.2，建议）。
 3. **`BootConfirm`**：在设备上确认加入哪个家、谁发起的。有备份时 `BootRestore`。然后 `Members`。
 4. 大人第一次进来设密码（`PinSet`，中枢设计 §6.2）。
 5. **`BootHello`**：设置完落在一段能读的文字上，试一次“按住 AI 键问夜邮是什么意思”。这是第一个想拿给别人看的时刻（建议，D-99）。已有家庭回到上次的地方。
@@ -265,8 +267,9 @@ D-38（已定）：默认 10 分钟不操作自动锁屏；锁屏 = 画面保持
 
 - 面板：`AiListen`（按住）、`AiListenTap`（点按或叫名字）、`AiThink`、`Ai`（答案先出来，一句话，写“出自这一页”）、`AiLong`（讲细一点，翻页）、`AiSpeak`（读给你听，AI 键打断）。
 - 问不了时：`AiOffline`、`AiTimeout`、`AiBudget`（D-79：120% 后说“今天的额度用完了”，孩子说“可以问爸爸妈妈”）。主按钮都是“继续读”。
-- 结果：`AiReceipts` 列全了，做好了、一部分、等联网、不能做、过期、撤销不了、不确定、页面变了、换了人。**不确定就不自动重试**（中枢协议 §3.7）。
-- 确认：`Confirm`（短信，能改一下）、`ConfirmCall`、`ConfirmSetting`、`ConfirmWeb`（网页上已登录时点任何东西都要确认，D-85）、`ConfirmDelete`、`ConfirmParent`（卡上输大人密码）、`ConfirmExpired`、`StressConfirm`（内容长时翻完才能确认）。卡片写清楚对象、内容、以谁的身份、多久有效，由系统画。
+- 结果：`AiReceipts` 列全了，做好了、一部分、等联网、不能做、过期、对象不清楚先问一句、撤销不了、不确定、页面变了、换了人。**不确定就不自动重试**（中枢协议 §3.7）。
+- **默认自动**（D-105）：人亲口要求的发短信、打电话、在网页上点和填，以及非高风险的设置，都直接做，做完就地说结果（`AiHome`：“短信已发出”）。代价是 AI 可能做错、事后才知道，所以有 `AiLog`：做过的事都查得到，能撤销的给撤销。
+- **确认卡只留给高风险**（清单是助手的建议，用户可以改）：花钱（`ConfirmWeb`）、密码和证件（`ConfirmSecret`）、找不回来的删除（`ConfirmDelete`）、身份和权限（`ConfirmParent` 要输大人密码，`ConfirmSetting` 改孩子的规则）、把没提到的家庭资料发出去（`Confirm`）。不是人要求的对外动作，比如网页上写着让你打电话，也要问（`ConfirmCall`）。过期了 `ConfirmExpired`，内容长时翻完才能确认（`StressConfirm`）。卡片写清楚对象、内容、以谁的身份、多久有效，由系统画。
 
 ### 7.5 键盘和听写
 
@@ -340,18 +343,18 @@ D-85 用户选了首版做。`RemoteLoading`（第一屏最多等 1.5 秒）、`
 
 ## 10. 每屏 AI 能看什么、能做什么
 
-G-002 和 R-055（模块划分、AI 原生、可调用的都开放）。这张表是交付要求，按钮和 AI 走同一条能力（建议，等实现时逐页落实）：
+G-002 和 R-055（模块划分、AI 原生、可调用的都开放）。这张表是交付要求，按钮和 AI 走同一条能力；要确认的范围按 D-105（建议，等实现时逐页落实）：
 
 | 页面 | AI 能看到 | 不用确认就能做 | 要确认 | 只有人能做 |
 | --- | --- | --- | --- | --- |
 | 阅读、报纸 | 这一页的字、位置、选中的字 | 翻页、朗读、记备忘、加单词 | — | — |
 | 主屏、今日 | 今日卡片的数据、当前是谁 | 打开应用、接着读、接着听 | — | — |
-| 备忘 | 内容、清单 | 新建、改、勾选、加提醒 | 删除 | — |
-| 文件 | 当前这个人能看的列表 | 查找、拷贝、移动 | 删除、开 U 盘 | — |
-| 短信、电话 | 这个人的联系人和会话 | 查、起草 | 发送、拨号 | — |
-| 设置、控制中心 | 当前值 | 调亮度、暖光、音量 | 改系统设置、飞行 | — |
-| 键盘 | 输入类型和内容（密码只看到掩码） | 往框里写、提交 | 提交带来的动作按原动作确认 | — |
-| 网页 | 文字结构、带编号的链接 | 没登录的：翻页、点链接；登录的：只读和翻页 | 填写、提交；登录时点任何东西 | — |
+| 备忘 | 内容、清单 | 新建、改、勾选、加提醒、删一条（能撤销） | 批量删除 | — |
+| 文件 | 当前这个人能看的列表 | 查找、拷贝、移动 | 删除（找不回来）、开 U 盘 | — |
+| 短信、电话 | 这个人的联系人和会话 | 人亲口要求的发送和拨号；对象在这句话里找不到或同名时先问一句 | 人没要求的（网页或消息里写的）；把没提到的资料发出去 | — |
+| 设置、控制中心 | 当前值 | 亮度、音量、网络、通知、字体、飞行（能改回） | 改孩子的规则、增删家人、移除设备、恢复备份、换模型厂商 | 发起升级 |
+| 键盘 | 输入类型和内容（密码只看到掩码） | 往框里写、提交 | 提交带来的动作按原动作判断 | — |
+| 网页 | 文字结构、带编号的链接 | 人要求的翻页、点和填 | 花钱；填密码、验证码、证件号；把没提到的家庭资料填进去 | — |
 | 确认卡 | 卡片内容和状态 | 撤回自己发起的 | — | 确认、取消（只收触摸和按键） |
 | 锁屏、选人、密码 | 大人验证前一律没有 | — | — | 唤醒、输密码 |
 | 孩子的空间 | 孩子自己的数据 | 孩子白名单和页面动作的交集 | 要家长的 | — |
@@ -367,7 +370,7 @@ G-002 和 R-055（模块划分、AI 原生、可调用的都开放）。这张�
 | 读书问 AI，记下来，回原页 | `AiListen` → `AiThink` → `Ai`（记下来 → 已记下）→ 关闭 |
 | 听写被来电打断 | `ImeVoice` → `PhoneIncoming` → `ImeVoiceStates`（来电打断） |
 | 朗读被闹钟打断；通话时闹钟 | `AiSpeak` → `ClockRing`；第 8 节 |
-| AI 发短信的确认被打断 | `Confirm` → `ConfirmExpired`；`AiReceipts` |
+| AI 的确认被打断 | `ConfirmWeb` → `ConfirmExpired`；`AiReceipts` |
 | 长备忘，听写失败，改字，回来 | `ImeLong` → `ImeVoiceStates`（没听清）→ `ImeEdit` → `MemoEdit`；`MemoSaveFail` |
 | 没网继续用，恢复后补上 | `AiOffline`、`MemoRecord` → `MemoPending`；`BackupFail` → `Backup` |
 | 传输和更新出问题 | `TransferLive`、`TransferUsbBusy`、`TransferUsbFail`；`UpdateBlocked`、`UpdateFail`、`BootRecovery` |
