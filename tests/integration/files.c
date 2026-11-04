@@ -514,10 +514,10 @@ static void test_task(void *arg) {
     members();
     jobs();
     capabilities();
-    virtual_roots();
-    long_chinese();
     usb_disk();
     card_trouble();
+    virtual_roots();
+    long_chinese();
     ink_probe_count("test.finished");
 }
 
