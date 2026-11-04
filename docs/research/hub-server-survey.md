@@ -14,7 +14,7 @@
 4. **渲染用 Playwright + Chromium。** Lightpanda 没有图形渲染，给不了设备要的像素；Browserless 是 SSPL。一路浏览器按约 1 GB 内存算。
 5. **数据库用 SQLite，一家一个文件。** 隔离、备份、搬家、删除都最简单；用不上 PostgreSQL 的并发能力，以后要换也留了路。
 6. **许可证有两个坑**：EbookLib 和 PyMuPDF 都是 AGPL-3.0，内容转换改用 pdfminer.six、pypdfium2 和自己解析 EPUB；TEN 框架和 xiaozhi-server-go 是加了限制条件的 Apache 许可证，不用。
-7. **费用有条件在 D-07 的预算内。** 全家一天 50 轮对话的假设下，模型加语音约每月 50～210 元（§10），主要看主模型选谁；这个数对假设很敏感（§10.3 末尾），要看真实账本。
+7. **费用有条件在 D-07 的预算内。** 全家一天 50 轮对话的假设下，模型加语音约每月 50～210 元（§10），主要看主模型选谁；按用户的方向（DeepSeek）约 56～120 元（§10.3）。这个数对假设很敏感（§10.3 末尾），要看真实账本。
 
 ## 1. 小智服务端
 
@@ -151,6 +151,10 @@
 | 海外模型 | Anthropic 的支持地区列表里没有中国内地（官方页面），也没有香港（第三方整理）；OpenAI 2024-07 起停止向中国内地和香港提供 API（报道）。所以默认候选只列国内厂商 | 〔文档〕[Anthropic Supported Regions](https://www.anthropic.com/legal/supported-regions)；〔报道〕[Medianama](https://www.medianama.com/2025/09/223-anthropic-service-policy-update-bans-ai-access-chinese-firms/)、[整理文章](https://blog.eimoon.com/p/anthropic-supported-countries-regions-2026-04/) |
 | 配网 | 乐鑫推荐 `network_provisioning` 组件（SoftAP 或蓝牙，官方配手机 App）；手机扫 `WIFI:` 二维码加入热点并弹出页面的行为，这次没有查到权威资料，要实机试 | 〔文档〕[乐鑫组件](https://components.espressif.com/components/espressif/network_provisioning/versions/1.2.4/examples/wifi_prov) |
 | 穿透 | [frp](https://github.com/fatedier/frp)，Apache-2.0，11 万星 | 〔GitHub〕 |
+| 上海到东京的延迟 | WonderNetwork 的一对探针最近两周（约 2026-10-21 至 11-04）平均 132～293 ms，查的时候约 155 ms；同一来源东京到新加坡平均 65～74 ms；商家文章写从日本到上海 45～70 ms（未必代表普通线路）。没有权威的、分运营商和晚高峰的数据，要自己量 | 〔实测，第三方〕[WonderNetwork 上海—东京](https://wondernetwork.com/pings/Shanghai/Tokyo)、[东京—新加坡](https://wondernetwork.com/pings/Tokyo/Singapore)；〔报道〕[Varidata](https://www.varidata.com/blog/japan-servers-latency-to-various-regions-in-mainland-china/) |
+| 百炼的地域 | 北京、新加坡、法兰克福、东京、香港、弗吉尼亚六个地域；每个地域的密钥、地址、模型列表互相独立，不能混用；地域决定请求数据存在哪；东京只支持业务空间专属域名；第三方直供模型只在北京。实时语音合成的指南只列了新加坡和北京；价格页的东京部分只看到文本模型。**东京有没有实时语音没查到，要在控制台确认** | 〔文档〕[地域](https://www.alibabacloud.com/help/zh/model-studio/regions/)、[OpenAI 兼容](https://help.aliyun.com/zh/model-studio/developer-reference/compatibility-of-openai-with-dashscope)、[实时合成](https://www.alibabacloud.com/help/zh/model-studio/realtime-tts-user-guide)、[价格](https://www.alibabacloud.com/help/zh/model-studio/model-pricing) |
+| 豆包语音的地址 | 官方文档给的是 `wss://openspeech.bytedance.com/api/v3/sauc/bigmodel`；海外接入、BytePlus 有没有对应服务这次没查到 | 〔文档〕[火山引擎](https://www.volcengine.com/docs/6561/1354869) |
+| DeepSeek 的数据 | 隐私政策（2026-02-10）：境内运营收集和产生的个人信息存在中国境内；输入输出可能经加密和去标识后用于训练，关闭入口写的是账号设置里的“数据用于优化体验”，有没有覆盖 API 没写；不主动收集 14 岁以下儿童的个人信息。开放平台条款（2026-04-22）：没有列受限地区，没写 API 内容是否用于训练，也没写保留多久。**api.deepseek.com 实际在哪处理、从海外连有多慢，没查到** | 〔文档〕[隐私政策](https://cdn.deepseek.com/policies/zh-CN/deepseek-privacy-policy.html)、[开放平台条款](https://cdn.deepseek.com/policies/zh-CN/deepseek-open-platform-terms-of-service.html) |
 
 ## 10. 模型和语音的价格
 
@@ -190,6 +194,7 @@ DeepSeek 的忙时是北京时间工作日 9:00–12:00 和 14:00–18:00。“�
 | 豆包语音合成 2.0 | 3 元/万字符（按量） | 同上 |
 | 百炼向量 text-embedding-v4 | 0.5 元/百万 token | [百炼](https://help.aliyun.com/zh/model-studio/text-embedding-v4) |
 | 识别词表（热词） | 百炼：`vocabulary_id`，先建表再引用；Fun-ASR-Realtime 最多 2000 词，paraformer 最多 500 词。标点默认开；VAD 断句静音阈值默认 800 ms（200～6000 ms）。豆包：`boosting_table_id`，每表 5000 词，也能在请求里直传少量词 | [百炼 提升识别准确率](https://help.aliyun.com/zh/model-studio/improve-asr-accuracy)、[Paraformer SDK](https://help.aliyun.com/zh/model-studio/paraformer-real-time-speech-recognition-python-sdk)、[豆包 热词与上下文](https://docs.volcengine.com/docs/DoubaoVoice/hot-words-and-context?lang=zh) |
+| 百炼新加坡（国际） | fun-asr-realtime $0.00009/秒（免费额度 36000 秒）；qwen3-tts-flash-realtime、cosyvoice-v3-flash $0.13/万字符，cosyvoice-v3-plus $0.26/万字符；text-embedding-v4 $0.07/百万 token。页面用 $ 表示，按美元理解。东京的语音价格没有列 | [百炼](https://www.alibabacloud.com/help/zh/model-studio/model-pricing) |
 | 联网搜索 | DeepSeek 的 Search 5 元/千次；国内搜索接口约从 12 元/千次起 | [DeepSeek](https://api-docs.deepseek.com/zh-cn/quick_start/pricing)；[第三方对比](https://select.keenable.ai/r/web-search-apis-china-market-comparison/3G5FI8ZzfPffaploN_Zmqw) |
 
 一把密钥：百炼一个账号能调 Qwen、DeepSeek、Kimi、GLM 的模型，也有语音和向量（同一张价格表），配置向导最省事。〔建议〕以此起步，见 D-78。
@@ -224,6 +229,16 @@ DeepSeek 的忙时是北京时间工作日 9:00–12:00 和 14:00–18:00。“�
 | qwen3.8-max | 143 | **约 171** | 约 209 |
 | kimi-k3 | 258 | **约 286** | 约 324 |
 
+**按用户的方向（D-78：主模型 DeepSeek，语音豆包或阿里）**，其余假设不变，美元按 7 元算：
+
+| 语音用谁 | 语音部分 | 便宜模型和搜索 | 总计（DeepSeek 闲时 / 忙时） | 加可选项后 |
+| --- | --- | --- | --- | --- |
+| 百炼北京 | 22 | 7 | **约 56 / 84** | 约 94 / 122 |
+| 百炼新加坡 | 24 | 7 | **约 59 / 87** | 约 94 / 122 |
+| 豆包 | 57 | 7 | **约 92 / 120** | 约 206 / 234 |
+
+DeepSeek 的忙时是工作日白天，一家人晚上和周末用得多，实际应该更接近闲时那一列【推断】。用豆包又要预生成朗读时会超过 200 元的软上限，可以预生成走便宜的那家（声音会不一样）。
+
 可选项：报纸朗读预生成（18 万字，18 元）和一本书的朗读（20 万字，20 元）。用豆包语音时朗读是 3 倍价。对话量翻倍，主模型和语音部分也大约翻倍。语音输入（听写）没算在内：每天 5 分钟约每月多 3 元（150 分钟 × 0.00033 元/秒）。
 
 **这组数对假设很敏感**（Codex 用 `docs/audits/2026-11-04-codex-hub-design/experiments/cost_checks.py` 重算过，原假设下的算术基本正确）：
@@ -238,4 +253,4 @@ DeepSeek 的忙时是北京时间工作日 9:00–12:00 和 14:00–18:00。“�
 
 ## 修订记录
 
-- 2026-11-04：初稿。按用户要求去掉服务器价格。同日按 Codex 设计审查补充：费用的敏感性、模型语义差异、Caddy 的 IP 证书、SQLite 快照。
+- 2026-11-04：初稿。按用户要求去掉服务器价格。同日按 Codex 设计审查补充：费用的敏感性、模型语义差异、Caddy 的 IP 证书、SQLite 快照。用户选了日本服务器和混搭厂商后，补充：上海到东京的延迟、百炼的地域和国际价格、豆包语音的地址、DeepSeek 的数据条款、按用户方向的费用。
