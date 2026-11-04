@@ -1,0 +1,32 @@
+[
+  {
+    "id": "HUB4-001",
+    "verdict": "已解决",
+    "evidence": "【文档核查】docs/hub/hub-architecture.md:406、:408、:409、:410、:412：新机开放前旧机必须已停；计划内交接禁止自动启动，意外恢复要求人工停机，启动无法查明所有权时默认不开放。",
+    "note": "在首版接受人工确认的边界内关闭原双实例问题，不要求自动租约，不重报误确认残余风险。单实例成立后仍可漏读停机前新增的异地安全日志，另列 HUB5-001。已解决是设计层面判断。"
+  },
+  {
+    "id": "HUB4-002",
+    "verdict": "已解决",
+    "evidence": "【文档核查】docs/hub/hub-architecture.md:386、:418、:426；docs/hub/device-protocol.md:272：durable 同时要求内容和包含目录记录的完整快照异地成功，restic 完整成功且清单一致才算完成；未备份缓存不清，空间不足拒绝新任务。",
+    "note": "正文和协议一致，原来只确认字节导致恢复丢目录的反例已被挡住；恢复后 30 天内不做无引用清理提供额外缓冲。未做对象存储或恢复实测。"
+  },
+  {
+    "id": "HUB4-003",
+    "verdict": "改出了新问题",
+    "evidence": "【文档核查】docs/hub/hub-architecture.md:997、:1007、:1013；docs/hub/device-protocol.md:298、:299、:314。【复现】closed_path_controls 表明同一实例中旧快照重复使用和副本改变后的授权不会直接通过；grant_history_gap 表明新数据集首次携未用令牌报到时，history_gap=true 仍被判 continue。",
+    "note": "一次性授权关闭原重复使用旧快照绕过预览的路径；由 manifest 改为 continue 新增删除历史缺口路径，计为 HUB5-002。授权跨中枢恢复如何失效属于需落实的技术前提，其条件实验不另计问题。"
+  },
+  {
+    "id": "HUB4-004",
+    "verdict": "已解决",
+    "evidence": "【文档核查】docs/hub/hub-architecture.md:438、:1247；docs/hub/device-protocol.md:129：首版明确不轮换且不发 next_token；未来启用时，新认证状态异地持久化后才释放旧凭据。",
+    "note": "原问题仅在启用轮换时发生，首版关闭后反例不可达。不是对未来轮换方案完成验收的声明。"
+  },
+  {
+    "id": "HUB3-002",
+    "verdict": "已解决",
+    "evidence": "【文档核查】docs/hub/hub-architecture.md:999、:1004、:1009、:1013；docs/hub/device-protocol.md:296、:299、:301、:303。【复现】closed_path_controls：旧 hub_instance 的普通未知数据集回 wait，已用授权／副本已变的授权不能自动接续，未经新确认的 complete=false 回 wait。",
+    "note": "原来的旧实例或最新签发快照自动取得缺项删除权已取消。授权快捷分支的新问题只按 HUB5-002 计一次，不与本编号重复计算。"
+  }
+]

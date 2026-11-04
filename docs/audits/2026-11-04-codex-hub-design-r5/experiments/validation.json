@@ -1,0 +1,33 @@
+{
+  "status": "passed",
+  "reviewed_commit": "f7408cd9c014ada0754d60c71187a414318456b8",
+  "state_checks_exit_code": 0,
+  "tracked_files_unchanged": true,
+  "changes_confined_to_audit_directory": true,
+  "json_schema_checks": "passed",
+  "severity_counts": {
+    "严重": 1,
+    "高": 1
+  },
+  "verification_counts": {
+    "已解决": 4,
+    "改出了新问题": 1
+  },
+  "local_markdown_links_checked": 5,
+  "explicit_file_line_references_checked": 45,
+  "artifact_sizes_bytes": {
+    "report.md": 17189,
+    "findings.json": 3430,
+    "verification.json": 2843,
+    "experiments/results.json": 1846,
+    "experiments/README.md": 3346,
+    "experiments/state_checks.py": 10255
+  },
+  "source_sha256": {
+    "docs/hub/hub-architecture.md": "6d744f58191e0e7c79ac4d4c582b0d3eb2ac98afa0fc2ca172936900e885ef5b",
+    "docs/hub/device-protocol.md": "5c4fb267322ed3eea56a4b8f7b1720e049e488b60d013f09bd9b48ff59af42c1",
+    "docs/decisions/README.md": "7003deee5d75e7bda619dbeac8428765b33a166f858788d67157e517218537a9"
+  },
+  "note": "File integrity and bounded synthetic checks only; not product acceptance.",
+  "final_report_checked": true
+}

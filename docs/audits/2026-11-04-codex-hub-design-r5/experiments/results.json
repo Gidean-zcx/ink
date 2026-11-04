@@ -1,0 +1,60 @@
+{
+  "scope": "synthetic design transitions; no product execution",
+  "contract_anchors": {
+    "stop_before_open": true,
+    "read_log_before_stop_page": true,
+    "grant_fast_path": true,
+    "grant_ack_baseline": true,
+    "device_stores_grant": true,
+    "ack_allows_tombstone_prune": true,
+    "bounded_tombstones": true,
+    "blob_metadata_required": true,
+    "rotation_disabled": true
+  },
+  "read_log_then_stop": {
+    "old_server_stopped_before_new_open": true,
+    "remote_log_committed": 1,
+    "new_server_log_applied": 0,
+    "forgotten_record_visible": true,
+    "control_refetch_after_stop_visible": false
+  },
+  "grant_state_rollback": {
+    "grant_used_before_rollback": true,
+    "grant_used_in_restored_snapshot": false,
+    "hub_instance_changed": true,
+    "action": "continue",
+    "returned_acked_ver": 2,
+    "device_previous_acked_ver": 3,
+    "remaining_delete_tombstones": 0,
+    "deleted_records_still_in_hub": [
+      2
+    ],
+    "control_invalidate_prior_instance_action": "wait",
+    "control_after_new_preview_and_manifest_records": [
+      1
+    ]
+  },
+  "grant_history_gap": {
+    "hub_rollback": false,
+    "grant_previously_used": false,
+    "device_complete": true,
+    "reported_history_gap": true,
+    "action_on_first_report": "continue",
+    "increment_from_ver_matches_ack": true,
+    "retained_tombstones": 256,
+    "deleted_records_remaining_after_delta": [
+      1
+    ],
+    "later_status_if_gap_retained": "manifest",
+    "control_manifest_remaining_records": []
+  },
+  "closed_path_controls": {
+    "ordinary_unknown_old_instance": "wait",
+    "reused_grant_new_dataset": "wait",
+    "replica_changed_since_issue": "wait",
+    "incomplete_with_grant": "wait",
+    "first_install_unchanged": "continue",
+    "same_dataset_retry": "continue",
+    "known_dataset_after_hub_restore": "manifest"
+  }
+}

@@ -20,6 +20,7 @@
 | 2026-11-04 家庭中枢设计复核（同上，第二轮） | `claude/hub-design-8fd433` a740294（设计 v0.2） | [2026-11-04-codex-hub-design-r2/TASK.md](2026-11-04-codex-hub-design-r2/TASK.md) | [report.md](2026-11-04-codex-hub-design-r2/report.md)、[verification.json](2026-11-04-codex-hub-design-r2/verification.json)、[findings.json](2026-11-04-codex-hub-design-r2/findings.json)、[experiments/](2026-11-04-codex-hub-design-r2/experiments/README.md) | 原 25 条：已解决 15、部分 9、改出新问题 1；新问题严重 3、高 7。都成立，设计改到 v0.3，处理见下 |
 | 2026-11-04 家庭中枢设计复核（第三轮，小范围） | `claude/hub-design-8fd433` 1b7635a（设计 v0.4） | [2026-11-04-codex-hub-design-r3/TASK.md](2026-11-04-codex-hub-design-r3/TASK.md) | [report.md](2026-11-04-codex-hub-design-r3/report.md)、[verification.json](2026-11-04-codex-hub-design-r3/verification.json)、[findings.json](2026-11-04-codex-hub-design-r3/findings.json)、[experiments/](2026-11-04-codex-hub-design-r3/experiments/README.md) | 第二轮 10 条：已解决 7、部分 2、改出新问题 1；新问题严重 1、高 2。都成立，设计改到 v0.5，处理见下 |
 | 2026-11-04 家庭中枢设计复核（第四轮，小范围） | `claude/hub-design-8fd433` 2059f32（设计 v0.5） | [2026-11-04-codex-hub-design-r4/TASK.md](2026-11-04-codex-hub-design-r4/TASK.md) | [report.md](2026-11-04-codex-hub-design-r4/report.md)、[verification.json](2026-11-04-codex-hub-design-r4/verification.json)、[findings.json](2026-11-04-codex-hub-design-r4/findings.json)、[experiments/](2026-11-04-codex-hub-design-r4/experiments/README.md) | 第三轮 3 条：已解决 2、部分 1；新问题严重 2、高 2。都成立，设计改到 v0.6，处理见下 |
+| 2026-11-04 家庭中枢设计复核（第五轮，小范围） | `claude/hub-design-8fd433` f7408cd（设计 v0.6） | [2026-11-04-codex-hub-design-r5/TASK.md](2026-11-04-codex-hub-design-r5/TASK.md) | [report.md](2026-11-04-codex-hub-design-r5/report.md)、[verification.json](2026-11-04-codex-hub-design-r5/verification.json)、[findings.json](2026-11-04-codex-hub-design-r5/findings.json)、[experiments/](2026-11-04-codex-hub-design-r5/experiments/README.md) | 第四轮 4 条：已解决 3、改出新问题 1；第三轮余项已解决；新问题严重 1、高 1。都成立，设计改到 v0.7，处理见下 |
 | 2026-11-04 家庭中枢产品审查（产品负责人视角） | `claude/hub-design-8fd433` 2059f32（设计 v0.5） | [2026-11-04-codex-hub-jobs/TASK.md](2026-11-04-codex-hub-jobs/TASK.md) | [report.md](2026-11-04-codex-hub-jobs/report.md)、[findings.json](2026-11-04-codex-hub-jobs/findings.json) | 必须改 5、应该改 7、可以想 2；只看简单、专注、值得喜欢，处理见下 |
 
 此前的三次独立评审都由助手发起的子代理完成。问题与处理分别记在：
@@ -28,6 +29,19 @@
 - [刷新算法集成报告](../research/eink-refresh-integration.md)。
 
 审计报告回来后，逐条核实，再决定修复、记录或不处理，结果写回本表和相关文档。
+
+## 2026-11-04 家庭中枢设计复核（第五轮）：处理
+
+对象是设计 v0.6。Codex 的结论：第 1 步本机、合成数据的骨架可以开始，恢复规则还要修。助手重跑了 `state_checks.py`，两个反例都能复现，**都接受**。这一轮还没看到用户后来的 D-103～D-105。
+
+| 编号 | 级别 | 问题 | 处理 | 位置 |
+| --- | --- | --- | --- | --- |
+| HUB5-001 | 严重 | 核对页才让人停旧机，安全日志却已经读完，中间传上去的吊销和“忘掉”会漏 | 改顺序：先确认旧机已停（交接时看标记），马上写明现在是这一台，才取最终快照和日志；开放前再读一次日志。`handover` 先停写，标记绑定实例和最后位置 | 概要 §4.5 |
+| HUB5-002 | 高 | 恢复令牌直接接续增量，漏掉 `history_gap` | 令牌只负责认可新数据集；有 `history_gap` 走对账。令牌还绑定 `hub_instance`，中枢恢复过就作废 | 概要 §5.8；协议 §3.9 |
+
+顺手一起改了：示例模式由服务端检查；数据不完整时预览里只能选用中枢的；说清“已备份”指设备和中枢各有一份。
+
+助手接着自查用户新定的 D-105，补了两处：发短信、打电话、分享留 3 秒撤销（免按键时电视里的话也可能触发）；“把家庭资料发出去”按这一轮读过什么、要发的内容里有什么来判断，不听模型的。
 
 ## 2026-11-04 家庭中枢产品审查：处理
 
