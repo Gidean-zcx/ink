@@ -583,7 +583,12 @@ static int load(ink_db_t *c) {
     bool bad = false;
     c->next_id = 1;
     if (snap_path(c, path, sizeof path) < 0) return -1;
-    if (ink_storage_load(path, &buf, &len) == 0 && buf) {
+    int got = ink_storage_load(path, &buf, &len);
+    if (got == INK_STORAGE_LOAD_FAILED) { /* it is there and cannot be had now: opened empty, the next write would bury it */
+        ink_probe_count("data.load_error");
+        return -1;
+    }
+    if (got == 0 && buf) {
         snap_hdr_t h;
         bool ok = len >= sizeof h;
         bool magic = false;
@@ -619,7 +624,12 @@ static int load(ink_db_t *c) {
     }
     for (uint32_t g = c->snap_gen; g <= c->snap_gen + 1; g++) {
         if (log_path(c, g, path, sizeof path) < 0) return -1;
-        if (ink_storage_load(path, &buf, &len) != 0) continue;
+        got = ink_storage_load(path, &buf, &len);
+        if (got == INK_STORAGE_LOAD_FAILED) {
+            ink_probe_count("data.load_error");
+            return -1;
+        }
+        if (got != 0) continue;
         c->gen = g;
         if (g == c->snap_gen + 1) c->old_bytes = c->gen_bytes;
         c->gen_bytes = len;

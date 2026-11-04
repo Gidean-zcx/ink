@@ -83,6 +83,8 @@ int ink_fs_move(const char *from, const char *to);
 /** Replace or create a whole file through a temporary one. */
 int ink_fs_write_atomic(const char *path, const void *data, size_t n);
 int ink_fs_free(uint64_t *free_bytes, uint64_t *total_bytes);
+/** A member was removed: their folder, which nobody can delete by its path. Blocks on the card. INK_FS_OK, or why not. */
+int ink_fs_forget_member(const char *id);
 /** Factory reset: every member's files, what is downloaded and the cache. The family's shared content stays. */
 void ink_fs_wipe_personal(void);
 

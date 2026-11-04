@@ -435,10 +435,24 @@ static void due_cb(void *arg) { /* timer task */
 /* The clock moved or the zone changed: what is ahead is worked out again; what is due now stays due. */
 static void clock_moved(void) {
     int64_t now = ink_time_now_s();
-    ink_svc_lock();
-    for (int i = 0; i < T.n; i++)
-        if (T.a[i].enabled && (!T.a[i].next_s || T.a[i].next_s > now)) T.a[i].next_s = next_of(&T.a[i], now);
-    ink_svc_unlock();
+    ink_alarm_t *a = osal_malloc(sizeof *a, OSAL_MEM_EXTERNAL);
+    for (int i = 0;; i++) {
+        bool any = false, changed = false;
+        ink_svc_lock();
+        if (i < T.n) {
+            any = true;
+            if (T.a[i].enabled && (!T.a[i].next_s || T.a[i].next_s > now)) {
+                int64_t next = next_of(&T.a[i], now);
+                changed = next != T.a[i].next_s;
+                T.a[i].next_s = next;
+                if (changed && a) *a = T.a[i];
+            }
+        }
+        ink_svc_unlock();
+        if (!any) break;
+        if (changed && a) save_alarm(a); /* the next boot starts from what holds now */
+    }
+    osal_free(a);
     publish_minute();
     reschedule();
 }
@@ -658,8 +672,8 @@ int ink_time_init(void) {
     load_alarms();
     if (T.valid) { /* what was due while it was off comes up as late: reported, not rung */
         int64_t now = ink_time_now_s();
-        for (int i = 0; i < T.n; i++)
-            if (T.a[i].enabled && !T.a[i].next_s) T.a[i].next_s = next_of(&T.a[i], now);
+        for (int i = 0; i < T.n; i++) /* what is ahead by today's rules and zone: a power cut may have come before it was saved */
+            if (T.a[i].enabled && (!T.a[i].next_s || T.a[i].next_s > now)) T.a[i].next_s = next_of(&T.a[i], now);
         publish_minute();
         minute_cb(NULL);
         reschedule();

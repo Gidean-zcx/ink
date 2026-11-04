@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "cJSON.h"
 #include "ink/sys/ai.h"
 #include "ink/sys/confirm.h"
 #include "ink/sys/hub.h"
@@ -21,34 +22,41 @@
 
 #include "whole_product.h"
 
-/* What the AI can call. On its own page where it says so. */
-static const char *const FOR_AI[] = {
-    "caps.domains", "caps.find", "system.undo", "system.home", "system.full_refresh", "system.set_volume", "system.switch_member", "system.shutdown", "system.factory_reset",
-    "state.list", "settings.list", "settings.get", "settings.set",
-    "data.collections", "data.list", "data.get", "data.put", "data.delete",
-    "file.list", "file.stat", "file.read", "file.write", "file.mkdir", "file.copy", "file.move", "file.delete", "file.free", "usb.status", "usb.mount", "usb.unmount",
-    "time.now", "time.set", "time.lunar", "alarm.set", "alarm.list", "alarm.cancel", "alarm.dismiss", "alarm.snooze", "reminder.add", "reminder.list", "reminder.cancel",
-    "notify.post", "notify.list", "notify.read", "notify.dismiss", "notify.clear", "notify.channels", "notify.set_channel", "interrupt.list", "interrupt.ack",
-    "confirm.list", "confirm.withdraw",
-    "app.list", "app.open", "app.close", "app.cards",
-    "text.state", "text.insert", "text.submit", "clipboard.read", "clipboard.write",
-    "media.play", "media.pause", "media.resume", "media.seek", "media.stop", "media.status", "audio.record", "audio.record_stop",
-    "bt.scan", "bt.list", "bt.pair", "bt.connect", "bt.disconnect", "bt.forget",
-    "wifi.scan", "wifi.list", "wifi.connect", "wifi.forget", "member.list", "member.add", "member.remove", "system.reboot",
-    "camera.capture", "message.send", "message.list", "call.dial", "call.answer", "call.hangup", "remote.open",
-    "reader.list_books", "reader.open_book", "reader.next_page", "reader.prev_page", "reader.goto_page", "reader.read_page",
-    NULL,
+/* What the AI can call, on its own page where it says so, and what each must be given: the names it cannot do without,
+ * "" when all it takes is optional, NULL when it takes nothing. Without these the model has only a name to go on. */
+static const struct {
+    const char *id, *args;
+} FOR_AI[] = {
+    {"caps.domains", NULL}, {"caps.find", "query"}, {"system.undo", "object"}, {"system.home", NULL}, {"system.full_refresh", NULL},
+    {"system.set_volume", "percent"}, {"system.switch_member", "id"}, {"system.shutdown", NULL}, {"system.factory_reset", NULL},
+    {"system.reboot", NULL}, {"state.list", NULL}, {"settings.list", NULL}, {"settings.get", "id"}, {"settings.set", "id,value"},
+    {"data.collections", NULL}, {"data.list", "collection"}, {"data.get", "collection,id"}, {"data.put", "collection,value"},
+    {"data.delete", "collection,id"}, {"file.list", "path"}, {"file.stat", "path"}, {"file.read", "path"}, {"file.write", "path,text"},
+    {"file.mkdir", "path"}, {"file.copy", "from,to"}, {"file.move", "from,to"}, {"file.delete", "path"}, {"file.free", NULL}, {"usb.status", NULL},
+    {"usb.mount", NULL}, {"usb.unmount", NULL}, {"time.now", NULL}, {"time.set", "utc_s"}, {"time.lunar", ""}, {"alarm.set", "hour,minute"},
+    {"alarm.list", NULL}, {"alarm.cancel", "id"}, {"alarm.dismiss", ""}, {"alarm.snooze", ""}, {"reminder.add", "at,title"}, {"reminder.list", NULL},
+    {"reminder.cancel", "id"}, {"notify.post", "title"}, {"notify.list", ""}, {"notify.read", ""}, {"notify.dismiss", "id"}, {"notify.clear", NULL},
+    {"notify.channels", NULL}, {"notify.set_channel", "id,enabled"}, {"interrupt.list", NULL}, {"interrupt.ack", NULL}, {"confirm.list", NULL},
+    {"confirm.withdraw", "token"}, {"app.list", NULL}, {"app.open", "id"}, {"app.close", "id"}, {"app.cards", NULL}, {"text.state", NULL},
+    {"text.insert", "text"}, {"text.submit", NULL}, {"clipboard.read", NULL}, {"clipboard.write", "text"}, {"media.play", "path"},
+    {"media.pause", NULL}, {"media.resume", NULL}, {"media.seek", "ms"}, {"media.stop", NULL}, {"media.status", NULL}, {"audio.record", ""},
+    {"audio.record_stop", NULL}, {"bt.scan", NULL}, {"bt.list", NULL}, {"bt.pair", "addr"}, {"bt.connect", "addr"}, {"bt.disconnect", NULL},
+    {"bt.forget", "addr"}, {"wifi.scan", NULL}, {"wifi.list", NULL}, {"wifi.connect", "ssid"}, {"wifi.forget", "ssid"}, {"member.list", NULL},
+    {"member.add", "id"}, {"member.remove", "id"}, {"camera.capture", NULL}, {"message.send", "to,text"}, {"message.list", NULL},
+    {"call.dial", "number"}, {"call.answer", NULL}, {"call.hangup", NULL}, {"remote.open", ""}, {"reader.list_books", NULL},
+    {"reader.open_book", "title"}, {"reader.next_page", NULL}, {"reader.prev_page", NULL}, {"reader.goto_page", "page"}, {"reader.read_page", NULL},
+    {NULL, NULL},
 };
 
 /* What it cannot, and why. */
 static const struct {
-    const char *id, *why;
+    const char *id, *why, *args;
 } NOT_FOR_AI[] = {
-    {"confirm.accept", "only a person on the device can say yes"},
-    {"confirm.reject", "only a person on the device answers"},
-    {"member.unlock", "a PIN is entered on the device, it goes through nobody else"},
-    {"member.set_pin", "a PIN is entered on the device, it goes through nobody else"},
-    {NULL, NULL},
+    {"confirm.accept", "only a person on the device can say yes", "token"},
+    {"confirm.reject", "only a person on the device answers", "token"},
+    {"member.unlock", "a PIN is entered on the device, it goes through nobody else", "id,pin"},
+    {"member.set_pin", "a PIN is entered on the device, it goes through nobody else", "id,new_pin"},
+    {NULL, NULL, NULL},
 };
 
 static const char *const STATES[] = {
@@ -61,23 +69,22 @@ static const char *const SETTINGS[] = {"notify.dnd", "time.zone", "time.auto", "
 /* Events the design promises the AI hears about (the rest of the table by the same rule: registered is forwarded). */
 static const char *const EVENTS[] = {"data.write_failed", "file.changed", "file.job_done", "usb.changed", "alarm.fired", "reminder.fired", "time.changed", "notify.posted", "confirm.result", "app.state", "battery.low", "media.finished", "audio.record_done", "bt.changed", "wifi.changed", "member.changed", NULL};
 
-static bool in_list(const char *const *list, const char *id) {
-    for (; *list; list++)
-        if (!strcmp(*list, id)) return true;
-    return false;
+static int for_ai(const char *id) {
+    for (int i = 0; FOR_AI[i].id; i++)
+        if (!strcmp(FOR_AI[i].id, id)) return i;
+    return -1;
 }
 
-static const char *not_for_ai(const char *id) {
+static int not_for_ai(const char *id) {
     for (int i = 0; NOT_FOR_AI[i].id; i++)
-        if (!strcmp(NOT_FOR_AI[i].id, id)) return NOT_FOR_AI[i].why;
-    return NULL;
+        if (!strcmp(NOT_FOR_AI[i].id, id)) return i;
+    return -1;
 }
 
-/* The tool list, as the hub gets it. */
-static char *g_tools;
-static size_t g_tools_len;
+/* The tool list, as the hub gets it: every page parsed, every entry kept. */
+static cJSON *g_tools;
 static const char *g_method;
-static char g_params[64];
+static char g_params[128];
 
 static void ask_event(void *arg) {
     (void)arg;
@@ -94,33 +101,53 @@ static const char *ask_device(const char *method, const char *params) {
 }
 
 static void fetch_tools(void) {
-    g_tools = malloc(128 * 1024);
-    g_tools[0] = 0;
-    g_tools_len = 0;
+    g_tools = cJSON_CreateObject();
     char cursor[64] = "{}";
     int pages = 0;
     for (;;) {
         const char *reply = ask_device("tools/list", cursor);
         CHECK(reply != NULL, "the device answers tools/list");
         if (!reply) return;
-        size_t n = strlen(reply);
-        if (g_tools_len + n < 128 * 1024 - 1) {
-            memcpy(g_tools + g_tools_len, reply, n + 1);
-            g_tools_len += n;
+        cJSON *page = cJSON_Parse(reply);
+        const cJSON *result = cJSON_GetObjectItem(page, "result"), *tool;
+        CHECK(cJSON_IsArray(cJSON_GetObjectItem(result, "tools")), "page %d is whole JSON with its tools", pages);
+        cJSON_ArrayForEach(tool, cJSON_GetObjectItem(result, "tools")) {
+            const cJSON *name = cJSON_GetObjectItem(tool, "name");
+            CHECK(cJSON_IsString(name) && !cJSON_GetObjectItem(g_tools, name->valuestring), "a tool once, with a name");
+            cJSON_AddItemToObject(g_tools, cJSON_IsString(name) ? name->valuestring : "?", cJSON_Duplicate(tool, 1));
         }
+        const cJSON *next = cJSON_GetObjectItem(result, "nextCursor");
         pages++;
-        const char *next = strstr(reply, "\"nextCursor\":\"");
+        if (cJSON_IsString(next)) snprintf(cursor, sizeof cursor, "{\"cursor\":\"%s\"}", next->valuestring);
+        cJSON_Delete(page);
         if (!next) break;
-        int c = atoi(next + 14);
-        snprintf(cursor, sizeof cursor, "{\"cursor\":\"%d\"}", c);
     }
     CHECK(pages >= 2, "more than fits one page, so it comes in pages (%d)", pages);
 }
 
-static bool tool_listed(const char *id) {
-    char needle[64];
-    snprintf(needle, sizeof needle, "\"name\":\"%s\"", id);
-    return strstr(g_tools, needle) != NULL;
+/* What it says it takes against what the table says it must be given (audit AUD15-009: without this a capability could lose
+ * its description and the test would not notice). */
+static void takes(const char *id, const cJSON *schema, const char *args) {
+    CHECK(cJSON_IsObject(schema), "%s: there is a schema", id);
+    CHECK(cJSON_IsString(cJSON_GetObjectItem(schema, "type")) && !strcmp(cJSON_GetObjectItem(schema, "type")->valuestring, "object"), "%s: its arguments are an object", id);
+    const cJSON *props = cJSON_GetObjectItem(schema, "properties"), *req = cJSON_GetObjectItem(schema, "required"), *r;
+    if (!args) {
+        CHECK(!cJSON_GetArraySize(props), "%s takes nothing: it says nothing else", id);
+        return;
+    }
+    CHECK(cJSON_GetArraySize(props) > 0, "%s takes something: it says what", id);
+    int want = 0;
+    char name[32];
+    for (const char *p = args; *p; want++) {
+        const char *e = strchr(p, ',');
+        size_t n = e ? (size_t)(e - p) : strlen(p);
+        snprintf(name, sizeof name, "%.*s", (int)n, p);
+        bool listed = false;
+        cJSON_ArrayForEach(r, req) listed = listed || !strcmp(r->valuestring, name);
+        CHECK(listed && cJSON_GetObjectItem(props, name), "%s cannot do without %s: it says so", id, name);
+        p += n + (e != NULL);
+    }
+    CHECK(cJSON_GetArraySize(req) == want, "%s: nothing else is required (%d, %d)", id, cJSON_GetArraySize(req), want);
 }
 
 static void the_tools(void) {
@@ -130,25 +157,58 @@ static void the_tools(void) {
     for (int i = 0; ink_cap_at(i); i++) {
         const ink_cap_t *c = ink_cap_at(i);
         if (c->form == INK_FORM_EVENT) continue;
-        bool want = in_list(FOR_AI, c->id);
-        const char *why = not_for_ai(c->id);
-        CHECK(want != (why != NULL), "%s must be in exactly one table: for the AI, or not with the reason", c->id);
+        int yes = for_ai(c->id), no = not_for_ai(c->id);
+        CHECK((yes >= 0) != (no >= 0), "%s must be in exactly one table: for the AI, or not with the reason", c->id);
         CHECK(c->title && c->title[0], "%s has a title", c->id);
-        if (c->input) CHECK(strstr(c->input, "\"type\":\"object\""), "%s: its arguments are a schema", c->id);
+        const cJSON *tool = cJSON_GetObjectItem(g_tools, c->id);
         bool here = !c->activity; /* what belongs to a page is listed on that page */
-        if (want && here) CHECK(tool_listed(c->id), "%s is in the tool list the hub gets", c->id);
-        if (why) CHECK(!tool_listed(c->id), "%s must not be in it (%s)", c->id, why);
-        if (want) callable++;
+        if (yes >= 0 && here) {
+            CHECK(tool != NULL, "%s is in the tool list the hub gets", c->id);
+            const cJSON *title = cJSON_GetObjectItem(tool, "title");
+            CHECK(cJSON_IsString(title) && title->valuestring[0], "%s: with a title there", c->id);
+            takes(c->id, cJSON_GetObjectItem(tool, "inputSchema"), FOR_AI[yes].args);
+        } else {
+            if (no >= 0) CHECK(!tool, "%s must not be in it (%s)", c->id, NOT_FOR_AI[no].why);
+            cJSON *own = cJSON_Parse(c->input ? c->input : "{\"type\":\"object\"}"); /* not listed from here: what it declares */
+            takes(c->id, own, yes >= 0 ? FOR_AI[yes].args : no >= 0 ? NOT_FOR_AI[no].args : NULL);
+            cJSON_Delete(own);
+        }
+        if (yes >= 0) callable++;
     }
     /* nothing in the tables that is not there */
-    for (int i = 0; FOR_AI[i]; i++) CHECK(ink_cap_find(FOR_AI[i]) != NULL, "%s is in the table but not registered", FOR_AI[i]);
+    for (int i = 0; FOR_AI[i].id; i++) CHECK(ink_cap_find(FOR_AI[i].id) != NULL, "%s is in the table but not registered", FOR_AI[i].id);
     for (int i = 0; NOT_FOR_AI[i].id; i++) CHECK(ink_cap_find(NOT_FOR_AI[i].id) != NULL, "%s is in the table but not registered", NOT_FOR_AI[i].id);
     CHECK(callable > 50, "the table is not empty (%d)", callable);
     /* what the design promises for finding things */
     CHECK(AI("caps.domains", NULL) && strstr(g_result, "notify") && strstr(g_result, "file") && strstr(g_result, "app"), "a directory of domains (%s)", g_result);
     CHECK(AI("caps.find", "{\"query\":\"通知\"}") && strstr(g_result, "notify.list"), "and a search (%s)", g_result);
-    free(g_tools);
+    cJSON_Delete(g_tools);
     g_tools = NULL;
+}
+
+/* A record as large as there can be, all the way to the hub: a tool's answer as the model gets it (audit AUD15-004). */
+static const ink_db_def_t BIG = {.name = "test.big", .title = "大记录", .scope = INK_DB_DEVICE, .schema = 1, .json = true, .ai_read = true};
+
+static void a_large_answer(void) {
+    CHECK(ink_db_register(&BIG) == 0, "registered");
+    ink_db_t *db = ink_db_open(&BIG, NULL);
+    static char v[INK_DB_RECORD_MAX];
+    size_t n = (size_t)snprintf(v, sizeof v, "{\"text\":\"");
+    while (n + 3 < sizeof v) v[n++] = 'x';
+    v[n++] = '"';
+    v[n++] = '}';
+    uint32_t id = 0;
+    ink_db_write_t w = {.data = v, .len = n};
+    CHECK(db && ink_db_put(db, &w, &id) == INK_DB_OK, "the largest there can be");
+    ink_db_close(db);
+    char params[96];
+    snprintf(params, sizeof params, "{\"name\":\"data.get\",\"arguments\":{\"collection\":\"test.big\",\"id\":%u}}", (unsigned)id);
+    const char *reply = ask_device("tools/call", params);
+    cJSON *j = cJSON_Parse(reply ? reply : "");
+    const cJSON *receipt = cJSON_GetObjectItem(j, "result"), *value = cJSON_GetObjectItem(cJSON_GetObjectItem(receipt, "result"), "value");
+    const cJSON *text = cJSON_GetObjectItem(value, "text");
+    CHECK(cJSON_IsString(text) && strlen(text->valuestring) == n - 11, "the hub gets all of it, as JSON (%zu)", reply ? strlen(reply) : 0);
+    cJSON_Delete(j);
 }
 
 static void state_and_settings(void) {
@@ -253,6 +313,7 @@ static void test_task(void *arg) {
     ink_hub_demand();
     CHECK(WAIT_FOR(ink_hub_online(), 30000), "online");
     the_tools();
+    a_large_answer();
     state_and_settings();
     events_reach_the_hub();
     what_goes_with_a_question();

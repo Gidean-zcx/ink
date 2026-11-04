@@ -617,17 +617,17 @@ int ink_storage_load(const char *path, void **out, size_t *len) {
     *out = NULL;
     *len = 0;
     int64_t size = ink_storage_size(path);
-    if (size < 0) return -1;
+    if (size < 0) return INK_STORAGE_NO_FILE;
     if (size == 0) return 0;
     const char *prev = osal_mem_tag("storage");
     uint8_t *buf = osal_malloc((size_t)size, OSAL_MEM_EXTERNAL);
     osal_mem_tag(prev);
-    if (!buf) return -1;
+    if (!buf) return INK_STORAGE_LOAD_FAILED;
     load_req_t q = {.path = path, .buf = buf, .cap = (size_t)size};
     ink_storage_run(load_fn, &q, false);
     if (q.got != size) {
         osal_free(buf);
-        return -1;
+        return INK_STORAGE_LOAD_FAILED;
     }
     *out = buf;
     *len = (size_t)size;

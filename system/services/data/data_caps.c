@@ -12,8 +12,8 @@
 #include "ink/sys/data.h"
 #include "ink/sys/json.h"
 
-#define RESULT_CAP 4096
-#define VALUE_CAP 2048
+#define VALUE_CAP (INK_DB_RECORD_MAX + 1)
+#define RESULT_CAP (2 * INK_DB_RECORD_MAX + 512) /* a record goes in as it is: a page has room for at least one, whole */
 #define UNDO_MS 10000
 
 static const char *const SRC_NAME[] = {"touch", "key", "ai", "system", "app", "remote", "confirmed"};
@@ -175,6 +175,10 @@ static void cap_get(ink_call_t *c) {
         ink_jw_init(&w, out, RESULT_CAP);
         rec_json(&w, &r, value);
         if (!w.overflow) ink_cap_result(c, out);
+        else {
+            c->rc.status = INK_RC_FAILED;
+            snprintf(c->rc.detail, sizeof c->rc.detail, "too long");
+        }
     }
     osal_free(value);
     osal_free(out);

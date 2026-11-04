@@ -571,6 +571,17 @@ if(INK_HAVE_FONTS)
               --out ${CMAKE_BINARY_DIR}/test-out/text-${v} --quiet --no-random-outages)
   endforeach()
   # What the AI can reach, against the table in the design (tests/integration/ai_surface.c).
+  # Two tasks at the worst moment: the services built with that moment in them, instead of the library's.
+  add_executable(sim-races simulator/runtime/sim_main.c tests/integration/races.c tests/integration/races_notify.c tests/integration/races_interrupt.c)
+  target_link_libraries(sim-races PRIVATE ink_apps ink_system ink_port_sim)
+  target_compile_options(sim-races PRIVATE ${INK_WARN} -Wno-format-truncation) # a message cut short does no harm
+  add_test(NAME integration-races
+    COMMAND sim-races --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+            --budget ${CMAKE_SOURCE_DIR}/tests/integration/races.budget.json
+            --script ${CMAKE_SOURCE_DIR}/tests/integration/races.script
+            --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+            --out ${CMAKE_BINARY_DIR}/test-out/races --quiet --no-random-outages)
+
   add_executable(sim-ai-surface simulator/runtime/sim_main.c tests/integration/ai_surface.c)
   target_link_libraries(sim-ai-surface PRIVATE ink_apps ink_system ink_port_sim)
   target_compile_options(sim-ai-surface PRIVATE ${INK_WARN} -Wno-format-truncation) # a message cut short does no harm

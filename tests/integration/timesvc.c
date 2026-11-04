@@ -461,6 +461,53 @@ static void reboot2(void) { /* booted 5 minutes later: --wall-start */
     ink_alarm_dismiss(0);
 }
 
+/* A change of zone across a restart (audit AUD15-008). */
+static const ink_db_def_t ALARMS_ON_FLASH = {.name = "time.alarms", .scope = INK_DB_DEVICE, .schema = 1};
+
+static void zone1(void) { /* 08:00 where it starts */
+    ink_alarm_t a = {.kind = INK_ALARM, .repeat = INK_REPEAT_WEEKDAYS, .weekdays = 0x7F, .hour = 9};
+    snprintf(a.title, sizeof a.title, "saved");
+    ink_alarm_t b = {.kind = INK_ALARM, .repeat = INK_REPEAT_WEEKDAYS, .weekdays = 0x7F, .hour = 10};
+    snprintf(b.title, sizeof b.title, "cut off");
+    int ia = ink_alarm_add(&a), ib = ink_alarm_add(&b);
+    CHECK(ia > 0 && ib > 0, "two alarms");
+    CHECK(a.next_s == BOOT_S + 3600 && b.next_s == BOOT_S + 2 * 3600, "in an hour and in two");
+    int64_t stale_b = b.next_s;
+    set_zone("UTC");
+    int cursor = 0;
+    ink_alarm_t got;
+    while (ink_alarm_next(&cursor, INK_ALARM, &got) == 1)
+        if (!strcmp(got.title, "saved")) CHECK(got.next_s == BOOT_S + 9 * 3600, "another zone: nine o'clock there");
+    /* what is kept says the same */
+    ink_db_t *db = ink_db_open(&ALARMS_ON_FLASH, NULL);
+    ink_alarm_t kept = {0};
+    CHECK(db && ink_db_get(db, (uint32_t)ia, NULL, &kept, sizeof kept) == INK_DB_OK && kept.next_s == BOOT_S + 9 * 3600, "and that is what is kept (%lld)", (long long)kept.next_s);
+    /* and if the power had gone before the other was written */
+    CHECK(ink_db_get(db, (uint32_t)ib, NULL, &kept, sizeof kept) == INK_DB_OK, "the other");
+    kept.next_s = stale_b;
+    ink_db_write_t w = {.id = (uint32_t)ib, .sort = stale_b, .data = &kept, .len = sizeof kept};
+    CHECK(ink_db_put(db, &w, NULL) == INK_DB_OK, "put back as it was before");
+    ink_db_close(db);
+    ink_db_flush_all();
+    for (int i = 0; i < 500 && (!ink_db_idle() || ink_storage_pending() > 0); i++) osal_task_delay_us(10000);
+    CHECK(ink_db_idle(), "on the flash");
+    osal_task_delay_us(3000000); /* the setting too */
+}
+
+static void zone2(void) { /* five minutes later: --wall-start */
+    CHECK(!strcmp(ink_time_zone(), "UTC"), "the zone is what it was changed to (%s)", ink_time_zone());
+    int cursor = 0, seen = 0;
+    ink_alarm_t got;
+    while (ink_alarm_next(&cursor, INK_ALARM, &got) == 1) {
+        seen++;
+        if (!strcmp(got.title, "saved")) CHECK(got.next_s == BOOT_S + 9 * 3600, "at nine there (%lld)", (long long)(got.next_s - BOOT_S));
+        if (!strcmp(got.title, "cut off")) CHECK(got.next_s == BOOT_S + 10 * 3600, "what was not written is worked out again (%lld)", (long long)(got.next_s - BOOT_S));
+    }
+    CHECK(seen == 2, "both (%d)", seen);
+    osal_task_delay_us(1000000);
+    CHECK(g_missed == 0 && g_fired == 0, "none of them went off, nor is reported as missed (%d, %d)", g_missed, g_fired);
+}
+
 /* A clean flash, for a run that does not continue another. */
 static void test_task(void *arg) {
     (void)arg;
@@ -480,6 +527,8 @@ static void test_task(void *arg) {
     else if (phase && !strcmp(phase, "line_low")) line_low();
     else if (phase && !strcmp(phase, "reboot1")) reboot1();
     else if (phase && !strcmp(phase, "reboot2")) reboot2();
+    else if (phase && !strcmp(phase, "zone1")) zone1();
+    else if (phase && !strcmp(phase, "zone2")) zone2();
     else {
         zones();
         rules();

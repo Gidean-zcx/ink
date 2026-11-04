@@ -471,7 +471,7 @@ static void wipe_member_files(void *arg) { /* the storage task: their data area 
 }
 
 static void cap_remove(ink_call_t *c) { /* exec.bg */
-    char id[16], card[40];
+    char id[16];
     ink_args_get_str(&c->args, "id", id, sizeof id);
     slot_t *s = find(id);
     if (!s) {
@@ -480,6 +480,10 @@ static void cap_remove(ink_call_t *c) { /* exec.bg */
     }
     if (s == cur()) {
         fail(c, INK_RC_FAILED, "they are using the device");
+        return;
+    }
+    if (ink_usb_disk_active()) { /* their files cannot be reached: whoever gets the name next would find them */
+        fail(c, INK_RC_FAILED, "the card is lent to a computer");
         return;
     }
     int adults = 0;
@@ -501,10 +505,9 @@ static void cap_remove(ink_call_t *c) { /* exec.bg */
     /* what was theirs, on the flash and on the card */
     ink_db_forget_member(id);
     ink_storage_run(wipe_member_files, id, true);
-    snprintf(card, sizeof card, "/members/%s", id);
-    if (ink_fs_delete_start(card) < 0) ink_probe_count("members.card_not_cleared");
+    int card = ink_fs_forget_member(id);
     ink_cap_emit("member.changed", NULL);
-    snprintf(c->rc.say, sizeof c->rc.say, "删掉了");
+    snprintf(c->rc.say, sizeof c->rc.say, "%s", card == INK_FS_ERR_NO_CARD ? "删掉了。存储卡不在，卡上的文件还留着" : "删掉了");
 }
 
 /* What only happens on the device: the answer is told when the slow part is over. */

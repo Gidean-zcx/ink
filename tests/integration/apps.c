@@ -234,6 +234,59 @@ static void lifecycle(void) {
     CHECK(!strcmp(fg_state(), "home") && ink_app_state_of("alpha") == INK_APP_BACKGROUND, "home (%s)", fg_state());
 }
 
+/* What it keeps cannot be handed to the flash (audit AUD15-010): the only copy is in the app, it is not let go of. */
+static int fill_storage_queue(void) {
+    int n = 0;
+    ink_storage_hold_writes(true);
+    for (; n < 32; n++) {
+        char path[48];
+        snprintf(path, sizeof path, "/user/sys/test-queue-%d", n);
+        if (ink_storage_write_atomic(path, "x", 1) != 0) break;
+    }
+    return n;
+}
+
+static void empty_storage_queue(int n) {
+    ink_storage_hold_writes(false);
+    CHECK(WAIT_FOR(ink_storage_pending() == 0, 3000), "it drains");
+    for (int i = 0; i < n; i++) {
+        char path[48];
+        snprintf(path, sizeof path, "/user/sys/test-queue-%d", i);
+        ink_storage_remove(path, NULL, NULL);
+    }
+    CHECK(WAIT_FOR(ink_storage_pending() == 0, 3000), "and is clean");
+}
+
+static void saving_fails(void) {
+    snprintf(alpha_kept, sizeof alpha_kept, "旧的");
+    CHECK(AI("app.open", "{\"id\":\"alpha\"}") && !strcmp(top(), "alpha_page"), "open (%s)", g_on_top);
+    CHECK(AI("app.close", "{\"id\":\"alpha\"}") && g_rc.status == INK_RC_DONE, "closed, kept");
+    CHECK(WAIT_FOR(ink_storage_pending() == 0, 3000), "on the flash");
+    CHECK(AI("app.open", "{\"id\":\"alpha\"}") && !strcmp(alpha_memory, "旧的"), "comes back (%s)", alpha_memory);
+
+    /* closing */
+    snprintf(alpha_kept, sizeof alpha_kept, "新的");
+    double not_saved = sim_metric_value("app.state_not_saved");
+    int filled = fill_storage_queue();
+    CHECK(filled > 0, "the queue to the flash is full (%d)", filled);
+    CHECK(AI("app.close", "{\"id\":\"alpha\"}") && g_rc.status == INK_RC_FAILED, "closing says it could not (%s, %s)", ink_rc_name(g_rc.status), g_rc.detail);
+    CHECK(ink_app_state_of("alpha") == INK_APP_BACKGROUND, "and it stays (%s)", ink_app_state_name(ink_app_state_of("alpha")));
+    CHECK(sim_metric_value("app.state_not_saved") == not_saved + 1, "counted");
+
+    /* freezing */
+    delay_ms(11000);
+    CHECK(ink_app_state_of("alpha") == INK_APP_BACKGROUND, "nor is it frozen (%s)", ink_app_state_name(ink_app_state_of("alpha")));
+    empty_storage_queue(filled);
+    delay_ms(11000);
+    CHECK(ink_app_state_of("alpha") == INK_APP_FROZEN, "tried again after the same while (%s)", ink_app_state_name(ink_app_state_of("alpha")));
+
+    CHECK(AI("app.close", "{\"id\":\"alpha\"}") && g_rc.status == INK_RC_DONE && ink_app_state_of("alpha") == INK_APP_STOPPED, "closed in the end (%s)", g_rc.detail);
+    alpha_memory[0] = 0;
+    CHECK(AI("app.open", "{\"id\":\"alpha\"}") && !strcmp(alpha_memory, "新的"), "with what it was keeping (%s)", alpha_memory);
+    on_ui(go_home);
+    delay_ms(200);
+}
+
 /* Memory taken from outside until the level is reached. */
 static void *g_hog[128];
 static int g_nhog;
@@ -380,6 +433,7 @@ static void test_task(void *arg) {
     CHECK(ink_cap_subscribe("app.state", on_app_state, NULL, INK_EXEC_DIRECT) == 0, "subscribe");
     directory();
     lifecycle();
+    saving_fails();
     pressure();
     another_member();
     permissions();

@@ -35,6 +35,7 @@ static struct {
     bool holding;  /* the screen and the chip are kept up for us */
     bool relock;   /* it was locked underneath: it locks again when the last one ends */
     bool ring_on;  /* what the audio service was last told */
+    bool applying, apply_again;
     ink_int_presenter_t presenter;
     bool has_presenter;
     ink_exec_job_t show_job, power_key_job;
@@ -61,47 +62,50 @@ static void show_job(void *arg) { /* on the presenter's executor: the newest sta
     if (show) show(any ? &copy : NULL);
 }
 
-/* The sound follows the table. Two tasks may come here at once and tell the audio service in the other order:
- * whoever finishes last looks again, so what it hears at the end is what the table says. */
-static void apply_ring(void) {
-    for (;;) {
-        ink_svc_lock();
-        const ink_interrupt_t *top = top_locked();
-        bool want = top && top->ringing, same = want == IT.ring_on;
-        IT.ring_on = want;
-        ink_svc_unlock();
-        if (same) return;
-        ink_audio_ring(want);
-    }
-}
-
-/* What the table says now: power, sound, state, the shell. Outside the lock. */
+/* What the table says now: power, sound, state, the shell, all outside the lock and never waiting. One task at a time does
+ * it: one that comes while another is at it says there is more and goes (audit AUD15-006), so these never get applied in
+ * the other order and what is left in the end is what the table says. */
 static void apply(void) {
     ink_svc_lock();
-    const ink_interrupt_t *top = top_locked();
-    bool any = top != NULL;
-    ink_int_kind_t kind = any ? top->kind : INK_INT_LOW_BATTERY;
-    bool hold = any && !IT.holding, release = !any && IT.holding, relock = release && IT.relock;
-    if (hold) IT.holding = true;
-    if (release) {
-        IT.holding = false;
-        IT.relock = false;
+    if (IT.applying) {
+        IT.apply_again = true;
+        ink_svc_unlock();
+        return;
     }
-    ink_exec_t exec = IT.has_presenter ? IT.presenter.exec : INK_EXEC_UI;
-    bool present = IT.has_presenter;
+    IT.applying = true;
+    for (;;) {
+        IT.apply_again = false;
+        const ink_interrupt_t *top = top_locked();
+        bool any = top != NULL, want_ring = top && top->ringing;
+        ink_int_kind_t kind = any ? top->kind : INK_INT_LOW_BATTERY;
+        bool hold = any && !IT.holding, release = !any && IT.holding, relock = release && IT.relock;
+        bool ring_changed = want_ring != IT.ring_on;
+        if (hold) IT.holding = true;
+        if (release) {
+            IT.holding = false;
+            IT.relock = false;
+        }
+        IT.ring_on = want_ring;
+        ink_exec_t exec = IT.has_presenter ? IT.presenter.exec : INK_EXEC_UI;
+        bool present = IT.has_presenter;
+        ink_svc_unlock();
+        if (hold) {
+            ink_power_hold(INK_NEED_AWAKE);
+            ink_power_hold(INK_NEED_NO_LOCK);
+        }
+        if (ring_changed) ink_audio_ring(want_ring);
+        ink_state_set_str(IT.h_active, any ? KIND_NAME[kind] : "none");
+        if (present) ink_exec_post(exec, &IT.show_job, show_job, NULL);
+        if (release) {
+            ink_power_release(INK_NEED_NO_LOCK);
+            ink_power_release(INK_NEED_AWAKE);
+            if (relock) ink_power_lock();
+        }
+        ink_svc_lock();
+        if (!IT.apply_again) break;
+    }
+    IT.applying = false;
     ink_svc_unlock();
-    if (hold) {
-        ink_power_hold(INK_NEED_AWAKE);
-        ink_power_hold(INK_NEED_NO_LOCK);
-    }
-    apply_ring();
-    ink_state_set_str(IT.h_active, any ? KIND_NAME[kind] : "none");
-    if (present) ink_exec_post(exec, &IT.show_job, show_job, NULL);
-    if (release) {
-        ink_power_release(INK_NEED_NO_LOCK);
-        ink_power_release(INK_NEED_AWAKE);
-        if (relock) ink_power_lock();
-    }
 }
 
 int ink_interrupt_raise(const ink_interrupt_t *it) {

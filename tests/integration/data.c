@@ -12,6 +12,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "cJSON.h"
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/cap.h"
@@ -32,11 +33,15 @@
 #include "sim.h"
 
 static int g_fail_appends, g_fail_snapshots;
+static const char *g_fail_load; /* the file whose reading fails, the next time */
 static int test_append(const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx);
 static int test_write_borrow(const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx);
+static int test_load(const char *path, void **out, size_t *len);
 #define ink_storage_append test_append
 #define ink_storage_write_borrow test_write_borrow
+#define ink_storage_load test_load
 #include "../../system/services/data/datastore.c"
+#undef ink_storage_load
 #undef ink_storage_append
 #undef ink_storage_write_borrow
 
@@ -53,6 +58,14 @@ static int test_write_borrow(const char *path, const void *data, size_t len, ink
     } while (0)
 
 /* A failure the storage service reports later, as a full flash would: nothing reached the file. */
+static int test_load(const char *path, void **out, size_t *len) {
+    if (g_fail_load && strstr(path, g_fail_load)) {
+        g_fail_load = NULL;
+        return INK_STORAGE_LOAD_FAILED;
+    }
+    return ink_storage_load(path, out, len);
+}
+
 static void *g_failed_ctx;
 static ink_storage_done_fn g_failed_done;
 static ink_exec_job_t g_fail_job;
@@ -450,7 +463,7 @@ static void memory(void) {
 
 static volatile int g_done;
 static ink_receipt_t g_rc;
-static char g_result[2048];
+static char g_result[20000];
 
 static void done_cb(void *ctx, const ink_receipt_t *rc) {
     (void)ctx;
@@ -517,6 +530,89 @@ static void caps(void) {
 #define PC_OPS 150
 
 /* The series: put id with value v<i>; every 5th deletes instead. Same every run. */
+/* Records as large as there can be come back whole to the AI, alone and in a list (audit AUD15-004). */
+static const ink_db_def_t BIG = {.name = "test.big", .title = "大记录", .scope = INK_DB_DEVICE, .schema = 1, .json = true, .ai_read = true};
+
+static void large_records(void) {
+    CHECK(ink_db_register(&BIG) == 0, "registered");
+    ink_db_t *db = ink_db_open(&BIG, NULL);
+    static char v[INK_DB_RECORD_MAX];
+    size_t n = (size_t)snprintf(v, sizeof v, "{\"text\":\"");
+    while (n + 3 < sizeof v) v[n++] = 'x';
+    v[n++] = '"';
+    v[n++] = '}';
+    uint32_t id = 0;
+    for (int i = 0; i < 3; i++) {
+        ink_db_write_t w = {.sort = i, .data = v, .len = n};
+        CHECK(db && ink_db_put(db, &w, &id) == INK_DB_OK, "the largest there can be (%d)", i);
+    }
+    char args[96];
+    snprintf(args, sizeof args, "{\"collection\":\"test.big\",\"id\":%u}", (unsigned)id);
+    CHECK(call_json("data.get", args, INK_SRC_AI) && g_rc.status == INK_RC_DONE, "the AI asks for one (%s)", g_rc.detail);
+    cJSON *j = cJSON_Parse(g_result);
+    const cJSON *text = cJSON_GetObjectItem(cJSON_GetObjectItem(j, "value"), "text");
+    CHECK(cJSON_IsString(text) && strlen(text->valuestring) == n - 11, "whole, as JSON (%zu of %zu)", strlen(g_result), n);
+    cJSON_Delete(j);
+    /* page by page, with a cursor: none of them cut, none of them missed */
+    int seen = 0, pages = 0;
+    char cursor[40] = "";
+    for (; pages < 6; pages++) {
+        snprintf(args, sizeof args, "{\"collection\":\"test.big\"%s%s%s}", cursor[0] ? ",\"cursor\":\"" : "", cursor, cursor[0] ? "\"" : "");
+        CHECK(call_json("data.list", args, INK_SRC_AI) && g_rc.status == INK_RC_DONE, "the AI lists them (%s)", g_rc.detail);
+        j = cJSON_Parse(g_result);
+        CHECK(j != NULL, "a page is whole JSON (%zu)", strlen(g_result));
+        const cJSON *r;
+        cJSON_ArrayForEach(r, cJSON_GetObjectItem(j, "records")) {
+            const cJSON *t = cJSON_GetObjectItem(cJSON_GetObjectItem(r, "value"), "text");
+            CHECK(cJSON_IsString(t) && strlen(t->valuestring) == n - 11, "and a record in it too");
+            seen++;
+        }
+        const cJSON *next = cJSON_GetObjectItem(j, "next");
+        snprintf(cursor, sizeof cursor, "%s", cJSON_IsString(next) ? next->valuestring : "");
+        cJSON_Delete(j);
+        if (!cursor[0]) break;
+    }
+    CHECK(seen == 3 && pages >= 1, "all of them, in more than one page (%d, %d)", seen, pages + 1);
+    ink_db_close(db);
+}
+
+/* A file that is there and cannot be read now is not an empty one: nothing opens on top of it (audit AUD15-001). */
+static const ink_db_def_t LOADFAIL = {.name = "test.loadfail", .scope = INK_DB_DEVICE, .schema = 1};
+
+static void load_failure(void) {
+    ink_db_t *db = ink_db_open(&LOADFAIL, NULL);
+    CHECK(put_text(db, 1, 1, "old") != 0, "written");
+    drain(db);
+    ink_db_close(db);
+    forget(&LOADFAIL, NULL);
+    double errs = sim_metric_value("data.load_error");
+    g_fail_load = "test.loadfail.0.log";
+    db = ink_db_open(&LOADFAIL, NULL);
+    CHECK(!db && !g_fail_load, "the log cannot be read: it does not open as if empty");
+    CHECK(sim_metric_value("data.load_error") == errs + 1, "and it says so");
+    db = ink_db_open(&LOADFAIL, NULL);
+    char got[8] = "";
+    CHECK(db && ink_db_get(db, 1, NULL, got, sizeof got) == INK_DB_OK && !strcmp(got, "old"), "the next time all of it is there (%s)", got);
+    CHECK(put_text(db, 1, 2, "new") != 0, "and can be changed");
+    drain(db);
+    ink_db_close(db);
+    forget(&LOADFAIL, NULL);
+    db = ink_db_open(&LOADFAIL, NULL);
+    CHECK(db && ink_db_get(db, 1, NULL, got, sizeof got) == INK_DB_OK && !strcmp(got, "new"), "and that is what comes back (%s)", got);
+    ink_db_close(db);
+    /* the same for a snapshot: folding() left one */
+    db = ink_db_open(&FOLD, NULL);
+    int count = ink_db_count(db);
+    ink_db_close(db);
+    forget(&FOLD, NULL);
+    g_fail_load = "test.fold.snap";
+    db = ink_db_open(&FOLD, NULL);
+    CHECK(!db && !g_fail_load, "the snapshot cannot be read: nor this");
+    db = ink_db_open(&FOLD, NULL);
+    CHECK(db && count > 0 && ink_db_count(db) == count, "and nothing is lost (%d)", count);
+    ink_db_close(db);
+}
+
 static void pc_value(int i, char *out, size_t cap) {
     int fill = 40 + (i * 37) % 300;
     int n = snprintf(out, cap, "v%d:", i);
@@ -639,6 +735,8 @@ static void test_task(void *arg) {
         memory();
         lazy();
         caps();
+        large_records();
+        load_failure();
     }
     ink_probe_count("test.finished");
 }

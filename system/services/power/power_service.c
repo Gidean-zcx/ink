@@ -163,8 +163,13 @@ static void locked_step(void) {
     lock();
     bool busy = PS.holds[INK_NEED_AUDIO] > 0 || PS.holds[INK_NEED_NET] > 0 || PS.holds[INK_NEED_AWAKE] > 0;
     unlock();
-    if (busy) { /* e.g. an audiobook: stay awake, locked; a release kicks us */
-        osal_sem_take(PS.kick, OSAL_WAIT_FOREVER);
+    if (busy) { /* e.g. an audiobook: stay awake, locked; a release kicks us. It may go on for hours: the battery is looked at. */
+        uint64_t now = osal_now_us();
+        if (now >= PS.next_battery_us) {
+            publish_battery();
+            PS.next_battery_us = now + BATTERY_POLL_US;
+        }
+        osal_sem_take(PS.kick, (int64_t)(PS.next_battery_us - now));
         return;
     }
     if (!quiet()) { /* the lock mark is still being drawn, a write is queued ... */

@@ -177,6 +177,13 @@ int fs_resolve(const char *path, bool write, char *phys, size_t cap) {
     return INK_FS_OK;
 }
 
+/* A place that is there for everyone and that nobody can take away: under /family lie the members' own folders, which
+ * nobody sees from there and which nothing that walks it may touch. */
+static bool virtual_root(const char *path) {
+    if (!strcmp(path, "/me") || !strcmp(path, "/family")) return true;
+    return !strncmp(path, "/members/", 9) && !strchr(path + 9, '/');
+}
+
 /* The directories of a physical path, from the card's root down. */
 static void make_parents(const char *phys) {
     char dir[PHYS_MAX];
@@ -413,6 +420,7 @@ int ink_fs_remove(const char *path) {
 
 int ink_fs_move(const char *from, const char *to) {
     char a[PHYS_MAX], b[PHYS_MAX];
+    if (virtual_root(from)) return INK_FS_ERR_DENIED;
     int r = fs_resolve(from, true, a, sizeof a);
     if (!r) r = fs_resolve(to, true, b, sizeof b);
     if (r) return r;
@@ -770,6 +778,7 @@ static void job_finish(void *ctx, ink_job_step_t how, bool cancelled) {
 
 static int job_begin(int op, const char *from, const char *to) {
     char a[PHYS_MAX], b[PHYS_MAX] = "";
+    if (op == 1 && virtual_root(from)) return INK_FS_ERR_DENIED;
     int r = fs_resolve(from, op == 1, a, sizeof a);
     if (!r && op == 0) r = fs_resolve(to, true, b, sizeof b);
     if (r) return r;
@@ -833,6 +842,16 @@ static int job_begin(int op, const char *from, const char *to) {
 
 int ink_fs_copy_start(const char *from, const char *to) { return job_begin(0, from, to); }
 int ink_fs_delete_start(const char *path) { return job_begin(1, path, NULL); }
+
+int ink_fs_forget_member(const char *id) {
+    char phys[PHYS_MAX];
+    if (FS.usb_lent) return INK_FS_ERR_USB;
+    if (!hal_fs_card_present()) return INK_FS_ERR_NO_CARD;
+    if (snprintf(phys, sizeof phys, "/content/.m/%s", id) >= (int)sizeof phys) return INK_FS_ERR_PATH;
+    wipe_tree(phys, 0);
+    hal_fs_remove(phys);
+    return INK_FS_OK;
+}
 
 int ink_fs_job_status(int id, ink_fs_job_status_t *out) {
     ink_svc_lock();

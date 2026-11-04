@@ -141,6 +141,7 @@ typedef struct {
     const char *request_id; /* a repeated id does not run twice: the first receipt again, or "queued" while it runs; NULL = none.
                              * A read that gave a result runs again: it has no effect to repeat, and the result is not kept. */
     const char *args_json;  /* JSON arguments instead of a table (the AI's, the hub's): checked after the gate */
+    const char *member;     /* only for this member: another using the device by the time it starts, and it does not run; NULL = whoever */
     ink_exec_t reply_exec;  /* where `done` runs */
     ink_cap_done_fn done;   /* may be NULL */
     void *ctx;

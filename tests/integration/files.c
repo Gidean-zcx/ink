@@ -457,6 +457,48 @@ static void clean_card(void *arg) {
     if (system(cmd) != 0) sim_warn("cannot clean the card");
 }
 
+/* A page of Chinese is cut before a whole character: that is not the end (audit AUD15-003). */
+static void long_chinese(void) {
+    size_t n = 0;
+    static char text[9000];
+    while (n + 3 < 8000) n += (size_t)snprintf(text + n, sizeof text - n, "汉");
+    CHECK(ink_fs_write_atomic("/me/long.txt", text, n) == 0, "a long text");
+    size_t total = 0;
+    int64_t off = 0;
+    bool ended = false;
+    for (int page = 0; page < 20 && !ended; page++) {
+        char args[64];
+        snprintf(args, sizeof args, "{\"path\":\"/me/long.txt\",\"offset\":%lld}", (long long)off);
+        if (!AI("file.read", args) || g_rc.status != INK_RC_DONE) break;
+        const char *t = strstr(g_result, "\"text\":\"");
+        const char *e = t ? strchr(t + 8, '"') : NULL;
+        const char *next = strstr(g_result, "\"next_offset\":");
+        if (!t || !e || !next) break;
+        total += (size_t)(e - (t + 8));
+        off = atoll(next + 14);
+        ended = strstr(g_result, "\"end\":true") != NULL;
+    }
+    CHECK(ended && total == n, "page by page, all of it (%zu of %zu)", total, n);
+}
+
+/* The places everyone sees are not folders to take away (audit AUD15-002). */
+static void virtual_roots(void) {
+    CHECK(write_text("/me/keep.txt", "mine") == 0 && write_text("/family/mine-too.txt", "ours") == 0, "something in each");
+    CHECK(ink_fs_delete_start("/me") == INK_FS_ERR_DENIED, "/me cannot be deleted");
+    CHECK(ink_fs_delete_start("/family") == INK_FS_ERR_DENIED, "/family neither");
+    CHECK(ink_fs_delete_start("/members/owner") == INK_FS_ERR_DENIED, "nor a member's place");
+    CHECK(ink_fs_move("/me", "/family/moved") == INK_FS_ERR_DENIED && ink_fs_move("/family", "/me/moved") == INK_FS_ERR_DENIED, "nor moved");
+    /* a folder in the family's place is the family's: it goes */
+    CHECK(write_text("/family/shelf/a.txt", "a") == 0, "a folder of theirs");
+    int id = ink_fs_delete_start("/family/shelf");
+    CHECK(id > 0, "can be deleted");
+    ink_fs_job_status_t st = {0};
+    for (int i = 0; i < 100 && ink_fs_job_status(id, &st) == 0 && st.state == INK_FS_JOB_RUNNING; i++) osal_task_delay_us(50000);
+    ink_fs_stat_t fs;
+    CHECK(ink_fs_stat("/family/shelf", &fs) == INK_FS_ERR_NOT_FOUND, "and is gone");
+    CHECK(ink_fs_stat("/me/keep.txt", &fs) == 0, "what is elsewhere is not touched");
+}
+
 static void test_task(void *arg) {
     (void)arg;
     vtk_host_call(clean_card, NULL);
@@ -472,6 +514,8 @@ static void test_task(void *arg) {
     members();
     jobs();
     capabilities();
+    virtual_roots();
+    long_chinese();
     usb_disk();
     card_trouble();
     ink_probe_count("test.finished");

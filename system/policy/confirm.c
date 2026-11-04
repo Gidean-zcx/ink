@@ -352,7 +352,7 @@ static int decide(uint32_t token, bool accept) {
     if (!accept) tell(token, r->cap, "rejected", NULL);
     else if (strcmp(h->member, ink_member_current()->id)) tell(token, r->cap, "member_changed", NULL);
     else {
-        ink_call_opts_t o = {.src = INK_SRC_CONFIRMED, .page_gen = h->page_gen, .reply_exec = INK_EXEC_DIRECT, .done = confirmed_done, .ctx = r};
+        ink_call_opts_t o = {.src = INK_SRC_CONFIRMED, .page_gen = h->page_gen, .member = h->member, .reply_exec = INK_EXEC_DIRECT, .done = confirmed_done, .ctx = r};
         int started = ink_cap_call(r->cap, &h->args, &o);
         osal_free(h);
         if (started == 0) return 0; /* confirmed_done frees it */

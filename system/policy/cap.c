@@ -14,6 +14,7 @@
 #include "ink/sys/confirm.h"
 #include "ink/sys/hub.h"
 #include "ink/sys/json.h"
+#include "ink/sys/layout.h"
 #include "ink/sys/members.h"
 #include "ink/sys/ui.h"
 
@@ -167,6 +168,7 @@ typedef struct {
     bool remote;   /* the hub link's own timeout is its deadline */
     bool repeat_safe; /* rid is the caller's: the receipt is kept for retries */
     bool started, deferred, replied, finished, answered;
+    char member[INK_MEMBER_ID_MAX]; /* ink_call_opts_t.member */
 } pending_t;
 
 typedef struct {
@@ -423,7 +425,7 @@ static void start(void *arg) {
     snprintf(key, sizeof key, "action.%s.%s", p->call.src == INK_SRC_AI ? "ai" : "user", p->id);
     ink_probe_count(key);
     bool ran = false;
-    ink_rc_t verdict = gate(c, p->call.src, p->call.page_gen, rc);
+    ink_rc_t verdict = p->member[0] && strcmp(p->member, ink_member_current()->id) ? reject(rc, INK_RC_STALE, "someone else is using the device now") : gate(c, p->call.src, p->call.page_gen, rc);
     if (verdict == INK_RC_DONE || verdict == INK_RC_PENDING_CONFIRMATION) {
         char why[96];
         int bad = p->json ? ink_args_from_json(&p->call.args, p->json, strlen(p->json), c->input, why, sizeof why)
@@ -476,8 +478,10 @@ static pending_t *prepare(const char *id, const ink_cap_t *c, const ink_args_t *
     p->json = json;
     p->call.src = o->src;
     p->call.page_gen = o->page_gen;
+    snprintf(p->member, sizeof p->member, "%s", o->member ? o->member : "");
     p->o = *o;
     p->o.request_id = p->o.args_json = NULL; /* the caller's strings need not outlive the call */
+    p->o.member = NULL;
     p->remote = remote;
     p->deadline_us = osal_now_us() + (uint64_t)timeout_ms(c) * 1000u;
     osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);

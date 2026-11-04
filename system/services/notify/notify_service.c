@@ -229,7 +229,8 @@ int ink_notify_post(const ink_notify_t *n, uint32_t *out_id) {
         ci = 0;
     }
     int prio = n->prio >= 0 ? n->prio : (int)NS.ch[ci]->prio;
-    const char *who = n->member ? n->member : ink_member_current()->id;
+    char who[INK_MEMBER_ID_MAX];
+    snprintf(who, sizeof who, "%s", n->member ? n->member : ink_member_current()->id);
     int64_t wall = osal_wall_us();
     int64_t sort = wall > 0 ? wall / 1000000 : (int64_t)(osal_now_us() / 1000000);
     const char *prev = osal_mem_tag("notify");
@@ -269,7 +270,7 @@ int ink_notify_post(const ink_notify_t *n, uint32_t *out_id) {
         ink_probe_count("notify.channel_off");
         return 0;
     }
-    ink_db_t *db = inbox();
+    ink_db_t *db = ink_db_open(&INBOX, who); /* whose it is, as decided above, whatever has happened since */
     uint32_t wrote = 0;
     ink_db_write_t w = {.id = db && n->tag ? find_tag(db, n->tag) : 0, .sort = sort, .data = buf, .len = (size_t)len, .src = n->src};
     int r = db ? ink_db_put(db, &w, &wrote) : INK_DB_ERR_ARG;
@@ -282,6 +283,10 @@ int ink_notify_post(const ink_notify_t *n, uint32_t *out_id) {
     if (out_id) *out_id = wrote;
     recount();
     ink_probe_count("notify.posted");
+    ink_svc_lock();
+    mine = !strcmp(who, NS.member);
+    ink_svc_unlock();
+    if (!mine) return 0; /* someone else came meanwhile: it is in the right inbox, not for them to hear about */
     announce(wrote, channel, n->title, prio);
     if (prio >= INK_NOTIFY_HIGH && !ink_setting_get("notify.dnd")) { /* no banner: e-ink would need a refresh for it to go away too */
         ink_probe_count("notify.alerted");

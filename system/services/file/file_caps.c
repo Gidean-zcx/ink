@@ -150,7 +150,7 @@ static void cap_read(ink_call_t *c) {
         ink_jw_strn(&w, buf, good);
         ink_jw_raw(&w, ",\"next_offset\":");
         ink_jw_int(&w, off + (int64_t)good);
-        ink_jw_raw(&w, (int64_t)good < max ? ",\"end\":true}" : "}");
+        ink_jw_raw(&w, n < max ? ",\"end\":true}" : "}"); /* a page cut before a character that did not fit is not the end */
         if (!w.overflow) ink_cap_result(c, out);
     }
     osal_free(buf);

@@ -67,7 +67,9 @@ int ink_storage_remove(const char *path, ink_storage_done_fn done, void *ctx);
 /** Size of a file (blocks), -1 if it does not exist. Flash content: queued jobs do not count. */
 int64_t ink_storage_size(const char *path);
 /** A whole file into a new external-RAM block (ink_storage_free it): read in small pieces, the panel may
- *  refresh between them. 0 and *out set (NULL for an empty file), or -1 (no file, no memory). */
+ *  refresh between them. 0 and *out set (NULL for an empty file), INK_STORAGE_NO_FILE, or INK_STORAGE_LOAD_FAILED: there is
+ *  a file and it could not be had (no memory, a read error): what it holds must not be taken for nothing. */
+enum { INK_STORAGE_NO_FILE = -1, INK_STORAGE_LOAD_FAILED = -2 };
 int ink_storage_load(const char *path, void **out, size_t *len);
 void ink_storage_free(void *block);
 /** Bytes on the /user volume (blocks; walks the file system: slow, not often). 0 or -1. */

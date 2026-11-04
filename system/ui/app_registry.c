@@ -81,19 +81,28 @@ static int state_path(const app_t *a, char *out, size_t cap) {
     return ink_layout_member(out, cap, AP.member, name);
 }
 
-/* What it wants kept goes to the flash in the background; nothing kept, nothing left. */
-static void save(app_t *a) {
-    if (!a->def->ops || !a->def->ops->save_state) return;
+/* What it wants kept goes to the flash in the background; nothing kept, nothing left. A full queue drains in moments: it
+ * waits that long. False: it could not be handed over, and what is in the app is the only copy. */
+#define SAVE_TRIES 40
+#define SAVE_WAIT_US 10000
+static bool save(app_t *a) {
+    if (!a->def->ops || !a->def->ops->save_state) return true;
     char path[INK_LAYOUT_PATH_MAX];
     void *buf = osal_malloc(INK_APP_STATE_MAX, OSAL_MEM_EXTERNAL);
     if (!buf || state_path(a, path, sizeof path) < 0) {
         osal_free(buf);
-        return;
+        ink_probe_count("app.state_not_saved");
+        return false;
     }
     int n = a->def->ops->save_state(buf, INK_APP_STATE_MAX);
-    if (n > 0 && n <= INK_APP_STATE_MAX) ink_storage_write_atomic(path, buf, (size_t)n);
-    else ink_storage_remove(path, NULL, NULL);
+    int r = -1;
+    for (int i = 0; i < SAVE_TRIES && r != 0; i++) {
+        r = n > 0 && n <= INK_APP_STATE_MAX ? ink_storage_write_atomic(path, buf, (size_t)n) : ink_storage_remove(path, NULL, NULL);
+        if (r != 0) osal_task_delay_us(SAVE_WAIT_US);
+    }
     osal_free(buf);
+    if (r != 0) ink_probe_count("app.state_not_saved");
+    return r == 0;
 }
 
 static void restore(app_t *a) {
@@ -110,22 +119,31 @@ static void restore(app_t *a) {
 }
 
 static void freeze(app_t *a) {
-    save(a);
+    if (!save(a)) { /* the only copy of what it keeps is in it: it stays as it is, and is tried again after the same while */
+        a->left_at = osal_now_us();
+        return;
+    }
     if (a->def->ops && a->def->ops->on_freeze) a->def->ops->on_freeze();
     set_state(a, INK_APP_FROZEN);
     ink_probe_count("app.frozen");
 }
 
-/* From the background or frozen (what was frozen has saved already). */
-static void stop(app_t *a) {
+/* It has saved. */
+static void stop_saved(app_t *a) {
     if (a->state == INK_APP_STOPPED) return;
-    if (a->state != INK_APP_FROZEN) save(a);
     if (a->def->ops && a->def->ops->on_stop) a->def->ops->on_stop();
     ink_svc_lock();
     a->bg = 0;
     ink_svc_unlock();
     set_state(a, INK_APP_STOPPED);
     ink_probe_count("app.stopped");
+}
+
+/* From the background or frozen (what was frozen has saved already). When memory says so it goes, saved or not. */
+static void stop(app_t *a) {
+    if (a->state == INK_APP_STOPPED) return;
+    if (a->state != INK_APP_FROZEN) save(a);
+    stop_saved(a);
 }
 
 static void freeze_due(void *arg);
@@ -307,7 +325,11 @@ int ink_app_close(const char *id) {
     app_t *a = find(id);
     if (!a || a->def->keep) return -1;
     ink_ui_drop_app(id); /* its pages off the stack: the foreground moves on by itself */
-    stop(a);
+    if (a->state != INK_APP_STOPPED && a->state != INK_APP_FROZEN && !save(a)) { /* the only copy of what it keeps is in it: it stays */
+        plan_freeze();
+        return -2;
+    }
+    stop_saved(a);
     plan_freeze();
     return 0;
 }
@@ -399,7 +421,9 @@ static void cap_open(ink_call_t *c) { /* UI task */
 static void cap_close(ink_call_t *c) { /* UI task */
     char id[32];
     ink_args_get_str(&c->args, "id", id, sizeof id);
-    if (ink_app_close(id) != 0) fail(c, INK_RC_INVALID, "no such app, or it cannot be closed");
+    int r = ink_app_close(id);
+    if (r == -2) fail(c, INK_RC_FAILED, "what it keeps could not be saved: it stays open");
+    else if (r != 0) fail(c, INK_RC_INVALID, "no such app, or it cannot be closed");
 }
 
 static void cap_cards(ink_call_t *c) { /* UI task: apps have no other */

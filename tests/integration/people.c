@@ -240,6 +240,18 @@ static void add_and_remove(void) {
     CHECK(ink_storage_write_atomic("/user/m/grandma/reader.state", "page 3", 6) == 0, "what an app kept for them");
     CHECK(WAIT_FOR(ink_storage_size("/user/m/grandma/reader.state") == 6, 2000), "on the flash");
 
+    /* the card on a computer: their files cannot be reached, so they are not removed */
+    hw(HW_USB_ON, 0, 0);
+    CHECK(WAIT_FOR(ink_usb_disk_start() == 0, 2000), "the card is lent");
+    CHECK(BY_HAND("member.remove", "{\"id\":\"grandma\"}") && g_rc.status == INK_RC_PENDING_CONFIRMATION, "asked");
+    int lent = g_pin_done;
+    CHECK(ink_confirm_accept_with_pin(token_of_receipt(), "654321", pin_told, NULL) == 0 && WAIT_FOR(g_pin_done > lent, 5000), "with the PIN");
+    delay_ms(500);
+    CHECK(AI("member.list", NULL) && strstr(g_result, "奶奶"), "they stay");
+    CHECK(ink_usb_disk_stop() == 0, "the card comes back");
+    hw(HW_USB_OFF, 0, 0);
+    delay_ms(1200);
+
     /* removing someone takes a parent, whoever asks */
     CHECK(BY_HAND("member.remove", "{\"id\":\"grandma\"}") && g_rc.status == INK_RC_PENDING_CONFIRMATION, "by hand too it comes with a card (%s)", ink_rc_name(g_rc.status));
     uint32_t token = token_of_receipt();

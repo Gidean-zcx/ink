@@ -729,6 +729,23 @@ static void battery(void) {
     ink_notify_clear();
 }
 
+/* Locked and kept awake for hours by something in the background: the battery is still looked at (audit AUD15-011). */
+static void battery_while_locked(void) {
+    ink_power_hold(INK_NEED_AWAKE);
+    ink_power_lock();
+    delay_ms(1000);
+    CHECK(!strcmp(power_state(), "locked") && !battery_low_state(), "locked, not sleeping, the battery fine");
+    hw(HW_BATTERY, 13, 0);
+    CHECK(WAIT_FOR(battery_low_state(), 70000), "it notices");
+    int64_t level = 0;
+    CHECK(ink_state_get_int(ink_state_find("battery.level"), &level) && level == 13, "and says how much (%lld)", (long long)level);
+    ink_power_release(INK_NEED_AWAKE);
+    ink_power_unlock(osal_now_us());
+    hw(HW_BATTERY_CHARGING, 80, 0);
+    CHECK(WAIT_FOR(!battery_low_state(), 70000), "charged");
+    ink_notify_clear();
+}
+
 /* ------------------------------------------------------------ a nearly empty battery */
 
 static void lowbat1(void) {
@@ -768,6 +785,7 @@ static void test_task(void *arg) {
         an_alarm();
         other_events();
         battery();
+        battery_while_locked();
     }
     ink_probe_count("test.finished");
 }

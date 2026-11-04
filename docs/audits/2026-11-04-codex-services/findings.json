@@ -1,0 +1,203 @@
+[
+  {
+    "id": "AUD15-001",
+    "severity": "高",
+    "area": "data/storage",
+    "title": "加载失败被当成文件不存在，后续写入虚报持久化并在重载后丢失",
+    "evidence_type": [
+      "复现",
+      "代码核查",
+      "推断"
+    ],
+    "locations": [
+      "system/services/data/datastore.c:586",
+      "system/services/data/datastore.c:622",
+      "system/services/storage/storage_service.c:597"
+    ],
+    "impact": "ink_storage_load 对不存在、内存不足、读取失败都返回 -1；load 忽略失败并开放空/不完整集合继续写。版本和 ID 可从 1 重用，新帧被下次回放作为旧版本跳过。【推断】已有快照加载失败时还可能在压缩后覆盖旧数据；本实验复现的是新写入已报 durable 后重载仍读到旧值，未单独复现快照覆盖。",
+    "recommendation": "区分 NOT_FOUND、NOMEM 和 IO；存在的快照/日志未完整加载时拒绝开放可写集合，保留磁盘内容。",
+    "reproduce": "python3 docs/audits/2026-11-04-codex-services/experiments/run_probe.py docs/audits/2026-11-04-codex-services/experiments/data_probe.c；data_probe.c：一次日志加载返回 -1；open_success=1 count=0；新写入 durable_ver=1；重新加载 value=old，预期 new。"
+  },
+  {
+    "id": "AUD15-002",
+    "severity": "高",
+    "area": "file",
+    "title": "删除家庭根目录会递归删除未对该路径开放的成员私有区",
+    "evidence_type": [
+      "复现",
+      "代码核查"
+    ],
+    "locations": [
+      "system/services/file/file_service.c:149",
+      "system/services/file/file_service.c:643",
+      "system/services/file/file_service.c:748"
+    ],
+    "impact": "/family 映射 /content；列表和拷贝隐藏 .m，但递归删除只排除 . 和 ..，因此删除 /family 同时销毁 /content/.m 下全体成员文件，也进入 .update。成人确认的家庭目录操作超出了界面可见范围。触发条件是对虚拟家庭根目录发起删除。",
+    "recommendation": "将虚拟根目录设为不可移动/不可删除，或为根目录操作定义限定公开条目的遍历；在递归层维护与虚拟路径相同的范围规则。",
+    "reproduce": "python3 docs/audits/2026-11-04-codex-services/experiments/run_probe.py docs/audits/2026-11-04-codex-services/experiments/file_probe.c --template sim-files；file_probe.c：private_read=0、hidden_in_list=1；删除 /family 后 job_state=2（DONE），private_read=-3（NOT_FOUND）。"
+  },
+  {
+    "id": "AUD15-003",
+    "severity": "高",
+    "area": "file/AI",
+    "title": "UTF-8 分页边界被误判为文件末尾，中文文件只读出第一页",
+    "evidence_type": [
+      "复现",
+      "代码核查"
+    ],
+    "locations": [
+      "system/services/file/file_caps.c:138",
+      "system/services/file/file_caps.c:153"
+    ],
+    "impact": "默认读取 2048 字节时，三字节汉字只截得 2046 个完整字节；代码因 good < max 返回 end:true。AI 按回执停止分页会漏掉剩余正文，是常见中文文本路径。",
+    "recommendation": "依据原始读取量或文件大小判断 EOF；完整字符边界仅用于 next_offset。补充多字节跨页连续读取验证。",
+    "reproduce": "python3 docs/audits/2026-11-04-codex-services/experiments/run_probe.py docs/audits/2026-11-04-codex-services/experiments/file_probe.c --template sim-files；file_probe.c：3000 字节中文文本，file.read status=0 next_offset=2046 end=1。"
+  },
+  {
+    "id": "AUD15-004",
+    "severity": "中",
+    "area": "data/AI",
+    "title": "合法大记录被截断后直接拼入 JSON，成功回执不是有效 JSON",
+    "evidence_type": [
+      "复现",
+      "代码核查"
+    ],
+    "locations": [
+      "system/services/data/data_caps.c:139",
+      "system/services/data/data_caps.c:173"
+    ],
+    "impact": "存储支持 8192 字节记录，data.get/data.list 只取 2047 字节后直接写入 value；超过缓冲的合法 JSON 被截断，仍报告 DONE。影响声明 AI 可读的大记录，现有测试只覆盖小记录。",
+    "recommendation": "按记录长度分配并检查输出上限；放不下时明确返回可分页/过大错误，不能把 JSON 片段当完整值返回。",
+    "reproduce": "python3 docs/audits/2026-11-04-codex-services/experiments/run_probe.py docs/audits/2026-11-04-codex-services/experiments/data_probe.c；data_probe.c：3000 字节合法 JSON 记录，data.get status=0 result_bytes=2109 valid_json=0（cJSON_Parse）。"
+  },
+  {
+    "id": "AUD15-005",
+    "severity": "中",
+    "area": "notify/member",
+    "title": "成员检查与收件箱取引用不在同一事务，通知进入另一成员私有区",
+    "evidence_type": [
+      "复现",
+      "代码核查"
+    ],
+    "locations": [
+      "system/services/notify/notify_service.c:245",
+      "system/services/notify/notify_service.c:272",
+      "system/services/notify/notify_service.c:65"
+    ],
+    "impact": "ink_notify_post 先确认收件人为当前成员，解锁后 inbox() 又取当前 NS.member。两者之间完成成员切换时，指定 owner 的通知被写入 kid 收件箱。可能泄露原成员的通知正文；本次为锁边界确定性交错，未声称自然高频发生。",
+    "recommendation": "在首次锁区固定接收者和数据库引用，后续写入不再重新选择成员；未读统计和事件也绑定对应成员。",
+    "reproduce": "见 experiments/README.md 的并发复现命令。concurrency_probe：notify.post result=0 recipient=owner owner_has=0 kid_has=1；只在第一次解锁后让第二任务完成真实 ink_member_switch。"
+  },
+  {
+    "id": "AUD15-006",
+    "severity": "中",
+    "area": "interrupt/audio",
+    "title": "并发结束与启动打断会留下响铃和错误的活动状态",
+    "evidence_type": [
+      "复现",
+      "代码核查"
+    ],
+    "locations": [
+      "system/services/notify/interrupt.c:68",
+      "system/services/notify/interrupt.c:83",
+      "system/services/notify/interrupt.c:99"
+    ],
+    "impact": "apply_ring 在调用音频服务前更新 IT.ring_on。另一任务结束打断并关闭音频后，旧调用恢复并重新打开音频；重查只比较已提前写入的期望值，因相等直接返回。打断表已空但声音不停，旧 apply 还把 interrupt.active 写回 alarm；需要特定任务交错。",
+    "recommendation": "为声音、电源和发布状态建立串行应用机制或带版本的收敛协议，区分期望值和实际完成值；在无 UI 依赖的执行器上完成。",
+    "reproduce": "见 experiments/README.md 的并发复现命令。concurrency_probe：interrupt id=1 active=0 actual_ring=1 published=alarm；第二任务在原任务真正调用 ink_audio_ring(true) 前结束该打断，原任务随后继续。"
+  },
+  {
+    "id": "AUD15-007",
+    "severity": "中",
+    "area": "confirm/cap/member",
+    "title": "确认执行未绑定原成员，排队期间切换成员会操作新成员文件",
+    "evidence_type": [
+      "复现",
+      "代码核查"
+    ],
+    "locations": [
+      "system/policy/confirm.c:309",
+      "system/policy/confirm.c:311",
+      "system/policy/cap.c:418",
+      "system/policy/cap.c:469",
+      "system/services/file/file_service.c:147"
+    ],
+    "impact": "确认时检查成员，但随后排入 BG 的 pending 调用不携带成员。执行时重新按当前成员解释 /me；成员在确认后、服务执行前切换，确认的删除落在新成员同名文件。特定执行器延迟和切换交错下发生跨成员破坏；现有换成员测试只覆盖仍在等待确认的卡片。",
+    "recommendation": "让调用和确认令牌携带不可变的成员及会话代次，在 provider 开始前验证，路径解析使用绑定身份；切换时使尚未开始的旧成员调用失效。",
+    "reproduce": "见 experiments/README.md 的并发复现命令。concurrency_probe：confirmed owner deletion owner_stat=0 kid_stat=-3；占住 BG 后主人接受确认，再切换 kid 并放行，主人文件保留而孩子文件删除。"
+  },
+  {
+    "id": "AUD15-008",
+    "severity": "高",
+    "area": "time/persistence",
+    "title": "改时区后的闹钟计划只更新内存，重启后按旧时区对应的 UTC 时间响",
+    "evidence_type": [
+      "复现",
+      "代码核查"
+    ],
+    "locations": [
+      "system/services/time/time_service.c:436",
+      "system/services/time/time_service.c:601",
+      "system/services/time/time_service.c:662"
+    ],
+    "impact": "clock_moved 重算 next_s 却没有 save_alarm；启动又信任持久记录中非零的 next_s。先在上海时区设每天 09:00，再改 UTC 并等写完，内存显示 09:00；下一次启动同为 UTC、规则仍 09:00，next_s 却是 01:00。正常改时区后重启即可提前或错过闹钟，无需并发或断电注入。",
+    "recommendation": "持久保存重算后的计划，明确规则/绝对提醒/错过补报的恢复契约；时区设置与计划更改应可一致恢复，或保存调度所用时区代次并在启动时识别过期计划。",
+    "reproduce": "同一个 build-audit/audit-probes/time-zone.img 连续运行 time_probe 的 write 和 read 两阶段：before reboot zone=UTC next_local_hour=9 next_s=1793610000；after reboot zone=UTC rule_hour=9 next_local_hour=1 next_s=1793581200。"
+  },
+  {
+    "id": "AUD15-009",
+    "severity": "高",
+    "area": "tests/AI-contract",
+    "title": "AI 能力测试缺失 Schema 不失败，文档给出了未被实现的回归保证",
+    "evidence_type": [
+      "复现",
+      "代码核查",
+      "文档核查"
+    ],
+    "locations": [
+      "tests/integration/ai_surface.c:128",
+      "tests/integration/ai_surface.c:131",
+      "docs/system/system-services-design.md:67"
+    ],
+    "impact": "测试仅在 c->input 非空时检查是否含 type:object，没有核查应有参数的能力缺 Schema，也不验证实际工具清单中的 Schema。删除 data.get 的完整 input 声明后，原 integration-ai-surface 仍 test.fail=0、test.finished=1；实际清单会退回默认空对象 Schema，丢失 collection/id 的必需参数描述（cap.c:853）。与文档“缺 Schema 都不通过”的明确保证不符，模型将无法获得该工具必需参数的约束。按任务将虚假测试保证定为高；不是声称当前未变异版 data.get 已缺 Schema。",
+    "recommendation": "将能力的必需输入/输出契约列为可核对数据，解析真实 tools/list 的完整对象，验证必需字段与 Schema；对有参数的能力移除 Schema 的反向用例必须失败，同时收窄文档对当前检查能力的表述。",
+    "reproduce": "python3 docs/audits/2026-11-04-codex-services/experiments/reverse_controls.py；missing-input-schema 仅在 build-audit 副本中删除 data.get 的 input 行，原测试和预算不变，模拟器与包装脚本均退出 0、test.fail=0、test.finished=1。"
+  },
+  {
+    "id": "AUD15-010",
+    "severity": "中",
+    "area": "apps/storage",
+    "title": "状态保存入队失败仍停止应用并返回成功，重新打开恢复旧状态",
+    "evidence_type": [
+      "复现",
+      "代码核查"
+    ],
+    "locations": [
+      "system/ui/app_registry.c:85",
+      "system/ui/app_registry.c:94",
+      "system/ui/app_registry.c:120",
+      "system/ui/app_registry.c:306"
+    ],
+    "impact": "save 忽略 ink_storage_write_atomic 的失败结果，stop 仍释放应用内存，ink_app_close 返回 0。真实存储队列 8 槽占满时，新状态未入队；排空并重开应用得到 old-state。需要队列满或内存不足；当前随附阅读器不使用这套 save_state，故按有限范围的失败路径定中。框架承诺不能扩展为保存已成功。",
+    "recommendation": "让保存结果参与生命周期转换：入队失败保留脏状态、重试或明确报告失败；不能在唯一的新状态被释放后只保留成功回执。异步写失败也要有可观察的处置。",
+    "reproduce": "python3 docs/audits/2026-11-04-codex-services/experiments/run_probe.py docs/audits/2026-11-04-codex-services/experiments/app_probe.c --template sim-apps；真实 ink_storage_hold_writes + 8 个不同路径写入占满队列，输出 close_result=0 queue_before=8 restored=old-state expected=new-state。"
+  },
+  {
+    "id": "AUD15-011",
+    "severity": "中",
+    "area": "power/background",
+    "title": "锁屏且后台保持唤醒时无限等待，低电量监测停止",
+    "evidence_type": [
+      "复现",
+      "代码核查"
+    ],
+    "locations": [
+      "system/services/power/power_service.c:158",
+      "system/services/power/power_service.c:167",
+      "system/services/power/power_service.c:239"
+    ],
+    "impact": "locked_step 发现 AUDIO/NET/AWAKE hold 后永久等待 PS.kick；这条分支既不进入睡眠片，也不到亮屏的每分钟电量轮询。保持 hold 时电量变化不唤醒该等待，低电量通知、保存和关机均不执行。实测锁屏后台 hold，硬件电量 1%，75 秒后发布电量仍 80%、关机计数 0。限定于持续后台 hold；会直接影响第二阶段锁屏媒体等合法用法，不是要求本轮实现媒体功能。",
+    "recommendation": "在保持 CPU 唤醒的锁屏分支也按电量截止时间有界等待并采样；与低电量关机等待合并，不为无后台工作的正常深睡额外增加轮询唤醒。",
+    "reproduce": "python3 docs/audits/2026-11-04-codex-services/experiments/run_probe.py docs/audits/2026-11-04-codex-services/experiments/power_probe.c --template sim-notify --end 90s；locked battery before=80 hardware=1 after75s=80 shutdowns=0 state=locked。"
+  }
+]
