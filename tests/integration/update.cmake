@@ -84,7 +84,14 @@ run(res1 restart)
 run(res2 off)
 run(res3 done)
 
-# On a new device, as it were: by itself when that was asked for, and only on Wi-Fi.
+# On a new device, as it were: a download the power cut short.
+file(REMOVE_RECURSE ${OUT}/sd)
+file(MAKE_DIRECTORY ${OUT}/sd/content)
+file(REMOVE ${img} ${img}.ota)
+run(resume1 off)
+run(resume2 done)
+
+# Again: by itself when that was asked for, and only on Wi-Fi.
 file(REMOVE_RECURSE ${OUT}/sd)
 file(MAKE_DIRECTORY ${OUT}/sd/content)
 file(REMOVE ${img} ${img}.ota)

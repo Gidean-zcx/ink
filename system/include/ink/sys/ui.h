@@ -63,6 +63,8 @@ typedef struct {
 /** In its place by level (up to 4), `root` above the lower ones. UI task. */
 void ink_ui_overlay_add(const ink_ui_overlay_t *o, lv_obj_t *root);
 void ink_ui_overlay_remove(const ink_ui_overlay_t *o);
+/** A system card is up. UI task. */
+bool ink_ui_overlay_up(void);
 
 /** Start the UI task with `home` as the root activity. */
 int ink_ui_start(const ink_activity_t *home);

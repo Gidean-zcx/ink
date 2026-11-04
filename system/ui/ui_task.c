@@ -478,6 +478,8 @@ void ink_ui_overlay_add(const ink_ui_overlay_t *o, lv_obj_t *root) {
     overlays_changed();
 }
 
+bool ink_ui_overlay_up(void) { return UI.noverlays > 0; }
+
 void ink_ui_overlay_remove(const ink_ui_overlay_t *o) {
     for (int i = 0; i < UI.noverlays; i++)
         if (UI.overlays[i] == o) {

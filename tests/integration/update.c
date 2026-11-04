@@ -375,6 +375,39 @@ static void res3(void) {
     ink_probe_count("test.finished");
 }
 
+/* ---- a download across a power cut: from where it stopped ---- */
+
+static void resume1(void) {
+    ink_hub_demand();
+    CHECK(WAIT_FOR(ink_hub_online(), 30000), "online");
+    CHECK(AI("update.check", NULL) && g_rc.status == INK_RC_DONE, "there is one");
+    CHECK(AI("update.download", NULL) && g_rc.status == INK_RC_DONE, "it comes");
+    int64_t pct = 0;
+    for (int i = 0; i < 400 && pct < 40; i++) {
+        delay_ms(25);
+        ink_state_get_int(ink_state_find("update.progress"), &pct);
+    }
+    CHECK(pct >= 40, "far enough (%d)", (int)pct);
+    ink_probe_count("test.finished");
+    vtk_event_at(vtk_now() + SIM_MS(1), cut_event, NULL);
+    delay_ms(10000);
+    CHECK(0, "the power should have gone");
+}
+
+static void resume2(void) {
+    int64_t part = hal_fs_size("/content/.update/2.0.0.inkfw.part");
+    CHECK(part > 400000, "what came is still there (%lld)", (long long)part);
+    ink_hub_demand();
+    CHECK(WAIT_FOR(ink_hub_online(), 30000), "online");
+    CHECK(AI("update.check", NULL) && g_rc.status == INK_RC_DONE, "there is one");
+    CHECK(AI("update.download", NULL) && g_rc.status == INK_RC_DONE, "again");
+    CHECK(WAIT_FOR(!strcmp(state_of("update.state"), "ready"), 60000), "and it finishes (%s)", state_of("update.state"));
+    CHECK(sim_metric_value("update.download_bad") == 0, "whole and good");
+    double pieces = sim_metric_value("hub.requests.update/fetch");
+    CHECK(pieces > 10 && pieces < 60, "only the rest was asked for: a whole one is 86 pieces (%.0f)", pieces);
+    ink_probe_count("test.finished");
+}
+
 /* ---- by itself, if asked to ---- */
 
 static void auto_wifi(void) {
@@ -426,6 +459,8 @@ static void test_task(void *arg) {
     else if (!strcmp(phase, "hang1")) hang1();
     else if (!strcmp(phase, "hang2")) hang2();
     else if (!strcmp(phase, "hang3")) hang3();
+    else if (!strcmp(phase, "resume1")) resume1();
+    else if (!strcmp(phase, "resume2")) resume2();
     else if (!strcmp(phase, "res1")) res1();
     else if (!strcmp(phase, "res2")) res2();
     else if (!strcmp(phase, "res3")) res3();

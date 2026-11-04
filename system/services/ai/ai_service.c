@@ -29,6 +29,7 @@
 #include "ink/sys/rt.h"
 #include "ink/sys/settings.h"
 #include "ink/sys/media.h"
+#include "ink/sys/members.h"
 #include "ink/sys/state.h"
 #include "ink/sys/ai.h"
 #include "ink/sys/audio.h"
@@ -733,6 +734,12 @@ static void offline_intent(int k, uint64_t t) { /* UI task, during a hands-free 
 static void listen_job(void *arg) { /* UI task: the voice front end's events drive the same turn as the AI key */
     listen_job_t *j = arg;
     if (j->ev == INK_LISTEN_WAKE && g_handsfree_turn) j->ev = INK_LISTEN_SPEECH; /* already listening to this one */
+    /* the AI key does not get past a system card, and nothing gets into a space that is closed: a voice is no different */
+    if ((j->ev == INK_LISTEN_WAKE || j->ev == INK_LISTEN_BARGE) && (ink_ui_overlay_up() || !ink_member_space_open())) {
+        ink_probe_count("ai.wake_not_now");
+        osal_free(j);
+        return;
+    }
     if (j->ev == INK_LISTEN_WAKE || j->ev == INK_LISTEN_BARGE) {
         g_handsfree_turn = true;
         ink_probe_count(j->ev == INK_LISTEN_WAKE ? "ai.wakes" : "ai.barge_ins");

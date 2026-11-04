@@ -584,6 +584,17 @@ if(INK_HAVE_FONTS)
             -DSRC=${CMAKE_SOURCE_DIR}/tests/integration -DPY=${Python3_EXECUTABLE} -DTOOL=${CMAKE_SOURCE_DIR}/tools/inkfw/make_inkfw.py
             -P ${CMAKE_SOURCE_DIR}/tests/integration/update.cmake)
 
+  # Hands-free listening, all three settings, on the profile with the voice front end.
+  add_executable(sim-listening simulator/runtime/sim_main.c tests/integration/listening.c)
+  target_link_libraries(sim-listening PRIVATE ink_apps ink_system ink_port_sim)
+  target_compile_options(sim-listening PRIVATE ${INK_WARN} -Wno-format-truncation) # a message cut short does no harm
+  add_test(NAME integration-listening
+    COMMAND sim-listening --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus-handsfree.json
+            --budget ${CMAKE_SOURCE_DIR}/tests/integration/listening.budget.json
+            --script ${CMAKE_SOURCE_DIR}/tests/integration/listening.script
+            --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+            --out ${CMAKE_BINARY_DIR}/test-out/listening --quiet --no-random-outages)
+
   # Two tasks at the worst moment: the services built with that moment in them, instead of the library's.
   add_executable(sim-races simulator/runtime/sim_main.c tests/integration/races.c tests/integration/races_notify.c tests/integration/races_interrupt.c)
   target_link_libraries(sim-races PRIVATE ink_apps ink_system ink_port_sim)

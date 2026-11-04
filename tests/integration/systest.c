@@ -558,6 +558,25 @@ static size_t test_reclaim(void *ctx, size_t want) {
     return 1536u * 1024u;
 }
 
+static volatile int g_other_steps;
+static ink_job_step_t other_step(void *ctx) {
+    (void)ctx;
+    g_other_steps++;
+    return INK_JOB_DONE;
+}
+
+static void net_off(void *arg) {
+    (void)arg;
+    extern void sim_net_set_link(const char *);
+    sim_net_set_link("none");
+}
+
+static void net_on(void *arg) {
+    (void)arg;
+    extern void sim_net_set_link(const char *);
+    sim_net_set_link("wifi");
+}
+
 static ink_job_step_t three_steps(void *ctx) {
     (void)ctx;
     g_steps_on_bg = g_steps_on_bg && ink_exec_is_current(INK_EXEC_BG);
@@ -607,6 +626,27 @@ static void res_checks(void) {
     CHECK(g_steps == 0, "a held job does not run");
     ink_jobs_hold(false);
     CHECK(wait_for(&g_finished, 2, 2000000) && g_steps == 3, "released, it runs");
+
+    /* what needs the network waits for it, and goes by itself when it is back */
+    vtk_event_at(vtk_now() + SIM_MS(1), net_off, NULL);
+    int64_t up = 1;
+    for (int i = 0; i < 400 && up; i++) {
+        osal_task_delay_us(100000);
+        ink_state_get_int(ink_state_find("net.online"), &up);
+    }
+    CHECK(!up, "offline");
+    ink_job_t onl = {.name = "online", .step = three_steps, .finish = job_finished, .needs_net = true};
+    int fin = g_finished;
+    g_steps = 0;
+    CHECK(ink_job_submit(&onl) > 0, "a job that needs the network is queued");
+    ink_job_t off = {.name = "offline", .step = other_step, .finish = job_finished};
+    g_other_steps = 0;
+    CHECK(ink_job_submit(&off) > 0 && wait_for(&g_finished, fin + 1, 2000000) && g_other_steps > 0, "one that does not runs meanwhile");
+    osal_task_delay_us(2000000);
+    CHECK(g_steps == 0 && ink_jobs_pending() == 1, "it has not run (%d, %d)", g_steps, ink_jobs_pending());
+    vtk_event_at(vtk_now() + SIM_MS(1), net_on, NULL);
+    CHECK(wait_for(&g_finished, fin + 2, 90000000) && g_steps == 3, "online again it runs, nobody had to ask (%d)", g_steps);
+    g_finished = fin; /* what follows counts from here */
 
     /* pressure: reclaim first, then pause background work */
     CHECK(ink_mem_reclaimer("test-cache", 0, test_reclaim, NULL) == 0, "a reclaimable cache registers");

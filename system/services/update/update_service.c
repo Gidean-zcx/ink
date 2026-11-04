@@ -295,7 +295,6 @@ static void never_back(void) { /* hal_power_reboot does not come back on the dev
 
 /* What stands in the way, in words. */
 static const char *not_now(void) {
-    if (ink_usb_disk_active()) return "the card is lent to a computer";
     if (ink_audio_focus_top() || ink_audio_recording()) return "a call, a recording or something being said comes first";
     ink_media_status_t m;
     ink_media_status(&m);

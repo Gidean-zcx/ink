@@ -64,7 +64,7 @@ flowchart TB
 
 ### 1.3 能力总表
 
-“AI 可调”是经 `tools/call` 能直接用的（有副作用的按等级走确认卡）；“AI 不可调”写明原因。测试 `integration-ai-surface` 启动完整系统，用和中枢一样的路径拉工具清单，逐项核对这张表：多了、少了、缺标题、缺 Schema 都不通过；不给 AI 的能力必须在测试的例外表里写明原因。
+“AI 可调”是经 `tools/call` 能直接用的（有副作用的按等级走确认卡）；“AI 不可调”写明原因。测试 `integration-ai-surface` 启动完整系统，用和中枢一样的路径拉工具清单，逐项核对这张表：多了、少了、缺标题都不通过；每个能力必须给的参数也列在测试的表里，和中枢实际收到的 `inputSchema` 逐项比（缺了不通过，这一条第十四轮审计 AUD15-009 之后才成立）；不给 AI 的能力必须在测试的例外表里写明原因。
 
 | 子系统 | AI 可调的能力 | AI 不可调（原因） | 状态 | 设置 | 事件 | 内部机制（不开放） |
 | --- | --- | --- | --- | --- | --- | --- |
@@ -79,7 +79,7 @@ flowchart TB
 | 蓝牙 | `bt.scan`、`bt.list`、`bt.pair`、`bt.connect`、`bt.disconnect`、`bt.forget` | — | `bt.connected`、`bt.device`、`bt.available` | — | `bt.changed` | 芯片命令（协议未知） |
 | Wi-Fi | `wifi.scan`、`wifi.list`、`wifi.connect`（系统级，确认）、`wifi.forget`（确认） | — | `wifi.state`、`wifi.ssid` | `net.prefer` | `wifi.changed` | 选网、入网步骤 |
 | 成员 | `member.list`、`system.switch_member`（孩子到成人仍要 PIN）；`member.add`、`member.remove`（系统级，确认） | `member.unlock`、`member.set_pin`（PIN 只在设备上输入） | `member.current`、`member.authed` | `member.idle_return_s` | `member.changed` | PIN 校验值、盐 |
-| 升级 | `update.status`、`update.check`、`update.download` | `system.upgrade`、`system.upgrade_from_card`（底座设计 §6.2：AI 不能发起升级） | `update.state`、`update.version` | `update.auto_download` | `update.available`、`update.result` | 写槽、回滚、自检 |
+| 升级 | `update.status`、`update.check`、`update.download`（移动数据下要人来） | `system.upgrade`、`system.upgrade_from_card`（底座设计 §6.2：AI 不能发起升级，安装时设备几分钟不能用；清单里也没有） | `update.state`、`update.version`、`update.progress` | `update.auto_download` | `update.available`、`update.result` | 写槽、回滚、自检 |
 | 系统 | `state.list`、`settings.list`、`settings.get`、`settings.set`、`caps.domains`、`caps.find`、`system.undo`、`system.home`、`system.full_refresh`；`system.reboot`、`system.shutdown`、`system.factory_reset`（系统级，确认） | — | `power.state`、`battery.level`、`battery.charging`、`battery.low` | `power.lock_after_s` | `battery.low` | 电源轨、睡眠 |
 
 自动检查之外，每轮审计人工对照这张表和代码（[审计任务说明 K 节](../audits/codex-audit-prompt.md)）。
@@ -230,7 +230,8 @@ void ink_db_flush_all(void);                                 /* 锁屏、关机�
 - **压缩**：日志超过 `max(8 KiB, 快照的一半)` 时排一个后台作业：在锁内把全部记录序列化到 PSRAM，`write_atomic` 写快照。**代**的规则保证任何时刻断电都不丢（D-66）：
   - 快照记着 `log_gen = G`。加载：读快照，按序回放 `G` 代和 `G+1` 代日志，序号 ≤ `last_ver` 的跳过，再顺手删 `G-1` 代。
   - 压缩时如果在用的代就是 `G`，先换到 `G+1`（之后的追加写新文件），新快照写 `log_gen = 当前代`；快照写成功之后才删旧日志；失败什么都不删。所以最多只有两代。
-- **坏帧**：LittleFS 的同步是原子的，正常不会有半帧。真遇到（CRC 不对、sync 不对、长度越界）：停在这里，已读到的留下，计数 `data.log_bad`，马上压缩一次把坏尾巴丢掉，之后的追加不会接在坏帧后面。快照坏了：计数 `data.snapshot_bad`，只从日志恢复。
+- **坏帧**：LittleFS 的同步是原子的，正常不会有半帧。真遇到（CRC 不对、sync 不对、长度越界）：逐字节往后找下一个好帧，坏帧后面追加的还算数，计数 `data.log_bad`，马上压缩一次把坏的部分丢掉。快照坏了：计数 `data.snapshot_bad`，只从日志恢复。
+- **读不出来不等于没有**：`ink_storage_load` 区分“没有这个文件”和“有，但这会儿读不出来”（内存不够、读错）。后者集合打不开（`ink_db_open` 返回空，计数 `data.load_error`），下次再试；如果当成空集合打开，新写的版本号从头算，下次加载会被当成旧帧跳过（AUD15-001）。
 - **墓碑**：删除留一条只有头的记录，给同步用；每个集合最多留 256 条，最老的先扔，`ink_db_ack` 之后的可以提前扔。
 
 ### 3.5 内存和预算
@@ -297,6 +298,8 @@ void ink_fs_job_cancel(int id);
 - `ink_fs_copy_start(from, to)`、`ink_fs_delete_start(path)`：目录连里面的内容一起，单个大文件也可能要几分钟（卡的写速度约 1 MB/s），所以是**后台作业**：每步 64 KiB 或一个目录项，能取消（`ink_fs_job_cancel`），能查进度（`ink_fs_job_status`：已处理的字节和文件数、总量、状态），结束发事件 `file.job_done {id, ok, why}`。同一时刻一个，别的回“忙”。
 - 拷贝先写 `<目标>.part`，写完才改名，断电留下的 `.part` 不算文件（列表不显示；开机不去翻卡，下次拷到同一个目标时覆盖，整个目录删除时一起删；U 盘模式下电脑能看到）；空间不够提前拒绝（先算总量）；中途失败或取消，已经完整拷完的留着，正在拷的删掉，并报告。
 - 删除目录：先删里面的，再删目录；中途失败报告还剩什么。删除不可撤销（这一轮没有回收站），AI 发起要确认卡；人在设备上按的，确认由界面做。
+- `/me`、`/family`、`/members/<成员>` 这些谁都看得到的地方本身不能删、不能移（`INK_FS_ERR_DENIED`），里面的可以。`/family` 对应卡的 `/content`，成员的私有目录 `.m` 和升级目录 `.update` 就在它下面，列表和路径都看不到，但递归删除会碰到（AUD15-002）。删成员走 `ink_fs_forget_member`，卡被借给电脑时不能删成员（`member.remove` 失败）；卡不在时删了成员，回执说卡上的文件还留着。
+- 系统自己放在卡上的东西（升级包、词库）不走路径。用它们时持有卡（`ink_fs_card_hold` / `ink_fs_card_release`），和打开文件一样算数：持有期间卡不会借给电脑。
 
 ### 4.4 U 盘模式（R-058，D-72）
 
@@ -361,6 +364,8 @@ int64_t ink_time_from_local(const ink_tm_t *tm);
 到点：闹钟经打断通道（§6.3）响铃，`alarm.ringing`，等 `alarm.dismiss` 或 `alarm.snooze`（默认 9 分钟），响 2 分钟没人管就自己停、记一条“错过”通知；提醒发高优先级通知。迟到的处理：晚 60 s 内照常响；更晚的（关机了、时钟跳了）不补响，发“错过”通知（底座设计 §5.7“不补跑”）。重复的闹钟算下一次。
 
 低电量也要响。关机后能不能靠 RTC 开机**不知道**（§14）。
+
+时钟或时区一变（`clock_moved`），前面的闹钟重新算下一次并写回；开机时对还没到的闹钟也按当前规则和时区再算一遍，所以改了时区后断电也不会按旧时区响（AUD15-008）。小睡（`snooze_until`）算在内。
 
 ## 6. 通知和系统打断通道
 
@@ -455,7 +460,9 @@ void ink_confirm_set_presenter(const ink_confirm_presenter_t *p);
 3. 用户确认：用来源 `INK_SRC_CONFIRMED` 重新走一遍调用：关口再查一次（成员还是不是那个人、儿童限制、页面版本、页面还在不在，看的是卡片底下的页面），只是不再要确认。结果发事件 `confirm.result {token, cap, decision, status, detail, say, object}`，事件经 AI 代理转给中枢（§1.2 第 3 条）。
 4. 取消、过期（60 s）、换成员、AI 撤回（`confirm.withdraw`）：调用作废，同样发 `confirm.result`。主页键、返回键等于取消。
 5. 只有 `INK_SRC_TOUCH`、`INK_SRC_KEY` 能确认。`confirm.accept`、`confirm.reject` 标 `INK_EXPOSE_OWNER`：不开放给 AI、远端和应用，也不在工具清单里；C 接口也查来源。同一个 token 只能决定一次。撤回只有发起的来源或人能做。
-6. 要家长确认的（`INK_CONFIRM_PARENT`，比如恢复出厂）：卡片上要输成人 PIN（§11.3）。
+6. 要家长确认的（`parent_pin`：删成员、恢复出厂，有 PIN 才要）：卡片是数字键盘，`ink_confirm_accept_with_pin`，普通的“确认”不算（§11.3）。
+7. 确认过的调用绑定当时的成员（`ink_call_opts_t.member`）。它可能要排一会儿队，开始之前换了人就不执行，结果是“过时”（AUD15-007）。
+8. 人自己按一般不用确认（界面就是确认）；标了 `ask_by_hand` 的能力人也要确认：升级（§12），点一下通知不该让设备几分钟不能用。
 
 系统级设置（`settings.set`）走同样的路：设置表回“待确认”时，处理函数调用 `ink_confirm_hold`，回执带 token。应用改系统级设置也要确认。
 
@@ -504,6 +511,7 @@ stateDiagram-v2
 ```
 
 - 应用没有线程，“冻结”的含义是：它答应不再做事（停定时器、放掉缓存）；执行队列的工作由它自己收住。
+- 交不出去（存储队列满，等约 400 ms 还是满）时唯一的一份还在应用里：`ink_app_close` 返回 -2、`app.close` 失败，应用留在后台；冻结下次再试；只有内存危急时才不管存没存上（计数 `app.state_not_saved`，AUD15-010）。
 - 状态保存：`save_state(buf, cap)` 最多 1 KiB，写到成员数据区 `/user/m/<成员>/<应用>.state`；停止后再打开时 `restore_state`，用户感觉不到。冻结时已经存过，从冻结到停止不再存。
 - 内存压力接 `ink_mem_on_pressure`：紧张（LOW）冻结所有后台的（播放除外）；危急（CRITICAL）从最久没用的开始停，播放的最后停，主页和前台不停，停到不再危急为止。
 - 换成员：全部保存、停止，回主页，文件和数据都换成新成员的。
@@ -521,13 +529,13 @@ typedef struct { char id[16], title[32], text[96], action[40]; int64_t value; bo
 ### 9.1 输入会话
 
 ```c
-typedef struct { ink_text_type_t type; ink_text_enter_t enter; const char *initial, *hint; size_t max; bool ai_visible; } ink_text_cfg_t;
+typedef struct { ink_text_type_t type; ink_text_enter_t enter; const char *initial, *hint; size_t max; bool ai_hidden; } ink_text_cfg_t;
 int  ink_text_focus(const ink_text_cfg_t *cfg, const ink_text_client_t *client, void *ctx); /* 界面任务 */
 void ink_text_blur(int session);
 /* 键盘（或测试）喂进来 */
 void ink_text_key(char c); void ink_text_backspace(void); void ink_text_pick(int index); void ink_text_enter(void); void ink_text_commit_utf8(const char *s);
 /* 读 */
-const char *ink_text_value(void), *ink_text_composing(void); int ink_text_candidates(int page, ink_text_cand_t *out, int max);
+const char *ink_text_value(void), *ink_text_composing(void); int ink_text_candidates(int first, ink_text_cand_t *out, int max);
 ```
 
 - 一个时刻一个会话。类型：普通、数字、电话、密码（不进候选、不学词、对 AI 掩码、不能复制）。
@@ -541,13 +549,13 @@ const char *ink_text_value(void), *ink_text_composing(void); int ink_text_candid
 - 查询：取组合串，从最长的前缀往短找完全匹配的键，同长度按“用户频率 + 词库频率”排。选中一个候选消耗对应的字母。不做拼音切分：数据本身决定（`xian` 既是“先”也是“西安”）。
 - 用户词频：成员集合 `text.user_freq`，选中时 `INK_DB_LAZY` 更新；密码框不学。
 - 词库来源（D-70）：工具 `tools/imedict` 从制表文本生成；仓库里放一份测试和模拟器够用的小词表，正式词库的来源和许可等决定。
-- AI 联想（R-027）：默认关，接口先留（`ink_text_suggest_hook`），走软总线，不在这一轮做。
+- AI 联想（R-027）：不在这一轮做，接口也没留（等要做时按软总线能力加）。
 
 ### 9.3 剪贴板
 
 ```c
-int ink_clip_set(const char *text, bool sensitive, ink_source_t src);
-int ink_clip_get(char *out, size_t cap, ink_source_t src, bool *sensitive);
+int ink_clip_set(const char *text, bool sensitive, uint8_t src);
+int ink_clip_get(char *out, size_t cap, uint8_t src, bool *sensitive);
 void ink_clip_clear(void);
 ```
 
@@ -582,9 +590,9 @@ void ink_audio_focus_release(int token);
 格式（D-67）：**Ogg Opus（RFC 7845），16 kHz 单声道，60 ms 一帧**。标准格式，用户拷到电脑上能播，中枢也容易转；设备上没有 MP3 解码，别的格式由中枢转换。容器解析和写入都自己写（很小）；模拟器里包的是替身 Opus 帧。
 
 ```c
-int  ink_media_play(const char *path, uint32_t start_ms, const ink_media_opts_t *o);
+int  ink_media_play(const char *path, uint32_t start_ms);
 void ink_media_pause(void); void ink_media_resume(void); int ink_media_seek(uint32_t ms); void ink_media_stop(void);
-int  ink_media_status(ink_media_status_t *out); /* 路径、位置、总长、状态、暂停原因 */
+void ink_media_status(ink_media_status_t *out); /* 路径、位置、总长、状态、暂停原因 */
 ```
 
 - 一个播放会话，属于“成员 × 内容”，切换成员时暂停并保存。
@@ -603,8 +611,8 @@ int  ink_media_status(ink_media_status_t *out); /* 路径、位置、总长、�
 **不知道的（§14）**：BH1098G 没有手册；官方只写“模式 2 经蓝牙耳机通话”；扫描、配对、连接的串口协议没有拿到；音质未知；回采声道在模式 2 下有没有未知。所以：
 
 - HAL 只定接口（`hal_bt.h`、`hal_audio_route_*`），**不假设协议**。真机端口在协议弄清之前 `hal_bt_available()` 返回假，系统照常用外放。
-- 模拟器的耳机是行为模型，在 HAL 这一层（不编 AT 命令）：脚本 `headset add/on/off/range`；连上后声音算到耳机上（指标 `audio.bt.played_ms`），功放关，麦克风来自耳机且没有回采；切模式只调用已知的 `bh1098g_set_mode`（700 ms，官方代码），不动 P14；通话中不切。
-- 系统：蓝牙服务（扫描、配对、连接、忘记，已配对的存设备集合 `bt.devices`），连上自动切到耳机（`audio.route` = `bt_headset`），断开退回外放（`speaker`）；耳机断开时**媒体暂停**（不让声音突然外放，D-68 里一起记）。
+- 模拟器的耳机是行为模型，在 HAL 这一层（不编 AT 命令）：脚本 `headset add|on|off|in|out`；连上后声音算到耳机上（指标 `audio.bt.played_ms`），功放关，麦克风来自耳机且没有回采；切模式只调用已知的 `bh1098g_set_mode`（700 ms，官方代码），不动 P14；通话中不切。
+- 系统：蓝牙服务（扫描、配对、连接、忘记，已配对的存设备集合 `bt.devices`），连上自动切到耳机（`audio.route` = `bt_headset`，接口 `ink_audio_set_route`），断开退回外放（`speaker`）；通话中的切换等通话结束；耳机断开时**媒体暂停**（不让声音突然外放，D-68 里一起记）。
 - 儿童音量上限 `audio.child_max` 在所有路由上都生效（底座设计 §7.4，Sony 的反例）。
 
 采样率仍固定 16 kHz（RK-12）；S31 自带蓝牙不在这一轮（D-63）。
@@ -626,14 +634,15 @@ void hal_wifi_set_known(const hal_wifi_known_t *list, int n);          /* 自动
 - 连接新网络是系统级（AI 发起走确认卡，卡片只显示网络名）。
 - 选网逻辑（D-58）不变：`hal_net_available(WIFI)` = 已知网络有一个在范围内。
 - 模拟器：脚本 `ap add <名字> <信号> [密码]`、`ap del <名字>`；现有的 `wifi on|off|broken` 保留（等于一个已知网络）。
+- 回执里连失败的原因（`wrong password`、`not found`）都只说原因，不带密码；密码错了不记住。
 
 ### 11.2 成员表
 
-设备集合 `member.table`（成员编号、名字、角色、盐、PIN 校验值、失败次数、下次可试时间、白名单）。内置的两位成员（`owner`、`kid`）是第一次开机的默认值，以后由中枢同步。能力 `member.list`、`member.add`、`member.remove`（系统级）。删除成员：清它的成员数据区和成员文件区（不可逆，家长确认）。
+设备集合 `member.table`（成员编号、名字、角色、盐、PIN 校验值、失败次数、下次可试时间、白名单）。内置的两位成员（`owner`、`kid`）是第一次开机的默认值，表从第一次改动起才写；以后由中枢同步。槽位固定，别处可以长期留着指针。接口：`ink_members_init`（内置表）、`ink_members_start`（数据存储起来之后读表）、`ink_member_at`、`ink_member_switch`（目标有 PIN 时返回 -2）。能力 `member.list`、`member.add`、`member.remove`（系统级）。删除成员：清它的成员数据区和成员文件区（不可逆，家长确认）。
 
 ### 11.3 PIN
 
-- PBKDF2-HMAC-SHA256，每台设备独立的盐（底座设计 §8.1），迭代次数让 S31 上大约 100 ms（D-69，待实机校准），在后台执行队列算，不占界面任务。
+- PBKDF2-HMAC-SHA256，每台设备独立的盐（底座设计 §8.1），现在迭代 3000 次，目标是 S31 上大约 100 ms（D-69，待实机校准），在后台执行队列算，不占界面任务：`ink_member_unlock`、`ink_member_set_pin`、`ink_member_check_parent` 都是异步的，结果 `INK_PIN_OK/WRONG/WAIT/NO_MEMBER/BAD_FORM`。
 - 校验值存表里，明文不落盘、不进日志、不进参数 JSON；`member.unlock`、`member.set_pin` 不开放给 AI 和远端。
 - 输错递增等待：3 次之后 30 s，再错翻倍，最多 15 分钟；次数落盘，重启不清零。忘了 PIN 由中枢重置（以后）。
 
@@ -642,6 +651,8 @@ void hal_wifi_set_known(const hal_wifi_known_t *list, int n);          /* 自动
 `member.authed`：成人解过 PIN 为真。成人闲置 `member.idle_return_s`（默认 120 s）或进入锁屏：`authed` 变假，应用保存、停止，回到成员选择（占位）。`authed` 假时策略关口只放行标了 `while_locked` 的能力（`member.*`、`alarm.dismiss`、`alarm.snooze`、`call.answer`、`call.hangup`），AI 一律拒绝。孩子没有 PIN，不受影响。没设过 PIN 的成人也不受影响（第一次开机）。
 
 切换成员时：剪贴板清空、AI 这一轮结束、媒体暂停存位置、应用全停、通知换收件箱、输入法换用户词频、确认卡作废。
+
+浮层分四层（`ink_ui_overlay_t.level`，高的在上面）：确认卡 1，谁可以用设备（成员门）2，来电、闹钟、低电量 3，安装进度 4。
 
 ## 12. 系统升级（R-056）
 
@@ -678,18 +689,18 @@ OTA 和卡刷只有第一步不同，后面完全一样：同一种包、同一�
 
 ### 12.3 下载（OTA）
 
-`update.check`：向中枢要最新版本（`update/check` → `{version, version_code, size, sha256}`）；有新版本发 `update.available` 和一条通知。`update.download`：后台作业，分块从中枢取（`update/fetch {offset, len}`，二进制帧，后台优先级，实时会话时让路），写到 TF 卡 `/content/.update/<版本>.inkfw.part`，能续传；完了校验、改名。没卡不能 OTA（Flash 放不下暂存，也不想边下边写）。电量低、有实时会话时暂停。设置 `update.auto_download` 默认关（流量要钱）。
+`update.check`：向中枢要最新版本（`update/check` → `{version, version_code, size}`）；有新版本发 `update.available` 和一条通知。上线时它自己也看一眼，最多一天一次，没有新版本就什么都不做（不启动后台执行队列）。`update.download`：后台作业，分块从中枢取（`update/fetch {offset, len}`，每块最多 12 KiB，后台优先级，实时会话时让路），写到 TF 卡 `/content/.update/<版本>.inkfw.part`，能续传；每写一块才持有一下卡，所以中途可以借给电脑，回来接着下；完了校验、改名。没卡不能 OTA（Flash 放不下暂存，也不想边下边写）。断网、电量低于 15% 时等着。**现在是 JSON 里放 base64**（模拟中枢的实现），比设计的二进制帧多三分之一流量，定中枢协议时再改。设置 `update.auto_download` 默认关，打开也只在 Wi-Fi 下自己下；移动数据要花钱：AI 不能开始下载，人可以。
 
 ### 12.4 卡刷
 
-用户经 U 盘模式把 `.inkfw` 放到 TF 卡的 `content/update/` 目录（系统里就是 `/family/update/`）。系统在开机、退出 U 盘模式、卡插上时看一眼；发现比现在新的包：发通知“发现系统更新”，点开确认后安装。能力 `system.upgrade_from_card`。这条路不需要网，所以中枢坏了、Wi-Fi 配不上也能救。
+用户经 U 盘模式把 `.inkfw` 放到 TF 卡的 `content/update/` 目录（系统里就是 `/family/update/`）。系统在开机、退出 U 盘模式、卡插上时看一眼（卡插上要等文件服务发现，`storage.card` 变真；有没有卡检测引脚不知道，§14）；只有文件夹在才看，不为此启动后台执行队列。发现比现在新、段哈希也对的包：发通知“发现系统更新”（同一个版本这次开机只说一次），点开确认后安装。能力 `system.upgrade_from_card`。这条路不需要网，所以中枢坏了、Wi-Fi 配不上也能救。
 
 ### 12.5 安装、自检和回滚
 
-- HAL `hal_ota.h`：`hal_ota_info`、`hal_ota_begin`、`hal_ota_write`、`hal_ota_end`、`hal_ota_set_boot`、`hal_ota_mark_valid`、`hal_ota_rollback`；`hal_power_reboot`。真机对应 `esp_ota_*`。
+- HAL `hal_ota.h`：`hal_ota_info`、`hal_ota_begin`、`hal_ota_write`、`hal_ota_end`、`hal_ota_set_boot`、`hal_ota_mark_valid`、`hal_ota_write_resource`；`hal_power_reboot`。真机对应 `esp_ota_*`。没有“回滚”接口：没说“这个好”就重启，引导程序自己回去，所以卡死时不用再碰 Flash。凡是碰 Flash 的都在存储任务里跑，后台执行队列的栈在 PSRAM 上。
 - 写槽在存储任务里，每次一块（擦 4 KiB + 写），每块都有 Flash 守卫，块之间让路给刷新和读（整个槽约 1100 块，每块 60～90 ms 停顿，约 1～2 分钟，界面明显变慢，所以安装时显示进度、不让用别的）。通话、录音、播放中不开始；开始后不被打断，来电照样响但等写完这一块。
 - 断电：新槽写一半没有关系，旧槽没动；开机看到 `/user/sys/update.json` 说“在写”就清状态，包还在卡上，重新来。
-- 新系统第一次启动（`pending_verify`）：`ink_update_boot_check()`：所有服务起来了、屏刷过一次、`/user` 能读写；通过后 `hal_ota_mark_valid`。自检之前不做数据格式迁移（底座设计 §10.3）。崩溃或 60 s 内没通过：重启，引导程序回滚。旧系统启动后看到“上次在试新版本”，发通知说明失败，并记下这个版本不再自动提示。
+- 新系统第一次启动（`pending_verify`）：`ink_update_boot_check()`：所有服务起来了、屏刷过一次（`ink_display_commits`）、`/user` 能读写，加上别的服务用 `ink_update_self_check_add` 登记的检查；通过后 `hal_ota_mark_valid`。自检之前不做数据格式迁移（底座设计 §10.3）。崩溃或 60 s 内没通过：重启，引导程序回滚。旧系统启动后看到“上次在试新版本”，发通知说明失败，并记下这个版本不再自动提示。
 - **回滚要新引导程序**：出厂的没开回滚（底座设计 §10.1），第一次装我们的系统要经 USB 写引导程序、分区表和系统，要用户同意（§14）。在那之前的真机上这一节不能完全生效。
 - 字库和资源没有 A/B：新系统确认有效之后再写；写的时候断电，开机发现资源标记没完成：用内置最小字库兜底，接着写。
 
@@ -699,7 +710,7 @@ OTA 和卡刷只有第一步不同，后面完全一样：同一种包、同一�
 
 ### 12.7 给 AI 的能力
 
-`update.status`、`update.check`、`update.download` 给 AI（它可以提醒“有新版本”“我帮你下好了”）；`system.upgrade`、`system.upgrade_from_card` 不给（现有规则：名字带 upgrade 的 AI 一律拒绝，底座设计 §6.2）。
+`update.status`、`update.check`、`update.download` 给 AI（它可以提醒“有新版本”“我帮你下好了”）；`system.upgrade`、`system.upgrade_from_card` 不给：标了 `INK_EXPOSE_OWNER`，清单里没有；策略关口还有一条规则，名字带 upgrade 的 AI 一律拒绝（底座设计 §6.2）。人来也要过确认卡（`ask_by_hand`）。
 
 ## 13. 其余缺项
 
@@ -711,14 +722,16 @@ OTA 和卡刷只有第一步不同，后面完全一样：同一种包、同一�
 | `time.zone`、闹钟提醒 | §5 |
 | `audio.record` | §10.3 |
 | `system.reboot` | HAL 加 `hal_power_reboot`，能力系统级 |
-| “一直在听”没有专门测试 | 加测试 |
-| 作业“离线不跑、联网后跑”没有专门测试 | 加测试 |
+| “一直在听”没有专门测试 | `integration-listening`：三种设置；锁屏听的时候不睡；唤醒词过不了确认卡，也进不了锁着的空间 |
+| 作业“离线不跑、联网后跑”没有专门测试 | `systest-services` 里加了 |
 | 生命周期回调和状态保存 | §8 |
 | 权限检查 | §8.1 |
 | 给 AI 的上下文带系统状态；事件转发（主动决策的第一步） | §1.2 第 3、4 条 |
 | 工具清单只有 6 KiB 缓冲，能力多了放不下 | 分页（§1.2 第 5 条） |
 | `MAX_CAPS` 96、事件订阅 16、状态 48、设置 32、`on_online` 2 | 都要加大，放 PSRAM |
 | `SDK 头文件自成一体` | 这轮不做，界面框架会动这些头文件，记在 §15 |
+
+另外加大了：状态和设置的监听 24 个（`WATCH_MAX`），`on_online` 6 个。
 
 明确不做的（以后）：媒体索引、节气、成员级设置（现在设置表是设备级的，音量等都全家一个）、AI 联想、S31 自带蓝牙、配对（首次开机）、无线传输。
 
@@ -753,6 +766,9 @@ OTA 和卡刷只有第一步不同，后面完全一样：同一种包、同一�
 | `lfs_fs_size` 和 `f_getfree` 的实际耗时 | `storage.free` 刷新频率 | 测量固件 |
 | PBKDF2 迭代次数 | PIN 解锁时长 | 测量固件 |
 | 升级时写槽对音频、触摸的影响 | 安装体验 | 用户同意后试一次 |
+| `esp_ota_begin` 擦除要多久、能不能边写边擦 | 存储任务一次不能占太久 | 端口实现时测，要写设备 |
+| 出厂引导程序没开回滚 | 真机上“新系统不行就回去”要等第一次经 USB 装我们的引导程序 | 同第一行 |
+| PQ-BN 下一帧什么时候算“屏刷过一次” | 自检用提交帧数和 `ink_display_busy`，没测过真屏 | 第一次装系统时看 |
 
 ## 15. 验证记录
 
@@ -786,5 +802,6 @@ OTA 和卡刷只有第一步不同，后面完全一样：同一种包、同一�
 
 ## 修订记录
 
+- v0.3（2026-11-04）：第 2 阶段和升级完成，第十四轮审计的问题修完；§3、§4、§5、§7～§13 按实际接口改。
 - v0.2（2026-11-04）：第 1 阶段完成，回填验证记录和实现中改的接口。
 - v0.1（2026-11-04）：初稿，含用户补充的 R-055～R-058。
