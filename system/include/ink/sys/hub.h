@@ -64,6 +64,8 @@ int ink_hub_send_binary(const void *data, size_t len);
 enum { INK_HUB_TX_VOICE = 0, INK_HUB_TX_INPUT, INK_HUB_TX_SCREEN, INK_HUB_TX_CONTROL, INK_HUB_TX_BACKGROUND };
 /** One binary message in a send class (ink_hub_send_binary is the voice class). */
 int ink_hub_send_frame(const void *data, size_t len, int cls);
+/** Delayed session producers retain the original member and incarnation through the final send. */
+int ink_hub_send_frame_for(const void *data, size_t len, int cls, const char *member, uint32_t generation);
 typedef void (*ink_hub_binary_fn)(void *ctx, const uint8_t *data, size_t len);
 /** The (single) receiver of binary messages from the hub; runs in the hub task. */
 void ink_hub_on_binary(ink_hub_binary_fn fn, void *ctx);

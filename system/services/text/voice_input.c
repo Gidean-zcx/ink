@@ -126,13 +126,22 @@ static void free_frames(void) {
     VS.buffered = 0;
 }
 
+static bool voice_allowed(void) {
+    if (!ink_member_space_open()) {
+        __atomic_store_n(&VS.drop, true, __ATOMIC_RELEASE);
+        __atomic_store_n(&VS.revoked, true, __ATOMIC_RELEASE);
+    }
+    return !__atomic_load_n(&VS.revoked, __ATOMIC_ACQUIRE);
+}
+
 /* The audio task while a capture runs, this one after it: never both. */
 static void flush_frames(void) {
-    if (__atomic_load_n(&VS.revoked, __ATOMIC_ACQUIRE)) {
+    if (!voice_allowed()) {
         free_frames();
         return;
     }
     while (VS.head) {
+        if (!voice_allowed()) { free_frames(); return; }
         if (ink_rt_send(VS.sid, INK_RT_VOICE_UP, VS.head->data, VS.head->len, 0) != 0) break;
         frame_t *f = VS.head;
         VS.head = f->next;
@@ -147,7 +156,7 @@ static void capture_ended(void *arg);
 static void on_frame(void *ctx, const uint8_t *data, size_t len, uint32_t seq) { /* audio task */
     (void)ctx;
     (void)seq;
-    bool drop = __atomic_load_n(&VS.drop, __ATOMIC_ACQUIRE);
+    bool drop = !voice_allowed() || __atomic_load_n(&VS.drop, __ATOMIC_ACQUIRE);
     if (!len) { /* the end: the microphone is about to be free. From here on the frames are the UI task's */
         ink_exec_post(INK_EXEC_UI, &VS.ended_job, capture_ended, NULL);
         return;
@@ -390,6 +399,7 @@ static void arm_tick(void) { ink_svc_at(&VS.tick_at, osal_now_us() + TICK_US, ti
 static void tick_job(void *arg) {
     (void)arg;
     if (VS.state == INK_VOICE_IDLE) return;
+    if (!voice_allowed()) { voice_end("cancelled"); return; }
     uint64_t now = osal_now_us();
     uint32_t in_state_ms = (uint32_t)((now - VS.state_since_us) / 1000u);
     ink_power_activity(now); /* talking to it is using it */
