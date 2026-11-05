@@ -5,6 +5,7 @@ import hashlib
 import json
 import os
 import platform
+import shlex
 import statistics
 import subprocess
 from pathlib import Path
@@ -22,6 +23,9 @@ def check(result, metrics, candidate):
     assert m.get("test.fail", 0) == 0 and m["test.pass"] >= 18, m.get("test.fail")
     assert m["action.user.spike.set"] == 1 and m["action.ai.spike.set"] == 3
     assert m["action.user.spike.submit"] == 1
+    # An unsettled VM startup only advances the 0.5 us clock-read annotation.
+    if candidate == "lua" and metrics["cpu_mode"] == "measured":
+        assert result["startup_us"] > 1, "unsettled_cpu_clock"
     for name in ({"json": ["bad_json_rejected"], "lua": ["modules_hidden", "loop_stopped", "quota_rejected", "invalid_row_rejected"]}.get(candidate, [])):
         assert m[f"spike.{name}"]["min"] == 1, name
     assert result["released"]
@@ -62,9 +66,40 @@ def main():
     args = parser.parse_args()
     assert 1 <= args.samples <= 20
     build, out = args.build.resolve(), args.out.resolve()
-    cc = subprocess.run(["cc", "--version"], check=True, capture_output=True, text=True).stdout.splitlines()[0]
-    report = {"environment": {"system": platform.system(), "release": platform.release(), "machine": platform.machine(),
-                              "macos": platform.mac_ver()[0], "compiler": cc, "build_type": "RelWithDebInfo",
+    out.mkdir(parents=True, exist_ok=True)
+    (out / "measurements.json").unlink(missing_ok=True)
+    cache = {}
+    for line in (build / "CMakeCache.txt").read_text().splitlines():
+        if line and not line.startswith(("#", "//")) and "=" in line and ":" in line.split("=", 1)[0]:
+            key, value = line.split("=", 1)
+            cache[key.split(":", 1)[0]] = value
+    cc = subprocess.run([cache["CMAKE_C_COMPILER"], "--version"], check=True, capture_output=True, text=True).stdout.splitlines()[0]
+    processor = platform.processor()
+    processor_probe = "platform.processor"
+    if platform.system() == "Darwin":
+        probe = subprocess.run(["sysctl", "-n", "machdep.cpu.brand_string"], capture_output=True, text=True)
+        if probe.returncode == 0:
+            processor = probe.stdout.strip()
+            processor_probe = "sysctl"
+        else:
+            processor_probe = "CPU model unavailable in sandbox; using platform.processor"
+    font = Path(os.environ["INK_DEPS"]) / "build-deps/fonts/NotoSansCJK-Regular.ttc"
+    build_type = cache.get("CMAKE_BUILD_TYPE") or "RelWithDebInfo"
+    actual_flags = ""
+    flags_file = build / "CMakeFiles/appfw-c.dir/flags.make"
+    if flags_file.exists():
+        actual_flags = next(line.partition("=")[2].strip() for line in flags_file.read_text().splitlines() if line.startswith("C_FLAGS ="))
+        parts = shlex.split(actual_flags)
+        actual_flags = " ".join("<sdk>" if i and parts[i - 1] == "-isysroot" else "<path>" if part.startswith("/") else part
+                                for i, part in enumerate(parts))
+    report = {"evidence": "【实测H】host simulator; numeric fields share the recorded environment and definitions",
+              "environment": {"system": platform.system(), "release": platform.release(), "machine": platform.machine(),
+                              "macos": platform.mac_ver()[0], "processor": processor, "processor_probe": processor_probe,
+                              "compiler": cc, "build_type": build_type, "build_type_defaulted": not bool(cache.get("CMAKE_BUILD_TYPE")),
+                              "cflags": cache.get("CMAKE_C_FLAGS", ""), "build_type_flags": cache.get("CMAKE_C_FLAGS_" + build_type.upper(), ""),
+                              "actual_c_flags": actual_flags,
+                              "werror": cache["INK_WERROR"], "sanitize": cache["INK_SANITIZE"],
+                              "font_sha256": hashlib.sha256(font.read_bytes()).hexdigest(), "font_face": 2,
                               "lvgl": "9.5.0", "lua": "5.4.8", "profile": "metalio-plus", "measured_cpu_factor": 1},
               "definitions": {"timing": "simulator host-thread CPU x1 plus scheduler/fixed-time costs; cycle annotations disabled; NOT S31 wall time",
                               "heap": "whole-scenario simulated TLSF pool peak; includes shared product and input service",
@@ -91,10 +126,15 @@ def main():
                                             "snapshot_characters": len(snapshot), "snapshot_utf8_bytes": len(snapshot.encode()),
                                             "deterministic": result, "timing_us": timing, "samples": samples,
                                             "screenshot_sha256": hashlib.sha256(image.tobytes()).hexdigest(),
-                                            "test_pass": metrics["metrics"]["test.pass"]}
+                                            "test_pass": metrics["metrics"]["test.pass"],
+                                            "guard_checks": {k: v for k, v in metrics["metrics"].items() if k.startswith("spike.")}}
         print(f"{candidate}: deterministic, same pixels, {metrics['metrics']['test.pass']} checks; {timing}")
     report["source_inventory"] = {path.name: source_metrics(path) for path in sorted((ROOT / "tools/appfw-spike").iterdir())
                                  if path.suffix in (".c", ".h", ".py", ".sh", ".cmake", ".txt") and path.name not in FRONTENDS.values()}
+    lua_src = ROOT / "work/appfw-spike/lua-5.4.8/src"
+    lua_files = [p for p in sorted(lua_src.glob("*.c")) if p.name not in ("lua.c", "luac.c")]
+    report["upstream_lua_source"] = {"compiled_c_files": len(lua_files), "physical_c_lines": sum(source_metrics(p)["lines"] for p in lua_files),
+                                      "archive_sha256": hashlib.sha256((lua_src.parent.parent / "lua-5.4.8.tar.gz").read_bytes()).hexdigest()}
     (out / "measurements.json").write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
 
 

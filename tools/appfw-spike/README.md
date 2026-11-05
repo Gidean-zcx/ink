@@ -7,7 +7,7 @@ export INK_DEPS=依赖检出目录
 bash tools/appfw-spike/run.sh all
 ```
 
-构建固定 `-j4`，三个目标顺序构建。输出在忽略的 `build-spike/` 和 `work/appfw-spike/evidence/`。脚本先核对 Lua 归档 SHA-256；下载和解压都只写 `work/`。要完整重建第三方源码，使用新的检出或确认解压目录没有自行修改。
+构建固定 `-j4`，三个目标共用一条构建命令。输出在忽略的 `build-spike/` 和 `work/appfw-spike/evidence/`。脚本先核对 Lua 归档 SHA-256，并逐文件核对解压后的 C／头文件；下载和解压都只写 `work/`。测量开始时移除旧汇总，只有全部检查通过才写出新汇总。
 
 每个候选先跑两轮确定性模式，再跑五轮 `--cpu measured:1`。每轮都检查真实触摸、AI 调用同一能力、旧版本拒绝、非法能力／参数、输入服务和页面释放；脚本比较两轮完整指标及三种入口的初始截图。失败会退出非零。样本数可由 `INK_SPIKE_SAMPLES` 调整；正式记录用五次，保留所有样本而非只留最好值。
 
@@ -21,7 +21,7 @@ INK_SPIKE_BUILD=build-spike-asan INK_SPIKE_SANITIZE=ON \
 
 内存记录两类：整个模拟场景的内部 RAM／PSRAM 堆高水位（包含既有系统、字库缓存、编辑器和测试任务）；`appfw.model`、`appfw.lua`、`lvgl` 标签分别记录分配峰值。标签峰值发生时间可能不同，不相加当作同一时刻峰值。`appfw.model` 包含固定 8194 字节源码暂存区和 JSON 解析临时区；C 没有源码暂存区。Lua 另列分配器请求字节峰值和包含分配器开销的 PSRAM 标签峰值。模拟器池不计本机静态数据，宿主文件／PNG／输出内存走 `vtk_host_call`，不冒充设备内存。
 
-配额的反向对照：`"$INK_DEPS/build-deps/pyenv/bin/python" tools/appfw-spike/negative.py`。它临时移除本目录 Lua 分配器的一行配额检查，用原验证器确认失败；在 `finally` 中逐字恢复源码并重建、确认恢复后通过。只能独占运行，不能与其他构建同时执行；产物仍在忽略目录。
+配额和计时的反向对照：`"$INK_DEPS/build-deps/pyenv/bin/python" tools/appfw-spike/negative.py`。它先临时移除 Lua 分配器的一行配额检查，再单独移除计时边界的 CPU 结算，均用原验证器确认失败；每次都在 `finally` 中逐字恢复源码并重建、确认恢复后通过。计时自检要求这个 VM 初始化超过仅调用时钟得到的 0～1 微秒读数，不是性能预算。只能独占运行，不能与其他构建同时执行；产物仍在忽略目录。
 
 字符数是输入文件和紧凑快照的 Unicode 码点数，保留输入文件空白；另列 UTF-8 字节和物理行数。C 输入统计整个 `candidate_c.c`，JSON／Lua 统计各自页面文件，适配器和测量代码另列清单。它表示本轮页面载荷，不包含提示词、接口说明、能力 manifest、模型推理或 token 数，也没有调用真实 AI。
 

@@ -20,6 +20,17 @@ PY
   if [[ ! -d work/appfw-spike/lua-5.4.8 ]]; then
     tar -xzf "$archive" -C work/appfw-spike
   fi
+  "$INK_DEPS/build-deps/pyenv/bin/python" - "$archive" <<'PY'
+import sys, tarfile
+from pathlib import Path
+with tarfile.open(sys.argv[1]) as archive:
+    files = [m for m in archive.getmembers() if m.isfile() and m.name.startswith('lua-5.4.8/src/') and m.name.endswith(('.c', '.h'))]
+    expected = {Path(m.name).name for m in files}
+    actual = {p.name for p in Path('work/appfw-spike/lua-5.4.8/src').iterdir() if p.suffix in ('.c', '.h')}
+    assert expected == actual
+    for member in files:
+        assert (Path('work/appfw-spike') / member.name).read_bytes() == archive.extractfile(member).read(), member.name
+PY
 }
 configure() {
   cmake -S . -B "$spike_build" -DINK_WERROR=ON -DINK_GUI=OFF \
