@@ -33,6 +33,50 @@ static int count_icons(lv_obj_t *root) {
     for (uint32_t i = 0; i < lv_obj_get_child_count(root); i++) count += count_icons(lv_obj_get_child(root, (int32_t)i));
     return count;
 }
+static lv_obj_t *find_label(lv_obj_t *root, const char *text) {
+    if (lv_obj_check_type(root, &lv_label_class) && !strcmp(lv_label_get_text(root), text)) return root;
+    for (uint32_t i = 0; i < lv_obj_get_child_count(root); i++) {
+        lv_obj_t *found = find_label(lv_obj_get_child(root, (int32_t)i), text);
+        if (found) return found;
+    }
+    return NULL;
+}
+static void check_segments(void) {
+    const char *const labels[] = {"小", "中", "大", "特大"};
+    lv_obj_t *root = ink_ui_box(lv_layer_sys(), 0, 0, INK_CANVAS_W, INK_CANVAS_H, 0, INK_SURFACE_WHITE, false);
+    for (int count = 2; count <= 4; count++) for (int selected = 0; selected < count; selected += count - 1) {
+        lv_obj_t *row = ink_ui_segments(root, labels, count, selected, INK_MARGIN, INK_MARGIN,
+                                         INK_CANVAS_W - 2 * INK_MARGIN, NULL, NULL);
+        lv_obj_update_layout(root);
+        lv_area_t outer; lv_obj_get_coords(row, &outer);
+        int gap = ink_ui_px(INK_GAP_XS);
+        for (int i = 0; i < count; i++) {
+            lv_area_t inner; lv_obj_get_coords(lv_obj_get_child(row, i), &inner);
+            CHECK(abs(inner.y1 - outer.y1 - gap) <= 1 && abs(outer.y2 - inner.y2 - gap) <= 1,
+                  "%d-way segment %d leaves the top and bottom outlines visible", count, i);
+            CHECK(inner.x1 >= outer.x1 + gap - 1 && inner.x2 <= outer.x2 - gap + 1,
+                  "%d-way segment %d stays within both rounded ends", count, i);
+        }
+        lv_obj_delete(row);
+    }
+    lv_obj_delete(root);
+}
+static void check_search_layout(void) {
+    lv_obj_update_layout(lv_screen_active());
+    lv_obj_t *label = find_label(lv_screen_active(), "查找应用");
+    CHECK(label, "the real Apps search field is visible");
+    if (!label) return;
+    lv_obj_t *field = lv_obj_get_parent(label);
+    CHECK(count_icons(field) == 1, "search includes exactly one search icon");
+    lv_area_t text, bounds; lv_obj_get_coords(label, &text); lv_obj_get_coords(field, &bounds);
+    for (uint32_t i = 0; i < lv_obj_get_child_count(field); i++) {
+        lv_obj_t *icon = lv_obj_get_child(field, (int32_t)i);
+        if (!lv_obj_check_type(icon, &lv_image_class)) continue;
+        lv_area_t a; lv_obj_get_coords(icon, &a);
+        CHECK(a.x1 >= bounds.x1 && a.x2 < text.x1 && a.y1 >= bounds.y1 && a.y2 <= bounds.y2,
+              "the search icon fits the field without overlapping editable text");
+    }
+}
 static void inspect(lv_obj_t *root) {
     for (uint32_t i = 0; i < lv_obj_get_child_count(root); i++) {
         lv_obj_t *o = lv_obj_get_child(root, (int32_t)i);
@@ -171,6 +215,7 @@ static void confirmation_tests(void) {
     ink_confirm_view_t view; CHECK(ink_confirm_list(&view, 1) == 0 && effects == 0, "no truncated transaction can be accepted");
 }
 static void slider_tests(void) {
+    on_ui(check_segments); quiet();
     const char *ids[] = {"display.light", "display.warmth", "audio.volume"};
     const char *titles[] = {"亮度", "暖光", "音量"};
     for (int i = 0; i < 3; i++) {
@@ -363,6 +408,27 @@ static const ink_app_def_t TOOL_B = {.id = "tool_b", .title = "工具乙", .entr
 static const ink_text_client_t TEXT_CLIENT = {0};
 static ink_text_type_t keyboard_type;
 static char first_candidate[40], picked_text[128];
+static lv_area_t keyboard_bounds;
+static lv_obj_t *keyboard_panel(void) {
+    lv_obj_t *root = find_label(lv_layer_sys(), "空格");
+    for (int i = 0; i < 4 && root; i++) root = lv_obj_get_parent(root);
+    CHECK(root && !strcmp(ink_ui_top_name(), "Keyboard"), "the real keyboard panel exists");
+    return root;
+}
+static void remember_keyboard(void) {
+    lv_obj_update_layout(lv_layer_sys());
+    lv_obj_t *root = keyboard_panel();
+    if (root) lv_obj_get_coords(root, &keyboard_bounds);
+}
+static void check_keyboard_bounds(void) {
+    lv_obj_update_layout(lv_layer_sys());
+    lv_obj_t *root = keyboard_panel();
+    if (!root) return;
+    lv_area_t current; lv_obj_get_coords(root, &current);
+    CHECK(current.x1 == keyboard_bounds.x1 && current.x2 == keyboard_bounds.x2 &&
+          current.y1 == keyboard_bounds.y1 && current.y2 == keyboard_bounds.y2,
+          "candidate, edit and password states preserve the same keyboard area");
+}
 static void focus_keyboard(void) {
     ink_text_cfg_t cfg = {.type = keyboard_type, .initial = keyboard_type == INK_TEXT_PASSWORD ? "FAKE_UI_SECRET" : "测试文字", .max = 128};
     CHECK(ink_text_focus(&cfg, &TEXT_CLIENT, NULL) > 0, "focus the real text service");
@@ -386,6 +452,7 @@ static void snapshot_tests(void) {
     wanted = "继续听"; on_ui(read_view); CHECK(label_x >= 0, "Today describes listening as continue listening");
     wanted = "今日报纸"; on_ui(read_view); CHECK(label_x >= 0, "Today labels today's newspaper explicitly");
     CHECK(BY_HAND("shell.search", "{\"query\":\"\"}") && g_rc.status == INK_RC_DONE, "open Apps with a two-page tool fixture"); quiet(); on_ui(read_context);
+    on_ui(check_search_layout);
     CHECK(strstr(context, "工具页=1/2") && strstr(context, "工具甲（tool_a）") && strstr(context, "对话记录（ai）") && strstr(context, "短信（message）"), "Apps includes the visible registered, built-in and fixed-group entries");
     CHECK(!strstr(context, "设置（settings）"), "Apps omits tools on the next page");
     wanted = "工具甲"; on_ui(read_view); CHECK(label_x >= 0, "the advertised tool is visible"); if (label_x >= 0) tap(label_x, label_y); quiet();
@@ -415,7 +482,11 @@ static void snapshot_tests(void) {
     CHECK(strstr(context, token) && strstr(context, "已读=1"), "control preserves the stable notification id and its read state");
     CHECK(AI("shell.notifications", NULL) && g_rc.status == INK_RC_DONE, "open the full notification list"); quiet(); on_ui(read_context);
     for (int i = 0; i < 3; i++) CHECK(strstr(context, titles[i]), "the full visible list exposes notification %d", i);
-    on_ui(ink_ui_home); quiet(); keyboard_type = INK_TEXT_PLAIN; on_ui(focus_keyboard); compose_xian(); on_ui(read_candidate); on_ui(read_context);
+    on_ui(ink_ui_home); quiet(); keyboard_type = INK_TEXT_PLAIN; on_ui(focus_keyboard); quiet(); on_ui(remember_keyboard);
+    compose_xian(); on_ui(check_keyboard_bounds);
+    CHECK(AI("keyboard.candidates", "{}") && g_rc.status == INK_RC_DONE, "expand the real candidates through the bus"); quiet(); on_ui(check_keyboard_bounds);
+    CHECK(AI("keyboard.candidates", "{\"fold\":true}") && g_rc.status == INK_RC_DONE, "fold candidates through the same capability"); quiet(); on_ui(check_keyboard_bounds);
+    on_ui(read_candidate); on_ui(read_context);
     snprintf(token, sizeof token, "候选[0]=%s", first_candidate);
     CHECK(first_candidate[0] && strstr(context, token) && strstr(context, "光标=") && strstr(context, "选区="), "keyboard describes its actual candidate id, cursor and selection");
     wanted = first_candidate; on_ui(read_view); CHECK(label_x >= 0, "the described candidate is visible"); if (label_x >= 0) tap(label_x, label_y); quiet();
@@ -424,8 +495,10 @@ static void snapshot_tests(void) {
     CHECK(AI("keyboard.pick", "{\"index\":0}") && g_rc.status == INK_RC_DONE, "AI selects the candidate id from the snapshot"); quiet();
     CHECK(!strcmp(picked_text, ink_text_value()), "touch and AI commit the same candidate");
     CHECK(AI("text.select", "{\"start\":1,\"end\":3}") && g_rc.status == INK_RC_DONE, "select real text through the bus"); quiet(); on_ui(read_context);
+    on_ui(check_keyboard_bounds);
     CHECK(strstr(context, "选区=1..3") && !strstr(context, "候选["), "the editing snapshot reports selection and omits hidden candidates");
     keyboard_type = INK_TEXT_PASSWORD; on_ui(focus_keyboard); quiet(); on_ui(read_context);
+    on_ui(check_keyboard_bounds);
     CHECK(strstr(context, "******") && !strstr(context, "FAKE_UI_SECRET") && !strstr(context, "候选[") && !strstr(context, "选区="), "password snapshots remain masked without candidates or selection");
     on_ui(blur_keyboard); quiet();
 }

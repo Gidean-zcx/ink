@@ -246,6 +246,15 @@ lv_obj_t *ink_textfield_create(lv_obj_t *parent, const ink_text_cfg_t *cfg, void
     lv_obj_set_style_radius(f->obj, ink_ui_px(INK_RADIUS_CARD), 0);
     f->label = lv_label_create(f->obj);
     lv_obj_set_style_text_font(f->label, font(), 0);
+    if (cfg->type == INK_TEXT_PLAIN && cfg->enter == INK_ENTER_SEARCH) {
+        lv_obj_set_style_bg_color(f->obj, ink_ui_gray(), 0);
+        lv_obj_set_style_border_width(f->obj, 0, 0);
+        lv_obj_set_style_radius(f->obj, LV_RADIUS_CIRCLE, 0);
+        lv_obj_set_style_pad_left(f->obj, ink_ui_px(INK_MARGIN + INK_ICON_LIST + INK_GAP_M), 0);
+        lv_obj_set_style_pad_ver(f->obj, ink_ui_px((INK_CONTROL - INK_LINE_LIST) / 2), 0);
+        lv_obj_set_style_text_font(f->label, ink_ui_font_px(INK_FONT_LIST, INK_WEIGHT_REGULAR), 0);
+        ink_ui_icon(f->obj, "search", INK_ICON_LIST, INK_ICON_LINE, 0 - INK_ICON_LIST - INK_GAP_M, 0, false);
+    }
     lv_obj_set_width(f->label, LV_PCT(100));
     lv_label_set_long_mode(f->label, LV_LABEL_LONG_CLIP);
     lv_obj_add_event_cb(f->obj, field_event, LV_EVENT_ALL, f);

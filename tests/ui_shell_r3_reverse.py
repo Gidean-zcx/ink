@@ -3,6 +3,7 @@
 import argparse
 import contextlib
 import io
+import json
 import os
 from pathlib import Path
 import re
@@ -37,6 +38,7 @@ def gate(code, source):
 def main():
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument('--build', type=Path, default=ROOT / 'build')
+    ap.add_argument('--components', action='store_true')
     a = ap.parse_args()
     build = a.build.resolve()
     old = {'__file__': str(ROOT / 'tools/ui_scale_check.py'), '__name__': 'r3_previous'}
@@ -98,6 +100,27 @@ def main():
         rc = subprocess.run([compiler, '-I' + str(fixture / 'build/generated'), '-x', 'c', '-c', '-', '-o', str(fixture / 'probe.o')], input=source, text=True, capture_output=True)
         print(f'r3-002 compiler registry, {name}: exit={rc.returncode}')
         assert bool(rc.returncode) == expected
+    if a.components:
+        from ui_shell_reverse import compile_variant
+        for stem, path, mode, profile in (
+            ('r3-segment-border', 'system/ui/theme.c', 'slider', 'metalio-plus'),
+            ('r3-search-icon', 'system/ui/textfield.c', 'snapshot', 'metalio-plus'),
+            ('r3-icon-scale', 'system/ui/icons.c', 'snapshot', 'desktop-lcd'),
+            ('r3-keyboard-height', 'system/ui/shell/keyboard.c', 'snapshot', 'metalio-plus'),
+        ):
+            binary = compile_variant(build, stem, previous(path), 'ink_system', 'sim-ui-regressions')
+            folder = build / f'test-out/review-negative-{stem}'
+            command = [str(binary), '--profile', str(ROOT / f'simulator/profiles/{profile}.json'),
+                       '--script', str(ROOT / 'tests/ui_shell_regressions.script'),
+                       '--hub', str(ROOT / 'tests/ui_shell.hub.json'), '--assets', str(build / 'assets'),
+                       '--content', str(build / 'test-content'), '--budget', str(ROOT / 'tests/ui_scene.budget.json'),
+                       '--out', str(folder), '--quiet', '--no-random-outages']
+            rc = subprocess.run(command, env=dict(os.environ, INK_UI_REGRESSION=mode), capture_output=True, text=True, timeout=90)
+            data = json.loads((folder / 'metrics.json').read_text())
+            failures = data['metrics'].get('test.fail', 0)
+            print(f'{stem}, {profile}: exit={rc.returncode}, test.fail={failures}')
+            for warning in data.get('warnings', [])[:3]: print(' ', warning.split(') ', 1)[-1])
+            assert rc.returncode and failures
     print('All round-three gate controls behaved as expected; product sources stayed unchanged.')
 
 

@@ -207,10 +207,11 @@ static void build(int kind) {
     K.built_for = kind;
     K.keys = lv_obj_create(K.root);
     lv_obj_remove_style_all(K.keys);
-    lv_obj_set_size(K.keys, LV_PCT(100), LV_SIZE_CONTENT);
+    lv_obj_set_size(K.keys, LV_PCT(100), ink_ui_px(INK_LINE_LIST + INK_CONTROL + 4 * INK_KEY + 5 * INK_GAP_XS));
     lv_obj_set_style_pad_row(K.keys, ink_ui_px(INK_GAP_XS), 0);
     lv_obj_set_flex_flow(K.keys, LV_FLEX_FLOW_COLUMN);
     K.composing = lv_label_create(K.keys);
+    lv_obj_set_height(K.composing, ink_ui_px(INK_LINE_LIST));
     lv_obj_set_style_text_font(K.composing, font(), 0);
     lv_label_set_text(K.composing, "");
     K.edit = new_row();
@@ -410,6 +411,7 @@ static void sync(void) { /* UI task */
         else lv_obj_remove_flag(row, LV_OBJ_FLAG_HIDDEN);
     }
     lv_obj_set_flex_flow(K.cands, K.expanded ? LV_FLEX_FLOW_ROW_WRAP : LV_FLEX_FLOW_ROW);
+    lv_obj_set_height(K.cands, K.expanded ? LV_SIZE_CONTENT : ink_ui_px(INK_CONTROL));
     for (int i = 0; i < INK_TEXT_PAGE; i++) {
         lv_obj_set_flex_grow(K.cand_btn[i], K.expanded ? 0 : 1);
         if (K.expanded) lv_obj_set_width(K.cand_btn[i], ink_ui_px((INK_CANVAS_W - 2 * INK_GAP - 2 * INK_GAP_XS) / 3));

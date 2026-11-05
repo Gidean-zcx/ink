@@ -2,7 +2,7 @@
 
 2026-11-06，第 3 轮修复。接续基线 `332cab0`，依据 [REVIEW.md](REVIEW.md) 和[总规则](../codex-rules.md)；原任务基线 `fdff779`。分支 `claude/codex-ui-shell`，仅本地提交。前轮报告保留在 `27040e3:docs/tasks/ui-shell/REPORT.md`。
 
-**里程碑：严重 0 项，两项高问题已修并完成反向验证；普通构建通过。小型中级修复、最终普通及 ASan/UBSan 全量尚在进行，整体验收不认定通过。**
+**里程碑：严重 0 项，两项高问题已修；中级布局问题补了分段边框、搜索图标、图标缩放边界和键盘固定区域，均完成正反验证。普通构建通过；最终普通及 ASan/UBSan 全量尚在进行，整体验收不认定通过。**
 
 ## 验收表
 
@@ -13,7 +13,8 @@
 | UI-R3-001（高）/ UI-R2-001 / U1 | 已修，门禁回归通过 | 【实测】带/不带花括号、两路和嵌套分支、循环、条件复合赋值、别名、预处理分支及条件表达式负例；25 文件、0 违规。旧检查器在同一自检失败 23 项，无异常 | G、N |
 | UI-R3-002（高）/ U4 | 已修，构建门禁通过 | 【实测】应用/分组/Dock 表、工具结构体、条件图标、别名、转发及应用 `.icon` 声明覆盖。真实 APP_ICONS 注入缺失名称：旧门禁退出 0，新门禁退出 1；实际 CMake 检查目标退出 2，恢复后退出 0；生成名称表的编译对照 0/1 | B、G、N |
 | UI-R2-002、003 | 已修，待本轮全量复跑 | 【实现】未撤销成员隔离及完整答案分页 | 待 T |
-| UI-R2-004、005、006 / U2、U3、U5～U13 | 本轮待最终验证 | 较大遗留项见下方；尚未用旧数据充当本轮结果 | 待 T、V |
+| UI-R2-006（中）/ U2 | 部分修复 | 【实测】2/3/4 段且两端选中时，按钮都保留上下及两端边框；搜索图标与文字不重叠；共用图标缩放同时调整控件边界；候选、折叠、编辑、密码状态区域一致。两档案各 185 项滑杆/分段、89 项快照断言通过。分别撤回修复失败 24/1/1/2 项 | G2、N |
+| UI-R2-004、005 / U3、U5～U13 | 本轮待最终验证 | 较大遗留项见下方；尚未用旧数据充当本轮结果 | 待 T、V |
 
 命令（依赖使用用户指定的 `INK_DEPS` / `INK_DESIGN`；构建及反向构建串行）：
 
@@ -27,8 +28,11 @@ cmake --build build -j4
 # G：4/4 通过，退出 0
 "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j3 \
   -R '^ui-(scale|scale-regressions|icons|icons-regressions)$'
+# G2：4/4 通过，退出 0
+"$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j3 \
+  -R '^ui-(slider|snapshot)-regressions-'
 # N：退出 0，表示正反对照均符合预期；隔离 CMake 构建最多 -j1
-"$INK_DEPS/build-deps/pyenv/bin/python" -B tests/ui_shell_r3_reverse.py
+"$INK_DEPS/build-deps/pyenv/bin/python" -B tests/ui_shell_r3_reverse.py --components
 ```
 
 【实现】图标表使用从 manifest 生成的 `INK_UI_ICON` 名称引用，编译时也拒绝不存在的名称；资源检查成为 `ink_system` 的前置依赖。检查器仍是有界 C 源码检查，不声称通用 C 编译/数据流分析。日志留在忽略目录 `work/ui-shell-r3/`。
@@ -39,11 +43,11 @@ cmake --build build -j4
 
 ## 和设计不一致的
 
-键盘固定高度、分段边框、搜索图标等局部问题将继续修复并验证。其余成套布局、密码流程及 30 屏视觉仍按复查记录保留；尚未取得本轮新分数。
+键盘固定区域、分段边框、搜索图标已修并有回归；候选网格/页码、设置搜索与家庭卡、密码槽/忘记密码及成套布局仍欠验收，不能用局部修复关闭整个 UI-R2-006。尚未取得本轮视觉新分数。
 
 ## 改过的已有测试
 
-`ui_scale_check_test.py` 只增加正反例，未删除原断言或放宽尺寸集合。新增 `ui_icon_check_test.py` 和独立反向脚本 `ui_shell_r3_reverse.py`；未改预算或既有失败断言。
+`ui_scale_check_test.py` 只增加正反例，未删除原断言或放宽尺寸集合。新增 `ui_icon_check_test.py` 和独立反向脚本 `ui_shell_r3_reverse.py`；未改预算或既有失败断言。`ui_shell_regressions.c` 新增实际分段边界、搜索图标与文本位置，以及键盘跨状态区域断言；原有断言保留。
 
 ## 要用户定的
 

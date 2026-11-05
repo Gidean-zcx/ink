@@ -228,7 +228,7 @@ lv_obj_t *ink_ui_slider(lv_obj_t *parent, const char *title, int value, int x, i
 lv_obj_t *ink_ui_segments(lv_obj_t *parent, const char *const *labels, int count, int selected, int x, int y, int w, lv_event_cb_t cb, void *ctx) {
     lv_obj_t *row = ink_ui_box(parent, x, y, w, INK_SEGMENT, -1, INK_SURFACE_WHITE, true);
     for (int i = 0; i < count; i++) {
-        lv_obj_t *b = ink_ui_pill(row, labels[i], INK_GAP_XS + i * (w - 2 * INK_GAP_XS) / count, INK_GAP_XS,
+        lv_obj_t *b = ink_ui_pill(row, labels[i], INK_GAP_XS - INK_STROKE + i * (w - 2 * INK_GAP_XS) / count, INK_GAP_XS - INK_STROKE,
                                   (w - 2 * INK_GAP_XS) / count, INK_SEGMENT - 2 * INK_GAP_XS, i == selected, cb, ctx);
         if (i != selected) lv_obj_set_style_border_width(b, 0, 0);
     }

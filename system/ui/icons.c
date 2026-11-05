@@ -36,7 +36,8 @@ lv_obj_t *ink_ui_icon(lv_obj_t *parent, const char *name, int px, ink_ui_icon_lo
     lv_obj_t *im = lv_image_create(parent);
     lv_image_set_src(im, &asset->dsc);
     lv_obj_set_pos(im, ink_ui_px(x), ink_ui_px(y));
-    if (ink_ui_px(px) != px) lv_image_set_scale(im, (uint32_t)ink_ui_px(px) * LV_SCALE_NONE / (uint32_t)px);
+    lv_obj_set_size(im, ink_ui_px(px), ink_ui_px(px));
+    lv_image_set_inner_align(im, LV_IMAGE_ALIGN_STRETCH);
     if (white && look != INK_ICON_SOLID) {
         lv_obj_set_style_image_recolor(im, ink_ui_paper(), 0);
         lv_obj_set_style_image_recolor_opa(im, LV_OPA_COVER, 0);
