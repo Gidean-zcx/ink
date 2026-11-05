@@ -440,7 +440,8 @@ static void slider_changed(lv_event_t *e) {
     lv_area_t a; lv_obj_get_coords(o, &a);
     int span = a.x2 - a.x1;
     int v = span > 0 ? ((pt.x - a.x1) * 10 + span / 2) / span : 0;
-    if (v < 0) v = 0; if (v > 10) v = 10;
+    if (v < 0) v = 0;
+    if (v > 10) v = 10;
     char json[128];
     snprintf(json, sizeof json, "{\"id\":\"%s\",\"value\":%d}", id, v * 10);
     ink_call_opts_t opts = {.src = INK_SRC_TOUCH, .args_json = json, .reply_exec = INK_EXEC_UI};

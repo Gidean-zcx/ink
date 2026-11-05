@@ -226,7 +226,8 @@ static void slider_tests(void) {
         for (int drag = 0; drag < 2; drag++) for (int value = 0; value <= 10; value++) {
             int span = slider.x2 - slider.x1, y = (slider.y1 + slider.y2) / 2;
             int x = slider.x1 + (span * value + 5) / 10;
-            if (value == 0) x++; if (value == 10) x--;
+            if (value == 0) x++;
+            if (value == 10) x--;
             if (drag) {
                 hw(HW_PRESS, (slider.x1 + slider.x2) / 2, y); delay_ms(80);
                 hw(HW_PRESS, x, y); delay_ms(80); hw(HW_RELEASE, x, y);
