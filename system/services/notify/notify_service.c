@@ -64,8 +64,9 @@ static struct {
  * loaded, so this only counts a reference. */
 static ink_db_t *inbox(void) {
     char who[INK_MEMBER_ID_MAX];
+    const char *now = ink_member_current()->id;
     ink_svc_lock();
-    bool open = NS.held != NULL;
+    bool open = NS.held != NULL && !strcmp(NS.member, now); /* this service follows on the background executor: until it has, nothing of the last one's */
     snprintf(who, sizeof who, "%s", NS.member);
     ink_svc_unlock();
     return open ? ink_db_open(&INBOX, who) : NULL;
@@ -447,7 +448,12 @@ static void save_prefs(void) {
 int ink_notify_channel_set(const char *id, bool on) {
     int i = channel_index(id);
     if (i < 0) return -1;
+    const char *now = ink_member_current()->id;
     ink_svc_lock();
+    if (strcmp(NS.member, now)) { /* these are still the last one's */
+        ink_svc_unlock();
+        return -1;
+    }
     if (on) NS.off &= ~(1u << i);
     else NS.off |= 1u << i;
     ink_svc_unlock();
@@ -568,10 +574,11 @@ static void on_missed(void *ctx, const char *id, const ink_args_t *p) { /* exec.
 static void on_message(void *ctx, const char *id, const ink_args_t *p) { /* exec.bg */
     (void)ctx;
     (void)id;
-    char from[24] = "", text[160] = "";
+    char from[24] = "", text[160] = "", whose[INK_MEMBER_ID_MAX] = "";
     ink_args_get_str(p, "from", from, sizeof from);
     ink_args_get_str(p, "text", text, sizeof text);
-    ink_notify_t n = {.channel = "message", .title = from, .body = text, .group = from, .prio = -1, .src = INK_SRC_SYSTEM};
+    ink_args_get_str(p, "member", whose, sizeof whose);
+    ink_notify_t n = {.channel = "message", .title = from, .body = text, .group = from, .prio = -1, .member = whose[0] ? whose : NULL, .src = INK_SRC_SYSTEM};
     ink_notify_post(&n, NULL);
 }
 

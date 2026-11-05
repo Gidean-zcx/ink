@@ -236,6 +236,67 @@ static void yes_then_someone_else(void) {
     CHECK(ink_fs_delete_start("/members/kid/racing.txt") > 0, "tidied up");
 }
 
+/* AUD18-3: someone else comes while the background has something else to do: what follows on it has not caught up yet. */
+static ink_receipt_t g_queued_rc;
+static volatile int g_queued_done;
+static void queued_done(void *ctx, const ink_receipt_t *rc) {
+    (void)ctx;
+    g_queued_rc = *rc;
+    g_queued_rc.result = NULL;
+    g_queued_done++;
+}
+
+static void someone_else_while_the_background_is_busy(void) {
+    static ink_exec_job_t held;
+    uint32_t id = 0;
+    ink_notify_t n = {.member = "owner", .title = "主人留的", .prio = INK_NOTIFY_LOW};
+    CHECK(ink_notify_post(&n, &id) == 0 && id, "the owner has a notification");
+    delay_ms(300);
+    /* the inbox has not changed hands yet */
+    CHECK(ink_exec_post(INK_EXEC_BG, &held, hold_bg, NULL) == 0 && osal_sem_take(g_bg_in, 2000000) == OSAL_OK, "the background is busy");
+    CHECK(ink_member_switch("kid") == 0, "someone else");
+    CHECK(AI("notify.list", NULL) && g_rc.status == INK_RC_DONE && !strstr(g_result, "主人留的"), "the next one does not see it (%s)", g_result);
+    char args[40];
+    snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)id);
+    CHECK(AI("notify.dismiss", args) && g_rc.status == INK_RC_FAILED, "nor can take it away (%s)", ink_rc_name(g_rc.status));
+    CHECK(ink_notify_channel_set("ai", false) != 0, "nor change the last one's channels");
+    osal_sem_give(g_bg_go);
+    delay_ms(500);
+    CHECK(AI("notify.list", NULL) && g_rc.status == INK_RC_DONE && !strstr(g_result, "主人留的"), "nor after (%s)", g_result);
+    ink_member_test_reset();
+    delay_ms(500);
+    CHECK(in_inbox("主人留的"), "it is still the owner's");
+    CHECK(ink_notify_channel_on("ai"), "and so are their channels");
+    /* a call that was waiting its turn */
+    hal_fs_remove("/content/.m/owner/queued-for-race.txt");
+    hal_fs_remove("/content/.m/kid/queued-for-race.txt");
+    CHECK(ink_exec_post(INK_EXEC_BG, &held, hold_bg, NULL) == 0 && osal_sem_take(g_bg_in, 2000000) == OSAL_OK, "the background is busy");
+    ink_call_opts_t o = {.src = INK_SRC_AI, .args_json = "{\"path\":\"/me/queued-for-race.txt\",\"text\":\"x\"}", .reply_exec = INK_EXEC_DIRECT, .done = queued_done};
+    int done = g_queued_done;
+    CHECK(ink_cap_call("file.write", NULL, &o) == 0, "the owner's AI asks to write");
+    CHECK(ink_member_switch("kid") == 0, "someone else, before it runs");
+    osal_sem_give(g_bg_go);
+    CHECK(WAIT_FOR(g_queued_done > done, 3000) && g_queued_rc.status == INK_RC_STALE, "it does not run for them (%s)", ink_rc_name(g_queued_rc.status));
+    CHECK(hal_fs_size("/content/.m/kid/queued-for-race.txt") < 0 && hal_fs_size("/content/.m/owner/queued-for-race.txt") < 0, "nothing is written");
+    ink_member_test_reset();
+    delay_ms(500);
+    /* an event that was waiting for whoever takes it up */
+    CHECK(ink_exec_post(INK_EXEC_BG, &held, hold_bg, NULL) == 0 && osal_sem_take(g_bg_in, 2000000) == OSAL_OK, "the background is busy");
+    ink_args_t *a = osal_malloc(sizeof *a, OSAL_MEM_EXTERNAL);
+    ink_args_init(a);
+    ink_args_str(a, "from", "王老师");
+    ink_args_str(a, "text", "明天开会");
+    ink_cap_emit("message.received", a);
+    osal_free(a);
+    CHECK(ink_member_switch("kid") == 0, "someone else, before it is taken up");
+    osal_sem_give(g_bg_go);
+    delay_ms(800);
+    CHECK(!in_inbox("王老师"), "it does not go in their inbox");
+    ink_member_test_reset();
+    delay_ms(800);
+    CHECK(in_inbox("王老师"), "it went in the inbox of who was there");
+}
+
 static void test_task(void *arg) {
     (void)arg;
     g_test_task = osal_task_self();
@@ -246,6 +307,7 @@ static void test_task(void *arg) {
     events_stay_with_who_they_are_about();
     interruption_ended_at_once();
     yes_then_someone_else();
+    someone_else_while_the_background_is_busy();
     ink_probe_count("test.finished");
 }
 
