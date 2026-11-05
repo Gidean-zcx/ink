@@ -231,7 +231,7 @@ static bool same_file(const char *a, const char *b) {
 
 static volatile int g_done;
 static ink_receipt_t g_rc;
-static char g_result[4096];
+static char g_result[8192];
 
 static void done_cb(void *ctx, const ink_receipt_t *rc) {
     (void)ctx;
@@ -251,7 +251,34 @@ static bool call_as(const char *id, const char *args, ink_source_t src) {
 }
 #define AI(id, args) call_as(id, args, INK_SRC_AI)
 
+/* The list when it is full: all of it still comes back, and what ended makes room for what is new. */
+static void list_full(void) {
+    static const char LONG[] = "一个很长很长的名字一个很长很长的名字一个很长很长的名字一个很长很长";
+    int first = 0;
+    for (int i = 0; i < 30; i++) {
+        int id = ink_task_begin("test.long.kind.name.here", LONG, false, NULL, NULL);
+        CHECK(id > 0, "room for it (%d)", i);
+        if (!first) first = id;
+        ink_task_progress(id, 50, "stage-word-long");
+        ink_task_end(id, INK_TASK_DONE, "结果也很长结果也很长结果也很长结果也很长结果也很长结果也很长", "file:/me/a/long/path/of/the/thing/made/here");
+    }
+    CHECK(AI("job.list", NULL) && g_rc.status == INK_RC_DONE, "all of it comes back (%s)", g_rc.detail);
+    int shown = 0;
+    for (const char *p = g_result; (p = strstr(p, "\"kind\":")) != NULL; p++) shown++;
+    CHECK(shown == 16, "as many as it keeps (%d)", shown);
+    char oldest[32];
+    snprintf(oldest, sizeof oldest, "\"id\":%d,", first);
+    CHECK(!strstr(g_result, oldest), "the oldest made room");
+    int running[17], n = 0;
+    while (n < 17 && (running[n] = ink_task_begin("test.run", "跑着的", false, NULL, NULL)) > 0) n++;
+    CHECK(n == 16, "what runs stays: no room for a 17th (%d)", n);
+    ink_task_progress(0, 10, NULL); /* nothing happens */
+    ink_task_end(0, INK_TASK_DONE, NULL, NULL);
+    for (int i = 0; i < n; i++) ink_task_end(running[i], INK_TASK_DONE, NULL, NULL);
+}
+
 static void jobs(void) {
+    list_full();
     ink_fs_job_status_t st;
     /* one large file */
     make_file("/me/big.bin", 300 * 1024);

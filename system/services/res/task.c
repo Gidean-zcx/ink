@@ -17,7 +17,7 @@
 #include "ink/sys/time.h"
 
 #define TASKS_MAX 16
-#define LIST_MAX 2048
+#define LIST_MAX 6144 /* all of them with everything filled in */
 
 typedef struct {
     int id;
