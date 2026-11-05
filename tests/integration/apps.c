@@ -8,6 +8,7 @@
 #include <string.h>
 
 #include "ink/sys/appreg.h"
+#include "ink/sys/layout.h"
 #include "ink/sys/members.h"
 #include "ink/sys/power.h"
 #include "ink/sys/res.h"
@@ -426,6 +427,89 @@ static void home_by_hand(void) {
     CHECK(AI("app.close", "{\"id\":\"alpha\"}"), "closed");
 }
 
+static volatile int pin_done, pin_result;
+static void pin_told(void *ctx, int result, uint32_t wait_s) {
+    (void)ctx;
+    (void)wait_s;
+    pin_result = result;
+    pin_done++;
+}
+
+static bool click_label(lv_obj_t *root, const char *text) {
+    for (uint32_t i = 0; i < lv_obj_get_child_count(root); i++) {
+        lv_obj_t *child = lv_obj_get_child(root, (int32_t)i);
+        if (lv_obj_check_type(child, &lv_label_class) && !strcmp(lv_label_get_text(child), text) && lv_obj_check_type(root, &lv_button_class)) {
+            lv_obj_send_event(root, LV_EVENT_CLICKED, NULL);
+            return true;
+        }
+        if (click_label(child, text)) return true;
+    }
+    return false;
+}
+
+static const char *gate_name;
+static bool gate_pin;
+static void choose_in_gate(void) {
+    CHECK(click_label(lv_layer_sys(), gate_name), "choose %s in the expired member gate", gate_name);
+    if (gate_pin) {
+        for (int i = 0; i < 4; i++) CHECK(click_label(lv_layer_sys(), "2"), "enter a synthetic PIN by hand");
+        CHECK(click_label(lv_layer_sys(), "确定"), "submit the other adult's PIN by hand");
+    }
+}
+
+/* MW-R1: every way out of another member's expired gate must restart the app lifecycle. */
+static void expired_gate_members(void) {
+    CHECK(BY_HAND("member.add", "{\"id\":\"guest\",\"name\":\"测试成人\",\"role\":\"adult\"}") && g_rc.status == INK_RC_PENDING_CONFIRMATION, "add a synthetic adult");
+    unsigned token = 0;
+    CHECK(sscanf(g_rc.object, "confirm:%u", &token) == 1 && ink_confirm_decide(token, true, INK_SRC_TOUCH) == 0 &&
+          WAIT_FOR(ink_member_generation("guest") != 0, 5000), "confirm the synthetic adult");
+    int before = pin_done;
+    CHECK(ink_member_set_pin("owner", NULL, "1111", pin_told, NULL) == 0 && WAIT_FOR(pin_done > before, 5000) && pin_result == INK_PIN_OK, "set the owner's synthetic PIN");
+    ink_power_hold(INK_NEED_AWAKE);
+    const char *const ids[] = {"kid", "guest", "guest"};
+    const char *const names[] = {"小朋友", "测试成人", "测试成人"};
+    const char *const previous[] = {"孩子的", "", "guest gate fixture"};
+    for (int i = 0; i < 3; i++) {
+        if (i == 2) {
+            before = pin_done;
+            CHECK(ink_member_set_pin("guest", NULL, "2222", pin_told, NULL) == 0 && WAIT_FOR(pin_done > before, 5000) && pin_result == INK_PIN_OK, "also cover another adult with a PIN");
+        }
+        CHECK(BY_HAND("app.open", "{\"id\":\"alpha\"}") && g_rc.status == INK_RC_DONE, "the owner's app before locking");
+        snprintf(alpha_kept, sizeof alpha_kept, "owner gate fixture");
+        snprintf(alpha_memory, sizeof alpha_memory, "owner gate fixture");
+        ink_power_lock();
+        CHECK(WAIT_FOR(!strcmp(power_state(), "locked"), 2000), "lock the adult's space");
+        delay_ms(121000);
+        ink_power_unlock(osal_now_us());
+        CHECK(WAIT_FOR(!strcmp(top(), "member_gate"), 2000), "wake into the expired adult gate");
+        gate_name = names[i];
+        gate_pin = i == 2;
+        LOG_CLEAR();
+        on_ui(choose_in_gate);
+        CHECK(WAIT_FOR(!strcmp(ink_member_current()->id, ids[i]) && !strcmp(top(), "home"), 5000), "the selected member gets home");
+        CHECK(ink_app_state_of("home") == INK_APP_FOREGROUND && !strcmp(fg_state(), "home"), "home's lifecycle resumes");
+        CHECK(ink_app_state_of("alpha") == INK_APP_STOPPED && SEEN("alpha:stop"), "the old member's app is stopped");
+        LOG_CLEAR();
+        CHECK(BY_HAND("app.open", "{\"id\":\"alpha\"}") && g_rc.status == INK_RC_DONE, "open the new member's app");
+        CHECK(SEEN("alpha:start") && !strcmp(alpha_memory, previous[i]), "start and restore only this member's memory (%s, %s)", g_log, alpha_memory);
+        snprintf(alpha_kept, sizeof alpha_kept, "%s gate fixture", ids[i]);
+        LOG_CLEAR();
+        CHECK(BY_HAND("app.close", "{\"id\":\"alpha\"}") && g_rc.status == INK_RC_DONE && SEEN("alpha:save"), "closing saves under the selected member (%s)", g_log);
+        char path[INK_LAYOUT_PATH_MAX], saved[64] = "";
+        CHECK(ink_layout_member(path, sizeof path, ids[i], "alpha.state") >= 0 && ink_storage_read(path, saved, sizeof saved - 1) > 0 &&
+              !strcmp(saved, alpha_kept), "the selected member's state persisted (%s)", saved);
+        CHECK(BY_HAND("app.open", "{\"id\":\"beta\"}") && g_rc.status == INK_RC_DONE &&
+              call_as("test.perm", NULL, INK_SRC_APP) && g_rc.status == INK_RC_DONE, "the new foreground app gets its declared permission");
+        CHECK(BY_HAND("app.close", "{\"id\":\"beta\"}") && g_rc.status == INK_RC_DONE, "close the permission fixture");
+        before = pin_done;
+        CHECK(ink_member_unlock("owner", "1111", pin_told, NULL) == 0 && WAIT_FOR(pin_done > before, 5000) && pin_result == INK_PIN_OK &&
+              WAIT_FOR(!strcmp(top(), "home") && ink_app_state_of("home") == INK_APP_FOREGROUND, 2000), "return to the owner");
+        CHECK(BY_HAND("app.open", "{\"id\":\"alpha\"}") && g_rc.status == INK_RC_DONE && !strcmp(alpha_memory, "owner gate fixture"), "the owner's saved memory stays separate");
+        CHECK(BY_HAND("app.close", "{\"id\":\"alpha\"}") && g_rc.status == INK_RC_DONE, "close the owner's fixture");
+    }
+    ink_power_release(INK_NEED_AWAKE);
+}
+
 static void test_task(void *arg) {
     (void)arg;
     delay_ms(1500);
@@ -439,6 +523,7 @@ static void test_task(void *arg) {
     permissions();
     cards();
     home_by_hand();
+    expired_gate_members();
     ink_probe_count("test.finished");
 }
 

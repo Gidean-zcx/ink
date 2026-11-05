@@ -30,6 +30,7 @@
 #include "ink/sys/settings.h"
 #include "ink/sys/media.h"
 #include "ink/sys/members.h"
+#include "ink/sys/layout.h"
 #include "ink/sys/state.h"
 #include "ink/sys/ai.h"
 #include "ink/sys/audio.h"
@@ -87,6 +88,20 @@ static struct {
     int tts_opened;   /* the last audio stream opened for the current turn (0 none): a failure told later */
 } AI;
 static bool g_turn_revoked INK_PSRAM_BSS; /* under AI.lock */
+static char g_turn_member[INK_MEMBER_ID_MAX] INK_PSRAM_BSS;
+static uint32_t g_turn_generation INK_PSRAM_BSS;
+static ink_exec_job_t g_owner_job INK_PSRAM_BSS;
+static void owner_ui(void *arg);
+
+static bool turn_allowed(void) { /* under AI.lock */
+    if (!g_turn_revoked && (!ink_member_space_open() || !g_turn_generation ||
+        g_turn_generation != ink_member_generation(g_turn_member) || strcmp(g_turn_member, ink_member_current()->id))) {
+        g_turn_revoked = AI.drop_frames = true;
+        AI.tts_done_for = AI.stream;
+        ink_exec_post(INK_EXEC_UI, &g_owner_job, owner_ui, NULL);
+    }
+    return !g_turn_revoked;
+}
 
 typedef struct {
     ink_exec_job_t job;
@@ -320,7 +335,7 @@ static void on_rt_frame(void *ctx, int sid, uint8_t kind, const uint8_t *opus, s
     uint8_t st = (uint8_t)sid;
     /* under the lock, so a press (new turn) cannot slip between the check and opening a stream */
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
-    if (!g_turn_revoked && st == AI.stream && AI.tts_done_for != st) { /* the current turn, its speech not ended yet */
+    if (turn_allowed() && st == AI.stream && AI.tts_done_for != st) { /* the current turn, its speech not ended yet */
         if (AI.tts_stream <= 0 || AI.tts_for != st) {
             AI.tts_stream = ink_audio_stream_open(INK_AUDIO_PRIO_VOICE, AI.t_release, "ai.release_to_first_audio_heard_ms");
             AI.tts_for = st;
@@ -366,10 +381,14 @@ static void free_buffered(void) { /* under lock */
 
 /* Send buffered frames (and the end notification once the last frame went out) if online. */
 static void flush_uplink(void) {
-    if (!ink_rt_ready(AI.stream)) return; /* the turn's session is not confirmed yet: keep buffering */
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
-    if (g_turn_revoked) free_buffered();
+    if (!turn_allowed()) free_buffered();
+    if (!ink_rt_ready(AI.stream)) { /* still revoke buffered audio before the session is ready */
+        osal_mutex_unlock(AI.lock);
+        return;
+    }
     while (AI.buf_head) {
+        if (!turn_allowed()) { free_buffered(); break; }
         frame_t *f = AI.buf_head;
         if (ink_rt_send(f->sid, INK_RT_VOICE_UP, f->data, f->len, 0) != 0) break;
         AI.buf_head = f->next;
@@ -418,7 +437,7 @@ static void on_frame(void *ctx, const uint8_t *data, size_t len, uint32_t seq) {
     memcpy(f->data, data, len);
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
     f->sid = AI.stream;
-    if (AI.drop_frames || g_turn_revoked) { /* nothing more of a closed or previous member's turn goes out */
+    if (!turn_allowed() || AI.drop_frames) { /* nothing more of a closed or previous member's turn goes out */
         osal_mutex_unlock(AI.lock);
         osal_free(f);
         return;
@@ -613,6 +632,8 @@ void ink_ai_key(bool pressed, uint64_t t_us) {
         AI.up_open = AI.dismissed = false;
         AI.tts_stream = AI.tts_opened = 0;
         AI.tts_for = AI.tts_done_for = -1;
+        snprintf(g_turn_member, sizeof g_turn_member, "%s", ink_member_current()->id);
+        g_turn_generation = ink_member_generation(g_turn_member);
         g_turn_revoked = false;
         osal_mutex_unlock(AI.lock);
         if (sid > 0 && !ink_rt_is_open(sid)) { /* it ended already, its handler may have found no session to end */
@@ -705,6 +726,8 @@ void ink_ai_ask_text(const char *text) {
     AI.up_open = AI.dismissed = false;
     AI.tts_stream = AI.tts_opened = 0;
     AI.tts_for = AI.tts_done_for = -1;
+    snprintf(g_turn_member, sizeof g_turn_member, "%s", ink_member_current()->id);
+    g_turn_generation = ink_member_generation(g_turn_member);
     g_turn_revoked = false;
     osal_mutex_unlock(AI.lock);
     AI.mic_failed = AI.speech_failed = AI.turn_over = false;
@@ -802,7 +825,6 @@ static void on_listen_inputs(void *ctx, int h, const char *id) { /* power.state 
 
 static bool g_switch_is_mine; /* UI task */
 static bool g_member_handoff INK_PSRAM_BSS;
-static ink_exec_job_t g_owner_job INK_PSRAM_BSS;
 
 void ink_ai_switching_member(void) { g_switch_is_mine = true; }
 
