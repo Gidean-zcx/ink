@@ -383,6 +383,39 @@ add_test(NAME hub-export-caps COMMAND sim-hub-cap-export
   --assets ${INK_ASSETS_DIR} --content ${CMAKE_BINARY_DIR}/test-content
   --out ${CMAKE_BINARY_DIR}/test-out/hub --end 3s --quiet --no-random-outages)
 set_tests_properties(hub-export-caps PROPERTIES FIXTURES_SETUP hub-caps)
+ink_sim_executable(sim-capability-inventory tests/capability_table/export.c)
+target_link_libraries(sim-capability-inventory PRIVATE ink_apps ink_system)
+if(INK_HAVE_FONTS)
+  add_dependencies(sim-capability-inventory ink_fonts ink_test_content)
+endif()
+add_test(NAME capability-table-doc COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tools/capabilities.py --check)
+add_test(NAME capability-table-regressions COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/capability_table/test_catalogue.py)
+add_test(NAME capability-table-export COMMAND sim-capability-inventory
+  --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+  --assets ${INK_ASSETS_DIR} --content ${CMAKE_BINARY_DIR}/test-content
+  --out ${CMAKE_BINARY_DIR}/test-out/capability-table --end 3s --quiet --no-random-outages)
+set_tests_properties(capability-table-export PROPERTIES FIXTURES_SETUP capability-inventory)
+add_test(NAME capability-table-runtime COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/capability_table/check_runtime.py
+  ${CMAKE_BINARY_DIR}/test-out/capability-table/capability-inventory.json)
+set_tests_properties(capability-table-runtime PROPERTIES FIXTURES_REQUIRED capability-inventory)
+ink_sim_executable(sim-capability-policy tests/capability_table/policy.c)
+target_link_libraries(sim-capability-policy PRIVATE ink_apps ink_system)
+if(INK_HAVE_FONTS)
+  add_dependencies(sim-capability-policy ink_fonts ink_test_content)
+endif()
+add_test(NAME capability-table-policy-export COMMAND sim-capability-policy
+  --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+  --budget ${CMAKE_SOURCE_DIR}/tests/capability_table/policy.budget.json
+  --assets ${INK_ASSETS_DIR} --content ${CMAKE_BINARY_DIR}/test-content
+  --out ${CMAKE_BINARY_DIR}/test-out/capability-policy --end 15s --quiet --no-random-outages)
+set_tests_properties(capability-table-policy-export PROPERTIES FIXTURES_SETUP capability-policy)
+add_test(NAME capability-table-policy COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/capability_table/check_policy.py
+  ${CMAKE_BINARY_DIR}/test-out/capability-policy/capability-policy.json)
+set_tests_properties(capability-table-policy PROPERTIES FIXTURES_REQUIRED capability-policy)
 add_executable(hub-bridge-lifecycle tests/hub/bridge_lifecycle.c)
 target_include_directories(hub-bridge-lifecycle PRIVATE simulator)
 target_link_libraries(hub-bridge-lifecycle PRIVATE ink_sim_core)
