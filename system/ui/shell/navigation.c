@@ -1,4 +1,7 @@
 /* Three home pages, control centre and the first settings pages. */
+/* ui-scale-runtime: dimension width Canvas width minus theme margins, shared by all shell pages. */
+/* ui-scale-runtime: dimension notifications Returns the bottom of theme-sized notification rows. */
+/* ui-scale-runtime: dimension y tile and notifications accept a theme-derived row position. */
 #include <stdio.h>
 #include <string.h>
 

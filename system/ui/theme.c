@@ -1,4 +1,10 @@
 /* Shared geometry and components; no service state lives here. */
+/* ui-scale-runtime: dimension x,y,w,h,px,radius,diameter,icon_px,height Public component arguments; each caller is checked. */
+/* ui-scale-runtime: dimension offset_x,offset_y,ink_ui_line_height Theme scaling and font metrics, not independent pixel choices. */
+/* ui-scale-runtime: dimension adjusted[weight][at].base_line,adjusted[weight][at].line_height Metrics loaded from generated UI fonts. */
+/* ui-scale-runtime: font px Public font argument; ink_ui_font_px and line-height callers are checked. */
+/* ui-scale-runtime: icon icon_px Public circle argument; ink_ui_circle callers are checked. */
+/* ui-scale-runtime: radius radius Public box argument; ink_ui_box callers are checked. */
 #include <stdio.h>
 #include <string.h>
 

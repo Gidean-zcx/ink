@@ -1,4 +1,5 @@
 /* Only a person's answer after reading the whole transaction can accept it. */
+/* ui-scale-runtime: dimension C.panel_y,C.panel_h,C.row_y Saved LVGL geometry from the theme card, plus theme paging space. */
 #include <stdio.h>
 #include <string.h>
 

@@ -2,6 +2,7 @@
  * Who is using the device (placeholder, D-64): an adult's space that has closed (idle, locked) asks who it is before anything
  * else. It shows the members; one with a PIN asks for it; the keys do nothing. The rules are the members' and the policy's.
  */
+/* ui-scale-runtime: dimension x,y,diameter member_tile arguments use theme margins, rows and avatar sizes. */
 #include <stdio.h>
 #include <string.h>
 

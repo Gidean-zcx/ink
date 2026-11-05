@@ -1,4 +1,5 @@
 /* Flash-mapped icon bitmaps: no simulator headers or host allocations. */
+/* ui-scale-runtime: dimension x,y,px Forwarded icon geometry; ink_ui_icon callers are checked. */
 #include <stdio.h>
 #include <string.h>
 

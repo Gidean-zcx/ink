@@ -7,6 +7,7 @@ are dimensionless. Font/icon/radius arguments use their own contract categories.
 """
 import argparse
 import ast
+import copy
 import pathlib
 import re
 import sys
@@ -26,7 +27,10 @@ STYLE_SIZE = r'(?:min_|max_)?(?:width|height)|pad_\w+|radius|border_width|outlin
 CALL = re.compile(r"\b(ink_dp|ink_ui_px|ink_ui_font_px|ink_ui_line_height|ink_ui_(?:box|label|icon|pill|circle|card|toggle|slider|segments|list_row|panel|pagebar|notice)|"
                   r"lv_obj_(?:set_(?:pos|size|width|height|x|y|content_(?:width|height)|ext_click_area)|align(?:_to)?|set_style_(?:" + STYLE_SIZE + r"))|lv_style_set_(?:" + STYLE_SIZE + r"))\s*\(")
 EXCEPTION = re.compile(r"ui-scale-exception:\s*(\d+(?:\.\d+)?)\s+([^\n*]+)")
-DECL = re.compile(r'\b(?:(?:const|static|unsigned|signed)\s+)*(?:int|long|short|float|double|u?int\d+_t|lv_coord_t)\s+(?:const\s+)?([a-zA-Z_]\w*)\s*(?:=\s*([^;]+?))?\s*(?=[;,)])')
+DECL = re.compile(r'\b(?:(?:const|static|unsigned|signed)\s+)*(?:int|long|short|float|double|u?int\d+_t|lv_coord_t)\s+(?:const\s+)?([a-zA-Z_]\w*)\s*(?=[=;,)])')
+ARRAY = re.compile(r'\b(?:(?:const|static|unsigned|signed)\s+)*(?:int|u?int\d+_t|lv_coord_t)\s+(\w+)\s*\[[^]]*\]\s*=\s*\{([^{}]+)\}')
+ASSIGN = re.compile(r'(?=(?<![\w.>])\b(\w+)\s*([+\-*/]?=)(?!=)\s*([^;{}]+);)')
+RUNTIME = re.compile(r'ui-scale-runtime:\s*(dimension|font|icon|radius|stroke)\s+(\S+)\s+([^\n*]+)')
 
 
 def clean_source(text):
@@ -75,7 +79,7 @@ def parameters(name, args):
 
 
 def symbols_before(text, pos):
-    # Only enclosing lexical scopes can supply a name. A later shadow wins.
+    # Track simple writes by lexical identity, including writes inside branches.
     stack, scopes = [], []
     for at, c in enumerate(text[:pos]):
         if c == '{': stack.append(at)
@@ -84,9 +88,44 @@ def symbols_before(text, pos):
     current = tuple(stack)
     symbols = {k: str(v) for k, v in VALUES.items()}
     for m in re.finditer(r'^\s*#define\s+(\w+)[ \t]+([^\n]+)', text[:pos], re.M): symbols[m[1]] = m[2]
-    for m in DECL.finditer(text[:pos]):
-        scope = scopes[m.start()] if scopes else ()
-        if current[:len(scope)] == scope: symbols[m[1]] = m[2] or ''
+    declarations = list(DECL.finditer(text[:pos]))
+    arrays = list(ARRAY.finditer(text[:pos]))
+    events = [(m.start(), 'decl', m) for m in declarations] + [(m.start(), 'array', m) for m in arrays]
+    events += [(m.start(), 'assign', m) for m in ASSIGN.finditer(text[:pos])
+               if not any(d.start() <= m.start() < d.end() for d in arrays)]
+    bindings = {}
+    for at, kind, m in sorted(events):
+        scope = scopes[at] if scopes else ()
+        if scope and current and scope[0] != current[0]: continue
+        if kind != 'assign':
+            value = '[' + m[2] + ']' if kind == 'array' else ''
+            bindings[m[1], scope] = value
+            continue
+        owners = [s for name, s in bindings if name == m[1] and scope[:len(s)] == s]
+        if not owners:
+            start = max(text.rfind(';', 0, at), text.rfind('{', 0, at), text.rfind('}', 0, at)) + 1
+            if ',' not in text[start:at] or not DECL.search(text[start:at]): continue
+            bindings[m[1], scope] = ''
+            owners = [scope]
+        owner = max(owners, key=len)
+        previous = bindings[m[1], owner]
+        # Stop at a declarator comma, but retain commas inside calls/subscripts.
+        rhs = m[3]; depth = 0
+        for i, c in enumerate(rhs):
+            depth += (c in '([') - (c in ')]')
+            if c == ',' and not depth: rhs = rhs[:i]; break
+        value = rhs if m[2] == '=' else f'({previous}) {m[2][0]} ({rhs})'
+        if value.strip() == m[1]: continue
+        # Freeze aliases at the write, rather than at a later use.
+        known = {}
+        for (name, s), v in sorted(bindings.items(), key=lambda item: len(item[0][1])):
+            if scope[:len(s)] == s and v: known[name] = v
+        value = re.sub(r'\b\w+\b', lambda word: '(' + known[word[0]] + ')' if word[0] in known else word[0], value)
+        if m[2] == '=' and current[:len(scope)] != scope and previous:
+            value = f'[{previous}, {value}]'
+        bindings[m[1], owner] = value
+    for (name, scope), value in sorted(bindings.items(), key=lambda item: len(item[0][1])):
+        if current[:len(scope)] == scope: symbols[name] = value
     for m in re.finditer(r'\benum\s*\{([^}]+)\}', text[:pos], re.S):
         scope = scopes[m.start()] if scopes else ()
         if current[:len(scope)] == scope:
@@ -94,18 +133,44 @@ def symbols_before(text, pos):
     return symbols
 
 
+def conditionals(source):
+    # Size choices are all checked; condition operands are not pixel values.
+    out, at = '', 0
+    while at < len(source):
+        if source[at] != '(':
+            out += source[at]; at += 1; continue
+        end, depth = at + 1, 1
+        while end < len(source) and depth:
+            depth += (source[end] == '(') - (source[end] == ')'); end += 1
+        if depth: return source
+        out += '(' + conditionals(source[at + 1:end - 1]) + ')'; at = end
+    depth = 0
+    for i, c in enumerate(out):
+        depth += (c == '(') - (c == ')')
+        if c == '?' and depth == 0:
+            nested = 0
+            for j in range(i + 1, len(out)):
+                nested += (out[j] == '?') - (out[j] == ':')
+                if out[j] == ':' and nested == -1:
+                    return '(' + conditionals(out[i + 1:j]) + ') if True else (' + conditionals(out[j + 1:]) + ')'
+    return out
+
+
 def expression(source, symbols, seen=()):
     source = re.sub(r'\((?:const\s+)?(?:int|u?int\d+_t|unsigned|long|lv_coord_t)\)', '', source)
     source = re.sub(r'\b(0x[\da-fA-F]+|\d+)[uUlLfF]+\b', r'\1', source)
     try:
-        node = ast.parse(source.strip(), mode='eval').body
+        node = ast.parse(conditionals(source.strip()), mode='eval').body
     except (SyntaxError, ValueError):
         return None
     def resolve(n):
         if isinstance(n, ast.Name) and n.id in symbols and n.id not in seen:
-            value = expression(symbols[n.id], symbols, (*seen, n.id)) or n
+            value = copy.deepcopy(symbols[n.id]) if isinstance(symbols[n.id], ast.AST) else expression(symbols[n.id], symbols, (*seen, n.id)) or n
             if n.id in VALUES: value.ui_contract = True
             return value
+        if isinstance(n, ast.Subscript):
+            value = resolve(n.value)
+            if isinstance(value, (ast.List, ast.Tuple)): return value
         for field, value in ast.iter_fields(n):
             if isinstance(value, ast.AST): setattr(n, field, resolve(value))
             elif isinstance(value, list): setattr(n, field, [resolve(x) if isinstance(x, ast.AST) else x for x in value])
@@ -146,45 +211,57 @@ def violations(source, category, symbols, allowed):
     if source.startswith(('ink_ui_px(', 'ink_dp(')):
         inner = arguments(source, source.index('(') + 1)
         if len(inner) == 1: return violations(inner[0], category, symbols, allowed)
-    # Check either branch of a simple C conditional independently.
-    if '?' in source and ':' in source:
-        yes, no = source.split('?', 1)[1].rsplit(':', 1)
-        return violations(yes, category, symbols, allowed) + violations(no, category, symbols, allowed)
     node = expression(source, symbols)
-    if node is None: return []  # Runtime C calls/array indexing: their nested size calls are checked separately.
-    contract = any(getattr(n, 'ui_contract', False) for n in ast.walk(node))
-    value = evaluate(node)
-    if value is not None and (category != 'dimension' or not contract):
-        return [] if value in allowed else [value]
-    def leaves(n):
-        if getattr(n, 'ui_contract', False): return []
+    if node is None: return ['unresolved expression ' + source]
+    def leaves(n, ratio=False):
+        if isinstance(n, ast.Name) and n.id in ('LV_SIZE_CONTENT', 'LV_RADIUS_CIRCLE'): return []
+        if isinstance(n, (ast.List, ast.Tuple)):
+            return [bad for item in n.elts for bad in leaves(item)]
+        if isinstance(n, ast.IfExp): return leaves(n.body) + leaves(n.orelse)
+        if category == 'dimension' and getattr(n, 'ui_contract', False): return []
+        if ast.unparse(n) in symbols and getattr(symbols[ast.unparse(n)], 'ui_contract', False): return []
+        if isinstance(n, ast.Call):
+            name = ast.unparse(n.func)
+            if name in ('ink_ui_px', 'ink_dp') and len(n.args) == 1: return leaves(n.args[0])
+            if category == 'dimension' and (name in symbols and getattr(symbols[name], 'ui_contract', False) or
+                name in ('lv_obj_get_width', 'lv_obj_get_height', 'ink_ui_width', 'ink_ui_height')): return []
+            return ['unresolved call ' + name]
+        contract = any(getattr(item, 'ui_contract', False) for item in ast.walk(n))
+        v = evaluate(n)
+        if v is not None and (category != 'dimension' or not contract):
+            return [] if v in allowed or ratio else [v]
         if isinstance(n, ast.BinOp):
             # Layout count/ratio factors are not pixel operands. Fully constant
             # expressions were evaluated above, so 123 * 1 never escapes here.
             if isinstance(n.op, (ast.Mult, ast.Div, ast.FloorDiv, ast.Mod)):
-                result = []
-                for child in (n.left, n.right):
-                    if evaluate(child) is None: result += leaves(child)
-                return result
+                return leaves(n.left, ratio=True) + leaves(n.right, ratio=True)
             return leaves(n.left) + leaves(n.right)
-        v = evaluate(n)
-        return [v] if v is not None and v not in allowed and -v not in allowed else []
+        if ratio and isinstance(n, ast.Name): return []
+        return ['unresolved value ' + ast.unparse(n)]
     return leaves(node)
 
 
 def check(path):
     text = path.read_text(encoding='utf-8')
     exceptions = {float(n) for n, why in EXCEPTION.findall(text[:2400]) if len(why.strip()) >= 8}
+    runtime = [(category, name, why) for category, names, why in RUNTIME.findall(text[:2400])
+               if len(why.strip()) >= 8 for name in names.split(',')]
     clean, errors = clean_source(text), []
     for call in CALL.finditer(clean):
         args = arguments(clean, call.end())
         symbols = symbols_before(clean, call.start())
         for i, category in parameters(call[1], args):
             if i >= len(args): continue
-            for value in violations(args[i], category, symbols, CATEGORIES[category] | exceptions):
+            if re.match(r'^(?:int|unsigned|lv_coord_t)\s+\w+$', args[i]): continue  # Function declaration.
+            trusted = dict(symbols)
+            for kind, name, _ in runtime:
+                if kind == category:
+                    value = ast.Name(id=name, ctx=ast.Load()); value.ui_contract = True
+                    if name not in trusted or not trusted[name]: trusted[name] = value
+            for value in violations(args[i], category, trusted, CATEGORIES[category] | exceptions):
                 line = clean.count('\n', 0, call.end()) + 1
                 where = path.relative_to(ROOT) if path.is_relative_to(ROOT) else path
-                errors.append(f'{where}:{line}: illegal UI {category} {value:g}')
+                errors.append(f'{where}:{line}: illegal UI {category} {value if isinstance(value, str) else format(value, "g")}')
     return sorted(set(errors))
 
 
