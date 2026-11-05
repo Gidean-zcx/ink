@@ -11,6 +11,61 @@ sys.path.insert(0, str(ROOT / "tools"))
 import capabilities as catalogue
 
 
+class InitializerMacroTest(unittest.TestCase):
+    def test_object_macros_preserve_fields_and_permissions(self):
+        source = r'''
+        #define EFFECT INK_FX_SYSTEM
+        #define CONTROL .exec=INK_EXEC_BG, \
+                        .effect=EFFECT
+        #define OWNER .expose=INK_EXPOSE_OWNER, CONTROL
+        #define CAP(id_, title_) {.id=id_, .title=title_, OWNER, .run=handler}
+        static const ink_cap_t CAPS[] = {
+          {.id="test.control", .title="CONTROL", CONTROL, .run=handler},
+          CAP("test.owner", "仅人操作"),
+        };
+        '''
+        entries = catalogue.parse_source("system/services/test/test.c", source)
+        catalogue.validate(entries)
+        self.assertEqual([e.id for e in entries], ["test.control", "test.owner"])
+        self.assertEqual(entries[0].string("title"), "CONTROL")
+        for entry in entries:
+            self.assertEqual(entry.value("exec"), "INK_EXEC_BG")
+            self.assertEqual(entry.value("effect"), "INK_FX_SYSTEM")
+        self.assertTrue(catalogue.ai_allowed(entries[0]))
+        self.assertEqual(catalogue.exposure(entries[1]), catalogue.EXPOSE["INK_EXPOSE_OWNER"])
+        self.assertFalse(catalogue.ai_allowed(entries[1]))
+
+    def test_duplicate_fields_from_object_macros_rejected(self):
+        for fields in ("CONTROL, .effect=INK_FX_READ", "CONTROL, CONTROL"):
+            source = '''
+            #define CONTROL .exec=INK_EXEC_BG, .effect=INK_FX_SYSTEM
+            static const ink_cap_t CAP = {
+              .id="test.duplicate", .title="重复字段", FIELDS, .run=handler
+            };
+            '''.replace("FIELDS", fields)
+            with self.subTest(fields=fields), self.assertRaisesRegex(ValueError, "duplicate designated field"):
+                catalogue.parse_source("test.c", source)
+
+    def test_unknown_field_macro_rejected(self):
+        source = '''
+        static const ink_cap_t CAP = {
+          .id="test.unknown", .title="未知字段宏", UNKNOWN, .run=handler
+        };
+        '''
+        with self.assertRaisesRegex(ValueError, "invalid or duplicate designated field"):
+            catalogue.parse_source("test.c", source)
+
+    def test_recursive_object_macros_rejected(self):
+        for definitions in ("#define CONTROL CONTROL", "#define CONTROL OWNER\n#define OWNER CONTROL"):
+            source = definitions + '''
+            static const ink_cap_t CAP = {
+              .id="test.recursive", .title="递归字段宏", CONTROL, .run=handler
+            };
+            '''
+            with self.subTest(definitions=definitions), self.assertRaisesRegex(ValueError, "recursive object macro"):
+                catalogue.parse_source("test.c", source)
+
+
 class CatalogueTest(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
