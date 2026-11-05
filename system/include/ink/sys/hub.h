@@ -37,6 +37,9 @@ typedef void (*ink_hub_notify_fn)(void *ctx, const char *method, const ink_json_
 int ink_hub_init(const char *url);
 /** Asynchronous request. `params_json` = a JSON object text (copied). Returns the request id (> 0) or < 0. */
 int ink_hub_call(const char *method, const char *params_json, int64_t timeout_us, ink_hub_reply_fn cb, void *ctx);
+/** A request built for a saved member boundary; never rebound after preparing its private payload. */
+int ink_hub_call_for(const char *method, const char *params_json, int64_t timeout_us, ink_hub_reply_fn cb, void *ctx,
+                     const char *member, uint32_t epoch);
 /** Receive notifications whose method starts with `prefix` (e.g. "ai."). Up to 8 subscribers. */
 int ink_hub_subscribe(const char *prefix, ink_hub_notify_fn fn, void *ctx);
 /** User activity: open the connection now if needed and keep it up for a while (pre-connect on key press). */

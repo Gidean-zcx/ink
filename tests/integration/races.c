@@ -77,7 +77,8 @@ static bool told_to_ai(int from, const char *title) {
     for (int i = from; i < sim_hub_events_seen(); i++) {
         const char *e = sim_hub_event_at(i);
         CHECK(e != NULL, "the hub still has it");
-        if (e && strstr(e, title)) return true;
+        const char *audience = sim_hub_event_audience(i);
+        if (e && audience && !strcmp(audience, ink_member_current()->id) && strstr(e, title)) return true;
     }
     return false;
 }

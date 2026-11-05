@@ -347,7 +347,9 @@ void sim_hub_request_device_raw(const char *method, const char *params_json); /*
 const char *sim_hub_device_reply(void);
 /* Tests: the device/event messages so far (the first 32), and the last question with what came with it. */
 int sim_hub_events_seen(void);
+void sim_hub_event_acks(bool enabled); /* fault fixture: drop ACKs without dropping events */
 const char *sim_hub_event_at(int i);
+const char *sim_hub_event_audience(int i); /* connection identity at receipt, independent of event payload */
 const char *sim_hub_last_ask(void);
 /* Dictation (asr.stream): what is "said" (phrases separated by |); after that many frames it fails with that code
  * ("silent": it answers nothing at all). What it was opened with. */

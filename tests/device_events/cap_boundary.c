@@ -1,7 +1,20 @@
+#include "ink/osal.h"
+#include "ink/sys/members.h"
+static bool handoff_on_alloc;
+static void *fixture_calloc(size_t count, size_t size, uint32_t mem) {
+    if (handoff_on_alloc) {
+        handoff_on_alloc = false;
+        ink_member_switch("kid");
+        ink_member_switch("owner");
+    }
+    return osal_calloc(count, size, mem);
+}
+#define osal_calloc fixture_calloc
 #ifndef INK_TEST_CAP_SOURCE
 #define INK_TEST_CAP_SOURCE "../../system/policy/cap.c"
 #endif
 #include INK_TEST_CAP_SOURCE
+#undef osal_calloc
 #include "../integration/whole_product.h"
 
 static void page_reply(const char *text, int status) {
@@ -43,6 +56,16 @@ void test_cap_directory(void) {
 }
 
 uint32_t test_event_boot(void) { return CB.boot_tag; }
+void test_cap_accept_handoff(void) {
+    char text[160];
+    snprintf(text, sizeof text, "{\"name\":\"fixture.bump\",\"_meta\":{\"member\":\"owner\",\"epoch\":%u}}", ink_hub_member_epoch());
+    ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
+    CHECK(j && !ink_json_parse(j, text, strlen(text)), "parse acceptance-race fixture");
+    handoff_on_alloc = true;
+    on_tools(NULL, 2000000000, "tools/call", j, 0);
+    CHECK(!handoff_on_alloc, "handoff happened between validation and job allocation");
+    osal_free(j);
+}
 uint32_t test_event_acked(void) { return ev_acked; }
 void test_event_ack(uint32_t boot, uint32_t upto) {
     char text[96];

@@ -31,6 +31,7 @@ static void run(void *arg) {
     CHECK(WAIT_FOR(ink_hub_online(), 30000), "owner connection");
     CHECK(ink_member_set_pin("owner", "", "2468", pin_told, NULL) == 0 && WAIT_FOR(pin_done, 5000) && pin_result == INK_PIN_OK,
           "synthetic PIN protects the owner space");
+    ink_member_test_reset(); /* Close authentication explicitly; D-95 now grants a lock grace. */
     ink_power_lock();
     CHECK(WAIT_FOR(!ink_member_space_open(), 2000), "owner space closed");
     CHECK(ink_hub_notify("device/event", "{\"member\":\"owner\",\"event\":\"media.finished\",\"args\":{\"path\":\"SYNTHETIC_CLOSED_FILE\"}}") != 0,

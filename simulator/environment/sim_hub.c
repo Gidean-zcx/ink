@@ -87,6 +87,8 @@ int sim_hub_load(const char *path, char *err, size_t errlen) {
 }
 
 static int64_t g_hub_clock_offset_s;
+static bool g_event_acks = true;
+void sim_hub_event_acks(bool enabled) { g_event_acks = enabled; }
 
 static const cJSON *rule_for(const char *method) {
     const cJSON *rules = cJSON_GetObjectItemCaseSensitive(RULES, "rules"), *r, *star = NULL;
@@ -278,6 +280,7 @@ static int64_t g_test_rpc = TEST_RPC_BASE;
 static char *g_test_reply;
 static struct {
     char *text[32];
+    char audience[32][16];
     int n;
 } g_events;
 static char *g_last_ask;
@@ -309,6 +312,7 @@ void sim_hub_request_device_raw(const char *method, const char *params_json) { r
 const char *sim_hub_device_reply(void) { return g_test_reply; }
 int sim_hub_events_seen(void) { return g_events.n; }
 const char *sim_hub_event_at(int i) { return i >= 0 && i < g_events.n && i >= g_events.n - 32 ? g_events.text[i % 32] : NULL; } /* the latest 32 */
+const char *sim_hub_event_audience(int i) { return i >= 0 && i < g_events.n && i >= g_events.n - 32 ? g_events.audience[i % 32] : NULL; }
 const char *sim_hub_last_ask(void) { return g_last_ask; }
 
 /* ------------------------------------------------------------ dictation (hub protocol §3.11) */
@@ -628,9 +632,10 @@ void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t 
     }
     if (!strcmp(method, "device/event")) {
         keep_text(&g_events.text[g_events.n % 32], req);
+        snprintf(g_events.audience[g_events.n % 32], sizeof g_events.audience[0], "%s", MC[member_slot(ws)].member);
         g_events.n++;
         const cJSON *pr = cJSON_GetObjectItemCaseSensitive(req, "params");
-        if (cJSON_IsNumber(cJSON_GetObjectItemCaseSensitive(pr, "seq")) && cJSON_IsNumber(cJSON_GetObjectItemCaseSensitive(pr, "boot"))) {
+        if (g_event_acks && cJSON_IsNumber(cJSON_GetObjectItemCaseSensitive(pr, "seq")) && cJSON_IsNumber(cJSON_GetObjectItemCaseSensitive(pr, "boot"))) {
             cJSON *ack = cJSON_CreateObject();
             cJSON_AddStringToObject(ack, "jsonrpc", "2.0");
             cJSON_AddStringToObject(ack, "method", "device/event_ack");
@@ -684,7 +689,25 @@ void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t 
         cJSON_AddItemToObject(res, "id", cJSON_Duplicate(id, 1));
         char dir[768];
         snprintf(dir, sizeof dir, "%s%s", ASR.hide ? "{\"tools\":[" : DIR_ASR, DIR + strlen("{\"tools\":["));
-        cJSON_AddItemToObject(res, "result", cJSON_Parse(dir));
+        const cJSON *pr = cJSON_GetObjectItemCaseSensitive(req, "params");
+        const cJSON *cursor_item = cJSON_GetObjectItemCaseSensitive(pr, "cursor");
+        const char *cursor = cJSON_GetStringValue(cursor_item);
+        int start = !cursor_item ? 0 : cursor && !strcmp(cursor, "sim:3") ? 3 : cursor && !strcmp(cursor, "sim:6") ? 6 : -1;
+        cJSON *all = cJSON_Parse(dir);
+        const cJSON *tools = cJSON_GetObjectItemCaseSensitive(all, "tools");
+        int count = cJSON_GetArraySize(tools), end = start + 3 < count ? start + 3 : count;
+        if (start < 0 || (start && start >= count)) {
+            cJSON *error = cJSON_AddObjectToObject(res, "error");
+            cJSON_AddNumberToObject(error, "code", -32602);
+            cJSON_AddStringToObject(error, "message", "invalid directory cursor");
+        } else {
+            cJSON *result = cJSON_AddObjectToObject(res, "result");
+            cJSON *page = cJSON_AddArrayToObject(result, "tools");
+            for (int k = start; k < end; k++) cJSON_AddItemToArray(page, cJSON_Duplicate(cJSON_GetArrayItem(tools, k), 1));
+            cJSON_AddNumberToObject(result, "rev", 1);
+            if (end < count) cJSON_AddStringToObject(result, "nextCursor", end == 3 ? "sim:3" : "sim:6");
+        }
+        cJSON_Delete(all);
         send_json(ws, t + SIM_MS(10), res);
         cJSON_Delete(res);
         sim_metric_add("hub.caps_list", 1);

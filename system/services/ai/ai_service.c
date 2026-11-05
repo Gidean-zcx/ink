@@ -91,12 +91,13 @@ static struct {
 static bool g_turn_revoked INK_PSRAM_BSS; /* under AI.lock */
 static char g_turn_member[INK_MEMBER_ID_MAX] INK_PSRAM_BSS;
 static uint32_t g_turn_generation INK_PSRAM_BSS;
+static uint32_t g_turn_epoch INK_PSRAM_BSS;
 static ink_exec_job_t g_owner_job INK_PSRAM_BSS;
 static void owner_ui(void *arg);
 
 static bool turn_allowed(void) { /* under AI.lock */
     if (!g_turn_revoked && (!ink_member_space_open() || !g_turn_generation ||
-        g_turn_generation != ink_member_generation(g_turn_member) || strcmp(g_turn_member, ink_member_current()->id))) {
+        g_turn_epoch != ink_hub_member_epoch() || g_turn_generation != ink_member_generation(g_turn_member) || strcmp(g_turn_member, ink_member_current()->id))) {
         g_turn_revoked = AI.drop_frames = true;
         AI.tts_done_for = AI.stream;
         ink_exec_post(INK_EXEC_UI, &g_owner_job, owner_ui, NULL);
@@ -489,6 +490,9 @@ static int request(const char *method, bool voice) {
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
     AI.seq++;
     if (voice) AI.session_seq = AI.seq;
+    char member[INK_MEMBER_ID_MAX];
+    snprintf(member, sizeof member, "%s", g_turn_member);
+    uint32_t epoch = g_turn_epoch;
     osal_mutex_unlock(AI.lock);
     const char *prev = osal_mem_tag("ai");
     size_t ids_cap = 3;
@@ -537,7 +541,7 @@ static int request(const char *method, bool voice) {
     }
     ink_jw_raw(&w, "}");
     ink_power_hold(INK_NEED_NET); /* no sleep while the answer is on its way */
-    int id = w.overflow ? -1 : ink_hub_call(method, params, ASK_TIMEOUT_US, on_reply, (void *)(intptr_t)AI.seq);
+    int id = w.overflow ? -1 : ink_hub_call_for(method, params, ASK_TIMEOUT_US, on_reply, (void *)(intptr_t)AI.seq, member, epoch);
     if (id < 0) { /* no reply will come: the turn ends here */
         ink_power_release(INK_NEED_NET);
         post(AI.seq, 2, id, NULL);
@@ -646,6 +650,7 @@ void ink_ai_key(bool pressed, uint64_t t_us) {
         AI.tts_for = AI.tts_done_for = -1;
         snprintf(g_turn_member, sizeof g_turn_member, "%s", ink_member_current()->id);
         g_turn_generation = ink_member_generation(g_turn_member);
+        g_turn_epoch = ink_hub_member_epoch();
         g_turn_revoked = false;
         osal_mutex_unlock(AI.lock);
         if (sid > 0 && !ink_rt_is_open(sid)) { /* it ended already, its handler may have found no session to end */
@@ -740,6 +745,7 @@ void ink_ai_ask_text(const char *text) {
     AI.tts_for = AI.tts_done_for = -1;
     snprintf(g_turn_member, sizeof g_turn_member, "%s", ink_member_current()->id);
     g_turn_generation = ink_member_generation(g_turn_member);
+    g_turn_epoch = ink_hub_member_epoch();
     g_turn_revoked = false;
     osal_mutex_unlock(AI.lock);
     AI.mic_failed = AI.speech_failed = AI.turn_over = false;
@@ -870,8 +876,6 @@ static void revoke_turn(void *ctx, int h, const char *id) { /* direct: stop tran
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
     g_turn_revoked = AI.drop_frames = true;
     AI.tts_done_for = AI.stream;
-    if (AI.tts_stream > 0) ink_audio_stream_abort(AI.tts_stream);
-    if (AI.tts_opened > 0) ink_audio_stream_abort(AI.tts_opened);
     AI.tts_stream = 0;
     osal_mutex_unlock(AI.lock);
     ink_exec_post(INK_EXEC_UI, &g_owner_job, owner_ui, NULL);

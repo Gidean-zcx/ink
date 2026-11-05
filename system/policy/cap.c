@@ -195,6 +195,7 @@ typedef struct {
     activity_note_t *activity;
     char member[INK_MEMBER_ID_MAX]; /* ink_call_opts_t.member */
     uint32_t generation;
+    uint32_t origin_epoch;
     uint8_t identity[32];
 } pending_t;
 
@@ -601,6 +602,7 @@ static int remote_call(const char *name, const ink_args_t *args, const ink_call_
 /* Accept a call: a slot holding everything the call needs, its deadline running. NULL: not accepted.
  * A repeat of a request has been answered when this returns NULL with *repeat set. */
 static pending_t *prepare(const char *id, const ink_cap_t *c, const ink_args_t *args, const ink_call_opts_t *o, bool remote, bool asked, bool *repeat) {
+    uint32_t origin_epoch = o->hub_epoch ? o->hub_epoch : ink_hub_member_epoch();
     char *json = NULL;
     *repeat = false;
     if (!args && o->args_json && *o->args_json) {
@@ -644,6 +646,7 @@ static pending_t *prepare(const char *id, const ink_cap_t *c, const ink_args_t *
         return NULL;
     }
     p->call.cap = c;
+    p->origin_epoch = origin_epoch;
     snprintf(p->id, sizeof p->id, "%s", id);
     if (args) p->call.args = *args;
     else ink_args_init(&p->call.args);
@@ -841,7 +844,7 @@ static int remote_call(const char *name, const ink_args_t *args, const ink_call_
     ink_jw_raw(&w, ",\"page_gen\":");
     ink_jw_int(&w, p->call.page_gen);
     ink_jw_raw(&w, "}}");
-    int r = w.overflow ? -1 : ink_hub_call("tools/call", params, 30000000, remote_reply, p);
+    int r = w.overflow ? -1 : ink_hub_call_for("tools/call", params, 30000000, remote_reply, p, p->member, p->origin_epoch);
     osal_free(params);
     if (r < 0) { /* not even queued: answer now */
         memset(&p->call.rc, 0, sizeof p->call.rc);
@@ -1446,10 +1449,12 @@ static void on_tools(void *ctx, int64_t id, const char *method, const ink_json_t
         return;
     }
     char target[INK_MEMBER_ID_MAX];
-    int64_t epoch = 0;
+    snprintf(target, sizeof target, "%s", ink_member_current()->id);
+    uint32_t connection = ink_hub_connection();
+    int64_t epoch = ink_hub_member_epoch();
     if (!list && (ink_json_str(j, ink_json_find(j, params, "_meta.member"), target, sizeof target) <= 0 ||
         !ink_json_int(j, ink_json_find(j, params, "_meta.epoch"), &epoch) || epoch <= 0 || epoch > UINT32_MAX ||
-        !ink_hub_member_matches(target, (uint32_t)epoch, ink_hub_connection()))) {
+        !ink_hub_member_matches(target, (uint32_t)epoch, connection))) {
         ink_hub_respond_error(id, -32023, "stale_member");
         return;
     }
@@ -1471,9 +1476,9 @@ static void on_tools(void *ctx, int64_t id, const char *method, const ink_json_t
     t->id = id;
     t->list = list;
     t->received_us = osal_now_us();
-    t->epoch = ink_hub_member_epoch();
-    t->connection = ink_hub_connection();
-    snprintf(t->member, sizeof t->member, "%s", ink_member_current()->id);
+    t->epoch = (uint32_t)epoch;
+    t->connection = connection;
+    snprintf(t->member, sizeof t->member, "%s", target);
     if (list) {
         char cursor[16];
         if (ink_json_str(j, ink_json_find(j, params, "cursor"), cursor, sizeof cursor) > 0) t->cursor = atoi(cursor);
@@ -1491,6 +1496,19 @@ static void on_tools(void *ctx, int64_t id, const char *method, const ink_json_t
         if (ink_json_str(j, ink_json_find(j, params, "name"), t->name, sizeof t->name) < 0) {
             osal_free(t);
             ink_hub_respond_error(id, -32602, "tools/call needs a name");
+            return;
+        }
+        int undo = ink_json_find(j, params, "_meta.undo_ms");
+        int64_t undo_ms = 0;
+        if (undo >= 0 && (!ink_json_int(j, undo, &undo_ms) || undo_ms != 3000)) {
+            osal_free(t);
+            ink_hub_respond_error(id, -32602, "undo_ms must be 3000");
+            return;
+        }
+        /* Never bypass a requested display-and-cancel window before its presenter exists. */
+        if (undo >= 0 || (t->asked && (!strcmp(t->name, "message.send") || !strcmp(t->name, "call.dial")))) {
+            osal_free(t);
+            ink_hub_respond_error(id, -32021, "automatic undo window unavailable");
             return;
         }
         t->generation = ink_member_generation(t->member);

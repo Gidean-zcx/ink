@@ -14,12 +14,19 @@ static int test_hub_call(const char *method, const char *params, int64_t timeout
     }
     return ink_hub_call(method, params, timeout, cb, ctx);
 }
+static int test_hub_call_for(const char *method, const char *params, int64_t timeout, ink_hub_reply_fn cb, void *ctx,
+                              const char *member, uint32_t epoch) {
+    (void)member; (void)epoch;
+    return test_hub_call(method, params, timeout, cb, ctx);
+}
 #define ink_hub_call test_hub_call
+#define ink_hub_call_for test_hub_call_for
 #ifndef INK_TEST_AI_SOURCE
 #define INK_TEST_AI_SOURCE "../../system/services/ai/ai_service.c"
 #endif
 #include INK_TEST_AI_SOURCE
 #undef ink_hub_call
+#undef ink_hub_call_for
 static void ask(void) { request("ai.listen", true); request("ai.ask", false); }
 static void run(void *arg) {
     (void)arg;

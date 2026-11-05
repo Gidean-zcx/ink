@@ -95,16 +95,20 @@ static void open_reply(void *ctx, int status, const ink_json_t *j, int result);
  * < 0: the request could not even be made; nothing will answer it. */
 static int announce(int sid) {
     char params[INK_RT_PARAMS + 64];
+    char member[INK_MEMBER_ID_MAX] = "";
+    uint32_t epoch = 0;
     osal_mutex_lock(RT.lock, OSAL_WAIT_FOREVER);
     int i = find(sid);
     if (i >= 0) {
         RT.s[i].inflight = true;
         RT.s[i].ready = false;
         snprintf(params, sizeof params, "{\"sid\":%d,\"cap\":\"%s\",\"params\":%s}", sid, RT.s[i].cap, RT.s[i].params);
+        snprintf(member, sizeof member, "%s", RT.s[i].member);
+        epoch = RT.s[i].epoch;
     }
     osal_mutex_unlock(RT.lock);
     if (i < 0) return 0;
-    int r = ink_hub_call("rt.open", params, 10000000, open_reply, (void *)(intptr_t)sid);
+    int r = ink_hub_call_for("rt.open", params, 10000000, open_reply, (void *)(intptr_t)sid, member, epoch);
     return r < 0 ? r : 0;
 }
 

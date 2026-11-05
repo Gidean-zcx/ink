@@ -209,7 +209,8 @@ static void finish(pending_t *p, int status, const ink_json_t *msg, int tok) {
 }
 
 static int send_request(pending_t *p) {
-    if (osal_now_us() >= p->deadline && p->used) return -1;
+    uint64_t now = osal_now_us();
+    if (now >= p->deadline && p->used) return -1;
     if (p->member[0] && !ink_hub_member_matches(p->member, p->member_epoch, H.ws_gen)) {
         finish(p, INK_HUB_ERR_LOST, NULL, -1);
         return -1;
@@ -218,9 +219,18 @@ static int send_request(pending_t *p) {
     size_t plen = strlen(p->params ? p->params : "{}");
     snprintf(head, sizeof head, "{\"jsonrpc\":\"2.0\",\"id\":%u,\"method\":\"%s\",\"params\":", p->id, p->method);
     bool ai = !strcmp(p->method, "ai.listen") || !strcmp(p->method, "ai.ask");
+    const char *body = p->params ? p->params + 1 : "}";
+    if (ai && !strncmp(body, "\"budget_ms\":", 12)) {
+        body += 12;
+        while (*body >= '0' && *body <= '9') body++;
+        if (*body == ',') body++;
+        else if (*body != '}') return -1;
+    }
     char budget[48] = "";
-    if (ai) snprintf(budget, sizeof budget, "{\"budget_ms\":%u%s", (unsigned)((p->deadline - osal_now_us()) / 1000), plen > 2 ? "," : "");
-    size_t blen = strlen(budget), hlen = strlen(head), total = hlen + plen + 1 + (ai ? blen - 1 : 0);
+    uint64_t left_ms = p->deadline > now ? (p->deadline - now) / 1000 : 0;
+    if (left_ms > 45000) left_ms = 45000;
+    if (ai) snprintf(budget, sizeof budget, "{\"budget_ms\":%u%s", (unsigned)left_ms, *body != '}' ? "," : "");
+    size_t blen = strlen(budget), hlen = strlen(head), total = hlen + (ai ? blen + strlen(body) : plen) + 1;
     const char *prev = osal_mem_tag("hub");
     char *buf = osal_malloc(total + 1, OSAL_MEM_EXTERNAL);
     osal_mem_tag(prev);
@@ -228,7 +238,7 @@ static int send_request(pending_t *p) {
     memcpy(buf, head, hlen);
     if (ai) {
         memcpy(buf + hlen, budget, blen);
-        memcpy(buf + hlen + blen, p->params + 1, plen - 1);
+        memcpy(buf + hlen + blen, body, strlen(body));
     } else memcpy(buf + hlen, p->params ? p->params : "{}", plen);
     buf[total - 1] = '}';
     buf[total] = 0;
@@ -287,7 +297,7 @@ static void start_connect(void) {
     hal_net_link_status(&st);
     H.connect_started = osal_now_us();
     H.ws_link = st.type;
-    H.ws = hal_ws_open(H.url, ws_cb, (void *)(uintptr_t)++H.ws_gen);
+    H.ws = hal_ws_open(H.url, ws_cb, (void *)(uintptr_t)__atomic_add_fetch(&H.ws_gen, 1, __ATOMIC_ACQ_REL));
     set_state(H.ws ? HS_CONNECTING : HS_BACKOFF);
     if (!H.ws) enter_backoff();
 }
@@ -595,7 +605,9 @@ int ink_hub_init(const char *url) {
     return osal_task_create(&cfg, &H.task) == OSAL_OK ? 0 : -1;
 }
 
-int ink_hub_call(const char *method, const char *params_json, int64_t timeout_us, ink_hub_reply_fn cb, void *ctx) {
+int ink_hub_call_for(const char *method, const char *params_json, int64_t timeout_us, ink_hub_reply_fn cb, void *ctx,
+                     const char *member, uint32_t epoch) {
+    uint64_t deadline = osal_now_us() + (uint64_t)(timeout_us > 0 ? timeout_us : 20000000);
     const char *prev = osal_mem_tag("hub");
     call_req_t *r = osal_calloc(1, sizeof *r, OSAL_MEM_EXTERNAL);
     const char *pj = params_json ? params_json : "{}";
@@ -607,10 +619,10 @@ int ink_hub_call(const char *method, const char *params_json, int64_t timeout_us
     }
     r->id = new_id();
     snprintf(r->method, sizeof r->method, "%s", method);
-    r->deadline = osal_now_us() + (uint64_t)(timeout_us > 0 ? timeout_us : 20000000);
-    if (!strncmp(method, "ai.", 3) || !strcmp(method, "rt.open") || !strcmp(method, "tools/call")) {
-        r->member_epoch = ink_hub_member_epoch();
-        snprintf(r->member, sizeof r->member, "%s", ink_member_current()->id);
+    r->deadline = deadline;
+    if (member || !strncmp(method, "ai.", 3) || !strcmp(method, "rt.open") || !strcmp(method, "tools/call")) {
+        r->member_epoch = member ? epoch : ink_hub_member_epoch();
+        snprintf(r->member, sizeof r->member, "%s", member ? member : ink_member_current()->id);
     }
     r->cb = cb;
     r->ctx = ctx;
@@ -622,6 +634,10 @@ int ink_hub_call(const char *method, const char *params_json, int64_t timeout_us
     hub_msg_t m = {.type = HE_CALL, .req = r};
     osal_queue_send(H.q, &m, OSAL_WAIT_FOREVER);
     return (int)id;
+}
+
+int ink_hub_call(const char *method, const char *params_json, int64_t timeout_us, ink_hub_reply_fn cb, void *ctx) {
+    return ink_hub_call_for(method, params_json, timeout_us, cb, ctx, NULL, 0);
 }
 
 int ink_hub_subscribe(const char *prefix, ink_hub_notify_fn fn, void *ctx) {
