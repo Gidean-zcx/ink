@@ -1,11 +1,13 @@
 # member-wake 执行报告
 
-基线：`103382b1`。范围：仅 `backlog.md` 的 `member-wake`。状态：完成；证据来自本机模拟器。
+原开发基线：`103382b1`；本轮修复基线：`be7abb88`（独立复查记录已提交）。范围：`REVIEW.md` 的 MW-R1、MW-R2 及同类路径。状态：修复中；原报告的通过结论须由本轮回归重新确认，证据仍仅限本机模拟器。
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
+| MW-R1 | 已修复【实测／实现】 | 重建主页前同步电源与认证；孩子、无 PIN 成人、有 PIN 成人的启动、隔离、保存和权限均通过；撤销该行修复后 15 条失败且 `test.finished=1` | `cmake --build build --target sim-apps -j4`；`ctest --test-dir build --output-on-failure -j1 -R '^integration-apps$'`（1/1）；反向对照见 `build/test-out/member-wake-r1-out/metrics.json` |
+| MW-R2 | 待修复 | 后台 Wi-Fi 扫描跨过授权截止；补查非本地采集、语音缓冲和最终发送，本地录音保持原规则 | 本轮待补 |
 | MW-1 | 通过【实测】 | 阅读闲置 121 秒不退出；自动锁屏后才起算免密码时段 | 定向回归命令，`integration-member-wake` |
 | MW-2 | 通过【实测】 | 电源键、AI 键分别在锁屏后 119 秒直接回原页，121 秒进成员门；唤醒键不启动 AI | 同上 |
 | MW-3 | 通过【实测】 | 错误 PIN 显示错误并保持关门；正确 PIN 经现有按键回调认证 | 同上 |

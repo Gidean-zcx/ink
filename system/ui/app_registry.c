@@ -278,6 +278,7 @@ static void stop_for_member(void) { /* UI task */
 
 static void member_job(void *arg) { /* UI task */
     (void)arg;
+    AP.locked = ink_power_state() == INK_PWR_LOCKED || !ink_member_space_open();
     ink_ui_restart(stop_for_member);
 }
 
