@@ -17,7 +17,7 @@
 | 2026-11-04 第十二轮（系统层，同上） | `claude/system-layer` 9cf64ad（第十一轮处理之后） | [2026-11-04-codex-system-r3/TASK.md](2026-11-04-codex-system-r3/TASK.md) | [report.md](2026-11-04-codex-system-r3/report.md) | **没有严重和高**；4 条中级已处理，见下 |
 | 2026-11-04 第十三轮（系统层，小范围复核） | `claude/system-layer` 99495a8（第十二轮处理之后，只看 `9cf64ad..99495a8`） | [2026-11-04-codex-system-r4/TASK.md](2026-11-04-codex-system-r4/TASK.md) | [report.md](2026-11-04-codex-system-r4/report.md) | **没有新问题**；AUD13-001～004 已修复；可以合入 main |
 | 2026-11-04 系统界面设计审计（Codex，gpt-6-astra，推理 max） | `claude/system-layer` cd486a2 和画布上的 65 个画板 | [2026-11-04-codex-ui/TASK.md](2026-11-04-codex-ui/TASK.md) | [report.md](2026-11-04-codex-ui/report.md)、[findings.json](2026-11-04-codex-ui/findings.json) | 明确的错已改；首版缺的流程等用户决定（见下） |
-| 2026-11-04 系统界面设计审计：产品负责人视角（Codex，gpt-6-astra，推理 max） | `claude/system-layer` 2d3323f 的 68 个画板，收尾核对了两个并行分支 | [2026-11-04-codex-jobs/TASK.md](2026-11-04-codex-jobs/TASK.md) | [report.md](2026-11-04-codex-jobs/report.md)、[findings.json](2026-11-04-codex-jobs/findings.json)、[early.md](2026-11-04-codex-jobs/early.md) | 已处理；D-106 等用户选（见下） |
+| 2026-11-04 系统界面设计审计：产品负责人视角（Codex，gpt-6-astra，推理 max） | `claude/system-layer` 2d3323f 的 68 个画板，收尾核对了两个并行分支 | [2026-11-04-codex-jobs/TASK.md](2026-11-04-codex-jobs/TASK.md) | [report.md](2026-11-04-codex-jobs/report.md)、[findings.json](2026-11-04-codex-jobs/findings.json)、[early.md](2026-11-04-codex-jobs/early.md) | 已处理（见下） |
 
 此前的三次独立评审都由助手发起的子代理完成。问题与处理分别记在：
 
@@ -34,7 +34,7 @@
 
 | 编号 | 级别 | 问题 | 处理 |
 | --- | --- | --- | --- |
-| JOBS-001 | 严重 | 主屏像一部应用很多的时钟 | D-60 范围内先改：继续读写清书名和页码，全部屏分组。更强的方案画成 `MainB`，等用户选（D-106） |
+| JOBS-001 | 严重 | 主屏像一部应用很多的时钟 | D-60 范围内改了：继续读写清书名和页码，全部屏分组。更强的方案画给用户比较，用户选保持原布局（D-106 选 A） |
 | JOBS-002 | 高 | 今日页像任务账单 | 已改：写书名、报纸标题，大数字去掉 |
 | JOBS-003 | 中 | 一个输入框又搜又问 | 已改：只找应用和设置；AI 全屏页改叫“对话记录” |
 | JOBS-004 | 高 | AI 的仪式比答案显眼 | 已改：同一块面板，字从同一处开始，去掉大话筒、等待点和完成标题，主动作一个 |
@@ -53,7 +53,7 @@
 
 另外，用户提出图标、字号、间距、圆角大大小小不整齐（R-064）。审计没有专门查这个，靠测量查出来：字号 33 种、图标 32 种、控件高度 39 种、字号和行高的搭配 81 种。已收成一套规格（[界面规范第 1 节](../product/system-ui-spec.md)），用脚本统一并复量：字号 9 种，图标 5 种，超出的只有键盘内部的小间距和壁纸页的缩略图。
 
-验证：177 个画板重新渲染，没有溢出；39 条流程点过一遍。**这些改动没有再让 Codex 审一轮，也没有上实机。**
+验证：渲染了全部画板（当时 177 个，含后来拿掉的 `MainB`），没有溢出；39 条流程点过一遍。**这些改动没有再让 Codex 审一轮，也没有上实机。**
 
 ## 2026-11-04 系统界面设计审计：处理
 

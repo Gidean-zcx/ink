@@ -1,6 +1,6 @@
 # 系统界面规范（第一版）
 
-更新日期：2026-11-04。状态：用户已确认视觉方向（“定了，铺开其余页面”）；交互和状态按 [Codex 设计审计](../audits/2026-11-04-codex-ui/report.md)修订过，首版缺的流程已经画了（第 7 节），设计原则按用户要求对齐乔布斯的理念（R-059，第 0 节）。设计稿在[私有画布](https://claude.ai/artifact/PtS48RHTy15aMKa4bgbRVJ)上，共 177 个画板，只有用户能打开，页面源文件也在那里，不在仓库。
+更新日期：2026-11-04。状态：用户已确认视觉方向（“定了，铺开其余页面”）；交互和状态按 [Codex 设计审计](../audits/2026-11-04-codex-ui/report.md)修订过，首版缺的流程已经画了（第 7 节），设计原则按用户要求对齐乔布斯的理念（R-059，第 0 节）。设计稿在[私有画布](https://claude.ai/artifact/PtS48RHTy15aMKa4bgbRVJ)上，共 176 个画板，只有用户能打开，页面源文件也在那里，不在仓库。
 
 相关文档：[界面参考](../research/system-ui-references.md)（依据和具体数值）、[系统应用分类](system-apps.md)、[底层依赖](../system/ui-dependencies.md)（每个界面还缺什么）、[家庭中枢设计](https://github.com/Gidean-zcx/ink/blob/claude/hub-design-8fd433/docs/hub/hub-architecture.md)、[系统服务设计](https://github.com/Gidean-zcx/ink/blob/claude/system-services/docs/system/system-services-design.md)（后两份在分支上，未合入）。
 
@@ -79,7 +79,7 @@ D-60：三屏加固定 Dock。
 
 翻屏不跟手：松手才翻，指示点跟着变。上一页、下一页键也一样。指示点只是指示，不能点。
 
-审计认为最大的问题是第一眼说不清为什么要拿起它：主屏最大的是时钟（JOBS-001）。上面是 D-60 范围内的改善；更强的方案 `MainB` 缩小时钟，让“继续读”占主位，8 个图标减到 4 个，三屏和 Dock 不变。这改了用户确认过的具体布局，**由用户选（D-106）**。
+审计认为最大的问题是第一眼说不清为什么要拿起它：主屏最大的是时钟（JOBS-001）。它推荐缩小时钟、让“继续读”占主位，用户选了保持原布局（D-106 选 A），只把“继续读”写清楚。
 
 孩子有自己的版本（`KidHome`、`KidToday`、`KidApps`）：结构一样，书和进度是孩子的；没有设置、文件、网页；今日屏下面写一行“爸爸妈妈可以看到你的记录”（底座设计 §8）；电话和短信不限制（D-25）。
 
@@ -187,11 +187,11 @@ D-38（已定）：默认 10 分钟不操作自动锁屏；锁屏 = 画面保持
 
 ## 4. 页面清单
 
-画布上有 177 个画板，首版的在前面：
+画布上有 176 个画板，首版的在前面：
 
 | 组 | 画板 |
 | --- | --- |
-| 主页和系统壳 | `Today`、`Main`、`MainB`（D-106 待选）、`Apps`、`LockPage`、`Lock`、`LockImage`、`Control`、`Notifications` |
+| 主页和系统壳 | `Today`、`Main`、`Apps`、`LockPage`、`Lock`、`LockImage`、`Control`、`Notifications` |
 | 首次开机 | `FirstBoot`、`BootWifi`、`BootWifiPass`、`BootJoining`、`BootJoinFail`、`BootClaim`、`BootNoHub`、`BootConfirm`、`BootRestore`、`BootHello`、`BootRevoked` |
 | 家人和密码 | `Members`、`MembersBack`、`MemberSwitch`、`Pin`、`PinWrong`、`PinWait`、`PinForgot`、`PinSet`、`FactoryReset`、`FactoryDone` |
 | 孩子 | `KidHome`、`KidToday`、`KidApps`、`KidControl`、`KidLimit`、`KidTimeUp`、`SetKid` |
@@ -243,7 +243,7 @@ D-38（已定）：默认 10 分钟不操作自动锁屏；锁屏 = 画面保持
 
 ## 6. 没有验证的
 
-- 设计稿已用无头浏览器逐屏渲染（177 个画板，没有溢出，没有脚本错误），39 条主要流程点过一遍。这只说明版面和链接，不说明实机效果。
+- 设计稿已用无头浏览器逐屏渲染（176 个画板，没有溢出，没有脚本错误），39 条主要流程点过一遍。这只说明版面和链接，不说明实机效果。
 - 没有上过实机：浅灰和白能否分清、Outfit 细体的观感、所有刷新时间。
 - 灰底控件（设置分组的行、Dock）从灰变到别的颜色，能不能走快刷，要状态过渡和实机校准。
 - AI 键在机身上的位置资料里没有写，`BootHello` 的箭头要按实机调。
