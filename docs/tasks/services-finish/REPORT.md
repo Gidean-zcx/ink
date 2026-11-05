@@ -1,23 +1,24 @@
 # 系统服务收尾报告
 
-2026-11-05，第 1 轮复查修复。状态：六项修复、常规 86/86 和 19 组回归通过，正在执行 ASan/UBSan 验收。指定差异基线 `fdff779`，本轮开工提交 `d74a261`，初始工作区干净。保留 [独立复查](REVIEW.md) 原文；它的“不通过”是修前结论。本报告替换上轮过满的 S2、S6 结论；上轮详细记录仍在 `d74a261` 的同名文件中。
+2026-11-05，第 1 轮复查修复。状态：复查的 1 严重、4 高、1 中全部修复；另修 1 个确定性验收阻挡项。常规与 ASan/UBSan 各 86/86，19 组回归和栈计量检查两种构建均通过。指定差异基线 `fdff779`，本轮开工提交 `d74a261`，初始工作区干净。保留 [独立复查](REVIEW.md) 原文；它的“不通过”是修前结论。本报告替换上轮过满的 S2、S6 结论；上轮详细记录仍在 `d74a261` 的同名文件中。
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| R1-01 高 | 已修，待最终内存检查 | 【实现】先持久保存 `committing`，有效槽提交成功后才进入资源阶段；开机按实际版本收敛回滚事务，检查 HAL 提交错误。【实测】正常、提交前断电、提交后断电、提交失败四链，各四次启动；旧源码在提交前断电后仍永久阻塞 | V2 / V3 的 `upgrade_crash` |
-| R1-02 高 | 已修，待最终内存检查 | 【实现】换人直接作废播放流、预缓冲，音频任务丢弃在途输出。【实测】UI 忙时缓冲 TTS、媒体队列忙时缓冲听书都不再继续播放；同一成员锁屏听书保留。旧源码失败 | V2 / V3 的 `playback`；V1 的 `integration-media` |
-| R1-03 高 | 已修，待最终内存检查 | 【实现】集合仍为 128 KiB，复用 `drop_oldest` 回收最旧记录；每成员最多占 16 个 PSRAM 待记槽，存储积压时保持拒绝无记录写入。【实测】连续 1,600 次动作不锁死；故意占满成人待记槽，孩子的 AI 和确认后动作仍可执行，恢复存储后成人也恢复。旧源码失败 | V2 / V3 的 `activity` |
-| R1-04 严重 | 已修，待最终内存检查 | 【实现】权限、儿童音量规则、身份保护设置逐项标记人工确认；绑定 id/value，确认后重查成员和设置限制；直接设置入口和撤销也不绕过。【实测】真实剪贴板、儿童上限的确认/拒绝/换人/无效值，以及普通音量亮度自动执行；旧源码失败。补测“AI 撤销真人关闭权限”曾失败，修后通过 | V2 / V3 的 `permissions`；`policy` |
-| R1-05 高 | 已修，待最终内存检查 | 【实现】先持久保存待清理标记，缓存、Flash、卡清理及身份删除全部成功才释放编号；失败回执不再是 done；标记阻止切换、PIN 解锁和复用，重启可查询并重试。【实测】卡目录失败、Flash 失败、缓存被占、待删除成人持唯一 PIN 四链，每链三次启动，最后复用编号的孩子无旧文件/集合；旧源码失败 | V2 / V3 的 `removal`；V1 的 `integration-people` |
-| R1-06 中 | 已修，待最终内存检查 | 【实现】撤销选最新记录，可用 revision 绑定指定操作，设置逆操作在修改锁内校验当前版本。【实测】0→10→20 撤销回 10；旧记录、后来人工修改、过期撤销均不覆盖当前值。旧源码失败 | V2 / V3 的 `undo` |
+| R1-01 高 | 已修，常规/内存检查通过 | 【实现】先持久保存 `committing`，有效槽提交成功后才进入资源阶段；开机按实际版本收敛回滚事务，检查 HAL 提交错误。【实测】正常、提交前断电、提交后断电、提交失败四链，各四次启动；旧源码在提交前断电后仍永久阻塞 | V2 / V3 的 `upgrade_crash` |
+| R1-02 高 | 已修，常规/内存检查通过 | 【实现】换人直接作废播放流、预缓冲，音频任务丢弃在途输出。【实测】UI 忙时缓冲 TTS、媒体队列忙时缓冲听书都不再继续播放；同一成员锁屏听书保留。旧源码失败 | V2 / V3 的 `playback`；V1 的 `integration-media` |
+| R1-03 高 | 已修，常规/内存检查通过 | 【实现】集合仍为 128 KiB，复用 `drop_oldest` 回收最旧记录；每成员最多占 16 个 PSRAM 待记槽，存储积压时保持拒绝无记录写入。【实测】连续 1,600 次动作不锁死；故意占满成人待记槽，孩子的 AI 和确认后动作仍可执行，恢复存储后成人也恢复。旧源码失败 | V2 / V3 的 `activity` |
+| R1-04 严重 | 已修，常规/内存检查通过 | 【实现】权限、儿童音量规则、身份保护设置逐项标记人工确认；绑定 id/value，确认后重查成员和设置限制；直接设置入口和撤销也不绕过。【实测】真实剪贴板、儿童上限的确认/拒绝/换人/无效值，以及普通音量亮度自动执行；旧源码失败。补测“AI 撤销真人关闭权限”曾失败，修后通过 | V2 / V3 的 `permissions`；`policy` |
+| R1-05 高 | 已修，常规/内存检查通过 | 【实现】先持久保存待清理标记，缓存、Flash、卡清理及身份删除全部成功才释放编号；失败回执不再是 done；标记阻止切换、PIN 解锁和复用，重启可查询并重试。【实测】卡目录失败、Flash 失败、缓存被占、待删除成人持唯一 PIN 四链，每链三次启动，最后复用编号的孩子无旧文件/集合；旧源码失败 | V2 / V3 的 `removal`；V1 的 `integration-people` |
+| R1-06 中 | 已修，常规/内存检查通过 | 【实现】撤销选最新记录，可用 revision 绑定指定操作，设置逆操作在修改锁内校验当前版本。【实测】0→10→20 撤销回 10；指定旧回执的撤销不覆盖后来的人工修改，过期撤销无效。旧源码失败 | V2 / V3 的 `undo` |
 | S1 | 六项复查问题均有修复和正反例；原保留项见后文 | 【实测】先执行独立复查附录，复现六项共 10 个失败，正常升级/停止播放/正常删除控制通过；再以开工源码做反向对照 | V2、V3；`build/services-review1-before.log` |
-| S2 | 已补真实设置、满额、连续撤销边界，待最终全量验收 | 【实测】`permissions` 26、`undo` 13、`policy` 30 检查通过；未把确认卡或密码检查交给 AI | V1 / V2 |
+| S2 | 通过本轮验证，已补真实设置、满额、连续撤销边界 | 【实测】`permissions` 26、`undo` 13、`policy` 30 检查通过；未把确认卡或密码检查交给 AI | V1 / V2 |
 | S3 | 保留既有修复 | 【实测】实际能力表完整发送的 `actions` 回归通过；没有新增内部 RAM 缓冲 | V2 的 `actions`；V1 预算 |
-| S4 | 内存检查中 | 最新补修后常规 86/86，45.61 秒；19 组全部通过；预算未改 | V1、V2 |
-| S6 | 已补播放与删除事务边界，待最终内存检查 | 【实测】`handoff`、`isolation`、`playback`、`removal`；保留原成员、通知、文件、应用的全量断言 | V1 / V2 |
-| S5 | 最终检查中 | 差异、隐私、文件大小、链接及提交尚待最后核对 | V4 |
+| S4 | 通过 | 【实测】最终常规 86/86、35.41 秒；ASan/UBSan 86/86、70.34 秒；两套各 19 组及栈计量检查通过，预算未改 | V1、V2、V3 |
+| S6 | 通过本轮补查，已补播放与删除事务边界 | 【实测】`handoff`、`isolation`、`playback`、`removal`；保留原成员、通知、文件、应用的全量断言 | V1 / V2 |
+| S4-DET 中（阻挡项） | 已修，常规/内存检查通过 | 【实测】内存检查首次为 85/86，仅栈指标 7807/7808 不同，截图及其他指标相同；栈字前缀等于填充值的确定性复现，旧代码 7 项失败；按完整栈字保守计量后通过，不放宽预算或过滤指标 | `python tests/services_finish/stack_meter.py`；加 `--build build-asan` 或 `--baseline b431412` |
+| S5 | 通过结束检查，保留继承诊断 | 【实测】新增隐私匹配 0，27 个相关文件无超大文件，18 个相对链接有效；新增差异无空白问题，继承诊断不变；修复里程碑 `b431412`，最终验证随本报告本地提交，不推送 | V4 |
 
 证据只覆盖本机模拟器，不代表 Linux、真机或真实中枢。构建和全量测试逐轮串行，构建最多 `-j4`、CTest 最多 `-j3`。仅既有 `gui-smoke` 使用 SDL dummy，没有启动窗口。
 
@@ -70,11 +71,34 @@ INK_FINISH_SAVED=1 UBSAN_OPTIONS=halt_on_error=1 $INK_DEPS/build-deps/pyenv/bin/
 # V3: 只读替换对应源码，预期退出 1；不回滚工作区
 $INK_DEPS/build-deps/pyenv/bin/python tests/services_finish/run.py --baseline d74a261 permissions undo playback activity upgrade_crash removal
 
-# V4: 指定基线的隐私检查仅统计，避免打印继承的敏感内容
-# 另检查 git diff --stat、git diff --check、相对链接、文件大小及 git status
+# V3: 栈计量；两个正例退出 0，旧源码反向预期退出 1
+$INK_DEPS/build-deps/pyenv/bin/python tests/services_finish/stack_meter.py
+$INK_DEPS/build-deps/pyenv/bin/python tests/services_finish/stack_meter.py --build build-asan
+$INK_DEPS/build-deps/pyenv/bin/python tests/services_finish/stack_meter.py --build build-asan --baseline b431412
+
+# V4: 另按总规则 §6 的原隐私正则统计匹配行，不回显继承内容
+git diff --stat d74a261..HEAD
+git diff --check d74a261..HEAD
+git diff --check fdff779..HEAD
+git status --short
 ```
 
-本地忽略目录证据：修前 `build/services-review1-before.log`；新增权限撤销修前 `build/services-review1-permission-undo-before.log`（5 个失败），修后 `build/services-review1-permission-undo-final.log`（permissions/undo/policy 均通过）。最新常规构建 `build/services-review1-fix-build.log`、全量 `build/services-review1-ctest-final.log`、19 组回归 `build/services-review1-regressions-final.log`（产物 `build/services-finish-s6a1in6u/`）；最终反向 `build/services-review1-reverse-final.log`，六组均检出问题，退出 1（预期），产物 `build/services-finish-i9bv5wg4/`。内存检查及结束检查待补齐。
+本地忽略目录证据（最终构建和正向测试退出 0，反向对照预期退出 1；继承差异检查另列）：
+
+| 检查 | 日志 / 产物 |
+| --- | --- |
+| 常规构建、86/86 | `build/services-review1-build-final.log`、`build/services-review1-ctest-final.log` |
+| ASan/UBSan 构建、86/86 | `build-asan/services-review1-build-final.log`、`build-asan/services-review1-ctest-final.log` |
+| 两套各 19 组 | 两个构建目录的 `services-review1-regressions-final.log`；产物 `build/services-finish-8wl8nanb/`、`build-asan/services-finish-u7dvivna/` |
+| 低电量正常保存对照，各 5 检查 | 两个构建目录的 `services-review1-saved-final.log`；产物 `build/services-finish-y3xur1lm/`、`build-asan/services-finish-6y6x0kco/` |
+| 六项修前与反向 | `build/services-review1-before.log`（原六项共 10 个失败）；`build/services-review1-reverse-final.log`，六组均失败，产物 `build/services-finish-i9bv5wg4/` |
+| 权限撤销补充 | `build/services-review1-permission-undo-before.log`（5 个失败）；修后 permissions 26、undo 13、policy 30 检查通过，`build/services-review1-permission-undo-final.log` |
+| 栈计量正反例 | 两个构建目录的 `services-review1-stack-final.log` 均 0 失败；`build-asan/services-review1-stack-reverse.log` 为 7 个失败；ASan 失败原指标对保存在 `build-asan/services-review1-determinism-before/` |
+| 资源、隐私、链接、范围 | `build/services-review1-closure.json` |
+
+【实测】两套 PQBN AI 场景的总内部 RAM 最低空闲均为 33,192 字节，原门槛 32,768，余 424；内部失败分配均为 0。没有把动态池单项余量混成总内部 RAM，也没有放宽预算。新增待记槽和设置版本放 PSRAM，没有新增常驻任务。
+
+【实测】指定基线的隐私正则：`fdff779..HEAD` 与开工 `fdff779..d74a261` 同为 4,134 匹配行；本轮 `d74a261..HEAD` 为 0。完整基线的空白检查退出 2、1,157 条诊断，与开工一致，来自继承资料；本轮差异退出 0。未改这些原始审计材料。27 个改动文件均小于 5 MB；两个公共头及栈计量内核的必要范围例外见下文；其余均在允许范围，设计只改 §7、§15。只有本地提交，没有设备、真实密钥、付费接口或外部发布操作。
 
 ## 没做到的
 
@@ -86,6 +110,7 @@ $INK_DEPS/build-deps/pyenv/bin/python tests/services_finish/run.py --baseline d7
 
 - 上述四项中级及文档能力总表仍有缺口。只更新允许的设计 §7、§15；没有修改规范迁就代码。
 - 必要范围例外：`system/include/ink/sys/settings.h` 增加设置风险字段；`system/include/ink/sys/data.h` 增加能报告缓存占用错误的遗忘接口，原 void 接口保留。二者是 R1-04、R1-05 所需的最小声明变更，未改层次或硬件接口。
+- S4 阻挡项范围例外：`simulator/kernel/vtk/vtk.c` 按完整栈字计量，避免宿主地址字节偶然等于填充值时少算几字节；只改两行，不改预算、任务大小或确定性断言。按总规则 §2 的验收阻挡项处理。
 - 删除在清理失败时保留隔离编号，需要人重试；未做自动清理后台任务。Flash 数据目录按现有布局为扁平目录；遇到异常子目录返回失败并保留隔离，未谎报完成。
 
 ## 改过的已有测试
@@ -106,4 +131,5 @@ $INK_DEPS/build-deps/pyenv/bin/python tests/services_finish/run.py --baseline d7
 ## 顺手发现
 
 - 权限变更的撤销若继承通用 `CONFIRMED` 来源，AI 可撤销真人关闭权限而重新获权。已纳入 R1-04 修复和回归，不另留安全绕过。
-- 首次常规全量为 84/86：同一成员锁屏听书被停、删除标记的固定 2 秒等待早于墨水屏约 2.156 秒写入等待。保留原测试，恢复同一成员锁屏听书；删除改为使用调用现有剩余期限，没有延长能力期限或预算。两项定点重测通过，最终仍须全量和内存检查。
+- 首次常规全量为 84/86：同一成员锁屏听书被停；删除标记的固定 2 秒等待超时，存储等待峰值约 2.156 秒。保留原测试，恢复同一成员锁屏听书；删除改为使用调用现有剩余期限，没有延长能力期限或预算。两项定点重测通过，最终两套全量及回归均通过。
+- ASan/UBSan 首次全量 85/86，失败对照保存在 `build-asan/services-review1-determinism-before/`；原断言单跑可通过，但不能以重跑掩盖波动。新增 `stack_meter` 固定复现并修复字节填充值碰撞，原确定性比较和全部指标保留。
