@@ -107,7 +107,6 @@ static void sheet_open(void) {
 static void set_status(const char *s) {
     if (!AI.open) return;
     ink_shell_ai_status(s);
-    ink_ui_hint_obj(AI.status, INK_REFRESH_FAST);
 }
 
 static void free_buffered(void);

@@ -36,16 +36,17 @@ static struct {
     lv_obj_t *control, *page, *page_body;
     lv_obj_t *status[3];
     bool status_time[3];
-    int home_page, notify_page, apps_page, apps_pages;
+    int home_page, notify_page, apps_page, apps_pages, wifi_page;
     page_t page_id;
     bool more, initialized, need_body;
     char result[160], search[80];
     char wifi_ssid[6][40], picked_ssid[40];
     int wifi_count;
-    bool scan_busy;
+    bool scan_busy, notify_more;
     ink_exec_job_t refresh;
 } N INK_PSRAM_BSS;
 static void draw_page_body(void);
+static void draw_home_content(void);
 
 static void wifi_receipt(void *ctx, const ink_receipt_t *rc) {
     bool scan = ctx != NULL;
@@ -54,6 +55,7 @@ static void wifi_receipt(void *ctx, const ink_receipt_t *rc) {
     if (scan && rc->status == INK_RC_DONE && rc->result) {
         ink_json_t j;
         N.wifi_count = 0;
+        N.wifi_page = 0;
         if (ink_json_parse(&j, rc->result, strlen(rc->result)) == 0) for (int i = 1; i < j.ntok && N.wifi_count < 6; i++) {
             if (j.tok[i].type != 1) continue;
             int token = ink_json_find(&j, i, "ssid");
@@ -61,6 +63,7 @@ static void wifi_receipt(void *ctx, const ink_receipt_t *rc) {
             int end = j.tok[i].end;
             while (i + 1 < j.ntok && j.tok[i + 1].start < end) i++;
         }
+        ink_ui_content_changed();
     }
     if (N.page_body && N.page_id == PAGE_NETWORK) draw_page_body();
 }
@@ -172,6 +175,7 @@ static void draw_dots(void) {
 }
 
 static void tile(lv_obj_t *parent, const char *id, const char *title, const char *icon, int col, int row, int y, bool compact) {
+    if (N.home_page == 2 && N.search[0] && !strstr(title, N.search) && !strstr(id, N.search)) return;
     int cell = width() / 4, d = compact ? INK_CIRCLE : INK_CIRCLE_APP;
     int x = INK_MARGIN + col * cell + (cell - d) / 2;
     int at = y + row * (d + INK_GAP_S + INK_LINE_NOTE + INK_GAP_L);
@@ -187,8 +191,24 @@ static const char *const APP_IDS[] = {"listen", "news", "word", "upcoming", "clo
 static const char *const APP_TITLES[] = {"听", "报纸", "单词", "接下来", "时钟", "相机", "相册", "设置"};
 static const char *const APP_ICONS[] = {"headphones", "news", "word", "calendar", "clock", "camera", "gallery", "gear"};
 
+static void search_entered(void *ctx, const char *value) {
+    (void)ctx;
+    ink_args_t *args = osal_malloc(sizeof *args, OSAL_MEM_EXTERNAL);
+    if (!args) return;
+    ink_args_init(args); ink_args_str(args, "query", value);
+    ink_receipt_t rc; ink_cap_invoke("shell.search", args, INK_SRC_TOUCH, 0, &rc);
+    osal_free(args);
+}
+
 static void draw_home_content(void) {
     if (!N.content) return;
+    for (unsigned i = 0; i < sizeof N.status / sizeof *N.status; i++) {
+        if (N.status[i] && lv_obj_get_parent(N.status[i]) == N.home && N.status_time[i] != (N.home_page != 1)) {
+            lv_obj_delete(N.status[i]);
+            lv_obj_t *bar = ink_shell_statusbar(N.home, N.home_page != 1);
+            ink_ui_hint_obj(bar, INK_REFRESH_FAST);
+        }
+    }
     N.clock = N.date = N.message = NULL;
     lv_obj_clean(N.content);
     char clock[16], date[96];
@@ -237,8 +257,8 @@ static void draw_home_content(void) {
         }
     } else {
         ink_ui_label(N.content, "全部", INK_FONT_HEADING, INK_WEIGHT_BOLD, INK_MARGIN, page_top, width());
-        ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .enter = INK_ENTER_SEARCH, .max = 64, .hint = "查找应用"};
-        lv_obj_t *search = ink_textfield_create(N.content, &cfg, NULL, NULL, false);
+        ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .enter = INK_ENTER_SEARCH, .max = 64, .hint = "查找应用", .initial = N.search};
+        lv_obj_t *search = ink_textfield_create(N.content, &cfg, search_entered, NULL, false);
         lv_obj_set_pos(search, ink_ui_px(INK_MARGIN), ink_ui_px(INK_PRIMARY));
         lv_obj_set_size(search, ink_ui_px(width()), ink_ui_px(INK_CONTROL));
         static const char *const groups[] = {"读和听", "记和联系", "工具"};
@@ -340,6 +360,16 @@ int ink_shell_home_snapshot(char *buf, size_t cap) {
     if (!ink_member_space_open()) return snprintf(buf, cap, "空间锁定；AI 无权读取。");
     ink_card_t card;
     bool has = bookmark(&card);
+    if (N.home_page == 2) {
+        int n = snprintf(buf, cap, "Apps；当前=%s；查找=%s；", ink_member_current()->name, N.search);
+        for (int i = 0; i < ink_app_count() && n >= 0 && (size_t)n < cap; i++) {
+            const ink_app_def_t *a = ink_app_at(i);
+            if (ink_app_visible(a) && (!N.search[0] || strstr(a->title, N.search) || strstr(a->id, N.search)))
+                n += snprintf(buf + n, cap - (size_t)n, "%s（%s）；", a->title, a->id);
+        }
+        if (n >= 0 && (size_t)n < cap) n += snprintf(buf + n, cap - (size_t)n, "动作：shell.launch、shell.search、home.next、home.prev、shell.control。");
+        return n < 0 ? 0 : (size_t)n < cap ? n : (int)cap - 1;
+    }
     return snprintf(buf, cap, "页面=%s；当前=%s；继续读=%s；%s。动作：shell.launch、shell.resume、home.next、home.prev、shell.control。",
                     N.home_page == 0 ? "Today" : N.home_page == 1 ? "Main" : "Apps", ink_member_current()->name, has ? card.text : "没有阅读进度", N.result);
 }
@@ -376,7 +406,7 @@ static int notifications(lv_obj_t *parent, int y, int limit) {
     ink_notify_view_t n;
     int count = 0, skipped = 0;
     while (count < limit && ink_notify_next(&cursor, &n) == 1) {
-        if (skipped++ < N.notify_page * limit) continue;
+        if (skipped++ < (parent == N.page_body ? N.notify_page * limit : 0)) continue;
         lv_obj_t *card = ink_ui_card(parent, INK_MARGIN, y, width(), INK_ROW_DOUBLE, INK_SURFACE_WHITE);
         ink_ui_circle(card, !strcmp(n.channel, "message") ? "message" : "bell", INK_GAP, INK_GAP_M, INK_CIRCLE, INK_ICON_LIST, INK_SURFACE_STATIC, NULL, NULL);
         ink_ui_label(card, n.title, INK_FONT_LIST, INK_WEIGHT_BOLD, INK_ROW_DOUBLE, INK_GAP, width() - INK_ROW_DOUBLE - INK_MARGIN);
@@ -385,6 +415,8 @@ static int notifications(lv_obj_t *parent, int y, int limit) {
         char args[64]; snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)n.id); ink_shell_bind(card, "notify.read", args);
         count++; y += INK_ROW_DOUBLE + INK_GAP_M;
     }
+    if (parent == N.page_body) N.notify_more = ink_notify_next(&cursor, &n) == 1;
+    if (!count && parent == N.page_body && N.notify_page) { N.notify_page = 0; return notifications(parent, y, limit); }
     if (!count) ink_ui_notice(parent, "还没有通知", y + INK_GAP_L);
     return y;
 }
@@ -458,8 +490,8 @@ static void wifi_password(void *ctx, const char *password) {
 }
 static void wifi_picked(lv_event_t *e) {
     int index = (int)(intptr_t)lv_event_get_user_data(e);
-    snprintf(N.picked_ssid, sizeof N.picked_ssid, "%s", N.wifi_ssid[index]);
-    draw_page_body();
+    char args[40]; snprintf(args, sizeof args, "{\"index\":%d}", index);
+    ink_receipt_t rc; ink_cap_invoke_json("shell.wifi_pick", args, INK_SRC_TOUCH, 0, &rc);
 }
 
 static void draw_page_body(void) {
@@ -528,9 +560,16 @@ static void draw_page_body(void) {
         }
         lv_obj_t *scan = ink_ui_pill(N.page_body, N.scan_busy ? "正在找附近的 Wi-Fi" : "找附近的 Wi-Fi", INK_MARGIN, y, width(), INK_CONTROL, N.scan_busy, NULL, NULL); ink_shell_bind(scan, "wifi.scan", NULL);
         y += INK_CONTROL + INK_GAP_M;
-        for (int i = 0; i < N.wifi_count && i < 3; i++) {
+        for (int i = N.wifi_page * 2; i < N.wifi_count && i < (N.wifi_page + 1) * 2; i++) {
             ink_ui_pill(N.page_body, N.wifi_ssid[i], INK_MARGIN, y, width(), INK_CONTROL, false, wifi_picked, (void *)(intptr_t)i);
             y += INK_CONTROL + INK_GAP_S;
+        }
+        if (N.wifi_count > 2) {
+            lv_obj_t *prev = ink_ui_pill(N.page_body, "上一组", INK_MARGIN, y, (width() - INK_GAP) / 2, INK_CONTROL, false, NULL, NULL);
+            if (N.wifi_page) ink_shell_bind(prev, "shell.wifi_prev", NULL);
+            lv_obj_t *next = ink_ui_pill(N.page_body, "下一组", INK_MARGIN + (width() + INK_GAP) / 2, y, (width() - INK_GAP) / 2, INK_CONTROL, false, NULL, NULL);
+            if ((N.wifi_page + 1) * 2 < N.wifi_count) ink_shell_bind(next, "shell.wifi_next", NULL);
+            y += INK_CONTROL + INK_GAP_M;
         }
         if (!N.wifi_count) { ink_ui_notice(N.page_body, "还没有附近的网络列表", y); y += INK_LINE_NOTE + INK_GAP_L; }
         ink_ui_label(N.page_body, "SIM 卡", INK_FONT_LIST, INK_WEIGHT_BOLD, INK_MARGIN, y, width()); y += INK_LINE_LIST + INK_GAP_M;
@@ -542,6 +581,15 @@ static void draw_page_body(void) {
     } else {
         y = notifications(N.page_body, 0, 6);
         lv_obj_t *read = ink_ui_pill(N.page_body, "全部已读", INK_MARGIN, y + INK_GAP, width(), INK_CONTROL, false, NULL, NULL); ink_shell_bind(read, "notify.read", "{\"id\":0}");
+        y += INK_GAP + INK_CONTROL + INK_GAP;
+        lv_obj_t *prev = ink_ui_pill(N.page_body, "上一页", INK_MARGIN, y, 2 * INK_PRIMARY, INK_CONTROL, false, NULL, NULL);
+        if (N.notify_page) ink_shell_bind(prev, "shell.notify_prev", NULL);
+        lv_obj_t *next = ink_ui_pill(N.page_body, "下一页", INK_CANVAS_W - INK_MARGIN - 2 * INK_PRIMARY, y, 2 * INK_PRIMARY, INK_CONTROL, false, NULL, NULL);
+        if (N.notify_more) ink_shell_bind(next, "shell.notify_next", NULL);
+        char page[40]; snprintf(page, sizeof page, "第 %d 页", N.notify_page + 1);
+        lv_obj_t *caption = ink_ui_label(N.page_body, page, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN + 2 * INK_PRIMARY,
+                                         y + (INK_CONTROL - INK_LINE_NOTE) / 2, width() - 4 * INK_PRIMARY);
+        lv_obj_set_style_text_align(caption, LV_TEXT_ALIGN_CENTER, 0);
     }
     ink_ui_hint_obj(N.page_body, INK_REFRESH_UI);
 }
@@ -559,9 +607,22 @@ static void destroy_page(void) { N.page = N.page_body = NULL; }
 static bool page_key(ink_key_t key, bool lng) { (void)key; (void)lng; return false; }
 static int page_snapshot(char *buf, size_t cap) {
     if (!ink_member_space_open()) return snprintf(buf, cap, "空间锁定；AI 无权读取。");
-    return snprintf(buf, cap, "%s；当前=%s；亮度=%lld；暖光=%lld；音量=%lld；网络偏好=%lld；通知=%d。动作：settings.set、shell.back、shell.control。",
+    int n = snprintf(buf, cap, "%s；当前=%s；亮度=%lld；暖光=%lld；音量=%lld；网络偏好=%lld；通知=%d。",
                     PAGES[N.page_id].name, ink_member_current()->name, (long long)ink_setting_get("display.light"), (long long)ink_setting_get("display.warmth"),
                     (long long)ink_setting_get("audio.volume"), (long long)ink_setting_get("net.prefer"), ink_notify_unread());
+    if (N.page_id == PAGE_NOTIFICATIONS) {
+        ink_db_cursor_t cursor = {0}; ink_notify_view_t item; int at = 0;
+        while (ink_notify_next(&cursor, &item) == 1 && n >= 0 && (size_t)n < cap) {
+            if (at++ < N.notify_page * 6) continue;
+            if (at > (N.notify_page + 1) * 6) break;
+            n += snprintf(buf + n, cap - (size_t)n, "%u：%s，%s；", (unsigned)item.id, item.title, item.body);
+        }
+    }
+    const char *actions = N.page_id == PAGE_NOTIFICATIONS ? "动作：notify.read、notify.dismiss、shell.back、shell.control、shell.notify_next、shell.notify_prev。"
+                          : N.page_id == PAGE_NETWORK ? "动作：settings.set、wifi.scan、wifi.list、shell.back、shell.control、shell.wifi_next、shell.wifi_prev、shell.wifi_pick。"
+                          : "动作：settings.set、shell.back、shell.control。";
+    if (n >= 0 && (size_t)n < cap) n += snprintf(buf + n, cap - (size_t)n, "%s", actions);
+    return n < 0 ? 0 : (size_t)n < cap ? n : (int)cap - 1;
 }
 
 void ink_shell_open_page(const char *name) {
@@ -586,11 +647,34 @@ static void cap_nav(ink_call_t *c) {
     else if (!strcmp(c->cap->id, "shell.more")) { N.more = !N.more; if (N.control) draw_control(); }
     else if (!strcmp(c->cap->id, "home.next")) turn(1);
     else if (!strcmp(c->cap->id, "home.prev")) turn(-1);
+    else if (!strcmp(c->cap->id, "shell.search")) {
+        ink_args_get_str(&c->args, "query", N.search, sizeof N.search);
+        N.apps_page = 0;
+        ink_text_blur(0);
+        if (N.content) { N.home_page = 2; ink_ui_content_changed(); draw_home_content(); }
+    }
     else if (!strcmp(c->cap->id, "shell.settings")) ink_shell_open_page("Settings");
     else if (!strcmp(c->cap->id, "shell.display")) ink_shell_open_page("SetDisplay");
     else if (!strcmp(c->cap->id, "shell.sound")) ink_shell_open_page("SetSound");
     else if (!strcmp(c->cap->id, "shell.network")) ink_shell_open_page("SetNetwork");
     else if (!strcmp(c->cap->id, "shell.notifications")) ink_shell_open_page("Notifications");
+    else if (!strcmp(c->cap->id, "shell.notify_next") || !strcmp(c->cap->id, "shell.notify_prev")) {
+        if (N.page_body && N.page_id == PAGE_NOTIFICATIONS) {
+            if (!strcmp(c->cap->id, "shell.notify_next") && N.notify_more) N.notify_page++;
+            else if (!strcmp(c->cap->id, "shell.notify_prev") && N.notify_page) N.notify_page--;
+            ink_ui_content_changed(); ink_ui_stage_next(); draw_page_body();
+        }
+    } else if (!strcmp(c->cap->id, "shell.wifi_next") || !strcmp(c->cap->id, "shell.wifi_prev")) {
+        if (N.page_body && N.page_id == PAGE_NETWORK && !N.picked_ssid[0]) {
+            if (!strcmp(c->cap->id, "shell.wifi_next") && (N.wifi_page + 1) * 2 < N.wifi_count) N.wifi_page++;
+            else if (!strcmp(c->cap->id, "shell.wifi_prev") && N.wifi_page) N.wifi_page--;
+            ink_ui_content_changed(); ink_ui_stage_next(); draw_page_body();
+        }
+    } else if (!strcmp(c->cap->id, "shell.wifi_pick")) {
+        int64_t index = -1; ink_args_get_int(&c->args, "index", &index);
+        if (!N.page_body || N.page_id != PAGE_NETWORK || index < 0 || index >= N.wifi_count) c->rc.status = INK_RC_REJECTED;
+        else { snprintf(N.picked_ssid, sizeof N.picked_ssid, "%s", N.wifi_ssid[index]); draw_page_body(); }
+    }
     snprintf(c->rc.object, sizeof c->rc.object, "screen:%s", ink_shell_board());
 }
 
@@ -627,6 +711,10 @@ static const ink_cap_t CAPS[] = {
     NAV("shell.members", "选择家人", true), NAV("shell.more", "更多控制", false),
     NAV("shell.settings", "打开设置", false), NAV("shell.display", "显示和亮度", false), NAV("shell.sound", "声音", false),
     NAV("shell.network", "网络和 SIM 卡", false), NAV("shell.notifications", "查看通知", true),
+    NAV("shell.notify_next", "通知下一页", true), NAV("shell.notify_prev", "通知上一页", true),
+    NAV("shell.wifi_next", "附近网络下一组", false), NAV("shell.wifi_prev", "附近网络上一组", false),
+    {.id = "shell.search", .title = "查找应用", .activity = "home", .input = "{\"type\":\"object\",\"properties\":{\"query\":{\"type\":\"string\",\"maxLength\":64}},\"required\":[\"query\"]}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = cap_nav},
+    {.id = "shell.wifi_pick", .title = "选附近网络（密码由人在设备上填写）", .input = "{\"type\":\"object\",\"properties\":{\"index\":{\"type\":\"integer\",\"minimum\":0}},\"required\":[\"index\"]}", .effect = INK_FX_NAVIGATE, .child_ok = false, .run = cap_nav},
     {.id = "home.next", .title = "主页下一屏", .activity = "home", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = cap_nav},
     {.id = "home.prev", .title = "主页上一屏", .activity = "home", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = cap_nav},
     {.id = "shell.launch", .title = "打开主页上的应用", .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\"}},\"required\":[\"id\"]}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = cap_launch},

@@ -186,7 +186,7 @@ static void build(int kind) {
     lv_obj_set_style_bg_opa(K.root, LV_OPA_COVER, 0);
     lv_obj_set_style_border_color(K.root, lv_color_black(), 0);
     lv_obj_set_style_border_width(K.root, ink_ui_px(INK_STROKE), 0);
-    lv_obj_set_style_border_side(K.root, LV_BORDER_SIDE_TOP, 0);
+    lv_obj_set_style_border_side(K.root, LV_BORDER_SIDE_TOP | LV_BORDER_SIDE_LEFT | LV_BORDER_SIDE_RIGHT, 0);
     lv_obj_set_style_radius(K.root, ink_ui_px(INK_RADIUS_PANEL), 0);
     lv_obj_set_style_pad_hor(K.root, ink_ui_px(INK_GAP), 0);
     lv_obj_set_style_pad_ver(K.root, ink_ui_px(INK_GAP_S), 0);

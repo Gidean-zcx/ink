@@ -3,6 +3,7 @@
 #include <string.h>
 #include "ink/sys/confirm.h"
 #include "ink/sys/interrupt.h"
+#include "ink/sys/notify.h"
 #include "ink/sys/settings.h"
 #include "ink/sys/textfield.h"
 #include "ink/ui_shell.h"
@@ -53,6 +54,16 @@ static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
 static void quiet(void) { CHECK(WAIT_FOR(settled(), 10000), "the panel settles"); }
 static void snapshot_event(void *name) { sim_display_snapshot(name); }
 static void panel(const char *name) { vtk_event_at(vtk_now() + SIM_MS(1), snapshot_event, (void *)name); delay_ms(5); }
+static bool clock_tile;
+static void find_clock_in(lv_obj_t *root) {
+    for (uint32_t i = 0; i < lv_obj_get_child_count(root); i++) {
+        lv_obj_t *child = lv_obj_get_child(root, (int32_t)i);
+        if (lv_obj_has_flag(child, LV_OBJ_FLAG_HIDDEN)) continue;
+        if (lv_obj_check_type(child, &lv_label_class) && !strcmp(lv_label_get_text(child), "时钟")) clock_tile = true;
+        find_clock_in(child);
+    }
+}
+static void find_clock(void) { clock_tile = false; find_clock_in(lv_screen_active()); }
 
 static void test_task(void *arg) {
     (void)arg; delay_ms(1800); quiet();
@@ -69,6 +80,16 @@ static void test_task(void *arg) {
     CHECK(BY_HAND("shell.settings", NULL) && g_rc.status == INK_RC_DONE, "settings opens"); quiet();
     swipe(20, 400, 250, 400); quiet(); CHECK(!strcmp(ink_ui_page_name(), "home"), "left edge returns one level");
     swipe(500, 500, 200, 500); quiet(); CHECK(!strcmp(ink_shell_board(), "Apps"), "foreground swipe turns only on release");
+    on_ui(find_clock); CHECK(clock_tile, "Apps initially shows its Clock tile");
+    tap(300, INK_LINE_BODY + INK_PRIMARY + INK_CONTROL / 2);
+    CHECK(ink_text_focused(), "application search takes the input focus");
+    CHECK(AI("text.insert", "{\"text\":\"阅读\"}") && g_rc.status == INK_RC_DONE, "the AI can fill the same application query");
+    CHECK(BY_HAND("text.submit", NULL) && g_rc.status == INK_RC_DONE, "the search key submits through the text capability");
+    quiet(); on_ui(read_screen);
+    CHECK(strstr(g_snap, "查找=阅读") && !ink_text_focused(), "the real query filters Apps and closes its keyboard");
+    on_ui(find_clock); CHECK(!clock_tile, "the nonmatching Clock tile is absent from the rendered tree");
+    CHECK(BY_HAND("shell.search", "{\"query\":\"\"}") && g_rc.status == INK_RC_DONE, "clearing the same query restores Apps");
+    on_ui(find_clock); CHECK(clock_tile, "clearing the query restores the rendered tile");
     key(HAL_KEY_PREV); quiet();
     on_ui(open_input); quiet();
     swipe(300, 1200, 300, 900); quiet(); CHECK(ink_text_focused() && !strcmp(ink_ui_page_name(), "test.input"), "keyboard owns the bottom edge");
@@ -96,6 +117,17 @@ static void test_task(void *arg) {
     double preview = sim_metric_value("display.two_phase.preview"), gray = sim_metric_value("display.two_phase.gray");
     key(HAL_KEY_NEXT); quiet();
     CHECK(sim_metric_value("display.two_phase.preview") > preview && sim_metric_value("display.two_phase.gray") > gray, "a page has a binary preview and gray refinement");
+    for (int i = 0; i < 8; i++) {
+        char title[48]; snprintf(title, sizeof title, "测试通知 %d", i);
+        ink_notify_t note = {.title = title, .body = "分页测试", .prio = INK_NOTIFY_LOW, .src = INK_SRC_SYSTEM};
+        CHECK(ink_notify_post(&note, NULL) == 0, "post synthetic notification %d", i);
+    }
+    CHECK(BY_HAND("shell.notifications", NULL) && g_rc.status == INK_RC_DONE, "open the real notification list"); quiet();
+    on_ui(read_screen); char first[sizeof g_snap]; snprintf(first, sizeof first, "%s", g_snap);
+    CHECK(BY_HAND("shell.notify_next", NULL) && g_rc.status == INK_RC_DONE, "the notification page advances through its capability"); quiet();
+    on_ui(read_screen); CHECK(strcmp(first, g_snap), "the next page shows different real records");
+    CHECK(BY_HAND("shell.notify_prev", NULL) && g_rc.status == INK_RC_DONE, "the notification page returns through the same capability"); quiet();
+    on_ui(read_screen); CHECK(!strcmp(first, g_snap), "the previous six records are restored");
     ink_probe_count("test.finished");
 }
 void ink_main(void) {

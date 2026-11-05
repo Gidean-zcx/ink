@@ -53,6 +53,8 @@ static const struct {
     {"shell.launch", "id"}, {"shell.resume", NULL}, {"ai.panel.hide", NULL}, {"ai.panel.listen", NULL},
     {"ai.panel.next", NULL}, {"ai.panel.prev", NULL},
     {"keyboard.key", "code"}, {"keyboard.pick", "index"}, {"keyboard.candidates", ""}, {"keyboard.edit", "action"},
+    {"shell.search", "query"}, {"shell.notify_next", NULL}, {"shell.notify_prev", NULL},
+    {"shell.wifi_next", NULL}, {"shell.wifi_prev", NULL}, {"shell.wifi_pick", "index"},
     {NULL, NULL},
 };
 
@@ -60,6 +62,7 @@ static const struct {
 static const struct {
     const char *id, *why, *args;
 } NOT_FOR_AI[] = {
+    {"shell.members_page", "member selection stays on the device before adult authentication", "delta"},
     {"confirm.accept", "only a person on the device can say yes", "token"},
     {"confirm.reject", "only a person on the device answers", "token"},
     {"member.unlock", "a PIN is entered on the device, it goes through nobody else", "id,pin"},

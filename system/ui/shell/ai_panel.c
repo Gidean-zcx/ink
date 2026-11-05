@@ -91,7 +91,7 @@ void ink_shell_ai_status(const char *s) {
         lv_obj_remove_flag(A.question, LV_OBJ_FLAG_HIDDEN);
         lv_obj_add_flag(A.answer, LV_OBJ_FLAG_HIDDEN);
     }
-    ink_ui_hint_obj(A.status, INK_REFRESH_FAST);
+    ink_ui_hint_obj(A.status, done ? INK_REFRESH_UI : INK_REFRESH_FAST);
 }
 
 static void action(ink_call_t *c) {

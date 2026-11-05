@@ -8,6 +8,7 @@
 
 #include "ink/sys/cap.h"
 #include "ink/sys/interrupt.h"
+#include "ink/sys/members.h"
 #include "shell_card.h"
 #include "ink/ui_shell.h"
 
@@ -23,6 +24,7 @@ static void on_button(lv_event_t *e) {
 }
 
 static int snapshot(char *buf, size_t cap) {
+    if (!ink_member_space_open()) return snprintf(buf, cap, "有系统打断；大人验证前 AI 无权读取个人内容。");
     int n = snprintf(buf, cap, "%s：%s。", C.now.title, C.now.body);
     for (int i = 0; i < C.now.nactions && n >= 0 && (size_t)n < cap; i++) n += snprintf(buf + n, cap - (size_t)n, "按钮：%s。", C.now.actions[i].label);
     return n < 0 ? 0 : (size_t)n < cap ? n : (int)cap - 1;
@@ -49,6 +51,7 @@ static void show(const ink_interrupt_t *top) { /* UI task */
     shell_card_text(&C.card, C.now.title, C.now.body);
     bool call = C.now.kind == INK_INT_CALL;
     bool alarm = C.now.kind == INK_INT_ALARM;
+    lv_obj_set_style_text_font(C.card.title, ink_ui_font_px(call ? INK_FONT_LIST : INK_FONT_HEADING, INK_WEIGHT_BOLD), 0);
     lv_obj_set_y(C.card.title, ink_ui_px(call ? INK_LINE_BODY + INK_BLOCK : INK_LINE_BODY + INK_BLOCK_L + INK_CIRCLE_LARGE + INK_MARGIN));
     lv_obj_set_y(C.card.body, ink_ui_px(INK_LINE_BODY + INK_BLOCK_L + INK_CIRCLE_LARGE + INK_MARGIN + INK_LINE_TITLE));
     lv_obj_set_style_text_font(C.card.body, ink_ui_font_px(alarm ? INK_FONT_CLOCK : INK_FONT_BODY, INK_WEIGHT_REGULAR), 0);
@@ -58,7 +61,27 @@ static void show(const ink_interrupt_t *top) { /* UI task */
                   INK_CIRCLE_LARGE, INK_ICON_STATE, call ? INK_SURFACE_STATIC : INK_SURFACE_BLACK, NULL, NULL);
     shell_card_clear_buttons(&C.card);
     for (int i = 0; i < C.now.nactions; i++) shell_card_button(&C.card, C.now.actions[i].label, on_button, (void *)(intptr_t)i);
-    if (alarm && C.now.nactions == 2) {
+    if (call && C.now.nactions == 2) {
+        int h = INK_CIRCLE_LARGE + INK_GAP_M + INK_LINE_LIST;
+        lv_obj_set_flex_flow(C.card.row, LV_FLEX_FLOW_ROW_REVERSE);
+        lv_obj_set_height(C.card.row, ink_ui_px(h));
+        lv_obj_set_y(C.card.row, ink_ui_px(INK_CANVAS_H - INK_MARGIN - h));
+        for (int i = 0; i < 2; i++) {
+            lv_obj_t *button = lv_obj_get_child(C.card.row, i);
+            lv_obj_set_height(button, ink_ui_px(h));
+            lv_obj_set_style_bg_opa(button, LV_OPA_TRANSP, 0);
+            lv_obj_set_style_border_width(button, 0, 0);
+            lv_obj_set_style_text_color(button, ink_ui_ink(), 0);
+            lv_label_set_text(lv_obj_get_child(button, 0), "");
+            int cell = (INK_CANVAS_W - 2 * INK_MARGIN - INK_GAP) / 2;
+            ink_ui_circle(button, i ? "callEnd" : "phone", (cell - INK_CIRCLE_LARGE) / 2 - INK_GAP, 0,
+                           INK_CIRCLE_LARGE, INK_ICON_APP, i ? INK_SURFACE_WHITE : INK_SURFACE_BLACK, NULL, NULL);
+            const char *label = i && C.now.actions[i].cap && !strcmp(C.now.actions[i].cap, "call.hangup") ? "拒接" : C.now.actions[i].label;
+            lv_obj_t *caption = ink_ui_label(button, label, INK_FONT_LIST, INK_WEIGHT_MEDIUM,
+                                             0, INK_CIRCLE_LARGE + INK_GAP_M, cell - 2 * INK_GAP);
+            lv_obj_set_style_text_align(caption, LV_TEXT_ALIGN_CENTER, 0);
+        }
+    } else if (alarm && C.now.nactions == 2) {
         lv_obj_set_flex_flow(C.card.row, LV_FLEX_FLOW_COLUMN);
         lv_obj_set_style_pad_row(C.card.row, ink_ui_px(INK_GAP), 0);
         lv_obj_set_height(C.card.row, ink_ui_px(2 * INK_PRIMARY + INK_GAP));
