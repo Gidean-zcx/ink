@@ -272,9 +272,9 @@ PQ-BN 各配置的对比见 [system-comparison.md](research/eink-refresh/integra
 **命令**
 
 ```bash
-cmake -S . -B build && cmake --build build -j && ctest --test-dir build --output-on-failure   # 86 项
-cmake -S . -B build-werror -DINK_WERROR=ON && cmake --build build-werror -j && ctest --test-dir build-werror
-cmake -S . -B build-asan -DINK_SANITIZE=ON && cmake --build build-asan -j && ctest --test-dir build-asan   # ASan + UBSan
+cmake -S . -B build && cmake --build build -j8 && ctest --test-dir build --output-on-failure   # 86 项
+cmake -S . -B build-werror -DINK_WERROR=ON && cmake --build build-werror -j8 && ctest --test-dir build-werror
+cmake -S . -B build-asan -DINK_SANITIZE=ON && cmake --build build-asan -j8 && ctest --test-dir build-asan   # ASan + UBSan
 
 # 单独跑一个场景（换档案即可比较两种显示驱动）
 ./build/ink-sim --profile simulator/profiles/metalio-plus.json --script tests/scenarios/reader_basic.script \

@@ -17,7 +17,7 @@
 ## 快速开始
 
 ```bash
-cmake -S . -B build && cmake --build build -j && ctest --test-dir build --output-on-failure
+cmake -S . -B build && cmake --build build -j8 && ctest --test-dir build --output-on-failure
 ```
 
 需要能访问 GitHub（拉取 LVGL；没装 SDL2 时还会拉取 SDL2 和 Dear ImGui），以及 Noto Sans CJK 字体和带 Pillow 的 Python 3（Debian/Ubuntu：`fonts-noto-cjk`、`python3-pil`、`libsdl2-dev`；macOS 的做法见 [CI 配置](.github/workflows/sim.yml)）。详见[项目全貌 §11](docs/background.md)。
