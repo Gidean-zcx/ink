@@ -42,7 +42,7 @@
 ## 5. 构建和测试
 
 ```bash
-cmake -S . -B build -DINK_WERROR=ON -DINK_CJK_FONT=$INK_DEPS/build-deps/fonts/NotoSansCJK-Regular.ttc -DINK_CJK_FACE=2 -DPython3_EXECUTABLE=$INK_DEPS/build-deps/pyenv/bin/python -DFETCHCONTENT_SOURCE_DIR_LVGL=$INK_DEPS/build/_deps/lvgl-src
+cmake -S . -B build -DINK_WERROR=ON -DINK_CJK_FONT=$INK_DEPS/build-deps/fonts/NotoSansCJK-Regular.ttc -DINK_CJK_FACE=2 -DINK_CJK_MEDIUM_FONT=$INK_DEPS/build-deps/fonts/NotoSansCJKsc-Medium.otf -DINK_CJK_BOLD_FONT=$INK_DEPS/build-deps/fonts/NotoSansCJKsc-Bold.otf -DPython3_EXECUTABLE=$INK_DEPS/build-deps/pyenv/bin/python -DFETCHCONTENT_SOURCE_DIR_LVGL=$INK_DEPS/build/_deps/lvgl-src
 cmake --build build -j4
 $INK_DEPS/build-deps/pyenv/bin/ctest --test-dir build --output-on-failure -j3
 ```
