@@ -214,7 +214,7 @@ static void on_top(const char *app) {
 
 static void power_job(void *arg) { /* UI task */
     (void)arg;
-    AP.locked = ink_power_state() == INK_PWR_LOCKED;
+    AP.locked = ink_power_state() == INK_PWR_LOCKED || !ink_member_space_open();
     sync_foreground();
 }
 
@@ -285,7 +285,9 @@ static void on_member(void *ctx, int h, const char *id) {
     (void)ctx;
     (void)h;
     (void)id;
-    if (strcmp(AP.member, ink_member_current()->id) || !ink_member_space_open()) ink_exec_post(INK_EXEC_UI, &AP.member_job, member_job, NULL);
+    if (strcmp(AP.member, ink_member_current()->id) || AP.generation != ink_member_generation(NULL))
+        ink_exec_post(INK_EXEC_UI, &AP.member_job, member_job, NULL);
+    else ink_exec_post(INK_EXEC_UI, &AP.power_job, power_job, NULL); /* the member gate keeps this person's page stack */
 }
 
 /* ---- the directory ---- */
