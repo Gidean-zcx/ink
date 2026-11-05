@@ -143,7 +143,7 @@ static void changed(void) {
     present();
 }
 
-static void tell(uint32_t token, const char *cap, const char *decision, const ink_receipt_t *rc) {
+static void tell(uint32_t token, const char *cap, const char *decision, const ink_receipt_t *rc, const char *who) {
     const char *prev = osal_mem_tag("confirm");
     ink_args_t *a = osal_malloc(sizeof *a, OSAL_MEM_EXTERNAL);
     osal_mem_tag(prev);
@@ -155,6 +155,7 @@ static void tell(uint32_t token, const char *cap, const char *decision, const in
     ink_args_int(a, "token", token);
     ink_args_str(a, "cap", cap);
     ink_args_str(a, "decision", decision);
+    ink_args_str(a, "member", who); /* whose it was: not told to whoever came after */
     if (rc) {
         ink_args_str(a, "status", ink_rc_name(rc->status));
         if (rc->detail[0]) ink_args_str(a, "detail", rc->detail);
@@ -188,16 +189,18 @@ static void expiry_cb(void *arg) { /* the timer task */
     for (;;) {
         uint32_t token = 0;
         const char *cap = NULL;
+        char who[INK_MEMBER_ID_MAX] = "";
         ink_svc_lock();
         for (int i = 0; i < MAX_HELD && !token; i++)
             if (CF.held[i].used && CF.held[i].expires_us <= now) {
                 CF.held[i].used = false;
                 token = CF.held[i].token;
                 cap = CF.held[i].cap->id;
+                snprintf(who, sizeof who, "%s", CF.held[i].member);
             }
         ink_svc_unlock();
         if (!token) break;
-        tell(token, cap, "expired", NULL);
+        tell(token, cap, "expired", NULL, who);
     }
     changed();
 }
@@ -283,11 +286,12 @@ int ink_confirm_list(ink_confirm_view_t *out, int max) {
 typedef struct {
     uint32_t token;
     char cap[48];
+    char who[INK_MEMBER_ID_MAX];
 } ran_t;
 
 static void confirmed_done(void *ctx, const ink_receipt_t *rc) {
     ran_t *r = ctx;
-    tell(r->token, r->cap, "accepted", rc);
+    tell(r->token, r->cap, "accepted", rc, r->who);
     osal_free(r);
 }
 
@@ -349,8 +353,9 @@ static int decide(uint32_t token, bool accept) {
     changed();
     r->token = token;
     snprintf(r->cap, sizeof r->cap, "%s", h->cap->id);
-    if (!accept) tell(token, r->cap, "rejected", NULL);
-    else if (strcmp(h->member, ink_member_current()->id)) tell(token, r->cap, "member_changed", NULL);
+    snprintf(r->who, sizeof r->who, "%s", h->member);
+    if (!accept) tell(token, r->cap, "rejected", NULL, r->who);
+    else if (strcmp(h->member, ink_member_current()->id)) tell(token, r->cap, "member_changed", NULL, r->who);
     else {
         ink_call_opts_t o = {.src = INK_SRC_CONFIRMED, .page_gen = h->page_gen, .member = h->member, .reply_exec = INK_EXEC_DIRECT, .done = confirmed_done, .ctx = r};
         int started = ink_cap_call(r->cap, &h->args, &o);
@@ -358,7 +363,7 @@ static int decide(uint32_t token, bool accept) {
         if (started == 0) return 0; /* confirmed_done frees it */
         ink_receipt_t busy = {.status = INK_RC_FAILED};
         snprintf(busy.detail, sizeof busy.detail, "could not be started");
-        tell(token, r->cap, "accepted", &busy);
+        tell(token, r->cap, "accepted", &busy, r->who);
         osal_free(r);
         return 0;
     }
@@ -368,6 +373,7 @@ static int decide(uint32_t token, bool accept) {
 }
 
 int ink_confirm_withdraw(uint32_t token, ink_source_t src) {
+    char who[INK_MEMBER_ID_MAX] = "";
     bool mine = false, person = src == INK_SRC_TOUCH || src == INK_SRC_KEY;
     uint32_t got = 0;
     const char *cap = NULL;
@@ -379,12 +385,13 @@ int ink_confirm_withdraw(uint32_t token, ink_source_t src) {
                 CF.held[i].used = false;
                 got = token;
                 cap = CF.held[i].cap->id;
+                snprintf(who, sizeof who, "%s", CF.held[i].member);
             }
         }
     ink_svc_unlock();
     if (!got) return -1;
     changed();
-    tell(token, cap, "withdrawn", NULL);
+    tell(token, cap, "withdrawn", NULL, who);
     return 0;
 }
 
@@ -406,17 +413,19 @@ static void on_member(void *ctx, int h, const char *id) { /* wherever the switch
     for (;;) {
         uint32_t token = 0;
         const char *cap = NULL;
+        char who[INK_MEMBER_ID_MAX] = "";
         ink_svc_lock();
         for (int i = 0; i < MAX_HELD && !token; i++)
             if (CF.held[i].used && strcmp(CF.held[i].member, now)) {
                 CF.held[i].used = false;
                 token = CF.held[i].token;
                 cap = CF.held[i].cap->id;
+                snprintf(who, sizeof who, "%s", CF.held[i].member);
             }
         ink_svc_unlock();
         if (!token) return;
         changed();
-        tell(token, cap, "member_changed", NULL);
+        tell(token, cap, "member_changed", NULL, who);
     }
 }
 

@@ -338,6 +338,7 @@ static void emit_alarm(const char *event, const ink_alarm_t *a, const char *why)
     ink_args_int(args, "id", a->id);
     ink_args_str(args, "title", a->title);
     ink_args_str(args, "owner", a->owner);
+    if (a->owner[0]) ink_args_str(args, "member", a->owner);
     if (why) ink_args_str(args, "why", why);
     ink_cap_emit(event, args);
     osal_free(args);

@@ -81,10 +81,7 @@ static void pin_told(void *ctx, int result, uint32_t wait_s) {
     g_pin_done++;
 }
 
-static void media_busy(void *arg) {
-    (void)arg;
-    osal_task_delay_us(1000000);
-}
+static void media_busy(void *arg) { osal_task_delay_us((uint64_t)(intptr_t)arg * 1000u); }
 
 static void recording(void) {
     int done = g_rec_done;
@@ -138,7 +135,7 @@ static void recording(void) {
     CHECK(BY_HAND("audio.record", "{\"path\":\"/me/rec/whose.opus\"}") && g_rc.status == INK_RC_DONE, "recording, as the owner");
     delay_ms(1800);
     static ink_exec_job_t busy; /* the media executor has something else to do first: the microphone goes on meanwhile */
-    ink_exec_post(INK_EXEC_MEDIA, &busy, media_busy, NULL);
+    ink_exec_post(INK_EXEC_MEDIA, &busy, media_busy, (void *)(intptr_t)1000);
     CHECK(ink_member_switch("kid") == 0, "someone else");
     CHECK(WAIT_FOR(g_rec_done == done + 1, 2000) && !strcmp(g_rec_why, "member_changed"), "it ends (%s)", g_rec_why);
     CHECK(!ink_audio_recording() && !bool_state("audio.recording"), "and says so");
@@ -149,6 +146,17 @@ static void recording(void) {
     CHECK(ink_fs_stat("/me/rec/whose.opus", &fs) == 0 && fs.size > 500, "it is the owner's, and it can be played");
     CHECK(BY_HAND("media.play", "{\"path\":\"/me/rec/whose.opus\",\"start_ms\":0}") && g_rc.status == INK_RC_DONE, "a whole file");
     BY_HAND("media.stop", NULL);
+
+    /* the card is slow for a long while (AUD17-005): what does not fit in the queue is lost, its end is not */
+    done = g_rec_done;
+    CHECK(BY_HAND("audio.record", "{\"path\":\"/me/rec/slow.opus\"}") && g_rc.status == INK_RC_DONE, "recording");
+    delay_ms(400);
+    ink_exec_post(INK_EXEC_MEDIA, &busy, media_busy, (void *)(intptr_t)9000);
+    delay_ms(8500);
+    CHECK(BY_HAND("audio.record_stop", NULL) && g_rc.status == INK_RC_DONE, "stopped, with the queue full");
+    CHECK(WAIT_FOR(g_rec_done == done + 1, 3000) && !strcmp(g_rec_why, "stopped"), "it ends all the same (%s)", g_rec_why);
+    CHECK(!ink_audio_recording() && sim_metric_value("media.record_lost_frames") > 0, "and frames were lost, as it says (%.0f)", sim_metric_value("media.record_lost_frames"));
+    CHECK(ink_fs_stat("/me/rec/slow.opus", &fs) == 0 && fs.size > 500, "what fitted is there");
 
     /* the card fills up */
     done = g_rec_done;
@@ -248,12 +256,26 @@ static void playing(void) {
     CHECK(BY_HAND("media.stop", NULL) && g_rc.status == INK_RC_DONE, "stopped");
     CHECK(BY_HAND("media.play", "{\"path\":\"/me/rec/long.opus\"}") && g_rc.status == INK_RC_DONE, "and opened again");
     CHECK(st().position_ms + 3500 >= paused_at && st().position_ms <= paused_at, "from there, or the little before it that it goes back (%u, %u)", (unsigned)st().position_ms, (unsigned)paused_at);
-    /* someone else: it stops, and has its own places */
+    /* someone else: it stops, and has its own places. What was playing is not told to their AI (AUD17-004) */
     fin = g_finished;
+    ink_hub_demand();
+    CHECK(WAIT_FOR(ink_hub_online(), 30000), "online");
+    int events = sim_hub_events_seen();
     CHECK(ink_member_switch("kid") == 0, "someone else");
     CHECK(WAIT_FOR(g_finished == fin + 1, 1000) && !strcmp(state_of("media.state"), "idle"), "the listening ends with the listener");
+    delay_ms(500);
+    for (int i = events; i < sim_hub_events_seen(); i++) CHECK(sim_hub_event_at(i) && !strstr(sim_hub_event_at(i), "long.opus"), "not told to their AI (%s)", sim_hub_event_at(i));
     ink_member_test_reset();
     delay_ms(300);
+    events = sim_hub_events_seen();
+    CHECK(BY_HAND("media.play", "{\"path\":\"/me/rec/long.opus\"}") && g_rc.status == INK_RC_DONE, "the owner again");
+    CHECK(BY_HAND("media.stop", NULL) && g_rc.status == INK_RC_DONE, "stopped");
+    bool told = false;
+    for (int t = 0; t < 40 && !told; t++) {
+        for (int i = events; i < sim_hub_events_seen() && !told; i++) told = sim_hub_event_at(i) && strstr(sim_hub_event_at(i), "long.opus");
+        if (!told) delay_ms(50);
+    }
+    CHECK(told, "their own AI does hear of it");
 }
 
 /* A file bent out of shape, through the card itself. */

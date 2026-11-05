@@ -129,8 +129,7 @@ static void wipe_flash(void *arg) { /* the storage task, guarded */
     (void)arg;
     /* not whose the device was but what it is: which version did not hold, which fonts are half written */
     static const char *const KEEP[] = {RESET_MARK, INK_UPDATE_STATE_FILE, NULL};
-    ink_storage_wipe_user(KEEP);
-    hal_fs_rename(RESET_MARK, RESET_CARD_MARK);
+    if (ink_storage_wipe_user(KEEP)) hal_fs_rename(RESET_MARK, RESET_CARD_MARK); /* else the next boot tries again */
 }
 
 static void forget_card_mark(void *arg) { /* the storage task, guarded */

@@ -507,10 +507,20 @@ static void resume2(void) {
     CHECK(AI("job.list", NULL) && strstr(g_result, "\"state\":\"cancelled\""), "and the list says so (%s)", g_result);
     int64_t kept = hal_fs_size("/content/.update/2.0.0.inkfw.part");
     CHECK(kept >= part, "what came stays (%lld)", (long long)kept);
-    double before_stop = sim_metric_value("hub.requests.update/fetch");
+    /* stopped with a piece on its way (AUD17-001): the answer comes to nobody, and not into the next try */
+    for (int round = 0; round < 2; round++) {
+        double asked = sim_metric_value("hub.requests.update/fetch");
+        CHECK(AI("update.download", NULL) && g_rc.status == INK_RC_DONE, "on from there (%s)", g_rc.detail);
+        for (int i = 0; i < 2000 && sim_metric_value("hub.requests.update/fetch") == asked; i++) delay_ms(1);
+        CHECK(sim_metric_value("hub.requests.update/fetch") > asked, "a piece is on its way");
+        CHECK(AI("job.list", NULL) && (at = strstr(g_result, "{\"id\":")) && sscanf(at + 6, "%d", &job) == 1, "its number");
+        snprintf(args, sizeof args, "{\"id\":%d}", job);
+        CHECK(AI("job.cancel", args) && g_rc.status == INK_RC_DONE, "stopped (%s)", g_rc.detail);
+        CHECK(WAIT_FOR(!strcmp(state_of("update.state"), "available"), 5000), "it stops (%s)", state_of("update.state"));
+        if (round == 0) delay_ms(500); /* the answer comes, with nothing waiting for it */
+    }
     CHECK(AI("update.download", NULL) && g_rc.status == INK_RC_DONE, "and on from there");
     CHECK(WAIT_FOR(!strcmp(state_of("update.state"), "ready"), 60000), "and it finishes (%s)", state_of("update.state"));
-    (void)before_stop;
     CHECK(AI("job.list", NULL) && strstr(g_result, "下载好了") && strstr(g_result, "\"percent\":100"), "the list has the result (%s)", g_result);
     CHECK(sim_metric_value("update.download_bad") == 0, "whole and good");
     double pieces = sim_metric_value("hub.requests.update/fetch");

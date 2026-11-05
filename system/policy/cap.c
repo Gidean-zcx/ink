@@ -705,6 +705,7 @@ static struct {
     uint32_t seq;
     int64_t at_s;
     char id[48];
+    char member[INK_MEMBER_ID_MAX]; /* whose it is: who it says, or who was there when it happened */
     ink_args_t args;
 } EV[EVENTS_KEPT] INK_PSRAM_BSS;
 static uint32_t ev_next, ev_sent; /* sequence numbers, under CB.lock */
@@ -713,12 +714,16 @@ static void keep_event(const char *id, const ink_args_t *payload) {
     const ink_cap_t *c = ink_cap_find(id);
     if (!CB.lock || !c || c->form != INK_FORM_EVENT || !exposed(c, INK_SRC_AI)) return;
     int64_t wall = osal_wall_us();
+    char whose[INK_MEMBER_ID_MAX] = "";
+    if (payload) ink_args_get_str(payload, "member", whose, sizeof whose);
+    if (!whose[0]) snprintf(whose, sizeof whose, "%s", ink_member_current()->id);
     osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
     uint32_t seq = ++ev_next;
     typeof(EV[0]) *e = &EV[seq % EVENTS_KEPT];
     e->seq = seq;
     e->at_s = wall > 0 ? wall / 1000000 : 0;
     snprintf(e->id, sizeof e->id, "%s", id);
+    snprintf(e->member, sizeof e->member, "%s", whose);
     if (payload) e->args = *payload;
     else ink_args_init(&e->args);
     if (ev_next - ev_sent > EVENTS_KEPT) {
@@ -740,20 +745,19 @@ static void send_events(void) { /* hub task */
         char *out = osal_malloc(EVENT_JSON_CAP + sizeof(ink_args_t), OSAL_MEM_EXTERNAL);
         if (!out) return;
         ink_args_t *args = (ink_args_t *)(out + EVENT_JSON_CAP);
-        char id[48] = "";
+        char id[48] = "", whose[INK_MEMBER_ID_MAX] = "";
         int64_t at = 0;
         osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
         uint32_t seq = ev_sent + 1;
         const typeof(EV[0]) *e = &EV[seq % EVENTS_KEPT];
         snprintf(id, sizeof id, "%s", e->id);
+        snprintf(whose, sizeof whose, "%s", e->member);
         at = e->at_s;
         *args = e->args;
         osal_mutex_unlock(CB.lock);
-        /* one that says whose it is goes only while it is theirs who is here: the next one's AI does not hear about it */
-        char whose[INK_MEMBER_ID_MAX] = "";
-        ink_args_get_str(args, "member", whose, sizeof whose);
-        bool theirs = !whose[0] || !strcmp(whose, ink_member_current()->id);
-        int head = snprintf(out, EVENT_JSON_CAP, "{\"event\":\"%s\",\"at_s\":%lld,\"args\":", id, (long long)at);
+        /* it goes only while it is theirs who is here: the next one's AI does not hear about it */
+        bool theirs = !strcmp(whose, ink_member_current()->id);
+        int head = snprintf(out, EVENT_JSON_CAP, "{\"event\":\"%s\",\"at_s\":%lld,\"member\":\"%s\",\"args\":", id, (long long)at, whose);
         int body = ink_args_to_json(args, out + head, EVENT_JSON_CAP - (size_t)head - 2);
         int r = 0;
         if (!theirs) ink_probe_count("cap.event_for_another_member");

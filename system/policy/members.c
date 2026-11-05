@@ -7,6 +7,7 @@
 #include <string.h>
 
 #include "ink/hal_device.h"
+#include "ink/hal_power.h"
 #include "ink/hal_storage.h"
 #include "ink/osal.h"
 #include "ink/probe.h"
@@ -59,7 +60,6 @@ static struct {
     slot_t *cur;
     bool authed;
     bool table_is_real;
-    bool table_known;  /* registered with the data store */
     bool table_unread; /* it is there and could not be read: nobody knows who has a PIN, so as if everyone adult had one */
     int h_member, h_authed;
     ink_svc_deadline_t idle_at;
@@ -150,21 +150,15 @@ static void save_all(void) {
     ink_db_close(db);
 }
 
-static void load_table(void) {
-    if (!M.table_known && ink_db_register(&TABLE) != 0) return; /* some test programs run without the data store */
-    M.table_known = true;
+/* What is on the flash, into fresh: how many, 0 when there is no family yet, -1 when it cannot be told. */
+static int read_table(slot_t *fresh) {
     ink_db_t *db = ink_db_open(&TABLE, NULL);
-    M.table_unread = db == NULL;
-    if (!db) {
-        ink_probe_count("members.table_unread");
-        return;
-    }
+    if (!db) return -1;
     ink_db_cursor_t c = {0};
     ink_rec_t r;
     stored_t st;
     int n = 0;
-    slot_t *fresh = osal_calloc(INK_MEMBERS_MAX, sizeof *fresh, OSAL_MEM_EXTERNAL);
-    while (fresh && n < INK_MEMBERS_MAX && ink_db_next(db, &c, &r, &st, sizeof st) == 1) {
+    while (n < INK_MEMBERS_MAX && ink_db_next(db, &c, &r, &st, sizeof st) == 1) {
         if (r.len != sizeof st) continue;
         slot_t *s = &fresh[n++];
         s->used = true;
@@ -178,7 +172,20 @@ static void load_table(void) {
         s->not_before_s = st.not_before_s;
         set_allow(s);
     }
-    if (n && fresh) {
+    memset(&st, 0, sizeof st);
+    if (!n && ink_db_count(db) > 0) n = -1; /* records, and none that this can use: not an empty family */
+    ink_db_close(db);
+    return n;
+}
+
+static void load_table(void) {
+    if (ink_db_register(&TABLE) != 0) return; /* some test programs run without the data store */
+    slot_t *fresh = osal_calloc(INK_MEMBERS_MAX, sizeof *fresh, OSAL_MEM_EXTERNAL);
+    int n = fresh ? read_table(fresh) : -1;
+    if (n < 0) {
+        M.table_unread = true;
+        ink_probe_count("members.table_unread");
+    } else if (n > 0) {
         memcpy(M.s, fresh, sizeof M.s);
         M.table_is_real = true;
         /* an adult first, as on the first boot */
@@ -186,12 +193,18 @@ static void load_table(void) {
         for (int i = INK_MEMBERS_MAX - 1; i >= 0; i--)
             if (M.s[i].used && M.s[i].m.role == INK_ROLE_ADULT) first = &M.s[i];
         M.cur = first;
-    } else if (ink_db_count(db) > 0) { /* records, and none that this can use: not an empty family */
-        M.table_unread = true;
-        ink_probe_count("members.table_unread");
     }
+    if (fresh) memset(fresh, 0, INK_MEMBERS_MAX * sizeof *fresh);
     osal_free(fresh);
-    ink_db_close(db);
+}
+
+/* It could not be read at the boot; can it now? Nothing here changes while it looks. */
+static bool table_back(void) {
+    slot_t *fresh = osal_calloc(INK_MEMBERS_MAX, sizeof *fresh, OSAL_MEM_EXTERNAL);
+    bool back = fresh && read_table(fresh) >= 0;
+    if (fresh) memset(fresh, 0, INK_MEMBERS_MAX * sizeof *fresh);
+    osal_free(fresh);
+    return back;
 }
 
 void ink_members_init(void) {
@@ -338,15 +351,17 @@ static void pin_job(void *arg) { /* exec.bg: slow by design */
     int r = INK_PIN_NO_MEMBER;
     uint32_t wait_s = 0;
     slot_t *s = NULL;
-    if (M.table_unread) {
-        load_table(); /* maybe it was a moment's trouble */
-        if (M.table_unread) {
-            if (j->done) j->done(j->ctx, INK_PIN_WAIT, UNREAD_RETRY_S);
-            wipe(j);
-            osal_free(j);
-            return;
+    if (M.table_unread) { /* maybe it was a moment's trouble. Then start over: everything up to now started from the defaults */
+        if (table_back()) {
+            ink_probe_count("members.table_back");
+            ink_db_flush_all();
+            for (int i = 0; i < 100 && (!ink_db_idle() || ink_storage_pending()); i++) osal_task_delay_us(50000);
+            hal_power_reboot();
         }
-        publish();
+        if (j->done) j->done(j->ctx, INK_PIN_WAIT, UNREAD_RETRY_S);
+        wipe(j);
+        osal_free(j);
+        return;
     }
     if (j->kind == JOB_CHECK_PARENT) { /* the one using the device if an adult with a PIN, else the first who has one */
         if (cur()->m.role == INK_ROLE_ADULT && cur()->has_pin) s = cur();

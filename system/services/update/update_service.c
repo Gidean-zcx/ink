@@ -84,6 +84,11 @@ typedef struct {
     uint32_t blocked_code;
 } stored_t;
 
+typedef struct {
+    int refs; /* the download's, and one for the request on its way */
+    uint8_t data[DOWNLOAD_CHUNK];
+} dl_piece_t;
+
 static struct {
     hal_ota_info_t me;
     const char *product;
@@ -103,7 +108,7 @@ static struct {
     uint32_t dl_off;
     char dl_final[64], dl_path[72];
     volatile int dl_waiting;     /* 0 nothing out, 1 asked, 2 answered */
-    uint8_t *dl_buf;
+    dl_piece_t *dl_piece; /* under the service lock when it changes */
     volatile size_t dl_got;
     volatile bool dl_failed;
     int dl_errors;
@@ -616,14 +621,25 @@ static size_t b64_decode(const char *s, size_t n, uint8_t *out, size_t cap) {
     return o;
 }
 
+static void piece_release(dl_piece_t *p) {
+    if (__atomic_sub_fetch(&p->refs, 1, __ATOMIC_ACQ_REL) == 0) osal_free(p);
+}
+
+/* The download may have been stopped while this was on its way, and perhaps started again: then this answer is nobody's. */
 static void on_chunk(void *ctx, int status, const ink_json_t *j, int result) { /* hub task */
-    (void)ctx;
-    U.dl_got = 0;
+    dl_piece_t *p = ctx;
+    size_t got = 0;
     if (status == INK_HUB_OK) {
         int t = ink_json_find(j, result, "data");
-        if (t >= 0) U.dl_got = b64_decode(j->text + j->tok[t].start, (size_t)(j->tok[t].end - j->tok[t].start), U.dl_buf, DOWNLOAD_CHUNK);
+        if (t >= 0) got = b64_decode(j->text + j->tok[t].start, (size_t)(j->tok[t].end - j->tok[t].start), p->data, DOWNLOAD_CHUNK);
     }
-    __atomic_store_n(&U.dl_waiting, 2, __ATOMIC_RELEASE);
+    ink_svc_lock();
+    if (p == U.dl_piece) {
+        U.dl_got = got;
+        __atomic_store_n(&U.dl_waiting, 2, __ATOMIC_RELEASE);
+    }
+    ink_svc_unlock();
+    piece_release(p);
 }
 
 /* Whole: it has to be a package for this device, and what its signature says. */
@@ -662,7 +678,7 @@ static ink_job_step_t dl_step(void *ctx) { /* exec.bg: realtime sessions first (
                 return INK_JOB_MORE; /* it waits with the piece */
             }
             hal_file_t *f = hal_fs_open(U.dl_path, HAL_O_WRITE | HAL_O_CREATE | HAL_O_APPEND);
-            ssize_t n = f ? hal_fs_write(f, U.dl_buf, U.dl_got) : -1;
+            ssize_t n = f ? hal_fs_write(f, U.dl_piece->data, U.dl_got) : -1;
             if (f) hal_fs_close(f);
             ink_fs_card_release();
             if (n != (ssize_t)U.dl_got) return INK_JOB_FAILED;
@@ -688,15 +704,22 @@ static ink_job_step_t dl_step(void *ctx) { /* exec.bg: realtime sessions first (
     uint32_t left = U.offer_size - U.dl_off;
     snprintf(params, sizeof params, "{\"blob\":\"%s\",\"offset\":%u,\"len\":%u}", U.offer_blob, (unsigned)U.dl_off, (unsigned)(left < DOWNLOAD_CHUNK * 3 / 4 ? left : DOWNLOAD_CHUNK * 3 / 4));
     __atomic_store_n(&U.dl_waiting, 1, __ATOMIC_RELEASE);
-    if (ink_hub_call("update/fetch", params, 20000000, on_chunk, NULL) < 0) __atomic_store_n(&U.dl_waiting, 0, __ATOMIC_RELEASE);
+    __atomic_add_fetch(&U.dl_piece->refs, 1, __ATOMIC_ACQ_REL); /* the answer writes into it, whatever happens here meanwhile */
+    if (ink_hub_call("update/fetch", params, 20000000, on_chunk, U.dl_piece) < 0) {
+        piece_release(U.dl_piece);
+        __atomic_store_n(&U.dl_waiting, 0, __ATOMIC_RELEASE);
+    }
     return INK_JOB_MORE;
 }
 
 static void dl_finish(void *ctx, ink_job_step_t how, bool cancelled) { /* exec.bg */
     (void)ctx;
     ink_power_release(INK_NEED_NET);
-    osal_free(U.dl_buf);
-    U.dl_buf = NULL;
+    ink_svc_lock();
+    dl_piece_t *piece = U.dl_piece;
+    U.dl_piece = NULL;
+    ink_svc_unlock();
+    piece_release(piece);
     U.job = 0;
     if (how != INK_JOB_DONE || cancelled) {
         set_state(cancelled ? "available" : "failed");
@@ -736,8 +759,12 @@ static const char *start_download(void) {
         ok = f != NULL;
     }
     ink_fs_card_release();
-    U.dl_buf = ok ? osal_malloc(DOWNLOAD_CHUNK, OSAL_MEM_EXTERNAL) : NULL;
-    if (!U.dl_buf) return "the card cannot be written";
+    dl_piece_t *piece = ok ? osal_malloc(sizeof *piece, OSAL_MEM_EXTERNAL) : NULL;
+    if (!piece) return "the card cannot be written";
+    piece->refs = 1;
+    ink_svc_lock();
+    U.dl_piece = piece;
+    ink_svc_unlock();
     U.dl_waiting = 0;
     U.dl_got = 0;
     U.dl_errors = 0;
@@ -745,8 +772,10 @@ static const char *start_download(void) {
     U.job = ink_job_submit(&j);
     if (U.job < 0) {
         U.job = 0;
-        osal_free(U.dl_buf);
-        U.dl_buf = NULL;
+        ink_svc_lock();
+        U.dl_piece = NULL;
+        ink_svc_unlock();
+        piece_release(piece);
         return "too much going on";
     }
     ink_power_hold(INK_NEED_NET);

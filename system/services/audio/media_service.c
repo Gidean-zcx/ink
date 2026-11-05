@@ -43,6 +43,7 @@ static struct {
     ogg_reader_t *r;
     int stream;
     uint32_t base_ms;      /* the stream's first frame is here in the file */
+    char who[INK_MEMBER_ID_MAX]; /* who is listening */
     bool at_end;
     int focus;
     uint64_t paused_at_s;
@@ -190,6 +191,7 @@ static void end_session(const char *why) { /* executor */
             ink_args_init(a);
             ink_args_str(a, "path", path);
             ink_args_str(a, "why", why);
+            ink_args_str(a, "member", M.who);
             ink_cap_emit("media.finished", a);
             osal_free(a);
         }
@@ -318,6 +320,7 @@ static int do_play(const char *path, uint32_t start_ms) { /* executor; 0 or an e
     if (e == OGG_ERR_FILE) return fs_err;
     if (e != OGG_OK) return -100;
     M.r = r;
+    snprintf(M.who, sizeof M.who, "%s", ink_member_current()->id);
     snprintf(M.member, sizeof M.member, "%s", ink_member_current()->id);
     ink_svc_lock();
     snprintf(M.st.path, sizeof M.st.path, "%s", path);
@@ -510,12 +513,6 @@ static void rec_write(void *arg) { /* executor: what the microphone gave, to the
             if (ending) rec_finish(REC.why[0] ? REC.why : "stopped");
             return;
         }
-        if (!f.data) { /* the end of the capture, in its place in the queue */
-            ink_svc_lock();
-            REC.ending = true;
-            ink_svc_unlock();
-            continue;
-        }
         int e = ogg_write_packet(REC.w, f.data, f.len, OGG_FRAME_MS);
         osal_free(f.data);
         if (e) { /* full, or the card went */
@@ -538,16 +535,20 @@ static void rec_write(void *arg) { /* executor: what the microphone gave, to the
 static void rec_frame(void *ctx, const uint8_t *data, size_t len, uint32_t seq) { /* the audio task: short */
     (void)ctx;
     (void)seq;
-    uint8_t *copy = NULL;
-    if (len && strcmp(ink_member_current()->id, REC.member)) return; /* someone else has it now, the end is on its way */
-    if (len) {
-        copy = osal_malloc(len, OSAL_MEM_EXTERNAL);
-        if (!copy) {
-            ink_probe_count("media.record_lost_frames");
-            return;
-        }
-        memcpy(copy, data, len);
+    if (!len) { /* the end: after what is queued. It takes no room there, a full queue must not lose it */
+        ink_svc_lock();
+        REC.ending = true;
+        ink_svc_unlock();
+        ink_exec_post(INK_EXEC_MEDIA, &REC.write_job, rec_write, NULL);
+        return;
     }
+    if (strcmp(ink_member_current()->id, REC.member)) return; /* someone else has it now, the end is on its way */
+    uint8_t *copy = osal_malloc(len, OSAL_MEM_EXTERNAL);
+    if (!copy) {
+        ink_probe_count("media.record_lost_frames");
+        return;
+    }
+    memcpy(copy, data, len);
     ink_svc_lock();
     bool room = REC.head - REC.tail < REC_FRAMES;
     if (room) REC.q[REC.head++ % REC_FRAMES] = (rec_frame_t){copy, (uint16_t)len};

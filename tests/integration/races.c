@@ -8,6 +8,9 @@
 #include <string.h>
 
 #include "ink/sys/interrupt.h"
+#include "ink/sys/file.h"
+#include "ink/hal_storage.h"
+#include "ink/sys/time.h"
 #include "ink/sys/svc.h"
 
 #define ink_main product_main
@@ -108,6 +111,81 @@ static void notification_for_someone(void) {
     CHECK(moments >= 3, "there were moments to try (%d)", moments);
 }
 
+/* AUD17-004: an event is about whoever was there when it happened, also if it waited for the network. */
+extern void sim_net_set_link(const char *);
+static void net_none(void *arg) {
+    (void)arg;
+    sim_net_set_link("none");
+}
+static void net_wifi(void *arg) {
+    (void)arg;
+    sim_net_set_link("wifi");
+}
+
+static void events_stay_with_who_they_are_about(void) {
+    vtk_event_at(vtk_now() + SIM_MS(1), net_none, NULL);
+    CHECK(WAIT_FOR(!ink_hub_online(), 40000), "offline");
+    CHECK(ink_fs_write_atomic("/me/only-the-owner.txt", "x", 1) == 0, "the owner's file");
+    CHECK(ink_member_switch("kid") == 0, "someone else");
+    CHECK(ink_fs_write_atomic("/me/the-childs.txt", "x", 1) == 0, "the child's file");
+    int from = sim_hub_events_seen();
+    vtk_event_at(vtk_now() + SIM_MS(1), net_wifi, NULL);
+    ink_hub_demand();
+    CHECK(WAIT_FOR(ink_hub_online(), 60000), "online");
+    CHECK(WAIT_FOR(told_to_ai(from, "the-childs"), 5000), "what is theirs is told to their AI");
+    delay_ms(500);
+    CHECK(!told_to_ai(from, "only-the-owner"), "what was the owner's is not");
+    bool says = false;
+    for (int i = from; i < sim_hub_events_seen(); i++) says = says || (sim_hub_event_at(i) && strstr(sim_hub_event_at(i), "the-childs") && strstr(sim_hub_event_at(i), "\"member\":\"kid\""));
+    CHECK(says, "and it says whose it is");
+    ink_member_test_reset();
+    delay_ms(500);
+
+    /* a copy that ends after someone else came */
+    static char block[4096];
+    hal_file_t *big = hal_fs_open("/content/.m/owner/big-for-race.bin", HAL_O_WRITE | HAL_O_CREATE | HAL_O_TRUNC);
+    for (int i = 0; big && i < 100; i++) hal_fs_write(big, block, sizeof block);
+    if (big) hal_fs_close(big);
+    hal_fs_remove("/content/.m/owner/copied-for-race.bin"); /* an earlier run's */
+    int job = ink_fs_copy_start("/me/big-for-race.bin", "/me/copied-for-race.bin");
+    CHECK(job > 0, "a copy (%d)", job);
+    from = sim_hub_events_seen();
+    CHECK(ink_member_switch("kid") == 0, "someone else");
+    ink_fs_job_status_t st;
+    for (int i = 0; i < 500 && ink_fs_job_status(job, &st) == 0 && st.state == INK_FS_JOB_RUNNING; i++) delay_ms(20);
+    CHECK(st.state == INK_FS_JOB_DONE, "it ends (%d)", st.state);
+    delay_ms(500);
+    CHECK(!told_to_ai(from, "copied-for-race"), "the next one's AI does not hear where it went");
+    CHECK(!told_to_ai(from, "file.job_done"), "nor that it ended");
+    CHECK(!told_to_ai(from, "job.finished"), "nor in the list's words");
+    ink_member_test_reset();
+    delay_ms(500);
+
+    /* what someone asked for and did not get an answer to */
+    CHECK(AI("notify.clear", NULL) && g_rc.status == INK_RC_PENDING_CONFIRMATION, "a card asks (%s)", ink_rc_name(g_rc.status));
+    from = sim_hub_events_seen();
+    CHECK(ink_member_switch("kid") == 0, "someone else");
+    delay_ms(1000);
+    CHECK(!told_to_ai(from, "confirm.result"), "the next one's AI does not hear how that ended");
+    ink_member_test_reset();
+    delay_ms(500);
+
+    /* the owner's reminder, with someone else there */
+    char args[96];
+    ink_tm_t t;
+    ink_time_to_local(ink_time_now_s() + 60, &t);
+    snprintf(args, sizeof args, "{\"at\":\"%04d-%02d-%02d %02d:%02d\",\"title\":\"给主人的提醒\"}", t.year, t.month, t.day, t.hour, t.min);
+    CHECK(AI("reminder.add", args) && g_rc.status == INK_RC_DONE, "a reminder (%s)", g_rc.detail);
+    from = sim_hub_events_seen();
+    double fired = sim_metric_value("event.reminder.fired");
+    CHECK(ink_member_switch("kid") == 0, "someone else");
+    CHECK(WAIT_FOR(sim_metric_value("event.reminder.fired") > fired, 70000), "it goes off");
+    delay_ms(500);
+    CHECK(!told_to_ai(from, "给主人的提醒"), "the next one's AI does not hear of it");
+    ink_member_test_reset();
+    delay_ms(500);
+}
+
 /* AUD15-006: it ends while the task that raised it is on its way to the audio service. */
 static void interruption_ended_at_once(void) {
     g_mode = 2;
@@ -165,6 +243,7 @@ static void test_task(void *arg) {
     ink_hub_demand();
     CHECK(WAIT_FOR(ink_hub_online(), 30000), "online");
     notification_for_someone();
+    events_stay_with_who_they_are_about();
     interruption_ended_at_once();
     yes_then_someone_else();
     ink_probe_count("test.finished");

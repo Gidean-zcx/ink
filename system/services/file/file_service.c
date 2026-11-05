@@ -67,6 +67,7 @@ typedef struct {
     uint8_t *buf;
     bool cancel;
     int task;
+    char who[INK_MEMBER_ID_MAX];
     ink_fs_job_status_t st;
     void (*on_end)(void *ctx, const ink_fs_job_status_t *st);
     void *on_end_ctx;
@@ -210,17 +211,20 @@ static int card_error(void) {
     return INK_FS_ERR_IO;
 }
 
-static void changed(const char *path, const char *kind) {
+static void changed_for(const char *who, const char *path, const char *kind) {
     char *block = osal_malloc(sizeof(ink_args_t), OSAL_MEM_EXTERNAL); /* the arguments are large for most stacks */
     if (!block) return;
     ink_args_t *a = (ink_args_t *)block;
     ink_args_init(a);
     ink_args_str(a, "path", path);
     ink_args_str(a, "kind", kind);
+    if (who) ink_args_str(a, "member", who);
     ink_cap_emit("file.changed", a);
     osal_free(block);
     ink_svc_at(&FS.refresh_at, osal_now_us() + 60000000ull, fs_refresh_cb, NULL); /* what is free changed */
 }
+
+static void changed(const char *path, const char *kind) { changed_for(NULL, path, kind); }
 
 /* ------------------------------------------------------------ files */
 
@@ -437,29 +441,47 @@ int ink_fs_move(const char *from, const char *to) {
     return INK_FS_OK;
 }
 
-static void wipe_tree(const char *phys, int depth) {
-    if (depth > 8) return;
+/* Everything under phys, however deep: one entry at a time, nothing held open, no recursion. 0 only when nothing is left. */
+static int wipe_tree(const char *phys) {
     char *path = osal_malloc(PHYS_MAX, OSAL_MEM_EXTERNAL);
     hal_dirent_t *e = osal_malloc(sizeof *e, OSAL_MEM_EXTERNAL);
-    hal_dir_t *d = path && e ? hal_fs_opendir(phys) : NULL;
-    while (d && hal_fs_readdir(d, e) == 1) {
-        if (!strcmp(e->name, ".") || !strcmp(e->name, "..")) continue;
-        if (snprintf(path, PHYS_MAX, "%s/%s", phys, e->name) >= PHYS_MAX) continue;
-        if (e->is_dir) wipe_tree(path, depth + 1);
-        hal_fs_remove(path);
+    int r = path && e ? 0 : INK_FS_ERR_IO;
+    size_t root = strlen(phys);
+    if (!r) snprintf(path, PHYS_MAX, "%s", phys);
+    while (!r) {
+        hal_dir_t *d = hal_fs_opendir(path);
+        if (!d) { /* no such folder at the top is nothing to do; further down it was just listed */
+            if (strlen(path) != root) r = INK_FS_ERR_IO;
+            break;
+        }
+        bool found = false;
+        int more;
+        while (!found && (more = hal_fs_readdir(d, e)) == 1) found = strcmp(e->name, ".") && strcmp(e->name, "..");
+        hal_fs_closedir(d);
+        size_t n = strlen(path);
+        if (found) {
+            if (snprintf(path + n, PHYS_MAX - n, "/%s", e->name) >= (int)(PHYS_MAX - n)) r = INK_FS_ERR_IO;
+            else if (!e->is_dir) {
+                if (hal_fs_remove(path) != 0) r = INK_FS_ERR_IO;
+                path[n] = 0;
+            }
+        } else if (more < 0) r = INK_FS_ERR_IO;
+        else if (n == root) break;
+        else if (hal_fs_remove(path) != 0) r = INK_FS_ERR_IO;
+        else *strrchr(path, '/') = 0;
     }
-    if (d) hal_fs_closedir(d);
     osal_free(path);
     osal_free(e);
+    return r;
 }
 
 int ink_fs_wipe_personal(void) {
     if (FS.usb_lent) return INK_FS_ERR_USB;
     if (!hal_fs_card_present()) return INK_FS_ERR_NO_CARD;
-    wipe_tree("/content/.m", 0);
-    wipe_tree("/content/.update", 0);
-    wipe_tree("/cache", 0);
-    return INK_FS_OK;
+    int r = wipe_tree("/content/.m");
+    if (!r) r = wipe_tree("/content/.update");
+    if (!r) r = wipe_tree("/cache");
+    return r;
 }
 
 int ink_fs_write_atomic(const char *path, const void *data, size_t n) {
@@ -784,10 +806,11 @@ static void job_finish(void *ctx, ink_job_step_t how, bool cancelled) {
         ink_args_int(a, "id", id);
         ink_args_bool(a, "ok", ok);
         if (!ok) ink_args_str(a, "why", err ? ink_fs_err_name(err) : "cancelled");
+        ink_args_str(a, "member", j->who);
         ink_cap_emit("file.job_done", a);
         osal_free(a);
     }
-    changed(j->op == 0 ? j->vto : j->vfrom, j->op == 0 ? "copied" : "removed");
+    changed_for(j->who, j->op == 0 ? j->vto : j->vfrom, j->op == 0 ? "copied" : "removed");
     ink_probe_count(ok ? "file.jobs_done" : "file.jobs_failed");
 }
 
@@ -814,6 +837,7 @@ static int job_begin(int op, const char *from, const char *to) {
     fjob_t *j = &FS.job;
     int id = ++FS.next_job;
     memset(j, 0, sizeof *j);
+    snprintf(j->who, sizeof j->who, "%s", ink_member_current()->id);
     j->id = id;
     j->op = op;
     j->st.state = INK_FS_JOB_RUNNING;
@@ -869,9 +893,9 @@ int ink_fs_forget_member(const char *id) {
     if (FS.usb_lent) return INK_FS_ERR_USB;
     if (!hal_fs_card_present()) return INK_FS_ERR_NO_CARD;
     if (snprintf(phys, sizeof phys, "/content/.m/%s", id) >= (int)sizeof phys) return INK_FS_ERR_PATH;
-    wipe_tree(phys, 0);
+    int r = wipe_tree(phys);
     hal_fs_remove(phys);
-    return INK_FS_OK;
+    return r;
 }
 
 int ink_fs_job_status(int id, ink_fs_job_status_t *out) {

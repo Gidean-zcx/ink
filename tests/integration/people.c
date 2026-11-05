@@ -329,6 +329,7 @@ static void reset1(void) {
     delay_ms(1000);
     /* some of everyone's */
     CHECK(ink_fs_write_atomic("/me/mine.txt", "mine", 4) == 0, "a file");
+    CHECK(ink_fs_write_atomic("/me/a/b/c/d/e/f/g/h/i/deep.txt", "mine", 4) == 0, "and one deep down (AUD17-002)");
     CHECK(ink_fs_write_atomic("/family/shared.txt", "shared", 6) == 0, "a shared one");
     ink_notify_t n = {.title = "一条", .prio = INK_NOTIFY_LOW};
     ink_notify_post(&n, NULL);
@@ -357,6 +358,8 @@ static void reset2(void) {
     CHECK(ink_member_space_open(), "the first boot again");
     ink_fs_stat_t st;
     CHECK(ink_fs_stat("/me/mine.txt", &st) == INK_FS_ERR_NOT_FOUND, "a member's files are gone");
+    CHECK(ink_fs_stat("/me/a/b/c/d/e/f/g/h/i/deep.txt", &st) == INK_FS_ERR_NOT_FOUND, "however deep");
+    CHECK(hal_fs_size("/content/.m/owner/a") < 0, "folders too");
     CHECK(ink_fs_stat("/family/shared.txt", &st) == 0, "the family's are not");
     CHECK(hal_fs_size("/content/books/星星邮差.txt") > 0, "nor the books");
     CHECK(ink_storage_size("/user/sys/reset.pending") < 0 && ink_storage_size("/user/sys/reset.card") < 0, "nothing waits");
@@ -450,13 +453,38 @@ static void table2(void) { /* two reads fail: the boot's and the first try */
     ink_member_test_reset();
     CHECK(unlock("owner", "1234") == INK_PIN_WAIT, "it cannot tell yet, so it asks to wait");
     CHECK(!ink_member_space_open(), "still closed");
-    CHECK(unlock("owner", "0000") == INK_PIN_WRONG, "then it can: this one is wrong");
-    CHECK(!ink_member_space_open(), "still closed");
-    CHECK(unlock("owner", "1234") == INK_PIN_OK, "this one is right: nothing was lost");
-    CHECK(ink_member_space_open() && ink_member_has_pin("owner"), "in");
-    ink_db_flush_all();
-    CHECK(WAIT_FOR(ink_db_idle() && !ink_storage_pending(), 6000), "stored");
+    ink_probe_count("test.finished"); /* the next try can read it: everything starts over (AUD17-003) */
+    int d = g_pin_done;
+    CHECK(ink_member_unlock("owner", "1234", pin_told, NULL) == 0, "again");
+    for (int i = 0; i < 400; i++) { /* until the power goes: nothing opens meanwhile */
+        CHECK(!ink_member_space_open() && g_pin_done == d, "nothing opens, nothing is decided (%d)", g_pin_done - d);
+        delay_ms(10);
+    }
+    CHECK(0, "it should have restarted");
+}
+
+/* The card says no to being cleared (AUD17-002): it is not called done, and it stays to do. */
+static void stuck2(void) {
+    ink_fs_stat_t st;
+    CHECK(!ink_member_has_pin("owner"), "the flash is clean");
+    CHECK(ink_storage_size("/user/sys/reset.card") >= 0, "the card's part waits");
+    CHECK(sim_metric_value("system.factory_reset_card_at_boot") == 0, "not called done");
+    CHECK(ink_fs_stat("/me/mine.txt", &st) == 0 || hal_fs_size("/content/.m/owner/stuck/left.txt") > 0, "what could not go is still there");
+    delay_ms(6000);
+    CHECK(ink_storage_size("/user/sys/reset.card") >= 0, "it keeps looking");
     ink_probe_count("test.finished");
+}
+
+static void stuck3(void) {
+    CHECK(sim_metric_value("system.factory_reset_card_at_boot") == 1, "now it can");
+    CHECK(hal_fs_size("/content/.m/owner/stuck/left.txt") < 0, "and it is gone");
+    CHECK(ink_storage_size("/user/sys/reset.card") < 0, "nothing waits");
+    ink_probe_count("test.finished");
+}
+
+static void stuck1(void) {
+    CHECK(ink_fs_write_atomic("/me/stuck/left.txt", "mine", 4) == 0, "a file");
+    reset1();
 }
 
 static void table3(void) { /* a normal boot: the table as it was */
@@ -472,6 +500,9 @@ static void test_task(void *arg) {
     const char *phase = getenv("INK_PEOPLE_PHASE");
     if (phase && !strcmp(phase, "reset1")) reset1();
     else if (phase && !strcmp(phase, "reset2")) reset2();
+    else if (phase && !strcmp(phase, "stuck1")) stuck1();
+    else if (phase && !strcmp(phase, "stuck2")) stuck2();
+    else if (phase && !strcmp(phase, "stuck3")) stuck3();
     else if (phase && !strcmp(phase, "nocard1")) nocard1();
     else if (phase && !strcmp(phase, "nocard2")) nocard2();
     else if (phase && !strcmp(phase, "nocard3")) nocard3();

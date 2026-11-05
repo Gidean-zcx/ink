@@ -1,0 +1,56 @@
+[
+  {
+    "id": "AUD17-001",
+    "severity": "高",
+    "area": "update / job.cancel",
+    "title": "取消下载释放缓冲后，迟到的数据块回调写空指针并崩溃",
+    "evidence_type": [
+      "复现",
+      "代码核查"
+    ],
+    "locations": [
+      "system/services/update/update_service.c:602",
+      "system/services/update/update_service.c:619",
+      "system/services/update/update_service.c:704"
+    ],
+    "impact": "下载等待数据块时通过 job.cancel 取消，dl_finish 释放 U.dl_buf 并置 NULL，未取消 update/fetch，也没有代次校验。真实模拟中枢响应到达后 b64_decode 写 NULL。ASan/UBSan 报 on_chunk 空指针写并 SIGABRT；原产品源文件被原样 include，观察器只读内部状态。",
+    "recommendation": "将下载请求、缓冲、取消和回调绑定到独立会话；取消后丢弃旧回调，或等待在途请求退役后释放。重新开始下载也要隔离旧数据。",
+    "reproduce": "INK_SIM_UPDATE_PKG=$PWD/build-audit/test-out/update/hub.inkfw python3 docs/audits/2026-11-05-codex-services-s3/experiments/run_probe.py docs/audits/2026-11-05-codex-services-s3/experiments/update_cancel_probe.c --template sim-update --build build-audit-asan --extra docs/audits/2026-11-05-codex-services-s3/experiments/update_observer.c --script tests/integration/update_ota1.script"
+  },
+  {
+    "id": "AUD17-002",
+    "severity": "高",
+    "area": "factory reset / file",
+    "title": "个人文件清理达到深度上限就跳过，仍返回成功并允许清除恢复标记",
+    "evidence_type": [
+      "复现",
+      "代码核查"
+    ],
+    "locations": [
+      "system/services/file/file_service.c:441",
+      "system/services/file/file_service.c:458",
+      "system/policy/system_actions.c:144"
+    ],
+    "impact": "通过正常文件服务创建 /me/a/b/c/d/e/f/g/h/i/private.txt 后，ink_fs_wipe_personal 返回 0，文件仍可 stat（0）。wipe_tree 深度超过 8 直接返回，且忽略遍历、删除错误。开机恢复据此删除 reset.card，失去重试入口；遗留个人文件在恢复默认成员后仍可访问。实验直接复现清理 API 的失实成功，删除恢复标记的后续链为代码核查。",
+    "recommendation": "覆盖接口允许的目录深度，对分配、打开、遍历、删除失败返回错误；确认目标区域已清空后才删除 reset.card。",
+    "reproduce": "python3 docs/audits/2026-11-05-codex-services-s3/experiments/run_probe.py docs/audits/2026-11-05-codex-services-s3/experiments/reset_depth_probe.c --template sim-people"
+  },
+  {
+    "id": "AUD17-003",
+    "severity": "高",
+    "area": "members / policy",
+    "title": "成员表重读未完成就解除 table_unread，错误密码重试期间短暂开放成人空间",
+    "evidence_type": [
+      "复现",
+      "代码核查"
+    ],
+    "locations": [
+      "system/policy/members.c:165",
+      "system/policy/members.c:174",
+      "system/policy/members.c:346"
+    ],
+    "impact": "先用真实持久镜像保存成人 PIN，使启动时一次成员日志加载失败。初始保护有效；提交错误密码后，在成员表首条 ink_db_next 前安排另一个任务，观察 has_pin=0、space_open=1，AI 的 state.list 回 DONE。重读完成后错误 PIN 仍被拒绝，空间再关闭。M.table_unread 在 db 非 NULL 时立即清除，而 M.s 此时仍是无 PIN 默认表。实验只安排 API 边界交错，没有修改保护逻辑。",
+    "recommendation": "在私有临时表中完整读取并验证，成功后一次性发布成员表、当前身份和授权状态；重读期间维持 fail-closed，使用同一同步机制保护读者。不要在后台重读时隐式改换当前成员。",
+    "reproduce": "见 experiments/README.md 的 member_retry_probe 两次启动；输出 AUDIT retry has_pin=0 space_open=1 ai_status=0，after_retry space_open=0 pin_result=-1。"
+  }
+]

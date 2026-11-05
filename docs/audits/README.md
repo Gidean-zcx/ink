@@ -18,6 +18,7 @@
 | 2026-11-04 第十三轮（系统层，小范围复核） | `claude/system-layer` 99495a8（第十二轮处理之后，只看 `9cf64ad..99495a8`） | [2026-11-04-codex-system-r4/TASK.md](2026-11-04-codex-system-r4/TASK.md) | [report.md](2026-11-04-codex-system-r4/report.md) | **没有新问题**；AUD13-001～004 已修复；可以合入 main |
 | 2026-11-04 第十四轮（系统服务第 1 阶段，含架构和 AI 原生审视） | `claude/system-services` a81c1b8（范围 `1fbf510..a81c1b8`） | [2026-11-04-codex-services/TASK.md](2026-11-04-codex-services/TASK.md) | [report.md](2026-11-04-codex-services/report.md)、[findings.json](2026-11-04-codex-services/findings.json)、[verification.json](2026-11-04-codex-services/verification.json) | 已处理：5 高 6 中都修了 |
 | 2026-11-04 第十五轮（系统服务第 2 阶段，**中途被服务方的内容分类器切断，报告不完整**） | `claude/system-services` 88f107c（范围 `a81c1b8..88f107c`） | [2026-11-04-codex-services-s2/TASK.md](2026-11-04-codex-services-s2/TASK.md) | [报告](2026-11-04-codex-services-s2/report.md)、[问题](2026-11-04-codex-services-s2/findings.json)、[验证](2026-11-04-codex-services-s2/verification.json) | 高 7、中 1，已处理；没做完的部分放到下一轮 |
+| 2026-11-05 第十六轮（系统服务，**又被切断，报告不完整**） | `claude/system-services` 7f86503 | [2026-11-05-codex-services-s3/TASK.md](2026-11-05-codex-services-s3/TASK.md) | [报告](2026-11-05-codex-services-s3/report.md)、[问题](2026-11-05-codex-services-s3/findings.json) | 写出高 3，实验里还能看出高 2，已处理 |
 | 2026-11-04 系统界面设计审计（Codex，gpt-6-astra，推理 max） | `claude/system-layer` cd486a2 和画布上的 65 个画板 | [2026-11-04-codex-ui/TASK.md](2026-11-04-codex-ui/TASK.md) | [report.md](2026-11-04-codex-ui/report.md)、[findings.json](2026-11-04-codex-ui/findings.json) | 明确的错已改；首版缺的流程等用户决定（见下） |
 
 此前的三次独立评审都由助手发起的子代理完成。问题与处理分别记在：
@@ -26,6 +27,10 @@
 - [刷新算法集成报告](../research/eink-refresh-integration.md)。
 
 审计报告回来后，逐条核实，再决定修复、记录或不处理，结果写回本表和相关文档。
+
+## 2026-11-05 第十六轮（系统服务）：处理
+
+对象 7f86503。跑了 18 分钟被切断，切断前正在重跑第十五轮留下的、和密码尝试次数有关的实验（以后不再让审计跑这一类）。写进报告的 3 条和实验里能看出的 2 条都是真问题，都是高，已处理，见[设计文档 §15.3.2](../system/system-services-design.md)。它的 `verification.json` 是空的：修复核查和架构审视都没做完，放到下一轮，下一轮分成几个小范围。
 
 ## 2026-11-04 第十五轮（系统服务第 2 阶段）：处理
 

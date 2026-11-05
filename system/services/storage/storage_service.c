@@ -140,8 +140,9 @@ static size_t reclaim(void *ctx, size_t want) {
 }
 
 /* Depth first, small steps: a folder at a time. */
-static void wipe_dir(const char *dir, const char *const *keep, int depth) {
-    if (depth > 6) return;
+static bool wipe_dir(const char *dir, const char *const *keep, int depth) {
+    if (depth > 12) return false; /* nothing the system makes goes this deep */
+    bool ok = true;
     char *path = osal_malloc(160, OSAL_MEM_EXTERNAL);
     hal_dirent_t *e = osal_malloc(sizeof *e, OSAL_MEM_EXTERNAL);
     hal_dir_t *d = path && e ? hal_fs_opendir(dir) : NULL;
@@ -151,15 +152,19 @@ static void wipe_dir(const char *dir, const char *const *keep, int depth) {
         bool kept = false;
         for (int i = 0; keep[i] && !kept; i++) kept = !strcmp(keep[i], path);
         if (kept) continue;
-        if (e->is_dir) wipe_dir(path, keep, depth + 1);
-        hal_fs_remove(path); /* a folder with something kept in it says no, and stays */
+        if (e->is_dir) {
+            ok = wipe_dir(path, keep, depth + 1) && ok;
+            hal_fs_remove(path); /* a folder with something kept in it says no, and stays */
+        } else if (hal_fs_remove(path) != 0) ok = false;
     }
     if (d) hal_fs_closedir(d);
+    else ok = false;
     osal_free(path);
     osal_free(e);
+    return ok;
 }
 
-void ink_storage_wipe_user(const char *const *keep) { wipe_dir("/user", keep, 0); }
+bool ink_storage_wipe_user(const char *const *keep) { return wipe_dir("/user", keep, 0); }
 
 int ink_storage_reclaimable(void) { return ink_mem_reclaimer("storage-cache", 10, reclaim, NULL); }
 

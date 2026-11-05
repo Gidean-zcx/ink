@@ -1,3 +1,3 @@
 # Two tasks at the worst moment; the hub is there to hear what it is told.
 @0       net   wifi
-@60s     end
+@200s    end

@@ -88,10 +88,23 @@ must_have(test.finished)
 run(d noboot3 noboot3)
 must_have(test.finished)
 
-# the family's table cannot be read at first
+# the card says no to being cleared: not called done, it stays to do
+run(f stuck1 reset1)
+must_have(power.reboot)
+execute_process(COMMAND chmod u-w ${OUT}/f/sd/content/.m/owner/stuck)
+run(f stuck2 reset2)
+must_have(test.finished)
+must_have(system.factory_reset_done)
+execute_process(COMMAND chmod u+w ${OUT}/f/sd/content/.m/owner/stuck)
+run(f stuck3 reset2)
+must_have(test.finished)
+
+# the family's table cannot be read at first; when it can again, everything starts over
 run(e table1 table1)
 must_have(test.finished)
 run(e table2 table2 INK_TEST_TABLE_FAILS=2)
 must_have(test.finished)
+must_have(members.table_back)
+must_have(power.reboot)
 run(e table3 table3)
 must_have(test.finished)
