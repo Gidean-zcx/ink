@@ -9,15 +9,15 @@
 - **硬件**：整机已到货。第 0 步（只读识别与整片备份）和第 1 步（测量固件跑校准内核，测完复原）完成，见[实机记录](docs/hardware/README.md)。自研系统还没有在实机上跑过。
 - **自研系统**：主页、书架与阅读器、语音 AI、动作与策略、电源与待机、4G 切卡与短信电话的驱动，以及系统服务（数据、文件、时间、通知、确认卡、文字输入、音频、成员和密码、升级），已在模拟器上实现并按预算测试。**还没有在真机上跑过。**
 - **系统界面**：设计稿和[规范](docs/product/system-ui-spec.md)已有，代码里还是占位外观。
-- **家庭中枢（服务器）**：[设计 v0.8](docs/hub/hub-architecture.md) 已有，代码还没开始。
+- **家庭中枢（服务器）**：[设计 v0.8](docs/hub/hub-architecture.md) 已有；第 1 步的骨架在 `hub/`，只用假厂商和合成数据在本机跑过，模拟器能连上它走通一轮语音和一次工具调用。
 - **模拟器**：把系统编译成电脑程序，跑在按 E-Ink4 Plus 建模的虚拟设备上（双核、时间、内存和整块板的芯片都按官方硬件建模）；有命令行（场景测试）和桌面窗口（类似 Android Studio 的模拟器）两种用法。哪些部件与官方一致、哪些只是估计，见[硬件对照](docs/research/simulator/hardware-parity.md)。
-- **测试**：86 项，GitHub Actions 在 Linux 和 macOS 上每次推送都跑。
+- **测试**：91 项，GitHub Actions 在 Linux 和 macOS 上每次推送都跑。
 - **审计**：2026-11-03 用 Codex 对全系统与模拟器做了审计，之后按复审结果继续修，每轮的问题与处理见[审计记录](docs/audits/README.md)。
 
 ## 快速开始
 
 ```bash
-cmake -S . -B build && cmake --build build -j && ctest --test-dir build --output-on-failure
+cmake -S . -B build && cmake --build build -j8 && ctest --test-dir build --output-on-failure
 ```
 
 需要能访问 GitHub（拉取 LVGL；没装 SDL2 时还会拉取 SDL2 和 Dear ImGui），以及 Noto Sans CJK 字体和带 Pillow 的 Python 3（Debian/Ubuntu：`fonts-noto-cjk`、`python3-pil`、`libsdl2-dev`；macOS 的做法见 [CI 配置](.github/workflows/sim.yml)）。详见[项目全貌 §11](docs/background.md)。

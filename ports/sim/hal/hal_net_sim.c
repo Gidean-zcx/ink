@@ -45,6 +45,8 @@ struct hal_ws {
     uint64_t gen;
     vtk_waitq_t wq, txwq, donewq;
     bool close_req, dead, freed_by_user, task_done;
+    bool bridge_open;
+    sim_hub_bridge_t *bridge;
     uint64_t dead_since;
     uint64_t down_last, up_last; /* latest arrival scheduled in each direction (TCP delivers in order) */
     osal_task_t *task;
@@ -1046,12 +1048,35 @@ typedef struct {
 
 static void hub_arrive_cb(void *arg) { /* ISR: an uplink message reached the hub */
     uplink_t *u = arg;
-    if (u->ws->gen == u->gen && u->ws->state == 1 && !u->ws->dead && N.up)
-        sim_hub_receive(u->ws, vtk_isr_now(), u->m->data, u->m->len, u->m->binary);
+    if (u->ws->gen == u->gen && u->ws->state == 1 && !u->ws->dead && N.up) {
+        if (g_sim.hub_url) {
+            if (!sim_hub_bridge_send(u->ws->bridge, u->m->data, u->m->len, u->m->binary))
+                sim_metric_add("bridge.dropped_uplink", 1);
+        } else sim_hub_receive(u->ws, vtk_isr_now(), u->m->data, u->m->len, u->m->binary);
+    }
     else
         sim_metric_add("net.dropped_uplink", 1);
     sim_host_free(u->m);
     sim_host_free(u);
+}
+
+void sim_net_bridge_event(void *owner, uint64_t generation, int event, const void *data, size_t len) {
+    struct hal_ws *w = owner;
+    if (w->gen != generation || w->close_req || w->state == 2) {
+        sim_metric_add("bridge.stale_callbacks", 1);
+        return;
+    }
+    if (event == SIM_BRIDGE_OPEN) {
+        w->bridge_open = true;
+        vtk_isr_wake_one(&w->wq);
+    } else if (event == SIM_BRIDGE_CLOSED) {
+        w->dead = true;
+        w->dead_since = vtk_isr_now();
+        vtk_isr_wake_one(&w->wq);
+    } else if (w->state == 1 && !w->dead) {
+        sim_net_hub_send(w, vtk_isr_now(), data, len, event == SIM_BRIDGE_BINARY);
+        sim_metric_add("bridge.received", 1);
+    }
 }
 
 /* --------------------------------------------------------- connection task */
@@ -1068,6 +1093,7 @@ static bool wait_until(struct hal_ws *w, uint64_t t) { /* false if closed/dead m
 static void close_now(struct hal_ws *w, const char *why) {
     if (w->state == 2) return;
     w->state = 2;
+    if (w->bridge) sim_hub_bridge_close(w->bridge);
     sim_trace_instant("net", why, vtk_now(), NULL);
     vtk_lock();
     vtk_wake_all_locked(&w->txwq);
@@ -1102,6 +1128,14 @@ static void ws_task(void *arg) {
             ok = wait_until(w, t) && N.up && !w->dead;
         }
         if (ok) N.dns_cached = true;
+    }
+    if (ok && g_sim.hub_url) {
+        w->bridge = sim_hub_bridge_open(w, w->gen);
+        vtk_lock();
+        while (w->bridge && !w->bridge_open && !w->dead && !w->close_req && vtk_now() < deadline)
+            vtk_block_locked(&w->wq, deadline - vtk_now());
+        ok = w->bridge_open && !w->dead && !w->close_req;
+        vtk_unlock();
     }
     if (!ok) {
         N.connect_fail++;
