@@ -65,6 +65,7 @@ static const struct {
     {"shell.members_page", "member selection stays on the device before adult authentication", "delta"},
     {"confirm.accept", "only a person on the device can say yes", "token"},
     {"confirm.reject", "only a person on the device answers", "token"},
+    {"confirm.page", "only a person reads the mandatory confirmation pages", "token,delta"},
     {"member.unlock", "a PIN is entered on the device, it goes through nobody else", "id,pin"},
     {"member.set_pin", "a PIN is entered on the device, it goes through nobody else", "id,new_pin"},
     {"system.upgrade", "a person installs: it may fetch and tell, the device is gone for minutes (design §12.7)", NULL},

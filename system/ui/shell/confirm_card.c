@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "ink/osal.h"
 #include "ink/sys/confirm.h"
 #include "ink/sys/exec.h"
 #include "pinpad.h"
@@ -15,11 +16,12 @@ static struct {
     lv_timer_t *read_timer;
     uint16_t starts[161]; /* At most one page per detail byte, plus the end. */
     int page, pages;
+    int panel_y, panel_h, row_y;
     bool drawn, read, watching;
     int pin_result;
     uint32_t pin_wait;
     ink_exec_job_t told_job;
-} C;
+} C INK_PSRAM_BSS;
 
 static void told_job(void *arg);
 
@@ -58,8 +60,8 @@ static void on_answer(lv_event_t *e) {
 }
 
 static int snapshot(char *buf, size_t cap) {
-    int n = snprintf(buf, cap, "等你确认：%s。%s。阅读=%d/%d；只能由你确认或取消。动作：confirm.withdraw。",
-                     C.now.title, C.now.detail, C.page + 1, C.pages);
+    int n = snprintf(buf, cap, "等你确认：%s。%s。阅读=%d/%d；可确认=%d；只能由你确认或取消。动作：confirm.withdraw。",
+                     C.now.title, C.now.detail, C.page + 1, C.pages, C.read && C.page + 1 == C.pages);
     return n < 0 ? 0 : (size_t)n < cap ? n : (int)cap - 1;
 }
 
@@ -82,12 +84,19 @@ static void read_pressed(lv_event_t *e) {
     (void)e;
     if (C.drawn && !ink_display_busy()) C.read = true;
 }
-static void page_clicked(lv_event_t *e) {
-    if (!C.read) return;
-    int page = C.page + (int)(intptr_t)lv_event_get_user_data(e);
-    if (page < 0 || page >= C.pages) return;
+static void page_action(ink_call_t *call) {
+    int64_t token = 0, delta = 0;
+    ink_args_get_int(&call->args, "token", &token); ink_args_get_int(&call->args, "delta", &delta);
+    if (!C.card.root || C.pad || !C.read || token != C.now.token || strcmp(ink_ui_top_name(), "confirm")) { call->rc.status = INK_RC_STALE; return; }
+    int page = C.page + (int)delta;
+    if (page < 0 || page >= C.pages) { call->rc.status = INK_RC_INVALID; return; }
     C.page = page;
     draw_page();
+}
+static void page_clicked(lv_event_t *e) {
+    char args[80];
+    snprintf(args, sizeof args, "{\"token\":%u,\"delta\":%d}", (unsigned)C.now.token, (int)(intptr_t)lv_event_get_user_data(e));
+    ink_receipt_t rc; ink_cap_invoke_json("confirm.page", args, INK_SRC_TOUCH, 0, &rc);
 }
 
 static void paginate(void) {
@@ -121,6 +130,10 @@ static void paginate(void) {
 }
 
 static void draw_page(void) {
+    int extra = C.pages > 1 ? ink_ui_px(INK_GAP_XXL) : 0;
+    lv_obj_set_y(C.card.panel, C.panel_y - extra);
+    lv_obj_set_height(C.card.panel, C.panel_h + extra);
+    lv_obj_set_y(C.card.row, C.row_y + extra);
     char text[sizeof C.now.detail];
     if (C.pages) snprintf(text, sizeof text, "%.*s", C.starts[C.page + 1] - C.starts[C.page], C.now.detail + C.starts[C.page]);
     else snprintf(text, sizeof text, "说明无法完整显示，请取消。");
@@ -160,6 +173,9 @@ static void show(const ink_confirm_view_t *top) { /* UI task */
     }
     if (!C.card.root) {
         shell_card_open(&C.card);
+        lv_obj_update_layout(C.card.root);
+        C.panel_y = lv_obj_get_y(C.card.panel); C.panel_h = lv_obj_get_height(C.card.panel); C.row_y = lv_obj_get_y(C.card.row);
+        /* Poll presentation only while this page is pending, then pause. */
         C.read_timer = lv_timer_create(read_ready, 20, NULL);
         if (!C.watching) {
             lv_display_add_event_cb(lv_obj_get_display(C.card.root), page_drawn, LV_EVENT_REFR_READY, NULL);
@@ -189,6 +205,9 @@ static void show(const ink_confirm_view_t *top) { /* UI task */
 }
 
 int ink_shell_confirm_card_init(void) {
+    static const ink_cap_t PAGE = {.id = "confirm.page", .title = "翻阅确认说明（只由人在设备上操作）", .effect = INK_FX_NAVIGATE, .child_ok = true, .expose = INK_EXPOSE_OWNER,
+        .input = "{\"type\":\"object\",\"properties\":{\"token\":{\"type\":\"integer\",\"minimum\":1},\"delta\":{\"type\":\"integer\",\"minimum\":-1,\"maximum\":1}},\"required\":[\"token\",\"delta\"]}", .run = page_action};
+    if (ink_cap_register(&PAGE, 1) != 0) return -1;
     static const ink_confirm_presenter_t P = {.show = show, .exec = INK_EXEC_UI};
     ink_confirm_set_presenter(&P);
     return 0;

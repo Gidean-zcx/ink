@@ -86,6 +86,9 @@ def main():
     early = pending.replace('    if (!quiet()) return;\n    vtk_event_at', '    vtk_event_at', 1)
     binary = compile_variant(build, '004-without-wait', early, 'sim-ui-scenes', 'sim-ui-scenes', True)
     run(build, binary, '004-without-wait', scene='Apps')
+    overlapping = (ROOT / 'system/ui/shell/confirm_card.c').read_text().replace('int extra = C.pages > 1 ? ink_ui_px(INK_GAP_XXL) : 0;', 'int extra = 0;', 1)
+    binary = compile_variant(build, '003-overlapping-pager', overlapping, 'ink_system', 'sim-ui-regressions')
+    run(build, binary, '003-overlapping-pager', regression='confirm')
     for name, path, regression in (
         ('003-original-card', 'system/ui/shell/confirm_card.c', 'confirm'),
         ('003-original-detail-limit', 'system/policy/confirm.c', 'confirm'),
@@ -98,6 +101,7 @@ def main():
         run(build, binary, name, regression=regression)
     binary = compile_variant(build, '008-original-context', old('system/ui/shell/navigation.c'), 'ink_system', 'sim-ui-scenes')
     run(build, binary, '008-original-context', scene='SetDisplay')
+    run(build, build / 'review-negative/006-original-mapping', '008-original-overview', regression='context')
     print('All review reverse controls were detected; product sources stayed unchanged.')
 
 

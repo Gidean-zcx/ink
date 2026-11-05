@@ -19,6 +19,7 @@ static lv_obj_t *accept;
 static lv_area_t slider;
 static bool have_slider;
 static int screen_w, screen_h, interrupt_id;
+static int pager_bottom, accept_top;
 static void effect(ink_call_t *c) { (void)c; effects++; }
 static const ink_cap_t CAPS[] = {
     {.id = "test.long_confirm", .title = "删除测试文件", .ask = "{detail}", .effect = INK_FX_LOCAL_DESTRUCTIVE, .child_ok = true,
@@ -37,10 +38,12 @@ static void inspect(lv_obj_t *root) {
             if (!strcmp(s, "删除")) {
                 accept = parent; disabled = lv_obj_has_state(parent, LV_STATE_DISABLED);
                 accept_x = (area.x1 + area.x2) / 2; accept_y = (area.y1 + area.y2) / 2;
+                lv_area_t bounds; lv_obj_get_coords(parent, &bounds); accept_top = bounds.y1;
             }
             int a, b;
             if (sscanf(s, "%d / %d", &a, &b) == 2) {
                 page = a; pages = b;
+                lv_area_t bounds; lv_obj_get_coords(parent, &bounds); pager_bottom = bounds.y2;
                 lv_obj_get_coords(lv_obj_get_child(parent, 2), &area);
                 next_x = (area.x1 + area.x2) / 2; next_y = (area.y1 + area.y2) / 2;
             }
@@ -93,6 +96,7 @@ static void raise_call(void) {
 static void read_all(const char *text) {
     char seen[512] = "";
     CHECK(page == 1 && pages > 1 && disabled, "a long transaction starts unread with acceptance disabled");
+    CHECK(pager_bottom < accept_top, "the paging controls do not overlap confirmation buttons");
     on_ui(forced_accept); quiet();
     CHECK(effects == 0, "even a synthetic click cannot bypass unread pages");
     for (int i = 1; i <= pages && i < 80; i++) {
@@ -107,6 +111,9 @@ static void read_all(const char *text) {
 static void confirmation_tests(void) {
     const char *long_text = "测试文件甲\n测试文件乙\n测试文件丙\n这三个文件都找不回来";
     uint32_t first = open_confirm(long_text);
+    char page_args[96]; snprintf(page_args, sizeof page_args, "{\"token\":%u,\"delta\":1}", (unsigned)first);
+    CHECK(AI("confirm.page", page_args) && g_rc.status == INK_RC_INVALID, "AI cannot mark mandatory pages read");
+    on_ui(read_view); CHECK(page == 1 && disabled, "an AI page request cannot change reading progress");
     CHECK(ink_confirm_decide(first, true, INK_SRC_AI) < 0 && effects == 0, "AI cannot accept even with a real token");
     read_all(long_text);
     tap(accept_x, accept_y); quiet();
@@ -114,6 +121,8 @@ static void confirmation_tests(void) {
     effects = 0;
     uint32_t second = open_confirm(long_text);
     CHECK(second != first && disabled && page == 1, "a new token cannot inherit the prior reading state");
+    CHECK(BY_HAND("confirm.page", page_args) && g_rc.status == INK_RC_STALE, "a stale token cannot turn the next transaction's pages");
+    on_ui(read_view); CHECK(page == 1, "stale pagination leaves the new card on its first page");
     int w = screen_w, h = screen_h;
     swipe(w / 2, h - 4, w / 2, h * 3 / 4);
     CHECK(strcmp(ink_ui_top_name(), "confirm") && effects == 0, "bottom edge cancels without executing");
@@ -199,6 +208,15 @@ static void context_tests(void) {
     CHECK(ink_text_focused() && ink_text_type() == INK_TEXT_PASSWORD, "selection opens a human password field");
     CHECK(AI("text.insert", "{\"text\":\"FORBIDDEN\"}") && g_rc.status != INK_RC_DONE, "AI cannot type the network password");
     key(HAL_KEY_HOME); quiet();
+    CHECK(AI("settings.set", "{\"id\":\"voice.handsfree\",\"value\":2}") && g_rc.status == INK_RC_DONE, "change the actual wake setting");
+    CHECK(AI("settings.set", "{\"id\":\"display.lock_style\",\"value\":1}") && g_rc.status == INK_RC_DONE, "change the actual lock style");
+    CHECK(AI("shell.settings", NULL) && g_rc.status == INK_RC_DONE, "return to the settings overview"); quiet();
+    wanted = "叫名字已关闭"; on_ui(read_view); CHECK(label_x >= 0, "the overview reflects the wake setting");
+    wanted = "时钟和待办"; on_ui(read_view); CHECK(label_x >= 0, "the overview reflects the lock style");
+    /* A UI-only connection-state fixture; no pairing or real radio is used. */
+    ink_state_set_bool(ink_state_find("bt.connected"), true); quiet();
+    wanted = "已连接"; on_ui(read_view); CHECK(label_x >= 0, "a connection-state event updates the visible Bluetooth status");
+    ink_state_set_bool(ink_state_find("bt.connected"), false); quiet();
     CHECK(ink_member_switch("kid") == 0, "switch to the real child space"); quiet();
     CHECK(AI("shell.control", NULL) && g_rc.status == INK_RC_DONE, "child opens their own controls"); quiet(); on_ui(read_context);
     CHECK(!strstr(context, "shell.settings") && !strstr(context, "shell.members"), "the child snapshot does not advertise adult controls");

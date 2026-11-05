@@ -511,15 +511,20 @@ static void draw_page_body(void) {
     if (N.page_id == PAGE_SETTINGS) {
         lv_obj_t *who = ink_ui_pill(N.page_body, ink_member_current()->name, INK_MARGIN, y, width(), INK_ROW_DOUBLE, true, NULL, NULL);
         ink_shell_bind(who, "shell.members", NULL); y += INK_ROW_DOUBLE + INK_GAP;
+        char ssid[64], light[32], volume[32];
+        state_text("wifi.ssid", ssid, sizeof ssid);
+        snprintf(light, sizeof light, "亮度 %lld", (long long)ink_setting_get("display.light") / 10);
+        snprintf(volume, sizeof volume, "音量 %lld", (long long)ink_setting_get("audio.volume") / 10);
         lv_obj_t *g = ink_ui_card(N.page_body, INK_MARGIN, y, width(), 2 * INK_CONTROL, INK_SURFACE_STATIC);
-        group_row(g, "wifi", "网络和 SIM 卡", "", 0, "shell.network");
-        group_row(g, "bluetooth", "蓝牙", "没有连接", 1, NULL); y += 2 * INK_CONTROL + INK_GAP;
+        group_row(g, "wifi", "网络和 SIM 卡", ssid[0] ? ssid : "还没有连接", 0, "shell.network");
+        group_row(g, "bluetooth", "蓝牙", integer("bt.connected") ? "已连接" : "没有连接", 1, NULL); y += 2 * INK_CONTROL + INK_GAP;
         g = ink_ui_card(N.page_body, INK_MARGIN, y, width(), 3 * INK_CONTROL, INK_SURFACE_STATIC);
-        group_row(g, "sun", "显示和亮度", "", 0, "shell.display");
-        group_row(g, "volume", "声音", "", 1, "shell.sound");
-        group_row(g, "wave", "语音和 AI", "使用时能叫名字", 2, NULL); y += 3 * INK_CONTROL + INK_GAP;
+        group_row(g, "sun", "显示和亮度", light, 0, "shell.display");
+        group_row(g, "volume", "声音", volume, 1, "shell.sound");
+        int wake = (int)ink_setting_get("voice.handsfree");
+        group_row(g, "wave", "语音和 AI", wake == 2 ? "叫名字已关闭" : wake == 1 ? "一直能叫名字" : "使用时能叫名字", 2, NULL); y += 3 * INK_CONTROL + INK_GAP;
         g = ink_ui_card(N.page_body, INK_MARGIN, y, width(), 3 * INK_CONTROL, INK_SURFACE_STATIC);
-        group_row(g, "lock", "锁屏和壁纸", "这一页", 0, "shell.display");
+        group_row(g, "lock", "锁屏和壁纸", ink_setting_get("display.lock_style") ? "时钟和待办" : "这一页", 0, "shell.display");
         group_row(g, "storage", "存储和备份", "还没有备份", 1, NULL);
         group_row(g, "info", "关于和更新", "", 2, NULL);
     } else if (N.page_id == PAGE_DISPLAY) {
@@ -621,7 +626,10 @@ static void create_page(lv_obj_t *screen, void *arg) {
                              INK_CANVAS_H - INK_LINE_BODY - INK_PRIMARY - INK_GAP_XS, 0, INK_SURFACE_WHITE, false);
     draw_page_body();
 }
-static void destroy_page(void) { N.page = N.page_body = NULL; }
+static void destroy_page(void) {
+    if (N.page_id == PAGE_NETWORK) { N.picked_ssid[0] = 0; ink_text_blur(0); }
+    N.page = N.page_body = NULL;
+}
 static bool page_key(ink_key_t key, bool lng) { (void)key; (void)lng; return false; }
 static int page_snapshot(char *buf, size_t cap) {
     if (!ink_member_space_open()) return snprintf(buf, cap, "空间锁定；AI 无权读取。");
@@ -776,8 +784,8 @@ static void refresh(void *unused) {
 }
 static void changed(void *ctx, int h, const char *id) {
     (void)h;
-    if (ctx && strncmp(id, "time.", 5) && strcmp(id, "power.state") && strcmp(id, "notify.unread") && strcmp(id, "audio.mic") && strcmp(id, "net.type") && strncmp(id, "wifi.", 5)) return;
-    if (!ctx || !strcmp(id, "notify.unread") || !strncmp(id, "wifi.", 5)) __atomic_store_n(&N.need_body, true, __ATOMIC_RELEASE);
+    if (ctx && strncmp(id, "time.", 5) && strcmp(id, "power.state") && strcmp(id, "notify.unread") && strcmp(id, "audio.mic") && strcmp(id, "net.type") && strncmp(id, "wifi.", 5) && strcmp(id, "bt.connected")) return;
+    if (!ctx || !strcmp(id, "notify.unread") || !strncmp(id, "wifi.", 5) || !strcmp(id, "bt.connected")) __atomic_store_n(&N.need_body, true, __ATOMIC_RELEASE);
     ink_exec_post(INK_EXEC_UI, &N.refresh, refresh, NULL);
 }
 static const char *const FONT_CHOICES[] = {"小", "中", "大", "特大", NULL};
