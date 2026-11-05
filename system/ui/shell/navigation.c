@@ -20,7 +20,7 @@
 #include "ink/sys/time.h"
 #include "ink/ui_shell.h"
 
-typedef struct { char cap[48], args[192]; } binding_t;
+typedef struct { char cap[48], args[192]; uint32_t epoch; } binding_t;
 typedef enum { PAGE_SETTINGS, PAGE_DISPLAY, PAGE_SOUND, PAGE_NETWORK, PAGE_NOTIFICATIONS } page_t;
 static void create_page(lv_obj_t *screen, void *arg);
 static void destroy_page(void);
@@ -42,6 +42,8 @@ static struct {
     int home_page, notify_page, apps_page, apps_pages, wifi_page;
     page_t page_id;
     bool more, initialized, need_body;
+    char member[16];
+    uint32_t session, epoch;
     char result[160], search[80];
     char wifi_ssid[6][40], picked_ssid[40];
     int wifi_count;
@@ -51,8 +53,15 @@ static struct {
 static void draw_page_body(void);
 static void draw_home_content(void);
 
+static bool current_session(uint32_t epoch) {
+    return epoch == __atomic_load_n(&N.session, __ATOMIC_ACQUIRE) &&
+           !strcmp(N.member, ink_member_current()->id) && ink_member_space_open();
+}
+
 static void wifi_receipt(void *ctx, const ink_receipt_t *rc) {
-    bool scan = ctx != NULL;
+    uintptr_t request = (uintptr_t)ctx;
+    if (!current_session((uint32_t)(request >> 1))) return;
+    bool scan = (request & 1) != 0;
     N.scan_busy = false;
     snprintf(N.result, sizeof N.result, "%s", rc->say[0] ? rc->say : rc->status == INK_RC_DONE ? "已经找过附近的网络" : "没能完成，可以再试一次");
     if (scan && rc->status == INK_RC_DONE && rc->result) {
@@ -79,11 +88,12 @@ static void state_text(const char *id, char *buf, size_t cap) { if (ink_state_ge
 static void binding_event(lv_event_t *e) {
     binding_t *b = lv_event_get_user_data(e);
     if (lv_event_get_code(e) == LV_EVENT_DELETE) { osal_free(b); return; }
+    if (!current_session(b->epoch)) return;
     ink_call_opts_t o = {.src = INK_SRC_TOUCH, .args_json = b->args[0] ? b->args : NULL, .reply_exec = INK_EXEC_UI,
                         .member = ink_member_current()->id};
     if (!strcmp(b->cap, "wifi.scan")) {
         if (N.scan_busy) return;
-        N.scan_busy = true; o.done = wifi_receipt; o.ctx = (void *)1;
+        N.scan_busy = true; o.done = wifi_receipt; o.ctx = (void *)(((uintptr_t)b->epoch << 1) | 1);
         ink_ui_busy_control(lv_event_get_target_obj(e), true);
     }
     if (!strcmp(b->cap, "text.voice_start")) ink_ui_cause(osal_now_us(), "text.voice_tap_to_panel_ms");
@@ -95,6 +105,7 @@ void ink_shell_bind(lv_obj_t *obj, const char *cap, const char *json) {
     if (!b) return;
     snprintf(b->cap, sizeof b->cap, "%s", cap);
     snprintf(b->args, sizeof b->args, "%s", json ? json : "");
+    b->epoch = N.epoch;
     lv_obj_add_flag(obj, LV_OBJ_FLAG_CLICKABLE);
     lv_obj_add_event_cb(obj, binding_event, LV_EVENT_CLICKED, b);
     lv_obj_add_event_cb(obj, binding_event, LV_EVENT_DELETE, b);
@@ -195,7 +206,7 @@ static const char *const APP_TITLES[] = {"听", "报纸", "单词", "接下来",
 static const char *const APP_ICONS[] = {"headphones", "news", "word", "calendar", "clock", "camera", "gallery", "gear"};
 
 static void search_entered(void *ctx, const char *value) {
-    (void)ctx;
+    if (!current_session((uint32_t)(uintptr_t)ctx)) return;
     ink_args_t *args = osal_malloc(sizeof *args, OSAL_MEM_EXTERNAL);
     if (!args) return;
     ink_args_init(args); ink_args_str(args, "query", value);
@@ -261,7 +272,7 @@ static void draw_home_content(void) {
     } else {
         ink_ui_label(N.content, "全部", INK_FONT_HEADING, INK_WEIGHT_BOLD, INK_MARGIN, page_top, width());
         ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .enter = INK_ENTER_SEARCH, .max = 64, .hint = "查找应用", .initial = N.search};
-        lv_obj_t *search = ink_textfield_create(N.content, &cfg, search_entered, NULL, false);
+        lv_obj_t *search = ink_textfield_create(N.content, &cfg, search_entered, (void *)(uintptr_t)N.epoch, false);
         lv_obj_set_pos(search, ink_ui_px(INK_MARGIN), ink_ui_px(INK_PRIMARY));
         lv_obj_set_size(search, ink_ui_px(width()), ink_ui_px(INK_CONTROL));
         static const char *const groups[] = {"读和听", "记和联系", "工具"};
@@ -303,6 +314,16 @@ static void draw_home_content(void) {
 }
 
 void ink_shell_home_create(lv_obj_t *screen) {
+    uint32_t session = __atomic_load_n(&N.session, __ATOMIC_ACQUIRE);
+    if (N.epoch != session || strcmp(N.member, ink_member_current()->id) || !ink_member_space_open()) {
+        ink_shell_close();
+        N.search[0] = N.result[0] = N.picked_ssid[0] = 0;
+        memset(N.wifi_ssid, 0, sizeof N.wifi_ssid);
+        N.home_page = 1; N.notify_page = N.apps_page = N.wifi_page = N.wifi_count = 0;
+        N.apps_pages = 1; N.more = N.scan_busy = N.notify_more = false;
+        N.epoch = session;
+        snprintf(N.member, sizeof N.member, "%s", ink_member_current()->id);
+    }
     N.home = screen;
     N.home_page = N.initialized ? N.home_page : 1;
     N.initialized = true;
@@ -360,7 +381,7 @@ bool ink_shell_home_key(ink_key_t key, bool long_press) {
 }
 
 int ink_shell_home_snapshot(char *buf, size_t cap) {
-    if (!ink_member_space_open()) return snprintf(buf, cap, "空间锁定；AI 无权读取。");
+    if (!current_session(N.epoch)) return snprintf(buf, cap, "空间锁定或正在切换；AI 无权读取。");
     ink_card_t card;
     bool has = bookmark(&card);
     if (N.home_page == 2) {
@@ -382,6 +403,7 @@ int ink_shell_home_snapshot(char *buf, size_t cap) {
 }
 
 static int control_snapshot(char *buf, size_t cap) {
+    if (!current_session(N.epoch)) return snprintf(buf, cap, "空间锁定或正在切换；AI 无权读取。");
     char ssid[64]; state_text("wifi.ssid", ssid, sizeof ssid);
     int n = snprintf(buf, cap, "Control；当前=%s；亮度=%lld；音量=%lld；勿扰=%lld；叫名字=%lld；更多=%d；通知=%d；网络=%s；",
                      ink_member_current()->name, (long long)ink_setting_get("display.light"), (long long)ink_setting_get("audio.volume"),
@@ -493,11 +515,11 @@ static void group_row(lv_obj_t *group, const char *icon, const char *title, cons
 }
 
 static void wifi_password(void *ctx, const char *password) {
-    (void)ctx;
+    if (!current_session((uint32_t)(uintptr_t)ctx)) return;
     ink_args_t *args = osal_malloc(sizeof *args, OSAL_MEM_EXTERNAL);
     if (!args) return;
     ink_args_init(args); ink_args_str(args, "ssid", N.picked_ssid); ink_args_str(args, "password", password);
-    ink_call_opts_t o = {.src = INK_SRC_TOUCH, .reply_exec = INK_EXEC_UI, .done = wifi_receipt, .member = ink_member_current()->id};
+    ink_call_opts_t o = {.src = INK_SRC_TOUCH, .reply_exec = INK_EXEC_UI, .done = wifi_receipt, .ctx = (void *)((uintptr_t)N.epoch << 1), .member = ink_member_current()->id};
     ink_cap_call("wifi.connect", args, &o);
     memset(args, 0, sizeof *args); osal_free(args);
     N.picked_ssid[0] = 0; ink_text_blur(0); draw_page_body();
@@ -580,7 +602,7 @@ static void draw_page_body(void) {
         ink_ui_notice(N.page_body, ssid[0] ? ssid : "还没有连接 Wi-Fi", y); y += INK_LINE_NOTE + INK_GAP_L;
         if (N.picked_ssid[0]) {
             ink_text_cfg_t cfg = {.type = INK_TEXT_PASSWORD, .enter = INK_ENTER_DONE, .max = 64, .hint = "输入网络密码", .ai_hidden = true};
-            lv_obj_t *password_field = ink_textfield_create(N.page_body, &cfg, wifi_password, NULL, true);
+            lv_obj_t *password_field = ink_textfield_create(N.page_body, &cfg, wifi_password, (void *)(uintptr_t)N.epoch, true);
             lv_obj_set_pos(password_field, ink_ui_px(INK_MARGIN), ink_ui_px(y));
             return;
         }
@@ -635,7 +657,7 @@ static void destroy_page(void) {
 }
 static bool page_key(ink_key_t key, bool lng) { (void)key; (void)lng; return false; }
 static int page_snapshot(char *buf, size_t cap) {
-    if (!ink_member_space_open()) return snprintf(buf, cap, "空间锁定；AI 无权读取。");
+    if (!current_session(N.epoch)) return snprintf(buf, cap, "空间锁定或正在切换；AI 无权读取。");
     int n = snprintf(buf, cap, "%s；当前=%s；亮度=%lld；暖光=%lld；音量=%lld；网络偏好=%lld；通知=%d。",
                     PAGES[N.page_id].name, ink_member_current()->name, (long long)ink_setting_get("display.light"), (long long)ink_setting_get("display.warmth"),
                     (long long)ink_setting_get("audio.volume"), (long long)ink_setting_get("net.prefer"), ink_notify_unread());
@@ -763,6 +785,7 @@ static const ink_cap_t CAPS[] = {
 static void refresh(void *unused) {
     (void)unused;
     if (ink_power_state() == INK_PWR_LOCKED) return;
+    if (!current_session(N.epoch)) return;
     bool body = __atomic_exchange_n(&N.need_body, false, __ATOMIC_ACQ_REL);
     if (body && N.control && ink_member_space_open()) draw_control();
     if (body && N.page_body && ink_member_space_open() && !N.picked_ssid[0]) draw_page_body();
@@ -787,6 +810,10 @@ static void refresh(void *unused) {
 }
 static void changed(void *ctx, int h, const char *id) {
     (void)h;
+    if (ctx && (!strcmp(id, "member.current") || (!strcmp(id, "member.authed") && !ink_member_space_open()))) {
+        __atomic_add_fetch(&N.session, 1, __ATOMIC_ACQ_REL);
+        return;
+    }
     if (ctx && strncmp(id, "time.", 5) && strcmp(id, "power.state") && strcmp(id, "notify.unread") && strcmp(id, "audio.mic") && strcmp(id, "net.type") && strncmp(id, "wifi.", 5) && strcmp(id, "bt.connected")) return;
     if (!ctx || !strcmp(id, "notify.unread") || !strncmp(id, "wifi.", 5) || !strcmp(id, "bt.connected")) __atomic_store_n(&N.need_body, true, __ATOMIC_RELEASE);
     ink_exec_post(INK_EXEC_UI, &N.refresh, refresh, NULL);

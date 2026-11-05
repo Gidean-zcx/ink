@@ -9,18 +9,19 @@
 #include "ink/ui_shell.h"
 
 #define PANEL_HEIGHT (INK_MARGIN + INK_CONTROL + INK_GAP_M + 3 * INK_LINE_BODY + INK_GAP_S + INK_LINE_NOTE + INK_GAP_M + INK_CONTROL + INK_MARGIN)
-#define ANSWER_CHARS 54
 static struct {
-    lv_obj_t *root, *status, *question, *answer, *source, *actions;
-    char words[4096];
-    int page;
+    lv_obj_t *root, *status, *question, *answer, *source, *actions, *prev, *next, *counter;
+    char words[4096], text[4096];
+    uint16_t starts[4097];
+    int page, pages;
     bool hidden;
     ink_exec_job_t refine;
 } A INK_PSRAM_BSS;
 
 int ink_shell_ai_snapshot(char *buf, size_t cap) {
-    return snprintf(buf, cap, "AI 面板；%s；%s。动作：ai.panel.hide、ai.panel.listen、ai.panel.next、ai.panel.prev。",
-                    A.status ? lv_label_get_text(A.status) : "", A.answer ? lv_label_get_text(A.answer) : "");
+    return snprintf(buf, cap, "AI 面板；%s；%s；页码=%d/%d；上一页=%d；下一页=%d。动作：ai.panel.hide、ai.panel.listen、ai.panel.next、ai.panel.prev。",
+                    A.status ? lv_label_get_text(A.status) : "", A.answer ? lv_label_get_text(A.answer) : "", A.page + 1, A.pages,
+                    A.page > 0, A.page + 1 < A.pages);
 }
 static bool key(ink_key_t k, bool lng) {
     if (lng || (k != INK_KEY_HOME && k != INK_KEY_BACK)) return false;
@@ -37,22 +38,48 @@ static void refine(void *arg) {
     lv_obj_invalidate(A.root);
 }
 
-static const char *advance(const char *p, int count) {
-    while (*p && count-- > 0) { p++; while ((*p & 0xc0) == 0x80) p++; }
-    return p;
+static void paginate(void) {
+    lv_obj_update_layout(A.root);
+    int w = lv_obj_get_width(A.answer), h = lv_obj_get_height(A.answer);
+    const lv_font_t *font = lv_obj_get_style_text_font(A.answer, LV_PART_MAIN);
+    int letter = lv_obj_get_style_text_letter_space(A.answer, LV_PART_MAIN);
+    int line = lv_obj_get_style_text_line_space(A.answer, LV_PART_MAIN);
+    size_t at = 0, len = strlen(A.words);
+    A.pages = 0; A.starts[0] = 0;
+    do {
+        size_t end = at;
+        while (end < len) {
+            size_t next = end + 1;
+            while (next < len && (A.words[next] & 0xc0) == 0x80) next++;
+            memcpy(A.text, A.words + at, next - at); A.text[next - at] = 0;
+            lv_point_t size;
+            lv_text_get_size(&size, A.text, font, letter, line, w, LV_TEXT_FLAG_NONE);
+            if (size.y > h) break;
+            end = next;
+        }
+        if (end == at && at < len) { A.pages = 0; break; }
+        at = end; A.starts[++A.pages] = (uint16_t)at;
+    } while (at < len);
+    if (A.page >= A.pages) A.page = A.pages ? A.pages - 1 : 0;
 }
 static void draw_words(void) {
-    const char *a = advance(A.words, A.page * ANSWER_CHARS), *b = advance(a, ANSWER_CHARS);
-    char page[ANSWER_CHARS * 4 + 1];
-    snprintf(page, sizeof page, "%.*s", (int)(b - a), a);
-    lv_label_set_text(A.answer, page);
+    if (A.pages) {
+        size_t len = A.starts[A.page + 1] - A.starts[A.page];
+        memcpy(A.text, A.words + A.starts[A.page], len); A.text[len] = 0;
+    } else snprintf(A.text, sizeof A.text, "回答无法完整显示，请重新打开面板。");
+    lv_label_set_text(A.answer, A.text);
+    char count[32]; snprintf(count, sizeof count, "%d / %d", A.page + 1, A.pages);
+    lv_label_set_text(A.counter, count);
+    if (A.page > 0) lv_obj_remove_state(A.prev, LV_STATE_DISABLED); else lv_obj_add_state(A.prev, LV_STATE_DISABLED);
+    if (A.page + 1 < A.pages) lv_obj_remove_state(A.next, LV_STATE_DISABLED); else lv_obj_add_state(A.next, LV_STATE_DISABLED);
     ink_ui_hint_obj(A.answer, INK_REFRESH_UI);
+    ink_ui_hint_obj(A.actions, INK_REFRESH_UI);
 }
 void ink_shell_ai_words(const char *text) {
     if (!A.root) return;
     snprintf(A.words, sizeof A.words, "%s", text);
     if (text[0]) { lv_obj_add_flag(A.question, LV_OBJ_FLAG_HIDDEN); lv_obj_remove_flag(A.answer, LV_OBJ_FLAG_HIDDEN); }
-    draw_words();
+    paginate(); draw_words();
 }
 
 bool ink_shell_ai_hide(void) {
@@ -73,8 +100,9 @@ void ink_shell_ai_closed(void) {
     if (!A.root) return;
     ink_ui_hint_obj(A.root, INK_REFRESH_FLASH_UI);
     ink_ui_overlay_remove(&OVERLAY);
-    A.root = A.status = A.question = A.answer = A.source = A.actions = NULL;
-    A.words[0] = 0; A.page = 0; A.hidden = false;
+    A.root = A.status = A.question = A.answer = A.source = A.actions = A.prev = A.next = A.counter = NULL;
+    memset(A.words, 0, sizeof A.words); memset(A.text, 0, sizeof A.text);
+    A.page = A.pages = 0; A.hidden = false;
 }
 
 void ink_shell_ai_status(const char *s) {
@@ -95,10 +123,11 @@ void ink_shell_ai_status(const char *s) {
 }
 
 static void action(ink_call_t *c) {
+    if (!A.root || A.hidden) { c->rc.status = INK_RC_STALE; return; }
     const char *id = c->cap->id;
     if (!strcmp(id, "ai.panel.hide")) ink_shell_ai_hide();
     else if (!strcmp(id, "ai.panel.listen")) ink_ai_tap();
-    else if (!strcmp(id, "ai.panel.next")) { if (*advance(A.words, (A.page + 1) * ANSWER_CHARS)) A.page++; if (A.answer) draw_words(); }
+    else if (!strcmp(id, "ai.panel.next")) { if (A.page + 1 < A.pages) A.page++; draw_words(); }
     else if (!strcmp(id, "ai.panel.prev")) { if (A.page) A.page--; if (A.answer) draw_words(); }
 }
 static const ink_cap_t CAPS[] = {
@@ -125,11 +154,18 @@ void ink_shell_ai_open(lv_obj_t **root, lv_obj_t **status, lv_obj_t **question, 
                             INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, 0, INK_SURFACE_WHITE, false);
     lv_obj_t *next = ink_ui_pill(A.actions, "继续问", 0, 0, 2 * INK_PRIMARY, INK_CONTROL, false, NULL, NULL);
     ink_shell_bind(next, "ai.panel.listen", NULL);
-    next = ink_ui_pill(A.actions, "下一页", 2 * INK_PRIMARY + INK_GAP, 0, 2 * INK_PRIMARY, INK_CONTROL, false, NULL, NULL);
-    ink_shell_bind(next, "ai.panel.next", NULL);
+    int x = 2 * INK_PRIMARY + INK_GAP;
+    A.prev = ink_ui_circle(A.actions, "back", x, 0, INK_CONTROL, INK_ICON_SMALL, INK_SURFACE_WHITE, NULL, NULL);
+    ink_shell_bind(A.prev, "ai.panel.prev", NULL);
+    A.counter = ink_ui_label(A.actions, "1 / 1", INK_FONT_LIST, INK_WEIGHT_MEDIUM, x + INK_CONTROL + INK_GAP,
+                             (INK_CONTROL - INK_LINE_LIST) / 2, INK_BLOCK_L);
+    lv_obj_set_style_text_align(A.counter, LV_TEXT_ALIGN_CENTER, 0);
+    A.next = ink_ui_circle(A.actions, "next", x + INK_CONTROL + 2 * INK_GAP + INK_BLOCK_L, 0, INK_CONTROL, INK_ICON_SMALL, INK_SURFACE_WHITE, NULL, NULL);
+    ink_shell_bind(A.next, "ai.panel.next", NULL);
     lv_obj_add_flag(A.source, LV_OBJ_FLAG_HIDDEN);
     lv_obj_add_flag(A.actions, LV_OBJ_FLAG_HIDDEN);
-    A.hidden = false; A.page = 0; A.words[0] = 0;
+    A.hidden = false; A.page = 0; A.pages = 1; A.words[0] = 0; A.starts[0] = A.starts[1] = 0;
+    draw_words();
     ink_ui_overlay_add(&OVERLAY, A.root);
     ink_ui_hint_obj(A.root, INK_REFRESH_FAST);
     ink_exec_post(INK_EXEC_UI, &A.refine, refine, NULL);

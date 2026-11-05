@@ -224,10 +224,120 @@ static void context_tests(void) {
     CHECK(AI("shell.settings", NULL) && g_rc.status == INK_RC_REJECTED, "a globally registered setting entry is actually denied to the child");
     CHECK(!strcmp(ink_ui_top_name(), "Control"), "the denied operation cannot navigate away");
 }
+static ink_exec_job_t blocked_job, drained_job;
+static volatile bool bg_started, bg_release, bg_drained;
+static void block_background(void *arg) {
+    (void)arg;
+    __atomic_store_n(&bg_started, true, __ATOMIC_RELEASE);
+    while (!__atomic_load_n(&bg_release, __ATOMIC_ACQUIRE)) osal_task_delay_us(1000);
+}
+static void background_drained(void *arg) { (void)arg; __atomic_store_n(&bg_drained, true, __ATOMIC_RELEASE); }
+static void member_privacy_tests(void) {
+    CHECK(BY_HAND("shell.search", "{\"query\":\"PRIVATE_OWNER_TEST_QUERY\"}") && g_rc.status == INK_RC_DONE, "the adult searches through the real capability"); quiet();
+    CHECK(BY_HAND("shell.display", NULL) && g_rc.status == INK_RC_DONE, "leave home in the same member's session"); quiet();
+    on_ui(ink_ui_home); quiet(); on_ui(read_context);
+    CHECK(strstr(context, "PRIVATE_OWNER_TEST_QUERY"), "ordinary navigation preserves the current member's query");
+    CHECK(BY_HAND("shell.network", NULL) && g_rc.status == INK_RC_DONE, "open real network settings"); quiet();
+    CHECK(ink_exec_post(INK_EXEC_BG, &blocked_job, block_background, NULL) == 0 && WAIT_FOR(__atomic_load_n(&bg_started, __ATOMIC_ACQUIRE), 2000), "hold the background executor before the scan starts");
+    wanted = "找附近的 Wi-Fi"; on_ui(read_view);
+    CHECK(label_x >= 0, "find the real scan button"); if (label_x >= 0) tap(label_x, label_y); quiet();
+    CHECK(BY_HAND("shell.members", NULL) && g_rc.status == INK_RC_DONE, "open the actual member picker"); quiet();
+    wanted = "小"; on_ui(read_view);
+    CHECK(label_x >= 0, "find the child's avatar"); if (label_x >= 0) tap(label_x, label_y); quiet();
+    CHECK(!strcmp(ink_member_current()->id, "kid"), "touch really switches to the child");
+    on_ui(read_context);
+    CHECK(!strstr(context, "PRIVATE_OWNER_TEST_QUERY"), "the child snapshot has no adult query");
+    CHECK(!strcmp(ink_shell_board(), "Main"), "a different member starts on their main page");
+    wanted = "PRIVATE_OWNER_TEST_QUERY"; on_ui(read_view);
+    CHECK(label_x < 0, "the child screen has no adult query");
+    __atomic_store_n(&bg_release, true, __ATOMIC_RELEASE);
+    CHECK(ink_exec_post(INK_EXEC_BG, &drained_job, background_drained, NULL) == 0 && WAIT_FOR(__atomic_load_n(&bg_drained, __ATOMIC_ACQUIRE), 5000), "the old member's queued scan has returned");
+    quiet(); on_ui(read_context);
+    CHECK(!strstr(context, "没能完成，可以再试一次") && !strstr(context, "已经找过附近的网络"), "a late scan receipt cannot change the new member's result");
+    CHECK(BY_HAND("home.next", NULL) && g_rc.status == INK_RC_DONE, "inspect the child's own apps page"); quiet(); on_ui(read_context);
+    CHECK(strstr(context, "查找=；") && !strstr(context, "PRIVATE_OWNER_TEST_QUERY"), "the child's search field is empty on Apps too");
+    wanted = "PRIVATE_OWNER_TEST_QUERY"; on_ui(read_view); CHECK(label_x < 0, "Apps does not reveal the old query");
+    CHECK(ink_member_switch("owner") == 0, "return to the adult without reusing the old session"); quiet();
+    CHECK(BY_HAND("shell.network", NULL) && g_rc.status == INK_RC_DONE, "reopen networks after switching back"); quiet(); on_ui(read_context);
+    CHECK(!strstr(context, "网络[0]=") && strstr(context, "选中网络=；"), "network results and selection do not cross sessions");
+}
+static lv_obj_t *answer_root, *answer_status, *answer_question, *answer_label;
+static const char *answer_words;
+static char answer_text[4096] INK_PSRAM_BSS, answer_seen[4096] INK_PSRAM_BSS;
+static bool answer_fits, answer_next_disabled, answer_prev_disabled;
+static lv_obj_t *bound(lv_obj_t *root, const char *id) {
+    const char *cap = ink_shell_bound_cap(root);
+    if (cap && !strcmp(cap, id)) return root;
+    for (uint32_t i = 0; i < lv_obj_get_child_count(root); i++) {
+        lv_obj_t *found = bound(lv_obj_get_child(root, (int32_t)i), id);
+        if (found) return found;
+    }
+    return NULL;
+}
+static void open_answer(void) { ink_shell_ai_open(&answer_root, &answer_status, &answer_question, &answer_label); }
+static void update_answer(void) { ink_shell_ai_words(answer_words); ink_shell_ai_status("回答完成"); }
+static void close_answer(void) { ink_shell_ai_closed(); lv_obj_delete(answer_root); answer_root = NULL; }
+static void read_answer(void) {
+    read_view();
+    const char *text = lv_label_get_text(answer_label);
+    snprintf(answer_text, sizeof answer_text, "%s", text);
+    lv_point_t size;
+    lv_text_get_size(&size, text, lv_obj_get_style_text_font(answer_label, 0), lv_obj_get_style_text_letter_space(answer_label, 0),
+                     lv_obj_get_style_text_line_space(answer_label, 0), lv_obj_get_width(answer_label), LV_TEXT_FLAG_NONE);
+    answer_fits = size.y <= lv_obj_get_height(answer_label);
+    lv_obj_t *next = bound(answer_root, "ai.panel.next"), *prev = bound(answer_root, "ai.panel.prev");
+    answer_next_disabled = !next || lv_obj_has_state(next, LV_STATE_DISABLED);
+    answer_prev_disabled = !prev || lv_obj_has_state(prev, LV_STATE_DISABLED);
+    if (next) { lv_area_t a; lv_obj_get_coords(next, &a); next_x = (a.x1 + a.x2) / 2; next_y = (a.y1 + a.y2) / 2; }
+    if (prev) { lv_area_t a; lv_obj_get_coords(prev, &a); label_x = (a.x1 + a.x2) / 2; label_y = (a.y1 + a.y2) / 2; }
+}
+static void traverse_answer(const char *text) {
+    answer_words = text; on_ui(open_answer); on_ui(update_answer); quiet(); on_ui(read_answer);
+    CHECK(page == 1 && pages > 1 && answer_prev_disabled, "a long answer has a visible page count and starts on its first page");
+    answer_seen[0] = 0;
+    int total = pages;
+    for (int i = 1; i <= total && i < 200; i++) {
+        CHECK(page == i && answer_fits && answer_text[0], "answer page %d fits the actual font and label", i);
+        size_t used = strlen(answer_seen), size = strlen(answer_text);
+        CHECK(used + size < sizeof answer_seen, "the traversed fixture fits its complete-text buffer");
+        if (used + size < sizeof answer_seen) memcpy(answer_seen + used, answer_text, size + 1);
+        on_ui(read_context); CHECK(strstr(context, answer_text) && strstr(context, "页码="), "AI sees the displayed page and page count");
+        if (i < total) {
+            CHECK(!answer_next_disabled, "a further page has an enabled next button");
+            if (i % 2) tap(next_x, next_y);
+            else CHECK(AI("ai.panel.next", NULL) && g_rc.status == INK_RC_DONE, "AI uses the same next-page capability");
+            quiet(); on_ui(read_answer);
+        }
+    }
+    CHECK(!strcmp(answer_seen, text), "complete traversal preserves every byte, without missing or repeated text");
+    CHECK(answer_next_disabled, "the last page disables forward navigation");
+    CHECK(BY_HAND("ai.panel.next", NULL) && g_rc.status == INK_RC_DONE, "an extra next-page request is bounded");
+    quiet(); on_ui(read_answer); CHECK(page == total, "forward navigation stays on the last page");
+    if (total > 1) { tap(label_x, label_y); quiet(); on_ui(read_answer); CHECK(page == total - 1, "the visible previous button goes back"); }
+    for (int i = total - 1; i > 1; i--) {
+        CHECK(AI("ai.panel.prev", NULL) && g_rc.status == INK_RC_DONE, "AI can return through previous pages");
+        quiet(); on_ui(read_answer); CHECK(page == i - 1 && answer_fits, "previous page is reachable without clipping");
+    }
+    on_ui(close_answer); quiet();
+}
+static void answer_tests(void) {
+    traverse_answer("第一行\n第二行\n第三行\n第四行\n第五行");
+    static char long_text[1800] INK_PSRAM_BSS;
+    for (int i = 0; i < 30; i++) strcat(long_text, "中文答案 mixed words 123，阅读这一页。\n");
+    traverse_answer(long_text);
+    answer_words = "第一行\n第二行\n第三行\n第四行\n第五行"; on_ui(open_answer); on_ui(update_answer); quiet();
+    CHECK(AI("ai.panel.next", NULL) && g_rc.status == INK_RC_DONE, "advance before replacing streamed content");
+    answer_words = "回答"; on_ui(update_answer); quiet(); on_ui(read_answer);
+    CHECK(page == 1 && pages == 1 && !strcmp(answer_text, "回答") && answer_next_disabled && answer_prev_disabled, "shorter streamed content clamps the page and updates both buttons");
+    on_ui(close_answer); quiet();
+    CHECK(AI("ai.panel.next", NULL) && g_rc.status == INK_RC_STALE, "a closed answer cannot be paginated");
+}
 static void test_task(void *unused) {
     (void)unused; delay_ms(1800); quiet();
     if (!strcmp(mode, "slider")) slider_tests();
     else if (!strcmp(mode, "context")) context_tests();
+    else if (!strcmp(mode, "privacy")) member_privacy_tests();
+    else if (!strcmp(mode, "answer")) answer_tests();
     else confirmation_tests();
     ink_probe_count("test.finished");
 }
