@@ -7,9 +7,8 @@ import sys
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 THEME = ROOT / "system/ui/ink/ui_theme.h"
-# LVGL uses integer strokes: the common theme rounds the spec's 2.5 px to 3.
-SPEC = {0, 1, 2, 2.5, 4, 8, 12, 16, 24, 26, 28, 30, 32, 36, 40, 44, 48,
-        52, 56, 60, 64, 72, 84, 88, 96, 100, 104, 112, 124, 136, 160, 176, 186}
+# Read the same contract as the C code. Zero/sentinel flags are not dimensions.
+SPEC = {0, 1, 2, 2.5} | {float(n) for n in re.findall(r'INK_(?!CANVAS|STROKE)[A-Z_]+\s*=\s*(\d+)\b', THEME.read_text())}
 CALL = re.compile(r"\b(?:ink_dp|ink_ui_px|ink_ui_(?:box|label|icon|pill|circle|card|toggle|slider|segments|list_row|panel|pagebar|notice)|"
                   r"lv_obj_(?:set_(?:pos|size|width|height|x|y)|align(?:_to)?|set_style_(?:pad_\w+|radius|border_width|text_(?:letter|line)_space|translate_[xy])))\s*\(")
 NUMBER = re.compile(r"(?<![\w.])\d+(?:\.\d+)?(?![\w.])")

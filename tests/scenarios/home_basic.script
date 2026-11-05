@@ -1,9 +1,9 @@
 # Home: visit all three pages, open the shelf from the fixed Dock twice.
 @3s      snap  boot
 +500ms   tap   68% 92%
-+1500ms  key   home
++1500ms  swipe 50% 99% 50% 65% 400ms
 +1500ms  tap   68% 92%
-+1500ms  key   home
++1500ms  swipe 50% 99% 50% 65% 400ms
 +1500ms  key   next
 +1800ms  key   prev
 +1800ms  swipe 88% 55% 15% 55% 250ms

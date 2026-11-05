@@ -10,7 +10,7 @@
 +3s      key   next               # page turn 1
 +20s     snap  idle-page          # idle since 5 s after the turn
 +1s      key   power              # lock (short press) ...
-+1180ms  key   power              # ... and unlock at once: lands in the chip's sleep entry sequence
++1280ms  key   power              # ... and unlock at once: lands in the chip's sleep entry sequence
 +2s      snap  quick-unlock       # unlocked, not asleep for a slice
 +1s      key   power              # lock again
 +3s      snap  locked             # page + lock mark

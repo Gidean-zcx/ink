@@ -28,17 +28,24 @@ static struct {
 } G;
 
 static void sync_gate(void *arg);
+static bool on_key(ink_key_t key, bool long_press) {
+    if (!long_press && G.requested && ink_member_space_open() && (key == INK_KEY_HOME || key == INK_KEY_BACK)) {
+        G.requested = false;
+        sync_gate(NULL);
+    }
+    return true;
+}
 
 static int snapshot(char *buf, size_t cap) {
     int n = snprintf(buf, cap, "设备锁着：请选择家人，或输入密码。");
     return n < 0 ? 0 : (size_t)n < cap ? n : (int)cap - 1;
 }
 
-static const ink_ui_overlay_t OVERLAY = {.name = "member_gate", .level = 2, .snapshot = snapshot};
+static const ink_ui_overlay_t OVERLAY = {.name = "member_gate", .level = 2, .snapshot = snapshot, .on_key = on_key};
 
 static void result_job(void *arg) { /* UI task */
     (void)arg;
-    if (G.result == INK_PIN_OK) return; /* the state changes, the gate goes */
+    if (G.result == INK_PIN_OK) { G.requested = false; sync_gate(NULL); return; }
     char s[48];
     if (G.result == INK_PIN_WAIT || G.wait_s) snprintf(s, sizeof s, "请等 %u 秒再试", (unsigned)G.wait_s);
     else snprintf(s, sizeof s, "密码不对");
@@ -70,6 +77,25 @@ static void on_member(lv_event_t *e) {
     }
 }
 
+static void member_tile(const ink_member_t *m, int x, int y, int diameter, bool primary) {
+    lv_obj_t *b = ink_ui_pill(G.card.panel, "", x, y, diameter, diameter, primary, on_member, (void *)m);
+    lv_obj_set_style_border_width(b, 0, 0);
+    if (!primary) lv_obj_set_style_bg_color(b, ink_ui_gray(), 0);
+    char first[8] = {0};
+    size_t len = 1;
+    while (len < sizeof first - 1 && (m->name[len] & 0xc0) == 0x80) len++;
+    memcpy(first, m->name, len);
+    lv_obj_t *letter = lv_obj_get_child(b, 0);
+    lv_obj_set_style_text_font(letter, ink_ui_font_px(INK_FONT_HEADING, INK_WEIGHT_MEDIUM), 0);
+    lv_label_set_text(letter, first);
+    lv_obj_center(letter);
+    if (ink_member_has_pin(m->id)) ink_ui_circle(b, "lock", diameter - INK_CIRCLE_SMALL, diameter - INK_CIRCLE_SMALL,
+                                                INK_CIRCLE_SMALL, INK_ICON_SMALL, INK_SURFACE_WHITE, NULL, NULL);
+    lv_obj_t *name = ink_ui_label(G.card.panel, m->name, INK_FONT_BODY, INK_WEIGHT_BOLD,
+                                  x - INK_GAP, y + diameter + INK_GAP, diameter + 2 * INK_GAP);
+    lv_obj_set_style_text_align(name, LV_TEXT_ALIGN_CENTER, 0);
+}
+
 static void sync_gate(void *arg) { /* UI task */
     (void)arg;
     bool want = (G.requested || !ink_member_space_open()) && ink_power_state() != INK_PWR_LOCKED;
@@ -85,16 +111,27 @@ static void sync_gate(void *arg) { /* UI task */
     shell_card_open(&G.card);
     shell_card_full(&G.card);
     ink_ui_overlay_add(&OVERLAY, G.card.root);
-    shell_card_text(&G.card, "谁在用？", "");
+    ink_shell_statusbar(G.card.panel, true);
+    shell_card_text(&G.card, G.requested ? "谁在用？" : "", "");
     shell_card_clear_buttons(&G.card);
-    const ink_member_t *m;
-    lv_obj_set_pos(G.card.row, ink_ui_px(INK_BLOCK), ink_ui_px(INK_BLOCK_L + INK_PRIMARY + INK_BLOCK));
-    lv_obj_set_size(G.card.row, ink_ui_px(INK_CANVAS_W - 2 * INK_BLOCK), ink_ui_px(3 * INK_CIRCLE_LARGE));
-    lv_obj_set_flex_flow(G.card.row, LV_FLEX_FLOW_ROW_WRAP);
-    lv_obj_set_style_pad_row(G.card.row, ink_ui_px(INK_GAP_XXL), 0);
+    lv_obj_add_flag(G.card.row, LV_OBJ_FLAG_HIDDEN);
+    const ink_member_t *m, *current = ink_member_current();
+    int count = 0;
+    if (!G.requested) {
+        member_tile(current, (INK_CANVAS_W - INK_CIRCLE_LARGE) / 2, INK_LINE_BODY + 2 * INK_BLOCK,
+                    INK_CIRCLE_LARGE, true);
+        ink_ui_notice(G.card.panel, "输密码，回到刚才的地方", INK_LINE_BODY + 2 * INK_BLOCK + INK_CIRCLE_LARGE + INK_GAP + INK_LINE_BODY + INK_GAP_M);
+        ink_ui_notice(G.card.panel, "换一位家人", INK_CANVAS_H - INK_BLOCK_L - INK_CIRCLE_APP - 2 * INK_LINE_BODY);
+    }
     for (int i = 0; (m = ink_member_at(i)) != NULL; i++) {
-        lv_obj_t *b = ink_ui_pill(G.card.row, m->name, 0, 0, INK_CIRCLE_LARGE, INK_CIRCLE_LARGE, i == 0, on_member, (void *)m);
-        (void)b;
+        if (!G.requested && !strcmp(m->id, current->id)) continue;
+        int diameter = G.requested ? INK_CIRCLE_LARGE : INK_CIRCLE_APP;
+        int cell = (INK_CANVAS_W - 2 * INK_MARGIN) / 2;
+        int x = INK_MARGIN + (count % 2) * cell + (cell - diameter) / 2;
+        int y = G.requested ? INK_LINE_BODY + 2 * INK_BLOCK + INK_PRIMARY + (count / 2) * (diameter + INK_LINE_BODY + INK_BLOCK)
+                            : INK_CANVAS_H - INK_BLOCK - diameter - INK_LINE_BODY;
+        member_tile(m, x, y, diameter, i == 0);
+        count++;
     }
     /* the one whose space it is first */
     snprintf(G.picked, sizeof G.picked, "%s", ink_member_current()->id);

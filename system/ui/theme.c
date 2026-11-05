@@ -48,6 +48,19 @@ static const void *glyph_bitmap(lv_font_glyph_dsc_t *dsc, lv_draw_buf_t *out) {
     int bpp = ink_font_bpp(f), levels = (1 << bpp) - 1, row_bytes = (g.w * bpp + 7) / 8;
     int source_px = ink_font_px(f), px = face->px;
     unsigned stride = lv_draw_buf_width_to_stride(dsc->box_w, LV_COLOR_FORMAT_A8);
+    if (px == source_px && bpp <= 4) {
+        uint8_t coverage[16];
+        for (int i = 0; i <= levels; i++) coverage[i] = (uint8_t)(i * 255 / levels);
+        for (int y = 0; y < g.h; y++) {
+            const uint8_t *row = g.bits + (size_t)y * row_bytes;
+            uint8_t *dest = out->data + (size_t)y * stride;
+            for (int x = 0; x < g.w; x++) {
+                int bit = x * bpp;
+                dest[x] = coverage[(row[bit >> 3] >> (8 - bpp - (bit & 7))) & levels];
+            }
+        }
+        return out;
+    }
     for (unsigned y = 0; y < dsc->box_h; y++) for (unsigned x = 0; x < dsc->box_w; x++) {
         unsigned sx = x * source_px / px, sy = y * source_px / px, bit = sx * bpp;
         int v = (g.bits[sy * row_bytes + bit / 8] >> (8 - bpp - (bit & 7))) & levels;
@@ -58,7 +71,17 @@ static const void *glyph_bitmap(lv_font_glyph_dsc_t *dsc, lv_draw_buf_t *out) {
 
 int ink_ui_width(void) { return lv_display_get_horizontal_resolution(NULL); }
 int ink_ui_height(void) { return lv_display_get_vertical_resolution(NULL); }
-int ink_ui_px(int px) { return (px * ink_ui_width() + INK_CANVAS_W / 2) / INK_CANVAS_W; }
+int ink_ui_px(int px) {
+    int w = ink_ui_width(), h = ink_ui_height();
+    if (w * INK_CANVAS_H <= h * INK_CANVAS_W) return (px * w + INK_CANVAS_W / 2) / INK_CANVAS_W;
+    return (px * h + INK_CANVAS_H / 2) / INK_CANVAS_H;
+}
+static int offset_x(lv_obj_t *parent) {
+    return lv_obj_get_width(parent) == ink_ui_width() ? (ink_ui_width() - ink_ui_px(INK_CANVAS_W)) / 2 : 0;
+}
+static int offset_y(lv_obj_t *parent) {
+    return lv_obj_get_height(parent) == ink_ui_height() ? (ink_ui_height() - ink_ui_px(INK_CANVAS_H)) / 2 : 0;
+}
 lv_color_t ink_ui_paper(void) { return lv_color_white(); }
 lv_color_t ink_ui_ink(void) { return lv_color_black(); }
 lv_color_t ink_ui_gray(void) { return lv_color_hex(0xe6e6e6); }
@@ -80,21 +103,22 @@ const lv_font_t *ink_ui_font_px(int px, ink_ui_weight_t weight) {
         fonts[weight][at] = ink_font_open(name);
         if (!fonts[weight][at]) return &lv_font_montserrat_28;
         adjusted[weight][at] = *ink_font_lvgl(fonts[weight][at]);
-        adjusted[weight][at].base_line += (ink_ui_line_height(px) - adjusted[weight][at].line_height) / 2;
-        adjusted[weight][at].line_height = (uint16_t)ink_ui_line_height(px);
+        adjusted[weight][at].base_line = (int16_t)ink_ui_px(adjusted[weight][at].base_line);
+        adjusted[weight][at].base_line += (ink_ui_px(ink_ui_line_height(px)) - ink_ui_px(adjusted[weight][at].line_height)) / 2;
+        adjusted[weight][at].line_height = (uint16_t)ink_ui_px(ink_ui_line_height(px));
         if (!fallback) fallback = ink_font_open("fonts/sans-32.inkf");
-        faces[weight][at] = (font_face_t){fonts[weight][at], px};
+        faces[weight][at] = (font_face_t){fonts[weight][at], ink_ui_px(px)};
         adjusted[weight][at].dsc = &faces[weight][at];
         adjusted[weight][at].get_glyph_dsc = glyph_desc;
         adjusted[weight][at].get_glyph_bitmap = glyph_bitmap;
-        if (px == INK_FONT_CLOCK) adjusted[weight][at].base_line -= INK_GAP;
+        if (px == INK_FONT_CLOCK) adjusted[weight][at].base_line -= ink_ui_px(INK_GAP);
     }
     return &adjusted[weight][at];
 }
 
 static void box_style(lv_obj_t *o, int x, int y, int w, int h, int radius, ink_ui_surface_t surface, bool border) {
     lv_obj_remove_style_all(o);
-    lv_obj_set_pos(o, ink_ui_px(x), ink_ui_px(y));
+    lv_obj_set_pos(o, ink_ui_px(x) + offset_x(lv_obj_get_parent(o)), ink_ui_px(y) + offset_y(lv_obj_get_parent(o)));
     lv_obj_set_size(o, ink_ui_px(w), ink_ui_px(h));
     lv_obj_set_style_radius(o, radius < 0 ? LV_RADIUS_CIRCLE : ink_ui_px(radius), 0);
     lv_obj_set_style_bg_opa(o, LV_OPA_COVER, 0);
@@ -102,6 +126,7 @@ static void box_style(lv_obj_t *o, int x, int y, int w, int h, int radius, ink_u
     lv_obj_set_style_text_color(o, surface == INK_SURFACE_BLACK ? ink_ui_paper() : ink_ui_ink(), 0);
     lv_obj_set_style_border_color(o, ink_ui_ink(), 0);
     lv_obj_set_style_border_width(o, border ? ink_ui_px(INK_STROKE) : 0, 0);
+    if (radius) lv_obj_set_style_clip_corner(o, true, 0);
     lv_obj_remove_flag(o, LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_CLICKABLE);
 }
 lv_obj_t *ink_ui_box(lv_obj_t *parent, int x, int y, int w, int h, int radius, ink_ui_surface_t surface, bool border) {
@@ -116,7 +141,7 @@ lv_obj_t *ink_ui_label(lv_obj_t *parent, const char *text, int px, ink_ui_weight
     lv_obj_set_style_text_font(l, ink_ui_font_px(px, weight), 0);
     lv_obj_set_style_text_line_space(l, 0, 0);
     lv_obj_set_style_text_color(l, lv_obj_get_style_text_color(parent, LV_PART_MAIN), 0);
-    lv_obj_set_pos(l, ink_ui_px(x), ink_ui_px(y));
+    lv_obj_set_pos(l, ink_ui_px(x) + offset_x(parent), ink_ui_px(y) + offset_y(parent));
     if (w > 0) lv_obj_set_width(l, ink_ui_px(w));
     lv_label_set_long_mode(l, LV_LABEL_LONG_WRAP);
     lv_label_set_text(l, text ? text : "");
@@ -218,7 +243,7 @@ lv_obj_t *ink_ui_list_row(lv_obj_t *parent, const char *icon, const char *title,
 
 lv_obj_t *ink_ui_panel(lv_obj_t *parent, int height, bool modal) {
     int w = INK_CANVAS_W;
-    lv_obj_t *p = ink_ui_box(parent, 0, ink_ui_height() * INK_CANVAS_W / ink_ui_width() - height, w, height + INK_RADIUS_PANEL,
+    lv_obj_t *p = ink_ui_box(parent, 0, INK_CANVAS_H - height, w, height + INK_RADIUS_PANEL,
                              INK_RADIUS_PANEL, INK_SURFACE_WHITE, modal);
     lv_obj_set_style_clip_corner(p, true, 0);
     return p;

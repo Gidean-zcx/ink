@@ -7,6 +7,7 @@
 #include "ink/sys/ai.h"
 #include "ink/sys/font.h"
 #include "ink/sys/textfield.h"
+#include "ink/ui_theme.h"
 
 typedef struct {
     lv_obj_t *obj, *label, *menu;
@@ -24,10 +25,7 @@ typedef struct {
 #define WINDOW_CHARS 30
 
 static const lv_font_t *font(void) {
-    hal_panel_info_t pi;
-    hal_display_get_info(&pi);
-    ink_font_t *cjk = ink_font_for_pt(10, pi.dpi);
-    return cjk ? ink_font_lvgl(cjk) : ink_ui_font(0);
+    return ink_ui_font_px(INK_FONT_BODY, INK_WEIGHT_REGULAR);
 }
 
 static const char *char_at(const char *s, size_t chars) {
@@ -175,9 +173,10 @@ static void on_ask(lv_event_t *e) {
 static void menu_button(field_t *f, const char *label, lv_event_cb_t cb) {
     lv_obj_t *b = lv_button_create(f->menu);
     ink_ui_style_button(b);
+    lv_obj_set_size(b, ink_ui_px(INK_SEGMENT), ink_ui_px(INK_CONTROL));
     lv_obj_add_event_cb(b, cb, LV_EVENT_CLICKED, f);
     lv_obj_t *l = lv_label_create(b);
-    lv_obj_set_style_text_font(l, font(), 0);
+    lv_obj_set_style_text_font(l, ink_ui_font_px(INK_FONT_NOTE, INK_WEIGHT_MEDIUM), 0);
     lv_label_set_text(l, label);
 }
 
@@ -191,25 +190,30 @@ static void field_event(lv_event_t *e) {
     } else if (code == LV_EVENT_LONG_PRESSED) {
         close_menu(f);
         if (f->session && f->cfg.type != INK_TEXT_PASSWORD) ink_text_select_word(place_of(f, e));
-        f->menu = lv_obj_create(lv_layer_top());
+        f->menu = lv_obj_create(lv_layer_sys());
+        lv_obj_remove_style_all(f->menu);
         lv_obj_remove_flag(f->menu, LV_OBJ_FLAG_SCROLLABLE);
-        lv_obj_set_size(f->menu, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
+        lv_obj_set_size(f->menu, ink_ui_px(INK_CANVAS_W - 2 * INK_MARGIN), ink_ui_px(INK_CONTROL));
         lv_obj_set_flex_flow(f->menu, LV_FLEX_FLOW_ROW);
+        lv_obj_set_style_pad_column(f->menu, ink_ui_px(INK_GAP_S), 0);
         lv_obj_align_to(f->menu, f->obj, LV_ALIGN_OUT_BOTTOM_LEFT, 0, ink_dp(4));
         if (f->session && f->cfg.type != INK_TEXT_PASSWORD) {
             menu_button(f, "◀", on_left);
             menu_button(f, "▶", on_right);
             menu_button(f, "撤销", on_undo);
         }
-        menu_button(f, "复制", on_copy);
+        if (f->cfg.type != INK_TEXT_PASSWORD) menu_button(f, "复制", on_copy);
         menu_button(f, "粘贴", on_paste);
-        menu_button(f, "问 AI", on_ask);
+        if (f->cfg.type != INK_TEXT_PASSWORD && !f->cfg.ai_hidden) menu_button(f, "问 AI", on_ask);
         ink_ui_hint_obj(f->menu, INK_REFRESH_FAST);
     } else if (code == LV_EVENT_DELETE) {
         close_menu(f);
         if (f->session) ink_text_blur(f->session);
+        if (f->cfg.type == INK_TEXT_PASSWORD) memset(f->text, 0, f->cap + 1);
         osal_free(f->text);
         osal_free(f);
+    } else if (code == LV_EVENT_SIZE_CHANGED) {
+        lv_label_set_long_mode(f->label, lv_obj_get_height(f->obj) > ink_ui_px(INK_PRIMARY) ? LV_LABEL_LONG_WRAP : LV_LABEL_LONG_CLIP);
     }
 }
 
@@ -230,17 +234,23 @@ lv_obj_t *ink_textfield_create(lv_obj_t *parent, const ink_text_cfg_t *cfg, void
     f->entered = entered;
     f->ctx = ctx;
     f->obj = lv_obj_create(parent);
+    lv_obj_remove_style_all(f->obj);
     lv_obj_remove_flag(f->obj, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_set_size(f->obj, LV_PCT(90), ink_dp(48));
+    lv_obj_set_size(f->obj, LV_PCT(90), ink_ui_px(INK_CONTROL));
+    lv_obj_set_style_bg_color(f->obj, ink_ui_paper(), 0);
+    lv_obj_set_style_bg_opa(f->obj, LV_OPA_COVER, 0);
+    lv_obj_set_style_pad_hor(f->obj, ink_ui_px(INK_MARGIN), 0);
+    lv_obj_set_style_pad_ver(f->obj, ink_ui_px(INK_GAP_L), 0);
     lv_obj_set_style_border_color(f->obj, lv_color_black(), 0);
-    lv_obj_set_style_border_width(f->obj, 2, 0);
-    lv_obj_set_style_radius(f->obj, ink_dp(4), 0);
+    lv_obj_set_style_border_width(f->obj, ink_ui_px(INK_STROKE), 0);
+    lv_obj_set_style_radius(f->obj, ink_ui_px(INK_RADIUS_CARD), 0);
     f->label = lv_label_create(f->obj);
     lv_obj_set_style_text_font(f->label, font(), 0);
     lv_obj_set_width(f->label, LV_PCT(100));
     lv_label_set_long_mode(f->label, LV_LABEL_LONG_CLIP);
     lv_obj_add_event_cb(f->obj, field_event, LV_EVENT_ALL, f);
     lv_obj_set_user_data(f->obj, f);
+    ink_ui_capture_touch(f->obj);
     show(f);
     if (start) focus(f);
     return f->obj;

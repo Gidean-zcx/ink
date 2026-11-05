@@ -20,12 +20,12 @@
 #define KEY_SHIFT '\2'
 
 static struct {
-    lv_obj_t *root, *keys, *cands, *composing;
+    lv_obj_t *root, *keys, *cands, *composing, *edit, *fold;
     lv_obj_t *cand_btn[INK_TEXT_PAGE], *cand_label[INK_TEXT_PAGE], *more, *mic;
     lv_obj_t *panel, *status, *heard; /* the voice panel: where the keys were, the same size */
     int first;
     int shown;
-    bool symbols, shift;
+    bool symbols, shift, expanded;
     int built_for; /* 1 letters, 2 symbols, 3 digits */
 } K;
 
@@ -33,8 +33,18 @@ static const lv_font_t *font(void) { return ink_ui_font_px(INK_FONT_LIST, INK_WE
 
 static void sync(void);
 
-static void on_key(lv_event_t *e) {
-    char c = (char)(intptr_t)lv_event_get_user_data(e);
+static bool may_edit(ink_call_t *c) {
+    if (!ink_text_focused() || ((c->src != INK_SRC_TOUCH && c->src != INK_SRC_KEY) &&
+        (ink_text_type() == INK_TEXT_PASSWORD || ink_text_ai_hidden()))) {
+        c->rc.status = INK_RC_REJECTED;
+        return false;
+    }
+    return true;
+}
+static void press_key(ink_call_t *call) {
+    int64_t code = 0; ink_args_get_int(&call->args, "code", &code);
+    if (!may_edit(call)) return;
+    char c = (char)code;
     switch (c) {
     case KEY_BACKSPACE: ink_text_backspace(); break;
     case KEY_ENTER: ink_text_enter(); break;
@@ -53,23 +63,61 @@ static void on_key(lv_event_t *e) {
     ink_ui_cause(osal_now_us(), "text.key_to_visible_ms");
 }
 
-static void on_cand(lv_event_t *e) {
-    int i = (int)(intptr_t)lv_event_get_user_data(e);
-    int first = K.first;
+static void pick(ink_call_t *call) {
+    int64_t index = 0; ink_args_get_int(&call->args, "index", &index);
+    if (!may_edit(call)) return;
     K.first = 0;
-    ink_text_pick(first + i);
+    K.expanded = false;
+    ink_text_pick((int)index);
     ink_ui_cause(osal_now_us(), "text.key_to_visible_ms");
 }
 
-static void on_more(lv_event_t *e) {
-    (void)e;
-    K.first += INK_TEXT_PAGE;
+static void candidates(ink_call_t *call) {
+    bool fold = false; ink_args_get_bool(&call->args, "fold", &fold);
+    if (!may_edit(call)) return;
+    if (fold) { K.expanded = false; K.first = 0; }
+    else if (K.expanded) K.first += INK_TEXT_PAGE;
+    else K.expanded = true;
     sync();
+}
+static void edit(ink_call_t *call) {
+    int64_t value = 0; ink_args_get_int(&call->args, "action", &value);
+    if (!may_edit(call)) return;
+    int action = (int)value;
+    if (action < 2) { ink_text_move(action ? 1 : -1, true); return; }
+    if (action == 5) { ink_text_undo(); return; }
+    char *text = osal_malloc(INK_CLIP_MAX + 1, OSAL_MEM_EXTERNAL);
+    if (!text) return;
+    if (action == 4) { if (ink_clip_get(text, INK_CLIP_MAX + 1, call->src, NULL) > 0) ink_text_commit_utf8(text); }
+    else if (ink_text_selected(text, INK_CLIP_MAX + 1) > 0) {
+        ink_clip_set(text, false, call->src);
+        if (action == 3) ink_text_backspace();
+    }
+    osal_free(text);
+}
+
+static void invoke(const char *id, const char *json) {
+    ink_receipt_t rc; ink_cap_invoke_json(id, json, INK_SRC_TOUCH, 0, &rc);
+}
+static void on_key(lv_event_t *e) {
+    char args[40]; snprintf(args, sizeof args, "{\"code\":%d}", (int)(intptr_t)lv_event_get_user_data(e));
+    invoke("keyboard.key", args);
+}
+static void on_cand(lv_event_t *e) {
+    char args[40]; snprintf(args, sizeof args, "{\"index\":%d}", K.first + (int)(intptr_t)lv_event_get_user_data(e));
+    invoke("keyboard.pick", args);
+}
+static void on_more(lv_event_t *e) { (void)e; invoke("keyboard.candidates", "{}"); }
+static void on_fold(lv_event_t *e) { (void)e; invoke("keyboard.candidates", "{\"fold\":true}"); }
+static void edit_action(lv_event_t *e) {
+    char args[40]; snprintf(args, sizeof args, "{\"action\":%d}", (int)(intptr_t)lv_event_get_user_data(e));
+    invoke("keyboard.edit", args);
 }
 
 static int snapshot(char *buf, size_t cap) {
     bool secret = ink_text_type() == INK_TEXT_PASSWORD || ink_text_ai_hidden();
-    return snprintf(buf, cap, "键盘；类型=%s；内容=%s；组合=%s。动作：text.insert、text.select、text.submit、text.voice_start、text.voice_finish、text.voice_cancel。",
+    if (secret) return snprintf(buf, cap, "密码输入；内容=******。只能由人在设备上填写，没有 AI 写入、提交或话筒动作。");
+    return snprintf(buf, cap, "键盘；类型=%s；内容=%s；组合=%s。动作：text.insert、text.select、text.submit、text.voice_start、text.voice_finish、text.voice_cancel、keyboard.key、keyboard.pick、keyboard.candidates、keyboard.edit。",
                     secret ? "密码" : "普通文字", secret ? "******" : ink_text_value(), secret ? "" : ink_text_composing());
 }
 static bool overlay_key(ink_key_t k, bool lng) {
@@ -81,6 +129,7 @@ static const ink_ui_overlay_t OVERLAY = {.name = "Keyboard", .level = -2, .on_ke
 static lv_obj_t *key(lv_obj_t *row, const char *label, char code, int grow) {
     lv_obj_t *b = lv_button_create(row);
     ink_ui_style_button(b);
+    lv_obj_set_style_border_width(b, ink_ui_px(INK_STROKE), 0);
     lv_obj_set_style_pad_all(b, ink_ui_px(INK_GAP_XS), 0);
     lv_obj_set_height(b, ink_ui_px(INK_KEY));
     lv_obj_set_flex_grow(b, (uint8_t)grow);
@@ -90,13 +139,6 @@ static lv_obj_t *key(lv_obj_t *row, const char *label, char code, int grow) {
     lv_label_set_text(l, label);
     lv_obj_center(l);
     return b;
-}
-
-static void on_mic(lv_event_t *e) {
-    (void)e;
-    ink_receipt_t rc;
-    ink_cap_invoke("text.voice_start", NULL, INK_SRC_TOUCH, 0, &rc);
-    ink_ui_cause(osal_now_us(), "text.voice_tap_to_panel_ms");
 }
 
 static void on_said(lv_event_t *e) {
@@ -146,7 +188,8 @@ static void build(int kind) {
     lv_obj_set_style_border_width(K.root, ink_ui_px(INK_STROKE), 0);
     lv_obj_set_style_border_side(K.root, LV_BORDER_SIDE_TOP, 0);
     lv_obj_set_style_radius(K.root, ink_ui_px(INK_RADIUS_PANEL), 0);
-    lv_obj_set_style_pad_all(K.root, ink_ui_px(INK_GAP_XS), 0);
+    lv_obj_set_style_pad_hor(K.root, ink_ui_px(INK_GAP), 0);
+    lv_obj_set_style_pad_ver(K.root, ink_ui_px(INK_GAP_S), 0);
     lv_obj_set_style_pad_row(K.root, ink_ui_px(INK_GAP_XS), 0);
     lv_obj_set_flex_flow(K.root, LV_FLEX_FLOW_COLUMN);
     K.built_for = kind;
@@ -158,6 +201,13 @@ static void build(int kind) {
     K.composing = lv_label_create(K.keys);
     lv_obj_set_style_text_font(K.composing, font(), 0);
     lv_label_set_text(K.composing, "");
+    K.edit = new_row();
+    static const char *const EDIT[] = {"◀", "▶", "复制", "剪切", "粘贴", "撤销"};
+    for (int i = 0; i < 6; i++) {
+        lv_obj_t *b = ink_ui_pill(K.edit, EDIT[i], 0, 0, INK_SEGMENT, INK_CONTROL, false, edit_action, (void *)(intptr_t)i);
+        lv_obj_set_flex_grow(b, 1);
+    }
+    lv_obj_add_flag(K.edit, LV_OBJ_FLAG_HIDDEN);
     K.cands = new_row();
     for (int i = 0; i < INK_TEXT_PAGE; i++) {
         K.cand_btn[i] = lv_button_create(K.cands);
@@ -176,11 +226,14 @@ static void build(int kind) {
     ink_ui_style_button(K.more);
     lv_obj_set_style_pad_all(K.more, ink_ui_px(INK_GAP_XS), 0);
     lv_obj_set_height(K.more, ink_ui_px(INK_CONTROL));
+    lv_obj_set_width(K.more, ink_ui_px(INK_CONTROL));
     lv_obj_add_event_cb(K.more, on_more, LV_EVENT_CLICKED, NULL);
     lv_obj_t *ml = lv_label_create(K.more);
     lv_obj_set_style_text_font(ml, font(), 0);
     lv_label_set_text(ml, "更多");
     lv_obj_add_flag(K.more, LV_OBJ_FLAG_HIDDEN);
+    K.fold = ink_ui_pill(K.cands, "键盘", 0, 0, INK_PRIMARY, INK_CONTROL, false, on_fold, NULL);
+    lv_obj_add_flag(K.fold, LV_OBJ_FLAG_HIDDEN);
     /* the microphone: black, at the end of the candidates (the system UI's own look comes later) */
     K.mic = lv_button_create(K.cands);
     ink_ui_style_button(K.mic);
@@ -188,11 +241,15 @@ static void build(int kind) {
     lv_obj_set_style_bg_opa(K.mic, LV_OPA_COVER, 0);
     lv_obj_set_style_pad_all(K.mic, ink_ui_px(INK_GAP_XS), 0);
     lv_obj_set_height(K.mic, ink_ui_px(INK_CONTROL));
-    lv_obj_add_event_cb(K.mic, on_mic, LV_EVENT_CLICKED, NULL);
+    lv_obj_set_width(K.mic, ink_ui_px(INK_PRIMARY));
+    lv_obj_set_style_radius(K.mic, LV_RADIUS_CIRCLE, 0);
+    ink_shell_bind(K.mic, "text.voice_start", NULL);
     lv_obj_t *mic = lv_label_create(K.mic);
     lv_obj_set_style_text_font(mic, font(), 0);
     lv_obj_set_style_text_color(mic, lv_color_white(), 0);
-    lv_label_set_text(mic, "话筒");
+    lv_label_set_text(mic, "");
+    lv_obj_t *mic_icon = ink_ui_icon(K.mic, "mic", INK_ICON_LIST, INK_ICON_SOLID, 0, 0, true);
+    lv_obj_center(mic_icon);
     lv_obj_add_flag(K.mic, LV_OBJ_FLAG_HIDDEN);
     if (kind == 3) {
         char_row("123");
@@ -298,6 +355,7 @@ static void sync(void) { /* UI task */
             K.root = NULL;
             K.first = 0;
             K.symbols = K.shift = false;
+            K.expanded = false;
         }
         return;
     }
@@ -317,19 +375,48 @@ static void sync(void) { /* UI task */
     for (int i = 0; i < INK_TEXT_PAGE; i++) {
         if (i < n) {
             lv_label_set_text(K.cand_label[i], c[i].word);
+            lv_obj_set_style_bg_color(K.cand_btn[i], i == 0 ? ink_ui_ink() : ink_ui_paper(), 0);
+            lv_obj_set_style_text_color(K.cand_label[i], i == 0 ? ink_ui_paper() : ink_ui_ink(), 0);
+            lv_obj_set_style_border_width(K.cand_btn[i], 0, 0);
             lv_obj_remove_flag(K.cand_btn[i], LV_OBJ_FLAG_HIDDEN);
         } else lv_obj_add_flag(K.cand_btn[i], LV_OBJ_FLAG_HIDDEN);
     }
-    if (n > INK_TEXT_PAGE) lv_obj_remove_flag(K.more, LV_OBJ_FLAG_HIDDEN);
+    if (n > 0) lv_obj_remove_flag(K.more, LV_OBJ_FLAG_HIDDEN);
     else lv_obj_add_flag(K.more, LV_OBJ_FLAG_HIDDEN);
     if (ink_text_voice_possible()) lv_obj_remove_flag(K.mic, LV_OBJ_FLAG_HIDDEN);
     else lv_obj_add_flag(K.mic, LV_OBJ_FLAG_HIDDEN);
     K.shown = n;
+    size_t start, end;
+    ink_text_selection(&start, &end);
+    bool editing = start != end && type != INK_TEXT_PASSWORD;
+    if (editing) { lv_obj_remove_flag(K.edit, LV_OBJ_FLAG_HIDDEN); lv_obj_add_flag(K.cands, LV_OBJ_FLAG_HIDDEN); }
+    else { lv_obj_add_flag(K.edit, LV_OBJ_FLAG_HIDDEN); lv_obj_remove_flag(K.cands, LV_OBJ_FLAG_HIDDEN); }
+    for (uint32_t i = 0; i < lv_obj_get_child_count(K.keys); i++) {
+        lv_obj_t *row = lv_obj_get_child(K.keys, (int32_t)i);
+        if (row == K.composing || row == K.cands || row == K.edit) continue;
+        if (K.expanded) lv_obj_add_flag(row, LV_OBJ_FLAG_HIDDEN);
+        else lv_obj_remove_flag(row, LV_OBJ_FLAG_HIDDEN);
+    }
+    lv_obj_set_flex_flow(K.cands, K.expanded ? LV_FLEX_FLOW_ROW_WRAP : LV_FLEX_FLOW_ROW);
+    for (int i = 0; i < INK_TEXT_PAGE; i++) {
+        lv_obj_set_flex_grow(K.cand_btn[i], K.expanded ? 0 : 1);
+        if (K.expanded) lv_obj_set_width(K.cand_btn[i], ink_ui_px((INK_CANVAS_W - 2 * INK_GAP - 2 * INK_GAP_XS) / 3));
+        else lv_obj_set_width(K.cand_btn[i], LV_SIZE_CONTENT);
+    }
+    if (K.expanded) lv_obj_remove_flag(K.fold, LV_OBJ_FLAG_HIDDEN);
+    else lv_obj_add_flag(K.fold, LV_OBJ_FLAG_HIDDEN);
     ink_ui_hint_obj(K.cands, INK_REFRESH_FAST);
     ink_ui_hint_obj(K.composing, INK_REFRESH_FAST);
 }
 
 int ink_shell_keyboard_init(void) {
+    static const ink_cap_t caps[] = {
+        {.id = "keyboard.key", .title = "按输入法的键（1 符号、2 大写、8 删除、10 回车，其余是 ASCII）", .input = "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":127}},\"required\":[\"code\"]}", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = press_key},
+        {.id = "keyboard.pick", .title = "选输入法候选（从 0 开始）", .input = "{\"type\":\"object\",\"properties\":{\"index\":{\"type\":\"integer\",\"minimum\":0}},\"required\":[\"index\"]}", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = pick},
+        {.id = "keyboard.candidates", .title = "展开下一页候选，或 fold 收回键盘", .input = "{\"type\":\"object\",\"properties\":{\"fold\":{\"type\":\"boolean\"}}}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = candidates},
+        {.id = "keyboard.edit", .title = "编辑选中内容：0 左、1 右、2 复制、3 剪切、4 粘贴、5 撤销", .input = "{\"type\":\"object\",\"properties\":{\"action\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":5}},\"required\":[\"action\"]}", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = edit}
+    };
+    if (ink_cap_register(caps, sizeof caps / sizeof *caps) != 0) return -1;
     ink_text_set_presenter(sync);
     return 0;
 }

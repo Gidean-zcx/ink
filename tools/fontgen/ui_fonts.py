@@ -5,9 +5,11 @@ import json
 from pathlib import Path
 import subprocess
 import sys
+import re
 
 ROOT = Path(__file__).resolve().parents[2]
-SIZES = {24: 32, 26: 36, 30: 44, 32: 52, 36: 48, 44: 60, 60: 72, 88: 100, 176: 186}
+TOKENS = {name: int(value) for name, value in re.findall(r'(INK_[A-Z_]+)\s*=\s*(\d+)\b', (ROOT / 'system/ui/ink/ui_theme.h').read_text())}
+SIZES = {value: TOKENS[name.replace('INK_FONT_', 'INK_LINE_')] for name, value in TOKENS.items() if name.startswith('INK_FONT_')}
 
 
 def main():
@@ -19,8 +21,7 @@ def main():
     ap.add_argument('--out', required=True, type=Path)
     a = ap.parse_args()
     a.out.mkdir(parents=True, exist_ok=True)
-    # UI strings plus the common GB2312 fallback. Dynamic names outside the UI subset
-    # resolve to a same-size question mark; unrestricted body text uses sans-32.
+    # Dynamic glyphs outside this subset use the runtime's scaled sans-32 fallback.
     chars = set(''.join(chr(i) for i in range(32, 127)) + '□●·…“”《》——，。！？：；（）【】◀▶')
     import importlib.util
     spec = importlib.util.spec_from_file_location('fontgen', ROOT / 'tools/fontgen/fontgen.py')
@@ -32,7 +33,9 @@ def main():
             # private-use markers or unsupported typographic symbols.
             chars.update(c for c in source.read_text() if '\u3400' <= c <= '\u9fff')
     coverage = fontgen.font_coverage(a.regular, a.face)
-    chars = {c for c in chars if ord(c) in coverage}
+    missing = sorted(c for c in chars if ord(c) not in coverage)
+    if missing:
+        raise SystemExit('Missing required UI glyphs in regular CJK face: ' + ''.join(missing))
     repertoire = a.out / 'ui-charset.txt'
     repertoire.write_text(''.join(sorted(chars)), encoding='utf-8')
     outfit = ROOT / 'third_party/fonts/Outfit.ttf'

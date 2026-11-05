@@ -18,6 +18,7 @@
 #undef ink_main
 
 #include "whole_product.h"
+#include "ink/ui_shell.h"
 
 /* What the apps were told, in order. */
 static char g_log[2048];
@@ -394,29 +395,31 @@ static void cards(void) {
     delay_ms(1500);
 }
 
-static lv_obj_t *g_home_btn;
 static int g_home_x, g_home_y, g_home_buttons;
-static void look_at_home(void) {
-    g_home_buttons = 0;
-    lv_obj_t *scr = lv_screen_active();
-    for (uint32_t i = 0; i < lv_obj_get_child_count(scr); i++) {
-        lv_obj_t *c = lv_obj_get_child(scr, (int32_t)i);
-        if (!lv_obj_check_type(c, &lv_button_class)) continue;
-        g_home_buttons++;
-        if (g_home_buttons == 2) { /* the counter, then the directory in its order: the test's were registered first */
-            g_home_btn = c;
-            lv_area_t a;
-            lv_obj_update_layout(c);
-            lv_obj_get_coords(c, &a);
-            g_home_x = (a.x1 + a.x2) / 2;
-            g_home_y = (a.y1 + a.y2) / 2;
+static void home_labels(lv_obj_t *o) {
+    for (uint32_t i = 0; i < lv_obj_get_child_count(o); i++) {
+        lv_obj_t *c = lv_obj_get_child(o, (int32_t)i);
+        if (lv_obj_check_type(c, &lv_label_class)) {
+            const char *text = lv_label_get_text(c);
+            if (!strcmp(text, "甲") || !strcmp(text, "乙") || !strcmp(text, "丁") || !strcmp(text, "阅读")) g_home_buttons++;
+            if (!strcmp(text, "甲")) {
+                lv_area_t a; lv_obj_update_layout(c); lv_obj_get_coords(c, &a);
+                g_home_x = (a.x1 + a.x2) / 2;
+                g_home_y = a.y1 - ink_ui_px(INK_CIRCLE / 2 + INK_GAP_S);
+            }
+            CHECK(strcmp(text, "丙"), "an app with missing capabilities stays hidden");
         }
+        home_labels(c);
     }
+}
+static void look_at_home(void) {
+    if (strcmp(ink_shell_board(), "Apps")) ink_shell_home_swipe(INK_SWIPE_LEFT);
+    g_home_buttons = 0; home_labels(lv_screen_active());
 }
 
 static void home_by_hand(void) {
     on_ui(look_at_home);
-    CHECK(g_home_buttons == 5, "home lists what the directory has: the counter, alpha, beta, delta, reader (%d)", g_home_buttons);
+    CHECK(g_home_buttons == 4, "Apps lists alpha, beta, delta and reader (%d)", g_home_buttons);
     LOG_CLEAR();
     tap(g_home_x, g_home_y);
     CHECK(WAIT_FOR(!strcmp(fg_state(), "alpha"), 2000), "a finger opens it the same way (%s)", fg_state());

@@ -293,13 +293,13 @@ if(EXISTS ${INK_CJK_FONT} AND Python3_FOUND)
     COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/fontgen/ui_fonts.py
       --regular ${INK_CJK_FONT} --face ${INK_CJK_FACE} --medium ${INK_CJK_MEDIUM_FONT} --bold ${INK_CJK_BOLD_FONT}
       --out ${INK_ASSETS_DIR}/fonts
-    DEPENDS ${INK_FONT_FILES} ${INK_UI_TEXT} tools/fontgen/fontgen.py tools/fontgen/ui_fonts.py third_party/fonts/Outfit.ttf
+    DEPENDS ${INK_FONT_FILES} ${INK_UI_TEXT} tools/fontgen/fontgen.py tools/fontgen/ui_fonts.py system/ui/ink/ui_theme.h third_party/fonts/Outfit.ttf
     COMMENT "fontgen: contract UI sizes, CJK weights and Outfit digits")
   add_custom_target(ink_ui_fonts ALL DEPENDS ${INK_ASSETS_DIR}/fonts/ui-fonts.stamp)
   set(INK_HAVE_FONTS ON)
 else()
-  message(WARNING "No CJK font (${INK_CJK_FONT}) or Python 3: CJK fonts not generated, reader scenarios skipped. "
-                  "Debian/Ubuntu: apt install fonts-noto-cjk python3-pil")
+  message(FATAL_ERROR "The shell requires CJK fonts and Python 3 (${INK_CJK_FONT}). "
+                      "Debian/Ubuntu: apt install fonts-noto-cjk fonts-noto-cjk-extra python3-pil")
 endif()
 
 # Icons are checked in as extracted geometry, not screenshots or design boards.
@@ -335,6 +335,9 @@ foreach(index RANGE ${INK_ICON_LAST})
   endforeach()
 endforeach()
 add_custom_target(ink_icons ALL DEPENDS ${INK_ICON_FILES})
+add_custom_target(ink_ui_resource_check ALL
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/icongen/check.py
+  COMMENT "Check required design icon geometry")
 
 # Scenario content: the committed sample books + a generated long book (pagination stress).
 set(INK_TEST_CONTENT ${CMAKE_BINARY_DIR}/test-content)
@@ -438,9 +441,36 @@ endif()
 # ---------------------------------------------------------------- tests
 enable_testing()
 add_test(NAME ui-scale COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/ui_scale_check.py)
+add_test(NAME ui-icons COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/icongen/check.py)
+add_test(NAME ui-assets COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/ui_assets_check.py ${INK_ASSETS_DIR})
 add_executable(sim-ui-scenes simulator/runtime/sim_main.c tests/ui_shell_scenes.c)
 target_link_libraries(sim-ui-scenes PRIVATE ink_apps ink_system ink_port_sim)
 target_compile_options(sim-ui-scenes PRIVATE ${INK_WARN} -Wno-format-truncation)
+set(INK_SHELL_SCENES Main Today Apps Lock LockPage Control Notifications Members MembersBack Pin PinWrong
+  ImePinyin ImeCandidates ImeEdit ImePassword ImeVoice Confirm ConfirmDelete ConfirmSecret AiListen AiThink Ai
+  Settings SetDisplay SetSound SetNetwork PowerMenu PowerOff PhoneIncoming ClockRing Components ComponentsDock ComponentsPanel)
+foreach(scene ${INK_SHELL_SCENES})
+  if(scene STREQUAL "PowerOff")
+    set(budget ui_off_scene)
+  else()
+    set(budget ui_scene)
+  endif()
+  add_test(NAME ui-scene-${scene}
+    COMMAND ${CMAKE_COMMAND} -E env INK_UI_SCENE=${scene} $<TARGET_FILE:sim-ui-scenes>
+      --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json --script ${CMAKE_SOURCE_DIR}/tests/ui_shell.script
+      --budget ${CMAKE_SOURCE_DIR}/tests/${budget}.budget.json --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+      --out ${CMAKE_BINARY_DIR}/test-out/ui-scene-${scene} --quiet --no-random-outages)
+endforeach()
+add_executable(sim-ui-shell-test simulator/runtime/sim_main.c tests/ui_shell_test.c)
+target_link_libraries(sim-ui-shell-test PRIVATE ink_apps ink_system ink_port_sim)
+target_compile_options(sim-ui-shell-test PRIVATE ${INK_WARN} -Wno-format-truncation)
+add_test(NAME ui-shell-priorities
+  COMMAND sim-ui-shell-test --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+    --script ${CMAKE_SOURCE_DIR}/tests/ui_shell_test.script --budget ${CMAKE_SOURCE_DIR}/tests/ui_shell.budget.json
+    --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT} --out ${CMAKE_BINARY_DIR}/test-out/ui-shell --quiet --no-random-outages)
+add_test(NAME ui-panel-restore
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/ui_panel_check.py ${CMAKE_BINARY_DIR}/test-out/ui-shell)
+set_tests_properties(ui-panel-restore PROPERTIES DEPENDS ui-shell-priorities)
 ink_sim_executable(sim-selftest tests/simulator/selftest.c)
 foreach(p metalio-plus metalio-plus-psram16 pinenote-rk3566 desktop-lcd)
   add_test(NAME selftest-${p}

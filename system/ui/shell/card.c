@@ -2,7 +2,7 @@
 #include "ink/ui_theme.h"
 #include "shell_card.h"
 
-#define CARD_HEIGHT (INK_MARGIN * 2 + INK_CIRCLE + INK_GAP_L * 2 + INK_ROW_DOUBLE * 2 + INK_PRIMARY)
+#define CARD_HEIGHT (INK_MARGIN * 2 + INK_CIRCLE + INK_GAP_L * 2 + INK_ROW_DOUBLE * 2 + INK_PRIMARY + INK_GAP_M)
 
 void shell_card_open(shell_card_t *c) {
     c->root = lv_obj_create(lv_layer_sys());

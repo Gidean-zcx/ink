@@ -1,6 +1,6 @@
 /* Home is a shell surface; its data and actions use the application framework. */
 #include "ink/sys/appreg.h"
-#include "ink/ui_shell.h"
+#include "ink/sys/ui.h"
 
 static void create(lv_obj_t *screen, void *arg) { (void)arg; ink_shell_home_create(screen); }
 

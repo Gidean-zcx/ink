@@ -19,8 +19,8 @@ static const ink_ui_overlay_t OVERLAY = {.name = "LockPage", .level = 2, .snapsh
 
 static void update_clock(void) {
     if (!g_clock) return;
-    char s[24] = "--:--";
-    if (ink_time_valid()) { ink_tm_t t; ink_time_to_local(ink_time_now_s(), &t); snprintf(s, sizeof s, "%02d:%02d", t.hour, t.min); }
+    char s[24], date[96];
+    ink_shell_time_strings(s, sizeof s, date, sizeof date);
     lv_label_set_text(g_clock, s);
     ink_ui_hint_obj(g_clock, INK_REFRESH_TEXT);
 }
@@ -28,22 +28,39 @@ static void update_clock(void) {
 static void show(void) {
     if (g_mark) return;
     bool clock = ink_setting_get("display.lock_style") == 1;
-    g_mark = lv_obj_create(lv_layer_sys());
-    lv_obj_remove_style_all(g_mark);
-    lv_obj_set_size(g_mark, LV_PCT(100), LV_PCT(100));
+    g_mark = clock ? lv_obj_create(lv_layer_sys()) : ink_ui_box(lv_layer_sys(), INK_MARGIN,
+             INK_CANVAS_H - INK_CONTROL - INK_GAP_S, INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, 0, INK_SURFACE_WHITE, false);
+    if (clock) {
+        lv_obj_remove_style_all(g_mark);
+        lv_obj_set_size(g_mark, LV_PCT(100), LV_PCT(100));
+    }
     lv_obj_remove_flag(g_mark, LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_CLICKABLE);
     if (clock) {
         lv_obj_set_style_bg_color(g_mark, ink_ui_paper(), 0);
         lv_obj_set_style_bg_opa(g_mark, LV_OPA_COVER, 0);
+        ink_shell_statusbar(g_mark, false);
+        char time[24], date[96]; ink_shell_time_strings(time, sizeof time, date, sizeof date);
+        lv_obj_t *date_label = ink_ui_label(g_mark, date, INK_FONT_LIST, INK_WEIGHT_MEDIUM,
+                                           INK_MARGIN, INK_LINE_BODY + INK_BLOCK, INK_CANVAS_W - 2 * INK_MARGIN);
+        lv_obj_set_style_text_align(date_label, LV_TEXT_ALIGN_CENTER, 0);
         g_clock = ink_ui_label(g_mark, "", INK_FONT_CLOCK, INK_WEIGHT_REGULAR, INK_MARGIN,
                                INK_LINE_BODY + INK_BLOCK + INK_LINE_LIST, INK_CANVAS_W - 2 * INK_MARGIN);
         lv_obj_set_style_text_align(g_clock, LV_TEXT_ALIGN_CENTER, 0);
         update_clock();
-        char count[64]; snprintf(count, sizeof count, "%d 条通知，唤醒后查看", ink_notify_unread());
-        ink_ui_notice(g_mark, count, INK_CANVAS_H - 2 * INK_PRIMARY - INK_MARGIN);
+        int cursor = 0; ink_alarm_t alarm;
+        if (ink_alarm_next(&cursor, INK_ALARM, &alarm) == 1) {
+            char next[64]; snprintf(next, sizeof next, "闹钟 %d:%02d", alarm.hour, alarm.min);
+            ink_ui_notice(g_mark, next, INK_LINE_BODY + INK_BLOCK + INK_LINE_LIST + INK_LINE_CLOCK + INK_GAP_M);
+        }
+        lv_obj_t *notice = ink_ui_card(g_mark, INK_MARGIN, INK_CANVAS_H - INK_CONTROL - INK_GAP_L - INK_MARGIN - INK_ROW_DOUBLE,
+                                       INK_CANVAS_W - 2 * INK_MARGIN, INK_ROW_DOUBLE, INK_SURFACE_WHITE);
+        ink_ui_circle(notice, "bell", INK_GAP, (INK_ROW_DOUBLE - INK_CIRCLE) / 2, INK_CIRCLE, INK_ICON_LIST, INK_SURFACE_STATIC, NULL, NULL);
+        char count[64]; snprintf(count, sizeof count, "%d 条通知", ink_notify_unread());
+        ink_ui_label(notice, count, INK_FONT_LIST, INK_WEIGHT_BOLD, INK_ROW_DOUBLE, INK_GAP, INK_CANVAS_W - 2 * INK_ROW_DOUBLE);
+        ink_ui_label(notice, "唤醒后查看", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_ROW_DOUBLE, INK_GAP + INK_LINE_LIST, INK_CANVAS_W - 2 * INK_ROW_DOUBLE);
     }
-    lv_obj_t *strip = ink_ui_box(g_mark, INK_MARGIN, INK_CANVAS_H - INK_CONTROL - INK_GAP_S,
-                                  INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, 0, INK_SURFACE_WHITE, false);
+    lv_obj_t *strip = clock ? ink_ui_box(g_mark, INK_MARGIN, INK_CANVAS_H - INK_CONTROL - INK_GAP_S,
+                                  INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, 0, INK_SURFACE_WHITE, false) : g_mark;
     lv_obj_t *l = ink_ui_label(strip, "已锁定，按电源键或 AI 键唤醒", INK_FONT_NOTE, INK_WEIGHT_REGULAR, 0,
                                (INK_CONTROL - INK_LINE_NOTE) / 2, INK_CANVAS_W - 2 * INK_MARGIN);
     lv_obj_set_style_text_align(l, LV_TEXT_ALIGN_CENTER, 0);

@@ -64,6 +64,7 @@ static struct {
     bool last_pressed;
     int touch_x0, touch_y0;
     bool touch_owned;
+    uint64_t touch_invalid_before;
     /* refresh intents for the frame being built */
     struct {
         lv_area_t a;
@@ -477,6 +478,7 @@ void ink_ui_drop_app(const char *app) {
  * for it is still right when the overlay goes (while it is up, the gate refuses what belongs to the page). */
 static void overlays_changed(void) {
     UI.generation++;
+    UI.touch_invalid_before = osal_now_us();
     lv_indev_reset(UI.indev, NULL);
     UI.pn = 0;
     if (UI.last_pressed) UI.skip_touch = true;
@@ -594,6 +596,11 @@ static void handle_input(const umsg_t *m) {
     UI.last_input_us = osal_now_us();
     switch (e->kind) {
     case INK_EV_POINTER:
+        if (e->phase == INK_PTR_PRESS && e->t_us < UI.touch_invalid_before) {
+            UI.skip_touch = true;
+            ink_probe_count("ui.touch_under_overlay_dropped");
+            return;
+        }
         if (UI.skip_touch) {
             if (e->phase == INK_PTR_RELEASE) UI.skip_touch = false;
             ink_probe_count("ui.touch_under_overlay_dropped");
@@ -656,8 +663,8 @@ static void handle_input(const umsg_t *m) {
         UI.cause_tag = NULL;
         if (UI.noverlays) {
             const ink_ui_overlay_t *o = UI.overlays[UI.noverlays - 1];
-            if (o->on_key) o->on_key((hal_key_t)e->key, lng);
-            return;
+            if (o->on_key && o->on_key((hal_key_t)e->key, lng)) return;
+            if (o->level >= 0) return;
         }
         if ((e->key == HAL_KEY_BACK || e->key == HAL_KEY_HOME) && ink_ai_dismiss()) return;
         if (top && top->on_key && top->on_key((hal_key_t)e->key, lng)) return;

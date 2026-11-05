@@ -8,7 +8,7 @@
 #include "ink/sys/exec.h"
 #include "ink/ui_shell.h"
 
-#define PANEL_HEIGHT (INK_MARGIN + INK_CONTROL + INK_GAP_M + INK_LINE_BODY + INK_GAP_S + INK_LINE_NOTE + INK_GAP_M + INK_CONTROL + INK_MARGIN)
+#define PANEL_HEIGHT (INK_MARGIN + INK_CONTROL + INK_GAP_M + 3 * INK_LINE_BODY + INK_GAP_S + INK_LINE_NOTE + INK_GAP_M + INK_CONTROL + INK_MARGIN)
 #define ANSWER_CHARS 54
 static struct {
     lv_obj_t *root, *status, *question, *answer, *source, *actions;
@@ -22,7 +22,11 @@ int ink_shell_ai_snapshot(char *buf, size_t cap) {
     return snprintf(buf, cap, "AI 面板；%s；%s。动作：ai.panel.hide、ai.panel.listen、ai.panel.next、ai.panel.prev。",
                     A.status ? lv_label_get_text(A.status) : "", A.answer ? lv_label_get_text(A.answer) : "");
 }
-static bool key(ink_key_t k, bool lng) { if (!lng && (k == INK_KEY_HOME || k == INK_KEY_BACK)) ink_shell_ai_hide(); return true; }
+static bool key(ink_key_t k, bool lng) {
+    if (lng || (k != INK_KEY_HOME && k != INK_KEY_BACK)) return false;
+    ink_ai_dismiss();
+    return true;
+}
 static const ink_ui_overlay_t OVERLAY = {.name = "Ai", .level = -1, .on_key = key, .snapshot = ink_shell_ai_snapshot};
 
 static void refine(void *arg) {
@@ -47,6 +51,7 @@ static void draw_words(void) {
 void ink_shell_ai_words(const char *text) {
     if (!A.root) return;
     snprintf(A.words, sizeof A.words, "%s", text);
+    if (text[0]) { lv_obj_add_flag(A.question, LV_OBJ_FLAG_HIDDEN); lv_obj_remove_flag(A.answer, LV_OBJ_FLAG_HIDDEN); }
     draw_words();
 }
 
@@ -78,8 +83,13 @@ void ink_shell_ai_status(const char *s) {
     const char *caption = done ? "" : strstr(s, "正在听") ? "正在听 · 松开结束" : strstr(s, "正在想") ? "正在看这一页" : s;
     lv_label_set_text(A.status, caption);
     if (done) {
+        lv_obj_add_flag(A.question, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_remove_flag(A.answer, LV_OBJ_FLAG_HIDDEN);
         lv_obj_remove_flag(A.source, LV_OBJ_FLAG_HIDDEN);
         lv_obj_remove_flag(A.actions, LV_OBJ_FLAG_HIDDEN);
+    } else if (!A.words[0]) {
+        lv_obj_remove_flag(A.question, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_add_flag(A.answer, LV_OBJ_FLAG_HIDDEN);
     }
     ink_ui_hint_obj(A.status, INK_REFRESH_FAST);
 }
@@ -100,6 +110,7 @@ static const ink_cap_t CAPS[] = {
 
 void ink_shell_ai_open(lv_obj_t **root, lv_obj_t **status, lv_obj_t **question, lv_obj_t **answer) {
     A.root = ink_ui_panel(lv_layer_sys(), PANEL_HEIGHT, true);
+    ink_ui_box(A.root, (INK_CANVAS_W - INK_ICON_STATE) / 2, INK_GAP_M, INK_ICON_STATE, INK_GAP_S, -1, INK_SURFACE_BLACK, false);
     ink_ui_circle(A.root, "ai", INK_MARGIN, INK_MARGIN + INK_GAP_M, INK_CIRCLE_SMALL, INK_ICON_LIST, INK_SURFACE_BLACK, NULL, NULL);
     A.status = ink_ui_label(A.root, "", INK_FONT_LIST, INK_WEIGHT_MEDIUM,
                             INK_MARGIN + INK_CIRCLE_SMALL + INK_GAP_M, INK_MARGIN + (INK_CONTROL - INK_LINE_LIST) / 2, INK_CANVAS_W - 2 * INK_PRIMARY - INK_MARGIN);
@@ -107,8 +118,7 @@ void ink_shell_ai_open(lv_obj_t **root, lv_obj_t **status, lv_obj_t **question, 
     ink_shell_bind(close, "ai.panel.hide", NULL);
     A.answer = ink_ui_label(A.root, "", INK_FONT_BODY, INK_WEIGHT_REGULAR, INK_MARGIN, INK_MARGIN + INK_CONTROL + INK_GAP_M, INK_CANVAS_W - 2 * INK_MARGIN);
     lv_obj_set_height(A.answer, ink_ui_px(3 * INK_LINE_BODY));
-    A.question = ink_ui_label(A.root, "", INK_FONT_NOTE, INK_WEIGHT_REGULAR, 0, 0, 0);
-    lv_obj_add_flag(A.question, LV_OBJ_FLAG_HIDDEN);
+    A.question = ink_ui_label(A.root, "", INK_FONT_BODY, INK_WEIGHT_REGULAR, INK_MARGIN, INK_MARGIN + INK_CONTROL + INK_GAP_M, INK_CANVAS_W - 2 * INK_MARGIN);
     A.source = ink_ui_label(A.root, "出自这一页", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN,
                             PANEL_HEIGHT - INK_MARGIN - INK_CONTROL - INK_GAP_M - INK_LINE_NOTE, INK_CANVAS_W - 2 * INK_MARGIN);
     A.actions = ink_ui_box(A.root, INK_MARGIN, PANEL_HEIGHT - INK_MARGIN - INK_CONTROL,

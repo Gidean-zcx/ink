@@ -10,6 +10,7 @@
 #include "ink/sys/exec.h"
 #include "pinpad.h"
 #include "shell_card.h"
+#include "ink/ui_shell.h"
 
 static struct {
     shell_card_t card;
@@ -84,6 +85,15 @@ static void show(const ink_confirm_view_t *top) { /* UI task */
     if (!C.card.root) {
         shell_card_open(&C.card);
         ink_ui_overlay_add(&OVERLAY, C.card.root);
+        ink_ui_circle(C.card.panel, "ai", INK_MARGIN, INK_MARGIN, INK_CIRCLE, INK_ICON_LIST, INK_SURFACE_BLACK, NULL, NULL);
+        lv_obj_set_pos(C.card.title, ink_ui_px(INK_MARGIN + INK_CIRCLE + INK_GAP), ink_ui_px(INK_MARGIN));
+        lv_obj_set_width(C.card.title, ink_ui_px(INK_CANVAS_W - 2 * INK_MARGIN - INK_CIRCLE - INK_GAP));
+        lv_obj_t *preview = ink_ui_box(C.card.panel, INK_MARGIN, INK_MARGIN + INK_CIRCLE + INK_GAP_L,
+                                      INK_CANVAS_W - 2 * INK_MARGIN, INK_ROW_DOUBLE + INK_LINE_NOTE, INK_RADIUS_KEY, INK_SURFACE_STATIC, false);
+        lv_obj_set_parent(C.card.body, preview);
+        lv_obj_set_pos(C.card.body, ink_ui_px(INK_MARGIN), ink_ui_px(INK_GAP_L));
+        lv_obj_set_size(C.card.body, ink_ui_px(INK_CANVAS_W - 4 * INK_MARGIN), ink_ui_px(INK_PRIMARY));
+        ink_ui_notice(C.card.panel, "只有你确认后才会继续。", INK_MARGIN + INK_CIRCLE + INK_GAP_L + INK_ROW_DOUBLE + INK_LINE_NOTE + INK_GAP_L);
     }
     shell_card_text(&C.card, C.now.title, C.now.detail);
     shell_card_clear_buttons(&C.card);
