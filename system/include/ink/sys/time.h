@@ -87,9 +87,13 @@ typedef struct {
 
 /** Add: fills id and next_s. > 0 the id, < 0 refused (table full, not valid). */
 int ink_alarm_add(ink_alarm_t *a);
+/** Runtime mutation version for an inverse; the stored alarm format is unchanged. */
+int ink_alarm_add_versioned(ink_alarm_t *a, uint32_t *written);
 /** Erase owned schedules and ringing state durably before releasing a member id. */
 int ink_time_forget_member(const char *member, int64_t timeout_us);
 int ink_alarm_cancel(uint32_t id);
+/** Cancel only the unchanged alarm: -2 if its runtime version is stale. */
+int ink_alarm_cancel_if_revision(uint32_t id, uint32_t revision);
 /** The next of the current member's, after *cursor (start from 0): 1, 0 at the end. */
 int ink_alarm_next(int *cursor, ink_alarm_kind_t kind, ink_alarm_t *out);
 /** Stop a ringing alarm (id 0: all). Repeats stay scheduled. */

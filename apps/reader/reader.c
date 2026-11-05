@@ -60,6 +60,7 @@ static struct {
     bool dirty_pos;
     uint64_t dirty_since_us; /* first turn not saved yet */
     char member[16];         /* whose reading position this is (the member who opened the book) */
+    uint32_t generation;
 } RD;
 
 /* Reading positions are kept per member (foundation §5.5, D-03): one small file per member and book,
@@ -249,7 +250,7 @@ static void ahead_cb(lv_timer_t *t) {
 
 static void save_cb(lv_timer_t *t) {
     (void)t;
-    if (!RD.dirty_pos) return;
+    if (!RD.dirty_pos || !RD.generation || RD.generation != ink_member_generation(RD.member)) return;
     char path[200], data[64];
     pos_path(path, sizeof path, RD.member, LIB.books[LIB.open].name);
     int n = snprintf(data, sizeof data, "offset=%u\n", (unsigned)RD.starts[RD.page]);
@@ -425,6 +426,7 @@ static void book_create(lv_obj_t *scr, void *arg) {
     RD.buf_page[0] = RD.buf_page[1] = -1;
     RD.shown = -1;
     snprintf(RD.member, sizeof RD.member, "%s", ink_member_current()->id);
+    RD.generation = ink_member_generation(RD.member);
     ink_font_t *body = ink_font_for_pt(8, dpi);
     ink_font_t *small = ink_font_for_pt(6, dpi);
     if (!body || !load_text(LIB.books[LIB.open].path)) {

@@ -122,7 +122,7 @@ static bool parse_at(const char *s, ink_alarm_t *a) { /* "2026-11-05 15:00" */
 }
 
 static void answer_add(ink_call_t *c, ink_alarm_t *a, const char *undo_cap) {
-    int id = ink_alarm_add(a);
+    int id = ink_alarm_add_versioned(a, &c->rc.revision);
     if (id <= 0) {
         fail(c, id == -3 ? INK_RC_REJECTED : INK_RC_INVALID, id == -2 ? "that time has passed" : id == -3 ? "too many alarms" : "not a valid time");
         return;
@@ -136,6 +136,7 @@ static void answer_add(ink_call_t *c, ink_alarm_t *a, const char *undo_cap) {
     ink_args_t undo;
     ink_args_init(&undo);
     ink_args_int(&undo, "id", id);
+    ink_args_int(&undo, "if_revision", c->rc.revision);
     ink_cap_undoable(c, undo_cap, &undo, UNDO_MS);
 }
 
@@ -233,9 +234,14 @@ static void cap_alarm_list(ink_call_t *c) { list_kind(c, INK_ALARM); }
 static void cap_reminder_list(ink_call_t *c) { list_kind(c, INK_REMINDER); }
 
 static void cap_cancel(ink_call_t *c) {
-    int64_t id = 0;
+    int64_t id = 0, revision = 0;
     ink_args_get_int(&c->args, "id", &id);
-    if (ink_alarm_cancel((uint32_t)id) != 0) fail(c, INK_RC_FAILED, "no such one, or not yours");
+    if (ink_args_get_int(&c->args, "if_revision", &revision) && (revision <= 0 || revision > UINT32_MAX)) {
+        fail(c, INK_RC_STALE, "alarm changed or absent");
+        return;
+    }
+    int r = ink_alarm_cancel_if_revision((uint32_t)id, (uint32_t)revision);
+    if (r != 0) fail(c, r == -2 ? INK_RC_STALE : INK_RC_FAILED, "no such one, or changed");
 }
 
 static void cap_dismiss(ink_call_t *c) {

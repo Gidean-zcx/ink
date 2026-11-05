@@ -7,8 +7,9 @@ static void hold(ink_call_t *c) { if(held_count<2) held[held_count++]=c; ink_cap
 static void completed_call(void *ctx,const ink_receipt_t *rc) { completed[(intptr_t)ctx]=*rc; done_count++; }
 static const ink_cap_t HOLD={.id="review.hold",.effect=INK_FX_LOCAL_WRITE,.child_ok=true,.exec=INK_EXEC_DIRECT,.run=hold};
 static const char *requested_member;
+static ink_source_t requested_source = INK_SRC_AI;
 static bool with_id(const char *id,const char *args,const char *rid) {
-    ink_call_opts_t o={.src=INK_SRC_AI,.request_id=rid,.args_json=args,
+    ink_call_opts_t o={.src=requested_source,.request_id=rid,.args_json=args,
         .member=requested_member?requested_member:ink_member_current()->id,.reply_exec=INK_EXEC_DIRECT,.done=rc_done};
     g_done=0;g_result[0]=0;
     return ink_cap_call(id,NULL,&o)==0 && WAIT_FOR(g_done,5000);
@@ -18,6 +19,9 @@ static void run(void *arg) {
     const char *owner="{\"path\":\"/me/SYNTHETIC_ADULT_PRIVATE\",\"text\":\"owner\"}";
     CHECK(with_id("file.write",owner,"synthetic-request-1")&&g_rc.status==INK_RC_DONE,"adult write");
     CHECK(with_id("file.write",owner,"synthetic-request-1")&&g_rc.status==INK_RC_DONE,"same-member retry");
+    requested_source=INK_SRC_TOUCH;
+    CHECK(with_id("file.write",owner,"synthetic-request-1")&&g_rc.status==INK_RC_INVALID,"same id cannot change source");
+    requested_source=INK_SRC_AI;
     CHECK(with_id("file.write","{\"path\":\"/me/changed.txt\",\"text\":\"other\"}","synthetic-request-1")&&g_rc.status==INK_RC_INVALID,"same member cannot reuse id for different parameters");
     CHECK(with_id("file.mkdir","{\"path\":\"/me/other\"}","synthetic-request-1")&&g_rc.status==INK_RC_INVALID,"same id cannot change capability");
     CHECK(ink_cap_register(&HOLD,1)==0,"in-flight test capability");

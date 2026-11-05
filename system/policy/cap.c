@@ -1110,17 +1110,23 @@ static undo_t UNDO[UNDO_MAX] INK_PSRAM_BSS;
 static int undo_next;
 
 void ink_cap_undoable(ink_call_t *call, const char *cap, const ink_args_t *args, uint32_t ms) {
+    pending_t *p = (pending_t *)call;
     osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+    if (!p->generation || p->generation != ink_member_generation(p->member) ||
+        strcmp(p->member, ink_member_current()->id) || !ink_member_space_open()) {
+        osal_mutex_unlock(CB.lock);
+        return;
+    }
     undo_t *u = &UNDO[undo_next];
     undo_next = (undo_next + 1) % UNDO_MAX;
     snprintf(u->object, sizeof u->object, "%s", call->rc.object);
     snprintf(u->cap, sizeof u->cap, "%s", cap);
-    snprintf(u->member, sizeof u->member, "%s", ink_member_current()->id);
+    snprintf(u->member, sizeof u->member, "%s", p->member);
     if (args) u->args = *args;
     else ink_args_init(&u->args);
     u->until_us = osal_now_us() + (uint64_t)ms * 1000u;
     u->revision = call->rc.revision;
-    u->generation = ink_member_generation(NULL);
+    u->generation = p->generation;
     osal_mutex_unlock(CB.lock);
     call->rc.undo_ms = ms;
 }
@@ -1165,7 +1171,7 @@ static void cap_undo(ink_call_t *c) {
     snprintf(c->rc.object, sizeof c->rc.object, "%s", object);
     ink_cap_defer(c); /* Settings recheck their own risk; a permission inverse is still a permission change. */
     ink_source_t src = !strcmp(u.cap, "settings.set") ? c->src : INK_SRC_CONFIRMED;
-    ink_call_opts_t o = {.src = src, .member = u.member, .reply_exec = INK_EXEC_DIRECT, .done = undo_done, .ctx = c};
+    ink_call_opts_t o = {.src = src, .member = u.member, .member_generation = u.generation, .reply_exec = INK_EXEC_DIRECT, .done = undo_done, .ctx = c};
     if (ink_cap_call(u.cap, &u.args, &o) != 0) {
         reject(&c->rc, INK_RC_FAILED, "busy");
         ink_cap_done(c);

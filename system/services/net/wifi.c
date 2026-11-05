@@ -161,7 +161,7 @@ static void cap_connect(ink_call_t *c) { /* exec.bg */
         told("connected", k->ssid);
         snprintf(c->rc.say, sizeof c->rc.say, "连上了 %.60s", k->ssid);
         snprintf(c->rc.object, sizeof c->rc.object, "wifi:%.32s", k->ssid);
-        if (can_undo) {
+        if (can_undo && saved == INK_DB_OK && c->rc.revision) {
             ink_args_t *undo = osal_malloc(sizeof *undo, OSAL_MEM_EXTERNAL);
             if (undo) {
                 ink_args_init(undo);
