@@ -2,27 +2,29 @@
 
 日期：2026-11-06；基线：`f1f72ae9`。证据范围是本机 macOS 模拟器、`sim_hub` 和合成家庭中枢，没有真机或真实厂商验证。范围按[任务书](../backlog.md#device-events)、[两端约定](../../hub/contracts-step1.md)和[设备协议](../../hub/device-protocol.md)核对。
 
-本轮复修基线：`97645ea2`。按[独立复查](REVIEW.md)处理 DE-R1、DE-R2（严重 0、高 2，未单列中级）。两项已修；定向、19 个反向对照和两项基线复现均通过，全量及内存待复验。原报告的握手隔离和声音提示证据不足，以下以本轮结果为准；原任务未完成项仍保留。
+本轮复修基线：`97645ea2`。按[独立复查](REVIEW.md)处理 DE-R1、DE-R2（严重 0、高 2，未单列中级）。两项及同类边界已修，两套全量均 103/103；19 个反向对照和两项基线复现均检出预期失败。原报告的握手隔离和声音提示证据不足，以下以本轮结果为准；原任务未完成项仍保留。
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| DE-R1 握手隔离（高） | 【实现＋实测】已修，定向通过 | 保存本连接 hello／member 已发送的 epoch，握手成功后先同步身份再上线、发送排队请求和调用回调；身份同步失败断开重连。覆盖首次握手、重连、双向换人、A→B→A、同成员解锁／关闭认证、普通在线换人；观测实际接收连接的成员和代次 | `ctest --test-dir build --output-on-failure -j3 -R '^device-events$'` |
-| DE-R2 声音失败（高） | 【实现＋实测】已修，定向通过 | 两种声音错误通知统一用提问轮次匹配，不再混用 rt sid。真实文字提问后接语音，在实际下行首次 push／创建音频流时各拒收一次；声音中止、回答完成后仍显示失败。另测扬声器失败回调、旧通知不串新轮，以及失败早于首段文字时提示保留 | 同上；新增 `sim-device-events-review` 由同一 ctest 执行 |
+| DE-R1 握手隔离（高） | 【实现＋实测】已修，两套通过 | 保存本连接 hello／member 已发送的 epoch，握手成功后先同步身份再上线、发送排队请求和调用回调；身份同步失败断开重连。覆盖首次握手、重连、双向换人、A→B→A、同成员解锁／关闭认证、普通在线换人；观测实际接收连接的成员和代次 | `ctest --test-dir build --output-on-failure -j3 -R '^device-events$'`；同命令换 `build-asan` |
+| DE-R2 声音失败（高） | 【实现＋实测】已修，两套通过 | 两种声音错误通知统一用提问轮次匹配，不再混用 rt sid。真实文字提问后接语音，在实际下行首次 push／创建音频流时各拒收一次；声音中止、回答完成后仍显示失败。另测扬声器失败回调、旧通知不串新轮，以及失败早于首段文字时提示保留 | 同上；新增 `sim-device-events-review` 由同一 ctest 执行 |
 | DE-1 事件 | 【实测】通过 | `device/event` 带 seq、boot、member；boot 原子落盘，重启递增；保留最近 8 条直到 ACK；丢 ACK 重连用同一身份重发，错 boot／超前 ACK 无效 | `ctest --test-dir build --output-on-failure -j3 -R '^device-events$'` |
-| DE-2 成员与交付 | 【实测】定向通过，待全量复验 | 原入站、队列、执行、快照、RPC、实时会话和声音撤销回归保留；补 DE-R1 的握手窗口，并在序列化分配后、最终发送前再查成员代次。故障注入在分配期间换人，旧私密请求得到 LOST，不能发送 | 同上；完整隔离回归待复验 |
-| DE-3 时间与背压 | 【实测】定向通过，待全量复验 | 原 budget、排队 deadline、30 秒录音上限保留。补 DE-R2 的真实下行拒收、提示文案和完成后保留断言；同类的音频流创建失败也终止声音并提示，不再静默丢帧 | 同上 |
+| DE-2 成员与交付 | 【实测】本批实现两套通过 | 原入站、队列、执行、快照、RPC、实时会话和声音撤销回归保留；补 DE-R1 的握手窗口，并在序列化分配后、最终发送前再查成员代次。故障注入在分配期间换人，旧私密请求得到 LOST，不能发送 | 同上；`python3 tests/services_finish/run.py --build build handoff actions policy isolation`；同命令换 `build-asan` |
+| DE-3 时间与背压 | 【实测】本批实现两套通过 | 原 budget、排队 deadline、30 秒录音上限保留。补 DE-R2 的真实下行拒收、提示文案和完成后保留断言；同类的音频流创建失败也终止声音并提示，不再静默丢帧 | 同上 |
 | DE-4 能力目录 | 【实测＋实现】通过 | 已测全分页原子替换、不透明 cursor、同 rev、重复 cursor 和失败保留旧表；代码另拒绝重复名字和超限，暂存表放 PSRAM。sim_hub 默认分 3 页。保留基线完整 actions，未改为空数组；actions_more 可选优化未做 | 同上；`actions` 回归仍要求完整能力列表超过 768 字节 |
 | DE-5 两端契约 | 【实测】通过 | 假设备保存并检查交付代次；中枢接受 hello epoch，ACK 事件、检测缺口和重连重复；proto1 仍固定合成儿童，不因 authed 自报而授予成人权限；保留原 result／MCP 回执、语音、听写和错误测试 | `ctest --test-dir build --output-on-failure -j3 -R 'hub-contract|hub-json-crosscheck|hub-simulator-e2e'` |
 | DE-6 D-105 | 【实现＋实测】部分 | 保留基线 asked、ask_by_hand、活动记录；校验 undo_ms 必须为 3000。自动撤销窗口尚未实现：带窗口的请求，或 asked 的短信／拨号，明确回 -32021，不能忽略窗口后立即执行 | `device-events`；`policy` 回归 |
 | DE-7 反向对照 | 【实测】19/19，另有两项基线复现 | 原 12 项全部保留；新增 hello、send-boundary、speech-id、speech-notify、speaker-id、speech-open、speech-delta。每次窄撤回一个保护，编译／链接／模拟器退出均为 0，目标断言失败且 test.fail>0；只撤掉声音通知也必失败。修前 hub／AI 源码各自放入新夹具，均复现目标失败 | `python3 tests/device_events/reverse.py --build build`；`python3 tests/device_events/reverse.py --build build --baseline 97645ea2 hello speech-id` |
-| G1 全量与内存 | 【实测】普通 103/103；内存待复验 | 普通 56.79 秒，无跳过，预算未修改。定向测试两次启动各 94 项，新增复查场景 83 项；补充 handoff／actions／policy／isolation 各 15／6／37／15 项通过 | `cmake --build build -j4`；`ctest --test-dir build --output-on-failure -j3`；同命令换 `build-asan` |
-| G2 原子能力／AI | 【实现】通过 | 未增加用户操作或页面；工具仍走同一能力策略关口。新增的是传输身份绑定接口，不让界面直接修改服务状态 | 能力表 runtime／policy 和现有场景测试 |
+| G1 全量与内存 | 【实测】普通、ASan+UBSan 均 103/103 | 普通 56.79 秒、内存 90.85 秒，无跳过；两套中枢契约内部也均 125 项通过。预算、确定性和分层检查全部保留。两套 device-events 均为两次启动各 94 项、复查场景 83 项；补充 handoff／actions／policy／isolation 各 15／6／37／15 项通过 | `cmake --build build -j4`；`ctest --test-dir build --output-on-failure -j3`；同命令换 `build-asan`；全部退出 0 |
+| G2 原子能力／AI | 【实现】通过 | 边界仍是连接服务处理身份、AI 服务投递错误、UI 执行器更新既有浮层；工具走同一能力策略关口。本轮无新用户操作或页面，不新增应开放给 AI 的能力，不增加常驻任务或资源预算 | 能力表 runtime／policy、分层和现有场景测试 |
 | G3 依赖状态 | 【实现】已更新 | 只更新 ui-dependencies 的“成员、PIN”状态格，并链接本报告 | `git diff -- docs/system/ui-dependencies.md` |
 | G4／G5 范围 | 【实现】符合 | 无新页面；只改服务、策略、模拟替身和测试。没有启动带窗口的 GUI；全量原有 gui-smoke 使用 SDL dummy | `git diff --stat f1f72ae9` |
 
-复现环境：构建参数按总规则，两个构建均使用 INK_WERROR=ON，内存构建另加 INK_SANITIZE=ON。中枢 Python 在 `work/hub-python`：运行依赖从 `hub/requirements.lock` 用 `--require-hashes` 安装，pytest=8.4.2、pytest-asyncio=1.2.0；环境的模块搜索路径指向本仓库 hub。CMake 的 INK_HUB_PYTHON 指向该解释器，未跳过中枢测试。详细原始输出在被忽略的 `work/` 和构建目录；上表命令可重新生成。
+复现环境：构建参数按总规则，两个构建均使用 INK_WERROR=ON，内存构建另加 INK_SANITIZE=ON；上表 ctest 实际使用 `$INK_DEPS/build-deps/pyenv/bin/ctest`。中枢 Python 沿用 `work/hub-python`：运行依赖来自 `hub/requirements.lock`，pytest=8.4.2、pytest-asyncio=1.2.0；模块搜索路径指向本仓库 hub，CMake 的 INK_HUB_PYTHON 指向该解释器。所有构建与全量测试串行，构建 `-j4`、ctest `-j3`；gui-smoke 为 SDL dummy，无窗口。
+
+本轮日志在两个构建目录的 `device-events-full-build.log`、`device-events-full-test.log`、`device-events-services.log`；反向对照和基线复现分别在 `build/device-events-reverse.log`、`build/device-events-baseline.log`。修复后的全量、定向和补充回归均无断言失败，反向对照及基线副本均检出目标失败。所有产物被忽略，上表命令可重新生成。
 
 ## 没做到的
 
@@ -61,4 +63,5 @@
 
 - 本产品的状态订阅固定槽位已很紧；本次复用 hub 的成员通知给实时会话，没有增加常驻任务或提高槽位／内存预算。
 - 换成员时清除排队语音，基线音频服务已经在直接成员回调里完成；新增回归保留这项保证，没有重复加一层中止逻辑。
-- 已核对差异范围和本地链接（报告 3 条、依赖状态表 11 条），Python 语法和 `git diff --check` 通过。`git diff f1f72ae9..HEAD` 按总规则 §6 的 grep 表达式扫描：0 命中，grep 退出 1；没有本机路径、设备标识或密钥进入提交。代码验收提交为 `b4c71d45`（前一里程碑 `0053ef9e`）；报告提交后再核对同一范围。
+- 本轮差异 12 个文件，仅两个产品服务、必要的测试／构建登记、依赖状态格和本报告。已检查本地链接（报告 4 条、依赖状态表 11 条）、Python 语法和 `git diff --check`；新增 C 代码没有 write/read/fgets 调用。两段提交差异 `97645ea2..HEAD`、`f1f72ae9..HEAD` 按总规则 §6 的 grep 表达式均为 0 命中，grep 均退出 1；没有本机路径、设备标识或密钥进入提交。
+- 本轮代码提交 `348a6bbf`，策略夹具接续提交 `add4d080`；上一轮 `0053ef9e`、`b4c71d45` 的结果仍保留。仅本地提交，未 push；最终报告提交后再核对上述两段差异。
