@@ -1,0 +1,83 @@
+[
+  {
+    "id": "AUD18-401",
+    "severity": "高",
+    "area": "AI 原生／文本编辑契约",
+    "title": "文本能力未绑定编辑会话和内容版本，迟到请求会落到当前字段",
+    "evidence_type": "代码核查；影响为推断，未新增实验",
+    "locations": [
+      "system/services/text/text_caps.c:17",
+      "system/services/text/text_caps.c:62",
+      "system/services/text/text_caps.c:144",
+      "system/services/text/text_caps.c:173",
+      "system/services/text/text_service.c:76",
+      "system/policy/cap.c:133",
+      "system/ui/textfield.c:102",
+      "tests/integration/textinput.c:415"
+    ],
+    "impact": "同一成员在 AI 处理期间换字段或继续编辑后，旧请求仍按执行时焦点和选区修改或提交，可能覆盖非预期文字。当前页面版本校验不覆盖这些全局文本能力。",
+    "recommendation": "在 text.state 暴露字段/会话标识与内容版本；AI 编辑携带预期目标与版本，提供者原子校验并对过期请求返回 stale；选择并替换可合成一个原子操作。",
+    "reproduce": "本路只读代码，不写实验。核对 text.state 无 session/revision、文本写能力无 activity 和目标参数、gate 仅对 activity 能力查 page_gen；现有 integration-text-main 只在同一会话内顺序检查编辑。"
+  },
+  {
+    "id": "AUD18-402",
+    "severity": "中",
+    "area": "AI 原生／输入面板可见性",
+    "title": "普通与数字键盘的可见状态未接入统一 AI 快照",
+    "evidence_type": "代码核查；文档核查；影响为推断",
+    "locations": [
+      "system/ui/shell/keyboard.c:125",
+      "system/ui/shell/keyboard.c:275",
+      "system/ui/shell/keyboard.c:317",
+      "system/ui/ui_task.c:290",
+      "system/services/text/text_caps.c:17",
+      "system/services/ai/ai_service.c:471",
+      "docs/system/system-services-design.md:60",
+      "tests/integration/ai_surface.c:301"
+    ],
+    "impact": "当前输入面板不注册 snapshot，提问只得到已注册浮层或底下活动的快照。text.state 可以另读非敏感框的值和选区，但不含面板的失败提示、候选页和动作键语义；用户指着输入面板提问时，AI 收不到同样的上下文。普通数字/号码键盘也走这一实现。",
+    "recommendation": "给非模态输入面板提供语义快照，组合页面与当前输入会话，包含非敏感文本、光标/选区、当前输入方式和提示；与密码/PIN 遮蔽规则统一。不要仅为快照把键盘变成拦住整页的模态浮层。",
+    "reproduce": "本路不写实验。检查 keyboard.c 仅 set_presenter(sync)，没有注册 overlay 或 snapshot；ui_task.c 只调顶层已注册 overlay/activity 的回调；text.state 不输出 voice_notice/候选页/enter_kind。现有 ai_surface 提问断言只检查 page 对象存在，未检查聚焦输入面板。"
+  },
+  {
+    "id": "AUD18-403",
+    "severity": "高",
+    "area": "模块边界／低电量关机呈现",
+    "title": "关机呈现接口不携带保存结果，低电量超时仍显示全部已保存",
+    "evidence_type": "代码核查；错误路径影响为推断",
+    "locations": [
+      "system/services/power/power_service.c:48",
+      "system/services/power/power_service.c:125",
+      "system/services/data/datastore.c:288",
+      "system/services/data/datastore.c:1019",
+      "system/ui/shell/off_picture.c:49",
+      "system/ui/shell/off_picture.c:57",
+      "tests/integration/power_menu.c:184",
+      "docs/system/system-services-design.md:829",
+      "docs/system/ui-dependencies.md:168"
+    ],
+    "impact": "电源服务等待保存完成或满 5 秒都会调用相同的 off_picture(\"battery\")，系统壳无条件显示“东西都存好了”。保存持续失败或超过截止时间时，这一状态无法从接口传给界面和快照，用户会得到不实的保存结论。本次未复现实际丢数据。 §13 和 ui-dependencies §7 同样把“先保存好再画”写成已完成；按 TASK 对不实保存保证的口径定高。",
+    "recommendation": "电源服务将保存结果（完成、超时、失败或未确认）传给关机呈现接口，壳按结果显示；保留低电量有界关机策略，把保存判断留在服务层。",
+    "reproduce": "只读 power_service.c:132 的成功/超时合流与 off_picture.c:49 的固定文案；datastore append_done 失败保留 fly 并延后重试，idle 在此期间为 false。现有 power_menu.c:184-200 只证明正常存储下的关机和重启留存，未覆盖保存未完成时的文案。"
+  },
+  {
+    "id": "AUD18-404",
+    "severity": "低",
+    "area": "文档真实性／能力总表",
+    "title": "能力总表遗漏已开放的任务、编辑等接口，测试核对的是另一份手工表",
+    "evidence_type": "文档核查；代码核查；既有测试通过",
+    "locations": [
+      "docs/system/system-services-design.md:67",
+      "docs/system/system-services-design.md:74",
+      "docs/system/system-services-design.md:77",
+      "docs/system/system-services-design.md:83",
+      "system/services/res/task.c:227",
+      "system/services/text/text_caps.c:173",
+      "tests/integration/ai_surface.c:29",
+      "tests/integration/ai_surface.c:157"
+    ],
+    "impact": "§1.3 未列 job.list/cancel、job.running/finished，也漏 text.select/undo/redo、system.set_volume 和 interrupt.list/ack。测试实际校验源码中的 FOR_AI 等表，不读取文档；所以 85 项通过不能表示总表已同步。运行时能力已开放，这不是缺工具。",
+    "recommendation": "补齐 §1.3 的任务行及相关接口；说明测试以代码内清单为基准、文档需人工同步，或从同一登记数据生成审计用清单。",
+    "reproduce": "对照 §1.3 的完整表、text_caps.c:173-187、task.c:227-239 和 ai_surface.c:29-74/157-184。源码名称比较见 experiments/surface-comparison.json；旧阅读/通信等域不在本服务表范围的差异没有全算作遗漏。"
+  }
+]
