@@ -999,10 +999,13 @@ void ink_task_end(int id, ink_task_state_t how, const char *result, const char *
 
 中枢协议 v0.2 要设备改的（[hub-architecture §13](https://github.com/Gidean-zcx/ink/blob/claude/hub-design-8fd433/docs/hub/hub-architecture.md)，服务器设计说还没到做的阶段，先记着）：`device/event` 加 `seq`、`boot`、`member`；`confirm/request`；`ink/member`；块传输（kind 6、7，`update/fetch` 固定包标识，现在是 JSON 里放 base64）；`hub_link` 的配对状态；确认结果落盘、`confirm.status`；同步的快照安装。
 
-还没做、也不属于这一轮的：中枢真正的 `update/*` 协议；正式词库；`ports/esp32s31` 上这些 HAL 全部没有实现（§14.2）；应用权限按前台应用查、事件信封没有成员归属（第十四轮报告的架构节）。
+确认规则要改（D-105、R-063，用户的要求，[服务器设计概要 §7.5、§13](https://github.com/Gidean-zcx/ink/blob/claude/hub-design-8fd433/docs/hub/hub-architecture.md)，协议 §3.3）：默认自动，确认卡只留给高风险。**还没改，什么时候改由用户定。** 要动的：`confirm_for`（`cap.c`）里外部和系统副作用不再一律弹卡，中枢发来的 `tools/call` 带 `_meta.asked:true` 就直接做；高风险的打上 `ask_by_hand`（花钱、改家人的密码、清空设备、删家人、批量删除、移除设备、退出家庭、改孩子的规则、恢复备份，这份清单还可以改）；`text.voice_start` 这类不再一律弹卡；自动做的进活动记录，能撤销的给撤销。这和现在的 §7、底座设计 §6.2 不一样，现在的代码和测试还是旧规则。
+
+还没做、也不属于这一轮的：中枢真正的 `update/*` 协议；正式词库；`ports/esp32s31` 上这些 HAL 全部没有实现（§14.2）；应用权限按前台应用查（第十四轮报告的架构节）。事件信封：带 `member` 的事件已经按成员发（§11.4），`seq`、`boot` 还没有。
 
 ## 修订记录
 
+- v0.5（2026-11-05）：第十五轮审计的问题修完（§15.3.1）；语音输入被打断时留字（§9.5）；加文字编辑（§9.4.1）、麦克风状态（§10.3）、恢复出厂的做法（§11.5）、任务列表（§13.1）、音量键、关机图（§13）、`data.status`；记下确认规则要改（§15.4）。
 - v0.4（2026-11-04）：加语音输入（§9.5）、电源菜单、和界面约定的对照（§15.4）；和其他分支重号的编号改掉。
 - v0.3（2026-11-04）：第 2 阶段和升级完成，第十四轮审计的问题修完；§3、§4、§5、§7～§13 按实际接口改。
 - v0.2（2026-11-04）：第 1 阶段完成，回填验证记录和实现中改的接口。
