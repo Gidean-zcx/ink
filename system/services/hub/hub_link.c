@@ -46,7 +46,7 @@ typedef enum { HE_CALL = 1, HE_WS, HE_LINK, HE_DEMAND, HE_TX, HE_RECONNECT } hub
  * task. Small binary frames (voice, input) come from a pool allocated once: no allocation per frame. */
 typedef struct tx_item {
     struct tx_item *next;
-    bool binary, pooled;
+    bool binary, pooled, enrollment;
     uint32_t event_seq;
     char member[INK_MEMBER_ID_MAX];
     size_t len;
@@ -401,7 +401,7 @@ static void drain_tx(bool online) {
             }
         osal_mutex_unlock(H.tx_lock);
         if (!it) return; /* empty, or only background left while it is paced (next_wakeup) */
-        if (!online || !H.ws || (it->member[0] && (!ink_member_space_open() || strcmp(it->member, ink_member_current()->id))) ||
+        if (!online || !H.ws || (!it->enrollment && H.state != HS_ONLINE) || (it->member[0] && (!ink_member_space_open() || strcmp(it->member, ink_member_current()->id))) ||
             hal_ws_send(H.ws, it->binary, it->data, it->len, 2000000) != 0) {
             ink_probe_count("hub.tx_dropped");
         } else {
@@ -485,8 +485,9 @@ static void hub_task(void *arg) {
             }
             case HE_TX: break; /* drained below */
             case HE_RECONNECT:
-                drain_tx(H.state == HS_ONLINE || H.state == HS_PAIRING);
-                fail_all(INK_HUB_ERR_LOST, true);
+                drain_tx(H.state == HS_PAIRING);
+                if (H.state == HS_PAIRING && H.ws && hal_ws_flush(H.ws, 2000000) != 0) ink_probe_count("pairing.reply_lost");
+                fail_all(INK_HUB_ERR_LOST, false);
                 close_ws();
                 set_state(HS_DISCONNECTED);
                 break;
@@ -693,6 +694,7 @@ static int enqueue_tx(bool binary, int cls, const void *data, size_t len, const 
     }
     it->next = NULL;
     it->binary = binary;
+    it->enrollment = pairing;
     it->len = len;
     memcpy(it->data, data, len);
     osal_mutex_lock(H.tx_lock, OSAL_WAIT_FOREVER);
@@ -775,7 +777,7 @@ int ink_hub_on_request(const char *prefix, ink_hub_request_fn fn, void *ctx) {
     return 0;
 }
 
-int ink_hub_respond(int64_t id, const char *result_json) {
+static int respond(int64_t id, const char *result_json, bool pairing) {
     const char *r = result_json ? result_json : "{}";
     size_t rl = strlen(r);
     const char *prev = osal_mem_tag("hub");
@@ -785,12 +787,15 @@ int ink_hub_respond(int64_t id, const char *result_json) {
     int n = snprintf(buf, 64, "{\"jsonrpc\":\"2.0\",\"id\":%lld,\"result\":", (long long)id);
     memcpy(buf + n, r, rl);
     buf[n + rl] = '}';
-    int ok = enqueue_tx(false, INK_HUB_TX_CONTROL, buf, (size_t)n + rl + 1, NULL, true);
+    int ok = enqueue_tx(false, INK_HUB_TX_CONTROL, buf, (size_t)n + rl + 1, NULL, pairing);
     osal_free(buf);
     return ok == 0 ? 0 : INK_HUB_ERR_OFFLINE;
 }
 
-int ink_hub_respond_error(int64_t id, int code, const char *message) {
+int ink_hub_respond(int64_t id, const char *result_json) { return respond(id, result_json, false); }
+int ink_hub_pair_respond(int64_t id, const char *result_json) { return respond(id, result_json, true); }
+
+static int respond_error(int64_t id, int code, const char *message, bool pairing) {
     char buf[256];
     ink_jw_t w;
     ink_jw_init(&w, buf, sizeof buf);
@@ -800,5 +805,7 @@ int ink_hub_respond_error(int64_t id, int code, const char *message) {
     ink_jw_str(&w, message ? message : "error");
     ink_jw_raw(&w, "}}");
     if (w.overflow) return INK_HUB_ERR_NOMEM;
-    return enqueue_tx(false, INK_HUB_TX_CONTROL, buf, w.len, NULL, true) == 0 ? 0 : INK_HUB_ERR_OFFLINE;
+    return enqueue_tx(false, INK_HUB_TX_CONTROL, buf, w.len, NULL, pairing) == 0 ? 0 : INK_HUB_ERR_OFFLINE;
 }
+int ink_hub_respond_error(int64_t id, int code, const char *message) { return respond_error(id, code, message, false); }
+int ink_hub_pair_respond_error(int64_t id, int code, const char *message) { return respond_error(id, code, message, true); }

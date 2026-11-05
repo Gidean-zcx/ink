@@ -1312,6 +1312,21 @@ int hal_ws_send(hal_ws_t *w, bool binary, const void *data, size_t len, int64_t 
     return 0;
 }
 
+int hal_ws_flush(hal_ws_t *w, int64_t timeout_us) {
+    if (!w || vtk_in_isr() || osal_task_self() == w->task || timeout_us < 0) return -1;
+    vtk_lock();
+    uint64_t deadline = vtk_now() + (uint64_t)timeout_us * 1000;
+    while (w->state == 1 && !w->dead && (w->tx_bytes || vtk_now() < w->up_last)) {
+        uint64_t now = vtk_now();
+        if (now >= deadline) { vtk_unlock(); return -1; }
+        uint64_t until = !w->tx_bytes && w->up_last < deadline ? w->up_last : deadline;
+        vtk_block_locked(&w->txwq, until - now);
+    }
+    bool ok = w->state == 1 && !w->dead;
+    vtk_unlock();
+    return ok ? 0 : -1;
+}
+
 void hal_ws_free(hal_ws_t *w) {
     if (!w) return;
     if (vtk_in_isr() || osal_task_self() == w->task) osal_panic("hal_ws_free from an ISR or its connection's callback (see hal_net.h)");

@@ -35,6 +35,7 @@ def boot(area, phase, checkpoint=False):
     if not ok:
         print(run.stderr[-3500:])
         print(json.dumps(data.get("warnings", []), ensure_ascii=False))
+        print(json.dumps({key: metrics.get(key, 0) for key in ("power.reboot", "test.finished", "test.fail")}, sort_keys=True))
         raise SystemExit(1)
 
 area = work / "recovery"
@@ -42,7 +43,7 @@ area.mkdir()
 for phase in ("network", "claim", "commit"):
     boot(area, phase, checkpoint=True)
 # Preserve the committing image for mutually independent error and wipe scenarios.
-for label in ("expired", "invalid", "wipe"):
+for label in ("expired", "invalid", "wipe", "wipe-string"):
     target = work / label
     target.mkdir()
     shutil.copy2(area / "user.img", target / "user.img")
@@ -53,12 +54,15 @@ for phase in ("expired", "invalid"):
     boot(work / phase, phase)
 boot(work / "wipe", "wipe")
 boot(work / "wipe", "wiped")
-for phase in ("hotspot", "card", "pin"):
+boot(work / "wipe-string", "wipe-string")
+for phase in ("hotspot", "hotspot-handoff", "card", "pin", "card-wifi"):
     target = work / phase
     (target / "sd/content").mkdir(parents=True)
-    if phase == "card":
-        (target / "sd/content/ink-pair.json").write_text(json.dumps({
-            "url": "wss://example.com/v1/device", "pin": "11" * 32, "preauth": "test-once"}))
+    if phase in ("card", "card-wifi"):
+        config = {"url": "wss://example.com/v1/device", "pin": "11" * 32, "preauth": "test-once"}
+        if phase == "card-wifi": config.update(ssid="test-wifi", password="test-password")
+        (target / "sd/content/ink-pair.json").write_text(json.dumps(config))
     boot(target, phase)
     if phase == "hotspot": boot(target, "hotspot-reboot")
+    if phase == "card-wifi": boot(target, "card-wifi-retry")
 print("Evidence directory:", work.relative_to(ROOT))

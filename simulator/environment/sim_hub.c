@@ -259,6 +259,7 @@ static void answer_listen(int i, uint64_t t) {
 static struct hal_ws *g_last_ws;
 static int64_t g_test_rpc = TEST_RPC_BASE;
 static char *g_test_reply;
+static int64_t g_test_reply_id, g_test_external_id;
 static struct {
     char *text[32];
     int n;
@@ -277,6 +278,11 @@ void sim_hub_pair_faults(unsigned faults, int hello_error, bool wipe) {
 }
 const char *sim_hub_pair_nonce(void) { return PAIR.nonce; }
 const char *sim_hub_pair_txid(void) { return PAIR.txid; }
+void sim_hub_pair_expire(void) {
+    if (!g_last_ws) return;
+    cJSON *n = cJSON_Parse("{\"jsonrpc\":\"2.0\",\"method\":\"pair/expired\",\"params\":{}}");
+    send_json(g_last_ws, vtk_isr_now() + SIM_MS(1), n); cJSON_Delete(n);
+}
 static void pair_reply(struct hal_ws *ws, uint64_t at, const cJSON *id, const char *result, int code, bool wipe) {
     cJSON *r = cJSON_CreateObject();
     cJSON_AddStringToObject(r, "jsonrpc", "2.0");
@@ -356,6 +362,7 @@ void sim_hub_request_device(const char *method, const char *params_json) { /* ev
     cJSON *rq = cJSON_CreateObject();
     cJSON_AddStringToObject(rq, "jsonrpc", "2.0");
     cJSON_AddNumberToObject(rq, "id", (double)++g_test_rpc);
+    g_test_external_id = g_test_rpc;
     cJSON_AddStringToObject(rq, "method", method);
     cJSON *pr = cJSON_Parse(params_json ? params_json : "{}");
     if (pr) cJSON_AddItemToObject(rq, "params", pr);
@@ -366,6 +373,19 @@ void sim_hub_request_device(const char *method, const char *params_json) { /* ev
 }
 
 const char *sim_hub_device_reply(void) { return g_test_reply; }
+void sim_hub_request_device_raw(const char *method, const char *params_json) {
+    if (!g_last_ws || !method || strlen(method) > 31 || !params_json) return;
+    size_t size = strlen(params_json) + 128;
+    char *txt = sim_host_malloc(size);
+    if (!txt) return;
+    g_test_external_id = ++g_test_rpc;
+    int n = snprintf(txt, size, "{\"jsonrpc\":\"2.0\",\"id\":%lld,\"method\":\"%s\",\"params\":%s}",
+                     (long long)g_test_rpc, method, params_json);
+    sim_host_free(g_test_reply); g_test_reply = NULL;
+    if (n > 0 && (size_t)n < size) sim_net_hub_send_at(g_last_ws, vtk_isr_now() + SIM_MS(1), txt, (size_t)n, false);
+    sim_host_free(txt);
+}
+bool sim_hub_reply_matches_request(void) { return g_test_reply && g_test_reply_id == g_test_external_id; }
 int sim_hub_events_seen(void) { return g_events.n; }
 const char *sim_hub_event_at(int i) { return i >= 0 && i < g_events.n && i >= g_events.n - 32 ? g_events.text[i % 32] : NULL; } /* the latest 32 */
 const char *sim_hub_last_ask(void) { return g_last_ask; }
@@ -549,6 +569,7 @@ static bool on_device_response(struct hal_ws *ws, uint64_t t, cJSON *msg) {
     const cJSON *id = cJSON_GetObjectItemCaseSensitive(msg, "id");
     if (!cJSON_IsNumber(id)) return false;
     if ((int64_t)id->valuedouble > TEST_RPC_BASE) {
+        g_test_reply_id = (int64_t)id->valuedouble;
         keep_text(&g_test_reply, msg);
         return true;
     }
@@ -650,7 +671,11 @@ void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t 
     const char *method = cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(req, "method"));
     cJSON *id = cJSON_GetObjectItemCaseSensitive(req, "id");
     if (!method) { /* a response from the device (to a tools/call) */
-        if (PAIR.faults & SIM_PAIR_DROP_ACK) { sim_metric_add("hub.pair_ack_dropped", 1); cJSON_Delete(req); return; }
+        const cJSON *result = cJSON_GetObjectItemCaseSensitive(req, "result");
+        if (cJSON_IsTrue(cJSON_GetObjectItemCaseSensitive(result, "ok"))) {
+            if (PAIR.faults & SIM_PAIR_DROP_ACK) { sim_metric_add("hub.pair_ack_dropped", 1); cJSON_Delete(req); return; }
+            sim_metric_add("hub.pair_ack_received", 1);
+        }
         if (!on_device_response(ws, t, req)) sim_metric_add("hub.unexpected_responses", 1);
         cJSON_Delete(req);
         return;

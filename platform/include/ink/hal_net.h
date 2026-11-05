@@ -117,6 +117,8 @@ bool hal_ws_peer_key(hal_ws_t *ws, uint8_t out[32]);
  * the send buffer is full. Returns 0, or -1 if not connected / timed out.
  */
 int hal_ws_send(hal_ws_t *ws, bool binary, const void *data, size_t len, int64_t timeout_us);
+/* Owner task: finish queued writes before an intentional enrollment reconnect. Bounded, 0 or -1. */
+int hal_ws_flush(hal_ws_t *ws, int64_t timeout_us);
 /** Close if still open (no HAL_WS_CLOSED for that), wait until no callback is running and none can
  *  start, release the handle. ctx may be freed once it returns. May block for a network round trip. */
 void hal_ws_free(hal_ws_t *ws);

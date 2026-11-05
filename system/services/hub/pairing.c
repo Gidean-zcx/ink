@@ -48,12 +48,14 @@ typedef struct {
 } pair_event_t;
 enum { PE_BEGIN, PE_HELLO, PE_OFFER, PE_COMPLETE, PE_EXPIRED, PE_WEB };
 static struct {
-    osal_mutex_t *lock;
+    bool ready;
     osal_sem_t *saved;
     pair_config_t config;
     pair_identity_t identity;
     bool enabled, blocked, halted, hotspot;
-    int save_result, queued, h_state;
+    char hotspot_owner[16];
+    uint32_t hotspot_generation;
+    int save_result, queued, h_state, last_error;
     uint32_t generation;
     unsigned char peer[32];
     char code[9];
@@ -63,8 +65,8 @@ static struct {
 } P INK_PSRAM_BSS;
 
 static const char *const STATES[] = {"unpaired", "pairing", "committing", "bound", "revoked"};
-static void lock(void) { osal_mutex_lock(P.lock, OSAL_WAIT_FOREVER); }
-static void unlock(void) { osal_mutex_unlock(P.lock); }
+static void lock(void) { ink_svc_lock(); }
+static void unlock(void) { ink_svc_unlock(); }
 static void snapshot(pair_identity_t *s, pair_config_t *c) {
     lock();
     if (s) *s = P.identity;
@@ -81,8 +83,10 @@ static bool durable(const char *path, void *data, size_t size) {
     if (!P.saved) return false;
     uint32_t crc = ink_crc32(0, data, size - sizeof crc);
     memcpy((char *)data + size - sizeof crc, &crc, sizeof crc);
-    if (ink_storage_write_borrow(path, data, size, saved, NULL) != 0) return false;
-    return osal_sem_take(P.saved, OSAL_WAIT_FOREVER) == OSAL_OK && P.save_result == 0;
+    bool ok = ink_storage_write_borrow(path, data, size, saved, NULL) == 0 &&
+              osal_sem_take(P.saved, OSAL_WAIT_FOREVER) == OSAL_OK && P.save_result == 0;
+    osal_sem_delete(P.saved); P.saved = NULL;
+    return ok;
 }
 static void publish(void) {
     ink_state_set_str(P.h_state, STATES[ink_pairing_state()]);
@@ -152,11 +156,23 @@ static bool endpoint_ok(const char *s, const char *scheme, bool device) {
     for (const char *p = host; *p; p++) if ((unsigned char)*p <= 32 || *p == '@' || *p == '?' || *p == '#' || *p == '\\') return false;
     return !device || !strcmp(slash, "/v1/device");
 }
+static bool token_string(const ink_json_t *j, int t, char *out, size_t cap, bool required) {
+    out[0] = 0;
+    if (t < 0 || t >= j->ntok || j->tok[t].type != 4) return false;
+    int raw = j->tok[t].end - j->tok[t].start;
+    if (raw < 0 || raw > MESSAGE_MAX) return false;
+    char *full = osal_malloc((size_t)raw + 1, OSAL_MEM_EXTERNAL);
+    if (!full) return false;
+    int n = ink_json_str(j, t, full, (size_t)raw + 1);
+    bool ok = n >= (required ? 1 : 0) && (size_t)n < cap && !memchr(full, 0, (size_t)n);
+    if (ok) memcpy(out, full, (size_t)n + 1);
+    memset(full, 0, (size_t)raw + 1); osal_free(full);
+    return ok;
+}
 static bool string(const ink_json_t *j, int obj, const char *key, char *out, size_t cap, bool required) {
     int t = ink_json_find(j, obj, key);
     if (t < 0) { out[0] = 0; return !required; }
-    int n = ink_json_str(j, t, out, cap);
-    return n >= (required ? 1 : 0) && (size_t)n < cap;
+    return token_string(j, t, out, cap, required);
 }
 static void fail(ink_call_t *c, const char *why) {
     c->rc.status = INK_RC_FAILED;
@@ -169,10 +185,10 @@ static bool by_person(ink_call_t *c) {
     return false;
 }
 
-bool ink_pairing_enabled(void) { if (!P.lock) return false; lock(); bool v = P.enabled; unlock(); return v; }
+bool ink_pairing_enabled(void) { if (!P.ready) return false; lock(); bool v = P.enabled; unlock(); return v; }
 bool ink_pairing_blocked(void) { return __atomic_load_n(&P.blocked, __ATOMIC_ACQUIRE); }
 ink_pair_state_t ink_pairing_state(void) {
-    if (!P.lock) return INK_PAIR_UNPAIRED;
+    if (!P.ready) return INK_PAIR_UNPAIRED;
     lock(); unsigned s = P.identity.state; unlock();
     return s <= INK_PAIR_REVOKED ? (ink_pair_state_t)s : INK_PAIR_UNPAIRED;
 }
@@ -187,11 +203,14 @@ bool ink_pairing_endpoint(char url[128], unsigned char pin[32], bool *pinned) {
     unlock();
     return true;
 }
-void ink_pairing_peer(const unsigned char hash[32]) { if (P.lock) { lock(); memcpy(P.peer, hash, 32); unlock(); } }
+void ink_pairing_peer(const unsigned char hash[32]) { if (P.ready) { lock(); memcpy(P.peer, hash, 32); unlock(); } }
 int ink_pairing_handshake(char method[32], char *params, size_t cap) {
     if (!ink_pairing_enabled() || ink_pairing_blocked()) return -1;
     ink_jw_t w;
     ink_jw_init(&w, params, cap);
+    char member[16];
+    snprintf(member, sizeof member, "%s", ink_member_current()->id);
+    bool authed = ink_member_space_open();
     lock();
     pair_identity_t *s = &P.identity;
     if (s->token[0]) {
@@ -199,13 +218,13 @@ int ink_pairing_handshake(char method[32], char *params, size_t cap) {
         ink_jw_raw(&w, "{\"proto\":2,\"hw\":\"metalio-e-ink4-plus\",\"fw\":\"dev\",\"device\":");
         ink_jw_str(&w, s->device);
         ink_jw_raw(&w, ",\"token\":"); ink_jw_str(&w, s->token);
-        ink_jw_raw(&w, ",\"member\":"); ink_jw_str(&w, ink_member_current()->id);
-        ink_jw_raw(&w, ink_member_space_open() ? ",\"authed\":true}" : ",\"authed\":false}");
+        ink_jw_raw(&w, ",\"member\":"); ink_jw_str(&w, member);
+        ink_jw_raw(&w, authed ? ",\"authed\":true}" : ",\"authed\":false}");
     } else {
         snprintf(method, 32, "pair/begin");
         ink_jw_raw(&w, "{\"proto\":2,\"hw\":\"metalio-e-ink4-plus\",\"fw\":\"dev\",\"nonce\":");
         ink_jw_str(&w, s->nonce);
-        if (s->txid[0]) { ink_jw_raw(&w, ",\"txid\":"); ink_jw_str(&w, s->txid); }
+        if (s->state == INK_PAIR_COMMITTING && s->txid[0]) { ink_jw_raw(&w, ",\"txid\":"); ink_jw_str(&w, s->txid); }
         if (s->preauth[0]) { ink_jw_raw(&w, ",\"preauth\":"); ink_jw_str(&w, s->preauth); }
         ink_jw_raw(&w, "}");
     }
@@ -218,8 +237,12 @@ static void tx_params(const char *txid, char *out, size_t cap) {
     ink_jw_raw(&w, "{\"txid\":"); ink_jw_str(&w, txid); ink_jw_raw(&w, "}");
 }
 static void event_job(void *arg);
+static void free_event(pair_event_t *e) {
+    memset(e->text, 0, strlen(e->text)); osal_free(e);
+    __atomic_sub_fetch(&P.queued, 1, __ATOMIC_ACQ_REL);
+}
 static bool queue_event(int kind, long long id, uint32_t web, int status, const char *text, size_t len) {
-    if (!P.lock || len > MESSAGE_MAX) return false;
+    if (!P.ready || len > MESSAGE_MAX) return false;
     if (__atomic_add_fetch(&P.queued, 1, __ATOMIC_ACQ_REL) > 4) { __atomic_sub_fetch(&P.queued, 1, __ATOMIC_ACQ_REL); return false; }
     pair_event_t *e = osal_calloc(1, sizeof *e + len + 1, OSAL_MEM_EXTERNAL);
     if (!e) { __atomic_sub_fetch(&P.queued, 1, __ATOMIC_ACQ_REL); return false; }
@@ -245,7 +268,7 @@ bool ink_pairing_request(long long id, const char *method, const ink_json_t *j, 
     int kind = !strcmp(method, "pair/offer") ? PE_OFFER : !strcmp(method, "pair/complete") ? PE_COMPLETE : -1;
     if (kind < 0) return false;
     if (!ink_pairing_enabled() || ink_pairing_blocked() || !queue_event(kind, id, 0, 0, j->text, strlen(j->text)))
-        ink_hub_respond_error(id, -32022, "pairing unavailable");
+        ink_hub_pair_respond_error(id, -32022, "pairing unavailable");
     return true;
 }
 void ink_pairing_expired(void) {
@@ -301,7 +324,10 @@ static void web_done(void *ctx, const ink_receipt_t *rc) {
         hal_provision_reply(request, 200);
         hal_provision_stop();
         lock(); P.hotspot = false; unlock();
-    } else hal_provision_reply(request, 400);
+    } else {
+        if (!request) P.card_wifi = false;
+        hal_provision_reply(request, 400);
+    }
 }
 static bool join_wifi(const ink_json_t *j, int obj, uint32_t request) {
     ink_args_t *a = osal_malloc(sizeof *a, OSAL_MEM_EXTERNAL);
@@ -310,13 +336,31 @@ static bool join_wifi(const ink_json_t *j, int obj, uint32_t request) {
     if (ok) {
         ink_args_init(a);
         ok = ink_args_str(a, "ssid", ssid) == 0 && ink_args_str(a, "password", password) == 0;
-        ink_call_opts_t opts = {.src = INK_SRC_TOUCH, .reply_exec = INK_EXEC_BG, .done = web_done, .ctx = (void *)(uintptr_t)request};
+        char owner[16]; uint32_t generation;
+        lock(); memcpy(owner, P.hotspot_owner, sizeof owner); generation = P.hotspot_generation; unlock();
+        ink_call_opts_t opts = {.src = INK_SRC_TOUCH, .reply_exec = INK_EXEC_BG, .done = web_done, .ctx = (void *)(uintptr_t)request,
+                               .member = request ? owner : NULL, .member_generation = request ? generation : 0};
         if (ok) ok = ink_cap_call("wifi.connect", a, &opts) == 0;
     }
     memset(password, 0, sizeof password);
     if (a) memset(a, 0, sizeof *a);
     osal_free(a);
     return ok;
+}
+static void finish_web(pair_event_t *e, const ink_json_t *j) {
+    if (ink_json_find(j, 0, "ssid") >= 0) {
+        if (!join_wifi(j, 0, e->web)) hal_provision_reply(e->web, 400);
+    } else {
+        hal_provision_reply(e->web, 200); hal_provision_stop();
+        lock(); P.hotspot = false; unlock();
+    }
+}
+static void web_configured(void *ctx, const ink_receipt_t *rc) {
+    pair_event_t *e = ctx;
+    ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
+    if (rc->status == INK_RC_DONE && j && ink_json_parse(j, e->text, strlen(e->text)) == 0) finish_web(e, j);
+    else hal_provision_reply(e->web, 400);
+    osal_free(j); free_event(e);
 }
 static void provision(void *ctx, uint32_t request, const char *json, size_t len) {
     (void)ctx;
@@ -334,13 +378,13 @@ static bool complete_config(const ink_json_t *j, int obj) {
     bool ok = !c->pin[0] || !strcmp(c->pin, observed);
     int urls = ink_json_find(j, obj, "urls"), pins = ink_json_find(j, obj, "pins");
     if (urls >= 0) ok = ok && j->tok[urls].type == 2 && j->tok[urls].size >= 1 &&
-                          ink_json_str(j, urls + 1, c->url, sizeof c->url) > 0 && endpoint_ok(c->url, "wss://", true);
+                          token_string(j, urls + 1, c->url, sizeof c->url, true) && endpoint_ok(c->url, "wss://", true);
     if (pins >= 0) {
         bool matched = false;
         if (j->tok[pins].type == 2 && j->tok[pins].size > 0 && j->tok[pins].size <= 2) {
             for (int i = 0; i < j->tok[pins].size; i++) {
                 char key[65];
-                if (ink_json_str(j, pins + 1 + i, key, sizeof key) > 0 && normalize_key(key) && !strcmp(key, observed)) matched = true;
+                if (token_string(j, pins + 1 + i, key, sizeof key, true) && normalize_key(key) && !strcmp(key, observed)) matched = true;
             }
         }
         ok = ok && matched;
@@ -367,13 +411,29 @@ static void event_job(void *arg) {
         obj = e->kind == PE_WEB ? 0 : ink_json_find(j, 0, e->status < 0 ? "error" : e->kind <= PE_HELLO ? "result" : "params");
     if (e->kind == PE_WEB) {
         if (obj < 0) { hal_provision_reply(e->web, 400); goto done; }
-        lock(); bool active = P.hotspot; unlock();
+        char owner[16]; uint32_t generation;
+        lock(); bool active = P.hotspot; memcpy(owner, P.hotspot_owner, sizeof owner); generation = P.hotspot_generation; unlock();
+        active = active && !strcmp(owner, ink_member_current()->id) && generation == ink_member_generation(owner) && ink_member_space_open();
         if (!active) { hal_provision_reply(e->web, 403); goto done; }
-        bool ok = ink_json_find(j, 0, "url") < 0 || configure(j, obj, NULL);
-        if (!ok) { hal_provision_reply(e->web, 400); goto done; }
-        if (ink_json_find(j, obj, "ssid") >= 0) {
-            if (!join_wifi(j, obj, e->web)) hal_provision_reply(e->web, 400);
-        } else { hal_provision_reply(e->web, 200); hal_provision_stop(); lock(); P.hotspot = false; unlock(); }
+        if (ink_json_find(j, 0, "url") >= 0) {
+            ink_args_t *a = osal_malloc(sizeof *a, OSAL_MEM_EXTERNAL);
+            bool ok = a != NULL;
+            if (a) {
+                ink_args_init(a);
+                const char *keys[] = {"url", "console", "pin"};
+                for (int k = 0; ok && k < 3; k++) {
+                    if (ink_json_find(j, 0, keys[k]) < 0) continue;
+                    char value[128];
+                    ok = string(j, 0, keys[k], value, sizeof value, true) && ink_args_str(a, keys[k], value) == 0;
+                }
+                ink_call_opts_t opts = {.src=INK_SRC_TOUCH, .member=owner, .member_generation=generation,
+                                       .reply_exec=INK_EXEC_BG, .done=web_configured, .ctx=e};
+                if (ok) ok = ink_cap_call("pairing.configure", a, &opts) == 0;
+            }
+            osal_free(a);
+            if (ok) { memset(s, 0, sizeof *s); osal_free(s); osal_free(j); return; }
+            hal_provision_reply(e->web, 400);
+        } else finish_web(e, j);
     } else if (e->kind == PE_EXPIRED) {
         if (s->state != INK_PAIR_COMMITTING && s->state != INK_PAIR_BOUND && s->state != INK_PAIR_REVOKED) {
             fresh(s);
@@ -383,10 +443,13 @@ static void event_job(void *arg) {
         if (e->status < 0) {
             int64_t code = 0;
             if (obj >= 0) ink_json_int(j, ink_json_find(j, obj, "code"), &code);
+            lock(); P.last_error = (int)code; unlock();
+            publish();
             if (code == -32011) {
                 bool wipe = false;
                 int data = ink_json_find(j, obj, "data");
-                wipe = ink_json_eq(j, ink_json_find(j, data, "wipe"), "true");
+                int w = ink_json_find(j, data, "wipe");
+                wipe = w >= 0 && j->tok[w].type == 8 && ink_json_eq(j, w, "true");
                 fresh(s); s->state = INK_PAIR_REVOKED; s->wipe = wipe;
                 if (store_identity(s)) {
                     ink_hub_reconnect();
@@ -401,13 +464,17 @@ static void event_job(void *arg) {
                 fresh(s); if (store_identity(s)) ink_hub_reconnect();
             }
         } else if (e->kind == PE_HELLO) {
+            lock(); P.last_error = 0; unlock();
             if (s->state == INK_PAIR_COMMITTING && s->token[0]) {
                 s->state = INK_PAIR_BOUND; s->preauth[0] = 0;
                 store_identity(s);
             }
         } else if (obj >= 0) {
+            lock(); P.last_error = 0; unlock();
             char code[9]; int64_t seconds = 0;
-            if (string(j, obj, "code", code, sizeof code, true) && strlen(code) == 8 &&
+            bool valid = string(j, obj, "code", code, sizeof code, true) && strlen(code) == 8;
+            for (int i = 0; valid && i < 8; i++) valid = (code[i] >= 'A' && code[i] <= 'Z') || (code[i] >= '2' && code[i] <= '9');
+            if (valid &&
                 ink_json_int(j, ink_json_find(j, obj, "expires_s"), &seconds) && seconds > 0 && seconds <= 600) {
                 if (s->state == INK_PAIR_UNPAIRED) { s->state = INK_PAIR_PAIRING; if (!store_identity(s)) goto done; }
                 lock(); memcpy(P.code, code, sizeof code); P.expires = osal_now_us() + (uint64_t)seconds * 1000000; unlock();
@@ -418,35 +485,34 @@ static void event_job(void *arg) {
         bool ok = string(j, obj, "txid", txid, sizeof txid, true) &&
                   (s->state == INK_PAIR_PAIRING || (s->state == INK_PAIR_COMMITTING && !strcmp(s->txid, txid)));
         if (ok && s->state == INK_PAIR_PAIRING) {
-            memcpy(s->txid, txid, sizeof txid);
+            snprintf(s->txid, sizeof s->txid, "%s", txid);
             ok = string(j, obj, "family", s->family, sizeof s->family, true) && string(j, obj, "by", s->by, sizeof s->by, true) &&
                  string(j, obj, "name", s->name, sizeof s->name, true) && store_identity(s);
         }
         if (ok) {
-            ink_hub_respond(e->id, "{\"shown\":true}");
+            ink_hub_pair_respond(e->id, "{\"shown\":true}");
             if (s->state == INK_PAIR_COMMITTING && !s->token[0]) { char params[128]; tx_params(s->txid, params, sizeof params); ink_hub_pair_call("pair/accept", params); }
-        } else ink_hub_respond_error(e->id, -32602, "invalid pairing offer");
+        } else ink_hub_pair_respond_error(e->id, -32602, "invalid pairing offer");
     } else if (e->kind == PE_COMPLETE && obj >= 0) {
         char txid[40];
         bool ok = string(j, obj, "txid", txid, sizeof txid, true) &&
                   ((s->state == INK_PAIR_COMMITTING && !strcmp(s->txid, txid)) ||
                    ((s->state == INK_PAIR_PAIRING || s->state == INK_PAIR_UNPAIRED) && s->preauth[0]));
         if (ok) {
-            memcpy(s->txid, txid, sizeof txid);
+            snprintf(s->txid, sizeof s->txid, "%s", txid);
             ok = string(j, obj, "device", s->device, sizeof s->device, true) && string(j, obj, "token", s->token, sizeof s->token, true);
         }
         if (ok) {
             s->state = INK_PAIR_COMMITTING;
             ok = complete_config(j, obj) && store_identity(s);
         }
-        if (ok) { ink_probe_count("pairing.token_durable"); ink_hub_respond(e->id, "{\"ok\":true}"); ink_hub_reconnect(); }
-        else ink_hub_respond_error(e->id, -32602, "pairing not confirmed or not saved");
+        if (ok) { ink_probe_count("pairing.token_durable"); ink_hub_pair_respond(e->id, "{\"ok\":true}"); ink_hub_reconnect(); }
+        else ink_hub_pair_respond_error(e->id, -32602, "pairing not confirmed or not saved");
     }
 done:
     if (s) memset(s, 0, sizeof *s);
     osal_free(s); osal_free(j);
-    memset(e->text, 0, strlen(e->text)); osal_free(e);
-    __atomic_sub_fetch(&P.queued, 1, __ATOMIC_ACQ_REL);
+    free_event(e);
 }
 
 static void cap_configure(ink_call_t *c) {
@@ -455,7 +521,7 @@ static void cap_configure(ink_call_t *c) {
     int n = ink_args_to_json(&c->args, text, sizeof text);
     bool ok = j && n > 0 && ink_json_parse(j, text, (size_t)n) == 0 && configure(j, 0, NULL);
     osal_free(j);
-    if (!ok) fail(c, "家庭服务器地址或公钥不对，原来的设置已保留");
+    if (!ok) fail(c, "家庭服务器设置没能保存，请检查地址、公钥和存储");
 }
 static void cap_accept(ink_call_t *c) {
     if (!by_person(c)) return;
@@ -513,7 +579,9 @@ static void cap_hotspot(ink_call_t *c) {
         char result[128]; snprintf(result, sizeof result, "{\"wifi_qr\":\"WIFI:T:WPA;S:ink-setup;P:%s;;\"}", password);
         ink_cap_result(c, result); memset(password, 0, sizeof password);
     } else hal_provision_stop();
-    lock(); P.hotspot = on; unlock();
+    char owner[16]; snprintf(owner, sizeof owner, "%s", ink_member_current()->id);
+    uint32_t generation = ink_member_generation(owner);
+    lock(); P.hotspot = on; memcpy(P.hotspot_owner, owner, sizeof owner); P.hotspot_generation = generation; unlock();
 }
 static void cap_import(ink_call_t *c) {
     if (c->src != INK_SRC_SYSTEM && !by_person(c)) return;
@@ -530,11 +598,14 @@ static void cap_import(ink_call_t *c) {
     /* A card is a trusted source: it must carry the public key. */
     if (ok) {
         char key[65];
-        ok = string(j, 0, "pin", key, sizeof key, true) && normalize_key(key) && configure(j, 0, preauth);
+        /* A restart may have bound the device before optional Wi-Fi was saved. */
+        bool bound = ink_pairing_state() == INK_PAIR_BOUND;
+        ok = string(j, 0, "pin", key, sizeof key, true) && normalize_key(key) && configure(j, 0, bound ? NULL : preauth);
     }
     bool wifi = ok && ink_json_find(j, 0, "ssid") >= 0;
     if (wifi) { P.card_wifi = true; ok = join_wifi(j, 0, 0); if (!ok) P.card_wifi = false; }
     if (ok && !wifi) ok = hal_fs_remove(CARD_FILE) == 0;
+    if (ok && wifi) { c->rc.status = INK_RC_QUEUED; snprintf(c->rc.say, sizeof c->rc.say, "配对信息已保存，正在连接 Wi-Fi"); }
     if (!ok) fail(c, "没能导入配对文件，请检查文件和存储卡");
     memset(preauth, 0, sizeof preauth);
     if (text) memset(text, 0, MESSAGE_MAX + 1);
@@ -561,6 +632,7 @@ static void cap_status(ink_call_t *c) {
     ink_jw_raw(&w, "{\"state\":"); ink_jw_str(&w, STATES[P.identity.state]);
     ink_jw_raw(&w, P.hotspot ? ",\"hotspot\":true" : ",\"hotspot\":false");
     ink_jw_raw(&w, ink_pairing_blocked() ? ",\"blocked\":true" : ",\"blocked\":false");
+    ink_jw_raw(&w, ",\"error\":"); ink_jw_int(&w, P.last_error);
     ink_jw_raw(&w, ",\"family\":"); ink_jw_str(&w, P.identity.family);
     ink_jw_raw(&w, ",\"by\":"); ink_jw_str(&w, P.identity.by);
     ink_jw_raw(&w, ",\"txid\":"); ink_jw_str(&w, P.identity.txid);
@@ -607,13 +679,12 @@ void ink_pairing_start(void) {
     if (wipe || file) card_tick(NULL);
 }
 uint64_t ink_pairing_deadline(void) {
-    if (!P.lock) return 0;
+    if (!P.ready) return 0;
     lock(); uint64_t t = P.code[0] && P.identity.state == INK_PAIR_PAIRING ? P.expires : 0; unlock();
     return t;
 }
 int ink_pairing_init(void) {
-    P.lock = osal_mutex_create();
-    if (!P.lock) return -1;
+    P.ready = true;
     P.h_state = ink_state_define(&STATE);
     P.identity.version = PAIR_VERSION;
     int n = ink_storage_read(CONFIG_FILE, &P.config, sizeof P.config);
