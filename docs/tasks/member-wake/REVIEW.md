@@ -1,245 +1,101 @@
 # member-wake 独立复查
 
-复查日期：2026-11-06。基线：`103382b1`；复查提交：`4bc1f936`。范围：`backlog.md` 开头的 G1～G5 与 `member-wake` 一节。开始时旧 `REVIEW.md` 为空，没有上一轮发现可供回归。
+复查日期：2026-11-06。开发基线：`103382b1`；复查提交：`6b4fb6c6`。范围：`backlog.md` 开头 G1～G5 与 `member-wake`。上一轮记录取自 `be7abb88`，优先复核 MW-R1、MW-R2。仅写本报告，不改产品代码、不提交。
 
-**结论：不通过，严重 0、高 2。** 既有测试全部通过；补充场景复现了成员切换后的应用生命周期错误，以及免密截止后继续上传语音。两项均有源码定位、普通/ASan 复现与临时对象对照。
+**结论：本轮范围内通过，严重 0、高 0。** 上一轮两项高问题已修复；普通和 ASan/UBSan 全量各 96/96 通过。旧复现脚本、正式回归和撤销修复的对照均由本轮独立执行，没有直接采用开发报告的测试结论。证据限本机模拟器。
 
-## 发现
+## 上一轮问题复核
 
-### MW-R1【高】从过期成人成员门选择孩子后，没有恢复应用生命周期
+### MW-R1【原高，已修复】过期成人成员门换人后的应用生命周期
 
-- 位置：`system/ui/app_registry.c:217`、`:279–290`；后续影响位于 `:182–200`、`:147–150`。遗漏场景：`tests/integration/member_wake.c:214–225`。
-- 原因【实现】：过期唤醒的 `power_job` 将 `AP.locked` 置为真。成员门选择孩子时，`member.current` 和 `member.authed` 的回调都因身份变化只投递 `member_job`；该任务重建主页，却不重新计算 `AP.locked`。页面随后能打开，应用管理器仍不启动前台应用，直到再次锁屏/唤醒等路径重新同步。
-- 复现【实测】：成人设合成 PIN、打开阅读第 4 页、锁屏 121 秒、电源键唤醒，在成员门直接选择“小朋友”，再打开阅读器。主页及阅读器均为 `stopped`，探针退出 1，3 个检查失败。
-- 影响验证【实测】：复用现有 `tests/integration/apps.c` 的 alpha/beta 应用夹具：孩子打开 alpha 未调用 `on_start`，仍保留成人的 `owner fixture` 内存；关闭应用返回成功，却不调用 `save_state`，读取孩子的状态文件返回 -1；beta 已声明的权限也被拒绝。普通与 ASan 构建均为 **4 个检查失败、`test.finished=1`**。
-- 对照【实测】：只在临时编译对象的 `member_job` 中重算 `AP.locked`，同一夹具 **16/16 通过、退出 0**；仓库源码未修改。现有新测试先认证成人再切换孩子，没有走这条路径。
-- 证据边界：真实阅读器已证实生命周期状态错误；跨成员内存残留和保存遗漏由仓库已有生命周期夹具证实，并非实机或现有阅读器正文泄漏的结论。
-- 修法：切换成员的 UI 任务须在重建主页前同步当前电源与认证状态，使新成员应用正常启动、恢复和保存。增加“过期成人门 → 孩子 / 另一成人”的端到端测试，检查生命周期、状态保存及成员内存清理。
-- 复现命令：运行末尾脚本，`REVIEW_CASE=lifecycle`；对照加 `REVIEW_VARIANT=control`。证据：`build/test-out/review-member-lifecycle-current-out/metrics.json`、`review-member-lifecycle-control-out/metrics.json`。
+- 【实现】`system/ui/app_registry.c:279` 在重建主页前同步电源和认证状态；`:285` 区分实际换成员与同成员重新认证；`:496` 在启动时也同步状态。
+- 【实测】上一轮 `REVIEW_CASE=lifecycle` 原脚本在普通、ASan 构建均 **16/16、退出 0**。从过期成人门选择孩子后，应用重新启动、清除旧成员内存、按孩子保存状态，前台应用权限恢复。
+- 【实测】`integration-apps` **164/164**，另覆盖无 PIN 成人、有 PIN 成人、旧成员停止及双方状态恢复。已有 PIN 和成员表不可读的连续启动场景分别通过，未认证时主页应用保持停止。
+- 【反向实测】只移除 `member_job` 的状态同步，新测试失败 **15 条**；只移除启动同步，`table2`、`table3` 各失败 **1 条**。均完成测试，不是崩溃或超时造成的失败。
 
-### MW-R2【高】Wi-Fi 扫描跨过免密截止时，成人语音继续上传
+### MW-R2【原高，已修复】后台 Wi-Fi 扫描跨过截止后继续上传语音
 
-- 位置：`system/policy/members.c:310–319`；关联 `system/services/ai/ai_service.c:368–437`、`:830–840`，`system/services/hub/hub_link.c:709`。遗漏场景：`tests/integration/member_wake.c:157–174`。
-- 原因【实现】：到期回调只向 `INK_EXEC_BG` 排队。`ink_member_space_open()` 会按时间返回假，但 `member.authed` 尚未发布关闭，因此语音采集与发送端收不到撤销；二进制语音发送又没有核对该截止时间。`wifi.scan` 本就在同一后台执行器中同步等待扫描完成（`system/services/net/wifi.c:79,202`），模拟器扫描耗时 2.5 秒。
-- 复现【实测】：保持默认 120 秒，设合成成人 PIN，将已有免按键语音设置选为“始终”；锁屏 116 秒后用合成唤醒词和连续语音启动会话，在第 119 秒通过能力表发起 `wifi.scan`。扫描跨过截止，`ink_member_space_open()==false`，但 `audio.mic=sending`，随后 **0.5 秒仍上传 1176 字节**。扫描结束、后台队列处理到期任务后才停。普通与 ASan 构建均为 **2 个检查失败、`test.finished=1`**。此复现没有人为卡住执行器。
-- 补充边界【实测】：沿用新测试的信号量阻塞方法，默认 120 秒到期后的 2.2 秒继续上传 5826 字节；因此不仅是一次已经在途的帧。
-- 对照【实测】：临时编译对象让到期撤销直接执行、不再等待后台队列，相同 Wi-Fi 场景 **13/13 通过、退出 0**。这只用于定位原因，不表示可直接把含锁操作的全部状态通知搬进定时回调。
-- 修法：授权到期的撤销不能依赖普通后台工作完成；非本地采集、语音发送及排队帧最终发送的关口须检查成员身份和授权有效性，到期立即停止/丢弃语音。补充“已在上传 → 正常后台操作跨过截止 → 不唤醒”的回归，并保留本地录音可继续的规则。
-- 复现命令：运行末尾脚本，`REVIEW_CASE=uplinkscan`；对照加 `REVIEW_VARIANT=control`。证据：`build/test-out/review-member-uplinkscan-current-out/metrics.json`、`review-member-uplinkscan-control-out/metrics.json`。
+- 【实现】`system/services/audio/audio_service.c:206`、`system/services/ai/ai_service.c:96`、`system/services/text/voice_input.c:129` 在采集和缓冲处理时检查有效授权；`system/services/hub/rt.c:211` 保留会话原成员和成员代际；`system/services/hub/hub_link.c:382`、`:722` 在入队及最终发送前复核授权，已排队帧还核对撤销轮次。
+- 【实测】上一轮 `REVIEW_CASE=uplinkscan` 原脚本在普通、ASan 构建均 **13/13、退出 0**：默认 120 秒、真实模拟 Wi-Fi 扫描占用后台执行器，无需唤醒，到期后停止继续上传。
+- 【实测】`integration-member-wake-stream` **87/87**，补查通用非本地采集、AI/听写等待 `rt.open` 的缓冲、到期前入队的语音、成员快速往返及旧会话在孩子身份下发送；同成员的本地文件录音继续。
+- 【反向实测】分别替换为修复前的采集、AI、传输、听写、会话实现，新测试分别失败 **2/1/6/1/1 条**，均到达 `test.finished=1`。
 
 ## 逐条验收
 
-| 项目 | 复查结论 | 独立证据 |
-| --- | --- | --- |
-| 阅读闲置不退出；自动锁屏后起算 | 通过【实测】 | `integration-member-wake`：阅读 121 秒仍开放，自动锁屏后 119 秒直接返回 |
-| 1 分 59 秒 / 2 分 01 秒；电源键 / AI 键唤醒 | 通过【实测】 | 两键 × 两时点均执行；119 秒免密，121 秒显示成员门；唤醒键不启动 AI |
-| 错误密码不解锁 | 通过【实测】 | 通过现有 PIN 按钮回调输入错误值、检查错误提示，再输入正确值；`integration-people` 保留递增等待与隔离检查 |
-| 正确密码回到原页、原位置 | 通过【实测】 | 真实阅读器第 4 页：页面对象、文本、内容版本、能力回执页码均保持 |
-| 孩子不受影响；无 PIN 成人不受影响 | **部分通过** | 已处于孩子空间的两键唤醒、孩子不能切入带 PIN 成人、无 PIN 成人均通过；从成人门直接选孩子失败，见 MW-R1 |
-| 时长一处可改、仍为暂定值 | 通过【实测／实现】 | `members.c:37,714–721`；默认 120，已有设置改成 30 后按 30 秒生效 |
-| 开发报告 MW-7：后台忙时仍执行截止 | **部分通过** | 能力访问及唤醒门的截止检查有效；已开始的语音会话继续外发，见 MW-R2 |
-| `system-services-design.md` §11.4 同步 | 已同步【实现】 | 第 720～730 行记录锁屏起算、原页恢复和暂定时长；其“到期后麦克风不再发送”承诺尚不满足 |
-| G1 全量、内存检查、预算 | 通过【实测】 | 普通与 ASan/UBSan 均 95/95；已有预算未修改 |
-| G2 能力路径、AI 快照与凭据边界 | 基础路径通过，存在撤销缺口 | 未新增用户操作或页面；复用设置能力、人工 PIN 接口和成员门脱敏快照；AI 的持续执行撤销见 MW-R2 |
-| G3 依赖状态表 | 通过【实现】 | `ui-dependencies.md:159` 对应行已更新为“按推荐暂定，模拟器”，没有把占位外观写成完成设计稿 |
-| G4 页面规格与对照图 | 不适用 | 本节为服务策略任务，没有新增页面；`MembersBack` 明示复用占位成员门，未声称完成页面像素验收 |
-| G5 范围 | 未见无关改动 | 13 个文件；除服务、测试和说明外，应用管理器的 6 行差异直接服务于原页恢复，没有开发具体应用 |
+以下测试均包含在本轮普通和 ASan 全量运行中。
 
-## 命令与反向对照
+| 项目 | 结论 | 独立证据 |
+| --- | --- | --- |
+| 阅读闲置不退出；自动锁屏后才起算 | 通过【实测】 | `integration-member-wake`：阅读 121 秒仍开放；自动锁屏后的第 119 秒直接返回 |
+| 1 分 59 秒 / 2 分 01 秒；电源键 / AI 键 | 通过【实测】 | 两键 × 两时点均执行；119 秒免密，121 秒进成员门；唤醒键不额外启动 AI，短暂唤醒取消旧截止 |
+| 密码错误 | 通过【实测】 | 成员门实际按钮回调输入错误密码后保持关闭并显示错误；正确密码才开放；`integration-people` 保留递增等待和成员隔离检查 |
+| 回原页、原位置 | 通过【实测】 | 真实阅读器第 4 页的页面对象、文本、内容版本、能力回执页码保持；同成员认证恢复前台，实际换人重建主页 |
+| 孩子不受影响 | 通过【实测】 | 孩子两键唤醒免密、不能进入带 PIN 成人；无 PIN 成人也不受影响；过期成人门换人路径见 MW-R1 |
+| 时长一处可改、仍为暂定 | 通过【实测／实现】 | `members.c:37` 单处默认 120；`:714` 保留原设置 id，范围 30～3600；测试经人工确认改为 30 后生效 |
+| 报告 MW-7：后台繁忙不能延长授权 | 通过【实测】 | `integration-member-wake` 核对访问及唤醒关口；`integration-member-wake-stream` 核对持续采集、缓冲及最终发送，见 MW-R2 |
+| 服务设计 §11.4 | 已同步【实现】 | `docs/system/system-services-design.md:720` 记录锁屏起算、暂定时长、同页恢复、换成员和语音撤销；与本轮验证一致 |
+| G1 全量、内存检查、预算 | 通过【实测】 | 普通与 ASan/UBSan 均 96/96；既有预算文件未修改，新预算要求测试完成且零失败、零警告 |
+| G2 能力、AI 快照及凭据边界 | 通过【实测／实现】 | `integration-ai-surface`、`integration-people` 及新回归通过；复用成员、设置能力及脱敏成员门快照，PIN 仍仅人工输入；未新增用户操作或页面 |
+| G3 依赖状态 | 通过【实现】 | `docs/system/ui-dependencies.md:159` 已更新实际状态，仍注明暂定时长、模拟器证据及占位外观，没有改变需求判断 |
+| G4 页面规格与对照图 | 不适用 | 本节为服务策略任务；没有页面外观改动，未声称完成 `MembersBack` 设计稿。未把占位外观计作页面验收通过 |
+| G5 范围 | 符合【实现】 | 基线以来共 25 个相关文件；应用管理器改动用于原页保留及生命周期恢复，传输接口用于原成员绑定；未开发具体应用或修改无关设计 |
+
+## 独立命令与结果
+
+沿用已有构建缓存：两种构建均 `INK_WERROR=ON`，内存检查另为 `INK_SANITIZE=ON`；依赖来自给定的 `$INK_DEPS`。逐轮串行执行。
 
 | 命令 | 结果 |
 | --- | --- |
-| `cmake --build build -j4` | 退出 0；`INK_WERROR=ON` |
-| `$INK_DEPS/build-deps/pyenv/bin/ctest --test-dir build --output-on-failure -j3` | 退出 0，95/95，46.75 秒 |
-| `cmake --build build-asan -j4` | 退出 0；`INK_WERROR=ON`、`INK_SANITIZE=ON` |
-| `UBSAN_OPTIONS=halt_on_error=1 $INK_DEPS/build-deps/pyenv/bin/ctest --test-dir build-asan --output-on-failure -j3` | 退出 0，95/95，75.90 秒 |
-| 两份 `test-out/member-wake/metrics.json` | 均 174 条检查通过、`test.finished=1`、零警告、零预算违规 |
+| `cmake --build build -j4` | 退出 0 |
+| `$INK_DEPS/build-deps/pyenv/bin/ctest --test-dir build --output-on-failure -j3` | 退出 0，96/96，41.53 秒 |
+| `cmake --build build-asan -j4` | 退出 0 |
+| `UBSAN_OPTIONS=halt_on_error=1 $INK_DEPS/build-deps/pyenv/bin/ctest --test-dir build-asan --output-on-failure -j3` | 退出 0，96/96，76.43 秒；无 ASan/UBSan 报错 |
+| 两种构建的 `test-out/{member-wake,member-wake-stream,apps}/metrics.json` | 分别 174、87、164 条检查通过，均 `test.finished=1`、零警告、零预算违规 |
 | `git diff --check 103382b1..HEAD` | 退出 0 |
-| 差异隐私/I/O 检查、文档链接检查 | 本机路径/MAC 零命中；未新增 `write/read/fgets`；25 个本地链接均有效 |
+| `git diff --stat 103382b1..HEAD`、隐私及新增 I/O 调用扫描 | 25 个相关文件；本机路径/MAC 零命中；未新增 `write/read/fgets` 调用 |
 
-四组撤修复均由本轮独立执行：从标准输入编译替代对象，插在原静态库前链接现有 `sim-member-wake` 测试；不改原文件、不覆盖正式测试可执行文件。编译和链接均退出 0，直接运行对应模拟器均退出 1，均到达 `test.finished=1`：
-
-| 临时撤销内容 | 失败检查数 | 关键结果 |
-| --- | --- | --- |
-| `git show 103382b1:system/policy/members.c` | 25 | 阅读 121 秒与 119 秒免密返回失败 |
-| `git show 103382b1:system/ui/app_registry.c` | 32 | 成员门底下成为主页，原书页丢失 |
-| 只移除 `ink_member_space_open` 的截止检查 | 1 | 后台队列阻塞时仍放行过期授权 |
-| 只移除 `on_power` 的唤醒截止检查 | 5 | 唤醒绕过排队中的关闭任务 |
-
-结果分别在 `build/test-out/review-reverse-{members-baseline,apps-baseline,no-access-deadline,no-wake-deadline}-out/metrics.json`。这证明原有测试确实能测到报告列出的四类修复；本轮两项发现属于它们遗漏的组合场景。
-
-## 范围、规则与架构审视
-
-- 总规则第 1 节：只使用仓库、给定构建依赖和合成夹具；未操作设备、调用付费服务或真实凭据、对外写入、改历史或受保护资料。仅修改本报告，未提交。
-- 第 4 节：分层与确定性检查均通过；新计时使用 OSAL，新增共享 64 位计时值使用原子读写，未加常驻任务或大缓冲。未新增忽略返回值的 `write/read/fgets`。没有执行 Linux/gcc 或实机测试，本机通过不代替这些验证。
-- 既有测试期望变更与新锁屏规则相符；新增延时用于推进明确的模拟时刻，未发现通过 sleep 掩盖竞态、删除断言或放宽既有预算。
-- R-061：成员策略负责授权、应用管理器负责生命周期、现有软总线负责能力调用，划分本身成立。当前缺口在两个边界的同步：新成员页面与生命周期未一致恢复（MW-R1），授权截止与持续流未一致撤销（MW-R2）。没有新增必须另开放给 AI 的操作；PIN 仍只允许人工输入。
-- 构建、全量测试和补充探针逐轮串行，构建不超过 `-j4`、ctest 不超过 `-j3`。未启动带窗口的模拟器；既有 `gui-smoke` 使用 SDL dummy。
-- 补充实验只生成被忽略的 `build*/test-out/` 对象、可执行文件和合成输出；没有改源文件、测试文件或开发报告。
-
-## 补充复现脚本
-
-在已完成上述构建的仓库根目录执行。`lifecycle` 对应 MW-R1，改成 `uplinkscan` 对应 MW-R2；增加 `REVIEW_VARIANT=control` 运行临时对象对照；增加 `REVIEW_BUILD=build-asan UBSAN_OPTIONS=halt_on_error=1` 使用内存检查构建。当前源码两项退出 1，对照退出 0。脚本读取当前测试夹具并在内存中替换测试入口，源文件保持原样。
+复跑旧复现的命令如下；本轮分别使用 `build`、`build-asan` 与 `lifecycle`、`uplinkscan` 四种组合。旧脚本读取当前源码，只把探针编译到被忽略的测试输出目录，不依赖本报告旧内容仍在工作区。
 
 ```sh
-REVIEW_CASE=lifecycle python3 - <<'PY'
-from pathlib import Path
-doc = Path("docs/tasks/member-wake/REVIEW.md").read_text()
-code = doc.split("<!-- member-wake-probe -->\n```python\n", 1)[1].split("\n```", 1)[0]
-exec(compile(code, "<member-wake-review>", "exec"))
+REVIEW_BUILD=build REVIEW_CASE=lifecycle REVIEW_VARIANT=current \
+UBSAN_OPTIONS=halt_on_error=1 python3 - <<'PY'
+import subprocess
+doc = subprocess.check_output(
+    ['git', 'show', 'be7abb88:docs/tasks/member-wake/REVIEW.md'], text=True)
+code = doc.split('<!-- member-wake-probe -->\n```python\n', 1)[1].split('\n```', 1)[0]
+exec(compile(code, '<old-member-wake-review>', 'exec'))
 PY
 ```
 
-<!-- member-wake-probe -->
-```python
-BODIES = {
-'lifecycle': r'''
-#include "ink/sys/layout.h"
-static volatile int review_pin_done, review_pin_result;
-static void review_pin(void *ctx, int result, uint32_t wait_s) {
-    (void)ctx; (void)wait_s;
-    review_pin_result=result;
-    review_pin_done++;
-}
-static bool review_click(lv_obj_t *root) {
-    for (uint32_t i=0; i<lv_obj_get_child_count(root); i++) {
-        lv_obj_t *child=lv_obj_get_child(root,(int32_t)i);
-        if (lv_obj_check_type(child,&lv_label_class) && !strcmp(lv_label_get_text(child),"小朋友") && lv_obj_check_type(root,&lv_button_class)) {
-            lv_obj_send_event(root,LV_EVENT_CLICKED,NULL);
-            return true;
-        }
-        if (review_click(child)) return true;
-    }
-    return false;
-}
-static void pick_child(void) { CHECK(review_click(lv_layer_sys()),"pick child in gate"); }
-static void test_task(void *arg) {
-    (void)arg;
-    delay_ms(1500);
-    CHECK(ink_cap_register(TEST_CAPS,1)==0,"test capability");
-    CHECK(ink_member_set_pin("owner",NULL,"1234",review_pin,NULL)==0 && WAIT_FOR(review_pin_done,5000) && review_pin_result==INK_PIN_OK,"synthetic PIN");
-    CHECK(BY_HAND("app.open","{\"id\":\"alpha\"}") && g_rc.status==INK_RC_DONE,"adult alpha");
-    snprintf(alpha_kept,sizeof alpha_kept,"owner fixture");
-    snprintf(alpha_memory,sizeof alpha_memory,"owner fixture");
-    ink_power_hold(INK_NEED_AWAKE);
-    ink_power_lock();
-    CHECK(WAIT_FOR(!strcmp(power_state(),"locked"),2000),"locked");
-    delay_ms(121000);
-    ink_power_unlock(osal_now_us());
-    CHECK(WAIT_FOR(!strcmp(top(),"member_gate"),2000),"expired adult gate");
-    on_ui(pick_child);
-    CHECK(WAIT_FOR(!strcmp(ink_member_current()->id,"kid") && !strcmp(top(),"home"),2000),"child home");
-    LOG_CLEAR();
-    CHECK(BY_HAND("app.open","{\"id\":\"alpha\"}") && g_rc.status==INK_RC_DONE,"child alpha opened");
-    CHECK(SEEN("alpha:start") && !alpha_memory[0],"child open must reset prior member memory; log=%s memory=%s",g_log,alpha_memory);
-    snprintf(alpha_kept,sizeof alpha_kept,"child fixture");
-    LOG_CLEAR();
-    CHECK(BY_HAND("app.close","{\"id\":\"alpha\"}") && g_rc.status==INK_RC_DONE,"child alpha closed");
-    CHECK(SEEN("alpha:save"),"child app.close must save; log=%s state=%s",g_log,ink_app_state_name(ink_app_state_of("alpha")));
-    char path[INK_LAYOUT_PATH_MAX], saved[64]={0};
-    CHECK(ink_layout_member(path,sizeof path,"kid","alpha.state")>=0,"child state path");
-    int n=ink_storage_read(path,saved,sizeof saved-1);
-    CHECK(n>0 && !strcmp(saved,"child fixture"),"child state must persist; n=%d bytes=%s",n,saved);
-    CHECK(BY_HAND("app.open","{\"id\":\"beta\"}") && g_rc.status==INK_RC_DONE,"child beta opened");
-    CHECK(call_as("test.perm",NULL,INK_SRC_APP) && g_rc.status==INK_RC_DONE,"declared app permission must work; result=%s",g_rc.detail);
-    ink_power_release(INK_NEED_AWAKE);
-    ink_probe_count("test.finished");
-}
-''',
-'uplinkscan': r'''
-static bool review_scanning(void) {
-    char value[24] = "";
-    ink_state_get_str(ink_state_find("wifi.state"),value,sizeof value);
-    return !strcmp(value,"scanning");
-}
-static void test_task(void *arg) {
-    (void)arg;
-    delay_ms(1500);
-    ink_hub_demand();
-    CHECK(WAIT_FOR(ink_hub_online(),30000),"online");
-    int before=g_pin_done;
-    CHECK(ink_member_set_pin("owner",NULL,"1234",pin_told,NULL)==0 && WAIT_FOR(g_pin_done>before,5000) && g_pin_result==INK_PIN_OK,"synthetic PIN");
-    CHECK(ink_setting_get("member.idle_return_s")==120,"default 120s grace");
-    set_mode(ALWAYS);
-    lock();
-    uint64_t since=osal_now_us();
-    delay_ms(116000);
-    mic("wake");
-    delay_ms(700);
-    mic("speech");
-    delay_ms(1000);
-    CHECK(!strcmp(mic_state(),"sending"),"synthetic speech uploads within grace");
-    uint64_t scan_at=since+119000000ull;
-    if(osal_now_us()<scan_at) osal_task_delay_us(scan_at-osal_now_us());
-    ink_call_opts_t opts={.src=INK_SRC_AI,.reply_exec=INK_EXEC_DIRECT,.done=rc_done};
-    g_done=0;
-    CHECK(ink_cap_call("wifi.scan",NULL,&opts)==0,"start the existing wifi.scan capability");
-    CHECK(WAIT_FOR(review_scanning(),500),"real Wi-Fi scan is running in exec.bg");
-    delay_ms(1500);
-    CHECK(!ink_member_space_open() && review_scanning(),"space expired while Wi-Fi scan still runs");
-    double sent=sim_metric_value("hub.binary_bytes");
-    delay_ms(500);
-    CHECK(sim_metric_value("hub.binary_bytes")==sent,"expired space uploaded %.0f extra bytes during real wifi.scan; mic=%s",sim_metric_value("hub.binary_bytes")-sent,mic_state());
-    CHECK(strcmp(mic_state(),"sending")!=0,"expired microphone must stop sending during real wifi.scan");
-    CHECK(WAIT_FOR(g_done,3000),"Wi-Fi scan eventually completes");
-    CHECK(WAIT_FOR(strcmp(mic_state(),"sending")!=0,2000),"capture revoked once BG queue drains");
-    mic("silence");
-    ink_probe_count("test.finished");
-}
-'''
-}
+旧探针证据在两种构建的 `test-out/review-member-{lifecycle,uplinkscan}-current-out/metrics.json`，编译、链接、运行均退出 0。
 
-from pathlib import Path
-import json,os,re,shlex,subprocess
-root=Path.cwd(); build=root/os.environ.get('REVIEW_BUILD','build')
-case=os.environ.get('REVIEW_CASE','lifecycle')
-target='sim-apps' if case=='lifecycle' else 'sim-listening'
-stem='apps' if case=='lifecycle' else 'listening'
-body=BODIES[case]
-source=(root/f'tests/integration/{stem}.c').read_text()
-a=source.index('static void test_task(void *arg)'); b=source.index('\nvoid ink_main(void)',a)
-source=source[:a]+body+source[b:]
-flags=(build/f'CMakeFiles/{target}.dir/flags.make').read_text()
-opts=[]
-for k in ['C_DEFINES','C_INCLUDES','C_FLAGS']:
-    opts+=shlex.split(re.search(r'^'+k+r' = (.*)$',flags,re.M).group(1))
-link=shlex.split((build/f'CMakeFiles/{target}.dir/link.txt').read_text())
-variant=os.environ.get('REVIEW_VARIANT','current')
-obj=build/f'test-out/review-member-{case}.o'
-exe=build/f'test-out/review-member-{case}-{variant}'
-def compile_source(src,out,extra=None):
-    cmd=[link[0],*opts,'-I'+str(root/'tests/integration'),*(extra or []),'-x','c','-c','-','-o',str(out)]
-    r=subprocess.run(cmd,input=src,text=True,capture_output=True)
-    print('compile_exit=',r.returncode,r.stderr,flush=True)
-    if r.returncode: raise SystemExit(r.returncode)
-compile_source(source,obj)
-link=[str(obj) if p.endswith(f'tests/integration/{stem}.c.o') else p for p in link]
-link[link.index('-o')+1]=str(exe)
-if variant=='control':
-    path='system/ui/app_registry.c' if case=='lifecycle' else 'system/policy/members.c'
-    control=(root/path).read_text()
-    if case=='lifecycle':
-        control=control.replace('    ink_ui_restart(stop_for_member);','    AP.locked = ink_power_state() == INK_PWR_LOCKED || !ink_member_space_open();\n    ink_ui_restart(stop_for_member);')
-    else:
-        control=control.replace('    ink_exec_post(INK_EXEC_BG, &M.idle_job, idle_job, NULL);','    idle_job(NULL);')
-    override=build/f'test-out/review-member-{case}-control.o'
-    compile_source(control,override,['-I'+str(root/Path(path).parent)])
-    link.insert(link.index('libink_system.a'),str(override))
-r=subprocess.run(link,cwd=build,text=True,capture_output=True)
-print('link_exit=',r.returncode,r.stderr,flush=True)
-if r.returncode: raise SystemExit(r.returncode)
-out=build/f'test-out/review-member-{case}-{variant}-out'
-profile='metalio-plus' if case=='lifecycle' else 'metalio-plus-handsfree'
-script='member_wake' if case=='lifecycle' else 'listening'
-cmd=[str(exe),'--profile',f'simulator/profiles/{profile}.json','--budget',f'tests/integration/{script}.budget.json','--script',f'tests/integration/{script}.script','--assets',str(build/'assets'),'--content',str(build/'test-content'),'--out',str(out),'--quiet','--no-random-outages']
-r=subprocess.run(cmd,text=True,capture_output=True)
-print('probe_exit=',r.returncode,r.stdout[-1500:],r.stderr[-1500:],flush=True)
-p=out/'metrics.json'
-if p.exists():
-    v=json.loads(p.read_text())
-    print(json.dumps({'warnings':v['warnings'],'checks':{k:v['metrics'].get(k) for k in ['test.pass','test.fail','test.finished']},'budget_violations':v['budget_violations']},ensure_ascii=False,indent=2))
+## 测试有效性：撤销修复的对照
 
-raise SystemExit(r.returncode)
-```
+本轮从标准输入编译替代对象，使用对应目标的 `flags.make`、`link.txt` 链接到独立可执行文件；没有修改工作区源码或正式测试。AI、听写替换对应测试包装对象；旧传输实现缺少新增内部接口时，仅加转发到旧发送函数的兼容入口，不增加授权检查。以下编译和链接全部退出 0；各失败运行均退出 1，且 `test.finished=1`。
 
-SEVERE=0 HIGH=2
+| 临时撤销内容 | 使用的正式测试 | 失败检查数 | 证据目录，位于 `build/test-out/` |
+| --- | --- | --- | --- |
+| 成员策略换回 `103382b1` | member-wake | 25 | `review2-reverse-members-baseline-out` |
+| 应用管理器换回 `103382b1` | member-wake | 32 | `review2-reverse-apps-baseline-out` |
+| 仅去掉访问时的截止检查 | member-wake | 1 | `review2-reverse-access-deadline-out` |
+| 仅去掉唤醒时的截止检查 | member-wake | 5 | `review2-reverse-wake-deadline-out` |
+| 仅去掉成员门换人时的状态同步 | apps | 15 | `review2-reverse-member-lifecycle-out` |
+| 仅去掉启动时的状态同步 | people，table2 / table3 | 各 1 | `review2-boot-reverse/table2`、`table3` |
+| 音频采集换回 `be7abb88` | member-wake-stream | 2 | `review2-reverse-audio-out` |
+| AI 缓冲换回 `be7abb88` | member-wake-stream | 1 | `review2-reverse-ai-out` |
+| 传输队列换回 `be7abb88` | member-wake-stream | 6 | `review2-reverse-hub-out` |
+| 听写缓冲换回 `be7abb88` | member-wake-stream | 1 | `review2-reverse-dictation-out` |
+| 实时会话换回 `be7abb88` | member-wake-stream | 1 | `review2-reverse-session-out` |
+
+启动对照使用各自独立的合成 Flash 镜像，依次执行 `INK_PEOPLE_PHASE=table1/table2/table3`；`table2` 另设 `INK_TEST_TABLE_FAILS=2`。当前实现三阶段分别 **2/11/5 条通过、退出 0**，证据在 `review2-boot-current/`。汇总另见 `review2-reverse-summary.json`。
+
+既有 `people`、`listening`、`media` 测试的期望变更与新规则一致：原来“锁屏立即关闭”的检查改为先确认宽限期仍开放、再等待配置的截止。新增延时用于推进明确的模拟时间，信号量用于固定队列边界；未发现删除测试、放宽断言/既有预算或用等待掩盖失败。
+
+## 总规则与架构审视
+
+- **总规则 §1、§4**：差异未触及设备、真实凭据、受保护资料或第三方依赖。分层、确定性和能力检查均随全量通过。新增大块队列/缓冲仍在 PSRAM，没有新增常驻任务；生产代码未引用模拟器头文件，LVGL 操作仍在 UI 任务。
+- **R-061**：成员策略负责时长和有效授权，应用管理器负责生命周期，采集/缓冲/传输分别在执行边界复核；依赖方向成立。新增 `ink_hub_send_frame_for` 是内部会话归属机制，不是遗漏的用户能力。设置仍走现有能力和确认策略，凭据不开放给 AI。
+- **证据边界**：本机为 macOS clang，未运行 Linux/gcc，也未操作实机；没有将模拟器通过写成设备验证。成员门外观仍待独立页面任务完成。
+- **资源与改动**：构建最多 `-j4`、ctest 最多 `-j3`；构建和全量测试不并行。未启动带窗口的模拟器，既有 `gui-smoke` 使用 `SDL_VIDEODRIVER=dummy`。除本报告外，仅生成被忽略的构建/测试产物；没有提交、推送或改开发报告。
+
+SEVERE=0 HIGH=0
