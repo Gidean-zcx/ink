@@ -1,12 +1,12 @@
 # pairing 执行报告
 
-2026-11-06。接续 [独立复查](REVIEW.md)，本轮起点 `47c82d67`，合入 `FETCH_HEAD` 的 `1c43c28a`。门禁只有合并日志，唯一冲突是 `hub_link.c`；构建、测试、CI 和隐私门禁尚未执行。以下是本轮重新验证的结果，取代旧验收结论。
+2026-11-06。接续 [独立复查](REVIEW.md)，本轮起点 `47c82d67`，合并提交 `68e21ef2` 已包含 `FETCH_HEAD` 的 `1c43c28a`。门禁当时只有合并日志，唯一冲突是 `hub_link.c`，后续环节未执行。以下是本轮重新验证的结果，取代旧验收结论。
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| I1 合并集成分支 | 已解决冲突【实现／实测】 | 共用发送队列同时保留配对阶段标志和成员 generation/epoch；更新全部调用点。21 个集成文件与目标提交完全一致，另 4 个共用文件逐项核对；索引无未合并条目 | T1、T5 |
+| I1 合并集成分支 | 已合入【实现／实测】 | 共用发送队列同时保留配对阶段标志和成员 generation/epoch；更新全部调用点。21 个集成文件与目标提交完全一致，另 4 个共用文件逐项核对；合并双亲及目标祖先关系核对通过 | T1、T5 |
 | I2 配对与成员边界 | 通过【实测】 | 普通响应、错误、通知、语音及带成员的控制帧不能在未认证连接发送；配对响应仍能完成。成员过期、快速切换后返回、旧实时会话与 AI／听写缓冲沿用集成回归 | T1、T3 |
 | I3 反向对照 | 20/20 通过【实测】 | 原 18 项及新增两项均触发预期保护断言。去掉 generation/epoch 的变体完整运行到 `test.finished=1`，两条成员隔离断言失败，证明旧帧不会因切回同一成员而复活 | T3 |
 | P1 配网、身份与状态 | 通过（模拟器）【实测】 | 五状态、固定公钥、同公钥迁址、跨公钥授权清除、认证错误分类、AI 权限与凭据脱敏通过 | T1、T2 |
@@ -17,7 +17,7 @@
 | G2 能力与分层 | 保持【实现／实测】 | 沿用原子能力和中枢任务；人工与 AI 仍走原能力，最终 accept 和凭据仍受原策略约束；没有新增用户操作、页面、任务或预算 | T1、T2；源码差异 |
 | G3 依赖状态 | 保持【实现】 | 保留配对服务／网页模型与页面待接的边界，并保留集成分支的成员唤醒状态说明，没有改原判断 | T5 |
 | G4 页面验收 | 不适用【实现】 | 未新增页面，桌面冒烟仅验证既有输入路径；没有产生新的 UI 对照分数 | — |
-| G5 范围与隐私 | 核查进行中【实测】 | 本轮冲突修复及补测仅涉及 `hub_link.c`、两个配对测试文件和本报告；其余变更来自集成提交。合并前差异检查、文件大小及路径／MAC 模式扫描通过，提交后复核待完成 | T4、T5 |
+| G5 范围与隐私 | 通过【实测】 | 本轮冲突修复及补测仅涉及 `hub_link.c`、两个配对测试文件和本报告；其余变更来自集成提交。提交后差异、文件大小、报告链接及路径／MAC 模式扫描均通过 | T4、T5 |
 
 所有构建最多 `-j4`，全量测试最多 `-j3`，构建与全量测试逐轮串行。两目录均为 `INK_WERROR=ON`、`INK_GUI=ON`，内存目录另加 `INK_SANITIZE=ON`；仅经 SDL dummy 运行桌面冒烟，未启动带窗口的模拟器。
 
@@ -27,12 +27,12 @@
 - T2：同样配置换 `build-asan` 并加 `INK_SANITIZE=ON`；`cmake --build build-asan -j4`、`SDL_VIDEODRIVER=dummy UBSAN_OPTIONS=halt_on_error=1 ctest --test-dir build-asan --output-on-failure -j3` 均退出 0，98/98。日志 `work/pairing-gate-asan-configure.log`、`work/pairing-gate-asan-build.log`、`work/pairing-gate-asan-full.log`。
 - T3：`python tests/pairing/reverse.py --build build`，最终整轮 20/20、退出 0；日志 `work/pairing-gate-reverse.log`，证据 `build/pairing-reverse-ll7hu1qt/`。仅在被忽略目录中生成替代对象，不撤改生产源码或断言。新增两项另用 `--only member-control-before-auth --only stale-member-frame` 复验也是 2/2、退出 0。
 - T4：按 CMake 生成的各目标参数，对相对起点及集成提交有变化的 25 个 C 编译单元逐一加 `-Wsign-compare -Werror=unused-result -fsyntax-only`，均退出 0；日志 `work/pairing-gate-strict.log`。本轮及原配对分支新增的 POSIX `write`、`read`、`fgets` 调用均为 0；该检查仍是 clang，不代替 Linux/gcc。
-- T5：`git diff --stat 47c82d67`、`git diff --check 47c82d67`，后者退出 0；28 个文件均存在且不超过 5 MB。分别扫描相对起点和 `FETCH_HEAD` 的差异，使用总规则 §6 的 `grep -nE` 模式，均 0 命中（grep 退出 1）。日志 `work/pairing-gate-checks.log`；提交后及报告链接核查待完成。
+- T5：`git diff --stat 47c82d67..HEAD`、`git diff --check 47c82d67..HEAD`，后者退出 0；28 个文件均存在且不超过 5 MB，2 个报告链接有效。提交后分别扫描 `47c82d67..HEAD`、`1c43c28a..HEAD`，使用总规则 §6 的 `grep -nE` 模式，均 0 命中（grep 退出 1）。`git merge-base --is-ancestor FETCH_HEAD HEAD` 退出 0；`68e21ef2` 双亲为起点及集成提交，工作区干净。日志 `work/pairing-gate-checks.log`。
 
 ## 没做到的
 
 - 本机是 macOS／Apple clang，没有 Linux/gcc 环境，未实测 Linux CI。没有执行真实设备、TLS/NVS、手机网页或家庭服务器验证；不把本机模拟器通过写成这些环境通过。
-- 提交后核查待完成；构建、测试和反向对照均已完成。
+- 本轮没有未修复的集成问题；构建、测试、反向对照及提交后核查均已完成。
 
 ## 和设计不一致的
 
