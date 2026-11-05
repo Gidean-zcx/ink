@@ -150,7 +150,9 @@ bool ink_member_any_pin(void) {
 }
 
 static bool return_expired(uint64_t now) {
-    return M.locked_since && now >= M.locked_since && now - M.locked_since >= M.return_after_us;
+    uint64_t since = __atomic_load_n(&M.locked_since, __ATOMIC_ACQUIRE);
+    uint64_t after = __atomic_load_n(&M.return_after_us, __ATOMIC_RELAXED);
+    return since && now >= since && now - since >= after;
 }
 
 bool ink_member_space_open(void) {
@@ -299,13 +301,15 @@ static void close_space(void) {
 static void idle_check(void *arg);
 
 static void arm_idle(void) {
-    if (M.authed && M.locked_since) ink_svc_at(&M.idle_at, M.locked_since + M.return_after_us, idle_check, NULL);
+    uint64_t since = __atomic_load_n(&M.locked_since, __ATOMIC_ACQUIRE);
+    uint64_t after = __atomic_load_n(&M.return_after_us, __ATOMIC_RELAXED);
+    if (M.authed && since) ink_svc_at(&M.idle_at, since + after, idle_check, NULL);
     else ink_svc_cancel(&M.idle_at);
 }
 
 static void idle_job(void *arg) { /* exec.bg */
     (void)arg;
-    if (!M.authed || !M.locked_since) return;
+    if (!M.authed || !__atomic_load_n(&M.locked_since, __ATOMIC_ACQUIRE)) return;
     if (return_expired(osal_now_us())) close_space();
     else arm_idle();
 }
@@ -318,19 +322,19 @@ static void idle_check(void *arg) { /* the timer task */
 static void on_power(void *ctx, ink_power_state_t from, ink_power_state_t to, uint64_t cause_us) { /* power task */
     (void)ctx;
     if (to == INK_PWR_LOCKED) {
-        M.locked_since = osal_now_us();
+        __atomic_store_n(&M.locked_since, osal_now_us(), __ATOMIC_RELEASE);
         arm_idle();
     } else if (from == INK_PWR_LOCKED) {
         /* A busy background executor must not let a wake key bypass the deadline. */
         if (return_expired(cause_us)) close_space();
-        M.locked_since = 0;
+        __atomic_store_n(&M.locked_since, 0, __ATOMIC_RELEASE);
         ink_svc_cancel(&M.idle_at);
     }
 }
 
 static void apply_return_after(void *ctx, int64_t seconds) {
     (void)ctx;
-    M.return_after_us = (uint64_t)seconds * 1000000ull;
+    __atomic_store_n(&M.return_after_us, (uint64_t)seconds * 1000000ull, __ATOMIC_RELAXED);
     arm_idle();
 }
 
@@ -431,7 +435,7 @@ static void pin_job(void *arg) { /* exec.bg: slow by design */
             if (r == INK_PIN_OK) {
                 M.cur = s;
                 M.authed = s->has_pin;
-                M.locked_since = ink_power_state() == INK_PWR_LOCKED ? osal_now_us() : 0;
+                __atomic_store_n(&M.locked_since, ink_power_state() == INK_PWR_LOCKED ? osal_now_us() : 0, __ATOMIC_RELEASE);
                 ink_power_activity(osal_now_us()); /* the person is here: however long the slow part took */
                 publish();
                 if (M.authed) arm_idle();

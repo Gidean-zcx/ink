@@ -1,6 +1,6 @@
 # member-wake 执行报告
 
-基线：`103382b1`。范围：仅 `backlog.md` 的 `member-wake`。状态：实现、定向回归、反向对照完成，全量和内存检查进行中。
+基线：`103382b1`。范围：仅 `backlog.md` 的 `member-wake`。状态：完成；证据来自本机模拟器。
 
 ## 验收表
 
@@ -12,15 +12,26 @@
 | MW-4 | 通过【实测】 | 真实阅读器第 4 页的页面对象、文本、内容版本、能力回执页码保持一致 | 同上 |
 | MW-5 | 通过【实测】 | 孩子两种唤醒键均免密码；仍不能进入成人空间；无 PIN 成人不受影响 | 同上 |
 | MW-6 | 通过【实测／实现】 | 暂定 120 秒只在 `IDLE_RETURN_S` 定义；沿用 `member.idle_return_s`，设置成 30 秒即生效 | 同上；`system/policy/members.c` |
-| MW-7 | 通过【实测】 | 后台队列阻塞时，状态尚未更新也拒绝过期空间访问；唤醒仍显示成员门 | 同上 |
+| MW-7 | 通过【实测／实现】 | 后台队列阻塞时，状态尚未更新也拒绝过期空间访问；唤醒仍显示成员门；共享的 64 位计时值采用原子读写 | 同上；`system/policy/members.c` |
 | MW-8 | 通过【实现】 | 同步服务设计 §11.4、应用恢复状态行及 `ui-dependencies.md` 对应状态 | `git diff --check` |
-| G1 | 待验证 | 全量测试、内存检查与预算 | 待执行 |
-| G2 | 通过【实测／实现】 | 复用设置能力和人工 PIN 接口；关门时 AI 不能调用能力，成员门快照不含凭据 | 定向回归；现有 `integration-people` |
-| S1 | 反向对照通过【实测】；终检待做 | 四组撤修复均失败，恢复后通过；首次隐私扫描零命中 | 见下；总规则 §6 |
+| G1 | 通过【实测】 | 普通 95/95（51.16 秒）、ASan/UBSan 95/95（82.64 秒），无跳过项；已有预算未改 | 下列全量命令 |
+| G2 | 通过【实测／实现】 | 无新增用户操作；复用设置能力和人工 PIN 接口；关门时 AI 不能调用能力，成员门快照不含凭据 | 定向回归；现有 `integration-people` |
+| S1 | 通过【实测】 | 四组撤修复均失败，恢复后通过；13 个相关文件；25 个本地文档链接有效；已提交差异隐私扫描零命中 | 见下；`git diff --check`、`git diff --stat 103382b1..HEAD`、总规则 §6 的隐私命令 |
+
+配置沿用总规则 §5，两个目录都保留 `INK_WERROR=ON`，相关配置的唯一区别是 `INK_SANITIZE=OFF/ON`。中枢环境按 `hub/README.md` 用 uv 0.9.5、`uv sync --project hub --frozen` 安装，两个目录都指定 `-DINK_HUB_PYTHON="$PWD/hub/.venv/bin/python"`；未改锁文件、未升级依赖。以下 `ctest` 均使用 `$INK_DEPS/build-deps/pyenv/bin/ctest`：
+
+```sh
+cmake --build build -j4
+ctest --test-dir build --output-on-failure -j3
+cmake --build build-asan -j4
+UBSAN_OPTIONS=halt_on_error=1 ctest --test-dir build-asan --output-on-failure -j3
+```
+
+全部构建和全量测试逐轮串行；`gui-smoke` 仅用 SDL dummy 无窗口模式。最终两个构建中的 `integration-member-wake` 都是 174 条检查、`test.finished=1`、零警告、零预算违规。
 
 ## 没做到的
 
-全量、ASan/UBSan 及最终隐私检查待执行。首轮全量发现 `integration-media` 仍按锁屏立即关门，已修正前置条件，定向复测通过；3 项中枢测试缺 Python 依赖而跳过，正在补齐冻结依赖后重跑。
+本节验收无遗留。没有执行 Linux/gcc 或实机测试；本机结果不代表已在实机验证。
 
 ## 和设计不一致的
 
@@ -49,4 +60,4 @@
 
 ## 顺手发现
 
-本机 CMake 提示 `INK_CJK_MEDIUM_FONT`、`INK_CJK_BOLD_FONT` 未被基线使用；未改构建配置。没有新增 `write`、`read` 或 `fgets` 调用；Linux/gcc 仍须由 CI 实际核验，本机不冒称 Linux 实测。
+本机 CMake 提示 `INK_CJK_MEDIUM_FONT`、`INK_CJK_BOLD_FONT` 未被基线使用；未处理这条基线提示。没有新增 `write`、`read` 或 `fgets` 调用。
