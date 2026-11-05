@@ -84,6 +84,21 @@ static void turn_page(void) { ink_ui_content_changed(); }
 #define CARD_UP() (on_ui(read_screen), !strcmp(g_top, "confirm"))
 #define CARD_GONE() (on_ui(read_screen), strcmp(g_top, "confirm") != 0)
 
+static bool accept_enabled;
+static void read_accept(lv_obj_t *root) {
+    for (uint32_t i = 0; i < lv_obj_get_child_count(root); i++) {
+        lv_obj_t *child = lv_obj_get_child(root, (int32_t)i);
+        if (lv_obj_check_type(child, &lv_button_class)) { accept_enabled = !lv_obj_has_state(child, LV_STATE_DISABLED); return; }
+        read_accept(child);
+    }
+}
+static void read_accept_state(void) { accept_enabled = false; read_accept(lv_layer_sys()); read_screen(); }
+static void accept_visible_card(void) {
+    CHECK(WAIT_FOR(!ink_ui_busy() && !ink_display_busy(), 10000), "the complete confirmation is on the panel before acceptance");
+    CHECK(WAIT_FOR(({ on_ui(read_accept_state); accept_enabled; }), 10000), "acceptance becomes available after presentation");
+    tap(g_btn_x[0], g_btn_y[0]);
+}
+
 static void accepted(void) {
     int results = g_results;
     CHECK(ASK_OK("{\"to\":\"10086\",\"text\":\"查询余额\",\"count\":2}"), "the AI asks: it waits (%s, %s)", ink_rc_name(g_rc.status), g_rc.detail);
@@ -110,7 +125,7 @@ static void accepted(void) {
     free(list);
     CHECK(g_runs == 0 && pending_state() == 1, "so it still waits");
 
-    tap(g_btn_x[0], g_btn_y[0]);
+    accept_visible_card();
     CHECK(WAIT_FOR(g_results == results + 1, 2000), "a person says yes");
     CHECK(g_runs == 1 && g_last_src == INK_SRC_CONFIRMED && !strcmp(g_last_to, "10086"), "it runs, once, as confirmed, with what was asked (%d, %d, %s)", g_runs, g_last_src, g_last_to);
     CHECK(!strcmp(g_decision, "accepted") && !strcmp(g_status, "done") && !strcmp(g_say, "办好了") && g_result_token == token && !strcmp(g_cap, "test.external"), "the asker hears how it went (%s, %s, %s)", g_decision, g_status, g_say);
@@ -210,7 +225,7 @@ static void queue(void) {
     delay_ms(600);
     on_ui(read_screen);
     CHECK(strstr(g_snap, "q1") && g_btn_n == 2, "then the next (%s, %d)", g_snap, g_btn_n);
-    tap(g_btn_x[0], g_btn_y[0]);
+    accept_visible_card();
     CHECK(WAIT_FOR(g_runs == runs + 1, 1000) && !strcmp(g_last_to, "q1"), "that one runs (%s)", g_last_to);
     delay_ms(600);
     on_ui(read_screen);
@@ -243,7 +258,7 @@ static void member_changes(void) {
     delay_ms(600);
     on_ui(read_screen);
     CHECK(g_btn_n == 2, "the card");
-    tap(g_btn_x[0], g_btn_y[0]);
+    accept_visible_card();
     CHECK(WAIT_FOR(g_results == results + 1, 1000) && !strcmp(g_status, "done"), "and it runs (%s)", g_status);
     delay_ms(1200);
 }
@@ -288,7 +303,7 @@ static void page_bound(void) {
     CHECK(!strcmp(g_top, "confirm") && g_btn_n == 2, "the card");
     CHECK(ink_ui_content_version() == gen, "the card does not change the page's version");
     int results = g_results;
-    tap(g_btn_x[0], g_btn_y[0]);
+    accept_visible_card();
     CHECK(WAIT_FOR(g_results == results + 1, 1000) && g_page_runs == 1 && !strcmp(g_status, "done"), "it runs on the page under the card (%s, %d)", g_status, g_page_runs);
     delay_ms(1200);
 
@@ -299,7 +314,7 @@ static void page_bound(void) {
     on_ui(turn_page);
     on_ui(read_screen);
     results = g_results;
-    tap(g_btn_x[0], g_btn_y[0]);
+    accept_visible_card();
     CHECK(WAIT_FOR(g_results == results + 1, 1000) && !strcmp(g_decision, "accepted") && !strcmp(g_status, "stale") && g_page_runs == 1, "what it was about is gone: not run, and said (%s, %d)", g_status, g_page_runs);
     delay_ms(1200);
 
@@ -311,7 +326,7 @@ static void page_bound(void) {
     delay_ms(300);
     on_ui(read_screen);
     results = g_results;
-    tap(g_btn_x[0], g_btn_y[0]);
+    accept_visible_card();
     CHECK(WAIT_FOR(g_results == results + 1, 1000) && !strcmp(g_status, "invalid") && g_page_runs == 1, "its page is gone: not run (%s, %d)", g_status, g_page_runs);
     delay_ms(1200);
 }
@@ -330,12 +345,10 @@ static void what_the_card_says(void) {
     snprintf(longer + n, sizeof longer - n, "\"}");
     ink_confirm_withdraw(token, INK_SRC_AI);
     delay_ms(1200);
-    CHECK(ASK_OK(longer), "a long one");
+    int runs = g_runs;
+    CHECK(AI("test.external", longer) && g_rc.status == INK_RC_REJECTED, "an over-capacity description is refused without hiding any object");
     ink_confirm_view_t v;
-    CHECK(ink_confirm_list(&v, 1) == 1 && strlen(v.detail) < sizeof v.detail, "it fits (%zu)", strlen(v.detail));
-    size_t len = strlen(v.detail);
-    CHECK(len > 0 && (((unsigned char)v.detail[len - 1] & 0xC0) == 0x80 || (unsigned char)v.detail[len - 1] < 0x80), "and is cut between characters");
-    ink_confirm_withdraw(v.token, INK_SRC_AI);
+    CHECK(ink_confirm_list(&v, 1) == 0 && g_runs == runs, "no truncated transaction is queued or executed");
     delay_ms(1200);
 }
 
@@ -348,7 +361,7 @@ static void settings_system(void) {
     delay_ms(600);
     on_ui(read_screen);
     CHECK(strstr(g_snap, "把设置 test.sys 改成 是"), "the card says what (%s)", g_snap);
-    tap(g_btn_x[0], g_btn_y[0]);
+    accept_visible_card();
     CHECK(WAIT_FOR(g_results == results + 1, 1000) && !strcmp(g_status, "done") && ink_setting_get("test.sys") == 1, "yes: changed (%s, %d)", g_status, (int)ink_setting_get("test.sys"));
     delay_ms(1200);
 }
@@ -363,7 +376,7 @@ static void a_real_message(void) {
     CHECK(strstr(g_snap, "发短信给 10086：查询余额"), "the card says to whom and what (%s)", g_snap);
     delay_ms(2000);
     CHECK(sim_net_sms_sent() == sent, "nothing has gone out");
-    tap(g_btn_x[0], g_btn_y[0]);
+    accept_visible_card();
     CHECK(WAIT_FOR(g_results == results + 1, 40000) && !strcmp(g_status, "done"), "a person says yes: sent (%s)", g_status);
     CHECK(sim_net_sms_sent() == sent + 1, "the modem sent one (%d)", sim_net_sms_sent() - sent);
     delay_ms(1200);

@@ -136,7 +136,7 @@ lv_obj_t *ink_shell_statusbar(lv_obj_t *parent, bool show_time) {
     if (integer("notify.unread")) ink_ui_icon(bar, "bell", INK_ICON_SMALL, INK_ICON_LINE, x + INK_ICON_LIST, INK_GAP_M, false);
     if (!strcmp(mic, "local")) ink_ui_icon(bar, "mic", INK_ICON_SMALL, INK_ICON_LINE, x + 2 * INK_ICON_LIST, INK_GAP_M, false);
     else if (!strcmp(mic, "sending") || !strcmp(mic, "recording")) {
-        lv_obj_t *s = ink_ui_box(bar, x + 2 * INK_ICON_LIST, INK_GAP_XS, INK_CONTROL, INK_LINE_LIST, INK_GAP_S, INK_SURFACE_BLACK, false);
+        lv_obj_t *s = ink_ui_box(bar, x + 2 * INK_ICON_LIST, INK_GAP_XS, INK_CONTROL, INK_LINE_LIST, INK_RADIUS_KEY, INK_SURFACE_BLACK, false);
         ink_ui_label(s, !strcmp(mic, "recording") ? "录音" : "在听", INK_FONT_STATUS, INK_WEIGHT_MEDIUM, INK_GAP_S, INK_GAP_XS, INK_BLOCK);
     }
     char battery[12];
@@ -370,13 +370,23 @@ int ink_shell_home_snapshot(char *buf, size_t cap) {
         if (n >= 0 && (size_t)n < cap) n += snprintf(buf + n, cap - (size_t)n, "动作：shell.launch、shell.search、home.next、home.prev、shell.control。");
         return n < 0 ? 0 : (size_t)n < cap ? n : (int)cap - 1;
     }
-    return snprintf(buf, cap, "页面=%s；当前=%s；继续读=%s；%s。动作：shell.launch、shell.resume、home.next、home.prev、shell.control。",
-                    N.home_page == 0 ? "Today" : N.home_page == 1 ? "Main" : "Apps", ink_member_current()->name, has ? card.text : "没有阅读进度", N.result);
+    char clock[16], date[96], upcoming[96] = "还没有接下来的事";
+    ink_shell_time_strings(clock, sizeof clock, date, sizeof date);
+    int cursor = 0; ink_alarm_t alarm;
+    if (ink_alarm_next(&cursor, INK_ALARM, &alarm) == 1) snprintf(upcoming, sizeof upcoming, "%s %d:%02d", alarm.title, alarm.hour, alarm.min);
+    return snprintf(buf, cap, "页面=%s；当前=%s；日期=%s；时间=%s；继续读=%s；继续听=还没有在听的内容；今日报纸=今天的还没到；单词=还没有记下的词；接下来=%s；%s。动作：shell.launch、shell.resume、home.next、home.prev、shell.control。",
+                    N.home_page == 0 ? "Today" : "Main", ink_member_current()->name, date, clock, has ? card.text : "没有阅读进度", upcoming, N.result);
 }
 
 static int control_snapshot(char *buf, size_t cap) {
-    return snprintf(buf, cap, "Control；当前=%s；亮度=%lld；音量=%lld；勿扰=%lld；通知=%d。动作：settings.set、system.set_volume、shell.members、shell.close。",
-                    ink_member_current()->name, (long long)ink_setting_get("display.light"), (long long)ink_setting_get("audio.volume"), (long long)ink_setting_get("notify.dnd"), ink_notify_unread());
+    char ssid[64]; state_text("wifi.ssid", ssid, sizeof ssid);
+    int n = snprintf(buf, cap, "Control；当前=%s；亮度=%lld；音量=%lld；勿扰=%lld；叫名字=%lld；更多=%d；通知=%d；网络=%s；",
+                     ink_member_current()->name, (long long)ink_setting_get("display.light"), (long long)ink_setting_get("audio.volume"),
+                     (long long)ink_setting_get("notify.dnd"), (long long)ink_setting_get("voice.handsfree"), N.more, ink_notify_unread(), ssid[0] ? ssid : "还没有连接 Wi-Fi");
+    if (N.more && n >= 0 && (size_t)n < cap) n += snprintf(buf + n, cap - (size_t)n, "暖光=%lld；", (long long)ink_setting_get("display.warmth"));
+    const char *actions = child() ? "动作：settings.set、system.set_volume、shell.close。" : "动作：settings.set、system.set_volume、shell.members、shell.settings、shell.network、shell.more、shell.close。";
+    if (n >= 0 && (size_t)n < cap) n += snprintf(buf + n, cap - (size_t)n, "%s", actions);
+    return n < 0 ? 0 : (size_t)n < cap ? n : (int)cap - 1;
 }
 static bool control_key(ink_key_t key, bool lng) { if (!lng && (key == INK_KEY_HOME || key == INK_KEY_BACK)) ink_shell_close(); return true; }
 static const ink_ui_overlay_t CONTROL = {.name = "Control", .level = 0, .on_key = control_key, .snapshot = control_snapshot};
@@ -388,7 +398,8 @@ static void slider_changed(lv_event_t *e) {
     if (!in) return;
     lv_point_t pt; lv_indev_get_point(in, &pt);
     lv_area_t a; lv_obj_get_coords(o, &a);
-    int v = (pt.x - a.x1) * 10 / (a.x2 - a.x1 + 1);
+    int span = a.x2 - a.x1;
+    int v = span > 0 ? ((pt.x - a.x1) * 10 + span / 2) / span : 0;
     if (v < 0) v = 0; if (v > 10) v = 10;
     char json[128];
     snprintf(json, sizeof json, "{\"id\":\"%s\",\"value\":%d}", id, v * 10);
@@ -525,7 +536,14 @@ static void draw_page_body(void) {
         y += INK_DIGIT + 2 * INK_MARGIN + INK_GAP_L;
         lv_obj_t *refresh = ink_ui_pill(N.page_body, "刷新屏幕", INK_MARGIN, y, width(), INK_CONTROL, false, NULL, NULL); ink_shell_bind(refresh, "system.full_refresh", NULL);
         y += INK_CONTROL + INK_GAP;
-        lv_obj_t *lock = ink_ui_pill(N.page_body, "自动锁屏 10 分钟", INK_MARGIN, y, width(), INK_CONTROL, false, NULL, NULL); ink_shell_bind(lock, "settings.set", "{\"id\":\"power.lock_after_s\",\"value\":600}");
+        static const int seconds[] = {60, 300, 600, 1800, 3600};
+        int64_t current = ink_setting_get("power.lock_after_s");
+        int next = seconds[0];
+        for (unsigned i = 0; i < sizeof seconds / sizeof *seconds; i++) if (seconds[i] > current) { next = seconds[i]; break; }
+        char label[64], args[96];
+        snprintf(label, sizeof label, "自动锁屏 %lld 分钟", (long long)current / 60);
+        snprintf(args, sizeof args, "{\"id\":\"power.lock_after_s\",\"value\":%d}", next);
+        lv_obj_t *lock = ink_ui_pill(N.page_body, label, INK_MARGIN, y, width(), INK_CONTROL, false, NULL, NULL); ink_shell_bind(lock, "settings.set", args);
     } else if (N.page_id == PAGE_SOUND) {
         ink_ui_slider(N.page_body, "音量", (int)ink_setting_get("audio.volume") / 10, INK_MARGIN, y, width(), slider_changed, (void *)"audio.volume"); y += INK_SLIDER + INK_GAP_S;
         ink_ui_notice(N.page_body, "听书、AI 和提示音用这个音量", y); y += INK_LINE_NOTE + INK_GAP_L;
@@ -610,6 +628,16 @@ static int page_snapshot(char *buf, size_t cap) {
     int n = snprintf(buf, cap, "%s；当前=%s；亮度=%lld；暖光=%lld；音量=%lld；网络偏好=%lld；通知=%d。",
                     PAGES[N.page_id].name, ink_member_current()->name, (long long)ink_setting_get("display.light"), (long long)ink_setting_get("display.warmth"),
                     (long long)ink_setting_get("audio.volume"), (long long)ink_setting_get("net.prefer"), ink_notify_unread());
+    if (N.page_id != PAGE_NOTIFICATIONS && n >= 0 && (size_t)n < cap) n += snprintf(buf + n, cap - (size_t)n, "字号=%lld；锁屏画面=%lld；自动锁屏秒=%lld；勿扰=%lld；叫名字=%lld；",
+        (long long)ink_setting_get("display.font_size"), (long long)ink_setting_get("display.lock_style"), (long long)ink_setting_get("power.lock_after_s"),
+        (long long)ink_setting_get("notify.dnd"), (long long)ink_setting_get("voice.handsfree"));
+    if (N.page_id == PAGE_NETWORK && n >= 0 && (size_t)n < cap) {
+        char ssid[64]; state_text("wifi.ssid", ssid, sizeof ssid);
+        n += snprintf(buf + n, cap - (size_t)n, "已连网络=%s；选中网络=%s；网络组=%d；SIM=%lld；4G在线=%lld；",
+            ssid, N.picked_ssid, N.wifi_page + 1, (long long)ink_setting_get("cell.sim_slot"), (long long)integer("cell.registered"));
+        for (int i = N.wifi_page * 2; i < N.wifi_count && i < (N.wifi_page + 1) * 2 && n >= 0 && (size_t)n < cap; i++)
+            n += snprintf(buf + n, cap - (size_t)n, "网络[%d]=%s；", i, N.wifi_ssid[i]);
+    }
     if (N.page_id == PAGE_NOTIFICATIONS) {
         ink_db_cursor_t cursor = {0}; ink_notify_view_t item; int at = 0;
         while (ink_notify_next(&cursor, &item) == 1 && n >= 0 && (size_t)n < cap) {

@@ -25,14 +25,19 @@ def main():
     for scene in a.scenes:
         target = a.out / scene
         if not a.reuse:
+            (target / 'snap-scene.png').unlink(missing_ok=True)
             env = dict(os.environ, INK_UI_SCENE=scene)
             result = subprocess.run([str(a.build / 'sim-ui-scenes'), '--profile', str(ROOT / 'simulator/profiles/metalio-plus.json'),
-                '--script', str(ROOT / 'tests/ui_shell.script'), '--assets', str(a.build / 'assets'),
+                '--script', str(ROOT / 'tests/ui_shell.script'), '--hub', str(ROOT / 'tests/ui_shell.hub.json'), '--assets', str(a.build / 'assets'),
                 '--content', str(a.build / 'test-content'), '--out', str(target), '--no-random-outages', '--quiet'],
                 env=env, capture_output=True, text=True)
             if result.returncode: raise SystemExit(f'{scene}: simulator failed\n{result.stdout}\n{result.stderr}')
         rendered = target / 'snap-scene.png'
-        if not rendered.exists(): rendered = target / 'final.png'
+        metrics = json.loads((target / 'metrics.json').read_text())
+        counters = metrics.get('metrics', {})
+        if (not rendered.exists() or counters.get('test.snapshot.settled', 0) != 1 or counters.get(f'test.snapshot.{scene}', 0) != 1
+                or counters.get('test.finished', 0) != 1 or counters.get('test.fail', 0) != 0):
+            raise SystemExit(f'{scene}: missing a verified settled scene frame; rerun without --reuse')
         reference = a.design / 'png' / f'{scene}.png'
         actual = Image.open(rendered).convert('L')
         design = Image.open(reference).convert('L')

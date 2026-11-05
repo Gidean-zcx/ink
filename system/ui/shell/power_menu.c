@@ -31,8 +31,7 @@ static void close_menu(void) { /* UI task */
 }
 
 static bool on_key(ink_key_t key, bool long_press) {
-    (void)long_press;
-    if (key == HAL_KEY_HOME) {
+    if (!long_press && (key == HAL_KEY_HOME || key == HAL_KEY_BACK)) {
         close_menu();
         return true;
     }

@@ -199,6 +199,7 @@ lv_obj_t *ink_ui_slider(lv_obj_t *parent, const char *title, int value, int x, i
     lv_obj_t *label = ink_ui_label(b, title, INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_GAP_XL, (INK_SLIDER - INK_LINE_LIST) / 2, w - 2 * INK_BLOCK_L);
     lv_obj_t *clip = lv_obj_create(b);
     lv_obj_remove_style_all(clip);
+    lv_obj_remove_flag(clip, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);
     lv_obj_set_pos(clip, 0, 0);
     lv_obj_set_size(clip, ink_ui_px(w * value / 10), ink_ui_px(INK_SLIDER));
     lv_obj_t *white = ink_ui_label(clip, title, INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_GAP_XL, (INK_SLIDER - INK_LINE_LIST) / 2, w - 2 * INK_BLOCK_L);

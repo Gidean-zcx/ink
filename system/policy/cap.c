@@ -803,7 +803,7 @@ void ink_cap_emit(const char *id, const ink_args_t *payload) {
 
 /* What the current member may use now, as the AI sees it. */
 static bool listed(const ink_cap_t *c) {
-    if (!on_its_page(c) || !exposed(c, INK_SRC_AI)) return false;
+    if (!ink_member_space_open() || !on_its_page(c) || !exposed(c, INK_SRC_AI)) return false;
     const ink_member_t *m = ink_member_current();
     return m->role != INK_ROLE_CHILD || (c->effect != INK_FX_SYSTEM && ink_member_allows(c->id, c->child_ok));
 }
@@ -889,7 +889,7 @@ int ink_cap_ids_json(char *out, size_t cap) {
     ink_jw_raw(&w, "[");
     bool first = true;
     for (int i = 0; i < nreg; i++) {
-        if (!on_its_page(REG[i]) || !exposed(REG[i], INK_SRC_AI) || REG[i]->form == INK_FORM_EVENT) continue; /* what can be called */
+        if (!listed(REG[i]) || REG[i]->form == INK_FORM_EVENT) continue; /* what can be called */
         if (!first) ink_jw_raw(&w, ",");
         first = false;
         ink_jw_str(&w, REG[i]->id);

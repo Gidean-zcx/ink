@@ -7,6 +7,7 @@
 #include "ink/sys/confirm.h"
 #include "ink/sys/interrupt.h"
 #include "ink/sys/members.h"
+#include "ink/sys/audio.h"
 #include "ink/sys/notify.h"
 #include "ink/sys/settings.h"
 #include "ink/sys/textfield.h"
@@ -27,6 +28,7 @@ static int label_x, label_y;
 static void label_at(lv_obj_t *root) {
     for (uint32_t i = 0; i < lv_obj_get_child_count(root); i++) {
         lv_obj_t *c = lv_obj_get_child(root, (int32_t)i);
+        if (lv_obj_has_flag(c, LV_OBJ_FLAG_HIDDEN)) continue;
         if (lv_obj_check_type(c, &lv_label_class) && !strcmp(lv_label_get_text(c), wanted)) {
             lv_area_t a; lv_obj_update_layout(c); lv_obj_get_coords(c, &a);
             label_x = (a.x1 + a.x2) / 2; label_y = (a.y1 + a.y2) / 2;
@@ -34,7 +36,7 @@ static void label_at(lv_obj_t *root) {
         label_at(c);
     }
 }
-static void find_label(void) { label_x = label_y = -1; label_at(lv_layer_sys()); }
+static void find_label(void) { label_x = label_y = -1; label_at(lv_screen_active()); label_at(lv_layer_sys()); }
 static bool press_label(const char *label) { wanted = label; on_ui(find_label); if (label_x < 0) return false; tap(label_x, label_y); return true; }
 
 static void pin_result(void *ctx, int result, uint32_t wait_s) { (void)ctx; (void)result; (void)wait_s; pin_done++; }
@@ -114,15 +116,87 @@ static void find_member(void) {
     read_screen();
 }
 static void make_alarm(void) {
-    ink_interrupt_t a = {.kind = INK_INT_ALARM, .nactions = 2};
-    snprintf(a.title, sizeof a.title, "起床"); snprintf(a.body, sizeof a.body, "7:30");
-    a.actions[0].label = "再睡 10 分钟"; a.actions[0].cap = "alarm.snooze";
-    a.actions[1].label = "这次不再响"; a.actions[1].cap = "alarm.dismiss";
-    ink_interrupt_raise(&a);
+    ink_alarm_t a = {.kind = INK_ALARM, .at_utc = ink_time_now_s() + 2, .src = INK_SRC_TOUCH};
+    snprintf(a.title, sizeof a.title, "起床");
+    CHECK(ink_alarm_add(&a) > 0, "schedule a real synthetic alarm");
 }
-static void take_snapshot(void *arg) { sim_display_snapshot((const char *)arg); }
-static void snapshot_now(void) { vtk_event_at(vtk_now() + SIM_MS(1), take_snapshot, "scene"); delay_ms(5); }
+static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
+static bool quiet(void) {
+    bool ok = WAIT_FOR(settled(), 10000);
+    CHECK(ok, "%s did not settle within 10 virtual seconds", scene);
+    return ok;
+}
+static void take_snapshot(void *arg) {
+    if (!settled()) { CHECK(false, "snapshot must be a fully presented frame on %s", scene); return; }
+    ink_probe_count("test.snapshot.settled");
+    char id[80]; snprintf(id, sizeof id, "test.snapshot.%s", scene); ink_probe_count(id);
+    sim_display_snapshot((const char *)arg);
+}
+static void snapshot_now(void) {
+    if (!quiet()) return;
+    vtk_event_at(vtk_now() + SIM_MS(1), take_snapshot, "scene"); delay_ms(5);
+}
+static bool listed(const char *id) {
+    char *page = osal_malloc(4096, OSAL_MEM_EXTERNAL);
+    if (!page) return false;
+    char quoted[80]; snprintf(quoted, sizeof quoted, "\"%s\"", id);
+    bool found = false;
+    int next = 0;
+    do {
+        if (ink_cap_manifest_page(next, NULL, page, 4096, &next) < 0) break;
+        if (strstr(page, quoted)) { found = true; break; }
+    } while (next >= 0);
+    osal_free(page);
+    return found;
+}
+static bool label_visible(const char *label) { wanted = label; find_label(); return label_x >= 0; }
+static bool snapshot_has(const char *text) {
+    char *snapshot = osal_malloc(4096, OSAL_MEM_EXTERNAL);
+    const char *name;
+    bool found = snapshot && ink_ui_snapshot(snapshot, 4096, &name) > 0 && strstr(snapshot, text);
+    osal_free(snapshot);
+    return found;
+}
+static void assert_identity(void) {
+    const char *top = scene, *page = "home", *expected_text = scene;
+    if (!strcmp(scene, "Main") || !strcmp(scene, "Today") || !strcmp(scene, "Apps")) top = "home";
+    else if (!strcmp(scene, "Lock") || !strcmp(scene, "LockPage")) { top = "LockPage"; expected_text = "设备已锁定"; }
+    else if (!strcmp(scene, "Members") || !strcmp(scene, "MembersBack") || !strncmp(scene, "Pin", 3)) { top = "member_gate"; expected_text = "请选择家人"; }
+    else if (!strncmp(scene, "Ime", 3)) { top = "Keyboard"; page = "test.text"; expected_text = password ? "密码输入" : "键盘"; }
+    else if (!strncmp(scene, "Confirm", 7)) { top = "confirm"; expected_text = !strcmp(scene, "ConfirmDelete") ? "测试文件" : !strcmp(scene, "ConfirmSecret") ? "******" : "example.com"; }
+    else if (!strncmp(scene, "Ai", 2)) { top = "Ai"; expected_text = !strcmp(scene, "AiListen") ? "正在听" : !strcmp(scene, "AiThink") ? "正在看这一页" : "测试答案"; }
+    else if (!strcmp(scene, "PowerMenu")) { top = "power_menu"; expected_text = "电源菜单"; }
+    else if (!strcmp(scene, "PowerOff")) { top = "off"; expected_text = "已关机"; }
+    else if (!strcmp(scene, "PhoneIncoming") || !strcmp(scene, "ClockRing")) { top = "interrupt"; expected_text = !strcmp(scene, "ClockRing") ? "起床" : "00000000000"; }
+    else if (!strncmp(scene, "Components", 10)) { top = "Components"; page = "Components"; expected_text = "测试输入页"; }
+    else if (!strcmp(scene, "Settings") || !strncmp(scene, "Set", 3) || !strcmp(scene, "Notifications")) page = scene;
+    if (!strncmp(scene, "Ai", 2) || !strcmp(scene, "LockPage") || !strcmp(scene, "PowerOff")) page = "book";
+    CHECK(!strcmp(ink_ui_top_name(), top), "%s requires overlay/page %s, got %s", scene, top, ink_ui_top_name());
+    CHECK(!strcmp(ink_ui_page_name(), page), "%s requires activity %s, got %s", scene, page, ink_ui_page_name());
+    if (!strcmp(top, "home")) CHECK(!strcmp(ink_shell_board(), scene), "%s is the selected home screen", scene);
+    CHECK(snapshot_has(expected_text), "%s snapshot must contain %s", scene, expected_text);
+    if (!strcmp(scene, "Lock") || !strcmp(scene, "LockPage"))
+        CHECK(ink_setting_get("display.lock_style") == !strcmp(scene, "Lock") && ink_power_state() == INK_PWR_LOCKED, "the requested lock variant is actually locked");
+    if (!strcmp(scene, "Pin")) CHECK(label_visible("输入密码"), "the PIN pad is visible");
+    if (!strcmp(scene, "PinWrong")) CHECK(label_visible("密码不对") && !ink_member_space_open(), "a real rejected PIN is visible, the space stays closed");
+    if (!strcmp(scene, "Members")) CHECK(label_visible("谁在用？") && ink_member_space_open(), "requested member picker, not the lock gate");
+    if (!strcmp(scene, "MembersBack")) CHECK(label_visible("输密码，回到刚才的地方") && !ink_member_space_open(), "returning member gate, not the requested picker");
+    if (!strcmp(scene, "ImePinyin") || !strcmp(scene, "ImeCandidates"))
+        CHECK(!strcmp(ink_text_composing(), !strcmp(scene, "ImePinyin") ? "jintian" : "shi"), "the expected composition is active");
+    if (!strcmp(scene, "ImeCandidates")) CHECK(label_visible("键盘"), "expanded candidates, not the alphabet layout");
+    if (!strcmp(scene, "ImeEdit")) { size_t a, b; ink_text_selection(&a, &b); CHECK(a == 2 && b == 4 && label_visible("复制"), "the real selection and edit tools are visible"); }
+    if (!strcmp(scene, "ImeVoice")) CHECK(ink_text_voice_state() == INK_VOICE_LISTENING && label_visible("用键盘"), "the real dictation is listening");
+    if (!strcmp(scene, "Components")) CHECK(label_visible("开关") && label_visible("自动"), "component controls exist");
+    if (!strcmp(scene, "ComponentsPanel")) CHECK(label_visible("底部面板"), "the panel component exists");
+    if (!strcmp(scene, "ComponentsDock")) CHECK(lv_obj_get_child_count(lv_screen_active()) > 1 && !label_visible("开关") && !label_visible("底部面板"), "Dock fixture has its own variant");
+    if (!strcmp(scene, "Control") || !strcmp(scene, "SetDisplay")) CHECK(snapshot_has("亮度=40"), "current brightness, not just a registered setting");
+    if (!strcmp(scene, "SetDisplay")) CHECK(snapshot_has("字号=1") && snapshot_has("自动锁屏秒=600"), "display settings have their current values");
+    if (!strcmp(scene, "SetNetwork")) CHECK(snapshot_has("网络组=1") && snapshot_has("SIM="), "network selection context is present");
+    if (!strcmp(scene, "Today")) CHECK(snapshot_has("今日报纸=") && snapshot_has("单词=") && snapshot_has("接下来="), "all Today cards have semantic context");
+}
+
 static void assert_view(void) {
+    assert_identity();
     char *snapshot = osal_malloc(4096, OSAL_MEM_EXTERNAL), *actions = osal_malloc(8192, OSAL_MEM_EXTERNAL);
     const char *name;
     CHECK(snapshot && ink_ui_snapshot(snapshot, 4096, &name) > 0, "nonempty AI view for %s", scene);
@@ -134,10 +208,70 @@ static void assert_view(void) {
         char id[64]; size_t n = 0;
         while ((islower((unsigned char)*p) || isdigit((unsigned char)*p) || *p == '_' || *p == '.') && n + 1 < sizeof id) id[n++] = *p++;
         id[n] = 0;
-        if (strchr(id, '.')) CHECK(ink_cap_find(id) != NULL, "the declared action %s exists on %s", id, scene);
+        if (strchr(id, '.')) CHECK(ink_cap_available(id) && listed(id), "the declared action %s is usable by this member on %s", id, scene);
     }
     if (password) CHECK(snapshot && !strstr(snapshot, "FAKE_TEST_SECRET") && !strstr(snapshot, "text.insert"), "password snapshot has no secret or AI editing action");
     osal_free(snapshot); osal_free(actions);
+}
+
+
+static void assert_operation(void) {
+    if (!ink_member_space_open()) {
+        CHECK(AI("shell.control", NULL) && g_rc.status == INK_RC_REJECTED, "an unauthenticated AI cannot navigate private controls");
+        CHECK(AI("text.insert", "{\"text\":\"test\"}") && g_rc.status != INK_RC_DONE, "an unauthenticated AI cannot write");
+        return;
+    }
+    if (!strcmp(scene, "Main") || !strcmp(scene, "Today") || !strcmp(scene, "Apps")) {
+        tap(460, 1120); quiet();
+        CHECK(strcmp(ink_ui_page_name(), "home"), "the Dock touch actually opens the reading application");
+    } else if (!strcmp(scene, "Settings")) {
+        CHECK(press_label("显示和亮度"), "touch the display settings row"); quiet();
+        CHECK(!strcmp(ink_ui_page_name(), "SetDisplay"), "the row opens its promised page");
+    } else if (!strcmp(scene, "Control") || !strcmp(scene, "SetSound")) {
+        tap(528, 208); quiet();
+        CHECK(ink_setting_get(!strcmp(scene, "Control") ? "display.light" : "audio.volume") == 80, "the visible slider reaches the setting service");
+    } else if (!strcmp(scene, "SetDisplay")) {
+        CHECK(press_label("自动锁屏 10 分钟"), "touch the current lock interval"); quiet();
+        CHECK(ink_setting_get("power.lock_after_s") == 1800, "the lock interval changes instead of writing 600 again");
+    } else if (!strcmp(scene, "SetNetwork")) {
+        CHECK(press_label("4G"), "touch the network preference"); quiet();
+        CHECK(ink_setting_get("net.prefer") == 2, "network preference is applied by the service");
+    } else if (!strcmp(scene, "Notifications")) {
+        CHECK(press_label("全部已读"), "touch mark read"); quiet(); CHECK(ink_notify_unread() == 0, "the service marks notifications read");
+    } else if (!strncmp(scene, "Confirm", 7)) {
+        CHECK(press_label("取消"), "cancel by touch"); quiet(); ink_confirm_view_t v;
+        CHECK(ink_confirm_list(&v, 1) == 0, "the transaction is removed without executing the fixture");
+    } else if (!strcmp(scene, "ImePassword")) {
+        CHECK(AI("text.insert", "{\"text\":\"FORBIDDEN\"}") && g_rc.status != INK_RC_DONE, "AI cannot edit a password");
+        CHECK(!strcmp(ink_text_value(), "FAKE_TEST_SECRET"), "the denied call leaves the password untouched");
+    } else if (!strcmp(scene, "ImeVoice")) {
+        CHECK(press_label("用键盘"), "leave dictation by touch");
+        CHECK(WAIT_FOR(ink_text_voice_state() == INK_VOICE_IDLE, 3000), "the touch stops actual dictation");
+    } else if (!strcmp(scene, "ImePinyin")) {
+        CHECK(AI("keyboard.pick", "{\"index\":0}") && g_rc.status == INK_RC_DONE, "AI selects a real candidate through the same path");
+        CHECK(strcmp(ink_text_value(), "明天带作业本，"), "the candidate changes the real text buffer");
+    } else if (!strcmp(scene, "ImeCandidates")) {
+        CHECK(press_label("键盘"), "fold candidates by touch"); quiet();
+        wanted = "q"; on_ui(find_label); CHECK(label_x >= 0, "alphabet keys reappear");
+    } else if (!strcmp(scene, "ImeEdit")) {
+        CHECK(AI("keyboard.edit", "{\"action\":2}") && g_rc.status == INK_RC_DONE, "copy the selection through its capability");
+        char clip[64]; CHECK(ink_clip_get(clip, sizeof clip, INK_SRC_TOUCH, NULL) > 0 && !strcmp(clip, "带作"), "the service copied the selected characters");
+        CHECK(ink_clip_get(clip, sizeof clip, INK_SRC_AI, NULL) < 0, "AI clipboard reading still requires its setting");
+    } else if (!strcmp(scene, "PowerMenu")) {
+        CHECK(press_label("取消"), "cancel the power menu by touch"); quiet(); CHECK(strcmp(ink_ui_top_name(), "power_menu"), "the menu closes");
+    } else if (!strcmp(scene, "PhoneIncoming") || !strcmp(scene, "ClockRing")) {
+        CHECK(press_label(!strcmp(scene, "PhoneIncoming") ? "拒接" : "关闭"), "touch the interruption action"); quiet();
+        CHECK(!strcmp(active_state(), "none"), "the interruption service handles the action");
+    } else if (!strncmp(scene, "Ai", 2)) {
+        CHECK(AI("ai.panel.hide", NULL) && g_rc.status == INK_RC_DONE, "hide the actual AI panel through its capability"); quiet();
+        CHECK(strcmp(ink_ui_top_name(), "Ai"), "the AI panel is hidden and the reading page remains");
+    }
+}
+extern void (*sim_power_before_shutdown)(void);
+static void at_shutdown(void) {
+    on_ui(assert_view);
+    snapshot_now();
+    ink_probe_count("test.finished");
 }
 
 static void test_task(void *arg) {
@@ -146,6 +280,7 @@ static void test_task(void *arg) {
     if (!strncmp(scene, "Ai", 2) || !strcmp(scene, "LockPage") || !strcmp(scene, "PowerOff")) {
         CHECK(BY_HAND("reader.open_book", "{\"title\":\"星星邮差\"}") && g_rc.status == INK_RC_DONE, "open the real reading surface below the shell");
     }
+    quiet();
     on_ui(prepare);
     if (!strcmp(scene, "MembersBack") || !strcmp(scene, "Pin") || !strcmp(scene, "PinWrong")) {
         ink_member_set_pin("owner", NULL, "1234", pin_result, NULL);
@@ -165,12 +300,20 @@ static void test_task(void *arg) {
         hw(HW_KEY_DOWN, HAL_KEY_POWER, 0); delay_ms(1600); hw(HW_KEY_UP, HAL_KEY_POWER, 0);
     } else if (!strcmp(scene, "PowerOff")) {
         CHECK(ink_cap_find("system.shutdown") != NULL, "shutdown is a real capability");
-        ink_probe_count("test.finished");
-        BY_HAND("system.shutdown", NULL); delay_ms(10000);
+        sim_power_before_shutdown = at_shutdown;
+        BY_HAND("system.shutdown", NULL);
+        delay_ms(60000);
+        CHECK(false, "shutdown must end the run after the validated frame");
+        return;
     } else if (!strcmp(scene, "PhoneIncoming")) {
         snprintf(g_hw.num, sizeof g_hw.num, "00000000000"); hw(HW_CALL, 0, 0);
-    } else if (!strcmp(scene, "ClockRing")) on_ui(make_alarm);
-    delay_ms(!strcmp(scene, "Ai") ? 14000 : !strcmp(scene, "AiThink") ? 500 : 2000);
+    } else if (!strcmp(scene, "ClockRing")) {
+        on_ui(make_alarm);
+        CHECK(WAIT_FOR(!strcmp(active_state(), "alarm"), 5000), "the alarm service is actually ringing");
+    }
+    if (!strcmp(scene, "Ai")) CHECK(WAIT_FOR(sim_metric_value("ai.answers") >= 1, 20000), "the fixture answer arrives");
+    if (!strcmp(scene, "ImeVoice")) CHECK(WAIT_FOR(ink_text_voice_state() == INK_VOICE_LISTENING, 5000), "the dictation fixture is listening");
+    quiet();
     on_ui(read_screen);
     on_ui(assert_view);
     CHECK(g_snap[0] != 0, "the screen has an AI snapshot (%s)", scene);
@@ -182,6 +325,7 @@ static void test_task(void *arg) {
         on_ui(read_screen);
         CHECK(strcmp(g_top, "member_gate"), "the successful PIN closes its presenter");
     }
+    assert_operation();
     ink_probe_count("test.finished");
 }
 

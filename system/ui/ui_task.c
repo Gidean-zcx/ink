@@ -344,7 +344,7 @@ static void styles_init(void) {
     lv_style_set_bg_color(&UI.st_btn, lv_color_white());
     lv_style_set_bg_opa(&UI.st_btn, LV_OPA_COVER);
     lv_style_set_border_color(&UI.st_btn, lv_color_black());
-    lv_style_set_border_width(&UI.st_btn, ink_dp(2));
+    lv_style_set_border_width(&UI.st_btn, ink_ui_px(INK_STROKE));
     lv_style_set_radius(&UI.st_btn, ink_ui_px(INK_RADIUS_KEY));
     lv_style_set_text_color(&UI.st_btn, lv_color_black());
     lv_style_set_shadow_width(&UI.st_btn, 0);
@@ -639,7 +639,11 @@ static void handle_input(const umsg_t *m) {
         {
             int edge = UI.dpi * 60 / 254; /* 6 mm, section 3.3; the start owns the gesture. */
             const ink_ui_overlay_t *o = UI.noverlays ? UI.overlays[UI.noverlays - 1] : NULL;
-            if (o && o->level >= 1) return;
+            if (o && o->level >= 0) {
+                if (o->on_key && UI.touch_y0 >= UI.lh - edge && e->dir == INK_SWIPE_UP) o->on_key(INK_KEY_HOME, false);
+                else if (o->on_key && UI.touch_x0 < edge && e->dir == INK_SWIPE_RIGHT) o->on_key(INK_KEY_BACK, false);
+                return;
+            }
             if (UI.touch_y0 < edge && e->dir == INK_SWIPE_DOWN) ink_shell_control();
             else if (UI.touch_y0 >= UI.lh - edge && e->dir == INK_SWIPE_UP) {
                 if (!ink_shell_close() && !ink_shell_ai_hide()) ink_ui_home();

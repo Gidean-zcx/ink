@@ -441,6 +441,8 @@ endif()
 # ---------------------------------------------------------------- tests
 enable_testing()
 add_test(NAME ui-scale COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/ui_scale_check.py)
+add_test(NAME ui-scale-regressions COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/ui_scale_check_test.py)
+add_test(NAME ui-compare-regressions COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/ui_compare_test.py)
 add_test(NAME ui-icons COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/icongen/check.py)
 add_test(NAME ui-assets COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/ui_assets_check.py ${INK_ASSETS_DIR})
 add_executable(sim-ui-scenes simulator/runtime/sim_main.c tests/ui_shell_scenes.c)
@@ -458,6 +460,7 @@ foreach(scene ${INK_SHELL_SCENES})
   add_test(NAME ui-scene-${scene}
     COMMAND ${CMAKE_COMMAND} -E env INK_UI_SCENE=${scene} $<TARGET_FILE:sim-ui-scenes>
       --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json --script ${CMAKE_SOURCE_DIR}/tests/ui_shell.script
+      --hub ${CMAKE_SOURCE_DIR}/tests/ui_shell.hub.json
       --budget ${CMAKE_SOURCE_DIR}/tests/${budget}.budget.json --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
       --out ${CMAKE_BINARY_DIR}/test-out/ui-scene-${scene} --quiet --no-random-outages)
 endforeach()
@@ -471,6 +474,18 @@ add_test(NAME ui-shell-priorities
 add_test(NAME ui-panel-restore
   COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/ui_panel_check.py ${CMAKE_BINARY_DIR}/test-out/ui-shell)
 set_tests_properties(ui-panel-restore PROPERTIES DEPENDS ui-shell-priorities)
+add_executable(sim-ui-regressions simulator/runtime/sim_main.c tests/ui_shell_regressions.c)
+target_link_libraries(sim-ui-regressions PRIVATE ink_apps ink_system ink_port_sim)
+target_compile_options(sim-ui-regressions PRIVATE ${INK_WARN} -Wno-format-truncation)
+foreach(profile metalio-plus desktop-lcd)
+  foreach(regression confirm slider context)
+    add_test(NAME ui-${regression}-regressions-${profile}
+      COMMAND ${CMAKE_COMMAND} -E env INK_UI_REGRESSION=${regression} $<TARGET_FILE:sim-ui-regressions>
+        --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/${profile}.json --script ${CMAKE_SOURCE_DIR}/tests/ui_shell_regressions.script
+        --budget ${CMAKE_SOURCE_DIR}/tests/ui_scene.budget.json --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+        --out ${CMAKE_BINARY_DIR}/test-out/ui-${regression}-${profile} --quiet --no-random-outages)
+  endforeach()
+endforeach()
 ink_sim_executable(sim-selftest tests/simulator/selftest.c)
 foreach(p metalio-plus metalio-plus-psram16 pinenote-rk3566 desktop-lcd)
   add_test(NAME selftest-${p}
