@@ -157,6 +157,7 @@ int fs_resolve(const char *path, bool write, char *phys, size_t cap) {
     bool adult = m->role == INK_ROLE_ADULT;
     int r;
     if (!strncmp(path, "/me", 3) && (path[3] == '/' || !path[3])) {
+        if (!ink_member_generation(m->id)) return INK_FS_ERR_DENIED;
         r = snprintf(phys, cap, "/content/.m/%s%s", m->id, path + 3);
     } else if (!strncmp(path, "/family", 7) && (path[7] == '/' || !path[7])) {
         if (write && !adult) return INK_FS_ERR_DENIED;
@@ -175,6 +176,7 @@ int fs_resolve(const char *path, bool write, char *phys, size_t cap) {
     } else if (!strcmp(path, "/members")) {
         return adult ? INK_FS_ERR_IS_DIR : INK_FS_ERR_DENIED; /* the list of members is not a directory */
     } else if (!strncmp(path, "/app/", 5)) {
+        if (!ink_member_generation(m->id)) return INK_FS_ERR_DENIED;
         const char *rest = strchr(path + 5, '/');
         if (!rest) return INK_FS_ERR_PATH;
         r = snprintf(phys, cap, "/content/.m/%s/apps/%.*s%s", m->id, (int)(rest - (path + 5)), path + 5, rest);
@@ -292,9 +294,9 @@ static int fs_open_unlocked(const char *path, int mode, ink_fs_file_t **out) {
         slot->writable = (mode & (INK_FS_WRITE | INK_FS_APPEND)) != 0;
         slot->revision = __atomic_load_n(&FS.revision, __ATOMIC_RELAXED);
         snprintf(slot->member, sizeof slot->member, "%s", ink_member_current()->id);
-        if (!strncmp(path, "/members/", 9)) {
-            const char *end = strchr(path + 9, '/');
-            snprintf(slot->member, sizeof slot->member, "%.*s", (int)(end ? end - (path + 9) : (ptrdiff_t)strlen(path + 9)), path + 9);
+        if (!strncmp(phys, "/content/.m/", 12)) {
+            const char *end = strchr(phys + 12, '/');
+            snprintf(slot->member, sizeof slot->member, "%.*s", (int)(end ? end - (phys + 12) : (ptrdiff_t)strlen(phys + 12)), phys + 12);
         }
         snprintf(slot->path, sizeof slot->path, "%s", path);
         slot->owner = osal_task_name(osal_task_self());
@@ -954,19 +956,25 @@ int ink_fs_copy_start(const char *from, const char *to) { return job_begin(0, fr
 int ink_fs_delete_start(const char *path) { return job_begin(1, path, NULL); }
 
 int ink_fs_forget_member(const char *id) {
+    osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
     ink_svc_lock();
     bool busy = FS.job_active;
     for (int i = 0; i < MAX_OPEN; i++) busy |= FS.files[i].used && (!strcmp(FS.files[i].member, id) || !strncmp(FS.files[i].path, "/cache/", 7));
     ink_svc_unlock();
-    if (busy) return INK_FS_ERR_BUSY;
+    if (busy) { osal_mutex_unlock(FS.edits); return INK_FS_ERR_BUSY; }
     char phys[PHYS_MAX];
-    if (snprintf(phys, sizeof phys, "/content/.m/%s", id) >= (int)sizeof phys) return INK_FS_ERR_PATH;
+    if (snprintf(phys, sizeof phys, "/content/.m/%s", id) >= (int)sizeof phys) {
+        osal_mutex_unlock(FS.edits);
+        return INK_FS_ERR_PATH;
+    }
     int r = ink_fs_card_hold();
-    if (r) return r;
+    if (r) { osal_mutex_unlock(FS.edits); return r; }
     r = wipe_tree(phys);
     if (!r) r = wipe_tree("/cache");
     if (!r && hal_fs_size(phys) >= 0 && hal_fs_remove(phys) != 0) r = INK_FS_ERR_IO;
-    return card_done(r);
+    r = card_done(r);
+    osal_mutex_unlock(FS.edits);
+    return r;
 }
 
 int ink_fs_job_status(int id, ink_fs_job_status_t *out) {

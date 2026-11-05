@@ -18,6 +18,7 @@ a = p.parse_args()
 build = (ROOT / a.build).resolve()
 work = Path(tempfile.mkdtemp(prefix='services-finish-', dir=build))
 suites = {
+    'file_late': ('sim-media', ['file_late_boundary.c'], '25s'),
     'member_writes': ('sim-media', ['members_boundary.c'], '40s'),
     'late_writers': ('sim-media', ['late_app_boundary.c', 'late_media_boundary.c', 'late_notify_boundary.c', 'late_activity_boundary.c'], '25s'),
     'reader_late': ('sim-media', ['reader_boundary.c'], '35s'),
@@ -136,6 +137,15 @@ def review_matrix(name, binary):
             if cut == 'after': env['INK_REVIEW_EXPECT_RESOURCES'] = '1'
             boot(path, 'recovery', env)
             boot(path, 'next-boot', {'INK_REVIEW_EXPECT_ROLLBACK': '1'} if cut in ('before', 'error') else {})
+    elif name == 'file_late':
+        for operation in ('atomic', 'open'):
+            for variant in ('control', 'removed', 'reused'):
+                path = work / ('file-' + operation + '-' + variant)
+                (path / 'sd').mkdir(parents=True)
+                env = {'INK_REVIEW_FILE_OPEN': '1'} if operation == 'open' else {}
+                if variant == 'control': env['INK_REVIEW_CONTROL'] = '1'
+                if variant == 'removed': env['INK_REVIEW_NO_REUSE'] = '1'
+                boot(path, 'run', env)
     elif name == 'late_writers':
         for writer in ('app_write', 'app_remove', 'media_flash', 'media_card', 'notify', 'notify_prefs', 'activity'):
             for variant in ('control', 'removed', 'reused'):
@@ -266,7 +276,7 @@ for name in a.suites:
     if name == 'update':
         failed |= not update_matrix(binary)
         continue
-    if name in ('upgrade_crash', 'removal', 'removal_alarm', 'empty_removal', 'update_history', 'reader_late', 'member_inventory', 'late_writers'):
+    if name in ('upgrade_crash', 'removal', 'removal_alarm', 'empty_removal', 'update_history', 'reader_late', 'member_inventory', 'late_writers', 'file_late'):
         failed |= not review_matrix(name, binary)
         continue
     out = work / (name + '-out')
