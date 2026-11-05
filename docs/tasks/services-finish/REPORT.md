@@ -1,6 +1,6 @@
 # 系统服务收尾报告
 
-2026-11-05，第 5 轮；开工基线 `9b976aa`，工作区干净。依据 [复查报告](REVIEW.md)、[任务书](../services-finish.md)和[总规则](../codex-rules.md)。实现提交 `969cf95`、`55d27bc`；复查报告原文保留，历史报告在 Git 中。本轮确认的两项高问题及下列同类问题已修复；最终全量复跑及结束检查正在核对。以下【实测】为本次执行，历史反向结果不计入本次。
+2026-11-05，第 5 轮；开工基线 `9b976aa`，工作区干净。依据 [复查报告](REVIEW.md)、[任务书](../services-finish.md)和[总规则](../codex-rules.md)。实现提交 `969cf95`、`55d27bc`、`934eaf8`；复查报告原文保留，历史报告在 Git 中。复查中的两项高问题及另两处录音/播放启动的同类高问题已修复；本轮没有未处理的已确认严重、高或小型中级问题。最终全量、内存检查及结束检查均已完成。以下【实测】为本次执行，历史反向结果不计入本次。
 
 ## 验收表
 
@@ -51,12 +51,12 @@
 | S6-01 高 | 保留并补全 | 【实测】旧缓冲/传输事件及关闭空间回归通过；本轮文件生产者补原代次 | V2 `handoff replay file_events file_reuse` |
 | S6-02 高 | 保留修复 | 【实测】采集、迟到帧和缓冲播放隔离通过 | V2 `isolation playback` |
 | S4-DET 中 | 保留修复 | 【实测】确定性比较及栈计量通过 | V1；V2 `stack_meter.py` |
-| S1 | 本轮范围已修，最终复跑待核对 | 【实测】复查两项高先复现；另复现并修复录音/播放启动两处同类高问题，同类均有正反向；此前严重、高和中逐项重跑正向通过 | V1/V2/V3 |
+| S1 | 本轮范围通过 | 【实测】复查两项高先复现；另复现并修复录音/播放启动两处同类高问题，同类均有正反向；此前严重、高和中逐项重跑正向通过 | V1/V2/V3 |
 | S2 | 保留修复 | 【实测】D-105、儿童权限、人工确认、凭据绑定及撤销通过 | V2 `permissions policy undo undo_data undo_owner` |
 | S3 | 保留修复 | 【实测】实际能力表 actions 六检查与 AI 场景预算通过 | V2 `actions`；V1 |
 | S6/R-061 | 本轮模拟器范围通过 | 【实现】路径及授权上下文归文件服务，接受调用和事件归属归总线，私有任务归任务服务；按钮和 AI 继续调用共同能力。录音/播放通过文件服务的代次入口保留接受身份，Ogg 长度取已打开的句柄。新增入口是内部身份机制，不允许 AI 自选成员或代次；应用/缓存路径仍不在 AI 能力范围 | V2/V3；相关源码 |
-| S4 | 最终复跑待核对 | 两套完整配置、构建、全量、服务回归、低电量保存及栈计量；不放宽资源预算 | V1/V2 |
-| S5 | 结束检查待核对 | 提交范围、隐私、文件和链接检查 | V4 |
+| S4 | 通过 | 【实测】普通 86/86（35.15 秒）、ASan/UBSan 86/86（82.23 秒）；每套 38 组、168 次启动、1,911 项功能检查通过；另各 5 项低电量保存检查，栈计量各 0 失败 | V1/V2 |
+| S5 | 通过 | 【实测】19 个相关文件均小于 5 MB，隐私匹配 0，空白与相对链接检查通过；35 组原测试定义、预算和受保护文档未改，新增 C 代码无 libc write/read/fgets 调用 | V4 |
 
 V0【实测】：开工时运行复查留下的两个脚本，正常文件/录音同成员控制通过；换人事件泄漏 4 项断言失败，路径混用 3 项断言失败，均退出 1。日志 `build/services-r5-before-events.log`、`build/services-r5-before-paths.log`。这两个临时脚本不作为交付依赖，完整可复建的回归已加入 `tests/services_finish/`。继续排查后，`build/services-r5-record-start-before.log`、`build/services-r5-play-start-before.log` 分别确认录音及播放启动的同类路径事件泄漏；没有声称已实测录到孩子声音或成人声音实际外放。
 
@@ -84,7 +84,17 @@ V3：两套执行下列命令，内存套增加 --build build-asan。预期退�
 UBSAN_OPTIONS=halt_on_error=1 $INK_DEPS/build-deps/pyenv/bin/python tests/services_finish/run.py --baseline 9b976aa file_events file_paths file_reuse
 ```
 
-最终结果、证据目录、RAM 数字和 V4 待最后核对后填写。命令、退出码及耗时在 `build/services-r5-validation.json`；每套日志为 services-r5-configure-final.log、services-r5-build-final.log、services-r5-ctest-final.log、services-r5-regressions-final.log、services-r5-saved-final.log、services-r5-stack-final.log、services-r5-reverse-final.log。
+【实测】上述最终命令串行执行，配置、构建、全量、正向回归、保存及栈计量均退出 0；两套反向均按预期退出 1。构建始终最多 -j4、ctest 最多 -j3；没有同时构建或同时跑两轮全量。正向 168 次启动包含 12 个按脚本要求提前重启的升级/清理分支，其他 156 次均有 test.finished=1；全部无功能断言失败。
+
+【实测】新增三组本身每套 59 次启动、653 项检查通过；反向每套 59 次模拟器均退出 0、test.finished=1，29 个分支触发 71 项功能断言失败，共执行 654 项检查，没有编译/链接失败。额外一项检查来自旧录音不会自动停止、测试在断言后人工停止以完成后续观察。正向、反向均无 sanitizer 诊断；没有把故障注入、崩溃或未结束当成复现。
+
+正向证据：普通 `build/services-finish-gnmdoapl/`、内存 `build-asan/services-finish-zyd6owxe/`；反向 `build/services-finish-q9b294le/`、`build-asan/services-finish-ke1utlhz/`。保存分支为 `build/services-finish-m8w5maxf/`、`build-asan/services-finish-6q8nabmp/`；栈计量为 `build/services-stack-fbet8qsc/`、`build-asan/services-stack-a5r8d0z0/`。
+
+【实测】两套 PQBN AI 场景内部总 RAM 最低空闲均 32,880 字节，原门槛 32,768，余量仍为 112；内部、DMA 和外部失败分配均 0。【实现】新增句柄/任务身份元数据保留在原 PSRAM 表，目录和媒体命令仍分配 PSRAM；没有新建锁、定时器或常驻任务，没有抬高预算或关闭确定性比较。
+
+V4【实测】：核对 git diff --stat 9b976aa..HEAD；git diff --check 9b976aa..HEAD 退出 0。按总规则原隐私正则扫描已提交差异，并另扫包含报告草稿的完整差异，均匹配 0；19 个相关文件均小于 5 MB，相对文件链接有效。没有构建产物、受保护资料、预算或设计稿夹带，未改原 35 组测试定义。闭合检查 `build/services-r5-closure.json`，汇总 `build/services-r5-results.json`。最终验证后只更新本报告，源码和测试与 `934eaf8` 一致。
+
+命令、退出码及耗时在 `build/services-r5-validation.json`；每套日志为 services-r5-configure-final.log、services-r5-build-final.log、services-r5-ctest-final.log、services-r5-regressions-final.log、services-r5-saved-final.log、services-r5-stack-final.log、services-r5-reverse-final.log。
 
 ## 没做到的
 
@@ -110,4 +120,5 @@ UBSAN_OPTIONS=halt_on_error=1 $INK_DEPS/build-deps/pyenv/bin/python tests/servic
 ## 顺手发现
 
 - 同类的短操作事件、stat/作业交接、录音及播放启动、内部媒体命令、任务标题、目录权限和释放槽后编号复用均已纳入本轮修复与正反向验证。
+- README 与 docs/background.md 的历史快速开始示例仍未限定构建并发，本轮未改范围外文档；本次执行记录均显式限制并发。
 - 证据为确定性的模拟器并发窗口及真实服务链路；没有据此声称真机自然触发频率、整个产品的所有并发窗口或物理擦除已经验证。
