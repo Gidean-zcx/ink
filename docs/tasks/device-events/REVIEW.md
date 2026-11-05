@@ -1,262 +1,258 @@
 # device-events 独立复查
 
-复查日期：2026-11-06。基线 `f1f72ae9`，受检提交 `013efa53`。范围为任务清单开头 G1～G5、device-events 一节及总规则。只修改本报告，不改产品代码、不提交。
+日期：2026-11-06。任务基线 f1f72ae9，受检提交 7834882c；上一轮复查及修前状态为 97645ea2。本次覆盖旧报告，只修改 REVIEW.md，不改产品或测试源码，不提交。
 
-结论：**本轮复查不通过，严重 0、高 2**。一项是握手期间换人导致上下文串成员；另一项是声音拒收提示被丢弃，且现有测试无法发现。未完成范围另列，不混作已验收。
+**结论：复查不通过，严重 1、高 1。** 上一轮 DE-R1 指定的握手窗口及 DE-R2 的声音提示问题已修到位；本次另证实两处成员隔离缺口。已披露的未完成功能仍未验收，不能把测试全过理解为任务全部完成。
 
-## 验收核对
+## 上一轮问题
 
-- 原 REVIEW.md 为空，没有本任务上一轮问题清单；先复核本轮 `b4c71d45` 声称补强的取消、隔离和失败边界。
-- 已读取任务书、执行报告、两端约定和概要设计 §13。报告明确承认的未完成项会独立列出，不能由测试通过推导为整项完成。
-- 普通构建和 ASan/UBSan 构建均退出 0；两轮全量 ctest 分别 103/103 通过（43.02 秒、75.99 秒）。构建 `-j4`，ctest `-j3`，串行执行；仅原有 SDL dummy 无窗口检查。
-- 原有 12 个反向对照全部复现；补跑 handoff、actions、policy、isolation，分别 15、6、36、15 个检查通过。另证实以下两项高等级问题，不能仅凭原测试全过验收。
-
-| 条目 | 复查结论 | 独立证据 |
+| 编号 | 复核结果 | 独立证据 |
 | --- | --- | --- |
-| G1 全量、内存、预算 | 原有检查通过，存在漏测 | 两套 103/103，无跳过；两套 INK_WERROR=ON，内存构建另开 INK_SANITIZE=ON；预算上限未放宽。新增复现见 DE-R1、DE-R2 |
-| G2 原子能力、AI 原生、分层 | 本次增量符合 | tools/call 仍进能力策略关口；新增接口用于传输身份；未新增需要另行开放的用户操作或页面；能力目录、策略、分层测试通过 |
-| G3 依赖状态 | 已更新，表述需随修复校正 | 仅改 ui-dependencies.md 的“成员、PIN”状态格并链接报告；不能据此认为握手时序也已验证 |
-| G4 页面要求 | 不适用 | 服务层任务无新页面，不要求 10 屏设计稿对照；未启动带窗口 GUI |
-| G5 范围、总规则 §1/§4 | 未见范围外产品改动 | 核对 27 个差异文件：服务、策略、接口、必要的模拟中枢／合成服务端和测试；无硬件操作、付费调用、提交或外发 |
-| DE-1 seq/boot/member、事件 ACK | 已实现部分通过 | 两次持久 Flash 启动 boot 递增；ACK 丢失重连保留事件身份；错误 boot／超前 ACK 拒绝；8 条内存环的既定丢旧边界未扩大承诺 |
-| DE-2 成员和交付 | **不通过** | 入站缺失／错误元数据、分配和排队期间换人、A→B→A、会话及排队语音取消的回归通过；握手期间换人可串到另一成员上下文，见 DE-R1 |
-| DE-3 时间与背压 | **部分通过** | 剩余 budget、排队不重置期限、30 秒录音上限及其反向对照通过；声音拒收后的提示会丢失，见 DE-R2 |
-| DE-4 caps/list 全分页 | 本批实现通过 | 实际 sim_hub 三页取回；不完整页不发布、rev 改变／重复 cursor／超时保留旧表；代码核对重复名称和 32 项上限；暂存表在 PSRAM；完整 actions 回归通过 |
-| DE-5 假设备、契约和桥接 | 现有合成范围通过 | hub-contract 内部 125 项、hub-json-crosscheck、hub-simulator-e2e 均实际执行通过；proto1 固定合成儿童，未把它当成正式成人身份验证 |
-| DE-6 D-105 | 未完成，报告已说明 | asked、ask_by_hand、活动记录沿用基线且策略回归通过；undo_ms=3000 仅校验并拒绝，不是三秒可撤销执行 |
-| DE-7 反向对照 | 12 个既有对照有效，覆盖不完整 | 每个指定保护撤回后确有断言失败；仅删掉声音错误通知时原测试仍全过，见 DE-R2 |
+| DE-R1 握手期间换人 | 原复现已修；成员隔离整体仍有 DE-R3、DE-R4 | 真实首次握手、重连、双向切换、A→B→A、同成员认证变化、同步发送失败及发送分配边界的新增场景通过。撤回 hello 同步或最终发送检查均触发目标断言；将 97645ea2 的 hub_link.c 放入当前夹具，原握手隔离断言失败 |
+| DE-R2 声音失败提示 | 已修 | 文字提问后再语音，真实下行 push／stream_open 拒收都终止声音，完成后保留失败文案；扬声器失败、旧通知及首段文字顺序回归通过。仅删错误通知也触发失败；修前 ai_service.c 在新夹具中复现提示失败 |
 
-任务书引用范围还有明确未完成项：`members/list` 全页替换与 `member.reset_pin`、正式成人解锁证明、三秒撤销窗口、`sync/*` 和数据集元数据／一致清单／原子快照／history_gap、设备末端计时上传，以及 §13 列出的内容包、网页新动作、真 Opus/JPEG、可选的 rt.close 附加字段和计划短连。报告已披露这些差距；本次不把“坦承未完成”重复计作虚报严重问题，也不把它们从任务书中自行划掉。配对、确认持久化、块传输是任务书明确排除项。
+## 逐条验收
 
-测试期望变化已逐项核对：ai_tools 改为换成员取消旧轮，并新增恰好一次执行／取消断言；races 改查接收时连接受众；starts/actions/policy 适配身份接口；handoff 显式关闭认证以适配基线 D-95。未发现删除旧测试、抬高资源上限或用新增 sleep 掩盖实现时序。录音测试的 31 秒等待是在虚拟时间内越过真实上限。
+| 条目 | 结论 | 核对结果 |
+| --- | --- | --- |
+| G1 全量、内存、预算 | 既有检查通过，但有漏测 | 【实测】普通及 ASan+UBSan 构建均退出 0；全量各 103/103，42.43 秒／77.35 秒，无跳过。两套 INK_WERROR=ON，内存构建另开 INK_SANITIZE=ON。资源预算未放宽；新增独立复现见下 |
+| G2 原子能力、AI 原生、分层 | 调用路径保留；身份边界不合格 | 【实现】tools/call 仍经能力策略，结果结构化，未新增缺少 AI 入口的用户操作。连接、实时会话、AI 展示的职责基本合理，但身份真值与协议代次分开发布（DE-R3），AI 切换保留旧成员展示（DE-R4），不能判隔离通过 |
+| G3 依赖状态 | 已更新，不能据此扩大验收 | 【实现】ui-dependencies.md 仅改“成员、PIN”的状态格及报告链接；已覆盖的握手修复成立，新发现的隔离限制应在修复时同步 |
+| G4 页面要求 | 本任务不适用 | 无新页面，不要求十屏设计稿对照。为 DE-R4 另查看了真实模拟器渲染图，确认文字仍在屏上；未启动带窗口 GUI |
+| G5 范围与总规则 §1/§4 | 范围符合；成员隔离不符合 | 【实现】差异限于服务、策略、接口、必要的模拟替身／合成中枢、测试、构建登记及任务资料；无新增常驻任务或越层依赖。两处隔离问题违反总规则 §4 |
+| DE-1 seq、boot、member、事件 ACK | 标识与重发通过；受众隔离不通过 | 【实测】两次持久 Flash 启动各 94 项检查，boot 递增；ACK 丢失后同身份重发，错误 boot／超前 ACK 拒绝。DE-R3 证明正确的 payload.member 不等于正确的接收上下文。8 条内存环不是持久结果库 |
+| DE-2 ink/member、代次、交付 | 不通过 | 【实测】缺失／错误元数据、分配中换人、排队后 A→B→A、旧请求及实时声音撤销的现有测试通过；发布窗口和旧浮层仍串成员，见 DE-R3、DE-R4 |
+| DE-3 budget_ms、录音上限、背压 | 本批实现通过 | 【实测】发送剩余时间、排队不重置期限、30 秒录音上限及其反向对照通过；声音失败提示已补齐实际下行验证 |
+| DE-4 caps/list、actions | 本批实现通过 | 【实测】真实模拟中枢三页取回；中间页不发布、rev 改变／重复 cursor／超时保留旧表；完整 actions 回归通过。【实现】重复名称和 32 项上限有拒绝分支，暂存表在 PSRAM；actions_more 是未做的可选优化 |
+| DE-5 sim_hub、假设备、契约 | 现有合成范围通过 | 【实测】两套 hub-contract 内部各 125 项通过，hub-json-crosscheck 和 hub-simulator-e2e 通过。真实中枢仍是固定合成儿童的 proto1；不等于成人解锁证明或正式家庭已验证 |
+| DE-6 D-105 | 部分，未完成 | asked／ask_by_hand／活动记录沿用基线且回归通过；undo_ms=3000 只有检查与明确拒绝，不是“上屏后三秒可撤销执行” |
+| DE-7 反向对照 | 19 项及两个修前复现有效 | 【实测】逐项编译、链接和模拟器均退出 0，指定断言确实失败。原测试没有覆盖本报告新发现的两种成员边界 |
 
-附加边界检查：把合成 `/user` 填至 free_bytes=0、写入明确失败后，原版 ink-sim 仍可重启（退出 0），未将“满盘一定无法更新 boot”这一猜测列为问题。两份构建日志和所有复现产物仅在忽略的 build 目录；没有真机或 Linux gcc 实测。提交差异隐私扫描 0 命中，新增代码无 write/read/fgets 调用；`git diff --check f1f72ae9..HEAD` 通过。
+§13 中未完成的项目逐项保留：三秒撤销窗口；中枢成员表全分页替换及 member.reset_pin；正式成人解锁证明；sync/*、数据集元数据、一致清单、原子安装与 history_gap；末端计时探针上传；内容包、远程画面的新动作、真 Opus／JPEG 模式；可选的 rt.close 原因／播放进度及计划短连。执行报告已明确披露，未发现把这些项目冒充完成。配对、固定公钥、地址／令牌和首次开机流程、确认持久化、块传输属于本节明确排除范围。远端 result、语音面板／asr.stream 和本机中枢桥的基线回归仍通过。
 
-本次独立运行的既有检查（按序执行，全部退出 0）：
+已有测试改动核对：ai_tools 的 done／answers 改为精确 1／3，同时要求 switch=1、旧轮取消=1，符合换成员取消旧轮的协议，资源上限没提高；但这些计数测不到旧文字是否消失。races 改查接收连接的实际成员；starts／actions 适配绑定身份的接口；policy 补交付元数据和已同步连接；handoff 显式关闭成人认证以适配基线 D-95。未见删除旧测试、放宽资源预算或用 sleep 掩盖产品时序。
 
-```sh
+## 已证实的问题
+
+### DE-R4（严重）：AI 正常切到孩子空间，成人转写仍留在屏上
+
+- **位置**：system/services/ai/ai_service.c:850、:859–864；调用点 system/policy/system_actions.c:79。ai_service.c:234–279 的 UI 通知也只比提问编号，不核对成员边界。
+- **触发与复现命令**：运行下方附录，查看 voice-out。使用正常 AI 按下／松开、实际模拟语音上传、ai.stt 和带当前 member/epoch 的 system.switch_member；全程不暂停任务、不修改状态、不直接设置 AI 内部字段。
+- **【实测】结果**：action.ai.system.switch_member=1，hub.member_turns_cancelled=1，当前成员已是 kid 且新目录已同步，但 AI.question 仍为“你问：SYNTHETIC_OWNER_PRIVATE：我的私人备忘处理完后，请切到孩子空间。”；状态变成“网络断了，回答没收全，请再试一次”，浮层没有关闭。问题组 test.pass=4、test.fail=1，移除保留例外的临时对照组 test.pass=5、test.fail=0；两组编译、链接、模拟器均退出 0，test.finished=1。已打开 voice-out/frames 中最后一张 GC16 图核对，成人转写确实可见，不能用“后台会话已经取消”解释为展示已隔离。
+- **原因与影响**：AI 发起切换时设置 g_switch_is_mine，成员变更回调特意跳过 ink_ai_dismiss。正常支持的换成员操作因此把上一位成人的话留给孩子，不需要竞态或故障注入，按普通使用直接串成员定为严重。这处例外在 f1f72ae9 已存在，属于本次成员隔离验收仍未消除的基线缺口，不冒称本轮新引入。
+- **修法**：换成员一律清掉旧轮的转写、回答及排队展示通知；若要显示“切换成功”，另产生不含旧成员内容、绑定新身份的提示。增加真实语音工具切换后对浮层内容／显示结果的断言。附录只在临时编译输入中移除该保留例外作对照，不修改产品文件。
+
+### DE-R3（高）：本地身份已变、状态通知未到时，成人事件可发入孩子连接
+
+- **位置**：system/services/hub/hub_link.c:597–603、:690–693、:438–441；状态改变源为 system/policy/members.c:435–440、:91–98；事件出口为 system/policy/cap.c:957–966。
+- **触发与复现命令**：运行下方附录，比较 pin-event-out 和 pin-event-control-out。先设置合成成人 PIN，切到孩子，再调用真实 ink_member_unlock。只在成员服务调用 ink_state_set_str 前用信号量暂停解锁工作线程，保留本地成员已变、发布尚未发生的调度窗口；此时异步产生一个归属 owner 的事件。该边界本来就跨越状态锁、任务调度及双核并发，测试没有伪造 epoch 或跳过校验。
+- **【实测】结果**：暂停时本地 owner 已解锁，协议 epoch 仍为孩子的旧值。接收端独立记录 audience=kid，收到的同一帧却有 member=owner、seq=5、boot=1 和 SYNTHETIC_OWNER_PRIVATE_EVENT。问题组 review.event_to_kid=1、test.pass=10、test.fail=1；控制组先放行解锁及身份同步再发事件，review.event_to_owner=1、test.pass=11、test.fail=0。两组编译、链接、模拟器均退出 0，test.finished=1。
+- **原因与影响**：当前成员由成员服务先改，H.member_epoch 到状态订阅回调才递增；wire_epoch 仅保存数字。窗口内本地成员检查和新旧 epoch 相等检查全能通过，但连接实际仍属于孩子。成人后台事件因而越过设备的交付边界，DE-1／DE-2 不能整体通过。另用文字请求复现过同一发送缺口；本条采用真实 PIN 工作线程加异步事件作为主要证据。当前 Python 中枢会拒绝成员不匹配的事件（hub/ink_hub/gateway/server.py:303–308），所以这里证明的是设备发送边界失效，不把模拟器受众记录冒充孩子的模型已读取事件。全部是合成数据，不宣称真实家庭数据已发生泄漏。
+- **修法**：把成员、认证状态、代次作为一致的身份边界发布，切换开始即使旧身份失效；连接记录本连接已发送的完整身份，在成员同步完成前拒绝私密发送。保留握手窗口测试，并补本条更早的发布窗口及等待同步后的正常发送对照。
+
+## 独立运行的检查
+
+下列命令按序执行；构建最多 -j4、ctest 最多 -j3，同一时间没有两个构建或两轮全量测试。全量中的原有 gui-smoke 仅用 SDL dummy。日志在相应构建目录的 device-events-review-*.log。
+
+~~~sh
 cmake --build build -j4
 "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j3
 cmake --build build-asan -j4
 "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j3
 python3 tests/device_events/reverse.py --build build
+python3 tests/device_events/reverse.py --build build --baseline 97645ea2 hello speech-id
 python3 tests/services_finish/run.py --build build handoff actions policy isolation
-```
+python3 tests/services_finish/run.py --build build-asan handoff actions policy isolation
+~~~
 
-## 已证实的问题
+以上均退出 0。两套 device-events 各为两次启动 94／94 项、复查场景 83 项；补跑 handoff／actions／policy／isolation 两套各为 15／6／37／15 项。反向对照的退出 0 表示成功检测到指定失败，不能当作被撤回保护的产品通过。
 
-### DE-R1（高）：hello 等待期间的成员变更被消费，新成员问题发到旧成员上下文
+git diff --check f1f72ae9..HEAD 通过；基线差异隐私扫描无本机路径或设备标识命中；新增 C 代码未发现 write/read/fgets 调用。未在 Linux gcc 或真机上执行，不能作两者通过的承诺。无硬件、真实数据、付费接口、对外发布或提交操作。
 
-- 位置：`system/services/hub/hub_link.c:472`、`:482`、`:324`。
-- 触发：成人发出 hello 后、回执到达前切到孩子。`member_changed` 被 exchange 清零，但只有 HS_ONLINE 才发 ink/member；HS_HELLO 没有保留待同步状态。握手回执随后直接上线、发送排队请求，`ink_hub_member_matches` 只检查本地身份，未检查中枢已知身份。
-- 【实测】真实启动、成员切换和 `ink_ai_ask_text` 路径；模拟中枢只增加接收时身份观测。双向均复现，附录保留“孩子握手期间切回成人”：`review.hello_epoch=2`、`review.new_epoch=3`、`review.member_notifications=0`、`review.ask.kid=1`，成人问题进入孩子上下文，隔离断言失败 1 次。对照组在线后再切换，问题正确进入 owner，test.fail=0。模拟器均退出 0，判断依据是 test.fail，不把退出码当通过。全为合成数据，未连接真实家庭；正式账号系统尚未实现，此处证明的是设备协议路由错误。
-- 复现命令：运行附录重建脚本，再执行 `build/review-device-events/hello --profile simulator/profiles/metalio-plus.json --assets build/assets --content build/test-content --out build/review-device-events/hello-out --end 40s --quiet --no-random-outages`，检查 metrics.json 的 test.fail=1 和 review.ask.kid=1。
-- 影响：握手或重连与换人重叠时，页面和问题可能按另一成员交给 AI；同时中枢回来的工具调用因旧 epoch 被拒。DE-2 的“出站快照、RPC 不重新绑定成员”不能判整体通过。
-- 修法：保存本连接已发送的 hello/member 身份；上线发送任何成员数据前确保当前身份已同步。HELLO 期间变更应保留到上线补发，或关闭旧握手后重新连接。增加上述握手窗口回归，并验证普通在线切换仍通过。
+## 新问题的可重建复现
 
-### DE-R2（高）：下行拒收的提示混用两种编号，且原测试测不到“显示失败”
+普通构建完成后在仓库根目录执行。只向忽略的 build/review-device-events-final 生成目标文件、二进制、合成中枢脚本、日志和渲染图；不改产品及测试源码。接收端事件受众由模拟中枢连接记录，独立于事件自报的 member。四个案例串行编译、串行运行；两个问题组应各有一条失败，对照组应为零。
 
-- 位置：`system/services/ai/ai_service.c:351`（发送 AI.session_seq），`:237`（kind=4 却匹配 AI.stream）；测试漏项在 `tests/device_events/ai_boundary.c:46`；对应 `REPORT.md:11` 的“中止该段声音并显示失败”。
-- 触发：先完整打字提问一轮，再按 AI 键语音提问；两种编号成为 session_seq=2、stream=1。在真实模拟中枢下行的第一帧注入一次 ink_audio_stream_push 拒收，实际走 rt 分发和 UI 队列。
-- 【实测】声音确实中止，ai.downlink_overflow=1；但 kind=4 通知因为 2≠1 被 ui_apply 丢掉，ai.speech_failed=0。等这一轮真正完成，界面仍显示“回答完成 · 按 AI 键继续问，按 HOME 关闭”。直接以语音开始的对照组两种编号都是 1，会正确提示声音失败。两组模拟器退出均为 0，问题组 test.fail=1，对照组 test.fail=0。
-- 测试有效性：【实测】仅在临时编译副本删除这一个 post(...)，保留声音中止保护，原 device-events 测试仍在两次启动中全部通过。现有断言只看 tts_stream、tts_done_for 和 overflow 计数；原 reverse.py 的 downlink 对照撤掉整个处理分支，只能证明“中止”被测到，证明不了“提示”被测到。按复查规则“测试实际测不到”定为高。
-- 复现命令：运行附录重建脚本；`build/review-device-events/downlink-real-typed --profile simulator/profiles/metalio-plus.json --assets build/assets --content build/test-content --out build/review-device-events/downlink-real-typed-out --end 55s --quiet --no-random-outages`。检查 test.fail=1、ai.downlink_overflow=1、缺失 ai.speech_failed，及 warnings 中的实际状态文案。
-- 修法：错误通知使用与 kind=4 接收侧一致的会话身份，并在完成后的状态中保留失败提示；补“先文字／听写或其他实时会话、再语音”的真实往返测试，断言界面提示，增加只撤掉错误通知的反向对照。
-
-## 高等级问题可重建复现
-
-在仓库根目录，普通构建完成后运行下列命令。只在忽略的构建目录生成目标文件、二进制和输出；产品源码不作修改。DE-R1 的观测器读取模拟中枢从 hello/ink/member 学到的连接身份，不采信问题内容自报的成员。DE-R2 只对实际到达的音频帧注入一次拒收；对照组不先打字提问。末尾还重建仅删除错误提示的测试副本，证明原断言漏测。
-
-```sh
+~~~sh
 python3 - <<'PY'
 from pathlib import Path
-p = Path('docs/tasks/device-events/REVIEW.md').read_text()
-exec(p.split('```python\n', 1)[1].split('\n```', 1)[0])
+text = Path("docs/tasks/device-events/REVIEW.md").read_text()
+exec(text.split("~~~python\n", 1)[1].split("\n~~~", 1)[0])
 PY
-```
+~~~
 
-```python
+~~~python
 from pathlib import Path
 import json, shlex, subprocess
+
 root = Path.cwd()
-build = root / 'build'
-out = build / 'review-device-events'
+build = root / "build"
+out = build / "review-device-events-final"
 out.mkdir(exist_ok=True)
 flags = {}
-for line in (build / 'CMakeFiles/sim-device-events.dir/flags.make').read_text().splitlines():
-    if ' = ' in line:
-        key, value = line.split(' = ', 1)
+for line in (build / "CMakeFiles/sim-device-events-review.dir/flags.make").read_text().splitlines():
+    if " = " in line:
+        key, value = line.split(" = ", 1)
         flags[key] = shlex.split(value)
-base = shlex.split((build / 'CMakeFiles/sim-device-events.dir/link.txt').read_text())
-main = r'''
-#include "@ROOT@/tests/services_finish/product.h"
-#include "@ROOT@/system/services/hub/hub_link.c"
-static void review_ask(void) { ink_ai_ask_text("SYNTHETIC_ADULT_PRIVATE_QUESTION"); }
-static void review_run(void *arg) {
-    (void)arg;
-    CHECK(ink_member_switch("kid") == 0, "start as synthetic child");
-    ink_hub_demand();
-#ifdef REVIEW_CONTROL
-    CHECK(WAIT_FOR(ink_hub_online(), 30000), "control handshake completed");
-#else
-    for (int i = 0; i < 30000 && get_state() != HS_HELLO; ++i) osal_task_delay_us(1000);
-    CHECK(get_state() == HS_HELLO, "entered real hello wait");
-#endif
-    ink_probe_value("review.hello_epoch", ink_hub_member_epoch());
-    CHECK(ink_member_switch("owner") == 0, "switch to synthetic adult");
-    ink_probe_value("review.new_epoch", ink_hub_member_epoch());
-    CHECK(WAIT_FOR(ink_hub_online() && ink_cap_available("voice.chat"), 30000), "online after handoff");
-    on_ui(review_ask);
-    CHECK(WAIT_FOR(sim_metric_value("review.ask.owner") + sim_metric_value("review.ask.kid") > 0, 3000), "private ask delivered");
-    CHECK(sim_metric_value("review.ask.kid") == 0 && sim_metric_value("review.ask.owner") == 1,
-          "REVIEW_HELLO: adult question must reach adult context");
-    ink_probe_value("review.member_notifications", sim_metric_value("hub.requests.ink/member"));
-    ink_probe_count("test.finished");
-}
-void ink_main(void) {
-    product_main();
-    osal_task_cfg_t cfg = {.name="review", .fn=review_run, .stack_bytes=16384,
-        .priority=OSAL_PRIO_NORMAL, .core=-1, .flags=OSAL_TASK_STACK_EXTERNAL};
-    CHECK(osal_task_create(&cfg, NULL) == OSAL_OK, "review task started");
-}
-'''
-observer = r'''
-#define sim_hub_receive review_original_receive
-#include "@ROOT@/simulator/environment/sim_hub.c"
-#undef sim_hub_receive
-void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t len, bool binary) {
-    if (!binary) {
-        cJSON *msg = cJSON_ParseWithLength((const char *)data, len);
-        const char *method = cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(msg, "method"));
-        if (method && !strcmp(method, "ai.ask")) {
-            char key[80];
-            snprintf(key, sizeof key, "review.ask.%s", MC[member_slot(ws)].member);
-            sim_metric_add(key, 1);
-        }
-        cJSON_Delete(msg);
+base = shlex.split((build / "CMakeFiles/sim-device-events-review.dir/link.txt").read_text())
+
+event_source = r'''
+#include "ink/sys/state.h"
+#include "ink/osal.h"
+#include <string.h>
+static volatile bool review_pause, review_paused;
+static osal_sem_t *review_release;
+static void review_set_str(int h, const char *s) {
+    if (review_pause && h == ink_state_find("member.current")) {
+        review_pause = false;
+        review_paused = true;
+        osal_sem_take(review_release, OSAL_WAIT_FOREVER);
     }
-    review_original_receive(ws, t, data, len, binary);
+    ink_state_set_str(h, s);
 }
-'''
-def compile_obj(name, source, extra=()):
-    obj = out / (name + '.o')
-    cmd = [base[0], *flags['C_DEFINES'], *flags['C_INCLUDES'], *flags['C_FLAGS'],
-           *extra, '-x', 'c', '-c', '-', '-o', str(obj)]
-    subprocess.run(cmd, input=source.replace('@ROOT@', str(root)), text=True, cwd=build, check=True)
-    return str(obj)
-obs = compile_obj('observer', observer)
-for case, extra in [('hello', ()), ('online-control', ('-DREVIEW_CONTROL',))]:
-    obj = compile_obj(case, main, extra)
-    link = [part for part in base if '/tests/device_events/' not in part]
-    binary = out / case
-    link[link.index('-o') + 1] = str(binary)
-    pos = next(i for i, part in enumerate(link) if part.endswith('.a'))
-    link[pos:pos] = [obj, obs]
-    subprocess.run(link, cwd=build, check=True)
-    folder = out / (case + '-out')
-    run = subprocess.run([str(binary), '--profile', str(root / 'simulator/profiles/metalio-plus.json'),
-        '--assets', str(build / 'assets'), '--content', str(build / 'test-content'), '--out', str(folder),
-        '--end', '40s', '--quiet', '--no-random-outages'], cwd=root, capture_output=True, text=True, timeout=60)
-    (out / (case + '.log')).write_text(run.stdout + run.stderr)
-    result = json.loads((folder / 'metrics.json').read_text())
-    metrics = result['metrics']
-    print(case, 'process_exit=', run.returncode,
-          {k: v for k, v in metrics.items() if k.startswith(('test.', 'review.'))})
-    print(result.get('warnings', []))
-    assert run.returncode == 0 and metrics.get('test.finished') == 1
-    assert metrics.get('test.fail', 0) == (1 if case == 'hello' else 0)
-
-audio = r'''
-#include "ink/sys/audio.h"
-static bool review_fail_next;
-static int review_push(int id, const uint8_t *data, size_t len) {
-    if (review_fail_next) { review_fail_next = false; return -1; }
-    return ink_audio_stream_push(id, data, len);
-}
-#define ink_audio_stream_push review_push
-#include "@ROOT@/system/services/ai/ai_service.c"
-#undef ink_audio_stream_push
+#define ink_state_set_str review_set_str
+#include "@ROOT@/system/policy/members.c"
+#undef ink_state_set_str
 #include "@ROOT@/tests/services_finish/product.h"
-static void typed(void) { ink_ai_ask_text("SYNTHETIC_FIRST_TYPED_TURN"); }
-static void begin_voice(void) { ink_ai_key(true, osal_now_us()); }
-static void end_voice(void) {
-    ink_probe_value("review.ai_seq", AI.session_seq);
-    ink_probe_value("review.rt_sid", AI.stream);
-    review_fail_next = true;
-    ink_ai_key(false, osal_now_us());
-}
-static void inspect(void) {
-    CHECK(AI.speech_failed, "REVIEW_DOWNLINK: real rejected downlink must be visible on current AI sheet");
-    sim_warn("REVIEW_DOWNLINK status: %s", lv_label_get_text(AI.status));
-    ink_ai_dismiss();
+static const ink_cap_t REVIEW_CAPS[] = {
+    {.id="fixture.publish_event", .title="合成异步事件", .form=INK_FORM_EVENT, .child_ok=true},
+};
+static volatile int review_pin_done, review_pin_result;
+static void review_pin(void *ctx, int result, uint32_t wait_s) {
+    (void)ctx; (void)wait_s;
+    review_pin_result = result; review_pin_done = 1;
 }
 static void review_run(void *arg) {
     (void)arg;
     ink_hub_demand();
-    CHECK(WAIT_FOR(ink_hub_online() && ink_cap_available("voice.chat"), 30000), "hub ready");
-#ifdef REVIEW_TYPED_FIRST
-    on_ui(typed);
-    CHECK(WAIT_FOR(sim_metric_value("ai.answers") == 1, 10000), "typed turn completes first");
+    CHECK(WAIT_FOR(ink_hub_online() && ink_cap_available("voice.chat"),30000),"connection ready");
+    CHECK(ink_member_set_pin("owner","","2468",review_pin,NULL)==0 &&
+          WAIT_FOR(review_pin_done,5000) && review_pin_result==INK_PIN_OK,"synthetic owner PIN installed");
+    CHECK(ink_member_switch("kid")==0,"start in child context");
+    CHECK(WAIT_FOR(ink_cap_available("voice.chat"),5000),"child connection synchronized");
+    uint32_t epoch = ink_hub_member_epoch();
+    review_release = osal_sem_create(0,1);
+    review_pin_done = 0; review_pause = true;
+    CHECK(ink_member_unlock("owner","2468",review_pin,NULL)==0 && WAIT_FOR(review_paused,5000),
+          "real PIN worker paused between local identity change and publication");
+    CHECK(!strcmp(ink_member_current()->id,"owner") && ink_member_space_open() &&
+          ink_hub_member_epoch()==epoch,"adult is current while wire epoch remains the child epoch");
+#ifdef REVIEW_CONTROL
+    osal_sem_give(review_release);
+    CHECK(WAIT_FOR(review_pin_done && ink_cap_available("voice.chat"),5000),"control waits for publication");
 #endif
-    double answers = sim_metric_value("ai.answers");
-    on_ui(begin_voice);
-    delay_ms(1000);
-    on_ui(end_voice);
-    CHECK(WAIT_FOR(sim_metric_value("ai.downlink_overflow") == 1, 10000), "real downlink refusal observed");
-    CHECK(WAIT_FOR(sim_metric_value("ai.answers") > answers, 25000), "real voice roundtrip finished");
-    on_ui(inspect);
+    int first = sim_hub_events_seen();
+    ink_args_t *a = osal_malloc(sizeof *a,OSAL_MEM_EXTERNAL);
+    ink_args_init(a); ink_args_str(a,"value","SYNTHETIC_OWNER_PRIVATE_EVENT");
+    ink_cap_emit_for("fixture.publish_event",a,"owner",ink_member_generation("owner"));
+    osal_free(a);
+    bool got = false, wrong = false;
+    for (int step=0;step<3000 && !got;step++) {
+        for (int i=first;i<sim_hub_events_seen();i++) {
+            const char *event = sim_hub_event_at(i), *audience = sim_hub_event_audience(i);
+            if (event && strstr(event,"SYNTHETIC_OWNER_PRIVATE_EVENT")) {
+                got = true; wrong = !audience || strcmp(audience,"owner");
+                ink_probe_count(wrong ? "review.event_to_kid" : "review.event_to_owner");
+                sim_warn("REVIEW_EVENT audience=%s payload=%s",audience ? audience : "?",event);
+            }
+        }
+        if (!got) osal_task_delay_us(1000);
+    }
+    CHECK(got,"asynchronous owner event reaches receiving connection");
+    CHECK(!wrong,"REVIEW_PUBLISH_EVENT: private event must never enter previous child's context");
+#ifndef REVIEW_CONTROL
+    osal_sem_give(review_release);
+    CHECK(WAIT_FOR(review_pin_done,5000),"release real PIN worker");
+#endif
     ink_probe_count("test.finished");
 }
 void ink_main(void) {
     product_main();
-    osal_task_cfg_t cfg = {.name="review-audio", .fn=review_run, .stack_bytes=16384,
+    CHECK(ink_cap_register(REVIEW_CAPS,1)==0,"synthetic event registered");
+    osal_task_cfg_t cfg = {.name="review-publish", .fn=review_run, .stack_bytes=16384,
         .priority=OSAL_PRIO_NORMAL, .core=-1, .flags=OSAL_TASK_STACK_EXTERNAL};
-    CHECK(osal_task_create(&cfg, NULL) == OSAL_OK, "review task started");
+    CHECK(osal_task_create(&cfg,NULL)==OSAL_OK,"review task started");
 }
 '''
-def run_probe(case, link, end, flash=None):
-    binary = out / case
-    link[link.index('-o') + 1] = str(binary)
+
+voice_source = r'''
+#include "@ROOT@/tests/services_finish/product.h"
+#include "@ROOT@/system/services/ai/ai_service.c"
+static void review_press(void) { ink_ai_key(true,osal_now_us()); }
+static void review_release_key(void) { ink_ai_key(false,osal_now_us()); }
+static void review_inspect(void) {
+    bool exposed = AI.open && strstr(lv_label_get_text(AI.question),"SYNTHETIC_OWNER_PRIVATE");
+    CHECK(!exposed,"REVIEW_SHEET: adult transcript must not remain visible in child's space");
+    if (AI.open) sim_warn("REVIEW_SHEET member=%s question=%s status=%s",ink_member_current()->id,
+                         lv_label_get_text(AI.question),lv_label_get_text(AI.status));
+    if (exposed) ink_probe_count("review.private_text_exposed");
+}
+static void review_run(void *arg) {
+    (void)arg;
+    ink_hub_demand();
+    CHECK(WAIT_FOR(ink_hub_online() && ink_cap_available("voice.chat"),30000),"hub ready");
+    on_ui(review_press);
+    CHECK(WAIT_FOR(sim_metric_value("hub.binary_bytes")>0,3000),"real voice uplink");
+    on_ui(review_release_key);
+    CHECK(WAIT_FOR(!strcmp(ink_member_current()->id,"kid") && ink_cap_available("voice.chat"),10000),
+          "normal voice tool switched to child and synchronized the connection");
+    on_ui(review_inspect);
+    ink_probe_count("test.finished");
+}
+void ink_main(void) {
+    product_main();
+    osal_task_cfg_t cfg = {.name="review-sheet", .fn=review_run, .stack_bytes=16384,
+        .priority=OSAL_PRIO_NORMAL, .core=-1, .flags=OSAL_TASK_STACK_EXTERNAL};
+    CHECK(osal_task_create(&cfg,NULL)==OSAL_OK,"review task started");
+}
+'''
+
+hub_script = {"rules": [
+    {"method":"hello","think_ms":40,"result":{"session":"synthetic","proto":1}},
+    {"method":"ai.listen",
+     "listen":{"stt_ms":100,"transcript":"SYNTHETIC_OWNER_PRIVATE：我的私人备忘处理完后，请切到孩子空间。"},
+     "tools":[{"name":"system.switch_member","arguments":{"id":"kid"},"think_ms":300}],
+     "result":{"done":True}}
+]}
+(out / "hub.json").write_text(json.dumps(hub_script, ensure_ascii=False))
+
+def probe(name, source, expected, extra=(), observer=False, voice=False):
+    obj = out / (name + ".o")
+    subprocess.run([base[0], *extra, *flags["C_DEFINES"], *flags["C_INCLUDES"], *flags["C_FLAGS"],
+                    "-x", "c", "-c", "-", "-o", str(obj)],
+                   input=source.replace("@ROOT@", str(root)), text=True, cwd=build, check=True)
+    link = [p for p in base if "/tests/device_events/" not in p or
+            (observer and p.endswith("/hub_observer.c.o"))]
+    link.insert(next(i for i, p in enumerate(link) if p.endswith(".a")), str(obj))
+    binary = out / name
+    link[link.index("-o") + 1] = str(binary)
     subprocess.run(link, cwd=build, check=True)
-    folder = out / (case + '-out')
-    cmd = [str(binary), '--profile', str(root / 'simulator/profiles/metalio-plus.json'),
-        '--assets', str(build / 'assets'), '--content', str(build / 'test-content'), '--out', str(folder),
-        '--end', end, '--quiet', '--no-random-outages']
-    if flash:
-        cmd.extend(['--flash-image', str(flash)])
-    run = subprocess.run(cmd, cwd=root, capture_output=True, text=True, timeout=60)
-    (out / (case + '.log')).write_text(run.stdout + run.stderr)
-    result = json.loads((folder / 'metrics.json').read_text())
-    metrics = result['metrics']
-    print(case, 'process_exit=', run.returncode, {k: v for k, v in metrics.items()
-        if k.startswith(('test.', 'review.', 'ai.answers', 'ai.speech', 'ai.downlink'))})
-    print(result.get('warnings', []))
-    assert run.returncode == 0 and metrics.get('test.finished') == 1
-    return metrics
-for case, extra in [('downlink-real-typed', ('-DREVIEW_TYPED_FIRST',)), ('downlink-real-control', ())]:
-    obj = compile_obj(case, audio, extra)
-    link = [part for part in base if '/tests/device_events/' not in part]
-    pos = next(i for i, part in enumerate(link) if part.endswith('.a'))
-    link.insert(pos, obj)
-    metrics = run_probe(case, link, '55s')
-    assert metrics.get('test.fail', 0) == (1 if extra else 0)
+    folder = out / (name + "-out")
+    cmd = [str(binary), "--profile", str(root / "simulator/profiles/metalio-plus.json"),
+           "--assets", str(build / "assets"), "--content", str(build / "test-content"),
+           "--out", str(folder), "--end", "45s", "--quiet", "--no-random-outages"]
+    if voice:
+        cmd += ["--hub", str(out / "hub.json"), "--frames"]
+    run = subprocess.run(cmd, cwd=root, capture_output=True, text=True, timeout=50)
+    (out / (name + ".log")).write_text(run.stdout + run.stderr)
+    result = json.loads((folder / "metrics.json").read_text())
+    metrics = result["metrics"]
+    print(name, "compile/link=0", "simulator_exit=", run.returncode,
+          {k:v for k,v in metrics.items() if k.startswith(("test.", "review."))})
+    print(result.get("warnings", []))
+    assert run.returncode == 0 and metrics.get("test.finished") == 1
+    assert metrics.get("test.fail", 0) == expected
 
-ai = (root / 'system/services/ai/ai_service.c').read_text()
-assert ai.count('post(AI.session_seq, 4, 0, NULL);') == 1
-ai = ai.replace('post(AI.session_seq, 4, 0, NULL);', '/* Review mutant: omit only the error notification. */')
-mutant = (root / 'tests/device_events/ai_boundary.c').read_text().replace('#include INK_TEST_AI_SOURCE', ai)
-obj = compile_obj('no-speech-notify', mutant, ('-iquote', str(root / 'tests/device_events')))
-link = list(base)
-pos = next(i for i, part in enumerate(link) if part.endswith('/ai_boundary.c.o'))
-link[pos] = obj
-flash = out / 'notification-mutant.img'
-flash.unlink(missing_ok=True)
-boots = []
-for number in (1, 2):
-    metrics = run_probe('notification-mutant-boot-' + str(number), list(link), '90s', flash)
-    assert metrics.get('test.fail', 0) == 0
-    boots.append(metrics['test.event_boot']['max'])
-assert boots[1] == boots[0] + 1
-```
+probe("pin-event", event_source, 1, observer=True)
+probe("pin-event-control", event_source, 0, extra=("-DREVIEW_CONTROL",), observer=True)
+probe("voice", voice_source, 1, voice=True)
+# Control only: compile without the exception that preserves the previous member's sheet.
+ai = (root / "system/services/ai/ai_service.c").read_text()
+old = "if (!g_switch_is_mine) ink_ai_dismiss();"
+assert ai.count(old) == 1
+control = voice_source.replace('#include "@ROOT@/system/services/ai/ai_service.c"',
+                               ai.replace(old, "ink_ai_dismiss();"))
+probe("voice-control", control, 0, voice=True)
+~~~
 
-SEVERE=0 HIGH=2
+SEVERE=1 HIGH=1
