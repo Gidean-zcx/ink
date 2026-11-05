@@ -1,6 +1,6 @@
 # member-wake 执行报告
 
-基线：`103382b1`。范围：仅 `backlog.md` 的 `member-wake`。状态：实现和定向回归完成，全量、内存和反向对照待执行。
+基线：`103382b1`。范围：仅 `backlog.md` 的 `member-wake`。状态：实现、定向回归、反向对照完成，全量和内存检查进行中。
 
 ## 验收表
 
@@ -16,11 +16,11 @@
 | MW-8 | 通过【实现】 | 同步服务设计 §11.4、应用恢复状态行及 `ui-dependencies.md` 对应状态 | `git diff --check` |
 | G1 | 待验证 | 全量测试、内存检查与预算 | 待执行 |
 | G2 | 通过【实测／实现】 | 复用设置能力和人工 PIN 接口；关门时 AI 不能调用能力，成员门快照不含凭据 | 定向回归；现有 `integration-people` |
-| S1 | 待验证 | 反向对照、差异范围和隐私检查 | 待执行 |
+| S1 | 反向对照通过【实测】；终检待做 | 四组撤修复均失败，恢复后通过；首次隐私扫描零命中 | 见下；总规则 §6 |
 
 ## 没做到的
 
-全量、ASan/UBSan、反向对照及最终隐私检查待执行。
+全量、ASan/UBSan 及最终隐私检查待执行。首轮全量发现 `integration-media` 仍按锁屏立即关门，已修正前置条件，定向复测通过；3 项中枢测试缺 Python 依赖而跳过，正在补齐冻结依赖后重跑。
 
 ## 和设计不一致的
 
@@ -30,8 +30,18 @@
 
 - `integration-people`：原“闲置 60 秒关门”改为“阅读不关门、锁屏 60 秒关门”；原“锁屏立即关门”改为“锁屏 30 秒后关门”；异步状态发布用条件等待核对。PIN 错误次数、递增等待和隔离断言保留。
 - `integration-listening` 两处关闭空间的前置条件改为先等 30 秒锁屏时段，另断言刚锁屏仍有认证；原有禁止上传、结束 AI 会话等断言保留，预算和脚本时限未改。
+- `integration-media`：锁屏立即关闭空间改为先确认有免密时段，再等 30 秒后检查关闭；原“媒体继续播放、音量键有效、AI 不能越权”等断言保留，预算和脚本时限未改。
 
-定向回归命令：`ctest --test-dir build --output-on-failure -j3 -R '^integration-(member-wake|people|listening|apps)$'`，4/4 通过；新增测试 174 条检查、`test.finished=1`、零警告。
+定向回归命令：`ctest --test-dir build --output-on-failure -j3 -R '^integration-(member-wake|people|listening|apps|media)$'`，5/5 通过；新增测试 174 条检查、`test.finished=1`、零警告。
+
+反向对照：每次只改一处，`cmake --build build --target sim-member-wake -j4` 均退出 0，再执行 `ctest --test-dir build --output-on-failure -j1 -R '^integration-member-wake$'` 均退出 8。原文件逐次恢复，最终重建与复测均退出 0。
+
+| 撤掉的修复 | 失败检查数 | 关键失败 |
+| --- | --- | --- |
+| 将 `members.c` 换成基线版本（`git show 103382b1:system/policy/members.c`） | 25 | 阅读 121 秒仍应开放、119 秒免密返回 |
+| 将 `app_registry.c` 换成基线版本 | 32 | 成员门底下变成 `home`，没有保留原书页 |
+| 仅移除访问入口的截止时间检查 | 1 | 后台队列阻塞时，状态更新前仍须拒绝过期空间 |
+| 仅移除唤醒时的截止时间检查 | 5 | AI 键唤醒不得绕过排队中的过期处理 |
 
 ## 要用户定的
 
