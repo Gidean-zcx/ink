@@ -25,7 +25,7 @@
 ## 构建
 
 ```bash
-D=/Users/bytedance/Documents/Workspace/ink
+D=<放 build-deps 的主检出目录>
 cmake -S . -B build-audit -DINK_WERROR=ON -DINK_GUI=OFF \
   -DINK_CJK_FONT=$D/build-deps/fonts/NotoSansCJK-Regular.ttc -DINK_CJK_FACE=2 \
   -DPython3_EXECUTABLE=$D/build-deps/pyenv/bin/python \
