@@ -24,7 +24,7 @@ static struct {
         ink_rt_handler_t h;
         uint16_t seq[INK_RT_KINDS];
         char member[INK_MEMBER_ID_MAX];
-        uint32_t generation;
+        uint32_t generation, epoch;
         char cap[24];
         char params[INK_RT_PARAMS];
     } s[INK_RT_MAX];
@@ -40,6 +40,8 @@ static int find(int sid) { /* under the lock */
 static bool handler_of(int sid, ink_rt_handler_t *h) {
     osal_mutex_lock(RT.lock, OSAL_WAIT_FOREVER);
     int i = find(sid);
+    if (i >= 0 && (RT.s[i].epoch != ink_hub_member_epoch() || !ink_member_space_open() ||
+        strcmp(RT.s[i].member, ink_member_current()->id) || RT.s[i].generation != ink_member_generation(RT.s[i].member))) i = -1;
     if (i >= 0) *h = RT.s[i].h;
     osal_mutex_unlock(RT.lock);
     return i >= 0;
@@ -114,6 +116,17 @@ static void lost(int sid) {
     ink_probe_count("rt.refused");
 }
 
+static void member_changed(void) {
+    for (int i = 0; i < INK_RT_MAX; i++) {
+        ink_rt_handler_t h = {0};
+        int sid = 0;
+        osal_mutex_lock(RT.lock, OSAL_WAIT_FOREVER);
+        if (RT.s[i].used && RT.s[i].epoch != ink_hub_member_epoch()) { sid = RT.s[i].sid; h = RT.s[i].h; }
+        osal_mutex_unlock(RT.lock);
+        if (sid && drop(sid) && h.on_closed) h.on_closed(h.ctx, sid, -1);
+    }
+}
+
 static void on_online(void *ctx) { /* hub task: a new connection knows no sessions */
     (void)ctx;
     int again[INK_RT_MAX], n = 0;
@@ -163,6 +176,7 @@ int ink_rt_init(void) {
     RT.lock = osal_mutex_create();
     if (!RT.lock) return -1;
     ink_hub_on_binary(on_binary, NULL);
+    ink_hub_on_member(member_changed);
     if (ink_hub_on_online(on_online, NULL)) return -1;
     return ink_hub_subscribe("rt.", on_notify, NULL);
 }
@@ -181,6 +195,7 @@ int ink_rt_open(const char *cap, const char *params_json, const ink_rt_handler_t
         RT.s[slot].h = *h;
         snprintf(RT.s[slot].member, sizeof RT.s[slot].member, "%s", ink_member_current()->id);
         RT.s[slot].generation = ink_member_generation(RT.s[slot].member);
+        RT.s[slot].epoch = ink_hub_member_epoch();
         memset(RT.s[slot].seq, 0, sizeof RT.s[slot].seq);
         snprintf(RT.s[slot].cap, sizeof RT.s[slot].cap, "%s", cap);
         snprintf(RT.s[slot].params, sizeof RT.s[slot].params, "%s", params_json && *params_json ? params_json : "{}");
@@ -212,10 +227,11 @@ int ink_rt_send(int sid, uint8_t kind, const void *payload, size_t len, uint8_t 
     int i = find(sid);
     bool ready = i >= 0 && RT.s[i].ready;
     char member[INK_MEMBER_ID_MAX] = "";
-    uint32_t generation = 0;
+    uint32_t generation = 0, epoch = 0;
     if (ready) {
         snprintf(member, sizeof member, "%s", RT.s[i].member);
         generation = RT.s[i].generation;
+        epoch = RT.s[i].epoch;
     }
     uint16_t seq = ready ? RT.s[i].seq[kind]++ : 0;
     osal_mutex_unlock(RT.lock);
@@ -227,7 +243,7 @@ int ink_rt_send(int sid, uint8_t kind, const void *payload, size_t len, uint8_t 
     uint8_t hdr[INK_RT_HDR] = {kind, (uint8_t)sid, (uint8_t)seq, (uint8_t)(seq >> 8), (uint8_t)t, (uint8_t)(t >> 8), (uint8_t)(t >> 16), (uint8_t)(t >> 24), flags, 0};
     memcpy(f, hdr, INK_RT_HDR);
     if (len) memcpy(f + INK_RT_HDR, payload, len);
-    int r = ink_hub_send_frame_for(f, len + INK_RT_HDR, class_of(kind), member, generation);
+    int r = ink_hub_send_frame_for(f, len + INK_RT_HDR, class_of(kind), member, generation, epoch);
     if (f != local) osal_free(f);
     return r;
 }

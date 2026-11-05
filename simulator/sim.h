@@ -343,6 +343,7 @@ void sim_hub_clock_offset(int64_t seconds); /* ISR: the hub's clock is this far 
 void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t len, bool binary); /* ISR */
 /* Tests: a request to the device on the connection in use (ISR), and what it answered (NULL until then). */
 void sim_hub_request_device(const char *method, const char *params_json);
+void sim_hub_request_device_raw(const char *method, const char *params_json); /* no fixture delivery metadata */
 const char *sim_hub_device_reply(void);
 /* Tests: the device/event messages so far (the first 32), and the last question with what came with it. */
 int sim_hub_events_seen(void);

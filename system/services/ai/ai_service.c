@@ -45,6 +45,7 @@
 #define SNAPSHOT_CAP 3072
 #define STATE_CAP 2048 /* the system's state, with every question: what the AI knows without asking */
 #define ASK_TIMEOUT_US (45ull * 1000000ull)
+#define CAPTURE_LIMIT_US (30ull * 1000000ull)
 #define MAX_BUFFERED_FRAMES 512 /* ~30 s of speech captured before the link is online */
 
 static const char *SIM_TRANSCRIPT = "这一页讲了什么？";
@@ -341,7 +342,13 @@ static void on_rt_frame(void *ctx, int sid, uint8_t kind, const uint8_t *opus, s
             AI.tts_for = st;
             AI.tts_opened = AI.tts_stream > 0 ? AI.tts_stream : 0;
         }
-        if (AI.tts_stream > 0) ink_audio_stream_push(AI.tts_stream, opus, len);
+        if (AI.tts_stream > 0 && ink_audio_stream_push(AI.tts_stream, opus, len) != 0) {
+            ink_audio_stream_abort(AI.tts_stream);
+            AI.tts_stream = 0;
+            AI.tts_done_for = st;
+            ink_probe_count("ai.downlink_overflow");
+            post(AI.session_seq, 4, 0, NULL);
+        }
     }
     osal_mutex_unlock(AI.lock);
 }
@@ -457,6 +464,11 @@ static void on_frame(void *ctx, const uint8_t *data, size_t len, uint32_t seq) {
 }
 
 static void flush_timer_cb(lv_timer_t *t) { /* UI task: the link may come up after the user stopped talking */
+    if (AI.capturing && osal_now_us() - AI.t_press >= CAPTURE_LIMIT_US) {
+        end_capture(false);
+        ink_probe_count("ai.capture_limit");
+        if (AI.open) set_status("已听够 30 秒，正在想…");
+    }
     flush_uplink();
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
     bool idle = !AI.buf_head && !AI.end_pending && !AI.up_open;
@@ -858,6 +870,9 @@ static void revoke_turn(void *ctx, int h, const char *id) { /* direct: stop tran
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
     g_turn_revoked = AI.drop_frames = true;
     AI.tts_done_for = AI.stream;
+    if (AI.tts_stream > 0) ink_audio_stream_abort(AI.tts_stream);
+    if (AI.tts_opened > 0) ink_audio_stream_abort(AI.tts_opened);
+    AI.tts_stream = 0;
     osal_mutex_unlock(AI.lock);
     ink_exec_post(INK_EXEC_UI, &g_owner_job, owner_ui, NULL);
 }

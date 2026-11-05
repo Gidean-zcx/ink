@@ -9,6 +9,7 @@ class Metrics:
         self.lag = deque(maxlen=10000)
         self.turns = 0
         self.tool_calls = 0
+        self.event_gaps = 0
 
     async def monitor(self):
         loop = asyncio.get_running_loop()

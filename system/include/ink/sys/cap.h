@@ -139,6 +139,7 @@ typedef void (*ink_cap_done_fn)(void *ctx, const ink_receipt_t *rc);
 typedef struct {
     ink_source_t src;
     uint32_t page_gen;      /* the content version the caller saw (AI, hub); 0 = not page-bound */
+    uint32_t hub_epoch, hub_connection; /* incoming delivery only; zero for local callers */
     const char *request_id; /* a repeated id does not run twice: the first receipt again, or "queued" while it runs; NULL = none.
                              * A read that gave a result runs again: it has no effect to repeat, and the result is not kept. */
     const char *args_json;  /* JSON arguments instead of a table (the AI's, the hub's): checked after the gate */

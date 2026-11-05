@@ -23,10 +23,12 @@ class FakeDevice:
         self.calls = []
         self.receipt = {"status": "done", "say": "已完成。"}
         self.rpc_error = None
+        self.member, self.epoch = "default", 0
 
     async def connect(self, device="example-device", proto=1):
         self.ws = await self.client.ws_connect(self.url + "/v1/device")
-        return await self.call("hello", {"proto": proto, "device": device, "member": "default"})
+        return await self.call("hello", {"proto": proto, "device": device, "member": self.member,
+                                         "epoch": self.epoch, "authed": False})
 
     async def send(self, method, params=None, rid=True):
         self.rid += 1
@@ -68,7 +70,9 @@ class FakeDevice:
         elif method == "tools/call":
             meta = params["_meta"]
             assert len(meta["request_id"].encode()) <= 39
-            assert meta["member"] == "default" and meta["epoch"] == 0
+            if meta.get("member") != self.member or type(meta.get("epoch")) is not int or meta["epoch"] != self.epoch:
+                await self.ws.send_json({"jsonrpc": "2.0", "id": msg["id"], "error": {"code": -32023, "message": "stale_member"}})
+                return
             result = self.receipt
         else:
             raise AssertionError(f"协议没有约定这个请求: {method}")
@@ -91,7 +95,8 @@ class FakeDevice:
     async def voice(self, actions=(), page_gen=12):
         await self.send("rt.open", {"sid": 7, "cap": "voice.chat", "params": {}})
         rid = await self.send("ai.listen", {"stream": 7, "format": "opus", "rate": 16000, "frame_ms": 60,
-                                            "page_gen": page_gen, "page": {"app": "reader", "text": "示例页面", "actions": list(actions)}})
+                                            "budget_ms": 45000, "page_gen": page_gen,
+                                            "page": {"app": "reader", "text": "示例页面", "actions": list(actions)}})
         # The device only sends audio after rt.open has been acknowledged.
         while True:
             msg = await self.recv()
