@@ -26,6 +26,7 @@
 #include "ink/sys/layout.h"
 #include "ink/sys/state.h"
 #include "ink/sys/power.h"
+#include "ink/sys/pairing.h"
 
 #define HUB_STACK 6144 /* PSRAM: replies run here, and what they start (closing a session, the next request) */
 #define HUB_PRIO 6
@@ -36,8 +37,8 @@
 #define DEMAND_HOLD_US (30ull * 1000000ull)
 #define HELLO_TIMEOUT_US (10ull * 1000000ull)
 
-typedef enum { HS_DISCONNECTED, HS_CONNECTING, HS_HELLO, HS_ONLINE, HS_BACKOFF } hub_state_t;
-typedef enum { HE_CALL = 1, HE_WS, HE_LINK, HE_DEMAND, HE_TX } hub_ev_t;
+typedef enum { HS_DISCONNECTED, HS_CONNECTING, HS_HELLO, HS_ONLINE, HS_BACKOFF, HS_PAIRING } hub_state_t;
+typedef enum { HE_CALL = 1, HE_WS, HE_LINK, HE_DEMAND, HE_TX, HE_RECONNECT } hub_ev_t;
 
 /* Fire-and-forget messages (notifications, binary frames): FIFOs in PSRAM, one per class, drained
  * by the hub task while online, highest class first (voice > input > screen > control >
@@ -100,6 +101,7 @@ static struct {
     pending_t pend[MAX_PENDING];
     uint32_t next_id;
     uint32_t hello_id;
+    bool pair_begin;
     uint64_t hello_sent_us;
     int64_t server_ms;     /* the hub's clock when this connection came up, 0 = it did not say */
     uint32_t hello_rtt_ms;
@@ -257,6 +259,8 @@ static void enter_backoff(void) {
 }
 
 static bool has_demand(uint64_t now) {
+    if (ink_pairing_enabled() && ink_pairing_blocked()) return false;
+    if (ink_pairing_wants_link()) return true;
     if (now < demand_until() || __atomic_load_n(&H.keep, __ATOMIC_ACQUIRE) > 0) return true;
     for (int i = 0; i < MAX_PENDING; i++)
         if (H.pend[i].used) return true;
@@ -268,7 +272,9 @@ static void start_connect(void) {
     hal_net_link_status(&st);
     H.connect_started = osal_now_us();
     H.ws_link = st.type;
-    H.ws = hal_ws_open(H.url, ws_cb, (void *)(uintptr_t)++H.ws_gen);
+    uint8_t pin[32]; bool pinned = false;
+    ink_pairing_endpoint(H.url, pin, &pinned);
+    H.ws = hal_ws_open_pinned(H.url, pinned ? pin : NULL, ws_cb, (void *)(uintptr_t)++H.ws_gen);
     set_state(H.ws ? HS_CONNECTING : HS_BACKOFF);
     if (!H.ws) enter_backoff();
 }
@@ -288,7 +294,14 @@ static void on_text(const char *txt, size_t len) {
         int64_t id;
         if (!ink_json_int(j, id_t, &id)) return;
         if ((uint32_t)id == H.hello_id && H.state == HS_HELLO) {
+            if (H.pair_begin) {
+                set_state(HS_PAIRING);
+                ink_pairing_reply(false, res_t >= 0 ? INK_HUB_OK : INK_HUB_ERR_REMOTE, j, res_t >= 0 ? res_t : err_t);
+                if (err_t >= 0) enter_backoff();
+                return;
+            }
             if (res_t >= 0) {
+                if (ink_pairing_enabled()) ink_pairing_reply(true, INK_HUB_OK, j, res_t);
                 int64_t ms;
                 H.server_ms = ink_json_int(j, ink_json_find(j, res_t, "now_ms"), &ms) ? ms : 0;
                 H.hello_rtt_ms = (uint32_t)((osal_now_us() - H.hello_sent_us) / 1000u);
@@ -299,6 +312,7 @@ static void on_text(const char *txt, size_t len) {
                     if (H.pend[i].used && !H.pend[i].sent) send_request(&H.pend[i]);
                 for (int i = 0; i < H.nonline; i++) H.online_fn[i](H.online_ctx[i]); /* e.g. sessions announce themselves again */
             } else {
+                if (ink_pairing_enabled()) ink_pairing_reply(true, INK_HUB_ERR_REMOTE, j, err_t);
                 enter_backoff();
             }
             return;
@@ -319,6 +333,12 @@ static void on_text(const char *txt, size_t len) {
         char method[40];
         if (ink_json_str(j, m_t, method, sizeof method) < 0) return;
         int params = ink_json_find(j, 0, "params");
+        if (ink_pairing_enabled() && !strncmp(method, "pair/", 5)) {
+            int64_t rid = 0;
+            if (id_t >= 0 && ink_json_int(j, id_t, &rid) && ink_pairing_request(rid, method, j, params)) return;
+            if (id_t < 0 && !strcmp(method, "pair/expired")) { ink_pairing_expired(); return; }
+        }
+        if (H.state != HS_ONLINE) return; /* unauthenticated connections cannot invoke tools */
         if (id_t >= 0) { /* a request from the hub (e.g. tools/call): exactly one handler answers */
             int64_t rid;
             if (!ink_json_int(j, id_t, &rid)) return;
@@ -340,9 +360,13 @@ static void send_hello(void) {
     hal_device_get_info(&di);
     pending_t hello = {.id = new_id(), .used = false};
     H.hello_id = hello.id;
-    char params[160];
-    snprintf(params, sizeof params, "{\"proto\":1,\"device\":\"%s\",\"member\":\"default\"}", di.profile_id ? di.profile_id : "?");
+    char params[512];
     snprintf(hello.method, sizeof hello.method, "hello");
+    H.pair_begin = false;
+    if (ink_pairing_enabled()) {
+        if (ink_pairing_handshake(hello.method, params, sizeof params) != 0) { enter_backoff(); return; }
+        H.pair_begin = !strcmp(hello.method, "pair/begin");
+    } else snprintf(params, sizeof params, "{\"proto\":1,\"device\":\"%s\",\"member\":\"default\"}", di.profile_id ? di.profile_id : "?");
     hello.params = params;
     H.hello_sent_us = osal_now_us();
     if (send_request(&hello) != 0) enter_backoff();
@@ -393,6 +417,8 @@ static void drain_tx(bool online) {
 
 static uint64_t next_wakeup(uint64_t now) {
     uint64_t t = UINT64_MAX;
+    uint64_t pairing = ink_pairing_deadline();
+    if (pairing && pairing < t) t = pairing;
     for (int i = 0; i < MAX_PENDING; i++)
         if (H.pend[i].used && H.pend[i].deadline < t) t = H.pend[i].deadline;
     if (H.state == HS_BACKOFF && H.backoff_until < t) t = H.backoff_until;
@@ -422,7 +448,7 @@ static void accept_call(call_req_t *r, uint64_t now) {
         p->ctx = r->ctx;
         p->used = true;
         H.last_activity = now;
-        if (H.state == HS_ONLINE) send_request(p);
+        if (H.state == HS_ONLINE || (H.state == HS_PAIRING && !strncmp(p->method, "pair/", 5))) send_request(p);
     }
     osal_free(r);
 }
@@ -458,15 +484,23 @@ static void hub_task(void *arg) {
                 break;
             }
             case HE_TX: break; /* drained below */
+            case HE_RECONNECT:
+                drain_tx(H.state == HS_ONLINE || H.state == HS_PAIRING);
+                fail_all(INK_HUB_ERR_LOST, true);
+                close_ws();
+                set_state(HS_DISCONNECTED);
+                break;
             case HE_WS:
                 if (!H.ws || m.ws_gen != H.ws_gen) break; /* from a connection already closed */
                 if (m.ws_event == HAL_WS_CONNECTED && H.state == HS_CONNECTING) {
+                    uint8_t hash[32];
+                    if (hal_ws_peer_key(H.ws, hash)) ink_pairing_peer(hash);
                     send_hello();
                 } else if (m.ws_event == HAL_WS_TEXT && m.data) {
                     on_text(m.data, m.len);
                 } else if (m.ws_event == HAL_WS_BINARY && m.data) {
                     H.last_activity = now;
-                    if (H.bin_fn) H.bin_fn(H.bin_ctx, (const uint8_t *)m.data, m.len);
+                    if (H.state == HS_ONLINE && H.bin_fn) H.bin_fn(H.bin_ctx, (const uint8_t *)m.data, m.len);
                 } else if (m.ws_event == HAL_WS_CLOSED) {
                     fail_all(INK_HUB_ERR_LOST, true);
                     ink_probe_count("hub.disconnects");
@@ -482,12 +516,18 @@ static void hub_task(void *arg) {
         }
         if (H.state == HS_ONLINE && H.tick) H.tick();
         /* queued notifications and binary frames: sent while online, dropped otherwise */
-        drain_tx(H.state == HS_ONLINE);
+        drain_tx(H.state == HS_ONLINE || H.state == HS_PAIRING);
+        if (H.state == HS_PAIRING) {
+            for (int i = 0; i < MAX_PENDING; i++)
+                if (H.pend[i].used && !H.pend[i].sent && !strncmp(H.pend[i].method, "pair/", 5)) send_request(&H.pend[i]);
+        }
         /* timeouts */
         for (int i = 0; i < MAX_PENDING; i++)
             if (H.pend[i].used && now >= H.pend[i].deadline)
                 finish(&H.pend[i], H.pend[i].sent ? INK_HUB_ERR_TIMEOUT : INK_HUB_ERR_OFFLINE, NULL, -1);
         /* state machine */
+        uint64_t pair_expiry = ink_pairing_deadline();
+        if (pair_expiry && now >= pair_expiry) ink_pairing_expired();
         hal_link_status_t st;
         hal_net_link_status(&st);
         switch (H.state) {
@@ -552,7 +592,9 @@ int ink_hub_init(const char *url) {
     hal_net_set_link_callback(link_cb, NULL);
     osal_task_cfg_t cfg = {.name = "hub", .fn = hub_task, .stack_bytes = HUB_STACK, .priority = HUB_PRIO, .core = -1,
                            .flags = OSAL_TASK_STACK_EXTERNAL};
-    return osal_task_create(&cfg, &H.task) == OSAL_OK ? 0 : -1;
+    if (osal_task_create(&cfg, &H.task) != OSAL_OK) return -1;
+    if (ink_pairing_wants_link()) ink_hub_demand();
+    return 0;
 }
 
 int ink_hub_call(const char *method, const char *params_json, int64_t timeout_us, ink_hub_reply_fn cb, void *ctx) {
@@ -620,8 +662,8 @@ void ink_hub_keep(bool on) {
     ink_hub_demand(); /* connect now if needed; when the last one goes, the quiet period starts */
 }
 
-static int enqueue_tx(bool binary, int cls, const void *data, size_t len, const char *member) {
-    if (get_state() != HS_ONLINE || cls < 0 || cls >= TX_CLASSES) return -1;
+static int enqueue_tx(bool binary, int cls, const void *data, size_t len, const char *member, bool pairing) {
+    if ((get_state() != HS_ONLINE && !(pairing && get_state() == HS_PAIRING && cls == INK_HUB_TX_CONTROL)) || cls < 0 || cls >= TX_CLASSES) return -1;
     tx_item_t *it = NULL;
     osal_mutex_lock(H.tx_lock, OSAL_WAIT_FOREVER); /* reserve the budget first: producers race */
     bool full = H.tx_bytes + len > TX_MAX_BYTES;
@@ -677,6 +719,17 @@ void ink_hub_wake(void) {
     if (H.q) osal_queue_send(H.q, &m, 0); /* a full queue wakes the task soon anyway */
 }
 
+void ink_hub_reconnect(void) {
+    if (!H.q) return;
+    hub_msg_t m = {.type = HE_RECONNECT};
+    osal_queue_send(H.q, &m, OSAL_WAIT_FOREVER); /* background enrollment work only */
+    ink_hub_demand();
+}
+int ink_hub_pair_call(const char *method, const char *params) {
+    if (strcmp(method, "pair/accept") && strcmp(method, "pair/reject")) return -1;
+    return ink_hub_call(method, params, 10000000, NULL, NULL);
+}
+
 int ink_hub_notify(const char *method, const char *params_json) {
     char head[80];
     const char *pj = params_json ? params_json : "{}";
@@ -699,14 +752,14 @@ int ink_hub_notify(const char *method, const char *params_json) {
     memcpy(buf, head, hl);
     memcpy(buf + hl, pj, pl);
     buf[hl + pl] = '}';
-    int r = enqueue_tx(false, INK_HUB_TX_CONTROL, buf, hl + pl + 1, member);
+    int r = enqueue_tx(false, INK_HUB_TX_CONTROL, buf, hl + pl + 1, member, false);
     osal_free(buf);
     return r == 0 ? 0 : INK_HUB_ERR_OFFLINE;
 }
 
 int ink_hub_send_binary(const void *data, size_t len) { return ink_hub_send_frame(data, len, INK_HUB_TX_VOICE); }
 
-int ink_hub_send_frame(const void *data, size_t len, int cls) { return enqueue_tx(true, cls, data, len, NULL) == 0 ? 0 : INK_HUB_ERR_OFFLINE; }
+int ink_hub_send_frame(const void *data, size_t len, int cls) { return enqueue_tx(true, cls, data, len, NULL, false) == 0 ? 0 : INK_HUB_ERR_OFFLINE; }
 
 void ink_hub_on_binary(ink_hub_binary_fn fn, void *ctx) {
     H.bin_ctx = ctx;
@@ -732,7 +785,7 @@ int ink_hub_respond(int64_t id, const char *result_json) {
     int n = snprintf(buf, 64, "{\"jsonrpc\":\"2.0\",\"id\":%lld,\"result\":", (long long)id);
     memcpy(buf + n, r, rl);
     buf[n + rl] = '}';
-    int ok = enqueue_tx(false, INK_HUB_TX_CONTROL, buf, (size_t)n + rl + 1, NULL);
+    int ok = enqueue_tx(false, INK_HUB_TX_CONTROL, buf, (size_t)n + rl + 1, NULL, true);
     osal_free(buf);
     return ok == 0 ? 0 : INK_HUB_ERR_OFFLINE;
 }
@@ -747,5 +800,5 @@ int ink_hub_respond_error(int64_t id, int code, const char *message) {
     ink_jw_str(&w, message ? message : "error");
     ink_jw_raw(&w, "}}");
     if (w.overflow) return INK_HUB_ERR_NOMEM;
-    return enqueue_tx(false, INK_HUB_TX_CONTROL, buf, w.len, NULL) == 0 ? 0 : INK_HUB_ERR_OFFLINE;
+    return enqueue_tx(false, INK_HUB_TX_CONTROL, buf, w.len, NULL, true) == 0 ? 0 : INK_HUB_ERR_OFFLINE;
 }

@@ -69,6 +69,14 @@ static int publish_known(void) {
     return n;
 }
 
+int ink_wifi_wait_saved(uint32_t revision) {
+    if (!revision) return -1;
+    ink_db_t *db = ink_db_open(&KNOWN, NULL);
+    int r = db ? ink_db_wait(db, revision, 35000000) : -1;
+    ink_db_close(db);
+    return r;
+}
+
 static void cap_scan(ink_call_t *c) { /* exec.bg */
     hal_wifi_ap_t *ap = osal_malloc(sizeof *ap * MAX_SEEN, OSAL_MEM_EXTERNAL);
     char *out = osal_malloc(1536, OSAL_MEM_EXTERNAL);

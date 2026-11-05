@@ -265,6 +265,87 @@ static struct {
 } g_events;
 static char *g_last_ask;
 
+/* Synthetic enrollment peer. No account service or real token is used. */
+static struct {
+    unsigned faults;
+    int hello_error;
+    bool wipe, accepted, used;
+    char nonce[64], txid[40];
+} PAIR;
+void sim_hub_pair_faults(unsigned faults, int hello_error, bool wipe) {
+    PAIR.faults = faults; PAIR.hello_error = hello_error; PAIR.wipe = wipe;
+}
+const char *sim_hub_pair_nonce(void) { return PAIR.nonce; }
+const char *sim_hub_pair_txid(void) { return PAIR.txid; }
+static void pair_reply(struct hal_ws *ws, uint64_t at, const cJSON *id, const char *result, int code, bool wipe) {
+    cJSON *r = cJSON_CreateObject();
+    cJSON_AddStringToObject(r, "jsonrpc", "2.0");
+    cJSON_AddItemToObject(r, "id", cJSON_Duplicate(id, 1));
+    if (!code) cJSON_AddItemToObject(r, "result", cJSON_Parse(result ? result : "{}"));
+    else {
+        cJSON *err = cJSON_AddObjectToObject(r, "error");
+        cJSON_AddNumberToObject(err, "code", code);
+        cJSON_AddStringToObject(err, "message", "synthetic pairing error");
+        if (wipe) cJSON_AddBoolToObject(cJSON_AddObjectToObject(err, "data"), "wipe", true);
+    }
+    send_json(ws, at, r); cJSON_Delete(r);
+}
+static void pair_complete(struct hal_ws *ws, uint64_t at) {
+    if (PAIR.faults & SIM_PAIR_DROP_COMPLETE) return;
+    cJSON *r = cJSON_CreateObject();
+    cJSON_AddStringToObject(r, "jsonrpc", "2.0");
+    cJSON_AddNumberToObject(r, "id", (double)++g_test_rpc);
+    cJSON_AddStringToObject(r, "method", "pair/complete");
+    cJSON *p = cJSON_AddObjectToObject(r, "params");
+    cJSON_AddStringToObject(p, "txid", "test-tx-1");
+    cJSON_AddStringToObject(p, "device", "test-device");
+    cJSON_AddStringToObject(p, "token", "test-only-pending-token");
+    cJSON_AddItemToObject(p, "urls", cJSON_Parse("[\"wss://example.com/v1/device\"]"));
+    cJSON_AddItemToObject(p, "pins", cJSON_Parse("[\"1111111111111111111111111111111111111111111111111111111111111111\"]"));
+    send_json(ws, at, r); cJSON_Delete(r);
+    sim_metric_add("hub.pair_complete", 1);
+}
+static bool pairing_request(struct hal_ws *ws, uint64_t at, const char *method, const cJSON *req, const cJSON *id) {
+    const cJSON *p = cJSON_GetObjectItemCaseSensitive(req, "params");
+    if (!strcmp(method, "hello") && num_or(p, "proto", 1) == 2) {
+        if (PAIR.faults & SIM_PAIR_DROP_HELLO) return true;
+        const char *token = cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(p, "token"));
+        int error = PAIR.hello_error ? PAIR.hello_error : token && !strcmp(token, "test-only-pending-token") ? 0 : -32010;
+        pair_reply(ws, at + SIM_MS(5), id, "{\"proto\":2,\"session\":\"test-session\"}", error, PAIR.wipe);
+        sim_metric_add(error ? "hub.pair_hello_failed" : "hub.pair_hello_ok", 1);
+        return true;
+    }
+    if (strncmp(method, "pair/", 5)) return false;
+    if (cJSON_GetObjectItemCaseSensitive(p, "password") || cJSON_GetObjectItemCaseSensitive(p, "ssid")) sim_metric_add("hub.pair_secret_leaked", 1);
+    const char *txid = cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(p, "txid"));
+    if (!strcmp(method, "pair/begin")) {
+        const char *nonce = cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(p, "nonce"));
+        const char *preauth = cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(p, "preauth"));
+        bool same = nonce && !strcmp(nonce, PAIR.nonce);
+        if (preauth && (strcmp(preauth, "test-once") || (PAIR.used && !same))) {
+            pair_reply(ws, at + SIM_MS(5), id, NULL, -32030, false); return true;
+        }
+        snprintf(PAIR.nonce, sizeof PAIR.nonce, "%s", nonce ? nonce : "");
+        snprintf(PAIR.txid, sizeof PAIR.txid, "%s", txid ? txid : "");
+        if (!(PAIR.faults & SIM_PAIR_DROP_BEGIN)) pair_reply(ws, at + SIM_MS(5), id, "{\"code\":\"K7QF2M9X\",\"expires_s\":600}", 0, false);
+        if (preauth || txid) {
+            PAIR.used = PAIR.used || preauth != NULL;
+            PAIR.accepted = true;
+            pair_complete(ws, at + SIM_MS(30));
+        }
+    } else if (!strcmp(method, "pair/accept")) {
+        if (!(PAIR.faults & SIM_PAIR_DROP_ACCEPT)) {
+            PAIR.accepted = true;
+            pair_reply(ws, at + SIM_MS(5), id, "{}", 0, false);
+            pair_complete(ws, at + SIM_MS(30));
+        }
+    } else if (!strcmp(method, "pair/reject")) {
+        PAIR.accepted = false;
+        pair_reply(ws, at + SIM_MS(5), id, "{}", 0, false);
+    } else pair_reply(ws, at + SIM_MS(5), id, NULL, -32601, false);
+    return true;
+}
+
 static void keep_text(char **slot, cJSON *item) {
     sim_host_free(*slot);
     *slot = cJSON_PrintUnformatted(item);
@@ -569,6 +650,7 @@ void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t 
     const char *method = cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(req, "method"));
     cJSON *id = cJSON_GetObjectItemCaseSensitive(req, "id");
     if (!method) { /* a response from the device (to a tools/call) */
+        if (PAIR.faults & SIM_PAIR_DROP_ACK) { sim_metric_add("hub.pair_ack_dropped", 1); cJSON_Delete(req); return; }
         if (!on_device_response(ws, t, req)) sim_metric_add("hub.unexpected_responses", 1);
         cJSON_Delete(req);
         return;
@@ -578,6 +660,7 @@ void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t 
     sim_metric_add(key, 1);
     sim_trace_instant("hub", method ? method : "?", t, NULL);
     g_last_ws = ws;
+    if (id && pairing_request(ws, t, method, req, id)) { cJSON_Delete(req); return; }
     if (!strcmp(method, "device/event")) { /* what the device tells: nobody here answers */
         keep_text(&g_events.text[g_events.n % 32], req);
         g_events.n++;

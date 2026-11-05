@@ -27,6 +27,7 @@
 static const struct {
     const char *id, *args;
 } FOR_AI[] = {
+    {"pairing.status", NULL},
     {"caps.domains", NULL}, {"caps.find", "query"}, {"system.undo", "object"}, {"system.home", NULL}, {"system.full_refresh", NULL},
     {"system.set_volume", "percent"}, {"system.switch_member", "id"}, {"system.shutdown", NULL}, {"system.factory_reset", NULL},
     {"system.reboot", NULL}, {"state.list", NULL}, {"settings.list", NULL}, {"settings.get", "id"}, {"settings.set", "id,value"},
@@ -54,6 +55,13 @@ static const struct {
 static const struct {
     const char *id, *why, *args;
 } NOT_FOR_AI[] = {
+    {"pairing.configure", "only a person chooses the household endpoint and trust anchor", "url"},
+    {"pairing.accept", "only a person confirms joining a household", "txid"},
+    {"pairing.reject", "only a person answers a household offer", "txid"},
+    {"pairing.restart", "only a person restarts enrollment after removal", NULL},
+    {"pairing.import", "inserting the local card authorizes enrollment", NULL},
+    {"pairing.hotspot_start", "setup passwords stay with the person on the device", NULL},
+    {"pairing.hotspot_stop", "only a person ends local setup", NULL},
     {"confirm.accept", "only a person on the device can say yes", "token"},
     {"confirm.reject", "only a person on the device answers", "token"},
     {"member.unlock", "a PIN is entered on the device, it goes through nobody else", "id,pin"},
@@ -64,6 +72,7 @@ static const struct {
 };
 
 static const char *const STATES[] = {
+    "pairing.state",
     "storage.user_free", "storage.free", "storage.card", "storage.mode", "usb.connected", "time.synced", "time.zone", "time.minute", "alarm.ringing", "notify.unread", "interrupt.active",
     "confirm.pending", "app.foreground", "app.cards_rev", "power.state", "battery.level", "battery.charging", "battery.low", "member.current", "text.focused", "audio.now_playing", "audio.route", "audio.listening", "audio.mic", "audio.recording", "job.running", "media.state", "bt.connected", "bt.device", "bt.available", "wifi.state", "wifi.ssid", "member.authed", "update.state", "update.version", "update.progress", "text.voice", NULL,
 };
@@ -71,7 +80,7 @@ static const char *const STATES[] = {
 static const char *const SETTINGS[] = {"notify.dnd", "time.zone", "time.auto", "power.lock_after_s", "audio.volume", "audio.child_max", "voice.handsfree", "ai.read_clipboard", "member.idle_return_s", "update.auto_download", NULL};
 
 /* Events the design promises the AI hears about (the rest of the table by the same rule: registered is forwarded). */
-static const char *const EVENTS[] = {"data.write_failed", "file.changed", "file.job_done", "job.finished", "usb.changed", "alarm.fired", "reminder.fired", "time.changed", "notify.posted", "confirm.result", "app.state", "battery.low", "media.finished", "audio.record_done", "bt.changed", "wifi.changed", "member.changed", "update.available", "update.result", "text.voice_ended", NULL};
+static const char *const EVENTS[] = {"pairing.changed", "data.write_failed", "file.changed", "file.job_done", "job.finished", "usb.changed", "alarm.fired", "reminder.fired", "time.changed", "notify.posted", "confirm.result", "app.state", "battery.low", "media.finished", "audio.record_done", "bt.changed", "wifi.changed", "member.changed", "update.available", "update.result", "text.voice_ended", NULL};
 
 static int for_ai(const char *id) {
     for (int i = 0; FOR_AI[i].id; i++)

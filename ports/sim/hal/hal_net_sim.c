@@ -46,6 +46,8 @@ struct hal_ws {
     vtk_waitq_t wq, txwq, donewq;
     bool close_req, dead, freed_by_user, task_done;
     bool bridge_open;
+    bool pinned;
+    uint8_t expected_key[32], peer_key[32];
     sim_hub_bridge_t *bridge;
     uint64_t dead_since;
     uint64_t down_last, up_last; /* latest arrival scheduled in each direction (TCP delivers in order) */
@@ -81,6 +83,12 @@ static struct {
     /* stats */
     uint64_t bytes_up, bytes_down, msgs_up, msgs_down, connects, connect_fail, resumes;
 } N;
+
+/* Synthetic SPKI digest; tests may change the peer independently of the device. */
+static uint8_t g_peer_key[32] = {
+    17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,
+    17,17,17,17,17,17,17,17,17,17,17,17,17,17,17,17};
+void sim_net_peer_key(const uint8_t key[32]) { memcpy(g_peer_key, key, 32); }
 
 /* ------------------------------------------------------------- helpers */
 
@@ -1137,6 +1145,11 @@ static void ws_task(void *arg) {
         ok = w->bridge_open && !w->dead && !w->close_req;
         vtk_unlock();
     }
+    memcpy(w->peer_key, g_peer_key, 32);
+    if (ok && w->pinned && memcmp(w->expected_key, w->peer_key, 32)) {
+        sim_metric_add("net.pin_rejected", 1);
+        ok = false;
+    }
     if (!ok) {
         N.connect_fail++;
         close_now(w, "connect failed");
@@ -1222,13 +1235,15 @@ static void ws_task(void *arg) {
 
 /* ------------------------------------------------------------------ API */
 
-hal_ws_t *hal_ws_open(const char *url, hal_ws_cb cb, void *ctx) {
+hal_ws_t *hal_ws_open_pinned(const char *url, const uint8_t *sha256, hal_ws_cb cb, void *ctx) {
     if (vtk_in_isr() || !vtk_self()) osal_panic("hal_ws_open must be called from a task");
     struct hal_ws *w = sim_host_calloc(1, sizeof *w);
     if (!w) abort();
     snprintf(w->url, sizeof w->url, "%s", url);
     w->cb = cb;
     w->ctx = ctx;
+    w->pinned = sha256 != NULL;
+    if (sha256) memcpy(w->expected_key, sha256, 32);
     w->gen = ++N.gen;
     const char *prev = osal_mem_tag("tls");
     if (g_profile.tls_internal_bytes) w->tls_int = osal_malloc(g_profile.tls_internal_bytes, OSAL_MEM_INTERNAL);
@@ -1256,6 +1271,13 @@ hal_ws_t *hal_ws_open(const char *url, hal_ws_cb cb, void *ctx) {
     N.conns = w;
     vtk_unlock();
     return w;
+}
+
+hal_ws_t *hal_ws_open(const char *url, hal_ws_cb cb, void *ctx) { return hal_ws_open_pinned(url, NULL, cb, ctx); }
+bool hal_ws_peer_key(hal_ws_t *w, uint8_t out[32]) {
+    if (!w || w->state != 1) return false;
+    memcpy(out, w->peer_key, 32);
+    return true;
 }
 
 int hal_ws_send(hal_ws_t *w, bool binary, const void *data, size_t len, int64_t timeout_us) {

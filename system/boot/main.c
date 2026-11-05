@@ -24,6 +24,7 @@
 #include "ink/sys/media.h"
 #include "ink/sys/members.h"
 #include "ink/sys/net.h"
+#include "ink/sys/pairing.h"
 #include "ink/sys/notify.h"
 #include "ink/sys/settings.h"
 #include "ink/sys/state.h"
@@ -66,6 +67,7 @@ void ink_main(void) {
     ink_members_init();
     if (ink_members_start() != 0) osal_panic("members failed to start");
     if (ink_net_init() != 0 || ink_wifi_init() != 0 || ink_light_init() != 0) osal_panic("network or light settings failed to start");
+    if (ink_pairing_init() != 0) osal_panic("pairing failed to start");
     if (ink_hub_init("wss://hub.local/v1/device") != 0 || ink_rt_init() != 0) osal_panic("hub link failed to start");
     if (ink_audio_init() != 0) osal_panic("audio service failed to start");
     /* before time: an alarm that is due now goes off as soon as the time service is up */
@@ -83,6 +85,7 @@ void ink_main(void) {
     if (ink_apps_init() != 0 || ink_app_register(&ink_appdef_home) != 0 || ink_app_register(&ink_appdef_reader) != 0) osal_panic("app directory failed to start");
     if (ink_ui_start(&ink_app_home) != 0 || ink_ui_lock_mark_init() != 0 || ink_shell_interrupt_card_init() != 0 || ink_shell_confirm_card_init() != 0 || ink_shell_keyboard_init() != 0 || ink_shell_member_gate_init() != 0 || ink_shell_update_card_init() != 0 || ink_shell_power_menu_init() != 0 || ink_shell_off_picture_init() != 0) osal_panic("ui failed to start");
     ink_fs_refresh_state(); /* blocks on the card: here, not in anyone's way */
+    ink_pairing_start();
     ink_data_refresh_state();
     ink_power_battery_policy_start();
     ink_update_boot_check();
