@@ -17,7 +17,7 @@
 | DE-5 两端契约 | 【实测】通过 | 假设备保存并检查交付代次；中枢接受 hello epoch，ACK 事件、检测缺口和重连重复；proto1 仍固定合成儿童，不因 authed 自报而授予成人权限；保留原 result／MCP 回执、语音、听写和错误测试 | `ctest --test-dir build --output-on-failure -j3 -R 'hub-contract|hub-json-crosscheck|hub-simulator-e2e'` |
 | DE-6 D-105 | 【实现＋实测】部分 | 保留基线 asked、ask_by_hand、活动记录；校验 undo_ms 必须为 3000。自动撤销窗口尚未实现：带窗口的请求，或 asked 的短信／拨号，明确回 -32021，不能忽略窗口后立即执行 | `device-events`；`policy` 回归 |
 | DE-7 反向对照 | 【实测】19/19，另有两项基线复现 | 原 12 项全部保留；新增 hello、send-boundary、speech-id、speech-notify、speaker-id、speech-open、speech-delta。每次窄撤回一个保护，编译／链接／模拟器退出均为 0，目标断言失败且 test.fail>0；只撤掉声音通知也必失败。修前 hub／AI 源码各自放入新夹具，均复现目标失败 | `python3 tests/device_events/reverse.py --build build`；`python3 tests/device_events/reverse.py --build build --baseline 97645ea2 hello speech-id` |
-| G1 全量与内存 | 待本轮复验 | 上一轮两套 103/103 不能代替本轮验证；预算未修改。定向测试两次启动各 94 项检查通过，新增复查场景通过 | `cmake --build build -j4`；`ctest --test-dir build --output-on-failure -j3`；同命令换 `build-asan` |
+| G1 全量与内存 | 【实测】普通 103/103；内存待复验 | 普通 56.79 秒，无跳过，预算未修改。定向测试两次启动各 94 项，新增复查场景 83 项；补充 handoff／actions／policy／isolation 各 15／6／37／15 项通过 | `cmake --build build -j4`；`ctest --test-dir build --output-on-failure -j3`；同命令换 `build-asan` |
 | G2 原子能力／AI | 【实现】通过 | 未增加用户操作或页面；工具仍走同一能力策略关口。新增的是传输身份绑定接口，不让界面直接修改服务状态 | 能力表 runtime／policy 和现有场景测试 |
 | G3 依赖状态 | 【实现】已更新 | 只更新 ui-dependencies 的“成员、PIN”状态格，并链接本报告 | `git diff -- docs/system/ui-dependencies.md` |
 | G4／G5 范围 | 【实现】符合 | 无新页面；只改服务、策略、模拟替身和测试。没有启动带窗口的 GUI；全量原有 gui-smoke 使用 SDL dummy | `git diff --stat f1f72ae9` |
@@ -42,6 +42,8 @@
 ## 改过的已有测试
 
 本轮没有删除测试、修改既有行为断言或预算。`device-events/run.py` 仅追加复查夹具（83 项检查），原两次持久 Flash 启动仍各为 94 项；`reverse.py` 适配新的拒收分支并新增七个反向对照及可选的基线源码编译。HELLO 回执在新夹具中受控延迟 1 秒，以覆盖真实握手窗口；未加 sleep 掩盖产品时序。提前声音失败通知是额外注入，push／创建音频流拒收另走实际下行帧。
+
+`services_finish/policy.c` 原来没有连接中枢就直接注入远程 `tools/call`，新增的连接身份检查使其先被拒收；本轮仅补真实握手及身份同步前置检查，原 36 项断言不变，现为 37 项。修前夹具本次失败 7 项；补前置条件后全部通过，没有放松产品检查或策略断言。
 
 上一轮已改测试如下，继续保留：
 

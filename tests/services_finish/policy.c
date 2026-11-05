@@ -53,6 +53,9 @@ static void queued_for_someone_else(void) {
 }
 static void run(void *arg) {
     (void)arg; delay_ms(1800);
+    ink_hub_demand();
+    CHECK(WAIT_FOR(ink_hub_online() && ink_hub_member_matches(ink_member_current()->id, ink_hub_member_epoch(), ink_hub_connection()), 30000),
+          "remote policy fixture has a synchronized hub identity");
     CHECK(ink_cap_register(CAPS, 2) == 0 && ink_settings_define(&SETTING, 1) == 0, "fixtures");
     send("{\"name\":\"finish.external\",\"arguments\":{\"text\":\"SYNTHETIC\"},\"_meta\":{\"asked\":true}}");
     CHECK(external_runs == 1 && !cards(), "D-105: requested external action executes directly");
