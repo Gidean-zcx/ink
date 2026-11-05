@@ -1,0 +1,42 @@
+name: inkhub
+services:
+  hub:
+    image: inkhub-local:0.1.0
+    build:
+      context: .
+      dockerfile: Dockerfile
+    network_mode: host
+    user: "10001:10001"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 300m
+    pids_limit: 64
+    tmpfs: ["/tmp:size=16m,uid=10001,gid=10001"]
+    volumes: [./data:/data]
+    environment:
+      INK_HUB_DEV_ALLOW_PROTO1: "${INK_HUB_DEV_ALLOW_PROTO1:-0}"
+      INK_HUB_MODEL: fake
+      INK_HUB_ASR: fake
+      INK_HUB_TTS: fake
+    healthcheck:
+      test: [CMD, python, -c, "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8443/healthz', timeout=2)"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+  worker:
+    image: inkhub-worker-local:0.1.0
+    build:
+      context: ./worker
+    network_mode: none
+    user: "10001:10001"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    mem_limit: 800m
+    cpus: 1
+    pids_limit: 16
+    tmpfs: ["/tmp:size=16m,uid=10001,gid=10001"]
+    volumes:
+      - ./work/example/input:/work/input:ro
+      - ./work/example/output:/work/output

@@ -259,7 +259,7 @@ void sim_gui_stop(void) {
     if (sim_gui_phase() == SIM_GUI_RUNNING) vtk_stop();
 }
 
-void sim_gui_set_speed(double speed) { vtk_set_realtime_speed(speed); }
+void sim_gui_set_speed(double speed) { vtk_set_realtime_speed(g_sim.hub_url ? 1.0 : speed); }
 void sim_gui_set_paused(bool paused) { vtk_set_paused(paused); }
 
 /* ------------------------------------------------------------------ speaker -> computer */
