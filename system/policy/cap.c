@@ -989,7 +989,7 @@ int ink_cap_manifest_json(char *out, size_t cap) {
     ink_jw_raw(&w, "[");
     bool first = true;
     for (int i = 0; i < nreg; i++) {
-        if (!listed(REG[i])) continue;
+        if (!listed(REG[i]) || REG[i]->form == INK_FORM_EVENT) continue;
         manifest_entry(&w, REG[i], first);
         first = false;
     }
@@ -1006,7 +1006,7 @@ int ink_cap_manifest_page(int start, const char *prefix, char *out, size_t cap, 
     *next = -1;
     size_t plen = prefix ? strlen(prefix) : 0;
     for (int i = start < 0 ? 0 : start; i < nreg; i++) {
-        if (!listed(REG[i]) || (plen && strncmp(REG[i]->id, prefix, plen))) continue;
+        if (!listed(REG[i]) || REG[i]->form == INK_FORM_EVENT || (plen && strncmp(REG[i]->id, prefix, plen))) continue;
         size_t before = w.len;
         manifest_entry(&w, REG[i], first);
         if (w.overflow) { /* the next page starts here; one entry alone must fit */

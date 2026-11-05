@@ -1,137 +1,97 @@
-# 界面框架与系统壳执行报告
+# 界面壳集成修复报告
 
-2026-11-06 集成修复进行中：起点 `4b996dc0`，合入 `FETCH_HEAD`（`2c844243`）。七处冲突按两侧功能与断言合并：保留 UI 与 hub 测试、显示两段刷新和故障计数、D-105 直接执行及撤销断言、完整 AI 能力清单。下方为前轮记录，当前全量和内存检查结果待补。
+2026-11-06。此次任务起点 `4b996dc0`，先合入 `FETCH_HEAD`（`2c844243`），合并提交 `ec74e15e`。`gate-1` 只有合并失败日志，七处冲突均已解决。本报告验收此次集成修复；原界面任务报告保留在 `4b996dc0:docs/tasks/ui-shell/REPORT.md`，原复查见 [REVIEW.md](REVIEW.md)。
 
-2026-11-06，第 3 轮修复。接续基线 `332cab0`，依据 [REVIEW.md](REVIEW.md) 和[总规则](../codex-rules.md)；原任务基线 `fdff779`。分支 `claude/codex-ui-shell`，仅本地提交。里程碑 `7593e93`、`8b5408a`；补充门禁与最终验证随本报告提交。前轮报告保留在 `27040e3:docs/tasks/ui-shell/REPORT.md`。
-
-**严重 0 项；两项高问题已修。中级补了分段边框、搜索图标、缩放图标边界和键盘固定区域，整组布局仍未完成。普通及 ASan/UBSan 全量均 136/141，退出 8；整体验收未通过。** UI 55 项全部通过；视觉仍为 0/30 达标。未删测试、放宽断言或抬预算。
+**【实测】普通及 ASan/UBSan 全量各 148/148，无跳过；七组撤回修复的反向对照在两套构建中均检出预期故障；成员隔离相关专项各 46 次启动、600 项检查通过。** 原有 146 项全部保留，新增两项；未降低原断言、超时、故障注入或资源预算。
 
 ## 验收表
 
-证据：【实测】本轮命令及产物；【实现】代码核查；【目视】本轮实际打开的图。B/T、N、V 对应下方命令。
+B/T/S/N/H 是下方实际命令；日志和中间产物在忽略目录 `work/ui-shell-integration/`，不提交。
 
 | 编号 | 结论 | 证据 | 命令或位置 |
 | --- | --- | --- | --- |
-| UI-R3-001（高）/ UI-R2-001 | 已修 | 【实测】保留可达候选，覆盖带/不带花括号、两路/嵌套分支、循环、条件复合赋值、别名、预处理赋值及条件宏定义；未知尺寸继续拒绝。25 文件、0 违规。撤回检查器修复，同一自检失败 25 项、无异常 | T、N；`ui_scale_check.py`、`ui_scale_check_test.py` |
-| UI-R3-002（高） | 已修 | 【实测】应用/分组/Dock 表、工具结构体、条件选择、别名、注册应用 `.icon` 及跨文件多层转发覆盖，转发不依赖参数叫 `icon`。真实 APP_ICONS 注入未知名称：旧门禁退出 0，新门禁退出 1；复制实际 CMake 检查目标后构建退出 2，恢复名称退出 0；生成名称表编译对照退出 0/1 | B、T、N；`tools/icongen/check.py`、`ui_icon_check_test.py` |
-| UI-R2-002（高，前轮已修） | 本轮回归通过 | 【实测】两档案成员隔离各 32 项通过；旧壳失败 5 项，单撤迟到回执守卫失败 1 项 | T、N |
-| UI-R2-003（中，前轮已修） | 本轮回归通过 | 【实测】两档案完整答案分页各 113 项通过；旧分页失败 11 项，撤掉四位页码栏修复失败 1 项 | T、N |
-| UI-R2-004（中） | 未修 | 【实测/目视】两个主页档案仍超原刷新预算，Apps 稳定帧仍留旧时钟/图标残影；需要跨页对象保留及脏矩形、补灰队列联合验证 | T、V；没做到的 |
-| UI-R2-005（中） | 延续部分完成 | 【实测】可见内容/能力回归通过，Apps/通知旧版本失败 7 项；AI 主动作、全局字号、完整声音设置仍未闭环 | T、N；没做到的 |
-| UI-R2-006（中） | 本轮部分修复 | 【实测】2/3/4 段、两端选中均留出上下边框和圆角两端；搜索图标不遮文字；缩放时控件与图像同尺寸；候选、折叠、编辑、密码状态保持同一区域。两档案各 185 项滑杆/分段、89 项快照断言通过。分别撤回四处修复失败 24/1/1/2 项 | T、N、V |
-| U1 | 本轮门禁通过 | 【实测】条件赋值/宏和原有字号表负例均有效；尺寸集合、例外要求未放宽。检查仍是有界 C 表达式检查 | T、N |
-| U2 | 组件回归通过，整体外观未齐 | 【实测/目视】三组件场景通过；分段边框已修，Dock、分组列表和其他页面层次仍偏离设计 | T、V |
-| U3 | 本机构建通过，体积/跨平台未完成 | 【实测】609 glyph UI 子集、三字重、Outfit 数字与回退资源通过结构检查；字体 7,538,204 字节，比 4 MiB 超 3,343,900。Ubuntu 未验，CI 的 `fonts-noto-cjk-extra` 欠项仍在 | B、T |
-| U4 | 本轮构建门禁通过 | 【实测】80 名称、240 SVG、1,600 位图校验通过；表中名称改用 manifest 生成的 `INK_UI_ICON` 声明，未知名称在检查和编译阶段均拒绝。资源检查是 `ink_system` 的前置依赖 | B、T、N |
-| U5 | 本轮回归通过 | 【实测】键盘/滑杆/边缘/前台/实体键优先级通过，旧事件分派及触摸层仍被反向检出 | T、N |
-| U6 | 本轮回归通过 | 【实测】打断恢复、帧缓冲/物理面板恢复及成员隔离通过；不代表实机时序验收 | T、N |
-| U7 | 未通过 | 【实测/目视】主页刷新延迟和残影仍未解决，跨页局部对象保留未完成 | T、V |
-| U8 | 入口通过，完整流程未齐 | 【实测】30 屏身份及代表动作通过；AI、声音、设置、密码等欠项仍保留 | T、V |
-| U9 | 部分完成 | 【实测】现有画面/快照、成员及 touch/AI 操作回归通过；本轮是呈现修复，未补齐缺失的服务原子能力 | T、N；UI-R2-005 |
-| U10 | 取图通过，视觉未达标 | 【实测】无缓存重取 30 屏；0/30 ≤12/255。Apps 15.673→13.995，SetDisplay 18.817→18.510，仍未达标 | V；下方逐屏表 |
-| U11 | 全量未通过，已查 RAM 达标 | 【实测】两套均 136/141，失败项相同；日志无 sanitizer 错误诊断。最低已查 AI 内部 RAM 33,192 ≥32,768，预算未改 | B、T；失败/资源表 |
-| U12 | 无窗口验证通过 | 【实测】SDL dummy 的 `gui-smoke`、主页三屏、控制中心及设置场景通过；未启动带窗口的模拟器 | T |
-| U13 | 本机结束检查完成，跨平台未验 | 【实测】两套构建/全量、三轮反向、30 屏新图、范围/隐私/返回值/文件检查均已做；仅本地提交，未做 Ubuntu、目标链接/分区或设备验证 | B、T、N、V；顺手发现 |
+| M1 合并 | 完成 | 【实现】七处冲突：构建、总规则、能力、显示、UI 任务、AI 能力测试、确认测试；同时保留 UI 与中枢测试、显示故障计数和两段刷新，采用集成分支的 D-105 规则 | `ec74e15e`；`git merge-base --is-ancestor FETCH_HEAD HEAD` 退出 0 |
+| M2 启动 | 已修 | 【实测】订阅合计超过旧 24 项，电源菜单注册失败；PSRAM 中的订阅表改为 32 项。撤回容量修复，真实启动退出 2，明确报 UI 初始化失败 | T、N/watch |
+| M3 刷新 | 原预算通过 | 【实测】同帧反馈与内容合并为一次 DU 预览，再 GL16 补灰；由 HAL 使用已有屏幕历史保留旧灰像素，删除重复整帧缓冲。FAST 统计实际预览完成，TEXT 仍统计最终灰阶完成。旧显示服务撤回后仍超过原 1,200 ms 上限 | T、N/display；资源表 |
+| M4 预览边界 | 通过 | 【实测】新增像素测试：旧灰像素保持、黑白区域更新、GL16 补齐、错误波形拒绝且画面不变。撤回 HAL 实现，测试完成但像素断言及预算失败 | T/selftest-binary-preview；N/preview |
+| M5 通知与成员 | 已修 | 【实测】提示音排队后才向列表发布；读取时校验发布代次。新增仅引用已加载成员集合的接口，核对成员生命周期且不触发冷加载；后台通知在收件人已回到设备时补发原成员事件。旧代码分别复现声音断言和原成员交错断言失败 | T/integration-notify、integration-races；S；N/notify、members |
+| M6 工具清单 | 已修 | 【实测】工具清单排除不可调用事件，完整调用能力和 schema 保留；事件仍注册并经原总线转发。生产导出由 33,147 降至 28,716 字节；原确认测试 32,768 字节缓冲通过，未增大缓冲。撤回后复现原工具清单断言失败 | T/integration-confirm、integration-ai-surface、hub-contract；N/manifest |
+| M7 PMIC | 已修 | 【实测】寄存器读写仅对总线超时重试，最多三次；探测仍交给原整套上电重试，NACK/其他错误立即返回。8% 故障注入保持，上电失败为 0，真实整套重试 4 次；新单测检查重试耗尽、非超时失败及 VCOM 多次写入。撤回读写修复，单测退出 3 | T/scenario-reader_basic-panel-power-faults、unit-pmic-retry；N/pmic |
+| M8 中枢场景 | 通过 | 【实测】首个点击改到现有 Dock 的书架位置；原流程和全部端到端断言保留。旧坐标的定向复现为 `tool_calls=0`，新坐标两套全量及连续五次通过，连续检查 87.62 秒、退出 0 | T、H |
+| M9 普通全量 | 通过 | 【实测】严格构建退出 0；最终 148/148，47.37 秒，退出 0，无跳过 | B/T；`ctest-final.log` |
+| M10 内存检查 | 通过 | 【实测】相同依赖、WERROR，加 ASan/UBSan；148/148，112.93 秒，退出 0。核对编译和链接均启用 sanitizer，全量日志及 LastTest 无 sanitizer 错误诊断 | B/T；`ctest-asan.log` |
+| M11 专项与反向 | 通过 | 【实测】S 两套各 46 次启动、600 项检查；N 两套各七种撤回均产生指定失败，脚本退出 0；编译失败或崩溃不冒充功能反例，启动容量反例除外（其故障本来就是启动 panic） | S/N；`services*.log`、`reverse*.log` |
+| M12 结束检查 | 本轮通过 | 【实测】本轮差异空白检查、隐私、文件大小、报告链接及 I/O 返回值核查完成；只本地提交。完整 UI 分支的第三方原文空白告警保留，见顺手发现 | 下方结束检查 |
 
-复跑命令（依赖使用用户指定的 `INK_DEPS` / `INK_DESIGN`；构建和全量串行，最多 `-j4` / `-j3`）：
+复跑命令（使用用户提供的 `INK_DEPS`、`INK_DESIGN`；依赖与设计稿只读）：
 
 ```sh
-# B/T：普通配置、构建、全量
+# 锁定的中枢环境：uv 0.9.5，Python 3.11.15；uv lock --check 已退出 0
+UV_CACHE_DIR="$PWD/work/uv-cache" build/hub-venv/bin/uv sync --project hub --frozen \
+  --python "$INK_DEPS/build-deps/pyenv/bin/python"
+
+# B：普通配置；内存配置同参，只换目录并加 -DINK_SANITIZE=ON
 cmake -S . -B build -DINK_WERROR=ON \
   -DINK_CJK_FONT="$INK_DEPS/build-deps/fonts/NotoSansCJK-Regular.ttc" -DINK_CJK_FACE=2 \
+  -DINK_CJK_MEDIUM_FONT="$INK_DEPS/build-deps/fonts/NotoSansCJKsc-Medium.otf" \
+  -DINK_CJK_BOLD_FONT="$INK_DEPS/build-deps/fonts/NotoSansCJKsc-Bold.otf" \
   -DPython3_EXECUTABLE="$INK_DEPS/build-deps/pyenv/bin/python" \
-  -DFETCHCONTENT_SOURCE_DIR_LVGL="$INK_DEPS/build/_deps/lvgl-src"
+  -DFETCHCONTENT_SOURCE_DIR_LVGL="$INK_DEPS/build/_deps/lvgl-src" \
+  -DINK_HUB_PYTHON="$PWD/hub/.venv/bin/python"
 cmake --build build -j4
-"$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j3
-# B/T：相同依赖与 WERROR，换目录并开启 sanitizer
-cmake -S . -B build-asan -DINK_WERROR=ON -DINK_SANITIZE=ON \
-  -DINK_CJK_FONT="$INK_DEPS/build-deps/fonts/NotoSansCJK-Regular.ttc" -DINK_CJK_FACE=2 \
-  -DPython3_EXECUTABLE="$INK_DEPS/build-deps/pyenv/bin/python" \
-  -DFETCHCONTENT_SOURCE_DIR_LVGL="$INK_DEPS/build/_deps/lvgl-src"
-cmake --build build-asan -j4
-"$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j3
-# N：串行编译忽略目录中的副本，不改产品源码
-"$INK_DEPS/build-deps/pyenv/bin/python" -B tests/ui_shell_reverse.py
-"$INK_DEPS/build-deps/pyenv/bin/python" -B tests/ui_shell_r2_reverse.py
-"$INK_DEPS/build-deps/pyenv/bin/python" -B tests/ui_shell_r3_reverse.py --components
-# V：不用 --reuse
-"$INK_DEPS/build-deps/pyenv/bin/python" -B tools/ui_compare.py --design "$INK_DESIGN"
+# T：两套串行执行，下列 build 再换成 build-asan
+SDL_VIDEODRIVER=dummy UBSAN_OPTIONS=halt_on_error=1 \
+  "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j3
+# S/N：普通一遍，内存一遍（加 --build build-asan）；各组编译、运行均串行
+UBSAN_OPTIONS=halt_on_error=1 "$INK_DEPS/build-deps/pyenv/bin/python" -B \
+  tests/services_finish/run.py member_caps late_writers removal_alarm offpanel
+UBSAN_OPTIONS=halt_on_error=1 "$INK_DEPS/build-deps/pyenv/bin/python" -B \
+  tests/ui_shell_integration_reverse.py
+# H：与 CI 的连续检查一致
+SDL_VIDEODRIVER=dummy UBSAN_OPTIONS=halt_on_error=1 \
+  "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^hub-simulator-e2e$' \
+  --repeat until-fail:5 --output-on-failure -j1
 ```
 
-【实测】两套配置/构建退出 0；最终普通全量 33.09 秒、ASan/UBSan 全量 85.02 秒，均退出 8。第二套编译和链接实际带 `-fsanitize=address,undefined`；两套 `LastTest.log` 与最终全量日志未见 ASan/LeakSanitizer/UBSan 错误诊断，不把它写成全量通过。N 三脚本与 V 均退出 0；N 的 0 表示预期故障被检出，V 的 0 只表示生成成功。
+【实测】全过程构建最多 `-j4`，ctest 最多 `-j3`；同一时间只有一轮构建或测试。GUI smoke 使用 SDL dummy，无带窗口程序。安装、构建日志和反向副本均在忽略目录。
 
-本轮新增一个 ctest 项 `ui-icons-regressions`，原有 140 项保留。原始记录在忽略目录 `work/ui-shell-r3/`，最终全量为 `full-final.log` / `full-asan.log`；反向副本在 `build/review-negative/`，图片在 `out/ui-compare/`。这是 macOS 增量构建，没有重建 Linux 基线。
+资源与延迟（毫秒、字节；模拟器模型，非实机）：
 
-资源对比（字节；修前内部/DMA 来自本轮 REVIEW，PSRAM 来自前轮执行报告；未重新构建修前全量。本轮来自最终普通全量。内部取 `mem.internal_total.min_free_bytes`，为模拟器模型，非目标链接或实机）：
-
-| 场景 | 内部最低余量：修前→本轮 | DMA 最低余量：修前→本轮 | PSRAM 最低余量：修前→本轮 |
+| 项目 | 修前 | 最终普通构建 | 原门槛 |
 | --- | ---: | ---: | ---: |
-| ai_ask-metalio-plus | 35,856→35,856 | 31,328→31,328 | 10,974,840→10,974,840 |
-| home_basic-metalio-plus | 48,816→48,816 | 48,752→48,752 | 12,361,168→12,361,168 |
-| ai_tools-metalio-plus | 34,912→34,912 | 31,328→31,328 | 10,974,960→10,974,960 |
-| ai_ask-metalio-plus-pqbn | 33,192→33,192 | 28,616→28,616 | 10,120,064→10,120,064 |
+| Plus 主页首变化 p95 | 431.915 | 295.645 | ≤400 ms |
+| Plus 主页 FAST p95 | 686.628 | 535.105 | ≤600 ms |
+| Plus 主页 TEXT p95 | 1,928.255 | 1,145.164 | ≤1,200 ms |
+| PSRAM16 主页 TEXT p95 | 1,707.376 | 1,073.471 | ≤1,200 ms |
+| AI Plus 内部最低余量 | 35,856 | 35,544 | ≥32,768 字节 |
+| AI PQBN 内部最低余量 | 33,192 | 32,880 | ≥32,768 字节 |
 
-最低已查 AI 内部余量仅比门槛高 424 字节；ASan 档案该值也为 33,192。29 个字体共 7,538,204 字节，1,600 个图标 20,308,480，合计 27,846,684，与修前相同。没有新增常驻任务、大缓冲或服务接口。
+延迟修前值来自本轮合并后、仅恢复启动的 `targeted-watch.log`；RAM 修前值来自前轮报告，未重建前轮源码。PQBN 最低内部余量仅高 112 字节，原预算未变。删除 1216×684 的预览缓冲，少占约 831,744 字节 PSRAM；字体与图标预算未调整。
 
 ## 没做到的
 
-两套最终全量相同的五个失败，原断言和预算全部保留：
-
-| 项目 | 本轮实测 | 没修的原因 |
-| --- | --- | --- |
-| scenario-home_basic-metalio-plus | 首变化 p95 431.851 >400 ms；FAST 686.565 >600；TEXT 1928.191 >1,200 | UI-R2-004：涉及跨页对象保留、脏矩形及预览/补灰队列和波形联合验证；超出小型中级修复，不能用延时或改预算关闭 |
-| scenario-home_basic-metalio-plus-psram16 | TEXT p95 1707.372 >1,200 ms | 同上，较快内存档案仍不合格 |
-| integration-listening | `tests/integration/listening.c:97`，42 通过、1 失败；锁定后 70 秒内睡眠计数未增长 | 声音/电源时序根因未定位；未改听取服务或放宽等待，不扩大结论为所有音频永久阻止睡眠 |
-| integration-notify | `tests/integration/notify.c:657`，177 通过、1 失败；提醒入库时声音计数未增长 | 提醒发布/播放观测时序尚未定位，不能据此断言最终永远无声；未改通知服务或原断言 |
-| scenario-reader_basic-panel-power-faults | `display.power_failures=1`，上限 0 | 注入故障后的电源重试未定位；驱动不在本任务允许修改范围，未动注入或预算 |
-
-- UI-R2-005 剩余：AI 的“听解释/更多→讲细一点、记下来、对话记录”完整服务流程；字号应用到全局内容；声音页提示音、振动、铃声的完整能力和交互。需要服务、回执与页面契约一起完成，不能靠换文案或假按钮关闭。本轮没有把这些改称“不需要”。
-- UI-R2-006 剩余：设置搜索、家庭卡、分组层次、密码槽/忘记密码、候选网格与页码、AI 主动作和其他成套页面对齐。涉及多屏与真实流程，仍未完成；本轮固定区域不等于完整键盘验收。
-- 字体未压到 4 MiB；Ubuntu/CI、目标链接/分区、窗口 GUI 及实机刷新未验。CI 仍缺任务指定的 `fonts-noto-cjk-extra`，工作流内的旧无数字并行命令本轮未执行、未修改（任务允许文件范围不含工作流）。
+- 仅 macOS/Apple clang 实测，未运行 Linux gcc 或远端 CI；未接设备、真实厂商、真实家庭数据或窗口 GUI。
+- 本轮只修集成和全量阻塞，未重做 30 屏视觉对照，也未处理原复查 UI-R4-001/002 的尺寸/图标检查器缺口、字体 4 MiB 目标及剩余页面流程。不把全量测试通过等同于原 U1～U13 整体验收通过。
 
 ## 和设计不一致的
 
-开工实际打开 Foundation、Components、Main、Today、Control、Settings 原稿。最终逐张打开 Main、Apps、Control、Settings、SetDisplay、ImeCandidates、ImeVoice 七张新三栏对照，以及新 Components 场景；其余 23 屏运行并核对分数，不称全部目视。
-
-【目视】Apps 已有搜索图标，仍有旧时钟/图标残影；SetDisplay 分段的上下边线完整，下面“屏幕”分组仍是两个胶囊；候选展开不再缩短面板，但网格、页码和键盘残影仍不齐；Control 的网络/收起仍是胶囊，Settings 缺搜索与家庭信息层次。AI、密码、确认卡、闹钟等原有差异未因局部修复关闭。保持布局 A，不为分数采用画板中的规格外数值；真实空状态和测试合成内容仍按证据边界解释。
-
-下表是本轮无缓存 V，目标全部 ≤12/255，实际 0/30 达到：
-
-| 页面 | 差值 /255 | 页面 | 差值 /255 |
-| --- | ---: | --- | ---: |
-| Main | 15.345 | Today | 24.541 |
-| Apps | 13.995 | Lock | 17.630 |
-| LockPage | 37.596 | Control | 23.177 |
-| Notifications | 20.829 | Members | 18.197 |
-| MembersBack | 20.701 | Pin | 19.816 |
-| PinWrong | 18.619 | ImePinyin | 32.647 |
-| ImeCandidates | 27.015 | ImeEdit | 33.666 |
-| ImePassword | 29.636 | ImeVoice | 29.947 |
-| Confirm | 24.931 | ConfirmDelete | 26.084 |
-| ConfirmSecret | 27.869 | AiListen | 33.584 |
-| AiThink | 32.902 | Ai | 37.348 |
-| Settings | 16.222 | SetDisplay | 18.510 |
-| SetSound | 20.973 | SetNetwork | 35.636 |
-| PowerMenu | 27.167 | PowerOff | 16.877 |
-| PhoneIncoming | 19.966 | ClockRing | 19.637 |
+- 预览只把原黑白像素更新为二值目标，原灰阶像素留给后续 GL16；不声称预览整帧已经纯黑白。这样避免用 DU 驱动灰阶转换，最终 TEXT 延迟包含完整补灰。新增 HAL 标志只在模拟器端口验证，未来真机端口仍须实现和校准。
+- 未改设计文档迁就代码；原完整外观与流程欠项仍见前轮报告和复查。
 
 ## 改过的已有测试
 
-- `ui_scale_check_test.py` 只增加条件赋值、循环、预处理/条件宏定义的负例及合法对照；原断言、尺寸集合和例外要求保留，没有修改旧期望。
-- `ui_shell_regressions.c` 只增加 2/3/4 段实际边界、搜索图标与文本位置、键盘跨状态区域检查；原滑杆、快照、密码隔离和服务动作断言保留，没有修改旧期望。
-- 新增 `ui_icon_check_test.py`、`ui_shell_r3_reverse.py`。后者用真实表变异、原检查器及隔离构建/编译作正反对照；组件副本先删旧指标，再要求退出 1、实际 CHECK 失败及任务完成，避免把崩溃或旧结果当成功。
-- 本轮未改已有脚本、预算、`listening.c`、`notify.c` 或 `dictation.c`，未删测试、跳过测试或增加等待遮掩失败。前轮测试变更的理由仍在历史报告。
+- 合并 `confirm.c` 时保留集成分支 D-105 的直接执行、无确认卡和撤销断言，替换过时的普通系统设置等待确认期望；高风险确认、只能由人接受等断言保留。
+- `ai_surface.c` 合并两边能力清单、集成分支的可选参数 schema；修复时只追加事件不得成为可调用工具的断言。
+- `races.c` 原交错、成员隔离、等待阈值不变，只追加缓存命中、错误生命周期拒绝、冷集合不加载三条断言。
+- `hub/e2e.script` 只更新首个书架点击坐标；原后续脚本及 Python 断言不变。
+- 新增 `selftest-binary-preview`、`unit-pmic-retry` 和独立反向脚本。没有删除、跳过已有测试或修改已有预算；新增预算只约束新增像素测试。
 
 ## 要用户定的
 
-无新增决策。按已有授权完成可逆修复，未请求确认，也未修改产品合同或范围。
+无。按现有授权完成可逆修复；无 push、PR、发布、硬件或付费操作。
 
 ## 顺手发现
 
-【实现】R-061：新增工作仍在 UI 呈现与宿主构建检查；输入、按钮和 AI 继续走既有能力总线，界面没有直写服务内部持久状态。没有服务/策略层增量接口、常驻任务或第三方依赖。缺失的 AI/设置流程仍限制整体 AI 原生完整性。
-
-【实测】中间版本在原尺寸图标上重复设布局，听写出现“一帧晚到”计数断言；隔离撤回该处后通过。最终只在需要缩放时调整控件布局，两套原听写及免按键听写断言均通过。未查明那一帧的内容，不把计数变化称为已证明的通话内容泄漏，也没有改声音服务或放宽断言。
-
-【实测】结束检查：本轮 14 个相关文件，无文件超过 5 MiB；相对 `332cab0` 的差异检查通过。本轮提交及最终工作区差异、本任务原基线 `fdff779` 以来的差异，本机路径/MAC 正则均 0 命中。修改的 C/H 去掉注释/字符串后，`write/read/fgets` 调用为 0，没有新增忽略返回值的写法；不据此声称 Linux gcc 已验。报告的相对链接可解析。
-
-【实测】完整原任务基线 `git diff --check fdff779..HEAD` 仍有第三方 Outfit-OFL、NanoSVG LICENSE 的原文空白及 nanosvgrast 缩进告警；未为消除告警修改第三方原文。构建物、日志、反向副本、截图及生成名称头文件均未提交。依赖/设计稿只读；无硬件、串口、真实凭据、付费接口、远端写入或带窗口 GUI 操作。
+- 【实现】服务/策略增量逐项为：PSRAM 订阅容量、工具清单的事件过滤、显示调度与 HAL 预览标志、通知发布代次与原成员事件、仅引用已加载成员数据的接口。PMIC 读写重试是故障注入阻塞的最小驱动修复。没有新增常驻任务；按钮和 AI 的业务入口仍为原子能力，缓存和预览属于内部机制（R-061）。
+- 【实测】本轮修复相对 `ec74e15e` 的空白检查退出 0；完整分支相对集成分支仍有 Outfit-OFL、NanoSVG 许可证与原栅格器缩进告警，未批量改第三方原文或历史审计资料。
+- 【实测】相对合并基线和集成分支的隐私正则均 0 命中；48 个改动 C/H 去掉注释和字符串后，`write/read/fgets` 实际调用为 0，没有新增忽略返回值的写法；这不能替代 Linux CI。报告相对链接和本轮文件大小检查通过，生成物不提交。

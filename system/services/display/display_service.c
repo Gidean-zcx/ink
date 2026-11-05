@@ -33,7 +33,6 @@ static struct {
     osal_queue_t *q;
     osal_mutex_t *lock;
     uint8_t *fb;
-    uint8_t *preview;
     int w, h, stride;
     hal_panel_info_t info;
     rp_state_t rp;
@@ -78,6 +77,18 @@ static void dispatch_next(void) {
     rp_dispatch_t d;
     const int cap = DS.info.async_updates ? (int)(sizeof DS.flight / sizeof DS.flight[0]) : 1;
     while (DS.nflight < cap && !DS.guard) {
+        if (DS.staged && !DS.info.async_updates && DS.rp.npending) {
+            /* One binary pass covers both feedback and the new page. */
+            hal_rect_t r = DS.rp.pending[0].rect;
+            for (int i = 1; i < DS.rp.npending; i++) {
+                hal_rect_t p = DS.rp.pending[i].rect;
+                int x = r.x < p.x ? r.x : p.x, y = r.y < p.y ? r.y : p.y;
+                int right = r.x + r.w > p.x + p.w ? r.x + r.w : p.x + p.w;
+                int bottom = r.y + r.h > p.y + p.h ? r.y + r.h : p.y + p.h;
+                r = (hal_rect_t){x, y, right - x, bottom - y};
+            }
+            rp_add(&DS.rp, r, INK_REFRESH_UI, 0, NULL);
+        }
         if (rp_next(&DS.rp, &d)) dispatch_one(d, false);
         else if (rp_next(&DS.refinement, &d)) dispatch_one(d, true);
         else break;
@@ -92,23 +103,15 @@ static void dispatch_one(rp_dispatch_t d, bool refine) {
     else hal_display_hold_power(0);
     uint32_t flags = d.intent <= INK_REFRESH_FAST ? HAL_UPD_FLAG_PRIORITY : 0;
     osal_mutex_lock(DS.lock, OSAL_WAIT_FOREVER);
-    bool preview = !refine && DS.staged && DS.preview && !DS.info.async_updates &&
-                   (d.intent == INK_REFRESH_UI || d.intent == INK_REFRESH_TEXT);
+    bool preview = !refine && DS.staged && !d.cleanup && !DS.info.async_updates &&
+                   DS.info.tech == HAL_PANEL_EPD && (d.intent == INK_REFRESH_UI || d.intent == INK_REFRESH_TEXT);
     if (preview) {
-        for (int y = d.rect.y; y < d.rect.y + d.rect.h; y++) {
-            for (int x = d.rect.x; x < d.rect.x + d.rect.w; x++) {
-                size_t at = (size_t)y * DS.stride + x;
-                DS.preview[at] = DS.fb[at] < 128 ? 0 : 255;
-            }
-            if ((y & 31) == 31) osal_preempt_point();
-        }
-        osal_cost_units("psram.copy_byte", (uint64_t)d.rect.w * d.rect.h);
-        /* GL16 is valid when the previous page still contains gray; DU is not. */
-        d.wf = HAL_WF_GL16;
-        DS.staged = false;
+        d.wf = HAL_WF_DU;
+        flags |= HAL_UPD_FLAG_BINARY_PREVIEW;
         ink_probe_count("display.two_phase.preview");
     } else if (refine) ink_probe_count("display.two_phase.gray");
-    const uint8_t *pixels = preview ? DS.preview : DS.fb;
+    if (!refine) DS.staged = false;
+    const uint8_t *pixels = DS.fb;
     uint32_t id = hal_display_update(&d.rect, pixels + (size_t)d.rect.y * DS.stride + d.rect.x, DS.stride, d.wf, flags,
                                      done_cb, NULL);
     osal_mutex_unlock(DS.lock);
@@ -153,11 +156,11 @@ static void on_done(const hal_display_result_t *r) {
     if (preview && r->ok) {
         rp_add(&DS.refinement, cur.rect, cur.intent, cur.cause_us, cur.cause_tag);
         ink_probe_value("ui.preview_to_visible_ms", (double)(r->done_us - cur.cause_us) / 1000.0);
-        return;
     }
-    if (cur.cause_us && !cur.cause_tag && !cause_seen(cur.cause_us, INTENT_NAME[cur.intent])) {
+    const char *intent = INTENT_NAME[preview ? INK_REFRESH_FAST : cur.intent];
+    if (cur.cause_us && !cur.cause_tag && !cause_seen(cur.cause_us, intent)) {
         char key[64];
-        snprintf(key, sizeof key, "ui.action_to_visible_ms.%s", INTENT_NAME[cur.intent]);
+        snprintf(key, sizeof key, "ui.action_to_visible_ms.%s", intent);
         ink_probe_value(key, (double)(r->done_us - cur.cause_us) / 1000.0);
     }
     if (cur.cause_us && !cause_seen(cur.cause_us, cur.cause_tag)) {
@@ -211,17 +214,17 @@ int ink_display_init(void) {
     DS.stride = DS.w;
     const char *prev = osal_mem_tag("display-service");
     DS.fb = osal_malloc((size_t)DS.stride * DS.h, OSAL_MEM_EXTERNAL);
-    DS.preview = osal_malloc((size_t)DS.stride * DS.h, OSAL_MEM_EXTERNAL);
     DS.lock = osal_mutex_create();
     DS.q = osal_queue_create(sizeof(dmsg_t), DS_QUEUE_LEN);
     DS.guard_ack = osal_sem_create(0, 1);
     osal_mem_tag(prev);
-    if (!DS.fb || !DS.preview || !DS.lock || !DS.q || !DS.guard_ack) return -1;
+    if (!DS.fb || !DS.lock || !DS.q || !DS.guard_ack) return -1;
     memset(DS.fb, 0xff, (size_t)DS.stride * DS.h);
     rp_init(&DS.rp, DS.w, DS.h, DS.info.waveforms, DS.info.tech == HAL_PANEL_LCD);
     DS.rp.async = DS.info.async_updates;
     rp_init(&DS.refinement, DS.w, DS.h, DS.info.waveforms, DS.info.tech == HAL_PANEL_LCD);
     DS.refinement.async = DS.info.async_updates;
+    DS.refinement.text_cleanup_every = 0; /* the first pass owns periodic cleanup */
     if (DS.rp.async) DS.rp.text_cleanup_every = 0;
     osal_task_cfg_t cfg = {.name = "display", .fn = service_task, .stack_bytes = DS_STACK, .priority = DS_PRIO, .core = -1,
                            .flags = OSAL_TASK_STACK_EXTERNAL}; /* touches the PSRAM framebuffer anyway */

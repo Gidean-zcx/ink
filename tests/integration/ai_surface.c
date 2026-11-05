@@ -170,7 +170,10 @@ static void the_tools(void) {
     int callable = 0;
     for (int i = 0; ink_cap_at(i); i++) {
         const ink_cap_t *c = ink_cap_at(i);
-        if (c->form == INK_FORM_EVENT) continue;
+        if (c->form == INK_FORM_EVENT) {
+            CHECK(!cJSON_GetObjectItem(g_tools, c->id), "%s is an event, not a callable tool", c->id);
+            continue;
+        }
         int yes = for_ai(c->id), no = not_for_ai(c->id);
         CHECK((yes >= 0) != (no >= 0), "%s must be in exactly one table: for the AI, or not with the reason", c->id);
         CHECK(c->title && c->title[0], "%s has a title", c->id);

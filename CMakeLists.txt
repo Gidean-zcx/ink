@@ -565,6 +565,15 @@ add_test(NAME selftest-expander-dead
           --i2c-faults 1.0:io-expander)
 set_tests_properties(selftest-expander-dead PROPERTIES ENVIRONMENT "INK_SELFTEST_EXPANDER_DEAD=1")
 # Unit tests: one part on its own, checked against its reference (here the pools against TLSF).
+ink_sim_executable(sim-binary-preview tests/simulator/binary_preview.c)
+add_test(NAME selftest-binary-preview COMMAND sim-binary-preview
+  --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+  --budget ${CMAKE_SOURCE_DIR}/tests/simulator/binary_preview.budget.json
+  --out ${CMAKE_BINARY_DIR}/test-out/binary-preview --end 8s --quiet --no-random-outages)
+add_executable(pmic-retry-test tests/unit/pmic_retry_test.c drivers/chips/tps65185/tps65185.c)
+target_include_directories(pmic-retry-test PRIVATE platform/include drivers/chips)
+target_compile_options(pmic-retry-test PRIVATE ${INK_WARN})
+add_test(NAME unit-pmic-retry COMMAND pmic-retry-test)
 add_executable(pools-test tests/unit/pools_test.c)
 target_include_directories(pools-test PRIVATE simulator/memory simulator/kernel/vtk)
 target_link_libraries(pools-test PRIVATE ink_platform ink_tlsf)
