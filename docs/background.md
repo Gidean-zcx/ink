@@ -97,7 +97,7 @@
 **还没有做的**
 
 - 设备端固件：`ports/esp32s31` 尚未建立，所有系统代码目前只在模拟器上运行。系统服务（数据、文件、时间、通知、确认卡、应用、文本输入、音频、Wi-Fi、成员、升级）只有模拟器验证，见[系统服务详细设计](system/system-services-design.md)。
-- 家庭中枢服务器：只有模拟器里的替身；[设计 v0.8](hub/hub-architecture.md) 已过七轮审查，代码还没开始。
+- 家庭中枢服务器：[设计 v0.8](hub/hub-architecture.md) 的第 1 步在 `hub/`，只用假厂商和合成数据在本机验证过；真实模型和语音、账号配对、记忆、内容都还没做。
 - 按设计稿实现的界面：[设计稿和规范](product/system-ui-spec.md)已有，代码里的系统界面还是占位外观，界面框架（主题、组件、图标、手势、浮层）没有开始。
 - 下一步怎么排见 [project.md](project.md) 最前面的接续记录。
 
@@ -272,7 +272,7 @@ PQ-BN 各配置的对比见 [system-comparison.md](research/eink-refresh/integra
 **命令**
 
 ```bash
-cmake -S . -B build && cmake --build build -j8 && ctest --test-dir build --output-on-failure   # 86 项
+cmake -S . -B build && cmake --build build -j8 && ctest --test-dir build --output-on-failure   # 91 项（要先建 hub 环境，见 hub/README.md，否则中枢的测试显示跳过）
 cmake -S . -B build-werror -DINK_WERROR=ON && cmake --build build-werror -j8 && ctest --test-dir build-werror
 cmake -S . -B build-asan -DINK_SANITIZE=ON && cmake --build build-asan -j8 && ctest --test-dir build-asan   # ASan + UBSan
 

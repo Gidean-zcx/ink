@@ -81,7 +81,7 @@ jobs:
       - name: Configure and build
         run: |
           cmake -S . -B build -DINK_WERROR=ON -DPython3_EXECUTABLE=/usr/bin/python3 -DINK_HUB_PYTHON=$PWD/hub/.venv/bin/python
-          cmake --build build -j
+          cmake --build build -j4
       - name: Hub contracts and production JSON crosscheck
         run: ctest --test-dir build -R '^hub-' --output-on-failure
       - name: Five consecutive realtime simulator rounds
