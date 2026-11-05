@@ -19,6 +19,7 @@
 #include "ink/sys/ai.h"
 #include "ink/sys/exec.h"
 #include "ink/sys/ui.h"
+#include "ink/ui_shell.h"
 
 #define UI_STACK 10240
 #define UI_PRIO 5
@@ -28,7 +29,7 @@
 #define MAX_HINTS 8
 #define MAX_DIRTY 24
 #define MAX_ACTIVITIES 6
-#define MAX_OVERLAYS 4
+#define MAX_OVERLAYS 8
 #define PFIFO 16
 #define INTERACTIVE_IDLE_MS 2500
 
@@ -61,6 +62,8 @@ static struct {
     int ph, pn;
     lv_point_t last_pt;
     bool last_pressed;
+    int touch_x0, touch_y0;
+    bool touch_owned;
     /* refresh intents for the frame being built */
     struct {
         lv_area_t a;
@@ -71,6 +74,7 @@ static struct {
     ink_region_t dirty[MAX_DIRTY];
     int ndirty;
     bool fb_locked;
+    bool staged;
     uint64_t cause_us;
     const char *cause_tag;
     /* activities */
@@ -214,7 +218,9 @@ static void refr_event_cb(lv_event_t *e) {
         prev_objs = objs;
     } else if (code == LV_EVENT_REFR_READY) {
         if (UI.ndirty) {
-            ink_display_commit_tagged(UI.dirty, UI.ndirty, UI.cause_us, UI.cause_tag);
+            if (UI.staged) ink_display_commit_staged(UI.dirty, UI.ndirty, UI.cause_us, UI.cause_tag);
+            else ink_display_commit_tagged(UI.dirty, UI.ndirty, UI.cause_us, UI.cause_tag);
+            UI.staged = false;
             UI.ndirty = 0;
             UI.cause_us = 0;
             UI.cause_tag = NULL;
@@ -286,6 +292,20 @@ const char *ink_ui_page_name(void) {
 }
 
 const char *ink_ui_top_name(void) { return UI.noverlays ? UI.overlays[UI.noverlays - 1]->name : ink_ui_page_name(); }
+const char *ink_ui_action_page(void) {
+    return UI.noverlays && UI.overlays[UI.noverlays - 1]->level >= 0 ? ink_ui_top_name() : ink_ui_page_name();
+}
+int ink_ui_context_snapshot(char *buf, size_t cap, const char **name) {
+    for (int i = UI.noverlays - 1; i >= 0; i--) {
+        const ink_ui_overlay_t *o = UI.overlays[i];
+        if (!strcmp(o->name, "Ai")) continue;
+        if (name) *name = o->name;
+        return o->snapshot && cap ? o->snapshot(buf, cap) : 0;
+    }
+    const ink_activity_t *top = UI.depth ? UI.stack[UI.depth - 1].a : NULL;
+    if (name) *name = top ? top->name : "";
+    return top && top->snapshot && cap ? top->snapshot(buf, cap) : 0;
+}
 
 int ink_ui_snapshot(char *buf, size_t cap, const char **activity_name) {
     if (UI.noverlays) {
@@ -307,6 +327,7 @@ int ink_ui_snapshot(char *buf, size_t cap, const char **activity_name) {
 void ink_ui_hint_frame(ink_refresh_t intent) {
     if (intent > UI.frame_intent) UI.frame_intent = intent;
 }
+void ink_ui_stage_next(void) { UI.staged = true; }
 
 /* --------------------------------------------------------------- styles */
 
@@ -323,7 +344,7 @@ static void styles_init(void) {
     lv_style_set_bg_opa(&UI.st_btn, LV_OPA_COVER);
     lv_style_set_border_color(&UI.st_btn, lv_color_black());
     lv_style_set_border_width(&UI.st_btn, ink_dp(2));
-    lv_style_set_radius(&UI.st_btn, ink_dp(6));
+    lv_style_set_radius(&UI.st_btn, ink_ui_px(INK_RADIUS_KEY));
     lv_style_set_text_color(&UI.st_btn, lv_color_black());
     lv_style_set_shadow_width(&UI.st_btn, 0);
     lv_style_set_pad_all(&UI.st_btn, ink_dp(8));
@@ -478,7 +499,9 @@ void ink_ui_overlay_add(const ink_ui_overlay_t *o, lv_obj_t *root) {
     overlays_changed();
 }
 
-bool ink_ui_overlay_up(void) { return UI.noverlays > 0; }
+bool ink_ui_overlay_up(void) {
+    return UI.noverlays && UI.overlays[UI.noverlays - 1]->level >= 1 && strcmp(ink_ui_top_name(), "LockPage");
+}
 
 void ink_ui_overlay_remove(const ink_ui_overlay_t *o) {
     for (int i = 0; i < UI.noverlays; i++)
@@ -511,11 +534,7 @@ static void do_open(void *unused) {
 }
 
 void ink_ui_open(lv_obj_t *from, const ink_activity_t *a, void *arg) {
-    if (from) {
-        lv_obj_add_style(from, &UI.st_btn_pr, LV_STATE_USER_1);
-        lv_obj_add_state(from, LV_STATE_USER_1);
-        ink_ui_hint_obj(from, INK_REFRESH_FAST);
-    }
+    (void)from; /* Navigation is its own feedback; only network waits use .busy. */
     pending_open.a = a;
     pending_open.arg = arg;
     pending_open.cause_us = UI.cause_us;
@@ -584,10 +603,15 @@ static void handle_input(const umsg_t *m) {
             ink_probe_count("ui.stale_input_dropped");
             return;
         }
-        if (e->phase == INK_PTR_PRESS) set_interactive(true);
+        if (e->phase == INK_PTR_PRESS) {
+            set_interactive(true);
+            UI.touch_x0 = e->x;
+            UI.touch_y0 = e->y;
+            UI.touch_owned = ink_ui_touch_captured(e->x, e->y);
+        }
         UI.cause_us = e->t_us;
         UI.cause_tag = NULL;
-        if (e->phase == INK_PTR_RELEASE && (e->flags & INK_EVF_SWIPE)) {
+        if (e->phase == INK_PTR_RELEASE && (e->flags & INK_EVF_SWIPE) && !UI.touch_owned) {
             /* a swipe is not a click: LVGL would send CLICKED on any release without scrolling
              * (found in the simulator: a swipe turned the page twice, once per gesture path) */
             lv_indev_reset(UI.indev, NULL);
@@ -604,13 +628,24 @@ static void handle_input(const umsg_t *m) {
         if (m->generation != UI.generation) return;
         UI.cause_us = e->t_us;
         UI.cause_tag = NULL;
-        if (!UI.noverlays && top && top->on_swipe) top->on_swipe((ink_swipe_dir_t)e->dir);
+        if (UI.touch_owned) { UI.touch_owned = false; return; }
+        {
+            int edge = UI.dpi * 60 / 254; /* 6 mm, section 3.3; the start owns the gesture. */
+            const ink_ui_overlay_t *o = UI.noverlays ? UI.overlays[UI.noverlays - 1] : NULL;
+            if (o && o->level >= 1) return;
+            if (UI.touch_y0 < edge && e->dir == INK_SWIPE_DOWN) ink_shell_control();
+            else if (UI.touch_y0 >= UI.lh - edge && e->dir == INK_SWIPE_UP) {
+                if (!ink_shell_close() && !ink_shell_ai_hide()) ink_ui_home();
+            } else if (UI.touch_x0 < edge && e->dir == INK_SWIPE_RIGHT) {
+                if (!ink_shell_close() && !ink_shell_ai_hide()) ink_ui_pop();
+            } else if (!UI.noverlays && top && top->on_swipe) top->on_swipe((ink_swipe_dir_t)e->dir);
+        }
         break;
     case INK_EV_KEY:
     case INK_EV_KEY_LONG: {
         bool lng = e->kind == INK_EV_KEY_LONG;
         if (e->key == HAL_KEY_AI) { /* system-wide: push-to-talk, handled by the AI service; an overlay comes first, but one already talking may let go */
-            if (e->kind == INK_EV_KEY && (!UI.noverlays || !e->pressed)) ink_ai_key(e->pressed, e->t_us);
+            if (e->kind == INK_EV_KEY && (!UI.noverlays || UI.overlays[UI.noverlays - 1]->level <= 0 || !e->pressed)) ink_ai_key(e->pressed, e->t_us);
             return;
         }
         if (e->kind == INK_EV_KEY && (!e->pressed || (e->flags & INK_EVF_AFTER_LONG))) {
@@ -753,6 +788,7 @@ static void ui_task(void *arg) {
 
 int ink_ui_start(const ink_activity_t *home) {
     g_home = home;
+    if (ink_shell_init() != 0) return -1;
     const char *prev = osal_mem_tag("ui");
     UI.q = osal_queue_create(sizeof(umsg_t), UI_QUEUE_LEN);
     osal_mem_tag(prev);

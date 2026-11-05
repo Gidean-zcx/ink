@@ -1,14 +1,15 @@
-# Home screen: boot, tap the counter button, turn pages with keys and swipes.
-# Coordinates in dp / % so the same script runs on every panel.
+# Home: visit all three pages, open the shelf from the fixed Dock twice.
 @3s      snap  boot
-+500ms   tap   116dp 92dp       # counter button (16..216 dp x 64..120 dp)
-+1500ms  tap   116dp 92dp
-+1500ms  key   next             # page turn (text refresh)
++500ms   tap   68% 92%
++1500ms  key   home
++1500ms  tap   68% 92%
++1500ms  key   home
 +1500ms  key   next
-+1500ms  swipe 88% 55% 15% 55% 250ms
-+1500ms  key   next
-+1500ms  key   next
-+1500ms  key   next
-+1500ms  key   next
++1800ms  key   prev
++1800ms  swipe 88% 55% 15% 55% 250ms
++1800ms  key   prev
++1800ms  key   prev
++1800ms  key   next
++1800ms  key   next
 +2s      snap  end
 +500ms   end

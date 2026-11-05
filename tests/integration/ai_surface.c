@@ -47,6 +47,11 @@ static const struct {
     {"reader.open_book", "title"}, {"reader.next_page", NULL}, {"reader.prev_page", NULL}, {"reader.goto_page", "page"}, {"reader.read_page", NULL},
     {"update.status", NULL}, {"update.check", NULL}, {"update.download", NULL},
     {"text.voice_start", NULL}, {"text.voice_finish", NULL}, {"text.voice_cancel", NULL},
+    {"shell.control", NULL}, {"shell.close", NULL}, {"shell.back", NULL}, {"shell.members", NULL},
+    {"shell.more", NULL}, {"shell.settings", NULL}, {"shell.display", NULL}, {"shell.sound", NULL},
+    {"shell.network", NULL}, {"shell.notifications", NULL}, {"home.next", NULL}, {"home.prev", NULL},
+    {"shell.launch", "id"}, {"shell.resume", NULL}, {"ai.panel.hide", NULL}, {"ai.panel.listen", NULL},
+    {"ai.panel.next", NULL}, {"ai.panel.prev", NULL},
     {NULL, NULL},
 };
 

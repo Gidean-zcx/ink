@@ -11,6 +11,8 @@
 #include "ink/sys/font.h"
 #include "ink/sys/textinput.h"
 #include "ink/sys/ui.h"
+#include "ink/ui_shell.h"
+#include "ink/sys/cap.h"
 
 #define KEY_BACKSPACE '\b'
 #define KEY_ENTER '\n'
@@ -27,12 +29,7 @@ static struct {
     int built_for; /* 1 letters, 2 symbols, 3 digits */
 } K;
 
-static const lv_font_t *font(void) {
-    hal_panel_info_t pi;
-    hal_display_get_info(&pi);
-    ink_font_t *cjk = ink_font_for_pt(10, pi.dpi);
-    return cjk ? ink_font_lvgl(cjk) : ink_ui_font(0);
-}
+static const lv_font_t *font(void) { return ink_ui_font_px(INK_FONT_LIST, INK_WEIGHT_REGULAR); }
 
 static void sync(void);
 
@@ -70,11 +67,22 @@ static void on_more(lv_event_t *e) {
     sync();
 }
 
+static int snapshot(char *buf, size_t cap) {
+    bool secret = ink_text_type() == INK_TEXT_PASSWORD || ink_text_ai_hidden();
+    return snprintf(buf, cap, "键盘；类型=%s；内容=%s；组合=%s。动作：text.insert、text.select、text.submit、text.voice_start、text.voice_finish、text.voice_cancel。",
+                    secret ? "密码" : "普通文字", secret ? "******" : ink_text_value(), secret ? "" : ink_text_composing());
+}
+static bool overlay_key(ink_key_t k, bool lng) {
+    if (!lng && (k == INK_KEY_HOME || k == INK_KEY_BACK)) ink_text_blur(0);
+    return true;
+}
+static const ink_ui_overlay_t OVERLAY = {.name = "Keyboard", .level = -2, .on_key = overlay_key, .snapshot = snapshot};
+
 static lv_obj_t *key(lv_obj_t *row, const char *label, char code, int grow) {
     lv_obj_t *b = lv_button_create(row);
     ink_ui_style_button(b);
-    lv_obj_set_style_pad_all(b, ink_dp(2), 0);
-    lv_obj_set_height(b, ink_dp(44));
+    lv_obj_set_style_pad_all(b, ink_ui_px(INK_GAP_XS), 0);
+    lv_obj_set_height(b, ink_ui_px(INK_KEY));
     lv_obj_set_flex_grow(b, (uint8_t)grow);
     lv_obj_add_event_cb(b, on_key, LV_EVENT_CLICKED, (void *)(intptr_t)code);
     lv_obj_t *l = lv_label_create(b);
@@ -86,18 +94,21 @@ static lv_obj_t *key(lv_obj_t *row, const char *label, char code, int grow) {
 
 static void on_mic(lv_event_t *e) {
     (void)e;
-    ink_text_voice_start();
+    ink_receipt_t rc;
+    ink_cap_invoke("text.voice_start", NULL, INK_SRC_TOUCH, 0, &rc);
     ink_ui_cause(osal_now_us(), "text.voice_tap_to_panel_ms");
 }
 
 static void on_said(lv_event_t *e) {
     (void)e;
-    ink_text_voice_finish();
+    ink_receipt_t rc;
+    ink_cap_invoke("text.voice_finish", NULL, INK_SRC_TOUCH, 0, &rc);
 }
 
 static void on_use_keys(lv_event_t *e) {
     (void)e;
-    ink_text_voice_cancel();
+    ink_receipt_t rc;
+    ink_cap_invoke("text.voice_cancel", NULL, INK_SRC_TOUCH, 0, &rc);
 }
 
 static lv_obj_t *new_row(void) {
@@ -105,7 +116,7 @@ static lv_obj_t *new_row(void) {
     lv_obj_remove_style_all(r);
     lv_obj_set_size(r, LV_PCT(100), LV_SIZE_CONTENT);
     lv_obj_set_flex_flow(r, LV_FLEX_FLOW_ROW);
-    lv_obj_set_style_pad_column(r, ink_dp(2), 0);
+    lv_obj_set_style_pad_column(r, ink_ui_px(INK_GAP_XS), 0);
     return r;
 }
 
@@ -123,25 +134,26 @@ static const char *enter_label(void) {
 }
 
 static void build(int kind) {
-    if (K.root) lv_obj_delete(K.root);
-    K.root = lv_obj_create(lv_layer_top());
+    if (K.root) { ink_ui_overlay_remove(&OVERLAY); lv_obj_delete(K.root); }
+    K.root = lv_obj_create(lv_layer_sys());
+    lv_obj_remove_style_all(K.root);
     lv_obj_remove_flag(K.root, LV_OBJ_FLAG_SCROLLABLE);
     lv_obj_set_size(K.root, LV_PCT(100), LV_SIZE_CONTENT);
     lv_obj_align(K.root, LV_ALIGN_BOTTOM_MID, 0, 0);
     lv_obj_set_style_bg_color(K.root, lv_color_white(), 0);
     lv_obj_set_style_bg_opa(K.root, LV_OPA_COVER, 0);
     lv_obj_set_style_border_color(K.root, lv_color_black(), 0);
-    lv_obj_set_style_border_width(K.root, 2, 0);
+    lv_obj_set_style_border_width(K.root, ink_ui_px(INK_STROKE), 0);
     lv_obj_set_style_border_side(K.root, LV_BORDER_SIDE_TOP, 0);
-    lv_obj_set_style_radius(K.root, 0, 0);
-    lv_obj_set_style_pad_all(K.root, ink_dp(2), 0);
-    lv_obj_set_style_pad_row(K.root, ink_dp(2), 0);
+    lv_obj_set_style_radius(K.root, ink_ui_px(INK_RADIUS_PANEL), 0);
+    lv_obj_set_style_pad_all(K.root, ink_ui_px(INK_GAP_XS), 0);
+    lv_obj_set_style_pad_row(K.root, ink_ui_px(INK_GAP_XS), 0);
     lv_obj_set_flex_flow(K.root, LV_FLEX_FLOW_COLUMN);
     K.built_for = kind;
     K.keys = lv_obj_create(K.root);
     lv_obj_remove_style_all(K.keys);
     lv_obj_set_size(K.keys, LV_PCT(100), LV_SIZE_CONTENT);
-    lv_obj_set_style_pad_row(K.keys, ink_dp(2), 0);
+    lv_obj_set_style_pad_row(K.keys, ink_ui_px(INK_GAP_XS), 0);
     lv_obj_set_flex_flow(K.keys, LV_FLEX_FLOW_COLUMN);
     K.composing = lv_label_create(K.keys);
     lv_obj_set_style_text_font(K.composing, font(), 0);
@@ -150,8 +162,8 @@ static void build(int kind) {
     for (int i = 0; i < INK_TEXT_PAGE; i++) {
         K.cand_btn[i] = lv_button_create(K.cands);
         ink_ui_style_button(K.cand_btn[i]);
-        lv_obj_set_style_pad_all(K.cand_btn[i], ink_dp(2), 0);
-        lv_obj_set_height(K.cand_btn[i], ink_dp(40));
+        lv_obj_set_style_pad_all(K.cand_btn[i], ink_ui_px(INK_GAP_XS), 0);
+        lv_obj_set_height(K.cand_btn[i], ink_ui_px(INK_CONTROL));
         lv_obj_set_flex_grow(K.cand_btn[i], 1);
         lv_obj_add_event_cb(K.cand_btn[i], on_cand, LV_EVENT_CLICKED, (void *)(intptr_t)i);
         K.cand_label[i] = lv_label_create(K.cand_btn[i]);
@@ -162,8 +174,8 @@ static void build(int kind) {
     }
     K.more = lv_button_create(K.cands);
     ink_ui_style_button(K.more);
-    lv_obj_set_style_pad_all(K.more, ink_dp(2), 0);
-    lv_obj_set_height(K.more, ink_dp(40));
+    lv_obj_set_style_pad_all(K.more, ink_ui_px(INK_GAP_XS), 0);
+    lv_obj_set_height(K.more, ink_ui_px(INK_CONTROL));
     lv_obj_add_event_cb(K.more, on_more, LV_EVENT_CLICKED, NULL);
     lv_obj_t *ml = lv_label_create(K.more);
     lv_obj_set_style_text_font(ml, font(), 0);
@@ -174,8 +186,8 @@ static void build(int kind) {
     ink_ui_style_button(K.mic);
     lv_obj_set_style_bg_color(K.mic, lv_color_black(), 0);
     lv_obj_set_style_bg_opa(K.mic, LV_OPA_COVER, 0);
-    lv_obj_set_style_pad_all(K.mic, ink_dp(2), 0);
-    lv_obj_set_height(K.mic, ink_dp(40));
+    lv_obj_set_style_pad_all(K.mic, ink_ui_px(INK_GAP_XS), 0);
+    lv_obj_set_height(K.mic, ink_ui_px(INK_CONTROL));
     lv_obj_add_event_cb(K.mic, on_mic, LV_EVENT_CLICKED, NULL);
     lv_obj_t *mic = lv_label_create(K.mic);
     lv_obj_set_style_text_font(mic, font(), 0);
@@ -234,11 +246,11 @@ static void build(int kind) {
     lv_obj_remove_style_all(row);
     lv_obj_set_size(row, LV_PCT(100), LV_SIZE_CONTENT);
     lv_obj_set_flex_flow(row, LV_FLEX_FLOW_ROW);
-    lv_obj_set_style_pad_column(row, ink_dp(2), 0);
+    lv_obj_set_style_pad_column(row, ink_ui_px(INK_GAP_XS), 0);
     for (int i = 0; i < 2; i++) {
         lv_obj_t *b = lv_button_create(row);
         ink_ui_style_button(b);
-        lv_obj_set_height(b, ink_dp(44));
+        lv_obj_set_height(b, ink_ui_px(INK_KEY));
         lv_obj_set_flex_grow(b, 1);
         lv_obj_add_event_cb(b, i ? on_use_keys : on_said, LV_EVENT_CLICKED, NULL);
         lv_obj_t *l = lv_label_create(b);
@@ -247,7 +259,9 @@ static void build(int kind) {
         lv_obj_center(l);
     }
     lv_obj_add_flag(K.panel, LV_OBJ_FLAG_HIDDEN);
-    ink_ui_hint_obj(K.root, INK_REFRESH_FAST);
+    ink_ui_capture_touch(K.root);
+    ink_ui_overlay_add(&OVERLAY, K.root);
+    ink_ui_hint_obj(K.root, INK_REFRESH_FLASH_UI);
 }
 
 /* The voice panel over the keys, or the keys back: only the fixed area changes while it lasts. */
@@ -279,6 +293,7 @@ static void sync(void) { /* UI task */
             lv_area_t a;
             lv_obj_get_coords(K.root, &a);
             ink_ui_hint_area(&a, INK_REFRESH_TEXT); /* the page under it comes back with its gray levels */
+            ink_ui_overlay_remove(&OVERLAY);
             lv_obj_delete(K.root);
             K.root = NULL;
             K.first = 0;

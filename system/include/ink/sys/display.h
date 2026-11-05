@@ -48,6 +48,8 @@ void ink_display_unlock(void);
 void ink_display_commit(const ink_region_t *regions, int n, uint64_t cause_us);
 /** Same, with a probe name: when the frame is physically visible, `cause_tag` records the latency. */
 void ink_display_commit_tagged(const ink_region_t *regions, int n, uint64_t cause_us, const char *cause_tag);
+/** Page transition: show a binary preview, then refine the latest framebuffer's gray levels. */
+void ink_display_commit_staged(const ink_region_t *regions, int n, uint64_t cause_us, const char *cause_tag);
 
 /** Interactive phase (typing, menus): keep the panel powered between updates. */
 void ink_display_interactive(bool on);

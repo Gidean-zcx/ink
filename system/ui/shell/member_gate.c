@@ -15,6 +15,7 @@
 #include "ink/sys/ui.h"
 #include "pinpad.h"
 #include "shell_card.h"
+#include "ink/ui_shell.h"
 
 static struct {
     shell_card_t card;
@@ -22,6 +23,7 @@ static struct {
     lv_obj_t *pad;
     int result;
     uint32_t wait_s;
+    bool requested;
     ink_exec_job_t sync_job, result_job;
 } G;
 
@@ -62,15 +64,15 @@ static void on_member(lv_event_t *e) {
     snprintf(G.picked, sizeof G.picked, "%s", m->id);
     if (ink_member_has_pin(m->id)) {
         if (!G.pad) G.pad = shell_pinpad(G.card.root, pin_entered);
-        shell_card_text(&G.card, m->name, "");
     } else if (ink_member_switch(m->id) == 0) {
+        G.requested = false;
         ink_exec_post(INK_EXEC_UI, &G.sync_job, sync_gate, NULL);
     }
 }
 
 static void sync_gate(void *arg) { /* UI task */
     (void)arg;
-    bool want = !ink_member_space_open() && ink_power_state() != INK_PWR_LOCKED;
+    bool want = (G.requested || !ink_member_space_open()) && ink_power_state() != INK_PWR_LOCKED;
     if (!want) {
         if (G.card.root) {
             shell_card_close(&G.card);
@@ -81,14 +83,29 @@ static void sync_gate(void *arg) { /* UI task */
     }
     if (G.card.root) return;
     shell_card_open(&G.card);
+    shell_card_full(&G.card);
     ink_ui_overlay_add(&OVERLAY, G.card.root);
     shell_card_text(&G.card, "谁在用？", "");
     shell_card_clear_buttons(&G.card);
     const ink_member_t *m;
-    for (int i = 0; (m = ink_member_at(i)) != NULL; i++) shell_card_button(&G.card, m->name, on_member, (void *)m);
+    lv_obj_set_pos(G.card.row, ink_ui_px(INK_BLOCK), ink_ui_px(INK_BLOCK_L + INK_PRIMARY + INK_BLOCK));
+    lv_obj_set_size(G.card.row, ink_ui_px(INK_CANVAS_W - 2 * INK_BLOCK), ink_ui_px(3 * INK_CIRCLE_LARGE));
+    lv_obj_set_flex_flow(G.card.row, LV_FLEX_FLOW_ROW_WRAP);
+    lv_obj_set_style_pad_row(G.card.row, ink_ui_px(INK_GAP_XXL), 0);
+    for (int i = 0; (m = ink_member_at(i)) != NULL; i++) {
+        lv_obj_t *b = ink_ui_pill(G.card.row, m->name, 0, 0, INK_CIRCLE_LARGE, INK_CIRCLE_LARGE, i == 0, on_member, (void *)m);
+        (void)b;
+    }
     /* the one whose space it is first */
     snprintf(G.picked, sizeof G.picked, "%s", ink_member_current()->id);
-    G.pad = shell_pinpad(G.card.root, pin_entered);
+    G.pad = NULL;
+}
+
+void ink_shell_members_open(bool returning) {
+    (void)returning;
+    G.requested = true;
+    ink_shell_close();
+    sync_gate(NULL);
 }
 
 static void on_change(void *ctx, int h, const char *id) {

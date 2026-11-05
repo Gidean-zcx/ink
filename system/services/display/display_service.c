@@ -33,13 +33,17 @@ static struct {
     osal_queue_t *q;
     osal_mutex_t *lock;
     uint8_t *fb;
+    uint8_t *preview;
     int w, h, stride;
     hal_panel_info_t info;
     rp_state_t rp;
+    rp_state_t refinement;
+    bool staged;
     int nflight; /* updates handed to the platform and not done (one at a time unless async) */
     struct {
         uint32_t id;
         rp_dispatch_t d;
+        bool preview;
     } flight[16];
     bool interactive;
     bool guard;
@@ -66,17 +70,21 @@ static void done_cb(void *ctx, const hal_display_result_t *r) {
     ds_send(&m);
 }
 
-static void dispatch_one(rp_dispatch_t d);
+static void dispatch_one(rp_dispatch_t d, bool refine);
 
 /* EPDiy-class panels take one update at a time (global lock); a direct-drive panel (async) takes
  * every committed region at once and converges them together */
 static void dispatch_next(void) {
     rp_dispatch_t d;
     const int cap = DS.info.async_updates ? (int)(sizeof DS.flight / sizeof DS.flight[0]) : 1;
-    while (DS.nflight < cap && !DS.guard && rp_next(&DS.rp, &d)) dispatch_one(d);
+    while (DS.nflight < cap && !DS.guard) {
+        if (rp_next(&DS.rp, &d)) dispatch_one(d, false);
+        else if (rp_next(&DS.refinement, &d)) dispatch_one(d, true);
+        else break;
+    }
 }
 
-static void dispatch_one(rp_dispatch_t d) {
+static void dispatch_one(rp_dispatch_t d, bool refine) {
     /* power policy: keep rails up around touch feedback and interactive phases;
      * otherwise power off right after the update (reading = long idle gaps) */
     if (DS.interactive) hal_display_hold_power(HOLD_INTERACTIVE_MS);
@@ -84,7 +92,24 @@ static void dispatch_one(rp_dispatch_t d) {
     else hal_display_hold_power(0);
     uint32_t flags = d.intent <= INK_REFRESH_FAST ? HAL_UPD_FLAG_PRIORITY : 0;
     osal_mutex_lock(DS.lock, OSAL_WAIT_FOREVER);
-    uint32_t id = hal_display_update(&d.rect, DS.fb + (size_t)d.rect.y * DS.stride + d.rect.x, DS.stride, d.wf, flags,
+    bool preview = !refine && DS.staged && DS.preview && !DS.info.async_updates &&
+                   (d.intent == INK_REFRESH_UI || d.intent == INK_REFRESH_TEXT);
+    if (preview) {
+        for (int y = d.rect.y; y < d.rect.y + d.rect.h; y++) {
+            for (int x = d.rect.x; x < d.rect.x + d.rect.w; x++) {
+                size_t at = (size_t)y * DS.stride + x;
+                DS.preview[at] = DS.fb[at] < 128 ? 0 : 255;
+            }
+            if ((y & 31) == 31) osal_preempt_point();
+        }
+        osal_cost_units("psram.copy_byte", (uint64_t)d.rect.w * d.rect.h);
+        /* GL16 is valid when the previous page still contains gray; DU is not. */
+        d.wf = HAL_WF_GL16;
+        DS.staged = false;
+        ink_probe_count("display.two_phase.preview");
+    } else if (refine) ink_probe_count("display.two_phase.gray");
+    const uint8_t *pixels = preview ? DS.preview : DS.fb;
+    uint32_t id = hal_display_update(&d.rect, pixels + (size_t)d.rect.y * DS.stride + d.rect.x, DS.stride, d.wf, flags,
                                      done_cb, NULL);
     osal_mutex_unlock(DS.lock);
     if (!id) {
@@ -93,6 +118,7 @@ static void dispatch_one(rp_dispatch_t d) {
     }
     DS.flight[DS.nflight].id = id;
     DS.flight[DS.nflight].d = d;
+    DS.flight[DS.nflight].preview = preview;
     DS.nflight++;
     char key[48];
     snprintf(key, sizeof key, "display.dispatch.%s%s", INTENT_NAME[d.intent], d.cleanup ? "+clean" : "");
@@ -119,8 +145,19 @@ static void on_done(const hal_display_result_t *r) {
     while (k < DS.nflight && DS.flight[k].id != r->id) k++;
     if (k == DS.nflight) return; /* not ours (cannot happen) */
     rp_dispatch_t cur = DS.flight[k].d;
+    bool preview = DS.flight[k].preview;
     DS.flight[k] = DS.flight[--DS.nflight];
     rp_done(&DS.rp, &cur, r->ok);
+    if (preview && r->ok) {
+        rp_add(&DS.refinement, cur.rect, cur.intent, cur.cause_us, cur.cause_tag);
+        ink_probe_value("ui.preview_to_visible_ms", (double)(r->done_us - cur.cause_us) / 1000.0);
+        return;
+    }
+    if (cur.cause_us && !cur.cause_tag && !cause_seen(cur.cause_us, INTENT_NAME[cur.intent])) {
+        char key[64];
+        snprintf(key, sizeof key, "ui.action_to_visible_ms.%s", INTENT_NAME[cur.intent]);
+        ink_probe_value(key, (double)(r->done_us - cur.cause_us) / 1000.0);
+    }
     if (cur.cause_us && !cause_seen(cur.cause_us, cur.cause_tag)) {
         if (cur.cause_tag) {
             /* a named cause (e.g. "AI answer visible after release") has its own metric and may
@@ -129,9 +166,6 @@ static void on_done(const hal_display_result_t *r) {
         } else {
             ink_probe_value("ui.action_to_first_change_ms", (double)(r->started_us - cur.cause_us) / 1000.0);
             ink_probe_value("ui.action_to_visible_ms", (double)(r->done_us - cur.cause_us) / 1000.0);
-            char key[64];
-            snprintf(key, sizeof key, "ui.action_to_visible_ms.%s", INTENT_NAME[cur.intent]);
-            ink_probe_value(key, (double)(r->done_us - cur.cause_us) / 1000.0);
         }
     }
 }
@@ -142,7 +176,10 @@ static void service_task(void *arg) {
     for (;;) {
         osal_queue_recv(DS.q, &m, OSAL_WAIT_FOREVER);
         switch (m.type) {
-        case DM_REGION: rp_add(&DS.rp, m.rect, (ink_refresh_t)m.intent, m.cause_us, m.cause_tag); break;
+        case DM_REGION:
+            rp_add(&DS.rp, m.rect, (ink_refresh_t)m.intent, m.cause_us, m.cause_tag);
+            if (m.flag) DS.staged = true;
+            break;
         case DM_FRAME_END: break;
         case DM_DONE: on_done(&m.result); break;
         case DM_INTERACTIVE:
@@ -160,7 +197,7 @@ static void service_task(void *arg) {
         if (m.type == DM_DONE && DS.guard && !DS.info.async_updates && !DS.nflight) osal_sem_give(DS.guard_ack);
         /* only dispatch on frame boundaries so a half-committed frame is never driven */
         if (m.type != DM_REGION) dispatch_next();
-        __atomic_store_n(&DS.busy, DS.rp.npending + DS.nflight, __ATOMIC_SEQ_CST);
+        __atomic_store_n(&DS.busy, DS.rp.npending + DS.refinement.npending + DS.nflight, __ATOMIC_SEQ_CST);
         __atomic_sub_fetch(&DS.inbox, 1, __ATOMIC_SEQ_CST); /* after busy: see ds_send */
     }
 }
@@ -172,14 +209,17 @@ int ink_display_init(void) {
     DS.stride = DS.w;
     const char *prev = osal_mem_tag("display-service");
     DS.fb = osal_malloc((size_t)DS.stride * DS.h, OSAL_MEM_EXTERNAL);
+    DS.preview = osal_malloc((size_t)DS.stride * DS.h, OSAL_MEM_EXTERNAL);
     DS.lock = osal_mutex_create();
     DS.q = osal_queue_create(sizeof(dmsg_t), DS_QUEUE_LEN);
     DS.guard_ack = osal_sem_create(0, 1);
     osal_mem_tag(prev);
-    if (!DS.fb || !DS.lock || !DS.q || !DS.guard_ack) return -1;
+    if (!DS.fb || !DS.preview || !DS.lock || !DS.q || !DS.guard_ack) return -1;
     memset(DS.fb, 0xff, (size_t)DS.stride * DS.h);
     rp_init(&DS.rp, DS.w, DS.h, DS.info.waveforms, DS.info.tech == HAL_PANEL_LCD);
     DS.rp.async = DS.info.async_updates;
+    rp_init(&DS.refinement, DS.w, DS.h, DS.info.waveforms, DS.info.tech == HAL_PANEL_LCD);
+    DS.refinement.async = DS.info.async_updates;
     if (DS.rp.async) DS.rp.text_cleanup_every = 0;
     osal_task_cfg_t cfg = {.name = "display", .fn = service_task, .stack_bytes = DS_STACK, .priority = DS_PRIO, .core = -1,
                            .flags = OSAL_TASK_STACK_EXTERNAL}; /* touches the PSRAM framebuffer anyway */
@@ -206,6 +246,17 @@ void ink_display_commit_tagged(const ink_region_t *regions, int n, uint64_t caus
     for (int i = 0; i < n; i++) {
         dmsg_t m = {.type = DM_REGION, .intent = (uint8_t)regions[i].intent, .rect = regions[i].rect, .cause_us = cause_us,
                     .cause_tag = cause_tag};
+        ds_send(&m);
+    }
+    dmsg_t end = {.type = DM_FRAME_END};
+    ds_send(&end);
+}
+
+void ink_display_commit_staged(const ink_region_t *regions, int n, uint64_t cause_us, const char *cause_tag) {
+    __atomic_add_fetch(&DS.commits, 1, __ATOMIC_RELAXED);
+    for (int i = 0; i < n; i++) {
+        dmsg_t m = {.type = DM_REGION, .flag = true, .intent = (uint8_t)regions[i].intent, .rect = regions[i].rect,
+                    .cause_us = cause_us, .cause_tag = cause_tag};
         ds_send(&m);
     }
     dmsg_t end = {.type = DM_FRAME_END};

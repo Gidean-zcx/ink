@@ -9,6 +9,7 @@
 #include "ink/sys/cap.h"
 #include "ink/sys/interrupt.h"
 #include "shell_card.h"
+#include "ink/ui_shell.h"
 
 static struct {
     shell_card_t card;
@@ -40,9 +41,17 @@ static void show(const ink_interrupt_t *top) { /* UI task */
     if (same) return; /* only the sound changed */
     if (!C.card.root) {
         shell_card_open(&C.card);
+        shell_card_full(&C.card);
         ink_ui_overlay_add(&OVERLAY, C.card.root);
     }
     shell_card_text(&C.card, C.now.title, C.now.body);
+    bool call = C.now.kind == INK_INT_CALL;
+    lv_obj_set_y(C.card.title, ink_ui_px(INK_LINE_BODY + INK_BLOCK));
+    lv_obj_set_y(C.card.body, ink_ui_px(INK_LINE_BODY + INK_BLOCK + INK_CIRCLE_LARGE + 2 * INK_MARGIN + INK_LINE_HEADING));
+    if (!call) lv_obj_set_style_text_font(C.card.body, ink_ui_font_px(INK_FONT_CLOCK, INK_WEIGHT_REGULAR), 0);
+    ink_ui_circle(C.card.panel, call ? "person" : C.now.kind == INK_INT_ALARM ? "clock" : "battery",
+                  (INK_CANVAS_W - INK_CIRCLE_LARGE) / 2, INK_LINE_BODY + INK_BLOCK + INK_LINE_HEADING + INK_MARGIN,
+                  INK_CIRCLE_LARGE, INK_ICON_STATE, call ? INK_SURFACE_STATIC : INK_SURFACE_BLACK, NULL, NULL);
     shell_card_clear_buttons(&C.card);
     for (int i = 0; i < C.now.nactions; i++) shell_card_button(&C.card, C.now.actions[i].label, on_button, (void *)(intptr_t)i);
     ink_ui_cause(top->raised_us, "interrupt.to_visible_ms");

@@ -5,7 +5,7 @@
 #    its call is refused as stale, the page stays where the person put it;
 # 3) the hub sends the same request twice (a retry): the page turns once and
 #    both answers are the same.
-@3s      tap   116dp 160dp        # 阅读
+@3s      tap   68% 92%        # 阅读
 +2500ms  tap   50% 160dp          # 星星邮差
 +3s      mic   speech
 +0       key   ai 1200ms          # turn 1

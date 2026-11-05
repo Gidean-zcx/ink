@@ -1,7 +1,7 @@
 # Power cut during a position save (run 1 of 2, see powercut.cmake).
 # Read 3 pages and let the position save complete; read 3 more pages, then cut the power in the
 # middle of the 2nd flash program/erase of the next save.
-@3s      tap   116dp 160dp        # "阅读" on home
+@3s      tap   68% 92%        # "阅读" on home
 +2500ms  tap   50% 228dp          # 测试长书
 +3s      key   next
 +1500ms  key   next

@@ -17,6 +17,7 @@
 #include "ink/sys/layout.h"
 #include "ink/sys/members.h"
 #include "ink/sys/ui.h"
+#include "ink/ui_shell.h"
 
 #define MAX_CAPS 192
 
@@ -48,7 +49,7 @@ const ink_cap_t *ink_cap_find(const char *id) {
     return NULL;
 }
 
-static bool on_its_page(const ink_cap_t *c) { return !c->activity || !strcmp(ink_ui_top_name(), c->activity); }
+static bool on_its_page(const ink_cap_t *c) { return !c->activity || !strcmp(ink_ui_action_page(), c->activity); }
 
 static bool in_directory(const char *id); /* the hub's directory, below */
 

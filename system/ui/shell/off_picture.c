@@ -49,6 +49,7 @@ static void draw(void *arg) { /* UI task */
     snprintf(O.body, sizeof O.body, "%s", !strcmp(O.why, "battery") ? "没电了，东西都存好了。充上电再开机" : "按电源键开机");
     if (ink_member_space_open()) add_bookmark();
     shell_card_open(&O.card);
+    shell_card_full(&O.card);
     ink_ui_overlay_add(&OVERLAY, O.card.root);
     shell_card_text(&O.card, "已关机", O.body);
     __atomic_store_n(&O.drawn, true, __ATOMIC_RELEASE);

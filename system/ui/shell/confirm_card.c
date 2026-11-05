@@ -89,6 +89,7 @@ static void show(const ink_confirm_view_t *top) { /* UI task */
     shell_card_clear_buttons(&C.card);
     shell_card_button(&C.card, "确认", on_answer, (void *)1);
     shell_card_button(&C.card, "取消", on_answer, NULL);
+    lv_obj_set_flex_flow(C.card.row, LV_FLEX_FLOW_ROW_REVERSE);
 }
 
 int ink_shell_confirm_card_init(void) {
