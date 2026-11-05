@@ -44,6 +44,9 @@ static void run(void *arg) {
     CHECK(confirmed("member.add", "{\"id\":\"former\",\"role\":\"adult\"}"), "add original adult");
     CHECK(ink_member_switch("former") == 0, "original adult enters");
     uint32_t generation = ink_member_generation("former");
+    CHECK(ink_fs_write_atomic("/family/SYNTH_SHARED.txt", "SYNTH_SHARED", 12) == 0, "shared directory entry");
+    ink_fs_dir_t *root = NULL, *family = NULL;
+    CHECK(ink_fs_dir_open("/", &root) == 0 && ink_fs_dir_open("/family", &family) == 0, "original directory handles");
     CHECK(ink_fs_open("/me/SYNTH_OWNER_PRIVATE.txt", INK_FS_WRITE | INK_FS_CREATE, &file) == 0 &&
           ink_fs_write(file, "SYNTH", 5) == 5, "original writable handle");
     ink_test_file_gate_kind = 2;
@@ -55,6 +58,11 @@ static void run(void *arg) {
     CHECK(confirmed("member.remove", "{\"id\":\"former\"}"), "real cleanup succeeds after slot release");
     CHECK(confirmed("member.add", "{\"id\":\"former\",\"role\":\"child\"}"), "child reuses cleaned id");
     CHECK(ink_member_switch("former") == 0 && ink_member_generation("former") != generation, "new incarnation enters");
+    ink_fs_stat_t entry;
+    CHECK(ink_fs_dir_next(root, &entry) == INK_FS_ERR_DENIED, "old virtual directory cannot inherit reused identity");
+    CHECK(ink_fs_dir_next(family, &entry) == INK_FS_ERR_DENIED, "old shared directory cannot inherit reused identity");
+    ink_fs_dir_close(root);
+    ink_fs_dir_close(family);
     ink_hub_demand();
     CHECK(WAIT_FOR(ink_hub_online(), 10000), "new incarnation online");
     int first = sim_hub_events_seen();
@@ -67,6 +75,13 @@ static void run(void *arg) {
     CHECK(!seen(first, "SYNTH_OWNER_PRIVATE"), "late old-generation path is absent from new AI connection");
     CHECK(AI("file.read", "{\"path\":\"/me/SYNTH_OWNER_PRIVATE.txt\"}") && g_rc.status != INK_RC_DONE, "cleaned file remains absent");
     CHECK(AI("job.list", NULL) && !strstr(g_result, "SYNTH_STALE_TASK"), "new incarnation sees no old task");
+    root = NULL;
+    CHECK(ink_fs_dir_open("/", &root) == 0 && ink_fs_dir_next(root, &entry) == 1 && !strcmp(entry.name, "me") &&
+          ink_fs_dir_next(root, &entry) == 1 && !strcmp(entry.name, "family"), "current child directory works");
+    CHECK(ink_member_switch("owner") == 0, "adult takes over child directory handle");
+    CHECK(ink_fs_dir_next(root, &entry) == 0, "child directory never gains adult-only roots");
+    ink_fs_dir_close(root);
+    CHECK(ink_member_switch("former") == 0, "restore current child");
     ink_probe_count("test.finished");
 }
 void ink_main(void) {

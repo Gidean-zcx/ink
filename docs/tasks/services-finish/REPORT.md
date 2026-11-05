@@ -33,7 +33,9 @@ UBSAN_OPTIONS=halt_on_error=1 $INK_DEPS/build-deps/pyenv/bin/python tests/servic
 
 ## 改过的已有测试
 
-待记录；不删除测试，不放宽断言、等待阈值或预算。
+- run.py 新增三组回归及其矩阵分支，原组别、断言、等待阈值和预算不变。
+- 新增真实 HAL 暂停包装及事件、路径、代次回归；不是模拟返回值或伪造业务结果。
+- 目录补充回归：27 项检查通过，撤回文件实现后旧虚拟目录、共享目录继承复用身份，以及儿童目录获得成人根项，均触发断言失败。证据在 `build/services-r5-directory-positive.log` 和 `build/services-r5-directory-reverse.log`。
 
 ## 要用户定的
 

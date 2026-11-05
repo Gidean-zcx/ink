@@ -146,7 +146,7 @@ static bool hidden_name(const char *name) {
 
 /* Capture once, before a card call or waiting for another edit. */
 static file_context_t current_context(void) {
-    file_context_t c;
+    file_context_t c = {0};
     ink_svc_lock();
     const ink_member_t *m = ink_member_current();
     snprintf(c.member, sizeof c.member, "%s", m->id);
