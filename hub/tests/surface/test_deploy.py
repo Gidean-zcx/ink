@@ -58,6 +58,9 @@ def test_compose_worker_is_isolated():
     assert all("data" not in v and "secret" not in v for v in worker["volumes"])
     assert worker["cap_drop"] == ["ALL"]
     assert worker["mem_limit"] == "800m"
+    for service in config["services"].values():
+        assert len(service["tmpfs"]) == 1
+        assert service["tmpfs"][0].startswith("/tmp:")
     assert ":latest" not in (ROOT / "deploy/Dockerfile").read_text()
 
 
