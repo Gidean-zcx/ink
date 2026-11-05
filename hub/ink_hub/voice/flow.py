@@ -85,13 +85,19 @@ async def run_turn(self, rid, method, params):
         return
     except (TimeoutError, ProtocolError, PermissionError, ConnectionError, RuntimeError):
         if guard():
-            await self.notify("ai.delta", {"id": rid, "text": "这次没有完成，请重试。"}, guard)
+            try:
+                await self.notify("ai.delta", {"id": rid, "text": "这次没有完成，请重试。"}, guard)
+            except ConnectionError:
+                pass
     finally:
         if guard() and not asyncio.current_task().cancelling():
-            if session:
-                await self.notify("ai.tts.end", {"id": rid, "stream": sid, "frames": count}, guard)
-            await self.send(response(rid, {"done": True}), guard=guard)
-            self.hub.metrics.turns += 1
+            try:
+                if session:
+                    await self.notify("ai.tts.end", {"id": rid, "stream": sid, "frames": count}, guard)
+                await self.send(response(rid, {"done": True}), guard=guard)
+                self.hub.metrics.turns += 1
+            except ConnectionError:
+                pass
 
 async def run_dictation(self, sid, session):
     scope = self.scope

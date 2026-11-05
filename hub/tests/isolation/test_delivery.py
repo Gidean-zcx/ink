@@ -301,3 +301,29 @@ async def test_direct_vendor_failure_returns_error(make_hub):
     reply = await device.call("tools/call", {"name": "llm.ask", "arguments": {"question": "示例"}})
     assert reply["error"]["code"] == -32603
     assert "result" in await device.call("caps/list")
+
+
+@pytest.mark.parametrize("output", ["receipt", "error"])
+async def test_revoked_turn_tail_finishes_without_exception(blocked_connection, output):
+    connection, sink = blocked_connection
+    connection.tools.definitions["development", "reader.next_page", 1] = {
+        "name": "reader.next_page", "effect": "navigate", "inputSchema": {"type": "object"}}
+    params = {"question": "", "page": {"actions": ["reader.next_page"]}}
+    if output == "error":
+        params["budget_ms"] = -1
+    await connection.receive(json.dumps({"jsonrpc": "2.0", "id": 10, "method": "ai.ask", "params": params}))
+    task = connection.turns[10]
+    try:
+        if output == "receipt":
+            await sink.wait_queued(rid=10)
+        else:
+            await sink.wait_queued(method="ai.delta")
+        connection.hub.authority.remove("demo", "default")
+        sink.release.set()
+        await asyncio.wait_for(task, 2)
+        await connection.queue.join()
+        assert not [m for m in sink.sent if m.get("id") == 10 or m.get("method") == "ai.delta"]
+    finally:
+        sink.release.set()
+        task.cancel()
+        await asyncio.gather(task, return_exceptions=True)
