@@ -9,9 +9,12 @@ ink/
 ├── apps/                    应用：主页 home/、阅读器 reader/
 ├── system/                  自研系统（真机与模拟器共用）
 │   ├── boot/                组合根：ink_main() 启动服务和应用
-│   ├── services/            系统服务：display、input、storage、power、audio、hub（与中枢的连接）、ai
+│   ├── services/            系统服务：display、input、storage、power、audio、hub（与中枢的连接）、ai，
+│   │                        data、file、time、notify、text、net、bt、comm、camera、res、update
+│   ├── apps/                系统应用：remote/ 远程画面
 │   ├── policy/              动作与权限：actions、members、system_actions
-│   ├── ui/                  界面任务、锁屏标记、LVGL 适配与配置
+│   ├── ui/                  界面任务、应用注册、文本框、锁屏标记、LVGL 适配与配置；
+│   │                        shell/ 系统壳（确认卡、键盘、密码、电源菜单等，现在是占位外观）
 │   ├── text/                字体、断行、排版
 │   ├── util/                通用实现（严格 JSON）
 │   └── include/ink/sys/     系统接口（应用和服务之间）

@@ -1,6 +1,6 @@
 # 项目全貌与背景（接手与审计必读）
 
-更新：2026-11-03（第 0 步实机结果；外部审计复核）。本文把散在各处的背景集中交代一遍：项目为什么存在、用户要什么、已经定了什么、做出了什么、哪些只是估算，以及怎么构建、怎么验证。细节都链接到唯一维护位置，本文不重复维护数据；两处说法不一致时，以被链接的源文档为准，并请把不一致记为问题。
+更新：2026-11-05（系统服务、系统界面设计稿、家庭中枢设计都已合入 main）。本文把散在各处的背景集中交代一遍：项目为什么存在、用户要什么、已经定了什么、做出了什么、哪些只是估算，以及怎么构建、怎么验证。细节都链接到唯一维护位置，本文不重复维护数据；两处说法不一致时，以被链接的源文档为准，并请把不一致记为问题。
 
 外部审计请同时阅读 [审计任务说明](audits/codex-audit-prompt.md)。
 
@@ -97,8 +97,9 @@
 **还没有做的**
 
 - 设备端固件：`ports/esp32s31` 尚未建立，所有系统代码目前只在模拟器上运行。系统服务（数据、文件、时间、通知、确认卡、应用、文本输入、音频、Wi-Fi、成员、升级）只有模拟器验证，见[系统服务详细设计](system/system-services-design.md)。
-- 家庭中枢服务器：只有模拟器里的替身。
-- 界面视觉设计。
+- 家庭中枢服务器：只有模拟器里的替身；[设计 v0.8](hub/hub-architecture.md) 已过七轮审查，代码还没开始。
+- 按设计稿实现的界面：[设计稿和规范](product/system-ui-spec.md)已有，代码里的系统界面还是占位外观，界面框架（主题、组件、图标、手势、浮层）没有开始。
+- 下一步怎么排见 [project.md](project.md) 最前面的接续记录。
 
 ## 6. 决策总览
 
@@ -271,7 +272,7 @@ PQ-BN 各配置的对比见 [system-comparison.md](research/eink-refresh/integra
 **命令**
 
 ```bash
-cmake -S . -B build && cmake --build build -j && ctest --test-dir build --output-on-failure   # 82 项
+cmake -S . -B build && cmake --build build -j && ctest --test-dir build --output-on-failure   # 86 项
 cmake -S . -B build-werror -DINK_WERROR=ON && cmake --build build-werror -j && ctest --test-dir build-werror
 cmake -S . -B build-asan -DINK_SANITIZE=ON && cmake --build build-asan -j && ctest --test-dir build-asan   # ASan + UBSan
 
@@ -344,6 +345,9 @@ python3 tools/simreport/simreport.py out/reader --lang zh    # HTML 报告：刷
 | 决策 | [decisions/README.md](decisions/README.md) |
 | 产品定义 | [product/prd.md](product/prd.md)、[product/needs-analysis.md](product/needs-analysis.md) |
 | 系统需求、架构、底座 | [system/srs.md](system/srs.md)、[system/architecture.md](system/architecture.md)、[system/foundation.md](system/foundation.md) |
+| 系统服务详细设计、每个界面还缺什么 | [system/system-services-design.md](system/system-services-design.md)、[system/ui-dependencies.md](system/ui-dependencies.md) |
+| 系统界面（设计稿在私有画布上） | [product/system-ui-spec.md](product/system-ui-spec.md)、[product/system-apps.md](product/system-apps.md)、[research/system-ui-references.md](research/system-ui-references.md) |
+| 家庭中枢（服务器端，设计 v0.8，没有实现） | [hub/hub-architecture.md](hub/hub-architecture.md)、[hub/device-protocol.md](hub/device-protocol.md)、[research/hub-server-survey.md](research/hub-server-survey.md) |
 | 模拟器与平台抽象 | [system/platform-and-simulator.md](system/platform-and-simulator.md) |
 | 风险与实机验证计划 | [system/risks-and-spikes.md](system/risks-and-spikes.md) |
 | 性能建模、指令级校准 | [research/simulator/](research/simulator/performance-modeling.md) |
@@ -364,6 +368,7 @@ python3 tools/simreport/simreport.py out/reader --lang zh    # HTML 报告：刷
 | #5 | `work/` 原始素材移到归档分支（D-11） | 2026-11-02 合入 |
 | #6 | 两级模拟器 + 平台抽象 + 系统纵切 + 刷新算法集成（基于 #4，含 #7） | 2026-11-02 合入 |
 | #7 | 刷新算法研究归档 | 内容随 #6 进入 main |
+| #8 | 家庭中枢设计 v0.8 | 2026-11-05 合入（和系统服务、系统界面一起） |
 
 其余分支：
 

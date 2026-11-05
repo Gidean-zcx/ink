@@ -1,0 +1,65 @@
+{
+  "design_commit": "2059f32b081b3e15b47dfdbc8ba944f85071cc3c",
+  "scope": "synthetic design-state checks, not product integration tests",
+  "checks": [
+    {
+      "id": "owner_check_then_write",
+      "result": "counterexample reproduced",
+      "trace": [
+        "old checks owner",
+        "new takes over",
+        "new writes",
+        "old writes"
+      ],
+      "old_write_after_takeover": true,
+      "atomic_publication_fence_rejects_old": true,
+      "boundary": "both writers are admitted; no shared object key or restic snapshot layout assumed"
+    },
+    {
+      "id": "partitioned_old_server",
+      "result": "counterexample reproduced",
+      "old_still_serves_device_revoked_on_new": true,
+      "assumption": "old server retains device connectivity but loses object-store connectivity"
+    },
+    {
+      "id": "blob_metadata_boundary",
+      "result": "counterexample reproduced",
+      "durable_reported": true,
+      "device_original_exists": false,
+      "bytes_survive_initial_restore": true,
+      "restored_catalogue_rows": 0,
+      "restored_pending_upload_rows": 0,
+      "unreferenced_gc_after_retention_removes_bytes": true,
+      "metadata_snapshot_before_ack_control_passed": true,
+      "assumption": "no extra durable catalogue/journal beyond the design's database snapshots"
+    },
+    {
+      "id": "reused_latest_snapshot",
+      "result": "counterexample reproduced",
+      "selected_action": "manifest",
+      "newer_records_moved_to_history_without_preview": [
+        "B"
+      ],
+      "original_old_instance_only_case_now_waits": true,
+      "complete_false_control_waits": true,
+      "assumption": "latest-issued snapshot identifier remains valid after its first installation; no consumption rule is specified"
+    },
+    {
+      "id": "rotation_before_snapshot",
+      "result": "counterexample reproduced",
+      "new_hello_success_before_crash": true,
+      "can_authenticate_after_restore": false,
+      "retain_until_remote_durable_control_passed": true,
+      "boundary": "rotation is optional in the first release; counterexample applies when enabled"
+    },
+    {
+      "id": "security_log_and_interval_controls",
+      "result": "controls passed",
+      "completed_security_operations_survive_single_writer_restore": true,
+      "manual_gate_blocks_automatic_reopen_with_old_prefix": true,
+      "snapshot_interval_seconds": 300,
+      "example_committed_snapshot_age_seconds": 359,
+      "boundary": "synthetic schedule, not a measured backup time; no separate high finding"
+    }
+  ]
+}

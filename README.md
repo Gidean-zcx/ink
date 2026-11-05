@@ -4,12 +4,14 @@
 
 两个核心目标（[G-001、G-002](docs/requirements.md)）：把刷消遣 app 的时间变成获取高价值信息、增长知识和能力的时间；系统级原生 AI，系统和应用的所有行为、数据和页面都能被 AI 操作和读取。
 
-## 现状（2026-11-03）
+## 现状（2026-11-05）
 
 - **硬件**：整机已到货。第 0 步（只读识别与整片备份）和第 1 步（测量固件跑校准内核，测完复原）完成，见[实机记录](docs/hardware/README.md)。自研系统还没有在实机上跑过。
-- **自研系统**：主页、书架与阅读器、语音 AI、动作与策略、电源与待机、4G 切卡与短信电话的驱动，已在模拟器上实现并按预算测试。
+- **自研系统**：主页、书架与阅读器、语音 AI、动作与策略、电源与待机、4G 切卡与短信电话的驱动，以及系统服务（数据、文件、时间、通知、确认卡、文字输入、音频、成员和密码、升级），已在模拟器上实现并按预算测试。**还没有在真机上跑过。**
+- **系统界面**：设计稿和[规范](docs/product/system-ui-spec.md)已有，代码里还是占位外观。
+- **家庭中枢（服务器）**：[设计 v0.8](docs/hub/hub-architecture.md) 已有，代码还没开始。
 - **模拟器**：把系统编译成电脑程序，跑在按 E-Ink4 Plus 建模的虚拟设备上（双核、时间、内存和整块板的芯片都按官方硬件建模）；有命令行（场景测试）和桌面窗口（类似 Android Studio 的模拟器）两种用法。哪些部件与官方一致、哪些只是估计，见[硬件对照](docs/research/simulator/hardware-parity.md)。
-- **测试**：43 项，GitHub Actions 在 Linux 和 macOS 上每次推送都跑。
+- **测试**：86 项，GitHub Actions 在 Linux 和 macOS 上每次推送都跑。
 - **审计**：2026-11-03 用 Codex 对全系统与模拟器做了审计，之后按复审结果继续修，每轮的问题与处理见[审计记录](docs/audits/README.md)。
 
 ## 快速开始
@@ -64,6 +66,9 @@ flowchart LR
 | 系统怎么分层、设备与服务器怎么分工 | [系统架构概要设计 v1.0](docs/system/system-architecture.md)（已确认）、[架构方案](docs/system/architecture.md)、[底座设计](docs/system/foundation.md)（可点选的[底座地图](https://claude.ai/artifact/KvJAr2ZS9MZNvHu9RqcZRz)，源文件 [docs/foundation-map.html](docs/foundation-map.html)） |
 | **模拟器：怎么搭的、组件与接口、怎么平移到真机** | [模拟系统总览](docs/system/simulator-overview.md)、[平台与模拟器](docs/system/platform-and-simulator.md)、[硬件对照](docs/research/simulator/hardware-parity.md) |
 | 代码放在哪、分几层 | [仓库结构](docs/system/repo-layout.md) |
+| 系统界面长什么样、每个界面还缺什么 | [系统界面规范](docs/product/system-ui-spec.md)、[底层依赖](docs/system/ui-dependencies.md) |
+| 系统服务怎么设计、验证到哪了 | [系统服务详细设计](docs/system/system-services-design.md) |
+| 服务器（家庭中枢）怎么设计 | [家庭中枢概要设计](docs/hub/hub-architecture.md)、[设备协议](docs/hub/device-protocol.md) |
 | 墨水屏刷新算法 | [刷新算法研究](docs/research/eink-refresh-algorithm.md)、[集成报告](docs/research/eink-refresh-integration.md) |
 | 最大的技术风险和实机验证计划 | [风险与验证](docs/system/risks-and-spikes.md) |
 | 需要用户拍板的事项与推荐 | [决策记录](docs/decisions/README.md)（可点选的[交互式决策板](https://claude.ai/artifact/RWnCX8AyAbyqArc7D9Wsft)，源文件 [docs/decision-board.html](docs/decision-board.html)） |

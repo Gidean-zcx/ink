@@ -1,0 +1,122 @@
+[
+  {
+    "id": "HUB2-001",
+    "verdict": "已解决",
+    "evidence": "【文档核查】`docs/hub/device-protocol.md:151`、`:153`、`:155`；`docs/hub/hub-architecture.md:1083`。",
+    "note": "扫码带 128 位截断指纹，电脑另输 60 位核对码；可信控制台无条件比对，不采信设备自报的 pin 状态。原先只转发认领码的路径不再能跳过比对。这是设计闭合，不是已完成配对攻击测试。"
+  },
+  {
+    "id": "HUB2-002",
+    "verdict": "已解决",
+    "evidence": "【文档核查】`docs/hub/device-protocol.md:141`、`:161`～`:164`。",
+    "note": "COMMITTING 持久化，首次 hello 才转 BOUND；七天过期或更久之后收到 auth_invalid 都能重新认领。BOUND 的认证错误不清已有身份。"
+  },
+  {
+    "id": "HUB2-003",
+    "verdict": "部分解决",
+    "evidence": "【文档核查】`docs/hub/hub-architecture.md:376`～`:381`。【复现】`experiments/state_checks.py` 的 `check_security_log_tail`。",
+    "note": "日志已有异地副本；但本机先生效、异地异步上传，恢复时仅验链不能识别缺少末尾记录。取不到/验不过的关闭策略抓不到“旧前缀仍然有效”的情况。见 HUB3-001。"
+  },
+  {
+    "id": "HUB2-004",
+    "verdict": "改出了新问题",
+    "evidence": "【文档核查】`docs/hub/device-protocol.md:277`～`:300`；`docs/hub/hub-architecture.md:890`～`:905`。【复现】`check_unknown_dataset`。",
+    "note": "随机编号解决了重复恢复时加一重用的问题，修订号的比较域也已修正。新增判断表却把旧 hub_instance 当作设备数据可以覆盖中枢的证明；中枢迁移与设备恢复旧副本组合时会误删现行副本。见 HUB3-002。"
+  },
+  {
+    "id": "HUB2-005",
+    "verdict": "已解决",
+    "evidence": "【文档核查】`docs/hub/device-protocol.md:302`～`:311`；`docs/hub/hub-architecture.md:927`～`:932`。【代码核查】`f41d3cc:system/include/ink/sys/data.h:96`、`:108`～`:118`。",
+    "note": "一致清单、水位 V、正文补齐、暂存、原子提交、ACK(V) 和增量接续均已规定；新增设备接口被明确列入依赖。此判定不把 HUB3-002 的“谁有权对账”算作已解决。"
+  },
+  {
+    "id": "HUB2-006",
+    "verdict": "已解决",
+    "evidence": "【文档核查】`docs/hub/device-protocol.md:394`～`:402`。【代码核查】`system/services/ai/ai_service.c:480`～`:482`；`f41d3cc:system/policy/cap.c:794`～`:842`。",
+    "note": "空 actions 改为查询当前 tools/list 分页视图，不再把工具集清空；页面改变后重新取集合。系统服务分支的分页实现提供了可行依赖，原有缓冲溢出事实仍在，但不再直接造成工具全丢。"
+  },
+  {
+    "id": "HUB2-007",
+    "verdict": "已解决",
+    "evidence": "【文档核查】`docs/hub/device-protocol.md:234`～`:239`；`docs/hub/hub-architecture.md:1369`～`:1375`。【代码核查】`f41d3cc:system/policy/confirm.c:172`～`:180`、`:255`～`:280`。",
+    "note": "不再用待办消失证明未执行；执行前持久记录、终态查询、unknown 不重试，以及设备/中枢执行的区别均已补齐。不能把尚待新增 confirm.status 当作设计缺陷。"
+  },
+  {
+    "id": "HUB2-008",
+    "verdict": "已解决",
+    "evidence": "【文档核查】`docs/hub/hub-architecture.md:734`～`:741`；`docs/hub/device-protocol.md:174`、`:176`、`:388`～`:390`。【代码核查】`system/services/audio/audio_service.c:767`、`:774`。",
+    "note": "实时输出随旧代次作废，成员切换清声音；持久结果回来后重新鉴权，用交付代次发送；副作用动作不重新授权重放。现有 finish/abort 的区别与文档一致，设备改造已经列为依赖。"
+  },
+  {
+    "id": "HUB2-009",
+    "verdict": "已解决",
+    "evidence": "【文档核查】`docs/hub/hub-architecture.md:587`～`:590`、`:1582`；`docs/hub/device-protocol.md:106`、`:406`。【代码核查】`system/services/hub/hub_link.c:397`、`:402`；`system/services/audio/audio_service.c:754`。",
+    "note": "新协议要求实际发包时的剩余预算，取消尾帧突发，限定发送节奏，并把录音封顶和 push 失败处理列为设备改造。以这些强制改造完成为验收前提；无 budget_ms 的旧版“按 30 秒”只是兼容估计，不是对任意冷连接的时限保证。"
+  },
+  {
+    "id": "HUB2-010",
+    "verdict": "部分解决",
+    "evidence": "【文档核查】`docs/hub/hub-architecture.md:857`、`:858`；[AWS 预签名 URL 文档](https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-presigned-url.html)。【推断】见 HUB3-003。",
+    "note": "已登录上下文的任意点击确认修复了原主要路径；但无登录状态不等于没有代表用户的授权，匿名例外仍缺进入条件。"
+  },
+  {
+    "id": "HUB-002",
+    "verdict": "已解决",
+    "evidence": "【文档核查】`docs/hub/device-protocol.md:394`～`:402`。【代码核查】`system/services/ai/ai_service.c:480`～`:482`；`f41d3cc:system/policy/cap.c:794`～`:842`。",
+    "note": "定义字典与可用集合分开；空 actions 有回退。 对应 HUB2-006。"
+  },
+  {
+    "id": "HUB-005",
+    "verdict": "已解决",
+    "evidence": "【文档核查】`docs/hub/device-protocol.md:234`～`:239`；`docs/hub/hub-architecture.md:1369`～`:1375`。【代码核查】`f41d3cc:system/policy/confirm.c:172`～`:180`、`:255`～`:280`。；【文档核查】`docs/hub/hub-architecture.md:734`～`:741`；`docs/hub/device-protocol.md:174`、`:176`、`:388`～`:390`。【代码核查】`system/services/audio/audio_service.c:767`、`:774`。",
+    "note": "原动作绑定、确认终态、交付成员代次均已有约定。 对应 HUB2-007、HUB2-008。"
+  },
+  {
+    "id": "HUB-006",
+    "verdict": "已解决",
+    "evidence": "【文档核查】`docs/hub/hub-architecture.md:587`～`:590`、`:1582`；`docs/hub/device-protocol.md:106`、`:406`。【代码核查】`system/services/hub/hub_link.c:397`、`:402`；`system/services/audio/audio_service.c:754`。",
+    "note": "必须带预算的新协议和限速策略回应原高等级问题；兼容估计的限制见开发注意项。 对应 HUB2-009。"
+  },
+  {
+    "id": "HUB-008",
+    "verdict": "已解决",
+    "evidence": "【文档核查】`docs/hub/device-protocol.md:151`、`:153`、`:155`；`docs/hub/hub-architecture.md:1083`。",
+    "note": "电脑路径也携带独立的人机核对信息。 对应 HUB2-001。"
+  },
+  {
+    "id": "HUB-009",
+    "verdict": "部分解决",
+    "evidence": "【文档核查】`docs/hub/hub-architecture.md:376`～`:381`。【复现】`experiments/state_checks.py` 的 `check_security_log_tail`。",
+    "note": "同代快照不重审；跨整机损毁后的安全日志完整性仍欠缺。 对应 HUB2-003。"
+  },
+  {
+    "id": "HUB-010",
+    "verdict": "部分解决",
+    "evidence": "【文档核查】`docs/hub/device-protocol.md:277`～`:300`；`docs/hub/hub-architecture.md:890`～`:905`。【复现】`check_unknown_dataset`。；【文档核查】`docs/hub/device-protocol.md:302`～`:311`；`docs/hub/hub-architecture.md:927`～`:932`。【代码核查】`f41d3cc:system/include/ink/sys/data.h:96`、`:108`～`:118`。",
+    "note": "随机编号、完整对账流程已补；未知数据集的权威判断还有 HUB3-002。 对应 HUB2-004、HUB2-005。"
+  },
+  {
+    "id": "HUB-011",
+    "verdict": "已解决",
+    "evidence": "【文档核查】`docs/hub/hub-architecture.md:734`～`:741`；`docs/hub/device-protocol.md:174`、`:176`、`:388`～`:390`。【代码核查】`system/services/audio/audio_service.c:767`、`:774`。",
+    "note": "返回后的结果交付与旧副作用作废不再冲突。 对应 HUB2-008。"
+  },
+  {
+    "id": "HUB-012",
+    "verdict": "已解决",
+    "evidence": "【文档核查】`docs/hub/device-protocol.md:141`、`:161`～`:164`。",
+    "note": "待生效凭据超期和断电后的状态转移已补。 对应 HUB2-002。"
+  },
+  {
+    "id": "HUB-014",
+    "verdict": "部分解决",
+    "evidence": "【文档核查】`docs/hub/hub-architecture.md:376`～`:381`。【复现】`experiments/state_checks.py` 的 `check_security_log_tail`。",
+    "note": "忘掉日志仍可能缺失于整机恢复。 对应 HUB2-003。"
+  },
+  {
+    "id": "HUB-018",
+    "verdict": "部分解决",
+    "evidence": "【文档核查】`docs/hub/hub-architecture.md:857`、`:858`；[AWS 预签名 URL 文档](https://docs.aws.amazon.com/AmazonS3/latest/userguide/using-presigned-url.html)。【推断】见 HUB3-003。",
+    "note": "截图和输入改造不重审；自动浏览的授权边界仍有 HUB3-003。 对应 HUB2-010。"
+  }
+]

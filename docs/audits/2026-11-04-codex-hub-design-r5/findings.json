@@ -1,0 +1,39 @@
+[
+  {
+    "id": "HUB5-001",
+    "severity": "严重",
+    "area": "恢复接管与安全日志重放",
+    "title": "核对页要求停旧机，但安全日志在停机前已经读完，可能遗漏已上传的操作",
+    "evidence_type": ["文档核查", "复现", "推断"],
+    "locations": [
+      "docs/hub/hub-architecture.md:398",
+      "docs/hub/hub-architecture.md:399",
+      "docs/hub/hub-architecture.md:400",
+      "docs/hub/hub-architecture.md:401",
+      "docs/hub/hub-architecture.md:409",
+      "docs/hub/hub-architecture.md:442",
+      "docs/hub/hub-architecture.md:453"
+    ],
+    "impact": "【文档核查】恢复图先取回并重放安全日志，随后才在核对页要求停旧机，确认后直接开放。【复现】read_log_then_stop 中，新机取日志后、旧机真正停止前又有一条已异地完成的忘掉记录；新机开放时仍保留该记录。旧机在新机开放前确已停止，无误确认、双实例同时服务或未上传尾部的假设。【推断】已完成的忘掉可能重新进入 AI 可读数据，类似时序也会漏掉吊销；违反已上传安全操作在恢复后继续有效的保证。实验为合成状态转换，不是产品或对象存储实测。",
+    "recommendation": "将旧机停写、停服务的确认放在选取最终恢复点之前；如果已预下载，停机确认后重新取得并验证最终快照和安全日志水位，补齐重放，再展示更新后的名单供成人核对开放。计划内 handover 在持续禁写下排空任务、完成最终上传，交接标记绑定本次实例及恢复水位。首版无需因此改为自动租约。"
+  },
+  {
+    "id": "HUB5-002",
+    "severity": "高",
+    "area": "恢复令牌与增量同步连续性",
+    "title": "恢复令牌直接接续增量，漏掉新数据集的删除历史缺口",
+    "evidence_type": ["文档核查", "复现", "推断"],
+    "locations": [
+      "docs/hub/hub-architecture.md:988",
+      "docs/hub/hub-architecture.md:997",
+      "docs/hub/hub-architecture.md:1007",
+      "docs/hub/hub-architecture.md:1013",
+      "docs/hub/device-protocol.md:291",
+      "docs/hub/device-protocol.md:298",
+      "docs/hub/device-protocol.md:299",
+      "docs/hub/device-protocol.md:314"
+    ],
+    "impact": "【文档核查】history_gap 只在已知数据集分支触发 manifest，新增令牌分支对未知数据集直接回 continue。【复现】grant_history_gap 中设备安装快照后、首次报到前断网并本地删除 257 项；最早一条墓碑被挤掉。设备明确上报 history_gap=true，令牌未用且中枢副本未变，仍获准增量；from_ver 与返回的快照水位能接上，256 条剩余墓碑同步后中枢仍留 1 条已删除记录。【推断】恢复副本不准确，之后恢复可使删除记录复活，违反超过 256 次删除不复活的要求。如果保留 gap 并再次 status，可能通过已知数据集分支修复，因此不声称永久损失或必然永远不同步。",
+    "recommendation": "分别校验恢复授权和增量历史连续性：有效令牌且中枢基准未变时认可新数据集，只有快照水位之后的变更完整且没有 history_gap 才回 continue；有缺口则走完整对账。没有有效授权的未知数据集仍回 wait，不因 history_gap 取得删除权。新增安装后断线、本地删除超过 256 条、第一次携令牌报到的契约用例。"
+  }
+]
