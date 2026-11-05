@@ -36,6 +36,7 @@ enum { EDIT_NONE = 0, EDIT_KEYS, EDIT_DELETE, EDIT_OTHER };
 
 static struct {
     int session, next_session;
+    uint32_t revision;
     ink_text_type_t type;
     ink_text_enter_t enter;
     bool ai_hidden;
@@ -59,12 +60,17 @@ static struct {
 } TS INK_PSRAM_BSS;
 
 static void changed(void) {
+    if (++TS.revision == 0) TS.revision++;
     TS.cands_valid = false;
     if (TS.client && TS.client->changed) TS.client->changed(TS.ctx);
     if (TS.presenter) TS.presenter();
 }
 
+int ink_text_target_session(void) { return TS.session; }
+uint32_t ink_text_edit_revision(void) { return TS.revision; }
+
 void text_presenter_kick(void) {
+    if (TS.session && ++TS.revision == 0) TS.revision++;
     if (TS.presenter) TS.presenter();
 }
 
@@ -100,6 +106,7 @@ int ink_text_focus(const ink_text_cfg_t *cfg, const ink_text_client_t *client, v
     TS.client = client;
     TS.ctx = ctx;
     TS.session = ++TS.next_session;
+    TS.revision = 1;
     TS.cands_valid = false;
     if (cfg->type == INK_TEXT_PLAIN) {
         TS.freq = ink_db_open(&USER_FREQ, NULL);
@@ -357,6 +364,7 @@ void ink_text_enter(void) {
         changed();
         return;
     }
+    if (++TS.revision == 0) TS.revision++;
     ink_probe_count("text.entered");
     if (TS.client && TS.client->entered) TS.client->entered(TS.ctx, TS.value);
 }

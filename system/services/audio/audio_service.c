@@ -143,6 +143,7 @@ static struct {
     bool boosting;
     hal_cpu_boost_t *boost;
 } AU;
+static bool g_capture_revoked INK_PSRAM_BSS; /* under AU.lock; a handoff cannot be undone by switching back */
 
 static void lock(void) { osal_mutex_lock(AU.lock, OSAL_WAIT_FOREVER); }
 static void unlock(void) { osal_mutex_unlock(AU.lock); }
@@ -240,7 +241,7 @@ static void encode_and_deliver(const int16_t *frame) {
     uint8_t pkt[HAL_OPUS_MAX_PACKET];
     int n = hal_opus_encode(AU.enc, frame, pkt, sizeof pkt);
     lock();
-    bool allowed = focus_top_locked() < INK_AUDIO_PRIO_ALERT;
+    bool allowed = !g_capture_revoked && focus_top_locked() < INK_AUDIO_PRIO_ALERT;
     unlock();
     if (allowed && n > 0 && AU.cap_fn) AU.cap_fn(AU.cap_ctx, pkt, (size_t)n, AU.cap_seq++);
 }
@@ -249,7 +250,7 @@ static void encode_and_deliver(const int16_t *frame) {
 static bool capture_step(int16_t *scratch) {
     lock();
     bool on = AU.cap_on, ending = AU.cap_ending, listen = AU.listen_on;
-    bool cut = on && ending && focus_top_locked() >= INK_AUDIO_PRIO_ALERT;
+    bool cut = on && ending && (g_capture_revoked || focus_top_locked() >= INK_AUDIO_PRIO_ALERT);
     bool got = !cut && (on || listen) && take_frame(scratch);
     uint32_t left = cut ? 0 : AU.wr - AU.rd;
     if (!got && on && ending && !listen) { /* flush the tail (padded) and signal the end */
@@ -712,6 +713,21 @@ static void volume_apply(void *ctx, int64_t v) {
     ink_audio_set_volume((int)v);
 }
 
+static void on_capture_owner(void *ctx, int h, const char *id) { /* direct: the UI and media queues may be busy */
+    (void)ctx;
+    (void)h;
+    bool handoff = !strcmp(id, "member.current"), closed = !ink_member_space_open();
+    if (!handoff && strcmp(id, "member.authed")) return;
+    lock();
+    if (AU.cap_on && (handoff || (closed && !AU.cap_local))) {
+        g_capture_revoked = true;
+        AU.cap_ending = true;
+        AU.rd = AU.wr;
+    }
+    unlock();
+    osal_sem_give(AU.wake);
+}
+
 /* When the device listens for its wake word (D-52: a setting, by default only while the screen is
  * on and unlocked). Takes effect with the voice front end (detailed design §7). */
 static const char *const HANDSFREE[] = {"screen_on", "always", "off", NULL};
@@ -749,6 +765,7 @@ int ink_audio_init(void) {
     AU.pcm = osal_malloc(FRAME * 4 * sizeof(int16_t), OSAL_MEM_EXTERNAL);
     osal_mem_tag(prev);
     if (!AU.lock || !AU.mic_lock || !AU.wake || !AU.ring || !AU.jb || !AU.pcm) return -1;
+    if (ink_state_watch("member.", on_capture_owner, NULL, INK_EXEC_DIRECT) != 0) return -1;
     if (!AU.info.has_speaker && !AU.info.has_mic) return 0;
     osal_task_cfg_t cfg = {.name = "audio", .fn = audio_task, .stack_bytes = AU_STACK, .priority = AU_PRIO, .core = -1,
                            .flags = OSAL_TASK_STACK_EXTERNAL};
@@ -833,6 +850,7 @@ static int capture_begin_locked(ink_audio_frame_fn fn, void *ctx, bool local) { 
     AU.cap_on = true;
     AU.cap_local = local;
     AU.cap_ending = false;
+    g_capture_revoked = false;
     unlock();
     if (!listening && hal_audio_capture_start(capture_cb, NULL) != 0) {
         lock();

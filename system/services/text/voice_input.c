@@ -17,6 +17,7 @@
 #include "ink/sys/exec.h"
 #include "ink/sys/hub.h"
 #include "ink/sys/media.h"
+#include "ink/sys/members.h"
 #include "ink/sys/power.h"
 #include "ink/sys/rt.h"
 #include "ink/sys/state.h"
@@ -61,7 +62,7 @@ static struct {
     uint64_t state_since_us;
     int readies;
     /* the audio task's while a capture runs, this task's after it */
-    bool drop;
+    bool drop, revoked;
     frame_t *head, *tail;
     int buffered;
     bool heard;
@@ -127,6 +128,10 @@ static void free_frames(void) {
 
 /* The audio task while a capture runs, this one after it: never both. */
 static void flush_frames(void) {
+    if (__atomic_load_n(&VS.revoked, __ATOMIC_ACQUIRE)) {
+        free_frames();
+        return;
+    }
     while (VS.head) {
         if (ink_rt_send(VS.sid, INK_RT_VOICE_UP, VS.head->data, VS.head->len, 0) != 0) break;
         frame_t *f = VS.head;
@@ -304,7 +309,7 @@ static void rt_ready(void *ctx, int sid) { /* hub task. Again means a new connec
 
 static void result_job(void *arg) {
     result_t *r = arg;
-    if (r->sid == VS.sid && VS.state != INK_VOICE_IDLE && r->seg >= VS.next_seg) { /* a later result replaces, a final one stays */
+    if (!__atomic_load_n(&VS.revoked, __ATOMIC_ACQUIRE) && r->sid == VS.sid && VS.state != INK_VOICE_IDLE && r->seg >= VS.next_seg) { /* a later result replaces, a final one stays */
         if (r->final) {
             add_words(r->text);
             VS.next_seg = r->seg + 1;
@@ -319,6 +324,10 @@ static void result_job(void *arg) {
 
 static void done_job(void *arg) {
     if ((int)(intptr_t)arg != VS.sid) return;
+    if (__atomic_load_n(&VS.revoked, __ATOMIC_ACQUIRE)) {
+        voice_end("cancelled");
+        return;
+    }
     add_words(VS.interim);
     if (VS.nwords) {
         commit_words();
@@ -459,6 +468,7 @@ int ink_text_voice_start(void) {
     __atomic_store_n(&VS.heard, false, __ATOMIC_RELEASE);
     __atomic_store_n(&VS.quiet_frames, 0, __ATOMIC_RELEASE);
     __atomic_store_n(&VS.drop, false, __ATOMIC_RELEASE);
+    __atomic_store_n(&VS.revoked, false, __ATOMIC_RELEASE);
     ink_hub_demand(); /* connected already while the person starts to speak */
     int sid = ink_rt_open(ASR_CAP, params, &RT_HANDLER);
     if (sid <= 0 || !ink_rt_is_open(sid)) {
@@ -500,8 +510,18 @@ static void on_power_state(void *ctx, int h, const char *id) { /* UI task: locke
 
 static const ink_state_def_t ST_VOICE = {.id = "text.voice", .type = INK_ST_STR, .title = "语音输入（idle、connecting、listening、finishing）"};
 
+static void on_voice_owner(void *ctx, int h, const char *id) { /* direct: no frames or delayed results cross a handoff */
+    (void)ctx;
+    (void)h;
+    if (strcmp(id, "member.current") && strcmp(id, "member.authed")) return;
+    if (strcmp(id, "member.current") && ink_member_space_open()) return;
+    __atomic_store_n(&VS.drop, true, __ATOMIC_RELEASE);
+    __atomic_store_n(&VS.revoked, true, __ATOMIC_RELEASE);
+}
+
 int text_voice_init(void) {
     VS.h_state = ink_state_define(&ST_VOICE);
     ink_state_set_str(VS.h_state, STATE_NAME[0]);
+    if (ink_state_watch("member.", on_voice_owner, NULL, INK_EXEC_DIRECT) != 0) return -1;
     return ink_state_watch("power.state", on_power_state, NULL, INK_EXEC_UI);
 }

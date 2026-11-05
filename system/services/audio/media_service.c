@@ -548,6 +548,7 @@ static void rec_frame(void *ctx, const uint8_t *data, size_t len, uint32_t seq) 
     (void)seq;
     if (!len) { /* the end: after what is queued. It takes no room there, a full queue must not lose it */
         ink_svc_lock();
+        if (strcmp(ink_member_current()->id, REC.member)) snprintf(REC.why, sizeof REC.why, "member_changed");
         REC.ending = true;
         ink_svc_unlock();
         ink_exec_post(INK_EXEC_MEDIA, &REC.write_job, rec_write, NULL);

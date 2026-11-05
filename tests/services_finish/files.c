@@ -1,5 +1,5 @@
 #include "product.h"
-extern int ink_test_fail_root, ink_test_pause_submit;
+extern int ink_test_fail_root, ink_test_pause_submit, ink_test_lend_on_write, ink_test_lend_result;
 static void run(void *arg) {
     (void)arg;
     delay_ms(1800);
@@ -21,6 +21,10 @@ static void run(void *arg) {
     CHECK(ink_fs_write_atomic("/me/refused.txt", "X", 1) == INK_FS_ERR_USB, "short write refused while lent");
     CHECK(ink_fs_mkdir("/me/refused") == INK_FS_ERR_USB, "mkdir refused while lent");
     CHECK(ink_usb_disk_stop() == 0, "return card");
+    ink_test_lend_on_write = 1;
+    CHECK(ink_fs_write_atomic("/me/short.txt", "X", 1) == 0, "short write");
+    CHECK(ink_test_lend_result == INK_FS_ERR_BUSY && !ink_usb_disk_active(), "AUD18-102: lease covers the entire short operation");
+    if (ink_usb_disk_active()) ink_usb_disk_stop();
     ink_test_pause_submit = 1;
     int id = ink_fs_copy_start("/me/source.txt", "/me/copy.txt");
     CHECK(id > 0, "copy starts");

@@ -468,8 +468,12 @@ static int wipe_tree(const char *phys) {
     if (!r) snprintf(path, PHYS_MAX, "%s", phys);
     while (!r) {
         hal_dir_t *d = hal_fs_opendir(path);
-        if (!d) { /* Only a missing top-level folder counts as empty. */
-            if (strlen(path) != root || hal_fs_size(path) >= 0) r = INK_FS_ERR_IO;
+        if (!d && strlen(path) == root && hal_fs_size(path) < 0) {
+            /* A size error cannot prove absence. Establish an empty root, then inspect it. */
+            if (hal_fs_mkdir(path) == 0) d = hal_fs_opendir(path);
+        }
+        if (!d) {
+            r = INK_FS_ERR_IO;
             break;
         }
         bool found = false;

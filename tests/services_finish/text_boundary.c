@@ -7,6 +7,10 @@ static void *test_malloc(size_t n, uint32_t mem);
 #endif
 #include INK_TEST_TEXT_SOURCE
 #undef osal_malloc
+#ifdef INK_TEST_OLD_TEXT
+int ink_text_target_session(void) { return TS.session; }
+uint32_t ink_text_edit_revision(void) { return 1; }
+#endif
 static void *test_malloc(size_t n, uint32_t mem) {
     if (fail_next) { fail_next = false; return NULL; }
     return osal_malloc(n, mem);

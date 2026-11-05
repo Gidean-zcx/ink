@@ -21,9 +21,13 @@ suites = {
     'files': ('sim-media', ['file_boundary.c'], '75s'),
     'storage': ('sim-media', [], '75s'),
     'update': ('sim-media', [], '80s'),
-    'text': ('sim-media', ['text_boundary.c'], '20s'),
+    'text': ('sim-media', ['text_boundary.c', 'text_caps_boundary.c'], '20s'),
+    'bindings': ('sim-media', ['text_boundary.c', 'text_caps_boundary.c'], '25s'),
+    'lowbattery': ('sim-media', [], '25s'),
     'audio': ('sim-media', [], '40s'),
     'voice': ('sim-media', ['audio_boundary.c'], '40s'),
+    'handoff': ('sim-media', ['hub_boundary.c'], '40s'),
+    'isolation': ('sim-media', ['audio_boundary.c'], '60s'),
     'shutdown': ('sim-media', [], '30s'),
     'actions': ('sim-media', [], '15s'),
     'policy': ('sim-media', ['settings_boundary.c'], '40s'),
@@ -40,10 +44,12 @@ def compile_suite(name):
     defines = []
     if a.baseline:
         # Read only: source copies and binaries live in the ignored build directory.
-        for rel in ['system/services/file/file_service.c', 'system/services/data/datastore.c', 'system/services/update/update_service.c', 'system/services/text/text_service.c', 'system/services/audio/audio_service.c', 'system/services/power/power_service.c', 'system/services/ai/ai_service.c', 'system/policy/cap.c', 'system/policy/settings.c']:
+        for rel in ['system/services/file/file_service.c', 'system/services/data/datastore.c', 'system/services/update/update_service.c', 'system/services/text/text_service.c', 'system/services/text/text_caps.c', 'system/services/audio/audio_service.c', 'system/services/power/power_service.c', 'system/services/ai/ai_service.c', 'system/policy/cap.c', 'system/policy/settings.c', 'system/services/hub/hub_link.c']:
             target = work / Path(rel).name
             target.write_bytes(subprocess.check_output(['git', 'show', a.baseline + ':' + rel], cwd=ROOT))
-            macro = 'INK_TEST_' + {'file_service.c': 'FILE', 'datastore.c': 'DATA', 'update_service.c': 'UPDATE', 'text_service.c': 'TEXT', 'audio_service.c': 'AUDIO', 'power_service.c': 'POWER', 'ai_service.c': 'AI', 'cap.c': 'CAP', 'settings.c': 'SETTINGS'}[Path(rel).name] + '_SOURCE'
+            macro = 'INK_TEST_' + {'file_service.c': 'FILE', 'datastore.c': 'DATA', 'update_service.c': 'UPDATE', 'text_service.c': 'TEXT', 'text_caps.c': 'TEXT_CAPS', 'audio_service.c': 'AUDIO', 'power_service.c': 'POWER', 'ai_service.c': 'AI', 'cap.c': 'CAP', 'settings.c': 'SETTINGS', 'hub_link.c': 'HUB'}[Path(rel).name] + '_SOURCE'
+            if rel.endswith('text_service.c') and 'ink_text_edit_revision' not in target.read_text():
+                defines += ['-DINK_TEST_OLD_TEXT=1']
             defines += ['-D' + macro + '=' + json.dumps(str(target))]
     objects = []
     for i, source in enumerate([name + '.c', *extras]):
@@ -161,7 +167,7 @@ for name in a.suites:
     cmd = [str(binary), '--profile', str(ROOT / 'simulator/profiles/metalio-plus.json'),
            '--assets', str(build / 'assets'), '--content', str(build / 'test-content'),
            '--out', str(out), '--end', end, '--quiet', '--no-random-outages']
-    if name == 'voice': cmd += ['--script', str(ROOT / 'tests/services_finish/voice.script')]
+    if name in ('voice', 'handoff', 'isolation'): cmd += ['--script', str(ROOT / 'tests/services_finish/voice.script')]
     run = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, timeout=180)
     metrics = json.loads((out / 'metrics.json').read_text()) if (out / 'metrics.json').exists() else {}
     counters = metrics.get('metrics', {})
