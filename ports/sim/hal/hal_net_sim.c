@@ -1093,7 +1093,7 @@ static bool wait_until(struct hal_ws *w, uint64_t t) { /* false if closed/dead m
 static void close_now(struct hal_ws *w, const char *why) {
     if (w->state == 2) return;
     w->state = 2;
-    if (w->bridge) sim_hub_bridge_close(w->bridge);
+    if (w->bridge) { sim_hub_bridge_close(w->bridge); w->bridge = NULL; }
     sim_trace_instant("net", why, vtk_now(), NULL);
     vtk_lock();
     vtk_wake_all_locked(&w->txwq);

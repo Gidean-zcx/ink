@@ -36,6 +36,7 @@ struct sim_hub_bridge {
     int socket;
     atomic_bool stop;
     bool started;
+    bool closed, finished;
     void *owner;
     uint64_t generation;
     message_t *head, *tail;
@@ -52,9 +53,27 @@ typedef struct injected {
 } injected_t;
 
 static sim_hub_bridge_t *g_bridges;
+static pthread_mutex_t g_bridges_mutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_cond_t g_bridges_cond = PTHREAD_COND_INITIALIZER;
 static unsigned g_port;
 static injected_t *g_injected;
 static pthread_mutex_t g_injected_mutex = PTHREAD_MUTEX_INITIALIZER;
+
+/* The owner and detached worker each release their side exactly once. */
+static void retire_bridge(sim_hub_bridge_t *b, bool worker) {
+    pthread_mutex_lock(&g_bridges_mutex);
+    if (worker) b->finished = true;
+    else b->closed = true;
+    if (b->closed && b->finished) {
+        sim_hub_bridge_t **p = &g_bridges;
+        while (*p && *p != b) p = &(*p)->next;
+        if (*p) *p = b->next;
+        pthread_mutex_destroy(&b->mutex);
+        free(b);
+    }
+    pthread_cond_broadcast(&g_bridges_cond);
+    pthread_mutex_unlock(&g_bridges_mutex);
+}
 
 int sim_hub_bridge_configure(const char *url) {
     unsigned port = 0;
@@ -270,17 +289,39 @@ static void *network_thread(void *arg) {
     free(buffer);
 done:
     if (b->socket >= 0) close(b->socket);
+    b->socket = -1;
     inject(b, SIM_BRIDGE_CLOSED, NULL, 0);
+    pthread_mutex_lock(&b->mutex);
+    atomic_store(&b->stop, true);
+    close(b->wake[0]); close(b->wake[1]);
+    b->wake[0] = b->wake[1] = -1;
+    while (b->head) { message_t *m = b->head; b->head = m->next; free(m); }
+    b->tail = NULL; b->queued = 0;
+    pthread_mutex_unlock(&b->mutex);
+    retire_bridge(b, true);
     return NULL;
 }
 
 static void start_on_host(void *arg) {
     sim_hub_bridge_t *b = arg;
-    pthread_mutex_init(&b->mutex, NULL);
-    if (socketpair(AF_UNIX, SOCK_STREAM, 0, b->wake)) return;
-    fcntl(b->wake[0], F_SETFL, O_NONBLOCK);
-    fcntl(b->wake[1], F_SETFL, O_NONBLOCK);
-    b->started = pthread_create(&b->thread, NULL, network_thread, b) == 0;
+    if (pthread_mutex_init(&b->mutex, NULL)) return;
+    if (socketpair(AF_UNIX, SOCK_STREAM, 0, b->wake)) goto failed;
+    if (fcntl(b->wake[0], F_SETFL, O_NONBLOCK) || fcntl(b->wake[1], F_SETFL, O_NONBLOCK)) goto failed;
+    pthread_attr_t attr;
+    if (pthread_attr_init(&attr)) goto failed;
+    if (!pthread_attr_setdetachstate(&attr, PTHREAD_CREATE_DETACHED)) {
+        pthread_mutex_lock(&g_bridges_mutex);
+        b->next = g_bridges; g_bridges = b;
+        b->started = pthread_create(&b->thread, &attr, network_thread, b) == 0;
+        if (!b->started) g_bridges = b->next;
+        pthread_mutex_unlock(&g_bridges_mutex);
+    }
+    pthread_attr_destroy(&attr);
+    if (b->started) return;
+failed:
+    if (b->wake[0] >= 0) close(b->wake[0]);
+    if (b->wake[1] >= 0) close(b->wake[1]);
+    pthread_mutex_destroy(&b->mutex);
 }
 
 sim_hub_bridge_t *sim_hub_bridge_open(void *owner, uint64_t generation) {
@@ -288,9 +329,11 @@ sim_hub_bridge_t *sim_hub_bridge_open(void *owner, uint64_t generation) {
     if (!b) return NULL;
     b->owner = owner; b->generation = generation; b->socket = -1;
     b->wake[0] = b->wake[1] = -1;
-    b->next = g_bridges; g_bridges = b;
+    atomic_init(&b->stop, false);
     vtk_host_call(start_on_host, b);
-    return b->started ? b : NULL;
+    if (b->started) return b;
+    sim_host_free(b);
+    return NULL;
 }
 
 typedef struct { sim_hub_bridge_t *b; message_t *m; bool ok; } enqueue_t;
@@ -322,27 +365,39 @@ bool sim_hub_bridge_send(sim_hub_bridge_t *b, const void *data, size_t len, bool
     return e.ok;
 }
 
-static void stop_on_host(void *arg) {
-    sim_hub_bridge_t *b = arg;
+static void stop_bridge(sim_hub_bridge_t *b) {
+    pthread_mutex_lock(&b->mutex);
     atomic_store(&b->stop, true);
     uint8_t byte = 1;
     if (b->wake[1] >= 0 && write(b->wake[1], &byte, 1) < 0) { /* pipe full: the thread is already due to wake */ }
+    pthread_mutex_unlock(&b->mutex);
+}
+
+static void stop_on_host(void *arg) {
+    sim_hub_bridge_t *b = arg;
+    stop_bridge(b);
+    retire_bridge(b, false);
 }
 
 void sim_hub_bridge_close(sim_hub_bridge_t *b) { if (b) vtk_host_call(stop_on_host, b); }
 
 void sim_hub_bridge_shutdown(void) {
-    for (sim_hub_bridge_t *b = g_bridges; b; b = b->next) stop_on_host(b);
-    while (g_bridges) {
-        sim_hub_bridge_t *b = g_bridges;
-        g_bridges = b->next;
-        if (b->started) pthread_join(b->thread, NULL);
-        if (b->wake[0] >= 0) close(b->wake[0]);
-        if (b->wake[1] >= 0) close(b->wake[1]);
-        while (b->head) { message_t *m = b->head; b->head = m->next; free(m); }
-        pthread_mutex_destroy(&b->mutex);
-        free(b);
+    pthread_mutex_lock(&g_bridges_mutex);
+    for (sim_hub_bridge_t *b = g_bridges; b; b = b->next) {
+        stop_bridge(b);
+        b->closed = true;
     }
+    sim_hub_bridge_t **p = &g_bridges;
+    while (*p) {
+        sim_hub_bridge_t *b = *p;
+        if (b->finished) {
+            *p = b->next;
+            pthread_mutex_destroy(&b->mutex);
+            free(b);
+        } else p = &b->next;
+    }
+    while (g_bridges) pthread_cond_wait(&g_bridges_cond, &g_bridges_mutex);
+    pthread_mutex_unlock(&g_bridges_mutex);
     /* Kernel has stopped; queued external callbacks will not run again. */
     while (g_injected) { injected_t *e = g_injected; g_injected = e->next; free(e); }
 }
