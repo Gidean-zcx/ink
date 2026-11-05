@@ -383,6 +383,18 @@ add_test(NAME hub-export-caps COMMAND sim-hub-cap-export
   --assets ${INK_ASSETS_DIR} --content ${CMAKE_BINARY_DIR}/test-content
   --out ${CMAKE_BINARY_DIR}/test-out/hub --end 3s --quiet --no-random-outages)
 set_tests_properties(hub-export-caps PROPERTIES FIXTURES_SETUP hub-caps)
+add_executable(hub-bridge-lifecycle tests/hub/bridge_lifecycle.c)
+target_include_directories(hub-bridge-lifecycle PRIVATE simulator)
+target_link_libraries(hub-bridge-lifecycle PRIVATE ink_sim_core)
+target_compile_options(hub-bridge-lifecycle PRIVATE ${INK_WARN})
+add_test(NAME hub-bridge-lifecycle COMMAND hub-bridge-lifecycle)
+set_tests_properties(hub-bridge-lifecycle PROPERTIES TIMEOUT 30)
+add_test(NAME services-mid-capability-doc COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/services_mid/check_capability_doc.py)
+add_test(NAME services-mid-regressions COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/services_finish/run.py --build ${CMAKE_BINARY_DIR}
+  update_history offpanel text_window keyboard_snapshot undo empty_removal)
+set_tests_properties(services-mid-regressions PROPERTIES TIMEOUT 180 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")
 ink_sim_executable(sim-hub-bridge-state tests/hub/bridge_state.c)
 add_test(NAME hub-bridge-generations COMMAND sim-hub-bridge-state
   --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json

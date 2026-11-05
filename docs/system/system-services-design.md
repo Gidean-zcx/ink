@@ -64,23 +64,24 @@ flowchart TB
 
 ### 1.3 能力总表
 
-“AI 可调”是经 `tools/call` 能直接用的（有副作用的按等级走确认卡）；“AI 不可调”写明原因。测试 `integration-ai-surface` 启动完整系统，用和中枢一样的路径拉工具清单，逐项核对这张表：多了、少了、缺标题都不通过；每个能力必须给的参数也列在测试的表里，和中枢实际收到的 `inputSchema` 逐项比（缺了不通过，这一条第十四轮审计 AUD15-009 之后才成立）；不给 AI 的能力必须在测试的例外表里写明原因。
+“AI 可调”是经 `tools/call` 能直接用的（有副作用的按等级走确认卡）；“AI 不可调”写明原因。测试 `integration-ai-surface` 启动完整系统，用和中枢一样的路径拉工具清单，逐项核对测试源码中的能力、状态、设置和事件清单：多了、少了、缺标题都不通过；每个能力必须给的参数也列在测试的表里，和中枢实际收到的 `inputSchema` 逐项比（缺了不通过，这一条第十四轮审计 AUD15-009 之后才成立）；不给 AI 的能力必须在测试的例外表里写明原因。`services-mid-capability-doc` 另行解析本节，核对这些清单中属于本表系统服务范围的条目及其列；阅读、通信、相机和远程应用不在本表范围。两项检查合起来覆盖文档与运行时，尚未从代码自动生成文档。
 
 | 子系统 | AI 可调的能力 | AI 不可调（原因） | 状态 | 设置 | 事件 | 内部机制（不开放） |
 | --- | --- | --- | --- | --- | --- | --- |
 | 数据 | `data.collections`、`data.list`、`data.get`、`data.put`、`data.delete`、`data.status`（集合自己声明开放） | 没声明开放的集合（凭据、PIN 校验值） | `storage.user_free` | — | `data.write_failed` | 日志格式、快照、压缩、存储任务 |
+| 后台任务 | `job.list`、`job.cancel` | — | `job.running` | — | `job.finished` | 执行器、内部任务调度 |
 | 文件 | `file.list`、`file.stat`、`file.read`、`file.write`、`file.mkdir`、`file.copy`、`file.move`、`file.delete`（确认）、`file.free`；`usb.status`、`usb.mount`（系统级，确认）、`usb.unmount` | — | `storage.free`、`storage.card`、`storage.mode`、`usb.connected` | — | `file.changed`、`file.job_done`、`usb.changed` | 路径映射、临时文件、U 盘模式互斥、USB 协议 |
 | 时间 | `time.now`、`time.lunar`、`alarm.set`、`alarm.list`、`alarm.cancel`、`alarm.snooze`、`alarm.dismiss`、`reminder.add`、`reminder.list`、`reminder.cancel`；`time.set`（系统级，确认） | — | `time.synced`、`time.zone`、`time.minute`、`alarm.ringing` | `time.zone`、`time.auto` | `alarm.fired`、`reminder.fired`、`time.changed` | RTC 寄存器、唤醒定时 |
-| 通知 | `notify.post`、`notify.list`、`notify.read`、`notify.dismiss`、`notify.clear`、`notify.channels`、`notify.set_channel` | — | `notify.unread`、`interrupt.active` | `notify.dnd` | `notify.posted` | 打断通道本身（来电、闹钟、低电量由系统拉起，AI 不能假装来电） |
+| 通知 | `notify.post`、`notify.list`、`notify.read`、`notify.dismiss`、`notify.clear`、`notify.channels`、`notify.set_channel`；`interrupt.list`、`interrupt.ack`（关闭低电量提示） | — | `notify.unread`、`interrupt.active` | `notify.dnd` | `notify.posted` | 打断通道本身（来电、闹钟、低电量由系统拉起，AI 不能假装来电） |
 | 确认卡 | `confirm.list`、`confirm.withdraw`（撤回自己发起的） | `confirm.accept`、`confirm.reject`（只有人在设备上能按） | `confirm.pending` | — | `confirm.result` | — |
 | 应用 | `app.list`、`app.open`、`app.close`、`app.cards` | — | `app.foreground`、`app.cards_rev` | — | `app.state` | 冻结、停止、状态保存的时机 |
-| 文本输入 | `text.state`、`text.insert`、`text.submit`；`text.voice_start`（开麦克风，确认）、`text.voice_finish`、`text.voice_cancel`；`clipboard.write`；`clipboard.read`（设置打开才行，默认不读） | 敏感内容（`clipboard.read` 不给）；密码框内容（掩码，也不能听写） | `text.focused`、`text.voice` | `ai.read_clipboard` | `text.voice_ended` | 拼音引擎、词库、候选、停顿判断 |
+| 文本输入 | `text.state`、`text.insert`、`text.select`、`text.undo`、`text.redo`、`text.submit`；`text.voice_start`（开麦克风，确认）、`text.voice_finish`、`text.voice_cancel`；`clipboard.write`；`clipboard.read`（设置打开才行，默认不读） | 敏感内容（`clipboard.read` 不给）；密码框内容（掩码，也不能听写） | `text.focused`、`text.voice` | `ai.read_clipboard` | `text.voice_ended` | 拼音引擎、词库、候选、停顿判断 |
 | 音频 | `media.play`、`media.pause`、`media.resume`、`media.seek`、`media.stop`、`media.status`、`audio.record`、`audio.record_stop` | — | `audio.now_playing`、`audio.mic`、`audio.route`、`audio.listening`、`audio.recording`、`media.state` | `audio.volume`、`audio.child_max`、`voice.handsfree` | `media.finished`、`audio.record_done` | 焦点、功放、I2S、模式切换 |
 | 蓝牙 | `bt.scan`、`bt.list`、`bt.pair`、`bt.connect`、`bt.disconnect`、`bt.forget` | — | `bt.connected`、`bt.device`、`bt.available` | — | `bt.changed` | 芯片命令（协议未知） |
 | Wi-Fi | `wifi.scan`、`wifi.list`、`wifi.connect`（系统级，确认）、`wifi.forget`（确认） | — | `wifi.state`、`wifi.ssid` | `net.prefer` | `wifi.changed` | 选网、入网步骤 |
 | 成员 | `member.list`、`system.switch_member`（孩子到成人仍要 PIN）；`member.add`、`member.remove`（系统级，确认） | `member.unlock`、`member.set_pin`（PIN 只在设备上输入） | `member.current`、`member.authed` | `member.idle_return_s` | `member.changed` | PIN 校验值、盐 |
 | 升级 | `update.status`、`update.check`、`update.download`（移动数据下要人来） | `system.upgrade`、`system.upgrade_from_card`（底座设计 §6.2：AI 不能发起升级，安装时设备几分钟不能用；清单里也没有） | `update.state`、`update.version`、`update.progress` | `update.auto_download` | `update.available`、`update.result` | 写槽、回滚、自检 |
-| 系统 | `state.list`、`settings.list`、`settings.get`、`settings.set`、`caps.domains`、`caps.find`、`system.undo`、`system.home`、`system.full_refresh`；`system.reboot`、`system.shutdown`、`system.factory_reset`（系统级，确认） | — | `power.state`、`battery.level`、`battery.charging`、`battery.low` | `power.lock_after_s` | `battery.low` | 电源轨、睡眠 |
+| 系统 | `state.list`、`settings.list`、`settings.get`、`settings.set`、`caps.domains`、`caps.find`、`system.undo`、`system.home`、`system.full_refresh`、`system.set_volume`；`system.reboot`、`system.shutdown`、`system.factory_reset`（系统级，确认） | — | `power.state`、`battery.level`、`battery.charging`、`battery.low` | `power.lock_after_s` | `battery.low` | 电源轨、睡眠 |
 
 自动检查之外，每轮审计人工对照这张表和代码（[审计任务说明 K 节](../audits/codex-audit-prompt.md)）。
 
@@ -1038,7 +1039,7 @@ void ink_task_end(int id, ink_task_state_t how, const char *result, const char *
 
 ### 15.5 系统服务收尾（第十七轮 A、B、C2 与家人隔离补查）
 
-逐条结论、命令、反向对照和最终测试结果见[收尾报告](../tasks/services-finish/REPORT.md)及[本轮处理表](../audits/README.md)。A/B/C2 的 11 条高问题、10 条中问题已在初次收尾及后续复查修复；低级 404 仍保留。AUD18-106、206、207、402 已有相应实现与专项回归，原先“未改”的记录更新为当前状态。
+逐条结论、命令、反向对照和最终测试结果见[收尾报告](../tasks/services-finish/REPORT.md)及[本轮处理表](../audits/README.md)。A/B/C2 的 11 条高问题、10 条中问题已在初次收尾及后续复查修复。AUD18-106、206、207、402 已有相应实现与专项回归，原先“未改”的记录更新为当前状态。低级 AUD18-404 的 §1.3 漏项和文档检查已在 [services-mid](../tasks/services-mid/REPORT.md) 补齐，既有审计原文保留。
 
 - 文本能力以 `text.state` 的 `session`、`revision` 绑定编辑目标；AI/远端/应用缺失或过期目标回 `stale`，不落到当前的新字段。光标、选区、组合串及内容变化推进版本；触摸和按键仍使用当前会话。密码与隐藏字段继续拒绝 AI 编辑和提交。
 - 文件清理不把无法打开的根当作已清空，短操作及目录也持卡；文件任务发布前登记。升级先持久保存试运行状态再切槽，保留失败资源恢复事务，核对包表与固定下载身份。数据集合遗忘前取消共享计时节点。
@@ -1046,7 +1047,7 @@ void ink_task_end(int id, ink_task_state_t how, const char *result, const char *
 - 关机等待采集结束和本地数据完成；普通关机没存好回失败，低电量有界等待超时传 `battery_unsaved`，关机图和快照都明确有内容没保存。关机图已绑定具体显示帧的成功回执，提交失败不会冒报已显示（AUD18-206）。
 - `ai.listen` 和 `ai.ask` 的真实能力表按长度在 PSRAM 分配，不再受 768 字节限制。未增加内部 RAM 缓冲或常驻任务，预算上限不改。
 
-文档真实性边界：§1.3 的总表仍漏 `job.*`、`text.select/undo/redo`、`system.set_volume`、`interrupt.*`（AUD18-404）；`integration-ai-surface` 校验的是测试源码清单与运行时，未解析文档。`ui-dependencies.md` §7 的“先存再写”应结合低电量超时分支理解，不能作为全部已保存的保证。长文本翻页、应用调用者身份、远端 `needs`、事件必达及中枢同步仍有原边界。
+文档真实性边界：`integration-ai-surface` 校验测试源码清单与运行时，`services-mid-capability-doc` 校验本表与测试清单，范围见 §1.3。`ui-dependencies.md` §7 的“先存再写”应结合低电量超时分支理解，不能作为全部已保存的保证。长文本翻页、应用调用者身份、远端 `needs`、事件必达及中枢同步仍有原边界。
 
 第 6 轮复查修复（2026-11-06）：数据与时间能力固定总线接受时的成员和代次；时间新增/取消在修改锁内登记原成员写者，角色权限取原成员。通知宣告、闹钟/提醒事件及派生通知沿用生产者的原代次，成员删除复用后不重新绑定。入口仍由原服务实现，按钮与 AI 走共同能力；代次入口仅供内部调用，不开放给 AI 选择身份。
 

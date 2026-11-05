@@ -10,6 +10,7 @@ typedef struct sim_hub_bridge sim_hub_bridge_t;
 int sim_hub_bridge_configure(const char *url);
 sim_hub_bridge_t *sim_hub_bridge_open(void *owner, uint64_t generation);
 bool sim_hub_bridge_send(sim_hub_bridge_t *bridge, const void *data, size_t len, bool binary);
+/* Consumes the handle without waiting for the host worker. */
 void sim_hub_bridge_close(sim_hub_bridge_t *bridge);
 void sim_hub_bridge_shutdown(void);
 
