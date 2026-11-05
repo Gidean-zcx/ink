@@ -199,6 +199,19 @@ static void run(void *arg) {
         CHECK(WAIT_FOR(hal_fs_size("/content/ink-pair.json") < 0, 18000), "restart finishes optional Wi-Fi then deletes card file");
         CHECK(ink_pairing_state() == INK_PAIR_BOUND && sim_metric_value("hub.requests.pair/begin") == 0, "same-key card retry preserves household token");
         CHECK(AI("wifi.list", NULL) && strstr(g_result, "test-wifi"), "optional card Wi-Fi is durable");
+    } else if (!strcmp(phase, "escaped-token")) {
+        CHECK(BY_HAND("pairing.configure", CONFIG) && g_rc.status == INK_RC_DONE, "configure for escaped identity boundary");
+        wait_claim(); offer(); set_fault(SIM_PAIR_DROP_COMPLETE, 0, false);
+        CHECK(BY_HAND("pairing.accept", TX) && g_rc.status == INK_RC_DONE, "confirm escaped identity fixture");
+        char token[128], params[1024];
+        memcpy(token, "test-", 5); memset(token + 5, 1, 122); token[127] = 0;
+        ink_jw_t w; ink_jw_init(&w, params, sizeof params);
+        ink_jw_raw(&w, "{\"txid\":\"test-tx-1\",\"device\":\"test-device\",\"token\":");
+        ink_jw_str(&w, token); ink_jw_raw(&w, "}");
+        CHECK(!w.overflow, "max decoded token fixture fits incoming JSON budget");
+        request("pair/complete", params);
+        CHECK(WAIT_FOR(sim_metric_value("hub.requests.hello") > 0 && sim_metric_value("hub.pair_hello_failed") > 0, 15000), "escaped token within limits is sent to hello");
+        CHECK(WAIT_FOR(ink_pairing_state() == INK_PAIR_PAIRING, 10000), "invalid escaped synthetic token returns to enrollment");
     } else if (!strcmp(phase, "pin")) {
         CHECK(BY_HAND("pairing.configure", "{\"url\":\"wss://example.com/v1/device\",\"pin\":\"2222222222222222222222222222222222222222222222222222222222222222\"}") && g_rc.status == INK_RC_DONE, "configured independent trust anchor");
         CHECK(WAIT_FOR(sim_metric_value("net.pin_rejected") > 0, 10000), "incorrect TLS public key rejected before pair begin");

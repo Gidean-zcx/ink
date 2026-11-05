@@ -34,6 +34,7 @@ mutations = {
     "nul-transaction": (' && !memchr(full, 0, (size_t)n)', ''),
     "ordinary-response-before-auth": ('return respond(id, result_json, false);', 'return respond(id, result_json, true);'),
     "unconfirmed-resume": ('if (s->state == INK_PAIR_COMMITTING && s->txid[0])', 'if (s->txid[0])'),
+    "escaped-hello-buffer": ('ink_pairing_handshake(hello.method, params, 2048)', 'ink_pairing_handshake(hello.method, params, 512)'),
 }
 flags = {}
 target = build / "CMakeFiles/sim-pairing.dir"
@@ -43,7 +44,7 @@ for line in (target / "flags.make").read_text().splitlines():
         flags[key] = shlex.split(value)
 original_link = shlex.split((target / "link.txt").read_text())
 for label, (before, after) in mutations.items():
-    original = hub_source if label in ("completion-not-flushed", "ordinary-response-before-auth") else source
+    original = hub_source if label in ("completion-not-flushed", "ordinary-response-before-auth", "escaped-hello-buffer") else source
     if original.count(before) != 1:
         raise SystemExit(label + ": safeguard not found exactly once")
     altered = work / (label + ".c")
@@ -65,7 +66,7 @@ for label, (before, after) in mutations.items():
                 "token-not-durable": "saved token used despite missing completion acknowledgement", "revocation-not-durable": "revocation persisted and reconnect stopped",
                 "completion-not-flushed": "completion acknowledgement explicitly lost at peer", "wipe-not-boolean": "string true cannot authorize irreversible wipe",
                 "nul-transaction": "embedded NUL transaction rejected", "ordinary-response-before-auth": "ordinary responses cannot leave on a preauth connection",
-                "unconfirmed-resume": "unconfirmed offer is not resumed as accepted"}[label]
+                "unconfirmed-resume": "unconfirmed offer is not resumed as accepted", "escaped-hello-buffer": "escaped token within limits is sent to hello"}[label]
     destructive_reboot = label == "wipe-not-boolean" and "wipe-string FAIL exit=0" in run.stdout and '"power.reboot": 1' in run.stdout
     if run.returncode != 1 or (expected not in run.stdout and not destructive_reboot) or "exit=0" not in run.stdout:
         print(run.stdout[-2500:], run.stderr[-1500:])

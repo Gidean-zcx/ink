@@ -360,17 +360,21 @@ static void send_hello(void) {
     hal_device_get_info(&di);
     pending_t hello = {.id = new_id(), .used = false};
     H.hello_id = hello.id;
-    char params[512];
+    char legacy[160];
+    bool enrollment = ink_pairing_enabled();
+    char *params = enrollment ? osal_malloc(2048, OSAL_MEM_EXTERNAL) : legacy;
+    if (!params) { enter_backoff(); return; }
     snprintf(hello.method, sizeof hello.method, "hello");
     H.pair_begin = false;
-    if (ink_pairing_enabled()) {
-        if (ink_pairing_handshake(hello.method, params, sizeof params) != 0) { enter_backoff(); return; }
+    if (enrollment) {
+        if (ink_pairing_handshake(hello.method, params, 2048) != 0) { osal_free(params); enter_backoff(); return; }
         H.pair_begin = !strcmp(hello.method, "pair/begin");
-    } else snprintf(params, sizeof params, "{\"proto\":1,\"device\":\"%s\",\"member\":\"default\"}", di.profile_id ? di.profile_id : "?");
+    } else snprintf(params, sizeof legacy, "{\"proto\":1,\"device\":\"%s\",\"member\":\"default\"}", di.profile_id ? di.profile_id : "?");
     hello.params = params;
     H.hello_sent_us = osal_now_us();
     if (send_request(&hello) != 0) enter_backoff();
     else set_state(HS_HELLO);
+    if (enrollment) osal_free(params);
     hello.params = NULL;
 }
 

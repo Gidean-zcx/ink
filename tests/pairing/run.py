@@ -55,7 +55,7 @@ for phase in ("expired", "invalid"):
 boot(work / "wipe", "wipe")
 boot(work / "wipe", "wiped")
 boot(work / "wipe-string", "wipe-string")
-for phase in ("hotspot", "hotspot-handoff", "card", "pin", "card-wifi"):
+for phase in ("hotspot", "hotspot-handoff", "card", "pin", "card-wifi", "escaped-token"):
     target = work / phase
     (target / "sd/content").mkdir(parents=True)
     if phase in ("card", "card-wifi"):

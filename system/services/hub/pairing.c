@@ -491,7 +491,7 @@ static void event_job(void *arg) {
         }
         if (ok) {
             ink_hub_pair_respond(e->id, "{\"shown\":true}");
-            if (s->state == INK_PAIR_COMMITTING && !s->token[0]) { char params[128]; tx_params(s->txid, params, sizeof params); ink_hub_pair_call("pair/accept", params); }
+            if (s->state == INK_PAIR_COMMITTING && !s->token[0]) { char params[256]; tx_params(s->txid, params, sizeof params); ink_hub_pair_call("pair/accept", params); }
         } else ink_hub_pair_respond_error(e->id, -32602, "invalid pairing offer");
     } else if (e->kind == PE_COMPLETE && obj >= 0) {
         char txid[40];
@@ -534,7 +534,7 @@ static void cap_accept(ink_call_t *c) {
     else {
         s->state = INK_PAIR_COMMITTING;
         if (!store_identity(s)) fail(c, "没能保存，请重试");
-        else { char params[128]; tx_params(s->txid, params, sizeof params); ink_hub_pair_call("pair/accept", params); ink_hub_demand(); }
+        else { char params[256]; tx_params(s->txid, params, sizeof params); ink_hub_pair_call("pair/accept", params); ink_hub_demand(); }
     }
     memset(s, 0, sizeof *s); osal_free(s);
 }
@@ -546,7 +546,7 @@ static void cap_reject(ink_call_t *c) {
     char txid[40]; ink_args_get_str(&c->args, "txid", txid, sizeof txid);
     if (s->state != INK_PAIR_PAIRING || strcmp(txid, s->txid)) fail(c, "加入请求已变化");
     else {
-        char params[128]; tx_params(s->txid, params, sizeof params);
+        char params[256]; tx_params(s->txid, params, sizeof params);
         s->txid[0] = s->family[0] = s->by[0] = s->name[0] = 0;
         if (store_identity(s)) ink_hub_pair_call("pair/reject", params); else fail(c, "没能保存，请重试");
     }
