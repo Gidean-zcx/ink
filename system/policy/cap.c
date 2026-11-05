@@ -12,12 +12,15 @@
 #include "ink/sys/appreg.h"
 #include "ink/sys/cap.h"
 #include "ink/sys/confirm.h"
+#include "ink/sys/data.h"
+#include "ink/sys/svc.h"
 #include "ink/sys/hub.h"
 #include "ink/sys/json.h"
 #include "ink/sys/layout.h"
 #include "ink/sys/members.h"
 #include "ink/sys/ui.h"
 #include "ink/ui_shell.h"
+#include "ink/sys/sha256.h"
 
 #define MAX_CAPS 192
 
@@ -74,21 +77,15 @@ static bool exposed(const ink_cap_t *c, ink_source_t src) {
     }
 }
 
-/* Default confirmation by side effect (foundation §6.2). Direct manipulation (touch, keys) is the
- * member's own confirmation except where a PIN is required. */
-static ink_confirm_t confirm_for(const ink_cap_t *c, ink_source_t src) {
-    ink_confirm_t k = INK_CONFIRM_NONE;
-    switch (c->effect) {
-    case INK_FX_LOCAL_DESTRUCTIVE:
-    case INK_FX_EXTERNAL:
-    case INK_FX_SYSTEM: k = INK_CONFIRM_DEVICE; break;
-    default: break;
-    }
+/* D-105: the gateway's intent marker applies only to ordinary external actions. */
+static ink_confirm_t confirm_for(const ink_cap_t *c, ink_source_t src, bool asked) {
     if (src == INK_SRC_CONFIRMED) return INK_CONFIRM_NONE;
     if (c->parent_pin && ink_member_any_pin()) return INK_CONFIRM_PARENT;
     if (c->ask_by_hand) return INK_CONFIRM_DEVICE;
     if (src == INK_SRC_TOUCH || src == INK_SRC_KEY || src == INK_SRC_SYSTEM) return INK_CONFIRM_NONE;
-    return k;
+    if (c->effect == INK_FX_LOCAL_DESTRUCTIVE) return INK_CONFIRM_DEVICE;
+    if (c->effect == INK_FX_EXTERNAL && !asked) return INK_CONFIRM_DEVICE;
+    return INK_CONFIRM_NONE;
 }
 
 static ink_rc_t reject(ink_receipt_t *rc, ink_rc_t st, const char *why) {
@@ -98,7 +95,7 @@ static ink_rc_t reject(ink_receipt_t *rc, ink_rc_t st, const char *why) {
 }
 
 /* The policy gate (detailed design §2.4), before anything runs. INK_RC_DONE = may run. */
-static ink_rc_t gate(const ink_cap_t *c, ink_source_t src, uint32_t page_gen, ink_receipt_t *rc) {
+static ink_rc_t gate(const ink_cap_t *c, ink_source_t src, uint32_t page_gen, bool asked, ink_receipt_t *rc) {
     if (!c) return reject(rc, INK_RC_INVALID, "unknown action");
     /* the card the member just answered is still over the page it was asked about */
     if (src == INK_SRC_CONFIRMED ? c->activity && strcmp(ink_ui_page_name(), c->activity) : !on_its_page(c)) return reject(rc, INK_RC_INVALID, "not available on this page");
@@ -133,7 +130,7 @@ static ink_rc_t gate(const ink_cap_t *c, ink_source_t src, uint32_t page_gen, in
     /* a tool call prepared for an older page must not act on the new one */
     if ((remote || src == INK_SRC_CONFIRMED) && page_gen && c->activity && page_gen != ink_ui_content_version())
         return reject(rc, INK_RC_STALE, "the page changed since the request was made");
-    if (confirm_for(c, src) != INK_CONFIRM_NONE) {
+    if (confirm_for(c, src, asked) != INK_CONFIRM_NONE) {
         ink_probe_count("policy.pending_confirmation");
         return reject(rc, INK_RC_PENDING_CONFIRMATION, "needs confirmation on the device");
     }
@@ -145,6 +142,29 @@ static ink_rc_t gate(const ink_cap_t *c, ink_source_t src, uint32_t page_gen, in
 #define POOL_N 16 /* calls in flight */
 #define SEEN_N 32 /* request ids remembered for retries */
 #define RID_CAP 40
+
+#define ACTIVITY_PENDING 16
+#define ACTIVITY_SLOTS (ACTIVITY_PENDING * INK_MEMBERS_MAX)
+
+typedef struct {
+    ink_exec_job_t job;
+    ink_svc_deadline_t retry;
+    bool used;
+    char member[INK_MEMBER_ID_MAX], cap[48], object[48];
+    ink_rc_t status;
+    uint32_t revision, undo_ms;
+    bool asked;
+    uint32_t generation;
+    int64_t when_s;
+} activity_note_t;
+
+static struct {
+    bool ready;
+    activity_note_t pending[ACTIVITY_SLOTS];
+} AL INK_PSRAM_BSS;
+
+static const ink_db_def_t ACTIVITY = {.name = "activity.log", .title = "AI 的活动记录", .scope = INK_DB_MEMBER,
+    .schema = 1, .json = true, .ai_read = true, .max_bytes = 128 * 1024, .drop_oldest = true};
 
 /*
  * One call, from acceptance to the slot's return. Its deadline counts from acceptance, whatever it
@@ -168,13 +188,20 @@ typedef struct {
     bool used;
     bool accepted; /* fully prepared: the deadline applies */
     bool remote;   /* the hub link's own timeout is its deadline */
+    bool cache_hit;
     bool repeat_safe; /* rid is the caller's: the receipt is kept for retries */
     bool started, deferred, replied, finished, answered;
+    bool asked; /* Only the hub tools envelope can set this; never arguments. */
+    activity_note_t *activity;
     char member[INK_MEMBER_ID_MAX]; /* ink_call_opts_t.member */
+    uint32_t generation;
+    uint8_t identity[32];
 } pending_t;
 
 typedef struct {
-    char rid[RID_CAP];
+    char rid[RID_CAP], member[INK_MEMBER_ID_MAX];
+    uint32_t generation;
+    uint8_t identity[32];
     ink_receipt_t rc;
 } seen_t;
 
@@ -196,6 +223,82 @@ static struct {
     uint64_t timer_due;
     uint32_t boot_tag, next_rid;
 } CB;
+
+static void activity_flush(void *arg);
+
+static void activity_retry(void *arg) { /* timer task: storage work belongs to the executor */
+    activity_note_t *n = arg;
+    if (ink_exec_post(INK_EXEC_BG, &n->job, activity_flush, n) != 0)
+        ink_svc_at(&n->retry, osal_now_us() + 1000000, activity_retry, n);
+}
+
+static void activity_flush(void *arg) { /* exec.bg */
+    activity_note_t *n = arg;
+    if (!n->generation || n->generation != ink_member_generation(n->member)) {
+        osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER); n->used = false; osal_mutex_unlock(CB.lock);
+        return;
+    }
+    ink_db_t *db = ink_db_open_member(&ACTIVITY, n->member, n->generation);
+    char json[512];
+    ink_jw_t w;
+    ink_jw_init(&w, json, sizeof json);
+    ink_jw_raw(&w, "{\"cap\":"); ink_jw_str(&w, n->cap);
+    ink_jw_raw(&w, ",\"status\":"); ink_jw_str(&w, ink_rc_name(n->status));
+    ink_jw_raw(&w, ",\"object\":"); ink_jw_str(&w, n->object);
+    ink_jw_raw(&w, ",\"revision\":"); ink_jw_int(&w, n->revision);
+    ink_jw_raw(&w, ",\"undo_ms\":"); ink_jw_int(&w, n->undo_ms);
+    ink_jw_raw(&w, ",\"when\":"); ink_jw_int(&w, n->when_s);
+    ink_jw_raw(&w, n->asked ? ",\"asked\":true}" : ",\"asked\":false}");
+    ink_db_write_t rec = {.data = json, .len = w.len, .sort = n->when_s, .src = INK_SRC_AI};
+    int result = db && !w.overflow ? ink_db_put(db, &rec, NULL) : INK_DB_ERR_NOMEM;
+    if (db) ink_db_close(db);
+    if (result != INK_DB_OK) {
+        if (result == INK_DB_ERR_FULL) ink_probe_count("activity.backlog_full");
+        ink_probe_count("activity.write_retry");
+        ink_svc_at(&n->retry, osal_now_us() + 1000000, activity_retry, n);
+        return;
+    }
+    osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+    n->used = false;
+    osal_mutex_unlock(CB.lock);
+}
+
+static bool needs_activity(const ink_cap_t *c, ink_source_t src) {
+    return AL.ready && c && c->effect >= INK_FX_LOCAL_WRITE &&
+           (src == INK_SRC_AI || src == INK_SRC_REMOTE || src == INK_SRC_CONFIRMED);
+}
+
+static activity_note_t *activity_reserve(const ink_cap_t *c, const char *member) {
+    activity_note_t *n = NULL;
+    osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+    int held = 0;
+    for (int i = 0; i < ACTIVITY_SLOTS; i++)
+        if (AL.pending[i].used && !strcmp(AL.pending[i].member, member)) held++;
+    for (int i = 0; held < ACTIVITY_PENDING && i < ACTIVITY_SLOTS && !n; i++)
+        if (!AL.pending[i].used) {
+            n = &AL.pending[i];
+            n->used = true;
+            n->generation = ink_member_generation(member);
+            snprintf(n->member, sizeof n->member, "%s", member);
+            snprintf(n->cap, sizeof n->cap, "%s", c->id);
+        }
+    osal_mutex_unlock(CB.lock);
+    return n;
+}
+
+/* Under the call lock: no arguments, passwords or free-form receipt text enter the log. */
+static void activity_settle(pending_t *p, const ink_receipt_t *rc) {
+    activity_note_t *n = p->activity;
+    if (!n) return;
+    p->activity = NULL;
+    snprintf(n->object, sizeof n->object, "%s", rc->object);
+    n->status = rc->status;
+    n->revision = rc->revision;
+    n->undo_ms = rc->undo_ms;
+    n->asked = p->asked;
+    n->when_s = osal_wall_us() / 1000000;
+    activity_retry(n);
+}
 
 static void timeout_cb(void *arg);
 
@@ -224,44 +327,42 @@ int ink_cap_init(void) {
     return CB.lock && CB.pool && CB.seen && CB.dir && CB.timer ? 0 : -1;
 }
 
-static const seen_t *seen_find(const char *rid) { /* under the lock */
-    for (int i = 0; i < SEEN_N; i++)
-        if (CB.seen[i].rid[0] && !strcmp(CB.seen[i].rid, rid)) return &CB.seen[i];
-    return NULL;
-}
-
-static bool in_flight(const char *rid) { /* under the lock */
-    for (int i = 0; i < POOL_N; i++)
-        if (CB.pool[i].used && !CB.pool[i].replied && !strcmp(CB.pool[i].rid, rid)) return true;
-    return false;
-}
-
-/* A free slot for a request. One hold of the lock decides whether the request id was seen and makes
- * it taken: of two copies arriving together, one runs and the other is a repeat. A repeat's slot
- * comes back with its receipt in `out` and *repeat set, ready to be answered. NULL: the pool is full. */
-static pending_t *claim(const char *rid, bool *repeat) {
+static pending_t *claim(const char *rid, const char *member, uint32_t generation, const uint8_t identity[32],
+                        ink_rc_t verdict, bool *repeat) {
     pending_t *p = NULL;
     *repeat = false;
     if (rid && !*rid) rid = NULL;
     osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
-    for (int i = 0; i < POOL_N && !p; i++)
-        if (!CB.pool[i].used) p = &CB.pool[i];
+    for (int i = 0; i < POOL_N && !p; i++) if (!CB.pool[i].used) p = &CB.pool[i];
     if (p) {
         memset(p, 0, sizeof *p);
         p->used = true;
-        const seen_t *s = rid ? seen_find(rid) : NULL;
-        if (s) {
-            p->out = s->rc;
+        snprintf(p->member, sizeof p->member, "%s", member);
+        p->generation = generation;
+        memcpy(p->identity, identity, 32);
+        if (verdict != INK_RC_DONE && verdict != INK_RC_PENDING_CONFIRMATION) {
+            p->out.status = verdict;
             *repeat = true;
-        } else if (rid && in_flight(rid)) { /* it must not run a second time (a text message would go out twice) */
-            p->out.status = INK_RC_QUEUED;
-            snprintf(p->out.detail, sizeof p->out.detail, "this request is still running");
-            *repeat = true;
-        } else if (rid) {
-            snprintf(p->rid, sizeof p->rid, "%s", rid);
-            p->repeat_safe = true;
+        }
+        for (int i = 0; rid && !*repeat && i < SEEN_N; i++) {
+            const seen_t *s = &CB.seen[i];
+            if (!strcmp(s->rid, rid) && s->generation == generation && !strcmp(s->member, member)) {
+                if (!memcmp(s->identity, identity, 32)) p->out = s->rc;
+                else { p->out.status = INK_RC_INVALID; snprintf(p->out.detail, sizeof p->out.detail, "request id reused with different action or arguments"); }
+                p->cache_hit = true;
+                *repeat = true;
+            }
+        }
+        for (int i = 0; rid && !*repeat && i < POOL_N; i++) {
+            pending_t *q = &CB.pool[i];
+            if (q != p && q->used && !q->replied && q->generation == generation && !strcmp(q->member, member) && !strcmp(q->rid, rid)) {
+                p->cache_hit = true;
+                p->out.status = memcmp(q->identity, identity, 32) ? INK_RC_INVALID : INK_RC_QUEUED;
+                *repeat = true;
+            }
         }
         if (*repeat) p->started = p->replied = p->finished = true;
+        else if (rid) { snprintf(p->rid, sizeof p->rid, "%s", rid); p->repeat_safe = true; }
     }
     osal_mutex_unlock(CB.lock);
     if (!p) ink_probe_count("cap.busy");
@@ -290,11 +391,15 @@ static void settle(pending_t *p, const ink_receipt_t *rc) {
     p->replied = true;
     p->out = *rc;
     p->out.page_gen = ink_ui_content_version();
+    activity_settle(p, rc);
     if (!p->repeat_safe) return;
     if (p->result && p->call.cap && p->call.cap->effect == INK_FX_READ) return; /* a repeat reads again: the result is not kept */
     seen_t *s = &CB.seen[CB.seen_next];
     CB.seen_next = (CB.seen_next + 1) % SEEN_N;
     snprintf(s->rid, sizeof s->rid, "%s", p->rid);
+    snprintf(s->member, sizeof s->member, "%s", p->member);
+    s->generation = p->generation;
+    memcpy(s->identity, p->identity, 32);
     s->rc = p->out;
     s->rc.result = NULL; /* it goes with the slot */
 }
@@ -310,6 +415,12 @@ static void answer_job(void *arg) {
     osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
     ink_cap_done_fn done = p->o.done; /* NULL once a waiting ink_cap_invoke gave up on it */
     osal_mutex_unlock(CB.lock);
+    bool handoff = p->call.cap && !strcmp(p->call.cap->id, "system.switch_member") && p->out.status == INK_RC_DONE && !p->out.result;
+    bool hand_locked = p->call.cap && p->call.cap->while_locked && (p->o.src == INK_SRC_TOUCH || p->o.src == INK_SRC_KEY);
+    if (!handoff && p->member[0] && (!p->generation || p->generation != ink_member_generation(p->member) ||
+        strcmp(p->member, ink_member_current()->id) || (!ink_member_space_open() && !hand_locked && p->o.src != INK_SRC_SYSTEM && p->out.status == INK_RC_DONE))) {
+        memset(&p->out, 0, sizeof p->out); p->out.status = INK_RC_STALE;
+    }
     if (done) done(p->o.ctx, &p->out);
     answered(p);
 }
@@ -373,6 +484,12 @@ uint32_t ink_cap_time_left_ms(const ink_call_t *call) {
     return p->deadline_us > now ? (uint32_t)((p->deadline_us - now) / 1000u) : 0;
 }
 
+const char *ink_cap_call_member(const ink_call_t *call, uint32_t *generation) {
+    const pending_t *p = (const pending_t *)call;
+    *generation = p->generation;
+    return p->member;
+}
+
 static void timeout_cb(void *arg) { /* timer task: answer the overdue, re-arm for the rest */
     (void)arg;
     pending_t *due[POOL_N];
@@ -427,7 +544,7 @@ static void start(void *arg) {
     snprintf(key, sizeof key, "action.%s.%s", p->call.src == INK_SRC_AI ? "ai" : "user", p->id);
     ink_probe_count(key);
     bool ran = false;
-    ink_rc_t verdict = p->member[0] && strcmp(p->member, ink_member_current()->id) ? reject(rc, INK_RC_STALE, "someone else is using the device now") : gate(c, p->call.src, p->call.page_gen, rc);
+    ink_rc_t verdict = !p->generation || p->generation != ink_member_generation(p->member) || strcmp(p->member, ink_member_current()->id) ? reject(rc, INK_RC_STALE, "someone else is using the device now") : gate(c, p->call.src, p->call.page_gen, p->asked, rc);
     if (verdict == INK_RC_DONE || verdict == INK_RC_PENDING_CONFIRMATION) {
         char why[96];
         int bad = p->json ? ink_args_from_json(&p->call.args, p->json, strlen(p->json), c->input, why, sizeof why)
@@ -453,7 +570,7 @@ static int remote_call(const char *name, const ink_args_t *args, const ink_call_
 
 /* Accept a call: a slot holding everything the call needs, its deadline running. NULL: not accepted.
  * A repeat of a request has been answered when this returns NULL with *repeat set. */
-static pending_t *prepare(const char *id, const ink_cap_t *c, const ink_args_t *args, const ink_call_opts_t *o, bool remote, bool *repeat) {
+static pending_t *prepare(const char *id, const ink_cap_t *c, const ink_args_t *args, const ink_call_opts_t *o, bool remote, bool asked, bool *repeat) {
     char *json = NULL;
     *repeat = false;
     if (!args && o->args_json && *o->args_json) {
@@ -462,11 +579,34 @@ static pending_t *prepare(const char *id, const ink_cap_t *c, const ink_args_t *
         if (!json) return NULL;
         memcpy(json, o->args_json, n + 1);
     }
-    pending_t *p = claim(o->request_id, repeat);
+    const char *member = o->member ? o->member : ink_member_current()->id;
+    uint32_t current_generation = ink_member_generation(member);
+    uint32_t generation = o->member_generation ? o->member_generation : current_generation;
+    ink_receipt_t checked = {0};
+    ink_rc_t verdict = !generation || generation != current_generation || strcmp(member, ink_member_current()->id) ? INK_RC_STALE :
+        remote ? (ink_member_space_open() ? INK_RC_DONE : INK_RC_REJECTED) :
+        o->request_id ? gate(c, o->src, 0, asked, &checked) : INK_RC_DONE;
+    uint8_t identity[32];
+    ink_sha256_t sum;
+    ink_sha256_init(&sum);
+    ink_sha256_update(&sum, id, strlen(id) + 1);
+    ink_sha256_update(&sum, &remote, sizeof remote);
+    ink_sha256_update(&sum, &o->src, sizeof o->src);
+    ink_sha256_update(&sum, &asked, sizeof asked);
+    if (args) {
+        char *encoded = osal_malloc(INK_ARGS_TEXT * 2, OSAL_MEM_EXTERNAL);
+        int n = encoded ? ink_args_to_json(args, encoded, INK_ARGS_TEXT * 2) : -1;
+        if (n < 0) { osal_free(encoded); osal_free(json); return NULL; }
+        ink_sha256_update(&sum, encoded, (size_t)n);
+        osal_free(encoded);
+    } else ink_sha256_update(&sum, json ? json : "{}", json ? strlen(json) : 2);
+    ink_sha256_final(&sum, identity);
+    pending_t *p = claim(o->request_id, member, generation, identity, verdict, repeat);
     if (!p || *repeat) {
         osal_free(json);
         if (p) { /* the first receipt again, or "queued": told like any other */
-            ink_probe_count("cap.replayed");
+            if (p->cache_hit) ink_probe_count("cap.replayed");
+            p->call.cap = c;
             p->o = *o;
             p->o.request_id = p->o.args_json = NULL;
             answer(p);
@@ -480,7 +620,17 @@ static pending_t *prepare(const char *id, const ink_cap_t *c, const ink_args_t *
     p->json = json;
     p->call.src = o->src;
     p->call.page_gen = o->page_gen;
-    snprintf(p->member, sizeof p->member, "%s", o->member ? o->member : "");
+    /* whoever asks, asks for who is here now: if someone else has come by the time it runs, it does not run for them */
+    snprintf(p->member, sizeof p->member, "%s", o->member ? o->member : ink_member_current()->id);
+    if (needs_activity(c, o->src) && !strcmp(p->member, ink_member_current()->id)) {
+        p->activity = activity_reserve(c, p->member);
+        if (!p->activity) {
+            osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+            p->finished = p->answered = true;
+            unlock_retire(p);
+            return NULL;
+        }
+    }
     p->o = *o;
     p->o.request_id = p->o.args_json = NULL; /* the caller's strings need not outlive the call */
     p->o.member = NULL;
@@ -497,7 +647,7 @@ static pending_t *prepare(const char *id, const ink_cap_t *c, const ink_args_t *
     return p;
 }
 
-int ink_cap_call(const char *addr, const ink_args_t *args, const ink_call_opts_t *o) {
+static int call_with_intent(const char *addr, const ink_args_t *args, const ink_call_opts_t *o, bool asked) {
     if (!CB.pool || !addr || !o) return -1;
     if (o->request_id && strlen(o->request_id) >= RID_CAP) return -1; /* cut, it would not be recognised again */
     if (o->done && ink_exec_ready(o->reply_exec) != 0) return -1;     /* the receipt could not be delivered */
@@ -507,11 +657,16 @@ int ink_cap_call(const char *addr, const ink_args_t *args, const ink_call_opts_t
     ink_exec_t e = c ? c->exec : INK_EXEC_DIRECT;
     if (ink_exec_ready(e) != 0) return -1;
     bool repeat;
-    pending_t *p = prepare(addr, c, args, o, false, &repeat);
+    pending_t *p = prepare(addr, c, args, o, false, asked, &repeat);
     if (!p) return repeat ? 0 : -1;
+    p->asked = asked;
     if (e == INK_EXEC_DIRECT || ink_exec_is_current(e)) start(p);
     else ink_exec_post(e, &p->start_job, start, p);
     return 0;
+}
+
+int ink_cap_call(const char *addr, const ink_args_t *args, const ink_call_opts_t *o) {
+    return call_with_intent(addr, args, o, false);
 }
 
 typedef struct {
@@ -542,7 +697,7 @@ static ink_rc_t invoke(const char *id, const ink_args_t *args, const char *json,
     o.done = copy_receipt;
     o.ctx = &sync;
     bool repeat;
-    pending_t *p = CB.pool ? prepare(id, c, args, &o, false, &repeat) : NULL;
+    pending_t *p = CB.pool ? prepare(id, c, args, &o, false, false, &repeat) : NULL;
     if (!p) return reject(rc, INK_RC_FAILED, "busy");
     osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
     p->refs++; /* looked at below, however soon it completes */
@@ -613,6 +768,9 @@ static void remote_reply(void *ctx, int status, const ink_json_t *j, int result)
             }
         }
     }
+    if (!p->generation || p->generation != ink_member_generation(p->member) || strcmp(p->member, ink_member_current()->id) || !ink_member_space_open()) {
+        memset(rc, 0, sizeof *rc); rc->status = INK_RC_STALE;
+    }
     char key[48];
     snprintf(key, sizeof key, "cap.remote.%s", ink_rc_name(rc->status));
     ink_probe_count(key);
@@ -621,7 +779,7 @@ static void remote_reply(void *ctx, int status, const ink_json_t *j, int result)
 
 static int remote_call(const char *name, const ink_args_t *args, const ink_call_opts_t *o) {
     bool repeat;
-    pending_t *p = prepare(name, NULL, args, o, true, &repeat);
+    pending_t *p = prepare(name, NULL, args, o, true, false, &repeat);
     if (!p) return repeat ? 0 : -1;
     if (!p->rid[0]) snprintf(p->rid, sizeof p->rid, "d%08x-%u", (unsigned)CB.boot_tag, (unsigned)__atomic_add_fetch(&CB.next_rid, 1, __ATOMIC_RELAXED));
     const char *prev = osal_mem_tag("cap");
@@ -646,6 +804,10 @@ static int remote_call(const char *name, const ink_args_t *args, const ink_call_
     }
     ink_jw_raw(&w, ",\"_meta\":{\"request_id\":");
     ink_jw_str(&w, p->rid);
+    ink_jw_raw(&w, ",\"member\":");
+    ink_jw_str(&w, p->member);
+    ink_jw_raw(&w, ",\"member_generation\":");
+    ink_jw_int(&w, p->generation);
     ink_jw_raw(&w, ",\"page_gen\":");
     ink_jw_int(&w, p->call.page_gen);
     ink_jw_raw(&w, "}}");
@@ -677,7 +839,8 @@ typedef struct {
     ink_exec_job_t job;
     ink_event_fn fn;
     void *ctx;
-    char id[48];
+    char id[48], member[INK_MEMBER_ID_MAX];
+    uint32_t generation;
     ink_args_t payload;
 } event_job_t;
 
@@ -695,7 +858,7 @@ int ink_cap_subscribe(const char *prefix, ink_event_fn fn, void *ctx, ink_exec_t
 
 static void event_job(void *arg) {
     event_job_t *e = arg;
-    e->fn(e->ctx, e->id, &e->payload);
+    if (e->generation && e->generation == ink_member_generation(e->member)) e->fn(e->ctx, e->id, &e->payload);
     osal_free(e);
 }
 
@@ -703,7 +866,7 @@ static void event_job(void *arg) {
  * hub task, the latest 8 wait for it to be online. */
 #define EVENTS_KEPT 8
 static struct {
-    uint32_t seq;
+    uint32_t seq, generation;
     int64_t at_s;
     char id[48];
     char member[INK_MEMBER_ID_MAX]; /* whose it is: who it says, or who was there when it happened */
@@ -711,17 +874,15 @@ static struct {
 } EV[EVENTS_KEPT] INK_PSRAM_BSS;
 static uint32_t ev_next, ev_sent; /* sequence numbers, under CB.lock */
 
-static void keep_event(const char *id, const ink_args_t *payload) {
+static void keep_event(const char *id, const ink_args_t *payload, const char *whose, uint32_t generation) {
     const ink_cap_t *c = ink_cap_find(id);
     if (!CB.lock || !c || c->form != INK_FORM_EVENT || !exposed(c, INK_SRC_AI)) return;
     int64_t wall = osal_wall_us();
-    char whose[INK_MEMBER_ID_MAX] = "";
-    if (payload) ink_args_get_str(payload, "member", whose, sizeof whose);
-    if (!whose[0]) snprintf(whose, sizeof whose, "%s", ink_member_current()->id);
     osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
     uint32_t seq = ++ev_next;
     typeof(EV[0]) *e = &EV[seq % EVENTS_KEPT];
     e->seq = seq;
+    e->generation = generation;
     e->at_s = wall > 0 ? wall / 1000000 : 0;
     snprintf(e->id, sizeof e->id, "%s", id);
     snprintf(e->member, sizeof e->member, "%s", whose);
@@ -753,11 +914,12 @@ static void send_events(void) { /* hub task */
         const typeof(EV[0]) *e = &EV[seq % EVENTS_KEPT];
         snprintf(id, sizeof id, "%s", e->id);
         snprintf(whose, sizeof whose, "%s", e->member);
+        uint32_t generation = e->generation;
         at = e->at_s;
         *args = e->args;
         osal_mutex_unlock(CB.lock);
         /* it goes only while it is theirs who is here: the next one's AI does not hear about it */
-        bool theirs = !strcmp(whose, ink_member_current()->id);
+        bool theirs = generation && generation == ink_member_generation(whose) && ink_member_space_open() && !strcmp(whose, ink_member_current()->id);
         int head = snprintf(out, EVENT_JSON_CAP, "{\"event\":\"%s\",\"at_s\":%lld,\"member\":\"%s\",\"args\":", id, (long long)at, whose);
         int body = ink_args_to_json(args, out + head, EVENT_JSON_CAP - (size_t)head - 2);
         int r = 0;
@@ -775,11 +937,12 @@ static void send_events(void) { /* hub task */
     }
 }
 
-void ink_cap_emit(const char *id, const ink_args_t *payload) {
+void ink_cap_emit_for(const char *id, const ink_args_t *payload, const char *whose, uint32_t generation) {
+    if (!whose || !generation || generation != ink_member_generation(whose)) return;
     char key[64];
     snprintf(key, sizeof key, "event.%s", id);
     ink_probe_count(key);
-    keep_event(id, payload);
+    keep_event(id, payload, whose, generation);
     for (int i = 0; i < nsubs; i++) {
         if (strncmp(id, SUBS[i].prefix, SUBS[i].plen)) continue;
         const char *prev = osal_mem_tag("cap");
@@ -789,16 +952,26 @@ void ink_cap_emit(const char *id, const ink_args_t *payload) {
             ink_probe_count("event.dropped");
             continue;
         }
+        snprintf(e->member, sizeof e->member, "%s", whose);
+        e->generation = generation;
         e->fn = SUBS[i].fn;
         e->ctx = SUBS[i].ctx;
         snprintf(e->id, sizeof e->id, "%s", id);
         if (payload) e->payload = *payload;
         else ink_args_init(&e->payload);
+        ink_args_str(&e->payload, "member", whose);
         if (ink_exec_post(SUBS[i].exec, &e->job, event_job, e) != 0) {
             ink_probe_count("event.dropped");
             osal_free(e);
         }
     }
+}
+
+void ink_cap_emit(const char *id, const ink_args_t *payload) {
+    char whose[INK_MEMBER_ID_MAX] = "";
+    if (payload) ink_args_get_str(payload, "member", whose, sizeof whose);
+    if (!whose[0]) snprintf(whose, sizeof whose, "%s", ink_member_current()->id);
+    ink_cap_emit_for(id, payload, whose, ink_member_generation(whose));
 }
 
 /* What the current member may use now, as the AI sees it. */
@@ -863,7 +1036,7 @@ static void manifest_entry(ink_jw_t *wp, const ink_cap_t *c, bool first) {
         ink_jw_raw(&w, ",\"effect\":");
         ink_jw_str(&w, ink_effect_name(c->effect));
         ink_jw_raw(&w, ",\"confirm\":");
-        ink_jw_str(&w, CONFIRM_NAME[confirm_for(c, INK_SRC_AI)]);
+        ink_jw_str(&w, CONFIRM_NAME[confirm_for(c, INK_SRC_AI, false)]);
         if (c->version > 1) {
             ink_jw_raw(&w, ",\"version\":");
             ink_jw_int(&w, c->version);
@@ -941,21 +1114,30 @@ typedef struct {
     char object[48], cap[48], member[16];
     ink_args_t args;
     uint64_t until_us;
+    uint32_t revision, generation;
 } undo_t;
 
 static undo_t UNDO[UNDO_MAX] INK_PSRAM_BSS;
 static int undo_next;
 
 void ink_cap_undoable(ink_call_t *call, const char *cap, const ink_args_t *args, uint32_t ms) {
+    pending_t *p = (pending_t *)call;
     osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+    if (!p->generation || p->generation != ink_member_generation(p->member) ||
+        strcmp(p->member, ink_member_current()->id) || !ink_member_space_open()) {
+        osal_mutex_unlock(CB.lock);
+        return;
+    }
     undo_t *u = &UNDO[undo_next];
     undo_next = (undo_next + 1) % UNDO_MAX;
     snprintf(u->object, sizeof u->object, "%s", call->rc.object);
     snprintf(u->cap, sizeof u->cap, "%s", cap);
-    snprintf(u->member, sizeof u->member, "%s", ink_member_current()->id);
+    snprintf(u->member, sizeof u->member, "%s", p->member);
     if (args) u->args = *args;
     else ink_args_init(&u->args);
     u->until_us = osal_now_us() + (uint64_t)ms * 1000u;
+    u->revision = call->rc.revision;
+    u->generation = p->generation;
     osal_mutex_unlock(CB.lock);
     call->rc.undo_ms = ms;
 }
@@ -967,6 +1149,8 @@ static void undo_done(void *ctx, const ink_receipt_t *rc) {
         snprintf(c->rc.say, sizeof c->rc.say, "撤销了");
     } else {
         c->rc.status = rc->status;
+        snprintf(c->rc.object, sizeof c->rc.object, "%s", rc->object);
+        snprintf(c->rc.say, sizeof c->rc.say, "%s", rc->say);
         snprintf(c->rc.detail, sizeof c->rc.detail, "%s", rc->detail);
     }
     ink_cap_done(c);
@@ -975,13 +1159,16 @@ static void undo_done(void *ctx, const ink_receipt_t *rc) {
 static void cap_undo(ink_call_t *c) {
     char object[48];
     ink_args_get_str(&c->args, "object", object, sizeof object);
+    int64_t revision = 0;
+    bool bound = ink_args_get_int(&c->args, "revision", &revision);
     undo_t u = {0};
     bool found = false;
     uint64_t now = osal_now_us();
     osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
-    for (int i = 0; i < UNDO_MAX && !found; i++) {
+    for (int n = 0; n < UNDO_MAX && !found; n++) {
+        int i = (undo_next + UNDO_MAX - 1 - n) % UNDO_MAX;
         undo_t *e = &UNDO[i];
-        if (e->until_us > now && !strcmp(e->object, object) && !strcmp(e->member, ink_member_current()->id)) {
+        if (e->generation && e->generation == ink_member_generation(NULL) && e->until_us > now && (!bound || e->revision == (uint32_t)revision) && !strcmp(e->object, object) && !strcmp(e->member, ink_member_current()->id)) {
             u = *e;
             e->until_us = 0; /* once */
             found = true;
@@ -993,8 +1180,9 @@ static void cap_undo(ink_call_t *c) {
         return;
     }
     snprintf(c->rc.object, sizeof c->rc.object, "%s", object);
-    ink_cap_defer(c); /* the inverse may run on another executor: the member's own undo, no second confirmation */
-    ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .reply_exec = INK_EXEC_DIRECT, .done = undo_done, .ctx = c};
+    ink_cap_defer(c); /* Settings recheck their own risk; a permission inverse is still a permission change. */
+    ink_source_t src = !strcmp(u.cap, "settings.set") ? c->src : INK_SRC_CONFIRMED;
+    ink_call_opts_t o = {.src = src, .member = u.member, .member_generation = u.generation, .reply_exec = INK_EXEC_DIRECT, .done = undo_done, .ctx = c};
     if (ink_cap_call(u.cap, &u.args, &o) != 0) {
         reject(&c->rc, INK_RC_FAILED, "busy");
         ink_cap_done(c);
@@ -1066,10 +1254,70 @@ static void cap_find(ink_call_t *c) {
     osal_free(out);
 }
 
+static void cap_activity_list(ink_call_t *c) { /* exec.bg */
+    char member[INK_MEMBER_ID_MAX], cursor[48] = "";
+    snprintf(member, sizeof member, "%s", ink_member_current()->id);
+    ink_db_t *db = ink_db_open(&ACTIVITY, member);
+    char *out = osal_malloc(16384, OSAL_MEM_EXTERNAL);
+    if (!db || !out) {
+        if (db) ink_db_close(db);
+        osal_free(out);
+        reject(&c->rc, INK_RC_FAILED, "activity log unavailable");
+        return;
+    }
+    ink_db_cursor_t at = {.desc = true};
+    if (ink_args_get_str(&c->args, "cursor", cursor, sizeof cursor) > 0) {
+        long long sort = 0; unsigned id = 0;
+        if (sscanf(cursor, "%lld:%u", &sort, &id) != 2) {
+            ink_db_close(db); osal_free(out);
+            reject(&c->rc, INK_RC_INVALID, "invalid cursor");
+            return;
+        }
+        at.sort = sort; at.id = id; at.started = true;
+    }
+    int64_t limit = 20;
+    ink_args_get_int(&c->args, "limit", &limit);
+    int64_t now = osal_wall_us() / 1000000;
+    int64_t keep = (ink_member_current()->role == INK_ROLE_CHILD ? 180ll : 365ll) * 86400;
+    ink_jw_t w;
+    ink_jw_init(&w, out, 16384 - 80);
+    ink_jw_raw(&w, "{\"items\":[");
+    ink_rec_t rec;
+    char row[512];
+    int shown = 0;
+    bool more = false;
+    ink_db_cursor_t last = at;
+    while (ink_db_next(db, &at, &rec, row, sizeof row - 1) == 1) {
+        if (rec.sort > 0 && now > 0 && rec.sort < now - keep) continue;
+        if (shown >= limit) { more = true; break; }
+        row[rec.len < sizeof row ? rec.len : sizeof row - 1] = 0;
+        size_t before = w.len;
+        if (shown) ink_jw_raw(&w, ",");
+        ink_jw_raw(&w, row);
+        if (w.overflow) { w.overflow = false; w.len = before; out[w.len] = 0; more = true; break; }
+        shown++;
+        last = at;
+    }
+    ink_jw_raw(&w, "]");
+    if (more) {
+        char next[80];
+        snprintf(next, sizeof next, ",\"next\":\"%lld:%u\"", (long long)last.sort, (unsigned)last.id);
+        ink_jw_raw(&w, next);
+    }
+    ink_jw_raw(&w, "}");
+    ink_db_close(db);
+    if (strcmp(member, ink_member_current()->id) || !ink_member_space_open()) reject(&c->rc, INK_RC_STALE, "member changed");
+    else ink_cap_result(c, out);
+    osal_free(out);
+}
+
 static const ink_cap_t BUS_CAPS[] = {
+    {.id = "activity.list", .title = "查看 AI 做过的事", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_BG,
+     .input = "{\"type\":\"object\",\"properties\":{\"cursor\":{\"type\":\"string\",\"maxLength\":47},\"limit\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":100}}}",
+     .run = cap_activity_list},
     {.id = "system.undo",
      .title = "撤销刚才的操作",
-     .input = "{\"type\":\"object\",\"properties\":{\"object\":{\"type\":\"string\",\"maxLength\":47}},\"required\":[\"object\"]}",
+     .input = "{\"type\":\"object\",\"properties\":{\"object\":{\"type\":\"string\",\"maxLength\":47},\"revision\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":4294967295}},\"required\":[\"object\"]}",
      .effect = INK_FX_LOCAL_WRITE,
      .child_ok = true,
      .exec = INK_EXEC_DIRECT,
@@ -1091,10 +1339,11 @@ static int register_bus_caps(void) { return ink_cap_register(BUS_CAPS, (int)(siz
 typedef struct {
     ink_exec_job_t job;
     int64_t id;
-    bool list;
+    bool list, asked;
+    char member[INK_MEMBER_ID_MAX];
     int cursor;        /* tools/list: the page */
     char domain[16];   /* tools/list: only this domain */
-    uint32_t page_gen;
+    uint32_t page_gen, generation;
     uint64_t received_us;
     char name[48];
     char rid[RID_CAP]; /* _meta.request_id: a retry gets the first receipt again */
@@ -1137,9 +1386,9 @@ static void tool_run(void *arg) { /* UI task */
         return;
     }
     ink_ui_cause(t->received_us, "ai.tool_to_visible_ms"); /* what the capability changes on screen */
-    ink_call_opts_t o = {.src = INK_SRC_AI, .page_gen = t->page_gen, .request_id = t->rid[0] ? t->rid : NULL, .args_json = t->args,
+    ink_call_opts_t o = {.src = INK_SRC_AI, .member = t->member, .member_generation = t->generation, .page_gen = t->page_gen, .request_id = t->rid[0] ? t->rid : NULL, .args_json = t->args,
                          .reply_exec = INK_EXEC_DIRECT, .done = tool_done, .ctx = t};
-    if (ink_cap_call(t->name, NULL, &o) != 0) {
+    if (call_with_intent(t->name, NULL, &o, t->asked) != 0) {
         ink_hub_respond_error(t->id, -32603, "busy");
         osal_free(t);
     }
@@ -1170,17 +1419,27 @@ static void on_tools(void *ctx, int64_t id, const char *method, const ink_json_t
     t->id = id;
     t->list = list;
     t->received_us = osal_now_us();
+    snprintf(t->member, sizeof t->member, "%s", ink_member_current()->id);
     if (list) {
         char cursor[16];
         if (ink_json_str(j, ink_json_find(j, params, "cursor"), cursor, sizeof cursor) > 0) t->cursor = atoi(cursor);
         ink_json_str(j, ink_json_find(j, params, "domain"), t->domain, sizeof t->domain);
     }
     if (!list) {
+        int intent = ink_json_find(j, params, "_meta.asked");
+        t->asked = intent >= 0 && j->tok[intent].type == 8 && ink_json_eq(j, intent, "true");
+        int member = ink_json_find(j, params, "_meta.member");
+        if (member >= 0 && (ink_json_str(j, member, t->member, sizeof t->member) < 0 || !ink_layout_member_ok(t->member))) {
+            osal_free(t);
+            ink_hub_respond_error(id, -32602, "invalid member");
+            return;
+        }
         if (ink_json_str(j, ink_json_find(j, params, "name"), t->name, sizeof t->name) < 0) {
             osal_free(t);
             ink_hub_respond_error(id, -32602, "tools/call needs a name");
             return;
         }
+        t->generation = ink_member_generation(t->member);
         int64_t pg = 0;
         if (ink_json_int(j, ink_json_find(j, params, "page_gen"), &pg) || ink_json_int(j, ink_json_find(j, params, "_meta.page_gen"), &pg))
             t->page_gen = (uint32_t)pg;
@@ -1234,6 +1493,13 @@ static void on_caps_changed(void *ctx, const char *method, const ink_json_t *j, 
 }
 
 int ink_tools_init(void) {
+    if (ink_db_register(&ACTIVITY) != 0) return -1;
+    /* Boot reads the small logs before interactive work can queue activity writes. */
+    for (int i = 0; ink_member_at(i); i++) {
+        ink_db_t *db = ink_db_open(&ACTIVITY, ink_member_at(i)->id);
+        if (db) ink_db_close(db);
+    }
+    AL.ready = true;
     if (ink_hub_on_online(dir_fetch, NULL) || ink_hub_subscribe("caps/", on_caps_changed, NULL)) return -1;
     ink_hub_set_tick(send_events);
     return ink_hub_on_request("tools/", on_tools, NULL);

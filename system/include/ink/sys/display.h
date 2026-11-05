@@ -59,6 +59,8 @@ void ink_display_set_text_cleanup_every(int n);
 
 /** Frames committed since boot. */
 uint32_t ink_display_commits(void);
+/** Failed dispatches or panel completions since boot. */
+uint32_t ink_display_failures(void);
 /** Number of committed-but-not-yet-stable regions (0 = screen settled). */
 int ink_display_busy(void);
 

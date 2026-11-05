@@ -11,12 +11,23 @@
 #include "ink/sys/cap.h"
 #include "ink/sys/data.h"
 #include "ink/sys/json.h"
+#include "ink/sys/members.h"
 
 #define VALUE_CAP (INK_DB_RECORD_MAX + 1)
 #define RESULT_CAP (2 * INK_DB_RECORD_MAX + 512) /* a record goes in as it is: a page has room for at least one, whole */
 #define UNDO_MS 10000
 
 static const char *const SRC_NAME[] = {"touch", "key", "ai", "system", "app", "remote", "confirmed"};
+
+static ink_db_t *open_for_call(ink_call_t *c, const ink_db_def_t *d) {
+    uint32_t generation;
+    const char *member = ink_cap_call_member(c, &generation);
+    if (!generation || generation != ink_member_generation(member)) {
+        c->rc.status = INK_RC_STALE;
+        return NULL;
+    }
+    return d->scope == INK_DB_MEMBER ? ink_db_open_member(d, member, generation) : ink_db_open(d, NULL);
+}
 
 static const ink_db_def_t *open_def(ink_call_t *c, bool write, ink_db_t **out) {
     char name[INK_DB_NAME_MAX];
@@ -27,9 +38,9 @@ static const ink_db_def_t *open_def(ink_call_t *c, bool write, ink_db_t **out) {
         snprintf(c->rc.detail, sizeof c->rc.detail, "%s", d ? "this collection is not open to this" : "no such collection");
         return NULL;
     }
-    *out = ink_db_open(d, NULL);
+    *out = open_for_call(c, d);
     if (!*out) {
-        c->rc.status = INK_RC_FAILED;
+        if (c->rc.status != INK_RC_STALE) c->rc.status = INK_RC_FAILED;
         snprintf(c->rc.detail, sizeof c->rc.detail, "cannot open the collection");
         return NULL;
     }
@@ -65,7 +76,8 @@ static void cap_collections(ink_call_t *c) { /* exec.bg: opening one may wait fo
         const ink_db_def_t *d = ink_db_def_at(i);
         if (!d) break;
         if (!d->json || !d->ai_read) continue;
-        ink_db_t *db = ink_db_open(d, NULL);
+        ink_db_t *db = open_for_call(c, d);
+        if (c->rc.status == INK_RC_STALE) break;
         ink_jw_raw(&w, first ? "{\"name\":" : ",{\"name\":");
         first = false;
         ink_jw_str(&w, d->name);
@@ -80,7 +92,7 @@ static void cap_collections(ink_call_t *c) { /* exec.bg: opening one may wait fo
     if (w.overflow) {
         c->rc.status = INK_RC_FAILED;
         snprintf(c->rc.detail, sizeof c->rc.detail, "too long");
-    } else ink_cap_result(c, out);
+    } else if (c->rc.status != INK_RC_STALE) ink_cap_result(c, out);
     osal_free(out);
 }
 
@@ -207,17 +219,18 @@ static void cap_put(ink_call_t *c) {
         sort = wall > 0 ? wall / 1000000 : 0;
     }
     bool existed = id && ink_db_get(db, (uint32_t)id, NULL, NULL, 0) == INK_DB_OK;
-    ink_db_write_t wr = {.id = (uint32_t)id, .sort = sort, .data = c->args.text + v->off, .len = v->len, .src = (uint8_t)c->src};
+    ink_db_write_t wr = {.written_ver = &c->rc.revision, .id = (uint32_t)id, .sort = sort, .data = c->args.text + v->off, .len = v->len, .src = (uint8_t)c->src};
     uint32_t got = 0;
     int r = ink_db_put(db, &wr, &got);
     put_result(c, d, r, got);
     if (r == INK_DB_OK) {
-        c->rc.revision = ink_db_last_ver(db);
+        /* The version belongs to this put, even if another writer follows. */
         if (!existed) { /* a new record can be taken back; an overwrite could not be restored from here */
             ink_args_t undo;
             ink_args_init(&undo);
             ink_args_str(&undo, "collection", d->name);
             ink_args_int(&undo, "id", got);
+            ink_args_int(&undo, "if_revision", c->rc.revision);
             ink_cap_undoable(c, "data.delete", &undo, UNDO_MS);
         }
     }
@@ -254,11 +267,13 @@ static void cap_delete(ink_call_t *c) {
     if (!d) return;
     int64_t id = 0;
     ink_args_get_int(&c->args, "id", &id);
-    int r = ink_db_del(db, (uint32_t)id, (uint8_t)c->src);
+    int64_t ver = 0;
+    ink_args_get_int(&c->args, "if_revision", &ver);
+    int r = ink_db_del_if_ver(db, (uint32_t)id, (uint8_t)c->src, (uint32_t)ver);
     if (r == INK_DB_OK) snprintf(c->rc.object, sizeof c->rc.object, "%.32s#%u", d->name, (unsigned)id);
     else {
-        c->rc.status = INK_RC_FAILED;
-        snprintf(c->rc.detail, sizeof c->rc.detail, "no such record");
+        c->rc.status = ver ? INK_RC_STALE : INK_RC_FAILED;
+        snprintf(c->rc.detail, sizeof c->rc.detail, "record changed or absent");
     }
     ink_db_close(db);
 }
@@ -302,7 +317,7 @@ static const ink_cap_t DATA_CAPS[] = {
      .title = "删除一条数据",
      .ask = "从 {collection} 删除第 {id} 条",
      .input = "{\"type\":\"object\",\"properties\":{" COLL ",\"id\":{\"type\":\"integer\",\"minimum\":1}},\"required\":[\"collection\",\"id\"]}",
-     .effect = INK_FX_LOCAL_DESTRUCTIVE,
+     .effect = INK_FX_LOCAL_DESTRUCTIVE, .ask_by_hand = true,
      .child_ok = true,
      .exec = INK_EXEC_BG,
      .run = cap_delete},

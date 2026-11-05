@@ -21,6 +21,10 @@
 
 # Python 字节码
 __pycache__/
+/hub/.venv/
+/hub/data/
+/.pytest_cache/
+/hub/.pytest_cache/
 
 # hw-probe (ESP-IDF) build output and generated config
 /tools/hw-probe/build/

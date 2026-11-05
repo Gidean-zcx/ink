@@ -25,6 +25,7 @@
 #include "ink/sys/storage.h"
 #include "ink/sys/svc.h"
 #include "ink/sys/time.h"
+#include "ink/sys/task.h"
 
 #define PIN_ITERATIONS 3000      /* about 100 ms on the S31 by the block cost; to be set on the device (D-69) */
 #define PIN_MIN 4
@@ -34,9 +35,13 @@
 #define LONGEST_WAIT_S 900
 #define UNREAD_RETRY_S 10
 #define IDLE_RETURN_S 120
+#define REMOVING 0x80u /* Kept in the stored role byte without changing the record format. */
 
 typedef struct {
     bool used;
+    bool removing;
+    uint16_t writers;
+    uint32_t generation;
     ink_member_t m;
     uint8_t salt[16], hash[32];
     bool has_pin;
@@ -57,6 +62,7 @@ static const ink_db_def_t TABLE = {.name = "member.table", .title = "家人名�
 
 static struct {
     slot_t s[INK_MEMBERS_MAX];
+    uint32_t next_generation;
     slot_t *cur;
     bool authed;
     bool table_is_real;
@@ -91,6 +97,36 @@ static void publish(void) {
 
 const ink_member_t *ink_member_current(void) { return &cur()->m; }
 
+bool ink_member_removing(const char *id) { const slot_t *s = find(id); return s && s->removing; }
+
+uint32_t ink_member_generation(const char *id) {
+    slot_t *s = id ? find(id) : cur();
+    if (!s || s->removing) return 0;
+    uint32_t generation = __atomic_load_n(&s->generation, __ATOMIC_ACQUIRE);
+    if (!generation) {
+        uint32_t fresh = __atomic_add_fetch(&M.next_generation, 1, __ATOMIC_RELAXED);
+        __atomic_compare_exchange_n(&s->generation, &generation, fresh, false, __ATOMIC_RELEASE, __ATOMIC_ACQUIRE);
+        generation = __atomic_load_n(&s->generation, __ATOMIC_ACQUIRE);
+    }
+    return generation;
+}
+
+bool ink_member_io_begin(const char *id, uint32_t generation) {
+    ink_svc_lock();
+    slot_t *s = id ? find(id) : NULL;
+    bool ok = s && generation && generation == ink_member_generation(id) && s->writers < UINT16_MAX;
+    if (ok) s->writers++;
+    ink_svc_unlock();
+    return ok;
+}
+
+void ink_member_io_end(const char *id) {
+    ink_svc_lock();
+    slot_t *s = find(id);
+    if (s && s->writers) s->writers--;
+    ink_svc_unlock();
+}
+
 const ink_member_t *ink_member_at(int i) {
     int seen = 0;
     for (int k = 0; k < INK_MEMBERS_MAX; k++)
@@ -106,7 +142,7 @@ bool ink_member_has_pin(const char *id) {
 bool ink_member_any_pin(void) {
     if (M.table_unread) return true;
     for (int k = 0; k < INK_MEMBERS_MAX; k++)
-        if (M.s[k].used && M.s[k].m.role == INK_ROLE_ADULT && M.s[k].has_pin) return true;
+        if (M.s[k].used && !M.s[k].removing && M.s[k].m.role == INK_ROLE_ADULT && M.s[k].has_pin) return true;
     return false;
 }
 
@@ -130,14 +166,14 @@ static uint32_t record_id(const char *id) {
 }
 
 /* What is in memory, written: from the first change on the table is what there is. */
-static void save_slot(ink_db_t *db, const slot_t *s) {
-    stored_t r = {.role = (uint8_t)s->m.role, .has_pin = s->has_pin, .fails = s->fails, .not_before_s = s->not_before_s};
+static int save_slot(ink_db_t *db, const slot_t *s) {
+    stored_t r = {.role = (uint8_t)s->m.role | (s->removing ? REMOVING : 0), .has_pin = s->has_pin, .fails = s->fails, .not_before_s = s->not_before_s};
     snprintf(r.id, sizeof r.id, "%s", s->m.id);
     snprintf(r.name, sizeof r.name, "%s", s->m.name);
     memcpy(r.salt, s->salt, sizeof r.salt);
     memcpy(r.hash, s->hash, sizeof r.hash);
     ink_db_write_t w = {.id = record_id(s->m.id), .data = &r, .len = sizeof r, .src = INK_SRC_SYSTEM};
-    ink_db_put(db, &w, NULL);
+    return ink_db_put(db, &w, NULL);
 }
 
 static void save_all(void) {
@@ -164,7 +200,8 @@ static int read_table(slot_t *fresh) {
         s->used = true;
         snprintf(s->m.id, sizeof s->m.id, "%.15s", st.id);
         snprintf(s->m.name, sizeof s->m.name, "%.31s", st.name);
-        s->m.role = (ink_role_t)st.role;
+        s->m.role = (ink_role_t)(st.role & ~REMOVING);
+        s->removing = (st.role & REMOVING) != 0;
         s->has_pin = st.has_pin;
         memcpy(s->salt, st.salt, sizeof s->salt);
         memcpy(s->hash, st.hash, sizeof s->hash);
@@ -191,7 +228,7 @@ static void load_table(void) {
         /* an adult first, as on the first boot */
         slot_t *first = &M.s[0];
         for (int i = INK_MEMBERS_MAX - 1; i >= 0; i--)
-            if (M.s[i].used && M.s[i].m.role == INK_ROLE_ADULT) first = &M.s[i];
+            if (M.s[i].used && !M.s[i].removing && M.s[i].m.role == INK_ROLE_ADULT) first = &M.s[i];
         M.cur = first;
     }
     if (fresh) memset(fresh, 0, INK_MEMBERS_MAX * sizeof *fresh);
@@ -214,7 +251,7 @@ void ink_members_init(void) {
 
 int ink_member_switch(const char *id) {
     slot_t *t = find(id);
-    if (!t) return -1;
+    if (!t || t->removing) return -1;
     if (t == cur()) return ink_member_space_open() ? 0 : -2;
     if (t->has_pin || (M.table_unread && t->m.role == INK_ROLE_ADULT)) return -2; /* needs the PIN */
     M.cur = t;
@@ -226,7 +263,7 @@ int ink_member_switch(const char *id) {
 
 void ink_member_test_reset(void) {
     for (int i = 0; i < INK_MEMBERS_MAX; i++)
-        if (M.s[i].used && M.s[i].m.role == INK_ROLE_ADULT) {
+        if (M.s[i].used && !M.s[i].removing && M.s[i].m.role == INK_ROLE_ADULT) {
             M.cur = &M.s[i];
             break;
         }
@@ -335,6 +372,7 @@ typedef enum { JOB_UNLOCK, JOB_SET, JOB_CHECK_PARENT } job_kind_t;
 typedef struct {
     ink_exec_job_t job;
     job_kind_t kind;
+    uint32_t generation;
     char id[16];
     char pin[PIN_MAX + 1], new_pin[PIN_MAX + 1];
     ink_pin_done_fn done;
@@ -366,9 +404,9 @@ static void pin_job(void *arg) { /* exec.bg: slow by design */
     if (j->kind == JOB_CHECK_PARENT) { /* the one using the device if an adult with a PIN, else the first who has one */
         if (cur()->m.role == INK_ROLE_ADULT && cur()->has_pin) s = cur();
         for (int i = 0; i < INK_MEMBERS_MAX && !s; i++)
-            if (M.s[i].used && M.s[i].m.role == INK_ROLE_ADULT && M.s[i].has_pin) s = &M.s[i];
+            if (M.s[i].used && !M.s[i].removing && M.s[i].m.role == INK_ROLE_ADULT && M.s[i].has_pin) s = &M.s[i];
     } else s = find(j->id);
-    if (s) switch (j->kind) {
+    if (s && !s->removing && (j->kind == JOB_CHECK_PARENT || j->generation == ink_member_generation(j->id))) switch (j->kind) {
         case JOB_UNLOCK:
             if (!s->has_pin) r = INK_PIN_OK;
             else r = try_pin(s, j->pin, &wait_s);
@@ -418,6 +456,7 @@ static int start_job(job_kind_t kind, const char *id, const char *pin, const cha
     pin_job_t *j = osal_calloc(1, sizeof *j, OSAL_MEM_EXTERNAL);
     if (!j) return -1;
     j->kind = kind;
+    j->generation = ink_member_generation(id);
     snprintf(j->id, sizeof j->id, "%s", id ? id : "");
     snprintf(j->pin, sizeof j->pin, "%s", pin ? pin : "");
     snprintf(j->new_pin, sizeof j->new_pin, "%s", new_pin ? new_pin : "");
@@ -443,9 +482,10 @@ static void fail(ink_call_t *c, ink_rc_t st, const char *why) {
 }
 
 static void cap_list(ink_call_t *c) {
-    char out[768];
+    char *out = osal_malloc(1536, OSAL_MEM_EXTERNAL);
+    if (!out) { fail(c, INK_RC_FAILED, "out of memory"); return; }
     ink_jw_t w;
-    ink_jw_init(&w, out, sizeof out);
+    ink_jw_init(&w, out, 1536);
     ink_jw_raw(&w, "[");
     const ink_member_t *m;
     for (int i = 0; (m = ink_member_at(i)) != NULL; i++) {
@@ -454,10 +494,13 @@ static void cap_list(ink_call_t *c) {
         ink_jw_raw(&w, ",\"name\":");
         ink_jw_str(&w, m->name);
         ink_jw_raw(&w, m->role == INK_ROLE_CHILD ? ",\"role\":\"child\"" : ",\"role\":\"adult\"");
-        ink_jw_raw(&w, ink_member_has_pin(m->id) ? ",\"has_pin\":true}" : ",\"has_pin\":false}");
+        ink_jw_raw(&w, ink_member_has_pin(m->id) ? ",\"has_pin\":true" : ",\"has_pin\":false");
+        ink_jw_raw(&w, find(m->id)->removing ? ",\"removing\":true}" : "}");
     }
     ink_jw_raw(&w, "]");
-    ink_cap_result(c, out);
+    if (w.overflow) fail(c, INK_RC_FAILED, "member list too long");
+    else ink_cap_result(c, out);
+    osal_free(out);
 }
 
 static void cap_add(ink_call_t *c) { /* exec.bg */
@@ -480,31 +523,40 @@ static void cap_add(ink_call_t *c) { /* exec.bg */
         fail(c, INK_RC_FAILED, "the family is full");
         return;
     }
+    ink_svc_lock();
     memset(s, 0, sizeof *s);
     snprintf(s->m.id, sizeof s->m.id, "%.15s", id);
     snprintf(s->m.name, sizeof s->m.name, "%.31s", name[0] ? name : id);
     s->m.role = !strcmp(role, "adult") ? INK_ROLE_ADULT : INK_ROLE_CHILD;
     set_allow(s);
     s->used = true;
+    s->generation = __atomic_add_fetch(&M.next_generation, 1, __ATOMIC_RELAXED);
+    ink_svc_unlock();
     save_all();
     ink_cap_emit("member.changed", NULL);
 }
 
-static void wipe_member_files(void *arg) { /* the storage task: their data area */
-    const char *id = arg;
+typedef struct { const char *id; int result; } member_wipe_t;
+
+static void wipe_member_files(void *arg) { /* the storage task: their flat data area */
+    member_wipe_t *w = arg;
     char dir[INK_LAYOUT_PATH_MAX];
-    if (ink_layout_member(dir, sizeof dir, id, "x") < 0) return;
+    if (ink_layout_member(dir, sizeof dir, w->id, "x") < 0) return;
     dir[strlen(dir) - 2] = 0;
+    if (ink_storage_forget_member(w->id) != 0) return;
     hal_dir_t *d = hal_fs_opendir(dir);
+    if (!d && hal_fs_size(dir) < 0 && hal_fs_mkdir(dir) == 0) d = hal_fs_opendir(dir);
     if (!d) return;
     hal_dirent_t e;
     char path[INK_LAYOUT_PATH_MAX + 64];
-    while (hal_fs_readdir(d, &e) == 1) {
-        if (e.is_dir) continue;
-        if (snprintf(path, sizeof path, "%s/%s", dir, e.name) < (int)sizeof path) hal_fs_remove(path);
+    int more = 0;
+    bool ok = true;
+    while (ok && (more = hal_fs_readdir(d, &e)) == 1) {
+        if (!strcmp(e.name, ".") || !strcmp(e.name, "..")) continue;
+        ok = !e.is_dir && snprintf(path, sizeof path, "%s/%s", dir, e.name) < (int)sizeof path && hal_fs_remove(path) == 0;
     }
     hal_fs_closedir(d);
-    hal_fs_remove(dir);
+    if (ok && more == 0 && hal_fs_remove(dir) == 0) w->result = 0;
 }
 
 static void cap_remove(ink_call_t *c) { /* exec.bg */
@@ -525,26 +577,60 @@ static void cap_remove(ink_call_t *c) { /* exec.bg */
     }
     int adults = 0;
     for (int i = 0; i < INK_MEMBERS_MAX; i++)
-        if (M.s[i].used && M.s[i].m.role == INK_ROLE_ADULT) adults++;
-    if (s->m.role == INK_ROLE_ADULT && adults == 1) {
+        if (M.s[i].used && !M.s[i].removing && M.s[i].m.role == INK_ROLE_ADULT) adults++;
+    if (!s->removing && s->m.role == INK_ROLE_ADULT && adults == 1) {
         fail(c, INK_RC_FAILED, "the last adult stays");
         return;
     }
     ink_db_t *db = ink_db_open(&TABLE, NULL);
-    if (db) {
+    bool saved = db != NULL;
+    if (!db) ink_probe_count("members.cleanup_table_unavailable");
+    ink_svc_lock();
+    s->removing = true; /* The id stays reserved through failures and restarts. */
+    ink_svc_unlock();
+    if (saved) {
         for (int i = 0; i < INK_MEMBERS_MAX; i++)
-            if (M.s[i].used) save_slot(db, &M.s[i]); /* the table is real from now on */
+            if (M.s[i].used) {
+                int r = save_slot(db, &M.s[i]);
+                if (r != INK_DB_OK) { ink_probe_value("members.cleanup_put_error", r); saved = false; }
+            }
+        if (saved) {
+            saved = ink_db_wait(db, ink_db_last_ver(db), (int64_t)ink_cap_time_left_ms(c) * 1000) == 0;
+            if (!saved) ink_probe_count("members.cleanup_state_timeout");
+        }
         M.table_is_real = true;
-        ink_db_del(db, record_id(id), (uint8_t)c->src);
-        ink_db_close(db);
     }
+    if (!saved) ink_probe_count("members.cleanup_state_failed");
+    ink_svc_lock();
+    bool writers_idle = s->writers == 0;
+    ink_svc_unlock();
+    if (!writers_idle) ink_probe_count("members.cleanup_writer_busy");
+    bool cleared = saved && writers_idle && ink_time_forget_member(id, (int64_t)ink_cap_time_left_ms(c) * 1000) == 0;
+    if (cleared) ink_task_forget_member(id);
+    cleared = cleared && ink_db_try_forget_member(id) == 0;
+    if (saved && !cleared) ink_probe_count("members.cleanup_cache_busy");
+    member_wipe_t wipe = {.id = id, .result = -1};
+    if (cleared) ink_storage_run(wipe_member_files, &wipe, true);
+    if (cleared && wipe.result != 0) ink_probe_count("members.cleanup_flash_failed");
+    cleared = cleared && wipe.result == 0;
+    if (cleared && ink_fs_forget_member(id) != INK_FS_OK) {
+        ink_probe_count("members.cleanup_card_failed");
+        cleared = false;
+    }
+    if (cleared) cleared = ink_db_del(db, record_id(id), (uint8_t)c->src) == INK_DB_OK &&
+                           ink_db_wait(db, ink_db_last_ver(db), (int64_t)ink_cap_time_left_ms(c) * 1000) == 0;
+    if (db) ink_db_close(db);
+    if (!cleared) {
+        fail(c, INK_RC_FAILED, "member cleanup incomplete; retry removal with the card inserted");
+        snprintf(c->rc.say, sizeof c->rc.say, "还没删完，请插好存储卡后重试；这位家人的编号暂时不能使用");
+        ink_cap_emit("member.changed", NULL);
+        return;
+    }
+    ink_svc_lock();
     s->used = false;
-    /* what was theirs, on the flash and on the card */
-    ink_db_forget_member(id);
-    ink_storage_run(wipe_member_files, id, true);
-    int card = ink_fs_forget_member(id);
+    ink_svc_unlock();
     ink_cap_emit("member.changed", NULL);
-    snprintf(c->rc.say, sizeof c->rc.say, "%s", card == INK_FS_ERR_NO_CARD ? "删掉了。存储卡不在，卡上的文件还留着" : "删掉了");
+    snprintf(c->rc.say, sizeof c->rc.say, "删掉了");
 }
 
 /* What only happens on the device: the answer is told when the slow part is over. */
@@ -588,10 +674,10 @@ static const ink_cap_t MEMBER_CAPS[] = {
     {.id = "member.list", .title = "家里有哪些人", .output = "{\"type\":\"array\"}", .effect = INK_FX_READ, .child_ok = true, .while_locked = true, .exec = INK_EXEC_DIRECT, .run = cap_list},
     {.id = "member.add", .title = "加一位家人", .ask = "加一位家人：{name}（{role}）",
      .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":15},\"name\":{\"type\":\"string\",\"maxLength\":31},\"role\":{\"type\":\"string\",\"enum\":[\"adult\",\"child\"]}},\"required\":[\"id\"]}",
-     .effect = INK_FX_SYSTEM, .exec = INK_EXEC_BG, .run = cap_add},
+     .effect = INK_FX_SYSTEM, .ask_by_hand = true, .parent_pin = true, .exec = INK_EXEC_BG, .run = cap_add},
     {.id = "member.remove", .title = "删除一位家人和他们的全部数据（不能撤销）", .ask = "删除家人 {id} 和他们的全部数据，不能撤销",
      .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":15}},\"required\":[\"id\"]}",
-     .effect = INK_FX_SYSTEM, .parent_pin = true, .exec = INK_EXEC_BG, .run = cap_remove},
+     .effect = INK_FX_SYSTEM, .ask_by_hand = true, .parent_pin = true, .exec = INK_EXEC_BG, .run = cap_remove},
     /* a PIN goes through no one's hands but the person's */
     {.id = "member.unlock", .title = "输密码进入家人的空间（只能在设备上）",
      .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":15},\"pin\":{\"type\":\"string\",\"maxLength\":8}},\"required\":[\"id\",\"pin\"]}",
@@ -603,7 +689,7 @@ static const ink_cap_t MEMBER_CAPS[] = {
 };
 
 static const ink_setting_def_t MEMBER_SETTINGS[] = {
-    {.id = "member.idle_return_s", .title = "大人的空间闲置多久后要重新输密码（秒）", .type = INK_SET_INT, .min = 30, .max = 3600, .def = IDLE_RETURN_S},
+    {.id = "member.idle_return_s", .title = "大人的空间闲置多久后要重新输密码（秒）", .type = INK_SET_INT, .min = 30, .max = 3600, .def = IDLE_RETURN_S, .ask_by_hand = true},
 };
 
 int ink_members_start(void) {

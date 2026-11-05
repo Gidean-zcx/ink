@@ -31,6 +31,14 @@ void ink_members_init(void);
 /** The capabilities and the idle watch: after the data store, the power service and the settings. */
 int ink_members_start(void);
 const ink_member_t *ink_member_current(void);
+/** Live incarnation, zero for an absent or quarantined member. */
+uint32_t ink_member_generation(const char *id);
+/** Register a writer of this incarnation before opening files/collections or queuing work. Removal
+ *  quarantines the member and refuses cleanup while a writer is registered. End every successful begin. */
+bool ink_member_io_begin(const char *id, uint32_t generation);
+void ink_member_io_end(const char *id);
+/** Writes into a quarantined namespace must stop before it is erased. */
+bool ink_member_removing(const char *id);
 /** Who there is. NULL past the last. */
 const ink_member_t *ink_member_at(int i);
 bool ink_member_has_pin(const char *id);

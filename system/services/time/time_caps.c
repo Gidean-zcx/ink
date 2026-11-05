@@ -53,7 +53,22 @@ static void cap_now(ink_call_t *c) {
 static void cap_set(ink_call_t *c) {
     int64_t s = 0;
     ink_args_get_int(&c->args, "utc_s", &s);
-    ink_time_set(s, false);
+    int64_t before = ink_time_now_s();
+    bool valid = ink_time_valid();
+    int64_t expected = 0;
+    ink_args_get_int(&c->args, "if_revision", &expected);
+    if (ink_time_set_if_revision(s, false, (uint32_t)expected, &c->rc.revision) != 0) { c->rc.status = INK_RC_STALE; return; }
+    snprintf(c->rc.object, sizeof c->rc.object, "time:clock");
+    if (valid) {
+        ink_args_t *undo = osal_malloc(sizeof *undo, OSAL_MEM_EXTERNAL);
+        if (undo) {
+            ink_args_init(undo);
+            ink_args_int(undo, "utc_s", before);
+            ink_args_int(undo, "if_revision", c->rc.revision);
+            ink_cap_undoable(c, "time.set", undo, 10000);
+            osal_free(undo);
+        }
+    }
     snprintf(c->rc.say, sizeof c->rc.say, "时间改好了");
 }
 
@@ -107,9 +122,11 @@ static bool parse_at(const char *s, ink_alarm_t *a) { /* "2026-11-05 15:00" */
 }
 
 static void answer_add(ink_call_t *c, ink_alarm_t *a, const char *undo_cap) {
-    int id = ink_alarm_add(a);
+    uint32_t generation;
+    const char *member = ink_cap_call_member(c, &generation);
+    int id = ink_time_alarm_add_for(a, &c->rc.revision, member, generation);
     if (id <= 0) {
-        fail(c, id == -3 ? INK_RC_REJECTED : INK_RC_INVALID, id == -2 ? "that time has passed" : id == -3 ? "too many alarms" : "not a valid time");
+        fail(c, id == -5 ? INK_RC_STALE : id == -3 ? INK_RC_REJECTED : INK_RC_INVALID, id == -2 ? "that time has passed" : id == -3 ? "too many alarms" : "not a valid time");
         return;
     }
     snprintf(c->rc.object, sizeof c->rc.object, "%s:%d", a->kind == INK_ALARM ? "alarm" : "reminder", id);
@@ -121,6 +138,7 @@ static void answer_add(ink_call_t *c, ink_alarm_t *a, const char *undo_cap) {
     ink_args_t undo;
     ink_args_init(&undo);
     ink_args_int(&undo, "id", id);
+    ink_args_int(&undo, "if_revision", c->rc.revision);
     ink_cap_undoable(c, undo_cap, &undo, UNDO_MS);
 }
 
@@ -173,6 +191,8 @@ static void cap_reminder_add(ink_call_t *c) {
 }
 
 static void list_kind(ink_call_t *c, ink_alarm_kind_t kind) {
+    uint32_t generation;
+    const char *member = ink_cap_call_member(c, &generation);
     char *out = osal_malloc(4096, OSAL_MEM_EXTERNAL);
     ink_alarm_t *a = osal_malloc(sizeof *a, OSAL_MEM_EXTERNAL);
     if (!out || !a) {
@@ -186,7 +206,8 @@ static void list_kind(ink_call_t *c, ink_alarm_kind_t kind) {
     ink_jw_raw(&w, "[");
     int cursor = 0;
     bool first = true;
-    while (ink_alarm_next(&cursor, kind, a) == 1) {
+    int got;
+    while ((got = ink_time_alarm_next_for(&cursor, kind, a, member, generation)) == 1) {
         char next[24] = "";
         if (a->next_s) local_text(a->next_s, next, sizeof next);
         size_t before = w.len;
@@ -209,7 +230,8 @@ static void list_kind(ink_call_t *c, ink_alarm_kind_t kind) {
         first = false;
     }
     ink_jw_raw(&w, "]");
-    ink_cap_result(c, out);
+    if (got < 0) c->rc.status = INK_RC_STALE;
+    else ink_cap_result(c, out);
     osal_free(out);
     osal_free(a);
 }
@@ -218,9 +240,16 @@ static void cap_alarm_list(ink_call_t *c) { list_kind(c, INK_ALARM); }
 static void cap_reminder_list(ink_call_t *c) { list_kind(c, INK_REMINDER); }
 
 static void cap_cancel(ink_call_t *c) {
-    int64_t id = 0;
+    int64_t id = 0, revision = 0;
     ink_args_get_int(&c->args, "id", &id);
-    if (ink_alarm_cancel((uint32_t)id) != 0) fail(c, INK_RC_FAILED, "no such one, or not yours");
+    if (ink_args_get_int(&c->args, "if_revision", &revision) && (revision <= 0 || revision > UINT32_MAX)) {
+        fail(c, INK_RC_STALE, "alarm changed or absent");
+        return;
+    }
+    uint32_t generation;
+    const char *member = ink_cap_call_member(c, &generation);
+    int r = ink_time_alarm_cancel_for((uint32_t)id, (uint32_t)revision, member, generation);
+    if (r != 0) fail(c, r == -2 || r == -5 ? INK_RC_STALE : INK_RC_FAILED, "no such one, or changed");
 }
 
 static void cap_dismiss(ink_call_t *c) {

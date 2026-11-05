@@ -15,6 +15,8 @@
 #include "ink/sys/audio.h"
 #include "ink/sys/camera.h"
 #include "ink/sys/cap.h"
+#include "ink/sys/data.h"
+#include "ink/sys/svc.h"
 #include "ink/sys/comm.h"
 #include "ink/sys/display.h"
 #include "ink/sys/exec.h"
@@ -710,7 +712,7 @@ static void lifecycle_task(void *arg) {
     static const char saved[] = "{\"cell.sim_slot\":1}";
     ok = ok && ink_storage_write_atomic(INK_SETTINGS_PATH, saved, sizeof saved - 1) == 0;
     while (ink_storage_pending() > 0) osal_task_delay_us(20000);
-    if (!ok || ink_settings_init() != 0 || ink_power_init() != 0 || ink_net_init() != 0 || ink_hub_init("wss://hub.local/v1/device") != 0 || ink_rt_init() != 0 ||
+    if (!ok || ink_settings_init() != 0 || ink_svc_init() != 0 || ink_data_init() != 0 || ink_power_init() != 0 || ink_net_init() != 0 || ink_hub_init("wss://hub.local/v1/device") != 0 || ink_rt_init() != 0 ||
         ink_tools_init() != 0 || ink_audio_init() != 0 || ink_comm_init() != 0 || ink_remote_init() != 0 || ink_ui_start(&T_HOME) != 0) {
         CHECK(0, "the system services start");
         return;

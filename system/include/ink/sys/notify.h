@@ -31,6 +31,7 @@ typedef struct {
     int prio;                /* ink_notify_prio_t, or -1 for the channel's */
     const char *member;      /* whose inbox; NULL = the current member */
     uint8_t src;             /* ink_source_t: who posted it */
+    uint32_t *written_ver;   /* current inbox only; version accepted by this post */
 } ink_notify_t;
 
 typedef struct {
@@ -50,6 +51,7 @@ int ink_notify_init(void);
 /** Any task but the timer's; does not wait for the flash. Another member's goes through the background executor. 0, or -1. */
 int ink_notify_post(const ink_notify_t *n, uint32_t *out_id);
 int ink_notify_cancel(uint32_t id);
+int ink_notify_cancel_if_ver(uint32_t id, uint32_t ver);
 int ink_notify_cancel_tag(const char *tag);
 /** id 0: all of them. */
 int ink_notify_mark_read(uint32_t id);

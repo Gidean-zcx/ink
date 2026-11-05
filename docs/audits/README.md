@@ -19,6 +19,7 @@
 | 2026-11-04 第十四轮（系统服务第 1 阶段，含架构和 AI 原生审视） | `claude/system-services` a81c1b8（范围 `1fbf510..a81c1b8`） | [2026-11-04-codex-services/TASK.md](2026-11-04-codex-services/TASK.md) | [report.md](2026-11-04-codex-services/report.md)、[findings.json](2026-11-04-codex-services/findings.json)、[verification.json](2026-11-04-codex-services/verification.json) | 已处理：5 高 6 中都修了 |
 | 2026-11-04 第十五轮（系统服务第 2 阶段，**中途被服务方的内容分类器切断，报告不完整**） | `claude/system-services` 88f107c（范围 `a81c1b8..88f107c`） | [2026-11-04-codex-services-s2/TASK.md](2026-11-04-codex-services-s2/TASK.md) | [报告](2026-11-04-codex-services-s2/report.md)、[问题](2026-11-04-codex-services-s2/findings.json)、[验证](2026-11-04-codex-services-s2/verification.json) | 高 7、中 1，已处理；没做完的部分放到下一轮 |
 | 2026-11-05 第十六轮（系统服务，**又被切断，报告不完整**） | `claude/system-services` 7f86503 | [2026-11-05-codex-services-s3/TASK.md](2026-11-05-codex-services-s3/TASK.md) | [报告](2026-11-05-codex-services-s3/report.md)、[问题](2026-11-05-codex-services-s3/findings.json) | 写出高 3，实验里还能看出高 2，已处理 |
+| 2026-11-05 第十七轮 A/B/C2 收尾及 C 路补查 | 指定基线 `fdff779`；开工 `70d3a43` | [收尾任务](../tasks/services-finish.md) | [处理与验收报告](../tasks/services-finish/REPORT.md) | 11 高、6 中已修；4 中、1 低列后续；隔离补查另修 2 高，最终测试见报告 |
 | 2026-11-04 系统界面设计审计（Codex，gpt-6-astra，推理 max） | `claude/system-layer` cd486a2 和画布上的 65 个画板 | [2026-11-04-codex-ui/TASK.md](2026-11-04-codex-ui/TASK.md) | [report.md](2026-11-04-codex-ui/report.md)、[findings.json](2026-11-04-codex-ui/findings.json) | 明确的错已改；首版缺的流程等用户决定（见下） |
 | 2026-11-04 系统界面设计审计：产品负责人视角（Codex，gpt-6-astra，推理 max） | `claude/system-layer` 2d3323f 的 68 个画板，收尾核对了两个并行分支 | [2026-11-04-codex-jobs/TASK.md](2026-11-04-codex-jobs/TASK.md) | [report.md](2026-11-04-codex-jobs/report.md)、[findings.json](2026-11-04-codex-jobs/findings.json)、[early.md](2026-11-04-codex-jobs/early.md) | 已处理（见下） |
 | 2026-11-04 家庭中枢设计审查（Codex，gpt-6-astra，推理 max） | `claude/hub-design-8fd433` 6d10d95（设计 v0.1，含语音输入） | [2026-11-04-codex-hub-design/TASK.md](2026-11-04-codex-hub-design/TASK.md) | [report.md](2026-11-04-codex-hub-design/report.md)、[findings.json](2026-11-04-codex-hub-design/findings.json)、[experiments/](2026-11-04-codex-hub-design/experiments/README.md) | 严重 3、高 12、中 9、低 1；逐条核实都成立，设计改到 v0.2，处理见下 |
@@ -37,9 +38,47 @@
 
 审计报告回来后，逐条核实，再决定修复、记录或不处理，结果写回本表和相关文档。
 
+## 2026-11-05 第十七轮（系统服务收尾）：处理
+
+依据 [A 路](2026-11-05-codex-services-a/report.md)、[B 路](2026-11-05-codex-services-b/report.md)、[C2 路](2026-11-05-codex-services-c2/report.md)，并按原 [C 路范围](2026-11-05-codex-services-c/TASK.md)补查。以下“已修”以模拟器回归和换回开工源码的反向失败为证据，不代表真机或真实中枢验收。命令、已有测试改动、延期原因见[任务报告](../tasks/services-finish/REPORT.md)。
+
+| 编号 | 等级 | 处理 | 回归 |
+| --- | --- | --- | --- |
+| AUD18-101 | 高 | 清理根打不开时回错误；读状态失败不能推定根不存在 | `services_finish/files` |
+| AUD18-102 | 高 | 文件、目录和短操作统一持卡，USB 检查与借出互斥 | `files`（目录、原子写入期间借卡） |
+| AUD18-103 | 中 | 文件任务先登记后发布，结束读完上下文再释放槽 | `files`（完成先于提交返回） |
+| AUD18-104 | 高 | 状态持久完成后才切槽，试运行缺记录不能自检成功 | `update`（拒写、完成失败、缺记录） |
+| AUD18-105 | 高 | 资源恢复事务未完时拒绝新安装 | `update/resources-preserved` |
+| AUD18-106 | 中 | 后续复查已修：失败版本历史、旧记录迁移及人工重试 | `update_history` |
+| AUD18-107 | 中 | 校验已签名包的段类型、唯一性、非空及文件内边界 | `update/tables` |
+| AUD18-108 | 中 | 固定下载身份；续传与完成都核对，不混用新 offer | `update/offer-changed`、`offer-kept` |
+| AUD18-109 | 高 | 遗忘集合前取消共享计时节点，排除在途操作 | `storage` |
+| AUD18-201 | 高 | 焦点抢占即截断采集，不等媒体/UI 队列 | `audio`、`voice` |
+| AUD18-202 | 高 | 快照 OOM 后新编辑使旧 redo 失效 | `text` |
+| AUD18-203 | 高 | 关机等待录音收尾和本地持久完成，失败不报存好 | `shutdown`、`lowbattery` |
+| AUD18-204 | 高 | 耳机掉线先停输出，路由与旧媒体帧一起作废 | `audio` |
+| AUD18-205 | 中 | CALL 下暂停保留 ALERT，通话后恢复 | `audio` |
+| AUD18-206 | 中 | 后续复查已修：关机图绑定具体显示帧，提交失败不冒报已显示 | `offpanel` |
+| AUD18-207 | 中 | 后续复查已修：文本窗口、选区标记及拼音位置映射 | `text_window` |
+| AUD18-208 | 中 | 隐藏框禁止 AI submit 和听写控制 | `text` |
+| AUD18-209 | 中 | 初始文本截断退回完整 UTF-8 边界 | `text` |
+| AUD18-401 | 高 | AI 编辑绑定会话与编辑版本，过期返回 `stale` | `bindings` |
+| AUD18-402 | 中 | 后续复查已修：键盘组合快照保留页面、输入目标及版本，凭据掩码 | `keyboard_snapshot` |
+| AUD18-403 | 高 | 低电量超时传未保存原因，关机图和快照如实显示 | `lowbattery`（正常保存与超时） |
+| AUD18-404 | 低 | 列后续：§1.3 总表漏项，测试不解析文档 | 允许范围 §15 已明确此边界 |
+| S6-01 | 高（补查） | 设备发送缓冲中的旧成员事件在换人或空间关闭时取消；迟到生产者同样拒绝；已获 RPC 因果回执的事件不再导致断线 | `handoff`、既有 `integration-media`、`scenario-ai_tools` |
+| S6-02 | 高（补查） | UI 忙时换人仍停止采集和上传，旧帧与迟到结果作废 | `isolation`（听写、AI 两条链） |
+| S4-GUI | 中（验收阻挡项） | 模拟器无有效鼠标坐标时不转整数，有效坐标先限幅；按总规则 §2 的阻挡项例外最小修改 | `gui-smoke`，UBSan 遇错终止；旧可执行文件反向失败 |
+| R6-01 | 高（第 6 轮复查） | 数据能力按接受身份打开集合；时间能力在修改锁内校验原代次，取消权限取原成员角色 | `member_caps`（写入、真人确认删除、闹钟、提醒、取消及删除复用；原源码反向失败） |
+| R6-02 | 高（第 6 轮复查） | 通知及时间生产者保留原代次；时间事件派生通知沿用事件代次，不能在编号复用后重绑 | `member_caps`（本地订阅、实际模拟中枢、收件箱；原源码反向失败） |
+
+D-105、真实能力表的 PSRAM 编码及原 C 路六项审视结果见[设计 §7、§15.5](../system/system-services-design.md)和报告。已有第十四至十六轮隔离、确认、通知、应用测试继续保留；未重跑密码尝试次数或等待时间的专门实验。
+
 ## 2026-11-05 第十六轮（系统服务）：处理
 
 对象 7f86503。跑了 18 分钟被切断，切断前正在重跑第十五轮留下的、和密码尝试次数有关的实验（以后不再让审计跑这一类）。写进报告的 3 条和实验里能看出的 2 条都是真问题，都是高，已处理，见[设计文档 §15.3.2](../system/system-services-design.md)。它的 `verification.json` 是空的：修复核查和架构审视都没做完，放到下一轮，下一轮分成几个小范围。
+
+第十七轮 C 路（`2026-11-05-codex-services-c`，对象 4d23fc2）跑了 9 分钟也被切断，只留下日志和一个没跑成的实验。其中的 3 个疑点我复现后修了，见设计文档 §15.3.2。
 
 ## 2026-11-04 第十五轮（系统服务第 2 阶段）：处理
 

@@ -1,0 +1,116 @@
+[
+  {
+    "id": "AUD15-001",
+    "verdict": "已修复",
+    "evidence": "【代码核查】system/services/storage/storage_service.c:624-642 返回 LOAD_FAILED；system/services/data/datastore.c:587-589、627-630 对已有文件读取失败拒绝打开。tests/integration/data.c:612-644 检查日志和快照的读取失败。",
+    "note": "【复现】普通及 ASan/UBSan 的 integration-data 通过。结论限原报告的读取/分配失败路径，没有穷举所有文件系统错误。"
+  },
+  {
+    "id": "AUD15-002",
+    "verdict": "已修复",
+    "evidence": "【代码核查】system/services/file/file_service.c:429、821 在移动/递归作业入口保留虚拟根；tests/integration/files.c:557 起检查根操作。",
+    "note": "【复现】integration-files、integration-people 两种构建通过；这里核查虚拟命名空间边界，不讨论检查失效方式。"
+  },
+  {
+    "id": "AUD15-003",
+    "verdict": "已修复",
+    "evidence": "【代码核查】system/services/file/file_caps.c:151-153 用完整 UTF-8 长度推进 offset，用原始读取长度判断 EOF；tests/integration/files.c:532 起检查中文分页。",
+    "note": "【复现】integration-files 两种构建通过；未另写读取实验。"
+  },
+  {
+    "id": "AUD15-004",
+    "verdict": "已修复",
+    "evidence": "【代码核查】system/services/data/data_caps.c:15-16 缓冲按记录上限，130-145 放不下整条时退回页边界；tests/integration/data.c:566 起、tests/integration/ai_surface.c:193 起检查大记录和 JSON。",
+    "note": "【复现】integration-data、integration-ai-surface 两种构建通过。"
+  },
+  {
+    "id": "AUD15-005",
+    "verdict": "已修复",
+    "evidence": "【代码核查】system/services/notify/notify_service.c:275 按已确定的 who 打开收件箱，289-292 在通知前重核归属；tests/integration/races.c:85-108。",
+    "note": "【复现】integration-races 两种构建通过。"
+  },
+  {
+    "id": "AUD15-006",
+    "verdict": "已修复",
+    "evidence": "【代码核查】system/services/notify/interrupt.c:68-107 用 applying/apply_again 保证一个应用者重复收敛；tests/integration/races.c:190-200 检查最终响铃/状态。",
+    "note": "【复现】integration-races 两种构建通过。"
+  },
+  {
+    "id": "AUD15-007",
+    "verdict": "已修复",
+    "evidence": "【代码核查】system/policy/confirm.c:360 继续传 h->member；system/policy/cap.c:429 执行前核对调用绑定成员；tests/integration/races.c:218-236。",
+    "note": "【复现】integration-races 两种构建通过。成员身份已修复不等于原始来源链已修复，见 R14-ARCH-SOURCE。"
+  },
+  {
+    "id": "AUD15-008",
+    "verdict": "已修复",
+    "evidence": "【代码核查】system/services/time/time_service.c:437-455 时区/时钟变化时保存新计划，676-677 开机按现规则重算未来计划。",
+    "note": "【复现】integration-time-reboot 两种构建通过；没有实机 RTC 验证。"
+  },
+  {
+    "id": "AUD15-009",
+    "verdict": "已修复",
+    "evidence": "【代码核查】tests/integration/ai_surface.c:134-154 的 takes 解析必需参数，169-173 检查中枢实际拿到的全局能力 inputSchema。",
+    "note": "【复现】integration-ai-surface 两种构建通过，各 test.pass=1254。4 个页面专属能力只检查本地声明；本轮未重做历史反向对照，也不扩展为输出语义或文档自动同步保证。"
+  },
+  {
+    "id": "AUD15-010",
+    "verdict": "已修复",
+    "evidence": "【代码核查】system/ui/app_registry.c:88-105 返回入队结果，121-127 保存未接受时不冻结，324-334 关闭失败保留运行状态；tests/integration/apps.c:269-283。",
+    "note": "【复现】integration-apps 两种构建通过。保证的是原报告的保存入队失败处理，不是所有后续异步落盘都完成。"
+  },
+  {
+    "id": "AUD15-011",
+    "verdict": "已修复",
+    "evidence": "【代码核查】system/services/power/power_service.c:168-174 锁定且有后台持有时按 next_battery_us 有界等待并采样。",
+    "note": "【复现】integration-notify 和低电量相关测试两种构建通过；未做实际待机电流测量。"
+  },
+  {
+    "id": "R14-ARCH-SOURCE",
+    "verdict": "未修复",
+    "evidence": "【代码核查】system/policy/confirm.c:30 保存原 src，471-472 的待确认列表有 asked_by；360 执行改为 INK_SRC_CONFIRMED。cap.c:426 只区分 ai/user；confirm.c:146-165 结果事件没有原 src/asked_by。",
+    "note": "第十四轮架构节没有编号，本 ID 是本报告的核查锚点。完整“AI 发起—人批准—系统执行”来源链仍未贯穿；docs/audits/README.md:70 说原始来源在结果事件里，当前代码不支持这一句。不是新报问题；D-105 活动记录在排除范围。"
+  },
+  {
+    "id": "R14-ARCH-APP-CALLER",
+    "verdict": "未修复",
+    "evidence": "【代码核查】system/policy/cap.c:123-125 仍使用 ink_app_foreground_may。docs/system/system-services-design.md:1031 明确列为后续。",
+    "note": "核查锚点；调用者应用身份尚未变成不可变的调用上下文。按现有范围记后续边界，不推断真实第三方应用行为。"
+  },
+  {
+    "id": "R14-ARCH-NEEDS",
+    "verdict": "未修复",
+    "evidence": "【代码核查】system/ui/app_registry.c:298-302 的 needs 仍逐项查 ink_cap_find；system/policy/cap.c:57 的 ink_cap_available 已有本机/远端入口，但此处未用。",
+    "note": "核查锚点；依赖远端能力的应用可见性未统一。当前已实现应用没有因该契约缺少真实远端服务而被本轮判故障。"
+  },
+  {
+    "id": "R14-ARCH-EVENT-MEMBER",
+    "verdict": "已修复",
+    "evidence": "【代码核查】system/policy/cap.c:714-725 保留 member，756-765 按成员转发并在信封带 member，775-798 为本地订阅者补事件发出时身份；tests/integration/races.c:125 起。",
+    "note": "【复现】integration-races、integration-media 两种构建通过。仅成员归属这一项已修复，seq/boot 仍未上线路协议，属于任务排除项。"
+  },
+  {
+    "id": "R14-ARCH-EVENT-LOSS",
+    "verdict": "未修复",
+    "evidence": "【代码核查】system/policy/cap.c:727-729 离线只留最近 8 条；787-801 仍为每个订阅者分配，失败计 event.dropped；735/766 有事件编码上限。",
+    "note": "核查锚点；原报告已明确的资源/可靠性边界仍在，不是新问题。不将测试通过写成每个事件必达，本次未做全局内存分配失败实验。"
+  },
+  {
+    "id": "R14-ARCH-SNAPSHOT",
+    "verdict": "部分修复",
+    "evidence": "【代码核查】system/ui/ui_task.c:290-304 统一选择顶层快照；confirm_card.c:58、interrupt_card.c:23、update_card.c:15、member_gate.c:30、off_picture.c:27 均有回调；keyboard.c:317 只设置 presenter。",
+    "note": "核查锚点；已有快照机制继续有效，新增面板接入不完整。键盘的新问题见 AUD18-402；密码数字不出快照是有意边界。"
+  },
+  {
+    "id": "R14-ARCH-UNDO",
+    "verdict": "部分修复",
+    "evidence": "【代码核查】system/policy/cap.c:951-1003 为已登记对象提供成员/期限约束的 inverse；system/services/text/text_service.c:30-47、352-358 提供会话内文字历史，text_caps.c:152-157 开放 undo/redo。",
+    "note": "核查锚点；新增文本可撤销，但不是全系统持久活动日志。文本历史不带原始 src，clipboard.c:45-46 也不保留 src；已登记短时对象撤销、文字撤销和 D-105 活动记录应分别描述。"
+  },
+  {
+    "id": "HUB2-006",
+    "verdict": "部分修复",
+    "evidence": "【代码核查】system/services/ai/ai_service.c:491-493 的 actions 缓冲仍为 768 字节，放不下发 []；【文档核查】docs/hub/hub-architecture.md:1415 明确空数组代表未知，中枢应分页 tools/list。",
+    "note": "这是已有中枢审计事项，不进入 findings.json。源码名称计算见 experiments/surface-comparison.json。设备改进和真实中枢接入本轮排除，未验证中枢 fallback 实现；不能据此宣称 AI 没有工具。"
+  }
+]

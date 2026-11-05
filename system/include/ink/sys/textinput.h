@@ -44,6 +44,8 @@ typedef struct {
 int ink_text_focus(const ink_text_cfg_t *cfg, const ink_text_client_t *client, void *ctx);
 void ink_text_blur(int session);
 bool ink_text_focused(void);
+/** UI task: semantic input snapshot, with credential contents masked. */
+int ink_text_snapshot(char *out, size_t cap);
 ink_text_type_t ink_text_type(void);
 ink_text_enter_t ink_text_enter_kind(void);
 const char *ink_text_hint(void);

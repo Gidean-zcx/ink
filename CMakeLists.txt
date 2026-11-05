@@ -121,6 +121,7 @@ add_library(ink_port_sim STATIC
   simulator/models/dev_camera.c
   simulator/models/dev_bt_audio.c
   simulator/environment/sim_hub.c
+  simulator/environment/hub_bridge.c
   simulator/environment/sim_remote.c
   simulator/runtime/metrics.c
   simulator/runtime/trace.c
@@ -491,6 +492,40 @@ foreach(profile metalio-plus desktop-lcd)
         --out ${CMAKE_BINARY_DIR}/test-out/ui-${regression}-${profile} --quiet --no-random-outages)
   endforeach()
 endforeach()
+set(INK_HUB_PYTHON "${Python3_EXECUTABLE}" CACHE FILEPATH "Python with the locked hub test dependencies")
+add_executable(hub-json-check tests/hub/json_check.c system/util/ink_json.c)
+target_include_directories(hub-json-check PRIVATE platform/include system/include third_party/jsmn)
+target_compile_options(hub-json-check PRIVATE ${INK_WARN})
+ink_sim_executable(sim-hub-cap-export tests/hub/export_caps.c)
+target_link_libraries(sim-hub-cap-export PRIVATE ink_apps ink_system)
+ink_sim_executable(sim-hub-e2e tests/hub/e2e_device.c)
+target_link_libraries(sim-hub-e2e PRIVATE ink_apps ink_system)
+if(INK_HAVE_FONTS)
+  add_dependencies(sim-hub-cap-export ink_fonts ink_test_content)
+  add_dependencies(sim-hub-e2e ink_fonts ink_test_content)
+endif()
+add_test(NAME hub-export-caps COMMAND sim-hub-cap-export
+  --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+  --assets ${INK_ASSETS_DIR} --content ${CMAKE_BINARY_DIR}/test-content
+  --out ${CMAKE_BINARY_DIR}/test-out/hub --end 3s --quiet --no-random-outages)
+set_tests_properties(hub-export-caps PROPERTIES FIXTURES_SETUP hub-caps)
+ink_sim_executable(sim-hub-bridge-state tests/hub/bridge_state.c)
+add_test(NAME hub-bridge-generations COMMAND sim-hub-bridge-state
+  --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+  --out ${CMAKE_BINARY_DIR}/test-out/hub-bridge-state --end 2s --quiet --no-random-outages)
+if(INK_HUB_PYTHON)
+  add_test(NAME hub-contract COMMAND ${INK_HUB_PYTHON} ${CMAKE_SOURCE_DIR}/tests/hub/run_contract.py
+    --caps ${CMAKE_BINARY_DIR}/test-out/hub/caps.json --samples ${CMAKE_BINARY_DIR}/test-out/hub/messages.jsonl)
+  set_tests_properties(hub-contract PROPERTIES FIXTURES_REQUIRED hub-caps FIXTURES_SETUP hub-messages SKIP_RETURN_CODE 77 TIMEOUT 120)
+  add_test(NAME hub-json-crosscheck COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/hub/check_samples.py
+    $<TARGET_FILE:hub-json-check> ${CMAKE_BINARY_DIR}/test-out/hub/messages.jsonl)
+  set_tests_properties(hub-json-crosscheck PROPERTIES FIXTURES_REQUIRED hub-messages SKIP_RETURN_CODE 77)
+  add_test(NAME hub-simulator-e2e COMMAND ${INK_HUB_PYTHON} ${CMAKE_SOURCE_DIR}/tests/hub/e2e.py
+    --sim $<TARGET_FILE:sim-hub-e2e> --parser $<TARGET_FILE:hub-json-check>
+    --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+    --out ${CMAKE_BINARY_DIR}/test-out/hub-e2e)
+  set_tests_properties(hub-simulator-e2e PROPERTIES SKIP_RETURN_CODE 77 TIMEOUT 60)
+endif()
 ink_sim_executable(sim-selftest tests/simulator/selftest.c)
 foreach(p metalio-plus metalio-plus-psram16 pinenote-rk3566 desktop-lcd)
   add_test(NAME selftest-${p}

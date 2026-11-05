@@ -36,6 +36,7 @@ enum { EDIT_NONE = 0, EDIT_KEYS, EDIT_DELETE, EDIT_OTHER };
 
 static struct {
     int session, next_session;
+    uint32_t revision;
     ink_text_type_t type;
     ink_text_enter_t enter;
     bool ai_hidden;
@@ -59,12 +60,17 @@ static struct {
 } TS INK_PSRAM_BSS;
 
 static void changed(void) {
+    if (++TS.revision == 0) TS.revision++;
     TS.cands_valid = false;
     if (TS.client && TS.client->changed) TS.client->changed(TS.ctx);
     if (TS.presenter) TS.presenter();
 }
 
+int ink_text_target_session(void) { return TS.session; }
+uint32_t ink_text_edit_revision(void) { return TS.revision; }
+
 void text_presenter_kick(void) {
+    if (TS.session && ++TS.revision == 0) TS.revision++;
     if (TS.presenter) TS.presenter();
 }
 
@@ -80,7 +86,14 @@ int ink_text_focus(const ink_text_cfg_t *cfg, const ink_text_client_t *client, v
     size_t cap = cfg->max ? (cfg->max < VALUE_MAX ? cfg->max : VALUE_MAX) : VALUE_DEFAULT;
     char *v = osal_malloc(cap + 1, OSAL_MEM_EXTERNAL);
     if (!v) return -1;
-    snprintf(v, cap + 1, "%s", cfg->initial ? cfg->initial : "");
+    const char *initial = cfg->initial ? cfg->initial : "";
+    size_t n = strlen(initial);
+    if (n > cap) {
+        n = cap;
+        while (n && ((unsigned char)initial[n] & 0xC0) == 0x80) n--;
+    }
+    memcpy(v, initial, n);
+    v[n] = 0;
     TS.value = v;
     TS.cap = cap;
     TS.cursor = TS.anchor = strlen(v);
@@ -93,6 +106,7 @@ int ink_text_focus(const ink_text_cfg_t *cfg, const ink_text_client_t *client, v
     TS.client = client;
     TS.ctx = ctx;
     TS.session = ++TS.next_session;
+    TS.revision = 1;
     TS.cands_valid = false;
     if (cfg->type == INK_TEXT_PLAIN) {
         TS.freq = ink_db_open(&USER_FREQ, NULL);
@@ -129,12 +143,17 @@ static bool push_snap(snap_t *list, int *n) { /* what is there now; the oldest m
 /* Before a change: keys in a row, soon after each other and in the same place, are undone together. Nothing of a password is kept. */
 static void before_edit(int kind) {
     if (TS.type == INK_TEXT_PASSWORD) return;
+    forget_snaps(TS.redo, &TS.nredo); /* A new branch invalidates redo even when a snapshot cannot fit. */
     uint64_t now = osal_now_us();
     if (kind != EDIT_OTHER && kind == TS.edit_kind && now - TS.edit_at_us < UNDO_GROUP_US) {
         TS.edit_at_us = now;
         return;
     }
-    if (push_snap(TS.undo, &TS.nundo)) forget_snaps(TS.redo, &TS.nredo);
+    if (!push_snap(TS.undo, &TS.nundo)) {
+        forget_snaps(TS.undo, &TS.nundo);
+        TS.edit_kind = EDIT_NONE;
+        return;
+    }
     TS.edit_kind = kind;
     TS.edit_at_us = now;
 }
@@ -345,6 +364,7 @@ void ink_text_enter(void) {
         changed();
         return;
     }
+    if (++TS.revision == 0) TS.revision++;
     ink_probe_count("text.entered");
     if (TS.client && TS.client->entered) TS.client->entered(TS.ctx, TS.value);
 }
@@ -511,7 +531,7 @@ static void on_member(void *ctx, int h, const char *id) { /* UI task */
 
 static const ink_state_def_t ST_FOCUSED = {.id = "text.focused", .type = INK_ST_BOOL, .title = "有文本框在输入"};
 static const ink_setting_def_t TEXT_SETTINGS[] = {
-    {.id = "ai.read_clipboard", .title = "AI 可以读剪贴板", .type = INK_SET_BOOL, .def = 0},
+    {.id = "ai.read_clipboard", .title = "AI 可以读剪贴板", .type = INK_SET_BOOL, .def = 0, .ask_by_hand = true},
 };
 
 int ink_text_service_init(void) {

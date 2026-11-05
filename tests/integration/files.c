@@ -11,6 +11,7 @@
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/cap.h"
+#include "ink/sys/confirm.h"
 #include "ink/sys/data.h"
 #include "ink/sys/display.h"
 #include "ink/sys/exec.h"
@@ -398,7 +399,12 @@ static void capabilities(void) {
     ink_fs_stat_t st;
     CHECK(AI("system.undo", args) && g_rc.status == INK_RC_UNDONE && ink_fs_stat("/me/ai.txt", &st) == 0 && ink_fs_stat("/me/ai2.txt", &st) != 0, "undo moves it back (%s)", g_rc.detail);
     CHECK(AI("file.delete", "{\"path\":\"/me/ai.txt\"}") && g_rc.status == INK_RC_PENDING_CONFIRMATION && ink_fs_stat("/me/ai.txt", &st) == 0, "a delete asked by the AI waits for a person");
-    CHECK(call_as("file.delete", "{\"path\":\"/me/ai.txt\"}", INK_SRC_TOUCH) && g_rc.status == INK_RC_DONE && ink_fs_stat("/me/ai.txt", &st) != 0, "the same by touch goes through (%s)", g_rc.detail);
+    CHECK(call_as("file.delete", "{\"path\":\"/me/ai.txt\"}", INK_SRC_TOUCH) && g_rc.status == INK_RC_PENDING_CONFIRMATION && ink_fs_stat("/me/ai.txt", &st) == 0, "D-105: irreversible deletion asks by hand too");
+    unsigned delete_token = 0;
+    sscanf(g_rc.object, "confirm:%u", &delete_token);
+    CHECK(ink_confirm_decide(delete_token, true, INK_SRC_TOUCH) == 0, "person accepts deletion");
+    for (int wait = 0; wait < 150 && ink_fs_stat("/me/ai.txt", &st) == 0; wait++) osal_task_delay_us(20000);
+    CHECK(ink_fs_stat("/me/ai.txt", &st) == INK_FS_ERR_NOT_FOUND, "deletion runs after the person accepts");
     CHECK(AI("file.copy", "{\"from\":\"/me/tree/a/one.bin\",\"to\":\"/me/one.bin\"}") && g_rc.status == INK_RC_DONE && ink_fs_stat("/me/one.bin", &st) == 0, "a small copy answers when it is done (%s)", g_rc.detail);
     CHECK(AI("file.copy", "{\"from\":\"/me/big.bin\",\"to\":\"/me/big2.bin\"}") && g_rc.status == INK_RC_QUEUED && !strncmp(g_rc.object, "file-job:", 9), "a large one answers queued and names the job (%s)", g_rc.object);
     ink_fs_job_status_t js;
@@ -414,7 +420,7 @@ static void capabilities(void) {
     CHECK(AI("usb.mount", NULL) && g_rc.status == INK_RC_REJECTED, "nor lend the card (%s)", ink_rc_name(g_rc.status));
     CHECK(call_as("usb.mount", NULL, INK_SRC_TOUCH) && g_rc.status == INK_RC_REJECTED, "nor a child by touch");
     ink_member_test_reset();
-    CHECK(AI("usb.mount", NULL) && g_rc.status == INK_RC_PENDING_CONFIRMATION, "an adult's AI waits for a person (%s)", ink_rc_name(g_rc.status));
+    CHECK(AI("usb.mount", NULL) && g_rc.status == INK_RC_PENDING_CONFIRMATION, "sharing the whole card still needs a person (%s)", ink_rc_name(g_rc.status));
     CHECK(AI("usb.status", NULL) && strstr(g_result, "\"lent\":false"), "the status can be asked (%s)", g_result);
 }
 
@@ -431,9 +437,35 @@ static void release_cb(void *ctx) {
     }
 }
 
+static int mount_results;
+static ink_rc_t mount_status;
+static char mount_detail[96];
+static void mount_result(void *ctx, const char *id, const ink_args_t *a) {
+    (void)ctx; (void)id;
+    char cap[48], status[24];
+    ink_args_get_str(a, "cap", cap, sizeof cap);
+    if (strcmp(cap, "usb.mount")) return;
+    ink_args_get_str(a, "status", status, sizeof status);
+    mount_status = !strcmp(status, "done") ? INK_RC_DONE : INK_RC_FAILED;
+    ink_args_get_str(a, "detail", mount_detail, sizeof mount_detail);
+    mount_results++;
+}
+static bool mount_by_person(void) {
+    int before = mount_results;
+    if (!call_as("usb.mount", NULL, INK_SRC_TOUCH) || g_rc.status != INK_RC_PENDING_CONFIRMATION) return false;
+    unsigned token = 0; sscanf(g_rc.object, "confirm:%u", &token);
+    if (ink_confirm_decide(token, true, INK_SRC_TOUCH) != 0) return false;
+    for (int i = 0; i < 1000 && mount_results == before; i++) osal_task_delay_us(10000);
+    if (mount_results == before) return false;
+    g_rc.status = mount_status;
+    snprintf(g_rc.detail, sizeof g_rc.detail, "%s", mount_detail);
+    return true;
+}
+
 static void usb_disk(void) {
     static char buf[64];
-    CHECK(call_as("usb.mount", NULL, INK_SRC_TOUCH) && g_rc.status == INK_RC_FAILED, "no computer, no USB disk (%s)", g_rc.detail);
+    CHECK(ink_cap_subscribe("confirm.result", mount_result, NULL, INK_EXEC_DIRECT) == 0, "confirmed USB results");
+    CHECK(mount_by_person() && g_rc.status == INK_RC_FAILED, "no computer, no USB disk (%s)", g_rc.detail);
     wait_until_s(41);
     int64_t v = 0;
     CHECK(ink_state_get_int(ink_state_find("usb.connected"), &v) && v == 1 && g_usb_events >= 1, "the computer is noticed");
@@ -448,7 +480,7 @@ static void usb_disk(void) {
     CHECK(ink_fs_on_release(release_cb, NULL) == 0, "a holder listens");
     CHECK(ink_fs_open("/me/tree/three.bin", INK_FS_READ, &g_holder) == 0, "and has a file open");
     int sleeps0 = sim_power_sleeps();
-    CHECK(call_as("usb.mount", NULL, INK_SRC_TOUCH) && g_rc.status == INK_RC_DONE && ink_usb_disk_active() && g_release_told == 1 && !g_holder, "it closes it and the card is lent (%s)", g_rc.detail);
+    CHECK(mount_by_person() && g_rc.status == INK_RC_DONE && ink_usb_disk_active() && g_release_told == 1 && !g_holder, "it closes it and the card is lent (%s)", g_rc.detail);
     char mode[16] = "";
     ink_state_get_str(ink_state_find("storage.mode"), mode, sizeof mode);
     CHECK(!strcmp(mode, "usb"), "system state says so (%s)", mode);
@@ -575,7 +607,7 @@ static void test_task(void *arg) {
     (void)arg;
     vtk_host_call(clean_card, NULL);
     if (ink_display_init() != 0 || ink_storage_init() != 0 || ink_cap_init() != 0 || ink_exec_init() != 0 || ink_res_init() != 0 || ink_state_init() != 0 ||
-        ink_settings_init() != 0 || ink_svc_init() != 0 || ink_task_init() != 0 || ink_data_init() != 0 || ink_power_init() != 0 || ink_file_service_init() != 0) {
+        ink_settings_init() != 0 || ink_svc_init() != 0 || ink_confirm_init() != 0 || ink_task_init() != 0 || ink_data_init() != 0 || ink_power_init() != 0 || ink_file_service_init() != 0) {
         CHECK(0, "the services start");
         return;
     }

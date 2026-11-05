@@ -22,6 +22,7 @@
 typedef struct {
     const ink_setting_def_t *def;
     int64_t v;
+    uint32_t revision;
     ink_exec_job_t apply;
 } item_t;
 
@@ -191,7 +192,8 @@ static ink_rc_t refuse(ink_receipt_t *rc, ink_rc_t st, const char *why) {
     return st;
 }
 
-ink_rc_t ink_setting_set(const char *id, int64_t v, ink_source_t src, ink_receipt_t *rc) {
+static ink_rc_t setting_set(const char *id, int64_t v, ink_source_t src, bool check_revision,
+                            uint32_t revision, int64_t *before, ink_receipt_t *rc) {
     memset(rc, 0, sizeof *rc);
     if (!SE.lock) return refuse(rc, INK_RC_FAILED, "settings not started");
     osal_mutex_lock(SE.lock, OSAL_WAIT_FOREVER);
@@ -204,18 +206,27 @@ ink_rc_t ink_setting_set(const char *id, int64_t v, ink_source_t src, ink_receip
         ink_probe_count("policy.rejected");
         return refuse(rc, INK_RC_REJECTED, "children cannot change this setting");
     }
-    if (d->system && (src == INK_SRC_AI || src == INK_SRC_REMOTE || src == INK_SRC_APP)) {
-        ink_probe_count("policy.pending_confirmation");
-        return refuse(rc, INK_RC_PENDING_CONFIRMATION, "needs confirmation on the device");
+    if (d->ask_by_hand && src != INK_SRC_CONFIRMED && src != INK_SRC_SYSTEM) {
+        ink_args_t args;
+        ink_args_init(&args);
+        ink_args_str(&args, "id", id);
+        ink_args_int(&args, "value", v);
+        if (check_revision) ink_args_int(&args, "expected_revision", revision);
+        return ink_confirm_hold(ink_cap_find("settings.set"), &args, src, 0, rc);
     }
     if (d->apply && ink_exec_ready(d->apply_exec) != 0) return refuse(rc, INK_RC_FAILED, "cannot be applied now"); /* not stored either */
     osal_mutex_lock(SE.lock, OSAL_WAIT_FOREVER);
+    if (check_revision && SE.it[i].revision != revision) {
+        osal_mutex_unlock(SE.lock);
+        return refuse(rc, INK_RC_STALE, "the setting changed since this operation");
+    }
+    if (before) *before = SE.it[i].v;
     bool changed = SE.it[i].v != v;
     SE.it[i].v = v;
+    rc->revision = ++SE.it[i].revision;
     osal_mutex_unlock(SE.lock);
     rc->status = INK_RC_DONE;
     snprintf(rc->object, sizeof rc->object, "setting:%s", id);
-    rc->revision = (uint32_t)v;
     char vt[32];
     value_text(d, v, vt, sizeof vt);
     snprintf(rc->say, sizeof rc->say, "%s：%s", d->title, vt);
@@ -227,6 +238,10 @@ ink_rc_t ink_setting_set(const char *id, int64_t v, ink_source_t src, ink_receip
         osal_timer_start(SE.save_timer, SAVE_DELAY_US, 0); /* re-armed: one write for a burst */
     }
     return rc->status;
+}
+
+ink_rc_t ink_setting_set(const char *id, int64_t v, ink_source_t src, ink_receipt_t *rc) {
+    return setting_set(id, v, src, false, 0, NULL, rc);
 }
 
 int ink_settings_watch(const char *prefix, ink_state_fn fn, void *ctx, ink_exec_t exec) {
@@ -265,6 +280,7 @@ int ink_settings_json(char *out, size_t cap) {
             ink_jw_raw(&w, "]");
         }
         if (d->system) ink_jw_raw(&w, ",\"system\":true");
+        if (d->ask_by_hand) ink_jw_raw(&w, ",\"ask_by_hand\":true");
         ink_jw_raw(&w, "}");
     }
     osal_mutex_unlock(SE.lock);
@@ -281,6 +297,7 @@ static void cap_get(ink_call_t *c) {
     int i = find(id);
     const ink_setting_def_t *d = i >= 0 ? SE.it[i].def : NULL;
     int64_t v = i >= 0 ? SE.it[i].v : 0;
+    uint32_t revision = i >= 0 ? SE.it[i].revision : 0;
     osal_mutex_unlock(SE.lock);
     if (!d) {
         refuse(&c->rc, INK_RC_INVALID, "unknown setting");
@@ -289,7 +306,7 @@ static void cap_get(ink_call_t *c) {
     char vt[32];
     value_text(d, v, vt, sizeof vt);
     snprintf(c->rc.object, sizeof c->rc.object, "setting:%s", id);
-    c->rc.revision = (uint32_t)v;
+    c->rc.revision = revision;
     snprintf(c->rc.say, sizeof c->rc.say, "%s：%s", d->title, vt);
 }
 
@@ -317,7 +334,16 @@ static void cap_set(ink_call_t *c) {
         refuse(&c->rc, INK_RC_INVALID, "value required");
         return;
     }
-    if (ink_setting_set(id, v, c->src, &c->rc) == INK_RC_PENDING_CONFIRMATION) ink_confirm_hold(c->cap, &c->args, c->src, c->page_gen, &c->rc);
+    int64_t before = 0, revision = 0;
+    bool check_revision = ink_args_get_int(&c->args, "expected_revision", &revision);
+    if (setting_set(id, v, c->src, check_revision, (uint32_t)revision, &before, &c->rc) == INK_RC_DONE && before != v && !check_revision) {
+        ink_args_t undo;
+        ink_args_init(&undo);
+        ink_args_str(&undo, "id", id);
+        ink_args_int(&undo, "value", before);
+        ink_args_int(&undo, "expected_revision", c->rc.revision);
+        ink_cap_undoable(c, "settings.set", &undo, 10000);
+    }
 }
 
 static const ink_cap_t SETTINGS_CAPS[] = {
@@ -331,7 +357,7 @@ static const ink_cap_t SETTINGS_CAPS[] = {
      .title = "改一项设置",
      .ask = "把设置 {id} 改成 {value}",
      .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":39},"
-              "\"value\":{\"type\":[\"integer\",\"boolean\",\"string\"]}},\"required\":[\"id\",\"value\"]}",
+              "\"value\":{\"type\":[\"integer\",\"boolean\",\"string\"]},\"expected_revision\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":4294967295}},\"required\":[\"id\",\"value\"]}",
      .effect = INK_FX_LOCAL_WRITE,
      .child_ok = true, /* each setting says whether children may change it */
      .run = cap_set},

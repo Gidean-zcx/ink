@@ -42,11 +42,18 @@ struct ink_fs_file {
     hal_file_t *f;
     bool used;
     bool wrote;
+    bool writable;
+    uint32_t revision;
+    file_context_t context;
+    char member[INK_MEMBER_ID_MAX];
     char path[INK_FS_PATH_MAX]; /* virtual, for the change event */
     const char *owner;          /* the task that opened it, for "in use by" */
 };
 
 struct ink_fs_dir {
+    char member[INK_MEMBER_ID_MAX];
+    uint32_t generation;
+    file_context_t context;
     hal_dir_t *d;
     bool at_root; /* "/" lists the virtual roots */
     int next_root;
@@ -68,18 +75,22 @@ typedef struct {
     bool cancel;
     int task;
     char who[INK_MEMBER_ID_MAX];
+    uint32_t generation;
     ink_fs_job_status_t st;
     void (*on_end)(void *ctx, const ink_fs_job_status_t *st);
     void *on_end_ctx;
 } fjob_t;
 
 static struct {
+    osal_mutex_t *edits;
+    uint32_t revision;
     struct ink_fs_file files[MAX_OPEN];
     int nopen;
     fjob_t job;
     bool job_active;
     int next_job;
     bool usb_lent;
+    bool ready; /* Early reset recovery runs alone, before the service lock exists. */
     struct {
         ink_fs_release_fn fn;
         void *ctx;
@@ -133,8 +144,48 @@ static bool hidden_name(const char *name) {
     return (n > 5 && !strcmp(name + n - 5, PART_SUFFIX)) || (n > 4 && !strcmp(name + n - 4, TMP_SUFFIX));
 }
 
-/* The current member's right on it. */
-int fs_resolve(const char *path, bool write, char *phys, size_t cap) {
+/* Capture once, before a card call or waiting for another edit. */
+static file_context_t current_context(void) {
+    file_context_t c = {0};
+    ink_svc_lock();
+    const ink_member_t *m = ink_member_current();
+    snprintf(c.member, sizeof c.member, "%s", m->id);
+    c.adult = m->role == INK_ROLE_ADULT;
+    c.generation = ink_member_generation(c.member);
+    ink_svc_unlock();
+    return c;
+}
+
+static file_context_t member_context(const char *member, uint32_t generation) {
+    file_context_t c = {0};
+    ink_svc_lock();
+    if (member && generation && generation == ink_member_generation(member)) {
+        const ink_member_t *m;
+        for (int i = 0; (m = ink_member_at(i)) != NULL; i++) {
+            if (strcmp(m->id, member)) continue;
+            snprintf(c.member, sizeof c.member, "%s", m->id);
+            c.adult = m->role == INK_ROLE_ADULT;
+            c.generation = generation;
+            break;
+        }
+    }
+    ink_svc_unlock();
+    return c;
+}
+
+bool fs_context_for_call(file_context_t *context, ink_call_t *call) {
+    *context = current_context();
+    uint32_t generation;
+    const char *member = ink_cap_call_member(call, &generation);
+    if (context->generation && context->generation == generation && !strcmp(context->member, member)) return true;
+    call->rc.status = INK_RC_STALE;
+    snprintf(call->rc.detail, sizeof call->rc.detail, "someone else is using the device now");
+    return false;
+}
+
+/* Every path of an operation uses the same authority and namespace. */
+static int resolve_for(const file_context_t *c, const char *path, bool write, char *phys, size_t cap) {
+    if (!c->generation || c->generation != ink_member_generation(c->member)) return INK_FS_ERR_DENIED;
     size_t n = path ? strlen(path) : 0;
     if (n < 2 || n >= INK_FS_PATH_MAX || path[0] != '/' || path[n - 1] == '/') return INK_FS_ERR_PATH;
     for (const char *p = path + 1;;) { /* every segment */
@@ -144,16 +195,14 @@ int fs_resolve(const char *path, bool write, char *phys, size_t cap) {
         if (!e) break;
         p = e + 1;
     }
-    const ink_member_t *m = ink_member_current();
-    bool adult = m->role == INK_ROLE_ADULT;
     int r;
     if (!strncmp(path, "/me", 3) && (path[3] == '/' || !path[3])) {
-        r = snprintf(phys, cap, "/content/.m/%s%s", m->id, path + 3);
+        r = snprintf(phys, cap, "/content/.m/%s%s", c->member, path + 3);
     } else if (!strncmp(path, "/family", 7) && (path[7] == '/' || !path[7])) {
-        if (write && !adult) return INK_FS_ERR_DENIED;
+        if (write && !c->adult) return INK_FS_ERR_DENIED;
         r = snprintf(phys, cap, "/content%s", path + 7);
     } else if (!strncmp(path, "/members/", 9)) {
-        if (!adult) return INK_FS_ERR_DENIED;
+        if (!c->adult) return INK_FS_ERR_DENIED;
         const char *rest = strchr(path + 9, '/');
         size_t idn = rest ? (size_t)(rest - (path + 9)) : strlen(path + 9);
         char id[INK_MEMBER_ID_MAX];
@@ -161,13 +210,14 @@ int fs_resolve(const char *path, bool write, char *phys, size_t cap) {
         memcpy(id, path + 9, idn);
         id[idn] = 0;
         if (!ink_layout_member_ok(id)) return INK_FS_ERR_PATH;
+        if (!ink_member_generation(id)) return INK_FS_ERR_DENIED;
         r = snprintf(phys, cap, "/content/.m/%s%s", id, rest ? rest : "");
     } else if (!strcmp(path, "/members")) {
-        return adult ? INK_FS_ERR_IS_DIR : INK_FS_ERR_DENIED; /* the list of members is not a directory */
+        return c->adult ? INK_FS_ERR_IS_DIR : INK_FS_ERR_DENIED; /* the list of members is not a directory */
     } else if (!strncmp(path, "/app/", 5)) {
         const char *rest = strchr(path + 5, '/');
         if (!rest) return INK_FS_ERR_PATH;
-        r = snprintf(phys, cap, "/content/.m/%s/apps/%.*s%s", m->id, (int)(rest - (path + 5)), path + 5, rest);
+        r = snprintf(phys, cap, "/content/.m/%s/apps/%.*s%s", c->member, (int)(rest - (path + 5)), path + 5, rest);
     } else if (!strncmp(path, "/cache/", 7)) {
         r = snprintf(phys, cap, "%s", path);
     } else return INK_FS_ERR_PATH;
@@ -178,6 +228,25 @@ int fs_resolve(const char *path, bool write, char *phys, size_t cap) {
         return INK_FS_ERR_NO_CARD;
     }
     return INK_FS_OK;
+}
+
+int fs_resolve(const char *path, bool write, char *phys, size_t cap) {
+    file_context_t c = current_context();
+    return resolve_for(&c, path, write, phys, cap);
+}
+
+/* The lease covers resolution and every HAL call, including short operations. */
+static int resolve_held(const file_context_t *c, const char *path, bool write, char *phys, size_t cap) {
+    int r = ink_fs_card_hold();
+    if (r) return r;
+    r = resolve_for(c, path, write, phys, cap);
+    if (r) ink_fs_card_release();
+    return r;
+}
+
+static int card_done(int r) {
+    ink_fs_card_release();
+    return r;
 }
 
 /* A place that is there for everyone and that nobody can take away: under /family lie the members' own folders, which
@@ -211,27 +280,27 @@ static int card_error(void) {
     return INK_FS_ERR_IO;
 }
 
-static void changed_for(const char *who, const char *path, const char *kind) {
+static void changed_for(const char *who, uint32_t generation, const char *path, const char *kind) {
     char *block = osal_malloc(sizeof(ink_args_t), OSAL_MEM_EXTERNAL); /* the arguments are large for most stacks */
     if (!block) return;
     ink_args_t *a = (ink_args_t *)block;
     ink_args_init(a);
     ink_args_str(a, "path", path);
     ink_args_str(a, "kind", kind);
-    if (who) ink_args_str(a, "member", who);
-    ink_cap_emit("file.changed", a);
+    ink_args_str(a, "member", who);
+    ink_cap_emit_for("file.changed", a, who, generation);
     osal_free(block);
     ink_svc_at(&FS.refresh_at, osal_now_us() + 60000000ull, fs_refresh_cb, NULL); /* what is free changed */
 }
 
-static void changed(const char *path, const char *kind) { changed_for(NULL, path, kind); }
+static void changed(const file_context_t *c, const char *path, const char *kind) { changed_for(c->member, c->generation, path, kind); }
 
 /* ------------------------------------------------------------ files */
 
-int ink_fs_open(const char *path, int mode, ink_fs_file_t **out) {
+static int fs_open_unlocked(const file_context_t *c, const char *path, int mode, ink_fs_file_t **out) {
     char phys[PHYS_MAX];
     bool write = mode & (INK_FS_WRITE | INK_FS_APPEND | INK_FS_CREATE);
-    int r = fs_resolve(path, write, phys, sizeof phys);
+    int r = resolve_held(c, path, write, phys, sizeof phys);
     if (r) return r;
     ink_fs_file_t *slot = NULL;
     ink_svc_lock();
@@ -239,10 +308,9 @@ int ink_fs_open(const char *path, int mode, ink_fs_file_t **out) {
         if (!FS.files[i].used) slot = &FS.files[i];
     if (slot) {
         slot->used = true; /* before the card: lending it waits for this */
-        FS.nopen++;
     }
     ink_svc_unlock();
-    if (!slot) return INK_FS_ERR_BUSY;
+    if (!slot) return card_done(INK_FS_ERR_BUSY);
     int64_t size = hal_fs_size(phys);
     int err = INK_FS_OK;
     if ((mode & INK_FS_EXCL) && size >= 0) err = INK_FS_ERR_EXISTS;
@@ -266,6 +334,14 @@ int ink_fs_open(const char *path, int mode, ink_fs_file_t **out) {
     } else {
         slot->f = f;
         slot->wrote = false;
+        slot->writable = (mode & (INK_FS_WRITE | INK_FS_APPEND)) != 0;
+        slot->revision = __atomic_load_n(&FS.revision, __ATOMIC_RELAXED);
+        slot->context = *c;
+        snprintf(slot->member, sizeof slot->member, "%s", c->member);
+        if (!strncmp(phys, "/content/.m/", 12)) {
+            const char *end = strchr(phys + 12, '/');
+            snprintf(slot->member, sizeof slot->member, "%.*s", (int)(end ? end - (phys + 12) : (ptrdiff_t)strlen(phys + 12)), phys + 12);
+        }
         snprintf(slot->path, sizeof slot->path, "%s", path);
         slot->owner = osal_task_name(osal_task_self());
     }
@@ -281,7 +357,7 @@ int64_t ink_fs_read(ink_fs_file_t *f, void *buf, size_t n) {
     return r < 0 ? card_error() : r;
 }
 
-int64_t ink_fs_write(ink_fs_file_t *f, const void *buf, size_t n) {
+static int64_t fs_write_unlocked(ink_fs_file_t *f, const void *buf, size_t n) {
     if (!f || !f->f) return INK_FS_ERR_IO;
     int64_t r = hal_fs_write(f->f, buf, n);
     if (r < 0) {
@@ -289,6 +365,7 @@ int64_t ink_fs_write(ink_fs_file_t *f, const void *buf, size_t n) {
         return e == INK_FS_ERR_IO ? INK_FS_ERR_NO_SPACE : e; /* the card answers and refuses: full */
     }
     f->wrote = true;
+    f->revision = __atomic_load_n(&FS.revision, __ATOMIC_RELAXED);
     return r;
 }
 
@@ -300,6 +377,7 @@ int ink_fs_close(ink_fs_file_t *f) {
     if (!f || !f->used) return INK_FS_ERR_IO;
     int r = hal_fs_close(f->f);
     bool wrote = f->wrote;
+    file_context_t c = f->context;
     char path[INK_FS_PATH_MAX];
     snprintf(path, sizeof path, "%s", f->path);
     ink_svc_lock();
@@ -307,15 +385,15 @@ int ink_fs_close(ink_fs_file_t *f) {
     f->used = false;
     FS.nopen--;
     ink_svc_unlock();
-    if (wrote) changed(path, "written");
+    if (wrote) changed(&c, path, "written");
     return r == 0 ? INK_FS_OK : INK_FS_ERR_IO;
 }
 
 /* ------------------------------------------------------------ directories */
 
-int ink_fs_stat(const char *path, ink_fs_stat_t *out) {
+int fs_stat_for(const file_context_t *c, const char *path, ink_fs_stat_t *out) {
     char phys[PHYS_MAX];
-    int r = fs_resolve(path, false, phys, sizeof phys);
+    int r = resolve_held(c, path, false, phys, sizeof phys);
     if (r == INK_FS_ERR_IS_DIR) { /* "/members" */
         memset(out, 0, sizeof *out);
         snprintf(out->name, sizeof out->name, "members");
@@ -332,33 +410,47 @@ int ink_fs_stat(const char *path, ink_fs_stat_t *out) {
         out->is_dir = d != NULL;
         if (d) hal_fs_closedir(d);
         out->size = d ? 0 : size;
-        return INK_FS_OK;
+        return card_done(INK_FS_OK);
     }
     /* /me may not exist yet: it is empty, not missing */
     if (!strcmp(path, "/me") || !strncmp(path, "/members/", 9) || !strcmp(path, "/family")) {
         const char *rest = !strncmp(path, "/members/", 9) ? strchr(path + 9, '/') : NULL;
         if (!rest) {
             out->is_dir = true;
-            return INK_FS_OK;
+            return card_done(INK_FS_OK);
         }
     }
-    return hal_fs_card_present() ? INK_FS_ERR_NOT_FOUND : card_error();
+    return card_done(hal_fs_card_present() ? INK_FS_ERR_NOT_FOUND : card_error());
 }
 
-int ink_fs_dir_open(const char *path, ink_fs_dir_t **out) {
+int ink_fs_stat(const char *path, ink_fs_stat_t *out) {
+    file_context_t c = current_context();
+    return fs_stat_for(&c, path, out);
+}
+
+int fs_dir_open_for(const file_context_t *c, const char *path, ink_fs_dir_t **out) {
     ink_fs_dir_t *dir = osal_calloc(1, sizeof *dir, OSAL_MEM_EXTERNAL);
     if (!dir) return INK_FS_ERR_IO;
+    dir->context = *c;
     if (path && !strcmp(path, "/")) {
         dir->at_root = true;
         *out = dir;
         return INK_FS_OK;
     }
     char phys[PHYS_MAX];
-    int r = fs_resolve(path, false, phys, sizeof phys);
+    int r = resolve_held(c, path, false, phys, sizeof phys);
     if (r == INK_FS_ERR_IS_DIR) r = INK_FS_ERR_DENIED; /* who the members are: member.list */
     if (r) {
         osal_free(dir);
         return r;
+    }
+    if (strncmp(path, "/family", 7)) {
+        snprintf(dir->member, sizeof dir->member, "%s", c->member);
+        if (!strncmp(path, "/members/", 9)) {
+            const char *end = strchr(path + 9, '/');
+            snprintf(dir->member, sizeof dir->member, "%.*s", (int)(end ? end - (path + 9) : (ptrdiff_t)strlen(path + 9)), path + 9);
+        }
+        dir->generation = ink_member_generation(dir->member);
     }
     dir->d = hal_fs_opendir(phys);
     if (!dir->d && !strcmp(path, "/me")) { /* first use: an empty place of their own */
@@ -369,17 +461,24 @@ int ink_fs_dir_open(const char *path, ink_fs_dir_t **out) {
     if (!dir->d) {
         int e = hal_fs_card_present() ? INK_FS_ERR_NOT_FOUND : card_error();
         osal_free(dir);
-        return e;
+        return card_done(e);
     }
     *out = dir;
     return INK_FS_OK;
 }
 
+int ink_fs_dir_open(const char *path, ink_fs_dir_t **out) {
+    file_context_t c = current_context();
+    return fs_dir_open_for(&c, path, out);
+}
+
 int ink_fs_dir_next(ink_fs_dir_t *d, ink_fs_stat_t *out) {
     if (!d) return INK_FS_ERR_IO;
+    if (!d->context.generation || d->context.generation != ink_member_generation(d->context.member)) return INK_FS_ERR_DENIED;
+    if (d->member[0] && (!d->generation || d->generation != ink_member_generation(d->member))) return INK_FS_ERR_DENIED;
     if (d->at_root) {
         static const char *const ROOTS[] = {"me", "family", "members"};
-        int n = ink_member_current()->role == INK_ROLE_ADULT ? 3 : 2;
+        int n = d->context.adult ? 3 : 2;
         if (d->next_root >= n) return 0;
         memset(out, 0, sizeof *out);
         snprintf(out->name, sizeof out->name, "%s", ROOTS[d->next_root++]);
@@ -400,45 +499,49 @@ int ink_fs_dir_next(ink_fs_dir_t *d, ink_fs_stat_t *out) {
 
 void ink_fs_dir_close(ink_fs_dir_t *d) {
     if (!d) return;
-    if (d->d) hal_fs_closedir(d->d);
+    if (d->d) {
+        hal_fs_closedir(d->d);
+        ink_fs_card_release();
+    }
     osal_free(d);
 }
 
-int ink_fs_mkdir(const char *path) {
+static int fs_mkdir_unlocked(const file_context_t *c, const char *path) {
     char phys[PHYS_MAX];
-    int r = fs_resolve(path, true, phys, sizeof phys);
+    int r = resolve_held(c, path, true, phys, sizeof phys);
     if (r) return r;
     make_parents(phys);
-    if (hal_fs_mkdir(phys) != 0) return card_error();
-    changed(path, "created");
-    return INK_FS_OK;
+    if (hal_fs_mkdir(phys) != 0) return card_done(card_error());
+    changed(c, path, "created");
+    return card_done(INK_FS_OK);
 }
 
-int ink_fs_remove(const char *path) {
+static int fs_remove_unlocked(const file_context_t *c, const char *path) {
     char phys[PHYS_MAX];
-    int r = fs_resolve(path, true, phys, sizeof phys);
+    int r = resolve_held(c, path, true, phys, sizeof phys);
     if (r) return r;
-    if (hal_fs_size(phys) < 0) return hal_fs_card_present() ? INK_FS_ERR_NOT_FOUND : card_error();
-    if (hal_fs_remove(phys) != 0) return card_error();
-    changed(path, "removed");
-    return INK_FS_OK;
+    if (hal_fs_size(phys) < 0) return card_done(hal_fs_card_present() ? INK_FS_ERR_NOT_FOUND : card_error());
+    if (hal_fs_remove(phys) != 0) return card_done(card_error());
+    changed(c, path, "removed");
+    return card_done(INK_FS_OK);
 }
 
-int ink_fs_move(const char *from, const char *to) {
+static int fs_move_unlocked(const file_context_t *c, const char *from, const char *to) {
     char a[PHYS_MAX], b[PHYS_MAX];
     if (virtual_root(from)) return INK_FS_ERR_DENIED;
-    int r = fs_resolve(from, true, a, sizeof a);
-    if (!r) r = fs_resolve(to, true, b, sizeof b);
+    int r = resolve_held(c, from, true, a, sizeof a);
     if (r) return r;
-    if (hal_fs_size(a) < 0) return hal_fs_card_present() ? INK_FS_ERR_NOT_FOUND : card_error();
-    if (hal_fs_size(b) >= 0) return INK_FS_ERR_EXISTS;
+    r = resolve_for(c, to, true, b, sizeof b);
+    if (r) return card_done(r);
+    if (hal_fs_size(a) < 0) return card_done(hal_fs_card_present() ? INK_FS_ERR_NOT_FOUND : card_error());
+    if (hal_fs_size(b) >= 0) return card_done(INK_FS_ERR_EXISTS);
     size_t an = strlen(a);
-    if (!strncmp(a, b, an) && b[an] == '/') return INK_FS_ERR_PATH; /* into itself */
+    if (!strncmp(a, b, an) && b[an] == '/') return card_done(INK_FS_ERR_PATH); /* into itself */
     make_parents(b);
-    if (hal_fs_rename(a, b) != 0) return card_error();
-    changed(from, "moved");
-    changed(to, "moved");
-    return INK_FS_OK;
+    if (hal_fs_rename(a, b) != 0) return card_done(card_error());
+    changed(c, from, "moved");
+    changed(c, to, "moved");
+    return card_done(INK_FS_OK);
 }
 
 /* Everything under phys, however deep: one entry at a time, nothing held open, no recursion. 0 only when nothing is left. */
@@ -450,8 +553,13 @@ static int wipe_tree(const char *phys) {
     if (!r) snprintf(path, PHYS_MAX, "%s", phys);
     while (!r) {
         hal_dir_t *d = hal_fs_opendir(path);
-        if (!d) { /* no such folder at the top is nothing to do; further down it was just listed */
-            if (strlen(path) != root) r = INK_FS_ERR_IO;
+        if (!d && strlen(path) == root && hal_fs_size(path) < 0) {
+            /* A size error cannot prove absence. Establish an empty root, then inspect it. */
+            make_parents(path);
+            if (hal_fs_mkdir(path) == 0) d = hal_fs_opendir(path);
+        }
+        if (!d) {
+            r = INK_FS_ERR_IO;
             break;
         }
         bool found = false;
@@ -476,44 +584,45 @@ static int wipe_tree(const char *phys) {
 }
 
 int ink_fs_wipe_personal(void) {
-    if (FS.usb_lent) return INK_FS_ERR_USB;
-    if (!hal_fs_card_present()) return INK_FS_ERR_NO_CARD;
-    int r = wipe_tree("/content/.m");
+    int r = ink_fs_card_hold();
+    if (r) return r;
+    r = wipe_tree("/content/.m");
     if (!r) r = wipe_tree("/content/.update");
     if (!r) r = wipe_tree("/cache");
-    return r;
+    return card_done(r);
 }
 
-int ink_fs_write_atomic(const char *path, const void *data, size_t n) {
+static int fs_write_atomic_unlocked(const file_context_t *c, const char *path, const void *data, size_t n) {
     char phys[PHYS_MAX], tmp[PHYS_MAX + 8];
-    int r = fs_resolve(path, true, phys, sizeof phys);
+    int r = resolve_held(c, path, true, phys, sizeof phys);
     if (r) return r;
     snprintf(tmp, sizeof tmp, "%s" TMP_SUFFIX, phys);
     make_parents(phys);
     hal_file_t *f = hal_fs_open(tmp, HAL_O_WRITE | HAL_O_CREATE | HAL_O_TRUNC);
-    if (!f) return card_error();
+    if (!f) return card_done(card_error());
     ssize_t w = hal_fs_write(f, data, n);
-    int c = hal_fs_close(f);
-    if (w != (ssize_t)n || c != 0) {
+    int closed = hal_fs_close(f);
+    if (w != (ssize_t)n || closed != 0) {
         hal_fs_remove(tmp);
         int e = card_error();
-        return e == INK_FS_ERR_IO ? INK_FS_ERR_NO_SPACE : e;
+        return card_done(e == INK_FS_ERR_IO ? INK_FS_ERR_NO_SPACE : e);
     }
     if (hal_fs_rename(tmp, phys) != 0) {
         hal_fs_remove(tmp);
-        return card_error();
+        return card_done(card_error());
     }
-    changed(path, "written");
-    return INK_FS_OK;
+    changed(c, path, "written");
+    return card_done(INK_FS_OK);
 }
 
 int ink_fs_free(uint64_t *free_bytes, uint64_t *total_bytes) {
-    if (FS.usb_lent) return INK_FS_ERR_USB;
+    int r = ink_fs_card_hold();
+    if (r) return r;
     hal_fs_volume_info_t vi;
-    if (hal_fs_volume_info("/content", &vi) != 0) return card_error();
+    if (hal_fs_volume_info("/content", &vi) != 0) return card_done(card_error());
     if (free_bytes) *free_bytes = vi.free_bytes;
     if (total_bytes) *total_bytes = vi.total_bytes;
-    return INK_FS_OK;
+    return card_done(INK_FS_OK);
 }
 
 void ink_fs_refresh_state(void) {
@@ -793,13 +902,12 @@ static void job_finish(void *ctx, ink_job_step_t how, bool cancelled) {
     int id = j->id;
     ink_fs_job_status_t end = j->st;
     void (*on_end)(void *, const ink_fs_job_status_t *) = j->on_end;
-    FS.job_active = false;
     ink_svc_unlock();
     char say[64], object[48];
     snprintf(say, sizeof say, "%s", ok ? (j->op == 0 ? "拷贝好了" : "删好了") : err == INK_FS_ERR_NO_SPACE ? "存储卡满了" : err ? "没做成" : "停下了");
     if (snprintf(object, sizeof object, "file:%s", j->vto) >= (int)sizeof object) object[0] = 0;
     ink_task_end(j->task, ok ? INK_TASK_DONE : end.state == INK_FS_JOB_CANCELLED ? INK_TASK_CANCELLED : INK_TASK_FAILED, say, ok && j->op == 0 ? object : NULL);
-    if (on_end) on_end(j->on_end_ctx, &end);
+    void *on_end_ctx = j->on_end_ctx;
     ink_args_t *a = osal_malloc(sizeof *a, OSAL_MEM_EXTERNAL);
     if (a) {
         ink_args_init(a);
@@ -807,41 +915,48 @@ static void job_finish(void *ctx, ink_job_step_t how, bool cancelled) {
         ink_args_bool(a, "ok", ok);
         if (!ok) ink_args_str(a, "why", err ? ink_fs_err_name(err) : "cancelled");
         ink_args_str(a, "member", j->who);
-        ink_cap_emit("file.job_done", a);
+        ink_cap_emit_for("file.job_done", a, j->who, j->generation);
         osal_free(a);
     }
-    changed_for(j->who, j->op == 0 ? j->vto : j->vfrom, j->op == 0 ? "copied" : "removed");
+    changed_for(j->who, j->generation, j->op == 0 ? j->vto : j->vfrom, j->op == 0 ? "copied" : "removed");
     ink_probe_count(ok ? "file.jobs_done" : "file.jobs_failed");
+    ink_svc_lock();
+    FS.job_active = false;
+    ink_svc_unlock();
+    if (on_end) on_end(on_end_ctx, &end);
 }
 
 static void job_cancel_cb(void *ctx) { ink_fs_job_cancel((int)(intptr_t)ctx); }
 
-static int job_begin(int op, const char *from, const char *to) {
+static int job_begin_unlocked(const file_context_t *c, int op, const char *from, const char *to) {
     char a[PHYS_MAX], b[PHYS_MAX] = "";
     if (op == 1 && virtual_root(from)) return INK_FS_ERR_DENIED;
-    int r = fs_resolve(from, op == 1, a, sizeof a);
-    if (!r && op == 0) r = fs_resolve(to, true, b, sizeof b);
+    int r = resolve_held(c, from, op == 1, a, sizeof a);
     if (r) return r;
-    if (hal_fs_size(a) < 0) return hal_fs_card_present() ? INK_FS_ERR_NOT_FOUND : card_error();
+    if (op == 0) r = resolve_for(c, to, true, b, sizeof b);
+    if (r) return card_done(r);
+    if (hal_fs_size(a) < 0) return card_done(hal_fs_card_present() ? INK_FS_ERR_NOT_FOUND : card_error());
     if (op == 0) {
-        if (hal_fs_size(b) >= 0) return INK_FS_ERR_EXISTS;
+        if (hal_fs_size(b) >= 0) return card_done(INK_FS_ERR_EXISTS);
         size_t an = strlen(a);
-        if (!strncmp(a, b, an) && b[an] == '/') return INK_FS_ERR_PATH; /* into itself */
+        if (!strncmp(a, b, an) && b[an] == '/') return card_done(INK_FS_ERR_PATH); /* into itself */
     }
     ink_svc_lock();
     if (FS.job_active) {
         ink_svc_unlock();
-        return INK_FS_ERR_BUSY;
+        return card_done(INK_FS_ERR_BUSY);
     }
     FS.job_active = true;
     fjob_t *j = &FS.job;
     int id = ++FS.next_job;
     memset(j, 0, sizeof *j);
-    snprintf(j->who, sizeof j->who, "%s", ink_member_current()->id);
+    snprintf(j->who, sizeof j->who, "%s", c->member);
+    j->generation = c->generation;
     j->id = id;
     j->op = op;
     j->st.state = INK_FS_JOB_RUNNING;
     ink_svc_unlock();
+    ink_fs_card_release(); /* job_active now holds the card. */
     snprintf(j->from, sizeof j->from, "%s", a);
     snprintf(j->to, sizeof j->to, "%s", b);
     snprintf(j->vfrom, sizeof j->vfrom, "%s", from);
@@ -870,37 +985,63 @@ static int job_begin(int op, const char *from, const char *to) {
             j->phase = 1;
         } else r = INK_FS_ERR_IO;
     }
+    char title[64];
+    const char *base = strrchr(from, '/');
+    snprintf(title, sizeof title, "%s %.48s", op == 0 ? "拷贝" : "删除", base ? base + 1 : from);
+    j->task = ink_task_begin_for(op == 0 ? "file.copy" : "file.delete", title, j->who, j->generation, job_cancel_cb, (void *)(intptr_t)id);
     ink_job_t job = {.name = "file", .step = job_step, .finish = job_finish, .ctx = j, .step_budget_ms = 500};
     if (r || ink_job_submit(&job) < 0) {
         job_release(j);
         ink_svc_lock();
         FS.job_active = false;
         ink_svc_unlock();
+        ink_task_end(j->task, INK_TASK_FAILED, "没做成", NULL);
         return r ? r : INK_FS_ERR_BUSY;
     }
-    char title[64];
-    const char *base = strrchr(from, '/');
-    snprintf(title, sizeof title, "%s %.48s", op == 0 ? "拷贝" : "删除", base ? base + 1 : from);
-    j->task = ink_task_begin(op == 0 ? "file.copy" : "file.delete", title, false, job_cancel_cb, (void *)(intptr_t)id);
     return id;
+}
+
+int fs_job_begin_for(const file_context_t *c, int op, const char *from, const char *to) {
+    osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
+    __atomic_add_fetch(&FS.revision, 1, __ATOMIC_RELAXED);
+    int r = job_begin_unlocked(c, op, from, to);
+    osal_mutex_unlock(FS.edits);
+    return r;
+}
+
+static int job_begin(int op, const char *from, const char *to) {
+    file_context_t c = current_context();
+    return fs_job_begin_for(&c, op, from, to);
 }
 
 int ink_fs_copy_start(const char *from, const char *to) { return job_begin(0, from, to); }
 int ink_fs_delete_start(const char *path) { return job_begin(1, path, NULL); }
 
 int ink_fs_forget_member(const char *id) {
+    osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
+    ink_svc_lock();
+    bool busy = FS.job_active;
+    for (int i = 0; i < MAX_OPEN; i++) busy |= FS.files[i].used && (!strcmp(FS.files[i].member, id) || !strncmp(FS.files[i].path, "/cache/", 7));
+    ink_svc_unlock();
+    if (busy) { osal_mutex_unlock(FS.edits); return INK_FS_ERR_BUSY; }
     char phys[PHYS_MAX];
-    if (FS.usb_lent) return INK_FS_ERR_USB;
-    if (!hal_fs_card_present()) return INK_FS_ERR_NO_CARD;
-    if (snprintf(phys, sizeof phys, "/content/.m/%s", id) >= (int)sizeof phys) return INK_FS_ERR_PATH;
-    int r = wipe_tree(phys);
-    hal_fs_remove(phys);
+    if (snprintf(phys, sizeof phys, "/content/.m/%s", id) >= (int)sizeof phys) {
+        osal_mutex_unlock(FS.edits);
+        return INK_FS_ERR_PATH;
+    }
+    int r = ink_fs_card_hold();
+    if (r) { osal_mutex_unlock(FS.edits); return r; }
+    r = wipe_tree(phys);
+    if (!r) r = wipe_tree("/cache");
+    if (!r && hal_fs_size(phys) >= 0 && hal_fs_remove(phys) != 0) r = INK_FS_ERR_IO;
+    r = card_done(r);
+    osal_mutex_unlock(FS.edits);
     return r;
 }
 
 int ink_fs_job_status(int id, ink_fs_job_status_t *out) {
     ink_svc_lock();
-    bool hit = FS.job.id == id && id > 0;
+    bool hit = FS.job.id == id && id > 0 && FS.job.generation && FS.job.generation == ink_member_generation(FS.job.who);
     if (hit) *out = FS.job.st;
     ink_svc_unlock();
     return hit ? INK_FS_OK : INK_FS_ERR_NOT_FOUND;
@@ -947,6 +1088,7 @@ static void usb_tell(void) {
 }
 
 int ink_fs_card_hold(void) {
+    if (!FS.ready) return hal_fs_card_present() ? INK_FS_OK : INK_FS_ERR_NO_CARD;
     int r = INK_FS_OK;
     ink_svc_lock();
     if (FS.usb_lent) r = INK_FS_ERR_USB;
@@ -957,12 +1099,14 @@ int ink_fs_card_hold(void) {
 }
 
 void ink_fs_card_release(void) {
+    if (!FS.ready) return;
     ink_svc_lock();
     FS.nopen--;
     ink_svc_unlock();
 }
 
 int ink_usb_disk_start(void) {
+    __atomic_add_fetch(&FS.revision, 1, __ATOMIC_RELAXED);
     if (FS.usb_lent) return INK_FS_OK;
     if (!hal_usb_host_connected()) return INK_FS_ERR_NO_HOST;
     if (!hal_fs_card_present()) return INK_FS_ERR_NO_CARD;
@@ -999,6 +1143,7 @@ int ink_usb_disk_start(void) {
 }
 
 int ink_usb_disk_stop(void) {
+    file_context_t c = current_context();
     ink_svc_lock();
     bool lent = FS.usb_lent;
     ink_svc_unlock();
@@ -1013,7 +1158,7 @@ int ink_usb_disk_stop(void) {
     ink_probe_count(r == 0 ? "usb.disk_stopped" : "usb.disk_stopped_bad");
     usb_tell();
     if (r != 0) return INK_FS_ERR_NO_CARD; /* never formatted here: a computer can repair it */
-    changed("/", "rescan"); /* the computer may have changed anything */
+    changed(&c, "/", "rescan"); /* the computer may have changed anything */
     return INK_FS_OK;
 }
 
@@ -1046,6 +1191,9 @@ static const ink_state_def_t ST_MODE = {.id = "storage.mode", .type = INK_ST_STR
 static const ink_state_def_t ST_USB = {.id = "usb.connected", .type = INK_ST_BOOL, .title = "连着电脑"};
 
 int ink_file_service_init(void) {
+    FS.edits = osal_mutex_create();
+    if (!FS.edits) return -1;
+    FS.ready = true;
     FS.h_free = ink_state_define(&ST_FREE);
     FS.h_card = ink_state_define(&ST_CARD);
     FS.h_mode = ink_state_define(&ST_MODE);
@@ -1055,4 +1203,96 @@ int ink_file_service_init(void) {
     ink_state_set_bool(FS.h_usb, hal_usb_host_connected());
     hal_usb_set_callback(on_usb, NULL);
     return ink_file_caps_init();
+}
+
+uint32_t ink_fs_file_revision(ink_fs_file_t *f) { return f ? f->revision : 0; }
+
+static bool inverse_ready(uint32_t revision) {
+    if (!revision || revision != __atomic_load_n(&FS.revision, __ATOMIC_RELAXED) || FS.job_active || ink_usb_disk_active()) return false;
+    for (int i = 0; i < MAX_OPEN; i++)
+        if (FS.files[i].used && FS.files[i].writable) return false;
+    return true;
+}
+
+int fs_open_for(const file_context_t *c, const char *path, int mode, ink_fs_file_t **out) {
+    osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
+    if (mode & (INK_FS_WRITE | INK_FS_APPEND | INK_FS_CREATE)) __atomic_add_fetch(&FS.revision, 1, __ATOMIC_RELAXED);
+    int r = fs_open_unlocked(c, path, mode, out);
+    osal_mutex_unlock(FS.edits);
+    return r;
+}
+
+int ink_fs_open(const char *path, int mode, ink_fs_file_t **out) {
+    file_context_t c = current_context();
+    return fs_open_for(&c, path, mode, out);
+}
+
+int ink_fs_open_member_generation(const char *member, uint32_t generation, const char *path, int mode, ink_fs_file_t **out) {
+    file_context_t c = member_context(member, generation);
+    return fs_open_for(&c, path, mode, out);
+}
+
+int64_t ink_fs_write(ink_fs_file_t *f, const void *buf, size_t n) {
+    osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
+    __atomic_add_fetch(&FS.revision, 1, __ATOMIC_RELAXED);
+    int64_t r = fs_write_unlocked(f, buf, n);
+    osal_mutex_unlock(FS.edits);
+    return r;
+}
+
+int fs_mkdir_for(const file_context_t *c, const char *path) {
+    osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
+    __atomic_add_fetch(&FS.revision, 1, __ATOMIC_RELAXED);
+    int r = fs_mkdir_unlocked(c, path);
+    osal_mutex_unlock(FS.edits);
+    return r;
+}
+
+int ink_fs_mkdir(const char *path) {
+    file_context_t c = current_context();
+    return fs_mkdir_for(&c, path);
+}
+
+int fs_remove_for(const file_context_t *c, const char *path, uint32_t revision) {
+    osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
+    int r = INK_FS_ERR_BUSY;
+    if (!revision || inverse_ready(revision)) { __atomic_add_fetch(&FS.revision, 1, __ATOMIC_RELAXED); r = fs_remove_unlocked(c, path); }
+    osal_mutex_unlock(FS.edits);
+    return r;
+}
+int ink_fs_remove_if_revision(const char *path, uint32_t revision) {
+    file_context_t c = current_context();
+    return fs_remove_for(&c, path, revision);
+}
+int ink_fs_remove(const char *path) { return ink_fs_remove_if_revision(path, 0); }
+
+int ink_fs_remove_member_generation(const char *member, uint32_t generation, const char *path) {
+    file_context_t c = member_context(member, generation);
+    return fs_remove_for(&c, path, 0);
+}
+
+int fs_move_for(const file_context_t *c, const char *from, const char *to, uint32_t revision, uint32_t *written) {
+    osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
+    int r = INK_FS_ERR_BUSY;
+    if (!revision || inverse_ready(revision)) {
+        __atomic_add_fetch(&FS.revision, 1, __ATOMIC_RELAXED);
+        r = fs_move_unlocked(c, from, to);
+        if (!r && written) *written = __atomic_load_n(&FS.revision, __ATOMIC_RELAXED);
+    }
+    osal_mutex_unlock(FS.edits);
+    return r;
+}
+int ink_fs_move_if_revision(const char *from, const char *to, uint32_t revision, uint32_t *written) {
+    file_context_t c = current_context();
+    return fs_move_for(&c, from, to, revision, written);
+}
+int ink_fs_move(const char *from, const char *to) { return ink_fs_move_if_revision(from, to, 0, NULL); }
+
+int ink_fs_write_atomic(const char *path, const void *data, size_t n) {
+    file_context_t c = current_context();
+    osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
+    __atomic_add_fetch(&FS.revision, 1, __ATOMIC_RELAXED);
+    int r = fs_write_atomic_unlocked(&c, path, data, n);
+    osal_mutex_unlock(FS.edits);
+    return r;
 }

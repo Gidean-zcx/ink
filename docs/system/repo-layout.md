@@ -18,6 +18,7 @@ ink/
 │   ├── text/                字体、断行、排版
 │   ├── util/                通用实现（严格 JSON）
 │   └── include/ink/sys/     系统接口（应用和服务之间）
+├── hub/                     家庭中枢（Python）：网关、能力总线、假厂商、任务队列、安装脚本和测试
 ├── platform/include/ink/    平台接口：OSAL 与各 HAL（系统与端口之间的契约）
 ├── drivers/                 驱动（真机与模拟器共用）
 │   ├── chips/               每颗芯片一个：tca9555 tps65185 ft6336u bq27220 cx25601n pcf8563 sc7a20h gc2145 bh1098g nt26

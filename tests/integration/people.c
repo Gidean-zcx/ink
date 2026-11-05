@@ -50,7 +50,19 @@ static uint32_t token_of_receipt(void) {
     return t;
 }
 
+static volatile int g_wifi_results;
+static char g_wifi_result[16];
+static void wifi_result(void *ctx, const char *id, const ink_args_t *a) {
+    (void)ctx; (void)id;
+    char cap[48];
+    if (ink_args_get_str(a, "cap", cap, sizeof cap) > 0 && !strcmp(cap, "wifi.forget")) {
+        ink_args_get_str(a, "status", g_wifi_result, sizeof g_wifi_result);
+        g_wifi_results++;
+    }
+}
+
 static void wifi(void) {
+    CHECK(ink_cap_subscribe("confirm.result", wifi_result, NULL, INK_EXEC_DIRECT) == 0, "Wi-Fi confirmation results");
     CHECK(!strcmp(state_of("wifi.state"), "idle"), "idle (%s)", state_of("wifi.state"));
     CHECK(AI("wifi.scan", NULL) && g_rc.status == INK_RC_DONE, "the AI looks around (%s)", g_rc.detail);
     CHECK(strstr(g_result, "\"ssid\":\"家里\"") && strstr(g_result, "\"secured\":false"), "it sees them (%s)", g_result);
@@ -59,15 +71,7 @@ static void wifi(void) {
     CHECK(AI("wifi.list", NULL) && !strcmp(g_result, "[]"), "it knows none yet (%s)", g_result);
     CHECK(!hal_net_available(HAL_LINK_WIFI), "so none is available");
 
-    /* the AI asking: a card that says which network, not the password */
-    CHECK(AI("wifi.connect", "{\"ssid\":\"家里\",\"password\":\"hunter2hunter2\"}") && g_rc.status == INK_RC_PENDING_CONFIRMATION, "the AI asks: it waits (%s)", ink_rc_name(g_rc.status));
-    uint32_t token = token_of_receipt();
-    delay_ms(600);
-    on_ui(read_screen);
-    CHECK(strstr(g_snap, "连接 Wi-Fi：家里") && !strstr(g_snap, "hunter2"), "the card says which, not the password (%s)", g_snap);
-    CHECK(ink_confirm_withdraw(token, INK_SRC_AI) == 0, "taken back");
-    delay_ms(1200);
-
+    CHECK(AI("wifi.connect", "{\"ssid\":\"家里\",\"password\":\"hunter2hunter2\"}") && g_rc.status == INK_RC_REJECTED, "AI cannot enter a password");
     /* wrong password, by hand */
     CHECK(BY_HAND("wifi.connect", "{\"ssid\":\"家里\",\"password\":\"wrong\"}") && g_rc.status == INK_RC_FAILED && strstr(g_rc.detail, "password"), "the wrong password (%s)", g_rc.detail);
     CHECK(!strcmp(state_of("wifi.state"), "failed"), "says so");
@@ -75,12 +79,13 @@ static void wifi(void) {
     CHECK(BY_HAND("wifi.connect", "{\"ssid\":\"没有这个\"}") && g_rc.status == INK_RC_FAILED && strstr(g_rc.detail, "around"), "one that is not there (%s)", g_rc.detail);
 
     /* right */
-    CHECK(BY_HAND("wifi.connect", "{\"ssid\":\"家里\",\"password\":\"hunter2hunter2\"}") && g_rc.status == INK_RC_DONE, "joined (%s)", g_rc.detail);
+    CHECK(BY_HAND("wifi.connect", "{\"ssid\":\"家里\",\"password\":\"hunter2hunter2\"}") && g_rc.status == INK_RC_DONE, "person joins with their password (%s)", g_rc.detail);
     CHECK(!strcmp(state_of("wifi.state"), "connected") && !strcmp(state_of("wifi.ssid"), "家里"), "state (%s, %s)", state_of("wifi.state"), state_of("wifi.ssid"));
     CHECK(WAIT_FOR(hal_net_available(HAL_LINK_WIFI), 1000), "available to the net service now");
     CHECK(WAIT_FOR(!strcmp(state_of("net.type"), "wifi"), 15000), "which chooses it (%s)", state_of("net.type"));
     CHECK(AI("wifi.list", NULL) && !strcmp(g_result, "[\"家里\"]"), "names only (%s)", g_result);
 
+    CHECK(AI("wifi.connect", "{\"ssid\":\"家里\"}") && g_rc.status == INK_RC_DONE, "D-105: AI reconnects to a stored network directly");
     /* the password is nobody's to read */
     CHECK(AI("data.collections", NULL) && !strstr(g_result, "net.wifi"), "the AI does not even see the collection (%s)", g_result);
     CHECK(AI("data.list", "{\"collection\":\"net.wifi\"}") && g_rc.status != INK_RC_DONE, "nor can read it (%s)", ink_rc_name(g_rc.status));
@@ -99,9 +104,13 @@ static void wifi(void) {
     CHECK(AI("wifi.forget", "{\"ssid\":\"家里\"}") && g_rc.status == INK_RC_PENDING_CONFIRMATION, "the AI forgetting one needs a yes");
     CHECK(ink_confirm_withdraw(token_of_receipt(), INK_SRC_AI) == 0, "taken back");
     delay_ms(1200);
-    CHECK(BY_HAND("wifi.forget", "{\"ssid\":\"家里\"}") && g_rc.status == INK_RC_DONE, "by hand");
+    CHECK(BY_HAND("wifi.forget", "{\"ssid\":\"家里\"}") && g_rc.status == INK_RC_PENDING_CONFIRMATION, "by hand too");
+    int results = g_wifi_results;
+    CHECK(ink_confirm_decide(token_of_receipt(), true, INK_SRC_TOUCH) == 0 && WAIT_FOR(g_wifi_results > results, 2000) && !strcmp(g_wifi_result, "done"), "person confirms forgetting the saved password");
     CHECK(WAIT_FOR(!hal_net_available(HAL_LINK_WIFI), 1000), "not known any more");
-    CHECK(BY_HAND("wifi.forget", "{\"ssid\":\"家里\"}") && g_rc.status == INK_RC_FAILED, "and not twice");
+    CHECK(BY_HAND("wifi.forget", "{\"ssid\":\"家里\"}") && g_rc.status == INK_RC_PENDING_CONFIRMATION, "second attempt still asks");
+    results = g_wifi_results;
+    CHECK(ink_confirm_decide(token_of_receipt(), true, INK_SRC_TOUCH) == 0 && WAIT_FOR(g_wifi_results > results, 2000) && !strcmp(g_wifi_result, "failed"), "and not twice");
     /* a child cannot */
     CHECK(ink_member_switch("kid") == 0, "a child");
     CHECK(BY_HAND("wifi.connect", "{\"ssid\":\"咖啡店\"}") && g_rc.status == INK_RC_REJECTED, "cannot join networks (%s)", ink_rc_name(g_rc.status));
@@ -160,8 +169,7 @@ static void members_and_pin(void) {
     CHECK(set_pin("owner", "123456", "654321") == INK_PIN_OK, "the right one");
 
     /* the idle return */
-    ink_receipt_t rc;
-    CHECK(ink_setting_set("member.idle_return_s", 60, INK_SRC_TOUCH, &rc) == INK_RC_DONE, "a minute");
+    CHECK(setting_by_hand("member.idle_return_s", 60), "a minute with human confirmation");
     ink_power_activity(osal_now_us());
     CHECK(unlock("owner", "654321") == INK_PIN_OK, "in");
     delay_ms(50000);
@@ -199,7 +207,7 @@ static void members_and_pin(void) {
     CHECK(strcmp(g_top, "member_gate"), "the gate is gone (%s)", g_top);
 
     /* locking closes it, long before going idle would */
-    CHECK(ink_setting_set("member.idle_return_s", 3600, INK_SRC_TOUCH, &rc) == INK_RC_DONE, "an hour");
+    CHECK(setting_by_hand("member.idle_return_s", 3600), "an hour with human confirmation");
     ink_power_activity(osal_now_us());
     ink_power_lock();
     CHECK(WAIT_FOR(!ink_member_space_open(), 2000), "locked: closed");
@@ -221,13 +229,28 @@ static void members_and_pin(void) {
     delay_ms(600);
 }
 
+static int add_results;
+static char add_status[24];
+static void add_result(void *ctx, const char *id, const ink_args_t *a) {
+    (void)ctx; (void)id;
+    ink_args_get_str(a, "status", add_status, sizeof add_status);
+    add_results++;
+}
+static bool add_confirmed(const char *args, const char *status) {
+    int before = add_results, pin_before = g_pin_done;
+    if (!BY_HAND("member.add", args) || g_rc.status != INK_RC_PENDING_CONFIRMATION) return false;
+    if (ink_confirm_accept_with_pin(token_of_receipt(), "654321", pin_told, NULL) != 0) return false;
+    return WAIT_FOR(g_pin_done > pin_before && add_results > before, 5000) && !strcmp(add_status, status);
+}
+
 static void add_and_remove(void) {
+    CHECK(ink_cap_subscribe("confirm.result", add_result, NULL, INK_EXEC_DIRECT) == 0, "listen to the confirmed result");
     CHECK(AI("member.add", "{\"id\":\"grandma\",\"name\":\"奶奶\",\"role\":\"adult\"}") && g_rc.status == INK_RC_PENDING_CONFIRMATION, "the AI adding someone needs a yes");
     CHECK(ink_confirm_withdraw(token_of_receipt(), INK_SRC_AI) == 0, "taken back");
     delay_ms(1200);
-    CHECK(BY_HAND("member.add", "{\"id\":\"grandma\",\"name\":\"奶奶\",\"role\":\"adult\"}") && g_rc.status == INK_RC_DONE, "by hand (%s)", g_rc.detail);
-    CHECK(BY_HAND("member.add", "{\"id\":\"grandma\"}") && g_rc.status == INK_RC_FAILED, "once");
-    CHECK(BY_HAND("member.add", "{\"id\":\"../x\"}") && g_rc.status == INK_RC_INVALID, "a name for a folder (%s)", ink_rc_name(g_rc.status));
+    CHECK(add_confirmed("{\"id\":\"grandma\",\"name\":\"奶奶\",\"role\":\"adult\"}", "done"), "by hand (%s)", g_rc.detail);
+    CHECK(add_confirmed("{\"id\":\"grandma\"}", "failed"), "once");
+    CHECK(add_confirmed("{\"id\":\"../x\"}", "invalid"), "a name for a folder (%s)", ink_rc_name(g_rc.status));
     CHECK(AI("member.list", NULL) && strstr(g_result, "奶奶"), "listed (%s)", g_result);
 
     /* with their own data, on the flash and on the card */

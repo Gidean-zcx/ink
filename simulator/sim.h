@@ -21,6 +21,7 @@
 #include "pools.h"
 #include "profile.h"
 #include "vtk.h"
+#include "environment/hub_bridge.h"
 
 #define SIM_MS(x) ((uint64_t)(x) * 1000000ull)
 #define SIM_US(x) ((uint64_t)(x) * 1000ull)
@@ -36,6 +37,7 @@ typedef struct {
     int nasset_dirs;
     const char *seed_content;  /* host directory copied into /content at boot (books for scenarios) */
     const char *hub_script;    /* scripted hub rules (JSON); built-in defaults if NULL */
+    const char *hub_url;       /* opt-in loopback WebSocket bridge; fixed 1x realtime */
     bool no_random_outages;    /* disable the profile's random link outages */
     const char *flash_timing;  /* override the profile's flash timing: "typ" | "max" | "tail" */
     double i2c_faults;         /* share of hal_i2c transfers that time out (fault injection) */

@@ -17,7 +17,8 @@ typedef struct {
     size_t cap;
     int session;
     size_t window; /* the character the label starts with */
-    int mark_at;   /* the place of the mark in the label, -1 none */
+    size_t display_map[256];
+    size_t displayed;
     void (*entered)(void *ctx, const char *value);
     void *ctx;
 } field_t;
@@ -39,20 +40,37 @@ static const char *char_at(const char *s, size_t chars) {
 
 /* The text with what is being composed where the cursor is; the cursor or the selection marked unless it is simply at the end
  * (placeholder look, D-64). A long text starts so that the cursor is in view. */
+static void line_piece(field_t *f, char *line, size_t cap, size_t *bytes, const char *s, size_t n, size_t at, size_t after) {
+    if (*bytes + n >= cap || f->displayed + 1 >= 256) return;
+    f->display_map[f->displayed++] = at;
+    memcpy(line + *bytes, s, n);
+    *bytes += n; line[*bytes] = 0;
+    f->display_map[f->displayed] = after;
+}
+
 static void compose_line(field_t *f, const char *v, const char *c, char *line, size_t cap) {
     size_t start, end;
     ink_text_selection(&start, &end);
-    size_t all = 0;
-    for (const char *p = v; *p; p++) all += (*p & 0xC0) != 0x80;
-    f->window = end > WINDOW_CHARS ? end - WINDOW_CHARS : 0;
-    const char *from = char_at(v, f->window), *a = char_at(v, start), *b = char_at(v, end);
-    if (start != end) {
-        f->mark_at = (int)(start - f->window);
-        snprintf(line, cap, "%.*s[%.*s]%s", (int)(a - from), from, (int)(b - a), a, b);
-    } else if (end < all || c[0]) {
-        f->mark_at = (int)(end - f->window);
-        snprintf(line, cap, "%.*s%s|%s", (int)(a - from), from, c, a);
-    } else snprintf(line, cap, "%s", from);
+    f->window = start > WINDOW_CHARS ? start - WINDOW_CHARS : 0;
+    const char *p = char_at(v, f->window);
+    size_t bytes = 0, at = f->window;
+    f->displayed = 0; f->display_map[0] = at;
+    line[0] = 0;
+    for (;;) {
+        if (at == start && start != end) line_piece(f, line, cap, &bytes, "[", 1, at, at);
+        if (at == end && start != end) line_piece(f, line, cap, &bytes, "]", 1, at, at);
+        if (start == end && at == end && (*p || *c)) {
+            for (const char *q = c; *q;) {
+                const char *next = char_at(q, 1);
+                line_piece(f, line, cap, &bytes, q, (size_t)(next - q), at, at); q = next;
+            }
+            line_piece(f, line, cap, &bytes, "|", 1, at, at);
+        }
+        if (!*p || at >= f->window + WINDOW_CHARS * 2) break;
+        const char *next = char_at(p, 1);
+        line_piece(f, line, cap, &bytes, p, (size_t)(next - p), at, at + 1);
+        p = next; at++;
+    }
 }
 
 static void show(field_t *f) {
@@ -60,7 +78,7 @@ static void show(field_t *f) {
     const char *c = f->session ? ink_text_composing() : "";
     char line[256];
     f->window = 0;
-    f->mark_at = -1;
+    f->displayed = 0;
     if (f->cfg.type == INK_TEXT_PASSWORD) {
         size_t n = strlen(v);
         if (n >= sizeof line) n = sizeof line - 1;
@@ -112,6 +130,11 @@ static void close_menu(field_t *f) {
     f->menu = NULL;
 }
 
+static size_t field_index(field_t *f, uint32_t letter) {
+    if (f->session && f->cfg.type != INK_TEXT_PASSWORD) return f->display_map[letter < f->displayed ? letter : f->displayed];
+    return f->window + letter;
+}
+
 /* What the tap or the long press was on, as a place in the text. */
 static size_t place_of(field_t *f, lv_event_t *e) {
     lv_point_t p;
@@ -121,8 +144,7 @@ static size_t place_of(field_t *f, lv_event_t *e) {
     p.x -= a.x1;
     p.y -= a.y1;
     uint32_t letter = lv_label_get_letter_on(f->label, &p, true);
-    if (f->mark_at >= 0 && letter > (uint32_t)f->mark_at) letter--; /* the mark is not a letter of the text */
-    return f->window + letter;
+    return field_index(f, letter);
 }
 
 static void on_copy(lv_event_t *e) {

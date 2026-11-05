@@ -49,19 +49,27 @@ static struct {
     uint64_t paused_at_s;
     uint64_t last_card_us;
     char member[INK_MEMBER_ID_MAX];
+    uint32_t generation;
     ink_svc_deadline_t pump_at;
     ink_exec_job_t pump_job, member_job, route_job, battery_job;
     int h_state;
+    bool on_headset;
 } M INK_PSRAM_BSS;
 
-typedef struct {
+typedef struct media_cmd {
     ink_exec_job_t job;
-    void (*fn)(uint32_t arg, const char *path);
+    void (*fn)(struct media_cmd *cmd);
     uint32_t arg;
+    char member[INK_MEMBER_ID_MAX];
+    uint32_t generation;
     char path[INK_FS_PATH_MAX];
 } media_cmd_t;
 
 static const char *const STATE_NAME[] = {"idle", "playing", "paused"};
+
+static bool playback_current(void) {
+    return M.generation && M.generation == ink_member_generation(M.member) && !strcmp(M.member, ink_member_current()->id);
+}
 
 static void set_state(ink_media_state_t s, ink_media_pause_t by) {
     ink_svc_lock();
@@ -98,7 +106,8 @@ static uint32_t path_id(const char *path) {
 }
 
 static void save_to_flash(const char *path, uint32_t ms) {
-    ink_db_t *db = ink_db_open(&POSITIONS, M.member);
+    if (!M.generation || M.generation != ink_member_generation(M.member)) return;
+    ink_db_t *db = ink_db_open_member(&POSITIONS, M.member, M.generation);
     if (!db) return;
     char buf[INK_FS_PATH_MAX + 64];
     ink_jw_t w;
@@ -115,9 +124,12 @@ static void save_to_flash(const char *path, uint32_t ms) {
 }
 
 static void save_to_card(const char *path, uint32_t ms) {
+    if (!M.generation || M.generation != ink_member_generation(M.member)) return;
     char buf[INK_FS_PATH_MAX + 64];
     int n = snprintf(buf, sizeof buf, "%lld\n%s\n%s\n%u\n", (long long)ink_time_now_s(), M.member, path, (unsigned)ms);
+    if (!ink_member_io_begin(M.member, M.generation)) return;
     if (ink_fs_write_atomic(POS_CACHE, buf, (size_t)n) == 0) ink_probe_count("media.positions_cached");
+    ink_member_io_end(M.member);
 }
 
 /* The newer of what the flash and the card say. */
@@ -192,7 +204,7 @@ static void end_session(const char *why) { /* executor */
             ink_args_str(a, "path", path);
             ink_args_str(a, "why", why);
             ink_args_str(a, "member", M.who);
-            ink_cap_emit("media.finished", a);
+            ink_cap_emit_for("media.finished", a, M.who, M.generation);
             osal_free(a);
         }
     }
@@ -205,14 +217,31 @@ static bool open_stream(void) {
         M.stream = 0;
         return false;
     }
+    if (!playback_current()) {
+        ink_audio_stream_abort(M.stream);
+        M.stream = 0;
+        return false;
+    }
     M.base_ms = ogg_position_ms(M.r);
     M.at_end = false;
     return true;
 }
 
+static void do_pause(ink_media_pause_t by);
+
 static void pump(void *arg) { /* executor: keep the queue filled, see how it goes */
     (void)arg;
     if (!M.r || M.st.state != INK_MEDIA_PLAYING) return;
+    if (!playback_current()) {
+        save_to_flash(M.st.path, heard_ms());
+        end_session("member_changed");
+        return;
+    }
+    if (M.on_headset && ink_audio_route() == INK_ROUTE_SPEAKER) {
+        M.on_headset = false;
+        do_pause(INK_MEDIA_BY_ROUTE);
+        return;
+    }
     uint32_t played = 0, queued = 0;
     if (!M.stream && !open_stream()) { /* something else has the speaker: the focus says when */
         ink_svc_at(&M.pump_at, osal_now_us() + PUMP_US, pump_due, NULL);
@@ -252,7 +281,7 @@ static void pump(void *arg) { /* executor: keep the queue filled, see how it goe
             ink_audio_stream_finish(M.stream);
             break;
         }
-        if (ink_audio_stream_push(M.stream, data, len) != 0) break;
+        if (!playback_current() || ink_audio_stream_push(M.stream, data, len) != 0) break;
         queued++;
     }
     uint32_t now_ms = M.base_ms + played * OGG_FRAME_MS;
@@ -307,7 +336,8 @@ static void on_focus(void *ctx, ink_focus_event_t ev, ink_audio_prio_t by) { /* 
     }
 }
 
-static int do_play(const char *path, uint32_t start_ms) { /* executor; 0 or an error (ink_fs_err_t, or -100 not a playable file) */
+static int do_play(const char *path, uint32_t start_ms, const char *member, uint32_t generation) { /* executor */
+    if (!generation || generation != ink_member_generation(member) || strcmp(member, ink_member_current()->id)) return INK_FS_ERR_DENIED;
     if (M.r) {
         char was[INK_FS_PATH_MAX];
         snprintf(was, sizeof was, "%s", M.st.path);
@@ -316,12 +346,17 @@ static int do_play(const char *path, uint32_t start_ms) { /* executor; 0 or an e
     }
     int fs_err = 0;
     ogg_reader_t *r = NULL;
-    int e = ogg_open(path, &r, &fs_err);
+    int e = ogg_open_member_generation(member, generation, path, &r, &fs_err);
     if (e == OGG_ERR_FILE) return fs_err;
     if (e != OGG_OK) return -100;
+    if (generation != ink_member_generation(member) || strcmp(member, ink_member_current()->id)) {
+        ogg_close(r);
+        return INK_FS_ERR_DENIED;
+    }
     M.r = r;
-    snprintf(M.who, sizeof M.who, "%s", ink_member_current()->id);
-    snprintf(M.member, sizeof M.member, "%s", ink_member_current()->id);
+    snprintf(M.who, sizeof M.who, "%s", member);
+    snprintf(M.member, sizeof M.member, "%s", member);
+    M.generation = generation;
     ink_svc_lock();
     snprintf(M.st.path, sizeof M.st.path, "%s", path);
     M.st.duration_ms = ogg_duration_ms(r);
@@ -365,15 +400,22 @@ static void do_stop(void) { /* executor */
 
 static void cmd_job(void *arg) {
     media_cmd_t *c = arg;
-    c->fn(c->arg, c->path);
+    if (c->generation && c->generation == ink_member_generation(c->member) && !strcmp(c->member, ink_member_current()->id)) c->fn(c);
     osal_free(c);
 }
 
-static int post_cmd(void (*fn)(uint32_t, const char *), uint32_t a, const char *path) {
+static int post_cmd(void (*fn)(media_cmd_t *), uint32_t a, const char *path) {
+    char member[INK_MEMBER_ID_MAX];
+    ink_svc_lock();
+    snprintf(member, sizeof member, "%s", ink_member_current()->id);
+    uint32_t generation = ink_member_generation(member);
+    ink_svc_unlock();
     media_cmd_t *c = osal_calloc(1, sizeof *c, OSAL_MEM_EXTERNAL);
     if (!c) return -1;
     c->fn = fn;
     c->arg = a;
+    snprintf(c->member, sizeof c->member, "%s", member);
+    c->generation = generation;
     if (path) snprintf(c->path, sizeof c->path, "%s", path);
     if (ink_exec_post(INK_EXEC_MEDIA, &c->job, cmd_job, c) != 0) {
         osal_free(c);
@@ -382,24 +424,20 @@ static int post_cmd(void (*fn)(uint32_t, const char *), uint32_t a, const char *
     return 0;
 }
 
-static void c_play(uint32_t a, const char *p) { do_play(p, a); }
-static void c_pause(uint32_t a, const char *p) {
-    (void)a;
-    (void)p;
+static void c_play(media_cmd_t *c) { do_play(c->path, c->arg, c->member, c->generation); }
+static void c_pause(media_cmd_t *c) {
+    (void)c;
     do_pause(INK_MEDIA_BY_USER);
 }
-static void c_resume(uint32_t a, const char *p) {
-    (void)a;
-    (void)p;
+static void c_resume(media_cmd_t *c) {
+    (void)c;
     do_resume(0);
 }
-static void c_seek(uint32_t a, const char *p) {
-    (void)p;
-    do_seek(a);
+static void c_seek(media_cmd_t *c) {
+    do_seek(c->arg);
 }
-static void c_stop(uint32_t a, const char *p) {
-    (void)a;
-    (void)p;
+static void c_stop(media_cmd_t *c) {
+    (void)c;
     do_stop();
 }
 
@@ -413,6 +451,7 @@ void ink_media_status(ink_media_status_t *out) {
     ink_svc_lock();
     *out = M.st;
     ink_svc_unlock();
+    if (!playback_current()) *out = (ink_media_status_t){.state = INK_MEDIA_IDLE};
 }
 
 /* ---- what else stops it ---- */
@@ -434,7 +473,10 @@ static void on_member(void *ctx, int h, const char *id) {
 
 static void route_job(void *arg) { /* the headset went: not suddenly out loud */
     (void)arg;
-    if (ink_audio_route() == INK_ROUTE_SPEAKER) do_pause(INK_MEDIA_BY_ROUTE);
+    if (ink_audio_route() == INK_ROUTE_SPEAKER) {
+        M.on_headset = false;
+        do_pause(INK_MEDIA_BY_ROUTE);
+    } else M.on_headset = true;
 }
 
 static void on_route(void *ctx, int h, const char *id) {
@@ -456,6 +498,7 @@ static struct {
     ogg_writer_t *w;
     char path[INK_FS_PATH_MAX];
     char member[INK_MEMBER_ID_MAX]; /* whose it is: what the next one says does not go into it */
+    uint32_t generation;
     rec_frame_t q[REC_FRAMES];
     uint32_t head, tail; /* under the service lock */
     uint32_t last_sync_ms, max_ms;
@@ -491,7 +534,7 @@ static void rec_finish(const char *why) { /* executor */
         ink_args_str(a, "member", REC.member);
         ink_args_int(a, "ms", ms);
         ink_args_str(a, "why", r && !REC.why[0] ? "write_failed" : why);
-        ink_cap_emit("audio.record_done", a);
+        ink_cap_emit_for("audio.record_done", a, REC.member, REC.generation);
         osal_free(a);
     }
 }
@@ -537,12 +580,13 @@ static void rec_frame(void *ctx, const uint8_t *data, size_t len, uint32_t seq) 
     (void)seq;
     if (!len) { /* the end: after what is queued. It takes no room there, a full queue must not lose it */
         ink_svc_lock();
+        if (REC.generation != ink_member_generation(REC.member) || strcmp(ink_member_current()->id, REC.member)) snprintf(REC.why, sizeof REC.why, "member_changed");
         REC.ending = true;
         ink_svc_unlock();
         ink_exec_post(INK_EXEC_MEDIA, &REC.write_job, rec_write, NULL);
         return;
     }
-    if (strcmp(ink_member_current()->id, REC.member)) return; /* someone else has it now, the end is on its way */
+    if (REC.generation != ink_member_generation(REC.member) || strcmp(ink_member_current()->id, REC.member)) return;
     uint8_t *copy = osal_malloc(len, OSAL_MEM_EXTERNAL);
     if (!copy) {
         ink_probe_count("media.record_lost_frames");
@@ -561,7 +605,7 @@ static void rec_frame(void *ctx, const uint8_t *data, size_t len, uint32_t seq) 
 }
 
 static void rec_member_changed(void) { /* executor */
-    if (!ink_audio_recording() || !strcmp(ink_member_current()->id, REC.member)) return;
+    if (!ink_audio_recording() || (REC.generation == ink_member_generation(REC.member) && !strcmp(ink_member_current()->id, REC.member))) return;
     snprintf(REC.why, sizeof REC.why, "member_changed");
     ink_audio_capture_end();
 }
@@ -583,11 +627,13 @@ static void fail(ink_call_t *c, ink_rc_t st, const char *why) {
 }
 
 static void cap_play(ink_call_t *c) { /* executor */
+    uint32_t generation;
+    const char *member = ink_cap_call_member(c, &generation);
     char path[INK_FS_PATH_MAX];
     int64_t start = -1;
     ink_args_get_str(&c->args, "path", path, sizeof path);
     ink_args_get_int(&c->args, "start_ms", &start);
-    int e = do_play(path, start < 0 ? INK_MEDIA_RESUME : (uint32_t)start);
+    int e = do_play(path, start < 0 ? INK_MEDIA_RESUME : (uint32_t)start, member, generation);
     if (e == -100) fail(c, INK_RC_FAILED, "not an Ogg Opus file (one channel)");
     else if (e) fail(c, INK_RC_FAILED, ink_fs_err_name(e));
     else {
@@ -600,6 +646,7 @@ static void cap_play(ink_call_t *c) { /* executor */
 
 static void need_session(ink_call_t *c, void (*act)(void)) {
     if (!M.r) fail(c, INK_RC_FAILED, "nothing is playing");
+    else if (!playback_current()) fail(c, INK_RC_STALE, "someone else is using the device now");
     else act();
 }
 
@@ -614,6 +661,7 @@ static void cap_seek(ink_call_t *c) {
     int64_t ms = 0;
     ink_args_get_int(&c->args, "ms", &ms);
     if (!M.r) fail(c, INK_RC_FAILED, "nothing is playing");
+    else if (!playback_current()) fail(c, INK_RC_STALE, "someone else is using the device now");
     else do_seek((uint32_t)ms);
 }
 
@@ -643,6 +691,13 @@ static void cap_status(ink_call_t *c) {
 }
 
 static void cap_record(ink_call_t *c) { /* executor */
+    char member[INK_MEMBER_ID_MAX];
+    uint32_t generation;
+    snprintf(member, sizeof member, "%s", ink_cap_call_member(c, &generation));
+    if (!generation || generation != ink_member_generation(member) || strcmp(member, ink_member_current()->id)) {
+        fail(c, INK_RC_STALE, "someone else is using the device now");
+        return;
+    }
     char path[INK_FS_PATH_MAX] = "";
     int64_t max_s = 0;
     ink_args_get_str(&c->args, "path", path, sizeof path);
@@ -660,13 +715,6 @@ static void cap_record(ink_call_t *c) { /* executor */
         ink_time_to_local(ink_time_now_s(), &t);
         snprintf(path, sizeof path, "/me/recordings/%04d%02d%02d-%02d%02d%02d.opus", t.year, t.month, t.day, t.hour, t.min, t.sec);
     }
-    char dir[INK_FS_PATH_MAX];
-    snprintf(dir, sizeof dir, "%s", path);
-    char *slash = strrchr(dir, '/');
-    if (slash && slash != dir) {
-        *slash = 0;
-        ink_fs_mkdir(dir);
-    }
     REC.focus = ink_audio_focus_acquire(INK_AUDIO_PRIO_VOICE, rec_on_focus, NULL, INK_EXEC_MEDIA);
     if (REC.focus < 0) {
         REC.focus = 0;
@@ -674,7 +722,7 @@ static void cap_record(ink_call_t *c) { /* executor */
         return;
     }
     int fs_err = 0;
-    int e = ogg_create(path, &REC.w, &fs_err);
+    int e = ogg_create_member_generation(member, generation, path, &REC.w, &fs_err);
     if (e != OGG_OK) {
         ink_audio_focus_release(REC.focus);
         REC.focus = 0;
@@ -682,7 +730,8 @@ static void cap_record(ink_call_t *c) { /* executor */
         return;
     }
     snprintf(REC.path, sizeof REC.path, "%s", path);
-    snprintf(REC.member, sizeof REC.member, "%s", ink_member_current()->id);
+    snprintf(REC.member, sizeof REC.member, "%s", member);
+    REC.generation = generation;
     REC.why[0] = 0;
     REC.last_sync_ms = 0;
     REC.max_ms = max_s > 0 && max_s < REC_MAX_S ? (uint32_t)max_s * 1000u : REC_MAX_S * 1000u;
@@ -697,13 +746,14 @@ static void cap_record(ink_call_t *c) { /* executor */
         ink_svc_unlock();
         ogg_finish(REC.w);
         REC.w = NULL;
-        ink_fs_remove(path);
+        ink_fs_remove_member_generation(member, generation, path);
         ink_audio_focus_release(REC.focus);
         REC.focus = 0;
         fail(c, INK_RC_FAILED, "the microphone is in use");
         return;
     }
     ink_state_set_bool(REC.h_recording, true);
+    rec_member_changed(); /* A handoff during file setup may have preceded REC.on. */
     snprintf(c->rc.object, sizeof c->rc.object, "file:%.40s", path);
     char result[INK_FS_PATH_MAX + 16];
     snprintf(result, sizeof result, "{\"path\":\"%s\"}", path); /* our own name or the file service's: no quotes in it */

@@ -1,0 +1,21 @@
+[project]
+name = "ink-hub"
+version = "0.1.0"
+description = "家庭服务器：第 1 步示例骨架"
+requires-python = "==3.11.15"
+dependencies = ["aiohttp==3.12.15", "PyYAML==6.0.3"]
+
+[dependency-groups]
+dev = ["pytest==8.4.2", "pytest-asyncio==1.2.0"]
+
+[project.scripts]
+inkhub = "ink_hub.__main__:main"
+
+[build-system]
+requires = ["hatchling==1.27.0"]
+build-backend = "hatchling.build"
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+addopts = "-ra"

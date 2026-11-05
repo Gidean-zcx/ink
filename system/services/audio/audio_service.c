@@ -143,6 +143,8 @@ static struct {
     bool boosting;
     hal_cpu_boost_t *boost;
 } AU;
+static bool g_capture_revoked INK_PSRAM_BSS; /* under AU.lock; a handoff cannot be undone by switching back */
+static bool g_output_revoked INK_PSRAM_BSS;
 
 static void lock(void) { osal_mutex_lock(AU.lock, OSAL_WAIT_FOREVER); }
 static void unlock(void) { osal_mutex_unlock(AU.lock); }
@@ -196,6 +198,7 @@ static void close_output(bool drain);
 static void free_jb(void);
 
 static int g_last_command = -1;
+static int focus_top_locked(void);
 
 static void listen_event(ink_listen_ev_t ev, uint64_t t_us) {
     if (AU.listen_fn) AU.listen_fn(AU.listen_ctx, ev, t_us);
@@ -238,14 +241,19 @@ static void encode_and_deliver(const int16_t *frame) {
     }
     uint8_t pkt[HAL_OPUS_MAX_PACKET];
     int n = hal_opus_encode(AU.enc, frame, pkt, sizeof pkt);
-    if (n > 0 && AU.cap_fn) AU.cap_fn(AU.cap_ctx, pkt, (size_t)n, AU.cap_seq++);
+    lock();
+    bool allowed = !g_capture_revoked && focus_top_locked() < INK_AUDIO_PRIO_ALERT;
+    unlock();
+    if (allowed && n > 0 && AU.cap_fn) AU.cap_fn(AU.cap_ctx, pkt, (size_t)n, AU.cap_seq++);
 }
 
 /* Encode one frame, or finish an ending capture. Returns true if there may be more to encode. */
 static bool capture_step(int16_t *scratch) {
     lock();
-    bool on = AU.cap_on, ending = AU.cap_ending, listen = AU.listen_on, got = (on || listen) && take_frame(scratch);
-    uint32_t left = AU.wr - AU.rd;
+    bool on = AU.cap_on, ending = AU.cap_ending, listen = AU.listen_on;
+    bool cut = on && ending && (g_capture_revoked || focus_top_locked() >= INK_AUDIO_PRIO_ALERT);
+    bool got = !cut && (on || listen) && take_frame(scratch);
+    uint32_t left = cut ? 0 : AU.wr - AU.rd;
     if (!got && on && ending && !listen) { /* flush the tail (padded) and signal the end */
         for (int i = 0; i < FRAME; i++) scratch[i] = i < (int)left ? AU.ring[AU.rd++ % CAP_RING] : 0;
     }
@@ -502,6 +510,7 @@ static bool take_tone(void) {
 }
 
 static void service_playback(void) {
+    if (__atomic_exchange_n(&g_output_revoked, false, __ATOMIC_ACQ_REL) && AU.out_open) close_output(false);
     (void)staged_wanted();
     for (;;) {
         if (AU.pcm_off >= AU.pcm_len) { /* nothing staged: the ringing, a tone, else the stream's next frame when it can play */
@@ -659,6 +668,12 @@ static void apply_route(void) { /* audio task */
         return;
     }
     lock();
+    if (want == INK_ROUTE_SPEAKER && AU.stream && AU.prio == INK_AUDIO_PRIO_STORY) {
+        free_jb();
+        stream_gone();
+        AU.finishing = AU.started = false;
+        AU.pcm_off = AU.pcm_len = 0;
+    }
     AU.route = want;
     unlock();
     ink_state_set_str(h_route, want == INK_ROUTE_HEADSET ? "bt_headset" : "speaker");
@@ -700,6 +715,28 @@ static void volume_apply(void *ctx, int64_t v) {
     ink_audio_set_volume((int)v);
 }
 
+static void on_capture_owner(void *ctx, int h, const char *id) { /* direct: the UI and media queues may be busy */
+    (void)ctx;
+    (void)h;
+    bool handoff = !strcmp(id, "member.current"), closed = !ink_member_space_open();
+    if (!handoff && strcmp(id, "member.authed")) return;
+    lock();
+    if (AU.cap_on && (handoff || (closed && !AU.cap_local))) {
+        g_capture_revoked = true;
+        AU.cap_ending = true;
+        AU.rd = AU.wr;
+    }
+    bool stop_output = handoff || (closed && AU.prio != INK_AUDIO_PRIO_STORY);
+    if (stop_output && AU.stream) {
+        free_jb();
+        stream_gone();
+        AU.finishing = AU.started = false;
+    }
+    if (stop_output) __atomic_store_n(&g_output_revoked, true, __ATOMIC_RELEASE);
+    unlock();
+    osal_sem_give(AU.wake);
+}
+
 /* When the device listens for its wake word (D-52: a setting, by default only while the screen is
  * on and unlocked). Takes effect with the voice front end (detailed design §7). */
 static const char *const HANDSFREE[] = {"screen_on", "always", "off", NULL};
@@ -708,7 +745,7 @@ static const ink_setting_def_t AUDIO_SETTINGS[] = {
     {.id = "audio.volume", .title = "音量", .type = INK_SET_INT, .min = 0, .max = 100, .def = 70, .child_may_change = true,
      .apply = volume_apply, .apply_exec = INK_EXEC_DIRECT},
     {.id = "voice.handsfree", .title = "叫名字（什么时候在等）", .type = INK_SET_ENUM, .def = 0, .choices = HANDSFREE},
-    {.id = "audio.child_max", .title = "孩子的音量上限", .type = INK_SET_INT, .min = 10, .max = 100, .def = 60, .apply = child_max_apply, .apply_exec = INK_EXEC_DIRECT},
+    {.id = "audio.child_max", .title = "孩子的音量上限", .type = INK_SET_INT, .min = 10, .max = 100, .def = 60, .ask_by_hand = true, .apply = child_max_apply, .apply_exec = INK_EXEC_DIRECT},
 };
 
 int ink_audio_init(void) {
@@ -737,6 +774,7 @@ int ink_audio_init(void) {
     AU.pcm = osal_malloc(FRAME * 4 * sizeof(int16_t), OSAL_MEM_EXTERNAL);
     osal_mem_tag(prev);
     if (!AU.lock || !AU.mic_lock || !AU.wake || !AU.ring || !AU.jb || !AU.pcm) return -1;
+    if (ink_state_watch("member.", on_capture_owner, NULL, INK_EXEC_DIRECT) != 0) return -1;
     if (!AU.info.has_speaker && !AU.info.has_mic) return 0;
     osal_task_cfg_t cfg = {.name = "audio", .fn = audio_task, .stack_bytes = AU_STACK, .priority = AU_PRIO, .core = -1,
                            .flags = OSAL_TASK_STACK_EXTERNAL};
@@ -807,6 +845,11 @@ static int capture_begin_locked(ink_audio_frame_fn fn, void *ctx, bool local) { 
     hal_opus_enc_t *enc = hal_opus_enc_new(BITRATE, 0);
     if (!enc) return -1;
     lock();
+    if (focus_top_locked() >= INK_AUDIO_PRIO_ALERT) {
+        unlock();
+        hal_opus_enc_free(enc);
+        return -1;
+    }
     bool listening = AU.listen_on; /* the microphone already runs: the capture starts from now */
     AU.enc = enc;
     AU.cap_fn = fn;
@@ -816,6 +859,7 @@ static int capture_begin_locked(ink_audio_frame_fn fn, void *ctx, bool local) { 
     AU.cap_on = true;
     AU.cap_local = local;
     AU.cap_ending = false;
+    g_capture_revoked = false;
     unlock();
     if (!listening && hal_audio_capture_start(capture_cb, NULL) != 0) {
         lock();
@@ -929,7 +973,7 @@ int ink_audio_focus_acquire(ink_audio_prio_t prio, ink_focus_fn fn, void *ctx, i
             h->token = 0;
             if (free_at < 0) free_at = i;
         } else if (h->prio < prio) {
-            if (h->prio == INK_AUDIO_PRIO_STORY) {
+            if (h->prio == INK_AUDIO_PRIO_STORY || (h->prio == INK_AUDIO_PRIO_ALERT && prio == INK_AUDIO_PRIO_CALL)) {
                 if (!h->paused) {
                     h->paused = true;
                     tell[ntell++] = (typeof(tell[0])){h->fn, h->ctx, h->exec, INK_FOCUS_PAUSED};
@@ -946,6 +990,10 @@ int ink_audio_focus_acquire(ink_audio_prio_t prio, ink_focus_fn fn, void *ctx, i
         token = ++AU.next_focus;
         *h = (typeof(*h)){.token = token, .prio = prio, .fn = fn, .ctx = ctx, .exec = exec, .paused = top > (int)prio};
     }
+    if (token > 0 && prio >= INK_AUDIO_PRIO_ALERT && AU.cap_on) {
+        AU.cap_ending = true; /* The audio task stops capture even if the owner's executor is busy. */
+        AU.rd = AU.wr;
+    }
     if (prio >= INK_AUDIO_PRIO_ALERT && AU.stream && AU.prio < prio) abort_stream = true; /* what is said ends: the words are on the screen */
     bool starts_paused = token > 0 && top > (int)prio;
     ink_audio_prio_t by = (ink_audio_prio_t)top;
@@ -957,7 +1005,7 @@ int ink_audio_focus_acquire(ink_audio_prio_t prio, ink_focus_fn fn, void *ctx, i
     unlock();
     for (int i = 0; i < ntell; i++) focus_tell(tell[i].fn, tell[i].ctx, tell[i].exec, tell[i].ev, prio);
     if (starts_paused) focus_tell(fn, ctx, exec, INK_FOCUS_PAUSED, by);
-    if (abort_stream) osal_sem_give(AU.wake);
+    if (abort_stream || (token > 0 && prio >= INK_AUDIO_PRIO_ALERT)) osal_sem_give(AU.wake);
     if (token < 0) ink_probe_count("audio.focus_table_full");
     return token;
 }

@@ -13,8 +13,11 @@
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/cap.h"
+#include "ink/sys/confirm.h"
 #include "ink/sys/exec.h"
+#include "ink/sys/json.h"
 #include "ink/sys/state.h"
+#include "ink/sys/settings.h"
 #include "ink/sys/ui.h"
 #include "sim.h"
 
@@ -47,15 +50,45 @@ static void rc_done(void *ctx, const ink_receipt_t *rc) {
 }
 
 static bool call_as(const char *id, const char *args, ink_source_t src) {
-    ink_call_opts_t o = {.src = src, .args_json = args, .reply_exec = INK_EXEC_DIRECT, .done = rc_done};
+    char *bound = NULL;
+    if ((src == INK_SRC_AI || src == INK_SRC_REMOTE) && !strncmp(id, "text.", 5) && strcmp(id, "text.state") &&
+        (!args || (args[0] == '{' && !strstr(args, "\"session\"")))) {
+        /* Ordinary clients read the editing target; explicit stale-target tests keep their own arguments. */
+        if (call_as("text.state", NULL, src)) {
+            ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
+            int64_t session = 0, revision = 0;
+            if (j && ink_json_parse(j, g_result, strlen(g_result)) == 0 &&
+                ink_json_int(j, ink_json_find(j, 0, "session"), &session) &&
+                ink_json_int(j, ink_json_find(j, 0, "revision"), &revision)) {
+                size_t size = (args ? strlen(args) : 2) + 128;
+                bound = osal_malloc(size, OSAL_MEM_EXTERNAL);
+                if (bound) snprintf(bound, size, "{\"session\":%lld,\"revision\":%lld%s%s", (long long)session, (long long)revision,
+                                    args && strlen(args) > 2 ? "," : "", args ? args + 1 : "}");
+            }
+            osal_free(j);
+        }
+    }
+    ink_call_opts_t o = {.src = src, .args_json = bound ? bound : args, .reply_exec = INK_EXEC_DIRECT, .done = rc_done};
     g_done = 0;
     g_result[0] = 0;
-    if (ink_cap_call(id, NULL, &o) != 0) return false;
+    int accepted = ink_cap_call(id, NULL, &o);
+    osal_free(bound);
+    if (accepted != 0) return false;
     for (int i = 0; i < 2000 && !__atomic_load_n(&g_done, __ATOMIC_ACQUIRE); i++) osal_task_delay_us(5000);
     return g_done != 0;
 }
 #define AI(id, args) call_as(id, args, INK_SRC_AI)
 #define BY_HAND(id, args) call_as(id, args, INK_SRC_TOUCH)
+
+static bool setting_by_hand(const char *id, int64_t value) {
+    ink_receipt_t rc;
+    if (ink_setting_set(id, value, INK_SRC_TOUCH, &rc) != INK_RC_PENDING_CONFIRMATION) return false;
+    unsigned token = 0;
+    sscanf(rc.object, "confirm:%u", &token);
+    if (ink_confirm_decide(token, true, INK_SRC_TOUCH) != 0) return false;
+    for (int i = 0; i < 200 && ink_setting_get(id) != value; i++) osal_task_delay_us(5000);
+    return ink_setting_get(id) == value;
+}
 
 static void delay_ms(int ms) { osal_task_delay_us((uint64_t)ms * 1000); }
 

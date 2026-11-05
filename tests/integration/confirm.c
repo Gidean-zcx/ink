@@ -38,7 +38,7 @@ static const ink_cap_t TEST_CAPS[] = {
      .input = "{\"type\":\"object\",\"properties\":{\"to\":{\"type\":\"string\"},\"text\":{\"type\":\"string\"},\"count\":{\"type\":\"integer\"}},\"required\":[\"to\"]}",
      .effect = INK_FX_EXTERNAL, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = external_run},
     {.id = "test.plain", .title = "连网络", .input = "{\"type\":\"object\",\"properties\":{\"ssid\":{\"type\":\"string\"},\"password\":{\"type\":\"string\"},\"hidden\":{\"type\":\"boolean\"}}}",
-     .effect = INK_FX_SYSTEM, .exec = INK_EXEC_DIRECT, .run = external_run},
+     .effect = INK_FX_SYSTEM, .ask_by_hand = true, .exec = INK_EXEC_DIRECT, .run = external_run},
     {.id = "test.child_no", .title = "孩子不能做的", .effect = INK_FX_EXTERNAL, .exec = INK_EXEC_DIRECT, .run = external_run},
     {.id = "test.page_del", .title = "删这一页的东西", .activity = "testpage", .effect = INK_FX_LOCAL_DESTRUCTIVE, .exec = INK_EXEC_DIRECT, .run = page_run},
 };
@@ -353,17 +353,15 @@ static void what_the_card_says(void) {
 }
 
 static void settings_system(void) {
-    /* system.factory_reset is the real thing: a harmless system-level setting stands in */
     static const ink_setting_def_t SYS = {.id = "test.sys", .title = "系统级", .type = INK_SET_BOOL, .def = 0, .system = true};
     CHECK(ink_settings_define(&SYS, 1) == 0, "defined");
     int results = g_results;
-    CHECK(AI("settings.set", "{\"id\":\"test.sys\",\"value\":true}") && g_rc.status == INK_RC_PENDING_CONFIRMATION && !ink_setting_get("test.sys") && token_of_receipt(), "a system-level setting waits too (%s, %s)", ink_rc_name(g_rc.status), g_rc.object);
-    delay_ms(600);
-    on_ui(read_screen);
-    CHECK(strstr(g_snap, "把设置 test.sys 改成 是"), "the card says what (%s)", g_snap);
-    accept_visible_card();
-    CHECK(WAIT_FOR(g_results == results + 1, 1000) && !strcmp(g_status, "done") && ink_setting_get("test.sys") == 1, "yes: changed (%s, %d)", g_status, (int)ink_setting_get("test.sys"));
-    delay_ms(1200);
+    CHECK(AI("settings.set", "{\"id\":\"test.sys\",\"value\":true}") && g_rc.status == INK_RC_DONE && ink_setting_get("test.sys") && g_rc.undo_ms,
+          "D-105: a non-risk system setting is done and reversible (%s)", ink_rc_name(g_rc.status));
+    CHECK(g_results == results && pending_state() == 0, "no confirmation card");
+    char args[100];
+    snprintf(args, sizeof args, "{\"object\":\"%s\"}", g_rc.object);
+    CHECK(AI("system.undo", args) && g_rc.status == INK_RC_UNDONE && !ink_setting_get("test.sys"), "and can be undone");
 }
 
 static void a_real_message(void) {

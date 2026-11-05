@@ -26,6 +26,8 @@
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/data.h"
+#include "ink/sys/audio.h"
+#include "ink/sys/media.h"
 #include "ink/sys/display.h"
 #include "ink/sys/power.h"
 #include "ink/sys/cap.h"
@@ -68,6 +70,7 @@ static struct {
     uint64_t next_battery_us;
     bool battery_policy;    /* ink_power_battery_policy_start */
     void (*off_picture)(const char *why);
+    bool off_picture_ok;
     int battery_level;      /* what has been told: 0 fine, 1 low, 2 very low, 3 powering off */
     bool powering_off;
     uint64_t off_at;
@@ -103,6 +106,19 @@ static void tell_battery(int level, int percent) {
     osal_free(a);
 }
 
+static void stop_audio(void) {
+    ink_audio_capture_end();
+    ink_audio_ring(false);
+    ink_audio_stop_all();
+    ink_media_stop();
+}
+
+static bool audio_finished(void) {
+    ink_media_status_t m;
+    ink_media_status(&m);
+    return !ink_audio_capture_busy() && !ink_audio_recording() && m.state != INK_MEDIA_PLAYING;
+}
+
 /* Battery as system state: read when the state changes, at each sleep slice and once a minute awake.
  * Low battery (foundation §7.4): a notification, then an interruption; nearly empty, what waits is written and
  * it powers off. Each level is told once on the way down; the charger starts over. Power task. */
@@ -125,13 +141,16 @@ static void publish_battery(void) {
     if (level == 3 && !PS.powering_off) {
         PS.powering_off = true;
         PS.off_at = osal_now_us() + BATTERY_OFF_WAIT_US;
+        stop_audio();
         ink_db_flush_all();
     }
     if (PS.powering_off) {
         if (!level) PS.powering_off = false; /* it was plugged in just in time */
-        else if ((ink_db_idle() && ink_storage_pending() == 0) || osal_now_us() >= PS.off_at) {
+        else if ((audio_finished() && ink_db_idle() && ink_storage_pending() == 0) || osal_now_us() >= PS.off_at) {
+            bool saved = audio_finished() && ink_db_idle() && ink_storage_pending() == 0;
+            if (!saved) ink_probe_count("power.shutdown_unsaved");
             ink_probe_count("power.low_battery_off");
-            if (PS.off_picture) PS.off_picture("battery");
+            if (PS.off_picture) PS.off_picture(saved ? "battery" : "battery_unsaved");
             hal_power_shutdown();
         }
     }
@@ -275,10 +294,19 @@ static const ink_setting_def_t POWER_SETTINGS[] = {
 };
 
 static void cap_shutdown(ink_call_t *c) { /* exec.bg */
-    snprintf(c->rc.say, sizeof c->rc.say, "关机");
+    int failed = ink_storage_failed();
+    stop_audio();
     ink_db_flush_all();
-    for (int i = 0; i < 100 && (!ink_db_idle() || ink_storage_pending()); i++) osal_task_delay_us(50000);
+    for (int i = 0; i < 100 && (!audio_finished() || !ink_db_idle() || ink_storage_pending()); i++) osal_task_delay_us(50000);
+    if (!audio_finished() || !ink_db_idle() || ink_storage_pending() || ink_storage_failed() != failed) {
+        c->rc.status = INK_RC_FAILED;
+        snprintf(c->rc.say, sizeof c->rc.say, "还有内容没保存，请稍后重试关机");
+        return;
+    }
+    snprintf(c->rc.say, sizeof c->rc.say, "已保存，正在关机");
+    PS.off_picture_ok = false;
     if (PS.off_picture) PS.off_picture("shutdown");
+    if (!PS.off_picture_ok) { c->rc.status = INK_RC_FAILED; snprintf(c->rc.say, sizeof c->rc.say, "关机画面没显示成功，请重试"); return; }
     hal_power_shutdown();
 }
 
@@ -311,6 +339,8 @@ int ink_power_init(void) {
     osal_task_cfg_t cfg = {.name = "power", .fn = power_task, .stack_bytes = PW_STACK, .priority = PW_PRIO, .core = -1};
     return osal_task_create(&cfg, &PS.task) == OSAL_OK ? 0 : -1;
 }
+
+void ink_power_off_picture_result(bool ok) { PS.off_picture_ok = ok; }
 
 void ink_power_set_off_picture(void (*fn)(const char *why)) { PS.off_picture = fn; }
 

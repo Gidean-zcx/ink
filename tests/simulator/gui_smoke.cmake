@@ -8,6 +8,7 @@
 # under capacity limits), so a run that misses is tried once more; a broken input path fails both.
 #   cmake -DGUI=ink-sim-gui -DOUT=dir -P gui_smoke.cmake
 set(ENV{SDL_VIDEODRIVER} dummy)
+set(ENV{UBSAN_OPTIONS} "$ENV{UBSAN_OPTIONS}:halt_on_error=1")
 set(problem "")
 foreach(attempt 1 2)
   set(dir ${OUT})

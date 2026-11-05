@@ -29,6 +29,9 @@ void text_voice_clear_notice(void);
 /** The keyboard's: what it shows changed. */
 void text_presenter_kick(void);
 
+/* UI task: asynchronous edits name this target and revision. */
+int ink_text_target_session(void);
+uint32_t ink_text_edit_revision(void);
 int text_caps_init(void);
 void clip_init(void);
 
