@@ -46,6 +46,11 @@ def main():
     if guard not in nav: raise SystemExit('missing receipt guard mutation target')
     binary = compile_variant(build, 'r2-002-late-receipt', nav.replace(guard, '', 1), 'ink_system', 'sim-ui-regressions')
     run(build, binary, 'r2-002-late-receipt', regression='privacy')
+    panel = (ROOT / 'system/ui/shell/ai_panel.c').read_text()
+    counter = '(INK_CONTROL - INK_LINE_LIST) / 2, 2 * INK_CONTROL);'
+    if counter not in panel: raise SystemExit('missing counter-width mutation target')
+    binary = compile_variant(build, 'r2-003-narrow-counter', panel.replace(counter, '(INK_CONTROL - INK_LINE_LIST) / 2, INK_BLOCK_L);', 1), 'ink_system', 'sim-ui-regressions')
+    run(build, binary, 'r2-003-narrow-counter', regression='answer')
     print('All round-two reverse controls were detected; product files stayed unchanged.')
 
 

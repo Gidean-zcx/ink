@@ -158,9 +158,9 @@ void ink_shell_ai_open(lv_obj_t **root, lv_obj_t **status, lv_obj_t **question, 
     A.prev = ink_ui_circle(A.actions, "back", x, 0, INK_CONTROL, INK_ICON_SMALL, INK_SURFACE_WHITE, NULL, NULL);
     ink_shell_bind(A.prev, "ai.panel.prev", NULL);
     A.counter = ink_ui_label(A.actions, "1 / 1", INK_FONT_LIST, INK_WEIGHT_MEDIUM, x + INK_CONTROL + INK_GAP,
-                             (INK_CONTROL - INK_LINE_LIST) / 2, INK_BLOCK_L);
+                             (INK_CONTROL - INK_LINE_LIST) / 2, 2 * INK_CONTROL);
     lv_obj_set_style_text_align(A.counter, LV_TEXT_ALIGN_CENTER, 0);
-    A.next = ink_ui_circle(A.actions, "next", x + INK_CONTROL + 2 * INK_GAP + INK_BLOCK_L, 0, INK_CONTROL, INK_ICON_SMALL, INK_SURFACE_WHITE, NULL, NULL);
+    A.next = ink_ui_circle(A.actions, "next", x + 3 * INK_CONTROL + 2 * INK_GAP, 0, INK_CONTROL, INK_ICON_SMALL, INK_SURFACE_WHITE, NULL, NULL);
     ink_shell_bind(A.next, "ai.panel.next", NULL);
     lv_obj_add_flag(A.source, LV_OBJ_FLAG_HIDDEN);
     lv_obj_add_flag(A.actions, LV_OBJ_FLAG_HIDDEN);

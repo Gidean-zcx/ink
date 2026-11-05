@@ -13,7 +13,7 @@
 
 static const char *mode, *detail, *wanted;
 static int effects, page, pages, accept_x, accept_y, next_x, next_y, label_x, label_y;
-static bool disabled, fits;
+static bool disabled, fits, pager_fits;
 static char visible[160];
 static lv_obj_t *accept;
 static lv_area_t slider;
@@ -49,6 +49,10 @@ static void inspect(lv_obj_t *root) {
             int a, b;
             if (sscanf(s, "%d / %d", &a, &b) == 2) {
                 page = a; pages = b;
+                lv_point_t size;
+                lv_text_get_size(&size, s, lv_obj_get_style_text_font(o, 0), lv_obj_get_style_text_letter_space(o, 0),
+                                 lv_obj_get_style_text_line_space(o, 0), lv_obj_get_width(o), LV_TEXT_FLAG_NONE);
+                pager_fits = size.y <= ink_ui_px(INK_LINE_LIST) && size.x <= lv_obj_get_width(o);
                 lv_area_t bounds; lv_obj_get_coords(parent, &bounds); pager_bottom = bounds.y2;
                 lv_obj_get_coords(lv_obj_get_child(parent, 2), &area);
                 next_x = (area.x1 + area.x2) / 2; next_y = (area.y1 + area.y2) / 2;
@@ -344,6 +348,10 @@ static void answer_tests(void) {
     CHECK(AI("ai.panel.next", NULL) && g_rc.status == INK_RC_DONE, "advance before replacing streamed content");
     answer_words = "回答"; on_ui(update_answer); quiet(); on_ui(read_answer);
     CHECK(page == 1 && pages == 1 && !strcmp(answer_text, "回答") && answer_next_disabled && answer_prev_disabled, "shorter streamed content clamps the page and updates both buttons");
+    static char many_lines[4096] INK_PSRAM_BSS;
+    for (size_t i = 0; i < sizeof many_lines - 2; i += 2) { many_lines[i] = 'a'; many_lines[i + 1] = '\n'; }
+    answer_words = many_lines; on_ui(update_answer); quiet(); on_ui(read_answer);
+    CHECK(pages >= 1000 && pager_fits, "four-digit page counts fit the visible pager on one line");
     on_ui(close_answer); quiet();
     CHECK(AI("ai.panel.next", NULL) && g_rc.status == INK_RC_STALE, "a closed answer cannot be paginated");
 }
