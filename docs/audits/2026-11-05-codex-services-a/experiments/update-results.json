@@ -1,0 +1,220 @@
+{
+  "work": "<审计工作树>/build-audit/audit-probes/update-matrix-qvab9vp5",
+  "runs": [
+    {
+      "chain": "state-control",
+      "phase": "install-200",
+      "exit": 0,
+      "metrics": {
+        "ota.bytes_written": 8192,
+        "power.reboot": 1,
+        "test.finished": 1,
+        "test.pass": 3,
+        "update.installed": 1
+      },
+      "stdout": "",
+      "warnings": []
+    },
+    {
+      "chain": "state-control",
+      "phase": "valid",
+      "exit": 0,
+      "metrics": {
+        "ota.marked_valid": 1,
+        "ota.resource_bytes": 12288,
+        "test.finished": 1,
+        "test.pass": 1,
+        "update.self_check_passed": 1
+      },
+      "stdout": "AUDIT update runtime_code=200 state= code=200 res=3 path= blocked=0 offer=0 dl_off=0 job=0\nAUDIT persisted_state len=71 json={\"state\":\"\",\"version\":\"2.0.0\",\"code\":200,\"path\":\"\",\"res\":3,\"blocked\":0} marked_valid=1 resource_bytes=12288 resource_failed=0\n",
+      "warnings": []
+    },
+    {
+      "chain": "state-refused",
+      "phase": "install-200",
+      "exit": 0,
+      "metrics": {
+        "ota.bytes_written": 8192,
+        "power.reboot": 1,
+        "test.finished": 1,
+        "test.pass": 3,
+        "update.installed": 1
+      },
+      "stdout": "AUDIT refused_state_write bytes=104\nAUDIT refused_state_write bytes=103\n",
+      "warnings": []
+    },
+    {
+      "chain": "state-refused",
+      "phase": "valid-without-state",
+      "exit": 0,
+      "metrics": {
+        "ota.marked_valid": 1,
+        "test.finished": 1,
+        "test.pass": 1,
+        "update.self_check_passed": 1
+      },
+      "stdout": "AUDIT update runtime_code=200 state= code=0 res=0 path= blocked=0 offer=0 dl_off=0 job=0\nAUDIT persisted_state len=64 json={\"state\":\"\",\"version\":\"\",\"code\":0,\"path\":\"\",\"res\":0,\"blocked\":0} marked_valid=1 resource_bytes=0 resource_failed=0\n",
+      "warnings": []
+    },
+    {
+      "chain": "resources-replaced",
+      "phase": "install-200",
+      "exit": 0,
+      "metrics": {
+        "ota.bytes_written": 8192,
+        "power.reboot": 1,
+        "test.finished": 1,
+        "test.pass": 3,
+        "update.installed": 1
+      },
+      "stdout": "",
+      "warnings": []
+    },
+    {
+      "chain": "resources-replaced",
+      "phase": "half-resources",
+      "exit": 0,
+      "metrics": {
+        "ota.marked_valid": 1,
+        "ota.resource_bytes": 8192,
+        "test.finished": 1,
+        "test.pass": 1,
+        "update.resources_failed": 1,
+        "update.self_check_passed": 1
+      },
+      "stdout": "AUDIT update runtime_code=200 state=resources code=200 res=2 path=/content/update/next.inkfw blocked=0 offer=0 dl_off=0 job=0\nAUDIT persisted_state len=106 json={\"state\":\"resources\",\"version\":\"2.0.0\",\"code\":200,\"path\":\"/content/update/next.inkfw\",\"res\":2,\"blocked\":0} marked_valid=1 resource_bytes=8192 resource_failed=1\n",
+      "warnings": []
+    },
+    {
+      "chain": "resources-replaced",
+      "phase": "install-300",
+      "exit": 0,
+      "metrics": {
+        "ota.bytes_written": 8192,
+        "power.reboot": 1,
+        "test.finished": 1,
+        "test.pass": 3,
+        "update.installed": 1,
+        "update.package_ignored": 1,
+        "update.resources_failed": 1
+      },
+      "stdout": "",
+      "warnings": []
+    },
+    {
+      "chain": "resources-replaced",
+      "phase": "new-version-without-resources",
+      "exit": 0,
+      "metrics": {
+        "ota.marked_valid": 1,
+        "test.finished": 1,
+        "test.pass": 1,
+        "update.self_check_passed": 1
+      },
+      "stdout": "AUDIT update runtime_code=300 state= code=300 res=1 path= blocked=0 offer=0 dl_off=0 job=0\nAUDIT persisted_state len=71 json={\"state\":\"\",\"version\":\"3.0.0\",\"code\":300,\"path\":\"\",\"res\":1,\"blocked\":0} marked_valid=1 resource_bytes=0 resource_failed=0\n",
+      "warnings": []
+    },
+    {
+      "chain": "blocked-history",
+      "phase": "install-200",
+      "exit": 0,
+      "metrics": {
+        "ota.bytes_written": 8192,
+        "power.reboot": 1,
+        "test.finished": 1,
+        "test.pass": 3,
+        "update.installed": 1
+      },
+      "stdout": "",
+      "warnings": []
+    },
+    {
+      "chain": "blocked-history",
+      "phase": "fails-200",
+      "exit": 0,
+      "metrics": {
+        "power.reboot": 1,
+        "test.pass": 1,
+        "update.self_check_failed": 1
+      },
+      "stdout": "",
+      "warnings": []
+    },
+    {
+      "chain": "blocked-history",
+      "phase": "rollback-200",
+      "exit": 0,
+      "metrics": {
+        "test.finished": 1,
+        "test.pass": 1,
+        "update.package_ignored": 1,
+        "update.rolled_back": 1
+      },
+      "stdout": "AUDIT update runtime_code=100 state= code=200 res=0 path= blocked=200 offer=0 dl_off=0 job=0\nAUDIT persisted_state len=73 json={\"state\":\"\",\"version\":\"2.0.0\",\"code\":200,\"path\":\"\",\"res\":0,\"blocked\":200} marked_valid=0 resource_bytes=0 resource_failed=0\nAUDIT prior_failed_package result=9\n",
+      "warnings": []
+    },
+    {
+      "chain": "blocked-history",
+      "phase": "install-300",
+      "exit": 0,
+      "metrics": {
+        "ota.bytes_written": 8192,
+        "power.reboot": 1,
+        "test.finished": 1,
+        "test.pass": 3,
+        "update.installed": 1
+      },
+      "stdout": "",
+      "warnings": []
+    },
+    {
+      "chain": "blocked-history",
+      "phase": "fails-300",
+      "exit": 0,
+      "metrics": {
+        "power.reboot": 1,
+        "test.pass": 1,
+        "update.self_check_failed": 1
+      },
+      "stdout": "",
+      "warnings": []
+    },
+    {
+      "chain": "blocked-history",
+      "phase": "rollback-300",
+      "exit": 0,
+      "metrics": {
+        "test.finished": 1,
+        "test.pass": 1,
+        "update.package_ignored": 1,
+        "update.rolled_back": 1
+      },
+      "stdout": "AUDIT update runtime_code=100 state= code=300 res=0 path= blocked=300 offer=0 dl_off=0 job=0\nAUDIT persisted_state len=73 json={\"state\":\"\",\"version\":\"3.0.0\",\"code\":300,\"path\":\"\",\"res\":0,\"blocked\":300} marked_valid=0 resource_bytes=0 resource_failed=0\nAUDIT prior_failed_package result=0\n",
+      "warnings": []
+    },
+    {
+      "chain": "package-table",
+      "phase": "check-tables",
+      "exit": 0,
+      "metrics": {
+        "test.finished": 1,
+        "test.pass": 1
+      },
+      "stdout": "AUDIT package normal result=0\nAUDIT package overlap result=0\nAUDIT package duplicate result=0\nAUDIT package unknown result=0\nAUDIT package zero result=0\nAUDIT package past_eof result=7\nAUDIT package truncated result=7\nAUDIT package overflow result=7\nAUDIT package unsigned_damage result=3\n",
+      "warnings": []
+    },
+    {
+      "chain": "download-offer-changed",
+      "phase": "changing-offer",
+      "exit": 0,
+      "metrics": {
+        "test.finished": 1,
+        "test.pass": 7,
+        "update.download_started": 1,
+        "update.downloaded": 1
+      },
+      "stdout": "AUDIT download_before_change off=12288\nAUDIT update runtime_code=100 state= code=0 res=0 path= blocked=0 offer=300 dl_off=12288 job=1\nAUDIT download_after_change state=ready bad=0 partial=-1\nAUDIT downloaded_package header_code=200 size=196820\n",
+      "warnings": []
+    }
+  ]
+}

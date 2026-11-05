@@ -479,7 +479,8 @@ static pending_t *prepare(const char *id, const ink_cap_t *c, const ink_args_t *
     p->json = json;
     p->call.src = o->src;
     p->call.page_gen = o->page_gen;
-    snprintf(p->member, sizeof p->member, "%s", o->member ? o->member : "");
+    /* whoever asks, asks for who is here now: if someone else has come by the time it runs, it does not run for them */
+    snprintf(p->member, sizeof p->member, "%s", o->member ? o->member : ink_member_current()->id);
     p->o = *o;
     p->o.request_id = p->o.args_json = NULL; /* the caller's strings need not outlive the call */
     p->o.member = NULL;
@@ -710,13 +711,10 @@ static struct {
 } EV[EVENTS_KEPT] INK_PSRAM_BSS;
 static uint32_t ev_next, ev_sent; /* sequence numbers, under CB.lock */
 
-static void keep_event(const char *id, const ink_args_t *payload) {
+static void keep_event(const char *id, const ink_args_t *payload, const char *whose) {
     const ink_cap_t *c = ink_cap_find(id);
     if (!CB.lock || !c || c->form != INK_FORM_EVENT || !exposed(c, INK_SRC_AI)) return;
     int64_t wall = osal_wall_us();
-    char whose[INK_MEMBER_ID_MAX] = "";
-    if (payload) ink_args_get_str(payload, "member", whose, sizeof whose);
-    if (!whose[0]) snprintf(whose, sizeof whose, "%s", ink_member_current()->id);
     osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
     uint32_t seq = ++ev_next;
     typeof(EV[0]) *e = &EV[seq % EVENTS_KEPT];
@@ -778,7 +776,11 @@ void ink_cap_emit(const char *id, const ink_args_t *payload) {
     char key[64];
     snprintf(key, sizeof key, "event.%s", id);
     ink_probe_count(key);
-    keep_event(id, payload);
+    char whose[INK_MEMBER_ID_MAX] = ""; /* who it says, or who is here now: whoever gets to it later may find someone else here */
+    if (payload) ink_args_get_str(payload, "member", whose, sizeof whose);
+    bool says = whose[0] != 0;
+    if (!says) snprintf(whose, sizeof whose, "%s", ink_member_current()->id);
+    keep_event(id, payload, whose);
     for (int i = 0; i < nsubs; i++) {
         if (strncmp(id, SUBS[i].prefix, SUBS[i].plen)) continue;
         const char *prev = osal_mem_tag("cap");
@@ -793,6 +795,7 @@ void ink_cap_emit(const char *id, const ink_args_t *payload) {
         snprintf(e->id, sizeof e->id, "%s", id);
         if (payload) e->payload = *payload;
         else ink_args_init(&e->payload);
+        if (!says) ink_args_str(&e->payload, "member", whose);
         if (ink_exec_post(SUBS[i].exec, &e->job, event_job, e) != 0) {
             ink_probe_count("event.dropped");
             osal_free(e);

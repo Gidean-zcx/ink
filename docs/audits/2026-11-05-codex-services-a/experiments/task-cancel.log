@@ -1,0 +1,4 @@
+RUN <审计工作树>/build-audit/audit-probes/task_cancel_probe/probe --profile <审计工作树>/simulator/profiles/metalio-plus.json --out <审计工作树>/build-audit/audit-probes/task_cancel_probe/run-7t_ufdkr --quiet --no-random-outages --script <审计工作树>/docs/audits/2026-11-05-codex-services-a/experiments/network.script --assets <审计工作树>/build-audit/assets --content <审计工作树>/build-audit/test-content
+ink-sim: ok, 100.050 s virtual, report <审计工作树>/build-audit/audit-probes/task_cancel_probe/run-7t_ufdkr/metrics.json
+AUDIT before_old_cancel_resumes new_job=2 new_task=2
+AUDIT old_task=1 new_task=2 tasks=[{"id":2,"kind":"update.download","title":"下载系统更新 2.0.0","state":"cancelled","percent":0,"result":"停下了，下次接着下载","ended_s":1793577603},{"id":1,"kind":"update.download","title":"下载系统更新 2.0.0","state":"cancelled","percent":0,"result":"停下了，下次接着下载","ended_s":1793577603}]

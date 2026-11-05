@@ -1,0 +1,184 @@
+{
+  "work": "<审计工作树>/build-audit/audit-probes/reset-matrix-okpku9n_",
+  "runs": [
+    {
+      "case": "seed",
+      "label": "prepare",
+      "exit": 0,
+      "stdout": "",
+      "metrics": {
+        "test.finished": 1,
+        "test.pass": 5
+      }
+    },
+    {
+      "case": "control",
+      "label": "resume",
+      "exit": 0,
+      "stdout": "AUDIT reset card=-3 flash=-1 pending=-1 card_mark=-1 done=1 card_done=1\n",
+      "metrics": {
+        "system.factory_reset_card_at_boot": 1,
+        "system.factory_reset_done": 1,
+        "test.finished": 1,
+        "test.pass": 3
+      }
+    },
+    {
+      "case": "card-open-fails",
+      "label": "resume",
+      "exit": 0,
+      "stdout": "AUDIT reset card=0 flash=-1 pending=-1 card_mark=-1 done=1 card_done=1\n",
+      "metrics": {
+        "system.factory_reset_card_at_boot": 1,
+        "system.factory_reset_done": 1,
+        "test.finished": 1,
+        "test.pass": 3
+      }
+    },
+    {
+      "case": "flash-readdir-fails",
+      "label": "resume",
+      "exit": 0,
+      "stdout": "AUDIT reset card=-3 flash=9 pending=-1 card_mark=-1 done=1 card_done=1\n",
+      "metrics": {
+        "system.factory_reset_card_at_boot": 1,
+        "system.factory_reset_done": 1,
+        "test.finished": 1,
+        "test.pass": 3
+      }
+    },
+    {
+      "case": "cut-1",
+      "label": "cut",
+      "exit": 0,
+      "stdout": "",
+      "metrics": {}
+    },
+    {
+      "case": "cut-1",
+      "label": "after-cut",
+      "exit": 0,
+      "stdout": "AUDIT reset card=-3 flash=-1 pending=-1 card_mark=-1 done=1 card_done=1\n",
+      "metrics": {
+        "system.factory_reset_card_at_boot": 1,
+        "system.factory_reset_done": 1,
+        "test.finished": 1,
+        "test.pass": 3
+      }
+    },
+    {
+      "case": "cut-2",
+      "label": "cut",
+      "exit": 0,
+      "stdout": "",
+      "metrics": {}
+    },
+    {
+      "case": "cut-2",
+      "label": "after-cut",
+      "exit": 0,
+      "stdout": "AUDIT reset card=-3 flash=-1 pending=-1 card_mark=-1 done=1 card_done=1\n",
+      "metrics": {
+        "system.factory_reset_card_at_boot": 1,
+        "system.factory_reset_done": 1,
+        "test.finished": 1,
+        "test.pass": 3
+      }
+    },
+    {
+      "case": "cut-3",
+      "label": "cut",
+      "exit": 0,
+      "stdout": "",
+      "metrics": {}
+    },
+    {
+      "case": "cut-3",
+      "label": "after-cut",
+      "exit": 0,
+      "stdout": "AUDIT reset card=-3 flash=-1 pending=-1 card_mark=-1 done=1 card_done=1\n",
+      "metrics": {
+        "system.factory_reset_card_at_boot": 1,
+        "system.factory_reset_done": 1,
+        "test.finished": 1,
+        "test.pass": 3
+      }
+    },
+    {
+      "case": "cut-4",
+      "label": "cut",
+      "exit": 0,
+      "stdout": "",
+      "metrics": {}
+    },
+    {
+      "case": "cut-4",
+      "label": "after-cut",
+      "exit": 0,
+      "stdout": "AUDIT reset card=-3 flash=-1 pending=-1 card_mark=-1 done=1 card_done=1\n",
+      "metrics": {
+        "system.factory_reset_card_at_boot": 1,
+        "system.factory_reset_done": 1,
+        "test.finished": 1,
+        "test.pass": 3
+      }
+    },
+    {
+      "case": "cut-5",
+      "label": "cut",
+      "exit": 0,
+      "stdout": "",
+      "metrics": {}
+    },
+    {
+      "case": "cut-5",
+      "label": "after-cut",
+      "exit": 0,
+      "stdout": "AUDIT reset card=-3 flash=-1 pending=-1 card_mark=-1 done=1 card_done=1\n",
+      "metrics": {
+        "system.factory_reset_card_at_boot": 1,
+        "system.factory_reset_done": 1,
+        "test.finished": 1,
+        "test.pass": 3
+      }
+    },
+    {
+      "case": "cut-6",
+      "label": "cut",
+      "exit": 0,
+      "stdout": "",
+      "metrics": {}
+    },
+    {
+      "case": "cut-6",
+      "label": "after-cut",
+      "exit": 0,
+      "stdout": "AUDIT reset card=-3 flash=-1 pending=-1 card_mark=-1 done=0 card_done=1\n",
+      "metrics": {
+        "system.factory_reset_card_at_boot": 1,
+        "system.factory_reset_card_done": 1,
+        "test.finished": 1,
+        "test.pass": 3
+      }
+    },
+    {
+      "case": "cut-7",
+      "label": "cut",
+      "exit": 0,
+      "stdout": "",
+      "metrics": {
+        "system.factory_reset_done": 1
+      }
+    },
+    {
+      "case": "cut-7",
+      "label": "after-cut",
+      "exit": 0,
+      "stdout": "AUDIT reset card=-3 flash=-1 pending=-1 card_mark=-1 done=0 card_done=0\n",
+      "metrics": {
+        "test.finished": 1,
+        "test.pass": 3
+      }
+    }
+  ]
+}

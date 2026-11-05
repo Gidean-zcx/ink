@@ -1,0 +1,78 @@
+
+CASE state-control install-200 exit 0
+
+
+CASE state-control valid exit 0
+AUDIT update runtime_code=200 state= code=200 res=3 path= blocked=0 offer=0 dl_off=0 job=0
+AUDIT persisted_state len=71 json={"state":"","version":"2.0.0","code":200,"path":"","res":3,"blocked":0} marked_valid=1 resource_bytes=12288 resource_failed=0
+
+
+CASE state-refused install-200 exit 0
+AUDIT refused_state_write bytes=104
+AUDIT refused_state_write bytes=103
+
+
+CASE state-refused valid-without-state exit 0
+AUDIT update runtime_code=200 state= code=0 res=0 path= blocked=0 offer=0 dl_off=0 job=0
+AUDIT persisted_state len=64 json={"state":"","version":"","code":0,"path":"","res":0,"blocked":0} marked_valid=1 resource_bytes=0 resource_failed=0
+
+
+CASE resources-replaced install-200 exit 0
+
+
+CASE resources-replaced half-resources exit 0
+AUDIT update runtime_code=200 state=resources code=200 res=2 path=/content/update/next.inkfw blocked=0 offer=0 dl_off=0 job=0
+AUDIT persisted_state len=106 json={"state":"resources","version":"2.0.0","code":200,"path":"/content/update/next.inkfw","res":2,"blocked":0} marked_valid=1 resource_bytes=8192 resource_failed=1
+
+
+CASE resources-replaced install-300 exit 0
+
+
+CASE resources-replaced new-version-without-resources exit 0
+AUDIT update runtime_code=300 state= code=300 res=1 path= blocked=0 offer=0 dl_off=0 job=0
+AUDIT persisted_state len=71 json={"state":"","version":"3.0.0","code":300,"path":"","res":1,"blocked":0} marked_valid=1 resource_bytes=0 resource_failed=0
+
+
+CASE blocked-history install-200 exit 0
+
+
+CASE blocked-history fails-200 exit 0
+
+
+CASE blocked-history rollback-200 exit 0
+AUDIT update runtime_code=100 state= code=200 res=0 path= blocked=200 offer=0 dl_off=0 job=0
+AUDIT persisted_state len=73 json={"state":"","version":"2.0.0","code":200,"path":"","res":0,"blocked":200} marked_valid=0 resource_bytes=0 resource_failed=0
+AUDIT prior_failed_package result=9
+
+
+CASE blocked-history install-300 exit 0
+
+
+CASE blocked-history fails-300 exit 0
+
+
+CASE blocked-history rollback-300 exit 0
+AUDIT update runtime_code=100 state= code=300 res=0 path= blocked=300 offer=0 dl_off=0 job=0
+AUDIT persisted_state len=73 json={"state":"","version":"3.0.0","code":300,"path":"","res":0,"blocked":300} marked_valid=0 resource_bytes=0 resource_failed=0
+AUDIT prior_failed_package result=0
+
+
+CASE package-table check-tables exit 0
+AUDIT package normal result=0
+AUDIT package overlap result=0
+AUDIT package duplicate result=0
+AUDIT package unknown result=0
+AUDIT package zero result=0
+AUDIT package past_eof result=7
+AUDIT package truncated result=7
+AUDIT package overflow result=7
+AUDIT package unsigned_damage result=3
+
+
+CASE download-offer-changed changing-offer exit 0
+AUDIT download_before_change off=12288
+AUDIT update runtime_code=100 state= code=0 res=0 path= blocked=0 offer=300 dl_off=12288 job=1
+AUDIT download_after_change state=ready bad=0 partial=-1
+AUDIT downloaded_package header_code=200 size=196820
+
+MATRIX complete 16 boots; artifacts <审计工作树>/build-audit/audit-probes/update-matrix-qvab9vp5
