@@ -207,17 +207,18 @@ static void cap_put(ink_call_t *c) {
         sort = wall > 0 ? wall / 1000000 : 0;
     }
     bool existed = id && ink_db_get(db, (uint32_t)id, NULL, NULL, 0) == INK_DB_OK;
-    ink_db_write_t wr = {.id = (uint32_t)id, .sort = sort, .data = c->args.text + v->off, .len = v->len, .src = (uint8_t)c->src};
+    ink_db_write_t wr = {.written_ver = &c->rc.revision, .id = (uint32_t)id, .sort = sort, .data = c->args.text + v->off, .len = v->len, .src = (uint8_t)c->src};
     uint32_t got = 0;
     int r = ink_db_put(db, &wr, &got);
     put_result(c, d, r, got);
     if (r == INK_DB_OK) {
-        c->rc.revision = ink_db_last_ver(db);
+        /* The version belongs to this put, even if another writer follows. */
         if (!existed) { /* a new record can be taken back; an overwrite could not be restored from here */
             ink_args_t undo;
             ink_args_init(&undo);
             ink_args_str(&undo, "collection", d->name);
             ink_args_int(&undo, "id", got);
+            ink_args_int(&undo, "if_revision", c->rc.revision);
             ink_cap_undoable(c, "data.delete", &undo, UNDO_MS);
         }
     }
@@ -254,11 +255,13 @@ static void cap_delete(ink_call_t *c) {
     if (!d) return;
     int64_t id = 0;
     ink_args_get_int(&c->args, "id", &id);
-    int r = ink_db_del(db, (uint32_t)id, (uint8_t)c->src);
+    int64_t ver = 0;
+    ink_args_get_int(&c->args, "if_revision", &ver);
+    int r = ink_db_del_if_ver(db, (uint32_t)id, (uint8_t)c->src, (uint32_t)ver);
     if (r == INK_DB_OK) snprintf(c->rc.object, sizeof c->rc.object, "%.32s#%u", d->name, (unsigned)id);
     else {
-        c->rc.status = INK_RC_FAILED;
-        snprintf(c->rc.detail, sizeof c->rc.detail, "no such record");
+        c->rc.status = ver ? INK_RC_STALE : INK_RC_FAILED;
+        snprintf(c->rc.detail, sizeof c->rc.detail, "record changed or absent");
     }
     ink_db_close(db);
 }

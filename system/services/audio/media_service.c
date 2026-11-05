@@ -49,6 +49,7 @@ static struct {
     uint64_t paused_at_s;
     uint64_t last_card_us;
     char member[INK_MEMBER_ID_MAX];
+    uint32_t generation;
     ink_svc_deadline_t pump_at;
     ink_exec_job_t pump_job, member_job, route_job, battery_job;
     int h_state;
@@ -99,6 +100,7 @@ static uint32_t path_id(const char *path) {
 }
 
 static void save_to_flash(const char *path, uint32_t ms) {
+    if (!M.generation || M.generation != ink_member_generation(M.member)) return;
     ink_db_t *db = ink_db_open(&POSITIONS, M.member);
     if (!db) return;
     char buf[INK_FS_PATH_MAX + 64];
@@ -116,6 +118,7 @@ static void save_to_flash(const char *path, uint32_t ms) {
 }
 
 static void save_to_card(const char *path, uint32_t ms) {
+    if (!M.generation || M.generation != ink_member_generation(M.member)) return;
     char buf[INK_FS_PATH_MAX + 64];
     int n = snprintf(buf, sizeof buf, "%lld\n%s\n%s\n%u\n", (long long)ink_time_now_s(), M.member, path, (unsigned)ms);
     if (ink_fs_write_atomic(POS_CACHE, buf, (size_t)n) == 0) ink_probe_count("media.positions_cached");
@@ -330,6 +333,7 @@ static int do_play(const char *path, uint32_t start_ms) { /* executor; 0 or an e
     M.r = r;
     snprintf(M.who, sizeof M.who, "%s", ink_member_current()->id);
     snprintf(M.member, sizeof M.member, "%s", ink_member_current()->id);
+    M.generation = ink_member_generation(M.member);
     ink_svc_lock();
     snprintf(M.st.path, sizeof M.st.path, "%s", path);
     M.st.duration_ms = ogg_duration_ms(r);

@@ -73,6 +73,8 @@ int ink_power_add_busy_check(bool (*busy)(void));
 /** What to leave on the panel just before the power goes, what waited to be written being written: it returns when that is done,
  *  or it gave up. why: "shutdown" or "battery". One. */
 void ink_power_set_off_picture(void (*fn)(const char *why));
+/** Presenter acknowledges its committed frame after all panel callbacks succeeded. */
+void ink_power_off_picture_result(bool ok);
 
 #ifdef __cplusplus
 }

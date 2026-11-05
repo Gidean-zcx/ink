@@ -824,6 +824,7 @@ int ink_db_put(ink_db_t *db, const ink_db_write_t *w, uint32_t *out_id) {
     db->last_ver = nr->ver;
     if (nr->id >= db->next_id) db->next_id = nr->id + 1;
     if (out_id) *out_id = nr->id;
+    if (w->written_ver) *w->written_ver = nr->ver;
     if (w->flags & INK_DB_LAZY) {
         if (!db->flush_at.armed) ink_svc_at(&db->flush_at, osal_now_us() + LAZY_US, flush_cb, db);
     } else flush_locked(db);
@@ -840,6 +841,10 @@ uint32_t ink_db_new_id(ink_db_t *db) {
 }
 
 int ink_db_del(ink_db_t *db, uint32_t id, uint8_t src) {
+    return ink_db_del_if_ver(db, id, src, 0);
+}
+
+int ink_db_del_if_ver(ink_db_t *db, uint32_t id, uint8_t src, uint32_t ver) {
     if (!db) return INK_DB_ERR_ARG;
     lock();
     int at = find_id(db, id);
@@ -848,6 +853,7 @@ int ink_db_del(ink_db_t *db, uint32_t id, uint8_t src) {
         return INK_DB_ERR_NOT_FOUND;
     }
     rec_t *old = db->idx[at].r;
+    if (ver && old->ver != ver) { unlock(); return INK_DB_ERR_ARG; }
     rec_t *t = mem_get(sizeof(rec_t));
     if (!t) {
         unlock();

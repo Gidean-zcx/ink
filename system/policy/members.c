@@ -25,6 +25,7 @@
 #include "ink/sys/storage.h"
 #include "ink/sys/svc.h"
 #include "ink/sys/time.h"
+#include "ink/sys/task.h"
 
 #define PIN_ITERATIONS 3000      /* about 100 ms on the S31 by the block cost; to be set on the device (D-69) */
 #define PIN_MIN 4
@@ -39,6 +40,7 @@
 typedef struct {
     bool used;
     bool removing;
+    uint32_t generation;
     ink_member_t m;
     uint8_t salt[16], hash[32];
     bool has_pin;
@@ -59,6 +61,7 @@ static const ink_db_def_t TABLE = {.name = "member.table", .title = "家人名�
 
 static struct {
     slot_t s[INK_MEMBERS_MAX];
+    uint32_t next_generation;
     slot_t *cur;
     bool authed;
     bool table_is_real;
@@ -92,6 +95,20 @@ static void publish(void) {
 }
 
 const ink_member_t *ink_member_current(void) { return &cur()->m; }
+
+bool ink_member_removing(const char *id) { const slot_t *s = find(id); return s && s->removing; }
+
+uint32_t ink_member_generation(const char *id) {
+    slot_t *s = id ? find(id) : cur();
+    if (!s || s->removing) return 0;
+    uint32_t generation = __atomic_load_n(&s->generation, __ATOMIC_ACQUIRE);
+    if (!generation) {
+        uint32_t fresh = __atomic_add_fetch(&M.next_generation, 1, __ATOMIC_RELAXED);
+        __atomic_compare_exchange_n(&s->generation, &generation, fresh, false, __ATOMIC_RELEASE, __ATOMIC_ACQUIRE);
+        generation = __atomic_load_n(&s->generation, __ATOMIC_ACQUIRE);
+    }
+    return generation;
+}
 
 const ink_member_t *ink_member_at(int i) {
     int seen = 0;
@@ -338,6 +355,7 @@ typedef enum { JOB_UNLOCK, JOB_SET, JOB_CHECK_PARENT } job_kind_t;
 typedef struct {
     ink_exec_job_t job;
     job_kind_t kind;
+    uint32_t generation;
     char id[16];
     char pin[PIN_MAX + 1], new_pin[PIN_MAX + 1];
     ink_pin_done_fn done;
@@ -371,7 +389,7 @@ static void pin_job(void *arg) { /* exec.bg: slow by design */
         for (int i = 0; i < INK_MEMBERS_MAX && !s; i++)
             if (M.s[i].used && !M.s[i].removing && M.s[i].m.role == INK_ROLE_ADULT && M.s[i].has_pin) s = &M.s[i];
     } else s = find(j->id);
-    if (s && !s->removing) switch (j->kind) {
+    if (s && !s->removing && (j->kind == JOB_CHECK_PARENT || j->generation == ink_member_generation(j->id))) switch (j->kind) {
         case JOB_UNLOCK:
             if (!s->has_pin) r = INK_PIN_OK;
             else r = try_pin(s, j->pin, &wait_s);
@@ -421,6 +439,7 @@ static int start_job(job_kind_t kind, const char *id, const char *pin, const cha
     pin_job_t *j = osal_calloc(1, sizeof *j, OSAL_MEM_EXTERNAL);
     if (!j) return -1;
     j->kind = kind;
+    j->generation = ink_member_generation(id);
     snprintf(j->id, sizeof j->id, "%s", id ? id : "");
     snprintf(j->pin, sizeof j->pin, "%s", pin ? pin : "");
     snprintf(j->new_pin, sizeof j->new_pin, "%s", new_pin ? new_pin : "");
@@ -493,6 +512,7 @@ static void cap_add(ink_call_t *c) { /* exec.bg */
     s->m.role = !strcmp(role, "adult") ? INK_ROLE_ADULT : INK_ROLE_CHILD;
     set_allow(s);
     s->used = true;
+    s->generation = __atomic_add_fetch(&M.next_generation, 1, __ATOMIC_RELAXED);
     save_all();
     ink_cap_emit("member.changed", NULL);
 }
@@ -504,6 +524,7 @@ static void wipe_member_files(void *arg) { /* the storage task: their flat data 
     char dir[INK_LAYOUT_PATH_MAX];
     if (ink_layout_member(dir, sizeof dir, w->id, "x") < 0) return;
     dir[strlen(dir) - 2] = 0;
+    if (ink_storage_forget_member(w->id) != 0) return;
     hal_dir_t *d = hal_fs_opendir(dir);
     if (!d && hal_fs_size(dir) < 0 && hal_fs_mkdir(dir) == 0) d = hal_fs_opendir(dir);
     if (!d) return;
@@ -559,7 +580,9 @@ static void cap_remove(ink_call_t *c) { /* exec.bg */
         M.table_is_real = true;
     }
     if (!saved) ink_probe_count("members.cleanup_state_failed");
-    bool cleared = saved && ink_db_try_forget_member(id) == 0;
+    bool cleared = saved && ink_time_forget_member(id, (int64_t)ink_cap_time_left_ms(c) * 1000) == 0;
+    if (cleared) ink_task_forget_member(id);
+    cleared = cleared && ink_db_try_forget_member(id) == 0;
     if (saved && !cleared) ink_probe_count("members.cleanup_cache_busy");
     member_wipe_t wipe = {.id = id, .result = -1};
     if (cleared) ink_storage_run(wipe_member_files, &wipe, true);

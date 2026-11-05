@@ -90,6 +90,8 @@ typedef struct {
 } dl_piece_t;
 
 static struct {
+    ink_db_t *failures;
+    bool history_ok;
     hal_ota_info_t me;
     const char *product;
     stored_t st;
@@ -214,9 +216,24 @@ static pkg_err_t read_header(const char *path, pkg_t *p) {
     return e;
 }
 
-static pkg_err_t check_rules(const pkg_t *p) {
+static const ink_db_def_t FAILURES = {.name = "update.failures", .scope = INK_DB_DEVICE, .schema = 1, .max_bytes = 128 * 1024};
+
+static bool failed_before(uint32_t code) {
+    return !U.history_ok || code == U.st.blocked_code || ink_db_get(U.failures, code, NULL, NULL, 0) == INK_DB_OK;
+}
+
+static bool remember_failure(uint32_t code) {
+    if (!U.failures || !code) return false;
+    if (ink_db_get(U.failures, code, NULL, NULL, 0) != INK_DB_OK) {
+        ink_db_write_t w = {.id = code, .data = &code, .len = sizeof code, .src = INK_SRC_SYSTEM};
+        if (ink_db_put(U.failures, &w, NULL) != INK_DB_OK) return false;
+    }
+    return ink_db_wait(U.failures, ink_db_last_ver(U.failures), 3000000) == 0;
+}
+
+static pkg_err_t check_rules_for(const pkg_t *p, bool retry) {
     if (strcmp(p->product, U.product)) return PKG_WRONG_PRODUCT;
-    if (p->code == U.st.blocked_code) return PKG_BLOCKED;
+    if (!U.history_ok || (!retry && failed_before(p->code))) return PKG_BLOCKED;
     if (p->code <= U.me.version_code && !(p->flags & 1)) return PKG_OLDER;
     if (U.me.version_code < p->min_from) return PKG_TOO_OLD_TO_UPGRADE;
     bool has_app = false;
@@ -229,6 +246,8 @@ static pkg_err_t check_rules(const pkg_t *p) {
 }
 
 /* Every section's hash, the whole file read. */
+static pkg_err_t check_rules(const pkg_t *p) { return check_rules_for(p, false); }
+
 static pkg_err_t check_sections(const char *path, const pkg_t *p) {
     uint64_t header = 88 + p->nsec * sizeof(sec_t) + 4 + 64;
     int64_t size = hal_fs_size(path);
@@ -272,12 +291,14 @@ static pkg_err_t check_sections(const char *path, const pkg_t *p) {
     return e;
 }
 
-static pkg_err_t check_package(const char *path, pkg_t *p) {
+static pkg_err_t check_package_for(const char *path, pkg_t *p, bool retry) {
     pkg_err_t e = read_header(path, p);
-    if (e == PKG_OK) e = check_rules(p);
+    if (e == PKG_OK) e = check_rules_for(p, retry);
     if (e == PKG_OK) e = check_sections(path, p);
     return e;
 }
+
+static pkg_err_t check_package(const char *path, pkg_t *p) { return check_package_for(path, p, false); }
 
 /* ---- installing ---- */
 
@@ -434,7 +455,11 @@ static void install_cap(ink_call_t *c, const char *path) {
         return;
     }
     set_state("verifying");
-    pkg_err_t e = check_package(path, p);
+    bool retry = false;
+    ink_args_get_bool(&c->args, "retry_failed", &retry);
+    char selected[64];
+    retry = retry && c->src == INK_SRC_CONFIRMED && ink_args_get_str(&c->args, "file", selected, sizeof selected) > 0;
+    pkg_err_t e = check_package_for(path, p, retry);
     if (e != PKG_OK) {
         set_state("idle");
         ink_probe_count("update.package_refused");
@@ -535,7 +560,7 @@ typedef struct {
     uint32_t code, size;
 } answer_t;
 
-static bool is_newer(uint32_t code) { return code > U.me.version_code && code != U.st.blocked_code; }
+static bool is_newer(uint32_t code) { return code > U.me.version_code && !failed_before(code); }
 
 static bool on_wifi(void) {
     char type[8] = "";
@@ -1048,6 +1073,7 @@ void ink_update_boot_check(void) { /* boot task */
     if ((trying || committed || (writing && U.me.rolled_back)) && U.st.code != U.me.version_code) { /* it went back */
         ink_probe_count("update.rolled_back");
         U.st.blocked_code = U.st.code;
+        if (!remember_failure(U.st.code)) { U.history_ok = false; set_state("failed"); return; }
         char version[24];
         snprintf(version, sizeof version, "%s", U.st.version);
         U.st.state[0] = 0;
@@ -1083,7 +1109,7 @@ static const ink_cap_t UPDATE_CAPS[] = {
     /* a person installs: not even listed for the AI (foundation §6.2; the policy gate has the same rule by name) */
     {.id = "system.upgrade", .title = "安装下载好的新系统（安装时不能用设备，会重启）", .ask = "安装新系统，装完重启", .ask_by_hand = true, .effect = INK_FX_SYSTEM, .expose = INK_EXPOSE_OWNER, .timeout_ms = 600000, .exec = INK_EXEC_BG, .run = cap_upgrade},
     {.id = "system.upgrade_from_card", .title = "安装存储卡上的新系统（update 文件夹里，会重启）", .ask = "从存储卡安装新系统，装完重启", .ask_by_hand = true,
-     .input = "{\"type\":\"object\",\"properties\":{\"file\":{\"type\":\"string\",\"maxLength\":63}}}", .effect = INK_FX_SYSTEM, .expose = INK_EXPOSE_OWNER, .timeout_ms = 600000, .exec = INK_EXEC_BG, .run = cap_upgrade_card},
+     .input = "{\"type\":\"object\",\"properties\":{\"file\":{\"type\":\"string\",\"maxLength\":63},\"retry_failed\":{\"type\":\"boolean\"}}}", .effect = INK_FX_SYSTEM, .expose = INK_EXPOSE_OWNER, .timeout_ms = 600000, .exec = INK_EXEC_BG, .run = cap_upgrade_card},
     {.id = "update.available", .title = "发现了新版本", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},
     {.id = "update.result", .title = "升级的结果", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},
 };
@@ -1101,6 +1127,10 @@ int ink_update_init(void) {
     U.product = di.profile_id;
     hal_ota_info(&U.me);
     load_state();
+    ink_db_register(&FAILURES);
+    U.failures = ink_db_open(&FAILURES, NULL);
+    U.history_ok = U.failures && !ink_db_error(U.failures);
+    if (U.st.blocked_code && !remember_failure(U.st.blocked_code)) U.history_ok = false;
     U.h_state = ink_state_define(&ST_STATE);
     U.h_version = ink_state_define(&ST_VERSION);
     U.h_progress = ink_state_define(&ST_PROGRESS);

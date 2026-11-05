@@ -70,6 +70,7 @@ static struct {
     uint64_t next_battery_us;
     bool battery_policy;    /* ink_power_battery_policy_start */
     void (*off_picture)(const char *why);
+    bool off_picture_ok;
     int battery_level;      /* what has been told: 0 fine, 1 low, 2 very low, 3 powering off */
     bool powering_off;
     uint64_t off_at;
@@ -303,7 +304,9 @@ static void cap_shutdown(ink_call_t *c) { /* exec.bg */
         return;
     }
     snprintf(c->rc.say, sizeof c->rc.say, "已保存，正在关机");
+    PS.off_picture_ok = false;
     if (PS.off_picture) PS.off_picture("shutdown");
+    if (!PS.off_picture_ok) { c->rc.status = INK_RC_FAILED; snprintf(c->rc.say, sizeof c->rc.say, "关机画面没显示成功，请重试"); return; }
     hal_power_shutdown();
 }
 
@@ -336,6 +339,8 @@ int ink_power_init(void) {
     osal_task_cfg_t cfg = {.name = "power", .fn = power_task, .stack_bytes = PW_STACK, .priority = PW_PRIO, .core = -1};
     return osal_task_create(&cfg, &PS.task) == OSAL_OK ? 0 : -1;
 }
+
+void ink_power_off_picture_result(bool ok) { PS.off_picture_ok = ok; }
 
 void ink_power_set_off_picture(void (*fn)(const char *why)) { PS.off_picture = fn; }
 

@@ -23,6 +23,7 @@ int ink_task_init(void);
 int ink_task_begin(const char *kind, const char *title, bool for_everyone, void (*cancel)(void *ctx), void *ctx);
 /** percent 0..100, or -1 not known. stage: a word for the screen to turn into its steps, or NULL to leave it. */
 void ink_task_progress(int id, int percent, const char *stage);
+void ink_task_forget_member(const char *member);
 /** Over. result: a sentence for a person, or NULL. object: what it made, in the form receipts use ("file:/me/a.txt"), or NULL. */
 void ink_task_end(int id, ink_task_state_t how, const char *result, const char *object);
 

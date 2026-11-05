@@ -42,6 +42,7 @@ static struct {
     int fg;            /* in the foreground: index, or -1 */
     char top[32];      /* the app of the page on top: "" for a page of nobody's */
     bool locked;
+    uint32_t generation;
     char member[INK_MEMBER_ID_MAX]; /* whose data the running apps are using */
     int h_foreground, h_cards_rev;
     int cards_rev;
@@ -86,6 +87,7 @@ static int state_path(const app_t *a, char *out, size_t cap) {
 #define SAVE_TRIES 40
 #define SAVE_WAIT_US 10000
 static bool save(app_t *a) {
+    if (!AP.generation || AP.generation != ink_member_generation(AP.member)) return true;
     if (!a->def->ops || !a->def->ops->save_state) return true;
     char path[INK_LAYOUT_PATH_MAX];
     void *buf = osal_malloc(INK_APP_STATE_MAX, OSAL_MEM_EXTERNAL);
@@ -268,6 +270,7 @@ static void stop_for_member(void) { /* UI task */
     }
     for (int i = 0; i < AP.n; i++) stop(&AP.a[i]);
     snprintf(AP.member, sizeof AP.member, "%s", ink_member_current()->id);
+    AP.generation = ink_member_generation(AP.member);
     plan_freeze();
 }
 
@@ -486,6 +489,7 @@ static const ink_state_def_t ST_CARDS_REV = {.id = "app.cards_rev", .type = INK_
 int ink_apps_init(void) {
     AP.fg = -1;
     snprintf(AP.member, sizeof AP.member, "%s", ink_member_current()->id);
+    AP.generation = ink_member_generation(AP.member);
     AP.h_foreground = ink_state_define(&ST_FOREGROUND);
     AP.h_cards_rev = ink_state_define(&ST_CARDS_REV);
     ink_state_set_str(AP.h_foreground, "");

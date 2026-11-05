@@ -36,15 +36,10 @@ static void text_result(ink_call_t *c, int session) {
 
 static bool editable(ink_call_t *c);
 
-static void cap_state(ink_call_t *c) { /* UI task */
+int ink_text_snapshot(char *out, size_t cap) {
     static const char *const TYPE[] = {"plain", "number", "phone", "password"};
-    char *out = osal_malloc(16 * 1024, OSAL_MEM_EXTERNAL);
-    if (!out) {
-        fail(c, INK_RC_FAILED, "out of memory");
-        return;
-    }
     ink_jw_t w;
-    ink_jw_init(&w, out, 16 * 1024);
+    ink_jw_init(&w, out, cap);
     if (!ink_text_focused()) ink_jw_raw(&w, "{\"focused\":false}");
     else {
         ink_jw_raw(&w, "{\"focused\":true,\"type\":");
@@ -80,7 +75,14 @@ static void cap_state(ink_call_t *c) { /* UI task */
         ink_jw_str(&w, ink_text_voice_state_name());
         ink_jw_raw(&w, ink_text_voice_possible() ? ",\"voice_possible\":true}" : "}");
     }
-    if (w.overflow) fail(c, INK_RC_FAILED, "too long");
+    if (w.overflow) { if (cap) out[0] = 0; return -1; }
+    return (int)w.len;
+}
+
+static void cap_state(ink_call_t *c) {
+    char *out = osal_malloc(16 * 1024, OSAL_MEM_EXTERNAL);
+    if (!out) { fail(c, INK_RC_FAILED, "out of memory"); return; }
+    if (ink_text_snapshot(out, 16 * 1024) < 0) fail(c, INK_RC_FAILED, "too long");
     else ink_cap_result(c, out);
     osal_free(out);
 }

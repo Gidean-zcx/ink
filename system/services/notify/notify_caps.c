@@ -27,7 +27,7 @@ static void cap_post(ink_call_t *c) {
     ink_args_get_str(&c->args, "channel", channel, sizeof channel);
     bool has_action = ink_args_get_str(&c->args, "action", act, sizeof act) > 0;
     bool from_person = c->src == INK_SRC_TOUCH || c->src == INK_SRC_KEY || c->src == INK_SRC_SYSTEM;
-    ink_notify_t n = {.channel = from_person && channel[0] ? channel : "ai", .title = title, .body = has_body ? body : NULL, .group = has_group ? group : NULL,
+    ink_notify_t n = {.written_ver = &c->rc.revision, .channel = from_person && channel[0] ? channel : "ai", .title = title, .body = has_body ? body : NULL, .group = has_group ? group : NULL,
                       .action = has_action ? act : NULL, .prio = -1, .src = (uint8_t)c->src};
     uint32_t id = 0;
     if (ink_notify_post(&n, &id) != 0) {
@@ -36,12 +36,13 @@ static void cap_post(ink_call_t *c) {
     }
     snprintf(c->rc.object, sizeof c->rc.object, "notification:%u", (unsigned)id);
     ink_args_t *undo = osal_malloc(sizeof *undo, OSAL_MEM_EXTERNAL);
-    if (undo) {
+    if (undo && id) {
         ink_args_init(undo);
         ink_args_int(undo, "id", id);
+        ink_args_int(undo, "if_revision", c->rc.revision);
         ink_cap_undoable(c, "notify.dismiss", undo, 10000);
-        osal_free(undo);
     }
+    osal_free(undo);
 }
 
 static void cap_list(ink_call_t *c) {
@@ -112,7 +113,9 @@ static void cap_read(ink_call_t *c) {
 static void cap_dismiss(ink_call_t *c) {
     int64_t id = 0;
     ink_args_get_int(&c->args, "id", &id);
-    if (ink_notify_cancel((uint32_t)id) != 0) fail(c, INK_RC_FAILED, "no such notification");
+    int64_t revision = 0;
+    ink_args_get_int(&c->args, "if_revision", &revision);
+    if (ink_notify_cancel_if_ver((uint32_t)id, (uint32_t)revision) != 0) fail(c, revision ? INK_RC_STALE : INK_RC_FAILED, "notification changed or absent");
 }
 
 static void cap_clear(ink_call_t *c) {

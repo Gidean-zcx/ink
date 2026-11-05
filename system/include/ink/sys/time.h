@@ -34,6 +34,7 @@ void ink_time_to_local(int64_t utc_s, ink_tm_t *out);
 int64_t ink_time_from_local(const ink_tm_t *tm);
 /** Set the clock (and the RTC). A person's choice or the hub's: alarms move with it. */
 void ink_time_set(int64_t utc_s, bool from_hub);
+int ink_time_set_if_revision(int64_t utc_s, bool from_hub, uint32_t expected, uint32_t *written);
 /** The time zone's name, e.g. "Asia/Shanghai". */
 const char *ink_time_zone(void);
 
@@ -86,6 +87,8 @@ typedef struct {
 
 /** Add: fills id and next_s. > 0 the id, < 0 refused (table full, not valid). */
 int ink_alarm_add(ink_alarm_t *a);
+/** Erase owned schedules and ringing state durably before releasing a member id. */
+int ink_time_forget_member(const char *member, int64_t timeout_us);
 int ink_alarm_cancel(uint32_t id);
 /** The next of the current member's, after *cursor (start from 0): 1, 0 at the end. */
 int ink_alarm_next(int *cursor, ink_alarm_kind_t kind, ink_alarm_t *out);

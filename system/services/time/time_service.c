@@ -49,6 +49,8 @@ typedef struct {
 } ring_t;
 
 static struct {
+    osal_mutex_t *edits, *clock_lock;
+    uint32_t clock_revision;
     ink_alarm_t a[MAX_ALARMS];
     int n;
     ink_db_t *db;
@@ -315,9 +317,16 @@ static void reschedule(void) {
     if (rtc_changed) ink_exec_post(INK_EXEC_BG, &T.rtc_job, rtc_job, NULL); /* the first alarm starts this executor, not the boot */
 }
 
-static void save_alarm(const ink_alarm_t *a) { /* outside the lock */
+static int find_alarm(uint32_t id);
+
+static void save_alarm(const ink_alarm_t *a) { /* outside the service lock */
+    osal_mutex_lock(T.edits, OSAL_WAIT_FOREVER);
+    ink_svc_lock();
+    bool live = find_alarm(a->id) >= 0 && ink_member_generation(a->owner);
+    ink_svc_unlock();
     ink_db_write_t w = {.id = a->id, .sort = a->next_s, .data = a, .len = sizeof *a, .src = a->src};
-    if (T.db && ink_db_put(T.db, &w, NULL) != INK_DB_OK) ink_probe_count("time.save_failed");
+    if (live && T.db && ink_db_put(T.db, &w, NULL) != INK_DB_OK) ink_probe_count("time.save_failed");
+    osal_mutex_unlock(T.edits);
 }
 
 static int find_alarm(uint32_t id) { /* under the lock */
@@ -331,7 +340,8 @@ static void remove_at(int i) { /* under the lock */
     T.n--;
 }
 
-static void emit_alarm(const char *event, const ink_alarm_t *a, const char *why) { /* the timer task, or a capability's */
+static void emit_alarm_epoch(const char *event, const ink_alarm_t *a, const char *why, uint32_t generation) { /* the timer task, or a capability's */
+    if (!generation || generation != ink_member_generation(a->owner)) return;
     ink_args_t *args = osal_malloc(sizeof *args, OSAL_MEM_EXTERNAL);
     if (!args) return;
     ink_args_init(args);
@@ -342,6 +352,10 @@ static void emit_alarm(const char *event, const ink_alarm_t *a, const char *why)
     if (why) ink_args_str(args, "why", why);
     ink_cap_emit(event, args);
     osal_free(args);
+}
+
+static void emit_alarm(const char *event, const ink_alarm_t *a, const char *why) {
+    emit_alarm_epoch(event, a, why, ink_member_generation(a->owner));
 }
 
 static void ring_add(uint32_t id, uint64_t now_us) { /* under the lock */
@@ -399,6 +413,7 @@ static void due_cb(void *arg) { /* timer task */
     uint64_t now_us = osal_now_us();
     ink_alarm_t *fired = osal_malloc(sizeof(ink_alarm_t) * MAX_FIRE_BATCH, OSAL_MEM_EXTERNAL);
     bool late[MAX_FIRE_BATCH], saved[MAX_FIRE_BATCH];
+    uint32_t generations[MAX_FIRE_BATCH];
     int n = 0;
     if (!fired) {
         ink_svc_at(&T.due_at, now_us + 1000000u, due_cb, NULL);
@@ -415,6 +430,7 @@ static void due_cb(void *arg) { /* timer task */
         a->next_s = a->repeat == INK_REPEAT_NONE ? 0 : rule_next(a, now);
         if (!a->next_s && a->kind == INK_ALARM) a->enabled = false; /* a single alarm stays in the list, off */
         saved[n] = a->kind == INK_ALARM || a->next_s; /* a single reminder is over */
+        generations[n] = ink_member_generation(a->owner);
         fired[n] = *a;
         n++;
         if (!a->next_s && a->kind == INK_REMINDER) remove_at(i);
@@ -425,8 +441,8 @@ static void due_cb(void *arg) { /* timer task */
         if (saved[i]) save_alarm(a);
         else if (T.db) ink_db_del(T.db, a->id, a->src);
         ink_probe_count(late[i] ? "time.missed" : a->kind == INK_ALARM ? "time.alarms_fired" : "time.reminders_fired");
-        if (late[i]) emit_alarm(a->kind == INK_ALARM ? "alarm.missed" : "reminder.missed", a, "the device was off or the clock moved");
-        else emit_alarm(a->kind == INK_ALARM ? "alarm.fired" : "reminder.fired", a, NULL);
+        if (late[i]) emit_alarm_epoch(a->kind == INK_ALARM ? "alarm.missed" : "reminder.missed", a, "the device was off or the clock moved", generations[i]);
+        else emit_alarm_epoch(a->kind == INK_ALARM ? "alarm.fired" : "reminder.fired", a, NULL, generations[i]);
     }
     osal_free(fired);
     if (n) rings_changed();
@@ -458,8 +474,9 @@ static void clock_moved(void) {
     reschedule();
 }
 
-void ink_time_set(int64_t utc_s, bool from_hub) {
+static void time_set_unlocked(int64_t utc_s, bool from_hub) {
     if (from_hub && !ink_setting_get("time.auto") && ink_time_valid()) return;
+    T.clock_revision++;
     osal_set_wall_us(utc_s * 1000000);
     __atomic_store_n(&T.valid, true, __ATOMIC_RELEASE);
     if (!hal_rtc_set(utc_s)) ink_probe_count("time.rtc_write_failed");
@@ -472,6 +489,15 @@ void ink_time_set(int64_t utc_s, bool from_hub) {
     if (!T.minute_at.armed) minute_cb(NULL);
     ink_cap_emit("time.changed", NULL);
 }
+
+int ink_time_set_if_revision(int64_t utc_s, bool from_hub, uint32_t expected, uint32_t *written) {
+    osal_mutex_lock(T.clock_lock, OSAL_WAIT_FOREVER);
+    bool ok = !expected || expected == T.clock_revision;
+    if (ok) { time_set_unlocked(utc_s, from_hub); if (written) *written = T.clock_revision; }
+    osal_mutex_unlock(T.clock_lock);
+    return ok ? 0 : -1;
+}
+void ink_time_set(int64_t utc_s, bool from_hub) { ink_time_set_if_revision(utc_s, from_hub, 0, NULL); }
 
 /* The hub told its time at hello. Hub task. */
 static void on_online(void *ctx) {
@@ -503,8 +529,8 @@ static bool alarm_valid(const ink_alarm_t *a) {
     }
 }
 
-int ink_alarm_add(ink_alarm_t *a) {
-    if (!T.db || !alarm_valid(a)) return -1;
+static int alarm_add_unlocked(ink_alarm_t *a) {
+    if (!T.db || !alarm_valid(a) || !ink_member_generation(a->owner[0] ? a->owner : ink_member_current()->id)) return -1;
     int64_t now = ink_time_now_s();
     a->enabled = true;
     a->snooze_until = 0;
@@ -525,7 +551,7 @@ int ink_alarm_add(ink_alarm_t *a) {
     return (int)a->id;
 }
 
-int ink_alarm_cancel(uint32_t id) {
+static int alarm_cancel_unlocked(uint32_t id) {
     ink_svc_lock();
     int i = find_alarm(id);
     ink_alarm_t a = {0};
@@ -549,6 +575,47 @@ int ink_alarm_cancel(uint32_t id) {
     }
     reschedule();
     return 0;
+}
+
+int ink_alarm_add(ink_alarm_t *a) {
+    osal_mutex_lock(T.edits, OSAL_WAIT_FOREVER);
+    int r = alarm_add_unlocked(a);
+    osal_mutex_unlock(T.edits);
+    return r;
+}
+
+int ink_alarm_cancel(uint32_t id) {
+    osal_mutex_lock(T.edits, OSAL_WAIT_FOREVER);
+    int r = alarm_cancel_unlocked(id);
+    osal_mutex_unlock(T.edits);
+    return r;
+}
+
+int ink_time_forget_member(const char *member, int64_t timeout_us) {
+    if (!T.db) return -1;
+    osal_mutex_lock(T.edits, OSAL_WAIT_FOREVER);
+    bool ok = true;
+    ink_db_cursor_t cursor = {0};
+    ink_rec_t rec;
+    ink_alarm_t alarm;
+    int more;
+    while ((more = ink_db_next(T.db, &cursor, &rec, &alarm, sizeof alarm)) == 1) {
+        if (rec.len != sizeof alarm) { ok = false; break; }
+        if (strcmp(alarm.owner, member)) continue;
+        if (ink_db_del(T.db, rec.id, INK_SRC_SYSTEM) != INK_DB_OK) { ok = false; break; }
+        ink_svc_lock();
+        int at = find_alarm(rec.id);
+        if (at >= 0) remove_at(at);
+        for (int k = 0; k < MAX_RINGING; k++) if (T.rings[k].id == rec.id) T.rings[k].id = 0;
+        ink_svc_unlock();
+    }
+    if (more < 0) ok = false;
+    uint32_t version = ink_db_last_ver(T.db);
+    osal_mutex_unlock(T.edits);
+    if (ok) ok = ink_db_wait(T.db, version, timeout_us) == 0;
+    rings_changed();
+    reschedule();
+    return ok ? 0 : -1;
 }
 
 int ink_alarm_next(int *cursor, ink_alarm_kind_t kind, ink_alarm_t *out) {
@@ -650,6 +717,9 @@ static void load_alarms(void) {
 }
 
 int ink_time_init(void) {
+    T.edits = osal_mutex_create();
+    T.clock_lock = osal_mutex_create();
+    if (!T.edits || !T.clock_lock) return -1;
     if (ink_settings_define(TIME_SETTINGS, 2) != 0) return -1;
     T.h_synced = ink_state_define(&ST_SYNCED);
     T.h_zone = ink_state_define(&ST_ZONE);

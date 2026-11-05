@@ -70,6 +70,7 @@ typedef struct {
     uint8_t schema;      /* 0 = the collection's */
     uint8_t src;         /* ink_source_t */
     uint32_t flags;      /* INK_DB_LAZY */
+    uint32_t *written_ver; /* optional: the accepted record version, under the write lock */
 } ink_db_write_t;
 
 /* A position in the sort order: by key, so inserts and deletes between pages cannot skip or repeat. */
@@ -99,6 +100,7 @@ int ink_db_put(ink_db_t *db, const ink_db_write_t *w, uint32_t *out_id);
 /** An id for a record about to be written, for records that carry their own id inside. */
 uint32_t ink_db_new_id(ink_db_t *db);
 int ink_db_del(ink_db_t *db, uint32_t id, uint8_t src);
+int ink_db_del_if_ver(ink_db_t *db, uint32_t id, uint8_t src, uint32_t ver);
 /** One record: the first cap bytes of its content into buf (buf may be NULL). 0 or INK_DB_ERR_NOT_FOUND. */
 int ink_db_get(ink_db_t *db, uint32_t id, ink_rec_t *out, void *buf, size_t cap);
 /** The next record after the cursor: 1 (filled in), 0 at the end, < 0 on an error. */

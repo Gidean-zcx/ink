@@ -27,7 +27,7 @@ typedef struct {
     void (*cancel)(void *ctx);
     void *cancel_ctx;
     char kind[24], title[64], stage[16], result[96], object[48];
-    char member[INK_MEMBER_ID_MAX];
+    char member[INK_MEMBER_ID_MAX], creator[INK_MEMBER_ID_MAX];
     int64_t ended_s;
     uint32_t order;
 } task_t;
@@ -75,11 +75,28 @@ int ink_task_begin(const char *kind, const char *title, bool for_everyone, void 
         snprintf(slot->kind, sizeof slot->kind, "%s", kind);
         snprintf(slot->title, sizeof slot->title, "%s", title);
         snprintf(slot->member, sizeof slot->member, "%s", member);
+        snprintf(slot->creator, sizeof slot->creator, "%s", ink_member_current()->id);
     }
     ink_svc_unlock();
     if (id) publish_running();
     else ink_probe_count("task.no_room");
     return id;
+}
+
+void ink_task_forget_member(const char *member) {
+    for (int i = 0; i < TASKS_MAX; i++) {
+        void (*cancel)(void *) = NULL;
+        void *ctx = NULL;
+        ink_svc_lock();
+        task_t *t = &T.t[i];
+        if (t->id && (!strcmp(t->member, member) || !strcmp(t->creator, member))) {
+            cancel = t->cancel; ctx = t->cancel_ctx;
+            memset(t, 0, sizeof *t);
+        }
+        ink_svc_unlock();
+        if (cancel) cancel(ctx);
+    }
+    publish_running();
 }
 
 void ink_task_progress(int id, int percent, const char *stage) {

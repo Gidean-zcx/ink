@@ -77,6 +77,8 @@ int ink_storage_volume(uint64_t *total_bytes, uint64_t *free_bytes);
 /** In the storage task only (ink_storage_run): every file and folder on /user is gone, except the files named in keep (ended by
  *  NULL). False: something is still there. */
 bool ink_storage_wipe_user(const char *const *keep);
+/** Storage task only: refuse pending writes, then purge this member read cache and prefetches. */
+int ink_storage_forget_member(const char *member);
 /** Run fn(arg) in the storage task (blocks until it finished), for code that must touch the flash:
  *  with `guarded` the flash guard is held around it. Keep it short: every other flash user waits. */
 void ink_storage_run(void (*fn)(void *arg), void *arg, bool guarded);

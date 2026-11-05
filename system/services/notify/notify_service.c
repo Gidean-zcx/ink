@@ -201,6 +201,7 @@ typedef struct {
     ink_exec_job_t job;
     char member[INK_MEMBER_ID_MAX];
     uint8_t src;
+    uint32_t generation;
     int channel;
     int64_t sort;
     char json[];
@@ -208,6 +209,7 @@ typedef struct {
 
 static void post_away(void *arg) { /* exec.bg: another member's inbox, nobody is disturbed */
     away_t *a = arg;
+    if (!a->generation || a->generation != ink_member_generation(a->member)) { osal_free(a); return; }
     if (prefs_off(a->member) & (1u << a->channel)) ink_probe_count("notify.channel_off");
     else {
         ink_db_t *db = ink_db_open(&INBOX, a->member);
@@ -233,6 +235,8 @@ int ink_notify_post(const ink_notify_t *n, uint32_t *out_id) {
     int prio = n->prio >= 0 ? n->prio : (int)NS.ch[ci]->prio;
     char who[INK_MEMBER_ID_MAX];
     snprintf(who, sizeof who, "%s", n->member ? n->member : ink_member_current()->id);
+    uint32_t generation = ink_member_generation(who);
+    if (!generation) return -1;
     int64_t wall = osal_wall_us();
     int64_t sort = wall > 0 ? wall / 1000000 : (int64_t)(osal_now_us() / 1000000);
     const char *prev = osal_mem_tag("notify");
@@ -256,6 +260,7 @@ int ink_notify_post(const ink_notify_t *n, uint32_t *out_id) {
             return -1;
         }
         snprintf(a->member, sizeof a->member, "%s", who);
+        a->generation = generation;
         a->src = n->src;
         a->channel = ci;
         a->sort = sort;
@@ -274,7 +279,7 @@ int ink_notify_post(const ink_notify_t *n, uint32_t *out_id) {
     }
     ink_db_t *db = ink_db_open(&INBOX, who); /* whose it is, as decided above, whatever has happened since */
     uint32_t wrote = 0;
-    ink_db_write_t w = {.id = db && n->tag ? find_tag(db, n->tag) : 0, .sort = sort, .data = buf, .len = (size_t)len, .src = n->src};
+    ink_db_write_t w = {.written_ver = n->written_ver, .id = db && n->tag ? find_tag(db, n->tag) : 0, .sort = sort, .data = buf, .len = (size_t)len, .src = n->src};
     int r = db ? ink_db_put(db, &w, &wrote) : INK_DB_ERR_ARG;
     ink_db_close(db);
     osal_free(buf);
@@ -298,9 +303,11 @@ int ink_notify_post(const ink_notify_t *n, uint32_t *out_id) {
     return 0;
 }
 
-int ink_notify_cancel(uint32_t id) {
+int ink_notify_cancel(uint32_t id) { return ink_notify_cancel_if_ver(id, 0); }
+
+int ink_notify_cancel_if_ver(uint32_t id, uint32_t ver) {
     ink_db_t *db = inbox();
-    int r = db ? ink_db_del(db, id, INK_SRC_SYSTEM) : INK_DB_ERR_ARG;
+    int r = db ? ink_db_del_if_ver(db, id, INK_SRC_SYSTEM, ver) : INK_DB_ERR_ARG;
     ink_db_close(db);
     if (r != INK_DB_OK) return -1;
     recount();

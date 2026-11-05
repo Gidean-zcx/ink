@@ -18,6 +18,14 @@ a = p.parse_args()
 build = (ROOT / a.build).resolve()
 work = Path(tempfile.mkdtemp(prefix='services-finish-', dir=build))
 suites = {
+    'replay': ('sim-media', ['cap_boundary.c'], '30s'),
+    'undo_data': ('sim-media', ['data_caps_boundary.c', 'file_caps_boundary.c', 'notify_caps_boundary.c', 'time_caps_boundary.c', 'wifi_boundary.c'], '30s'),
+    'removal_alarm': ('sim-media', ['members_boundary.c', 'time_boundary.c', 'task_boundary.c', 'notify_boundary.c', 'activity_boundary.c'], '30s'),
+    'empty_removal': ('sim-media', ['members_boundary.c', 'file_clean_boundary.c'], '30s'),
+    'update_history': ('sim-media', [], '30s'),
+    'text_window': ('sim-media', [], '20s'),
+    'keyboard_snapshot': ('sim-media', ['ui_boundary.c'], '20s'),
+    'offpanel': ('sim-media', ['off_boundary.c', 'display_boundary.c'], '30s'),
     'files': ('sim-media', ['file_boundary.c'], '75s'),
     'storage': ('sim-media', [], '75s'),
     'update': ('sim-media', [], '80s'),
@@ -50,18 +58,20 @@ def compile_suite(name):
     defines = []
     if a.baseline:
         # Read only: source copies and binaries live in the ignored build directory.
-        for rel in ['system/services/file/file_service.c', 'system/services/data/datastore.c', 'system/services/update/update_service.c', 'system/services/text/text_service.c', 'system/services/text/text_caps.c', 'system/services/audio/audio_service.c', 'system/services/power/power_service.c', 'system/services/ai/ai_service.c', 'system/policy/cap.c', 'system/policy/settings.c', 'system/policy/members.c', 'system/services/hub/hub_link.c', 'system/services/net/wifi.c']:
+        for rel in ['system/services/file/file_service.c', 'system/services/data/datastore.c', 'system/services/update/update_service.c', 'system/services/text/text_service.c', 'system/services/text/text_caps.c', 'system/services/audio/audio_service.c', 'system/services/power/power_service.c', 'system/services/ai/ai_service.c', 'system/policy/cap.c', 'system/policy/settings.c', 'system/policy/members.c', 'system/services/hub/hub_link.c', 'system/services/net/wifi.c', 'system/services/time/time_service.c', 'system/services/time/time_caps.c', 'system/services/res/task.c', 'system/services/data/data_caps.c', 'system/services/file/file_caps.c', 'system/ui/textfield.c', 'system/ui/ui_task.c', 'system/ui/shell/off_picture.c', 'system/services/notify/notify_service.c', 'system/services/notify/notify_caps.c']:
             target = work / Path(rel).name
             target.write_bytes(subprocess.check_output(['git', 'show', a.baseline + ':' + rel], cwd=ROOT))
-            macro = 'INK_TEST_' + {'file_service.c': 'FILE', 'datastore.c': 'DATA', 'update_service.c': 'UPDATE', 'text_service.c': 'TEXT', 'text_caps.c': 'TEXT_CAPS', 'audio_service.c': 'AUDIO', 'power_service.c': 'POWER', 'ai_service.c': 'AI', 'cap.c': 'CAP', 'settings.c': 'SETTINGS', 'members.c': 'MEMBERS', 'hub_link.c': 'HUB', 'wifi.c': 'WIFI'}[Path(rel).name] + '_SOURCE'
+            macro = 'INK_TEST_' + {'file_service.c': 'FILE', 'datastore.c': 'DATA', 'update_service.c': 'UPDATE', 'text_service.c': 'TEXT', 'text_caps.c': 'TEXT_CAPS', 'audio_service.c': 'AUDIO', 'power_service.c': 'POWER', 'ai_service.c': 'AI', 'cap.c': 'CAP', 'settings.c': 'SETTINGS', 'members.c': 'MEMBERS', 'hub_link.c': 'HUB', 'wifi.c': 'WIFI', 'time_service.c': 'TIME', 'time_caps.c': 'TIME_CAPS', 'task.c': 'TASK', 'data_caps.c': 'DATA_CAPS', 'file_caps.c': 'FILE_CAPS', 'textfield.c': 'TEXTFIELD', 'ui_task.c': 'UI', 'off_picture.c': 'OFF', 'notify_service.c': 'NOTIFY', 'notify_caps.c': 'NOTIFY_CAPS'}[Path(rel).name] + '_SOURCE'
             if rel.endswith('text_service.c') and 'ink_text_edit_revision' not in target.read_text():
                 defines += ['-DINK_TEST_OLD_TEXT=1']
+            for feature, token in [('MEMBERS', 'ink_member_generation'), ('TIME', 'ink_time_forget_member'), ('TASK', 'ink_task_forget_member'), ('FILE', 'ink_fs_file_revision'), ('UPDATE', 'check_rules_for'), ('TEXTFIELD', 'display_map'), ('OFF', 'ink_power_off_picture_result'), ('NOTIFY', 'ink_notify_cancel_if_ver')]:
+                if macro == 'INK_TEST_' + feature + '_SOURCE' and token not in target.read_text(): defines += ['-DINK_TEST_OLD_' + feature + '=1']
             defines += ['-D' + macro + '=' + json.dumps(str(target))]
     objects = []
     for i, source in enumerate([name + '.c', *extras]):
         obj = work / (name + '-' + str(i) + '.o')
         cmd = [link[0], *flags['C_DEFINES'], *defines, *flags['C_INCLUDES'],
-               '-I' + str(ROOT / 'system/services/file'), '-I' + str(ROOT / 'system/services/data'), '-I' + str(ROOT / 'system/services/text'), '-I' + str(ROOT / 'system/policy'),
+               '-I' + str(ROOT / 'system/services/file'), '-I' + str(ROOT / 'system/services/data'), '-I' + str(ROOT / 'system/services/text'), '-I' + str(ROOT / 'system/policy'), '-I' + str(ROOT / 'system/ui/shell'), '-I' + str(ROOT / 'system/services/time'), '-I' + str(ROOT / 'system/services/notify'),
                *flags['C_FLAGS'], '-Wno-unused-function', '-c', str(ROOT / 'tests/services_finish' / source), '-o', str(obj)]
         subprocess.run(cmd, cwd=build, check=True)
         objects.append(str(obj))
@@ -114,6 +124,14 @@ def review_matrix(name, binary):
             if cut == 'after': env['INK_REVIEW_EXPECT_RESOURCES'] = '1'
             boot(path, 'recovery', env)
             boot(path, 'next-boot', {'INK_REVIEW_EXPECT_ROLLBACK': '1'} if cut in ('before', 'error') else {})
+    elif name in ('removal_alarm', 'empty_removal', 'update_history'):
+        path = work / (name + '-state')
+        (path / 'sd').mkdir(parents=True)
+        phases = ('prepare', 'inspect') if name == 'removal_alarm' else ('legacy', 'rollback', 'inspect') if name == 'update_history' else ('run',)
+        for phase in phases:
+            env = {'INK_REVIEW_INSPECT': '1'} if phase == 'inspect' else {}
+            env['INK_REVIEW_HISTORY'] = phase
+            boot(path, phase, env)
     else:
         for failure in ('card', 'flash', 'cache', 'pin'):
             path = work / ('removal-' + failure)
@@ -135,7 +153,7 @@ def update_matrix(binary):
     def package(code=200):
         return fw.build(str(code // 100) + '.0.0', code, app_size=8192, font=4096, resources=8192)[0]
     def chain(name):
-        path = work / name
+        path = work / (name + '-state')
         (path / 'sd/content/update').mkdir(parents=True)
         return path
     def boot(path, phase, label, **env):
@@ -217,7 +235,7 @@ for name in a.suites:
     if name == 'update':
         failed |= not update_matrix(binary)
         continue
-    if name in ('upgrade_crash', 'removal'):
+    if name in ('upgrade_crash', 'removal', 'removal_alarm', 'empty_removal', 'update_history'):
         failed |= not review_matrix(name, binary)
         continue
     out = work / (name + '-out')

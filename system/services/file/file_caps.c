@@ -171,16 +171,19 @@ static void cap_write(ink_call_t *c) {
     }
     size_t n = strlen(text);
     int64_t w = ink_fs_write(f, text, n);
+    uint32_t revision = ink_fs_file_revision(f);
     int cl = ink_fs_close(f);
     if (w != (int64_t)n || cl) {
         refuse(c, w < 0 ? (int)w : INK_FS_ERR_IO);
         return;
     }
     snprintf(c->rc.object, sizeof c->rc.object, "file:%.40s", path);
+    c->rc.revision = revision;
     if (!append && strlen(path) <= 40) { /* a new file can be taken back; "object" must name it whole */
         ink_args_t undo;
         ink_args_init(&undo);
         ink_args_str(&undo, "path", path);
+        ink_args_int(&undo, "if_revision", revision);
         ink_cap_undoable(c, "file.delete", &undo, UNDO_MS);
     }
 }
@@ -196,16 +199,21 @@ static void cap_mkdir(ink_call_t *c) {
 static void cap_move(ink_call_t *c) {
     char from[INK_FS_PATH_MAX], to[INK_FS_PATH_MAX];
     if (!arg_path(c, "from", from, sizeof from) || !arg_path(c, "to", to, sizeof to)) return;
-    int r = ink_fs_move(from, to);
+    int64_t expected = 0;
+    ink_args_get_int(&c->args, "if_revision", &expected);
+    uint32_t revision = 0;
+    int r = ink_fs_move_if_revision(from, to, (uint32_t)expected, &revision);
     if (r) {
-        refuse(c, r);
+        if (expected) c->rc.status = INK_RC_STALE; else refuse(c, r);
         return;
     }
+    c->rc.revision = revision;
     snprintf(c->rc.object, sizeof c->rc.object, "file:%.40s", to);
     ink_args_t undo;
     ink_args_init(&undo);
     ink_args_str(&undo, "from", to);
     ink_args_str(&undo, "to", from);
+    ink_args_int(&undo, "if_revision", revision);
     if (strlen(to) <= 40) ink_cap_undoable(c, "file.move", &undo, UNDO_MS);
 }
 
@@ -244,6 +252,11 @@ static void cap_copy(ink_call_t *c) {
 static void cap_delete(ink_call_t *c) {
     char path[INK_FS_PATH_MAX];
     if (!arg_path(c, "path", path, sizeof path)) return;
+    int64_t revision = 0;
+    if (ink_args_get_int(&c->args, "if_revision", &revision)) {
+        if (ink_fs_remove_if_revision(path, (uint32_t)revision) != INK_FS_OK) c->rc.status = INK_RC_STALE;
+        return;
+    }
     int r = ink_fs_delete_start(path);
     if (r < 0) {
         refuse(c, r);

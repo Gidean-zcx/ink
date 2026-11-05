@@ -152,7 +152,7 @@ static void cap_connect(ink_call_t *c) { /* exec.bg */
     ink_power_release(INK_NEED_AWAKE);
     if (r == HAL_WIFI_OK) {
         ink_db_t *db = ink_db_open(&KNOWN, NULL);
-        ink_db_write_t rec = {.id = ssid_id(k->ssid), .data = k, .len = sizeof *k, .src = (uint8_t)c->src};
+        ink_db_write_t rec = {.written_ver = &c->rc.revision, .id = ssid_id(k->ssid), .data = k, .len = sizeof *k, .src = (uint8_t)c->src};
         int saved = db ? ink_db_put(db, &rec, NULL) : INK_DB_ERR_ARG;
         ink_db_close(db);
         if (saved != INK_DB_OK) ink_probe_count("wifi.not_saved");
@@ -166,6 +166,7 @@ static void cap_connect(ink_call_t *c) { /* exec.bg */
             if (undo) {
                 ink_args_init(undo);
                 ink_args_str(undo, "ssid", k->ssid);
+                ink_args_int(undo, "if_revision", c->rc.revision);
                 ink_cap_undoable(c, "wifi.forget", undo, 10000);
                 osal_free(undo);
             }
@@ -183,10 +184,12 @@ static void cap_forget(ink_call_t *c) { /* exec.bg */
     char ssid[33];
     ink_args_get_str(&c->args, "ssid", ssid, sizeof ssid);
     ink_db_t *db = ink_db_open(&KNOWN, NULL);
-    int r = db ? ink_db_del(db, ssid_id(ssid), (uint8_t)c->src) : INK_DB_ERR_ARG;
+    int64_t revision = 0;
+    ink_args_get_int(&c->args, "if_revision", &revision);
+    int r = db ? ink_db_del_if_ver(db, ssid_id(ssid), (uint8_t)c->src, (uint32_t)revision) : INK_DB_ERR_ARG;
     ink_db_close(db);
     if (r != INK_DB_OK) {
-        fail(c, INK_RC_FAILED, "not a known network");
+        fail(c, revision ? INK_RC_STALE : INK_RC_FAILED, "network changed or absent");
         return;
     }
     publish_known();

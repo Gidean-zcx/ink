@@ -55,13 +55,16 @@ static void cap_set(ink_call_t *c) {
     ink_args_get_int(&c->args, "utc_s", &s);
     int64_t before = ink_time_now_s();
     bool valid = ink_time_valid();
-    ink_time_set(s, false);
+    int64_t expected = 0;
+    ink_args_get_int(&c->args, "if_revision", &expected);
+    if (ink_time_set_if_revision(s, false, (uint32_t)expected, &c->rc.revision) != 0) { c->rc.status = INK_RC_STALE; return; }
     snprintf(c->rc.object, sizeof c->rc.object, "time:clock");
     if (valid) {
         ink_args_t *undo = osal_malloc(sizeof *undo, OSAL_MEM_EXTERNAL);
         if (undo) {
             ink_args_init(undo);
             ink_args_int(undo, "utc_s", before);
+            ink_args_int(undo, "if_revision", c->rc.revision);
             ink_cap_undoable(c, "time.set", undo, 10000);
             osal_free(undo);
         }

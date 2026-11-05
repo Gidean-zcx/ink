@@ -68,6 +68,10 @@ int ink_fs_seek(ink_fs_file_t *f, int64_t off, int whence);
 int64_t ink_fs_tell(ink_fs_file_t *f);
 int ink_fs_sync(ink_fs_file_t *f);
 int ink_fs_close(ink_fs_file_t *f);
+uint32_t ink_fs_file_revision(ink_fs_file_t *f);
+/** Conditional inverses share the file mutation lock. Any later card mutation invalidates them. */
+int ink_fs_remove_if_revision(const char *path, uint32_t revision);
+int ink_fs_move_if_revision(const char *from, const char *to, uint32_t revision, uint32_t *written);
 
 int ink_fs_stat(const char *path, ink_fs_stat_t *out);
 int ink_fs_dir_open(const char *path, ink_fs_dir_t **out);
