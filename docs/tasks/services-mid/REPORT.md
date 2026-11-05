@@ -33,7 +33,7 @@ V2：`UBSAN_OPTIONS=halt_on_error=1 "$INK_DEPS/build-deps/pyenv/bin/python" test
 
 V3：`"$INK_DEPS/build-deps/pyenv/bin/python" tests/services_finish/stack_meter.py`，内存套增加 `--build build-asan`，均退出 0、栈计量 0 失败；证据 `build/services-stack-x36_mlq3/`、`build-asan/services-stack-2iwgo4qk/`。
 
-V4：【实测】`git diff --stat 2c844243..HEAD` 核对 10 文件；`git diff --check 2c844243..HEAD` 退出 0。按总规则原隐私正则检查完整提交差异，0 匹配；全部变更文件小于 5 MB，本地 Markdown 链接无缺失；受保护需求、想法、决策、研究、简报和审计原文均未改。新增/调整的 libc I/O 返回值均有检查。结果 `build/services-mid-closure.json`；本轮未 push、开 PR、改远端或触碰设备。
+V4：【实测】`git diff --stat 2c844243..HEAD` 核对 10 文件；`git diff --check 2c844243..HEAD` 退出 0。按总规则原隐私正则检查完整提交差异，0 匹配；全部变更文件小于 5 MB，本地 Markdown 链接无缺失；受保护需求、想法、决策、研究、简报和审计原文均未改。没有新增忽略返回值的 write/read/fgets 调用，新增 send/recv 检查返回值。结果 `build/services-mid-closure.json`；本轮未 push、开 PR、改远端或触碰设备。
 
 ## 没做到的
 
