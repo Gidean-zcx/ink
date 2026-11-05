@@ -22,6 +22,8 @@
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/hub.h"
+#include "ink/sys/members.h"
+#include "ink/sys/state.h"
 #include "ink/sys/power.h"
 
 #define HUB_STACK 6144 /* PSRAM: replies run here, and what they start (closing a session, the next request) */
@@ -108,6 +110,7 @@ static struct {
     int nsubs;
     ink_json_t *json; /* parse buffer (PSRAM, ~2 KB): keeps the token array off the stack */
     void (*tick)(void);
+    bool member_changed, member_events; /* Queued events cannot outlive the member on this connection. */
     osal_mutex_t *tx_lock; /* the tx queue, its byte count and demand_until */
     tx_item_t *tx_head[TX_CLASSES], *tx_tail[TX_CLASSES];
     tx_item_t *tx_free; /* the pool's unused items */
@@ -420,6 +423,14 @@ static void hub_task(void *arg) {
         hub_msg_t m;
         osal_err_t e = osal_queue_recv(H.q, &m, wait ? (int64_t)wait : OSAL_WAIT_FOREVER);
         now = osal_now_us();
+        if (__atomic_exchange_n(&H.member_changed, false, __ATOMIC_ACQ_REL) && H.member_events) {
+            H.member_events = false;
+            fail_all(INK_HUB_ERR_LOST, true);
+            close_ws();
+            drain_tx(false);
+            set_state(HS_DISCONNECTED);
+            ink_probe_count("hub.member_events_cancelled");
+        }
         if (e == OSAL_OK) {
             switch (m.type) {
             case HE_CALL: accept_call(m.req, now); break;
@@ -502,6 +513,12 @@ static void on_power(void *ctx, ink_power_state_t from, ink_power_state_t to, ui
     osal_queue_send(H.q, &m, 0);
 }
 
+static void on_member(void *ctx, int h, const char *id) { /* state callback: no socket operations here */
+    (void)ctx; (void)h; (void)id;
+    __atomic_store_n(&H.member_changed, true, __ATOMIC_RELEASE);
+    ink_hub_wake();
+}
+
 int ink_hub_init(const char *url) {
     snprintf(H.url, sizeof H.url, "%s", url);
     const char *prev = osal_mem_tag("hub");
@@ -519,6 +536,7 @@ int ink_hub_init(const char *url) {
         H.tx_free = it;
     }
     ink_power_subscribe(on_power, NULL);
+    ink_state_watch("member.current", on_member, NULL, INK_EXEC_DIRECT);
     hal_net_set_link_callback(link_cb, NULL);
     osal_task_cfg_t cfg = {.name = "hub", .fn = hub_task, .stack_bytes = HUB_STACK, .priority = HUB_PRIO, .core = -1,
                            .flags = OSAL_TASK_STACK_EXTERNAL};
@@ -652,6 +670,7 @@ int ink_hub_notify(const char *method, const char *params_json) {
     memcpy(buf, head, hl);
     memcpy(buf + hl, pj, pl);
     buf[hl + pl] = '}';
+    if (!strcmp(method, "device/event")) H.member_events = true;
     int r = enqueue_tx(false, INK_HUB_TX_CONTROL, buf, hl + pl + 1);
     osal_free(buf);
     return r == 0 ? 0 : INK_HUB_ERR_OFFLINE;

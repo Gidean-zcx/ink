@@ -204,10 +204,6 @@ ink_rc_t ink_setting_set(const char *id, int64_t v, ink_source_t src, ink_receip
         ink_probe_count("policy.rejected");
         return refuse(rc, INK_RC_REJECTED, "children cannot change this setting");
     }
-    if (d->system && (src == INK_SRC_AI || src == INK_SRC_REMOTE || src == INK_SRC_APP)) {
-        ink_probe_count("policy.pending_confirmation");
-        return refuse(rc, INK_RC_PENDING_CONFIRMATION, "needs confirmation on the device");
-    }
     if (d->apply && ink_exec_ready(d->apply_exec) != 0) return refuse(rc, INK_RC_FAILED, "cannot be applied now"); /* not stored either */
     osal_mutex_lock(SE.lock, OSAL_WAIT_FOREVER);
     bool changed = SE.it[i].v != v;
@@ -317,7 +313,14 @@ static void cap_set(ink_call_t *c) {
         refuse(&c->rc, INK_RC_INVALID, "value required");
         return;
     }
-    if (ink_setting_set(id, v, c->src, &c->rc) == INK_RC_PENDING_CONFIRMATION) ink_confirm_hold(c->cap, &c->args, c->src, c->page_gen, &c->rc);
+    int64_t before = ink_setting_get(id);
+    if (ink_setting_set(id, v, c->src, &c->rc) == INK_RC_DONE && before != v) {
+        ink_args_t undo;
+        ink_args_init(&undo);
+        ink_args_str(&undo, "id", id);
+        ink_args_int(&undo, "value", before);
+        ink_cap_undoable(c, "settings.set", &undo, 10000);
+    }
 }
 
 static const ink_cap_t SETTINGS_CAPS[] = {

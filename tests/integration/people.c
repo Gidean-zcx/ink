@@ -59,15 +59,7 @@ static void wifi(void) {
     CHECK(AI("wifi.list", NULL) && !strcmp(g_result, "[]"), "it knows none yet (%s)", g_result);
     CHECK(!hal_net_available(HAL_LINK_WIFI), "so none is available");
 
-    /* the AI asking: a card that says which network, not the password */
-    CHECK(AI("wifi.connect", "{\"ssid\":\"家里\",\"password\":\"hunter2hunter2\"}") && g_rc.status == INK_RC_PENDING_CONFIRMATION, "the AI asks: it waits (%s)", ink_rc_name(g_rc.status));
-    uint32_t token = token_of_receipt();
-    delay_ms(600);
-    on_ui(read_screen);
-    CHECK(strstr(g_snap, "连接 Wi-Fi：家里") && !strstr(g_snap, "hunter2"), "the card says which, not the password (%s)", g_snap);
-    CHECK(ink_confirm_withdraw(token, INK_SRC_AI) == 0, "taken back");
-    delay_ms(1200);
-
+    CHECK(AI("wifi.connect", "{\"ssid\":\"家里\",\"password\":\"hunter2hunter2\"}") && g_rc.status == INK_RC_REJECTED, "AI cannot enter a password");
     /* wrong password, by hand */
     CHECK(BY_HAND("wifi.connect", "{\"ssid\":\"家里\",\"password\":\"wrong\"}") && g_rc.status == INK_RC_FAILED && strstr(g_rc.detail, "password"), "the wrong password (%s)", g_rc.detail);
     CHECK(!strcmp(state_of("wifi.state"), "failed"), "says so");
@@ -75,12 +67,13 @@ static void wifi(void) {
     CHECK(BY_HAND("wifi.connect", "{\"ssid\":\"没有这个\"}") && g_rc.status == INK_RC_FAILED && strstr(g_rc.detail, "around"), "one that is not there (%s)", g_rc.detail);
 
     /* right */
-    CHECK(BY_HAND("wifi.connect", "{\"ssid\":\"家里\",\"password\":\"hunter2hunter2\"}") && g_rc.status == INK_RC_DONE, "joined (%s)", g_rc.detail);
+    CHECK(BY_HAND("wifi.connect", "{\"ssid\":\"家里\",\"password\":\"hunter2hunter2\"}") && g_rc.status == INK_RC_DONE, "person joins with their password (%s)", g_rc.detail);
     CHECK(!strcmp(state_of("wifi.state"), "connected") && !strcmp(state_of("wifi.ssid"), "家里"), "state (%s, %s)", state_of("wifi.state"), state_of("wifi.ssid"));
     CHECK(WAIT_FOR(hal_net_available(HAL_LINK_WIFI), 1000), "available to the net service now");
     CHECK(WAIT_FOR(!strcmp(state_of("net.type"), "wifi"), 15000), "which chooses it (%s)", state_of("net.type"));
     CHECK(AI("wifi.list", NULL) && !strcmp(g_result, "[\"家里\"]"), "names only (%s)", g_result);
 
+    CHECK(AI("wifi.connect", "{\"ssid\":\"家里\"}") && g_rc.status == INK_RC_DONE, "D-105: AI reconnects to a stored network directly");
     /* the password is nobody's to read */
     CHECK(AI("data.collections", NULL) && !strstr(g_result, "net.wifi"), "the AI does not even see the collection (%s)", g_result);
     CHECK(AI("data.list", "{\"collection\":\"net.wifi\"}") && g_rc.status != INK_RC_DONE, "nor can read it (%s)", ink_rc_name(g_rc.status));
@@ -221,13 +214,28 @@ static void members_and_pin(void) {
     delay_ms(600);
 }
 
+static int add_results;
+static char add_status[24];
+static void add_result(void *ctx, const char *id, const ink_args_t *a) {
+    (void)ctx; (void)id;
+    ink_args_get_str(a, "status", add_status, sizeof add_status);
+    add_results++;
+}
+static bool add_confirmed(const char *args, const char *status) {
+    int before = add_results, pin_before = g_pin_done;
+    if (!BY_HAND("member.add", args) || g_rc.status != INK_RC_PENDING_CONFIRMATION) return false;
+    if (ink_confirm_accept_with_pin(token_of_receipt(), "654321", pin_told, NULL) != 0) return false;
+    return WAIT_FOR(g_pin_done > pin_before && add_results > before, 5000) && !strcmp(add_status, status);
+}
+
 static void add_and_remove(void) {
+    CHECK(ink_cap_subscribe("confirm.result", add_result, NULL, INK_EXEC_DIRECT) == 0, "listen to the confirmed result");
     CHECK(AI("member.add", "{\"id\":\"grandma\",\"name\":\"奶奶\",\"role\":\"adult\"}") && g_rc.status == INK_RC_PENDING_CONFIRMATION, "the AI adding someone needs a yes");
     CHECK(ink_confirm_withdraw(token_of_receipt(), INK_SRC_AI) == 0, "taken back");
     delay_ms(1200);
-    CHECK(BY_HAND("member.add", "{\"id\":\"grandma\",\"name\":\"奶奶\",\"role\":\"adult\"}") && g_rc.status == INK_RC_DONE, "by hand (%s)", g_rc.detail);
-    CHECK(BY_HAND("member.add", "{\"id\":\"grandma\"}") && g_rc.status == INK_RC_FAILED, "once");
-    CHECK(BY_HAND("member.add", "{\"id\":\"../x\"}") && g_rc.status == INK_RC_INVALID, "a name for a folder (%s)", ink_rc_name(g_rc.status));
+    CHECK(add_confirmed("{\"id\":\"grandma\",\"name\":\"奶奶\",\"role\":\"adult\"}", "done"), "by hand (%s)", g_rc.detail);
+    CHECK(add_confirmed("{\"id\":\"grandma\"}", "failed"), "once");
+    CHECK(add_confirmed("{\"id\":\"../x\"}", "invalid"), "a name for a folder (%s)", ink_rc_name(g_rc.status));
     CHECK(AI("member.list", NULL) && strstr(g_result, "奶奶"), "listed (%s)", g_result);
 
     /* with their own data, on the flash and on the card */

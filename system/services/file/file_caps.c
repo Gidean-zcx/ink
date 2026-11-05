@@ -316,7 +316,7 @@ static const ink_cap_t FILE_CAPS[] = {
      .input = "{\"type\":\"object\",\"properties\":{" PATH_ARG("from") "," PATH_ARG("to") "},\"required\":[\"from\",\"to\"]}",
      .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .permission = "file", .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_move},
     {.id = "file.delete", .title = "删除文件或目录（不能撤销）", .ask = "删除 {path}，不能撤销", .input = PATH_OBJ("path"),
-     .effect = INK_FX_LOCAL_DESTRUCTIVE, .child_ok = true, .permission = "file", .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_delete},
+     .effect = INK_FX_LOCAL_DESTRUCTIVE, .ask_by_hand = true, .child_ok = true, .permission = "file", .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_delete},
     {.id = "file.free", .title = "存储卡还剩多少空间", .output = "{\"type\":\"object\"}",
      .effect = INK_FX_READ, .child_ok = true, .permission = "file", .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_free},
     {.id = "file.changed", .title = "文件变了", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true, .permission = "file"},
@@ -324,7 +324,7 @@ static const ink_cap_t FILE_CAPS[] = {
     {.id = "usb.status", .title = "是否连着电脑、存储卡是否借给了电脑", .output = "{\"type\":\"object\"}",
      .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_usb_status},
     /* the computer sees the whole card, all members' files on it: adults, by a person */
-    {.id = "usb.mount", .title = "把存储卡借给电脑当 U 盘", .effect = INK_FX_SYSTEM, .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_usb_mount},
+    {.id = "usb.mount", .title = "把存储卡借给电脑当 U 盘", .effect = INK_FX_SYSTEM, .ask_by_hand = true, .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_usb_mount},
     {.id = "usb.unmount", .title = "从电脑收回存储卡", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_usb_unmount},
     {.id = "usb.changed", .title = "电脑连上、断开或 U 盘状态变了", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},
 };

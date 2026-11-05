@@ -173,7 +173,7 @@ static const ink_cap_t NOTIFY_CAPS[] = {
      .child_ok = true,
      .exec = INK_EXEC_DIRECT,
      .run = cap_dismiss},
-    {.id = "notify.clear", .title = "清空通知", .effect = INK_FX_LOCAL_DESTRUCTIVE, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_clear},
+    {.id = "notify.clear", .title = "清空通知", .effect = INK_FX_LOCAL_DESTRUCTIVE, .ask_by_hand = true, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_clear},
     {.id = "notify.channels", .title = "哪些通知渠道开着", .output = "{\"type\":\"object\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_channels},
     {.id = "notify.set_channel",
      .title = "开关一个通知渠道",

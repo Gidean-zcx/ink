@@ -52,6 +52,7 @@ static struct {
     ink_svc_deadline_t pump_at;
     ink_exec_job_t pump_job, member_job, route_job, battery_job;
     int h_state;
+    bool on_headset;
 } M INK_PSRAM_BSS;
 
 typedef struct {
@@ -210,9 +211,16 @@ static bool open_stream(void) {
     return true;
 }
 
+static void do_pause(ink_media_pause_t by);
+
 static void pump(void *arg) { /* executor: keep the queue filled, see how it goes */
     (void)arg;
     if (!M.r || M.st.state != INK_MEDIA_PLAYING) return;
+    if (M.on_headset && ink_audio_route() == INK_ROUTE_SPEAKER) {
+        M.on_headset = false;
+        do_pause(INK_MEDIA_BY_ROUTE);
+        return;
+    }
     uint32_t played = 0, queued = 0;
     if (!M.stream && !open_stream()) { /* something else has the speaker: the focus says when */
         ink_svc_at(&M.pump_at, osal_now_us() + PUMP_US, pump_due, NULL);
@@ -434,7 +442,10 @@ static void on_member(void *ctx, int h, const char *id) {
 
 static void route_job(void *arg) { /* the headset went: not suddenly out loud */
     (void)arg;
-    if (ink_audio_route() == INK_ROUTE_SPEAKER) do_pause(INK_MEDIA_BY_ROUTE);
+    if (ink_audio_route() == INK_ROUTE_SPEAKER) {
+        M.on_headset = false;
+        do_pause(INK_MEDIA_BY_ROUTE);
+    } else M.on_headset = true;
 }
 
 static void on_route(void *ctx, int h, const char *id) {

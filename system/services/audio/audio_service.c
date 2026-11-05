@@ -196,6 +196,7 @@ static void close_output(bool drain);
 static void free_jb(void);
 
 static int g_last_command = -1;
+static int focus_top_locked(void);
 
 static void listen_event(ink_listen_ev_t ev, uint64_t t_us) {
     if (AU.listen_fn) AU.listen_fn(AU.listen_ctx, ev, t_us);
@@ -238,14 +239,19 @@ static void encode_and_deliver(const int16_t *frame) {
     }
     uint8_t pkt[HAL_OPUS_MAX_PACKET];
     int n = hal_opus_encode(AU.enc, frame, pkt, sizeof pkt);
-    if (n > 0 && AU.cap_fn) AU.cap_fn(AU.cap_ctx, pkt, (size_t)n, AU.cap_seq++);
+    lock();
+    bool allowed = focus_top_locked() < INK_AUDIO_PRIO_ALERT;
+    unlock();
+    if (allowed && n > 0 && AU.cap_fn) AU.cap_fn(AU.cap_ctx, pkt, (size_t)n, AU.cap_seq++);
 }
 
 /* Encode one frame, or finish an ending capture. Returns true if there may be more to encode. */
 static bool capture_step(int16_t *scratch) {
     lock();
-    bool on = AU.cap_on, ending = AU.cap_ending, listen = AU.listen_on, got = (on || listen) && take_frame(scratch);
-    uint32_t left = AU.wr - AU.rd;
+    bool on = AU.cap_on, ending = AU.cap_ending, listen = AU.listen_on;
+    bool cut = on && ending && focus_top_locked() >= INK_AUDIO_PRIO_ALERT;
+    bool got = !cut && (on || listen) && take_frame(scratch);
+    uint32_t left = cut ? 0 : AU.wr - AU.rd;
     if (!got && on && ending && !listen) { /* flush the tail (padded) and signal the end */
         for (int i = 0; i < FRAME; i++) scratch[i] = i < (int)left ? AU.ring[AU.rd++ % CAP_RING] : 0;
     }
@@ -659,6 +665,12 @@ static void apply_route(void) { /* audio task */
         return;
     }
     lock();
+    if (want == INK_ROUTE_SPEAKER && AU.stream && AU.prio == INK_AUDIO_PRIO_STORY) {
+        free_jb();
+        stream_gone();
+        AU.finishing = AU.started = false;
+        AU.pcm_off = AU.pcm_len = 0;
+    }
     AU.route = want;
     unlock();
     ink_state_set_str(h_route, want == INK_ROUTE_HEADSET ? "bt_headset" : "speaker");
@@ -807,6 +819,11 @@ static int capture_begin_locked(ink_audio_frame_fn fn, void *ctx, bool local) { 
     hal_opus_enc_t *enc = hal_opus_enc_new(BITRATE, 0);
     if (!enc) return -1;
     lock();
+    if (focus_top_locked() >= INK_AUDIO_PRIO_ALERT) {
+        unlock();
+        hal_opus_enc_free(enc);
+        return -1;
+    }
     bool listening = AU.listen_on; /* the microphone already runs: the capture starts from now */
     AU.enc = enc;
     AU.cap_fn = fn;
@@ -929,7 +946,7 @@ int ink_audio_focus_acquire(ink_audio_prio_t prio, ink_focus_fn fn, void *ctx, i
             h->token = 0;
             if (free_at < 0) free_at = i;
         } else if (h->prio < prio) {
-            if (h->prio == INK_AUDIO_PRIO_STORY) {
+            if (h->prio == INK_AUDIO_PRIO_STORY || (h->prio == INK_AUDIO_PRIO_ALERT && prio == INK_AUDIO_PRIO_CALL)) {
                 if (!h->paused) {
                     h->paused = true;
                     tell[ntell++] = (typeof(tell[0])){h->fn, h->ctx, h->exec, INK_FOCUS_PAUSED};
@@ -946,6 +963,10 @@ int ink_audio_focus_acquire(ink_audio_prio_t prio, ink_focus_fn fn, void *ctx, i
         token = ++AU.next_focus;
         *h = (typeof(*h)){.token = token, .prio = prio, .fn = fn, .ctx = ctx, .exec = exec, .paused = top > (int)prio};
     }
+    if (token > 0 && prio >= INK_AUDIO_PRIO_ALERT && AU.cap_on) {
+        AU.cap_ending = true; /* The audio task stops capture even if the owner's executor is busy. */
+        AU.rd = AU.wr;
+    }
     if (prio >= INK_AUDIO_PRIO_ALERT && AU.stream && AU.prio < prio) abort_stream = true; /* what is said ends: the words are on the screen */
     bool starts_paused = token > 0 && top > (int)prio;
     ink_audio_prio_t by = (ink_audio_prio_t)top;
@@ -957,7 +978,7 @@ int ink_audio_focus_acquire(ink_audio_prio_t prio, ink_focus_fn fn, void *ctx, i
     unlock();
     for (int i = 0; i < ntell; i++) focus_tell(tell[i].fn, tell[i].ctx, tell[i].exec, tell[i].ev, prio);
     if (starts_paused) focus_tell(fn, ctx, exec, INK_FOCUS_PAUSED, by);
-    if (abort_stream) osal_sem_give(AU.wake);
+    if (abort_stream || (token > 0 && prio >= INK_AUDIO_PRIO_ALERT)) osal_sem_give(AU.wake);
     if (token < 0) ink_probe_count("audio.focus_table_full");
     return token;
 }

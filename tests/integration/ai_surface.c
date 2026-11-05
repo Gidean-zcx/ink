@@ -45,7 +45,7 @@ static const struct {
     {"member.add", "id"}, {"member.remove", "id"}, {"camera.capture", NULL}, {"message.send", "to,text"}, {"message.list", NULL},
     {"call.dial", "number"}, {"call.answer", NULL}, {"call.hangup", NULL}, {"remote.open", ""}, {"reader.list_books", NULL},
     {"reader.open_book", "title"}, {"reader.next_page", NULL}, {"reader.prev_page", NULL}, {"reader.goto_page", "page"}, {"reader.read_page", NULL},
-    {"update.status", NULL}, {"update.check", NULL}, {"update.download", NULL},
+    {"activity.list", ""}, {"update.status", NULL}, {"update.check", NULL}, {"update.download", NULL},
     {"text.voice_start", NULL}, {"text.voice_finish", NULL}, {"text.voice_cancel", NULL},
     {NULL, NULL},
 };

@@ -588,10 +588,10 @@ static const ink_cap_t MEMBER_CAPS[] = {
     {.id = "member.list", .title = "家里有哪些人", .output = "{\"type\":\"array\"}", .effect = INK_FX_READ, .child_ok = true, .while_locked = true, .exec = INK_EXEC_DIRECT, .run = cap_list},
     {.id = "member.add", .title = "加一位家人", .ask = "加一位家人：{name}（{role}）",
      .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":15},\"name\":{\"type\":\"string\",\"maxLength\":31},\"role\":{\"type\":\"string\",\"enum\":[\"adult\",\"child\"]}},\"required\":[\"id\"]}",
-     .effect = INK_FX_SYSTEM, .exec = INK_EXEC_BG, .run = cap_add},
+     .effect = INK_FX_SYSTEM, .ask_by_hand = true, .parent_pin = true, .exec = INK_EXEC_BG, .run = cap_add},
     {.id = "member.remove", .title = "删除一位家人和他们的全部数据（不能撤销）", .ask = "删除家人 {id} 和他们的全部数据，不能撤销",
      .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":15}},\"required\":[\"id\"]}",
-     .effect = INK_FX_SYSTEM, .parent_pin = true, .exec = INK_EXEC_BG, .run = cap_remove},
+     .effect = INK_FX_SYSTEM, .ask_by_hand = true, .parent_pin = true, .exec = INK_EXEC_BG, .run = cap_remove},
     /* a PIN goes through no one's hands but the person's */
     {.id = "member.unlock", .title = "输密码进入家人的空间（只能在设备上）",
      .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":15},\"pin\":{\"type\":\"string\",\"maxLength\":8}},\"required\":[\"id\",\"pin\"]}",

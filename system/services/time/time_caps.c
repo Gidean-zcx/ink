@@ -53,7 +53,19 @@ static void cap_now(ink_call_t *c) {
 static void cap_set(ink_call_t *c) {
     int64_t s = 0;
     ink_args_get_int(&c->args, "utc_s", &s);
+    int64_t before = ink_time_now_s();
+    bool valid = ink_time_valid();
     ink_time_set(s, false);
+    snprintf(c->rc.object, sizeof c->rc.object, "time:clock");
+    if (valid) {
+        ink_args_t *undo = osal_malloc(sizeof *undo, OSAL_MEM_EXTERNAL);
+        if (undo) {
+            ink_args_init(undo);
+            ink_args_int(undo, "utc_s", before);
+            ink_cap_undoable(c, "time.set", undo, 10000);
+            osal_free(undo);
+        }
+    }
     snprintf(c->rc.say, sizeof c->rc.say, "时间改好了");
 }
 

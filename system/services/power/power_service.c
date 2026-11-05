@@ -26,6 +26,8 @@
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/data.h"
+#include "ink/sys/audio.h"
+#include "ink/sys/media.h"
 #include "ink/sys/display.h"
 #include "ink/sys/power.h"
 #include "ink/sys/cap.h"
@@ -103,6 +105,19 @@ static void tell_battery(int level, int percent) {
     osal_free(a);
 }
 
+static void stop_audio(void) {
+    ink_audio_capture_end();
+    ink_audio_ring(false);
+    ink_audio_stop_all();
+    ink_media_stop();
+}
+
+static bool audio_finished(void) {
+    ink_media_status_t m;
+    ink_media_status(&m);
+    return !ink_audio_capture_busy() && !ink_audio_recording() && m.state != INK_MEDIA_PLAYING;
+}
+
 /* Battery as system state: read when the state changes, at each sleep slice and once a minute awake.
  * Low battery (foundation §7.4): a notification, then an interruption; nearly empty, what waits is written and
  * it powers off. Each level is told once on the way down; the charger starts over. Power task. */
@@ -125,13 +140,16 @@ static void publish_battery(void) {
     if (level == 3 && !PS.powering_off) {
         PS.powering_off = true;
         PS.off_at = osal_now_us() + BATTERY_OFF_WAIT_US;
+        stop_audio();
         ink_db_flush_all();
     }
     if (PS.powering_off) {
         if (!level) PS.powering_off = false; /* it was plugged in just in time */
-        else if ((ink_db_idle() && ink_storage_pending() == 0) || osal_now_us() >= PS.off_at) {
+        else if ((audio_finished() && ink_db_idle() && ink_storage_pending() == 0) || osal_now_us() >= PS.off_at) {
+            bool saved = audio_finished() && ink_db_idle() && ink_storage_pending() == 0;
+            if (!saved) ink_probe_count("power.shutdown_unsaved");
             ink_probe_count("power.low_battery_off");
-            if (PS.off_picture) PS.off_picture("battery");
+            if (PS.off_picture) PS.off_picture(saved ? "battery" : "battery_unsaved");
             hal_power_shutdown();
         }
     }
@@ -275,9 +293,16 @@ static const ink_setting_def_t POWER_SETTINGS[] = {
 };
 
 static void cap_shutdown(ink_call_t *c) { /* exec.bg */
-    snprintf(c->rc.say, sizeof c->rc.say, "关机");
+    int failed = ink_storage_failed();
+    stop_audio();
     ink_db_flush_all();
-    for (int i = 0; i < 100 && (!ink_db_idle() || ink_storage_pending()); i++) osal_task_delay_us(50000);
+    for (int i = 0; i < 100 && (!audio_finished() || !ink_db_idle() || ink_storage_pending()); i++) osal_task_delay_us(50000);
+    if (!audio_finished() || !ink_db_idle() || ink_storage_pending() || ink_storage_failed() != failed) {
+        c->rc.status = INK_RC_FAILED;
+        snprintf(c->rc.say, sizeof c->rc.say, "还有内容没保存，请稍后重试关机");
+        return;
+    }
+    snprintf(c->rc.say, sizeof c->rc.say, "已保存，正在关机");
     if (PS.off_picture) PS.off_picture("shutdown");
     hal_power_shutdown();
 }

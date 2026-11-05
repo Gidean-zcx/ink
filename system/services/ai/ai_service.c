@@ -458,10 +458,15 @@ static int request(const char *method, bool voice) {
     if (voice) AI.session_seq = AI.seq;
     osal_mutex_unlock(AI.lock);
     const char *prev = osal_mem_tag("ai");
+    size_t ids_cap = 3;
+    for (int i = 0; ink_cap_at(i); i++) ids_cap += strlen(ink_cap_at(i)->id) * 6 + 3;
+    size_t params_cap = SNAPSHOT_CAP * 6 + STATE_CAP + ids_cap + 1024;
     char *snap = osal_malloc(SNAPSHOT_CAP, OSAL_MEM_EXTERNAL);
-    char *params = osal_malloc(SNAPSHOT_CAP * 2 + STATE_CAP + 256, OSAL_MEM_EXTERNAL);
+    char *ids = osal_malloc(ids_cap, OSAL_MEM_EXTERNAL);
+    char *params = osal_malloc(params_cap, OSAL_MEM_EXTERNAL);
     osal_mem_tag(prev);
-    if (!snap || !params) {
+    if (!snap || !ids || !params) {
+        osal_free(ids);
         osal_free(snap);
         osal_free(params);
         post(AI.seq, 2, INK_HUB_ERR_NOMEM, NULL);
@@ -470,7 +475,7 @@ static int request(const char *method, bool voice) {
     const char *app = "";
     int n = ink_ui_snapshot(snap, SNAPSHOT_CAP, &app);
     ink_jw_t w;
-    ink_jw_init(&w, params, SNAPSHOT_CAP * 2 + STATE_CAP + 256);
+    ink_jw_init(&w, params, params_cap);
     if (voice) {
         char head[96];
         snprintf(head, sizeof head, "{\"stream\":%d,\"format\":\"opus\",\"rate\":16000,\"frame_ms\":60", AI.stream);
@@ -488,9 +493,9 @@ static int request(const char *method, bool voice) {
     ink_jw_strn(&w, snap, n > 0 ? (size_t)n : 0);
     ink_jw_raw(&w, ",\"actions\":");
     {
-        char ids[768];
-        int k = ink_cap_ids_json(ids, sizeof ids);
-        ink_jw_raw(&w, k > 0 ? ids : "[]");
+        int k = ink_cap_ids_json(ids, ids_cap);
+        if (k < 0) w.overflow = true;
+        else ink_jw_raw(&w, ids);
     }
     ink_jw_raw(&w, "},\"state\":");
     {
@@ -499,11 +504,12 @@ static int request(const char *method, bool voice) {
     }
     ink_jw_raw(&w, "}");
     ink_power_hold(INK_NEED_NET); /* no sleep while the answer is on its way */
-    int id = ink_hub_call(method, w.overflow ? "{}" : params, ASK_TIMEOUT_US, on_reply, (void *)(intptr_t)AI.seq);
+    int id = w.overflow ? -1 : ink_hub_call(method, params, ASK_TIMEOUT_US, on_reply, (void *)(intptr_t)AI.seq);
     if (id < 0) { /* no reply will come: the turn ends here */
         ink_power_release(INK_NEED_NET);
         post(AI.seq, 2, id, NULL);
     }
+    osal_free(ids);
     osal_free(snap);
     osal_free(params);
     return id;

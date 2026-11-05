@@ -1002,6 +1002,10 @@ void ink_db_forget_member(const char *member) {
     for (int i = 0; i < MAX_COLLECTIONS; i++) {
         ink_db_t *c = &DB.c[i];
         if (!c->used || !c->loaded || strcmp(c->member, member) || c->refs || c->fly || c->in_flight || c->compacting) continue;
+        ink_svc_cancel(&c->flush_at);
+        ink_svc_cancel(&c->tell_at);
+        ink_svc_cancel(&c->compact_at);
+        c->compact_wanted = false;
         free_records(c);
         memset(c, 0, sizeof *c);
     }

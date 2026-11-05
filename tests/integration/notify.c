@@ -250,7 +250,9 @@ static void capabilities(void) {
     sscanf(g_rc.object, "confirm:%u", &token);
     CHECK(ink_confirm_withdraw(token, INK_SRC_AI) == 0, "the AI takes that back");
     delay_ms(1200);
-    CHECK(BY_HAND("notify.clear", NULL) && g_rc.status == INK_RC_DONE && inbox_count() == 0, "by hand it just happens");
+    CHECK(BY_HAND("notify.clear", NULL) && g_rc.status == INK_RC_PENDING_CONFIRMATION && inbox_count() == 1, "D-105: bulk deletion asks by hand too");
+    sscanf(g_rc.object, "confirm:%u", &token);
+    CHECK(ink_confirm_decide(token, true, INK_SRC_TOUCH) == 0 && WAIT_FOR(inbox_count() == 0, 1000), "cleared after the person accepts");
 }
 
 /* ------------------------------------------------------------ interruptions */

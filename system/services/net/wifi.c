@@ -130,7 +130,21 @@ static void cap_connect(ink_call_t *c) { /* exec.bg */
         return;
     }
     ink_args_get_str(&c->args, "ssid", k->ssid, sizeof k->ssid);
-    ink_args_get_str(&c->args, "password", k->password, sizeof k->password);
+    int password = ink_args_get_str(&c->args, "password", k->password, sizeof k->password);
+    if (password > 0 && (c->src == INK_SRC_AI || c->src == INK_SRC_REMOTE || c->src == INK_SRC_APP)) {
+        memset(k, 0, sizeof *k);
+        osal_free(k);
+        fail(c, INK_RC_REJECTED, "passwords are entered by the person on the device");
+        return;
+    }
+    ink_db_t *known = ink_db_open(&KNOWN, NULL);
+    hal_wifi_known_t *prior = osal_calloc(1, sizeof *prior, OSAL_MEM_EXTERNAL);
+    int remembered = known && prior ? ink_db_get(known, ssid_id(k->ssid), NULL, prior, sizeof *prior) : INK_DB_ERR_NOMEM;
+    bool had = remembered == INK_DB_OK && !strcmp(prior->ssid, k->ssid);
+    bool can_undo = remembered == INK_DB_ERR_NOT_FOUND;
+    if (password < 0 && had) snprintf(k->password, sizeof k->password, "%s", prior->password);
+    if (prior) { memset(prior, 0, sizeof *prior); osal_free(prior); }
+    if (known) ink_db_close(known);
     ink_state_set_str(W.h_state, "joining");
     ink_state_set_str(W.h_ssid, k->ssid);
     ink_power_hold(INK_NEED_AWAKE);
@@ -147,6 +161,15 @@ static void cap_connect(ink_call_t *c) { /* exec.bg */
         told("connected", k->ssid);
         snprintf(c->rc.say, sizeof c->rc.say, "连上了 %.60s", k->ssid);
         snprintf(c->rc.object, sizeof c->rc.object, "wifi:%.32s", k->ssid);
+        if (can_undo) {
+            ink_args_t *undo = osal_malloc(sizeof *undo, OSAL_MEM_EXTERNAL);
+            if (undo) {
+                ink_args_init(undo);
+                ink_args_str(undo, "ssid", k->ssid);
+                ink_cap_undoable(c, "wifi.forget", undo, 10000);
+                osal_free(undo);
+            }
+        }
     } else {
         ink_state_set_str(W.h_state, "failed");
         ink_state_set_str(W.h_ssid, "");

@@ -84,7 +84,7 @@ static void cap_submit(ink_call_t *c) { /* UI task */
         fail(c, INK_RC_FAILED, "no text field has the focus");
         return;
     }
-    if (ink_text_type() == INK_TEXT_PASSWORD) {
+    if (ink_text_type() == INK_TEXT_PASSWORD || ink_text_ai_hidden()) {
         fail(c, INK_RC_REJECTED, "this field is the person's to fill in");
         return;
     }
@@ -106,11 +106,19 @@ static void cap_voice_start(ink_call_t *c) { /* UI task */
 }
 
 static void cap_voice_finish(ink_call_t *c) { /* UI task */
+    if (c->src != INK_SRC_TOUCH && c->src != INK_SRC_KEY && (ink_text_type() == INK_TEXT_PASSWORD || ink_text_ai_hidden())) {
+        fail(c, INK_RC_REJECTED, "this field is the person's to fill in");
+        return;
+    }
     if (ink_text_voice_state() == INK_VOICE_IDLE) fail(c, INK_RC_FAILED, "nobody is dictating");
     else ink_text_voice_finish();
 }
 
 static void cap_voice_cancel(ink_call_t *c) { /* UI task */
+    if (c->src != INK_SRC_TOUCH && c->src != INK_SRC_KEY && (ink_text_type() == INK_TEXT_PASSWORD || ink_text_ai_hidden())) {
+        fail(c, INK_RC_REJECTED, "this field is the person's to fill in");
+        return;
+    }
     if (ink_text_voice_state() == INK_VOICE_IDLE) fail(c, INK_RC_FAILED, "nobody is dictating");
     else ink_text_voice_cancel();
 }
