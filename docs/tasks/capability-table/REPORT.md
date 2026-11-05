@@ -1,22 +1,22 @@
 # capability-table 执行报告
 
-原开发基线：`1c43c28a`；本轮修复基线：`7c393cde`（2026-11-06）。范围：`capability-table` 及独立复查 R1。复查列出严重 0、高 1，没有中级条目。本轮 R1 定向验证已通过，完整普通与内存检查待执行；原 C2、C3 的策略语义结论已按反例修正。
+原开发基线：`1c43c28a`；本轮修复基线：`7c393cde`（2026-11-06）。范围：`capability-table` 及独立复查 R1。复查列出严重 0、高 1，没有中级条目。本轮修复、反向对照、普通和内存检查全量均完成；原 C2、C3 的策略语义结论已按反例修正。修复提交：`9a11e9a7`。
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| R1 成员范围、撤销确认、设置儿童权限 | 已修，定向通过【实测／实现】 | 修正所有同类成员文字和设置撤销说明；14 项设置均导出、严格比较三个权限布尔字段；真实调用及撤回修复的对照通过 | V1、V2 |
+| R1 成员范围、撤销确认、设置儿童权限 | 已修，通过【实测／实现】 | 修正所有同类成员文字和设置撤销说明；14 项设置均导出、严格比较三个权限布尔字段；真实调用及撤回修复的对照通过 | V1、V2、V3 |
 | C1 代码生成能力总表 | 已实现【实现】 | 115 个调用、27 个事件、14 个设置、42 个状态；关联面有源码链接 | `python3 tools/capabilities.py --check` |
-| C2 表与代码一致，每个能力有描述和风险 | 定向通过【实测】 | 13 项 Python 回归；142 项运行时元数据、3976 个外层确认组合；另核对实际调用及完整撤销路径，不再把外层闸门当成整个调用 | V1 |
-| C3 每个设置项都有能力 | 定向通过【实测／实现】 | 14 项均映射 settings.get/set；逐项核对 child_may_change、system、ask_by_hand；儿童可写、不可写及权限撤销结果符合总表 | V1 |
+| C2 表与代码一致，每个能力有描述和风险 | 通过【实测】 | 13 项 Python 回归；142 项运行时元数据、3976 个外层确认组合；另核对实际调用及完整撤销路径，不再把外层闸门当成整个调用 | V1、V3 |
+| C3 每个设置项都有能力 | 通过【实测／实现】 | 14 项均映射 settings.get/set；逐项核对 child_may_change、system、ask_by_hand；儿童可写、不可写及权限撤销结果符合总表 | V1、V3 |
 | C4 用户操作缺口及小修 | 核查完成【实现】 | 原缺口表保留；本轮未新增产品入口 | 下文缺口表 |
-| G1 全量测试及内存检查 | 待本轮执行 | 不引用上轮的 100/100 作为本轮证据；预算、断言、时限未放宽 | V3 |
+| G1 全量测试及内存检查 | 通过【实测】 | 普通 102/102（42.82 秒），ASan/UBSan 102/102（77.38 秒），均退出 0、无跳过；原预算、断言、时限未改 | V3 |
 | G2 原子能力与 AI 共用入口 | 本轮无新增产品操作或页面【实现】 | 生成器、运行时元数据和真实总线行为分别核对；已有入口缺口仍保留 | C4；V1 |
 | G3 依赖状态 | 保留“部分”并更新校验证据【实现】 | 只改对应状态单元格，保留原判断 | 文件差异 |
 | G4 页面验收 | 不适用【实现】 | 未改页面，不涉及设计稿或视觉对照 | 文件差异 |
 | G5 范围 | 符合【实现】 | 只改生成工具、测试、CTest 登记、总表、状态和报告；产品源码、设计合同未改 | 文件差异 |
-| P1 差异与隐私检查 | 待最终提交核对 | 本轮定向空白检查通过 | V4 |
+| P1 差异与隐私检查 | 通过【实测】 | 11 个相关文件，208 个本地链接有效，文件均小于 5 MB；空白检查通过，两个基线的隐私扫描均 0 匹配 | V4 |
 
 V1（定向实测，退出 0）：
 
@@ -32,15 +32,24 @@ SDL_VIDEODRIVER=dummy UBSAN_OPTIONS=halt_on_error=1 "$INK_DEPS/build-deps/pyenv/
 
 同类排查覆盖全部 115 个调用和 14 个设置：102 个非 system 且 child_ok=true 直接允许儿童，3 个非 system 且 child_ok=false 允许白名单额外放行，2 个 system 且 child_ok=true 仅人工儿童可调，其余 8 个 system 仅成人。成员列说明能力闸门，设置写入/撤销另注明设置项检查。运行时导出在测试程序中直接读注册定义，不修改产品权限或公开 JSON 接口。82 个负对照包含全部设置的三种权限标记翻转、漏掉儿童权限、源码儿童权限翻转，以及非布尔值；另有 4 个错误说明文字被真实行为对照拒绝。
 
-V2（撤回修复的实测）：新增 3 项回归在修复前运行 `python3 tests/capability_table/test_catalogue.py`，13 项中出现 112 个失败子项，退出 1；修复后 13/13 通过。另将 `git show 7c393cde:tools/capabilities.py` 写到忽略的 `work/capabilities-before-r1.py`，用 importlib 临时作为 capabilities 加载，再用 runpy 执行上述两个 check 脚本：运行时检查因接受错误 child_may_change 失败，实际行为检查因 settings.get 的错误白名单文字失败。恢复当前模块后两个脚本均通过；未撤改工作区产品代码。日志 `work/capability-r1-before.log`、`work/capability-r1-reverse.log`。
+V2（撤回修复的实测）：新增 3 项回归在修复前运行 `python3 tests/capability_table/test_catalogue.py`，13 项中出现 112 个失败子项，退出 1；修复后 13/13 通过。另将 `git show 7c393cde:tools/capabilities.py` 写到忽略的 `work/capabilities-before-r1.py`，用 importlib 临时作为 capabilities 加载，再用 runpy 执行上述两个 check 脚本：运行时检查因接受错误 child_may_change 失败，实际行为检查因 settings.get 的错误白名单文字失败。恢复当前模块后两个脚本均通过；未撤改工作区产品代码。审查 P2 原样再跑，明确报错 `runtime setting metadata differs: audio.child_max`。日志 `work/capability-r1-before.log`、`work/capability-r1-reverse.log`。
 
-V3：两套沿用总规则的完整配置参数和锁定中枢环境 `work/hub-venv`，保留 INK_WERROR=ON；内存套只另加 INK_SANITIZE=ON。构建最多 -j4，CTest 最多 -j3，构建与测试逐轮串行；不启动带窗口的模拟器。全量结果待填。
+V3（完整实测）：两套沿用总规则 §5 的完整字体、Python、LVGL 配置参数，均使用 `-DINK_HUB_PYTHON="$PWD/work/hub-venv/bin/python"` 和 INK_WERROR=ON；内存套只另加 INK_SANITIZE=ON。原锁定中枢测试环境沿用，没有安装或升级依赖。以下四条逐轮串行，全部退出 0：
 
-V4：最终差异、隐私、文件大小和本地链接检查待填。
+```sh
+cmake --build build -j4
+SDL_VIDEODRIVER=dummy UBSAN_OPTIONS=halt_on_error=1 "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j3
+cmake --build build-asan -j4
+SDL_VIDEODRIVER=dummy UBSAN_OPTIONS=halt_on_error=1 "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j3
+```
+
+普通 102/102、42.82 秒，内存检查 102/102、77.38 秒，均无跳过。两套 `gui-smoke` 均使用 SDL dummy，无窗口；没有手动启动窗口版模拟器。构建上限 -j4、CTest 上限 -j3，全程没有并发构建或重叠的全量轮次。日志为 `work/capability-r1-configure{,-asan}.log`、`work/capability-r1-build-{full,asan}.log`、`work/capability-r1-ctest-{full,asan}.log`；完整测试输出在两套 `Testing/Temporary/LastTest.log`。内存套完整输出未发现 ASan、UBSan 或泄漏错误。
+
+V4：`git diff --stat 7c393cde..HEAD`、`git diff --check 7c393cde..HEAD`，并对本轮基线和原开发基线 `1c43c28a` 各执行总规则 §6 原隐私正则：grep 均退出 1、无输出，即 0 匹配。11 个变更文件均小于 5 MB，208 个本地文件链接全部存在。受保护的需求、想法、决策、研究、简报和审计原文均未改；没有提交构建产物、依赖、设计稿或真实身份凭据，没有 push、PR、硬件或付费操作。
 
 ## 没做到的
 
-本节按任务允许列出以下遗留操作，不代表这些功能不需要或首版不做。未新增产品能力：给下列操作加名字不足以完成共用入口；必须连同按钮、页面/会话版本、儿童白名单、锁定和敏感输入一起改验。按 G5，本节保持服务/策略/测试范围，没有改界面或具体应用。
+本轮复查 R1 没有未修项。以下保留原开发报告按任务允许列出的操作缺口，不代表这些功能不需要或首版不做。未新增产品能力：给下列操作加名字不足以完成共用入口；必须连同按钮、页面/会话版本、儿童白名单、锁定和敏感输入一起改验。按 G5，本节保持服务/策略/测试范围，没有改界面或具体应用。
 
 | 没有能力的已实现操作 | 【实现】证据 | 不能作为本节小改的原因 |
 | --- | --- | --- |
