@@ -260,7 +260,7 @@ static void assert_operation(void) {
     } else if (!strcmp(scene, "PowerMenu")) {
         CHECK(press_label("取消"), "cancel the power menu by touch"); quiet(); CHECK(strcmp(ink_ui_top_name(), "power_menu"), "the menu closes");
     } else if (!strcmp(scene, "PhoneIncoming") || !strcmp(scene, "ClockRing")) {
-        CHECK(press_label(!strcmp(scene, "PhoneIncoming") ? "拒接" : "关闭"), "touch the interruption action"); quiet();
+        CHECK(press_label(!strcmp(scene, "PhoneIncoming") ? "拒接" : "这次不再响"), "touch the interruption action"); quiet();
         CHECK(!strcmp(active_state(), "none"), "the interruption service handles the action");
     } else if (!strncmp(scene, "Ai", 2)) {
         CHECK(AI("ai.panel.hide", NULL) && g_rc.status == INK_RC_DONE, "hide the actual AI panel through its capability"); quiet();

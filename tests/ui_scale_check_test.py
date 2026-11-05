@@ -47,6 +47,11 @@ class ScaleCheck(unittest.TestCase):
             'int px; ink_ui_font_px(px,INK_WEIGHT_REGULAR);',
             'ink_ui_font_px(unknown(),INK_WEIGHT_REGULAR);',
             'lv_obj_set_width(o, unknown());',
+            'lv_obj_set_width(o, ink_ui_px(INK_MARGIN) + 123);',
+            'lv_obj_set_width(o, ink_dp(104) + 123);',
+            'ink_ui_font_px(LV_PCT(32), INK_WEIGHT_REGULAR);',
+            'ink_ui_font_px(LV_SIZE_CONTENT, INK_WEIGHT_REGULAR);',
+            'ink_ui_icon(o,"ai",LV_RADIUS_CIRCLE,INK_ICON_LINE,0,0,false);',
             'void f(int w) {lv_obj_set_width(o,w);}',
             '/* ui-scale-runtime: dimension w Forwarded theme component argument. */\nint w=123; lv_obj_set_width(o,w);',
         ):

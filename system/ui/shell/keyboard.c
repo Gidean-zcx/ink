@@ -117,8 +117,20 @@ static void edit_action(lv_event_t *e) {
 static int snapshot(char *buf, size_t cap) {
     bool secret = ink_text_type() == INK_TEXT_PASSWORD || ink_text_ai_hidden();
     if (secret) return snprintf(buf, cap, "密码输入；内容=******。只能由人在设备上填写，没有 AI 写入、提交或话筒动作。");
-    return snprintf(buf, cap, "键盘；类型=%s；内容=%s；组合=%s。动作：text.insert、text.select、text.submit、text.voice_start、text.voice_finish、text.voice_cancel、keyboard.key、keyboard.pick、keyboard.candidates、keyboard.edit。",
-                    secret ? "密码" : "普通文字", secret ? "******" : ink_text_value(), secret ? "" : ink_text_composing());
+    size_t start, end;
+    ink_text_selection(&start, &end);
+    int n = snprintf(buf, cap, "键盘；类型=普通文字；内容=%s；组合=%s；光标=%zu；选区=%zu..%zu；展开=%d；候选起点=%d；",
+                     ink_text_value(), ink_text_composing(), ink_text_cursor(), start, end, K.expanded, K.first);
+    if (K.cands && !lv_obj_has_flag(K.keys, LV_OBJ_FLAG_HIDDEN) && !lv_obj_has_flag(K.cands, LV_OBJ_FLAG_HIDDEN)) {
+        for (int i = 0; i < INK_TEXT_PAGE && n >= 0 && (size_t)n < cap; i++) if (!lv_obj_has_flag(K.cand_btn[i], LV_OBJ_FLAG_HIDDEN))
+            n += snprintf(buf + n, cap - (size_t)n, "候选[%d]=%s；", K.first + i, lv_label_get_text(K.cand_label[i]));
+    }
+    if (K.panel && !lv_obj_has_flag(K.panel, LV_OBJ_FLAG_HIDDEN) && n >= 0 && (size_t)n < cap)
+        n += snprintf(buf + n, cap - (size_t)n, "听写=%s；听到=%s；动作：text.voice_finish、text.voice_cancel。", lv_label_get_text(K.status), lv_label_get_text(K.heard));
+    else if (n >= 0 && (size_t)n < cap)
+        n += snprintf(buf + n, cap - (size_t)n, "更多候选=%d；动作：text.insert、text.select、text.submit、keyboard.key、keyboard.pick、keyboard.candidates、keyboard.edit%s。",
+                      K.more && !lv_obj_has_flag(K.more, LV_OBJ_FLAG_HIDDEN), ink_text_voice_possible() ? "、text.voice_start" : "");
+    return n < 0 ? 0 : (size_t)n < cap ? n : (int)cap - 1;
 }
 static bool overlay_key(ink_key_t k, bool lng) {
     if (!lng && (k == INK_KEY_HOME || k == INK_KEY_BACK)) ink_text_blur(0);

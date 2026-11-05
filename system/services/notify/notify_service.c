@@ -549,8 +549,9 @@ static void on_alarm(void *ctx, const char *id, const ink_args_t *p) { /* the ti
     it->nactions = 2;
     snprintf(it->title, sizeof it->title, "闹钟");
     ink_args_get_str(p, "title", it->body, sizeof it->body);
-    action(&it->actions[0], "关闭", "alarm.dismiss", args);
-    action(&it->actions[1], "稍后", "alarm.snooze", args);
+    action(&it->actions[0], "这次不再响", "alarm.dismiss", args);
+    snprintf(args, sizeof args, "{\"id\":%u,\"minutes\":10}", (unsigned)ref);
+    action(&it->actions[1], "再睡 10 分钟", "alarm.snooze", args);
     ink_interrupt_raise(it);
 }
 

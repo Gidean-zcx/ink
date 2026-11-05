@@ -205,16 +205,11 @@ def violations(source, category, symbols, allowed):
             if depth == 0: break
         if i != len(source) - 1: break
         source = source[1:-1].strip()
-    if re.fullmatch(r'(?:LV_PCT|lv_pct)\s*\(.*\)', source): return []
-    if source.strip() in ('LV_SIZE_CONTENT', 'LV_RADIUS_CIRCLE'): return []
-    # A scaling helper preserves the category of its argument.
-    if source.startswith(('ink_ui_px(', 'ink_dp(')):
-        inner = arguments(source, source.index('(') + 1)
-        if len(inner) == 1: return violations(inner[0], category, symbols, allowed)
     node = expression(source, symbols)
     if node is None: return ['unresolved expression ' + source]
     def leaves(n, ratio=False):
-        if isinstance(n, ast.Name) and n.id in ('LV_SIZE_CONTENT', 'LV_RADIUS_CIRCLE'): return []
+        if isinstance(n, ast.Name) and ((category == 'dimension' and n.id == 'LV_SIZE_CONTENT') or
+                                       (category == 'radius' and n.id == 'LV_RADIUS_CIRCLE')): return []
         if isinstance(n, (ast.List, ast.Tuple)):
             return [bad for item in n.elts for bad in leaves(item)]
         if isinstance(n, ast.IfExp): return leaves(n.body) + leaves(n.orelse)
@@ -223,6 +218,7 @@ def violations(source, category, symbols, allowed):
         if isinstance(n, ast.Call):
             name = ast.unparse(n.func)
             if name in ('ink_ui_px', 'ink_dp') and len(n.args) == 1: return leaves(n.args[0])
+            if category == 'dimension' and name in ('LV_PCT', 'lv_pct') and len(n.args) == 1: return []
             if category == 'dimension' and (name in symbols and getattr(symbols[name], 'ui_contract', False) or
                 name in ('lv_obj_get_width', 'lv_obj_get_height', 'ink_ui_width', 'ink_ui_height')): return []
             return ['unresolved call ' + name]

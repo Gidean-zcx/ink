@@ -18,6 +18,7 @@ static char visible[160];
 static lv_obj_t *accept;
 static lv_area_t slider;
 static bool have_slider;
+static int slider_icons;
 static int screen_w, screen_h, interrupt_id;
 static int pager_bottom, accept_top;
 static void effect(ink_call_t *c) { (void)c; effects++; }
@@ -27,6 +28,11 @@ static const ink_cap_t CAPS[] = {
 };
 static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
 static void quiet(void) { CHECK(WAIT_FOR(settled(), 10000), "the panel settles"); }
+static int count_icons(lv_obj_t *root) {
+    int count = lv_obj_check_type(root, &lv_image_class) ? 1 : 0;
+    for (uint32_t i = 0; i < lv_obj_get_child_count(root); i++) count += count_icons(lv_obj_get_child(root, (int32_t)i));
+    return count;
+}
 static void inspect(lv_obj_t *root) {
     for (uint32_t i = 0; i < lv_obj_get_child_count(root); i++) {
         lv_obj_t *o = lv_obj_get_child(root, (int32_t)i);
@@ -57,8 +63,16 @@ static void inspect(lv_obj_t *root) {
             }
             if (wanted && !strcmp(s, wanted)) {
                 label_x = (area.x1 + area.x2) / 2; label_y = (area.y1 + area.y2) / 2;
+                if (i > 0) {
+                    lv_obj_t *icon = lv_obj_get_child(root, (int32_t)i - 1);
+                    const char *cap = ink_shell_bound_cap(icon);
+                    if (cap && !strcmp(cap, "shell.launch")) {
+                        lv_area_t tile; lv_obj_get_coords(icon, &tile);
+                        label_x = (tile.x1 + tile.x2) / 2; label_y = (tile.y1 + tile.y2) / 2;
+                    }
+                }
                 while (parent && !lv_obj_has_flag(parent, LV_OBJ_FLAG_CLICKABLE)) parent = lv_obj_get_parent(parent);
-                if (parent) { lv_obj_get_coords(parent, &slider); have_slider = true; }
+                if (parent) { lv_obj_get_coords(parent, &slider); have_slider = true; slider_icons = count_icons(parent); }
             }
         }
         inspect(o);
@@ -159,6 +173,7 @@ static void slider_tests(void) {
         CHECK(BY_HAND(i < 2 ? "shell.display" : "shell.sound", NULL) && g_rc.status == INK_RC_DONE, "open real slider page"); quiet();
         wanted = titles[i]; on_ui(read_view);
         CHECK(have_slider, "find slider %s in the rendered tree", titles[i]);
+        CHECK(slider_icons >= 2, "%s includes its normal and reversed icon for either slider fill", titles[i]);
         for (int drag = 0; drag < 2; drag++) for (int value = 0; value <= 10; value++) {
             int span = slider.x2 - slider.x1, y = (slider.y1 + slider.y2) / 2;
             int x = slider.x1 + (span * value + 5) / 10;
@@ -323,7 +338,7 @@ static void traverse_answer(const char *text) {
 static void answer_tests(void) {
     traverse_answer("第一行\n第二行\n第三行\n第四行\n第五行");
     static char long_text[1800] INK_PSRAM_BSS;
-    for (int i = 0; i < 30; i++) strcat(long_text, "中文答案 mixed words 123，阅读这一页。\n");
+    for (int i = 0; i < 30; i++) strcat(long_text, "中文答案 mixed words 123，阅读这一页。 ");
     traverse_answer(long_text);
     answer_words = "第一行\n第二行\n第三行\n第四行\n第五行"; on_ui(open_answer); on_ui(update_answer); quiet();
     CHECK(AI("ai.panel.next", NULL) && g_rc.status == INK_RC_DONE, "advance before replacing streamed content");
@@ -332,18 +347,130 @@ static void answer_tests(void) {
     on_ui(close_answer); quiet();
     CHECK(AI("ai.panel.next", NULL) && g_rc.status == INK_RC_STALE, "a closed answer cannot be paginated");
 }
+static void tool_page(lv_obj_t *screen, void *arg) { (void)screen; (void)arg; }
+static const ink_activity_t TOOL_PAGE_A = {.name = "fake-tool-a", .app = "tool_a", .create = tool_page};
+static const ink_activity_t TOOL_PAGE_B = {.name = "fake-tool-b", .app = "tool_b", .create = tool_page};
+static const ink_app_def_t TOOL_A = {.id = "tool_a", .title = "工具甲", .entry = &TOOL_PAGE_A, .child_ok = true};
+static const ink_app_def_t TOOL_B = {.id = "tool_b", .title = "工具乙", .entry = &TOOL_PAGE_B, .child_ok = true};
+static const ink_text_client_t TEXT_CLIENT = {0};
+static ink_text_type_t keyboard_type;
+static char first_candidate[40], picked_text[128];
+static void focus_keyboard(void) {
+    ink_text_cfg_t cfg = {.type = keyboard_type, .initial = keyboard_type == INK_TEXT_PASSWORD ? "FAKE_UI_SECRET" : "测试文字", .max = 128};
+    CHECK(ink_text_focus(&cfg, &TEXT_CLIENT, NULL) > 0, "focus the real text service");
+}
+static void blur_keyboard(void) { ink_text_blur(0); }
+static void read_candidate(void) {
+    ink_text_cand_t candidates[INK_TEXT_PAGE];
+    int n = ink_text_candidates(0, candidates, INK_TEXT_PAGE);
+    CHECK(n > 0, "the synthetic pinyin input has real candidates");
+    snprintf(first_candidate, sizeof first_candidate, "%s", n ? candidates[0].word : "");
+}
+static void compose_xian(void) {
+    for (const char *p = "xian"; *p; p++) {
+        char args[32]; snprintf(args, sizeof args, "{\"code\":%d}", (int)*p);
+        CHECK(AI("keyboard.key", args) && g_rc.status == INK_RC_DONE, "type through the keyboard capability");
+    }
+    quiet();
+}
+static void snapshot_tests(void) {
+    CHECK(BY_HAND("home.prev", NULL) && g_rc.status == INK_RC_DONE, "open Today through its real action"); quiet();
+    wanted = "继续听"; on_ui(read_view); CHECK(label_x >= 0, "Today describes listening as continue listening");
+    wanted = "今日报纸"; on_ui(read_view); CHECK(label_x >= 0, "Today labels today's newspaper explicitly");
+    CHECK(BY_HAND("shell.search", "{\"query\":\"\"}") && g_rc.status == INK_RC_DONE, "open Apps with a two-page tool fixture"); quiet(); on_ui(read_context);
+    CHECK(strstr(context, "工具页=1/2") && strstr(context, "工具甲（tool_a）") && strstr(context, "对话记录（ai）") && strstr(context, "短信（message）"), "Apps includes the visible registered, built-in and fixed-group entries");
+    CHECK(!strstr(context, "设置（settings）"), "Apps omits tools on the next page");
+    wanted = "工具甲"; on_ui(read_view); CHECK(label_x >= 0, "the advertised tool is visible"); if (label_x >= 0) tap(label_x, label_y); quiet();
+    CHECK(!strcmp(ink_ui_page_name(), "fake-tool-a"), "touch launches the advertised stable id");
+    on_ui(ink_ui_home); quiet();
+    CHECK(AI("home.next", NULL) && g_rc.status == INK_RC_DONE, "turn the tools page through the same capability"); quiet(); on_ui(read_context);
+    CHECK(strstr(context, "工具页=2/2") && strstr(context, "设置（settings）") && !strstr(context, "工具甲（tool_a）") && !strstr(context, "相机（camera）"), "the next-page snapshot matches only its visible tools");
+    CHECK(AI("shell.launch", "{\"id\":\"settings\"}") && g_rc.status == INK_RC_DONE, "AI can use the visible settings id"); quiet(); CHECK(!strcmp(ink_ui_page_name(), "Settings"), "the advertised id opens actual settings");
+    on_ui(ink_ui_home); quiet();
+    CHECK(AI("shell.search", "{\"query\":\"工具甲\"}") && g_rc.status == INK_RC_DONE, "filter Apps through its capability"); quiet(); on_ui(read_context);
+    CHECK(strstr(context, "工具甲（tool_a）") && !strstr(context, "工具乙（tool_b）") && !strstr(context, "短信（message）"), "search applies the identical visible-item filter to the snapshot");
+    CHECK(AI("shell.launch", "{\"id\":\"tool_a\"}") && g_rc.status == INK_RC_DONE, "AI launches the same tool as touch"); quiet(); CHECK(!strcmp(ink_ui_page_name(), "fake-tool-a"), "touch and AI reach the same real activity");
+    on_ui(ink_ui_home); quiet();
+    const char *titles[] = {"测试通知甲", "测试通知乙", "测试通知丙"}; uint32_t ids[3] = {0};
+    for (int i = 0; i < 3; i++) {
+        ink_notify_t n = {.title = titles[i], .body = "测试通知内容", .prio = INK_NOTIFY_LOW, .src = INK_SRC_TOUCH};
+        CHECK(ink_notify_post(&n, &ids[i]) == 0 && ids[i], "post a synthetic notification to the real service");
+    }
+    CHECK(AI("shell.control", NULL) && g_rc.status == INK_RC_DONE, "open the populated control center"); quiet(); on_ui(read_context);
+    for (int i = 0; i < 3; i++) {
+        wanted = titles[i]; on_ui(read_view);
+        CHECK((label_x >= 0) == (i > 0) && (strstr(context, titles[i]) != NULL) == (i > 0), "control notification %d agrees between screen and snapshot", i);
+    }
+    char args[48]; snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)ids[2]);
+    CHECK(AI("notify.read", args) && g_rc.status == INK_RC_DONE, "AI marks the displayed notification read"); quiet(); on_ui(read_context);
+    char token[64]; snprintf(token, sizeof token, "通知[%u]=", (unsigned)ids[2]);
+    CHECK(strstr(context, token) && strstr(context, "已读=1"), "control preserves the stable notification id and its read state");
+    CHECK(AI("shell.notifications", NULL) && g_rc.status == INK_RC_DONE, "open the full notification list"); quiet(); on_ui(read_context);
+    for (int i = 0; i < 3; i++) CHECK(strstr(context, titles[i]), "the full visible list exposes notification %d", i);
+    on_ui(ink_ui_home); quiet(); keyboard_type = INK_TEXT_PLAIN; on_ui(focus_keyboard); compose_xian(); on_ui(read_candidate); on_ui(read_context);
+    snprintf(token, sizeof token, "候选[0]=%s", first_candidate);
+    CHECK(first_candidate[0] && strstr(context, token) && strstr(context, "光标=") && strstr(context, "选区="), "keyboard describes its actual candidate id, cursor and selection");
+    wanted = first_candidate; on_ui(read_view); CHECK(label_x >= 0, "the described candidate is visible"); if (label_x >= 0) tap(label_x, label_y); quiet();
+    snprintf(picked_text, sizeof picked_text, "%s", ink_text_value());
+    on_ui(focus_keyboard); compose_xian();
+    CHECK(AI("keyboard.pick", "{\"index\":0}") && g_rc.status == INK_RC_DONE, "AI selects the candidate id from the snapshot"); quiet();
+    CHECK(!strcmp(picked_text, ink_text_value()), "touch and AI commit the same candidate");
+    CHECK(AI("text.select", "{\"start\":1,\"end\":3}") && g_rc.status == INK_RC_DONE, "select real text through the bus"); quiet(); on_ui(read_context);
+    CHECK(strstr(context, "选区=1..3") && !strstr(context, "候选["), "the editing snapshot reports selection and omits hidden candidates");
+    keyboard_type = INK_TEXT_PASSWORD; on_ui(focus_keyboard); quiet(); on_ui(read_context);
+    CHECK(strstr(context, "******") && !strstr(context, "FAKE_UI_SECRET") && !strstr(context, "候选[") && !strstr(context, "选区="), "password snapshots remain masked without candidates or selection");
+    on_ui(blur_keyboard); quiet();
+}
+static bool alarm_title_font, alarm_time_font;
+static void read_alarm_fields(void) {
+    lv_obj_t *root = lv_layer_sys();
+    for (uint32_t i = 0; i < lv_obj_get_child_count(root); i++) {
+        lv_obj_t *panel = lv_obj_get_child(root, (int32_t)i);
+        for (uint32_t j = 0; j < lv_obj_get_child_count(panel); j++) {
+            lv_obj_t *body = lv_obj_get_child(panel, (int32_t)j);
+            for (uint32_t k = 0; k < lv_obj_get_child_count(body); k++) {
+                lv_obj_t *o = lv_obj_get_child(body, (int32_t)k);
+                if (!lv_obj_check_type(o, &lv_label_class)) continue;
+                const char *s = lv_label_get_text(o);
+                if (!strcmp(s, "起床")) alarm_title_font = lv_obj_get_style_text_font(o, 0) == ink_ui_font_px(INK_FONT_TITLE, INK_WEIGHT_BOLD);
+                if (!strcmp(s, "07:30")) alarm_time_font = lv_obj_get_style_text_font(o, 0) == ink_ui_font_px(INK_FONT_NUMBER, INK_WEIGHT_REGULAR);
+            }
+        }
+    }
+}
+static void alarm_tests(void) {
+    ink_tm_t tm = {.year = 2026, .month = 11, .day = 5, .hour = 7, .min = 29, .sec = 58};
+    ink_time_set(ink_time_from_local(&tm), false);
+    ink_alarm_t a = {.kind = INK_ALARM, .at_utc = ink_time_now_s() + 2, .src = INK_SRC_TOUCH};
+    snprintf(a.title, sizeof a.title, "起床");
+    CHECK(ink_alarm_add(&a) > 0 && WAIT_FOR(!strcmp(active_state(), "alarm"), 5000), "a real synthetic alarm rings at 07:30"); quiet(); on_ui(read_context); on_ui(read_alarm_fields);
+    CHECK(strstr(context, "起床") && strstr(context, "时间=07:30") && strstr(context, "日期=") && strstr(context, "11月5日"), "alarm snapshot separates its title, actual time and date");
+    CHECK(alarm_title_font && alarm_time_font, "Chinese alarm title uses title type while time uses the numeric font");
+    wanted = "再睡 10 分钟"; on_ui(read_view); CHECK(label_x >= 0, "the snooze button states its actual duration"); if (label_x >= 0) tap(label_x, label_y); quiet();
+    CHECK(!strcmp(active_state(), "none"), "touch snoozes the real alarm");
+    int cursor = 0; ink_alarm_t saved;
+    CHECK(ink_alarm_next(&cursor, INK_ALARM, &saved) == 1 && saved.id == a.id && saved.snooze_until - ink_time_now_s() >= 598 && saved.snooze_until - ink_time_now_s() <= 600, "the same service schedules ten minutes, not its nine-minute default");
+    CHECK(ink_alarm_cancel(a.id) == 0, "remove the snoozed fixture");
+    a.id = 0; a.at_utc = ink_time_now_s() + 2;
+    CHECK(ink_alarm_add(&a) > 0 && WAIT_FOR(!strcmp(active_state(), "alarm"), 5000), "ring another real alarm to check dismiss"); quiet();
+    wanted = "这次不再响"; on_ui(read_view); CHECK(label_x >= 0, "dismiss states that it affects this occurrence"); if (label_x >= 0) tap(label_x, label_y); quiet();
+    CHECK(!strcmp(active_state(), "none"), "touch dismisses the actual alarm");
+}
 static void test_task(void *unused) {
     (void)unused; delay_ms(1800); quiet();
     if (!strcmp(mode, "slider")) slider_tests();
     else if (!strcmp(mode, "context")) context_tests();
     else if (!strcmp(mode, "privacy")) member_privacy_tests();
     else if (!strcmp(mode, "answer")) answer_tests();
+    else if (!strcmp(mode, "snapshot")) snapshot_tests();
+    else if (!strcmp(mode, "alarm")) alarm_tests();
     else confirmation_tests();
     ink_probe_count("test.finished");
 }
 void ink_main(void) {
     mode = getenv("INK_UI_REGRESSION"); if (!mode) mode = "confirm";
     product_main(); ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS);
+    if (!strcmp(mode, "snapshot")) { ink_app_register(&TOOL_A); ink_app_register(&TOOL_B); }
     osal_task_cfg_t cfg = {.name = "ui-review", .fn = test_task, .stack_bytes = 16384, .priority = OSAL_PRIO_NORMAL, .core = -1, .flags = OSAL_TASK_STACK_EXTERNAL};
     if (osal_task_create(&cfg, NULL) != OSAL_OK) osal_panic("UI regression task");
 }

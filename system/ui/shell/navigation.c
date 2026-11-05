@@ -48,6 +48,8 @@ static struct {
     char wifi_ssid[6][40], picked_ssid[40];
     int wifi_count;
     bool scan_busy, notify_more;
+    ink_notify_view_t control_items[2], notify_items[6];
+    int control_count, notify_count;
     ink_exec_job_t refresh;
 } N INK_PSRAM_BSS;
 static void draw_page_body(void);
@@ -188,8 +190,9 @@ static void draw_dots(void) {
     ink_ui_hint_obj(N.dots, INK_REFRESH_FAST);
 }
 
+static bool matches(const char *title, const char *id) { return !N.search[0] || strstr(title, N.search) || strstr(id, N.search); }
 static void tile(lv_obj_t *parent, const char *id, const char *title, const char *icon, int col, int row, int y, bool compact) {
-    if (N.home_page == 2 && N.search[0] && !strstr(title, N.search) && !strstr(id, N.search)) return;
+    if (N.home_page == 2 && !matches(title, id)) return;
     int cell = width() / 4, d = compact ? INK_CIRCLE : INK_CIRCLE_APP;
     int x = INK_MARGIN + col * cell + (cell - d) / 2;
     int at = y + row * (d + INK_GAP_S + INK_LINE_NOTE + INK_GAP_L);
@@ -204,6 +207,27 @@ static void tile(lv_obj_t *parent, const char *id, const char *title, const char
 static const char *const APP_IDS[] = {"listen", "news", "word", "upcoming", "clock", "camera", "gallery", "settings"};
 static const char *const APP_TITLES[] = {"听", "报纸", "单词", "接下来", "时钟", "相机", "相册", "设置"};
 static const char *const APP_ICONS[] = {"headphones", "news", "word", "calendar", "clock", "camera", "gallery", "gear"};
+static const char *const GROUP_IDS[][4] = {{"reader", "listen", "news", "word"}, {"memo", "upcoming", "phone", "message"}};
+static const char *const GROUP_TITLES[][4] = {{"阅读", "听", "报纸", "单词"}, {"备忘", "接下来", "电话", "短信"}};
+static const char *const GROUP_ICONS[][4] = {{"book", "headphones", "news", "word"}, {"memo", "calendar", "phone", "message"}};
+typedef struct { const char *id, *title, *icon; } tool_t;
+static int tools(tool_t out[24]) {
+    int count = 0;
+    for (int i = 0; i < ink_app_count() && count < 16; i++) {
+        const ink_app_def_t *a = ink_app_at(i);
+        if (!a->entry || !ink_app_visible(a) || !strcmp(a->id, "home") || !strcmp(a->id, "reader")) continue;
+        out[count++] = (tool_t){a->id, a->title, a->icon ? a->icon : "grid"};
+    }
+    static const tool_t MORE[] = {{"clock", "时钟", "clock"}, {"camera", "相机", "camera"}, {"gallery", "相册", "gallery"},
+        {"files", "文件", "folder"}, {"remote", "网页", "globe"}, {"ai", "对话记录", "ai"}, {"settings", "设置", "gear"}};
+    for (unsigned i = 0; i < sizeof MORE / sizeof *MORE; i++) {
+        if (child() && (i == 3 || i == 4 || i == 6)) continue;
+        bool present = false;
+        for (int k = 0; k < count; k++) present |= !strcmp(out[k].id, MORE[i].id);
+        if (!present) out[count++] = MORE[i];
+    }
+    return count;
+}
 
 static void search_entered(void *ctx, const char *value) {
     if (!current_session((uint32_t)(uintptr_t)ctx)) return;
@@ -246,18 +270,24 @@ static void draw_home_content(void) {
         int grid = bottom - 2 * (INK_CIRCLE_APP + INK_GAP_S + INK_LINE_NOTE) - INK_GAP_L;
         for (int i = 0; i < 8; i++) if (!(child() && i == 7)) tile(N.content, APP_IDS[i], APP_TITLES[i], APP_ICONS[i], i % 4, i / 4, grid, false);
     } else if (N.home_page == 0) {
-        ink_ui_label(N.content, "今日", INK_FONT_HEADING, INK_WEIGHT_BOLD, INK_MARGIN, page_top, width());
+        ink_ui_label(N.content, "今日", INK_FONT_HEADING, INK_WEIGHT_BOLD, INK_MARGIN, page_top, 2 * INK_PRIMARY);
+        const char *separator = strstr(date, " · ");
+        char short_date[96]; snprintf(short_date, sizeof short_date, "%.*s", (int)(separator ? separator - date : (ptrdiff_t)strlen(date)), date);
+        lv_obj_t *today_date = ink_ui_label(N.content, short_date, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_CANVAS_W / 2,
+                                           page_top + INK_LINE_HEADING - INK_LINE_NOTE, INK_CANVAS_W / 2 - INK_MARGIN);
+        lv_obj_set_style_text_align(today_date, LV_TEXT_ALIGN_RIGHT, 0);
         lv_obj_t *c = ink_ui_card(N.content, INK_MARGIN, page_top + INK_PRIMARY, width(), 2 * INK_ROW_DOUBLE + INK_GAP_S, INK_SURFACE_BLACK);
         ink_ui_label(c, "继续读", INK_FONT_NOTE, INK_WEIGHT_MEDIUM, INK_MARGIN, INK_MARGIN, width() - 2 * INK_MARGIN);
         ink_ui_label(c, has_book ? card.text : "还没有开始读书", INK_FONT_TITLE, INK_WEIGHT_BOLD, INK_MARGIN, INK_MARGIN + INK_LINE_NOTE + INK_GAP_S, width() - 2 * INK_MARGIN);
         ink_shell_bind(c, "shell.resume", NULL);
         const char *const empty[] = {"还没有在听的内容", "今天的还没到", "还没有记下的词", "还没有接下来的事"};
+        const char *const titles[] = {"继续听", "今日报纸", "单词", "接下来"};
         for (int i = 0; i < 4; i++) {
             int w = (width() - INK_GAP) / 2, h = 2 * INK_ROW_DOUBLE + INK_GAP_S;
             int y = page_top + INK_PRIMARY + h + INK_GAP + (i / 2) * (h + INK_GAP);
             lv_obj_t *small = ink_ui_card(N.content, INK_MARGIN + (i % 2) * (w + INK_GAP), y, w, h, INK_SURFACE_WHITE);
             ink_ui_icon(small, APP_ICONS[i], INK_ICON_MEDIUM, INK_ICON_LINE, INK_GAP_L, INK_GAP_L, false);
-            ink_ui_label(small, APP_TITLES[i], INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_GAP_L + INK_ICON_MEDIUM + INK_GAP_S, INK_GAP_L, w - INK_PRIMARY);
+            ink_ui_label(small, titles[i], INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_GAP_L + INK_ICON_MEDIUM + INK_GAP_S, INK_GAP_L, w - INK_PRIMARY);
             const char *text = empty[i];
             char next[96];
             if (i == 3) {
@@ -276,34 +306,16 @@ static void draw_home_content(void) {
         lv_obj_set_pos(search, ink_ui_px(INK_MARGIN), ink_ui_px(INK_PRIMARY));
         lv_obj_set_size(search, ink_ui_px(width()), ink_ui_px(INK_CONTROL));
         static const char *const groups[] = {"读和听", "记和联系", "工具"};
-        static const char *const ids[][4] = {{"reader", "listen", "news", "word"}, {"memo", "upcoming", "phone", "message"}, {"clock", "camera", "gallery", "settings"}};
-        static const char *const titles[][4] = {{"阅读", "听", "报纸", "单词"}, {"备忘", "接下来", "电话", "短信"}, {"时钟", "相机", "相册", "设置"}};
-        static const char *const icons[][4] = {{"book", "headphones", "news", "word"}, {"memo", "calendar", "phone", "message"}, {"clock", "camera", "gallery", "gear"}};
         int y = INK_PRIMARY + INK_CONTROL + INK_GAP_L;
         for (int g = 0; g < 3; g++) {
             ink_ui_label(N.content, groups[g], INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y, width());
             if (g < 2) {
-                for (int i = 0; i < 4; i++) tile(N.content, ids[g][i], titles[g][i], icons[g][i], i, 0, y + INK_LINE_NOTE + INK_GAP_S, true);
+                for (int i = 0; i < 4; i++) tile(N.content, GROUP_IDS[g][i], GROUP_TITLES[g][i], GROUP_ICONS[g][i], i, 0, y + INK_LINE_NOTE + INK_GAP_S, true);
             } else {
-                const char *tool_ids[24], *tool_titles[24], *tool_icons[24];
-                int count = 0;
-                for (int i = 0; i < ink_app_count() && count < 16; i++) {
-                    const ink_app_def_t *a = ink_app_at(i);
-                    if (!a->entry || !ink_app_visible(a) || !strcmp(a->id, "home") || !strcmp(a->id, "reader")) continue;
-                    tool_ids[count] = a->id; tool_titles[count] = a->title; tool_icons[count++] = a->icon ? a->icon : "grid";
-                }
-                static const char *const more_ids[] = {"clock", "camera", "gallery", "files", "remote", "ai", "settings"};
-                static const char *const more_titles[] = {"时钟", "相机", "相册", "文件", "网页", "对话记录", "设置"};
-                static const char *const more_icons[] = {"clock", "camera", "gallery", "folder", "globe", "ai", "gear"};
-                for (unsigned i = 0; i < sizeof more_ids / sizeof *more_ids; i++) {
-                    if (child() && (i == 3 || i == 4 || i == 6)) continue;
-                    bool present = false;
-                    for (int k = 0; k < count; k++) present |= !strcmp(tool_ids[k], more_ids[i]);
-                    if (!present) { tool_ids[count] = more_ids[i]; tool_titles[count] = more_titles[i]; tool_icons[count++] = more_icons[i]; }
-                }
+                tool_t items[24]; int count = tools(items);
                 N.apps_pages = (count + 7) / 8;
                 for (int i = N.apps_page * 8; i < count && i < (N.apps_page + 1) * 8; i++)
-                    tile(N.content, tool_ids[i], tool_titles[i], tool_icons[i], (i % 8) % 4, (i % 8) / 4, y + INK_LINE_NOTE + INK_GAP_S, true);
+                    tile(N.content, items[i].id, items[i].title, items[i].icon, (i % 8) % 4, (i % 8) / 4, y + INK_LINE_NOTE + INK_GAP_S, true);
             }
             y += INK_LINE_NOTE + INK_GAP_S + INK_CIRCLE + INK_GAP_S + INK_LINE_NOTE + INK_GAP_L;
         }
@@ -321,6 +333,7 @@ void ink_shell_home_create(lv_obj_t *screen) {
         memset(N.wifi_ssid, 0, sizeof N.wifi_ssid);
         N.home_page = 1; N.notify_page = N.apps_page = N.wifi_page = N.wifi_count = 0;
         N.apps_pages = 1; N.more = N.scan_busy = N.notify_more = false;
+        N.control_count = N.notify_count = 0;
         N.epoch = session;
         snprintf(N.member, sizeof N.member, "%s", ink_member_current()->id);
     }
@@ -385,12 +398,12 @@ int ink_shell_home_snapshot(char *buf, size_t cap) {
     ink_card_t card;
     bool has = bookmark(&card);
     if (N.home_page == 2) {
-        int n = snprintf(buf, cap, "Apps；当前=%s；查找=%s；", ink_member_current()->name, N.search);
-        for (int i = 0; i < ink_app_count() && n >= 0 && (size_t)n < cap; i++) {
-            const ink_app_def_t *a = ink_app_at(i);
-            if (ink_app_visible(a) && (!N.search[0] || strstr(a->title, N.search) || strstr(a->id, N.search)))
-                n += snprintf(buf + n, cap - (size_t)n, "%s（%s）；", a->title, a->id);
-        }
+        tool_t items[24]; int count = tools(items);
+        int n = snprintf(buf, cap, "Apps；当前=%s；查找=%s；工具页=%d/%d；", ink_member_current()->name, N.search, N.apps_page + 1, N.apps_pages);
+        for (int g = 0; g < 2; g++) for (int i = 0; i < 4 && n >= 0 && (size_t)n < cap; i++)
+            if (matches(GROUP_TITLES[g][i], GROUP_IDS[g][i])) n += snprintf(buf + n, cap - (size_t)n, "%s（%s）；", GROUP_TITLES[g][i], GROUP_IDS[g][i]);
+        for (int i = N.apps_page * 8; i < count && i < (N.apps_page + 1) * 8 && n >= 0 && (size_t)n < cap; i++)
+            if (matches(items[i].title, items[i].id)) n += snprintf(buf + n, cap - (size_t)n, "%s（%s）；", items[i].title, items[i].id);
         if (n >= 0 && (size_t)n < cap) n += snprintf(buf + n, cap - (size_t)n, "动作：shell.launch、shell.search、home.next、home.prev、shell.control。");
         return n < 0 ? 0 : (size_t)n < cap ? n : (int)cap - 1;
     }
@@ -409,7 +422,9 @@ static int control_snapshot(char *buf, size_t cap) {
                      ink_member_current()->name, (long long)ink_setting_get("display.light"), (long long)ink_setting_get("audio.volume"),
                      (long long)ink_setting_get("notify.dnd"), (long long)ink_setting_get("voice.handsfree"), N.more, ink_notify_unread(), ssid[0] ? ssid : "还没有连接 Wi-Fi");
     if (N.more && n >= 0 && (size_t)n < cap) n += snprintf(buf + n, cap - (size_t)n, "暖光=%lld；", (long long)ink_setting_get("display.warmth"));
-    const char *actions = child() ? "动作：settings.set、system.set_volume、shell.close。" : "动作：settings.set、system.set_volume、shell.members、shell.settings、shell.network、shell.more、shell.close。";
+    for (int i = 0; i < N.control_count && n >= 0 && (size_t)n < cap; i++)
+        n += snprintf(buf + n, cap - (size_t)n, "通知[%u]=%s，%s；已读=%d；", (unsigned)N.control_items[i].id, N.control_items[i].title, N.control_items[i].body, N.control_items[i].read);
+    const char *actions = child() ? "动作：settings.set、system.set_volume、notify.read、shell.close。" : "动作：settings.set、system.set_volume、notify.read、shell.members、shell.settings、shell.network、shell.more、shell.close。";
     if (n >= 0 && (size_t)n < cap) n += snprintf(buf + n, cap - (size_t)n, "%s", actions);
     return n < 0 ? 0 : (size_t)n < cap ? n : (int)cap - 1;
 }
@@ -441,8 +456,10 @@ static int notifications(lv_obj_t *parent, int y, int limit) {
     ink_db_cursor_t cursor = {0};
     ink_notify_view_t n;
     int count = 0, skipped = 0;
+    ink_notify_view_t *visible = parent == N.page_body ? N.notify_items : N.control_items;
     while (count < limit && ink_notify_next(&cursor, &n) == 1) {
         if (skipped++ < (parent == N.page_body ? N.notify_page * limit : 0)) continue;
+        visible[count] = n;
         lv_obj_t *card = ink_ui_card(parent, INK_MARGIN, y, width(), INK_ROW_DOUBLE, INK_SURFACE_WHITE);
         ink_ui_circle(card, !strcmp(n.channel, "message") ? "message" : "bell", INK_GAP, INK_GAP_M, INK_CIRCLE, INK_ICON_LIST, INK_SURFACE_STATIC, NULL, NULL);
         ink_ui_label(card, n.title, INK_FONT_LIST, INK_WEIGHT_BOLD, INK_ROW_DOUBLE, INK_GAP, width() - INK_ROW_DOUBLE - INK_MARGIN);
@@ -454,6 +471,7 @@ static int notifications(lv_obj_t *parent, int y, int limit) {
     if (parent == N.page_body) N.notify_more = ink_notify_next(&cursor, &n) == 1;
     if (!count && parent == N.page_body && N.notify_page) { N.notify_page = 0; return notifications(parent, y, limit); }
     if (!count) ink_ui_notice(parent, "还没有通知", y + INK_GAP_L);
+    if (parent == N.page_body) N.notify_count = count; else N.control_count = count;
     return y;
 }
 
@@ -672,12 +690,8 @@ static int page_snapshot(char *buf, size_t cap) {
             n += snprintf(buf + n, cap - (size_t)n, "网络[%d]=%s；", i, N.wifi_ssid[i]);
     }
     if (N.page_id == PAGE_NOTIFICATIONS) {
-        ink_db_cursor_t cursor = {0}; ink_notify_view_t item; int at = 0;
-        while (ink_notify_next(&cursor, &item) == 1 && n >= 0 && (size_t)n < cap) {
-            if (at++ < N.notify_page * 6) continue;
-            if (at > (N.notify_page + 1) * 6) break;
-            n += snprintf(buf + n, cap - (size_t)n, "%u：%s，%s；", (unsigned)item.id, item.title, item.body);
-        }
+        for (int i = 0; i < N.notify_count && n >= 0 && (size_t)n < cap; i++)
+            n += snprintf(buf + n, cap - (size_t)n, "%u：%s，%s；已读=%d；", (unsigned)N.notify_items[i].id, N.notify_items[i].title, N.notify_items[i].body, N.notify_items[i].read);
     }
     const char *actions = N.page_id == PAGE_NOTIFICATIONS ? "动作：notify.read、notify.dismiss、shell.back、shell.control、shell.notify_next、shell.notify_prev。"
                           : N.page_id == PAGE_NETWORK ? "动作：settings.set、wifi.scan、wifi.list、shell.back、shell.control、shell.wifi_next、shell.wifi_prev、shell.wifi_pick。"

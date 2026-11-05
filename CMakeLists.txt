@@ -478,7 +478,7 @@ add_executable(sim-ui-regressions simulator/runtime/sim_main.c tests/ui_shell_re
 target_link_libraries(sim-ui-regressions PRIVATE ink_apps ink_system ink_port_sim)
 target_compile_options(sim-ui-regressions PRIVATE ${INK_WARN} -Wno-format-truncation)
 foreach(profile metalio-plus desktop-lcd)
-  foreach(regression confirm slider context privacy answer)
+  foreach(regression confirm slider context privacy answer snapshot alarm)
     add_test(NAME ui-${regression}-regressions-${profile}
       COMMAND ${CMAKE_COMMAND} -E env INK_UI_REGRESSION=${regression} $<TARGET_FILE:sim-ui-regressions>
         --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/${profile}.json --script ${CMAKE_SOURCE_DIR}/tests/ui_shell_regressions.script

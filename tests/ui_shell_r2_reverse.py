@@ -30,8 +30,16 @@ def main():
     for stem, path, mode in (
         ('r2-002-original-state', 'system/ui/shell/navigation.c', 'privacy'),
         ('r2-003-original-pages', 'system/ui/shell/ai_panel.c', 'answer'),
+        ('r2-005-original-app-notifications', 'system/ui/shell/navigation.c', 'snapshot'),
+        ('r2-005-original-keyboard', 'system/ui/shell/keyboard.c', 'snapshot'),
+        ('r2-006-original-alarm-view', 'system/ui/shell/interrupt_card.c', 'alarm'),
+        ('r2-006-original-alarm-actions', 'system/services/notify/notify_service.c', 'alarm'),
+        ('r2-006-original-slider-icons', 'system/ui/theme.c', 'slider'),
     ):
-        binary = compile_variant(build, stem, old(path), 'ink_system', 'sim-ui-regressions')
+        source = old(path)
+        if path == 'system/services/notify/notify_service.c':
+            source = source.replace('#include "notify_internal.h"', '#include "system/services/notify/notify_internal.h"')
+        binary = compile_variant(build, stem, source, 'ink_system', 'sim-ui-regressions')
         run(build, binary, stem, regression=mode)
     nav = (ROOT / 'system/ui/shell/navigation.c').read_text()
     guard = '    if (!current_session((uint32_t)(request >> 1))) return;'
