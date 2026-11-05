@@ -1,7 +1,9 @@
 #include "ink/sys/audio.h"
 #include "ink/sys/hub.h"
+#include "ink/probe.h"
 #include <string.h>
 static bool fail_push;
+static bool fail_next_push, fail_next_open;
 static int stale_status = 100;
 static ink_hub_reply_fn stale_reply;
 static void *stale_context;
@@ -19,15 +21,30 @@ static int fixture_call_for(const char *method, const char *params, int64_t time
     return ink_hub_call_for(method, params, timeout, cb, ctx, member, epoch);
 }
 static int fixture_push(int id, const uint8_t *opus, size_t len) {
+    if (fail_next_push) {
+        fail_next_push = false;
+        ink_probe_count("test.audio.refused");
+        return -1;
+    }
     return fail_push ? -1 : ink_audio_stream_push(id, opus, len);
 }
+static int fixture_stream_open(ink_audio_prio_t prio, uint64_t cause_us, const char *heard_probe) {
+    if (fail_next_open) {
+        fail_next_open = false;
+        ink_probe_count("test.audio.open_refused");
+        return -1;
+    }
+    return ink_audio_stream_open(prio, cause_us, heard_probe);
+}
 #define ink_audio_stream_push fixture_push
+#define ink_audio_stream_open fixture_stream_open
 #define ink_hub_call_for fixture_call_for
 #ifndef INK_TEST_AI_SOURCE
 #define INK_TEST_AI_SOURCE "../../system/services/ai/ai_service.c"
 #endif
 #include INK_TEST_AI_SOURCE
 #undef ink_audio_stream_push
+#undef ink_audio_stream_open
 #undef ink_hub_call_for
 #include "../integration/whole_product.h"
 
@@ -93,4 +110,45 @@ void test_ai_stale_question(void) {
 bool test_ai_stale_done(void) { return stale_status != 100; }
 void test_ai_stale_result(void) {
     CHECK(stale_status == INK_HUB_ERR_LOST, "private request cannot rebind to a newer member epoch");
+}
+
+void test_ai_review_voice(void) {
+    ink_ai_key(true, osal_now_us());
+    CHECK(AI.capturing && AI.session_seq != AI.stream, "real voice uses distinct turn and realtime identities");
+}
+void test_ai_review_push_refusal(void) {
+    fail_next_push = true;
+    ink_ai_key(false, osal_now_us());
+}
+void test_ai_review_open_refusal(void) {
+    fail_next_open = true;
+    ink_ai_key(false, osal_now_us());
+}
+void test_ai_review_release(void) { ink_ai_key(false, osal_now_us()); }
+void test_ai_review_aborted(void) {
+    osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
+    CHECK(AI.tts_stream == 0 && AI.tts_done_for == AI.stream, "real downlink refusal aborts the rest of this speech");
+    osal_mutex_unlock(AI.lock);
+}
+void test_ai_review_failure(void) {
+    CHECK(AI.open && AI.speech_failed && strstr(lv_label_get_text(AI.status), "声音没能播放") &&
+          strstr(lv_label_get_text(AI.status), "回答完成"), "real speech failure remains visible after the answer completes");
+}
+void test_ai_review_speaker_failure(void) {
+    CHECK(AI.tts_opened > 0 && AI.session_seq != AI.stream, "speaker callback belongs to a real completed voice turn");
+    on_speech_failed(NULL, AI.tts_opened);
+}
+void test_ai_review_new_turn(void) {
+    int old_turn = AI.session_seq;
+    ink_ai_ask_text("SYNTHETIC_NEXT_TYPED_TURN");
+    post(old_turn, 4, 0, NULL);
+}
+void test_ai_review_clean(void) {
+    CHECK(AI.open && !AI.speech_failed && !strstr(lv_label_get_text(AI.status), "声音没能播放"),
+          "queued speech failure cannot contaminate the next typed turn");
+}
+void test_ai_review_early_failure(void) { post(AI.session_seq, 4, 0, NULL); }
+void test_ai_review_first_text(void) {
+    CHECK(AI.open && AI.asking && AI.first_text_seen && AI.speech_failed && strstr(lv_label_get_text(AI.status), "声音没能播放"),
+          "speech failure remains visible when the first text arrives");
 }

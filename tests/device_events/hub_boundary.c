@@ -1,7 +1,35 @@
+#include "ink/hal_net.h"
+#include "ink/osal.h"
+#include "ink/probe.h"
+#include "ink/sys/members.h"
+#include <string.h>
+static bool fail_member_send;
+static bool handoff_on_alloc, handoff_succeeded;
+static void *fixture_hub_malloc(size_t size, uint32_t caps) {
+    void *p = osal_malloc(size, caps);
+    if (handoff_on_alloc) {
+        handoff_on_alloc = false;
+        handoff_succeeded = ink_member_switch("kid") == 0 && ink_member_switch("owner") == 0;
+    }
+    return p;
+}
+static int fixture_ws_send(hal_ws_t *ws, bool binary, const void *data, size_t len, int64_t timeout_us) {
+    static const char prefix[] = "{\"jsonrpc\":\"2.0\",\"method\":\"ink/member\"";
+    if (fail_member_send && !binary && len >= sizeof prefix - 1 && !memcmp(data, prefix, sizeof prefix - 1)) {
+        fail_member_send = false;
+        ink_probe_count("test.member_sync_refused");
+        return -1;
+    }
+    return hal_ws_send(ws, binary, data, len, timeout_us);
+}
+#define hal_ws_send fixture_ws_send
+#define osal_malloc fixture_hub_malloc
 #ifndef INK_TEST_HUB_SOURCE
 #define INK_TEST_HUB_SOURCE "../../system/services/hub/hub_link.c"
 #endif
 #include INK_TEST_HUB_SOURCE
+#undef hal_ws_send
+#undef osal_malloc
 #include "../integration/whole_product.h"
 
 void test_hub_budget(void) {
@@ -25,6 +53,30 @@ void test_hub_reconnect(void) {
     fail_all(INK_HUB_ERR_LOST, true);
     close_ws(); drain_tx(false); set_state(HS_DISCONNECTED);
     ink_hub_demand();
+}
+
+bool test_hub_hello(void) { return get_state() == HS_HELLO; }
+void test_hub_fail_member_send(void) { fail_member_send = true; }
+
+static int send_status;
+static void send_told(void *ctx, int status, const ink_json_t *j, int result) {
+    (void)ctx; (void)j; (void)result;
+    send_status = status;
+}
+void test_hub_send_boundary(void) {
+    pending_t p = {.id=new_id(), .used=true, .deadline=osal_now_us() + 5000000,
+                   .member_epoch=ink_hub_member_epoch(), .cb=send_told};
+    snprintf(p.member, sizeof p.member, "%s", ink_member_current()->id);
+    snprintf(p.method, sizeof p.method, "ai.ask");
+    p.params = dup_mem("{\"question\":\"SYNTHETIC_ALLOC_HANDOFF\"}", strlen("{\"question\":\"SYNTHETIC_ALLOC_HANDOFF\"}"));
+    CHECK(p.params != NULL, "private send fixture allocated");
+    if (!p.params) return;
+    send_status = 100;
+    handoff_on_alloc = true;
+    int result = send_request(&p);
+    CHECK(handoff_succeeded && result < 0 && send_status == INK_HUB_ERR_LOST,
+          "handoff during wire allocation cannot send a stale private request");
+    finish(&p, INK_HUB_ERR_LOST, NULL, -1);
 }
 
 static void (*fixture_hub_fn)(void), (*fixture_tick)(void);

@@ -233,9 +233,7 @@ static void turn_over(void) {
 
 static void ui_apply(void *arg) { /* UI task */
     ai_post_t *p = arg;
-    bool match = (p->kind == 0 || p->kind == 3) ? p->req_id == AI.req_id
-                 : p->kind == 4                 ? p->req_id == AI.stream
-                                                : p->req_id == AI.seq;
+    bool match = (p->kind == 0 || p->kind == 3) ? p->req_id == AI.req_id : p->req_id == AI.seq;
     if (!AI.open || !match) {
         osal_free(p);
         return;
@@ -256,16 +254,16 @@ static void ui_apply(void *arg) { /* UI task */
         ink_ui_hint_obj(AI.answer, INK_REFRESH_UI);
         if (!AI.first_text_seen) {
             AI.first_text_seen = true;
-            set_status("回答中");
+            set_status(AI.speech_failed ? "声音没能播放，文字回答在上面" : "回答中");
             ink_ui_cause(AI.t_release, "ai.release_to_first_text_visible_ms");
         }
-    } else if (p->kind == 4) { /* the speaker could not start for the answer (the text is on the sheet) */
+    } else if (p->kind == 4) { /* this turn's speech failed; the text remains available */
         AI.speech_failed = true;
-        set_status(AI.asking ? "声音没能播放：扬声器没打开，文字回答在上面" : "回答完成 · 声音没能播放（扬声器没打开）· 按 AI 键继续问");
+        set_status(AI.asking ? "声音没能播放，文字回答在上面" : "回答完成 · 声音没能播放 · 按 AI 键继续问");
         ink_probe_count("ai.speech_failed");
     } else if (p->kind == 1) {
         turn_over();
-        set_status(AI.speech_failed ? "回答完成 · 声音没能播放（扬声器没打开）· 按 AI 键继续问" : "回答完成 · 按 AI 键继续问，按 HOME 关闭");
+        set_status(AI.speech_failed ? "回答完成 · 声音没能播放 · 按 AI 键继续问" : "回答完成 · 按 AI 键继续问，按 HOME 关闭");
         ink_ui_cause(AI.t_release, "ai.release_to_done_visible_ms");
         ink_probe_count("ai.answers");
     } else {
@@ -322,7 +320,7 @@ static void on_speech_failed(void *ctx, int id) {
     (void)ctx;
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
     bool ours = id > 0 && id == AI.tts_opened;
-    int turn = AI.stream;
+    int turn = AI.session_seq;
     osal_mutex_unlock(AI.lock);
     if (ours) post(turn, 4, 0, NULL);
 }
@@ -343,7 +341,12 @@ static void on_rt_frame(void *ctx, int sid, uint8_t kind, const uint8_t *opus, s
             AI.tts_for = st;
             AI.tts_opened = AI.tts_stream > 0 ? AI.tts_stream : 0;
         }
-        if (AI.tts_stream > 0 && ink_audio_stream_push(AI.tts_stream, opus, len) != 0) {
+        if (AI.tts_stream <= 0) {
+            AI.tts_stream = 0;
+            AI.tts_done_for = st;
+            ink_probe_count("ai.downlink_unavailable");
+            post(AI.session_seq, 4, 0, NULL);
+        } else if (ink_audio_stream_push(AI.tts_stream, opus, len) != 0) {
             ink_audio_stream_abort(AI.tts_stream);
             AI.tts_stream = 0;
             AI.tts_done_for = st;

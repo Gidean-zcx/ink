@@ -432,6 +432,9 @@ ink_sim_executable(sim-hub-bridge-state tests/hub/bridge_state.c)
 ink_sim_executable(sim-device-events tests/device_events/protocol.c tests/device_events/cap_boundary.c
   tests/device_events/hub_boundary.c tests/device_events/ai_boundary.c)
 target_link_libraries(sim-device-events PRIVATE ink_apps ink_system)
+ink_sim_executable(sim-device-events-review tests/device_events/review.c tests/device_events/hub_boundary.c
+  tests/device_events/ai_boundary.c tests/device_events/hub_observer.c)
+target_link_libraries(sim-device-events-review PRIVATE ink_apps ink_system)
 add_test(NAME device-events COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/device_events/run.py
   --build ${CMAKE_BINARY_DIR})
 set_tests_properties(device-events PROPERTIES TIMEOUT 120 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")

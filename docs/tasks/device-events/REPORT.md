@@ -2,20 +2,22 @@
 
 日期：2026-11-06；基线：`f1f72ae9`。证据范围是本机 macOS 模拟器、`sim_hub` 和合成家庭中枢，没有真机或真实厂商验证。范围按[任务书](../backlog.md#device-events)、[两端约定](../../hub/contracts-step1.md)和[设备协议](../../hub/device-protocol.md)核对。
 
-本轮复修基线：`97645ea2`。按[独立复查](REVIEW.md)处理 DE-R1、DE-R2（严重 0、高 2，未单列中级）。下表保留上一轮证据；成员握手隔离和声音失败提示的原“通过”已被复查推翻，本轮正在补修和验证，全量、内存及反向对照结果完成后更新。
+本轮复修基线：`97645ea2`。按[独立复查](REVIEW.md)处理 DE-R1、DE-R2（严重 0、高 2，未单列中级）。两项已修；定向、19 个反向对照和两项基线复现均通过，全量及内存待复验。原报告的握手隔离和声音提示证据不足，以下以本轮结果为准；原任务未完成项仍保留。
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
+| DE-R1 握手隔离（高） | 【实现＋实测】已修，定向通过 | 保存本连接 hello／member 已发送的 epoch，握手成功后先同步身份再上线、发送排队请求和调用回调；身份同步失败断开重连。覆盖首次握手、重连、双向换人、A→B→A、同成员解锁／关闭认证、普通在线换人；观测实际接收连接的成员和代次 | `ctest --test-dir build --output-on-failure -j3 -R '^device-events$'` |
+| DE-R2 声音失败（高） | 【实现＋实测】已修，定向通过 | 两种声音错误通知统一用提问轮次匹配，不再混用 rt sid。真实文字提问后接语音，在实际下行首次 push／创建音频流时各拒收一次；声音中止、回答完成后仍显示失败。另测扬声器失败回调、旧通知不串新轮，以及失败早于首段文字时提示保留 | 同上；新增 `sim-device-events-review` 由同一 ctest 执行 |
 | DE-1 事件 | 【实测】通过 | `device/event` 带 seq、boot、member；boot 原子落盘，重启递增；保留最近 8 条直到 ACK；丢 ACK 重连用同一身份重发，错 boot／超前 ACK 无效 | `ctest --test-dir build --output-on-failure -j3 -R '^device-events$'` |
-| DE-2 成员与交付 | 【实测】通过 | hello 带实际成员、authed、epoch；切成员和认证变化推进代次；入站缺少／不匹配 `_meta.member/epoch` 回 -32023。校验到分配、UI 队列、执行和回执均保留原身份；A→B→A 不恢复旧请求；出站快照、RPC、会话和帧不重新绑定成员；换人关闭会话，排队语音被清除 | 同上；`python tests/services_finish/run.py --build build handoff actions policy isolation` |
-| DE-3 时间与背压 | 【实测】通过 | 截止时间从请求创建计，不因等队列重置；budget_ms 在实际发送时写入，最多 45000。按键不松开也在 30 秒结束录音；下行队列拒收后中止该段声音并显示失败，不再静默丢帧 | 同上 |
+| DE-2 成员与交付 | 【实测】定向通过，待全量复验 | 原入站、队列、执行、快照、RPC、实时会话和声音撤销回归保留；补 DE-R1 的握手窗口，并在序列化分配后、最终发送前再查成员代次。故障注入在分配期间换人，旧私密请求得到 LOST，不能发送 | 同上；完整隔离回归待复验 |
+| DE-3 时间与背压 | 【实测】定向通过，待全量复验 | 原 budget、排队 deadline、30 秒录音上限保留。补 DE-R2 的真实下行拒收、提示文案和完成后保留断言；同类的音频流创建失败也终止声音并提示，不再静默丢帧 | 同上 |
 | DE-4 能力目录 | 【实测＋实现】通过 | 已测全分页原子替换、不透明 cursor、同 rev、重复 cursor 和失败保留旧表；代码另拒绝重复名字和超限，暂存表放 PSRAM。sim_hub 默认分 3 页。保留基线完整 actions，未改为空数组；actions_more 可选优化未做 | 同上；`actions` 回归仍要求完整能力列表超过 768 字节 |
 | DE-5 两端契约 | 【实测】通过 | 假设备保存并检查交付代次；中枢接受 hello epoch，ACK 事件、检测缺口和重连重复；proto1 仍固定合成儿童，不因 authed 自报而授予成人权限；保留原 result／MCP 回执、语音、听写和错误测试 | `ctest --test-dir build --output-on-failure -j3 -R 'hub-contract|hub-json-crosscheck|hub-simulator-e2e'` |
 | DE-6 D-105 | 【实现＋实测】部分 | 保留基线 asked、ask_by_hand、活动记录；校验 undo_ms 必须为 3000。自动撤销窗口尚未实现：带窗口的请求，或 asked 的短信／拨号，明确回 -32021，不能忽略窗口后立即执行 | `device-events`；`policy` 回归 |
-| DE-7 反向对照 | 【实测】12/12 | event、member、accept、epoch、directory、replay、budget、scope、undo、deadline、capture、downlink；每次窄撤回一个保护，编译和链接均为 0，指定断言失败且 test.fail>0；模拟器本身可退出 0，不冒充进程失败 | `python tests/device_events/reverse.py --build build` |
-| G1 全量与内存 | 【实测】两套均 103/103 | 普通 54.13 秒、ASan+UBSan 88.73 秒；中枢契约内部 125 项也全过，无跳过。包含预算、确定性、重启和无窗口 GUI 检查；全部命令退出 0 | `cmake --build build -j4`；`ctest --test-dir build --output-on-failure -j3`；同命令换 `build-asan` |
+| DE-7 反向对照 | 【实测】19/19，另有两项基线复现 | 原 12 项全部保留；新增 hello、send-boundary、speech-id、speech-notify、speaker-id、speech-open、speech-delta。每次窄撤回一个保护，编译／链接／模拟器退出均为 0，目标断言失败且 test.fail>0；只撤掉声音通知也必失败。修前 hub／AI 源码各自放入新夹具，均复现目标失败 | `python3 tests/device_events/reverse.py --build build`；`python3 tests/device_events/reverse.py --build build --baseline 97645ea2 hello speech-id` |
+| G1 全量与内存 | 待本轮复验 | 上一轮两套 103/103 不能代替本轮验证；预算未修改。定向测试两次启动各 94 项检查通过，新增复查场景通过 | `cmake --build build -j4`；`ctest --test-dir build --output-on-failure -j3`；同命令换 `build-asan` |
 | G2 原子能力／AI | 【实现】通过 | 未增加用户操作或页面；工具仍走同一能力策略关口。新增的是传输身份绑定接口，不让界面直接修改服务状态 | 能力表 runtime／policy 和现有场景测试 |
 | G3 依赖状态 | 【实现】已更新 | 只更新 ui-dependencies 的“成员、PIN”状态格，并链接本报告 | `git diff -- docs/system/ui-dependencies.md` |
 | G4／G5 范围 | 【实现】符合 | 无新页面；只改服务、策略、模拟替身和测试。没有启动带窗口的 GUI；全量原有 gui-smoke 使用 SDL dummy | `git diff --stat f1f72ae9` |
@@ -23,6 +25,8 @@
 复现环境：构建参数按总规则，两个构建均使用 INK_WERROR=ON，内存构建另加 INK_SANITIZE=ON。中枢 Python 在 `work/hub-python`：运行依赖从 `hub/requirements.lock` 用 `--require-hashes` 安装，pytest=8.4.2、pytest-asyncio=1.2.0；环境的模块搜索路径指向本仓库 hub。CMake 的 INK_HUB_PYTHON 指向该解释器，未跳过中枢测试。详细原始输出在被忽略的 `work/` 和构建目录；上表命令可重新生成。
 
 ## 没做到的
+
+本轮复查问题无未修项。以下保留原任务的功能缺口，不因本轮通过而视为完成。
 
 - **三秒自动撤销窗口**：只有字段检查和明确拒绝，未实现“内容真正上屏后计时、到点执行、这一轮取消时撤销”。需要显示回执和确认事务接续，不能拿收到请求的时刻冒充上屏。本次不实现确认结果持久化、confirm.status、confirm/request。
 - **中枢成员表**：未实现 members/list 的全页替换和 member.reset_pin；保留设备原有成员表和本地密码保护。当前真实中枢仍是受限 proto1 开发握手，没有正式家庭身份和成人解锁证明，不把自报 authed 当证明。
@@ -36,6 +40,10 @@
 上列未完成部分仍与概要设计 §13 有差距，未改设计迁就实现。目录沿用 32 项固定上限，超限保留旧表并记失败，不静默截断；事件的 8 条环仍可能丢旧事件，seq/boot 用于识别缺口，不能当作持久确认结果。boot 文件损坏或无法落盘时启动失败，不复用已知启动身份。
 
 ## 改过的已有测试
+
+本轮没有删除测试、修改既有行为断言或预算。`device-events/run.py` 仅追加复查夹具（83 项检查），原两次持久 Flash 启动仍各为 94 项；`reverse.py` 适配新的拒收分支并新增七个反向对照及可选的基线源码编译。HELLO 回执在新夹具中受控延迟 1 秒，以覆盖真实握手窗口；未加 sleep 掩盖产品时序。提前声音失败通知是额外注入，push／创建音频流拒收另走实际下行帧。
+
+上一轮已改测试如下，继续保留：
 
 - `ai_tools.budget.json`：行为计数改为精确断言 done=1、answers=3，并新增 switch=1、旧轮取消=1。协议 §3.3 要求换成员取消旧轮，所以不能继续要求旧成员回答完整播放。原页面过期、儿童拒绝、翻页和全部资源上限保留。
 - `races.c`：判断“告诉当前成员的 AI”时核对模拟中枢接收时的连接成员；受众由连接上下文记录，独立于事件自报 member。换人前已经正确交付给旧成员的事件不能算作串给新成员。原收件箱、通知和竞态断言保留。

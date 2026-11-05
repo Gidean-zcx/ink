@@ -28,3 +28,12 @@ for number in (1, 2):
     print(f'boot {number}: {m.get("test.pass", 0)} checks passed')
 assert boots[1] == boots[0] + 1, boots
 print('durable boot sequence advances across restart')
+folder = out / 'review'
+run = subprocess.run([str(build / 'sim-device-events-review'), '--profile', str(ROOT / 'simulator/profiles/metalio-plus.json'),
+                      '--assets', str(build / 'assets'), '--content', str(build / 'test-content'), '--out', str(folder),
+                      '--end', '180s', '--quiet', '--no-random-outages'], cwd=ROOT, capture_output=True, text=True, timeout=50)
+(out / 'review.log').write_text(run.stdout + run.stderr)
+metrics = json.loads((folder / 'metrics.json').read_text()) if (folder / 'metrics.json').exists() else {}
+m = metrics.get('metrics', {})
+assert run.returncode == 0 and m.get('test.fail', 0) == 0 and m.get('test.finished', 0) == 1, (run.returncode, m, metrics.get('warnings'), run.stderr[-2500:])
+print(f'review regressions: {m.get("test.pass", 0)} checks passed')

@@ -106,6 +106,7 @@ static struct {
     pending_t pend[MAX_PENDING];
     uint32_t next_id;
     uint32_t hello_id;
+    uint32_t wire_epoch; /* atomic: identity last sent on this connection */
     uint64_t hello_sent_us;
     int64_t server_ms;     /* the hub's clock when this connection came up, 0 = it did not say */
     uint32_t hello_rtt_ms;
@@ -242,6 +243,11 @@ static int send_request(pending_t *p) {
     } else memcpy(buf + hlen, p->params ? p->params : "{}", plen);
     buf[total - 1] = '}';
     buf[total] = 0;
+    if (p->member[0] && !ink_hub_member_matches(p->member, p->member_epoch, H.ws_gen)) {
+        osal_free(buf);
+        finish(p, INK_HUB_ERR_LOST, NULL, -1);
+        return -1;
+    }
     int r = hal_ws_send(H.ws, false, buf, total, 2000000);
     osal_free(buf);
     if (r == 0) {
@@ -267,6 +273,7 @@ static pending_t *slot_new(void) {
 }
 
 static void close_ws(void) {
+    __atomic_store_n(&H.wire_epoch, 0, __ATOMIC_RELEASE);
     if (H.ws) hal_ws_free(H.ws);
     H.ws = NULL;
 }
@@ -304,6 +311,22 @@ static void start_connect(void) {
 
 int ink_hub_respond_error(int64_t id, int code, const char *message);
 
+static bool sync_member(void) { /* hub task: precedes online callbacks and private sends */
+    uint32_t epoch = ink_hub_member_epoch();
+    if (epoch == __atomic_load_n(&H.wire_epoch, __ATOMIC_ACQUIRE)) return true;
+    char wire[192];
+    int n = snprintf(wire, sizeof wire,
+        "{\"jsonrpc\":\"2.0\",\"method\":\"ink/member\",\"params\":{\"member\":\"%s\",\"authed\":%s,\"epoch\":%u}}",
+        ink_member_current()->id, ink_member_space_open() ? "true" : "false", epoch);
+    if (n < 0 || (size_t)n >= sizeof wire || hal_ws_send(H.ws, false, wire, (size_t)n, 2000000) != 0 ||
+        epoch != ink_hub_member_epoch()) {
+        enter_backoff();
+        return false;
+    }
+    __atomic_store_n(&H.wire_epoch, epoch, __ATOMIC_RELEASE);
+    return true;
+}
+
 static void on_text(const char *txt, size_t len) {
     ink_json_t *j = H.json;
     if (ink_json_parse(j, txt, len) != 0) {
@@ -321,6 +344,7 @@ static void on_text(const char *txt, size_t len) {
                 int64_t ms;
                 H.server_ms = ink_json_int(j, ink_json_find(j, res_t, "now_ms"), &ms) ? ms : 0;
                 H.hello_rtt_ms = (uint32_t)((osal_now_us() - H.hello_sent_us) / 1000u);
+                if (!sync_member()) return;
                 set_state(HS_ONLINE);
                 H.backoff_us = 0;
                 ink_probe_value("hub.online_ms", (double)(osal_now_us() - H.connect_started) / 1000.0);
@@ -369,14 +393,18 @@ static void send_hello(void) {
     hal_device_get_info(&di);
     pending_t hello = {.id = new_id(), .used = false};
     H.hello_id = hello.id;
+    uint32_t epoch = ink_hub_member_epoch();
     char params[160];
     snprintf(params, sizeof params, "{\"proto\":1,\"device\":\"%s\",\"member\":\"%s\",\"authed\":%s,\"epoch\":%u}",
-             di.profile_id ? di.profile_id : "?", ink_member_current()->id, ink_member_space_open() ? "true" : "false", ink_hub_member_epoch());
+             di.profile_id ? di.profile_id : "?", ink_member_current()->id, ink_member_space_open() ? "true" : "false", epoch);
     snprintf(hello.method, sizeof hello.method, "hello");
     hello.params = params;
     H.hello_sent_us = osal_now_us();
     if (send_request(&hello) != 0) enter_backoff();
-    else set_state(HS_HELLO);
+    else {
+        __atomic_store_n(&H.wire_epoch, epoch, __ATOMIC_RELEASE);
+        set_state(HS_HELLO);
+    }
     hello.params = NULL;
 }
 
@@ -407,8 +435,9 @@ static void drain_tx(bool online) {
             }
         osal_mutex_unlock(H.tx_lock);
         if (!it) return; /* empty, or only background left while it is paced (next_wakeup) */
-        if (!online || !H.ws || it->connection != H.ws_gen || (it->member[0] && (!ink_member_space_open() || strcmp(it->member, ink_member_current()->id) ||
-            it->member_generation != ink_member_generation(it->member) || it->member_epoch != __atomic_load_n(&H.member_epoch, __ATOMIC_ACQUIRE))) ||
+        if (!online || !H.ws || it->connection != H.ws_gen || (it->member[0] &&
+            (!ink_hub_member_matches(it->member, it->member_epoch, it->connection) ||
+             it->member_generation != ink_member_generation(it->member))) ||
             hal_ws_send(H.ws, it->binary, it->data, it->len, 2000000) != 0) {
             ink_probe_count("hub.tx_dropped");
         } else {
@@ -480,13 +509,7 @@ static void hub_task(void *arg) {
                 set_state(HS_DISCONNECTED);
                 ink_probe_count("hub.member_events_cancelled");
             } else if (H.state == HS_ONLINE) {
-                char member[112];
-                snprintf(member, sizeof member, "{\"member\":\"%s\",\"authed\":%s,\"epoch\":%u}", ink_member_current()->id,
-                         ink_member_space_open() ? "true" : "false", ink_hub_member_epoch());
-                /* This boundary precedes every new member's queued request and frame. */
-                char wire[192];
-                int n = snprintf(wire, sizeof wire, "{\"jsonrpc\":\"2.0\",\"method\":\"ink/member\",\"params\":%s}", member);
-                if (hal_ws_send(H.ws, false, wire, (size_t)n, 2000000) != 0) enter_backoff();
+                sync_member();
             }
         }
         if (e == OSAL_OK) {
@@ -665,7 +688,8 @@ uint32_t ink_hub_member_epoch(void) { return __atomic_load_n(&H.member_epoch, __
 void ink_hub_on_member(void (*fn)(void)) { H.member_fn = fn; }
 uint32_t ink_hub_connection(void) { return __atomic_load_n(&H.ws_gen, __ATOMIC_ACQUIRE); }
 bool ink_hub_member_matches(const char *member, uint32_t epoch, uint32_t connection) {
-    return member && epoch == ink_hub_member_epoch() && connection == ink_hub_connection() &&
+    return member && epoch == ink_hub_member_epoch() && epoch == __atomic_load_n(&H.wire_epoch, __ATOMIC_ACQUIRE) &&
+           connection == ink_hub_connection() &&
            !strcmp(member, ink_member_current()->id) && ink_member_space_open();
 }
 void ink_hub_events_acked(void) {
