@@ -206,6 +206,20 @@ def confirmation(entry):
     return "无需"
 
 
+def confirm_value(entry, pin, src, asked):
+    """Numeric policy result, cross-checked against the compiled confirm_for in CTest."""
+    if src == 6:  # CONFIRMED
+        return 0
+    if entry.flag("parent_pin") and pin:
+        return 2
+    if entry.flag("ask_by_hand"):
+        return 1
+    if src in (0, 1, 3):  # TOUCH, KEY, SYSTEM
+        return 0
+    return int(entry.value("effect") == "INK_FX_LOCAL_DESTRUCTIVE" or
+               (entry.value("effect") == "INK_FX_EXTERNAL" and not asked))
+
+
 def member_scope(entry):
     if entry.value("form") == "INK_FORM_EVENT":
         return "按原事件成员及代际投递"
@@ -244,7 +258,7 @@ def render(entries, sources):
     lines = ["# 能力总表（代码生成）", "",
              "由 `tools/capabilities.py` 读取 `system/`、`apps/` 的 `ink_cap_t`、`ink_setting_def_t`、`ink_state_def_t` 定义生成；请修改代码后重新生成，不直接编辑本文件。",
              "", "```sh", "python3 tools/capabilities.py", "python3 tools/capabilities.py --check", "```", "",
-             f"当前共 {len(caps)} 项：可调用能力 {len(caps) - len(events)}、事件 {len(events)}；设置 {len(settings)} 项、状态 {len(states)} 项。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录。", "",
+             f"当前共 {len(caps)} 项：可调用能力 {len(caps) - len(events)}、事件 {len(events)}；设置 {len(settings)} 项、状态 {len(states)} 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。", "",
              "风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。", "",
              "调用和确认规则来自 `system/policy/cap.c` 的 exposed / gate / confirm_for，以及 `system/policy/settings.c` 的 setting_set。表中人指触摸、实体键；AI 指 INK_SRC_AI，外部调用还须各自的 expose 权限。AI 不能代输 PIN 或替人按确认。asked=true 只取消普通对外动作的确认，不绕过 ask_by_hand、成人 PIN、成员、页面版本或服务内部校验。", "",
              "成员范围指能力闸门允许的调用成员，均绑定调用时的当前成员及代际，不表示能访问其他成员数据。成人空间关闭时 AI、外部应用都不能调用；while_locked 只放行人工入口。数据集合、文件路径、通知、闹钟、后台作业仍检查各自的归属；设置是设备级值，儿童写权限另列。事件只能订阅，不能当工具调用，投递仍按成员隔离。", "",
@@ -307,7 +321,8 @@ def check_runtime(entries, path):
         entry = caps[item["id"]]
         expected = {"id": entry.id, "title": entry.string("title"), "effect": list(EFFECTS).index(entry.value("effect")),
                     "form": FORMS.index(entry.value("form", FORMS[0])), "expose": exposure(entry),
-                    "activity": entry.string("activity"), **{name: entry.flag(name) for name in ("child_ok", "while_locked", "ask_by_hand", "parent_pin")}}
+                    "activity": entry.string("activity"), **{name: entry.flag(name) for name in ("child_ok", "while_locked", "ask_by_hand", "parent_pin")},
+                    "confirmations": [confirm_value(entry, pin, src, asked) for pin in (False, True) for src in range(7) for asked in (False, True)]}
         if item != expected:
             raise ValueError(f"runtime metadata differs: {entry.id}")
     settings = {e.id: e for e in entries if e.kind == "setting"}

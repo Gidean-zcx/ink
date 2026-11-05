@@ -398,8 +398,8 @@ add_test(NAME capability-table-export COMMAND sim-capability-inventory
   --out ${CMAKE_BINARY_DIR}/test-out/capability-table --end 3s --quiet --no-random-outages)
 set_tests_properties(capability-table-export PROPERTIES FIXTURES_SETUP capability-inventory)
 add_test(NAME capability-table-runtime COMMAND ${Python3_EXECUTABLE}
-  ${CMAKE_SOURCE_DIR}/tools/capabilities.py --check
-  --runtime ${CMAKE_BINARY_DIR}/test-out/capability-table/capability-inventory.json)
+  ${CMAKE_SOURCE_DIR}/tests/capability_table/check_runtime.py
+  ${CMAKE_BINARY_DIR}/test-out/capability-table/capability-inventory.json)
 set_tests_properties(capability-table-runtime PROPERTIES FIXTURES_REQUIRED capability-inventory)
 add_executable(hub-bridge-lifecycle tests/hub/bridge_lifecycle.c)
 target_include_directories(hub-bridge-lifecycle PRIVATE simulator)

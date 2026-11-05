@@ -8,6 +8,13 @@
 #include "../../system/boot/main.c"
 #undef ink_main
 
+/* Exercise the real gate's confirmation function with synthetic PIN availability. */
+static bool inventory_has_pin;
+static bool inventory_any_pin(void) { return inventory_has_pin; }
+#define ink_member_any_pin inventory_any_pin
+#include "../../system/policy/cap.c"
+#undef ink_member_any_pin
+
 static void json_string(FILE *file, const char *text) { /* host context */
     if (fputc('"', file) == EOF) abort();
     for (const unsigned char *p = (const unsigned char *)(text ? text : ""); *p; p++) {
@@ -38,6 +45,15 @@ static void save_on_host(void *arg) {
                     (int)c->effect, (int)c->form, (unsigned)c->expose, c->child_ok ? "true" : "false", c->while_locked ? "true" : "false",
                     c->ask_by_hand ? "true" : "false", c->parent_pin ? "true" : "false") < 0) abort();
         json_string(file, c->activity);
+        if (fputs(",\"confirmations\":[", file) == EOF) abort();
+        for (int pin = 0; pin < 2; pin++) {
+            inventory_has_pin = pin != 0;
+            for (int src = INK_SRC_TOUCH; src <= INK_SRC_CONFIRMED; src++)
+                for (int asked = 0; asked < 2; asked++)
+                    if (fprintf(file, "%s%d", pin || src || asked ? "," : "", (int)confirm_for(c, (ink_source_t)src, asked != 0)) < 0) abort();
+        }
+        inventory_has_pin = false;
+        if (fputc(']', file) == EOF) abort();
         if (fputc('}', file) == EOF) abort();
     }
     if (fprintf(file, "],\"settings\":%s}\n", settings) < 0) abort();
