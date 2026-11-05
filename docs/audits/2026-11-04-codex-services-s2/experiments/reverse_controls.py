@@ -14,7 +14,7 @@ import sys
 ROOT = Path(__file__).resolve().parents[4]
 BUILD = ROOT / 'build-audit'
 DEST = BUILD / 'reverse-controls'
-PY = '/Users/bytedance/Documents/Workspace/ink/build-deps/pyenv/bin/python'
+PY = os.environ.get('INK_AUDIT_PY', sys.executable)
 
 
 def replace_once(text, old, new):

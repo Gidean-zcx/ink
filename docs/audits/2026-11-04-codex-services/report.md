@@ -177,7 +177,7 @@
 环境：Darwin arm64，CMake 3.28.3，任务提供的本地字体、LVGL、Python 依赖。以下两套 configure/build/ctest 均退出 0：
 
 ```bash
-D=/Users/bytedance/Documents/Workspace/ink
+D=<放 build-deps 的主检出目录>
 cmake -S . -B build-audit -DINK_WERROR=ON -DINK_GUI=OFF \
   -DINK_CJK_FONT=$D/build-deps/fonts/NotoSansCJK-Regular.ttc -DINK_CJK_FACE=2 \
   -DPython3_EXECUTABLE=$D/build-deps/pyenv/bin/python \

@@ -2,7 +2,7 @@
 
 状态：**待用户审核**，配合[家庭中枢概要设计](hub-architecture.md) §7。这是中枢和设备两边开发时共同遵守的约定；假设备的契约测试按它写。按 Codex 的设计审查改过（[第一轮](../audits/2026-11-04-codex-hub-design/report.md)、[第二轮](../audits/2026-11-04-codex-hub-design-r2/report.md)，之后各轮的处理见[审计记录](../audits/README.md)）。
 
-对照的代码是提交 `9b3c24a`：`system/services/hub/hub_link.c`、`rt.c`，`system/policy/cap.c`，`system/services/ai/ai_service.c`，`system/apps/remote/remote.c`，`simulator/environment/sim_hub.c`、`sim_remote.c`。“系统服务”指分支 `claude/system-services`（提交 `a81c1b8`）上的[系统服务详细设计](https://github.com/Gidean-zcx/ink/blob/claude/system-services/docs/system/system-services-design.md)和代码，还没合入 main。
+对照的代码是提交 `9b3c24a`：`system/services/hub/hub_link.c`、`rt.c`，`system/policy/cap.c`，`system/services/ai/ai_service.c`，`system/apps/remote/remote.c`，`simulator/environment/sim_hub.c`、`sim_remote.c`。“系统服务”指提交 `a81c1b8` 时的[系统服务详细设计](../system/system-services-design.md)和代码，2026-11-05 已合入 main。
 
 原则（用户要求）：**不推翻已有协议。** §1 的消息全部保留，语义不变；§3 只加，每一条都写明为什么。
 

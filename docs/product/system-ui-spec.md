@@ -2,7 +2,7 @@
 
 更新日期：2026-11-04。状态：用户已确认视觉方向（“定了，铺开其余页面”）；交互和状态按 [Codex 设计审计](../audits/2026-11-04-codex-ui/report.md)修订过，首版缺的流程已经画了（第 7 节），设计原则按用户要求对齐乔布斯的理念（R-059，第 0 节）。设计稿在[私有画布](https://claude.ai/artifact/PtS48RHTy15aMKa4bgbRVJ)上，共 176 个画板，只有用户能打开，页面源文件也在那里，不在仓库。
 
-相关文档：[界面参考](../research/system-ui-references.md)（依据和具体数值）、[系统应用分类](system-apps.md)、[底层依赖](../system/ui-dependencies.md)（每个界面还缺什么）、[家庭中枢设计](https://github.com/Gidean-zcx/ink/blob/claude/hub-design-8fd433/docs/hub/hub-architecture.md)、[系统服务设计](https://github.com/Gidean-zcx/ink/blob/claude/system-services/docs/system/system-services-design.md)（后两份在分支上，未合入）。
+相关文档：[界面参考](../research/system-ui-references.md)（依据和具体数值）、[系统应用分类](system-apps.md)、[底层依赖](../system/ui-dependencies.md)（每个界面还缺什么）、[家庭中枢设计](../hub/hub-architecture.md)、[系统服务设计](../system/system-services-design.md)。
 
 标了“建议”的是助手或审计的判断，用户还没选；标了决策编号的以[决策记录](../decisions/README.md)为准。
 
@@ -27,7 +27,7 @@
 9. **按钮和 AI 是同一件事。** 每屏说得清当前是谁、在看什么、能做什么、做完怎么呈现（第 10 节）。
 10. **说人话。** 用下面的词，不在屏幕上写说明书。
 
-另外用户定了一条全系统的规则（D-105、R-063，在中枢分支上，[概要设计 §7.5](https://github.com/Gidean-zcx/ink/blob/claude/hub-design-8fd433/docs/hub/hub-architecture.md#75-权限和确认卡)）：**默认自动，确认卡只留给高风险。** 用户原话：“自动帮我点吧 设计上尽量少一些确认卡 非高风险的系统设置都自动完成 非设置类的应该都能自动完成”。人亲口要求的事和非高风险的设置直接做，做完就地说结果，查得到（`AiLog`），能撤销的给撤销。
+另外用户定了一条全系统的规则（D-105、R-063，[概要设计 §7.5](../hub/hub-architecture.md#75-权限和确认卡)）：**默认自动，确认卡只留给高风险。** 用户原话：“自动帮我点吧 设计上尽量少一些确认卡 非高风险的系统设置都自动完成 非设置类的应该都能自动完成”。人亲口要求的事和非高风险的设置直接做，做完就地说结果，查得到（`AiLog`），能撤销的给撤销。
 
 用户看到的词（D-98，暂定）：
 
@@ -172,7 +172,7 @@ D-38（已定）：默认 10 分钟不操作自动锁屏；锁屏 = 画面保持
 
 ### 3.7 通知和控制中心
 
-普通通知只改状态栏小图标，不弹横幅（横幅每次消失都要刷新）；来电、闹钟才占全屏。通话时长只到分钟，计时器也不显示跳动的秒。勿扰时闹钟照响，来电不响铃但全屏（D-68，在底层分支上）。
+普通通知只改状态栏小图标，不弹横幅（横幅每次消失都要刷新）；来电、闹钟才占全屏。通话时长只到分钟，计时器也不显示跳动的秒。勿扰时闹钟照响，来电不响铃但全屏（D-68）。
 
 | 控件 | 规则 |
 | --- | --- |

@@ -2,7 +2,7 @@
 
 状态：**待用户审核**。这一步只做设计和调研：没有写服务实现，没有买服务器，没有调用付费接口，没有碰设备。审核通过后按 §10 开发。v0.2～v0.8 按 Codex 的七轮设计审查和一轮产品审查改过，最后一轮没有严重和高问题（[第一轮](../audits/2026-11-04-codex-hub-design/report.md)、[第二轮](../audits/2026-11-04-codex-hub-design-r2/report.md)，逐条处理见[审计记录](../audits/README.md)）。v0.4 写入用户选的 7 项决策（D-74、D-78、D-79、D-85、D-87、D-91、D-94）。v0.5 按用户的要求改成服务器只是运行时，数据放对象存储（D-101）。v0.6 补齐恢复的边界情况，并按用户的要求改成默认自动，确认卡只留给高风险（D-105）。v0.7 改恢复的顺序。v0.8 补齐自动规则的保护。
 
-依据：用户的问题（[R-055、I-050](../requirements.md)）；用户随后提的语音输入（[R-056、D-65](https://github.com/Gidean-zcx/ink/blob/claude/system-layer/docs/decisions/README.md)，在分支 `claude/system-layer` 上，经主会话转来）；已定的决策（D-04、D-07、D-09、D-12、D-14、D-15、D-16、D-24、D-25、D-34、D-46、D-47、D-51～D-54，见[决策记录](../decisions/README.md)）；[系统架构 v1.0](../system/system-architecture.md)；[底座设计](../system/foundation.md) §5.7、§6.5、§8.1、§9、§10；[底层系统详细设计](../system/system-detailed-design.md) §3、§6、§8、§9；设备代码和模拟中枢（提交 `9b3c24a`）；[系统界面规范](../product/system-ui-spec.md)和设计稿；分支 `claude/system-services` 上的[系统服务详细设计](https://github.com/Gidean-zcx/ink/blob/claude/system-services/docs/system/system-services-design.md)（升级、成员、审视原则，还没合入 main）。调研和来源见[中枢调研](../research/hub-server-survey.md)，设备协议的逐条约定见[设备协议](device-protocol.md)。
+依据：用户的问题（[R-055、I-050](../requirements.md)）；用户随后提的语音输入（[R-056、D-65](../decisions/README.md)，经主会话转来）；已定的决策（D-04、D-07、D-09、D-12、D-14、D-15、D-16、D-24、D-25、D-34、D-46、D-47、D-51～D-54，见[决策记录](../decisions/README.md)）；[系统架构 v1.0](../system/system-architecture.md)；[底座设计](../system/foundation.md) §5.7、§6.5、§8.1、§9、§10；[底层系统详细设计](../system/system-detailed-design.md) §3、§6、§8、§9；设备代码和模拟中枢（提交 `9b3c24a`）；[系统界面规范](../product/system-ui-spec.md)和设计稿；[系统服务详细设计](../system/system-services-design.md)（升级、成员、审视原则）。调研和来源见[中枢调研](../research/hub-server-survey.md)，设备协议的逐条约定见[设备协议](device-protocol.md)。
 
 证据标注：【实现】本仓库代码里查到的；【文档】对方官方资料；【估算】本文的估计，写了假设；【推断】没有直接证据的判断；【建议】助手的设计选择，用户没有要求过。**本文所有关于中枢的内容都还没有运行过。** 用户提的是问题，括号里带问号的候选（小智、代理、多账号、记忆、浏览器、重负载）不算需求；本文逐项给判断，由用户定。
 
@@ -98,7 +98,7 @@
 
 ### 1.3 设备一侧的硬限制（真实中枢必须遵守）
 
-这些是读设备代码查到的【实现】，Codex 审查又逐条核对过。位置都对应提交 `9b3c24a`；“分支”指 `claude/system-services`（提交 `a81c1b8`），还没合入 main。
+这些是读设备代码查到的【实现】，Codex 审查又逐条核对过。位置都对应提交 `9b3c24a`；“分支”指系统服务当时的提交 `a81c1b8`，2026-11-05 已合入 main，这张表没有再逐行核对。
 
 | 限制 | 数值 | 位置 |
 | --- | --- | --- |
@@ -121,7 +121,7 @@
 | 地址最长 127 字节 | `H.url[128]` | `hub_link.c:86` |
 | 每条新连接上中枢都当作什么都不记得：设备重新登记还开着的会话，且不先通知拥有者；远程画面按白屏算差异 | `on_online` | `rt.c:113`、详细设计 §8.2 |
 | 二进制帧必须属于一个会话，`sid = 0` 的被丢弃；发送优先级按帧类型，没列的算画面 | `on_binary`、`class_of` | `rt.c:57`、`:199` |
-| `ink_hub_on_online` main 上 2 个都用了，分支上放宽到 4 个 | | `hub_link.c:565` |
+| `ink_hub_on_online` 原来 2 个都用了，系统服务放宽到 4 个，现在是 6 个 | | `hub_link.c:565` |
 | 远程画面现在只实现了点按，没有翻页、长按、提交文字；`params` 不带 `dpi` | | `system/apps/remote/remote.c:424`、`:314` |
 | 阅读器只读 `.txt`，整本读入，最大 2 MiB | `MAX_BOOK_BYTES` | `apps/reader/reader.c:27` |
 | 模拟器的语音和 JPEG 都是替身格式；网络模型直接调 `sim_hub_receive`，没有真实 socket | | `ports/sim/hal/hal_codec_sim.c:30`、`hal_jpeg_sim.c:13`、`hal_net_sim.c:931` |
@@ -244,7 +244,7 @@ flowchart LR
 
 ### 3.3 架构审视：每个子系统给 AI 开放什么
 
-按用户 2026-11-04 的要求（[架构审视](https://github.com/Gidean-zcx/ink/blob/claude/system-services/docs/process.md)），每个子系统列能力、状态、设置、事件、内部机制和 AI 能不能碰。能力的完整定义在 §7.3。
+按用户 2026-11-04 的要求（[架构审视](../process.md)），每个子系统列能力、状态、设置、事件、内部机制和 AI 能不能碰。能力的完整定义在 §7.3。
 
 **规则（v0.2 改正，D-105 再改）**：用户能做的事，AI 都能做，走同一个能力；默认直接做，只有高风险才要人确认（§7.5）。AI 不能碰的只有四类：**凭据的值**（密钥、密码、令牌）、**确认按钮本身**、**固件签名**、**发起升级**（设备规则，底座设计 §6.2）。第一版把系统操作都排除在 AI 之外是错的。
 
@@ -786,7 +786,7 @@ sequenceDiagram
 
 额度不够时也是**先确认 `rt.open` 再发错误**：设备的 `open_reply` 不把错误码交给会话（【实现】`rt.c:129`），这样不用改 `rt.c` 就能说清原因。
 
-**设备这边**已经按[设备协议 §3.11](device-protocol.md) 做完（`claude/system-services` 提交 `23d8a74`，还没合入）：能力 `text.voice_start`、`text.voice_finish`、`text.voice_cancel`，状态 `text.voice`（idle、connecting、listening、finishing），事件 `text.voice_ended {how, why}`，`text.state` 里带 `voice`、`voice_possible`；模拟中枢有 `asr.stream` 替身。当时的前提是：麦克风同一时间只有一个拥有者（`audio_service.c:679`），听写要定义和 AI 键、唤醒词、来电、录音、锁屏的抢占关系，等采集结束的回调后才交接；断线时要主动关会话，因为 `on_online` 会自动重新登记，而且不先通知拥有者。
+**设备这边**已经按[设备协议 §3.11](device-protocol.md) 做完（提交 `23d8a74`）：能力 `text.voice_start`、`text.voice_finish`、`text.voice_cancel`，状态 `text.voice`（idle、connecting、listening、finishing），事件 `text.voice_ended {how, why}`，`text.state` 里带 `voice`、`voice_possible`；模拟中枢有 `asr.stream` 替身。当时的前提是：麦克风同一时间只有一个拥有者（`audio_service.c:679`），听写要定义和 AI 键、唤醒词、来电、录音、锁屏的抢占关系，等采集结束的回调后才交接；断线时要主动关会话，因为 `on_online` 会自动重新登记，而且不先通知拥有者。
 
 **其他规则**：
 
@@ -1127,7 +1127,7 @@ sequenceDiagram
 
 ### 6.1 第一次配对：和设计稿对上
 
-设计稿和流程见[界面规范 §7.1](https://github.com/Gidean-zcx/ink/blob/claude/system-layer/docs/product/system-ui-spec.md)（`claude/system-layer` 提交 `88ac961`）。`FirstBoot` 的字是“用手机设置这台设备 / 连接网络，选好谁来用”，下面一行“在设备上设置”；三个点：连网、加入家庭、谁在用。
+设计稿和流程见[界面规范 §7.1](../product/system-ui-spec.md)（提交 `88ac961`）。`FirstBoot` 的字是“用手机设置这台设备 / 连接网络，选好谁来用”，下面一行“在设备上设置”；三个点：连网、加入家庭、谁在用。
 
 **用户看到的词**（界面规范第 0 节，暂定）：手机页面、控制台和设备用同一套词。本文和协议继续用内部术语。
 
@@ -1411,7 +1411,7 @@ async def memory_search(call: Call, query: str, limit: int = 5) -> Receipt:
 | 方向 | 消息 | 现状 | 中枢要做 |
 | --- | --- | --- | --- |
 | 设备发现服务器能力 | 每次连上发 `caps/list`；中枢发 `caps/changed` 时重拉 | 【实现】`cap.c:883`，设备只读 `name`、`form` | 按成员和部署情况过滤（没装浏览器就不列 `browser.session`）；按词法单元切页 |
-| 中枢知道设备能力的**定义** | `tools/list` | 【实现】设备从能力表生成，只列当前可用的；分页在系统服务分支上 | **按“固件 + 能力名 + 版本”累积一本字典**。定义不随页面变，变的只是可用不可用 |
+| 中枢知道设备能力的**定义** | `tools/list` | 【实现】设备从能力表生成，只列当前可用的；分页已有 | **按“固件 + 能力名 + 版本”累积一本字典**。定义不随页面变，变的只是可用不可用 |
 | 中枢知道此刻**能用什么** | `ai.listen` 的 `page.actions`；不可靠时用 `tools/list` | 【实现】每轮都带，但**放不下时是空数组**（审查 HUB2-006） | `actions` 不是空的，就用它 ∩ 成员规则；**空数组当作“不知道”，不是“没有”**，当场拉 `tools/list` 当前视图（分页）来定。这时用户还在说话，趁这个时间拉，不影响第一句回答。现有设备也不会丢工具，只是多几个来回。设备可以改进：`actions` 只列绑定当前页面的，全局能力不必每轮带；放不下时带 `actions_more:true`（§13） |
 | 这一轮里页面变了 | 回执的 `page_gen` | 【实现】 | 工具调用让页面变了，下一步之前重新确定可用集合 |
 | AI 发现能力 | 每轮常驻：目录索引 + 当前应用和系统常用能力（≤15 个）；其余用 `find_capabilities`、`load_capabilities` | 【设计】底座设计 §6.5；系统服务分支有 `caps.domains`、`caps.find` | 工具集合保持稳定，快照里的 `actions` 说明此刻哪些有效 |
@@ -1614,7 +1614,7 @@ sequenceDiagram
 | 一轮的边界 | 45 秒、2048 字节 | 长回答、长任务、等确认都移出一轮；`ai.listen` 带 `budget_ms`；录音 30 秒封顶；以后改成没有活动才超时 | 中枢，设备要加字段 | 这是硬约束 |
 | 下载上传 | 没有（设计写 HTTPS） | 新增帧 kind 6、7（`sid = 0`）和 `blob/*`，`update/fetch` 归到它 | 两边：`on_binary` 路由、`class_of` 分类 | D-89：不开第二条 TLS |
 | 同步 | 没有 | 新增 `sync/*`，带 `dataset`、`hub_instance`，对账会话；设备数据存储要加取一致清单和原子安装快照 | 两边 | R-023 |
-| 事件 | 分支上有 `device/event`，没有序号 | 加 `seq`、`boot` | 设备 | 发现事件丢失 |
+| 事件 | 已有 `device/event`，没有序号 | 加 `seq`、`boot` | 设备 | 发现事件丢失 |
 | 确认 | 设备内部 | 新增 `confirm/request`、`confirm.status`，设备保留确认结果 | 两边 | 中枢能力也要确认；事件丢了要查得到 |
 | 语音输入 | 没有 | 新增会话能力 `asr.stream`，通知 `rt.asr`、`rt.asr.done`、`rt.asr.error` | 两边，设备底层会话在做 | R-056；走现有的会话和语音帧 |
 | 真中枢联调 | 模拟器没有真实网络，媒体是替身 | 加网络桥和真媒体模式 | 模拟器 | 第 1、2、6 步验收的前提 |
@@ -1717,7 +1717,7 @@ hub/
 
 **第一次写真实家庭数据之前**：用户要确认 D-86，对象存储要配好并演练过一次恢复。网页的登录状态也算家庭数据。
 
-**两端约定什么时候定**（Codex 第二、三轮给的顺序，做法都已写在本文）：第 1 步验收前定系统服务分支的分页和 `result` 的合入基线、能力可用集合（§7.4）、确认记录的持久身份（§7.5）、实时输出和持久结果（§5.4）、`budget_ms`（§5.3）、动作范围的字段和比对规则、受限执行收到什么（原话、资料和工具的白名单）、自动待执行动作的持久标识和结果查询（§7.5）；第 2a 步验收前定发送预算和播放暂停（§5.3）；第 3 步之前定公钥核对和配对状态（§6.1）；第 4 步之前定安全日志、接管规则、`blob/status`、恢复卡和身份包的格式（§4.5）和同步、恢复令牌（§5.8）；第 6 步让 AI 操作浏览器之前定 §5.7。第 1 步本身可以先开始。
+**两端约定什么时候定**（Codex 第二、三轮给的顺序，做法都已写在本文）：第 1 步验收前定系统服务的分页和 `result` 的基线（2026-11-05 已合入 main，以 main 为准）、能力可用集合（§7.4）、确认记录的持久身份（§7.5）、实时输出和持久结果（§5.4）、`budget_ms`（§5.3）、动作范围的字段和比对规则、受限执行收到什么（原话、资料和工具的白名单）、自动待执行动作的持久标识和结果查询（§7.5）；第 2a 步验收前定发送预算和播放暂停（§5.3）；第 3 步之前定公钥核对和配对状态（§6.1）；第 4 步之前定安全日志、接管规则、`blob/status`、恢复卡和身份包的格式（§4.5）和同步、恢复令牌（§5.8）；第 6 步让 AI 操作浏览器之前定 §5.7。第 1 步本身可以先开始。
 
 **测试的中心是“假设备”**：一个 Python 客户端严格按[设备协议](device-protocol.md)说话，包括 128 词法单元的检查（超了就算中枢的错）。`tests/scenarios/*.hub.json` 是模拟中枢的规则，不是完整的线协议记录（握手、`rt.open`、音频都在 `sim_hub.c` 里），可以复用它们的意图和断言，但要转成真实消息序列，再加乱序、超限和错误。这样中枢和设备两边都对着同一份约定。
 
@@ -1806,8 +1806,8 @@ D-73～D-94、D-101～D-105，详情和状态在[决策记录](../decisions/READ
 | `sync/*` 客户端；数据集元数据（`dataset`、`complete`、上次的 `hub_instance`、`restore_token`）；取已落盘版本 V 对应的一致清单；原子安装快照（保留编号和版本）；墓碑被挤掉时报 `history_gap` | §5.8 | 基于 `ink_db_changes`、`ink_db_ack`；数据存储新增接口 |
 | 确认规则改成默认自动（D-105）：`confirm_for` 看 `_meta.asked` 和 `ask_by_hand`；高风险能力打上 `ask_by_hand`；`text.voice_start` 这类不再一律弹卡；发短信、打电话、分享留 3 秒撤销，窗口由设备算（`_meta.undo_ms`），切成员、断线、取消就作废；结果和确认卡记在同一张表；自动做的动作进活动记录；底座设计 §6.2 同步 | §7.5 | `system/policy/cap.c`、能力表。用户定何时做 |
 | `confirm/request` 方法；`token` 跨重启不复用；确认结果落盘保留，`confirm.status` 能力 | §7.5 | 确认卡服务（系统服务 §7）；`ink_hub_on_request` 加前缀 |
-| `device/event` 加 `seq`、`boot` | §7.6 | 分支上的 `cap.c:745` |
-| 语音面板和 `asr.stream` 客户端 | R-056、D-65 | **已做**（`claude/system-services` 提交 `23d8a74`，还没合入）。范围是：`rt.asr` 的显示、断线主动关会话并退回键盘、麦克风抢占和交接、听写时暂停唤醒词；打开面板也要是一个能力（按钮和 AI 同一条路）；模拟中枢加替身 |
+| `device/event` 加 `seq`、`boot` | §7.6 | `cap.c:745`（提交 `a81c1b8`） |
+| 语音面板和 `asr.stream` 客户端 | R-056、D-65 | **已做**（提交 `23d8a74`）。范围是：`rt.asr` 的显示、断线主动关会话并退回键盘、麦克风抢占和交接、听写时暂停唤醒词；打开面板也要是一个能力（按钮和 AI 同一条路）；模拟中枢加替身 |
 | 内容包：阅读器分块读取、定位、离线播放器和句子对齐 | §5.6 | **第 5 步的硬依赖**。现在只读 2 MiB 以内的 TXT |
 | 远程画面补翻页、长按、提交文字 | §5.7 | **第 6 步的硬依赖**。现在只有点按。用户选了首版做（D-85），要提前排 |
 | 模拟器：真中枢桥；真 Opus 和真 JPEG 模式 | §10 | 第 1、2、6 步的前提 |

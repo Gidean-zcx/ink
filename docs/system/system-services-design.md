@@ -2,7 +2,7 @@
 
 起草：2026-11-04。状态：草案，边实现边修订，结果回填 §15。依据：用户要求 R-052～R-058，[底层依赖](ui-dependencies.md)（范围和顺序），[系统架构 v1.0](system-architecture.md)，[底座设计](foundation.md) §4.8、§5.5、§7、§7.1、§8、§10，[底层系统详细设计](system-detailed-design.md) §13 的缺项。
 
-证据边界：接口、数据格式和数字都是本文定的设计，只在模拟器里验证；时延、内存来自模拟器的悲观档；实机没有验证，只有实机能回答的列在 §14。设计里的取舍是助手的建议，新决定记为 D-100～D-72（§14），都可逆，按推荐暂定。
+证据边界：接口、数据格式和数字都是本文定的设计，只在模拟器里验证；时延、内存来自模拟器的悲观档；实机没有验证，只有实机能回答的列在 §14。设计里的取舍是助手的建议，新决定记为 D-66～D-72、D-100（§14），都可逆，按推荐暂定。
 
 ## 0. 这份文档管什么
 
@@ -589,7 +589,7 @@ bool ink_text_redo(void);
 
 ### 9.5 语音输入（听写，R-056、D-65）
 
-文字来自中枢（`asr.stream`，[中枢协议 §3.11](https://github.com/Gidean-zcx/ink/blob/claude/hub-design-8fd433/docs/hub/device-protocol.md)，在分支 `claude/hub-design-8fd433` 上）：设备自己只有命令词识别，没有中枢就没有听写，这一点要告诉用户。代码在 `system/services/text/voice_input.c`，面板在 `system/ui/shell/keyboard.c`。
+文字来自中枢（`asr.stream`，[中枢协议 §3.11](../hub/device-protocol.md)）：设备自己只有命令词识别，没有中枢就没有听写，这一点要告诉用户。代码在 `system/services/text/voice_input.c`，面板在 `system/ui/shell/keyboard.c`。
 
 ```c
 typedef enum { INK_VOICE_IDLE, INK_VOICE_CONNECTING, INK_VOICE_LISTENING, INK_VOICE_FINISHING } ink_voice_state_t;
@@ -996,7 +996,7 @@ void ink_task_end(int id, ink_task_state_t how, const char *result, const char *
 | 成员、确认事务 | §7、§11 | 确认结果落盘（中枢协议要求，见下） |
 | 应用状态恢复（D-95 如果定了，“回到原页和原位置”） | `save_state`、`restore_state` 存到 `/user/m/<成员>/`；成人空间关闭时页面栈不动，成员门盖在上面，解锁就回到原页 | §11.4 现在是 120 s 闲置或一锁屏就关。**D-95 等用户定，定了再改计时**，恢复这一半已经够 |
 
-中枢协议 v0.2 要设备改的（[hub-architecture §13](https://github.com/Gidean-zcx/ink/blob/claude/hub-design-8fd433/docs/hub/hub-architecture.md)，服务器设计说还没到做的阶段，先记着）：`device/event` 加 `seq`、`boot`、`member`；`confirm/request`；`ink/member`；块传输（kind 6、7，`update/fetch` 固定包标识，现在是 JSON 里放 base64）；`hub_link` 的配对状态；确认结果落盘、`confirm.status`；同步的快照安装。
+中枢协议 v0.2 要设备改的（[hub-architecture §13](../hub/hub-architecture.md)，服务器设计说还没到做的阶段，先记着）：`device/event` 加 `seq`、`boot`、`member`；`confirm/request`；`ink/member`；块传输（kind 6、7，`update/fetch` 固定包标识，现在是 JSON 里放 base64）；`hub_link` 的配对状态；确认结果落盘、`confirm.status`；同步的快照安装。
 
 还没做、也不属于这一轮的：中枢真正的 `update/*` 协议；正式词库；`ports/esp32s31` 上这些 HAL 全部没有实现（§14.2）；应用权限按前台应用查、事件信封没有成员归属（第十四轮报告的架构节）。
 
