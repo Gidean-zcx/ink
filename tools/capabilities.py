@@ -330,7 +330,8 @@ def check_runtime(entries, path):
         raise ValueError("runtime setting ids differ from the source catalogue")
     for item in runtime["settings"]:
         entry = settings[item["id"]]
-        if item["title"] != entry.string("title") or any(bool(item.get(flag)) != entry.flag(flag) for flag in ("system", "ask_by_hand")):
+        setting_type = {"INK_SET_BOOL": "bool", "INK_SET_INT": "int", "INK_SET_ENUM": "enum"}[entry.value("type")]
+        if item["title"] != entry.string("title") or item["type"] != setting_type or any(bool(item.get(flag)) != entry.flag(flag) for flag in ("system", "ask_by_hand")):
             raise ValueError(f"runtime setting metadata differs: {entry.id}")
     print(f"Runtime matches: {len(actual)} capabilities, {len(settings)} settings")
 

@@ -17,7 +17,7 @@ inventory = json.loads(path.read_text(encoding="utf-8"))
 with tempfile.TemporaryDirectory(prefix="reverse-", dir=path.parent) as directory:
     negative = Path(directory) / "inventory.json"
     cases = []
-    for label in ("capability missing", "setting missing", "description", "risk", "exposure", "member", "confirmation", "setting confirmation"):
+    for label in ("capability missing", "setting missing", "description", "risk", "exposure", "member", "confirmation", "setting confirmation", "setting type"):
         changed = copy.deepcopy(inventory)
         if label == "capability missing":
             changed["capabilities"].pop()
@@ -25,6 +25,8 @@ with tempfile.TemporaryDirectory(prefix="reverse-", dir=path.parent) as director
             changed["settings"].pop()
         elif label == "setting confirmation":
             changed["settings"][0]["ask_by_hand"] = not changed["settings"][0].get("ask_by_hand", False)
+        elif label == "setting type":
+            changed["settings"][0]["type"] = "unknown"
         else:
             cap = changed["capabilities"][0]
             if label == "description":
