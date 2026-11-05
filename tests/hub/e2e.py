@@ -1,4 +1,4 @@
-"""Real simulator ↔ local hub, readiness and completion driven by events, no sleeps."""
+"""Real product and loopback hub with the confirmed synthetic child fixture."""
 import argparse
 import asyncio
 import importlib.util
@@ -46,6 +46,7 @@ async def run(args):
         assert hub.metrics.tool_calls == 1, f"tool_calls={hub.metrics.tool_calls}"
         metrics = json.loads((output / "sim/metrics.json").read_text())
         device = metrics["metrics"]
+        assert device.get("test.hub_member_ready", 0) == 1
         assert device.get("ai.answers", 0) == 1
         assert device.get("action.ai.reader.next_page", 0) == 1
         assert device.get("audio.speaker.played_ms", 0) >= 300

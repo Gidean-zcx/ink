@@ -36,7 +36,8 @@ typedef struct {
     int64_t min, max, def;         /* ENUM: the value is an index into choices */
     const char *const *choices;    /* ENUM: value names, NULL-terminated */
     bool child_may_change;
-    bool system;                   /* system-level: adults only; the AI's change waits for confirmation */
+    bool system;                   /* system-level: adults only */
+    bool ask_by_hand;              /* permissions and child rules need a person's confirmation */
     void (*apply)(void *ctx, int64_t v); /* the owning service puts the value into effect: on every set,
                                           * also of the same value, so it must not harm when nothing changed */
     void *ctx;

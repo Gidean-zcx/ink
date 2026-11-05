@@ -22,6 +22,7 @@ static struct {
     const char *why;
     char body[192];
     bool drawn;
+    uint32_t commit;
 } O;
 
 static int snapshot(char *buf, size_t cap) {
@@ -46,20 +47,28 @@ static void add_bookmark(void) { /* the first card that is one */
 
 static void draw(void *arg) { /* UI task */
     (void)arg;
-    snprintf(O.body, sizeof O.body, "%s", !strcmp(O.why, "battery") ? "没电了，东西都存好了。充上电再开机" : "按电源键开机");
+    snprintf(O.body, sizeof O.body, "%s", !strcmp(O.why, "battery_unsaved") ? "没电了，有些内容没保存。充上电再开机" : !strcmp(O.why, "battery") ? "没电了，东西都存好了。充上电再开机" : "按电源键开机");
     if (ink_member_space_open()) add_bookmark();
+    if (O.card.root) { ink_ui_overlay_remove(&OVERLAY); shell_card_close(&O.card); }
     shell_card_open(&O.card);
     ink_ui_overlay_add(&OVERLAY, O.card.root);
     shell_card_text(&O.card, "已关机", O.body);
+    lv_refr_now(NULL);
+    O.commit = ink_display_commits();
     __atomic_store_n(&O.drawn, true, __ATOMIC_RELEASE);
 }
 
 static void off_picture(const char *why) { /* the task that turns it off */
     O.why = why;
-    ink_exec_post(INK_EXEC_UI, &O.job, draw, NULL);
+    uint32_t before = ink_display_commits(), failures = ink_display_failures();
+    __atomic_store_n(&O.drawn, false, __ATOMIC_RELEASE);
+    if (ink_exec_post(INK_EXEC_UI, &O.job, draw, NULL) != 0) { ink_power_off_picture_result(false); return; }
     uint64_t end = osal_now_us() + PANEL_WAIT_US;
     while ((!__atomic_load_n(&O.drawn, __ATOMIC_ACQUIRE) || ink_ui_busy() || ink_display_busy() > 0) && osal_now_us() < end) osal_task_delay_us(50000);
-    ink_probe_count(osal_now_us() < end ? "ui.off_picture_on_panel" : "ui.off_picture_late");
+    bool ok = __atomic_load_n(&O.drawn, __ATOMIC_ACQUIRE) && O.commit > before &&
+        !ink_ui_busy() && !ink_display_busy() && ink_display_failures() == failures;
+    ink_power_off_picture_result(ok);
+    ink_probe_count(ok ? "ui.off_picture_on_panel" : "ui.off_picture_late");
 }
 
 int ink_shell_off_picture_init(void) {

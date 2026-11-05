@@ -467,8 +467,7 @@ static void clipboard(void) {
     CHECK(BY_HAND("clipboard.write", "{\"text\":\"一段话\"}") && g_rc.status == INK_RC_DONE, "written");
     CHECK(ink_clip_get(out, sizeof out, INK_SRC_TOUCH, NULL) > 0 && !strcmp(out, "一段话"), "the person reads it (%s)", out);
     CHECK(AI("clipboard.read", NULL) && g_rc.status == INK_RC_REJECTED, "the AI does not, by default (%s)", ink_rc_name(g_rc.status));
-    ink_receipt_t rc;
-    ink_setting_set("ai.read_clipboard", 1, INK_SRC_TOUCH, &rc);
+    CHECK(setting_by_hand("ai.read_clipboard", 1), "person confirms clipboard access");
     CHECK(AI("clipboard.read", NULL) && g_rc.status == INK_RC_DONE && strstr(g_result, "一段话"), "unless allowed (%s)", g_result);
     CHECK(AI("clipboard.write", "{\"text\":\"密码\",\"sensitive\":true}") && g_rc.status == INK_RC_DONE, "something sensitive");
     CHECK(AI("clipboard.read", NULL) && g_rc.status == INK_RC_REJECTED, "the AI never reads that (%s)", g_result);
@@ -486,7 +485,7 @@ static void clipboard(void) {
     CHECK(ink_member_switch("kid") == 0, "someone else");
     CHECK(ink_clip_get(out, sizeof out, INK_SRC_TOUCH, NULL) == 0, "it is not theirs");
     ink_member_test_reset();
-    ink_setting_set("ai.read_clipboard", 0, INK_SRC_TOUCH, &rc);
+    CHECK(setting_by_hand("ai.read_clipboard", 0), "person confirms revoking clipboard access");
     char *huge = malloc(INK_CLIP_MAX + 2);
     memset(huge, 'x', INK_CLIP_MAX + 1);
     huge[INK_CLIP_MAX + 1] = 0;

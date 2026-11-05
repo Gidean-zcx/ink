@@ -697,7 +697,7 @@ static size_t reclaim(void *ctx, size_t want) { /* never from under the lock: no
 
 /* ------------------------------------------------------------ the API */
 
-ink_db_t *ink_db_open(const ink_db_def_t *def, const char *member) {
+static ink_db_t *open_collection(const ink_db_def_t *def, const char *member) {
     if (!DB.lock || !def || !def->name || strlen(def->name) >= INK_DB_NAME_MAX || !ink_layout_name_ok(def->name)) return NULL;
     char who[INK_MEMBER_ID_MAX] = "";
     if (def->scope == INK_DB_MEMBER) {
@@ -751,6 +751,22 @@ ink_db_t *ink_db_open(const ink_db_def_t *def, const char *member) {
         unlock();
         return slot;
     }
+}
+
+ink_db_t *ink_db_open_member(const ink_db_def_t *def, const char *member, uint32_t generation) {
+    if (!def || def->scope != INK_DB_MEMBER || !ink_member_io_begin(member, generation)) return NULL;
+    ink_db_t *db = open_collection(def, member);
+    ink_member_io_end(member);
+    return db;
+}
+
+ink_db_t *ink_db_open(const ink_db_def_t *def, const char *member) {
+    if (!def || def->scope != INK_DB_MEMBER) return open_collection(def, member);
+    char who[INK_MEMBER_ID_MAX];
+    const char *id = member ? member : ink_member_current()->id;
+    if (!ink_layout_member_ok(id)) return NULL;
+    snprintf(who, sizeof who, "%s", id);
+    return ink_db_open_member(def, who, ink_member_generation(who));
 }
 
 void ink_db_close(ink_db_t *db) {
@@ -824,6 +840,7 @@ int ink_db_put(ink_db_t *db, const ink_db_write_t *w, uint32_t *out_id) {
     db->last_ver = nr->ver;
     if (nr->id >= db->next_id) db->next_id = nr->id + 1;
     if (out_id) *out_id = nr->id;
+    if (w->written_ver) *w->written_ver = nr->ver;
     if (w->flags & INK_DB_LAZY) {
         if (!db->flush_at.armed) ink_svc_at(&db->flush_at, osal_now_us() + LAZY_US, flush_cb, db);
     } else flush_locked(db);
@@ -840,6 +857,10 @@ uint32_t ink_db_new_id(ink_db_t *db) {
 }
 
 int ink_db_del(ink_db_t *db, uint32_t id, uint8_t src) {
+    return ink_db_del_if_ver(db, id, src, 0);
+}
+
+int ink_db_del_if_ver(ink_db_t *db, uint32_t id, uint8_t src, uint32_t ver) {
     if (!db) return INK_DB_ERR_ARG;
     lock();
     int at = find_id(db, id);
@@ -848,6 +869,7 @@ int ink_db_del(ink_db_t *db, uint32_t id, uint8_t src) {
         return INK_DB_ERR_NOT_FOUND;
     }
     rec_t *old = db->idx[at].r;
+    if (ver && old->ver != ver) { unlock(); return INK_DB_ERR_ARG; }
     rec_t *t = mem_get(sizeof(rec_t));
     if (!t) {
         unlock();
@@ -996,17 +1018,32 @@ int ink_db_error(ink_db_t *db) {
     return e;
 }
 
-void ink_db_forget_member(const char *member) {
-    if (!DB.lock) return;
+int ink_db_try_forget_member(const char *member) {
+    if (!DB.lock) return 0;
     lock();
     for (int i = 0; i < MAX_COLLECTIONS; i++) {
         ink_db_t *c = &DB.c[i];
+        if (c->used && !strcmp(c->member, member) &&
+            (c->loading || c->refs || c->fly || c->in_flight || c->compacting)) {
+            unlock();
+            return -1;
+        }
+    }
+    for (int i = 0; i < MAX_COLLECTIONS; i++) {
+        ink_db_t *c = &DB.c[i];
         if (!c->used || !c->loaded || strcmp(c->member, member) || c->refs || c->fly || c->in_flight || c->compacting) continue;
+        ink_svc_cancel(&c->flush_at);
+        ink_svc_cancel(&c->tell_at);
+        ink_svc_cancel(&c->compact_at);
+        c->compact_wanted = false;
         free_records(c);
         memset(c, 0, sizeof *c);
     }
     unlock();
+    return 0;
 }
+
+void ink_db_forget_member(const char *member) { (void)ink_db_try_forget_member(member); }
 
 void ink_db_flush_all(void) {
     if (!DB.lock) return;

@@ -76,7 +76,7 @@ typedef enum {
 static const char *const PKG_ERR[] = {"ok", "no such file", "not an upgrade package", "the signature does not hold", "for another product", "not newer than what runs", "this system is too old for it", "damaged", "too large", "it failed before"};
 
 typedef struct {
-    char state[12];   /* "", "writing", "trying", "resources" */
+    char state[12];   /* "", "writing", "trying", "committing", "resources" */
     char version[24];
     uint32_t code;
     char path[PKG_PATH_MAX];
@@ -90,6 +90,8 @@ typedef struct {
 } dl_piece_t;
 
 static struct {
+    ink_db_t *failures;
+    bool history_ok;
     hal_ota_info_t me;
     const char *product;
     stored_t st;
@@ -105,6 +107,8 @@ static struct {
     uint32_t card_told_code;
     /* downloading */
     int job;
+    char dl_version[24], dl_blob[BLOB_MAX];
+    uint32_t dl_code, dl_size;
     uint32_t dl_off;
     char dl_final[64], dl_path[72];
     volatile int dl_waiting;     /* 0 nothing out, 1 asked, 2 answered */
@@ -129,7 +133,11 @@ static void fail(ink_call_t *c, ink_rc_t st, const char *why) {
 
 /* ---- what survives a restart ---- */
 
-static void save_state(void) {
+static void state_saved(void *ctx, int result) {
+    __atomic_store_n((int *)ctx, result == 0 ? 0 : -1, __ATOMIC_RELEASE);
+}
+
+static bool save_state(void) {
     char buf[320];
     ink_jw_t w;
     ink_jw_init(&w, buf, sizeof buf);
@@ -146,7 +154,11 @@ static void save_state(void) {
     ink_jw_raw(&w, ",\"blocked\":");
     ink_jw_int(&w, U.st.blocked_code);
     ink_jw_raw(&w, "}");
-    if (!w.overflow) ink_storage_write_atomic(INK_UPDATE_STATE_FILE, buf, w.len);
+    int result = 1;
+    if (w.overflow || ink_storage_write_borrow(INK_UPDATE_STATE_FILE, buf, w.len, state_saved, &result) != 0) return false;
+    /* The stack buffer remains borrowed until the durable completion. Never on UI or input tasks. */
+    while (__atomic_load_n(&result, __ATOMIC_ACQUIRE) == 1) osal_task_delay_us(10000);
+    return result == 0;
 }
 
 static void load_state(void) {
@@ -204,9 +216,24 @@ static pkg_err_t read_header(const char *path, pkg_t *p) {
     return e;
 }
 
-static pkg_err_t check_rules(const pkg_t *p) {
+static const ink_db_def_t FAILURES = {.name = "update.failures", .scope = INK_DB_DEVICE, .schema = 1, .max_bytes = 128 * 1024};
+
+static bool failed_before(uint32_t code) {
+    return !U.history_ok || code == U.st.blocked_code || ink_db_get(U.failures, code, NULL, NULL, 0) == INK_DB_OK;
+}
+
+static bool remember_failure(uint32_t code) {
+    if (!U.failures || !code) return false;
+    if (ink_db_get(U.failures, code, NULL, NULL, 0) != INK_DB_OK) {
+        ink_db_write_t w = {.id = code, .data = &code, .len = sizeof code, .src = INK_SRC_SYSTEM};
+        if (ink_db_put(U.failures, &w, NULL) != INK_DB_OK) return false;
+    }
+    return ink_db_wait(U.failures, ink_db_last_ver(U.failures), 3000000) == 0;
+}
+
+static pkg_err_t check_rules_for(const pkg_t *p, bool retry) {
     if (strcmp(p->product, U.product)) return PKG_WRONG_PRODUCT;
-    if (p->code == U.st.blocked_code) return PKG_BLOCKED;
+    if (!U.history_ok || (!retry && failed_before(p->code))) return PKG_BLOCKED;
     if (p->code <= U.me.version_code && !(p->flags & 1)) return PKG_OLDER;
     if (U.me.version_code < p->min_from) return PKG_TOO_OLD_TO_UPGRADE;
     bool has_app = false;
@@ -219,7 +246,21 @@ static pkg_err_t check_rules(const pkg_t *p) {
 }
 
 /* Every section's hash, the whole file read. */
+static pkg_err_t check_rules(const pkg_t *p) { return check_rules_for(p, false); }
+
 static pkg_err_t check_sections(const char *path, const pkg_t *p) {
+    uint64_t header = 88 + p->nsec * sizeof(sec_t) + 4 + 64;
+    int64_t size = hal_fs_size(path);
+    uint32_t kinds = 0;
+    for (uint32_t i = 0; i < p->nsec; i++) {
+        const sec_t *sec = &p->sec[i];
+        if (sec->kind > SEC_RES || (kinds & (1u << sec->kind)) || !sec->size || sec->reserved ||
+            sec->offset < header || size < 0 || sec->offset > (uint64_t)size || sec->size > (uint64_t)size - sec->offset) return PKG_BAD_SECTION;
+        kinds |= 1u << sec->kind;
+        for (uint32_t k = 0; k < i; k++)
+            if (sec->offset < p->sec[k].offset + p->sec[k].size && p->sec[k].offset < sec->offset + sec->size) return PKG_BAD_SECTION;
+    }
+    if (!(kinds & (1u << SEC_APP))) return PKG_BAD_SECTION;
     hal_file_t *f = hal_fs_open(path, HAL_O_READ);
     if (!f) return PKG_NO_FILE;
     uint8_t *buf = osal_malloc(BLOCK, OSAL_MEM_EXTERNAL);
@@ -250,12 +291,14 @@ static pkg_err_t check_sections(const char *path, const pkg_t *p) {
     return e;
 }
 
-static pkg_err_t check_package(const char *path, pkg_t *p) {
+static pkg_err_t check_package_for(const char *path, pkg_t *p, bool retry) {
     pkg_err_t e = read_header(path, p);
-    if (e == PKG_OK) e = check_rules(p);
+    if (e == PKG_OK) e = check_rules_for(p, retry);
     if (e == PKG_OK) e = check_sections(path, p);
     return e;
 }
+
+static pkg_err_t check_package(const char *path, pkg_t *p) { return check_package_for(path, p, false); }
 
 /* ---- installing ---- */
 
@@ -282,8 +325,7 @@ static void slot_finish(void *arg) { /* whole and well formed: the next boot is 
 }
 
 static void slot_valid(void *arg) {
-    (void)arg;
-    hal_ota_mark_valid();
+    *(int *)arg = hal_ota_mark_valid();
 }
 
 typedef struct {
@@ -304,6 +346,7 @@ static void never_back(void) { /* hal_power_reboot does not come back on the dev
 
 /* What stands in the way, in words. */
 static const char *not_now(void) {
+    if (!strcmp(U.st.state, "resources") || !strcmp(U.st.state, "committing")) return "resources from the previous upgrade still need recovery";
     if (ink_audio_focus_top() || ink_audio_recording()) return "a call, a recording or something being said comes first";
     ink_media_status_t m;
     ink_media_status(&m);
@@ -336,7 +379,13 @@ static int install(const char *path, const pkg_t *p) { /* exec.bg, holding the c
     U.st.code = p->code;
     snprintf(U.st.path, sizeof U.st.path, "%s", path);
     U.st.res_done_section = 0;
-    save_state();
+    if (!save_state()) {
+        hal_fs_close(f);
+        osal_free(sum);
+        osal_free(buf);
+        set_state("failed");
+        return -1;
+    }
     set_state("installing");
     ink_power_hold(INK_NEED_AWAKE);
     ink_power_hold(INK_NEED_NO_LOCK);
@@ -370,6 +419,10 @@ static int install(const char *path, const pkg_t *p) { /* exec.bg, holding the c
         ink_probe_count("update.changed_while_written");
         bad = 1;
     }
+    if (!bad) {
+        snprintf(U.st.state, sizeof U.st.state, "trying");
+        if (!save_state()) bad = 1;
+    }
     if (!bad) ink_storage_run(slot_finish, &op, true);
     if (bad || op.r != 0) {
         ink_power_release(INK_NEED_NO_LOCK);
@@ -380,8 +433,6 @@ static int install(const char *path, const pkg_t *p) { /* exec.bg, holding the c
         ink_probe_count("update.write_failed");
         return -1;
     }
-    snprintf(U.st.state, sizeof U.st.state, "trying");
-    save_state();
     ink_db_flush_all();
     for (int i = 0; i < 200 && (!ink_db_idle() || ink_storage_pending()); i++) osal_task_delay_us(50000);
     set_state("rebooting");
@@ -404,7 +455,11 @@ static void install_cap(ink_call_t *c, const char *path) {
         return;
     }
     set_state("verifying");
-    pkg_err_t e = check_package(path, p);
+    bool retry = false;
+    ink_args_get_bool(&c->args, "retry_failed", &retry);
+    char selected[64];
+    retry = retry && c->src == INK_SRC_CONFIRMED && ink_args_get_str(&c->args, "file", selected, sizeof selected) > 0;
+    pkg_err_t e = check_package_for(path, p, retry);
     if (e != PKG_OK) {
         set_state("idle");
         ink_probe_count("update.package_refused");
@@ -505,7 +560,7 @@ typedef struct {
     uint32_t code, size;
 } answer_t;
 
-static bool is_newer(uint32_t code) { return code > U.me.version_code && code != U.st.blocked_code; }
+static bool is_newer(uint32_t code) { return code > U.me.version_code && !failed_before(code); }
 
 static bool on_wifi(void) {
     char type[8] = "";
@@ -650,6 +705,7 @@ static ink_job_step_t dl_check(void) { /* exec.bg */
     }
     pkg_t *p = osal_malloc(sizeof *p, OSAL_MEM_EXTERNAL);
     pkg_err_t e = p ? check_package(U.dl_path, p) : PKG_BAD_FORMAT;
+    if (e == PKG_OK && (p->code != U.dl_code || strcmp(p->version, U.dl_version) || hal_fs_size(U.dl_path) != U.dl_size)) e = PKG_BAD_SECTION;
     osal_free(p);
     if (e != PKG_OK) {
         hal_fs_remove(U.dl_path);
@@ -658,9 +714,9 @@ static ink_job_step_t dl_check(void) { /* exec.bg */
         return INK_JOB_FAILED;
     }
     hal_fs_remove(U.dl_final);
-    hal_fs_rename(U.dl_path, U.dl_final);
+    int renamed = hal_fs_rename(U.dl_path, U.dl_final);
     ink_fs_card_release();
-    return INK_JOB_DONE;
+    return renamed == 0 ? INK_JOB_DONE : INK_JOB_FAILED;
 }
 
 /* A piece at a time, and the card held only for as long as a piece takes: it can be lent in between. */
@@ -673,6 +729,7 @@ static ink_job_step_t dl_step(void *ctx) { /* exec.bg: realtime sessions first (
     }
     if (w == 2) {
         if (U.dl_got) {
+            if (U.dl_got > U.dl_size - U.dl_off) return INK_JOB_FAILED;
             if (ink_fs_card_hold() != INK_FS_OK) {
                 osal_task_delay_us(WAIT_FOR_NET_US);
                 return INK_JOB_MORE; /* it waits with the piece */
@@ -684,7 +741,7 @@ static ink_job_step_t dl_step(void *ctx) { /* exec.bg: realtime sessions first (
             if (n != (ssize_t)U.dl_got) return INK_JOB_FAILED;
             U.dl_off += (uint32_t)U.dl_got;
             U.dl_errors = 0;
-            int percent = (int)((uint64_t)U.dl_off * 100 / (U.offer_size ? U.offer_size : 1));
+            int percent = (int)((uint64_t)U.dl_off * 100 / (U.dl_size ? U.dl_size : 1));
             ink_state_set_int(U.h_progress, percent);
             ink_task_progress(U.task, percent, NULL);
         } else if (++U.dl_errors > DOWNLOAD_MAX_ERRORS) { /* the link went and came back is one thing; this is not that */
@@ -692,7 +749,7 @@ static ink_job_step_t dl_step(void *ctx) { /* exec.bg: realtime sessions first (
         } else osal_task_delay_us(WAIT_FOR_NET_US);
         __atomic_store_n(&U.dl_waiting, 0, __ATOMIC_RELEASE);
     }
-    if (U.dl_off >= U.offer_size) return dl_check();
+    if (U.dl_off >= U.dl_size) return dl_check();
     hal_battery_t b;
     hal_power_battery(&b);
     if (!ink_hub_online() || (b.percent < DOWNLOAD_PAUSE_BATTERY && !b.charging && !b.external_power)) { /* until it is back, or charged */
@@ -701,8 +758,8 @@ static ink_job_step_t dl_step(void *ctx) { /* exec.bg: realtime sessions first (
         return INK_JOB_MORE;
     }
     char params[64 + BLOB_MAX];
-    uint32_t left = U.offer_size - U.dl_off;
-    snprintf(params, sizeof params, "{\"blob\":\"%s\",\"offset\":%u,\"len\":%u}", U.offer_blob, (unsigned)U.dl_off, (unsigned)(left < DOWNLOAD_CHUNK * 3 / 4 ? left : DOWNLOAD_CHUNK * 3 / 4));
+    uint32_t left = U.dl_size - U.dl_off;
+    snprintf(params, sizeof params, "{\"blob\":\"%s\",\"offset\":%u,\"len\":%u}", U.dl_blob, (unsigned)U.dl_off, (unsigned)(left < DOWNLOAD_CHUNK * 3 / 4 ? left : DOWNLOAD_CHUNK * 3 / 4));
     __atomic_store_n(&U.dl_waiting, 1, __ATOMIC_RELEASE);
     __atomic_add_fetch(&U.dl_piece->refs, 1, __ATOMIC_ACQ_REL); /* the answer writes into it, whatever happens here meanwhile */
     if (ink_hub_call("update/fetch", params, 20000000, on_chunk, U.dl_piece) < 0) {
@@ -731,7 +788,7 @@ static void dl_finish(void *ctx, ink_job_step_t how, bool cancelled) { /* exec.b
     set_state("ready");
     ink_probe_count("update.downloaded");
     char body[64];
-    snprintf(body, sizeof body, "%s 下载好了，可以安装", U.offer_version);
+    snprintf(body, sizeof body, "%s 下载好了，可以安装", U.dl_version);
     ink_notify_t n = {.channel = "download", .title = "系统更新", .body = body, .tag = "update", .action = "system.upgrade", .prio = INK_NOTIFY_NORMAL, .src = INK_SRC_SYSTEM};
     ink_notify_post(&n, NULL);
 }
@@ -747,16 +804,35 @@ static const char *start_download(void) {
     if (U.job) return "already downloading";
     int held = ink_fs_card_hold();
     if (held != INK_FS_OK) return held == INK_FS_ERR_USB ? "the card is lent to a computer" : "no card: the package waits on the card";
+    ink_svc_lock();
+    snprintf(U.dl_version, sizeof U.dl_version, "%s", U.offer_version);
+    snprintf(U.dl_blob, sizeof U.dl_blob, "%s", U.offer_blob);
+    U.dl_code = U.offer_code;
+    U.dl_size = U.offer_size;
+    ink_svc_unlock();
     hal_fs_mkdir(UPDATE_DIR);
-    snprintf(U.dl_final, sizeof U.dl_final, "%s/%s.inkfw", UPDATE_DIR, U.offer_version);
+    snprintf(U.dl_final, sizeof U.dl_final, "%s/%s.inkfw", UPDATE_DIR, U.dl_version);
     snprintf(U.dl_path, sizeof U.dl_path, "%s.part", U.dl_final);
     int64_t have = hal_fs_size(U.dl_path);
-    U.dl_off = have > 0 && have <= U.offer_size ? (uint32_t)have : 0; /* from where it stopped */
+    char identity[160], identity_path[80], saved[160];
+    int identity_len = snprintf(identity, sizeof identity, "%u:%u:%s", (unsigned)U.dl_code, (unsigned)U.dl_size, U.dl_blob);
+    snprintf(identity_path, sizeof identity_path, "%s.id", U.dl_path);
+    hal_file_t *id_file = hal_fs_open(identity_path, HAL_O_READ);
+    ssize_t id_len = id_file ? hal_fs_read(id_file, saved, sizeof saved) : -1;
+    if (id_file) hal_fs_close(id_file);
+    bool same = identity_len > 0 && identity_len < (int)sizeof identity && id_len == identity_len && !memcmp(saved, identity, (size_t)identity_len);
+    U.dl_off = same && have > 0 && have <= U.dl_size ? (uint32_t)have : 0;
     bool ok = true;
     if (!U.dl_off) { /* nothing, or not what this can be */
         hal_file_t *f = hal_fs_open(U.dl_path, HAL_O_WRITE | HAL_O_CREATE | HAL_O_TRUNC);
         if (f) hal_fs_close(f);
         ok = f != NULL;
+        id_file = ok ? hal_fs_open(identity_path, HAL_O_WRITE | HAL_O_CREATE | HAL_O_TRUNC) : NULL;
+        if (!id_file) ok = false;
+        else {
+            ok = hal_fs_write(id_file, identity, (size_t)identity_len) == identity_len;
+            if (hal_fs_close(id_file) != 0) ok = false;
+        }
     }
     ink_fs_card_release();
     dl_piece_t *piece = ok ? osal_malloc(sizeof *piece, OSAL_MEM_EXTERNAL) : NULL;
@@ -782,9 +858,9 @@ static const char *start_download(void) {
     ink_probe_count("update.download_started");
     set_state("downloading");
     char title[64];
-    snprintf(title, sizeof title, "下载系统更新 %.20s", U.offer_version);
+    snprintf(title, sizeof title, "下载系统更新 %.20s", U.dl_version);
     U.task = ink_task_begin("update.download", title, true, dl_cancel, NULL);
-    ink_task_progress(U.task, (int)((uint64_t)U.dl_off * 100 / (U.offer_size ? U.offer_size : 1)), NULL);
+    ink_task_progress(U.task, (int)((uint64_t)U.dl_off * 100 / (U.dl_size ? U.dl_size : 1)), NULL);
     return NULL;
 }
 
@@ -866,7 +942,7 @@ static void told_result(bool ok, const char *version, const char *why) {
 
 /* What was not in the slot: fonts and resources, after the system has proved itself. From where a power cut left it. */
 static bool write_resources(const char *path) { /* exec.bg, holding the card */
-    if (!path[0]) return true; /* a package with nothing more to write */
+    if (!path[0]) return false; /* A trial without a recovery record cannot prove its resources. */
     pkg_t *p = osal_malloc(sizeof *p, OSAL_MEM_EXTERNAL);
     uint8_t *buf = osal_malloc(BLOCK, OSAL_MEM_EXTERNAL);
     ink_sha256_t *sum = osal_malloc(sizeof *sum, OSAL_MEM_EXTERNAL);
@@ -899,7 +975,7 @@ static bool write_resources(const char *path) { /* exec.bg, holding the card */
             }
             if (ok) {
                 U.st.res_done_section = i + 1;
-                save_state();
+                if (!save_state()) ok = false;
             }
         }
     }
@@ -941,15 +1017,28 @@ static void self_job(void *arg) { /* exec.bg */
     while (ink_storage_pending()) osal_task_delay_us(50000);
     int n = ink_storage_read("/user/sys/update.probe", back, sizeof back - 1);
     ink_storage_remove("/user/sys/update.probe", NULL, NULL);
-    bool ok = panel_ok && n == (int)sizeof PROBE - 1 && !memcmp(back, PROBE, sizeof PROBE - 1);
+    bool ok = panel_ok && !strcmp(U.st.state, "trying") && U.st.code == U.me.version_code && U.st.path[0] &&
+              n == (int)sizeof PROBE - 1 && !memcmp(back, PROBE, sizeof PROBE - 1);
     for (int i = 0; i < U.nchecks && ok; i++) ok = U.checks[i]();
     if (!ok) {
         ink_probe_count("update.self_check_failed");
         hal_power_reboot();
         never_back();
     }
+    snprintf(U.st.state, sizeof U.st.state, "committing");
+    if (!save_state()) {
+        ink_probe_count("update.state_failed");
+        hal_power_reboot();
+        never_back();
+    }
     ink_svc_cancel(&U.self_at);
-    ink_storage_run(slot_valid, NULL, true);
+    int valid = -1;
+    ink_storage_run(slot_valid, &valid, true);
+    if (valid != 0) {
+        ink_probe_count("update.self_check_failed");
+        hal_power_reboot();
+        never_back();
+    }
     ink_probe_count("update.self_check_passed");
     if (U.st.state[0] && U.st.code == U.me.version_code) {
         snprintf(U.st.state, sizeof U.st.state, "resources");
@@ -980,9 +1069,11 @@ void ink_update_boot_check(void) { /* boot task */
         return;
     }
     bool trying = !strcmp(U.st.state, "trying"), writing = !strcmp(U.st.state, "writing");
-    if ((trying || writing) && U.st.code != U.me.version_code && (trying || U.me.rolled_back)) { /* it went back */
+    bool committed = !strcmp(U.st.state, "committing") || !strcmp(U.st.state, "resources");
+    if ((trying || committed || (writing && U.me.rolled_back)) && U.st.code != U.me.version_code) { /* it went back */
         ink_probe_count("update.rolled_back");
         U.st.blocked_code = U.st.code;
+        if (!remember_failure(U.st.code)) { U.history_ok = false; set_state("failed"); return; }
         char version[24];
         snprintf(version, sizeof version, "%s", U.st.version);
         U.st.state[0] = 0;
@@ -993,7 +1084,9 @@ void ink_update_boot_check(void) { /* boot task */
         ink_probe_count("update.interrupted");
         U.st.state[0] = 0;
         save_state();
-    } else if (U.st.state[0]) { /* it is good, a power cut came before all of the rest was done */
+    } else if (U.st.state[0] && U.st.code == U.me.version_code) { /* the slot is valid; finish its own resources */
+        snprintf(U.st.state, sizeof U.st.state, "resources");
+        save_state();
         ink_exec_post(INK_EXEC_BG, &U.rest_job, rest_job, NULL);
     }
     /* a package on the card? Only if the folder is there: this should not start the executor for nothing */
@@ -1016,7 +1109,7 @@ static const ink_cap_t UPDATE_CAPS[] = {
     /* a person installs: not even listed for the AI (foundation §6.2; the policy gate has the same rule by name) */
     {.id = "system.upgrade", .title = "安装下载好的新系统（安装时不能用设备，会重启）", .ask = "安装新系统，装完重启", .ask_by_hand = true, .effect = INK_FX_SYSTEM, .expose = INK_EXPOSE_OWNER, .timeout_ms = 600000, .exec = INK_EXEC_BG, .run = cap_upgrade},
     {.id = "system.upgrade_from_card", .title = "安装存储卡上的新系统（update 文件夹里，会重启）", .ask = "从存储卡安装新系统，装完重启", .ask_by_hand = true,
-     .input = "{\"type\":\"object\",\"properties\":{\"file\":{\"type\":\"string\",\"maxLength\":63}}}", .effect = INK_FX_SYSTEM, .expose = INK_EXPOSE_OWNER, .timeout_ms = 600000, .exec = INK_EXEC_BG, .run = cap_upgrade_card},
+     .input = "{\"type\":\"object\",\"properties\":{\"file\":{\"type\":\"string\",\"maxLength\":63},\"retry_failed\":{\"type\":\"boolean\"}}}", .effect = INK_FX_SYSTEM, .expose = INK_EXPOSE_OWNER, .timeout_ms = 600000, .exec = INK_EXEC_BG, .run = cap_upgrade_card},
     {.id = "update.available", .title = "发现了新版本", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},
     {.id = "update.result", .title = "升级的结果", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},
 };
@@ -1034,6 +1127,10 @@ int ink_update_init(void) {
     U.product = di.profile_id;
     hal_ota_info(&U.me);
     load_state();
+    ink_db_register(&FAILURES);
+    U.failures = ink_db_open(&FAILURES, NULL);
+    U.history_ok = U.failures && !ink_db_error(U.failures);
+    if (U.st.blocked_code && !remember_failure(U.st.blocked_code)) U.history_ok = false;
     U.h_state = ink_state_define(&ST_STATE);
     U.h_version = ink_state_define(&ST_VERSION);
     U.h_progress = ink_state_define(&ST_PROGRESS);

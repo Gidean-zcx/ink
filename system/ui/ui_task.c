@@ -19,6 +19,8 @@
 #include "ink/sys/ai.h"
 #include "ink/sys/exec.h"
 #include "ink/sys/ui.h"
+#include "ink/sys/textinput.h"
+#include "ink/sys/json.h"
 
 #define UI_STACK 10240
 #define UI_PRIO 5
@@ -297,11 +299,24 @@ int ink_ui_snapshot(char *buf, size_t cap, const char **activity_name) {
     }
     const ink_activity_t *top = UI.depth ? UI.stack[UI.depth - 1].a : NULL;
     if (activity_name) *activity_name = top ? top->name : "";
-    if (!top || !top->snapshot || !cap) {
+    if (!cap || ((!top || !top->snapshot) && !ink_text_focused())) {
         if (cap) buf[0] = 0;
         return 0;
     }
-    return top->snapshot(buf, cap);
+    if (!ink_text_focused()) return top->snapshot(buf, cap);
+    char *page = osal_malloc(cap, OSAL_MEM_EXTERNAL);
+    char *text = osal_malloc(cap, OSAL_MEM_EXTERNAL);
+    int pn = page ? (top && top->snapshot ? top->snapshot(page, cap) : snprintf(page, cap, "%s", top ? top->name : "")) : -1;
+    int tn = text ? ink_text_snapshot(text, cap) : -1;
+    ink_jw_t w;
+    ink_jw_init(&w, buf, cap);
+    if (pn >= 0 && tn >= 0) {
+        ink_jw_raw(&w, "{\"page\":"); ink_jw_strn(&w, page, (size_t)pn);
+        ink_jw_raw(&w, ",\"keyboard\":"); ink_jw_raw(&w, text); ink_jw_raw(&w, "}");
+    } else w.overflow = true;
+    osal_free(page); osal_free(text);
+    if (w.overflow) { buf[0] = 0; return -1; }
+    return (int)w.len;
 }
 
 void ink_ui_hint_frame(ink_refresh_t intent) {

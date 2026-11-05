@@ -12,6 +12,8 @@
 #include "ink/sys/camera.h"
 #include "ink/sys/comm.h"
 #include "ink/sys/cap.h"
+#include "ink/sys/data.h"
+#include "ink/sys/svc.h"
 #include "ink/sys/display.h"
 #include "ink/sys/exec.h"
 #include "ink/sys/hub.h"
@@ -217,7 +219,10 @@ static const ink_cap_t TEST_CAPS[] = {
 static ink_rc_t json_call(const char *id, const char *args, ink_receipt_t *rc) { return ink_cap_invoke_json(id, args, INK_SRC_AI, 0, rc); }
 
 static void cap_checks(void) {
-    static char buf[4096];
+    enum { CAP_BUF = 32768 };
+    char *buf = osal_malloc(CAP_BUF, OSAL_MEM_EXTERNAL);
+    CHECK(buf != NULL, "manifest buffer");
+    if (!buf) return;
     ink_receipt_t rc;
     CHECK(ink_cap_register(TEST_CAPS, (int)(sizeof TEST_CAPS / sizeof TEST_CAPS[0])) == 0, "test capabilities register");
     CHECK(ink_cap_invoke("test.read", NULL, INK_SRC_TOUCH, 0, &rc) == INK_RC_DONE && g_runs == 1, "a read runs (%s)", ink_rc_name(rc.status));
@@ -259,22 +264,23 @@ static void cap_checks(void) {
     ink_args_init(&a);
     ink_args_int(&a, "n", 3);
     ink_args_str(&a, "name", "a\"b");
-    int n = ink_args_to_json(&a, buf, sizeof buf);
+    int n = ink_args_to_json(&a, buf, CAP_BUF);
     char why[96], name[8];
     CHECK(n > 0 && ink_args_from_json(&back, buf, (size_t)n, NULL, why, sizeof why) == 0 && ink_args_get_str(&back, "name", name, sizeof name) == 3 &&
               !strcmp(name, "a\"b"),
           "arguments survive a round trip through JSON (%.120s)", buf);
 
     /* the tool list is generated from the table */
-    n = ink_cap_manifest_json(buf, sizeof buf);
+    n = ink_cap_manifest_json(buf, CAP_BUF);
     cJSON *list = n > 0 ? cJSON_Parse(buf) : NULL; /* the whole list: more tokens than the device parser takes */
     CHECK(cJSON_IsArray(list) && cJSON_GetArraySize(list) >= 8, "the tool list is a JSON array: the 8 test and settings capabilities offered to "
           "the AI, and the services' own (%d)", cJSON_GetArraySize(list));
     cJSON_Delete(list);
     CHECK(strstr(buf, "\"name\":\"test.args\"") && strstr(buf, "\"maxLength\":3") && !strstr(buf, "test.hidden") && !strstr(buf, "test.page"),
           "it lists what the AI may use now, with the schemas");
-    n = ink_cap_ids_json(buf, sizeof buf);
+    n = ink_cap_ids_json(buf, CAP_BUF);
     CHECK(n > 0 && strstr(buf, "\"test.read\"") && !strstr(buf, "test.hidden"), "the id list for snapshots matches");
+    osal_free(buf);
 }
 
 static int g_seen[3];
@@ -352,9 +358,9 @@ static void settings_checks(void) {
     CHECK(ink_cap_invoke_json("settings.set", "{\"id\":\"test.mode\",\"value\":\"c\"}", INK_SRC_AI, 0, &rc) == INK_RC_DONE &&
               ink_setting_get("test.mode") == 2,
           "the AI changes a setting through settings.set, enum values by name (%s)", rc.detail);
-    CHECK(ink_cap_invoke_json("settings.set", "{\"id\":\"test.sys\",\"value\":true}", INK_SRC_AI, 0, &rc) == INK_RC_PENDING_CONFIRMATION &&
-              ink_setting_get("test.sys") == 0,
-          "a system-level setting asked by the AI waits for confirmation (%s)", ink_rc_name(rc.status));
+    CHECK(ink_cap_invoke_json("settings.set", "{\"id\":\"test.sys\",\"value\":true}", INK_SRC_AI, 0, &rc) == INK_RC_DONE &&
+              ink_setting_get("test.sys") == 1 && rc.undo_ms > 0,
+          "D-105: a non-risk system setting is done and reversible (%s)", ink_rc_name(rc.status));
     CHECK(ink_setting_set("test.sys", 1, INK_SRC_TOUCH, &rc) == INK_RC_DONE, "the same by touch is done");
     CHECK(ink_cap_invoke_json("settings.get", "{\"id\":\"test.mode\"}", INK_SRC_AI, 0, &rc) == INK_RC_DONE && strstr(rc.say, "c"), "settings.get (%s)",
           rc.say);
@@ -792,7 +798,7 @@ static void child_checks(void) {
 static void systest_task(void *arg) {
     (void)arg;
     if (ink_display_init() != 0 || ink_storage_init() != 0 || ink_cap_init() != 0 || ink_exec_init() != 0 || ink_res_init() != 0 || ink_storage_reclaimable() != 0 || ink_state_init() != 0 ||
-        ink_settings_init() != 0 || ink_power_init() != 0 || ink_net_init() != 0 || ink_light_init() != 0 ||
+        ink_settings_init() != 0 || ink_svc_init() != 0 || ink_data_init() != 0 || ink_power_init() != 0 || ink_net_init() != 0 || ink_light_init() != 0 ||
         ink_hub_init("wss://hub.local/v1/device") != 0 || ink_rt_init() != 0 || ink_tools_init() != 0 || ink_audio_init() != 0 || ink_camera_init() != 0 || ink_comm_init() != 0) {
         CHECK(0, "the system services start");
         return;

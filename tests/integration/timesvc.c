@@ -379,7 +379,8 @@ static void capabilities(void) {
     snprintf(args, sizeof args, "{\"id\":%u}", rid);
     CHECK(AI("reminder.cancel", args) && g_rc.status == INK_RC_DONE, "cancelled");
     CHECK(AI("reminder.add", "{\"at\":\"tomorrow\",\"title\":\"x\"}") && g_rc.status == INK_RC_INVALID && strstr(g_rc.detail, "YYYY"), "a time it cannot read is said so");
-    CHECK(AI("time.set", "{\"utc_s\":1800000000}") && g_rc.status == INK_RC_PENDING_CONFIRMATION, "the AI changing the clock waits for a person");
+    CHECK(AI("time.set", "{\"utc_s\":1800000000}") && g_rc.status == INK_RC_DONE && ink_time_now_s() >= 1800000000 && g_rc.undo_ms, "D-105: time setting executes and offers undo");
+    CHECK(AI("system.undo", "{\"object\":\"time:clock\"}") && g_rc.status == INK_RC_UNDONE, "restore the clock for the remaining time tests");
     CHECK(AI("alarm.dismiss", "{}") && g_rc.status == INK_RC_FAILED, "nothing rings");
     CHECK(ink_member_switch("kid") == 0, "the child");
     CHECK(call_as("time.set", "{\"utc_s\":1800000000}", INK_SRC_TOUCH) && g_rc.status == INK_RC_REJECTED, "a child cannot change the time: it would get around time limits (%s)", ink_rc_name(g_rc.status));

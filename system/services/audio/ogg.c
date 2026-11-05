@@ -150,7 +150,7 @@ static void find_duration(ogg_reader_t *r) {
     r->duration_ms = (uint32_t)granule_ms(r, best);
 }
 
-int ogg_open(const char *path, ogg_reader_t **out, int *fs_err) {
+static int open_for(const char *member, uint32_t generation, const char *path, ogg_reader_t **out, int *fs_err) {
     ogg_reader_t *r = osal_calloc(1, sizeof *r, OSAL_MEM_EXTERNAL);
     uint8_t *page = osal_malloc(PAGE_MAX, OSAL_MEM_EXTERNAL);
     uint8_t *packet = osal_malloc(4096, OSAL_MEM_EXTERNAL);
@@ -163,14 +163,18 @@ int ogg_open(const char *path, ogg_reader_t **out, int *fs_err) {
     r->page = page;
     r->packet = packet;
     r->packet_cap = 4096;
-    int e = ink_fs_open(path, INK_FS_READ, &r->f);
+    int e = member ? ink_fs_open_member_generation(member, generation, path, INK_FS_READ, &r->f) : ink_fs_open(path, INK_FS_READ, &r->f);
     if (e != INK_FS_OK) {
         if (fs_err) *fs_err = e;
         ogg_close(r);
         return OGG_ERR_FILE;
     }
-    ink_fs_stat_t st;
-    r->size = ink_fs_stat(path, &st) == 0 ? st.size : 0;
+    r->size = ink_fs_seek(r->f, 0, 2) == 0 ? ink_fs_tell(r->f) : -1;
+    if (r->size < 0 || ink_fs_seek(r->f, 0, 0) != 0) {
+        if (fs_err) *fs_err = INK_FS_ERR_IO;
+        ogg_close(r);
+        return OGG_ERR_FILE;
+    }
     /* the first page: OpusHead, one channel; the second: OpusTags */
     int64_t n = read_page_here(r);
     if (n <= 0 || n < HEAD_SIZE + 1 + 19 || memcmp(r->page + HEAD_SIZE + r->page[26], "OpusHead", 8) || r->page[HEAD_SIZE + r->page[26] + 9] != 1) {
@@ -191,6 +195,12 @@ int ogg_open(const char *path, ogg_reader_t **out, int *fs_err) {
     r->pos_ms = 0;
     *out = r;
     return OGG_OK;
+}
+
+int ogg_open(const char *path, ogg_reader_t **out, int *fs_err) { return open_for(NULL, 0, path, out, fs_err); }
+
+int ogg_open_member_generation(const char *member, uint32_t generation, const char *path, ogg_reader_t **out, int *fs_err) {
+    return open_for(member, generation, path, out, fs_err);
 }
 
 void ogg_close(ogg_reader_t *r) {
@@ -332,7 +342,7 @@ static int flush_page(ogg_writer_t *w, uint8_t flags) {
     return r;
 }
 
-int ogg_create(const char *path, ogg_writer_t **out, int *fs_err) {
+static int create_for(const char *member, uint32_t generation, const char *path, ogg_writer_t **out, int *fs_err) {
     ogg_writer_t *w = osal_calloc(1, sizeof *w, OSAL_MEM_EXTERNAL);
     uint8_t *body = osal_malloc(PAGE_BYTES, OSAL_MEM_EXTERNAL);
     if (!w || !body) {
@@ -342,7 +352,8 @@ int ogg_create(const char *path, ogg_writer_t **out, int *fs_err) {
     }
     w->body = body;
     w->serial = (uint32_t)(osal_now_us() & 0xffffffffu) | 1u;
-    int e = ink_fs_open(path, INK_FS_WRITE | INK_FS_CREATE | INK_FS_EXCL, &w->f);
+    int mode = INK_FS_WRITE | INK_FS_CREATE | INK_FS_EXCL;
+    int e = member ? ink_fs_open_member_generation(member, generation, path, mode, &w->f) : ink_fs_open(path, mode, &w->f);
     if (e != INK_FS_OK) {
         if (fs_err) *fs_err = e;
         osal_free(body);
@@ -363,6 +374,12 @@ int ogg_create(const char *path, ogg_writer_t **out, int *fs_err) {
     }
     *out = w;
     return OGG_OK;
+}
+
+int ogg_create(const char *path, ogg_writer_t **out, int *fs_err) { return create_for(NULL, 0, path, out, fs_err); }
+
+int ogg_create_member_generation(const char *member, uint32_t generation, const char *path, ogg_writer_t **out, int *fs_err) {
+    return create_for(member, generation, path, out, fs_err);
 }
 
 int ogg_write_packet(ogg_writer_t *w, const uint8_t *data, size_t len, uint32_t ms) {

@@ -46,7 +46,7 @@ static struct {
     osal_sem_t *guard_ack;
     int busy;  /* regions waiting in the policy + the update in flight (this task writes it) */
     int inbox; /* messages sent and not yet fully handled (atomic) */
-    uint32_t commits;
+    uint32_t commits, failures;
 } DS;
 
 /* Every message goes through here: the inbox count rises before the message is queued and
@@ -88,6 +88,7 @@ static void dispatch_one(rp_dispatch_t d) {
                                      done_cb, NULL);
     osal_mutex_unlock(DS.lock);
     if (!id) {
+        __atomic_add_fetch(&DS.failures, 1, __ATOMIC_RELEASE);
         rp_done(&DS.rp, &d, false);
         return;
     }
@@ -121,6 +122,7 @@ static void on_done(const hal_display_result_t *r) {
     rp_dispatch_t cur = DS.flight[k].d;
     DS.flight[k] = DS.flight[--DS.nflight];
     rp_done(&DS.rp, &cur, r->ok);
+    if (!r->ok) __atomic_add_fetch(&DS.failures, 1, __ATOMIC_RELEASE);
     if (cur.cause_us && !cause_seen(cur.cause_us, cur.cause_tag)) {
         if (cur.cause_tag) {
             /* a named cause (e.g. "AI answer visible after release") has its own metric and may
@@ -198,6 +200,8 @@ void ink_display_unlock(void) { osal_mutex_unlock(DS.lock); }
 void ink_display_commit(const ink_region_t *regions, int n, uint64_t cause_us) {
     ink_display_commit_tagged(regions, n, cause_us, NULL);
 }
+
+uint32_t ink_display_failures(void) { return __atomic_load_n(&DS.failures, __ATOMIC_ACQUIRE); }
 
 uint32_t ink_display_commits(void) { return __atomic_load_n(&DS.commits, __ATOMIC_RELAXED); }
 

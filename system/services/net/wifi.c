@@ -130,7 +130,21 @@ static void cap_connect(ink_call_t *c) { /* exec.bg */
         return;
     }
     ink_args_get_str(&c->args, "ssid", k->ssid, sizeof k->ssid);
-    ink_args_get_str(&c->args, "password", k->password, sizeof k->password);
+    int password = ink_args_get_str(&c->args, "password", k->password, sizeof k->password);
+    if (password > 0 && (c->src == INK_SRC_AI || c->src == INK_SRC_REMOTE || c->src == INK_SRC_APP)) {
+        memset(k, 0, sizeof *k);
+        osal_free(k);
+        fail(c, INK_RC_REJECTED, "passwords are entered by the person on the device");
+        return;
+    }
+    ink_db_t *known = ink_db_open(&KNOWN, NULL);
+    hal_wifi_known_t *prior = osal_calloc(1, sizeof *prior, OSAL_MEM_EXTERNAL);
+    int remembered = known && prior ? ink_db_get(known, ssid_id(k->ssid), NULL, prior, sizeof *prior) : INK_DB_ERR_NOMEM;
+    bool had = remembered == INK_DB_OK && !strcmp(prior->ssid, k->ssid);
+    bool can_undo = remembered == INK_DB_ERR_NOT_FOUND;
+    if (password < 0 && had) snprintf(k->password, sizeof k->password, "%s", prior->password);
+    if (prior) { memset(prior, 0, sizeof *prior); osal_free(prior); }
+    if (known) ink_db_close(known);
     ink_state_set_str(W.h_state, "joining");
     ink_state_set_str(W.h_ssid, k->ssid);
     ink_power_hold(INK_NEED_AWAKE);
@@ -138,7 +152,7 @@ static void cap_connect(ink_call_t *c) { /* exec.bg */
     ink_power_release(INK_NEED_AWAKE);
     if (r == HAL_WIFI_OK) {
         ink_db_t *db = ink_db_open(&KNOWN, NULL);
-        ink_db_write_t rec = {.id = ssid_id(k->ssid), .data = k, .len = sizeof *k, .src = (uint8_t)c->src};
+        ink_db_write_t rec = {.written_ver = &c->rc.revision, .id = ssid_id(k->ssid), .data = k, .len = sizeof *k, .src = (uint8_t)c->src};
         int saved = db ? ink_db_put(db, &rec, NULL) : INK_DB_ERR_ARG;
         ink_db_close(db);
         if (saved != INK_DB_OK) ink_probe_count("wifi.not_saved");
@@ -147,6 +161,16 @@ static void cap_connect(ink_call_t *c) { /* exec.bg */
         told("connected", k->ssid);
         snprintf(c->rc.say, sizeof c->rc.say, "连上了 %.60s", k->ssid);
         snprintf(c->rc.object, sizeof c->rc.object, "wifi:%.32s", k->ssid);
+        if (can_undo && saved == INK_DB_OK && c->rc.revision) {
+            ink_args_t *undo = osal_malloc(sizeof *undo, OSAL_MEM_EXTERNAL);
+            if (undo) {
+                ink_args_init(undo);
+                ink_args_str(undo, "ssid", k->ssid);
+                ink_args_int(undo, "if_revision", c->rc.revision);
+                ink_cap_undoable(c, "wifi.forget", undo, 10000);
+                osal_free(undo);
+            }
+        }
     } else {
         ink_state_set_str(W.h_state, "failed");
         ink_state_set_str(W.h_ssid, "");
@@ -160,10 +184,12 @@ static void cap_forget(ink_call_t *c) { /* exec.bg */
     char ssid[33];
     ink_args_get_str(&c->args, "ssid", ssid, sizeof ssid);
     ink_db_t *db = ink_db_open(&KNOWN, NULL);
-    int r = db ? ink_db_del(db, ssid_id(ssid), (uint8_t)c->src) : INK_DB_ERR_ARG;
+    int64_t revision = 0;
+    ink_args_get_int(&c->args, "if_revision", &revision);
+    int r = db ? ink_db_del_if_ver(db, ssid_id(ssid), (uint8_t)c->src, (uint32_t)revision) : INK_DB_ERR_ARG;
     ink_db_close(db);
     if (r != INK_DB_OK) {
-        fail(c, INK_RC_FAILED, "not a known network");
+        fail(c, revision ? INK_RC_STALE : INK_RC_FAILED, "network changed or absent");
         return;
     }
     publish_known();
@@ -179,7 +205,7 @@ static const ink_cap_t WIFI_CAPS[] = {
      .input = "{\"type\":\"object\",\"properties\":{\"ssid\":{\"type\":\"string\",\"maxLength\":32},\"password\":{\"type\":\"string\",\"maxLength\":64}},\"required\":[\"ssid\"]}",
      .effect = INK_FX_SYSTEM, .timeout_ms = 20000, .exec = INK_EXEC_BG, .run = cap_connect},
     {.id = "wifi.forget", .title = "忘掉一个 Wi-Fi", .ask = "忘掉 Wi-Fi：{ssid}", .input = "{\"type\":\"object\",\"properties\":{\"ssid\":{\"type\":\"string\",\"maxLength\":32}},\"required\":[\"ssid\"]}",
-     .effect = INK_FX_LOCAL_DESTRUCTIVE, .exec = INK_EXEC_BG, .run = cap_forget},
+     .effect = INK_FX_LOCAL_DESTRUCTIVE, .ask_by_hand = true, .exec = INK_EXEC_BG, .run = cap_forget},
     {.id = "wifi.changed", .title = "Wi-Fi 的情况变了（连上了、忘掉了）", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},
 };
 

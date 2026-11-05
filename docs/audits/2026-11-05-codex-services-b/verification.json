@@ -1,0 +1,44 @@
+[
+  {
+    "id": "AUD17-005",
+    "verdict": "已修复",
+    "evidence": "【复现】【代码核查】原 record_end_probe.c 在当前提交得到 recording=0 capture=0 focus=0 lost=15 completed=1；它断言旧缺陷仍存在的两条检查失败，runner 退出 1。当前 integration-media 常规和 ASan/UBSan 均通过。media_service.c:538 的 ending 标志不占帧队列位置。见 experiments/record-end-original.log。",
+    "note": "核查的是队列满时结束标记丢失；来电及时停止的不同问题见 AUD18-201。本轮未撤回此修复做变异。"
+  },
+  {
+    "id": "AUD16-002",
+    "verdict": "已修复",
+    "evidence": "【复现】【代码核查】【文档核查】media_service.c:81 无流时使用暂停位置。两种构建 integration-media 通过；仅从构建目录副本删除该分支，原测试失败 (19200, 23280)，test.fail=1、runner 退出 1，与设计 §15.3.1 相符。见 experiments/reverse-media-pause.log。",
+    "note": "包括暂停后停止、重新播放的原回归；未修改产品文件。"
+  },
+  {
+    "id": "AUD16-003",
+    "verdict": "已修复",
+    "evidence": "【复现】【代码核查】【文档核查】media_service.c:545 在音频任务检查成员，:563 在媒体执行器收尾，:491 的结束事件携带成员。原测试媒体队列忙 1 s 的场景两种构建均通过；副本只去掉收帧成员检查，原测试得到 2820 ms，test.fail=1、runner 退出 1，与设计表一致。见 experiments/reverse-media-member.log。",
+    "note": "限换成员收音边界；不能据此保证通话焦点边界正确。"
+  },
+  {
+    "id": "AUD15-006",
+    "verdict": "已修复",
+    "evidence": "【复现】【代码核查】【文档核查】notify/interrupt.c:70 的 applying/apply_again 保证单执行者最终重算。原 integration-races 两种构建均通过；独立边界探针当前为 active=0 ring=0 state=none。仅在副本绕过单执行者检查，同探针变为 active=0 ring=1 state=alarm，两条断言失败、runner 退出 1，与 §15.2 所述失败一致。见 experiments/interrupt-fixed.log、reverse-interrupt.log。",
+    "note": "此修复保证 apply 并发顺序，不保证 CALL 覆盖后 ring 的焦点生命周期；后者为 AUD18-205。"
+  },
+  {
+    "id": "AUD15-011",
+    "verdict": "已修复",
+    "evidence": "【复现】【代码核查】power_service.c:169 的 locked_step 在后台持有唤醒时按 next_battery_us 有界等待并轮询；integration-notify-lowbat 常规及 ASan/UBSan 均通过。日志见 experiments/ctest.log、ctest-asan.log。",
+    "note": "未重做此项反向变异；轮询恢复不等于关机数据收尾已正确，后者见 AUD18-203。"
+  },
+  {
+    "id": "AUD16-008",
+    "verdict": "已修复",
+    "evidence": "【复现】【代码核查】integration-listening 两种构建均通过，覆盖成人空间关闭后结束 AI 轮次和停止上传；本轮 voice_lifecycle_probe 的收尾再锁屏为 voice=0 rt=0，未把待定听写写回。",
+    "note": "验证的是现有空间关闭及正常 UI 执行路径，没有把它推广为任意拥堵执行器下的同步停止证明。"
+  },
+  {
+    "id": "AUD17-004",
+    "verdict": "已修复",
+    "evidence": "【复现】【代码核查】integration-races、integration-media 两种构建均通过；media_service.c:194 的 media.finished 和 :491 的 audio.record_done 带成员，换成员后事件按归属处理。",
+    "note": "本条限本轮音频事件分支和已运行回归；下载、更新、清理等其他分支不作独立完整验收。"
+  }
+]

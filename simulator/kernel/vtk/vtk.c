@@ -799,6 +799,8 @@ __attribute__((no_sanitize("address"))) static size_t own_stack_used(const vtk_t
     const uint8_t *p = t->own_lo;
     size_t n = (size_t)(t->entry - p), i = 0;
     while (i < n && p[i] == STACK_PATTERN) i++;
+    /* Count the whole live word, even when an address starts with pattern-valued bytes. */
+    if (i < n) i -= i % sizeof(uintptr_t);
     return n - i;
 }
 

@@ -1,0 +1,168 @@
+[
+  {
+    "id": "AUD18-201",
+    "severity": "高",
+    "area": "音频焦点 / 录音 / 听写",
+    "title": "来电取得焦点后，停止收音依赖拥堵的执行器，录音和听写仍继续采集",
+    "evidence_type": [
+      "复现",
+      "代码核查"
+    ],
+    "locations": [
+      "system/services/audio/audio_service.c:905",
+      "system/services/audio/media_service.c:569",
+      "system/services/audio/media_service.c:670",
+      "system/services/text/voice_input.c:428",
+      "system/services/text/voice_input.c:449"
+    ],
+    "impact": "媒体执行队列忙 2 s 时录音从来电前约 1.21 s 延长到 3.24 s。UI 忙时听写在通话焦点取得并等待 600 ms 后又上传了 26 帧。违反打断后停止收音、通话声音不进听写的保证。实验验证采集和上传继续，未模拟或声称验证真实通话声道。",
+    "recommendation": "焦点改变时同步标记采集截止代次或样本边界，音频任务按边界拒绝新帧；文件收尾和 UI 更新再异步完成。覆盖 UI 与媒体执行器分别阻塞的用例。",
+    "reproduce": "python3 docs/audits/2026-11-05-codex-services-s3/experiments/run_probe.py docs/audits/2026-11-05-codex-services-b/experiments/record_call_probe.c --template sim-media --script docs/audits/2026-11-05-codex-services-b/experiments/audio.script；另见 experiments/voice-call.log，复跑上轮 voice_boundary_probe.c。"
+  },
+  {
+    "id": "AUD18-202",
+    "severity": "高",
+    "area": "文字编辑 / 内存不足",
+    "title": "快照分配失败后仍保留旧重做分支，重做会覆盖刚输入的文字",
+    "evidence_type": [
+      "复现",
+      "代码核查"
+    ],
+    "locations": [
+      "system/services/text/text_service.c:115",
+      "system/services/text/text_service.c:130",
+      "system/services/text/text_service.c:352",
+      "system/services/text/text_service.c:498"
+    ],
+    "impact": "输入 ABC，撤销到 AB；下一次快照分配失败时输入 D 得 ABD，但 can_redo 仍为真。重做回到 ABC，D 被覆盖。新修改后不能重做的约定在内存不足时失效。 常规及 ASan/UBSan 探针结果一致。",
+    "recommendation": "任何新编辑都必须使旧 redo 失效；明确快照分配失败策略，拒绝编辑或清理、降级历史并通知，不能继续宣称旧历史可用。",
+    "reproduce": "python3 docs/audits/2026-11-05-codex-services-s3/experiments/run_probe.py docs/audits/2026-11-05-codex-services-b/experiments/text_oom_probe.c --template sim-textinput --extra docs/audits/2026-11-05-codex-services-b/experiments/text_observer.c；日志 experiments/text-oom.log。观察器仅令原样 include 的文字服务下一次分配返回 NULL。"
+  },
+  {
+    "id": "AUD18-203",
+    "severity": "高",
+    "area": "关机 / 音频 / 持久化",
+    "title": "录音未停时关机，写入仍被音频延后，5 秒后直接断电丢失已接受的数据",
+    "evidence_type": [
+      "复现",
+      "代码核查"
+    ],
+    "locations": [
+      "system/services/power/power_service.c:125",
+      "system/services/power/power_service.c:277",
+      "system/services/audio/audio_service.c:565",
+      "system/services/storage/storage_service.c:403"
+    ],
+    "impact": "未注入故障：录音中接受一条 INK_DB_LAZY 记录，再正常调用 system.shutdown。请求断电时 recording=1 capture=1 db_idle=0 storage_pending=1 durable=1 latest=2；用同一 Flash 镜像重启，记录返回 -5（不存在）。关机只发 flush 并等待最多 5 s，音频写入 hold 则可延后 30 s；没有先停止采集、结束录音或暂停媒体。低电量路径也走同一写入超时逻辑，且仍显示东西都存好了。后者为代码核查。",
+    "recommendation": "建立统一关机收尾流程：停止新采集和编辑、收尾录音、释放音频写入 hold、等待持久化回执，再画关机图；普通关机遇失败应可重试或明确告知。低电量必须有受电量约束的收尾与失败表述。",
+    "reproduce": "shutdown_audio_probe.c 两轮运行，共用 build-audit/audit-shutdown.img 和 audit-shutdown-sd；第二轮设置 INK_AUDIT_REOPEN=1。完整命令和输出见 experiments/shutdown-audio.log、shutdown-audio-reboot.log。"
+  },
+  {
+    "id": "AUD18-204",
+    "severity": "高",
+    "area": "耳机断连 / 音频路由",
+    "title": "耳机断开先切外放、后异步暂停，已缓冲的媒体会外放",
+    "evidence_type": [
+      "复现",
+      "代码核查"
+    ],
+    "locations": [
+      "system/services/audio/audio_service.c:645",
+      "system/services/audio/audio_service.c:679",
+      "system/services/audio/media_service.c:435",
+      "system/services/bt/bt_service.c:56"
+    ],
+    "impact": "媒体执行器暂忙时，模拟耳机离线触发真实 BT 服务切回 speaker；音频任务立即继续播放缓冲帧，暂停仍在媒体队列里。复现额外外放 990 ms，media_state=playing。现有 integration-media 在已等到 PAUSED 后才记录外放基线，不能验证断连到暂停之间没有外放，设计文档给出的保证不成立。",
+    "recommendation": "切到 speaker 之前同步停止或静音媒体输出并清理在途输出；将暂停位置和通知交给媒体执行器。测试从耳机断开前开始记录外放样本，并覆盖媒体队列忙的情况。",
+    "reproduce": "python3 docs/audits/2026-11-05-codex-services-s3/experiments/run_probe.py docs/audits/2026-11-05-codex-services-b/experiments/headset_probe.c --template sim-media --script docs/audits/2026-11-05-codex-services-b/experiments/audio.script；输出 experiments/headset.log。"
+  },
+  {
+    "id": "AUD18-205",
+    "severity": "中",
+    "area": "音频焦点 / 响铃",
+    "title": "来电覆盖闹钟后，闹钟继续响但不再持有焦点，录音可以在其下启动",
+    "evidence_type": [
+      "复现",
+      "代码核查"
+    ],
+    "locations": [
+      "system/services/audio/audio_service.c:931",
+      "system/services/audio/audio_service.c:1113",
+      "system/services/notify/interrupt.c:79",
+      "system/services/notify/interrupt.c:96"
+    ],
+    "impact": "闹钟响铃持有 ALERT；CALL acquire 将其删除。来电和剩余闹钟均 ringing 时，打断服务不再调用 ink_audio_ring(true)，旧 ring_focus 没有恢复。结束来电后 interrupt=alarm、focus=0，500 ms 内仍播放 495 ms 响铃；audio.record 返回 done 并开始采集。闹钟对低档音频的阻挡失效。",
+    "recommendation": "让闹钟焦点在 CALL 下暂停并恢复，或让 ring 管理者在焦点丢失和恢复时重新取得有效 token；不能仅用 ring_on 的布尔变化维护焦点生命周期。",
+    "reproduce": "python3 docs/audits/2026-11-05-codex-services-s3/experiments/run_probe.py docs/audits/2026-11-05-codex-services-b/experiments/audio_focus_probe.c --template sim-media --script docs/audits/2026-11-05-codex-services-b/experiments/audio.script；输出 experiments/audio-focus.log。"
+  },
+  {
+    "id": "AUD18-206",
+    "severity": "中",
+    "area": "关机图 / 刷新回执",
+    "title": "面板供电失败仍被记为关机图已经显示",
+    "evidence_type": [
+      "复现",
+      "代码核查"
+    ],
+    "locations": [
+      "system/ui/shell/off_picture.c:56",
+      "system/services/display/display_service.c:115",
+      "tests/integration/power_menu.c:145"
+    ],
+    "impact": "给模拟 PMIC 注入持续 I2C 故障，关机时 display.power_failures=2、ui.off_picture_on_panel=1、late=0。off_picture 仅等绘图作业和 busy 清空，没有关联成功刷新的回执；失败也会清空 busy，旧画面仍可能留在墨水屏。现有正常关机测试只看提交数增长及空闲，不能排除此情形。没有声称验证真实面板。",
+    "recommendation": "让关机图绑定具体帧的成功完成结果；区分已绘制、已提交、已显示和失败，在剩余电量及时间允许时有限重试，失败不得计 on_panel。补面板供电和刷新失败用例。",
+    "reproduce": "python3 docs/audits/2026-11-05-codex-services-b/experiments/run_probe.py docs/audits/2026-11-05-codex-services-b/experiments/power_picture_probe.c --template sim-power-menu --sim-arg=--i2c-faults --sim-arg=1.0:pmic；见 experiments/power-picture.log。"
+  },
+  {
+    "id": "AUD18-207",
+    "severity": "中",
+    "area": "文字框 / 点击位置",
+    "title": "选区的显示位置映射错误：点击偏后一字，长选区重复显示",
+    "evidence_type": [
+      "复现",
+      "代码核查"
+    ],
+    "locations": [
+      "system/ui/textfield.c:51",
+      "system/ui/textfield.c:119"
+    ],
+    "impact": "正文 abcdef 选择 bc，标签为 a[bc]def；真实模拟触摸点在 d 上，光标变成 4 而非 3，输入 X 得 abcdXef。compose_line 加两个选区标记，place_of 只减一个。100 字全选时，窗口从第 70 字开始，但格式化起点仍用选区起点，负精度让尾部 30 字又出现在选区之前，标签长达 132 字。两种结果在常规及 ASan/UBSan 构建一致。属于现有编辑行为错误，不是占位 UI 的外观缺口。",
+    "recommendation": "保留显示字符到正文位置的完整映射，统一处理两个选区标记、组合串和滚动窗口；增加选区两侧、组合串前后及长选区的点击用例。",
+    "reproduce": "python3 docs/audits/2026-11-05-codex-services-b/experiments/run_probe.py docs/audits/2026-11-05-codex-services-b/experiments/text_boundary_probe.c --template sim-textinput；见 experiments/text-boundary.log。"
+  },
+  {
+    "id": "AUD18-208",
+    "severity": "中",
+    "area": "文字能力 / AI 权限",
+    "title": "text.submit 漏查 ai_hidden，AI 仍能提交隐藏输入框",
+    "evidence_type": [
+      "复现",
+      "代码核查",
+      "文档核查"
+    ],
+    "locations": [
+      "system/services/text/text_caps.c:81",
+      "docs/system/system-services-design.md:588"
+    ],
+    "impact": "普通文字框设置 ai_hidden=true 后，AI text.insert 正确拒绝，但 text.submit 返回 done，并调用一次 entered 回调。与该类输入框 AI 碰不到的约定不一致。本轮只验证回调被触发，没有把占位回调推断成真实消息发送、付款或空间权限突破。",
+    "recommendation": "在所有文字操作能力执行处统一核查输入框类型、ai_hidden 和调用来源，至少让 submit 与 insert/select/undo 的限制一致；核查 voice_finish/cancel 的相同边界。",
+    "reproduce": "同 text_boundary_probe.c；输出 hidden_submit status=done entered_delta=1，见 experiments/text-boundary.log。"
+  },
+  {
+    "id": "AUD18-209",
+    "severity": "中",
+    "area": "文字会话 / UTF-8 截断",
+    "title": "初始文字按字节直接截断，会留下不完整的 UTF-8 字符",
+    "evidence_type": [
+      "复现",
+      "代码核查"
+    ],
+    "locations": [
+      "system/services/text/text_service.c:79",
+      "system/ui/textfield.c:227"
+    ],
+    "impact": "以 initial=中文、max=4 建立文字会话，结果为 e4 b8 ad e6，最后一个字只剩首字节，字符光标仍算作 2。后续显示、提交或持久化会接收无效 UTF-8。常规追加路径会回退到完整字符边界，初始值路径没有同样保护。 常规及 ASan/UBSan 结果一致；此例不依赖快照 OOM 注入。",
+    "recommendation": "初始会话和控件缓存复用追加路径的 UTF-8 边界裁剪；对过长初始值明确拒绝或按完整字符截断，添加多字节字和容量交界用例。",
+    "reproduce": "text_oom_probe.c 后半段不注入分配失败，直接建立 max=4 的会话；输出 initial_4_bytes hex=e4b8ade6 cursor=2，见 experiments/text-oom.log。"
+  }
+]

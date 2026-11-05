@@ -70,6 +70,7 @@ typedef struct {
     uint8_t schema;      /* 0 = the collection's */
     uint8_t src;         /* ink_source_t */
     uint32_t flags;      /* INK_DB_LAZY */
+    uint32_t *written_ver; /* optional: the accepted record version, under the write lock */
 } ink_db_write_t;
 
 /* A position in the sort order: by key, so inserts and deletes between pages cannot skip or repeat. */
@@ -91,6 +92,9 @@ const ink_db_def_t *ink_db_def_at(int i);
 /** Open (reference counted). member NULL = the current member; device collections ignore it. The first
  *  open reads the files and may wait for a refresh. NULL: no memory, or a format newer than this firmware. */
 ink_db_t *ink_db_open(const ink_db_def_t *def, const char *member);
+/** Open a member collection for a saved incarnation. Registration and the returned reference protect
+ *  its lifecycle through removal; NULL if the id was removed, quarantined or reused. */
+ink_db_t *ink_db_open_member(const ink_db_def_t *def, const char *member, uint32_t generation);
 void ink_db_close(ink_db_t *db);
 
 /** Accepted, in memory, on its way to the flash: `ver` of this change is ink_db_last_ver() right after,
@@ -99,6 +103,7 @@ int ink_db_put(ink_db_t *db, const ink_db_write_t *w, uint32_t *out_id);
 /** An id for a record about to be written, for records that carry their own id inside. */
 uint32_t ink_db_new_id(ink_db_t *db);
 int ink_db_del(ink_db_t *db, uint32_t id, uint8_t src);
+int ink_db_del_if_ver(ink_db_t *db, uint32_t id, uint8_t src, uint32_t ver);
 /** One record: the first cap bytes of its content into buf (buf may be NULL). 0 or INK_DB_ERR_NOT_FOUND. */
 int ink_db_get(ink_db_t *db, uint32_t id, ink_rec_t *out, void *buf, size_t cap);
 /** The next record after the cursor: 1 (filled in), 0 at the end, < 0 on an error. */
@@ -124,6 +129,8 @@ int ink_db_error(ink_db_t *db);
 void ink_db_flush_all(void);
 /** A member is gone: what is held of theirs goes, unwritten or not. */
 void ink_db_forget_member(const char *member);
+/** As above, but return -1 without dropping anything if a collection is still in use. */
+int ink_db_try_forget_member(const char *member);
 /** Nothing waits to be written, anywhere (the storage service's queue is checked separately). */
 bool ink_db_idle(void);
 /** The state storage.user_free, measured now (blocks, walks the file system: at boot; it follows by itself after each folding). */
