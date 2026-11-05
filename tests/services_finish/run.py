@@ -18,6 +18,7 @@ a = p.parse_args()
 build = (ROOT / a.build).resolve()
 work = Path(tempfile.mkdtemp(prefix='services-finish-', dir=build))
 suites = {
+    'member_caps': ('sim-media', ['member_time_boundary.c', 'member_data_boundary.c', 'member_notify_boundary.c', 'time_caps_boundary.c', 'notify_caps_boundary.c'], '30s'),
     'file_events': ('sim-media', ['file_handoff_boundary.c', 'media_record_boundary.c'], '30s'),
     'file_paths': ('sim-media', ['file_handoff_boundary.c'], '30s'),
     'file_reuse': ('sim-media', ['file_handoff_boundary.c'], '30s'),
@@ -118,8 +119,8 @@ def review_matrix(name, binary):
                              env={**os.environ, 'UBSAN_OPTIONS': 'halt_on_error=1', **env})
         (path / (label + '.stdout.log')).write_text(run.stdout)
         (path / (label + '.stderr.log')).write_text(run.stderr)
-        metrics = json.loads((out / 'metrics.json').read_text())
-        m = metrics['metrics']
+        metrics = json.loads((out / 'metrics.json').read_text()) if (out / 'metrics.json').exists() else {}
+        m = metrics.get('metrics', {})
         complete = m.get(checkpoint) == 1 and m.get('power.reboot') == 1 if checkpoint else m.get('test.finished') == 1
         ok = run.returncode == 0 and complete and m.get('test.fail', 0) == 0
         print(name + '/' + path.name + '/' + label, 'PASS' if ok else 'FAIL',
@@ -129,7 +130,20 @@ def review_matrix(name, binary):
             for warning in metrics.get('warnings', []): print(warning)
         all_ok &= ok
 
-    if name == 'file_events':
+    if name == 'member_caps':
+        for mode in ('data', 'data_delete', 'alarm', 'reminder', 'cancel', 'events', 'alarm_events', 'reminder_events'):
+            for change in (False, True):
+                path = work / (mode + ('-switch' if change else '-control'))
+                (path / 'sd').mkdir(parents=True)
+                env = {'INK_REVIEW_MODE': mode}
+                if change: env['INK_REVIEW_CHANGE'] = '1'
+                boot(path, 'run', env)
+        for mode in ('data', 'alarm', 'reminder'):
+            for lifecycle in ('removed', 'reused'):
+                path = work / (mode + '-' + lifecycle)
+                (path / 'sd').mkdir(parents=True)
+                boot(path, 'run', {'INK_REVIEW_MODE': mode, 'INK_REVIEW_LIFECYCLE': lifecycle})
+    elif name == 'file_events':
         for operation in ('handle', 'record', 'record_start', 'play_start', 'play_api_start', 'atomic', 'mkdir', 'remove', 'move', 'copy', 'delete'):
             for change in (False, True):
                 path = work / (operation + ('-switch' if change else '-control'))
@@ -313,7 +327,7 @@ for name in a.suites:
     if name == 'update':
         failed |= not update_matrix(binary)
         continue
-    if name in ('upgrade_crash', 'removal', 'removal_alarm', 'empty_removal', 'update_history', 'reader_late', 'member_inventory', 'late_writers', 'file_late', 'file_events', 'file_paths'):
+    if name in ('upgrade_crash', 'removal', 'removal_alarm', 'empty_removal', 'update_history', 'reader_late', 'member_inventory', 'late_writers', 'file_late', 'file_events', 'file_paths', 'member_caps'):
         failed |= not review_matrix(name, binary)
         continue
     out = work / (name + '-out')

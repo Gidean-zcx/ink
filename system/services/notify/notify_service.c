@@ -161,7 +161,7 @@ static uint32_t find_tag(ink_db_t *db, const char *tag) {
     return hit;
 }
 
-static void announce(uint32_t id, const char *channel, const char *title, int prio, const char *who) {
+static void announce(uint32_t id, const char *channel, const char *title, int prio, const char *who, uint32_t generation) {
     ink_args_t *a = osal_malloc(sizeof *a, OSAL_MEM_EXTERNAL);
     if (a) {
         ink_args_init(a);
@@ -170,7 +170,7 @@ static void announce(uint32_t id, const char *channel, const char *title, int pr
         ink_args_str(a, "channel", channel);
         ink_args_str(a, "title", title);
         ink_args_int(a, "prio", prio);
-        ink_cap_emit("notify.posted", a);
+        ink_cap_emit_for("notify.posted", a, who, generation);
         osal_free(a);
     }
 }
@@ -228,6 +228,16 @@ static void post_away(void *arg) { /* exec.bg: another member's inbox, nobody is
 
 int ink_notify_post(const ink_notify_t *n, uint32_t *out_id) {
     if (!n || !n->title) return -1;
+    char member[INK_MEMBER_ID_MAX];
+    ink_svc_lock();
+    snprintf(member, sizeof member, "%s", n->member ? n->member : ink_member_current()->id);
+    uint32_t generation = ink_member_generation(member);
+    ink_svc_unlock();
+    return ink_notify_post_for(n, out_id, member, generation);
+}
+
+int ink_notify_post_for(const ink_notify_t *n, uint32_t *out_id, const char *member, uint32_t generation) {
+    if (!n || !n->title || !member || !generation || generation != ink_member_generation(member)) return -1;
     const char *channel = n->channel ? n->channel : "system";
     int ci = channel_index(channel);
     if (ci < 0) {
@@ -236,9 +246,7 @@ int ink_notify_post(const ink_notify_t *n, uint32_t *out_id) {
     }
     int prio = n->prio >= 0 ? n->prio : (int)NS.ch[ci]->prio;
     char who[INK_MEMBER_ID_MAX];
-    snprintf(who, sizeof who, "%s", n->member ? n->member : ink_member_current()->id);
-    uint32_t generation = ink_member_generation(who);
-    if (!generation) return -1;
+    snprintf(who, sizeof who, "%s", member);
     int64_t wall = osal_wall_us();
     int64_t sort = wall > 0 ? wall / 1000000 : (int64_t)(osal_now_us() / 1000000);
     const char *prev = osal_mem_tag("notify");
@@ -252,7 +260,7 @@ int ink_notify_post(const ink_notify_t *n, uint32_t *out_id) {
         return -1;
     }
     ink_svc_lock();
-    bool mine = !strcmp(who, NS.member);
+    bool mine = generation == NS.generation && !strcmp(who, NS.member);
     bool off = mine && (NS.off & (1u << ci));
     ink_svc_unlock();
     if (!mine) {
@@ -293,10 +301,14 @@ int ink_notify_post(const ink_notify_t *n, uint32_t *out_id) {
     recount();
     ink_probe_count("notify.posted");
     ink_svc_lock();
-    mine = !strcmp(who, NS.member);
+    mine = generation == NS.generation && generation == ink_member_generation(who) && !strcmp(who, NS.member);
     ink_svc_unlock();
     if (!mine) return 0; /* someone else came meanwhile: it is in the right inbox, not for them to hear about */
-    announce(wrote, channel, n->title, prio, who);
+    announce(wrote, channel, n->title, prio, who, generation);
+    ink_svc_lock();
+    mine = generation == NS.generation && generation == ink_member_generation(who) && !strcmp(who, NS.member);
+    ink_svc_unlock();
+    if (!mine) return 0;
     if (prio >= INK_NOTIFY_HIGH && !ink_setting_get("notify.dnd")) { /* no banner: e-ink would need a refresh for it to go away too */
         ink_probe_count("notify.alerted");
         ink_audio_tone(INK_TONE_DONE, 0, NULL);
@@ -581,7 +593,10 @@ static void on_missed(void *ctx, const char *id, const ink_args_t *p) { /* exec.
     bool alarm = !strncmp(id, "alarm.", 6), missed = alarm || !strcmp(id, "reminder.missed");
     ink_notify_t n = {.channel = alarm ? "alarm" : "reminder", .title = alarm ? "错过的闹钟" : missed ? "错过的提醒" : "提醒", .body = title,
                       .prio = missed ? INK_NOTIFY_NORMAL : INK_NOTIFY_HIGH, .member = owner[0] ? owner : NULL, .src = INK_SRC_SYSTEM};
-    ink_notify_post(&n, NULL);
+    int64_t generation = 0;
+    if (ink_args_get_int(p, "member_generation", &generation)) {
+        if (generation > 0 && generation <= UINT32_MAX) ink_notify_post_for(&n, NULL, owner, (uint32_t)generation);
+    } else ink_notify_post(&n, NULL);
 }
 
 static void on_message(void *ctx, const char *id, const ink_args_t *p) { /* exec.bg */

@@ -11,12 +11,23 @@
 #include "ink/sys/cap.h"
 #include "ink/sys/data.h"
 #include "ink/sys/json.h"
+#include "ink/sys/members.h"
 
 #define VALUE_CAP (INK_DB_RECORD_MAX + 1)
 #define RESULT_CAP (2 * INK_DB_RECORD_MAX + 512) /* a record goes in as it is: a page has room for at least one, whole */
 #define UNDO_MS 10000
 
 static const char *const SRC_NAME[] = {"touch", "key", "ai", "system", "app", "remote", "confirmed"};
+
+static ink_db_t *open_for_call(ink_call_t *c, const ink_db_def_t *d) {
+    uint32_t generation;
+    const char *member = ink_cap_call_member(c, &generation);
+    if (!generation || generation != ink_member_generation(member)) {
+        c->rc.status = INK_RC_STALE;
+        return NULL;
+    }
+    return d->scope == INK_DB_MEMBER ? ink_db_open_member(d, member, generation) : ink_db_open(d, NULL);
+}
 
 static const ink_db_def_t *open_def(ink_call_t *c, bool write, ink_db_t **out) {
     char name[INK_DB_NAME_MAX];
@@ -27,9 +38,9 @@ static const ink_db_def_t *open_def(ink_call_t *c, bool write, ink_db_t **out) {
         snprintf(c->rc.detail, sizeof c->rc.detail, "%s", d ? "this collection is not open to this" : "no such collection");
         return NULL;
     }
-    *out = ink_db_open(d, NULL);
+    *out = open_for_call(c, d);
     if (!*out) {
-        c->rc.status = INK_RC_FAILED;
+        if (c->rc.status != INK_RC_STALE) c->rc.status = INK_RC_FAILED;
         snprintf(c->rc.detail, sizeof c->rc.detail, "cannot open the collection");
         return NULL;
     }
@@ -65,7 +76,8 @@ static void cap_collections(ink_call_t *c) { /* exec.bg: opening one may wait fo
         const ink_db_def_t *d = ink_db_def_at(i);
         if (!d) break;
         if (!d->json || !d->ai_read) continue;
-        ink_db_t *db = ink_db_open(d, NULL);
+        ink_db_t *db = open_for_call(c, d);
+        if (c->rc.status == INK_RC_STALE) break;
         ink_jw_raw(&w, first ? "{\"name\":" : ",{\"name\":");
         first = false;
         ink_jw_str(&w, d->name);
@@ -80,7 +92,7 @@ static void cap_collections(ink_call_t *c) { /* exec.bg: opening one may wait fo
     if (w.overflow) {
         c->rc.status = INK_RC_FAILED;
         snprintf(c->rc.detail, sizeof c->rc.detail, "too long");
-    } else ink_cap_result(c, out);
+    } else if (c->rc.status != INK_RC_STALE) ink_cap_result(c, out);
     osal_free(out);
 }
 

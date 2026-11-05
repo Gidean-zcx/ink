@@ -122,9 +122,11 @@ static bool parse_at(const char *s, ink_alarm_t *a) { /* "2026-11-05 15:00" */
 }
 
 static void answer_add(ink_call_t *c, ink_alarm_t *a, const char *undo_cap) {
-    int id = ink_alarm_add_versioned(a, &c->rc.revision);
+    uint32_t generation;
+    const char *member = ink_cap_call_member(c, &generation);
+    int id = ink_time_alarm_add_for(a, &c->rc.revision, member, generation);
     if (id <= 0) {
-        fail(c, id == -3 ? INK_RC_REJECTED : INK_RC_INVALID, id == -2 ? "that time has passed" : id == -3 ? "too many alarms" : "not a valid time");
+        fail(c, id == -5 ? INK_RC_STALE : id == -3 ? INK_RC_REJECTED : INK_RC_INVALID, id == -2 ? "that time has passed" : id == -3 ? "too many alarms" : "not a valid time");
         return;
     }
     snprintf(c->rc.object, sizeof c->rc.object, "%s:%d", a->kind == INK_ALARM ? "alarm" : "reminder", id);
@@ -189,6 +191,8 @@ static void cap_reminder_add(ink_call_t *c) {
 }
 
 static void list_kind(ink_call_t *c, ink_alarm_kind_t kind) {
+    uint32_t generation;
+    const char *member = ink_cap_call_member(c, &generation);
     char *out = osal_malloc(4096, OSAL_MEM_EXTERNAL);
     ink_alarm_t *a = osal_malloc(sizeof *a, OSAL_MEM_EXTERNAL);
     if (!out || !a) {
@@ -202,7 +206,8 @@ static void list_kind(ink_call_t *c, ink_alarm_kind_t kind) {
     ink_jw_raw(&w, "[");
     int cursor = 0;
     bool first = true;
-    while (ink_alarm_next(&cursor, kind, a) == 1) {
+    int got;
+    while ((got = ink_time_alarm_next_for(&cursor, kind, a, member, generation)) == 1) {
         char next[24] = "";
         if (a->next_s) local_text(a->next_s, next, sizeof next);
         size_t before = w.len;
@@ -225,7 +230,8 @@ static void list_kind(ink_call_t *c, ink_alarm_kind_t kind) {
         first = false;
     }
     ink_jw_raw(&w, "]");
-    ink_cap_result(c, out);
+    if (got < 0) c->rc.status = INK_RC_STALE;
+    else ink_cap_result(c, out);
     osal_free(out);
     osal_free(a);
 }
@@ -240,8 +246,10 @@ static void cap_cancel(ink_call_t *c) {
         fail(c, INK_RC_STALE, "alarm changed or absent");
         return;
     }
-    int r = ink_alarm_cancel_if_revision((uint32_t)id, (uint32_t)revision);
-    if (r != 0) fail(c, r == -2 ? INK_RC_STALE : INK_RC_FAILED, "no such one, or changed");
+    uint32_t generation;
+    const char *member = ink_cap_call_member(c, &generation);
+    int r = ink_time_alarm_cancel_for((uint32_t)id, (uint32_t)revision, member, generation);
+    if (r != 0) fail(c, r == -2 || r == -5 ? INK_RC_STALE : INK_RC_FAILED, "no such one, or changed");
 }
 
 static void cap_dismiss(ink_call_t *c) {
