@@ -123,6 +123,8 @@ class ScaleCheck(unittest.TestCase):
             'int w=123;\n#if FLAG\nw=104;\n#endif\nlv_obj_set_width(o,w);',
             'int w=104;\n#if FLAG\nw=123;\n#else\nw=104;\n#endif\nlv_obj_set_width(o,w);',
             'int w=104; flag ? w=123 : w=104; lv_obj_set_width(o,w);',
+            '#if FLAG\n#define BAD 123\n#else\n#define BAD 104\n#endif\nlv_obj_set_width(o,BAD);',
+            '#define BAD 123\n#ifdef FLAG\n#define BAD 104\n#endif\nlv_obj_set_width(o,BAD);',
         ):
             with self.subTest(source=source): self.assertTrue(self.check_source(source))
 
@@ -141,6 +143,7 @@ class ScaleCheck(unittest.TestCase):
         for source in (
             'int w=123; if(flag) w=160; w=104; lv_obj_set_width(o,w);',
             'int w=123; if(flag) {w=104; lv_obj_set_width(o,w);}',
+            '#if FLAG\n#define WIDTH 104\n#else\n#define WIDTH 160\n#endif\nlv_obj_set_width(o,WIDTH);',
         ):
             with self.subTest(source=source): self.assertFalse(self.check_source(source))
 

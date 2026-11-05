@@ -55,6 +55,15 @@ class IconCheck(unittest.TestCase):
         self.assertTrue(CHECKER['check_sources'](sources, NAMES))
         sources = {Path('helper.c'): helper, Path('caller.c'): 'const char *choice="missingReviewIcon"; tile("x",choice,0);'}
         self.assertTrue(CHECKER['check_sources'](sources, NAMES))
+        for parameter in ('glyph', 'resource'):
+            renamed = helper.replace('icon', parameter)
+            sources = {Path('helper.c'): renamed,
+                       Path('forward.c'): 'void forward(const char *name){tile("任意标题",name,0);}',
+                       Path('caller.c'): 'forward("missingReviewIcon");'}
+            with self.subTest(parameter=parameter):
+                self.assertTrue(CHECKER['check_sources'](sources, NAMES))
+                sources[Path('caller.c')] = 'forward("book");'
+                self.assertFalse(CHECKER['check_sources'](sources, NAMES))
 
     def test_real_declared_origins(self):
         for file, needle in (

@@ -65,13 +65,32 @@ def literal_names(expr):
 
 
 def icon_parameters(sources):
-    sinks = {'ink_ui_icon': 1, 'ink_ui_circle': 1, 'ink_ui_list_row': 1}
-    # Forwarding helpers declare their icon argument, just like the components.
+    sinks = {'ink_ui_icon': {1}, 'ink_ui_circle': {1}, 'ink_ui_list_row': {1}}
+    parameters = []
     for text in sources:
         for m in re.finditer(r'\b(\w+)\s*\(([^;{}]*)\)\s*\{', text):
             args, _ = parts('(' + m[2] + ')', 1)
+            _, end = parts(text, m.end(), '}')
             for i, arg in enumerate(args):
-                if re.fullmatch(r'const\s+char\s*\*\s*icon', arg): sinks[m[1]] = i
+                param = re.fullmatch(r'const\s+char\s*\*\s*(\w+)', arg)
+                if param: parameters.append((m[1], i, param[1], text[m.end():end - 1]))
+    # Infer forwarding from use, independent of the parameter's spelling, and
+    # repeat for helpers which forward through another helper in another file.
+    changed = True
+    while changed:
+        changed = False
+        for function, index, parameter, body in parameters:
+            if index in sinks.get(function, set()): continue
+            forwarded = False
+            for callee, indices in list(sinks.items()):
+                for call in re.finditer(r'\b' + re.escape(callee) + r'\s*\(', body):
+                    args, _ = parts(body, call.end())
+                    for i in indices:
+                        if i < len(args) and any(re.fullmatch(re.escape(parameter), leaf) for leaf in choices(args[i])):
+                            forwarded = True
+            if forwarded:
+                sinks.setdefault(function, set()).add(index)
+                changed = True
     return sinks
 
 
@@ -115,11 +134,12 @@ def check_sources(sources, names):
     errors = []
     for path, text in clean.items():
         required = [(m[1], m.start()) for m in REFERENCE.finditer(text)]
-        for function, index in sinks.items():
+        for function, indices in sinks.items():
             for m in re.finditer(r'\b' + re.escape(function) + r'\s*\(', text):
                 args, _ = parts(text, m.end())
-                if len(args) > index and not re.match(r'const\s+char\s*\*', args[index]):
-                    required += [(name, m.start()) for name in resolve(args[index])]
+                for index in indices:
+                    if len(args) > index and not re.match(r'const\s+char\s*\*', args[index]):
+                        required += [(name, m.start()) for name in resolve(args[index])]
         # Raw spellings in icon tables/aliases are checked too. The generated
         # INK_UI_ICON references also make a misspelling a compiler error.
         for m in re.finditer(r'\bchar\s*\*\s*(?:const\s+)?(\w+)\s*(?:\[[^]]*\]\s*)*=\s*', text):

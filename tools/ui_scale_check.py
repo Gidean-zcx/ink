@@ -139,14 +139,16 @@ def symbols_before(text, pos, branches=None):
         scopes.append(tuple(stack))
     current = tuple(stack)
     symbols = {k: str(v) for k, v in VALUES.items()}
-    for m in re.finditer(r'^\s*#define\s+(\w+)[ \t]+([^\n]+)', text[:pos], re.M): symbols[m[1]] = m[2]
+    if branches is None: branches = conditional_spans(text)
+    for m in re.finditer(r'^\s*#define\s+(\w+)[ \t]+([^\n]+)', text[:pos], re.M):
+        optional = any(start <= m.start() < end and not start <= pos < end for start, end in branches)
+        symbols[m[1]] = f'[{symbols[m[1]]}, {m[2]}]' if optional and m[1] in symbols else m[2]
     declarations = list(DECL.finditer(text[:pos]))
     arrays = list(ARRAY.finditer(text[:pos]))
     events = [(m.start(), 'decl', m) for m in declarations] + [(m.start(), 'array', m) for m in arrays]
     events += [(m.start(), 'assign', m) for m in ASSIGN.finditer(text[:pos])
                if not any(d.start() <= m.start() < d.end() for d in arrays)]
     bindings = {}
-    if branches is None: branches = conditional_spans(text)
     for at, kind, m in sorted(events):
         scope = scopes[at] if scopes else ()
         if scope and current and scope[0] != current[0]: continue

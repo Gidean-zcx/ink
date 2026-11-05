@@ -110,17 +110,19 @@ def main():
         ):
             binary = compile_variant(build, stem, previous(path), 'ink_system', 'sim-ui-regressions')
             folder = build / f'test-out/review-negative-{stem}'
+            metrics = folder / 'metrics.json'
+            metrics.unlink(missing_ok=True)
             command = [str(binary), '--profile', str(ROOT / f'simulator/profiles/{profile}.json'),
                        '--script', str(ROOT / 'tests/ui_shell_regressions.script'),
                        '--hub', str(ROOT / 'tests/ui_shell.hub.json'), '--assets', str(build / 'assets'),
                        '--content', str(build / 'test-content'), '--budget', str(ROOT / 'tests/ui_scene.budget.json'),
                        '--out', str(folder), '--quiet', '--no-random-outages']
             rc = subprocess.run(command, env=dict(os.environ, INK_UI_REGRESSION=mode), capture_output=True, text=True, timeout=90)
-            data = json.loads((folder / 'metrics.json').read_text())
+            data = json.loads(metrics.read_text())
             failures = data['metrics'].get('test.fail', 0)
             print(f'{stem}, {profile}: exit={rc.returncode}, test.fail={failures}')
             for warning in data.get('warnings', [])[:3]: print(' ', warning.split(') ', 1)[-1])
-            assert rc.returncode and failures
+            assert rc.returncode == 1 and failures and data['metrics'].get('test.finished') == 1
     print('All round-three gate controls behaved as expected; product sources stayed unchanged.')
 
 
