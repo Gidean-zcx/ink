@@ -202,7 +202,7 @@ static const ink_cap_t WIFI_CAPS[] = {
      .input = "{\"type\":\"object\",\"properties\":{\"ssid\":{\"type\":\"string\",\"maxLength\":32},\"password\":{\"type\":\"string\",\"maxLength\":64}},\"required\":[\"ssid\"]}",
      .effect = INK_FX_SYSTEM, .timeout_ms = 20000, .exec = INK_EXEC_BG, .run = cap_connect},
     {.id = "wifi.forget", .title = "忘掉一个 Wi-Fi", .ask = "忘掉 Wi-Fi：{ssid}", .input = "{\"type\":\"object\",\"properties\":{\"ssid\":{\"type\":\"string\",\"maxLength\":32}},\"required\":[\"ssid\"]}",
-     .effect = INK_FX_LOCAL_DESTRUCTIVE, .exec = INK_EXEC_BG, .run = cap_forget},
+     .effect = INK_FX_LOCAL_DESTRUCTIVE, .ask_by_hand = true, .exec = INK_EXEC_BG, .run = cap_forget},
     {.id = "wifi.changed", .title = "Wi-Fi 的情况变了（连上了、忘掉了）", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},
 };
 

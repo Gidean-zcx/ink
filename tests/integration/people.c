@@ -50,7 +50,19 @@ static uint32_t token_of_receipt(void) {
     return t;
 }
 
+static volatile int g_wifi_results;
+static char g_wifi_result[16];
+static void wifi_result(void *ctx, const char *id, const ink_args_t *a) {
+    (void)ctx; (void)id;
+    char cap[48];
+    if (ink_args_get_str(a, "cap", cap, sizeof cap) > 0 && !strcmp(cap, "wifi.forget")) {
+        ink_args_get_str(a, "status", g_wifi_result, sizeof g_wifi_result);
+        g_wifi_results++;
+    }
+}
+
 static void wifi(void) {
+    CHECK(ink_cap_subscribe("confirm.result", wifi_result, NULL, INK_EXEC_DIRECT) == 0, "Wi-Fi confirmation results");
     CHECK(!strcmp(state_of("wifi.state"), "idle"), "idle (%s)", state_of("wifi.state"));
     CHECK(AI("wifi.scan", NULL) && g_rc.status == INK_RC_DONE, "the AI looks around (%s)", g_rc.detail);
     CHECK(strstr(g_result, "\"ssid\":\"家里\"") && strstr(g_result, "\"secured\":false"), "it sees them (%s)", g_result);
@@ -92,9 +104,13 @@ static void wifi(void) {
     CHECK(AI("wifi.forget", "{\"ssid\":\"家里\"}") && g_rc.status == INK_RC_PENDING_CONFIRMATION, "the AI forgetting one needs a yes");
     CHECK(ink_confirm_withdraw(token_of_receipt(), INK_SRC_AI) == 0, "taken back");
     delay_ms(1200);
-    CHECK(BY_HAND("wifi.forget", "{\"ssid\":\"家里\"}") && g_rc.status == INK_RC_DONE, "by hand");
+    CHECK(BY_HAND("wifi.forget", "{\"ssid\":\"家里\"}") && g_rc.status == INK_RC_PENDING_CONFIRMATION, "by hand too");
+    int results = g_wifi_results;
+    CHECK(ink_confirm_decide(token_of_receipt(), true, INK_SRC_TOUCH) == 0 && WAIT_FOR(g_wifi_results > results, 2000) && !strcmp(g_wifi_result, "done"), "person confirms forgetting the saved password");
     CHECK(WAIT_FOR(!hal_net_available(HAL_LINK_WIFI), 1000), "not known any more");
-    CHECK(BY_HAND("wifi.forget", "{\"ssid\":\"家里\"}") && g_rc.status == INK_RC_FAILED, "and not twice");
+    CHECK(BY_HAND("wifi.forget", "{\"ssid\":\"家里\"}") && g_rc.status == INK_RC_PENDING_CONFIRMATION, "second attempt still asks");
+    results = g_wifi_results;
+    CHECK(ink_confirm_decide(token_of_receipt(), true, INK_SRC_TOUCH) == 0 && WAIT_FOR(g_wifi_results > results, 2000) && !strcmp(g_wifi_result, "failed"), "and not twice");
     /* a child cannot */
     CHECK(ink_member_switch("kid") == 0, "a child");
     CHECK(BY_HAND("wifi.connect", "{\"ssid\":\"咖啡店\"}") && g_rc.status == INK_RC_REJECTED, "cannot join networks (%s)", ink_rc_name(g_rc.status));

@@ -30,7 +30,7 @@ suites = {
     'isolation': ('sim-media', ['audio_boundary.c'], '60s'),
     'shutdown': ('sim-media', [], '30s'),
     'actions': ('sim-media', [], '15s'),
-    'policy': ('sim-media', ['settings_boundary.c'], '40s'),
+    'policy': ('sim-media', ['settings_boundary.c', 'wifi_boundary.c'], '40s'),
 }
 
 def compile_suite(name):
@@ -44,10 +44,10 @@ def compile_suite(name):
     defines = []
     if a.baseline:
         # Read only: source copies and binaries live in the ignored build directory.
-        for rel in ['system/services/file/file_service.c', 'system/services/data/datastore.c', 'system/services/update/update_service.c', 'system/services/text/text_service.c', 'system/services/text/text_caps.c', 'system/services/audio/audio_service.c', 'system/services/power/power_service.c', 'system/services/ai/ai_service.c', 'system/policy/cap.c', 'system/policy/settings.c', 'system/services/hub/hub_link.c']:
+        for rel in ['system/services/file/file_service.c', 'system/services/data/datastore.c', 'system/services/update/update_service.c', 'system/services/text/text_service.c', 'system/services/text/text_caps.c', 'system/services/audio/audio_service.c', 'system/services/power/power_service.c', 'system/services/ai/ai_service.c', 'system/policy/cap.c', 'system/policy/settings.c', 'system/services/hub/hub_link.c', 'system/services/net/wifi.c']:
             target = work / Path(rel).name
             target.write_bytes(subprocess.check_output(['git', 'show', a.baseline + ':' + rel], cwd=ROOT))
-            macro = 'INK_TEST_' + {'file_service.c': 'FILE', 'datastore.c': 'DATA', 'update_service.c': 'UPDATE', 'text_service.c': 'TEXT', 'text_caps.c': 'TEXT_CAPS', 'audio_service.c': 'AUDIO', 'power_service.c': 'POWER', 'ai_service.c': 'AI', 'cap.c': 'CAP', 'settings.c': 'SETTINGS', 'hub_link.c': 'HUB'}[Path(rel).name] + '_SOURCE'
+            macro = 'INK_TEST_' + {'file_service.c': 'FILE', 'datastore.c': 'DATA', 'update_service.c': 'UPDATE', 'text_service.c': 'TEXT', 'text_caps.c': 'TEXT_CAPS', 'audio_service.c': 'AUDIO', 'power_service.c': 'POWER', 'ai_service.c': 'AI', 'cap.c': 'CAP', 'settings.c': 'SETTINGS', 'hub_link.c': 'HUB', 'wifi.c': 'WIFI'}[Path(rel).name] + '_SOURCE'
             if rel.endswith('text_service.c') and 'ink_text_edit_revision' not in target.read_text():
                 defines += ['-DINK_TEST_OLD_TEXT=1']
             defines += ['-D' + macro + '=' + json.dumps(str(target))]

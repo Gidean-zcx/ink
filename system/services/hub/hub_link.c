@@ -23,6 +23,7 @@
 #include "ink/probe.h"
 #include "ink/sys/hub.h"
 #include "ink/sys/members.h"
+#include "ink/sys/layout.h"
 #include "ink/sys/state.h"
 #include "ink/sys/power.h"
 
@@ -46,6 +47,7 @@ typedef struct tx_item {
     struct tx_item *next;
     bool binary, pooled;
     uint32_t event_seq;
+    char member[INK_MEMBER_ID_MAX];
     size_t len;
     uint8_t data[];
 } tx_item_t;
@@ -375,7 +377,8 @@ static void drain_tx(bool online) {
             }
         osal_mutex_unlock(H.tx_lock);
         if (!it) return; /* empty, or only background left while it is paced (next_wakeup) */
-        if (!online || !H.ws || hal_ws_send(H.ws, it->binary, it->data, it->len, 2000000) != 0) {
+        if (!online || !H.ws || (it->member[0] && (!ink_member_space_open() || strcmp(it->member, ink_member_current()->id))) ||
+            hal_ws_send(H.ws, it->binary, it->data, it->len, 2000000) != 0) {
             ink_probe_count("hub.tx_dropped");
         } else {
             H.last_activity = osal_now_us();
@@ -522,7 +525,8 @@ static void on_power(void *ctx, ink_power_state_t from, ink_power_state_t to, ui
 }
 
 static void on_member(void *ctx, int h, const char *id) { /* state callback: no socket operations here */
-    (void)ctx; (void)h; (void)id;
+    (void)ctx; (void)h;
+    if (strcmp(id, "member.current") && (strcmp(id, "member.authed") || ink_member_space_open())) return;
     __atomic_store_n(&H.member_changed, true, __ATOMIC_RELEASE);
     ink_hub_wake();
 }
@@ -544,7 +548,7 @@ int ink_hub_init(const char *url) {
         H.tx_free = it;
     }
     ink_power_subscribe(on_power, NULL);
-    ink_state_watch("member.current", on_member, NULL, INK_EXEC_DIRECT);
+    ink_state_watch("member.", on_member, NULL, INK_EXEC_DIRECT);
     hal_net_set_link_callback(link_cb, NULL);
     osal_task_cfg_t cfg = {.name = "hub", .fn = hub_task, .stack_bytes = HUB_STACK, .priority = HUB_PRIO, .core = -1,
                            .flags = OSAL_TASK_STACK_EXTERNAL};
@@ -616,7 +620,7 @@ void ink_hub_keep(bool on) {
     ink_hub_demand(); /* connect now if needed; when the last one goes, the quiet period starts */
 }
 
-static int enqueue_tx(bool binary, int cls, const void *data, size_t len, bool member_event) {
+static int enqueue_tx(bool binary, int cls, const void *data, size_t len, const char *member) {
     if (get_state() != HS_ONLINE || cls < 0 || cls >= TX_CLASSES) return -1;
     tx_item_t *it = NULL;
     osal_mutex_lock(H.tx_lock, OSAL_WAIT_FOREVER); /* reserve the budget first: producers race */
@@ -651,7 +655,8 @@ static int enqueue_tx(bool binary, int cls, const void *data, size_t len, bool m
     memcpy(it->data, data, len);
     osal_mutex_lock(H.tx_lock, OSAL_WAIT_FOREVER);
     it->event_seq = 0;
-    if (member_event) {
+    snprintf(it->member, sizeof it->member, "%s", member ? member : "");
+    if (it->member[0]) {
         if (!++H.events_queued) ++H.events_queued;
         it->event_seq = H.events_queued;
         __atomic_store_n(&H.member_events, true, __ATOMIC_RELEASE);
@@ -675,6 +680,16 @@ void ink_hub_wake(void) {
 int ink_hub_notify(const char *method, const char *params_json) {
     char head[80];
     const char *pj = params_json ? params_json : "{}";
+    char member[INK_MEMBER_ID_MAX] = "";
+    if (!strcmp(method, "device/event")) {
+        ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
+        if (!j) return INK_HUB_ERR_NOMEM;
+        bool valid = ink_json_parse(j, pj, strlen(pj)) == 0 &&
+                     ink_json_str(j, ink_json_find(j, 0, "member"), member, sizeof member) > 0 &&
+                     ink_member_space_open() && !strcmp(member, ink_member_current()->id);
+        osal_free(j);
+        if (!valid) return INK_HUB_ERR_OFFLINE;
+    }
     snprintf(head, sizeof head, "{\"jsonrpc\":\"2.0\",\"method\":\"%s\",\"params\":", method);
     size_t hl = strlen(head), pl = strlen(pj);
     const char *prev = osal_mem_tag("hub");
@@ -684,14 +699,14 @@ int ink_hub_notify(const char *method, const char *params_json) {
     memcpy(buf, head, hl);
     memcpy(buf + hl, pj, pl);
     buf[hl + pl] = '}';
-    int r = enqueue_tx(false, INK_HUB_TX_CONTROL, buf, hl + pl + 1, !strcmp(method, "device/event"));
+    int r = enqueue_tx(false, INK_HUB_TX_CONTROL, buf, hl + pl + 1, member);
     osal_free(buf);
     return r == 0 ? 0 : INK_HUB_ERR_OFFLINE;
 }
 
 int ink_hub_send_binary(const void *data, size_t len) { return ink_hub_send_frame(data, len, INK_HUB_TX_VOICE); }
 
-int ink_hub_send_frame(const void *data, size_t len, int cls) { return enqueue_tx(true, cls, data, len, false) == 0 ? 0 : INK_HUB_ERR_OFFLINE; }
+int ink_hub_send_frame(const void *data, size_t len, int cls) { return enqueue_tx(true, cls, data, len, NULL) == 0 ? 0 : INK_HUB_ERR_OFFLINE; }
 
 void ink_hub_on_binary(ink_hub_binary_fn fn, void *ctx) {
     H.bin_ctx = ctx;
@@ -717,7 +732,7 @@ int ink_hub_respond(int64_t id, const char *result_json) {
     int n = snprintf(buf, 64, "{\"jsonrpc\":\"2.0\",\"id\":%lld,\"result\":", (long long)id);
     memcpy(buf + n, r, rl);
     buf[n + rl] = '}';
-    int ok = enqueue_tx(false, INK_HUB_TX_CONTROL, buf, (size_t)n + rl + 1, false);
+    int ok = enqueue_tx(false, INK_HUB_TX_CONTROL, buf, (size_t)n + rl + 1, NULL);
     osal_free(buf);
     return ok == 0 ? 0 : INK_HUB_ERR_OFFLINE;
 }
@@ -732,5 +747,5 @@ int ink_hub_respond_error(int64_t id, int code, const char *message) {
     ink_jw_str(&w, message ? message : "error");
     ink_jw_raw(&w, "}}");
     if (w.overflow) return INK_HUB_ERR_NOMEM;
-    return enqueue_tx(false, INK_HUB_TX_CONTROL, buf, w.len, false) == 0 ? 0 : INK_HUB_ERR_OFFLINE;
+    return enqueue_tx(false, INK_HUB_TX_CONTROL, buf, w.len, NULL) == 0 ? 0 : INK_HUB_ERR_OFFLINE;
 }

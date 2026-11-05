@@ -62,6 +62,10 @@ static void run(void *arg) {
     CHECK(AI("settings.set", "{\"id\":\"finish.system\",\"value\":true}") && g_rc.status == INK_RC_DONE && ink_setting_get("finish.system") == 1 && g_rc.undo_ms, "non-risk system setting is automatic and reversible");
     char undo[100]; snprintf(undo, sizeof undo, "{\"object\":\"%s\"}", g_rc.object);
     CHECK(AI("system.undo", undo) && g_rc.status == INK_RC_UNDONE && ink_setting_get("finish.system") == 0, "setting undo restores old value");
+    CHECK(BY_HAND("wifi.forget", "{\"ssid\":\"SYNTHETIC_UNUSED\"}") && g_rc.status == INK_RC_PENDING_CONFIRMATION,
+          "credential deletion also asks the person");
+    unsigned wifi_token = 0; sscanf(g_rc.object, "confirm:%u", &wifi_token);
+    CHECK(ink_confirm_withdraw(wifi_token, INK_SRC_TOUCH) == 0, "person can cancel credential deletion");
     on_ui(password);
     CHECK(AI("text.insert", "{\"text\":\"9\"}") && g_rc.status == INK_RC_REJECTED, "AI cannot fill password");
     CHECK(AI("text.submit", NULL) && g_rc.status == INK_RC_REJECTED, "AI cannot submit password");
@@ -75,7 +79,7 @@ static void run(void *arg) {
     CHECK(AI("activity.list", NULL) && g_rc.status == INK_RC_DONE && !strstr(g_result, "finish.external"), "activity is member-scoped");
     CHECK(AI("settings.set", "{\"id\":\"finish.system\",\"value\":true}") && g_rc.status == INK_RC_REJECTED, "children cannot change system settings");
     ink_member_test_reset();
-    CHECK(ink_cap_find("member.add")->ask_by_hand && ink_cap_find("member.remove")->ask_by_hand && ink_cap_find("system.factory_reset")->ask_by_hand && ink_cap_find("file.delete")->ask_by_hand && ink_cap_find("notify.clear")->ask_by_hand, "real high-risk descriptors are explicit");
+    CHECK(ink_cap_find("member.add")->ask_by_hand && ink_cap_find("member.remove")->ask_by_hand && ink_cap_find("system.factory_reset")->ask_by_hand && ink_cap_find("file.delete")->ask_by_hand && ink_cap_find("notify.clear")->ask_by_hand && ink_cap_find("wifi.forget")->ask_by_hand, "real high-risk descriptors are explicit");
     ink_probe_count("test.finished");
 }
 void ink_main(void) {

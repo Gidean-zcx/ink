@@ -31,6 +31,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 
+#include <algorithm>
 #include <atomic>
 #include <cmath>
 #include <deque>
@@ -539,9 +540,11 @@ void screen_input(const Dev &d) {
     ImGui::SetCursorScreenPos(a);
     ImGui::InvisibleButton("##screen", ImVec2(b.x - a.x, b.y - a.y));
     ImVec2 m = ImGui::GetIO().MousePos;
-    int x = (int)((m.x - a.x) / d.s), y = (int)((m.y - a.y) / d.s);
-    x = x < 0 ? 0 : x >= g_tex_w ? g_tex_w - 1 : x;
-    y = y < 0 ? 0 : y >= g_tex_h ? g_tex_h - 1 : y;
+    int x = lx, y = ly;
+    if (ImGui::IsMousePosValid(&m) && d.s > 0 && g_tex_w > 0 && g_tex_h > 0) {
+        x = (int)std::clamp((m.x - a.x) / d.s, 0.0f, (float)(g_tex_w - 1));
+        y = (int)std::clamp((m.y - a.y) / d.s, 0.0f, (float)(g_tex_h - 1));
+    }
     bool paused = g_paused;
     if (ImGui::IsItemActivated() && !paused) {
         down = true;
