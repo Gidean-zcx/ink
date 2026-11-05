@@ -1,3 +1,0 @@
-RUN <审计工作树>/build-audit/audit-probes/reset_probe/probe --profile <审计工作树>/simulator/profiles/metalio-plus.json --out <审计工作树>/build-audit/audit-probes/reset_probe/run-81dldtjg --quiet --no-random-outages --end 10s --assets <审计工作树>/build-audit/assets --content <审计工作树>/build-audit/test-content
-ink-sim: ok, 10.000 s virtual, report <审计工作树>/build-audit/audit-probes/reset_probe/run-81dldtjg/metrics.json
-AUDIT reset card=-3 flash=-1 pending=-1 card_mark=-1 done=0 card_done=0

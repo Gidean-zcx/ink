@@ -9,7 +9,7 @@
 ## 构建与现有测试
 
 ```sh
-INK_DEPS=/Users/bytedance/Documents/Workspace/ink
+INK_DEPS=<本机路径>
 cmake -S . -B build-audit -DINK_WERROR=ON -DINK_GUI=OFF \
   -DINK_CJK_FONT="$INK_DEPS/build-deps/fonts/NotoSansCJK-Regular.ttc" -DINK_CJK_FACE=2 \
   -DPython3_EXECUTABLE="$INK_DEPS/build-deps/pyenv/bin/python" \

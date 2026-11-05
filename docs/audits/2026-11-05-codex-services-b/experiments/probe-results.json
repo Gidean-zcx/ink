@@ -179,8 +179,8 @@
       "AUDIT after_drain recording=0 capture=0 focus=0 lost=15 completed=1"
     ],
     "warnings": [
-      "14.480s CHECK FAILED (/private/tmp/claude-501/-Users-bytedance-Documents-Workspace-ink--claude-worktrees-optimistic-wilbur-d7cee8/babd9fe7-3ffb-4bb6-89c6-f0aff51c6f0f/scratchpad/audit-b/docs/audits/2026-11-05-codex-services-s3/experiments/record_end_probe.c:17) lost terminal marker leaves recording stuck",
-      "15.490s CHECK FAILED (/private/tmp/claude-501/-Users-bytedance-Documents-Workspace-ink--claude-worktrees-optimistic-wilbur-d7cee8/babd9fe7-3ffb-4bb6-89c6-f0aff51c6f0f/scratchpad/audit-b/docs/audits/2026-11-05-codex-services-s3/experiments/record_end_probe.c:19) second stop cannot recover"
+      "14.480s CHECK FAILED (<本机路径>:17) lost terminal marker leaves recording stuck",
+      "15.490s CHECK FAILED (<本机路径>:19) second stop cannot recover"
     ]
   },
   {
@@ -206,7 +206,7 @@
     "test_fail": 1,
     "observations": [],
     "warnings": [
-      "124.900s CHECK FAILED (/private/tmp/claude-501/-Users-bytedance-Documents-Workspace-ink--claude-worktrees-optimistic-wilbur-d7cee8/babd9fe7-3ffb-4bb6-89c6-f0aff51c6f0f/scratchpad/audit-b/tests/integration/media.c:258) from there, or the little before it that it goes back (19200, 23280)"
+      "124.900s CHECK FAILED (<本机路径>:258) from there, or the little before it that it goes back (19200, 23280)"
     ]
   },
   {
@@ -219,7 +219,7 @@
     "test_fail": 1,
     "observations": [],
     "warnings": [
-      "17.580s CHECK FAILED (/private/tmp/claude-501/-Users-bytedance-Documents-Workspace-ink--claude-worktrees-optimistic-wilbur-d7cee8/babd9fe7-3ffb-4bb6-89c6-f0aff51c6f0f/scratchpad/audit-b/tests/integration/media.c:142) what was said before, no more (2820 ms)"
+      "17.580s CHECK FAILED (<本机路径>:142) what was said before, no more (2820 ms)"
     ]
   },
   {
@@ -234,8 +234,8 @@
       "AUDIT active=0 ring=1 state=alarm"
     ],
     "warnings": [
-      "3.110s CHECK FAILED (/private/tmp/claude-501/-Users-bytedance-Documents-Workspace-ink--claude-worktrees-optimistic-wilbur-d7cee8/babd9fe7-3ffb-4bb6-89c6-f0aff51c6f0f/scratchpad/audit-b/docs/audits/2026-11-05-codex-services-b/experiments/interrupt_probe.c:22) the ringing has stopped",
-      "3.110s CHECK FAILED (/private/tmp/claude-501/-Users-bytedance-Documents-Workspace-ink--claude-worktrees-optimistic-wilbur-d7cee8/babd9fe7-3ffb-4bb6-89c6-f0aff51c6f0f/scratchpad/audit-b/docs/audits/2026-11-05-codex-services-b/experiments/interrupt_probe.c:23) everything says it is over"
+      "3.110s CHECK FAILED (<本机路径>:22) the ringing has stopped",
+      "3.110s CHECK FAILED (<本机路径>:23) everything says it is over"
     ]
   },
   {

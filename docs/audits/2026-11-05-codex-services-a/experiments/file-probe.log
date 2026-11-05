@@ -1,6 +1,0 @@
-RUN <审计工作树>/build-audit/audit-probes/file_probe/probe --profile <审计工作树>/simulator/profiles/metalio-plus.json --out <审计工作树>/build-audit/audit-probes/file_probe/run-wvd5kyn3 --quiet --no-random-outages --end 15s --assets <审计工作树>/build-audit/assets --content <审计工作树>/build-audit/test-content
-ink-sim: ok, 15.000 s virtual, report <审计工作树>/build-audit/audit-probes/file_probe/run-wvd5kyn3/metrics.json
-AUDIT deep_wipe result=0 remaining=-3
-AUDIT failed_root_open wipe=0 remaining=0
-AUDIT directory_vs_usb nopen=0 lend=0 active=1 next=1
-AUDIT submit_vs_end file_state=2 task=1 list=[{"id":1,"kind":"file.copy","title":"拷贝 source.txt","state":"running","can_cancel":true}]
