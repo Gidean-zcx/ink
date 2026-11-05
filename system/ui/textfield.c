@@ -15,9 +15,13 @@ typedef struct {
     char *text; /* what it holds: the session's while it has one */
     size_t cap;
     int session;
+    size_t window; /* the character the label starts with */
+    int mark_at;   /* the place of the mark in the label, -1 none */
     void (*entered)(void *ctx, const char *value);
     void *ctx;
 } field_t;
+
+#define WINDOW_CHARS 30
 
 static const lv_font_t *font(void) {
     hal_panel_info_t pi;
@@ -26,16 +30,46 @@ static const lv_font_t *font(void) {
     return cjk ? ink_font_lvgl(cjk) : ink_ui_font(0);
 }
 
+static const char *char_at(const char *s, size_t chars) {
+    while (*s && chars) {
+        s++;
+        while ((*s & 0xC0) == 0x80) s++;
+        chars--;
+    }
+    return s;
+}
+
+/* The text with what is being composed where the cursor is; the cursor or the selection marked unless it is simply at the end
+ * (placeholder look, D-64). A long text starts so that the cursor is in view. */
+static void compose_line(field_t *f, const char *v, const char *c, char *line, size_t cap) {
+    size_t start, end;
+    ink_text_selection(&start, &end);
+    size_t all = 0;
+    for (const char *p = v; *p; p++) all += (*p & 0xC0) != 0x80;
+    f->window = end > WINDOW_CHARS ? end - WINDOW_CHARS : 0;
+    const char *from = char_at(v, f->window), *a = char_at(v, start), *b = char_at(v, end);
+    if (start != end) {
+        f->mark_at = (int)(start - f->window);
+        snprintf(line, cap, "%.*s[%.*s]%s", (int)(a - from), from, (int)(b - a), a, b);
+    } else if (end < all || c[0]) {
+        f->mark_at = (int)(end - f->window);
+        snprintf(line, cap, "%.*s%s|%s", (int)(a - from), from, c, a);
+    } else snprintf(line, cap, "%s", from);
+}
+
 static void show(field_t *f) {
     const char *v = f->session ? ink_text_value() : f->text;
     const char *c = f->session ? ink_text_composing() : "";
     char line[256];
+    f->window = 0;
+    f->mark_at = -1;
     if (f->cfg.type == INK_TEXT_PASSWORD) {
         size_t n = strlen(v);
         if (n >= sizeof line) n = sizeof line - 1;
         memset(line, '*', n);
         line[n] = 0;
     } else if (!v[0] && !c[0]) snprintf(line, sizeof line, "%s", f->hint);
+    else if (f->session) compose_line(f, v, c, line, sizeof line);
     else snprintf(line, sizeof line, "%s%s", v, c);
     lv_label_set_text(f->label, line);
     ink_ui_hint_obj(f->obj, INK_REFRESH_FAST);
@@ -80,10 +114,45 @@ static void close_menu(field_t *f) {
     f->menu = NULL;
 }
 
+/* What the tap or the long press was on, as a place in the text. */
+static size_t place_of(field_t *f, lv_event_t *e) {
+    lv_point_t p;
+    lv_indev_get_point(lv_event_get_indev(e), &p);
+    lv_area_t a;
+    lv_obj_get_coords(f->label, &a);
+    p.x -= a.x1;
+    p.y -= a.y1;
+    uint32_t letter = lv_label_get_letter_on(f->label, &p, true);
+    if (f->mark_at >= 0 && letter > (uint32_t)f->mark_at) letter--; /* the mark is not a letter of the text */
+    return f->window + letter;
+}
+
 static void on_copy(lv_event_t *e) {
     field_t *f = lv_event_get_user_data(e);
-    if (f->cfg.type != INK_TEXT_PASSWORD) ink_clip_set(f->text, false, 0 /* the person's own */);
+    char *what = osal_malloc(INK_CLIP_MAX + 1, OSAL_MEM_EXTERNAL);
+    if (what) {
+        if (f->session && ink_text_selected(what, INK_CLIP_MAX + 1) > 0) ink_clip_set(what, false, 0 /* the person's own */);
+        else if (f->cfg.type != INK_TEXT_PASSWORD) ink_clip_set(f->text, false, 0);
+        memset(what, 0, INK_CLIP_MAX + 1);
+        osal_free(what);
+    }
     close_menu(f);
+}
+
+static void on_left(lv_event_t *e) {
+    (void)e;
+    ink_text_move(-1, true);
+}
+
+static void on_right(lv_event_t *e) {
+    (void)e;
+    ink_text_move(1, true);
+}
+
+static void on_undo(lv_event_t *e) {
+    field_t *f = lv_event_get_user_data(e);
+    close_menu(f);
+    ink_text_undo();
 }
 
 static void on_paste(lv_event_t *e) {
@@ -117,14 +186,21 @@ static void field_event(lv_event_t *e) {
     lv_event_code_t code = lv_event_get_code(e);
     if (code == LV_EVENT_SHORT_CLICKED) { /* a plain click also comes after a long press */
         close_menu(f);
+        if (f->session) ink_text_set_cursor(place_of(f, e)); /* the first tap is to start typing */
         focus(f);
     } else if (code == LV_EVENT_LONG_PRESSED) {
         close_menu(f);
+        if (f->session && f->cfg.type != INK_TEXT_PASSWORD) ink_text_select_word(place_of(f, e));
         f->menu = lv_obj_create(lv_layer_top());
         lv_obj_remove_flag(f->menu, LV_OBJ_FLAG_SCROLLABLE);
         lv_obj_set_size(f->menu, LV_SIZE_CONTENT, LV_SIZE_CONTENT);
         lv_obj_set_flex_flow(f->menu, LV_FLEX_FLOW_ROW);
         lv_obj_align_to(f->menu, f->obj, LV_ALIGN_OUT_BOTTOM_LEFT, 0, ink_dp(4));
+        if (f->session && f->cfg.type != INK_TEXT_PASSWORD) {
+            menu_button(f, "◀", on_left);
+            menu_button(f, "▶", on_right);
+            menu_button(f, "撤销", on_undo);
+        }
         menu_button(f, "复制", on_copy);
         menu_button(f, "粘贴", on_paste);
         menu_button(f, "问 AI", on_ask);

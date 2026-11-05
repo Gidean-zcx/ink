@@ -565,6 +565,28 @@ void ink_clip_clear(void);
 
 `text.state`（有没有焦点、类型、内容；密码掩码）、`text.insert {text}`（往焦点框里写，等于替用户打字）、`text.submit`（等于按回车）；`clipboard.read`、`clipboard.write`。这样“帮我把这段填到搜索框”不用模拟按键。语音输入见 §9.5。
 
+### 9.4.1 编辑：光标、选区、撤销（界面规范 `ImeEdit`）
+
+都按字符算（一个汉字算一个），标签和 AI 也是这么数的。
+
+```c
+size_t ink_text_cursor(void);
+void ink_text_selection(size_t *start, size_t *end); /* start == end：没选中 */
+void ink_text_set_cursor(size_t at);                 /* 超过末尾就是末尾 */
+void ink_text_select(size_t start, size_t end);
+void ink_text_select_word(size_t at);
+void ink_text_move(int chars, bool end);             /* 没选中：移光标；选中了：移选区的尾或头 */
+int  ink_text_selected(char *out, size_t cap);       /* 密码回 -1 */
+bool ink_text_undo(void);
+bool ink_text_redo(void);
+```
+
+- **键盘、候选、语音、粘贴都写在光标处**，选中的被替换；退格删光标前一个字或者选中的全部。动光标时正在拼的字母先按原样进去。
+- **电子纸上不拖动**：点一下放光标，长按选一个词，◀ ▶ 调（占位外观：`system/ui/textfield.c` 长按出菜单，选区用方括号、光标用竖线标在文字里，光标在末尾时不标；长文字从光标往前 30 个字开始显示）。
+- **什么算一个词**：连在一起的字母和数字；中文现在只是两个字（最常见的词长），没有分词表。要准得等词库能反查。
+- **撤销**：记整段文字的快照，最近 16 步，PSRAM，随输入会话走。连着打的键算一步（中间停 3 s、动过光标就算新的一步）；提交的一段文字（语音、粘贴、AI 写的）单独一步；退格连着算一步。撤销后再改就不能重做。**密码不留历史**，选中的内容也拿不出来。结束会话时擦掉。
+- **给 AI**：`text.select {start, end?}`（不给 `end` 就是放光标）、`text.undo`、`text.redo`；`text.state` 带 `cursor`、`selection_start`、`selection_end`、`can_undo`、`can_redo`。`ai_hidden` 的框和密码框 AI 碰不到。
+
 ### 9.5 语音输入（听写，R-056、D-65）
 
 文字来自中枢（`asr.stream`，[中枢协议 §3.11](https://github.com/Gidean-zcx/ink/blob/claude/hub-design-8fd433/docs/hub/device-protocol.md)，在分支 `claude/hub-design-8fd433` 上）：设备自己只有命令词识别，没有中枢就没有听写，这一点要告诉用户。代码在 `system/services/text/voice_input.c`，面板在 `system/ui/shell/keyboard.c`。
@@ -925,6 +947,7 @@ void ink_task_end(int id, ink_task_state_t how, const char *result, const char *
 | 麦克风状态、保存阶段、音量键、关机图 | 完成 | （见提交记录） | `integration-media`、`integration-listening`、`integration-dictation`、`integration-data`、`integration-power-menu`（加了 `battery`、`battery_after`） | 录音不算录音；不说在送出去（AI、听写）；不说在等名字；从不更新。全算已存；不看中枢；不按记录看（更新的一条在写时旧的一条也说在写）。键没反应；锁屏没放声音也调；锁屏被关口拒绝；超过 100；按了就解锁。没有关机图（关机、没电）；不等屏幕刷完（`test.off_picture_drawn` 在要求断电那一刻检查）；没有书签；空间关着也留；没电不说；图比写数据先：各自的检查失败 |
 | 任务列表 | 完成 | （见提交记录） | `integration-files`、`integration-update`（`resume2`） | 所有人都看得到；孩子能停更新下载；没有进度；数不减；没有事件；没有结果和产物；顺序反了；文件作业不进列表；停下的说失败；文件作业停不了；下载不进列表；下载算某位家人的：各自的检查失败 |
 | `update/fetch` 带包的标识 | 完成 | （见提交记录） | `integration-update`（模拟中枢不认没带标识的请求） | 不带：下载失败 |
+| 文字编辑（光标、选区、撤销） | 完成 | （见提交记录） | `integration-text-main`（`editing`、`field_editing`） | 总写在末尾；退格只删末尾；退格不管选中；限长时切半个字；动光标丢正在拼的；按字节算；词只算一个字；中文只一个字；标点算中文；选区尾越过头；每个键算一步；停顿不分步；动光标不分步；撤销不回光标；新改动后还能重做；密码有历史；密码能拿出来；换框还能撤销；不止 16 步；AI 能动隐藏的框；点不放光标；长按不选；标记算一个字；长文字不移窗口：各自的检查失败 |
 | 电源键长按、电源菜单 | 完成 | 4173abe、002df94 | `integration-power-menu`（一个镜像 7 轮） | 松开还锁屏；0.5 s 就算长按；没有长按；来电时也出菜单；HOME 不关；锁屏不收；孩子不能关机；AI 能替孩子关；关着的空间不能关；关机前不写；标记文字：各自的检查失败 |
 | 作业和网络 | 完成 | 7721632、f41d3cc | `systest-services` | 离线也跑（`it has not run (3, 0)`）；联网不启动：测试不通过 |
 | 模块划分、AI 能看到什么 | 完成 | 4e556d1 | `layering`、`integration-ai-surface` | 见 §15.2 AUD15-009 |
@@ -969,7 +992,7 @@ void ink_task_end(int id, ink_task_state_t how, const char *result, const char *
 | 保存回执（写进队列不等于已保存；分清本地保存、等待上传、中枢收到） | C 接口：`ink_db_durable_ver`、`ink_db_acked_ver`、`ink_db_wait`、`ink_db_error`，事件 `data.write_failed`。能力 `data.put` 回 `revision`，`data.status {collection, id 或 revision}` 回 `saving`、`on_device`、`at_hub`、`failed` | “等待上传”这一步要等同步（中枢协议 §3.9）：现在还没有上传队列，`on_device` 也包括了它 |
 | 后台作业（能查进度和结果，界面能显示） | §13.1：`job.list`、`job.cancel`、`job.finished`、`job.running`；文件作业、系统更新下载 | 中枢那边的作业（放书进来的七个阶段）要等中枢协议接上；`ink_job_*` 里别的后台活（阅读预渲染这种）不算用户关心的，不进列表 |
 | 系统手势仲裁（保留起点，系统先判边缘带；键盘、滑杆、文字选择按下后输入归它们） | 输入事件有 `x`、`y`、`dx`、`dy` 和方向，浮层独占输入，一个已按下的手指不能按到新出现的东西 | 起点没有传给前台，边缘带和“按下后归谁”都没有。归界面框架，和手势一起做 |
-| 编辑会话 | 类型、组合串、候选分页、提交和取消、成员清空、语音输入 | 选区、撤销、光标移动；长文本（现在上限 4 KiB，从末尾追加） |
+| 编辑会话 | 类型、组合串、候选分页、提交和取消、成员清空、语音输入、光标、选区、撤销（§9.4.1） | 长文本翻页（`ImeLong`，现在上限 4 KiB）；草稿自动存归页面 |
 | 成员、确认事务 | §7、§11 | 确认结果落盘（中枢协议要求，见下） |
 | 应用状态恢复（D-95 如果定了，“回到原页和原位置”） | `save_state`、`restore_state` 存到 `/user/m/<成员>/`；成人空间关闭时页面栈不动，成员门盖在上面，解锁就回到原页 | §11.4 现在是 120 s 闲置或一锁屏就关。**D-95 等用户定，定了再改计时**，恢复这一半已经够 |
 

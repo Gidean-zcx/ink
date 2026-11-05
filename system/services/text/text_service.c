@@ -19,11 +19,20 @@
 
 #define VALUE_DEFAULT 1024
 #define VALUE_MAX 4095
+#define UNDO_MAX 16
+#define UNDO_GROUP_US 3000000ull
 #define COMPOSING_MAX 40
 #define MAX_CANDS 60
 
 /* What the member picked, by a hash of the word: the count, then the word. */
 static const ink_db_def_t USER_FREQ = {.name = "text.user_freq", .title = "输入法学到的词频", .scope = INK_DB_MEMBER, .schema = 1, .max_records = 512, .drop_oldest = true};
+
+typedef struct {
+    char *text;
+    size_t cursor, anchor;
+} snap_t;
+
+enum { EDIT_NONE = 0, EDIT_KEYS, EDIT_DELETE, EDIT_OTHER };
 
 static struct {
     int session, next_session;
@@ -32,6 +41,11 @@ static struct {
     bool ai_hidden;
     char *value;
     size_t cap;
+    size_t cursor, anchor; /* bytes, on whole characters. They differ when something is selected */
+    snap_t undo[UNDO_MAX], redo[UNDO_MAX];
+    int nundo, nredo;
+    int edit_kind;         /* what the last edit was: keys in a row are one thing to undo */
+    uint64_t edit_at_us;
     char hint[48];
     char composing[COMPOSING_MAX + 1];
     const ink_text_client_t *client;
@@ -69,6 +83,8 @@ int ink_text_focus(const ink_text_cfg_t *cfg, const ink_text_client_t *client, v
     snprintf(v, cap + 1, "%s", cfg->initial ? cfg->initial : "");
     TS.value = v;
     TS.cap = cap;
+    TS.cursor = TS.anchor = strlen(v);
+    TS.edit_kind = EDIT_NONE;
     TS.type = cfg->type;
     TS.enter = cfg->enter;
     TS.ai_hidden = cfg->ai_hidden;
@@ -88,6 +104,41 @@ int ink_text_focus(const ink_text_cfg_t *cfg, const ink_text_client_t *client, v
     return TS.session;
 }
 
+static void forget_snaps(snap_t *list, int *n) {
+    for (int i = 0; i < *n; i++) {
+        memset(list[i].text, 0, strlen(list[i].text));
+        osal_free(list[i].text);
+    }
+    *n = 0;
+}
+
+static bool push_snap(snap_t *list, int *n) { /* what is there now; the oldest makes room */
+    char *copy = osal_malloc(strlen(TS.value) + 1, OSAL_MEM_EXTERNAL);
+    if (!copy) return false;
+    strcpy(copy, TS.value);
+    if (*n == UNDO_MAX) {
+        memset(list[0].text, 0, strlen(list[0].text));
+        osal_free(list[0].text);
+        memmove(list, list + 1, sizeof list[0] * (UNDO_MAX - 1));
+        (*n)--;
+    }
+    list[(*n)++] = (snap_t){copy, TS.cursor, TS.anchor};
+    return true;
+}
+
+/* Before a change: keys in a row, soon after each other and in the same place, are undone together. Nothing of a password is kept. */
+static void before_edit(int kind) {
+    if (TS.type == INK_TEXT_PASSWORD) return;
+    uint64_t now = osal_now_us();
+    if (kind != EDIT_OTHER && kind == TS.edit_kind && now - TS.edit_at_us < UNDO_GROUP_US) {
+        TS.edit_at_us = now;
+        return;
+    }
+    if (push_snap(TS.undo, &TS.nundo)) forget_snaps(TS.redo, &TS.nredo);
+    TS.edit_kind = kind;
+    TS.edit_at_us = now;
+}
+
 void ink_text_blur(int session) {
     if (!TS.session || (session && session != TS.session)) return;
     text_voice_on_blur();
@@ -97,6 +148,8 @@ void ink_text_blur(int session) {
     TS.client = NULL;
     ink_db_close(TS.freq);
     TS.freq = NULL;
+    forget_snaps(TS.undo, &TS.nundo);
+    forget_snaps(TS.redo, &TS.nredo);
     osal_free(TS.value);
     TS.value = NULL;
     TS.composing[0] = 0;
@@ -115,16 +168,18 @@ const char *ink_text_composing(void) { return TS.composing; }
 
 void ink_text_set_presenter(void (*fn)(void)) { TS.presenter = fn; }
 
-/* As much as fits, whole characters. */
-static void append(const char *s) {
-    size_t have = strlen(TS.value), add = strlen(s);
-    if (have + add > TS.cap) {
-        add = TS.cap - have;
+/* In place of what is selected, or at the cursor. As much as fits, whole characters. */
+static void put(const char *s) {
+    size_t lo = TS.cursor < TS.anchor ? TS.cursor : TS.anchor, hi = TS.cursor < TS.anchor ? TS.anchor : TS.cursor;
+    size_t have = strlen(TS.value), add = strlen(s), rest = have - (hi - lo);
+    if (rest + add > TS.cap) {
+        add = TS.cap - rest;
         while (add && (s[add] & 0xC0) == 0x80) add--;
         ink_probe_count("text.too_long");
     }
-    memcpy(TS.value + have, s, add);
-    TS.value[have + add] = 0;
+    memmove(TS.value + lo + add, TS.value + hi, have - hi + 1);
+    memcpy(TS.value + lo, s, add);
+    TS.cursor = TS.anchor = lo + add;
 }
 
 static uint32_t word_id(const char *word) {
@@ -201,7 +256,8 @@ int ink_text_candidates(int first, ink_text_cand_t *out, int max) {
 /* What is being composed goes in as typed. */
 static void flush_composing(void) {
     if (!TS.composing[0]) return;
-    append(TS.composing);
+    before_edit(EDIT_KEYS);
+    put(TS.composing);
     TS.composing[0] = 0;
 }
 
@@ -211,7 +267,8 @@ void ink_text_pick(int index) {
     compute_cands();
     if (index < 0 || index >= TS.ncands) return;
     ink_text_cand_t c = TS.cands[index];
-    append(c.word);
+    before_edit(EDIT_KEYS);
+    put(c.word);
     learn(c.word);
     memmove(TS.composing, TS.composing + c.consumed, strlen(TS.composing + c.consumed) + 1);
     ink_probe_count("text.picks");
@@ -239,20 +296,23 @@ void ink_text_key(char c) {
             flush_composing();
         } else {
             flush_composing();
-            append(one);
+            before_edit(EDIT_KEYS);
+            put(one);
         }
         break;
     case INK_TEXT_NUMBER:
         if ((c < '0' || c > '9') && c != '.' && c != '-') return;
-        append(one);
+        before_edit(EDIT_KEYS);
+        put(one);
         break;
     case INK_TEXT_PHONE:
         if ((c < '0' || c > '9') && c != '+' && c != '*' && c != '#') return;
-        append(one);
+        before_edit(EDIT_KEYS);
+        put(one);
         break;
     case INK_TEXT_PASSWORD:
         if ((unsigned char)c < 0x20) return;
-        append(one);
+        put(one);
         break;
     }
     changed();
@@ -263,11 +323,16 @@ void ink_text_backspace(void) {
     if (!TS.session) return;
     size_t n = strlen(TS.composing);
     if (n) TS.composing[n - 1] = 0;
-    else {
-        size_t v = strlen(TS.value);
+    else if (TS.cursor != TS.anchor) {
+        before_edit(EDIT_OTHER);
+        put("");
+    } else if (TS.cursor) {
+        before_edit(EDIT_DELETE);
+        size_t v = TS.cursor;
         while (v && (TS.value[v - 1] & 0xC0) == 0x80) v--; /* continuation bytes */
         if (v) v--;
-        TS.value[v] = 0;
+        TS.anchor = v;
+        put("");
     }
     changed();
 }
@@ -287,8 +352,153 @@ void ink_text_enter(void) {
 void ink_text_commit_utf8(const char *s) {
     if (!TS.session || !s) return;
     flush_composing();
-    append(s);
+    before_edit(EDIT_OTHER);
+    put(s);
+    TS.edit_kind = EDIT_OTHER;
     changed();
+}
+
+/* ---- the cursor, the selection and undo: in characters, as a label and the AI count them ---- */
+
+static size_t to_chars(size_t bytes) {
+    size_t n = 0;
+    for (size_t i = 0; i < bytes && TS.value[i]; i++) n += (TS.value[i] & 0xC0) != 0x80;
+    return n;
+}
+
+static size_t to_bytes(size_t chars) { /* past the end: the end */
+    size_t i = 0;
+    while (TS.value[i] && chars) {
+        i++;
+        while ((TS.value[i] & 0xC0) == 0x80) i++;
+        chars--;
+    }
+    return i;
+}
+
+static void moved(void) { /* the next key starts something new to undo */
+    TS.edit_kind = EDIT_NONE;
+    changed();
+}
+
+void ink_text_selection(size_t *start, size_t *end) {
+    size_t a = TS.value ? to_chars(TS.cursor) : 0, b = TS.value ? to_chars(TS.anchor) : 0;
+    if (start) *start = a < b ? a : b;
+    if (end) *end = a < b ? b : a;
+}
+
+size_t ink_text_cursor(void) { return TS.value ? to_chars(TS.cursor) : 0; }
+
+void ink_text_set_cursor(size_t at) {
+    if (!TS.session) return;
+    flush_composing();
+    TS.cursor = TS.anchor = to_bytes(at);
+    moved();
+}
+
+void ink_text_select(size_t start, size_t end) {
+    if (!TS.session) return;
+    flush_composing();
+    TS.anchor = to_bytes(start < end ? start : end);
+    TS.cursor = to_bytes(start < end ? end : start);
+    moved();
+}
+
+static bool ascii_word(unsigned char c) { return (c >= '0' && c <= '9') || (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'); }
+
+/* A wide character that is not punctuation: the blocks of Chinese characters. */
+static bool han_at(size_t i) {
+    unsigned char c0 = (unsigned char)TS.value[i];
+    if (c0 < 0xE3 || c0 > 0xE9) return false;
+    return c0 >= 0xE4 || (c0 == 0xE3 && (unsigned char)TS.value[i + 1] >= 0x90);
+}
+
+static size_t next_char(size_t i) {
+    if (!TS.value[i]) return i;
+    i++;
+    while ((TS.value[i] & 0xC0) == 0x80) i++;
+    return i;
+}
+
+static size_t prev_char(size_t i) {
+    if (!i) return 0;
+    i--;
+    while (i && (TS.value[i] & 0xC0) == 0x80) i--;
+    return i;
+}
+
+void ink_text_select_word(size_t at) {
+    if (!TS.session) return;
+    flush_composing();
+    size_t i = to_bytes(at);
+    if (!TS.value[i] && i) i = prev_char(i); /* past the end: the last one */
+    size_t lo = i, hi = next_char(i);
+    if (ascii_word((unsigned char)TS.value[i])) {
+        while (lo && ascii_word((unsigned char)TS.value[lo - 1])) lo--;
+        while (ascii_word((unsigned char)TS.value[hi])) hi++;
+    } else if (han_at(i)) { /* no word list to go by yet: two characters, the commonest length; the arrows do the rest */
+        if (han_at(hi)) hi = next_char(hi);
+        else if (lo && han_at(prev_char(lo))) lo = prev_char(lo);
+    }
+    TS.anchor = lo;
+    TS.cursor = hi;
+    moved();
+}
+
+void ink_text_move(int chars, bool end) {
+    if (!TS.session) return;
+    flush_composing();
+    bool selected = TS.cursor != TS.anchor;
+    size_t lo = TS.cursor < TS.anchor ? TS.cursor : TS.anchor, hi = TS.cursor < TS.anchor ? TS.anchor : TS.cursor;
+    size_t p = selected ? (end ? hi : lo) : TS.cursor;
+    for (; chars > 0; chars--) p = next_char(p);
+    for (; chars < 0; chars++) p = prev_char(p);
+    if (!selected) TS.cursor = TS.anchor = p;
+    else if (end) {
+        TS.anchor = lo;
+        TS.cursor = p < lo ? lo : p;
+    } else {
+        TS.anchor = p > hi ? hi : p;
+        TS.cursor = hi;
+    }
+    moved();
+}
+
+int ink_text_selected(char *out, size_t cap) {
+    if (!TS.session || TS.type == INK_TEXT_PASSWORD || !cap) return -1;
+    size_t lo = TS.cursor < TS.anchor ? TS.cursor : TS.anchor, hi = TS.cursor < TS.anchor ? TS.anchor : TS.cursor;
+    size_t n = hi - lo;
+    if (n >= cap) n = cap - 1;
+    while (n && (TS.value[lo + n] & 0xC0) == 0x80) n--;
+    memcpy(out, TS.value + lo, n);
+    out[n] = 0;
+    return (int)n;
+}
+
+static void restore(const snap_t *s) {
+    strcpy(TS.value, s->text);
+    TS.cursor = s->cursor;
+    TS.anchor = s->anchor;
+    TS.composing[0] = 0;
+    TS.edit_kind = EDIT_NONE;
+    memset(s->text, 0, strlen(s->text));
+    osal_free(s->text);
+    changed();
+}
+
+bool ink_text_can_undo(void) { return TS.session && TS.nundo > 0; }
+bool ink_text_can_redo(void) { return TS.session && TS.nredo > 0; }
+
+bool ink_text_undo(void) {
+    if (!ink_text_can_undo() || !push_snap(TS.redo, &TS.nredo)) return false;
+    restore(&TS.undo[--TS.nundo]);
+    return true;
+}
+
+bool ink_text_redo(void) {
+    if (!ink_text_can_redo() || !push_snap(TS.undo, &TS.nundo)) return false;
+    restore(&TS.redo[--TS.nredo]);
+    return true;
 }
 
 /* Someone else takes the device: what was typed is not theirs. */

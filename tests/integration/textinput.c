@@ -191,6 +191,254 @@ static void types(void) {
     on_ui(do_blur);
 }
 
+/* ---- editing: the cursor, the selection, undo ---- */
+
+static size_t g_a, g_b, g_cur, g_sel_a, g_sel_b;
+static bool g_ok;
+static const char *g_commit;
+static char g_selected[128];
+static int g_selected_n;
+static void do_cursor(void) { ink_text_set_cursor(g_a); }
+static void do_select(void) { ink_text_select(g_a, g_b); }
+static void do_word(void) { ink_text_select_word(g_a); }
+static void do_move(void) { ink_text_move((int)(long)g_a, g_b != 0); }
+static void do_undo(void) { g_ok = ink_text_undo(); }
+static void do_redo(void) { g_ok = ink_text_redo(); }
+static void do_commit(void) { ink_text_commit_utf8(g_commit); }
+static void do_where(void) {
+    g_cur = ink_text_cursor();
+    ink_text_selection(&g_sel_a, &g_sel_b);
+    g_selected_n = ink_text_selected(g_selected, sizeof g_selected);
+    snprintf(g_val, sizeof g_val, "%s", ink_text_value());
+    snprintf(g_comp, sizeof g_comp, "%s", ink_text_composing());
+}
+static void where(void) { on_ui(do_where); }
+static void cursor_to(size_t at) {
+    g_a = at;
+    on_ui(do_cursor);
+}
+static void select_range(size_t a, size_t b) {
+    g_a = a;
+    g_b = b;
+    on_ui(do_select);
+}
+static void select_word_at(size_t at) {
+    g_a = at;
+    on_ui(do_word);
+}
+static void move_by(int chars, bool end) {
+    g_a = (size_t)(long)chars;
+    g_b = end;
+    on_ui(do_move);
+}
+static void commit(const char *s) {
+    g_commit = s;
+    on_ui(do_commit);
+}
+static bool undo(void) {
+    on_ui(do_undo);
+    return g_ok;
+}
+static bool redo(void) {
+    on_ui(do_redo);
+    return g_ok;
+}
+#define VALUE_IS(want, what) \
+    do { \
+        where(); \
+        CHECK(!strcmp(g_val, want), "%s (%s)", what, g_val); \
+    } while (0)
+
+static void editing(void) {
+    focus_as(INK_TEXT_PLAIN, "今天天气很好", 0);
+    where();
+    CHECK(g_cur == 6 && g_sel_a == 6 && g_sel_b == 6, "the cursor starts at the end, in characters (%d)", (int)g_cur);
+    /* at the cursor */
+    cursor_to(2);
+    commit("真的");
+    VALUE_IS("今天真的天气很好", "text goes in at the cursor");
+    CHECK(g_cur == 4, "and the cursor after it (%d)", (int)g_cur);
+    type("ab");
+    where();
+    CHECK(!strcmp(g_comp, "ab") && !strcmp(g_val, "今天真的天气很好"), "what is being composed is not in it yet");
+    on_ui(do_enter);
+    VALUE_IS("今天真的ab天气很好", "then in that place");
+    CHECK(g_cur == 6, "(%d)", (int)g_cur);
+    on_ui(do_backspace);
+    VALUE_IS("今天真的a天气很好", "backspace takes what is before the cursor");
+    cursor_to(2);
+    on_ui(do_backspace);
+    VALUE_IS("今真的a天气很好", "a whole character");
+    CHECK(g_cur == 1, "and the cursor goes with it (%d)", (int)g_cur);
+    cursor_to(0);
+    on_ui(do_backspace);
+    VALUE_IS("今真的a天气很好", "nothing before it: nothing happens");
+    cursor_to(999);
+    where();
+    CHECK(g_cur == 8, "past the end: the end (%d)", (int)g_cur);
+    /* moving the cursor takes in what was being composed */
+    cursor_to(1);
+    type("xy");
+    cursor_to(0);
+    VALUE_IS("今xy真的a天气很好", "what was being composed goes in where it was");
+    /* selecting */
+    select_range(3, 5);
+    where();
+    CHECK(g_sel_a == 3 && g_sel_b == 5 && !strcmp(g_selected, "真的"), "selected (%d, %d, %s)", (int)g_sel_a, (int)g_sel_b, g_selected);
+    commit("很");
+    VALUE_IS("今xy很a天气很好", "text takes the place of what is selected");
+    CHECK(g_sel_a == g_sel_b && g_cur == 4, "and nothing is selected after (%d)", (int)g_cur);
+    select_range(4, 2); /* either way round */
+    where();
+    CHECK(g_sel_a == 2 && g_sel_b == 4 && !strcmp(g_selected, "y很"), "(%s)", g_selected);
+    on_ui(do_backspace);
+    VALUE_IS("今xa天气很好", "backspace takes all of what is selected");
+    on_ui(do_blur);
+    /* a word */
+    focus_as(INK_TEXT_PLAIN, "say hello, 今天天气好。再见", 0);
+    select_word_at(5);
+    where();
+    CHECK(!strcmp(g_selected, "hello"), "letters that go together (%s)", g_selected);
+    select_word_at(12);
+    where();
+    CHECK(!strcmp(g_selected, "天天"), "Chinese: two characters (%s)", g_selected);
+    select_word_at(15);
+    where();
+    CHECK(!strcmp(g_selected, "气好") , "the last before punctuation: with the one before it (%s)", g_selected);
+    select_word_at(9);
+    where();
+    CHECK(!strcmp(g_selected, ","), "punctuation: itself (%s)", g_selected);
+    /* the arrows: nothing selected, the cursor */
+    cursor_to(1);
+    move_by(1, true);
+    where();
+    CHECK(g_cur == 2 && g_sel_a == g_sel_b, "moved (%d)", (int)g_cur);
+    move_by(-5, true);
+    where();
+    CHECK(g_cur == 0, "not before the start (%d)", (int)g_cur);
+    /* selected: its end, or its start */
+    select_word_at(12);
+    move_by(1, true);
+    where();
+    CHECK(!strcmp(g_selected, "天天气"), "the end moves (%s)", g_selected);
+    move_by(-1, false);
+    where();
+    CHECK(!strcmp(g_selected, "今天天气"), "the start moves (%s)", g_selected);
+    move_by(-20, true);
+    where();
+    CHECK(g_sel_a == g_sel_b && g_sel_a == 11, "the end does not go past the start (%d, %d)", (int)g_sel_a, (int)g_sel_b);
+    on_ui(do_blur);
+    /* only so much fits, whole characters, wherever it goes in */
+    focus_as(INK_TEXT_PLAIN, "一二三四", 16);
+    cursor_to(1);
+    commit("五六七");
+    VALUE_IS("一五二三四", "as much as fits (the limit is in bytes)");
+    on_ui(do_blur);
+    /* undo */
+    focus_as(INK_TEXT_PLAIN, "开头", 0);
+    CHECK(!undo(), "nothing to undo yet");
+    type("a");
+    type("b");
+    type(",");
+    VALUE_IS("开头ab,", "keys");
+    CHECK(undo(), "undone");
+    VALUE_IS("开头", "keys in a row are one step");
+    CHECK(!undo(), "and that was all");
+    CHECK(redo(), "redone");
+    VALUE_IS("开头ab,", "back");
+    where();
+    CHECK(g_cur == 5, "and the cursor (%d)", (int)g_cur);
+    delay_ms(3200);
+    type(".");
+    CHECK(undo(), "after a while it is a step of its own");
+    VALUE_IS("开头ab,", "only that");
+    CHECK(redo(), "redone");
+    cursor_to(2);
+    type(".");
+    CHECK(undo(), "moved in between: a step of its own");
+    VALUE_IS("开头ab,.", "only that");
+    where();
+    CHECK(g_cur == 2, "the cursor comes back too (%d)", (int)g_cur);
+    commit("新的");
+    CHECK(!redo(), "something new: there is no going forward any more");
+    CHECK(undo(), "undone");
+    VALUE_IS("开头ab,.", "what text.commit put in goes as one");
+    select_range(0, 2);
+    on_ui(do_backspace);
+    VALUE_IS("ab,.", "selected, deleted");
+    CHECK(undo(), "undone");
+    VALUE_IS("开头ab,.", "it comes back");
+    where();
+    CHECK(g_sel_a == 0 && g_sel_b == 2, "selected as it was (%d, %d)", (int)g_sel_a, (int)g_sel_b);
+    /* a pause, or moving in between, ends a step */
+    on_ui(do_blur);
+    focus_as(INK_TEXT_PLAIN, "", 0);
+    type("1");
+    delay_ms(3200);
+    type("2");
+    CHECK(undo(), "undone");
+    VALUE_IS("1", "a pause ended the step");
+    on_ui(do_blur);
+    focus_as(INK_TEXT_PLAIN, "", 0);
+    type("1");
+    cursor_to(0);
+    type("2");
+    CHECK(undo(), "undone");
+    VALUE_IS("1", "moving ended the step");
+    /* how far back */
+    on_ui(do_blur);
+    focus_as(INK_TEXT_PLAIN, "", 0);
+    for (int i = 0; i < 20; i++) commit("x");
+    int steps = 0;
+    while (undo()) steps++;
+    CHECK(steps == 16, "the last 16 (%d)", steps);
+    VALUE_IS("xxxx", "the rest stays");
+    on_ui(do_blur);
+    /* gone with the session */
+    focus_as(INK_TEXT_PLAIN, "第一个", 0);
+    commit("的");
+    on_ui(do_blur);
+    focus_as(INK_TEXT_PLAIN, "", 0);
+    CHECK(!undo(), "another field starts with nothing to undo");
+    on_ui(do_blur);
+    /* a password keeps nothing, and nothing comes out */
+    focus_as(INK_TEXT_PASSWORD, "", 0);
+    type("secret");
+    CHECK(!undo(), "no history of a password");
+    commit("more");
+    on_ui(do_backspace);
+    CHECK(!undo(), "however it changed");
+    select_range(0, 3);
+    where();
+    CHECK(g_selected_n == -1, "what is selected does not come out (%d)", g_selected_n);
+    on_ui(do_blur);
+    /* the AI, the same */
+    CHECK(AI("text.select", "{\"start\":0}") && g_rc.status == INK_RC_FAILED, "no field: nothing to select");
+    focus_as(INK_TEXT_PLAIN, "今天天气很好", 0);
+    CHECK(AI("text.state", NULL) && strstr(g_result, "\"cursor\":6") && strstr(g_result, "\"selection_start\":6") && strstr(g_result, "\"selection_end\":6") && !strstr(g_result, "can_undo"), "it sees where (%s)", g_result);
+    CHECK(AI("text.select", "{\"start\":2,\"end\":4}") && g_rc.status == INK_RC_DONE, "it selects (%s)", g_rc.detail);
+    CHECK(AI("text.insert", "{\"text\":\"阳光\"}") && g_rc.status == INK_RC_DONE, "and writes over it");
+    VALUE_IS("今天阳光很好", "the same as a person");
+    CHECK(AI("text.state", NULL) && strstr(g_result, "\"can_undo\":true"), "it sees it can be undone (%s)", g_result);
+    CHECK(AI("text.undo", NULL) && g_rc.status == INK_RC_DONE, "and undoes (%s)", g_rc.detail);
+    VALUE_IS("今天天气很好", "as a person would");
+    CHECK(AI("text.redo", NULL) && g_rc.status == INK_RC_DONE, "and back");
+    VALUE_IS("今天阳光很好", "as a person would");
+    CHECK(AI("text.select", "{\"start\":1}") && g_rc.status == INK_RC_DONE, "no end: the cursor");
+    where();
+    CHECK(g_cur == 1 && g_sel_a == g_sel_b, "(%d, %d, %d)", (int)g_cur, (int)g_sel_a, (int)g_sel_b);
+    on_ui(do_blur);
+    g_cfg = (ink_text_cfg_t){.type = INK_TEXT_PLAIN, .ai_hidden = true, .initial = "mimi"};
+    on_ui(do_focus);
+    CHECK(AI("text.select", "{\"start\":0,\"end\":2}") && g_rc.status == INK_RC_REJECTED, "not in a field that keeps to itself");
+    CHECK(AI("text.undo", NULL) && g_rc.status == INK_RC_REJECTED, "nor undo there");
+    CHECK(AI("text.state", NULL) && !strstr(g_result, "selection_start"), "nor sees where (%s)", g_result);
+    on_ui(do_blur);
+    focus_as(INK_TEXT_PASSWORD, "", 0);
+    CHECK(AI("text.select", "{\"start\":0}") && g_rc.status == INK_RC_REJECTED, "nor a password");
+    on_ui(do_blur);
+}
+
 static void for_the_ai(void) {
     CHECK(AI("text.state", NULL) && strstr(g_result, "\"focused\":false"), "nothing has the focus (%s)", g_result);
     CHECK(AI("text.insert", "{\"text\":\"你好\"}") && g_rc.status == INK_RC_FAILED, "nowhere to write");
@@ -303,6 +551,8 @@ static void field_where(void) {
     g_fy = (a.y1 + a.y2) / 2;
 }
 
+static void do_focus_end(void) { ink_text_set_cursor(9999); }
+
 static void keyboard(void) {
     on_ui(open_field_page);
     delay_ms(1500);
@@ -350,7 +600,7 @@ static void keyboard(void) {
     CHECK(!strcmp(g_val, "好中1") && !strcmp(g_comp, "q"), "(%s, %s)", g_val, g_comp);
     CHECK(press("删除") && press("发送"), "the enter key says what it does");
     CHECK(WAIT_FOR(g_field_entered == 1, 500) && !strcmp(g_field_text, "好中1"), "and the page hears (%s)", g_field_text);
-    /* pressed long: copy, paste */
+    /* pressed long: the last thing there is selected (nothing is under the finger), copy, paste */
     hw(HW_PRESS, g_fx, g_fy);
     delay_ms(900);
     hw(HW_RELEASE, g_fx, g_fy);
@@ -358,14 +608,15 @@ static void keyboard(void) {
     CHECK(press("复制"), "pressed long: a menu");
     char clip[32] = "";
     ink_clip_get(clip, sizeof clip, INK_SRC_TOUCH, NULL);
-    CHECK(!strcmp(clip, "好中1"), "copied (%s)", clip);
+    CHECK(!strcmp(clip, "1"), "what is selected is copied (%s)", clip);
+    on_ui(do_focus_end);
     hw(HW_PRESS, g_fx, g_fy);
     delay_ms(900);
     hw(HW_RELEASE, g_fx, g_fy);
     delay_ms(300);
     CHECK(press("粘贴"), "again");
     look();
-    CHECK(!strcmp(g_val, "好中1好中1"), "pasted (%s)", g_val);
+    CHECK(!strcmp(g_val, "好中1"), "pasted over what is selected (%s)", g_val);
     /* leaving the page ends it, and the keyboard goes */
     on_ui(close_field_page);
     delay_ms(400);
@@ -480,6 +731,113 @@ static void bad_dictionaries(void) {
     on_ui(do_blur);
 }
 
+/* On the page: a tap puts the cursor, a long press selects a word, the arrows adjust (placeholder look). */
+static char g_label_text[256];
+static void find_field_label(void) {
+    lv_obj_t *l = lv_obj_get_child(g_field, 0);
+    snprintf(g_label_text, sizeof g_label_text, "%s", lv_label_get_text(l));
+}
+static int g_left_x, g_left_y;
+static int g_letter;
+static void letter_where(void) {
+    lv_area_t a;
+    lv_point_t p;
+    lv_obj_t *l = lv_obj_get_child(g_field, 0);
+    lv_obj_update_layout(g_field);
+    lv_obj_get_coords(l, &a);
+    lv_label_get_letter_pos(l, (uint32_t)g_letter, &p);
+    g_left_x = a.x1 + p.x + 2;
+    g_left_y = a.y1 + p.y + 4;
+}
+static void field_left(void) {
+    lv_area_t a;
+    lv_obj_t *l = lv_obj_get_child(g_field, 0);
+    lv_obj_update_layout(g_field);
+    lv_obj_get_coords(l, &a);
+    g_left_x = a.x1 + 6;
+    g_left_y = (a.y1 + a.y2) / 2;
+}
+
+static void field_editing(void) {
+    on_ui(open_field_page);
+    delay_ms(1500);
+    on_ui(field_where);
+    tap(g_fx, g_fy);
+    delay_ms(300);
+    CHECK(ink_text_focused(), "typing");
+    commit("hello world");
+    delay_ms(300);
+    on_ui(find_field_label);
+    CHECK(!strcmp(g_label_text, "hello world"), "the cursor at the end is not marked (%s)", g_label_text);
+    on_ui(field_left);
+    tap(g_left_x, g_left_y);
+    delay_ms(300);
+    where();
+    CHECK(g_cur == 0, "a tap at the start puts the cursor there (%d)", (int)g_cur);
+    on_ui(find_field_label);
+    CHECK(!strcmp(g_label_text, "|hello world"), "where it is shows (%s)", g_label_text);
+    commit("a");
+    where();
+    CHECK(!strcmp(g_val, "ahello world"), "and what comes goes there (%s)", g_val);
+    /* a long press selects the word */
+    on_ui(field_left);
+    hw(HW_PRESS, g_left_x + 30, g_left_y);
+    delay_ms(1000);
+    hw(HW_RELEASE, g_left_x + 30, g_left_y);
+    delay_ms(300);
+    where();
+    CHECK(!strcmp(g_selected, "ahello"), "a long press selects the word (%s)", g_selected);
+    on_ui(find_field_label);
+    CHECK(strstr(g_label_text, "[ahello]"), "and it shows (%s)", g_label_text);
+    CHECK(press("◀"), "the arrows are there");
+    delay_ms(300);
+    where();
+    CHECK(!strcmp(g_selected, "ahell"), "the end moves back (%s)", g_selected);
+    CHECK(press("▶"), "and on");
+    delay_ms(300);
+    where();
+    CHECK(!strcmp(g_selected, "ahello"), "(%s)", g_selected);
+    CHECK(press("复制"), "copy");
+    delay_ms(300);
+    char got[32] = "";
+    bool sensitive = false;
+    CHECK(ink_clip_get(got, sizeof got, INK_SRC_TOUCH, &sensitive) > 0 && !strcmp(got, "ahello"), "what is selected goes on the clipboard (%s)", got);
+    on_ui(do_backspace);
+    where();
+    CHECK(!strcmp(g_val, " world"), "the selection goes (%s)", g_val);
+    on_ui(field_left);
+    hw(HW_PRESS, g_left_x + 30, g_left_y);
+    delay_ms(1000);
+    hw(HW_RELEASE, g_left_x + 30, g_left_y);
+    delay_ms(300);
+    CHECK(press("撤销"), "undo from the menu");
+    delay_ms(300);
+    where();
+    CHECK(!strcmp(g_val, "ahello world"), "it comes back (%s)", g_val);
+    /* the mark is not a letter of the text */
+    cursor_to(2);
+    delay_ms(300);
+    g_letter = 3; /* "ah|ello": the e */
+    on_ui(letter_where);
+    tap(g_left_x, g_left_y);
+    delay_ms(300);
+    where();
+    CHECK(g_cur == 2, "a tap on the letter after the mark means that letter (%d)", (int)g_cur);
+    /* a long text starts so that the cursor is in view */
+    cursor_to(999);
+    commit("一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十");
+    delay_ms(300);
+    on_ui(find_field_label);
+    CHECK(!strncmp(g_label_text, "一二三", strlen("一二三")) && g_label_text[0] && !strstr(g_label_text, "hello"), "the end of it shows (%s)", g_label_text);
+    on_ui(field_left);
+    tap(g_left_x, g_left_y);
+    delay_ms(300);
+    where();
+    CHECK(g_cur == 12, "a tap on the first letter shown means that one (%d)", (int)g_cur);
+    on_ui(close_field_page);
+    delay_ms(500);
+}
+
 static void test_task(void *arg) {
     (void)arg;
     delay_ms(1500);
@@ -490,8 +848,10 @@ static void test_task(void *arg) {
         engine();
         types();
         for_the_ai();
+        editing();
         clipboard();
         keyboard();
+        field_editing();
         memory_short();
     }
     ink_probe_count("test.finished");

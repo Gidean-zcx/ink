@@ -55,8 +55,27 @@ void ink_text_backspace(void);
 /** A candidate, by its place in the whole list. */
 void ink_text_pick(int index);
 void ink_text_enter(void);
-/** Text as it is: what is being composed goes in as typed, then this. */
+/** Text as it is: what is being composed goes in as typed, then this. In place of what is selected, or at the cursor. */
 void ink_text_commit_utf8(const char *s);
+
+/* The cursor and the selection, counted in characters as a label and the AI count them. Keys, candidates and backspace all work
+ * there. Nobody drags on electronic paper: a tap puts the cursor, a long press selects a word, the arrows adjust (system UI spec). */
+size_t ink_text_cursor(void);
+/** start == end: nothing is selected. */
+void ink_text_selection(size_t *start, size_t *end);
+void ink_text_set_cursor(size_t at);
+void ink_text_select(size_t start, size_t end);
+/** The word around this place: letters and digits that go together; in Chinese two characters, until there is a word list to go by. */
+void ink_text_select_word(size_t at);
+/** The arrows: nothing selected, the cursor moves; something selected, its end (or its start) does. */
+void ink_text_move(int chars, bool end);
+/** What is selected, bytes copied; -1 for a password, which does not come out. */
+int ink_text_selected(char *out, size_t cap);
+/** Keys in a row are one step. A password keeps no history. */
+bool ink_text_undo(void);
+bool ink_text_redo(void);
+bool ink_text_can_undo(void);
+bool ink_text_can_redo(void);
 
 const char *ink_text_value(void);
 const char *ink_text_composing(void);

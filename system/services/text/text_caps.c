@@ -35,6 +35,16 @@ static void cap_state(ink_call_t *c) { /* UI task */
             ink_jw_str(&w, ink_text_value());
             ink_jw_raw(&w, ",\"composing\":");
             ink_jw_str(&w, ink_text_composing());
+            size_t sel_start, sel_end;
+            ink_text_selection(&sel_start, &sel_end);
+            ink_jw_raw(&w, ",\"cursor\":");
+            ink_jw_int(&w, (int64_t)ink_text_cursor());
+            ink_jw_raw(&w, ",\"selection_start\":");
+            ink_jw_int(&w, (int64_t)sel_start);
+            ink_jw_raw(&w, ",\"selection_end\":");
+            ink_jw_int(&w, (int64_t)sel_end);
+            if (ink_text_can_undo()) ink_jw_raw(&w, ",\"can_undo\":true");
+            if (ink_text_can_redo()) ink_jw_raw(&w, ",\"can_redo\":true");
             if (ink_text_voice_state() != INK_VOICE_IDLE) {
                 ink_jw_raw(&w, ",\"heard\":");
                 ink_jw_str(&w, ink_text_voice_heard());
@@ -123,6 +133,30 @@ static void cap_clip_read(ink_call_t *c) {
     osal_free(text);
 }
 
+/* The field is there, and it is one the AI may touch. */
+static bool editable(ink_call_t *c) {
+    if (!ink_text_focused()) fail(c, INK_RC_FAILED, "no text field has the focus");
+    else if (ink_text_type() == INK_TEXT_PASSWORD || ink_text_ai_hidden()) fail(c, INK_RC_REJECTED, "this field is the person's to fill in");
+    else return true;
+    return false;
+}
+
+static void cap_select(ink_call_t *c) { /* UI task */
+    int64_t start = 0, end = 0;
+    ink_args_get_int(&c->args, "start", &start);
+    if (!ink_args_get_int(&c->args, "end", &end)) end = start;
+    if (!editable(c)) return;
+    ink_text_select((size_t)start, (size_t)end);
+}
+
+static void cap_undo(ink_call_t *c) { /* UI task */
+    if (editable(c) && !ink_text_undo()) fail(c, INK_RC_FAILED, "nothing to undo");
+}
+
+static void cap_redo(ink_call_t *c) { /* UI task */
+    if (editable(c) && !ink_text_redo()) fail(c, INK_RC_FAILED, "nothing to redo");
+}
+
 static void cap_clip_write(ink_call_t *c) {
     char *text = osal_malloc(INK_ARGS_TEXT, OSAL_MEM_EXTERNAL);
     if (!text) {
@@ -139,6 +173,11 @@ static void cap_clip_write(ink_call_t *c) {
 static const ink_cap_t TEXT_CAPS[] = {
     {.id = "text.state", .title = "现在有没有文本框在输入，里面是什么（密码不给看）", .output = "{\"type\":\"object\"}", .effect = INK_FX_READ, .child_ok = true, .run = cap_state},
     {.id = "text.insert", .title = "往有焦点的文本框里写字（等于替用户打字）", .input = "{\"type\":\"object\",\"properties\":{\"text\":{\"type\":\"string\",\"maxLength\":300}},\"required\":[\"text\"]}", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = cap_insert},
+    {.id = "text.select", .title = "放光标或选一段字（按字数算；不给 end 就是放光标。text.insert 写在这里，选中的被替换）",
+     .input = "{\"type\":\"object\",\"properties\":{\"start\":{\"type\":\"integer\",\"minimum\":0},\"end\":{\"type\":\"integer\",\"minimum\":0}},\"required\":[\"start\"]}",
+     .effect = INK_FX_NAVIGATE, .child_ok = true, .run = cap_select},
+    {.id = "text.undo", .title = "撤销文本框里刚才的修改", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = cap_undo},
+    {.id = "text.redo", .title = "把撤销的改回来", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = cap_redo},
     {.id = "text.submit", .title = "按回车（完成、发送、搜索）", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = cap_submit},
     {.id = "text.voice_start", .title = "打开语音输入：说的话变成文字进文本框", .ask = "打开语音输入（声音会发给家庭服务器）", .effect = INK_FX_EXTERNAL, .child_ok = true, .run = cap_voice_start},
     {.id = "text.voice_finish", .title = "说完了，结束语音输入", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = cap_voice_finish},
