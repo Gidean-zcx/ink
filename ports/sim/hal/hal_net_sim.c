@@ -69,6 +69,10 @@ static struct {
     int nlink;
     vtk_waitq_t evt_wq;
     bool link_changed;
+    struct {
+        void (*fn)(void *);
+        void *ctx;
+    } evt[4]; /* other work for the event task (sim_sys_evt) */
     bool started;                /* sim_net_init ran */
     struct hal_ws *conns;
     uint64_t gen;
@@ -130,6 +134,17 @@ static uint64_t radio_touch(uint64_t t) {
 }
 
 /* ------------------------------------------------------------ link state */
+
+void sim_sys_evt(void (*fn)(void *), void *ctx) { /* ISR or locked */
+    for (int i = 0; i < 4; i++)
+        if (!N.evt[i].fn || N.evt[i].fn == fn) {
+            N.evt[i].fn = fn;
+            N.evt[i].ctx = ctx;
+            break;
+        }
+    if (vtk_in_isr()) vtk_isr_wake_one(&N.evt_wq);
+    else vtk_wake_one_locked(&N.evt_wq);
+}
 
 static void notify_link_locked(void) {
     N.link_changed = true;
@@ -225,6 +240,7 @@ static void set_link(hal_link_type_t t, bool up) { /* ISR or locked task context
 
 static struct {
     bool wifi, cell;
+    bool wifi_script, wifi_table; /* the script's "wifi on"; a known network from the table in range */
     bool wifi_broken; /* in range, but joining it never works */
     int wifi_rssi, cell_rsrp;
     bool outage;
@@ -255,15 +271,18 @@ static void joined_cb(void *arg) { /* ISR: Wi-Fi association done */
 }
 
 void sim_net_set_link(const char *name) { /* ISR (script "net"): legacy shorthand for the environment */
-    if (!strcmp(name, "none")) E.wifi = E.cell = false;
-    else if (!strcmp(name, "wifi")) E.wifi = true;
+    if (!strcmp(name, "none")) {
+        E.wifi_script = E.cell = false;
+        E.wifi = E.wifi_table;
+    } else if (!strcmp(name, "wifi")) E.wifi_script = E.wifi = true;
     else if (!strcmp(name, "lte")) E.cell = true;
     relink();
 }
 
 void sim_net_env(int which, bool on, int level) { /* ISR (script, window): 0 Wi-Fi, 1 cellular */
     if (which == 0 || which == 2) {
-        E.wifi = on;
+        E.wifi_script = on;
+        E.wifi = on || E.wifi_table;
         E.wifi_broken = which == 2;
         if (level) E.wifi_rssi = level;
     } else {
@@ -271,6 +290,97 @@ void sim_net_env(int which, bool on, int level) { /* ISR (script, window): 0 Wi-
         if (level) E.cell_rsrp = level;
     }
     relink();
+}
+
+/* ---- Wi-Fi management: the networks around, as the script makes them ---- */
+#define MAX_APS 8
+#define SCAN_US 2500000ull
+#define JOIN_FAIL_US 3000000ull
+static struct {
+    hal_wifi_ap_t ap[MAX_APS];
+    char password[MAX_APS][65];
+    int n;
+    hal_wifi_known_t known[8];
+    int nknown;
+} W;
+
+/* A known network in range, and the strongest: the one automatic choosing joins. Locked or ISR. */
+static int known_in_range(void) {
+    int best = -1;
+    for (int i = 0; i < W.n; i++)
+        for (int k = 0; k < W.nknown; k++)
+            if (!strcmp(W.ap[i].ssid, W.known[k].ssid) && !strcmp(W.password[i], W.known[k].password) && (best < 0 || W.ap[i].rssi > W.ap[best].rssi)) best = i;
+    return best;
+}
+
+static void wifi_from_table(void) { /* locked or ISR */
+    int i = known_in_range();
+    E.wifi_table = i >= 0;
+    if (i >= 0) E.wifi_rssi = W.ap[i].rssi;
+    E.wifi = E.wifi_script || E.wifi_table;
+    relink();
+}
+
+void sim_wifi_ap_add(const char *ssid, int rssi, const char *password) { /* ISR (script) */
+    int at = -1;
+    for (int i = 0; i < W.n; i++)
+        if (!strcmp(W.ap[i].ssid, ssid)) at = i;
+    if (at < 0 && W.n < MAX_APS) at = W.n++;
+    if (at < 0) return;
+    snprintf(W.ap[at].ssid, sizeof W.ap[at].ssid, "%s", ssid);
+    W.ap[at].rssi = rssi;
+    W.ap[at].secured = password && password[0];
+    snprintf(W.password[at], sizeof W.password[at], "%s", password ? password : "");
+    wifi_from_table();
+}
+
+void sim_wifi_ap_del(const char *ssid) { /* ISR (script) */
+    for (int i = 0; i < W.n; i++)
+        if (!strcmp(W.ap[i].ssid, ssid)) {
+            memmove(&W.ap[i], &W.ap[i + 1], sizeof W.ap[0] * (size_t)(W.n - i - 1));
+            memmove(&W.password[i], &W.password[i + 1], sizeof W.password[0] * (size_t)(W.n - i - 1));
+            W.n--;
+            break;
+        }
+    wifi_from_table();
+}
+
+int hal_wifi_scan(hal_wifi_ap_t *out, int max, uint32_t timeout_ms) {
+    uint64_t wait = (uint64_t)timeout_ms * 1000u;
+    osal_task_delay_us(wait < SCAN_US ? wait : SCAN_US);
+    vtk_lock();
+    int n = 0;
+    for (int i = 0; i < W.n && n < max; i++) {
+        int at = n++;
+        out[at] = W.ap[i];
+        while (at > 0 && out[at - 1].rssi < out[at].rssi) { /* strongest first */
+            hal_wifi_ap_t t = out[at - 1];
+            out[at - 1] = out[at];
+            out[at] = t;
+            at--;
+        }
+    }
+    vtk_unlock();
+    return n;
+}
+
+int hal_wifi_connect(const char *ssid, const char *password, uint32_t timeout_ms) {
+    osal_task_delay_us(WIFI_JOIN_MS * 1000ull < (uint64_t)timeout_ms * 1000u ? WIFI_JOIN_MS * 1000ull : (uint64_t)timeout_ms * 1000u);
+    vtk_lock();
+    int at = -1;
+    for (int i = 0; i < W.n; i++)
+        if (!strcmp(W.ap[i].ssid, ssid)) at = i;
+    int r = at < 0 ? HAL_WIFI_ERR_NOT_FOUND : strcmp(W.password[at], password ? password : "") ? HAL_WIFI_ERR_AUTH : HAL_WIFI_OK;
+    vtk_unlock();
+    return r;
+}
+
+void hal_wifi_set_known(const hal_wifi_known_t *list, int n) {
+    vtk_lock();
+    W.nknown = n < 8 ? n : 8;
+    if (W.nknown) memcpy(W.known, list, sizeof W.known[0] * (size_t)W.nknown);
+    wifi_from_table();
+    vtk_unlock();
 }
 
 void sim_net_env_state(bool *wifi, int *rssi, bool *cell, int *rsrp, int *chosen) { /* ISR */
@@ -706,6 +816,8 @@ static hal_at_result_t at_run(const char *cmd, const char *payload, char *resp, 
 }
 
 /* The outside world (window, scripts; ISR context) */
+int sim_net_sms_sent(void) { return (int)MS.sms_out; }
+
 bool sim_net_deliver_sms(const char *number, const char *utf8) {
     if (!can_sms()) return false;
     for (int i = 0; i < SMS_SLOTS; i++)
@@ -813,11 +925,18 @@ static void sys_evt_task(void *arg) {
     (void)arg;
     for (;;) {
         vtk_lock();
-        while (!N.link_changed) vtk_block_locked(&N.evt_wq, VTK_TIME_INF);
+        bool other = false;
+        while (!N.link_changed && !(other = N.evt[0].fn != NULL)) vtk_block_locked(&N.evt_wq, VTK_TIME_INF);
+        bool link = N.link_changed;
         N.link_changed = false;
+        typeof(N.evt) todo;
+        memcpy(todo, N.evt, sizeof todo);
+        if (other) memset(N.evt, 0, sizeof N.evt);
         vtk_unlock();
         sim_charge_ns_always(SIM_US(40));
-        if (N.nlink) {
+        if (other)
+            for (int i = 0; i < 4 && todo[i].fn; i++) todo[i].fn(todo[i].ctx);
+        if (link && N.nlink) {
             hal_link_status_t st;
             hal_net_link_status(&st);
             for (int i = 0; i < N.nlink; i++) N.link_cb[i](N.link_ctx[i], &st);
@@ -1039,11 +1158,12 @@ static void ws_task(void *arg) {
             u->ws = w;
             u->gen = w->gen;
             u->m = m;
+            size_t len = m->len; /* once it is on its way the message is the event's, which frees it */
             vtk_event_at(arrive, hub_arrive_cb, u);
-            w->tx_bytes -= m->len;
+            w->tx_bytes -= len;
             vtk_wake_all_locked(&w->txwq);
             vtk_unlock();
-            N.bytes_up += m->len;
+            N.bytes_up += len;
             N.msgs_up++;
         }
     }
@@ -1192,7 +1312,7 @@ void sim_net_env_init(void) {
     CELL.registered = CELL.present[CELL.active]; /* registered at boot (no boot-time delay modelled) */
     /* around at the start: the network of the choice the system saved, and cellular coverage if there
      * is a modem; a known Wi-Fi network elsewhere comes with the script ("wifi on") */
-    E.wifi = g_profile.wifi.present && t == HAL_LINK_WIFI;
+    E.wifi = E.wifi_script = g_profile.wifi.present && t == HAL_LINK_WIFI;
     E.cell = g_profile.lte.present;
     E.wifi_rssi = -60;
     E.cell_rsrp = -100;

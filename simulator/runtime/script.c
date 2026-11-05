@@ -22,9 +22,19 @@
  *   +0       orient portrait|upside_down|landscape_left|landscape_right|face_up|face_down
  *   +0       shake                    # a movement the accelerometer notices
  *   +0       rtc lost                 # the RTC's backup supply failed: its time is invalid
+ *   +0       rtc line low             # the RTC's interrupt line reads low all the time (as in the factory log)
+ *   +0       hub-clock -3600          # the hub's clock is this many seconds from the true time
  *   +0       sms-in 10086 text...     # a text message arrives (needs a card with SMS)
  *   +0       call-in 13800000000      # an incoming call (needs a card with voice)
  *   +0       remote answer|hangup     # the far end of a call
+ *   +0       sd remove|insert|full|free N  # the TF card: taken out, put in, full, N KiB left
+ *   +0       usb plug|unplug|eject    # a computer at the other end of the cable; it ejects the USB disk
+ *   +0       usb copy-in HOSTFILE PATH  # the computer copies a file onto the USB disk (PATH on the card, from its root)
+ *   +0       ap add NAME -60 [password] # a Wi-Fi network appears (known or not)
+ *   +0       ap del NAME               # it goes away
+ *   +0       headset add AA:BB name    # a Bluetooth headset appears, on and in range
+ *   +0       headset on|off AA:BB      # it is switched on or off
+ *   +0       headset in|out AA:BB      # it comes into range or goes out of it
  *   +0       faults io-expander 1.0   # that chip's I2C transfers time out at this rate; "faults off" ends it
  *   +5s      end
  *
@@ -42,7 +52,7 @@
 #include "ink/rotation.h"
 #include "sim.h"
 
-typedef enum { A_TOUCH, A_KEY, A_SNAP, A_MARK, A_NOTE, A_BATTERY, A_POWERCUT, A_END, A_NET, A_OUTAGE, A_MIC, A_MIC_SAY, A_SIM, A_ORIENT, A_SHAKE, A_RTC_LOST, A_SMS_IN, A_CALL_IN, A_REMOTE, A_ENV, A_FAULTS } akind_t;
+typedef enum { A_TOUCH, A_KEY, A_SNAP, A_MARK, A_NOTE, A_BATTERY, A_POWERCUT, A_END, A_NET, A_OUTAGE, A_MIC, A_MIC_SAY, A_SIM, A_ORIENT, A_SHAKE, A_RTC_LOST, A_SMS_IN, A_CALL_IN, A_REMOTE, A_ENV, A_FAULTS, A_SD, A_USB, A_HUB_CLOCK, A_RTC_LINE, A_HEADSET, A_AP } akind_t;
 
 typedef struct {
     uint64_t t;
@@ -50,6 +60,7 @@ typedef struct {
     int a, b, c;
     char text[96];
     char num[24];
+    char path[200];
 } action_t;
 
 static action_t *A;
@@ -225,11 +236,35 @@ int sim_script_load(const char *path, char *err, size_t errlen) {
             for (int k = 0; k < 6 && n >= 3; k++)
                 if (!strcmp(tok[2], o[k])) ok = true;
             if (ok) snprintf(push(t, A_ORIENT)->text, 16, "%s", tok[2]);
+        } else if (!strcmp(cmd, "ap")) {
+            ok = n >= 4 && (!strcmp(tok[2], "del") || (!strcmp(tok[2], "add") && n >= 5));
+            if (ok) {
+                action_t *a = push(t, A_AP);
+                a->a = !strcmp(tok[2], "add");
+                snprintf(a->num, 24, "%s", tok[3]);
+                if (a->a) a->b = atoi(tok[4]);
+                if (n >= 6) snprintf(a->text, 96, "%s", tok[5]);
+            }
+        } else if (!strcmp(cmd, "headset")) {
+            static const char *const ops[] = {"add", "on", "off", "in", "out"};
+            int op = -1;
+            for (int k = 0; k < 5 && n >= 4; k++)
+                if (!strcmp(tok[2], ops[k])) op = k;
+            ok = op >= 0;
+            if (ok) {
+                action_t *a = push(t, A_HEADSET);
+                a->a = op;
+                snprintf(a->num, 24, "%s", tok[3]);
+                if (n >= 5) snprintf(a->text, 96, "%s", tok[4]);
+            }
         } else if (!strcmp(cmd, "shake")) {
             push(t, A_SHAKE);
         } else if (!strcmp(cmd, "rtc")) {
-            ok = n >= 3 && !strcmp(tok[2], "lost");
-            if (ok) push(t, A_RTC_LOST);
+            ok = n >= 3 && (!strcmp(tok[2], "lost") || (!strcmp(tok[2], "line") && n >= 4 && !strcmp(tok[3], "low")));
+            if (ok) push(t, !strcmp(tok[2], "lost") ? A_RTC_LOST : A_RTC_LINE);
+        } else if (!strcmp(cmd, "hub-clock")) {
+            ok = n >= 3;
+            if (ok) push(t, A_HUB_CLOCK)->c = atoi(tok[2]);
         } else if (!strcmp(cmd, "wifi") || !strcmp(cmd, "cell")) {
             bool broken = !strcmp(cmd, "wifi") && n >= 3 && !strcmp(tok[2], "broken");
             ok = n >= 3 && (!strcmp(tok[2], "on") || !strcmp(tok[2], "off") || broken);
@@ -267,6 +302,23 @@ int sim_script_load(const char *path, char *err, size_t errlen) {
                 if (strcmp(tok[2], "off")) {
                     snprintf(a->text, sizeof a->text, "%s", tok[2]);
                     a->c = (int)(atof(tok[3]) * 1000 + 0.5); /* per mille */
+                }
+            }
+        } else if (!strcmp(cmd, "sd")) {
+            ok = n >= 3 && (!strcmp(tok[2], "remove") || !strcmp(tok[2], "insert") || !strcmp(tok[2], "full") || (!strcmp(tok[2], "free") && n >= 4));
+            if (ok) {
+                action_t *a = push(t, A_SD);
+                a->a = !strcmp(tok[2], "remove") ? 0 : !strcmp(tok[2], "insert") ? 1 : !strcmp(tok[2], "full") ? 2 : 3;
+                a->c = n >= 4 ? atoi(tok[3]) : 0;
+            }
+        } else if (!strcmp(cmd, "usb")) {
+            ok = n >= 3 && (!strcmp(tok[2], "plug") || !strcmp(tok[2], "unplug") || !strcmp(tok[2], "eject") || (!strcmp(tok[2], "copy-in") && n >= 5));
+            if (ok) {
+                action_t *a = push(t, A_USB);
+                a->a = !strcmp(tok[2], "plug") ? 0 : !strcmp(tok[2], "unplug") ? 1 : !strcmp(tok[2], "eject") ? 2 : 3;
+                if (a->a == 3) {
+                    snprintf(a->path, sizeof a->path, "%s", tok[3]);
+                    snprintf(a->text, sizeof a->text, "%s", tok[4]);
                 }
             }
         } else if (!strcmp(cmd, "powercut")) {
@@ -321,6 +373,17 @@ static void run_action(void *arg) { /* ISR context */
     case A_ORIENT: sim_accel_orient(a->text); break;
     case A_SHAKE: sim_accel_shake(); break;
     case A_RTC_LOST: sim_rtc_lose_time(); break;
+    case A_RTC_LINE: sim_rtc_line_stuck_low(); break;
+    case A_HUB_CLOCK: sim_hub_clock_offset(a->c); break;
+    case A_AP:
+        if (a->a) sim_wifi_ap_add(a->num, a->b, a->text);
+        else sim_wifi_ap_del(a->num);
+        break;
+    case A_HEADSET:
+        if (a->a == 0) sim_headset_add(a->num, a->text);
+        else if (a->a <= 2) sim_headset_power(a->num, a->a == 1);
+        else sim_headset_range(a->num, a->a == 3);
+        break;
     case A_SMS_IN:
         if (!sim_net_deliver_sms(a->num, a->text)) sim_note("script: sms to the device not delivered (no SMS service)");
         break;
@@ -332,6 +395,15 @@ static void run_action(void *arg) { /* ISR context */
     case A_REMOTE:
         if (a->a) sim_net_remote_answer();
         else sim_net_remote_hangup();
+        break;
+    case A_SD:
+        if (a->a <= 1) sim_sd_set_present(a->a == 1);
+        else sim_sd_set_free(a->a == 2 ? 0 : (int64_t)a->c * 1024);
+        break;
+    case A_USB:
+        if (a->a <= 1) sim_usb_plug(a->a == 0);
+        else if (a->a == 2) sim_usb_eject();
+        else sim_usb_copy_in(a->path, a->text);
         break;
     }
 }

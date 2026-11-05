@@ -141,6 +141,17 @@ void sim_storage_power_cut(void);
 /** Cut power in the middle of the n-th flash program/erase that starts from now (ISR ctx). */
 void sim_storage_arm_power_cut(int nth_write);
 void sim_storage_shutdown(void);      /* clean shutdown: save image */
+void sim_sd_set_present(bool present); /* ISR (script): the card taken out, put in */
+void sim_sd_set_free(int64_t bytes);   /* ISR (script): what the card still takes; < 0: no limit */
+void sim_sd_lend(bool lent, bool dirty); /* the USB disk model: unmounted while lent; dirty: the next mount fails */
+const char *sim_sd_root(void);         /* host directory behind /content and /cache */
+/* USB to a computer (hal_usb_sim.c), ISR (script): */
+void sim_usb_plug(bool on);
+void sim_usb_eject(void);
+void sim_usb_copy_in(const char *host_path, const char *card_path);
+void sim_usb_report(void);
+void sim_sys_evt(void (*fn)(void *), void *ctx); /* run fn in the platform's event task; ISR-safe; one at a time per fn */
+void sim_power_set_cable(bool on);    /* ISR or locked: the cable carries power */
 
 /* Mapped-asset D-cache model (hal_assets_sim.c) */
 void sim_assets_cache_pollute(void);  /* a refresh streamed PSRAM through the shared D-cache */
@@ -237,6 +248,7 @@ void sim_sensors_service_gpio2(void);     /* task context: read the acceleromete
 void sim_sensors_sleep(void);             /* light sleep: accelerometer quiet, INT1 released; task context */
 void sim_sensors_resume(void);            /* after the wake: set up again; task context */
 void sim_rtc_lose_time(void);             /* ISR (script) */
+void sim_rtc_line_stuck_low(void);        /* ISR (script): P16 reads low all the time */
 int64_t sim_rtc_now_s(void);
 unsigned sim_rtc_alarms(void);
 bool sim_accel_int_low(void);
@@ -252,6 +264,7 @@ bool sim_display_playing(void);
 void sim_display_supply_low(void); /* PWR_GOOD read low while serving GPIO2 (input task) */
 uint64_t sim_display_ipc_wait_ns(uint64_t now); /* task context */
 bool sim_power_sleeping(void);
+int sim_power_sleeps(void);    /* light sleeps so far (tests) */
 bool sim_power_waking(void);  /* asleep, but a wake source already fired */
 void sim_power_input_lost(void);
 void sim_input_set_power_state(hal_power_state_t s);
@@ -266,6 +279,10 @@ void sim_input_restore_later(bool keys, bool rails); /* the wake's restore faile
 hal_power_state_t sim_power_state(void);
 bool sim_audio_busy(void);
 double sim_audio_played_ms(void); /* what the speaker has played so far (tests) */
+double sim_audio_bt_played_ms(void); /* what the headset has played so far (tests) */
+void sim_headset_add(const char *addr, const char *name); /* a Bluetooth headset, switched on, in range */
+void sim_headset_power(const char *addr, bool on);
+void sim_headset_range(const char *addr, bool in);
 void sim_audio_init(void);            /* task context (boot) */
 void sim_audio_report(void);
 void sim_audio_mic_source(const char *name); /* ISR (script): "speech" | "silence" | "noise" | "wake" | "host" (window) */
@@ -301,6 +318,9 @@ void sim_net_modem_power(bool on);         /* board P14 (shared 4G + BT audio + 
 bool sim_net_modem_registered(void);
 /* The outside world for SMS and calls (window, scripts; ISR context) */
 bool sim_net_deliver_sms(const char *number, const char *utf8); /* false: no SMS service or store full */
+int sim_net_sms_sent(void); /* messages the device has sent so far (tests) */
+void sim_wifi_ap_add(const char *ssid, int rssi, const char *password); /* ISR (script): a network appears */
+void sim_wifi_ap_del(const char *ssid);
 bool sim_net_incoming_call(const char *number);                 /* false: busy or no voice service */
 void sim_net_remote_answer(void);
 void sim_net_remote_hangup(void);
@@ -317,7 +337,21 @@ void sim_remote_close(struct hal_ws *ws, int sid);
 /* The same, entering the stream at t_send (later sends by the hub: think time, speech being synthesised). ISR. */
 void sim_net_hub_send_at(struct hal_ws *ws, uint64_t t_send, const void *data, size_t len, bool binary);
 int sim_hub_load(const char *path, char *err, size_t errlen);
+void sim_hub_clock_offset(int64_t seconds); /* ISR: the hub's clock is this far from the true time */
 void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t len, bool binary); /* ISR */
+/* Tests: a request to the device on the connection in use (ISR), and what it answered (NULL until then). */
+void sim_hub_request_device(const char *method, const char *params_json);
+const char *sim_hub_device_reply(void);
+/* Tests: the device/event messages so far (the first 32), and the last question with what came with it. */
+int sim_hub_events_seen(void);
+const char *sim_hub_event_at(int i);
+const char *sim_hub_last_ask(void);
+/* Dictation (asr.stream): what is "said" (phrases separated by |); after that many frames it fails with that code
+ * ("silent": it answers nothing at all). What it was opened with. */
+void sim_hub_asr_script(const char *phrases, const char *fail_code, int fail_after_frames);
+void sim_hub_asr_refuse(bool refuse); /* rt.open gets an error */
+void sim_hub_asr_hide(bool hide);     /* not in the directory (this member may not), from the next caps/list */
+const char *sim_hub_asr_params(void);
 
 /* ---- script ---- */
 int sim_script_load(const char *path, char *err, size_t errlen);

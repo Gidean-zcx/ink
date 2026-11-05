@@ -1,0 +1,6 @@
+{
+  "_doc": "System upgrades (tests/integration/update.c): every CHECK must pass and nothing may panic.",
+  "test.fail": {"max": 0, "optional": true, "why": "a CHECK failed (see warnings)"},
+  "panic.count": {"max": 0, "optional": true},
+  "warnings.count": {"max": 0, "optional": true}
+}

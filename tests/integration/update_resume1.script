@@ -1,0 +1,3 @@
+# Part of a download, then the power goes (the test cuts it).
+@0       net   wifi
+@60s     end

@@ -1,0 +1,3 @@
+# The first boot of what was installed.
+@0       net   wifi
+@120s    end

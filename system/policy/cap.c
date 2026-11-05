@@ -4,17 +4,21 @@
  * result structures inside the device's own JSON-RPC envelope).
  */
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "ink/osal.h"
 #include "ink/probe.h"
+#include "ink/sys/appreg.h"
 #include "ink/sys/cap.h"
+#include "ink/sys/confirm.h"
 #include "ink/sys/hub.h"
 #include "ink/sys/json.h"
+#include "ink/sys/layout.h"
 #include "ink/sys/members.h"
 #include "ink/sys/ui.h"
 
-#define MAX_CAPS 96
+#define MAX_CAPS 192
 
 static const ink_cap_t *REG[MAX_CAPS] INK_PSRAM_BSS;
 static int nreg;
@@ -35,6 +39,8 @@ int ink_cap_register(const ink_cap_t *table, int n) {
     }
     return 0;
 }
+
+const ink_cap_t *ink_cap_at(int i) { return i >= 0 && i < nreg ? REG[i] : NULL; }
 
 const ink_cap_t *ink_cap_find(const char *id) {
     for (int i = 0; i < nreg; i++)
@@ -77,6 +83,9 @@ static ink_confirm_t confirm_for(const ink_cap_t *c, ink_source_t src) {
     case INK_FX_SYSTEM: k = INK_CONFIRM_DEVICE; break;
     default: break;
     }
+    if (src == INK_SRC_CONFIRMED) return INK_CONFIRM_NONE;
+    if (c->parent_pin && ink_member_any_pin()) return INK_CONFIRM_PARENT;
+    if (c->ask_by_hand) return INK_CONFIRM_DEVICE;
     if (src == INK_SRC_TOUCH || src == INK_SRC_KEY || src == INK_SRC_SYSTEM) return INK_CONFIRM_NONE;
     return k;
 }
@@ -90,12 +99,13 @@ static ink_rc_t reject(ink_receipt_t *rc, ink_rc_t st, const char *why) {
 /* The policy gate (detailed design §2.4), before anything runs. INK_RC_DONE = may run. */
 static ink_rc_t gate(const ink_cap_t *c, ink_source_t src, uint32_t page_gen, ink_receipt_t *rc) {
     if (!c) return reject(rc, INK_RC_INVALID, "unknown action");
-    if (!on_its_page(c)) return reject(rc, INK_RC_INVALID, "not available on this page");
+    /* the card the member just answered is still over the page it was asked about */
+    if (src == INK_SRC_CONFIRMED ? c->activity && strcmp(ink_ui_page_name(), c->activity) : !on_its_page(c)) return reject(rc, INK_RC_INVALID, "not available on this page");
     if (c->form == INK_FORM_EVENT || !c->run) return reject(rc, INK_RC_INVALID, "an event: subscribe to it");
     if (!exposed(c, src)) return reject(rc, INK_RC_INVALID, "not offered to this caller");
     const ink_member_t *m = ink_member_current();
     if (m->role == INK_ROLE_CHILD) {
-        if (c->effect == INK_FX_SYSTEM) {
+        if (c->effect == INK_FX_SYSTEM && !(c->child_ok && (src == INK_SRC_TOUCH || src == INK_SRC_KEY))) { /* turning it off is anyone's who holds it */
             ink_probe_count("policy.rejected");
             return reject(rc, INK_RC_REJECTED, "children cannot run system actions");
         }
@@ -104,16 +114,25 @@ static ink_rc_t gate(const ink_cap_t *c, ink_source_t src, uint32_t page_gen, in
             return reject(rc, INK_RC_REJECTED, "not on this child's whitelist");
         }
     }
+    if (!ink_member_space_open() && src != INK_SRC_SYSTEM) { /* an adult's space, closed: what comes through is what cannot wait, and from a person */
+        if (src == INK_SRC_AI || src == INK_SRC_REMOTE || src == INK_SRC_APP || !c->while_locked) {
+            ink_probe_count("policy.rejected");
+            return reject(rc, INK_RC_REJECTED, "this member's space is locked");
+        }
+    }
+    if (src == INK_SRC_APP && c->permission && !ink_app_foreground_may(c->permission)) {
+        ink_probe_count("policy.rejected");
+        return reject(rc, INK_RC_REJECTED, "the app did not declare this permission");
+    }
     bool remote = src == INK_SRC_AI || src == INK_SRC_REMOTE;
     if (remote && strstr(c->id, "upgrade")) { /* the AI never starts an upgrade */
         ink_probe_count("policy.rejected");
         return reject(rc, INK_RC_REJECTED, "upgrades are started by people only");
     }
     /* a tool call prepared for an older page must not act on the new one */
-    if (remote && page_gen && c->activity && page_gen != ink_ui_content_version())
+    if ((remote || src == INK_SRC_CONFIRMED) && page_gen && c->activity && page_gen != ink_ui_content_version())
         return reject(rc, INK_RC_STALE, "the page changed since the request was made");
     if (confirm_for(c, src) != INK_CONFIRM_NONE) {
-        /* the system confirmation card is not built yet: report what would happen */
         ink_probe_count("policy.pending_confirmation");
         return reject(rc, INK_RC_PENDING_CONFIRMATION, "needs confirmation on the device");
     }
@@ -141,6 +160,7 @@ typedef struct {
     char id[48];
     char rid[RID_CAP];
     char *json; /* JSON arguments until the gate passed */
+    char *result; /* what the handler found (rc.result points here until the slot goes) */
     uint64_t deadline_us;
     ink_exec_job_t start_job, answer_job;
     uint8_t refs;
@@ -149,6 +169,7 @@ typedef struct {
     bool remote;   /* the hub link's own timeout is its deadline */
     bool repeat_safe; /* rid is the caller's: the receipt is kept for retries */
     bool started, deferred, replied, finished, answered;
+    char member[INK_MEMBER_ID_MAX]; /* ink_call_opts_t.member */
 } pending_t;
 
 typedef struct {
@@ -186,8 +207,11 @@ static bool in_directory(const char *id) {
     return hit;
 }
 
+static int register_bus_caps(void);
+
 int ink_cap_init(void) {
     if (CB.pool) return 0;
+    if (register_bus_caps() != 0) return -1;
     const char *prev = osal_mem_tag("cap");
     CB.lock = osal_mutex_create();
     CB.pool = osal_calloc(POOL_N, sizeof(pending_t), OSAL_MEM_EXTERNAL);
@@ -246,14 +270,17 @@ static pending_t *claim(const char *rid, bool *repeat) {
 /* Releases the lock. Whoever finds all three conditions met frees the slot: only one can, each sets
  * its own condition under the lock before it comes here. */
 static void unlock_retire(pending_t *p) {
-    char *json = NULL;
+    char *json = NULL, *result = NULL;
     if (p->finished && p->answered && !p->refs) {
         json = p->json;
         p->json = NULL;
+        result = p->result;
+        p->result = NULL;
         p->used = false;
     }
     osal_mutex_unlock(CB.lock);
     osal_free(json);
+    osal_free(result);
 }
 
 /* Under the lock: `rc` is the call's final receipt. Becoming final and being found by a retry are one
@@ -263,10 +290,12 @@ static void settle(pending_t *p, const ink_receipt_t *rc) {
     p->out = *rc;
     p->out.page_gen = ink_ui_content_version();
     if (!p->repeat_safe) return;
+    if (p->result && p->call.cap && p->call.cap->effect == INK_FX_READ) return; /* a repeat reads again: the result is not kept */
     seen_t *s = &CB.seen[CB.seen_next];
     CB.seen_next = (CB.seen_next + 1) % SEEN_N;
     snprintf(s->rid, sizeof s->rid, "%s", p->rid);
     s->rc = p->out;
+    s->rc.result = NULL; /* it goes with the slot */
 }
 
 static void answered(pending_t *p) {
@@ -310,6 +339,22 @@ static void finish(pending_t *p) {
     unlock_retire(p);
     if (reply) answer(p);
     else if (late) ink_probe_count("cap.late");
+}
+
+void ink_cap_result(ink_call_t *call, const char *json) {
+    pending_t *p = (pending_t *)call;
+    size_t n = json ? strlen(json) : 0;
+    const char *prev = osal_mem_tag("cap");
+    char *copy = n ? osal_malloc(n + 1, OSAL_MEM_EXTERNAL) : NULL;
+    osal_mem_tag(prev);
+    if (copy) memcpy(copy, json, n + 1);
+    else if (n) ink_probe_count("cap.result_dropped");
+    osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+    char *old = p->result;
+    p->result = copy;
+    call->rc.result = copy;
+    osal_mutex_unlock(CB.lock);
+    osal_free(old);
 }
 
 void ink_cap_defer(ink_call_t *call) {
@@ -381,11 +426,13 @@ static void start(void *arg) {
     snprintf(key, sizeof key, "action.%s.%s", p->call.src == INK_SRC_AI ? "ai" : "user", p->id);
     ink_probe_count(key);
     bool ran = false;
-    if (gate(c, p->call.src, p->call.page_gen, rc) == INK_RC_DONE) {
+    ink_rc_t verdict = p->member[0] && strcmp(p->member, ink_member_current()->id) ? reject(rc, INK_RC_STALE, "someone else is using the device now") : gate(c, p->call.src, p->call.page_gen, rc);
+    if (verdict == INK_RC_DONE || verdict == INK_RC_PENDING_CONFIRMATION) {
         char why[96];
         int bad = p->json ? ink_args_from_json(&p->call.args, p->json, strlen(p->json), c->input, why, sizeof why)
                           : ink_args_check(&p->call.args, c->input, why, sizeof why);
-        if (bad) reject(rc, INK_RC_INVALID, why);
+        if (bad) reject(rc, INK_RC_INVALID, why); /* no card for what could not run anyway */
+        else if (verdict == INK_RC_PENDING_CONFIRMATION) ink_confirm_hold(c, &p->call.args, p->call.src, p->call.page_gen, rc);
         else {
             rc->status = INK_RC_DONE;
             c->run(&p->call);
@@ -432,8 +479,10 @@ static pending_t *prepare(const char *id, const ink_cap_t *c, const ink_args_t *
     p->json = json;
     p->call.src = o->src;
     p->call.page_gen = o->page_gen;
+    snprintf(p->member, sizeof p->member, "%s", o->member ? o->member : "");
     p->o = *o;
     p->o.request_id = p->o.args_json = NULL; /* the caller's strings need not outlive the call */
+    p->o.member = NULL;
     p->remote = remote;
     p->deadline_us = osal_now_us() + (uint64_t)timeout_ms(c) * 1000u;
     osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
@@ -472,6 +521,7 @@ typedef struct {
 static void copy_receipt(void *ctx, const ink_receipt_t *rc) {
     sync_reply_t *s = ctx;
     *s->rc = *rc;
+    s->rc->result = NULL; /* it goes with the slot: read results need ink_cap_call */
     __atomic_store_n(&s->copied, 1, __ATOMIC_RELEASE);
 }
 
@@ -550,6 +600,17 @@ static void remote_reply(void *ctx, int status, const ink_json_t *j, int result)
         if (ink_json_int(j, ink_json_find(j, sc, "revision"), &v)) rc->revision = (uint32_t)v;
         if (ink_json_int(j, ink_json_find(j, sc, "undo_ms"), &v)) rc->undo_ms = (uint32_t)v;
         if (ink_json_eq(j, ink_json_find(j, result, "isError"), "true")) rc->status = INK_RC_FAILED;
+        int found = ink_json_find(j, sc, "result");
+        if (found >= 0) { /* a hub capability's result is as good as a local one's */
+            size_t n = (size_t)(j->tok[found].end - j->tok[found].start);
+            char *copy = osal_malloc(n + 1, OSAL_MEM_EXTERNAL);
+            if (copy) {
+                memcpy(copy, j->text + j->tok[found].start, n);
+                copy[n] = 0;
+                ink_cap_result(&p->call, copy);
+                osal_free(copy);
+            }
+        }
     }
     char key[48];
     snprintf(key, sizeof key, "cap.remote.%s", ink_rc_name(rc->status));
@@ -600,7 +661,7 @@ static int remote_call(const char *name, const ink_args_t *args, const ink_call_
 
 /* ------------------------------------------------------------ events */
 
-#define SUBS_MAX 16
+#define SUBS_MAX 32
 
 static struct {
     const char *prefix;
@@ -637,10 +698,83 @@ static void event_job(void *arg) {
     osal_free(e);
 }
 
+/* Events to the AI (system services design §1.2 rule 3): what is registered and offered goes to the hub through the
+ * hub task, the latest 8 wait for it to be online. */
+#define EVENTS_KEPT 8
+static struct {
+    uint32_t seq;
+    int64_t at_s;
+    char id[48];
+    ink_args_t args;
+} EV[EVENTS_KEPT] INK_PSRAM_BSS;
+static uint32_t ev_next, ev_sent; /* sequence numbers, under CB.lock */
+
+static void keep_event(const char *id, const ink_args_t *payload) {
+    const ink_cap_t *c = ink_cap_find(id);
+    if (!CB.lock || !c || c->form != INK_FORM_EVENT || !exposed(c, INK_SRC_AI)) return;
+    int64_t wall = osal_wall_us();
+    osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+    uint32_t seq = ++ev_next;
+    typeof(EV[0]) *e = &EV[seq % EVENTS_KEPT];
+    e->seq = seq;
+    e->at_s = wall > 0 ? wall / 1000000 : 0;
+    snprintf(e->id, sizeof e->id, "%s", id);
+    if (payload) e->args = *payload;
+    else ink_args_init(&e->args);
+    if (ev_next - ev_sent > EVENTS_KEPT) {
+        ev_sent = ev_next - EVENTS_KEPT; /* the oldest was just written over */
+        ink_probe_count("cap.events_lost_offline");
+    }
+    osal_mutex_unlock(CB.lock);
+    if (ink_hub_online()) ink_hub_wake();
+}
+
+#define EVENT_JSON_CAP 1024
+
+static void send_events(void) { /* hub task */
+    for (;;) {
+        osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+        bool any = ev_sent != ev_next;
+        osal_mutex_unlock(CB.lock);
+        if (!any) return;
+        char *out = osal_malloc(EVENT_JSON_CAP + sizeof(ink_args_t), OSAL_MEM_EXTERNAL);
+        if (!out) return;
+        ink_args_t *args = (ink_args_t *)(out + EVENT_JSON_CAP);
+        char id[48] = "";
+        int64_t at = 0;
+        osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+        uint32_t seq = ev_sent + 1;
+        const typeof(EV[0]) *e = &EV[seq % EVENTS_KEPT];
+        snprintf(id, sizeof id, "%s", e->id);
+        at = e->at_s;
+        *args = e->args;
+        osal_mutex_unlock(CB.lock);
+        /* one that says whose it is goes only while it is theirs who is here: the next one's AI does not hear about it */
+        char whose[INK_MEMBER_ID_MAX] = "";
+        ink_args_get_str(args, "member", whose, sizeof whose);
+        bool theirs = !whose[0] || !strcmp(whose, ink_member_current()->id);
+        int head = snprintf(out, EVENT_JSON_CAP, "{\"event\":\"%s\",\"at_s\":%lld,\"args\":", id, (long long)at);
+        int body = ink_args_to_json(args, out + head, EVENT_JSON_CAP - (size_t)head - 2);
+        int r = 0;
+        if (!theirs) ink_probe_count("cap.event_for_another_member");
+        else if (body >= 0) {
+            out[head + body] = '}';
+            out[head + body + 1] = 0;
+            r = ink_hub_notify("device/event", out);
+        } else ink_probe_count("cap.event_too_long");
+        osal_free(out);
+        if (r != 0) return; /* the queue is full: the next time round */
+        osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+        if (ev_sent + 1 == seq) ev_sent = seq; /* still the oldest: nothing wrote over it */
+        osal_mutex_unlock(CB.lock);
+    }
+}
+
 void ink_cap_emit(const char *id, const ink_args_t *payload) {
     char key[64];
     snprintf(key, sizeof key, "event.%s", id);
     ink_probe_count(key);
+    keep_event(id, payload);
     for (int i = 0; i < nsubs; i++) {
         if (strncmp(id, SUBS[i].prefix, SUBS[i].plen)) continue;
         const char *prev = osal_mem_tag("cap");
@@ -669,16 +803,55 @@ static bool listed(const ink_cap_t *c) {
     return m->role != INK_ROLE_CHILD || (c->effect != INK_FX_SYSTEM && ink_member_allows(c->id, c->child_ok));
 }
 
+static void manifest_entry(ink_jw_t *w, const ink_cap_t *c, bool first);
+
 int ink_cap_manifest_json(char *out, size_t cap) {
     ink_jw_t w;
     ink_jw_init(&w, out, cap);
     ink_jw_raw(&w, "[");
     bool first = true;
     for (int i = 0; i < nreg; i++) {
-        const ink_cap_t *c = REG[i];
-        if (!listed(c)) continue;
-        ink_jw_raw(&w, first ? "{\"name\":" : ",{\"name\":");
+        if (!listed(REG[i])) continue;
+        manifest_entry(&w, REG[i], first);
         first = false;
+    }
+    ink_jw_raw(&w, "]");
+    return w.overflow ? -1 : (int)w.len;
+}
+
+int ink_cap_manifest_page(int start, const char *prefix, char *out, size_t cap, int *next) {
+    ink_jw_t w;
+    if (cap < 2) return -1;
+    ink_jw_init(&w, out, cap - 1); /* room for the closing bracket */
+    ink_jw_raw(&w, "[");
+    bool first = true;
+    *next = -1;
+    size_t plen = prefix ? strlen(prefix) : 0;
+    for (int i = start < 0 ? 0 : start; i < nreg; i++) {
+        if (!listed(REG[i]) || (plen && strncmp(REG[i]->id, prefix, plen))) continue;
+        size_t before = w.len;
+        manifest_entry(&w, REG[i], first);
+        if (w.overflow) { /* the next page starts here; one entry alone must fit */
+            w.overflow = false;
+            w.len = before;
+            if (first) {
+                ink_probe_count("cap.manifest_entry_too_long");
+                continue;
+            }
+            *next = i;
+            break;
+        }
+        first = false;
+    }
+    out[w.len++] = ']';
+    out[w.len] = 0;
+    return (int)w.len;
+}
+
+static void manifest_entry(ink_jw_t *wp, const ink_cap_t *c, bool first) {
+#define w (*wp)
+    {
+        ink_jw_raw(&w, first ? "{\"name\":" : ",{\"name\":");
         ink_jw_str(&w, c->id);
         ink_jw_raw(&w, ",\"title\":");
         ink_jw_str(&w, c->title);
@@ -702,8 +875,7 @@ int ink_cap_manifest_json(char *out, size_t cap) {
         }
         ink_jw_raw(&w, "}");
     }
-    ink_jw_raw(&w, "]");
-    return w.overflow ? -1 : (int)w.len;
+#undef w
 }
 
 int ink_cap_ids_json(char *out, size_t cap) {
@@ -748,9 +920,166 @@ int ink_receipt_json(const ink_receipt_t *rc, char *out, size_t cap) {
         ink_jw_raw(&w, ",\"page_gen\":");
         ink_jw_int(&w, rc->page_gen);
     }
+    if (rc->result) {
+        ink_jw_raw(&w, ",\"result\":");
+        ink_jw_raw(&w, rc->result);
+    }
     ink_jw_raw(&w, "}");
     return w.overflow ? -1 : (int)w.len;
 }
+
+/* ------------------------------------------------------------ undo (foundation §6.2: reversible writes say how long) */
+
+#define UNDO_MAX 4
+
+typedef struct {
+    char object[48], cap[48], member[16];
+    ink_args_t args;
+    uint64_t until_us;
+} undo_t;
+
+static undo_t UNDO[UNDO_MAX] INK_PSRAM_BSS;
+static int undo_next;
+
+void ink_cap_undoable(ink_call_t *call, const char *cap, const ink_args_t *args, uint32_t ms) {
+    osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+    undo_t *u = &UNDO[undo_next];
+    undo_next = (undo_next + 1) % UNDO_MAX;
+    snprintf(u->object, sizeof u->object, "%s", call->rc.object);
+    snprintf(u->cap, sizeof u->cap, "%s", cap);
+    snprintf(u->member, sizeof u->member, "%s", ink_member_current()->id);
+    if (args) u->args = *args;
+    else ink_args_init(&u->args);
+    u->until_us = osal_now_us() + (uint64_t)ms * 1000u;
+    osal_mutex_unlock(CB.lock);
+    call->rc.undo_ms = ms;
+}
+
+static void undo_done(void *ctx, const ink_receipt_t *rc) {
+    ink_call_t *c = ctx;
+    if (rc->status == INK_RC_DONE) {
+        c->rc.status = INK_RC_UNDONE;
+        snprintf(c->rc.say, sizeof c->rc.say, "撤销了");
+    } else {
+        c->rc.status = rc->status;
+        snprintf(c->rc.detail, sizeof c->rc.detail, "%s", rc->detail);
+    }
+    ink_cap_done(c);
+}
+
+static void cap_undo(ink_call_t *c) {
+    char object[48];
+    ink_args_get_str(&c->args, "object", object, sizeof object);
+    undo_t u = {0};
+    bool found = false;
+    uint64_t now = osal_now_us();
+    osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+    for (int i = 0; i < UNDO_MAX && !found; i++) {
+        undo_t *e = &UNDO[i];
+        if (e->until_us > now && !strcmp(e->object, object) && !strcmp(e->member, ink_member_current()->id)) {
+            u = *e;
+            e->until_us = 0; /* once */
+            found = true;
+        }
+    }
+    osal_mutex_unlock(CB.lock);
+    if (!found) {
+        reject(&c->rc, INK_RC_FAILED, "nothing to undo, or too late");
+        return;
+    }
+    snprintf(c->rc.object, sizeof c->rc.object, "%s", object);
+    ink_cap_defer(c); /* the inverse may run on another executor: the member's own undo, no second confirmation */
+    ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .reply_exec = INK_EXEC_DIRECT, .done = undo_done, .ctx = c};
+    if (ink_cap_call(u.cap, &u.args, &o) != 0) {
+        reject(&c->rc, INK_RC_FAILED, "busy");
+        ink_cap_done(c);
+    }
+}
+
+/* ------------------------------------------------------------ finding capabilities (foundation §6.5: the whole list is too much to keep in every turn) */
+
+static void cap_domains(ink_call_t *c) {
+    char *out = osal_malloc(2048, OSAL_MEM_EXTERNAL);
+    if (!out) {
+        reject(&c->rc, INK_RC_FAILED, "out of memory");
+        return;
+    }
+    ink_jw_t w;
+    ink_jw_init(&w, out, 2048);
+    ink_jw_raw(&w, "{");
+    bool first = true;
+    for (int i = 0; i < nreg; i++) {
+        const char *dot = strchr(REG[i]->id, '.');
+        size_t n = dot ? (size_t)(dot - REG[i]->id) : strlen(REG[i]->id);
+        bool seen = false;
+        int count = 0;
+        for (int k = 0; k < nreg; k++) {
+            if (!listed(REG[k]) || strncmp(REG[k]->id, REG[i]->id, n) || (REG[k]->id[n] != '.' && REG[k]->id[n])) continue;
+            if (k < i) seen = true;
+            count++;
+        }
+        if (seen || !count) continue;
+        if (!first) ink_jw_raw(&w, ",");
+        first = false;
+        ink_jw_strn(&w, REG[i]->id, n);
+        ink_jw_raw(&w, ":");
+        ink_jw_int(&w, count);
+    }
+    ink_jw_raw(&w, "}");
+    if (w.overflow) reject(&c->rc, INK_RC_FAILED, "too long");
+    else ink_cap_result(c, out);
+    osal_free(out);
+}
+
+static void cap_find(ink_call_t *c) {
+    char q[48] = "";
+    ink_args_get_str(&c->args, "query", q, sizeof q);
+    char *out = osal_malloc(4096, OSAL_MEM_EXTERNAL);
+    if (!out) {
+        reject(&c->rc, INK_RC_FAILED, "out of memory");
+        return;
+    }
+    ink_jw_t w;
+    ink_jw_init(&w, out, 4095);
+    ink_jw_raw(&w, "[");
+    bool first = true;
+    for (int i = 0; i < nreg; i++) {
+        const ink_cap_t *k = REG[i];
+        if (!listed(k) || (!strstr(k->id, q) && !strstr(k->title, q))) continue;
+        size_t before = w.len;
+        manifest_entry(&w, k, first);
+        if (w.overflow) { /* as many as fit: the query can be narrowed */
+            w.overflow = false;
+            w.len = before;
+            break;
+        }
+        first = false;
+    }
+    out[w.len++] = ']';
+    out[w.len] = 0;
+    ink_cap_result(c, out);
+    osal_free(out);
+}
+
+static const ink_cap_t BUS_CAPS[] = {
+    {.id = "system.undo",
+     .title = "撤销刚才的操作",
+     .input = "{\"type\":\"object\",\"properties\":{\"object\":{\"type\":\"string\",\"maxLength\":47}},\"required\":[\"object\"]}",
+     .effect = INK_FX_LOCAL_WRITE,
+     .child_ok = true,
+     .exec = INK_EXEC_DIRECT,
+     .run = cap_undo},
+    {.id = "caps.domains", .title = "有哪些类能力（每类多少个）", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_domains},
+    {.id = "caps.find",
+     .title = "按关键词查能力（带完整描述）",
+     .input = "{\"type\":\"object\",\"properties\":{\"query\":{\"type\":\"string\",\"maxLength\":47}},\"required\":[\"query\"]}",
+     .effect = INK_FX_READ,
+     .child_ok = true,
+     .exec = INK_EXEC_DIRECT,
+     .run = cap_find},
+};
+
+static int register_bus_caps(void) { return ink_cap_register(BUS_CAPS, (int)(sizeof BUS_CAPS / sizeof BUS_CAPS[0])); }
 
 /* ------------------------------------------------------------ hub tools */
 
@@ -758,6 +1087,8 @@ typedef struct {
     ink_exec_job_t job;
     int64_t id;
     bool list;
+    int cursor;        /* tools/list: the page */
+    char domain[16];   /* tools/list: only this domain */
     uint32_t page_gen;
     uint64_t received_us;
     char name[48];
@@ -771,27 +1102,29 @@ static void tool_done(void *ctx, const ink_receipt_t *rc) { /* where the capabil
     snprintf(key, sizeof key, "tools.calls.%s", ink_rc_name(rc->status));
     ink_probe_count(key);
     const char *prev = osal_mem_tag("tools");
-    char *out = osal_malloc(768, OSAL_MEM_EXTERNAL);
+    size_t cap = 768 + (rc->result ? strlen(rc->result) : 0);
+    char *out = osal_malloc(cap, OSAL_MEM_EXTERNAL);
     osal_mem_tag(prev);
-    if (!out || ink_receipt_json(rc, out, 768) < 0) ink_hub_respond_error(t->id, -32603, out ? "receipt too long" : "out of memory");
+    if (!out || ink_receipt_json(rc, out, cap) < 0) ink_hub_respond_error(t->id, -32603, out ? "receipt too long" : "out of memory");
     else ink_hub_respond(t->id, out);
     osal_free(out);
     osal_free(t);
 }
 
+#define TOOLS_PAGE 6144
+
 static void tool_run(void *arg) { /* UI task */
     tool_job_t *t = arg;
-    if (t->list) {
+    if (t->list) { /* paged (architecture: progressive disclosure): caps.domains and caps.find say what there is */
         const char *prev = osal_mem_tag("tools");
-        char *out = osal_malloc(6144, OSAL_MEM_EXTERNAL);
+        char *out = osal_malloc(TOOLS_PAGE, OSAL_MEM_EXTERNAL);
         osal_mem_tag(prev);
-        int n = out ? ink_cap_manifest_json(out + 10, 6144 - 12) : -1;
-        if (n < 0) ink_hub_respond_error(t->id, -32603, out ? "tool list too long" : "out of memory");
+        int next = -1, n = out ? ink_cap_manifest_page(t->cursor, t->domain[0] ? t->domain : NULL, out + 9, TOOLS_PAGE - 48, &next) : -1;
+        if (n < 0) ink_hub_respond_error(t->id, -32603, "out of memory");
         else {
             memcpy(out, "{\"tools\":", 9);
-            out[9] = ' ';
-            out[10 + n] = '}';
-            out[11 + n] = 0;
+            if (next >= 0) snprintf(out + 9 + n, 48, ",\"nextCursor\":\"%d\"}", next);
+            else snprintf(out + 9 + n, 48, "}");
             ink_hub_respond(t->id, out);
         }
         osal_free(out);
@@ -832,6 +1165,11 @@ static void on_tools(void *ctx, int64_t id, const char *method, const ink_json_t
     t->id = id;
     t->list = list;
     t->received_us = osal_now_us();
+    if (list) {
+        char cursor[16];
+        if (ink_json_str(j, ink_json_find(j, params, "cursor"), cursor, sizeof cursor) > 0) t->cursor = atoi(cursor);
+        ink_json_str(j, ink_json_find(j, params, "domain"), t->domain, sizeof t->domain);
+    }
     if (!list) {
         if (ink_json_str(j, ink_json_find(j, params, "name"), t->name, sizeof t->name) < 0) {
             osal_free(t);
@@ -892,5 +1230,6 @@ static void on_caps_changed(void *ctx, const char *method, const ink_json_t *j, 
 
 int ink_tools_init(void) {
     if (ink_hub_on_online(dir_fetch, NULL) || ink_hub_subscribe("caps/", on_caps_changed, NULL)) return -1;
+    ink_hub_set_tick(send_events);
     return ink_hub_on_request("tools/", on_tools, NULL);
 }

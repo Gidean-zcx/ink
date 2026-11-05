@@ -179,7 +179,15 @@ void sim_power_off(const char *reason) { /* any context: the power chip cut the 
 
 const char *sim_power_off_reason(void) { return g_off_reason; }
 
+void hal_power_reboot(void) {
+    sim_metric_set("power.reboot", 1);
+    sim_power_off("reboot");
+}
+
+void (*sim_power_before_shutdown)(void); /* a test looks at what the system left, the moment it asks for the power to go */
+
 void hal_power_shutdown(void) {
+    if (sim_power_before_shutdown) sim_power_before_shutdown();
     if (metalio_board_ready()) metalio_power_off(); /* the expander model cuts power at the last pulse */
     sim_power_off("shutdown");
 }
@@ -285,6 +293,7 @@ void hal_cpu_boost_release(hal_cpu_boost_t *b) {
 #define WAKE_GPIO2 (1u << 16) /* GPIO2 low: classified after the wake */
 
 bool sim_power_sleeping(void) { return PW.sleeping; }
+int sim_power_sleeps(void) { return (int)PW.sleeps; }
 bool sim_power_waking(void) { return PW.sleeping && PW.wake_cause != 0; }
 
 static void wake_cb(void *arg) { /* ISR: the chip is awake: the sleeper continues */
@@ -584,6 +593,11 @@ void hal_power_battery(hal_battery_t *out) {
     battery_model(out);
 }
 
+void sim_power_set_cable(bool on) { /* ISR or locked */
+    PW.charging = on;
+    sim_charger_update();
+}
+
 void sim_power_set_battery(int percent, bool charging) {
     double used = total_mah();
     PW.soc = percent / 100.0 + (g_profile.batt_mah > 0 ? used / g_profile.batt_mah : 0);
@@ -639,6 +653,11 @@ void sim_power_report(void) {
 /* ------------------------------------------------------------ device */
 
 void hal_device_get_info(hal_device_info_t *out) { *out = g_profile.info; }
+
+void hal_random_fill(void *out, size_t n) {
+    uint8_t *p = out;
+    for (size_t i = 0; i < n; i++) p[i] = (uint8_t)(sim_rand01() * 256);
+}
 
 const char *hal_device_reset_reason(void) { return g_sim.reset_reason ? g_sim.reset_reason : "poweron"; }
 

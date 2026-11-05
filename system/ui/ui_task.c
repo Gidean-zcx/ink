@@ -28,6 +28,7 @@
 #define MAX_HINTS 8
 #define MAX_DIRTY 24
 #define MAX_ACTIVITIES 6
+#define MAX_OVERLAYS 4
 #define PFIFO 16
 #define INTERACTIVE_IDLE_MS 2500
 
@@ -75,7 +76,12 @@ static struct {
     /* activities */
     frame_t stack[MAX_ACTIVITIES];
     int depth;
+    void (*top_hook)(const char *app);
     lv_obj_t *screen;
+    const ink_ui_overlay_t *overlays[MAX_OVERLAYS];
+    lv_obj_t *overlay_root[MAX_OVERLAYS];
+    int noverlays;
+    bool skip_touch; /* a finger went down before the screen changed under it: nothing until it lifts */
     volatile uint32_t generation;
     bool interactive;
     uint64_t last_input_us;
@@ -274,12 +280,21 @@ void ink_ui_cause(uint64_t t_us, const char *tag) {
     UI.cause_tag = tag;
 }
 
-const char *ink_ui_top_name(void) {
+const char *ink_ui_page_name(void) {
     const ink_activity_t *top = UI.depth ? UI.stack[UI.depth - 1].a : NULL;
     return top && top->name ? top->name : "";
 }
 
+const char *ink_ui_top_name(void) { return UI.noverlays ? UI.overlays[UI.noverlays - 1]->name : ink_ui_page_name(); }
+
 int ink_ui_snapshot(char *buf, size_t cap, const char **activity_name) {
+    if (UI.noverlays) {
+        const ink_ui_overlay_t *o = UI.overlays[UI.noverlays - 1];
+        if (activity_name) *activity_name = o->name;
+        if (o->snapshot && cap) return o->snapshot(buf, cap);
+        if (cap) buf[0] = 0;
+        return 0;
+    }
     const ink_activity_t *top = UI.depth ? UI.stack[UI.depth - 1].a : NULL;
     if (activity_name) *activity_name = top ? top->name : "";
     if (!top || !top->snapshot || !cap) {
@@ -368,6 +383,7 @@ static void show_top(void) {
      * drive part of the NEW screen with a binary waveform first (seen in the simulator). */
     UI.nhints = 0;
     UI.frame_intent = INK_REFRESH_FLASH_UI;
+    if (UI.top_hook) UI.top_hook(f->a->app);
     f->a->create(UI.screen, f->arg);
     lv_screen_load(UI.screen);
     if (old) lv_obj_delete(old);
@@ -397,6 +413,82 @@ void ink_ui_pop(void) {
     if (UI.stack[UI.depth - 1].a->destroy) UI.stack[UI.depth - 1].a->destroy();
     UI.depth--;
     show_top(); /* activities rebuild from their own state: only the top one holds a screen */
+}
+
+void ink_ui_restart(void (*between)(void)) {
+    if (UI.depth && UI.stack[UI.depth - 1].a->destroy) UI.stack[UI.depth - 1].a->destroy();
+    if (UI.depth) UI.depth = 1;
+    if (between) between();
+    if (UI.depth) show_top();
+}
+
+bool ink_ui_full(void) { return UI.depth >= MAX_ACTIVITIES; }
+
+void ink_ui_set_top_hook(void (*fn)(const char *app)) { UI.top_hook = fn; }
+
+static bool of_app(const frame_t *f, const char *app) { return f->a->app && !strcmp(f->a->app, app); }
+
+bool ink_ui_bring_up(const char *app) {
+    int at = -1;
+    for (int i = UI.depth - 1; i >= 0 && at < 0; i--)
+        if (of_app(&UI.stack[i], app)) at = i;
+    if (at < 0) return false;
+    if (at == UI.depth - 1) return true;
+    if (UI.stack[UI.depth - 1].a->destroy) UI.stack[UI.depth - 1].a->destroy();
+    UI.depth = at + 1;
+    show_top();
+    return true;
+}
+
+void ink_ui_drop_app(const char *app) {
+    bool was_top = UI.depth && of_app(&UI.stack[UI.depth - 1], app);
+    if (was_top && UI.stack[UI.depth - 1].a->destroy) UI.stack[UI.depth - 1].a->destroy();
+    int kept = 0;
+    for (int i = 0; i < UI.depth; i++)
+        if (!of_app(&UI.stack[i], app)) UI.stack[kept++] = UI.stack[i];
+    UI.depth = kept;
+    if (was_top && UI.depth) show_top();
+}
+
+/* What was aimed at the old content is dropped, as for a new screen. A touch in progress too: the next move of that
+ * finger would press what is under it now, and lifting it would be a tap (a finger down when a call came in, on the
+ * spot where "hang up" appears). The content version stays: the page under it has not changed, and what is prepared
+ * for it is still right when the overlay goes (while it is up, the gate refuses what belongs to the page). */
+static void overlays_changed(void) {
+    UI.generation++;
+    lv_indev_reset(UI.indev, NULL);
+    UI.pn = 0;
+    if (UI.last_pressed) UI.skip_touch = true;
+    UI.last_pressed = false;
+}
+
+void ink_ui_overlay_add(const ink_ui_overlay_t *o, lv_obj_t *root) {
+    for (int i = 0; i < UI.noverlays; i++)
+        if (UI.overlays[i] == o) return;
+    if (UI.noverlays >= MAX_OVERLAYS) return;
+    int at = UI.noverlays++;
+    while (at > 0 && UI.overlays[at - 1]->level > o->level) {
+        UI.overlays[at] = UI.overlays[at - 1];
+        UI.overlay_root[at] = UI.overlay_root[at - 1];
+        at--;
+    }
+    UI.overlays[at] = o;
+    UI.overlay_root[at] = root;
+    for (int i = at + 1; i < UI.noverlays; i++) lv_obj_move_foreground(UI.overlay_root[i]);
+    overlays_changed();
+}
+
+bool ink_ui_overlay_up(void) { return UI.noverlays > 0; }
+
+void ink_ui_overlay_remove(const ink_ui_overlay_t *o) {
+    for (int i = 0; i < UI.noverlays; i++)
+        if (UI.overlays[i] == o) {
+            memmove(&UI.overlays[i], &UI.overlays[i + 1], sizeof UI.overlays[0] * (size_t)(UI.noverlays - i - 1));
+            memmove(&UI.overlay_root[i], &UI.overlay_root[i + 1], sizeof UI.overlay_root[0] * (size_t)(UI.noverlays - i - 1));
+            UI.noverlays--;
+            overlays_changed();
+            return;
+        }
 }
 
 /* Open with feedback: the tapped control inverts immediately (one FAST refresh, first
@@ -483,6 +575,11 @@ static void handle_input(const umsg_t *m) {
     UI.last_input_us = osal_now_us();
     switch (e->kind) {
     case INK_EV_POINTER:
+        if (UI.skip_touch) {
+            if (e->phase == INK_PTR_RELEASE) UI.skip_touch = false;
+            ink_probe_count("ui.touch_under_overlay_dropped");
+            return;
+        }
         if (m->generation != UI.generation && e->phase != INK_PTR_RELEASE) {
             ink_probe_count("ui.stale_input_dropped");
             return;
@@ -500,17 +597,20 @@ static void handle_input(const umsg_t *m) {
         }
         pointer_push(e->x, e->y, e->phase != INK_PTR_RELEASE);
         break;
+    case INK_EV_LONGPRESS: /* LVGL looks at the clock only when it reads: this is when it finds out, and no click follows */
+        if (!UI.skip_touch && m->generation == UI.generation && UI.last_pressed) lv_indev_read(UI.indev);
+        break;
     case INK_EV_SWIPE:
         if (m->generation != UI.generation) return;
         UI.cause_us = e->t_us;
         UI.cause_tag = NULL;
-        if (top && top->on_swipe) top->on_swipe((ink_swipe_dir_t)e->dir);
+        if (!UI.noverlays && top && top->on_swipe) top->on_swipe((ink_swipe_dir_t)e->dir);
         break;
     case INK_EV_KEY:
     case INK_EV_KEY_LONG: {
         bool lng = e->kind == INK_EV_KEY_LONG;
-        if (e->key == HAL_KEY_AI) { /* system-wide: push-to-talk, handled by the AI service */
-            if (e->kind == INK_EV_KEY) ink_ai_key(e->pressed, e->t_us);
+        if (e->key == HAL_KEY_AI) { /* system-wide: push-to-talk, handled by the AI service; an overlay comes first, but one already talking may let go */
+            if (e->kind == INK_EV_KEY && (!UI.noverlays || !e->pressed)) ink_ai_key(e->pressed, e->t_us);
             return;
         }
         if (e->kind == INK_EV_KEY && (!e->pressed || (e->flags & INK_EVF_AFTER_LONG))) {
@@ -519,6 +619,11 @@ static void handle_input(const umsg_t *m) {
         }
         UI.cause_us = e->t_us;
         UI.cause_tag = NULL;
+        if (UI.noverlays) {
+            const ink_ui_overlay_t *o = UI.overlays[UI.noverlays - 1];
+            if (o->on_key) o->on_key((hal_key_t)e->key, lng);
+            return;
+        }
         if ((e->key == HAL_KEY_BACK || e->key == HAL_KEY_HOME) && ink_ai_dismiss()) return;
         if (top && top->on_key && top->on_key((hal_key_t)e->key, lng)) return;
         if (e->key == HAL_KEY_BACK && !lng) ink_ui_pop();

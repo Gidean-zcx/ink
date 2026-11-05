@@ -223,6 +223,7 @@
     "audio.convert_frame": 12,
     "audio.mix_sample": 6,
     "tone.sample": 20,
+    "sha256.block": 1600,
     "epd.diff_px": 14,
     "flash.line_fill": 1150,
     "lvgl.obj_refr": 1500,

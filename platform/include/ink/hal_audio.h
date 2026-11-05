@@ -25,6 +25,11 @@ extern "C" {
 
 #define HAL_AUDIO_RATE 16000
 
+/* Where the sound goes. What the headset path is on the Plus is only known in outline (BH1098G mode 2, "calls through a
+ * Bluetooth headset"); see hal_bt.h. Blocks while the audio chip changes mode (~0.7 s). 0, or -1. */
+typedef enum { HAL_ROUTE_SPEAKER = 0, HAL_ROUTE_BT_HEADSET } hal_audio_route_t;
+int hal_audio_route_set(hal_audio_route_t route);
+
 typedef struct {
     bool has_speaker;
     bool has_mic;

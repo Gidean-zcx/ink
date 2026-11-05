@@ -20,6 +20,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
+#include "ink/sys/exec.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -28,6 +30,7 @@ typedef enum {
     INK_AUDIO_PRIO_STORY = 1, /* audiobooks, reading aloud */
     INK_AUDIO_PRIO_VOICE = 2, /* AI replies */
     INK_AUDIO_PRIO_ALERT = 3, /* alarms, reminders */
+    INK_AUDIO_PRIO_CALL = 4,  /* a call, ringing or going on */
 } ink_audio_prio_t;
 
 typedef enum {
@@ -46,7 +49,15 @@ typedef void (*ink_audio_frame_fn)(void *ctx, const uint8_t *data, size_t len, u
 /** 0, or -1: no microphone, it did not start, or a capture is still running. One that was ended counts
  *  until its end has been delivered, so -1 also from inside that delivery. */
 int ink_audio_capture_begin(ink_audio_frame_fn fn, void *ctx);
+/** The same for what stays on the device, a recording: state audio.mic tells the two apart. */
+int ink_audio_capture_begin_local(ink_audio_frame_fn fn, void *ctx);
 void ink_audio_capture_end(void);
+/** A capture runs, or has not delivered its end yet: ink_audio_capture_begin would say -1. */
+bool ink_audio_capture_busy(void);
+/** Have the level of each frame measured, for whoever decides when someone has stopped talking; it costs a little. */
+void ink_audio_capture_measure(bool on);
+/** The last frame's mean absolute sample, 0..32767. */
+int ink_audio_capture_level(void);
 
 /**
  * Open a playback stream; returns its id (> 0), or -1 if a higher-priority stream owns the
@@ -94,8 +105,35 @@ int ink_audio_listen_commands(const char *const *phrases, int n);
 /** Index of the command word last reported by INK_LISTEN_COMMAND. */
 int ink_audio_last_command(void);
 
+/** A call or an alarm rings (generated here, needs no file): it goes on, in this task, whatever the UI does, until
+ *  turned off. It plays over a stream, which waits. Any task, never waits. */
+void ink_audio_ring(bool on);
+
 /** Speaker volume 0..100 (software gain). */
 void ink_audio_set_volume(int percent);
+/** What plays at now: the volume, under a child's limit (audio.child_max) on every route. */
+int ink_audio_effective_volume(void);
+
+/*
+ * Audio focus (system services design §10.1): one way to say who may be heard. Same level: the newer takes over. A
+ * higher one: media is paused and told when it may go on; speech and recording end. Tones are dropped under a call or an
+ * alarm. A mechanism of the system, not a capability.
+ */
+typedef enum { INK_FOCUS_LOST = 0, INK_FOCUS_PAUSED, INK_FOCUS_BACK } ink_focus_event_t;
+typedef void (*ink_focus_fn)(void *ctx, ink_focus_event_t ev, ink_audio_prio_t by);
+/** Any task. A token (> 0), or -1: something higher holds it and this level does not wait. Media waits: PAUSED comes at once. `fn` runs on `exec`, may be NULL. */
+int ink_audio_focus_acquire(ink_audio_prio_t prio, ink_focus_fn fn, void *ctx, ink_exec_t exec);
+void ink_audio_focus_release(int token);
+/** The highest level held now; 0 = none. */
+int ink_audio_focus_top(void);
+
+/** How far a stream has come: frames played and still queued. -1: not this stream any more (played is still right for the last one). */
+int ink_audio_stream_progress(int id, uint32_t *played, uint32_t *queued);
+
+/* Where the sound goes (state audio.route). Not during a call: it switches when the call is over. */
+typedef enum { INK_ROUTE_SPEAKER = 0, INK_ROUTE_HEADSET } ink_audio_route_t;
+void ink_audio_set_route(ink_audio_route_t route);
+ink_audio_route_t ink_audio_route(void);
 
 #ifdef __cplusplus
 }

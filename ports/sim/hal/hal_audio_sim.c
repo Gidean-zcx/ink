@@ -53,6 +53,8 @@ static struct {
     osal_task_t *task;
     osal_mutex_t *bt_lock;      /* the BH1098G's mode */
     bool bt_mode_set;
+    int bt_mode_wanted;         /* 1 speaker, 2 headset (mode 2: "calls through a Bluetooth headset", officially) */
+    uint64_t bt_played_samples;
     unsigned bt_epoch;          /* P14 power cycle the mode was set in */
     /* microphone */
     bool cap_on;
@@ -148,8 +150,8 @@ static int16_t mic_sample(uint64_t n) {
     double t = (double)n / HAL_AUDIO_RATE;
     switch (A.src) {
     case MIC_HOST: return host_mic_sample();
-    case MIC_SILENCE: return (int16_t)((int)((n * 2654435761u) >> 27) - 16); /* room noise, a few LSB */
-    case MIC_NOISE: return (int16_t)((int)((n * 2654435761u) >> 19) - 4096);
+    case MIC_SILENCE: return (int16_t)((int)(((uint32_t)n * 2654435761u) >> 27) - 16); /* room noise, a few LSB */
+    case MIC_NOISE: return (int16_t)((int)(((uint32_t)n * 2654435761u) >> 19) - 4096);
     case MIC_WAKE: /* the wake word sounds like speech */
     default: {
         /* voiced speech-like: pitch around 150 Hz with drift, ~4 syllables per second */
@@ -285,7 +287,8 @@ static void play_tick(void *arg) { /* ISR: the DMA needs the next descriptor */
         wav_put(s, A.chunk, t);
         A.tail = (A.tail + 1) % A.N;
         A.full--;
-        A.played_samples += (uint64_t)A.chunk;
+        if (A.bt_mode_wanted == 2) A.bt_played_samples += (uint64_t)A.chunk; /* to the headset: the amplifier is off */
+        else A.played_samples += (uint64_t)A.chunk;
         A.in_gap = false;
         A.sounding = tail_audible(s, A.chunk);
     } else if (A.partial > 0) { /* a half-written descriptor: the rest plays as zeros */
@@ -333,7 +336,8 @@ static bool ensure_bt_mode(void) {
         uint64_t ready = metalio_board_shared_power_since_us() + BH1098G_BOOT_US, now = osal_now_us();
         if (ready > now) osal_task_delay_us(ready - now);
         hal_uart_t *u = hal_uart_open(BH1098G_UART_PORT, BH1098G_BAUD);
-        bool ok = u && bh1098g_set_mode(u, 1) == 0;
+        int mode = A.bt_mode_wanted ? A.bt_mode_wanted : 1;
+        bool ok = u && bh1098g_set_mode(u, mode) == 0;
         if (metalio_board_shared_power_epoch() != epoch || !(metalio_board_output(1) & MB_P1_SHARED_PWR)) {
             A.bt_mode_set = false; /* P14 went away meanwhile: the chip lost the mode again */
             sim_metric_add("audio.bt_mode_power_cycled", 1);
@@ -341,7 +345,7 @@ static bool ensure_bt_mode(void) {
         }
         A.bt_mode_set = ok;
         A.bt_epoch = epoch;
-        if (!ok) sim_warn("audio: BH1098G mode 1 not set");
+        if (!ok) sim_warn("audio: BH1098G mode %d not set", mode);
         else sim_metric_add("audio.bt_mode_sets", 1);
         have = ok;
         break;
@@ -562,6 +566,16 @@ void sim_audio_init(void) {
 
 bool sim_audio_busy(void) { return A.cap_on || A.out_on; }
 
+double sim_audio_bt_played_ms(void) { return A.bt_played_samples * 1000.0 / HAL_AUDIO_RATE; }
+
+int hal_audio_route_set(hal_audio_route_t route) {
+    int mode = route == HAL_ROUTE_BT_HEADSET ? 2 : 1;
+    if (mode == A.bt_mode_wanted || (mode == 1 && !A.bt_mode_wanted)) return 0;
+    A.bt_mode_wanted = mode;
+    A.bt_mode_set = false; /* it goes through ensure_bt_mode: the known command, about 0.7 s; the shared rail stays on */
+    return ensure_bt_mode() || !A.bt_lock ? 0 : -1;
+}
+
 double sim_audio_played_ms(void) {
     vtk_lock();
     double ms = A.played_samples * 1000.0 / HAL_AUDIO_RATE;
@@ -584,6 +598,7 @@ void sim_audio_report(void) {
     sim_metric_set("audio.mic.overruns", (double)A.cap_overruns);
     sim_metric_set("audio.mic.lost_ms", A.cap_lost_samples * 1000.0 / HAL_AUDIO_RATE);
     sim_metric_set("audio.speaker.played_ms", A.played_samples * 1000.0 / HAL_AUDIO_RATE);
+    if (A.bt_played_samples) sim_metric_set("audio.bt.played_ms", A.bt_played_samples * 1000.0 / HAL_AUDIO_RATE);
     sim_metric_set("audio.speaker.underruns", (double)A.underruns);
     sim_metric_set("audio.speaker.underrun_ms", A.underrun_samples * 1000.0 / HAL_AUDIO_RATE);
     sim_metric_set("audio.speaker.idle_ms", A.idle_samples * 1000.0 / HAL_AUDIO_RATE);

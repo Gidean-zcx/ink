@@ -19,7 +19,7 @@
 extern "C" {
 #endif
 
-#define INK_STATE_MAX 48
+#define INK_STATE_MAX 64
 #define INK_STATE_STR 32 /* longest string value, NUL included */
 
 typedef enum { INK_ST_BOOL = 1, INK_ST_INT, INK_ST_STR } ink_st_type_t;

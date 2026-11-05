@@ -46,6 +46,7 @@ static struct {
     osal_sem_t *guard_ack;
     int busy;  /* regions waiting in the policy + the update in flight (this task writes it) */
     int inbox; /* messages sent and not yet fully handled (atomic) */
+    uint32_t commits;
 } DS;
 
 /* Every message goes through here: the inbox count rises before the message is queued and
@@ -198,7 +199,10 @@ void ink_display_commit(const ink_region_t *regions, int n, uint64_t cause_us) {
     ink_display_commit_tagged(regions, n, cause_us, NULL);
 }
 
+uint32_t ink_display_commits(void) { return __atomic_load_n(&DS.commits, __ATOMIC_RELAXED); }
+
 void ink_display_commit_tagged(const ink_region_t *regions, int n, uint64_t cause_us, const char *cause_tag) {
+    __atomic_add_fetch(&DS.commits, 1, __ATOMIC_RELAXED);
     for (int i = 0; i < n; i++) {
         dmsg_t m = {.type = DM_REGION, .intent = (uint8_t)regions[i].intent, .rect = regions[i].rect, .cause_us = cause_us,
                     .cause_tag = cause_tag};

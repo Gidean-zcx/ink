@@ -13,7 +13,7 @@
 #include "ink/osal.h"
 #include "ink/sys/exec.h"
 
-#define WATCH_MAX 16
+#define WATCH_MAX 24
 
 typedef void (*watch_fn)(void *ctx, int idx, const char *id);
 

@@ -31,9 +31,9 @@ static void on_power(void *ctx, int h, const char *id) { /* after a wake the lig
 }
 
 static const ink_setting_def_t LIGHT_SETTINGS[] = {
-    {.id = "display.light", .title = "前光亮度", .type = INK_SET_INT, .min = 0, .max = 100, .def = 0, .child_may_change = true, .apply = on_setting,
+    {.id = "display.light", .title = "亮度", .type = INK_SET_INT, .min = 0, .max = 100, .def = 0, .child_may_change = true, .apply = on_setting,
      .apply_exec = INK_EXEC_DIRECT},
-    {.id = "display.warmth", .title = "色温（越大越暖）", .type = INK_SET_INT, .min = 0, .max = 100, .def = 50, .child_may_change = true,
+    {.id = "display.warmth", .title = "暖光（越大越暖）", .type = INK_SET_INT, .min = 0, .max = 100, .def = 50, .child_may_change = true,
      .apply = on_setting, .apply_exec = INK_EXEC_DIRECT},
 };
 

@@ -1,0 +1,4 @@
+# The RTC's backup supply failed before the device started.
+@0       rtc lost
++0       sim   external data
+@500s    end

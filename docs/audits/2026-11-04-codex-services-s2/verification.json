@@ -1,0 +1,50 @@
+[
+  {
+    "id": "reverse-clipboard-sensitive",
+    "verdict": "反向对照有效",
+    "evidence": "【复现】编译/链接退出 0；撤保护后测试退出 1，test.fail 总计 1。the AI never reads that ({\"text\":\"密码\"})",
+    "note": "mutant 与日志仅在 build-audit/reverse-controls/clipboard-sensitive；tests 原文件未改。"
+  },
+  {
+    "id": "reverse-confirmed-member",
+    "verdict": "反向对照有效",
+    "evidence": "【复现】编译/链接退出 0；撤保护后测试退出 1，test.fail 总计 2。the child's file of that name is still there；tidied up",
+    "note": "mutant 与日志仅在 build-audit/reverse-controls/confirmed-member；tests 原文件未改。"
+  },
+  {
+    "id": "reverse-interrupt-apply",
+    "verdict": "反向对照有效",
+    "evidence": "【复现】编译/链接退出 0；撤保护后测试退出 1，test.fail 总计 2。the ringing has stopped；and everything says it is over (alarm)",
+    "note": "mutant 与日志仅在 build-audit/reverse-controls/interrupt-apply；tests 原文件未改。"
+  },
+  {
+    "id": "reverse-media-resume-back",
+    "verdict": "反向对照有效",
+    "evidence": "【复现】编译/链接退出 0；撤保护后测试退出 1，test.fail 总计 1。a little earlier (6180, 6060)",
+    "note": "mutant 与日志仅在 build-audit/reverse-controls/media-resume-back；tests 原文件未改。"
+  },
+  {
+    "id": "reverse-missing-input-schema",
+    "verdict": "反向对照有效",
+    "evidence": "【复现】编译/链接退出 0；撤保护后测试退出 1，test.fail 总计 4。data.get takes something: it says what；data.get cannot do without collection: it says so；data.get cannot do without id: it says so；data.get: nothing else is required (0, 2)",
+    "note": "mutant 与日志仅在 build-audit/reverse-controls/missing-input-schema；tests 原文件未改。"
+  },
+  {
+    "id": "reverse-pin-wait",
+    "verdict": "反向对照有效",
+    "evidence": "【复现】编译/链接退出 0；撤保护后测试退出 1，test.fail 总计 3。even the right one must wait (0, 30)；still closed；again wrong: twice as long (0)",
+    "note": "mutant 与日志仅在 build-audit/reverse-controls/pin-wait；tests 原文件未改。"
+  },
+  {
+    "id": "reverse-upgrade-signature",
+    "verdict": "反向对照有效",
+    "evidence": "【复现】编译/链接退出 0；撤保护后测试退出 1，test.fail 总计 1。the good one on the card is offered (可以升级到 9.0.0)",
+    "note": "mutant 与日志仅在 build-audit/reverse-controls/upgrade-signature；tests 原文件未改。升级流程在 card1 检出错误并终止；不能算跑完全部阶段。"
+  },
+  {
+    "id": "reverse-wake-gate",
+    "verdict": "反向对照有效",
+    "evidence": "【复现】编译/链接退出 0；撤保护后测试退出 1，test.fail 总计 4。the wake word waits for it (0, 1)；then it works again；and nobody gets to the owner's AI (0, 1)；with it, the wake word works",
+    "note": "mutant 与日志仅在 build-audit/reverse-controls/wake-gate；tests 原文件未改。"
+  }
+]

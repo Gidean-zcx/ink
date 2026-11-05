@@ -33,8 +33,9 @@ typedef hal_key_t ink_key_t;
 #define INK_KEY_NEXT HAL_KEY_NEXT
 #define INK_KEY_BACK HAL_KEY_BACK
 
-typedef struct {
+typedef struct ink_activity {
     const char *name;
+    const char *app; /* the app it belongs to (ink/sys/appreg.h); NULL = the system's */
     /* build the screen; `screen` is a fresh LVGL screen owned by the runtime */
     void (*create)(lv_obj_t *screen, void *arg);
     void (*destroy)(void);
@@ -49,6 +50,22 @@ typedef struct {
     void (*settle)(void);
 } ink_activity_t;
 
+/* A system overlay (an interruption, a confirmation card): over the foreground activity and whatever it drew,
+ * on lv_layer_sys. While one is up it takes the keys and swipes and the AI sees what it says, and a finger that
+ * was already down cannot press what appeared under it. What it looks like is its owner's. */
+typedef struct {
+    const char *name;
+    int level; /* the higher is on top: a card asking, then who may use the device, then what cannot wait */
+    bool (*on_key)(ink_key_t key, bool long_press); /* NULL: keys do nothing */
+    int (*snapshot)(char *buf, size_t cap);
+} ink_ui_overlay_t;
+
+/** In its place by level (up to 4), `root` above the lower ones. UI task. */
+void ink_ui_overlay_add(const ink_ui_overlay_t *o, lv_obj_t *root);
+void ink_ui_overlay_remove(const ink_ui_overlay_t *o);
+/** A system card is up. UI task. */
+bool ink_ui_overlay_up(void);
+
 /** Start the UI task with `home` as the root activity. */
 int ink_ui_start(const ink_activity_t *home);
 /** Open an activity on top (UI task only). The new screen is drawn with a flashing refresh. */
@@ -60,6 +77,16 @@ void ink_ui_open(lv_obj_t *from, const ink_activity_t *a, void *arg);
 void ink_ui_pop(void);
 /** Back to the root activity (one rebuild). */
 void ink_ui_home(void);
+/** Close everything above the root activity and build the root afresh, with `between` called when nothing is open. UI task. */
+void ink_ui_restart(void (*between)(void));
+/** The stack has no room for another activity. */
+bool ink_ui_full(void);
+/** An activity of this app is open: it comes to the top (what is above it closes). False: there is none. UI task. */
+bool ink_ui_bring_up(const char *app);
+/** Off the stack with all its activities. UI task. */
+void ink_ui_drop_app(const char *app);
+/** Told before a new top activity is built, with the app it belongs to (the app manager). */
+void ink_ui_set_top_hook(void (*fn)(const char *app));
 /** A job waits for the UI task (ink_exec_post calls this; any task, never waits). */
 void ink_ui_kick(void);
 /** The calling task is the UI task. */
@@ -81,10 +108,12 @@ void ink_ui_hint_frame(ink_refresh_t intent);
 /** Attribute the next frame to an earlier action: when it is visible, `tag` (static string)
  *  records the latency from `t_us` (e.g. AI key release -> first answer text). */
 void ink_ui_cause(uint64_t t_us, const char *tag);
-/** Page context of the foreground activity (see ink_activity_t.snapshot). */
+/** Page context of the foreground activity (see ink_activity_t.snapshot), or what the top overlay says. */
 int ink_ui_snapshot(char *buf, size_t cap, const char **activity_name);
-/** Name of the foreground activity ("" if none). */
+/** Name of the foreground activity or the top overlay ("" if none). */
 const char *ink_ui_top_name(void);
+/** Name of the foreground activity, under any overlay ("" if none). */
+const char *ink_ui_page_name(void);
 
 /** dp -> pixels for the current panel. */
 int ink_dp(int dp);

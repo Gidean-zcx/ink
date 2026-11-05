@@ -1,0 +1,1317 @@
+{
+  "commit": "a81c1b8ed805c044bcc24a120c14bb8e3a4d011e",
+  "command": "python3 docs/audits/2026-11-04-codex-services/experiments/dump_surface.py",
+  "pages": 3,
+  "tools_count": 83,
+  "document_stage1_and_system_missing": [
+    "system.reboot"
+  ],
+  "runtime_extra_to_selected_document_rows": [
+    "alarm.ended",
+    "alarm.fired",
+    "alarm.missed",
+    "app.state",
+    "battery.low",
+    "call.answer",
+    "call.answered",
+    "call.dial",
+    "call.ended",
+    "call.hangup",
+    "call.incoming",
+    "camera.capture",
+    "confirm.result",
+    "data.write_failed",
+    "file.changed",
+    "file.job_done",
+    "interrupt.ack",
+    "interrupt.list",
+    "message.list",
+    "message.received",
+    "message.send",
+    "notify.posted",
+    "reader.list_books",
+    "reader.open_book",
+    "reminder.fired",
+    "reminder.missed",
+    "remote.open",
+    "system.set_volume",
+    "system.switch_member",
+    "time.changed",
+    "usb.changed"
+  ],
+  "forbidden_present": [],
+  "tools": [
+    {
+      "name": "system.undo",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "object": {
+            "type": "string",
+            "maxLength": 47
+          }
+        },
+        "required": [
+          "object"
+        ]
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "caps.domains",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "caps.find",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "maxLength": 47
+          }
+        },
+        "required": [
+          "query"
+        ]
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "settings.get",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "maxLength": 39
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "settings.set",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "maxLength": 39
+          },
+          "value": {
+            "type": [
+              "integer",
+              "boolean",
+              "string"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "value"
+        ]
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "confirm.list",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": {
+        "type": "array"
+      }
+    },
+    {
+      "name": "confirm.withdraw",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "token"
+        ]
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "confirm.result",
+      "form": "event",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "data.collections",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": {
+        "type": "array"
+      }
+    },
+    {
+      "name": "data.list",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "collection": {
+            "type": "string",
+            "maxLength": 39
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50
+          },
+          "cursor": {
+            "type": "string",
+            "maxLength": 39
+          },
+          "oldest_first": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "collection"
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "records": {
+            "type": "array"
+          },
+          "next": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "data.get",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "collection": {
+            "type": "string",
+            "maxLength": 39
+          },
+          "id": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "collection",
+          "id"
+        ]
+      },
+      "outputSchema": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "data.put",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "collection": {
+            "type": "string",
+            "maxLength": 39
+          },
+          "id": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "sort": {
+            "type": "integer"
+          },
+          "value": {
+            "type": "object"
+          }
+        },
+        "required": [
+          "collection",
+          "value"
+        ]
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "data.delete",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "collection": {
+            "type": "string",
+            "maxLength": 39
+          },
+          "id": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "collection",
+          "id"
+        ]
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "data.write_failed",
+      "form": "event",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "system.shutdown",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "file.list",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "maxLength": 127
+          },
+          "cursor": {
+            "type": "string",
+            "maxLength": 15
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 200
+          }
+        },
+        "required": [
+          "path"
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "entries": {
+            "type": "array"
+          },
+          "next": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "file.stat",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "maxLength": 127
+          }
+        },
+        "required": [
+          "path"
+        ]
+      },
+      "outputSchema": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "file.read",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "maxLength": 127
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "max_bytes": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2048
+          }
+        },
+        "required": [
+          "path"
+        ]
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string"
+          },
+          "next_offset": {
+            "type": "integer"
+          },
+          "end": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    {
+      "name": "file.write",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "maxLength": 127
+          },
+          "text": {
+            "type": "string"
+          },
+          "append": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "path",
+          "text"
+        ]
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "file.mkdir",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "maxLength": 127
+          }
+        },
+        "required": [
+          "path"
+        ]
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "file.copy",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "maxLength": 127
+          },
+          "to": {
+            "type": "string",
+            "maxLength": 127
+          }
+        },
+        "required": [
+          "from",
+          "to"
+        ]
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "file.move",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string",
+            "maxLength": 127
+          },
+          "to": {
+            "type": "string",
+            "maxLength": 127
+          }
+        },
+        "required": [
+          "from",
+          "to"
+        ]
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "file.delete",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "maxLength": 127
+          }
+        },
+        "required": [
+          "path"
+        ]
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "file.free",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "file.changed",
+      "form": "event",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "file.job_done",
+      "form": "event",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "usb.status",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "usb.mount",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "usb.unmount",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "usb.changed",
+      "form": "event",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "interrupt.list",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": {
+        "type": "array"
+      }
+    },
+    {
+      "name": "interrupt.ack",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "notify.post",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "maxLength": 15
+          },
+          "body": {
+            "type": "string",
+            "maxLength": 50
+          },
+          "group": {
+            "type": "string",
+            "maxLength": 7
+          },
+          "channel": {
+            "type": "string",
+            "maxLength": 15
+          },
+          "action": {
+            "type": "string",
+            "maxLength": 39
+          }
+        },
+        "required": [
+          "title"
+        ]
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "notify.list",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50
+          },
+          "unread_only": {
+            "type": "boolean"
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "unread": {
+            "type": "integer"
+          },
+          "items": {
+            "type": "array"
+          }
+        }
+      }
+    },
+    {
+      "name": "notify.read",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "notify.dismiss",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "notify.clear",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "notify.channels",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "notify.set_channel",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "maxLength": 15
+          },
+          "enabled": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "id",
+          "enabled"
+        ]
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "notify.posted",
+      "form": "event",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "battery.low",
+      "form": "event",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "time.now",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "time.set",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "utc_s": {
+            "type": "integer",
+            "minimum": 1000000000
+          }
+        },
+        "required": [
+          "utc_s"
+        ]
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "time.lunar",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "year": {
+            "type": "integer"
+          },
+          "month": {
+            "type": "integer"
+          },
+          "day": {
+            "type": "integer"
+          },
+          "lunar_year": {
+            "type": "integer"
+          },
+          "lunar_month": {
+            "type": "integer"
+          },
+          "lunar_day": {
+            "type": "integer"
+          },
+          "leap": {
+            "type": "boolean"
+          }
+        }
+      },
+      "outputSchema": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "alarm.set",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "hour": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 23
+          },
+          "minute": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 59
+          },
+          "weekdays": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 127
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 15
+          }
+        },
+        "required": [
+          "hour",
+          "minute"
+        ]
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "alarm.list",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": {
+        "type": "array"
+      }
+    },
+    {
+      "name": "alarm.cancel",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "alarm.dismiss",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "alarm.snooze",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "minutes": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 120
+          }
+        }
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "reminder.add",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "at": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "title": {
+            "type": "string",
+            "maxLength": 15
+          },
+          "repeat": {
+            "type": "string",
+            "enum": [
+              "daily",
+              "weekly",
+              "monthly",
+              "yearly",
+              "lunar_yearly"
+            ]
+          }
+        },
+        "required": [
+          "at",
+          "title"
+        ]
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "reminder.list",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": {
+        "type": "array"
+      }
+    },
+    {
+      "name": "reminder.cancel",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "alarm.fired",
+      "form": "event",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "alarm.ended",
+      "form": "event",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "alarm.missed",
+      "form": "event",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "reminder.fired",
+      "form": "event",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "reminder.missed",
+      "form": "event",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "time.changed",
+      "form": "event",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "camera.capture",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": {
+        "type": "object",
+        "properties": {
+          "object": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    {
+      "name": "message.send",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "to": {
+            "type": "string",
+            "maxLength": 20
+          },
+          "text": {
+            "type": "string",
+            "maxLength": 118
+          }
+        },
+        "required": [
+          "to",
+          "text"
+        ]
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "message.list",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "call.dial",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "number": {
+            "type": "string",
+            "maxLength": 20
+          }
+        },
+        "required": [
+          "number"
+        ]
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "call.answer",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "call.hangup",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "message.received",
+      "form": "event",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "call.incoming",
+      "form": "event",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "call.answered",
+      "form": "event",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "call.ended",
+      "form": "event",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "system.home",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "system.full_refresh",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "system.set_volume",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "percent": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100
+          }
+        },
+        "required": [
+          "percent"
+        ]
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "system.switch_member",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "state.list",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": {
+        "type": "object"
+      }
+    },
+    {
+      "name": "settings.list",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": {
+        "type": "array"
+      }
+    },
+    {
+      "name": "system.factory_reset",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "reader.list_books",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "reader.open_book",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title"
+        ]
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "remote.open",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "maxLength": 120
+          }
+        }
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "app.list",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": {
+        "type": "array"
+      }
+    },
+    {
+      "name": "app.open",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "maxLength": 31
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "app.close",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "maxLength": 31
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "outputSchema": null
+    },
+    {
+      "name": "app.cards",
+      "form": "call",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": {
+        "type": "array"
+      }
+    },
+    {
+      "name": "app.state",
+      "form": "event",
+      "inputSchema": {
+        "type": "object",
+        "properties": {}
+      },
+      "outputSchema": null
+    }
+  ]
+}

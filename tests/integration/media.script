@@ -1,0 +1,5 @@
+# The microphone hears someone talking the whole time; a headset is in the room; the hub is reachable.
+@0       net   wifi
++0       headset add 00:11:22:33:44:55 测试耳机
+@1s      mic   speech
+@6000s   end

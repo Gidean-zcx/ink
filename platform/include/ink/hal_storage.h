@@ -16,6 +16,7 @@
 #ifndef INK_HAL_STORAGE_H
 #define INK_HAL_STORAGE_H
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 #include <sys/types.h>
@@ -66,6 +67,9 @@ typedef struct {
 } hal_fs_volume_info_t;
 
 int hal_fs_volume_info(const char *volume /* "/user" ... */, hal_fs_volume_info_t *out);
+/** The card is in and mounted: /content and /cache work (they fail otherwise). Does not wait; whether a
+ *  card pulled out is noticed before the next access depends on the board (no card-detect line known). */
+bool hal_fs_card_present(void);
 
 #ifdef __cplusplus
 }

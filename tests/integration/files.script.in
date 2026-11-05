@@ -1,0 +1,13 @@
+# Environment for the file service checks (tests/integration/files.c): the computer and the card.
+@40s     usb plug
+@48s     usb copy-in @CMAKE_SOURCE_DIR@/tests/fixtures/usb/hello.txt content/from-pc/hello.txt
+@50s     usb eject
+@60s     usb unplug
+@70s     usb plug
+@80s     usb unplug
+@90s     sd insert
+@100s    sd remove
+@105s    sd insert
+@110s    sd free 10
+@115s    sd free -1
+@130s    end

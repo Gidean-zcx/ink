@@ -55,6 +55,8 @@ void ink_display_interactive(bool on);
 /** Text refreshes between automatic ghost-clearing flashes (KOReader default 6). */
 void ink_display_set_text_cleanup_every(int n);
 
+/** Frames committed since boot. */
+uint32_t ink_display_commits(void);
 /** Number of committed-but-not-yet-stable regions (0 = screen settled). */
 int ink_display_busy(void);
 

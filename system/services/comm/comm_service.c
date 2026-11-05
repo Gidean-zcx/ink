@@ -18,6 +18,7 @@
 #include "ink/hal_cellular.h"
 #include "ink/osal.h"
 #include "ink/probe.h"
+#include "ink/sys/audio.h"
 #include "ink/sys/cap.h"
 #include "ink/sys/comm.h"
 #include "ink/sys/settings.h"
@@ -77,6 +78,15 @@ static bool refresh_status(hal_cell_status_t *st) {
     ink_state_set_bool(CM.h_registered, st->registered);
     ink_state_set_str(CM.h_sim, st->slot == HAL_CELL_SLOT_INTERNAL ? "internal" : "external");
     return true;
+}
+
+/* A call has the sound to itself, ringing or going on: media pauses, speech ends. */
+static void call_focus(bool on) {
+    static int token;
+    if (on && !token) {
+        int t = ink_audio_focus_acquire(INK_AUDIO_PRIO_CALL, NULL, NULL, INK_EXEC_DIRECT);
+        __atomic_store_n(&token, t > 0 ? t : 0, __ATOMIC_RELEASE);
+    } else if (!on) ink_audio_focus_release(__atomic_exchange_n(&token, 0, __ATOMIC_ACQ_REL));
 }
 
 static void on_sms(int index) { /* comm task */
@@ -159,10 +169,12 @@ static void comm_task(void *arg) {
             if (ev.type == HAL_CELL_EV_SMS) on_sms(ev.sms_index);
             else if (ev.type == HAL_CELL_EV_RING && !CM.ringing) { /* once per call: it rings again every few seconds */
                 CM.ringing = true;
+                call_focus(true);
                 ink_args_str(a, "from", ev.number);
                 ink_cap_emit("call.incoming", a);
             } else if (ev.type == HAL_CELL_EV_CALL_ENDED) {
                 CM.ringing = false;
+                call_focus(false);
                 ink_cap_emit("call.ended", a);
             }
         }
@@ -227,6 +239,7 @@ static void cap_dial(ink_call_t *c) {
     osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
     int r = hal_cell_dial(number);
     osal_mutex_unlock(CM.at);
+    if (r == 0) call_focus(true);
     call_result(c, r, "正在拨号", "the call could not be placed");
 }
 
@@ -236,6 +249,7 @@ static void cap_answer(ink_call_t *c) {
     int r = hal_cell_answer();
     osal_mutex_unlock(CM.at);
     call_result(c, r, "接通了", "nothing to answer");
+    if (r == 0) ink_cap_emit("call.answered", NULL);
 }
 
 static void cap_hangup(ink_call_t *c) {
@@ -249,6 +263,7 @@ static void cap_hangup(ink_call_t *c) {
 static const ink_cap_t COMM_CAPS[] = {
     {.id = "message.send",
      .title = "发短信",
+     .ask = "发短信给 {to}：{text}",
      .input = "{\"type\":\"object\",\"properties\":{\"to\":{\"type\":\"string\",\"maxLength\":20},\"text\":{\"type\":\"string\",\"maxLength\":118}},"
               "\"required\":[\"to\",\"text\"]}",
      .effect = INK_FX_EXTERNAL,
@@ -261,6 +276,7 @@ static const ink_cap_t COMM_CAPS[] = {
     {.id = "message.list", .title = "最近的短信", .effect = INK_FX_READ, .child_ok = true, .permission = "message", .exec = INK_EXEC_DIRECT, .run = cap_list},
     {.id = "call.dial",
      .title = "打电话",
+     .ask = "打电话给 {number}",
      .input = "{\"type\":\"object\",\"properties\":{\"number\":{\"type\":\"string\",\"maxLength\":20}},\"required\":[\"number\"]}",
      .effect = INK_FX_EXTERNAL,
      .child_ok = true,
@@ -270,10 +286,11 @@ static const ink_cap_t COMM_CAPS[] = {
      .exec = INK_EXEC_BG,
      .run = cap_dial},
     /* the modem may be busy with a message for up to 20 s; a call rings longer than that */
-    {.id = "call.answer", .title = "接电话", .effect = INK_FX_EXTERNAL, .child_ok = true, .permission = "call", .timeout_ms = 25000, .exec = INK_EXEC_BG, .run = cap_answer},
-    {.id = "call.hangup", .title = "挂电话", .effect = INK_FX_NAVIGATE, .child_ok = true, .permission = "call", .timeout_ms = 25000, .exec = INK_EXEC_BG, .run = cap_hangup},
+    {.id = "call.answer", .title = "接电话", .effect = INK_FX_EXTERNAL, .child_ok = true, .while_locked = true, .permission = "call", .timeout_ms = 25000, .exec = INK_EXEC_BG, .run = cap_answer},
+    {.id = "call.hangup", .title = "挂电话", .effect = INK_FX_NAVIGATE, .child_ok = true, .while_locked = true, .permission = "call", .timeout_ms = 25000, .exec = INK_EXEC_BG, .run = cap_hangup},
     {.id = "message.received", .title = "收到短信", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true, .permission = "message"},
     {.id = "call.incoming", .title = "来电", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true, .permission = "call"},
+    {.id = "call.answered", .title = "电话接通了", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true, .permission = "call"},
     {.id = "call.ended", .title = "通话结束", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true, .permission = "call"},
 };
 

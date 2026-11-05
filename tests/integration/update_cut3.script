@@ -1,0 +1,3 @@
+# The first boot of the new one: the power goes before it can prove itself.
+@5s      powercut
+@10s     end

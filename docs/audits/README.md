@@ -16,6 +16,8 @@
 | 2026-11-04 第十一轮（系统层，同上） | `claude/system-layer` c95f48c（第十轮处理之后） | [2026-11-04-codex-system-r2/TASK.md](2026-11-04-codex-system-r2/TASK.md) | [report.md](2026-11-04-codex-system-r2/report.md) | 已处理，见下 |
 | 2026-11-04 第十二轮（系统层，同上） | `claude/system-layer` 9cf64ad（第十一轮处理之后） | [2026-11-04-codex-system-r3/TASK.md](2026-11-04-codex-system-r3/TASK.md) | [report.md](2026-11-04-codex-system-r3/report.md) | **没有严重和高**；4 条中级已处理，见下 |
 | 2026-11-04 第十三轮（系统层，小范围复核） | `claude/system-layer` 99495a8（第十二轮处理之后，只看 `9cf64ad..99495a8`） | [2026-11-04-codex-system-r4/TASK.md](2026-11-04-codex-system-r4/TASK.md) | [report.md](2026-11-04-codex-system-r4/report.md) | **没有新问题**；AUD13-001～004 已修复；可以合入 main |
+| 2026-11-04 第十四轮（系统服务第 1 阶段，含架构和 AI 原生审视） | `claude/system-services` a81c1b8（范围 `1fbf510..a81c1b8`） | [2026-11-04-codex-services/TASK.md](2026-11-04-codex-services/TASK.md) | [report.md](2026-11-04-codex-services/report.md)、[findings.json](2026-11-04-codex-services/findings.json)、[verification.json](2026-11-04-codex-services/verification.json) | 已处理：5 高 6 中都修了 |
+| 2026-11-04 第十五轮（系统服务第 2 阶段，**中途被服务方的内容分类器切断，报告不完整**） | `claude/system-services` 88f107c（范围 `a81c1b8..88f107c`） | [2026-11-04-codex-services-s2/TASK.md](2026-11-04-codex-services-s2/TASK.md) | [报告](2026-11-04-codex-services-s2/report.md)、[问题](2026-11-04-codex-services-s2/findings.json)、[验证](2026-11-04-codex-services-s2/verification.json) | 高 7、中 1，已处理；没做完的部分放到下一轮 |
 | 2026-11-04 系统界面设计审计（Codex，gpt-6-astra，推理 max） | `claude/system-layer` cd486a2 和画布上的 65 个画板 | [2026-11-04-codex-ui/TASK.md](2026-11-04-codex-ui/TASK.md) | [report.md](2026-11-04-codex-ui/report.md)、[findings.json](2026-11-04-codex-ui/findings.json) | 明确的错已改；首版缺的流程等用户决定（见下） |
 | 2026-11-04 系统界面设计审计：产品负责人视角（Codex，gpt-6-astra，推理 max） | `claude/system-layer` 2d3323f 的 68 个画板，收尾核对了两个并行分支 | [2026-11-04-codex-jobs/TASK.md](2026-11-04-codex-jobs/TASK.md) | [report.md](2026-11-04-codex-jobs/report.md)、[findings.json](2026-11-04-codex-jobs/findings.json)、[early.md](2026-11-04-codex-jobs/early.md) | 已处理（见下） |
 | 2026-11-04 家庭中枢设计审查（Codex，gpt-6-astra，推理 max） | `claude/hub-design-8fd433` 6d10d95（设计 v0.1，含语音输入） | [2026-11-04-codex-hub-design/TASK.md](2026-11-04-codex-hub-design/TASK.md) | [report.md](2026-11-04-codex-hub-design/report.md)、[findings.json](2026-11-04-codex-hub-design/findings.json)、[experiments/](2026-11-04-codex-hub-design/experiments/README.md) | 严重 3、高 12、中 9、低 1；逐条核实都成立，设计改到 v0.2，处理见下 |
@@ -34,6 +36,33 @@
 
 审计报告回来后，逐条核实，再决定修复、记录或不处理，结果写回本表和相关文档。
 
+## 2026-11-04 第十五轮（系统服务第 2 阶段）：处理
+
+对象 88f107c。运行被服务方的内容分类器中途切断（以前也遇到过，把任务说明换成软件质量的说法就能跑完）。**已写出的 8 条都复现了、都是真问题：高 7、中 1。** 第十四轮修复的核查、架构和 AI 原生审视没写完，放到下一轮。逐条处理和反向对照见[设计文档 §15.3.1](../system/system-services-design.md)。
+
+## 2026-11-04 第十四轮（系统服务第 1 阶段）：处理
+
+（报告和任务说明里的 R-055、R-056、D-65、I-050、I-051 是当时的编号，合并 `claude/system-layer` 时这几个改成了 R-061、R-062、D-100、I-056、I-057，因为那边先用了。）
+
+对象 a81c1b8。**严重 0、高 5、中 6。** 普通构建和内存检查构建都是 72/72，这些问题是审计另写的探针复现的：通过既有测试不等于这些路径对。修复在 42f1f22，反向对照都做了（撤掉修复，对应的检查失败）。
+
+| 编号 | 级别 | 问题 | 处理 | 测试 |
+| --- | --- | --- | --- | --- |
+| AUD15-001 | 高 | 集合文件读不出来被当成没有，空集合打开后写入报了落盘，下次加载丢 | 已修复：`ink_storage_load` 区分两种情况，读不出来时打不开 | `integration-data`（日志、快照各一次） |
+| AUD15-002 | 高 | 删 `/family` 递归删掉 `.m` 下所有成员的文件 | 已修复：看得到的根不能删、不能移；删成员走单独的接口，卡在电脑上时不能删成员 | `integration-files`、`integration-people` |
+| AUD15-003 | 高 | 中文文件第一页就报读完了 | 已修复：按读到的字节数判断 | `integration-files` |
+| AUD15-004 | 中 | 大记录被截断成无效 JSON，还报成功 | 已修复：缓冲按记录上限，一页至少放下一条 | `integration-data`、`integration-ai-surface`（经中枢） |
+| AUD15-005 | 中 | 成员检查和取收件箱不是一步，通知进了另一个成员的收件箱 | 已修复：按当时定下的成员开；换了人也不告诉新成员的 AI | `integration-races` |
+| AUD15-006 | 中 | 同时结束和拉起打断，声音停不下来、状态不对 | 已修复：一次只有一个任务在应用，其他的只说“还有” | `integration-races` |
+| AUD15-007 | 中 | 确认后排队期间换成员，删到新成员的文件 | 已修复：调用可以绑定成员，换了人回“过时” | `integration-races` |
+| AUD15-008 | 高 | 改时区后闹钟不落盘，重启按旧时区响 | 已修复：改了就写，开机再按规则算一遍 | `integration-time-reboot` |
+| AUD15-009 | 高 | 测试发现不了能力丢了 Schema，文档却说能 | 已修复：解析中枢实际收到的清单，和“必须给的参数”表逐项比 | `integration-ai-surface`，审计的那个反向对照现在失败 |
+| AUD15-010 | 中 | 状态交不给存储还是停了应用、报成功 | 已修复：留在后台，关闭报失败，冻结下次再试 | `integration-apps` |
+| AUD15-011 | 中 | 锁屏且后台保持唤醒时不看电量 | 已修复：有上限地等 | `integration-notify` |
+
+没改、记在这里的（报告的架构节，都不是这一轮的缺陷）：`INK_SRC_CONFIRMED` 只说“人确认过”，原始来源（AI 发起）在结果事件里但不进记录；应用权限按“现在前台是谁”查，应用 `needs` 只查本机；事件信封没有成员归属；`ink_cap_emit` 给每个订阅者分配一份参数，内存不够时会丢事件。接真实中枢和第三方内容时再定。
+
+两个写法上的教训：反向对照之后没等一秒就重新构建，macOS 自带的 make 3.81 时间戳只到秒，改回去的源文件会被当成没变（对照的结果串到下一个，审计的 006、007 第一次就这样）；对照脚本现在改回去后等一秒并更新时间。把一个文件写进两个对照之间的测试也不行：`virtual_roots` 放得太靠前，撤掉保护后后面的测试先崩，看不到是哪条检查发现的，所以放到最后。
 
 
 ## 2026-11-04 系统界面设计审计（产品负责人视角）：处理

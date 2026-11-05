@@ -16,8 +16,11 @@
 
 #include "ink/probe.h"
 #include "ink/sys/app.h"
+#include "ink/sys/appreg.h"
 #include "ink/sys/cap.h"
+#include "ink/sys/crc.h"
 #include "ink/sys/font.h"
+#include "ink/sys/layout.h"
 #include "ink/sys/members.h"
 #include "ink/sys/storage.h"
 #include "ink/sys/text.h"
@@ -59,9 +62,12 @@ static struct {
     char member[16];         /* whose reading position this is (the member who opened the book) */
 } RD;
 
-/* Reading positions are kept per member (foundation §5.5, D-03): one small file per member and book. */
+/* Reading positions are kept per member (foundation §5.5, D-03): one small file per member and book,
+ * in the member's data area, named after the book's checksum (titles can be long). */
 static void pos_path(char *out, size_t cap, const char *member, const char *book) {
-    snprintf(out, cap, "/user/apps/reader-%s-%s.pos", member, book);
+    char name[32];
+    snprintf(name, sizeof name, "reader.%08x.pos", (unsigned)ink_crc32(0, book, strlen(book)));
+    if (ink_layout_member(out, cap, member, name) < 0 && cap) out[0] = 0;
 }
 
 /* ------------------------------------------------------------- library */
@@ -133,7 +139,7 @@ static void library_create(lv_obj_t *scr, void *arg) {
     }
 }
 
-const ink_activity_t ink_app_reader = {.name = "reader", .create = library_create};
+const ink_activity_t ink_app_reader = {.name = "reader", .app = "reader", .create = library_create};
 
 static void act_list(ink_call_t *c) {
     ink_receipt_t *rc = &c->rc;
@@ -247,7 +253,7 @@ static void save_cb(lv_timer_t *t) {
     char path[200], data[64];
     pos_path(path, sizeof path, RD.member, LIB.books[LIB.open].name);
     int n = snprintf(data, sizeof data, "offset=%u\n", (unsigned)RD.starts[RD.page]);
-    if (ink_storage_write_atomic(path, data, (size_t)n) == 0) RD.dirty_pos = false;
+    if (path[0] && ink_storage_write_atomic(path, data, (size_t)n) == 0) RD.dirty_pos = false;
 }
 
 static bool go_to(int target) {
@@ -450,7 +456,7 @@ static void book_create(lv_obj_t *scr, void *arg) {
     char path[200], data[64] = {0};
     pos_path(path, sizeof path, RD.member, LIB.books[LIB.open].name);
     unsigned saved = 0;
-    if (ink_storage_read(path, data, sizeof data - 1) > 0) sscanf(data, "offset=%u", &saved);
+    if (path[0] && ink_storage_read(path, data, sizeof data - 1) > 0) sscanf(data, "offset=%u", &saved);
     while (saved && find_page_start(RD.page + 1) >= 0 && RD.starts[RD.page + 1] <= saved) RD.page++;
     ink_probe_value("reader.restored_page", (double)RD.page);
 
@@ -511,12 +517,28 @@ static int book_snapshot(char *buf, size_t cap) {
 }
 
 const ink_activity_t ink_app_book = {.name = "book",
+                                     .app = "reader",
                                      .create = book_create,
                                      .destroy = book_destroy,
                                      .on_key = book_key,
                                      .on_swipe = book_swipe,
                                      .snapshot = book_snapshot,
                                      .settle = book_settle};
+
+/* What is being read: the card on home, and for the AI. */
+static int reader_card(int index, ink_card_t *out) {
+    if (index != 0 || !RD.text) return 0;
+    snprintf(out->id, sizeof out->id, "reading");
+    snprintf(out->title, sizeof out->title, "在读");
+    snprintf(out->text, sizeof out->text, "《%.60s》第 %d 页", LIB.books[LIB.open].name, RD.page + 1);
+    snprintf(out->action, sizeof out->action, "reader.open_book");
+    out->value = RD.page + 1;
+    out->has_value = true;
+    out->bookmark = true;
+    return 1;
+}
+
+const ink_app_def_t ink_appdef_reader = {.id = "reader", .title = "阅读", .entry = &ink_app_reader, .system_app = true, .child_ok = true, .card = reader_card};
 
 int ink_reader_actions_init(void) {
     int r = ink_cap_register(SHELF_ACTIONS, (int)(sizeof SHELF_ACTIONS / sizeof SHELF_ACTIONS[0]));

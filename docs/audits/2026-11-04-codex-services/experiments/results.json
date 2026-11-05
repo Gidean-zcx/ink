@@ -1,0 +1,197 @@
+{
+  "commit": "a81c1b8ed805c044bcc24a120c14bb8e3a4d011e",
+  "baseline": [
+    {
+      "build": "build-audit",
+      "configure_exit": 0,
+      "build_exit": 0,
+      "ctest_exit": 0,
+      "passed": 72,
+      "total": 72,
+      "seconds": 26.76,
+      "powercut_cases": 240,
+      "powercut_torn_cases": 233
+    },
+    {
+      "build": "build-audit-asan",
+      "configure_exit": 0,
+      "build_exit": 0,
+      "ctest_exit": 0,
+      "passed": 72,
+      "total": 72,
+      "seconds": 76.24,
+      "powercut_cases": 240,
+      "powercut_torn_cases": 233
+    }
+  ],
+  "probes": [
+    {
+      "probe": "data_probe",
+      "exit_code": 0,
+      "metrics": "build-audit/audit-probes/data_probe/run-vkbj86fz/metrics.json",
+      "test_finished": 1,
+      "test_fail": 0,
+      "warnings": [],
+      "observed": [
+        "AUDIT failed-load open_success=1 count=0",
+        "AUDIT new-write durable_ver=1",
+        "AUDIT reload value=old (expected new)",
+        "AUDIT data.get status=0 result_bytes=2109 valid_json=0"
+      ]
+    },
+    {
+      "probe": "file_probe",
+      "exit_code": 0,
+      "metrics": "build-audit/audit-probes/file_probe/run-l4c1kth0/metrics.json",
+      "test_finished": 1,
+      "test_fail": 0,
+      "warnings": [],
+      "observed": [
+        "AUDIT file.read status=0 next_offset=2046 end=1 source_bytes=3000",
+        "AUDIT before family delete private_read=0 hidden_in_list=1",
+        "AUDIT after family delete job_state=2 private_read=-3 (expected preserved)"
+      ]
+    },
+    {
+      "probe": "concurrency_probe",
+      "exit_code": 0,
+      "metrics": "build-audit/audit-probes/concurrency_probe/run-zku6ku9b/metrics.json",
+      "test_finished": 1,
+      "test_fail": 0,
+      "warnings": [],
+      "observed": [
+        "AUDIT notify.post result=0 recipient=owner owner_has=0 kid_has=1",
+        "AUDIT interrupt id=1 active=0 actual_ring=1 published=alarm",
+        "AUDIT confirmed owner deletion owner_stat=0 kid_stat=-3"
+      ]
+    },
+    {
+      "probe": "app_probe",
+      "exit_code": 0,
+      "metrics": "build-audit/audit-probes/app_probe/run-73ar0lhk/metrics.json",
+      "test_finished": 1,
+      "test_fail": 0,
+      "warnings": [],
+      "observed": [
+        "AUDIT app close_result=0 queue_before=8 restored=old-state expected=new-state"
+      ]
+    },
+    {
+      "probe": "power_probe",
+      "exit_code": 0,
+      "metrics": "build-audit/audit-probes/power_probe/run-a6b9rft7/metrics.json",
+      "test_finished": 1,
+      "test_fail": 0,
+      "warnings": [],
+      "observed": [
+        "AUDIT locked battery before=80 hardware=1 after75s=80 shutdowns=0 state=locked"
+      ]
+    },
+    {
+      "probe": "time_probe:write",
+      "exit_code": 0,
+      "metrics": "build-audit/audit-probes/time_probe/run-offe9zxz/metrics.json",
+      "test_finished": 1,
+      "test_fail": 0,
+      "warnings": [],
+      "observed": [
+        "AUDIT time before reboot zone=UTC next_local_hour=9 next_s=1793610000"
+      ]
+    },
+    {
+      "probe": "time_probe:read",
+      "exit_code": 0,
+      "metrics": "build-audit/audit-probes/time_probe/run-srvrqwu0/metrics.json",
+      "test_finished": 1,
+      "test_fail": 0,
+      "warnings": [],
+      "observed": [
+        "AUDIT time after reboot zone=UTC rule_hour=9 next_local_hour=1 next_s=1793581200"
+      ]
+    }
+  ],
+  "reverse_controls": [
+    {
+      "id": "snapshot-version",
+      "verdict": "成立（变异后失败）",
+      "evidence": {
+        "command": "python3 docs/audits/2026-11-04-codex-services/experiments/reverse_controls.py",
+        "runner_exit_code": 1,
+        "test.fail": 1,
+        "test.finished": 1,
+        "warnings": [
+          "nothing was lost with it (7, ver 49 of 49)"
+        ],
+        "mutation_source": "system/services/data/datastore.c",
+        "simulator_exit_code": 1
+      },
+      "note": "§15 结构化数据：快照也按逐帧递增版本筛选；测试确实发现折叠后记录丢失。"
+    },
+    {
+      "id": "child-family-write",
+      "verdict": "成立（变异后失败）",
+      "evidence": {
+        "command": "python3 docs/audits/2026-11-04-codex-services/experiments/reverse_controls.py",
+        "runner_exit_code": 1,
+        "test.fail": 20,
+        "test.finished": 1,
+        "warnings": [
+          "but not written by a child",
+          "not even appended to",
+          "nor removed or moved out",
+          "nor by a job"
+        ],
+        "mutation_source": "system/services/file/file_service.c",
+        "simulator_exit_code": 1
+      },
+      "note": "§15 文件权限：首批失败就是孩子写、追加、删除家庭文件；后续失败包含这个变异造成的连锁影响，不计为独立检测能力。"
+    },
+    {
+      "id": "confirm-source",
+      "verdict": "成立（变异后失败）",
+      "evidence": {
+        "command": "python3 docs/audits/2026-11-04-codex-services/experiments/reverse_controls.py",
+        "runner_exit_code": 1,
+        "test.fail": 2,
+        "test.finished": 1,
+        "warnings": [
+          "nor through the C interface",
+          "so it still waits"
+        ],
+        "mutation_source": "system/policy/confirm.c",
+        "simulator_exit_code": 1
+      },
+      "note": "§15 确认：C 接口绕过来源检查被检测，原测试其余断言保持不变。"
+    },
+    {
+      "id": "hidden-ai-tool",
+      "verdict": "成立（变异后失败）",
+      "evidence": {
+        "command": "python3 docs/audits/2026-11-04-codex-services/experiments/reverse_controls.py",
+        "runner_exit_code": 1,
+        "test.fail": 1,
+        "test.finished": 1,
+        "warnings": [
+          "notify.post is in the tool list the hub gets"
+        ],
+        "mutation_source": "system/services/notify/notify_caps.c",
+        "simulator_exit_code": 1
+      },
+      "note": "§15 能力开放：对 notify.post 加 OWNER 可见范围后，真实 tools/list 中缺少此工具，被检测。"
+    },
+    {
+      "id": "missing-input-schema",
+      "verdict": "不成立（变异后仍通过）",
+      "evidence": {
+        "command": "python3 docs/audits/2026-11-04-codex-services/experiments/reverse_controls.py",
+        "runner_exit_code": 0,
+        "test.fail": 0,
+        "test.finished": 1,
+        "warnings": [],
+        "mutation_source": "system/services/data/data_caps.c",
+        "simulator_exit_code": 0
+      },
+      "note": "额外核验 §1.3 声称的 Schema 保证；删除 data.get input 后仍通过，详见 AUD15-009。"
+    }
+  ]
+}

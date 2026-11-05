@@ -103,6 +103,9 @@ add_library(ink_port_sim STATIC
   ports/sim/hal/hal_display_sim.c
   ports/sim/hal/hal_input_sim.c
   ports/sim/hal/hal_storage_sim.c
+  ports/sim/hal/hal_usb_sim.c
+  ports/sim/hal/hal_bt_sim.c
+  ports/sim/hal/hal_ota_sim.c
   ports/sim/hal/hal_power_sim.c
   ports/sim/hal/hal_assets_sim.c
   ports/sim/hal/hal_net_sim.c
@@ -166,14 +169,51 @@ add_library(ink_system STATIC
   system/services/audio/audio_service.c
   system/services/res/exec.c
   system/services/res/res.c
+  system/services/res/svc.c
+  system/services/res/task.c
+  system/services/data/datastore.c
+  system/services/data/data_caps.c
+  system/services/file/file_service.c
+  system/services/file/file_caps.c
+  system/services/time/lunar.c
+  system/services/time/time_service.c
+  system/services/update/update_service.c
+  system/ui/shell/update_card.c
+  system/ui/shell/power_menu.c
+  system/ui/shell/off_picture.c
+  system/services/time/time_caps.c
+  system/services/notify/notify_service.c
+  system/services/notify/notify_caps.c
+  system/services/notify/interrupt.c
+  system/services/net/wifi.c
+  system/util/sha256.c
+  system/ui/shell/pinpad.c
+  system/ui/shell/member_gate.c
+  system/services/audio/ogg.c
+  system/services/audio/media_service.c
+  system/services/bt/bt_service.c
+  system/services/text/text_service.c
+  system/services/text/pinyin.c
+  system/services/text/clipboard.c
+  system/services/text/text_caps.c
+  system/services/text/voice_input.c
+  system/ui/textfield.c
+  system/ui/shell/keyboard.c
+  system/ui/app_registry.c
+  system/ui/shell/card.c
+  system/ui/shell/interrupt_card.c
+  system/ui/shell/confirm_card.c
   system/policy/cap.c
   system/policy/members.c
   system/policy/settings.c
+  system/policy/confirm.c
   system/policy/state.c
   system/policy/system_actions.c
   system/policy/watch.c
   system/util/ink_args.c
+  system/util/ink_crc.c
   system/util/ink_json.c
+  system/util/layout.c
   system/text/ink_font.c
   system/text/linebreak.c
   system/text/layout.c
@@ -230,7 +270,10 @@ add_custom_command(OUTPUT ${INK_TEST_CONTENT}/books/测试长书.txt
   COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/tests/fixtures/content ${INK_TEST_CONTENT}
   COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/testdata/make_long_book.py
           ${CMAKE_SOURCE_DIR}/tests/fixtures/content/books/星星邮差.txt ${INK_TEST_CONTENT}/books/测试长书.txt 40
+  COMMAND ${CMAKE_COMMAND} -E make_directory ${INK_TEST_CONTENT}/.system/ime
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/imedict/imedict.py ${CMAKE_SOURCE_DIR}/tests/fixtures/ime/mini.tsv ${INK_TEST_CONTENT}/.system/ime/base.ikd
   DEPENDS ${CMAKE_SOURCE_DIR}/tools/testdata/make_long_book.py ${CMAKE_SOURCE_DIR}/tests/fixtures/content/books/星星邮差.txt
+          ${CMAKE_SOURCE_DIR}/tools/imedict/imedict.py ${CMAKE_SOURCE_DIR}/tests/fixtures/ime/mini.tsv
   COMMENT "test content: long book")
 add_custom_target(ink_test_content ALL DEPENDS ${INK_TEST_CONTENT}/books/测试长书.txt)
 
@@ -367,6 +410,7 @@ target_link_libraries(pools-test PRIVATE ink_platform ink_tlsf)
 target_compile_options(pools-test PRIVATE ${INK_WARN})
 add_test(NAME unit-pools COMMAND pools-test)
 add_test(NAME sdk-boundary COMMAND ${CMAKE_COMMAND} -DSRC=${CMAKE_SOURCE_DIR} -P ${CMAKE_SOURCE_DIR}/tests/sdk_boundary.cmake)
+add_test(NAME layering COMMAND ${CMAKE_COMMAND} -DSRC=${CMAKE_SOURCE_DIR} -P ${CMAKE_SOURCE_DIR}/tests/layering.cmake)
 add_executable(pqbn-clock-test tests/unit/pqbn_clock_test.c)
 target_link_libraries(pqbn-clock-test PRIVATE ink_drivers)
 target_compile_options(pqbn-clock-test PRIVATE ${INK_WARN})
@@ -411,6 +455,56 @@ add_test(NAME integration-net-auto
           --budget ${CMAKE_SOURCE_DIR}/tests/integration/net_auto.budget.json
           --script ${CMAKE_SOURCE_DIR}/tests/integration/net_auto.script
           --out ${CMAKE_BINARY_DIR}/test-out/net_auto --quiet --no-random-outages)
+# The structured data store: records, pages, members, limits, the capabilities (tests/integration/data.c).
+add_executable(sim-data simulator/runtime/sim_main.c tests/integration/data.c)
+target_link_libraries(sim-data PRIVATE ink_system ink_port_sim)
+target_compile_options(sim-data PRIVATE ${INK_WARN} -Wno-format-truncation) # a message cut short does no harm
+add_test(NAME integration-data
+  COMMAND sim-data --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+          --budget ${CMAKE_SOURCE_DIR}/tests/integration/data.budget.json
+          --script ${CMAKE_SOURCE_DIR}/tests/integration/data.script
+          --out ${CMAKE_BINARY_DIR}/test-out/data --quiet --no-random-outages)
+# The file service: paths, permissions, copy and delete jobs, the USB disk (tests/integration/files.c).
+configure_file(tests/integration/files.script.in ${CMAKE_BINARY_DIR}/test-out/files.script @ONLY)
+add_executable(sim-files simulator/runtime/sim_main.c tests/integration/files.c)
+target_link_libraries(sim-files PRIVATE ink_system ink_port_sim)
+target_compile_options(sim-files PRIVATE ${INK_WARN} -Wno-format-truncation) # a message cut short does no harm
+add_test(NAME integration-files
+  COMMAND sim-files --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+          --budget ${CMAKE_SOURCE_DIR}/tests/integration/files.budget.json
+          --script ${CMAKE_BINARY_DIR}/test-out/files.script
+          --out ${CMAKE_BINARY_DIR}/test-out/files --quiet --no-random-outages)
+# The time service: the clock, zones, alarms and reminders, waking from sleep (tests/integration/timesvc.c).
+add_executable(sim-time simulator/runtime/sim_main.c tests/integration/timesvc.c)
+target_link_libraries(sim-time PRIVATE ink_system ink_port_sim)
+target_compile_options(sim-time PRIVATE ${INK_WARN} -Wno-format-truncation) # a message cut short does no harm
+foreach(v main rtc_lost line_low)
+  add_test(NAME integration-time-${v}
+    COMMAND ${CMAKE_COMMAND} -E env INK_TIME_PHASE=${v}
+            $<TARGET_FILE:sim-time> --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+            --budget ${CMAKE_SOURCE_DIR}/tests/integration/timesvc_${v}.budget.json
+            --script ${CMAKE_SOURCE_DIR}/tests/integration/timesvc_${v}.script
+            --out ${CMAKE_BINARY_DIR}/test-out/time-${v} --quiet --no-random-outages)
+endforeach()
+# Alarms across a power-off: what came due is reported missed, what is ahead still rings.
+add_test(NAME integration-time-reboot
+  COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:sim-time> -DPROFILE=${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+          -DOUT=${CMAKE_BINARY_DIR}/test-out/time_reboot -DSRC=${CMAKE_SOURCE_DIR}/tests/integration
+          -P ${CMAKE_SOURCE_DIR}/tests/integration/timesvc_reboot.cmake)
+add_executable(sha256-test tests/unit/sha256_test.c system/util/sha256.c)
+target_include_directories(sha256-test PRIVATE system/include platform/include)
+target_compile_options(sha256-test PRIVATE ${INK_WARN})
+add_test(NAME unit-sha256 COMMAND sha256-test)
+add_executable(lunar-test tests/unit/lunar_test.c system/services/time/lunar.c)
+target_include_directories(lunar-test PRIVATE system/include)
+target_compile_options(lunar-test PRIVATE ${INK_WARN})
+add_test(NAME unit-lunar COMMAND lunar-test ${CMAKE_SOURCE_DIR}/tests/fixtures/lunar/chinese_years_apple.txt)
+# Power cut at every flash write of a run that adds, replaces, deletes and folds: nothing durable is lost.
+add_test(NAME integration-data-powercut
+  COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:sim-data> -DPROFILE=${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+          -DOUT=${CMAKE_BINARY_DIR}/test-out/data_powercut -DSRC=${CMAKE_SOURCE_DIR}/tests/integration
+          -P ${CMAKE_SOURCE_DIR}/tests/integration/data_powercut.cmake)
+set_tests_properties(integration-data-powercut PROPERTIES TIMEOUT 300)
 add_test(NAME determinism
   COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:sim-selftest>
           -DPROFILE=${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
@@ -445,6 +539,149 @@ if(INK_HAVE_FONTS)
   ink_scenario(ai_ask metalio-plus)
   ink_scenario(ai_turn_end metalio-plus)
   ink_scenario(ai_turn_lost metalio-plus)
+  # Wi-Fi, members and the PIN (tests/integration/people.c).
+  add_executable(sim-people simulator/runtime/sim_main.c tests/integration/people.c tests/integration/people_table.c)
+  target_link_libraries(sim-people PRIVATE ink_apps ink_system ink_port_sim)
+  target_compile_options(sim-people PRIVATE ${INK_WARN} -Wno-format-truncation)
+  add_test(NAME integration-people
+    COMMAND sim-people --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+            --budget ${CMAKE_SOURCE_DIR}/tests/integration/people.budget.json
+            --script ${CMAKE_SOURCE_DIR}/tests/integration/people.script
+            --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+            --out ${CMAKE_BINARY_DIR}/test-out/people --quiet --no-random-outages)
+  add_test(NAME integration-people-reset
+    COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:sim-people> -DPROFILE=${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+            -DASSETS=${INK_ASSETS_DIR} -DCONTENT=${INK_TEST_CONTENT}
+            -DOUT=${CMAKE_BINARY_DIR}/test-out/people-reset -DSRC=${CMAKE_SOURCE_DIR}/tests/integration
+            -P ${CMAKE_SOURCE_DIR}/tests/integration/people_reset.cmake)
+  # Audio focus, media, recording, the headset (tests/integration/media.c).
+  add_executable(sim-media simulator/runtime/sim_main.c tests/integration/media.c)
+  target_link_libraries(sim-media PRIVATE ink_apps ink_system ink_port_sim)
+  target_compile_options(sim-media PRIVATE ${INK_WARN} -Wno-format-truncation) # a message cut short does no harm
+  add_test(NAME integration-media
+    COMMAND sim-media --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+            --budget ${CMAKE_SOURCE_DIR}/tests/integration/media.budget.json
+            --script ${CMAKE_SOURCE_DIR}/tests/integration/media.script
+            --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+            --out ${CMAKE_BINARY_DIR}/test-out/media --quiet --no-random-outages)
+  # Text input and the clipboard (tests/integration/textinput.c).
+  add_executable(sim-textinput simulator/runtime/sim_main.c tests/integration/textinput.c)
+  target_link_libraries(sim-textinput PRIVATE ink_apps ink_system ink_port_sim)
+  target_compile_options(sim-textinput PRIVATE ${INK_WARN} -Wno-format-truncation) # a message cut short does no harm
+  foreach(v main nocard baddict)
+    add_test(NAME integration-text-${v}
+      COMMAND ${CMAKE_COMMAND} -E env INK_TEXT_PHASE=${v}
+              $<TARGET_FILE:sim-textinput> --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+              --budget ${CMAKE_SOURCE_DIR}/tests/integration/textinput.budget.json
+              --script ${CMAKE_SOURCE_DIR}/tests/integration/textinput_${v}.script
+              --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+              --out ${CMAKE_BINARY_DIR}/test-out/text-${v} --quiet --no-random-outages)
+  endforeach()
+  # What the AI can reach, against the table in the design (tests/integration/ai_surface.c).
+  # System upgrades, boot after boot: over the air, from the card, what goes wrong with each.
+  add_executable(sim-update simulator/runtime/sim_main.c tests/integration/update.c)
+  target_link_libraries(sim-update PRIVATE ink_apps ink_system ink_port_sim)
+  target_compile_options(sim-update PRIVATE ${INK_WARN} -Wno-format-truncation) # a message cut short does no harm
+  add_test(NAME integration-update
+    COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:sim-update> -DPROFILE=${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+            -DASSETS=${INK_ASSETS_DIR} -DCONTENT=${INK_TEST_CONTENT} -DOUT=${CMAKE_BINARY_DIR}/test-out/update
+            -DSRC=${CMAKE_SOURCE_DIR}/tests/integration -DPY=${Python3_EXECUTABLE} -DTOOL=${CMAKE_SOURCE_DIR}/tools/inkfw/make_inkfw.py
+            -P ${CMAKE_SOURCE_DIR}/tests/integration/update.cmake)
+
+  # The power key held down: the power menu, and what it leaves alone.
+  add_executable(sim-power-menu simulator/runtime/sim_main.c tests/integration/power_menu.c)
+  target_link_libraries(sim-power-menu PRIVATE ink_apps ink_system ink_port_sim)
+  target_compile_options(sim-power-menu PRIVATE ${INK_WARN} -Wno-format-truncation) # a message cut short does no harm
+  add_test(NAME integration-power-menu
+    COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:sim-power-menu> -DPROFILE=${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+            -DASSETS=${INK_ASSETS_DIR} -DCONTENT=${INK_TEST_CONTENT} -DOUT=${CMAKE_BINARY_DIR}/test-out/power_menu
+            -DSRC=${CMAKE_SOURCE_DIR}/tests/integration -P ${CMAKE_SOURCE_DIR}/tests/integration/power_menu.cmake)
+
+  # Dictation: the input method's microphone, with the hub's stand-in for asr.stream.
+  add_executable(sim-dictation simulator/runtime/sim_main.c tests/integration/dictation.c)
+  target_link_libraries(sim-dictation PRIVATE ink_apps ink_system ink_port_sim)
+  target_compile_options(sim-dictation PRIVATE ${INK_WARN} -Wno-format-truncation) # a message cut short does no harm
+  add_test(NAME integration-dictation
+    COMMAND sim-dictation --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+            --budget ${CMAKE_SOURCE_DIR}/tests/integration/dictation.budget.json
+            --script ${CMAKE_SOURCE_DIR}/tests/integration/dictation.script
+            --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+            --out ${CMAKE_BINARY_DIR}/test-out/dictation --quiet --no-random-outages)
+  add_test(NAME integration-dictation-handsfree
+    COMMAND ${CMAKE_COMMAND} -E env INK_DICTATION_PHASE=handsfree
+            $<TARGET_FILE:sim-dictation> --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus-handsfree.json
+            --budget ${CMAKE_SOURCE_DIR}/tests/integration/dictation.budget.json
+            --script ${CMAKE_SOURCE_DIR}/tests/integration/dictation.script
+            --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+            --out ${CMAKE_BINARY_DIR}/test-out/dictation-handsfree --quiet --no-random-outages)
+
+  # Hands-free listening, all three settings, on the profile with the voice front end.
+  add_executable(sim-listening simulator/runtime/sim_main.c tests/integration/listening.c)
+  target_link_libraries(sim-listening PRIVATE ink_apps ink_system ink_port_sim)
+  target_compile_options(sim-listening PRIVATE ${INK_WARN} -Wno-format-truncation) # a message cut short does no harm
+  add_test(NAME integration-listening
+    COMMAND sim-listening --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus-handsfree.json
+            --budget ${CMAKE_SOURCE_DIR}/tests/integration/listening.budget.json
+            --script ${CMAKE_SOURCE_DIR}/tests/integration/listening.script
+            --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+            --out ${CMAKE_BINARY_DIR}/test-out/listening --quiet --no-random-outages)
+
+  # Two tasks at the worst moment: the services built with that moment in them, instead of the library's.
+  add_executable(sim-races simulator/runtime/sim_main.c tests/integration/races.c tests/integration/races_notify.c tests/integration/races_interrupt.c)
+  target_link_libraries(sim-races PRIVATE ink_apps ink_system ink_port_sim)
+  target_compile_options(sim-races PRIVATE ${INK_WARN} -Wno-format-truncation) # a message cut short does no harm
+  add_test(NAME integration-races
+    COMMAND sim-races --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+            --budget ${CMAKE_SOURCE_DIR}/tests/integration/races.budget.json
+            --script ${CMAKE_SOURCE_DIR}/tests/integration/races.script
+            --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+            --out ${CMAKE_BINARY_DIR}/test-out/races --quiet --no-random-outages)
+
+  add_executable(sim-ai-surface simulator/runtime/sim_main.c tests/integration/ai_surface.c)
+  target_link_libraries(sim-ai-surface PRIVATE ink_apps ink_system ink_port_sim)
+  target_compile_options(sim-ai-surface PRIVATE ${INK_WARN} -Wno-format-truncation) # a message cut short does no harm
+  add_test(NAME integration-ai-surface
+    COMMAND sim-ai-surface --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+            --budget ${CMAKE_SOURCE_DIR}/tests/integration/ai_surface.budget.json
+            --script ${CMAKE_SOURCE_DIR}/tests/integration/ai_surface.script
+            --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+            --out ${CMAKE_BINARY_DIR}/test-out/ai_surface --quiet --no-random-outages)
+  # The app directory and lifecycle (tests/integration/apps.c).
+  add_executable(sim-apps simulator/runtime/sim_main.c tests/integration/apps.c)
+  target_link_libraries(sim-apps PRIVATE ink_apps ink_system ink_port_sim)
+  target_compile_options(sim-apps PRIVATE ${INK_WARN} -Wno-format-truncation) # a message cut short does no harm
+  add_test(NAME integration-apps
+    COMMAND sim-apps --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+            --budget ${CMAKE_SOURCE_DIR}/tests/integration/apps.budget.json
+            --script ${CMAKE_SOURCE_DIR}/tests/integration/apps.script
+            --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+            --out ${CMAKE_BINARY_DIR}/test-out/apps --quiet --no-random-outages)
+  # The confirmation card: what the AI asks for waits for a person (tests/integration/confirm.c).
+  add_executable(sim-confirm simulator/runtime/sim_main.c tests/integration/confirm.c)
+  target_link_libraries(sim-confirm PRIVATE ink_apps ink_system ink_port_sim)
+  target_compile_options(sim-confirm PRIVATE ${INK_WARN} -Wno-format-truncation) # a message cut short does no harm
+  add_test(NAME integration-confirm
+    COMMAND sim-confirm --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+            --budget ${CMAKE_SOURCE_DIR}/tests/integration/confirm.budget.json
+            --script ${CMAKE_SOURCE_DIR}/tests/integration/confirm.script
+            --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+            --out ${CMAKE_BINARY_DIR}/test-out/confirm --quiet --no-random-outages)
+  # Notifications and interruptions, on the whole product (tests/integration/notify.c).
+  add_executable(sim-notify simulator/runtime/sim_main.c tests/integration/notify.c)
+  target_link_libraries(sim-notify PRIVATE ink_apps ink_system ink_port_sim)
+  target_compile_options(sim-notify PRIVATE ${INK_WARN} -Wno-format-truncation) # a message cut short does no harm
+  add_test(NAME integration-notify
+    COMMAND sim-notify --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+            --budget ${CMAKE_SOURCE_DIR}/tests/integration/notify.budget.json
+            --script ${CMAKE_SOURCE_DIR}/tests/integration/notify.script
+            --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+            --out ${CMAKE_BINARY_DIR}/test-out/notify --quiet --no-random-outages)
+  # A nearly empty battery writes what waits and powers off; it is there at the next boot.
+  add_test(NAME integration-notify-lowbat
+    COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:sim-notify> -DPROFILE=${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+            -DASSETS=${INK_ASSETS_DIR} -DCONTENT=${INK_TEST_CONTENT}
+            -DOUT=${CMAKE_BINARY_DIR}/test-out/notify-lowbat -DSRC=${CMAKE_SOURCE_DIR}/tests/integration
+            -P ${CMAKE_SOURCE_DIR}/tests/integration/notify_lowbat.cmake)
   # A voice turn's answer arriving while the next turn starts (tests/integration/ai_race.c): the product, booted.
   add_executable(sim-ai-race simulator/runtime/sim_main.c tests/integration/ai_race.c)
   target_link_libraries(sim-ai-race PRIVATE ink_apps ink_system ink_port_sim)
@@ -473,6 +710,15 @@ if(INK_HAVE_FONTS)
   ink_scenario(voice_listen_policy metalio-plus-handsfree)
   ink_scenario(ai_offline_intent metalio-plus-handsfree)
   # the microphone cannot start (the expander, and with it the audio chip, not set up): AUD5-003
+  # The spoken answer over a pessimistic LTE link does not depend on one lucky run: seeds where a shorter prebuffer cut into it.
+  foreach(seed 26 29)
+    add_test(NAME scenario-ai_ask-metalio-plus-seed-${seed}
+      COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+              --script ${CMAKE_SOURCE_DIR}/tests/scenarios/ai_ask.script
+              --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/ai_ask.budget.json
+              --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT} --seed ${seed}
+              --out ${CMAKE_BINARY_DIR}/test-out/ai_ask-seed-${seed} --quiet --no-random-outages)
+  endforeach()
   add_test(NAME scenario-ai_mic_unavailable-metalio-plus
     COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/ai_mic_unavailable.script

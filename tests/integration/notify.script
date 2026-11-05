@@ -1,0 +1,4 @@
+# Environment for the notification checks: a card for texts and calls, the rest comes from the test itself.
+@0       sim   external voice
++0       cell  on -90
+@8000s   end

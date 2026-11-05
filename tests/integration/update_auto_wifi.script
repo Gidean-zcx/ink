@@ -1,0 +1,3 @@
+# On Wi-Fi it fetches by itself, when that was asked for.
+@0       net   wifi
+@300s    end

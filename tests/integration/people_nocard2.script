@@ -1,0 +1,4 @@
+# No card at this boot; it is put in while the device runs.
+@0       sd remove
+@8s      sd insert
+@60s     end

@@ -34,6 +34,7 @@ typedef enum {
     INK_NEED_AUDIO = 0, /* playing or recording: the chip stays awake (also while locked) */
     INK_NEED_NET,       /* a transfer that must finish (AI turn, sync, download): active (full clock), no sleep until done */
     INK_NEED_NO_LOCK,   /* no automatic locking (USB disk, upgrade screen) */
+    INK_NEED_AWAKE,     /* the chip stays awake, also when locked (USB disk, an interrupt on screen, an upgrade) */
     INK_NEED_COUNT
 } ink_power_need_t;
 
@@ -46,10 +47,20 @@ void ink_power_activity(uint64_t t_us);
 void ink_power_hold(ink_power_need_t need);
 void ink_power_release(ink_power_need_t need);
 
+/** The last input. */
+uint64_t ink_power_last_activity(void);
+
 /** Lock now (power key short press). */
 void ink_power_lock(void);
 /** A wake key was pressed at t_us while locked: unlock. Returns false if it was not locked. */
 bool ink_power_unlock(uint64_t t_us);
+
+/** The next time something is due (alarms): a sleep slice ends there, and the chip does not sleep past it until
+ *  the owner moves it, for a few seconds at most. 0 = nothing. Any task. */
+void ink_power_wake_at(uint64_t t_us);
+
+/** The system is up, whoever listens for `battery.low` is listening: a low battery is acted on from now on. */
+void ink_power_battery_policy_start(void);
 
 /** State changes, called in the power task after the change. Up to 8 listeners. */
 typedef void (*ink_power_fn)(void *ctx, ink_power_state_t from, ink_power_state_t to, uint64_t cause_us);
@@ -59,6 +70,9 @@ int ink_power_subscribe(ink_power_fn fn, void *ctx);
  *  mark (asked from the power task: cheap, non-blocking). Up to 6. The panel (refreshes queued
  *  or playing) and the flash (writes queued) are always checked. */
 int ink_power_add_busy_check(bool (*busy)(void));
+/** What to leave on the panel just before the power goes, what waited to be written being written: it returns when that is done,
+ *  or it gave up. why: "shutdown" or "battery". One. */
+void ink_power_set_off_picture(void (*fn)(const char *why));
 
 #ifdef __cplusplus
 }

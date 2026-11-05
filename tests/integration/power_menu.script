@@ -1,0 +1,2 @@
+# The power key held down; a run that turns the device off ends there.
+@200s    end

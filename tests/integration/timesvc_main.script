@@ -1,0 +1,4 @@
+# Environment for the time service checks: cards so that the hub link works over 4G, the hub's clock 100 s off.
+@0       sim   external data
++0       hub-clock 100
+@1000s   end

@@ -1,0 +1,5 @@
+# The networks around, and nothing to reach over LTE; the test takes it from there.
+@0       ap add 家里 -55 hunter2hunter2
++0       ap add 邻居 -80 another-password
++0       ap add 咖啡店 -70
+@3000s   end

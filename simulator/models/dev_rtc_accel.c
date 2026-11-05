@@ -41,8 +41,10 @@ static int64_t rtc_now_s(void) { return g_sim.wall_start_us / 1000000 + (int64_t
 static uint8_t bcd(int v) { return (uint8_t)(((v / 10) << 4) | (v % 10)); }
 static int dec(uint8_t v) { return (v >> 4) * 10 + (v & 0x0F); }
 
+static bool g_line_stuck_low; /* the factory log reads P16 low all the time (N2-1): a board variant, unexplained */
+
 static void rtc_int(void) { /* INT low while AF and AIE: TCA9555 P16 */
-    bool low = (R.reg[0x01] & 0x08) && (R.reg[0x01] & 0x02);
+    bool low = g_line_stuck_low || ((R.reg[0x01] & 0x08) && (R.reg[0x01] & 0x02));
     if (sim_board_present()) sim_tca_input(1, MB_P1_RTC_INT, low ? 0 : MB_P1_RTC_INT);
 }
 
@@ -130,6 +132,10 @@ static int rtc_xfer(void *state, const uint8_t *w, size_t wlen, uint8_t *r, size
 }
 
 void sim_rtc_lose_time(void) { R.vl = true; } /* ISR (script): the backup supply failed */
+void sim_rtc_line_stuck_low(void) { /* ISR (script) */
+    g_line_stuck_low = true;
+    rtc_int();
+}
 int64_t sim_rtc_now_s(void) { return rtc_now_s(); }
 unsigned sim_rtc_alarms(void) { return R.alarms; }
 

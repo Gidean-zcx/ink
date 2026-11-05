@@ -1,0 +1,3 @@
+# A family with data on the device; the test resets it. A computer for a moment first: the card lent, no reset.
+@2s      usb plug
+@400s    end

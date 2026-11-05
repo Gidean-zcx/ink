@@ -25,7 +25,16 @@
 
 #define STACK_PATTERN 0xA5u
 #define MIN_HOST_STACK (64u * 1024u)
+#ifdef __has_feature
+#if __has_feature(address_sanitizer)
+#define VTK_ASAN 1
+#endif
+#endif
+#if defined(__SANITIZE_ADDRESS__) || defined(VTK_ASAN)
+#define KERNEL_ZONE (256u * 1024u) /* ASan's pthread_create takes more than 64 KiB of stack on macOS, when a task creates a task */
+#else
 #define KERNEL_ZONE (64u * 1024u) /* host stack below each task's own zone, where the kernel runs (in_kernel_zone) */
+#endif
 
 struct vtk_task {
     int id;
@@ -783,8 +792,9 @@ int vtk_current_core(void) { return tls_self && !K.in_isr ? tls_self->core : -1;
 const char *vtk_task_name(const vtk_task_t *t) { return t ? t->name : "?"; }
 int vtk_task_count(void) { return K.ntasks; }
 
-/* Host bytes the task's own code has used below its entry point (pattern scan of its own zone). */
-static size_t own_stack_used(const vtk_task_t *t) {
+/* Host bytes the task's own code has used below its entry point (pattern scan of its own zone). It reads a stack that
+ * may still be in use: a sanitizer's marks on it are not for this. */
+__attribute__((no_sanitize("address"))) static size_t own_stack_used(const vtk_task_t *t) {
     if (!t->entry) return 0; /* never ran */
     const uint8_t *p = t->own_lo;
     size_t n = (size_t)(t->entry - p), i = 0;

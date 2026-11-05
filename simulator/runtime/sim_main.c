@@ -116,6 +116,7 @@ static int finalize(const char *status) {
     sim_audio_report();
     sim_assets_report();
     sim_power_report();
+    sim_usb_report();
     if (sim_board_present()) sim_tca9555_report();
     sim_trace_close();
     char path[600];
@@ -198,6 +199,7 @@ int sim_main(int argc, char **argv) {
         }
         else if (!strcmp(a, "--panel-vcom-mv")) { NEEDV(); g_sim.panel_vcom_mv = (unsigned)strtoul(v, NULL, 0); }
         else if (!strcmp(a, "--reset-reason")) { NEEDV(); g_sim.reset_reason = v; }
+        else if (!strcmp(a, "--wall-start")) { NEEDV(); g_sim.wall_start_us = strtoll(v, NULL, 0) * 1000000ll; } /* the RTC's time at boot, Unix seconds */
         else if (!strcmp(a, "--trace")) g_sim.trace = true;
         else if (!strcmp(a, "--frames")) g_sim.frames = true;
         else if (!strcmp(a, "--quiet")) g_sim.quiet = true;

@@ -1,0 +1,8 @@
+{
+  "_doc": "Notifications and interruptions (tests/integration/notify.c): every CHECK must pass and nothing may panic. Stack and memory warnings count: an alarm's path runs on the timer task, the battery's on the power task.",
+  "test.fail": {"max": 0, "optional": true, "why": "a CHECK failed (see warnings)"},
+  "test.finished": {"min": 1, "max": 1, "why": "all the checks ran before the script ended"},
+  "ui.touch_under_overlay_dropped": {"min": 1, "why": "a touch that began before the card came was dropped"},
+  "panic.count": {"max": 0, "optional": true},
+  "warnings.count": {"max": 0, "optional": true}
+}
