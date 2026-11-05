@@ -1,0 +1,92 @@
+[
+  {
+    "id": "AUD17-001",
+    "verdict": "已修复",
+    "evidence": [
+      "【复现】experiments/ctest.log：8/8 通过",
+      "【代码核查】报告待补充精确位置"
+    ],
+    "note": "integration-update resume2 的取消、立即重启下载与最终完整包通过；dl_piece 独立引用与身份比较已核查，待内存检查。"
+  },
+  {
+    "id": "AUD17-002",
+    "verdict": "部分修复",
+    "evidence": [
+      "【复现】experiments/ctest.log：8/8 通过",
+      "【代码核查】报告待补充精确位置"
+    ],
+    "note": "10 层深目录已清完（remaining=-3）；根目录 open 失败仍误报成功，见 AUD18-101。"
+  },
+  {
+    "id": "AUD16-004",
+    "verdict": "已修复",
+    "evidence": [
+      "【复现】experiments/ctest.log：8/8 通过",
+      "【代码核查】报告待补充精确位置"
+    ],
+    "note": "integration-update rbad/rother/rgood/rdone 通过；write_resources 重新验证头、产品、运行版本和所有段哈希，逐段写入再验哈希。"
+  },
+  {
+    "id": "AUD16-005",
+    "verdict": "已修复",
+    "evidence": [
+      "【复现】experiments/ctest.log：8/8 通过",
+      "【代码核查】报告待补充精确位置"
+    ],
+    "note": "integration-update rfail1/rfail2 通过；HAL 返回失败保留 state/path/res_done_section，失败通知存在。"
+  },
+  {
+    "id": "AUD16-006",
+    "verdict": "部分修复",
+    "evidence": [
+      "【复现】experiments/ctest.log：8/8 通过",
+      "【代码核查】报告待补充精确位置"
+    ],
+    "note": "代码已改为 USB 拒绝、先落记号、重启前置清理、缺卡持久等待；异常目录打开仍可失实完成，见 AUD18-101。"
+  },
+  {
+    "id": "AUD15-001",
+    "verdict": "已修复",
+    "evidence": [
+      "【复现】experiments/ctest.log：8/8 通过",
+      "【代码核查】报告待补充精确位置"
+    ],
+    "note": "integration-data 中日志和快照加载失败均拒绝打开；ink_storage_load 与 load 区分 LOAD_FAILED。"
+  },
+  {
+    "id": "AUD15-002",
+    "verdict": "已修复",
+    "evidence": [
+      "【复现】experiments/ctest.log：8/8 通过",
+      "【代码核查】报告待补充精确位置"
+    ],
+    "note": "integration-files 通过；job_begin 与 ink_fs_move 明确拒绝虚拟根。"
+  },
+  {
+    "id": "AUD15-003",
+    "verdict": "已修复",
+    "evidence": [
+      "【复现】experiments/ctest.log：8/8 通过",
+      "【代码核查】报告待补充精确位置"
+    ],
+    "note": "integration-files UTF-8 全文分页通过；EOF 根据原始读取量而非字符截断量。"
+  },
+  {
+    "id": "AUD15-004",
+    "verdict": "已修复",
+    "evidence": [
+      "【复现】experiments/ctest.log：8/8 通过",
+      "【代码核查】报告待补充精确位置"
+    ],
+    "note": "integration-data 大记录 get/list 及中枢回执通过；VALUE_CAP 覆盖完整记录，分页先回退整条记录。"
+  },
+  {
+    "id": "AUD15-007",
+    "verdict": "已修复",
+    "evidence": [
+      "【复现】experiments/ctest.log：8/8 通过",
+      "【代码核查】报告待补充精确位置"
+    ],
+    "note": "integration-races 确认后换人时旧调用不删除新成员文件通过。"
+  }
+]
