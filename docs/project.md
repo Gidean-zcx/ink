@@ -60,7 +60,7 @@
 
 - 2026-11-05 用户额度快用完，要求改由 Codex（gpt-6.1-sol）开发，Claude 只写任务、复核和收尾。规则和任务书在 [docs/tasks/](tasks/codex-rules.md)：服务器第 1 步、界面框架和系统壳、系统服务收尾。Codex 在 `~/Documents/Workspace/ink-codex/` 的独立副本里工作，不 push，开发完由 Codex（gpt-6-astra）独立复查一轮，Claude 复核后才合入。真机和内置应用页面设计没有交给它：真机每步要用户在场，设计要看判断。
 
-- 2026-11-05 Codex 完成服务器第 1 步（`hub/`，[报告](tasks/hub-step1/REPORT.md)、[复查](tasks/hub-step1/REVIEW.md)，严重 0、高 0）。只验证了假厂商和合成数据；容器没有在本机跑过。复查留下一条中级：模拟器桥关闭连接后，资源要到模拟器退出才释放（R4）。
+- 2026-11-05 Codex 完成服务器第 1 步（`hub/`，[报告](tasks/hub-step1/REPORT.md)、[复查](tasks/hub-step1/REVIEW.md)，严重 0、高 0）。只验证了假厂商和合成数据；容器没有在本机跑过。复查留下一条中级：模拟器桥关闭连接后，资源要到模拟器退出才释放（R4）。CI 三项都过（包括 Linux 上检查容器配置），已合入 main（`504a988`）。
 - 用户要求之后每个 Codex 任务按 1 小时左右划分，第一批跑了 3 小时以上。
 
 ### 接下来（都是助手的建议，用户还没确认）
