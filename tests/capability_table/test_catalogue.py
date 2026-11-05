@@ -98,6 +98,33 @@ class CatalogueTest(unittest.TestCase):
         self.assertIn("仅人工", catalogue.member_scope(caps["system.shutdown"]))
         self.assertEqual(catalogue.confirmation(caps["call.incoming"]), "不适用")
 
+    def test_child_whitelist_extends_child_ok(self):
+        for entry in self.entries:
+            if entry.kind != "cap" or entry.value("form") == "INK_FORM_EVENT":
+                continue
+            if entry.value("effect") == "INK_FX_SYSTEM":
+                expected = "成人；儿童仅人工" if entry.flag("child_ok") else "仅成人"
+            else:
+                expected = "成人、儿童（无需白名单）" if entry.flag("child_ok") else "成人；儿童须白名单"
+            with self.subTest(capability=entry.id):
+                self.assertEqual(catalogue.member_scope(entry).split("；锁定时")[0].split("；页面")[0]
+                                 .split("；设置写入")[0].split("；设置撤销")[0], expected)
+
+    def test_setting_member_scope_has_no_extra_whitelist(self):
+        document = catalogue.render(self.entries, self.sources)
+        for entry in self.entries:
+            if entry.kind != "setting":
+                continue
+            line = next(line for line in document.splitlines() if line.startswith(f"| `{entry.id}` |"))
+            expected = "成人、儿童（无需白名单）" if entry.flag("child_may_change") and not entry.flag("system") else "仅成人"
+            with self.subTest(setting=entry.id):
+                self.assertEqual(line.split(" | ")[4], expected)
+
+    def test_undo_confirmation_rechecks_the_setting(self):
+        undo = next(e for e in self.entries if e.kind == "cap" and e.id == "system.undo")
+        self.assertEqual(catalogue.confirmation(undo), "设置撤销按设置项重新判断（见设置表）；其他撤销无需")
+        self.assertIn("设置撤销另受设置项限制", catalogue.member_scope(undo))
+
     def test_check_rejects_stale_document(self):
         # Only the output copy changes; the repository document and sources remain intact.
         with tempfile.TemporaryDirectory() as directory:

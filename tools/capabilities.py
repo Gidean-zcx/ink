@@ -195,6 +195,8 @@ def confirmation(entry):
         return "不适用"
     if entry.id == "settings.set":
         return "按设置项（见设置表）"
+    if entry.id == "system.undo":
+        return "设置撤销按设置项重新判断（见设置表）；其他撤销无需"
     if entry.flag("parent_pin"):
         return "人、AI 均确认；已设成人 PIN 时还需 PIN"
     if entry.flag("ask_by_hand"):
@@ -223,16 +225,18 @@ def confirm_value(entry, pin, src, asked):
 def member_scope(entry):
     if entry.value("form") == "INK_FORM_EVENT":
         return "按原事件成员及代际投递"
-    if entry.flag("child_ok"):
-        rule = "成人；儿童须白名单"
-        if entry.value("effect") == "INK_FX_SYSTEM":
-            rule = "成人；儿童仅人工且须白名单"
+    if entry.value("effect") == "INK_FX_SYSTEM":
+        rule = "成人；儿童仅人工" if entry.flag("child_ok") else "仅成人"
     else:
-        rule = "仅成人"
+        rule = "成人、儿童（无需白名单）" if entry.flag("child_ok") else "成人；儿童须白名单"
     if entry.flag("while_locked"):
         rule += "；锁定时仅人工入口"
     if "activity" in entry.fields:
         rule += "；页面 " + entry.string("activity")
+    if entry.id == "settings.set":
+        rule += "；设置写入另受设置项限制"
+    if entry.id == "system.undo":
+        rule += "；设置撤销另受设置项限制"
     return rule
 
 
@@ -261,7 +265,8 @@ def render(entries, sources):
              f"当前共 {len(caps)} 项：可调用能力 {len(caps) - len(events)}、事件 {len(events)}；设置 {len(settings)} 项、状态 {len(states)} 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。", "",
              "风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。", "",
              "调用和确认规则来自 `system/policy/cap.c` 的 exposed / gate / confirm_for，以及 `system/policy/settings.c` 的 setting_set。表中人指触摸、实体键；AI 指 INK_SRC_AI，外部调用还须各自的 expose 权限。AI 不能代输 PIN 或替人按确认。asked=true 只取消普通对外动作的确认，不绕过 ask_by_hand、成人 PIN、成员、页面版本或服务内部校验。", "",
-             "成员范围指能力闸门允许的调用成员，均绑定调用时的当前成员及代际，不表示能访问其他成员数据。成人空间关闭时 AI、外部应用都不能调用；while_locked 只放行人工入口。数据集合、文件路径、通知、闹钟、后台作业仍检查各自的归属；设置是设备级值，儿童写权限另列。事件只能订阅，不能当工具调用，投递仍按成员隔离。", "",
+             "成员范围指能力闸门允许的调用成员，均绑定调用时的当前成员及代际，不表示能访问其他成员数据。非 system 能力的 child_ok 直接放行儿童，白名单按 id 前缀额外放行 child_ok=false 的能力；system 能力则只允许 child_ok=true 的人工儿童调用，白名单不能绕过。成人空间关闭时 AI、外部应用都不能调用；while_locked 只放行人工入口。数据集合、文件路径、通知、闹钟、后台作业仍检查各自的归属；设置是设备级值，儿童写权限另列。事件只能订阅，不能当工具调用，投递仍按成员隔离。", "",
+             "system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确认。设置撤销保留当前来源，重新经过 settings.set 及设置项的儿童、确认、版本检查；其他撤销以已确认来源调用逆操作，仍检查逆操作的成员及服务条件。", "",
              "关联面按同一服务目录（policy / ui 按源文件）及该提供方源码引用的已知 id 汇集，表示服务上下文，**不表示每次调用都会修改列出的所有设置、状态或发出所有事件**。完整设置、状态和事件定义均列在后文。没有定义的关联显示 —，不据命名前缀猜测。", "",
              "## 可调用能力", "",
              row("能力 id", "描述", "谁能调", "风险 / effect", "是否确认", "成员范围", "关联面", "定义"),
@@ -296,7 +301,7 @@ def render(entries, sources):
         risk = "高" if entry.flag("system") or entry.flag("ask_by_hand") else "中"
         ask = "人、AI 均需确认" if entry.flag("ask_by_hand") else "无需"
         lines.append(row(code(entry.id), entry.string("title"), code(entry.value("type")),
-                         "`settings.get` / `settings.set`", "成人、儿童白名单" if children else "仅成人",
+                         "`settings.get` / `settings.set`", "成人、儿童（无需白名单）" if children else "仅成人",
                          risk + " / " + ask, f"[{entry.path}](../../{entry.path})"))
     lines += ["", "## 状态", "", row("状态 id", "描述", "类型", "AI 可读", "定义"), row(*(["---"] * 5))]
     for entry in states:
@@ -331,7 +336,9 @@ def check_runtime(entries, path):
     for item in runtime["settings"]:
         entry = settings[item["id"]]
         setting_type = {"INK_SET_BOOL": "bool", "INK_SET_INT": "int", "INK_SET_ENUM": "enum"}[entry.value("type")]
-        if item["title"] != entry.string("title") or item["type"] != setting_type or any(bool(item.get(flag)) != entry.flag(flag) for flag in ("system", "ask_by_hand")):
+        if item["title"] != entry.string("title") or item["type"] != setting_type or any(
+                type(item.get(flag)) is not bool or item[flag] != entry.flag(flag)
+                for flag in ("system", "ask_by_hand", "child_may_change")):
             raise ValueError(f"runtime setting metadata differs: {entry.id}")
     print(f"Runtime matches: {len(actual)} capabilities, {len(settings)} settings")
 

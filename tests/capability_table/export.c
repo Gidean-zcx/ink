@@ -14,6 +14,8 @@ static bool inventory_any_pin(void) { return inventory_has_pin; }
 #define ink_member_any_pin inventory_any_pin
 #include "../../system/policy/cap.c"
 #undef ink_member_any_pin
+/* Inspect registered setting definitions without changing the product JSON API. */
+#include "../../system/policy/settings.c"
 
 static void json_string(FILE *file, const char *text) { /* host context */
     if (fputc('"', file) == EOF) abort();
@@ -28,7 +30,7 @@ static void json_string(FILE *file, const char *text) { /* host context */
 }
 
 static void save_on_host(void *arg) {
-    const char *settings = arg;
+    (void)arg;
     char path[600];
     int n = snprintf(path, sizeof path, "%s/capability-inventory.json", g_sim.out_dir);
     if (n < 0 || (size_t)n >= sizeof path) abort();
@@ -56,14 +58,24 @@ static void save_on_host(void *arg) {
         if (fputc(']', file) == EOF) abort();
         if (fputc('}', file) == EOF) abort();
     }
-    if (fprintf(file, "],\"settings\":%s}\n", settings) < 0) abort();
+    if (fputs("],\"settings\":[", file) == EOF) abort();
+    for (int i = 0; i < SE.n; i++) {
+        const ink_setting_def_t *d = SE.it[i].def;
+        if (fprintf(file, "%s{\"id\":", i ? "," : "") < 0) abort();
+        json_string(file, d->id);
+        if (fputs(",\"title\":", file) == EOF) abort();
+        json_string(file, d->title);
+        if (fputs(",\"type\":", file) == EOF) abort();
+        json_string(file, TYPE_NAME[d->type]);
+        if (fprintf(file, ",\"system\":%s,\"ask_by_hand\":%s,\"child_may_change\":%s}",
+                    d->system ? "true" : "false", d->ask_by_hand ? "true" : "false",
+                    d->child_may_change ? "true" : "false") < 0) abort();
+    }
+    if (fputs("]}\n", file) == EOF) abort();
     if (fclose(file)) abort();
 }
 
 void ink_main(void) {
     ink_product_main();
-    char *settings = osal_malloc(16384, OSAL_MEM_EXTERNAL);
-    if (!settings || ink_settings_json(settings, 16384) < 0) osal_panic("cannot export the settings catalogue");
-    vtk_host_call(save_on_host, settings);
-    osal_free(settings);
+    vtk_host_call(save_on_host, NULL);
 }

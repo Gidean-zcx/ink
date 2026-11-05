@@ -13,7 +13,9 @@ python3 tools/capabilities.py --check
 
 调用和确认规则来自 `system/policy/cap.c` 的 exposed / gate / confirm_for，以及 `system/policy/settings.c` 的 setting_set。表中人指触摸、实体键；AI 指 INK_SRC_AI，外部调用还须各自的 expose 权限。AI 不能代输 PIN 或替人按确认。asked=true 只取消普通对外动作的确认，不绕过 ask_by_hand、成人 PIN、成员、页面版本或服务内部校验。
 
-成员范围指能力闸门允许的调用成员，均绑定调用时的当前成员及代际，不表示能访问其他成员数据。成人空间关闭时 AI、外部应用都不能调用；while_locked 只放行人工入口。数据集合、文件路径、通知、闹钟、后台作业仍检查各自的归属；设置是设备级值，儿童写权限另列。事件只能订阅，不能当工具调用，投递仍按成员隔离。
+成员范围指能力闸门允许的调用成员，均绑定调用时的当前成员及代际，不表示能访问其他成员数据。非 system 能力的 child_ok 直接放行儿童，白名单按 id 前缀额外放行 child_ok=false 的能力；system 能力则只允许 child_ok=true 的人工儿童调用，白名单不能绕过。成人空间关闭时 AI、外部应用都不能调用；while_locked 只放行人工入口。数据集合、文件路径、通知、闹钟、后台作业仍检查各自的归属；设置是设备级值，儿童写权限另列。事件只能订阅，不能当工具调用，投递仍按成员隔离。
+
+system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确认。设置撤销保留当前来源，重新经过 settings.set 及设置项的儿童、确认、版本检查；其他撤销以已确认来源调用逆操作，仍检查逆操作的成员及服务条件。
 
 关联面按同一服务目录（policy / ui 按源文件）及该提供方源码引用的已知 id 汇集，表示服务上下文，**不表示每次调用都会修改列出的所有设置、状态或发出所有事件**。完整设置、状态和事件定义均列在后文。没有定义的关联显示 —，不据命名前缀猜测。
 
@@ -21,121 +23,121 @@ python3 tools/capabilities.py --check
 
 | 能力 id | 描述 | 谁能调 | 风险 / effect | 是否确认 | 成员范围 | 关联面 | 定义 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `activity.list` | 查看 AI 做过的事 | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s03](#s03) | [system/policy/cap.c](../../system/policy/cap.c) |
-| `alarm.cancel` | 删闹钟 | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单 | [s20](#s20) | [system/services/time/time_caps.c](../../system/services/time/time_caps.c) |
-| `alarm.dismiss` | 关掉正在响的闹钟 | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单；锁定时仅人工入口 | [s20](#s20) | [system/services/time/time_caps.c](../../system/services/time/time_caps.c) |
-| `alarm.list` | 我的闹钟 | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s20](#s20) | [system/services/time/time_caps.c](../../system/services/time/time_caps.c) |
-| `alarm.set` | 设闹钟（weekdays 每周几：位 0 是周日；不给就只响一次） | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单 | [s20](#s20) | [system/services/time/time_caps.c](../../system/services/time/time_caps.c) |
-| `alarm.snooze` | 闹钟稍后再响 | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单；锁定时仅人工入口 | [s20](#s20) | [system/services/time/time_caps.c](../../system/services/time/time_caps.c) |
-| `app.cards` | 各应用的服务卡片（和主页看到的一样） | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s22](#s22) | [system/ui/app_registry.c](../../system/ui/app_registry.c) |
-| `app.close` | 关掉一个应用（它会保存状态） | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s22](#s22) | [system/ui/app_registry.c](../../system/ui/app_registry.c) |
-| `app.list` | 这台设备上有哪些应用，各自的状态 | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s22](#s22) | [system/ui/app_registry.c](../../system/ui/app_registry.c) |
-| `app.open` | 打开一个应用 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s22](#s22) | [system/ui/app_registry.c](../../system/ui/app_registry.c) |
-| `audio.record` | 开始录音，存成文件 | 人、AI | 高 / external | 人无需；AI 仅 asked=true 时无需 | 成人；儿童须白名单 | [s08](#s08) | [system/services/audio/media_service.c](../../system/services/audio/media_service.c) |
-| `audio.record_stop` | 停止录音 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s08](#s08) | [system/services/audio/media_service.c](../../system/services/audio/media_service.c) |
-| `bt.connect` | 连上耳机，声音走耳机 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s09](#s09) | [system/services/bt/bt_service.c](../../system/services/bt/bt_service.c) |
-| `bt.disconnect` | 断开耳机，声音回到外放 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s09](#s09) | [system/services/bt/bt_service.c](../../system/services/bt/bt_service.c) |
-| `bt.forget` | 忘掉一副耳机 | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单 | [s09](#s09) | [system/services/bt/bt_service.c](../../system/services/bt/bt_service.c) |
-| `bt.list` | 配对过的耳机 | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s09](#s09) | [system/services/bt/bt_service.c](../../system/services/bt/bt_service.c) |
-| `bt.pair` | 配对一副耳机 | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单 | [s09](#s09) | [system/services/bt/bt_service.c](../../system/services/bt/bt_service.c) |
-| `bt.scan` | 找附近的蓝牙耳机（要几秒） | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s09](#s09) | [system/services/bt/bt_service.c](../../system/services/bt/bt_service.c) |
-| `call.answer` | 接电话 | 人、AI | 高 / external | 人无需；AI 仅 asked=true 时无需 | 成人；儿童须白名单；锁定时仅人工入口 | [s11](#s11) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
-| `call.dial` | 打电话 | 人、AI | 高 / external | 人无需；AI 仅 asked=true 时无需 | 成人；儿童须白名单 | [s11](#s11) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
-| `call.hangup` | 挂电话 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单；锁定时仅人工入口 | [s11](#s11) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
-| `camera.capture` | 拍一张照片 | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单 | [s10](#s10) | [system/services/camera/camera_service.c](../../system/services/camera/camera_service.c) |
-| `caps.domains` | 有哪些类能力（每类多少个） | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s03](#s03) | [system/policy/cap.c](../../system/policy/cap.c) |
-| `caps.find` | 按关键词查能力（带完整描述） | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s03](#s03) | [system/policy/cap.c](../../system/policy/cap.c) |
-| `clipboard.read` | 读剪贴板（用户在设置里打开才行） | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s19](#s19) | [system/services/text/text_caps.c](../../system/services/text/text_caps.c) |
-| `clipboard.write` | 写剪贴板 | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单 | [s19](#s19) | [system/services/text/text_caps.c](../../system/services/text/text_caps.c) |
-| `confirm.accept` | 确认（只有人在设备上能按） | 仅人（设备） | 低 / navigate | 无需 | 成人；儿童须白名单 | [s04](#s04) | [system/policy/confirm.c](../../system/policy/confirm.c) |
-| `confirm.list` | 有什么在等人确认 | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s04](#s04) | [system/policy/confirm.c](../../system/policy/confirm.c) |
-| `confirm.reject` | 取消（只有人在设备上能按） | 仅人（设备） | 低 / navigate | 无需 | 成人；儿童须白名单 | [s04](#s04) | [system/policy/confirm.c](../../system/policy/confirm.c) |
-| `confirm.withdraw` | 撤回自己发起、还在等确认的请求 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s04](#s04) | [system/policy/confirm.c](../../system/policy/confirm.c) |
-| `data.collections` | 有哪些数据集合 | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s12](#s12) | [system/services/data/data_caps.c](../../system/services/data/data_caps.c) |
-| `data.delete` | 删除一条数据 | 人、AI | 高 / local_destructive | 人、AI 均在设备确认 | 成人；儿童须白名单 | [s12](#s12) | [system/services/data/data_caps.c](../../system/services/data/data_caps.c) |
-| `data.get` | 读一条数据 | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s12](#s12) | [system/services/data/data_caps.c](../../system/services/data/data_caps.c) |
-| `data.list` | 分页读一个数据集合（默认最新的在前） | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s12](#s12) | [system/services/data/data_caps.c](../../system/services/data/data_caps.c) |
-| `data.put` | 写一条数据（新的可以撤销） | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单 | [s12](#s12) | [system/services/data/data_caps.c](../../system/services/data/data_caps.c) |
-| `data.status` | 一条数据保存到哪一步了（saving 正在写、on_device 已存在这台设备、at_hub 已备份、failed 没写进去） | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s12](#s12) | [system/services/data/data_caps.c](../../system/services/data/data_caps.c) |
-| `file.copy` | 拷贝文件或目录（大的在后台做） | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单 | [s14](#s14) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
-| `file.delete` | 删除文件或目录（不能撤销） | 人、AI | 高 / local_destructive | 人、AI 均在设备确认 | 成人；儿童须白名单 | [s14](#s14) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
-| `file.free` | 存储卡还剩多少空间 | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s14](#s14) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
-| `file.list` | 列出目录（/me 自己的文件，/family 全家的内容） | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s14](#s14) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
-| `file.mkdir` | 新建目录 | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单 | [s14](#s14) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
-| `file.move` | 移动或改名（可撤销） | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单 | [s14](#s14) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
-| `file.read` | 读文本文件（每次最多 2 KiB） | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s14](#s14) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
-| `file.stat` | 一个文件或目录的信息 | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s14](#s14) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
-| `file.write` | 写文本文件（新文件，或追加） | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单 | [s14](#s14) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
-| `interrupt.ack` | 知道了（关掉低电量提示） | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单；锁定时仅人工入口 | [s16](#s16) | [system/services/notify/interrupt.c](../../system/services/notify/interrupt.c) |
-| `interrupt.list` | 现在有什么在打断（来电、闹钟、低电量），各有什么按钮 | 人、AI | 低 / read | 无需 | 成人；儿童须白名单；锁定时仅人工入口 | [s16](#s16) | [system/services/notify/interrupt.c](../../system/services/notify/interrupt.c) |
-| `job.cancel` | 停下一件后台在做的事 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s18](#s18) | [system/services/res/task.c](../../system/services/res/task.c) |
-| `job.list` | 后台在做什么、做到哪了、做完的结果 | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s18](#s18) | [system/services/res/task.c](../../system/services/res/task.c) |
-| `media.pause` | 暂停 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s08](#s08) | [system/services/audio/media_service.c](../../system/services/audio/media_service.c) |
-| `media.play` | 放一个音频文件（Ogg Opus），不给位置就从上次听到的地方 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s08](#s08) | [system/services/audio/media_service.c](../../system/services/audio/media_service.c) |
-| `media.resume` | 接着放 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s08](#s08) | [system/services/audio/media_service.c](../../system/services/audio/media_service.c) |
-| `media.seek` | 跳到某个位置 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s08](#s08) | [system/services/audio/media_service.c](../../system/services/audio/media_service.c) |
-| `media.status` | 现在放的是什么，到哪儿了 | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s08](#s08) | [system/services/audio/media_service.c](../../system/services/audio/media_service.c) |
-| `media.stop` | 停止 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s08](#s08) | [system/services/audio/media_service.c](../../system/services/audio/media_service.c) |
+| `activity.list` | 查看 AI 做过的事 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s03](#s03) | [system/policy/cap.c](../../system/policy/cap.c) |
+| `alarm.cancel` | 删闹钟 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s20](#s20) | [system/services/time/time_caps.c](../../system/services/time/time_caps.c) |
+| `alarm.dismiss` | 关掉正在响的闹钟 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单）；锁定时仅人工入口 | [s20](#s20) | [system/services/time/time_caps.c](../../system/services/time/time_caps.c) |
+| `alarm.list` | 我的闹钟 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s20](#s20) | [system/services/time/time_caps.c](../../system/services/time/time_caps.c) |
+| `alarm.set` | 设闹钟（weekdays 每周几：位 0 是周日；不给就只响一次） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s20](#s20) | [system/services/time/time_caps.c](../../system/services/time/time_caps.c) |
+| `alarm.snooze` | 闹钟稍后再响 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单）；锁定时仅人工入口 | [s20](#s20) | [system/services/time/time_caps.c](../../system/services/time/time_caps.c) |
+| `app.cards` | 各应用的服务卡片（和主页看到的一样） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s22](#s22) | [system/ui/app_registry.c](../../system/ui/app_registry.c) |
+| `app.close` | 关掉一个应用（它会保存状态） | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s22](#s22) | [system/ui/app_registry.c](../../system/ui/app_registry.c) |
+| `app.list` | 这台设备上有哪些应用，各自的状态 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s22](#s22) | [system/ui/app_registry.c](../../system/ui/app_registry.c) |
+| `app.open` | 打开一个应用 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s22](#s22) | [system/ui/app_registry.c](../../system/ui/app_registry.c) |
+| `audio.record` | 开始录音，存成文件 | 人、AI | 高 / external | 人无需；AI 仅 asked=true 时无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/services/audio/media_service.c](../../system/services/audio/media_service.c) |
+| `audio.record_stop` | 停止录音 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/services/audio/media_service.c](../../system/services/audio/media_service.c) |
+| `bt.connect` | 连上耳机，声音走耳机 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s09](#s09) | [system/services/bt/bt_service.c](../../system/services/bt/bt_service.c) |
+| `bt.disconnect` | 断开耳机，声音回到外放 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s09](#s09) | [system/services/bt/bt_service.c](../../system/services/bt/bt_service.c) |
+| `bt.forget` | 忘掉一副耳机 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s09](#s09) | [system/services/bt/bt_service.c](../../system/services/bt/bt_service.c) |
+| `bt.list` | 配对过的耳机 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s09](#s09) | [system/services/bt/bt_service.c](../../system/services/bt/bt_service.c) |
+| `bt.pair` | 配对一副耳机 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s09](#s09) | [system/services/bt/bt_service.c](../../system/services/bt/bt_service.c) |
+| `bt.scan` | 找附近的蓝牙耳机（要几秒） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s09](#s09) | [system/services/bt/bt_service.c](../../system/services/bt/bt_service.c) |
+| `call.answer` | 接电话 | 人、AI | 高 / external | 人无需；AI 仅 asked=true 时无需 | 成人、儿童（无需白名单）；锁定时仅人工入口 | [s11](#s11) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
+| `call.dial` | 打电话 | 人、AI | 高 / external | 人无需；AI 仅 asked=true 时无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
+| `call.hangup` | 挂电话 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；锁定时仅人工入口 | [s11](#s11) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
+| `camera.capture` | 拍一张照片 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s10](#s10) | [system/services/camera/camera_service.c](../../system/services/camera/camera_service.c) |
+| `caps.domains` | 有哪些类能力（每类多少个） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s03](#s03) | [system/policy/cap.c](../../system/policy/cap.c) |
+| `caps.find` | 按关键词查能力（带完整描述） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s03](#s03) | [system/policy/cap.c](../../system/policy/cap.c) |
+| `clipboard.read` | 读剪贴板（用户在设置里打开才行） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s19](#s19) | [system/services/text/text_caps.c](../../system/services/text/text_caps.c) |
+| `clipboard.write` | 写剪贴板 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s19](#s19) | [system/services/text/text_caps.c](../../system/services/text/text_caps.c) |
+| `confirm.accept` | 确认（只有人在设备上能按） | 仅人（设备） | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s04](#s04) | [system/policy/confirm.c](../../system/policy/confirm.c) |
+| `confirm.list` | 有什么在等人确认 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s04](#s04) | [system/policy/confirm.c](../../system/policy/confirm.c) |
+| `confirm.reject` | 取消（只有人在设备上能按） | 仅人（设备） | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s04](#s04) | [system/policy/confirm.c](../../system/policy/confirm.c) |
+| `confirm.withdraw` | 撤回自己发起、还在等确认的请求 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s04](#s04) | [system/policy/confirm.c](../../system/policy/confirm.c) |
+| `data.collections` | 有哪些数据集合 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s12](#s12) | [system/services/data/data_caps.c](../../system/services/data/data_caps.c) |
+| `data.delete` | 删除一条数据 | 人、AI | 高 / local_destructive | 人、AI 均在设备确认 | 成人、儿童（无需白名单） | [s12](#s12) | [system/services/data/data_caps.c](../../system/services/data/data_caps.c) |
+| `data.get` | 读一条数据 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s12](#s12) | [system/services/data/data_caps.c](../../system/services/data/data_caps.c) |
+| `data.list` | 分页读一个数据集合（默认最新的在前） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s12](#s12) | [system/services/data/data_caps.c](../../system/services/data/data_caps.c) |
+| `data.put` | 写一条数据（新的可以撤销） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s12](#s12) | [system/services/data/data_caps.c](../../system/services/data/data_caps.c) |
+| `data.status` | 一条数据保存到哪一步了（saving 正在写、on_device 已存在这台设备、at_hub 已备份、failed 没写进去） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s12](#s12) | [system/services/data/data_caps.c](../../system/services/data/data_caps.c) |
+| `file.copy` | 拷贝文件或目录（大的在后台做） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s14](#s14) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
+| `file.delete` | 删除文件或目录（不能撤销） | 人、AI | 高 / local_destructive | 人、AI 均在设备确认 | 成人、儿童（无需白名单） | [s14](#s14) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
+| `file.free` | 存储卡还剩多少空间 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s14](#s14) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
+| `file.list` | 列出目录（/me 自己的文件，/family 全家的内容） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s14](#s14) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
+| `file.mkdir` | 新建目录 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s14](#s14) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
+| `file.move` | 移动或改名（可撤销） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s14](#s14) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
+| `file.read` | 读文本文件（每次最多 2 KiB） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s14](#s14) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
+| `file.stat` | 一个文件或目录的信息 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s14](#s14) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
+| `file.write` | 写文本文件（新文件，或追加） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s14](#s14) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
+| `interrupt.ack` | 知道了（关掉低电量提示） | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；锁定时仅人工入口 | [s16](#s16) | [system/services/notify/interrupt.c](../../system/services/notify/interrupt.c) |
+| `interrupt.list` | 现在有什么在打断（来电、闹钟、低电量），各有什么按钮 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单）；锁定时仅人工入口 | [s16](#s16) | [system/services/notify/interrupt.c](../../system/services/notify/interrupt.c) |
+| `job.cancel` | 停下一件后台在做的事 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s18](#s18) | [system/services/res/task.c](../../system/services/res/task.c) |
+| `job.list` | 后台在做什么、做到哪了、做完的结果 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s18](#s18) | [system/services/res/task.c](../../system/services/res/task.c) |
+| `media.pause` | 暂停 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/services/audio/media_service.c](../../system/services/audio/media_service.c) |
+| `media.play` | 放一个音频文件（Ogg Opus），不给位置就从上次听到的地方 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/services/audio/media_service.c](../../system/services/audio/media_service.c) |
+| `media.resume` | 接着放 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/services/audio/media_service.c](../../system/services/audio/media_service.c) |
+| `media.seek` | 跳到某个位置 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/services/audio/media_service.c](../../system/services/audio/media_service.c) |
+| `media.status` | 现在放的是什么，到哪儿了 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/services/audio/media_service.c](../../system/services/audio/media_service.c) |
+| `media.stop` | 停止 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/services/audio/media_service.c](../../system/services/audio/media_service.c) |
 | `member.add` | 加一位家人 | 人、AI | 高 / system | 人、AI 均确认；已设成人 PIN 时还需 PIN | 仅成人 | [s05](#s05) | [system/policy/members.c](../../system/policy/members.c) |
-| `member.list` | 家里有哪些人 | 人、AI | 低 / read | 无需 | 成人；儿童须白名单；锁定时仅人工入口 | [s05](#s05) | [system/policy/members.c](../../system/policy/members.c) |
+| `member.list` | 家里有哪些人 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单）；锁定时仅人工入口 | [s05](#s05) | [system/policy/members.c](../../system/policy/members.c) |
 | `member.remove` | 删除一位家人和他们的全部数据（不能撤销） | 人、AI | 高 / system | 人、AI 均确认；已设成人 PIN 时还需 PIN | 仅成人 | [s05](#s05) | [system/policy/members.c](../../system/policy/members.c) |
-| `member.set_pin` | 设置或修改密码（只能在设备上） | 仅人（设备） | 中 / local_write | 无需 | 仅成人 | [s05](#s05) | [system/policy/members.c](../../system/policy/members.c) |
-| `member.unlock` | 输密码进入家人的空间（只能在设备上） | 仅人（设备） | 低 / navigate | 无需 | 成人；儿童须白名单；锁定时仅人工入口 | [s05](#s05) | [system/policy/members.c](../../system/policy/members.c) |
-| `message.list` | 最近的短信 | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s11](#s11) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
-| `message.send` | 发短信 | 人、AI | 高 / external | 人无需；AI 仅 asked=true 时无需 | 成人；儿童须白名单 | [s11](#s11) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
-| `notify.channels` | 哪些通知渠道开着 | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s16](#s16) | [system/services/notify/notify_caps.c](../../system/services/notify/notify_caps.c) |
-| `notify.clear` | 清空通知 | 人、AI | 高 / local_destructive | 人、AI 均在设备确认 | 成人；儿童须白名单 | [s16](#s16) | [system/services/notify/notify_caps.c](../../system/services/notify/notify_caps.c) |
-| `notify.dismiss` | 删一条通知 | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单 | [s16](#s16) | [system/services/notify/notify_caps.c](../../system/services/notify/notify_caps.c) |
-| `notify.list` | 通知列表（新的在前） | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s16](#s16) | [system/services/notify/notify_caps.c](../../system/services/notify/notify_caps.c) |
-| `notify.post` | 发一条通知（给用户看的提醒；来源记为 AI） | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单 | [s16](#s16) | [system/services/notify/notify_caps.c](../../system/services/notify/notify_caps.c) |
-| `notify.read` | 标为已读（id 0 或不给：全部） | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单 | [s16](#s16) | [system/services/notify/notify_caps.c](../../system/services/notify/notify_caps.c) |
-| `notify.set_channel` | 开关一个通知渠道 | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单 | [s16](#s16) | [system/services/notify/notify_caps.c](../../system/services/notify/notify_caps.c) |
-| `reader.goto_page` | 跳到第几页 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单；页面 book | [s01](#s01) | [apps/reader/reader.c](../../apps/reader/reader.c) |
-| `reader.list_books` | 书架上有哪些书 | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s01](#s01) | [apps/reader/reader.c](../../apps/reader/reader.c) |
-| `reader.next_page` | 下一页 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单；页面 book | [s01](#s01) | [apps/reader/reader.c](../../apps/reader/reader.c) |
-| `reader.open_book` | 打开一本书 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s01](#s01) | [apps/reader/reader.c](../../apps/reader/reader.c) |
-| `reader.prev_page` | 上一页 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单；页面 book | [s01](#s01) | [apps/reader/reader.c](../../apps/reader/reader.c) |
-| `reader.read_page` | 读出这一页 | 人、AI | 低 / read | 无需 | 成人；儿童须白名单；页面 book | [s01](#s01) | [apps/reader/reader.c](../../apps/reader/reader.c) |
-| `reminder.add` | 加提醒（at 本地时间 YYYY-MM-DD HH:MM；repeat: daily weekly monthly yearly lunar_yearly） | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单 | [s20](#s20) | [system/services/time/time_caps.c](../../system/services/time/time_caps.c) |
-| `reminder.cancel` | 删提醒 | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单 | [s20](#s20) | [system/services/time/time_caps.c](../../system/services/time/time_caps.c) |
-| `reminder.list` | 我的提醒 | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s20](#s20) | [system/services/time/time_caps.c](../../system/services/time/time_caps.c) |
-| `remote.open` | 打开网页 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s02](#s02) | [system/apps/remote/remote.c](../../system/apps/remote/remote.c) |
-| `settings.get` | 查看一项设置 | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s06](#s06) | [system/policy/settings.c](../../system/policy/settings.c) |
-| `settings.list` | 所有设置，各自的类型、取值范围和现在的值 | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s07](#s07) | [system/policy/system_actions.c](../../system/policy/system_actions.c) |
-| `settings.set` | 改一项设置 | 人、AI | 中 / local_write | 按设置项（见设置表） | 成人；儿童须白名单 | [s06](#s06) | [system/policy/settings.c](../../system/policy/settings.c) |
-| `state.list` | 系统现在的状态（电量、网络、前台应用……） | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s07](#s07) | [system/policy/system_actions.c](../../system/policy/system_actions.c) |
+| `member.set_pin` | 设置或修改密码（只能在设备上） | 仅人（设备） | 中 / local_write | 无需 | 成人；儿童须白名单 | [s05](#s05) | [system/policy/members.c](../../system/policy/members.c) |
+| `member.unlock` | 输密码进入家人的空间（只能在设备上） | 仅人（设备） | 低 / navigate | 无需 | 成人、儿童（无需白名单）；锁定时仅人工入口 | [s05](#s05) | [system/policy/members.c](../../system/policy/members.c) |
+| `message.list` | 最近的短信 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
+| `message.send` | 发短信 | 人、AI | 高 / external | 人无需；AI 仅 asked=true 时无需 | 成人、儿童（无需白名单） | [s11](#s11) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
+| `notify.channels` | 哪些通知渠道开着 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s16](#s16) | [system/services/notify/notify_caps.c](../../system/services/notify/notify_caps.c) |
+| `notify.clear` | 清空通知 | 人、AI | 高 / local_destructive | 人、AI 均在设备确认 | 成人、儿童（无需白名单） | [s16](#s16) | [system/services/notify/notify_caps.c](../../system/services/notify/notify_caps.c) |
+| `notify.dismiss` | 删一条通知 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s16](#s16) | [system/services/notify/notify_caps.c](../../system/services/notify/notify_caps.c) |
+| `notify.list` | 通知列表（新的在前） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s16](#s16) | [system/services/notify/notify_caps.c](../../system/services/notify/notify_caps.c) |
+| `notify.post` | 发一条通知（给用户看的提醒；来源记为 AI） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s16](#s16) | [system/services/notify/notify_caps.c](../../system/services/notify/notify_caps.c) |
+| `notify.read` | 标为已读（id 0 或不给：全部） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s16](#s16) | [system/services/notify/notify_caps.c](../../system/services/notify/notify_caps.c) |
+| `notify.set_channel` | 开关一个通知渠道 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s16](#s16) | [system/services/notify/notify_caps.c](../../system/services/notify/notify_caps.c) |
+| `reader.goto_page` | 跳到第几页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 book | [s01](#s01) | [apps/reader/reader.c](../../apps/reader/reader.c) |
+| `reader.list_books` | 书架上有哪些书 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s01](#s01) | [apps/reader/reader.c](../../apps/reader/reader.c) |
+| `reader.next_page` | 下一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 book | [s01](#s01) | [apps/reader/reader.c](../../apps/reader/reader.c) |
+| `reader.open_book` | 打开一本书 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s01](#s01) | [apps/reader/reader.c](../../apps/reader/reader.c) |
+| `reader.prev_page` | 上一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 book | [s01](#s01) | [apps/reader/reader.c](../../apps/reader/reader.c) |
+| `reader.read_page` | 读出这一页 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单）；页面 book | [s01](#s01) | [apps/reader/reader.c](../../apps/reader/reader.c) |
+| `reminder.add` | 加提醒（at 本地时间 YYYY-MM-DD HH:MM；repeat: daily weekly monthly yearly lunar_yearly） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s20](#s20) | [system/services/time/time_caps.c](../../system/services/time/time_caps.c) |
+| `reminder.cancel` | 删提醒 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s20](#s20) | [system/services/time/time_caps.c](../../system/services/time/time_caps.c) |
+| `reminder.list` | 我的提醒 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s20](#s20) | [system/services/time/time_caps.c](../../system/services/time/time_caps.c) |
+| `remote.open` | 打开网页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s02](#s02) | [system/apps/remote/remote.c](../../system/apps/remote/remote.c) |
+| `settings.get` | 查看一项设置 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s06](#s06) | [system/policy/settings.c](../../system/policy/settings.c) |
+| `settings.list` | 所有设置，各自的类型、取值范围和现在的值 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s07](#s07) | [system/policy/system_actions.c](../../system/policy/system_actions.c) |
+| `settings.set` | 改一项设置 | 人、AI | 中 / local_write | 按设置项（见设置表） | 成人、儿童（无需白名单）；设置写入另受设置项限制 | [s06](#s06) | [system/policy/settings.c](../../system/policy/settings.c) |
+| `state.list` | 系统现在的状态（电量、网络、前台应用……） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s07](#s07) | [system/policy/system_actions.c](../../system/policy/system_actions.c) |
 | `system.factory_reset` | 清空这台设备（清掉所有家人的数据，不能撤销） | 人、AI | 高 / system | 人、AI 均确认；已设成人 PIN 时还需 PIN | 仅成人 | [s07](#s07) | [system/policy/system_actions.c](../../system/policy/system_actions.c) |
-| `system.full_refresh` | 刷新屏幕 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s07](#s07) | [system/policy/system_actions.c](../../system/policy/system_actions.c) |
-| `system.home` | 回到主页 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s07](#s07) | [system/policy/system_actions.c](../../system/policy/system_actions.c) |
-| `system.reboot` | 重启 | 人、AI | 高 / system | 无需 | 成人；儿童仅人工且须白名单；锁定时仅人工入口 | [s07](#s07) | [system/policy/system_actions.c](../../system/policy/system_actions.c) |
-| `system.set_volume` | 调音量 | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单；锁定时仅人工入口 | [s07](#s07) | [system/policy/system_actions.c](../../system/policy/system_actions.c) |
-| `system.shutdown` | 关机 | 人、AI | 高 / system | 无需 | 成人；儿童仅人工且须白名单；锁定时仅人工入口 | [s17](#s17) | [system/services/power/power_service.c](../../system/services/power/power_service.c) |
-| `system.switch_member` | 切换家人 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s07](#s07) | [system/policy/system_actions.c](../../system/policy/system_actions.c) |
-| `system.undo` | 撤销刚才的操作 | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单 | [s03](#s03) | [system/policy/cap.c](../../system/policy/cap.c) |
+| `system.full_refresh` | 刷新屏幕 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s07](#s07) | [system/policy/system_actions.c](../../system/policy/system_actions.c) |
+| `system.home` | 回到主页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s07](#s07) | [system/policy/system_actions.c](../../system/policy/system_actions.c) |
+| `system.reboot` | 重启 | 人、AI | 高 / system | 无需 | 成人；儿童仅人工；锁定时仅人工入口 | [s07](#s07) | [system/policy/system_actions.c](../../system/policy/system_actions.c) |
+| `system.set_volume` | 调音量 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单）；锁定时仅人工入口 | [s07](#s07) | [system/policy/system_actions.c](../../system/policy/system_actions.c) |
+| `system.shutdown` | 关机 | 人、AI | 高 / system | 无需 | 成人；儿童仅人工；锁定时仅人工入口 | [s17](#s17) | [system/services/power/power_service.c](../../system/services/power/power_service.c) |
+| `system.switch_member` | 切换家人 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s07](#s07) | [system/policy/system_actions.c](../../system/policy/system_actions.c) |
+| `system.undo` | 撤销刚才的操作 | 人、AI | 中 / local_write | 设置撤销按设置项重新判断（见设置表）；其他撤销无需 | 成人、儿童（无需白名单）；设置撤销另受设置项限制 | [s03](#s03) | [system/policy/cap.c](../../system/policy/cap.c) |
 | `system.upgrade` | 安装下载好的新系统（安装时不能用设备，会重启） | 仅人（设备） | 高 / system | 人在设备确认 | 仅成人 | [s21](#s21) | [system/services/update/update_service.c](../../system/services/update/update_service.c) |
 | `system.upgrade_from_card` | 安装存储卡上的新系统（update 文件夹里，会重启） | 仅人（设备） | 高 / system | 人在设备确认 | 仅成人 | [s21](#s21) | [system/services/update/update_service.c](../../system/services/update/update_service.c) |
-| `text.insert` | 往有焦点的文本框里写字（等于替用户打字） | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单 | [s19](#s19) | [system/services/text/text_caps.c](../../system/services/text/text_caps.c) |
-| `text.redo` | 把撤销的改回来 | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单 | [s19](#s19) | [system/services/text/text_caps.c](../../system/services/text/text_caps.c) |
-| `text.select` | 放光标或选一段字（按字数算；不给 end 就是放光标。text.insert 写在这里，选中的被替换） | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s19](#s19) | [system/services/text/text_caps.c](../../system/services/text/text_caps.c) |
-| `text.state` | 现在有没有文本框在输入，里面是什么（密码不给看） | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s19](#s19) | [system/services/text/text_caps.c](../../system/services/text/text_caps.c) |
-| `text.submit` | 按回车（完成、发送、搜索） | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s19](#s19) | [system/services/text/text_caps.c](../../system/services/text/text_caps.c) |
-| `text.undo` | 撤销文本框里刚才的修改 | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单 | [s19](#s19) | [system/services/text/text_caps.c](../../system/services/text/text_caps.c) |
-| `text.voice_cancel` | 取消语音输入，什么都不写进去 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s19](#s19) | [system/services/text/text_caps.c](../../system/services/text/text_caps.c) |
-| `text.voice_finish` | 说完了，结束语音输入 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s19](#s19) | [system/services/text/text_caps.c](../../system/services/text/text_caps.c) |
-| `text.voice_start` | 打开语音输入：说的话变成文字进文本框 | 人、AI | 高 / external | 人无需；AI 仅 asked=true 时无需 | 成人；儿童须白名单 | [s19](#s19) | [system/services/text/text_caps.c](../../system/services/text/text_caps.c) |
-| `time.lunar` | 公历和农历互查（不给日期就是今天） | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s20](#s20) | [system/services/time/time_caps.c](../../system/services/time/time_caps.c) |
-| `time.now` | 现在几点（含时区和农历） | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s20](#s20) | [system/services/time/time_caps.c](../../system/services/time/time_caps.c) |
+| `text.insert` | 往有焦点的文本框里写字（等于替用户打字） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s19](#s19) | [system/services/text/text_caps.c](../../system/services/text/text_caps.c) |
+| `text.redo` | 把撤销的改回来 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s19](#s19) | [system/services/text/text_caps.c](../../system/services/text/text_caps.c) |
+| `text.select` | 放光标或选一段字（按字数算；不给 end 就是放光标。text.insert 写在这里，选中的被替换） | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s19](#s19) | [system/services/text/text_caps.c](../../system/services/text/text_caps.c) |
+| `text.state` | 现在有没有文本框在输入，里面是什么（密码不给看） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s19](#s19) | [system/services/text/text_caps.c](../../system/services/text/text_caps.c) |
+| `text.submit` | 按回车（完成、发送、搜索） | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s19](#s19) | [system/services/text/text_caps.c](../../system/services/text/text_caps.c) |
+| `text.undo` | 撤销文本框里刚才的修改 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s19](#s19) | [system/services/text/text_caps.c](../../system/services/text/text_caps.c) |
+| `text.voice_cancel` | 取消语音输入，什么都不写进去 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s19](#s19) | [system/services/text/text_caps.c](../../system/services/text/text_caps.c) |
+| `text.voice_finish` | 说完了，结束语音输入 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s19](#s19) | [system/services/text/text_caps.c](../../system/services/text/text_caps.c) |
+| `text.voice_start` | 打开语音输入：说的话变成文字进文本框 | 人、AI | 高 / external | 人无需；AI 仅 asked=true 时无需 | 成人、儿童（无需白名单） | [s19](#s19) | [system/services/text/text_caps.c](../../system/services/text/text_caps.c) |
+| `time.lunar` | 公历和农历互查（不给日期就是今天） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s20](#s20) | [system/services/time/time_caps.c](../../system/services/time/time_caps.c) |
+| `time.now` | 现在几点（含时区和农历） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s20](#s20) | [system/services/time/time_caps.c](../../system/services/time/time_caps.c) |
 | `time.set` | 改系统时间 | 人、AI | 高 / system | 无需 | 仅成人 | [s20](#s20) | [system/services/time/time_caps.c](../../system/services/time/time_caps.c) |
-| `update.check` | 问家庭服务器有没有新版本 | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s21](#s21) | [system/services/update/update_service.c](../../system/services/update/update_service.c) |
-| `update.download` | 把新版本下载到存储卡（不安装） | 人、AI | 中 / local_write | 无需 | 仅成人 | [s21](#s21) | [system/services/update/update_service.c](../../system/services/update/update_service.c) |
-| `update.status` | 系统版本和升级进度 | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s21](#s21) | [system/services/update/update_service.c](../../system/services/update/update_service.c) |
+| `update.check` | 问家庭服务器有没有新版本 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s21](#s21) | [system/services/update/update_service.c](../../system/services/update/update_service.c) |
+| `update.download` | 把新版本下载到存储卡（不安装） | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单 | [s21](#s21) | [system/services/update/update_service.c](../../system/services/update/update_service.c) |
+| `update.status` | 系统版本和升级进度 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s21](#s21) | [system/services/update/update_service.c](../../system/services/update/update_service.c) |
 | `usb.mount` | 把存储卡借给电脑当 U 盘 | 人、AI | 高 / system | 人、AI 均在设备确认 | 仅成人 | [s14](#s14) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
-| `usb.status` | 是否连着电脑、存储卡是否借给了电脑 | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s14](#s14) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
-| `usb.unmount` | 从电脑收回存储卡 | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单 | [s14](#s14) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
+| `usb.status` | 是否连着电脑、存储卡是否借给了电脑 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s14](#s14) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
+| `usb.unmount` | 从电脑收回存储卡 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s14](#s14) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
 | `wifi.connect` | 连接一个 Wi-Fi 并记住它 | 人、AI | 高 / system | 无需 | 仅成人 | [s15](#s15) | [system/services/net/wifi.c](../../system/services/net/wifi.c) |
-| `wifi.forget` | 忘掉一个 Wi-Fi | 人、AI | 高 / local_destructive | 人、AI 均在设备确认 | 仅成人 | [s15](#s15) | [system/services/net/wifi.c](../../system/services/net/wifi.c) |
-| `wifi.list` | 这台设备记得的 Wi-Fi（只有名字） | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s15](#s15) | [system/services/net/wifi.c](../../system/services/net/wifi.c) |
-| `wifi.scan` | 找附近的 Wi-Fi（要几秒） | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s15](#s15) | [system/services/net/wifi.c](../../system/services/net/wifi.c) |
+| `wifi.forget` | 忘掉一个 Wi-Fi | 人、AI | 高 / local_destructive | 人、AI 均在设备确认 | 成人；儿童须白名单 | [s15](#s15) | [system/services/net/wifi.c](../../system/services/net/wifi.c) |
+| `wifi.list` | 这台设备记得的 Wi-Fi（只有名字） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s15](#s15) | [system/services/net/wifi.c](../../system/services/net/wifi.c) |
+| `wifi.scan` | 找附近的 Wi-Fi（要几秒） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s15](#s15) | [system/services/net/wifi.c](../../system/services/net/wifi.c) |
 
 ## 关联的设置、状态和事件
 
@@ -367,13 +369,13 @@ python3 tools/capabilities.py --check
 | --- | --- | --- | --- | --- | --- | --- |
 | `ai.read_clipboard` | AI 可以读剪贴板 | `INK_SET_BOOL` | `settings.get` / `settings.set` | 仅成人 | 高 / 人、AI 均需确认 | [system/services/text/text_service.c](../../system/services/text/text_service.c) |
 | `audio.child_max` | 孩子的音量上限 | `INK_SET_INT` | `settings.get` / `settings.set` | 仅成人 | 高 / 人、AI 均需确认 | [system/services/audio/audio_service.c](../../system/services/audio/audio_service.c) |
-| `audio.volume` | 音量 | `INK_SET_INT` | `settings.get` / `settings.set` | 成人、儿童白名单 | 中 / 无需 | [system/services/audio/audio_service.c](../../system/services/audio/audio_service.c) |
+| `audio.volume` | 音量 | `INK_SET_INT` | `settings.get` / `settings.set` | 成人、儿童（无需白名单） | 中 / 无需 | [system/services/audio/audio_service.c](../../system/services/audio/audio_service.c) |
 | `cell.sim_slot` | SIM 卡 | `INK_SET_ENUM` | `settings.get` / `settings.set` | 仅成人 | 中 / 无需 | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
-| `display.light` | 亮度 | `INK_SET_INT` | `settings.get` / `settings.set` | 成人、儿童白名单 | 中 / 无需 | [system/services/display/light.c](../../system/services/display/light.c) |
-| `display.warmth` | 暖光（越大越暖） | `INK_SET_INT` | `settings.get` / `settings.set` | 成人、儿童白名单 | 中 / 无需 | [system/services/display/light.c](../../system/services/display/light.c) |
+| `display.light` | 亮度 | `INK_SET_INT` | `settings.get` / `settings.set` | 成人、儿童（无需白名单） | 中 / 无需 | [system/services/display/light.c](../../system/services/display/light.c) |
+| `display.warmth` | 暖光（越大越暖） | `INK_SET_INT` | `settings.get` / `settings.set` | 成人、儿童（无需白名单） | 中 / 无需 | [system/services/display/light.c](../../system/services/display/light.c) |
 | `member.idle_return_s` | 大人锁屏多久后要重新输密码（秒） | `INK_SET_INT` | `settings.get` / `settings.set` | 仅成人 | 高 / 人、AI 均需确认 | [system/policy/members.c](../../system/policy/members.c) |
 | `net.prefer` | 上网方式 | `INK_SET_ENUM` | `settings.get` / `settings.set` | 仅成人 | 中 / 无需 | [system/services/net/net_service.c](../../system/services/net/net_service.c) |
-| `notify.dnd` | 勿扰 | `INK_SET_BOOL` | `settings.get` / `settings.set` | 成人、儿童白名单 | 中 / 无需 | [system/services/notify/notify_service.c](../../system/services/notify/notify_service.c) |
+| `notify.dnd` | 勿扰 | `INK_SET_BOOL` | `settings.get` / `settings.set` | 成人、儿童（无需白名单） | 中 / 无需 | [system/services/notify/notify_service.c](../../system/services/notify/notify_service.c) |
 | `power.lock_after_s` | 自动锁屏（秒） | `INK_SET_INT` | `settings.get` / `settings.set` | 仅成人 | 中 / 无需 | [system/services/power/power_service.c](../../system/services/power/power_service.c) |
 | `time.auto` | 自动校时（听家庭服务器的） | `INK_SET_BOOL` | `settings.get` / `settings.set` | 仅成人 | 中 / 无需 | [system/services/time/time_service.c](../../system/services/time/time_service.c) |
 | `time.zone` | 时区 | `INK_SET_ENUM` | `settings.get` / `settings.set` | 仅成人 | 中 / 无需 | [system/services/time/time_service.c](../../system/services/time/time_service.c) |
