@@ -10,6 +10,7 @@
 #include "ink/hal_storage.h"
 #include "ink/hal_net.h"
 #include "ink/hal_usb.h"
+#include "ink/sys/appreg.h"
 #include "ink/sys/audio.h"
 #include "ink/sys/confirm.h"
 #include "ink/sys/data.h"
@@ -476,6 +477,7 @@ static void table2(void) { /* two reads fail: the boot's and the first try */
     CHECK(sim_metric_value("members.table_unread") >= 1, "the boot could not read it");
     CHECK(ink_member_has_pin("owner") && ink_member_any_pin(), "so an adult may have a PIN");
     CHECK(!ink_member_space_open(), "the space is closed");
+    CHECK(ink_app_state_of("home") == INK_APP_STOPPED, "an unread adult table cannot start a foreground app at boot");
     CHECK(AI("file.list", "{\"path\":\"/me\"}") && g_rc.status == INK_RC_REJECTED, "the AI does not get in (%s)", ink_rc_name(g_rc.status));
     CHECK(ink_member_switch("owner") == -2, "no way in without the PIN");
     CHECK(ink_member_switch("kid") == 0 && ink_member_switch("owner") == -2, "nor by going round through a child");
@@ -519,7 +521,9 @@ static void stuck1(void) {
 static void table3(void) { /* a normal boot: the table as it was */
     CHECK(sim_metric_value("members.table_unread") == 0, "read");
     CHECK(ink_member_has_pin("owner") && !ink_member_space_open(), "the PIN is still there");
+    CHECK(ink_app_state_of("home") == INK_APP_STOPPED, "a protected adult starts behind the gate without running an app");
     CHECK(unlock("owner", "1234") == INK_PIN_OK, "and it is the same one");
+    CHECK(WAIT_FOR(ink_app_state_of("home") == INK_APP_FOREGROUND, 2000), "the authenticated adult starts home normally");
     ink_probe_count("test.finished");
 }
 

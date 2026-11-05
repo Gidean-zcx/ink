@@ -493,6 +493,7 @@ static const ink_state_def_t ST_CARDS_REV = {.id = "app.cards_rev", .type = INK_
 
 int ink_apps_init(void) {
     AP.fg = -1;
+    AP.locked = ink_power_state() == INK_PWR_LOCKED || !ink_member_space_open();
     snprintf(AP.member, sizeof AP.member, "%s", ink_member_current()->id);
     AP.generation = ink_member_generation(AP.member);
     AP.h_foreground = ink_state_define(&ST_FOREGROUND);

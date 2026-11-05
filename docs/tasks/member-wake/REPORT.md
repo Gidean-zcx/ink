@@ -6,7 +6,7 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| MW-R1 | 已修复【实测／实现】 | 重建主页前同步电源及授权状态；过期成人门 → 孩子、无 PIN 成人、有 PIN 成人，均检查应用启动、旧成员停止、内存隔离、保存恢复和前台权限；`integration-apps` 164 条通过 | `cmake --build build --target sim-apps -j4`；定向命令见下 |
+| MW-R1 | 已修复【实测／实现】 | 重建主页前及启动时同步电源及授权状态；过期成人门 → 孩子、无 PIN 成人、有 PIN 成人，均检查应用启动、旧成员停止、内存隔离、保存恢复和前台权限；`integration-apps` 164 条通过；已有 PIN 和成员表不可读的启动场景也通过 | `cmake --build build --target sim-apps sim-people -j4`；定向命令见下；`people` 的 `table1/2/3` 连续启动 |
 | MW-R2 | 已修复【实测／实现】 | 截止检查独立于后台通知；非本地采集停止，AI 和听写丢弃缓冲；实时会话保留原成员与代际，传输队列在最终发送前检查成员、代际、撤销轮次及有效授权；本地录音继续 | `integration-member-wake-stream` 87 条通过；定向命令见下 |
 | MW-1～MW-6 | 待本轮全量复验 | 保留原有阅读闲置、两键 × 119/121 秒、错误/正确 PIN、原书第 4 页、孩子及无 PIN 成人、设置时长回归 | `integration-member-wake`、`integration-people` |
 | MW-7 | 已补齐持续流撤销【实测／实现】 | 正常 Wi-Fi 扫描跨过默认 120 秒截止，无需唤醒；通用采集及排队语音也受约束；状态通知仍可排队，授权执行不等它 | `integration-member-wake-stream` |
@@ -34,6 +34,7 @@ UBSAN_OPTIONS=halt_on_error=1 ctest --test-dir build-asan --output-on-failure -j
 | 撤销的层 | 失败检查数 | 证据目录（均在 `build/test-out/`） |
 | --- | --- | --- |
 | MW-R1：成员切换时同步锁定状态 | 15 | `member-wake-r1-out` |
+| MW-R1 同类：仅撤销启动时同步 | 不可读表、已有 PIN 各 1 条 | `member-wake-r1-boot-reverse/table2`、`table3`；正常对照为 `member-wake-r1-boot-current/`，2/11/5 条通过 |
 | MW-R2：通用音频采集截止检查 | 2 | `member-wake-r2-audio-out` |
 | MW-R2：AI 发送及缓冲截止检查 | 1 | `member-wake-r2-ai-out` |
 | MW-R2：传输队列检查 | 6 | `member-wake-r2-hub-out` |
@@ -50,7 +51,7 @@ UBSAN_OPTIONS=halt_on_error=1 ctest --test-dir build-asan --output-on-failure -j
 
 ## 改过的已有测试
 
-本轮没有修改已有断言、期望、预算或脚本时限；`integration-apps` 追加三个成员门生命周期场景，另新增持续流回归及只读缓冲观察包装。原开发轮改过的 `people`、`listening`、`media` 期望未再次改动。
+本轮没有修改已有断言、期望、预算或脚本时限；`integration-apps` 追加三个成员门生命周期场景，`integration-people-reset` 的 `table2/3` 追加三条启动/恢复断言，另新增持续流回归及只读缓冲观察包装。原开发轮改过的 `people`、`listening`、`media` 期望未再次改动。
 
 ## 要用户定的
 
