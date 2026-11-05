@@ -1,0 +1,34 @@
+{
+  "status": "passed",
+  "date": "2026-11-04",
+  "head": "2059f32b081b3e15b47dfdbc8ba944f85071cc3c",
+  "findings": {
+    "严重": 2,
+    "高": 2
+  },
+  "verification": {
+    "已解决": 2,
+    "部分解决": 1,
+    "未解决": 0,
+    "改出了新问题": 0
+  },
+  "experiment_checks": 6,
+  "source_location_checks": 24,
+  "local_links_checked": 9,
+  "all_files_under_one_mb": true,
+  "tracked_files_unchanged": true,
+  "staged_files_unchanged": true,
+  "all_untracked_outputs_in_audit_directory": true,
+  "git_diff_check_exit_code": 0,
+  "artifact_sizes_bytes": {
+    "TASK.md": 4650,
+    "experiments/README.md": 3233,
+    "experiments/results.json": 2544,
+    "experiments/state_checks.py": 9787,
+    "findings.json": 6030,
+    "report.md": 23995,
+    "verification.json": 1777
+  },
+  "script_sha256": "8cf848c78cb1f0bdb2533b56ef3bed5ca30e4517b8dc7220877ac4e3256a46bd",
+  "results_sha256": "b706e2d14b07bfb36daa3e385d342c96033e60e132fa16bc762c80e0f9960049"
+}

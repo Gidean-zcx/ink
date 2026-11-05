@@ -1,0 +1,70 @@
+[
+  {
+    "id": "HUB4-001",
+    "severity": "严重",
+    "area": "单实例接管与恢复安全",
+    "title": "上传前查一次实例编号，挡不住旧服务器继续服务和写入",
+    "evidence_type": ["文档核查", "复现", "推断"],
+    "locations": [
+      "docs/hub/hub-architecture.md:396",
+      "docs/hub/hub-architecture.md:412",
+      "docs/hub/hub-architecture.md:428",
+      "docs/hub/hub-architecture.md:1165",
+      "docs/audits/2026-11-04-codex-hub-design-r4/experiments/state_checks.py:15",
+      "docs/audits/2026-11-04-codex-hub-design-r4/experiments/state_checks.py:44"
+    ],
+    "impact": "【复现】合成状态检查中，旧机先检查通过、新机接管并写入、旧机再写入，两台均获准；没有假定 restic 快照覆盖同一个对象。【推断】旧机只失去对象存储连接、仍连得上设备时，按断存储照常运行的规则继续服务，新机已异地提交的吊销无法约束它，已吊销设备仍可能读家庭数据。域名切换和新机人工核对都不能关闭旧连接，也没有规则合并双机接受的写入。这是设计反例，不是对象存储实测故障。",
+    "recommendation": "新机开放前证明旧机已停止且不会自动重启，或从基础设施隔离其设备入口和存储权限；无法隔离时不开放。若采用自动接管，需原子更新的有期限所有权机制，使服务请求和持久发布均受有效所有权约束。上传前单独 GET 不构成隔离，S3 条件写也不自动保护另一个对象或本地数据库。"
+  },
+  {
+    "id": "HUB4-002",
+    "severity": "严重",
+    "area": "文件持久确认与恢复目录",
+    "title": "文件上传成功后可删原件，但恢复所需的目录与归属还可能只在本机",
+    "evidence_type": ["文档核查", "复现", "推断"],
+    "locations": [
+      "docs/hub/device-protocol.md:272",
+      "docs/hub/hub-architecture.md:374",
+      "docs/hub/hub-architecture.md:406",
+      "docs/hub/hub-architecture.md:778",
+      "docs/hub/hub-architecture.md:984",
+      "docs/audits/2026-11-04-codex-hub-design-r4/experiments/state_checks.py:60"
+    ],
+    "impact": "【复现】内存 SQLite 实验先快照，再登记新文件并上传字节、返回 durable，设备删原件后服务器在下一次快照前丢失；恢复目录和待确认列表都为空，远端字节虽在，却没有恢复所需的业务记录。按无引用规则推进至保留期后，对象被清除。【推断】在没有额外异地文件提交记录的现行方案下，已承诺备份完成的文件无法按既定恢复流程找回，最终可能丢失唯一副本；仅凭内容哈希无法恢复成员、目录和授权，绕过授权展示又有泄露风险。不声称上传后的密文立即丢失，也未对真实文件或对象存储运行实验。",
+    "recommendation": "durable 必须同时证明文件字节及可重建对象、成员归属、授权、引用关系的元数据已异地提交。首版可等包含该记录的完整快照上传成功才返回 true；更快的方案需加密文件提交记录，恢复时重放，并与删除、快照水位和回收联动。恢复目录未重建完成时禁止无引用回收。"
+  },
+  {
+    "id": "HUB4-003",
+    "severity": "高",
+    "area": "未知数据集与快照恢复授权",
+    "title": "最新签发的快照可重复使用，仍会把较新记录移出当前数据",
+    "evidence_type": ["文档核查", "复现", "推断"],
+    "locations": [
+      "docs/hub/device-protocol.md:279",
+      "docs/hub/device-protocol.md:298",
+      "docs/hub/device-protocol.md:310",
+      "docs/hub/device-protocol.md:313",
+      "docs/hub/hub-architecture.md:951",
+      "docs/hub/hub-architecture.md:980",
+      "docs/audits/2026-11-04-codex-hub-design-r4/experiments/state_checks.py:125"
+    ],
+    "impact": "【复现】最新签发快照 S 只有 A，首次安装成 D1 后两端新增 B；没有签发新快照。再次恢复 S 或保留其 from_snapshot 的旧备份形成未知 D2，S 仍符合最新签发条件，表中直接返回 manifest，B 被移到历史而未经预览。【推断】最新签发不代表当前数据水位，也不代表本次人已批准。历史可找回，所以定为高；这是 HUB3-002 修订后残留入口，不与旧编号作为两份问题累计。",
+    "recommendation": "未知数据集默认预览；保留自动接续时，应绑定本次恢复操作、目标数据集与基准水位，首次提交后消耗授权。重试只能幂等复用同一提交，不能把同一快照交给任意新数据集自动覆盖。中枢回退后无法证明授权有效时返回 wait。"
+  },
+  {
+    "id": "HUB4-004",
+    "severity": "高",
+    "area": "认证轮换与灾难恢复接续",
+    "title": "新令牌登录成功就丢弃旧令牌，早于备份持久化，恢复时无令牌可回退",
+    "evidence_type": ["文档核查", "复现", "推断"],
+    "locations": [
+      "docs/hub/hub-architecture.md:1164",
+      "docs/hub/hub-architecture.md:374",
+      "docs/hub/hub-architecture.md:418",
+      "docs/hub/device-protocol.md:164",
+      "docs/audits/2026-11-04-codex-hub-design-r4/experiments/state_checks.py:149"
+    ],
+    "impact": "【复现】合成凭据版本检查中，设备轮换后用新版本 hello 成功，按规则丢弃旧版本；在包含新认证状态的下一次快照前丢机，恢复中枢只认识旧版本，设备只剩新版本，无法认证。【推断】BOUND 设备将收到 auth_invalid 并退避，不能开始同步；需要人工修复或重新配对，公钥和域名不变也无效。本条只影响启用轮换的配置，文档允许首版关闭轮换。",
+    "recommendation": "首版可明确关闭轮换；启用时，旧凭据只在收到绑定本次轮换的认证状态已异地持久提交确认后释放，或将认证变更另行持久化并在恢复开放前重放。固定多留 5 分钟不够，异地故障可能持续更久；回退不得绕过吊销记录。"
+  }
+]

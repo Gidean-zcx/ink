@@ -1,0 +1,152 @@
+[
+  {
+    "id": "HUB-001",
+    "verdict": "已解决",
+    "evidence": "【文档核查】docs/hub/device-protocol.md:342、344、345；docs/hub/hub-architecture.md:1188。【代码核查】a81c1b8:system/policy/cap.c:590。",
+    "note": "系统服务分支保留 result；文档明确查询分页、回调生命周期和合入依赖。解决的是设计缺口，不代表当前工作树已实现。"
+  },
+  {
+    "id": "HUB-002",
+    "verdict": "改出了新问题",
+    "evidence": "【文档核查】docs/hub/device-protocol.md:362、365、366、368。【代码核查】a81c1b8:system/services/ai/ai_service.c:481、483；a81c1b8:system/policy/cap.c:863。【复现】experiments/discovery_probe.py：53 项的 JSON 长 780 字节，768 字节缓冲返回 -1，调用方发送空 actions。",
+    "note": "累积定义字典修正了按固件缓存动态视图的错误，但以 actions 为必经交集且声称不用改设备，继承了已有容量问题并使全部设备工具消失。见 HUB2-006。"
+  },
+  {
+    "id": "HUB-003",
+    "verdict": "已解决",
+    "evidence": "【文档核查】docs/hub/hub-architecture.md:224、230、233、240。",
+    "note": "系统操作恢复为 AI 提案、成人确认；预算、恢复、配置都有能力入口，凭据、确认按钮和固件升级例外明确。"
+  },
+  {
+    "id": "HUB-004",
+    "verdict": "已解决",
+    "evidence": "【文档核查】docs/hub/device-protocol.md:186、188。",
+    "note": "改为序列化后整条消息计数，每页不超过 110 词法单元，完整读取才替换目录。分页仍是待实现项。"
+  },
+  {
+    "id": "HUB-005",
+    "verdict": "部分解决",
+    "evidence": "【文档核查】docs/hub/hub-architecture.md:1232、1260、1264、1267；docs/hub/device-protocol.md:205、216。【代码核查】a81c1b8:system/policy/confirm.c:171、253、311。",
+    "note": "独立方法、来源隔离、原动作绑定和重新校验已经补齐；但 confirm.list 只列待办，不能把查不到且事件丢失推成没有执行。见 HUB2-007；代次的传递见 HUB2-008。"
+  },
+  {
+    "id": "HUB-006",
+    "verdict": "部分解决",
+    "evidence": "【文档核查】docs/hub/hub-architecture.md:531、536、538、540；docs/hub/device-protocol.md:76。【代码核查】system/services/hub/hub_link.c:397、402；system/services/audio/audio_service.c:754。",
+    "note": "长任务、长朗读、确认不占一轮以及文字上限已明确。倒推发送仍缺设备剩余时限和可用音频缓冲的契约，冷连接与尾帧突发不能据此验收。见 HUB2-009。"
+  },
+  {
+    "id": "HUB-007",
+    "verdict": "已解决",
+    "evidence": "【文档核查】docs/hub/device-protocol.md:313、326、328。",
+    "note": "停说、断流、厂商无反应、总时限分别处理；听写拥有者负责断线关闭和麦克风交接，final-only 不再被新文字超时截断。"
+  },
+  {
+    "id": "HUB-008",
+    "verdict": "部分解决",
+    "evidence": "【文档核查】docs/hub/hub-architecture.md:952、984、986；docs/hub/device-protocol.md:148、150。",
+    "note": "有 pin 的路径和完整二维码的可信控制台比对已经建立独立信任来源；仅地址、无 pin 时的电脑输入认领码回退没有携带观察到的指纹。见 HUB2-001。"
+  },
+  {
+    "id": "HUB-009",
+    "verdict": "部分解决",
+    "evidence": "【文档核查】docs/hub/hub-architecture.md:329、330、331、341、342、354、356、362。",
+    "note": "先拉镜像、停写排空、冻结回收、同代完成标记及开放写入后的人工恢复边界已补齐。不可倒退日志没有跨主机损毁的持久性保证，恢复后安全状态仍可能倒退。见 HUB2-003。"
+  },
+  {
+    "id": "HUB-010",
+    "verdict": "部分解决",
+    "evidence": "【文档核查】docs/hub/hub-architecture.md:362、831、833、834；docs/hub/device-protocol.md:263、275、277、279。【代码核查】a81c1b8:system/services/data/datastore.c:885、916、932。",
+    "note": "补上代次、缺口和全量对账、原子安装的方向正确，但从可回退备份中的代次加一会重用；全量对账没有稳定水位、缺失正文传输和提交 ACK 规则。见 HUB2-004、HUB2-005。"
+  },
+  {
+    "id": "HUB-011",
+    "verdict": "部分解决",
+    "evidence": "【文档核查】docs/hub/hub-architecture.md:673、681、682、684、685；docs/hub/device-protocol.md:166、168、170、353、356。",
+    "note": "Scope、接收成员、切换取消和发送前检查已补齐；旧代次一律丢弃与结果留到成员回来之间没有重新授权规则，设备入站字段仍只检查成员名。见 HUB2-008。"
+  },
+  {
+    "id": "HUB-012",
+    "verdict": "部分解决",
+    "evidence": "【文档核查】docs/hub/device-protocol.md:136、138、145、152、156、158、379。",
+    "note": "等待 10 分钟、首次 hello 激活及 complete 丢失重发已补齐。设备已存待生效凭据但首次 hello 超过十分钟时，服务器作废而设备只能退避 hello，没有回到配对的持久状态转移。见 HUB2-002。"
+  },
+  {
+    "id": "HUB-013",
+    "verdict": "已解决",
+    "evidence": "【文档核查】docs/hub/hub-architecture.md:260、275、396。",
+    "note": "向导先建立可信 HTTPS 或 SSH 转发；可信之前不收秘密，无证书不降为未知自签。"
+  },
+  {
+    "id": "HUB-014",
+    "verdict": "部分解决",
+    "evidence": "【文档核查】docs/hub/hub-architecture.md:721、727、342、354、362；docs/decisions/README.md 的 D-93。",
+    "note": "依赖关系、派生重建、禁止重新提取和原话保留选择已有约定；忘掉记录仍受不可倒退日志的异地持久性缺口影响，旧备份恢复可重新暴露它。见 HUB2-003。"
+  },
+  {
+    "id": "HUB-015",
+    "verdict": "已解决",
+    "evidence": "【文档核查】docs/hub/hub-architecture.md:185、211、747。",
+    "note": "独立 worker，无网络、密钥和数据库，只映射单任务输入输出，主进程校验产物。实际容器隔离仍需第 1 步实现验证。"
+  },
+  {
+    "id": "HUB-016",
+    "verdict": "已解决",
+    "evidence": "【文档核查】docs/hub/hub-architecture.md:755、761、1475。",
+    "note": "内容包 v1、解码样本、阅读器与播放器改造已列为第 5 步硬依赖，不再声称现有 TXT 阅读器直接支持。"
+  },
+  {
+    "id": "HUB-017",
+    "verdict": "已解决",
+    "evidence": "【文档核查】docs/hub/hub-architecture.md:1387、1389、1393、1402。",
+    "note": "1× 实时网络桥、替身模式、真 Opus/JPEG 模式和分阶段验收已区分，假媒体成功不等于真媒体通过。"
+  },
+  {
+    "id": "HUB-018",
+    "verdict": "部分解决",
+    "evidence": "【文档核查】docs/hub/hub-architecture.md:797、800、802、803、804。",
+    "note": "截图截止时间、像素比较、单元不打断、输入改造已经补齐；新增的按 DOM 区分普通链接与副作用动作不能成为安全边界。见 HUB2-010。"
+  },
+  {
+    "id": "HUB-019",
+    "verdict": "已解决",
+    "evidence": "【文档核查】docs/hub/hub-architecture.md:470、473；docs/decisions/README.md 的 D-79。",
+    "note": "原子预留、调用上界、未知费用待对账和软硬阈值均明确，具体金额仍待用户选择。"
+  },
+  {
+    "id": "HUB-020",
+    "verdict": "已解决",
+    "evidence": "【文档核查】docs/hub/hub-architecture.md:458、464。",
+    "note": "保留原始厂商字段、完整组装工具调用、每模型能力表，首版限定一家一个模式。本轮未重新审计各厂商现行接口。"
+  },
+  {
+    "id": "HUB-021",
+    "verdict": "已解决",
+    "evidence": "【文档核查】docs/hub/device-protocol.md:243、251、257、285。",
+    "note": "停等按 64 KiB 段估算，上传编号限定连接、落盘 ACK、最终哈希和 OTA 固定包已补齐。实际吞吐未测。"
+  },
+  {
+    "id": "HUB-022",
+    "verdict": "已解决",
+    "evidence": "【文档核查】docs/hub/hub-architecture.md:861、868。",
+    "note": "任务运行、取消、结果未知分开；副作用 unknown 不重试，持久幂等与内容复用已明确。确认事件错误推成未执行另列 HUB2-007。"
+  },
+  {
+    "id": "HUB-023",
+    "verdict": "已解决",
+    "evidence": "【文档核查】docs/hub/hub-architecture.md:909、1398；docs/decisions/README.md 的 D-86。",
+    "note": "合成数据可以暂定，首次真实家庭数据落盘前明确设置用户确认和备份演练门槛。"
+  },
+  {
+    "id": "HUB-024",
+    "verdict": "已解决",
+    "evidence": "【文档核查】docs/hub/hub-architecture.md:512、525、529、1389。",
+    "note": "模型 2 秒只是必要指标，文档承认尚未计入网络与停说等待；成人/儿童、冷热连接、工具路径均量到设备末端并报 p50/p95。时延目标未实测达成；整轮截止另见 HUB2-009。"
+  },
+  {
+    "id": "HUB-025",
+    "verdict": "已解决",
+    "evidence": "【文档核查】docs/hub/device-protocol.md:27、40、79；docs/hub/hub-architecture.md:1387、1388、1389。",
+    "note": "修正 ai.ask 文本来源、rt.open 次序和方法长度；开发第 2 步分为免费假厂商与批准后的付费真厂商。"
+  }
+]

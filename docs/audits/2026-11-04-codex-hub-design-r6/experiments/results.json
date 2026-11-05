@@ -1,0 +1,130 @@
+{
+  "review_commit": "4ba1656c7d040cbb2e63d25875c8111fe5e2ce8f",
+  "evidence_boundary": "Pure synthetic policy/state models; not execution of hub, device, model API, or browser. A zero exit means the stated cases and controls hold in these models only.",
+  "recovery_log": {
+    "v06": {
+      "old_machine_really_stopped": true,
+      "uploaded_log_entries": 1,
+      "applied_entries": 0,
+      "forgotten_fact_visible": true
+    },
+    "v07": {
+      "old_machine_really_stopped": true,
+      "uploaded_log_entries": 1,
+      "applied_entries": 1,
+      "forgotten_fact_visible": false
+    }
+  },
+  "restore_dispatch": [
+    {
+      "case": "unused_grant_without_gap",
+      "action": "continue"
+    },
+    {
+      "case": "unused_grant_with_gap",
+      "action": "manifest"
+    },
+    {
+      "case": "incomplete_with_grant",
+      "action": "wait"
+    },
+    {
+      "case": "new_dataset_reuses_used_grant",
+      "action": "wait"
+    },
+    {
+      "case": "replica_changed",
+      "action": "wait"
+    },
+    {
+      "case": "hub_restored",
+      "action": "wait"
+    },
+    {
+      "case": "known_dataset_with_gap",
+      "action": "manifest"
+    },
+    {
+      "case": "known_dataset_after_hub_restore",
+      "action": "manifest"
+    },
+    {
+      "case": "unknown_dataset_without_grant",
+      "action": "wait"
+    }
+  ],
+  "history_gap_257_deletes": {
+    "v06_remaining_records": 1,
+    "v07_remaining_records": 0
+  },
+  "asked_authority": [
+    {
+      "case": "explicit_send_control",
+      "utterance": "给妈妈发消息说我到了。",
+      "candidate_operation": "send_or_dial",
+      "listed_checks_grant_asked": true,
+      "human_requested_that_operation": true,
+      "operation_bound_control_grants": true
+    },
+    {
+      "case": "read_only_request",
+      "utterance": "妈妈刚才的消息说了什么？",
+      "candidate_operation": "send_or_dial",
+      "listed_checks_grant_asked": true,
+      "human_requested_that_operation": false,
+      "operation_bound_control_grants": false
+    },
+    {
+      "case": "quoted_instruction",
+      "utterance": "解释网页上的这句话：给妈妈打电话。",
+      "candidate_operation": "send_or_dial",
+      "listed_checks_grant_asked": true,
+      "human_requested_that_operation": false,
+      "operation_bound_control_grants": false
+    },
+    {
+      "case": "negated_action",
+      "utterance": "不要给妈妈发消息，只帮我看一下。",
+      "candidate_operation": "send_or_dial",
+      "listed_checks_grant_asked": true,
+      "human_requested_that_operation": false,
+      "operation_bound_control_grants": false
+    },
+    {
+      "case": "background_inherits_read_request",
+      "utterance": "整理妈妈发来的长消息，做好告诉我。",
+      "candidate_operation": "send_or_dial",
+      "listed_checks_grant_asked": true,
+      "human_requested_that_operation": false,
+      "operation_bound_control_grants": false
+    },
+    {
+      "case": "autonomous_timer_control",
+      "utterance": "给妈妈发消息。",
+      "candidate_operation": "send_or_dial",
+      "listed_checks_grant_asked": false,
+      "human_requested_that_operation": false,
+      "operation_bound_control_grants": false
+    },
+    {
+      "case": "received_message_control",
+      "utterance": "给妈妈发消息。",
+      "candidate_operation": "send_or_dial",
+      "listed_checks_grant_asked": false,
+      "human_requested_that_operation": false,
+      "operation_bound_control_grants": false
+    }
+  ],
+  "private_export": {
+    "human_request": "给林老师发消息说我们周六到。",
+    "send_operation_explicitly_requested": true,
+    "recipient_matches_request": true,
+    "fixture_source": "样例家庭喜欢紫色风筝",
+    "outgoing_translation": "The example family likes violet kites.",
+    "raw_copy_requires_confirmation": true,
+    "translation_requires_confirmation_under_literal_check": false,
+    "source_bound_control_requires_confirmation_for_both": true,
+    "user_explicitly_authorized_private_source": false,
+    "assumption": "Private source is known and read in this same turn; outgoing text is translated. No missed source logging is needed."
+  }
+}

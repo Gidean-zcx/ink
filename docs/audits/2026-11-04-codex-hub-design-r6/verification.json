@@ -1,0 +1,20 @@
+[
+  {
+    "id": "HUB5-001",
+    "verdict": "已解决",
+    "evidence": "【文档核查】docs/hub/hub-architecture.md:400-405,410-416,446-448：先确认旧机已停，再更新实例、读取最终快照和安全日志，开放前再读日志；交接标记绑定实例和最终位置。",
+    "note": "关闭人在正确停机时仍遗漏已上传日志的原反例；保留用户已接受的人工确认前提。设计层面解决，不代表实机验收。"
+  },
+  {
+    "id": "HUB5-002",
+    "verdict": "已解决",
+    "evidence": "【文档核查】docs/hub/hub-architecture.md:1003,1010-1019；docs/hub/device-protocol.md:298-301,307-314：有效恢复授权遇到 history_gap 必须走 manifest，全量提交前不修改副本，不发送增量。",
+    "note": "装好快照后断网并删除超过 256 条的原反例不再直接接续增量；数据不完整仍回 wait。设计层面解决。"
+  },
+  {
+    "id": "HUB4-003",
+    "verdict": "已解决",
+    "evidence": "【文档核查】docs/hub/hub-architecture.md:1000-1001,1019；docs/hub/device-protocol.md:280,301,303,316：一次性授权绑定快照、副本版本和 hub_instance，同一数据集重试幂等。",
+    "note": "重复安装旧快照、副本已经变化和跨中枢恢复的旧授权都不能跳过预览；HUB5-002 的缺口分支也已修正。设计层面解决。"
+  }
+]

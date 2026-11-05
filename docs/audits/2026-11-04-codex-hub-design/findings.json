@@ -1,0 +1,411 @@
+[
+  {
+    "id": "HUB-001",
+    "severity": "高",
+    "area": "B",
+    "title": "现有远端回执丢弃查询数据，不能只靠中枢适配完成软总线接入",
+    "evidence_type": "代码核查、文档核查",
+    "locations": [
+      "docs/hub/hub-architecture.md:995",
+      "docs/hub/hub-architecture.md:1083",
+      "system/policy/cap.c:532",
+      "system/include/ink/sys/cap.h:62",
+      "7bc57cb:docs/system/system-services-design.md:58"
+    ],
+    "impact": "library.search、memory.search、usage.today 等即使返回 structuredContent.result，设备也只保留 status/object/say/detail/revision/undo_ms，应用拿不到列表、数值和游标。系统服务分支规定要加 result，但本设计没有把远端解包、分页与生命周期列为前置依赖；按“不用改设备”实施会返工。",
+    "recommendation": "固定双向 Receipt v2，定义 result、Schema、分页和超限时 blob 引用；明确回调所有权与大小上限，先补设备远端解包及契约测试，再开发查询能力。"
+  },
+  {
+    "id": "HUB-002",
+    "severity": "高",
+    "area": "B",
+    "title": "按固件缓存 tools/list 会缓存错误的页面与成员能力集合",
+    "evidence_type": "代码核查、文档核查",
+    "locations": [
+      "docs/hub/hub-architecture.md:1037",
+      "system/policy/cap.c:45",
+      "system/policy/cap.c:665",
+      "system/policy/cap.c:672",
+      "system/services/ai/ai_service.c:478"
+    ],
+    "impact": "tools/list 是当前页面、当前成员和 AI 开放范围过滤后的视图。在主页首次拉取后进入阅读页，缓存没有 reader 工具的 Schema；在儿童身份首次拉取后切成人，权限集合也不完整。快照 actions 只有名字，不能补齐定义。",
+    "recommendation": "区分静态全量能力定义与动态可用集合。静态定义以 manifest_hash 缓存，动态按 member/session_epoch/page_gen/caps_rev 更新；或先按当前页面和成员重新分页拉取。"
+  },
+  {
+    "id": "HUB-003",
+    "severity": "高",
+    "area": "C",
+    "title": "把需确认的系统操作直接排除于 AI，缩减了已确认的 AI 能力范围",
+    "evidence_type": "文档核查",
+    "locations": [
+      "docs/hub/hub-architecture.md:214",
+      "docs/hub/hub-architecture.md:217",
+      "docs/hub/hub-architecture.md:224",
+      "docs/hub/hub-architecture.md:1094",
+      "docs/system/foundation.md:351",
+      "docs/requirements.md:39",
+      "7bc57cb:docs/system/system-services-design.md:55"
+    ],
+    "impact": "budget.set、device.revoke、member.remove 被列为 AI 不可调，restore.apply 和改配置只给控制台，然而 §7.5 又让 AI 发起 budget.set。G-002/R-007 要求同一路径，既定规则是系统操作按权限确认；凭据和固件升级等明确例外不能扩大为全部系统操作。",
+    "recommendation": "让 AI 提交结构化的修改或恢复提案，走同一能力总线，最终由成人按操作摘要确认。保留凭据值、确认按钮、签名和禁止 AI 发起的升级为明确例外；补 settings/state 和数据导出等能力映射，逐项验证。"
+  },
+  {
+    "id": "HUB-004",
+    "severity": "中",
+    "area": "B",
+    "title": "目录“17 项即可不分页”的规则与新增字段不相容",
+    "evidence_type": "复现、代码核查、文档核查",
+    "locations": [
+      "docs/hub/hub-architecture.md:1004",
+      "docs/hub/device-protocol.md:173",
+      "docs/hub/device-protocol.md:182",
+      "system/util/ink_json.c:13",
+      "system/policy/cap.c:853",
+      "experiments/protocol_checks.py"
+    ],
+    "impact": "实测 17 项、每项 name/title/form 的完整响应恰为 128 tokens；增加 rev 就变为 130，15 项加 offline/timeout_ms/rev 为 176，现有解析器整条拒收。设备也只读第一页，缺能力会被误认为中枢未提供。",
+    "recommendation": "按序列化后的实际 token 数和字节数切页，预留协议扩展余量；将分页、游标和目录版本替换作为必要依赖，或对旧设备固定返回经测量可容纳的精简完整目录。"
+  },
+  {
+    "id": "HUB-005",
+    "severity": "高",
+    "area": "B/E",
+    "title": "远端确认没有贯通调用来源、确认事件和被批准动作的绑定",
+    "evidence_type": "代码核查、文档核查、推断",
+    "locations": [
+      "docs/hub/hub-architecture.md:1094",
+      "docs/hub/device-protocol.md:199",
+      "docs/hub/device-protocol.md:203",
+      "system/policy/cap.c:802",
+      "7bc57cb:docs/system/system-services-design.md:442"
+    ],
+    "impact": "confirm.request 被限定为远端能力，但所有入站 tools/call 当前均作为 INK_SRC_AI 调用；系统服务事件为 token/decision，协议却等 request_id/accepted。仅传标题正文、等待 true，也未规定确认记录如何绑定不可变的实际参数、成人身份、成员代次和网页版本，重启、换人、网页变化后可能执行与卡片不同的动作。",
+    "recommendation": "在已认证通道上区分受控系统远端入口与模型工具入口，不能信任模型自报 source；统一 token/事件与状态查询。中枢保存一次性确认记录，绑定 scope、session_epoch、cap、参数摘要哈希、目标版本、期限，执行前重新校验，断线/换人/过期可撤回，重复事件不重执行。"
+  },
+  {
+    "id": "HUB-006",
+    "severity": "高",
+    "area": "B/F",
+    "title": "长语音、长回答和人工确认超出现有一轮请求的时限与文本容量",
+    "evidence_type": "代码核查、文档核查、推断",
+    "locations": [
+      "system/services/ai/ai_service.c:40",
+      "system/services/ai/ai_service.c:216",
+      "system/services/ai/ai_service.c:324",
+      "system/services/ai/ai_service.c:486",
+      "docs/hub/hub-architecture.md:475",
+      "docs/hub/hub-architecture.md:491",
+      "docs/hub/device-protocol.md:33",
+      "docs/hub/device-protocol.md:74"
+    ],
+    "impact": "ai.listen 从开始录音起只有 45 秒，最终回执又必须等朗读帧发送完；确认本身允许等 60 秒。慢模型、多轮工具、长页朗读或等待用户会被设备超时关闭。回答总缓冲只有 2048 字节，逐条小于 511 并不能防止总内容被忽略；ai.stt 是替换文本，按 511 字节拆成多条会只留下最后一段。",
+    "recommendation": "先明确短回答的字节/时间上限；将长任务与人工确认从单次 RPC 生命周期拆出，返回可查询/取消的任务句柄，完成后通过受成员约束的通知取结果。若扩展交互流，显式设计总期限、播放进度、分页与转写分段语义，不用无限延长超时解决。"
+  },
+  {
+    "id": "HUB-007",
+    "severity": "中",
+    "area": "F",
+    "title": "听写以“5 秒没有新文字”判断停说，会截断合法录音",
+    "evidence_type": "文档核查、代码核查、推断",
+    "locations": [
+      "docs/hub/hub-architecture.md:547",
+      "docs/hub/hub-architecture.md:568",
+      "docs/hub/device-protocol.md:293",
+      "system/services/hub/rt.c:113",
+      "system/services/audio/audio_service.c:679"
+    ],
+    "impact": "interim_ms=0 明确允许只发定稿，厂商也可能长句末尾才出结果；仍在接收音频时，5 秒无新文字不能证明用户停说。rt.c 断线会自动重登记且没有立即 on_closed 通知，听写拥有者若只等该回调，会继续录音或把旧段接到新会话。",
+    "recommendation": "分开音频输入超时、VAD 静音、上游无结果和总录音时限；final-only 不依赖中间文字。设备听写服务负责麦克风独占、等采集结束回调后交接，监听断线并废弃旧 segment，重连须显式新开；这些作为 R-056 前置契约验收。"
+  },
+  {
+    "id": "HUB-008",
+    "severity": "严重",
+    "area": "E",
+    "title": "首次配对的无预置公钥路径没有独立信任锚，二维码比对可被自证",
+    "evidence_type": "文档核查、推断",
+    "locations": [
+      "docs/hub/hub-architecture.md:843",
+      "docs/hub/hub-architecture.md:861",
+      "docs/hub/device-protocol.md:142",
+      "docs/hub/device-protocol.md:145"
+    ],
+    "impact": "在首次无 pin 的连接被替换这一威胁前提下，对方同时控制设备收到的公钥、claim URL 和二维码内容。它可返回自己有可信 HTTPS 证书的站点，页面比较自己的公钥当然成功。HTTPS 只证明这个站点，不证明它是用户的中枢；设备可能加入攻击者中枢，之后暴露设备页面与成员数据。此为协议攻击路径推演，并非已部署漏洞复现。",
+    "recommendation": "首次连接前经独立可信控制台/本地安装输出导入期望公钥和规范化中枢 origin（配对文件或带 pin 的链接）；扫码认领 URL 必须限制到这个已验证 origin。无预置信任时采用双方独立短码核对或受口令认证的引导，不能让未知服务提供唯一验证页；同时采用单次原子认领并在设备显示待加入家庭供本地确认。"
+  },
+  {
+    "id": "HUB-009",
+    "severity": "严重",
+    "area": "D",
+    "title": "跨库快照没有一致边界，升级回滚会丢掉快照后仍在接收的数据",
+    "evidence_type": "复现、文档核查、推断",
+    "locations": [
+      "docs/hub/hub-architecture.md:278",
+      "docs/hub/hub-architecture.md:308",
+      "docs/hub/hub-architecture.md:321",
+      "docs/hub/hub-architecture.md:330",
+      "docs/hub/hub-architecture.md:334",
+      "experiments/recovery_checks.py"
+    ],
+    "impact": "逐个 VACUUM INTO 只保证各库自身一致，无法保证 hub.db 成员/设备表、family.db 数据、作业和 blob 引用同一时刻。SQLite 小模型复现了每库 integrity_check 都通过、恢复后记录却引用不存在成员。升级先快照再拉镜像再停服务，期间仍可写；失败恢复会丢这段已确认数据，远不止文中所谓停机几分钟，且吊销/删除状态也可能倒退。",
+    "recommendation": "先下载并验证镜像，再暂停写入、排空任务、冻结 blob GC，形成包含全部库/配置/不可变块的同代清单和原子完成标记，再迁移。自动回滚限定到开放写入之前；恢复生产旧备份必须明确 RPO、保留后续日志和不可倒退的吊销/删除记录。演练验证跨库引用与真实业务恢复，不只打开几行。"
+  },
+  {
+    "id": "HUB-010",
+    "severity": "严重",
+    "area": "G",
+    "title": "同步 ACK 后删除墓碑，无法在中枢旧备份恢复或设备版本回退后正确对账",
+    "evidence_type": "复现、代码核查、文档核查、推断",
+    "locations": [
+      "docs/hub/hub-architecture.md:729",
+      "docs/hub/hub-architecture.md:739",
+      "docs/hub/device-protocol.md:253",
+      "7bc57cb:docs/system/system-services-design.md:193",
+      "7bc57cb:docs/system/system-services-design.md:234",
+      "experiments/recovery_checks.py",
+      "7bc57cb:system/services/data/datastore.c:238"
+    ],
+    "impact": "已同步的删除在设备 ACK 后清墓碑；中枢恢复删除前备份时，设备已无变更可补，旧对象会复活。另有每集合 256 墓碑淘汰规则，长期离线也能丢删除。去重键 collection/member/id/ver 缺设备与数据代次，设备恢复旧快照后重用版本可能使新编辑被当成重复而丢弃。现有 ink_db_put/changes/ack 还没有安装快照并保留 id/ver 的恢复契约。",
+    "recommendation": "增加 dataset/device/hub epoch、连续游标与历史缺口检测；恢复或墓碑历史不完整时走明确的权威全量清单对账，缺失即删除须受范围和确认约束。快照需有 schema、哈希、代次、next_id/last_ver 及原子安装/失败回退接口；使用新 epoch 防版本重用，测试 ACK 后回滚、超过 256 次删除、断电和重试。"
+  },
+  {
+    "id": "HUB-011",
+    "severity": "高",
+    "area": "E",
+    "title": "成员切换仅结束 AI 会话，未约束外发队列和其他异步输出的接收人",
+    "evidence_type": "文档核查、推断",
+    "locations": [
+      "docs/hub/hub-architecture.md:495",
+      "docs/hub/hub-architecture.md:611",
+      "docs/hub/hub-architecture.md:929",
+      "docs/hub/device-protocol.md:165"
+    ],
+    "impact": "共享设备上，成人触发的私密任务在孩子使用时完成，外发队列按设备上线直接发送 tools/call；协议未规定目标成员、身份代次或接收前校验。浏览器画面、ASR、确认和排队中的音频也不在“结束当前 AI”的覆盖范围内。两家静态读取测试不能证明同一家庭内不会串数据。",
+    "recommendation": "由已认证主体生成 Scope，包含 actor、目标成员和权限版本；异步任务固定起始 scope，外发消息带 audience，敏感结果等待对应成人解锁。成员切换做有确认的 epoch 屏障，撤销旧会话/确认并清理排队帧；设备和中枢都丢弃旧 epoch 输出。补成人→儿童、成人→另一成人、重连与迟到结果交错测试。"
+  },
+  {
+    "id": "HUB-012",
+    "severity": "高",
+    "area": "E/B",
+    "title": "配对等待和令牌提交的失败状态没有闭合",
+    "evidence_type": "代码核查、文档核查、推断",
+    "locations": [
+      "docs/hub/device-protocol.md:81",
+      "docs/hub/device-protocol.md:142",
+      "docs/hub/device-protocol.md:157",
+      "system/services/hub/hub_link.c:318",
+      "system/services/hub/hub_link.c:577",
+      "docs/hub/hub-architecture.md:1294"
+    ],
+    "impact": "未 hello 10 秒断连接与人工扫码有效 600 秒冲突；pair/complete 后设备已保存令牌，ACK 丢失却让中枢作废令牌，设备转入 hello 后会反复 auth_invalid。当前 hello/ONLINE 状态机也不能直接在未认证状态发送 pair/complete 回执。仅增加 send_hello 字段和新服务无法完成。",
+    "recommendation": "明确 UNPAIRED/PAIRING/COMMITTING/BOUND/REVOKED 状态、分阶段超时和允许消息；pair/begin 视为有界配对握手。提交采用幂等 transaction_id，允许持 pending token 的首次 hello 完成提交，或可查询/重发 complete；加入每一步掉线、ACK 丢失和重启用例。"
+  },
+  {
+    "id": "HUB-013",
+    "severity": "高",
+    "area": "D",
+    "title": "安装向导在建立可信 HTTPS 之前处理账号和密钥",
+    "evidence_type": "文档核查、推断",
+    "locations": [
+      "docs/hub/hub-architecture.md:239",
+      "docs/hub/hub-architecture.md:247",
+      "docs/hub/hub-architecture.md:251",
+      "docs/hub/hub-architecture.md:262",
+      "docs/hub/hub-architecture.md:367"
+    ],
+    "impact": "按图先登录、保存恢复密钥、填写模型密钥，到第 5 步才确定地址和发证书；初始 URL 如何可信没有定义。自签兜底又与二维码配对依赖可信网页矛盾。普通用户会遇到打不开、证书警告或无法判别是否泄露秘密的入口，单测 /ping 不能发现 443/ACME 不通。",
+    "recommendation": "先做公网/端口/证书预检，建立可信 HTTPS；无法直接获得证书时使用默认仅本机监听的 setup 加 SSH 转发/本地 CLI 建立信任，再开放控制台。未知证书状态不展示恢复密钥、不收 API 密钥、不进入无 pin 配对；给封端口、无公网和续签失败明确恢复指引。"
+  },
+  {
+    "id": "HUB-014",
+    "severity": "高",
+    "area": "G",
+    "title": "“忘掉”只删记忆表，派生摘要、原转写和备份会把事实带回来",
+    "evidence_type": "文档核查、推断",
+    "locations": [
+      "docs/hub/hub-architecture.md:630",
+      "docs/hub/hub-architecture.md:643",
+      "docs/hub/hub-architecture.md:650",
+      "docs/hub/hub-architecture.md:741",
+      "docs/hub/hub-architecture.md:1233"
+    ],
+    "impact": "记忆的旧版本和向量被删除，但年度保留的转写、已生成档案/摘要、待运行提取任务和旧备份没有同一删除语义。下次重建记忆或恢复备份能重新出现，立即调用 memory.list 查不到并不能证明“忘掉”。",
+    "recommendation": "定义来源→事实→摘要/索引的依赖关系、删除范围及提取水位；持久记录最小化的禁止再提取标记，撤销相关派生项和在途任务，恢复时重放删除记录。按 D-34 保留原转写可与“不再作为记忆使用”分开，是否也删除原文由用户选择，不能悄悄改变保留要求。"
+  },
+  {
+    "id": "HUB-015",
+    "severity": "高",
+    "area": "G/E",
+    "title": "不可信书籍转换只限资源，没有与家庭数据和主密钥隔离",
+    "evidence_type": "文档核查、推断",
+    "locations": [
+      "docs/hub/hub-architecture.md:173",
+      "docs/hub/hub-architecture.md:278",
+      "docs/hub/hub-architecture.md:665",
+      "docs/hub/hub-architecture.md:755"
+    ],
+    "impact": "转换作为主容器里的普通子进程处理任意 EPUB/PDF，文件不可信但仅规定内存/时间限制。未限制文件系统、继承凭据和网络；解析器缺陷、外部资源加载或压缩路径处理错误一旦出现，影响可扩到同容器的家庭库/密钥。浏览器已有隔离，文件解析却缺同等边界。",
+    "recommendation": "给转换器独立低权限沙箱/容器，只映射单任务只读输入和隔离输出，不传 API 凭据、无网络、无家庭数据库挂载；限制解压总量、路径、页数和外部引用。主进程验证产物格式/大小/哈希后再入库；同样约束 web.fetch 的重定向与内网目标。"
+  },
+  {
+    "id": "HUB-016",
+    "severity": "高",
+    "area": "G/I",
+    "title": ".ebook 与读听对齐没有设备消费契约，第 5 步不能靠中枢转换器验收",
+    "evidence_type": "代码核查、文档核查",
+    "locations": [
+      "docs/hub/hub-architecture.md:665",
+      "docs/hub/hub-architecture.md:667",
+      "docs/hub/hub-architecture.md:1234",
+      "docs/hub/hub-architecture.md:1291",
+      "apps/reader/reader.c:69",
+      "apps/reader/reader.c:391"
+    ],
+    "impact": "当前阅读器仅扫描 .txt、整本读入且限 2 MiB，没有 EBOK 分块读取或离线句子音频索引。设计要求 EPUB 转扩展 .ebook 后能读能听，却未冻结扩展格式、文本定位单位、内容版本与音频对齐，也没将阅读器/播放器改造列入 §13。上游格式存在不能证明本项目能读。",
+    "recommendation": "先冻结最小内容包：规范化文本、稳定内容 ID/修订、章/段/字节定位、压缩块索引、媒体清单及句子时间映射，配设备解码和定位恢复样本。可先以 TXT+版本化音频索引跑通纵切，再扩 EPUB/PDF 排版；把阅读器与离线播放器适配列为第 5 步硬依赖。"
+  },
+  {
+    "id": "HUB-017",
+    "severity": "高",
+    "area": "I",
+    "title": "模拟器连真中枢还缺真实媒体编解码，socket 桥不能验证语音和 JPEG",
+    "evidence_type": "代码核查、文档核查",
+    "locations": [
+      "docs/hub/hub-architecture.md:1230",
+      "docs/hub/hub-architecture.md:1235",
+      "docs/hub/hub-architecture.md:1303",
+      "ports/sim/hal/hal_net_sim.c:931",
+      "ports/sim/hal/hal_codec_sim.c:30",
+      "ports/sim/hal/hal_codec_sim.c:98",
+      "docs/system/system-detailed-design.md:560",
+      "ports/sim/hal/hal_jpeg_sim.c:13"
+    ],
+    "impact": "模拟上行是 MAGIC+音高/音量的替身包，下行只识别这种格式；它们不是 Opus。JPEG 也是替身格式。仅把 hal_ws 接真实 socket，真实 ASR 不会得到正确语音，真实 TTS/JPEG 不能正确消费；假设备/假厂商通过会掩盖这一缺口。",
+    "recommendation": "明确两种模式：保持原虚拟时间和替身编解码用于确定性预算；真中枢联调用 1×墙钟、真实 Opus/JPEG 适配或录制的合法媒体，并验证可听/可见内容。外部网络线程经 VTK 安全入口注入，连接代次、暂停和退出有规则；桥与媒体适配一起成为步骤 1/2/6 的依赖。"
+  },
+  {
+    "id": "HUB-018",
+    "severity": "中",
+    "area": "G/I",
+    "title": "真实浏览器的截图触发与输入能力不足以支撑完整网页使用",
+    "evidence_type": "代码核查、文档核查、推断",
+    "locations": [
+      "docs/hub/hub-architecture.md:705",
+      "docs/hub/hub-architecture.md:706",
+      "docs/hub/hub-architecture.md:711",
+      "docs/hub/hub-architecture.md:1235",
+      "system/apps/remote/remote.c:424",
+      "docs/hub/device-protocol.md:64"
+    ],
+    "impact": "网络安静且 DOM 不变 100ms 没有最大等待时间，持续推送、轮播或 canvas 页可能一直不出图；仅 DOM 变化也捕捉不到所有视觉变化。设备现阶段只有点按，翻页键/长按/文字提交未实现，§10 却标无需改设备。任意 click/导航也可能有外部副作用，不能只把表单提交列为需确认。",
+    "recommendation": "设首屏/每次交互的截图截止时间和采样上限，用像素变化判断实际更新，保持完整单元/F_LAST；补翻页和 IME 的焦点、坐标、提交/取消协议。首版明确只读浏览范围，自动 click/fill 采用可信操作分类及具体确认；未知站点动作由用户执行，不把模型判定当权限边界。"
+  },
+  {
+    "id": "HUB-019",
+    "severity": "中",
+    "area": "H",
+    "title": "费用阈值没有在途预留与调用上界，120% 停止不是可执行硬限额",
+    "evidence_type": "文档核查、推断",
+    "locations": [
+      "docs/hub/hub-architecture.md:432",
+      "docs/hub/hub-architecture.md:437",
+      "docs/hub/hub-architecture.md:755"
+    ],
+    "impact": "多成员会话和后台朗读可同时通过额度检查，再在完成后入账；无预留、最大输出/工具步数/重试预算，长调用可以跨过阈值。网络超时后供应商是否已计费也不一定可知。100% 降级、120% 停止的语义与用户理解的“200 元上限”不同。",
+    "recommendation": "区分软预算和用户批准的硬上限；按家庭/成员原子预留最坏费用，完成结算、失败保守保留待对账。限制每轮 token、工具步数、ASR 时长、TTS 字数及重试；后台预生成也走同一关口，超额提示用本地或缓存音频；账目保留当时的价格版本。"
+  },
+  {
+    "id": "HUB-020",
+    "severity": "中",
+    "area": "G",
+    "title": "两种线路格式的归一化丢掉厂商必需语义，不能保证换配置即可切模型",
+    "evidence_type": "文档核查、推断",
+    "locations": [
+      "docs/hub/hub-architecture.md:428",
+      "docs/hub/hub-architecture.md:430",
+      "docs/decisions/README.md:137",
+      "https://api-docs.deepseek.com/zh-cn/guides/thinking_mode/"
+    ],
+    "impact": "归一化仅列文字片段、工具调用片段、用量，未规定 reasoning/供应商不透明字段、分片工具参数、结束原因和工具结果关联。已查官方 DeepSeek 文档明确带 tools 的思考模式须完整回传 reasoning_content，否则可能 400；兼容 API 外形不能消除语义差异。",
+    "recommendation": "保留每次厂商原始消息的必要回传字段，定义工具 index/id 组装、完整参数校验后执行、stop_reason、并行工具和中断状态。为每个批准模型建立能力矩阵和录制/伪造流契约测试；首次使用先限定一家、一个模式，回退只在未输出且未执行工具时进行。"
+  },
+  {
+    "id": "HUB-021",
+    "severity": "中",
+    "area": "G",
+    "title": "块传输吞吐估计漏掉逐块 RTT，上传标识与持久确认也未定义一致",
+    "evidence_type": "复现、文档核查、推断",
+    "locations": [
+      "docs/hub/hub-architecture.md:909",
+      "docs/hub/device-protocol.md:216",
+      "docs/hub/device-protocol.md:233",
+      "docs/hub/device-protocol.md:263",
+      "experiments/cost_checks.py"
+    ],
+    "impact": "16 KiB 停等下载 1 MiB 共 64 次往返，在文中 1.6Mbit/s、RTT 50～200ms 的假设下至少约 8.44～18.04s，约 5s 只算了净传输。上传 JSON 返回 u1 字符串，二进制却要求 u16，尚无映射/连接作用域；每 64KiB ACK 的在途窗口、落盘边界、重连 offset 与终态哈希校验未固定，影响续传可靠性。",
+    "recommendation": "保留单 WSS 以节省 TLS 内存，但用完整停等模型估时，必要时验证小窗口预取且能暂停；明确数值 transfer_id、连接代次、持久 offset、重复/越界块、最终 hash、配额与失败清理。OTA 绑定 update/check 的不可变包 ID，不能续传到变化的 latest。"
+  },
+  {
+    "id": "HUB-022",
+    "severity": "中",
+    "area": "G",
+    "title": "任务重启恢复与十分钟去重窗口不足以定义副作用恰好执行一次",
+    "evidence_type": "文档核查、推断",
+    "locations": [
+      "docs/hub/hub-architecture.md:755",
+      "docs/hub/hub-architecture.md:918",
+      "docs/hub/hub-architecture.md:929"
+    ],
+    "impact": "jobs 有幂等键是好的起点，但“重启后未完成的恢复”没有区分执行中、已产生外部结果但尚未落库、取消中等状态。十分钟通用请求去重不能覆盖长书朗读、离线外发和重启；重放可能重复付费或重复执行，直接判失败也会丢产物。",
+    "recommendation": "定义任务状态与 attempt/租约、持久幂等结果、取消后的费用和输出处置；能传供应商幂等键就传，结果不明的副作用标 unknown 并对账，不自动重试。内容按不可变输入 hash+参数+版本复用产物，外发采用持久 outbox，超时和 TTL 以业务完成范围确定。"
+  },
+  {
+    "id": "HUB-023",
+    "severity": "中",
+    "area": "J",
+    "title": "D-86 降低静态加密边界被列作可逆暂定，实际数据落地后不能完全回撤",
+    "evidence_type": "文档核查、推断",
+    "locations": [
+      "docs/decisions/README.md:145",
+      "docs/hub/hub-architecture.md:791",
+      "docs/hub/hub-architecture.md:1246",
+      "docs/system/foundation.md:501"
+    ],
+    "impact": "正文要求用户确认数据库不加密，但决策表仍暂定且笼统说其余都可逆。后续再加密不能收回已经形成的明文磁盘快照/备份副本。无人值守启动的密钥部署约束也不等于静态加密毫无价值，SQLCipher 检索/备份复杂度尚无对比实验。",
+    "recommendation": "开发可继续用合成数据暂定 A；首次写真实家庭数据前单独确认威胁范围和磁盘/快照加密方案。准确区分在线管理员、云盘快照、备份和密钥管理能防什么；以小型 FTS/备份恢复原型比较 A/B/C，不把建议自动升级为已定要求。"
+  },
+  {
+    "id": "HUB-024",
+    "severity": "中",
+    "area": "F/I",
+    "title": "时延验收缺设备末端和儿童路径，当前预算不能支持统一 3s/4s 承诺",
+    "evidence_type": "代码核查、文档核查、推断",
+    "locations": [
+      "docs/hub/hub-architecture.md:475",
+      "docs/hub/hub-architecture.md:497",
+      "docs/hub/hub-architecture.md:770",
+      "docs/hub/hub-architecture.md:774",
+      "docs/hub/hub-architecture.md:1231",
+      "system/services/audio/audio_service.c:57"
+    ],
+    "impact": "主模型按表中 3s 上端计算，服务阶段已合计 3.98s；加儿童过滤和设备 180ms 预缓冲至少 4.36～4.56s，未含网络/VAD。当前瀑布止于服务端发帧，设备探针却列以后，无法证明首字可见/首音可听。按句检查朗读也没规定 ai.delta 同样检查，可能出现文字先显示的策略绕过。",
+    "recommendation": "把设备 end/可见/播放事件接入步骤 2 的关联测量，区分成人/儿童、冷热连接、工具等待，给分位数和失败比例；只发已经通过所需检查的文字和语音。先用假厂商验证调度开销，再经用户批准测真实模型，不以首包发出替代端到端结果。"
+  },
+  {
+    "id": "HUB-025",
+    "severity": "低",
+    "area": "K",
+    "title": "“现状”和开发计划的若干表述互相矛盾",
+    "evidence_type": "代码核查、文档核查",
+    "locations": [
+      "docs/hub/device-protocol.md:27",
+      "docs/hub/device-protocol.md:38",
+      "docs/hub/device-protocol.md:77",
+      "docs/hub/hub-architecture.md:1226",
+      "docs/hub/hub-architecture.md:1231",
+      "system/services/ai/ai_service.c:324",
+      "system/services/ai/ai_service.c:566"
+    ],
+    "impact": "ai.ask 回答文本实际被丢弃；语音时序图显示等待 rt.open 回答，代码只让音频等 ready；31 字节是发送方法上限；“前两步全部假厂商不花钱”与第 2 步真实 API、付费验收矛盾。按文字直接写假设备会复制错误假设。",
+    "recommendation": "明确现状/拟新增/保守协议限制三种口径；修正时序图和 ai.ask 文本来源，把步骤 2 拆成免费的模拟验收与已获授权后的真实接口验收，代码事实附固定提交与行号。"
+  }
+]

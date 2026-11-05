@@ -1,0 +1,102 @@
+[
+  {
+    "id": "HUB2-001",
+    "severity": "严重",
+    "area": "配对信任",
+    "title": "无预置公钥时，电脑只输入认领码的路径没有带上设备观察到的指纹",
+    "evidence_type": ["文档核查", "推断"],
+    "locations": ["docs/hub/device-protocol.md:148", "docs/hub/device-protocol.md:150", "docs/hub/hub-architecture.md:952", "docs/hub/hub-architecture.md:986"],
+    "impact": "完整二维码携带观察到的公钥指纹，单独的八位随机认领码没有。若可信控制台仍接受只有代码的无 pin 认领，网络中间人可代理真实认领流程，使用户看到正确家庭名，却在攻击者终止的设备连接上收到配对凭据；若拒绝，则文档承诺的电脑回退不可用。这是有条件的协议攻击推演，未进行真实攻击，不适用于已有 pin 的路径。",
+    "recommendation": "无 pin 时必须把设备观察到的指纹通过独立可信的人机路径带到控制台，并绑定本次配对交易和随机数；电脑入口输入完整可信链接或另核对指纹。无法完成验证就禁止该回退路径，不能仅凭认领码跳过公钥比对。加入代理真实认领码但替换设备 TLS 公钥的负例。"
+  },
+  {
+    "id": "HUB2-002",
+    "severity": "高",
+    "area": "配对状态机",
+    "title": "设备已保存待生效凭据后跨过十分钟期限，没有自动恢复转移",
+    "evidence_type": ["文档核查", "复现", "推断"],
+    "locations": ["docs/hub/device-protocol.md:136", "docs/hub/device-protocol.md:138", "docs/hub/device-protocol.md:145", "docs/hub/device-protocol.md:156", "docs/hub/device-protocol.md:158", "docs/hub/device-protocol.md:379", "docs/hub/hub-architecture.md:1390"],
+    "impact": "pair/complete 已落盘但首次 hello 前设备断电或断网超过十分钟，中枢作废待生效凭据；设备有凭据，只能进入 hello，auth_invalid 又只要求退避重连，无法回到仅无凭据才允许的配对入口。文档没有满足每一步重启都能恢复的验收条件。状态模型复现规则缺口，并非运行中枢实现。",
+    "recommendation": "持久区分已收凭据的 COMMITTING 和已激活的 BOUND，定义按 txid 查询/重发的幂等规则、过期后的明确错误及清理/重新认领转移；保留旧已激活身份的处理边界，不能把任意认证失败都静默当成重新配对。覆盖保存成功后跨过期限再开机的场景。"
+  },
+  {
+    "id": "HUB2-003",
+    "severity": "严重",
+    "area": "备份恢复与安全状态",
+    "title": "不可倒退日志只排除本机回滚，未保证整台服务器丢失后仍然存在",
+    "evidence_type": ["文档核查", "复现", "推断"],
+    "locations": ["docs/hub/hub-architecture.md:342", "docs/hub/hub-architecture.md:354", "docs/hub/hub-architecture.md:358", "docs/hub/hub-architecture.md:362", "docs/hub/hub-architecture.md:727", "docs/hub/hub-architecture.md:1391"],
+    "impact": "每日异地备份后发生的设备吊销、成员删除或忘掉记录，若只持久化在原主机，整机损毁后无法从昨天的备份重放。恢复服务会重新接受已吊销身份或暴露已忘掉内容。普通 AI 数据最多丢一天的约定不能证明安全状态不倒退；状态模型验证了该失败时序。",
+    "recommendation": "明确安全日志的独立故障域、成功确认前的持久性和恢复新鲜度水位。可采用外部追加日志，或在无法证明日志完整时保持恢复实例不可访问、使旧认证失效并完成删除核对后再开放。整机损毁演练必须包含最近一次备份之后的吊销和忘掉。"
+  },
+  {
+    "id": "HUB2-004",
+    "severity": "严重",
+    "area": "同步代次与重复恢复",
+    "title": "恢复备份后把保存的代次加一，不能保证每次恢复都是新代次",
+    "evidence_type": ["文档核查", "代码核查", "复现", "推断"],
+    "locations": ["docs/hub/hub-architecture.md:362", "docs/hub/hub-architecture.md:831", "docs/hub/hub-architecture.md:833", "docs/hub/device-protocol.md:263", "docs/hub/device-protocol.md:275", "docs/hub/device-protocol.md:279", "a81c1b8:system/services/data/datastore.c:932"],
+    "impact": "从同一份代次为 0 的备份两次恢复并加一，都会得到 1。第二次设备仍持有 1，不再因恢复触发代次不符；第一次恢复后已 ACK 并清掉的删除历史不在设备变更集里，旧记录仍可能留在中枢。代次相同也破坏了恢复前后版本去重域必须不同的前提。模型只验证代次碰撞及指定触发条件失效，不声称现有同步实现已造成数据损坏。",
+    "recommendation": "恢复标识必须保证不从可回退快照重用，例如每次恢复生成新且足够长的随机实例标识，或依赖不可回退分配器。明确中枢实例、设备数据实例与集合游标的区别和协商方，拒绝旧代次的 push/ACK；加入连续两次恢复同一备份、设备重复恢复旧快照和迟到 ACK 的测试。"
+  },
+  {
+    "id": "HUB2-005",
+    "severity": "高",
+    "area": "全量对账事务",
+    "title": "全量清单缺少稳定水位、正文补齐和提交 ACK，不能据此安全删除和续传",
+    "evidence_type": ["文档核查", "代码核查", "复现", "推断"],
+    "locations": ["docs/hub/device-protocol.md:273", "docs/hub/device-protocol.md:277", "docs/hub/hub-architecture.md:833", "docs/hub/hub-architecture.md:835", "a81c1b8:system/services/data/datastore.c:885", "a81c1b8:system/services/data/datastore.c:916"],
+    "impact": "只有 id/ver/hash 的清单不能补回备份后新建记录的正文，也没有定义整个清单对应哪个持久版本。现有逐条遍历不提供全局快照；上传期间继续编辑时，按结束时 last_ver 确认会吞掉清单之外的新编辑，按不完整清单做缺项删除又会误移记录。实验展示一种当前文字未排除的 ACK 错配实现，不是生产同步复现。",
+    "recommendation": "定义对账会话、完整且一致的清单范围及持久水位 V；定义缺失/不一致记录的正文与文件块补齐、失败重试和原子提交。仅确认已完整提交的 V，再续传 V 后变更。以可校验状态证明设备数据完整，不能只用用户是否刚刷机判断。明确所需设备遍历/快照接口及验收。"
+  },
+  {
+    "id": "HUB2-006",
+    "severity": "高",
+    "area": "能力发现",
+    "title": "定义字典以 actions 为必经交集，但现有缓冲溢出会把全部能力变为空集合",
+    "evidence_type": ["文档核查", "代码核查", "复现"],
+    "locations": ["docs/hub/device-protocol.md:365", "docs/hub/device-protocol.md:366", "docs/hub/device-protocol.md:368", "docs/hub/hub-architecture.md:1171", "a81c1b8:system/services/ai/ai_service.c:481", "a81c1b8:system/services/ai/ai_service.c:483", "a81c1b8:system/policy/cap.c:863", "a81c1b8:system/boot/main.c:48"],
+    "impact": "生产序列化函数的最小 C 实验中，仅 53 个已注册、全局、默认向 AI 开放的能力名就需要 780 字节，不含结尾 NUL；现有数组只有 768 字节，返回 -1，调用方发送 actions:[]。新交集规则因此删除所有设备工具，字典已有定义也无济于事；空数组也不会触发未知能力重拉。",
+    "recommendation": "在把 actions 作为权威集合前，定义完整性、版本和容量契约：完整分页/可扩展快照或显式查询当前可用集，溢出必须是错误而非空集合；把必要设备修改列入第 1 步依赖。还需规定同一轮工具调用改变页面后如何更新可用集。用实际注册表规模和最坏字段长度验证。"
+  },
+  {
+    "id": "HUB2-007",
+    "severity": "高",
+    "area": "确认与副作用终态",
+    "title": "确认已从待办消失且事件丢失，不能推断动作没有执行",
+    "evidence_type": ["文档核查", "代码核查", "复现"],
+    "locations": ["docs/hub/hub-architecture.md:1232", "docs/hub/hub-architecture.md:1267", "docs/hub/device-protocol.md:205", "a81c1b8:system/policy/confirm.c:171", "a81c1b8:system/policy/confirm.c:253", "a81c1b8:system/policy/confirm.c:285", "a81c1b8:system/policy/confirm.c:311"],
+    "impact": "设备执行短信等动作前已从待确认表取走记录，confirm.list 只列仍在待办的项。执行成功后结果事件若被后续八条事件挤掉，文档规定的回退却向用户报告没有执行；用户重做会重复外部副作用。对尚未收到授权、由中枢执行的动作可以保守不执行，但不能把同一判断套给设备已执行动作。",
+    "recommendation": "区分待确认查询与动作终态查询；稳定操作编号关联执行结果，终态保留到可靠 ACK 或可查询的持久历史。证据不足必须是 unknown 并禁止自动重试，不能报告没有执行。测试已执行后事件溢出、断电和重连。"
+  },
+  {
+    "id": "HUB2-008",
+    "severity": "高",
+    "area": "成员代次与异步交付",
+    "title": "旧代次丢弃与留待成员回来冲突，入站协议又缺少交付代次",
+    "evidence_type": ["文档核查", "代码核查", "复现", "推断"],
+    "locations": ["docs/hub/hub-architecture.md:681", "docs/hub/hub-architecture.md:682", "docs/hub/hub-architecture.md:684", "docs/hub/hub-architecture.md:685", "docs/hub/device-protocol.md:168", "docs/hub/device-protocol.md:170", "docs/hub/device-protocol.md:216", "docs/hub/device-protocol.md:353", "system/services/ai/ai_service.c:324", "system/services/audio/audio_service.c:767"],
+    "impact": "成人 A 在代次 17 发起任务，切到孩子 18，再以 A 解锁进入 19，保留结果仍绑定 17。严格丢旧代次则永远无法交付；只比 _meta.member 又会接受旧授权时期的迟到命令。模型证明相同成员名不足以验证代次。还需明确已结束会话但仍在音频队列中播放的输出归属；关闭实时会话本身不等于清除该队列。",
+    "recommendation": "区分结果产生时的 Scope 与本次交付授权：成员回来后重新鉴权，为仍有效结果创建当前代次的交付，绝不重新授权重放旧副作用。tools/call、confirm/request 和会话输出有可验证的交付代次；设备在执行、显示和播放时核验，切换屏障清理已排队输出。规定锁定、返回、重连和撤权时的持久结果策略。"
+  },
+  {
+    "id": "HUB2-009",
+    "severity": "高",
+    "area": "语音期限与缓冲",
+    "title": "中枢按自身 42 秒倒推并突发尾帧，缺少设备剩余时间与缓冲余量依据",
+    "evidence_type": ["文档核查", "代码核查", "复现", "推断"],
+    "locations": ["docs/hub/device-protocol.md:26", "docs/hub/device-protocol.md:76", "docs/hub/hub-architecture.md:536", "docs/hub/hub-architecture.md:537", "system/services/hub/hub_link.c:397", "system/services/hub/hub_link.c:402", "system/services/audio/audio_service.c:56", "system/services/audio/audio_service.c:754", "system/services/ai/ai_service.c:319"],
+    "impact": "设备接受请求即开始 45 秒计时，未联网时也计时；ai.listen 没有剩余期限。冷连接耗 8 秒后中枢再用 42 秒会晚 5 秒。512 帧是总容量而非空闲量，已有 200 帧时再突发 400 帧，即使尾部只有 24 秒也会超容量；满队列时音频 push 失败且 AI 接收路径忽略返回值。算术模型不是实际时延或吞吐测量。",
+    "recommendation": "在实际发包时传递可换算的剩余预算，明确排队和网络裕量；发送端必须得到播放进度/配额，或以保守上界限制全部未播放帧，不能把总容量当空闲量。定义完整句截断、长内容转作业及 30 秒录音封顶的设备依赖，并在假厂商阶段覆盖冷连接、播放暂停和慢链路。"
+  },
+  {
+    "id": "HUB2-010",
+    "severity": "高",
+    "area": "浏览器动作授权",
+    "title": "按 DOM 把普通链接判成只读，不能证明已登录浏览器没有外部副作用",
+    "evidence_type": ["文档核查", "推断"],
+    "locations": ["docs/hub/hub-architecture.md:796", "docs/hub/hub-architecture.md:803", "docs/hub/hub-architecture.md:804", "https://dom.spec.whatwg.org/#introduction-to-dom-events", "https://html.spec.whatwg.org/multipage/links.html#hyperlink-auditing"],
+    "impact": "普通 a 元素的点击也能触发祖先委托监听、链接 ping POST 或服务端带副作用的跳转。DOM 外形与 HTTP 方法都不能证明业务只读；在保留成员登录态的上下文中，未经确认的点击可能以用户身份写入或外发。出站代理只屏蔽网络地址，不能替代业务授权。此为标准支持的推断，未对真实网站执行动作。",
+    "recommendation": "缩小自动执行边界：纯阅读/滚动、已知站点适配器明确审核的动作；未知链接及已登录交互交由用户或具体动作确认，必要时把无身份内容抓取与有身份浏览分离。禁止用模型自述或 DOM 元素类型作为最终授权依据。加入祖先监听和普通链接引发外部请求的对抗用例。"
+  }
+]
