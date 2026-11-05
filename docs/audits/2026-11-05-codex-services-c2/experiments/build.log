@@ -1,0 +1,740 @@
+[  2%] Building C object CMakeFiles/ink_lz4.dir/system/util/lz4.c.o
+[  2%] Building C object CMakeFiles/ink_tlsf.dir/third_party/tlsf/tlsf.c.o
+[  2%] Building C object CMakeFiles/ink_cjson.dir/third_party/cjson/cJSON.c.o
+[  2%] Building C object CMakeFiles/ink_littlefs.dir/third_party/littlefs/lfs.c.o
+[  2%] Linking C static library libink_lz4.a
+[  2%] Built target ink_lz4
+[  2%] Linking C static library libink_tlsf.a
+[  2%] Building C object CMakeFiles/ink_littlefs.dir/third_party/littlefs/lfs_util.c.o
+[  2%] Built target ink_tlsf
+[  3%] Building C object CMakeFiles/ink_drivers.dir/drivers/chips/tca9555/tca9555.c.o
+[  3%] Building C object CMakeFiles/ink_stb.dir/simulator/runtime/stb_impl.c.o
+[  3%] Building C object CMakeFiles/ink_drivers.dir/drivers/chips/tps65185/tps65185.c.o
+[  3%] Linking C static library libink_cjson.a
+[  3%] Building C object CMakeFiles/ink_drivers.dir/drivers/chips/ft6336u/ft6336u.c.o
+[  3%] Built target ink_cjson
+[  3%] Building C object CMakeFiles/ink_drivers.dir/drivers/chips/bq27220/bq27220.c.o
+[  3%] Building C object CMakeFiles/ink_drivers.dir/drivers/chips/cx25601n/cx25601n.c.o
+[  3%] Building C object CMakeFiles/ink_drivers.dir/drivers/chips/pcf8563/pcf8563.c.o
+[  3%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/core/lv_group.c.o
+[  3%] Building C object CMakeFiles/ink_drivers.dir/drivers/chips/sc7a20h/sc7a20h.c.o
+[  3%] Linking C static library libink_littlefs.a
+[  4%] Building C object CMakeFiles/ink_drivers.dir/drivers/chips/gc2145/gc2145.c.o
+[  4%] Built target ink_littlefs
+[  4%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/core/lv_obj.c.o
+[  4%] Building C object CMakeFiles/ink_drivers.dir/drivers/chips/bh1098g/bh1098g.c.o
+[  4%] fontgen: CJK bitmap font 24px
+[  4%] Building C object CMakeFiles/ink_drivers.dir/drivers/chips/nt26/nt26.c.o
+[  4%] Linking C static library libink_stb.a
+[  4%] Built target ink_stb
+[  4%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/core/lv_obj_class.c.o
+[  4%] fontgen: CJK bitmap font 32px
+[  4%] Building C object CMakeFiles/ink_drivers.dir/drivers/display/pqbn/pqbn_v4.c.o
+[  4%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/core/lv_obj_draw.c.o
+[  5%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/core/lv_obj_event.c.o
+[  5%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/core/lv_obj_id_builtin.c.o
+[  5%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/core/lv_obj_pos.c.o
+[  5%] Linking C static library libink_drivers.a
+[  5%] Built target ink_drivers
+[  5%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/core/lv_obj_property.c.o
+[  5%] test content: long book
+[  5%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/core/lv_obj_scroll.c.o
+[  5%] Built target ink_test_content
+[  5%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/core/lv_obj_style.c.o
+[  5%] Building C object CMakeFiles/pools-test.dir/tests/unit/pools_test.c.o
+[  5%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/core/lv_obj_style_gen.c.o
+[  5%] Linking C executable pools-test
+[  5%] Built target pools-test
+[  5%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/core/lv_observer.c.o
+[  6%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/core/lv_obj_tree.c.o
+[  6%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/core/lv_refr.c.o
+[  6%] Building C object CMakeFiles/pqbn-clock-test.dir/tests/unit/pqbn_clock_test.c.o
+[  6%] Linking C executable pqbn-clock-test
+[  6%] Built target pqbn-clock-test
+[  6%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/debugging/monkey/lv_monkey.c.o
+[  6%] Building C object CMakeFiles/sha256-test.dir/tests/unit/sha256_test.c.o
+[  6%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/debugging/sysmon/lv_sysmon.c.o
+[  6%] Building C object CMakeFiles/sha256-test.dir/system/util/sha256.c.o
+[  6%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/debugging/test/lv_test_display.c.o
+[  6%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/debugging/test/lv_test_fs.c.o
+[  7%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/debugging/test/lv_test_helpers.c.o
+[  8%] Linking C executable sha256-test
+[  8%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/debugging/test/lv_test_indev.c.o
+fontgen: /tmp/claude-501/-Users-bytedance-Documents-Workspace-ink--claude-worktrees-optimistic-wilbur-d7cee8/babd9fe7-3ffb-4bb6-89c6-f0aff51c6f0f/scratchpad/audit-c2/build-audit/assets/fonts/sans-24.inkf: 7629 glyphs (1 missing in font), 24px 2bpp, 1146 KiB
+[  8%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/debugging/test/lv_test_indev_gesture.c.o
+[  8%] Built target sha256-test
+[  8%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/debugging/test/lv_test_screenshot_compare.c.o
+[  8%] Building C object CMakeFiles/lunar-test.dir/tests/unit/lunar_test.c.o
+[  8%] Building C object CMakeFiles/iss.dir/tools/iss/src/iss.c.o
+[  8%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/debugging/vg_lite_tvg/vg_lite_matrix.c.o
+[  8%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/display/lv_display.c.o
+[  8%] Building C object CMakeFiles/lunar-test.dir/system/services/time/lunar.c.o
+[  9%] Linking C executable lunar-test
+[  9%] Built target lunar-test
+[  9%] Building C object CMakeFiles/iss.dir/tools/iss/src/iss_cfg.c.o
+[  9%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/convert/helium/lv_draw_buf_convert_helium.c.o
+[ 10%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/convert/lv_draw_buf_convert.c.o
+[ 11%] Building C object CMakeFiles/iss-selftest.dir/tools/iss/src/iss.c.o
+[ 11%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/convert/neon/lv_draw_buf_convert_neon.c.o
+[ 11%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/dma2d/lv_draw_dma2d.c.o
+[ 11%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/dma2d/lv_draw_dma2d_fill.c.o
+[ 11%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/dma2d/lv_draw_dma2d_img.c.o
+[ 11%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/espressif/ppa/lv_draw_ppa.c.o
+[ 11%] Building C object CMakeFiles/iss.dir/tools/iss/src/iss_elf.c.o
+[ 11%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/espressif/ppa/lv_draw_ppa_buf.c.o
+fontgen: /tmp/claude-501/-Users-bytedance-Documents-Workspace-ink--claude-worktrees-optimistic-wilbur-d7cee8/babd9fe7-3ffb-4bb6-89c6-f0aff51c6f0f/scratchpad/audit-c2/build-audit/assets/fonts/sans-32.inkf: 7629 glyphs (1 missing in font), 32px 2bpp, 1928 KiB
+[ 11%] Built target ink_fonts
+[ 11%] Building C object CMakeFiles/iss-selftest.dir/tools/iss/src/iss_cfg.c.o
+[ 12%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/espressif/ppa/lv_draw_ppa_fill.c.o
+[ 12%] Building C object CMakeFiles/iss.dir/tools/iss/src/main.c.o
+[ 12%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/espressif/ppa/lv_draw_ppa_img.c.o
+[ 12%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/eve/lv_draw_eve.c.o
+[ 12%] Building C object CMakeFiles/iss-selftest.dir/tools/iss/src/iss_elf.c.o
+[ 12%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/eve/lv_draw_eve_arc.c.o
+[ 12%] Linking C executable iss
+[ 12%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/eve/lv_draw_eve_fill.c.o
+[ 12%] Built target iss
+[ 12%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/eve/lv_draw_eve_image.c.o
+[ 12%] Building C object CMakeFiles/iss-selftest.dir/tools/iss/test/iss_selftest.c.o
+[ 12%] Building C object CMakeFiles/ink_board_metalio_plus.dir/boards/metalio_plus/metalio_board.c.o
+[ 12%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/eve/lv_draw_eve_letter.c.o
+[ 14%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/eve/lv_draw_eve_line.c.o
+[ 14%] Building C object CMakeFiles/ink_board_metalio_plus.dir/boards/metalio_plus/metalio_epd_power.c.o
+[ 14%] Linking C executable iss-selftest
+[ 14%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/eve/lv_draw_eve_ram_g.c.o
+[ 14%] Building C object CMakeFiles/ink_sim_core.dir/simulator/kernel/vtk/vtk.c.o
+[ 14%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/eve/lv_draw_eve_triangle.c.o
+[ 14%] Building C object CMakeFiles/ink_board_metalio_plus.dir/boards/metalio_plus/metalio_touch.c.o
+[ 14%] Built target iss-selftest
+[ 14%] Building C object CMakeFiles/ink_sim_core.dir/simulator/memory/pools.c.o
+[ 14%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/eve/lv_eve.c.o
+[ 14%] Linking C static library libink_board_metalio_plus.a
+[ 14%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/lv_draw.c.o
+[ 14%] Built target ink_board_metalio_plus
+[ 14%] Building C object CMakeFiles/ink_sim_core.dir/simulator/runtime/profile.c.o
+[ 14%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/lv_draw_3d.c.o
+[ 14%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/lv_draw_arc.c.o
+[ 15%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/lv_draw_blur.c.o
+[ 15%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/lv_draw_buf.c.o
+[ 15%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/lv_draw_image.c.o
+[ 15%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/lv_draw_label.c.o
+[ 15%] Linking C static library libink_sim_core.a
+[ 15%] Built target ink_sim_core
+[ 15%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/lv_draw_line.c.o
+[ 15%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/lv_draw_rect.c.o
+[ 15%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/lv_draw_mask.c.o
+[ 15%] Building C object CMakeFiles/ink_port_sim.dir/ports/sim/osal/osal_sim.c.o
+[ 16%] Building C object CMakeFiles/ink_port_sim.dir/ports/sim/hal/hal_i2c_sim.c.o
+[ 16%] Building C object CMakeFiles/ink_port_sim.dir/ports/sim/hal/hal_sensors_sim.c.o
+[ 17%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/lv_draw_triangle.c.o
+[ 17%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/lv_draw_vector.c.o
+[ 17%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/lv_image_decoder.c.o
+[ 17%] Building C object CMakeFiles/ink_port_sim.dir/ports/sim/hal/hal_display_sim.c.o
+[ 17%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nanovg/lv_draw_nanovg.c.o
+[ 17%] Building C object CMakeFiles/ink_port_sim.dir/ports/sim/hal/hal_input_sim.c.o
+[ 17%] Building C object CMakeFiles/ink_port_sim.dir/ports/sim/hal/hal_storage_sim.c.o
+[ 17%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nanovg/lv_draw_nanovg_3d.c.o
+[ 17%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nanovg/lv_draw_nanovg_arc.c.o
+[ 17%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nanovg/lv_draw_nanovg_border.c.o
+[ 18%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nanovg/lv_draw_nanovg_box_shadow.c.o
+[ 18%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nanovg/lv_draw_nanovg_fill.c.o
+[ 18%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nanovg/lv_draw_nanovg_grad.c.o
+[ 18%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nanovg/lv_draw_nanovg_image.c.o
+[ 18%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nanovg/lv_draw_nanovg_label.c.o
+[ 18%] Building C object CMakeFiles/ink_port_sim.dir/ports/sim/hal/hal_usb_sim.c.o
+[ 18%] Building C object CMakeFiles/ink_port_sim.dir/ports/sim/hal/hal_bt_sim.c.o
+[ 18%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nanovg/lv_draw_nanovg_layer.c.o
+[ 18%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nanovg/lv_draw_nanovg_line.c.o
+[ 19%] Building C object CMakeFiles/ink_port_sim.dir/ports/sim/hal/hal_ota_sim.c.o
+[ 20%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nanovg/lv_draw_nanovg_mask_rect.c.o
+[ 20%] Building C object CMakeFiles/ink_port_sim.dir/ports/sim/hal/hal_power_sim.c.o
+[ 20%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nanovg/lv_draw_nanovg_triangle.c.o
+[ 20%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nanovg/lv_draw_nanovg_vector.c.o
+[ 20%] Building C object CMakeFiles/ink_port_sim.dir/ports/sim/hal/hal_assets_sim.c.o
+[ 20%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nanovg/lv_nanovg_fbo_cache.c.o
+[ 20%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nanovg/lv_nanovg_image_cache.c.o
+[ 20%] Building C object CMakeFiles/ink_port_sim.dir/ports/sim/hal/hal_net_sim.c.o
+[ 20%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nanovg/lv_nanovg_utils.c.o
+[ 21%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nema_gfx/lv_draw_nema_gfx.c.o
+[ 21%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nema_gfx/lv_draw_nema_gfx_arc.c.o
+[ 21%] Building C object CMakeFiles/ink_port_sim.dir/ports/sim/hal/hal_audio_sim.c.o
+[ 21%] Building C object CMakeFiles/ink_port_sim.dir/ports/sim/hal/hal_cellular_sim.c.o
+[ 21%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nema_gfx/lv_draw_nema_gfx_border.c.o
+[ 21%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nema_gfx/lv_draw_nema_gfx_fill.c.o
+[ 21%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nema_gfx/lv_draw_nema_gfx_img.c.o
+[ 21%] Building C object CMakeFiles/ink_port_sim.dir/ports/sim/hal/hal_afe_sim.c.o
+[ 21%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nema_gfx/lv_draw_nema_gfx_label.c.o
+[ 21%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nema_gfx/lv_draw_nema_gfx_layer.c.o
+[ 22%] Building C object CMakeFiles/ink_port_sim.dir/ports/sim/hal/hal_jpeg_sim.c.o
+[ 23%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nema_gfx/lv_draw_nema_gfx_line.c.o
+[ 23%] Building C object CMakeFiles/ink_port_sim.dir/ports/sim/hal/hal_codec_sim.c.o
+[ 23%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nema_gfx/lv_draw_nema_gfx_stm32_hal.c.o
+[ 23%] Building C object CMakeFiles/ink_port_sim.dir/simulator/models/dev_epd_power.c.o
+[ 23%] Building C object CMakeFiles/ink_port_sim.dir/simulator/models/dev_tca9555.c.o
+[ 23%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nema_gfx/lv_draw_nema_gfx_triangle.c.o
+[ 23%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nema_gfx/lv_draw_nema_gfx_utils.c.o
+[ 23%] Building C object CMakeFiles/ink_port_sim.dir/simulator/models/dev_power_chips.c.o
+[ 23%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nema_gfx/lv_draw_nema_gfx_vector.c.o
+[ 23%] Building C object CMakeFiles/ink_port_sim.dir/simulator/models/dev_rtc_accel.c.o
+[ 23%] Building C object CMakeFiles/ink_port_sim.dir/simulator/models/dev_camera.c.o
+[ 23%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nema_gfx/lv_nema_gfx_path.c.o
+[ 23%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nxp/g2d/lv_draw_buf_g2d.c.o
+[ 24%] Building C object CMakeFiles/ink_port_sim.dir/simulator/models/dev_bt_audio.c.o
+[ 25%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nxp/g2d/lv_draw_g2d.c.o
+[ 25%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nxp/g2d/lv_draw_g2d_fill.c.o
+[ 25%] Building C object CMakeFiles/ink_port_sim.dir/simulator/environment/sim_hub.c.o
+[ 25%] Building C object CMakeFiles/ink_port_sim.dir/simulator/environment/sim_remote.c.o
+[ 25%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nxp/g2d/lv_draw_g2d_img.c.o
+[ 25%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nxp/g2d/lv_g2d_buf_map.c.o
+[ 25%] Building C object CMakeFiles/ink_port_sim.dir/simulator/runtime/metrics.c.o
+[ 25%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nxp/g2d/lv_g2d_utils.c.o
+[ 25%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nxp/pxp/lv_draw_buf_pxp.c.o
+[ 25%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nxp/pxp/lv_draw_pxp.c.o
+[ 26%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nxp/pxp/lv_draw_pxp_fill.c.o
+[ 26%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nxp/pxp/lv_draw_pxp_img.c.o
+[ 26%] Building C object CMakeFiles/ink_port_sim.dir/simulator/runtime/trace.c.o
+[ 26%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nxp/pxp/lv_draw_pxp_layer.c.o
+[ 26%] Building C object CMakeFiles/ink_port_sim.dir/simulator/runtime/script.c.o
+[ 26%] Building C object CMakeFiles/ink_port_sim.dir/simulator/desktop/sim_gui.c.o
+[ 26%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nxp/pxp/lv_pxp_cfg.c.o
+[ 26%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nxp/pxp/lv_pxp_utils.c.o
+[ 26%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/nxp/pxp/lv_pxp_osa.c.o
+[ 26%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/opengles/lv_draw_opengles.c.o
+[ 27%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/renesas/dave2d/lv_draw_dave2d.c.o
+[ 27%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/renesas/dave2d/lv_draw_dave2d_arc.c.o
+[ 27%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/renesas/dave2d/lv_draw_dave2d_fill.c.o
+[ 27%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/renesas/dave2d/lv_draw_dave2d_border.c.o
+[ 27%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/renesas/dave2d/lv_draw_dave2d_image.c.o
+[ 28%] Linking C static library libink_port_sim.a
+[ 28%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/renesas/dave2d/lv_draw_dave2d_label.c.o
+[ 28%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/renesas/dave2d/lv_draw_dave2d_line.c.o
+[ 29%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/renesas/dave2d/lv_draw_dave2d_mask_rectangle.c.o
+[ 29%] Built target ink_port_sim
+[ 29%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/renesas/dave2d/lv_draw_dave2d_triangle.c.o
+[ 29%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/renesas/dave2d/lv_draw_dave2d_utils.c.o
+[ 29%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/sdl/lv_draw_sdl.c.o
+[ 29%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/snapshot/lv_snapshot.c.o
+[ 29%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/sw/blend/lv_draw_sw_blend.c.o
+[ 29%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/sw/blend/lv_draw_sw_blend_to_a8.c.o
+[ 29%] Building C object CMakeFiles/sim-selftest.dir/simulator/runtime/sim_main.c.o
+[ 29%] Building C object CMakeFiles/sim-selftest.dir/tests/simulator/selftest.c.o
+[ 30%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/sw/blend/lv_draw_sw_blend_to_al88.c.o
+[ 30%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/sw/blend/lv_draw_sw_blend_to_argb8888.c.o
+[ 30%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/sw/blend/lv_draw_sw_blend_to_argb8888_premultiplied.c.o
+[ 30%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/sw/blend/lv_draw_sw_blend_to_i1.c.o
+[ 30%] Linking C executable sim-selftest
+[ 30%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/sw/blend/lv_draw_sw_blend_to_l8.c.o
+[ 30%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/sw/blend/lv_draw_sw_blend_to_rgb565.c.o
+[ 30%] Built target sim-selftest
+[ 31%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/sw/blend/lv_draw_sw_blend_to_rgb565_swapped.c.o
+[ 31%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/sw/blend/lv_draw_sw_blend_to_rgb888.c.o
+[ 31%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/sw/blend/neon/lv_draw_sw_blend_neon_to_rgb565.c.o
+[ 31%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/sw/blend/neon/lv_draw_sw_blend_neon_to_rgb888.c.o
+[ 31%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/sw/lv_draw_sw.c.o
+[ 31%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/sw/blend/riscv_v/lv_draw_sw_blend_riscv_v_to_rgb888.c.o
+[ 31%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/sw/lv_draw_sw_arc.c.o
+[ 31%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/sw/lv_draw_sw_blur.c.o
+[ 32%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/sw/lv_draw_sw_border.c.o
+[ 32%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/sw/lv_draw_sw_box_shadow.c.o
+[ 32%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/sw/lv_draw_sw_fill.c.o
+[ 32%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/sw/lv_draw_sw_grad.c.o
+[ 32%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/sw/lv_draw_sw_img.c.o
+[ 32%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/sw/lv_draw_sw_letter.c.o
+[ 32%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/sw/lv_draw_sw_line.c.o
+[ 33%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/sw/lv_draw_sw_mask.c.o
+[ 33%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/sw/lv_draw_sw_mask_rect.c.o
+[ 33%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/sw/lv_draw_sw_transform.c.o
+[ 33%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/sw/lv_draw_sw_triangle.c.o
+[ 33%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/sw/lv_draw_sw_utils.c.o
+[ 33%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/sw/lv_draw_sw_vector.c.o
+[ 33%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/vg_lite/lv_draw_buf_vg_lite.c.o
+[ 34%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/vg_lite/lv_draw_vg_lite.c.o
+[ 34%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/vg_lite/lv_draw_vg_lite_arc.c.o
+[ 34%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/vg_lite/lv_draw_vg_lite_box_shadow.c.o
+[ 34%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/vg_lite/lv_draw_vg_lite_border.c.o
+[ 34%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/vg_lite/lv_draw_vg_lite_fill.c.o
+[ 34%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/vg_lite/lv_draw_vg_lite_img.c.o
+[ 34%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/vg_lite/lv_draw_vg_lite_label.c.o
+[ 35%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/vg_lite/lv_draw_vg_lite_layer.c.o
+[ 35%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/vg_lite/lv_draw_vg_lite_mask_rect.c.o
+[ 35%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/vg_lite/lv_draw_vg_lite_line.c.o
+[ 35%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/vg_lite/lv_draw_vg_lite_triangle.c.o
+[ 35%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/vg_lite/lv_draw_vg_lite_vector.c.o
+[ 35%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/vg_lite/lv_vg_lite_decoder.c.o
+[ 35%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/vg_lite/lv_vg_lite_bitmap_font_cache.c.o
+[ 36%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/vg_lite/lv_vg_lite_grad.c.o
+[ 36%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/vg_lite/lv_vg_lite_math.c.o
+[ 36%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/vg_lite/lv_vg_lite_path.c.o
+[ 36%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/vg_lite/lv_vg_lite_pending.c.o
+[ 36%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/vg_lite/lv_vg_lite_stroke.c.o
+[ 36%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/draw/vg_lite/lv_vg_lite_utils.c.o
+[ 36%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/display/drm/lv_linux_drm.c.o
+[ 36%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/display/drm/lv_linux_drm_egl.c.o
+[ 37%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/display/drm/lv_linux_drm_common.c.o
+[ 37%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/display/fb/lv_linux_fbdev.c.o
+[ 37%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/display/ft81x/lv_ft81x.c.o
+[ 37%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/display/lcd/lv_lcd_generic_mipi.c.o
+[ 37%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/display/ili9341/lv_ili9341.c.o
+[ 37%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/display/nxp_elcdif/lv_nxp_elcdif.c.o
+[ 38%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/display/nv3007/lv_nv3007.c.o
+[ 38%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/display/st7735/lv_st7735.c.o
+[ 38%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/display/renesas_glcdc/lv_renesas_glcdc.c.o
+[ 38%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/display/st7789/lv_st7789.c.o
+[ 38%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/display/st7796/lv_st7796.c.o
+[ 38%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/display/st_ltdc/lv_st_ltdc.c.o
+[ 39%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/draw/eve/lv_draw_eve_display.c.o
+[ 39%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/evdev/lv_evdev.c.o
+[ 39%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/libinput/lv_libinput.c.o
+[ 39%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/libinput/lv_xkb.c.o
+[ 39%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/nuttx/lv_nuttx_cache.c.o
+[ 39%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/nuttx/lv_nuttx_entry.c.o
+[ 39%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/nuttx/lv_nuttx_fbdev.c.o
+[ 40%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/nuttx/lv_nuttx_image_cache.c.o
+[ 40%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/nuttx/lv_nuttx_lcd.c.o
+[ 40%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/nuttx/lv_nuttx_libuv.c.o
+[ 40%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/nuttx/lv_nuttx_mouse.c.o
+[ 40%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/nuttx/lv_nuttx_profiler.c.o
+[ 40%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/nuttx/lv_nuttx_touchscreen.c.o
+[ 40%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/opengles/assets/lv_opengles_shader.c.o
+[ 41%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/opengles/glad/src/egl.c.o
+[ 41%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/opengles/glad/src/gles2.c.o
+[ 41%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/opengles/glad/src/gl.c.o
+[ 41%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/opengles/lv_opengles_debug.c.o
+[ 41%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/opengles/lv_opengles_driver.c.o
+[ 41%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/opengles/lv_opengles_egl.c.o
+[ 41%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/opengles/lv_opengles_glfw.c.o
+[ 42%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/opengles/lv_opengles_texture.c.o
+[ 42%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/opengles/opengl_shader/lv_opengl_shader_manager.c.o
+[ 42%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/opengles/opengl_shader/lv_opengl_shader_program.c.o
+[ 42%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/qnx/lv_qnx.c.o
+[ 42%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/sdl/lv_sdl_egl.c.o
+[ 42%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/sdl/lv_sdl_keyboard.c.o
+[ 42%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/sdl/lv_sdl_mouse.c.o
+[ 43%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/sdl/lv_sdl_mousewheel.c.o
+[ 43%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/sdl/lv_sdl_sw.c.o
+[ 43%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/sdl/lv_sdl_texture.c.o
+[ 43%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/sdl/lv_sdl_window.c.o
+[ 43%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/uefi/lv_uefi_context.c.o
+[ 43%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/uefi/lv_uefi_display.c.o
+[ 43%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/uefi/lv_uefi_indev_keyboard.c.o
+[ 44%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/uefi/lv_uefi_indev_pointer.c.o
+[ 44%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/uefi/lv_uefi_private.c.o
+[ 44%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/uefi/lv_uefi_indev_touch.c.o
+[ 44%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/wayland/lv_wayland.c.o
+[ 44%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/wayland/lv_wl_egl_backend.c.o
+[ 44%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/wayland/lv_wl_g2d_backend.c.o
+[ 44%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/wayland/lv_wl_keyboard.c.o
+[ 44%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/wayland/lv_wl_seat.c.o
+[ 45%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/wayland/lv_wl_pointer.c.o
+[ 45%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/wayland/lv_wl_shm_backend.c.o
+[ 45%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/wayland/lv_wl_touch.c.o
+[ 45%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/wayland/lv_wl_window.c.o
+[ 45%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/windows/lv_windows_context.c.o
+[ 45%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/wayland/lv_wl_xdg_shell.c.o
+[ 46%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/windows/lv_windows_display.c.o
+[ 46%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/windows/lv_windows_input.c.o
+[ 46%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/x11/lv_x11_display.c.o
+[ 46%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/drivers/x11/lv_x11_input.c.o
+[ 46%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/font/fmt_txt/lv_font_fmt_txt.c.o
+[ 46%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/font/binfont_loader/lv_binfont_loader.c.o
+[ 47%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/font/font_manager/lv_font_manager.c.o
+[ 47%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/font/font_manager/lv_font_manager_recycle.c.o
+[ 47%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/font/imgfont/lv_imgfont.c.o
+[ 47%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/font/lv_font.c.o
+[ 47%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/font/lv_font_dejavu_16_persian_hebrew.c.o
+[ 47%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/font/lv_font_montserrat_10.c.o
+[ 47%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/font/lv_font_montserrat_12.c.o
+[ 47%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/font/lv_font_montserrat_14.c.o
+[ 48%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/font/lv_font_montserrat_14_aligned.c.o
+[ 48%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/font/lv_font_montserrat_16.c.o
+[ 48%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/font/lv_font_montserrat_18.c.o
+[ 48%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/font/lv_font_montserrat_20.c.o
+[ 48%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/font/lv_font_montserrat_22.c.o
+[ 48%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/font/lv_font_montserrat_24.c.o
+[ 48%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/font/lv_font_montserrat_26.c.o
+[ 49%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/font/lv_font_montserrat_28.c.o
+[ 49%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/font/lv_font_montserrat_28_compressed.c.o
+[ 49%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/font/lv_font_montserrat_30.c.o
+[ 49%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/font/lv_font_montserrat_32.c.o
+[ 49%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/font/lv_font_montserrat_34.c.o
+[ 49%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/font/lv_font_montserrat_36.c.o
+[ 49%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/font/lv_font_montserrat_38.c.o
+[ 50%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/font/lv_font_montserrat_40.c.o
+[ 50%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/font/lv_font_montserrat_44.c.o
+[ 50%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/font/lv_font_montserrat_42.c.o
+[ 50%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/font/lv_font_montserrat_46.c.o
+[ 50%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/font/lv_font_montserrat_48.c.o
+[ 50%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/font/lv_font_source_han_sans_sc_14_cjk.c.o
+[ 50%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/font/lv_font_montserrat_8.c.o
+[ 51%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/font/lv_font_source_han_sans_sc_16_cjk.c.o
+[ 51%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/font/lv_font_unscii_16.c.o
+[ 51%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/font/lv_font_unscii_8.c.o
+[ 51%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/indev/lv_indev.c.o
+[ 51%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/indev/lv_indev_gesture.c.o
+[ 51%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/indev/lv_gridnav.c.o
+[ 51%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/layouts/flex/lv_flex.c.o
+[ 52%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/indev/lv_indev_scroll.c.o
+[ 52%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/layouts/grid/lv_grid.c.o
+[ 52%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/layouts/lv_layout.c.o
+[ 52%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/FT800-FT813/EVE_commands.c.o
+[ 52%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/FT800-FT813/EVE_supplemental.c.o
+[ 52%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/barcode/code128.c.o
+[ 52%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/bin_decoder/lv_bin_decoder.c.o
+[ 53%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/barcode/lv_barcode.c.o
+[ 53%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/bmp/lv_bmp.c.o
+[ 53%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/ffmpeg/lv_ffmpeg.c.o
+[ 53%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/freetype/lv_freetype.c.o
+[ 53%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/freetype/lv_freetype_glyph.c.o
+[ 53%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/freetype/lv_freetype_image.c.o
+[ 54%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/freetype/lv_freetype_outline.c.o
+[ 54%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/freetype/lv_ftsystem.c.o
+[ 54%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/frogfs/src/decomp_raw.c.o
+[ 54%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/frogfs/src/frogfs.c.o
+[ 54%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/fsdrv/lv_fs_cbfs.c.o
+[ 54%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/fsdrv/lv_fs_fatfs.c.o
+[ 54%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/fsdrv/lv_fs_frogfs.c.o
+[ 55%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/fsdrv/lv_fs_memfs.c.o
+[ 55%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/fsdrv/lv_fs_littlefs.c.o
+[ 55%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/fsdrv/lv_fs_posix.c.o
+[ 55%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/fsdrv/lv_fs_stdio.c.o
+[ 55%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/fsdrv/lv_fs_win32.c.o
+[ 55%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/fsdrv/lv_fs_uefi.c.o
+[ 55%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/gif/gif.c.o
+[ 56%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/gltf/gltf_environment/lv_gltf_ibl_sampler.c.o
+[ 56%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/gltf/gltf_view/assets/lv_gltf_view_shader.c.o
+[ 56%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/gltf/gltf_view/assets/chromatic.c.o
+[ 56%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/gltf/math/lv_3dmath.c.o
+[ 56%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/gstreamer/lv_gstreamer.c.o
+[ 56%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/libjpeg_turbo/lv_libjpeg_turbo.c.o
+[ 56%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/libpng/lv_libpng.c.o
+[ 56%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/lodepng/lodepng.c.o
+[ 57%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/libwebp/lv_libwebp.c.o
+[ 57%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/lodepng/lv_lodepng.c.o
+[ 57%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/lz4/lz4.c.o
+[ 57%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/nanovg/nanovg.c.o
+[ 57%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/qrcode/lv_qrcode.c.o
+[ 57%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/qrcode/qrcodegen.c.o
+[ 58%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/rle/lv_rle.c.o
+[ 58%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/rlottie/lv_rlottie.c.o
+[ 58%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/svg/lv_svg.c.o
+[ 58%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/svg/lv_svg_decoder.c.o
+[ 58%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/svg/lv_svg_parser.c.o
+[ 58%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/svg/lv_svg_render.c.o
+[ 58%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/svg/lv_svg_token.c.o
+[ 59%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/tiny_ttf/lv_tiny_ttf.c.o
+[ 59%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/tjpgd/lv_tjpgd.c.o
+[ 59%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/tjpgd/tjpgd.c.o
+[ 59%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/vg_lite_driver/VGLite/vg_lite.c.o
+[ 59%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/vg_lite_driver/VGLite/vg_lite_image.c.o
+[ 59%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/vg_lite_driver/VGLite/vg_lite_matrix.c.o
+[ 59%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/vg_lite_driver/VGLite/vg_lite_path.c.o
+[ 60%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/vg_lite_driver/VGLite/vg_lite_stroke.c.o
+[ 60%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/vg_lite_driver/VGLiteKernel/vg_lite_kernel.c.o
+[ 60%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/vg_lite_driver/lv_vg_lite_hal/lv_vg_lite_hal.c.o
+[ 60%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/libs/vg_lite_driver/lv_vg_lite_hal/vg_lite_os.c.o
+[ 60%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/lv_init.c.o
+[ 60%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/cache/class/lv_cache_lru_ll.c.o
+[ 60%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/cache/class/lv_cache_lru_rb.c.o
+[ 61%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/cache/class/lv_cache_sc_da.c.o
+[ 61%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/cache/instance/lv_image_cache.c.o
+[ 61%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/cache/instance/lv_image_header_cache.c.o
+[ 61%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/cache/lv_cache.c.o
+[ 61%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/cache/lv_cache_entry.c.o
+[ 61%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/lv_anim.c.o
+[ 61%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/lv_anim_timeline.c.o
+[ 62%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/lv_area.c.o
+[ 62%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/lv_array.c.o
+[ 62%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/lv_async.c.o
+[ 62%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/lv_bidi.c.o
+[ 62%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/lv_circle_buf.c.o
+[ 62%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/lv_color.c.o
+[ 62%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/lv_color_op.c.o
+[ 63%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/lv_event.c.o
+[ 63%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/lv_fs.c.o
+[ 63%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/lv_iter.c.o
+[ 63%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/lv_grad.c.o
+[ 63%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/lv_ll.c.o
+[ 63%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/lv_log.c.o
+[ 63%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/lv_lru.c.o
+[ 64%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/lv_math.c.o
+[ 64%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/lv_matrix.c.o
+[ 64%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/lv_palette.c.o
+[ 64%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/lv_pending.c.o
+[ 64%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/lv_profiler_builtin.c.o
+[ 64%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/lv_profiler_builtin_posix.c.o
+[ 64%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/lv_rb.c.o
+[ 65%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/lv_style.c.o
+[ 65%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/lv_style_gen.c.o
+[ 65%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/lv_templ.c.o
+[ 65%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/lv_text.c.o
+[ 65%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/lv_timer.c.o
+[ 65%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/lv_text_ap.c.o
+[ 65%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/lv_tree.c.o
+[ 66%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/misc/lv_utils.c.o
+[ 66%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/osal/lv_cmsis_rtos2.c.o
+[ 66%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/osal/lv_freertos.c.o
+[ 66%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/osal/lv_linux.c.o
+[ 66%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/osal/lv_mqx.c.o
+[ 66%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/osal/lv_os.c.o
+[ 67%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/osal/lv_os_none.c.o
+[ 67%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/osal/lv_rtthread.c.o
+[ 67%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/osal/lv_pthread.c.o
+[ 67%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/osal/lv_sdl2.c.o
+[ 67%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/osal/lv_windows.c.o
+[ 67%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/others/file_explorer/lv_file_explorer.c.o
+[ 67%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/others/fragment/lv_fragment.c.o
+[ 68%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/others/fragment/lv_fragment_manager.c.o
+[ 68%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/others/translation/lv_translation.c.o
+[ 68%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/stdlib/builtin/lv_mem_core_builtin.c.o
+[ 68%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/stdlib/builtin/lv_sprintf_builtin.c.o
+[ 68%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/stdlib/builtin/lv_string_builtin.c.o
+[ 68%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/stdlib/builtin/lv_tlsf.c.o
+[ 68%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/stdlib/clib/lv_mem_core_clib.c.o
+[ 69%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/stdlib/clib/lv_sprintf_clib.c.o
+[ 69%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/stdlib/clib/lv_string_clib.c.o
+[ 69%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/stdlib/lv_mem.c.o
+[ 69%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/stdlib/micropython/lv_mem_core_micropython.c.o
+[ 69%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/stdlib/rtthread/lv_mem_core_rtthread.c.o
+[ 69%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/stdlib/rtthread/lv_sprintf_rtthread.c.o
+[ 70%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/stdlib/rtthread/lv_string_rtthread.c.o
+[ 70%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/stdlib/uefi/lv_mem_core_uefi.c.o
+[ 70%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/themes/default/lv_theme_default.c.o
+[ 70%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/themes/lv_theme.c.o
+[ 70%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/themes/mono/lv_theme_mono.c.o
+[ 70%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/themes/simple/lv_theme_simple.c.o
+[ 70%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/tick/lv_tick.c.o
+[ 70%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/3dtexture/lv_3dtexture.c.o
+[ 71%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/animimage/lv_animimage.c.o
+[ 71%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/arc/lv_arc.c.o
+[ 71%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/arclabel/lv_arclabel.c.o
+[ 71%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/bar/lv_bar.c.o
+[ 71%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/button/lv_button.c.o
+[ 71%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/buttonmatrix/lv_buttonmatrix.c.o
+[ 71%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/calendar/lv_calendar.c.o
+[ 72%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/calendar/lv_calendar_chinese.c.o
+[ 72%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/calendar/lv_calendar_header_arrow.c.o
+[ 72%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/calendar/lv_calendar_header_dropdown.c.o
+[ 72%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/canvas/lv_canvas.c.o
+[ 72%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/chart/lv_chart.c.o
+[ 72%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/checkbox/lv_checkbox.c.o
+[ 72%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/dropdown/lv_dropdown.c.o
+[ 73%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/gif/lv_gif.c.o
+[ 73%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/image/lv_image.c.o
+[ 73%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/imagebutton/lv_imagebutton.c.o
+[ 73%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/ime/lv_ime_pinyin.c.o
+[ 73%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/keyboard/lv_keyboard.c.o
+[ 73%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/label/lv_label.c.o
+[ 73%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/led/lv_led.c.o
+[ 74%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/line/lv_line.c.o
+[ 74%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/list/lv_list.c.o
+[ 74%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/lottie/lv_lottie.c.o
+[ 74%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/menu/lv_menu.c.o
+[ 74%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/msgbox/lv_msgbox.c.o
+[ 74%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/objx_templ/lv_objx_templ.c.o
+[ 74%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/property/lv_animimage_properties.c.o
+[ 75%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/property/lv_arc_properties.c.o
+[ 75%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/property/lv_bar_properties.c.o
+[ 75%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/property/lv_buttonmatrix_properties.c.o
+[ 75%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/property/lv_chart_properties.c.o
+[ 75%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/property/lv_checkbox_properties.c.o
+[ 75%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/property/lv_dropdown_properties.c.o
+[ 75%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/property/lv_image_properties.c.o
+[ 75%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/property/lv_label_properties.c.o
+[ 76%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/property/lv_led_properties.c.o
+[ 76%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/property/lv_keyboard_properties.c.o
+[ 76%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/property/lv_line_properties.c.o
+[ 76%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/property/lv_obj_properties.c.o
+[ 76%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/property/lv_menu_properties.c.o
+[ 76%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/property/lv_roller_properties.c.o
+[ 76%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/property/lv_slider_properties.c.o
+[ 76%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/property/lv_spinbox_properties.c.o
+[ 76%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/property/lv_span_properties.c.o
+[ 77%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/property/lv_scale_properties.c.o
+[ 77%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/property/lv_spinner_properties.c.o
+[ 78%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/property/lv_style_properties.c.o
+[ 78%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/property/lv_switch_properties.c.o
+[ 78%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/property/lv_table_properties.c.o
+[ 78%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/property/lv_tabview_properties.c.o
+[ 78%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/property/lv_textarea_properties.c.o
+[ 78%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/roller/lv_roller.c.o
+[ 78%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/scale/lv_scale.c.o
+[ 78%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/span/lv_span.c.o
+[ 78%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/slider/lv_slider.c.o
+[ 79%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/spinbox/lv_spinbox.c.o
+[ 79%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/spinner/lv_spinner.c.o
+[ 79%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/switch/lv_switch.c.o
+[ 79%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/table/lv_table.c.o
+[ 79%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/tabview/lv_tabview.c.o
+[ 79%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/textarea/lv_textarea.c.o
+[ 79%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/tileview/lv_tileview.c.o
+[ 79%] Building C object CMakeFiles/ink_lvgl.dir/system/ui/lv_mem_osal.c.o
+[ 80%] Building C object CMakeFiles/ink_lvgl.dir/Users/bytedance/Documents/Workspace/ink/build/_deps/lvgl-src/src/widgets/win/lv_win.c.o
+[ 80%] Linking C static library libink_lvgl.a
+[ 80%] Built target ink_lvgl
+[ 80%] Building C object CMakeFiles/ink_system.dir/system/services/comm/comm_service.c.o
+[ 80%] Building C object CMakeFiles/ink_system.dir/system/services/camera/camera_service.c.o
+[ 81%] Building C object CMakeFiles/ink_system.dir/system/services/display/light.c.o
+[ 81%] Building C object CMakeFiles/ink_system.dir/system/services/display/display_service.c.o
+[ 81%] Building C object CMakeFiles/ink_system.dir/system/services/net/net_service.c.o
+[ 81%] Building C object CMakeFiles/ink_system.dir/system/services/display/refresh_policy.c.o
+[ 81%] Building C object CMakeFiles/ink_system.dir/system/services/input/input_service.c.o
+[ 82%] Building C object CMakeFiles/ink_system.dir/system/services/storage/storage_service.c.o
+[ 82%] Building C object CMakeFiles/ink_system.dir/system/services/power/power_service.c.o
+[ 82%] Building C object CMakeFiles/ink_system.dir/system/services/hub/hub_link.c.o
+[ 82%] Building C object CMakeFiles/ink_system.dir/system/services/hub/rt.c.o
+[ 82%] Building C object CMakeFiles/ink_system.dir/system/services/ai/ai_service.c.o
+[ 82%] Building C object CMakeFiles/ink_system.dir/system/services/audio/audio_service.c.o
+[ 82%] Building C object CMakeFiles/ink_system.dir/system/services/res/exec.c.o
+[ 83%] Building C object CMakeFiles/ink_system.dir/system/services/res/res.c.o
+[ 83%] Building C object CMakeFiles/ink_system.dir/system/services/res/svc.c.o
+[ 83%] Building C object CMakeFiles/ink_system.dir/system/services/res/task.c.o
+[ 83%] Building C object CMakeFiles/ink_system.dir/system/services/data/datastore.c.o
+[ 83%] Building C object CMakeFiles/ink_system.dir/system/services/data/data_caps.c.o
+[ 83%] Building C object CMakeFiles/ink_system.dir/system/services/file/file_service.c.o
+[ 83%] Building C object CMakeFiles/ink_system.dir/system/services/file/file_caps.c.o
+[ 84%] Building C object CMakeFiles/ink_system.dir/system/services/time/lunar.c.o
+[ 84%] Building C object CMakeFiles/ink_system.dir/system/services/time/time_service.c.o
+[ 84%] Building C object CMakeFiles/ink_system.dir/system/services/update/update_service.c.o
+[ 84%] Building C object CMakeFiles/ink_system.dir/system/ui/shell/update_card.c.o
+[ 84%] Building C object CMakeFiles/ink_system.dir/system/ui/shell/power_menu.c.o
+[ 84%] Building C object CMakeFiles/ink_system.dir/system/services/time/time_caps.c.o
+[ 84%] Building C object CMakeFiles/ink_system.dir/system/ui/shell/off_picture.c.o
+[ 85%] Building C object CMakeFiles/ink_system.dir/system/services/notify/notify_service.c.o
+[ 85%] Building C object CMakeFiles/ink_system.dir/system/services/notify/notify_caps.c.o
+[ 85%] Building C object CMakeFiles/ink_system.dir/system/services/net/wifi.c.o
+[ 85%] Building C object CMakeFiles/ink_system.dir/system/services/notify/interrupt.c.o
+[ 85%] Building C object CMakeFiles/ink_system.dir/system/util/sha256.c.o
+[ 85%] Building C object CMakeFiles/ink_system.dir/system/ui/shell/pinpad.c.o
+[ 85%] Building C object CMakeFiles/ink_system.dir/system/ui/shell/member_gate.c.o
+[ 85%] Building C object CMakeFiles/ink_system.dir/system/services/audio/media_service.c.o
+[ 86%] Building C object CMakeFiles/ink_system.dir/system/services/audio/ogg.c.o
+[ 86%] Building C object CMakeFiles/ink_system.dir/system/services/bt/bt_service.c.o
+[ 86%] Building C object CMakeFiles/ink_system.dir/system/services/text/text_service.c.o
+[ 86%] Building C object CMakeFiles/ink_system.dir/system/services/text/pinyin.c.o
+[ 86%] Building C object CMakeFiles/ink_system.dir/system/services/text/text_caps.c.o
+[ 86%] Building C object CMakeFiles/ink_system.dir/system/services/text/clipboard.c.o
+[ 87%] Building C object CMakeFiles/ink_system.dir/system/services/text/voice_input.c.o
+[ 87%] Building C object CMakeFiles/ink_system.dir/system/ui/textfield.c.o
+[ 87%] Building C object CMakeFiles/ink_system.dir/system/ui/shell/keyboard.c.o
+[ 87%] Building C object CMakeFiles/ink_system.dir/system/ui/app_registry.c.o
+[ 87%] Building C object CMakeFiles/ink_system.dir/system/ui/shell/card.c.o
+[ 87%] Building C object CMakeFiles/ink_system.dir/system/ui/shell/interrupt_card.c.o
+[ 87%] Building C object CMakeFiles/ink_system.dir/system/ui/shell/confirm_card.c.o
+[ 88%] Building C object CMakeFiles/ink_system.dir/system/policy/cap.c.o
+[ 88%] Building C object CMakeFiles/ink_system.dir/system/policy/members.c.o
+[ 88%] Building C object CMakeFiles/ink_system.dir/system/policy/settings.c.o
+[ 88%] Building C object CMakeFiles/ink_system.dir/system/policy/confirm.c.o
+[ 88%] Building C object CMakeFiles/ink_system.dir/system/policy/state.c.o
+[ 88%] Building C object CMakeFiles/ink_system.dir/system/policy/system_actions.c.o
+[ 88%] Building C object CMakeFiles/ink_system.dir/system/policy/watch.c.o
+[ 89%] Building C object CMakeFiles/ink_system.dir/system/util/ink_args.c.o
+[ 89%] Building C object CMakeFiles/ink_system.dir/system/util/ink_crc.c.o
+[ 89%] Building C object CMakeFiles/ink_system.dir/system/util/ink_json.c.o
+[ 89%] Building C object CMakeFiles/ink_system.dir/system/util/layout.c.o
+[ 89%] Building C object CMakeFiles/ink_system.dir/system/text/ink_font.c.o
+[ 89%] Building C object CMakeFiles/ink_system.dir/system/text/linebreak.c.o
+[ 90%] Building C object CMakeFiles/ink_system.dir/system/text/layout.c.o
+[ 90%] Building C object CMakeFiles/ink_system.dir/system/ui/ui_task.c.o
+[ 90%] Building C object CMakeFiles/ink_system.dir/system/ui/lock_mark.c.o
+[ 90%] Building C object CMakeFiles/ink_system.dir/system/ui/app.c.o
+[ 90%] Building C object CMakeFiles/ink_system.dir/system/apps/remote/remote.c.o
+[ 90%] Linking C static library libink_system.a
+[ 90%] Built target ink_system
+[ 90%] Building C object CMakeFiles/sim-systest.dir/simulator/runtime/sim_main.c.o
+[ 90%] Building C object CMakeFiles/sim-lifecycle.dir/simulator/runtime/sim_main.c.o
+[ 90%] Building C object CMakeFiles/sim-starts.dir/simulator/runtime/sim_main.c.o
+[ 90%] Building C object CMakeFiles/ink_apps.dir/apps/home/home.c.o
+[ 90%] Building C object CMakeFiles/ink_apps.dir/apps/reader/reader.c.o
+[ 90%] Building C object CMakeFiles/sim-lifecycle.dir/tests/integration/lifecycle.c.o
+[ 91%] Building C object CMakeFiles/sim-systest.dir/tests/integration/systest.c.o
+[ 91%] Building C object CMakeFiles/sim-starts.dir/tests/integration/starts.c.o
+[ 91%] Linking C static library libink_apps.a
+[ 91%] Built target ink_apps
+[ 91%] Building C object CMakeFiles/sim-hal-switch.dir/simulator/runtime/sim_main.c.o
+[ 91%] Linking C executable sim-starts
+[ 91%] Linking C executable sim-systest
+[ 91%] Built target sim-starts
+[ 91%] Building C object CMakeFiles/sim-hal-switch.dir/tests/integration/hal_switch.c.o
+[ 91%] Building C object CMakeFiles/sim-net-auto.dir/simulator/runtime/sim_main.c.o
+[ 91%] Built target sim-systest
+[ 92%] Building C object CMakeFiles/sim-net-auto.dir/tests/integration/net_auto.c.o
+[ 92%] Linking C executable sim-hal-switch
+[ 92%] Built target sim-hal-switch
+[ 92%] Linking C executable sim-net-auto
+[ 92%] Building C object CMakeFiles/sim-data.dir/simulator/runtime/sim_main.c.o
+[ 92%] Building C object CMakeFiles/sim-files.dir/simulator/runtime/sim_main.c.o
+[ 92%] Built target sim-net-auto
+[ 93%] Building C object CMakeFiles/sim-data.dir/tests/integration/data.c.o
+[ 93%] Building C object CMakeFiles/sim-files.dir/tests/integration/files.c.o
+[ 93%] Linking C executable sim-lifecycle
+[ 93%] Building C object CMakeFiles/sim-time.dir/simulator/runtime/sim_main.c.o
+[ 93%] Built target sim-lifecycle
+[ 93%] Building C object CMakeFiles/sim-time.dir/tests/integration/timesvc.c.o
+[ 93%] Building C object CMakeFiles/sim-people.dir/simulator/runtime/sim_main.c.o
+[ 93%] Building C object CMakeFiles/sim-people.dir/tests/integration/people.c.o
+[ 93%] Linking C executable sim-time
+[ 94%] Linking C executable sim-files
+[ 94%] Built target sim-time
+[ 95%] Building C object CMakeFiles/sim-people.dir/tests/integration/people_table.c.o
+[ 95%] Built target sim-files
+[ 95%] Building C object CMakeFiles/sim-media.dir/simulator/runtime/sim_main.c.o
+[ 95%] Linking C executable sim-data
+[ 95%] Building C object CMakeFiles/sim-media.dir/tests/integration/media.c.o
+[ 95%] Built target sim-data
+[ 95%] Linking C executable sim-people
+[ 95%] Building C object CMakeFiles/sim-textinput.dir/simulator/runtime/sim_main.c.o
+[ 95%] Building C object CMakeFiles/sim-update.dir/simulator/runtime/sim_main.c.o
+[ 95%] Built target sim-people
+[ 95%] Building C object CMakeFiles/sim-textinput.dir/tests/integration/textinput.c.o
+[ 95%] Building C object CMakeFiles/sim-update.dir/tests/integration/update.c.o
+[ 95%] Building C object CMakeFiles/sim-power-menu.dir/simulator/runtime/sim_main.c.o
+[ 95%] Building C object CMakeFiles/sim-power-menu.dir/tests/integration/power_menu.c.o
+[ 95%] Linking C executable sim-media
+[ 96%] Linking C executable sim-update
+[ 96%] Built target sim-media
+[ 96%] Building C object CMakeFiles/sim-dictation.dir/simulator/runtime/sim_main.c.o
+[ 96%] Linking C executable sim-power-menu
+[ 96%] Built target sim-update
+[ 96%] Building C object CMakeFiles/sim-dictation.dir/tests/integration/dictation.c.o
+[ 96%] Built target sim-power-menu
+[ 97%] Building C object CMakeFiles/sim-listening.dir/simulator/runtime/sim_main.c.o
+[ 97%] Building C object CMakeFiles/sim-races.dir/simulator/runtime/sim_main.c.o
+[ 98%] Linking C executable sim-textinput
+[ 98%] Built target sim-textinput
+[ 98%] Building C object CMakeFiles/sim-listening.dir/tests/integration/listening.c.o
+[ 98%] Building C object CMakeFiles/sim-races.dir/tests/integration/races.c.o
+[ 98%] Building C object CMakeFiles/sim-ai-surface.dir/simulator/runtime/sim_main.c.o
+[ 98%] Building C object CMakeFiles/sim-ai-surface.dir/tests/integration/ai_surface.c.o
+[ 98%] Linking C executable sim-listening
+[ 99%] Building C object CMakeFiles/sim-races.dir/tests/integration/races_notify.c.o
+[ 99%] Built target sim-listening
+[ 99%] Building C object CMakeFiles/sim-races.dir/tests/integration/races_interrupt.c.o
+[ 99%] Linking C executable sim-dictation
+[ 99%] Linking C executable sim-races
+[ 99%] Built target sim-dictation
+[100%] Building C object CMakeFiles/sim-apps.dir/simulator/runtime/sim_main.c.o
+[100%] Linking C executable sim-ai-surface
+[100%] Built target sim-races
+[100%] Building C object CMakeFiles/sim-confirm.dir/simulator/runtime/sim_main.c.o
+[100%] Building C object CMakeFiles/sim-apps.dir/tests/integration/apps.c.o
+[100%] Built target sim-ai-surface
+[100%] Building C object CMakeFiles/sim-confirm.dir/tests/integration/confirm.c.o
+[100%] Building C object CMakeFiles/sim-notify.dir/simulator/runtime/sim_main.c.o
+[100%] Building C object CMakeFiles/sim-notify.dir/tests/integration/notify.c.o
+[100%] Building C object CMakeFiles/sim-ai-race.dir/simulator/runtime/sim_main.c.o
+[100%] Linking C executable sim-apps
+[100%] Building C object CMakeFiles/sim-ai-race.dir/tests/integration/ai_race.c.o
+[100%] Linking C executable sim-confirm
+[100%] Built target sim-apps
+[100%] Building C object CMakeFiles/ink_boot.dir/system/boot/main.c.o
+[100%] Built target sim-confirm
+[100%] Linking C static library libink_boot.a
+[100%] Linking C executable sim-ai-race
+[100%] Built target ink_boot
+[100%] Linking C executable sim-notify
+[100%] Building C object CMakeFiles/ink-sim.dir/simulator/runtime/sim_main.c.o
+[100%] Built target sim-ai-race
+[100%] Built target sim-notify
+[100%] Linking C executable ink-sim
+ld: warning: ignoring duplicate libraries: 'libink_port_sim.a'
+[100%] Built target ink-sim

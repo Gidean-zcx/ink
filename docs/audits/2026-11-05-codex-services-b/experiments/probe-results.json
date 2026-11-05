@@ -1,0 +1,273 @@
+[
+  {
+    "name": "record-call",
+    "log": "record-call.log",
+    "simulator_exit": 0,
+    "runner_exit": 0,
+    "metrics": "build-audit/audit-probes/record_call_probe/run-uopkjedw/metrics.json",
+    "test_finished": 1,
+    "test_fail": 0,
+    "observations": [
+      "AUDIT during_call busy=1 recording=1 elapsed_before_call_ms=1210",
+      "AUDIT call_recorded_ms=3240 expected_cut_by_ms=1390 reason=interrupted",
+      "AUDIT file_duration_ms=3240"
+    ],
+    "warnings": []
+  },
+  {
+    "name": "voice-call",
+    "log": "voice-call.log",
+    "simulator_exit": 0,
+    "runner_exit": 0,
+    "metrics": "build-audit/audit-probes/voice_boundary_probe/run-76zxdj_i/metrics.json",
+    "test_finished": 1,
+    "test_fail": 0,
+    "observations": [
+      "AUDIT call_focus=4 capture_busy=1 asr_frames_after_grace=26"
+    ],
+    "warnings": []
+  },
+  {
+    "name": "text-oom",
+    "log": "text-oom.log",
+    "simulator_exit": 0,
+    "runner_exit": 0,
+    "metrics": "build-audit/audit-probes/text_oom_probe/run-1k8_pxmy/metrics.json",
+    "test_finished": 1,
+    "test_fail": 0,
+    "observations": [
+      "AUDIT after_failed_snapshot text=ABD undo=1 redo=1 can_redo=1",
+      "AUDIT after_redo text=ABC",
+      "AUDIT initial_4_bytes hex=e4b8ade6 cursor=2"
+    ],
+    "warnings": []
+  },
+  {
+    "name": "shutdown-audio",
+    "log": "shutdown-audio.log",
+    "simulator_exit": 0,
+    "runner_exit": 0,
+    "metrics": "build-audit/audit-probes/shutdown_audio_probe/run-evh2ntep/metrics.json",
+    "test_finished": 1,
+    "test_fail": 0,
+    "observations": [
+      "AUDIT shutdown recording=1 capture=1 db_idle=0 storage_pending=1 durable=1 latest=2"
+    ],
+    "warnings": []
+  },
+  {
+    "name": "shutdown-audio-reboot",
+    "log": "shutdown-audio-reboot.log",
+    "simulator_exit": 0,
+    "runner_exit": 0,
+    "metrics": "build-audit/audit-probes/shutdown_audio_probe/run-0duizcve/metrics.json",
+    "test_finished": 1,
+    "test_fail": 0,
+    "observations": [
+      "AUDIT reboot get_last_edit_rc=-5 text="
+    ],
+    "warnings": []
+  },
+  {
+    "name": "headset",
+    "log": "headset.log",
+    "simulator_exit": 0,
+    "runner_exit": 0,
+    "metrics": "build-audit/audit-probes/headset_probe/run-px9i6zu9/metrics.json",
+    "test_finished": 1,
+    "test_fail": 0,
+    "observations": [
+      "AUDIT disconnected speaker_ms=990 media_state=1"
+    ],
+    "warnings": []
+  },
+  {
+    "name": "audio-focus",
+    "log": "audio-focus.log",
+    "simulator_exit": 0,
+    "runner_exit": 0,
+    "metrics": "build-audit/audit-probes/audio_focus_probe/run-tdj33543/metrics.json",
+    "test_finished": 1,
+    "test_fail": 0,
+    "observations": [
+      "AUDIT after_call interrupt=alarm focus=0 ring_played_ms=495",
+      "AUDIT record_under_alarm status=done recording=1"
+    ],
+    "warnings": []
+  },
+  {
+    "name": "power-picture",
+    "log": "power-picture.log",
+    "simulator_exit": 0,
+    "runner_exit": 0,
+    "metrics": "build-audit/audit-probes/power_picture_probe/run-_o6s8tzz/metrics.json",
+    "test_finished": 1,
+    "test_fail": 0,
+    "observations": [
+      "AUDIT off_picture_on_panel=1 late=0 failures=2 panel_busy=0 ui_busy=0"
+    ],
+    "warnings": []
+  },
+  {
+    "name": "voice-lifecycle",
+    "log": "voice-lifecycle.log",
+    "simulator_exit": 0,
+    "runner_exit": 0,
+    "metrics": "build-audit/audit-probes/voice_lifecycle_probe/run-448uzzhu/metrics.json",
+    "test_finished": 1,
+    "test_fail": 0,
+    "observations": [
+      "AUDIT two_sessions voice=3 rt=2 capture=1 focus=2",
+      "AUDIT locked voice=0 rt=0 value=base"
+    ],
+    "warnings": []
+  },
+  {
+    "name": "text-boundary",
+    "log": "text-boundary.log",
+    "simulator_exit": 0,
+    "runner_exit": 0,
+    "metrics": "build-audit/audit-probes/text_boundary_probe/run-5mpy7ofi/metrics.json",
+    "test_finished": 1,
+    "test_fail": 0,
+    "observations": [
+      "AUDIT displayed=a[bc]def tap_letter=5",
+      "AUDIT after_tap cursor=4 expected=3",
+      "AUDIT after_insert=abcdXef",
+      "AUDIT long_selection value_chars=100 label_chars=132 opening_mark_at=30",
+      "AUDIT hidden_submit status=done entered_delta=1"
+    ],
+    "warnings": []
+  },
+  {
+    "name": "record-card",
+    "log": "record-card.log",
+    "simulator_exit": 0,
+    "runner_exit": 0,
+    "metrics": "build-audit/audit-probes/record_card_probe/run-zzjaq7z8/metrics.json",
+    "test_finished": 1,
+    "test_fail": 0,
+    "observations": [
+      "AUDIT recording_usb_start=-9 active=0",
+      "AUDIT card_removed reason=write_failed recording=0 capture=0"
+    ],
+    "warnings": []
+  },
+  {
+    "name": "power-wait",
+    "log": "power-wait.log",
+    "simulator_exit": 0,
+    "runner_exit": 0,
+    "metrics": "build-audit/audit-probes/power_wait_probe/run-lf0so5xh/metrics.json",
+    "test_finished": 1,
+    "test_fail": 0,
+    "observations": [
+      "AUDIT power_wait elapsed_ms=6059 late=1 on_panel=0 low_battery_off=1 state=locked",
+      "AUDIT power_wait elapsed_ms=7089 late=2 on_panel=0 low_battery_off=1 state=locked"
+    ],
+    "warnings": []
+  },
+  {
+    "name": "record-end-original",
+    "log": "record-end-original.log",
+    "simulator_exit": 0,
+    "runner_exit": 1,
+    "metrics": "build-audit/audit-probes/record_end_probe/run-k7achcw_/metrics.json",
+    "test_finished": 1,
+    "test_fail": 2,
+    "observations": [
+      "AUDIT after_drain recording=0 capture=0 focus=0 lost=15 completed=1"
+    ],
+    "warnings": [
+      "14.480s CHECK FAILED (/private/tmp/claude-501/-Users-bytedance-Documents-Workspace-ink--claude-worktrees-optimistic-wilbur-d7cee8/babd9fe7-3ffb-4bb6-89c6-f0aff51c6f0f/scratchpad/audit-b/docs/audits/2026-11-05-codex-services-s3/experiments/record_end_probe.c:17) lost terminal marker leaves recording stuck",
+      "15.490s CHECK FAILED (/private/tmp/claude-501/-Users-bytedance-Documents-Workspace-ink--claude-worktrees-optimistic-wilbur-d7cee8/babd9fe7-3ffb-4bb6-89c6-f0aff51c6f0f/scratchpad/audit-b/docs/audits/2026-11-05-codex-services-s3/experiments/record_end_probe.c:19) second stop cannot recover"
+    ]
+  },
+  {
+    "name": "interrupt-fixed",
+    "log": "interrupt-fixed.log",
+    "simulator_exit": 0,
+    "runner_exit": 0,
+    "metrics": "build-audit/audit-probes/interrupt_probe/run-pfbx_o6i/metrics.json",
+    "test_finished": 1,
+    "test_fail": 0,
+    "observations": [
+      "AUDIT active=0 ring=0 state=none"
+    ],
+    "warnings": []
+  },
+  {
+    "name": "reverse-media-pause",
+    "log": "reverse-media-pause.log",
+    "simulator_exit": 0,
+    "runner_exit": 1,
+    "metrics": "build-audit/audit-probes/media/run-vdrhkwky/metrics.json",
+    "test_finished": 1,
+    "test_fail": 1,
+    "observations": [],
+    "warnings": [
+      "124.900s CHECK FAILED (/private/tmp/claude-501/-Users-bytedance-Documents-Workspace-ink--claude-worktrees-optimistic-wilbur-d7cee8/babd9fe7-3ffb-4bb6-89c6-f0aff51c6f0f/scratchpad/audit-b/tests/integration/media.c:258) from there, or the little before it that it goes back (19200, 23280)"
+    ]
+  },
+  {
+    "name": "reverse-media-member",
+    "log": "reverse-media-member.log",
+    "simulator_exit": 0,
+    "runner_exit": 1,
+    "metrics": "build-audit/audit-probes/media/run-jcb9ox35/metrics.json",
+    "test_finished": 1,
+    "test_fail": 1,
+    "observations": [],
+    "warnings": [
+      "17.580s CHECK FAILED (/private/tmp/claude-501/-Users-bytedance-Documents-Workspace-ink--claude-worktrees-optimistic-wilbur-d7cee8/babd9fe7-3ffb-4bb6-89c6-f0aff51c6f0f/scratchpad/audit-b/tests/integration/media.c:142) what was said before, no more (2820 ms)"
+    ]
+  },
+  {
+    "name": "reverse-interrupt",
+    "log": "reverse-interrupt.log",
+    "simulator_exit": 0,
+    "runner_exit": 1,
+    "metrics": "build-audit/audit-probes/interrupt_probe/run-3s_fouvp/metrics.json",
+    "test_finished": 1,
+    "test_fail": 2,
+    "observations": [
+      "AUDIT active=0 ring=1 state=alarm"
+    ],
+    "warnings": [
+      "3.110s CHECK FAILED (/private/tmp/claude-501/-Users-bytedance-Documents-Workspace-ink--claude-worktrees-optimistic-wilbur-d7cee8/babd9fe7-3ffb-4bb6-89c6-f0aff51c6f0f/scratchpad/audit-b/docs/audits/2026-11-05-codex-services-b/experiments/interrupt_probe.c:22) the ringing has stopped",
+      "3.110s CHECK FAILED (/private/tmp/claude-501/-Users-bytedance-Documents-Workspace-ink--claude-worktrees-optimistic-wilbur-d7cee8/babd9fe7-3ffb-4bb6-89c6-f0aff51c6f0f/scratchpad/audit-b/docs/audits/2026-11-05-codex-services-b/experiments/interrupt_probe.c:23) everything says it is over"
+    ]
+  },
+  {
+    "name": "text-oom-asan",
+    "log": "text-oom-asan.log",
+    "simulator_exit": 0,
+    "runner_exit": 0,
+    "metrics": "build-audit-asan/audit-probes/text_oom_probe/run-yo7eviyy/metrics.json",
+    "test_finished": 1,
+    "test_fail": 0,
+    "observations": [
+      "AUDIT after_failed_snapshot text=ABD undo=1 redo=1 can_redo=1",
+      "AUDIT after_redo text=ABC",
+      "AUDIT initial_4_bytes hex=e4b8ade6 cursor=2"
+    ],
+    "warnings": []
+  },
+  {
+    "name": "text-boundary-asan",
+    "log": "text-boundary-asan.log",
+    "simulator_exit": 0,
+    "runner_exit": 0,
+    "metrics": "build-audit-asan/audit-probes/text_boundary_probe/run-1p8k4tz4/metrics.json",
+    "test_finished": 1,
+    "test_fail": 0,
+    "observations": [
+      "AUDIT displayed=a[bc]def tap_letter=5",
+      "AUDIT after_tap cursor=4 expected=3",
+      "AUDIT after_insert=abcdXef",
+      "AUDIT long_selection value_chars=100 label_chars=132 opening_mark_at=30",
+      "AUDIT hidden_submit status=done entered_delta=1"
+    ],
+    "warnings": []
+  }
+]

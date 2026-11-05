@@ -1,0 +1,2 @@
+OK: findings schema (9), verification schema (7), source line ranges, Markdown links, every delivered file <3 MB.
+OK: no hardware-address strings in deliverables; tracked diff unchanged from initial deletion; new files only in audit output directory.

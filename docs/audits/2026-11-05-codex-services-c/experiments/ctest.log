@@ -1,0 +1,43 @@
+Test project /private/tmp/claude-501/-Users-bytedance-Documents-Workspace-ink--claude-worktrees-optimistic-wilbur-d7cee8/babd9fe7-3ffb-4bb6-89c6-f0aff51c6f0f/scratchpad/audit-c/build-audit
+      Start 11: sdk-boundary
+      Start 12: layering
+      Start 20: integration-time-main
+      Start 23: integration-time-reboot
+ 1/19 Test #11: sdk-boundary ......................   Passed    0.04 sec
+      Start 39: integration-media
+ 2/19 Test #12: layering ..........................   Passed    0.23 sec
+      Start 40: integration-text-main
+ 3/19 Test #20: integration-time-main .............   Passed    0.63 sec
+      Start 41: integration-text-nocard
+ 4/19 Test #23: integration-time-reboot ...........   Passed    0.70 sec
+      Start 42: integration-text-baddict
+ 5/19 Test #41: integration-text-nocard ...........   Passed    0.81 sec
+      Start 44: integration-power-menu
+ 6/19 Test #42: integration-text-baddict ..........   Passed    0.78 sec
+      Start 45: integration-dictation
+ 7/19 Test #39: integration-media .................   Passed    1.96 sec
+      Start 46: integration-dictation-handsfree
+ 8/19 Test #40: integration-text-main .............   Passed    2.15 sec
+      Start 47: integration-listening
+ 9/19 Test #44: integration-power-menu ............   Passed    1.83 sec
+      Start 48: integration-races
+10/19 Test #46: integration-dictation-handsfree ...   Passed    1.41 sec
+      Start 49: integration-ai-surface
+11/19 Test #47: integration-listening .............   Passed    1.80 sec
+      Start 50: integration-apps
+12/19 Test #45: integration-dictation .............   Passed    3.26 sec
+      Start 51: integration-confirm
+13/19 Test #48: integration-races .................   Passed    1.57 sec
+      Start 52: integration-notify
+14/19 Test #49: integration-ai-surface ............   Passed    2.70 sec
+      Start 53: integration-notify-lowbat
+15/19 Test #50: integration-apps ..................   Passed    2.81 sec
+      Start 74: scenario-ai_tools-metalio-plus
+16/19 Test #53: integration-notify-lowbat .........   Passed    1.41 sec
+17/19 Test #51: integration-confirm ...............   Passed    3.15 sec
+18/19 Test #52: integration-notify ................   Passed    4.08 sec
+19/19 Test #74: scenario-ai_tools-metalio-plus ....   Passed    2.09 sec
+
+100% tests passed out of 19
+
+Total Test time (real) =   9.17 sec
