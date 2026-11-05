@@ -43,9 +43,11 @@
 
 ```bash
 cmake -S . -B build -DINK_WERROR=ON -DINK_CJK_FONT=$INK_DEPS/build-deps/fonts/NotoSansCJK-Regular.ttc -DINK_CJK_FACE=2 -DPython3_EXECUTABLE=$INK_DEPS/build-deps/pyenv/bin/python -DFETCHCONTENT_SOURCE_DIR_LVGL=$INK_DEPS/build/_deps/lvgl-src
-cmake --build build -j
-$INK_DEPS/build-deps/pyenv/bin/ctest --test-dir build --output-on-failure -j8
+cmake --build build -j4
+$INK_DEPS/build-deps/pyenv/bin/ctest --test-dir build --output-on-failure -j3
 ```
+
+资源限制（上次并行太多，把用户的电脑卡死到要强制重启）：构建最多 `-j4`，**不许用不带数字的 `-j`**，它在这台电脑上等于不限；`ctest` 最多 `-j3`；同一时间只跑一个构建或一轮全量测试；不要启动带窗口的 `ink-sim-gui`，窗口版由复核者看。
 
 内存检查：同样的命令换目录 `build-asan`，加 `-DINK_SANITIZE=ON`，不要 `-DINK_WERROR=ON` 以外的改动。构建目录都已被忽略。
 
