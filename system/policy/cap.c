@@ -142,6 +142,7 @@ static ink_rc_t gate(const ink_cap_t *c, ink_source_t src, uint32_t page_gen, bo
 #define RID_CAP 40
 
 #define ACTIVITY_PENDING 16
+#define ACTIVITY_SLOTS (ACTIVITY_PENDING * INK_MEMBERS_MAX)
 
 typedef struct {
     ink_exec_job_t job;
@@ -156,11 +157,11 @@ typedef struct {
 
 static struct {
     bool ready;
-    activity_note_t pending[ACTIVITY_PENDING];
+    activity_note_t pending[ACTIVITY_SLOTS];
 } AL INK_PSRAM_BSS;
 
 static const ink_db_def_t ACTIVITY = {.name = "activity.log", .title = "AI 的活动记录", .scope = INK_DB_MEMBER,
-    .schema = 1, .json = true, .ai_read = true, .max_bytes = 128 * 1024};
+    .schema = 1, .json = true, .ai_read = true, .max_bytes = 128 * 1024, .drop_oldest = true};
 
 /*
  * One call, from acceptance to the slot's return. Its deadline counts from acceptance, whatever it
@@ -237,9 +238,10 @@ static void activity_flush(void *arg) { /* exec.bg */
     ink_jw_raw(&w, ",\"when\":"); ink_jw_int(&w, n->when_s);
     ink_jw_raw(&w, n->asked ? ",\"asked\":true}" : ",\"asked\":false}");
     ink_db_write_t rec = {.data = json, .len = w.len, .sort = n->when_s, .src = INK_SRC_AI};
-    bool saved = db && !w.overflow && ink_db_put(db, &rec, NULL) == INK_DB_OK;
+    int result = db && !w.overflow ? ink_db_put(db, &rec, NULL) : INK_DB_ERR_NOMEM;
     if (db) ink_db_close(db);
-    if (!saved) {
+    if (result != INK_DB_OK) {
+        if (result == INK_DB_ERR_FULL) ink_probe_count("activity.backlog_full");
         ink_probe_count("activity.write_retry");
         ink_svc_at(&n->retry, osal_now_us() + 1000000, activity_retry, n);
         return;
@@ -257,7 +259,10 @@ static bool needs_activity(const ink_cap_t *c, ink_source_t src) {
 static activity_note_t *activity_reserve(const ink_cap_t *c, const char *member) {
     activity_note_t *n = NULL;
     osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
-    for (int i = 0; i < ACTIVITY_PENDING && !n; i++)
+    int held = 0;
+    for (int i = 0; i < ACTIVITY_SLOTS; i++)
+        if (AL.pending[i].used && !strcmp(AL.pending[i].member, member)) held++;
+    for (int i = 0; held < ACTIVITY_PENDING && i < ACTIVITY_SLOTS && !n; i++)
         if (!AL.pending[i].used) {
             n = &AL.pending[i];
             n->used = true;
@@ -568,7 +573,7 @@ static pending_t *prepare(const char *id, const ink_cap_t *c, const ink_args_t *
     p->call.page_gen = o->page_gen;
     /* whoever asks, asks for who is here now: if someone else has come by the time it runs, it does not run for them */
     snprintf(p->member, sizeof p->member, "%s", o->member ? o->member : ink_member_current()->id);
-    if (needs_activity(c, o->src)) {
+    if (needs_activity(c, o->src) && !strcmp(p->member, ink_member_current()->id)) {
         p->activity = activity_reserve(c, p->member);
         if (!p->activity) {
             osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
@@ -1044,6 +1049,7 @@ typedef struct {
     char object[48], cap[48], member[16];
     ink_args_t args;
     uint64_t until_us;
+    uint32_t revision;
 } undo_t;
 
 static undo_t UNDO[UNDO_MAX] INK_PSRAM_BSS;
@@ -1059,6 +1065,7 @@ void ink_cap_undoable(ink_call_t *call, const char *cap, const ink_args_t *args,
     if (args) u->args = *args;
     else ink_args_init(&u->args);
     u->until_us = osal_now_us() + (uint64_t)ms * 1000u;
+    u->revision = call->rc.revision;
     osal_mutex_unlock(CB.lock);
     call->rc.undo_ms = ms;
 }
@@ -1070,6 +1077,8 @@ static void undo_done(void *ctx, const ink_receipt_t *rc) {
         snprintf(c->rc.say, sizeof c->rc.say, "撤销了");
     } else {
         c->rc.status = rc->status;
+        snprintf(c->rc.object, sizeof c->rc.object, "%s", rc->object);
+        snprintf(c->rc.say, sizeof c->rc.say, "%s", rc->say);
         snprintf(c->rc.detail, sizeof c->rc.detail, "%s", rc->detail);
     }
     ink_cap_done(c);
@@ -1078,13 +1087,16 @@ static void undo_done(void *ctx, const ink_receipt_t *rc) {
 static void cap_undo(ink_call_t *c) {
     char object[48];
     ink_args_get_str(&c->args, "object", object, sizeof object);
+    int64_t revision = 0;
+    bool bound = ink_args_get_int(&c->args, "revision", &revision);
     undo_t u = {0};
     bool found = false;
     uint64_t now = osal_now_us();
     osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
-    for (int i = 0; i < UNDO_MAX && !found; i++) {
+    for (int n = 0; n < UNDO_MAX && !found; n++) {
+        int i = (undo_next + UNDO_MAX - 1 - n) % UNDO_MAX;
         undo_t *e = &UNDO[i];
-        if (e->until_us > now && !strcmp(e->object, object) && !strcmp(e->member, ink_member_current()->id)) {
+        if (e->until_us > now && (!bound || e->revision == (uint32_t)revision) && !strcmp(e->object, object) && !strcmp(e->member, ink_member_current()->id)) {
             u = *e;
             e->until_us = 0; /* once */
             found = true;
@@ -1096,8 +1108,9 @@ static void cap_undo(ink_call_t *c) {
         return;
     }
     snprintf(c->rc.object, sizeof c->rc.object, "%s", object);
-    ink_cap_defer(c); /* the inverse may run on another executor: the member's own undo, no second confirmation */
-    ink_call_opts_t o = {.src = INK_SRC_CONFIRMED, .member = u.member, .reply_exec = INK_EXEC_DIRECT, .done = undo_done, .ctx = c};
+    ink_cap_defer(c); /* Settings recheck their own risk; a permission inverse is still a permission change. */
+    ink_source_t src = !strcmp(u.cap, "settings.set") ? c->src : INK_SRC_CONFIRMED;
+    ink_call_opts_t o = {.src = src, .member = u.member, .reply_exec = INK_EXEC_DIRECT, .done = undo_done, .ctx = c};
     if (ink_cap_call(u.cap, &u.args, &o) != 0) {
         reject(&c->rc, INK_RC_FAILED, "busy");
         ink_cap_done(c);
@@ -1232,7 +1245,7 @@ static const ink_cap_t BUS_CAPS[] = {
      .run = cap_activity_list},
     {.id = "system.undo",
      .title = "撤销刚才的操作",
-     .input = "{\"type\":\"object\",\"properties\":{\"object\":{\"type\":\"string\",\"maxLength\":47}},\"required\":[\"object\"]}",
+     .input = "{\"type\":\"object\",\"properties\":{\"object\":{\"type\":\"string\",\"maxLength\":47},\"revision\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":4294967295}},\"required\":[\"object\"]}",
      .effect = INK_FX_LOCAL_WRITE,
      .child_ok = true,
      .exec = INK_EXEC_DIRECT,

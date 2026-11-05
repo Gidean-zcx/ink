@@ -31,6 +31,12 @@ suites = {
     'shutdown': ('sim-media', [], '30s'),
     'actions': ('sim-media', [], '15s'),
     'policy': ('sim-media', ['settings_boundary.c', 'wifi_boundary.c'], '40s'),
+    'permissions': ('sim-media', ['settings_boundary.c'], '25s'),
+    'undo': ('sim-media', ['settings_boundary.c', 'cap_boundary.c'], '30s'),
+    'playback': ('sim-media', ['audio_boundary.c'], '35s'),
+    'activity': ('sim-media', [], '200s'),
+    'upgrade_crash': ('sim-media', [], '20s'),
+    'removal': ('sim-media', ['removal_files.c'], '25s'),
 }
 
 def compile_suite(name):
@@ -44,10 +50,10 @@ def compile_suite(name):
     defines = []
     if a.baseline:
         # Read only: source copies and binaries live in the ignored build directory.
-        for rel in ['system/services/file/file_service.c', 'system/services/data/datastore.c', 'system/services/update/update_service.c', 'system/services/text/text_service.c', 'system/services/text/text_caps.c', 'system/services/audio/audio_service.c', 'system/services/power/power_service.c', 'system/services/ai/ai_service.c', 'system/policy/cap.c', 'system/policy/settings.c', 'system/services/hub/hub_link.c', 'system/services/net/wifi.c']:
+        for rel in ['system/services/file/file_service.c', 'system/services/data/datastore.c', 'system/services/update/update_service.c', 'system/services/text/text_service.c', 'system/services/text/text_caps.c', 'system/services/audio/audio_service.c', 'system/services/power/power_service.c', 'system/services/ai/ai_service.c', 'system/policy/cap.c', 'system/policy/settings.c', 'system/policy/members.c', 'system/services/hub/hub_link.c', 'system/services/net/wifi.c']:
             target = work / Path(rel).name
             target.write_bytes(subprocess.check_output(['git', 'show', a.baseline + ':' + rel], cwd=ROOT))
-            macro = 'INK_TEST_' + {'file_service.c': 'FILE', 'datastore.c': 'DATA', 'update_service.c': 'UPDATE', 'text_service.c': 'TEXT', 'text_caps.c': 'TEXT_CAPS', 'audio_service.c': 'AUDIO', 'power_service.c': 'POWER', 'ai_service.c': 'AI', 'cap.c': 'CAP', 'settings.c': 'SETTINGS', 'hub_link.c': 'HUB', 'wifi.c': 'WIFI'}[Path(rel).name] + '_SOURCE'
+            macro = 'INK_TEST_' + {'file_service.c': 'FILE', 'datastore.c': 'DATA', 'update_service.c': 'UPDATE', 'text_service.c': 'TEXT', 'text_caps.c': 'TEXT_CAPS', 'audio_service.c': 'AUDIO', 'power_service.c': 'POWER', 'ai_service.c': 'AI', 'cap.c': 'CAP', 'settings.c': 'SETTINGS', 'members.c': 'MEMBERS', 'hub_link.c': 'HUB', 'wifi.c': 'WIFI'}[Path(rel).name] + '_SOURCE'
             if rel.endswith('text_service.c') and 'ink_text_edit_revision' not in target.read_text():
                 defines += ['-DINK_TEST_OLD_TEXT=1']
             defines += ['-D' + macro + '=' + json.dumps(str(target))]
@@ -69,6 +75,54 @@ def compile_suite(name):
     link[first_lib:first_lib] = objects[1:]
     subprocess.run(link, cwd=build, check=True)
     return binary, end
+
+def review_matrix(name, binary):
+    all_ok = True
+    def boot(path, label, env, checkpoint=None):
+        nonlocal all_ok
+        out = path / label
+        cmd = [str(binary), '--profile', str(ROOT / 'simulator/profiles/metalio-plus.json'),
+               '--assets', str(build / 'assets'), '--content', str(build / 'test-content'),
+               '--out', str(out), '--end', '25s', '--quiet', '--no-random-outages',
+               '--flash-image', str(path / 'user.img'), '--sd-dir', str(path / 'sd')]
+        run = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, timeout=180,
+                             env={**os.environ, 'UBSAN_OPTIONS': 'halt_on_error=1', **env})
+        (path / (label + '.stdout.log')).write_text(run.stdout)
+        (path / (label + '.stderr.log')).write_text(run.stderr)
+        metrics = json.loads((out / 'metrics.json').read_text())
+        m = metrics['metrics']
+        complete = m.get(checkpoint) == 1 and m.get('power.reboot') == 1 if checkpoint else m.get('test.finished') == 1
+        ok = run.returncode == 0 and complete and m.get('test.fail', 0) == 0
+        print(name + '/' + path.name + '/' + label, 'PASS' if ok else 'FAIL',
+              'exit=' + str(run.returncode), 'checks=' + str(m.get('test.pass', 0)), flush=True)
+        if not ok:
+            print(run.stderr[-2000:])
+            for warning in metrics.get('warnings', []): print(warning)
+        all_ok &= ok
+
+    if name == 'upgrade_crash':
+        spec = importlib.util.spec_from_file_location('inkfw', ROOT / 'tools/inkfw/make_inkfw.py')
+        fw = importlib.util.module_from_spec(spec); spec.loader.exec_module(fw)
+        for cut in ('control', 'before', 'after', 'error'):
+            path = work / ('commit-' + cut)
+            folder = path / 'sd/content/update'; folder.mkdir(parents=True)
+            (folder / 'next.inkfw').write_bytes(fw.build('2.0.0', 200, app_size=8192, font=4096, resources=8192)[0])
+            boot(path, 'install', {'INK_REVIEW_INSTALL': '1'}, 'test.finished')
+            checkpoint = {'before': 'review.cut_before_valid', 'after': 'review.cut_after_valid', 'error': 'review.valid_error'}.get(cut)
+            boot(path, 'trial', {'INK_REVIEW_CUT': cut} if checkpoint else {}, checkpoint)
+            env = {'INK_REVIEW_EXPECT_ROLLBACK': '1'} if cut in ('before', 'error') else {}
+            if cut == 'after': env['INK_REVIEW_EXPECT_RESOURCES'] = '1'
+            boot(path, 'recovery', env)
+            boot(path, 'next-boot', {'INK_REVIEW_EXPECT_ROLLBACK': '1'} if cut in ('before', 'error') else {})
+    else:
+        for failure in ('card', 'flash', 'cache', 'pin'):
+            path = work / ('removal-' + failure)
+            (path / 'sd').mkdir(parents=True)
+            for phase in ('prepare', 'retry', 'inspect'):
+                boot(path, phase, {'INK_REVIEW_PHASE': phase, 'INK_REVIEW_FAILURE': failure},
+                     'review.removal_checkpoint' if phase != 'inspect' else None)
+    return all_ok
+
 
 def update_matrix(binary):
     spec = importlib.util.spec_from_file_location('inkfw', ROOT / 'tools/inkfw/make_inkfw.py')
@@ -163,6 +217,9 @@ for name in a.suites:
     if name == 'update':
         failed |= not update_matrix(binary)
         continue
+    if name in ('upgrade_crash', 'removal'):
+        failed |= not review_matrix(name, binary)
+        continue
     out = work / (name + '-out')
     cmd = [str(binary), '--profile', str(ROOT / 'simulator/profiles/metalio-plus.json'),
            '--assets', str(build / 'assets'), '--content', str(build / 'test-content'),
@@ -171,6 +228,8 @@ for name in a.suites:
     run = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, timeout=180)
     metrics = json.loads((out / 'metrics.json').read_text()) if (out / 'metrics.json').exists() else {}
     counters = metrics.get('metrics', {})
+    (work / (name + '.stdout.log')).write_text(run.stdout)
+    (work / (name + '.stderr.log')).write_text(run.stderr)
     ok = run.returncode == 0 and counters.get('test.finished') == 1 and counters.get('test.fail', 0) == 0
     print(name, 'PASS' if ok else 'FAIL', 'exit=' + str(run.returncode),
           'checks=' + str(counters.get('test.pass', 0)), 'failures=' + str(counters.get('test.fail', 0)), flush=True)

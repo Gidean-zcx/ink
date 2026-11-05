@@ -169,8 +169,7 @@ static void members_and_pin(void) {
     CHECK(set_pin("owner", "123456", "654321") == INK_PIN_OK, "the right one");
 
     /* the idle return */
-    ink_receipt_t rc;
-    CHECK(ink_setting_set("member.idle_return_s", 60, INK_SRC_TOUCH, &rc) == INK_RC_DONE, "a minute");
+    CHECK(setting_by_hand("member.idle_return_s", 60), "a minute with human confirmation");
     ink_power_activity(osal_now_us());
     CHECK(unlock("owner", "654321") == INK_PIN_OK, "in");
     delay_ms(50000);
@@ -208,7 +207,7 @@ static void members_and_pin(void) {
     CHECK(strcmp(g_top, "member_gate"), "the gate is gone (%s)", g_top);
 
     /* locking closes it, long before going idle would */
-    CHECK(ink_setting_set("member.idle_return_s", 3600, INK_SRC_TOUCH, &rc) == INK_RC_DONE, "an hour");
+    CHECK(setting_by_hand("member.idle_return_s", 3600), "an hour with human confirmation");
     ink_power_activity(osal_now_us());
     ink_power_lock();
     CHECK(WAIT_FOR(!ink_member_space_open(), 2000), "locked: closed");

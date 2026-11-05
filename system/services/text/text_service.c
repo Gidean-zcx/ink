@@ -531,7 +531,7 @@ static void on_member(void *ctx, int h, const char *id) { /* UI task */
 
 static const ink_state_def_t ST_FOCUSED = {.id = "text.focused", .type = INK_ST_BOOL, .title = "有文本框在输入"};
 static const ink_setting_def_t TEXT_SETTINGS[] = {
-    {.id = "ai.read_clipboard", .title = "AI 可以读剪贴板", .type = INK_SET_BOOL, .def = 0},
+    {.id = "ai.read_clipboard", .title = "AI 可以读剪贴板", .type = INK_SET_BOOL, .def = 0, .ask_by_hand = true},
 };
 
 int ink_text_service_init(void) {

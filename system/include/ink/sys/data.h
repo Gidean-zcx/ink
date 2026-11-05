@@ -124,6 +124,8 @@ int ink_db_error(ink_db_t *db);
 void ink_db_flush_all(void);
 /** A member is gone: what is held of theirs goes, unwritten or not. */
 void ink_db_forget_member(const char *member);
+/** As above, but return -1 without dropping anything if a collection is still in use. */
+int ink_db_try_forget_member(const char *member);
 /** Nothing waits to be written, anywhere (the storage service's queue is checked separately). */
 bool ink_db_idle(void);
 /** The state storage.user_free, measured now (blocks, walks the file system: at boot; it follows by itself after each folding). */

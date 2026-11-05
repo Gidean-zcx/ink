@@ -13,9 +13,11 @@
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/cap.h"
+#include "ink/sys/confirm.h"
 #include "ink/sys/exec.h"
 #include "ink/sys/json.h"
 #include "ink/sys/state.h"
+#include "ink/sys/settings.h"
 #include "ink/sys/ui.h"
 #include "sim.h"
 
@@ -77,6 +79,16 @@ static bool call_as(const char *id, const char *args, ink_source_t src) {
 }
 #define AI(id, args) call_as(id, args, INK_SRC_AI)
 #define BY_HAND(id, args) call_as(id, args, INK_SRC_TOUCH)
+
+static bool setting_by_hand(const char *id, int64_t value) {
+    ink_receipt_t rc;
+    if (ink_setting_set(id, value, INK_SRC_TOUCH, &rc) != INK_RC_PENDING_CONFIRMATION) return false;
+    unsigned token = 0;
+    sscanf(rc.object, "confirm:%u", &token);
+    if (ink_confirm_decide(token, true, INK_SRC_TOUCH) != 0) return false;
+    for (int i = 0; i < 200 && ink_setting_get(id) != value; i++) osal_task_delay_us(5000);
+    return ink_setting_get(id) == value;
+}
 
 static void delay_ms(int ms) { osal_task_delay_us((uint64_t)ms * 1000); }
 

@@ -144,6 +144,7 @@ static struct {
     hal_cpu_boost_t *boost;
 } AU;
 static bool g_capture_revoked INK_PSRAM_BSS; /* under AU.lock; a handoff cannot be undone by switching back */
+static bool g_output_revoked INK_PSRAM_BSS;
 
 static void lock(void) { osal_mutex_lock(AU.lock, OSAL_WAIT_FOREVER); }
 static void unlock(void) { osal_mutex_unlock(AU.lock); }
@@ -509,6 +510,7 @@ static bool take_tone(void) {
 }
 
 static void service_playback(void) {
+    if (__atomic_exchange_n(&g_output_revoked, false, __ATOMIC_ACQ_REL) && AU.out_open) close_output(false);
     (void)staged_wanted();
     for (;;) {
         if (AU.pcm_off >= AU.pcm_len) { /* nothing staged: the ringing, a tone, else the stream's next frame when it can play */
@@ -724,6 +726,13 @@ static void on_capture_owner(void *ctx, int h, const char *id) { /* direct: the 
         AU.cap_ending = true;
         AU.rd = AU.wr;
     }
+    bool stop_output = handoff || (closed && AU.prio != INK_AUDIO_PRIO_STORY);
+    if (stop_output && AU.stream) {
+        free_jb();
+        stream_gone();
+        AU.finishing = AU.started = false;
+    }
+    if (stop_output) __atomic_store_n(&g_output_revoked, true, __ATOMIC_RELEASE);
     unlock();
     osal_sem_give(AU.wake);
 }
@@ -736,7 +745,7 @@ static const ink_setting_def_t AUDIO_SETTINGS[] = {
     {.id = "audio.volume", .title = "音量", .type = INK_SET_INT, .min = 0, .max = 100, .def = 70, .child_may_change = true,
      .apply = volume_apply, .apply_exec = INK_EXEC_DIRECT},
     {.id = "voice.handsfree", .title = "叫名字（什么时候在等）", .type = INK_SET_ENUM, .def = 0, .choices = HANDSFREE},
-    {.id = "audio.child_max", .title = "孩子的音量上限", .type = INK_SET_INT, .min = 10, .max = 100, .def = 60, .apply = child_max_apply, .apply_exec = INK_EXEC_DIRECT},
+    {.id = "audio.child_max", .title = "孩子的音量上限", .type = INK_SET_INT, .min = 10, .max = 100, .def = 60, .ask_by_hand = true, .apply = child_max_apply, .apply_exec = INK_EXEC_DIRECT},
 };
 
 int ink_audio_init(void) {

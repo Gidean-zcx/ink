@@ -996,9 +996,17 @@ int ink_db_error(ink_db_t *db) {
     return e;
 }
 
-void ink_db_forget_member(const char *member) {
-    if (!DB.lock) return;
+int ink_db_try_forget_member(const char *member) {
+    if (!DB.lock) return 0;
     lock();
+    for (int i = 0; i < MAX_COLLECTIONS; i++) {
+        ink_db_t *c = &DB.c[i];
+        if (c->used && !strcmp(c->member, member) &&
+            (c->loading || c->refs || c->fly || c->in_flight || c->compacting)) {
+            unlock();
+            return -1;
+        }
+    }
     for (int i = 0; i < MAX_COLLECTIONS; i++) {
         ink_db_t *c = &DB.c[i];
         if (!c->used || !c->loaded || strcmp(c->member, member) || c->refs || c->fly || c->in_flight || c->compacting) continue;
@@ -1010,7 +1018,10 @@ void ink_db_forget_member(const char *member) {
         memset(c, 0, sizeof *c);
     }
     unlock();
+    return 0;
 }
+
+void ink_db_forget_member(const char *member) { (void)ink_db_try_forget_member(member); }
 
 void ink_db_flush_all(void) {
     if (!DB.lock) return;

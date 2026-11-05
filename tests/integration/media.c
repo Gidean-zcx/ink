@@ -551,13 +551,13 @@ static void volume_keys(void) {
 static void volume(void) {
     ink_receipt_t rc;
     ink_setting_set("audio.volume", 100, INK_SRC_TOUCH, &rc);
-    ink_setting_set("audio.child_max", 50, INK_SRC_TOUCH, &rc);
+    CHECK(setting_by_hand("audio.child_max", 50), "parent confirms the child limit");
     CHECK(ink_audio_effective_volume() == 100, "an adult: as set (%d)", ink_audio_effective_volume());
     ink_member_switch("kid");
     CHECK(ink_audio_effective_volume() == 50, "a child: the limit (%d)", ink_audio_effective_volume());
     CHECK(ink_setting_set("audio.child_max", 100, INK_SRC_TOUCH, &rc) == INK_RC_REJECTED, "which they cannot change (%s)", ink_rc_name(rc.status));
     ink_member_test_reset();
-    ink_setting_set("audio.child_max", 60, INK_SRC_TOUCH, &rc);
+    CHECK(setting_by_hand("audio.child_max", 60), "parent confirms restoring the limit");
     ink_setting_set("audio.volume", 70, INK_SRC_TOUCH, &rc);
 }
 

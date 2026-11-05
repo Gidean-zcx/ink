@@ -76,7 +76,7 @@ typedef enum {
 static const char *const PKG_ERR[] = {"ok", "no such file", "not an upgrade package", "the signature does not hold", "for another product", "not newer than what runs", "this system is too old for it", "damaged", "too large", "it failed before"};
 
 typedef struct {
-    char state[12];   /* "", "writing", "trying", "resources" */
+    char state[12];   /* "", "writing", "trying", "committing", "resources" */
     char version[24];
     uint32_t code;
     char path[PKG_PATH_MAX];
@@ -304,8 +304,7 @@ static void slot_finish(void *arg) { /* whole and well formed: the next boot is 
 }
 
 static void slot_valid(void *arg) {
-    (void)arg;
-    hal_ota_mark_valid();
+    *(int *)arg = hal_ota_mark_valid();
 }
 
 typedef struct {
@@ -326,7 +325,7 @@ static void never_back(void) { /* hal_power_reboot does not come back on the dev
 
 /* What stands in the way, in words. */
 static const char *not_now(void) {
-    if (!strcmp(U.st.state, "resources")) return "resources from the previous upgrade still need recovery";
+    if (!strcmp(U.st.state, "resources") || !strcmp(U.st.state, "committing")) return "resources from the previous upgrade still need recovery";
     if (ink_audio_focus_top() || ink_audio_recording()) return "a call, a recording or something being said comes first";
     ink_media_status_t m;
     ink_media_status(&m);
@@ -1001,14 +1000,20 @@ static void self_job(void *arg) { /* exec.bg */
         hal_power_reboot();
         never_back();
     }
-    snprintf(U.st.state, sizeof U.st.state, "resources");
+    snprintf(U.st.state, sizeof U.st.state, "committing");
     if (!save_state()) {
         ink_probe_count("update.state_failed");
         hal_power_reboot();
         never_back();
     }
     ink_svc_cancel(&U.self_at);
-    ink_storage_run(slot_valid, NULL, true);
+    int valid = -1;
+    ink_storage_run(slot_valid, &valid, true);
+    if (valid != 0) {
+        ink_probe_count("update.self_check_failed");
+        hal_power_reboot();
+        never_back();
+    }
     ink_probe_count("update.self_check_passed");
     if (U.st.state[0] && U.st.code == U.me.version_code) {
         snprintf(U.st.state, sizeof U.st.state, "resources");
@@ -1039,7 +1044,8 @@ void ink_update_boot_check(void) { /* boot task */
         return;
     }
     bool trying = !strcmp(U.st.state, "trying"), writing = !strcmp(U.st.state, "writing");
-    if ((trying || writing) && U.st.code != U.me.version_code && (trying || U.me.rolled_back)) { /* it went back */
+    bool committed = !strcmp(U.st.state, "committing") || !strcmp(U.st.state, "resources");
+    if ((trying || committed || (writing && U.me.rolled_back)) && U.st.code != U.me.version_code) { /* it went back */
         ink_probe_count("update.rolled_back");
         U.st.blocked_code = U.st.code;
         char version[24];
@@ -1052,7 +1058,9 @@ void ink_update_boot_check(void) { /* boot task */
         ink_probe_count("update.interrupted");
         U.st.state[0] = 0;
         save_state();
-    } else if (U.st.state[0]) { /* it is good, a power cut came before all of the rest was done */
+    } else if (U.st.state[0] && U.st.code == U.me.version_code) { /* the slot is valid; finish its own resources */
+        snprintf(U.st.state, sizeof U.st.state, "resources");
+        save_state();
         ink_exec_post(INK_EXEC_BG, &U.rest_job, rest_job, NULL);
     }
     /* a package on the card? Only if the folder is there: this should not start the executor for nothing */
