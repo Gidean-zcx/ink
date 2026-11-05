@@ -30,6 +30,7 @@
 #include "ink/sys/storage.h"
 #include "ink/sys/svc.h"
 #include "ink/sys/textinput.h"
+#include "ink/sys/task.h"
 #include "ink/sys/time.h"
 #include "ink/sys/ui.h"
 #include "ink/sys/update.h"
@@ -60,6 +61,7 @@ void ink_main(void) {
         osal_panic("capability bus or resource manager failed to start");
     if (ink_state_init() != 0 || ink_settings_init() != 0) osal_panic("state and settings tables failed to start");
     if (ink_svc_init() != 0 || ink_confirm_init() != 0 || ink_data_init() != 0) osal_panic("data store failed to start");
+    if (ink_task_init() != 0) osal_panic("task list failed to start");
     if (ink_power_init() != 0 || ink_file_service_init() != 0) osal_panic("power or file service failed to start");
     ink_members_init();
     if (ink_members_start() != 0) osal_panic("members failed to start");

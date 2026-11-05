@@ -240,7 +240,7 @@ void ink_db_flush_all(void);                                 /* 锁屏、关机�
 
 ### 3.6 给 AI 的能力
 
-`data.collections`（当前成员能看的集合：名字、标题、条数）、`data.list {collection, limit, cursor}`、`data.get {collection, id}`、`data.put {collection, id?, sort?, value}`（`value` 是 JSON 文本，可撤销）、`data.delete {collection, id}`（不可逆，走确认）。只对声明了 `ai_read`、`ai_write` 且内容是 JSON 的集合；成员永远是当前成员，没有办法指定别人。应用和服务也用这组能力跨应用读数据。
+`data.collections`（当前成员能看的集合：名字、标题、条数）、`data.list {collection, limit, cursor}`、`data.get {collection, id}`、`data.put {collection, id?, sort?, value}`（`value` 是 JSON 文本，可撤销）、`data.delete {collection, id}`（不可逆，走确认）、`data.status {collection, id 或 revision}`（保存到哪一步：`saving`、`on_device`、`at_hub`、`failed`）。只对声明了 `ai_read`、`ai_write` 且内容是 JSON 的集合；成员永远是当前成员，没有办法指定别人。应用和服务也用这组能力跨应用读数据。
 
 ## 4. 文件服务
 
@@ -750,6 +750,8 @@ OTA 和卡刷只有第一步不同，后面完全一样：同一种包、同一�
 
 `update.check`：向中枢要最新版本（`update/check` → `{version, version_code, size}`）；有新版本发 `update.available` 和一条通知。上线时它自己也看一眼，最多一天一次，没有新版本就什么都不做（不启动后台执行队列）。`update.download`：后台作业，分块从中枢取（`update/fetch {offset, len}`，每块最多 12 KiB，后台优先级，实时会话时让路），写到 TF 卡 `/content/.update/<版本>.inkfw.part`，能续传；每写一块才持有一下卡，所以中途可以借给电脑，回来接着下；完了校验、改名。没卡不能 OTA（Flash 放不下暂存，也不想边下边写）。断网、电量低于 15% 时等着。**现在是 JSON 里放 base64**（模拟中枢的实现），比设计的二进制帧多三分之一流量，定中枢协议时再改。设置 `update.auto_download` 默认关，打开也只在 Wi-Fi 下自己下；移动数据要花钱：AI 不能开始下载，人可以。
 
+`update/check` 的回答带 `blob`（包的标识，中枢协议 §3.10），`update/fetch` 每次都带上它，整个下载固定这一个包。真要被换掉了（中枢说不认），下载失败；留下的 `.part` 如果拼出来不对，下载完的校验会发现并删掉。
+
 ### 12.4 卡刷
 
 用户经 U 盘模式把 `.inkfw` 放到 TF 卡的 `content/update/` 目录（系统里就是 `/family/update/`）。系统在开机、退出 U 盘模式、卡插上时看一眼（卡插上要等文件服务发现，`storage.card` 变真；有没有卡检测引脚不知道，§14）；只有文件夹在才看，不为此启动后台执行队列。发现比现在新、段哈希也对的包：发通知“发现系统更新”（同一个版本这次开机只说一次），点开确认后安装。能力 `system.upgrade_from_card`。这条路不需要网，所以中枢坏了、Wi-Fi 配不上也能救。
@@ -800,6 +802,22 @@ OTA 和卡刷只有第一步不同，后面完全一样：同一种包、同一�
 **关机图**（界面规范 §7.12，`system/ui/shell/off_picture.c`，占位外观）：电子纸断电后画面还在，所以关机前要写清楚已关机。`ink_power_set_off_picture` 登记，关机和没电都走它：先把要写的写完，再画，等屏幕刷完（最多 6 s），才断电。没电时写“没电了，东西都存好了”。如果有应用的卡片标了 `bookmark`（现在是阅读的“在读”），留一行读到哪儿；**空间关着时不留**，电子纸上的字谁都能看。
 
 明确不做的（以后）：媒体索引、节气、成员级设置（现在设置表是设备级的，音量等都全家一个）、AI 联想、S31 自带蓝牙、配对（首次开机）、无线传输。
+
+### 13.1 任务列表（`ink/sys/task.h`，界面规范 §7.7）
+
+用户能看到的“后台在做什么”。干活的还是原来那些（`ink_job_*`、文件作业、下载），这里只是一张它们自己报上来的表：标题、做到百分之几、一个阶段词（界面拿去合成自己的几步，`ImportJob` 用）、能不能停、怎么结束的、结果一句话、做出来的东西。
+
+```c
+int  ink_task_begin(const char *kind, const char *title, bool for_everyone, void (*cancel)(void *ctx), void *ctx);
+void ink_task_progress(int id, int percent, const char *stage);
+void ink_task_end(int id, ink_task_state_t how, const char *result, const char *object);
+```
+
+- **能力**：`job.list`（正在做的在前，然后是结束的，都是新的在前）、`job.cancel {id}`、事件 `job.finished`、状态 `job.running`。按钮和 AI 是同一条路。
+- **谁能看、谁能停**：默认是开始它的那位家人自己的，别人看不到也停不了，结束事件也只在这位还在时才发。`for_everyone`（系统更新下载）大家都看得到，只有大人能停。
+- **现在接上的**：文件拷贝和删除、系统更新下载。停下更新下载后 `.part` 留着，下次接着下。
+- **只在内存里**：16 条，结束的按时间让位给新的；重启后是空的。下载重启后要重新开始才会再出现。
+- **`file.copy` 的回执**不变（小文件等结果，大的回 `queued`），多了能查进度的地方。
 
 ## 14. 决定、实机问题
 
@@ -905,6 +923,8 @@ OTA 和卡刷只有第一步不同，后面完全一样：同一种包、同一�
 | “一直在听” | 完成 | 7721632、f41d3cc | `integration-listening` | 唤醒词过确认卡；进锁着的空间；“一直”不算锁屏；“关”不关；默认锁屏也听；听的时候不持有唤醒：各自的检查失败 |
 | 语音输入 | 完成 | 23d8a74 | `integration-dictation`、`integration-dictation-handsfree` | 密码框有键、能开、能经能力开；字随时进框；取消还留字；失败丢定稿；不告诉中枢说完；停顿不结束、停一下就结束、一直不说不结束、不提示；断线发现不了；重连后第二次确认发现不了；一直连不上；一直等结果；连接时说的丢了；来电、锁屏、切页面不结束；不取焦点；录音时也能开；数字框收别的字、发错类型；AI 键不取消、不等麦克风；AI 不用确认、能开隐藏框、看到隐藏框的字；不看目录；面板大小变；听写时唤醒词生效：各自的检查失败 |
 | 麦克风状态、保存阶段、音量键、关机图 | 完成 | （见提交记录） | `integration-media`、`integration-listening`、`integration-dictation`、`integration-data`、`integration-power-menu`（加了 `battery`、`battery_after`） | 录音不算录音；不说在送出去（AI、听写）；不说在等名字；从不更新。全算已存；不看中枢；不按记录看（更新的一条在写时旧的一条也说在写）。键没反应；锁屏没放声音也调；锁屏被关口拒绝；超过 100；按了就解锁。没有关机图（关机、没电）；不等屏幕刷完（`test.off_picture_drawn` 在要求断电那一刻检查）；没有书签；空间关着也留；没电不说；图比写数据先：各自的检查失败 |
+| 任务列表 | 完成 | （见提交记录） | `integration-files`、`integration-update`（`resume2`） | 所有人都看得到；孩子能停更新下载；没有进度；数不减；没有事件；没有结果和产物；顺序反了；文件作业不进列表；停下的说失败；文件作业停不了；下载不进列表；下载算某位家人的：各自的检查失败 |
+| `update/fetch` 带包的标识 | 完成 | （见提交记录） | `integration-update`（模拟中枢不认没带标识的请求） | 不带：下载失败 |
 | 电源键长按、电源菜单 | 完成 | 4173abe、002df94 | `integration-power-menu`（一个镜像 7 轮） | 松开还锁屏；0.5 s 就算长按；没有长按；来电时也出菜单；HOME 不关；锁屏不收；孩子不能关机；AI 能替孩子关；关着的空间不能关；关机前不写；标记文字：各自的检查失败 |
 | 作业和网络 | 完成 | 7721632、f41d3cc | `systest-services` | 离线也跑（`it has not run (3, 0)`）；联网不启动：测试不通过 |
 | 模块划分、AI 能看到什么 | 完成 | 4e556d1 | `layering`、`integration-ai-surface` | 见 §15.2 AUD15-009 |
@@ -947,7 +967,7 @@ OTA 和卡刷只有第一步不同，后面完全一样：同一种包、同一�
 | 约定 | 现在有 | 还缺 |
 | --- | --- | --- |
 | 保存回执（写进队列不等于已保存；分清本地保存、等待上传、中枢收到） | C 接口：`ink_db_durable_ver`、`ink_db_acked_ver`、`ink_db_wait`、`ink_db_error`，事件 `data.write_failed`。能力 `data.put` 回 `revision`，`data.status {collection, id 或 revision}` 回 `saving`、`on_device`、`at_hub`、`failed` | “等待上传”这一步要等同步（中枢协议 §3.9）：现在还没有上传队列，`on_device` 也包括了它 |
-| 后台作业（能查进度和结果，界面能显示） | 文件作业 `ink_fs_job_status`、事件 `file.job_done`；升级 `update.status`、`update.progress` | 通用的：`ink_job_*` 只有 `ink_jobs_pending`，没有名字、进度和结果的列表；文件作业的进度没有能力可问（只有结束的事件） |
+| 后台作业（能查进度和结果，界面能显示） | §13.1：`job.list`、`job.cancel`、`job.finished`、`job.running`；文件作业、系统更新下载 | 中枢那边的作业（放书进来的七个阶段）要等中枢协议接上；`ink_job_*` 里别的后台活（阅读预渲染这种）不算用户关心的，不进列表 |
 | 系统手势仲裁（保留起点，系统先判边缘带；键盘、滑杆、文字选择按下后输入归它们） | 输入事件有 `x`、`y`、`dx`、`dy` 和方向，浮层独占输入，一个已按下的手指不能按到新出现的东西 | 起点没有传给前台，边缘带和“按下后归谁”都没有。归界面框架，和手势一起做 |
 | 编辑会话 | 类型、组合串、候选分页、提交和取消、成员清空、语音输入 | 选区、撤销、光标移动；长文本（现在上限 4 KiB，从末尾追加） |
 | 成员、确认事务 | §7、§11 | 确认结果落盘（中枢协议要求，见下） |

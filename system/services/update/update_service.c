@@ -32,6 +32,7 @@
 #include "ink/sys/res.h"
 #include "ink/sys/settings.h"
 #include "ink/sys/sha256.h"
+#include "ink/sys/task.h"
 #include "ink/sys/state.h"
 #include "ink/sys/storage.h"
 #include "ink/sys/svc.h"
@@ -40,6 +41,7 @@
 #define HEADER_MAX 4096
 #define MAX_SECTIONS 6
 #define BLOCK 4096
+#define BLOB_MAX 80
 #define MIN_BATTERY 30
 #define DOWNLOAD_CHUNK (16 * 1024)
 #define DOWNLOAD_PAUSE_BATTERY 15
@@ -87,8 +89,10 @@ static struct {
     const char *product;
     stored_t st;
     int h_state, h_version, h_progress;
+    int task;
     /* what the hub offers */
     char offer_version[24];
+    char offer_blob[BLOB_MAX]; /* which package exactly: the hub's newest can change during a download */
     uint32_t offer_code;
     uint32_t offer_size;
     uint64_t looked_at_us;
@@ -492,6 +496,7 @@ typedef struct {
     ink_call_t *call; /* NULL: the look once a day */
     int status;
     char version[24];
+    char blob[BLOB_MAX];
     uint32_t code, size;
 } answer_t;
 
@@ -518,6 +523,7 @@ static void check_answered(void *arg) { /* exec.bg: the notification waits for t
         bool first = a->code != U.offer_code;
         ink_svc_lock();
         snprintf(U.offer_version, sizeof U.offer_version, "%s", a->version);
+        snprintf(U.offer_blob, sizeof U.offer_blob, "%s", a->blob);
         U.offer_code = a->code;
         U.offer_size = a->size;
         ink_svc_unlock();
@@ -553,7 +559,10 @@ static void on_check_reply(void *ctx, int status, const ink_json_t *j, int resul
         a->status = status;
         a->code = (uint32_t)code;
         a->size = (uint32_t)size;
-        if (status == INK_HUB_OK) ink_json_str(j, ink_json_find(j, result, "version"), a->version, sizeof a->version);
+        if (status == INK_HUB_OK) {
+            ink_json_str(j, ink_json_find(j, result, "version"), a->version, sizeof a->version);
+            if (ink_json_str(j, ink_json_find(j, result, "blob"), a->blob, sizeof a->blob) < 0) a->blob[0] = 0;
+        }
     }
     if (!a || ink_exec_post(INK_EXEC_BG, &a->job, check_answered, a) != 0) {
         osal_free(a);
@@ -659,7 +668,9 @@ static ink_job_step_t dl_step(void *ctx) { /* exec.bg: realtime sessions first (
             if (n != (ssize_t)U.dl_got) return INK_JOB_FAILED;
             U.dl_off += (uint32_t)U.dl_got;
             U.dl_errors = 0;
-            ink_state_set_int(U.h_progress, (int64_t)((uint64_t)U.dl_off * 100 / (U.offer_size ? U.offer_size : 1)));
+            int percent = (int)((uint64_t)U.dl_off * 100 / (U.offer_size ? U.offer_size : 1));
+            ink_state_set_int(U.h_progress, percent);
+            ink_task_progress(U.task, percent, NULL);
         } else if (++U.dl_errors > DOWNLOAD_MAX_ERRORS) { /* the link went and came back is one thing; this is not that */
             return INK_JOB_FAILED;
         } else osal_task_delay_us(WAIT_FOR_NET_US);
@@ -673,9 +684,9 @@ static ink_job_step_t dl_step(void *ctx) { /* exec.bg: realtime sessions first (
         osal_task_delay_us(WAIT_FOR_NET_US);
         return INK_JOB_MORE;
     }
-    char params[64];
+    char params[64 + BLOB_MAX];
     uint32_t left = U.offer_size - U.dl_off;
-    snprintf(params, sizeof params, "{\"offset\":%u,\"len\":%u}", (unsigned)U.dl_off, (unsigned)(left < DOWNLOAD_CHUNK * 3 / 4 ? left : DOWNLOAD_CHUNK * 3 / 4));
+    snprintf(params, sizeof params, "{\"blob\":\"%s\",\"offset\":%u,\"len\":%u}", U.offer_blob, (unsigned)U.dl_off, (unsigned)(left < DOWNLOAD_CHUNK * 3 / 4 ? left : DOWNLOAD_CHUNK * 3 / 4));
     __atomic_store_n(&U.dl_waiting, 1, __ATOMIC_RELEASE);
     if (ink_hub_call("update/fetch", params, 20000000, on_chunk, NULL) < 0) __atomic_store_n(&U.dl_waiting, 0, __ATOMIC_RELEASE);
     return INK_JOB_MORE;
@@ -690,14 +701,21 @@ static void dl_finish(void *ctx, ink_job_step_t how, bool cancelled) { /* exec.b
     if (how != INK_JOB_DONE || cancelled) {
         set_state(cancelled ? "available" : "failed");
         ink_probe_count("update.download_failed");
+        ink_task_end(U.task, cancelled ? INK_TASK_CANCELLED : INK_TASK_FAILED, cancelled ? "停下了，下次接着下载" : "没下载成", NULL);
         return;
     }
+    ink_task_end(U.task, INK_TASK_DONE, "下载好了，可以安装", NULL);
     set_state("ready");
     ink_probe_count("update.downloaded");
     char body[64];
     snprintf(body, sizeof body, "%s 下载好了，可以安装", U.offer_version);
     ink_notify_t n = {.channel = "download", .title = "系统更新", .body = body, .tag = "update", .action = "system.upgrade", .prio = INK_NOTIFY_NORMAL, .src = INK_SRC_SYSTEM};
     ink_notify_post(&n, NULL);
+}
+
+static void dl_cancel(void *ctx) {
+    (void)ctx;
+    if (U.job) ink_job_cancel(U.job);
 }
 
 /* NULL, or why not. exec.bg */
@@ -734,6 +752,10 @@ static const char *start_download(void) {
     ink_power_hold(INK_NEED_NET);
     ink_probe_count("update.download_started");
     set_state("downloading");
+    char title[64];
+    snprintf(title, sizeof title, "下载系统更新 %.20s", U.offer_version);
+    U.task = ink_task_begin("update.download", title, true, dl_cancel, NULL);
+    ink_task_progress(U.task, (int)((uint64_t)U.dl_off * 100 / (U.offer_size ? U.offer_size : 1)), NULL);
     return NULL;
 }
 

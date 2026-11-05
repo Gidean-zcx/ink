@@ -25,6 +25,7 @@
 #include "ink/sys/res.h"
 #include "ink/sys/state.h"
 #include "ink/sys/svc.h"
+#include "ink/sys/task.h"
 #include "file_internal.h"
 
 #define MAX_OPEN 8
@@ -65,6 +66,7 @@ typedef struct {
     char part[PHYS_MAX];
     uint8_t *buf;
     bool cancel;
+    int task;
     ink_fs_job_status_t st;
     void (*on_end)(void *ctx, const ink_fs_job_status_t *st);
     void *on_end_ctx;
@@ -715,6 +717,12 @@ static bool delete_step(fjob_t *j) {
     return false;
 }
 
+static int job_percent(const fjob_t *j) { /* under nobody's lock: a look */
+    if (j->phase == 0) return -1; /* still measuring */
+    if (j->op == 1) return j->st.files_total ? (int)((uint64_t)j->st.files_done * 100 / j->st.files_total) : 0;
+    return j->st.bytes_total ? (int)(j->st.bytes_done * 100 / j->st.bytes_total) : 0;
+}
+
 static ink_job_step_t job_step(void *ctx) {
     fjob_t *j = ctx;
     ink_svc_lock();
@@ -726,6 +734,7 @@ static ink_job_step_t job_step(void *ctx) {
         ink_svc_unlock();
         return INK_JOB_DONE;
     }
+    ink_task_progress(j->task, job_percent(j), NULL);
     bool over;
     if (j->op == 1) over = delete_step(j);
     else if (j->phase == 0) {
@@ -764,6 +773,10 @@ static void job_finish(void *ctx, ink_job_step_t how, bool cancelled) {
     void (*on_end)(void *, const ink_fs_job_status_t *) = j->on_end;
     FS.job_active = false;
     ink_svc_unlock();
+    char say[64], object[48];
+    snprintf(say, sizeof say, "%s", ok ? (j->op == 0 ? "拷贝好了" : "删好了") : err == INK_FS_ERR_NO_SPACE ? "存储卡满了" : err ? "没做成" : "停下了");
+    if (snprintf(object, sizeof object, "file:%s", j->vto) >= (int)sizeof object) object[0] = 0;
+    ink_task_end(j->task, ok ? INK_TASK_DONE : end.state == INK_FS_JOB_CANCELLED ? INK_TASK_CANCELLED : INK_TASK_FAILED, say, ok && j->op == 0 ? object : NULL);
     if (on_end) on_end(j->on_end_ctx, &end);
     ink_args_t *a = osal_malloc(sizeof *a, OSAL_MEM_EXTERNAL);
     if (a) {
@@ -777,6 +790,8 @@ static void job_finish(void *ctx, ink_job_step_t how, bool cancelled) {
     changed(j->op == 0 ? j->vto : j->vfrom, j->op == 0 ? "copied" : "removed");
     ink_probe_count(ok ? "file.jobs_done" : "file.jobs_failed");
 }
+
+static void job_cancel_cb(void *ctx) { ink_fs_job_cancel((int)(intptr_t)ctx); }
 
 static int job_begin(int op, const char *from, const char *to) {
     char a[PHYS_MAX], b[PHYS_MAX] = "";
@@ -839,6 +854,10 @@ static int job_begin(int op, const char *from, const char *to) {
         ink_svc_unlock();
         return r ? r : INK_FS_ERR_BUSY;
     }
+    char title[64];
+    const char *base = strrchr(from, '/');
+    snprintf(title, sizeof title, "%s %.48s", op == 0 ? "拷贝" : "删除", base ? base + 1 : from);
+    j->task = ink_task_begin(op == 0 ? "file.copy" : "file.delete", title, false, job_cancel_cb, (void *)(intptr_t)id);
     return id;
 }
 

@@ -422,9 +422,24 @@ static void update_request(struct hal_ws *ws, uint64_t t, const cJSON *req, cons
         cJSON_AddStringToObject(r, "version", version);
         cJSON_AddNumberToObject(r, "version_code", code);
         cJSON_AddNumberToObject(r, "size", (double)size);
+        char blob[48];
+        snprintf(blob, sizeof blob, "sha256:sim-%u-%ld", (unsigned)code, size);
+        cJSON_AddStringToObject(r, "blob", blob);
     } else if (f) {
         const cJSON *pr = cJSON_GetObjectItemCaseSensitive(req, "params");
         long offset = (long)num_or(pr, "offset", 0), len = (long)num_or(pr, "len", 0);
+        /* the whole download is of one package, named by what update/check said (hub protocol §3.10) */
+        char want[48];
+        unsigned char head[76];
+        uint32_t code = 0;
+        if (fread(head, 1, sizeof head, f) == sizeof head) memcpy(&code, head + 72, 4);
+        fseek(f, 0, SEEK_END);
+        snprintf(want, sizeof want, "sha256:sim-%u-%ld", (unsigned)code, ftell(f));
+        const cJSON *asked = cJSON_GetObjectItemCaseSensitive(pr, "blob");
+        if (!cJSON_IsString(asked) || strcmp(asked->valuestring, want)) {
+            sim_metric_add("hub.update_wrong_package", 1);
+            len = 0;
+        }
         static const char B64[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
         unsigned char *raw = malloc((size_t)len + 3);
         char *text = malloc((size_t)len * 2 + 8);

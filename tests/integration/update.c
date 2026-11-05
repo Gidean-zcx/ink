@@ -490,7 +490,28 @@ static void resume2(void) {
     CHECK(WAIT_FOR(ink_hub_online(), 30000), "online");
     CHECK(AI("update.check", NULL) && g_rc.status == INK_RC_DONE, "there is one");
     CHECK(AI("update.download", NULL) && g_rc.status == INK_RC_DONE, "again");
+    /* it is in the list of what goes on, for everyone; only an adult stops it (system UI spec §7.7) */
+    CHECK(AI("job.list", NULL) && strstr(g_result, "\"kind\":\"update.download\"") && strstr(g_result, "下载系统更新 2.0.0") && strstr(g_result, "\"can_cancel\":true"), "in the list (%s)", g_result);
+    int job = 0;
+    const char *at = strstr(g_result, "{\"id\":");
+    CHECK(at && sscanf(at + 6, "%d", &job) == 1, "its number");
+    char args[32];
+    snprintf(args, sizeof args, "{\"id\":%d}", job);
+    CHECK(ink_member_switch("kid") == 0, "a child");
+    CHECK(AI("job.list", NULL) && strstr(g_result, "update.download"), "they see it too");
+    CHECK(AI("job.cancel", args) && g_rc.status == INK_RC_FAILED && strstr(g_rc.detail, "adult"), "and cannot stop it (%s)", g_rc.detail);
+    ink_member_test_reset();
+    delay_ms(100);
+    CHECK(AI("job.cancel", args) && g_rc.status == INK_RC_DONE, "an adult can (%s)", g_rc.detail);
+    CHECK(WAIT_FOR(!strcmp(state_of("update.state"), "available"), 5000), "it stops (%s)", state_of("update.state"));
+    CHECK(AI("job.list", NULL) && strstr(g_result, "\"state\":\"cancelled\""), "and the list says so (%s)", g_result);
+    int64_t kept = hal_fs_size("/content/.update/2.0.0.inkfw.part");
+    CHECK(kept >= part, "what came stays (%lld)", (long long)kept);
+    double before_stop = sim_metric_value("hub.requests.update/fetch");
+    CHECK(AI("update.download", NULL) && g_rc.status == INK_RC_DONE, "and on from there");
     CHECK(WAIT_FOR(!strcmp(state_of("update.state"), "ready"), 60000), "and it finishes (%s)", state_of("update.state"));
+    (void)before_stop;
+    CHECK(AI("job.list", NULL) && strstr(g_result, "下载好了") && strstr(g_result, "\"percent\":100"), "the list has the result (%s)", g_result);
     CHECK(sim_metric_value("update.download_bad") == 0, "whole and good");
     double pieces = sim_metric_value("hub.requests.update/fetch");
     CHECK(pieces > 10 && pieces < 60, "only the rest was asked for: a whole one is 86 pieces (%.0f)", pieces);

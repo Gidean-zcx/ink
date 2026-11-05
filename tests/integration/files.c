@@ -22,6 +22,7 @@
 #include "ink/sys/state.h"
 #include "ink/sys/storage.h"
 #include "ink/sys/svc.h"
+#include "ink/sys/task.h"
 #include "sim.h"
 
 #define CHECK(cond, ...)                                                 \
@@ -64,7 +65,8 @@ static bool listed(const char *dir, const char *name) {
     return hit;
 }
 
-static volatile int g_changed, g_jobs_done;
+static volatile int g_changed, g_jobs_done, g_tasks_finished;
+static char g_task_state[16];
 static char g_last_path[INK_FS_PATH_MAX], g_last_kind[16];
 static bool g_job_ok;
 static int g_usb_events;
@@ -75,6 +77,9 @@ static void on_file(void *ctx, const char *id, const ink_args_t *a) {
         ink_args_get_str(a, "path", g_last_path, sizeof g_last_path);
         ink_args_get_str(a, "kind", g_last_kind, sizeof g_last_kind);
         g_changed++;
+    } else if (!strcmp(id, "job.finished")) {
+        ink_args_get_str(a, "state", g_task_state, sizeof g_task_state);
+        g_tasks_finished++;
     } else if (!strcmp(id, "file.job_done")) {
         ink_args_get_bool(a, "ok", &g_job_ok);
         g_jobs_done++;
@@ -224,6 +229,28 @@ static bool same_file(const char *a, const char *b) {
     return same;
 }
 
+static volatile int g_done;
+static ink_receipt_t g_rc;
+static char g_result[4096];
+
+static void done_cb(void *ctx, const ink_receipt_t *rc) {
+    (void)ctx;
+    g_rc = *rc;
+    g_result[0] = 0;
+    if (rc->result) snprintf(g_result, sizeof g_result, "%s", rc->result);
+    g_rc.result = NULL;
+    g_done++;
+}
+
+static bool call_as(const char *id, const char *args, ink_source_t src) {
+    int before = g_done;
+    ink_call_opts_t o = {.src = src, .args_json = args, .reply_exec = INK_EXEC_DIRECT, .done = done_cb};
+    if (ink_cap_call(id, NULL, &o) != 0) return false;
+    for (int i = 0; i < 3000 && g_done == before; i++) osal_task_delay_us(10000);
+    return g_done > before;
+}
+#define AI(id, args) call_as(id, args, INK_SRC_AI)
+
 static void jobs(void) {
     ink_fs_job_status_t st;
     /* one large file */
@@ -247,6 +274,40 @@ static void jobs(void) {
     CHECK(ink_fs_copy_start("/me/big.bin", "/me/copies/big.bin") == INK_FS_ERR_EXISTS, "a copy does not overwrite");
     CHECK(ink_fs_copy_start("/me/nothing", "/me/x") == INK_FS_ERR_NOT_FOUND, "a missing source is said at once");
 
+    /* in the list of what goes on (system UI spec §7.7): how far, and how it ended, for a person and the AI alike */
+    CHECK(AI("job.list", NULL) && g_rc.status == INK_RC_DONE && strstr(g_result, "\"kind\":\"file.copy\"") && strstr(g_result, "拷贝 big.bin") && strstr(g_result, "\"state\":\"done\"") && strstr(g_result, "\"percent\":100")
+          && strstr(g_result, "file:/me/copies/big.bin") && strstr(g_result, "拷贝好了") && !strstr(g_result, "can_cancel"), "the copy is there, done (%s)", g_result);
+    int finished0 = g_tasks_finished;
+    id = ink_fs_copy_start("/me/big.bin", "/me/copies/seen.bin");
+    int moved = -1, percent = -1;
+    for (int i = 0; i < 2000 && moved < 0; i++) {
+        CHECK(AI("job.list", NULL), "the list");
+        if (strstr(g_result, "\"state\":\"running\"") && strstr(g_result, "\"can_cancel\":true")) {
+            const char *p = strstr(g_result, "\"percent\":");
+            if (p && sscanf(p + 10, "%d", &percent) == 1 && percent > 0 && percent < 100) moved = percent;
+        }
+        osal_task_delay_us(5000);
+    }
+    CHECK(moved > 0, "while it runs: how far, and it can be stopped (%s)", g_result);
+    CHECK(strstr(g_result, "\"state\":\"running\"") < strstr(g_result, "\"state\":\"done\""), "what runs comes first (%s)", g_result);
+    int64_t running = -1;
+    CHECK(ink_state_get_int(ink_state_find("job.running"), &running) && running == 1, "the state counts it (%d)", (int)running);
+    /* someone else does not see it, and cannot stop it */
+    int seen_id = 0;
+    const char *found = strstr(g_result, "{\"id\":");
+    if (found) sscanf(found + 6, "%d", &seen_id);
+    CHECK(seen_id > 0, "its number");
+    char job_args[48];
+    snprintf(job_args, sizeof job_args, "{\"id\":%d}", seen_id);
+    CHECK(ink_member_switch("kid") == 0, "someone else");
+    CHECK(AI("job.list", NULL) && !strstr(g_result, "seen") && !strstr(g_result, "big.bin"), "not for them to see (%s)", g_result);
+    CHECK(AI("job.cancel", job_args) && g_rc.status == INK_RC_FAILED, "nor to stop");
+    ink_member_test_reset();
+    wait_job(id, &st);
+    for (int i = 0; i < 200 && g_tasks_finished == finished0; i++) osal_task_delay_us(5000);
+    CHECK(g_tasks_finished == finished0 + 1 && !strcmp(g_task_state, "done"), "the end is told (%s)", g_task_state);
+    CHECK(ink_state_get_int(ink_state_find("job.running"), &running) && running == 0, "and it stops counting");
+
     /* cancelled half way: nothing under its name, no .part left */
     id = ink_fs_copy_start("/me/big.bin", "/me/copies/cancelled.bin");
     for (int i = 0; i < 500; i++) {
@@ -254,8 +315,13 @@ static void jobs(void) {
         if (st.bytes_done > 0) break;
         osal_task_delay_us(5000);
     }
-    ink_fs_job_cancel(id);
+    CHECK(AI("job.list", NULL) && (found = strstr(g_result, "{\"id\":")) && sscanf(found + 6, "%d", &seen_id) == 1, "the list (%s)", g_result);
+    snprintf(job_args, sizeof job_args, "{\"id\":%d}", seen_id);
+    CHECK(AI("job.cancel", job_args) && g_rc.status == INK_RC_DONE, "stopped from the list (%s)", g_rc.detail);
     wait_job(id, &st);
+    CHECK(AI("job.list", NULL) && strstr(g_result, "\"state\":\"cancelled\"") && strstr(g_result, "停下了"), "and the list says so (%s)", g_result);
+    CHECK(strstr(g_result, "\"state\":\"cancelled\"") < strstr(g_result, "\"state\":\"done\""), "the newest of what ended first (%s)", g_result);
+    CHECK(AI("job.cancel", job_args) && g_rc.status == INK_RC_FAILED, "it cannot be stopped twice");
     ink_fs_stat_t fs;
     CHECK(st.state == INK_FS_JOB_CANCELLED, "cancelled (%d)", st.state);
     CHECK(ink_fs_stat("/me/copies/cancelled.bin", &fs) == INK_FS_ERR_NOT_FOUND && hal_fs_size("/content/.m/owner/copies/cancelled.bin.part") < 0, "nothing is left of it");
@@ -284,27 +350,6 @@ static void jobs(void) {
 
 /* ---- through the bus, as the AI ---- */
 
-static volatile int g_done;
-static ink_receipt_t g_rc;
-static char g_result[4096];
-
-static void done_cb(void *ctx, const ink_receipt_t *rc) {
-    (void)ctx;
-    g_rc = *rc;
-    g_result[0] = 0;
-    if (rc->result) snprintf(g_result, sizeof g_result, "%s", rc->result);
-    g_rc.result = NULL;
-    g_done++;
-}
-
-static bool call_as(const char *id, const char *args, ink_source_t src) {
-    int before = g_done;
-    ink_call_opts_t o = {.src = src, .args_json = args, .reply_exec = INK_EXEC_DIRECT, .done = done_cb};
-    if (ink_cap_call(id, NULL, &o) != 0) return false;
-    for (int i = 0; i < 3000 && g_done == before; i++) osal_task_delay_us(10000);
-    return g_done > before;
-}
-#define AI(id, args) call_as(id, args, INK_SRC_AI)
 
 static void capabilities(void) {
     CHECK(AI("file.list", "{\"path\":\"/me/tree\"}") && g_rc.status == INK_RC_DONE && strstr(g_result, "\"name\":\"three.bin\"") && strstr(g_result, "\"size\":30000") && strstr(g_result, "\"name\":\"a\",\"dir\":true"),
@@ -503,12 +548,13 @@ static void test_task(void *arg) {
     (void)arg;
     vtk_host_call(clean_card, NULL);
     if (ink_display_init() != 0 || ink_storage_init() != 0 || ink_cap_init() != 0 || ink_exec_init() != 0 || ink_res_init() != 0 || ink_state_init() != 0 ||
-        ink_settings_init() != 0 || ink_svc_init() != 0 || ink_data_init() != 0 || ink_power_init() != 0 || ink_file_service_init() != 0) {
+        ink_settings_init() != 0 || ink_svc_init() != 0 || ink_task_init() != 0 || ink_data_init() != 0 || ink_power_init() != 0 || ink_file_service_init() != 0) {
         CHECK(0, "the services start");
         return;
     }
     ink_members_init();
     CHECK(ink_cap_subscribe("file.", on_file, NULL, INK_EXEC_DIRECT) == 0 && ink_cap_subscribe("usb.", on_usb, NULL, INK_EXEC_DIRECT) == 0, "subscribe to the events");
+    CHECK(ink_cap_subscribe("job.", on_file, NULL, INK_EXEC_DIRECT) == 0 && ink_cap_subscribe("usb.", on_usb, NULL, INK_EXEC_DIRECT) == 0, "subscribe to the events");
     paths();
     basics();
     members();

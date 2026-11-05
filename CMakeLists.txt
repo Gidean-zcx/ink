@@ -170,6 +170,7 @@ add_library(ink_system STATIC
   system/services/res/exec.c
   system/services/res/res.c
   system/services/res/svc.c
+  system/services/res/task.c
   system/services/data/datastore.c
   system/services/data/data_caps.c
   system/services/file/file_service.c
