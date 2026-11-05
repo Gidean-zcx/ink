@@ -53,4 +53,6 @@ class Registry:
         if not isinstance(arguments, dict) or "_meta" in arguments:
             raise ProtocolError("参数无效")
         validate(arguments, cap.input_schema or {"type": "object"})
-        return await cap.handler(scope, arguments)
+        result = await cap.handler(scope, arguments)
+        authority.check(scope)
+        return result

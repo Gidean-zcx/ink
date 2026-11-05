@@ -7,7 +7,7 @@ class DeviceTools:
         self.fw, self.manifest_hash = fw, manifest_hash
         self.definitions = {}
 
-    async def current(self, actions):
+    async def current(self, actions, *, guard=None):
         known = {key[1] for key in self.definitions}
         if actions and set(actions) <= known:
             return {name: self.definitions[next(k for k in self.definitions if k[1] == name)] for name in actions}
@@ -15,7 +15,7 @@ class DeviceTools:
         cursor = None
         seen = set()
         for _ in range(256):
-            reply = await self.request("tools/list", {"cursor": cursor} if cursor else {})
+            reply = await self.request("tools/list", {"cursor": cursor} if cursor else {}, guard=guard)
             if not isinstance(reply, dict) or not isinstance(reply.get("tools"), list):
                 raise ProtocolError("设备工具目录无效")
             for tool in reply["tools"]:

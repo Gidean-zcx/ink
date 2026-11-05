@@ -81,15 +81,16 @@ class JobQueue:
         return None
 
     def external_started(self, scope, jid):
-        self._transition(scope, jid, "running", "external")
+        return self._transition(scope, jid, "running", "external")
 
     def finish(self, scope, jid, result):
-        self._transition(scope, jid, ("running", "external"), "done", json.dumps(result))
+        return self._transition(scope, jid, ("running", "external"), "done", json.dumps(result))
 
     def cancel(self, scope, jid):
-        row = self.get(scope, jid)
-        if row and row["state"] in ("queued", "running"):
-            self._transition(scope, jid, row["state"], "cancelled")
+        self.authority.check(scope)
+        with self._open() as db:
+            db.execute("UPDATE jobs SET state='cancelled',result=NULL WHERE id=? AND owner=? "
+                       "AND state IN ('queued','running')", (jid, self._owner(scope)))
 
     def _transition(self, scope, jid, before, after, result=None):
         self.authority.check(scope)
@@ -97,9 +98,17 @@ class JobQueue:
         with self._open() as db:
             db.execute("BEGIN IMMEDIATE")
             row = db.execute("SELECT state FROM jobs WHERE id=? AND owner=?", (jid, self._owner(scope))).fetchone()
+            if row and row["state"] == "cancelled":
+                return False
             if not row or row["state"] not in before:
                 raise ValueError("invalid job transition")
             db.execute("UPDATE jobs SET state=?,result=? WHERE id=?", (after, result, jid))
+            return True
+
+    def _discard_revoked(self, row):
+        with self._open() as db:
+            db.execute("UPDATE jobs SET state=?,result=NULL WHERE id=? AND state IN ('running','external')",
+                       ("unknown" if row["effect"] == "external" else "cancelled", row["id"]))
 
     async def run_one(self, handlers):
         import asyncio
@@ -108,24 +117,23 @@ class JobQueue:
             return False
         scope = Scope(**json.loads(row["scope"]))
         handler = handlers.get(row["kind"])
-        if not handler:
-            await asyncio.to_thread(self.cancel, scope, row["id"])
-            return True
-        if row["effect"] == "external":
-            await asyncio.to_thread(self.external_started, scope, row["id"])
         try:
-            result = await handler(scope, json.loads(row["payload"]))
-        except Exception:
-            if row["effect"] == "external":
-                await asyncio.to_thread(self.recover)
-            else:
+            if not handler:
                 await asyncio.to_thread(self.cancel, scope, row["id"])
-            return True
-        try:
+                return True
+            if row["effect"] == "external":
+                if not await asyncio.to_thread(self.external_started, scope, row["id"]):
+                    return True
+            try:
+                result = await handler(scope, json.loads(row["payload"]))
+            except Exception:
+                if row["effect"] == "external":
+                    await asyncio.to_thread(self.recover)
+                else:
+                    await asyncio.to_thread(self.cancel, scope, row["id"])
+                return True
             await asyncio.to_thread(self.finish, scope, row["id"], result)
         except PermissionError:
-            # The owner was revoked while the handler awaited; never expose its result.
-            with self._open() as db:
-                db.execute("UPDATE jobs SET state=?,result=NULL WHERE id=? AND state IN ('running','external')",
-                           ("unknown" if row["effect"] == "external" else "cancelled", row["id"]))
+            # Revocation can race with dispatch, failure cleanup or completion.
+            await asyncio.to_thread(self._discard_revoked, row)
         return True

@@ -42,6 +42,7 @@ class Connection:
         self.closed = False
         self.sessions = {}
         self.turns = {}
+        self.calls = {}
         self.turn_sessions = {}
         self.pending = {}
         self.rid = 1000
@@ -55,15 +56,23 @@ class Connection:
             while True:
                 _, _, data, guard, done = await self.queue.get()
                 try:
-                    if guard is None or guard():
-                        if isinstance(data, bytes):
-                            await self.ws.send_bytes(data)
-                        else:
-                            await self.ws.send_str(data)
-                            if self.hub.samples is not None:
-                                self.hub.samples.append(data)
+                    if done.cancelled():
+                        continue
+                    if guard is not None and not guard():
+                        done.set_exception(ConnectionError("连接或家人已变化"))
+                        continue
+                    if isinstance(data, bytes):
+                        await self.ws.send_bytes(data)
+                    else:
+                        await self.ws.send_str(data)
+                        if self.hub.samples is not None:
+                            self.hub.samples.append(data)
                     if not done.done():
                         done.set_result(None)
+                except asyncio.CancelledError:
+                    if not done.done():
+                        done.set_exception(ConnectionError("连接已关闭"))
+                    raise
                 except Exception:
                     if not done.done():
                         done.set_exception(ConnectionError("连接已关闭"))
@@ -80,34 +89,76 @@ class Connection:
         if isinstance(message, bytes):
             priority = {1: 0, 2: 0, 4: 1, 3: 2, 6: 4, 7: 4}.get(message[0], 3)
         done = asyncio.get_running_loop().create_future()
+        scope, epoch = self.scope, self.epoch
+        valid = lambda: (not self.closed and (scope is None or self.valid_output(scope, epoch))
+                         and (guard is None or guard()))
         self.sequence += 1
-        await self.queue.put((priority, self.sequence, data, guard, done))
-        await done
+        try:
+            await self.queue.put((priority, self.sequence, data, valid, done))
+            await done
+        finally:
+            # Cancellation invalidates queued output, even before awaiting its receipt.
+            if not done.done():
+                done.cancel()
+            elif not done.cancelled():
+                done.exception()
 
     async def notify(self, method, params, guard=None):
         await self.send(notification(method, params), guard=guard)
 
-    async def request(self, method, params, timeout=None):
+    async def request(self, method, params, timeout=None, *, guard=None):
+        scope, epoch = self.scope, self.epoch
+        valid = lambda: self.valid_output(scope, epoch) and (guard is None or guard())
+        if scope is None or not valid():
+            raise ConnectionError("连接或家人已变化")
         self.rid += 1
         rid = self.rid
         future = asyncio.get_running_loop().create_future()
         self.pending[rid] = future
         try:
-            await self.send({"jsonrpc": "2.0", "id": rid, "method": method, "params": params})
+            await self.send({"jsonrpc": "2.0", "id": rid, "method": method, "params": params}, guard=valid)
             result = await asyncio.wait_for(future, timeout if timeout is not None else self.hub.request_timeout)
             # wait_for may return a concurrently completed future despite task cancellation.
             if asyncio.current_task().cancelling():
                 raise asyncio.CancelledError
+            if not valid():
+                raise ConnectionError("连接或家人已变化")
             return result
         finally:
             self.pending.pop(rid, None)
+            if not future.done():
+                future.cancel()
+            elif not future.cancelled():
+                future.exception()
 
-    async def error(self, rid, code, message):
-        await self.send({"jsonrpc": "2.0", "id": rid, "error": {"code": code, "message": message}})
+    async def error(self, rid, code, message, *, guard=None):
+        await self.send({"jsonrpc": "2.0", "id": rid, "error": {"code": code, "message": message}}, guard=guard)
+
+    async def call_tool(self, rid, params, scope, epoch):
+        guard = lambda: self.valid_output(scope, epoch)
+        try:
+            if not guard():
+                return
+            receipt = await self.hub.registry.call(scope, params.get("name"), params.get("arguments", {}), self.hub.authority)
+            await self.send(response(rid, {"content": [{"type": "text", "text": receipt.get("say", "")}],
+                                           "structuredContent": receipt, "isError": receipt["status"] != "done"}), guard=guard)
+        except (ProtocolError, PermissionError, ValueError, TypeError, KeyError,
+                TimeoutError, ConnectionError, RuntimeError) as exc:
+            if not guard() or isinstance(exc, ConnectionError):
+                return
+            code = exc.code if isinstance(exc, ProtocolError) else -32602
+            message = str(exc) if isinstance(exc, (ProtocolError, PermissionError)) else "参数无效"
+            if isinstance(exc, (TimeoutError, RuntimeError)):
+                code, message = -32603, "这次没有完成，请重试。"
+            try:
+                await self.error(rid, code, message, guard=guard)
+            except ConnectionError:
+                pass
 
     async def cancel_work(self):
-        tasks = list(self.turns.values())
+        tasks = list(self.turns.values()) + list(self.calls.values())
         self.turns.clear()
+        self.calls.clear()
         self.turn_sessions.clear()
         self.sessions.clear()
         for task in tasks:
@@ -125,7 +176,7 @@ class Connection:
         while not self.queue.empty():
             *_, done = self.queue.get_nowait()
             if not done.done():
-                done.cancel()
+                done.set_exception(ConnectionError("连接已关闭"))
             self.queue.task_done()
         await self.ws.close()
 
@@ -185,9 +236,13 @@ class Connection:
                 entries = [c.tool() for c in self.hub.registry.visible(self.hub.authority.role(self.scope), "ai", "call")]
                 await self.send(response(rid, page(entries, rid, params.get("cursor"))))
             elif method == "tools/call":
-                receipt = await self.hub.registry.call(self.scope, params.get("name"), params.get("arguments", {}), self.hub.authority)
-                await self.send(response(rid, {"content": [{"type": "text", "text": receipt.get("say", "")}],
-                                               "structuredContent": receipt, "isError": receipt["status"] != "done"}))
+                if rid is None or rid in self.calls or rid in self.turns:
+                    raise ProtocolError("这一轮编号无效")
+                if len(self.calls) + len(self.turns) >= 4:
+                    raise ProtocolError("正在处理的请求已满", -32022)
+                task = asyncio.create_task(self.call_tool(rid, params, self.scope, self.epoch))
+                self.calls[rid] = task
+                task.add_done_callback(lambda t, key=rid: self.calls.pop(key, None) if self.calls.get(key) is t else None)
             elif method == "rt.open":
                 sid, cap = params.get("sid"), params.get("cap")
                 if type(sid) is not int or sid not in range(1, 256) or sid in self.sessions:
@@ -207,12 +262,12 @@ class Connection:
             elif method == "rt.close":
                 await self.end_session(params.get("sid"))
             elif method in ("ai.listen", "ai.ask"):
-                if rid is None or rid in self.turns:
+                if rid is None or rid in self.turns or rid in self.calls:
                     raise ProtocolError("这一轮编号无效")
                 sid = params.get("stream", 0)
                 if method == "ai.listen" and (sid not in self.sessions or self.sessions[sid].cap != "voice.chat"):
                     raise ProtocolError("语音会话未打开")
-                if len(self.turns) >= 4:
+                if len(self.turns) + len(self.calls) >= 4:
                     raise ProtocolError("正在处理的请求已满", -32022)
                 task = asyncio.create_task(run_turn(self, rid, method, params))
                 self.turns[rid] = task
@@ -239,9 +294,9 @@ class Connection:
                 # Proto1 cannot prove adult unlock; it never grants an adult space.
                 if self.hub.authority.role(scope) == "adult":
                     raise ProtocolError("开发握手不能验证大人密码", -32020)
-                await self.cancel_work()
                 self.scope, self.epoch = scope, epoch
                 self.authed = False
+                await self.cancel_work()
                 await self.notify("caps/changed", {})
             elif method == "device/event":
                 pass  # No persistent event body or activity data in step 1.
@@ -282,6 +337,8 @@ class Connection:
         self.turn_sessions.pop(key, None)
 
     def valid_output(self, scope, epoch, sid=0, session=None):
+        if scope is None:
+            return False
         try:
             self.hub.authority.check(scope)
         except PermissionError:

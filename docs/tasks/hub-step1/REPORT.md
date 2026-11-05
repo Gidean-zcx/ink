@@ -2,10 +2,14 @@
 
 基线：`fdff779f2f2746ab10194e32a00b7dc343365e2c`。分支：`claude/codex-hub-step1`。日期：2026-11-05。只在本地提交，未推送或创建 PR。
 
+本次接续 `8a98acc` 的[第 1 轮复查](REVIEW.md)：R1、R2 均为高，严重和中级均为 0。重启后已核对 `fdf14b8`、工作区和报告，保留原有改动；后续构建最多 `-j4`，CTest 最多 `-j3`，构建／全量测试串行，不启动窗口。R1、R2 已实现并通过定向检查，最终全量与内存检查待跑；以下开发阶段的通过记录不能覆盖复查发现，H2/H3/H6/H7/H14 须以本次重测结果为准。
+
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
+| R1 | 已修；待全量复验 | 【实测】Registry 执行后复核；直接调用异步分派；出队、RPC 返回、取消、切成员、断线／重连及听写保护新增 19 项通过。撤回本轮修复的隔离副本中，3 个核心反例均失败，另捕获 1 个未取走 Future 异常 | `hub/.venv/bin/python -m pytest -q hub/tests/isolation/test_delivery.py`；`work/review-reverse-R1.log` |
+| R2 | 已修；待全量复验 | 【实测】取消与完成按事务状态处理，取消赢则丢结果；并发取消、外部执行前取消／撤权、执行失败撤权和后续任务继续等新增 9 项通过。旧代码反向对照 3 项失败 | `hub/.venv/bin/python -m pytest -q hub/tests/recovery/test_jobs.py hub/tests/recovery/test_cancel_races.py`；`work/review-reverse-R2.log` |
 | H1 | 通过 | 【实测】Python 3.11.15、uv 0.9.5；独立新环境安装、CLI 就绪、healthz/setup、84 项测试通过；目录和中文说明见 [README](../../../hub/README.md) | 下方“新环境复现”命令 |
 | H2 | 通过 | 【实测】开发握手、目录、双向工具回执、实时会话、文字/语音控制流符合既有协议；开发握手默认拒绝 | `ctest --test-dir build -R '^hub-contract$' -V` |
 | H3 | 通过 | 【实测】pytest **84/84**，无跳过；假设备独立词法计数，含乱序、超限、错误回执、重连、请求及轮次超时 | 同 H2；`python -m pytest -q`（hub 目录） |

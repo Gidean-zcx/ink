@@ -13,6 +13,8 @@ async def run_turn(self, rid, method, params):
     guard = lambda: self.valid_output(scope, epoch, sid, session)
     count = 0
     try:
+        if not guard():
+            return
         budget = params.get("budget_ms", 30000)
         if type(budget) is not int or budget < 0:
             raise ProtocolError("剩余时间无效")
@@ -23,7 +25,7 @@ async def run_turn(self, rid, method, params):
                 raise ProtocolError("页面快照无效")
             if any(not isinstance(n, str) or len(n.encode()) > 47 for n in snapshot.get("actions", [])):
                 raise ProtocolError("能力名无效")
-            available = await self.tools.current(snapshot.get("actions", []))
+            available = await self.tools.current(snapshot.get("actions", []), guard=guard)
             if self.hub.authority.role(scope) == "child":
                 available = {n: t for n, t in available.items() if t.get("effect") != "system" and t.get("confirm") != "parent"}
             if session:
@@ -39,6 +41,8 @@ async def run_turn(self, rid, method, params):
             if not isinstance(question, str):
                 raise ProtocolError("问题无效")
             answer = await self.hub.model.answer(question, list(available)) if question else None
+            if not guard():
+                return
             text = answer.text if answer else ""
             if answer and answer.tool:
                 descriptor = available[answer.tool]
@@ -50,13 +54,13 @@ async def run_turn(self, rid, method, params):
                                  effect=descriptor.get("effect", "read"))
                 meta["request_id"] = secrets.token_hex(16)
                 receipt = await self.request("tools/call", {"name": answer.tool, "arguments": answer.arguments,
-                                                           "page_gen": params.get("page_gen", 0), "_meta": meta})
+                                                           "page_gen": params.get("page_gen", 0), "_meta": meta}, guard=guard)
                 if not isinstance(receipt, dict) or "status" not in receipt:
                     raise ProtocolError("设备回执无效")
                 self.hub.metrics.tool_calls += 1
                 text = receipt.get("say") or ("操作未完成。" if receipt["status"] != "done" else text)
                 if receipt.get("page_gen", params.get("page_gen")) != params.get("page_gen"):
-                    await self.tools.current([])
+                    await self.tools.current([], guard=guard)
             for seq, part in enumerate(chunks(text, total=ANSWER_BYTES)):
                 await self.notify("ai.delta", {"id": rid, "text": part, "seq": seq}, guard)
             if session:
@@ -90,10 +94,18 @@ async def run_turn(self, rid, method, params):
             self.hub.metrics.turns += 1
 
 async def run_dictation(self, sid, session):
-    text = await self.hub.asr.transcribe(session.frames)
-    session.frames.clear()
-    guard = lambda: self.valid_output(self.scope, session.epoch, sid, session)
-    parts = list(chunks(text, limit=480))
-    for seg, part in enumerate(parts):
-        await self.notify("rt.asr", {"sid": sid, "seg": seg, "final": True, "text": part}, guard)
-    await self.notify("rt.asr.done", {"sid": sid, "segs": len(parts), "ms": session.seq * 60}, guard)
+    scope = self.scope
+    guard = lambda: self.valid_output(scope, session.epoch, sid, session)
+    if not guard():
+        return
+    try:
+        text = await self.hub.asr.transcribe(session.frames)
+        session.frames.clear()
+        if not guard():
+            return
+        parts = list(chunks(text, limit=480))
+        for seg, part in enumerate(parts):
+            await self.notify("rt.asr", {"sid": sid, "seg": seg, "final": True, "text": part}, guard)
+        await self.notify("rt.asr.done", {"sid": sid, "segs": len(parts), "ms": session.seq * 60}, guard)
+    except (asyncio.CancelledError, ConnectionError):
+        return

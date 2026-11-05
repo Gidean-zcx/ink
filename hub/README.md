@@ -28,7 +28,7 @@ cmake -S . -B build -DINK_WERROR=ON \
   -DPython3_EXECUTABLE="$INK_DEPS/build-deps/pyenv/bin/python" \
   -DFETCHCONTENT_SOURCE_DIR_LVGL="$INK_DEPS/build/_deps/lvgl-src" \
   -DINK_HUB_PYTHON="$PWD/hub/.venv/bin/python"
-cmake --build build -j8
+cmake --build build -j4
 "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^hub-' --output-on-failure
 cd hub
 INK_HUB_CAPS=../build/test-out/hub/caps.json .venv/bin/python -m pytest -q
