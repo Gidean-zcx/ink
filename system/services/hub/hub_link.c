@@ -131,6 +131,8 @@ static struct {
     size_t tx_bytes;    /* reserved: queued plus being queued */
     ink_hub_binary_fn bin_fn;
     void *bin_ctx;
+    ink_hub_binary_fn blob_fn;
+    void *blob_ctx;
     struct {
         char prefix[16];
         ink_hub_request_fn fn;
@@ -509,7 +511,12 @@ static void hub_task(void *arg) {
                     on_text(m.data, m.len);
                 } else if (m.ws_event == HAL_WS_BINARY && m.data) {
                     H.last_activity = now;
-                    if (H.state == HS_ONLINE && H.bin_fn) H.bin_fn(H.bin_ctx, (const uint8_t *)m.data, m.len);
+                    if (H.state == HS_ONLINE) {
+                        const uint8_t *d = (const uint8_t *)m.data;
+                        if (m.len >= 10 && d[0] == 6 && !d[1]) {
+                            if (H.blob_fn) H.blob_fn(H.blob_ctx, d, m.len);
+                        } else if (H.bin_fn) H.bin_fn(H.bin_ctx, d, m.len);
+                    }
                 } else if (m.ws_event == HAL_WS_CLOSED) {
                     fail_all(INK_HUB_ERR_LOST, true);
                     ink_probe_count("hub.disconnects");
@@ -788,6 +795,11 @@ int ink_hub_send_frame_for(const void *data, size_t len, int cls, const char *me
 void ink_hub_on_binary(ink_hub_binary_fn fn, void *ctx) {
     H.bin_ctx = ctx;
     H.bin_fn = fn;
+}
+
+void ink_hub_on_blob(ink_hub_binary_fn fn, void *ctx) {
+    H.blob_fn = fn;
+    H.blob_ctx = ctx;
 }
 
 int ink_hub_on_request(const char *prefix, ink_hub_request_fn fn, void *ctx) {

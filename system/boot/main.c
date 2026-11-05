@@ -39,6 +39,8 @@
 extern const ink_activity_t ink_app_home;
 extern const ink_app_def_t ink_appdef_home, ink_appdef_reader;
 
+#include "ink/sys/backup.h"
+
 int ink_system_actions_init(void);
 void ink_factory_reset_resume(void);
 int ink_reader_actions_init(void);
@@ -75,6 +77,7 @@ void ink_main(void) {
     if (ink_time_init() != 0) osal_panic("time service failed to start");
     if (ink_text_service_init() != 0) osal_panic("text input failed to start");
     if (ink_media_init() != 0 || ink_bt_service_init() != 0) osal_panic("media or Bluetooth failed to start");
+    if (ink_backup_init() != 0) osal_panic("backup service failed to start");
     if (ink_update_init() != 0) osal_panic("system upgrades failed to start");
     hal_device_info_t di;
     hal_device_get_info(&di);
@@ -86,6 +89,7 @@ void ink_main(void) {
     if (ink_ui_start(&ink_app_home) != 0 || ink_ui_lock_mark_init() != 0 || ink_shell_interrupt_card_init() != 0 || ink_shell_confirm_card_init() != 0 || ink_shell_keyboard_init() != 0 || ink_shell_member_gate_init() != 0 || ink_shell_update_card_init() != 0 || ink_shell_power_menu_init() != 0 || ink_shell_off_picture_init() != 0) osal_panic("ui failed to start");
     ink_fs_refresh_state(); /* blocks on the card: here, not in anyone's way */
     ink_pairing_start();
+    ink_backup_start();
     ink_data_refresh_state();
     ink_power_battery_policy_start();
     ink_update_boot_check();

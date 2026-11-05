@@ -26,6 +26,7 @@
 #include "ink/sys/state.h"
 #include "ink/sys/svc.h"
 #include "ink/sys/task.h"
+#include "ink/sys/sha256.h"
 #include "file_internal.h"
 
 #define MAX_OPEN 8
@@ -1294,5 +1295,46 @@ int ink_fs_write_atomic(const char *path, const void *data, size_t n) {
     __atomic_add_fetch(&FS.revision, 1, __ATOMIC_RELAXED);
     int r = fs_write_atomic_unlocked(&c, path, data, n);
     osal_mutex_unlock(FS.edits);
+    return r;
+}
+
+int ink_fs_restore(const char *member, uint32_t generation, unsigned stage, const char *path, const uint8_t expected_sha256[32]) {
+    if (!member || !path || !expected_sha256 || stage >= 128 || strncmp(path, "/me/", 4)) return INK_FS_ERR_PATH;
+    file_context_t c = member_context(member, generation);
+    if (!c.generation || !ink_member_io_begin(member, generation)) return INK_FS_ERR_DENIED;
+    int r = ink_fs_card_hold();
+    if (r) { ink_member_io_end(member); return r; }
+    uint8_t *buf = osal_malloc(JOB_BUF, OSAL_MEM_EXTERNAL);
+    if (!buf) { ink_fs_card_release(); ink_member_io_end(member); return INK_FS_ERR_IO; }
+    osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
+    char target[PHYS_MAX], source[PHYS_MAX], root[INK_LAYOUT_PATH_MAX];
+    r = resolve_for(&c, path, true, target, sizeof target);
+    if (!r && FS.job_active) r = INK_FS_ERR_BUSY;
+    for (int i = 0; !r && i < MAX_OPEN; i++)
+        if (FS.files[i].used && FS.files[i].writable) r = INK_FS_ERR_BUSY;
+    uint8_t hash[32] = {0};
+    if (!r && hal_fs_size(target) >= 0) {
+        hal_file_t *f = hal_fs_open(target, HAL_O_READ);
+        if (!f) r = INK_FS_ERR_IO;
+        else {
+            ink_sha256_t sha; ink_sha256_init(&sha);
+            ssize_t n;
+            while ((n = hal_fs_read(f, buf, JOB_BUF)) > 0) ink_sha256_update(&sha, buf, (size_t)n);
+            int closed = hal_fs_close(f);
+            if (n < 0 || closed != 0) r = INK_FS_ERR_IO;
+            else ink_sha256_final(&sha, hash);
+        }
+    }
+    if (!r && memcmp(hash, expected_sha256, 32)) r = INK_FS_ERR_EXISTS;
+    if (!r) {
+        if (ink_layout_member_files(root, sizeof root, member) < 0) r = INK_FS_ERR_PATH;
+        else {
+            snprintf(source, sizeof source, "%s/.backup/down%u", root, stage);
+            if (hal_fs_rename(source, target) != 0) r = INK_FS_ERR_IO;
+            else { __atomic_add_fetch(&FS.revision, 1, __ATOMIC_RELAXED); changed(&c, path, "restored"); }
+        }
+    }
+    osal_mutex_unlock(FS.edits);
+    osal_free(buf); ink_fs_card_release(); ink_member_io_end(member);
     return r;
 }

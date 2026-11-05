@@ -98,7 +98,7 @@ typedef struct {
 struct ink_db {
     const ink_db_def_t *def;
     char member[INK_MEMBER_ID_MAX]; /* "" = device data */
-    bool used, loading, loaded;
+    bool used, loading, loaded, installing;
     int refs;
     uint32_t last_use;
     /* records */
@@ -314,6 +314,7 @@ static void append_done(void *ctx, int result) { /* storage task */
 
 /* Under the lock. The batch that failed goes first, alone. */
 static void flush_locked(ink_db_t *c) {
+    if (c->installing) return;
     if (c->in_flight) return;
     if (c->fly && osal_now_us() < c->retry_at) return; /* it failed: its time comes (flush_at) */
     if (!c->fly) {
@@ -494,7 +495,7 @@ static void compact_cb(void *arg) { /* timer task */
     ink_db_t *c = arg;
     bool hold_off = battery_low(); /* it can wait: the flash work is not worth what is left (nothing is lost, the logs are all there) */
     lock();
-    bool go = c->compact_wanted && !c->compacting && !hold_off;
+    bool go = c->compact_wanted && !c->compacting && !c->installing && !hold_off;
     c->compact_wanted = false;
     if (hold_off) {
         c->compact_not_before = osal_now_us() + COMPACT_RETRY_US;
@@ -807,6 +808,7 @@ int ink_db_put(ink_db_t *db, const ink_db_write_t *w, uint32_t *out_id) {
     if (!db || !w || (w->len && !w->data)) return INK_DB_ERR_ARG;
     if (w->len > INK_DB_RECORD_MAX) return INK_DB_ERR_TOO_LARGE;
     lock();
+    if (db->installing) { unlock(); return INK_DB_ERR_FULL; }
     int old = w->id ? find_id(db, w->id) : -1;
     bool is_new = old < 0 || db->idx[old].r->dead;
     size_t old_len = is_new ? 0 : db->idx[old].r->len;
@@ -851,6 +853,7 @@ int ink_db_put(ink_db_t *db, const ink_db_write_t *w, uint32_t *out_id) {
 uint32_t ink_db_new_id(ink_db_t *db) {
     if (!db) return 0;
     lock();
+    if (db->installing) { unlock(); return 0; }
     uint32_t id = db->next_id++;
     unlock();
     return id;
@@ -863,6 +866,7 @@ int ink_db_del(ink_db_t *db, uint32_t id, uint8_t src) {
 int ink_db_del_if_ver(ink_db_t *db, uint32_t id, uint8_t src, uint32_t ver) {
     if (!db) return INK_DB_ERR_ARG;
     lock();
+    if (db->installing) { unlock(); return INK_DB_ERR_FULL; }
     int at = find_id(db, id);
     if (at < 0 || db->idx[at].r->dead) {
         unlock();
@@ -963,6 +967,7 @@ int ink_db_changes(ink_db_t *db, uint32_t *since_ver, ink_rec_t *out, void *buf,
 void ink_db_ack(ink_db_t *db, uint32_t ver) {
     if (!db) return;
     lock();
+    if (db->installing) { unlock(); return; }
     if (ver > db->acked_ver) db->acked_ver = ver;
     for (int i = db->n - 1; i >= 0; i--)
         if (db->idx[i].r->dead && db->idx[i].r->ver <= db->acked_ver) rec_forget(db, i);
@@ -1018,13 +1023,130 @@ int ink_db_error(ink_db_t *db) {
     return e;
 }
 
+static bool snapshot_idle(const ink_db_t *c) {
+    return !c->installing && !c->loading && !c->pend_len && !c->fly && !c->in_flight && !c->compacting;
+}
+
+int ink_db_export(ink_db_t *db, void **out, size_t *len) {
+    if (!db || !out || !len) return -1;
+    *out = NULL;
+    *len = 0;
+    lock();
+    if (!snapshot_idle(db) || db->durable_ver != db->last_ver) { unlock(); return -1; }
+    size_t n = sizeof(snap_hdr_t);
+    for (int i = 0; i < db->n; i++) n += FRAME_SIZE(db->idx[i].r->len);
+    uint8_t *buf = osal_malloc(n, OSAL_MEM_EXTERNAL);
+    if (!buf) { unlock(); return -1; }
+    snap_hdr_t h = {.magic = SNAP_MAGIC, .format = SNAP_FORMAT, .schema = db->def->schema,
+                    .count = (uint32_t)db->n, .last_ver = db->last_ver, .next_id = db->next_id};
+    uint8_t *p = buf + sizeof h;
+    for (int i = 0; i < db->n; i++) {
+        const rec_t *r = db->idx[i].r;
+        frame_t f = {.sync = FRAME_SYNC, .op = r->dead ? OP_DEL : OP_PUT, .src = r->src,
+                     .ver = r->ver, .id = r->id, .sort = r->sort, .updated_s = r->updated_s,
+                     .len = r->len, .schema = r->schema};
+        memcpy(p, &f, sizeof f);
+        memcpy(p + sizeof f, r->data, r->len);
+        uint32_t crc = ink_crc32(0, p, sizeof f + r->len);
+        memcpy(p + sizeof f + r->len, &crc, sizeof crc);
+        p += FRAME_SIZE(r->len);
+    }
+    unlock();
+    uint32_t crc = ink_crc32(0, &h, offsetof(snap_hdr_t, crc));
+    h.crc = ink_crc32(crc, buf + sizeof h, n - sizeof h);
+    memcpy(buf, &h, sizeof h);
+    *out = buf;
+    *len = n;
+    return 0;
+}
+
+typedef struct { int result, done; } install_result_t;
+static void install_done(void *ctx, int result) {
+    install_result_t *r = ctx;
+    r->result = result;
+    __atomic_store_n(&r->done, 1, __ATOMIC_RELEASE);
+}
+
+int ink_db_import(ink_db_t *db, const void *data, size_t len, uint32_t expected_ver) {
+    if (!db || !data || len < sizeof(snap_hdr_t) || len > MEM_QUOTA || !ink_exec_is_current(INK_EXEC_BG)) return -1;
+    snap_hdr_t h;
+    memcpy(&h, data, sizeof h);
+    const uint8_t *buf = data;
+    uint32_t crc = ink_crc32(0, &h, offsetof(snap_hdr_t, crc));
+    if (h.magic != SNAP_MAGIC || h.format != SNAP_FORMAT || h.schema != db->def->schema || !h.next_id ||
+        ink_crc32(crc, buf + sizeof h, len - sizeof h) != h.crc) return -1;
+    ink_db_t *fresh = osal_malloc(sizeof *fresh, OSAL_MEM_EXTERNAL);
+    uint8_t *copy = osal_malloc(len, OSAL_MEM_EXTERNAL);
+    if (!fresh || !copy) { osal_free(fresh); osal_free(copy); return -1; }
+    memset(fresh, 0, sizeof *fresh);
+    memcpy(copy, data, len);
+    fresh->def = db->def;
+    bool ok = true;
+    size_t off = sizeof h;
+    lock();
+    if (!snapshot_idle(db) || db->last_ver != expected_ver || db->gen > UINT32_MAX - 3) ok = false;
+    uint32_t old_gen = db->gen, old_snap_gen = db->snap_gen;
+    for (uint32_t i = 0; ok && i < h.count; i++) {
+        frame_t f;
+        size_t n = frame_check(buf + off, len - off, &f);
+        if (!n || !f.id || f.id >= h.next_id || !f.ver || f.ver > h.last_ver || f.src > INK_SRC_CONFIRMED ||
+            (f.op == OP_DEL && f.len) || find_id(fresh, f.id) >= 0 || !apply_frame(fresh, &f, buf + off + sizeof f)) ok = false;
+        else off += n;
+    }
+    if (off != len || (db->def->max_records && fresh->live > (int)db->def->max_records) ||
+        fresh->bytes > (db->def->max_bytes ? db->def->max_bytes : 256u * 1024u) || fresh->tombs > MAX_TOMBSTONES) ok = false;
+    if (ok) {
+        db->installing = true;
+        ink_svc_cancel(&db->compact_at);
+        db->compact_wanted = false;
+        /* The new snapshot cannot replay a log from the collection it replaces. */
+        h.log_gen = old_gen + 2;
+        h.acked_ver = 0;
+        crc = ink_crc32(0, &h, offsetof(snap_hdr_t, crc));
+        h.crc = ink_crc32(crc, copy + sizeof h, len - sizeof h);
+        memcpy(copy, &h, sizeof h);
+    }
+    unlock();
+    char path[INK_LAYOUT_PATH_MAX];
+    install_result_t result = {0};
+    if (ok && snap_path(db, path, sizeof path) > 0 &&
+        ink_storage_write_borrow(path, copy, len, install_done, &result) == 0) {
+        while (!__atomic_load_n(&result.done, __ATOMIC_ACQUIRE)) osal_task_delay_us(1000);
+        ok = result.result == 0;
+    } else ok = false;
+    lock();
+    if (db->installing) {
+        if (ok) {
+            free_records(db);
+            db->idx = fresh->idx; db->n = fresh->n; db->cap = fresh->cap;
+            db->live = fresh->live; db->tombs = fresh->tombs; db->bytes = fresh->bytes;
+            fresh->idx = NULL; fresh->n = fresh->cap = 0;
+            db->last_ver = db->durable_ver = h.last_ver;
+            db->next_id = h.next_id; db->acked_ver = 0;
+            db->gen = db->snap_gen = h.log_gen;
+            db->gen_bytes = db->old_bytes = 0; db->snap_bytes = len; db->err = 0;
+        }
+        db->installing = false;
+    }
+    free_records(fresh);
+    unlock();
+    if (ok) {
+        if (log_path(db, old_snap_gen, path, sizeof path) > 0) ink_storage_remove(path, NULL, NULL);
+        if (old_gen != old_snap_gen && log_path(db, old_gen, path, sizeof path) > 0) ink_storage_remove(path, NULL, NULL);
+        ink_probe_count("data.restored");
+    }
+    osal_free(copy);
+    osal_free(fresh);
+    return ok ? 0 : -1;
+}
+
 int ink_db_try_forget_member(const char *member) {
     if (!DB.lock) return 0;
     lock();
     for (int i = 0; i < MAX_COLLECTIONS; i++) {
         ink_db_t *c = &DB.c[i];
         if (c->used && !strcmp(c->member, member) &&
-            (c->loading || c->refs || c->fly || c->in_flight || c->compacting)) {
+            (c->loading || c->installing || c->refs || c->fly || c->in_flight || c->compacting)) {
             unlock();
             return -1;
         }

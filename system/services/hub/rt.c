@@ -203,7 +203,7 @@ int ink_rt_open(const char *cap, const char *params_json, const ink_rt_handler_t
 }
 
 static int class_of(uint8_t kind) {
-    return kind == INK_RT_VOICE_UP ? INK_HUB_TX_VOICE : kind == INK_RT_INPUT ? INK_HUB_TX_INPUT : INK_HUB_TX_SCREEN;
+    return kind == 7 ? INK_HUB_TX_BACKGROUND : kind == INK_RT_VOICE_UP ? INK_HUB_TX_VOICE : kind == INK_RT_INPUT ? INK_HUB_TX_INPUT : INK_HUB_TX_SCREEN;
 }
 
 int ink_rt_send(int sid, uint8_t kind, const void *payload, size_t len, uint8_t flags) {

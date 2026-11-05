@@ -40,6 +40,9 @@
 #include "cJSON.h"
 #include "sim.h"
 
+bool sim_backup_frame(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t len);
+bool sim_backup_request(struct hal_ws *ws, uint64_t t, const char *method, const cJSON *params, const cJSON *id);
+
 static cJSON *RULES;
 
 static const char *DEFAULT_SCRIPT =
@@ -651,6 +654,7 @@ static bool server_tool(struct hal_ws *ws, uint64_t t, cJSON *req, cJSON *id) {
 void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t len, bool binary) {
     if (binary) { /* microphone frames of a voice turn */
         sim_metric_add("hub.binary_bytes", (double)len);
+        if (sim_backup_frame(ws, t, data, len)) return;
         if (sim_remote_frame(ws, t, data, len)) return; /* credits and input of a remote screen */
         if (len >= 10 && echo_session(ws, data[1])) {
             sim_metric_add("hub.rt_echoed", 1);
@@ -692,6 +696,7 @@ void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t 
     sim_metric_add(key, 1);
     sim_trace_instant("hub", method ? method : "?", t, NULL);
     g_last_ws = ws;
+    if (id && sim_backup_request(ws, t, method, cJSON_GetObjectItemCaseSensitive(req, "params"), id)) { cJSON_Delete(req); return; }
     if (id && pairing_request(ws, t, method, req, id)) { cJSON_Delete(req); return; }
     if (!strcmp(method, "device/event")) { /* what the device tells: nobody here answers */
         keep_text(&g_events.text[g_events.n % 32], req);
