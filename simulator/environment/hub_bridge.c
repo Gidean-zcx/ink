@@ -305,7 +305,7 @@ static void enqueue_on_host(void *arg) {
         b->queued += e->m->len;
         e->ok = true;
         uint8_t byte = 1;
-        (void)write(b->wake[1], &byte, 1);
+        if (write(b->wake[1], &byte, 1) < 0) { /* pipe full: the thread is already due to wake */ }
     }
     pthread_mutex_unlock(&b->mutex);
 }
@@ -326,7 +326,7 @@ static void stop_on_host(void *arg) {
     sim_hub_bridge_t *b = arg;
     atomic_store(&b->stop, true);
     uint8_t byte = 1;
-    if (b->wake[1] >= 0) (void)write(b->wake[1], &byte, 1);
+    if (b->wake[1] >= 0 && write(b->wake[1], &byte, 1) < 0) { /* pipe full: the thread is already due to wake */ }
 }
 
 void sim_hub_bridge_close(sim_hub_bridge_t *b) { if (b) vtk_host_call(stop_on_host, b); }
