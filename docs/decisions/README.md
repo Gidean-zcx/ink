@@ -123,7 +123,7 @@
 
 ## 第九轮：家庭中枢（2026-11-04，R-055）
 
-依据：[家庭中枢概要设计 v0.8](../hub/hub-architecture.md)、[设备协议](../hub/device-protocol.md)、[中枢调研](../research/hub-server-survey.md)、[Codex 设计审查](../audits/2026-11-04-codex-hub-design/report.md)、[第二轮](../audits/2026-11-04-codex-hub-design-r2/report.md)、[第三轮](../audits/2026-11-04-codex-hub-design-r3/report.md)、[第四轮](../audits/2026-11-04-codex-hub-design-r4/report.md)、[第五轮](../audits/2026-11-04-codex-hub-design-r5/report.md)、[第六轮](../audits/2026-11-04-codex-hub-design-r6/report.md)。用户于 2026-11-04 08:10–08:12（UTC）在[摘要页](https://claude.ai/artifact/6Qd4jL4g3o7zwdBXJVDaJM)选了 D-74、D-78、D-79、D-85、D-87（存在它的数据库集合 `decisions`，助手做完两轮审查才读到）；D-91、D-94、D-101、D-102、D-103、D-104、D-105 是用户同日在对话里答的；其余按推荐暂定（D-95～D-99 在 `claude/system-layer` 上是系统界面的决策，D-100 在系统服务那边，这里跳过）。其中 D-86 在第一次写真实家庭数据之前必须确认。
+依据：[家庭中枢概要设计 v0.8](../hub/hub-architecture.md)、[设备协议](../hub/device-protocol.md)、[中枢调研](../research/hub-server-survey.md)、[Codex 设计审查](../audits/2026-11-04-codex-hub-design/report.md)、[第二轮](../audits/2026-11-04-codex-hub-design-r2/report.md)、[第三轮](../audits/2026-11-04-codex-hub-design-r3/report.md)、[第四轮](../audits/2026-11-04-codex-hub-design-r4/report.md)、[第五轮](../audits/2026-11-04-codex-hub-design-r5/report.md)、[第六轮](../audits/2026-11-04-codex-hub-design-r6/report.md)、[第七轮](../audits/2026-11-04-codex-hub-design-r7/report.md)。用户于 2026-11-04 08:10–08:12（UTC）在[摘要页](https://claude.ai/artifact/6Qd4jL4g3o7zwdBXJVDaJM)选了 D-74、D-78、D-79、D-85、D-87（存在它的数据库集合 `decisions`，助手做完两轮审查才读到）；D-91、D-94、D-101、D-102、D-103、D-104、D-105 是用户同日在对话里答的；其余按推荐暂定（D-95～D-99 在 `claude/system-layer` 上是系统界面的决策，D-100 在系统服务那边，这里跳过）。其中 D-86 在第一次写真实家庭数据之前必须确认。
 
 **对用户怎么分层**（[产品审查 JOBS-HUB-010](../audits/2026-11-04-codex-hub-jobs/report.md)）。这份记录保留全部，用来追溯；不是都要用户答：
 

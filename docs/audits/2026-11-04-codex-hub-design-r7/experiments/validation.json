@@ -1,0 +1,41 @@
+{
+  "status": "passed",
+  "evidence_type": "artifact_validation_only",
+  "review_commit": "9c050dc301e283f9c732140e5210b43b623413de",
+  "verification_counts": {
+    "已解决": 2
+  },
+  "new_findings": {
+    "严重": 0,
+    "高": 0
+  },
+  "reviewed_source_hashes_unchanged": {
+    "docs/hub/hub-architecture.md": "57c1e97d02236302510bc0152b630c2fce76c950a9eeb6cb77f0761670aac450",
+    "docs/hub/device-protocol.md": "b60ca3ac889bbe57badc2796dd9aa0fa0e19c702d869a00291903e2fcda1aed4",
+    "docs/decisions/README.md": "c16686c37cadf2d32417990c4e457b2df8ed0113358142bc244ed8b8085c6707"
+  },
+  "local_links_checked": [
+    "docs/audits/2026-11-04-codex-hub-design-r7/verification.json",
+    "docs/audits/2026-11-04-codex-hub-design-r7/findings.json",
+    "docs/audits/2026-11-04-codex-hub-design-r7/experiments/source-verification.json",
+    "docs/audits/2026-11-04-codex-hub-design-r7/experiments/source-verification.json",
+    "docs/audits/2026-11-04-codex-hub-design-r7/experiments/validate_artifacts.py"
+  ],
+  "explicit_file_line_references_checked": [
+    "docs/hub/hub-architecture.md:1493",
+    "docs/hub/hub-architecture.md:1491",
+    "docs/hub/device-protocol.md:178"
+  ],
+  "all_audit_files_under_1MB": true,
+  "file_sizes_bytes_before_this_result_write": {
+    "TASK.md": 4149,
+    "experiments/README.md": 1289,
+    "experiments/source-verification.json": 49036,
+    "experiments/validate_artifacts.py": 3589,
+    "experiments/validation.json": 1731,
+    "findings.json": 3,
+    "report.md": 14632,
+    "verification.json": 1262
+  },
+  "limitations": "No product, device, model, or service tests. Git metadata reads hung; full repository status could not be rechecked. Scope of writes is evidenced by the tool operations, not a successful final git status."
+}

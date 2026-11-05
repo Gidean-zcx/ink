@@ -22,6 +22,7 @@
 | 2026-11-04 家庭中枢设计复核（第四轮，小范围） | `claude/hub-design-8fd433` 2059f32（设计 v0.5） | [2026-11-04-codex-hub-design-r4/TASK.md](2026-11-04-codex-hub-design-r4/TASK.md) | [report.md](2026-11-04-codex-hub-design-r4/report.md)、[verification.json](2026-11-04-codex-hub-design-r4/verification.json)、[findings.json](2026-11-04-codex-hub-design-r4/findings.json)、[experiments/](2026-11-04-codex-hub-design-r4/experiments/README.md) | 第三轮 3 条：已解决 2、部分 1；新问题严重 2、高 2。都成立，设计改到 v0.6，处理见下 |
 | 2026-11-04 家庭中枢设计复核（第五轮，小范围） | `claude/hub-design-8fd433` f7408cd（设计 v0.6） | [2026-11-04-codex-hub-design-r5/TASK.md](2026-11-04-codex-hub-design-r5/TASK.md) | [report.md](2026-11-04-codex-hub-design-r5/report.md)、[verification.json](2026-11-04-codex-hub-design-r5/verification.json)、[findings.json](2026-11-04-codex-hub-design-r5/findings.json)、[experiments/](2026-11-04-codex-hub-design-r5/experiments/README.md) | 第四轮 4 条：已解决 3、改出新问题 1；第三轮余项已解决；新问题严重 1、高 1。都成立，设计改到 v0.7，处理见下 |
 | 2026-11-04 家庭中枢设计复核（第六轮，小范围） | `claude/hub-design-8fd433` 4ba1656（设计 v0.7） | [2026-11-04-codex-hub-design-r6/TASK.md](2026-11-04-codex-hub-design-r6/TASK.md) | [report.md](2026-11-04-codex-hub-design-r6/report.md)、[verification.json](2026-11-04-codex-hub-design-r6/verification.json)、[findings.json](2026-11-04-codex-hub-design-r6/findings.json)、[experiments/](2026-11-04-codex-hub-design-r6/experiments/README.md) | 第五轮 2 条和第四轮余项都已解决；新问题严重 1、高 1。都成立，设计改到 v0.8，处理见下 |
+| 2026-11-04 家庭中枢设计复核（第七轮，小范围） | `claude/hub-design-8fd433` 9c050dc（设计 v0.8） | [2026-11-04-codex-hub-design-r7/TASK.md](2026-11-04-codex-hub-design-r7/TASK.md) | [report.md](2026-11-04-codex-hub-design-r7/report.md)、[verification.json](2026-11-04-codex-hub-design-r7/verification.json)、[findings.json](2026-11-04-codex-hub-design-r7/findings.json)、[experiments/](2026-11-04-codex-hub-design-r7/experiments/README.md) | 第六轮 2 条已解决；**没有严重和高问题**。可以作为第 1 步本机、合成数据开发的依据 |
 | 2026-11-04 家庭中枢产品审查（产品负责人视角） | `claude/hub-design-8fd433` 2059f32（设计 v0.5） | [2026-11-04-codex-hub-jobs/TASK.md](2026-11-04-codex-hub-jobs/TASK.md) | [report.md](2026-11-04-codex-hub-jobs/report.md)、[findings.json](2026-11-04-codex-hub-jobs/findings.json) | 必须改 5、应该改 7、可以想 2；只看简单、专注、值得喜欢，处理见下 |
 
 此前的三次独立评审都由助手发起的子代理完成。问题与处理分别记在：
@@ -30,6 +31,12 @@
 - [刷新算法集成报告](../research/eink-refresh-integration.md)。
 
 审计报告回来后，逐条核实，再决定修复、记录或不处理，结果写回本表和相关文档。
+
+## 2026-11-04 家庭中枢设计复核（第七轮）：处理
+
+对象是设计 v0.8，只看第六轮的修法。HUB6-001、HUB6-002 都判已解决，**没有新的严重或高问题**，审查到此为止。结论只覆盖这次改动，不是真实运行的验收：中枢还没有实现，没有跑过真实模型、对象存储和设备。这一轮是文档核对，没有可重跑的状态实验。
+
+它点出的两处措辞已统一：定范围也覆盖人要求的普通设置；首版没有的是用户自己设的定时任务，报纸这类定时生成不算。第 1 步验收前要冻结的三项契约（动作范围、受限执行、自动待执行动作）写进了概要 §10。
 
 ## 2026-11-04 家庭中枢设计复核（第六轮）：处理
 

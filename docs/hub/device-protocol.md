@@ -1,6 +1,6 @@
 # 设备—中枢协议：现状和扩展
 
-状态：**待用户审核**，配合[家庭中枢概要设计](hub-architecture.md) §7。这是中枢和设备两边开发时共同遵守的约定；假设备的契约测试按它写。v0.2、v0.3 按 Codex 的两轮设计审查（[第一轮](../audits/2026-11-04-codex-hub-design/report.md)、[第二轮](../audits/2026-11-04-codex-hub-design-r2/report.md)）改过。
+状态：**待用户审核**，配合[家庭中枢概要设计](hub-architecture.md) §7。这是中枢和设备两边开发时共同遵守的约定；假设备的契约测试按它写。按 Codex 的设计审查改过（[第一轮](../audits/2026-11-04-codex-hub-design/report.md)、[第二轮](../audits/2026-11-04-codex-hub-design-r2/report.md)，之后各轮的处理见[审计记录](../audits/README.md)）。
 
 对照的代码是提交 `9b3c24a`：`system/services/hub/hub_link.c`、`rt.c`，`system/policy/cap.c`，`system/services/ai/ai_service.c`，`system/apps/remote/remote.c`，`simulator/environment/sim_hub.c`、`sim_remote.c`。“系统服务”指分支 `claude/system-services`（提交 `a81c1b8`）上的[系统服务详细设计](https://github.com/Gidean-zcx/ink/blob/claude/system-services/docs/system/system-services-design.md)和代码，还没合入 main。
 
@@ -177,7 +177,7 @@
 
 **`_meta.asked`**（D-105）：`tools/call` 带 `true` 表示这一步是人亲口要求的，由中枢策略代码比对这次的动作范围后填，模型碰不到（[概要设计 §7.5](hub-architecture.md)）。设备对对外动作和系统设置：有它就直接做，没有就弹确认卡；高风险的能力（`ask_by_hand`）一律弹卡。
 
-**`_meta.undo_ms`**（D-105）：发短信、打电话、分享这类收不回的，带 `3000`。设备把内容显示出来才开始计时，到点才执行，回执在这之后。这期间人取消、切成员、断线、这一轮被取消，都不执行。结果和确认卡记在同一张表（§3.7），查不到就是 `unknown`。中枢要把这 3 秒算进 `budget_ms`，不够就不发。
+**`_meta.undo_ms`**（D-105）：发短信、打电话、分享这类收不回的，带 `3000`。设备把内容显示出来才开始计时，到点才执行，回执在这之后。这期间人取消、切成员、断线、这一轮被取消，都不执行。结果和确认卡记在同一张表（§3.7），`confirm.status` 也能按 `request_id` 查，查不到就是 `unknown`。中枢要把这 3 秒算进 `budget_ms`，不够就不发。
 
 **`members/list`（设备 → 中枢，请求）**：`{"cursor"?}` → `{"members":[{"id","name","role","mark"}],"nextCursor"?,"rev"}`。一页不超过 8 人（实测 85 词法单元）。读完所有页才替换成员表。
 
