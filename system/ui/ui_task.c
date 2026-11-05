@@ -298,28 +298,21 @@ const char *ink_ui_top_name(void) { return UI.noverlays ? UI.overlays[UI.noverla
 const char *ink_ui_action_page(void) {
     return UI.noverlays && UI.overlays[UI.noverlays - 1]->level >= 0 ? ink_ui_top_name() : ink_ui_page_name();
 }
-int ink_ui_context_snapshot(char *buf, size_t cap, const char **name) {
+static int ui_snapshot(char *buf, size_t cap, const char **name, bool context) {
+    const ink_ui_overlay_t *overlay = NULL;
     for (int i = UI.noverlays - 1; i >= 0; i--) {
         const ink_ui_overlay_t *o = UI.overlays[i];
-        if (!strcmp(o->name, "Ai")) continue;
-        if (name) *name = o->name;
-        return o->snapshot && cap ? o->snapshot(buf, cap) : 0;
+        if (context && !strcmp(o->name, "Ai")) continue;
+        overlay = o;
+        break;
     }
     const ink_activity_t *top = UI.depth ? UI.stack[UI.depth - 1].a : NULL;
-    if (name) *name = top ? top->name : "";
-    return top && top->snapshot && cap ? top->snapshot(buf, cap) : 0;
-}
-
-int ink_ui_snapshot(char *buf, size_t cap, const char **activity_name) {
-    if (UI.noverlays) {
-        const ink_ui_overlay_t *o = UI.overlays[UI.noverlays - 1];
-        if (activity_name) *activity_name = o->name;
-        if (o->snapshot && cap) return o->snapshot(buf, cap);
+    if (name) *name = overlay ? overlay->name : top ? top->name : "";
+    if (overlay && strcmp(overlay->name, "Keyboard")) {
+        if (overlay->snapshot && cap) return overlay->snapshot(buf, cap);
         if (cap) buf[0] = 0;
         return 0;
     }
-    const ink_activity_t *top = UI.depth ? UI.stack[UI.depth - 1].a : NULL;
-    if (activity_name) *activity_name = top ? top->name : "";
     if (!cap || ((!top || !top->snapshot) && !ink_text_focused())) {
         if (cap) buf[0] = 0;
         return 0;
@@ -331,13 +324,29 @@ int ink_ui_snapshot(char *buf, size_t cap, const char **activity_name) {
     int tn = text ? ink_text_snapshot(text, cap) : -1;
     ink_jw_t w;
     ink_jw_init(&w, buf, cap);
-    if (pn >= 0 && tn >= 0) {
+    if (pn >= 0 && (size_t)pn < cap && tn >= 0) {
         ink_jw_raw(&w, "{\"page\":"); ink_jw_strn(&w, page, (size_t)pn);
-        ink_jw_raw(&w, ",\"keyboard\":"); ink_jw_raw(&w, text); ink_jw_raw(&w, "}");
+        ink_jw_raw(&w, ",\"keyboard\":"); ink_jw_raw(&w, text);
+        if (overlay && overlay->snapshot) {
+            /* Keep the visible candidates and actions alongside the input target. */
+            int n = overlay->snapshot(page, cap);
+            if (n >= 0 && (size_t)n < cap) {
+                ink_jw_raw(&w, ",\"keyboard_ui\":"); ink_jw_strn(&w, page, (size_t)n);
+            } else w.overflow = true;
+        }
+        ink_jw_raw(&w, "}");
     } else w.overflow = true;
     osal_free(page); osal_free(text);
     if (w.overflow) { buf[0] = 0; return -1; }
     return (int)w.len;
+}
+
+int ink_ui_context_snapshot(char *buf, size_t cap, const char **name) {
+    return ui_snapshot(buf, cap, name, true);
+}
+
+int ink_ui_snapshot(char *buf, size_t cap, const char **activity_name) {
+    return ui_snapshot(buf, cap, activity_name, false);
 }
 
 void ink_ui_hint_frame(ink_refresh_t intent) {
