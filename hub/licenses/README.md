@@ -1,6 +1,6 @@
 # 依赖来源与许可证
 
-查阅日期：2026-11-05。运行和测试依赖均来自 PyPI 官方索引；精确版本、源码包/各平台 wheel 的 SHA-256 和下载地址在 [uv.lock](../uv.lock)。容器安装清单 [requirements.lock](../requirements.lock) 同样带哈希。这里保留本次安装包附带的原始许可证，未修改许可证正文。
+查阅日期：2026-11-05。运行和测试依赖均来自 PyPI 官方索引；精确版本、源码包/各平台 wheel 的 SHA-256 和下载地址在 [uv.lock](../uv.lock)。容器安装清单 [requirements.lock](../requirements.lock) 同样带哈希。这里保留本次安装包附带的许可证文字，仅清理 Pygments 名单中的一处行尾空格。
 
 | 包 | 固定版本 | 许可 |
 | --- | --- | --- |
