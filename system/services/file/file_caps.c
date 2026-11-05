@@ -36,6 +36,8 @@ static bool arg_path(ink_call_t *c, const char *key, char *out, size_t cap) {
 }
 
 static void cap_list(ink_call_t *c) {
+    file_context_t context;
+    if (!fs_context_for_call(&context, c)) return;
     char path[INK_FS_PATH_MAX];
     if (!arg_path(c, "path", path, sizeof path)) return;
     int64_t skip = 0, limit = 50;
@@ -43,7 +45,7 @@ static void cap_list(ink_call_t *c) {
     if (ink_args_get_str(&c->args, "cursor", cur, sizeof cur) > 0) skip = atoi(cur);
     ink_args_get_int(&c->args, "limit", &limit);
     ink_fs_dir_t *d;
-    int r = ink_fs_dir_open(path, &d);
+    int r = fs_dir_open_for(&context, path, &d);
     if (r) {
         refuse(c, r);
         return;
@@ -94,10 +96,12 @@ static void cap_list(ink_call_t *c) {
 }
 
 static void cap_stat(ink_call_t *c) {
+    file_context_t context;
+    if (!fs_context_for_call(&context, c)) return;
     char path[INK_FS_PATH_MAX];
     if (!arg_path(c, "path", path, sizeof path)) return;
     ink_fs_stat_t st;
-    int r = ink_fs_stat(path, &st);
+    int r = fs_stat_for(&context, path, &st);
     if (r) {
         refuse(c, r);
         return;
@@ -123,6 +127,8 @@ static bool utf8_valid(const char *s, size_t n, size_t *complete) {
 }
 
 static void cap_read(ink_call_t *c) {
+    file_context_t context;
+    if (!fs_context_for_call(&context, c)) return;
     char path[INK_FS_PATH_MAX];
     if (!arg_path(c, "path", path, sizeof path)) return;
     int64_t off = 0, max = READ_MAX;
@@ -130,7 +136,7 @@ static void cap_read(ink_call_t *c) {
     ink_args_get_int(&c->args, "max_bytes", &max);
     if (max > READ_MAX) max = READ_MAX;
     ink_fs_file_t *f;
-    int r = ink_fs_open(path, INK_FS_READ, &f);
+    int r = fs_open_for(&context, path, INK_FS_READ, &f);
     if (r) {
         refuse(c, r);
         return;
@@ -158,13 +164,15 @@ static void cap_read(ink_call_t *c) {
 }
 
 static void cap_write(ink_call_t *c) {
+    file_context_t context;
+    if (!fs_context_for_call(&context, c)) return;
     char path[INK_FS_PATH_MAX], text[INK_ARGS_TEXT];
     if (!arg_path(c, "path", path, sizeof path)) return;
     ink_args_get_str(&c->args, "text", text, sizeof text);
     bool append = false;
     ink_args_get_bool(&c->args, "append", &append);
     ink_fs_file_t *f;
-    int r = ink_fs_open(path, append ? (INK_FS_APPEND | INK_FS_CREATE) : (INK_FS_WRITE | INK_FS_CREATE | INK_FS_EXCL), &f);
+    int r = fs_open_for(&context, path, append ? (INK_FS_APPEND | INK_FS_CREATE) : (INK_FS_WRITE | INK_FS_CREATE | INK_FS_EXCL), &f);
     if (r) {
         refuse(c, r);
         return;
@@ -189,20 +197,24 @@ static void cap_write(ink_call_t *c) {
 }
 
 static void cap_mkdir(ink_call_t *c) {
+    file_context_t context;
+    if (!fs_context_for_call(&context, c)) return;
     char path[INK_FS_PATH_MAX];
     if (!arg_path(c, "path", path, sizeof path)) return;
-    int r = ink_fs_mkdir(path);
+    int r = fs_mkdir_for(&context, path);
     if (r) refuse(c, r);
     else snprintf(c->rc.object, sizeof c->rc.object, "file:%.40s", path);
 }
 
 static void cap_move(ink_call_t *c) {
+    file_context_t context;
+    if (!fs_context_for_call(&context, c)) return;
     char from[INK_FS_PATH_MAX], to[INK_FS_PATH_MAX];
     if (!arg_path(c, "from", from, sizeof from) || !arg_path(c, "to", to, sizeof to)) return;
     int64_t expected = 0;
     ink_args_get_int(&c->args, "if_revision", &expected);
     uint32_t revision = 0;
-    int r = ink_fs_move_if_revision(from, to, (uint32_t)expected, &revision);
+    int r = fs_move_for(&context, from, to, (uint32_t)expected, &revision);
     if (r) {
         if (expected) c->rc.status = INK_RC_STALE; else refuse(c, r);
         return;
@@ -237,11 +249,13 @@ static void answer_job(ink_call_t *c, int id, uint64_t size) {
 }
 
 static void cap_copy(ink_call_t *c) {
+    file_context_t context;
+    if (!fs_context_for_call(&context, c)) return;
     char from[INK_FS_PATH_MAX], to[INK_FS_PATH_MAX];
     if (!arg_path(c, "from", from, sizeof from) || !arg_path(c, "to", to, sizeof to)) return;
     ink_fs_stat_t st;
-    int r = ink_fs_stat(from, &st);
-    if (!r) r = ink_fs_copy_start(from, to);
+    int r = fs_stat_for(&context, from, &st);
+    if (!r) r = fs_job_begin_for(&context, 0, from, to);
     if (r < 0) {
         refuse(c, r);
         return;
@@ -250,14 +264,16 @@ static void cap_copy(ink_call_t *c) {
 }
 
 static void cap_delete(ink_call_t *c) {
+    file_context_t context;
+    if (!fs_context_for_call(&context, c)) return;
     char path[INK_FS_PATH_MAX];
     if (!arg_path(c, "path", path, sizeof path)) return;
     int64_t revision = 0;
     if (ink_args_get_int(&c->args, "if_revision", &revision)) {
-        if (ink_fs_remove_if_revision(path, (uint32_t)revision) != INK_FS_OK) c->rc.status = INK_RC_STALE;
+        if (fs_remove_for(&context, path, (uint32_t)revision) != INK_FS_OK) c->rc.status = INK_RC_STALE;
         return;
     }
-    int r = ink_fs_delete_start(path);
+    int r = fs_job_begin_for(&context, 1, path, NULL);
     if (r < 0) {
         refuse(c, r);
         return;

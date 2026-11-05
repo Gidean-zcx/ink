@@ -28,6 +28,7 @@ typedef struct {
     void *cancel_ctx;
     char kind[24], title[64], stage[16], result[96], object[48];
     char member[INK_MEMBER_ID_MAX], creator[INK_MEMBER_ID_MAX];
+    uint32_t generation;
     int64_t ended_s;
     uint32_t order;
 } task_t;
@@ -57,10 +58,9 @@ static task_t *find(int id) { /* under the lock */
     return NULL;
 }
 
-int ink_task_begin(const char *kind, const char *title, bool for_everyone, void (*cancel)(void *ctx), void *ctx) {
-    char member[INK_MEMBER_ID_MAX];
-    snprintf(member, sizeof member, "%s", for_everyone ? "" : ink_member_current()->id);
+static int task_begin(const char *kind, const char *title, bool for_everyone, const char *member, uint32_t generation, void (*cancel)(void *ctx), void *ctx) {
     ink_svc_lock();
+    if (!generation || generation != ink_member_generation(member)) { ink_svc_unlock(); return 0; }
     task_t *slot = NULL, *oldest = NULL;
     for (int i = 0; i < TASKS_MAX && !slot; i++) {
         task_t *t = &T.t[i];
@@ -74,13 +74,24 @@ int ink_task_begin(const char *kind, const char *title, bool for_everyone, void 
         *slot = (task_t){.id = id, .state = INK_TASK_RUNNING, .percent = -1, .for_everyone = for_everyone, .cancel = cancel, .cancel_ctx = ctx, .order = ++T.next_order};
         snprintf(slot->kind, sizeof slot->kind, "%s", kind);
         snprintf(slot->title, sizeof slot->title, "%s", title);
-        snprintf(slot->member, sizeof slot->member, "%s", member);
-        snprintf(slot->creator, sizeof slot->creator, "%s", ink_member_current()->id);
+        snprintf(slot->member, sizeof slot->member, "%s", for_everyone ? "" : member);
+        snprintf(slot->creator, sizeof slot->creator, "%s", member);
+        slot->generation = generation;
     }
     ink_svc_unlock();
     if (id) publish_running();
     else ink_probe_count("task.no_room");
     return id;
+}
+
+int ink_task_begin_for(const char *kind, const char *title, const char *member, uint32_t generation, void (*cancel)(void *ctx), void *ctx) {
+    return task_begin(kind, title, false, member, generation, cancel, ctx);
+}
+
+int ink_task_begin(const char *kind, const char *title, bool for_everyone, void (*cancel)(void *ctx), void *ctx) {
+    char member[INK_MEMBER_ID_MAX];
+    snprintf(member, sizeof member, "%s", ink_member_current()->id);
+    return task_begin(kind, title, for_everyone, member, ink_member_generation(member), cancel, ctx);
 }
 
 void ink_task_forget_member(const char *member) {
@@ -114,10 +125,15 @@ void ink_task_end(int id, ink_task_state_t how, const char *result, const char *
     if (a) ink_args_init(a);
     ink_svc_lock();
     task_t *t = find(id);
+    char member[INK_MEMBER_ID_MAX] = "";
+    uint32_t generation = 0;
+    bool shared = t && t->for_everyone;
     bool ended = t && t->state == INK_TASK_RUNNING;
     if (ended) {
         t->state = how;
         t->cancel = NULL;
+        snprintf(member, sizeof member, "%s", t->creator);
+        generation = t->generation;
         t->ended_s = ink_time_now_s();
         if (how == INK_TASK_DONE) t->percent = 100;
         if (result) snprintf(t->result, sizeof t->result, "%s", result);
@@ -135,13 +151,18 @@ void ink_task_end(int id, ink_task_state_t how, const char *result, const char *
     ink_svc_unlock();
     if (ended) {
         publish_running();
-        if (a) ink_cap_emit("job.finished", a);
+        if (a) {
+            if (shared) ink_cap_emit("job.finished", a);
+            else ink_cap_emit_for("job.finished", a, member, generation);
+        }
     }
     osal_free(a);
 }
 
 /* Theirs, or for everyone. */
-static bool visible(const task_t *t, const char *member) { return t->id && (t->for_everyone || !strcmp(t->member, member)); }
+static bool visible(const task_t *t, const char *member) {
+    return t->id && t->generation == ink_member_generation(t->creator) && (t->for_everyone || !strcmp(t->member, member));
+}
 
 /* Newest first: what runs, then what ended. */
 static void cap_list(ink_call_t *c) {

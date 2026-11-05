@@ -483,6 +483,12 @@ uint32_t ink_cap_time_left_ms(const ink_call_t *call) {
     return p->deadline_us > now ? (uint32_t)((p->deadline_us - now) / 1000u) : 0;
 }
 
+const char *ink_cap_call_member(const ink_call_t *call, uint32_t *generation) {
+    const pending_t *p = (const pending_t *)call;
+    *generation = p->generation;
+    return p->member;
+}
+
 static void timeout_cb(void *arg) { /* timer task: answer the overdue, re-arm for the rest */
     (void)arg;
     pending_t *due[POOL_N];
@@ -867,7 +873,7 @@ static struct {
 } EV[EVENTS_KEPT] INK_PSRAM_BSS;
 static uint32_t ev_next, ev_sent; /* sequence numbers, under CB.lock */
 
-static void keep_event(const char *id, const ink_args_t *payload, const char *whose) {
+static void keep_event(const char *id, const ink_args_t *payload, const char *whose, uint32_t generation) {
     const ink_cap_t *c = ink_cap_find(id);
     if (!CB.lock || !c || c->form != INK_FORM_EVENT || !exposed(c, INK_SRC_AI)) return;
     int64_t wall = osal_wall_us();
@@ -875,7 +881,7 @@ static void keep_event(const char *id, const ink_args_t *payload, const char *wh
     uint32_t seq = ++ev_next;
     typeof(EV[0]) *e = &EV[seq % EVENTS_KEPT];
     e->seq = seq;
-    e->generation = ink_member_generation(whose);
+    e->generation = generation;
     e->at_s = wall > 0 ? wall / 1000000 : 0;
     snprintf(e->id, sizeof e->id, "%s", id);
     snprintf(e->member, sizeof e->member, "%s", whose);
@@ -930,15 +936,12 @@ static void send_events(void) { /* hub task */
     }
 }
 
-void ink_cap_emit(const char *id, const ink_args_t *payload) {
+void ink_cap_emit_for(const char *id, const ink_args_t *payload, const char *whose, uint32_t generation) {
+    if (!whose || !generation || generation != ink_member_generation(whose)) return;
     char key[64];
     snprintf(key, sizeof key, "event.%s", id);
     ink_probe_count(key);
-    char whose[INK_MEMBER_ID_MAX] = ""; /* who it says, or who is here now: whoever gets to it later may find someone else here */
-    if (payload) ink_args_get_str(payload, "member", whose, sizeof whose);
-    bool says = whose[0] != 0;
-    if (!says) snprintf(whose, sizeof whose, "%s", ink_member_current()->id);
-    keep_event(id, payload, whose);
+    keep_event(id, payload, whose, generation);
     for (int i = 0; i < nsubs; i++) {
         if (strncmp(id, SUBS[i].prefix, SUBS[i].plen)) continue;
         const char *prev = osal_mem_tag("cap");
@@ -949,18 +952,25 @@ void ink_cap_emit(const char *id, const ink_args_t *payload) {
             continue;
         }
         snprintf(e->member, sizeof e->member, "%s", whose);
-        e->generation = ink_member_generation(whose);
+        e->generation = generation;
         e->fn = SUBS[i].fn;
         e->ctx = SUBS[i].ctx;
         snprintf(e->id, sizeof e->id, "%s", id);
         if (payload) e->payload = *payload;
         else ink_args_init(&e->payload);
-        if (!says) ink_args_str(&e->payload, "member", whose);
+        ink_args_str(&e->payload, "member", whose);
         if (ink_exec_post(SUBS[i].exec, &e->job, event_job, e) != 0) {
             ink_probe_count("event.dropped");
             osal_free(e);
         }
     }
+}
+
+void ink_cap_emit(const char *id, const ink_args_t *payload) {
+    char whose[INK_MEMBER_ID_MAX] = "";
+    if (payload) ink_args_get_str(payload, "member", whose, sizeof whose);
+    if (!whose[0]) snprintf(whose, sizeof whose, "%s", ink_member_current()->id);
+    ink_cap_emit_for(id, payload, whose, ink_member_generation(whose));
 }
 
 /* What the current member may use now, as the AI sees it. */

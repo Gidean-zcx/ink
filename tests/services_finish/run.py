@@ -18,6 +18,9 @@ a = p.parse_args()
 build = (ROOT / a.build).resolve()
 work = Path(tempfile.mkdtemp(prefix='services-finish-', dir=build))
 suites = {
+    'file_events': ('sim-media', ['file_handoff_boundary.c'], '30s'),
+    'file_paths': ('sim-media', ['file_handoff_boundary.c'], '30s'),
+    'file_reuse': ('sim-media', ['file_handoff_boundary.c'], '30s'),
     'file_late': ('sim-media', ['file_late_boundary.c'], '25s'),
     'member_writes': ('sim-media', ['members_boundary.c'], '40s'),
     'late_writers': ('sim-media', ['late_app_boundary.c', 'late_media_boundary.c', 'late_notify_boundary.c', 'late_activity_boundary.c'], '25s'),
@@ -108,6 +111,7 @@ def review_matrix(name, binary):
                '--assets', str(build / 'assets'), '--content', str(build / 'test-content'),
                '--out', str(out), '--end', '25s', '--quiet', '--no-random-outages',
                '--flash-image', str(path / 'user.img'), '--sd-dir', str(path / 'sd')]
+        if name == 'file_events': cmd += ['--script', str(ROOT / 'tests/services_finish/voice.script')]
         run = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, timeout=180,
                              env={**os.environ, 'UBSAN_OPTIONS': 'halt_on_error=1', **env})
         (path / (label + '.stdout.log')).write_text(run.stdout)
@@ -123,7 +127,38 @@ def review_matrix(name, binary):
             for warning in metrics.get('warnings', []): print(warning)
         all_ok &= ok
 
-    if name == 'upgrade_crash':
+    if name == 'file_events':
+        for operation in ('handle', 'record', 'atomic', 'mkdir', 'remove', 'move', 'copy', 'delete'):
+            for change in (False, True):
+                path = work / (operation + ('-switch' if change else '-control'))
+                (path / 'sd').mkdir(parents=True)
+                env = {'INK_REVIEW_OPERATION': operation}
+                if change: env['INK_REVIEW_CHANGE'] = '1'
+                boot(path, 'run', env)
+    elif name == 'file_paths':
+        for operation in ('file.move', 'file.copy'):
+            for root in ('/me', '/app/demo', '/members/owner', '/family'):
+                stages = ('source', 'stat', 'setup') if operation == 'file.copy' and root != '/app/demo' else ('source', 'setup') if operation == 'file.copy' else ('source',)
+                for stage in stages:
+                    for change in (False, True):
+                        path = work / (operation + root.replace('/', '-') + '-' + stage + ('-switch' if change else '-control'))
+                        (path / 'sd').mkdir(parents=True)
+                        env = {'INK_REVIEW_OPERATION': operation, 'INK_REVIEW_ROOT': root, 'INK_REVIEW_STAGE': stage}
+                        if change: env['INK_REVIEW_CHANGE'] = '1'
+                        boot(path, 'run', env)
+            for change in (False, True):
+                path = work / (operation + '-child' + ('-switch' if change else '-control'))
+                (path / 'sd').mkdir(parents=True)
+                env = {'INK_REVIEW_OPERATION': operation, 'INK_REVIEW_ROOT': '/me', 'INK_REVIEW_STAGE': 'source', 'INK_REVIEW_CHILD': '1'}
+                if change: env['INK_REVIEW_CHANGE'] = '1'
+                boot(path, 'run', env)
+        for change in (False, True):
+            path = work / ('copy-tree' + ('-switch' if change else '-control'))
+            (path / 'sd').mkdir(parents=True)
+            env = {'INK_REVIEW_OPERATION': 'file.copy', 'INK_REVIEW_ROOT': '/me', 'INK_REVIEW_STAGE': 'source', 'INK_REVIEW_TREE': '1'}
+            if change: env['INK_REVIEW_CHANGE'] = '1'
+            boot(path, 'run', env)
+    elif name == 'upgrade_crash':
         spec = importlib.util.spec_from_file_location('inkfw', ROOT / 'tools/inkfw/make_inkfw.py')
         fw = importlib.util.module_from_spec(spec); spec.loader.exec_module(fw)
         for cut in ('control', 'before', 'after', 'error'):
@@ -276,14 +311,14 @@ for name in a.suites:
     if name == 'update':
         failed |= not update_matrix(binary)
         continue
-    if name in ('upgrade_crash', 'removal', 'removal_alarm', 'empty_removal', 'update_history', 'reader_late', 'member_inventory', 'late_writers', 'file_late'):
+    if name in ('upgrade_crash', 'removal', 'removal_alarm', 'empty_removal', 'update_history', 'reader_late', 'member_inventory', 'late_writers', 'file_late', 'file_events', 'file_paths'):
         failed |= not review_matrix(name, binary)
         continue
     out = work / (name + '-out')
     cmd = [str(binary), '--profile', str(ROOT / 'simulator/profiles/metalio-plus.json'),
            '--assets', str(build / 'assets'), '--content', str(build / 'test-content'),
            '--out', str(out), '--end', end, '--quiet', '--no-random-outages']
-    if name in ('voice', 'handoff', 'isolation'): cmd += ['--script', str(ROOT / 'tests/services_finish/voice.script')]
+    if name in ('voice', 'handoff', 'isolation', 'file_reuse'): cmd += ['--script', str(ROOT / 'tests/services_finish/voice.script')]
     run = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, timeout=180)
     metrics = json.loads((out / 'metrics.json').read_text()) if (out / 'metrics.json').exists() else {}
     counters = metrics.get('metrics', {})
