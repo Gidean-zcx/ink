@@ -48,7 +48,7 @@ def boot(area, phase, cut=None, server=None):
         done = metrics.get("system.factory_resets") == 1 and metrics.get("power.reboot") == 1
     elif phase == "flash-cut":
         done = metrics.get("flash.torn_ops", 0) > 0 or metrics.get("backup.restored", 0) > 0
-    ok = run.returncode == 0 and done and metrics.get("test.fail", 0) == 0
+    ok = run.returncode == 0 and done and metrics.get("test.fail", 0) == 0 and not data.get("warnings", [])
     print(phase, cut or "", "PASS" if ok else "FAIL", "exit=" + str(run.returncode),
           "checks=" + str(metrics.get("test.pass", 0)), flush=True)
     if not ok:

@@ -1249,6 +1249,11 @@ int fs_mkdir_for(const file_context_t *c, const char *path) {
     return r;
 }
 
+int ink_fs_mkdir_member_generation(const char *member, uint32_t generation, const char *path) {
+    file_context_t c = member_context(member, generation);
+    return fs_mkdir_for(&c, path);
+}
+
 int ink_fs_mkdir(const char *path) {
     file_context_t c = current_context();
     return fs_mkdir_for(&c, path);

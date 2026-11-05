@@ -170,6 +170,12 @@ static void api_checks(void *arg) {
     ink_fs_file_t *read=NULL;
     CHECK(ink_fs_open("/me/cas/guard.txt",INK_FS_READ,&read)==0 && ink_fs_read(read,buf,sizeof buf)==1 && buf[0]=='A',"card replacement content");
     if(read)CHECK(ink_fs_close(read)==0,"conditional card read closed");
+    uint32_t generation=ink_member_generation("owner");
+    CHECK(ink_member_switch("kid")==0,"another member arrives before a delayed directory creation");
+    CHECK(ink_fs_mkdir_member_generation("owner",generation,"/me/restore-parent")==0,"delayed directory keeps original member");
+    ink_fs_stat_t st;
+    CHECK(ink_fs_stat("/me/restore-parent",&st)==INK_FS_ERR_NOT_FOUND,"new member receives no directory from the old restore");
+    CHECK(ink_member_switch("owner")==0 && ink_fs_stat("/me/restore-parent",&st)==0 && st.is_dir,"directory exists only in original member namespace");
     api_done=1;
 }
 

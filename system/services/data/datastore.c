@@ -1084,7 +1084,7 @@ int ink_db_import(ink_db_t *db, const void *data, size_t len, uint32_t expected_
     bool ok = true;
     size_t off = sizeof h;
     lock();
-    if (!snapshot_idle(db) || db->last_ver != expected_ver || db->gen > UINT32_MAX - 3) ok = false;
+    if (!snapshot_idle(db) || db->last_ver != expected_ver || db->gen > UINT32_MAX - 4) ok = false;
     uint32_t old_gen = db->gen, old_snap_gen = db->snap_gen;
     for (uint32_t i = 0; ok && i < h.count; i++) {
         frame_t f;

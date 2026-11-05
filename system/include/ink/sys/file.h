@@ -82,6 +82,8 @@ int ink_fs_dir_next(ink_fs_dir_t *d, ink_fs_stat_t *out);
 void ink_fs_dir_close(ink_fs_dir_t *d);
 /** Makes the missing parents too. An existing directory is fine. */
 int ink_fs_mkdir(const char *path);
+/** Delayed service work retains the member that requested the directory. */
+int ink_fs_mkdir_member_generation(const char *member, uint32_t generation, const char *path);
 /** A file or an empty directory. Whole trees: ink_fs_delete_start. */
 int ink_fs_remove(const char *path);
 int ink_fs_remove_member_generation(const char *member, uint32_t generation, const char *path);

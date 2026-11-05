@@ -315,8 +315,8 @@ static void list_state(void *arg) {
     int got;
     while ((got = hal_fs_readdir(d, &ent)) > 0) {
         if (!strcmp(ent.name, ".") || !strcmp(ent.name, "..") || !strncmp(ent.name, "backup.", 7) || raw_db_file(ent.name)) continue;
-        if (ent.is_dir || !ink_layout_name_ok(ent.name) || names->count == ITEMS) { names->rc = -1; break; }
-        snprintf(names->name[names->count++], 64, "%s", ent.name);
+        if (ent.is_dir || !ink_layout_name_ok(ent.name) || strlen(ent.name) >= 64 || names->count == ITEMS) { names->rc = -1; break; }
+        memcpy(names->name[names->count++], ent.name, strlen(ent.name) + 1);
     }
     if (got < 0) names->rc = -1;
     hal_fs_closedir(d);
@@ -628,10 +628,10 @@ static int apply_item(unsigned index) {
     if (!physical(it, target, sizeof target)) return -2;
     if (it->kind == ITEM_FILE) {
         /* mkdir through the file service validates paths and keeps the same member. */
-        char virt[INK_FS_PATH_MAX]; snprintf(virt, sizeof virt, "/me/%s", it->name);
+        char virt[INK_FS_PATH_MAX]; snprintf(virt, sizeof virt, "/me/%.123s", it->name);
         char *slash = strrchr(virt, '/');
-        if (slash && slash != virt + 3) { *slash = 0; if (ink_fs_mkdir(virt) != 0) return -2; }
-        snprintf(virt, sizeof virt, "/me/%s", it->name);
+        if (slash && slash != virt + 3) { *slash = 0; if (ink_fs_mkdir_member_generation(B.j.member, B.j.generation, virt) != 0) return -2; }
+        snprintf(virt, sizeof virt, "/me/%.123s", it->name);
         int rc = ink_fs_restore(B.j.member, B.j.generation, index, virt, it->before);
         return rc == 0 ? 0 : rc == INK_FS_ERR_EXISTS ? -3 : rc == INK_FS_ERR_BUSY ? -1 : -2;
     }
@@ -708,9 +708,8 @@ static int upload_step(ink_json_t *j) {
             stage_path(path, sizeof path, "manifest", 0);
             ink_sha256(B.m, manifest_size(), h); len = B.j.manifest_size;
         }
-        /* Staging is immutable: corruption must not be uploaded under a different identity. */
-        uint8_t actual[32];
-        if (hash_file(path, actual, NULL) || memcmp(actual, h, 32)) return -2;
+        /* The hub verifies the whole hash at put.end; each step reads only its own segment. */
+        if (hal_fs_size(path) != len) return -2;
         int rc = upload_block(path, h, len, j);
         if (!rc) { B.j.next++; B.j.offset = 0; if (save_journal()) return -1; }
         return rc < 0 ? rc : 1;
