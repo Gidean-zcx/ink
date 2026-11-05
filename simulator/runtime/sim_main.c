@@ -75,7 +75,8 @@ static void usage(void) {
             "               [--end 20s] [--cpu annotated|measured[:factor]] [--realtime[=speed]]\n"
             "               [--flash-image F] [--sd-dir D] [--assets DIR]... [--content DIR] [--hub F.json]\n"
             "               [--no-random-outages] [--seed N] [--flash-timing typ|max|tail] [--quiet]\n"
-            "               [--i2c-faults RATE[:DEVICE]] [--panel-vcom-mv MV]\n");
+            "               [--i2c-faults RATE[:DEVICE]] [--panel-vcom-mv MV]\n"
+            "               [--hub-url ws://127.0.0.1:PORT/v1/device] (1x realtime, fake media)\n");
 }
 
 static int parse_time(const char *s, uint64_t *ns) {
@@ -188,6 +189,7 @@ int sim_main(int argc, char **argv) {
             if (g_sim.nasset_dirs < 4) g_sim.asset_dirs[g_sim.nasset_dirs++] = v;
         } else if (!strcmp(a, "--content")) { NEEDV(); g_sim.seed_content = v; }
         else if (!strcmp(a, "--hub")) { NEEDV(); g_sim.hub_script = v; }
+        else if (!strcmp(a, "--hub-url")) { NEEDV(); g_sim.hub_url = v; }
         else if (!strcmp(a, "--no-random-outages")) g_sim.no_random_outages = true;
         else if (!strcmp(a, "--seed")) { NEEDV(); g_sim.seed = (uint32_t)strtoul(v, NULL, 0); }
         else if (!strcmp(a, "--flash-timing")) { NEEDV(); g_sim.flash_timing = v; }
@@ -222,6 +224,13 @@ int sim_main(int argc, char **argv) {
     }
     if (!g_sim.profile_path) { usage(); return 3; }
     if (g_sim.interactive) g_sim.realtime = true;
+    if (g_sim.hub_url) {
+        if (g_sim.hub_script || g_sim.realtime_speed != 1.0 || sim_hub_bridge_configure(g_sim.hub_url)) {
+            fprintf(stderr, "--hub-url requires loopback ws://127.0.0.1:PORT/v1/device, 1x speed, and no --hub\n");
+            return 3;
+        }
+        g_sim.realtime = true;
+    }
     if (!g_sim.nasset_dirs) g_sim.asset_dirs[g_sim.nasset_dirs++] = "assets";
     rng_state = g_sim.seed ? g_sim.seed * 2654435761u : 0x9e3779b9u;
 
@@ -303,6 +312,7 @@ int sim_main(int argc, char **argv) {
     vtk_event_at(SIM_MS(50), sampler, NULL);
     if (g_sim.interactive) sim_gui_started();
     vtk_run();
+    if (g_sim.hub_url) sim_hub_bridge_shutdown();
     int v = finalize("ok");
     fflush(NULL);
     if (g_sim.interactive) sim_gui_finished();
