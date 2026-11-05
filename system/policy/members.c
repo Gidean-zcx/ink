@@ -40,6 +40,7 @@
 typedef struct {
     bool used;
     bool removing;
+    uint16_t writers;
     uint32_t generation;
     ink_member_t m;
     uint8_t salt[16], hash[32];
@@ -108,6 +109,22 @@ uint32_t ink_member_generation(const char *id) {
         generation = __atomic_load_n(&s->generation, __ATOMIC_ACQUIRE);
     }
     return generation;
+}
+
+bool ink_member_io_begin(const char *id, uint32_t generation) {
+    ink_svc_lock();
+    slot_t *s = id ? find(id) : NULL;
+    bool ok = s && generation && generation == ink_member_generation(id) && s->writers < UINT16_MAX;
+    if (ok) s->writers++;
+    ink_svc_unlock();
+    return ok;
+}
+
+void ink_member_io_end(const char *id) {
+    ink_svc_lock();
+    slot_t *s = find(id);
+    if (s && s->writers) s->writers--;
+    ink_svc_unlock();
 }
 
 const ink_member_t *ink_member_at(int i) {
@@ -506,6 +523,7 @@ static void cap_add(ink_call_t *c) { /* exec.bg */
         fail(c, INK_RC_FAILED, "the family is full");
         return;
     }
+    ink_svc_lock();
     memset(s, 0, sizeof *s);
     snprintf(s->m.id, sizeof s->m.id, "%.15s", id);
     snprintf(s->m.name, sizeof s->m.name, "%.31s", name[0] ? name : id);
@@ -513,6 +531,7 @@ static void cap_add(ink_call_t *c) { /* exec.bg */
     set_allow(s);
     s->used = true;
     s->generation = __atomic_add_fetch(&M.next_generation, 1, __ATOMIC_RELAXED);
+    ink_svc_unlock();
     save_all();
     ink_cap_emit("member.changed", NULL);
 }
@@ -566,7 +585,9 @@ static void cap_remove(ink_call_t *c) { /* exec.bg */
     ink_db_t *db = ink_db_open(&TABLE, NULL);
     bool saved = db != NULL;
     if (!db) ink_probe_count("members.cleanup_table_unavailable");
+    ink_svc_lock();
     s->removing = true; /* The id stays reserved through failures and restarts. */
+    ink_svc_unlock();
     if (saved) {
         for (int i = 0; i < INK_MEMBERS_MAX; i++)
             if (M.s[i].used) {
@@ -580,7 +601,11 @@ static void cap_remove(ink_call_t *c) { /* exec.bg */
         M.table_is_real = true;
     }
     if (!saved) ink_probe_count("members.cleanup_state_failed");
-    bool cleared = saved && ink_time_forget_member(id, (int64_t)ink_cap_time_left_ms(c) * 1000) == 0;
+    ink_svc_lock();
+    bool writers_idle = s->writers == 0;
+    ink_svc_unlock();
+    if (!writers_idle) ink_probe_count("members.cleanup_writer_busy");
+    bool cleared = saved && writers_idle && ink_time_forget_member(id, (int64_t)ink_cap_time_left_ms(c) * 1000) == 0;
     if (cleared) ink_task_forget_member(id);
     cleared = cleared && ink_db_try_forget_member(id) == 0;
     if (saved && !cleared) ink_probe_count("members.cleanup_cache_busy");
@@ -601,7 +626,9 @@ static void cap_remove(ink_call_t *c) { /* exec.bg */
         ink_cap_emit("member.changed", NULL);
         return;
     }
+    ink_svc_lock();
     s->used = false;
+    ink_svc_unlock();
     ink_cap_emit("member.changed", NULL);
     snprintf(c->rc.say, sizeof c->rc.say, "删掉了");
 }

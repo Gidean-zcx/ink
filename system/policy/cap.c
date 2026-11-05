@@ -237,7 +237,7 @@ static void activity_flush(void *arg) { /* exec.bg */
         osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER); n->used = false; osal_mutex_unlock(CB.lock);
         return;
     }
-    ink_db_t *db = ink_db_open(&ACTIVITY, n->member);
+    ink_db_t *db = ink_db_open_member(&ACTIVITY, n->member, n->generation);
     char json[512];
     ink_jw_t w;
     ink_jw_init(&w, json, sizeof json);

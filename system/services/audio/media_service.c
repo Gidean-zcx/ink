@@ -101,7 +101,7 @@ static uint32_t path_id(const char *path) {
 
 static void save_to_flash(const char *path, uint32_t ms) {
     if (!M.generation || M.generation != ink_member_generation(M.member)) return;
-    ink_db_t *db = ink_db_open(&POSITIONS, M.member);
+    ink_db_t *db = ink_db_open_member(&POSITIONS, M.member, M.generation);
     if (!db) return;
     char buf[INK_FS_PATH_MAX + 64];
     ink_jw_t w;
@@ -121,7 +121,9 @@ static void save_to_card(const char *path, uint32_t ms) {
     if (!M.generation || M.generation != ink_member_generation(M.member)) return;
     char buf[INK_FS_PATH_MAX + 64];
     int n = snprintf(buf, sizeof buf, "%lld\n%s\n%s\n%u\n", (long long)ink_time_now_s(), M.member, path, (unsigned)ms);
+    if (!ink_member_io_begin(M.member, M.generation)) return;
     if (ink_fs_write_atomic(POS_CACHE, buf, (size_t)n) == 0) ink_probe_count("media.positions_cached");
+    ink_member_io_end(M.member);
 }
 
 /* The newer of what the flash and the card say. */

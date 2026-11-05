@@ -29,6 +29,8 @@ int ink_storage_init(void);
 int ink_storage_reclaimable(void);
 /** Queue an atomic replace of `path` (/user/...) with a copy of data. Coalesces repeated writes of one path. */
 int ink_storage_write_atomic(const char *path, const void *data, size_t len);
+/** As above, for /user/m/<id>/... owned by a saved incarnation. Reject absent, removed or reused ids. */
+int ink_storage_write_member_atomic(const char *path, const void *data, size_t len, uint32_t generation);
 /** Read a small file into buf (blocks while the storage task reads it); bytes read or -1. Sees queued
  *  replaces and removes. */
 int ink_storage_read(const char *path, void *buf, size_t cap);
@@ -64,6 +66,8 @@ int ink_storage_write_borrow(const char *path, const void *data, size_t len, ink
 int ink_storage_append(const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx);
 /** Remove a file; one that does not exist counts as removed. Reads see it gone at once. `done` may be NULL. */
 int ink_storage_remove(const char *path, ink_storage_done_fn done, void *ctx);
+/** Remove in a saved member incarnation; the same lifetime protection as write_member_atomic. */
+int ink_storage_remove_member(const char *path, uint32_t generation, ink_storage_done_fn done, void *ctx);
 /** Size of a file (blocks), -1 if it does not exist. Flash content: queued jobs do not count. */
 int64_t ink_storage_size(const char *path);
 /** A whole file into a new external-RAM block (ink_storage_free it): read in small pieces, the panel may

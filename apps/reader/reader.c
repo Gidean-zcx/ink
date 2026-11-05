@@ -254,7 +254,7 @@ static void save_cb(lv_timer_t *t) {
     char path[200], data[64];
     pos_path(path, sizeof path, RD.member, LIB.books[LIB.open].name);
     int n = snprintf(data, sizeof data, "offset=%u\n", (unsigned)RD.starts[RD.page]);
-    if (path[0] && ink_storage_write_atomic(path, data, (size_t)n) == 0) RD.dirty_pos = false;
+    if (path[0] && ink_storage_write_member_atomic(path, data, (size_t)n, RD.generation) == 0) RD.dirty_pos = false;
 }
 
 static bool go_to(int target) {

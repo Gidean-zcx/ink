@@ -697,7 +697,7 @@ static size_t reclaim(void *ctx, size_t want) { /* never from under the lock: no
 
 /* ------------------------------------------------------------ the API */
 
-ink_db_t *ink_db_open(const ink_db_def_t *def, const char *member) {
+static ink_db_t *open_collection(const ink_db_def_t *def, const char *member) {
     if (!DB.lock || !def || !def->name || strlen(def->name) >= INK_DB_NAME_MAX || !ink_layout_name_ok(def->name)) return NULL;
     char who[INK_MEMBER_ID_MAX] = "";
     if (def->scope == INK_DB_MEMBER) {
@@ -751,6 +751,22 @@ ink_db_t *ink_db_open(const ink_db_def_t *def, const char *member) {
         unlock();
         return slot;
     }
+}
+
+ink_db_t *ink_db_open_member(const ink_db_def_t *def, const char *member, uint32_t generation) {
+    if (!def || def->scope != INK_DB_MEMBER || !ink_member_io_begin(member, generation)) return NULL;
+    ink_db_t *db = open_collection(def, member);
+    ink_member_io_end(member);
+    return db;
+}
+
+ink_db_t *ink_db_open(const ink_db_def_t *def, const char *member) {
+    if (!def || def->scope != INK_DB_MEMBER) return open_collection(def, member);
+    char who[INK_MEMBER_ID_MAX];
+    const char *id = member ? member : ink_member_current()->id;
+    if (!ink_layout_member_ok(id)) return NULL;
+    snprintf(who, sizeof who, "%s", id);
+    return ink_db_open_member(def, who, ink_member_generation(who));
 }
 
 void ink_db_close(ink_db_t *db) {

@@ -92,6 +92,9 @@ const ink_db_def_t *ink_db_def_at(int i);
 /** Open (reference counted). member NULL = the current member; device collections ignore it. The first
  *  open reads the files and may wait for a refresh. NULL: no memory, or a format newer than this firmware. */
 ink_db_t *ink_db_open(const ink_db_def_t *def, const char *member);
+/** Open a member collection for a saved incarnation. Registration and the returned reference protect
+ *  its lifecycle through removal; NULL if the id was removed, quarantined or reused. */
+ink_db_t *ink_db_open_member(const ink_db_def_t *def, const char *member, uint32_t generation);
 void ink_db_close(ink_db_t *db);
 
 /** Accepted, in memory, on its way to the flash: `ver` of this change is ink_db_last_ver() right after,

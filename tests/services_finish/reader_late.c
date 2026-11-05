@@ -7,6 +7,12 @@ static ink_exec_job_t held_ui_job;
 static int results;
 static char result_status[24];
 
+void ink_test_reader_before_submit(void) {
+    if (!getenv("INK_REVIEW_SAVE_GAP") || ui_held) return;
+    ui_held = true;
+    while (!release_ui) osal_task_delay_us(10000);
+}
+
 static void result(void *ctx, const char *id, const ink_args_t *args) {
     (void)ctx; (void)id;
     ink_args_get_str(args, "status", result_status, sizeof result_status);
@@ -23,6 +29,7 @@ static bool confirmed(const char *cap, const char *args) {
 
 static void hold_ui(void *ctx) {
     (void)ctx;
+    if (getenv("INK_REVIEW_SAVE_GAP")) { ink_test_reader_save(); return; }
     ui_held = true;
     while (!release_ui) osal_task_delay_us(10000);
     if (getenv("INK_REVIEW_SAVE_TIMER")) ink_test_reader_save();

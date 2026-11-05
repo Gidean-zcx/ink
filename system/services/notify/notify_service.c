@@ -51,6 +51,7 @@ static struct {
     uint32_t off;  /* the current member's channels turned off */
     ink_db_t *held; /* the current member's inbox stays loaded */
     char member[INK_MEMBER_ID_MAX];
+    uint32_t generation;
     int unread;
     int h_unread;
     ink_exec_job_t haptic_job;
@@ -68,8 +69,9 @@ static ink_db_t *inbox(void) {
     ink_svc_lock();
     bool open = NS.held != NULL && !strcmp(NS.member, now); /* this service follows on the background executor: until it has, nothing of the last one's */
     snprintf(who, sizeof who, "%s", NS.member);
+    uint32_t generation = NS.generation;
     ink_svc_unlock();
-    return open ? ink_db_open(&INBOX, who) : NULL;
+    return open ? ink_db_open_member(&INBOX, who, generation) : NULL;
 }
 
 /* ------------------------------------------------------------ the inbox */
@@ -179,9 +181,9 @@ static void haptic_job(void *arg) { /* exec.bg: the motor is on the shared I2C b
 }
 
 /* The channels someone turned off. Waits for the flash when it is not the current member. */
-static uint32_t prefs_off(const char *member) {
+static uint32_t prefs_off(const char *member, uint32_t generation) {
     uint32_t off = 0;
-    ink_db_t *db = ink_db_open(&PREFS, member);
+    ink_db_t *db = ink_db_open_member(&PREFS, member, generation);
     if (!db) return 0;
     char buf[256];
     ink_rec_t r;
@@ -210,9 +212,9 @@ typedef struct {
 static void post_away(void *arg) { /* exec.bg: another member's inbox, nobody is disturbed */
     away_t *a = arg;
     if (!a->generation || a->generation != ink_member_generation(a->member)) { osal_free(a); return; }
-    if (prefs_off(a->member) & (1u << a->channel)) ink_probe_count("notify.channel_off");
+    if (prefs_off(a->member, a->generation) & (1u << a->channel)) ink_probe_count("notify.channel_off");
     else {
-        ink_db_t *db = ink_db_open(&INBOX, a->member);
+        ink_db_t *db = ink_db_open_member(&INBOX, a->member, a->generation);
         ink_db_write_t w = {.sort = a->sort, .data = a->json, .len = strlen(a->json), .src = a->src};
         if (!db || ink_db_put(db, &w, NULL) != INK_DB_OK) ink_probe_count("notify.dropped");
         ink_db_close(db);
@@ -277,7 +279,7 @@ int ink_notify_post(const ink_notify_t *n, uint32_t *out_id) {
         ink_probe_count("notify.channel_off");
         return 0;
     }
-    ink_db_t *db = ink_db_open(&INBOX, who); /* whose it is, as decided above, whatever has happened since */
+    ink_db_t *db = ink_db_open_member(&INBOX, who, generation);
     uint32_t wrote = 0;
     ink_db_write_t w = {.written_ver = n->written_ver, .id = db && n->tag ? find_tag(db, n->tag) : 0, .sort = sort, .data = buf, .len = (size_t)len, .src = n->src};
     int r = db ? ink_db_put(db, &w, &wrote) : INK_DB_ERR_ARG;
@@ -433,8 +435,9 @@ static void save_prefs(void) {
     ink_svc_lock();
     uint32_t off = NS.off;
     snprintf(who, sizeof who, "%s", NS.member);
+    uint32_t generation = NS.generation;
     ink_svc_unlock();
-    ink_db_t *db = ink_db_open(&PREFS, who);
+    ink_db_t *db = ink_db_open_member(&PREFS, who, generation);
     if (!db) return;
     ink_jw_t w;
     ink_jw_init(&w, out, sizeof out);
@@ -479,13 +482,16 @@ bool ink_notify_channel_on(const char *id) {
 /* ------------------------------------------------------------ members */
 
 static void open_inbox(void) { /* may wait for the flash */
-    const char *id = ink_member_current()->id;
-    ink_db_t *db = ink_db_open(&INBOX, id);
-    uint32_t off = prefs_off(id);
+    char id[INK_MEMBER_ID_MAX];
+    snprintf(id, sizeof id, "%s", ink_member_current()->id);
+    uint32_t generation = ink_member_generation(id);
+    ink_db_t *db = ink_db_open_member(&INBOX, id, generation);
+    uint32_t off = prefs_off(id, generation);
     ink_svc_lock();
     ink_db_t *old = NS.held;
     NS.held = db;
     NS.off = off;
+    NS.generation = generation;
     snprintf(NS.member, sizeof NS.member, "%s", id);
     ink_svc_unlock();
     ink_db_close(old);

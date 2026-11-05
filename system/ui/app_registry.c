@@ -99,7 +99,9 @@ static bool save(app_t *a) {
     int n = a->def->ops->save_state(buf, INK_APP_STATE_MAX);
     int r = -1;
     for (int i = 0; i < SAVE_TRIES && r != 0; i++) {
-        r = n > 0 && n <= INK_APP_STATE_MAX ? ink_storage_write_atomic(path, buf, (size_t)n) : ink_storage_remove(path, NULL, NULL);
+        r = n > 0 && n <= INK_APP_STATE_MAX ? ink_storage_write_member_atomic(path, buf, (size_t)n, AP.generation) :
+                                            ink_storage_remove_member(path, AP.generation, NULL, NULL);
+        if (AP.generation != ink_member_generation(AP.member)) { r = 0; break; }
         if (r != 0) osal_task_delay_us(SAVE_WAIT_US);
     }
     osal_free(buf);
