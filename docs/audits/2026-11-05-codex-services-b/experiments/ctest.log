@@ -1,0 +1,69 @@
+Test project <审计工作树>/build-audit
+      Start 11: sdk-boundary
+      Start 12: layering
+      Start 15: integration-starts
+      Start 32: scenario-keys_overlap-metalio-plus
+ 1/32 Test #11: sdk-boundary ..........................................   Passed    0.02 sec
+      Start 34: scenario-ai_ask-metalio-plus
+ 2/32 Test #12: layering ..............................................   Passed    0.24 sec
+      Start 35: scenario-ai_turn_end-metalio-plus
+ 3/32 Test #15: integration-starts ....................................   Passed    1.43 sec
+      Start 36: scenario-ai_turn_lost-metalio-plus
+ 4/32 Test #32: scenario-keys_overlap-metalio-plus ....................   Passed    2.37 sec
+      Start 39: integration-media
+ 5/32 Test #35: scenario-ai_turn_end-metalio-plus .....................   Passed    2.30 sec
+      Start 40: integration-text-main
+ 6/32 Test #36: scenario-ai_turn_lost-metalio-plus ....................   Passed    1.24 sec
+      Start 41: integration-text-nocard
+ 7/32 Test #34: scenario-ai_ask-metalio-plus ..........................   Passed    3.30 sec
+      Start 42: integration-text-baddict
+ 8/32 Test #41: integration-text-nocard ...............................   Passed    1.20 sec
+      Start 44: integration-power-menu
+ 9/32 Test #42: integration-text-baddict ..............................   Passed    0.62 sec
+      Start 45: integration-dictation
+10/32 Test #39: integration-media .....................................   Passed    2.06 sec
+      Start 46: integration-dictation-handsfree
+11/32 Test #40: integration-text-main .................................   Passed    2.35 sec
+      Start 47: integration-listening
+12/32 Test #44: integration-power-menu ................................   Passed    3.22 sec
+      Start 48: integration-races
+13/32 Test #46: integration-dictation-handsfree .......................   Passed    3.82 sec
+      Start 52: integration-notify
+14/32 Test #48: integration-races .....................................   Passed    1.61 sec
+      Start 53: integration-notify-lowbat
+15/32 Test #53: integration-notify-lowbat .............................   Passed    0.35 sec
+      Start 54: integration-ai-race
+16/32 Test #47: integration-listening .................................   Passed    4.48 sec
+      Start 55: integration-lifecycle
+17/32 Test #54: integration-ai-race ...................................   Passed    1.74 sec
+      Start 56: scenario-standby-metalio-plus
+18/32 Test #55: integration-lifecycle .................................   Passed    1.95 sec
+      Start 59: scenario-ai_dismiss-metalio-plus
+19/32 Test #56: scenario-standby-metalio-plus .........................   Passed    0.98 sec
+      Start 60: scenario-ai_dismiss_held-metalio-plus
+20/32 Test #45: integration-dictation .................................   Passed    7.91 sec
+      Start 61: scenario-voice_handsfree-metalio-plus-handsfree
+21/32 Test #59: scenario-ai_dismiss-metalio-plus ......................   Passed    0.53 sec
+      Start 62: scenario-voice_listen_policy-metalio-plus-handsfree
+22/32 Test #62: scenario-voice_listen_policy-metalio-plus-handsfree ...   Passed    0.31 sec
+      Start 63: scenario-ai_offline_intent-metalio-plus-handsfree
+23/32 Test #60: scenario-ai_dismiss_held-metalio-plus .................   Passed    0.51 sec
+      Start 64: scenario-ai_ask-metalio-plus-seed-26
+24/32 Test #52: integration-notify ....................................   Passed    4.26 sec
+      Start 65: scenario-ai_ask-metalio-plus-seed-29
+25/32 Test #63: scenario-ai_offline_intent-metalio-plus-handsfree .....   Passed    0.60 sec
+      Start 66: scenario-ai_mic_unavailable-metalio-plus
+26/32 Test #61: scenario-voice_handsfree-metalio-plus-handsfree .......   Passed    1.32 sec
+      Start 69: scenario-ai_ask-metalio-plus-pqbn
+27/32 Test #66: scenario-ai_mic_unavailable-metalio-plus ..............   Passed    0.58 sec
+      Start 71: scenario-ai_page_version-metalio-plus
+28/32 Test #64: scenario-ai_ask-metalio-plus-seed-26 ..................   Passed    1.29 sec
+      Start 74: scenario-ai_tools-metalio-plus
+29/32 Test #65: scenario-ai_ask-metalio-plus-seed-29 ..................   Passed    1.20 sec
+30/32 Test #69: scenario-ai_ask-metalio-plus-pqbn .....................   Passed    1.12 sec
+31/32 Test #71: scenario-ai_page_version-metalio-plus .................   Passed    1.01 sec
+32/32 Test #74: scenario-ai_tools-metalio-plus ........................   Passed    1.05 sec
+
+100% tests passed out of 32
+
+Total Test time (real) =  14.65 sec

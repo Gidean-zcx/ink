@@ -1,0 +1,6 @@
+RUN <审计工作树>/build-audit/audit-probes/media/probe --profile <审计工作树>/simulator/profiles/metalio-plus.json --out <审计工作树>/build-audit/audit-probes/media/run-jcb9ox35 --quiet --no-random-outages --script <审计工作树>/tests/integration/media.script --assets <审计工作树>/build-audit/assets --content <审计工作树>/build-audit/test-content
+ink-sim: ok, 6000.050 s virtual, report <审计工作树>/build-audit/audit-probes/media/run-jcb9ox35/metrics.json
+Traceback (most recent call last):
+  File "<审计工作树>/docs/audits/2026-11-05-codex-services-b/experiments/run_probe.py", line 71, in <module>
+    assert metrics['metrics'].get('test.fail', 0) == 0, metrics.get('warnings', [])
+AssertionError: ['17.580s CHECK FAILED (<审计工作树>/tests/integration/media.c:142) what was said before, no more (2820 ms)']

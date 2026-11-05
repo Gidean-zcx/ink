@@ -1,0 +1,4 @@
+RUN <审计工作树>/build-audit/audit-probes/power_wait_probe/probe --profile <审计工作树>/simulator/profiles/metalio-plus.json --out <审计工作树>/build-audit/audit-probes/power_wait_probe/run-lf0so5xh --quiet --no-random-outages --end 30s --assets <审计工作树>/build-audit/assets --content <审计工作树>/build-audit/test-content
+ink-sim: ok, 12.771 s virtual, report <审计工作树>/build-audit/audit-probes/power_wait_probe/run-lf0so5xh/metrics.json
+AUDIT power_wait elapsed_ms=6059 late=1 on_panel=0 low_battery_off=1 state=locked
+AUDIT power_wait elapsed_ms=7089 late=2 on_panel=0 low_battery_off=1 state=locked

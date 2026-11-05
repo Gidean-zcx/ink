@@ -1,0 +1,4 @@
+RUN <审计工作树>/build-audit/audit-probes/voice_lifecycle_probe/probe --profile <审计工作树>/simulator/profiles/metalio-plus.json --out <审计工作树>/build-audit/audit-probes/voice_lifecycle_probe/run-448uzzhu --quiet --no-random-outages --script <审计工作树>/docs/audits/2026-11-05-codex-services-b/experiments/audio.script --assets <审计工作树>/build-audit/assets --content <审计工作树>/build-audit/test-content
+ink-sim: ok, 30.050 s virtual, report <审计工作树>/build-audit/audit-probes/voice_lifecycle_probe/run-448uzzhu/metrics.json
+AUDIT two_sessions voice=3 rt=2 capture=1 focus=2
+AUDIT locked voice=0 rt=0 value=base

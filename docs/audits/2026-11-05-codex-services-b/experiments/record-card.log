@@ -1,0 +1,4 @@
+RUN <审计工作树>/build-audit/audit-probes/record_card_probe/probe --profile <审计工作树>/simulator/profiles/metalio-plus.json --out <审计工作树>/build-audit/audit-probes/record_card_probe/run-zzjaq7z8 --quiet --no-random-outages --script <审计工作树>/docs/audits/2026-11-05-codex-services-b/experiments/audio.script --assets <审计工作树>/build-audit/assets --content <审计工作树>/build-audit/test-content
+ink-sim: ok, 30.050 s virtual, report <审计工作树>/build-audit/audit-probes/record_card_probe/run-zzjaq7z8/metrics.json
+AUDIT recording_usb_start=-9 active=0
+AUDIT card_removed reason=write_failed recording=0 capture=0

@@ -1,0 +1,7 @@
+RUN <审计工作树>/build-audit/audit-probes/text_boundary_probe/probe --profile <审计工作树>/simulator/profiles/metalio-plus.json --out <审计工作树>/build-audit/audit-probes/text_boundary_probe/run-5mpy7ofi --quiet --no-random-outages --end 30s --assets <审计工作树>/build-audit/assets --content <审计工作树>/build-audit/test-content
+ink-sim: ok, 30.000 s virtual, report <审计工作树>/build-audit/audit-probes/text_boundary_probe/run-5mpy7ofi/metrics.json
+AUDIT displayed=a[bc]def tap_letter=5
+AUDIT after_tap cursor=4 expected=3
+AUDIT after_insert=abcdXef
+AUDIT long_selection value_chars=100 label_chars=132 opening_mark_at=30
+AUDIT hidden_submit status=done entered_delta=1
