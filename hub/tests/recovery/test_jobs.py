@@ -90,3 +90,16 @@ async def test_runner_failure_after_external_request_is_unknown(queue):
     jid = q.enqueue(scope, "key", "example", {}, effect="external")
     await q.run_one({"example": handler})
     assert q.get(scope, jid)["state"] == "unknown"
+
+
+@pytest.mark.parametrize("effect,expected", [("none", "cancelled"), ("external", "unknown")])
+async def test_revoked_during_execution_cannot_publish_or_stop_queue(queue, effect, expected):
+    q, scope = queue
+    async def handler(owner, payload):
+        q.authority.add("example", "a")
+        return {"private": "synthetic private result"}
+    jid = q.enqueue(scope, "key", "example", {}, effect=effect)
+    assert await q.run_one({"example": handler})
+    renewed = q.authority.issue("example", "a")
+    row = q.get(renewed, jid)
+    assert row["state"] == expected and row["result"] is None

@@ -82,7 +82,10 @@ def test_install_with_mocked_docker_and_existing_target(tmp_path):
     assert result.returncode == 0, result.stderr
     assert (target / "worker/main.py").exists() and (target / "requirements.lock").exists()
     lines = log.read_text().splitlines()
-    assert "config --quiet" in lines[1] and "build" in lines[2] and "up -d hub" in lines[3]
+    config_index = next(i for i, line in enumerate(lines) if "config --quiet" in line)
+    assert "build" in lines[config_index + 1]
+    assert "--network none" in lines[config_index + 2]
+    assert "up -d hub" in lines[config_index + 3]
     assert subprocess.run(args, env=env, capture_output=True).returncode == 4
 
 

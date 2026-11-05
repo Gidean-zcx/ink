@@ -1,6 +1,11 @@
 from dataclasses import dataclass
 
 from ink_hub.gateway.wire import ProtocolError
+from .schema import validate
+
+
+def object_schema(properties):
+    return {"type": "object", "properties": properties, "required": list(properties), "additionalProperties": False}
 
 
 @dataclass(frozen=True)
@@ -12,6 +17,7 @@ class Capability:
     child_ok: bool = True
     effect: str = "read"
     expose: frozenset = frozenset({"app", "ai"})
+    input_schema: dict | None = None
 
     def directory(self):
         entry = {"name": self.name}
@@ -21,7 +27,7 @@ class Capability:
 
     def tool(self):
         return {"name": self.name, "title": self.title, "effect": self.effect,
-                "confirm": "none", "inputSchema": {"type": "object", "properties": {}}}
+                "confirm": "none", "inputSchema": self.input_schema or {"type": "object", "properties": {}}}
 
 
 class Registry:
@@ -46,4 +52,5 @@ class Registry:
             raise ProtocolError("请家长操作", -32020)
         if not isinstance(arguments, dict) or "_meta" in arguments:
             raise ProtocolError("参数无效")
+        validate(arguments, cap.input_schema or {"type": "object"})
         return await cap.handler(scope, arguments)

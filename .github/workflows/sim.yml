@@ -63,3 +63,39 @@ jobs:
         run: cmake --build build -j
       - name: Scenarios and budgets
         run: ctest --test-dir build --output-on-failure
+
+  hub:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11.15"
+      - name: Locked hub environment
+        run: |
+          python -m pip install uv==0.9.5
+          uv lock --project hub --check
+          uv sync --project hub --frozen
+      - name: Simulator dependencies
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends fonts-noto-cjk python3-pil libsdl2-dev
+      - name: Configure and build
+        run: |
+          cmake -S . -B build -DINK_WERROR=ON -DPython3_EXECUTABLE=/usr/bin/python3 -DINK_HUB_PYTHON=$PWD/hub/.venv/bin/python
+          cmake --build build -j
+      - name: Hub contracts and production JSON crosscheck
+        run: ctest --test-dir build -R '^hub-' --output-on-failure
+      - name: Five consecutive realtime simulator rounds
+        run: ctest --test-dir build -R '^hub-simulator-e2e$' --repeat until-fail:5 --output-on-failure
+      - name: Prepare installation and validate Compose
+        run: |
+          sh hub/deploy/install.sh --prefix work/compose-check --prepare-only
+          docker compose -f work/compose-check/compose.yaml config --quiet
+      - name: Keep synthetic evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: hub-step1-evidence
+          path: |
+            build/test-out/hub
+            build/test-out/hub-e2e
+          retention-days: 14

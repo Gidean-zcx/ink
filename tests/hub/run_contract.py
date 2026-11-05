@@ -10,6 +10,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument("--caps", required=True)
 parser.add_argument("--samples", required=True)
 args = parser.parse_args()
+Path(args.samples).unlink(missing_ok=True)
 if any(importlib.util.find_spec(name) is None for name in ("pytest", "pytest_asyncio", "aiohttp", "yaml")):
     print("SKIP: install hub/.venv with uv sync --frozen; select INK_HUB_PYTHON in CMake")
     sys.exit(77)

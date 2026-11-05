@@ -4,11 +4,13 @@ set -eu
 prefix=./inkhub-local
 apply=0
 install_docker=0
+prepare_only=0
 while [ "$#" -gt 0 ]; do
   case "$1" in
     --prefix) prefix=$2; shift 2 ;;
     --apply) apply=1; shift ;;
     --install-docker) install_docker=1; shift ;;
+    --prepare-only) prepare_only=1; apply=1; shift ;;
     --dry-run) apply=0; shift ;;
     *) echo '参数无效：--prefix DIR [--apply] [--install-docker]' >&2; exit 2 ;;
   esac
@@ -18,6 +20,9 @@ if [ "$apply" -eq 0 ]; then
   echo '预演：检查 Docker Compose；不抢占 80、443、8443；复制本地安装包；先构建再启动。'
   echo '入口仅监听本机。SSH 转发：ssh -L 8443:127.0.0.1:8443 user@example.com'
   exit 0
+fi
+if [ -e "$prefix" ]; then
+  echo '目标目录已存在，请选择新目录；不会覆盖已有安装。' >&2; exit 4
 fi
 if ! command -v docker >/dev/null 2>&1; then
   if [ "$install_docker" -ne 1 ]; then
@@ -32,16 +37,22 @@ if ! command -v docker >/dev/null 2>&1; then
   sudo apt-get install -y docker.io docker-compose-v2
 fi
 docker compose version >/dev/null
-if [ -e "$prefix" ]; then
-  echo '目标目录已存在，请选择新目录；不会覆盖已有安装。' >&2; exit 4
-fi
+python3 "$root/ink_hub/ops/preflight.py" --directory "$(dirname -- "$prefix")" --check-install
 mkdir -p "$prefix/data" "$prefix/work/example/input" "$prefix/work/example/output"
 cp "$root/deploy/compose.yaml" "$prefix/compose.yaml"
 cp "$root/.env.example" "$prefix/.env.example"
 cp -R "$root/ink_hub" "$root/worker" "$prefix/"
 cp "$root/deploy/Dockerfile" "$root/requirements.lock" "$prefix/"
 docker compose -f "$prefix/compose.yaml" config --quiet
+if [ "$prepare_only" -eq 1 ]; then
+  echo '本地安装包已准备并检查；没有构建或启动容器。'
+  exit 0
+fi
 docker compose -f "$prefix/compose.yaml" build
+absolute_prefix=$(CDPATH= cd -- "$prefix" && pwd)
+docker run --rm --network none --read-only --user 0:0 --cap-drop ALL --cap-add CHOWN --cap-add FOWNER \
+  --entrypoint python -v "$absolute_prefix/data:/data" -v "$absolute_prefix/work/example/output:/work/output" \
+  inkhub-local:0.1.0 -c 'import os; [(os.chown(p,10001,10001),os.chmod(p,0o700)) for p in ("/data","/work/output")]'
 docker compose -f "$prefix/compose.yaml" up -d hub
 echo '示例服务已启动。设置码请从本机 docker compose logs hub 读取。'
 echo 'SSH 转发：ssh -L 8443:127.0.0.1:8443 user@example.com'

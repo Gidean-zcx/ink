@@ -23,3 +23,5 @@
 | Pygments | 2.21.0 | BSD-2-Clause |
 
 开发工具 uv 0.9.5 和构建后端 hatchling 1.27.0 不随产品分发。没有把设计稿、依赖源码包、wheel、Python 环境或构建产物提交进仓库。
+
+容器基底为官方 `python:3.11.15-slim-bookworm`，2026-11-05 从 [Docker Hub 标签元数据](https://hub.docker.com/v2/repositories/library/python/tags/3.11.15-slim-bookworm) 核对清单摘要，两个 Dockerfile 都固定到 `sha256:d29f48a31a8b408ed19272ca1e7b10ebae13b240a27e862d3d4217c528e2e0c3`；本机未构建镜像。

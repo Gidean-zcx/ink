@@ -2,6 +2,7 @@ import asyncio
 import secrets
 
 from ink_hub.bus.policy import authorize
+from ink_hub.bus.schema import validate
 from ink_hub.gateway.wire import ANSWER_BYTES, ProtocolError, chunks, frame, response
 
 
@@ -9,7 +10,7 @@ async def run_turn(self, rid, method, params):
     epoch, scope = self.epoch, self.scope
     sid = params.get("stream", 0)
     session = self.sessions.get(sid)
-    guard = lambda: not self.closed and self.epoch == epoch and self.scope == scope and (not session or self.sessions.get(sid) is session)
+    guard = lambda: self.valid_output(scope, epoch, sid, session)
     count = 0
     try:
         budget = params.get("budget_ms", 30000)
@@ -20,6 +21,8 @@ async def run_turn(self, rid, method, params):
             snapshot = params.get("page", {})
             if not isinstance(snapshot, dict) or not isinstance(snapshot.get("actions", []), list):
                 raise ProtocolError("页面快照无效")
+            if any(not isinstance(n, str) or len(n.encode()) > 47 for n in snapshot.get("actions", [])):
+                raise ProtocolError("能力名无效")
             available = await self.tools.current(snapshot.get("actions", []))
             if self.hub.authority.role(scope) == "child":
                 available = {n: t for n, t in available.items() if t.get("effect") != "system" and t.get("confirm") != "parent"}
@@ -39,6 +42,9 @@ async def run_turn(self, rid, method, params):
             text = answer.text if answer else ""
             if answer and answer.tool:
                 descriptor = available[answer.tool]
+                if not isinstance(answer.arguments, dict) or "_meta" in answer.arguments:
+                    raise ProtocolError("工具参数无效")
+                validate(answer.arguments, descriptor.get("inputSchema", {"type": "object"}))
                 meta = authorize(self.hub.authority, scope, epoch=epoch, connection=self.id,
                                  action=answer.tool, arguments=answer.arguments, now=asyncio.get_running_loop().time(),
                                  effect=descriptor.get("effect", "read"))
@@ -86,7 +92,7 @@ async def run_turn(self, rid, method, params):
 async def run_dictation(self, sid, session):
     text = await self.hub.asr.transcribe(session.frames)
     session.frames.clear()
-    guard = lambda: not self.closed and self.sessions.get(sid) is session and session.epoch == self.epoch
+    guard = lambda: self.valid_output(self.scope, session.epoch, sid, session)
     parts = list(chunks(text, limit=480))
     for seg, part in enumerate(parts):
         await self.notify("rt.asr", {"sid": sid, "seg": seg, "final": True, "text": part}, guard)

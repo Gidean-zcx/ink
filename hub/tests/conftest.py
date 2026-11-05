@@ -46,7 +46,7 @@ def firmware_caps():
 
 def pytest_sessionfinish(session, exitstatus):
     path = os.environ.get("INK_HUB_SAMPLES")
-    if path:
+    if path and exitstatus == 0:
         output = Path(path)
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text("".join(s + "\n" for s in SAMPLES))

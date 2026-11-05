@@ -121,5 +121,11 @@ class JobQueue:
             else:
                 await asyncio.to_thread(self.cancel, scope, row["id"])
             return True
-        await asyncio.to_thread(self.finish, scope, row["id"], result)
+        try:
+            await asyncio.to_thread(self.finish, scope, row["id"], result)
+        except PermissionError:
+            # The owner was revoked while the handler awaited; never expose its result.
+            with self._open() as db:
+                db.execute("UPDATE jobs SET state=?,result=NULL WHERE id=? AND state IN ('running','external')",
+                           ("unknown" if row["effect"] == "external" else "cancelled", row["id"]))
         return True

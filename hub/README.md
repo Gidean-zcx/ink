@@ -51,8 +51,8 @@ sh hub/deploy/install.sh --dry-run
 sh hub/deploy/install.sh --prefix work/inkhub-example --apply
 ```
 
-第一条没有安装副作用。第二条要求 Docker Compose，会先构建本地镜像再启动；不覆盖已有安装。仅在管理员显式加 `--install-docker` 时才尝试 Debian/Ubuntu 的系统安装。Compose 使用 Linux 的 host 网络，仅暴露服务自己监听的本机地址；Mac 上先用上面的 Python 模式。本次开发机没有 Docker，实际容器运行结果见 [报告](../docs/tasks/hub-step1/REPORT.md)。
+第一条没有安装副作用。第二条要求 Docker Compose，会预检系统、端口和资源，再构建本地镜像并初始化专用数据目录权限，最后启动；不覆盖已有安装。资源读不到时明确报未知。`--prepare-only` 只准备安装包和检查 Compose，供 CI 使用。仅在管理员显式加 `--install-docker` 时才尝试 Debian/Ubuntu 的系统安装。Compose 使用 Linux 的 host 网络，仅暴露服务自己监听的本机地址；Mac 上先用上面的 Python 模式。容器默认拒绝开发握手，明确设置 `INK_HUB_DEV_ALLOW_PROTO1=1` 才打开。本次开发机没有 Docker，实际容器运行结果见 [报告](../docs/tasks/hub-step1/REPORT.md)。
 
-`worker` 是无网络、非 root、只读根文件系统、限内存的独立容器，只能读取本任务输入和写输出，拿不到家庭数据库和环境密钥。本步只实现有大小上限的合成文件哈希探针，书籍转换在第 5 步。任务队列使用 SQLite，安全任务租约过期后可恢复，外部请求结果不明标 `unknown`，不自动重试；幂等键按 Scope 隔离并核对参数摘要。
+`worker` 是无网络、非 root、只读根文件系统、限内存的独立容器，只能读取本任务输入和写输出，拿不到家庭数据库和环境密钥。本步只实现有大小上限的合成文件哈希探针，书籍转换在第 5 步。任务队列使用 SQLite，主进程调度器会恢复、执行合成哈希任务；安全任务租约过期后可恢复，外部请求结果不明标 `unknown`，不自动重试；幂等键按 Scope 隔离并核对参数摘要。任务执行中权限变化则禁止发布结果。参数 Schema 本步支持常见对象、类型、必填、枚举和大小限制，其他关键字明确拒绝。
 
 目录按 [设计 §9](../docs/hub/hub-architecture.md#9-代码结构) 保留。后续阶段的空包只标边界，不列为可用能力。第一步两端约定见 [contracts-step1.md](../docs/hub/contracts-step1.md)，测试及限制见 [执行报告](../docs/tasks/hub-step1/REPORT.md)。依赖来自 [PyPI](https://pypi.org/)，版本、源码和所有分发哈希在 `uv.lock`，许可证副本在 `licenses/`；没有引入 GPL 依赖。使用的服务接口依据 [aiohttp 3.12.15](https://docs.aiohttp.org/en/v3.12.15/web_reference.html)，锁文件用法依据 [uv 官方文档](https://docs.astral.sh/uv/concepts/projects/sync/)（查阅：2026-11-05）。

@@ -8,10 +8,11 @@ from pathlib import Path
 from aiohttp import WSMsgType, web
 
 from ink_hub.agent.tools import DeviceTools
-from ink_hub.bus.registry import Capability, Registry
+from ink_hub.bus.registry import Capability, Registry, object_schema
 from ink_hub.console.setup import Setup
 from ink_hub.data.scope import Authority
 from ink_hub.jobs.queue import JobQueue
+from ink_hub.jobs.runner import Runner
 from ink_hub.models.fake import FakeModel
 from ink_hub.ops.metrics import Metrics
 from ink_hub.speech.fake import FakeASR, FakeTTS
@@ -41,6 +42,7 @@ class Connection:
         self.closed = False
         self.sessions = {}
         self.turns = {}
+        self.turn_sessions = {}
         self.pending = {}
         self.rid = 1000
         self.queue = asyncio.PriorityQueue(maxsize=128)
@@ -106,6 +108,7 @@ class Connection:
     async def cancel_work(self):
         tasks = list(self.turns.values())
         self.turns.clear()
+        self.turn_sessions.clear()
         self.sessions.clear()
         for task in tasks:
             task.cancel()
@@ -213,7 +216,8 @@ class Connection:
                     raise ProtocolError("正在处理的请求已满", -32022)
                 task = asyncio.create_task(run_turn(self, rid, method, params))
                 self.turns[rid] = task
-                task.add_done_callback(lambda t, key=rid: self.turns.pop(key, None))
+                self.turn_sessions[rid] = sid
+                task.add_done_callback(lambda t, key=rid: self.forget_turn(key))
             elif method == "ai.listen.end":
                 session = self.sessions.get(params.get("stream"))
                 if session:
@@ -224,7 +228,8 @@ class Connection:
                 if session and session.cap == "asr.stream" and params.get("op") == "end":
                     task = asyncio.create_task(run_dictation(self, sid, session))
                     self.turns[f"asr:{sid}"] = task
-                    task.add_done_callback(lambda t: self.turns.pop(f"asr:{sid}", None))
+                    self.turn_sessions[f"asr:{sid}"] = sid
+                    task.add_done_callback(lambda t, key=f"asr:{sid}": self.forget_turn(key))
             elif method == "ink/member":
                 # Only synthetic configured identities exist in proto1 development mode.
                 member, epoch = params.get("member"), params.get("epoch")
@@ -267,11 +272,22 @@ class Connection:
         session = self.sessions.pop(sid, None)
         if session:
             session.ended.set()
-        # Closing any voice session invalidates its active turns before more output is sent.
-        tasks = list(self.turns.values())
+        tasks = [task for key, task in self.turns.items() if self.turn_sessions.get(key) == sid]
         for task in tasks:
             task.cancel()
         await asyncio.gather(*tasks, return_exceptions=True)
+
+    def forget_turn(self, key):
+        self.turns.pop(key, None)
+        self.turn_sessions.pop(key, None)
+
+    def valid_output(self, scope, epoch, sid=0, session=None):
+        try:
+            self.hub.authority.check(scope)
+        except PermissionError:
+            return False
+        return (not self.closed and self.epoch == epoch and self.scope == scope
+                and (session is None or self.sessions.get(sid) is session))
 
 
 
@@ -292,11 +308,16 @@ class Hub:
         self.registry = Registry()
         self.registry.register(Capability("voice.chat", "语音对话", form="session"))
         self.registry.register(Capability("asr.stream", "听写", form="session", expose=frozenset({"app"})))
-        self.registry.register(Capability("llm.ask", "示例问答", self.ask))
-        self.registry.register(Capability("tts.speak", "示例朗读", self.speak))
-        self.registry.register(Capability("asr.transcribe", "示例识别", self.transcribe))
-        self.registry.register(Capability("job.status", "任务进度", self.job_status))
+        self.registry.register(Capability("llm.ask", "示例问答", self.ask,
+                                           input_schema=object_schema({"question": {"type": "string"}})))
+        self.registry.register(Capability("tts.speak", "示例朗读", self.speak,
+                                           input_schema=object_schema({"text": {"type": "string"}})))
+        self.registry.register(Capability("asr.transcribe", "示例识别", self.transcribe,
+                                           input_schema=object_schema({"example": {"type": "boolean", "enum": [True]}})))
+        self.registry.register(Capability("job.status", "任务进度", self.job_status,
+                                           input_schema=object_schema({"id": {"type": "string"}})))
         self.jobs = JobQueue(self.directory / "hub.db", self.authority)
+        self.runner = Runner(self.jobs)
         self.metrics = Metrics()
         self.setup = Setup(self.directory)
 
@@ -353,9 +374,11 @@ class Hub:
         async def lifespan(application):
             await asyncio.to_thread(self.jobs.recover)
             monitor = asyncio.create_task(self.metrics.monitor())
+            jobs = asyncio.create_task(self.runner.run())
             yield
             monitor.cancel()
-            await asyncio.gather(monitor, return_exceptions=True)
+            jobs.cancel()
+            await asyncio.gather(monitor, jobs, return_exceptions=True)
             await asyncio.gather(*(c.close() for c in list(self.connections.values())))
 
         app.cleanup_ctx.append(lifespan)

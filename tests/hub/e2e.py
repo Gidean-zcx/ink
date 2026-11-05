@@ -6,6 +6,7 @@ import json
 import os
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 if any(importlib.util.find_spec(name) is None for name in ("aiohttp", "yaml")):
@@ -36,6 +37,7 @@ async def run(args):
                "--realtime=1", "--quiet", "--no-random-outages"]
     process = None
     try:
+        started = time.perf_counter()
         process = await asyncio.create_subprocess_exec(*command, stdout=asyncio.subprocess.PIPE, stderr=asyncio.subprocess.STDOUT)
         stdout, _ = await asyncio.wait_for(process.communicate(), 45)
         (output / "sim.log").write_bytes(stdout)
@@ -43,8 +45,17 @@ async def run(args):
         assert hub.metrics.turns == 1, f"turns={hub.metrics.turns}"
         assert hub.metrics.tool_calls == 1, f"tool_calls={hub.metrics.tool_calls}"
         metrics = json.loads((output / "sim/metrics.json").read_text())
+        device = metrics["metrics"]
+        assert device.get("ai.answers", 0) == 1
+        assert device.get("action.ai.reader.next_page", 0) == 1
+        assert device.get("audio.speaker.played_ms", 0) >= 300
+        assert device.get("hub.bad_messages", 0) == 0
+        assert device.get("bridge.dropped_uplink", 0) == 0
+        elapsed = time.perf_counter() - started
+        assert elapsed >= metrics["virtual_time_s"] * 0.95, "simulator ran faster than 1x"
         # Keep measurements separate from device performance acceptance (step 2b).
         measurement = hub.metrics.snapshot()
+        measurement.update(wall_s=elapsed, virtual_s=metrics["virtual_time_s"])
         assert measurement["loop_samples"] > 0
         (output / "measurement.json").write_text(json.dumps(measurement, indent=2) + "\n")
         samples = output / "messages.jsonl"
@@ -54,7 +65,6 @@ async def run(args):
         assert parser.returncode == 0
         print(parser_out.decode().strip())
         print(json.dumps(measurement, ensure_ascii=False))
-        assert "ai.answers" in json.dumps(metrics)
         return 0
     finally:
         if process and process.returncode is None:

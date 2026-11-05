@@ -40,7 +40,8 @@ def main():
         hub = Hub(args.data, dev_allow_proto1=args.dev_allow_proto1)
         print(f"示例设置入口：http://127.0.0.1:{args.port}/setup", flush=True)
         print(f"本次设置码：{hub.setup.code}", flush=True)
-        web.run_app(hub.application(), host=args.host, port=args.port, access_log=None, print=None)
+        web.run_app(hub.application(), host=args.host, port=args.port, access_log=None,
+                    print=lambda _: print("家庭服务器已就绪", flush=True))
 
 
 if __name__ == "__main__":

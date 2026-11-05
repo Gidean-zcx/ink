@@ -179,6 +179,20 @@ async def test_request_timeout_cleans_pending(make_hub):
     assert "result" in await device.call("caps/list")
 
 
+async def test_concurrent_reply_does_not_swallow_cancellation(make_hub):
+    hub, client, url = await make_hub()
+    device = FakeDevice(client, url)
+    await device.connect()
+    connection = hub.connections["example-device"]
+    task = asyncio.create_task(connection.request("tools/list", {}))
+    request = await device.recv()
+    connection.pending[request["id"]].set_result({"tools": []})
+    task.cancel()
+    with pytest.raises(asyncio.CancelledError):
+        await task
+    assert not connection.pending
+
+
 async def test_turn_timeout_does_not_wait_forever(make_hub):
     gate = asyncio.Event()
     hub, client, url = await make_hub(model=FakeModel(gate=gate))

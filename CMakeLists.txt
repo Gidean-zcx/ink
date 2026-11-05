@@ -380,6 +380,10 @@ add_test(NAME hub-export-caps COMMAND sim-hub-cap-export
   --assets ${INK_ASSETS_DIR} --content ${CMAKE_BINARY_DIR}/test-content
   --out ${CMAKE_BINARY_DIR}/test-out/hub --end 3s --quiet --no-random-outages)
 set_tests_properties(hub-export-caps PROPERTIES FIXTURES_SETUP hub-caps)
+ink_sim_executable(sim-hub-bridge-state tests/hub/bridge_state.c)
+add_test(NAME hub-bridge-generations COMMAND sim-hub-bridge-state
+  --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+  --out ${CMAKE_BINARY_DIR}/test-out/hub-bridge-state --end 2s --quiet --no-random-outages)
 if(INK_HUB_PYTHON)
   add_test(NAME hub-contract COMMAND ${INK_HUB_PYTHON} ${CMAKE_SOURCE_DIR}/tests/hub/run_contract.py
     --caps ${CMAKE_BINARY_DIR}/test-out/hub/caps.json --samples ${CMAKE_BINARY_DIR}/test-out/hub/messages.jsonl)

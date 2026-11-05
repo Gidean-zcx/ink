@@ -15,7 +15,7 @@ services:
     tmpfs: [/tmp:size=16m,uid=10001,gid=10001]
     volumes: [./data:/data]
     environment:
-      INK_HUB_DEV_ALLOW_PROTO1: "0"
+      INK_HUB_DEV_ALLOW_PROTO1: "${INK_HUB_DEV_ALLOW_PROTO1:-0}"
       INK_HUB_MODEL: fake
       INK_HUB_ASR: fake
       INK_HUB_TTS: fake

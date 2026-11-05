@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+import asyncio
 from typing import Protocol
 
 
@@ -18,9 +19,11 @@ class FakeModel:
         self.text, self.tool, self.arguments = text, tool, arguments or {}
         self.gate, self.fail = gate, fail
         self.calls = 0
+        self.started = asyncio.Event()
 
     async def answer(self, question, tools):
         self.calls += 1
+        self.started.set()
         if self.gate:
             await self.gate.wait()
         if self.fail:

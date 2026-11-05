@@ -6,19 +6,18 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| H1 | 进行中 | 【实现】Python 3.11.15、uv.lock 和中文 README 已加入；待全新环境复跑 | `uv sync --project hub --frozen` |
-| H2、H3 | 已验证第一版 | 【实测】69 项 pytest，含乱序、超限、错误、重连、超时 | `ctest --test-dir build -R '^hub-contract$' -V` |
+| H1 | 通过 | 【实测】独立新环境按锁文件安装，CLI 就绪事件及 healthz/setup 检查、84 项测试通过 | `uv sync --project hub --frozen`；`python tests/hub/check_fresh.py --out work/fresh-cli-check` |
+| H2、H3 | 通过 | 【实测】84 项 pytest，含乱序、超限、错误、重连、超时 | `ctest --test-dir build -R '^hub-contract$' -V` |
 | H4 | 已验证第一版 | 【实测】132 条自动生成消息，生产 C 解析器全部接受，最高 110 词法单元 | `ctest --test-dir build -R '^hub-json-crosscheck$' -V` |
 | H5 | 已验证第一版 | 【实测】当前产品初始化导出 131 条工具、104 个 actions，768 字节缓冲溢出；分页回查不丢定义 | `ctest --test-dir build -R '^hub-' -V` |
 | H6、H7 | 已验证第一版 | 【实测】Scope、权限版本、范围反例和 SQLite 队列恢复/去重在上述 pytest 中通过 | 同 H3 |
-| H8 | 进行中 | 【实测】本机脚本、向导、预检、worker 探针测试通过；没有 Docker | 同 H3 |
-| H9 | 进行中 | 【实测】改动前 86 项原测试全部通过；桥已实现，待改动后全量回归 | `ctest --test-dir build --output-on-failure -j8` |
-| H10 | 首次通过 | 【实测】1× 实时替身语音一轮、设备工具调用一次；待连续 5 次 | `ctest --test-dir build -R '^hub-simulator-e2e$' --output-on-failure` |
-| H11～H14 | 进行中 | 测量、契约、CI 和结束检查尚在整理 | — |
+| H8 | 本机通过，Docker 未实跑 | 【实测】脚本、向导、预检、worker 探针通过；Compose 校验已放入 Linux CI，本次没有触发 | 同 H3；`sh -n hub/deploy/install.sh` |
+| H9 | 通过 | 【实测】普通与 ASan/UBSan 各 91 项通过，含原 86 项与确定性；旧代次/关闭后回调检查通过 | `ctest --test-dir build --output-on-failure -j8`；同命令换 `build-asan` |
+| H10 | 通过；正在最终复跑 | 【实测】连续 5 次 1× 实时替身语音一轮、设备工具调用一次；缺环境退出 77，旧样本会清掉 | `ctest --test-dir build -R '^hub-simulator-e2e$' --repeat until-fail:5 -V` |
+| H11～H14 | 进行中 | 待最终数字入 §4.3、报告逐项展开与结束扫描 | — |
 
 ## 没做到的
 
-- 尚未做最终全量回归、ASan/UBSan、连续五次和全新环境复跑。
 - 本机没有 Docker；容器构建、运行与 Linux CI 尚未执行，不能写成验证通过。
 
 ## 和设计不一致的
@@ -36,4 +35,4 @@
 ## 顺手发现
 
 - 本任务不访问设备、不调用真实厂商、不推送或创建 PR；仅本地提交。
-- 【实测】新代码开发中发现并修复成员切换与设备回复同时发生的取消竞态，保留回归用例；最终反向对照待补。
+- 【实测】取消竞态、权限版本下的迟到输出、关闭其他会话、资源探针受限、作业执行中权限变化的保护，撤掉对应保护后定向测试均失败；已恢复，最终测试通过。反向日志在忽略的 `work/reverse-*.log`。
