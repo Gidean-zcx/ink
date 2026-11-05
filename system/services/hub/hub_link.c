@@ -273,6 +273,7 @@ static void start_connect(void) {
     H.connect_started = osal_now_us();
     H.ws_link = st.type;
     uint8_t pin[32]; bool pinned = false;
+    ink_pairing_peer(NULL);
     ink_pairing_endpoint(H.url, pin, &pinned);
     H.ws = hal_ws_open_pinned(H.url, pinned ? pin : NULL, ws_cb, (void *)(uintptr_t)++H.ws_gen);
     set_state(H.ws ? HS_CONNECTING : HS_BACKOFF);

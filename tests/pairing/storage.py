@@ -9,10 +9,12 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[2]
 p = argparse.ArgumentParser()
 p.add_argument("--build", type=Path, required=True)
+p.add_argument("--binary", type=Path)
 a = p.parse_args()
 build = a.build.resolve()
+binary = a.binary.resolve() if a.binary else build / "sim-pairing-storage"
 work = Path(tempfile.mkdtemp(prefix="pairing-storage-", dir=build))
-for mode in range(1, 5):
+for mode in range(1, 11):
     area = work / str(mode)
     area.mkdir()
     for recover in (False, True):
@@ -20,7 +22,7 @@ for mode in range(1, 5):
         out = area / label
         env = {**os.environ, "INK_PAIR_STORAGE_MODE": str(mode), "UBSAN_OPTIONS": "halt_on_error=1"}
         if recover: env["INK_PAIR_STORAGE_RECOVER"] = "1"
-        cmd = [str(build / "sim-pairing-storage"), "--profile", str(ROOT / "simulator/profiles/metalio-plus.json"),
+        cmd = [str(binary), "--profile", str(ROOT / "simulator/profiles/metalio-plus.json"),
                "--assets", str(build / "assets"), "--content", str(build / "test-content"),
                "--out", str(out), "--end", "35s", "--quiet", "--no-random-outages",
                "--flash-image", str(area / "user.img"), "--sd-dir", str(area / "sd")]

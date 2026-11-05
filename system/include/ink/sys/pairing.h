@@ -15,6 +15,7 @@ bool ink_pairing_wants_link(void);
 /* Hub task only: copy the current endpoint and trust anchor. */
 bool ink_pairing_endpoint(char url[128], unsigned char pin[32], bool *pinned);
 int ink_pairing_handshake(char method[32], char *params, size_t cap);
+/* NULL clears connection trust before opening the next socket. */
 void ink_pairing_peer(const unsigned char hash[32]);
 void ink_pairing_reply(bool hello, int status, const ink_json_t *j, int result);
 /* True when consumed; only enrollment requests are accepted before authentication. */

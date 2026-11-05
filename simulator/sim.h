@@ -303,7 +303,8 @@ int sim_provision_submit(const char *password, const char *json); /* AP page, ev
 int sim_provision_status(void);
 bool sim_provision_active(void);
 const char *sim_provision_page(void);
-enum { SIM_PAIR_DROP_BEGIN=1, SIM_PAIR_DROP_ACCEPT=2, SIM_PAIR_DROP_COMPLETE=4, SIM_PAIR_DROP_ACK=8, SIM_PAIR_DROP_HELLO=16 };
+enum { SIM_PAIR_DROP_BEGIN=1, SIM_PAIR_DROP_ACCEPT=2, SIM_PAIR_DROP_COMPLETE=4, SIM_PAIR_DROP_ACK=8, SIM_PAIR_DROP_HELLO=16,
+       SIM_PAIR_BEGIN_ERROR=32, SIM_PAIR_ACCEPT_ERROR=64 };
 void sim_hub_pair_faults(unsigned faults, int hello_error, bool wipe); /* event context */
 void sim_hub_pair_expire(void);
 const char *sim_hub_pair_nonce(void);

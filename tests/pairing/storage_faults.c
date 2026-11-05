@@ -8,6 +8,17 @@ static int borrow_fault(const char *, const void *, size_t, ink_storage_done_fn,
 #include "../../system/services/hub/pairing.c"
 #undef ink_storage_write_borrow
 static int borrow_fault(const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx) {
+    if (refuse >= 5) {
+        int stage = (refuse - 5) / 2;
+        const pair_identity_t *s = data;
+        bool identity = !strcmp(path, IDENTITY_FILE) && len == sizeof *s;
+        bool target = stage == 0 ? identity && !s->preauth[0] : stage == 1 ? !strcmp(path, CONFIG_FILE) :
+                      identity && P.config.pin[0] == '2';
+        if (target) {
+            if (refuse & 1) return -1;
+            done(ctx, -1); return 0;
+        }
+    }
     if (refuse && !strcmp(path, IDENTITY_FILE) && len == sizeof(pair_identity_t)) {
         const pair_identity_t *s = data;
         bool target = s->state == INK_PAIR_COMMITTING && ((refuse <= 2) == !s->token[0]);
@@ -31,6 +42,29 @@ static void run_fault(void *arg) {
     (void)arg;
     int mode = atoi(getenv("INK_PAIR_STORAGE_MODE"));
     bool recover = getenv("INK_PAIR_STORAGE_RECOVER") != NULL;
+    if (mode >= 5) {
+        if (!recover) {
+            ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
+            const char *old = "{\"url\":\"wss://example.com/v1/device\",\"pin\":\"1111111111111111111111111111111111111111111111111111111111111111\"}";
+            CHECK(j && ink_json_parse(j, old, strlen(old)) == 0 && configure(j, 0, "test-once"), "seed old key and one-time authorization");
+            osal_free(j);
+            CHECK(WAIT_FOR(sim_metric_value("hub.requests.pair/begin") > 0, 15000), "old key receives its authorization");
+            refuse = mode;
+            const char *next = "{\"url\":\"wss://other.example.com/v1/device\",\"pin\":\"2222222222222222222222222222222222222222222222222222222222222222\"}";
+            CHECK(BY_HAND("pairing.configure", next) && g_rc.status == INK_RC_FAILED && ink_pairing_blocked(), "failed key switch stays blocked");
+            char method[32], params[2048];
+            CHECK(ink_pairing_handshake(method, params, sizeof params) < 0, "failed key switch cannot emit authorization");
+            ink_probe_count("test.checkpoint"); hal_power_reboot(); return;
+        }
+        if (mode >= 7) {
+            CHECK(!P.identity.preauth[0] && !P.identity.txid[0], "key switch clears authorization durably before endpoint write");
+            char method[32], params[2048];
+            CHECK(ink_pairing_handshake(method, params, sizeof params) == 0 && !strstr(params, "test-once"), "restart never combines new key with old authorization");
+        } else {
+            CHECK(P.config.pin[0] == '1' && !strcmp(P.identity.preauth, "test-once"), "failed authorization clear leaves only the original trust anchor");
+        }
+        ink_probe_count("test.finished"); return;
+    }
     if (!recover) {
         const char *config = "{\"url\":\"wss://example.com/v1/device\",\"pin\":\"1111111111111111111111111111111111111111111111111111111111111111\"}";
         CHECK(BY_HAND("pairing.configure", config) && g_rc.status == INK_RC_DONE, "configuration saved");
@@ -60,6 +94,7 @@ static void run_fault(void *arg) {
     ink_probe_count("test.finished");
 }
 void ink_main(void) {
+    if (atoi(getenv("INK_PAIR_STORAGE_MODE")) >= 5) sim_hub_pair_faults(SIM_PAIR_DROP_BEGIN | SIM_PAIR_DROP_COMPLETE, 0, false);
     product_main();
     osal_task_cfg_t cfg = {.name="pair-store-test", .fn=run_fault, .stack_bytes=16384, .priority=OSAL_PRIO_NORMAL, .core=-1, .flags=OSAL_TASK_STACK_EXTERNAL};
     CHECK(osal_task_create(&cfg, NULL) == OSAL_OK, "test task");

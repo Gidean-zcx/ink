@@ -1,55 +1,52 @@
 # pairing 执行报告
 
-基线：`103382b1`。仅完成 backlog 的 pairing 服务任务；实现提交至 `b6acd510`。所有身份、凭据和资料均为合成夹具，没有接触设备或真实家庭服务器。
+2026-11-06。本轮基线 `68b6476f`，接续原实现和[独立复查](REVIEW.md)。本轮修复 R1～R3（高）和 R4（中），只使用合成资料及模拟中枢。以下替换上一轮验收结论。
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| P1 配对状态机、配网与令牌隔离 | 通过（模拟器） | 【实测】五个持久状态、独立保存 Wi-Fi/地址/身份、固定公钥、同公钥换地址、待生效令牌过期及已绑定认证失败 | T2、T4 |
-| P2 热点、小网页、存储卡配对文件 | 通过（模型） | 【实测】随机密码热点、本地表单提交、启动自动导入、一次性文件删除；配对完成但 Wi-Fi 未保存时重启可续接 | T2 |
-| P3 掉线、确认丢失、重启恢复 | 通过 | 【实测】begin/邀请/accept/complete/hello 的重连和重启、正常回包与显式丢失、4 类拒写；18 次恢复启动及 8 次拒写启动 | T2、T3 |
-| P4 吊销和数据处理 | 通过 | 【实测】移除后停止重连，重启保留私有 Flash/卡资料；人重新加入后回未配对；仅布尔 wipe:true 清空并恢复启动 | T2、T3 |
-| G1 全量、内存、预算 | 通过 | 【实测】普通 95/95、43.84 秒；ASan/UBSan 95/95、78.63 秒；均无跳过，预算未改 | T4、T5 |
-| G2 原子能力与成员隔离 | 通过 | 【实现/实测】8 个调用能力、1 个事件及脱敏状态；网页走 pairing.configure / wifi.connect，绑定成员和代次；认证前普通调用、回执和媒体均不外发 | T2、T4 |
-| G3 依赖状态 | 通过 | 【核查】只改“配网和家庭绑定”的状态格 | T6 |
-| G4 页面验收 | 不适用 | 服务任务；BootClaim/BootConfirm 等页面属 boot-flow，本次提供状态和能力，不启动窗口 | — |
-| G5 修改范围 | 通过 | 【核查】仅服务、策略、HAL 模型、启动装配、测试及报告；未改其他任务与需求文档 | T6 |
-| 隐私、文件与链接 | 通过 | 指定路径/MAC 模式 0 命中，空白检查退出 0；23 个变更文件均小于 5 MB，报告链接无缺失 | T6 |
+| R1 未受信任响应清空资料 | 已修复 | 【实现/实测】清空授权仅接受带已保存身份、令牌及匹配固定公钥的 hello 响应，信任随响应入队保存；换连接清除旧对端。地址、固定公钥、卡内 preauth 三种未确认 begin 均不能吊销或清空；重启保留 Flash/卡资料，正常已绑定吊销及 wipe 仍通过 | T1、T2 |
+| R2 提交进度丢失卡住 | 已修复 | 【实现/实测】提交中设 10 秒进度期限，失败后短退避，按已保存 nonce/txid 重连续接；accept 分配、排队、超时及远端错误有回调。不重启覆盖单次 accept/complete 丢失、16 个槽位占满、暂时错误和过期；过期不得推进到 token/hello | T1、T2 |
+| R3 一次性授权跨公钥泄漏 | 已修复 | 【实现/实测】变更或移除公钥先持久清除旧身份，再写新配置；失败停止发送。同公钥迁址保留授权；UNPAIRED/PAIRING 换公钥清掉 preauth、nonce、txid 和家庭信息。三处写入各测排队拒绝/完成失败及重启，共 6 类 | T1、T2 |
+| R4 AI 控制能力被整体排除 | 已修复 | 【实现/实测】除最终 accept 外，其余 7 个调用均向 AI 开放：公共地址配置、拒绝、重新发起、热点开关直接走同一能力；卡导入需人通过现有确认机制。热点二维码仅返回触摸/按键调用者。验证 AI 能控制但拿不到凭据、不能自行确认，儿童仍被隔离 | T1、T2 |
+| P1 状态、配网和身份隔离 | 针对性通过，待全量 | 【实测】五状态、固定公钥、迁址、认证错误分类、跨公钥事务隔离均通过 | T1 |
+| P2 热点、网页模型、配对卡 | 针对性通过，待全量 | 【实测】模型表单、随机密码、成员隔离、启动导入、可选 Wi-Fi 恢复和删除卡文件通过 | T1 |
+| P3 丢失及重启恢复 | 针对性通过，待全量 | 【实测】恢复矩阵 35 次启动，拒写矩阵 20 次启动；保留原断电恢复场景，新增活连接恢复 | T1 |
+| P4 吊销和资料处理 | 针对性通过，待全量 | 【实测】已绑定吊销、布尔 wipe、重启清理及未授权清空拒绝通过 | T1 |
+| G1 全量、内存、预算 | 待运行 | 普通与 ASan/UBSan 全量尚未运行，预算未改 | T3、T4 |
+| G2 原子能力与成员隔离 | 针对性通过，待全量 | 【实现/实测】8 个调用、1 个事件和脱敏状态；7 个调用可由 AI 发起，最终 accept 仅限人；公开快照及 AI 热点回执无秘密 | T1 |
+| G3 依赖状态 | 保持原状态 | 【实现】依赖表已注明服务/模型与页面的边界，本轮不改状态和原判断 | T5 |
+| G4 页面验收 | 不适用 | 服务修复；未开发开机页面、未启动窗口 | — |
+| G5 范围、隐私及文件检查 | 待最终检查 | 仅本任务的服务、接口注释、模拟故障、测试和报告；最终检查待提交后完成 | T5 |
 
-实现见[配对服务](../../../system/services/hub/pairing.c)、[中枢连接](../../../system/services/hub/hub_link.c)。热点网页只在模拟器内部建模，没有宿主 HTTP 监听。原有 proto:1 开发场景保留；配置家庭服务器后走 proto:2。长期令牌只在内部 Flash，公开快照不含令牌、一次性码或 Wi-Fi 密码。
+实现：[pairing.c](../../../system/services/hub/pairing.c)、[hub_link.c](../../../system/services/hub/hub_link.c)。仍复用后台执行器、共享服务锁和既有中枢任务；未增加常驻任务或预算。网页仍是模拟器内的模型，没有宿主 HTTP 监听。
 
-T1：按总规则 §5 配置。两个目录均 `INK_WERROR=ON`、`INK_GUI=OFF`，字体、Python、LVGL 使用 `$INK_DEPS`；内存目录另设 `INK_SANITIZE=ON`。`INK_HUB_PYTHON` 指向 `work/pairing-hub-venv/bin/python`，用 uv 0.9.5 按 `hub/uv.lock --frozen` 安装；没有升级锁文件。
-
-```sh
-cmake --build build -j4
-"$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j3
-cmake --build build-asan -j4
-"$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j3
-```
-
-- T2：`ctest --test-dir build -R '^pairing-' --output-on-failure -j2`，2/2；[恢复矩阵](../../../tests/pairing/run.py)和[拒写矩阵](../../../tests/pairing/storage.py)。
-- T3：`python tests/pairing/reverse.py --build build`，10/10。忽略目录中逐项撤掉保护，原测试均失败；异常清空变体触发了不该发生的重启。覆盖确认门槛、两处落盘、吊销状态、回包发送完成、wipe 类型、空字符、普通回执隔离、未确认交易恢复及转义后的握手长度。生产源码未撤回。
-- T4/T5：上面两轮全量命令，顺序执行；日志在 `work/pairing-validation/full.log`、`asan-build.log`、`asan-full.log`。
-- T6：`git diff --stat 103382b1..HEAD`、`git diff --check 103382b1..HEAD`、总规则指定路径/MAC 模式扫描和本地链接核对。额外用同一编译器对 pairing、hub_link、wifi 加 `-Wsign-compare -Werror=unused-result -fsyntax-only`，均退出 0；新增代码没有 POSIX read/write/fgets 调用，HAL 读写检查返回值。
+- T1：`cmake --build build -j4`；`ctest --test-dir build -R '^(pairing-|integration-ai-surface$)' --output-on-failure -j2`，3/3，2.28 秒。日志 `work/pairing-review-build.log`、`work/pairing-review-targeted.log`。
+- T2：`python tests/pairing/reverse.py --build build`，18/18，退出 0；生产源码不撤回，只编译忽略目录中的变体。保留原 10 项，新增信任、跨公钥清理、写入顺序、提交期限、accept 错误、AI 控制、凭据回执及导入确认共 8 项。每项均以对应保护断言失败判定；日志 `work/pairing-review-reverse.log`，证据 `build/pairing-reverse-89s610is/`。
+- T3/T4：待按总规则配置并串行执行普通、内存全量。两个目录保持 `INK_WERROR=ON`、`INK_GUI=OFF`，内存目录另有 `INK_SANITIZE=ON`；依赖使用只读 `$INK_DEPS`，既有中枢 Python 环境不变。
+- T5：待最终执行 `git diff --stat 68b6476f..HEAD`、`git diff --check 68b6476f..HEAD`、指定隐私扫描及链接检查。
 
 ## 没做到的
 
-- 实机 HAL/TLS/NVS、手机真正弹出网页、真实家庭服务器及 Linux/gcc 没有实测；不把模拟器结果外推为这些验证。开机页面没有越过本节范围开发。
+- 本机没有 Linux/gcc 工具链；未实测 Linux、真机 HAL/TLS/NVS、真实手机网页或真实家庭服务器，不把 clang 或模拟器通过写成这些环境通过。
+- 普通和内存全量待本轮后续验证完成。
 
 ## 和设计不一致的
 
-- 设计写 NVS；本模拟器复用已有内部 Flash 原子存储，分别保存 `pair.config` 和 `pair.identity`。真机 NVS 映射仍需设备端口实现，长期令牌没有写入存储卡。
+- 继续使用模拟器已有内部 Flash 原子存储保存 `pair.config` 与 `pair.identity`，真机 NVS 映射仍待设备端口实现；长期令牌不在存储卡。没有修改设计迁就实现。
 
 ## 改过的已有测试
 
-- 仅 `tests/integration/ai_surface.c` 新增 pairing.status、7 项仅供人的操作、pairing.state 和 pairing.changed 的期望。没有删改旧期望、预算、跳过规则或超时。
+- `tests/pairing/device.c` 的 AI configure 期望由“拒绝”改为“能设置公共地址但没有加入权限”，对应 R4；最终 accept 仍要求人操作。
+- `tests/integration/ai_surface.c` 将 configure、reject、restart、import、hotspot_start、hotspot_stop 六项从禁止表移到 AI 能力表；accept 仍留在禁止表。
+- 其他原断言、预算和超时未放宽；只追加网络边界、活连接恢复、AI 权限、写入故障及反向对照。过期 accept 新增中间路径断言，防止仅凭最终状态漏报。
 
 ## 要用户定的
 
-- 服务器对接时需冻结配对文件/链接的具体编码。当前卡模型暂用 JSON：`url`、`pin`，可选 `console`、`preauth`、`ssid`、`password`；公钥接受小写 SHA-256 十六进制或 sha256/base64。控制台地址默认同主机 443，密码只交设备。本次没有把这些暂定字段升级为产品需求。
+- 本轮无需新决定。沿用上一轮暂定配对文件 JSON 编码，服务器对接时仍需冻结；没有改需求、想法或决策记录。
 
 ## 顺手发现
 
-- 原状态监听名额紧张，本任务没有新增监听名额或预算。卡文件在启动时自动读取，也可显式调用 pairing.import。
-- 最紧 AI 场景的模拟内部 RAM 最低余量为 32880 字节，原预算是 32768 字节。配对服务复用共享锁，落盘信号量用完释放，没有新常驻任务。
+- 写入顺序与在途连接也影响授权隔离，已作为 R3 同类边界修复；配置失败保持停止发送，重启只会看到原公钥或已清空授权的新事务。
+- 原记录最紧 AI 场景内部 RAM 余量仅比门槛多 112 字节，本轮最终全量预算结果待核对。

@@ -65,4 +65,12 @@ for phase in ("hotspot", "hotspot-handoff", "card", "pin", "card-wifi", "escaped
     boot(target, phase)
     if phase == "hotspot": boot(target, "hotspot-reboot")
     if phase == "card-wifi": boot(target, "card-wifi-retry")
+for phase in ("guard-begin-wipe", "guard-pinned-wipe", "guard-preauth-wipe", "guard-switch-key", "guard-pairing-key", "guard-drop-key", "guard-same-key",
+              "live-control", "live-accept", "live-complete", "live-queue", "live-error", "live-expired", "ai-controls"):
+    target = work / phase
+    (target / "sd/content").mkdir(parents=True)
+    if phase.startswith("guard-") and phase not in ("guard-begin-wipe", "guard-pinned-wipe"):
+        (target / "sd/content/ink-pair.json").write_text(json.dumps({"url": "wss://example.com/v1/device", "pin": "11" * 32, "preauth": "test-once"}))
+    boot(target, phase)
+    if "wipe" in phase: boot(target, "guard-preserved")
 print("Evidence directory:", work.relative_to(ROOT))

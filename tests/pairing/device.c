@@ -65,11 +65,120 @@ static void sentinel(void) {
 static bool data_present(void) { return ink_storage_size("/user/m/owner/test.pairing") > 0 && hal_fs_size("/content/.m/owner/private.txt") > 0; }
 static bool wifi_failed(void) { char s[16]; return ink_state_get_str(ink_state_find("wifi.state"), s, sizeof s) && !strcmp(s, "failed"); }
 
+static void peer_b(void *arg) { (void)arg; unsigned char key[32]; memset(key, 34, sizeof key); sim_net_peer_key(key); }
+static void trust_guards(void) {
+    if (!strcmp(phase, "guard-preserved")) {
+        CHECK(data_present(), "untrusted removal preserves private flash and card after reboot");
+    } else if (strstr(phase, "wipe")) {
+        sentinel();
+        if (!strcmp(phase, "guard-preauth-wipe")) {
+            CHECK(WAIT_FOR(sim_metric_value("hub.requests.pair/begin") > 0, 15000), "card begins without confirmed identity");
+        } else {
+            set_fault(SIM_PAIR_BEGIN_ERROR, -32011, true);
+            const char *config = !strcmp(phase, "guard-begin-wipe") ? "{\"url\":\"wss://example.com/v1/device\"}" : CONFIG;
+            CHECK(BY_HAND("pairing.configure", config) && g_rc.status == INK_RC_DONE, "unconfirmed endpoint configured");
+            CHECK(WAIT_FOR(sim_metric_value("hub.requests.pair/begin") > 0, 15000), "untrusted begin response received");
+        }
+        CHECK(!WAIT_FOR(sim_metric_value("system.factory_resets") > 0, 2000), "untrusted begin cannot authorize wipe");
+        CHECK(data_present() && ink_pairing_state() != INK_PAIR_REVOKED && !ink_pairing_blocked(), "unconfirmed peer cannot revoke local identity");
+    } else {
+        CHECK(WAIT_FOR(sim_metric_value("hub.requests.pair/begin") > 0, 15000), "card authorization reaches original key");
+        bool same = !strcmp(phase, "guard-same-key");
+        bool no_pin = !strcmp(phase, "guard-drop-key");
+        if (!strcmp(phase, "guard-pairing-key")) { wait_claim(); offer(); }
+        char method[32], params[2048], nonce[33];
+        snprintf(nonce, sizeof nonce, "%s", sim_hub_pair_nonce());
+        CHECK(ink_pairing_handshake(method, params, sizeof params) == 0 && strstr(params, "test-once"), "old preauthorization exists");
+        double sent = sim_metric_value("hub.pair_preauth_received");
+        const char *config = same ? "{\"url\":\"wss://moved.example.com/v1/device\",\"pin\":\"1111111111111111111111111111111111111111111111111111111111111111\"}" : no_pin ?
+            "{\"url\":\"wss://other.example.com/v1/device\"}" :
+            "{\"url\":\"wss://other.example.com/v1/device\",\"pin\":\"2222222222222222222222222222222222222222222222222222222222222222\"}";
+        CHECK(BY_HAND("pairing.configure", config) && g_rc.status == INK_RC_DONE, "change enrollment endpoint");
+        CHECK(ink_pairing_handshake(method, params, sizeof params) == 0, "changed endpoint handshake available");
+        CHECK(same ? strstr(params, "test-once") && strstr(params, nonce) : !strstr(params, "preauth") && !strstr(params, nonce) && !strstr(params, "txid"),
+              "authorization and nonce stay only with the same pinned key");
+        if (!same) CHECK(status_has("\"family\":\"\""), "new key clears old family and offer");
+        if (!same) vtk_event_at(vtk_now() + SIM_MS(1), peer_b, NULL);
+        set_fault(SIM_PAIR_DROP_COMPLETE, 0, false);
+        double begins = sim_metric_value("hub.requests.pair/begin");
+        ink_hub_reconnect();
+        CHECK(WAIT_FOR(sim_metric_value("hub.requests.pair/begin") > begins, 15000), "new endpoint receives handshake");
+        CHECK(same ? sim_metric_value("hub.pair_preauth_received") > sent : sim_metric_value("hub.pair_preauth_received") == sent,
+              "old preauthorization never reaches another trust anchor");
+        CHECK(same ? !strcmp(nonce, sim_hub_pair_nonce()) : strcmp(nonce, sim_hub_pair_nonce()) != 0, "wire nonce follows trust anchor");
+    }
+    ink_probe_count("test.finished");
+}
+
+static void live_commit(void) {
+    CHECK(BY_HAND("pairing.configure", CONFIG) && g_rc.status == INK_RC_DONE, "live recovery setup");
+    wait_claim(); offer();
+    char nonce[33]; snprintf(nonce, sizeof nonce, "%s", sim_hub_pair_nonce());
+    bool queue = !strcmp(phase, "live-queue");
+    bool expired = !strcmp(phase, "live-expired");
+    if (queue) {
+        for (int i = 0; i < 16; i++) CHECK(ink_hub_call("test.hold", "{}", 5000000, NULL, NULL) > 0, "occupy an ordinary request slot");
+    } else {
+        unsigned fault = !strcmp(phase, "live-accept") ? SIM_PAIR_DROP_ACCEPT : !strcmp(phase, "live-complete") ? SIM_PAIR_DROP_COMPLETE :
+                         !strcmp(phase, "live-error") || expired ? SIM_PAIR_ACCEPT_ERROR : 0;
+        set_fault(fault, expired ? -32013 : -32603, false);
+    }
+    CHECK(BY_HAND("pairing.accept", TX) && g_rc.status == INK_RC_DONE, "live confirmation is durable");
+    if (!queue) CHECK(WAIT_FOR(sim_metric_value("hub.requests.pair/accept") > 0, 3000), "single accept reached peer");
+    if (expired) {
+        CHECK(WAIT_FOR(ink_pairing_state() == INK_PAIR_PAIRING && strcmp(nonce, sim_hub_pair_nonce()), 15000), "expired accept returns to a fresh claim without reboot");
+        CHECK(!sim_hub_pair_txid()[0] && !ink_pairing_blocked(), "expired accept does not replay the old confirmation");
+        CHECK(sim_metric_value("hub.pair_complete") == 0 && sim_metric_value("hub.requests.hello") == 0, "expired accept cannot advance to token authentication");
+    } else {
+        set_fault(0, 0, false);
+        CHECK(WAIT_FOR(ink_pairing_state() == INK_PAIR_BOUND && ink_hub_online(), 30000), "single lost progress recovers without reboot");
+        CHECK(!strcmp(nonce, sim_hub_pair_nonce()), "live recovery reuses the durable nonce");
+        if (strcmp(phase, "live-control")) CHECK(!strcmp(sim_hub_pair_txid(), "test-tx-1"), "live recovery resumes the durable accepted transaction");
+    }
+    ink_probe_count("test.finished");
+}
+
+static void ai_controls(void) {
+    CHECK(BY_HAND("pairing.hotspot_start", NULL) && g_rc.status == INK_RC_DONE && strstr(g_result, "wifi_qr"), "person receives setup QR");
+    CHECK(AI("pairing.hotspot_stop", NULL) && g_rc.status == INK_RC_DONE && !sim_provision_active(), "AI can stop setup hotspot");
+    CHECK(AI("pairing.hotspot_start", NULL) && g_rc.status == INK_RC_DONE && sim_provision_active() && !g_result[0], "AI can start hotspot without receiving credentials");
+    CHECK(status_has("\"hotspot\":true") && !strstr(g_result, "wifi_qr") && !strstr(g_result, "password"), "AI snapshot remains credential free");
+    CHECK(ink_member_switch("kid") == 0, "child becomes current member");
+    CHECK(AI("pairing.hotspot_stop", NULL) && g_rc.status == INK_RC_REJECTED && sim_provision_active(), "child AI cannot change system setup");
+    CHECK(ink_member_switch("owner") == 0, "return to adult");
+    CHECK(AI("pairing.hotspot_stop", NULL) && g_rc.status == INK_RC_DONE, "adult AI ends setup");
+    CHECK(AI("pairing.configure", CONFIG) && g_rc.status == INK_RC_DONE, "AI can initiate enrollment with public endpoint and key");
+    wait_claim(); offer();
+    CHECK(AI("pairing.reject", TX) && g_rc.status == INK_RC_DONE, "AI can cancel an unconfirmed offer");
+    CHECK(status_has("\"family\":\"\""), "cancel clears pending family");
+    offer();
+    CHECK(AI("pairing.accept", TX) && g_rc.status != INK_RC_DONE && ink_pairing_state() == INK_PAIR_PAIRING, "AI cannot press final join confirmation");
+    CHECK(AI("pairing.restart", NULL) && g_rc.status == INK_RC_DONE, "AI can restart an unconfirmed enrollment");
+    wait_claim();
+    static const char card[] = "{\"url\":\"wss://example.com/v1/device\",\"pin\":\"1111111111111111111111111111111111111111111111111111111111111111\",\"preauth\":\"test-once\"}";
+    hal_file_t *f = hal_fs_open("/content/ink-pair.json", HAL_O_WRITE | HAL_O_CREATE | HAL_O_TRUNC);
+    CHECK(f && hal_fs_write(f, card, sizeof card - 1) == sizeof card - 1, "insert synthetic authorization file after startup");
+    if (f) CHECK(hal_fs_close(f) == 0, "close authorization file");
+    CHECK(AI("pairing.import", NULL) && g_rc.status == INK_RC_PENDING_CONFIRMATION, "AI may request card import for a person to confirm");
+    unsigned token = 0; sscanf(g_rc.object, "confirm:%u", &token);
+    CHECK(ink_confirm_decide(token, true, INK_SRC_AI) != 0 && ink_pairing_state() == INK_PAIR_PAIRING, "AI cannot authorize the card by itself");
+    CHECK(ink_confirm_decide(token, false, INK_SRC_TOUCH) == 0 && hal_fs_size("/content/ink-pair.json") > 0, "person may decline import without consuming card");
+    CHECK(AI("pairing.import", NULL) && g_rc.status == INK_RC_PENDING_CONFIRMATION, "AI can request import again");
+    token = 0; sscanf(g_rc.object, "confirm:%u", &token);
+    CHECK(ink_confirm_decide(token, true, INK_SRC_TOUCH) == 0, "person authorizes requested import");
+    CHECK(WAIT_FOR(ink_pairing_state() == INK_PAIR_BOUND && ink_hub_online(), 18000), "confirmed import completes through the shared capability");
+    CHECK(status_has("\"state\":\"bound\"") && !strstr(g_result, "test-once") && !strstr(g_result, "token"), "confirmed import never exposes credential values");
+    ink_probe_count("test.finished");
+}
+
 static void run(void *arg) {
     (void)arg;
+    if (!strncmp(phase, "guard-", 6)) { trust_guards(); return; }
+    if (!strncmp(phase, "live-", 5)) { live_commit(); return; }
+    if (!strcmp(phase, "ai-controls")) { ai_controls(); return; }
     if (!strcmp(phase, "network")) {
         set_fault(SIM_PAIR_DROP_BEGIN, 0, false);
-        CHECK(AI("pairing.configure", CONFIG) && g_rc.status != INK_RC_DONE, "AI cannot provision identity");
+        CHECK(AI("pairing.configure", CONFIG) && g_rc.status == INK_RC_DONE && !ink_hub_online(), "AI can set a public endpoint without authorizing membership");
         CHECK(BY_HAND("pairing.configure", "{\"url\":\"ws://example.com/v1/device\"}") && g_rc.status != INK_RC_DONE, "plaintext endpoint rejected");
         CHECK(BY_HAND("pairing.configure", CONFIG) && g_rc.status == INK_RC_DONE, "configuration durable");
         CHECK(WAIT_FOR(sim_metric_value("hub.requests.pair/begin") > 0, 12000), "begin sent before response is lost");
@@ -227,6 +336,10 @@ void ink_main(void) {
     if (!strcmp(phase, "invalid")) sim_hub_pair_faults(0, -32010, false);
     if (!strcmp(phase, "card-wifi")) vtk_event_at(vtk_now() + SIM_MS(1), wifi_wrong, NULL);
     if (!strcmp(phase, "card-wifi-retry")) vtk_event_at(vtk_now() + SIM_MS(1), wifi_event, NULL);
+    if (!strcmp(phase, "guard-preauth-wipe")) sim_hub_pair_faults(SIM_PAIR_BEGIN_ERROR, -32011, true);
+    if (!strcmp(phase, "guard-switch-key") || !strcmp(phase, "guard-drop-key") || !strcmp(phase, "guard-same-key"))
+        sim_hub_pair_faults(SIM_PAIR_DROP_BEGIN | SIM_PAIR_DROP_COMPLETE, 0, false);
+    if (!strcmp(phase, "guard-pairing-key")) sim_hub_pair_faults(SIM_PAIR_DROP_COMPLETE, 0, false);
     product_main();
     osal_task_cfg_t cfg = {.name="pairing-test", .fn=run, .stack_bytes=16384, .priority=OSAL_PRIO_NORMAL, .core=-1, .flags=OSAL_TASK_STACK_EXTERNAL};
     CHECK(osal_task_create(&cfg, NULL) == OSAL_OK, "test task");

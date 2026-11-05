@@ -27,7 +27,8 @@
 static const struct {
     const char *id, *args;
 } FOR_AI[] = {
-    {"pairing.status", NULL},
+    {"pairing.status", NULL}, {"pairing.configure", "url"}, {"pairing.reject", "txid"},
+    {"pairing.restart", NULL}, {"pairing.import", NULL}, {"pairing.hotspot_start", NULL}, {"pairing.hotspot_stop", NULL},
     {"caps.domains", NULL}, {"caps.find", "query"}, {"system.undo", "object"}, {"system.home", NULL}, {"system.full_refresh", NULL},
     {"system.set_volume", "percent"}, {"system.switch_member", "id"}, {"system.shutdown", NULL}, {"system.factory_reset", NULL},
     {"system.reboot", NULL}, {"state.list", NULL}, {"settings.list", NULL}, {"settings.get", "id"}, {"settings.set", "id,value"},
@@ -55,13 +56,7 @@ static const struct {
 static const struct {
     const char *id, *why, *args;
 } NOT_FOR_AI[] = {
-    {"pairing.configure", "only a person chooses the household endpoint and trust anchor", "url"},
     {"pairing.accept", "only a person confirms joining a household", "txid"},
-    {"pairing.reject", "only a person answers a household offer", "txid"},
-    {"pairing.restart", "only a person restarts enrollment after removal", NULL},
-    {"pairing.import", "inserting the local card authorizes enrollment", NULL},
-    {"pairing.hotspot_start", "setup passwords stay with the person on the device", NULL},
-    {"pairing.hotspot_stop", "only a person ends local setup", NULL},
     {"confirm.accept", "only a person on the device can say yes", "token"},
     {"confirm.reject", "only a person on the device answers", "token"},
     {"member.unlock", "a PIN is entered on the device, it goes through nobody else", "id,pin"},

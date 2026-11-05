@@ -327,6 +327,10 @@ static bool pairing_request(struct hal_ws *ws, uint64_t at, const char *method, 
     if (!strcmp(method, "pair/begin")) {
         const char *nonce = cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(p, "nonce"));
         const char *preauth = cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(p, "preauth"));
+        if (preauth) sim_metric_add("hub.pair_preauth_received", 1);
+        if (PAIR.faults & SIM_PAIR_BEGIN_ERROR) {
+            pair_reply(ws, at + SIM_MS(5), id, NULL, PAIR.hello_error, PAIR.wipe); return true;
+        }
         bool same = nonce && !strcmp(nonce, PAIR.nonce);
         if (preauth && (strcmp(preauth, "test-once") || (PAIR.used && !same))) {
             pair_reply(ws, at + SIM_MS(5), id, NULL, -32030, false); return true;
@@ -340,6 +344,9 @@ static bool pairing_request(struct hal_ws *ws, uint64_t at, const char *method, 
             pair_complete(ws, at + SIM_MS(30));
         }
     } else if (!strcmp(method, "pair/accept")) {
+        if (PAIR.faults & SIM_PAIR_ACCEPT_ERROR) {
+            pair_reply(ws, at + SIM_MS(5), id, NULL, PAIR.hello_error, false); return true;
+        }
         if (!(PAIR.faults & SIM_PAIR_DROP_ACCEPT)) {
             PAIR.accepted = true;
             pair_reply(ws, at + SIM_MS(5), id, "{}", 0, false);
