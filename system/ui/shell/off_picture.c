@@ -51,6 +51,7 @@ static void draw(void *arg) { /* UI task */
     if (ink_member_space_open()) add_bookmark();
     if (O.card.root) { ink_ui_overlay_remove(&OVERLAY); shell_card_close(&O.card); }
     shell_card_open(&O.card);
+    shell_card_full(&O.card);
     ink_ui_overlay_add(&OVERLAY, O.card.root);
     shell_card_text(&O.card, "已关机", O.body);
     lv_refr_now(NULL);

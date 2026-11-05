@@ -1,5 +1,5 @@
 # Power cut during a position save (run 2 of 2): boot from the torn image, open the same book.
-@3s      tap   116dp 160dp
+@3s      tap   68% 92%
 +2500ms  tap   50% 228dp
 +3s      snap  resumed
 +500ms   end

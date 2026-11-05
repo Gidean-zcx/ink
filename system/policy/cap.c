@@ -19,6 +19,7 @@
 #include "ink/sys/layout.h"
 #include "ink/sys/members.h"
 #include "ink/sys/ui.h"
+#include "ink/ui_shell.h"
 #include "ink/sys/sha256.h"
 
 #define MAX_CAPS 192
@@ -51,7 +52,7 @@ const ink_cap_t *ink_cap_find(const char *id) {
     return NULL;
 }
 
-static bool on_its_page(const ink_cap_t *c) { return !c->activity || !strcmp(ink_ui_top_name(), c->activity); }
+static bool on_its_page(const ink_cap_t *c) { return !c->activity || !strcmp(ink_ui_action_page(), c->activity); }
 
 static bool in_directory(const char *id); /* the hub's directory, below */
 
@@ -975,7 +976,7 @@ void ink_cap_emit(const char *id, const ink_args_t *payload) {
 
 /* What the current member may use now, as the AI sees it. */
 static bool listed(const ink_cap_t *c) {
-    if (!on_its_page(c) || !exposed(c, INK_SRC_AI)) return false;
+    if (!ink_member_space_open() || !on_its_page(c) || !exposed(c, INK_SRC_AI)) return false;
     const ink_member_t *m = ink_member_current();
     return m->role != INK_ROLE_CHILD || (c->effect != INK_FX_SYSTEM && ink_member_allows(c->id, c->child_ok));
 }
@@ -988,7 +989,7 @@ int ink_cap_manifest_json(char *out, size_t cap) {
     ink_jw_raw(&w, "[");
     bool first = true;
     for (int i = 0; i < nreg; i++) {
-        if (!listed(REG[i])) continue;
+        if (!listed(REG[i]) || REG[i]->form == INK_FORM_EVENT) continue;
         manifest_entry(&w, REG[i], first);
         first = false;
     }
@@ -1005,7 +1006,7 @@ int ink_cap_manifest_page(int start, const char *prefix, char *out, size_t cap, 
     *next = -1;
     size_t plen = prefix ? strlen(prefix) : 0;
     for (int i = start < 0 ? 0 : start; i < nreg; i++) {
-        if (!listed(REG[i]) || (plen && strncmp(REG[i]->id, prefix, plen))) continue;
+        if (!listed(REG[i]) || REG[i]->form == INK_FORM_EVENT || (plen && strncmp(REG[i]->id, prefix, plen))) continue;
         size_t before = w.len;
         manifest_entry(&w, REG[i], first);
         if (w.overflow) { /* the next page starts here; one entry alone must fit */
@@ -1061,7 +1062,7 @@ int ink_cap_ids_json(char *out, size_t cap) {
     ink_jw_raw(&w, "[");
     bool first = true;
     for (int i = 0; i < nreg; i++) {
-        if (!on_its_page(REG[i]) || !exposed(REG[i], INK_SRC_AI) || REG[i]->form == INK_FORM_EVENT) continue; /* what can be called */
+        if (!listed(REG[i]) || REG[i]->form == INK_FORM_EVENT) continue; /* what can be called */
         if (!first) ink_jw_raw(&w, ",");
         first = false;
         ink_jw_str(&w, REG[i]->id);

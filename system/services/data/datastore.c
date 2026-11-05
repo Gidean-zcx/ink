@@ -760,6 +760,23 @@ ink_db_t *ink_db_open_member(const ink_db_def_t *def, const char *member, uint32
     return db;
 }
 
+ink_db_t *ink_db_open_cached_member(const ink_db_def_t *def, const char *member, uint32_t generation) {
+    if (!DB.lock || !def || !def->name || def->scope != INK_DB_MEMBER || !ink_member_io_begin(member, generation)) return NULL;
+    ink_db_t *found = NULL;
+    lock();
+    for (int i = 0; i < MAX_COLLECTIONS; i++) {
+        ink_db_t *c = &DB.c[i];
+        if (!c->used || !c->loaded || c->loading || !c->def || strcmp(c->def->name, def->name) || strcmp(c->member, member)) continue;
+        c->refs++;
+        c->last_use = ++DB.clock;
+        found = c;
+        break;
+    }
+    unlock();
+    ink_member_io_end(member);
+    return found;
+}
+
 ink_db_t *ink_db_open(const ink_db_def_t *def, const char *member) {
     if (!def || def->scope != INK_DB_MEMBER) return open_collection(def, member);
     char who[INK_MEMBER_ID_MAX];

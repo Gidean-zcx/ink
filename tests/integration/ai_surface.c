@@ -47,6 +47,14 @@ static const struct {
     {"reader.open_book", "title"}, {"reader.next_page", NULL}, {"reader.prev_page", NULL}, {"reader.goto_page", "page"}, {"reader.read_page", NULL},
     {"activity.list", ""}, {"update.status", NULL}, {"update.check", NULL}, {"update.download", NULL},
     {"text.voice_start", ""}, {"text.voice_finish", ""}, {"text.voice_cancel", ""},
+    {"shell.control", NULL}, {"shell.close", NULL}, {"shell.back", NULL}, {"shell.members", NULL}, {"shell.lock", NULL},
+    {"shell.more", NULL}, {"shell.settings", NULL}, {"shell.display", NULL}, {"shell.sound", NULL},
+    {"shell.network", NULL}, {"shell.notifications", NULL}, {"home.next", NULL}, {"home.prev", NULL},
+    {"shell.launch", "id"}, {"shell.resume", NULL}, {"ai.panel.hide", NULL}, {"ai.panel.listen", NULL},
+    {"ai.panel.next", NULL}, {"ai.panel.prev", NULL},
+    {"keyboard.key", "code"}, {"keyboard.pick", "index"}, {"keyboard.candidates", ""}, {"keyboard.edit", "action"},
+    {"shell.search", "query"}, {"shell.notify_next", NULL}, {"shell.notify_prev", NULL},
+    {"shell.wifi_next", NULL}, {"shell.wifi_prev", NULL}, {"shell.wifi_pick", "index"},
     {NULL, NULL},
 };
 
@@ -54,8 +62,10 @@ static const struct {
 static const struct {
     const char *id, *why, *args;
 } NOT_FOR_AI[] = {
+    {"shell.members_page", "member selection stays on the device before adult authentication", "delta"},
     {"confirm.accept", "only a person on the device can say yes", "token"},
     {"confirm.reject", "only a person on the device answers", "token"},
+    {"confirm.page", "only a person reads the mandatory confirmation pages", "token,delta"},
     {"member.unlock", "a PIN is entered on the device, it goes through nobody else", "id,pin"},
     {"member.set_pin", "a PIN is entered on the device, it goes through nobody else", "id,new_pin"},
     {"system.upgrade", "a person installs: it may fetch and tell, the device is gone for minutes (design §12.7)", NULL},
@@ -160,7 +170,10 @@ static void the_tools(void) {
     int callable = 0;
     for (int i = 0; ink_cap_at(i); i++) {
         const ink_cap_t *c = ink_cap_at(i);
-        if (c->form == INK_FORM_EVENT) continue;
+        if (c->form == INK_FORM_EVENT) {
+            CHECK(!cJSON_GetObjectItem(g_tools, c->id), "%s is an event, not a callable tool", c->id);
+            continue;
+        }
         int yes = for_ai(c->id), no = not_for_ai(c->id);
         CHECK((yes >= 0) != (no >= 0), "%s must be in exactly one table: for the AI, or not with the reason", c->id);
         CHECK(c->title && c->title[0], "%s has a title", c->id);

@@ -514,7 +514,7 @@ static void find_in(lv_obj_t *o) {
 }
 static void do_find(void) {
     g_found = false;
-    find_in(lv_layer_top());
+    find_in(lv_layer_sys());
 }
 static bool press(const char *label) {
     g_find = label;

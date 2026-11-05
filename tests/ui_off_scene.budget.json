@@ -1,0 +1,8 @@
+{
+  "test.pass": {"min": 1},
+  "test.fail": {"max": 0, "optional": true},
+  "test.finished": {"min": 1},
+  "ui.off_picture_on_panel": {"min": 1},
+  "panic.count": {"max": 0, "optional": true},
+  "warnings.count": {"max": 0, "optional": true}
+}
