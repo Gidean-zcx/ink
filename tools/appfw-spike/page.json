@@ -1,0 +1,17 @@
+{
+  "title": "阅读偏好",
+  "rows": [
+    {"label": "显示进度", "value": true},
+    {"label": "显示页码", "value": false},
+    {"label": "记住位置", "value": true},
+    {"label": "阅读提醒", "value": false},
+    {"label": "词语提示", "value": true},
+    {"label": "显示注释", "value": false},
+    {"label": "听书续播", "value": true},
+    {"label": "显示书名", "value": false}
+  ],
+  "field_label": "备注",
+  "text": "每天读一会儿",
+  "button": "完成",
+  "toggle_capability": "spike.set"
+}
