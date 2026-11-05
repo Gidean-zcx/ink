@@ -372,8 +372,11 @@ target_include_directories(hub-json-check PRIVATE platform/include system/includ
 target_compile_options(hub-json-check PRIVATE ${INK_WARN})
 ink_sim_executable(sim-hub-cap-export tests/hub/export_caps.c)
 target_link_libraries(sim-hub-cap-export PRIVATE ink_apps ink_system)
+ink_sim_executable(sim-hub-e2e tests/hub/e2e_device.c)
+target_link_libraries(sim-hub-e2e PRIVATE ink_apps ink_system)
 if(INK_HAVE_FONTS)
   add_dependencies(sim-hub-cap-export ink_fonts ink_test_content)
+  add_dependencies(sim-hub-e2e ink_fonts ink_test_content)
 endif()
 add_test(NAME hub-export-caps COMMAND sim-hub-cap-export
   --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
@@ -392,7 +395,7 @@ if(INK_HUB_PYTHON)
     $<TARGET_FILE:hub-json-check> ${CMAKE_BINARY_DIR}/test-out/hub/messages.jsonl)
   set_tests_properties(hub-json-crosscheck PROPERTIES FIXTURES_REQUIRED hub-messages SKIP_RETURN_CODE 77)
   add_test(NAME hub-simulator-e2e COMMAND ${INK_HUB_PYTHON} ${CMAKE_SOURCE_DIR}/tests/hub/e2e.py
-    --sim $<TARGET_FILE:ink-sim> --parser $<TARGET_FILE:hub-json-check>
+    --sim $<TARGET_FILE:sim-hub-e2e> --parser $<TARGET_FILE:hub-json-check>
     --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
     --out ${CMAKE_BINARY_DIR}/test-out/hub-e2e)
   set_tests_properties(hub-simulator-e2e PROPERTIES SKIP_RETURN_CODE 77 TIMEOUT 60)
