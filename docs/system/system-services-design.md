@@ -68,14 +68,14 @@ flowchart TB
 
 | 子系统 | AI 可调的能力 | AI 不可调（原因） | 状态 | 设置 | 事件 | 内部机制（不开放） |
 | --- | --- | --- | --- | --- | --- | --- |
-| 数据 | `data.collections`、`data.list`、`data.get`、`data.put`、`data.delete`（集合自己声明开放） | 没声明开放的集合（凭据、PIN 校验值） | `storage.user_free` | — | `data.write_failed` | 日志格式、快照、压缩、存储任务 |
+| 数据 | `data.collections`、`data.list`、`data.get`、`data.put`、`data.delete`、`data.status`（集合自己声明开放） | 没声明开放的集合（凭据、PIN 校验值） | `storage.user_free` | — | `data.write_failed` | 日志格式、快照、压缩、存储任务 |
 | 文件 | `file.list`、`file.stat`、`file.read`、`file.write`、`file.mkdir`、`file.copy`、`file.move`、`file.delete`（确认）、`file.free`；`usb.status`、`usb.mount`（系统级，确认）、`usb.unmount` | — | `storage.free`、`storage.card`、`storage.mode`、`usb.connected` | — | `file.changed`、`file.job_done`、`usb.changed` | 路径映射、临时文件、U 盘模式互斥、USB 协议 |
 | 时间 | `time.now`、`time.lunar`、`alarm.set`、`alarm.list`、`alarm.cancel`、`alarm.snooze`、`alarm.dismiss`、`reminder.add`、`reminder.list`、`reminder.cancel`；`time.set`（系统级，确认） | — | `time.synced`、`time.zone`、`time.minute`、`alarm.ringing` | `time.zone`、`time.auto` | `alarm.fired`、`reminder.fired`、`time.changed` | RTC 寄存器、唤醒定时 |
 | 通知 | `notify.post`、`notify.list`、`notify.read`、`notify.dismiss`、`notify.clear`、`notify.channels`、`notify.set_channel` | — | `notify.unread`、`interrupt.active` | `notify.dnd` | `notify.posted` | 打断通道本身（来电、闹钟、低电量由系统拉起，AI 不能假装来电） |
 | 确认卡 | `confirm.list`、`confirm.withdraw`（撤回自己发起的） | `confirm.accept`、`confirm.reject`（只有人在设备上能按） | `confirm.pending` | — | `confirm.result` | — |
 | 应用 | `app.list`、`app.open`、`app.close`、`app.cards` | — | `app.foreground`、`app.cards_rev` | — | `app.state` | 冻结、停止、状态保存的时机 |
 | 文本输入 | `text.state`、`text.insert`、`text.submit`；`text.voice_start`（开麦克风，确认）、`text.voice_finish`、`text.voice_cancel`；`clipboard.write`；`clipboard.read`（设置打开才行，默认不读） | 敏感内容（`clipboard.read` 不给）；密码框内容（掩码，也不能听写） | `text.focused`、`text.voice` | `ai.read_clipboard` | `text.voice_ended` | 拼音引擎、词库、候选、停顿判断 |
-| 音频 | `media.play`、`media.pause`、`media.resume`、`media.seek`、`media.stop`、`media.status`、`audio.record`、`audio.record_stop` | — | `audio.now_playing`、`audio.route`、`audio.listening`、`audio.recording`、`media.state` | `audio.volume`、`audio.child_max`、`voice.handsfree` | `media.finished`、`audio.record_done` | 焦点、功放、I2S、模式切换 |
+| 音频 | `media.play`、`media.pause`、`media.resume`、`media.seek`、`media.stop`、`media.status`、`audio.record`、`audio.record_stop` | — | `audio.now_playing`、`audio.mic`、`audio.route`、`audio.listening`、`audio.recording`、`media.state` | `audio.volume`、`audio.child_max`、`voice.handsfree` | `media.finished`、`audio.record_done` | 焦点、功放、I2S、模式切换 |
 | 蓝牙 | `bt.scan`、`bt.list`、`bt.pair`、`bt.connect`、`bt.disconnect`、`bt.forget` | — | `bt.connected`、`bt.device`、`bt.available` | — | `bt.changed` | 芯片命令（协议未知） |
 | Wi-Fi | `wifi.scan`、`wifi.list`、`wifi.connect`（系统级，确认）、`wifi.forget`（确认） | — | `wifi.state`、`wifi.ssid` | `net.prefer` | `wifi.changed` | 选网、入网步骤 |
 | 成员 | `member.list`、`system.switch_member`（孩子到成人仍要 PIN）；`member.add`、`member.remove`（系统级，确认） | `member.unlock`、`member.set_pin`（PIN 只在设备上输入） | `member.current`、`member.authed` | `member.idle_return_s` | `member.changed` | PIN 校验值、盐 |
@@ -599,7 +599,7 @@ const char *ink_text_voice_heard(void);  /* 听到的末尾，给面板的固定
 - **数字框**：`kind` 发 `number`，写进去之前只留数字框收的字符。**密码框**：没有话筒键，`ink_text_voice_start` 和 `text.voice_start` 都拒绝。
 - **孩子**：可以用（中枢设计 §5.3.1：它只是打字；D-25 不限制通信），家长要关就在中枢那边，目录里没有就没有键。
 - **给 AI**：`text.voice_start`（副作用按外部算，走确认卡，声音会发给中枢）、`text.voice_finish`、`text.voice_cancel`；`text.state` 带 `voice`、`voice_possible`、`heard`（`ai_hidden` 的框不给）；状态 `text.voice`；事件 `text.voice_ended {how, why}`。标了 `ai_hidden` 的框 AI 不能开。
-- **没做的**：麦克风开着时状态栏的标记归系统壳（状态 `text.voice`、`audio.listening`、`audio.recording` 够它分清）；口语整理（中枢以后做）。
+- **没做的**：麦克风开着时状态栏的标记归系统壳（状态 `audio.mic`，§10.3）；口语整理（中枢以后做）。
 
 ## 10. 音频
 
@@ -641,6 +641,8 @@ void ink_media_status(ink_media_status_t *out); /* 路径、位置、总长、�
 ### 10.3 录成文件
 
 `audio.record {path?, max_seconds?}`：默认存 `/me/recordings/<时间>.opus`，回执的对象是文件路径。别人（AI、中枢、应用）要开麦克风，走确认卡（副作用按外部算，用户的隐私）；人自己按不用。和 AI 共用一个麦克风：`ink_audio_capture_begin` 只有一个主人，录音时按 AI 键提示“正在录音”，免按键的唤醒词不触发；反过来 AI 这一轮进行时录音回“忙”。来电打断录音（焦点）。帧先进 PSRAM 环，媒体执行队列写文件，1 s 一页，5 s 同步一次；空间不够或到时长自动停并报原因。断电：Ogg 页自带边界，最多丢最后几秒，文件仍可播放（没有结束页也按文件尾结束）。
+
+**麦克风在做什么**（状态 `audio.mic`，界面规范 §3.6）：`off` 关着；`local` 只在设备上等人叫名字；`sending` 声音在送出去（AI 这一轮、听写）；`recording` 在录音。谁用麦克风都要经音频服务开（`ink_audio_capture_begin`，留在设备上的用 `ink_audio_capture_begin_local`），所以这个状态不用各服务自觉上报，也不会漏。只在音频任务里发布，最后一次说的就是真的。
 
 ### 10.4 路由和蓝牙耳机
 
@@ -793,6 +795,10 @@ OTA 和卡刷只有第一步不同，后面完全一样：同一种包、同一�
 
 界面审计（`claude/system-layer` 的[设计审计 §5](../audits/2026-11-04-codex-ui/report.md)）提到的电源键：**长按 1.5 s 是电源菜单**（`system/ui/shell/power_menu.c`，占位外观，关机、重启、取消，按钮走 `system.shutdown`、`system.reboot`）。短按还是锁屏；锁定时长按先唤醒再出菜单；来电和闹钟不响应长按，松开也不算短按；HOME 关菜单；锁屏时菜单收起。谁拿着设备谁能关机：孩子、关着的成人空间都能按，AI 替孩子不行。关机和重启都先写完在等的东西。锁屏标记改成“按电源键或 AI 键唤醒”（D-38）。
 
+**音量键**（D-19，音量键只调音量）：之前按了没有任何反应，这次补上。一次 10，走 `system.set_volume`，和 AI 同一条路。不交给应用，不唤醒设备。**锁屏时**只有正在放声音才有用（界面规范 `LockPlaying`，规范里写的是建议）：放声音时能调，不解锁，不打开成人空间；什么都没放就什么也不发生。`system.set_volume` 因此标了 `while_locked`，AI 在空间关着时仍然被关口拒绝。
+
+**关机图**（界面规范 §7.12，`system/ui/shell/off_picture.c`，占位外观）：电子纸断电后画面还在，所以关机前要写清楚已关机。`ink_power_set_off_picture` 登记，关机和没电都走它：先把要写的写完，再画，等屏幕刷完（最多 6 s），才断电。没电时写“没电了，东西都存好了”。如果有应用的卡片标了 `bookmark`（现在是阅读的“在读”），留一行读到哪儿；**空间关着时不留**，电子纸上的字谁都能看。
+
 明确不做的（以后）：媒体索引、节气、成员级设置（现在设置表是设备级的，音量等都全家一个）、AI 联想、S31 自带蓝牙、配对（首次开机）、无线传输。
 
 ## 14. 决定、实机问题
@@ -898,6 +904,7 @@ OTA 和卡刷只有第一步不同，后面完全一样：同一种包、同一�
 | 系统升级 | 完成 | 4e556d1、7721632 | `integration-update`（17 轮开机，同一个镜像和卡） | 不验签名、产品、版本、最低版本、大小、段哈希；提示前不校验；失败的版本又提示；自检不过还继续；一分钟没超时；从不说好；人不用确认；AI 能看到；移动数据下 AI 能下、自动下；设置不起作用；每次上线都看；写被借出的卡；不持卡安装；通话、低电量不挡；断电没发现；回滚不说；字库重写；断电后资源不接着写；下载的包不清；不续传；没有安装卡：各自的检查或阶段失败 |
 | “一直在听” | 完成 | 7721632、f41d3cc | `integration-listening` | 唤醒词过确认卡；进锁着的空间；“一直”不算锁屏；“关”不关；默认锁屏也听；听的时候不持有唤醒：各自的检查失败 |
 | 语音输入 | 完成 | 23d8a74 | `integration-dictation`、`integration-dictation-handsfree` | 密码框有键、能开、能经能力开；字随时进框；取消还留字；失败丢定稿；不告诉中枢说完；停顿不结束、停一下就结束、一直不说不结束、不提示；断线发现不了；重连后第二次确认发现不了；一直连不上；一直等结果；连接时说的丢了；来电、锁屏、切页面不结束；不取焦点；录音时也能开；数字框收别的字、发错类型；AI 键不取消、不等麦克风；AI 不用确认、能开隐藏框、看到隐藏框的字；不看目录；面板大小变；听写时唤醒词生效：各自的检查失败 |
+| 麦克风状态、保存阶段、音量键、关机图 | 完成 | （见提交记录） | `integration-media`、`integration-listening`、`integration-dictation`、`integration-data`、`integration-power-menu`（加了 `battery`、`battery_after`） | 录音不算录音；不说在送出去（AI、听写）；不说在等名字；从不更新。全算已存；不看中枢；不按记录看（更新的一条在写时旧的一条也说在写）。键没反应；锁屏没放声音也调；锁屏被关口拒绝；超过 100；按了就解锁。没有关机图（关机、没电）；不等屏幕刷完（`test.off_picture_drawn` 在要求断电那一刻检查）；没有书签；空间关着也留；没电不说；图比写数据先：各自的检查失败 |
 | 电源键长按、电源菜单 | 完成 | 4173abe、002df94 | `integration-power-menu`（一个镜像 7 轮） | 松开还锁屏；0.5 s 就算长按；没有长按；来电时也出菜单；HOME 不关；锁屏不收；孩子不能关机；AI 能替孩子关；关着的空间不能关；关机前不写；标记文字：各自的检查失败 |
 | 作业和网络 | 完成 | 7721632、f41d3cc | `systest-services` | 离线也跑（`it has not run (3, 0)`）；联网不启动：测试不通过 |
 | 模块划分、AI 能看到什么 | 完成 | 4e556d1 | `layering`、`integration-ai-surface` | 见 §15.2 AUD15-009 |
@@ -939,7 +946,7 @@ OTA 和卡刷只有第一步不同，后面完全一样：同一种包、同一�
 
 | 约定 | 现在有 | 还缺 |
 | --- | --- | --- |
-| 保存回执（写进队列不等于已保存；分清本地保存、等待上传、中枢收到） | C 接口：`ink_db_durable_ver`、`ink_db_wait`、`ink_db_error`，事件 `data.write_failed`。能力 `data.put` 回 `revision`，**但不能问这个版本落盘了没有** | 给能力一个问法（比如 `data.status`）；“等待上传”“中枢收到”要等同步（中枢协议 §3.9） |
+| 保存回执（写进队列不等于已保存；分清本地保存、等待上传、中枢收到） | C 接口：`ink_db_durable_ver`、`ink_db_acked_ver`、`ink_db_wait`、`ink_db_error`，事件 `data.write_failed`。能力 `data.put` 回 `revision`，`data.status {collection, id 或 revision}` 回 `saving`、`on_device`、`at_hub`、`failed` | “等待上传”这一步要等同步（中枢协议 §3.9）：现在还没有上传队列，`on_device` 也包括了它 |
 | 后台作业（能查进度和结果，界面能显示） | 文件作业 `ink_fs_job_status`、事件 `file.job_done`；升级 `update.status`、`update.progress` | 通用的：`ink_job_*` 只有 `ink_jobs_pending`，没有名字、进度和结果的列表；文件作业的进度没有能力可问（只有结束的事件） |
 | 系统手势仲裁（保留起点，系统先判边缘带；键盘、滑杆、文字选择按下后输入归它们） | 输入事件有 `x`、`y`、`dx`、`dy` 和方向，浮层独占输入，一个已按下的手指不能按到新出现的东西 | 起点没有传给前台，边缘带和“按下后归谁”都没有。归界面框架，和手势一起做 |
 | 编辑会话 | 类型、组合串、候选分页、提交和取消、成员清空、语音输入 | 选区、撤销、光标移动；长文本（现在上限 4 KiB，从末尾追加） |

@@ -534,6 +534,7 @@ static int reader_card(int index, ink_card_t *out) {
     snprintf(out->action, sizeof out->action, "reader.open_book");
     out->value = RD.page + 1;
     out->has_value = true;
+    out->bookmark = true;
     return 1;
 }
 

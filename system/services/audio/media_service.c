@@ -690,7 +690,7 @@ static void cap_record(ink_call_t *c) { /* executor */
     REC.ending = false;
     REC.on = true;
     ink_svc_unlock();
-    if (ink_audio_capture_begin(rec_frame, NULL) != 0) { /* the AI has the microphone, or there is none */
+    if (ink_audio_capture_begin_local(rec_frame, NULL) != 0) { /* the AI has the microphone, or there is none */
         ink_svc_lock();
         REC.on = false;
         ink_svc_unlock();

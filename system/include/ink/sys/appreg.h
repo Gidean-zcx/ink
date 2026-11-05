@@ -41,6 +41,7 @@ typedef struct {
     char id[16], title[32], text[96], action[40]; /* action: the capability behind it */
     int64_t value;
     bool has_value;
+    bool bookmark; /* where someone was: worth leaving on the panel when the device goes off */
     uint32_t rev;
 } ink_card_t;
 

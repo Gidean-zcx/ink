@@ -48,6 +48,13 @@ static void say_something(void) {
     delay_ms(1500);
 }
 
+static const char *mic_state(void) {
+    static char s[16];
+    s[0] = 0;
+    ink_state_get_str(ink_state_find("audio.mic"), s, sizeof s);
+    return s;
+}
+
 static double wakes(void) { return sim_metric_value("ai.wakes"); }
 static double questions(void) { return sim_metric_value("hub.requests.ai.listen"); }
 
@@ -78,6 +85,7 @@ static void test_task(void *arg) {
 
     /* by default: while the screen is on and unlocked */
     CHECK(listening(), "it listens from the start");
+    CHECK(!strcmp(mic_state(), "local"), "on the device only, the microphone says (%s)", mic_state());
     double was = wakes(), asked = questions();
     say_something();
     CHECK(wakes() == was + 1 && questions() >= asked + 1, "the wake word starts a turn (%.0f, %.0f)", wakes() - was, questions() - asked);
@@ -111,6 +119,7 @@ static void test_task(void *arg) {
     /* off: nothing listens, nothing wakes */
     set_mode(OFF);
     CHECK(WAIT_FOR(!listening(), 2000), "off: not even unlocked");
+    CHECK(WAIT_FOR(!strcmp(mic_state(), "off"), 200), "the microphone is off (%s)", mic_state());
     was = wakes();
     say_something();
     CHECK(wakes() == was, "the wake word means nothing (%.0f)", wakes() - was);
@@ -161,6 +170,7 @@ static void test_task(void *arg) {
     mic("speech");
     delay_ms(1500);
     CHECK(wakes() == was + 1, "someone is asking something (%.0f, %.0f barge, %.0f not now)", wakes() - was, sim_metric_value("ai.barge_ins"), sim_metric_value("ai.wake_not_now"));
+    CHECK(!strcmp(mic_state(), "sending"), "the voice goes out, the microphone says (%s)", mic_state());
     double closed = sim_metric_value("ai.closed_with_the_space");
     double sent = sim_metric_value("hub.binary_bytes");
     delay_ms(500);
@@ -172,6 +182,7 @@ static void test_task(void *arg) {
     sent = sim_metric_value("hub.binary_bytes");
     delay_ms(2200);
     CHECK(sim_metric_value("hub.binary_bytes") == sent, "and nothing more goes out (%.0f bytes)", sim_metric_value("hub.binary_bytes") - sent);
+    CHECK(!strcmp(mic_state(), "local"), "the microphone says so too (%s)", mic_state());
     mic("silence");
     delay_ms(500);
 

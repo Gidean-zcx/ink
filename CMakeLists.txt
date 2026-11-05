@@ -179,6 +179,7 @@ add_library(ink_system STATIC
   system/services/update/update_service.c
   system/ui/shell/update_card.c
   system/ui/shell/power_menu.c
+  system/ui/shell/off_picture.c
   system/services/time/time_caps.c
   system/services/notify/notify_service.c
   system/services/notify/notify_caps.c

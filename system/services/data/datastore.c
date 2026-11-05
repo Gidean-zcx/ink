@@ -963,6 +963,14 @@ uint32_t ink_db_durable_ver(ink_db_t *db) {
     return v;
 }
 
+uint32_t ink_db_acked_ver(ink_db_t *db) {
+    if (!db) return 0;
+    lock();
+    uint32_t v = db->acked_ver;
+    unlock();
+    return v;
+}
+
 void ink_db_flush(ink_db_t *db) {
     if (!db) return;
     lock();

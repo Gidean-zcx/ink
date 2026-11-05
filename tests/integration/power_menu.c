@@ -138,19 +138,67 @@ static void test_main(void) {
 /* What may wait (a reading position, say): it has to go before the power does. */
 static const ink_db_def_t KEPT = {.name = "test.kept", .scope = INK_DB_DEVICE, .schema = 1};
 
+/* What is on the panel when it goes: the run ends with the power, so what was seen is a counter the script around it looks at. */
+extern void (*sim_power_before_shutdown)(void);
+static uint32_t g_commits_before;
+
+static void at_shutdown(void) { /* all the way onto the panel, the moment the power is asked to go */
+    if (ink_display_commits() > g_commits_before && !ink_ui_busy() && ink_display_busy() <= 0) ink_probe_count("test.off_picture_drawn");
+}
+
+static void watch_off_picture(const char *must, const char *must_not) {
+    sim_power_before_shutdown = at_shutdown;
+    for (int i = 0; i < 4000; i++) {
+        g_commits_before = ink_display_commits();
+        on_ui(read_screen);
+        if (!strcmp(g_top, "off")) {
+            CHECK(strstr(g_snap, "已关机") && (!must || strstr(g_snap, must)) && (!must_not || !strstr(g_snap, must_not)), "what it says (%s)", g_snap);
+            ink_probe_count("test.saw_off_picture");
+            delay_ms(60000);
+        }
+        delay_ms(10);
+    }
+    CHECK(0, "it should have gone by now");
+}
+
 static void test_off(int button, const char *title) {
     ink_db_register(&KEPT);
     ink_db_t *db = ink_db_open(&KEPT, NULL);
     ink_db_write_t w = {.id = (uint32_t)button + 1, .data = title, .len = strlen(title) + 1, .flags = INK_DB_LAZY};
     CHECK(db && ink_db_put(db, &w, NULL) == INK_DB_OK && ink_db_durable_ver(db) < ink_db_last_ver(db), "something that may wait");
+    if (button == 0) {
+        CHECK(AI("reader.open_book", "{\"title\":\"星星邮差\"}") && g_rc.status == INK_RC_DONE, "reading (%s)", g_rc.detail);
+        delay_ms(1500);
+    }
     hold_power();
     release_power();
     delay_ms(600);
     CHECK(menu_up(), "the menu");
     ink_probe_count("test.finished");
     tap(g_btn_x[button], g_btn_y[button]);
+    if (button == 0) watch_off_picture("星星邮差", NULL); /* where the reading was */
     delay_ms(60000);
     CHECK(0, "it should have gone by now");
+}
+
+/* The battery: what waits is written, then the picture, then the power goes. */
+static void test_battery(void) {
+    ink_db_register(&KEPT);
+    ink_db_t *db = ink_db_open(&KEPT, NULL);
+    static const char TITLE[] = "没电前的";
+    ink_db_write_t w = {.id = 3, .data = TITLE, .len = sizeof TITLE, .flags = INK_DB_LAZY};
+    CHECK(db && ink_db_put(db, &w, NULL) == INK_DB_OK && ink_db_durable_ver(db) < ink_db_last_ver(db), "something that may wait");
+    ink_probe_count("test.finished");
+    hw(HW_BATTERY, 2, 0);
+    watch_off_picture("没电了", NULL);
+}
+
+static void test_battery_after(void) {
+    ink_db_register(&KEPT);
+    ink_db_t *db = ink_db_open(&KEPT, NULL);
+    char got[32] = "";
+    CHECK(db && ink_db_get(db, 3, NULL, got, sizeof got) == INK_DB_OK && !strcmp(got, "没电前的"), "what was waiting is there after (%s)", got);
+    ink_db_close(db);
 }
 
 /* Written before it went. */
@@ -172,8 +220,7 @@ static void test_child(void) {
     CHECK(menu_up(), "the menu");
     ink_probe_count("test.finished");
     tap(g_btn_x[0], g_btn_y[0]);
-    delay_ms(60000);
-    CHECK(0, "it should have gone by now");
+    watch_off_picture(NULL, NULL);
 }
 
 /* The button with this label, on the system cards: there may be more buttons than read_screen keeps. */
@@ -205,7 +252,20 @@ static void pin_told(void *ctx, int result, uint32_t wait_s) {
     g_pin_done++;
 }
 
+/* An app that has a place to leave, whatever else goes on. */
+static int always_card(int index, ink_card_t *out) {
+    if (index) return 0;
+    snprintf(out->id, sizeof out->id, "place");
+    snprintf(out->title, sizeof out->title, "在读");
+    snprintf(out->text, sizeof out->text, "别人的书");
+    out->bookmark = true;
+    return 1;
+}
+
+static const ink_app_def_t ALWAYS_APP = {.id = "test.always", .title = "测试", .card = always_card};
+
 static void test_closed(void) {
+    CHECK(ink_app_register(&ALWAYS_APP) == 0, "something to leave");
     CHECK(ink_member_set_pin("owner", NULL, "1234", pin_told, NULL) == 0 && WAIT_FOR(g_pin_done == 1, 5000), "a PIN");
     ink_power_lock();
     CHECK(WAIT_FOR(!ink_member_space_open(), 2000), "locked, closed");
@@ -224,8 +284,7 @@ static void test_closed(void) {
     on_ui(find_label);
     CHECK(g_label_x >= 0, "its button");
     tap(g_label_x, g_label_y);
-    delay_ms(60000);
-    CHECK(0, "it should have gone by now");
+    watch_off_picture(NULL, "在读"); /* the space is closed: nothing of what was behind it */
 }
 
 static void test_task(void *arg) {
@@ -238,6 +297,8 @@ static void test_task(void *arg) {
     else if (!strcmp(phase, "restart_after")) test_after(1, "重启前的");
     else if (!strcmp(phase, "child")) test_child();
     else if (!strcmp(phase, "closed")) test_closed();
+    else if (!strcmp(phase, "battery")) test_battery();
+    else if (!strcmp(phase, "battery_after")) test_battery_after();
     else test_main();
     ink_probe_count("test.finished");
 }

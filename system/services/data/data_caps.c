@@ -224,6 +224,30 @@ static void cap_put(ink_call_t *c) {
     ink_db_close(db);
 }
 
+/* How far something got: on its way to the flash, on the flash, at the hub. By revision (from data.put) or by record. */
+static void cap_status(ink_call_t *c) {
+    ink_db_t *db;
+    const ink_db_def_t *d = open_def(c, false, &db);
+    if (!d) return;
+    int64_t id = 0, revision = 0;
+    uint32_t ver = ink_db_last_ver(db);
+    if (ink_args_get_int(&c->args, "id", &id)) {
+        ink_rec_t r;
+        if (ink_db_get(db, (uint32_t)id, &r, NULL, 0) != INK_DB_OK) {
+            c->rc.status = INK_RC_FAILED;
+            snprintf(c->rc.detail, sizeof c->rc.detail, "no such record");
+            ink_db_close(db);
+            return;
+        }
+        ver = r.ver;
+    } else if (ink_args_get_int(&c->args, "revision", &revision)) ver = (uint32_t)revision;
+    const char *stage = ver <= ink_db_acked_ver(db) ? "at_hub" : ver <= ink_db_durable_ver(db) ? "on_device" : ink_db_error(db) ? "failed" : "saving";
+    char out[64];
+    snprintf(out, sizeof out, "{\"revision\":%u,\"stage\":\"%s\"}", (unsigned)ver, stage);
+    ink_cap_result(c, out);
+    ink_db_close(db);
+}
+
 static void cap_delete(ink_call_t *c) {
     ink_db_t *db;
     const ink_db_def_t *d = open_def(c, true, &db);
@@ -282,6 +306,14 @@ static const ink_cap_t DATA_CAPS[] = {
      .child_ok = true,
      .exec = INK_EXEC_BG,
      .run = cap_delete},
+    {.id = "data.status",
+     .title = "一条数据保存到哪一步了（saving 正在写、on_device 已存在这台设备、at_hub 已备份、failed 没写进去）",
+     .input = "{\"type\":\"object\",\"properties\":{" COLL ",\"id\":{\"type\":\"integer\",\"minimum\":1},\"revision\":{\"type\":\"integer\",\"minimum\":1}},\"required\":[\"collection\"]}",
+     .output = "{\"type\":\"object\"}",
+     .effect = INK_FX_READ,
+     .child_ok = true,
+     .exec = INK_EXEC_BG,
+     .run = cap_status},
     {.id = "data.write_failed", .title = "数据没能写进存储", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},
 };
 

@@ -186,6 +186,11 @@ static void happy(void) {
     CHECK(!strcmp(ink_state_get_str(ink_state_find("text.voice"), g_value, sizeof g_value) >= 0 ? g_value : "", "listening"), "state says so (%s)", g_value);
     /* the panel where the keys were */
     CHECK(there("说完了") && there("用键盘") && !there("q") && !there("话筒"), "the panel instead of the keys");
+    {
+        char mic_now[16] = "";
+        ink_state_get_str(ink_state_find("audio.mic"), mic_now, sizeof mic_now);
+        CHECK(!strcmp(mic_now, "sending"), "the microphone says it goes out (%s)", mic_now);
+    }
     /* what is heard shows in the panel and not in the field */
     CHECK(WAIT_FOR((look(), g_heard[0] != 0), 3000), "the first words come");
     CHECK(WAIT_FOR((look(), strstr(g_heard, "今晚七点到家。") != NULL), 3000), "the first sentence (%s)", g_heard);

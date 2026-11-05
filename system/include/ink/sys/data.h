@@ -112,6 +112,8 @@ void ink_db_ack(ink_db_t *db, uint32_t ver);
 
 uint32_t ink_db_last_ver(ink_db_t *db);
 uint32_t ink_db_durable_ver(ink_db_t *db);
+/** The newest change the hub has confirmed (ink_db_ack). */
+uint32_t ink_db_acked_ver(ink_db_t *db);
 /** Hand what waits to the storage service now. */
 void ink_db_flush(ink_db_t *db);
 /** Wait until `ver` is durable (not in the UI task): 0, or -1 after the timeout. */

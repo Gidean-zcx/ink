@@ -498,6 +498,39 @@ static void caps(void) {
     snprintf(args, sizeof args, "{\"collection\":\"test.notes\",\"id\":%u}", id);
     CHECK(call_json("data.get", args, INK_SRC_AI) && g_rc.status == INK_RC_DONE && strstr(g_result, "\"value\":{\"from\":\"ai\"}") && strstr(g_result, "\"by\":\"ai\""),
           "it reads back, and says the AI wrote it (%s)", g_result);
+    /* how far it got */
+    ink_storage_hold_writes(true);
+    CHECK(call_json("data.put", "{\"collection\":\"test.notes\",\"value\":{\"from\":\"ai\",\"n\":2}}", INK_SRC_AI) && g_rc.status == INK_RC_DONE && g_rc.revision > 0, "another (%s)", g_rc.detail);
+    uint32_t saved_rev = g_rc.revision, saved_id = (uint32_t)atoi(strchr(g_rc.object, '#') + 1);
+    char by_rev[96], by_id[96];
+    snprintf(by_rev, sizeof by_rev, "{\"collection\":\"test.notes\",\"revision\":%u}", (unsigned)saved_rev);
+    snprintf(by_id, sizeof by_id, "{\"collection\":\"test.notes\",\"id\":%u}", (unsigned)saved_id);
+    CHECK(call_json("data.status", by_rev, INK_SRC_AI) && strstr(g_result, "\"stage\":\"saving\""), "held back: on its way (%s)", g_result);
+    CHECK(call_json("data.status", by_id, INK_SRC_AI) && strstr(g_result, "\"stage\":\"saving\""), "the same by record (%s)", g_result);
+    ink_storage_hold_writes(false);
+    db = ink_db_open(&NOTES, NULL);
+    ink_db_flush(db);
+    CHECK(ink_db_wait(db, saved_rev, 5000000) == 0, "it gets there");
+    CHECK(call_json("data.status", by_rev, INK_SRC_AI) && strstr(g_result, "\"stage\":\"on_device\""), "on the device (%s)", g_result);
+    CHECK(call_json("data.status", by_id, INK_SRC_AI) && strstr(g_result, "\"stage\":\"on_device\""), "the same by record (%s)", g_result);
+    ink_db_ack(db, saved_rev);
+    CHECK(call_json("data.status", by_id, INK_SRC_AI) && strstr(g_result, "\"stage\":\"at_hub\""), "the hub has it (%s)", g_result);
+    /* a newer one on its way does not change how far this one got */
+    ink_storage_hold_writes(true);
+    ink_db_write_t newer = {.sort = 1, .data = "{}", .len = 2, .src = INK_SRC_TOUCH};
+    uint32_t newer_id = 0;
+    CHECK(ink_db_put(db, &newer, &newer_id) == INK_DB_OK, "a newer one");
+    ink_db_close(db);
+    CHECK(call_json("data.status", by_id, INK_SRC_AI) && strstr(g_result, "\"stage\":\"at_hub\""), "this one is where it was (%s)", g_result);
+    snprintf(by_id, sizeof by_id, "{\"collection\":\"test.notes\",\"id\":%u}", (unsigned)newer_id);
+    CHECK(call_json("data.status", by_id, INK_SRC_AI) && strstr(g_result, "\"stage\":\"saving\""), "that one on its way (%s)", g_result);
+    ink_storage_hold_writes(false);
+    db = ink_db_open(&NOTES, NULL);
+    ink_db_del(db, newer_id, INK_SRC_TOUCH);
+    ink_db_del(db, saved_id, INK_SRC_TOUCH);
+    ink_db_close(db);
+    CHECK(call_json("data.status", "{\"collection\":\"test.notes\",\"id\":99999}", INK_SRC_AI) && g_rc.status == INK_RC_FAILED, "no such record: says so");
+    CHECK(call_json("data.status", "{\"collection\":\"test.private\"}", INK_SRC_AI) && g_rc.status == INK_RC_REJECTED, "not one open to it: says nothing (%s)", g_result);
     CHECK(call_json("data.list", "{\"collection\":\"test.notes\",\"limit\":1}", INK_SRC_AI) && strstr(g_result, "\"records\":[") && strstr(g_result, "\"next\":"),
           "a page with a cursor for the next one (%s)", g_result);
     char *next = strstr(g_result, "\"next\":\"");

@@ -184,7 +184,10 @@ void hal_power_reboot(void) {
     sim_power_off("reboot");
 }
 
+void (*sim_power_before_shutdown)(void); /* a test looks at what the system left, the moment it asks for the power to go */
+
 void hal_power_shutdown(void) {
+    if (sim_power_before_shutdown) sim_power_before_shutdown();
     if (metalio_board_ready()) metalio_power_off(); /* the expander model cuts power at the last pulse */
     sim_power_off("shutdown");
 }

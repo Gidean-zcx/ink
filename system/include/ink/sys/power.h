@@ -70,6 +70,9 @@ int ink_power_subscribe(ink_power_fn fn, void *ctx);
  *  mark (asked from the power task: cheap, non-blocking). Up to 6. The panel (refreshes queued
  *  or playing) and the flash (writes queued) are always checked. */
 int ink_power_add_busy_check(bool (*busy)(void));
+/** What to leave on the panel just before the power goes, what waited to be written being written: it returns when that is done,
+ *  or it gave up. why: "shutdown" or "battery". One. */
+void ink_power_set_off_picture(void (*fn)(const char *why));
 
 #ifdef __cplusplus
 }

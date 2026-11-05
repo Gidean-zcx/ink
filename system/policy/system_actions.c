@@ -3,6 +3,7 @@
  * HOME key, the control centre and the AI use.
  */
 #include <stdio.h>
+#include <string.h>
 
 #include "ink/hal_power.h"
 #include "ink/hal_storage.h"
@@ -12,6 +13,7 @@
 #include "ink/sys/cap.h"
 #include "ink/sys/data.h"
 #include "ink/sys/file.h"
+#include "ink/sys/input.h"
 #include "ink/sys/storage.h"
 #include "ink/sys/settings.h"
 #include "ink/sys/state.h"
@@ -41,6 +43,33 @@ static void set_volume(ink_call_t *c) {
     ink_args_get_int(&c->args, "percent", &v); /* the schema checked it: 0..100 */
     if (ink_setting_set("audio.volume", v, c->src, &c->rc) == INK_RC_DONE)
         snprintf(c->rc.say, sizeof c->rc.say, "音量调到 %d", (int)v);
+}
+
+/* The keys are the same thing as the AI's capability. Locked only while something plays (system UI spec §3.5, LockPlaying): there is nothing else to hear. */
+#define VOLUME_STEP 10
+
+static int g_volume_steps;
+static ink_exec_job_t g_volume_job;
+
+static void volume_job(void *arg) { /* UI task */
+    (void)arg;
+    int steps = __atomic_exchange_n(&g_volume_steps, 0, __ATOMIC_ACQ_REL);
+    int64_t v = ink_setting_get("audio.volume") + steps * VOLUME_STEP;
+    ink_args_t *a = osal_malloc(sizeof *a, OSAL_MEM_EXTERNAL);
+    if (!a) return;
+    ink_args_init(a);
+    ink_args_int(a, "percent", v < 0 ? 0 : v > 100 ? 100 : v);
+    ink_receipt_t rc;
+    ink_cap_invoke("system.set_volume", a, INK_SRC_KEY, 0, &rc);
+    osal_free(a);
+}
+
+static void on_volume_key(int delta, bool locked) { /* input task */
+    char playing[16] = "";
+    ink_state_get_str(ink_state_find("audio.now_playing"), playing, sizeof playing);
+    if (locked && !strcmp(playing, "none")) return;
+    __atomic_add_fetch(&g_volume_steps, delta, __ATOMIC_ACQ_REL);
+    ink_exec_post(INK_EXEC_UI, &g_volume_job, volume_job, NULL);
 }
 
 static void switch_member(ink_call_t *c) {
@@ -221,6 +250,7 @@ static const ink_cap_t SYSTEM_ACTIONS[] = {
              "\"required\":[\"percent\"]}",
      .effect = INK_FX_LOCAL_WRITE,
      .child_ok = true,
+     .while_locked = true,
      .run = set_volume},
     {.id = "system.switch_member",
      .title = "切换家人",
@@ -235,6 +265,7 @@ static const ink_cap_t SYSTEM_ACTIONS[] = {
 };
 
 int ink_system_actions_init(void) {
+    ink_input_set_volume_key_hook(on_volume_key);
     if (g_card_cleared) tell_card_cleared();
     if (g_card_waits) {
         if (ink_state_watch("power.state", on_power_for_card, NULL, INK_EXEC_DIRECT) != 0) return -1;

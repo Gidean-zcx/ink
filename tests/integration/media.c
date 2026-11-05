@@ -73,6 +73,14 @@ static ink_exec_job_t g_key_job0;
 static void key_job0(void *pressed) { ink_ai_key(pressed != NULL, osal_now_us()); }
 static void dismiss_sheet(void) { ink_ai_dismiss(); }
 
+static volatile int g_pin_done, g_pin_result;
+static void pin_told(void *ctx, int result, uint32_t wait_s) {
+    (void)ctx;
+    (void)wait_s;
+    g_pin_result = result;
+    g_pin_done++;
+}
+
 static void media_busy(void *arg) {
     (void)arg;
     osal_task_delay_us(1000000);
@@ -83,6 +91,7 @@ static void recording(void) {
     CHECK(BY_HAND("audio.record", "{\"path\":\"/me/rec/one.opus\"}") && g_rc.status == INK_RC_DONE && strstr(g_rc.object, "one.opus"), "recording starts (%s %s)", ink_rc_name(g_rc.status), g_rc.detail);
     CHECK(strstr(g_result, "/me/rec/one.opus"), "the result says where (%s)", g_result);
     CHECK(bool_state("audio.recording") && ink_audio_recording(), "state says so");
+    CHECK(WAIT_FOR(!strcmp(state_of("audio.mic"), "recording"), 200), "the microphone says recording (%s)", state_of("audio.mic"));
     CHECK(BY_HAND("audio.record", "{\"path\":\"/me/rec/two.opus\"}") && g_rc.status == INK_RC_FAILED, "one at a time");
     CHECK(ink_audio_capture_begin(NULL, NULL) != 0, "the microphone is taken");
 
@@ -98,6 +107,7 @@ static void recording(void) {
     CHECK(WAIT_FOR(g_rec_done == done + 1, 3000), "it ends and says so");
     CHECK(!strcmp(g_rec_why, "stopped") && strstr(g_rec_path, "one.opus") && g_rec_ms >= 5500 && g_rec_ms <= 7000, "with its length (%s, %lld)", g_rec_why, (long long)g_rec_ms);
     CHECK(!bool_state("audio.recording"), "state again");
+    CHECK(WAIT_FOR(!strcmp(state_of("audio.mic"), "off"), 200), "the microphone is off (%s)", state_of("audio.mic"));
     ink_fs_stat_t fs;
     CHECK(ink_fs_stat("/me/rec/one.opus", &fs) == 0 && fs.size > 1000, "the file is there (%lld)", (long long)fs.size);
 
@@ -471,6 +481,51 @@ static void headset(void) {
     CHECK(AI("bt.connect", "{\"addr\":\"" HEADSET "\"}") && g_rc.status == INK_RC_FAILED, "it must be paired again");
 }
 
+static void volume_keys(void) {
+    ink_receipt_t rc;
+    ink_setting_set("audio.volume", 50, INK_SRC_TOUCH, &rc);
+    key(HAL_KEY_VOL_UP);
+    CHECK(WAIT_FOR(ink_setting_get("audio.volume") == 60, 500), "up (%d)", (int)ink_setting_get("audio.volume"));
+    key(HAL_KEY_VOL_DOWN);
+    key(HAL_KEY_VOL_DOWN);
+    CHECK(WAIT_FOR(ink_setting_get("audio.volume") == 40, 500), "down twice (%d)", (int)ink_setting_get("audio.volume"));
+    ink_setting_set("audio.volume", 95, INK_SRC_TOUCH, &rc);
+    key(HAL_KEY_VOL_UP);
+    CHECK(WAIT_FOR(ink_setting_get("audio.volume") == 100, 500), "not past the top (%d)", (int)ink_setting_get("audio.volume"));
+    ink_setting_set("audio.volume", 40, INK_SRC_TOUCH, &rc);
+    /* locked, nothing playing: it does not even wake */
+    ink_power_lock();
+    CHECK(WAIT_FOR(!strcmp(power_state(), "locked"), 2000), "locked");
+    delay_ms(500);
+    key(HAL_KEY_VOL_UP);
+    delay_ms(300);
+    CHECK(ink_setting_get("audio.volume") == 40 && !strcmp(power_state(), "locked"), "nothing to hear: nothing happens (%d, %s)", (int)ink_setting_get("audio.volume"), power_state());
+    ink_power_unlock(osal_now_us());
+    CHECK(WAIT_FOR(strcmp(power_state(), "locked") != 0, 70000), "unlocked");
+    ink_power_activity(osal_now_us());
+    /* locked, playing, the space closed: the keys work, and that is all that does */
+    int d = g_pin_done;
+    CHECK(ink_member_set_pin("owner", NULL, "1234", pin_told, NULL) == 0 && WAIT_FOR(g_pin_done > d, 5000) && g_pin_result == INK_PIN_OK, "a PIN");
+    CHECK(BY_HAND("media.play", "{\"path\":\"/me/rec/long.opus\",\"start_ms\":0}") && g_rc.status == INK_RC_DONE, "playing");
+    delay_ms(1000);
+    ink_power_lock();
+    CHECK(WAIT_FOR(!strcmp(power_state(), "locked") && !ink_member_space_open(), 2000), "locked, closed");
+    delay_ms(500);
+    CHECK(st().state == INK_MEDIA_PLAYING, "it goes on (%d)", st().state);
+    key(HAL_KEY_VOL_UP);
+    CHECK(WAIT_FOR(ink_setting_get("audio.volume") == 50, 500), "the key works (%d)", (int)ink_setting_get("audio.volume"));
+    CHECK(!strcmp(power_state(), "locked") && !ink_member_space_open(), "and nothing opens (%s)", power_state());
+    CHECK(AI("system.set_volume", "{\"percent\":10}") && g_rc.status == INK_RC_REJECTED, "the AI still cannot (%s)", ink_rc_name(g_rc.status));
+    ink_power_unlock(osal_now_us());
+    CHECK(WAIT_FOR(strcmp(power_state(), "locked") != 0, 70000), "unlocked");
+    ink_power_activity(osal_now_us());
+    d = g_pin_done;
+    CHECK(ink_member_unlock("owner", "1234", pin_told, NULL) == 0 && WAIT_FOR(g_pin_done > d, 5000) && g_pin_result == INK_PIN_OK, "in");
+    CHECK(BY_HAND("media.stop", NULL), "stop");
+    d = g_pin_done;
+    CHECK(ink_member_set_pin("owner", "1234", NULL, pin_told, NULL) == 0 && WAIT_FOR(g_pin_done > d, 5000) && g_pin_result == INK_PIN_OK, "no PIN again");
+}
+
 static void volume(void) {
     ink_receipt_t rc;
     ink_setting_set("audio.volume", 100, INK_SRC_TOUCH, &rc);
@@ -505,6 +560,7 @@ static void test_task(void *arg) {
     ai_speaks();
     headset();
     volume();
+    volume_keys();
     ink_probe_count("test.finished");
 }
 

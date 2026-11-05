@@ -79,6 +79,7 @@ static struct {
     int volume; /* 0..100 */
     /* capture */
     bool cap_on, cap_ending;
+    bool cap_local; /* it stays on the device: a recording */
     bool measure;
     int level;
     ink_audio_frame_fn cap_fn;
@@ -588,7 +589,7 @@ static void update_write_hold(void) {
     }
 }
 
-static int h_playing = -1, h_listening = -1, h_route = -1;
+static int h_playing = -1, h_listening = -1, h_route = -1, h_mic = -1;
 
 /* The front end starts and stops in this task (hal_afe.h); a start that fails ends the listening. */
 static void afe_transition(void) {
@@ -613,6 +614,7 @@ static void afe_transition(void) {
 /* System state: what plays (published on change only), and whether the device listens (hands-free, step 6). */
 static const ink_state_def_t ST_PLAYING = {.id = "audio.now_playing", .type = INK_ST_STR, .title = "正在播放"};
 static const ink_state_def_t ST_LISTENING = {.id = "audio.listening", .type = INK_ST_BOOL, .title = "在等人叫名字"};
+static const ink_state_def_t ST_MIC = {.id = "audio.mic", .type = INK_ST_STR, .title = "麦克风（off 关着、local 只在设备上等人叫名字、sending 声音在送出去、recording 在录音）"};
 static const ink_state_def_t ST_ROUTE = {.id = "audio.route", .type = INK_ST_STR, .title = "声音从哪儿出来（speaker、bt_headset）"};
 
 static void publish_playing(void) { /* audio task */
@@ -623,6 +625,18 @@ static void publish_playing(void) { /* audio task */
     unlock();
     if (now != last) {
         ink_state_set_str(h_playing, now);
+        last = now;
+    }
+}
+
+/* What the microphone is doing, for the status bar and the AI (system UI spec §3.6). Only here, so that the last word is the true one. */
+static void publish_mic(void) { /* audio task */
+    static const char *last;
+    lock();
+    const char *now = AU.cap_on ? (AU.cap_local ? "recording" : "sending") : AU.listen_on ? "local" : "off";
+    unlock();
+    if (now != last) {
+        ink_state_set_str(h_mic, now);
         last = now;
     }
 }
@@ -670,6 +684,7 @@ static void audio_task(void *arg) {
         update_write_hold();
         publish_playing();
         afe_transition();
+        publish_mic();
     }
 }
 
@@ -709,6 +724,8 @@ int ink_audio_init(void) {
     ink_state_set_str(h_route, "speaker");
     h_playing = ink_state_define(&ST_PLAYING);
     h_listening = ink_state_define(&ST_LISTENING);
+    h_mic = ink_state_define(&ST_MIC);
+    ink_state_set_str(h_mic, "off");
     ink_state_set_str(h_playing, "none");
     ink_state_set_bool(h_listening, false);
     const char *prev = osal_mem_tag("audio");
@@ -782,7 +799,7 @@ int ink_audio_listen(bool on, ink_audio_listen_fn fn, void *ctx) {
 bool ink_audio_has_speaker(void) { return AU.info.has_speaker; }
 bool ink_audio_has_mic(void) { return AU.info.has_mic; }
 
-static int capture_begin_locked(ink_audio_frame_fn fn, void *ctx) { /* under mic_lock */
+static int capture_begin_locked(ink_audio_frame_fn fn, void *ctx, bool local) { /* under mic_lock */
     lock();
     bool busy = AU.cap_on;
     unlock();
@@ -797,6 +814,7 @@ static int capture_begin_locked(ink_audio_frame_fn fn, void *ctx) { /* under mic
     AU.cap_seq = 0;
     if (!listening) AU.rd = AU.wr = 0;
     AU.cap_on = true;
+    AU.cap_local = local;
     AU.cap_ending = false;
     unlock();
     if (!listening && hal_audio_capture_start(capture_cb, NULL) != 0) {
@@ -811,14 +829,17 @@ static int capture_begin_locked(ink_audio_frame_fn fn, void *ctx) { /* under mic
     return 0;
 }
 
-int ink_audio_capture_begin(ink_audio_frame_fn fn, void *ctx) {
+static int capture_begin(ink_audio_frame_fn fn, void *ctx, bool local) {
     if (!AU.info.has_mic || !AU.task) return -1;
     osal_mutex_lock(AU.mic_lock, OSAL_WAIT_FOREVER);
-    int r = capture_begin_locked(fn, ctx);
+    int r = capture_begin_locked(fn, ctx, local);
     osal_mutex_unlock(AU.mic_lock);
     if (r == 0) osal_sem_give(AU.wake);
     return r;
 }
+
+int ink_audio_capture_begin(ink_audio_frame_fn fn, void *ctx) { return capture_begin(fn, ctx, false); }
+int ink_audio_capture_begin_local(ink_audio_frame_fn fn, void *ctx) { return capture_begin(fn, ctx, true); }
 
 bool ink_audio_capture_busy(void) {
     if (!AU.lock) return false;

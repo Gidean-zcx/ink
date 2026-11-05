@@ -67,6 +67,7 @@ static struct {
     uint64_t wake_at;       /* ink_power_wake_at */
     uint64_t next_battery_us;
     bool battery_policy;    /* ink_power_battery_policy_start */
+    void (*off_picture)(const char *why);
     int battery_level;      /* what has been told: 0 fine, 1 low, 2 very low, 3 powering off */
     bool powering_off;
     uint64_t off_at;
@@ -130,6 +131,7 @@ static void publish_battery(void) {
         if (!level) PS.powering_off = false; /* it was plugged in just in time */
         else if ((ink_db_idle() && ink_storage_pending() == 0) || osal_now_us() >= PS.off_at) {
             ink_probe_count("power.low_battery_off");
+            if (PS.off_picture) PS.off_picture("battery");
             hal_power_shutdown();
         }
     }
@@ -276,6 +278,7 @@ static void cap_shutdown(ink_call_t *c) { /* exec.bg */
     snprintf(c->rc.say, sizeof c->rc.say, "关机");
     ink_db_flush_all();
     for (int i = 0; i < 100 && (!ink_db_idle() || ink_storage_pending()); i++) osal_task_delay_us(50000);
+    if (PS.off_picture) PS.off_picture("shutdown");
     hal_power_shutdown();
 }
 
@@ -308,6 +311,8 @@ int ink_power_init(void) {
     osal_task_cfg_t cfg = {.name = "power", .fn = power_task, .stack_bytes = PW_STACK, .priority = PW_PRIO, .core = -1};
     return osal_task_create(&cfg, &PS.task) == OSAL_OK ? 0 : -1;
 }
+
+void ink_power_set_off_picture(void (*fn)(const char *why)) { PS.off_picture = fn; }
 
 void ink_power_battery_policy_start(void) {
     __atomic_store_n(&PS.battery_policy, true, __ATOMIC_RELEASE);

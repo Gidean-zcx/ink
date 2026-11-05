@@ -44,6 +44,7 @@ static struct {
     hal_key_t swallow_release; /* the release of a key press the power policy consumed */
     bool (*power_key_hook)(void);
     void (*power_long_hook)(void);
+    void (*volume_key_hook)(int delta, bool locked);
     bool power_down, power_long_fired;
     ink_svc_deadline_t power_at;
 } IS;
@@ -176,6 +177,12 @@ static bool power_filter(const hal_input_event_t *h) {
         IS.swallow_release = HAL_KEY_NONE;
         return true;
     }
+    if (is_key && (h->key.key == HAL_KEY_VOL_UP || h->key.key == HAL_KEY_VOL_DOWN)) { /* only the volume (D-19), and they wake nothing */
+        bool locked = ink_power_state() == INK_PWR_LOCKED;
+        if (h->key.pressed && IS.volume_key_hook) IS.volume_key_hook(h->key.key == HAL_KEY_VOL_UP ? 1 : -1, locked);
+        if (!locked) ink_power_activity(h->t_us);
+        return true;
+    }
     if (ink_power_state() == INK_PWR_LOCKED) {
         if (is_key && h->key.pressed && (h->key.key == HAL_KEY_POWER || h->key.key == HAL_KEY_AI)) {
             hal_display_wake(WAKE_HOLD_MS); /* the lock mark comes off right away */
@@ -203,6 +210,7 @@ static void hal_sink(const hal_input_event_t *h, void *ctx) {
 
 void ink_input_set_power_key_hook(bool (*fn)(void)) { IS.power_key_hook = fn; }
 void ink_input_set_power_long_hook(void (*fn)(void)) { IS.power_long_hook = fn; }
+void ink_input_set_volume_key_hook(void (*fn)(int delta, bool locked)) { IS.volume_key_hook = fn; }
 
 int ink_input_init(ink_input_handler_t handler, void *ctx) {
     IS.handler = handler;
