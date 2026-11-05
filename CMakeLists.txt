@@ -617,6 +617,25 @@ if(INK_HAVE_FONTS)
             -DASSETS=${INK_ASSETS_DIR} -DCONTENT=${INK_TEST_CONTENT}
             -DOUT=${CMAKE_BINARY_DIR}/test-out/people-reset -DSRC=${CMAKE_SOURCE_DIR}/tests/integration
             -P ${CMAKE_SOURCE_DIR}/tests/integration/people_reset.cmake)
+  add_executable(sim-member-wake simulator/runtime/sim_main.c tests/integration/member_wake.c)
+  target_link_libraries(sim-member-wake PRIVATE ink_apps ink_system ink_port_sim)
+  target_compile_options(sim-member-wake PRIVATE ${INK_WARN} -Wno-format-truncation)
+  add_test(NAME integration-member-wake
+    COMMAND sim-member-wake --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+            --budget ${CMAKE_SOURCE_DIR}/tests/integration/member_wake.budget.json
+            --script ${CMAKE_SOURCE_DIR}/tests/integration/member_wake.script
+            --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+            --out ${CMAKE_BINARY_DIR}/test-out/member-wake --quiet --no-random-outages)
+  add_executable(sim-member-wake-stream simulator/runtime/sim_main.c tests/integration/member_wake_stream.c
+                 tests/integration/member_wake_ai.c tests/integration/member_wake_dictation.c)
+  target_link_libraries(sim-member-wake-stream PRIVATE ink_apps ink_system ink_port_sim)
+  target_compile_options(sim-member-wake-stream PRIVATE ${INK_WARN} -Wno-format-truncation)
+  add_test(NAME integration-member-wake-stream
+    COMMAND sim-member-wake-stream --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus-handsfree.json
+            --budget ${CMAKE_SOURCE_DIR}/tests/integration/member_wake.budget.json
+            --script ${CMAKE_SOURCE_DIR}/tests/integration/member_wake_stream.script
+            --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+            --out ${CMAKE_BINARY_DIR}/test-out/member-wake-stream --quiet --no-random-outages)
   # Audio focus, media, recording, the headset (tests/integration/media.c).
   add_executable(sim-media simulator/runtime/sim_main.c tests/integration/media.c)
   target_link_libraries(sim-media PRIVATE ink_apps ink_system ink_port_sim)

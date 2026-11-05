@@ -146,8 +146,9 @@ static void test_task(void *arg) {
     /* nor into a space that is closed: an adult's, with a PIN, locked. What was said goes nowhere */
     int d = g_pin_done;
     CHECK(ink_member_set_pin("owner", NULL, "1234", pin_told, NULL) == 0 && WAIT_FOR(g_pin_done > d, 5000) && g_pin_result == INK_PIN_OK, "a PIN");
+    CHECK(setting_by_hand("member.idle_return_s", 30), "a short lock grace for the closed-space checks");
     lock();
-    CHECK(WAIT_FOR(!ink_member_space_open(), 2000), "the space is closed");
+    CHECK(WAIT_FOR(!ink_member_space_open(), 32000), "the lock grace expires: the space is closed");
     delay_ms(2000);
     CHECK(listening(), "it listens");
     was = wakes();
@@ -175,8 +176,10 @@ static void test_task(void *arg) {
     double sent = sim_metric_value("hub.binary_bytes");
     delay_ms(500);
     CHECK(sim_metric_value("hub.binary_bytes") > sent, "and it goes to the hub");
+    CHECK(setting_by_hand("member.idle_return_s", 30), "the same lock grace applies during a turn");
     lock();
-    CHECK(WAIT_FOR(!ink_member_space_open(), 2000), "the space is closed");
+    CHECK(ink_member_space_open(), "locking keeps the authenticated grace");
+    CHECK(WAIT_FOR(!ink_member_space_open(), 32000), "the lock grace expires: the space is closed");
     CHECK(WAIT_FOR(sim_metric_value("ai.closed_with_the_space") == closed + 1, 1000), "the turn is over");
     delay_ms(1000); /* what was on its way */
     sent = sim_metric_value("hub.binary_bytes");

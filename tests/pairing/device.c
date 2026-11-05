@@ -190,6 +190,13 @@ static void run(void *arg) {
     if (!strcmp(phase, "claim")) {
         wait_claim();
         CHECK(ink_hub_respond(424242, "{\"private\":\"synthetic old response\"}") == INK_HUB_ERR_OFFLINE, "ordinary responses cannot leave on a preauth connection");
+        CHECK(ink_hub_respond_error(424242, -32603, "synthetic error") == INK_HUB_ERR_OFFLINE, "ordinary errors cannot leave on a preauth connection");
+        CHECK(ink_hub_notify("test/synthetic", "{}") == INK_HUB_ERR_OFFLINE, "ordinary notifications cannot leave on a preauth connection");
+        uint8_t frame[16] = {1};
+        const char *member = ink_member_current()->id;
+        CHECK(ink_hub_send_binary(frame, sizeof frame) == INK_HUB_ERR_OFFLINE, "ordinary voice frames cannot leave on a preauth connection");
+        CHECK(ink_hub_send_frame_for(frame, sizeof frame, INK_HUB_TX_CONTROL, member, ink_member_generation(member)) == INK_HUB_ERR_OFFLINE,
+              "member control frames cannot leave on a preauth connection");
         char nonce[33];
         CHECK(ink_storage_read("/user/sys/test.nonce", nonce, sizeof nonce) == sizeof nonce && !strcmp(nonce, sim_hub_pair_nonce()), "same nonce after lost begin and reboot");
         double old_begin = sim_metric_value("hub.requests.pair/begin");

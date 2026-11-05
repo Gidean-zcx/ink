@@ -1,54 +1,55 @@
 # pairing 执行报告
 
-2026-11-06。本轮基线 `68b6476f`，修复提交 `3b8aa20a`，接续原实现和[独立复查](REVIEW.md)。本轮修复 R1～R3（高）和 R4（中），只使用合成资料及模拟中枢。以下替换上一轮验收结论。
+2026-11-06。接续 [独立复查](REVIEW.md)，本轮起点 `47c82d67`，合入 `FETCH_HEAD` 的 `1c43c28a`。门禁只有合并日志，唯一冲突是 `hub_link.c`；构建、测试、CI 和隐私门禁尚未执行。以下是本轮重新验证的结果，取代旧验收结论。
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| R1 未受信任响应清空资料 | 已修复 | 【实现/实测】清空授权仅接受带已保存身份、令牌及匹配固定公钥的 hello 响应，信任随响应入队保存；换连接清除旧对端。地址、固定公钥、卡内 preauth 三种未确认 begin 均不能吊销或清空；重启保留 Flash/卡资料，正常已绑定吊销及 wipe 仍通过 | T1、T2、T6 |
-| R2 提交进度丢失卡住 | 已修复 | 【实现/实测】提交中设 10 秒进度期限，失败后短退避，按已保存 nonce/txid 重连续接；accept 分配、排队、超时及远端错误有回调。不重启覆盖单次 accept/complete 丢失、16 个槽位占满、暂时错误和过期；过期不得推进到 token/hello | T1、T2、T6 |
-| R3 一次性授权跨公钥泄漏 | 已修复 | 【实现/实测】变更或移除公钥先持久清除旧身份，再写新配置；失败后保持握手阻断。同公钥迁址保留授权；UNPAIRED/PAIRING 换公钥清掉 preauth、nonce、txid 和家庭信息。三处写入各测排队拒绝/完成失败及重启，共 6 类 | T1、T2、T6 |
-| R4 AI 控制能力被整体排除 | 已修复 | 【实现/实测】除最终 accept 外，其余 7 个调用均向 AI 开放：公共地址配置、拒绝、重新发起、热点开关直接走同一能力；卡导入需人通过现有确认机制。热点二维码仅返回触摸/按键调用者。验证 AI 能控制但拿不到凭据、不能自行确认，儿童仍被隔离 | T1、T2 |
-| P1 状态、配网和身份隔离 | 通过（模拟器） | 【实测】五状态、固定公钥、迁址、认证错误分类、跨公钥事务隔离均通过 | T1 |
-| P2 热点、网页模型、配对卡 | 通过（模拟器） | 【实测】模型表单、随机密码、成员隔离、启动导入、可选 Wi-Fi 恢复和删除卡文件通过 | T1 |
-| P3 丢失及重启恢复 | 通过（模拟器） | 【实测】恢复矩阵 35 次启动，拒写矩阵 20 次启动；保留原断电恢复场景，新增活连接恢复 | T1 |
-| P4 吊销和资料处理 | 通过（模拟器） | 【实测】已绑定吊销、布尔 wipe、重启清理及未授权清空拒绝通过 | T1 |
-| G1 全量、内存、预算 | 通过 | 【实测】普通 95/95、47.82 秒；ASan/UBSan 95/95、83.45 秒；均无跳过，预算未改 | T3、T4 |
-| G2 原子能力与成员隔离 | 通过（模拟器） | 【实现/实测】8 个调用、1 个事件和脱敏状态；7 个调用可由 AI 发起，最终 accept 仅限人；公开快照及 AI 热点回执无秘密 | T1、T3 |
-| G3 依赖状态 | 保持原状态 | 【实现】依赖表已注明服务/模型与页面的边界，本轮不改状态和原判断 | T5 |
-| G4 页面验收 | 不适用 | 服务修复；未开发开机页面、未启动窗口 | — |
-| G5 范围、隐私及文件检查 | 通过 | 【实测/实现】12 个文件均为本任务服务、接口注释、模拟故障、测试和报告；指定路径/MAC 模式 0 命中，无超 5 MB 文件，报告链接有效 | T5 |
+| I1 合并集成分支 | 已解决冲突【实现／实测】 | 共用发送队列同时保留配对阶段标志和成员 generation/epoch；更新全部调用点。21 个集成文件与目标提交完全一致，另 4 个共用文件逐项核对；索引无未合并条目 | T1、T5 |
+| I2 配对与成员边界 | 通过【实测】 | 普通响应、错误、通知、语音及带成员的控制帧不能在未认证连接发送；配对响应仍能完成。成员过期、快速切换后返回、旧实时会话与 AI／听写缓冲沿用集成回归 | T1、T3 |
+| I3 反向对照 | 20/20 通过【实测】 | 原 18 项及新增两项均触发预期保护断言。去掉 generation/epoch 的变体完整运行到 `test.finished=1`，两条成员隔离断言失败，证明旧帧不会因切回同一成员而复活 | T3 |
+| P1 配网、身份与状态 | 通过（模拟器）【实测】 | 五状态、固定公钥、同公钥迁址、跨公钥授权清除、认证错误分类、AI 权限与凭据脱敏通过 | T1、T2 |
+| P2 热点与配对文件 | 通过（模拟器）【实测】 | 热点网页模型、随机密码、成员隔离、启动导入、可选 Wi-Fi 恢复、人工确认与文件删除通过 | T1、T2 |
+| P3 断线与持久化恢复 | 通过（模拟器）【实测】 | 原进程重启及写入故障矩阵通过；accept／complete 单次丢失、请求槽满、远端错误及过期均有回归 | T1、T2、T3 |
+| P4 吊销与资料处理 | 通过（模拟器）【实测】 | 已绑定吊销及布尔 wipe 通过；未受信任 begin、公钥变更及字符串 wipe 不能授权清空 | T1、T2、T3 |
+| G1 全量与内存检查 | 通过【实测】 | 普通 98/98，62.04 秒；ASan/UBSan 98/98，99.55 秒；均含 SDL dummy 桌面冒烟，无跳过，预算未放宽 | T1、T2 |
+| G2 能力与分层 | 保持【实现／实测】 | 沿用原子能力和中枢任务；人工与 AI 仍走原能力，最终 accept 和凭据仍受原策略约束；没有新增用户操作、页面、任务或预算 | T1、T2；源码差异 |
+| G3 依赖状态 | 保持【实现】 | 保留配对服务／网页模型与页面待接的边界，并保留集成分支的成员唤醒状态说明，没有改原判断 | T5 |
+| G4 页面验收 | 不适用【实现】 | 未新增页面，桌面冒烟仅验证既有输入路径；没有产生新的 UI 对照分数 | — |
+| G5 范围与隐私 | 核查进行中【实测】 | 本轮冲突修复及补测仅涉及 `hub_link.c`、两个配对测试文件和本报告；其余变更来自集成提交。合并前差异检查、文件大小及路径／MAC 模式扫描通过，提交后复核待完成 | T4、T5 |
 
-实现：[pairing.c](../../../system/services/hub/pairing.c)、[hub_link.c](../../../system/services/hub/hub_link.c)。仍复用后台执行器、共享服务锁和既有中枢任务；未增加常驻任务或预算。网页仍是模拟器内的模型，没有宿主 HTTP 监听。所有构建最多 `-j4`，全量最多 `-j3`，构建与全量测试串行执行，未启动 GUI。
+所有构建最多 `-j4`，全量测试最多 `-j3`，构建与全量测试逐轮串行。两目录均为 `INK_WERROR=ON`、`INK_GUI=ON`，内存目录另加 `INK_SANITIZE=ON`；仅经 SDL dummy 运行桌面冒烟，未启动带窗口的模拟器。
 
-- T1：`cmake --build build -j4`；`"$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^(pairing-|integration-ai-surface$)' --output-on-failure -j2`，3/3，2.28 秒。日志 `work/pairing-review-build.log`、`work/pairing-review-targeted.log`。
-- T2：`"$INK_DEPS/build-deps/pyenv/bin/python" tests/pairing/reverse.py --build build`，18/18，退出 0；生产源码不撤回，只编译忽略目录中的变体。保留原 10 项，新增信任、跨公钥清理、写入顺序、提交期限、accept 错误、AI 控制、凭据回执及导入确认共 8 项。每项均以对应保护断言失败判定；日志 `work/pairing-review-reverse.log`，证据 `build/pairing-reverse-89s610is/`。
-- T3：按总规则 §5 重新配置，`cmake --build build -j4`，`"$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j3`，构建及测试退出 0；95/95，47.82 秒，无跳过。日志 `work/pairing-review-configure.log`、`work/pairing-review-build.log`、`work/pairing-review-full.log`。
-- T4：同样配置换 `build-asan` 并加 `-DINK_SANITIZE=ON`，`cmake --build build-asan -j4` 退出 0；`"$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j3` 退出 0，95/95、83.45 秒，无跳过。日志 `work/pairing-review-asan-configure.log`、`work/pairing-review-asan-build.log`、`work/pairing-review-asan-full.log`。两个目录均 `INK_WERROR=ON`、`INK_GUI=OFF`，内存目录另有 `INK_SANITIZE=ON`；依赖使用只读 `$INK_DEPS`，既有中枢 Python 环境不变。
-- T5：`git diff --stat 68b6476f..HEAD`（12 个文件）、`git diff --check 68b6476f..HEAD`（退出 0）；按总规则的 `grep -nE` 路径/MAC 模式扫描差异，0 命中（grep 退出 1）。文件大小和报告链接检查通过。6 个变更 C 文件按各自 CMake 参数加 `-Wsign-compare -Werror=unused-result -fsyntax-only` 均退出 0；新增 POSIX write/read/fgets 调用为 0，HAL 读写长度及关闭返回值已检查。日志 `work/pairing-review-checks.log`；这仅是 clang 核查。
-- T6：原样执行 REVIEW.md 末尾复现命令，进程退出 0，7/7 场景完成、`test.fail` 均为 0；卡/Flash 私有文件重启后均仍为 23 字节，无旧 preauth 到新公钥。日志 `work/pairing-review-repro.log`，证据 `build/pairing-review-q9wdi0it/`。
+配置使用总规则 §5 的字体、Python 和 LVGL 参数；另将 `FETCHCONTENT_SOURCE_DIR_SDL2`、`FETCHCONTENT_SOURCE_DIR_IMGUI` 指向只读 `$INK_DEPS/build/_deps/` 中对应的 `sdl2-src`、`imgui-src`，不下载或改依赖。既有 `INK_HUB_PYTHON` 保持不变。下面的 `ctest`、`python` 均使用 `$INK_DEPS/build-deps/pyenv/bin/` 中的可执行文件。
+
+- T1：`cmake --build build -j4`；`SDL_VIDEODRIVER=dummy UBSAN_OPTIONS=halt_on_error=1 ctest --test-dir build --output-on-failure -j3`，均退出 0，98/98。日志 `work/pairing-gate-configure.log`、`work/pairing-gate-build.log`、`work/pairing-gate-full.log`。补测前另跑配对、成员唤醒、应用及 AI 能力定向 6/6，见 `work/pairing-gate-targeted.log`。
+- T2：同样配置换 `build-asan` 并加 `INK_SANITIZE=ON`；`cmake --build build-asan -j4`、`SDL_VIDEODRIVER=dummy UBSAN_OPTIONS=halt_on_error=1 ctest --test-dir build-asan --output-on-failure -j3` 均退出 0，98/98。日志 `work/pairing-gate-asan-configure.log`、`work/pairing-gate-asan-build.log`、`work/pairing-gate-asan-full.log`。
+- T3：`python tests/pairing/reverse.py --build build`，最终整轮 20/20、退出 0；日志 `work/pairing-gate-reverse.log`，证据 `build/pairing-reverse-ll7hu1qt/`。仅在被忽略目录中生成替代对象，不撤改生产源码或断言。新增两项另用 `--only member-control-before-auth --only stale-member-frame` 复验也是 2/2、退出 0。
+- T4：按 CMake 生成的各目标参数，对相对起点及集成提交有变化的 25 个 C 编译单元逐一加 `-Wsign-compare -Werror=unused-result -fsyntax-only`，均退出 0；日志 `work/pairing-gate-strict.log`。本轮及原配对分支新增的 POSIX `write`、`read`、`fgets` 调用均为 0；该检查仍是 clang，不代替 Linux/gcc。
+- T5：`git diff --stat 47c82d67`、`git diff --check 47c82d67`，后者退出 0；28 个文件均存在且不超过 5 MB。分别扫描相对起点和 `FETCH_HEAD` 的差异，使用总规则 §6 的 `grep -nE` 模式，均 0 命中（grep 退出 1）。日志 `work/pairing-gate-checks.log`；提交后及报告链接核查待完成。
 
 ## 没做到的
 
-- 本机没有 Linux/gcc 工具链；未实测 Linux、真机 HAL/TLS/NVS、真实手机网页或真实家庭服务器，不把 clang 或模拟器通过写成这些环境通过。
-- R1～R4 无未修项；本报告的“通过”限于上述模拟器和本机工具链。
+- 本机是 macOS／Apple clang，没有 Linux/gcc 环境，未实测 Linux CI。没有执行真实设备、TLS/NVS、手机网页或家庭服务器验证；不把本机模拟器通过写成这些环境通过。
+- 提交后核查待完成；构建、测试和反向对照均已完成。
 
 ## 和设计不一致的
 
-- 继续使用模拟器已有内部 Flash 原子存储保存 `pair.config` 与 `pair.identity`，真机 NVS 映射仍待设备端口实现；长期令牌不在存储卡。没有修改设计迁就实现。
+- 沿用模拟器内部 Flash 原子存储保存配对配置和身份；真机 NVS 映射、真实手机网页与首次开机页面仍未实现。本轮没有改设计迁就代码。
+- 集成分支已有的成员唤醒设计和状态说明原样保留；没有修改需求、想法或决策记录。
 
 ## 改过的已有测试
 
-- `tests/pairing/device.c` 的 AI configure 期望由“拒绝”改为“能设置公共地址但没有加入权限”，对应 R4；最终 accept 仍要求人操作。
-- `tests/integration/ai_surface.c` 将 configure、reject、restart、import、hotspot_start、hotspot_stop 六项从禁止表移到 AI 能力表；accept 仍留在禁止表。
-- 其他原断言、预算和超时未放宽；只追加网络边界、活连接恢复、AI 权限、写入故障及反向对照。过期 accept 新增中间路径断言，防止仅凭最终状态漏报。
+- 本轮在 `tests/pairing/device.c` 只追加四条未认证连接拒发断言；`reverse.py` 保留原 18 项，新增两项合并边界对照。没有删除测试、修改原有期望、预算或脚本时限。
+- 合入的 `people` 原有期望由闲置／锁屏立即关闭改为锁屏宽限到期关闭；`listening` 两处、`media` 一处按既有 30 秒设置核对到期，保留关闭后的隔离断言。这些是 `FETCH_HEAD` 为 D-95 调整的既有内容，逐字保留，详见 [member-wake 报告](../member-wake/REPORT.md)；本轮没有额外调整等待。
+- `apps`、`people` 的新增生命周期断言及两项 `member-wake` 测试均保留；桌面冒烟恢复到构建默认的启用状态。
 
 ## 要用户定的
 
-- 本轮无需新决定。沿用上一轮暂定配对文件 JSON 编码，服务器对接时仍需冻结；没有改需求、想法或决策记录。
+本轮没有新决定。继续沿用此前暂定的配对文件 JSON 编码和 D-95 时长，不变更产品范围。
 
 ## 顺手发现
 
-- 写入顺序与在途连接也影响授权隔离，已作为 R3 同类边界修复；配置失败保持握手阻断，重启只会看到原公钥或已清空授权的新事务。
-- 【实测】普通和内存全量的 PQ-BN AI 场景内部总 RAM 最低余量 32880 字节，门槛仍为 32768 字节，预算违规 0；余量仍很紧，没有提高预算上限。
+- 新增反向脚本初次从 stderr 找成员断言，实际警告存于 `metrics.json` 的 `warnings`。撤保护已经触发预期的两条失败；改为读取原始指标后复验通过，未放宽产品测试。
+- SDL 和链接器有既有第三方／重复库警告；不在本轮修改范围。正式代码仍以 `INK_WERROR=ON` 构建。

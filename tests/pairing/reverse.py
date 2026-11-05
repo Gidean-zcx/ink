@@ -1,5 +1,6 @@
 """Remove individual enrollment safeguards in ignored source copies and rerun recovery."""
 import argparse
+import json
 import os
 from pathlib import Path
 import shlex
@@ -44,6 +45,8 @@ mutations = {
     "ai-hotspot-secret": ('if (c->src == INK_SRC_TOUCH || c->src == INK_SRC_KEY) ink_cap_result(c, result);', 'ink_cap_result(c, result);'),
     "ai-import-confirmation": ('.ask_by_hand=true, .ask="从存储卡加入文件中的家庭？",', ''),
     "key-switch-write-order": ('fresh(s);\n                ok = store_identity(s);', 'ok = durable(CONFIG_FILE, c, sizeof *c);\n                fresh(s);\n                if (ok) ok = store_identity(s);'),
+    "member-control-before-auth": ('enqueue_tx(true, cls, data, len, member, generation, false)', 'enqueue_tx(true, cls, data, len, member, generation, true)'),
+    "stale-member-frame": ('it->member_generation != ink_member_generation(it->member) || it->member_epoch != __atomic_load_n(&H.member_epoch, __ATOMIC_ACQUIRE)', 'false'),
 }
 if a.only and set(a.only) - mutations.keys():
     raise SystemExit("unknown mutation selection")
@@ -57,7 +60,7 @@ original_link = shlex.split((target / "link.txt").read_text())
 for label, (before, after) in mutations.items():
     if a.only and label not in a.only:
         continue
-    original = hub_source if label in ("completion-not-flushed", "ordinary-response-before-auth", "escaped-hello-buffer") else source
+    original = hub_source if label in ("completion-not-flushed", "ordinary-response-before-auth", "escaped-hello-buffer", "member-control-before-auth", "stale-member-frame") else source
     if original.count(before) != 1:
         raise SystemExit(label + ": safeguard not found exactly once")
     altered = work / (label + ".c")
@@ -69,6 +72,8 @@ for label, (before, after) in mutations.items():
         compile_source = work / "storage.c"
         compile_source.write_text((ROOT / "tests/pairing/storage_faults.c").read_text().replace('../../system/services/hub/pairing.c', str(altered)))
         link_template = shlex.split((build / "CMakeFiles/sim-pairing-storage.dir/link.txt").read_text())
+    if label == "stale-member-frame":
+        link_template = shlex.split((build / "CMakeFiles/sim-member-wake-stream.dir/link.txt").read_text())
     obj = work / (label + ".o")
     cmd = [original_link[0], *flags["C_DEFINES"], *flags["C_INCLUDES"], *flags["C_FLAGS"], "-I" + str(ROOT / "tests/pairing"), "-c", str(compile_source), "-o", str(obj)]
     subprocess.run(cmd, cwd=build, check=True)
@@ -81,6 +86,22 @@ for label, (before, after) in mutations.items():
         index = next(i for i, word in enumerate(link) if word.endswith(".a"))
         link.insert(index, str(obj))
     subprocess.run(link, cwd=build, check=True)
+    if label == "stale-member-frame":
+        out = work / (label + "-out")
+        run = subprocess.run([str(binary), "--profile", str(ROOT / "simulator/profiles/metalio-plus-handsfree.json"),
+                              "--budget", str(ROOT / "tests/integration/member_wake.budget.json"),
+                              "--script", str(ROOT / "tests/integration/member_wake_stream.script"),
+                              "--assets", str(build / "assets"), "--content", str(build / "test-content"),
+                              "--out", str(out), "--quiet", "--no-random-outages"],
+                             cwd=ROOT, capture_output=True, text=True, timeout=90,
+                             env={**os.environ, "UBSAN_OPTIONS": "halt_on_error=1"})
+        (work / (label + ".log")).write_text(run.stdout + run.stderr)
+        report = json.loads((out / "metrics.json").read_text())
+        metrics = report["metrics"]
+        if run.returncode != 1 or metrics.get("test.finished") != 1 or metrics.get("test.fail", 0) < 1 or not any("switching back does not revive the old frame" in warning for warning in report.get("warnings", [])):
+            raise SystemExit(label + ": expected member isolation failure not observed")
+        print(label, "PASS: removed safeguard rejected by unchanged regression", flush=True)
+        continue
     runner = "storage.py" if storage else "run.py"
     run = subprocess.run([sys.executable, str(ROOT / "tests/pairing" / runner), "--build", str(build), "--binary", str(binary)],
                          cwd=ROOT, capture_output=True, text=True, timeout=90,
@@ -95,7 +116,8 @@ for label, (before, after) in mutations.items():
                 "commit-watchdog": "single lost progress recovers without reboot", "accept-error-handling": "expired accept cannot advance to token authentication",
                 "ai-hotspot-control": "AI can stop setup hotspot", "ai-hotspot-secret": "AI can start hotspot without receiving credentials",
                 "ai-import-confirmation": "AI may request card import for a person to confirm",
-                "key-switch-write-order": "failed authorization clear leaves only the original trust anchor"}[label]
+                "key-switch-write-order": "failed authorization clear leaves only the original trust anchor",
+                "member-control-before-auth": "member control frames cannot leave on a preauth connection"}[label]
     destructive_reboot = label == "wipe-not-boolean" and "wipe-string FAIL exit=0" in run.stdout and '"power.reboot": 1' in run.stdout
     destructive_reboot = destructive_reboot or label == "untrusted-revocation" and "guard-begin-wipe FAIL exit=0" in run.stdout and '"power.reboot": 1' in run.stdout
     if run.returncode != 1 or (expected not in run.stdout and not destructive_reboot) or "exit=0" not in run.stdout:

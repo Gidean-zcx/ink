@@ -1,0 +1,3 @@
+# Synthetic microphone, PIN and transport barriers; the real Wi-Fi scan crosses the deadline.
+@0 net wifi
+@400s end

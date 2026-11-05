@@ -34,7 +34,7 @@
 #define FIRST_WAIT_S 30
 #define LONGEST_WAIT_S 900
 #define UNREAD_RETRY_S 10
-#define IDLE_RETURN_S 120
+#define IDLE_RETURN_S 120        /* provisional lock grace (D-95); member.idle_return_s overrides it */
 #define REMOVING 0x80u /* Kept in the stored role byte without changing the record format. */
 
 typedef struct {
@@ -67,10 +67,13 @@ static struct {
     bool authed;
     bool table_is_real;
     bool table_unread; /* it is there and could not be read: nobody knows who has a PIN, so as if everyone adult had one */
+    uint64_t locked_since;
+    uint64_t return_after_us;
     int h_member, h_authed;
     ink_svc_deadline_t idle_at;
     ink_exec_job_t idle_job;
-} M = {.s = {[0] = {.used = true, .m = {.id = "owner", .name = "我", .role = INK_ROLE_ADULT}},
+} M = {.return_after_us = IDLE_RETURN_S * 1000000ull,
+       .s = {[0] = {.used = true, .m = {.id = "owner", .name = "我", .role = INK_ROLE_ADULT}},
              [1] = {.used = true, .m = {.id = "kid", .name = "小朋友", .role = INK_ROLE_CHILD, .allow = {"reader.", "ai.", "system.home"}}}}};
 
 static slot_t *cur(void) { return M.cur ? M.cur : &M.s[0]; }
@@ -146,9 +149,15 @@ bool ink_member_any_pin(void) {
     return false;
 }
 
+static bool return_expired(uint64_t now) {
+    uint64_t since = __atomic_load_n(&M.locked_since, __ATOMIC_ACQUIRE);
+    uint64_t after = __atomic_load_n(&M.return_after_us, __ATOMIC_RELAXED);
+    return since && now >= since && now - since >= after;
+}
+
 bool ink_member_space_open(void) {
     const slot_t *c = cur();
-    return c->m.role == INK_ROLE_CHILD || M.authed || (!c->has_pin && !M.table_unread);
+    return c->m.role == INK_ROLE_CHILD || (M.authed && !return_expired(osal_now_us())) || (!c->has_pin && !M.table_unread);
 }
 
 /* ---- the table on the flash ---- */
@@ -292,15 +301,16 @@ static void close_space(void) {
 static void idle_check(void *arg);
 
 static void arm_idle(void) {
-    int64_t s = ink_setting_get("member.idle_return_s");
-    ink_svc_at(&M.idle_at, ink_power_last_activity() + (uint64_t)(s > 0 ? s : IDLE_RETURN_S) * 1000000ull, idle_check, NULL);
+    uint64_t since = __atomic_load_n(&M.locked_since, __ATOMIC_ACQUIRE);
+    uint64_t after = __atomic_load_n(&M.return_after_us, __ATOMIC_RELAXED);
+    if (M.authed && since) ink_svc_at(&M.idle_at, since + after, idle_check, NULL);
+    else ink_svc_cancel(&M.idle_at);
 }
 
 static void idle_job(void *arg) { /* exec.bg */
     (void)arg;
-    if (!M.authed) return;
-    int64_t s = ink_setting_get("member.idle_return_s");
-    if (osal_now_us() >= ink_power_last_activity() + (uint64_t)(s > 0 ? s : IDLE_RETURN_S) * 1000000ull) close_space();
+    if (!M.authed || !__atomic_load_n(&M.locked_since, __ATOMIC_ACQUIRE)) return;
+    if (return_expired(osal_now_us())) close_space();
     else arm_idle();
 }
 
@@ -311,9 +321,21 @@ static void idle_check(void *arg) { /* the timer task */
 
 static void on_power(void *ctx, ink_power_state_t from, ink_power_state_t to, uint64_t cause_us) { /* power task */
     (void)ctx;
-    (void)from;
-    (void)cause_us;
-    if (to == INK_PWR_LOCKED) close_space();
+    if (to == INK_PWR_LOCKED) {
+        __atomic_store_n(&M.locked_since, osal_now_us(), __ATOMIC_RELEASE);
+        arm_idle();
+    } else if (from == INK_PWR_LOCKED) {
+        /* A busy background executor must not let a wake key bypass the deadline. */
+        if (return_expired(cause_us)) close_space();
+        __atomic_store_n(&M.locked_since, 0, __ATOMIC_RELEASE);
+        ink_svc_cancel(&M.idle_at);
+    }
+}
+
+static void apply_return_after(void *ctx, int64_t seconds) {
+    (void)ctx;
+    __atomic_store_n(&M.return_after_us, (uint64_t)seconds * 1000000ull, __ATOMIC_RELAXED);
+    arm_idle();
 }
 
 /* ---- the PIN ---- */
@@ -413,6 +435,7 @@ static void pin_job(void *arg) { /* exec.bg: slow by design */
             if (r == INK_PIN_OK) {
                 M.cur = s;
                 M.authed = s->has_pin;
+                __atomic_store_n(&M.locked_since, ink_power_state() == INK_PWR_LOCKED ? osal_now_us() : 0, __ATOMIC_RELEASE);
                 ink_power_activity(osal_now_us()); /* the person is here: however long the slow part took */
                 publish();
                 if (M.authed) arm_idle();
@@ -689,10 +712,12 @@ static const ink_cap_t MEMBER_CAPS[] = {
 };
 
 static const ink_setting_def_t MEMBER_SETTINGS[] = {
-    {.id = "member.idle_return_s", .title = "大人的空间闲置多久后要重新输密码（秒）", .type = INK_SET_INT, .min = 30, .max = 3600, .def = IDLE_RETURN_S, .ask_by_hand = true},
+    {.id = "member.idle_return_s", .title = "大人锁屏多久后要重新输密码（秒）", .type = INK_SET_INT, .min = 30, .max = 3600, .def = IDLE_RETURN_S, .ask_by_hand = true,
+     .apply = apply_return_after, .apply_exec = INK_EXEC_DIRECT},
 };
 
 int ink_members_start(void) {
     if (ink_settings_define(MEMBER_SETTINGS, 1) != 0 || ink_power_subscribe(on_power, NULL) != 0) return -1;
+    apply_return_after(NULL, ink_setting_get("member.idle_return_s"));
     return ink_cap_register(MEMBER_CAPS, (int)(sizeof MEMBER_CAPS / sizeof MEMBER_CAPS[0]));
 }
