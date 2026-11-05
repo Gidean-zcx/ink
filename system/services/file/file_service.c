@@ -156,6 +156,23 @@ static file_context_t current_context(void) {
     return c;
 }
 
+static file_context_t member_context(const char *member, uint32_t generation) {
+    file_context_t c = {0};
+    ink_svc_lock();
+    if (member && generation && generation == ink_member_generation(member)) {
+        const ink_member_t *m;
+        for (int i = 0; (m = ink_member_at(i)) != NULL; i++) {
+            if (strcmp(m->id, member)) continue;
+            snprintf(c.member, sizeof c.member, "%s", m->id);
+            c.adult = m->role == INK_ROLE_ADULT;
+            c.generation = generation;
+            break;
+        }
+    }
+    ink_svc_unlock();
+    return c;
+}
+
 bool fs_context_for_call(file_context_t *context, ink_call_t *call) {
     *context = current_context();
     uint32_t generation;
@@ -1210,6 +1227,11 @@ int ink_fs_open(const char *path, int mode, ink_fs_file_t **out) {
     return fs_open_for(&c, path, mode, out);
 }
 
+int ink_fs_open_member_generation(const char *member, uint32_t generation, const char *path, int mode, ink_fs_file_t **out) {
+    file_context_t c = member_context(member, generation);
+    return fs_open_for(&c, path, mode, out);
+}
+
 int64_t ink_fs_write(ink_fs_file_t *f, const void *buf, size_t n) {
     osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
     __atomic_add_fetch(&FS.revision, 1, __ATOMIC_RELAXED);
@@ -1243,6 +1265,11 @@ int ink_fs_remove_if_revision(const char *path, uint32_t revision) {
     return fs_remove_for(&c, path, revision);
 }
 int ink_fs_remove(const char *path) { return ink_fs_remove_if_revision(path, 0); }
+
+int ink_fs_remove_member_generation(const char *member, uint32_t generation, const char *path) {
+    file_context_t c = member_context(member, generation);
+    return fs_remove_for(&c, path, 0);
+}
 
 int fs_move_for(const file_context_t *c, const char *from, const char *to, uint32_t revision, uint32_t *written) {
     osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);

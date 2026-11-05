@@ -62,6 +62,8 @@ void ink_fs_refresh_state(void);
 
 /** 0 and *out, or an error. Up to 8 files at a time. */
 int ink_fs_open(const char *path, int mode, ink_fs_file_t **out);
+/** Trusted delayed callers keep the original actor, permission and incarnation. */
+int ink_fs_open_member_generation(const char *member, uint32_t generation, const char *path, int mode, ink_fs_file_t **out);
 int64_t ink_fs_read(ink_fs_file_t *f, void *buf, size_t n);
 int64_t ink_fs_write(ink_fs_file_t *f, const void *buf, size_t n);
 int ink_fs_seek(ink_fs_file_t *f, int64_t off, int whence);
@@ -82,6 +84,7 @@ void ink_fs_dir_close(ink_fs_dir_t *d);
 int ink_fs_mkdir(const char *path);
 /** A file or an empty directory. Whole trees: ink_fs_delete_start. */
 int ink_fs_remove(const char *path);
+int ink_fs_remove_member_generation(const char *member, uint32_t generation, const char *path);
 /** On the card that is a rename: at once. The target must not exist. */
 int ink_fs_move(const char *from, const char *to);
 /** Replace or create a whole file through a temporary one. */

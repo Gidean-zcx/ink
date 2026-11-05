@@ -18,7 +18,7 @@ a = p.parse_args()
 build = (ROOT / a.build).resolve()
 work = Path(tempfile.mkdtemp(prefix='services-finish-', dir=build))
 suites = {
-    'file_events': ('sim-media', ['file_handoff_boundary.c'], '30s'),
+    'file_events': ('sim-media', ['file_handoff_boundary.c', 'media_record_boundary.c'], '30s'),
     'file_paths': ('sim-media', ['file_handoff_boundary.c'], '30s'),
     'file_reuse': ('sim-media', ['file_handoff_boundary.c'], '30s'),
     'file_late': ('sim-media', ['file_late_boundary.c'], '25s'),
@@ -60,6 +60,8 @@ suites = {
 
 def compile_suite(name):
     template, extras, end = suites[name]
+    if a.baseline and name in ('file_events', 'file_paths', 'file_reuse'):
+        extras = [*extras, *[source for source in ('media_record_boundary.c', 'ogg_record_boundary.c') if source not in extras]]
     flags = {}
     for line in (build / 'CMakeFiles' / (template + '.dir') / 'flags.make').read_text().splitlines():
         if ' = ' in line:
@@ -69,10 +71,10 @@ def compile_suite(name):
     defines = []
     if a.baseline:
         # Read only: source copies and binaries live in the ignored build directory.
-        for rel in ['system/ui/app_registry.c', 'system/services/audio/media_service.c', 'apps/reader/reader.c', 'system/services/file/file_service.c', 'system/services/data/datastore.c', 'system/services/update/update_service.c', 'system/services/text/text_service.c', 'system/services/text/text_caps.c', 'system/services/audio/audio_service.c', 'system/services/power/power_service.c', 'system/services/ai/ai_service.c', 'system/policy/cap.c', 'system/policy/settings.c', 'system/policy/members.c', 'system/services/hub/hub_link.c', 'system/services/net/wifi.c', 'system/services/time/time_service.c', 'system/services/time/time_caps.c', 'system/services/res/task.c', 'system/services/data/data_caps.c', 'system/services/file/file_caps.c', 'system/ui/textfield.c', 'system/ui/ui_task.c', 'system/ui/shell/off_picture.c', 'system/services/notify/notify_service.c', 'system/services/notify/notify_caps.c']:
+        for rel in ['system/ui/app_registry.c', 'system/services/audio/ogg.c', 'system/services/audio/media_service.c', 'apps/reader/reader.c', 'system/services/file/file_service.c', 'system/services/data/datastore.c', 'system/services/update/update_service.c', 'system/services/text/text_service.c', 'system/services/text/text_caps.c', 'system/services/audio/audio_service.c', 'system/services/power/power_service.c', 'system/services/ai/ai_service.c', 'system/policy/cap.c', 'system/policy/settings.c', 'system/policy/members.c', 'system/services/hub/hub_link.c', 'system/services/net/wifi.c', 'system/services/time/time_service.c', 'system/services/time/time_caps.c', 'system/services/res/task.c', 'system/services/data/data_caps.c', 'system/services/file/file_caps.c', 'system/ui/textfield.c', 'system/ui/ui_task.c', 'system/ui/shell/off_picture.c', 'system/services/notify/notify_service.c', 'system/services/notify/notify_caps.c']:
             target = work / Path(rel).name
             target.write_bytes(subprocess.check_output(['git', 'show', a.baseline + ':' + rel], cwd=ROOT))
-            macro = 'INK_TEST_' + {'app_registry.c': 'APP', 'media_service.c': 'MEDIA', 'reader.c': 'READER', 'file_service.c': 'FILE', 'datastore.c': 'DATA', 'update_service.c': 'UPDATE', 'text_service.c': 'TEXT', 'text_caps.c': 'TEXT_CAPS', 'audio_service.c': 'AUDIO', 'power_service.c': 'POWER', 'ai_service.c': 'AI', 'cap.c': 'CAP', 'settings.c': 'SETTINGS', 'members.c': 'MEMBERS', 'hub_link.c': 'HUB', 'wifi.c': 'WIFI', 'time_service.c': 'TIME', 'time_caps.c': 'TIME_CAPS', 'task.c': 'TASK', 'data_caps.c': 'DATA_CAPS', 'file_caps.c': 'FILE_CAPS', 'textfield.c': 'TEXTFIELD', 'ui_task.c': 'UI', 'off_picture.c': 'OFF', 'notify_service.c': 'NOTIFY', 'notify_caps.c': 'NOTIFY_CAPS'}[Path(rel).name] + '_SOURCE'
+            macro = 'INK_TEST_' + {'app_registry.c': 'APP', 'ogg.c': 'OGG', 'media_service.c': 'MEDIA', 'reader.c': 'READER', 'file_service.c': 'FILE', 'datastore.c': 'DATA', 'update_service.c': 'UPDATE', 'text_service.c': 'TEXT', 'text_caps.c': 'TEXT_CAPS', 'audio_service.c': 'AUDIO', 'power_service.c': 'POWER', 'ai_service.c': 'AI', 'cap.c': 'CAP', 'settings.c': 'SETTINGS', 'members.c': 'MEMBERS', 'hub_link.c': 'HUB', 'wifi.c': 'WIFI', 'time_service.c': 'TIME', 'time_caps.c': 'TIME_CAPS', 'task.c': 'TASK', 'data_caps.c': 'DATA_CAPS', 'file_caps.c': 'FILE_CAPS', 'textfield.c': 'TEXTFIELD', 'ui_task.c': 'UI', 'off_picture.c': 'OFF', 'notify_service.c': 'NOTIFY', 'notify_caps.c': 'NOTIFY_CAPS'}[Path(rel).name] + '_SOURCE'
             if rel.endswith('members.c') and 'ink_member_io_begin' not in target.read_text():
                 defines += ['-DINK_TEST_OLD_MEMBER_IO=1']
             if rel.endswith('text_service.c') and 'ink_text_edit_revision' not in target.read_text():
@@ -128,7 +130,7 @@ def review_matrix(name, binary):
         all_ok &= ok
 
     if name == 'file_events':
-        for operation in ('handle', 'record', 'atomic', 'mkdir', 'remove', 'move', 'copy', 'delete'):
+        for operation in ('handle', 'record', 'record_start', 'play_start', 'play_api_start', 'atomic', 'mkdir', 'remove', 'move', 'copy', 'delete'):
             for change in (False, True):
                 path = work / (operation + ('-switch' if change else '-control'))
                 (path / 'sd').mkdir(parents=True)
