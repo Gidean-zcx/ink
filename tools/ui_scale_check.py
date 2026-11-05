@@ -78,7 +78,59 @@ def parameters(name, args):
     return [(1, 'dimension')]
 
 
-def symbols_before(text, pos):
+def conditional_spans(text):
+    # Give single-statement bodies the same branch boundary as braced bodies.
+    pairs, stack = {}, []
+    for at, c in enumerate(text):
+        if c in '({[': stack.append(at)
+        elif c in ')}]' and stack:
+            pairs[stack.pop()] = at + 1
+
+    def skip(at):
+        while at < len(text) and text[at].isspace(): at += 1
+        return at
+
+    def statement_end(at):
+        at = skip(at)
+        if at >= len(text): return at
+        if text[at] == '{': return pairs.get(at, len(text))
+        keyword = re.match(r'(if|for|while|switch|do)\b', text[at:])
+        if keyword:
+            body = skip(at + keyword.end())
+            if keyword[1] != 'do': body = skip(pairs.get(body, len(text)))
+            end = statement_end(body)
+            tail = skip(end)
+            if keyword[1] == 'if' and re.match(r'else\b', text[tail:]):
+                return statement_end(tail + 4)
+            if keyword[1] == 'do' and re.match(r'while\b', text[tail:]):
+                end = skip(pairs.get(skip(tail + 5), len(text)))
+                return end + (text[end:end + 1] == ';')
+            return end
+        while at < len(text):
+            if text[at] in '({[': at = pairs.get(at, len(text))
+            elif text[at] in ';}': return at + 1
+            else: at += 1
+        return at
+
+    spans = []
+    directives = []
+    for directive in re.finditer(r'^\s*#\s*(if|ifdef|ifndef|elif|else|endif)\b[^\n]*', text, re.M):
+        if directive[1] in ('if', 'ifdef', 'ifndef'): directives.append(directive.start())
+        elif directives:
+            spans.append((directives.pop(), directive.start()))
+            if directive[1] != 'endif': directives.append(directive.end())
+    for keyword in re.finditer(r'\b(if|for|while|switch|do)\b', text):
+        body = skip(keyword.end())
+        if keyword[1] != 'do': body = skip(pairs.get(body, len(text)))
+        end = statement_end(body)
+        spans.append((keyword.start(), end))
+        tail = skip(end)
+        if keyword[1] == 'if' and re.match(r'else\b', text[tail:]):
+            spans.append((tail, statement_end(tail + 4)))
+    return spans
+
+
+def symbols_before(text, pos, branches=None):
     # Track simple writes by lexical identity, including writes inside branches.
     stack, scopes = [], []
     for at, c in enumerate(text[:pos]):
@@ -94,6 +146,7 @@ def symbols_before(text, pos):
     events += [(m.start(), 'assign', m) for m in ASSIGN.finditer(text[:pos])
                if not any(d.start() <= m.start() < d.end() for d in arrays)]
     bindings = {}
+    if branches is None: branches = conditional_spans(text)
     for at, kind, m in sorted(events):
         scope = scopes[at] if scopes else ()
         if scope and current and scope[0] != current[0]: continue
@@ -121,8 +174,17 @@ def symbols_before(text, pos):
         for (name, s), v in sorted(bindings.items(), key=lambda item: len(item[0][1])):
             if scope[:len(s)] == s and v: known[name] = v
         value = re.sub(r'\b\w+\b', lambda word: '(' + known[word[0]] + ')' if word[0] in known else word[0], value)
-        if m[2] == '=' and current[:len(scope)] != scope and previous:
-            value = f'[{previous}, {value}]'
+        conditional = current[:len(scope)] != scope or any(
+            start <= at < end and not start <= pos < end for start, end in branches)
+        start = max(text.rfind(';', 0, at), text.rfind('{', 0, at), text.rfind('}', 0, at)) + 1
+        conditional |= bool(re.search(r'\?|&&|\|\|', text[start:at]))
+        # Symbolic compound expressions already retain their old leaves. Only a
+        # fully numeric expression can fold away an illegal previous candidate.
+        old = expression(previous, symbols) if m[2] != '=' and previous else None
+        folds_old = old is not None and evaluate(old) is not None and not any(
+            getattr(n, 'ui_contract', False) for n in ast.walk(old))
+        if conditional and (m[2] == '=' or folds_old):
+            value = f'[{previous or m[1]}, {value}]'
         bindings[m[1], owner] = value
     for (name, scope), value in sorted(bindings.items(), key=lambda item: len(item[0][1])):
         if current[:len(scope)] == scope: symbols[name] = value
@@ -211,8 +273,8 @@ def violations(source, category, symbols, allowed):
         if isinstance(n, ast.Name) and ((category == 'dimension' and n.id == 'LV_SIZE_CONTENT') or
                                        (category == 'radius' and n.id == 'LV_RADIUS_CIRCLE')): return []
         if isinstance(n, (ast.List, ast.Tuple)):
-            return [bad for item in n.elts for bad in leaves(item)]
-        if isinstance(n, ast.IfExp): return leaves(n.body) + leaves(n.orelse)
+            return [bad for item in n.elts for bad in leaves(item, ratio)]
+        if isinstance(n, ast.IfExp): return leaves(n.body, ratio) + leaves(n.orelse, ratio)
         if category == 'dimension' and getattr(n, 'ui_contract', False): return []
         if ast.unparse(n) in symbols and getattr(symbols[ast.unparse(n)], 'ui_contract', False): return []
         if isinstance(n, ast.Call):
@@ -243,9 +305,10 @@ def check(path):
     runtime = [(category, name, why) for category, names, why in RUNTIME.findall(text[:2400])
                if len(why.strip()) >= 8 for name in names.split(',')]
     clean, errors = clean_source(text), []
+    branches = conditional_spans(clean)
     for call in CALL.finditer(clean):
         args = arguments(clean, call.end())
-        symbols = symbols_before(clean, call.start())
+        symbols = symbols_before(clean, call.start(), branches)
         for i, category in parameters(call[1], args):
             if i >= len(args): continue
             if re.match(r'^(?:int|unsigned|lv_coord_t)\s+\w+$', args[i]): continue  # Function declaration.

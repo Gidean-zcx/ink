@@ -3,6 +3,7 @@
 #define INK_UI_THEME_H
 
 #include "ink/sys/ui.h"
+#include "ink/ui_icon_names.h"
 
 enum {
     INK_CANVAS_W = 684, INK_CANVAS_H = 1216, /* Panel geometry, not control sizes. */

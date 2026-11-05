@@ -206,20 +206,20 @@ static void tile(lv_obj_t *parent, const char *id, const char *title, const char
 
 static const char *const APP_IDS[] = {"listen", "news", "word", "upcoming", "clock", "camera", "gallery", "settings"};
 static const char *const APP_TITLES[] = {"听", "报纸", "单词", "接下来", "时钟", "相机", "相册", "设置"};
-static const char *const APP_ICONS[] = {"headphones", "news", "word", "calendar", "clock", "camera", "gallery", "gear"};
+static const char *const APP_ICONS[] = {INK_UI_ICON(headphones), INK_UI_ICON(news), INK_UI_ICON(word), INK_UI_ICON(calendar), INK_UI_ICON(clock), INK_UI_ICON(camera), INK_UI_ICON(gallery), INK_UI_ICON(gear)};
 static const char *const GROUP_IDS[][4] = {{"reader", "listen", "news", "word"}, {"memo", "upcoming", "phone", "message"}};
 static const char *const GROUP_TITLES[][4] = {{"阅读", "听", "报纸", "单词"}, {"备忘", "接下来", "电话", "短信"}};
-static const char *const GROUP_ICONS[][4] = {{"book", "headphones", "news", "word"}, {"memo", "calendar", "phone", "message"}};
+static const char *const GROUP_ICONS[][4] = {{INK_UI_ICON(book), INK_UI_ICON(headphones), INK_UI_ICON(news), INK_UI_ICON(word)}, {INK_UI_ICON(memo), INK_UI_ICON(calendar), INK_UI_ICON(phone), INK_UI_ICON(message)}};
 typedef struct { const char *id, *title, *icon; } tool_t;
 static int tools(tool_t out[24]) {
     int count = 0;
     for (int i = 0; i < ink_app_count() && count < 16; i++) {
         const ink_app_def_t *a = ink_app_at(i);
         if (!a->entry || !ink_app_visible(a) || !strcmp(a->id, "home") || !strcmp(a->id, "reader")) continue;
-        out[count++] = (tool_t){a->id, a->title, a->icon ? a->icon : "grid"};
+        out[count++] = (tool_t){a->id, a->title, a->icon ? a->icon : INK_UI_ICON(grid)};
     }
-    static const tool_t MORE[] = {{"clock", "时钟", "clock"}, {"camera", "相机", "camera"}, {"gallery", "相册", "gallery"},
-        {"files", "文件", "folder"}, {"remote", "网页", "globe"}, {"ai", "对话记录", "ai"}, {"settings", "设置", "gear"}};
+    static const tool_t MORE[] = {{"clock", "时钟", INK_UI_ICON(clock)}, {"camera", "相机", INK_UI_ICON(camera)}, {"gallery", "相册", INK_UI_ICON(gallery)},
+        {"files", "文件", INK_UI_ICON(folder)}, {"remote", "网页", INK_UI_ICON(globe)}, {"ai", "对话记录", INK_UI_ICON(ai)}, {"settings", "设置", INK_UI_ICON(gear)}};
     for (unsigned i = 0; i < sizeof MORE / sizeof *MORE; i++) {
         if (child() && (i == 3 || i == 4 || i == 6)) continue;
         bool present = false;
@@ -350,7 +350,7 @@ void ink_shell_home_create(lv_obj_t *screen) {
 
 lv_obj_t *ink_shell_dock(lv_obj_t *parent) {
     lv_obj_t *dock = ink_ui_box(parent, INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_DOCK, width(), INK_DOCK, -1, INK_SURFACE_STATIC, false);
-    static const char *const icons[] = {"phone", "message", "ai", "book", "memo"};
+    static const char *const icons[] = {INK_UI_ICON(phone), INK_UI_ICON(message), INK_UI_ICON(ai), INK_UI_ICON(book), INK_UI_ICON(memo)};
     static const char *const ids[] = {"phone", "message", "ai", "reader", "memo"};
     int dock_width = ink_ui_width() - 2 * ink_ui_px(INK_MARGIN);
     lv_obj_set_x(dock, ink_ui_px(INK_MARGIN));

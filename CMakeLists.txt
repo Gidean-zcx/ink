@@ -337,7 +337,11 @@ endforeach()
 add_custom_target(ink_icons ALL DEPENDS ${INK_ICON_FILES})
 add_custom_target(ink_ui_resource_check ALL
   COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/icongen/check.py
+          --header ${CMAKE_BINARY_DIR}/generated/ink/ui_icon_names.h
+  BYPRODUCTS ${CMAKE_BINARY_DIR}/generated/ink/ui_icon_names.h
   COMMENT "Check required design icon geometry")
+add_dependencies(ink_system ink_ui_resource_check)
+target_include_directories(ink_system PUBLIC ${CMAKE_BINARY_DIR}/generated)
 
 # Scenario content: the committed sample books + a generated long book (pagination stress).
 set(INK_TEST_CONTENT ${CMAKE_BINARY_DIR}/test-content)
@@ -444,6 +448,7 @@ add_test(NAME ui-scale COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/u
 add_test(NAME ui-scale-regressions COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/ui_scale_check_test.py)
 add_test(NAME ui-compare-regressions COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/ui_compare_test.py)
 add_test(NAME ui-icons COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/icongen/check.py)
+add_test(NAME ui-icons-regressions COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/ui_icon_check_test.py)
 add_test(NAME ui-assets COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/ui_assets_check.py ${INK_ASSETS_DIR})
 add_executable(sim-ui-scenes simulator/runtime/sim_main.c tests/ui_shell_scenes.c)
 target_link_libraries(sim-ui-scenes PRIVATE ink_apps ink_system ink_port_sim)

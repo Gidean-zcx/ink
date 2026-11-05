@@ -202,7 +202,7 @@ lv_obj_t *ink_ui_slider(lv_obj_t *parent, const char *title, int value, int x, i
     lv_obj_t *b = ink_ui_box(parent, x, y, w, INK_SLIDER, -1, INK_SURFACE_WHITE, true);
     lv_obj_t *fill = ink_ui_box(b, 0, 0, w * value / 10, INK_SLIDER, 0, INK_SURFACE_BLACK, false);
     (void)fill;
-    const char *icon = !strcmp(title, "亮度") ? "sun" : !strcmp(title, "音量") ? "volume" : !strcmp(title, "暖光") ? "warm" : NULL;
+    const char *icon = !strcmp(title, "亮度") ? INK_UI_ICON(sun) : !strcmp(title, "音量") ? INK_UI_ICON(volume) : !strcmp(title, "暖光") ? INK_UI_ICON(warm) : NULL;
     int title_x = INK_GAP_XL + (icon ? INK_ICON_MEDIUM + INK_GAP_M : 0);
     if (icon) ink_ui_icon(b, icon, INK_ICON_MEDIUM, INK_ICON_LINE, INK_GAP_XL, (INK_SLIDER - INK_ICON_MEDIUM) / 2, false);
     lv_obj_t *label = ink_ui_label(b, title, INK_FONT_LIST, INK_WEIGHT_MEDIUM, title_x, (INK_SLIDER - INK_LINE_LIST) / 2, w - 2 * INK_BLOCK_L);

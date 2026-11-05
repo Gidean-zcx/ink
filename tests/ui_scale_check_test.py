@@ -91,5 +91,58 @@ class ScaleCheck(unittest.TestCase):
         with patch.object(Path, 'read_text', return_value=source):
             self.assertTrue(CHECK(path))
 
+    def test_conditional_writes_keep_reachable_values(self):
+        for body in (
+            'if(flag) w=104;',
+            'if(flag) {w=104;}',
+            'if(flag) w=123; else w=104;',
+            'if(flag) {w=123;} else w=104;',
+            'if(flag) w=123; else {w=104;}',
+            'if(flag) w=104; else if(other) w=104;',
+            'if(flag) if(other) w=123; else w=104;',
+            'if(flag) {if(other) w=123; else w=104;}',
+            'if(flag) for(int i=0;i<2;i++) w=104;',
+            'for(int i=0;i<count;i++) w=104;',
+            'while(flag) w=104;',
+            'switch(flag) {case 0: w=104; break;}',
+            'if(flag) do w=104; while(other);',
+            'if(flag) w+=19; else w=104;',
+            'if(flag) w-=19;',
+            'if(flag) w=104; int alias=w; w=104; w=alias;',
+        ):
+            for initial in ('104', '123'):
+                # Every body has an illegal or uninitialized reachable path.
+                if initial == '104' and 'w=123' not in body and 'w+=19' not in body: continue
+                source = f'int w={initial}; {body} lv_obj_set_width(o,w);'
+                with self.subTest(source=source): self.assertTrue(self.check_source(source))
+        for source in (
+            'int px=123; if(flag) px=32; ink_ui_font_px(px,INK_WEIGHT_REGULAR);',
+            'int w; if(flag) w=104; lv_obj_set_width(o,w);',
+            'int w=123; if(flag) w=104; int h=w; lv_obj_set_height(o,h);',
+            'int w=104; if(flag) w=123; else w=104; lv_obj_set_width(o,w);',
+            'int w=123;\n#if FLAG\nw=104;\n#endif\nlv_obj_set_width(o,w);',
+            'int w=104;\n#if FLAG\nw=123;\n#else\nw=104;\n#endif\nlv_obj_set_width(o,w);',
+            'int w=104; flag ? w=123 : w=104; lv_obj_set_width(o,w);',
+        ):
+            with self.subTest(source=source): self.assertTrue(self.check_source(source))
+
+    def test_legal_conditional_writes(self):
+        for body in (
+            'if(flag) w=160;',
+            'if(flag) {w=160;} else w=104;',
+            'if(flag) w=160; else {w=104;}',
+            'if(flag) if(other) w=160; else w=104;',
+            'while(flag) w=160;',
+            'for(int i=0;i<count;i++) w=160;',
+            'do w=160; while(flag);',
+        ):
+            source = f'int w=104; {body} lv_obj_set_width(o,w);'
+            with self.subTest(source=source): self.assertFalse(self.check_source(source))
+        for source in (
+            'int w=123; if(flag) w=160; w=104; lv_obj_set_width(o,w);',
+            'int w=123; if(flag) {w=104; lv_obj_set_width(o,w);}',
+        ):
+            with self.subTest(source=source): self.assertFalse(self.check_source(source))
+
 
 if __name__ == '__main__': unittest.main()
