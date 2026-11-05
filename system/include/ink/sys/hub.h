@@ -50,6 +50,11 @@ int ink_hub_on_online(void (*fn)(void *ctx), void *ctx);
 void ink_hub_set_tick(void (*fn)(void));
 /** Have it look soon (any task, never waits). */
 void ink_hub_wake(void);
+/* Enrollment service: reconnect after durable configuration/identity changes. */
+void ink_hub_reconnect(void);
+int ink_hub_pair_call(const char *method, const char *params);
+int ink_hub_pair_respond(int64_t id, const char *result_json);
+int ink_hub_pair_respond_error(int64_t id, int code, const char *message);
 /** Stay connected while held (reference-counted; realtime sessions hold it). */
 void ink_hub_keep(bool on);
 
