@@ -586,6 +586,7 @@ static void apply_area(const req_t *r, hal_waveform_t wf) {
             size_t i = (size_t)y * D.W + x;
             uint8_t old = D.screen[i];
             uint8_t nv = D.applying[(size_t)(y - r->area.y) * r->area.w + (x - r->area.x)];
+            if ((r->flags & HAL_UPD_FLAG_BINARY_PREVIEW) && old == nv) continue;
             if (D.info.tech == HAL_PANEL_EPD && (wf == HAL_WF_DU || wf == HAL_WF_A2)) nv = nv < 128 ? 0 : 255; /* 2-level */
             if (D.info.tech == HAL_PANEL_LCD || pw->flashing) {
                 D.residual[i] = 0;
@@ -734,6 +735,24 @@ static void execute(req_t *r) {
     /* EPDiy drives from the framebuffer as it is when the update starts */
     for (int y = 0; y < r->area.h; y++)
         memcpy(D.applying + (size_t)y * r->area.w, D.target + (size_t)(r->area.y + y) * D.W + r->area.x, (size_t)r->area.w);
+
+    if (r->flags & HAL_UPD_FLAG_BINARY_PREVIEW) {
+        bool valid = wf == HAL_WF_DU;
+        for (int y = 0; valid && y < r->area.h; y++) for (int x = 0; x < r->area.w; x++) {
+            uint8_t old = D.screen[(size_t)(r->area.y + y) * D.W + r->area.x + x];
+            uint8_t *next = &D.applying[(size_t)y * r->area.w + x];
+            *next = old == 0 || old == 255 ? (*next < 128 ? 0 : 255) : old;
+        }
+        if (!valid) {
+            sim_metric_add("display.binary_preview_rejected", 1);
+            res.ok = false;
+            res.started_us = res.done_us = vtk_now() / 1000;
+            D.pending--;
+            hal_cpu_boost_release(g_boost);
+            if (r->done) r->done(r->ctx, &res);
+            return;
+        }
+    }
 
     bool full_area = r->area.x == 0 && r->area.y == 0 && r->area.w == D.W && r->area.h == D.H;
     uint64_t started, done;

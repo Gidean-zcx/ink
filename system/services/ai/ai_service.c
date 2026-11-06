@@ -33,6 +33,7 @@
 #include "ink/sys/layout.h"
 #include "ink/sys/state.h"
 #include "ink/sys/ai.h"
+#include "ink/ui_shell.h"
 #include "ink/sys/audio.h"
 #include "ink/sys/font.h"
 #include "ink/sys/power.h"
@@ -117,50 +118,15 @@ typedef struct {
 
 /* ---------------------------------------------------------------- sheet */
 
-static const lv_font_t *font_pt(double pt) {
-    hal_panel_info_t pi;
-    hal_display_get_info(&pi);
-    ink_font_t *f = ink_font_for_pt(pt, pi.dpi);
-    return f ? ink_font_lvgl(f) : ink_ui_font(0);
-}
-
 static void sheet_open(void) {
-    if (AI.open) return;
-    lv_obj_t *top = lv_layer_top();
-    AI.sheet = lv_obj_create(top);
-    lv_obj_remove_style_all(AI.sheet);
-    lv_obj_set_size(AI.sheet, lv_pct(100), lv_pct(58));
-    lv_obj_align(AI.sheet, LV_ALIGN_BOTTOM_MID, 0, 0);
-    lv_obj_set_style_bg_color(AI.sheet, lv_color_white(), 0);
-    lv_obj_set_style_bg_opa(AI.sheet, LV_OPA_COVER, 0);
-    lv_obj_set_style_border_side(AI.sheet, LV_BORDER_SIDE_TOP, 0);
-    lv_obj_set_style_border_width(AI.sheet, ink_dp(2), 0);
-    lv_obj_set_style_border_color(AI.sheet, lv_color_black(), 0);
-    lv_obj_set_style_pad_all(AI.sheet, ink_dp(16), 0);
-    lv_obj_set_flex_flow(AI.sheet, LV_FLEX_FLOW_COLUMN);
-    lv_obj_set_style_pad_row(AI.sheet, ink_dp(10), 0);
-    lv_obj_remove_flag(AI.sheet, LV_OBJ_FLAG_SCROLLABLE);
-
-    AI.status = lv_label_create(AI.sheet);
-    lv_obj_set_style_text_font(AI.status, font_pt(6), 0);
-    lv_obj_set_style_text_color(AI.status, lv_color_hex(0x444444), 0);
-    AI.question = lv_label_create(AI.sheet);
-    lv_obj_set_style_text_font(AI.question, font_pt(7), 0);
-    lv_obj_set_width(AI.question, lv_pct(100));
-    lv_label_set_long_mode(AI.question, LV_LABEL_LONG_MODE_WRAP);
-    lv_label_set_text(AI.question, "");
-    AI.answer = lv_label_create(AI.sheet);
-    lv_obj_set_style_text_font(AI.answer, font_pt(8), 0);
-    lv_obj_set_width(AI.answer, lv_pct(100));
-    lv_label_set_long_mode(AI.answer, LV_LABEL_LONG_MODE_WRAP);
-    lv_label_set_text(AI.answer, "");
+    if (AI.open) { ink_shell_ai_reveal(); return; }
+    ink_shell_ai_open(&AI.sheet, &AI.status, &AI.question, &AI.answer);
     AI.open = true;
 }
 
 static void set_status(const char *s) {
     if (!AI.open) return;
-    lv_label_set_text(AI.status, s);
-    ink_ui_hint_obj(AI.status, INK_REFRESH_FAST);
+    ink_shell_ai_status(s);
 }
 
 static void free_buffered(void);
@@ -205,6 +171,7 @@ bool ink_ai_dismiss(void) {
     if (!AI.open) return false;
     turn_focus_end();
     end_capture(true); /* closing while the key is still held ends the recording too */
+    ink_shell_ai_closed();
     lv_obj_delete(AI.sheet);
     AI.sheet = AI.status = AI.question = AI.answer = NULL;
     AI.answer_text[0] = 0;
@@ -264,7 +231,7 @@ static void ui_apply(void *arg) { /* UI task */
             memcpy(AI.answer_text + AI.answer_len, p->text, n + 1);
             AI.answer_len += n;
         }
-        lv_label_set_text(AI.answer, AI.answer_text);
+        ink_shell_ai_words(AI.answer_text);
         ink_ui_hint_obj(AI.answer, INK_REFRESH_UI);
         if (!AI.first_text_seen) {
             AI.first_text_seen = true;
@@ -531,7 +498,7 @@ static int request(const char *method, bool voice) {
         return -1;
     }
     const char *app = "";
-    int n = ink_ui_snapshot(snap, SNAPSHOT_CAP, &app);
+    int n = ink_ui_context_snapshot(snap, SNAPSHOT_CAP, &app);
     ink_jw_t w;
     ink_jw_init(&w, params, params_cap);
     if (voice) {
@@ -690,7 +657,7 @@ void ink_ai_key(bool pressed, uint64_t t_us) {
         AI.answer_text[0] = 0;
         AI.answer_len = 0;
         if (AI.open) {
-            lv_label_set_text(AI.answer, "");
+            ink_shell_ai_words("");
             lv_label_set_text(AI.question, "");
         }
         sheet_open();
@@ -783,7 +750,7 @@ void ink_ai_ask_text(const char *text) {
     snprintf(g_typed, sizeof g_typed, "%s", text);
     ink_hub_demand();
     sheet_open();
-    lv_label_set_text(AI.answer, "");
+    ink_shell_ai_words("");
     lv_label_set_text(AI.question, g_typed);
     ink_ui_hint_obj(AI.sheet, INK_REFRESH_FAST);
     set_status("正在想…");
@@ -799,7 +766,14 @@ typedef struct {
     uint64_t t;
 } listen_job_t;
 
-static bool g_handsfree_turn; /* UI task: this turn began with the wake word or an interruption */
+static bool g_handsfree_turn;
+
+void ink_ai_tap(void) {
+    if (AI.capturing) { g_handsfree_turn = false; ink_ai_key(false, osal_now_us()); }
+    else { g_handsfree_turn = true; ink_ai_key(true, osal_now_us()); }
+}
+
+ /* UI task: this turn began with the wake word or an interruption */
 
 /* Offline quick intents (architecture §6.4): the commonest commands, recognised on the device and
  * mapped straight to a capability, so they work without the hub. Online the hub understands the

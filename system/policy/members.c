@@ -217,7 +217,7 @@ static void save_all(void) {
     ink_db_close(db);
 }
 
-int ink_member_identity(const char *id, uint32_t generation, uint8_t out[16]) {
+int ink_member_durable_id(const char *id, uint32_t generation, uint8_t out[16]) {
     slot_t *s = find(id);
     if (!out || !s || !generation || generation != ink_member_generation(id) || M.table_unread ||
         !ink_exec_is_current(INK_EXEC_BG)) return -1;

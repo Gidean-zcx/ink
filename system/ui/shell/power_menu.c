@@ -8,6 +8,7 @@
 #include "ink/sys/interrupt.h"
 #include "ink/sys/state.h"
 #include "shell_card.h"
+#include "ink/ui_shell.h"
 
 static struct {
     shell_card_t card;
@@ -15,7 +16,7 @@ static struct {
 } M;
 
 static int snapshot(char *buf, size_t cap) {
-    int n = snprintf(buf, cap, "电源菜单：关机、重启、取消。");
+    int n = snprintf(buf, cap, "电源菜单：关机、重启、锁屏、取消。动作：system.shutdown、system.reboot、shell.lock。");
     return n < 0 ? 0 : (size_t)n < cap ? n : (int)cap - 1;
 }
 
@@ -30,8 +31,7 @@ static void close_menu(void) { /* UI task */
 }
 
 static bool on_key(ink_key_t key, bool long_press) {
-    (void)long_press;
-    if (key == HAL_KEY_HOME) {
+    if (!long_press && (key == HAL_KEY_HOME || key == HAL_KEY_BACK)) {
         close_menu();
         return true;
     }
@@ -46,15 +46,35 @@ static void on_button(lv_event_t *e) {
     ink_cap_call(cap, NULL, &o);
 }
 
+static void power_tile(const char *label, const char *icon, int col, const char *action, bool primary) {
+    int cell = (INK_CANVAS_W - 2 * INK_MARGIN) / 3;
+    lv_obj_t *b = ink_ui_pill(M.card.panel, "", INK_MARGIN + col * cell, INK_MARGIN, cell,
+                              INK_CIRCLE_LARGE + INK_GAP_M + INK_LINE_LIST, false, on_button, (void *)action);
+    lv_obj_set_style_border_width(b, 0, 0);
+    ink_ui_circle(b, icon, (cell - INK_CIRCLE_LARGE) / 2 - INK_GAP, 0, INK_CIRCLE_LARGE, INK_ICON_APP,
+                  primary ? INK_SURFACE_BLACK : INK_SURFACE_WHITE, NULL, NULL);
+    lv_obj_t *l = ink_ui_label(b, label, INK_FONT_LIST, INK_WEIGHT_MEDIUM, 0, INK_CIRCLE_LARGE + INK_GAP_M, cell - 2 * INK_GAP);
+    lv_obj_set_style_text_align(l, LV_TEXT_ALIGN_CENTER, 0);
+}
+
 static void open_job(void *arg) { /* UI task */
     (void)arg;
     if (M.card.root || ink_interrupt_active()) return;
     shell_card_open(&M.card);
     ink_ui_overlay_add(&OVERLAY, M.card.root);
-    shell_card_text(&M.card, "电源", "");
-    shell_card_button(&M.card, "关机", on_button, (void *)"system.shutdown");
-    shell_card_button(&M.card, "重启", on_button, (void *)"system.reboot");
-    shell_card_button(&M.card, "取消", on_button, NULL);
+    int h = 2 * INK_MARGIN + INK_CIRCLE_LARGE + INK_GAP_M + INK_LINE_LIST + INK_MARGIN + INK_PRIMARY;
+    lv_obj_clean(M.card.panel);
+    lv_obj_set_y(M.card.panel, ink_ui_px(INK_CANVAS_H - h));
+    lv_obj_set_height(M.card.panel, ink_ui_px(h + INK_RADIUS_PANEL));
+    power_tile("关机", "power", 0, "system.shutdown", true);
+    power_tile("重启", "update", 1, "system.reboot", false);
+    lv_obj_t *lock = ink_ui_circle(M.card.panel, "lock", INK_MARGIN + 2 * ((INK_CANVAS_W - 2 * INK_MARGIN) / 3) + INK_GAP_L,
+                                   INK_MARGIN, INK_CIRCLE_LARGE, INK_ICON_APP, INK_SURFACE_WHITE, NULL, NULL);
+    ink_shell_bind(lock, "shell.lock", NULL);
+    ink_ui_label(M.card.panel, "锁屏", INK_FONT_LIST, INK_WEIGHT_MEDIUM,
+                 INK_CANVAS_W - INK_MARGIN - INK_CIRCLE_LARGE + INK_GAP_L, INK_MARGIN + INK_CIRCLE_LARGE + INK_GAP_M, INK_CIRCLE_LARGE);
+    ink_ui_pill(M.card.panel, "取消", INK_MARGIN, h - INK_PRIMARY - INK_MARGIN,
+                 INK_CANVAS_W - 2 * INK_MARGIN, INK_PRIMARY, false, on_button, NULL);
 }
 
 static void on_long(void) { /* the timer task. A call or an alarm does not answer to it */

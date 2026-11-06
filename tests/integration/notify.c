@@ -580,11 +580,11 @@ static void an_alarm(void) {
     CHECK(WAIT_FOR(!strcmp(active_state(), "alarm"), 130000), "it goes off by itself (%s)", active_state());
     delay_ms(600);
     on_ui(read_screen);
-    CHECK(strstr(g_snap, "起床") && strstr(g_snap, "关闭") && strstr(g_snap, "稍后") && g_btn_n == 2, "what it is, and the buttons (%s)", g_snap);
+    CHECK(strstr(g_snap, "起床") && strstr(g_snap, "这次不再响") && strstr(g_snap, "再睡 10 分钟") && g_btn_n == 2, "what it is, and the buttons (%s)", g_snap);
     double played = sim_audio_played_ms();
     delay_ms(1000);
     CHECK(sim_audio_played_ms() > played + 200, "it rings");
-    tap(g_btn_x[0], g_btn_y[0]);
+    tap(g_btn_x[1], g_btn_y[1]); /* Dismiss follows snooze in the visual order. */
     CHECK(WAIT_FOR(!strcmp(active_state(), "none"), 2000), "the button stops it (%s)", active_state());
     delay_ms(300);
     played = sim_audio_played_ms();
@@ -594,7 +594,7 @@ static void an_alarm(void) {
     ink_alarm_cancel((uint32_t)id);
     delay_ms(1500);
 
-    /* snoozed by the second button; do not disturb does not silence it */
+    /* Snooze is first on screen; do not disturb does not silence it. */
     ink_receipt_t rc;
     ink_setting_set("notify.dnd", 1, INK_SRC_TOUCH, &rc);
     a = alarm_in(INK_ALARM, 1, "再睡会");
@@ -606,7 +606,7 @@ static void an_alarm(void) {
     CHECK(sim_audio_played_ms() > played + 200, "it rings with do not disturb on");
     ink_setting_set("notify.dnd", 0, INK_SRC_TOUCH, &rc);
     on_ui(read_screen);
-    tap(g_btn_x[1], g_btn_y[1]);
+    tap(g_btn_x[0], g_btn_y[0]);
     CHECK(WAIT_FOR(!strcmp(active_state(), "none"), 2000), "snoozed (%s)", active_state());
     delay_ms(1500);
     CHECK(WAIT_FOR(!strcmp(active_state(), "alarm"), 10 * 60000), "and back after the snooze (%s)", active_state());
@@ -643,7 +643,7 @@ static void an_alarm(void) {
     played = sim_audio_played_ms();
     delay_ms(1000);
     CHECK(sim_audio_played_ms() > played + 200, "and the sound");
-    tap(g_btn_x[0], g_btn_y[0]);
+    tap(g_btn_x[1], g_btn_y[1]);
     CHECK(WAIT_FOR(!strcmp(power_state(), "locked"), 3000), "stopped: it locks again (%s)", power_state());
     sleeps = sim_power_sleeps();
     CHECK(WAIT_FOR(sim_power_sleeps() > sleeps, 5000), "and sleeps");
