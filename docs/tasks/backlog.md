@@ -2,6 +2,8 @@
 
 用户要求：先夯实系统层的能力缺口和质量，再补齐系统级别的应用与应用框架，**暂不开发具体应用**（阅读、听、报纸、单词都不做），都做完再做底层性能优化。总规则见 [codex-rules.md](codex-rules.md)。
 
+**状态（2026-11-06）：** 已合入 `services-mid`、`member-wake`、`capability-table`、`device-events`、`pairing`、`backup-restore`。没开始 `member-quiesce`、`confirm-durable`、`file-index`、`wireless-transfer`。等应用框架选择：`text-long`、应用框架和系统应用各节、性能。
+
 **只做你被分配的那一节。** 每节按一小时左右规划，最多两小时；做不完的写进报告的“没做到的”，不要半成品冒充完成。报告写到 `docs/tasks/<节名>/REPORT.md`。
 
 每节都要满足：
