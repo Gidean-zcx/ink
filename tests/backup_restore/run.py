@@ -22,12 +22,12 @@ peer = work / "hub"
 peer.mkdir()
 
 
-def boot(area, phase, cut=None, server=None, length=None, race_length=None):
+def boot(area, phase, cut=None, server=None, length=None, race_length=None, profile=None):
     area.mkdir(parents=True, exist_ok=True)
     server = server or peer
     server.mkdir(exist_ok=True)
     out = area / (phase + (f"-{cut}" if cut else ""))
-    cmd = [str(binary), "--profile", str(ROOT / "simulator/profiles/metalio-plus.json"),
+    cmd = [str(binary), "--profile", str(profile or ROOT / "simulator/profiles/metalio-plus.json"),
            "--assets", str(build / "assets"), "--content", str(build / "test-content"),
            "--out", str(out), "--end", "500s", "--quiet", "--no-random-outages",
            "--flash-image", str(area / "user.img"), "--sd-dir", str(area / "sd")]
@@ -114,6 +114,17 @@ if not a.quick:
         boot(target, "reused-id", server=server)
         boot(target, "identity-reboot", server=server)
     boot(work / "deep", "deep", server=work / "deep-hub")
+    slow = json.loads((ROOT / "simulator/profiles/metalio-plus.json").read_text())
+    for link in ("wifi", "lte"):
+        slow["network"][link].update(mbps=0.2, rtt_ms_p50=600, rtt_ms_p99=600, loss=0)
+    slow_profile = work / "slow-link.json"
+    slow_profile.write_text(json.dumps(slow))
+    boot(work / "slow", "large-seed", server=work / "slow-hub", profile=slow_profile)
+    boot(work / "slow", "slow-status", server=work / "slow-hub", profile=slow_profile)
+    boot(clone(work / "slow", "slow-preview"), "slow-preview-switch", server=work / "slow-hub", profile=slow_profile)
+    boot(work / "slow", "large-restore", server=work / "slow-hub", profile=slow_profile)
+    for phase in ("slow-switch", "slow-pause"):
+        boot(work / phase, phase, server=work / (phase + "-hub"), profile=slow_profile)
     for label, length, race_length, phase in (("atomic", 98304, 8388608, "atomic-race"),
                                               ("atomic-same", 1048576, 1048576, "atomic-race"),
                                               ("atomic-absent", 98304, 8388608, "atomic-absent")):

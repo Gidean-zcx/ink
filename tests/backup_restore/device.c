@@ -110,14 +110,15 @@ static void verify(const char *who) {
     CHECK(ink_storage_read(path,value,sizeof value)==11 && !strcmp(value,"offset=1234"),"member page state restored");
     ink_fs_file_t *f=NULL;
     CHECK(ink_fs_open(file_path,INK_FS_READ,&f)==0,"restored personal file opens");
-    uint8_t bytes[128];
-    if (f) {
+    uint8_t *bytes=osal_malloc(4096,OSAL_MEM_EXTERNAL); CHECK(bytes,"whole-file verification buffer");
+    if (f && bytes) {
         bool correct=true; int64_t n;
         size_t total=0;
-        while ((n=ink_fs_read(f,bytes,sizeof bytes))>0) { total+=(size_t)n; for(int i=0;i<n;i++) if(bytes[i]!=(!strcmp(who,"owner")?'A':'K'))correct=false; }
+        while ((n=ink_fs_read(f,bytes,4096))>0) { total+=(size_t)n; for(int i=0;i<n;i++) if(bytes[i]!=(!strcmp(who,"owner")?'A':'K'))correct=false; }
         CHECK(n==0 && total==file_bytes && correct,"whole file restored, no mixed members or blocks");
-        CHECK(ink_fs_close(f)==0,"restored file closed");
     }
+    if(f) CHECK(ink_fs_close(f)==0,"restored file closed");
+    osal_free(bytes);
     ink_fs_stat_t st; CHECK(ink_fs_stat("/me/empty.txt",&st)==0 && st.size==0,"empty file restored");
 }
 
@@ -306,7 +307,7 @@ static void run(void *arg) {
     if (!strcmp(phase,"atomic-race") || !strcmp(phase,"atomic-absent")) {
         atomic_race();
     } else if (!strcmp(phase,"rejoin")) {
-        CHECK(AI("restore.preview",NULL) && g_rc.status==INK_RC_FAILED,"factory-reset identities cannot claim old backups by display id");
+        CHECK(AI("restore.preview",NULL) && g_rc.status==INK_RC_QUEUED && wait_phase("\"phase\":\"failed\"",60),"factory-reset identities cannot claim old backups by display id");
         api_done=0;
         CHECK(ink_exec_post(INK_EXEC_BG,&api_job,family_state,(void *)(intptr_t)1)==0 && WAIT_FOR(api_done,10000),"simulate independently authorized family reprovisioning");
     } else if (!strcmp(phase,"reused-id")) {
@@ -320,11 +321,11 @@ static void run(void *arg) {
         CHECK(ink_member_switch("owner")==0 && ink_member_current()->role==INK_ROLE_CHILD,"replacement child enters own space");
         CHECK(ink_member_generation("owner")!=old_generation,"local incarnation changed");
         CHECK(status("\"phase\":\"none\""),"replacement child gets no old receipt or journal");
-        CHECK(AI("restore.preview",NULL) && g_rc.status==INK_RC_FAILED,"replacement child cannot preview removed adult snapshot");
+        CHECK(AI("restore.preview",NULL) && g_rc.status==INK_RC_QUEUED && wait_phase("\"phase\":\"failed\"",60),"replacement child cannot preview removed adult snapshot");
         CHECK(AI("backup.manifest",NULL) && g_rc.status==INK_RC_DONE && !strstr(g_result,"test.backup"),"replacement child cannot enumerate old manifest");
         unsigned confirm=request_apply(old_preview);
         CHECK(ink_confirm_decide(confirm,true,INK_SRC_TOUCH)==0,"ordinary approval cannot transfer backup ownership");
-        CHECK(status("\"phase\":\"none\""),"old preview cannot install into replacement identity");
+        CHECK(status("\"phase\":\"failed\"") && sim_metric_value("backup.restored")==0,"old preview cannot install into replacement identity");
         CHECK(AI("data.get","{\"collection\":\"test.backup\",\"id\":41}") && !strstr(g_result,"测试大人资料"),"child AI never sees removed adult content");
         ink_db_t *db=ink_db_open(&NOTES,NULL); char value[128]="";
         CHECK(db && ink_db_get(db,41,NULL,value,sizeof value)==INK_DB_ERR_NOT_FOUND,"replacement child has no adult record"); ink_db_close(db);
@@ -375,12 +376,42 @@ static void run(void *arg) {
     } else if (!strcmp(phase,"collect-resume")) {
         responsive_wait("\"phase\":\"saved\"",300);
         CHECK(AI("backup.manifest",NULL) && g_rc.status==INK_RC_DONE && strstr(g_result,file_name),"restart rebuilds capture and uploads complete manifest");
+    } else if (!strcmp(phase,"slow-switch") || !strcmp(phase,"slow-pause")) {
+        set_fault(4); fixtures("owner");
+        CHECK(AI("backup.now",NULL) && g_rc.status==INK_RC_QUEUED,"queue backup before delayed ACK");
+        CHECK(WAIT_FOR(sim_metric_value("backup.mock_uploaded_bytes")>0,30000),"a frame reaches hub before delayed ACK");
+        if(!strcmp(phase,"slow-switch")) {
+            CHECK(ink_member_switch("kid")==0 && status("\"phase\":\"none\""),"new member has no in-flight backup state");
+            delay_ms(1000);
+            CHECK(ink_member_switch("owner")==0,"original member returns after old ACK");
+        } else {
+            ink_jobs_hold(true);
+            CHECK(status("\"phase\":\"uploading\""),"paused network leaves status responsive");
+            delay_ms(1000);
+            ink_jobs_hold(false);
+        }
+        responsive_wait("\"phase\":\"saved\"",300);
+        CHECK(sim_metric_value("backup.mock_resumed_upload")>0 && sim_metric_value("cap.timeouts")==0 && sim_metric_value("cap.late")==0,"delayed ACK resumes from durable offset without blocking capabilities");
+    } else if (!strcmp(phase,"slow-preview-switch")) {
+        CHECK(AI("restore.preview",NULL) && g_rc.status==INK_RC_QUEUED,"queue preview before delayed response");
+        CHECK(WAIT_FOR(sim_metric_value("hub.requests.backup/latest")>0,10000),"latest request is in flight");
+        CHECK(ink_member_switch("kid")==0 && status("\"phase\":\"none\""),"other member cannot inherit pending latest response");
+        delay_ms(1500);
+        CHECK(ink_member_switch("owner")==0,"return after stale RPC response");
+        responsive_wait("\"phase\":\"preview\"",180);
+        CHECK(AI("backup.manifest",NULL) && g_rc.status==INK_RC_DONE && strstr(g_result,file_name),"fresh bound RPC builds original member preview");
+        CHECK(sim_metric_value("cap.timeouts")==0 && sim_metric_value("cap.late")==0,"late RPC response leaves shared executor responsive");
     } else if (!strcmp(phase,"large-seed") || !strcmp(phase,"deep") || !strcmp(phase,"atomic-seed")) {
         set_fault(4); fixtures("owner");
         CHECK(AI("backup.now",NULL) && g_rc.status==INK_RC_QUEUED,"large or deep backup returns queued before collection");
         responsive_wait("\"phase\":\"saved\"",300);
         CHECK(AI("backup.manifest",NULL) && g_rc.status==INK_RC_DONE && strstr(g_result,file_name),"supported large or deep file is included");
         CHECK(sim_metric_value("cap.timeouts")==0 && sim_metric_value("cap.late")==0,"large/deep backup has no capability timeout or late completion");
+    } else if (!strcmp(phase,"slow-status")) {
+        ink_hub_demand(); CHECK(WAIT_FOR(ink_hub_online(),10000),"connect before cloud receipt refresh");
+        CHECK(status("\"phase\":\"saved\"") && strstr(g_result,"\"durable\":false"),"status returns cached receipt before cloud poll");
+        responsive_wait("\"durable\":true",30);
+        CHECK(sim_metric_value("cap.timeouts")==0 && sim_metric_value("cap.late")==0,"cloud receipt polling leaves shared executor responsive");
     } else if (!strcmp(phase,"large-restore")) {
         uint8_t *bytes=osal_malloc(file_bytes,OSAL_MEM_EXTERNAL); CHECK(bytes,"large overwrite fixture buffer");
         if(bytes) { memset(bytes,'B',file_bytes); CHECK(ink_fs_write_atomic(file_path,bytes,file_bytes)==0,"same-size local edit before preview"); osal_free(bytes); }

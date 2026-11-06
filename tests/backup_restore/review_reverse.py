@@ -65,7 +65,7 @@ def replace_once(source, old, new):
     return source.replace(old, new)
 
 
-def boot(area, binary, phase, server, *, failure=None, warning=None, length=None, race_length=None):
+def boot(area, binary, phase, server, *, failure=None, warning=None, length=None, race_length=None, profile=None):
     area.mkdir(exist_ok=True)
     server.mkdir(exist_ok=True)
     out = area / phase
@@ -74,7 +74,7 @@ def boot(area, binary, phase, server, *, failure=None, warning=None, length=None
         env["INK_BACKUP_BYTES"] = str(length)
     if race_length:
         env["INK_BACKUP_RACE_BYTES"] = str(race_length)
-    args = [str(binary), "--profile", str(ROOT / "simulator/profiles/metalio-plus.json"),
+    args = [str(binary), "--profile", str(profile or ROOT / "simulator/profiles/metalio-plus.json"),
             "--assets", str(build / "assets"), "--content", str(build / "test-content"),
             "--out", str(out), "--end", "500s", "--quiet", "--no-random-outages",
             "--flash-image", str(area / "user.img"), "--sd-dir", str(area / "sd")]
@@ -181,6 +181,28 @@ for label, length, race_length, phase in (("different", 98304, 8388608, "atomic-
     boot(target, binary, "atomic-seed", server, length=length)
     boot(target, binary, phase, server, length=length, race_length=race_length,
          failure="restore retains whole newer successful atomic write")
+
+
+def blocking_upload(s):
+    start, end = s.index("static int upload_block("), s.index("\n/* Only a completed block")
+    function = s[start:end].replace("static int upload_block(", "static int async_upload_block(", 1)
+    wrapper = """
+static int upload_block(const char *path, const uint8_t hash[32], uint32_t size, ink_json_t *j) {
+    int rc;
+    do {
+        rc = async_upload_block(path, hash, size, j);
+        if (rc == WAIT_IO) osal_task_delay_us(1000);
+    } while (rc > 0);
+    return rc;
+}
+"""
+    return s[:start] + function + wrapper + s[end:]
+
+
+area, binary = variant("blocking-network", backup, blocking_upload)
+boot(area / "fast", binary, "large-seed", area / "fast-hub")
+boot(area / "slow", binary, "large-seed", area / "slow-hub", profile=evidence / "slow-link.json",
+     failure="progress query stays responsive during large-file work")
 
 def no_preview_recovery(s):
     start = s.index('    if (load_manifest("preview", false)) {', s.index("static int restore_step("))

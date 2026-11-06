@@ -30,6 +30,7 @@
 #define STATE_MAGIC 0x31534249u
 #define RESULT_CAP 32768u
 #define RETRY_US 1000000u
+#define WAIT_IO 2
 
 enum { ITEM_DB = 1, ITEM_STATE, ITEM_FILE };
 enum { PH_NONE, PH_CAPTURE, PH_UPLOAD, PH_SAVED, PH_FETCH, PH_PREPARE, PH_PREVIEW, PH_CHECK, PH_RESTORE, PH_DONE, PH_FAILED };
@@ -57,18 +58,51 @@ static struct {
     uint8_t *buf; /* One bounded transfer block, allocated only while work runs. */
     ink_exec_job_t job;
     ink_svc_deadline_t retry;
-    int reply_done, reply_status;
-    char reply[1024];
-    uint16_t upload, xfer;
-    uint32_t ack, rx_len, want_off;
-    bool receiving;
-    char rx_member[INK_MEMBER_ID_MAX];
-    uint32_t rx_generation;
     struct { char member[INK_MEMBER_ID_MAX]; uint32_t generation; int id; } tasks[INK_MEMBERS_MAX];
     int no_task;
     struct { char member[INK_MEMBER_ID_MAX]; bool pending; } known[INK_MEMBERS_MAX];
     bool started;
 } B INK_PSRAM_BSS;
+
+/* Network callbacks use a separate continuation, never transient step buffers. */
+static struct {
+    bool bound, pending, done, receiving;
+    char member[INK_MEMBER_ID_MAX], reply[1024];
+    uint8_t identity[16], *rx;
+    uint32_t generation, phase, next, stage, offset, ack, expected, rx_len;
+    uint16_t upload, xfer;
+    uintptr_t cookie;
+    int status;
+    uint64_t until;
+} N INK_PSRAM_BSS;
+static uintptr_t next_cookie;
+static ink_svc_deadline_t net_at INK_PSRAM_BSS;
+static void wake(void *arg);
+
+static void net_reset(void) {
+    ink_svc_cancel(&net_at);
+    ink_svc_lock();
+    uint8_t *rx = N.rx;
+    memset(&N, 0, sizeof N);
+    ink_svc_unlock();
+    osal_free(rx);
+}
+
+static void net_bind(void) {
+    if (N.bound && !strcmp(N.member, B.j.member) && N.generation == B.j.generation &&
+        !memcmp(N.identity, B.j.identity, 16) && N.phase == B.j.phase && N.next == B.j.next) return;
+    net_reset();
+    ink_svc_lock();
+    snprintf(N.member, sizeof N.member, "%s", B.j.member);
+    memcpy(N.identity, B.j.identity, 16);
+    N.generation = B.j.generation; N.phase = B.j.phase; N.next = B.j.next; N.bound = true;
+    ink_svc_unlock();
+}
+
+static void net_wait(void) {
+    N.until = osal_now_us() + 3000000;
+    ink_svc_at(&net_at, N.until, wake, NULL);
+}
 
 static int *task_id(void) {
     int free_slot = -1;
@@ -169,7 +203,12 @@ static bool load_journal(const char *member) {
         !memchr(j.manifest_hash, 0, sizeof j.manifest_hash) || !memchr(j.preview, 0, sizeof j.preview) ||
         !memchr(j.reason, 0, sizeof j.reason)) return false;
     uint8_t identity[16];
-    if (ink_member_identity(member, ink_member_generation(member), identity) || memcmp(j.identity, identity, 16)) return false;
+    if (ink_member_identity(member, ink_member_generation(member), identity)) return false;
+    if (memcmp(j.identity, identity, 16)) {
+        memset(&B.j, 0, sizeof B.j);
+        remember(member, false);
+        return true;
+    }
     B.j = j;
     B.j.generation = ink_member_generation(member);
     return true;
@@ -445,34 +484,47 @@ static int capture_step(void) {
 }
 
 static void reply(void *ctx, int status, const ink_json_t *j, int result) {
-    (void)ctx;
     ink_svc_lock();
-    B.reply_status = status;
-    B.reply[0] = 0;
+    if (!N.pending || N.cookie != (uintptr_t)ctx) { ink_svc_unlock(); return; }
+    N.status = status;
+    N.reply[0] = 0;
     if (!status && j && result >= 0) {
         size_t n = (size_t)(j->tok[result].end - j->tok[result].start);
-        if (n >= sizeof B.reply) B.reply_status = INK_HUB_ERR_REMOTE;
-        else { memcpy(B.reply, j->text + j->tok[result].start, n); B.reply[n] = 0; }
+        if (n >= sizeof N.reply) N.status = INK_HUB_ERR_REMOTE;
+        else { memcpy(N.reply, j->text + j->tok[result].start, n); N.reply[n] = 0; }
         int64_t xfer;
-        if (B.receiving && ink_json_int(j, ink_json_find(j, result, "xfer"), &xfer) && xfer > 0 && xfer <= UINT16_MAX) B.xfer = (uint16_t)xfer;
+        if (N.receiving && ink_json_int(j, ink_json_find(j, result, "xfer"), &xfer) && xfer > 0 && xfer <= UINT16_MAX) N.xfer = (uint16_t)xfer;
     }
-    __atomic_store_n(&B.reply_done, 1, __ATOMIC_RELEASE);
+    N.done = true;
     ink_svc_unlock();
+    wake(NULL);
 }
 
 static int rpc(const char *method, const char *params, ink_json_t *j) {
     if (!actor_valid()) return -1;
-    __atomic_store_n(&B.reply_done, 0, __ATOMIC_RELEASE);
     char authenticated[640], identity[33];
     hex(B.j.identity, 16, identity);
-    size_t len = strlen(params);
-    if (!len || params[len - 1] != '}' || len + 50 >= sizeof authenticated) return -1;
-    snprintf(authenticated, sizeof authenticated, "%.*s,\"identity\":\"%s\"}", (int)(len - 1), params, identity);
-    if (ink_hub_call(method, authenticated, 3000000, reply, NULL) <= 0) return -1;
-    while (!__atomic_load_n(&B.reply_done, __ATOMIC_ACQUIRE)) osal_task_delay_us(1000);
+    ink_svc_lock();
+    bool pending = N.pending, done = N.done;
+    int status = N.status;
+    if (pending && done) { N.pending = false; N.cookie = 0; }
+    ink_svc_unlock();
+    if (!pending) {
+        size_t len = strlen(params);
+        if (!len || params[len - 1] != '}' || len + 50 >= sizeof authenticated) return -1;
+        snprintf(authenticated, sizeof authenticated, "%.*s,\"identity\":\"%s\"}", (int)(len - 1), params, identity);
+        uintptr_t cookie = ++next_cookie;
+        if (!cookie) cookie = ++next_cookie;
+        ink_svc_lock();
+        N.pending = true; N.done = false; N.cookie = cookie;
+        ink_svc_unlock();
+        if (ink_hub_call(method, authenticated, 3000000, reply, (void *)cookie) <= 0) return -1;
+        return WAIT_IO;
+    }
+    if (!done) return WAIT_IO;
     if (!actor_valid()) return -1;
-    if (B.reply_status == INK_HUB_ERR_REMOTE) return -2;
-    if (B.reply_status != 0 || ink_json_parse(j, B.reply, strlen(B.reply)) != 0) return -1;
+    if (status == INK_HUB_ERR_REMOTE) return -2;
+    if (status != 0 || ink_json_parse(j, N.reply, strlen(N.reply)) != 0) return -1;
     char received[33];
     if (ink_json_str(j, ink_json_find(j, 0, "identity"), received, sizeof received) != 32 || strcmp(received, identity)) return -2;
     return 0;
@@ -490,11 +542,15 @@ static void ack(void *ctx, const char *method, const ink_json_t *j, int params) 
     int64_t upload, off;
     if (!ink_json_int(j, ink_json_find(j, params, "upload"), &upload) ||
         !ink_json_int(j, ink_json_find(j, params, "offset"), &off) || off < 0 || off > UINT32_MAX) return;
-    char identity[33], received[33]; hex(B.j.identity, 16, identity);
-    if (ink_json_str(j, ink_json_find(j, params, "identity"), received, sizeof received) != 32 || strcmp(received, identity)) return;
+    char received[33];
+    if (ink_json_str(j, ink_json_find(j, params, "identity"), received, sizeof received) != 32) return;
     ink_svc_lock();
-    if (B.upload && upload == B.upload && (uint32_t)off >= B.ack) B.ack = (uint32_t)off;
+    char identity[33]; hex(N.identity, 16, identity);
+    bool valid = N.bound && N.upload && upload == N.upload && !strcmp(received, identity) &&
+        N.generation == ink_member_generation(N.member) && !strcmp(N.member, ink_member_current()->id);
+    if (valid && (uint32_t)off >= N.ack) N.ack = (uint32_t)off;
     ink_svc_unlock();
+    if (valid) wake(NULL);
 }
 
 static uint32_t u32(const uint8_t *p) { return (uint32_t)p[0] | (uint32_t)p[1] << 8 | (uint32_t)p[2] << 16 | (uint32_t)p[3] << 24; }
@@ -505,93 +561,109 @@ static void blob_frame(void *ctx, const uint8_t *d, size_t len) {
     ink_svc_lock();
     uint16_t xfer = (uint16_t)(d[10] | d[11] << 8);
     uint32_t off = u32(d + 12);
-    if (B.receiving && B.xfer && xfer == B.xfer && B.buf && off == B.want_off + B.rx_len &&
-        len - 16 <= CHUNK - B.rx_len && B.rx_generation == ink_member_generation(B.rx_member) &&
-        !strcmp(B.rx_member, ink_member_current()->id)) {
-        memcpy(B.buf + B.rx_len, d + 16, len - 16);
-        B.rx_len += (uint32_t)(len - 16);
+    bool valid = N.receiving && N.xfer && xfer == N.xfer && N.rx && off == N.offset + N.rx_len &&
+        len - 16 <= N.expected - N.rx_len && N.generation == ink_member_generation(N.member) &&
+        !strcmp(N.member, ink_member_current()->id);
+    if (valid) {
+        memcpy(N.rx + N.rx_len, d + 16, len - 16);
+        N.rx_len += (uint32_t)(len - 16);
     }
     ink_svc_unlock();
+    if (valid) wake(NULL);
 }
 
-/* One upload segment (up to four frames) per job step. The hub's durable offset is authoritative after every reconnect. */
+/* Send one frame per continuation; the protocol acknowledges at 64 KiB boundaries. */
 static int upload_block(const char *path, const uint8_t hash[32], uint32_t size, ink_json_t *j) {
     char sha[65], params[400]; hex(hash, 32, sha);
-    snprintf(params, sizeof params, "{\"name\":\"backup\",\"size\":%u,\"sha256\":\"%s\",\"member\":\"%s\",\"kind\":\"backup\"}", size, sha, B.j.member);
-    int called = rpc("blob/put.begin", params, j);
-    if (called) return called;
-    uint32_t upload, offset;
-    if (!number(j, "upload", &upload) || !upload || upload > UINT16_MAX || !number(j, "offset", &offset) || offset > size) return -1;
-    ink_svc_lock();
-    B.upload = (uint16_t)upload; B.ack = offset;
-    ink_svc_unlock();
-    if (offset < size) {
-        uint32_t segment = size - offset; if (segment > 65536u) segment = 65536u;
-        hal_file_t *f = hal_fs_open(path, HAL_O_READ);
-        bool ok = f && hal_fs_seek(f, offset, SEEK_SET) == 0;
-        int failure = -2;
-        for (uint32_t sent = 0; ok && sent < segment;) {
-            size_t n = segment - sent; if (n > CHUNK) n = CHUNK;
-            if (hal_fs_read(f, B.buf + 16, n) != (ssize_t)n) { ok = false; break; }
-            memset(B.buf, 0, 16); B.buf[0] = 7;
-            B.buf[10] = (uint8_t)upload; B.buf[11] = (uint8_t)(upload >> 8); put32(B.buf + 12, offset + sent);
-            if (ink_hub_send_frame_for(B.buf, n + 16, INK_HUB_TX_BACKGROUND, B.j.member, B.j.generation) != 0) { ok = false; failure = -1; break; }
-            sent += (uint32_t)n;
-        }
-        if (f && hal_fs_close(f) != 0) ok = false;
-        if (!ok) return failure;
-        uint64_t end = osal_now_us() + 3000000;
-        uint32_t got;
-        do {
-            ink_svc_lock(); got = B.ack; ink_svc_unlock();
-            if (got == offset + segment) break;
-            if (!actor_valid() || !ink_hub_online() || osal_now_us() >= end || got > offset + segment) return -1;
-            osal_task_delay_us(1000);
-        } while (true);
-        B.j.offset = got;
-        ink_probe_value("backup.upload_offset", got);
-        if (got < size) return 1;
+    if (!N.stage) {
+        snprintf(params, sizeof params, "{\"name\":\"backup\",\"size\":%u,\"sha256\":\"%s\",\"member\":\"%s\",\"kind\":\"backup\"}", size, sha, B.j.member);
+        int called = rpc("blob/put.begin", params, j);
+        if (called) return called;
+        uint32_t upload, offset;
+        if (!number(j, "upload", &upload) || !upload || upload > UINT16_MAX || !number(j, "offset", &offset) || offset > size) return -1;
+        ink_svc_lock();
+        N.upload = (uint16_t)upload; N.offset = N.ack = offset;
+        ink_svc_unlock();
+        uint32_t segment = 65536u - offset % 65536u;
+        if (segment > size - offset) segment = size - offset;
+        N.expected = offset + segment;
+        N.stage = offset < size ? 1 : 3;
     }
-    snprintf(params, sizeof params, "{\"upload\":%u,\"member\":\"%s\"}", upload, B.j.member);
-    called = rpc("blob/put.end", params, j);
+    if (N.stage == 1) {
+        uint32_t n = N.expected - N.offset; if (n > CHUNK) n = CHUNK;
+        hal_file_t *f = hal_fs_open(path, HAL_O_READ);
+        bool ok = f && hal_fs_seek(f, N.offset, SEEK_SET) == 0 && hal_fs_read(f, B.buf + 16, n) == (ssize_t)n;
+        if (f && hal_fs_close(f) != 0) ok = false;
+        if (!ok) return -2;
+        memset(B.buf, 0, 16); B.buf[0] = 7;
+        B.buf[10] = (uint8_t)N.upload; B.buf[11] = (uint8_t)(N.upload >> 8); put32(B.buf + 12, N.offset);
+        if (ink_hub_send_frame_for(B.buf, n + 16, INK_HUB_TX_BACKGROUND, B.j.member, B.j.generation) != 0) return -1;
+        N.offset += n;
+        if (N.offset < N.expected) return 1;
+        N.stage = 2; net_wait();
+        return WAIT_IO;
+    }
+    if (N.stage == 2) {
+        ink_svc_lock(); uint32_t got = N.ack; ink_svc_unlock();
+        if (got != N.expected) {
+            if (!ink_hub_online() || osal_now_us() >= N.until || got > N.expected) return -1;
+            return WAIT_IO;
+        }
+        ink_svc_cancel(&net_at);
+        N.offset = B.j.offset = got;
+        ink_probe_value("backup.upload_offset", got);
+        N.stage = got < size ? 1 : 3;
+        uint32_t segment = size - got; if (segment > 65536u) segment = 65536u;
+        N.expected = got + segment;
+        return 1;
+    }
+    snprintf(params, sizeof params, "{\"upload\":%u,\"member\":\"%s\"}", N.upload, B.j.member);
+    int called = rpc("blob/put.end", params, j);
     if (called) return called;
     char id[80], expected[80]; snprintf(expected, sizeof expected, "sha256:%s", sha);
     if (ink_json_str(j, ink_json_find(j, 0, "id"), id, sizeof id) < 0 || strcmp(id, expected)) return -2;
+    net_reset();
     return 0;
 }
 
-/* A completed block is synced on the card before the next request. File size survives a restart. */
+/* Only a completed block is synced and journaled. The receive buffer survives yielding. */
 static int download_block(const char *path, const char *sha, uint32_t size, ink_json_t *j) {
     int64_t have = hal_fs_size(path);
     if (have < 0) have = 0;
     if (have > size) { hal_fs_remove(path); have = 0; }
     if ((uint32_t)have < size) {
         uint32_t n = size - (uint32_t)have; if (n > CHUNK) n = CHUNK;
-        char params[320];
-        ink_svc_lock();
-        B.receiving = true; B.xfer = 0; B.rx_len = 0; B.want_off = (uint32_t)have;
-        snprintf(B.rx_member, sizeof B.rx_member, "%s", B.j.member); B.rx_generation = B.j.generation;
-        ink_svc_unlock();
-        snprintf(params, sizeof params, "{\"id\":\"sha256:%s\",\"offset\":%u,\"len\":%u,\"member\":\"%s\"}", sha, (uint32_t)have, n, B.j.member);
-        int rc = rpc("blob/fetch", params, j);
-        uint32_t total = 0;
-        char got_sha[65];
-        if (!rc && (!number(j, "size", &total) || total != size ||
-            ink_json_str(j, ink_json_find(j, 0, "sha256"), got_sha, sizeof got_sha) < 0 || strcmp(got_sha, sha))) rc = -2;
-        uint64_t end = osal_now_us() + 3000000;
-        uint32_t got = 0;
-        while (!rc) {
-            ink_svc_lock(); got = B.rx_len; ink_svc_unlock();
-            if (got == n) break;
-            if (!actor_valid() || !ink_hub_online() || osal_now_us() >= end) { rc = -1; break; }
-            osal_task_delay_us(1000);
+        if (!N.stage) {
+            if (!N.receiving) {
+                uint8_t *rx = osal_malloc(CHUNK, OSAL_MEM_EXTERNAL);
+                if (!rx) return -1;
+                ink_svc_lock();
+                N.rx = rx; N.receiving = true; N.xfer = 0; N.rx_len = 0;
+                N.offset = (uint32_t)have; N.expected = n;
+                ink_svc_unlock();
+            }
+            char params[320];
+            snprintf(params, sizeof params, "{\"id\":\"sha256:%s\",\"offset\":%u,\"len\":%u,\"member\":\"%s\"}", sha, (uint32_t)have, n, B.j.member);
+            int rc = rpc("blob/fetch", params, j);
+            if (rc) return rc;
+            uint32_t total = 0; char got_sha[65];
+            if (!number(j, "size", &total) || total != size ||
+                ink_json_str(j, ink_json_find(j, 0, "sha256"), got_sha, sizeof got_sha) < 0 || strcmp(got_sha, sha)) return -2;
+            N.stage = 1;
+            net_wait();
         }
-        ink_svc_lock(); B.receiving = false; ink_svc_unlock();
-        if (rc) return rc;
+        ink_svc_lock(); uint32_t got = N.rx_len; ink_svc_unlock();
+        if (got != n) {
+            if (!ink_hub_online() || osal_now_us() >= N.until) return -1;
+            return WAIT_IO;
+        }
+        ink_svc_lock(); N.receiving = false; ink_svc_unlock();
+        ink_svc_cancel(&net_at);
         hal_file_t *f = hal_fs_open(path, HAL_O_WRITE | HAL_O_CREATE | (have ? HAL_O_APPEND : HAL_O_TRUNC));
-        bool ok = f && hal_fs_write(f, B.buf, n) == (ssize_t)n && hal_fs_sync(f) == 0;
+        bool ok = f && hal_fs_write(f, N.rx, n) == (ssize_t)n && hal_fs_sync(f) == 0;
         if (f && hal_fs_close(f) != 0) ok = false;
         if (!ok) return -2;
+        osal_free(N.rx); N.rx = NULL; N.stage = 0;
         B.j.offset = (uint32_t)have + n;
         ink_probe_value("backup.download_offset", B.j.offset);
         if (B.j.offset < size) return 1;
@@ -601,6 +673,7 @@ static int download_block(const char *path, const char *sha, uint32_t size, ink_
     if (hashed) return hashed > 0 ? 1 : -2;
     hex(hash, 32, actual);
     if (strcmp(actual, sha)) { hal_fs_remove(path); return -2; }
+    net_reset();
     return 0;
 }
 
@@ -800,7 +873,7 @@ static int upload_step(ink_json_t *j) {
         if (hal_fs_size(path) != len) return -2;
         int rc = upload_block(path, h, len, j);
         if (!rc) { B.j.next++; B.j.offset = 0; if (save_journal()) return -1; }
-        return rc < 0 ? rc : 1;
+        return rc ? rc : 1;
     }
     char params[320];
     snprintf(params, sizeof params, "{\"member\":\"%s\",\"blob\":\"sha256:%s\",\"size\":%u,\"sha256\":\"%s\"}",
@@ -821,6 +894,16 @@ static int upload_step(ink_json_t *j) {
 
 static int restore_step(ink_json_t *j) {
     if (B.j.phase == PH_FETCH) {
+        if (!B.j.manifest_hash[0]) {
+            char params[96], sha[65]; uint32_t len;
+            snprintf(params, sizeof params, "{\"member\":\"%s\"}", B.j.member);
+            int rc = rpc("backup/latest", params, j);
+            if (rc) return rc;
+            if (!number(j, "size", &len) || len < offsetof(manifest_t, item) || len > sizeof(manifest_t) ||
+                ink_json_str(j, ink_json_find(j, 0, "sha256"), sha, sizeof sha) < 0 || !hash_ok(sha)) return -2;
+            snprintf(B.j.manifest_hash, sizeof B.j.manifest_hash, "%s", sha); B.j.manifest_size = len;
+            return save_journal() ? -1 : 1;
+        }
         char path[160]; stage_path(path, sizeof path, "remote", 0);
         int rc = download_block(path, B.j.manifest_hash, B.j.manifest_size, j);
         if (rc) return rc;
@@ -897,10 +980,22 @@ static void step(void *arg) {
     (void)arg;
     const char *member = ink_member_current()->id;
     if (C && (strcmp(C->member, member) || C->generation != ink_member_generation(member) || ink_jobs_held() || !ink_member_space_open())) free_capture();
-    if (!pending_for(member)) { schedule(); return; }
-    if (!load_journal(member)) { remember(member, false); schedule(); return; }
-    if (!actor_valid() || ink_jobs_held()) { schedule(); return; }
+    if (!pending_for(member)) { net_reset(); schedule(); return; }
+    if (!load_journal(member)) { net_reset(); remember(member, false); schedule(); return; }
+    if (!actor_valid() || ink_jobs_held()) { net_reset(); schedule(); return; }
+    net_bind();
     if (B.j.phase == PH_SAVED) {
+        int polled = 0;
+        if (!B.j.durable && ink_hub_online()) {
+            ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
+            char params[160];
+            snprintf(params, sizeof params, "{\"id\":\"sha256:%s\",\"member\":\"%s\"}", B.j.manifest_hash, B.j.member);
+            polled = j ? rpc("blob/status", params, j) : -1;
+            if (!polled && ink_json_eq(j, ink_json_find(j, 0, "durable"), "true")) { B.j.durable = 1; save_journal(); }
+            osal_free(j);
+        }
+        if (polled == WAIT_IO) return;
+        net_reset();
         if (ink_fs_card_hold() == INK_FS_OK) {
             if (resources() && load_manifest("manifest", true) == 0) { acknowledge_manifest(); remember(member, false); }
             free_resources(); ink_fs_card_release();
@@ -917,6 +1012,7 @@ static void step(void *arg) {
         rc = B.j.phase == PH_CAPTURE ? capture_step() : B.j.phase == PH_UPLOAD ? upload_step(j) : restore_step(j);
         if ((*task_id()) && B.m->count) ink_task_progress((*task_id()), (int)(B.j.next * 100 / (B.m->count + 1)), B.j.phase == PH_UPLOAD ? "sending" : "writing");
     }
+    if (rc < 0) net_reset();
     if (rc == 1 && active() && B.j.phase != PH_CAPTURE) save_journal();
     if (rc == -2) mark_failed("备份资料校验或写入失败，原件仍保留");
     else if (rc == -3) mark_failed("预览后资料有改动，请重新预览");
@@ -924,7 +1020,8 @@ static void step(void *arg) {
     if (B.j.phase != PH_CAPTURE) free_capture();
     osal_free(j); free_resources(); ink_fs_card_release();
     ink_member_io_end(B.j.member);
-    if (rc >= 0 && active()) wake(NULL); else schedule();
+    if (rc >= 0 && rc != WAIT_IO && active()) wake(NULL);
+    else if (rc != WAIT_IO) schedule();
 }
 
 static bool for_call(ink_call_t *c) {
@@ -985,13 +1082,8 @@ static void result(ink_call_t *c, bool include_items) {
 static void cap_status(ink_call_t *c) {
     if (!for_call(c)) return;
     if (B.j.phase == PH_SAVED && !B.j.durable && ink_hub_online()) {
-        ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
-        char params[160];
-        snprintf(params, sizeof params, "{\"id\":\"sha256:%s\",\"member\":\"%s\"}", B.j.manifest_hash, B.j.member);
-        if (j && rpc("blob/status", params, j) == 0 && ink_json_eq(j, ink_json_find(j, 0, "durable"), "true")) {
-            B.j.durable = 1; save_journal();
-        }
-        osal_free(j);
+        remember(B.j.member, true);
+        wake(NULL);
     }
     result(c, false);
 }
@@ -1012,7 +1104,7 @@ static void cap_backup(ink_call_t *c) {
     if (ink_fs_card_hold() != INK_FS_OK) {
         c->rc.status = INK_RC_FAILED; snprintf(c->rc.say, sizeof c->rc.say, "请插入存储卡后备份"); return;
     }
-    ink_fs_card_release(); free_capture(); H.valid = false;
+    ink_fs_card_release(); free_capture(); net_reset(); H.valid = false;
     B.j.phase = PH_CAPTURE; B.j.next = B.j.offset = B.j.subphase = B.j.received = B.j.durable = B.j.conflicts = 0;
     B.j.reason[0] = B.j.preview[0] = B.j.manifest_hash[0] = 0; B.j.manifest_size = 0;
     /* Persist intent before doing any capture or replacing staging content. */
@@ -1025,20 +1117,13 @@ static void cap_preview(ink_call_t *c) {
     if (!for_call(c)) return;
     if (B.j.phase == PH_PREVIEW) { cap_manifest(c); return; }
     if (active()) { c->rc.status = INK_RC_QUEUED; result(c, false); schedule(); return; }
-    ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
-    char params[96]; snprintf(params, sizeof params, "{\"member\":\"%s\"}", B.j.member);
-    uint32_t len = 0; char sha[65] = "";
-    bool ok = j && rpc("backup/latest", params, j) == 0 && number(j, "size", &len) && len >= offsetof(manifest_t, item) && len <= sizeof(manifest_t) &&
-        ink_json_str(j, ink_json_find(j, 0, "sha256"), sha, sizeof sha) > 0 && hash_ok(sha);
-    osal_free(j);
-    if (!ok) { c->rc.status = INK_RC_FAILED; snprintf(c->rc.say, sizeof c->rc.say, "暂时取不到这位成员的备份，请联网后再试"); return; }
     if (ink_fs_card_hold() != INK_FS_OK) { c->rc.status = INK_RC_FAILED; return; }
     if (!stage_dirs()) { ink_fs_card_release(); c->rc.status = INK_RC_FAILED; return; }
     char path[160]; stage_path(path, sizeof path, "remote", 0); hal_fs_remove(path);
     for (unsigned i = 0; i < ITEMS; i++) { stage_path(path, sizeof path, "down", i); hal_fs_remove(path); }
     ink_fs_card_release();
-    H.valid = false;
-    snprintf(B.j.manifest_hash, sizeof B.j.manifest_hash, "%s", sha); B.j.manifest_size = len;
+    net_reset(); H.valid = false;
+    B.j.manifest_hash[0] = 0; B.j.manifest_size = 0;
     B.j.phase = PH_FETCH; B.j.next = B.j.offset = B.j.subphase = B.j.conflicts = B.j.received = B.j.durable = 0;
     B.j.preview[0] = B.j.reason[0] = 0;
     if (save_journal()) c->rc.status = INK_RC_FAILED;
