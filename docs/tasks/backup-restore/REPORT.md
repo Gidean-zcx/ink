@@ -1,62 +1,78 @@
-# backup-restore 开发报告
+# backup-restore 修复报告
 
-基线：`a51a804c`。只开发设备服务、必要接口和模拟测试；未连接真实设备、服务器或付费接口。接口和证据边界见[实现说明](../../system/backup-restore.md)。
-
-2026-11-06 复查修复从 `cf258b3b` 接续。BR-R2（严重）、BR-R1/BR-R3（高）修复已实现，身份复用、八层目录、2/8 MiB 文件、采集中断/换人/暂停及后台查询回归已通过；新旧反向对照均得到预期失败。最后补充旧日志重新备份和预览检查点恢复回归，等待最终普通与内存检查全量。下文验收表仍是上一轮记录，最终核验后更新。复查没有另列中级问题。
+2026-11-06。从复查基线 `cf258b3b` 接续，修复提交 `99896dff`；原任务基线为 `a51a804c`。[复查](REVIEW.md)列出的 1 条严重、2 条高已修复，没有另列中级问题。证据范围是 macOS/clang、模拟器、合成成员和模拟中枢；未连接设备或真实服务器。
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| B1 备份清单与上传回执 | 通过，限成员资料【实测】 | 集合、阅读位置、个人文件、空文件；版本回执跨重启；中枢收到与云端持久性分开 | `python tests/backup_restore/run.py --build build` 的 seed、receipt-reboot |
-| B2 预览、覆盖确认、未恢复项目 | 通过【实测】 | 人工确认、家长密码及错误密码；新编辑使旧预览失效；未安装集合明确列出；拒绝坏哈希、跨成员、越界路径和重复条目 | 同上，stale、member-confirm、pin、corrupt、malicious |
-| B3 备份→清空设备→恢复 | 通过【实测，模拟器】 | 实际调用清空能力并重启；两位成员的编号/版本/删除/下个编号、文件和位置复原；再次重启后真实阅读器回到第 4 页 | 同上，wipe、restore-cut、restore-resume、verify-reboot |
-| B4 断电、断网后继续 | 通过【实测】 | 上传丢 ACK、双向断网、传输时断电；6 种 Flash 故障配置中 5 次实际撕裂后恢复通过，另 1 次为完整执行对照；回到原成员后继续 | 同上，upload-cut/resume、network、restore-network、member-resume、flash-cut/verify |
-| B5 成员隔离 | 通过【实测】 | 清单/进度/任务按成员；孩子不读成人；确认期间换人成为无效；恢复目录沿用原成员；卡暂存随成员和清空一同删除 | 同上，member-confirm、member-resume、malicious、api；串联场景 |
-| G1 全量测试、内存检查与预算 | 通过，普通与 ASan/UBSan 各 105/105【实测】 | 两轮均无跳过；各含 32 次备份恢复启动，无警告；未改预算 | `cmake --build build -j4`；`ctest --test-dir build --output-on-failure -j3`；同样配置在 build-asan 加 `INK_SANITIZE=ON`，同样构建/测试 |
-| G2 原子能力与 AI | 通过【实测】 | 5 个调用、2 个成员事件；统一能力门和密码/确认门；目录与运行时一致 | 全量中的 capability-table、integration-ai-surface |
-| G3 依赖表状态 | 已更新【实现】 | 只改“备份和恢复”状态格为“部分”，保留原判断 | `git diff a51a804c -- docs/system/ui-dependencies.md` |
-| G4 页面 | 不适用【实现】 | 此任务无页面和动画 | — |
-| G5 服务层范围 | 通过【实现】 | 服务、启动装配、模拟中枢、构建和测试；无界面实现改动 | `git diff --stat a51a804c` |
-| V1 反向对照 | 6 组均得到预期失败【实测】 | 隔离生成变体对象和归档，正式源码、构建归档不变；见下表 | `python tests/backup_restore/reverse.py --build build` |
-| P1 差异、文件/链接与隐私 | 通过，隐私扫描 0 匹配【实测】 | 仅相关文件；无保护文档改动、无大于 5 MiB 文件；链接与 `diff --check` 通过；按任务规定扫描基线到最终 HEAD | `git diff --stat a51a804c`；`git diff --check a51a804c`；任务规则中的隐私扫描命令 |
+| BR-R2 严重：成员 ID 复用 | 已修复【实现、实测】 | 成员表持久保存独立身份，创建序号在同一成员表生命周期内防止模拟 RNG 跨重启重复；请求、清单、回执、日志及中枢分区均校验。删除成人后复用 ID 创建孩子，在有本地资料和清空资料两种环境下，均拒绝旧备份预览、旧预览恢复及成人资料读取；新身份自己的备份可跨重启恢复 | `run.py` 的 reused-id、identity-reboot、malicious、wrong-receipt；`review_reverse.py` |
+| BR-R1 高：递归目录栈超额 | 已修复【实现、实测】 | 目录栈、路径、条目和复制状态在 PSRAM，迭代处理目录；八层目录通过，后台栈峰值估计 4,752 B，小于原 8,192 B。宿主 `-fstack-usage`：capture_step 320 B、hash_file 112 B，无随深度增长的递归帧 | `run.py` 的 deep；`review_reverse.py`；`build/repair-stack/` |
+| BR-R3 高：大文件阻塞后台能力 | 已修复【实现、实测】 | 先落盘采集意图并返回 queued；每步处理一个集合、Flash 状态或目录项，个人文件采集及卡文件哈希按 16 KiB 续接。预览、确认后校验、下载最终校验和安装前哈希也拆步；条件安装在修改锁内检查版本，无整文件锁内哈希。2/8 MiB 备份和实际覆盖恢复期间，进度查询及无密码成员解锁工作均及时完成，timeouts/late 均为 0 | `run.py` 的 large-seed、large-restore；`review_reverse.py` |
+| B1 清单与上传回执 | 通过【实测】 | 集合、阅读位置、个人文件、空文件及重启回执；received 与 durable 分开；错误身份回执拒绝；旧无身份日志明确要求重新备份，并允许新备份 | `run.py` 的 seed、receipt-reboot、wrong-receipt、legacy-journal |
+| B2 预览、覆盖确认、未恢复项目 | 通过【实测】 | 人工确认、家长 PIN、错误 PIN、换人及过期内容校验保留；坏哈希、错误身份、旧格式、越界路径和重复条目拒绝；未安装集合有说明 | `run.py` 的 pin、stale、member-confirm、corrupt、malicious |
+| B3 备份→清空→恢复 | 通过，限重新绑定后的成员资料【实测】 | 真正清空并重启；先验证新身份不能获取旧备份，再用独立合成身份夹具模拟明确重新绑定；两成员的编号、版本、删除、下个编号、文件和位置复原，再次重启后阅读器回第 4 页 | `run.py` 的 wipe、rejoin、restore-cut/resume、verify-reboot |
+| B4 断电、断网后继续 | 通过【实测】 | 采集断电后从原件重建；上传/下载按持久偏移继续；采集中换人和后台暂停；未授权预览检查点丢失后从校验过的远端清单重建；六组 Flash 故障均实际撕裂后恢复成功 | `run.py` 的 collect-*、prepare-recover、upload-*、network、restore-network、member-resume、flash-* |
+| B5 成员隔离 | 通过【实测】 | 持久身份与运行时代次分别校验；新孩子无旧成人清单、回执或数据；确认期间换人拒绝，回到原成员后继续；条件恢复仍绑定原成员 | `run.py` 的 reused-id、identity-reboot、member-confirm、member-resume、api |
+| G1 全量、内存检查与预算 | 通过【实测】 | 普通 105/105，72.74 s；ASan/UBSan 105/105，99.81 s；均退出 0、无跳过。两套备份专项各 51 次启动、零断言失败、零警告；普通专项内部 RAM 最低余量 41,872 B，后台栈最高 4,768 B，存储栈最高 3,472 B，预算未改 | 下方四条构建/CTest 命令 |
+| G2 原子能力与 AI | 通过【实现、实测】 | 原五调用、两事件仍走统一能力、确认和 PIN 门；新增内部接口只供可信服务使用；状态和清单可由 AI 查询，无新页面 | 全量中的 capability-table 系列、integration-ai-surface |
+| G3 依赖表 | 保持“部分”【实现】 | 本轮未改依赖判断；身份重绑定、真实对象存储等仍有缺口 | `git diff a51a804c..HEAD -- docs/system/ui-dependencies.md` |
+| G4 页面 | 不适用【实现】 | 没有界面或动画改动；GUI smoke 使用既有 SDL dummy 模式，无窗口 | 全量中的 gui-smoke |
+| G5 范围 | 通过【实现】 | 仅服务、成员策略、必要接口、模拟中枢、测试及本报告；未开发应用或改需求/决策/调研资料 | `git diff --stat cf258b3b..HEAD` |
+| V1 原六组反向对照 | 通过【实测】 | 版本、日志代、Flash 条件写、卡文件条件写、目录成员绑定及空闲任务预算仍能检出撤掉保护；旧日志清理不提交的保留保护对照通过 | `python tests/backup_restore/reverse.py --build build` |
+| V2 本轮反向对照 | 通过【实测】 | 九个负向场景（八个源码变体）均被断言或栈警告检出，见下表；隔离编译，正式源码和归档不变 | `python tests/backup_restore/review_reverse.py --build build --evidence build/backup-restore-phj0ft3x` |
+| P1 差异、文件、链接、隐私 | 通过【实测】 | 无夹带、无大于 5 MiB 的提交文件；文件/链接及 diff 检查通过；按任务规定扫描原任务基线和本轮基线到最终 HEAD，均 0 匹配（grep 退出 1） | `git diff --check a51a804c..HEAD`；任务规则的隐私扫描命令 |
 
-反向对照各自撤掉一个保护；日志项另模拟允许发生的“旧日志清理未提交”。
+两套按[总规则 §5](../codex-rules.md)配置；`INK_WERROR=ON`，内存检查仅另开 `INK_SANITIZE=ON`，保留既有 `INK_HUB_PYTHON=$PWD/hub/.venv/bin/python`。依赖从 `$INK_DEPS` 只读复用，未升级。所有构建和全量测试串行安排：
 
-| 撤掉的保护 | 实际失败证据 |
+```sh
+cmake --build build -j4
+"$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j3
+cmake --build build-asan -j4
+"$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j3
+```
+
+专项入口：[run.py](../../../tests/backup_restore/run.py)、[原反向对照](../../../tests/backup_restore/reverse.py)、[本轮反向对照](../../../tests/backup_restore/review_reverse.py)。其中 `python` 使用 `$INK_DEPS/build-deps/pyenv/bin/python`。普通与内存检查证据分别为 `build/backup-restore-phj0ft3x/`、`build-asan/backup-restore-gdrx7wwz/`；全量日志在对应目录的 `repair-ctest.log` 与 `Testing/Temporary/LastTest.log`。
+
+本轮反向对照证据：`build/backup-review-reverse-wtn7w3iv/`。编译、运行日志与断言原文均留在对应子目录。
+
+| 撤掉的保护 | 实际失败 |
 | --- | --- |
-| 安装前核对版本 | api 2 条断言失败，新编辑被旧快照覆盖 |
-| 快照使用新日志代 | api-reboot 1 条失败，旧的较高版本日志复活；保留换代、同样不提交清理时，两次启动均通过 |
-| Flash 条件替换 | api 2 条失败，队列里的较新写入被覆盖 |
-| 卡文件条件替换 | api 2 条失败，变过的原件被替换 |
-| 目录绑定原成员 | api 2 条失败，目录出现在后来成员空间 |
-| 空闲时不创建后台任务 | 原 AI 场景预算失败，内部 RAM 最低 32,408 B，小于既有 32,768 B；正式实现同场景 32,880 B |
+| 将身份重新绑定到可复用 ID | reused-id 4 条断言失败，包含新孩子可取旧成人预览 |
+| 身份不落盘 | 重启回执 2 条断言失败 |
+| 清单不检查身份 | 错误身份清单未在预览前拒绝，1 条失败 |
+| 回执不检查身份 | 错误身份回执 2 条断言失败 |
+| 迭代遍历改回原递归 | 八层业务断言完成，但后台栈估计 14,864 B，触发 8,192 B 栈警告 |
+| 采集改回整文件复制/复核 | 8 MiB 备份 6 条失败，3 次能力超时 |
+| 文件哈希改回同步整文件计算 | 8 MiB 恢复 6 条失败，3 次能力超时 |
+| 条件安装忽略文件修改版本 | api 3 条失败，包含较新同大小文件被覆盖 |
+| 未授权预览不恢复丢失检查点 | prepare-recover 1 条失败 |
 
-【实测，模拟器】新增场景内部 RAM 最低余量 43,920 B；普通构建存储任务栈估计峰值 3,472 / 3,584 B。ASan/UBSan 是宿主检查，不是实机内存测量。普通全测退出 0（59.91 s），内存检查全测退出 0（101.66 s）。
-
-增量接口：`ink_db_export/import`；`ink_storage_restore`；`ink_fs_restore`、`ink_fs_mkdir_member_generation`；`ink_jobs_held`；`ink_hub_on_blob`。SHA-256 仅复用为公共构建目标，未加依赖。能力总表自动生成，新分组使原关联链接编号随之调整。
-
-命令中的 `python`、`ctest` 使用 `$INK_DEPS/build-deps/pyenv/bin/`。中枢测试环境从 `hub/uv.lock` 按版本和 SHA-256 安装，未改依赖；本地 `hub/.venv` 用 `.pth` 指向当前 `hub/` 源码，两个构建均加 `-DINK_HUB_PYTHON="$PWD/hub/.venv/bin/python"`。初轮全测发现空闲启动及监听槽影响原测试，已改为只有持久任务才恢复执行，不增加监听槽；存储条件写的哈希计算使用独立栈帧，普通写入不增加该栈占用。
+原反向对照证据：`build/backup-reverse-kr7i7p2x/`。六组仍得到：版本保护 2 条、日志代 1 条、Flash 条件写 2 条、卡文件条件写 2 条、目录成员绑定 2 条失败；空闲任务变体内部 RAM 最低 32,408 B，低于原 32,768 B 预算。正式全量仍满足原预算。
 
 ## 没做到的
 
-- 未实现设备级设置、成员身份/PIN、网络/配对凭据的备份恢复；当前恢复范围是已存在成员自己的资料，未取消这些需求。
-- 未实现真实中枢的对象存储、历史版本选择、跨设备合并；只连接 `sim_hub`。Linux/gcc 和实机未在本机运行，新增读写及 `fgets` 类调用已检查返回值。
-- 需要存储卡暂存；无卡时明确失败，暂存不足或超限不静默漏项。上限为 128 项、8 层目录、Flash 文件/集合快照 1 MiB；个人卡文件流式处理。恢复逐项原子提交，非整台设备事务；完成后需要重启加载缓存。
+- Linux/gcc 和 S31 实机未运行。本环境未找到 RISC-V GCC，无法做目标编译栈验证；上表栈值来自宿主模拟估计及 macOS/clang 的 `-fstack-usage`。新增代码的 read/write/fgets 类返回值逐处核对，没有用 `(void)` 忽略。
+- 真实中枢的身份绑定、重新入家庭、跨设备身份恢复及旧无身份快照迁移未实现。恢复测试的 rejoin 直接导入单独保留的合成成员表，是测试夹具；没有给 AI 或用户开放绕过身份授权的导入能力。清空设备后不能仅凭同名 ID 认领旧备份。
+- 原任务未覆盖的设备设置、成员身份/PIN、网络/配对凭据备份恢复、真实对象存储、历史版本选择与跨设备合并仍未实现，未取消这些需求。
+- 仍需存储卡暂存；上限为 128 项、8 层目录、单个 Flash 文件/集合快照 1 MiB，模拟中枢单对象 64 MiB。超限明确失败；恢复逐项原子提交，完成后需重启加载缓存。采集中断会重采原件，上传/下载复用持久偏移。
 
 ## 和设计不一致的
 
-- 采用不可变整份清单及 `backup/commit`、`backup/latest` 协调；块传输沿用设备协议 §3.8。协议 §3.9 的增量推送、全量对账、每集合 dataset/restore_token 换代未接入，不能声称完整同步已交付。
-- 系统服务设计 §2.1 的非凭据设备数据备份未覆盖；当前仅成员范围。AI 活动日志有备份，但恢复保留本机审计记录，清单标 `kept_local_audit`；未安装集合标 `collection_unavailable`。共享内容按需下载，外部动作与过期提醒不重放；清单外本地文件保留。原设计未改。
+- 延续原任务的不可变整份清单与 `backup/commit`、`backup/latest` 协调；本轮增加持久身份和 v2 清单/日志，所有备份 RPC 与回执都带身份。旧无身份快照不自动迁移，不给可复用 ID 继承授权。真实服务器以后必须从已认证成员绑定验证身份，不能只信请求字段。
+- 设备协议 §3.9 的增量推送、对账、dataset/restore_token 换代仍未接入；设备级资料覆盖仍有缺口。未改原设计迁就实现。
+- 本机 AI 操作日志保留、未安装集合明确列出、清单外文件保留、外部动作不重放，延续原范围和断言。
 
 ## 改过的已有测试
 
-仅 `tests/integration/ai_surface.c`：`FOR_AI` 增加 `backup.status`、`backup.manifest`、`backup.now`、`restore.preview`、`restore.apply`，后者必填 `preview`；`EVENTS` 增加两个备份事件。未删测试、放宽断言或更改旧能力预期。
+- `tests/backup_restore/device.c`：原固定文件名和 98,304 B 长度参数化，默认夹具和内容断言不变；PIN 完成断言仅增加错误输出。增加持久身份复用、重启、八层目录、2/8 MiB 实际覆盖恢复、进度/解锁并发、采集断电/换人/暂停、错误身份回执、旧日志及预览检查点恢复场景；原断言保留。
+- `tests/backup_restore/run.py`：清空与恢复之间新增明确重新绑定夹具，先断言新身份不能取得旧备份；恶意清单偏移按 v2 布局调整，保留原三种攻击，另加错误身份与旧格式。新增场景均校验 test.finished、test.fail 和 warnings；未放宽预算、截止时间或已有通过条件。
+- `tests/backup_restore/reverse.py`、预算与既有能力测试本轮均未改。原任务对 `ai_surface.c` 新增五调用/两事件的记录继续有效。
 
 ## 要用户定的
 
-设备级资料选择性恢复、恢复其他成员身份/权限的界面及授权范围仍需确定。当前暂按“只恢复现有成员自己的资料、保留清单外文件和本机审计记录”推进，未把暂定方案升级为需求。
+本轮没有阻塞项。未来的身份重新绑定授权、其他成员资料迁移和旧无身份快照认领流程仍需产品决定；当前保守拒绝自动归属，保留远端历史对象。
 
 ## 顺手发现
 
-无另修范围外问题。未 push、未创建 PR、未启动窗口模拟器；CTest 的 GUI 项使用既有 SDL dummy 无窗口 smoke 模式。
+没有另修范围外问题，复查未列中级项。未 push、未开 PR、未碰设备、真实凭据或付费服务，未启动带窗口的模拟器。
