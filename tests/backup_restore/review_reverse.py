@@ -170,7 +170,8 @@ boot(area, binary, "api", area / "hub", failure="revision restore refuses interv
 
 def unstable_revision(s):
     start, end = s.index("uint32_t ink_fs_revision(void) {"), s.index("\nuint32_t ink_fs_file_revision(")
-    return s[:start] + "uint32_t ink_fs_revision(void) { return __atomic_load_n(&FS.revision, __ATOMIC_RELAXED); }\n" + s[end:]
+    s = s[:start] + "uint32_t ink_fs_revision(void) { return __atomic_load_n(&FS.revision, __ATOMIC_RELAXED); }\n" + s[end:]
+    return s.replace("osal_mutex_lock(FS.edits, revision ? 0 : OSAL_WAIT_FOREVER)", "osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER)")
 
 
 area, binary = variant("in-flight-revision", "system/services/file/file_service.c", unstable_revision)
@@ -181,6 +182,15 @@ for label, length, race_length, phase in (("different", 98304, 8388608, "atomic-
     boot(target, binary, "atomic-seed", server, length=length)
     boot(target, binary, phase, server, length=length, race_length=race_length,
          failure="restore retains whole newer successful atomic write")
+
+area, binary = variant("blocking-install", "system/services/file/file_service.c", lambda s: replace_once(
+    s, "osal_mutex_lock(FS.edits, revision ? 0 : OSAL_WAIT_FOREVER)", "osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER)"))
+boot(area, binary, "api", area / "hub", failure="conditional restore yields while atomic writer owns edit lock")
+
+area, binary = variant("usb-return-revision", "system/services/file/file_service.c", lambda s: replace_once(
+    s, "    int r = hal_usb_disk_stop();\n    ink_svc_lock();\n    __atomic_add_fetch(&FS.revision, 1, __ATOMIC_RELAXED);",
+    "    int r = hal_usb_disk_stop();\n    ink_svc_lock();"))
+boot(area, binary, "api", area / "hub", failure="USB return invalidates revision sampled before loan grant")
 
 
 def blocking_upload(s):

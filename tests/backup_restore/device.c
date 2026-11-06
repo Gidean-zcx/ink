@@ -126,6 +126,20 @@ static volatile int api_done, storage_done;
 static int storage_result;
 static ink_exec_job_t api_job;
 static void restore_done(void *ctx, int rc) { (void)ctx; storage_result=rc; storage_done=1; }
+static volatile int edit_done, usb_done;
+static int usb_result;
+static void api_writer(void *arg) {
+    (void)arg;
+    size_t len=2u*1024u*1024u;
+    uint8_t *bytes=osal_malloc(len,OSAL_MEM_EXTERNAL); CHECK(bytes,"API concurrent writer buffer");
+    if(bytes) {
+        memset(bytes,'C',len);
+        CHECK(ink_fs_write_atomic("/me/cas/guard.txt",bytes,len)==0,"API concurrent atomic write commits");
+        osal_free(bytes);
+    }
+    edit_done=1;
+}
+static void api_lender(void *arg) { (void)arg; usb_result=ink_usb_disk_start(); usb_done=1; }
 static void api_checks(void *arg) {
     (void)arg;
     ink_db_t *db=ink_db_open(&NOTES,NULL);
@@ -190,6 +204,26 @@ static void api_checks(void *arg) {
     ink_fs_file_t *writer=NULL;
     CHECK(ink_fs_open("/me/cas/guard.txt",INK_FS_WRITE,&writer)==0 && ink_fs_revision()==0,"open writer cannot yield a stable restore revision");
     if(writer) CHECK(ink_fs_close(writer)==0 && ink_fs_revision()!=0,"closing writer permits stable sampling again");
+    f=hal_fs_open("/content/.m/owner/.backup/down127",HAL_O_WRITE|HAL_O_CREATE|HAL_O_TRUNC);
+    CHECK(f && hal_fs_write(f,"R",1)==1,"stage concurrent lock fixture"); if(f) CHECK(hal_fs_close(f)==0,"lock fixture closed");
+    revision=ink_fs_revision();
+    osal_task_cfg_t edit_cfg={.name="api-writer",.fn=api_writer,.stack_bytes=4096,.priority=OSAL_PRIO_NORMAL,.core=-1,.flags=OSAL_TASK_STACK_EXTERNAL};
+    CHECK(osal_task_create(&edit_cfg,NULL)==OSAL_OK && WAIT_FOR(ink_fs_revision()==0 && !edit_done,1000),"atomic writer owns edit lock before conditional install");
+    uint64_t started=osal_now_us();
+    int restored=ink_fs_restore_if_revision("owner",ink_member_generation("owner"),127,"/me/cas/guard.txt",revision);
+    CHECK(restored==INK_FS_ERR_BUSY && osal_now_us()-started<200000,"conditional restore yields while atomic writer owns edit lock");
+    CHECK(WAIT_FOR(edit_done,5000),"concurrent API writer finished");
+    hw(HW_USB_ON,0,0);
+    CHECK(ink_fs_card_hold()==0,"hold card while USB loan waits");
+    revision=ink_fs_revision();
+    osal_task_cfg_t usb_cfg={.name="api-usb",.fn=api_lender,.stack_bytes=4096,.priority=OSAL_PRIO_NORMAL,.core=-1,.flags=OSAL_TASK_STACK_EXTERNAL};
+    CHECK(osal_task_create(&usb_cfg,NULL)==OSAL_OK && WAIT_FOR(ink_fs_revision()!=revision,1000),"USB borrowing intent changes revision before grant");
+    uint32_t waiting_revision=ink_fs_revision();
+    CHECK(waiting_revision && !ink_usb_disk_active(),"sample stable revision while card holder postpones USB grant");
+    ink_fs_card_release();
+    CHECK(WAIT_FOR(usb_done,3000) && usb_result==0 && ink_usb_disk_active() && ink_fs_revision()==0,"lent card refuses stable sampling");
+    CHECK(ink_usb_disk_stop()==0 && ink_fs_revision()!=waiting_revision,"USB return invalidates revision sampled before loan grant");
+    hw(HW_USB_OFF,0,0);
     uint32_t generation=ink_member_generation("owner");
     CHECK(ink_member_switch("kid")==0,"another member arrives before a delayed directory creation");
     CHECK(ink_fs_mkdir_member_generation("owner",generation,"/me/restore-parent")==0,"delayed directory keeps original member");
@@ -268,7 +302,7 @@ static void atomic_race(void) {
         if(bytes) { memset(bytes,'B',file_bytes); CHECK(ink_fs_write_atomic(file_path,bytes,file_bytes)==0,"local edit before preview"); osal_free(bytes); }
     }
     char token[33]=""; preview(token);
-    ink_backup_manifest_t *manifest=osal_malloc(sizeof *manifest,OSAL_MEM_EXTERNAL);
+    ink_backup_manifest_t *manifest=osal_calloc(1,sizeof *manifest,OSAL_MEM_EXTERNAL);
     hal_file_t *f=hal_fs_open("/content/.m/owner/.backup/preview0",HAL_O_READ);
     CHECK(manifest && f && hal_fs_read(f,manifest,sizeof *manifest)>=(ssize_t)offsetof(ink_backup_manifest_t,item),"read real preview item index");
     if(f) CHECK(hal_fs_close(f)==0,"preview index closed");

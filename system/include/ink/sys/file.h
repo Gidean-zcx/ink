@@ -95,7 +95,7 @@ int ink_fs_write_atomic(const char *path, const void *data, size_t n);
  *  Checks the previous hash (zero = absent), rejects open writers/jobs and changed originals. */
 int ink_fs_restore(const char *member, uint32_t generation, unsigned stage, const char *path, const uint8_t expected_sha256[32]);
 /** Trusted backup continuation: after hashing outside the edit lock, install only if the card revision
- *  still matches. Open writers and jobs also refuse installation.
+ *  still matches. Open writers and jobs also refuse installation; a busy edit lock returns BUSY.
  *  Revision sampling never waits: zero means an edit, writer, job or USB is active; retry later.
  *  Sample before reading metadata/content, then verify the same nonzero revision afterwards. */
 uint32_t ink_fs_revision(void);

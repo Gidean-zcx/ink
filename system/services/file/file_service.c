@@ -1157,6 +1157,7 @@ int ink_usb_disk_stop(void) {
     if (!lent) return INK_FS_OK;
     int r = hal_usb_disk_stop();
     ink_svc_lock();
+    __atomic_add_fetch(&FS.revision, 1, __ATOMIC_RELAXED);
     FS.usb_lent = false;
     ink_svc_unlock();
     ink_power_release(INK_NEED_AWAKE);
@@ -1329,7 +1330,10 @@ static int restore_file(const char *member, uint32_t generation, unsigned stage,
     if (r) { ink_member_io_end(member); return r; }
     uint8_t *buf = revision ? NULL : osal_malloc(JOB_BUF, OSAL_MEM_EXTERNAL);
     if (!revision && !buf) { ink_fs_card_release(); ink_member_io_end(member); return INK_FS_ERR_IO; }
-    osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
+    if (osal_mutex_lock(FS.edits, revision ? 0 : OSAL_WAIT_FOREVER) != OSAL_OK) {
+        osal_free(buf); ink_fs_card_release(); ink_member_io_end(member);
+        return INK_FS_ERR_BUSY;
+    }
     char target[PHYS_MAX], source[PHYS_MAX], root[INK_LAYOUT_PATH_MAX];
     r = resolve_for(&c, path, true, target, sizeof target);
     if (!r && FS.job_active) r = INK_FS_ERR_BUSY;
