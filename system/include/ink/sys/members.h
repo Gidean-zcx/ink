@@ -31,6 +31,15 @@ void ink_members_init(void);
 /** The capabilities and the lock grace watch: after the data store, the power service and the settings. */
 int ink_members_start(void);
 const ink_member_t *ink_member_current(void);
+typedef struct {
+    char member[16];
+    uint32_t generation, epoch;
+    bool authed;
+} ink_member_identity_t;
+/** One coherent identity, independent of delayed state notifications. No PIN material. */
+void ink_member_identity(ink_member_identity_t *out);
+/** Invalidated in the same critical section as a member/authentication change. */
+uint32_t ink_member_epoch(void);
 /** Live incarnation, zero for an absent or quarantined member. */
 uint32_t ink_member_generation(const char *id);
 /** Durable, opaque incarnation for backup ownership. exec.bg only; fails closed if it cannot persist.

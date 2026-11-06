@@ -9,8 +9,9 @@
     "optional": true
   },
   "hub.tool_results.done": {
-    "min": 2,
-    "why": "page turn and member switch must be done by the device"
+    "min": 1,
+    "max": 1,
+    "why": "page turn completes; changing member cancels the old turn before its receipt or answer is delivered"
   },
   "hub.tool_results.stale": {
     "min": 1,
@@ -28,7 +29,9 @@
     "why": "the key turn and the AI turn both happened (stale one did not)"
   },
   "ai.answers": {
-    "min": 4
+    "min": 3,
+    "max": 3,
+    "why": "page turn, stale-page reply and child rejection finish; no old-member answer follows the handoff"
   },
   "ai.tool_to_visible_ms.p95": {
     "max": 1500,
@@ -41,5 +44,15 @@
   },
   "audio.mic.lost_ms": {
     "max": 0
+  },
+  "hub.member_turns_cancelled": {
+    "min": 1,
+    "max": 1,
+    "why": "the member-switch tool ends exactly its originating realtime turn"
+  },
+  "action.ai.system.switch_member": {
+    "min": 1,
+    "max": 1,
+    "why": "member switch still executes once before the originating turn is revoked"
   }
 }

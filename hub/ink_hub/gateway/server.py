@@ -288,7 +288,8 @@ class Connection:
             elif method == "ink/member":
                 # Only synthetic configured identities exist in proto1 development mode.
                 member, epoch = params.get("member"), params.get("epoch")
-                if type(epoch) is not int or epoch <= self.epoch or member not in ("default", "demo-adult", "demo-other"):
+                if (type(epoch) is not int or not self.epoch < epoch <= 0xffffffff or
+                        type(params.get("authed", False)) is not bool or member not in ("default", "demo-adult", "demo-other")):
                     raise ProtocolError("家人或代次无效")
                 scope = self.hub.authority.issue("demo", member)
                 # Proto1 cannot prove adult unlock; it never grants an adult space.
@@ -299,7 +300,20 @@ class Connection:
                 await self.cancel_work()
                 await self.notify("caps/changed", {})
             elif method == "device/event":
-                pass  # No persistent event body or activity data in step 1.
+                boot, seq, member = params.get("boot"), params.get("seq"), params.get("member")
+                if (type(boot) is not int or not 0 < boot <= 0xffffffff or
+                        type(seq) is not int or not 0 < seq <= 0xffffffff or member != self.scope.member or
+                        not isinstance(params.get("event"), str) or not isinstance(params.get("args"), dict)):
+                    raise ProtocolError("事件标识无效")
+                # Only transport position is retained here; event bodies are synthetic and transient.
+                old_boot, old_seq = self.hub.event_positions.get(self.device, (boot, 0))
+                if boot < old_boot:
+                    raise ProtocolError("事件启动序号已过期")
+                if boot != old_boot or seq > old_seq + 1:
+                    self.hub.metrics.event_gaps += 1
+                upto = max(seq, old_seq) if boot == old_boot else seq
+                self.hub.event_positions[self.device] = boot, upto
+                await self.notify("device/event_ack", {"boot": boot, "upto": upto})
             else:
                 raise ProtocolError("未提供这个方法", -32601)
         except (ProtocolError, PermissionError, ValueError, TypeError, KeyError) as exc:
@@ -313,12 +327,16 @@ class Connection:
         device = params.get("device")
         if not isinstance(device, str) or not 1 <= len(device.encode()) <= 64:
             raise ProtocolError("设备名称无效")
+        epoch = params.get("epoch", 0)
+        if type(epoch) is not int or not 0 <= epoch <= 0xffffffff or type(params.get("authed", False)) is not bool:
+            raise ProtocolError("家人代次无效")
         old = self.hub.connections.get(device)
         if old and old is not self:
             await old.close()
         self.device = device
         self.hub.connections[device] = self
         self.scope = self.hub.authority.issue("demo", "default")
+        self.epoch = epoch
         self.tools = DeviceTools(self.request, params.get("fw", "development"), params.get("manifest_hash", ""))
         await self.send(response(rid, {"session": self.id, "proto": 1, "now_ms": int(time.time() * 1000),
                                        "hub_instance": self.hub.instance}))
@@ -361,6 +379,7 @@ class Hub:
         self.authority.add("demo", "default", "child", ("demo-adult", "demo-other"))
         self.instance = secrets.token_hex(16)
         self.connections = {}
+        self.event_positions = {}
         self.samples = [] if record_wire else None
         self.registry = Registry()
         self.registry.register(Capability("voice.chat", "语音对话", form="session"))

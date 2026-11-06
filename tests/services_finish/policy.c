@@ -16,7 +16,21 @@ static int sent;
 static void tools_request(void) {
     ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
     CHECK(j && ink_json_parse(j, request_json, strlen(request_json)) == 0, "request parses");
-    if (j) { on_tools(NULL, ++sent, "tools/call", j, 0); osal_free(j); }
+    if (j) {
+        size_t cap = strlen(request_json) + 128;
+        char *bound = osal_malloc(cap, OSAL_MEM_EXTERNAL);
+        int meta = ink_json_find(j, 0, "_meta");
+        int at = meta >= 0 ? j->tok[meta].start + 1 : (int)strlen(request_json) - 1;
+        if (bound) {
+            snprintf(bound, cap, "%.*s%s\"member\":\"%s\",\"epoch\":%u%s%s%s", at, request_json,
+                meta >= 0 ? "" : ",\"_meta\":{", ink_member_current()->id, ink_hub_member_epoch(),
+                meta >= 0 && j->tok[meta].size ? "," : "", meta >= 0 ? request_json + at : "}", meta >= 0 ? "" : "}");
+            CHECK(ink_json_parse(j, bound, strlen(bound)) == 0, "fixture includes delivery identity");
+            on_tools(NULL, ++sent, "tools/call", j, 0);
+            osal_free(bound);
+        }
+        osal_free(j);
+    }
 }
 static void send(const char *json) { request_json = json; on_ui(tools_request); delay_ms(100); }
 static void clear_cards(void) {
@@ -39,6 +53,9 @@ static void queued_for_someone_else(void) {
 }
 static void run(void *arg) {
     (void)arg; delay_ms(1800);
+    ink_hub_demand();
+    CHECK(WAIT_FOR(ink_hub_online() && ink_hub_member_matches(ink_member_current()->id, ink_hub_member_epoch(), ink_hub_connection()), 30000),
+          "remote policy fixture has a synchronized hub identity");
     CHECK(ink_cap_register(CAPS, 2) == 0 && ink_settings_define(&SETTING, 1) == 0, "fixtures");
     send("{\"name\":\"finish.external\",\"arguments\":{\"text\":\"SYNTHETIC\"},\"_meta\":{\"asked\":true}}");
     CHECK(external_runs == 1 && !cards(), "D-105: requested external action executes directly");

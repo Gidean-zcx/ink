@@ -35,6 +35,7 @@ typedef struct {
 enum { EDIT_NONE = 0, EDIT_KEYS, EDIT_DELETE, EDIT_OTHER };
 
 static struct {
+    ink_member_identity_t owner;
     int session, next_session;
     uint32_t revision;
     ink_text_type_t type;
@@ -82,6 +83,7 @@ static void on_dict_ready(void) { /* UI task: the keyboard asks again */
 int ink_text_focus(const ink_text_cfg_t *cfg, const ink_text_client_t *client, void *ctx) {
     if (!cfg) return -1;
     if (TS.session) ink_text_blur(TS.session);
+    ink_member_identity(&TS.owner);
     text_voice_clear_notice();
     size_t cap = cfg->max ? (cfg->max < VALUE_MAX ? cfg->max : VALUE_MAX) : VALUE_DEFAULT;
     char *v = osal_malloc(cap + 1, OSAL_MEM_EXTERNAL);
@@ -116,6 +118,13 @@ int ink_text_focus(const ink_text_cfg_t *cfg, const ink_text_client_t *client, v
     ink_probe_count("text.sessions");
     if (TS.presenter) TS.presenter();
     return TS.session;
+}
+
+bool ink_text_session_current(void) {
+    ink_member_identity_t identity;
+    ink_member_identity(&identity);
+    return !TS.session || (identity.authed && TS.owner.generation == identity.generation &&
+           !strcmp(TS.owner.member, identity.member));
 }
 
 static void forget_snaps(snap_t *list, int *n) {

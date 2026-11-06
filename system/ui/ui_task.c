@@ -21,6 +21,8 @@
 #include "ink/sys/ui.h"
 #include "ink/sys/textinput.h"
 #include "ink/sys/json.h"
+#include "ink/sys/members.h"
+#include "ink/sys/svc.h"
 
 #define UI_STACK 10240
 #define UI_PRIO 5
@@ -80,8 +82,10 @@ static struct {
     int depth;
     void (*top_hook)(const char *app);
     lv_obj_t *screen;
+    ink_member_identity_t page_owner;
     const ink_ui_overlay_t *overlays[MAX_OVERLAYS];
     lv_obj_t *overlay_root[MAX_OVERLAYS];
+    ink_member_identity_t overlay_owner[MAX_OVERLAYS];
     int noverlays;
     bool skip_touch; /* a finger went down before the screen changed under it: nothing until it lifts */
     volatile uint32_t generation;
@@ -289,7 +293,7 @@ const char *ink_ui_page_name(void) {
 
 const char *ink_ui_top_name(void) { return UI.noverlays ? UI.overlays[UI.noverlays - 1]->name : ink_ui_page_name(); }
 
-int ink_ui_snapshot(char *buf, size_t cap, const char **activity_name) {
+static int snapshot_content(char *buf, size_t cap, const char **activity_name) {
     if (UI.noverlays) {
         const ink_ui_overlay_t *o = UI.overlays[UI.noverlays - 1];
         if (activity_name) *activity_name = o->name;
@@ -317,6 +321,35 @@ int ink_ui_snapshot(char *buf, size_t cap, const char **activity_name) {
     osal_free(page); osal_free(text);
     if (w.overflow) { buf[0] = 0; return -1; }
     return (int)w.len;
+}
+
+static bool snapshot_owner_matches(const ink_member_identity_t *owner, const ink_member_identity_t *identity) {
+    return owner->generation == identity->generation && !strcmp(owner->member, identity->member);
+}
+
+bool ink_ui_page_current(void) {
+    ink_member_identity_t identity;
+    ink_member_identity(&identity);
+    ink_svc_lock();
+    bool current = identity.authed && snapshot_owner_matches(&UI.page_owner, &identity);
+    ink_svc_unlock();
+    return current;
+}
+
+int ink_ui_snapshot(char *buf, size_t cap, const char **activity_name) {
+    ink_member_identity_t identity, after;
+    ink_member_identity(&identity);
+    /* Reauthentication resumes this member's page; overlays provide their own sanitized snapshot. */
+    bool current = UI.noverlays ? snapshot_owner_matches(&UI.overlay_owner[UI.noverlays - 1], &identity) :
+                                 identity.authed && snapshot_owner_matches(&UI.page_owner, &identity);
+    int n = current ? snapshot_content(buf, cap, activity_name) : -1;
+    ink_member_identity(&after);
+    if (!snapshot_owner_matches(&identity, &after) || identity.epoch != after.epoch || identity.authed != after.authed) n = -1;
+    if (n < 0) {
+        if (cap) buf[0] = 0;
+        if (activity_name) *activity_name = "";
+    }
+    return n;
 }
 
 void ink_ui_hint_frame(ink_refresh_t intent) {
@@ -388,6 +421,9 @@ const lv_font_t *ink_ui_font(int role) {
 
 static void show_top(void) {
     frame_t *f = &UI.stack[UI.depth - 1];
+    ink_member_identity_t owner;
+    ink_member_identity(&owner);
+    ink_svc_lock(); UI.page_owner = owner; ink_svc_unlock();
     lv_obj_t *old = UI.screen;
     UI.screen = lv_obj_create(NULL);
     ink_ui_style_screen(UI.screen);
@@ -485,10 +521,12 @@ void ink_ui_overlay_add(const ink_ui_overlay_t *o, lv_obj_t *root) {
     while (at > 0 && UI.overlays[at - 1]->level > o->level) {
         UI.overlays[at] = UI.overlays[at - 1];
         UI.overlay_root[at] = UI.overlay_root[at - 1];
+        UI.overlay_owner[at] = UI.overlay_owner[at - 1];
         at--;
     }
     UI.overlays[at] = o;
     UI.overlay_root[at] = root;
+    ink_member_identity(&UI.overlay_owner[at]);
     for (int i = at + 1; i < UI.noverlays; i++) lv_obj_move_foreground(UI.overlay_root[i]);
     overlays_changed();
 }
@@ -500,6 +538,7 @@ void ink_ui_overlay_remove(const ink_ui_overlay_t *o) {
         if (UI.overlays[i] == o) {
             memmove(&UI.overlays[i], &UI.overlays[i + 1], sizeof UI.overlays[0] * (size_t)(UI.noverlays - i - 1));
             memmove(&UI.overlay_root[i], &UI.overlay_root[i + 1], sizeof UI.overlay_root[0] * (size_t)(UI.noverlays - i - 1));
+            memmove(&UI.overlay_owner[i], &UI.overlay_owner[i + 1], sizeof UI.overlay_owner[0] * (size_t)(UI.noverlays - i - 1));
             UI.noverlays--;
             overlays_changed();
             return;

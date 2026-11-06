@@ -45,6 +45,7 @@
 #define SNAPSHOT_CAP 3072
 #define STATE_CAP 2048 /* the system's state, with every question: what the AI knows without asking */
 #define ASK_TIMEOUT_US (45ull * 1000000ull)
+#define CAPTURE_LIMIT_US (30ull * 1000000ull)
 #define MAX_BUFFERED_FRAMES 512 /* ~30 s of speech captured before the link is online */
 
 static const char *SIM_TRANSCRIPT = "这一页讲了什么？";
@@ -90,12 +91,15 @@ static struct {
 static bool g_turn_revoked INK_PSRAM_BSS; /* under AI.lock */
 static char g_turn_member[INK_MEMBER_ID_MAX] INK_PSRAM_BSS;
 static uint32_t g_turn_generation INK_PSRAM_BSS;
+static uint32_t g_turn_epoch INK_PSRAM_BSS;
 static ink_exec_job_t g_owner_job INK_PSRAM_BSS;
 static void owner_ui(void *arg);
 
 static bool turn_allowed(void) { /* under AI.lock */
-    if (!g_turn_revoked && (!ink_member_space_open() || !g_turn_generation ||
-        g_turn_generation != ink_member_generation(g_turn_member) || strcmp(g_turn_member, ink_member_current()->id))) {
+    ink_member_identity_t identity;
+    ink_member_identity(&identity);
+    if (!g_turn_revoked && (!identity.authed || !g_turn_generation ||
+        g_turn_epoch != identity.epoch || g_turn_generation != identity.generation || strcmp(g_turn_member, identity.member))) {
         g_turn_revoked = AI.drop_frames = true;
         AI.tts_done_for = AI.stream;
         ink_exec_post(INK_EXEC_UI, &g_owner_job, owner_ui, NULL);
@@ -202,9 +206,13 @@ bool ink_ai_dismiss(void) {
     turn_focus_end();
     end_capture(true); /* closing while the key is still held ends the recording too */
     lv_obj_delete(AI.sheet);
-    AI.sheet = NULL;
+    AI.sheet = AI.status = AI.question = AI.answer = NULL;
+    AI.answer_text[0] = 0;
+    AI.answer_len = 0;
     AI.open = false;
     AI.asking = false;
+    AI.req_id = 0;
+    AI.seq++;
     /* closing ends this turn's speech too: frames still on their way are dropped (on_rt_frame), not
      * played after the sheet is gone */
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
@@ -219,6 +227,10 @@ bool ink_ai_dismiss(void) {
     return true;
 }
 
+static void dismiss_revoked_turn(void) {
+    if (ink_ai_dismiss()) ink_probe_count("ai.closed_with_the_space");
+}
+
 /* -------------------------------------------------------------- results */
 
 /* Nothing more happens in this turn, even if the key is still held: the microphone goes off. */
@@ -231,9 +243,11 @@ static void turn_over(void) {
 
 static void ui_apply(void *arg) { /* UI task */
     ai_post_t *p = arg;
-    bool match = (p->kind == 0 || p->kind == 3) ? p->req_id == AI.req_id
-                 : p->kind == 4                 ? p->req_id == AI.stream
-                                                : p->req_id == AI.seq;
+    osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
+    bool allowed = turn_allowed();
+    osal_mutex_unlock(AI.lock);
+    if (!allowed) dismiss_revoked_turn();
+    bool match = (p->kind == 0 || p->kind == 3) ? p->req_id == AI.req_id : p->req_id == AI.seq;
     if (!AI.open || !match) {
         osal_free(p);
         return;
@@ -254,16 +268,16 @@ static void ui_apply(void *arg) { /* UI task */
         ink_ui_hint_obj(AI.answer, INK_REFRESH_UI);
         if (!AI.first_text_seen) {
             AI.first_text_seen = true;
-            set_status("回答中");
+            set_status(AI.speech_failed ? "声音没能播放，文字回答在上面" : "回答中");
             ink_ui_cause(AI.t_release, "ai.release_to_first_text_visible_ms");
         }
-    } else if (p->kind == 4) { /* the speaker could not start for the answer (the text is on the sheet) */
+    } else if (p->kind == 4) { /* this turn's speech failed; the text remains available */
         AI.speech_failed = true;
-        set_status(AI.asking ? "声音没能播放：扬声器没打开，文字回答在上面" : "回答完成 · 声音没能播放（扬声器没打开）· 按 AI 键继续问");
+        set_status(AI.asking ? "声音没能播放，文字回答在上面" : "回答完成 · 声音没能播放 · 按 AI 键继续问");
         ink_probe_count("ai.speech_failed");
     } else if (p->kind == 1) {
         turn_over();
-        set_status(AI.speech_failed ? "回答完成 · 声音没能播放（扬声器没打开）· 按 AI 键继续问" : "回答完成 · 按 AI 键继续问，按 HOME 关闭");
+        set_status(AI.speech_failed ? "回答完成 · 声音没能播放 · 按 AI 键继续问" : "回答完成 · 按 AI 键继续问，按 HOME 关闭");
         ink_ui_cause(AI.t_release, "ai.release_to_done_visible_ms");
         ink_probe_count("ai.answers");
     } else {
@@ -320,7 +334,7 @@ static void on_speech_failed(void *ctx, int id) {
     (void)ctx;
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
     bool ours = id > 0 && id == AI.tts_opened;
-    int turn = AI.stream;
+    int turn = AI.session_seq;
     osal_mutex_unlock(AI.lock);
     if (ours) post(turn, 4, 0, NULL);
 }
@@ -341,7 +355,22 @@ static void on_rt_frame(void *ctx, int sid, uint8_t kind, const uint8_t *opus, s
             AI.tts_for = st;
             AI.tts_opened = AI.tts_stream > 0 ? AI.tts_stream : 0;
         }
-        if (AI.tts_stream > 0) ink_audio_stream_push(AI.tts_stream, opus, len);
+        if (!turn_allowed()) {
+            if (AI.tts_stream > 0) ink_audio_stream_abort(AI.tts_stream);
+            AI.tts_stream = 0;
+            AI.tts_done_for = st;
+        } else if (AI.tts_stream <= 0) {
+            AI.tts_stream = 0;
+            AI.tts_done_for = st;
+            ink_probe_count("ai.downlink_unavailable");
+            post(AI.session_seq, 4, 0, NULL);
+        } else if (ink_audio_stream_push(AI.tts_stream, opus, len) != 0) {
+            ink_audio_stream_abort(AI.tts_stream);
+            AI.tts_stream = 0;
+            AI.tts_done_for = st;
+            ink_probe_count("ai.downlink_overflow");
+            post(AI.session_seq, 4, 0, NULL);
+        }
     }
     osal_mutex_unlock(AI.lock);
 }
@@ -457,6 +486,11 @@ static void on_frame(void *ctx, const uint8_t *data, size_t len, uint32_t seq) {
 }
 
 static void flush_timer_cb(lv_timer_t *t) { /* UI task: the link may come up after the user stopped talking */
+    if (AI.capturing && osal_now_us() - AI.t_press >= CAPTURE_LIMIT_US) {
+        end_capture(false);
+        ink_probe_count("ai.capture_limit");
+        if (AI.open) set_status("已听够 30 秒，正在想…");
+    }
     flush_uplink();
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
     bool idle = !AI.buf_head && !AI.end_pending && !AI.up_open;
@@ -477,6 +511,9 @@ static int request(const char *method, bool voice) {
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
     AI.seq++;
     if (voice) AI.session_seq = AI.seq;
+    char member[INK_MEMBER_ID_MAX];
+    snprintf(member, sizeof member, "%s", g_turn_member);
+    uint32_t epoch = g_turn_epoch;
     osal_mutex_unlock(AI.lock);
     const char *prev = osal_mem_tag("ai");
     size_t ids_cap = 3;
@@ -506,7 +543,7 @@ static int request(const char *method, bool voice) {
         ink_jw_str(&w, g_typed[0] ? g_typed : SIM_TRANSCRIPT);
     }
     char gen[48];
-    snprintf(gen, sizeof gen, ",\"page_gen\":%u", (unsigned)ink_ui_content_version());
+    snprintf(gen, sizeof gen, ",\"page_gen\":%u", n < 0 ? 0 : (unsigned)ink_ui_content_version());
     ink_jw_raw(&w, gen);
     ink_jw_raw(&w, ",\"page\":{\"app\":");
     ink_jw_str(&w, app);
@@ -514,18 +551,18 @@ static int request(const char *method, bool voice) {
     ink_jw_strn(&w, snap, n > 0 ? (size_t)n : 0);
     ink_jw_raw(&w, ",\"actions\":");
     {
-        int k = ink_cap_ids_json(ids, ids_cap);
+        int k = n < 0 ? snprintf(ids, ids_cap, "[]") : ink_cap_ids_json(ids, ids_cap);
         if (k < 0) w.overflow = true;
         else ink_jw_raw(&w, ids);
     }
     ink_jw_raw(&w, "},\"state\":");
     {
-        int k = ink_state_json(snap, STATE_CAP, INK_EXPOSE_AI); /* the page's text is in params already: its buffer is free */
+        int k = n < 0 ? -1 : ink_state_json(snap, STATE_CAP, INK_EXPOSE_AI); /* page text is already in params */
         ink_jw_raw(&w, k > 0 ? snap : "{}");
     }
     ink_jw_raw(&w, "}");
     ink_power_hold(INK_NEED_NET); /* no sleep while the answer is on its way */
-    int id = w.overflow ? -1 : ink_hub_call(method, params, ASK_TIMEOUT_US, on_reply, (void *)(intptr_t)AI.seq);
+    int id = w.overflow ? -1 : ink_hub_call_for(method, params, ASK_TIMEOUT_US, on_reply, (void *)(intptr_t)AI.seq, member, epoch);
     if (id < 0) { /* no reply will come: the turn ends here */
         ink_power_release(INK_NEED_NET);
         post(AI.seq, 2, id, NULL);
@@ -632,8 +669,11 @@ void ink_ai_key(bool pressed, uint64_t t_us) {
         AI.up_open = AI.dismissed = false;
         AI.tts_stream = AI.tts_opened = 0;
         AI.tts_for = AI.tts_done_for = -1;
-        snprintf(g_turn_member, sizeof g_turn_member, "%s", ink_member_current()->id);
-        g_turn_generation = ink_member_generation(g_turn_member);
+        ink_member_identity_t identity;
+        ink_member_identity(&identity);
+        snprintf(g_turn_member, sizeof g_turn_member, "%s", identity.member);
+        g_turn_generation = identity.generation;
+        g_turn_epoch = identity.epoch;
         g_turn_revoked = false;
         osal_mutex_unlock(AI.lock);
         if (sid > 0 && !ink_rt_is_open(sid)) { /* it ended already, its handler may have found no session to end */
@@ -644,7 +684,12 @@ void ink_ai_key(bool pressed, uint64_t t_us) {
         ink_audio_stop_all(); /* talking over the previous answer interrupts it */
         ink_audio_tone(INK_TONE_LISTEN, t_us, tone_probe);
         ink_hub_demand(); /* pre-connect while the user speaks */
-        if (AI.open && !AI.asking) {
+        AI.req_id = 0;
+        AI.seq++;
+        AI.asking = false;
+        AI.answer_text[0] = 0;
+        AI.answer_len = 0;
+        if (AI.open) {
             lv_label_set_text(AI.answer, "");
             lv_label_set_text(AI.question, "");
         }
@@ -726,8 +771,11 @@ void ink_ai_ask_text(const char *text) {
     AI.up_open = AI.dismissed = false;
     AI.tts_stream = AI.tts_opened = 0;
     AI.tts_for = AI.tts_done_for = -1;
-    snprintf(g_turn_member, sizeof g_turn_member, "%s", ink_member_current()->id);
-    g_turn_generation = ink_member_generation(g_turn_member);
+    ink_member_identity_t identity;
+    ink_member_identity(&identity);
+    snprintf(g_turn_member, sizeof g_turn_member, "%s", identity.member);
+    g_turn_generation = identity.generation;
+    g_turn_epoch = identity.epoch;
     g_turn_revoked = false;
     osal_mutex_unlock(AI.lock);
     AI.mic_failed = AI.speech_failed = AI.turn_over = false;
@@ -823,43 +871,22 @@ static void on_listen_inputs(void *ctx, int h, const char *id) { /* power.state 
     ink_exec_post(INK_EXEC_UI, &g_policy_job, listen_policy, NULL);
 }
 
-static bool g_switch_is_mine; /* UI task */
-static bool g_member_handoff INK_PSRAM_BSS;
-
-void ink_ai_switching_member(void) { g_switch_is_mine = true; }
-
-static void on_space_changed(void *ctx, int h, const char *id) { /* UI task: closed (locked, idle): what the microphone hears goes nowhere */
-    (void)ctx;
-    (void)h;
-    (void)id;
-    if (!ink_member_space_open() && ink_ai_dismiss()) ink_probe_count("ai.closed_with_the_space");
-}
-
-static void on_member_changed(void *ctx, int h, const char *id) { /* UI task: what was being asked was someone else's */
-    (void)ctx;
-    (void)h;
-    (void)id;
-    if (!g_switch_is_mine) ink_ai_dismiss(); /* asked for by this very turn: its answer says it is done */
-    g_switch_is_mine = false;
-}
-
 static void owner_ui(void *arg) {
     (void)arg;
-    if (__atomic_exchange_n(&g_member_handoff, false, __ATOMIC_ACQ_REL)) on_member_changed(NULL, 0, NULL);
-    on_space_changed(NULL, 0, NULL);
+    osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
+    bool allowed = turn_allowed();
+    osal_mutex_unlock(AI.lock);
+    if (allowed) return;
+    dismiss_revoked_turn();
 }
 
 static void revoke_turn(void *ctx, int h, const char *id) { /* direct: stop transport before the UI can dismiss the sheet */
     (void)ctx;
     (void)h;
     if (strcmp(id, "member.current") && strcmp(id, "member.authed")) return;
-    if (strcmp(id, "member.current") && ink_member_space_open()) return;
-    if (!strcmp(id, "member.current")) __atomic_store_n(&g_member_handoff, true, __ATOMIC_RELEASE);
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
-    g_turn_revoked = AI.drop_frames = true;
-    AI.tts_done_for = AI.stream;
+    turn_allowed();
     osal_mutex_unlock(AI.lock);
-    ink_exec_post(INK_EXEC_UI, &g_owner_job, owner_ui, NULL);
 }
 
 int ink_ai_init(void) {

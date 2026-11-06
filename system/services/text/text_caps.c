@@ -6,6 +6,7 @@
 #include "ink/osal.h"
 #include "ink/sys/cap.h"
 #include "ink/sys/json.h"
+#include "ink/sys/members.h"
 #include "ink/sys/textinput.h"
 #include "text_internal.h"
 
@@ -15,6 +16,10 @@ static void fail(ink_call_t *c, ink_rc_t st, const char *why) {
 }
 
 static bool target_ok(ink_call_t *c) {
+    if (!ink_text_session_current()) {
+        fail(c, INK_RC_STALE, "输入已换人，请重新读取");
+        return false;
+    }
     if (!ink_text_focused()) {
         fail(c, INK_RC_FAILED, "no text field has the focus");
         return false;
@@ -37,6 +42,8 @@ static void text_result(ink_call_t *c, int session) {
 static bool editable(ink_call_t *c);
 
 int ink_text_snapshot(char *out, size_t cap) {
+    uint32_t epoch = ink_member_epoch();
+    if (!ink_text_session_current()) { if (cap) out[0] = 0; return -1; }
     static const char *const TYPE[] = {"plain", "number", "phone", "password"};
     ink_jw_t w;
     ink_jw_init(&w, out, cap);
@@ -75,7 +82,7 @@ int ink_text_snapshot(char *out, size_t cap) {
         ink_jw_str(&w, ink_text_voice_state_name());
         ink_jw_raw(&w, ink_text_voice_possible() ? ",\"voice_possible\":true}" : "}");
     }
-    if (w.overflow) { if (cap) out[0] = 0; return -1; }
+    if (w.overflow || !ink_text_session_current() || epoch != ink_member_epoch()) { if (cap) out[0] = 0; return -1; }
     return (int)w.len;
 }
 

@@ -195,7 +195,7 @@ static void run(void *arg) {
         uint8_t frame[16] = {1};
         const char *member = ink_member_current()->id;
         CHECK(ink_hub_send_binary(frame, sizeof frame) == INK_HUB_ERR_OFFLINE, "ordinary voice frames cannot leave on a preauth connection");
-        CHECK(ink_hub_send_frame_for(frame, sizeof frame, INK_HUB_TX_CONTROL, member, ink_member_generation(member)) == INK_HUB_ERR_OFFLINE,
+        CHECK(ink_hub_send_frame_for(frame, sizeof frame, INK_HUB_TX_CONTROL, member, ink_member_generation(member), ink_hub_member_epoch()) == INK_HUB_ERR_OFFLINE,
               "member control frames cannot leave on a preauth connection");
         char nonce[33];
         CHECK(ink_storage_read("/user/sys/test.nonce", nonce, sizeof nonce) == sizeof nonce && !strcmp(nonce, sim_hub_pair_nonce()), "same nonce after lost begin and reboot");
@@ -250,6 +250,20 @@ static void run(void *arg) {
     }
     if (!strcmp(phase, "bound") || !strcmp(phase, "wipe")) {
         CHECK(WAIT_FOR(ink_pairing_state() == INK_PAIR_BOUND && ink_hub_online(), 18000), "persisted pending token reaches bound");
+        ink_member_identity_t identity;
+        ink_member_identity(&identity);
+        char method[32], params[2048], member[16];
+        ink_json_t *hello = osal_malloc(sizeof *hello, OSAL_MEM_EXTERNAL);
+        int64_t epoch = 0;
+        CHECK(hello && ink_pairing_handshake(method, params, sizeof params) == 0 && !strcmp(method, "hello") &&
+              ink_json_parse(hello, params, strlen(params)) == 0 &&
+              ink_json_str(hello, ink_json_find(hello, 0, "member"), member, sizeof member) > 0 &&
+              !strcmp(member, identity.member) && ink_json_int(hello, ink_json_find(hello, 0, "epoch"), &epoch) &&
+              epoch == identity.epoch && ink_json_eq(hello, ink_json_find(hello, 0, "authed"), identity.authed ? "true" : "false"),
+              "paired hello contains coherent member authentication and epoch");
+        osal_free(hello);
+        CHECK(ink_hub_member_matches(identity.member, identity.epoch, ink_hub_connection()),
+              "paired connection synchronizes identity before becoming online");
         CHECK(data_present(), "binding retains local data");
         CHECK(BY_HAND("pairing.configure", "{\"url\":\"wss://elsewhere.example.com/v1/device\",\"pin\":\"2222222222222222222222222222222222222222222222222222222222222222\"}") && g_rc.status != INK_RC_DONE, "new public key cannot steal bound identity");
         CHECK(BY_HAND("pairing.configure", "{\"url\":\"wss://moved.example.com/v1/device\",\"pin\":\"1111111111111111111111111111111111111111111111111111111111111111\"}") && g_rc.status == INK_RC_DONE, "same key can change the address without losing identity");

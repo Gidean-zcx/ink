@@ -267,3 +267,64 @@ async def test_vendor_failure_returns_control(make_hub):
     device = FakeDevice(client, url)
     await device.connect()
     assert (await device.call("ai.ask", {"question": "示例", "page": {"actions": []}}))["result"]["done"]
+
+
+async def test_device_epoch_survives_hello_and_bounds_tool_delivery(make_hub):
+    hub, client, url = await make_hub(model=FakeModel(tool=TOOL['name']))
+    device = FakeDevice(client, url, [TOOL])
+    device.epoch = 17
+    await device.connect()
+    await device.voice(actions=[TOOL['name']])
+    delivered = next(c for c in device.calls if c['method'] == 'tools/call')
+    assert delivered['params']['_meta']['epoch'] == 17
+    await device.send('ink/member', {'member': 'default', 'authed': False, 'epoch': 18}, rid=False)
+    assert (await device.recv())['method'] == 'caps/changed'
+    device.epoch = 18
+    assert hub.connections['example-device'].epoch == 18
+    old = asyncio.create_task(hub.connections['example-device'].request('tools/call', delivered['params']))
+    await device.answer(await device.recv())
+    with pytest.raises(ProtocolError):
+        await old
+
+
+async def test_event_ack_reconnect_duplicate_and_gap(make_hub):
+    hub, client, url = await make_hub()
+    device = FakeDevice(client, url)
+    await device.connect()
+    event = {'event': 'fixture.event', 'args': {'example': True}, 'boot': 3, 'seq': 1, 'member': 'default'}
+    for seq in (1, 1, 3):
+        event['seq'] = seq
+        await device.send('device/event', event, rid=False)
+        ack = await device.recv()
+        assert ack['method'] == 'device/event_ack' and ack['params'] == {'boot': 3, 'upto': seq}
+    assert hub.metrics.event_gaps == 1
+    await device.ws.close()
+    device = FakeDevice(client, url)
+    await device.connect()
+    await device.send('device/event', event, rid=False)
+    assert (await device.recv())['params'] == {'boot': 3, 'upto': 3}
+    assert hub.metrics.event_gaps == 1
+    event['boot'], event['seq'] = 4, 1
+    await device.send('device/event', event, rid=False)
+    assert (await device.recv())['params'] == {'boot': 4, 'upto': 1}
+    assert hub.metrics.event_gaps == 2
+    assert hub.event_positions == {'example-device': (4, 1)}
+
+
+@pytest.mark.parametrize('change', [{'member': 'demo-adult'}, {'boot': True}, {'seq': 0}, {'seq': '1'}, {'args': []}])
+async def test_invalid_event_is_not_acknowledged(make_hub, change):
+    hub, client, url = await make_hub()
+    device = FakeDevice(client, url)
+    await device.connect()
+    event = {'event': 'fixture.event', 'args': {}, 'boot': 1, 'seq': 1, 'member': 'default', **change}
+    assert (await device.call('device/event', event))['error']['code'] == -32602
+    assert not hub.event_positions
+
+
+@pytest.mark.parametrize('epoch', [True, -1, '3', 2**32])
+async def test_invalid_hello_epoch_does_not_register_connection(make_hub, epoch):
+    hub, client, url = await make_hub()
+    device = FakeDevice(client, url)
+    device.epoch = epoch
+    assert (await device.connect())['error']['code'] == -32602
+    assert not hub.connections

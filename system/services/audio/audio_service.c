@@ -148,9 +148,20 @@ static bool g_capture_revoked INK_PSRAM_BSS; /* under AU.lock; a handoff cannot 
 static char g_capture_member[INK_MEMBER_ID_MAX] INK_PSRAM_BSS;
 static uint32_t g_capture_generation INK_PSRAM_BSS;
 static bool g_output_revoked INK_PSRAM_BSS;
+static ink_member_identity_t g_stream_owner INK_PSRAM_BSS, g_staged_owner INK_PSRAM_BSS, g_output_owner INK_PSRAM_BSS;
+static ink_audio_prio_t g_staged_prio, g_output_prio;
+static bool g_output_private;
 
 static void lock(void) { osal_mutex_lock(AU.lock, OSAL_WAIT_FOREVER); }
 static void unlock(void) { osal_mutex_unlock(AU.lock); }
+
+static bool playback_owner_matches(const ink_member_identity_t *owner, ink_audio_prio_t prio) {
+    ink_member_identity_t identity;
+    ink_member_identity(&identity);
+    return owner->generation == identity.generation && !strcmp(owner->member, identity.member) &&
+           (prio == INK_AUDIO_PRIO_STORY || (owner->epoch == identity.epoch &&
+            (prio != INK_AUDIO_PRIO_VOICE || identity.authed)));
+}
 
 /* Under the lock: what is left of a stream when it goes. */
 static void stream_gone(void) {
@@ -325,6 +336,7 @@ static void close_output(bool drain) {
     if (!AU.out_open) return;
     hal_audio_play_stop(drain);
     AU.out_open = false;
+    g_output_private = false;
 }
 
 static void make_tone(ink_tone_t t) {
@@ -372,7 +384,7 @@ static void free_jb(void) { /* under lock */
 /* Fill the staging buffer with the next decoded frame. Returns false if nothing to play yet. */
 static bool stage_next(void) {
     lock();
-    if (!AU.stream) {
+    if (!AU.stream || !playback_owner_matches(&g_stream_owner, AU.prio)) {
         unlock();
         return false;
     }
@@ -382,6 +394,8 @@ static bool stage_next(void) {
     }
     AU.started = true;
     int sid = AU.stream;
+    ink_member_identity_t owner = g_stream_owner;
+    ink_audio_prio_t prio = AU.prio;
     jb_frame_t f = {0};
     bool have = AU.jb_count > 0;
     if (have) {
@@ -413,6 +427,8 @@ static bool stage_next(void) {
     AU.pcm_off = 0;
     AU.pcm_len = n;
     AU.staged_stream = sid;
+    g_staged_owner = owner;
+    g_staged_prio = prio;
     lock();
     if (AU.stream_probe && have) { /* first real frame of the stream is about to go out */
         AU.heard_probe = AU.stream_probe;
@@ -493,7 +509,13 @@ static void output_stalled(void) {
  * in the loop below) loses its staged samples. Service task. */
 static bool staged_wanted(void) {
     lock();
-    bool wanted = !AU.staged_stream || AU.staged_stream == AU.stream;
+    if (AU.stream && !playback_owner_matches(&g_stream_owner, AU.prio)) {
+        free_jb();
+        stream_gone();
+        AU.finishing = AU.started = false;
+        ink_probe_count("audio.private_stream_revoked");
+    }
+    bool wanted = !AU.staged_stream || (AU.staged_stream == AU.stream && playback_owner_matches(&g_staged_owner, g_staged_prio));
     if (!wanted) {
         AU.pcm_off = AU.pcm_len = 0;
         AU.staged_stream = 0;
@@ -526,6 +548,7 @@ static bool take_tone(void) {
 static void service_playback(void) {
     if (__atomic_exchange_n(&g_output_revoked, false, __ATOMIC_ACQ_REL) && AU.out_open) close_output(false);
     (void)staged_wanted();
+    if (g_output_private && !playback_owner_matches(&g_output_owner, g_output_prio)) close_output(false);
     for (;;) {
         if (AU.pcm_off >= AU.pcm_len) { /* nothing staged: the ringing, a tone, else the stream's next frame when it can play */
             lock();
@@ -549,7 +572,13 @@ static void service_playback(void) {
             ink_probe_value(AU.heard_probe, (double)(osal_now_us() + (uint64_t)delay - AU.heard_cause) / 1000.0);
             AU.heard_probe = NULL;
         }
+        if (!staged_wanted()) continue; /* Decode, open and probes may have yielded across a handoff. */
         int w = hal_audio_play_write(AU.pcm + AU.pcm_off, AU.pcm_len - AU.pcm_off, 0);
+        if (w > 0 && AU.staged_stream) {
+            g_output_private = true;
+            g_output_owner = g_staged_owner;
+            g_output_prio = g_staged_prio;
+        }
         AU.pcm_off += w;
         if (w > 0) AU.stall_since = AU.open_failing_since = 0; /* it plays */
         if (AU.pcm_off < AU.pcm_len) { /* DMA ring full: come back next tick */
@@ -740,7 +769,7 @@ static void on_capture_owner(void *ctx, int h, const char *id) { /* direct: the 
         AU.cap_ending = true;
         AU.rd = AU.wr;
     }
-    bool stop_output = handoff || (closed && AU.prio != INK_AUDIO_PRIO_STORY);
+    bool stop_output = AU.stream && !playback_owner_matches(&g_stream_owner, AU.prio);
     if (stop_output && AU.stream) {
         free_jb();
         stream_gone();
@@ -1086,14 +1115,17 @@ ink_audio_route_t ink_audio_route(void) {
 
 int ink_audio_stream_open(ink_audio_prio_t prio, uint64_t cause_us, const char *heard_probe) {
     if (!AU.info.has_speaker || !AU.task) return -1;
+    ink_member_identity_t owner;
+    ink_member_identity(&owner);
     lock();
-    if ((AU.stream && AU.prio > prio) || focus_top_locked() > (int)prio) {
+    if ((AU.stream && AU.prio > prio) || focus_top_locked() > (int)prio || !playback_owner_matches(&owner, prio)) {
         unlock();
         return -1;
     }
     free_jb();
     stream_gone();
     AU.stream = ++AU.next_stream;
+    g_stream_owner = owner;
     AU.stream_played = 0;
     AU.prio = prio;
     AU.open_failing_since = AU.open_retry_at = 0; /* a new stream tries the output at once */
@@ -1116,7 +1148,7 @@ int ink_audio_stream_push(int id, const uint8_t *opus, size_t len) {
     if (!copy) return -1;
     memcpy(copy, opus, len);
     lock();
-    if (AU.stream != id || AU.finishing || AU.jb_count >= JB_MAX) {
+    if (AU.stream != id || AU.finishing || AU.jb_count >= JB_MAX || !playback_owner_matches(&g_stream_owner, AU.prio)) {
         unlock();
         osal_free(copy);
         if (AU.jb_count >= JB_MAX) ink_probe_count("audio.jitter_overflow");

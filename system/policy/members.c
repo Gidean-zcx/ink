@@ -66,6 +66,7 @@ static const ink_db_def_t TABLE = {.name = "member.table", .title = "家人名�
 static struct {
     slot_t s[INK_MEMBERS_MAX];
     uint32_t next_generation;
+    uint32_t epoch;
     slot_t *cur;
     bool authed;
     bool table_is_real;
@@ -75,7 +76,7 @@ static struct {
     int h_member, h_authed;
     ink_svc_deadline_t idle_at;
     ink_exec_job_t idle_job;
-} M = {.return_after_us = IDLE_RETURN_S * 1000000ull,
+} M = {.epoch = 1, .return_after_us = IDLE_RETURN_S * 1000000ull,
        .s = {[0] = {.used = true, .m = {.id = "owner", .name = "我", .role = INK_ROLE_ADULT}},
              [1] = {.used = true, .m = {.id = "kid", .name = "小朋友", .role = INK_ROLE_CHILD, .allow = {"reader.", "ai.", "system.home"}}}}};
 
@@ -97,8 +98,10 @@ static void publish(void) {
         M.h_authed = ink_state_define(&ST_AUTHED);
         g_published = 1;
     }
-    ink_state_set_str(M.h_member, cur()->m.id);
-    ink_state_set_bool(M.h_authed, ink_member_space_open());
+    ink_member_identity_t identity;
+    ink_member_identity(&identity);
+    ink_state_set_str(M.h_member, identity.member);
+    ink_state_set_bool(M.h_authed, identity.authed);
 }
 
 const ink_member_t *ink_member_current(void) { return &cur()->m; }
@@ -161,6 +164,21 @@ static bool return_expired(uint64_t now) {
 bool ink_member_space_open(void) {
     const slot_t *c = cur();
     return c->m.role == INK_ROLE_CHILD || (M.authed && !return_expired(osal_now_us())) || (!c->has_pin && !M.table_unread);
+}
+
+uint32_t ink_member_epoch(void) { return __atomic_load_n(&M.epoch, __ATOMIC_ACQUIRE); }
+
+void ink_member_identity(ink_member_identity_t *out) {
+    ink_svc_lock();
+    snprintf(out->member, sizeof out->member, "%s", cur()->m.id);
+    out->generation = ink_member_generation(out->member);
+    out->epoch = ink_member_epoch();
+    out->authed = ink_member_space_open();
+    ink_svc_unlock();
+}
+
+static void invalidate_identity(void) { /* under the service lock, before changing identity */
+    __atomic_add_fetch(&M.epoch, 1, __ATOMIC_ACQ_REL);
 }
 
 /* ---- the table on the flash ---- */
@@ -263,9 +281,14 @@ static void load_table(void) {
     slot_t *fresh = osal_calloc(INK_MEMBERS_MAX, sizeof *fresh, OSAL_MEM_EXTERNAL);
     int n = fresh ? read_table(fresh) : -1;
     if (n < 0) {
+        ink_svc_lock();
+        invalidate_identity();
         M.table_unread = true;
+        ink_svc_unlock();
         ink_probe_count("members.table_unread");
     } else if (n > 0) {
+        ink_svc_lock();
+        invalidate_identity();
         memcpy(M.s, fresh, sizeof M.s);
         M.table_is_real = true;
         /* an adult first, as on the first boot */
@@ -273,6 +296,7 @@ static void load_table(void) {
         for (int i = INK_MEMBERS_MAX - 1; i >= 0; i--)
             if (M.s[i].used && !M.s[i].removing && M.s[i].m.role == INK_ROLE_ADULT) first = &M.s[i];
         M.cur = first;
+        ink_svc_unlock();
     }
     if (fresh) memset(fresh, 0, INK_MEMBERS_MAX * sizeof *fresh);
     osal_free(fresh);
@@ -288,29 +312,36 @@ static bool table_back(void) {
 }
 
 void ink_members_init(void) {
+    if (ink_svc_init() != 0) osal_panic("members: service lock unavailable");
     load_table();
     publish();
 }
 
 int ink_member_switch(const char *id) {
+    ink_svc_lock();
     slot_t *t = find(id);
-    if (!t || t->removing) return -1;
-    if (t == cur()) return ink_member_space_open() ? 0 : -2;
-    if (t->has_pin || (M.table_unread && t->m.role == INK_ROLE_ADULT)) return -2; /* needs the PIN */
+    int r = !t || t->removing ? -1 : t == cur() ? (ink_member_space_open() ? 0 : -2) :
+            t->has_pin || (M.table_unread && t->m.role == INK_ROLE_ADULT) ? -2 : 1;
+    if (r != 1) { ink_svc_unlock(); return r; }
+    invalidate_identity();
     M.cur = t;
     M.authed = false;
+    ink_svc_unlock();
     ink_probe_count("members.switches");
     publish();
     return 0;
 }
 
 void ink_member_test_reset(void) {
+    ink_svc_lock();
+    invalidate_identity();
     for (int i = 0; i < INK_MEMBERS_MAX; i++)
         if (M.s[i].used && !M.s[i].removing && M.s[i].m.role == INK_ROLE_ADULT) {
             M.cur = &M.s[i];
             break;
         }
     M.authed = false;
+    ink_svc_unlock();
     publish();
 }
 
@@ -326,8 +357,11 @@ bool ink_member_allows(const char *action_id, bool child_ok) {
 /* ---- going idle, locking ---- */
 
 static void close_space(void) {
-    if (!M.authed) return;
+    ink_svc_lock();
+    if (!M.authed) { ink_svc_unlock(); return; }
+    invalidate_identity();
     M.authed = false;
+    ink_svc_unlock();
     ink_probe_count("members.space_closed");
     ink_state_set_bool(M.h_authed, ink_member_space_open());
 }
@@ -368,7 +402,11 @@ static void on_power(void *ctx, ink_power_state_t from, ink_power_state_t to, ui
 
 static void apply_return_after(void *ctx, int64_t seconds) {
     (void)ctx;
+    ink_svc_lock();
+    bool was_open = ink_member_space_open();
     __atomic_store_n(&M.return_after_us, (uint64_t)seconds * 1000000ull, __ATOMIC_RELAXED);
+    if (was_open != ink_member_space_open()) invalidate_identity();
+    ink_svc_unlock();
     arm_idle();
 }
 
@@ -467,9 +505,13 @@ static void pin_job(void *arg) { /* exec.bg: slow by design */
             if (!s->has_pin) r = INK_PIN_OK;
             else r = try_pin(s, j->pin, &wait_s);
             if (r == INK_PIN_OK) {
+                uint64_t locked_since = ink_power_state() == INK_PWR_LOCKED ? osal_now_us() : 0;
+                ink_svc_lock();
+                invalidate_identity();
                 M.cur = s;
                 M.authed = s->has_pin;
-                __atomic_store_n(&M.locked_since, ink_power_state() == INK_PWR_LOCKED ? osal_now_us() : 0, __ATOMIC_RELEASE);
+                __atomic_store_n(&M.locked_since, locked_since, __ATOMIC_RELEASE);
+                ink_svc_unlock();
                 ink_power_activity(osal_now_us()); /* the person is here: however long the slow part took */
                 publish();
                 if (M.authed) arm_idle();
@@ -484,10 +526,16 @@ static void pin_job(void *arg) { /* exec.bg: slow by design */
                     if (j->new_pin[0]) {
                         hal_random_fill(s->salt, sizeof s->salt);
                         ink_pbkdf2_sha256(j->new_pin, strlen(j->new_pin), s->salt, sizeof s->salt, PIN_ITERATIONS, s->hash);
+                        ink_svc_lock();
+                        if (s == cur()) invalidate_identity();
                         s->has_pin = true;
                         if (s == cur()) M.authed = true; /* the one who just set it is here */
+                        ink_svc_unlock();
                     } else {
+                        ink_svc_lock();
+                        if (s == cur()) invalidate_identity();
                         s->has_pin = false;
+                        ink_svc_unlock();
                         memset(s->hash, 0, sizeof s->hash);
                     }
                     s->fails = 0;

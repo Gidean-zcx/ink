@@ -76,7 +76,6 @@ static void switch_member(ink_call_t *c) {
     ink_receipt_t *rc = &c->rc;
     char id[16];
     ink_args_get_str(&c->args, "id", id, sizeof id); /* required by the schema */
-    if (c->src == INK_SRC_AI) ink_ai_switching_member();
     int r = ink_member_switch(id);
     if (r == -2) {
         rc->status = INK_RC_REJECTED;

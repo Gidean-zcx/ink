@@ -354,12 +354,14 @@ void sim_hub_clock_offset(int64_t seconds); /* ISR: the hub's clock is this far 
 void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t len, bool binary); /* ISR */
 /* Tests: a request to the device on the connection in use (ISR), and what it answered (NULL until then). */
 void sim_hub_request_device(const char *method, const char *params_json);
-void sim_hub_request_device_raw(const char *method, const char *params_json); /* preserve JSON escapes for parser tests */
+void sim_hub_request_device_raw(const char *method, const char *params_json); /* preserve escapes; no fixture metadata */
 const char *sim_hub_device_reply(void);
 bool sim_hub_reply_matches_request(void);
 /* Tests: the device/event messages so far (the first 32), and the last question with what came with it. */
 int sim_hub_events_seen(void);
+void sim_hub_event_acks(bool enabled); /* fault fixture: drop ACKs without dropping events */
 const char *sim_hub_event_at(int i);
+const char *sim_hub_event_audience(int i); /* connection identity at receipt, independent of event payload */
 const char *sim_hub_last_ask(void);
 /* Dictation (asr.stream): what is "said" (phrases separated by |); after that many frames it fails with that code
  * ("silent": it answers nothing at all). What it was opened with. */

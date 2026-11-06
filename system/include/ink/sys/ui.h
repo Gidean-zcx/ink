@@ -108,8 +108,10 @@ void ink_ui_hint_frame(ink_refresh_t intent);
 /** Attribute the next frame to an earlier action: when it is visible, `tag` (static string)
  *  records the latency from `t_us` (e.g. AI key release -> first answer text). */
 void ink_ui_cause(uint64_t t_us, const char *tag);
-/** Page context of the foreground activity (see ink_activity_t.snapshot), or what the top overlay says. */
+/** Foreground context, including focused input. An obsolete member incarnation returns -1 and clears all outputs. */
 int ink_ui_snapshot(char *buf, size_t cap, const char **activity_name);
+/** The foreground page belongs to the current open member incarnation. */
+bool ink_ui_page_current(void);
 /** Name of the foreground activity or the top overlay ("" if none). */
 const char *ink_ui_top_name(void);
 /** Name of the foreground activity, under any overlay ("" if none). */

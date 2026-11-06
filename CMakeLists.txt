@@ -457,6 +457,21 @@ add_test(NAME services-mid-regressions COMMAND ${Python3_EXECUTABLE}
   update_history offpanel text_window keyboard_snapshot undo empty_removal)
 set_tests_properties(services-mid-regressions PROPERTIES TIMEOUT 180 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")
 ink_sim_executable(sim-hub-bridge-state tests/hub/bridge_state.c)
+ink_sim_executable(sim-device-events tests/device_events/protocol.c tests/device_events/cap_boundary.c
+  tests/device_events/hub_boundary.c tests/device_events/ai_boundary.c)
+target_link_libraries(sim-device-events PRIVATE ink_apps ink_system)
+ink_sim_executable(sim-device-events-review tests/device_events/review.c tests/device_events/hub_boundary.c
+  tests/device_events/ai_boundary.c tests/device_events/hub_observer.c)
+target_link_libraries(sim-device-events-review PRIVATE ink_apps ink_system)
+ink_sim_executable(sim-device-events-isolation tests/device_events/isolation.c tests/device_events/member_boundary.c
+  tests/device_events/ai_boundary.c tests/device_events/hub_boundary.c tests/device_events/hub_observer.c)
+target_link_libraries(sim-device-events-isolation PRIVATE ink_apps ink_system)
+ink_sim_executable(sim-device-events-private tests/device_events/private.c tests/device_events/member_boundary.c
+  tests/device_events/ai_boundary.c tests/device_events/hub_boundary.c tests/device_events/hub_observer.c)
+target_link_libraries(sim-device-events-private PRIVATE ink_apps ink_system)
+add_test(NAME device-events COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/device_events/run.py
+  --build ${CMAKE_BINARY_DIR})
+set_tests_properties(device-events PROPERTIES TIMEOUT 120 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")
 add_test(NAME hub-bridge-generations COMMAND sim-hub-bridge-state
   --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
   --out ${CMAKE_BINARY_DIR}/test-out/hub-bridge-state --end 2s --quiet --no-random-outages)

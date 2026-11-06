@@ -29,10 +29,11 @@ static osal_sem_t *pausing_sem_create(uint32_t initial, uint32_t max);
 #include "../../system/services/res/exec.c"
 #undef osal_sem_create
 
-static int failing_hub_call(const char *method, const char *params_json, int64_t timeout_us, ink_hub_reply_fn cb, void *ctx);
-#define ink_hub_call failing_hub_call
+static int failing_hub_call(const char *method, const char *params_json, int64_t timeout_us, ink_hub_reply_fn cb, void *ctx,
+                             const char *member, uint32_t epoch);
+#define ink_hub_call_for failing_hub_call
 #include "../../system/services/hub/rt.c"
-#undef ink_hub_call
+#undef ink_hub_call_for
 
 #define CHECK(cond, ...)                                                 \
     do {                                                                 \
@@ -95,13 +96,14 @@ static void start_checks(void) {
 static int g_fail_calls;
 static volatile int g_closed, g_calls;
 
-static int failing_hub_call(const char *method, const char *params_json, int64_t timeout_us, ink_hub_reply_fn cb, void *ctx) {
+static int failing_hub_call(const char *method, const char *params_json, int64_t timeout_us, ink_hub_reply_fn cb, void *ctx,
+                             const char *member, uint32_t epoch) {
     g_calls++;
     if (g_fail_calls > 0) {
         g_fail_calls--;
         return INK_HUB_ERR_NOMEM;
     }
-    return ink_hub_call(method, params_json, timeout_us, cb, ctx);
+    return ink_hub_call_for(method, params_json, timeout_us, cb, ctx, member, epoch);
 }
 
 static void t_closed(void *ctx, int sid, int reason) {

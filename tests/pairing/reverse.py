@@ -37,6 +37,7 @@ mutations = {
     "ordinary-response-before-auth": ('return respond(id, result_json, false);', 'return respond(id, result_json, true);'),
     "unconfirmed-resume": ('if (s->state == INK_PAIR_COMMITTING && s->txid[0])', 'if (s->txid[0])'),
     "escaped-hello-buffer": ('ink_pairing_handshake(hello.method, params, 2048)', 'ink_pairing_handshake(hello.method, params, 512)'),
+    "paired-member-epoch": ('ink_jw_int(&w, identity.epoch)', 'ink_jw_int(&w, 0)'),
     "untrusted-revocation": ('code == -32011 && e->trusted', 'code == -32011'),
     "cross-key-authorization": ('!old || !same || s->state == INK_PAIR_REVOKED', '!old || s->state == INK_PAIR_REVOKED'),
     "commit-watchdog": ('? P.retry_at :', '? 0 :'),
@@ -45,8 +46,8 @@ mutations = {
     "ai-hotspot-secret": ('if (c->src == INK_SRC_TOUCH || c->src == INK_SRC_KEY) ink_cap_result(c, result);', 'ink_cap_result(c, result);'),
     "ai-import-confirmation": ('.ask_by_hand=true, .ask="从存储卡加入文件中的家庭？",', ''),
     "key-switch-write-order": ('fresh(s);\n                ok = store_identity(s);', 'ok = durable(CONFIG_FILE, c, sizeof *c);\n                fresh(s);\n                if (ok) ok = store_identity(s);'),
-    "member-control-before-auth": ('enqueue_tx(true, cls, data, len, member, generation, false)', 'enqueue_tx(true, cls, data, len, member, generation, true)'),
-    "stale-member-frame": ('it->member_generation != ink_member_generation(it->member) || it->member_epoch != __atomic_load_n(&H.member_epoch, __ATOMIC_ACQUIRE)', 'false'),
+    "member-control-before-auth": ('enqueue_tx(true, cls, data, len, member, generation, epoch, 0, false)', 'enqueue_tx(true, cls, data, len, member, generation, epoch, 0, true)'),
+    "stale-member-frame": ('!ink_hub_member_matches(it->member, it->member_epoch, it->connection) ||\n             it->member_generation != ink_member_generation(it->member)', 'false'),
 }
 if a.only and set(a.only) - mutations.keys():
     raise SystemExit("unknown mutation selection")
@@ -112,6 +113,7 @@ for label, (before, after) in mutations.items():
                 "completion-not-flushed": "completion acknowledgement explicitly lost at peer", "wipe-not-boolean": "string true cannot authorize irreversible wipe",
                 "nul-transaction": "embedded NUL transaction rejected", "ordinary-response-before-auth": "ordinary responses cannot leave on a preauth connection",
                 "unconfirmed-resume": "unconfirmed offer is not resumed as accepted", "escaped-hello-buffer": "escaped token within limits is sent to hello",
+                "paired-member-epoch": "paired hello contains coherent member authentication and epoch",
                 "untrusted-revocation": "untrusted begin cannot authorize wipe", "cross-key-authorization": "authorization and nonce stay only with the same pinned key",
                 "commit-watchdog": "single lost progress recovers without reboot", "accept-error-handling": "expired accept cannot advance to token authentication",
                 "ai-hotspot-control": "AI can stop setup hotspot", "ai-hotspot-secret": "AI can start hotspot without receiving credentials",

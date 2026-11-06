@@ -18,8 +18,6 @@ int ink_ai_init(void);
 void ink_ai_key(bool pressed, uint64_t t_us);
 /** UI task: a question in words, about what is on screen; the answer comes on the sheet, as for a spoken one. */
 void ink_ai_ask_text(const char *text);
-/** UI task: this turn is what asks for the switch of member: it does not end with it. */
-void ink_ai_switching_member(void);
 /** UI task: close the sheet if open; returns true if it was open. */
 bool ink_ai_dismiss(void);
 

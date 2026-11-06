@@ -37,11 +37,20 @@ typedef void (*ink_hub_notify_fn)(void *ctx, const char *method, const ink_json_
 int ink_hub_init(const char *url);
 /** Asynchronous request. `params_json` = a JSON object text (copied). Returns the request id (> 0) or < 0. */
 int ink_hub_call(const char *method, const char *params_json, int64_t timeout_us, ink_hub_reply_fn cb, void *ctx);
+/** A request built for a saved member boundary; never rebound after preparing its private payload. */
+int ink_hub_call_for(const char *method, const char *params_json, int64_t timeout_us, ink_hub_reply_fn cb, void *ctx,
+                     const char *member, uint32_t epoch);
 /** Receive notifications whose method starts with `prefix` (e.g. "ai."). Up to 8 subscribers. */
 int ink_hub_subscribe(const char *prefix, ink_hub_notify_fn fn, void *ctx);
 /** User activity: open the connection now if needed and keep it up for a while (pre-connect on key press). */
 void ink_hub_demand(void);
 bool ink_hub_online(void);
+/** Delivery identity; epoch changes on every member/authentication transition. */
+uint32_t ink_hub_member_epoch(void);
+uint32_t ink_hub_connection(void);
+bool ink_hub_member_matches(const char *member, uint32_t epoch, uint32_t connection);
+void ink_hub_events_acked(void); /* validated event ACK: transport no longer holds private events */
+void ink_hub_on_member(void (*fn)(void)); /* realtime transport boundary; runs without socket work */
 /** What the hub said the time was when this connection came up, and how long that took to hear. False if it did not say. */
 bool ink_hub_server_time(int64_t *unix_ms, uint32_t *round_trip_ms);
 /** fn(ctx) in the hub task each time the connection is (re)established. Up to 4. */
@@ -70,7 +79,7 @@ enum { INK_HUB_TX_VOICE = 0, INK_HUB_TX_INPUT, INK_HUB_TX_SCREEN, INK_HUB_TX_CON
 /** One binary message in a send class (ink_hub_send_binary is the voice class). */
 int ink_hub_send_frame(const void *data, size_t len, int cls);
 /** Delayed session producers retain the original member and incarnation through the final send. */
-int ink_hub_send_frame_for(const void *data, size_t len, int cls, const char *member, uint32_t generation);
+int ink_hub_send_frame_for(const void *data, size_t len, int cls, const char *member, uint32_t generation, uint32_t epoch);
 typedef void (*ink_hub_binary_fn)(void *ctx, const uint8_t *data, size_t len);
 /** The (single) receiver of binary messages from the hub; runs in the hub task. */
 void ink_hub_on_binary(ink_hub_binary_fn fn, void *ctx);
@@ -85,6 +94,7 @@ void ink_hub_on_blob(ink_hub_binary_fn fn, void *ctx);
 typedef void (*ink_hub_request_fn)(void *ctx, int64_t id, const char *method, const ink_json_t *msg, int params);
 int ink_hub_on_request(const char *prefix, ink_hub_request_fn fn, void *ctx);
 int ink_hub_respond(int64_t id, const char *result_json);
+int ink_hub_respond_for(int64_t id, const char *result_json, const char *member, uint32_t epoch, uint32_t connection);
 int ink_hub_respond_error(int64_t id, int code, const char *message);
 
 #ifdef __cplusplus

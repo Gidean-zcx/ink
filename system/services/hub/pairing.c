@@ -227,9 +227,8 @@ int ink_pairing_handshake(char method[32], char *params, size_t cap) {
     if (!ink_pairing_enabled() || ink_pairing_blocked()) return -1;
     ink_jw_t w;
     ink_jw_init(&w, params, cap);
-    char member[16];
-    snprintf(member, sizeof member, "%s", ink_member_current()->id);
-    bool authed = ink_member_space_open();
+    ink_member_identity_t identity;
+    ink_member_identity(&identity);
     lock();
     pair_identity_t *s = &P.identity;
     if (s->token[0]) {
@@ -237,8 +236,9 @@ int ink_pairing_handshake(char method[32], char *params, size_t cap) {
         ink_jw_raw(&w, "{\"proto\":2,\"hw\":\"metalio-e-ink4-plus\",\"fw\":\"dev\",\"device\":");
         ink_jw_str(&w, s->device);
         ink_jw_raw(&w, ",\"token\":"); ink_jw_str(&w, s->token);
-        ink_jw_raw(&w, ",\"member\":"); ink_jw_str(&w, member);
-        ink_jw_raw(&w, authed ? ",\"authed\":true}" : ",\"authed\":false}");
+        ink_jw_raw(&w, ",\"member\":"); ink_jw_str(&w, identity.member);
+        ink_jw_raw(&w, identity.authed ? ",\"authed\":true" : ",\"authed\":false");
+        ink_jw_raw(&w, ",\"epoch\":"); ink_jw_int(&w, identity.epoch); ink_jw_raw(&w, "}");
     } else {
         snprintf(method, 32, "pair/begin");
         ink_jw_raw(&w, "{\"proto\":2,\"hw\":\"metalio-e-ink4-plus\",\"fw\":\"dev\",\"nonce\":");
