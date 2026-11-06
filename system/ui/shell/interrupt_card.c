@@ -60,19 +60,19 @@ static void show(const ink_interrupt_t *top) { /* UI task */
     if (alarm) ink_shell_time_strings(C.clock, sizeof C.clock, C.date_text, sizeof C.date_text);
     shell_card_text(&C.card, alarm ? C.now.body : C.now.title, alarm ? C.clock : C.now.body);
     lv_obj_set_style_text_font(C.card.title, ink_ui_font_px(call ? INK_FONT_LIST : alarm ? INK_FONT_TITLE : INK_FONT_HEADING, INK_WEIGHT_BOLD), 0);
-    lv_obj_set_y(C.card.title, ink_ui_px(call ? INK_LINE_BODY + INK_BLOCK : INK_LINE_BODY + INK_BLOCK_L + INK_CIRCLE_LARGE + INK_MARGIN));
-    lv_obj_set_y(C.card.body, ink_ui_px(INK_LINE_BODY + INK_BLOCK_L + INK_CIRCLE_LARGE + INK_MARGIN + INK_LINE_TITLE));
+    lv_obj_set_y(C.card.title, ink_ui_px(call ? INK_STATUS_BAR + INK_BLOCK : INK_STATUS_BAR + INK_BLOCK_L + INK_CIRCLE_LARGE + INK_MARGIN));
+    lv_obj_set_y(C.card.body, ink_ui_px(INK_STATUS_BAR + INK_BLOCK_L + INK_CIRCLE_LARGE + INK_MARGIN + ink_ui_line_height(INK_FONT_TITLE)));
     lv_obj_set_style_text_font(C.card.body, ink_ui_font_px(alarm ? INK_FONT_NUMBER : INK_FONT_BODY, INK_WEIGHT_REGULAR), 0);
-    lv_obj_set_height(C.card.body, ink_ui_px(alarm ? INK_LINE_NUMBER : 2 * INK_ROW_DOUBLE));
+    lv_obj_set_height(C.card.body, ink_ui_px(alarm ? ink_ui_line_height(INK_FONT_NUMBER) : 2 * INK_ROW_DOUBLE));
     if (alarm) {
-        int y = INK_LINE_BODY + INK_BLOCK_L + INK_CIRCLE_LARGE + INK_MARGIN + INK_LINE_TITLE + INK_LINE_NUMBER + INK_GAP_L;
+        int y = INK_STATUS_BAR + INK_BLOCK_L + INK_CIRCLE_LARGE + INK_MARGIN + ink_ui_line_height(INK_FONT_TITLE) + ink_ui_line_height(INK_FONT_NUMBER) + INK_GAP_L;
         C.date = ink_ui_label(C.card.panel, C.date_text, INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_MARGIN, y, INK_CANVAS_W - 2 * INK_MARGIN);
         lv_obj_set_style_text_align(C.date, LV_TEXT_ALIGN_CENTER, 0);
-        C.notice = ink_ui_notice(C.card.panel, "按电源键再睡 10 分钟", INK_CANVAS_H - INK_MARGIN - INK_LINE_NOTE);
+        C.notice = ink_ui_notice(C.card.panel, "按电源键再睡 10 分钟", INK_CANVAS_H - INK_MARGIN - ink_ui_line_height(INK_FONT_NOTE));
     }
     if (C.icon) lv_obj_delete(C.icon);
     C.icon = ink_ui_circle(C.card.panel, call ? "person" : alarm ? "clock" : "battery",
-                  (INK_CANVAS_W - INK_CIRCLE_LARGE) / 2, call ? INK_LINE_BODY + INK_BLOCK + INK_LINE_HEADING + INK_MARGIN : INK_LINE_BODY + INK_BLOCK_L,
+                  (INK_CANVAS_W - INK_CIRCLE_LARGE) / 2, call ? INK_STATUS_BAR + INK_BLOCK + ink_ui_line_height(INK_FONT_HEADING) + INK_MARGIN : INK_STATUS_BAR + INK_BLOCK_L,
                   INK_CIRCLE_LARGE, INK_ICON_STATE, call ? INK_SURFACE_STATIC : INK_SURFACE_BLACK, NULL, NULL);
     shell_card_clear_buttons(&C.card);
     for (int i = 0; i < C.now.nactions; i++) {
@@ -80,7 +80,7 @@ static void show(const ink_interrupt_t *top) { /* UI task */
         shell_card_button(&C.card, C.now.actions[action].label, on_button, (void *)(intptr_t)action);
     }
     if (call && C.now.nactions == 2) {
-        int h = INK_CIRCLE_LARGE + INK_GAP_M + INK_LINE_LIST;
+        int h = INK_CIRCLE_LARGE + INK_GAP_M + ink_ui_line_height(INK_FONT_LIST);
         lv_obj_set_flex_flow(C.card.row, LV_FLEX_FLOW_ROW_REVERSE);
         lv_obj_set_height(C.card.row, ink_ui_px(h));
         lv_obj_set_y(C.card.row, ink_ui_px(INK_CANVAS_H - INK_MARGIN - h));
@@ -103,7 +103,7 @@ static void show(const ink_interrupt_t *top) { /* UI task */
         lv_obj_set_flex_flow(C.card.row, LV_FLEX_FLOW_COLUMN);
         lv_obj_set_style_pad_row(C.card.row, ink_ui_px(INK_GAP), 0);
         lv_obj_set_height(C.card.row, ink_ui_px(2 * INK_PRIMARY + INK_GAP));
-        lv_obj_set_y(C.card.row, ink_ui_px(INK_CANVAS_H - INK_MARGIN - INK_LINE_NOTE - INK_GAP - 2 * INK_PRIMARY - INK_GAP));
+        lv_obj_set_y(C.card.row, ink_ui_px(INK_CANVAS_H - INK_MARGIN - ink_ui_line_height(INK_FONT_NOTE) - INK_GAP - 2 * INK_PRIMARY - INK_GAP));
         for (int i = 0; i < 2; i++) {
             lv_obj_t *b = lv_obj_get_child(C.card.row, i);
             lv_obj_set_width(b, ink_ui_px(INK_CANVAS_W - 2 * INK_MARGIN));

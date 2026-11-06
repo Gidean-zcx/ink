@@ -77,6 +77,8 @@ void ink_ui_open(lv_obj_t *from, const ink_activity_t *a, void *arg);
 void ink_ui_pop(void);
 /** Back to the root activity (one rebuild). */
 void ink_ui_home(void);
+/** Build the top activity again, after something that changes how everything looks (UI task only). */
+void ink_ui_redraw(void);
 /** Built-in home surface. Only the home app uses this framework presenter. */
 void ink_shell_home_create(lv_obj_t *screen);
 void ink_shell_home_destroy(void);

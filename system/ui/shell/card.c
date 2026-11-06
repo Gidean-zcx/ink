@@ -10,6 +10,9 @@ void shell_card_open(shell_card_t *c) {
     lv_obj_set_size(c->root, LV_PCT(100), LV_PCT(100));
     lv_obj_remove_flag(c->root, LV_OBJ_FLAG_SCROLLABLE);
     lv_obj_add_flag(c->root, LV_OBJ_FLAG_CLICKABLE);
+    /* A panel always cuts across what is behind it: fade that, so the cut does not read as a mistake. */
+    lv_obj_set_style_bg_color(c->root, ink_ui_paper(), 0);
+    lv_obj_set_style_bg_opa(c->root, LV_OPA_80, 0);
     c->panel = ink_ui_panel(c->root, CARD_HEIGHT, true);
     c->title = ink_ui_label(c->panel, "", INK_FONT_SUBTITLE, INK_WEIGHT_BOLD,
                             INK_MARGIN, INK_MARGIN, INK_CANVAS_W - 2 * INK_MARGIN);
@@ -23,7 +26,7 @@ void shell_card_open(shell_card_t *c) {
     lv_obj_set_size(c->row, ink_ui_px(INK_CANVAS_W - 2 * INK_MARGIN), ink_ui_px(INK_PRIMARY));
     lv_obj_set_flex_flow(c->row, LV_FLEX_FLOW_ROW);
     lv_obj_set_style_pad_column(c->row, ink_ui_px(INK_GAP), 0);
-    ink_ui_hint_obj(c->panel, INK_REFRESH_FLASH_UI);
+    ink_ui_hint_obj(c->root, INK_REFRESH_FLASH_UI);
 }
 
 void shell_card_full(shell_card_t *c) {
@@ -31,11 +34,11 @@ void shell_card_full(shell_card_t *c) {
     lv_obj_set_size(c->panel, LV_PCT(100), LV_PCT(100));
     lv_obj_set_style_radius(c->panel, 0, 0);
     lv_obj_set_style_border_width(c->panel, 0, 0);
-    lv_obj_set_pos(c->title, ink_ui_px(INK_MARGIN), ink_ui_px(INK_BLOCK_L + INK_LINE_BODY));
+    lv_obj_set_pos(c->title, ink_ui_px(INK_MARGIN), ink_ui_px(INK_BLOCK_L + INK_STATUS_BAR));
     lv_obj_set_width(c->title, ink_ui_px(INK_CANVAS_W - 2 * INK_MARGIN));
     lv_obj_set_style_text_align(c->title, LV_TEXT_ALIGN_CENTER, 0);
     lv_obj_set_style_text_font(c->title, ink_ui_font_px(INK_FONT_HEADING, INK_WEIGHT_BOLD), 0);
-    lv_obj_set_pos(c->body, ink_ui_px(INK_MARGIN), ink_ui_px(INK_BLOCK_L + INK_LINE_BODY + INK_LINE_HEADING + INK_MARGIN));
+    lv_obj_set_pos(c->body, ink_ui_px(INK_MARGIN), ink_ui_px(INK_BLOCK_L + INK_STATUS_BAR + ink_ui_line_height(INK_FONT_HEADING) + INK_MARGIN));
     lv_obj_set_style_text_align(c->body, LV_TEXT_ALIGN_CENTER, 0);
     lv_obj_set_y(c->row, ink_ui_px(INK_CANVAS_H - INK_PRIMARY - INK_MARGIN));
 }
@@ -55,7 +58,7 @@ void shell_card_button(shell_card_t *c, const char *label, lv_event_cb_t cb, voi
 }
 
 void shell_card_close(shell_card_t *c) {
-    ink_ui_hint_obj(c->panel, INK_REFRESH_FLASH_UI);
+    ink_ui_hint_obj(c->root, INK_REFRESH_FLASH_UI);
     lv_obj_delete(c->root);
     c->root = c->panel = c->title = c->body = c->row = NULL;
 }

@@ -70,8 +70,8 @@ static void test_task(void *arg) {
     CHECK(BY_HAND("shell.control", NULL) && g_rc.status == INK_RC_DONE, "control through the bus"); quiet();
     CHECK(!strcmp(ink_ui_top_name(), "Control"), "control is an overlay");
     int64_t before_light = ink_setting_get("display.light");
-    swipe(40, INK_LINE_BODY + INK_GAP_S + INK_CIRCLE + INK_GAP_L + INK_SLIDER / 2, 500,
-          INK_LINE_BODY + INK_GAP_S + INK_CIRCLE + INK_GAP_L + INK_SLIDER / 2);
+    swipe(40, INK_STATUS_BAR + INK_GAP_S + INK_CIRCLE + INK_GAP_L + INK_SLIDER / 2, 500,
+          INK_STATUS_BAR + INK_GAP_S + INK_CIRCLE + INK_GAP_L + INK_SLIDER / 2);
     CHECK(!strcmp(ink_ui_top_name(), "Control") && ink_setting_get("display.light") != before_light, "slider owns a swipe starting in the left edge");
     ink_probe_count("test.slider_priority");
     key(HAL_KEY_HOME); quiet(); CHECK(!strcmp(ink_ui_top_name(), "home"), "HOME closes the overlay first");
@@ -81,7 +81,7 @@ static void test_task(void *arg) {
     swipe(20, 400, 250, 400); quiet(); CHECK(!strcmp(ink_ui_page_name(), "home"), "left edge returns one level");
     swipe(500, 500, 200, 500); quiet(); CHECK(!strcmp(ink_shell_board(), "Apps"), "foreground swipe turns only on release");
     on_ui(find_clock); CHECK(clock_tile, "Apps initially shows its Clock tile");
-    tap(300, INK_LINE_BODY + INK_PRIMARY + INK_CONTROL / 2);
+    tap(300, INK_STATUS_BAR + INK_PRIMARY + INK_CONTROL / 2);
     CHECK(ink_text_focused(), "application search takes the input focus");
     CHECK(AI("text.insert", "{\"text\":\"阅读\"}") && g_rc.status == INK_RC_DONE, "the AI can fill the same application query");
     CHECK(BY_HAND("text.submit", NULL) && g_rc.status == INK_RC_DONE, "the search key submits through the text capability");

@@ -71,7 +71,7 @@ static void fixtures(const char *who) {
     }
 }
 static void backup(void) {
-    CHECK(AI("backup.now",NULL) && g_rc.status==INK_RC_QUEUED,"start member backup (%s %s)",g_rc.say,g_rc.detail);
+    CHECK(AI("backup.now",NULL) && g_rc.status==INK_RC_QUEUED,"start member backup (status %d: %s %s)",(int)g_rc.status,g_rc.say,g_rc.detail);
     CHECK(wait_phase("\"phase\":\"saved\"",180),"backup received (%s)",g_result);
     CHECK(strstr(g_result,"\"received\":true") && strstr(g_result,"\"durable\":false"),"hub receipt is distinct from cloud durability");
     CHECK(AI("backup.manifest",NULL) && g_rc.status==INK_RC_DONE && strstr(g_result,"test.backup") && strstr(g_result,"test.position") && strstr(g_result,file_name),"manifest includes collection, state and files (%s)",g_result);

@@ -113,13 +113,13 @@ static void book_clicked(lv_event_t *e) {
 static void library_create(lv_obj_t *scr, void *arg) {
     (void)arg;
     int dpi = ink_panel_dpi();
-    ink_font_t *title_font = ink_font_for_pt(11, dpi);
+    ink_font_t *title_font = ink_font_for_pt(14, dpi);
     lv_obj_t *t = lv_label_create(scr);
     if (title_font) lv_obj_set_style_text_font(t, ink_font_lvgl(title_font), 0);
     lv_label_set_text(t, "书架");
     lv_obj_align(t, LV_ALIGN_TOP_LEFT, ink_dp(16), ink_dp(12));
     scan_library();
-    ink_font_t *f = ink_font_for_pt(9, dpi);
+    ink_font_t *f = ink_font_for_pt(10.5, dpi);
     for (int i = 0; i < LIB.nbooks; i++) {
         lv_obj_t *b = lv_button_create(scr);
         ink_ui_style_button(b);
@@ -426,15 +426,14 @@ static void book_create(lv_obj_t *scr, void *arg) {
     RD.shown = -1;
     snprintf(RD.member, sizeof RD.member, "%s", ink_member_current()->id);
     
-    ink_font_t *body = ink_font_for_pt(8, dpi);
-    ink_font_t *small = ink_font_for_pt(6, dpi);
+    ink_font_t *body = ink_font_for_pt(10.5, dpi); /* wu hao, about 3.8 mm on this panel */
     if (!body || !load_text(LIB.books[LIB.open].path)) {
         lv_obj_t *l = lv_label_create(scr);
         lv_label_set_text(l, "cannot open book");
         return;
     }
     int lw = lv_display_get_horizontal_resolution(NULL), lh = lv_display_get_vertical_resolution(NULL);
-    int margin = ink_dp(14), header = ink_dp(28), footer = ink_dp(28);
+    int margin = ink_dp(20), header = lv_font_get_line_height(ink_ui_font(2)) + 2 * ink_dp(6), footer = header;
     RD.bw = lw - 2 * margin;
     RD.bh = lh - header - footer;
     RD.layout.font = body;
@@ -462,7 +461,7 @@ static void book_create(lv_obj_t *scr, void *arg) {
     ink_probe_value("reader.restored_page", (double)RD.page);
 
     RD.title = lv_label_create(scr);
-    if (small) lv_obj_set_style_text_font(RD.title, ink_font_lvgl(small), 0);
+    lv_obj_set_style_text_font(RD.title, ink_ui_font(2), 0);
     lv_label_set_text(RD.title, LIB.books[LIB.open].name);
     lv_obj_align(RD.title, LV_ALIGN_TOP_MID, 0, ink_dp(6));
 
@@ -478,7 +477,7 @@ static void book_create(lv_obj_t *scr, void *arg) {
     lv_obj_add_event_cb(RD.img, page_clicked, LV_EVENT_CLICKED, NULL);
 
     RD.footer = lv_label_create(scr);
-    if (small) lv_obj_set_style_text_font(RD.footer, ink_font_lvgl(small), 0);
+    lv_obj_set_style_text_font(RD.footer, ink_ui_font(2), 0);
     lv_obj_align(RD.footer, LV_ALIGN_BOTTOM_MID, 0, -ink_dp(6));
 
     render_into(0, RD.page);

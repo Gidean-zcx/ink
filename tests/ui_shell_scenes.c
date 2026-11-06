@@ -56,8 +56,8 @@ static void text_create(lv_obj_t *screen, void *arg) {
     ink_text_cfg_t cfg = {.type = password ? INK_TEXT_PASSWORD : INK_TEXT_PLAIN, .enter = INK_ENTER_DONE,
                           .initial = password ? "FAKE_TEST_SECRET" : "明天带作业本，", .hint = "写下一句话", .max = 1024};
     field = ink_textfield_create(screen, &cfg, NULL, NULL, true);
-    lv_obj_set_pos(field, INK_MARGIN, INK_LINE_BODY + INK_PRIMARY + INK_GAP_XS);
-    lv_obj_set_size(field, INK_CANVAS_W - 2 * INK_MARGIN, 4 * INK_PRIMARY);
+    lv_obj_set_pos(field, INK_MARGIN, INK_STATUS_BAR + INK_PRIMARY + INK_GAP_XS);
+    lv_obj_set_size(field, INK_CANVAS_W - 2 * INK_MARGIN, 3 * INK_PRIMARY);
     if (!strcmp(scene, "ImePinyin") || !strcmp(scene, "ImeCandidates")) for (const char *p = !strcmp(scene, "ImeCandidates") ? "shi" : "jintian"; *p; p++) ink_text_key(*p);
     if (!strcmp(scene, "ImeEdit")) ink_text_select(2, 4);
     if (!strcmp(scene, "ImeVoice")) ink_text_voice_start();
@@ -76,9 +76,9 @@ static void component_scene(lv_obj_t *screen, void *arg) {
         ink_ui_notice(panel, "内容从 32 开始，面板贴底", INK_MARGIN + INK_PRIMARY);
         return;
     }
-    int y = INK_LINE_BODY + INK_PRIMARY + INK_MARGIN;
-    ink_ui_pill(screen, "主要", INK_MARGIN, y, 2 * INK_PRIMARY, INK_PRIMARY, true, NULL, NULL);
-    ink_ui_pill(screen, "次要", INK_MARGIN + 2 * INK_PRIMARY + INK_GAP, y, 2 * INK_PRIMARY, INK_PRIMARY, false, NULL, NULL);
+    int y = INK_STATUS_BAR + INK_PRIMARY + INK_MARGIN;
+    ink_ui_pill(screen, "主要", INK_MARGIN, y, 2 * INK_CONTROL, INK_PRIMARY, true, NULL, NULL);
+    ink_ui_pill(screen, "次要", INK_MARGIN + 2 * INK_CONTROL + INK_GAP, y, 2 * INK_CONTROL, INK_PRIMARY, false, NULL, NULL);
     ink_ui_circle(screen, "ai", INK_CANVAS_W - INK_MARGIN - INK_CIRCLE, y, INK_CIRCLE, INK_ICON_LIST, INK_SURFACE_BLACK, NULL, NULL);
     y += INK_PRIMARY + INK_GAP;
     ink_ui_toggle(screen, "开关", true, INK_MARGIN, y, w, NULL, NULL); y += INK_CONTROL + INK_GAP;
@@ -190,13 +190,68 @@ static void assert_identity(void) {
     if (!strcmp(scene, "ComponentsPanel")) CHECK(label_visible("底部面板"), "the panel component exists");
     if (!strcmp(scene, "ComponentsDock")) CHECK(lv_obj_get_child_count(lv_screen_active()) > 1 && !label_visible("开关") && !label_visible("底部面板"), "Dock fixture has its own variant");
     if (!strcmp(scene, "Control") || !strcmp(scene, "SetDisplay")) CHECK(snapshot_has("亮度=40"), "current brightness, not just a registered setting");
-    if (!strcmp(scene, "SetDisplay")) CHECK(snapshot_has("字号=1") && snapshot_has("自动锁屏秒=600"), "display settings have their current values");
+    if (!strcmp(scene, "SetDisplay")) {
+        char size[32]; snprintf(size, sizeof size, "字号=%lld", (long long)ink_setting_get("display.font_size"));
+        CHECK(snapshot_has(size) && snapshot_has("自动锁屏秒=600"), "display settings have their current values");
+    }
     if (!strcmp(scene, "SetNetwork")) CHECK(snapshot_has("网络组=1") && snapshot_has("SIM="), "network selection context is present");
     if (!strcmp(scene, "Today")) CHECK(snapshot_has("今日报纸=") && snapshot_has("单词=") && snapshot_has("接下来="), "all Today cards have semantic context");
 }
 
+/* No text cut off by what holds it, and no two lines of text on top of each other. Whatever the
+ * text size, this is what a layout must keep true. */
+static bool area_inside(const lv_area_t *a, const lv_area_t *in) { return a->x1 >= in->x1 && a->y1 >= in->y1 && a->x2 <= in->x2 && a->y2 <= in->y2; }
+static bool areas_meet(const lv_area_t *a, const lv_area_t *b) { return a->x1 <= b->x2 && b->x1 <= a->x2 && a->y1 <= b->y2 && b->y1 <= a->y2; }
+static bool text_area(lv_obj_t *label, lv_area_t *out) {
+    if (!lv_obj_check_type(label, &lv_label_class) || !lv_label_get_text(label)[0]) return false;
+    lv_point_t size;
+    lv_obj_get_coords(label, out);
+    if (lv_label_get_long_mode(label) == LV_LABEL_LONG_DOT) return true; /* cut to its box by design */
+    lv_text_get_size(&size, lv_label_get_text(label), lv_obj_get_style_text_font(label, 0), lv_obj_get_style_text_letter_space(label, 0),
+                     lv_obj_get_style_text_line_space(label, 0), lv_area_get_width(out), LV_TEXT_FLAG_NONE);
+    int spare = lv_area_get_width(out) - size.x;
+    lv_text_align_t align = lv_obj_get_style_text_align(label, 0);
+    if (align == LV_TEXT_ALIGN_CENTER) out->x1 += spare / 2;
+    else if (align == LV_TEXT_ALIGN_RIGHT) out->x1 += spare;
+    out->x2 = out->x1 + size.x - 1;
+    out->y2 = out->y1 + size.y - 1;
+    return true;
+}
+static void check_text(lv_obj_t *holder, lv_area_t clip) {
+    lv_area_t own;
+    lv_obj_get_coords(holder, &own);
+    bool scrolls = lv_obj_has_flag(holder, LV_OBJ_FLAG_SCROLLABLE) && lv_obj_get_scroll_dir(holder) != LV_DIR_NONE;
+    if (!scrolls && !lv_obj_has_flag(holder, LV_OBJ_FLAG_OVERFLOW_VISIBLE)) {
+        clip.x1 = LV_MAX(clip.x1, own.x1); clip.y1 = LV_MAX(clip.y1, own.y1);
+        clip.x2 = LV_MIN(clip.x2, own.x2); clip.y2 = LV_MIN(clip.y2, own.y2);
+    }
+    for (uint32_t i = 0; i < lv_obj_get_child_count(holder); i++) {
+        lv_obj_t *c = lv_obj_get_child(holder, (int32_t)i);
+        lv_area_t a, b;
+        if (lv_obj_has_flag(c, LV_OBJ_FLAG_HIDDEN)) continue;
+        if (text_area(c, &a)) {
+            CHECK(area_inside(&a, &clip), "%s: text cut off: \"%s\" at (%d,%d)-(%d,%d), room (%d,%d)-(%d,%d)", scene, lv_label_get_text(c),
+                  (int)a.x1, (int)a.y1, (int)a.x2, (int)a.y2, (int)clip.x1, (int)clip.y1, (int)clip.x2, (int)clip.y2);
+            for (uint32_t j = i + 1; j < lv_obj_get_child_count(holder); j++) {
+                lv_obj_t *other = lv_obj_get_child(holder, (int32_t)j);
+                if (!lv_obj_has_flag(other, LV_OBJ_FLAG_HIDDEN) && text_area(other, &b))
+                    CHECK(!areas_meet(&a, &b), "%s: text on text: \"%s\" and \"%s\"", scene, lv_label_get_text(c), lv_label_get_text(other));
+            }
+        }
+        if (!lv_obj_has_flag(c, LV_OBJ_FLAG_USER_1)) check_text(c, clip);
+    }
+}
+static void assert_text_fits(void) {
+    lv_area_t all;
+    lv_obj_update_layout(lv_screen_active());
+    lv_obj_get_coords(lv_screen_active(), &all);
+    check_text(lv_screen_active(), all);
+    check_text(lv_layer_sys(), all);
+}
+
 static void assert_view(void) {
     assert_identity();
+    assert_text_fits();
     char *snapshot = osal_malloc(4096, OSAL_MEM_EXTERNAL), *actions = osal_malloc(8192, OSAL_MEM_EXTERNAL);
     const char *name;
     CHECK(snapshot && ink_ui_snapshot(snapshot, 4096, &name) > 0, "nonempty AI view for %s", scene);
@@ -228,7 +283,12 @@ static void assert_operation(void) {
         CHECK(press_label("显示和亮度"), "touch the display settings row"); quiet();
         CHECK(!strcmp(ink_ui_page_name(), "SetDisplay"), "the row opens its promised page");
     } else if (!strcmp(scene, "Control") || !strcmp(scene, "SetSound")) {
-        tap(528, 208); quiet();
+        wanted = !strcmp(scene, "Control") ? "亮度" : "音量"; on_ui(find_label); tap(528, label_y); quiet();
+        if (!strcmp(scene, "SetSound")) {
+            wanted = "闹钟"; on_ui(find_label); CHECK(label_x < 0, "what does not fit waits on the next page");
+            CHECK(BY_HAND("shell.page_next", NULL) && g_rc.status == INK_RC_DONE, "turn the settings page"); quiet();
+            on_ui(find_label); CHECK(label_x >= 0, "the rest of the page is there");
+        }
         CHECK(ink_setting_get(!strcmp(scene, "Control") ? "display.light" : "audio.volume") == 80, "the visible slider reaches the setting service");
     } else if (!strcmp(scene, "SetDisplay")) {
         CHECK(press_label("自动锁屏 10 分钟"), "touch the current lock interval"); quiet();
@@ -277,6 +337,13 @@ static void at_shutdown(void) {
 static void test_task(void *arg) {
     (void)arg;
     delay_ms(1600);
+    const char *who = getenv("INK_UI_SCENE_MEMBER");
+    if (who) {
+        CHECK(ink_member_switch(who) == 0, "switch to %s", who);
+        delay_ms(100);
+        quiet();
+        CHECK(ink_member_current()->role != INK_ROLE_CHILD || ink_ui_line_height(INK_FONT_BODY) == (INK_LINE_BODY * 110 + 50) / 100, "a child reads one step up");
+    }
     if (!strncmp(scene, "Ai", 2) || !strcmp(scene, "LockPage") || !strcmp(scene, "PowerOff")) {
         CHECK(BY_HAND("reader.open_book", "{\"title\":\"星星邮差\"}") && g_rc.status == INK_RC_DONE, "open the real reading surface below the shell");
     }
@@ -286,6 +353,12 @@ static void test_task(void *arg) {
         delay_ms(500);
     }
     quiet();
+    const char *size = getenv("INK_UI_SCENE_TEXT");
+    if (size) {
+        set_level("display.font_size", atoi(size));
+        delay_ms(100);
+        quiet();
+    }
     on_ui(prepare);
     if (!strcmp(scene, "MembersBack") || !strcmp(scene, "Pin") || !strcmp(scene, "PinWrong")) {
         ink_member_set_pin("owner", NULL, "1234", pin_result, NULL);

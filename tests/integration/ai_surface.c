@@ -56,7 +56,7 @@ static const struct {
     {"shell.launch", "id"}, {"shell.resume", NULL}, {"ai.panel.hide", NULL}, {"ai.panel.listen", NULL},
     {"ai.panel.next", NULL}, {"ai.panel.prev", NULL},
     {"keyboard.key", "code"}, {"keyboard.pick", "index"}, {"keyboard.candidates", ""}, {"keyboard.edit", "action"},
-    {"shell.search", "query"}, {"shell.notify_next", NULL}, {"shell.notify_prev", NULL},
+    {"shell.search", "query"}, {"shell.page_next", NULL}, {"shell.page_prev", NULL}, {"shell.notify_next", NULL}, {"shell.notify_prev", NULL},
     {"shell.wifi_next", NULL}, {"shell.wifi_prev", NULL}, {"shell.wifi_pick", "index"},
     {NULL, NULL},
 };

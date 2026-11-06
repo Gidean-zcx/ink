@@ -141,13 +141,13 @@ static hal_waveform_t resolve_wf(hal_waveform_t wf) {
     return HAL_WF_GC16;
 }
 
-static void visible_image(uint8_t *out_logical, int *lw, int *lh) {
+static void panel_image(uint8_t *out_logical, int *lw, int *lh, bool residue) {
     int rot = D.info.rotation_deg;
     ink_logical_size(D.W, D.H, rot, lw, lh);
     for (int ny = 0; ny < D.H; ny++)
         for (int nx = 0; nx < D.W; nx++) {
             size_t i = (size_t)ny * D.W + nx;
-            float v = (float)D.screen[i] + D.residual[i];
+            float v = (float)D.screen[i] + (residue ? D.residual[i] : 0);
             if (D.info.tech == HAL_PANEL_EPD && D.info.gray_levels > 1 && D.info.gray_levels < 256) {
                 /* the panel only shows gray_levels levels */
                 float step = 255.0f / (float)(D.info.gray_levels - 1);
@@ -160,14 +160,19 @@ static void visible_image(uint8_t *out_logical, int *lw, int *lh) {
         }
 }
 
-static void png_on_host(void *path) {
+static void visible_image(uint8_t *out_logical, int *lw, int *lh) { panel_image(out_logical, lw, lh, true); }
+
+static void write_panel_png(const char *path, bool residue) {
     int lw, lh;
     uint8_t *img = sim_host_malloc((size_t)D.W * D.H);
     if (!img) return;
-    visible_image(img, &lw, &lh);
-    if (!stbi_write_png(path, lw, lh, 1, img, lw)) sim_warn("cannot write %s", (const char *)path);
+    panel_image(img, &lw, &lh, residue);
+    if (!stbi_write_png(path, lw, lh, 1, img, lw)) sim_warn("cannot write %s", path);
     sim_host_free(img);
 }
+static void png_on_host(void *path) { write_panel_png(path, true); }
+/* What was asked for, without the modelled residue: for judging a layout, and for the bench to show. */
+static void clean_png_on_host(void *path) { write_panel_png(path, false); }
 
 /* Host work (--frames, snapshots): not the calling task's stack. */
 static void write_png(const char *path) { vtk_host_call(png_on_host, (void *)path); }
@@ -178,6 +183,8 @@ void sim_display_snapshot(const char *name) {
     snprintf(path, sizeof path, "%s/snap-%s.png", g_sim.out_dir, name);
     write_png(path);
     sim_note("snapshot %s", path);
+    snprintf(path, sizeof path, "%s/clean-%s.png", g_sim.out_dir, name);
+    vtk_host_call(clean_png_on_host, path);
 }
 
 uint32_t sim_display_version(void) { return D.version; }

@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
-"""Generate the contract UI font sizes/weights; keep unrestricted reading fonts."""
+"""Generate the UI's faces. Regular text uses the reading font (sans-44); medium and bold carry the
+UI's own characters at one size each, and the digit faces their exact sizes. The theme scales the
+faces to every other text size."""
 import argparse
 import json
 from pathlib import Path
@@ -10,6 +12,7 @@ import re
 ROOT = Path(__file__).resolve().parents[2]
 TOKENS = {name: int(value) for name, value in re.findall(r'(INK_[A-Z_]+)\s*=\s*(\d+)\b', (ROOT / 'system/ui/ink/ui_theme.h').read_text())}
 SIZES = {value: TOKENS[name.replace('INK_FONT_', 'INK_LINE_')] for name, value in TOKENS.items() if name.startswith('INK_FONT_')}
+ACCENT_FACES = {1: TOKENS['INK_FONT_LIST'], 2: TOKENS['INK_FONT_TITLE']}  # weight: px; the size each weight is used at most
 
 
 def main():
@@ -21,7 +24,7 @@ def main():
     ap.add_argument('--out', required=True, type=Path)
     a = ap.parse_args()
     a.out.mkdir(parents=True, exist_ok=True)
-    # Dynamic glyphs outside this subset use the runtime's scaled sans-32 fallback.
+    # Dynamic glyphs outside this subset use the runtime's scaled sans-44 fallback.
     chars = set(''.join(chr(i) for i in range(32, 127)) + '□●·…“”《》——，。！？：；（）【】◀▶')
     import importlib.util
     spec = importlib.util.spec_from_file_location('fontgen', ROOT / 'tools/fontgen/fontgen.py')
@@ -32,10 +35,9 @@ def main():
             # Read only characters actually in the selected CJK face, not comments'
             # private-use markers or unsupported typographic symbols.
             chars.update(c for c in source.read_text() if '\u3400' <= c <= '\u9fff')
-    coverage = fontgen.font_coverage(a.regular, a.face)
-    missing = sorted(c for c in chars if ord(c) not in coverage)
+    missing = sorted(ord(c) for c in chars if ord(c) not in set(fontgen.charset('ascii,punct,pinyin,gb2312')))
     if missing:
-        raise SystemExit('Missing required UI glyphs in regular CJK face: ' + ''.join(missing))
+        raise SystemExit('UI text outside the reading font, add it there: ' + ''.join(map(chr, missing)))
     repertoire = a.out / 'ui-charset.txt'
     repertoire.write_text(''.join(sorted(chars)), encoding='utf-8')
     outfit = ROOT / 'third_party/fonts/Outfit.ttf'
@@ -44,6 +46,8 @@ def main():
         face = a.face if weight == 0 else (a.face if font.endswith('.ttc') else 0)
         for px, line in SIZES.items():
             digits = px >= 88
+            if not digits and ACCENT_FACES.get(weight) != px:
+                continue
             out = a.out / f'{"outfit" if digits else "ui"}-{weight}-{px}.inkf'
             cmd = [sys.executable, str(ROOT / 'tools/fontgen/fontgen.py'), '--font', str(outfit) if digits else font,
                    '--face', str(0 if digits else face), '--px', str(px), '--bpp', '2', '--exact-line', str(line),

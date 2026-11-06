@@ -340,6 +340,29 @@ static void ramp(uint8_t *fb) {
         for (int x = 0; x < w; x++) epd_draw_pixel(x, y, (uint8_t) (((y * 16 / h) & 15) * 17), fb);
 }
 
+/* Which way are touch and gravity? The person holds the device upright and taps numbered dots.
+ * Reads the two chips only; the accelerometer goes back to what it was doing. */
+static void touch_and_gravity(void) {
+    uint8_t was = 0, a[6], t[5];
+    bool accel = !rd(0x19, 0x20, &was, 1) && !wr(0x19, 0x20, 0x57);
+    bool down = false;
+    int64_t end = now_us() + 40 * 1000000, next_gravity = 0;
+    while (now_us() < end) {
+        if (!rd(0x38, 0x02, t, 5)) {
+            bool pressed = (t[0] & 0x0f) != 0;
+            if (pressed && !down) R("\"test\":\"touch\",\"x\":%d,\"y\":%d", (t[1] & 0x0f) << 8 | t[2], (t[3] & 0x0f) << 8 | t[4]);
+            down = pressed;
+        }
+        if (accel && now_us() > next_gravity && !rd(0x19, 0x28 | 0x80, a, 6)) {
+            R("\"test\":\"gravity\",\"x\":%d,\"y\":%d,\"z\":%d", (int16_t) (a[1] << 8 | a[0]) >> 4, (int16_t) (a[3] << 8 | a[2]) >> 4,
+              (int16_t) (a[5] << 8 | a[4]) >> 4);
+            next_gravity = now_us() + 5000000;
+        }
+        vTaskDelay(pdMS_TO_TICKS(20));
+    }
+    if (accel) wr(0x19, 0x20, was);
+}
+
 static void panel(void) {
     size_t before = heap_caps_get_free_size(MALLOC_CAP_INTERNAL);
     int64_t t = now_us();
@@ -349,7 +372,7 @@ static void panel(void) {
     heap("panel_on");
     if (!ok) return;
     EpdiyHighlevelState *hl = MetalioEpd_Hl();
-    epd_set_rotation(EPD_ROT_PORTRAIT);
+    epd_set_rotation(EPD_ROT_INVERTED_PORTRAIT); /* the way the device is held: the first run was upside down */
     uint8_t *fb = epd_hl_get_framebuffer(hl);
     int temp = 25;
     epd_poweron();
@@ -377,8 +400,10 @@ static void panel(void) {
             }
         char what[32];
         snprintf(what, sizeof what, "image_%s", BENCH_IMAGES[i].name);
-        show(hl, what, MODE_GC16, temp);
-        vTaskDelay(pdMS_TO_TICKS(20000)); /* long enough to look at */
+        /* Settings comes after the home screen without a flash, as a page turn does: how much really stays behind? */
+        show(hl, what, strcmp(BENCH_IMAGES[i].name, "Settings") ? MODE_GC16 : MODE_GL16, temp);
+        if (i == 0) touch_and_gravity(); /* the first picture has the dots */
+        else vTaskDelay(pdMS_TO_TICKS(20000)); /* long enough to look at */
     }
 #endif
     ramp(fb); /* what stays on the panel for a look afterwards */

@@ -259,12 +259,13 @@ find_package(Python3 COMPONENTS Interpreter)
 set(INK_HAVE_FONTS OFF)
 if(EXISTS ${INK_CJK_FONT} AND Python3_FOUND)
   set(INK_FONT_FILES)
-  foreach(px 24 32)
+  foreach(px 44) # the one reading font; the UI scales it for text outside its own subset
     set(out ${INK_ASSETS_DIR}/fonts/sans-${px}.inkf)
     add_custom_command(OUTPUT ${out}
       COMMAND ${CMAKE_COMMAND} -E make_directory ${INK_ASSETS_DIR}/fonts
       COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/fontgen/fontgen.py --font ${INK_CJK_FONT}
-              --face ${INK_CJK_FACE} --px ${px} --bpp 2 --charset ascii,punct,pinyin,gb2312 -o ${out}
+              --face ${INK_CJK_FACE} --px ${px} --bpp 2 --charset ascii,punct,pinyin,gb2312
+              --digits-font ${CMAKE_SOURCE_DIR}/third_party/fonts/Outfit.ttf --digits-weight 400 -o ${out}
       DEPENDS ${CMAKE_SOURCE_DIR}/tools/fontgen/fontgen.py
       COMMENT "fontgen: CJK bitmap font ${px}px")
     list(APPEND INK_FONT_FILES ${out})
@@ -317,28 +318,28 @@ target_link_libraries(ink-icon-raster PRIVATE m)
 file(READ ${CMAKE_SOURCE_DIR}/assets/icons/manifest.json INK_ICON_MANIFEST)
 string(JSON INK_ICON_COUNT LENGTH "${INK_ICON_MANIFEST}" names)
 math(EXPR INK_ICON_LAST "${INK_ICON_COUNT} - 1")
+string(JSON INK_ICON_SIZE_COUNT LENGTH "${INK_ICON_MANIFEST}" sizes)
+math(EXPR INK_ICON_SIZE_LAST "${INK_ICON_SIZE_COUNT} - 1")
+set(INK_ICON_SIZES)
+foreach(index RANGE ${INK_ICON_SIZE_LAST})
+  string(JSON size GET "${INK_ICON_MANIFEST}" sizes ${index})
+  list(APPEND INK_ICON_SIZES ${size})
+endforeach()
 set(INK_ICON_FILES)
 foreach(index RANGE ${INK_ICON_LAST})
   string(JSON icon GET "${INK_ICON_MANIFEST}" names ${index})
-  foreach(look line duo solid)
+  foreach(look line solid)
     set(svg ${CMAKE_SOURCE_DIR}/assets/icons/${icon}-${look}.svg)
     if(NOT EXISTS ${svg})
       message(FATAL_ERROR "Missing required design icon ${icon}-${look}")
     endif()
-    foreach(px 28 36 44 64 88)
+    foreach(px ${INK_ICON_SIZES})
       set(out ${INK_ASSETS_DIR}/icons/${icon}-${look}-${px}.inki)
       add_custom_command(OUTPUT ${out}
         COMMAND ${CMAKE_COMMAND} -E make_directory ${INK_ASSETS_DIR}/icons
         COMMAND ink-icon-raster ${svg} ${px} ${out}
         DEPENDS ink-icon-raster ${svg})
       list(APPEND INK_ICON_FILES ${out})
-      if(look STREQUAL "solid")
-        set(inverse ${INK_ASSETS_DIR}/icons/${icon}-${look}-inv-${px}.inki)
-        add_custom_command(OUTPUT ${inverse}
-          COMMAND ink-icon-raster ${svg} ${px} ${inverse} inverse
-          DEPENDS ink-icon-raster ${svg})
-        list(APPEND INK_ICON_FILES ${inverse})
-      endif()
     endforeach()
   endforeach()
 endforeach()
@@ -489,6 +490,21 @@ foreach(scene ${INK_SHELL_SCENES})
       --hub ${CMAKE_SOURCE_DIR}/tests/ui_shell.hub.json
       --budget ${CMAKE_SOURCE_DIR}/tests/${budget}.budget.json --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
       --out ${CMAKE_BINARY_DIR}/test-out/ui-scene-${scene} --quiet --no-random-outages)
+  # The largest text, which is also what a child sees.
+  add_test(NAME ui-scene-big-${scene}
+    COMMAND ${CMAKE_COMMAND} -E env INK_UI_SCENE=${scene} INK_UI_SCENE_TEXT=3 $<TARGET_FILE:sim-ui-scenes>
+      --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json --script ${CMAKE_SOURCE_DIR}/tests/${script}.script
+      --hub ${CMAKE_SOURCE_DIR}/tests/ui_shell.hub.json
+      --budget ${CMAKE_SOURCE_DIR}/tests/${budget}.budget.json --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+      --out ${CMAKE_BINARY_DIR}/test-out/ui-scene-big-${scene} --quiet --no-random-outages)
+endforeach()
+foreach(scene Main Today Apps Control Notifications Ai ImePinyin)
+  add_test(NAME ui-scene-child-${scene}
+    COMMAND ${CMAKE_COMMAND} -E env INK_UI_SCENE=${scene} INK_UI_SCENE_MEMBER=kid $<TARGET_FILE:sim-ui-scenes>
+      --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json --script ${CMAKE_SOURCE_DIR}/tests/ui_shell.script
+      --hub ${CMAKE_SOURCE_DIR}/tests/ui_shell.hub.json
+      --budget ${CMAKE_SOURCE_DIR}/tests/ui_scene.budget.json --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+      --out ${CMAKE_BINARY_DIR}/test-out/ui-scene-child-${scene} --quiet --no-random-outages)
 endforeach()
 add_executable(sim-ui-shell-test simulator/runtime/sim_main.c tests/ui_shell_test.c)
 target_link_libraries(sim-ui-shell-test PRIVATE ink_apps ink_system ink_port_sim)

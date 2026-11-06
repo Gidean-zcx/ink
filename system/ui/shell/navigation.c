@@ -2,6 +2,7 @@
 /* ui-scale-runtime: dimension width Canvas width minus theme margins, shared by all shell pages. */
 /* ui-scale-runtime: dimension notifications Returns the bottom of theme-sized notification rows. */
 /* ui-scale-runtime: dimension y tile and notifications accept a theme-derived row position. */
+/* ui-scale-runtime: dimension F.y,heading_h,notice_h,home_room,below_heading Page flow: theme sizes added up, plus text measured at the current size. */
 #include <stdio.h>
 #include <string.h>
 
@@ -53,7 +54,7 @@ static struct {
     lv_obj_t *control, *page, *page_body;
     lv_obj_t *status[3];
     bool status_time[3];
-    int home_page, notify_page, apps_page, apps_pages, wifi_page;
+    int home_page, notify_page, apps_page, apps_pages, wifi_page, body_page, body_pages;
     page_t page_id;
     bool more, initialized, need_body;
     char member[16];
@@ -179,14 +180,17 @@ static void status_deleted(lv_event_t *e) {
 }
 
 lv_obj_t *ink_shell_statusbar(lv_obj_t *parent, bool show_time) {
-    lv_obj_t *bar = ink_ui_box(parent, 0, 0, INK_CANVAS_W, INK_LINE_BODY, 0, INK_SURFACE_WHITE, false);
+    lv_obj_t *bar = ink_ui_box(parent, 0, 0, INK_CANVAS_W, INK_STATUS_BAR, 0, INK_SURFACE_WHITE, false);
     ink_shell_bind(bar, "shell.control", NULL);
     char clock[16], date[96];
     ink_shell_time_strings(clock, sizeof clock, date, sizeof date);
     int x = INK_MARGIN;
+    int bar_h = INK_STATUS_BAR, text_y = (bar_h - ink_ui_line_height(INK_FONT_STATUS)) / 2;
+    int icon_y = (bar_h - INK_ICON_SMALL) / 2;
+    int time_w = ink_ui_text_width(clock, INK_FONT_STATUS, INK_WEIGHT_MEDIUM);
     if (show_time) {
-        ink_ui_label(bar, clock, INK_FONT_STATUS, INK_WEIGHT_MEDIUM, x, INK_GAP_S, 2 * INK_ICON_MEDIUM);
-        x += 2 * INK_ICON_MEDIUM;
+        ink_ui_line(bar, clock, INK_FONT_STATUS, INK_WEIGHT_MEDIUM, x, text_y, time_w);
+        x += time_w + INK_GAP_S;
     }
     char net[32], mic[32];
     state_text("net.type", net, sizeof net);
@@ -195,23 +199,28 @@ lv_obj_t *ink_shell_statusbar(lv_obj_t *parent, bool show_time) {
                 !strcmp(net, "wifi")     ? "wifi"
                 : !strcmp(net, "mobile") ? "signal"
                                          : "wifioff",
-                INK_ICON_SMALL, INK_ICON_LINE, x, INK_GAP_M, false);
+                INK_ICON_SMALL, INK_ICON_LINE, x, icon_y, false);
     if (integer("notify.unread"))
-        ink_ui_icon(bar, "bell", INK_ICON_SMALL, INK_ICON_LINE, x + INK_ICON_LIST, INK_GAP_M, false);
+        ink_ui_icon(bar, "bell", INK_ICON_SMALL, INK_ICON_LINE, x + INK_ICON_LIST, icon_y, false);
     if (!strcmp(mic, "local"))
-        ink_ui_icon(bar, "mic", INK_ICON_SMALL, INK_ICON_LINE, x + 2 * INK_ICON_LIST, INK_GAP_M, false);
+        ink_ui_icon(bar, "mic", INK_ICON_SMALL, INK_ICON_LINE, x + 2 * INK_ICON_LIST, icon_y, false);
     else if (!strcmp(mic, "sending") || !strcmp(mic, "recording")) {
-        lv_obj_t *s = ink_ui_box(bar, x + 2 * INK_ICON_LIST, INK_GAP_XS, INK_CONTROL, INK_LINE_LIST, INK_RADIUS_KEY,
+        int pill_h = ink_ui_line_height(INK_FONT_STATUS) + INK_GAP_S;
+        if (pill_h > bar_h) pill_h = bar_h;
+        lv_obj_t *s = ink_ui_box(bar, x + 2 * INK_ICON_LIST, (bar_h - pill_h) / 2, INK_CONTROL, pill_h, INK_RADIUS_KEY,
                                  INK_SURFACE_BLACK, false);
-        ink_ui_label(s, !strcmp(mic, "recording") ? "录音" : "在听", INK_FONT_STATUS, INK_WEIGHT_MEDIUM, INK_GAP_S,
-                     INK_GAP_XS, INK_BLOCK);
+        lv_obj_t *on_air =
+            ink_ui_line(s, !strcmp(mic, "recording") ? "录音" : "在听", INK_FONT_STATUS, INK_WEIGHT_MEDIUM, 0,
+                        (pill_h - ink_ui_line_height(INK_FONT_STATUS)) / 2, INK_CONTROL);
+        lv_obj_set_style_text_align(on_air, LV_TEXT_ALIGN_CENTER, 0);
     }
     char battery[12];
     snprintf(battery, sizeof battery, "%lld", (long long) integer("battery.level"));
-    ink_ui_label(bar, battery, INK_FONT_STATUS, INK_WEIGHT_MEDIUM, INK_CANVAS_W - INK_MARGIN - INK_PRIMARY, INK_GAP_S,
-                 INK_LINE_LIST);
-    ink_ui_icon(bar, "battery", INK_ICON_LIST, INK_ICON_LINE, INK_CANVAS_W - INK_MARGIN - INK_ICON_LIST, INK_GAP_XS,
-                false);
+    int battery_w = ink_ui_text_width(battery, INK_FONT_STATUS, INK_WEIGHT_MEDIUM);
+    ink_ui_line(bar, battery, INK_FONT_STATUS, INK_WEIGHT_MEDIUM,
+                INK_CANVAS_W - INK_MARGIN - INK_ICON_LIST - INK_GAP_S - battery_w, text_y, battery_w);
+    ink_ui_icon(bar, "battery", INK_ICON_LIST, INK_ICON_LINE, INK_CANVAS_W - INK_MARGIN - INK_ICON_LIST,
+                (bar_h - INK_ICON_LIST) / 2, false);
     for (unsigned i = 0; i < sizeof N.status / sizeof *N.status; i++)
         if (!N.status[i]) {
             N.status[i] = bar;
@@ -223,12 +232,12 @@ lv_obj_t *ink_shell_statusbar(lv_obj_t *parent, bool show_time) {
 }
 
 void ink_shell_topbar(lv_obj_t *parent, const char *title) {
-    int y = INK_LINE_BODY + INK_GAP_S;
+    int y = INK_STATUS_BAR + INK_GAP_S;
     lv_obj_t *back =
         ink_ui_circle(parent, "back", INK_MARGIN, y, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_STATIC, NULL, NULL);
     ink_shell_bind(back, "shell.back", NULL);
     ink_ui_label(parent, title, INK_FONT_TITLE, INK_WEIGHT_BOLD, INK_MARGIN + INK_CONTROL + INK_GAP,
-                 y + (INK_CONTROL - INK_LINE_TITLE) / 2, width() - INK_CONTROL - INK_GAP);
+                 y + (INK_CONTROL - ink_ui_line_height(INK_FONT_TITLE)) / 2, width() - INK_CONTROL - INK_GAP);
 }
 
 static bool bookmark(ink_card_t *out) {
@@ -260,14 +269,14 @@ static void tile(lv_obj_t *parent, const char *id, const char *title, const char
     if (N.home_page == 2 && !matches(title, id)) return;
     int cell = width() / 4, d = compact ? INK_CIRCLE : INK_CIRCLE_APP;
     int x = INK_MARGIN + col * cell + (cell - d) / 2;
-    int at = y + row * (d + INK_GAP_S + INK_LINE_NOTE + INK_GAP_L);
+    int at = y + row * (d + INK_GAP_S + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_L);
     lv_obj_t *button =
         ink_ui_circle(parent, icon, x, at, d, compact ? INK_ICON_LIST : INK_ICON_APP, INK_SURFACE_STATIC, NULL, NULL);
     char json[96];
     snprintf(json, sizeof json, "{\"id\":\"%s\"}", id);
     ink_shell_bind(button, "shell.launch", json);
-    lv_obj_t *label = ink_ui_label(parent, title, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN + col * cell,
-                                   at + d + INK_GAP_S, cell);
+    lv_obj_t *label = ink_ui_line(parent, title, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN + col * cell,
+                                  at + d + INK_GAP_S, cell);
     lv_obj_set_style_text_align(label, LV_TEXT_ALIGN_CENTER, 0);
 }
 
@@ -305,6 +314,55 @@ static int tools(tool_t out[24]) {
     return count;
 }
 
+/* Under a page's big heading, on Today and Apps. */
+static int below_heading(void) {
+    return INK_GAP_S + ink_ui_line_height(INK_FONT_HEADING) + INK_GAP_XS;
+}
+static int home_room(void) {
+    return INK_CANVAS_H - INK_STATUS_BAR - INK_DOCK - INK_MARGIN - ink_ui_line_height(INK_FONT_LIST);
+}
+
+typedef struct {
+    char *buf;
+    size_t cap;
+    int n;
+} tile_list_t;
+
+/* Groups and their rows of tiles, page by page; a group's name stays with its first row. Draws the
+ * tiles of the page being shown and lists them for the AI. Returns the pages. */
+static int apps_walk(bool draw, tile_list_t *list) {
+    static const char *const groups[] = {"读和听", "记和联系", "工具"};
+    tool_t items[24];
+    int count = tools(items), top = below_heading() + INK_CONTROL + INK_GAP_L, y = top, page = 0;
+    int name_h = ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_S;
+    int row_h = INK_CIRCLE + INK_GAP_S + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_L;
+    for (int g = 0; g < 3; g++) {
+        int total = g < 2 ? 4 : count;
+        for (int i = 0; i < total; i += 4) {
+            int need = (i ? 0 : name_h) + row_h;
+            if (y + need - INK_GAP_L > home_room()) {
+                page++;
+                y = top;
+            }
+            if (page == N.apps_page) {
+                if (draw && !i)
+                    ink_ui_line(N.content, groups[g], INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y, width());
+                for (int k = i; k < i + 4 && k < total; k++) {
+                    const char *id = g < 2 ? GROUP_IDS[g][k] : items[k].id,
+                               *title = g < 2 ? GROUP_TITLES[g][k] : items[k].title;
+                    if (draw)
+                        tile(N.content, id, title, g < 2 ? GROUP_ICONS[g][k] : items[k].icon, k % 4, 0,
+                             y + (i ? 0 : name_h), true);
+                    if (list && matches(title, id) && list->n >= 0 && (size_t) list->n < list->cap)
+                        list->n += snprintf(list->buf + list->n, list->cap - (size_t) list->n, "%s（%s）；", title, id);
+                }
+            }
+            y += need;
+        }
+    }
+    return page + 1;
+}
+
 static void search_entered(void *ctx, const char *value) {
     if (!current_session((uint32_t) (uintptr_t) ctx)) return;
     ink_args_t *args = osal_malloc(sizeof *args, OSAL_MEM_EXTERNAL);
@@ -336,19 +394,21 @@ static void draw_home_content(void) {
         N.date = ink_ui_label(N.content, date, INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_MARGIN, INK_BLOCK, width());
         lv_obj_set_style_text_align(N.date, LV_TEXT_ALIGN_CENTER, 0);
         N.clock = ink_ui_label(N.content, clock, INK_FONT_CLOCK, INK_WEIGHT_REGULAR, INK_MARGIN,
-                               INK_BLOCK + INK_LINE_LIST, width());
+                               INK_BLOCK + ink_ui_line_height(INK_FONT_LIST), width());
         lv_obj_set_style_text_align(N.clock, LV_TEXT_ALIGN_CENTER, 0);
         char text[160];
         snprintf(text, sizeof text, "%s", has_book ? card.text : "还没有读到一半的书");
-        int y = INK_BLOCK + INK_LINE_LIST + INK_LINE_CLOCK + INK_GAP_M;
+        int y = INK_BLOCK + ink_ui_line_height(INK_FONT_LIST) + ink_ui_line_height(INK_FONT_CLOCK) + INK_GAP_M;
         lv_obj_t *resume = ink_ui_box(N.content, INK_MARGIN + INK_GAP_L, y, width() - 2 * INK_GAP_L, INK_CONTROL, -1,
                                       INK_SURFACE_STATIC, false);
         ink_ui_icon(resume, "book", INK_ICON_MEDIUM, INK_ICON_LINE, INK_GAP_L, INK_GAP_L, false);
-        ink_ui_label(resume, text, INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_GAP_L + INK_ICON_MEDIUM + INK_GAP_M,
-                     (INK_CONTROL - INK_LINE_LIST) / 2, width() - 2 * INK_PRIMARY);
+        ink_ui_line(resume, text, INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_GAP_L + INK_ICON_MEDIUM + INK_GAP_M,
+                    (INK_CONTROL - ink_ui_line_height(INK_FONT_LIST)) / 2,
+                    width() - 3 * INK_GAP_L - INK_ICON_MEDIUM - 2 * INK_GAP_M);
         ink_shell_bind(resume, "shell.resume", NULL);
-        int bottom = INK_CANVAS_H - INK_LINE_BODY - INK_DOCK - INK_MARGIN - INK_LINE_LIST - INK_GAP_S;
-        int grid = bottom - 2 * (INK_CIRCLE_APP + INK_GAP_S + INK_LINE_NOTE) - INK_GAP_L;
+        int bottom =
+            INK_CANVAS_H - INK_STATUS_BAR - INK_DOCK - INK_MARGIN - ink_ui_line_height(INK_FONT_LIST) - INK_GAP_S;
+        int grid = bottom - 2 * (INK_CIRCLE_APP + INK_GAP_S + ink_ui_line_height(INK_FONT_NOTE)) - INK_GAP_L;
         for (int i = 0; i < 8; i++)
             if (!(child() && i == 7))
                 tile(N.content, APP_IDS[i], APP_TITLES[i], APP_ICONS[i], i % 4, i / 4, grid, false);
@@ -358,24 +418,29 @@ static void draw_home_content(void) {
         char short_date[96];
         snprintf(short_date, sizeof short_date, "%.*s", (int) (separator ? separator - date : (ptrdiff_t) strlen(date)),
                  date);
-        lv_obj_t *today_date = ink_ui_label(N.content, short_date, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_CANVAS_W / 2,
-                                            page_top + INK_LINE_HEADING - INK_LINE_NOTE, INK_CANVAS_W / 2 - INK_MARGIN);
+        lv_obj_t *today_date =
+            ink_ui_label(N.content, short_date, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_CANVAS_W / 2,
+                         page_top + ink_ui_line_height(INK_FONT_HEADING) - ink_ui_line_height(INK_FONT_NOTE),
+                         INK_CANVAS_W / 2 - INK_MARGIN);
         lv_obj_set_style_text_align(today_date, LV_TEXT_ALIGN_RIGHT, 0);
-        lv_obj_t *c = ink_ui_card(N.content, INK_MARGIN, page_top + INK_PRIMARY, width(),
-                                  2 * INK_ROW_DOUBLE + INK_GAP_S, INK_SURFACE_BLACK);
-        ink_ui_label(c, "继续读", INK_FONT_NOTE, INK_WEIGHT_MEDIUM, INK_MARGIN, INK_MARGIN, width() - 2 * INK_MARGIN);
-        ink_ui_label(c, has_book ? card.text : "还没有开始读书", INK_FONT_TITLE, INK_WEIGHT_BOLD, INK_MARGIN,
-                     INK_MARGIN + INK_LINE_NOTE + INK_GAP_S, width() - 2 * INK_MARGIN);
+        int first = below_heading() + INK_GAP_XS, h = (home_room() - first - 2 * INK_GAP) / 3;
+        lv_obj_t *c = ink_ui_card(N.content, INK_MARGIN, first, width(), h, INK_SURFACE_BLACK);
+        ink_ui_line(c, "继续读", INK_FONT_NOTE, INK_WEIGHT_MEDIUM, INK_MARGIN, INK_GAP_L, width() - 2 * INK_MARGIN);
+        lv_obj_t *reading =
+            ink_ui_label(c, has_book ? card.text : "还没有开始读书", INK_FONT_TITLE, INK_WEIGHT_BOLD, INK_MARGIN,
+                         INK_GAP_L + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_S, width() - 2 * INK_MARGIN);
+        lv_label_set_long_mode(reading, LV_LABEL_LONG_DOT);
+        lv_obj_set_height(reading, ink_ui_px(2 * ink_ui_line_height(INK_FONT_TITLE)));
         ink_shell_bind(c, "shell.resume", NULL);
         const char *const empty[] = {"还没有在听的内容", "今天的还没到", "还没有记下的词", "还没有接下来的事"};
         const char *const titles[] = {"继续听", "今日报纸", "单词", "接下来"};
         for (int i = 0; i < 4; i++) {
-            int w = (width() - INK_GAP) / 2, h = 2 * INK_ROW_DOUBLE + INK_GAP_S;
-            int y = page_top + INK_PRIMARY + h + INK_GAP + (i / 2) * (h + INK_GAP);
+            int w = (width() - INK_GAP) / 2;
+            int y = first + h + INK_GAP + (i / 2) * (h + INK_GAP);
             lv_obj_t *small = ink_ui_card(N.content, INK_MARGIN + (i % 2) * (w + INK_GAP), y, w, h, INK_SURFACE_WHITE);
             ink_ui_icon(small, APP_ICONS[i], INK_ICON_MEDIUM, INK_ICON_LINE, INK_GAP_L, INK_GAP_L, false);
-            ink_ui_label(small, titles[i], INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_GAP_L + INK_ICON_MEDIUM + INK_GAP_S,
-                         INK_GAP_L, w - INK_PRIMARY);
+            ink_ui_line(small, titles[i], INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_GAP_L + INK_ICON_MEDIUM + INK_GAP_S,
+                        INK_GAP_L, w - 2 * INK_GAP_L - INK_ICON_MEDIUM - INK_GAP_S);
             const char *text = empty[i];
             char next[96];
             if (i == 3) {
@@ -386,8 +451,10 @@ static void draw_home_content(void) {
                     text = next;
                 }
             }
-            ink_ui_label(small, text, INK_FONT_LIST, INK_WEIGHT_BOLD, INK_GAP_L, INK_GAP_L + INK_LINE_NOTE + INK_GAP_M,
-                         w - 2 * INK_GAP_L);
+            lv_obj_t *what = ink_ui_label(small, text, INK_FONT_LIST, INK_WEIGHT_BOLD, INK_GAP_L,
+                                          INK_GAP_L + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_M, w - 2 * INK_GAP_L);
+            lv_label_set_long_mode(what, LV_LABEL_LONG_DOT);
+            lv_obj_set_height(what, ink_ui_px(2 * ink_ui_line_height(INK_FONT_LIST)));
             char json[64];
             snprintf(json, sizeof json, "{\"id\":\"%s\"}", APP_IDS[i]);
             ink_shell_bind(small, "shell.launch", json);
@@ -397,28 +464,23 @@ static void draw_home_content(void) {
         ink_text_cfg_t cfg = {
             .type = INK_TEXT_PLAIN, .enter = INK_ENTER_SEARCH, .max = 64, .hint = "查找应用", .initial = N.search};
         lv_obj_t *search = ink_textfield_create(N.content, &cfg, search_entered, (void *) (uintptr_t) N.epoch, false);
-        lv_obj_set_pos(search, ink_ui_px(INK_MARGIN), ink_ui_px(INK_PRIMARY));
+        lv_obj_set_pos(search, ink_ui_px(INK_MARGIN), ink_ui_px(below_heading()));
         lv_obj_set_size(search, ink_ui_px(width()), ink_ui_px(INK_CONTROL));
-        static const char *const groups[] = {"读和听", "记和联系", "工具"};
-        int y = INK_PRIMARY + INK_CONTROL + INK_GAP_L;
-        for (int g = 0; g < 3; g++) {
-            ink_ui_label(N.content, groups[g], INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y, width());
-            if (g < 2) {
-                for (int i = 0; i < 4; i++)
-                    tile(N.content, GROUP_IDS[g][i], GROUP_TITLES[g][i], GROUP_ICONS[g][i], i, 0,
-                         y + INK_LINE_NOTE + INK_GAP_S, true);
-            } else {
-                tool_t items[24];
-                int count = tools(items);
-                N.apps_pages = (count + 7) / 8;
-                for (int i = N.apps_page * 8; i < count && i < (N.apps_page + 1) * 8; i++)
-                    tile(N.content, items[i].id, items[i].title, items[i].icon, (i % 8) % 4, (i % 8) / 4,
-                         y + INK_LINE_NOTE + INK_GAP_S, true);
-            }
-            y += INK_LINE_NOTE + INK_GAP_S + INK_CIRCLE + INK_GAP_S + INK_LINE_NOTE + INK_GAP_L;
+        N.apps_pages = apps_walk(false, NULL);
+        if (N.apps_page >= N.apps_pages) N.apps_page = N.apps_pages - 1;
+        apps_walk(true, NULL);
+        if (N.apps_pages > 1) {
+            char at[32];
+            snprintf(at, sizeof at, "%d / %d", N.apps_page + 1, N.apps_pages);
+            lv_obj_t *pages =
+                ink_ui_line(N.content, at, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_CANVAS_W / 2,
+                            page_top + ink_ui_line_height(INK_FONT_HEADING) - ink_ui_line_height(INK_FONT_NOTE),
+                            INK_CANVAS_W / 2 - INK_MARGIN);
+            lv_obj_set_style_text_align(pages, LV_TEXT_ALIGN_RIGHT, 0);
         }
     }
-    N.message = ink_ui_notice(N.content, N.result, INK_LINE_BODY + INK_BLOCK_L + 2 * INK_LINE_CLOCK);
+    N.message =
+        ink_ui_notice(N.content, N.result, INK_STATUS_BAR + INK_BLOCK_L + 2 * ink_ui_line_height(INK_FONT_CLOCK));
     ink_ui_hint_obj(N.content, INK_REFRESH_TEXT);
     draw_dots();
 }
@@ -441,9 +503,10 @@ void ink_shell_home_create(lv_obj_t *screen) {
     N.home_page = N.initialized ? N.home_page : 1;
     N.initialized = true;
     ink_shell_statusbar(screen, N.home_page != 1);
-    int h = INK_CANVAS_H - INK_LINE_BODY - INK_DOCK - INK_MARGIN - INK_LINE_LIST;
-    N.content = ink_ui_box(screen, 0, INK_LINE_BODY, INK_CANVAS_W, h, 0, INK_SURFACE_WHITE, false);
-    N.dots = ink_ui_box(screen, 0, INK_LINE_BODY + h, INK_CANVAS_W, INK_LINE_LIST, 0, INK_SURFACE_WHITE, false);
+    int h = home_room();
+    N.content = ink_ui_box(screen, 0, INK_STATUS_BAR, INK_CANVAS_W, h, 0, INK_SURFACE_WHITE, false);
+    N.dots = ink_ui_box(screen, 0, INK_STATUS_BAR + h, INK_CANVAS_W, ink_ui_line_height(INK_FONT_LIST), 0,
+                        INK_SURFACE_WHITE, false);
     ink_shell_dock(screen);
     draw_home_content();
 }
@@ -460,8 +523,8 @@ lv_obj_t *ink_shell_dock(lv_obj_t *parent) {
     int cell = dock_width * INK_CANVAS_W / ink_ui_px(INK_CANVAS_W) / 5;
     for (int i = 0; i < 5; i++) {
         lv_obj_t *b =
-            ink_ui_circle(dock, icons[i], i * cell + (cell - INK_PRIMARY) / 2, (INK_DOCK - INK_PRIMARY) / 2,
-                          INK_PRIMARY, INK_ICON_APP, i == 2 ? INK_SURFACE_BLACK : INK_SURFACE_STATIC, NULL, NULL);
+            ink_ui_circle(dock, icons[i], i * cell + (cell - INK_SEGMENT) / 2, (INK_DOCK - INK_SEGMENT) / 2,
+                          INK_SEGMENT, INK_ICON_APP, i == 2 ? INK_SURFACE_BLACK : INK_SURFACE_STATIC, NULL, NULL);
         char json[64];
         snprintf(json, sizeof json, "{\"id\":\"%s\"}", ids[i]);
         ink_shell_bind(b, "shell.launch", json);
@@ -513,17 +576,11 @@ int ink_shell_home_snapshot(char *buf, size_t cap) {
     ink_card_t card;
     bool has = bookmark(&card);
     if (N.home_page == 2) {
-        tool_t items[24];
-        int count = tools(items);
         int n = snprintf(buf, cap, "Apps；当前=%s；查找=%s；工具页=%d/%d；", ink_member_current()->name, N.search,
                          N.apps_page + 1, N.apps_pages);
-        for (int g = 0; g < 2; g++)
-            for (int i = 0; i < 4 && n >= 0 && (size_t) n < cap; i++)
-                if (matches(GROUP_TITLES[g][i], GROUP_IDS[g][i]))
-                    n += snprintf(buf + n, cap - (size_t) n, "%s（%s）；", GROUP_TITLES[g][i], GROUP_IDS[g][i]);
-        for (int i = N.apps_page * 8; i < count && i < (N.apps_page + 1) * 8 && n >= 0 && (size_t) n < cap; i++)
-            if (matches(items[i].title, items[i].id))
-                n += snprintf(buf + n, cap - (size_t) n, "%s（%s）；", items[i].title, items[i].id);
+        tile_list_t list = {buf, cap, n};
+        apps_walk(false, &list);
+        n = list.n;
         if (n >= 0 && (size_t) n < cap)
             n += snprintf(buf + n, cap - (size_t) n,
                           "动作：shell.launch、shell.search、home.next、home.prev、shell.control。");
@@ -604,20 +661,20 @@ static int notifications(lv_obj_t *parent, int y, int limit) {
     while (count < limit && ink_notify_next(&cursor, &n) == 1) {
         if (skipped++ < (parent == N.page_body ? N.notify_page * limit : 0)) continue;
         visible[count] = n;
-        lv_obj_t *card = ink_ui_card(parent, INK_MARGIN, y, width(), INK_ROW_DOUBLE, INK_SURFACE_WHITE);
-        ink_ui_circle(card, !strcmp(n.channel, "message") ? "message" : "bell", INK_GAP, INK_GAP_M, INK_CIRCLE,
-                      INK_ICON_LIST, INK_SURFACE_STATIC, NULL, NULL);
-        ink_ui_label(card, n.title, INK_FONT_LIST, INK_WEIGHT_BOLD, INK_ROW_DOUBLE, INK_GAP,
-                     width() - INK_ROW_DOUBLE - INK_MARGIN);
-        lv_obj_t *body = ink_ui_label(card, n.body, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_ROW_DOUBLE,
-                                      INK_GAP + INK_LINE_LIST, width() - INK_ROW_DOUBLE - INK_MARGIN);
-        lv_label_set_long_mode(body, LV_LABEL_LONG_DOT);
-        lv_obj_set_height(body, ink_ui_px(INK_LINE_NOTE));
+        int h = ink_ui_row_double(),
+            text_y = (h - ink_ui_line_height(INK_FONT_LIST) - ink_ui_line_height(INK_FONT_NOTE)) / 2;
+        lv_obj_t *card = ink_ui_card(parent, INK_MARGIN, y, width(), h, INK_SURFACE_WHITE);
+        ink_ui_circle(card, !strcmp(n.channel, "message") ? "message" : "bell", INK_GAP, (h - INK_CIRCLE) / 2,
+                      INK_CIRCLE, INK_ICON_LIST, INK_SURFACE_STATIC, NULL, NULL);
+        ink_ui_line(card, n.title, INK_FONT_LIST, INK_WEIGHT_BOLD, INK_ROW_DOUBLE, text_y,
+                    width() - INK_ROW_DOUBLE - INK_MARGIN);
+        ink_ui_line(card, n.body, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_ROW_DOUBLE,
+                    text_y + ink_ui_line_height(INK_FONT_LIST), width() - INK_ROW_DOUBLE - INK_MARGIN);
         char args[64];
         snprintf(args, sizeof args, "{\"id\":%u}", (unsigned) n.id);
         ink_shell_bind(card, "notify.read", args);
         count++;
-        y += INK_ROW_DOUBLE + INK_GAP_M;
+        y += ink_ui_row_double() + INK_GAP_M;
     }
     if (parent == N.page_body) N.notify_more = ink_notify_next(&cursor, &n) == 1;
     if (!count && parent == N.page_body && N.notify_page) {
@@ -635,20 +692,23 @@ static int notifications(lv_obj_t *parent, int y, int limit) {
 static void draw_control(void) {
     lv_obj_clean(N.control);
     ink_shell_statusbar(N.control, true);
-    int y = INK_LINE_BODY + INK_GAP_S;
-    lv_obj_t *avatar =
-        ink_ui_circle(N.control, "person", INK_MARGIN, y, INK_CIRCLE, INK_ICON_LIST, INK_SURFACE_BLACK, NULL, NULL);
+    int y = INK_STATUS_BAR + INK_GAP_S;
+    int names = ink_ui_line_height(INK_FONT_LIST) + ink_ui_line_height(INK_FONT_NOTE);
+    int head = names > INK_CIRCLE ? names : INK_CIRCLE;
+    lv_obj_t *avatar = ink_ui_circle(N.control, "person", INK_MARGIN, y + (head - INK_CIRCLE) / 2, INK_CIRCLE,
+                                     INK_ICON_LIST, INK_SURFACE_BLACK, NULL, NULL);
     ink_shell_bind(avatar, "shell.members", NULL);
-    ink_ui_label(N.control, ink_member_current()->name, INK_FONT_LIST, INK_WEIGHT_BOLD,
-                 INK_MARGIN + INK_CIRCLE + INK_GAP, y, width() - 2 * INK_CIRCLE);
-    ink_ui_label(N.control, "换人", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN + INK_CIRCLE + INK_GAP,
-                 y + INK_LINE_LIST, width() - 2 * INK_CIRCLE);
+    ink_ui_line(N.control, ink_member_current()->name, INK_FONT_LIST, INK_WEIGHT_BOLD,
+                INK_MARGIN + INK_CIRCLE + INK_GAP, y + (head - names) / 2, width() - 2 * INK_CIRCLE - 2 * INK_GAP);
+    ink_ui_line(N.control, "换人", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN + INK_CIRCLE + INK_GAP,
+                y + (head - names) / 2 + ink_ui_line_height(INK_FONT_LIST), width() - 2 * INK_CIRCLE - 2 * INK_GAP);
     if (!child()) {
-        lv_obj_t *s = ink_ui_circle(N.control, "gear", INK_CANVAS_W - INK_MARGIN - INK_CIRCLE, y, INK_CIRCLE,
-                                    INK_ICON_LIST, INK_SURFACE_WHITE, NULL, NULL);
+        lv_obj_t *s =
+            ink_ui_circle(N.control, "gear", INK_CANVAS_W - INK_MARGIN - INK_CIRCLE, y + (head - INK_CIRCLE) / 2,
+                          INK_CIRCLE, INK_ICON_LIST, INK_SURFACE_WHITE, NULL, NULL);
         ink_shell_bind(s, "shell.settings", NULL);
     }
-    y += INK_CIRCLE + INK_GAP_L;
+    y += head + INK_GAP_L;
     ink_ui_slider(N.control, "亮度", (int) ink_setting_get("display.light") / 10, INK_MARGIN, y, width(),
                   slider_changed, (void *) "display.light");
     y += INK_SLIDER + INK_GAP_M;
@@ -686,10 +746,10 @@ static void draw_control(void) {
         ink_shell_bind(net, "shell.network", NULL);
         y += INK_CONTROL + INK_GAP_L;
     }
-    notifications(N.control, y, 2);
-    lv_obj_t *close =
-        ink_ui_pill(N.control, "收起", (INK_CANVAS_W - INK_CIRCLE_LARGE) / 2, INK_CANVAS_H - INK_CONTROL - INK_MARGIN,
-                    INK_CIRCLE_LARGE, INK_CONTROL, false, NULL, NULL);
+    int close_y = INK_CANVAS_H - INK_CONTROL - INK_MARGIN, fits = (close_y - y) / (ink_ui_row_double() + INK_GAP_M);
+    if (fits > 0) notifications(N.control, y, fits < 2 ? fits : 2);
+    lv_obj_t *close = ink_ui_pill(N.control, "收起", (INK_CANVAS_W - INK_CIRCLE_LARGE) / 2, close_y, INK_CIRCLE_LARGE,
+                                  INK_CONTROL, false, NULL, NULL);
     ink_shell_bind(close, "shell.close", NULL);
     ink_ui_hint_obj(N.control, INK_REFRESH_FLASH_UI);
 }
@@ -750,229 +810,329 @@ static void wifi_picked(lv_event_t *e) {
 /* Settings' first row: who is using the device, and the way to the family. */
 static void draw_who(int y) {
     const ink_member_t *me = ink_member_current();
-    lv_obj_t *who = ink_ui_pill(N.page_body, "", INK_MARGIN, y, width(), INK_ROW_DOUBLE, true, NULL, NULL);
+    int h = ink_ui_row_double();
+    lv_obj_t *who = ink_ui_pill(N.page_body, "", INK_MARGIN, y, width(), h, true, NULL, NULL);
     ink_shell_bind(who, "shell.members", NULL);
     char first[8] = {0}, family[32];
     size_t len = 1;
     while (len < sizeof first - 1 && (me->name[len] & 0xc0) == 0x80) len++;
     memcpy(first, me->name, len);
     lv_obj_t *avatar =
-        ink_ui_pill(who, first, INK_GAP, (INK_ROW_DOUBLE - INK_CIRCLE) / 2, INK_CIRCLE, INK_CIRCLE, false, NULL, NULL);
+        ink_ui_pill(who, first, INK_GAP_L, (h - INK_CIRCLE) / 2, INK_CIRCLE, INK_CIRCLE, false, NULL, NULL);
     lv_obj_remove_flag(avatar, LV_OBJ_FLAG_CLICKABLE);
-    int people = 0, x = INK_CIRCLE + 2 * INK_GAP;
+    int people = 0, x = INK_GAP_L + INK_CIRCLE + INK_GAP;
     while (ink_member_at(people)) people++;
     snprintf(family, sizeof family, "家里 %d 个人", people);
-    lv_obj_t *l = ink_ui_label(who, me->name, INK_FONT_LIST, INK_WEIGHT_BOLD, x,
-                               (INK_ROW_DOUBLE - INK_LINE_LIST - INK_LINE_NOTE) / 2, width() - x - INK_READING_MARGIN);
+    int text_y = (h - ink_ui_line_height(INK_FONT_LIST) - ink_ui_line_height(INK_FONT_NOTE)) / 2;
+    lv_obj_t *l =
+        ink_ui_line(who, me->name, INK_FONT_LIST, INK_WEIGHT_BOLD, x, text_y, width() - x - INK_READING_MARGIN);
     lv_obj_set_style_text_color(l, lv_color_white(), 0);
-    l = ink_ui_label(who, family, INK_FONT_NOTE, INK_WEIGHT_REGULAR, x,
-                     (INK_ROW_DOUBLE - INK_LINE_LIST - INK_LINE_NOTE) / 2 + INK_LINE_LIST,
-                     width() - x - INK_READING_MARGIN);
+    l = ink_ui_line(who, family, INK_FONT_NOTE, INK_WEIGHT_REGULAR, x, text_y + ink_ui_line_height(INK_FONT_LIST),
+                    width() - x - INK_READING_MARGIN);
     lv_obj_set_style_text_color(l, lv_color_white(), 0);
-    ink_ui_icon(who, "next", INK_ICON_SMALL, INK_ICON_LINE, width() - INK_READING_MARGIN,
-                (INK_ROW_DOUBLE - INK_ICON_SMALL) / 2, true);
+    ink_ui_icon(who, "next", INK_ICON_SMALL, INK_ICON_LINE, width() - INK_READING_MARGIN, (h - INK_ICON_SMALL) / 2,
+                true);
+}
+
+/* Pages do not scroll (spec section 1): a block that does not fit goes to the next page. */
+static struct {
+    int y, page, room;
+    bool draw;
+} F;
+static bool block(int h) {
+    if (F.y && F.y + h > F.room) {
+        F.page++;
+        F.y = 0;
+    }
+    return F.draw && F.page == N.body_page;
+}
+static lv_obj_t *group(int rows) {
+    return ink_ui_card(N.page_body, INK_MARGIN, F.y, width(), rows * INK_CONTROL, INK_SURFACE_STATIC);
+}
+static int heading_h(void) {
+    return ink_ui_line_height(INK_FONT_LIST) + INK_GAP_M;
+}
+static void heading(const char *text) {
+    ink_ui_line(N.page_body, text, INK_FONT_LIST, INK_WEIGHT_BOLD, INK_MARGIN, F.y, width());
+}
+static int notice_h(const char *text) {
+    return ink_ui_text_height(text, INK_FONT_NOTE, INK_WEIGHT_REGULAR, width());
+}
+static void bind_choices(lv_obj_t *row, int count, const char *id) {
+    for (int i = 0; i < count; i++) {
+        char args[96];
+        snprintf(args, sizeof args, "{\"id\":\"%s\",\"value\":%d}", id, i);
+        ink_shell_bind(lv_obj_get_child(row, i), "settings.set", args);
+    }
+}
+
+static void body_blocks(void) {
+    if (N.page_id == PAGE_SETTINGS) {
+        if (block(ink_ui_row_double())) draw_who(F.y);
+        F.y += ink_ui_row_double() + INK_GAP;
+        if (block(2 * INK_CONTROL)) {
+            char ssid[64];
+            state_text("wifi.ssid", ssid, sizeof ssid);
+            lv_obj_t *g = group(2);
+            group_row(g, "wifi", "网络和 SIM 卡", ssid[0] ? ssid : "还没有连接", 0, "shell.network");
+            group_row(g, "bluetooth", "蓝牙", integer("bt.connected") ? "已连接" : "没有连接", 1, NULL);
+        }
+        F.y += 2 * INK_CONTROL + INK_GAP;
+        if (block(3 * INK_CONTROL)) {
+            char light[32], volume[32];
+            snprintf(light, sizeof light, "亮度 %lld", (long long) ink_setting_get("display.light") / 10);
+            snprintf(volume, sizeof volume, "音量 %lld", (long long) ink_setting_get("audio.volume") / 10);
+            lv_obj_t *g = group(3);
+            group_row(g, "sun", "显示和亮度", light, 0, "shell.display");
+            group_row(g, "volume", "声音", volume, 1, "shell.sound");
+            int wake = (int) ink_setting_get("voice.handsfree");
+            group_row(g, "wave", "语音和 AI",
+                      wake == 2   ? "叫名字已关闭"
+                      : wake == 1 ? "一直能叫名字"
+                                  : "使用时能叫名字",
+                      2, NULL);
+        }
+        F.y += 3 * INK_CONTROL + INK_GAP;
+        if (block(3 * INK_CONTROL)) {
+            lv_obj_t *g = group(3);
+            group_row(g, "lock", "锁屏和壁纸", ink_setting_get("display.lock_style") ? "时钟和待办" : "这一页", 0,
+                      "shell.display");
+            group_row(g, "storage", "存储和备份", "还没有备份", 1, NULL);
+            group_row(g, "info", "关于和更新", "", 2, NULL);
+        }
+    } else if (N.page_id == PAGE_DISPLAY) {
+        if (block(INK_SLIDER))
+            ink_ui_slider(N.page_body, "亮度", (int) ink_setting_get("display.light") / 10, INK_MARGIN, F.y, width(),
+                          slider_changed, (void *) "display.light");
+        F.y += INK_SLIDER + INK_GAP_M;
+        if (block(INK_SLIDER))
+            ink_ui_slider(N.page_body, "暖光", (int) ink_setting_get("display.warmth") / 10, INK_MARGIN, F.y, width(),
+                          slider_changed, (void *) "display.warmth");
+        F.y += INK_SLIDER + INK_GAP_L;
+        const char *const sample_text = "天黑以后，阿木背起邮包。";
+        int sample_h = 2 * INK_GAP_L +
+                       ink_ui_text_height(sample_text, INK_FONT_BODY, INK_WEIGHT_REGULAR, width() - 2 * INK_MARGIN);
+        int h = heading_h() + INK_SEGMENT + INK_GAP + sample_h;
+        if (block(h)) {
+            heading("字号");
+            const char *const labels[] = {"小", "中", "大", "特大"};
+            lv_obj_t *seg = ink_ui_segments(N.page_body, labels, 4, (int) ink_setting_get("display.font_size"),
+                                            INK_MARGIN, F.y + heading_h(), width(), NULL, NULL);
+            bind_choices(seg, 4, "display.font_size");
+            lv_obj_t *sample = ink_ui_card(N.page_body, INK_MARGIN, F.y + heading_h() + INK_SEGMENT + INK_GAP, width(),
+                                           sample_h, INK_SURFACE_STATIC);
+            ink_ui_label(sample, sample_text, INK_FONT_BODY, INK_WEIGHT_REGULAR, INK_MARGIN, INK_GAP_L,
+                         width() - 2 * INK_MARGIN);
+        }
+        F.y += h + INK_GAP_L;
+        if (block(INK_CONTROL)) {
+            lv_obj_t *refresh =
+                ink_ui_pill(N.page_body, "刷新屏幕", INK_MARGIN, F.y, width(), INK_CONTROL, false, NULL, NULL);
+            ink_shell_bind(refresh, "system.full_refresh", NULL);
+        }
+        F.y += INK_CONTROL + INK_GAP;
+        if (block(INK_CONTROL)) {
+            static const int seconds[] = {60, 300, 600, 1800, 3600};
+            int64_t current = ink_setting_get("power.lock_after_s");
+            int next = seconds[0];
+            for (unsigned i = 0; i < sizeof seconds / sizeof *seconds; i++)
+                if (seconds[i] > current) {
+                    next = seconds[i];
+                    break;
+                }
+            char label[64], args[96];
+            snprintf(label, sizeof label, "自动锁屏 %lld 分钟", (long long) current / 60);
+            snprintf(args, sizeof args, "{\"id\":\"power.lock_after_s\",\"value\":%d}", next);
+            lv_obj_t *lock = ink_ui_pill(N.page_body, label, INK_MARGIN, F.y, width(), INK_CONTROL, false, NULL, NULL);
+            ink_shell_bind(lock, "settings.set", args);
+        }
+        F.y += INK_CONTROL;
+    } else if (N.page_id == PAGE_SOUND) {
+        const char *const about = "听书、AI 和提示音用这个音量";
+        int h = INK_SLIDER + INK_GAP_S + notice_h(about);
+        if (block(h)) {
+            ink_ui_slider(N.page_body, "音量", (int) ink_setting_get("audio.volume") / 10, INK_MARGIN, F.y, width(),
+                          slider_changed, (void *) "audio.volume");
+            ink_ui_notice(N.page_body, about, F.y + INK_SLIDER + INK_GAP_S);
+        }
+        F.y += h + INK_GAP_L;
+        h = heading_h() + 2 * INK_CONTROL;
+        if (block(h)) {
+            heading("声音从哪里出来");
+            F.y += heading_h();
+            char route[32];
+            state_text("audio.route", route, sizeof route);
+            lv_obj_t *g = group(2);
+            group_row(g, "volume", "喇叭", !strcmp(route, "speaker") ? "当前" : "", 0, "bt.disconnect");
+            group_row(g, "headphones", "蓝牙耳机", !strcmp(route, "bt_headset") ? "当前" : "没有连接", 1, NULL);
+            F.y -= heading_h();
+        }
+        F.y += h + INK_GAP_L;
+        if (block(INK_CONTROL)) {
+            lv_obj_t *toggle =
+                ink_ui_toggle(N.page_body, "勿扰", ink_setting_get("notify.dnd"), INK_MARGIN, F.y, width(), NULL, NULL);
+            bind_toggle(toggle, "notify.dnd");
+        }
+        F.y += INK_CONTROL + INK_GAP_L;
+        if (block(h)) {
+            heading("提示");
+            F.y += heading_h();
+            lv_obj_t *g = group(2);
+            group_row(g, "bell", "按键提示音", "暂无选项", 0, NULL);
+            group_row(g, "wave", "振动", "暂无选项", 1, NULL);
+            F.y -= heading_h();
+        }
+        F.y += h + INK_GAP_L;
+        if (block(h)) {
+            heading("铃声");
+            F.y += heading_h();
+            lv_obj_t *g = group(2);
+            group_row(g, "phone", "来电", "系统提示音", 0, NULL);
+            group_row(g, "clock", "闹钟", "系统提示音", 1, NULL);
+            F.y -= heading_h();
+        }
+        F.y += h;
+    } else if (N.page_id == PAGE_NETWORK) {
+        const char *const about = "自动：有 Wi-Fi 用 Wi-Fi，没有就用 4G";
+        int h = heading_h() + INK_SEGMENT + INK_GAP_M + notice_h(about);
+        if (block(h)) {
+            heading("上网方式");
+            const char *const labels[] = {"自动", "Wi-Fi", "4G"};
+            lv_obj_t *seg = ink_ui_segments(N.page_body, labels, 3, (int) ink_setting_get("net.prefer"), INK_MARGIN,
+                                            F.y + heading_h(), width(), NULL, NULL);
+            bind_choices(seg, 3, "net.prefer");
+            ink_ui_notice(N.page_body, about, F.y + heading_h() + INK_SEGMENT + INK_GAP_M);
+        }
+        F.y += h + INK_GAP_L;
+        char ssid[64];
+        state_text("wifi.ssid", ssid, sizeof ssid);
+        const char *const connected = ssid[0] ? ssid : "还没有连接 Wi-Fi";
+        h = heading_h() + notice_h(connected);
+        if (block(h)) {
+            heading("Wi-Fi");
+            ink_ui_notice(N.page_body, connected, F.y + heading_h());
+        }
+        F.y += h + INK_GAP_L;
+        if (N.picked_ssid[0]) {
+            if (block(INK_CONTROL)) {
+                ink_text_cfg_t cfg = {.type = INK_TEXT_PASSWORD,
+                                      .enter = INK_ENTER_DONE,
+                                      .max = 64,
+                                      .hint = "输入网络密码",
+                                      .ai_hidden = true};
+                lv_obj_t *password_field =
+                    ink_textfield_create(N.page_body, &cfg, wifi_password, (void *) (uintptr_t) N.epoch, true);
+                lv_obj_set_pos(password_field, ink_ui_px(INK_MARGIN), ink_ui_px(F.y));
+            }
+            return;
+        }
+        if (block(INK_CONTROL)) {
+            lv_obj_t *scan = ink_ui_pill(N.page_body, N.scan_busy ? "正在找附近的 Wi-Fi" : "找附近的 Wi-Fi", INK_MARGIN,
+                                         F.y, width(), INK_CONTROL, N.scan_busy, NULL, NULL);
+            ink_shell_bind(scan, "wifi.scan", NULL);
+        }
+        F.y += INK_CONTROL + INK_GAP_M;
+        for (int i = N.wifi_page * 2; i < N.wifi_count && i < (N.wifi_page + 1) * 2; i++) {
+            if (block(INK_CONTROL))
+                ink_ui_pill(N.page_body, N.wifi_ssid[i], INK_MARGIN, F.y, width(), INK_CONTROL, false, wifi_picked,
+                            (void *) (intptr_t) i);
+            F.y += INK_CONTROL + INK_GAP_S;
+        }
+        if (N.wifi_count > 2) {
+            if (block(INK_CONTROL)) {
+                lv_obj_t *prev = ink_ui_pill(N.page_body, "上一组", INK_MARGIN, F.y, (width() - INK_GAP) / 2,
+                                             INK_CONTROL, false, NULL, NULL);
+                if (N.wifi_page) ink_shell_bind(prev, "shell.wifi_prev", NULL);
+                lv_obj_t *next = ink_ui_pill(N.page_body, "下一组", INK_MARGIN + (width() + INK_GAP) / 2, F.y,
+                                             (width() - INK_GAP) / 2, INK_CONTROL, false, NULL, NULL);
+                if ((N.wifi_page + 1) * 2 < N.wifi_count) ink_shell_bind(next, "shell.wifi_next", NULL);
+            }
+            F.y += INK_CONTROL + INK_GAP_M;
+        }
+        if (!N.wifi_count) {
+            const char *const none = "还没有附近的网络列表";
+            if (block(notice_h(none))) ink_ui_notice(N.page_body, none, F.y);
+            F.y += notice_h(none) + INK_GAP_L;
+        }
+        const char *const sim_state = integer("cell.registered") ? "4G 在线，切卡不用重启" : "4G 还没有连上";
+        h = heading_h() + INK_SEGMENT + INK_GAP_L + notice_h(sim_state);
+        if (block(h)) {
+            heading("SIM 卡");
+            const char *const slots[] = {"外置卡", "内置卡"};
+            lv_obj_t *sim = ink_ui_segments(N.page_body, slots, 2, (int) ink_setting_get("cell.sim_slot"), INK_MARGIN,
+                                            F.y + heading_h(), width(), NULL, NULL);
+            bind_choices(sim, 2, "cell.sim_slot");
+            ink_ui_notice(N.page_body, sim_state, F.y + heading_h() + INK_SEGMENT + INK_GAP_L);
+        }
+        F.y += h;
+    }
+}
+
+static void body_page_clicked(lv_event_t *e) {
+    ink_receipt_t rc;
+    ink_cap_invoke(lv_event_get_user_data(e) == (void *) (intptr_t) 1 ? "shell.page_next" : "shell.page_prev", NULL,
+                   INK_SRC_TOUCH, 0, &rc);
 }
 
 static void draw_page_body(void) {
     lv_obj_clean(N.page_body);
-    int y = 0;
-    if (N.page_id == PAGE_SETTINGS) {
-        draw_who(y);
-        y += INK_ROW_DOUBLE + INK_GAP;
-        char ssid[64], light[32], volume[32];
-        state_text("wifi.ssid", ssid, sizeof ssid);
-        snprintf(light, sizeof light, "亮度 %lld", (long long) ink_setting_get("display.light") / 10);
-        snprintf(volume, sizeof volume, "音量 %lld", (long long) ink_setting_get("audio.volume") / 10);
-        lv_obj_t *g = ink_ui_card(N.page_body, INK_MARGIN, y, width(), 2 * INK_CONTROL, INK_SURFACE_STATIC);
-        group_row(g, "wifi", "网络和 SIM 卡", ssid[0] ? ssid : "还没有连接", 0, "shell.network");
-        group_row(g, "bluetooth", "蓝牙", integer("bt.connected") ? "已连接" : "没有连接", 1, NULL);
-        y += 2 * INK_CONTROL + INK_GAP;
-        g = ink_ui_card(N.page_body, INK_MARGIN, y, width(), 3 * INK_CONTROL, INK_SURFACE_STATIC);
-        group_row(g, "sun", "显示和亮度", light, 0, "shell.display");
-        group_row(g, "volume", "声音", volume, 1, "shell.sound");
-        int wake = (int) ink_setting_get("voice.handsfree");
-        group_row(g, "wave", "语音和 AI",
-                  wake == 2   ? "叫名字已关闭"
-                  : wake == 1 ? "一直能叫名字"
-                              : "使用时能叫名字",
-                  2, NULL);
-        y += 3 * INK_CONTROL + INK_GAP;
-        g = ink_ui_card(N.page_body, INK_MARGIN, y, width(), 3 * INK_CONTROL, INK_SURFACE_STATIC);
-        group_row(g, "lock", "锁屏和壁纸", ink_setting_get("display.lock_style") ? "时钟和待办" : "这一页", 0,
-                  "shell.display");
-        group_row(g, "storage", "存储和备份", "还没有备份", 1, NULL);
-        group_row(g, "info", "关于和更新", "", 2, NULL);
-    } else if (N.page_id == PAGE_DISPLAY) {
-        ink_ui_slider(N.page_body, "亮度", (int) ink_setting_get("display.light") / 10, INK_MARGIN, y, width(),
-                      slider_changed, (void *) "display.light");
-        y += INK_SLIDER + INK_GAP_M;
-        ink_ui_slider(N.page_body, "暖光", (int) ink_setting_get("display.warmth") / 10, INK_MARGIN, y, width(),
-                      slider_changed, (void *) "display.warmth");
-        y += INK_SLIDER + INK_GAP_L;
-        ink_ui_label(N.page_body, "字号", INK_FONT_LIST, INK_WEIGHT_BOLD, INK_MARGIN, y, width());
-        y += INK_LINE_LIST + INK_GAP_M;
-        const char *const labels[] = {"小", "中", "大", "特大"};
-        lv_obj_t *seg = ink_ui_segments(N.page_body, labels, 4, (int) ink_setting_get("display.font_size"), INK_MARGIN,
-                                        y, width(), NULL, NULL);
-        for (int i = 0; i < 4; i++) {
-            char args[96];
-            snprintf(args, sizeof args, "{\"id\":\"display.font_size\",\"value\":%d}", i);
-            ink_shell_bind(lv_obj_get_child(seg, i), "settings.set", args);
+    if (N.page_id != PAGE_NOTIFICATIONS) {
+        int room = INK_CANVAS_H - INK_STATUS_BAR - INK_PRIMARY - INK_GAP_XS - INK_GAP_M;
+        F.y = F.page = 0;
+        F.room = room;
+        F.draw = false;
+        body_blocks();
+        if (F.page) { /* room for the page turner */
+            room -= INK_CONTROL + INK_GAP;
+            F.y = F.page = 0;
+            F.room = room;
+            body_blocks();
         }
-        y += INK_SEGMENT + INK_GAP;
-        lv_obj_t *sample =
-            ink_ui_card(N.page_body, INK_MARGIN, y, width(), INK_DIGIT + 2 * INK_MARGIN, INK_SURFACE_STATIC);
-        static const int px[] = {INK_FONT_LIST, INK_FONT_BODY, INK_FONT_SUBTITLE, INK_FONT_TITLE};
-        ink_ui_label(sample, "天黑以后，阿木背起邮包。", px[ink_setting_get("display.font_size")], INK_WEIGHT_REGULAR,
-                     INK_MARGIN, INK_GAP_L, width() - 2 * INK_MARGIN);
-        y += INK_DIGIT + 2 * INK_MARGIN + INK_GAP_L;
-        lv_obj_t *refresh =
-            ink_ui_pill(N.page_body, "刷新屏幕", INK_MARGIN, y, width(), INK_CONTROL, false, NULL, NULL);
-        ink_shell_bind(refresh, "system.full_refresh", NULL);
-        y += INK_CONTROL + INK_GAP;
-        static const int seconds[] = {60, 300, 600, 1800, 3600};
-        int64_t current = ink_setting_get("power.lock_after_s");
-        int next = seconds[0];
-        for (unsigned i = 0; i < sizeof seconds / sizeof *seconds; i++)
-            if (seconds[i] > current) {
-                next = seconds[i];
-                break;
-            }
-        char label[64], args[96];
-        snprintf(label, sizeof label, "自动锁屏 %lld 分钟", (long long) current / 60);
-        snprintf(args, sizeof args, "{\"id\":\"power.lock_after_s\",\"value\":%d}", next);
-        lv_obj_t *lock = ink_ui_pill(N.page_body, label, INK_MARGIN, y, width(), INK_CONTROL, false, NULL, NULL);
-        ink_shell_bind(lock, "settings.set", args);
-    } else if (N.page_id == PAGE_SOUND) {
-        ink_ui_slider(N.page_body, "音量", (int) ink_setting_get("audio.volume") / 10, INK_MARGIN, y, width(),
-                      slider_changed, (void *) "audio.volume");
-        y += INK_SLIDER + INK_GAP_S;
-        ink_ui_notice(N.page_body, "听书、AI 和提示音用这个音量", y);
-        y += INK_LINE_NOTE + INK_GAP_L;
-        ink_ui_label(N.page_body, "声音从哪里出来", INK_FONT_LIST, INK_WEIGHT_BOLD, INK_MARGIN, y, width());
-        y += INK_LINE_LIST + INK_GAP_M;
-        lv_obj_t *g = ink_ui_card(N.page_body, INK_MARGIN, y, width(), 2 * INK_CONTROL, INK_SURFACE_STATIC);
-        char route[32];
-        state_text("audio.route", route, sizeof route);
-        group_row(g, "volume", "喇叭", !strcmp(route, "speaker") ? "当前" : "", 0, "bt.disconnect");
-        group_row(g, "headphones", "蓝牙耳机", !strcmp(route, "bt_headset") ? "当前" : "没有连接", 1, NULL);
-        y += 2 * INK_CONTROL + INK_GAP_L;
-        lv_obj_t *toggle =
-            ink_ui_toggle(N.page_body, "勿扰", ink_setting_get("notify.dnd"), INK_MARGIN, y, width(), NULL, NULL);
-        bind_toggle(toggle, "notify.dnd");
-        y += INK_CONTROL + INK_GAP_L;
-        ink_ui_label(N.page_body, "提示", INK_FONT_LIST, INK_WEIGHT_BOLD, INK_MARGIN, y, width());
-        y += INK_LINE_LIST + INK_GAP_M;
-        g = ink_ui_card(N.page_body, INK_MARGIN, y, width(), 2 * INK_CONTROL, INK_SURFACE_STATIC);
-        group_row(g, "bell", "按键提示音", "还没有可选设置", 0, NULL);
-        group_row(g, "wave", "振动", "还没有可选设置", 1, NULL);
-        y += 2 * INK_CONTROL + INK_GAP_L;
-        ink_ui_label(N.page_body, "铃声", INK_FONT_LIST, INK_WEIGHT_BOLD, INK_MARGIN, y, width());
-        y += INK_LINE_LIST + INK_GAP_M;
-        g = ink_ui_card(N.page_body, INK_MARGIN, y, width(), 2 * INK_CONTROL, INK_SURFACE_STATIC);
-        group_row(g, "phone", "来电", "系统提示音", 0, NULL);
-        group_row(g, "clock", "闹钟", "系统提示音", 1, NULL);
-    } else if (N.page_id == PAGE_NETWORK) {
-        ink_ui_label(N.page_body, "上网方式", INK_FONT_LIST, INK_WEIGHT_BOLD, INK_MARGIN, y, width());
-        y += INK_LINE_LIST + INK_GAP_M;
-        const char *const labels[] = {"自动", "Wi-Fi", "4G"};
-        int count = (int) (sizeof labels / sizeof *labels);
-        lv_obj_t *seg = ink_ui_segments(N.page_body, labels, count, (int) ink_setting_get("net.prefer"), INK_MARGIN, y,
-                                        width(), NULL, NULL);
-        for (int i = 0; i < 3; i++) {
-            char args[96];
-            snprintf(args, sizeof args, "{\"id\":\"net.prefer\",\"value\":%d}", i);
-            ink_shell_bind(lv_obj_get_child(seg, i), "settings.set", args);
-        }
-        y += INK_SEGMENT + INK_GAP_M;
-        ink_ui_notice(N.page_body, "自动：有 Wi-Fi 用 Wi-Fi，没有就用 4G", y);
-        y += INK_LINE_NOTE + INK_GAP_L;
-        ink_ui_label(N.page_body, "Wi-Fi", INK_FONT_LIST, INK_WEIGHT_BOLD, INK_MARGIN, y, width());
-        y += INK_LINE_LIST + INK_GAP_M;
-        char ssid[64];
-        state_text("wifi.ssid", ssid, sizeof ssid);
-        ink_ui_notice(N.page_body, ssid[0] ? ssid : "还没有连接 Wi-Fi", y);
-        y += INK_LINE_NOTE + INK_GAP_L;
-        if (N.picked_ssid[0]) {
-            ink_text_cfg_t cfg = {.type = INK_TEXT_PASSWORD,
-                                  .enter = INK_ENTER_DONE,
-                                  .max = 64,
-                                  .hint = "输入网络密码",
-                                  .ai_hidden = true};
-            lv_obj_t *password_field =
-                ink_textfield_create(N.page_body, &cfg, wifi_password, (void *) (uintptr_t) N.epoch, true);
-            lv_obj_set_pos(password_field, ink_ui_px(INK_MARGIN), ink_ui_px(y));
-            return;
-        }
-        lv_obj_t *scan = ink_ui_pill(N.page_body, N.scan_busy ? "正在找附近的 Wi-Fi" : "找附近的 Wi-Fi", INK_MARGIN, y,
-                                     width(), INK_CONTROL, N.scan_busy, NULL, NULL);
-        ink_shell_bind(scan, "wifi.scan", NULL);
-        y += INK_CONTROL + INK_GAP_M;
-        for (int i = N.wifi_page * 2; i < N.wifi_count && i < (N.wifi_page + 1) * 2; i++) {
-            ink_ui_pill(N.page_body, N.wifi_ssid[i], INK_MARGIN, y, width(), INK_CONTROL, false, wifi_picked,
-                        (void *) (intptr_t) i);
-            y += INK_CONTROL + INK_GAP_S;
-        }
-        if (N.wifi_count > 2) {
-            lv_obj_t *prev = ink_ui_pill(N.page_body, "上一组", INK_MARGIN, y, (width() - INK_GAP) / 2, INK_CONTROL,
-                                         false, NULL, NULL);
-            if (N.wifi_page) ink_shell_bind(prev, "shell.wifi_prev", NULL);
-            lv_obj_t *next = ink_ui_pill(N.page_body, "下一组", INK_MARGIN + (width() + INK_GAP) / 2, y,
-                                         (width() - INK_GAP) / 2, INK_CONTROL, false, NULL, NULL);
-            if ((N.wifi_page + 1) * 2 < N.wifi_count) ink_shell_bind(next, "shell.wifi_next", NULL);
-            y += INK_CONTROL + INK_GAP_M;
-        }
-        if (!N.wifi_count) {
-            ink_ui_notice(N.page_body, "还没有附近的网络列表", y);
-            y += INK_LINE_NOTE + INK_GAP_L;
-        }
-        ink_ui_label(N.page_body, "SIM 卡", INK_FONT_LIST, INK_WEIGHT_BOLD, INK_MARGIN, y, width());
-        y += INK_LINE_LIST + INK_GAP_M;
-        const char *const slots[] = {"外置卡", "内置卡"};
-        lv_obj_t *sim = ink_ui_segments(N.page_body, slots, 2, (int) ink_setting_get("cell.sim_slot"), INK_MARGIN, y,
-                                        width(), NULL, NULL);
-        for (int i = 0; i < 2; i++) {
-            char args[96];
-            snprintf(args, sizeof args, "{\"id\":\"cell.sim_slot\",\"value\":%d}", i);
-            ink_shell_bind(lv_obj_get_child(sim, i), "settings.set", args);
-        }
-        y += INK_SEGMENT + INK_GAP_L;
-        ink_ui_notice(N.page_body, integer("cell.registered") ? "4G 在线，切卡不用重启" : "4G 还没有连上", y);
-    } else {
-        y = notifications(N.page_body, 0, 6);
-        if (!y && !N.notify_page) { /* nothing to read or turn */
-            ink_ui_notice(N.page_body, "还没有通知", INK_GAP);
-            ink_ui_hint_obj(N.page_body, INK_REFRESH_UI);
-            return;
-        }
-        lv_obj_t *read =
-            ink_ui_pill(N.page_body, "全部已读", INK_MARGIN, y + INK_GAP, width(), INK_CONTROL, false, NULL, NULL);
-        ink_shell_bind(read, "notify.read", "{\"id\":0}");
-        y += INK_GAP + INK_CONTROL + INK_GAP;
-        lv_obj_t *prev =
-            ink_ui_pill(N.page_body, "上一页", INK_MARGIN, y, 2 * INK_PRIMARY, INK_CONTROL, false, NULL, NULL);
-        if (N.notify_page) ink_shell_bind(prev, "shell.notify_prev", NULL);
-        lv_obj_t *next = ink_ui_pill(N.page_body, "下一页", INK_CANVAS_W - INK_MARGIN - 2 * INK_PRIMARY, y,
-                                     2 * INK_PRIMARY, INK_CONTROL, false, NULL, NULL);
-        if (N.notify_more) ink_shell_bind(next, "shell.notify_next", NULL);
-        char page[40];
-        snprintf(page, sizeof page, "第 %d 页", N.notify_page + 1);
-        lv_obj_t *caption =
-            ink_ui_label(N.page_body, page, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN + 2 * INK_PRIMARY,
-                         y + (INK_CONTROL - INK_LINE_NOTE) / 2, width() - 4 * INK_PRIMARY);
-        lv_obj_set_style_text_align(caption, LV_TEXT_ALIGN_CENTER, 0);
+        N.body_pages = F.page + 1;
+        if (N.body_page >= N.body_pages) N.body_page = N.body_pages - 1;
+        F.y = F.page = 0;
+        F.room = room;
+        F.draw = true;
+        body_blocks();
+        if (N.body_pages > 1)
+            ink_ui_pagebar(N.page_body, N.body_page + 1, N.body_pages, room + INK_GAP, body_page_clicked);
+        ink_ui_hint_obj(N.page_body, INK_REFRESH_UI);
+        return;
     }
+    int fits = (INK_CANVAS_H - INK_STATUS_BAR - INK_PRIMARY - INK_GAP_XS - INK_GAP_M - 2 * (INK_CONTROL + INK_GAP)) /
+               (ink_ui_row_double() + INK_GAP_M);
+    int y = notifications(N.page_body, 0, fits < 6 ? fits : 6);
+    if (!y && !N.notify_page) { /* nothing to read or turn */
+        ink_ui_hint_obj(N.page_body, INK_REFRESH_UI);
+        return;
+    }
+    lv_obj_t *read =
+        ink_ui_pill(N.page_body, "全部已读", INK_MARGIN, y + INK_GAP, width(), INK_CONTROL, false, NULL, NULL);
+    ink_shell_bind(read, "notify.read", "{\"id\":0}");
+    y += INK_GAP + INK_CONTROL + INK_GAP;
+    lv_obj_t *prev = ink_ui_pill(N.page_body, "上一页", INK_MARGIN, y, 2 * INK_CONTROL, INK_CONTROL, false, NULL, NULL);
+    if (N.notify_page) ink_shell_bind(prev, "shell.notify_prev", NULL);
+    lv_obj_t *next = ink_ui_pill(N.page_body, "下一页", INK_CANVAS_W - INK_MARGIN - 2 * INK_CONTROL, y, 2 * INK_CONTROL,
+                                 INK_CONTROL, false, NULL, NULL);
+    if (N.notify_more) ink_shell_bind(next, "shell.notify_next", NULL);
+    char page[40];
+    snprintf(page, sizeof page, "第 %d 页", N.notify_page + 1);
+    lv_obj_t *caption =
+        ink_ui_label(N.page_body, page, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN + 2 * INK_CONTROL,
+                     y + (INK_CONTROL - ink_ui_line_height(INK_FONT_NOTE)) / 2, width() - 4 * INK_CONTROL);
+    lv_obj_set_style_text_align(caption, LV_TEXT_ALIGN_CENTER, 0);
     ink_ui_hint_obj(N.page_body, INK_REFRESH_UI);
 }
 
 static void create_page(lv_obj_t *screen, void *arg) {
     N.page = screen;
     N.page_id = (page_t) (intptr_t) arg;
+    N.body_page = 0;
     static const char *const titles[] = {"设置", "显示和亮度", "声音", "网络和 SIM 卡", "通知"};
     ink_shell_statusbar(screen, true);
     ink_shell_topbar(screen, titles[N.page_id]);
-    N.page_body = ink_ui_box(screen, 0, INK_LINE_BODY + INK_PRIMARY + INK_GAP_XS, INK_CANVAS_W,
-                             INK_CANVAS_H - INK_LINE_BODY - INK_PRIMARY - INK_GAP_XS, 0, INK_SURFACE_WHITE, false);
+    N.page_body = ink_ui_box(screen, 0, INK_STATUS_BAR + INK_PRIMARY + INK_GAP_XS, INK_CANVAS_W,
+                             INK_CANVAS_H - INK_STATUS_BAR - INK_PRIMARY - INK_GAP_XS, 0, INK_SURFACE_WHITE, false);
     draw_page_body();
 }
 static void destroy_page(void) {
@@ -982,10 +1142,18 @@ static void destroy_page(void) {
     }
     N.page = N.page_body = NULL;
 }
+static void turn_body(int delta) {
+    int page = N.body_page + delta;
+    if (!N.page_body || page < 0 || page >= N.body_pages) return;
+    N.body_page = page;
+    ink_ui_content_changed();
+    ink_ui_stage_next();
+    draw_page_body();
+}
 static bool page_key(ink_key_t key, bool lng) {
-    (void) key;
-    (void) lng;
-    return false;
+    if (lng || N.body_pages < 2 || (key != INK_KEY_NEXT && key != INK_KEY_PREV)) return false;
+    turn_body(key == INK_KEY_NEXT ? 1 : -1);
+    return true;
 }
 static int page_snapshot(char *buf, size_t cap) {
     if (!current_session(N.epoch)) return snprintf(buf, cap, "空间锁定或正在切换；AI 无权读取。");
@@ -999,6 +1167,9 @@ static int page_snapshot(char *buf, size_t cap) {
                       (long long) ink_setting_get("display.lock_style"),
                       (long long) ink_setting_get("power.lock_after_s"), (long long) ink_setting_get("notify.dnd"),
                       (long long) ink_setting_get("voice.handsfree"));
+    if (N.body_pages > 1 && N.page_id != PAGE_NOTIFICATIONS && n >= 0 && (size_t) n < cap)
+        n += snprintf(buf + n, cap - (size_t) n, "这一组第 %d 页，共 %d 页；动作：shell.page_next、shell.page_prev；",
+                      N.body_page + 1, N.body_pages);
     if (N.page_id == PAGE_NETWORK && n >= 0 && (size_t) n < cap) {
         char ssid[64];
         state_text("wifi.ssid", ssid, sizeof ssid);
@@ -1078,6 +1249,10 @@ static void cap_nav(ink_call_t *c) {
         ink_shell_open_page("SetNetwork");
     else if (!strcmp(c->cap->id, "shell.notifications"))
         ink_shell_open_page("Notifications");
+    else if (!strcmp(c->cap->id, "shell.page_next"))
+        turn_body(1);
+    else if (!strcmp(c->cap->id, "shell.page_prev"))
+        turn_body(-1);
     else if (!strcmp(c->cap->id, "shell.notify_next") || !strcmp(c->cap->id, "shell.notify_prev")) {
         if (N.page_body && N.page_id == PAGE_NOTIFICATIONS) {
             if (!strcmp(c->cap->id, "shell.notify_next") && N.notify_more)
@@ -1164,6 +1339,8 @@ static const ink_cap_t CAPS[] = {
     NAV("shell.sound", "声音", false),
     NAV("shell.network", "网络和 SIM 卡", false),
     NAV("shell.notifications", "查看通知", true),
+    NAV("shell.page_next", "设置页的下一页", true),
+    NAV("shell.page_prev", "设置页的上一页", true),
     NAV("shell.notify_next", "通知下一页", true),
     NAV("shell.notify_prev", "通知上一页", true),
     NAV("shell.wifi_next", "附近网络下一组", false),
@@ -1233,6 +1410,10 @@ static void refresh(void *unused) {
 }
 static void changed(void *ctx, int h, const char *id) {
     (void) h;
+    if (!ctx && !strcmp(id, "display.font_size")) {
+        ink_ui_redraw();
+        return;
+    }
     if (ctx && (!strcmp(id, "member.current") || (!strcmp(id, "member.authed") && !ink_member_space_open()))) {
         __atomic_add_fetch(&N.session, 1, __ATOMIC_ACQ_REL);
         return;
@@ -1246,18 +1427,14 @@ static void changed(void *ctx, int h, const char *id) {
 }
 static const char *const FONT_CHOICES[] = {"小", "中", "大", "特大", NULL};
 static const char *const LOCK_CHOICES[] = {"这一页", "时钟和待办", NULL};
-static const ink_setting_def_t SETTINGS[] = {{.id = "display.font_size",
-                                              .title = "字号",
-                                              .type = INK_SET_ENUM,
-                                              .def = 1,
-                                              .choices = FONT_CHOICES,
-                                              .child_may_change = true},
-                                             {.id = "display.lock_style",
-                                              .title = "锁屏画面",
-                                              .type = INK_SET_ENUM,
-                                              .def = 0,
-                                              .choices = LOCK_CHOICES,
-                                              .child_may_change = true}};
+static const ink_setting_def_t SETTINGS[] = {
+    {.id = "display.font_size", .title = "字号", .type = INK_SET_ENUM, .def = 1, .choices = FONT_CHOICES},
+    {.id = "display.lock_style",
+     .title = "锁屏画面",
+     .type = INK_SET_ENUM,
+     .def = 0,
+     .choices = LOCK_CHOICES,
+     .child_may_change = true}};
 
 int ink_shell_ai_init(void);
 

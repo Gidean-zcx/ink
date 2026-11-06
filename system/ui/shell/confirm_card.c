@@ -1,5 +1,5 @@
 /* Only a person's answer after reading the whole transaction can accept it. */
-/* ui-scale-runtime: dimension C.panel_y,C.panel_h,C.row_y Saved LVGL geometry from the theme card, plus theme paging space. */
+/* ui-scale-runtime: dimension C.head_h,C.preview_h,notice_y,pager_y Card geometry: theme sizes and text measured at the current size. */
 #include <stdio.h>
 #include <string.h>
 
@@ -13,11 +13,11 @@
 static struct {
     shell_card_t card;
     ink_confirm_view_t now;
-    lv_obj_t *pad, *pager, *accept, *notice;
+    lv_obj_t *pad, *pager, *accept, *notice, *preview;
+    int head_h, preview_h;
     lv_timer_t *read_timer;
     uint16_t starts[161]; /* At most one page per detail byte, plus the end. */
     int page, pages;
-    int panel_y, panel_h, row_y;
     bool drawn, read, watching;
     int pin_result;
     uint32_t pin_wait;
@@ -100,6 +100,26 @@ static void page_clicked(lv_event_t *e) {
     ink_receipt_t rc; ink_cap_invoke_json("confirm.page", args, INK_SRC_TOUCH, 0, &rc);
 }
 
+/* From the top of the card: icon and title, the words being confirmed, a line of notice, the page
+ * turner. The card is as tall as what it has to say, up to three lines of words a page. */
+static void fit_to_words(void) {
+    int title_w = INK_CANVAS_W - 2 * INK_MARGIN - INK_CIRCLE_SMALL - INK_GAP;
+    int title_h = ink_ui_text_height(C.now.title, INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, title_w);
+    if (title_h > 2 * ink_ui_line_height(INK_FONT_SUBTITLE)) title_h = 2 * ink_ui_line_height(INK_FONT_SUBTITLE);
+    int line = ink_ui_line_height(INK_FONT_BODY);
+    int words_h = ink_ui_text_height(C.now.detail, INK_FONT_BODY, INK_WEIGHT_REGULAR, INK_CANVAS_W - 4 * INK_MARGIN);
+    if (words_h > 3 * line) words_h = 3 * line;
+    if (words_h < line) words_h = line;
+    C.head_h = INK_MARGIN + (title_h > INK_CIRCLE_SMALL ? title_h : INK_CIRCLE_SMALL) + INK_GAP;
+    C.preview_h = words_h + 2 * INK_GAP;
+    lv_obj_set_height(C.card.title, ink_ui_px(title_h));
+    lv_obj_set_y(C.preview, ink_ui_px(C.head_h));
+    lv_obj_set_height(C.preview, ink_ui_px(C.preview_h));
+    lv_obj_set_height(C.card.body, ink_ui_px(words_h));
+}
+static int notice_y(void) { return C.head_h + C.preview_h + INK_GAP_S; }
+static int pager_y(void) { return notice_y() + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_S; }
+
 static void paginate(void) {
     lv_obj_update_layout(C.card.body);
     int w = lv_obj_get_width(C.card.body), h = lv_obj_get_height(C.card.body);
@@ -131,10 +151,11 @@ static void paginate(void) {
 }
 
 static void draw_page(void) {
-    int extra = C.pages > 1 ? ink_ui_px(INK_GAP_XXL) : 0;
-    lv_obj_set_y(C.card.panel, C.panel_y - extra);
-    lv_obj_set_height(C.card.panel, C.panel_h + extra);
-    lv_obj_set_y(C.card.row, C.row_y + extra);
+    int height = pager_y() + (C.pages > 1 ? INK_CONTROL + INK_GAP_S : 0) + INK_PRIMARY + INK_GAP_L;
+    lv_obj_set_y(C.card.panel, ink_ui_px(INK_CANVAS_H - height));
+    lv_obj_set_height(C.card.panel, ink_ui_px(height + INK_RADIUS_PANEL));
+    lv_obj_set_y(C.card.row, ink_ui_px(height - INK_PRIMARY - INK_GAP_L));
+    lv_obj_set_y(C.notice, ink_ui_px(notice_y()));
     char text[sizeof C.now.detail];
     if (C.pages) snprintf(text, sizeof text, "%.*s", C.starts[C.page + 1] - C.starts[C.page], C.now.detail + C.starts[C.page]);
     else snprintf(text, sizeof text, "说明无法完整显示，请取消。");
@@ -143,8 +164,7 @@ static void draw_page(void) {
     lv_obj_add_state(C.accept, LV_STATE_DISABLED);
     lv_label_set_text(C.notice, C.page + 1 == C.pages ? "只有你确认后才会继续。" : "请翻完说明，再决定是否继续。");
     if (C.pager) lv_obj_delete(C.pager);
-    C.pager = C.pages > 1 ? ink_ui_pagebar(C.card.panel, C.page + 1, C.pages,
-        INK_MARGIN + INK_CIRCLE + 2 * INK_GAP_L + INK_ROW_DOUBLE + 2 * INK_LINE_NOTE, page_clicked) : NULL;
+    C.pager = C.pages > 1 ? ink_ui_pagebar(C.card.panel, C.page + 1, C.pages, pager_y(), page_clicked) : NULL;
     if (C.pager) {
         lv_obj_add_event_cb(lv_obj_get_child(C.pager, 0), read_pressed, LV_EVENT_PRESSED, NULL);
         lv_obj_add_event_cb(lv_obj_get_child(C.pager, 2), read_pressed, LV_EVENT_PRESSED, NULL);
@@ -160,7 +180,7 @@ static void show(const ink_confirm_view_t *top) { /* UI task */
         lv_timer_delete(C.read_timer);
         C.read_timer = NULL;
         shell_card_close(&C.card);
-        C.pad = C.pager = C.accept = C.notice = NULL;
+        C.pad = C.pager = C.accept = C.notice = C.preview = NULL;
         ink_ui_overlay_remove(&OVERLAY);
         return;
     }
@@ -174,8 +194,6 @@ static void show(const ink_confirm_view_t *top) { /* UI task */
     }
     if (!C.card.root) {
         shell_card_open(&C.card);
-        lv_obj_update_layout(C.card.root);
-        C.panel_y = lv_obj_get_y(C.card.panel); C.panel_h = lv_obj_get_height(C.card.panel); C.row_y = lv_obj_get_y(C.card.row);
         /* Poll presentation only while this page is pending, then pause. */
         C.read_timer = lv_timer_create(read_ready, 20, NULL);
         if (!C.watching) {
@@ -183,16 +201,17 @@ static void show(const ink_confirm_view_t *top) { /* UI task */
             C.watching = true;
         }
         ink_ui_overlay_add(&OVERLAY, C.card.root);
-        ink_ui_circle(C.card.panel, "ai", INK_MARGIN, INK_MARGIN, INK_CIRCLE, INK_ICON_LIST, INK_SURFACE_BLACK, NULL, NULL);
-        lv_obj_set_pos(C.card.title, ink_ui_px(INK_MARGIN + INK_CIRCLE + INK_GAP), ink_ui_px(INK_MARGIN));
-        lv_obj_set_width(C.card.title, ink_ui_px(INK_CANVAS_W - 2 * INK_MARGIN - INK_CIRCLE - INK_GAP));
-        lv_obj_t *preview = ink_ui_box(C.card.panel, INK_MARGIN, INK_MARGIN + INK_CIRCLE + INK_GAP_L,
-                                      INK_CANVAS_W - 2 * INK_MARGIN, INK_ROW_DOUBLE + INK_LINE_NOTE, INK_RADIUS_KEY, INK_SURFACE_STATIC, false);
-        lv_obj_set_parent(C.card.body, preview);
-        lv_obj_set_pos(C.card.body, ink_ui_px(INK_MARGIN), ink_ui_px(INK_GAP_L));
-        lv_obj_set_size(C.card.body, ink_ui_px(INK_CANVAS_W - 4 * INK_MARGIN), ink_ui_px(INK_PRIMARY));
-        C.notice = ink_ui_notice(C.card.panel, "", INK_MARGIN + INK_CIRCLE + INK_GAP_L + INK_ROW_DOUBLE + INK_LINE_NOTE + INK_GAP_L);
+        ink_ui_circle(C.card.panel, "ai", INK_MARGIN, INK_MARGIN, INK_CIRCLE_SMALL, INK_ICON_MEDIUM, INK_SURFACE_BLACK, NULL, NULL);
+        lv_obj_set_pos(C.card.title, ink_ui_px(INK_MARGIN + INK_CIRCLE_SMALL + INK_GAP), ink_ui_px(INK_MARGIN));
+        lv_obj_set_width(C.card.title, ink_ui_px(INK_CANVAS_W - 2 * INK_MARGIN - INK_CIRCLE_SMALL - INK_GAP));
+        lv_label_set_long_mode(C.card.title, LV_LABEL_LONG_DOT);
+        C.preview = ink_ui_box(C.card.panel, INK_MARGIN, 0, INK_CANVAS_W - 2 * INK_MARGIN, 0, INK_RADIUS_KEY, INK_SURFACE_STATIC, false);
+        lv_obj_set_parent(C.card.body, C.preview);
+        lv_obj_set_pos(C.card.body, ink_ui_px(INK_MARGIN), ink_ui_px(INK_GAP));
+        lv_obj_set_width(C.card.body, ink_ui_px(INK_CANVAS_W - 4 * INK_MARGIN));
+        C.notice = ink_ui_notice(C.card.panel, "", 0);
     }
+    fit_to_words();
     shell_card_text(&C.card, C.now.title, C.now.detail);
     shell_card_clear_buttons(&C.card);
     const ink_cap_t *cap = ink_cap_find(C.now.cap);

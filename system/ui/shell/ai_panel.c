@@ -8,7 +8,7 @@
 #include "ink/sys/exec.h"
 #include "ink/ui_shell.h"
 
-#define PANEL_HEIGHT (INK_MARGIN + INK_CONTROL + INK_GAP_M + 3 * INK_LINE_BODY + INK_GAP_S + INK_LINE_NOTE + INK_GAP_M + INK_CONTROL + INK_MARGIN)
+#define PANEL_HEIGHT (INK_GAP_L + INK_CONTROL + INK_GAP_S + 3 * ink_ui_line_height(INK_FONT_BODY) + INK_GAP_S + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_S + INK_CONTROL + INK_GAP_L)
 static struct {
     lv_obj_t *root, *status, *question, *answer, *source, *actions, *prev, *next, *counter;
     char words[4096], text[4096];
@@ -140,27 +140,28 @@ static const ink_cap_t CAPS[] = {
 void ink_shell_ai_open(lv_obj_t **root, lv_obj_t **status, lv_obj_t **question, lv_obj_t **answer) {
     A.root = ink_ui_panel(lv_layer_sys(), PANEL_HEIGHT, true);
     ink_ui_box(A.root, (INK_CANVAS_W - INK_ICON_STATE) / 2, INK_GAP_M, INK_ICON_STATE, INK_GAP_S, -1, INK_SURFACE_BLACK, false);
-    ink_ui_circle(A.root, "ai", INK_MARGIN, INK_MARGIN + INK_GAP_M, INK_CIRCLE_SMALL, INK_ICON_LIST, INK_SURFACE_BLACK, NULL, NULL);
+    ink_ui_circle(A.root, "ai", INK_MARGIN, INK_GAP_L + (INK_CONTROL - INK_CIRCLE_SMALL) / 2, INK_CIRCLE_SMALL, INK_ICON_MEDIUM, INK_SURFACE_BLACK, NULL, NULL);
     A.status = ink_ui_label(A.root, "", INK_FONT_LIST, INK_WEIGHT_MEDIUM,
-                            INK_MARGIN + INK_CIRCLE_SMALL + INK_GAP_M, INK_MARGIN + (INK_CONTROL - INK_LINE_LIST) / 2, INK_CANVAS_W - 2 * INK_PRIMARY - INK_MARGIN);
-    lv_obj_t *close = ink_ui_circle(A.root, "close", INK_CANVAS_W - INK_MARGIN - INK_CONTROL, INK_MARGIN, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_WHITE, NULL, NULL);
+                            INK_MARGIN + INK_CIRCLE_SMALL + INK_GAP_M, INK_GAP_L + (INK_CONTROL - ink_ui_line_height(INK_FONT_LIST)) / 2, INK_CANVAS_W - 2 * INK_PRIMARY - INK_MARGIN);
+    lv_obj_t *close = ink_ui_circle(A.root, "close", INK_CANVAS_W - INK_MARGIN - INK_CONTROL, INK_GAP_L, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_WHITE, NULL, NULL);
     ink_shell_bind(close, "ai.panel.hide", NULL);
-    A.answer = ink_ui_label(A.root, "", INK_FONT_BODY, INK_WEIGHT_REGULAR, INK_MARGIN, INK_MARGIN + INK_CONTROL + INK_GAP_M, INK_CANVAS_W - 2 * INK_MARGIN);
-    lv_obj_set_height(A.answer, ink_ui_px(3 * INK_LINE_BODY));
-    A.question = ink_ui_label(A.root, "", INK_FONT_BODY, INK_WEIGHT_REGULAR, INK_MARGIN, INK_MARGIN + INK_CONTROL + INK_GAP_M, INK_CANVAS_W - 2 * INK_MARGIN);
+    A.answer = ink_ui_label(A.root, "", INK_FONT_BODY, INK_WEIGHT_REGULAR, INK_MARGIN, INK_GAP_L + INK_CONTROL + INK_GAP_S, INK_CANVAS_W - 2 * INK_MARGIN);
+    lv_obj_set_height(A.answer, ink_ui_px(3 * ink_ui_line_height(INK_FONT_BODY)));
+    A.question = ink_ui_label(A.root, "", INK_FONT_BODY, INK_WEIGHT_REGULAR, INK_MARGIN, INK_GAP_L + INK_CONTROL + INK_GAP_S, INK_CANVAS_W - 2 * INK_MARGIN);
     A.source = ink_ui_label(A.root, "出自这一页", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN,
-                            PANEL_HEIGHT - INK_MARGIN - INK_CONTROL - INK_GAP_M - INK_LINE_NOTE, INK_CANVAS_W - 2 * INK_MARGIN);
-    A.actions = ink_ui_box(A.root, INK_MARGIN, PANEL_HEIGHT - INK_MARGIN - INK_CONTROL,
+                            PANEL_HEIGHT - INK_GAP_L - INK_CONTROL - INK_GAP_S - ink_ui_line_height(INK_FONT_NOTE), INK_CANVAS_W - 2 * INK_MARGIN);
+    A.actions = ink_ui_box(A.root, INK_MARGIN, PANEL_HEIGHT - INK_GAP_L - INK_CONTROL,
                             INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, 0, INK_SURFACE_WHITE, false);
-    lv_obj_t *next = ink_ui_pill(A.actions, "继续问", 0, 0, 2 * INK_PRIMARY, INK_CONTROL, false, NULL, NULL);
+    lv_obj_t *next = ink_ui_pill(A.actions, "继续问", 0, 0, 2 * INK_CONTROL, INK_CONTROL, false, NULL, NULL);
     ink_shell_bind(next, "ai.panel.listen", NULL);
-    int x = 2 * INK_PRIMARY + INK_GAP;
+    int x = 2 * INK_CONTROL + INK_GAP;
     A.prev = ink_ui_circle(A.actions, "back", x, 0, INK_CONTROL, INK_ICON_SMALL, INK_SURFACE_WHITE, NULL, NULL);
     ink_shell_bind(A.prev, "ai.panel.prev", NULL);
-    A.counter = ink_ui_label(A.actions, "1 / 1", INK_FONT_LIST, INK_WEIGHT_MEDIUM, x + INK_CONTROL + INK_GAP,
-                             (INK_CONTROL - INK_LINE_LIST) / 2, 2 * INK_CONTROL);
+    int last = INK_CANVAS_W - 2 * INK_MARGIN - INK_CONTROL;
+    A.counter = ink_ui_line(A.actions, "1 / 1", INK_FONT_LIST, INK_WEIGHT_MEDIUM, x + INK_CONTROL + INK_GAP_S,
+                            (INK_CONTROL - ink_ui_line_height(INK_FONT_LIST)) / 2, last - x - INK_CONTROL - 2 * INK_GAP_S);
     lv_obj_set_style_text_align(A.counter, LV_TEXT_ALIGN_CENTER, 0);
-    A.next = ink_ui_circle(A.actions, "next", x + 3 * INK_CONTROL + 2 * INK_GAP, 0, INK_CONTROL, INK_ICON_SMALL, INK_SURFACE_WHITE, NULL, NULL);
+    A.next = ink_ui_circle(A.actions, "next", last, 0, INK_CONTROL, INK_ICON_SMALL, INK_SURFACE_WHITE, NULL, NULL);
     ink_shell_bind(A.next, "ai.panel.next", NULL);
     lv_obj_add_flag(A.source, LV_OBJ_FLAG_HIDDEN);
     lv_obj_add_flag(A.actions, LV_OBJ_FLAG_HIDDEN);

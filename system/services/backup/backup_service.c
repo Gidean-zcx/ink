@@ -1341,6 +1341,7 @@ static bool for_call(ink_call_t *c) {
         snprintf(B.j.member, sizeof B.j.member, "%s", member);
         if (ink_member_durable_id(member, B.j.identity)) {
             c->rc.status = INK_RC_FAILED;
+            snprintf(c->rc.say, sizeof c->rc.say, "备份记录暂时写不进去，请稍后再试");
             return false;
         }
     }
@@ -1484,6 +1485,7 @@ static void cap_backup(ink_call_t *c) {
     /* Persist intent before doing any capture or replacing staging content. */
     if (save_journal()) {
         c->rc.status = INK_RC_FAILED;
+        snprintf(c->rc.say, sizeof c->rc.say, "备份记录暂时写不进去，请稍后再试");
         return;
     }
     (*task_id()) = ink_task_begin_for("backup", "备份资料", B.j.member, NULL, NULL);

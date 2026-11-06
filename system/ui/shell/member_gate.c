@@ -103,8 +103,8 @@ static void member_tile(const ink_member_t *m, int x, int y, int diameter, bool 
     size_t len = 1;
     while (len < sizeof first - 1 && (m->name[len] & 0xc0) == 0x80) len++;
     memcpy(first, m->name, len);
+    ink_ui_pill_text(b, INK_FONT_HEADING, INK_WEIGHT_MEDIUM);
     lv_obj_t *letter = lv_obj_get_child(b, 0);
-    lv_obj_set_style_text_font(letter, ink_ui_font_px(INK_FONT_HEADING, INK_WEIGHT_MEDIUM), 0);
     lv_label_set_text(letter, first);
     lv_obj_center(letter);
     if (ink_member_has_pin(m->id)) ink_ui_circle(b, "lock", diameter - INK_CIRCLE_SMALL, diameter - INK_CIRCLE_SMALL,
@@ -139,10 +139,10 @@ static void sync_gate(void *arg) { /* UI task */
     int pages = (total + per_page - 1) / per_page;
     if (G.page >= pages) G.page = pages ? pages - 1 : 0;
     if (!G.requested) {
-        member_tile(current, (INK_CANVAS_W - INK_CIRCLE_LARGE) / 2, INK_LINE_BODY + 2 * INK_BLOCK,
+        member_tile(current, (INK_CANVAS_W - INK_CIRCLE_LARGE) / 2, INK_STATUS_BAR + 2 * INK_BLOCK,
                     INK_CIRCLE_LARGE, true);
-        ink_ui_notice(G.card.panel, "输密码，回到刚才的地方", INK_LINE_BODY + 2 * INK_BLOCK + INK_CIRCLE_LARGE + INK_GAP + INK_LINE_BODY + INK_GAP_M);
-        ink_ui_notice(G.card.panel, "换一位家人", INK_CANVAS_H - INK_BLOCK_L - INK_CIRCLE_APP - 2 * INK_LINE_BODY - INK_CONTROL);
+        ink_ui_notice(G.card.panel, "输密码，回到刚才的地方", INK_STATUS_BAR + 2 * INK_BLOCK + INK_CIRCLE_LARGE + INK_GAP + ink_ui_line_height(INK_FONT_BODY) + INK_GAP_M);
+        ink_ui_notice(G.card.panel, "换一位家人", INK_CANVAS_H - INK_BLOCK_L - INK_CIRCLE_APP - 2 * ink_ui_line_height(INK_FONT_BODY) - INK_CONTROL);
     }
     for (int i = 0; (m = ink_member_at(i)) != NULL; i++) {
         if (!G.requested && !strcmp(m->id, current->id)) continue;
@@ -152,8 +152,8 @@ static void sync_gate(void *arg) { /* UI task */
         int diameter = G.requested ? INK_CIRCLE_LARGE : INK_CIRCLE_APP;
         int cell = (INK_CANVAS_W - 2 * INK_MARGIN) / 2;
         int x = INK_MARGIN + (at % 2) * cell + (cell - diameter) / 2;
-        int y = G.requested ? INK_LINE_BODY + 2 * INK_BLOCK + INK_PRIMARY + (at / 2) * (diameter + INK_LINE_BODY + INK_BLOCK)
-                            : INK_CANVAS_H - INK_BLOCK - diameter - INK_LINE_BODY - INK_CONTROL;
+        int y = G.requested ? INK_STATUS_BAR + 2 * INK_BLOCK + INK_PRIMARY + (at / 2) * (diameter + ink_ui_line_height(INK_FONT_BODY) + INK_BLOCK)
+                            : INK_CANVAS_H - INK_BLOCK - diameter - ink_ui_line_height(INK_FONT_BODY) - INK_CONTROL;
         member_tile(m, x, y, diameter, i == 0);
     }
     if (pages > 1) ink_ui_pagebar(G.card.panel, G.page + 1, pages, INK_CANVAS_H - INK_MARGIN - INK_CONTROL, page_clicked);

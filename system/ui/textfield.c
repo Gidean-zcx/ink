@@ -218,7 +218,7 @@ static void field_event(lv_event_t *e) {
         lv_obj_set_size(f->menu, ink_ui_px(INK_CANVAS_W - 2 * INK_MARGIN), ink_ui_px(INK_CONTROL));
         lv_obj_set_flex_flow(f->menu, LV_FLEX_FLOW_ROW);
         lv_obj_set_style_pad_column(f->menu, ink_ui_px(INK_GAP_S), 0);
-        lv_obj_align_to(f->menu, f->obj, LV_ALIGN_OUT_BOTTOM_LEFT, 0, ink_dp(4));
+        lv_obj_align_to(f->menu, f->obj, LV_ALIGN_OUT_BOTTOM_LEFT, 0, ink_dp(INK_GAP_XS));
         if (f->session && f->cfg.type != INK_TEXT_PASSWORD) {
             menu_button(f, "◀", on_left);
             menu_button(f, "▶", on_right);
@@ -273,7 +273,7 @@ lv_obj_t *ink_textfield_create(lv_obj_t *parent, const ink_text_cfg_t *cfg, void
         lv_obj_set_style_border_width(f->obj, 0, 0);
         lv_obj_set_style_radius(f->obj, LV_RADIUS_CIRCLE, 0);
         lv_obj_set_style_pad_left(f->obj, ink_ui_px(INK_MARGIN + INK_ICON_LIST + INK_GAP_M), 0);
-        lv_obj_set_style_pad_ver(f->obj, ink_ui_px((INK_CONTROL - INK_LINE_LIST) / 2), 0);
+        lv_obj_set_style_pad_ver(f->obj, ink_ui_px((INK_CONTROL - ink_ui_line_height(INK_FONT_LIST)) / 2), 0);
         lv_obj_set_style_text_font(f->label, ink_ui_font_px(INK_FONT_LIST, INK_WEIGHT_REGULAR), 0);
         ink_ui_icon(f->obj, "search", INK_ICON_LIST, INK_ICON_LINE, 0 - INK_ICON_LIST - INK_GAP_M, 0, false);
     }

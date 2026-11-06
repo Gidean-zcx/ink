@@ -3,7 +3,7 @@
 fontgen — render a TrueType/OpenType font into ink's bitmap font format (INKF v1).
 
   python3 tools/fontgen/fontgen.py --font NotoSansCJK-Regular.ttc --face 2 \
-      --px 32 --bpp 2 --charset gb2312,ascii,punct,pinyin -o build/assets/fonts/sans-32.inkf
+      --px 44 --bpp 2 --charset gb2312,ascii,punct,pinyin -o build/assets/fonts/sans-44.inkf
 
 INKF v1 (little-endian):
   header (40 B): "INKF", u16 version=1, u8 bpp, u8 flags, u16 px, i16 ascent,
@@ -29,7 +29,7 @@ PUNCT = (
     list(range(0x2010, 0x2028)) + [0x2030, 0x2032, 0x2033, 0x203B, 0x2026] +
     list(range(0x3000, 0x3040)) +   # CJK symbols and punctuation
     list(range(0xFF01, 0xFF5F)) +   # fullwidth forms
-    [0x00A0, 0x00A9, 0x00AE, 0x00B0, 0x00B7, 0x00D7, 0x00F7]
+    [0x00A0, 0x00A9, 0x00AE, 0x00B0, 0x00B7, 0x00D7, 0x00F7, 0x25B6, 0x25C0]
 )
 PINYIN = [ord(c) for c in "āáǎàēéěèīíǐìōóǒòūúǔùǖǘǚǜüĀÁǍÀĒÉĚÈĪÍǏÌŌÓǑÒŪÚǓÙǕǗǙǛÜ"]
 

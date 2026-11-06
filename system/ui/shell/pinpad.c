@@ -51,8 +51,7 @@ lv_obj_t *shell_pinpad(lv_obj_t *parent, void (*done)(const char *pin)) {
     for (int y = 0; y < 4; y++) for (int x = 0; x < 3; x++) {
         lv_obj_t *b = ink_ui_pill(box, LABEL[y][x], x0 + x * (INK_DIGIT + gap), y0 + y * (INK_DIGIT + INK_GAP),
                                   INK_DIGIT, INK_DIGIT, false, on_digit, (void *)(intptr_t)CODE[y][x]);
-        lv_obj_t *l = lv_obj_get_child(b, 0);
-        lv_obj_set_style_text_font(l, ink_ui_font_px(y < 3 || x == 1 ? INK_FONT_HEADING : INK_FONT_LIST, INK_WEIGHT_REGULAR), 0);
+        ink_ui_pill_text(b, y < 3 || x == 1 ? INK_FONT_HEADING : INK_FONT_LIST, INK_WEIGHT_REGULAR);
     }
     ink_ui_capture_touch(box);
     shell_pinpad_clear();

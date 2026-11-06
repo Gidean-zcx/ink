@@ -1,32 +1,35 @@
-/* System UI spec section 1. Values are logical pixels on the Plus panel. */
+/* System UI spec section 1. Values are logical pixels on the Plus panel (297 dpi: 4.125 px to the point). */
 #ifndef INK_UI_THEME_H
 #define INK_UI_THEME_H
 
 #include "ink/sys/ui.h"
 #include "ink/ui_icon_names.h"
 
+/* The design's numbers x 1.2, all of them together, so that its proportions stay (docs/product/legibility.md).
+ * Only the keys are not: ten have to fit across the panel. */
 enum {
     INK_CANVAS_W = 684, INK_CANVAS_H = 1216, /* Panel geometry, not control sizes. */
-    INK_FONT_STATUS = 24, INK_FONT_NOTE = 26, INK_FONT_LIST = 30,
-    INK_FONT_BODY = 32, INK_FONT_SUBTITLE = 36, INK_FONT_TITLE = 44,
-    INK_FONT_HEADING = 60, INK_FONT_NUMBER = 88, INK_FONT_CLOCK = 176,
-    INK_LINE_STATUS = 32, INK_LINE_NOTE = 36, INK_LINE_LIST = 44,
-    INK_LINE_BODY = 52, INK_LINE_SUBTITLE = 48, INK_LINE_TITLE = 60,
-    INK_LINE_HEADING = 72, INK_LINE_NUMBER = 100, INK_LINE_CLOCK = 186,
-    INK_ICON_SMALL = 28, INK_ICON_MEDIUM = 36, INK_ICON_LIST = 44,
-    INK_ICON_APP = 64, INK_ICON_STATE = 88,
-    INK_CIRCLE_SMALL = 64, INK_CIRCLE = 84, INK_CIRCLE_APP = 112, INK_CIRCLE_LARGE = 160,
-    INK_CONTROL = 84, INK_PRIMARY = 104, INK_ROW_DOUBLE = 112,
-    INK_SEGMENT = 96, INK_SLIDER = 96, INK_DOCK = 124,
-    INK_KEY = 88, INK_DIGIT = 136, INK_MARGIN = 32, INK_READING_MARGIN = 48,
-    INK_GAP_XS = 4, INK_GAP_S = 8, INK_GAP_M = 12, INK_GAP = 16,
-    INK_GAP_L = 24, INK_GAP_XL = 32, INK_GAP_XXL = 48, INK_BLOCK = 64, INK_BLOCK_L = 96,
-    INK_RADIUS_KEY = 24, INK_RADIUS_CARD = 40, INK_RADIUS_PANEL = 56,
-    INK_STROKE = 3 /* 2.5 px rounded to LVGL's integer stroke. */
+    INK_STATUS_BAR = 62,
+    INK_FONT_STATUS = 29, INK_FONT_NOTE = 31, INK_FONT_LIST = 36,
+    INK_FONT_BODY = 38, INK_FONT_SUBTITLE = 43, INK_FONT_TITLE = 53,
+    INK_FONT_HEADING = 72, INK_FONT_NUMBER = 106, INK_FONT_CLOCK = 211,
+    INK_LINE_STATUS = 38, INK_LINE_NOTE = 43, INK_LINE_LIST = 53,
+    INK_LINE_BODY = 62, INK_LINE_SUBTITLE = 58, INK_LINE_TITLE = 72,
+    INK_LINE_HEADING = 86, INK_LINE_NUMBER = 120, INK_LINE_CLOCK = 223,
+    INK_ICON_SMALL = 34, INK_ICON_MEDIUM = 43, INK_ICON_LIST = 53,
+    INK_ICON_APP = 77, INK_ICON_STATE = 106,
+    INK_CIRCLE_SMALL = 77, INK_CIRCLE = 101, INK_CIRCLE_APP = 134, INK_CIRCLE_LARGE = 192,
+    INK_CONTROL = 101, INK_PRIMARY = 125, INK_ROW_DOUBLE = 134,
+    INK_SEGMENT = 115, INK_SLIDER = 115, INK_DOCK = 149,
+    INK_KEY = 96, INK_DIGIT = 163, INK_MARGIN = 38, INK_READING_MARGIN = 58,
+    INK_GAP_XS = 5, INK_GAP_S = 10, INK_GAP_M = 14, INK_GAP = 19,
+    INK_GAP_L = 29, INK_GAP_XL = 38, INK_GAP_XXL = 58, INK_BLOCK = 77, INK_BLOCK_L = 115,
+    INK_RADIUS_KEY = 29, INK_RADIUS_CARD = 48, INK_RADIUS_PANEL = 67,
+    INK_STROKE = 3 /* 2.5 x 1.2 */
 };
 
 typedef enum { INK_WEIGHT_REGULAR, INK_WEIGHT_MEDIUM, INK_WEIGHT_BOLD } ink_ui_weight_t;
-typedef enum { INK_ICON_LINE, INK_ICON_DUO, INK_ICON_SOLID } ink_ui_icon_look_t;
+typedef enum { INK_ICON_LINE, INK_ICON_SOLID } ink_ui_icon_look_t;
 typedef enum { INK_SURFACE_WHITE, INK_SURFACE_STATIC, INK_SURFACE_BLACK } ink_ui_surface_t;
 
 int ink_ui_px(int px);
@@ -38,6 +41,15 @@ lv_color_t ink_ui_gray(void);
 lv_color_t ink_ui_secondary(void);
 const lv_font_t *ink_ui_font_px(int px, ink_ui_weight_t weight);
 int ink_ui_line_height(int px);
+/** Height of a row with a title and a line under it, at the current text size. */
+int ink_ui_row_double(void);
+/** What this text takes at the current text size, in canvas pixels. */
+int ink_ui_text_width(const char *text, int px, ink_ui_weight_t weight);
+int ink_ui_text_height(const char *text, int px, ink_ui_weight_t weight, int w);
+/** Another text size for a pill. */
+void ink_ui_pill_text(lv_obj_t *pill, int px, ink_ui_weight_t weight);
+/** One line of text in a box of w, cut with dots when it does not fit. */
+lv_obj_t *ink_ui_line(lv_obj_t *parent, const char *text, int px, ink_ui_weight_t weight, int x, int y, int w);
 
 lv_obj_t *ink_ui_box(lv_obj_t *parent, int x, int y, int w, int h, int radius, ink_ui_surface_t surface, bool border);
 lv_obj_t *ink_ui_label(lv_obj_t *parent, const char *text, int px, ink_ui_weight_t weight, int x, int y, int w);

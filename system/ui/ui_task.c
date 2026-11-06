@@ -19,6 +19,7 @@
 #include "ink/sys/ai.h"
 #include "ink/sys/exec.h"
 #include "ink/sys/ui.h"
+#include "ink/ui_theme.h"
 #include "ink/ui_shell.h"
 #include "ink/sys/textinput.h"
 #include "ink/sys/json.h"
@@ -407,7 +408,7 @@ static void styles_init(void) {
     lv_style_set_radius(&UI.st_btn, ink_ui_px(INK_RADIUS_KEY));
     lv_style_set_text_color(&UI.st_btn, lv_color_black());
     lv_style_set_shadow_width(&UI.st_btn, 0);
-    lv_style_set_pad_all(&UI.st_btn, ink_dp(8));
+    lv_style_set_pad_all(&UI.st_btn, ink_dp(INK_GAP_S));
     lv_style_set_anim_duration(&UI.st_btn, 0);
 
     lv_style_init(&UI.st_btn_pr);
@@ -444,9 +445,9 @@ void ink_ui_style_button_pressable(lv_obj_t *btn) {
 
 const lv_font_t *ink_ui_font(int role) {
     switch (role) {
-    case 1: return &lv_font_montserrat_40;
-    case 2: return &lv_font_montserrat_20;
-    default: return &lv_font_montserrat_28;
+    case 1: return ink_ui_font_px(INK_FONT_TITLE, INK_WEIGHT_BOLD);
+    case 2: return ink_ui_font_px(INK_FONT_NOTE, INK_WEIGHT_REGULAR);
+    default: return ink_ui_font_px(INK_FONT_BODY, INK_WEIGHT_REGULAR);
     }
 }
 
@@ -459,6 +460,7 @@ static void show_top(void) {
     ink_svc_lock(); UI.page_owner = owner; ink_svc_unlock();
     lv_obj_t *old = UI.screen;
     UI.screen = lv_obj_create(NULL);
+    lv_style_set_text_font(&UI.st_screen, ink_ui_font(0)); /* follows the text size and the member */
     ink_ui_style_screen(UI.screen);
     UI.generation++;
     ink_ui_content_changed();
@@ -490,6 +492,12 @@ void ink_ui_home(void) {
         UI.depth--;
     }
     show_top(); /* one rebuild, not one per level */
+}
+
+void ink_ui_redraw(void) {
+    if (!UI.depth) return;
+    if (UI.stack[UI.depth - 1].a->destroy) UI.stack[UI.depth - 1].a->destroy();
+    show_top();
 }
 
 void ink_ui_pop(void) {

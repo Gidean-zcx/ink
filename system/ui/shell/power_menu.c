@@ -49,11 +49,11 @@ static void on_button(lv_event_t *e) {
 static void power_tile(const char *label, const char *icon, int col, const char *action, bool primary) {
     int cell = (INK_CANVAS_W - 2 * INK_MARGIN) / 3;
     lv_obj_t *b = ink_ui_pill(M.card.panel, "", INK_MARGIN + col * cell, INK_MARGIN, cell,
-                              INK_CIRCLE_LARGE + INK_GAP_M + INK_LINE_LIST, false, on_button, (void *)action);
+                              INK_CIRCLE_APP + INK_GAP_M + ink_ui_line_height(INK_FONT_LIST), false, on_button, (void *)action);
     lv_obj_set_style_border_width(b, 0, 0);
-    ink_ui_circle(b, icon, (cell - INK_CIRCLE_LARGE) / 2 - INK_GAP, 0, INK_CIRCLE_LARGE, INK_ICON_APP,
+    ink_ui_circle(b, icon, (cell - INK_CIRCLE_APP) / 2 - INK_GAP_XS, 0, INK_CIRCLE_APP, INK_ICON_APP,
                   primary ? INK_SURFACE_BLACK : INK_SURFACE_WHITE, NULL, NULL);
-    lv_obj_t *l = ink_ui_label(b, label, INK_FONT_LIST, INK_WEIGHT_MEDIUM, 0, INK_CIRCLE_LARGE + INK_GAP_M, cell - 2 * INK_GAP);
+    lv_obj_t *l = ink_ui_label(b, label, INK_FONT_LIST, INK_WEIGHT_MEDIUM, 0, INK_CIRCLE_APP + INK_GAP_M, cell - 2 * INK_GAP_XS);
     lv_obj_set_style_text_align(l, LV_TEXT_ALIGN_CENTER, 0);
 }
 
@@ -62,17 +62,19 @@ static void open_job(void *arg) { /* UI task */
     if (M.card.root || ink_interrupt_active()) return;
     shell_card_open(&M.card);
     ink_ui_overlay_add(&OVERLAY, M.card.root);
-    int h = 2 * INK_MARGIN + INK_CIRCLE_LARGE + INK_GAP_M + INK_LINE_LIST + INK_MARGIN + INK_PRIMARY;
+    int h = 2 * INK_MARGIN + INK_CIRCLE_APP + INK_GAP_M + ink_ui_line_height(INK_FONT_LIST) + INK_MARGIN + INK_PRIMARY;
     lv_obj_clean(M.card.panel);
     lv_obj_set_y(M.card.panel, ink_ui_px(INK_CANVAS_H - h));
     lv_obj_set_height(M.card.panel, ink_ui_px(h + INK_RADIUS_PANEL));
     power_tile("关机", "power", 0, "system.shutdown", true);
     power_tile("重启", "update", 1, "system.reboot", false);
-    lv_obj_t *lock = ink_ui_circle(M.card.panel, "lock", INK_MARGIN + 2 * ((INK_CANVAS_W - 2 * INK_MARGIN) / 3) + INK_GAP_L,
-                                   INK_MARGIN, INK_CIRCLE_LARGE, INK_ICON_APP, INK_SURFACE_WHITE, NULL, NULL);
+    int cell = (INK_CANVAS_W - 2 * INK_MARGIN) / 3;
+    lv_obj_t *lock = ink_ui_circle(M.card.panel, "lock", INK_MARGIN + 2 * cell + (cell - INK_CIRCLE_APP) / 2, INK_MARGIN,
+                                   INK_CIRCLE_APP, INK_ICON_APP, INK_SURFACE_WHITE, NULL, NULL);
     ink_shell_bind(lock, "shell.lock", NULL);
-    ink_ui_label(M.card.panel, "锁屏", INK_FONT_LIST, INK_WEIGHT_MEDIUM,
-                 INK_CANVAS_W - INK_MARGIN - INK_CIRCLE_LARGE + INK_GAP_L, INK_MARGIN + INK_CIRCLE_LARGE + INK_GAP_M, INK_CIRCLE_LARGE);
+    lv_obj_t *word = ink_ui_label(M.card.panel, "锁屏", INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_MARGIN + 2 * cell,
+                                  INK_MARGIN + INK_CIRCLE_APP + INK_GAP_M, cell);
+    lv_obj_set_style_text_align(word, LV_TEXT_ALIGN_CENTER, 0);
     ink_ui_pill(M.card.panel, "取消", INK_MARGIN, h - INK_PRIMARY - INK_MARGIN,
                  INK_CANVAS_W - 2 * INK_MARGIN, INK_PRIMARY, false, on_button, NULL);
 }

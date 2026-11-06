@@ -207,17 +207,18 @@ static void build(int kind) {
     K.built_for = kind;
     K.keys = lv_obj_create(K.root);
     lv_obj_remove_style_all(K.keys);
-    lv_obj_set_size(K.keys, LV_PCT(100), ink_ui_px(INK_LINE_LIST + INK_CONTROL + 4 * INK_KEY + 5 * INK_GAP_XS));
+    lv_obj_set_size(K.keys, LV_PCT(100), ink_ui_px(ink_ui_line_height(INK_FONT_LIST) + INK_CONTROL + 4 * INK_KEY + 5 * INK_GAP_XS));
     lv_obj_set_style_pad_row(K.keys, ink_ui_px(INK_GAP_XS), 0);
     lv_obj_set_flex_flow(K.keys, LV_FLEX_FLOW_COLUMN);
     K.composing = lv_label_create(K.keys);
-    lv_obj_set_height(K.composing, ink_ui_px(INK_LINE_LIST));
+    lv_obj_set_height(K.composing, ink_ui_px(ink_ui_line_height(INK_FONT_LIST)));
     lv_obj_set_style_text_font(K.composing, font(), 0);
     lv_label_set_text(K.composing, "");
     K.edit = new_row();
     static const char *const EDIT[] = {"◀", "▶", "复制", "剪切", "粘贴", "撤销"};
     for (int i = 0; i < 6; i++) {
-        lv_obj_t *b = ink_ui_pill(K.edit, EDIT[i], 0, 0, INK_SEGMENT, INK_CONTROL, false, edit_action, (void *)(intptr_t)i);
+        lv_obj_t *b = ink_ui_pill(K.edit, EDIT[i], 0, 0, 0, INK_CONTROL, false, edit_action, (void *)(intptr_t)i);
+        ink_ui_pill_text(b, INK_FONT_NOTE, INK_WEIGHT_MEDIUM);
         lv_obj_set_flex_grow(b, 1);
     }
     lv_obj_add_flag(K.edit, LV_OBJ_FLAG_HIDDEN);
@@ -242,8 +243,9 @@ static void build(int kind) {
     lv_obj_set_width(K.more, ink_ui_px(INK_CONTROL));
     lv_obj_add_event_cb(K.more, on_more, LV_EVENT_CLICKED, NULL);
     lv_obj_t *ml = lv_label_create(K.more);
-    lv_obj_set_style_text_font(ml, font(), 0);
+    lv_obj_set_style_text_font(ml, ink_ui_font_px(INK_FONT_NOTE, INK_WEIGHT_REGULAR), 0);
     lv_label_set_text(ml, "更多");
+    lv_obj_center(ml);
     lv_obj_add_flag(K.more, LV_OBJ_FLAG_HIDDEN);
     K.fold = ink_ui_pill(K.cands, "键盘", 0, 0, INK_PRIMARY, INK_CONTROL, false, on_fold, NULL);
     lv_obj_add_flag(K.fold, LV_OBJ_FLAG_HIDDEN);
@@ -302,7 +304,7 @@ static void build(int kind) {
     K.panel = lv_obj_create(K.root);
     lv_obj_remove_style_all(K.panel);
     lv_obj_set_width(K.panel, LV_PCT(100));
-    lv_obj_set_style_pad_row(K.panel, ink_dp(4), 0);
+    lv_obj_set_style_pad_row(K.panel, ink_dp(INK_GAP_XS), 0);
     lv_obj_set_flex_flow(K.panel, LV_FLEX_FLOW_COLUMN);
     K.status = lv_label_create(K.panel);
     lv_obj_set_style_text_font(K.status, font(), 0);
@@ -417,8 +419,13 @@ static void sync(void) { /* UI task */
         if (K.expanded) lv_obj_set_width(K.cand_btn[i], ink_ui_px((INK_CANVAS_W - 2 * INK_GAP - 2 * INK_GAP_XS) / 3));
         else lv_obj_set_width(K.cand_btn[i], LV_SIZE_CONTENT);
     }
-    if (K.expanded) lv_obj_remove_flag(K.fold, LV_OBJ_FLAG_HIDDEN);
-    else lv_obj_add_flag(K.fold, LV_OBJ_FLAG_HIDDEN);
+    if (K.expanded) {
+        lv_obj_remove_flag(K.fold, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_add_flag(K.more, LV_OBJ_FLAG_FLEX_IN_NEW_TRACK);
+    } else {
+        lv_obj_add_flag(K.fold, LV_OBJ_FLAG_HIDDEN);
+        lv_obj_remove_flag(K.more, LV_OBJ_FLAG_FLEX_IN_NEW_TRACK);
+    }
     ink_ui_hint_obj(K.cands, INK_REFRESH_FAST);
     ink_ui_hint_obj(K.composing, INK_REFRESH_FAST);
 }

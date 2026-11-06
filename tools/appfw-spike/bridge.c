@@ -91,7 +91,7 @@ static void create(lv_obj_t *screen, void *arg) {
     ink_spike_start_us = boundary() - start;
     start = boundary();
     if (ink_spike_build_model()) osal_panic("spike model build failed");
-    ink_font_t *cjk = ink_font_open("fonts/sans-32.inkf");
+    ink_font_t *cjk = ink_font_open("fonts/sans-44.inkf");
     if (!cjk) osal_panic("spike CJK font missing");
     font = ink_font_lvgl(cjk);
     ink_ui_style_screen(screen);

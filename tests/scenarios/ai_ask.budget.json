@@ -16,10 +16,10 @@
     "why": "the ask during the outage must fail visibly, not hang"
   },
   "ai.press_to_listening_visible_ms.p95": {
-    "max": 600,
+    "max": 700,
     "target_max": 300,
     "srs": "SR-UX-05",
-    "why": "AI key -> listening prompt visible; SR-UX-05/01a will be met by the audio prompt (tone), the screen alone cannot do 300 ms"
+    "why": "AI key -> listening prompt visible; SR-UX-05/01a will be met by the audio prompt (tone), the screen alone cannot do 300 ms; 700 since D-107: the larger text makes the panel 16% taller and PQ-BN draws it in proportion"
   },
   "ai.release_to_first_text_visible_ms.p95": {
     "max": 3500,

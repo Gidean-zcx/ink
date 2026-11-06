@@ -4,13 +4,7 @@
     "Icon": "fc7ce97831581811f30e597cc3d30858cfb3c64608c96eeac6383398c1e68b27",
     "IconSheet": "f038c333803d431f5e25e56f3aa0e5a0ab7844ae7c02961a58638acc57c64d35"
   },
-  "sizes": [
-    28,
-    36,
-    44,
-    64,
-    88
-  ],
+  "sizes": [34, 43, 53, 77, 106],
   "names": [
     "ai",
     "arrow",

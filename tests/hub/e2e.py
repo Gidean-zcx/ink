@@ -22,7 +22,7 @@ async def run(args):
     root = Path(__file__).resolve().parents[2]
     output = Path(args.out)
     output.mkdir(parents=True, exist_ok=True)
-    if not Path(args.assets, "fonts/sans-24.inkf").exists() or not Path(args.content, "books").exists():
+    if not Path(args.assets, "fonts/sans-44.inkf").exists() or not Path(args.content, "books").exists():
         print("SKIP: generated CJK fonts or test content are missing")
         return 77
     hub = Hub(output / "hub-data", dev_allow_proto1=True, model=FakeModel(tool="reader.next_page"), record_wire=True)

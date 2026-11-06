@@ -232,7 +232,8 @@ int ink_member_durable_id(const char *id, uint8_t out[16]) {
                 if (M.s[i].used && &M.s[i] != s) rc = save_slot(db, &M.s[i]);
         }
     }
-    if (!rc && !used) rc = ink_db_wait(db, ink_db_last_ver(db), 1000000);
+    /* Flash writes wait for the panel, and right after a member switch it is drawing a whole new screen. */
+    if (!rc && !used) rc = ink_db_wait(db, ink_db_last_ver(db), 5000000);
     if (!rc) { memcpy(out, s->identity, 16); M.table_is_real = true; }
     else if (!used) memset(s->identity, 0, sizeof s->identity);
     ink_db_close(db);
