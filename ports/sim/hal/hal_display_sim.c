@@ -859,7 +859,7 @@ static void execute(req_t *r) {
  * hal_display_pause() stops at the next phase boundary (flash operations run between phases). */
 
 #define PQ_MAX_UPD 64
-#define PQ_PLAN_STACK 3072
+#define PQ_PLAN_STACK 2048
 
 typedef struct {
     req_t r;

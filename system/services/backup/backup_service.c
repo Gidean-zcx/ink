@@ -982,7 +982,7 @@ static void step(void *arg) {
     if (C && (strcmp(C->member, member) || C->generation != ink_member_generation(member) || ink_jobs_held() || !ink_member_space_open())) free_capture();
     if (!pending_for(member)) { net_reset(); schedule(); return; }
     if (!load_journal(member)) { net_reset(); remember(member, false); schedule(); return; }
-    if (!actor_valid() || ink_jobs_held()) { net_reset(); schedule(); return; }
+    if (!actor_valid() || ink_jobs_held() || ink_storage_writes_held()) { net_reset(); schedule(); return; } /* never wait for the flash here: this executor is shared */
     net_bind();
     if (B.j.phase == PH_SAVED) {
         int polled = 0;
@@ -1098,7 +1098,15 @@ static void cap_manifest(ink_call_t *c) {
     free_resources(); ink_fs_card_release();
 }
 
+static bool held_back(ink_call_t *c) { /* sound holds the flash back; saving the journal now would stop the shared executor */
+    if (!ink_storage_writes_held()) return false;
+    c->rc.status = INK_RC_REJECTED;
+    snprintf(c->rc.say, sizeof c->rc.say, "正在放声音或录音，结束后再试");
+    return true;
+}
+
 static void cap_backup(ink_call_t *c) {
+    if (held_back(c)) return;
     if (!for_call(c)) return;
     if (active()) { c->rc.status = INK_RC_QUEUED; result(c, false); schedule(); return; }
     if (ink_fs_card_hold() != INK_FS_OK) {
@@ -1131,6 +1139,7 @@ static void cap_preview(ink_call_t *c) {
 }
 
 static void cap_apply(ink_call_t *c) {
+    if (held_back(c)) return;
     if (!for_call(c)) return;
     char preview[33]; ink_args_get_str(&c->args, "preview", preview, sizeof preview);
     if (B.j.phase != PH_PREVIEW || strcmp(preview, B.j.preview)) { c->rc.status = INK_RC_STALE; return; }

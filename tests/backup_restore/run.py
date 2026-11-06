@@ -114,6 +114,7 @@ if not a.quick:
         boot(target, "reused-id", server=server)
         boot(target, "identity-reboot", server=server)
     boot(work / "deep", "deep", server=work / "deep-hub")
+    boot(work / "recording", "recording", server=work / "recording-hub")
     slow = json.loads((ROOT / "simulator/profiles/metalio-plus.json").read_text(errors="replace"))
     for link in ("wifi", "lte"):
         slow["network"][link].update(mbps=0.2, rtt_ms_p50=600, rtt_ms_p99=600, loss=0)

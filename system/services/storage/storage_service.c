@@ -771,6 +771,13 @@ void ink_storage_prefetch(const char *path) {
     else osal_sem_give(ST.kick);
 }
 
+bool ink_storage_writes_held(void) {
+    osal_mutex_lock(ST.lock, OSAL_WAIT_FOREVER);
+    bool held = ST.holds > 0;
+    osal_mutex_unlock(ST.lock);
+    return held;
+}
+
 void ink_storage_hold_writes(bool hold) {
     osal_mutex_lock(ST.lock, OSAL_WAIT_FOREVER);
     ST.holds += hold ? 1 : -1;

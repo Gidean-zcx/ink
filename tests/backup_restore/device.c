@@ -266,6 +266,7 @@ static void human_member(const char *cap, const char *args, const char *id) {
     CHECK(sscanf(g_rc.object,"confirm:%u",&token)==1 && ink_confirm_decide(token,true,INK_SRC_TOUCH)==0,"human approves exact membership change");
     CHECK(WAIT_FOR(!strcmp(cap,"member.add") ? ink_member_generation(id)>0 : !member_exists(id),10000),"membership background work finished");
 }
+static void ignore_frame(void *ctx, const uint8_t *data, size_t len, uint32_t seq) { (void)ctx; (void)data; (void)len; (void)seq; }
 static void responsive_wait(const char *wanted, int seconds) {
     for(int i=0;i<seconds*5;i++) {
         ink_power_activity(osal_now_us());
@@ -441,6 +442,15 @@ static void run(void *arg) {
         responsive_wait("\"phase\":\"saved\"",300);
         CHECK(AI("backup.manifest",NULL) && g_rc.status==INK_RC_DONE && strstr(g_result,file_name),"supported large or deep file is included");
         CHECK(sim_metric_value("cap.timeouts")==0 && sim_metric_value("cap.late")==0,"large/deep backup has no capability timeout or late completion");
+    } else if (!strcmp(phase,"recording")) {
+        fixtures("owner");
+        CHECK(ink_audio_capture_begin_local(ignore_frame,NULL)==0,"a recording holds the flash back");
+        delay_ms(500);
+        CHECK(AI("backup.now",NULL) && g_rc.status==INK_RC_REJECTED && sim_metric_value("cap.timeouts")==0,"backup says to wait instead of stopping the executor");
+        ink_audio_capture_end();
+        delay_ms(1000);
+        CHECK(AI("backup.now",NULL) && g_rc.status==INK_RC_QUEUED,"and takes it after the recording");
+        responsive_wait("\"phase\":\"saved\"",60);
     } else if (!strcmp(phase,"slow-status")) {
         ink_hub_demand(); CHECK(WAIT_FOR(ink_hub_online(),10000),"connect before cloud receipt refresh");
         CHECK(status("\"phase\":\"saved\"") && strstr(g_result,"\"durable\":false"),"status returns cached receipt before cloud poll");

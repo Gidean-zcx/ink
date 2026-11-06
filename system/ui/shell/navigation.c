@@ -667,6 +667,11 @@ static void draw_page_body(void) {
         ink_ui_notice(N.page_body, integer("cell.registered") ? "4G 在线，切卡不用重启" : "4G 还没有连上", y);
     } else {
         y = notifications(N.page_body, 0, 6);
+        if (!y && !N.notify_page) { /* nothing to read or turn */
+            ink_ui_notice(N.page_body, "还没有通知", INK_GAP);
+            ink_ui_hint_obj(N.page_body, INK_REFRESH_UI);
+            return;
+        }
         lv_obj_t *read = ink_ui_pill(N.page_body, "全部已读", INK_MARGIN, y + INK_GAP, width(), INK_CONTROL, false, NULL, NULL); ink_shell_bind(read, "notify.read", "{\"id\":0}");
         y += INK_GAP + INK_CONTROL + INK_GAP;
         lv_obj_t *prev = ink_ui_pill(N.page_body, "上一页", INK_MARGIN, y, 2 * INK_PRIMARY, INK_CONTROL, false, NULL, NULL);

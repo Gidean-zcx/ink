@@ -43,6 +43,7 @@ void ink_storage_prefetch(const char *path);
  * are forced (counted as storage.forced_writes).
  */
 void ink_storage_hold_writes(bool hold);
+bool ink_storage_writes_held(void);
 /** Writes waiting in the queue, including the one being written (0 = nothing left to write). */
 int ink_storage_pending(void);
 /**
