@@ -123,8 +123,7 @@ int ink_text_focus(const ink_text_cfg_t *cfg, const ink_text_client_t *client, v
 bool ink_text_session_current(void) {
     ink_member_identity_t identity;
     ink_member_identity(&identity);
-    return !TS.session || (identity.authed && TS.owner.generation == identity.generation &&
-           !strcmp(TS.owner.member, identity.member));
+    return !TS.session || (identity.authed && !strcmp(TS.owner.member, identity.member));
 }
 
 static void forget_snaps(snap_t *list, int *n) {

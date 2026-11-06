@@ -91,7 +91,6 @@ static struct {
 } AI;
 static bool g_turn_revoked INK_PSRAM_BSS; /* under AI.lock */
 static char g_turn_member[INK_MEMBER_ID_MAX] INK_PSRAM_BSS;
-static uint32_t g_turn_generation INK_PSRAM_BSS;
 static uint32_t g_turn_epoch INK_PSRAM_BSS;
 static ink_exec_job_t g_owner_job INK_PSRAM_BSS;
 static void owner_ui(void *arg);
@@ -99,8 +98,8 @@ static void owner_ui(void *arg);
 static bool turn_allowed(void) { /* under AI.lock */
     ink_member_identity_t identity;
     ink_member_identity(&identity);
-    if (!g_turn_revoked && (!identity.authed || !g_turn_generation ||
-        g_turn_epoch != identity.epoch || g_turn_generation != identity.generation || strcmp(g_turn_member, identity.member))) {
+    if (!g_turn_revoked && (!identity.authed ||
+        g_turn_epoch != identity.epoch || strcmp(g_turn_member, identity.member))) {
         g_turn_revoked = AI.drop_frames = true;
         AI.tts_done_for = AI.stream;
         ink_exec_post(INK_EXEC_UI, &g_owner_job, owner_ui, NULL);
@@ -639,7 +638,6 @@ void ink_ai_key(bool pressed, uint64_t t_us) {
         ink_member_identity_t identity;
         ink_member_identity(&identity);
         snprintf(g_turn_member, sizeof g_turn_member, "%s", identity.member);
-        g_turn_generation = identity.generation;
         g_turn_epoch = identity.epoch;
         g_turn_revoked = false;
         osal_mutex_unlock(AI.lock);
@@ -741,7 +739,6 @@ void ink_ai_ask_text(const char *text) {
     ink_member_identity_t identity;
     ink_member_identity(&identity);
     snprintf(g_turn_member, sizeof g_turn_member, "%s", identity.member);
-    g_turn_generation = identity.generation;
     g_turn_epoch = identity.epoch;
     g_turn_revoked = false;
     osal_mutex_unlock(AI.lock);

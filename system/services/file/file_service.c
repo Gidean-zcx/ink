@@ -53,7 +53,6 @@ struct ink_fs_file {
 
 struct ink_fs_dir {
     char member[INK_MEMBER_ID_MAX];
-    uint32_t generation;
     file_context_t context;
     hal_dir_t *d;
     bool at_root; /* "/" lists the virtual roots */
@@ -76,7 +75,6 @@ typedef struct {
     bool cancel;
     int task;
     char who[INK_MEMBER_ID_MAX];
-    uint32_t generation;
     ink_fs_job_status_t st;
     void (*on_end)(void *ctx, const ink_fs_job_status_t *st);
     void *on_end_ctx;
@@ -152,21 +150,21 @@ static file_context_t current_context(void) {
     const ink_member_t *m = ink_member_current();
     snprintf(c.member, sizeof c.member, "%s", m->id);
     c.adult = m->role == INK_ROLE_ADULT;
-    c.generation = ink_member_generation(c.member);
+    
     ink_svc_unlock();
     return c;
 }
 
-static file_context_t member_context(const char *member, uint32_t generation) {
+static file_context_t member_context(const char *member) {
     file_context_t c = {0};
     ink_svc_lock();
-    if (member && generation && generation == ink_member_generation(member)) {
+    if (member && ink_member_exists(member)) {
         const ink_member_t *m;
         for (int i = 0; (m = ink_member_at(i)) != NULL; i++) {
             if (strcmp(m->id, member)) continue;
             snprintf(c.member, sizeof c.member, "%s", m->id);
             c.adult = m->role == INK_ROLE_ADULT;
-            c.generation = generation;
+            
             break;
         }
     }
@@ -176,9 +174,8 @@ static file_context_t member_context(const char *member, uint32_t generation) {
 
 bool fs_context_for_call(file_context_t *context, ink_call_t *call) {
     *context = current_context();
-    uint32_t generation;
-    const char *member = ink_cap_call_member(call, &generation);
-    if (context->generation && context->generation == generation && !strcmp(context->member, member)) return true;
+    const char *member = ink_cap_call_member(call);
+    if (!strcmp(context->member, member)) return true;
     call->rc.status = INK_RC_STALE;
     snprintf(call->rc.detail, sizeof call->rc.detail, "someone else is using the device now");
     return false;
@@ -186,7 +183,7 @@ bool fs_context_for_call(file_context_t *context, ink_call_t *call) {
 
 /* Every path of an operation uses the same authority and namespace. */
 static int resolve_for(const file_context_t *c, const char *path, bool write, char *phys, size_t cap) {
-    if (!c->generation || c->generation != ink_member_generation(c->member)) return INK_FS_ERR_DENIED;
+    if (!ink_member_exists(c->member)) return INK_FS_ERR_DENIED;
     size_t n = path ? strlen(path) : 0;
     if (n < 2 || n >= INK_FS_PATH_MAX || path[0] != '/' || path[n - 1] == '/') return INK_FS_ERR_PATH;
     for (const char *p = path + 1;;) { /* every segment */
@@ -211,7 +208,7 @@ static int resolve_for(const file_context_t *c, const char *path, bool write, ch
         memcpy(id, path + 9, idn);
         id[idn] = 0;
         if (!ink_layout_member_ok(id)) return INK_FS_ERR_PATH;
-        if (!ink_member_generation(id)) return INK_FS_ERR_DENIED;
+        if (!ink_member_exists(id)) return INK_FS_ERR_DENIED;
         r = snprintf(phys, cap, "/content/.m/%s%s", id, rest ? rest : "");
     } else if (!strcmp(path, "/members")) {
         return c->adult ? INK_FS_ERR_IS_DIR : INK_FS_ERR_DENIED; /* the list of members is not a directory */
@@ -281,7 +278,7 @@ static int card_error(void) {
     return INK_FS_ERR_IO;
 }
 
-static void changed_for(const char *who, uint32_t generation, const char *path, const char *kind) {
+static void changed_for(const char *who, const char *path, const char *kind) {
     char *block = osal_malloc(sizeof(ink_args_t), OSAL_MEM_EXTERNAL); /* the arguments are large for most stacks */
     if (!block) return;
     ink_args_t *a = (ink_args_t *)block;
@@ -289,12 +286,12 @@ static void changed_for(const char *who, uint32_t generation, const char *path, 
     ink_args_str(a, "path", path);
     ink_args_str(a, "kind", kind);
     ink_args_str(a, "member", who);
-    ink_cap_emit_for("file.changed", a, who, generation);
+    ink_cap_emit_for("file.changed", a, who);
     osal_free(block);
     ink_svc_at(&FS.refresh_at, osal_now_us() + 60000000ull, fs_refresh_cb, NULL); /* what is free changed */
 }
 
-static void changed(const file_context_t *c, const char *path, const char *kind) { changed_for(c->member, c->generation, path, kind); }
+static void changed(const file_context_t *c, const char *path, const char *kind) { changed_for(c->member, path, kind); }
 
 /* ------------------------------------------------------------ files */
 
@@ -451,7 +448,7 @@ int fs_dir_open_for(const file_context_t *c, const char *path, ink_fs_dir_t **ou
             const char *end = strchr(path + 9, '/');
             snprintf(dir->member, sizeof dir->member, "%.*s", (int)(end ? end - (path + 9) : (ptrdiff_t)strlen(path + 9)), path + 9);
         }
-        dir->generation = ink_member_generation(dir->member);
+        
     }
     dir->d = hal_fs_opendir(phys);
     if (!dir->d && !strcmp(path, "/me")) { /* first use: an empty place of their own */
@@ -475,8 +472,8 @@ int ink_fs_dir_open(const char *path, ink_fs_dir_t **out) {
 
 int ink_fs_dir_next(ink_fs_dir_t *d, ink_fs_stat_t *out) {
     if (!d) return INK_FS_ERR_IO;
-    if (!d->context.generation || d->context.generation != ink_member_generation(d->context.member)) return INK_FS_ERR_DENIED;
-    if (d->member[0] && (!d->generation || d->generation != ink_member_generation(d->member))) return INK_FS_ERR_DENIED;
+    if (!ink_member_exists(d->context.member)) return INK_FS_ERR_DENIED;
+    if (d->member[0] && (!ink_member_exists(d->member))) return INK_FS_ERR_DENIED;
     if (d->at_root) {
         static const char *const ROOTS[] = {"me", "family", "members"};
         int n = d->context.adult ? 3 : 2;
@@ -921,10 +918,10 @@ static void job_finish(void *ctx, ink_job_step_t how, bool cancelled) {
         ink_args_bool(a, "ok", ok);
         if (!ok) ink_args_str(a, "why", err ? ink_fs_err_name(err) : "cancelled");
         ink_args_str(a, "member", j->who);
-        ink_cap_emit_for("file.job_done", a, j->who, j->generation);
+        ink_cap_emit_for("file.job_done", a, j->who);
         osal_free(a);
     }
-    changed_for(j->who, j->generation, j->op == 0 ? j->vto : j->vfrom, j->op == 0 ? "copied" : "removed");
+    changed_for(j->who, j->op == 0 ? j->vto : j->vfrom, j->op == 0 ? "copied" : "removed");
     ink_probe_count(ok ? "file.jobs_done" : "file.jobs_failed");
     ink_svc_lock();
     FS.job_active = false;
@@ -957,7 +954,7 @@ static int job_begin_unlocked(const file_context_t *c, int op, const char *from,
     int id = ++FS.next_job;
     memset(j, 0, sizeof *j);
     snprintf(j->who, sizeof j->who, "%s", c->member);
-    j->generation = c->generation;
+    
     j->id = id;
     j->op = op;
     j->st.state = INK_FS_JOB_RUNNING;
@@ -994,7 +991,7 @@ static int job_begin_unlocked(const file_context_t *c, int op, const char *from,
     char title[64];
     const char *base = strrchr(from, '/');
     snprintf(title, sizeof title, "%s %.48s", op == 0 ? "拷贝" : "删除", base ? base + 1 : from);
-    j->task = ink_task_begin_for(op == 0 ? "file.copy" : "file.delete", title, j->who, j->generation, job_cancel_cb, (void *)(intptr_t)id);
+    j->task = ink_task_begin_for(op == 0 ? "file.copy" : "file.delete", title, j->who, job_cancel_cb, (void *)(intptr_t)id);
     ink_job_t job = {.name = "file", .step = job_step, .finish = job_finish, .ctx = j, .step_budget_ms = 500};
     if (r || ink_job_submit(&job) < 0) {
         job_release(j);
@@ -1048,7 +1045,7 @@ int ink_fs_forget_member(const char *id) {
 
 int ink_fs_job_status(int id, ink_fs_job_status_t *out) {
     ink_svc_lock();
-    bool hit = FS.job.id == id && id > 0 && FS.job.generation && FS.job.generation == ink_member_generation(FS.job.who);
+    bool hit = FS.job.id == id && id > 0 && ink_member_exists(FS.job.who);
     if (hit) *out = FS.job.st;
     ink_svc_unlock();
     return hit ? INK_FS_OK : INK_FS_ERR_NOT_FOUND;
@@ -1247,8 +1244,8 @@ int ink_fs_open(const char *path, int mode, ink_fs_file_t **out) {
     return fs_open_for(&c, path, mode, out);
 }
 
-int ink_fs_open_member_generation(const char *member, uint32_t generation, const char *path, int mode, ink_fs_file_t **out) {
-    file_context_t c = member_context(member, generation);
+int ink_fs_open_for(const char *member, const char *path, int mode, ink_fs_file_t **out) {
+    file_context_t c = member_context(member);
     return fs_open_for(&c, path, mode, out);
 }
 
@@ -1268,8 +1265,8 @@ int fs_mkdir_for(const file_context_t *c, const char *path) {
     return r;
 }
 
-int ink_fs_mkdir_member_generation(const char *member, uint32_t generation, const char *path) {
-    file_context_t c = member_context(member, generation);
+int ink_fs_mkdir_for(const char *member, const char *path) {
+    file_context_t c = member_context(member);
     return fs_mkdir_for(&c, path);
 }
 
@@ -1291,8 +1288,8 @@ int ink_fs_remove_if_revision(const char *path, uint32_t revision) {
 }
 int ink_fs_remove(const char *path) { return ink_fs_remove_if_revision(path, 0); }
 
-int ink_fs_remove_member_generation(const char *member, uint32_t generation, const char *path) {
-    file_context_t c = member_context(member, generation);
+int ink_fs_remove_for(const char *member, const char *path) {
+    file_context_t c = member_context(member);
     return fs_remove_for(&c, path, 0);
 }
 
@@ -1322,10 +1319,10 @@ int ink_fs_write_atomic(const char *path, const void *data, size_t n) {
     return r;
 }
 
-static int restore_file(const char *member, uint32_t generation, unsigned stage, const char *path, const uint8_t expected_sha256[32], uint32_t revision) {
+static int restore_file(const char *member, unsigned stage, const char *path, const uint8_t expected_sha256[32], uint32_t revision) {
     if (!member || !path || (!expected_sha256 && !revision) || stage >= 128 || strncmp(path, "/me/", 4)) return INK_FS_ERR_PATH;
-    file_context_t c = member_context(member, generation);
-    if (!c.generation || !ink_member_io_begin(member, generation)) return INK_FS_ERR_DENIED;
+    file_context_t c = member_context(member);
+    if (!ink_member_io_begin(member)) return INK_FS_ERR_DENIED;
     int r = ink_fs_card_hold();
     if (r) { ink_member_io_end(member); return r; }
     uint8_t *buf = revision ? NULL : osal_malloc(JOB_BUF, OSAL_MEM_EXTERNAL);
@@ -1369,11 +1366,11 @@ static int restore_file(const char *member, uint32_t generation, unsigned stage,
     return r;
 }
 
-int ink_fs_restore(const char *member, uint32_t generation, unsigned stage, const char *path, const uint8_t expected_sha256[32]) {
-    return restore_file(member, generation, stage, path, expected_sha256, 0);
+int ink_fs_restore(const char *member, unsigned stage, const char *path, const uint8_t expected_sha256[32]) {
+    return restore_file(member, stage, path, expected_sha256, 0);
 }
 
-int ink_fs_restore_if_revision(const char *member, uint32_t generation, unsigned stage, const char *path, uint32_t revision) {
+int ink_fs_restore_if_revision(const char *member, unsigned stage, const char *path, uint32_t revision) {
     if (!revision) return INK_FS_ERR_EXISTS;
-    return restore_file(member, generation, stage, path, NULL, revision);
+    return restore_file(member, stage, path, NULL, revision);
 }

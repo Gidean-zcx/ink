@@ -23,28 +23,28 @@ static void run(void *arg) {
     delay_ms(1800);
     CHECK(ink_cap_subscribe("confirm.result", result, NULL, INK_EXEC_DIRECT) == 0, "listener");
     CHECK(decide("member.add", "{\"id\":\"oldadult\",\"role\":\"adult\"}") && !strcmp(status, "done"), "add adult");
-    uint32_t old = ink_member_generation("oldadult");
-    CHECK(old && ink_member_io_begin("oldadult", old) && ink_member_io_begin("oldadult", old), "register two writers");
+    uint32_t old = ink_member_exists("oldadult");
+    CHECK(old && ink_member_io_begin("oldadult") && ink_member_io_begin("oldadult"), "register two writers");
     CHECK(decide("member.remove", "{\"id\":\"oldadult\"}") && !strcmp(status, "failed"), "registered writer blocks removal");
-    CHECK(ink_member_generation("oldadult") == 0, "quarantined incarnation");
-    CHECK(!ink_member_io_begin("oldadult", old), "no new writer after quarantine");
+    CHECK(ink_member_exists("oldadult") == 0, "quarantined incarnation");
+    CHECK(!ink_member_io_begin("oldadult"), "no new writer after quarantine");
     CHECK(decide("member.add", "{\"id\":\"oldadult\",\"role\":\"child\"}") && !strcmp(status, "failed"), "busy id cannot be reused");
     ink_member_io_end("oldadult");
     CHECK(decide("member.remove", "{\"id\":\"oldadult\"}") && !strcmp(status, "failed"), "second writer still holds id");
     ink_member_io_end("oldadult");
     CHECK(decide("member.remove", "{\"id\":\"oldadult\"}") && !strcmp(status, "done"), "retry after writers finish");
-    CHECK(!ink_member_io_begin("oldadult", old), "absent writer rejected");
+    CHECK(!ink_member_io_begin("oldadult"), "absent writer rejected");
     CHECK(ink_db_open(&PRIVATE, "oldadult") == NULL, "absent collection refused");
     CHECK(ink_storage_write_atomic("/user/m/oldadult/synthetic.raw", "SYNTH", 5) != 0, "absent raw write refused");
     CHECK(decide("member.add", "{\"id\":\"oldadult\",\"role\":\"child\"}") && !strcmp(status, "done"), "reuse after cleanup");
-    uint32_t fresh = ink_member_generation("oldadult");
-    CHECK(fresh && fresh != old && !ink_member_io_begin("oldadult", old), "old incarnation cannot register");
-    CHECK(ink_db_open_member(&PRIVATE, "oldadult", old) == NULL, "old collection opener refused");
-    CHECK(ink_storage_write_member_atomic("/user/m/oldadult/synthetic.raw", "SYNTH", 5, old) != 0 &&
-          ink_storage_remove_member("/user/m/oldadult/synthetic.raw", old, NULL, NULL) != 0, "old write and remove refused");
-    CHECK(ink_storage_write_member_atomic("/user/sys/synthetic.raw", "SYNTH", 5, fresh) != 0 &&
-          ink_storage_write_member_atomic("/user/m/oldadult/synthetic.raw", "SYNTH", 5, 0) != 0, "bound API rejects device path and zero incarnation");
-    ink_db_t *db = ink_db_open_member(&PRIVATE, "oldadult", fresh);
+    uint32_t fresh = ink_member_exists("oldadult");
+    CHECK(fresh && fresh != old && !ink_member_io_begin("oldadult"), "old incarnation cannot register");
+    CHECK(ink_db_open_member(&PRIVATE, "oldadult") == NULL, "old collection opener refused");
+    CHECK(ink_storage_write_member_atomic("/user/m/oldadult/synthetic.raw", "SYNTH", 5) != 0 &&
+          ink_storage_remove_member("/user/m/oldadult/synthetic.raw", NULL, NULL) != 0, "old write and remove refused");
+    CHECK(ink_storage_write_member_atomic("/user/sys/synthetic.raw", "SYNTH", 5) != 0 &&
+          ink_storage_write_member_atomic("/user/m/oldadult/synthetic.raw", "SYNTH", 5) != 0, "bound API rejects device path and zero incarnation");
+    ink_db_t *db = ink_db_open_member(&PRIVATE, "oldadult");
     CHECK(db != NULL, "live reference admitted");
     CHECK(decide("member.remove", "{\"id\":\"oldadult\"}") && !strcmp(status, "failed"), "collection reference blocks cleanup");
     ink_db_close(db);

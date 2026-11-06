@@ -42,7 +42,6 @@ typedef struct {
     bool used;
     bool removing;
     uint16_t writers;
-    uint32_t generation;
     uint8_t identity[16];
     ink_member_t m;
     uint8_t salt[16], hash[32];
@@ -62,10 +61,11 @@ typedef struct __attribute__((packed)) {
 
 /* Hashes and salts: no AI, no hub, no app reads this. */
 static const ink_db_def_t TABLE = {.name = "member.table", .title = "家人名单", .scope = INK_DB_DEVICE, .schema = 1, .max_records = INK_MEMBERS_MAX};
+/* An id is never used twice on a device: nothing delayed can reach a new person under an old id. */
+static const ink_db_def_t RETIRED = {.name = "member.retired", .title = "删掉的家人编号", .scope = INK_DB_DEVICE, .schema = 1, .max_records = 64};
 
 static struct {
     slot_t s[INK_MEMBERS_MAX];
-    uint32_t next_generation;
     uint32_t epoch;
     slot_t *cur;
     bool authed;
@@ -108,22 +108,15 @@ const ink_member_t *ink_member_current(void) { return &cur()->m; }
 
 bool ink_member_removing(const char *id) { const slot_t *s = find(id); return s && s->removing; }
 
-uint32_t ink_member_generation(const char *id) {
-    slot_t *s = id ? find(id) : cur();
-    if (!s || s->removing) return 0;
-    uint32_t generation = __atomic_load_n(&s->generation, __ATOMIC_ACQUIRE);
-    if (!generation) {
-        uint32_t fresh = __atomic_add_fetch(&M.next_generation, 1, __ATOMIC_RELAXED);
-        __atomic_compare_exchange_n(&s->generation, &generation, fresh, false, __ATOMIC_RELEASE, __ATOMIC_ACQUIRE);
-        generation = __atomic_load_n(&s->generation, __ATOMIC_ACQUIRE);
-    }
-    return generation;
+bool ink_member_exists(const char *id) {
+    const slot_t *s = id ? find(id) : cur();
+    return s && !s->removing;
 }
 
-bool ink_member_io_begin(const char *id, uint32_t generation) {
+bool ink_member_io_begin(const char *id) {
     ink_svc_lock();
     slot_t *s = id ? find(id) : NULL;
-    bool ok = s && generation && generation == ink_member_generation(id) && s->writers < UINT16_MAX;
+    bool ok = s && ink_member_exists(id) && s->writers < UINT16_MAX;
     if (ok) s->writers++;
     ink_svc_unlock();
     return ok;
@@ -171,7 +164,7 @@ uint32_t ink_member_epoch(void) { return __atomic_load_n(&M.epoch, __ATOMIC_ACQU
 void ink_member_identity(ink_member_identity_t *out) {
     ink_svc_lock();
     snprintf(out->member, sizeof out->member, "%s", cur()->m.id);
-    out->generation = ink_member_generation(out->member);
+    
     out->epoch = ink_member_epoch();
     out->authed = ink_member_space_open();
     ink_svc_unlock();
@@ -217,9 +210,9 @@ static void save_all(void) {
     ink_db_close(db);
 }
 
-int ink_member_durable_id(const char *id, uint32_t generation, uint8_t out[16]) {
+int ink_member_durable_id(const char *id, uint8_t out[16]) {
     slot_t *s = find(id);
-    if (!out || !s || !generation || generation != ink_member_generation(id) || M.table_unread ||
+    if (!out || !s || !ink_member_exists(id) || M.table_unread ||
         !ink_exec_is_current(INK_EXEC_BG)) return -1;
     ink_db_t *db = ink_db_open(&TABLE, NULL);
     if (!db) return -1;
@@ -278,6 +271,7 @@ static int read_table(slot_t *fresh) {
 
 static void load_table(void) {
     if (ink_db_register(&TABLE) != 0) return; /* some test programs run without the data store */
+    ink_db_register(&RETIRED);
     slot_t *fresh = osal_calloc(INK_MEMBERS_MAX, sizeof *fresh, OSAL_MEM_EXTERNAL);
     int n = fresh ? read_table(fresh) : -1;
     if (n < 0) {
@@ -466,7 +460,6 @@ typedef enum { JOB_UNLOCK, JOB_SET, JOB_CHECK_PARENT } job_kind_t;
 typedef struct {
     ink_exec_job_t job;
     job_kind_t kind;
-    uint32_t generation;
     char id[16];
     char pin[PIN_MAX + 1], new_pin[PIN_MAX + 1];
     ink_pin_done_fn done;
@@ -500,7 +493,7 @@ static void pin_job(void *arg) { /* exec.bg: slow by design */
         for (int i = 0; i < INK_MEMBERS_MAX && !s; i++)
             if (M.s[i].used && !M.s[i].removing && M.s[i].m.role == INK_ROLE_ADULT && M.s[i].has_pin) s = &M.s[i];
     } else s = find(j->id);
-    if (s && !s->removing && (j->kind == JOB_CHECK_PARENT || j->generation == ink_member_generation(j->id))) switch (j->kind) {
+    if (s && !s->removing && (j->kind == JOB_CHECK_PARENT || ink_member_exists(j->id))) switch (j->kind) {
         case JOB_UNLOCK:
             if (!s->has_pin) r = INK_PIN_OK;
             else r = try_pin(s, j->pin, &wait_s);
@@ -562,7 +555,7 @@ static int start_job(job_kind_t kind, const char *id, const char *pin, const cha
     pin_job_t *j = osal_calloc(1, sizeof *j, OSAL_MEM_EXTERNAL);
     if (!j) return -1;
     j->kind = kind;
-    j->generation = ink_member_generation(id);
+    
     snprintf(j->id, sizeof j->id, "%s", id ? id : "");
     snprintf(j->pin, sizeof j->pin, "%s", pin ? pin : "");
     snprintf(j->new_pin, sizeof j->new_pin, "%s", new_pin ? new_pin : "");
@@ -609,6 +602,24 @@ static void cap_list(ink_call_t *c) {
     osal_free(out);
 }
 
+static bool id_retired(const char *id) {
+    ink_db_t *db = ink_db_open(&RETIRED, NULL);
+    if (!db) return false;
+    ink_rec_t r;
+    bool used = ink_db_get(db, record_id(id), &r, NULL, 0) == INK_DB_OK;
+    ink_db_close(db);
+    return used;
+}
+
+static void retire_id(const char *id) {
+    ink_db_t *db = ink_db_open(&RETIRED, NULL);
+    if (!db) return;
+    ink_db_write_t w = {.id = record_id(id), .data = id, .len = strlen(id), .src = INK_SRC_SYSTEM};
+    ink_db_put(db, &w, NULL);
+    ink_db_flush(db);
+    ink_db_close(db);
+}
+
 static void cap_add(ink_call_t *c) { /* exec.bg */
     char id[32], name[32] = "", role[8] = "child";
     ink_args_get_str(&c->args, "id", id, sizeof id);
@@ -620,6 +631,10 @@ static void cap_add(ink_call_t *c) { /* exec.bg */
     }
     if (find(id)) {
         fail(c, INK_RC_FAILED, "already there");
+        return;
+    }
+    if (id_retired(id)) {
+        fail(c, INK_RC_FAILED, "that id belonged to someone who was removed");
         return;
     }
     slot_t *s = NULL;
@@ -636,7 +651,7 @@ static void cap_add(ink_call_t *c) { /* exec.bg */
     s->m.role = !strcmp(role, "adult") ? INK_ROLE_ADULT : INK_ROLE_CHILD;
     set_allow(s);
     s->used = true;
-    s->generation = __atomic_add_fetch(&M.next_generation, 1, __ATOMIC_RELAXED);
+    
     ink_svc_unlock();
     save_all();
     ink_cap_emit("member.changed", NULL);
@@ -732,6 +747,7 @@ static void cap_remove(ink_call_t *c) { /* exec.bg */
         ink_cap_emit("member.changed", NULL);
         return;
     }
+    retire_id(id);
     ink_svc_lock();
     s->used = false;
     ink_svc_unlock();

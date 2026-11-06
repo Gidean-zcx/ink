@@ -56,7 +56,6 @@ static struct {
     pair_identity_t identity;
     bool enabled, blocked, halted, hotspot;
     char hotspot_owner[16];
-    uint32_t hotspot_generation;
     int save_result, queued, h_state, last_error;
     uint32_t generation;
     unsigned char peer[32];
@@ -384,10 +383,10 @@ static bool join_wifi(const ink_json_t *j, int obj, uint32_t request) {
     if (ok) {
         ink_args_init(a);
         ok = ink_args_str(a, "ssid", ssid) == 0 && ink_args_str(a, "password", password) == 0;
-        char owner[16]; uint32_t generation;
-        lock(); memcpy(owner, P.hotspot_owner, sizeof owner); generation = P.hotspot_generation; unlock();
+        char owner[16];
+        lock(); memcpy(owner, P.hotspot_owner, sizeof owner); unlock();
         ink_call_opts_t opts = {.src = INK_SRC_TOUCH, .reply_exec = INK_EXEC_BG, .done = web_done, .ctx = (void *)(uintptr_t)request,
-                               .member = request ? owner : NULL, .member_generation = request ? generation : 0};
+                               .member = request ? owner : NULL};
         if (ok) ok = ink_cap_call("wifi.connect", a, &opts) == 0;
     }
     memset(password, 0, sizeof password);
@@ -460,9 +459,9 @@ static void event_job(void *arg) {
         obj = e->kind == PE_WEB ? 0 : ink_json_find(j, 0, e->status < 0 ? "error" : e->kind <= PE_ACCEPT ? "result" : "params");
     if (e->kind == PE_WEB) {
         if (obj < 0) { hal_provision_reply(e->web, 400); goto done; }
-        char owner[16]; uint32_t generation;
-        lock(); bool active = P.hotspot; memcpy(owner, P.hotspot_owner, sizeof owner); generation = P.hotspot_generation; unlock();
-        active = active && !strcmp(owner, ink_member_current()->id) && generation == ink_member_generation(owner) && ink_member_space_open();
+        char owner[16];
+        lock(); bool active = P.hotspot; memcpy(owner, P.hotspot_owner, sizeof owner); unlock();
+        active = active && !strcmp(owner, ink_member_current()->id) && ink_member_exists(owner) && ink_member_space_open();
         if (!active) { hal_provision_reply(e->web, 403); goto done; }
         if (ink_json_find(j, 0, "url") >= 0) {
             ink_args_t *a = osal_malloc(sizeof *a, OSAL_MEM_EXTERNAL);
@@ -475,7 +474,7 @@ static void event_job(void *arg) {
                     char value[128];
                     ok = string(j, 0, keys[k], value, sizeof value, true) && ink_args_str(a, keys[k], value) == 0;
                 }
-                ink_call_opts_t opts = {.src=INK_SRC_TOUCH, .member=owner, .member_generation=generation,
+                ink_call_opts_t opts = {.src=INK_SRC_TOUCH, .member=owner,
                                        .reply_exec=INK_EXEC_BG, .done=web_configured, .ctx=e};
                 if (ok) ok = ink_cap_call("pairing.configure", a, &opts) == 0;
             }
@@ -633,8 +632,7 @@ static void cap_hotspot(ink_call_t *c) {
         memset(password, 0, sizeof password);
     } else hal_provision_stop();
     char owner[16]; snprintf(owner, sizeof owner, "%s", ink_member_current()->id);
-    uint32_t generation = ink_member_generation(owner);
-    lock(); P.hotspot = on; memcpy(P.hotspot_owner, owner, sizeof owner); P.hotspot_generation = generation; unlock();
+    lock(); P.hotspot = on; memcpy(P.hotspot_owner, owner, sizeof owner); unlock();
 }
 static void cap_import(ink_call_t *c) {
     if (c->src != INK_SRC_SYSTEM && c->src != INK_SRC_CONFIRMED && !by_person(c)) return;

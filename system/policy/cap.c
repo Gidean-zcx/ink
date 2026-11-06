@@ -155,7 +155,6 @@ typedef struct {
     ink_rc_t status;
     uint32_t revision, undo_ms;
     bool asked;
-    uint32_t generation;
     int64_t when_s;
 } activity_note_t;
 
@@ -195,14 +194,12 @@ typedef struct {
     bool asked; /* Only the hub tools envelope can set this; never arguments. */
     activity_note_t *activity;
     char member[INK_MEMBER_ID_MAX]; /* ink_call_opts_t.member */
-    uint32_t generation;
     uint32_t origin_epoch;
     uint8_t identity[32];
 } pending_t;
 
 typedef struct {
     char rid[RID_CAP], member[INK_MEMBER_ID_MAX];
-    uint32_t generation;
     uint8_t identity[32];
     ink_receipt_t rc;
 } seen_t;
@@ -237,11 +234,11 @@ static void activity_retry(void *arg) { /* timer task: storage work belongs to t
 
 static void activity_flush(void *arg) { /* exec.bg */
     activity_note_t *n = arg;
-    if (!n->generation || n->generation != ink_member_generation(n->member)) {
+    if (!ink_member_exists(n->member)) {
         osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER); n->used = false; osal_mutex_unlock(CB.lock);
         return;
     }
-    ink_db_t *db = ink_db_open_member(&ACTIVITY, n->member, n->generation);
+    ink_db_t *db = ink_db_open_member(&ACTIVITY, n->member);
     char json[512];
     ink_jw_t w;
     ink_jw_init(&w, json, sizeof json);
@@ -281,7 +278,7 @@ static activity_note_t *activity_reserve(const ink_cap_t *c, const char *member)
         if (!AL.pending[i].used) {
             n = &AL.pending[i];
             n->used = true;
-            n->generation = ink_member_generation(member);
+            
             snprintf(n->member, sizeof n->member, "%s", member);
             snprintf(n->cap, sizeof n->cap, "%s", c->id);
         }
@@ -358,7 +355,7 @@ int ink_cap_init(void) {
     return CB.lock && CB.pool && CB.seen && CB.dir && CB.timer && next_boot() ? 0 : -1;
 }
 
-static pending_t *claim(const char *rid, const char *member, uint32_t generation, const uint8_t identity[32],
+static pending_t *claim(const char *rid, const char *member, const uint8_t identity[32],
                         ink_rc_t verdict, bool *repeat) {
     pending_t *p = NULL;
     *repeat = false;
@@ -369,7 +366,7 @@ static pending_t *claim(const char *rid, const char *member, uint32_t generation
         memset(p, 0, sizeof *p);
         p->used = true;
         snprintf(p->member, sizeof p->member, "%s", member);
-        p->generation = generation;
+        
         memcpy(p->identity, identity, 32);
         if (verdict != INK_RC_DONE && verdict != INK_RC_PENDING_CONFIRMATION) {
             p->out.status = verdict;
@@ -377,7 +374,7 @@ static pending_t *claim(const char *rid, const char *member, uint32_t generation
         }
         for (int i = 0; rid && !*repeat && i < SEEN_N; i++) {
             const seen_t *s = &CB.seen[i];
-            if (!strcmp(s->rid, rid) && s->generation == generation && !strcmp(s->member, member)) {
+            if (!strcmp(s->rid, rid) && !strcmp(s->member, member)) {
                 if (!memcmp(s->identity, identity, 32)) p->out = s->rc;
                 else { p->out.status = INK_RC_INVALID; snprintf(p->out.detail, sizeof p->out.detail, "request id reused with different action or arguments"); }
                 p->cache_hit = true;
@@ -386,7 +383,7 @@ static pending_t *claim(const char *rid, const char *member, uint32_t generation
         }
         for (int i = 0; rid && !*repeat && i < POOL_N; i++) {
             pending_t *q = &CB.pool[i];
-            if (q != p && q->used && !q->replied && q->generation == generation && !strcmp(q->member, member) && !strcmp(q->rid, rid)) {
+            if (q != p && q->used && !q->replied && !strcmp(q->member, member) && !strcmp(q->rid, rid)) {
                 p->cache_hit = true;
                 p->out.status = memcmp(q->identity, identity, 32) ? INK_RC_INVALID : INK_RC_QUEUED;
                 *repeat = true;
@@ -429,7 +426,7 @@ static void settle(pending_t *p, const ink_receipt_t *rc) {
     CB.seen_next = (CB.seen_next + 1) % SEEN_N;
     snprintf(s->rid, sizeof s->rid, "%s", p->rid);
     snprintf(s->member, sizeof s->member, "%s", p->member);
-    s->generation = p->generation;
+    
     memcpy(s->identity, p->identity, 32);
     s->rc = p->out;
     s->rc.result = NULL; /* it goes with the slot */
@@ -448,7 +445,7 @@ static void answer_job(void *arg) {
     osal_mutex_unlock(CB.lock);
     bool handoff = p->call.cap && !strcmp(p->call.cap->id, "system.switch_member") && p->out.status == INK_RC_DONE && !p->out.result;
     bool hand_locked = p->call.cap && p->call.cap->while_locked && (p->o.src == INK_SRC_TOUCH || p->o.src == INK_SRC_KEY);
-    if (!handoff && p->member[0] && (!p->generation || p->generation != ink_member_generation(p->member) ||
+    if (!handoff && p->member[0] && (!ink_member_exists(p->member) ||
         strcmp(p->member, ink_member_current()->id) || (!ink_member_space_open() && !hand_locked && p->o.src != INK_SRC_SYSTEM && p->out.status == INK_RC_DONE))) {
         memset(&p->out, 0, sizeof p->out); p->out.status = INK_RC_STALE;
     }
@@ -515,9 +512,8 @@ uint32_t ink_cap_time_left_ms(const ink_call_t *call) {
     return p->deadline_us > now ? (uint32_t)((p->deadline_us - now) / 1000u) : 0;
 }
 
-const char *ink_cap_call_member(const ink_call_t *call, uint32_t *generation) {
+const char *ink_cap_call_member(const ink_call_t *call) {
     const pending_t *p = (const pending_t *)call;
-    *generation = p->generation;
     return p->member;
 }
 
@@ -576,7 +572,7 @@ static void start(void *arg) {
     ink_probe_count(key);
     bool ran = false;
     bool delivery = !p->o.hub_epoch || ink_hub_member_matches(p->member, p->o.hub_epoch, p->o.hub_connection);
-    ink_rc_t verdict = !delivery || !p->generation || p->generation != ink_member_generation(p->member) || strcmp(p->member, ink_member_current()->id) ? reject(rc, INK_RC_STALE, "someone else is using the device now") : gate(c, p->call.src, p->call.page_gen, p->asked, rc);
+    ink_rc_t verdict = !delivery || !ink_member_exists(p->member) || strcmp(p->member, ink_member_current()->id) ? reject(rc, INK_RC_STALE, "someone else is using the device now") : gate(c, p->call.src, p->call.page_gen, p->asked, rc);
     if (verdict == INK_RC_DONE || verdict == INK_RC_PENDING_CONFIRMATION) {
         char why[96];
         int bad = p->json ? ink_args_from_json(&p->call.args, p->json, strlen(p->json), c->input, why, sizeof why)
@@ -613,10 +609,8 @@ static pending_t *prepare(const char *id, const ink_cap_t *c, const ink_args_t *
         memcpy(json, o->args_json, n + 1);
     }
     const char *member = o->member ? o->member : ink_member_current()->id;
-    uint32_t current_generation = ink_member_generation(member);
-    uint32_t generation = o->member_generation ? o->member_generation : current_generation;
     ink_receipt_t checked = {0};
-    ink_rc_t verdict = !generation || generation != current_generation || strcmp(member, ink_member_current()->id) ? INK_RC_STALE :
+    ink_rc_t verdict = strcmp(member, ink_member_current()->id) ? INK_RC_STALE :
         remote ? (ink_member_space_open() ? INK_RC_DONE : INK_RC_REJECTED) :
         o->request_id ? gate(c, o->src, 0, asked, &checked) : INK_RC_DONE;
     uint8_t identity[32];
@@ -634,7 +628,7 @@ static pending_t *prepare(const char *id, const ink_cap_t *c, const ink_args_t *
         osal_free(encoded);
     } else ink_sha256_update(&sum, json ? json : "{}", json ? strlen(json) : 2);
     ink_sha256_final(&sum, identity);
-    pending_t *p = claim(o->request_id, member, generation, identity, verdict, repeat);
+    pending_t *p = claim(o->request_id, member, identity, verdict, repeat);
     if (!p || *repeat) {
         osal_free(json);
         if (p) { /* the first receipt again, or "queued": told like any other */
@@ -802,7 +796,7 @@ static void remote_reply(void *ctx, int status, const ink_json_t *j, int result)
             }
         }
     }
-    if (!p->generation || p->generation != ink_member_generation(p->member) || strcmp(p->member, ink_member_current()->id) || !ink_member_space_open()) {
+    if (!ink_member_exists(p->member) || strcmp(p->member, ink_member_current()->id) || !ink_member_space_open()) {
         memset(rc, 0, sizeof *rc); rc->status = INK_RC_STALE;
     }
     char key[48];
@@ -840,8 +834,6 @@ static int remote_call(const char *name, const ink_args_t *args, const ink_call_
     ink_jw_str(&w, p->rid);
     ink_jw_raw(&w, ",\"member\":");
     ink_jw_str(&w, p->member);
-    ink_jw_raw(&w, ",\"member_generation\":");
-    ink_jw_int(&w, p->generation);
     ink_jw_raw(&w, ",\"page_gen\":");
     ink_jw_int(&w, p->call.page_gen);
     ink_jw_raw(&w, "}}");
@@ -874,7 +866,6 @@ typedef struct {
     ink_event_fn fn;
     void *ctx;
     char id[48], member[INK_MEMBER_ID_MAX];
-    uint32_t generation;
     ink_args_t payload;
 } event_job_t;
 
@@ -892,7 +883,7 @@ int ink_cap_subscribe(const char *prefix, ink_event_fn fn, void *ctx, ink_exec_t
 
 static void event_job(void *arg) {
     event_job_t *e = arg;
-    if (e->generation && e->generation == ink_member_generation(e->member)) e->fn(e->ctx, e->id, &e->payload);
+    if (ink_member_exists(e->member)) e->fn(e->ctx, e->id, &e->payload);
     osal_free(e);
 }
 
@@ -900,7 +891,7 @@ static void event_job(void *arg) {
  * hub task, the latest 8 wait for it to be online. */
 #define EVENTS_KEPT 8
 static struct {
-    uint32_t seq, generation;
+    uint32_t seq;
     int64_t at_s;
     char id[48];
     char member[INK_MEMBER_ID_MAX]; /* whose it is: who it says, or who was there when it happened */
@@ -908,7 +899,7 @@ static struct {
 } EV[EVENTS_KEPT] INK_PSRAM_BSS;
 static uint32_t ev_next, ev_sent, ev_acked; /* sequence numbers, under CB.lock */
 
-static void keep_event(const char *id, const ink_args_t *payload, const char *whose, uint32_t generation) {
+static void keep_event(const char *id, const ink_args_t *payload, const char *whose) {
     const ink_cap_t *c = ink_cap_find(id);
     if (!CB.lock || !c || c->form != INK_FORM_EVENT || !exposed(c, INK_SRC_AI)) return;
     int64_t wall = osal_wall_us();
@@ -917,7 +908,7 @@ static void keep_event(const char *id, const ink_args_t *payload, const char *wh
     uint32_t seq = ++ev_next;
     typeof(EV[0]) *e = &EV[seq % EVENTS_KEPT];
     e->seq = seq;
-    e->generation = generation;
+    
     e->at_s = wall > 0 ? wall / 1000000 : 0;
     snprintf(e->id, sizeof e->id, "%s", id);
     snprintf(e->member, sizeof e->member, "%s", whose);
@@ -950,12 +941,11 @@ static void send_events(void) { /* hub task */
         const typeof(EV[0]) *e = &EV[seq % EVENTS_KEPT];
         snprintf(id, sizeof id, "%s", e->id);
         snprintf(whose, sizeof whose, "%s", e->member);
-        uint32_t generation = e->generation;
         at = e->at_s;
         *args = e->args;
         osal_mutex_unlock(CB.lock);
         /* it goes only while it is theirs who is here: the next one's AI does not hear about it */
-        bool theirs = generation && generation == ink_member_generation(whose) && ink_member_space_open() && !strcmp(whose, ink_member_current()->id);
+        bool theirs = ink_member_exists(whose) && ink_member_space_open() && !strcmp(whose, ink_member_current()->id);
         int head = snprintf(out, EVENT_JSON_CAP, "{\"event\":\"%s\",\"at_s\":%lld,\"seq\":%u,\"boot\":%u,\"member\":\"%s\",\"args\":",
                             id, (long long)at, seq, CB.boot_tag, whose);
         int body = ink_args_to_json(args, out + head, EVENT_JSON_CAP - (size_t)head - 2);
@@ -974,12 +964,12 @@ static void send_events(void) { /* hub task */
     }
 }
 
-void ink_cap_emit_for(const char *id, const ink_args_t *payload, const char *whose, uint32_t generation) {
-    if (!whose || !generation || generation != ink_member_generation(whose)) return;
+void ink_cap_emit_for(const char *id, const ink_args_t *payload, const char *whose) {
+    if (!whose || !ink_member_exists(whose)) return;
     char key[64];
     snprintf(key, sizeof key, "event.%s", id);
     ink_probe_count(key);
-    keep_event(id, payload, whose, generation);
+    keep_event(id, payload, whose);
     for (int i = 0; i < nsubs; i++) {
         if (strncmp(id, SUBS[i].prefix, SUBS[i].plen)) continue;
         const char *prev = osal_mem_tag("cap");
@@ -990,7 +980,7 @@ void ink_cap_emit_for(const char *id, const ink_args_t *payload, const char *who
             continue;
         }
         snprintf(e->member, sizeof e->member, "%s", whose);
-        e->generation = generation;
+        
         e->fn = SUBS[i].fn;
         e->ctx = SUBS[i].ctx;
         snprintf(e->id, sizeof e->id, "%s", id);
@@ -1008,7 +998,7 @@ void ink_cap_emit(const char *id, const ink_args_t *payload) {
     char whose[INK_MEMBER_ID_MAX] = "";
     if (payload) ink_args_get_str(payload, "member", whose, sizeof whose);
     if (!whose[0]) snprintf(whose, sizeof whose, "%s", ink_member_current()->id);
-    ink_cap_emit_for(id, payload, whose, ink_member_generation(whose));
+    ink_cap_emit_for(id, payload, whose);
 }
 
 /* What the current member may use now, as the AI sees it. */
@@ -1151,7 +1141,7 @@ typedef struct {
     char object[48], cap[48], member[16];
     ink_args_t args;
     uint64_t until_us;
-    uint32_t revision, generation;
+    uint32_t revision;
 } undo_t;
 
 static undo_t UNDO[UNDO_MAX] INK_PSRAM_BSS;
@@ -1160,7 +1150,7 @@ static int undo_next;
 void ink_cap_undoable(ink_call_t *call, const char *cap, const ink_args_t *args, uint32_t ms) {
     pending_t *p = (pending_t *)call;
     osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
-    if (!p->generation || p->generation != ink_member_generation(p->member) ||
+    if (!ink_member_exists(p->member) ||
         strcmp(p->member, ink_member_current()->id) || !ink_member_space_open()) {
         osal_mutex_unlock(CB.lock);
         return;
@@ -1174,7 +1164,7 @@ void ink_cap_undoable(ink_call_t *call, const char *cap, const ink_args_t *args,
     else ink_args_init(&u->args);
     u->until_us = osal_now_us() + (uint64_t)ms * 1000u;
     u->revision = call->rc.revision;
-    u->generation = p->generation;
+    
     osal_mutex_unlock(CB.lock);
     call->rc.undo_ms = ms;
 }
@@ -1205,7 +1195,7 @@ static void cap_undo(ink_call_t *c) {
     for (int n = 0; n < UNDO_MAX && !found; n++) {
         int i = (undo_next + UNDO_MAX - 1 - n) % UNDO_MAX;
         undo_t *e = &UNDO[i];
-        if (e->generation && e->generation == ink_member_generation(NULL) && e->until_us > now && (!bound || e->revision == (uint32_t)revision) && !strcmp(e->object, object) && !strcmp(e->member, ink_member_current()->id)) {
+        if (ink_member_exists(NULL) && e->until_us > now && (!bound || e->revision == (uint32_t)revision) && !strcmp(e->object, object) && !strcmp(e->member, ink_member_current()->id)) {
             u = *e;
             e->until_us = 0; /* once */
             found = true;
@@ -1219,7 +1209,7 @@ static void cap_undo(ink_call_t *c) {
     snprintf(c->rc.object, sizeof c->rc.object, "%s", object);
     ink_cap_defer(c); /* Settings recheck their own risk; a permission inverse is still a permission change. */
     ink_source_t src = !strcmp(u.cap, "settings.set") ? c->src : INK_SRC_CONFIRMED;
-    ink_call_opts_t o = {.src = src, .member = u.member, .member_generation = u.generation, .reply_exec = INK_EXEC_DIRECT, .done = undo_done, .ctx = c};
+    ink_call_opts_t o = {.src = src, .member = u.member, .reply_exec = INK_EXEC_DIRECT, .done = undo_done, .ctx = c};
     if (ink_cap_call(u.cap, &u.args, &o) != 0) {
         reject(&c->rc, INK_RC_FAILED, "busy");
         ink_cap_done(c);
@@ -1380,7 +1370,7 @@ typedef struct {
     char member[INK_MEMBER_ID_MAX];
     int cursor;        /* tools/list: the page */
     char domain[16];   /* tools/list: only this domain */
-    uint32_t page_gen, generation;
+    uint32_t page_gen;
     uint32_t epoch, connection;
     uint64_t received_us;
     char name[48];
@@ -1434,7 +1424,7 @@ static void tool_run(void *arg) { /* UI task */
         return;
     }
     ink_ui_cause(t->received_us, "ai.tool_to_visible_ms"); /* what the capability changes on screen */
-    ink_call_opts_t o = {.src = INK_SRC_AI, .member = t->member, .member_generation = t->generation, .hub_epoch = t->epoch, .hub_connection = t->connection, .page_gen = t->page_gen, .request_id = t->rid[0] ? t->rid : NULL, .args_json = t->args,
+    ink_call_opts_t o = {.src = INK_SRC_AI, .member = t->member, .hub_epoch = t->epoch, .hub_connection = t->connection, .page_gen = t->page_gen, .request_id = t->rid[0] ? t->rid : NULL, .args_json = t->args,
                          .reply_exec = INK_EXEC_DIRECT, .done = tool_done, .ctx = t};
     if (call_with_intent(t->name, NULL, &o, t->asked) != 0) {
         ink_hub_respond_error(t->id, -32603, "busy");
@@ -1512,7 +1502,7 @@ static void on_tools(void *ctx, int64_t id, const char *method, const ink_json_t
             ink_hub_respond_error(id, -32021, "automatic undo window unavailable");
             return;
         }
-        t->generation = ink_member_generation(t->member);
+        
         int64_t pg = 0;
         if (ink_json_int(j, ink_json_find(j, params, "page_gen"), &pg) || ink_json_int(j, ink_json_find(j, params, "_meta.page_gen"), &pg))
             t->page_gen = (uint32_t)pg;

@@ -48,7 +48,7 @@ typedef struct tx_item {
     struct tx_item *next;
     bool binary, pooled, enrollment;
     uint32_t event_seq;
-    uint32_t member_generation, member_epoch;
+    uint32_t member_epoch;
     uint32_t connection;
     char member[INK_MEMBER_ID_MAX];
     size_t len;
@@ -323,7 +323,7 @@ static void start_connect(void) {
 int ink_hub_respond_error(int64_t id, int code, const char *message);
 
 static bool same_identity(const ink_member_identity_t *a, const ink_member_identity_t *b) {
-    return a->epoch == b->epoch && a->generation == b->generation && a->authed == b->authed &&
+    return a->epoch == b->epoch && a->authed == b->authed &&
            !strcmp(a->member, b->member);
 }
 
@@ -497,7 +497,7 @@ static void drain_tx(bool online) {
         if (!it) return; /* empty, or only background left while it is paced (next_wakeup) */
         if (!online || !H.ws || (!it->enrollment && H.state != HS_ONLINE) || it->connection != H.ws_gen || (it->member[0] &&
             (!ink_hub_member_matches(it->member, it->member_epoch, it->connection) ||
-             it->member_generation != ink_member_generation(it->member))) ||
+             !ink_member_exists(it->member))) ||
             hal_ws_send(H.ws, it->binary, it->data, it->len, 2000000) != 0) {
             ink_probe_count("hub.tx_dropped");
         } else {
@@ -805,7 +805,7 @@ void ink_hub_keep(bool on) {
     ink_hub_demand(); /* connect now if needed; when the last one goes, the quiet period starts */
 }
 
-static int enqueue_tx(bool binary, int cls, const void *data, size_t len, const char *member, uint32_t generation, uint32_t required_epoch, uint32_t connection, bool pairing) {
+static int enqueue_tx(bool binary, int cls, const void *data, size_t len, const char *member, uint32_t required_epoch, uint32_t connection, bool pairing) {
     if ((get_state() != HS_ONLINE && !(pairing && get_state() == HS_PAIRING && cls == INK_HUB_TX_CONTROL)) || cls < 0 || cls >= TX_CLASSES) return -1;
     uint32_t epoch = required_epoch ? required_epoch : ink_hub_member_epoch();
     if (!connection) connection = ink_hub_connection();
@@ -844,7 +844,6 @@ static int enqueue_tx(bool binary, int cls, const void *data, size_t len, const 
     osal_mutex_lock(H.tx_lock, OSAL_WAIT_FOREVER);
     it->event_seq = 0;
     snprintf(it->member, sizeof it->member, "%s", member ? member : "");
-    it->member_generation = generation;
     it->member_epoch = epoch;
     it->connection = connection;
     static const char event_prefix[] = "{\"jsonrpc\":\"2.0\",\"method\":\"device/event\"";
@@ -904,7 +903,7 @@ int ink_hub_notify(const char *method, const char *params_json) {
     memcpy(buf, head, hl);
     memcpy(buf + hl, pj, pl);
     buf[hl + pl] = '}';
-    int r = enqueue_tx(false, INK_HUB_TX_CONTROL, buf, hl + pl + 1, member, member[0] ? identity.generation : 0, identity.epoch, 0, false);
+    int r = enqueue_tx(false, INK_HUB_TX_CONTROL, buf, hl + pl + 1, member, identity.epoch, 0, false);
     osal_free(buf);
     return r == 0 ? 0 : INK_HUB_ERR_OFFLINE;
 }
@@ -914,13 +913,13 @@ int ink_hub_send_binary(const void *data, size_t len) { return ink_hub_send_fram
 int ink_hub_send_frame(const void *data, size_t len, int cls) {
     ink_member_identity_t identity;
     ink_member_identity(&identity);
-    return ink_hub_send_frame_for(data, len, cls, identity.member, identity.generation, identity.epoch);
+    return ink_hub_send_frame_for(data, len, cls, identity.member, identity.epoch);
 }
 
-int ink_hub_send_frame_for(const void *data, size_t len, int cls, const char *member, uint32_t generation, uint32_t epoch) {
-    if (!member || !generation || generation != ink_member_generation(member) ||
+int ink_hub_send_frame_for(const void *data, size_t len, int cls, const char *member, uint32_t epoch) {
+    if (!member || !ink_member_exists(member) ||
         strcmp(member, ink_member_current()->id) || !ink_member_space_open()) return INK_HUB_ERR_OFFLINE;
-    return enqueue_tx(true, cls, data, len, member, generation, epoch, 0, false) == 0 ? 0 : INK_HUB_ERR_OFFLINE;
+    return enqueue_tx(true, cls, data, len, member, epoch, 0, false) == 0 ? 0 : INK_HUB_ERR_OFFLINE;
 }
 
 void ink_hub_on_binary(ink_hub_binary_fn fn, void *ctx) {
@@ -953,7 +952,7 @@ static int respond_for(int64_t id, const char *result_json, const char *member, 
     int n = snprintf(buf, 64, "{\"jsonrpc\":\"2.0\",\"id\":%lld,\"result\":", (long long)id);
     memcpy(buf + n, r, rl);
     buf[n + rl] = '}';
-    int ok = enqueue_tx(false, INK_HUB_TX_CONTROL, buf, (size_t)n + rl + 1, member, member ? ink_member_generation(member) : 0, epoch, connection, pairing);
+    int ok = enqueue_tx(false, INK_HUB_TX_CONTROL, buf, (size_t)n + rl + 1, member, epoch, connection, pairing);
     osal_free(buf);
     return ok == 0 ? 0 : INK_HUB_ERR_OFFLINE;
 }
@@ -977,7 +976,7 @@ static int respond_error(int64_t id, int code, const char *message, bool pairing
     ink_jw_str(&w, message ? message : "error");
     ink_jw_raw(&w, "}}");
     if (w.overflow) return INK_HUB_ERR_NOMEM;
-    return enqueue_tx(false, INK_HUB_TX_CONTROL, buf, w.len, NULL, 0, 0, 0, pairing) == 0 ? 0 : INK_HUB_ERR_OFFLINE;
+    return enqueue_tx(false, INK_HUB_TX_CONTROL, buf, w.len, NULL, 0, 0, pairing) == 0 ? 0 : INK_HUB_ERR_OFFLINE;
 }
 int ink_hub_respond_error(int64_t id, int code, const char *message) { return respond_error(id, code, message, false); }
 int ink_hub_pair_respond_error(int64_t id, int code, const char *message) { return respond_error(id, code, message, true); }

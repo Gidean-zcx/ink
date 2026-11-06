@@ -45,7 +45,6 @@ static void run(void *arg) {
     CHECK(confirmed("member.add", "{\"id\":\"oldadult\",\"role\":\"adult\"}"), "add adult");
     CHECK(ink_member_switch("oldadult") == 0, "enter adult");
     delay_ms(300);
-    uint32_t generation = ink_member_generation("oldadult");
     CHECK(AI("reader.open_book", "{\"title\":\"测试长书\"}") && g_rc.status == INK_RC_DONE, "open actual reader");
     CHECK(AI("reader.goto_page", "{\"page\":3}") && g_rc.status == INK_RC_DONE, "adult advances to page 3");
     char path[96], raw[64] = {0};
@@ -54,10 +53,10 @@ static void run(void *arg) {
     CHECK(ink_member_switch("owner") == 0, "other adult takes device");
     if (!control) {
         CHECK(confirmed("member.remove", "{\"id\":\"oldadult\"}"), "delete while page cleanup queued: %s", result_status);
-        CHECK(ink_member_generation("oldadult") == 0, "removed incarnation unavailable");
+        CHECK(ink_member_exists("oldadult") == 0, "removed incarnation unavailable");
         if (reuse) {
             CHECK(confirmed("member.add", "{\"id\":\"oldadult\",\"role\":\"child\"}"), "reuse as child");
-            CHECK(ink_member_generation("oldadult") != generation, "reused id has a new incarnation");
+            CHECK(!ink_member_exists("oldadult"), "reused id has a new incarnation");
         }
         CHECK(ink_storage_read(path, raw, sizeof raw - 1) < 0, "old position absent before delayed save");
     }

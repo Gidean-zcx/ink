@@ -86,13 +86,11 @@ static bool told_to_ai(int from, const char *title) {
 /* AUD15-005, AUD16-007: for one member, and the member changes on the way: at each of the moments there are on the way. */
 static void notification_for_someone(void) {
     const ink_db_def_t *def = ink_db_find_def("notify.inbox");
-    uint32_t generation = ink_member_generation("owner");
-    ink_db_t *warm = ink_db_open_cached_member(def, "owner", generation);
+    ink_db_t *warm = ink_db_open_cached_member(def, "owner");
     CHECK(warm != NULL, "the current inbox has a cached reference");
     ink_db_close(warm);
-    CHECK(!ink_db_open_cached_member(def, "owner", generation + 1), "a cached reference still checks the member incarnation");
     const ink_db_def_t cold = {.name = "test.cold_inbox", .scope = INK_DB_MEMBER};
-    CHECK(!ink_db_open_cached_member(&cold, "owner", generation), "a cached lookup does not load a cold collection");
+    CHECK(!ink_db_open_cached_member(&cold, "owner"), "a cached lookup does not load a cold collection");
     int moments = 0;
     for (int k = 0;; k++) {
         char title[32];

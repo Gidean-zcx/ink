@@ -12,9 +12,9 @@ static ink_db_t *test_open(const ink_db_def_t *def, const char *member) {
     test_db_kind(def, member);
     return ink_db_open(def, member);
 }
-static ink_db_t *test_open_member(const ink_db_def_t *def, const char *member, uint32_t generation) {
+static ink_db_t *test_open_member(const ink_db_def_t *def, const char *member) {
     test_db_kind(def, member);
-    return ink_db_open_member(def, member, generation);
+    return ink_db_open_member(def, member);
 }
 #define ink_db_open test_open
 #define ink_db_open_member test_open_member

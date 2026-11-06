@@ -20,8 +20,7 @@ static void fail(ink_call_t *c, ink_rc_t st, const char *why) {
 }
 
 static void cap_post(ink_call_t *c) {
-    uint32_t generation;
-    const char *member = ink_cap_call_member(c, &generation);
+    const char *member = ink_cap_call_member(c);
     char title[48] = "", body[160] = "", group[24] = "", channel[16] = "", act[40] = "";
     ink_args_get_str(&c->args, "title", title, sizeof title);
     bool has_body = ink_args_get_str(&c->args, "body", body, sizeof body) >= 0;
@@ -32,7 +31,7 @@ static void cap_post(ink_call_t *c) {
     ink_notify_t n = {.written_ver = &c->rc.revision, .channel = from_person && channel[0] ? channel : "ai", .title = title, .body = has_body ? body : NULL, .group = has_group ? group : NULL,
                       .action = has_action ? act : NULL, .prio = -1, .src = (uint8_t)c->src};
     uint32_t id = 0;
-    if (ink_notify_post_for(&n, &id, member, generation) != 0) {
+    if (ink_notify_post_for(&n, &id, member) != 0) {
         fail(c, INK_RC_FAILED, "not posted");
         return;
     }

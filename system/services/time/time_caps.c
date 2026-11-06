@@ -122,9 +122,8 @@ static bool parse_at(const char *s, ink_alarm_t *a) { /* "2026-11-05 15:00" */
 }
 
 static void answer_add(ink_call_t *c, ink_alarm_t *a, const char *undo_cap) {
-    uint32_t generation;
-    const char *member = ink_cap_call_member(c, &generation);
-    int id = ink_time_alarm_add_for(a, &c->rc.revision, member, generation);
+    const char *member = ink_cap_call_member(c);
+    int id = ink_time_alarm_add_for(a, &c->rc.revision, member);
     if (id <= 0) {
         fail(c, id == -5 ? INK_RC_STALE : id == -3 ? INK_RC_REJECTED : INK_RC_INVALID, id == -2 ? "that time has passed" : id == -3 ? "too many alarms" : "not a valid time");
         return;
@@ -191,8 +190,7 @@ static void cap_reminder_add(ink_call_t *c) {
 }
 
 static void list_kind(ink_call_t *c, ink_alarm_kind_t kind) {
-    uint32_t generation;
-    const char *member = ink_cap_call_member(c, &generation);
+    const char *member = ink_cap_call_member(c);
     char *out = osal_malloc(4096, OSAL_MEM_EXTERNAL);
     ink_alarm_t *a = osal_malloc(sizeof *a, OSAL_MEM_EXTERNAL);
     if (!out || !a) {
@@ -207,7 +205,7 @@ static void list_kind(ink_call_t *c, ink_alarm_kind_t kind) {
     int cursor = 0;
     bool first = true;
     int got;
-    while ((got = ink_time_alarm_next_for(&cursor, kind, a, member, generation)) == 1) {
+    while ((got = ink_time_alarm_next_for(&cursor, kind, a, member)) == 1) {
         char next[24] = "";
         if (a->next_s) local_text(a->next_s, next, sizeof next);
         size_t before = w.len;
@@ -246,9 +244,8 @@ static void cap_cancel(ink_call_t *c) {
         fail(c, INK_RC_STALE, "alarm changed or absent");
         return;
     }
-    uint32_t generation;
-    const char *member = ink_cap_call_member(c, &generation);
-    int r = ink_time_alarm_cancel_for((uint32_t)id, (uint32_t)revision, member, generation);
+    const char *member = ink_cap_call_member(c);
+    int r = ink_time_alarm_cancel_for((uint32_t)id, (uint32_t)revision, member);
     if (r != 0) fail(c, r == -2 || r == -5 ? INK_RC_STALE : INK_RC_FAILED, "no such one, or changed");
 }
 

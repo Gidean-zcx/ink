@@ -33,21 +33,21 @@ int ink_members_start(void);
 const ink_member_t *ink_member_current(void);
 typedef struct {
     char member[16];
-    uint32_t generation, epoch;
+    uint32_t epoch;
     bool authed;
 } ink_member_identity_t;
 /** One coherent identity, independent of delayed state notifications. No PIN material. */
 void ink_member_identity(ink_member_identity_t *out);
 /** Invalidated in the same critical section as a member/authentication change. */
 uint32_t ink_member_epoch(void);
-/** Live incarnation, zero for an absent or quarantined member. */
-uint32_t ink_member_generation(const char *id);
+/** Still in the family and not being removed. An id is never used twice, so this is all a delayed caller needs. */
+bool ink_member_exists(const char *id);
 /** Durable, opaque incarnation for backup ownership. exec.bg only; fails closed if it cannot persist.
- *  Never use the reusable display id or the boot-local generation as a remote identity. */
-int ink_member_durable_id(const char *id, uint32_t generation, uint8_t out[16]);
+ *  Ids are not reused on one device, but a factory reset starts over: remote identity is this one. */
+int ink_member_durable_id(const char *id, uint8_t out[16]);
 /** Register a writer of this incarnation before opening files/collections or queuing work. Removal
  *  quarantines the member and refuses cleanup while a writer is registered. End every successful begin. */
-bool ink_member_io_begin(const char *id, uint32_t generation);
+bool ink_member_io_begin(const char *id);
 void ink_member_io_end(const char *id);
 /** Writes into a quarantined namespace must stop before it is erased. */
 bool ink_member_removing(const char *id);

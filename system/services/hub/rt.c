@@ -24,7 +24,7 @@ static struct {
         ink_rt_handler_t h;
         uint16_t seq[INK_RT_KINDS];
         char member[INK_MEMBER_ID_MAX];
-        uint32_t generation, epoch;
+        uint32_t epoch;
         char cap[24];
         char params[INK_RT_PARAMS];
     } s[INK_RT_MAX];
@@ -43,7 +43,7 @@ static bool handler_of(int sid, ink_rt_handler_t *h) {
     osal_mutex_lock(RT.lock, OSAL_WAIT_FOREVER);
     int i = find(sid);
     if (i >= 0 && (RT.s[i].epoch != identity.epoch || !identity.authed ||
-        strcmp(RT.s[i].member, identity.member) || RT.s[i].generation != identity.generation)) i = -1;
+        strcmp(RT.s[i].member, identity.member))) i = -1;
     if (i >= 0) *h = RT.s[i].h;
     osal_mutex_unlock(RT.lock);
     return i >= 0;
@@ -202,7 +202,7 @@ int ink_rt_open(const char *cap, const char *params_json, const ink_rt_handler_t
         RT.s[slot].sid = sid;
         RT.s[slot].h = *h;
         snprintf(RT.s[slot].member, sizeof RT.s[slot].member, "%s", identity.member);
-        RT.s[slot].generation = identity.generation;
+        
         RT.s[slot].epoch = identity.epoch;
         memset(RT.s[slot].seq, 0, sizeof RT.s[slot].seq);
         snprintf(RT.s[slot].cap, sizeof RT.s[slot].cap, "%s", cap);
@@ -235,10 +235,10 @@ int ink_rt_send(int sid, uint8_t kind, const void *payload, size_t len, uint8_t 
     int i = find(sid);
     bool ready = i >= 0 && RT.s[i].ready;
     char member[INK_MEMBER_ID_MAX] = "";
-    uint32_t generation = 0, epoch = 0;
+    uint32_t epoch = 0;
     if (ready) {
         snprintf(member, sizeof member, "%s", RT.s[i].member);
-        generation = RT.s[i].generation;
+        
         epoch = RT.s[i].epoch;
     }
     uint16_t seq = ready ? RT.s[i].seq[kind]++ : 0;
@@ -251,7 +251,7 @@ int ink_rt_send(int sid, uint8_t kind, const void *payload, size_t len, uint8_t 
     uint8_t hdr[INK_RT_HDR] = {kind, (uint8_t)sid, (uint8_t)seq, (uint8_t)(seq >> 8), (uint8_t)t, (uint8_t)(t >> 8), (uint8_t)(t >> 16), (uint8_t)(t >> 24), flags, 0};
     memcpy(f, hdr, INK_RT_HDR);
     if (len) memcpy(f + INK_RT_HDR, payload, len);
-    int r = ink_hub_send_frame_for(f, len + INK_RT_HDR, class_of(kind), member, generation, epoch);
+    int r = ink_hub_send_frame_for(f, len + INK_RT_HDR, class_of(kind), member, epoch);
     if (f != local) osal_free(f);
     return r;
 }

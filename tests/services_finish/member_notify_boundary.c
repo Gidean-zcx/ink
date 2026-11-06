@@ -16,9 +16,9 @@ static void ink_test_emit(const char *id, const ink_args_t *args) {
     ink_test_before_notify_event(id, args);
     ink_cap_emit(id, args);
 }
-static void ink_test_emit_for(const char *id, const ink_args_t *args, const char *member, uint32_t generation) {
+static void ink_test_emit_for(const char *id, const ink_args_t *args, const char *member) {
     ink_test_before_notify_event(id, args);
-    ink_cap_emit_for(id, args, member, generation);
+    ink_cap_emit_for(id, args, member);
 }
 #define ink_cap_emit ink_test_emit
 #define ink_cap_emit_for ink_test_emit_for

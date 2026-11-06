@@ -49,7 +49,6 @@ static struct {
     uint64_t paused_at_s;
     uint64_t last_card_us;
     char member[INK_MEMBER_ID_MAX];
-    uint32_t generation;
     ink_svc_deadline_t pump_at;
     ink_exec_job_t pump_job, member_job, route_job, battery_job;
     int h_state;
@@ -61,14 +60,13 @@ typedef struct media_cmd {
     void (*fn)(struct media_cmd *cmd);
     uint32_t arg;
     char member[INK_MEMBER_ID_MAX];
-    uint32_t generation;
     char path[INK_FS_PATH_MAX];
 } media_cmd_t;
 
 static const char *const STATE_NAME[] = {"idle", "playing", "paused"};
 
 static bool playback_current(void) {
-    return M.generation && M.generation == ink_member_generation(M.member) && !strcmp(M.member, ink_member_current()->id);
+    return ink_member_exists(M.member) && !strcmp(M.member, ink_member_current()->id);
 }
 
 static void set_state(ink_media_state_t s, ink_media_pause_t by) {
@@ -106,8 +104,8 @@ static uint32_t path_id(const char *path) {
 }
 
 static void save_to_flash(const char *path, uint32_t ms) {
-    if (!M.generation || M.generation != ink_member_generation(M.member)) return;
-    ink_db_t *db = ink_db_open_member(&POSITIONS, M.member, M.generation);
+    if (!ink_member_exists(M.member)) return;
+    ink_db_t *db = ink_db_open_member(&POSITIONS, M.member);
     if (!db) return;
     char buf[INK_FS_PATH_MAX + 64];
     ink_jw_t w;
@@ -124,10 +122,10 @@ static void save_to_flash(const char *path, uint32_t ms) {
 }
 
 static void save_to_card(const char *path, uint32_t ms) {
-    if (!M.generation || M.generation != ink_member_generation(M.member)) return;
+    if (!ink_member_exists(M.member)) return;
     char buf[INK_FS_PATH_MAX + 64];
     int n = snprintf(buf, sizeof buf, "%lld\n%s\n%s\n%u\n", (long long)ink_time_now_s(), M.member, path, (unsigned)ms);
-    if (!ink_member_io_begin(M.member, M.generation)) return;
+    if (!ink_member_io_begin(M.member)) return;
     if (ink_fs_write_atomic(POS_CACHE, buf, (size_t)n) == 0) ink_probe_count("media.positions_cached");
     ink_member_io_end(M.member);
 }
@@ -204,7 +202,7 @@ static void end_session(const char *why) { /* executor */
             ink_args_str(a, "path", path);
             ink_args_str(a, "why", why);
             ink_args_str(a, "member", M.who);
-            ink_cap_emit_for("media.finished", a, M.who, M.generation);
+            ink_cap_emit_for("media.finished", a, M.who);
             osal_free(a);
         }
     }
@@ -336,8 +334,8 @@ static void on_focus(void *ctx, ink_focus_event_t ev, ink_audio_prio_t by) { /* 
     }
 }
 
-static int do_play(const char *path, uint32_t start_ms, const char *member, uint32_t generation) { /* executor */
-    if (!generation || generation != ink_member_generation(member) || strcmp(member, ink_member_current()->id)) return INK_FS_ERR_DENIED;
+static int do_play(const char *path, uint32_t start_ms, const char *member) { /* executor */
+    if (!ink_member_exists(member) || strcmp(member, ink_member_current()->id)) return INK_FS_ERR_DENIED;
     if (M.r) {
         char was[INK_FS_PATH_MAX];
         snprintf(was, sizeof was, "%s", M.st.path);
@@ -346,17 +344,17 @@ static int do_play(const char *path, uint32_t start_ms, const char *member, uint
     }
     int fs_err = 0;
     ogg_reader_t *r = NULL;
-    int e = ogg_open_member_generation(member, generation, path, &r, &fs_err);
+    int e = ogg_open_for(member, path, &r, &fs_err);
     if (e == OGG_ERR_FILE) return fs_err;
     if (e != OGG_OK) return -100;
-    if (generation != ink_member_generation(member) || strcmp(member, ink_member_current()->id)) {
+    if (!ink_member_exists(member) || strcmp(member, ink_member_current()->id)) {
         ogg_close(r);
         return INK_FS_ERR_DENIED;
     }
     M.r = r;
     snprintf(M.who, sizeof M.who, "%s", member);
     snprintf(M.member, sizeof M.member, "%s", member);
-    M.generation = generation;
+    
     ink_svc_lock();
     snprintf(M.st.path, sizeof M.st.path, "%s", path);
     M.st.duration_ms = ogg_duration_ms(r);
@@ -400,7 +398,7 @@ static void do_stop(void) { /* executor */
 
 static void cmd_job(void *arg) {
     media_cmd_t *c = arg;
-    if (c->generation && c->generation == ink_member_generation(c->member) && !strcmp(c->member, ink_member_current()->id)) c->fn(c);
+    if (ink_member_exists(c->member) && !strcmp(c->member, ink_member_current()->id)) c->fn(c);
     osal_free(c);
 }
 
@@ -408,14 +406,13 @@ static int post_cmd(void (*fn)(media_cmd_t *), uint32_t a, const char *path) {
     char member[INK_MEMBER_ID_MAX];
     ink_svc_lock();
     snprintf(member, sizeof member, "%s", ink_member_current()->id);
-    uint32_t generation = ink_member_generation(member);
     ink_svc_unlock();
     media_cmd_t *c = osal_calloc(1, sizeof *c, OSAL_MEM_EXTERNAL);
     if (!c) return -1;
     c->fn = fn;
     c->arg = a;
     snprintf(c->member, sizeof c->member, "%s", member);
-    c->generation = generation;
+    
     if (path) snprintf(c->path, sizeof c->path, "%s", path);
     if (ink_exec_post(INK_EXEC_MEDIA, &c->job, cmd_job, c) != 0) {
         osal_free(c);
@@ -424,7 +421,7 @@ static int post_cmd(void (*fn)(media_cmd_t *), uint32_t a, const char *path) {
     return 0;
 }
 
-static void c_play(media_cmd_t *c) { do_play(c->path, c->arg, c->member, c->generation); }
+static void c_play(media_cmd_t *c) { do_play(c->path, c->arg, c->member); }
 static void c_pause(media_cmd_t *c) {
     (void)c;
     do_pause(INK_MEDIA_BY_USER);
@@ -498,7 +495,6 @@ static struct {
     ogg_writer_t *w;
     char path[INK_FS_PATH_MAX];
     char member[INK_MEMBER_ID_MAX]; /* whose it is: what the next one says does not go into it */
-    uint32_t generation;
     rec_frame_t q[REC_FRAMES];
     uint32_t head, tail; /* under the service lock */
     uint32_t last_sync_ms, max_ms;
@@ -534,7 +530,7 @@ static void rec_finish(const char *why) { /* executor */
         ink_args_str(a, "member", REC.member);
         ink_args_int(a, "ms", ms);
         ink_args_str(a, "why", r && !REC.why[0] ? "write_failed" : why);
-        ink_cap_emit_for("audio.record_done", a, REC.member, REC.generation);
+        ink_cap_emit_for("audio.record_done", a, REC.member);
         osal_free(a);
     }
 }
@@ -580,13 +576,13 @@ static void rec_frame(void *ctx, const uint8_t *data, size_t len, uint32_t seq) 
     (void)seq;
     if (!len) { /* the end: after what is queued. It takes no room there, a full queue must not lose it */
         ink_svc_lock();
-        if (REC.generation != ink_member_generation(REC.member) || strcmp(ink_member_current()->id, REC.member)) snprintf(REC.why, sizeof REC.why, "member_changed");
+        if (!ink_member_exists(REC.member) || strcmp(ink_member_current()->id, REC.member)) snprintf(REC.why, sizeof REC.why, "member_changed");
         REC.ending = true;
         ink_svc_unlock();
         ink_exec_post(INK_EXEC_MEDIA, &REC.write_job, rec_write, NULL);
         return;
     }
-    if (REC.generation != ink_member_generation(REC.member) || strcmp(ink_member_current()->id, REC.member)) return;
+    if (!ink_member_exists(REC.member) || strcmp(ink_member_current()->id, REC.member)) return;
     uint8_t *copy = osal_malloc(len, OSAL_MEM_EXTERNAL);
     if (!copy) {
         ink_probe_count("media.record_lost_frames");
@@ -605,7 +601,7 @@ static void rec_frame(void *ctx, const uint8_t *data, size_t len, uint32_t seq) 
 }
 
 static void rec_member_changed(void) { /* executor */
-    if (!ink_audio_recording() || (REC.generation == ink_member_generation(REC.member) && !strcmp(ink_member_current()->id, REC.member))) return;
+    if (!ink_audio_recording() || (ink_member_exists(REC.member) && !strcmp(ink_member_current()->id, REC.member))) return;
     snprintf(REC.why, sizeof REC.why, "member_changed");
     ink_audio_capture_end();
 }
@@ -627,13 +623,12 @@ static void fail(ink_call_t *c, ink_rc_t st, const char *why) {
 }
 
 static void cap_play(ink_call_t *c) { /* executor */
-    uint32_t generation;
-    const char *member = ink_cap_call_member(c, &generation);
+    const char *member = ink_cap_call_member(c);
     char path[INK_FS_PATH_MAX];
     int64_t start = -1;
     ink_args_get_str(&c->args, "path", path, sizeof path);
     ink_args_get_int(&c->args, "start_ms", &start);
-    int e = do_play(path, start < 0 ? INK_MEDIA_RESUME : (uint32_t)start, member, generation);
+    int e = do_play(path, start < 0 ? INK_MEDIA_RESUME : (uint32_t)start, member);
     if (e == -100) fail(c, INK_RC_FAILED, "not an Ogg Opus file (one channel)");
     else if (e) fail(c, INK_RC_FAILED, ink_fs_err_name(e));
     else {
@@ -692,9 +687,8 @@ static void cap_status(ink_call_t *c) {
 
 static void cap_record(ink_call_t *c) { /* executor */
     char member[INK_MEMBER_ID_MAX];
-    uint32_t generation;
-    snprintf(member, sizeof member, "%s", ink_cap_call_member(c, &generation));
-    if (!generation || generation != ink_member_generation(member) || strcmp(member, ink_member_current()->id)) {
+    snprintf(member, sizeof member, "%s", ink_cap_call_member(c));
+    if (!ink_member_exists(member) || strcmp(member, ink_member_current()->id)) {
         fail(c, INK_RC_STALE, "someone else is using the device now");
         return;
     }
@@ -722,7 +716,7 @@ static void cap_record(ink_call_t *c) { /* executor */
         return;
     }
     int fs_err = 0;
-    int e = ogg_create_member_generation(member, generation, path, &REC.w, &fs_err);
+    int e = ogg_create_for(member, path, &REC.w, &fs_err);
     if (e != OGG_OK) {
         ink_audio_focus_release(REC.focus);
         REC.focus = 0;
@@ -731,7 +725,7 @@ static void cap_record(ink_call_t *c) { /* executor */
     }
     snprintf(REC.path, sizeof REC.path, "%s", path);
     snprintf(REC.member, sizeof REC.member, "%s", member);
-    REC.generation = generation;
+    
     REC.why[0] = 0;
     REC.last_sync_ms = 0;
     REC.max_ms = max_s > 0 && max_s < REC_MAX_S ? (uint32_t)max_s * 1000u : REC_MAX_S * 1000u;
@@ -746,7 +740,7 @@ static void cap_record(ink_call_t *c) { /* executor */
         ink_svc_unlock();
         ogg_finish(REC.w);
         REC.w = NULL;
-        ink_fs_remove_member_generation(member, generation, path);
+        ink_fs_remove_for(member, path);
         ink_audio_focus_release(REC.focus);
         REC.focus = 0;
         fail(c, INK_RC_FAILED, "the microphone is in use");

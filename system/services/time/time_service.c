@@ -323,7 +323,7 @@ static int find_alarm(uint32_t id);
 static void save_alarm(const ink_alarm_t *a) { /* outside the service lock */
     osal_mutex_lock(T.edits, OSAL_WAIT_FOREVER);
     ink_svc_lock();
-    bool live = find_alarm(a->id) >= 0 && ink_member_generation(a->owner);
+    bool live = find_alarm(a->id) >= 0 && ink_member_exists(a->owner);
     ink_svc_unlock();
     ink_db_write_t w = {.id = a->id, .sort = a->next_s, .data = a, .len = sizeof *a, .src = a->src};
     if (live && T.db && ink_db_put(T.db, &w, NULL) != INK_DB_OK) ink_probe_count("time.save_failed");
@@ -347,8 +347,8 @@ static void remove_at(int i) { /* under the lock */
     T.n--;
 }
 
-static void emit_alarm_epoch(const char *event, const ink_alarm_t *a, const char *why, uint32_t generation) { /* the timer task, or a capability's */
-    if (!generation || generation != ink_member_generation(a->owner)) return;
+static void emit_alarm_epoch(const char *event, const ink_alarm_t *a, const char *why) { /* the timer task, or a capability's */
+    if (!ink_member_exists(a->owner)) return;
     ink_args_t *args = osal_malloc(sizeof *args, OSAL_MEM_EXTERNAL);
     if (!args) return;
     ink_args_init(args);
@@ -356,9 +356,8 @@ static void emit_alarm_epoch(const char *event, const ink_alarm_t *a, const char
     ink_args_str(args, "title", a->title);
     ink_args_str(args, "owner", a->owner);
     if (a->owner[0]) ink_args_str(args, "member", a->owner);
-    ink_args_int(args, "member_generation", generation);
     if (why) ink_args_str(args, "why", why);
-    ink_cap_emit_for(event, args, a->owner, generation);
+    ink_cap_emit_for(event, args, a->owner);
     osal_free(args);
 }
 
@@ -393,22 +392,20 @@ static void ring_cb(void *arg) { /* timer task */
     (void)arg;
     uint64_t now = osal_now_us();
     ink_alarm_t ended[MAX_RINGING];
-    uint32_t generations[MAX_RINGING];
     int n = 0;
     ink_svc_lock();
     for (int i = 0; i < MAX_RINGING; i++)
         if (T.rings[i].id && T.rings[i].until_us <= now) {
             int k = find_alarm(T.rings[i].id);
             if (k >= 0) {
-                generations[n] = ink_member_generation(T.a[k].owner);
                 ended[n++] = T.a[k];
             }
             T.rings[i].id = 0;
         }
     ink_svc_unlock();
     for (int i = 0; i < n; i++) {
-        emit_alarm_epoch("alarm.ended", &ended[i], "timeout", generations[i]);
-        emit_alarm_epoch("alarm.missed", &ended[i], "nobody stopped it", generations[i]);
+        emit_alarm_epoch("alarm.ended", &ended[i], "timeout");
+        emit_alarm_epoch("alarm.missed", &ended[i], "nobody stopped it");
     }
     rings_changed();
 }
@@ -421,7 +418,6 @@ static void due_cb(void *arg) { /* timer task */
     uint64_t now_us = osal_now_us();
     ink_alarm_t *fired = osal_malloc(sizeof(ink_alarm_t) * MAX_FIRE_BATCH, OSAL_MEM_EXTERNAL);
     bool late[MAX_FIRE_BATCH], saved[MAX_FIRE_BATCH];
-    uint32_t generations[MAX_FIRE_BATCH];
     int n = 0;
     if (!fired) {
         ink_svc_at(&T.due_at, now_us + 1000000u, due_cb, NULL);
@@ -439,7 +435,6 @@ static void due_cb(void *arg) { /* timer task */
         if (!a->next_s && a->kind == INK_ALARM) a->enabled = false; /* a single alarm stays in the list, off */
         alarm_changed(i);
         saved[n] = a->kind == INK_ALARM || a->next_s; /* a single reminder is over */
-        generations[n] = ink_member_generation(a->owner);
         fired[n] = *a;
         n++;
         if (!a->next_s && a->kind == INK_REMINDER) remove_at(i);
@@ -450,8 +445,8 @@ static void due_cb(void *arg) { /* timer task */
         if (saved[i]) save_alarm(a);
         else if (T.db) ink_db_del(T.db, a->id, a->src);
         ink_probe_count(late[i] ? "time.missed" : a->kind == INK_ALARM ? "time.alarms_fired" : "time.reminders_fired");
-        if (late[i]) emit_alarm_epoch(a->kind == INK_ALARM ? "alarm.missed" : "reminder.missed", a, "the device was off or the clock moved", generations[i]);
-        else emit_alarm_epoch(a->kind == INK_ALARM ? "alarm.fired" : "reminder.fired", a, NULL, generations[i]);
+        if (late[i]) emit_alarm_epoch(a->kind == INK_ALARM ? "alarm.missed" : "reminder.missed", a, "the device was off or the clock moved");
+        else emit_alarm_epoch(a->kind == INK_ALARM ? "alarm.fired" : "reminder.fired", a, NULL);
     }
     osal_free(fired);
     if (n) rings_changed();
@@ -541,7 +536,7 @@ static bool alarm_valid(const ink_alarm_t *a) {
 
 static int alarm_add_unlocked(ink_alarm_t *a, uint32_t *written) {
     if (written) *written = 0;
-    if (!T.db || !alarm_valid(a) || !a->owner[0] || !ink_member_generation(a->owner)) return -1;
+    if (!T.db || !alarm_valid(a) || !a->owner[0] || !ink_member_exists(a->owner)) return -1;
     int64_t now = ink_time_now_s();
     a->enabled = true;
     a->snooze_until = 0;
@@ -572,10 +567,9 @@ static int alarm_cancel_unlocked(uint32_t id, uint32_t revision, const char *mem
     bool mine = i >= 0 && (!strcmp(T.a[i].owner, member) || adult);
     if (revision && (!mine || T.revisions[i] != revision)) { ink_svc_unlock(); return -2; }
     bool ringing = false;
-    uint32_t generation = 0;
     if (mine) {
         a = T.a[i];
-        generation = ink_member_generation(a.owner);
+        
         remove_at(i);
     }
     for (int k = 0; k < MAX_RINGING && mine; k++)
@@ -587,19 +581,19 @@ static int alarm_cancel_unlocked(uint32_t id, uint32_t revision, const char *mem
     if (!mine) return -1;
     ink_db_del(T.db, id, a.src);
     if (ringing) {
-        emit_alarm_epoch("alarm.ended", &a, "cancelled", generation);
+        emit_alarm_epoch("alarm.ended", &a, "cancelled");
         rings_changed();
     }
     reschedule();
     return 0;
 }
 
-int ink_time_alarm_add_for(ink_alarm_t *a, uint32_t *written, const char *member, uint32_t generation) {
+int ink_time_alarm_add_for(ink_alarm_t *a, uint32_t *written, const char *member) {
     if (written) *written = 0;
     if (!a || !member) return -1;
     snprintf(a->owner, sizeof a->owner, "%s", member);
     osal_mutex_lock(T.edits, OSAL_WAIT_FOREVER);
-    bool live = ink_member_io_begin(member, generation);
+    bool live = ink_member_io_begin(member);
     int r = live ? alarm_add_unlocked(a, written) : -5;
     osal_mutex_unlock(T.edits);
     if (live) ink_member_io_end(member);
@@ -611,16 +605,15 @@ int ink_alarm_add_versioned(ink_alarm_t *a, uint32_t *written) {
     char member[16];
     ink_svc_lock();
     snprintf(member, sizeof member, "%s", a->owner[0] ? a->owner : ink_member_current()->id);
-    uint32_t generation = ink_member_generation(member);
     ink_svc_unlock();
-    return ink_time_alarm_add_for(a, written, member, generation);
+    return ink_time_alarm_add_for(a, written, member);
 }
 
 int ink_alarm_add(ink_alarm_t *a) { return ink_alarm_add_versioned(a, NULL); }
 
-int ink_time_alarm_cancel_for(uint32_t id, uint32_t revision, const char *member, uint32_t generation) {
+int ink_time_alarm_cancel_for(uint32_t id, uint32_t revision, const char *member) {
     osal_mutex_lock(T.edits, OSAL_WAIT_FOREVER);
-    bool live = ink_member_io_begin(member, generation), adult = false;
+    bool live = ink_member_io_begin(member), adult = false;
     ink_svc_lock();
     const ink_member_t *m;
     for (int i = 0; live && (m = ink_member_at(i)) != NULL; i++)
@@ -636,9 +629,8 @@ int ink_alarm_cancel_if_revision(uint32_t id, uint32_t revision) {
     char member[16];
     ink_svc_lock();
     snprintf(member, sizeof member, "%s", ink_member_current()->id);
-    uint32_t generation = ink_member_generation(member);
     ink_svc_unlock();
-    return ink_time_alarm_cancel_for(id, revision, member, generation);
+    return ink_time_alarm_cancel_for(id, revision, member);
 }
 
 int ink_alarm_cancel(uint32_t id) { return ink_alarm_cancel_if_revision(id, 0); }
@@ -670,9 +662,9 @@ int ink_time_forget_member(const char *member, int64_t timeout_us) {
     return ok ? 0 : -1;
 }
 
-int ink_time_alarm_next_for(int *cursor, ink_alarm_kind_t kind, ink_alarm_t *out, const char *member, uint32_t generation) {
+int ink_time_alarm_next_for(int *cursor, ink_alarm_kind_t kind, ink_alarm_t *out, const char *member) {
     ink_svc_lock();
-    if (!member || !generation || generation != ink_member_generation(member)) { ink_svc_unlock(); return -1; }
+    if (!member || !ink_member_exists(member)) { ink_svc_unlock(); return -1; }
     int hit = 0;
     for (int i = *cursor; i < T.n && !hit; i++)
         if (T.a[i].kind == kind && !strcmp(T.a[i].owner, member)) {
@@ -688,20 +680,18 @@ int ink_alarm_next(int *cursor, ink_alarm_kind_t kind, ink_alarm_t *out) {
     char member[16];
     ink_svc_lock();
     snprintf(member, sizeof member, "%s", ink_member_current()->id);
-    uint32_t generation = ink_member_generation(member);
     ink_svc_unlock();
-    return ink_time_alarm_next_for(cursor, kind, out, member, generation);
+    return ink_time_alarm_next_for(cursor, kind, out, member);
 }
 
 /* Stop what rings: id 0 all of it. How many stopped. */
-static int stop_rings(uint32_t id, ink_alarm_t *ended, uint32_t *generations, int max) {
+static int stop_rings(uint32_t id, ink_alarm_t *ended, int max) {
     int n = 0;
     ink_svc_lock();
     for (int i = 0; i < MAX_RINGING; i++)
         if (T.rings[i].id && (!id || T.rings[i].id == id)) {
             int k = find_alarm(T.rings[i].id);
             if (k >= 0 && n < max) {
-                generations[n] = ink_member_generation(T.a[k].owner);
                 ended[n++] = T.a[k];
                 alarm_changed(k);
             }
@@ -713,17 +703,15 @@ static int stop_rings(uint32_t id, ink_alarm_t *ended, uint32_t *generations, in
 
 int ink_alarm_dismiss(uint32_t id) {
     ink_alarm_t ended[MAX_RINGING];
-    uint32_t generations[MAX_RINGING];
-    int n = stop_rings(id, ended, generations, MAX_RINGING);
-    for (int i = 0; i < n; i++) emit_alarm_epoch("alarm.ended", &ended[i], "dismissed", generations[i]);
+    int n = stop_rings(id, ended, MAX_RINGING);
+    for (int i = 0; i < n; i++) emit_alarm_epoch("alarm.ended", &ended[i], "dismissed");
     rings_changed();
     return n ? 0 : -1;
 }
 
 int ink_alarm_snooze(uint32_t id, int minutes) {
     ink_alarm_t ended[MAX_RINGING];
-    uint32_t generations[MAX_RINGING];
-    int n = stop_rings(id, ended, generations, MAX_RINGING);
+    int n = stop_rings(id, ended, MAX_RINGING);
     if (!n) return -1;
     int64_t until = ink_time_now_s() + (minutes > 0 ? minutes : SNOOZE_MIN) * 60;
     ink_alarm_t updated[MAX_RINGING];
@@ -740,7 +728,7 @@ int ink_alarm_snooze(uint32_t id, int minutes) {
     }
     ink_svc_unlock();
     for (int i = 0; i < nu; i++) save_alarm(&updated[i]);
-    for (int i = 0; i < n; i++) emit_alarm_epoch("alarm.ended", &ended[i], "snoozed", generations[i]);
+    for (int i = 0; i < n; i++) emit_alarm_epoch("alarm.ended", &ended[i], "snoozed");
     rings_changed();
     reschedule();
     return 0;

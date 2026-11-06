@@ -146,7 +146,6 @@ static struct {
 } AU;
 static bool g_capture_revoked INK_PSRAM_BSS; /* under AU.lock; a handoff cannot be undone by switching back */
 static char g_capture_member[INK_MEMBER_ID_MAX] INK_PSRAM_BSS;
-static uint32_t g_capture_generation INK_PSRAM_BSS;
 static bool g_output_revoked INK_PSRAM_BSS;
 static ink_member_identity_t g_stream_owner INK_PSRAM_BSS, g_staged_owner INK_PSRAM_BSS, g_output_owner INK_PSRAM_BSS;
 static ink_audio_prio_t g_staged_prio, g_output_prio;
@@ -158,7 +157,7 @@ static void unlock(void) { osal_mutex_unlock(AU.lock); }
 static bool playback_owner_matches(const ink_member_identity_t *owner, ink_audio_prio_t prio) {
     ink_member_identity_t identity;
     ink_member_identity(&identity);
-    return owner->generation == identity.generation && !strcmp(owner->member, identity.member) &&
+    return !strcmp(owner->member, identity.member) &&
            (prio == INK_AUDIO_PRIO_STORY || (owner->epoch == identity.epoch &&
             (prio != INK_AUDIO_PRIO_VOICE || identity.authed)));
 }
@@ -215,7 +214,7 @@ static int g_last_command = -1;
 static int focus_top_locked(void);
 
 static bool capture_allowed(void) { /* under AU.lock */
-    if (!g_capture_revoked && (!g_capture_generation || g_capture_generation != ink_member_generation(g_capture_member) ||
+    if (!g_capture_revoked && (!ink_member_exists(g_capture_member) ||
         strcmp(g_capture_member, ink_member_current()->id) || (!AU.cap_local && !ink_member_space_open()))) {
         g_capture_revoked = true;
         AU.cap_ending = true;
@@ -904,7 +903,6 @@ static int capture_begin_locked(ink_audio_frame_fn fn, void *ctx, bool local) { 
     AU.cap_ending = false;
     g_capture_revoked = false;
     snprintf(g_capture_member, sizeof g_capture_member, "%s", ink_member_current()->id);
-    g_capture_generation = ink_member_generation(g_capture_member);
     unlock();
     if (!listening && hal_audio_capture_start(capture_cb, NULL) != 0) {
         lock();

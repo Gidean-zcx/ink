@@ -16,7 +16,7 @@ typedef enum { OGG_OK = 0, OGG_ERR_FILE = -1, OGG_ERR_FORMAT = -2, OGG_ERR_MEMOR
 
 /** Reads the header pages. *fs_err: what the file service said, when OGG_ERR_FILE. */
 int ogg_open(const char *path, ogg_reader_t **out, int *fs_err);
-int ogg_open_member_generation(const char *member, uint32_t generation, const char *path, ogg_reader_t **out, int *fs_err);
+int ogg_open_for(const char *member, const char *path, ogg_reader_t **out, int *fs_err);
 void ogg_close(ogg_reader_t *r);
 /** The length of the stream (from the last good page). */
 uint32_t ogg_duration_ms(const ogg_reader_t *r);
@@ -29,7 +29,7 @@ uint32_t ogg_position_ms(const ogg_reader_t *r);
 
 typedef struct ogg_writer ogg_writer_t;
 int ogg_create(const char *path, ogg_writer_t **out, int *fs_err);
-int ogg_create_member_generation(const char *member, uint32_t generation, const char *path, ogg_writer_t **out, int *fs_err);
+int ogg_create_for(const char *member, const char *path, ogg_writer_t **out, int *fs_err);
 /** 0, or a file service error: then what was written so far stays good. */
 int ogg_write_packet(ogg_writer_t *w, const uint8_t *data, size_t len, uint32_t ms);
 /** What is written so far is on the card even if the power goes now. */

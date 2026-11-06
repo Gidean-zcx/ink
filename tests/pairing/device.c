@@ -195,7 +195,7 @@ static void run(void *arg) {
         uint8_t frame[16] = {1};
         const char *member = ink_member_current()->id;
         CHECK(ink_hub_send_binary(frame, sizeof frame) == INK_HUB_ERR_OFFLINE, "ordinary voice frames cannot leave on a preauth connection");
-        CHECK(ink_hub_send_frame_for(frame, sizeof frame, INK_HUB_TX_CONTROL, member, ink_member_generation(member), ink_hub_member_epoch()) == INK_HUB_ERR_OFFLINE,
+        CHECK(ink_hub_send_frame_for(frame, sizeof frame, INK_HUB_TX_CONTROL, member, ink_hub_member_epoch()) == INK_HUB_ERR_OFFLINE,
               "member control frames cannot leave on a preauth connection");
         char nonce[33];
         CHECK(ink_storage_read("/user/sys/test.nonce", nonce, sizeof nonce) == sizeof nonce && !strcmp(nonce, sim_hub_pair_nonce()), "same nonce after lost begin and reboot");

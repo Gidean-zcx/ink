@@ -40,7 +40,7 @@ typedef ink_backup_item_t item_t;
 typedef ink_backup_manifest_t manifest_t;
 
 typedef struct {
-    uint32_t magic, format, phase, generation, next, offset, subphase;
+    uint32_t magic, format, phase, next, offset, subphase;
     char member[INK_MEMBER_ID_MAX];
     uint8_t identity[16];
     char manifest_hash[65], preview[33];
@@ -58,7 +58,7 @@ static struct {
     uint8_t *buf; /* One bounded transfer block, allocated only while work runs. */
     ink_exec_job_t job;
     ink_svc_deadline_t retry;
-    struct { char member[INK_MEMBER_ID_MAX]; uint32_t generation; int id; } tasks[INK_MEMBERS_MAX];
+    struct { char member[INK_MEMBER_ID_MAX]; int id; } tasks[INK_MEMBERS_MAX];
     int no_task;
     struct { char member[INK_MEMBER_ID_MAX]; bool pending; } known[INK_MEMBERS_MAX];
     bool started;
@@ -69,7 +69,7 @@ static struct {
     bool bound, pending, done, receiving;
     char member[INK_MEMBER_ID_MAX], reply[1024];
     uint8_t identity[16], *rx;
-    uint32_t generation, phase, next, stage, offset, ack, expected, rx_len;
+    uint32_t phase, next, stage, offset, ack, expected, rx_len;
     uint16_t upload, xfer;
     uintptr_t cookie;
     int status;
@@ -89,13 +89,12 @@ static void net_reset(void) {
 }
 
 static void net_bind(void) {
-    if (N.bound && !strcmp(N.member, B.j.member) && N.generation == B.j.generation &&
-        !memcmp(N.identity, B.j.identity, 16) && N.phase == B.j.phase && N.next == B.j.next) return;
+    if (N.bound && !strcmp(N.member, B.j.member) && !memcmp(N.identity, B.j.identity, 16) && N.phase == B.j.phase && N.next == B.j.next) return;
     net_reset();
     ink_svc_lock();
     snprintf(N.member, sizeof N.member, "%s", B.j.member);
     memcpy(N.identity, B.j.identity, 16);
-    N.generation = B.j.generation; N.phase = B.j.phase; N.next = B.j.next; N.bound = true;
+    N.phase = B.j.phase; N.next = B.j.next; N.bound = true;
     ink_svc_unlock();
 }
 
@@ -108,14 +107,13 @@ static int *task_id(void) {
     int free_slot = -1;
     for (int i = 0; i < INK_MEMBERS_MAX; i++) {
         if (!strcmp(B.tasks[i].member, B.j.member)) {
-            if (B.tasks[i].generation != B.j.generation) { B.tasks[i].generation = B.j.generation; B.tasks[i].id = 0; }
             return &B.tasks[i].id;
         }
-        if (free_slot < 0 && (!B.tasks[i].member[0] || !ink_member_generation(B.tasks[i].member))) free_slot = i;
+        if (free_slot < 0 && (!B.tasks[i].member[0] || !ink_member_exists(B.tasks[i].member))) free_slot = i;
     }
     if (free_slot >= 0) {
         snprintf(B.tasks[free_slot].member, sizeof B.tasks[free_slot].member, "%s", B.j.member);
-        B.tasks[free_slot].generation = B.j.generation; B.tasks[free_slot].id = 0;
+        B.tasks[free_slot].id = 0;
         return &B.tasks[free_slot].id;
     }
     return &B.no_task;
@@ -125,7 +123,7 @@ static void remember(const char *member, bool pending) {
     int slot = -1;
     for (int i = 0; i < INK_MEMBERS_MAX; i++) {
         if (!strcmp(B.known[i].member, member)) { B.known[i].pending = pending; return; }
-        if (slot < 0 && (!B.known[i].member[0] || !ink_member_generation(B.known[i].member))) slot = i;
+        if (slot < 0 && (!B.known[i].member[0] || !ink_member_exists(B.known[i].member))) slot = i;
     }
     if (slot >= 0) { snprintf(B.known[slot].member, sizeof B.known[slot].member, "%s", member); B.known[slot].pending = pending; }
 }
@@ -135,7 +133,7 @@ static bool pending_for(const char *member) {
 }
 
 static bool actor_valid(void) {
-    return B.j.generation && B.j.generation == ink_member_generation(B.j.member) &&
+    return ink_member_exists(B.j.member) &&
            !strcmp(B.j.member, ink_member_current()->id) && ink_member_space_open();
 }
 
@@ -192,10 +190,10 @@ static bool load_journal(const char *member) {
     if (n >= 8 && j.magic == STATE_MAGIC && j.format == 1) {
         memset(&B.j, 0, sizeof B.j);
         snprintf(B.j.member, sizeof B.j.member, "%s", member);
-        B.j.generation = ink_member_generation(member); B.j.phase = PH_FAILED;
+        B.j.phase = PH_FAILED;
         snprintf(B.j.reason, sizeof B.j.reason, "旧备份没有成员身份记录，请重新备份");
         remember(member, false);
-        return ink_member_durable_id(member, B.j.generation, B.j.identity) == 0;
+        return ink_member_durable_id(member, B.j.identity) == 0;
     }
     if (n != sizeof j || j.magic != STATE_MAGIC || j.format != 2 || j.phase > PH_FAILED ||
         j.crc != ink_crc32(0, &j, offsetof(journal_t, crc)) || memchr(j.member, 0, sizeof j.member) == NULL ||
@@ -203,14 +201,14 @@ static bool load_journal(const char *member) {
         !memchr(j.manifest_hash, 0, sizeof j.manifest_hash) || !memchr(j.preview, 0, sizeof j.preview) ||
         !memchr(j.reason, 0, sizeof j.reason)) return false;
     uint8_t identity[16];
-    if (ink_member_durable_id(member, ink_member_generation(member), identity)) return false;
+    if (ink_member_durable_id(member, identity)) return false;
     if (memcmp(j.identity, identity, 16)) {
         memset(&B.j, 0, sizeof B.j);
         remember(member, false);
         return true;
     }
     B.j = j;
-    B.j.generation = ink_member_generation(member);
+    
     return true;
 }
 
@@ -345,7 +343,7 @@ static uint32_t u32(const uint8_t *p);
 
 typedef struct {
     char member[INK_MEMBER_ID_MAX];
-    uint32_t generation, mode, db, state, depth, offset, length, revision;
+    uint32_t mode, db, state, depth, offset, length, revision;
     manifest_t manifest;
     names_t names;
     hal_dir_t *dirs[9];
@@ -368,7 +366,7 @@ static int capture_step(void) {
         if (ink_fs_card_hold() != INK_FS_OK) return -1;
         C = osal_calloc(1, sizeof *C, OSAL_MEM_EXTERNAL);
         if (!C) { ink_fs_card_release(); return -1; }
-        snprintf(C->member, sizeof C->member, "%s", B.j.member); C->generation = B.j.generation;
+        snprintf(C->member, sizeof C->member, "%s", B.j.member); 
         C->manifest.magic = MAN_MAGIC; C->manifest.format = 2;
         snprintf(C->manifest.member, sizeof C->manifest.member, "%s", B.j.member);
         memcpy(C->manifest.identity, B.j.identity, 16);
@@ -381,7 +379,7 @@ static int capture_step(void) {
         const ink_db_def_t *d = ink_db_def_at((int)C->db++);
         if (!d) C->mode++;
         else if (d->scope == INK_DB_MEMBER) {
-            ink_db_t *db = ink_db_open_member(d, B.j.member, B.j.generation);
+            ink_db_t *db = ink_db_open_member(d, B.j.member);
             if (!db) return -1;
             void *data = NULL; size_t len = 0;
             /* Flush, then yield until durable: do not block the shared executor waiting for a writer. */
@@ -547,7 +545,7 @@ static void ack(void *ctx, const char *method, const ink_json_t *j, int params) 
     ink_svc_lock();
     char identity[33]; hex(N.identity, 16, identity);
     bool valid = N.bound && N.upload && upload == N.upload && !strcmp(received, identity) &&
-        N.generation == ink_member_generation(N.member) && !strcmp(N.member, ink_member_current()->id);
+        ink_member_exists(N.member) && !strcmp(N.member, ink_member_current()->id);
     if (valid && (uint32_t)off >= N.ack) N.ack = (uint32_t)off;
     ink_svc_unlock();
     if (valid) wake(NULL);
@@ -562,7 +560,7 @@ static void blob_frame(void *ctx, const uint8_t *d, size_t len) {
     uint16_t xfer = (uint16_t)(d[10] | d[11] << 8);
     uint32_t off = u32(d + 12);
     bool valid = N.receiving && N.xfer && xfer == N.xfer && N.rx && off == N.offset + N.rx_len &&
-        len - 16 <= N.expected - N.rx_len && N.generation == ink_member_generation(N.member) &&
+        len - 16 <= N.expected - N.rx_len && ink_member_exists(N.member) &&
         !strcmp(N.member, ink_member_current()->id);
     if (valid) {
         memcpy(N.rx + N.rx_len, d + 16, len - 16);
@@ -597,7 +595,7 @@ static int upload_block(const char *path, const uint8_t hash[32], uint32_t size,
         if (!ok) return -2;
         memset(B.buf, 0, 16); B.buf[0] = 7;
         B.buf[10] = (uint8_t)N.upload; B.buf[11] = (uint8_t)(N.upload >> 8); put32(B.buf + 12, N.offset);
-        if (ink_hub_send_frame_for(B.buf, n + 16, INK_HUB_TX_BACKGROUND, B.j.member, B.j.generation, 0) != 0) return -1;
+        if (ink_hub_send_frame_for(B.buf, n + 16, INK_HUB_TX_BACKGROUND, B.j.member, 0) != 0) return -1;
         N.offset += n;
         if (N.offset < N.expected) return 1;
         N.stage = 2; net_wait();
@@ -729,7 +727,7 @@ static int current_hash(const item_t *it, uint8_t hash[32], uint32_t *revision) 
     if (!supported(it)) return 0;
     if (it->kind == ITEM_DB) {
         const ink_db_def_t *d = ink_db_find_def(it->name);
-        ink_db_t *db = ink_db_open_member(d, B.j.member, B.j.generation);
+        ink_db_t *db = ink_db_open_member(d, B.j.member);
         if (!db) return -1;
         void *data = NULL; size_t len = 0;
         ink_db_flush(db);
@@ -792,14 +790,14 @@ static int apply_item(unsigned index) {
     if (!physical(it, target, sizeof target)) return -2;
     if (it->kind == ITEM_FILE) {
         char virt[INK_FS_PATH_MAX]; snprintf(virt, sizeof virt, "/me/%.123s", it->name);
-        int rc = ink_fs_restore_if_revision(B.j.member, B.j.generation, index, virt, version);
+        int rc = ink_fs_restore_if_revision(B.j.member, index, virt, version);
         return rc == 0 ? 0 : rc == INK_FS_ERR_EXISTS ? -3 : rc == INK_FS_ERR_BUSY ? -1 : -2;
     }
     void *data = osal_malloc(it->size ? it->size : 1, OSAL_MEM_EXTERNAL);
     if (!data) return -1;
     int rc = card_load(staged, data, it->size);
     if (!rc && it->kind == ITEM_DB) {
-        ink_db_t *db = ink_db_open_member(ink_db_find_def(it->name), B.j.member, B.j.generation);
+        ink_db_t *db = ink_db_open_member(ink_db_find_def(it->name), B.j.member);
         rc = db ? ink_db_import(db, data, it->size, version) : -1;
         ink_db_close(db);
     } else if (!rc) {
@@ -830,7 +828,7 @@ static void event(const char *id) {
     ink_args_init(a);
     ink_args_str(a, "member", B.j.member);
     ink_args_str(a, "phase", PH_NAMES[B.j.phase]);
-    ink_cap_emit_for(id, a, B.j.member, B.j.generation);
+    ink_cap_emit_for(id, a, B.j.member);
     osal_free(a);
 }
 
@@ -850,7 +848,7 @@ static void mark_failed(const char *reason) {
 
 static void acknowledge_manifest(void) {
     for (unsigned k = 0; k < B.m->count; k++) if (B.m->item[k].kind == ITEM_DB && supported(&B.m->item[k])) {
-        ink_db_t *db = ink_db_open_member(ink_db_find_def(B.m->item[k].name), B.j.member, B.j.generation);
+        ink_db_t *db = ink_db_open_member(ink_db_find_def(B.m->item[k].name), B.j.member);
         if (db && B.m->item[k].revision <= ink_db_last_ver(db)) ink_db_ack(db, B.m->item[k].revision);
         ink_db_close(db);
     }
@@ -962,7 +960,7 @@ static int restore_step(ink_json_t *j) {
             if (it->kind == ITEM_FILE) {
                 char virt[INK_FS_PATH_MAX]; snprintf(virt, sizeof virt, "/me/%.123s", it->name);
                 char *slash = strrchr(virt, '/');
-                if (slash && slash != virt + 3) { *slash = 0; if (ink_fs_mkdir_member_generation(B.j.member, B.j.generation, virt)) return -2; }
+                if (slash && slash != virt + 3) { *slash = 0; if (ink_fs_mkdir_for(B.j.member, virt)) return -2; }
             }
             B.j.subphase = 2; H.valid = false;
         }
@@ -979,7 +977,7 @@ installed:
 static void step(void *arg) {
     (void)arg;
     const char *member = ink_member_current()->id;
-    if (C && (strcmp(C->member, member) || C->generation != ink_member_generation(member) || ink_jobs_held() || !ink_member_space_open())) free_capture();
+    if (C && (strcmp(C->member, member) || !ink_member_exists(member) || ink_jobs_held() || !ink_member_space_open())) free_capture();
     if (!pending_for(member)) { net_reset(); schedule(); return; }
     if (!load_journal(member)) { net_reset(); remember(member, false); schedule(); return; }
     if (!actor_valid() || ink_jobs_held() || ink_storage_writes_held()) { net_reset(); schedule(); return; } /* never wait for the flash here: this executor is shared */
@@ -1003,8 +1001,8 @@ static void step(void *arg) {
         schedule(); return;
     }
     if (!active()) { remember(member, false); schedule(); return; }
-    if (!*task_id()) *task_id() = ink_task_begin_for(B.j.phase == PH_CAPTURE || B.j.phase == PH_UPLOAD ? "backup" : "restore", "继续备份或恢复资料", B.j.member, B.j.generation, NULL, NULL);
-    if (!ink_member_io_begin(B.j.member, B.j.generation)) return;
+    if (!*task_id()) *task_id() = ink_task_begin_for(B.j.phase == PH_CAPTURE || B.j.phase == PH_UPLOAD ? "backup" : "restore", "继续备份或恢复资料", B.j.member, NULL, NULL);
+    if (!ink_member_io_begin(B.j.member)) return;
     if (ink_fs_card_hold() != INK_FS_OK) { schedule(); ink_member_io_end(B.j.member); return; }
     int rc = -1;
     ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
@@ -1025,16 +1023,15 @@ static void step(void *arg) {
 }
 
 static bool for_call(ink_call_t *c) {
-    uint32_t generation;
-    const char *member = ink_cap_call_member(c, &generation);
-    if (C && (strcmp(C->member, member) || C->generation != generation)) free_capture();
-    if (!generation || generation != ink_member_generation(member) || strcmp(member, ink_member_current()->id) || !ink_member_space_open()) {
+    const char *member = ink_cap_call_member(c);
+    if (C && strcmp(C->member, member)) free_capture();
+    if (!ink_member_exists(member) || strcmp(member, ink_member_current()->id) || !ink_member_space_open()) {
         c->rc.status = INK_RC_STALE; return false;
     }
     if (!load_journal(member)) { c->rc.status = INK_RC_FAILED; snprintf(c->rc.say, sizeof c->rc.say, "备份记录暂时读不出来，请稍后再试"); return false; }
     if (!B.j.member[0]) {
-        snprintf(B.j.member, sizeof B.j.member, "%s", member); B.j.generation = generation;
-        if (ink_member_durable_id(member, generation, B.j.identity)) { c->rc.status = INK_RC_FAILED; return false; }
+        snprintf(B.j.member, sizeof B.j.member, "%s", member); 
+        if (ink_member_durable_id(member, B.j.identity)) { c->rc.status = INK_RC_FAILED; return false; }
     }
     return true;
 }
@@ -1117,7 +1114,7 @@ static void cap_backup(ink_call_t *c) {
     B.j.reason[0] = B.j.preview[0] = B.j.manifest_hash[0] = 0; B.j.manifest_size = 0;
     /* Persist intent before doing any capture or replacing staging content. */
     if (save_journal()) { c->rc.status = INK_RC_FAILED; return; }
-    (*task_id()) = ink_task_begin_for("backup", "备份资料", B.j.member, B.j.generation, NULL, NULL);
+    (*task_id()) = ink_task_begin_for("backup", "备份资料", B.j.member, NULL, NULL);
     c->rc.status = INK_RC_QUEUED; result(c, false); schedule();
 }
 
@@ -1152,7 +1149,7 @@ static void cap_apply(ink_call_t *c) {
         B.j.phase = PH_CHECK; B.j.next = B.j.offset = B.j.subphase = 0; H.valid = false;
         if (save_journal()) c->rc.status = INK_RC_FAILED;
         else {
-            (*task_id()) = ink_task_begin_for("restore", "恢复资料", B.j.member, B.j.generation, NULL, NULL);
+            (*task_id()) = ink_task_begin_for("restore", "恢复资料", B.j.member, NULL, NULL);
             c->rc.status = INK_RC_QUEUED; result(c, true); schedule();
         }
     }

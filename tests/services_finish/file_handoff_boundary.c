@@ -44,9 +44,9 @@ static void test_emit(const char *id, const ink_args_t *args) {
     before_emit(id, args);
     ink_cap_emit(id, args);
 }
-static void test_emit_for(const char *id, const ink_args_t *args, const char *member, uint32_t generation) {
+static void test_emit_for(const char *id, const ink_args_t *args, const char *member) {
     before_emit(id, args);
-    ink_cap_emit_for(id, args, member, generation);
+    ink_cap_emit_for(id, args, member);
 }
 #define hal_fs_card_present() test_card_present(__func__)
 #define hal_fs_opendir(path) test_opendir(path, __func__)

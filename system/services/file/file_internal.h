@@ -10,7 +10,6 @@
 
 typedef struct {
     char member[INK_MEMBER_ID_MAX];
-    uint32_t generation;
     bool adult;
 } file_context_t;
 

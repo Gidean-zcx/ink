@@ -107,12 +107,6 @@ if not a.quick:
         boot(clone(empty, label), "malicious", server=server)
     for phase in ("stale", "member-confirm", "corrupt", "restore-network", "pin", "prepare-recover"):
         boot(clone(empty, phase), phase)
-    for origin, label in ((area, "identity-local"), (empty, "identity-clean")):
-        target = clone(origin, label)
-        server = work / (label + "-hub")
-        shutil.copytree(peer, server)
-        boot(target, "reused-id", server=server)
-        boot(target, "identity-reboot", server=server)
     boot(work / "deep", "deep", server=work / "deep-hub")
     boot(work / "recording", "recording", server=work / "recording-hub")
     slow = json.loads((ROOT / "simulator/profiles/metalio-plus.json").read_text(errors="replace"))

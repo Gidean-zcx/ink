@@ -55,7 +55,7 @@ static void fixtures(const char *who) {
     CHECK(ink_db_put(db,&w,NULL)==0 && ink_db_del(db,70,INK_SRC_TOUCH)==0 && ink_db_wait(db,3,5000000)==0, "durable deletion and next id");
     ink_db_close(db);
     char path[INK_LAYOUT_PATH_MAX]; snprintf(path,sizeof path,"/user/m/%s/test.position",who);
-    CHECK(ink_storage_write_member_atomic(path,"offset=1234",11,ink_member_generation(who))==0 && WAIT_FOR(ink_storage_pending()==0,5000),"raw member state durable");
+    CHECK(ink_storage_write_member_atomic(path,"offset=1234",11)==0 && WAIT_FOR(ink_storage_pending()==0,5000),"raw member state durable");
     uint8_t *bytes=osal_malloc(file_bytes,OSAL_MEM_EXTERNAL); CHECK(bytes,"file fixture buffer");
     if (bytes) {
         memset(bytes,!strcmp(who,"owner") ? 'A' : 'K',file_bytes);
@@ -184,10 +184,9 @@ static void api_checks(void *arg) {
     hal_file_t *f=hal_fs_open("/content/.m/owner/.backup/down127",HAL_O_WRITE|HAL_O_CREATE|HAL_O_TRUNC);
     CHECK(f && hal_fs_write(f,"A",1)==1,"stage replacement"); if(f)CHECK(hal_fs_close(f)==0,"stage closed");
     ink_sha256("A",1,hash);
-    CHECK(ink_fs_restore("owner",ink_member_generation("owner"),127,"/me/cas/guard.txt",hash)==INK_FS_ERR_EXISTS,"card edit lock refuses changed target");
+    CHECK(ink_fs_restore("owner",127,"/me/cas/guard.txt",hash)==INK_FS_ERR_EXISTS,"card edit lock refuses changed target");
     ink_sha256("B",1,hash);
-    CHECK(ink_fs_restore("owner",ink_member_generation("owner")+1,127,"/me/cas/guard.txt",hash)==INK_FS_ERR_DENIED,"card restore rejects a different member incarnation");
-    CHECK(ink_fs_restore("owner",ink_member_generation("owner"),127,"/me/cas/guard.txt",hash)==0,"unchanged card target restores");
+    CHECK(ink_fs_restore("owner",127,"/me/cas/guard.txt",hash)==0,"unchanged card target restores");
     ink_fs_file_t *read=NULL;
     CHECK(ink_fs_open("/me/cas/guard.txt",INK_FS_READ,&read)==0 && ink_fs_read(read,buf,sizeof buf)==1 && buf[0]=='A',"card replacement content");
     if(read)CHECK(ink_fs_close(read)==0,"conditional card read closed");
@@ -195,12 +194,11 @@ static void api_checks(void *arg) {
     CHECK(f && hal_fs_write(f,"R",1)==1,"stage revision-guard replacement"); if(f)CHECK(hal_fs_close(f)==0,"revision stage closed");
     uint32_t revision=ink_fs_revision();
     CHECK(ink_fs_write_atomic("/me/cas/guard.txt","C",1)==0,"same-size edit after incremental hash checkpoint");
-    CHECK(ink_fs_restore_if_revision("owner",ink_member_generation("owner"),127,"/me/cas/guard.txt",revision)==INK_FS_ERR_EXISTS,"revision restore refuses intervening same-size edit");
+    CHECK(ink_fs_restore_if_revision("owner",127,"/me/cas/guard.txt",revision)==INK_FS_ERR_EXISTS,"revision restore refuses intervening same-size edit");
     CHECK(ink_fs_open("/me/cas/guard.txt",INK_FS_READ,&read)==0 && ink_fs_read(read,buf,sizeof buf)==1 && buf[0]=='C',"revision guard retains new content");
     if(read)CHECK(ink_fs_close(read)==0,"revision-guard read closed");
     revision=ink_fs_revision();
-    CHECK(ink_fs_restore_if_revision("owner",ink_member_generation("owner")+1,127,"/me/cas/guard.txt",revision)==INK_FS_ERR_DENIED,"revision restore retains original member generation");
-    CHECK(ink_fs_restore_if_revision("owner",ink_member_generation("owner"),127,"/me/cas/guard.txt",revision)==0,"unchanged revision installs without whole-file lock-time hashing");
+    CHECK(ink_fs_restore_if_revision("owner",127,"/me/cas/guard.txt",revision)==0,"unchanged revision installs without whole-file lock-time hashing");
     ink_fs_file_t *writer=NULL;
     CHECK(ink_fs_open("/me/cas/guard.txt",INK_FS_WRITE,&writer)==0 && ink_fs_revision()==0,"open writer cannot yield a stable restore revision");
     if(writer) CHECK(ink_fs_close(writer)==0 && ink_fs_revision()!=0,"closing writer permits stable sampling again");
@@ -210,7 +208,7 @@ static void api_checks(void *arg) {
     osal_task_cfg_t edit_cfg={.name="api-writer",.fn=api_writer,.stack_bytes=4096,.priority=OSAL_PRIO_NORMAL,.core=-1,.flags=OSAL_TASK_STACK_EXTERNAL};
     CHECK(osal_task_create(&edit_cfg,NULL)==OSAL_OK && WAIT_FOR(ink_fs_revision()==0 && !edit_done,1000),"atomic writer owns edit lock before conditional install");
     uint64_t started=osal_now_us();
-    int restored=ink_fs_restore_if_revision("owner",ink_member_generation("owner"),127,"/me/cas/guard.txt",revision);
+    int restored=ink_fs_restore_if_revision("owner",127,"/me/cas/guard.txt",revision);
     CHECK(restored==INK_FS_ERR_BUSY && osal_now_us()-started<200000,"conditional restore yields while atomic writer owns edit lock");
     CHECK(WAIT_FOR(edit_done,5000),"concurrent API writer finished");
     hw(HW_USB_ON,0,0);
@@ -224,9 +222,8 @@ static void api_checks(void *arg) {
     CHECK(WAIT_FOR(usb_done,3000) && usb_result==0 && ink_usb_disk_active() && ink_fs_revision()==0,"lent card refuses stable sampling");
     CHECK(ink_usb_disk_stop()==0 && ink_fs_revision()!=waiting_revision,"USB return invalidates revision sampled before loan grant");
     hw(HW_USB_OFF,0,0);
-    uint32_t generation=ink_member_generation("owner");
     CHECK(ink_member_switch("kid")==0,"another member arrives before a delayed directory creation");
-    CHECK(ink_fs_mkdir_member_generation("owner",generation,"/me/restore-parent")==0,"delayed directory keeps original member");
+    CHECK(ink_fs_mkdir_for("owner","/me/restore-parent")==0,"delayed directory keeps original member");
     ink_fs_stat_t st;
     CHECK(ink_fs_stat("/me/restore-parent",&st)==INK_FS_ERR_NOT_FOUND,"new member receives no directory from the old restore");
     CHECK(ink_member_switch("owner")==0 && ink_fs_stat("/me/restore-parent",&st)==0 && st.is_dir,"directory exists only in original member namespace");
@@ -264,7 +261,7 @@ static void human_member(const char *cap, const char *args, const char *id) {
     unsigned token=0;
     CHECK(BY_HAND(cap,args) && g_rc.status==INK_RC_PENDING_CONFIRMATION,"membership change requires a person");
     CHECK(sscanf(g_rc.object,"confirm:%u",&token)==1 && ink_confirm_decide(token,true,INK_SRC_TOUCH)==0,"human approves exact membership change");
-    CHECK(WAIT_FOR(!strcmp(cap,"member.add") ? ink_member_generation(id)>0 : !member_exists(id),10000),"membership background work finished");
+    CHECK(WAIT_FOR(!strcmp(cap,"member.add") ? ink_member_exists(id)>0 : !member_exists(id),10000),"membership background work finished");
 }
 static void ignore_frame(void *ctx, const uint8_t *data, size_t len, uint32_t seq) { (void)ctx; (void)data; (void)len; (void)seq; }
 static void responsive_wait(const char *wanted, int seconds) {
@@ -345,37 +342,6 @@ static void run(void *arg) {
         CHECK(AI("restore.preview",NULL) && g_rc.status==INK_RC_QUEUED && wait_phase("\"phase\":\"failed\"",60),"factory-reset identities cannot claim old backups by display id");
         api_done=0;
         CHECK(ink_exec_post(INK_EXEC_BG,&api_job,family_state,(void *)(intptr_t)1)==0 && WAIT_FOR(api_done,10000),"simulate independently authorized family reprovisioning");
-    } else if (!strcmp(phase,"reused-id")) {
-        char old_preview[33]=""; preview(old_preview);
-        uint32_t old_generation=ink_member_generation("owner");
-        human_member("member.add","{\"id\":\"reviewadult\",\"name\":\"测试监护人\",\"role\":\"adult\"}","reviewadult");
-        CHECK(ink_member_switch("reviewadult")==0,"switch separate adult");
-        human_member("member.remove","{\"id\":\"owner\"}","owner");
-        CHECK(!member_exists("owner"),"old adult fully removed before id reuse");
-        human_member("member.add","{\"id\":\"owner\",\"name\":\"测试新孩子\",\"role\":\"child\"}","owner");
-        CHECK(ink_member_switch("owner")==0 && ink_member_current()->role==INK_ROLE_CHILD,"replacement child enters own space");
-        CHECK(ink_member_generation("owner")!=old_generation,"local incarnation changed");
-        CHECK(status("\"phase\":\"none\""),"replacement child gets no old receipt or journal");
-        CHECK(AI("restore.preview",NULL) && g_rc.status==INK_RC_QUEUED && wait_phase("\"phase\":\"failed\"",60),"replacement child cannot preview removed adult snapshot");
-        CHECK(AI("backup.manifest",NULL) && g_rc.status==INK_RC_DONE && !strstr(g_result,"test.backup"),"replacement child cannot enumerate old manifest");
-        unsigned confirm=request_apply(old_preview);
-        CHECK(ink_confirm_decide(confirm,true,INK_SRC_TOUCH)==0,"ordinary approval cannot transfer backup ownership");
-        CHECK(status("\"phase\":\"failed\"") && sim_metric_value("backup.restored")==0,"old preview cannot install into replacement identity");
-        CHECK(AI("data.get","{\"collection\":\"test.backup\",\"id\":41}") && !strstr(g_result,"测试大人资料"),"child AI never sees removed adult content");
-        ink_db_t *db=ink_db_open(&NOTES,NULL); char value[128]="";
-        CHECK(db && ink_db_get(db,41,NULL,value,sizeof value)==INK_DB_ERR_NOT_FOUND,"replacement child has no adult record"); ink_db_close(db);
-        save_record("{\"text\":\"测试新身份资料\"}");
-        set_fault(4);
-        CHECK(AI("backup.now",NULL) && g_rc.status==INK_RC_QUEUED && wait_phase("\"phase\":\"saved\"",180),"replacement identity can save its own backup");
-    } else if (!strcmp(phase,"identity-reboot")) {
-        CHECK(ink_member_switch("owner")==0 && ink_member_current()->role==INK_ROLE_CHILD,"replacement role persists across reboot");
-        CHECK(status("\"phase\":\"saved\""),"replacement durable identity keeps its own receipt across reboot");
-        CHECK(AI("restore.preview",NULL) && g_rc.status==INK_RC_QUEUED && wait_phase("\"phase\":\"preview\"",60),"replacement identity finds its own snapshot after reboot");
-        unsigned confirm=0; ink_json_t *j=osal_malloc(sizeof *j,OSAL_MEM_EXTERNAL); char token[33]="";
-        CHECK(j && ink_json_parse(j,g_result,strlen(g_result))==0 && ink_json_str(j,ink_json_find(j,0,"preview"),token,33)==32,"own preview token"); osal_free(j);
-        confirm=request_apply(token); CHECK(ink_confirm_decide(confirm,true,INK_SRC_TOUCH)==0,"approve replacement own backup");
-        CHECK(wait_phase("\"phase\":\"done\"",180),"replacement own restore completes");
-        CHECK(AI("data.get","{\"collection\":\"test.backup\",\"id\":41}") && strstr(g_result,"测试新身份资料") && !strstr(g_result,"测试大人资料"),"only replacement identity data survives restore and reboot");
     } else if (!strcmp(phase,"prepare-recover")) {
         CHECK(AI("restore.preview",NULL) && g_rc.status==INK_RC_QUEUED,"begin unapproved preview preparation");
         CHECK(wait_phase("\"phase\":\"preparing\"",10),"preview preparation has durable intent");
@@ -384,7 +350,7 @@ static void run(void *arg) {
         CHECK(ink_storage_size("/user/m/owner/test.position")<0,"preview recovery does not install member files");
     } else if (!strcmp(phase,"legacy-journal")) {
         const uint32_t legacy[2]={0x31534249u,1};
-        CHECK(ink_storage_write_member_atomic("/user/m/owner/backup.journal",legacy,sizeof legacy,ink_member_generation("owner"))==0 && WAIT_FOR(ink_storage_pending()==0,5000),"synthetic unbound legacy journal persisted");
+        CHECK(ink_storage_write_member_atomic("/user/m/owner/backup.journal",legacy,sizeof legacy)==0 && WAIT_FOR(ink_storage_pending()==0,5000),"synthetic unbound legacy journal persisted");
         CHECK(status("\"phase\":\"failed\"") && strstr(g_result,"请重新备份"),"legacy receipt and restore authority are discarded explicitly");
         CHECK(AI("backup.manifest",NULL) && g_rc.status==INK_RC_DONE && !strstr(g_result,"\"items\""),"legacy journal exposes no unbound manifest");
         CHECK(AI("backup.now",NULL) && g_rc.status==INK_RC_QUEUED && wait_phase("\"phase\":\"saved\"",180),"legacy journal does not block a fresh identity-bound backup");

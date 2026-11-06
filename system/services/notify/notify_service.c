@@ -51,7 +51,6 @@ static struct {
     uint32_t off;  /* the current member's channels turned off */
     ink_db_t *held; /* the current member's inbox stays loaded */
     char member[INK_MEMBER_ID_MAX];
-    uint32_t generation;
     uint32_t publishing, publication;
     int unread;
     int h_unread;
@@ -67,9 +66,8 @@ static ink_db_t *inbox(void) {
     char who[INK_MEMBER_ID_MAX];
     ink_svc_lock();
     snprintf(who, sizeof who, "%s", ink_member_current()->id);
-    uint32_t generation = ink_member_generation(who);
     ink_svc_unlock();
-    return ink_db_open_cached_member(&INBOX, who, generation);
+    return ink_db_open_cached_member(&INBOX, who);
 }
 
 /* ------------------------------------------------------------ the inbox */
@@ -159,7 +157,7 @@ static uint32_t find_tag(ink_db_t *db, const char *tag) {
     return hit;
 }
 
-static void announce(uint32_t id, const char *channel, const char *title, int prio, const char *who, uint32_t generation) {
+static void announce(uint32_t id, const char *channel, const char *title, int prio, const char *who) {
     ink_args_t *a = osal_malloc(sizeof *a, OSAL_MEM_EXTERNAL);
     if (a) {
         ink_args_init(a);
@@ -168,7 +166,7 @@ static void announce(uint32_t id, const char *channel, const char *title, int pr
         ink_args_str(a, "channel", channel);
         ink_args_str(a, "title", title);
         ink_args_int(a, "prio", prio);
-        ink_cap_emit_for("notify.posted", a, who, generation);
+        ink_cap_emit_for("notify.posted", a, who);
         osal_free(a);
     }
 }
@@ -179,9 +177,9 @@ static void haptic_job(void *arg) { /* exec.bg: the motor is on the shared I2C b
 }
 
 /* The channels someone turned off. Waits for the flash when it is not the current member. */
-static uint32_t prefs_off(const char *member, uint32_t generation) {
+static uint32_t prefs_off(const char *member) {
     uint32_t off = 0;
-    ink_db_t *db = ink_db_open_member(&PREFS, member, generation);
+    ink_db_t *db = ink_db_open_member(&PREFS, member);
     if (!db) return 0;
     char buf[256];
     ink_rec_t r;
@@ -201,7 +199,6 @@ typedef struct {
     ink_exec_job_t job;
     char member[INK_MEMBER_ID_MAX];
     uint8_t src;
-    uint32_t generation;
     int channel;
     int prio;
     char title[96];
@@ -211,21 +208,21 @@ typedef struct {
 
 static void post_away(void *arg) { /* exec.bg: another member's inbox, nobody is disturbed */
     away_t *a = arg;
-    if (!a->generation || a->generation != ink_member_generation(a->member)) { osal_free(a); return; }
-    if (prefs_off(a->member, a->generation) & (1u << a->channel)) ink_probe_count("notify.channel_off");
+    if (!ink_member_exists(a->member)) { osal_free(a); return; }
+    if (prefs_off(a->member) & (1u << a->channel)) ink_probe_count("notify.channel_off");
     else {
         ink_svc_lock();
         NS.publishing++;
         NS.publication++;
         ink_svc_unlock();
-        ink_db_t *db = ink_db_open_member(&INBOX, a->member, a->generation);
+        ink_db_t *db = ink_db_open_member(&INBOX, a->member);
         ink_db_write_t w = {.sort = a->sort, .data = a->json, .len = strlen(a->json), .src = a->src};
         uint32_t wrote = 0;
         bool posted = db && ink_db_put(db, &w, &wrote) == INK_DB_OK;
         if (!posted) ink_probe_count("notify.dropped");
         ink_db_close(db);
         ink_svc_lock();
-        bool now_theirs = posted && a->generation == ink_member_generation(a->member) &&
+        bool now_theirs = posted && ink_member_exists(a->member) &&
                           !strcmp(ink_member_current()->id, a->member);
         ink_svc_unlock();
         if (now_theirs && a->prio >= INK_NOTIFY_HIGH && !ink_setting_get("notify.dnd")) {
@@ -238,7 +235,7 @@ static void post_away(void *arg) { /* exec.bg: another member's inbox, nobody is
         NS.publication++;
         ink_svc_unlock();
         if (now_theirs) recount();
-        if (now_theirs) announce(wrote, NS.ch[a->channel]->id, a->title, a->prio, a->member, a->generation);
+        if (now_theirs) announce(wrote, NS.ch[a->channel]->id, a->title, a->prio, a->member);
     }
     osal_free(a);
 }
@@ -248,13 +245,12 @@ int ink_notify_post(const ink_notify_t *n, uint32_t *out_id) {
     char member[INK_MEMBER_ID_MAX];
     ink_svc_lock();
     snprintf(member, sizeof member, "%s", n->member ? n->member : ink_member_current()->id);
-    uint32_t generation = ink_member_generation(member);
     ink_svc_unlock();
-    return ink_notify_post_for(n, out_id, member, generation);
+    return ink_notify_post_for(n, out_id, member);
 }
 
-int ink_notify_post_for(const ink_notify_t *n, uint32_t *out_id, const char *member, uint32_t generation) {
-    if (!n || !n->title || !member || !generation || generation != ink_member_generation(member)) return -1;
+int ink_notify_post_for(const ink_notify_t *n, uint32_t *out_id, const char *member) {
+    if (!n || !n->title || !member || !ink_member_exists(member)) return -1;
     const char *channel = n->channel ? n->channel : "system";
     int ci = channel_index(channel);
     if (ci < 0) {
@@ -277,7 +273,7 @@ int ink_notify_post_for(const ink_notify_t *n, uint32_t *out_id, const char *mem
         return -1;
     }
     ink_svc_lock();
-    bool mine = generation == NS.generation && !strcmp(who, NS.member);
+    bool mine = !strcmp(who, NS.member);
     bool off = mine && (NS.off & (1u << ci));
     ink_svc_unlock();
     if (!mine) {
@@ -287,7 +283,7 @@ int ink_notify_post_for(const ink_notify_t *n, uint32_t *out_id, const char *mem
             return -1;
         }
         snprintf(a->member, sizeof a->member, "%s", who);
-        a->generation = generation;
+        
         a->src = n->src;
         a->channel = ci;
         a->prio = prio;
@@ -310,7 +306,7 @@ int ink_notify_post_for(const ink_notify_t *n, uint32_t *out_id, const char *mem
     NS.publishing++;
     NS.publication++;
     ink_svc_unlock();
-    ink_db_t *db = ink_db_open_member(&INBOX, who, generation);
+    ink_db_t *db = ink_db_open_member(&INBOX, who);
     uint32_t wrote = 0;
     ink_db_write_t w = {.written_ver = n->written_ver, .id = db && n->tag ? find_tag(db, n->tag) : 0, .sort = sort, .data = buf, .len = (size_t)len, .src = n->src};
     int r = db ? ink_db_put(db, &w, &wrote) : INK_DB_ERR_ARG;
@@ -326,7 +322,7 @@ int ink_notify_post_for(const ink_notify_t *n, uint32_t *out_id, const char *mem
     }
     if (out_id) *out_id = wrote;
     ink_svc_lock();
-    mine = generation == NS.generation && generation == ink_member_generation(who) &&
+    mine = ink_member_exists(who) &&
            !strcmp(who, NS.member) && !strcmp(who, ink_member_current()->id);
     ink_svc_unlock();
     if (mine && prio >= INK_NOTIFY_HIGH && !ink_setting_get("notify.dnd")) { /* no banner: e-ink would need a refresh for it to go away too */
@@ -341,7 +337,7 @@ int ink_notify_post_for(const ink_notify_t *n, uint32_t *out_id, const char *mem
     ink_svc_unlock();
     recount();
     ink_probe_count("notify.posted");
-    if (mine) announce(wrote, channel, n->title, prio, who, generation);
+    if (mine) announce(wrote, channel, n->title, prio, who);
     return 0;
 }
 
@@ -485,9 +481,8 @@ static void save_prefs(void) {
     ink_svc_lock();
     uint32_t off = NS.off;
     snprintf(who, sizeof who, "%s", NS.member);
-    uint32_t generation = NS.generation;
     ink_svc_unlock();
-    ink_db_t *db = ink_db_open_member(&PREFS, who, generation);
+    ink_db_t *db = ink_db_open_member(&PREFS, who);
     if (!db) return;
     ink_jw_t w;
     ink_jw_init(&w, out, sizeof out);
@@ -534,14 +529,13 @@ bool ink_notify_channel_on(const char *id) {
 static void open_inbox(void) { /* may wait for the flash */
     char id[INK_MEMBER_ID_MAX];
     snprintf(id, sizeof id, "%s", ink_member_current()->id);
-    uint32_t generation = ink_member_generation(id);
-    ink_db_t *db = ink_db_open_member(&INBOX, id, generation);
-    uint32_t off = prefs_off(id, generation);
+    ink_db_t *db = ink_db_open_member(&INBOX, id);
+    uint32_t off = prefs_off(id);
     ink_svc_lock();
     ink_db_t *old = NS.held;
     NS.held = db;
     NS.off = off;
-    NS.generation = generation;
+    
     snprintf(NS.member, sizeof NS.member, "%s", id);
     ink_svc_unlock();
     ink_db_close(old);
@@ -632,10 +626,8 @@ static void on_missed(void *ctx, const char *id, const ink_args_t *p) { /* exec.
     bool alarm = !strncmp(id, "alarm.", 6), missed = alarm || !strcmp(id, "reminder.missed");
     ink_notify_t n = {.channel = alarm ? "alarm" : "reminder", .title = alarm ? "错过的闹钟" : missed ? "错过的提醒" : "提醒", .body = title,
                       .prio = missed ? INK_NOTIFY_NORMAL : INK_NOTIFY_HIGH, .member = owner[0] ? owner : NULL, .src = INK_SRC_SYSTEM};
-    int64_t generation = 0;
-    if (ink_args_get_int(p, "member_generation", &generation)) {
-        if (generation > 0 && generation <= UINT32_MAX) ink_notify_post_for(&n, NULL, owner, (uint32_t)generation);
-    } else ink_notify_post(&n, NULL);
+    if (owner[0]) ink_notify_post_for(&n, NULL, owner);
+    else ink_notify_post(&n, NULL);
 }
 
 static void on_message(void *ctx, const char *id, const ink_args_t *p) { /* exec.bg */

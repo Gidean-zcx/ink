@@ -465,7 +465,7 @@ static void expired_gate_members(void) {
     CHECK(BY_HAND("member.add", "{\"id\":\"guest\",\"name\":\"测试成人\",\"role\":\"adult\"}") && g_rc.status == INK_RC_PENDING_CONFIRMATION, "add a synthetic adult");
     unsigned token = 0;
     CHECK(sscanf(g_rc.object, "confirm:%u", &token) == 1 && ink_confirm_decide(token, true, INK_SRC_TOUCH) == 0 &&
-          WAIT_FOR(ink_member_generation("guest") != 0, 5000), "confirm the synthetic adult");
+          WAIT_FOR(ink_member_exists("guest") != 0, 5000), "confirm the synthetic adult");
     int before = pin_done;
     CHECK(ink_member_set_pin("owner", NULL, "1111", pin_told, NULL) == 0 && WAIT_FOR(pin_done > before, 5000) && pin_result == INK_PIN_OK, "set the owner's synthetic PIN");
     ink_power_hold(INK_NEED_AWAKE);

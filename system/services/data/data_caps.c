@@ -20,13 +20,12 @@
 static const char *const SRC_NAME[] = {"touch", "key", "ai", "system", "app", "remote", "confirmed"};
 
 static ink_db_t *open_for_call(ink_call_t *c, const ink_db_def_t *d) {
-    uint32_t generation;
-    const char *member = ink_cap_call_member(c, &generation);
-    if (!generation || generation != ink_member_generation(member)) {
+    const char *member = ink_cap_call_member(c);
+    if (!ink_member_exists(member)) {
         c->rc.status = INK_RC_STALE;
         return NULL;
     }
-    return d->scope == INK_DB_MEMBER ? ink_db_open_member(d, member, generation) : ink_db_open(d, NULL);
+    return d->scope == INK_DB_MEMBER ? ink_db_open_member(d, member) : ink_db_open(d, NULL);
 }
 
 static const ink_db_def_t *open_def(ink_call_t *c, bool write, ink_db_t **out) {

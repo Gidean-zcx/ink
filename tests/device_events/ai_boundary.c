@@ -60,7 +60,6 @@ void test_ai_downlink(void) {
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
     g_turn_revoked = false;
     snprintf(g_turn_member, sizeof g_turn_member, "%s", ink_member_current()->id);
-    g_turn_generation = ink_member_generation(g_turn_member);
     g_turn_epoch = ink_hub_member_epoch();
     AI.stream = 201; AI.tts_done_for = -1; AI.tts_stream = 0;
     osal_mutex_unlock(AI.lock);
@@ -86,7 +85,6 @@ void test_ai_queue_speech(void) {
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
     g_turn_revoked = false;
     snprintf(g_turn_member, sizeof g_turn_member, "%s", ink_member_current()->id);
-    g_turn_generation = ink_member_generation(g_turn_member);
     g_turn_epoch = ink_hub_member_epoch();
     AI.stream = 202; AI.tts_done_for = -1; AI.tts_stream = 0;
     osal_mutex_unlock(AI.lock);
@@ -108,7 +106,6 @@ void test_ai_speech_revoked(void) {
 void test_ai_stale_question(void) {
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
     snprintf(g_turn_member, sizeof g_turn_member, "%s", ink_member_current()->id);
-    g_turn_generation = ink_member_generation(g_turn_member);
     g_turn_epoch = ink_hub_member_epoch();
     osal_mutex_unlock(AI.lock);
     CHECK(ink_member_switch("kid") == 0 && ink_member_switch("owner") == 0, "member changes after private request preparation");

@@ -30,7 +30,7 @@ static void emit(const char *member, const char *value) {
     CHECK(a != NULL, "event payload allocated");
     if (!a) return;
     ink_args_init(a); ink_args_str(a, "value", value);
-    ink_cap_emit_for("fixture.publish_event", a, member, ink_member_generation(member));
+    ink_cap_emit_for("fixture.publish_event", a, member);
     osal_free(a);
 }
 static bool event_received(int first, const char *value) {

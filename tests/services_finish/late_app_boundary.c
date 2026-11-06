@@ -11,17 +11,17 @@ static int test_write(const char *path, const void *data, size_t len) {
     gate(path);
     return ink_storage_write_atomic(path, data, len);
 }
-static int test_member_write(const char *path, const void *data, size_t len, uint32_t generation) {
+static int test_member_write(const char *path, const void *data, size_t len) {
     gate(path);
-    return ink_storage_write_member_atomic(path, data, len, generation);
+    return ink_storage_write_member_atomic(path, data, len);
 }
 static int test_remove(const char *path, ink_storage_done_fn done, void *ctx) {
     gate(path);
     return ink_storage_remove(path, done, ctx);
 }
-static int test_member_remove(const char *path, uint32_t generation, ink_storage_done_fn done, void *ctx) {
+static int test_member_remove(const char *path, ink_storage_done_fn done, void *ctx) {
     gate(path);
-    return ink_storage_remove_member(path, generation, done, ctx);
+    return ink_storage_remove_member(path, done, ctx);
 }
 #define ink_storage_write_atomic test_write
 #define ink_storage_write_member_atomic test_member_write

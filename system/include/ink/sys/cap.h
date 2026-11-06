@@ -144,7 +144,6 @@ typedef struct {
                              * A read that gave a result runs again: it has no effect to repeat, and the result is not kept. */
     const char *args_json;  /* JSON arguments instead of a table (the AI's, the hub's): checked after the gate */
     const char *member;     /* only for this member: another using the device by the time it starts, and it does not run; NULL = whoever */
-    uint32_t member_generation; /* optional incarnation binding for delayed callers */
     ink_exec_t reply_exec;  /* where `done` runs */
     ink_cap_done_fn done;   /* may be NULL */
     void *ctx;
@@ -167,7 +166,7 @@ void ink_cap_done(ink_call_t *call);
 /** In a handler that blocks: how long until its deadline (0: past it). What it may still wait for. */
 uint32_t ink_cap_time_left_ms(const ink_call_t *call);
 /** Immutable owner of an accepted call; valid while its provider holds the call. */
-const char *ink_cap_call_member(const ink_call_t *call, uint32_t *generation);
+const char *ink_cap_call_member(const ink_call_t *call);
 /** In a handler: what it found, as JSON text (copied), for the AI, the hub and other apps: rc.result. */
 void ink_cap_result(ink_call_t *call, const char *json);
 /** In a handler: this change can be undone for `ms` by running capability `cap` with `args`: the receipt's
@@ -184,7 +183,7 @@ int ink_cap_subscribe(const char *prefix, ink_event_fn fn, void *ctx, ink_exec_t
 /** The providing service emits an event (any task). */
 void ink_cap_emit(const char *id, const ink_args_t *payload);
 /** Delayed producers keep the original member incarnation, including across handoff. */
-void ink_cap_emit_for(const char *id, const ink_args_t *payload, const char *member, uint32_t generation);
+void ink_cap_emit_for(const char *id, const ink_args_t *payload, const char *member);
 
 /** The tool list for the hub and the model: JSON array of what the current member may use now. */
 int ink_cap_manifest_json(char *out, size_t cap);

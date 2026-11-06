@@ -43,7 +43,6 @@ static void run(void *arg) {
           ink_cap_subscribe("file.changed", observed, NULL, INK_EXEC_DIRECT) == 0, "observers");
     CHECK(confirmed("member.add", "{\"id\":\"former\",\"role\":\"adult\"}"), "add original adult");
     CHECK(ink_member_switch("former") == 0, "original adult enters");
-    uint32_t generation = ink_member_generation("former");
     CHECK(ink_fs_write_atomic("/family/SYNTH_SHARED.txt", "SYNTH_SHARED", 12) == 0, "shared directory entry");
     ink_fs_dir_t *root = NULL, *family = NULL;
     CHECK(ink_fs_dir_open("/", &root) == 0 && ink_fs_dir_open("/family", &family) == 0, "original directory handles");
@@ -57,7 +56,7 @@ static void run(void *arg) {
     CHECK(ink_member_switch("owner") == 0, "parent enters for removal");
     CHECK(confirmed("member.remove", "{\"id\":\"former\"}"), "real cleanup succeeds after slot release");
     CHECK(confirmed("member.add", "{\"id\":\"former\",\"role\":\"child\"}"), "child reuses cleaned id");
-    CHECK(ink_member_switch("former") == 0 && ink_member_generation("former") != generation, "new incarnation enters");
+    CHECK(ink_member_switch("former") == 0 && !ink_member_exists("former"), "new incarnation enters");
     ink_fs_stat_t entry;
     CHECK(ink_fs_dir_next(root, &entry) == INK_FS_ERR_DENIED, "old virtual directory cannot inherit reused identity");
     CHECK(ink_fs_dir_next(family, &entry) == INK_FS_ERR_DENIED, "old shared directory cannot inherit reused identity");
@@ -68,7 +67,7 @@ static void run(void *arg) {
     int first = sim_hub_events_seen();
     ink_test_file_release = true;
     CHECK(WAIT_FOR(closed, 2000), "delayed close event returns");
-    CHECK(ink_task_begin_for("file.copy", "SYNTH_STALE_TASK", "former", generation, NULL, NULL) == 0, "stale task registration refused");
+    CHECK(ink_task_begin_for("file.copy", "SYNTH_STALE_TASK", "former", NULL, NULL) == 0, "stale task registration refused");
     CHECK(ink_fs_write_atomic("/me/SYNTH_DELIVERY_CONTROL.txt", "X", 1) == 0 &&
           WAIT_FOR(seen(first, "SYNTH_DELIVERY_CONTROL"), 3000), "current event still delivered");
     CHECK(private_events == 0, "late old-generation path is absent from local subscriptions");

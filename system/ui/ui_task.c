@@ -41,8 +41,8 @@ typedef enum { UM_INPUT = 1, UM_CALL } um_type_t;
 
 typedef struct {
     uint8_t type;
-    uint32_t generation;
     ink_input_event_t ev;
+    uint32_t generation;
 } umsg_t;
 
 typedef struct {
@@ -346,7 +346,7 @@ static int snapshot_content(char *buf, size_t cap, const char **name, bool conte
 }
 
 static bool snapshot_owner_matches(const ink_member_identity_t *owner, const ink_member_identity_t *identity) {
-    return owner->generation == identity->generation && !strcmp(owner->member, identity->member);
+    return !strcmp(owner->member, identity->member);
 }
 
 bool ink_ui_page_current(void) {

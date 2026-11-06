@@ -9,7 +9,6 @@ static int identity_fault;
 static void fixture_identity(ink_member_identity_t *out) {
     ink_member_identity(out);
     if (identity_fault == 1) snprintf(out->member, sizeof out->member, "%s", !strcmp(out->member, "owner") ? "kid" : "owner");
-    if (identity_fault == 2) out->generation++;
 }
 static bool handoff_on_alloc, handoff_succeeded;
 static void *fixture_hub_malloc(size_t size, uint32_t caps) {
@@ -93,9 +92,6 @@ void test_hub_identity_tuple(void) {
     identity_fault = 1;
     fixture_identity(&identity);
     CHECK(!ink_hub_member_matches(identity.member, identity.epoch, H.ws_gen), "matching epoch alone cannot authorize a different wire member");
-    identity_fault = 2;
-    fixture_identity(&identity);
-    CHECK(!ink_hub_member_matches(identity.member, identity.epoch, H.ws_gen), "matching epoch alone cannot authorize a different wire incarnation");
     identity_fault = 0;
     fixture_identity(&identity);
     CHECK(ink_hub_member_matches(identity.member, identity.epoch, H.ws_gen), "complete matching wire identity permits normal delivery");

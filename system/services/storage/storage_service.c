@@ -18,7 +18,7 @@
  * Writes are atomic (temp file + rename); repeated writes of one path
  * coalesce. Appends and removes go through the same queue, in the order they
  * were accepted. Reads see queued writes, including the one being written; then
- * the read cache (small files and "does not exist", external RAM, LRU),
+ * the read cache (small files and "does not exist", LRU),
  * filled by reads, writes and background prefetches; only then the flash.
  * The cache never holds an older version than the newest write: a write
  * replaces the entry, or drops it when the new content does not fit (too
@@ -107,13 +107,13 @@ static struct {
 
 /* ------------------------------------------------------------ read cache (under ST.lock) */
 
-static bool member_begin(const char *path, uint32_t generation, char member[16]) {
+static bool member_begin(const char *path, char member[16]) {
     member[0] = 0;
-    if (strncmp(path, "/user/m/", 8)) return generation == 0;
+    if (strncmp(path, "/user/m/", 8)) return true;
     const char *end = strchr(path + 8, '/');
     if (!end || end == path + 8 || end - (path + 8) >= 16) return false;
     snprintf(member, 16, "%.*s", (int)(end - (path + 8)), path + 8);
-    return ink_member_io_begin(member, generation ? generation : ink_member_generation(member));
+    return ink_member_io_begin(member);
 }
 
 static void member_end(const char *member) {
@@ -229,7 +229,7 @@ static void cache_put(const char *path, const void *data, int len) {
     *e = (centry_t){.path = block, .data = (uint8_t *)block + plen, .len = len, .used_at = ++ST.clock};
 }
 
-/* Flash read into the cache (storage task, guard taken inside). Returns bytes, -1 = no file, -2 = too large. */
+/* Flash read into the cache (storage task). Returns bytes, -1 = no file, -2 = too large. */
 static int read_guarded(const char *path, void *buf, size_t cap);
 static bool queued_for(const char *path) { /* under lock: a write of path is waiting or being written */
     for (int i = 0; i < MAX_JOBS; i++)
@@ -526,9 +526,9 @@ static int free_slot(void) {
     return -1;
 }
 
-static int write_atomic(const char *path, const void *data, size_t len, uint32_t generation) {
+static int write_atomic(const char *path, const void *data, size_t len) {
     char member[16];
-    if (!member_begin(path, generation, member)) return -1;
+    if (!member_begin(path, member)) return -1;
     size_t plen = strlen(path) + 1;
     const char *prev = osal_mem_tag("storage");
     char *block = osal_malloc(plen + (len ? len : 1), OSAL_MEM_EXTERNAL);
@@ -572,15 +572,15 @@ static int write_atomic(const char *path, const void *data, size_t len, uint32_t
     return 0;
 }
 
-int ink_storage_write_atomic(const char *path, const void *data, size_t len) { return write_atomic(path, data, len, 0); }
+int ink_storage_write_atomic(const char *path, const void *data, size_t len) { return write_atomic(path, data, len); }
 
-int ink_storage_write_member_atomic(const char *path, const void *data, size_t len, uint32_t generation) {
-    return generation ? write_atomic(path, data, len, generation) : -1;
+int ink_storage_write_member_atomic(const char *path, const void *data, size_t len) {
+    return write_atomic(path, data, len);
 }
 
-static int submit(job_kind_t kind, const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx, uint32_t generation, const uint8_t *expected) {
+static int submit(job_kind_t kind, const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx, const uint8_t *expected) {
     char member[16];
-    if (!member_begin(path, generation, member)) return -1;
+    if (!member_begin(path, member)) return -1;
     size_t plen = strlen(path) + 1;
     const char *prev = osal_mem_tag("storage");
     char *block = osal_malloc(plen, OSAL_MEM_EXTERNAL);
@@ -608,21 +608,21 @@ static int submit(job_kind_t kind, const char *path, const void *data, size_t le
 }
 
 int ink_storage_write_borrow(const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx) {
-    return submit(J_WRITE, path, data, len, done, ctx, 0, NULL);
+    return submit(J_WRITE, path, data, len, done, ctx, NULL);
 }
 
 int ink_storage_restore(const char *path, const void *data, size_t len, const uint8_t expected_sha256[32], ink_storage_done_fn done, void *ctx) {
-    return expected_sha256 ? submit(J_RESTORE, path, data, len, done, ctx, 0, expected_sha256) : -1;
+    return expected_sha256 ? submit(J_RESTORE, path, data, len, done, ctx, expected_sha256) : -1;
 }
 
 int ink_storage_append(const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx) {
-    return submit(J_APPEND, path, data, len, done, ctx, 0, NULL);
+    return submit(J_APPEND, path, data, len, done, ctx, NULL);
 }
 
-int ink_storage_remove(const char *path, ink_storage_done_fn done, void *ctx) { return submit(J_REMOVE, path, NULL, 0, done, ctx, 0, NULL); }
+int ink_storage_remove(const char *path, ink_storage_done_fn done, void *ctx) { return submit(J_REMOVE, path, NULL, 0, done, ctx, NULL); }
 
-int ink_storage_remove_member(const char *path, uint32_t generation, ink_storage_done_fn done, void *ctx) {
-    return generation ? submit(J_REMOVE, path, NULL, 0, done, ctx, generation, NULL) : -1;
+int ink_storage_remove_member(const char *path, ink_storage_done_fn done, void *ctx) {
+    return submit(J_REMOVE, path, NULL, 0, done, ctx, NULL);
 }
 
 /* Hand a request to the storage task and wait for it. */
