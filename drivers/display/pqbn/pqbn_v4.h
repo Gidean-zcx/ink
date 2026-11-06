@@ -1,17 +1,22 @@
 /*
- * PQ-BN v4 direct-drive e-ink kernel (planner + executor), hardware independent.
+ * PQ-BN direct-drive e-ink kernel (planner + executor), hardware independent.
  *
- * Provenance: docs/research/eink-refresh/pqbn_v4/kernel/pqbn_v4.c (research archived in PR #7,
- * commit e77d01c, 2026-10-28 design by the assistant for this project). drivers/display/pqbn/pqbn_v4.c is
- * that file with this header split out; the algorithm is unchanged. See
- * docs/research/eink-refresh-algorithm.md for the design and docs/system/platform-and-simulator.md
- * for how the simulator and the ports use it.
+ * Grew from the research's kernel (docs/research/eink-refresh/pqbn_v4/kernel/pqbn_v4.c, PR #7); fixed as it is here
+ * after five runs on the real panel (docs/hardware/2026-11-06-phase3.md, D-110). There are no modes: every change
+ * goes the same way, so nothing has to tell a page turn from a scroll.
+ *   1. The swing. Each pixel that has to change goes to the rail its target level comes from, in one plan. A level
+ *      above `split` comes from white, the rest from black, each by the fewest pushes, so a light gray area never
+ *      goes through black and does not go dark on the way. The page is readable here, in black and white.
+ *   2. The settling, when nothing pushes any more: each pixel goes from its rail to its level, by the measured
+ *      number of pushes. A fraction of a push is a 2 x 2 pattern, finer than the eye.
  *
- * Call sequence: pqbn_v4_build() + pqbn_v4_build_motion() once (tables), pqbn_v4_init() with the
- * current framebuffer, then per drive phase: the UI marks tile_dirty[] for changed 32x4 tiles,
- * pqbn_v4_phase() plans (and, without line_mode, executes into the drive plane), and in line_mode
- * the scan task calls pqbn_v4_exec_row() for every panel row. Drive codes: 2 bit/px, 1 = push black,
- * 2 = push white, pixel 0 in bits 7:6 of byte 0.
+ * Call sequence: pqbn_v4_build() once (tables), pqbn_v4_init() with the current framebuffer, then per drive phase:
+ * the UI marks tile_dirty[] for changed 32x4 tiles, pqbn_v4_phase() plans, and the scan task calls pqbn_v4_exec_row()
+ * for every panel row. Drive codes: 2 bit/px, 1 = push black, 2 = push white, pixel 0 in bits 7:6 of byte 0.
+ *
+ * A pixel holds its push until the next scan writes it, so a phase's length is the strength of its push. The port must
+ * scan at a steady cadence (the measurements are at 12 ms) and, when pqbn_v4_plan_due() says a plan is coming, run one
+ * empty scan first: the planner can take 0.1 s, and that must not lengthen a push.
  */
 #ifndef INK_PQBN_V4_H
 #define INK_PQBN_V4_H
@@ -31,74 +36,60 @@ extern "C" {
 #define PQBN_TPX 32 /* tile width (px) */
 #define PQBN_TPY 4  /* tile height (rows) */
 
+/* What the tables are built from: the panel's measured response (panel_e0470a14.h). */
+typedef struct {
+    float scale_pushes;   // pushes the model state takes from rail to rail
+    int swing_units;      // a rail-to-rail swing, in units of two pushes (at most 6)
+    int split;            // levels above this come from the white rail, the rest from the black one
+    float first_push[4];  // how far the first push goes after a rest, by dwell class: 0, 1..7, 8..63, >= 64 phases
+    float pushes[16];     // pushes from its rail to each level
+} pqbn_panel_t;
+
 typedef struct {
     int W, H, ntx, nty;
-    const uint8_t *dec;       // 16 KB: [t4<<10 | q<<2 | cls] = nb | X<<4 ; n = up ? nb + (tau < X) : nb - (tau < X)
-    const uint8_t *exk;       // RMAX x 256: 4-bit drive codes of a hot byte at plan phase k (even px bits 3:2)
+    uint8_t *dec;             // 16 KB: [t4<<10 | q<<2 | cls] = nb | X<<4 ; n = up ? nb + (tau < X) : nb - (tau < X)
+    uint8_t *exk;             // RMAX x 256: 4-bit drive codes of a hot byte at plan phase k (even px bits 3:2)
     uint8_t step[4];          // first-push size per stiction class (Q8 of a full swing); step[0] = D
     int marg;
     const uint8_t *fb4;       // target 4 bpp (UI framebuffer), low nibble = even x
     uint8_t *hot;             // plan nibbles
     uint16_t *cold;           // per-pixel state words
-    const uint8_t *tau;       // 64x64 blue-noise thresholds 0..15
+    uint8_t *tau;             // 64x64 thresholds 0..15: the 2 x 2 pattern a fraction of a push is drawn with
     uint8_t *tile_dirty;      // set by the UI layer from invalidated areas; cleared here
     uint16_t *tile_plan;      // phase of the tile's last plan
     uint8_t *tile_nmax;       // per-tile state byte, see T_* below
-    uint8_t *drive;           // out: 2 bit/px, W/4 bytes/row, 1 = black push, 2 = white push, pixel 0 in bits 7:6
-    uint8_t *row_active;      // out: row has drive data this phase (else the DMA sends the zero line)
-    int plan_budget;          // max pixels the planner may visit per phase (0 = unlimited); excess tiles wait
-    int plan_cursor;          // tile where planning resumes when the budget ran out
     uint32_t stat_planned;    // statistics: pixels visited by the planner (accumulates)
-    const uint8_t *exk_m;     // motion mode: 7 x 256 executor tables (n up to 7, no settled code)
-    const uint8_t *tau_nib;   // motion mode: 64 x 32 bytes, binary thresholds packed like fb4
-    uint16_t *band;           // per tile row: [2*ty] phase until which plans run, [2*ty+1] tiles with a capped plan
-    int line_mode;            // 1: no drive plane; the display driver calls pqbn_v4_exec_row() per scan line
-    int auto_motion;          // 1: tiles switch to motion mode and back by themselves (needs plan_budget > 0)
-    int two_stage;            // 1: no modes: every change first swings to black and white, then settles on the grays. Line mode, plan_budget 0
-    int swing_units;          // two_stage: a rail-to-rail swing in units of two pushes (at most 6)
-    int keep;                 // two_stage: a pixel already showing its level stays out of the swing (small changes)
-    int swing_step;           // two_stage: state moved per unit; set by pqbn_v4_init
-    uint8_t level[16];        // the model state a target level rests at; all 0 until pqbn_v4_init sets the linear t4 * 17
-    uint8_t lo[16], hi[16];   // a pixel between these already shows that level (they differ with a measured table)
-    int backlog;              // phases in a row that ended with UI changes the planner could not serve
-    int n_motion;             // tiles currently in motion mode
+    uint32_t stat_swung;      // statistics: those visited for a swing, which costs less
+    uint32_t split_nib;       // the split in every nibble of a word: white iff t4 > split
+    uint16_t *band;           // per tile row: [2*ty] phase until which plans run, [2*ty+1] tiles waiting for the planner
+    int swing_step;           // state moved per unit of a swing
+    uint8_t level[16];        // the state each level rests at
+    uint8_t lo[16], hi[16];   // a pixel between these already shows that level and stays still
 } pqbn_v4_ctx;
 
 // per-tile state byte (tile_nmax)
-#define T_NMAX 0x07           // max pushes of the running plan (its tile is active while k < this)
-#define T_PEND 0x08           // a UI change is waiting to be planned
-#define T_HOT  0x30           // activity: UI changes arriving in quick succession (saturating count 1..3)
-#define T_SWING 0x10          // two_stage only: the running plan is a swing, T_NMAX counts units of two pushes
-#define T_MOT  0x40           // tile is in motion mode
-#define T_CAP  0x80           // some plan was capped at RMAX pushes: replan when it finishes
-#define HOT_WINDOW 9          // a UI change within this many phases of the previous one continues the activity
-#define EXIT_IDLE 12          // a motion tile without UI changes for this many phases goes back to PQ-BN
+#define T_NMAX  0x07          // max pushes of the running plan (its tile is active while k < this)
+#define T_PEND  0x08          // a UI change is waiting to be planned
+#define T_SWING 0x10          // the running plan is a swing: T_NMAX counts units of two pushes
+#define T_CAP   0x80          // the tile needs the planner once nothing pushes (after a swing, or a plan capped at RMAX pushes)
 
-/* Tables: dec 16384 B, exk 6 x 256 B, step[4]; T0 = pushes for a full swing, s0/taud = stiction model. */
-int pqbn_v4_build(uint8_t *dec, uint8_t *exk, uint8_t *step_out, float T0, float s0, float taud);
-/* The same from the panel's measured response: down[L] / up[L] = pushes from the white / black rail to level L.
- * No stiction model: the first weak push is in the measured curves. T0 only sets the scale of the state. */
-int pqbn_v4_build_measured(uint8_t *dec, uint8_t *exk, uint8_t *step_out, uint8_t *level, uint8_t *lo, uint8_t *hi, float T0,
-                           const float *down, const float *up);
-/* Motion-mode tables: exk_m 7 x 256 B, tau_nib 2048 B (from the 64x64 threshold map tau). */
-void pqbn_v4_build_motion(uint8_t *exk_m, uint8_t *tau_nib, const uint8_t *tau);
-/* two_stage: tau_nib from each level's share of white pixels, by brightness (after pqbn_v4_build_motion). */
-void pqbn_v4_build_binary(uint8_t *tau_nib, const uint8_t *tau, const float *white_share);
+/* Tables (dec 16384 B, exk 6 x 256 B, tau 4096 B); fills C's pointers to them and everything derived from P. */
+int pqbn_v4_build(pqbn_v4_ctx *C, uint8_t *dec, uint8_t *exk, uint8_t *tau, const pqbn_panel_t *P);
 /* Every pixel settled on the current framebuffer (fb4), long dwell. */
 void pqbn_v4_init(pqbn_v4_ctx *C, uint32_t now);
-/* One drive phase: acknowledge UI marks, plan within the budget, switch motion tiles, execute
- * (drive plane mode). Returns the drive words written (drive plane mode). */
-int pqbn_v4_phase(pqbn_v4_ctx *C, uint32_t now);
+/* Will the plan for phase `now` take long? Ask before pqbn_v4_phase: then the port runs one empty scan first. */
+int pqbn_v4_plan_due(const pqbn_v4_ctx *C, uint32_t now);
+/* One drive phase: acknowledge UI marks and plan what is due. */
+void pqbn_v4_phase(pqbn_v4_ctx *C, uint32_t now);
+/* Does anything still have to happen after phase `now`? */
+int pqbn_v4_busy_after(const pqbn_v4_ctx *C, uint32_t now);
 /* A rest: the phase clock moves from `from` to `to` without driving. Does the upkeep the skipped
  * phases would have done (the settled pixels' timestamp sweep, the tile-age clamp at multiples of
  * 4096), so a rest is equivalent to running those phases with nothing to drive. Returns the rows
  * swept (for the cost; a rest longer than 512 phases sweeps every row once). */
 int pqbn_v4_skip(pqbn_v4_ctx *C, uint32_t from, uint32_t to);
-/* Line mode: drive line of row y for phase now (after pqbn_v4_phase). Returns 0 for a zero line. */
+/* Drive line of row y for phase now (after pqbn_v4_phase). Returns 0 for a zero line. */
 PQBN_HOT int pqbn_v4_exec_row(const pqbn_v4_ctx *C, uint32_t now, int y, uint8_t *line);
-/* Optional hints (auto_motion decides by itself). */
-void pqbn_v4_motion_enter(pqbn_v4_ctx *C, uint32_t now, const uint8_t *sel);
-void pqbn_v4_motion_exit(pqbn_v4_ctx *C, uint32_t now, const uint8_t *sel);
 
 #ifdef __cplusplus
 }

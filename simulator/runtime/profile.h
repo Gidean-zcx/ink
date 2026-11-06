@@ -94,15 +94,10 @@ typedef struct {
      * 1 = PQ-BN direct drive (drivers/display/pqbn/pqbn_v4.c: per-pixel plans, updates overlap) */
     int display_driver;
     struct {
-        int plan_budget;        /* pixels the planner may visit per phase */
-        bool auto_motion;       /* tiles switch to the binary motion mode by themselves */
-        bool plan_during_scan;  /* the planner overlaps the scan (needs a port that plans behind the scan) */
-        double full_swing;      /* pushes for a full black<->white swing (panel model and planner tables) */
-        double stiction, stiction_tau; /* first-push loss after a rest: s0, time constant (phases) */
-        double mobility_sd;     /* per-pixel spread of the push size (panel model only) */
         /* CPU cycles (ISS, tools/iss/bench/run_pqbn.sh): scan rows and planner */
         double row_idle, row_band, row_tile;
-        double plan_base, plan_px, plan_motion_tile, plan_exit_tile, plan_idle;
+        double plan_base, plan_px, plan_idle;
+        double swing_px, swing_tile; /* the first stage of a change: per pixel that moves, per tile marked */
         double skip_row, skip_call, skip_clamp; /* a rest's upkeep (pqbn_v4_skip): per row swept, per call, per 4096 mark crossed */
     } pqbn;
     int line_count;             /* lines scanned per phase (panel lines + blanking) */

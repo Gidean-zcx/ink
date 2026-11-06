@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "panel_e0470a14.h"
 #include "pqbn_v4.h"
 
 #define PW 64
@@ -33,9 +34,7 @@ static void teardown(pqbn_v4_ctx *C) {
     if (!C->W) return;
     free((void *)C->dec);
     free((void *)C->exk);
-    free((void *)C->exk_m);
     free((void *)C->tau);
-    free((void *)C->tau_nib);
     free((void *)C->fb4);
     free(C->hot);
     free(C->cold);
@@ -43,28 +42,17 @@ static void teardown(pqbn_v4_ctx *C) {
     free(C->tile_plan);
     free(C->tile_nmax);
     free(C->band);
-    free(C->row_active);
-    free(C->drive);
     memset(C, 0, sizeof *C);
 }
 
 static void setup(pqbn_v4_ctx *C, uint32_t now) {
     int ntx = PW / PQBN_TPX, nty = PH / PQBN_TPY, nt = ntx * nty;
     teardown(C);
-    uint8_t *dec = alloc(16384), *exk = alloc(6 * 256), *exk_m = alloc(7 * 256), *tau = alloc(4096), *tau_nib = alloc(2048);
-    if (pqbn_v4_build(dec, exk, C->step, 7.6f, 0.3f, 120.0f)) abort();
-    for (int i = 0; i < 4096; i++) tau[i] = (uint8_t)((((i & 63) * 37) + ((i >> 6) * 101)) & 15);
-    pqbn_v4_build_motion(exk_m, tau_nib, tau);
+    if (pqbn_v4_build(C, alloc(16384), alloc(6 * 256), alloc(4096), &PQBN_PANEL_E0470A14)) abort();
     C->W = PW;
     C->H = PH;
     C->ntx = ntx;
     C->nty = nty;
-    C->marg = 2;
-    C->dec = dec;
-    C->exk = exk;
-    C->exk_m = exk_m;
-    C->tau = tau;
-    C->tau_nib = tau_nib;
     uint8_t *fb4 = alloc((size_t)PW * PH / 2);
     memset(fb4, 0xff, (size_t)PW * PH / 2); /* white everywhere, as at init */
     C->fb4 = fb4;
@@ -74,9 +62,6 @@ static void setup(pqbn_v4_ctx *C, uint32_t now) {
     C->tile_plan = (uint16_t *)alloc(nt * 2);
     C->tile_nmax = alloc(nt);
     C->band = (uint16_t *)alloc((size_t)nty * 4);
-    C->row_active = alloc(PH);
-    C->drive = alloc((size_t)PW * PH / 4);
-    C->plan_budget = 8000;
     pqbn_v4_init(C, now);
 }
 

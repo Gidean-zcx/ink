@@ -194,21 +194,14 @@ int profile_load(const char *path, sim_profile_t *p, char *err, size_t errlen) {
         if (p->panel.tech != HAL_PANEL_EPD || !p->feeders_cpu) p->display_driver = 0;
         if (p->display_driver == 1) {
             const cJSON *q = obj(d, "pqbn");
-            p->pqbn.plan_budget = (int)num(q, "plan_budget", 8000);
-            p->pqbn.auto_motion = flag(q, "auto_motion", true);
-            p->pqbn.plan_during_scan = flag(q, "plan_during_scan", false);
-            p->pqbn.full_swing = num(q, "full_swing_pushes", 7.6);
-            p->pqbn.stiction = num(q, "stiction", 0.3);
-            p->pqbn.stiction_tau = num(q, "stiction_tau_phases", 120);
-            p->pqbn.mobility_sd = num(q, "mobility_sd", 0.04);
             const cJSON *c = obj(q, "costs_cycles");
             p->pqbn.row_idle = num(c, "row_idle", 43);
             p->pqbn.row_band = num(c, "row_band", 1836);
             p->pqbn.row_tile = num(c, "row_tile", 215);
             p->pqbn.plan_base = num(c, "plan_base", 267375);
-            p->pqbn.plan_px = num(c, "plan_px", 248);
-            p->pqbn.plan_motion_tile = num(c, "plan_motion_tile", 2125);
-            p->pqbn.plan_exit_tile = num(c, "plan_exit_tile", 9305);
+            p->pqbn.plan_px = num(c, "plan_px", 190);
+            p->pqbn.swing_px = num(c, "swing_px", 70);
+            p->pqbn.swing_tile = num(c, "swing_tile", 2000);
             p->pqbn.plan_idle = num(c, "plan_idle", 110000);
             p->pqbn.skip_row = num(c, "skip_row", 55000);
             p->pqbn.skip_call = num(c, "skip_call", 42500);

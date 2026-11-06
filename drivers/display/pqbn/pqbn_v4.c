@@ -1,65 +1,34 @@
-/* PQ-BN v4 kernel: research copy docs/research/eink-refresh/pqbn_v4/kernel/pqbn_v4.c (PR #7,
- * e77d01c) with the context struct and tile flags moved to pqbn_v4.h and one line split for
- * -Wmisleading-indentation, and PQBN_HOT on the executor (IRAM placement). Since the first run on the real
- * panel (docs/hardware/2026-11-06-phase3.md) it also has: tables from the measured response
- * (pqbn_v4_build_measured), and two_stage, where every change first swings to black and white and then settles
- * on the grays. With neither, the algorithm is unchanged. */
-// PQ-BN v4: plan once per change, execute with a table lookup.
-//
-// v3 re-evaluated every in-flight pixel every phase (table lookup + state update per pixel per phase).
-// v4 splits the work:
-//   planner  - runs only in tiles the UI invalidated (or whose capped plan just finished). For each
-//              pixel that is not settled it decides the whole push sequence at once: n pushes (0..6)
-//              in one direction, starting this phase, one per phase.
-//   executor - runs every phase, only in tiles whose plan is still running. A pixel pushes in phase
-//              k of its tile's plan iff n > k, so the plan nibbles are read-only: 8 pixels are tested
-//              with one SWAR expression and converted to drive bits with 4 byte-table lookups.
-// Decisions are the same PQ-BN rule as v3 (blue-noise choice between the two reachable outcomes
-// that bracket the target; stiction-aware first push; rail margin and DC rebalancing). With
-// stiction off the drive is bit-identical to v3 (tests/eq_v3_v4.c).
-//
-// Stiction class of a pixel's first push comes from its dwell (idle phases before the push):
-//   class 0: 0, class 1: 1..7, class 2: 8..63, class 3: >= 64
-// Dwell is exact for pixels that pushed in their last plan (from the tile's plan phase and n) and
-// for settled pixels (10-bit timestamp). Pixels that rested through their last plan keep a 3-bit
-// log2 level (dwell >= 0,1,2,4,8,16,32,64) advanced at per-pixel-offset 2^L boundaries, so it
-// tracks dwell without bias however often the tile is replanned.
-//
-// Per-pixel storage (2.5 B/px):
-//   hot  (4 bit, packed like fb4: low nibble = even x)
-//        dir<<3 | n   n = pushes planned from the tile's plan phase (0..6), dir 1 = toward white
-//        0x7 / 0xF    settled on the black / white rail (target matches, margin done, DC safe)
-//   cold (16 bit)
-//        n > 0   : [7:0] q1 model optical state after the plan's first push, [12:8] dc0 DC balance at
-//                  plan start (signed, saturating +-15), [14:13] 0, [15] plan ends on a rail, margin done
-//        n = 0   : [7:0] q, [12:8] dc, [15:13] dwell level   (margin flag implied: q on a rail)
-//        settled : [7:0] ts low, [12:8] dc, [14:13] ts high, [15] 1   (ts = first idle phase, 10 bit)
-// Per-tile storage (32x4 px): dirty flag (from the UI), phase of the last plan (u16), max n | flags.
-//
-// Motion mode (fast scroll / fling; the UI switches the tiles of the scrolling container):
-//   binary blue-noise targets, 7-push rail-to-rail swings, planned 8 pixels at a time with SWAR.
-//   hot  = dir<<3 | r (r = pushes from the tile's plan phase, 0..7); remaining = max(r - k, 0);
-//          position from black = dir ? 7 - remaining : remaining, so no per-pixel state is read.
-//   cold = [3:0] position at entry, [12:8] DC at entry (untouched while in motion).
-//   Exit converts back (DC = entry DC + position change) and marks the tiles for a full PQ-BN replan.
-// Tables: 16 KB decision table, 1.5 KB executor table, 4 KB blue-noise thresholds.
-#include <stdint.h>
-#ifdef PQBN_RV
-void *memset(void *d, int v, unsigned long n);
-#else
-#include <string.h>
+/* PQ-BN kernel: see pqbn_v4.h. The planner runs only in tiles the UI changed: it decides a pixel's whole push sequence at
+ * once, n pushes (0..6) in one direction, one per phase. The executor runs every phase, only in tiles whose plan is
+ * still running: a pixel pushes in phase k of its tile's plan iff n > k, so the plan nibbles are read-only and 8 pixels are
+ * tested with one SWAR expression.
+ *
+ * Dwell (idle phases before a pixel's first push) decides how far that push goes, by class: 0: 0, 1: 1..7, 2: 8..63,
+ * 3: >= 64. It is exact for pixels that pushed in their last plan (from the tile's plan phase and n) and for settled
+ * pixels (10-bit timestamp). Pixels that rested through their last plan keep a 3-bit log2 level (dwell >= 0,1,2,4,8,16,32,64)
+ * advanced at per-pixel-offset 2^L boundaries, so it tracks dwell without bias however often the tile is replanned.
+ *
+ * Per-pixel storage (2.5 B/px):
+ *   hot  (4 bit, packed like fb4: low nibble = even x)
+ *        dir<<3 | n   n = pushes planned from the tile's plan phase (0..6), dir 1 = toward white
+ *        0x7 / 0xF    settled on the black / white rail (target matches, margin done, DC safe)
+ *   cold (16 bit)
+ *        n > 0   : [7:0] q1 model state after the plan's first push, [12:8] dc0 DC balance at plan start (signed, saturating
+ *                  +-15), [14:13] 0, [15] plan ends on a rail, margin done
+ *        n = 0   : [7:0] q, [12:8] dc, [15:13] dwell level   (margin flag implied: q on a rail)
+ *        settled : [7:0] ts low, [12:8] dc, [14:13] ts high, [15] 1   (ts = first idle phase, 10 bit)
+ * Per-tile storage (32x4 px): dirty flag (from the UI), phase of the last plan (u16), max n | flags.
+ * Tables: 16 KB decision table, 1.5 KB executor table, 4 KB thresholds. */
 #include <math.h>
-#include <stdio.h>
-#endif
+#include <stdint.h>
+#include <string.h>
+
+#include "pqbn_v4.h"
 
 #define TPX 32
 #define TPY 4
 #define RMAX 6
 #define TS_SWEEP 512          // every settled pixel's timestamp is visited at least once per TS_SWEEP phases
-
-#include "pqbn_v4.h"
-
-
 
 static inline void band_touch(pqbn_v4_ctx *C, int ti, uint32_t now, int nmax) {
     uint16_t *u = &C->band[2 * (ti / C->ntx)];
@@ -67,11 +36,8 @@ static inline void band_touch(pqbn_v4_ctx *C, int ti, uint32_t now, int nmax) {
     if ((int16_t)(e - *u) > 0) *u = e;
 }
 
-#ifndef PQBN_RV
-// representative dwell of each stiction class, used for the class's first-push size
-float pqbn_v4_class_dwell[4] = {0.f, 3.f, 24.f, 256.f};
-
-// number of pushes the PQ-BN rule chooses from state q toward target state d (no margin, no cap)
+// number of pushes from state q toward target state d (no margin, no cap): the two reachable states around the
+// target, chosen between by the threshold a4
 static int decide_n(int d, int q, int a4, int c, const int *step) {
     const int t = a4 * 16 + 8;
     if (d == q) return 0;
@@ -89,18 +55,6 @@ static int decide_n(int d, int q, int a4, int c, const int *step) {
     const int lo = s > 0 ? vprev : v, hi = s > 0 ? v : vprev;
     const int pick_hi = (d - lo) * 256 > t * (hi - lo);
     return ((s > 0) ? pick_hi : !pick_hi) ? n : n - 1;
-}
-
-static void build_exk(uint8_t *exk) {
-    for (int k = 0; k < RMAX; k++) for (int b = 0; b < 256; b++) {
-        int code4 = 0;
-        for (int j = 0; j < 2; j++) {
-            const int h = (b >> (4 * j)) & 15, n = h & 7;
-            const int code = (n != 7 && n > k) ? ((h & 8) ? 2 : 1) : 0;
-            code4 |= code << (j ? 0 : 2);
-        }
-        exk[(k << 8) | b] = (uint8_t)code4;
-    }
 }
 
 // one decision table entry: n(a) over the 16 thresholds must be expressible as nb +- (a < X); -1 if not
@@ -121,75 +75,44 @@ static int dec_entry(int d, int q, int c, const int *step) {
     return nb | (X << 4);
 }
 
-// returns 0 on success, -1 if a table entry cannot be expressed as nb +- (tau < X)
-int pqbn_v4_build(uint8_t *dec /*16384*/, uint8_t *exk /*RMAX*256*/, uint8_t *step_out, float T0, float s0, float taud) {
-    const float D = 1.0f / T0;
+int pqbn_v4_build(pqbn_v4_ctx *C, uint8_t *dec, uint8_t *exk, uint8_t *tau, const pqbn_panel_t *P) {
+    const float D = 255.0f / P->scale_pushes;
     int step[4];
-    for (int c = 0; c < 4; c++) {
-        const float st = c ? 1.f - s0 * (1.f - expf(-pqbn_v4_class_dwell[c] / taud)) : 1.f;
-        step[c] = (int)lrintf(D * st * 255.0f); step_out[c] = (uint8_t)step[c];
-    }
-    for (int t4 = 0; t4 < 16; t4++) for (int q = 0; q < 256; q++) for (int c = 0; c < 4; c++) {
-        const int e = dec_entry(t4 * 17, q, c, step);
-        if (e < 0) return -1;
-        dec[(t4 << 10) | (q << 2) | c] = (uint8_t)e;
-    }
-    build_exk(exk);
-    return 0;
-}
-
-// The panel answers differently from each side: a level from the white rail takes other pushes than from the
-// black one. So a level is a stretch of the state: [lo, hi], reached at hi coming down and at lo coming up.
-int pqbn_v4_build_measured(uint8_t *dec, uint8_t *exk, uint8_t *step_out, uint8_t *level, uint8_t *lo, uint8_t *hi, float T0,
-                           const float *down, const float *up) {
-    const float D = 255.0f / T0;
-    int step[4];
-    for (int c = 0; c < 4; c++) { step[c] = (int)lrintf(D); step_out[c] = (uint8_t)step[c]; }
+    for (int c = 0; c < 4; c++) { step[c] = (int)lrintf(D * P->first_push[c]); C->step[c] = (uint8_t)step[c]; }
     for (int t4 = 0; t4 < 16; t4++) {
-        int h = t4 == 15 ? 255 : t4 == 0 ? 0 : (int)lrintf(255.0f - down[t4] * D);
-        int l = t4 == 15 ? 255 : t4 == 0 ? 0 : (int)lrintf(up[t4] * D);
-        if (t4 > 0 && t4 < 15) { h = h > 250 ? 250 : h < 5 ? 5 : h; l = l > 250 ? 250 : l < 5 ? 5 : l; }
-        if (l > h) l = h;
-        lo[t4] = (uint8_t)l; hi[t4] = (uint8_t)h; level[t4] = (uint8_t)((l + h) / 2);
+        const float n = P->pushes[t4];
+        int d = (int)lrintf(t4 > P->split ? 255.0f - n * D : n * D);
+        if (t4 > 0 && t4 < 15) d = d > 250 ? 250 : d < 5 ? 5 : d;
+        if (t4 == 15) d = 255;
+        if (t4 == 0) d = 0;
+        C->level[t4] = (uint8_t)d;
+        // within a push of it a pixel shows this level; a rail is always moved to or settled on
+        const int l = d - step[0], h = d + step[0];
+        C->lo[t4] = (uint8_t)(t4 == 0 || t4 == 15 ? d : l < 1 ? 1 : l);
+        C->hi[t4] = (uint8_t)(t4 == 0 || t4 == 15 ? d : h > 254 ? 254 : h);
         for (int q = 0; q < 256; q++) for (int c = 0; c < 4; c++) {
-            const int e = q > h ? dec_entry(h, q, c, step) : q < l ? dec_entry(l, q, c, step) : 0;
+            const int e = dec_entry(d, q, c, step);
             if (e < 0) return -1;
             dec[(t4 << 10) | (q << 2) | c] = (uint8_t)e;
         }
     }
-    build_exk(exk);
-    return 0;
-}
-
-void pqbn_v4_build_motion(uint8_t *exk_m /*7*256*/, uint8_t *tau_nib /*2048*/, const uint8_t *tau /*4096*/) {
-    for (int k = 0; k < 7; k++) for (int b = 0; b < 256; b++) {
+    for (int k = 0; k < RMAX; k++) for (int b = 0; b < 256; b++) {
         int code4 = 0;
         for (int j = 0; j < 2; j++) {
             const int h = (b >> (4 * j)) & 15, n = h & 7;
-            const int code = n > k ? ((h & 8) ? 2 : 1) : 0;
+            const int code = (n != 7 && n > k) ? ((h & 8) ? 2 : 1) : 0;
             code4 |= code << (j ? 0 : 2);
         }
-        exk_m[(k << 8) | b] = (uint8_t)code4;
+        exk[(k << 8) | b] = (uint8_t)code4;
     }
-    memset(tau_nib, 0, 2048);
-    for (int y = 0; y < 64; y++) for (int x = 0; x < 64; x++) {
-        const int a = (16 * tau[y * 64 + x] + 8) / 17;          // white iff t4 > a  <=>  17*t4 > 16*tau + 8
-        tau_nib[y * 32 + (x >> 1)] |= (uint8_t)(a << ((x & 1) * 4));
-    }
+    // random dots read as noise on the panel; two pixels by two is finer than the eye (D-110)
+    static const uint8_t ORDERED[4] = {2, 10, 14, 6};
+    for (int i = 0; i < 4096; i++) tau[i] = ORDERED[(i & 1) | ((i >> 5) & 2)];
+    C->split_nib = (uint32_t)P->split * 0x11111111u;
+    C->swing_step = (255 + P->swing_units - 1) / P->swing_units;
+    C->dec = dec; C->exk = exk; C->tau = tau; C->marg = 2;
+    return 0;
 }
-
-// The swing's binary targets at the right brightness: a level's share of white pixels is the brightness it should
-// look like, not its number. Level 8 is bright on this panel: by number half its pixels would go black, and a gray
-// area would first go dark.
-void pqbn_v4_build_binary(uint8_t *tau_nib /*2048*/, const uint8_t *tau /*4096*/, const float *white_share /*16*/) {
-    memset(tau_nib, 0, 2048);
-    for (int y = 0; y < 64; y++) for (int x = 0; x < 64; x++) {
-        int a = 0;                                            // white iff t4 > a
-        for (int t = 1; t < 15; t++) if (tau[y * 64 + x] >= white_share[t] * 16.0f) a = t;
-        tau_nib[y * 32 + (x >> 1)] |= (uint8_t)(a << ((x & 1) * 4));
-    }
-}
-#endif
 
 static inline int sx5(int v) { return ((v & 31) ^ 16) - 16; }
 static inline int snapq(int v) { return v > 252 ? 255 : v < 3 ? 0 : v; }
@@ -218,7 +141,7 @@ static inline int level_up(int L, uint32_t t, uint32_t now, uint32_t h) {
 typedef struct {
     int16_t jD[8];            // (j - 1) * D where j = pushes done = min(k, n0)
     int8_t j[8];
-    int8_t dcj[8];            // pushes done = j * unit (a two_stage swing plans in units of two pushes)
+    int8_t dcj[8];            // pushes done = j * unit (a swing plans in units of two pushes)
     int8_t live[8];           // still in flight (j < n0): next push is a continuation, margin not done
     uint8_t L[8];             // dwell level after a completed plan
     int16_t rest[8];          // dwell after a completed plan, clamped to 256
@@ -302,7 +225,7 @@ static int plan_tile(pqbn_v4_ctx *C, const int16_t (*cum)[16], int ti, int x0, i
     const int W = C->W, Wh = W >> 1, D = C->step[0];
     const uint32_t tplan_old = C->tile_plan[ti];
     const int k = (uint16_t)(now - tplan_old), tn0 = C->tile_nmax[ti];
-    const int swung = C->two_stage && (tn0 & T_SWING);
+    const int swung = tn0 & T_SWING;
     recon_t R; make_recon(&R, k, swung ? C->swing_step : D, swung ? 2 : 1);
     int nmx = 0, cap = 0, visited = 0;
     for (int y = y0; y < y0 + TPY; y++) {
@@ -342,17 +265,22 @@ static int plan_tile(pqbn_v4_ctx *C, const int16_t (*cum)[16], int ti, int x0, i
         }
     }
     C->tile_plan[ti] = (uint16_t)now;
-    C->tile_nmax[ti] = (uint8_t)((C->two_stage ? 0 : (tn0 & T_HOT)) | nmx | (((cap >> 8) & 1) << 7));
+    C->tile_nmax[ti] = (uint8_t)(nmx | (((cap >> 8) & 1) << 7));
     band_touch(C, ti, now, nmx);
     return visited;
 }
 
-static inline uint32_t nib_gt(uint32_t T, uint32_t A);
+static inline uint32_t nib_gt(uint32_t T, uint32_t A) {         // per nibble: T > A -> bit 0 of the nibble
+    const uint32_t m = 0x0F0F0F0Fu;
+    const uint32_t ge = ((((T & m) | 0x10101010u) - (A & m) - 0x01010101u) >> 4) & 0x01010101u;
+    const uint32_t go = ((((T >> 4) & m) | 0x10101010u) - ((A >> 4) & m) - 0x01010101u) & 0x10101010u;
+    return ge | go;
+}
 
-// two_stage: the first stage of a change. Every pixel swings to the rail of its blue-noise binary target, in
-// units of two pushes, so one plan covers a whole swing. Words already there are skipped without reading a cold
-// word: only pixels that move pay. The planner proper then settles the tile on the real target (T_CAP, T_SWING).
-static int swing_tile(pqbn_v4_ctx *C, int ti, int x0, int y0, uint32_t now) {
+// The first stage of a change. Every pixel goes to the rail its level comes from, in units of two pushes, so one plan covers
+// a whole swing. Words already there are skipped without reading a cold word: only pixels that move pay. The planner
+// proper then settles the tile on the real target (T_CAP, T_SWING).
+static int swing_tile(pqbn_v4_ctx *C, int ti, int x0, int y0, uint32_t now, int page) {
     const int W = C->W, Wh = W >> 1, S = C->swing_step;
     const uint32_t tplan_old = C->tile_plan[ti];
     const int k = (uint16_t)(now - tplan_old), was_swing = C->tile_nmax[ti] & T_SWING;
@@ -360,15 +288,15 @@ static int swing_tile(pqbn_v4_ctx *C, int ti, int x0, int y0, uint32_t now) {
     int nmx = 0, visited = 0;
     for (int y = y0; y < y0 + TPY; y++) {
         const uint32_t *fw = (const uint32_t *)(C->fb4 + (size_t)y * Wh + (x0 >> 1));
-        const uint32_t *aw = (const uint32_t *)(C->tau_nib + ((y & 63) << 5) + ((x0 & 63) >> 1));
         uint32_t *hw = (uint32_t *)(C->hot + (size_t)y * Wh + (x0 >> 1));
         uint16_t *cr = C->cold + (size_t)y * W + x0;
         const uint32_t hrow = (uint32_t)y * 0x85EBCA77u ^ (uint32_t)x0 * 0x9E3779B1u;
         for (int w = 0; w < TPX / 8; w++) {
-            const uint32_t T = fw[w], Hn = hw[w], b = nib_gt(T, aw[w]);    // binary target: bit 0 of a nibble, 1 = white
+            const uint32_t T = fw[w], Hn = hw[w], b = nib_gt(T, C->split_nib);    // its rail: bit 0 of a nibble, 1 = white
             const uint32_t Tb = b * 15u;
             const uint32_t a0 = Tb & Hn, b0 = ~Tb & (Hn ^ 0x88888888u);    // nibble F: settled on the binary target's rail
-            const uint32_t sett = ((a0 & (a0 >> 1) & (a0 >> 2) & (a0 >> 3)) | (b0 & (b0 >> 1) & (b0 >> 2) & (b0 >> 3))) & 0x11111111u;
+            const uint32_t x0w = T ^ Tb, exact = ~(x0w | (x0w >> 1) | (x0w >> 2) | (x0w >> 3));  // bit 0 of a nibble: the target is that rail
+            const uint32_t sett = ((a0 & (a0 >> 1) & (a0 >> 2) & (a0 >> 3)) | (b0 & (b0 >> 1) & (b0 >> 2) & (b0 >> 3))) & exact & 0x11111111u;
             if (sett == 0x11111111u) continue;
             uint32_t Hnew = Hn & (sett * 15u);
             for (int j = 0; j < 8; j++) {
@@ -378,11 +306,15 @@ static int swing_tile(pqbn_v4_ctx *C, int ti, int x0, int y0, uint32_t now) {
                 visited++;
                 px_state(&R, cr[kp], h, tplan_old, now, hrow + (uint32_t)kp * 0x9E3779B1u, &q, &dc, &m, &L, &rest);
                 const int d = bw ? 255 : 0, dist = bw ? 255 - q : q;
-                if (!dist || (C->keep && q >= C->lo[t4] && q <= C->hi[t4])) { // on that rail already, or already showing its level
+                // On its rail already, or already showing its level: a small change leaves it still, or a gray area would
+                // blink around it. A new page moves it too, or what stayed would show as a ghost beside what moved.
+                if (!dist || (!page && q >= C->lo[t4] && q <= C->hi[t4])) {
                     cr[kp] = (uint16_t)(q | ((dc & 31) << 8) | (L << 13));
                     continue;
                 }
-                const int units = (dist + S - 1) / S;
+                // from between the rails, one unit more: what is left of a gray must not show on the rail
+                int units = (dist + S - 1) / S + (q != 0 && q != 255);
+                if (units > RMAX) units = RMAX;
                 if (units > nmx) nmx = units;
                 cr[kp] = (uint16_t)(snapq(d ? q + S : q - S) | ((dc & 31) << 8) | 0x8000); // the plan ends on a rail, margin done
                 Hnew |= (uint32_t)((bw << 3) | units) << (4 * j);
@@ -396,184 +328,6 @@ static int swing_tile(pqbn_v4_ctx *C, int ti, int x0, int y0, uint32_t now) {
     return visited;
 }
 
-static inline int exec_tile(const pqbn_v4_ctx *C, int x0, int y0, int k) {
-    const int W = C->W, Wh = W >> 1, Wq = W >> 2;
-    const uint8_t *X = C->exk + (k << 8);
-    const uint32_t kk = (uint32_t)(k + 1) * 0x11111111u;
-    int act = 0;
-    for (int y = y0; y < y0 + TPY; y++) {
-        const uint32_t *hw = (const uint32_t *)(C->hot + (size_t)y * Wh + (x0 >> 1));
-        uint16_t *dr = (uint16_t *)(C->drive + (size_t)y * Wq + (x0 >> 2));
-        for (int w = 0; w < TPX / 8; w++) {
-            const uint32_t H = hw[w];
-            const uint32_t s7 = ((H & 0x77777777u) + 0x11111111u) & 0x88888888u;   // n == 7 (settled)
-            const uint32_t pm = ((H | 0x88888888u) - kk) & ~s7 & 0x88888888u;   // n > k
-            if (!pm) continue;
-            dr[w] = (uint16_t)((X[H & 255] << 4) | X[(H >> 8) & 255] | (((X[(H >> 16) & 255] << 4) | X[H >> 24]) << 8));
-            act++;
-        }
-    }
-    return act;
-}
-
-// ---------------- motion mode ----------------
-static inline uint32_t nib_gt(uint32_t T, uint32_t A) {         // per nibble: T > A -> bit 0 of the nibble
-    const uint32_t m = 0x0F0F0F0Fu;
-    const uint32_t ge = ((((T & m) | 0x10101010u) - (A & m) - 0x01010101u) >> 4) & 0x01010101u;
-    const uint32_t go = ((((T >> 4) & m) | 0x10101010u) - ((A >> 4) & m) - 0x01010101u) & 0x10101010u;
-    return ge | go;
-}
-
-static void mplan_tile(pqbn_v4_ctx *C, int ti, int x0, int y0, uint32_t now) {
-    const int Wh = C->W >> 1;
-    int k = (uint16_t)(now - C->tile_plan[ti]); if (k > 7) k = 7;
-    const uint32_t kk = (uint32_t)k * 0x11111111u;
-    uint32_t any = 0;
-    for (int y = y0; y < y0 + TPY; y++) {
-        const uint32_t *fw = (const uint32_t *)(C->fb4 + (size_t)y * Wh + (x0 >> 1));
-        const uint32_t *aw = (const uint32_t *)(C->tau_nib + ((y & 63) << 5) + ((x0 & 63) >> 1));
-        uint32_t *hw = (uint32_t *)(C->hot + (size_t)y * Wh + (x0 >> 1));
-        for (int w = 0; w < TPX / 8; w++) {
-            const uint32_t H = hw[w];
-            const uint32_t t = (H | 0x88888888u) - kk;                            // 8 + r - k per nibble
-            const uint32_t rem = t & (((t >> 3) & 0x11111111u) * 7u);             // max(r - k, 0)
-            const uint32_t b = nib_gt(fw[w], aw[w]);                             // binary target: 1 = white
-            const uint32_t Hn = (b << 3) | (rem ^ ((((H >> 3) & 0x11111111u) ^ b) * 7u));
-            hw[w] = Hn; any |= Hn;
-        }
-    }
-    C->tile_plan[ti] = (uint16_t)now;
-    C->tile_nmax[ti] = (uint8_t)(T_MOT | (C->tile_nmax[ti] & T_HOT) | ((any & 0x77777777u) ? 7 : 0));
-    band_touch(C, ti, now, 7);
-}
-
-static inline int exec_tile_m(const pqbn_v4_ctx *C, int x0, int y0, int k) {
-    const int W = C->W, Wh = W >> 1, Wq = W >> 2;
-    const uint8_t *X = C->exk_m + (k << 8);
-    const uint32_t kk = (uint32_t)(k + 1) * 0x11111111u;
-    int act = 0;
-    for (int y = y0; y < y0 + TPY; y++) {
-        const uint32_t *hw = (const uint32_t *)(C->hot + (size_t)y * Wh + (x0 >> 1));
-        uint16_t *dr = (uint16_t *)(C->drive + (size_t)y * Wq + (x0 >> 2));
-        for (int w = 0; w < TPX / 8; w++) {
-            const uint32_t H = hw[w];
-            if (!(((H | 0x88888888u) - kk) & 0x88888888u)) continue;            // no r > k
-            dr[w] = (uint16_t)((X[H & 255] << 4) | X[(H >> 8) & 255] | (((X[(H >> 16) & 255] << 4) | X[H >> 24]) << 8));
-            act++;
-        }
-    }
-    return act;
-}
-
-static void band_recount(pqbn_v4_ctx *C, int ty) {          // tiles that need the planner's attention
-    int c = 0;
-    for (int t = ty * C->ntx; t < (ty + 1) * C->ntx; t++) c += (C->tile_nmax[t] & (T_PEND | T_CAP | T_MOT)) != 0;
-    C->band[2 * ty + 1] = (uint16_t)c;
-}
-
-// one tile into motion mode (reconstructs each pixel's state once); returns its cost in planner units
-static int menter_tile(pqbn_v4_ctx *C, int ti, uint32_t now) {
-    const int W = C->W, Wh = W >> 1, D = C->step[0];
-    const int x0 = (ti % C->ntx) * TPX, y0 = (ti / C->ntx) * TPY;
-    recon_t R; make_recon(&R, (uint16_t)(now - C->tile_plan[ti]), D, 1);
-    uint32_t any = 0;
-    int work = 0;
-    for (int y = y0; y < y0 + TPY; y++) {
-        const uint32_t *fw = (const uint32_t *)(C->fb4 + (size_t)y * Wh + (x0 >> 1));
-        const uint32_t *aw = (const uint32_t *)(C->tau_nib + ((y & 63) << 5) + ((x0 & 63) >> 1));
-        uint32_t *hw = (uint32_t *)(C->hot + (size_t)y * Wh + (x0 >> 1));
-        uint16_t *cr = C->cold + (size_t)y * W + x0;
-        for (int w = 0; w < TPX / 8; w++) {
-            const uint32_t Hn = hw[w], b = nib_gt(fw[w], aw[w]);
-            if ((((Hn & 0x77777777u) + 0x11111111u) & 0x88888888u) == 0x88888888u) {
-                // all 8 settled on a rail: position 0 or 7 straight from the hot nibbles; keep DC, store position
-                const uint32_t pos = ((Hn >> 3) & 0x11111111u) * 7u;
-                const uint32_t Hm = (b << 3) | (pos ^ (b * 7u));
-                for (int j = 0; j < 8; j++) cr[w * 8 + j] = (uint16_t)((cr[w * 8 + j] & 0x1F00) | ((pos >> (4 * j)) & 7));
-                hw[w] = Hm; any |= Hm; work += 1;
-                continue;
-            }
-            uint32_t Hm = 0;
-            for (int j = 0; j < 8; j++) {
-                const int h = (Hn >> (4 * j)) & 15, n0 = h & 7, s = cr[w * 8 + j];
-                int q, dc = sx5(s >> 8);
-                if (n0 == 7) q = (h & 8) ? 255 : 0;
-                else if (n0 == 0) q = s & 255;
-                else {
-                    const int jd = R.jD[n0], jj = R.j[n0];
-                    if (h & 8) { q = snapq((s & 255) + jd); dc += jj; } else { q = snapq((s & 255) - jd); dc -= jj; }
-                    dc = dc > 15 ? 15 : dc < -15 ? -15 : dc;
-                }
-                const int pos = ((q * 7 + 127) * 257) >> 16;                     // round(q * 7 / 255)
-                const int bw = (b >> (4 * j)) & 1;
-                Hm |= (uint32_t)((bw << 3) | (bw ? 7 - pos : pos)) << (4 * j);
-                cr[w * 8 + j] = (uint16_t)(pos | ((dc & 31) << 8));
-            }
-            hw[w] = Hm; any |= Hm; work += 4;
-        }
-    }
-    C->tile_plan[ti] = (uint16_t)now;
-    C->tile_nmax[ti] = (uint8_t)(T_MOT | (C->tile_nmax[ti] & T_HOT) | ((any & 0x77777777u) ? 7 : 0));
-    C->tile_dirty[ti] = 0;
-    band_touch(C, ti, now, 7);
-    C->n_motion++;
-    return work;
-}
-
-// one tile back to PQ-BN: pixels on a rail get two saturating pushes, then the tile is replanned by the
-// full planner (capped-plan mechanism); returns its cost in planner units
-static int mexit_tile(pqbn_v4_ctx *C, int ti, uint32_t now) {
-    const int W = C->W, Wh = W >> 1;
-    const int x0 = (ti % C->ntx) * TPX, y0 = (ti / C->ntx) * TPY;
-    int k = (uint16_t)(now - C->tile_plan[ti]); if (k > 64) k = 64;
-    int nmx = 0;
-    for (int y = y0; y < y0 + TPY; y++) {
-        uint32_t *hw = (uint32_t *)(C->hot + (size_t)y * Wh + (x0 >> 1));
-        uint16_t *cr = C->cold + (size_t)y * W + x0;
-        for (int w = 0; w < TPX / 8; w++) {
-            const uint32_t Hn = hw[w];
-            uint32_t Hx = 0;
-            for (int j = 0; j < 8; j++) {
-                const int h = (Hn >> (4 * j)) & 15, r = h & 7, rem = r > k ? r - k : 0;
-                const int pos = (h & 8) ? 7 - rem : rem, s = cr[w * 8 + j];
-                int dc = sx5(s >> 8) + pos - (s & 15); dc = dc > 15 ? 15 : dc < -15 ? -15 : dc;
-                if (pos == 7 || pos == 0) {
-                    // on a motion rail: one more push into it saturates the optical state (motion swings are
-                    // 7 pushes, ~0.92 of a full swing); more if the DC sits on the other side (rebalance, as the
-                    // PQ-BN rail rule does). Planned as a plan that ends on the rail with the margin done.
-                    const int v = pos ? dc : -dc, e = -v > 1 ? -v : 1, n = e > RMAX ? RMAX : e;
-                    Hx |= (uint32_t)((pos ? 8 : 0) | n) << (4 * j);
-                    if (n > nmx) nmx = n;
-                    cr[w * 8 + j] = (uint16_t)((pos ? 255 : 0) | ((dc & 31) << 8) | 0x8000);
-                } else {                                  // caught mid-swing: estimate, rest 0
-                    cr[w * 8 + j] = (uint16_t)(((pos * 255 + 3) / 7) | ((dc & 31) << 8));
-                }
-            }
-            hw[w] = Hx;
-        }
-    }
-    C->tile_plan[ti] = (uint16_t)now;
-    C->tile_nmax[ti] = (uint8_t)(T_CAP | (C->tile_nmax[ti] & T_HOT) | nmx);   // full PQ-BN replan once these pushes are done
-    C->tile_dirty[ti] = 0;
-    band_touch(C, ti, now, nmx);
-    C->n_motion--;
-    return 20;
-}
-
-// explicit control (optional; with auto_motion the kernel decides by itself):
-// switch the tiles with sel[ti] != 0 into motion mode
-void pqbn_v4_motion_enter(pqbn_v4_ctx *C, uint32_t now, const uint8_t *sel) {
-    for (int ti = 0; ti < C->ntx * C->nty; ti++)
-        if (sel[ti] && !(C->tile_nmax[ti] & T_MOT)) menter_tile(C, ti, now);
-    for (int ty = 0; ty < C->nty; ty++) band_recount(C, ty);
-}
-// back to PQ-BN for the tiles with sel[ti] != 0 (all motion tiles if sel is NULL)
-void pqbn_v4_motion_exit(pqbn_v4_ctx *C, uint32_t now, const uint8_t *sel) {
-    for (int ti = 0; ti < C->ntx * C->nty; ti++)
-        if ((!sel || sel[ti]) && (C->tile_nmax[ti] & T_MOT)) mexit_tile(C, ti, now);
-    for (int ty = 0; ty < C->nty; ty++) band_recount(C, ty);
-}
-
 // keeps settled pixels' 10-bit timestamps unambiguous: ages above 256 are clamped to 256
 static void ts_sweep(pqbn_v4_ctx *C, uint32_t now) {
     const int W = C->W, Wh = W >> 1, i = (int)(now & (TS_SWEEP - 1));
@@ -581,11 +335,10 @@ static void ts_sweep(pqbn_v4_ctx *C, uint32_t now) {
     for (int y = r0; y < r1; y++) {
         const uint32_t *hw = (const uint32_t *)(C->hot + (size_t)y * Wh);
         uint16_t *cr = C->cold + (size_t)y * W;
-        const uint8_t *tn = C->tile_nmax + (y / TPY) * C->ntx;
         for (int w = 0; w < W / 8; w++) {
             const uint32_t H = hw[w];
             const uint32_t s7 = ((H & 0x77777777u) + 0x11111111u) & 0x88888888u;
-            if (!s7 || (tn[w >> 2] & T_MOT)) continue;
+            if (!s7) continue;
             for (int j = 0; j < 8; j++) {
                 if (!((s7 >> (4 * j + 3)) & 1)) continue;
                 uint16_t *cp = &cr[w * 8 + j];
@@ -620,11 +373,10 @@ static void skip_long(pqbn_v4_ctx *C, uint32_t from, uint32_t to) {
         for (int y = r0; y < r1; y++) {
             const uint32_t *hw = (const uint32_t *)(C->hot + (size_t)y * Wh);
             uint16_t *cr = C->cold + (size_t)y * W;
-            const uint8_t *tn = C->tile_nmax + (y / TPY) * C->ntx;
-            for (int w = 0; w < W / 8; w++) {
+                for (int w = 0; w < W / 8; w++) {
                 const uint32_t H = hw[w];
                 const uint32_t s7 = ((H & 0x77777777u) + 0x11111111u) & 0x88888888u;
-                if (!s7 || (tn[w >> 2] & T_MOT)) continue;
+                if (!s7) continue;
                 for (int j = 0; j < 8; j++) {
                     if (!((s7 >> (4 * j + 3)) & 1)) continue;
                     uint16_t *cp = &cr[w * 8 + j];
@@ -661,90 +413,72 @@ int pqbn_v4_skip(pqbn_v4_ctx *C, uint32_t from, uint32_t to) {
     return rows;
 }
 
-int pqbn_v4_phase(pqbn_v4_ctx *C, uint32_t now) {
-    const int ntx = C->ntx, Wq = C->W >> 2;
-    int words = 0;
+static void band_recount(pqbn_v4_ctx *C, int ty) {          // tiles that need the planner's attention
+    int c = 0;
+    for (int t = ty * C->ntx; t < (ty + 1) * C->ntx; t++) c += (C->tile_nmax[t] & (T_PEND | T_CAP)) != 0;
+    C->band[2 * ty + 1] = (uint16_t)c;
+}
+
+static int bands_quiet(const pqbn_v4_ctx *C, uint32_t now) {   // nothing pushes in phase now
+    for (int ty = 0; ty < C->nty; ty++)
+        if ((int16_t)(C->band[2 * ty] - (uint16_t)now) > 0) return 0;
+    return 1;
+}
+
+int pqbn_v4_plan_due(const pqbn_v4_ctx *C, uint32_t now) {
+    const int nt = C->ntx * C->nty, quiet = bands_quiet(C, now);
+    for (int i = 0; i < nt; i++) {
+        const int tn = C->tile_nmax[i];
+        if (C->tile_dirty[i] || (tn & T_PEND) || (quiet && (tn & T_CAP))) return 1;
+    }
+    return 0;
+}
+
+int pqbn_v4_busy_after(const pqbn_v4_ctx *C, uint32_t now) {
+    const int nt = C->ntx * C->nty;
+    for (int i = 0; i < nt; i++)
+        if (C->tile_dirty[i] || (C->tile_nmax[i] & (T_PEND | T_CAP))) return 1;
+    return !bands_quiet(C, now + 1);
+}
+
+void pqbn_v4_phase(pqbn_v4_ctx *C, uint32_t now) {
+    const int ntx = C->ntx;
     int16_t cum[4][16];                                    // distance covered by n pushes starting in class c
     for (int c = 0; c < 4; c++) { cum[c][0] = 0; for (int n = 1; n < 16; n++) cum[c][n] = (int16_t)(C->step[c] + (n - 1) * C->step[0]); }
     if ((now & 4095) == 0) age_clamp(C, now);
     ts_sweep(C, now);
-    // planning: tiles the UI changed, and tiles whose capped plan just finished; resumes at the cursor.
-    // Tile rows without a UI mark or a tile needing attention are skipped after a byte scan.
-    // With auto_motion: while the planner falls behind (or motion tiles exist), tiles that keep changing
-    // (two or more UI updates in quick succession) switch to motion mode; motion tiles idle for EXIT_IDLE
-    // phases switch back. One-off changes (page turn, a new line of text) always get full PQ-BN.
-    const int nt = ntx * C->nty, budget = C->plan_budget;
-    const int episode = C->auto_motion && (C->backlog > 0 || C->n_motion > 0);
-    int used = 0, stop = -1, unserved = 0, ti = C->plan_cursor < nt ? C->plan_cursor : 0;
-    const int two = C->two_stage;
-    int quiet = 1;                                         // two_stage: nothing is pushing now, so a plan disturbs nothing
-    if (two) for (int ty = 0; ty < C->nty && quiet; ty++) quiet = (int16_t)(C->band[2 * ty] - (uint16_t)now) <= 0;
-    for (int cnt = 0; cnt < nt; ) {
-        const int ty = ti / ntx;
-        int tend = (ty + 1) * ntx; if (tend - ti > nt - cnt) tend = ti + (nt - cnt);
-        const int n = tend - ti;
+    // A change swings at once. The settling waits until nothing pushes, so all of it is planned together and a plan
+    // never holds a push. Tile rows without a UI mark or a tile needing attention are skipped after a byte scan.
+    const int quiet = bands_quiet(C, now);
+    int used = 0, marked = 0;
+    for (int t = 0; t < ntx * C->nty; t++) marked += C->tile_dirty[t];
+    const int page = marked * 3 > ntx * C->nty;            // a new page rather than a small change
+    for (int ty = 0; ty < C->nty; ty++) {
+        const int t0 = ty * ntx, t1 = t0 + ntx;
         int any = C->band[2 * ty + 1];
-        for (int t = ti; t < tend && !any; t++) any = C->tile_dirty[t];
-        if (any) {
-            for (int t = ti; t < tend; t++) {
-                int tn = C->tile_nmax[t];
-                if (C->tile_dirty[t]) {                        // acknowledge the UI's mark
-                    const int act = (tn & T_HOT) >> 4;
-                    const int recent = (tn & T_PEND) || (uint16_t)(now - C->tile_plan[t]) <= HOT_WINDOW;
-                    tn = two ? tn | T_PEND : (tn & ~T_HOT) | ((recent ? act + (act < 3) : 1) << 4) | T_PEND;
-                    C->tile_nmax[t] = (uint8_t)tn; C->tile_dirty[t] = 0;
-                }
-                const int x0 = (t % ntx) * TPX, y0 = ty * TPY;
-                if (two) {                                     // no modes: a change swings at once, the settling waits for quiet
-                    if (tn & T_PEND) used += swing_tile(C, t, x0, y0, now);
-                    else if ((tn & T_CAP) && quiet) used += plan_tile(C, (const int16_t (*)[16])cum, t, x0, y0, now);
-                    continue;
-                }
-                if (tn & T_MOT) {                              // motion tile: cheap SWAR plan on every UI update
-                    if (tn & T_PEND) mplan_tile(C, t, x0, y0, now);
-                    else if (C->auto_motion && (uint16_t)(now - C->tile_plan[t]) > EXIT_IDLE && (!budget || used < budget))
-                        used += mexit_tile(C, t, now);
-                    continue;
-                }
-                if (episode && (tn & T_PEND) && (tn & T_HOT) >= 0x20 && (!budget || used < budget)) {
-                    used += menter_tile(C, t, now);
-                    continue;
-                }
-                const int k = (uint16_t)(now - C->tile_plan[t]);
-                if (!((tn & T_PEND) || ((tn & T_CAP) && k >= (tn & T_NMAX)))) continue;
-                if (budget && used >= budget) { unserved += (tn & T_PEND) != 0; if (stop < 0) stop = t; continue; }
-                used += plan_tile(C, (const int16_t (*)[16])cum, t, x0, y0, now);
-            }
-            band_recount(C, ty);
-        }
-        cnt += n; ti = tend == nt ? 0 : tend;
-    }
-    C->plan_cursor = stop >= 0 ? stop : 0;
-    C->backlog = unserved ? C->backlog + 1 : 0;
-    C->stat_planned += (uint32_t)used;
-    // execution: every tile whose plan is still running
-    for (int ty = 0; ty < C->nty && !C->line_mode; ty++) {
-        const int y0 = ty * TPY, ti0 = ty * ntx;
-        int any = (int16_t)(C->band[2 * ty] - (uint16_t)now) > 0;
-        const uint8_t *tn = C->tile_nmax + ti0;
-        const uint16_t *tp = C->tile_plan + ti0;
-        if (any) { any = 0; for (int tx = 0; tx < ntx; tx++) any |= (int)(uint16_t)(now - tp[tx]) < (tn[tx] & T_NMAX); }
-        for (int y = y0; y < y0 + TPY; y++) {
-            C->row_active[y] = (uint8_t)any;
-            if (any) memset(C->drive + (size_t)y * Wq, 0, Wq);
-        }
+        for (int t = t0; t < t1 && !any; t++) any = C->tile_dirty[t];
         if (!any) continue;
-        for (int tx = 0; tx < ntx; tx++) {
-            const int k = (uint16_t)(now - tp[tx]);
-            if (k < (tn[tx] & T_NMAX)) words += (tn[tx] & T_MOT) ? exec_tile_m(C, tx * TPX, y0, k) : exec_tile(C, tx * TPX, y0, k);
+        for (int t = t0; t < t1; t++) {
+            int tn = C->tile_nmax[t];
+            if (C->tile_dirty[t]) {                        // acknowledge the UI's mark
+                tn |= T_PEND;
+                C->tile_nmax[t] = (uint8_t)tn; C->tile_dirty[t] = 0;
+            }
+            const int x0 = (t - t0) * TPX, y0 = ty * TPY;
+            if (tn & T_PEND) {
+                const int v = swing_tile(C, t, x0, y0, now, page);
+                used += v;
+                C->stat_swung += (uint32_t)v;
+            }
+            else if ((tn & T_CAP) && quiet) used += plan_tile(C, (const int16_t (*)[16])cum, t, x0, y0, now);
         }
+        band_recount(C, ty);
     }
-    return words;
+    C->stat_planned += (uint32_t)used;
 }
 
-// Line-by-line execution (no drive plane in PSRAM): writes the W/4-byte drive line of row y for phase
-// `now` (after pqbn_v4_phase(C, now) planned it); returns 0 if the row has no push (send the zero line).
-// Read-only, so it can run in the scan task while the planner works on rows the scan has passed.
+// writes the W/4-byte drive line of row y for phase `now` (after pqbn_v4_phase(C, now) planned it); returns 0 if the row
+// has no push (send the zero line).
 PQBN_HOT int pqbn_v4_exec_row(const pqbn_v4_ctx *C, uint32_t now, int y, uint8_t *line) {
     const int ty = y / TPY, ti0 = ty * C->ntx, Wh = C->W >> 1;
     if ((int16_t)(C->band[2 * ty] - (uint16_t)now) <= 0) return 0;
@@ -753,15 +487,14 @@ PQBN_HOT int pqbn_v4_exec_row(const pqbn_v4_ctx *C, uint32_t now, int y, uint8_t
     uint32_t any = 0;
     for (int tx = 0; tx < C->ntx; tx++) {
         const int tn = C->tile_nmax[ti0 + tx], k0 = (uint16_t)(now - C->tile_plan[ti0 + tx]);
-        const int k = (C->two_stage && (tn & T_SWING)) ? k0 >> 1 : k0;  // a swing's unit is two pushes
+        const int k = (tn & T_SWING) ? k0 >> 1 : k0;      // a swing's unit is two pushes
         uint16_t *o = out + tx * (TPX / 8);
         if (k >= (tn & T_NMAX)) { for (int w = 0; w < TPX / 8; w++) o[w] = 0; continue; }
-        const int motion = tn & T_MOT;
-        const uint8_t *X = (motion ? C->exk_m : C->exk) + (k << 8);
+        const uint8_t *X = C->exk + (k << 8);
         const uint32_t kk = (uint32_t)(k + 1) * 0x11111111u;
         for (int w = 0; w < TPX / 8; w++) {
             const uint32_t H = hrow[tx * (TPX / 8) + w];
-            const uint32_t s7 = motion ? 0 : ((H & 0x77777777u) + 0x11111111u) & 0x88888888u;
+            const uint32_t s7 = ((H & 0x77777777u) + 0x11111111u) & 0x88888888u;
             const uint32_t pm = ((H | 0x88888888u) - kk) & ~s7 & 0x88888888u;
             o[w] = pm ? (uint16_t)((X[H & 255] << 4) | X[(H >> 8) & 255] | (((X[(H >> 16) & 255] << 4) | X[H >> 24]) << 8)) : 0;
             any |= pm;
@@ -770,12 +503,9 @@ PQBN_HOT int pqbn_v4_exec_row(const pqbn_v4_ctx *C, uint32_t now, int y, uint8_t
     return any != 0;
 }
 
-#ifndef PQBN_RV
 // initial state: every pixel at rest on its target level (rails settled), long dwell
 void pqbn_v4_init(pqbn_v4_ctx *C, uint32_t now) {
     const int W = C->W, H = C->H;
-    if (!C->level[15]) for (int t = 0; t < 16; t++) C->level[t] = C->lo[t] = C->hi[t] = (uint8_t)(t * 17);
-    C->swing_step = C->swing_units ? (255 + C->swing_units - 1) / C->swing_units : 0;
     const int ts = (int)((now - 256) & 1023);
     for (int y = 0; y < H; y++) for (int x = 0; x < W; x++) {
         const int t4 = (C->fb4[(size_t)y * (W >> 1) + (x >> 1)] >> ((x & 1) << 2)) & 15;
@@ -787,7 +517,6 @@ void pqbn_v4_init(pqbn_v4_ctx *C, uint32_t now) {
         C->cold[(size_t)y * W + x] = s;
     }
     for (int i = 0; i < C->ntx * C->nty; i++) { C->tile_plan[i] = (uint16_t)(now - 8192); C->tile_nmax[i] = 0; C->tile_dirty[i] = 0; }
-    C->plan_cursor = 0; C->stat_planned = 0; C->backlog = 0; C->n_motion = 0;
+    C->stat_planned = 0; C->stat_swung = 0;
     for (int ty = 0; ty < C->nty; ty++) { C->band[2 * ty] = (uint16_t)now; C->band[2 * ty + 1] = 0; }
 }
-#endif

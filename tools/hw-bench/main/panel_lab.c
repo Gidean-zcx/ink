@@ -7,10 +7,8 @@
  *  3. A wedge: patches pushed 1..12 times from rest, and the same right after a swing to the other rail, next
  *     to the factory's 16 gray levels. A photo says how the panel answers at 12 ms a push.
  *  4. The page of grays through the factory driver, to read the kernel's grays against.
- *  5. Trials: the PQ-BN kernel (drivers/display/pqbn) with tables from the wedges, two ways, to compare by eye:
- *     every change first swings to black and white at the right brightness and then settles on the grays
- *     (two_stage), and every pixel going straight to its target. Each reports its time, the planner's and the
- *     executors' cycles, and missed lines.
+ *  5. A trial: the PQ-BN kernel (drivers/display/pqbn). Each screen reports its time, the planner's and the executors'
+ *     cycles, and missed lines.
  * A factory clean starts every trial, so nothing stays on the panel. Nobody has to touch anything: a video of the
  * whole run is what is read afterwards.
  *
@@ -31,9 +29,8 @@
 #include "lcd_driver.h"
 #include "line_queue.h"
 #include "tps65185.h"
+#include "panel_e0470a14.h"
 #include "pqbn_v4.h"
-#include "pqbn_tau.h"
-#include "panel_curve.h"
 
 #define PANEL_W 1216
 #define PANEL_H 684
@@ -376,47 +373,21 @@ static bool kernel_alloc(void) {
     C->H = PANEL_H;
     C->ntx = PANEL_W / PQBN_TPX;
     C->nty = PANEL_H / PQBN_TPY;
-    C->marg = 2;
-    C->plan_budget = 0;
-    C->swing_units = 6;  /* a swing of 12 pushes */
-    C->line_mode = 1;
-    C->drive = NULL;
     C->fb4 = lab_alloc(npx / 2, false);
     C->hot = lab_alloc(npx / 2, false);
     C->cold = lab_alloc(npx * 2, false);
-    C->dec = lab_alloc(16384, false);
-    C->tau = lab_alloc(4096, false);
-    C->tau_nib = lab_alloc(2048, false);
-    C->exk = lab_alloc(6 * 256, true);
-    C->exk_m = lab_alloc(7 * 256, true);
+    uint8_t *dec = lab_alloc(16384, false), *tau = lab_alloc(4096, false), *exk = lab_alloc(6 * 256, true);
     C->tile_dirty = lab_alloc(nt, true);
     C->tile_nmax = lab_alloc(nt, true);
     C->tile_plan = lab_alloc(nt * 2, true);
     C->band = lab_alloc((size_t) C->nty * 4, true);
-    C->row_active = lab_alloc(PANEL_H, true);
-    if (!C->fb4 || !C->hot || !C->cold || !C->dec || !C->tau || !C->tau_nib || !C->exk || !C->exk_m || !C->tile_dirty ||
-        !C->tile_nmax || !C->tile_plan || !C->band || !C->row_active)
-        return false;
-    memcpy((void *) C->tau, PQBN_TAU, 4096);
-    pqbn_v4_build_motion((uint8_t *) C->exk_m, (uint8_t *) C->tau_nib, C->tau);
-    pqbn_v4_build_binary((uint8_t *) C->tau_nib, C->tau, PANEL_WHITE_SHARE);
-    if (pqbn_v4_build_measured((uint8_t *) C->dec, (uint8_t *) C->exk, C->step, C->level, C->lo, C->hi, 12.0f, PANEL_PUSHES_DOWN, PANEL_PUSHES_UP)) {
+    if (!C->fb4 || !C->hot || !C->cold || !dec || !tau || !exk || !C->tile_dirty || !C->tile_nmax || !C->tile_plan || !C->band) return false;
+    if (pqbn_v4_build(C, dec, exk, tau, &PQBN_PANEL_E0470A14)) {
         R("\"test\":\"lab_alloc\",\"error\":\"the tables cannot be built\"");
         return false;
     }
     K.allocated = true;
     return true;
-}
-
-static bool kernel_work_after(uint32_t now) {
-    const pqbn_v4_ctx *C = &K.C;
-    if (C->backlog || C->n_motion) return true;
-    const int nt = C->ntx * C->nty;
-    for (int i = 0; i < nt; i++)
-        if (C->tile_dirty[i] || (C->tile_nmax[i] & (T_PEND | T_CAP))) return true;
-    for (int ty = 0; ty < C->nty; ty++)
-        if ((int16_t) (C->band[2 * ty] - (uint16_t) (now + 1)) > 0) return true;
-    return false;
 }
 
 /* The phase clock crosses a rest, at most 255 phases: the kernel's dwell (first-push stiction) counts in phases. */
@@ -429,23 +400,11 @@ static void kernel_rest(void) {
     K.now += (uint32_t) phases;
 }
 
-/* Is nothing pushing in the next phase? */
-static bool kernel_quiet(void) {
+/* Is a swing still running or waiting to settle? */
+static bool kernel_swinging(void) {
     const pqbn_v4_ctx *C = &K.C;
-    for (int ty = 0; ty < C->nty; ty++)
-        if ((int16_t) (C->band[2 * ty] - (uint16_t) (K.now + 1)) > 0) return false;
-    return true;
-}
-
-/* Will the next phase's planning take long? */
-static bool kernel_plan_due(void) {
-    const pqbn_v4_ctx *C = &K.C;
-    const int nt = C->ntx * C->nty;
-    const bool quiet = kernel_quiet();
-    for (int i = 0; i < nt; i++) {
-        const int tn = C->tile_nmax[i];
-        if (C->tile_dirty[i] || (tn & T_PEND) || (quiet && (tn & T_CAP))) return true;
-    }
+    for (int i = 0; i < C->ntx * C->nty; i++)
+        if (C->tile_nmax[i] & T_SWING) return true;
     return false;
 }
 
@@ -465,7 +424,7 @@ static bool kernel_drive(const char *what) {
     int64_t phase_max = 0, plan_sum = 0, plan_max = 0, phase_start = now_us();
     bool ok = true, holding = false;
     for (;;) {
-        if (holding && kernel_plan_due()) {
+        if (holding && pqbn_v4_plan_due(C, K.now + 1)) {
             ok = scan_once(fill_empty);
             empty_scans++;
             holding = false;
@@ -487,13 +446,13 @@ static bool kernel_drive(const char *what) {
         holding = true;
         phases++;
         const int64_t t = now_us();
-        if (bw_ms < 0 && kernel_quiet()) bw_ms = (int) ((t - t0) / 1000); /* the swing is over: black and white are on the panel */
+        if (bw_ms < 0 && !kernel_swinging()) bw_ms = (int) ((t - t0) / 1000); /* the swing has settled */
         if (t - phase_start > phase_max) phase_max = t - phase_start;
         phase_start = t;
-        if (!ok || t - t0 > MAX_DRIVE_US || !kernel_work_after(K.now)) break;
+        if (!ok || t - t0 > MAX_DRIVE_US || !pqbn_v4_busy_after(C, K.now)) break;
     }
     const int64_t total = now_us() - t0;
-    const bool settled = ok && !kernel_work_after(K.now);
+    const bool settled = ok && !pqbn_v4_busy_after(C, K.now);
     drive_end();
     K.last_drive_us = now_us();
     const uint64_t rows = L.rows_timed[0] + L.rows_timed[1];
@@ -512,7 +471,6 @@ static bool kernel_show(const char *picture, uint8_t *fb) {
     draw_picture(picture, fb);
     memcpy((void *) K.C.fb4, fb, (size_t) PANEL_W * PANEL_H / 2);
     memset(K.C.tile_dirty, 1, (size_t) K.C.ntx * K.C.nty);
-    K.C.keep = 0; /* a new page: everything goes through the swing, so nothing of the old page shows in the grays */
     return kernel_drive(picture);
 }
 
@@ -529,7 +487,6 @@ static bool kernel_toggle(int on) {
         }
     for (int ty = ny0 / PQBN_TPY; ty <= (ny0 + SIZE - 1) / PQBN_TPY; ty++)
         for (int tx = nx0 / PQBN_TPX; tx <= (nx0 + SIZE - 1) / PQBN_TPX; tx++) K.C.tile_dirty[ty * K.C.ntx + tx] = 1;
-    K.C.keep = 1; /* a small change: what is already right stays still */
     return kernel_drive(on ? "small_black" : "small_white");
 }
 
@@ -577,10 +534,9 @@ static const struct { const char *picture; int hold_ms; } TRIAL_STEPS[] = {
     {"Settings", 4000}, {"Today", 4000}, {"read1", 3000}, {"read2", 3000}, {"read3", 3000}, {"read4", 3000}, {"grays", 5000},
 };
 
-static void trial(EpdiyHighlevelState *hl, uint8_t *fb, int two_stage, int temp) {
-    R("\"test\":\"pqbn_trial\",\"two_stage\":%d", two_stage);
+static void trial(EpdiyHighlevelState *hl, uint8_t *fb, int temp) {
+    R("\"test\":\"pqbn_trial\"");
     pqbn_v4_ctx *C = &K.C;
-    C->two_stage = two_stage;
     factory_show(hl, fb, "Main", temp);
     memcpy((void *) C->fb4, fb, (size_t) PANEL_W * PANEL_H / 2);
     K.now = 0;
@@ -621,8 +577,7 @@ static void panel_lab(void) {
         }
         if (!L.failed && kernel_alloc()) {
             heap("kernel_on");
-            trial(hl, fb, 1, temp); /* black and white first, at the right brightness */
-            if (!L.failed) trial(hl, fb, 0, temp); /* straight to the target; its speed here says little: it plans three times on the way */
+            trial(hl, fb, temp);
         }
     }
     factory_show(hl, fb, "done", temp);

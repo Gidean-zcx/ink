@@ -55,6 +55,7 @@
 #include "ink/hal_display.h"
 #include "ink/hal_i2c.h"
 #include "ink/rotation.h"
+#include "panel_e0470a14.h"
 #include "pqbn_v4.h"
 #include "sim.h"
 #include "stb_image_write.h"
@@ -849,20 +850,18 @@ static void execute(req_t *r) {
 
 /* ------------------------------------------------------------------ PQ-BN direct drive
  *
- * display.driver = "pqbn": the research's direct-drive kernel (drivers/display/pqbn/pqbn_v4.c) replaces the
+ * display.driver = "pqbn": the direct-drive kernel (drivers/display/pqbn/pqbn_v4.c, D-110) replaces the
  * waveform tables. No global lock: an update converts its area into the kernel's 4 bpp target and
  * marks the 32x4 tiles; the driver runs drive phases back to back while anything moves. Per phase:
+ *   - the planner, between the scans: cycles from the real panel, by tiles marked and pixels visited. Before a
+ *     plan that takes long, one empty scan ends the pushes on the panel, since a push lasts until the next scan;
  *   - the scan: two executor tasks (the feeder tasks, blocking on a full queue) produce each drive
  *     line with pqbn_v4_exec_row(); a row costs row_idle (its tile band has no running plan) or
  *     row_band + row_tile x tiles still pushing (ISS fit, tools/iss/bench); the feeder planner above
  *     decides whether every row is ready in time (else an underrun, as with EPDiy);
- *   - the planner (its own task, just below the executors) computes the next phase's plans while
- *     this phase scans; planner cycles = plan_base + plan_px x pixels visited + ... (ISS fit). If it
- *     is not done when the scan ends, the next phase waits for it (counted: plan_late);
- *   - the panel model applies the drive codes: each push moves the pixel by 1/full_swing of the
- *     swing, less after a rest (stiction, the model the planner assumes), times a per-pixel mobility.
- * An update is done when no tile of its area has a running, pending or capped plan (and none is in
- * motion mode). HAL_WF_GC16 is a flashing clean: black, white, then the content.
+ *   - the panel model applies the drive codes: the panel's measured response (panel_e0470a14.h).
+ * An update is done when no tile of its area has a running, pending or capped plan.
+ * HAL_WF_GC16 is a flashing clean: black, white, then the content.
  * hal_display_pause() stops at the next phase boundary (flash operations run between phases). */
 
 #define PQ_MAX_UPD 64
@@ -882,10 +881,9 @@ static struct {
     uint8_t *line;            /* host scratch: one drive line */
     uint32_t now;             /* the kernel's phase clock */
     bool planned;             /* kernel state holds the plan for phase now + 1 */
-    uint16_t *opt;            /* panel model: optical state, 8.8 fixed point (host only) */
-    uint32_t *last_push;      /* phase of the pixel's last push (host only) */
-    uint8_t *mob;             /* per-pixel push size, x/128 (host only) */
-    float st_tab[1024];       /* stiction factor by rest length (phases) */
+    uint16_t *opt;            /* panel model: brightness, 16 bit (host only) */
+    float next_down[4096], next_up[4096]; /* panel model: brightness after one more push (host only) */
+    uint8_t shown[4096];      /* panel model: the design value a brightness reads as (host only) */
     pq_upd_t u[PQ_MAX_UPD];
     int nu;
     int clean_stage;          /* 0 none; 1 driving black, 2 white, 3 the content */
@@ -896,14 +894,14 @@ static struct {
     osal_sem_t *plan_go, *plan_done;
     double plan_cyc;
     uint32_t *line_cost;      /* per line, ns */
-    uint64_t phases, plan_late, cleans;
+    uint64_t phases, cleans;
     uint64_t drive_ns;        /* time spent driving (phases) */
     uint64_t idle_since;      /* end of the last drive (the phase clock is advanced across the rest) */
 } PQ;
 
 static bool pq_mode(void) { return g_profile.display_driver == 1 && D.info.tech == HAL_PANEL_EPD; }
 
-static void pq_plan_task(void *arg) { /* the planner's CPU, concurrently with the scan */
+static void pq_plan_task(void *arg) { /* the planner's CPU */
     (void)arg;
     for (;;) {
         osal_sem_take(PQ.plan_go, OSAL_WAIT_FOREVER);
@@ -926,15 +924,12 @@ static void pq_init(void) {
         {(void **)&PQ.C.hot, npx / 2, OSAL_MEM_EXTERNAL, "plan nibbles"},
         {(void **)&PQ.C.cold, npx * 2, OSAL_MEM_EXTERNAL, "pixel state"},
         {(void **)&PQ.C.dec, 16384, OSAL_MEM_EXTERNAL, "decision table"},
-        {(void **)&PQ.C.tau, 4096, OSAL_MEM_EXTERNAL, "blue-noise thresholds"},
-        {(void **)&PQ.C.tau_nib, 2048, OSAL_MEM_EXTERNAL, "motion thresholds"},
+        {(void **)&PQ.C.tau, 4096, OSAL_MEM_EXTERNAL, "thresholds"},
         {(void **)&PQ.C.exk, 6 * 256, OSAL_MEM_INTERNAL, "executor table"},
-        {(void **)&PQ.C.exk_m, 7 * 256, OSAL_MEM_INTERNAL, "motion executor table"},
         {(void **)&PQ.C.tile_dirty, nt, OSAL_MEM_INTERNAL, "tile marks"},
         {(void **)&PQ.C.tile_nmax, nt, OSAL_MEM_INTERNAL, "tile state"},
         {(void **)&PQ.C.tile_plan, nt * 2, OSAL_MEM_INTERNAL, "tile plan phases"},
         {(void **)&PQ.C.band, (size_t)PQ.nty * 4, OSAL_MEM_INTERNAL, "tile bands"},
-        {(void **)&PQ.C.row_active, (size_t)H, OSAL_MEM_INTERNAL, "row flags"},
     };
     for (size_t i = 0; i < sizeof parts / sizeof parts[0]; i++) {
         *parts[i].p = osal_malloc(parts[i].n, parts[i].caps);
@@ -948,44 +943,28 @@ static void pq_init(void) {
         osal_panic("pqbn init failed: no memory for the executors' line queues (2 x %zu bytes)", queue);
     if (!osal_malloc(bounce, OSAL_MEM_DMA)) osal_panic("pqbn init failed: no memory for the LCD bounce buffers");
     /* tables (build-time work, not charged) */
-    uint8_t *dec = (uint8_t *)PQ.C.dec, *exk = (uint8_t *)PQ.C.exk, *exk_m = (uint8_t *)PQ.C.exk_m;
-    uint8_t *tau = (uint8_t *)PQ.C.tau, *tau_nib = (uint8_t *)PQ.C.tau_nib;
-    if (pqbn_v4_build(dec, exk, PQ.C.step, (float)g_profile.pqbn.full_swing, (float)g_profile.pqbn.stiction,
-                      (float)g_profile.pqbn.stiction_tau))
-        osal_panic("pqbn: the decision table cannot be built for full_swing %.2f", g_profile.pqbn.full_swing);
-    for (int i = 0; i < 4096; i++) tau[i] = (uint8_t)((((i & 63) * 37) + ((i >> 6) * 101)) & 15); /* as the research's benches */
-    pqbn_v4_build_motion(exk_m, tau_nib, tau);
+    if (pqbn_v4_build(&PQ.C, PQ.C.dec, PQ.C.exk, PQ.C.tau, &PQBN_PANEL_E0470A14)) osal_panic("pqbn: the decision table cannot be built");
     PQ.C.W = W;
     PQ.C.H = H;
     PQ.C.ntx = PQ.ntx;
     PQ.C.nty = PQ.nty;
-    PQ.C.marg = 2;
-    PQ.C.plan_budget = g_profile.pqbn.plan_budget;
-    PQ.C.auto_motion = g_profile.pqbn.auto_motion;
-    PQ.C.line_mode = 1;
-    PQ.C.drive = NULL;
     /* the panel starts white and settled */
     memset((uint8_t *)PQ.C.fb4, 0xff, npx / 2);
     pqbn_v4_init(&PQ.C, 0);
     PQ.line = sim_host_malloc(line_bytes);
     PQ.opt = sim_host_malloc(npx * sizeof *PQ.opt);
-    PQ.last_push = sim_host_calloc(npx, sizeof *PQ.last_push);
-    PQ.mob = sim_host_malloc(npx);
     PQ.line_cost = sim_host_malloc(sizeof *PQ.line_cost * (size_t)(g_profile.line_count > H ? g_profile.line_count : H));
-    if (!PQ.line || !PQ.opt || !PQ.last_push || !PQ.mob || !PQ.line_cost) abort();
-    for (size_t i = 0; i < npx; i++) {
-        PQ.opt[i] = 255 << 8;
-        uint32_t h = (uint32_t)i * 0x9E3779B1u;
-        h ^= h >> 15;
-        h *= 0x2C1B3C6Du;
-        h ^= h >> 12;
-        /* deterministic spread ~ N(1, sd): sum of two uniforms */
-        double u = ((h & 0xffff) + (h >> 16)) / 65536.0 - 1.0; /* -1..1, triangular */
-        double k = 1.0 + u * g_profile.pqbn.mobility_sd * 2.449;
-        PQ.mob[i] = (uint8_t)(k * 128.0 + 0.5);
+    if (!PQ.line || !PQ.opt || !PQ.line_cost) abort();
+    for (size_t i = 0; i < npx; i++) PQ.opt[i] = 65535;
+    panel_model_tables(PQ.next_down, PQ.next_up);
+    for (int i = 0; i < 4096; i++) { /* a brightness shows as the level it looks like, whatever went into it */
+        const float b = (float)i / 4095.f;
+        int l = 0;
+        while (l < 14 && b > PANEL_LEVEL[l + 1]) l++;
+        const float f = (b - PANEL_LEVEL[l]) / (PANEL_LEVEL[l + 1] - PANEL_LEVEL[l]);
+        const float v = (l + (f < 0 ? 0 : f > 1 ? 1 : f)) * 17.f;
+        PQ.shown[i] = (uint8_t)(v + .5f);
     }
-    const double s0 = g_profile.pqbn.stiction, tau_d = g_profile.pqbn.stiction_tau;
-    for (int d = 0; d < 1024; d++) PQ.st_tab[d] = d == 0 ? 1.0f : (float)(1.0 - s0 * (1.0 - exp(-(double)d / tau_d)));
     PQ.plan_go = osal_sem_create(0, 1);
     PQ.plan_done = osal_sem_create(0, 1);
     if (!PQ.plan_go || !PQ.plan_done) osal_panic("pqbn init failed: no semaphores");
@@ -1054,10 +1033,14 @@ static void pq_ingest(const req_t *r) {
 }
 
 /* no further push in tile ti from phase `from` on */
+static bool pq_tile_runs(int ti, uint32_t now) { /* its plan pushes in phase now */
+    const int tn = PQ.C.tile_nmax[ti], k = (uint16_t)(now - PQ.C.tile_plan[ti]);
+    return ((tn & T_SWING) ? k >> 1 : k) < (tn & T_NMAX);
+}
+
 static bool pq_tile_still(int ti, uint32_t from) {
-    const int tn = PQ.C.tile_nmax[ti];
-    if (PQ.C.tile_dirty[ti] || (tn & (T_PEND | T_CAP | T_MOT))) return false;
-    return (int)(uint16_t)(from - PQ.C.tile_plan[ti]) >= (tn & T_NMAX);
+    if (PQ.C.tile_dirty[ti] || (PQ.C.tile_nmax[ti] & (T_PEND | T_CAP))) return false;
+    return !pq_tile_runs(ti, from);
 }
 
 static bool pq_area_still(int tx0, int ty0, int tx1, int ty1, uint32_t from) {
@@ -1067,42 +1050,19 @@ static bool pq_area_still(int tx0, int ty0, int tx1, int ty1, uint32_t from) {
     return true;
 }
 
-static bool pq_work_after(uint32_t now) { /* anything for phase now + 1 */
-    if (PQ.C.backlog || PQ.C.n_motion) return true;
-    const int nt = PQ.ntx * PQ.nty;
-    for (int i = 0; i < nt; i++)
-        if (PQ.C.tile_dirty[i] || (PQ.C.tile_nmax[i] & (T_PEND | T_CAP))) return true;
-    for (int ty = 0; ty < PQ.nty; ty++)
-        if ((int16_t)(PQ.C.band[2 * ty] - (uint16_t)(now + 1)) > 0) return true;
-    return false;
-}
-
 /* plan phase `now` (host) and return the planner's cycles on the device */
 static double pq_plan(uint32_t now) {
     const int nt = PQ.ntx * PQ.nty;
-    int dirty = 0, mdirty = 0;
-    for (int i = 0; i < nt; i++)
-        if (PQ.C.tile_dirty[i]) {
-            dirty++;
-            mdirty += (PQ.C.tile_nmax[i] & T_MOT) != 0;
-        }
-    const int motion0 = PQ.C.n_motion;
-    const uint32_t planned0 = PQ.C.stat_planned;
+    int dirty = 0;
+    for (int i = 0; i < nt; i++) dirty += PQ.C.tile_dirty[i];
+    const uint32_t planned0 = PQ.C.stat_planned, swung0 = PQ.C.stat_swung;
     pqbn_v4_phase(&PQ.C, now);
-    const uint32_t planned = PQ.C.stat_planned - planned0;
-    const int d = PQ.C.n_motion - motion0;
-    sim_metric_max("display.pqbn.motion_tiles_max", PQ.C.n_motion);
+    const uint32_t planned = PQ.C.stat_planned - planned0, swung = PQ.C.stat_swung - swung0;
     sim_metric_add("display.pqbn.planned_px", planned);
-    if (PQ.C.n_motion > motion0) {
-        sim_metric_add("display.pqbn.motion_enter_tiles", PQ.C.n_motion - motion0);
-        char a[64];
-        snprintf(a, sizeof a, "{\"tiles\":%d,\"backlog\":%d}", PQ.C.n_motion - motion0, PQ.C.backlog);
-        sim_trace_instant("display", "pqbn motion enter", vtk_now(), a);
-    }
-    double cyc = (!planned && !dirty && !PQ.C.n_motion && !d)
+    double cyc = !planned && !dirty
                      ? g_profile.pqbn.plan_idle
-                     : g_profile.pqbn.plan_base + g_profile.pqbn.plan_px * planned + g_profile.pqbn.plan_motion_tile * mdirty +
-                           g_profile.pqbn.plan_exit_tile * (d < 0 ? -d : 0);
+                     : g_profile.pqbn.plan_base + g_profile.pqbn.plan_px * (planned - swung) + g_profile.pqbn.swing_px * swung +
+                           g_profile.pqbn.swing_tile * dirty;
     sim_metric_sample("display.pqbn.plan_ms", sim_cycles_ns(cyc) / 1e6);
     return cyc;
 }
@@ -1139,8 +1099,7 @@ static int pq_row_costs(uint32_t now, int *first) {
         if ((int16_t)(PQ.C.band[2 * ty] - (uint16_t)now) > 0) {
             n = 0;
             for (int tx = 0; tx < PQ.ntx; tx++) {
-                const int ti = ty * PQ.ntx + tx;
-                n += (int)(uint16_t)(now - PQ.C.tile_plan[ti]) < (PQ.C.tile_nmax[ti] & T_NMAX);
+                n += pq_tile_runs(ty * PQ.ntx + tx, now);
             }
         }
         const double cyc = n < 0 ? g_profile.pqbn.row_idle : g_profile.pqbn.row_band + g_profile.pqbn.row_tile * n;
@@ -1156,7 +1115,6 @@ static int pq_row_costs(uint32_t now, int *first) {
 
 /* the panel model takes this phase's drive codes */
 static void pq_apply(uint32_t now) {
-    const double full = 255.0 * 256.0 / g_profile.pqbn.full_swing;
     /* the controller pushes whatever the supply does; the particles move only with rails and VCOM */
     const bool powered = !g_profile.pmic_tps65185 || sim_tps65185_panel_ready();
     if (!powered) sim_metric_add("display.unpowered_phases", 1);
@@ -1171,15 +1129,9 @@ static void pq_apply(uint32_t now) {
             const int code = (PQ.line[x >> 2] >> (6 - 2 * (x & 3))) & 3;
             if (!code) continue;
             const size_t i = (size_t)y * D.W + x;
-            uint32_t rest = now - PQ.last_push[i] - 1;
-            if (PQ.last_push[i] == 0 && now > 1) rest = 1023;
-            const double step = full * PQ.st_tab[rest > 1023 ? 1023 : rest] * PQ.mob[i] / 128.0;
-            double v = PQ.opt[i] + (code == 2 ? step : -step);
-            if (v < 0) v = 0;
-            if (v > 65535) v = 65535;
-            PQ.opt[i] = (uint16_t)v;
-            PQ.last_push[i] = now;
-            D.screen[i] = (uint8_t)(PQ.opt[i] >> 8);
+            const float *next = code == 2 ? PQ.next_up : PQ.next_down;
+            PQ.opt[i] = (uint16_t)(next[PQ.opt[i] >> 4] * 65535.f);
+            D.screen[i] = PQ.shown[PQ.opt[i] >> 4];
         }
     }
     if (powered) D.version++;
@@ -1226,8 +1178,7 @@ static void pq_note_started(uint32_t now, uint64_t scan_start) {
         if (u->started_ns) continue;
         for (int ty = u->ty0; ty <= u->ty1 && !u->started_ns; ty++)
             for (int tx = u->tx0; tx <= u->tx1; tx++) {
-                const int ti = ty * PQ.ntx + tx;
-                if ((int)(uint16_t)(now - PQ.C.tile_plan[ti]) < (PQ.C.tile_nmax[ti] & T_NMAX)) {
+                if (pq_tile_runs(ty * PQ.ntx + tx, now)) {
                     u->started_ns = scan_start + (uint64_t)(ty * PQBN_TPY) * g_profile.line_ns;
                     break;
                 }
@@ -1333,11 +1284,9 @@ static void pq_drive(void) {
     uint64_t t_start = vtk_now(), t0 = vtk_now(), last_scan = 0;
     const hal_rect_t all = {0, 0, D.W, D.H};
     double worst = 1e9;
-    bool plan_running = false;
+    bool holding = false; /* the last scan's pushes are still on the panel */
     for (;;) {
         if (supply_suspect()) { /* PWR_GOOD fell or the PMIC's pins changed: no further phase is trusted */
-            if (plan_running) osal_sem_take(PQ.plan_done, OSAL_WAIT_FOREVER);
-            plan_running = false;
             PQ.planned = false;
             (void)power_kept(); /* confirms through the driver; the rails count as off */
             for (int k = 0; k < PQ.nu; k++) redraw_add(&PQ.u[k].r.area);
@@ -1348,10 +1297,6 @@ static void pq_drive(void) {
         }
         pq_drain_requests();
         if (PQ.pause_req) { /* a flash operation: hold still between phases */
-            if (plan_running) {
-                osal_sem_take(PQ.plan_done, OSAL_WAIT_FOREVER);
-                plan_running = false;
-            }
             uint64_t tp = vtk_now();
             vtk_lock();
             PQ.paused = true;
@@ -1367,7 +1312,14 @@ static void pq_drive(void) {
             t0 = vtk_now();
             continue;
         }
-        if (!PQ.planned) { /* first phase after a rest: plan before the scan (adds latency) */
+        if (!PQ.planned) { /* plan before the scan */
+            if (holding && pqbn_v4_plan_due(&PQ.C, PQ.now + 1)) { /* a long plan: an empty scan ends the pushes first */
+                uint64_t phase_ns = (uint64_t)g_profile.line_count * g_profile.line_ns + SIM_US(g_profile.frame_overhead_us);
+                if (phase_ns < SIM_US(g_profile.phase_min_us)) phase_ns = SIM_US(g_profile.phase_min_us);
+                vtk_sleep_ns(phase_ns);
+                sim_metric_add("display.pqbn.empty_scans", 1);
+            }
+            holding = false;
             PQ.plan_cyc = pq_plan(PQ.now + 1);
             osal_sem_give(PQ.plan_go);
             osal_sem_take(PQ.plan_done, OSAL_WAIT_FOREVER);
@@ -1393,17 +1345,7 @@ static void pq_drive(void) {
         pq_note_started(now, p.scan_start);
         pq_apply(now);
         PQ.planned = false;
-        plan_running = false;
-        /* plan_during_scan: the planner prepares the next phase while this one scans (the port must
-         * then plan only bands the scan has passed, or double-buffer the tile state: the kernel's
-         * re-plans rewrite tiles still pushing in this phase). Otherwise the next phase is planned after
-         * this scan (the kernel as written): its time adds to the phase cycle. */
-        if (g_profile.pqbn.plan_during_scan && pq_work_after(now)) {
-            PQ.plan_cyc = pq_plan(now + 1);
-            osal_sem_give(PQ.plan_go);
-            plan_running = true;
-            PQ.planned = true;
-        }
+        holding = true;
         for (;;) { /* until the scan ends; a flash stall reported meanwhile re-plans it */
             uint64_t tn = vtk_now();
             if (tn < p.scan_end) vtk_sleep_ns(p.scan_end - tn);
@@ -1436,25 +1378,14 @@ static void pq_drive(void) {
         pq_after_phase(now, p.scan_end);
         if (D.rails_on) pq_redraw_check(); /* a redraw that waited for another clean */
         if (!D.rails_on) { /* the supply went away: pq_after_phase failed the updates; stop driving */
-            if (plan_running) osal_sem_take(PQ.plan_done, OSAL_WAIT_FOREVER);
-            plan_running = false;
             PQ.planned = false;
             break;
         }
         uint64_t tn = vtk_now();
         if (tn < p.next_start) vtk_sleep_ns(p.next_start - tn);
-        if (plan_running) {
-            if (osal_sem_take(PQ.plan_done, 0) != OSAL_OK) { /* the next phase waits for its plan */
-                PQ.plan_late++;
-                uint64_t tw = vtk_now();
-                osal_sem_take(PQ.plan_done, OSAL_WAIT_FOREVER);
-                sim_metric_sample("display.pqbn.plan_wait_ms", (vtk_now() - tw) / 1e6);
-            }
-            plan_running = false;
-        }
         t0 = vtk_now();
         pq_drain_requests();
-        if (!PQ.planned && !pq_work_after(now)) {
+        if (!pqbn_v4_busy_after(&PQ.C, now)) {
             /* nothing moves: anything still listed is finished (e.g. content that did not change) */
             pq_after_phase(now, p.scan_end);
             if (!PQ.nu) break;
@@ -1733,14 +1664,13 @@ void sim_display_report(void) {
     }
     if (pq_mode() && PQ.opt) {
         sim_metric_set("display.pqbn.phases", (double)PQ.phases);
-        sim_metric_set("display.pqbn.plan_late_phases", (double)PQ.plan_late);
         sim_metric_set("display.pqbn.cleans", (double)PQ.cleans);
         sim_metric_set("display.pqbn.drive_ms", PQ.drive_ns / 1e6);
         /* how close the panel model ended to the framebuffer (gray levels of 255) */
         double sum = 0, mx = 0;
         const size_t n = (size_t)D.W * D.H;
         for (size_t i = 0; i < n; i++) {
-            double e = fabs((double)PQ.opt[i] / 256.0 - (double)D.target[i]);
+            double e = fabs((double)D.screen[i] - (double)D.target[i]);
             sum += e;
             if (e > mx) mx = e;
         }

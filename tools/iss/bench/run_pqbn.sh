@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # PQ-BN v4 on the ISS (ESP32-S31 model): builds tools/iss/bench/pqbn_bench.c with the ESP-IDF S31
-# flags, runs the research's scenarios at the fitted and the slow timing corner, in line mode
-# (planner per phase + executor per row) and in drive-plane mode (the research's own numbers),
-# and summarizes with summarize_pqbn.py.
+# flags, runs the research's scenarios at the fitted and the slow timing corner (planner per phase +
+# executor per row), and summarizes with summarize_pqbn.py. The kernel lost its drive-plane mode and its
+# motion mode with D-110: the summary's columns for them are from before that, it needs rework for the next fit.
 #
 #   tools/iss/bench/run_pqbn.sh SCENARIO_DIR OUT_DIR
 #
@@ -40,8 +40,7 @@ build() { # name defines...
 }
 # the executor in IRAM as in the port (PQBN_HOT); the planner stays in flash (XIP)
 HOT='-DPQBN_HOT=__attribute__((section(".iram.text"),noinline))'
-build line -DLINE=1 "$HOT"
-build plane -DLINE=0 "$HOT"
+build line "$HOT"
 
 FIT=$ISSDIR/out/esp32s31.fitted.cfg
 # slow corner = calib.py SLOW_CORE + the PSRAM fit against ESP32-S3 rates (out/costs.json fit.psram.slow)
