@@ -1192,6 +1192,7 @@ static const ink_state_def_t ST_MODE = {.id = "storage.mode", .type = INK_ST_STR
 static const ink_state_def_t ST_USB = {.id = "usb.connected", .type = INK_ST_BOOL, .title = "连着电脑"};
 
 int ink_file_service_init(void) {
+    FS.revision = 1;
     FS.edits = osal_mutex_create();
     if (!FS.edits) return -1;
     FS.ready = true;
@@ -1205,6 +1206,8 @@ int ink_file_service_init(void) {
     hal_usb_set_callback(on_usb, NULL);
     return ink_file_caps_init();
 }
+
+uint32_t ink_fs_revision(void) { return __atomic_load_n(&FS.revision, __ATOMIC_RELAXED); }
 
 uint32_t ink_fs_file_revision(ink_fs_file_t *f) { return f ? f->revision : 0; }
 
@@ -1303,14 +1306,14 @@ int ink_fs_write_atomic(const char *path, const void *data, size_t n) {
     return r;
 }
 
-int ink_fs_restore(const char *member, uint32_t generation, unsigned stage, const char *path, const uint8_t expected_sha256[32]) {
-    if (!member || !path || !expected_sha256 || stage >= 128 || strncmp(path, "/me/", 4)) return INK_FS_ERR_PATH;
+static int restore_file(const char *member, uint32_t generation, unsigned stage, const char *path, const uint8_t expected_sha256[32], uint32_t revision) {
+    if (!member || !path || (!expected_sha256 && !revision) || stage >= 128 || strncmp(path, "/me/", 4)) return INK_FS_ERR_PATH;
     file_context_t c = member_context(member, generation);
     if (!c.generation || !ink_member_io_begin(member, generation)) return INK_FS_ERR_DENIED;
     int r = ink_fs_card_hold();
     if (r) { ink_member_io_end(member); return r; }
-    uint8_t *buf = osal_malloc(JOB_BUF, OSAL_MEM_EXTERNAL);
-    if (!buf) { ink_fs_card_release(); ink_member_io_end(member); return INK_FS_ERR_IO; }
+    uint8_t *buf = revision ? NULL : osal_malloc(JOB_BUF, OSAL_MEM_EXTERNAL);
+    if (!revision && !buf) { ink_fs_card_release(); ink_member_io_end(member); return INK_FS_ERR_IO; }
     osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
     char target[PHYS_MAX], source[PHYS_MAX], root[INK_LAYOUT_PATH_MAX];
     r = resolve_for(&c, path, true, target, sizeof target);
@@ -1318,19 +1321,22 @@ int ink_fs_restore(const char *member, uint32_t generation, unsigned stage, cons
     for (int i = 0; !r && i < MAX_OPEN; i++)
         if (FS.files[i].used && FS.files[i].writable) r = INK_FS_ERR_BUSY;
     uint8_t hash[32] = {0};
-    if (!r && hal_fs_size(target) >= 0) {
-        hal_file_t *f = hal_fs_open(target, HAL_O_READ);
-        if (!f) r = INK_FS_ERR_IO;
-        else {
-            ink_sha256_t sha; ink_sha256_init(&sha);
-            ssize_t n;
-            while ((n = hal_fs_read(f, buf, JOB_BUF)) > 0) ink_sha256_update(&sha, buf, (size_t)n);
-            int closed = hal_fs_close(f);
-            if (n < 0 || closed != 0) r = INK_FS_ERR_IO;
-            else ink_sha256_final(&sha, hash);
+    if (!r && revision && !inverse_ready(revision)) r = INK_FS_ERR_EXISTS;
+    if (!revision) {
+        if (!r && hal_fs_size(target) >= 0) {
+            hal_file_t *f = hal_fs_open(target, HAL_O_READ);
+            if (!f) r = INK_FS_ERR_IO;
+            else {
+                ink_sha256_t sha; ink_sha256_init(&sha);
+                ssize_t n;
+                while ((n = hal_fs_read(f, buf, JOB_BUF)) > 0) ink_sha256_update(&sha, buf, (size_t)n);
+                int closed = hal_fs_close(f);
+                if (n < 0 || closed != 0) r = INK_FS_ERR_IO;
+                else ink_sha256_final(&sha, hash);
+            }
         }
+        if (!r && memcmp(hash, expected_sha256, 32)) r = INK_FS_ERR_EXISTS;
     }
-    if (!r && memcmp(hash, expected_sha256, 32)) r = INK_FS_ERR_EXISTS;
     if (!r) {
         if (ink_layout_member_files(root, sizeof root, member) < 0) r = INK_FS_ERR_PATH;
         else {
@@ -1342,4 +1348,13 @@ int ink_fs_restore(const char *member, uint32_t generation, unsigned stage, cons
     osal_mutex_unlock(FS.edits);
     osal_free(buf); ink_fs_card_release(); ink_member_io_end(member);
     return r;
+}
+
+int ink_fs_restore(const char *member, uint32_t generation, unsigned stage, const char *path, const uint8_t expected_sha256[32]) {
+    return restore_file(member, generation, stage, path, expected_sha256, 0);
+}
+
+int ink_fs_restore_if_revision(const char *member, uint32_t generation, unsigned stage, const char *path, uint32_t revision) {
+    if (!revision) return INK_FS_ERR_EXISTS;
+    return restore_file(member, generation, stage, path, NULL, revision);
 }

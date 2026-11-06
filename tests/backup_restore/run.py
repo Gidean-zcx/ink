@@ -22,7 +22,7 @@ peer = work / "hub"
 peer.mkdir()
 
 
-def boot(area, phase, cut=None, server=None):
+def boot(area, phase, cut=None, server=None, length=None):
     area.mkdir(parents=True, exist_ok=True)
     server = server or peer
     server.mkdir(exist_ok=True)
@@ -33,6 +33,8 @@ def boot(area, phase, cut=None, server=None):
            "--flash-image", str(area / "user.img"), "--sd-dir", str(area / "sd")]
     env = {**os.environ, "INK_BACKUP_PHASE": phase, "INK_SIM_BACKUP_DIR": str(server),
            "UBSAN_OPTIONS": "halt_on_error=1"}
+    if length:
+        env["INK_BACKUP_BYTES"] = str(length)
     if cut:
         env["INK_BACKUP_CUT"] = str(cut)
     run = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, timeout=90, env=env)
@@ -42,7 +44,7 @@ def boot(area, phase, cut=None, server=None):
     data = json.loads((out / "metrics.json").read_text()) if (out / "metrics.json").exists() else {}
     metrics = data.get("metrics", {})
     done = metrics.get("test.finished") == 1
-    if phase in ("upload-cut", "restore-cut"):
+    if phase in ("upload-cut", "restore-cut", "collect-cut"):
         done = metrics.get("test.checkpoint") == 1
     elif phase == "wipe":
         done = metrics.get("system.factory_resets") == 1 and metrics.get("power.reboot") == 1
@@ -71,6 +73,7 @@ area = work / "roundtrip"
 boot(area, "seed")
 boot(clone(area, "receipt"), "receipt-reboot")
 boot(area, "wipe")
+boot(area, "rejoin")
 empty = clone(area, "empty")
 boot(area, "restore-cut")
 boot(area, "restore-resume")
@@ -79,25 +82,49 @@ if not a.quick:
     api = work / "api"
     boot(api, "api")
     boot(api, "api-reboot")
-    for label in ("foreign", "traversal", "duplicate"):
+    for label in ("foreign", "identity", "legacy", "traversal", "duplicate"):
         server = work / (label + "-hub")
         shutil.copytree(peer, server)
-        member_dir = server / "owner"
+        member_dir = next(d for d in (server / "owner").iterdir() if (d / "latest").exists())
         sha, _ = (member_dir / "latest").read_text().split()
         manifest = bytearray((member_dir / (sha + ".blob")).read_bytes())
         if label == "foreign":
             manifest[12:28] = b"kid" + bytes(13)
+        elif label == "identity":
+            manifest[40:56] = bytes(16)
+        elif label == "legacy":
+            struct.pack_into("<I", manifest, 4, 1)
         elif label == "traversal":
-            manifest[40:168] = b"../sys/unsafe" + bytes(115)
+            manifest[56:184] = b"../sys/unsafe" + bytes(115)
         else:
-            manifest.extend(manifest[40:248])
+            manifest.extend(manifest[56:264])
             struct.pack_into("<I", manifest, 8, struct.unpack_from("<I", manifest, 8)[0] + 1)
         digest = hashlib.sha256(manifest).hexdigest()
         (member_dir / (digest + ".blob")).write_bytes(manifest)
         (member_dir / "latest").write_text(f"{digest} {len(manifest)}\n")
         boot(clone(empty, label), "malicious", server=server)
-    for phase in ("stale", "member-confirm", "corrupt", "restore-network", "pin"):
+    for phase in ("stale", "member-confirm", "corrupt", "restore-network", "pin", "prepare-recover"):
         boot(clone(empty, phase), phase)
+    for origin, label in ((area, "identity-local"), (empty, "identity-clean")):
+        target = clone(origin, label)
+        server = work / (label + "-hub")
+        shutil.copytree(peer, server)
+        boot(target, "reused-id", server=server)
+        boot(target, "identity-reboot", server=server)
+    boot(work / "deep", "deep", server=work / "deep-hub")
+    for length in (2097152, 8388608):
+        target = work / ("large-" + str(length))
+        server = work / ("large-hub-" + str(length))
+        boot(target, "large-seed", server=server, length=length)
+        boot(target, "large-restore", server=server, length=length)
+    boot(clone(empty, "legacy-journal"), "legacy-journal", server=work / "legacy-journal-hub")
+    boot(work / "wrong-receipt", "wrong-receipt", server=work / "wrong-receipt-hub")
+    for phase in ("collect-cut", "collect-member", "collect-held"):
+        target = work / phase
+        server = work / (phase + "-hub")
+        boot(target, phase, server=server, length=2097152)
+        if phase == "collect-cut":
+            boot(target, "collect-resume", server=server, length=2097152)
     interrupted = work / "upload-restart"
     boot(interrupted, "upload-cut", server=work / "upload-hub")
     boot(interrupted, "upload-resume", server=work / "upload-hub")

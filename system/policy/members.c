@@ -3,6 +3,7 @@
  * a child whose whitelist allows reading and the AI. From the first change on, the table in the data store is what there
  * is. Slots do not move: ink_member_current() hands out a pointer into them.
  */
+#include <stddef.h>
 #include <stdio.h>
 #include <string.h>
 
@@ -42,6 +43,7 @@ typedef struct {
     bool removing;
     uint16_t writers;
     uint32_t generation;
+    uint8_t identity[16];
     ink_member_t m;
     uint8_t salt[16], hash[32];
     bool has_pin;
@@ -55,6 +57,7 @@ typedef struct __attribute__((packed)) {
     uint8_t salt[16], hash[32];
     uint32_t fails;
     int64_t not_before_s;
+    uint8_t identity[16];
 } stored_t;
 
 /* Hashes and salts: no AI, no hub, no app reads this. */
@@ -181,6 +184,7 @@ static int save_slot(ink_db_t *db, const slot_t *s) {
     snprintf(r.name, sizeof r.name, "%s", s->m.name);
     memcpy(r.salt, s->salt, sizeof r.salt);
     memcpy(r.hash, s->hash, sizeof r.hash);
+    memcpy(r.identity, s->identity, sizeof r.identity);
     ink_db_write_t w = {.id = record_id(s->m.id), .data = &r, .len = sizeof r, .src = INK_SRC_SYSTEM};
     return ink_db_put(db, &w, NULL);
 }
@@ -195,16 +199,45 @@ static void save_all(void) {
     ink_db_close(db);
 }
 
+int ink_member_identity(const char *id, uint32_t generation, uint8_t out[16]) {
+    slot_t *s = find(id);
+    if (!out || !s || !generation || generation != ink_member_generation(id) || M.table_unread ||
+        !ink_exec_is_current(INK_EXEC_BG)) return -1;
+    ink_db_t *db = ink_db_open(&TABLE, NULL);
+    if (!db) return -1;
+    uint8_t used = 0;
+    for (unsigned i = 0; i < sizeof s->identity; i++) used |= s->identity[i];
+    int rc = 0;
+    if (!used) {
+        /* The persisted table version also prevents deterministic simulator RNG reuse after reboot. */
+        uint32_t serial = ink_db_last_ver(db);
+        if (serial == UINT32_MAX) rc = -1;
+        else {
+            serial++;
+            hal_random_fill(s->identity, sizeof s->identity);
+            for (unsigned i = 0; i < 4; i++) s->identity[i] = (uint8_t)(serial >> (i * 8));
+            rc = save_slot(db, s);
+            for (int i = 0; !rc && i < INK_MEMBERS_MAX; i++)
+                if (M.s[i].used && &M.s[i] != s) rc = save_slot(db, &M.s[i]);
+        }
+    }
+    if (!rc && !used) rc = ink_db_wait(db, ink_db_last_ver(db), 1000000);
+    if (!rc) { memcpy(out, s->identity, 16); M.table_is_real = true; }
+    else if (!used) memset(s->identity, 0, sizeof s->identity);
+    ink_db_close(db);
+    return rc;
+}
+
 /* What is on the flash, into fresh: how many, 0 when there is no family yet, -1 when it cannot be told. */
 static int read_table(slot_t *fresh) {
     ink_db_t *db = ink_db_open(&TABLE, NULL);
     if (!db) return -1;
     ink_db_cursor_t c = {0};
     ink_rec_t r;
-    stored_t st;
+    stored_t st = {0};
     int n = 0;
     while (n < INK_MEMBERS_MAX && ink_db_next(db, &c, &r, &st, sizeof st) == 1) {
-        if (r.len != sizeof st) continue;
+        if (r.len != sizeof st && r.len != offsetof(stored_t, identity)) continue;
         slot_t *s = &fresh[n++];
         s->used = true;
         snprintf(s->m.id, sizeof s->m.id, "%.15s", st.id);
@@ -216,6 +249,7 @@ static int read_table(slot_t *fresh) {
         memcpy(s->hash, st.hash, sizeof s->hash);
         s->fails = st.fails;
         s->not_before_s = st.not_before_s;
+        if (r.len == sizeof st) memcpy(s->identity, st.identity, sizeof s->identity);
         set_allow(s);
     }
     memset(&st, 0, sizeof st);

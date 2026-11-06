@@ -8,6 +8,13 @@
 
 void sim_backup_faults(unsigned faults);
 static const char *phase;
+static size_t file_bytes = 98304;
+static const char *file_path = "/me/photos/test.bin";
+static const char *file_dir = "/me/photos";
+static const char *file_name = "photos/test.bin";
+static volatile int pin_done;
+static int pin_result;
+static void checked_pin(void *ctx, int rc, uint32_t wait_s) { (void)ctx; (void)wait_s; pin_result=rc; pin_done=1; }
 static const ink_db_def_t MISSING = {.name="test.missing",.title="测试未安装的集合",.scope=INK_DB_MEMBER,.schema=7};
 static const ink_db_def_t NOTES = {.name="test.backup", .title="测试备份资料", .scope=INK_DB_MEMBER, .schema=3,
     .json=true, .ai_read=true, .ai_write=true, .max_records=32};
@@ -48,10 +55,10 @@ static void fixtures(const char *who) {
     ink_db_close(db);
     char path[INK_LAYOUT_PATH_MAX]; snprintf(path,sizeof path,"/user/m/%s/test.position",who);
     CHECK(ink_storage_write_member_atomic(path,"offset=1234",11,ink_member_generation(who))==0 && WAIT_FOR(ink_storage_pending()==0,5000),"raw member state durable");
-    uint8_t *bytes=osal_malloc(98304,OSAL_MEM_EXTERNAL); CHECK(bytes,"file fixture buffer");
+    uint8_t *bytes=osal_malloc(file_bytes,OSAL_MEM_EXTERNAL); CHECK(bytes,"file fixture buffer");
     if (bytes) {
-        memset(bytes,!strcmp(who,"owner") ? 'A' : 'K',98304);
-        CHECK(ink_fs_mkdir("/me/photos")==0 && ink_fs_write_atomic("/me/photos/test.bin",bytes,98304)==0,"personal file fixture");
+        memset(bytes,!strcmp(who,"owner") ? 'A' : 'K',file_bytes);
+        CHECK(ink_fs_mkdir(file_dir)==0 && ink_fs_write_atomic(file_path,bytes,file_bytes)==0,"personal file fixture");
         osal_free(bytes);
     }
     CHECK(ink_fs_write_atomic("/me/empty.txt","",0)==0,"empty personal file fixture");
@@ -66,7 +73,7 @@ static void backup(void) {
     CHECK(AI("backup.now",NULL) && g_rc.status==INK_RC_QUEUED,"start member backup (%s %s)",g_rc.say,g_rc.detail);
     CHECK(wait_phase("\"phase\":\"saved\"",180),"backup received (%s)",g_result);
     CHECK(strstr(g_result,"\"received\":true") && strstr(g_result,"\"durable\":false"),"hub receipt is distinct from cloud durability");
-    CHECK(AI("backup.manifest",NULL) && g_rc.status==INK_RC_DONE && strstr(g_result,"test.backup") && strstr(g_result,"test.position") && strstr(g_result,"photos/test.bin"),"manifest includes collection, state and files (%s)",g_result);
+    CHECK(AI("backup.manifest",NULL) && g_rc.status==INK_RC_DONE && strstr(g_result,"test.backup") && strstr(g_result,"test.position") && strstr(g_result,file_name),"manifest includes collection, state and files (%s)",g_result);
     CHECK(strstr(g_result,"not_restored") && !strstr(g_result,"member.table") && !strstr(g_result,"test-only"),"credential exclusions are explicit");
     CHECK(AI("data.status","{\"collection\":\"test.backup\",\"id\":41}") && strstr(g_result,"at_hub"),"uploaded collection has real at_hub receipt (%s)",g_result);
 }
@@ -101,21 +108,19 @@ static void verify(const char *who) {
     char path[INK_LAYOUT_PATH_MAX]; snprintf(path,sizeof path,"/user/m/%s/test.position",who); memset(value,0,sizeof value);
     CHECK(ink_storage_read(path,value,sizeof value)==11 && !strcmp(value,"offset=1234"),"member page state restored");
     ink_fs_file_t *f=NULL;
-    CHECK(ink_fs_open("/me/photos/test.bin",INK_FS_READ,&f)==0,"restored personal file opens");
+    CHECK(ink_fs_open(file_path,INK_FS_READ,&f)==0,"restored personal file opens");
     uint8_t bytes[128];
     if (f) {
         bool correct=true; int64_t n;
         size_t total=0;
         while ((n=ink_fs_read(f,bytes,sizeof bytes))>0) { total+=(size_t)n; for(int i=0;i<n;i++) if(bytes[i]!=(!strcmp(who,"owner")?'A':'K'))correct=false; }
-        CHECK(n==0 && total==98304 && correct,"whole file restored, no mixed members or blocks");
+        CHECK(n==0 && total==file_bytes && correct,"whole file restored, no mixed members or blocks");
         CHECK(ink_fs_close(f)==0,"restored file closed");
     }
     ink_fs_stat_t st; CHECK(ink_fs_stat("/me/empty.txt",&st)==0 && st.size==0,"empty file restored");
 }
 
-static volatile int api_done, storage_done, pin_done;
-static int pin_result;
-static void checked_pin(void *ctx, int rc, uint32_t wait_s) { (void)ctx; (void)wait_s; pin_result=rc; pin_done=1; }
+static volatile int api_done, storage_done;
 static int storage_result;
 static ink_exec_job_t api_job;
 static void restore_done(void *ctx, int rc) { (void)ctx; storage_result=rc; storage_done=1; }
@@ -170,6 +175,16 @@ static void api_checks(void *arg) {
     ink_fs_file_t *read=NULL;
     CHECK(ink_fs_open("/me/cas/guard.txt",INK_FS_READ,&read)==0 && ink_fs_read(read,buf,sizeof buf)==1 && buf[0]=='A',"card replacement content");
     if(read)CHECK(ink_fs_close(read)==0,"conditional card read closed");
+    f=hal_fs_open("/content/.m/owner/.backup/down127",HAL_O_WRITE|HAL_O_CREATE|HAL_O_TRUNC);
+    CHECK(f && hal_fs_write(f,"R",1)==1,"stage revision-guard replacement"); if(f)CHECK(hal_fs_close(f)==0,"revision stage closed");
+    uint32_t revision=ink_fs_revision();
+    CHECK(ink_fs_write_atomic("/me/cas/guard.txt","C",1)==0,"same-size edit after incremental hash checkpoint");
+    CHECK(ink_fs_restore_if_revision("owner",ink_member_generation("owner"),127,"/me/cas/guard.txt",revision)==INK_FS_ERR_EXISTS,"revision restore refuses intervening same-size edit");
+    CHECK(ink_fs_open("/me/cas/guard.txt",INK_FS_READ,&read)==0 && ink_fs_read(read,buf,sizeof buf)==1 && buf[0]=='C',"revision guard retains new content");
+    if(read)CHECK(ink_fs_close(read)==0,"revision-guard read closed");
+    revision=ink_fs_revision();
+    CHECK(ink_fs_restore_if_revision("owner",ink_member_generation("owner")+1,127,"/me/cas/guard.txt",revision)==INK_FS_ERR_DENIED,"revision restore retains original member generation");
+    CHECK(ink_fs_restore_if_revision("owner",ink_member_generation("owner"),127,"/me/cas/guard.txt",revision)==0,"unchanged revision installs without whole-file lock-time hashing");
     uint32_t generation=ink_member_generation("owner");
     CHECK(ink_member_switch("kid")==0,"another member arrives before a delayed directory creation");
     CHECK(ink_fs_mkdir_member_generation("owner",generation,"/me/restore-parent")==0,"delayed directory keeps original member");
@@ -179,9 +194,140 @@ static void api_checks(void *arg) {
     api_done=1;
 }
 
+/* Synthetic authenticated reprovisioning fixture, separate from the member backup under test. */
+static const char *family_fixture = "/content/test-backup-family";
+static void family_state(void *arg) {
+    bool load = (bool)(intptr_t)arg;
+    ink_db_t *db = ink_db_open(ink_db_find_def("member.table"), NULL);
+    void *data = NULL; size_t len = 0;
+    if (!load) {
+        CHECK(db && ink_db_export(db, &data, &len)==0,"export synthetic family binding independently of backup");
+        hal_file_t *f = hal_fs_open(family_fixture, HAL_O_WRITE|HAL_O_CREATE|HAL_O_TRUNC);
+        CHECK(f && hal_fs_write(f,data,len)==(ssize_t)len && hal_fs_sync(f)==0,"save test-only reprovisioning fixture outside member backup");
+        if(f) CHECK(hal_fs_close(f)==0,"family fixture closed");
+    } else {
+        int64_t n=hal_fs_size(family_fixture);
+        CHECK(n>0 && n<8192,"synthetic binding fixture bounded");
+        if(n>0 && n<8192) {
+            len=(size_t)n; data=osal_malloc(len,OSAL_MEM_EXTERNAL);
+            hal_file_t *f=hal_fs_open(family_fixture,HAL_O_READ);
+            CHECK(data && f && hal_fs_read(f,data,len)==(ssize_t)len,"read separate synthetic family binding");
+            if(f) CHECK(hal_fs_close(f)==0,"family fixture read closed");
+            CHECK(db && data && ink_db_import(db,data,len,ink_db_last_ver(db))==0,"explicit test-only rebinding imports original durable identities");
+        }
+    }
+    osal_free(data); ink_db_close(db); api_done=1;
+}
+static bool member_exists(const char *id) {
+    for(int i=0;;i++) { const ink_member_t *m=ink_member_at(i); if(!m)return false; if(!strcmp(m->id,id))return true; }
+}
+static void human_member(const char *cap, const char *args, const char *id) {
+    unsigned token=0;
+    CHECK(BY_HAND(cap,args) && g_rc.status==INK_RC_PENDING_CONFIRMATION,"membership change requires a person");
+    CHECK(sscanf(g_rc.object,"confirm:%u",&token)==1 && ink_confirm_decide(token,true,INK_SRC_TOUCH)==0,"human approves exact membership change");
+    CHECK(WAIT_FOR(!strcmp(cap,"member.add") ? ink_member_generation(id)>0 : !member_exists(id),10000),"membership background work finished");
+}
+static void responsive_wait(const char *wanted, int seconds) {
+    for(int i=0;i<seconds*5;i++) {
+        ink_power_activity(osal_now_us());
+        CHECK(AI("backup.status",NULL) && g_rc.status==INK_RC_DONE,"progress query stays responsive during large-file work");
+        if(strstr(g_result,wanted))return;
+        if(strstr(g_result,"\"phase\":\"failed\""))break;
+        pin_done=0;
+        CHECK(ink_member_unlock("owner","",checked_pin,NULL)==0 && WAIT_FOR(pin_done,2000) && pin_result==INK_PIN_OK,"PIN executor work gets a turn during large-file work");
+        delay_ms(200);
+    }
+    CHECK(false,"large-file work completes (%s)",g_result);
+}
 static void run(void *arg) {
     (void)arg;
-    if (!strcmp(phase,"api")) {
+    if (!strcmp(phase,"rejoin")) {
+        CHECK(AI("restore.preview",NULL) && g_rc.status==INK_RC_FAILED,"factory-reset identities cannot claim old backups by display id");
+        api_done=0;
+        CHECK(ink_exec_post(INK_EXEC_BG,&api_job,family_state,(void *)(intptr_t)1)==0 && WAIT_FOR(api_done,10000),"simulate independently authorized family reprovisioning");
+    } else if (!strcmp(phase,"reused-id")) {
+        char old_preview[33]=""; preview(old_preview);
+        uint32_t old_generation=ink_member_generation("owner");
+        human_member("member.add","{\"id\":\"reviewadult\",\"name\":\"测试监护人\",\"role\":\"adult\"}","reviewadult");
+        CHECK(ink_member_switch("reviewadult")==0,"switch separate adult");
+        human_member("member.remove","{\"id\":\"owner\"}","owner");
+        CHECK(!member_exists("owner"),"old adult fully removed before id reuse");
+        human_member("member.add","{\"id\":\"owner\",\"name\":\"测试新孩子\",\"role\":\"child\"}","owner");
+        CHECK(ink_member_switch("owner")==0 && ink_member_current()->role==INK_ROLE_CHILD,"replacement child enters own space");
+        CHECK(ink_member_generation("owner")!=old_generation,"local incarnation changed");
+        CHECK(status("\"phase\":\"none\""),"replacement child gets no old receipt or journal");
+        CHECK(AI("restore.preview",NULL) && g_rc.status==INK_RC_FAILED,"replacement child cannot preview removed adult snapshot");
+        CHECK(AI("backup.manifest",NULL) && g_rc.status==INK_RC_DONE && !strstr(g_result,"test.backup"),"replacement child cannot enumerate old manifest");
+        unsigned confirm=request_apply(old_preview);
+        CHECK(ink_confirm_decide(confirm,true,INK_SRC_TOUCH)==0,"ordinary approval cannot transfer backup ownership");
+        CHECK(status("\"phase\":\"none\""),"old preview cannot install into replacement identity");
+        CHECK(AI("data.get","{\"collection\":\"test.backup\",\"id\":41}") && !strstr(g_result,"测试大人资料"),"child AI never sees removed adult content");
+        ink_db_t *db=ink_db_open(&NOTES,NULL); char value[128]="";
+        CHECK(db && ink_db_get(db,41,NULL,value,sizeof value)==INK_DB_ERR_NOT_FOUND,"replacement child has no adult record"); ink_db_close(db);
+        save_record("{\"text\":\"测试新身份资料\"}");
+        set_fault(4);
+        CHECK(AI("backup.now",NULL) && g_rc.status==INK_RC_QUEUED && wait_phase("\"phase\":\"saved\"",180),"replacement identity can save its own backup");
+    } else if (!strcmp(phase,"identity-reboot")) {
+        CHECK(ink_member_switch("owner")==0 && ink_member_current()->role==INK_ROLE_CHILD,"replacement role persists across reboot");
+        CHECK(status("\"phase\":\"saved\""),"replacement durable identity keeps its own receipt across reboot");
+        CHECK(AI("restore.preview",NULL) && g_rc.status==INK_RC_QUEUED && wait_phase("\"phase\":\"preview\"",60),"replacement identity finds its own snapshot after reboot");
+        unsigned confirm=0; ink_json_t *j=osal_malloc(sizeof *j,OSAL_MEM_EXTERNAL); char token[33]="";
+        CHECK(j && ink_json_parse(j,g_result,strlen(g_result))==0 && ink_json_str(j,ink_json_find(j,0,"preview"),token,33)==32,"own preview token"); osal_free(j);
+        confirm=request_apply(token); CHECK(ink_confirm_decide(confirm,true,INK_SRC_TOUCH)==0,"approve replacement own backup");
+        CHECK(wait_phase("\"phase\":\"done\"",180),"replacement own restore completes");
+        CHECK(AI("data.get","{\"collection\":\"test.backup\",\"id\":41}") && strstr(g_result,"测试新身份资料") && !strstr(g_result,"测试大人资料"),"only replacement identity data survives restore and reboot");
+    } else if (!strcmp(phase,"prepare-recover")) {
+        CHECK(AI("restore.preview",NULL) && g_rc.status==INK_RC_QUEUED,"begin unapproved preview preparation");
+        CHECK(wait_phase("\"phase\":\"preparing\"",10),"preview preparation has durable intent");
+        CHECK(hal_fs_remove("/content/.m/owner/.backup/preview0")==0,"simulate missing preview checkpoint after interrupted card write");
+        CHECK(wait_phase("\"phase\":\"preview\"",60),"unapproved partial preview rebuilds from identity-checked remote manifest");
+        CHECK(ink_storage_size("/user/m/owner/test.position")<0,"preview recovery does not install member files");
+    } else if (!strcmp(phase,"legacy-journal")) {
+        const uint32_t legacy[2]={0x31534249u,1};
+        CHECK(ink_storage_write_member_atomic("/user/m/owner/backup.journal",legacy,sizeof legacy,ink_member_generation("owner"))==0 && WAIT_FOR(ink_storage_pending()==0,5000),"synthetic unbound legacy journal persisted");
+        CHECK(status("\"phase\":\"failed\"") && strstr(g_result,"请重新备份"),"legacy receipt and restore authority are discarded explicitly");
+        CHECK(AI("backup.manifest",NULL) && g_rc.status==INK_RC_DONE && !strstr(g_result,"\"items\""),"legacy journal exposes no unbound manifest");
+        CHECK(AI("backup.now",NULL) && g_rc.status==INK_RC_QUEUED && wait_phase("\"phase\":\"saved\"",180),"legacy journal does not block a fresh identity-bound backup");
+    } else if (!strcmp(phase,"wrong-receipt")) {
+        fixtures("owner"); set_fault(12);
+        CHECK(AI("backup.now",NULL) && g_rc.status==INK_RC_QUEUED,"queue backup before wrong-identity reply");
+        CHECK(wait_phase("\"phase\":\"failed\"",60),"wrong identity in transfer receipt rejected");
+        CHECK(strstr(g_result,"\"received\":false"),"wrong-identity reply never grants a receipt");
+    } else if (!strcmp(phase,"collect-cut") || !strcmp(phase,"collect-member") || !strcmp(phase,"collect-held")) {
+        fixtures("owner"); set_fault(4);
+        CHECK(AI("backup.now",NULL) && g_rc.status==INK_RC_QUEUED,"capture intent returns before large file is read");
+        CHECK(WAIT_FOR(sim_metric_value("backup.collect_blocks")>0,15000),"capture has completed a bounded piece");
+        if(!strcmp(phase,"collect-cut")) { checkpoint(); return; }
+        if(!strcmp(phase,"collect-member")) {
+            CHECK(ink_member_switch("kid")==0 && status("\"phase\":\"none\""),"another member cannot observe capture progress");
+            CHECK(ink_member_switch("owner")==0,"return to original capture identity");
+        } else {
+            ink_jobs_hold(true);
+            CHECK(status("\"phase\":\"collecting\""),"paused capture leaves status executor responsive");
+            ink_jobs_hold(false);
+        }
+        responsive_wait("\"phase\":\"saved\"",300);
+        CHECK(sim_metric_value("cap.timeouts")==0,"capture suspension does not cause capability timeouts");
+    } else if (!strcmp(phase,"collect-resume")) {
+        responsive_wait("\"phase\":\"saved\"",300);
+        CHECK(AI("backup.manifest",NULL) && g_rc.status==INK_RC_DONE && strstr(g_result,file_name),"restart rebuilds capture and uploads complete manifest");
+    } else if (!strcmp(phase,"large-seed") || !strcmp(phase,"deep")) {
+        set_fault(4); fixtures("owner");
+        CHECK(AI("backup.now",NULL) && g_rc.status==INK_RC_QUEUED,"large or deep backup returns queued before collection");
+        responsive_wait("\"phase\":\"saved\"",300);
+        CHECK(AI("backup.manifest",NULL) && g_rc.status==INK_RC_DONE && strstr(g_result,file_name),"supported large or deep file is included");
+        CHECK(sim_metric_value("cap.timeouts")==0 && sim_metric_value("cap.late")==0,"large/deep backup has no capability timeout or late completion");
+    } else if (!strcmp(phase,"large-restore")) {
+        uint8_t *bytes=osal_malloc(file_bytes,OSAL_MEM_EXTERNAL); CHECK(bytes,"large overwrite fixture buffer");
+        if(bytes) { memset(bytes,'B',file_bytes); CHECK(ink_fs_write_atomic(file_path,bytes,file_bytes)==0,"same-size local edit before preview"); osal_free(bytes); }
+        CHECK(AI("restore.preview",NULL) && g_rc.status==INK_RC_QUEUED,"large preview returns promptly");
+        responsive_wait("\"phase\":\"preview\"",180);
+        ink_json_t *j=osal_malloc(sizeof *j,OSAL_MEM_EXTERNAL); char token[33]="";
+        CHECK(j && ink_json_parse(j,g_result,strlen(g_result))==0 && ink_json_str(j,ink_json_find(j,0,"preview"),token,33)==32,"large preview token"); osal_free(j);
+        unsigned confirm=request_apply(token); CHECK(ink_confirm_decide(confirm,true,INK_SRC_TOUCH)==0,"approve large restore");
+        responsive_wait("\"phase\":\"done\"",300); verify("owner");
+        CHECK(sim_metric_value("cap.timeouts")==0 && sim_metric_value("cap.late")==0,"large preview and restore do not block shared executor queries");
+    } else if (!strcmp(phase,"api")) {
         CHECK(ink_exec_post(INK_EXEC_BG,&api_job,api_checks,NULL)==0 && WAIT_FOR(api_done,30000),"snapshot and conditional restore API checks finish");
     } else if (!strcmp(phase,"api-reboot")) {
         ink_db_t *db=ink_db_open(&NOTES,NULL); char value[32]=""; ink_rec_t rec;
@@ -196,6 +342,8 @@ static void run(void *arg) {
     } else if (!strcmp(phase,"seed")) {
         set_fault(4); fixtures("owner"); backup(); fixtures("kid"); backup();
         CHECK(ink_member_switch("owner")==0,"return adult");
+        api_done=0;
+        CHECK(ink_exec_post(INK_EXEC_BG,&api_job,family_state,NULL)==0 && WAIT_FOR(api_done,10000),"keep separate synthetic family binding for reset test");
     } else if (!strcmp(phase,"wipe")) {
         CHECK(BY_HAND("system.factory_reset",NULL) && g_rc.status==INK_RC_PENDING_CONFIRMATION,"clear device requires confirmation");
         unsigned token=0; sscanf(g_rc.object,"confirm:%u",&token);
@@ -251,7 +399,7 @@ static void run(void *arg) {
         CHECK(status("\"phase\":\"preview\""),"wrong PIN leaves original state");
         pin_done=0;
         CHECK(ink_confirm_accept_with_pin(confirm,"1111",checked_pin,NULL)==0 && WAIT_FOR(pin_done,5000) && pin_result==INK_PIN_OK,"person's correct PIN authorizes restore");
-        CHECK(wait_phase("\"phase\":\"done\"",180),"PIN-authorized restore completes");
+        CHECK(wait_phase("\"phase\":\"done\"",180),"PIN-authorized restore completes (%s)",g_result);
     } else if (!strcmp(phase,"stale")) {
         char token[33]=""; preview(token); unsigned confirm=request_apply(token);
         save_record("{\"text\":\"预览后新改动\"}");
@@ -285,9 +433,15 @@ static void run(void *arg) {
 }
 void ink_main(void) {
     phase=getenv("INK_BACKUP_PHASE"); if(!phase)phase="seed";
+    const char *length=getenv("INK_BACKUP_BYTES"); if(length)file_bytes=(size_t)strtoul(length,NULL,10);
+    if(!strcmp(phase,"deep")) {
+        file_path="/me/d1/d2/d3/d4/d5/d6/d7/d8/test.bin";
+        file_dir="/me/d1/d2/d3/d4/d5/d6/d7/d8";
+        file_name="d1/d2/d3/d4/d5/d6/d7/d8/test.bin";
+    }
     product_main();
     CHECK(ink_db_register(&NOTES)==0,"register synthetic member collection");
-    if (!strcmp(phase,"seed")) CHECK(ink_db_register(&MISSING)==0,"register a collection only present at backup time");
+    if (!strcmp(phase,"seed") || !strcmp(phase,"large-seed")) CHECK(ink_db_register(&MISSING)==0,"register a collection only present at backup time");
     osal_task_cfg_t cfg={.name="backup-test",.fn=run,.stack_bytes=16384,.priority=OSAL_PRIO_NORMAL,.core=-1,.flags=OSAL_TASK_STACK_EXTERNAL};
     CHECK(osal_task_create(&cfg,NULL)==OSAL_OK,"backup test task");
 }

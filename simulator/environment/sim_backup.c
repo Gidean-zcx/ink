@@ -14,7 +14,7 @@
 #define BLOCK 16384u
 static struct {
     struct hal_ws *ws;
-    char member[16], sha[65];
+    char member[16], identity[33], sha[65];
     uint32_t size;
     uint16_t id;
 } PUT;
@@ -40,12 +40,19 @@ static void digest(const uint8_t *p, char out[65]) {
     for (int i = 0; i < 32; i++) { out[i * 2] = h[p[i] >> 4]; out[i * 2 + 1] = h[p[i] & 15]; }
     out[64] = 0;
 }
-static bool path(char out[1024], const char *member, const char *sha, const char *suffix) {
+static bool valid_identity(const char *s) {
+    if (!s || strlen(s) != 32) return false;
+    for (int i = 0; i < 32; i++) if (!((s[i] >= '0' && s[i] <= '9') || (s[i] >= 'a' && s[i] <= 'f'))) return false;
+    return true;
+}
+static bool path(char out[1024], const char *member, const char *identity, const char *sha, const char *suffix) {
     const char *root = getenv("INK_SIM_BACKUP_DIR");
-    if (!root || !valid(member, false) || (sha && !valid(sha, true))) return false;
+    if (!root || !valid(member, false) || !valid_identity(identity) || (sha && !valid(sha, true))) return false;
     int n = snprintf(out, 1024, "%s/%s", root, member);
     if (n < 0 || n >= 1024 || (mkdir(out, 0700) != 0 && errno != EEXIST)) return false;
-    n = snprintf(out, 1024, "%s/%s/%s%s", root, member, sha ? sha : "", suffix);
+    n = snprintf(out, 1024, "%s/%s/%s", root, member, identity);
+    if (n < 0 || n >= 1024 || (mkdir(out, 0700) != 0 && errno != EEXIST)) return false;
+    n = snprintf(out, 1024, "%s/%s/%s/%s%s", root, member, identity, sha ? sha : "", suffix);
     return n > 0 && n < 1024;
 }
 static int64_t size_of(const char *name) { struct stat st; return stat(name, &st) == 0 && S_ISREG(st.st_mode) ? st.st_size : -1; }
@@ -81,18 +88,22 @@ static void error(struct hal_ws *ws, uint64_t t, const cJSON *id) {
     cJSON *e = cJSON_AddObjectToObject(r, "error"); cJSON_AddNumberToObject(e, "code", -32004);
     cJSON_AddStringToObject(e, "message", "synthetic backup unavailable"); send(ws, t + SIM_MS(5), r); cJSON_Delete(r);
 }
-static bool manifest_complete(const char *name, const char *member) {
+static bool manifest_complete(const char *name, const char *member, const char *identity) {
     int64_t n = size_of(name);
-    if (n < 40 || n > (int64_t)sizeof(ink_backup_manifest_t)) return false;
+    if (n < (int64_t)offsetof(ink_backup_manifest_t, item) || n > (int64_t)sizeof(ink_backup_manifest_t)) return false;
     ink_backup_manifest_t *m = sim_host_calloc(1, sizeof *m);
     FILE *f = fopen(name, "rb");
     bool ok = f && fread(m, 1, (size_t)n, f) == (size_t)n;
     if (f && fclose(f) != 0) ok = false;
-    ok = ok && m->magic == INK_BACKUP_MAGIC && m->format == 1 && m->count <= INK_BACKUP_ITEMS &&
-         n == 40 + (int64_t)m->count * (int64_t)sizeof(ink_backup_item_t) && memchr(m->member, 0, sizeof m->member) && !strcmp(m->member, member);
+    ok = ok && m->magic == INK_BACKUP_MAGIC && m->format == 2 && m->count <= INK_BACKUP_ITEMS &&
+         n == (int64_t)offsetof(ink_backup_manifest_t, item) + (int64_t)m->count * (int64_t)sizeof(ink_backup_item_t) && memchr(m->member, 0, sizeof m->member) && !strcmp(m->member, member);
+    char owned[65];
+    /* digest expands 32 bytes; the identity is exactly its first 16 bytes. */
+    uint8_t padded[32] = {0}; memcpy(padded, m->identity, 16); digest(padded, owned); owned[32] = 0;
+    ok = ok && !strcmp(owned, identity);
     for (unsigned i = 0; ok && i < m->count; i++) {
         char sha[65], filename[1024], actual[65]; digest(m->item[i].hash, sha);
-        ok = path(filename, member, sha, ".blob") && size_of(filename) == m->item[i].size && file_hash(filename, actual) && !strcmp(actual, sha);
+        ok = path(filename, member, identity, sha, ".blob") && size_of(filename) == m->item[i].size && file_hash(filename, actual) && !strcmp(actual, sha);
     }
     sim_host_free(m); return ok;
 }
@@ -103,52 +114,55 @@ bool sim_backup_frame(struct hal_ws *ws, uint64_t t, const uint8_t *d, size_t le
     uint32_t off = (uint32_t)d[12] | (uint32_t)d[13] << 8 | (uint32_t)d[14] << 16 | (uint32_t)d[15] << 24;
     char name[1024];
     if (PUT.ws != ws || id != PUT.id || len - 16 > BLOCK || off > PUT.size || len - 16 > PUT.size - off ||
-        !path(name, PUT.member, PUT.sha, ".part") || size_of(name) != off) { sim_metric_add("backup.mock_rejected_frame", 1); return true; }
+        !path(name, PUT.member, PUT.identity, PUT.sha, ".part") || size_of(name) != off) { sim_metric_add("backup.mock_rejected_frame", 1); return true; }
     if (!write_file(name, d + 16, len - 16, "ab")) return true;
     sim_metric_add("backup.mock_uploaded_bytes", (double)(len - 16));
     if (off + len - 16 != PUT.size && (off + len - 16) % 65536u) return true;
     if (FAULTS & 1) { FAULTS &= ~1u; sim_metric_add("backup.mock_lost_ack", 1); return true; }
     cJSON *r = cJSON_CreateObject(); cJSON_AddStringToObject(r, "jsonrpc", "2.0"); cJSON_AddStringToObject(r, "method", "blob/put.ack");
-    cJSON *p = cJSON_AddObjectToObject(r, "params"); cJSON_AddNumberToObject(p, "upload", id); cJSON_AddNumberToObject(p, "offset", off + len - 16);
+    cJSON *p = cJSON_AddObjectToObject(r, "params"); cJSON_AddStringToObject(p, "identity", PUT.identity); cJSON_AddNumberToObject(p, "upload", id); cJSON_AddNumberToObject(p, "offset", off + len - 16);
     send(ws, t + SIM_MS(5), r); cJSON_Delete(r); return true;
 }
 
 bool sim_backup_request(struct hal_ws *ws, uint64_t t, const char *method, const cJSON *params, const cJSON *id) {
     if (!getenv("INK_SIM_BACKUP_DIR") || (strncmp(method, "blob/", 5) && strncmp(method, "backup/", 7))) return false;
-    const char *member = str(params, "member"), *sha = str(params, "sha256");
+    const char *member = str(params, "member"), *identity = str(params, "identity"), *sha = str(params, "sha256");
     char name[1024], part[1024], actual[65];
     cJSON *value, *r = response(id, &value);
     bool ok = false;
+    if (!valid(member, false) || !valid_identity(identity)) goto done;
+    cJSON_AddStringToObject(value, "identity", (FAULTS & 8) ? "00000000000000000000000000000000" : identity);
     if (!strcmp(method, "blob/put.begin")) {
         uint32_t size;
         if (valid(member, false) && valid(sha, true) && num(params, "size", &size) && size <= 64u * 1024u * 1024u &&
-            path(name, member, sha, ".blob") && path(part, member, sha, ".part")) {
+            path(name, member, identity, sha, ".blob") && path(part, member, identity, sha, ".part")) {
             int64_t off = size_of(name);
             if (off < 0) {
                 off = size_of(part);
                 if (off < 0 || off > size) { if (!write_file(part, "", 0, "wb")) goto done; off = 0; }
             }
             PUT.ws = ws; snprintf(PUT.member, sizeof PUT.member, "%s", member); snprintf(PUT.sha, sizeof PUT.sha, "%s", sha);
+            snprintf(PUT.identity, sizeof PUT.identity, "%s", identity);
             PUT.size = size; if (!++NEXT_ID) NEXT_ID++; PUT.id = NEXT_ID;
             cJSON_AddNumberToObject(value, "upload", PUT.id); cJSON_AddNumberToObject(value, "offset", (double)off); ok = true;
             if (off > 0) sim_metric_add("backup.mock_resumed_upload", 1);
         }
     } else if (!strcmp(method, "blob/put.end")) {
         uint32_t upload;
-        if (num(params, "upload", &upload) && upload == PUT.id && PUT.ws == ws &&
-            path(name, PUT.member, PUT.sha, ".blob") && path(part, PUT.member, PUT.sha, ".part")) {
+        if (num(params, "upload", &upload) && upload == PUT.id && PUT.ws == ws && !strcmp(member, PUT.member) && !strcmp(identity, PUT.identity) &&
+            path(name, PUT.member, PUT.identity, PUT.sha, ".blob") && path(part, PUT.member, PUT.identity, PUT.sha, ".part")) {
             bool complete = size_of(name) == PUT.size && file_hash(name, actual) && !strcmp(actual, PUT.sha);
             if (!complete) complete = size_of(part) == PUT.size && file_hash(part, actual) && !strcmp(actual, PUT.sha) && rename(part, name) == 0;
             if (complete) { char blob[80]; snprintf(blob, sizeof blob, "sha256:%s", PUT.sha); cJSON_AddStringToObject(value, "id", blob); ok = true; }
         }
     } else if (!strcmp(method, "blob/status")) {
         const char *blob = str(params, "id");
-        if (blob && !strncmp(blob, "sha256:", 7) && path(name, member, blob + 7, ".blob") && size_of(name) >= 0) {
+        if (blob && !strncmp(blob, "sha256:", 7) && path(name, member, identity, blob + 7, ".blob") && size_of(name) >= 0) {
             cJSON_AddBoolToObject(value, "durable", !(FAULTS & 4)); ok = true;
         }
     } else if (!strcmp(method, "blob/fetch")) {
         const char *blob = str(params, "id"); uint32_t off, len;
-        if (blob && !strncmp(blob, "sha256:", 7) && path(name, member, blob + 7, ".blob") && num(params, "offset", &off) && num(params, "len", &len) && len <= BLOCK &&
+        if (blob && !strncmp(blob, "sha256:", 7) && path(name, member, identity, blob + 7, ".blob") && num(params, "offset", &off) && num(params, "len", &len) && len <= BLOCK &&
             size_of(name) >= 0 && off <= (uint64_t)size_of(name) && len <= (uint64_t)size_of(name) - off) {
             uint8_t *frame = sim_host_calloc(1, len + 16); FILE *f = fopen(name, "rb");
             bool read_ok = f && fseek(f, off, SEEK_SET) == 0 && fread(frame + 16, 1, len, f) == len;
@@ -167,8 +181,8 @@ bool sim_backup_request(struct hal_ws *ws, uint64_t t, const char *method, const
         }
     } else if (!strcmp(method, "backup/commit")) {
         uint32_t size;
-        if (valid(sha, true) && path(name, member, sha, ".blob") && num(params, "size", &size) && size_of(name) == size &&
-            manifest_complete(name, member) && path(part, member, NULL, "latest.tmp") && path(name, member, NULL, "latest")) {
+        if (valid(sha, true) && path(name, member, identity, sha, ".blob") && num(params, "size", &size) && size_of(name) == size &&
+            manifest_complete(name, member, identity) && path(part, member, identity, NULL, "latest.tmp") && path(name, member, identity, NULL, "latest")) {
             char data[128]; int n = snprintf(data, sizeof data, "%s %u\n", sha, size);
             if (n > 0 && (size_t)n < sizeof data && write_file(part, data, (size_t)n, "wb") && rename(part, name) == 0) {
                 cJSON_AddBoolToObject(value, "received", true); cJSON_AddBoolToObject(value, "durable", !(FAULTS & 4));
@@ -177,7 +191,7 @@ bool sim_backup_request(struct hal_ws *ws, uint64_t t, const char *method, const
             }
         }
     } else if (!strcmp(method, "backup/latest")) {
-        if (path(name, member, NULL, "latest")) {
+        if (path(name, member, identity, NULL, "latest")) {
             FILE *f = fopen(name, "rb"); char data[128], hash[65]; unsigned size;
             bool read_ok = f && fgets(data, sizeof data, f) != NULL;
             if (f && fclose(f) != 0) read_ok = false;

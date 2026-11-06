@@ -32,15 +32,16 @@
 #define RETRY_US 1000000u
 
 enum { ITEM_DB = 1, ITEM_STATE, ITEM_FILE };
-enum { PH_NONE, PH_UPLOAD, PH_SAVED, PH_FETCH, PH_PREVIEW, PH_RESTORE, PH_DONE, PH_FAILED };
-static const char *const PH_NAMES[] = {"none", "uploading", "saved", "fetching", "preview", "restoring", "done", "failed"};
+enum { PH_NONE, PH_CAPTURE, PH_UPLOAD, PH_SAVED, PH_FETCH, PH_PREPARE, PH_PREVIEW, PH_CHECK, PH_RESTORE, PH_DONE, PH_FAILED };
+static const char *const PH_NAMES[] = {"none", "collecting", "uploading", "saved", "fetching", "preparing", "preview", "checking", "restoring", "done", "failed"};
 
 typedef ink_backup_item_t item_t;
 typedef ink_backup_manifest_t manifest_t;
 
 typedef struct {
-    uint32_t magic, format, phase, generation, next, offset;
+    uint32_t magic, format, phase, generation, next, offset, subphase;
     char member[INK_MEMBER_ID_MAX];
+    uint8_t identity[16];
     char manifest_hash[65], preview[33];
     uint8_t preview_hash[32];
     uint32_t manifest_size, received, durable, conflicts;
@@ -141,10 +142,10 @@ static int write_state_file(const char *path, const void *p, size_t n) {
 
 static int save_journal(void) {
     char path[INK_LAYOUT_PATH_MAX];
-    B.j.magic = STATE_MAGIC; B.j.format = 1;
+    B.j.magic = STATE_MAGIC; B.j.format = 2;
     B.j.crc = ink_crc32(0, &B.j, offsetof(journal_t, crc));
     int rc = state_path(path, B.j.member) ? write_state_file(path, &B.j, sizeof B.j) : -1;
-    if (!rc) remember(B.j.member, B.j.phase == PH_UPLOAD || B.j.phase == PH_FETCH || B.j.phase == PH_RESTORE);
+    if (!rc) remember(B.j.member, B.j.phase == PH_CAPTURE || B.j.phase == PH_UPLOAD || B.j.phase == PH_FETCH || B.j.phase == PH_PREPARE || B.j.phase == PH_CHECK || B.j.phase == PH_RESTORE);
     return rc;
 }
 
@@ -154,11 +155,21 @@ static bool load_journal(const char *member) {
     if (!state_path(path, member)) return false;
     int n = ink_storage_read(path, &j, sizeof j);
     if (n < 0) { memset(&B.j, 0, sizeof B.j); return ink_storage_size(path) < 0; }
-    if (n != sizeof j || j.magic != STATE_MAGIC || j.format != 1 || j.phase > PH_FAILED ||
+    if (n >= 8 && j.magic == STATE_MAGIC && j.format == 1) {
+        memset(&B.j, 0, sizeof B.j);
+        snprintf(B.j.member, sizeof B.j.member, "%s", member);
+        B.j.generation = ink_member_generation(member); B.j.phase = PH_FAILED;
+        snprintf(B.j.reason, sizeof B.j.reason, "旧备份没有成员身份记录，请重新备份");
+        remember(member, false);
+        return ink_member_identity(member, B.j.generation, B.j.identity) == 0;
+    }
+    if (n != sizeof j || j.magic != STATE_MAGIC || j.format != 2 || j.phase > PH_FAILED ||
         j.crc != ink_crc32(0, &j, offsetof(journal_t, crc)) || memchr(j.member, 0, sizeof j.member) == NULL ||
-        strcmp(j.member, member) || j.next > ITEMS + 1 ||
+        strcmp(j.member, member) || j.next > ITEMS + 1 || j.subphase > 2 ||
         !memchr(j.manifest_hash, 0, sizeof j.manifest_hash) || !memchr(j.preview, 0, sizeof j.preview) ||
         !memchr(j.reason, 0, sizeof j.reason)) return false;
+    uint8_t identity[16];
+    if (ink_member_identity(member, ink_member_generation(member), identity) || memcmp(j.identity, identity, 16)) return false;
     B.j = j;
     B.j.generation = ink_member_generation(member);
     return true;
@@ -194,24 +205,38 @@ static int card_load(const char *path, void *buf, size_t len) {
     return rc;
 }
 
+/* exec.bg owns this bounded hash continuation. No file handle survives a step. */
+static struct {
+    char path[256];
+    uint32_t size, offset, revision;
+    ink_sha256_t sha;
+    uint8_t hash[32];
+    bool valid, ready;
+} H INK_PSRAM_BSS;
+
 static int hash_file(const char *path, uint8_t hash[32], uint32_t *size) {
     int64_t len = hal_fs_size(path);
+    uint32_t revision = ink_fs_revision();
     if (len < 0 || len > UINT32_MAX) return -1;
-    hal_file_t *f = hal_fs_open(path, HAL_O_READ);
-    if (!f) return -1;
-    ink_sha256_t sha;
-    ink_sha256_init(&sha);
-    int rc = 0;
-    for (uint32_t off = 0; off < (uint32_t)len;) {
-        size_t n = (uint32_t)len - off;
-        if (n > CHUNK) n = CHUNK;
-        if (hal_fs_read(f, B.buf, n) != (ssize_t)n) { rc = -1; break; }
-        ink_sha256_update(&sha, B.buf, n);
-        off += (uint32_t)n;
+    if (!H.valid || strcmp(H.path, path) || H.size != (uint32_t)len || H.revision != revision) {
+        memset(&H, 0, sizeof H);
+        snprintf(H.path, sizeof H.path, "%s", path);
+        H.size = (uint32_t)len; H.revision = revision; H.valid = true;
+        ink_sha256_init(&H.sha);
     }
-    if (hal_fs_size(path) != len || hal_fs_close(f) != 0) rc = -1;
-    if (!rc) { ink_sha256_final(&sha, hash); if (size) *size = (uint32_t)len; }
-    return rc;
+    if (!H.ready) {
+        hal_file_t *f = hal_fs_open(path, HAL_O_READ);
+        size_t n = H.size - H.offset; if (n > CHUNK) n = CHUNK;
+        bool ok = f && hal_fs_seek(f, H.offset, SEEK_SET) == 0 && hal_fs_read(f, B.buf, n) == (ssize_t)n;
+        if (f && hal_fs_close(f) != 0) ok = false;
+        if (!ok || hal_fs_size(path) != len || revision != ink_fs_revision()) { H.valid = false; return -1; }
+        ink_sha256_update(&H.sha, B.buf, n); H.offset += (uint32_t)n;
+        if (H.offset != H.size) return 1;
+        ink_sha256_final(&H.sha, H.hash); H.ready = true;
+    }
+    memcpy(hash, H.hash, 32);
+    if (size) *size = H.size;
+    return 0;
 }
 
 static bool physical(const item_t *it, char *out, size_t cap) {
@@ -255,56 +280,6 @@ static int add_memory(uint32_t kind, const char *name, const void *data, size_t 
     return 0;
 }
 
-static int copy_personal(const char *name) {
-    item_t *it = new_item(ITEM_FILE, name);
-    char from[256], to[160];
-    if (!it || !physical(it, from, sizeof from) || !stage_path(to, sizeof to, "up", B.m->count)) return -1;
-    int64_t len = hal_fs_size(from);
-    if (len < 0 || len > UINT32_MAX) return -1;
-    hal_file_t *in = hal_fs_open(from, HAL_O_READ), *out = hal_fs_open(to, HAL_O_WRITE | HAL_O_CREATE | HAL_O_TRUNC);
-    int rc = in && out ? 0 : -1;
-    ink_sha256_t sha; ink_sha256_init(&sha);
-    for (uint32_t off = 0; !rc && off < (uint32_t)len;) {
-        size_t n = (uint32_t)len - off; if (n > CHUNK) n = CHUNK;
-        if (hal_fs_read(in, B.buf, n) != (ssize_t)n || hal_fs_write(out, B.buf, n) != (ssize_t)n) rc = -1;
-        else { ink_sha256_update(&sha, B.buf, n); off += (uint32_t)n; }
-    }
-    if (in && hal_fs_close(in) != 0) rc = -1;
-    if (out) { if (hal_fs_sync(out) != 0) rc = -1; if (hal_fs_close(out) != 0) rc = -1; }
-    if (hal_fs_size(from) != len) rc = -1;
-    if (!rc) {
-        it->size = (uint32_t)len;
-        ink_sha256_final(&sha, it->hash);
-        /* Catch a writer changing a same-size file during the copy. */
-        uint8_t h[32];
-        if (hash_file(from, h, NULL) != 0 || memcmp(h, it->hash, 32)) return -1;
-        B.m->count++;
-    }
-    return rc;
-}
-
-static int walk_personal(const char *relative, unsigned depth) {
-    if (depth > 8) return -1;
-    char root[INK_LAYOUT_PATH_MAX], path[256];
-    if (ink_layout_member_files(root, sizeof root, B.j.member) < 0) return -1;
-    snprintf(path, sizeof path, "%s%s%s", root, relative[0] ? "/" : "", relative);
-    hal_dir_t *dir = hal_fs_opendir(path);
-    if (!dir) return hal_fs_size(path) < 0 && !relative[0] ? 0 : -1;
-    hal_dirent_t *ent = osal_malloc(sizeof *ent, OSAL_MEM_EXTERNAL);
-    if (!ent) { hal_fs_closedir(dir); return -1; }
-    int rc = 0, got;
-    while ((got = hal_fs_readdir(dir, ent)) > 0) {
-        size_t suffix = strlen(ent->name);
-        if (ent->name[0] == '.' || (suffix > 5 && !strcmp(ent->name + suffix - 5, ".part")) ||
-            (suffix > 4 && !strcmp(ent->name + suffix - 4, ".tmp"))) continue;
-        char name[128];
-        int n = snprintf(name, sizeof name, "%s%s%s", relative, relative[0] ? "/" : "", ent->name);
-        if (n < 0 || (size_t)n >= sizeof name || (ent->is_dir ? walk_personal(name, depth + 1) : copy_personal(name)) != 0) { rc = -1; break; }
-    }
-    if (got < 0) rc = -1;
-    osal_free(ent); hal_fs_closedir(dir);
-    return rc;
-}
 
 typedef struct { char name[ITEMS][64]; int count, rc; char root[INK_LAYOUT_PATH_MAX]; } names_t;
 static void list_state(void *arg) {
@@ -324,57 +299,139 @@ static void list_state(void *arg) {
 
 static size_t manifest_size(void) { return offsetof(manifest_t, item) + B.m->count * sizeof(item_t); }
 
-static int make_manifest(void) {
-    memset(B.m, 0, sizeof *B.m);
-    B.m->magic = MAN_MAGIC; B.m->format = 1;
-    snprintf(B.m->member, sizeof B.m->member, "%s", B.j.member);
-    B.m->created_s = osal_wall_us() / 1000000;
-    if (!stage_dirs()) return -1;
-    for (int i = 0;; i++) {
-        const ink_db_def_t *d = ink_db_def_at(i);
-        if (!d) break;
-        if (d->scope != INK_DB_MEMBER) continue;
-        ink_db_t *db = ink_db_open_member(d, B.j.member, B.j.generation);
-        if (!db) return -1;
-        void *data = NULL; size_t len = 0;
-        int rc = ink_db_wait(db, ink_db_last_ver(db), 5000000);
-        if (!rc) rc = ink_db_export(db, &data, &len);
-        if (!rc) {
-            uint32_t revision; memcpy(&revision, (uint8_t *)data + 12, sizeof revision);
-            uint32_t records = 0;
-            for (size_t off = 32; off + 36 <= len;) {
-                const uint8_t *p = (const uint8_t *)data + off;
-                uint16_t bytes; memcpy(&bytes, p + 28, sizeof bytes);
-                records += p[2] == 1; off += 36u + bytes;
+static uint32_t u32(const uint8_t *p);
+
+typedef struct {
+    char member[INK_MEMBER_ID_MAX];
+    uint32_t generation, mode, db, state, depth, offset, length, revision;
+    manifest_t manifest;
+    names_t names;
+    hal_dir_t *dirs[9];
+    hal_dirent_t entry;
+    char relative[128], file[128], path[256], staged[160];
+    ink_sha256_t sha;
+} capture_t;
+static capture_t *C;
+
+static void free_capture(void) {
+    if (!C) return;
+    while (C->depth) hal_fs_closedir(C->dirs[--C->depth]);
+    osal_free(C); C = NULL;
+    ink_fs_card_release();
+}
+
+/* One collection, state file, directory entry, or 16 KiB of personal content per invocation. */
+static int capture_step(void) {
+    if (!C) {
+        if (ink_fs_card_hold() != INK_FS_OK) return -1;
+        C = osal_calloc(1, sizeof *C, OSAL_MEM_EXTERNAL);
+        if (!C) { ink_fs_card_release(); return -1; }
+        snprintf(C->member, sizeof C->member, "%s", B.j.member); C->generation = B.j.generation;
+        C->manifest.magic = MAN_MAGIC; C->manifest.format = 2;
+        snprintf(C->manifest.member, sizeof C->manifest.member, "%s", B.j.member);
+        memcpy(C->manifest.identity, B.j.identity, 16);
+        C->manifest.created_s = osal_wall_us() / 1000000;
+        if (!stage_dirs()) return -2;
+    }
+    memcpy(B.m, &C->manifest, sizeof *B.m);
+    int rc = 0;
+    if (C->mode == 0) {
+        const ink_db_def_t *d = ink_db_def_at((int)C->db++);
+        if (!d) C->mode++;
+        else if (d->scope == INK_DB_MEMBER) {
+            ink_db_t *db = ink_db_open_member(d, B.j.member, B.j.generation);
+            if (!db) return -1;
+            void *data = NULL; size_t len = 0;
+            /* Flush, then yield until durable: do not block the shared executor waiting for a writer. */
+            ink_db_flush(db);
+            if (ink_db_durable_ver(db) != ink_db_last_ver(db)) { C->db--; ink_db_close(db); return 1; }
+            rc = ink_db_export(db, &data, &len);
+            if (!rc) {
+                uint32_t records = 0;
+                for (size_t off = 32; off + 36 <= len;) {
+                    const uint8_t *p = (const uint8_t *)data + off;
+                    uint16_t bytes; memcpy(&bytes, p + 28, sizeof bytes);
+                    records += p[2] == 1; off += 36u + bytes;
+                }
+                rc = add_memory(ITEM_DB, d->name, data, len, u32((uint8_t *)data + 12), records);
             }
-            rc = add_memory(ITEM_DB, d->name, data, len, revision, records);
+            osal_free(data); ink_db_close(db);
         }
-        osal_free(data); ink_db_close(db);
-        if (rc) return -1;
-    }
-    names_t *names = osal_malloc(sizeof *names, OSAL_MEM_EXTERNAL);
-    if (!names) return -1;
-    memset(names, 0, sizeof *names);
-    snprintf(names->root, sizeof names->root, "/user/m/%s", B.j.member);
-    ink_storage_run(list_state, names, true);
-    int rc = names->rc;
-    for (int i = 0; !rc && i < names->count; i++) {
-        char path[INK_LAYOUT_PATH_MAX]; void *data = NULL; size_t len = 0;
-        if (ink_layout_member(path, sizeof path, B.j.member, names->name[i]) < 0 || ink_storage_load(path, &data, &len) != 0) rc = -1;
-        else rc = add_memory(ITEM_STATE, names->name[i], data, len, 0, 0);
-        ink_storage_free(data);
-    }
-    osal_free(names);
-    if (!rc) rc = walk_personal("", 0);
-    if (!rc) {
+    } else if (C->mode == 1) {
+        snprintf(C->names.root, sizeof C->names.root, "/user/m/%s", B.j.member);
+        ink_storage_run(list_state, &C->names, true);
+        rc = C->names.rc; C->mode++;
+    } else if (C->mode == 2) {
+        if (C->state < (unsigned)C->names.count) {
+            char path[INK_LAYOUT_PATH_MAX]; void *data = NULL; size_t len = 0;
+            const char *name = C->names.name[C->state++];
+            if (ink_layout_member(path, sizeof path, B.j.member, name) < 0 || ink_storage_load(path, &data, &len)) rc = -1;
+            else rc = add_memory(ITEM_STATE, name, data, len, 0, 0);
+            ink_storage_free(data);
+        } else {
+            if (ink_layout_member_files(C->path, sizeof C->path, B.j.member) < 0) return -2;
+            C->dirs[0] = hal_fs_opendir(C->path);
+            if (!C->dirs[0] && hal_fs_size(C->path) >= 0) return -2;
+            C->depth = C->dirs[0] ? 1 : 0; C->mode++;
+        }
+    } else if (C->mode == 3 && C->file[0]) {
+        size_t n = C->length - C->offset; if (n > CHUNK) n = CHUNK;
+        hal_file_t *in = hal_fs_open(C->path, HAL_O_READ);
+        hal_file_t *out = hal_fs_open(C->staged, HAL_O_WRITE | HAL_O_CREATE | (C->offset ? HAL_O_APPEND : HAL_O_TRUNC));
+        bool ok = in && out && hal_fs_seek(in, C->offset, SEEK_SET) == 0 &&
+            hal_fs_read(in, B.buf, n) == (ssize_t)n && hal_fs_write(out, B.buf, n) == (ssize_t)n;
+        if (in && hal_fs_close(in) != 0) ok = false;
+        if (out) { if (hal_fs_sync(out)) ok = false; if (hal_fs_close(out)) ok = false; }
+        if (!ok || hal_fs_size(C->path) != C->length || ink_fs_revision() != C->revision) return -2;
+        ink_sha256_update(&C->sha, B.buf, n); C->offset += (uint32_t)n;
+        ink_probe_value("backup.collect_offset", C->offset);
+        ink_probe_count("backup.collect_blocks");
+        if (C->offset == C->length) {
+            item_t *it = new_item(ITEM_FILE, C->file);
+            if (!it) return -2;
+            it->size = C->length; ink_sha256_final(&C->sha, it->hash); B.m->count++;
+            C->file[0] = 0;
+        }
+    } else if (C->mode == 3 && C->depth) {
+        int got = hal_fs_readdir(C->dirs[C->depth - 1], &C->entry);
+        if (got < 0) return -2;
+        if (!got) {
+            hal_fs_closedir(C->dirs[--C->depth]);
+            char *slash = strrchr(C->relative, '/');
+            if (slash) *slash = 0; else C->relative[0] = 0;
+        } else {
+            size_t suffix = strlen(C->entry.name);
+            if (C->entry.name[0] == '.' || (suffix > 5 && !strcmp(C->entry.name + suffix - 5, ".part")) ||
+                (suffix > 4 && !strcmp(C->entry.name + suffix - 4, ".tmp"))) return 1;
+            int n = snprintf(C->file, sizeof C->file, "%s%s%s", C->relative, C->relative[0] ? "/" : "", C->entry.name);
+            if (n < 0 || (size_t)n >= sizeof C->file) return -2;
+            char root[INK_LAYOUT_PATH_MAX];
+            if (ink_layout_member_files(root, sizeof root, B.j.member) < 0) return -2;
+            n = snprintf(C->path, sizeof C->path, "%s/%s", root, C->file);
+            if (n < 0 || (size_t)n >= sizeof C->path) return -2;
+            if (C->entry.is_dir) {
+                if (C->depth == 9) return -2;
+                hal_dir_t *d = hal_fs_opendir(C->path); if (!d) return -2;
+                C->dirs[C->depth++] = d;
+                snprintf(C->relative, sizeof C->relative, "%s", C->file); C->file[0] = 0;
+            } else {
+                int64_t len = hal_fs_size(C->path);
+                if (len < 0 || len > UINT32_MAX || !stage_path(C->staged, sizeof C->staged, "up", B.m->count)) return -2;
+                C->length = (uint32_t)len; C->offset = 0; C->revision = ink_fs_revision(); ink_sha256_init(&C->sha);
+            }
+        }
+    } else {
         char path[160]; uint8_t hash[32];
         stage_path(path, sizeof path, "manifest", 0);
-        size_t len = manifest_size();
-        ink_sha256(B.m, len, hash); hex(hash, 32, B.j.manifest_hash);
+        size_t len = manifest_size(); ink_sha256(B.m, len, hash); hex(hash, 32, B.j.manifest_hash);
         B.j.manifest_size = (uint32_t)len;
-        rc = card_write(path, B.m, len);
+        if (card_write(path, B.m, len)) return -2;
+        B.j.phase = PH_UPLOAD; B.j.next = B.j.offset = 0;
+        return save_journal() ? -1 : 0;
     }
-    return rc;
+    if (rc) return -2;
+    memcpy(&C->manifest, B.m, sizeof *B.m);
+    return 1;
 }
 
 static void reply(void *ctx, int status, const ink_json_t *j, int result) {
@@ -396,11 +453,18 @@ static void reply(void *ctx, int status, const ink_json_t *j, int result) {
 static int rpc(const char *method, const char *params, ink_json_t *j) {
     if (!actor_valid()) return -1;
     __atomic_store_n(&B.reply_done, 0, __ATOMIC_RELEASE);
-    if (ink_hub_call(method, params, 3000000, reply, NULL) <= 0) return -1;
+    char authenticated[640], identity[33];
+    hex(B.j.identity, 16, identity);
+    size_t len = strlen(params);
+    if (!len || params[len - 1] != '}' || len + 50 >= sizeof authenticated) return -1;
+    snprintf(authenticated, sizeof authenticated, "%.*s,\"identity\":\"%s\"}", (int)(len - 1), params, identity);
+    if (ink_hub_call(method, authenticated, 3000000, reply, NULL) <= 0) return -1;
     while (!__atomic_load_n(&B.reply_done, __ATOMIC_ACQUIRE)) osal_task_delay_us(1000);
     if (!actor_valid()) return -1;
     if (B.reply_status == INK_HUB_ERR_REMOTE) return -2;
     if (B.reply_status != 0 || ink_json_parse(j, B.reply, strlen(B.reply)) != 0) return -1;
+    char received[33];
+    if (ink_json_str(j, ink_json_find(j, 0, "identity"), received, sizeof received) != 32 || strcmp(received, identity)) return -2;
     return 0;
 }
 
@@ -416,6 +480,8 @@ static void ack(void *ctx, const char *method, const ink_json_t *j, int params) 
     int64_t upload, off;
     if (!ink_json_int(j, ink_json_find(j, params, "upload"), &upload) ||
         !ink_json_int(j, ink_json_find(j, params, "offset"), &off) || off < 0 || off > UINT32_MAX) return;
+    char identity[33], received[33]; hex(B.j.identity, 16, identity);
+    if (ink_json_str(j, ink_json_find(j, params, "identity"), received, sizeof received) != 32 || strcmp(received, identity)) return;
     ink_svc_lock();
     if (B.upload && upload == B.upload && (uint32_t)off >= B.ack) B.ack = (uint32_t)off;
     ink_svc_unlock();
@@ -476,7 +542,7 @@ static int upload_block(const char *path, const uint8_t hash[32], uint32_t size,
         ink_probe_value("backup.upload_offset", got);
         if (got < size) return 1;
     }
-    snprintf(params, sizeof params, "{\"upload\":%u}", upload);
+    snprintf(params, sizeof params, "{\"upload\":%u,\"member\":\"%s\"}", upload, B.j.member);
     called = rpc("blob/put.end", params, j);
     if (called) return called;
     char id[80], expected[80]; snprintf(expected, sizeof expected, "sha256:%s", sha);
@@ -521,7 +587,8 @@ static int download_block(const char *path, const char *sha, uint32_t size, ink_
         if (B.j.offset < size) return 1;
     } else if (!size && have == 0 && hal_fs_size(path) < 0 && card_write(path, "", 0)) return -2;
     uint8_t hash[32]; char actual[65];
-    if (hash_file(path, hash, NULL)) return -2;
+    int hashed = hash_file(path, hash, NULL);
+    if (hashed) return hashed > 0 ? 1 : -2;
     hex(hash, 32, actual);
     if (strcmp(actual, sha)) { hal_fs_remove(path); return -2; }
     return 0;
@@ -556,8 +623,8 @@ static int load_manifest(const char *which, bool remote) {
         uint8_t h[32]; char sha[65]; ink_sha256(B.m, B.j.manifest_size, h); hex(h, 32, sha);
         if (remote ? strcmp(sha, B.j.manifest_hash) != 0 : memcmp(h, B.j.preview_hash, 32) != 0) return -1;
     }
-    if (B.m->magic != MAN_MAGIC || B.m->format != 1 || B.m->count > ITEMS || manifest_size() != B.j.manifest_size ||
-        !memchr(B.m->member, 0, sizeof B.m->member) || strcmp(B.m->member, B.j.member)) return -1;
+    if (B.m->magic != MAN_MAGIC || B.m->format != 2 || B.m->count > ITEMS || manifest_size() != B.j.manifest_size ||
+        !memchr(B.m->member, 0, sizeof B.m->member) || strcmp(B.m->member, B.j.member) || memcmp(B.m->identity, B.j.identity, 16)) return -1;
     for (unsigned i = 0; i < B.m->count; i++) {
         item_t *it = &B.m->item[i];
         if (!memchr(it->name, 0, sizeof it->name) || !safe_name(it->name, it->kind == ITEM_FILE) ||
@@ -582,16 +649,19 @@ static int current_hash(const item_t *it, uint8_t hash[32], uint32_t *revision) 
         ink_db_t *db = ink_db_open_member(d, B.j.member, B.j.generation);
         if (!db) return -1;
         void *data = NULL; size_t len = 0;
-        int rc = ink_db_wait(db, ink_db_last_ver(db), 5000000);
-        if (!rc) rc = ink_db_export(db, &data, &len);
+        ink_db_flush(db);
+        if (ink_db_durable_ver(db) != ink_db_last_ver(db)) { ink_db_close(db); return 1; }
+        int rc = ink_db_export(db, &data, &len);
         if (!rc) { ink_sha256(data, len, hash); if (revision) *revision = u32((uint8_t *)data + 12); }
         osal_free(data); ink_db_close(db);
         return rc;
     }
     char path[256]; if (!physical(it, path, sizeof path)) return -1;
     if (it->kind == ITEM_FILE) {
-        if (hal_fs_size(path) < 0) return 0;
-        return hash_file(path, hash, NULL);
+        if (hal_fs_size(path) < 0) { if (revision) *revision = ink_fs_revision(); return 0; }
+        int rc = hash_file(path, hash, NULL);
+        if (!rc && revision) *revision = H.revision;
+        return rc;
     }
     void *data = NULL; size_t len = 0;
     int rc = ink_storage_load(path, &data, &len);
@@ -602,37 +672,40 @@ static int current_hash(const item_t *it, uint8_t hash[32], uint32_t *revision) 
     return 0;
 }
 
+static void event(const char *id);
+
 static int prepare_preview(void) {
-    B.j.conflicts = 0;
-    for (unsigned i = 0; i < B.m->count; i++) {
-        item_t *it = &B.m->item[i];
-        if (current_hash(it, it->before, NULL)) return -1;
+    if (B.j.next < B.m->count) {
+        item_t *it = &B.m->item[B.j.next];
+        int rc = current_hash(it, it->before, NULL);
+        if (rc) return rc > 0 ? 1 : -2;
         if (!zero_hash(it->before) && memcmp(it->before, it->hash, 32)) B.j.conflicts++;
+        B.j.next++;
+    } else {
+        uint8_t nonce[16]; hal_random_fill(nonce, sizeof nonce); hex(nonce, sizeof nonce, B.j.preview);
+        B.j.phase = PH_PREVIEW; B.j.next = B.j.offset = 0;
     }
     char path[160]; stage_path(path, sizeof path, "preview", 0);
-    if (card_write(path, B.m, manifest_size())) return -1;
+    if (card_write(path, B.m, manifest_size())) return -2;
     ink_sha256(B.m, manifest_size(), B.j.preview_hash);
-    uint8_t nonce[16]; hal_random_fill(nonce, sizeof nonce); hex(nonce, sizeof nonce, B.j.preview);
-    B.j.phase = PH_PREVIEW; B.j.next = B.j.offset = 0;
-    return save_journal();
+    if (save_journal()) return -1;
+    if (B.j.phase == PH_PREVIEW) event("backup.changed");
+    return 1;
 }
 
 static int apply_item(unsigned index) {
     item_t *it = &B.m->item[index];
     if (!supported(it)) return 0;
     uint8_t now[32]; uint32_t version;
-    if (current_hash(it, now, &version)) return -1;
+    int checked = current_hash(it, now, &version);
+    if (checked) return checked;
     if (!memcmp(now, it->hash, 32)) return 0; /* A cut after installation but before the journal commit. */
     if (memcmp(now, it->before, 32)) return -3;
     char staged[160], target[256]; stage_path(staged, sizeof staged, "down", index);
     if (!physical(it, target, sizeof target)) return -2;
     if (it->kind == ITEM_FILE) {
-        /* mkdir through the file service validates paths and keeps the same member. */
         char virt[INK_FS_PATH_MAX]; snprintf(virt, sizeof virt, "/me/%.123s", it->name);
-        char *slash = strrchr(virt, '/');
-        if (slash && slash != virt + 3) { *slash = 0; if (ink_fs_mkdir_member_generation(B.j.member, B.j.generation, virt) != 0) return -2; }
-        snprintf(virt, sizeof virt, "/me/%.123s", it->name);
-        int rc = ink_fs_restore(B.j.member, B.j.generation, index, virt, it->before);
+        int rc = ink_fs_restore_if_revision(B.j.member, B.j.generation, index, virt, version);
         return rc == 0 ? 0 : rc == INK_FS_ERR_EXISTS ? -3 : rc == INK_FS_ERR_BUSY ? -1 : -2;
     }
     void *data = osal_malloc(it->size ? it->size : 1, OSAL_MEM_EXTERNAL);
@@ -676,10 +749,11 @@ static void event(const char *id) {
 
 static void step(void *arg);
 static void wake(void *arg) { (void)arg; ink_exec_post(INK_EXEC_BG, &B.job, step, NULL); }
-static bool active(void) { return B.j.phase == PH_UPLOAD || B.j.phase == PH_FETCH || B.j.phase == PH_RESTORE; }
+static bool active(void) { return B.j.phase == PH_CAPTURE || B.j.phase == PH_UPLOAD || B.j.phase == PH_FETCH || B.j.phase == PH_PREPARE || B.j.phase == PH_CHECK || B.j.phase == PH_RESTORE; }
 static void schedule(void) { if (pending_for(NULL)) ink_svc_at(&B.retry, osal_now_us() + RETRY_US, wake, NULL); }
 
 static void mark_failed(const char *reason) {
+    free_capture();
     B.j.phase = PH_FAILED;
     snprintf(B.j.reason, sizeof B.j.reason, "%s", reason);
     save_journal();
@@ -736,12 +810,36 @@ static int restore_step(ink_json_t *j) {
         char path[160]; stage_path(path, sizeof path, "remote", 0);
         int rc = download_block(path, B.j.manifest_hash, B.j.manifest_size, j);
         if (rc) return rc;
-        if (load_manifest("remote", true) || prepare_preview()) return -2;
-        event("backup.changed");
-        return 0;
+        if (load_manifest("remote", true)) return -2;
+        stage_path(path, sizeof path, "preview", 0);
+        if (card_write(path, B.m, manifest_size())) return -2;
+        ink_sha256(B.m, manifest_size(), B.j.preview_hash);
+        B.j.phase = PH_PREPARE; B.j.next = B.j.offset = B.j.conflicts = 0; H.valid = false;
+        return save_journal() ? -1 : 1;
     }
-    if (load_manifest("preview", false)) return -2;
+    if (load_manifest("preview", false)) {
+        /* Before approval, a cut between the card write and journal commit can restart preparation. */
+        if (B.j.phase != PH_PREPARE || load_manifest("remote", true)) return -2;
+        char path[160]; stage_path(path, sizeof path, "preview", 0);
+        if (card_write(path, B.m, manifest_size())) return -2;
+        ink_sha256(B.m, manifest_size(), B.j.preview_hash);
+        B.j.next = B.j.conflicts = 0; H.valid = false;
+        return save_journal() ? -1 : 1;
+    }
     if (B.j.next > B.m->count) return -2;
+    if (B.j.phase == PH_PREPARE) return prepare_preview();
+    if (B.j.phase == PH_CHECK) {
+        if (B.j.next == B.m->count) {
+            B.j.phase = PH_RESTORE; B.j.next = 0; H.valid = false;
+        } else {
+            item_t *it = &B.m->item[B.j.next]; uint8_t now[32];
+            int rc = current_hash(it, now, NULL);
+            if (rc) return rc > 0 ? 1 : -1;
+            if (memcmp(now, it->before, 32)) return -3;
+            B.j.next++;
+        }
+        return save_journal() ? -1 : 1;
+    }
     if (B.j.next == B.m->count) {
         B.j.phase = PH_DONE; B.j.offset = 0;
         if (save_journal()) { B.j.phase = PH_RESTORE; return -1; }
@@ -752,17 +850,30 @@ static int restore_step(ink_json_t *j) {
     item_t *it = &B.m->item[B.j.next];
     int rc = 0;
     if (supported(it)) {
-        uint8_t now[32];
-        if (current_hash(it, now, NULL)) return -1;
-        if (memcmp(now, it->hash, 32)) {
+        if (!B.j.subphase) {
+            uint8_t now[32];
+            rc = current_hash(it, now, NULL);
+            if (rc) return rc > 0 ? 1 : -1;
+            if (!memcmp(now, it->hash, 32)) goto installed;
             if (memcmp(now, it->before, 32)) return -3;
+            B.j.subphase = 1; H.valid = false;
+        }
+        if (B.j.subphase == 1) {
             char path[160], sha[65]; stage_path(path, sizeof path, "down", B.j.next); hex(it->hash, 32, sha);
             rc = download_block(path, sha, it->size, j);
-            if (!rc) rc = apply_item(B.j.next);
+            if (rc) return rc;
+            if (it->kind == ITEM_FILE) {
+                char virt[INK_FS_PATH_MAX]; snprintf(virt, sizeof virt, "/me/%.123s", it->name);
+                char *slash = strrchr(virt, '/');
+                if (slash && slash != virt + 3) { *slash = 0; if (ink_fs_mkdir_member_generation(B.j.member, B.j.generation, virt)) return -2; }
+            }
+            B.j.subphase = 2; H.valid = false;
         }
+        rc = apply_item(B.j.next);
     }
+installed:
     if (!rc) {
-        B.j.next++; B.j.offset = 0;
+        B.j.next++; B.j.offset = B.j.subphase = 0; H.valid = false;
         if (save_journal()) return -1;
     }
     return rc < 0 ? rc : 1;
@@ -771,6 +882,7 @@ static int restore_step(ink_json_t *j) {
 static void step(void *arg) {
     (void)arg;
     const char *member = ink_member_current()->id;
+    if (C && (strcmp(C->member, member) || C->generation != ink_member_generation(member) || ink_jobs_held() || !ink_member_space_open())) free_capture();
     if (!pending_for(member)) { schedule(); return; }
     if (!load_journal(member)) { remember(member, false); schedule(); return; }
     if (!actor_valid() || ink_jobs_held()) { schedule(); return; }
@@ -782,32 +894,37 @@ static void step(void *arg) {
         schedule(); return;
     }
     if (!active()) { remember(member, false); schedule(); return; }
-    if (!*task_id()) *task_id() = ink_task_begin_for(B.j.phase == PH_UPLOAD ? "backup" : "restore", "继续备份或恢复资料", B.j.member, B.j.generation, NULL, NULL);
+    if (!*task_id()) *task_id() = ink_task_begin_for(B.j.phase == PH_CAPTURE || B.j.phase == PH_UPLOAD ? "backup" : "restore", "继续备份或恢复资料", B.j.member, B.j.generation, NULL, NULL);
     if (!ink_member_io_begin(B.j.member, B.j.generation)) return;
     if (ink_fs_card_hold() != INK_FS_OK) { schedule(); ink_member_io_end(B.j.member); return; }
     int rc = -1;
     ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
     if (resources() && j) {
-        rc = B.j.phase == PH_UPLOAD ? upload_step(j) : restore_step(j);
+        rc = B.j.phase == PH_CAPTURE ? capture_step() : B.j.phase == PH_UPLOAD ? upload_step(j) : restore_step(j);
         if ((*task_id()) && B.m->count) ink_task_progress((*task_id()), (int)(B.j.next * 100 / (B.m->count + 1)), B.j.phase == PH_UPLOAD ? "sending" : "writing");
     }
-    if (rc == 1 && active()) save_journal();
+    if (rc == 1 && active() && B.j.phase != PH_CAPTURE) save_journal();
     if (rc == -2) mark_failed("备份资料校验或写入失败，原件仍保留");
     else if (rc == -3) mark_failed("预览后资料有改动，请重新预览");
     if (rc < 0 && active()) ink_probe_count("backup.retries");
+    if (B.j.phase != PH_CAPTURE) free_capture();
     osal_free(j); free_resources(); ink_fs_card_release();
     ink_member_io_end(B.j.member);
-    schedule();
+    if (rc >= 0 && active()) wake(NULL); else schedule();
 }
 
 static bool for_call(ink_call_t *c) {
     uint32_t generation;
     const char *member = ink_cap_call_member(c, &generation);
+    if (C && (strcmp(C->member, member) || C->generation != generation)) free_capture();
     if (!generation || generation != ink_member_generation(member) || strcmp(member, ink_member_current()->id) || !ink_member_space_open()) {
         c->rc.status = INK_RC_STALE; return false;
     }
     if (!load_journal(member)) { c->rc.status = INK_RC_FAILED; snprintf(c->rc.say, sizeof c->rc.say, "备份记录暂时读不出来，请稍后再试"); return false; }
-    if (!B.j.member[0]) { snprintf(B.j.member, sizeof B.j.member, "%s", member); B.j.generation = generation; }
+    if (!B.j.member[0]) {
+        snprintf(B.j.member, sizeof B.j.member, "%s", member); B.j.generation = generation;
+        if (ink_member_identity(member, generation, B.j.identity)) { c->rc.status = INK_RC_FAILED; return false; }
+    }
     return true;
 }
 
@@ -821,8 +938,9 @@ static void result(ink_call_t *c, bool include_items) {
     ink_jw_raw(&w, ",\"preview\":"); ink_jw_str(&w, B.j.phase == PH_PREVIEW ? B.j.preview : "");
     ink_jw_raw(&w, ",\"received\":"); ink_jw_raw(&w, B.j.received ? "true" : "false");
     ink_jw_raw(&w, ",\"durable\":"); ink_jw_raw(&w, B.j.durable ? "true" : "false");
-    ink_jw_raw(&w, ",\"next\":"); ink_jw_int(&w, B.j.next);
-    ink_jw_raw(&w, ",\"offset\":"); ink_jw_int(&w, B.j.offset);
+    bool collecting = C && B.j.phase == PH_CAPTURE && !strcmp(C->member, B.j.member);
+    ink_jw_raw(&w, ",\"next\":"); ink_jw_int(&w, collecting ? C->manifest.count : B.j.next);
+    ink_jw_raw(&w, ",\"offset\":"); ink_jw_int(&w, collecting ? C->offset : B.j.offset);
     ink_jw_raw(&w, ",\"conflicts\":"); ink_jw_int(&w, B.j.conflicts);
     ink_jw_raw(&w, ",\"saved_s\":"); ink_jw_int(&w, B.j.saved_s);
     ink_jw_raw(&w, ",\"reason\":"); ink_jw_str(&w, B.j.reason);
@@ -866,9 +984,9 @@ static void cap_status(ink_call_t *c) {
 
 static void cap_manifest(ink_call_t *c) {
     if (!for_call(c)) return;
-    if (B.j.phase == PH_NONE) { result(c, false); return; }
+    if (B.j.phase == PH_NONE || B.j.phase == PH_CAPTURE || !B.j.manifest_hash[0]) { result(c, false); return; }
     if (ink_fs_card_hold() != INK_FS_OK) { c->rc.status = INK_RC_FAILED; return; }
-    bool preview = B.j.phase == PH_PREVIEW || B.j.phase == PH_RESTORE || B.j.phase == PH_DONE || (B.j.phase == PH_FAILED && B.j.preview[0]);
+    bool preview = B.j.phase == PH_PREPARE || B.j.phase == PH_PREVIEW || B.j.phase == PH_CHECK || B.j.phase == PH_RESTORE || B.j.phase == PH_DONE || (B.j.phase == PH_FAILED && B.j.preview[0]);
     if (!resources() || load_manifest(preview ? "preview" : "manifest", !preview)) c->rc.status = INK_RC_FAILED;
     else result(c, true);
     free_resources(); ink_fs_card_release();
@@ -877,25 +995,16 @@ static void cap_manifest(ink_call_t *c) {
 static void cap_backup(ink_call_t *c) {
     if (!for_call(c)) return;
     if (active()) { c->rc.status = INK_RC_QUEUED; result(c, false); schedule(); return; }
-    if (!ink_member_io_begin(B.j.member, B.j.generation)) { c->rc.status = INK_RC_STALE; return; }
     if (ink_fs_card_hold() != INK_FS_OK) {
-        c->rc.status = INK_RC_FAILED; snprintf(c->rc.say, sizeof c->rc.say, "请插入存储卡后备份"); ink_member_io_end(B.j.member); return;
+        c->rc.status = INK_RC_FAILED; snprintf(c->rc.say, sizeof c->rc.say, "请插入存储卡后备份"); return;
     }
-    B.j.phase = PH_NONE; B.j.next = B.j.offset = B.j.received = B.j.durable = B.j.conflicts = 0;
-    B.j.reason[0] = B.j.preview[0] = 0;
-    /* Invalidate an earlier preview before replacing any staging file. */
-    int rc = save_journal();
-    if (!rc && resources()) rc = make_manifest(); else rc = -1;
-    if (!rc) {
-        B.j.phase = PH_UPLOAD;
-        rc = save_journal();
-    }
-    if (rc) { c->rc.status = INK_RC_FAILED; mark_failed("备份清单没有写好，原件仍保留"); }
-    else {
-        (*task_id()) = ink_task_begin_for("backup", "备份资料", B.j.member, B.j.generation, NULL, NULL);
-        c->rc.status = INK_RC_QUEUED; result(c, true); schedule();
-    }
-    free_resources(); ink_fs_card_release(); ink_member_io_end(B.j.member);
+    ink_fs_card_release(); free_capture(); H.valid = false;
+    B.j.phase = PH_CAPTURE; B.j.next = B.j.offset = B.j.subphase = B.j.received = B.j.durable = B.j.conflicts = 0;
+    B.j.reason[0] = B.j.preview[0] = B.j.manifest_hash[0] = 0; B.j.manifest_size = 0;
+    /* Persist intent before doing any capture or replacing staging content. */
+    if (save_journal()) { c->rc.status = INK_RC_FAILED; return; }
+    (*task_id()) = ink_task_begin_for("backup", "备份资料", B.j.member, B.j.generation, NULL, NULL);
+    c->rc.status = INK_RC_QUEUED; result(c, false); schedule();
 }
 
 static void cap_preview(ink_call_t *c) {
@@ -914,8 +1023,9 @@ static void cap_preview(ink_call_t *c) {
     char path[160]; stage_path(path, sizeof path, "remote", 0); hal_fs_remove(path);
     for (unsigned i = 0; i < ITEMS; i++) { stage_path(path, sizeof path, "down", i); hal_fs_remove(path); }
     ink_fs_card_release();
+    H.valid = false;
     snprintf(B.j.manifest_hash, sizeof B.j.manifest_hash, "%s", sha); B.j.manifest_size = len;
-    B.j.phase = PH_FETCH; B.j.next = B.j.offset = B.j.conflicts = B.j.received = B.j.durable = 0;
+    B.j.phase = PH_FETCH; B.j.next = B.j.offset = B.j.subphase = B.j.conflicts = B.j.received = B.j.durable = 0;
     B.j.preview[0] = B.j.reason[0] = 0;
     if (save_journal()) c->rc.status = INK_RC_FAILED;
     else { c->rc.status = INK_RC_QUEUED; result(c, false); schedule(); }
@@ -927,15 +1037,11 @@ static void cap_apply(ink_call_t *c) {
     if (B.j.phase != PH_PREVIEW || strcmp(preview, B.j.preview)) { c->rc.status = INK_RC_STALE; return; }
     if (ink_fs_card_hold() != INK_FS_OK) { c->rc.status = INK_RC_FAILED; return; }
     bool ok = resources() && load_manifest("preview", false) == 0;
-    for (unsigned i = 0; ok && i < B.m->count; i++) {
-        uint8_t now[32];
-        if (current_hash(&B.m->item[i], now, NULL) || memcmp(now, B.m->item[i].before, 32)) ok = false;
-    }
     if (!ok) {
         c->rc.status = INK_RC_STALE; B.j.phase = PH_FAILED;
         snprintf(B.j.reason, sizeof B.j.reason, "预览后资料有改动，请重新预览"); save_journal();
     } else {
-        B.j.phase = PH_RESTORE; B.j.next = B.j.offset = 0;
+        B.j.phase = PH_CHECK; B.j.next = B.j.offset = B.j.subphase = 0; H.valid = false;
         if (save_journal()) c->rc.status = INK_RC_FAILED;
         else {
             (*task_id()) = ink_task_begin_for("restore", "恢复资料", B.j.member, B.j.generation, NULL, NULL);
