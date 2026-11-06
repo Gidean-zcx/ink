@@ -1,9 +1,15 @@
 #include "ink/sys/audio.h"
 #include "ink/sys/hub.h"
+#include "ink/sys/rt.h"
 #include "ink/probe.h"
 #include <string.h>
 static bool fail_push;
 static bool fail_next_push, fail_next_open;
+static bool fail_next_rt;
+static int fixture_rt_open(const char *cap, const char *params, const ink_rt_handler_t *handler) {
+    if (fail_next_rt) { fail_next_rt = false; return -1; }
+    return ink_rt_open(cap, params, handler);
+}
 static int stale_status = 100;
 static ink_hub_reply_fn stale_reply;
 static void *stale_context;
@@ -39,6 +45,7 @@ static int fixture_stream_open(ink_audio_prio_t prio, uint64_t cause_us, const c
 #define ink_audio_stream_push fixture_push
 #define ink_audio_stream_open fixture_stream_open
 #define ink_hub_call_for fixture_call_for
+#define ink_rt_open fixture_rt_open
 #ifndef INK_TEST_AI_SOURCE
 #define INK_TEST_AI_SOURCE "../../system/services/ai/ai_service.c"
 #endif
@@ -46,6 +53,7 @@ static int fixture_stream_open(ink_audio_prio_t prio, uint64_t cause_us, const c
 #undef ink_audio_stream_push
 #undef ink_audio_stream_open
 #undef ink_hub_call_for
+#undef ink_rt_open
 #include "../integration/whole_product.h"
 
 void test_ai_downlink(void) {
@@ -151,4 +159,59 @@ void test_ai_review_early_failure(void) { post(AI.session_seq, 4, 0, NULL); }
 void test_ai_review_first_text(void) {
     CHECK(AI.open && AI.asking && AI.first_text_seen && AI.speech_failed && strstr(lv_label_get_text(AI.status), "声音没能播放"),
           "speech failure remains visible when the first text arrives");
+}
+
+void test_ai_identity_ask(void) {
+    ink_ai_ask_text(ink_member_current()->role == INK_ROLE_CHILD ? "SYNTHETIC_CURRENT_CHILD" : "SYNTHETIC_OWNER_PRIVATE");
+}
+void test_ai_identity_new(void) { ink_ai_ask_text("SYNTHETIC_CURRENT_CHILD"); }
+void test_ai_identity_posts(void) {
+    static const char text[] = "SYNTHETIC_OWNER_PRIVATE_LATE_STT";
+    ai_post_t *p = osal_calloc(1, sizeof *p + sizeof text, OSAL_MEM_EXTERNAL);
+    CHECK(p != NULL, "late notification allocated");
+    if (!p) return;
+    p->req_id = AI.req_id; p->kind = 3;
+    memcpy(p->text, text, sizeof text);
+    ui_apply(p);
+    CHECK(!AI.open, "identity checked before an old STT is applied on the UI task");
+    post(AI.req_id, 3, 0, "SYNTHETIC_OWNER_PRIVATE_LATE_STT");
+    post(AI.req_id, 0, 0, "SYNTHETIC_OWNER_PRIVATE_LATE_DELTA");
+    post(AI.seq, 1, 0, NULL);
+    post(AI.seq, 2, INK_HUB_ERR_LOST, NULL);
+    post(AI.seq, 4, 0, NULL);
+}
+void test_ai_identity_empty(void) {
+    CHECK(!AI.open, "pending identity callback cannot display old member text before state publication");
+    CHECK(AI.answer_len == 0 && !AI.answer_text[0], "revoked answer buffer is cleared");
+}
+void test_ai_identity_current(void) {
+    const char *question = ink_member_current()->role == INK_ROLE_CHILD ? "SYNTHETIC_CURRENT_CHILD" : "SYNTHETIC_OWNER_PRIVATE";
+    CHECK(AI.open && !AI.asking && strstr(lv_label_get_text(AI.question), question) &&
+          !strcmp(g_turn_member, ink_member_current()->id), "delayed identity callback preserves the new member's current sheet");
+}
+void test_ai_identity_voice_closed(void) {
+    CHECK(!AI.open && !AI.sheet, "real voice switch removes the previous adult's transcript and answer sheet");
+    CHECK(!AI.answer_len && !AI.answer_text[0], "real voice switch clears the previous adult's answer buffer");
+}
+void test_ai_identity_switch(void) { CHECK(ink_member_switch("kid") == 0, "idle sheet handoff"); }
+void test_ai_identity_switch_and_ask(void) {
+    CHECK(ink_member_switch("kid") == 0, "same UI job switches before asking a new question");
+    test_ai_identity_new();
+}
+void test_ai_identity_failed_restart(void) {
+    ink_ai_ask_text("SYNTHETIC_OWNER_PRIVATE_PENDING");
+    int old_request = AI.req_id, old_turn = AI.seq;
+    fail_next_rt = true;
+    ink_ai_key(true, osal_now_us());
+    post(old_request, 3, 0, "SYNTHETIC_OWNER_PRIVATE_LATE_STT");
+    post(old_request, 0, 0, "SYNTHETIC_OWNER_PRIVATE_LATE_DELTA");
+    post(old_turn, 1, 0, NULL);
+    post(old_turn, 2, INK_HUB_ERR_LOST, NULL);
+}
+void test_ai_identity_failed_clean(void) {
+    CHECK(AI.open && AI.mic_failed && !AI.asking && !AI.req_id &&
+          !lv_label_get_text(AI.question)[0] && !lv_label_get_text(AI.answer)[0] &&
+          strstr(lv_label_get_text(AI.status), "语音通道没能打开"),
+          "failed new voice turn clears old labels and ignores all old request notifications");
+    ink_ai_dismiss();
 }

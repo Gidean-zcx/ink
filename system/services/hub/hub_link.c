@@ -107,6 +107,7 @@ static struct {
     uint32_t next_id;
     uint32_t hello_id;
     uint32_t wire_epoch; /* atomic: identity last sent on this connection */
+    ink_member_identity_t wire_identity; /* under id_lock */
     uint64_t hello_sent_us;
     int64_t server_ms;     /* the hub's clock when this connection came up, 0 = it did not say */
     uint32_t hello_rtt_ms;
@@ -121,7 +122,7 @@ static struct {
     int nsubs;
     ink_json_t *json; /* parse buffer (PSRAM, ~2 KB): keeps the token array off the stack */
     void (*tick)(void);
-    bool member_changed, member_events; /* Queued events cannot outlive the member on this connection. */
+    bool member_events; /* Queued events cannot outlive the member on this connection. */
     void (*member_fn)(void);
     uint32_t member_epoch;
     uint32_t events_queued, events_sent;
@@ -311,19 +312,45 @@ static void start_connect(void) {
 
 int ink_hub_respond_error(int64_t id, int code, const char *message);
 
+static bool same_identity(const ink_member_identity_t *a, const ink_member_identity_t *b) {
+    return a->epoch == b->epoch && a->generation == b->generation && a->authed == b->authed &&
+           !strcmp(a->member, b->member);
+}
+
+static void remember_identity(const ink_member_identity_t *identity) {
+    osal_mutex_lock(H.id_lock, OSAL_WAIT_FOREVER);
+    H.wire_identity = *identity;
+    __atomic_store_n(&H.wire_epoch, identity->epoch, __ATOMIC_RELEASE);
+    osal_mutex_unlock(H.id_lock);
+}
+
+static bool wire_matches(const ink_member_identity_t *identity) {
+    if (!H.id_lock) return false;
+    osal_mutex_lock(H.id_lock, OSAL_WAIT_FOREVER);
+    bool match = identity->epoch == __atomic_load_n(&H.wire_epoch, __ATOMIC_ACQUIRE) &&
+                 same_identity(identity, &H.wire_identity);
+    osal_mutex_unlock(H.id_lock);
+    return match;
+}
+
 static bool sync_member(void) { /* hub task: precedes online callbacks and private sends */
-    uint32_t epoch = ink_hub_member_epoch();
-    if (epoch == __atomic_load_n(&H.wire_epoch, __ATOMIC_ACQUIRE)) return true;
+    ink_member_identity_t identity, current;
+    ink_member_identity(&identity);
+    if (wire_matches(&identity)) return true;
     char wire[192];
     int n = snprintf(wire, sizeof wire,
         "{\"jsonrpc\":\"2.0\",\"method\":\"ink/member\",\"params\":{\"member\":\"%s\",\"authed\":%s,\"epoch\":%u}}",
-        ink_member_current()->id, ink_member_space_open() ? "true" : "false", epoch);
-    if (n < 0 || (size_t)n >= sizeof wire || hal_ws_send(H.ws, false, wire, (size_t)n, 2000000) != 0 ||
-        epoch != ink_hub_member_epoch()) {
+        identity.member, identity.authed ? "true" : "false", identity.epoch);
+    if (n < 0 || (size_t)n >= sizeof wire || hal_ws_send(H.ws, false, wire, (size_t)n, 2000000) != 0) {
         enter_backoff();
         return false;
     }
-    __atomic_store_n(&H.wire_epoch, epoch, __ATOMIC_RELEASE);
+    ink_member_identity(&current);
+    if (!same_identity(&identity, &current)) {
+        enter_backoff();
+        return false;
+    }
+    remember_identity(&identity);
     return true;
 }
 
@@ -393,16 +420,17 @@ static void send_hello(void) {
     hal_device_get_info(&di);
     pending_t hello = {.id = new_id(), .used = false};
     H.hello_id = hello.id;
-    uint32_t epoch = ink_hub_member_epoch();
+    ink_member_identity_t identity;
+    ink_member_identity(&identity);
     char params[160];
     snprintf(params, sizeof params, "{\"proto\":1,\"device\":\"%s\",\"member\":\"%s\",\"authed\":%s,\"epoch\":%u}",
-             di.profile_id ? di.profile_id : "?", ink_member_current()->id, ink_member_space_open() ? "true" : "false", epoch);
+             di.profile_id ? di.profile_id : "?", identity.member, identity.authed ? "true" : "false", identity.epoch);
     snprintf(hello.method, sizeof hello.method, "hello");
     hello.params = params;
     H.hello_sent_us = osal_now_us();
     if (send_request(&hello) != 0) enter_backoff();
     else {
-        __atomic_store_n(&H.wire_epoch, epoch, __ATOMIC_RELEASE);
+        remember_identity(&identity);
         set_state(HS_HELLO);
     }
     hello.params = NULL;
@@ -498,7 +526,9 @@ static void hub_task(void *arg) {
         hub_msg_t m;
         osal_err_t e = osal_queue_recv(H.q, &m, wait ? (int64_t)wait : OSAL_WAIT_FOREVER);
         now = osal_now_us();
-        if (__atomic_exchange_n(&H.member_changed, false, __ATOMIC_ACQ_REL)) {
+        if (H.member_epoch != ink_hub_member_epoch()) {
+            H.member_epoch = ink_hub_member_epoch();
+            if (H.member_fn) H.member_fn();
             for (int i = 0; i < MAX_PENDING; i++)
                 if (H.pend[i].used && H.pend[i].member[0] && H.pend[i].member_epoch != ink_hub_member_epoch())
                     finish(&H.pend[i], INK_HUB_ERR_LOST, NULL, -1);
@@ -597,9 +627,7 @@ static void on_power(void *ctx, ink_power_state_t from, ink_power_state_t to, ui
 static void on_member(void *ctx, int h, const char *id) { /* state callback: no socket operations here */
     (void)ctx; (void)h;
     if (strcmp(id, "member.current") && strcmp(id, "member.authed")) return;
-    __atomic_add_fetch(&H.member_epoch, 1, __ATOMIC_ACQ_REL);
     if (H.member_fn) H.member_fn();
-    __atomic_store_n(&H.member_changed, true, __ATOMIC_RELEASE);
     ink_hub_wake();
 }
 
@@ -613,7 +641,7 @@ int ink_hub_init(const char *url) {
     uint8_t *pool = osal_calloc(TXP_N, sizeof(tx_item_t) + TXP_PAYLOAD, OSAL_MEM_EXTERNAL);
     osal_mem_tag(prev);
     if (!H.q || !H.id_lock || !H.json || !H.tx_lock || !pool) return -1;
-    H.member_epoch = 1;
+    H.member_epoch = ink_hub_member_epoch();
     for (int i = 0; i < TXP_N; i++) {
         tx_item_t *it = (tx_item_t *)(pool + (size_t)i * (sizeof(tx_item_t) + TXP_PAYLOAD));
         it->pooled = true;
@@ -630,6 +658,8 @@ int ink_hub_init(const char *url) {
 
 int ink_hub_call_for(const char *method, const char *params_json, int64_t timeout_us, ink_hub_reply_fn cb, void *ctx,
                      const char *member, uint32_t epoch) {
+    ink_member_identity_t identity;
+    ink_member_identity(&identity);
     uint64_t deadline = osal_now_us() + (uint64_t)(timeout_us > 0 ? timeout_us : 20000000);
     const char *prev = osal_mem_tag("hub");
     call_req_t *r = osal_calloc(1, sizeof *r, OSAL_MEM_EXTERNAL);
@@ -644,8 +674,8 @@ int ink_hub_call_for(const char *method, const char *params_json, int64_t timeou
     snprintf(r->method, sizeof r->method, "%s", method);
     r->deadline = deadline;
     if (member || !strncmp(method, "ai.", 3) || !strcmp(method, "rt.open") || !strcmp(method, "tools/call")) {
-        r->member_epoch = member ? epoch : ink_hub_member_epoch();
-        snprintf(r->member, sizeof r->member, "%s", member ? member : ink_member_current()->id);
+        r->member_epoch = member ? epoch : identity.epoch;
+        snprintf(r->member, sizeof r->member, "%s", member ? member : identity.member);
     }
     r->cb = cb;
     r->ctx = ctx;
@@ -684,13 +714,15 @@ void ink_hub_demand(void) {
 
 bool ink_hub_online(void) { return get_state() == HS_ONLINE; }
 
-uint32_t ink_hub_member_epoch(void) { return __atomic_load_n(&H.member_epoch, __ATOMIC_ACQUIRE); }
+uint32_t ink_hub_member_epoch(void) { return ink_member_epoch(); }
 void ink_hub_on_member(void (*fn)(void)) { H.member_fn = fn; }
 uint32_t ink_hub_connection(void) { return __atomic_load_n(&H.ws_gen, __ATOMIC_ACQUIRE); }
 bool ink_hub_member_matches(const char *member, uint32_t epoch, uint32_t connection) {
-    return member && epoch == ink_hub_member_epoch() && epoch == __atomic_load_n(&H.wire_epoch, __ATOMIC_ACQUIRE) &&
-           connection == ink_hub_connection() &&
-           !strcmp(member, ink_member_current()->id) && ink_member_space_open();
+    ink_member_identity_t identity;
+    ink_member_identity(&identity);
+    return member && epoch && epoch == identity.epoch && identity.authed &&
+           connection == ink_hub_connection() && !strcmp(member, identity.member) && wire_matches(&identity) &&
+           epoch == ink_hub_member_epoch();
 }
 void ink_hub_events_acked(void) {
     osal_mutex_lock(H.tx_lock, OSAL_WAIT_FOREVER);
@@ -784,12 +816,14 @@ int ink_hub_notify(const char *method, const char *params_json) {
     char head[80];
     const char *pj = params_json ? params_json : "{}";
     char member[INK_MEMBER_ID_MAX] = "";
+    ink_member_identity_t identity;
+    ink_member_identity(&identity);
     if (!strcmp(method, "device/event")) {
         ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
         if (!j) return INK_HUB_ERR_NOMEM;
         bool valid = ink_json_parse(j, pj, strlen(pj)) == 0 &&
                      ink_json_str(j, ink_json_find(j, 0, "member"), member, sizeof member) > 0 &&
-                     ink_member_space_open() && !strcmp(member, ink_member_current()->id);
+                     identity.authed && !strcmp(member, identity.member);
         osal_free(j);
         if (!valid) return INK_HUB_ERR_OFFLINE;
     }
@@ -802,7 +836,7 @@ int ink_hub_notify(const char *method, const char *params_json) {
     memcpy(buf, head, hl);
     memcpy(buf + hl, pj, pl);
     buf[hl + pl] = '}';
-    int r = enqueue_tx(false, INK_HUB_TX_CONTROL, buf, hl + pl + 1, member, member[0] ? ink_member_generation(member) : 0, 0, 0);
+    int r = enqueue_tx(false, INK_HUB_TX_CONTROL, buf, hl + pl + 1, member, member[0] ? identity.generation : 0, identity.epoch, 0);
     osal_free(buf);
     return r == 0 ? 0 : INK_HUB_ERR_OFFLINE;
 }
@@ -810,9 +844,9 @@ int ink_hub_notify(const char *method, const char *params_json) {
 int ink_hub_send_binary(const void *data, size_t len) { return ink_hub_send_frame(data, len, INK_HUB_TX_VOICE); }
 
 int ink_hub_send_frame(const void *data, size_t len, int cls) {
-    char member[INK_MEMBER_ID_MAX];
-    snprintf(member, sizeof member, "%s", ink_member_current()->id);
-    return ink_hub_send_frame_for(data, len, cls, member, ink_member_generation(member), ink_hub_member_epoch());
+    ink_member_identity_t identity;
+    ink_member_identity(&identity);
+    return ink_hub_send_frame_for(data, len, cls, identity.member, identity.generation, identity.epoch);
 }
 
 int ink_hub_send_frame_for(const void *data, size_t len, int cls, const char *member, uint32_t generation, uint32_t epoch) {

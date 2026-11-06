@@ -2,8 +2,15 @@
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/members.h"
+#include <stdio.h>
 #include <string.h>
 static bool fail_member_send;
+static int identity_fault;
+static void fixture_identity(ink_member_identity_t *out) {
+    ink_member_identity(out);
+    if (identity_fault == 1) snprintf(out->member, sizeof out->member, "%s", !strcmp(out->member, "owner") ? "kid" : "owner");
+    if (identity_fault == 2) out->generation++;
+}
 static bool handoff_on_alloc, handoff_succeeded;
 static void *fixture_hub_malloc(size_t size, uint32_t caps) {
     void *p = osal_malloc(size, caps);
@@ -24,12 +31,14 @@ static int fixture_ws_send(hal_ws_t *ws, bool binary, const void *data, size_t l
 }
 #define hal_ws_send fixture_ws_send
 #define osal_malloc fixture_hub_malloc
+#define ink_member_identity fixture_identity
 #ifndef INK_TEST_HUB_SOURCE
 #define INK_TEST_HUB_SOURCE "../../system/services/hub/hub_link.c"
 #endif
 #include INK_TEST_HUB_SOURCE
 #undef hal_ws_send
 #undef osal_malloc
+#undef ink_member_identity
 #include "../integration/whole_product.h"
 
 void test_hub_budget(void) {
@@ -77,6 +86,19 @@ void test_hub_send_boundary(void) {
     CHECK(handoff_succeeded && result < 0 && send_status == INK_HUB_ERR_LOST,
           "handoff during wire allocation cannot send a stale private request");
     finish(&p, INK_HUB_ERR_LOST, NULL, -1);
+}
+
+void test_hub_identity_tuple(void) {
+    ink_member_identity_t identity;
+    identity_fault = 1;
+    fixture_identity(&identity);
+    CHECK(!ink_hub_member_matches(identity.member, identity.epoch, H.ws_gen), "matching epoch alone cannot authorize a different wire member");
+    identity_fault = 2;
+    fixture_identity(&identity);
+    CHECK(!ink_hub_member_matches(identity.member, identity.epoch, H.ws_gen), "matching epoch alone cannot authorize a different wire incarnation");
+    identity_fault = 0;
+    fixture_identity(&identity);
+    CHECK(ink_hub_member_matches(identity.member, identity.epoch, H.ws_gen), "complete matching wire identity permits normal delivery");
 }
 
 static void (*fixture_hub_fn)(void), (*fixture_tick)(void);

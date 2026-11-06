@@ -2,6 +2,7 @@
 
 void test_on_hub(void (*fn)(void)), test_hub_reconnect(void), test_hub_fail_member_send(void);
 void test_hub_send_boundary(void);
+void test_hub_identity_tuple(void);
 bool test_hub_hello(void);
 void test_ai_review_voice(void), test_ai_review_push_refusal(void), test_ai_review_open_refusal(void);
 void test_ai_review_release(void), test_ai_review_failure(void), test_ai_review_speaker_failure(void);
@@ -83,6 +84,7 @@ static void run(void *arg) {
           "failed identity synchronization reconnects before private delivery");
     test_on_hub(test_hub_send_boundary);
     ready();
+    test_on_hub(test_hub_identity_tuple);
 
     pin_done = 0;
     CHECK(ink_member_set_pin("owner", "", "2468", pin_told, NULL) == 0 && WAIT_FOR(pin_done, 5000) && pin_result == INK_PIN_OK,

@@ -2,12 +2,14 @@
 
 日期：2026-11-06；基线：`f1f72ae9`。证据范围是本机 macOS 模拟器、`sim_hub` 和合成家庭中枢，没有真机或真实厂商验证。范围按[任务书](../backlog.md#device-events)、[两端约定](../../hub/contracts-step1.md)和[设备协议](../../hub/device-protocol.md)核对。
 
-本轮复修基线：`053a4cd5`，处理最新[独立复查](REVIEW.md)的 DE-R4（严重）及 DE-R3（高）；未单列中级。当前在修复和补测，下面的通过数据均为上一轮记录，不能用作本轮验收。范围包含同类的成员／认证发布窗口、旧连接发送、AI 展示与排队通知；原任务未完成项保留。构建最多 `-j4`、ctest 最多 `-j3`，构建与全量串行，不启动带窗口的 GUI。
+本轮复修基线：`053a4cd5`，处理最新[独立复查](REVIEW.md)的 DE-R4（严重）及 DE-R3（高）；未单列中级。修复与新增定向检查已通过（`device-events`、`integration-listening` 共 2/2）；全量与内存待最终复跑，下面其余通过数据暂为上一轮记录。范围包含同类的成员／认证发布窗口、旧连接发送、AI 展示与排队通知；原任务未完成项保留。构建最多 `-j4`、ctest 最多 `-j3`，构建与全量串行，不启动带窗口的 GUI。
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
+| DE-R4 AI 展示隔离（严重） | 【实现＋实测】已修，普通定向通过 | 去掉 AI 换人保留旧浮层的例外；展示前核对一致的成员、认证和代次；清空旧文字与请求编号，延迟回调只关闭失效的旧轮。真实语音工具换人后浮层消失；另测排队通知、新成员新轮及新语音启动失败 | `ctest --test-dir build --output-on-failure -j3 -R '^(device-events\|integration-listening)$'` |
+| DE-R3 发布窗口（高） | 【实现＋实测】已修，普通定向通过 | 成员服务在同一临界区更新身份和代次；hello／member 记录完整连接身份。发送和实时回调使用一致快照，不依赖状态通知到达。真实 PIN 工作线程暂停在发布前，双向切换及认证关闭／重开时，旧请求拒收，新事件的实际接收受众正确 | 同上；`sim-device-events-isolation` 随 `device-events` 执行 |
 | DE-R1 握手隔离（高） | 【实现＋实测】已修，两套通过 | 保存本连接 hello／member 已发送的 epoch，握手成功后先同步身份再上线、发送排队请求和调用回调；身份同步失败断开重连。覆盖首次握手、重连、双向换人、A→B→A、同成员解锁／关闭认证、普通在线换人；观测实际接收连接的成员和代次 | `ctest --test-dir build --output-on-failure -j3 -R '^device-events$'`；同命令换 `build-asan` |
 | DE-R2 声音失败（高） | 【实现＋实测】已修，两套通过 | 两种声音错误通知统一用提问轮次匹配，不再混用 rt sid。真实文字提问后接语音，在实际下行首次 push／创建音频流时各拒收一次；声音中止、回答完成后仍显示失败。另测扬声器失败回调、旧通知不串新轮，以及失败早于首段文字时提示保留 | 同上；新增 `sim-device-events-review` 由同一 ctest 执行 |
 | DE-1 事件 | 【实测】通过 | `device/event` 带 seq、boot、member；boot 原子落盘，重启递增；保留最近 8 条直到 ACK；丢 ACK 重连用同一身份重发，错 boot／超前 ACK 无效 | `ctest --test-dir build --output-on-failure -j3 -R '^device-events$'` |

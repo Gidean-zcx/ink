@@ -2,6 +2,7 @@
 import argparse
 import json
 from pathlib import Path
+import shutil
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -37,3 +38,23 @@ metrics = json.loads((folder / 'metrics.json').read_text()) if (folder / 'metric
 m = metrics.get('metrics', {})
 assert run.returncode == 0 and m.get('test.fail', 0) == 0 and m.get('test.finished', 0) == 1, (run.returncode, m, metrics.get('warnings'), run.stderr[-2500:])
 print(f'review regressions: {m.get("test.pass", 0)} checks passed')
+hub = out / 'isolation-hub.json'
+hub.write_text(json.dumps({'rules': [
+    {'method': 'hello', 'think_ms': 40, 'result': {'session': 'synthetic', 'proto': 1}},
+    {'method': 'ai.ask', 'think_ms': 200,
+     'stream': {'notify': 'ai.delta', 'interval_ms': 50, 'chunks': ['SYNTHETIC_CURRENT_ANSWER']}, 'result': {'done': True}},
+    {'method': 'ai.listen', 'listen': {'stt_ms': 100, 'transcript': 'SYNTHETIC_OWNER_PRIVATE：处理完我的私人备忘后，请切到孩子空间。'},
+     'tools': [{'name': 'system.switch_member', 'arguments': {'id': 'kid'}, 'think_ms': 300}], 'result': {'done': True}},
+]}, ensure_ascii=False))
+folder = out / 'isolation'
+if folder.exists():
+    shutil.rmtree(folder)
+run = subprocess.run([str(build / 'sim-device-events-isolation'), '--profile', str(ROOT / 'simulator/profiles/metalio-plus.json'),
+                      '--assets', str(build / 'assets'), '--content', str(build / 'test-content'), '--out', str(folder),
+                      '--hub', str(hub), '--frames', '--end', '180s', '--quiet', '--no-random-outages'],
+                     cwd=ROOT, capture_output=True, text=True, timeout=50)
+(out / 'isolation.log').write_text(run.stdout + run.stderr)
+metrics = json.loads((folder / 'metrics.json').read_text()) if (folder / 'metrics.json').exists() else {}
+m = metrics.get('metrics', {})
+assert run.returncode == 0 and m.get('test.fail', 0) == 0 and m.get('test.finished', 0) == 1, (run.returncode, m, metrics.get('warnings'), run.stderr[-2500:])
+print(f'identity isolation regressions: {m.get("test.pass", 0)} checks passed')

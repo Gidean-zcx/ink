@@ -38,10 +38,12 @@ static int find(int sid) { /* under the lock */
 }
 
 static bool handler_of(int sid, ink_rt_handler_t *h) {
+    ink_member_identity_t identity;
+    ink_member_identity(&identity);
     osal_mutex_lock(RT.lock, OSAL_WAIT_FOREVER);
     int i = find(sid);
-    if (i >= 0 && (RT.s[i].epoch != ink_hub_member_epoch() || !ink_member_space_open() ||
-        strcmp(RT.s[i].member, ink_member_current()->id) || RT.s[i].generation != ink_member_generation(RT.s[i].member))) i = -1;
+    if (i >= 0 && (RT.s[i].epoch != identity.epoch || !identity.authed ||
+        strcmp(RT.s[i].member, identity.member) || RT.s[i].generation != identity.generation)) i = -1;
     if (i >= 0) *h = RT.s[i].h;
     osal_mutex_unlock(RT.lock);
     return i >= 0;
@@ -187,6 +189,8 @@ int ink_rt_init(void) {
 
 int ink_rt_open(const char *cap, const char *params_json, const ink_rt_handler_t *h) {
     if (!RT.lock || !cap || !h || (params_json && strlen(params_json) >= INK_RT_PARAMS) || strlen(cap) >= 24) return -1;
+    ink_member_identity_t identity;
+    ink_member_identity(&identity);
     osal_mutex_lock(RT.lock, OSAL_WAIT_FOREVER);
     int slot = -1, sid = -1;
     for (int i = 0; i < INK_RT_MAX && slot < 0; i++)
@@ -197,9 +201,9 @@ int ink_rt_open(const char *cap, const char *params_json, const ink_rt_handler_t
         RT.s[slot].used = true;
         RT.s[slot].sid = sid;
         RT.s[slot].h = *h;
-        snprintf(RT.s[slot].member, sizeof RT.s[slot].member, "%s", ink_member_current()->id);
-        RT.s[slot].generation = ink_member_generation(RT.s[slot].member);
-        RT.s[slot].epoch = ink_hub_member_epoch();
+        snprintf(RT.s[slot].member, sizeof RT.s[slot].member, "%s", identity.member);
+        RT.s[slot].generation = identity.generation;
+        RT.s[slot].epoch = identity.epoch;
         memset(RT.s[slot].seq, 0, sizeof RT.s[slot].seq);
         snprintf(RT.s[slot].cap, sizeof RT.s[slot].cap, "%s", cap);
         snprintf(RT.s[slot].params, sizeof RT.s[slot].params, "%s", params_json && *params_json ? params_json : "{}");
