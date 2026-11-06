@@ -549,12 +549,32 @@ static void wifi_picked(lv_event_t *e) {
     ink_receipt_t rc; ink_cap_invoke_json("shell.wifi_pick", args, INK_SRC_TOUCH, 0, &rc);
 }
 
+/* Settings' first row: who is using the device, and the way to the family. */
+static void draw_who(int y) {
+    const ink_member_t *me = ink_member_current();
+    lv_obj_t *who = ink_ui_pill(N.page_body, "", INK_MARGIN, y, width(), INK_ROW_DOUBLE, true, NULL, NULL);
+    ink_shell_bind(who, "shell.members", NULL);
+    char first[8] = {0}, family[32];
+    size_t len = 1;
+    while (len < sizeof first - 1 && (me->name[len] & 0xc0) == 0x80) len++;
+    memcpy(first, me->name, len);
+    lv_obj_t *avatar = ink_ui_pill(who, first, INK_GAP, (INK_ROW_DOUBLE - INK_CIRCLE) / 2, INK_CIRCLE, INK_CIRCLE, false, NULL, NULL);
+    lv_obj_remove_flag(avatar, LV_OBJ_FLAG_CLICKABLE);
+    int people = 0, x = INK_CIRCLE + 2 * INK_GAP;
+    while (ink_member_at(people)) people++;
+    snprintf(family, sizeof family, "家里 %d 个人", people);
+    lv_obj_t *l = ink_ui_label(who, me->name, INK_FONT_LIST, INK_WEIGHT_BOLD, x, (INK_ROW_DOUBLE - INK_LINE_LIST - INK_LINE_NOTE) / 2, width() - x - INK_READING_MARGIN);
+    lv_obj_set_style_text_color(l, lv_color_white(), 0);
+    l = ink_ui_label(who, family, INK_FONT_NOTE, INK_WEIGHT_REGULAR, x, (INK_ROW_DOUBLE - INK_LINE_LIST - INK_LINE_NOTE) / 2 + INK_LINE_LIST, width() - x - INK_READING_MARGIN);
+    lv_obj_set_style_text_color(l, lv_color_white(), 0);
+    ink_ui_icon(who, "next", INK_ICON_SMALL, INK_ICON_LINE, width() - INK_READING_MARGIN, (INK_ROW_DOUBLE - INK_ICON_SMALL) / 2, true);
+}
+
 static void draw_page_body(void) {
     lv_obj_clean(N.page_body);
     int y = 0;
     if (N.page_id == PAGE_SETTINGS) {
-        lv_obj_t *who = ink_ui_pill(N.page_body, ink_member_current()->name, INK_MARGIN, y, width(), INK_ROW_DOUBLE, true, NULL, NULL);
-        ink_shell_bind(who, "shell.members", NULL); y += INK_ROW_DOUBLE + INK_GAP;
+        draw_who(y); y += INK_ROW_DOUBLE + INK_GAP;
         char ssid[64], light[32], volume[32];
         state_text("wifi.ssid", ssid, sizeof ssid);
         snprintf(light, sizeof light, "亮度 %lld", (long long)ink_setting_get("display.light") / 10);

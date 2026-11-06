@@ -240,7 +240,7 @@ lv_obj_t *ink_ui_list_row(lv_obj_t *parent, const char *icon, const char *title,
     int h = two_lines ? INK_ROW_DOUBLE : INK_CONTROL;
     lv_obj_t *r = ink_ui_box(parent, x, y, w, h, 0, INK_SURFACE_STATIC, false);
     bind(r, cb, ctx);
-    ink_ui_circle(r, icon, INK_GAP, (h - INK_CIRCLE_SMALL) / 2, INK_CIRCLE_SMALL, INK_ICON_MEDIUM, INK_SURFACE_WHITE, NULL, NULL);
+    ink_ui_icon(r, icon, INK_ICON_MEDIUM, INK_ICON_LINE, INK_GAP + (INK_CIRCLE_SMALL - INK_ICON_MEDIUM) / 2, (h - INK_ICON_MEDIUM) / 2, false);
     ink_ui_label(r, title, INK_FONT_LIST, INK_WEIGHT_REGULAR, INK_CIRCLE_SMALL + INK_GAP_XL,
                  (h - INK_LINE_LIST) / 2, w - 2 * INK_CIRCLE_LARGE);
     if (value) {
