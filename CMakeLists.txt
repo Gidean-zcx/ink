@@ -375,6 +375,7 @@ endif()
 enable_testing()
 ink_sim_executable(sim-backup-restore tests/backup_restore/device.c)
 target_link_libraries(sim-backup-restore PRIVATE ink_apps ink_system)
+target_compile_options(sim-backup-restore PRIVATE -Wno-format-truncation) # a test path cut short fails the test anyway
 if(INK_HAVE_FONTS)
   add_dependencies(sim-backup-restore ink_fonts ink_test_content)
 endif()

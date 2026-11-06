@@ -44,7 +44,7 @@ uint32_t ink_member_epoch(void);
 uint32_t ink_member_generation(const char *id);
 /** Durable, opaque incarnation for backup ownership. exec.bg only; fails closed if it cannot persist.
  *  Never use the reusable display id or the boot-local generation as a remote identity. */
-int ink_member_identity(const char *id, uint32_t generation, uint8_t out[16]);
+int ink_member_durable_id(const char *id, uint32_t generation, uint8_t out[16]);
 /** Register a writer of this incarnation before opening files/collections or queuing work. Removal
  *  quarantines the member and refuses cleanup while a writer is registered. End every successful begin. */
 bool ink_member_io_begin(const char *id, uint32_t generation);

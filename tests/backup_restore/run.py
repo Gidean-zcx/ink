@@ -39,11 +39,11 @@ def boot(area, phase, cut=None, server=None, length=None, race_length=None, prof
         env["INK_BACKUP_RACE_BYTES"] = str(race_length)
     if cut:
         env["INK_BACKUP_CUT"] = str(cut)
-    run = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, timeout=90, env=env)
+    run = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, errors="replace", timeout=90, env=env)
     out.mkdir(exist_ok=True)
     (out / "stdout.log").write_text(run.stdout)
     (out / "stderr.log").write_text(run.stderr)
-    data = json.loads((out / "metrics.json").read_text()) if (out / "metrics.json").exists() else {}
+    data = json.loads((out / "metrics.json").read_text(errors="replace")) if (out / "metrics.json").exists() else {}
     metrics = data.get("metrics", {})
     done = metrics.get("test.finished") == 1
     if phase in ("upload-cut", "restore-cut", "collect-cut"):
@@ -88,7 +88,7 @@ if not a.quick:
         server = work / (label + "-hub")
         shutil.copytree(peer, server)
         member_dir = next(d for d in (server / "owner").iterdir() if (d / "latest").exists())
-        sha, _ = (member_dir / "latest").read_text().split()
+        sha, _ = (member_dir / "latest").read_text(errors="replace").split()
         manifest = bytearray((member_dir / (sha + ".blob")).read_bytes())
         if label == "foreign":
             manifest[12:28] = b"kid" + bytes(13)
@@ -114,7 +114,7 @@ if not a.quick:
         boot(target, "reused-id", server=server)
         boot(target, "identity-reboot", server=server)
     boot(work / "deep", "deep", server=work / "deep-hub")
-    slow = json.loads((ROOT / "simulator/profiles/metalio-plus.json").read_text())
+    slow = json.loads((ROOT / "simulator/profiles/metalio-plus.json").read_text(errors="replace"))
     for link in ("wifi", "lte"):
         slow["network"][link].update(mbps=0.2, rtt_ms_p50=600, rtt_ms_p99=600, loss=0)
     slow_profile = work / "slow-link.json"

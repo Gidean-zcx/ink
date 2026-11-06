@@ -195,7 +195,7 @@ static bool load_journal(const char *member) {
         B.j.generation = ink_member_generation(member); B.j.phase = PH_FAILED;
         snprintf(B.j.reason, sizeof B.j.reason, "旧备份没有成员身份记录，请重新备份");
         remember(member, false);
-        return ink_member_identity(member, B.j.generation, B.j.identity) == 0;
+        return ink_member_durable_id(member, B.j.generation, B.j.identity) == 0;
     }
     if (n != sizeof j || j.magic != STATE_MAGIC || j.format != 2 || j.phase > PH_FAILED ||
         j.crc != ink_crc32(0, &j, offsetof(journal_t, crc)) || memchr(j.member, 0, sizeof j.member) == NULL ||
@@ -203,7 +203,7 @@ static bool load_journal(const char *member) {
         !memchr(j.manifest_hash, 0, sizeof j.manifest_hash) || !memchr(j.preview, 0, sizeof j.preview) ||
         !memchr(j.reason, 0, sizeof j.reason)) return false;
     uint8_t identity[16];
-    if (ink_member_identity(member, ink_member_generation(member), identity)) return false;
+    if (ink_member_durable_id(member, ink_member_generation(member), identity)) return false;
     if (memcmp(j.identity, identity, 16)) {
         memset(&B.j, 0, sizeof B.j);
         remember(member, false);
@@ -597,7 +597,7 @@ static int upload_block(const char *path, const uint8_t hash[32], uint32_t size,
         if (!ok) return -2;
         memset(B.buf, 0, 16); B.buf[0] = 7;
         B.buf[10] = (uint8_t)N.upload; B.buf[11] = (uint8_t)(N.upload >> 8); put32(B.buf + 12, N.offset);
-        if (ink_hub_send_frame_for(B.buf, n + 16, INK_HUB_TX_BACKGROUND, B.j.member, B.j.generation) != 0) return -1;
+        if (ink_hub_send_frame_for(B.buf, n + 16, INK_HUB_TX_BACKGROUND, B.j.member, B.j.generation, 0) != 0) return -1;
         N.offset += n;
         if (N.offset < N.expected) return 1;
         N.stage = 2; net_wait();
@@ -1034,7 +1034,7 @@ static bool for_call(ink_call_t *c) {
     if (!load_journal(member)) { c->rc.status = INK_RC_FAILED; snprintf(c->rc.say, sizeof c->rc.say, "备份记录暂时读不出来，请稍后再试"); return false; }
     if (!B.j.member[0]) {
         snprintf(B.j.member, sizeof B.j.member, "%s", member); B.j.generation = generation;
-        if (ink_member_identity(member, generation, B.j.identity)) { c->rc.status = INK_RC_FAILED; return false; }
+        if (ink_member_durable_id(member, generation, B.j.identity)) { c->rc.status = INK_RC_FAILED; return false; }
     }
     return true;
 }

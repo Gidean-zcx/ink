@@ -217,7 +217,7 @@ static void save_all(void) {
     ink_db_close(db);
 }
 
-int ink_member_identity(const char *id, uint32_t generation, uint8_t out[16]) {
+int ink_member_durable_id(const char *id, uint32_t generation, uint8_t out[16]) {
     slot_t *s = find(id);
     if (!out || !s || !generation || generation != ink_member_generation(id) || M.table_unread ||
         !ink_exec_is_current(INK_EXEC_BG)) return -1;
@@ -507,7 +507,8 @@ static void pin_job(void *arg) { /* exec.bg: slow by design */
             if (r == INK_PIN_OK) {
                 uint64_t locked_since = ink_power_state() == INK_PWR_LOCKED ? osal_now_us() : 0;
                 ink_svc_lock();
-                invalidate_identity();
+                /* the same person unlocking an open space changes nothing */
+                if (M.cur != s || M.authed != s->has_pin || !ink_member_space_open()) invalidate_identity();
                 M.cur = s;
                 M.authed = s->has_pin;
                 __atomic_store_n(&M.locked_since, locked_since, __ATOMIC_RELEASE);
