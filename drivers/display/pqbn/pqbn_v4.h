@@ -54,6 +54,11 @@ typedef struct {
     uint16_t *band;           // per tile row: [2*ty] phase until which plans run, [2*ty+1] tiles with a capped plan
     int line_mode;            // 1: no drive plane; the display driver calls pqbn_v4_exec_row() per scan line
     int auto_motion;          // 1: tiles switch to motion mode and back by themselves (needs plan_budget > 0)
+                              // 2: every change goes the same way: black and white first, then the grays
+    int rail_extra;           // pushes after a motion swing that reach a rail (0 = 1); a swing is 7 pushes
+    int keep_off;             // auto_motion 2: 1 = pixels already at their level go through the swing too (no ghost, but they move)
+    uint8_t level[16];        // the model state a target level rests at; all 0 until pqbn_v4_init sets the linear t4 * 17
+    uint8_t lo[16], hi[16];   // a pixel between these already shows that level (they differ with a measured table)
     int backlog;              // phases in a row that ended with UI changes the planner could not serve
     int n_motion;             // tiles currently in motion mode
 } pqbn_v4_ctx;
@@ -69,6 +74,10 @@ typedef struct {
 
 /* Tables: dec 16384 B, exk 6 x 256 B, step[4]; T0 = pushes for a full swing, s0/taud = stiction model. */
 int pqbn_v4_build(uint8_t *dec, uint8_t *exk, uint8_t *step_out, float T0, float s0, float taud);
+/* The same from the panel's measured response: down[L] / up[L] = pushes from the white / black rail to level L.
+ * No stiction model: the first weak push is in the measured curves. T0 only sets the scale of the state. */
+int pqbn_v4_build_measured(uint8_t *dec, uint8_t *exk, uint8_t *step_out, uint8_t *level, uint8_t *lo, uint8_t *hi, float T0,
+                           const float *down, const float *up);
 /* Motion-mode tables: exk_m 7 x 256 B, tau_nib 2048 B (from the 64x64 threshold map tau). */
 void pqbn_v4_build_motion(uint8_t *exk_m, uint8_t *tau_nib, const uint8_t *tau);
 /* Every pixel settled on the current framebuffer (fb4), long dwell. */

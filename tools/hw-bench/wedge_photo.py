@@ -18,6 +18,8 @@ from PIL import Image, ImageOps
 W, H = 684, 1216
 COLS, ROWS, X0, Y0, PATCH, PX, PY = 6, 8, 30, 118, 84, 106, 124
 STRIP_Y, STRIP_H = 1120, 52
+# the wedge since 2026-11-06 16:42: pairs of rows; the first wedge had 24 patches each way (--first-wedge)
+SETS = ("toward_black", "toward_white_after_swing", "toward_white", "toward_black_after_swing")
 MARKS = ((17, 17), (667, 17), (17, 1199), (667, 1199))  # centres: top left, top right, bottom left, bottom right
 
 
@@ -119,7 +121,7 @@ def straighten(im, corners):
     return im.transform((W, H), Image.PERSPECTIVE, transform_for(corners), Image.BICUBIC)
 
 
-def analyse(flat):
+def analyse(flat, first_wedge=False):
     px = np.asarray(flat, dtype=np.float32)
     mean = lambda x0, y0, x1, y1: float(px[y0:y1, x0:x1].mean())
     strip = []
@@ -129,8 +131,7 @@ def analyse(flat):
         strip.append(mean(x + 8, STRIP_Y + 10, x + 32, STRIP_Y + STRIP_H - 10) / white)
     strip = np.array(strip)
     rising = np.maximum.accumulate(strip) + np.arange(16) * 1e-6  # the darkest levels can come out in the wrong order
-    rows = {"toward_black": {}, "toward_white": {}}
-    bright = {"toward_black": {}, "toward_white": {}}
+    rows, bright = {}, {}
     for r in range(ROWS):
         for c in range(COLS):
             x, y = X0 + c * PX, Y0 + r * PY
@@ -139,9 +140,12 @@ def analyse(flat):
             white = right if c == 0 else left if c == COLS - 1 else (left + right) / 2  # the outer margins are in the bezel's shadow
             value = mean(x + 21, y + 21, x + 63, y + 63) / white
             level = float(np.interp(value, rising, np.arange(16)))
-            name = "toward_black" if r < ROWS // 2 else "toward_white"
-            rows[name][n] = level
-            bright[name][n] = value
+            if first_wedge:
+                name, n = ("toward_black" if r < ROWS // 2 else "toward_white"), (r % (ROWS // 2)) * COLS + c + 1
+            else:
+                name, n = SETS[r // 2], (r % 2) * COLS + c + 1
+            rows.setdefault(name, {})[n] = level
+            bright.setdefault(name, {})[n] = value
     return strip, rows, bright
 
 
@@ -159,6 +163,7 @@ def main():
     ap.add_argument("photo")
     ap.add_argument("--corners", help="x,y four times: top left, top right, bottom left, bottom right")
     ap.add_argument("--debug", help="write the straightened screen here")
+    ap.add_argument("--first-wedge", action="store_true", help="the photo is of the first wedge's layout")
     a = ap.parse_args()
     im = load(a.photo)
     if a.corners:
@@ -169,12 +174,12 @@ def main():
     flat = straighten(im, corners)
     if a.debug:
         flat.save(a.debug)
-    strip, rows, bright = analyse(flat)
+    strip, rows, bright = analyse(flat, a.first_wedge)
     if not (strip[-1] > 1.5 * strip[:3].mean() and np.corrcoef(strip, np.arange(16))[0, 1] > 0.85):
         sys.exit("this does not read as the gray strip: the corners are wrong, pass --corners and look at --debug")
     print("factory levels, against white:", " ".join(f"{v:.2f}" for v in strip))
     for name, levels in rows.items():
-        start = 15 if name == "toward_black" else 0
+        start = 15 if name.startswith("toward_black") else 0
         print(f"{name} (factory levels):", " ".join(f"{n}:{levels[n]:.1f}" for n in sorted(levels)))
         print(f"{name} (against white):", " ".join(f"{n}:{bright[name][n]:.2f}" for n in sorted(levels)))
         if abs(levels[max(levels)] - start) < 3:

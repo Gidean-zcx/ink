@@ -4,15 +4,12 @@
  * What it does, in order, all with the rails and VCOM the factory driver sets:
  *  1. The guard proves itself: rails on, nobody scanning, and it must turn them off.
  *  2. A rehearsal: full scans of empty lines, which push nothing. The first push comes only after these.
- *  3. A wedge: patches pushed 1..24 times toward black from white and toward white from black, one
- *     push per scan, next to the factory's 16 gray levels. A photo of it says how many pushes a
- *     full swing takes at this phase length, which is what the kernel's tables are built from.
- *  4. Trials: the PQ-BN kernel (drivers/display/pqbn) drives real screens: a page change, a large
- *     black area, reading pages one after the other, a small area toggling. Each reports its time,
- *     the planner's and the executors' cycles, and missed lines.
- *  5. A page of grays through the factory driver, to choose from with the eye.
- * A factory clean ends every trial, so nothing stays on the panel. The kernel is used as it is: the
- * planner runs after each scan, which makes a busy phase longer (integration report, problem 1).
+ *  3. A wedge: patches pushed 1..12 times from rest, and the same right after a swing to the other rail, next
+ *     to the factory's 16 gray levels. A photo says how the panel answers at 12 ms a push.
+ *  4. The same pages through the factory driver without a flash, to compare with.
+ *  5. Trials: the PQ-BN kernel (drivers/display/pqbn) with tables from the first wedge, every change black and
+ *     white first and then the grays. Each reports its time, the planner's and the executors' cycles, and missed lines.
+ * A factory clean starts every trial, so nothing stays on the panel.
  *
  * Who runs when. The scan tasks never block while they wait for room or for each other, they only
  * yield, so nothing below them runs on their core until they are done. The third run hung on exactly
@@ -32,6 +29,8 @@
 #include "line_queue.h"
 #include "tps65185.h"
 #include "pqbn_v4.h"
+#include "pqbn_tau.h"
+#include "panel_curve.h"
 
 #define PANEL_W 1216
 #define PANEL_H 684
@@ -306,14 +305,25 @@ static void fill_wedge(int row, uint8_t *line) {
     else memcpy(line, g_wedge_line[col], LINE_BYTES);
 }
 
-/* Which patches push at step k. The patch at (col, row) gets n = row % 4 * cols + col + 1 pushes in all. */
-static void wedge_lines_for_step(int k) {
+/* One photo, four curves. The patch at (col, row) gets n = row % 2 * cols + col + 1 pushes. Rows 0-1 and 4-5
+ * start from rest, as the first wedge did. Rows 2-3 and 6-7 first swing to the other rail, with no rest between:
+ * that is the way a pixel goes to a gray on the single path. */
+#define WEDGE_SWING 12
+#define WEDGE_MOST (WEDGE_COLS * 2)
+
+static void wedge_lines(int swing_left, int k) {
     memset(g_wedge_line, 0, sizeof g_wedge_line);
     for (int c = 0; c < WEDGE_COLS; c++)
         for (int r = 0; r < WEDGE_ROWS; r++) {
-            const int n = (r % (WEDGE_ROWS / 2)) * WEDGE_COLS + c + 1;
-            if (n < k) continue;
-            const int code = r < WEDGE_ROWS / 2 ? 1 : 2, y0 = WEDGE_Y0 + r * WEDGE_PITCH_Y;
+            const bool from_white = r < WEDGE_ROWS / 2, after_swing = (r & 2) != 0;
+            int code = 0;
+            if (swing_left > 0) {
+                if (after_swing) code = from_white ? 1 : 2;
+            } else if ((r & 1) * WEDGE_COLS + c + 1 >= k) {
+                code = from_white != after_swing ? 1 : 2;
+            }
+            if (!code) continue;
+            const int y0 = WEDGE_Y0 + r * WEDGE_PITCH_Y;
             for (int x = y0; x < y0 + WEDGE_PATCH; x++) g_wedge_line[c][x >> 2] |= (uint8_t) (code << (6 - 2 * (x & 3)));
         }
 }
@@ -324,8 +334,8 @@ static void run_wedge(void) {
     const int64_t t0 = now_us();
     int64_t worst = 0, last = t0;
     bool ok = true;
-    for (int k = 1; k <= WEDGE_COLS * WEDGE_ROWS / 2 && ok; k++) {
-        wedge_lines_for_step(k);
+    for (int i = 0; i < WEDGE_SWING + WEDGE_MOST && ok; i++) {
+        wedge_lines(WEDGE_SWING - i, i - WEDGE_SWING + 1);
         ok = scan_once(fill_wedge);
         const int64_t t = now_us();
         if (t - last > worst) worst = t - last;
@@ -341,7 +351,6 @@ static void run_wedge(void) {
 static struct {
     pqbn_v4_ctx C;
     uint32_t now;
-    int frames_per_push;
     int64_t last_drive_us;
     bool allocated;
 } K;
@@ -365,8 +374,8 @@ static bool kernel_alloc(void) {
     C->ntx = PANEL_W / PQBN_TPX;
     C->nty = PANEL_H / PQBN_TPY;
     C->marg = 2;
-    C->plan_budget = 20000; /* for a screen of new content: at 8000 it took 140 phases on the real pictures (host run) */
-    C->auto_motion = 0;
+    C->plan_budget = 0;  /* everything at once: no sweep across the screen, and the planner waits on a quiet panel */
+    C->auto_motion = 2;  /* every change the same way: black and white first, then the grays */
     C->line_mode = 1;
     C->drive = NULL;
     C->fb4 = lab_alloc(npx / 2, false);
@@ -385,9 +394,12 @@ static bool kernel_alloc(void) {
     if (!C->fb4 || !C->hot || !C->cold || !C->dec || !C->tau || !C->tau_nib || !C->exk || !C->exk_m || !C->tile_dirty ||
         !C->tile_nmax || !C->tile_plan || !C->band || !C->row_active)
         return false;
-    uint8_t *tau = (uint8_t *) C->tau;
-    for (int i = 0; i < 4096; i++) tau[i] = (uint8_t) ((((i & 63) * 37) + ((i >> 6) * 101)) & 15); /* as the research's benches */
+    memcpy((void *) C->tau, PQBN_TAU, 4096);
     pqbn_v4_build_motion((uint8_t *) C->exk_m, (uint8_t *) C->tau_nib, C->tau);
+    if (pqbn_v4_build_measured((uint8_t *) C->dec, (uint8_t *) C->exk, C->step, C->level, C->lo, C->hi, 15.0f, PANEL_PUSHES_DOWN, PANEL_PUSHES_UP)) {
+        R("\"test\":\"lab_alloc\",\"error\":\"the tables cannot be built\"");
+        return false;
+    }
     K.allocated = true;
     return true;
 }
@@ -413,7 +425,22 @@ static void kernel_rest(void) {
     K.now += (uint32_t) phases;
 }
 
-/* Drive phases until nothing moves. */
+/* Will the next phase's planning take long? */
+static bool kernel_plan_due(void) {
+    const pqbn_v4_ctx *C = &K.C;
+    const int nt = C->ntx * C->nty;
+    for (int i = 0; i < nt; i++) {
+        const int tn = C->tile_nmax[i], k = (uint16_t) (K.now + 1 - C->tile_plan[i]);
+        if (C->tile_dirty[i] || (tn & T_PEND)) return true;
+        if ((tn & T_MOT) ? k > 6 : ((tn & T_CAP) && k >= (tn & T_NMAX))) return true;
+    }
+    return false;
+}
+
+/* Drive phases until nothing moves.
+ * A pixel holds its push until the next scan writes it again, so a phase's length is the strength of its push:
+ * the last run's phases of 16 to 25 ms pushed up to twice as hard as the 12 ms the wedge measured. Before a plan
+ * that takes long, an empty scan ends the pushes on the panel. */
 static bool kernel_drive(const char *what) {
     pqbn_v4_ctx *C = &K.C;
     kernel_rest();
@@ -422,10 +449,16 @@ static bool kernel_drive(const char *what) {
     const int64_t t0 = now_us();
     drive_begin();
     const int64_t rails_us = now_us() - t0;
-    int phases = 0, first_ms = -1;
+    int phases = 0, first_ms = -1, bw_ms = -1, empty_scans = 0;
     int64_t phase_max = 0, plan_sum = 0, plan_max = 0, phase_start = now_us();
-    bool ok = true;
+    bool ok = true, holding = false;
     for (;;) {
+        if (holding && kernel_plan_due()) {
+            ok = scan_once(fill_empty);
+            empty_scans++;
+            holding = false;
+            if (!ok) break;
+        }
         const int64_t p0 = now_us();
         pqbn_v4_phase(C, K.now + 1);
         const int64_t plan = now_us() - p0;
@@ -438,9 +471,11 @@ static bool kernel_drive(const char *what) {
                     first_ms = (int) ((now_us() - t0) / 1000);
                     break;
                 }
-        for (int f = 0; f < K.frames_per_push && ok; f++) ok = scan_once(fill_kernel);
+        ok = scan_once(fill_kernel);
+        holding = true;
         phases++;
         const int64_t t = now_us();
+        if (bw_ms < 0 && !C->n_motion) bw_ms = (int) ((t - t0) / 1000); /* the swings are over: black and white are on the panel */
         if (t - phase_start > phase_max) phase_max = t - phase_start;
         phase_start = t;
         if (!ok || t - t0 > MAX_DRIVE_US || !kernel_work_after(K.now)) break;
@@ -450,9 +485,9 @@ static bool kernel_drive(const char *what) {
     drive_end();
     K.last_drive_us = now_us();
     const uint64_t rows = L.rows_timed[0] + L.rows_timed[1];
-    R("\"test\":\"pqbn\",\"what\":\"%s\",\"ok\":%s,\"ms\":%lld,\"first_ms\":%d,\"phases\":%d,\"phase_ms_avg\":%.1f,\"phase_ms_max\":%.1f,"
+    R("\"test\":\"pqbn\",\"what\":\"%s\",\"ok\":%s,\"ms\":%lld,\"first_ms\":%d,\"bw_ms\":%d,\"phases\":%d,\"empty_scans\":%d,\"phase_ms_avg\":%.1f,\"phase_ms_max\":%.1f,"
       "\"plan_ms_avg\":%.2f,\"plan_ms_max\":%.2f,\"planned_px\":%u,\"row_cycles_avg\":%u,\"row_cycles_max\":%u,\"underruns\":%u,\"rails_ms\":%lld",
-      what, settled ? "true" : "false", total / 1000, first_ms, phases, (double) total / 1000.0 / phases,
+      what, settled ? "true" : "false", total / 1000, first_ms, bw_ms, phases, empty_scans, (double) total / 1000.0 / phases,
       (double) phase_max / 1000.0, (double) plan_sum / 1000.0 / phases, (double) plan_max / 1000.0,
       (unsigned) (C->stat_planned - planned0), rows ? (unsigned) ((L.row_cycles_sum[0] + L.row_cycles_sum[1]) / rows) : 0,
       (unsigned) (L.row_cycles_max[0] > L.row_cycles_max[1] ? L.row_cycles_max[0] : L.row_cycles_max[1]), (unsigned) L.underruns,
@@ -465,6 +500,7 @@ static bool kernel_show(const char *picture, uint8_t *fb) {
     draw_picture(picture, fb);
     memcpy((void *) K.C.fb4, fb, (size_t) PANEL_W * PANEL_H / 2);
     memset(K.C.tile_dirty, 1, (size_t) K.C.ntx * K.C.nty);
+    K.C.keep_off = 1; /* a new page: everything goes through the swing, so nothing of the old page shows in the grays */
     return kernel_drive(picture);
 }
 
@@ -481,6 +517,7 @@ static bool kernel_toggle(int on) {
         }
     for (int ty = ny0 / PQBN_TPY; ty <= (ny0 + SIZE - 1) / PQBN_TPY; ty++)
         for (int tx = nx0 / PQBN_TPX; tx <= (nx0 + SIZE - 1) / PQBN_TPX; tx++) K.C.tile_dirty[ty * K.C.ntx + tx] = 1;
+    K.C.keep_off = 0; /* a small change: what is already right stays still */
     return kernel_drive(on ? "small_black" : "small_white");
 }
 
@@ -524,33 +561,54 @@ static void hold_for_touch(int ms) {
     }
 }
 
-static void trial(EpdiyHighlevelState *hl, uint8_t *fb, float full_swing, int frames_per_push, int temp) {
-    R("\"test\":\"pqbn_trial\",\"full_swing\":%.1f,\"frames_per_push\":%d", full_swing, frames_per_push);
-    pqbn_v4_ctx *C = &K.C;
-    if (pqbn_v4_build((uint8_t *) C->dec, (uint8_t *) C->exk, C->step, full_swing, 0.3f, 120.0f)) {
-        R("\"test\":\"pqbn_trial\",\"error\":\"the tables cannot be built for this swing\"");
-        return;
+static const struct { const char *picture; int hold_ms; } TRIAL_STEPS[] = {
+    {"Settings", 6000}, {"Today", 6000}, {"read1", 5000}, {"read2", 3000}, {"read3", 3000}, {"read4", 3000}, {"grays", 5000},
+};
+
+/* The same pages as the factory driver turns them without a flash, to compare with. */
+static void factory_turn(EpdiyHighlevelState *hl, uint8_t *fb, const char *picture, int temp) {
+    epd_poweron();
+    guard_arm(FACTORY_GUARD_MS);
+    draw_picture(picture, fb);
+    char what[32];
+    snprintf(what, sizeof what, "gl16_%s", picture);
+    show(hl, what, MODE_GL16, temp);
+    G.armed = false;
+    epd_poweroff();
+}
+
+static void trial_factory(EpdiyHighlevelState *hl, uint8_t *fb, int temp) {
+    R("\"test\":\"factory_trial\"");
+    factory_show(hl, fb, "Main", temp);
+    hold(3000);
+    for (unsigned i = 0; i < sizeof TRIAL_STEPS / sizeof *TRIAL_STEPS; i++) {
+        factory_turn(hl, fb, TRIAL_STEPS[i].picture, temp);
+        hold(TRIAL_STEPS[i].hold_ms);
     }
+    factory_turn(hl, fb, "white", temp);
+    hold_for_touch(20000); /* what stays behind on white is the ghost: a photo shows it */
+}
+
+static void trial(EpdiyHighlevelState *hl, uint8_t *fb, int rail_extra, int temp) {
+    R("\"test\":\"pqbn_trial\",\"swing_pushes\":%d", 7 + rail_extra);
+    pqbn_v4_ctx *C = &K.C;
+    C->rail_extra = rail_extra;
     factory_show(hl, fb, "Main", temp);
     memcpy((void *) C->fb4, fb, (size_t) PANEL_W * PANEL_H / 2);
     K.now = 0;
-    K.frames_per_push = frames_per_push;
     K.last_drive_us = 0;
     pqbn_v4_init(C, 0);
     hold(3000);
-    static const struct { const char *picture; int hold_ms; } STEPS[] = {
-        {"Settings", 6000}, {"Today", 6000}, {"read1", 5000}, {"read2", 3000}, {"read3", 3000}, {"read4", 3000},
-    };
-    for (unsigned i = 0; i < sizeof STEPS / sizeof *STEPS; i++) {
-        if (!kernel_show(STEPS[i].picture, fb)) return;
-        hold(STEPS[i].hold_ms);
+    for (unsigned i = 0; i < sizeof TRIAL_STEPS / sizeof *TRIAL_STEPS; i++) {
+        if (!kernel_show(TRIAL_STEPS[i].picture, fb)) return;
+        hold(TRIAL_STEPS[i].hold_ms);
     }
     for (int i = 0; i < 6; i++) {
         if (!kernel_toggle(!(i & 1))) return;
         hold(800);
     }
-    if (!kernel_show("white", fb)) return; /* what stays behind on white is the ghost: a photo can show it */
-    hold(8000);
+    if (!kernel_show("white", fb)) return;
+    hold_for_touch(20000);
 }
 
 static void panel_lab(void) {
@@ -569,14 +627,13 @@ static void panel_lab(void) {
         hold(2000);
         run_wedge();
         if (!L.failed) hold_for_touch(120000);
+        if (!L.failed) trial_factory(hl, fb, temp); /* first: after our own driving its picture of the panel is out of date */
         if (!L.failed && kernel_alloc()) {
             heap("kernel_on");
-            trial(hl, fb, 14.0f, 1, temp); /* at most what the table format can hold, one scan per push */
-            if (!L.failed) trial(hl, fb, 10.0f, 2, temp); /* two scans per push: a slower panel still fits the tables */
+            trial(hl, fb, 6, temp); /* a swing of 13 pushes: full white and deep black */
+            if (!L.failed) trial(hl, fb, 3, temp); /* 10: faster; the model says more stays behind */
         }
     }
-    factory_show(hl, fb, "grays", temp);
-    hold_for_touch(120000);
     factory_show(hl, fb, "done", temp);
     heap("lab_done");
 }

@@ -36,7 +36,8 @@ def dots(font):
 
 
 def wedge(font):
-    """Patches start white (upper half) or black (lower half); the firmware pushes them n times."""
+    """Patches start white (upper half) or black (lower half); the firmware pushes them n times, in the second
+    and fourth pair of rows right after a swing to the other rail."""
     im = Image.new("L", (W, H), 255)
     d = ImageDraw.Draw(im)
     w = WEDGE
@@ -46,7 +47,7 @@ def wedge(font):
     for r in range(w["WEDGE_ROWS"]):
         for c in range(w["WEDGE_COLS"]):
             x, y = w["WEDGE_X0"] + c * w["WEDGE_PITCH_X"], w["WEDGE_Y0"] + r * w["WEDGE_PITCH_Y"]
-            n = (r % half) * w["WEDGE_COLS"] + c + 1
+            n = (r % 2) * w["WEDGE_COLS"] + c + 1
             d.text((x + w["WEDGE_PATCH"] // 2, y - 17), str(n), font=small, fill=0, anchor="mm")
             d.rectangle((x, y, x + w["WEDGE_PATCH"] - 1, y + w["WEDGE_PATCH"] - 1), fill=255 if r < half else 0,
                         outline=None if r >= half else 150)
