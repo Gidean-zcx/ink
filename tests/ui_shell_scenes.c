@@ -280,6 +280,11 @@ static void test_task(void *arg) {
     if (!strncmp(scene, "Ai", 2) || !strcmp(scene, "LockPage") || !strcmp(scene, "PowerOff")) {
         CHECK(BY_HAND("reader.open_book", "{\"title\":\"星星邮差\"}") && g_rc.status == INK_RC_DONE, "open the real reading surface below the shell");
     }
+    if (!strcmp(scene, "Notifications")) { /* with nothing to read the page shows only its empty state */
+        ink_notify_t n = {.channel = "system", .title = "今日报纸", .body = "城市里的候鸟 等 6 篇"};
+        CHECK(ink_notify_post(&n, NULL) == 0, "a notification to read");
+        delay_ms(500);
+    }
     quiet();
     on_ui(prepare);
     if (!strcmp(scene, "MembersBack") || !strcmp(scene, "Pin") || !strcmp(scene, "PinWrong")) {
