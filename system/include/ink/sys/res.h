@@ -65,6 +65,8 @@ int ink_job_submit(const ink_job_t *job);
 void ink_job_cancel(int id);
 /** Hold all jobs (reference-counted), e.g. while a realtime session is open. */
 void ink_jobs_hold(bool hold);
+/** Background transfers share the realtime and memory-pressure hold. */
+bool ink_jobs_held(void);
 int ink_jobs_pending(void);
 
 #ifdef __cplusplus

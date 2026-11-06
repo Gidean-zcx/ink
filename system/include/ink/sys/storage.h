@@ -61,6 +61,9 @@ int ink_storage_failed(void);
 typedef void (*ink_storage_done_fn)(void *ctx, int result);
 /** Atomic replace, without a copy, told when it is on the flash (not merged with other writes). */
 int ink_storage_write_borrow(const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx);
+/** Conditional restore in queue order. expected_sha256 is borrowed through done; all zero means absent.
+ *  -3 from done means the original changed; no replacement is made or exposed to readers. */
+int ink_storage_restore(const char *path, const void *data, size_t len, const uint8_t expected_sha256[32], ink_storage_done_fn done, void *ctx);
 /** Append to a file, creating it. All of it or nothing: a failure leaves the file as it was. Reads do not
  *  see an append until it is written: the data store keeps what it appends in memory. */
 int ink_storage_append(const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx);

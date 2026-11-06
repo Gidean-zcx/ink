@@ -51,6 +51,10 @@ target_compile_definitions(ink_littlefs PUBLIC LFS_NO_MALLOC LFS_NO_DEBUG LFS_NO
 # One target per layer (docs/system/repo-layout.md), from the bottom up; each exposes only its own
 # headers. platform/include is the contract between the portable code and a port.
 # LZ4 block format: the device decodes the remote screen, the simulated hub encodes it
+add_library(ink_sha256 STATIC system/util/sha256.c)
+target_include_directories(ink_sha256 PUBLIC system/include platform/include)
+target_compile_options(ink_sha256 PRIVATE ${INK_WARN})
+
 add_library(ink_lz4 STATIC system/util/lz4.c)
 target_include_directories(ink_lz4 PUBLIC system/include)
 
@@ -122,6 +126,7 @@ add_library(ink_port_sim STATIC
   simulator/models/dev_camera.c
   simulator/models/dev_bt_audio.c
   simulator/environment/sim_hub.c
+  simulator/environment/sim_backup.c
   simulator/environment/hub_bridge.c
   simulator/environment/sim_remote.c
   simulator/runtime/metrics.c
@@ -129,7 +134,7 @@ add_library(ink_port_sim STATIC
   simulator/runtime/script.c
   simulator/desktop/sim_gui.c)
 target_include_directories(ink_port_sim PUBLIC simulator simulator/desktop)
-target_link_libraries(ink_port_sim PUBLIC ink_board_metalio_plus ink_drivers ink_sim_core ink_littlefs ink_stb ink_lz4)
+target_link_libraries(ink_port_sim PUBLIC ink_board_metalio_plus ink_drivers ink_sim_core ink_littlefs ink_stb ink_lz4 ink_sha256)
 target_compile_options(ink_port_sim PRIVATE ${INK_WARN})
 
 # An executable = the simulator runner + the code under test (which provides ink_main()).
@@ -176,6 +181,7 @@ add_library(ink_system STATIC
   system/services/res/task.c
   system/services/data/datastore.c
   system/services/data/data_caps.c
+  system/services/backup/backup_service.c
   system/services/file/file_service.c
   system/services/file/file_caps.c
   system/services/time/lunar.c
@@ -189,7 +195,6 @@ add_library(ink_system STATIC
   system/services/notify/notify_caps.c
   system/services/notify/interrupt.c
   system/services/net/wifi.c
-  system/util/sha256.c
   system/ui/shell/pinpad.c
   system/ui/shell/member_gate.c
   system/services/audio/ogg.c
@@ -225,7 +230,7 @@ add_library(ink_system STATIC
   system/ui/app.c
   system/apps/remote/remote.c)
 target_include_directories(ink_system PUBLIC system/include PRIVATE system/services/display third_party/jsmn)
-target_link_libraries(ink_system PUBLIC ink_platform ink_lvgl ink_lz4)
+target_link_libraries(ink_system PUBLIC ink_platform ink_lvgl ink_lz4 ink_sha256)
 # The system calls the HAL; in this build the simulator port implements it. Link-only (no headers
 # leak into the system or the apps), and it puts the port after the system on every link line, which
 # GNU ld needs for HAL functions only the system references (e.g. hal_cell_*).
@@ -368,6 +373,13 @@ endif()
 
 # ---------------------------------------------------------------- tests
 enable_testing()
+ink_sim_executable(sim-backup-restore tests/backup_restore/device.c)
+target_link_libraries(sim-backup-restore PRIVATE ink_apps ink_system)
+if(INK_HAVE_FONTS)
+  add_dependencies(sim-backup-restore ink_fonts ink_test_content)
+endif()
+add_test(NAME backup-restore-recovery COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/backup_restore/run.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(backup-restore-recovery PROPERTIES TIMEOUT 240 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")
 ink_sim_executable(sim-pairing tests/pairing/device.c)
 target_link_libraries(sim-pairing PRIVATE ink_apps ink_system)
 if(INK_HAVE_FONTS)

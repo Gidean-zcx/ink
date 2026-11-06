@@ -36,6 +36,7 @@
 #include "ink/sys/res.h"
 #include "ink/sys/storage.h"
 #include "ink/sys/members.h"
+#include "ink/sys/sha256.h"
 
 #define MAX_JOBS 8
 #define ST_STACK 3584
@@ -57,7 +58,7 @@ typedef struct {
     uint32_t used_at;
 } centry_t;
 
-typedef enum { J_WRITE = 0, J_APPEND, J_REMOVE } job_kind_t;
+typedef enum { J_WRITE = 0, J_APPEND, J_REMOVE, J_RESTORE } job_kind_t;
 
 typedef struct {
     char *path; /* path and (copied) data share one external-RAM block */
@@ -71,6 +72,7 @@ typedef struct {
     bool inflight; /* taken by the storage task: stays visible to reads, never coalesced into */
     ink_storage_done_fn done;
     void *ctx;
+    const uint8_t *expected;
 } job_t;
 
 typedef struct {
@@ -286,7 +288,31 @@ static void make_parents(const char *path) {
         }
 }
 
+static __attribute__((noinline)) int restore_check(const job_t *j) {
+    uint8_t hash[32] = {0};
+    int64_t len = hal_fs_size(j->path);
+    if (len >= 0) {
+        hal_file_t *f = hal_fs_open(j->path, HAL_O_READ);
+        if (!f) return -1;
+        ink_sha256_t sha;
+        ink_sha256_init(&sha);
+        bool ok = true;
+        for (int64_t off = 0; off < len;) {
+            size_t n = (uint64_t)(len - off) > CACHE_FILE_MAX ? CACHE_FILE_MAX : (size_t)(len - off);
+            if (hal_fs_read(f, ST.scratch, n) != (ssize_t)n) { ok = false; break; }
+            ink_sha256_update(&sha, ST.scratch, n);
+            off += (int64_t)n;
+        }
+        if (hal_fs_close(f) != 0) ok = false;
+        if (!ok) return -1;
+        ink_sha256_final(&sha, hash);
+    }
+    if (memcmp(hash, j->expected, 32)) return -3;
+    return 0;
+}
+
 static int run_job(const job_t *j) {
+    if (j->kind == J_RESTORE) { int r = restore_check(j); if (r) return r; }
     if (j->kind == J_REMOVE) {
         hal_fs_remove(j->path); /* a file that is not there is removed too */
         return hal_fs_size(j->path) < 0 ? 0 : -1;
@@ -327,7 +353,7 @@ static void serve_read(void) {
     int from_queue = -1, newest = -1;
     if (r)
         for (int i = 0; i < MAX_JOBS; i++)
-            if (ST.jobs[i].used && ST.jobs[i].kind != J_APPEND && !strcmp(ST.jobs[i].path, r->path) &&
+            if (ST.jobs[i].used && ST.jobs[i].kind != J_APPEND && ST.jobs[i].kind != J_RESTORE && !strcmp(ST.jobs[i].path, r->path) &&
                 (newest < 0 || ST.jobs[i].seq > ST.jobs[newest].seq))
                 newest = i;
     if (newest >= 0 && ST.jobs[newest].kind == J_REMOVE) {
@@ -552,7 +578,7 @@ int ink_storage_write_member_atomic(const char *path, const void *data, size_t l
     return generation ? write_atomic(path, data, len, generation) : -1;
 }
 
-static int submit(job_kind_t kind, const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx, uint32_t generation) {
+static int submit(job_kind_t kind, const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx, uint32_t generation, const uint8_t *expected) {
     char member[16];
     if (!member_begin(path, generation, member)) return -1;
     size_t plen = strlen(path) + 1;
@@ -571,7 +597,7 @@ static int submit(job_kind_t kind, const char *path, const void *data, size_t le
     }
     ST.pending++;
     ST.jobs[slot] = (job_t){.path = block, .data = data, .len = len, .queued_us = osal_now_us(), .seq = ++ST.seq, .order = ++ST.order,
-                            .kind = (uint8_t)kind, .used = true, .done = done, .ctx = ctx};
+                            .kind = (uint8_t)kind, .used = true, .done = done, .ctx = ctx, .expected = expected};
     if (kind == J_WRITE) cache_put(path, data, (int)len);
     else if (kind == J_REMOVE) cache_put(path, NULL, -1);
     else cache_drop(path);
@@ -582,17 +608,21 @@ static int submit(job_kind_t kind, const char *path, const void *data, size_t le
 }
 
 int ink_storage_write_borrow(const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx) {
-    return submit(J_WRITE, path, data, len, done, ctx, 0);
+    return submit(J_WRITE, path, data, len, done, ctx, 0, NULL);
+}
+
+int ink_storage_restore(const char *path, const void *data, size_t len, const uint8_t expected_sha256[32], ink_storage_done_fn done, void *ctx) {
+    return expected_sha256 ? submit(J_RESTORE, path, data, len, done, ctx, 0, expected_sha256) : -1;
 }
 
 int ink_storage_append(const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx) {
-    return submit(J_APPEND, path, data, len, done, ctx, 0);
+    return submit(J_APPEND, path, data, len, done, ctx, 0, NULL);
 }
 
-int ink_storage_remove(const char *path, ink_storage_done_fn done, void *ctx) { return submit(J_REMOVE, path, NULL, 0, done, ctx, 0); }
+int ink_storage_remove(const char *path, ink_storage_done_fn done, void *ctx) { return submit(J_REMOVE, path, NULL, 0, done, ctx, 0, NULL); }
 
 int ink_storage_remove_member(const char *path, uint32_t generation, ink_storage_done_fn done, void *ctx) {
-    return generation ? submit(J_REMOVE, path, NULL, 0, done, ctx, generation) : -1;
+    return generation ? submit(J_REMOVE, path, NULL, 0, done, ctx, generation, NULL) : -1;
 }
 
 /* Hand a request to the storage task and wait for it. */

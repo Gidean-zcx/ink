@@ -336,6 +336,14 @@ void ink_jobs_hold(bool hold) {
     if (resume) job_kick();
 }
 
+bool ink_jobs_held(void) {
+    if (!R.lock) return false;
+    osal_mutex_lock(R.lock, OSAL_WAIT_FOREVER);
+    bool held = R.holds > 0;
+    osal_mutex_unlock(R.lock);
+    return held || ink_mem_pressure() >= INK_PRESSURE_LOW;
+}
+
 int ink_jobs_pending(void) {
     if (!R.lock) return 0;
     int n = 0;
