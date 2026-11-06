@@ -470,7 +470,7 @@ static void expired_gate_members(void) {
     CHECK(ink_member_set_pin("owner", NULL, "1111", pin_told, NULL) == 0 && WAIT_FOR(pin_done > before, 5000) && pin_result == INK_PIN_OK, "set the owner's synthetic PIN");
     ink_power_hold(INK_NEED_AWAKE);
     const char *const ids[] = {"kid", "guest", "guest"};
-    const char *const names[] = {"小朋友", "测试成人", "测试成人"};
+    const char *const names[] = {"小", "测", "测"}; /* a tile shows the first character */
     const char *const previous[] = {"孩子的", "", "guest gate fixture"};
     for (int i = 0; i < 3; i++) {
         if (i == 2) {

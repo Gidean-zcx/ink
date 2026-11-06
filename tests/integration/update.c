@@ -537,7 +537,8 @@ static void auto_wifi(void) {
     CHECK(WAIT_FOR(g_available == 1, 40000), "it looks when it is online, and finds it");
     CHECK(WAIT_FOR(!strcmp(state_of("update.state"), "ready"), 60000), "and fetches it (%s)", state_of("update.state"));
     char body[96];
-    CHECK(notified("系统更新", body, sizeof body) && strstr(body, "2.0.0"), "and says so (%s)", body);
+    body[0] = 0;
+    CHECK(WAIT_FOR(notified("系统更新", body, sizeof body), 2000) && strstr(body, "2.0.0"), "and says so (%s)", body);
     CHECK(ink_setting_get("update.auto_download") == 1 && running_code() == 100, "installing is still a person's");
     /* not every time it comes online */
     vtk_event_at(vtk_now() + SIM_MS(1), net_none, NULL);

@@ -362,8 +362,10 @@ static int checked_snapshot(char *buf, size_t cap, const char **activity_name, b
     ink_member_identity_t identity, after;
     ink_member_identity(&identity);
     /* Reauthentication resumes this member's page; overlays provide their own sanitized snapshot. */
-    bool current = UI.noverlays ? snapshot_owner_matches(&UI.overlay_owner[UI.noverlays - 1], &identity) :
-                                 identity.authed && snapshot_owner_matches(&UI.page_owner, &identity);
+    int top = UI.noverlays - 1;
+    if (context) while (top >= 0 && !strcmp(UI.overlays[top]->name, "Ai")) top--; /* the page under the panel is what gets read */
+    bool current = top >= 0 ? snapshot_owner_matches(&UI.overlay_owner[top], &identity) :
+                              identity.authed && snapshot_owner_matches(&UI.page_owner, &identity);
     int n = current ? snapshot_content(buf, cap, activity_name, context) : -1;
     ink_member_identity(&after);
     if (!snapshot_owner_matches(&identity, &after) || identity.epoch != after.epoch || identity.authed != after.authed) n = -1;

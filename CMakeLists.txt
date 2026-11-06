@@ -479,9 +479,13 @@ foreach(scene ${INK_SHELL_SCENES})
   else()
     set(budget ui_scene)
   endif()
+  set(script ui_shell)
+  if(scene MATCHES "^(MembersBack|Pin|PinWrong)$")
+    set(script ui_shell_gate) # waits past the D-95 two minutes
+  endif()
   add_test(NAME ui-scene-${scene}
     COMMAND ${CMAKE_COMMAND} -E env INK_UI_SCENE=${scene} $<TARGET_FILE:sim-ui-scenes>
-      --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json --script ${CMAKE_SOURCE_DIR}/tests/ui_shell.script
+      --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json --script ${CMAKE_SOURCE_DIR}/tests/${script}.script
       --hub ${CMAKE_SOURCE_DIR}/tests/ui_shell.hub.json
       --budget ${CMAKE_SOURCE_DIR}/tests/${budget}.budget.json --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
       --out ${CMAKE_BINARY_DIR}/test-out/ui-scene-${scene} --quiet --no-random-outages)

@@ -108,7 +108,7 @@ void ink_shell_ai_closed(void) {
 void ink_shell_ai_status(const char *s) {
     if (!A.root) return;
     bool done = strstr(s, "回答完成") || !strcmp(s, "回答中");
-    const char *caption = done ? "" : strstr(s, "正在听") ? "正在听 · 松开结束" : strstr(s, "正在想") ? "正在看这一页" : s;
+    const char *caption = strstr(s, "声音没能播放") ? (done ? "回答完成 · 声音没能播放" : "声音没能播放") : done ? "" : strstr(s, "正在听") ? "正在听 · 松开结束" : strstr(s, "正在想") ? "正在看这一页" : s;
     lv_label_set_text(A.status, caption);
     if (done) {
         lv_obj_add_flag(A.question, LV_OBJ_FLAG_HIDDEN);

@@ -93,7 +93,7 @@ static void test_task(void *arg) {
     lock();
     CHECK(WAIT_FOR(!listening(), 2000), "locked: it stops");
     int sleeps = sim_power_sleeps();
-    delay_ms(70000);
+    delay_ms(85000); /* the slice is 60 s and it starts after the last refresh */
     CHECK(sim_power_sleeps() > sleeps, "and the chip sleeps");
     unlock();
     CHECK(WAIT_FOR(listening(), 2000), "and listens again when unlocked");

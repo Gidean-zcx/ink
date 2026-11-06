@@ -26,7 +26,7 @@ static bool set_pin(const char *old_pin, const char *new_pin) {
            WAIT_FOR(pin_done > before, 5000) && pin_result == INK_PIN_OK;
 }
 
-static char page[32], saved_snapshot[256];
+static char page[32], saved_snapshot[sizeof g_snap];
 static uint32_t version, saved_version;
 static lv_obj_t *screen, *saved_screen;
 static bool wrong_message;
@@ -75,6 +75,7 @@ static void enter_right_pin(void) {
 static void open_page(void) {
     CHECK(BY_HAND("reader.open_book", "{\"title\":\"测试长书\"}") && g_rc.status == INK_RC_DONE, "open the real reader (%s)", g_rc.detail);
     CHECK(BY_HAND("reader.goto_page", "{\"page\":4}") && g_rc.status == INK_RC_DONE && g_rc.revision == 4, "read page four");
+    delay_ms(3000); /* until the next page's start is known: the snapshot ends there */
     on_ui(inspect);
     CHECK(!strcmp(g_top, "book"), "a book is open (%s)", g_top);
     snprintf(saved_snapshot, sizeof saved_snapshot, "%s", g_snap);

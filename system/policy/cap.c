@@ -23,7 +23,7 @@
 #include "ink/sys/sha256.h"
 #include "ink/sys/storage.h"
 
-#define MAX_CAPS 192
+#define MAX_CAPS 256
 
 static const ink_cap_t *REG[MAX_CAPS] INK_PSRAM_BSS;
 static int nreg;

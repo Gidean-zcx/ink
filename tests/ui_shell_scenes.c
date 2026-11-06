@@ -285,7 +285,7 @@ static void test_task(void *arg) {
     if (!strcmp(scene, "MembersBack") || !strcmp(scene, "Pin") || !strcmp(scene, "PinWrong")) {
         ink_member_set_pin("owner", NULL, "1234", pin_result, NULL);
         CHECK(WAIT_FOR(pin_done > 0, 5000), "a synthetic PIN is set");
-        ink_power_lock(); delay_ms(600); ink_power_unlock(osal_now_us()); delay_ms(1000);
+        ink_power_lock(); delay_ms(125000); ink_power_unlock(osal_now_us()); delay_ms(1000); /* past the D-95 two minutes */
         if (strcmp(scene, "MembersBack")) { on_ui(find_member); tap(g_btn_x[0], g_btn_y[0]); }
         if (!strcmp(scene, "PinWrong")) {
             for (int i = 0; i < 4; i++) CHECK(press_label("9"), "type a wrong test password through the real keypad");
