@@ -4,10 +4,13 @@
 
 本次 gate-2 再验从 `cb83a8eb` 接续。门禁仅留下 `.merge`，列出的三个冲突已由 `fb4dec90` 合并解决，后续修复在 `39b7dcf4`。本次执行 `git merge --no-edit FETCH_HEAD` 返回 `Already up to date.`，核实 `a51a804c` 是当前分支祖先；`git merge-tree --write-tree FETCH_HEAD HEAD` 退出 0，结果与 HEAD 的树相同。本次两套全量各 105/105，通过且无跳过；52 项反向与修前源码 5 项均检出预期失败。仅更新验证记录，未改产品源码或测试。
 
+本次 gate-3 从 `7166e863` 接续，发现此前修复留在 `codex/device-events-review-fixes`，原任务分支 `claude/codex-device-events` 仍为 `97645ea2`。将 FETCH_HEAD 与旧任务分支做合并预演，退出 1，精确重现 gate-3 的 sim_hub.c、sim.h、hub_link.c 三个冲突；与修复分支预演则退出 0。因此切回原任务分支，用 `git merge --ff-only codex/device-events-review-fixes` 快进保留全部修复与历史，再执行 `git merge --no-edit FETCH_HEAD`（已合入）。原任务分支的合并预演现退出 0，生成树与 HEAD 完全相同。本轮全量、内存及反向复验尚待执行，不沿用 gate-2 结果冒充本次结果。
+
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
+| M0 gate-3 分支错位 | 【实测】已修，待本轮测试 | 旧任务分支预演重现三个原冲突；快进原任务分支后预演无冲突且结果等于 HEAD，未重写历史 | `git switch claude/codex-device-events`；`git merge --ff-only codex/device-events-review-fixes`；`git merge --no-edit FETCH_HEAD`；`git merge-tree --write-tree FETCH_HEAD claude/codex-device-events` |
 | M1 集成冲突 | 【实现＋实测】已合并、构建通过 | 三个冲突文件逐处合并；保留固定公钥连接、配对专用响应、连接代次、完整已发送身份、发送前校验。修正自动合并留下的重复原始请求函数和配对夹具的旧接口调用 | `git merge --no-edit FETCH_HEAD`；`git merge-base --is-ancestor a51a804c HEAD`；T1 |
 | DE-R5 页面上下文（高） | 【实现＋实测】已修 | 页面、浮层和输入会话绑定成员与记录代次，读取前后复核身份。交接期间拒绝旧上下文及其页面能力／输入编辑，新问题只带自己的文字，page_gen=0、actions=[]、state={}；同成员重新验证后可继续读取原页，关闭空间时只提供本身份浮层的脱敏快照 | T2；`private` 场景及原 member-wake／people-reset／power-menu |
 | DE-R6 已完成朗读（高） | 【实现＋实测】已修 | 待播流、解码 PCM 与已提交输出保留原身份；声音类型决定锁屏策略，私密语音同时校验认证与 epoch，身份过期即丢缓存并停止输出。最后扬声器写入前再查；AI 打开声音流后再查原轮身份 | T2；`private`：真实语音已结束、缓存超过 20 帧、UI 忙、成员发布暂停；200 ms 在途窗口后观察 800 ms，旧声音增加 0 ms |
@@ -46,6 +49,8 @@
 上述缺口保持披露，没有改设计迁就实现。目录仍限制 32 项，超限保留旧表；只消费 name／form，offline／timeout_ms 尚未落实相应策略，actions_more 优化未做。事件仍为 8 条内存环，不能代替持久结果库；boot 损坏或不能落盘仍启动失败。proto1 开发握手仍固定合成儿童，客户端自报认证不能取得正式成人权限。
 
 ## 改过的已有测试
+
+本次 gate-3 只纠正任务分支归属与验证记录，未修改产品、测试、预算或构建参数。
 
 本次 gate-2 再验未修改任何测试或预算。以下保留原修复的变更说明。
 
