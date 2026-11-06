@@ -43,12 +43,17 @@ def compare(rows, prof):
     panel = one("heap", when="panel_done") or end
     if panel:
         floor = 32768
-        out.append(("Wi-Fi 和屏幕都开着后，内部内存最低", kib(panel["internal_min"]), f"底线 {kib(floor)}",
+        out.append(("屏幕开过之后（Wi-Fi 已关），内部内存历史最低", kib(panel["internal_min"]), f"底线 {kib(floor)}",
                     "够" if panel["internal_min"] >= floor else "**低于底线，RK-04 成立**"))
+        on, off = one("heap", when="wifi_on"), one("heap", when="wifi_off")
+        if on and off:
+            both = panel["internal_free"] - (off["internal_free"] - on["internal_free"])
+            out.append(("【估算】Wi-Fi 和屏幕同时开，内部内存可用（没有同时开过）", kib(both), f"底线 {kib(floor)}",
+                        "够，但这个固件没有 LVGL、TLS 和系统任务，真实系统要少很多" if both >= floor else "**低于底线**"))
     f = one("flash")
     if f and "erase_4k_us_avg" in f:
         typ, top = prof["flash"]["erase_sector_us"]["typ"], prof["flash"]["erase_sector_us"]["max"]
-        out.append(("Flash 擦一个扇区", f"平均 {f['erase_4k_us_avg'] / 1000:.1f} ms，最长 {f['erase_4k_us_max'] / 1000:.1f} ms",
+        out.append(("Flash 擦一个写过的扇区", f"平均 {f['erase_4k_us_avg'] / 1000:.1f} ms，最长 {f['erase_4k_us_max'] / 1000:.1f} ms",
                     f"典型 {typ / 1000:.0f} ms，最长 {top / 1000:.0f} ms", "在模型内" if f["erase_4k_us_max"] <= top else "**比模型慢**"))
         mbps = 4096 / f["read_4k_us_avg"] if f.get("read_4k_us_avg") else 0
         out.append(("Flash 读", f"{mbps:.1f} MB/s", f"{prof['flash']['read_mbps']} MB/s", "在模型内" if mbps >= prof["flash"]["read_mbps"] else "**比模型慢**"))

@@ -38,7 +38,8 @@
 #endif
 #endif
 
-#define R(fmt, ...) printf("BENCH {" fmt "}\n", ##__VA_ARGS__)
+/* The USB console drops lines while the panel is busy: give each one time to leave. */
+#define R(fmt, ...) do { printf("BENCH {" fmt "}\n", ##__VA_ARGS__); fflush(stdout); vTaskDelay(pdMS_TO_TICKS(20)); } while (0)
 #define SDA 0
 #define SCL 1
 #define TEST_REGION (256 * 1024)
@@ -106,12 +107,14 @@ static void flash_speed(void) {
     int n = 16, err = 0;
     for (int i = 0; i < n; i++) {
         uint32_t a = base + i * 4096u;
+        err |= esp_flash_erase_region(NULL, a, 4096); /* a blank sector erases almost at once: not what is measured */
         int64_t t = now_us();
-        err |= esp_flash_erase_region(NULL, a, 4096);
-        int64_t e = now_us() - t;
-        t = now_us();
         err |= esp_flash_write(NULL, page, a, sizeof page);
         int64_t w = now_us() - t;
+        t = now_us();
+        err |= esp_flash_erase_region(NULL, a, 4096);
+        int64_t e = now_us() - t;
+        err |= esp_flash_write(NULL, page, a, sizeof page);
         t = now_us();
         err |= esp_flash_read(NULL, page, a, sizeof page);
         rsum += now_us() - t;
@@ -272,6 +275,12 @@ static void modem(void) {
         R("\"test\":\"modem\",\"error\":\"uart\"");
         return;
     }
+    /* the factory board wakes the modem's UART with a ready line */
+    gpio_set_direction(60, GPIO_MODE_OUTPUT);
+    gpio_set_level(60, 1);
+    gpio_set_direction(3, GPIO_MODE_INPUT);
+    vTaskDelay(pdMS_TO_TICKS(100));
+    R("\"test\":\"modem_lines\",\"srdy\":%d", gpio_get_level(3));
     char buf[192];
     for (size_t i = 0; i < sizeof ask / sizeof *ask; i++) {
         uart_flush_input(1);
@@ -369,7 +378,7 @@ static void panel(void) {
         char what[32];
         snprintf(what, sizeof what, "image_%s", BENCH_IMAGES[i].name);
         show(hl, what, MODE_GC16, temp);
-        vTaskDelay(pdMS_TO_TICKS(8000));
+        vTaskDelay(pdMS_TO_TICKS(20000)); /* long enough to look at */
     }
 #endif
     ramp(fb); /* what stays on the panel for a look afterwards */
