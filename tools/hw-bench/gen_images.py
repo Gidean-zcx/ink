@@ -42,7 +42,7 @@ def wedge(font):
     d = ImageDraw.Draw(im)
     w = WEDGE
     title, small = font_at(font, 36), font_at(font, 26)
-    d.text((W // 2, 52), "等方块变了再拍照，拍好点一下屏幕", font=title, fill=0, anchor="mm")
+    d.text((W // 2, 52), "灰阶标定，不用操作", font=title, fill=0, anchor="mm")
     half = w["WEDGE_ROWS"] // 2
     for r in range(w["WEDGE_ROWS"]):
         for c in range(w["WEDGE_COLS"]):
@@ -64,8 +64,8 @@ def grays(font):
     im = Image.new("L", (W, H), 255)
     d = ImageDraw.Draw(im)
     title, body, note = font_at(font, 36), font_at(font, 38), font_at(font, 31)
-    d.text((W // 2, 46), "选灰度：记下数字，再点一下屏幕", font=title, fill=0, anchor="mm")
-    d.text((38, 110), "灰色底：哪个数字刚好看得清", font=note, fill=0, anchor="lm")
+    d.text((W // 2, 46), "灰度对比，不用操作", font=title, fill=0, anchor="mm")
+    d.text((38, 110), "灰色底", font=note, fill=0, anchor="lm")
     y = 146
     for level in (13, 12, 11, 10, 9, 8):
         d.rounded_rectangle((38, y, W - 38, y + 72), radius=20, fill=level * 17)
@@ -73,7 +73,7 @@ def grays(font):
         d.text((150, y + 36), "今日 设置 通知", font=body, fill=0, anchor="lm")
         y += 84
     y += 26
-    d.text((38, y), "次要文字：哪个数字读着舒服", font=note, fill=0, anchor="lm")
+    d.text((38, y), "文字", font=note, fill=0, anchor="lm")
     y += 36
     for level in (6, 5, 4, 3, 2, 0):
         d.text((62, y + 32), str(level), font=body, fill=0, anchor="lm")

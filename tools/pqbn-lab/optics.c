@@ -1,7 +1,7 @@
 /*
  * The kernel on a model of the real panel, on the computer: what would these pictures look like?
  *
- * optics [--t0 N] [--scans N] [--s0 X] [--budget N] [--measured] [--stage] [--extra N] [--lattice] [--nokeep] [--snap P,P,...] --out DIR first.raw next.raw ...
+ * optics [--t0 N] [--scans N] [--s0 X] [--budget N] [--measured] [--stage] [--units N] [--lattice] [--keep] [--snap P,P,...] --out DIR first.raw next.raw ...
  * Pictures are native 4 bpp frames (make_frames.py). The first is drawn by the factory driver, the kernel
  * takes each next one as the lab firmware does. For each it writes DIR/<n>.b8 (brightness, 8 bit, native),
  * DIR/<n>.ref.b8 (what the factory driver would show) and one line of numbers.
@@ -96,7 +96,7 @@ static float level_at(const uint8_t *fb, int i) {
 
 int main(int argc, char **argv) {
     float t0 = 14, s0 = 0.3f;
-    int scans = 1, budget = 20000, measured = 0, stage = 0, snaps[32], nsnap = 0, first = 0, extra = 1, lattice = 0, nokeep = 0;
+    int scans = 1, budget = 20000, measured = 0, stage = 0, snaps[32], nsnap = 0, first = 0, units = 6, lattice = 0, keep = 0, bynumber = 0;
     const char *out = ".";
     for (int i = 1; i < argc; i++) {
         if (!strcmp(argv[i], "--t0")) t0 = (float)atof(argv[++i]);
@@ -104,15 +104,17 @@ int main(int argc, char **argv) {
         else if (!strcmp(argv[i], "--scans")) scans = atoi(argv[++i]);
         else if (!strcmp(argv[i], "--budget")) budget = atoi(argv[++i]);
         else if (!strcmp(argv[i], "--measured")) measured = 1;
-        else if (!strcmp(argv[i], "--extra")) extra = atoi(argv[++i]);
+        else if (!strcmp(argv[i], "--units")) units = atoi(argv[++i]);
         else if (!strcmp(argv[i], "--lattice")) lattice = 1;
-        else if (!strcmp(argv[i], "--nokeep")) nokeep = 1;
+        else if (!strcmp(argv[i], "--keep")) keep = 1;
+        else if (!strcmp(argv[i], "--by-number")) bynumber = 1;
         else if (!strcmp(argv[i], "--stage")) stage = 1;
         else if (!strcmp(argv[i], "--out")) out = argv[++i];
         else if (!strcmp(argv[i], "--snap")) { char *t = strtok(argv[++i], ","); while (t && nsnap < 32) { snaps[nsnap++] = atoi(t); t = strtok(NULL, ","); } }
         else { first = i; break; }
     }
     if (!first) { fprintf(stderr, "no pictures\n"); return 1; }
+    if (stage) budget = 0;
     build_steps();
     const size_t nt = (size_t)(W / PQBN_TPX) * (H / PQBN_TPY);
     C.W = W; C.H = H; C.ntx = W / PQBN_TPX; C.nty = H / PQBN_TPY; C.marg = 2; C.plan_budget = budget; C.line_mode = 1;
@@ -126,9 +128,10 @@ int main(int argc, char **argv) {
     if (measured || stage) {
         if (pqbn_v4_build_measured((uint8_t *)C.dec, (uint8_t *)C.exk, C.step, C.level, C.lo, C.hi, t0, PANEL_PUSHES_DOWN, PANEL_PUSHES_UP)) { fprintf(stderr, "tables\n"); return 1; }
     } else if (pqbn_v4_build((uint8_t *)C.dec, (uint8_t *)C.exk, C.step, t0, s0, 120.0f)) { fprintf(stderr, "tables\n"); return 1; }
-    C.rail_extra = extra;
-    if (stage) C.auto_motion = 2;
-    C.keep_off = nokeep;
+    if (stage && !bynumber) pqbn_v4_build_binary((uint8_t *)C.tau_nib, C.tau, PANEL_WHITE_SHARE);
+    C.two_stage = stage;
+    C.swing_units = units;
+    C.keep = keep;
     B = malloc(sizeof(float) * N);
     float *ref = malloc(sizeof(float) * N);
     load(argv[first], fb);
@@ -167,7 +170,7 @@ int main(int argc, char **argv) {
         write_b8(path, B);
         snprintf(path, sizeof path, "%s/%d.ref.b8", out, p - first);
         write_b8(path, ref);
-        printf("%-28s phases=%-4d planned=%-8u error=%.3f ink=%.3f of the factory's\n", strrchr(argv[p], '/') ? strrchr(argv[p], '/') + 1 : argv[p], phases, C.stat_planned - planned0, err / N, ink / ink_ref);
+ printf("%-20s phases=%-4d planned=%-8u error=%.3f ink=%.3f of the factory's\n", strrchr(argv[p], '/') ? strrchr(argv[p], '/') + 1 : argv[p], phases, C.stat_planned - planned0, err / N, ink / ink_ref);
     }
     return 0;
 }

@@ -54,9 +54,10 @@ typedef struct {
     uint16_t *band;           // per tile row: [2*ty] phase until which plans run, [2*ty+1] tiles with a capped plan
     int line_mode;            // 1: no drive plane; the display driver calls pqbn_v4_exec_row() per scan line
     int auto_motion;          // 1: tiles switch to motion mode and back by themselves (needs plan_budget > 0)
-                              // 2: every change goes the same way: black and white first, then the grays
-    int rail_extra;           // pushes after a motion swing that reach a rail (0 = 1); a swing is 7 pushes
-    int keep_off;             // auto_motion 2: 1 = pixels already at their level go through the swing too (no ghost, but they move)
+    int two_stage;            // 1: no modes: every change first swings to black and white, then settles on the grays. Line mode, plan_budget 0
+    int swing_units;          // two_stage: a rail-to-rail swing in units of two pushes (at most 6)
+    int keep;                 // two_stage: a pixel already showing its level stays out of the swing (small changes)
+    int swing_step;           // two_stage: state moved per unit; set by pqbn_v4_init
     uint8_t level[16];        // the model state a target level rests at; all 0 until pqbn_v4_init sets the linear t4 * 17
     uint8_t lo[16], hi[16];   // a pixel between these already shows that level (they differ with a measured table)
     int backlog;              // phases in a row that ended with UI changes the planner could not serve
@@ -67,6 +68,7 @@ typedef struct {
 #define T_NMAX 0x07           // max pushes of the running plan (its tile is active while k < this)
 #define T_PEND 0x08           // a UI change is waiting to be planned
 #define T_HOT  0x30           // activity: UI changes arriving in quick succession (saturating count 1..3)
+#define T_SWING 0x10          // two_stage only: the running plan is a swing, T_NMAX counts units of two pushes
 #define T_MOT  0x40           // tile is in motion mode
 #define T_CAP  0x80           // some plan was capped at RMAX pushes: replan when it finishes
 #define HOT_WINDOW 9          // a UI change within this many phases of the previous one continues the activity
@@ -80,6 +82,8 @@ int pqbn_v4_build_measured(uint8_t *dec, uint8_t *exk, uint8_t *step_out, uint8_
                            const float *down, const float *up);
 /* Motion-mode tables: exk_m 7 x 256 B, tau_nib 2048 B (from the 64x64 threshold map tau). */
 void pqbn_v4_build_motion(uint8_t *exk_m, uint8_t *tau_nib, const uint8_t *tau);
+/* two_stage: tau_nib from each level's share of white pixels, by brightness (after pqbn_v4_build_motion). */
+void pqbn_v4_build_binary(uint8_t *tau_nib, const uint8_t *tau, const float *white_share);
 /* Every pixel settled on the current framebuffer (fb4), long dwell. */
 void pqbn_v4_init(pqbn_v4_ctx *C, uint32_t now);
 /* One drive phase: acknowledge UI marks, plan within the budget, switch motion tiles, execute

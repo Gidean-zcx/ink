@@ -6,10 +6,13 @@
  *  2. A rehearsal: full scans of empty lines, which push nothing. The first push comes only after these.
  *  3. A wedge: patches pushed 1..12 times from rest, and the same right after a swing to the other rail, next
  *     to the factory's 16 gray levels. A photo says how the panel answers at 12 ms a push.
- *  4. The same pages through the factory driver without a flash, to compare with.
- *  5. Trials: the PQ-BN kernel (drivers/display/pqbn) with tables from the first wedge, every change black and
- *     white first and then the grays. Each reports its time, the planner's and the executors' cycles, and missed lines.
- * A factory clean starts every trial, so nothing stays on the panel.
+ *  4. The page of grays through the factory driver, to read the kernel's grays against.
+ *  5. Trials: the PQ-BN kernel (drivers/display/pqbn) with tables from the wedges, two ways, to compare by eye:
+ *     every change first swings to black and white at the right brightness and then settles on the grays
+ *     (two_stage), and every pixel going straight to its target. Each reports its time, the planner's and the
+ *     executors' cycles, and missed lines.
+ * A factory clean starts every trial, so nothing stays on the panel. Nobody has to touch anything: a video of the
+ * whole run is what is read afterwards.
  *
  * Who runs when. The scan tasks never block while they wait for room or for each other, they only
  * yield, so nothing below them runs on their core until they are done. The third run hung on exactly
@@ -374,8 +377,8 @@ static bool kernel_alloc(void) {
     C->ntx = PANEL_W / PQBN_TPX;
     C->nty = PANEL_H / PQBN_TPY;
     C->marg = 2;
-    C->plan_budget = 0;  /* everything at once: no sweep across the screen, and the planner waits on a quiet panel */
-    C->auto_motion = 2;  /* every change the same way: black and white first, then the grays */
+    C->plan_budget = 0;
+    C->swing_units = 6;  /* a swing of 12 pushes */
     C->line_mode = 1;
     C->drive = NULL;
     C->fb4 = lab_alloc(npx / 2, false);
@@ -396,7 +399,8 @@ static bool kernel_alloc(void) {
         return false;
     memcpy((void *) C->tau, PQBN_TAU, 4096);
     pqbn_v4_build_motion((uint8_t *) C->exk_m, (uint8_t *) C->tau_nib, C->tau);
-    if (pqbn_v4_build_measured((uint8_t *) C->dec, (uint8_t *) C->exk, C->step, C->level, C->lo, C->hi, 15.0f, PANEL_PUSHES_DOWN, PANEL_PUSHES_UP)) {
+    pqbn_v4_build_binary((uint8_t *) C->tau_nib, C->tau, PANEL_WHITE_SHARE);
+    if (pqbn_v4_build_measured((uint8_t *) C->dec, (uint8_t *) C->exk, C->step, C->level, C->lo, C->hi, 12.0f, PANEL_PUSHES_DOWN, PANEL_PUSHES_UP)) {
         R("\"test\":\"lab_alloc\",\"error\":\"the tables cannot be built\"");
         return false;
     }
@@ -425,14 +429,22 @@ static void kernel_rest(void) {
     K.now += (uint32_t) phases;
 }
 
+/* Is nothing pushing in the next phase? */
+static bool kernel_quiet(void) {
+    const pqbn_v4_ctx *C = &K.C;
+    for (int ty = 0; ty < C->nty; ty++)
+        if ((int16_t) (C->band[2 * ty] - (uint16_t) (K.now + 1)) > 0) return false;
+    return true;
+}
+
 /* Will the next phase's planning take long? */
 static bool kernel_plan_due(void) {
     const pqbn_v4_ctx *C = &K.C;
     const int nt = C->ntx * C->nty;
+    const bool quiet = kernel_quiet();
     for (int i = 0; i < nt; i++) {
-        const int tn = C->tile_nmax[i], k = (uint16_t) (K.now + 1 - C->tile_plan[i]);
-        if (C->tile_dirty[i] || (tn & T_PEND)) return true;
-        if ((tn & T_MOT) ? k > 6 : ((tn & T_CAP) && k >= (tn & T_NMAX))) return true;
+        const int tn = C->tile_nmax[i];
+        if (C->tile_dirty[i] || (tn & T_PEND) || (quiet && (tn & T_CAP))) return true;
     }
     return false;
 }
@@ -475,7 +487,7 @@ static bool kernel_drive(const char *what) {
         holding = true;
         phases++;
         const int64_t t = now_us();
-        if (bw_ms < 0 && !C->n_motion) bw_ms = (int) ((t - t0) / 1000); /* the swings are over: black and white are on the panel */
+        if (bw_ms < 0 && kernel_quiet()) bw_ms = (int) ((t - t0) / 1000); /* the swing is over: black and white are on the panel */
         if (t - phase_start > phase_max) phase_max = t - phase_start;
         phase_start = t;
         if (!ok || t - t0 > MAX_DRIVE_US || !kernel_work_after(K.now)) break;
@@ -500,7 +512,7 @@ static bool kernel_show(const char *picture, uint8_t *fb) {
     draw_picture(picture, fb);
     memcpy((void *) K.C.fb4, fb, (size_t) PANEL_W * PANEL_H / 2);
     memset(K.C.tile_dirty, 1, (size_t) K.C.ntx * K.C.nty);
-    K.C.keep_off = 1; /* a new page: everything goes through the swing, so nothing of the old page shows in the grays */
+    K.C.keep = 0; /* a new page: everything goes through the swing, so nothing of the old page shows in the grays */
     return kernel_drive(picture);
 }
 
@@ -517,7 +529,7 @@ static bool kernel_toggle(int on) {
         }
     for (int ty = ny0 / PQBN_TPY; ty <= (ny0 + SIZE - 1) / PQBN_TPY; ty++)
         for (int tx = nx0 / PQBN_TPX; tx <= (nx0 + SIZE - 1) / PQBN_TPX; tx++) K.C.tile_dirty[ty * K.C.ntx + tx] = 1;
-    K.C.keep_off = 0; /* a small change: what is already right stays still */
+    K.C.keep = 1; /* a small change: what is already right stays still */
     return kernel_drive(on ? "small_black" : "small_white");
 }
 
@@ -562,37 +574,13 @@ static void hold_for_touch(int ms) {
 }
 
 static const struct { const char *picture; int hold_ms; } TRIAL_STEPS[] = {
-    {"Settings", 6000}, {"Today", 6000}, {"read1", 5000}, {"read2", 3000}, {"read3", 3000}, {"read4", 3000}, {"grays", 5000},
+    {"Settings", 4000}, {"Today", 4000}, {"read1", 3000}, {"read2", 3000}, {"read3", 3000}, {"read4", 3000}, {"grays", 5000},
 };
 
-/* The same pages as the factory driver turns them without a flash, to compare with. */
-static void factory_turn(EpdiyHighlevelState *hl, uint8_t *fb, const char *picture, int temp) {
-    epd_poweron();
-    guard_arm(FACTORY_GUARD_MS);
-    draw_picture(picture, fb);
-    char what[32];
-    snprintf(what, sizeof what, "gl16_%s", picture);
-    show(hl, what, MODE_GL16, temp);
-    G.armed = false;
-    epd_poweroff();
-}
-
-static void trial_factory(EpdiyHighlevelState *hl, uint8_t *fb, int temp) {
-    R("\"test\":\"factory_trial\"");
-    factory_show(hl, fb, "Main", temp);
-    hold(3000);
-    for (unsigned i = 0; i < sizeof TRIAL_STEPS / sizeof *TRIAL_STEPS; i++) {
-        factory_turn(hl, fb, TRIAL_STEPS[i].picture, temp);
-        hold(TRIAL_STEPS[i].hold_ms);
-    }
-    factory_turn(hl, fb, "white", temp);
-    hold_for_touch(20000); /* what stays behind on white is the ghost: a photo shows it */
-}
-
-static void trial(EpdiyHighlevelState *hl, uint8_t *fb, int rail_extra, int temp) {
-    R("\"test\":\"pqbn_trial\",\"swing_pushes\":%d", 7 + rail_extra);
+static void trial(EpdiyHighlevelState *hl, uint8_t *fb, int two_stage, int temp) {
+    R("\"test\":\"pqbn_trial\",\"two_stage\":%d", two_stage);
     pqbn_v4_ctx *C = &K.C;
-    C->rail_extra = rail_extra;
+    C->two_stage = two_stage;
     factory_show(hl, fb, "Main", temp);
     memcpy((void *) C->fb4, fb, (size_t) PANEL_W * PANEL_H / 2);
     K.now = 0;
@@ -603,12 +591,12 @@ static void trial(EpdiyHighlevelState *hl, uint8_t *fb, int rail_extra, int temp
         if (!kernel_show(TRIAL_STEPS[i].picture, fb)) return;
         hold(TRIAL_STEPS[i].hold_ms);
     }
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 4; i++) {
         if (!kernel_toggle(!(i & 1))) return;
         hold(800);
     }
     if (!kernel_show("white", fb)) return;
-    hold_for_touch(20000);
+    hold(8000); /* what stays behind on white is the ghost */
 }
 
 static void panel_lab(void) {
@@ -622,16 +610,19 @@ static void panel_lab(void) {
     if (!guard_self_test()) return; /* then nothing protects the panel: nothing more happens to it */
     hold(500);
     if (rehearse()) {
-        /* how the panel answers: stays up for a photo */
+        /* how the panel answers, and the factory's grays: up long enough for the video */
         factory_show(hl, fb, "wedge", temp);
         hold(2000);
         run_wedge();
-        if (!L.failed) hold_for_touch(120000);
-        if (!L.failed) trial_factory(hl, fb, temp); /* first: after our own driving its picture of the panel is out of date */
+        hold(8000);
+        if (!L.failed) {
+            factory_show(hl, fb, "grays", temp);
+            hold(5000);
+        }
         if (!L.failed && kernel_alloc()) {
             heap("kernel_on");
-            trial(hl, fb, 6, temp); /* a swing of 13 pushes: full white and deep black */
-            if (!L.failed) trial(hl, fb, 3, temp); /* 10: faster; the model says more stays behind */
+            trial(hl, fb, 1, temp); /* black and white first, at the right brightness */
+            if (!L.failed) trial(hl, fb, 0, temp); /* straight to the target; its speed here says little: it plans three times on the way */
         }
     }
     factory_show(hl, fb, "done", temp);
