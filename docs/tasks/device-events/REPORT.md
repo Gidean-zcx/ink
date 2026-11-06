@@ -4,13 +4,13 @@
 
 本次 gate-2 再验从 `cb83a8eb` 接续。门禁仅留下 `.merge`，列出的三个冲突已由 `fb4dec90` 合并解决，后续修复在 `39b7dcf4`。本次执行 `git merge --no-edit FETCH_HEAD` 返回 `Already up to date.`，核实 `a51a804c` 是当前分支祖先；`git merge-tree --write-tree FETCH_HEAD HEAD` 退出 0，结果与 HEAD 的树相同。本次两套全量各 105/105，通过且无跳过；52 项反向与修前源码 5 项均检出预期失败。仅更新验证记录，未改产品源码或测试。
 
-本次 gate-3 从 `7166e863` 接续，发现此前修复留在 `codex/device-events-review-fixes`，原任务分支 `claude/codex-device-events` 仍为 `97645ea2`。将 FETCH_HEAD 与旧任务分支做合并预演，退出 1，精确重现 gate-3 的 sim_hub.c、sim.h、hub_link.c 三个冲突；与修复分支预演则退出 0。因此切回原任务分支，用 `git merge --ff-only codex/device-events-review-fixes` 快进保留全部修复与历史，再执行 `git merge --no-edit FETCH_HEAD`（已合入）。原任务分支的合并预演现退出 0，生成树与 HEAD 完全相同。本轮全量、内存及反向复验尚待执行，不沿用 gate-2 结果冒充本次结果。
+本次 gate-3 从 `7166e863` 接续，发现此前修复留在 `codex/device-events-review-fixes`，原任务分支 `claude/codex-device-events` 仍为 `97645ea2`。将 FETCH_HEAD 与旧任务分支做合并预演，退出 1，精确重现 gate-3 的 sim_hub.c、sim.h、hub_link.c 三个冲突；与修复分支预演则退出 0。因此切回原任务分支，用 `git merge --ff-only codex/device-events-review-fixes` 快进保留全部修复与历史，再执行 `git merge --no-edit FETCH_HEAD`（已合入）。原任务分支的合并预演现退出 0，生成树与 HEAD 完全相同。本轮在原任务分支重新配置、构建，普通与 ASan+UBSan 全量各 105/105，52 项反向及修前源码 5 项均检出预期失败。此次没有再改产品源码或测试。
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| M0 gate-3 分支错位 | 【实测】已修，待本轮测试 | 旧任务分支预演重现三个原冲突；快进原任务分支后预演无冲突且结果等于 HEAD，未重写历史 | `git switch claude/codex-device-events`；`git merge --ff-only codex/device-events-review-fixes`；`git merge --no-edit FETCH_HEAD`；`git merge-tree --write-tree FETCH_HEAD claude/codex-device-events` |
+| M0 gate-3 分支错位 | 【实测】已修，两套全量通过 | 旧任务分支预演重现三个原冲突；快进原任务分支后预演无冲突且结果等于 HEAD，未重写历史；后续验证与提交均在原任务分支 | `git switch claude/codex-device-events`；`git merge --ff-only codex/device-events-review-fixes`；`git merge --no-edit FETCH_HEAD`；T7～T9 |
 | M1 集成冲突 | 【实现＋实测】已合并、构建通过 | 三个冲突文件逐处合并；保留固定公钥连接、配对专用响应、连接代次、完整已发送身份、发送前校验。修正自动合并留下的重复原始请求函数和配对夹具的旧接口调用 | `git merge --no-edit FETCH_HEAD`；`git merge-base --is-ancestor a51a804c HEAD`；T1 |
 | DE-R5 页面上下文（高） | 【实现＋实测】已修 | 页面、浮层和输入会话绑定成员与记录代次，读取前后复核身份。交接期间拒绝旧上下文及其页面能力／输入编辑，新问题只带自己的文字，page_gen=0、actions=[]、state={}；同成员重新验证后可继续读取原页，关闭空间时只提供本身份浮层的脱敏快照 | T2；`private` 场景及原 member-wake／people-reset／power-menu |
 | DE-R6 已完成朗读（高） | 【实现＋实测】已修 | 待播流、解码 PCM 与已提交输出保留原身份；声音类型决定锁屏策略，私密语音同时校验认证与 epoch，身份过期即丢缓存并停止输出。最后扬声器写入前再查；AI 打开声音流后再查原轮身份 | T2；`private`：真实语音已结束、缓存超过 20 帧、UI 忙、成员发布暂停；200 ms 在途窗口后观察 800 ms，旧声音增加 0 ms |
@@ -21,8 +21,8 @@
 | DE-4 能力目录 | 【实测】定向回归通过 | 全分页、同 rev 原子替换、不透明及重复 cursor、失败保留旧表、重复名与 32 项上限保护保留 | T2 |
 | DE-5 两端契约 | 【实测】两套全量通过相关项 | sim_hub、合成中枢契约、JSON 交叉检查及端到端通过；配对 hello 使用一致成员快照并携带 epoch，上线前仍强制同步身份 | 全量中的 hub-*、pairing-*；配对 hello 与在线身份断言 |
 | DE-6 D-105 | 【实现】部分，未完成 | asked、ask_by_hand、活动记录保留；undo_ms=3000 和 asked 短信／拨号仍明确拒绝，未实现三秒后执行 | T2；原缺口继续披露 |
-| DE-7 反向对照 | 【实测】本次 52/52 检出，另有修前源码 5/5 | 既有 26 项、新增 5 项、配对 21 项全部检出指定失败。新五项 test.finished=1；开工基线对应源码也检出同样失败。最初场景修前四条失败、旧声音增加 810 ms；能力／编辑旁路在修前另有两条失败 | T6；原 T3 证据仍保留 |
-| G1 全量与内存 | 【实测】本次普通及 ASan+UBSan 各 105/105 | 普通 45.13 秒，内存 82.36 秒，零失败、零跳过，无 sanitizer 错误。两套 private 均 33 项、test.finished=1、旧声音增加 0 ms；预算、确定性、分层未放宽 | T5；原 T1、T4 证据仍保留 |
+| DE-7 反向对照 | 【实测】本次 52/52 检出，另有修前源码 5/5 | 既有 26 项、新增 5 项、配对 21 项全部检出指定失败。新五项 test.finished=1；开工基线对应源码也检出同样失败，声音缺口均复现 810 ms | T8；原 T3、T6 证据仍保留 |
+| G1 全量与内存 | 【实测】本次普通及 ASan+UBSan 各 105/105 | 普通 54.66 秒，内存 94.69 秒，零失败、零跳过，无 sanitizer 错误。两套 private 均 33 项、test.finished=1、旧声音增加 0 ms；各含中枢 125 项；gui-smoke 均首轮通过；预算、确定性、分层未放宽 | T7；原 T1、T4、T5 证据仍保留 |
 | G2 原子能力／AI 原生／分层 | 【实现】符合本轮范围 | 没有新用户动作、能力旁路、常驻任务或锁。页面与输入仍由 UI 任务读取；音频出口在原服务内检查。新增身份元数据放 PSRAM；PIN 不入快照 | 源码差异、分层检查与既有能力回归 |
 | G3 依赖状态 | 【实现】已更新 | ui-dependencies 只更新成员隔离状态格和报告引用，不改设计判断 | `git diff -- docs/system/ui-dependencies.md` |
 | G4／G5 范围与资源 | 【实现＋实测】检查通过 | 修复提交 19 个相关文件，另合入上游配对／目录变更；无新页面、构建产物或设计稿。构建最多 -j4、ctest 最多 -j3，逐轮串行；gui-smoke 使用 SDL dummy。未启动窗口、触设备、调用付费接口或 push | `git diff --stat 83a0ac90..HEAD`；三个基线隐私扫描均零命中；文档与文件检查 |
@@ -35,6 +35,9 @@
 - T4：`$INK_DEPS/build-deps/pyenv/bin/ctest --test-dir build --output-on-failure -j3`；同命令换 `build-asan`，均退出 0。两套目录日志 `device-events-gate-full-test.log`，另核对 `Testing/Temporary/LastTest.log` 无 ASan／UBSan／泄漏错误签名。两套沿用总规则的字体、Python、LVGL 及锁定中枢环境 `INK_HUB_PYTHON=$PWD/work/hub-python/bin/python`；两套 WERROR=ON，内存版只另开 INK_SANITIZE=ON，按序执行。
 - T5（本次 gate-2 再验）：两套按 T1 配置，仍为 WERROR=ON、内存版只另开 INK_SANITIZE=ON。先普通、后内存，分别执行 `cmake --build build -j4` 和 T4 全量命令，再换 `build-asan`，配置／构建／测试均退出 0。新日志位于各构建目录的 `gate-2-recheck-cmake.log`、`gate-2-recheck-build.log`、`gate-2-recheck-ctest.log`；两套各 105 条结果，零跳过，`Testing/Temporary/LastTest.log` 无 sanitizer 错误。设备事件的 94／94／87／108／33 项全部完成且无失败，旧声音新增播放均为 0 ms。
 - T6（本次反向）：按序执行 `python3 tests/device_events/reverse.py --build build`（26 项）、`python3 tests/device_events/private_reverse.py --build build`（5 项）、`python3 tests/pairing/reverse.py --build build`（21 项），再执行 private_reverse 同命令加 `--baseline 83a0ac90`（5 项），均退出 0。日志在 `build/` 下，分别为 `gate-2-recheck-reverse.log`、`gate-2-recheck-private-reverse.log`、`gate-2-recheck-pairing-reverse.log`、`gate-2-recheck-private-baseline.log`。未替换产品源码，所有破坏版本均在忽略目录生成；退出 0 表示检出预期失败。
+- T7（gate-3 全量）：在 `claude/codex-device-events` 按 T1 完整字体、Python、LVGL 参数重新配置两套，显式保留同一锁定中枢环境 `INK_HUB_PYTHON=$PWD/work/hub-python/bin/python`；均 WERROR=ON，内存版只另开 INK_SANITIZE=ON。普通配置 → `cmake --build build -j4` → `SDL_VIDEODRIVER=dummy UBSAN_OPTIONS=halt_on_error=1 $INK_DEPS/build-deps/pyenv/bin/ctest --test-dir build --output-on-failure -j3`，结束后才换 `build-asan` 执行相同三步，全部退出 0。两套各 105 个不同测试通过、无跳过，LastTest.log 的 sanitizer 错误签名均零命中；设备事件分别为 94／94／87／108／33 项，均 finished=1、fail=0。日志在各构建目录的 `gate-3-recheck-cmake.log`、`gate-3-recheck-build.log`、`gate-3-recheck-ctest.log`；逐步退出状态和耗时为 `gate-3-recheck-results.json`。
+- T8（gate-3 反向）：两套全量结束后，按 T6 的四条命令逐个串行重跑，全部退出 0；分别检出 26／5／21／5 个预期失败。产物仅在忽略目录；未替换工作区产品源码。日志为 `build/gate-3-recheck-reverse.log`、`gate-3-recheck-private-reverse.log`、`gate-3-recheck-pairing-reverse.log`、`gate-3-recheck-private-baseline.log`，逐步状态为 `gate-3-recheck-reverse-results.json`。反向脚本成功代表检出破坏，不能理解为破坏版本通过测试。
+- T9（gate-3 分支反向）：`git merge-tree --write-tree FETCH_HEAD 97645ea2` 退出 1，冲突文件集合精确等于 gate-3 的三项；`git merge-tree --write-tree FETCH_HEAD claude/codex-device-events` 退出 0，输出等于 `git rev-parse HEAD^{tree}`；`git merge-base --is-ancestor FETCH_HEAD HEAD` 退出 0。带命令、退出码与原始输出的证据在 `work/gate-3-branch-regression.json`。
 
 首轮普通全量曾为 101/105：快照误拒脱敏浮层与同成员解锁的三项已修，音频去掉额外空闲锁操作后通知竞态原断言通过；最终两套全量如上。52 项反向日志为 `build/device-events-gate-reverse.log`、`device-events-gate-private-reverse.log`、`device-events-gate-pairing-reverse.log`；反向不是破坏后的产品通过。
 
@@ -71,4 +74,5 @@
 - 快照修复后的源码复核又发现同一交接窗口的页面能力与输入编辑旁路，补回归证实后在统一能力策略和文本目标校验中修复；没有只在 AI 请求拼装处隐藏旧内容。
 - 已核对两份修改文档的 14 个本地文件／锚点链接、Python 语法、候选文件大小及 git diff --check。相对 `83a0ac90`、`a51a804c`、`f1f72ae9` 的提交差异按总规则 §6 正则扫描均为 0 命中（grep 退出 1）；无本机路径、设备标识、密钥或生成产物进入提交。
 - 合并提交 `fb4dec90`，代码与回归提交 `39b7dcf4`；最终验证记录随本报告提交。仅本地提交，未 push。
-- 本次相对 `cb83a8eb` 仅改本报告；相对 `cb83a8eb`、`a51a804c`、`f1f72ae9` 的隐私扫描均为零命中（grep 退出 1），新增 C 行仍无 write／read／fgets 调用。报告的 3 个本地文件及锚点链接存在，`git diff --check` 通过。配对反向链接仍有重复静态库告警，链接退出 0；未调整相关参数。Linux gcc 和远端 CI 未在本次运行。
+- gate-2 相对 `cb83a8eb` 仅改本报告；相对 `cb83a8eb`、`a51a804c`、`f1f72ae9` 的隐私扫描均为零命中（grep 退出 1），新增 C 行仍无 write／read／fgets 调用。报告的 3 个本地文件及锚点链接存在，`git diff --check` 通过。配对反向链接仍有重复静态库告警，链接退出 0；未调整相关参数。Linux gcc 和远端 CI 未在该轮运行。
+- gate-3 相对 `7166e863` 仍只改本报告，原任务分支已包含全部既有修复。相对 `7166e863`、`97645ea2`、`a51a804c`、`f1f72ae9` 按总规则 §6 隐私正则检查均零命中；相对两个集成基线的新增 C 行均无 write／read／fgets 调用。报告的 3 个本地文件及锚点链接、文件大小、`git diff --check` 均通过；三个冲突文件无冲突标记，索引无未合并项。配对反向仍有原重复静态库告警，未改参数。Linux gcc 和远端 CI 未运行；仅本地提交，未 push。
