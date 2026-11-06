@@ -1,0 +1,14 @@
+# Applied file by file when a file is touched, not to the whole tree at once.
+BasedOnStyle: LLVM
+IndentWidth: 4
+ColumnLimit: 120
+SortIncludes: false
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: WithoutElse
+AllowShortLoopsOnASingleLine: true
+AllowShortBlocksOnASingleLine: Never
+AlignConsecutiveMacros: false
+AlignTrailingComments: false
+ReflowComments: false
+SpaceAfterCStyleCast: true
+Cpp11BracedListStyle: true

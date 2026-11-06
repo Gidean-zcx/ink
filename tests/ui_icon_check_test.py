@@ -1,4 +1,5 @@
 """Required icons include tables, branches, helper calls and app declarations."""
+import re
 import json
 from pathlib import Path
 import runpy
@@ -75,7 +76,7 @@ class IconCheck(unittest.TestCase):
         ):
             path = ROOT / file
             source = path.read_text()
-            self.assertEqual(source.count(needle), 1)
+            self.assertEqual(re.sub(r'\s+', '', source).count(re.sub(r'\s+', '', needle)), 1)
             import re
             mutant = source.replace(needle, re.sub(r'INK_UI_ICON\(\w+\)', 'INK_UI_ICON(missingReviewIcon)', needle), 1)
             errors = CHECKER['check_sources']({Path(file): mutant}, NAMES)
