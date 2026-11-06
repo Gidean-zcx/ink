@@ -3,6 +3,7 @@
  */
 #ifndef INK_SYS_NET_H
 #define INK_SYS_NET_H
+#include <stdint.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -11,6 +12,8 @@ extern "C" {
 int ink_net_init(void);
 /** Wi-Fi management: the networks it knows, the capabilities. After the data store. */
 int ink_wifi_init(void);
+/* Background setup page: do not discard optional Wi-Fi credentials before this succeeds. */
+int ink_wifi_wait_saved(uint32_t revision);
 
 #ifdef __cplusplus
 }

@@ -109,6 +109,7 @@ add_library(ink_port_sim STATIC
   ports/sim/hal/hal_power_sim.c
   ports/sim/hal/hal_assets_sim.c
   ports/sim/hal/hal_net_sim.c
+  ports/sim/hal/hal_provision_sim.c
   ports/sim/hal/hal_audio_sim.c
   ports/sim/hal/hal_cellular_sim.c
   ports/sim/hal/hal_afe_sim.c
@@ -165,6 +166,7 @@ add_library(ink_system STATIC
   system/services/storage/storage_service.c
   system/services/power/power_service.c
   system/services/hub/hub_link.c
+  system/services/hub/pairing.c
   system/services/hub/rt.c
   system/services/ai/ai_service.c
   system/services/audio/audio_service.c
@@ -366,6 +368,20 @@ endif()
 
 # ---------------------------------------------------------------- tests
 enable_testing()
+ink_sim_executable(sim-pairing tests/pairing/device.c)
+target_link_libraries(sim-pairing PRIVATE ink_apps ink_system)
+if(INK_HAVE_FONTS)
+  add_dependencies(sim-pairing ink_fonts ink_test_content)
+endif()
+add_test(NAME pairing-recovery COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/pairing/run.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(pairing-recovery PROPERTIES TIMEOUT 180 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")
+ink_sim_executable(sim-pairing-storage tests/pairing/storage_faults.c)
+target_link_libraries(sim-pairing-storage PRIVATE ink_apps ink_system)
+if(INK_HAVE_FONTS)
+  add_dependencies(sim-pairing-storage ink_fonts ink_test_content)
+endif()
+add_test(NAME pairing-storage-failures COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/pairing/storage.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(pairing-storage-failures PROPERTIES TIMEOUT 120 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")
 set(INK_HUB_PYTHON "${Python3_EXECUTABLE}" CACHE FILEPATH "Python with the locked hub test dependencies")
 add_executable(hub-json-check tests/hub/json_check.c system/util/ink_json.c)
 target_include_directories(hub-json-check PRIVATE platform/include system/include third_party/jsmn)

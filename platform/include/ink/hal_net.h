@@ -108,11 +108,17 @@ typedef void (*hal_ws_cb)(void *ctx, hal_ws_event_t ev, const uint8_t *data, siz
 
 /** Start connecting (asynchronous). Returns NULL only if out of memory. */
 hal_ws_t *hal_ws_open(const char *url, hal_ws_cb cb, void *ctx);
+/* Verify SHA-256 of the peer SPKI before CONNECTED. NULL preserves normal TLS validation. */
+hal_ws_t *hal_ws_open_pinned(const char *url, const uint8_t *sha256, hal_ws_cb cb, void *ctx);
+/* The observed peer SPKI digest, available after CONNECTED. */
+bool hal_ws_peer_key(hal_ws_t *ws, uint8_t out[32]);
 /**
  * Queue one message. The platform copies it. Blocks up to timeout_us while
  * the send buffer is full. Returns 0, or -1 if not connected / timed out.
  */
 int hal_ws_send(hal_ws_t *ws, bool binary, const void *data, size_t len, int64_t timeout_us);
+/* Owner task: finish queued writes before an intentional enrollment reconnect. Bounded, 0 or -1. */
+int hal_ws_flush(hal_ws_t *ws, int64_t timeout_us);
 /** Close if still open (no HAL_WS_CLOSED for that), wait until no callback is running and none can
  *  start, release the handle. ctx may be freed once it returns. May block for a network round trip. */
 void hal_ws_free(hal_ws_t *ws);

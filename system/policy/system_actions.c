@@ -212,6 +212,15 @@ static void factory_reset(ink_call_t *c) { /* exec.bg */
     ink_exec_post(INK_EXEC_BG, &g_reset_job, restart_job, NULL);
 }
 
+/* The authenticated hub already obtained the parent's explicit wipe choice. */
+int ink_factory_reset_from_hub(void) { /* exec.bg */
+    bool marked = false;
+    ink_storage_run(mark_reset, &marked, true);
+    if (!marked) return -1;
+    ink_probe_count("system.factory_resets");
+    return ink_exec_post(INK_EXEC_BG, &g_reset_job, restart_job, NULL);
+}
+
 static void cap_reboot(ink_call_t *c) { /* exec.bg */
     snprintf(c->rc.say, sizeof c->rc.say, "重启");
     ink_db_flush_all();

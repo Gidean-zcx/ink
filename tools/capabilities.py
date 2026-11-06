@@ -74,9 +74,25 @@ def split(tokens, delimiter):
     return parts + ([tokens[start:]] if tokens[start:] else [])
 
 
+def expand_objects(tokens, macros, path, active=()):
+    expanded = []
+    for token in tokens:
+        if token not in macros:
+            expanded.append(token)
+        elif token in active:
+            raise ValueError(f"{path}: recursive object macro {token}")
+        else:
+            expanded.extend(expand_objects(macros[token], macros, path, (*active, token)))
+    return expanded
+
+
 def parse_source(path, source):
     macros = {}
-    for match in re.finditer(r"^\s*#define\s+(\w+)\(([^)\n]*)\)\s+([^\n]+)", source, re.MULTILINE):
+    macro_source = re.sub(r"\\\r?\n", "", source)
+    objects = {}
+    for match in re.finditer(r"^[ \t]*#define[ \t]+(\w+)[ \t]+([^\n]*)", macro_source, re.MULTILINE):
+        objects[match[1]] = [m.group() for m in LEX.finditer(match[2]) if m.lastgroup != "comment"]
+    for match in re.finditer(r"^\s*#define\s+(\w+)\(([^)\n]*)\)\s+([^\n]+)", macro_source, re.MULTILINE):
         parameters = [p.strip() for p in match[2].split(",")]
         body = [m.group() for m in LEX.finditer(match[3]) if m.lastgroup != "comment"]
         macros[match[1]] = (parameters, body)
@@ -108,6 +124,7 @@ def parse_source(path, source):
                     raise ValueError(f"{path}: invalid initializer macro arguments")
                 values = dict(zip(parameters, arguments))
                 record = [part for token in expansion for part in values.get(token, [token])]
+            record = expand_objects(record, objects, path)
             if len(record) < 2 or record[0] != "{" or record[-1] != "}":
                 raise ValueError(f"{path}: {token} requires explicit designated initializers")
             fields = {}
