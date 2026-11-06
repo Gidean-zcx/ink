@@ -38,11 +38,12 @@ def main():
     ap.add_argument("--approved", action="store_true", help="the user agreed to docs/hardware/phase2-plan.md")
     ap.add_argument("--port", default="/dev/cu.usbmodem*")
     ap.add_argument("--seconds", type=float, default=420.0)
+    ap.add_argument("--lab", action="store_true", help="the image that tries our own refresh on the panel")
     a = ap.parse_args()
     check_backup()
-    image = os.path.join(HERE, "build", "ink-hw-bench.bin")
+    image = os.path.join(HERE, "build-lab" if a.lab else "build", "ink-hw-bench.bin")
     if not os.path.exists(image):
-        sys.exit("build it first: tools/hw-bench/build.sh")
+        sys.exit("build it first: tools/hw-bench/build.sh" + (" lab" if a.lab else ""))
     print(f"image {image}: {os.path.getsize(image)} bytes, sha256 {sha(image)[:16]}...")
     print("writes only ota_1 (0x580000) and otadata (0xd000); restores both and verifies against the backup")
     if not a.approved:

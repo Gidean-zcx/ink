@@ -17,6 +17,11 @@ if(EXISTS ${up}/display/metalio_epd.c)
     list(APPEND incs ${up} ${up}/display ${up}/bus ${up}/periph ${up}/display/output_lcd ${up}/display/output_common
          ${up}/display/waveforms $ENV{INK_UPSTREAM}/main)
     list(APPEND defs INK_BENCH_EPD=1)
+    if("$ENV{INK_BENCH_LAB}" STREQUAL "1")
+        list(APPEND srcs ${repo}/drivers/display/pqbn/pqbn_v4.c)
+        list(APPEND incs ${repo}/drivers/display/pqbn)
+        list(APPEND defs INK_BENCH_LAB=1 "PQBN_HOT=__attribute__((section(\".iram1.pqbn\")))")
+    endif()
 endif()
 idf_component_register(SRCS ${srcs} INCLUDE_DIRS ${incs}
     REQUIRES esp_driver_i2c esp_driver_uart esp_driver_sdmmc esp_driver_gpio esp_driver_i2s esp_driver_ledc esp_lcd

@@ -31,6 +31,7 @@ __pycache__/
 /tools/hw-probe/sdkconfig
 /tools/hw-probe/sdkconfig.old
 /tools/hw-bench/build/
+/tools/hw-bench/build-lab/
 /tools/hw-bench/sdkconfig
 /tools/hw-bench/sdkconfig.old
 /tools/hw-bench/partitions.csv

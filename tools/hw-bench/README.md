@@ -10,3 +10,5 @@
 | `report.py` | 把控制台日志变成报告，和模拟器的假设对比，过滤隐私。`tests/hw_bench/` 有样例和测试 |
 
 写设备前必须有用户同意，见项目规则。**不要用 `idf.py flash`**：它会覆盖引导程序、分区表和出厂固件。
+
+`build.sh lab` 编译另一个固件：自研刷新算法上真屏（`main/panel_lab.c`，[方案](../../docs/hardware/phase3-plan.md)）。`bench.py --lab` 跑它，`wedge_photo.py` 从照片读灰阶标定。

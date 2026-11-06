@@ -4,6 +4,7 @@
  *  - the last 256 KiB of ota_1, erased and written for the flash timing, left erased;
  *  - the RTC's timer, for a few seconds, put back as it was;
  *  - the panel, showing test pictures through the factory driver.
+ * Built with INK_BENCH_LAB it only tries our own refresh on the panel instead (panel_lab.c).
  * It asks the modem only questions. It never opens NVS and prints no MAC, IMEI, ICCID or Wi-Fi name.
  */
 #include <stdarg.h>
@@ -356,6 +357,36 @@ static int64_t show(EpdiyHighlevelState *hl, const char *what, enum EpdDrawMode 
     return ms;
 }
 
+#ifdef INK_BENCH_IMAGES
+/* Pictures are 4 bits a pixel, packed: a byte n < 128 is followed by n + 1 literal bytes, n >= 128 by one byte
+ * to repeat n - 125 times. */
+static void draw_picture(const char *name, uint8_t *fb) {
+    enum { W = 684, H = 1216 };
+    static uint8_t *pixels;
+    if (!pixels) pixels = heap_caps_malloc(W * H / 2, MALLOC_CAP_SPIRAM);
+    for (int i = 0; i < INK_BENCH_IMAGES; i++) {
+        if (strcmp(BENCH_IMAGES[i].name, name)) continue;
+        const uint8_t *in = BENCH_IMAGES[i].data, *end = in + BENCH_IMAGES[i].size;
+        size_t at = 0;
+        while (in < end && at < W * H / 2) {
+            const uint8_t code = *in++;
+            const size_t run = code < 128 ? code + 1u : code - 125u;
+            if (code < 128) memcpy(pixels + at, in, run);
+            else memset(pixels + at, *in, run);
+            in += code < 128 ? run : 1;
+            at += run;
+        }
+        for (int y = 0; y < H; y++)
+            for (int x = 0; x < W; x++) {
+                const uint8_t v = pixels[(y * W + x) / 2];
+                epd_draw_pixel(x, y, (uint8_t) (((x + y * W) & 1 ? v & 15 : v >> 4) * 17), fb);
+            }
+        return;
+    }
+    R("\"test\":\"picture\",\"name\":\"%s\",\"error\":\"missing\"", name);
+}
+#endif
+
 static void ramp(uint8_t *fb) {
     int w = epd_rotated_display_width(), h = epd_rotated_display_height();
     for (int y = 0; y < h; y++)
@@ -368,11 +399,15 @@ static void touch_and_gravity(void) {
     uint8_t was = 0, a[6], t[5];
     bool accel = !rd(0x19, 0x20, &was, 1) && !wr(0x19, 0x20, 0x57);
     bool down = false;
+    int taps = 0;
     int64_t end = now_us() + 40 * 1000000, next_gravity = 0;
-    while (now_us() < end) {
+    while (now_us() < end && taps < 4) {
         if (!rd(0x38, 0x02, t, 5)) {
             bool pressed = (t[0] & 0x0f) != 0;
-            if (pressed && !down) R("\"test\":\"touch\",\"x\":%d,\"y\":%d", (t[1] & 0x0f) << 8 | t[2], (t[3] & 0x0f) << 8 | t[4]);
+            if (pressed && !down) {
+                R("\"test\":\"touch\",\"x\":%d,\"y\":%d", (t[1] & 0x0f) << 8 | t[2], (t[3] & 0x0f) << 8 | t[4]);
+                taps++;
+            }
             down = pressed;
         }
         if (accel && now_us() > next_gravity && !rd(0x19, 0x28 | 0x80, a, 6)) {
@@ -414,12 +449,7 @@ static void panel(void) {
     }
 #ifdef INK_BENCH_IMAGES
     for (int i = 0; i < INK_BENCH_IMAGES; i++) {
-        const uint8_t *img = BENCH_IMAGES[i].data;
-        for (int y = 0; y < 1216; y++)
-            for (int x = 0; x < 684; x++) {
-                uint8_t v = img[(y * 684 + x) / 2];
-                epd_draw_pixel(x, y, (uint8_t) (((x + y * 684) & 1 ? v & 15 : v >> 4) * 17), fb);
-            }
+        draw_picture(BENCH_IMAGES[i].name, fb);
         char what[32];
         snprintf(what, sizeof what, "image_%s", BENCH_IMAGES[i].name);
         /* Settings comes after the home screen without a flash, as a page turn does: how much really stays behind? */
@@ -435,6 +465,10 @@ static void panel(void) {
 }
 #endif
 
+#ifdef INK_BENCH_LAB
+#include "panel_lab.c"
+#endif
+
 static void battery_again(const char *when) {
     uint8_t c[2];
     if (!rd(0x55, 0x0C, c, 2)) R("\"test\":\"battery_load\",\"when\":\"%s\",\"mA\":%d", when, (int16_t) (c[0] | c[1] << 8));
@@ -444,6 +478,19 @@ void app_main(void) {
     vTaskDelay(pdMS_TO_TICKS(500));
     g_said = heap_caps_malloc(SAID_CAP, MALLOC_CAP_SPIRAM);
     printf("BENCH_START\n");
+#ifdef INK_BENCH_LAB
+    /* After a crash the panel is not touched again: what comes next would be the same crash. */
+    const esp_reset_reason_t why = esp_reset_reason();
+    const bool crashed = why == ESP_RST_PANIC || why == ESP_RST_INT_WDT || why == ESP_RST_TASK_WDT || why == ESP_RST_WDT || why == ESP_RST_BROWNOUT;
+    sys_info();
+    i2c_scan();
+    bool up = MetalioEpd_Init(); /* first: the USB link may die here (second run), and then early is best */
+    R("\"test\":\"panel_init\",\"ok\":%s,\"crashed_before\":%s", up ? "true" : "false", crashed ? "true" : "false");
+    heap("panel_on");
+    if (up && !crashed) panel_lab();
+    heap("end");
+    goto said_all;
+#endif
     sys_info();
     copy_speed("internal_to_internal", MALLOC_CAP_INTERNAL, MALLOC_CAP_INTERNAL, 16 * 1024);
     copy_speed("psram_to_psram", MALLOC_CAP_SPIRAM, MALLOC_CAP_SPIRAM, 256 * 1024);
@@ -464,6 +511,9 @@ void app_main(void) {
     R("\"test\":\"panel_init\",\"ok\":false,\"error\":\"built without the panel driver\"");
 #endif
     heap("end");
+#ifdef INK_BENCH_LAB
+said_all:
+#endif
     for (;;) { /* until the computer has it: the panel is idle now, restoring may interrupt this at any point */
         printf("BENCH_REPLAY\n");
         for (size_t at = 0; at < g_said_n;) {
