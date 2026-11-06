@@ -355,7 +355,11 @@ static void on_rt_frame(void *ctx, int sid, uint8_t kind, const uint8_t *opus, s
             AI.tts_for = st;
             AI.tts_opened = AI.tts_stream > 0 ? AI.tts_stream : 0;
         }
-        if (AI.tts_stream <= 0) {
+        if (!turn_allowed()) {
+            if (AI.tts_stream > 0) ink_audio_stream_abort(AI.tts_stream);
+            AI.tts_stream = 0;
+            AI.tts_done_for = st;
+        } else if (AI.tts_stream <= 0) {
             AI.tts_stream = 0;
             AI.tts_done_for = st;
             ink_probe_count("ai.downlink_unavailable");
@@ -539,7 +543,7 @@ static int request(const char *method, bool voice) {
         ink_jw_str(&w, g_typed[0] ? g_typed : SIM_TRANSCRIPT);
     }
     char gen[48];
-    snprintf(gen, sizeof gen, ",\"page_gen\":%u", (unsigned)ink_ui_content_version());
+    snprintf(gen, sizeof gen, ",\"page_gen\":%u", n < 0 ? 0 : (unsigned)ink_ui_content_version());
     ink_jw_raw(&w, gen);
     ink_jw_raw(&w, ",\"page\":{\"app\":");
     ink_jw_str(&w, app);
@@ -547,13 +551,13 @@ static int request(const char *method, bool voice) {
     ink_jw_strn(&w, snap, n > 0 ? (size_t)n : 0);
     ink_jw_raw(&w, ",\"actions\":");
     {
-        int k = ink_cap_ids_json(ids, ids_cap);
+        int k = n < 0 ? snprintf(ids, ids_cap, "[]") : ink_cap_ids_json(ids, ids_cap);
         if (k < 0) w.overflow = true;
         else ink_jw_raw(&w, ids);
     }
     ink_jw_raw(&w, "},\"state\":");
     {
-        int k = ink_state_json(snap, STATE_CAP, INK_EXPOSE_AI); /* the page's text is in params already: its buffer is free */
+        int k = n < 0 ? -1 : ink_state_json(snap, STATE_CAP, INK_EXPOSE_AI); /* page text is already in params */
         ink_jw_raw(&w, k > 0 ? snap : "{}");
     }
     ink_jw_raw(&w, "}");

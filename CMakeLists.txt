@@ -454,6 +454,9 @@ target_link_libraries(sim-device-events-review PRIVATE ink_apps ink_system)
 ink_sim_executable(sim-device-events-isolation tests/device_events/isolation.c tests/device_events/member_boundary.c
   tests/device_events/ai_boundary.c tests/device_events/hub_boundary.c tests/device_events/hub_observer.c)
 target_link_libraries(sim-device-events-isolation PRIVATE ink_apps ink_system)
+ink_sim_executable(sim-device-events-private tests/device_events/private.c tests/device_events/member_boundary.c
+  tests/device_events/ai_boundary.c tests/device_events/hub_boundary.c tests/device_events/hub_observer.c)
+target_link_libraries(sim-device-events-private PRIVATE ink_apps ink_system)
 add_test(NAME device-events COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/device_events/run.py
   --build ${CMAKE_BINARY_DIR})
 set_tests_properties(device-events PROPERTIES TIMEOUT 120 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")

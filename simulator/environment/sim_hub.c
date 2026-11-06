@@ -402,7 +402,6 @@ static void request_device(const char *method, const char *params_json, bool add
 }
 
 void sim_hub_request_device(const char *method, const char *params_json) { request_device(method, params_json, true); }
-void sim_hub_request_device_raw(const char *method, const char *params_json) { request_device(method, params_json, false); }
 
 const char *sim_hub_device_reply(void) { return g_test_reply; }
 void sim_hub_request_device_raw(const char *method, const char *params_json) {

@@ -58,3 +58,24 @@ metrics = json.loads((folder / 'metrics.json').read_text()) if (folder / 'metric
 m = metrics.get('metrics', {})
 assert run.returncode == 0 and m.get('test.fail', 0) == 0 and m.get('test.finished', 0) == 1, (run.returncode, m, metrics.get('warnings'), run.stderr[-2500:])
 print(f'identity isolation regressions: {m.get("test.pass", 0)} checks passed')
+hub = out / 'private-hub.json'
+hub.write_text(json.dumps({'rules': [
+    {'method': 'hello', 'think_ms': 40, 'result': {'session': 'synthetic', 'proto': 1}},
+    {'method': 'ai.ask', 'think_ms': 50, 'result': {'done': True}},
+    {'method': 'ai.listen', 'think_ms': 50,
+     'listen': {'stt_ms': 50, 'transcript': 'SYNTHETIC_OWNER_QUESTION', 'tts_first_ms': 50,
+                'tts_chars_per_s': 8, 'tts_speed': 4},
+     'stream': {'notify': 'ai.delta', 'interval_ms': 50,
+                'chunks': ['成人的合成私人回答请勿对其他成员继续播放。这段合成朗读只供当前成员收听。']},
+     'result': {'done': True}},
+]}, ensure_ascii=False))
+folder = out / 'private'
+run = subprocess.run([str(build / 'sim-device-events-private'), '--profile', str(ROOT / 'simulator/profiles/metalio-plus.json'),
+                      '--assets', str(build / 'assets'), '--content', str(build / 'test-content'), '--out', str(folder),
+                      '--hub', str(hub), '--end', '90s', '--quiet', '--no-random-outages'],
+                     cwd=ROOT, capture_output=True, text=True, timeout=50)
+(out / 'private.log').write_text(run.stdout + run.stderr)
+metrics = json.loads((folder / 'metrics.json').read_text()) if (folder / 'metrics.json').exists() else {}
+m = metrics.get('metrics', {})
+assert run.returncode == 0 and m.get('test.fail', 0) == 0 and m.get('test.finished', 0) == 1, (run.returncode, m, metrics.get('warnings'), run.stderr[-2500:])
+print(f'private context and playback regressions: {m.get("test.pass", 0)} checks passed')

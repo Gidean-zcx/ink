@@ -133,6 +133,12 @@ void test_ai_review_open_refusal(void) {
     ink_ai_key(false, osal_now_us());
 }
 void test_ai_review_release(void) { ink_ai_key(false, osal_now_us()); }
+void test_ai_private_queued(void) {
+    uint32_t queued = 0;
+    CHECK(AI.turn_over && !AI.asking && !AI.session && AI.tts_opened > 0 &&
+          ink_audio_stream_progress(AI.tts_opened, NULL, &queued) == 0 && queued > 20,
+          "finished real voice answer still has private speech queued");
+}
 void test_ai_review_aborted(void) {
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
     CHECK(AI.tts_stream == 0 && AI.tts_done_for == AI.stream, "real downlink refusal aborts the rest of this speech");
