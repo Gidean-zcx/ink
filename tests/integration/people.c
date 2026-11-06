@@ -10,6 +10,7 @@
 #include "ink/hal_storage.h"
 #include "ink/hal_net.h"
 #include "ink/hal_usb.h"
+#include "ink/sys/appreg.h"
 #include "ink/sys/audio.h"
 #include "ink/sys/confirm.h"
 #include "ink/sys/data.h"
@@ -168,7 +169,7 @@ static void members_and_pin(void) {
     CHECK(set_pin("owner", "000000", "654321") == INK_PIN_WRONG, "the wrong old one");
     CHECK(set_pin("owner", "123456", "654321") == INK_PIN_OK, "the right one");
 
-    /* the idle return */
+    /* D-95: reading stays open; only time spent locked counts. */
     CHECK(setting_by_hand("member.idle_return_s", 60), "a minute with human confirmation");
     ink_power_activity(osal_now_us());
     CHECK(unlock("owner", "654321") == INK_PIN_OK, "in");
@@ -177,8 +178,13 @@ static void members_and_pin(void) {
     ink_power_activity(osal_now_us());
     delay_ms(50000);
     CHECK(ink_member_space_open(), "touching it keeps it open");
-    CHECK(WAIT_FOR(!ink_member_space_open(), 20000), "idle: it closes");
-    CHECK(!authed(), "state says so");
+    delay_ms(20000);
+    CHECK(ink_member_space_open(), "reading past the grace stays open");
+    ink_power_lock();
+    CHECK(WAIT_FOR(!strcmp(power_state(), "locked"), 2000) && ink_member_space_open(), "a fresh lock keeps the grace");
+    CHECK(WAIT_FOR(!ink_member_space_open(), 62000), "locked past the grace: it closes");
+    CHECK(WAIT_FOR(!authed(), 2000), "state says so");
+    ink_power_unlock(osal_now_us());
     delay_ms(500);
     on_ui(read_screen);
     CHECK(!strcmp(g_top, "member_gate"), "the gate is up (%s)", g_top);
@@ -206,11 +212,12 @@ static void members_and_pin(void) {
     on_ui(read_screen);
     CHECK(strcmp(g_top, "member_gate"), "the gate is gone (%s)", g_top);
 
-    /* locking closes it, long before going idle would */
-    CHECK(setting_by_hand("member.idle_return_s", 3600), "an hour with human confirmation");
+    /* The configured lock grace is also used by the member gate. */
+    CHECK(setting_by_hand("member.idle_return_s", 30), "half a minute with human confirmation");
     ink_power_activity(osal_now_us());
     ink_power_lock();
-    CHECK(WAIT_FOR(!ink_member_space_open(), 2000), "locked: closed");
+    CHECK(WAIT_FOR(!strcmp(power_state(), "locked"), 2000) && ink_member_space_open(), "locked: still in the grace");
+    CHECK(WAIT_FOR(!ink_member_space_open(), 32000), "the lock grace expires");
     ink_power_unlock(osal_now_us());
     delay_ms(800);
     on_ui(read_screen);
@@ -470,6 +477,7 @@ static void table2(void) { /* two reads fail: the boot's and the first try */
     CHECK(sim_metric_value("members.table_unread") >= 1, "the boot could not read it");
     CHECK(ink_member_has_pin("owner") && ink_member_any_pin(), "so an adult may have a PIN");
     CHECK(!ink_member_space_open(), "the space is closed");
+    CHECK(ink_app_state_of("home") == INK_APP_STOPPED, "an unread adult table cannot start a foreground app at boot");
     CHECK(AI("file.list", "{\"path\":\"/me\"}") && g_rc.status == INK_RC_REJECTED, "the AI does not get in (%s)", ink_rc_name(g_rc.status));
     CHECK(ink_member_switch("owner") == -2, "no way in without the PIN");
     CHECK(ink_member_switch("kid") == 0 && ink_member_switch("owner") == -2, "nor by going round through a child");
@@ -513,7 +521,9 @@ static void stuck1(void) {
 static void table3(void) { /* a normal boot: the table as it was */
     CHECK(sim_metric_value("members.table_unread") == 0, "read");
     CHECK(ink_member_has_pin("owner") && !ink_member_space_open(), "the PIN is still there");
+    CHECK(ink_app_state_of("home") == INK_APP_STOPPED, "a protected adult starts behind the gate without running an app");
     CHECK(unlock("owner", "1234") == INK_PIN_OK, "and it is the same one");
+    CHECK(WAIT_FOR(ink_app_state_of("home") == INK_APP_FOREGROUND, 2000), "the authenticated adult starts home normally");
     ink_probe_count("test.finished");
 }
 

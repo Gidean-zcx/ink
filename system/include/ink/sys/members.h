@@ -28,7 +28,7 @@ typedef struct {
 
 /** Publish member.current (after the state table started); read the table if the data store is up. */
 void ink_members_init(void);
-/** The capabilities and the idle watch: after the data store, the power service and the settings. */
+/** The capabilities and the lock grace watch: after the data store, the power service and the settings. */
 int ink_members_start(void);
 const ink_member_t *ink_member_current(void);
 /** Live incarnation, zero for an absent or quarantined member. */
@@ -48,7 +48,7 @@ int ink_member_switch(const char *id);
 void ink_member_test_reset(void);
 /** Does the current member's policy allow this action (child whitelist)? Adults: always. */
 bool ink_member_allows(const char *action_id, bool child_ok);
-/** Is the current member's space open: a child, an adult without a PIN, or an adult who has entered it and not gone idle. */
+/** A child, an adult without a PIN, or an authenticated adult within the lock grace (D-95). Reading never expires it. */
 bool ink_member_space_open(void);
 /** Is any adult's PIN set: what only a parent may do has something to ask for. */
 bool ink_member_any_pin(void);

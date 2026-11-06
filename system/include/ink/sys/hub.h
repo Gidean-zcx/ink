@@ -50,6 +50,11 @@ int ink_hub_on_online(void (*fn)(void *ctx), void *ctx);
 void ink_hub_set_tick(void (*fn)(void));
 /** Have it look soon (any task, never waits). */
 void ink_hub_wake(void);
+/* Enrollment service: reconnect after durable configuration/identity changes. */
+void ink_hub_reconnect(void);
+int ink_hub_pair_call(const char *method, const char *params);
+int ink_hub_pair_respond(int64_t id, const char *result_json);
+int ink_hub_pair_respond_error(int64_t id, int code, const char *message);
 /** Stay connected while held (reference-counted; realtime sessions hold it). */
 void ink_hub_keep(bool on);
 
@@ -64,6 +69,8 @@ int ink_hub_send_binary(const void *data, size_t len);
 enum { INK_HUB_TX_VOICE = 0, INK_HUB_TX_INPUT, INK_HUB_TX_SCREEN, INK_HUB_TX_CONTROL, INK_HUB_TX_BACKGROUND };
 /** One binary message in a send class (ink_hub_send_binary is the voice class). */
 int ink_hub_send_frame(const void *data, size_t len, int cls);
+/** Delayed session producers retain the original member and incarnation through the final send. */
+int ink_hub_send_frame_for(const void *data, size_t len, int cls, const char *member, uint32_t generation);
 typedef void (*ink_hub_binary_fn)(void *ctx, const uint8_t *data, size_t len);
 /** The (single) receiver of binary messages from the hub; runs in the hub task. */
 void ink_hub_on_binary(ink_hub_binary_fn fn, void *ctx);

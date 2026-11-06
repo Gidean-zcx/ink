@@ -44,6 +44,7 @@
 #include "ink/probe.h"
 #include "ink/sys/audio.h"
 #include "ink/sys/members.h"
+#include "ink/sys/layout.h"
 #include "ink/hal_afe.h"
 #include "ink/sys/settings.h"
 #include "ink/sys/state.h"
@@ -144,6 +145,8 @@ static struct {
     hal_cpu_boost_t *boost;
 } AU;
 static bool g_capture_revoked INK_PSRAM_BSS; /* under AU.lock; a handoff cannot be undone by switching back */
+static char g_capture_member[INK_MEMBER_ID_MAX] INK_PSRAM_BSS;
+static uint32_t g_capture_generation INK_PSRAM_BSS;
 static bool g_output_revoked INK_PSRAM_BSS;
 
 static void lock(void) { osal_mutex_lock(AU.lock, OSAL_WAIT_FOREVER); }
@@ -200,6 +203,16 @@ static void free_jb(void);
 static int g_last_command = -1;
 static int focus_top_locked(void);
 
+static bool capture_allowed(void) { /* under AU.lock */
+    if (!g_capture_revoked && (!g_capture_generation || g_capture_generation != ink_member_generation(g_capture_member) ||
+        strcmp(g_capture_member, ink_member_current()->id) || (!AU.cap_local && !ink_member_space_open()))) {
+        g_capture_revoked = true;
+        AU.cap_ending = true;
+        AU.rd = AU.wr;
+    }
+    return !g_capture_revoked;
+}
+
 static void listen_event(ink_listen_ev_t ev, uint64_t t_us) {
     if (AU.listen_fn) AU.listen_fn(AU.listen_ctx, ev, t_us);
 }
@@ -242,7 +255,7 @@ static void encode_and_deliver(const int16_t *frame) {
     uint8_t pkt[HAL_OPUS_MAX_PACKET];
     int n = hal_opus_encode(AU.enc, frame, pkt, sizeof pkt);
     lock();
-    bool allowed = !g_capture_revoked && focus_top_locked() < INK_AUDIO_PRIO_ALERT;
+    bool allowed = capture_allowed() && focus_top_locked() < INK_AUDIO_PRIO_ALERT;
     unlock();
     if (allowed && n > 0 && AU.cap_fn) AU.cap_fn(AU.cap_ctx, pkt, (size_t)n, AU.cap_seq++);
 }
@@ -250,6 +263,7 @@ static void encode_and_deliver(const int16_t *frame) {
 /* Encode one frame, or finish an ending capture. Returns true if there may be more to encode. */
 static bool capture_step(int16_t *scratch) {
     lock();
+    if (AU.cap_on) capture_allowed();
     bool on = AU.cap_on, ending = AU.cap_ending, listen = AU.listen_on;
     bool cut = on && ending && (g_capture_revoked || focus_top_locked() >= INK_AUDIO_PRIO_ALERT);
     bool got = !cut && (on || listen) && take_frame(scratch);
@@ -845,7 +859,7 @@ static int capture_begin_locked(ink_audio_frame_fn fn, void *ctx, bool local) { 
     hal_opus_enc_t *enc = hal_opus_enc_new(BITRATE, 0);
     if (!enc) return -1;
     lock();
-    if (focus_top_locked() >= INK_AUDIO_PRIO_ALERT) {
+    if (focus_top_locked() >= INK_AUDIO_PRIO_ALERT || (!local && !ink_member_space_open())) {
         unlock();
         hal_opus_enc_free(enc);
         return -1;
@@ -860,6 +874,8 @@ static int capture_begin_locked(ink_audio_frame_fn fn, void *ctx, bool local) { 
     AU.cap_local = local;
     AU.cap_ending = false;
     g_capture_revoked = false;
+    snprintf(g_capture_member, sizeof g_capture_member, "%s", ink_member_current()->id);
+    g_capture_generation = ink_member_generation(g_capture_member);
     unlock();
     if (!listening && hal_audio_capture_start(capture_cb, NULL) != 0) {
         lock();

@@ -528,10 +528,12 @@ static void volume_keys(void) {
     /* locked, playing, the space closed: the keys work, and that is all that does */
     int d = g_pin_done;
     CHECK(ink_member_set_pin("owner", NULL, "1234", pin_told, NULL) == 0 && WAIT_FOR(g_pin_done > d, 5000) && g_pin_result == INK_PIN_OK, "a PIN");
+    CHECK(setting_by_hand("member.idle_return_s", 30), "a short lock grace for the closed-space volume check");
     CHECK(BY_HAND("media.play", "{\"path\":\"/me/rec/long.opus\",\"start_ms\":0}") && g_rc.status == INK_RC_DONE, "playing");
     delay_ms(1000);
     ink_power_lock();
-    CHECK(WAIT_FOR(!strcmp(power_state(), "locked") && !ink_member_space_open(), 2000), "locked, closed");
+    CHECK(WAIT_FOR(!strcmp(power_state(), "locked"), 2000) && ink_member_space_open(), "locked, still within the grace");
+    CHECK(WAIT_FOR(!ink_member_space_open(), 32000), "the lock grace expires");
     delay_ms(500);
     CHECK(st().state == INK_MEDIA_PLAYING, "it goes on (%d)", st().state);
     key(HAL_KEY_VOL_UP);

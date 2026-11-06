@@ -298,6 +298,17 @@ int sim_opus_fake_packet(uint8_t *out, int cap, double freq, double level, int b
 /* ---- network + scripted hub ---- */
 struct hal_ws;
 void sim_net_init(void);              /* task context (boot) */
+void sim_net_peer_key(const uint8_t key[32]); /* synthetic TLS peer, event context */
+int sim_provision_submit(const char *password, const char *json); /* AP page, event context */
+int sim_provision_status(void);
+bool sim_provision_active(void);
+const char *sim_provision_page(void);
+enum { SIM_PAIR_DROP_BEGIN=1, SIM_PAIR_DROP_ACCEPT=2, SIM_PAIR_DROP_COMPLETE=4, SIM_PAIR_DROP_ACK=8, SIM_PAIR_DROP_HELLO=16,
+       SIM_PAIR_BEGIN_ERROR=32, SIM_PAIR_ACCEPT_ERROR=64 };
+void sim_hub_pair_faults(unsigned faults, int hello_error, bool wipe); /* event context */
+void sim_hub_pair_expire(void);
+const char *sim_hub_pair_nonce(void);
+const char *sim_hub_pair_txid(void);
 void sim_net_report(void);
 void sim_net_set_link(const char *name); /* ISR (script): "lte" | "wifi" | "none" */
 void sim_net_env_init(void); /* before the kernel runs: what is around and in the slots, from the profile */
@@ -343,7 +354,9 @@ void sim_hub_clock_offset(int64_t seconds); /* ISR: the hub's clock is this far 
 void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t len, bool binary); /* ISR */
 /* Tests: a request to the device on the connection in use (ISR), and what it answered (NULL until then). */
 void sim_hub_request_device(const char *method, const char *params_json);
+void sim_hub_request_device_raw(const char *method, const char *params_json); /* preserve JSON escapes for parser tests */
 const char *sim_hub_device_reply(void);
+bool sim_hub_reply_matches_request(void);
 /* Tests: the device/event messages so far (the first 32), and the last question with what came with it. */
 int sim_hub_events_seen(void);
 const char *sim_hub_event_at(int i);

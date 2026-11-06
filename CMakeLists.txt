@@ -109,6 +109,7 @@ add_library(ink_port_sim STATIC
   ports/sim/hal/hal_power_sim.c
   ports/sim/hal/hal_assets_sim.c
   ports/sim/hal/hal_net_sim.c
+  ports/sim/hal/hal_provision_sim.c
   ports/sim/hal/hal_audio_sim.c
   ports/sim/hal/hal_cellular_sim.c
   ports/sim/hal/hal_afe_sim.c
@@ -165,6 +166,7 @@ add_library(ink_system STATIC
   system/services/storage/storage_service.c
   system/services/power/power_service.c
   system/services/hub/hub_link.c
+  system/services/hub/pairing.c
   system/services/hub/rt.c
   system/services/ai/ai_service.c
   system/services/audio/audio_service.c
@@ -492,6 +494,20 @@ foreach(profile metalio-plus desktop-lcd)
         --out ${CMAKE_BINARY_DIR}/test-out/ui-${regression}-${profile} --quiet --no-random-outages)
   endforeach()
 endforeach()
+ink_sim_executable(sim-pairing tests/pairing/device.c)
+target_link_libraries(sim-pairing PRIVATE ink_apps ink_system)
+if(INK_HAVE_FONTS)
+  add_dependencies(sim-pairing ink_fonts ink_test_content)
+endif()
+add_test(NAME pairing-recovery COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/pairing/run.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(pairing-recovery PROPERTIES TIMEOUT 180 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")
+ink_sim_executable(sim-pairing-storage tests/pairing/storage_faults.c)
+target_link_libraries(sim-pairing-storage PRIVATE ink_apps ink_system)
+if(INK_HAVE_FONTS)
+  add_dependencies(sim-pairing-storage ink_fonts ink_test_content)
+endif()
+add_test(NAME pairing-storage-failures COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/pairing/storage.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(pairing-storage-failures PROPERTIES TIMEOUT 120 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")
 set(INK_HUB_PYTHON "${Python3_EXECUTABLE}" CACHE FILEPATH "Python with the locked hub test dependencies")
 add_executable(hub-json-check tests/hub/json_check.c system/util/ink_json.c)
 target_include_directories(hub-json-check PRIVATE platform/include system/include third_party/jsmn)
@@ -509,6 +525,39 @@ add_test(NAME hub-export-caps COMMAND sim-hub-cap-export
   --assets ${INK_ASSETS_DIR} --content ${CMAKE_BINARY_DIR}/test-content
   --out ${CMAKE_BINARY_DIR}/test-out/hub --end 3s --quiet --no-random-outages)
 set_tests_properties(hub-export-caps PROPERTIES FIXTURES_SETUP hub-caps)
+ink_sim_executable(sim-capability-inventory tests/capability_table/export.c)
+target_link_libraries(sim-capability-inventory PRIVATE ink_apps ink_system)
+if(INK_HAVE_FONTS)
+  add_dependencies(sim-capability-inventory ink_fonts ink_test_content)
+endif()
+add_test(NAME capability-table-doc COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tools/capabilities.py --check)
+add_test(NAME capability-table-regressions COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/capability_table/test_catalogue.py)
+add_test(NAME capability-table-export COMMAND sim-capability-inventory
+  --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+  --assets ${INK_ASSETS_DIR} --content ${CMAKE_BINARY_DIR}/test-content
+  --out ${CMAKE_BINARY_DIR}/test-out/capability-table --end 3s --quiet --no-random-outages)
+set_tests_properties(capability-table-export PROPERTIES FIXTURES_SETUP capability-inventory)
+add_test(NAME capability-table-runtime COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/capability_table/check_runtime.py
+  ${CMAKE_BINARY_DIR}/test-out/capability-table/capability-inventory.json)
+set_tests_properties(capability-table-runtime PROPERTIES FIXTURES_REQUIRED capability-inventory)
+ink_sim_executable(sim-capability-policy tests/capability_table/policy.c)
+target_link_libraries(sim-capability-policy PRIVATE ink_apps ink_system)
+if(INK_HAVE_FONTS)
+  add_dependencies(sim-capability-policy ink_fonts ink_test_content)
+endif()
+add_test(NAME capability-table-policy-export COMMAND sim-capability-policy
+  --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+  --budget ${CMAKE_SOURCE_DIR}/tests/capability_table/policy.budget.json
+  --assets ${INK_ASSETS_DIR} --content ${CMAKE_BINARY_DIR}/test-content
+  --out ${CMAKE_BINARY_DIR}/test-out/capability-policy --end 15s --quiet --no-random-outages)
+set_tests_properties(capability-table-policy-export PROPERTIES FIXTURES_SETUP capability-policy)
+add_test(NAME capability-table-policy COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/capability_table/check_policy.py
+  ${CMAKE_BINARY_DIR}/test-out/capability-policy/capability-policy.json)
+set_tests_properties(capability-table-policy PROPERTIES FIXTURES_REQUIRED capability-policy)
 add_executable(hub-bridge-lifecycle tests/hub/bridge_lifecycle.c)
 target_include_directories(hub-bridge-lifecycle PRIVATE simulator)
 target_link_libraries(hub-bridge-lifecycle PRIVATE ink_sim_core)
@@ -736,6 +785,25 @@ if(INK_HAVE_FONTS)
             -DASSETS=${INK_ASSETS_DIR} -DCONTENT=${INK_TEST_CONTENT}
             -DOUT=${CMAKE_BINARY_DIR}/test-out/people-reset -DSRC=${CMAKE_SOURCE_DIR}/tests/integration
             -P ${CMAKE_SOURCE_DIR}/tests/integration/people_reset.cmake)
+  add_executable(sim-member-wake simulator/runtime/sim_main.c tests/integration/member_wake.c)
+  target_link_libraries(sim-member-wake PRIVATE ink_apps ink_system ink_port_sim)
+  target_compile_options(sim-member-wake PRIVATE ${INK_WARN} -Wno-format-truncation)
+  add_test(NAME integration-member-wake
+    COMMAND sim-member-wake --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+            --budget ${CMAKE_SOURCE_DIR}/tests/integration/member_wake.budget.json
+            --script ${CMAKE_SOURCE_DIR}/tests/integration/member_wake.script
+            --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+            --out ${CMAKE_BINARY_DIR}/test-out/member-wake --quiet --no-random-outages)
+  add_executable(sim-member-wake-stream simulator/runtime/sim_main.c tests/integration/member_wake_stream.c
+                 tests/integration/member_wake_ai.c tests/integration/member_wake_dictation.c)
+  target_link_libraries(sim-member-wake-stream PRIVATE ink_apps ink_system ink_port_sim)
+  target_compile_options(sim-member-wake-stream PRIVATE ${INK_WARN} -Wno-format-truncation)
+  add_test(NAME integration-member-wake-stream
+    COMMAND sim-member-wake-stream --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus-handsfree.json
+            --budget ${CMAKE_SOURCE_DIR}/tests/integration/member_wake.budget.json
+            --script ${CMAKE_SOURCE_DIR}/tests/integration/member_wake_stream.script
+            --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+            --out ${CMAKE_BINARY_DIR}/test-out/member-wake-stream --quiet --no-random-outages)
   # Audio focus, media, recording, the headset (tests/integration/media.c).
   add_executable(sim-media simulator/runtime/sim_main.c tests/integration/media.c)
   target_link_libraries(sim-media PRIVATE ink_apps ink_system ink_port_sim)
