@@ -113,8 +113,8 @@ static int offset_y(lv_obj_t *parent) {
 lv_color_t ink_ui_paper(void) { return lv_color_white(); }
 lv_color_t ink_ui_ink(void) { return lv_color_black(); }
 /* Whole levels of the 16 the panel has. Seen on the panel: one level from white hardly shows. */
-lv_color_t ink_ui_gray(void) { return lv_color_hex(0xdddddd); }
-lv_color_t ink_ui_secondary(void) { return lv_color_hex(0x444444); }
+lv_color_t ink_ui_gray(void) { return lv_color_hex(0x888888); } /* chosen on the real panel: lighter levels nearly vanish (D-108) */
+lv_color_t ink_ui_secondary(void) { return lv_color_hex(0x000000); } /* chosen on the real panel too: secondary text differs by size, not by gray */
 
 /* 字号 moves all text by one factor; a child reads one step above the middle (docs/product/legibility.md).
  * Digit faces do not move, and what is already large does not grow. */

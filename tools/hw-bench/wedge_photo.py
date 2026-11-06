@@ -130,15 +130,19 @@ def analyse(flat):
     strip = np.array(strip)
     rising = np.maximum.accumulate(strip) + np.arange(16) * 1e-6  # the darkest levels can come out in the wrong order
     rows = {"toward_black": {}, "toward_white": {}}
+    bright = {"toward_black": {}, "toward_white": {}}
     for r in range(ROWS):
         for c in range(COLS):
             x, y = X0 + c * PX, Y0 + r * PY
             n = (r % (ROWS // 2)) * COLS + c + 1
-            white = mean(x - 16, y + 20, x - 6, y + 64)
+            left, right = mean(x - 16, y + 20, x - 6, y + 64), mean(x + PATCH + 6, y + 20, x + PATCH + 16, y + 64)
+            white = right if c == 0 else left if c == COLS - 1 else (left + right) / 2  # the outer margins are in the bezel's shadow
             value = mean(x + 21, y + 21, x + 63, y + 63) / white
             level = float(np.interp(value, rising, np.arange(16)))
-            rows["toward_black" if r < ROWS // 2 else "toward_white"][n] = level
-    return strip, rows
+            name = "toward_black" if r < ROWS // 2 else "toward_white"
+            rows[name][n] = level
+            bright[name][n] = value
+    return strip, rows, bright
 
 
 def swing(levels, tolerance=1.0):
@@ -165,13 +169,14 @@ def main():
     flat = straighten(im, corners)
     if a.debug:
         flat.save(a.debug)
-    strip, rows = analyse(flat)
+    strip, rows, bright = analyse(flat)
     if not (strip[-1] > 1.5 * strip[:3].mean() and np.corrcoef(strip, np.arange(16))[0, 1] > 0.85):
         sys.exit("this does not read as the gray strip: the corners are wrong, pass --corners and look at --debug")
     print("factory levels, against white:", " ".join(f"{v:.2f}" for v in strip))
     for name, levels in rows.items():
         start = 15 if name == "toward_black" else 0
-        print(f"{name}:", " ".join(f"{n}:{levels[n]:.1f}" for n in sorted(levels)))
+        print(f"{name} (factory levels):", " ".join(f"{n}:{levels[n]:.1f}" for n in sorted(levels)))
+        print(f"{name} (against white):", " ".join(f"{n}:{bright[name][n]:.2f}" for n in sorted(levels)))
         if abs(levels[max(levels)] - start) < 3:
             print("  these patches have not moved: the photo is from before the pushes, or the pushes did nothing")
         else:

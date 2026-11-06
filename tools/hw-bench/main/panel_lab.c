@@ -497,14 +497,21 @@ static void factory_show(EpdiyHighlevelState *hl, uint8_t *fb, const char *pictu
     epd_poweroff();
 }
 
-/* Until a finger comes, or the time is up. Says it is alive: a silent console means something is wrong. */
+/* Until a finger comes down, or the time is up. Says it is alive: a silent console means something is wrong.
+ * A finger already there, or one read's noise right after a refresh, is not a tap: the last run lost a page to that. */
 static void hold_for_touch(int ms) {
     uint8_t t[1];
-    const int64_t end = now_us() + (int64_t) ms * 1000;
-    int64_t next_word = now_us() + 30000000;
+    const int64_t start = now_us(), end = start + (int64_t) ms * 1000;
+    int64_t next_word = start + 30000000;
+    bool lifted = false;
+    int down_reads = 0;
     while (now_us() < end) {
-        if (!rd(0x38, 0x02, t, 1) && (t[0] & 0x0f)) {
-            R("\"test\":\"touched\",\"after_ms\":%lld", (int64_t) ms - (end - now_us()) / 1000);
+        const bool down = !rd(0x38, 0x02, t, 1) && (t[0] & 0x0f);
+        if (!down) {
+            lifted = true;
+            down_reads = 0;
+        } else if (lifted && now_us() - start > 1500000 && ++down_reads >= 2) {
+            R("\"test\":\"touched\",\"after_ms\":%lld", (now_us() - start) / 1000);
             hold(500);
             return;
         }
