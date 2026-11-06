@@ -1,0 +1,18 @@
+[10:00:00.000] esp-idf boot noise wifi:mode : sta (00:11:22:33:44:55)
+[10:00:01.000] BENCH_START
+[10:00:01.100] BENCH {"test":"sys","idf":"v6.1","revision":0,"cores":2,"cpu_mhz":320,"flash_bytes":16777216,"flash_id":"852018","psram_bytes":16777216,"reset_reason":3}
+[10:00:01.200] BENCH {"test":"heap","when":"boot","internal_free":281000,"internal_largest":200000,"internal_min":280000,"dma_free":64000,"dma_largest":60000,"psram_free":16000000,"psram_largest":15800000}
+[10:00:02.000] BENCH {"test":"memcpy","path":"psram_to_psram","MBps":58.2}
+[10:00:02.100] BENCH {"test":"crypto","sha256_MBps":6.10,"pbkdf2_iterations":3000,"pbkdf2_ms":118.5}
+[10:00:03.000] BENCH {"test":"flash","err":0,"erase_4k_us_min":21000,"erase_4k_us_avg":42000,"erase_4k_us_max":81000,"write_4k_us_avg":9000,"write_4k_us_max":12000,"read_4k_us_avg":150,"erase_256k_us":400000}
+[10:00:04.000] BENCH {"test":"i2c","addresses":["18","20","38","51","55","68","6b"]}
+[10:00:04.100] BENCH {"test":"modem","ask":"AT","answer":"  OK  "}
+[10:00:04.200] BENCH {"test":"modem","ask":"ATI","answer":"NT26 860123456789012 OK"}
+[10:00:05.000] BENCH {"test":"rtc_line","p16_before":0,"timer_fired_ms":2010,"p16_changed_ms":-1}
+[10:00:06.000] BENCH {"test":"wifi","err":0,"internal_cost":52000,"start_ms":120,"scan_ms":2100,"networks":7,"best_rssi":-48}
+[10:00:06.100] BENCH {"test":"heap","when":"wifi_on","internal_free":229000,"internal_largest":150000,"internal_min":225000,"dma_free":50000,"dma_largest":40000,"psram_free":15900000,"psram_largest":15700000}
+[10:00:07.000] BENCH {"test":"panel_init","ok":true,"ms":300,"internal_cost":61000}
+[10:00:08.000] BENCH {"test":"panel","what":"gray_ramp_gc16","err":0,"ms":1680}
+[10:00:08.100] BENCH {"test":"panel","what":"button_du","err":0,"ms":220}
+[10:00:09.000] BENCH {"test":"heap","when":"panel_done","internal_free":170000,"internal_largest":90000,"internal_min":30000,"dma_free":30000,"dma_largest":20000,"psram_free":14000000,"psram_largest":13000000}
+[10:00:09.100] BENCH_DONE

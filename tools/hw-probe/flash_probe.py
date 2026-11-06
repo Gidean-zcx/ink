@@ -41,15 +41,53 @@ def step(title):
     print(f"\n######## {title} ({datetime.datetime.now():%H:%M:%S})", flush=True)
 
 
+# What must equal the backup after a restore. NVS is left out: the factory firmware writes it.
+VERIFY = (("bootloader, partition table", 0x0, 0x9000), ("otadata", 0xD000, 0x2000),
+          ("ota_0", 0x80000, 0x500000), ("ota_1", 0x580000, 0x500000))
+
+
+def verify(a):
+    """Read back every region that matters and compare it with the backup. Writes nothing."""
+    if not a.backup:
+        sys.exit("verify needs --backup")
+    step("wait for the port and for the panel to be idle")
+    port = wait_idle(a.port, os.path.join(a.dir, "verify_console.txt"), 3.0, 300.0)
+    if port is None:
+        sys.exit("port never appeared; not verified")
+    esp = detect_chip(port, connect_mode="default-reset")
+    bad = []
+    try:
+        stub = run_stub(esp)
+        with open(a.backup, "rb") as f:
+            for name, addr, size in VERIFY:
+                out = os.path.join(a.dir, f"read_{addr:x}.bin")
+                esptool.main(["--no-stub", "--after", "no-reset-stub", "read-flash", hex(addr), hex(size), out], esp=stub)
+                f.seek(addr)
+                same = f.read(size) == open(out, "rb").read()
+                os.remove(out)
+                print(f"verify {name}: {'same as the backup' if same else 'DIFFERENT'}", flush=True)
+                if not same:
+                    bad.append(name)
+    finally:
+        reset_chip(esp, "hard-reset")
+        esp._port.close()
+    if bad:
+        sys.exit("NOT RESTORED: " + ", ".join(bad))
+    print("VERIFY OK")
+
+
 def main():
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
-    ap.add_argument("mode", choices=("install", "restore"))
+    ap.add_argument("mode", choices=("install", "restore", "verify"))
     ap.add_argument("--port", required=True)
     ap.add_argument("--dir", required=True, help="holds ink-hw-probe.bin, otadata_ota1.bin, otadata_factory.bin")
     ap.add_argument("--backup", help="restore: full flash backup (source of ota_1's original bytes)")
     ap.add_argument("--log-seconds", type=float, default=60.0)
+    ap.add_argument("--until", help="install: stop logging at the first console line holding this text")
     ap.add_argument("--approved", action="store_true", help="the user approved this write")
     a = ap.parse_args()
+    if a.mode == "verify":
+        return verify(a)
     if not a.approved:
         sys.exit("refusing to write: pass --approved only after the user agreed to the plan")
 
@@ -118,6 +156,9 @@ def main():
                     line, buf = buf.split(b"\n", 1)
                     text = line.rstrip(b"\r").decode("utf-8", "replace")
                     f.write(f"[{datetime.datetime.now():%H:%M:%S.%f}] {text}\n")
+                    if a.until and a.until in text:
+                        print(f"console said {a.until}")
+                        t0 = -1e12
         print(f"console log: {out}")
     print(f"\n{a.mode.upper()} OK")
 

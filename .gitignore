@@ -30,3 +30,9 @@ __pycache__/
 /tools/hw-probe/build/
 /tools/hw-probe/sdkconfig
 /tools/hw-probe/sdkconfig.old
+/tools/hw-bench/build/
+/tools/hw-bench/sdkconfig
+/tools/hw-bench/sdkconfig.old
+/tools/hw-bench/partitions.csv
+/tools/hw-bench/managed_components/
+/tools/hw-bench/dependencies.lock

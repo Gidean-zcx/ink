@@ -272,7 +272,7 @@ PQ-BN 各配置的对比见 [system-comparison.md](research/eink-refresh/integra
 **命令**
 
 ```bash
-cmake -S . -B build && cmake --build build -j8 && ctest --test-dir build --output-on-failure   # 163 项（要先建 hub 环境，见 hub/README.md，否则中枢的测试显示跳过）
+cmake -S . -B build && cmake --build build -j8 && ctest --test-dir build --output-on-failure   # 164 项（要先建 hub 环境，见 hub/README.md，否则中枢的测试显示跳过）
 cmake -S . -B build-werror -DINK_WERROR=ON && cmake --build build-werror -j8 && ctest --test-dir build-werror
 cmake -S . -B build-asan -DINK_SANITIZE=ON && cmake --build build-asan -j8 && ctest --test-dir build-asan   # ASan + UBSan
 

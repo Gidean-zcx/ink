@@ -69,6 +69,8 @@
   - 没开始：`confirm-durable`、`file-index`、`wireless-transfer`；等应用框架选择：`text-long`、`app-framework-*`、全部系统应用、性能。清单在 [backlog](tasks/backlog.md)。
   - 用户 2026-11-06 对 Codex 的要求：不用 fast；每个任务一小时左右；小问题不许大改、不许随手加机制。
 
+- 2026-11-06 去掉代次、格式化三个文件（结果见[代码健康](system/code-health.md)）。上机测量全套准备好了，等用户同意：[方案](hardware/phase2-plan.md)、`tools/hw-bench/`。只跑过空跑和样例测试，真机上还没跑过。
+
 ### 接下来（都是助手的建议，用户还没确认）
 
 （下面是 11-05 的版本，排序仍然有效，真机还没动。）

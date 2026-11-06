@@ -11,7 +11,7 @@
 - **系统界面**：[规范](docs/product/system-ui-spec.md)和设计稿已有；界面框架和第一批 30 个画板已在模拟器里实现，其余系统应用还没做。
 - **家庭中枢（服务器）**：[设计 v0.8](docs/hub/hub-architecture.md) 已有；第 1 步的骨架在 `hub/`，只用假厂商和合成数据在本机跑过，模拟器能连上它走通一轮语音和一次工具调用。
 - **模拟器**：把系统编译成电脑程序，跑在按 E-Ink4 Plus 建模的虚拟设备上（双核、时间、内存和整块板的芯片都按官方硬件建模）；有命令行（场景测试）和桌面窗口（类似 Android Studio 的模拟器）两种用法。哪些部件与官方一致、哪些只是估计，见[硬件对照](docs/research/simulator/hardware-parity.md)。
-- **测试**：163 项，GitHub Actions 在 Linux 和 macOS 上每次推送都跑。
+- **测试**：164 项，GitHub Actions 在 Linux 和 macOS 上每次推送都跑。
 - **审计**：2026-11-03 用 Codex 对全系统与模拟器做了审计，之后按复审结果继续修，每轮的问题与处理见[审计记录](docs/audits/README.md)。
 
 ## 快速开始
