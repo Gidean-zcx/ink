@@ -13,6 +13,7 @@
 #include "ink/sys/rt.h"
 #include "ink/sys/textfield.h"
 #include "ink/sys/textinput.h"
+#include "ink/ui_shell.h"
 
 #define ink_main product_main
 #include "../../system/boot/main.c"
@@ -56,6 +57,16 @@ static bool shown(lv_obj_t *o) {
 static void find_in(lv_obj_t *o) {
     for (uint32_t i = 0; i < lv_obj_get_child_count(o) && !g_found; i++) {
         lv_obj_t *c = lv_obj_get_child(o, (int32_t)i);
+        const char *action = ink_shell_bound_cap(c);
+        if (!strcmp(g_find, "话筒") && action && !strcmp(action, "text.voice_start") && shown(c)) {
+            lv_area_t a;
+            lv_obj_update_layout(c);
+            lv_obj_get_coords(c, &a);
+            g_found_x = (a.x1 + a.x2) / 2;
+            g_found_y = (a.y1 + a.y2) / 2;
+            g_found = true;
+            return;
+        }
         if (lv_obj_check_type(c, &lv_label_class) && !strcmp(lv_label_get_text(c), g_find) && shown(c)) {
             lv_area_t a;
             lv_obj_update_layout(c);
@@ -70,7 +81,7 @@ static void find_in(lv_obj_t *o) {
 }
 static void do_find(void) {
     g_found = false;
-    find_in(lv_layer_top());
+    find_in(lv_layer_sys());
 }
 static bool there(const char *label) {
     g_find = label;
@@ -97,7 +108,7 @@ static void says_in(lv_obj_t *o) {
 }
 static void do_says(void) {
     g_says = false;
-    says_in(lv_layer_top());
+    says_in(lv_layer_sys());
 }
 static bool keyboard_says(const char *text) {
     g_saying = text;
@@ -148,7 +159,7 @@ static void start_talking(const char *phrases) {
 static int g_kb_h;
 static void do_kb_height(void) {
     g_kb_h = 0;
-    lv_obj_t *top = lv_layer_top();
+    lv_obj_t *top = lv_layer_sys();
     for (uint32_t i = 0; i < lv_obj_get_child_count(top); i++) {
         lv_obj_t *c = lv_obj_get_child(top, (int32_t)i);
         lv_obj_update_layout(c);

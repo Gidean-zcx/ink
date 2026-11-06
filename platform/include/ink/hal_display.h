@@ -70,6 +70,7 @@ typedef void (*hal_display_done_fn)(void *ctx, const hal_display_result_t *r);
 enum {
     HAL_UPD_FLAG_NONE = 0,
     HAL_UPD_FLAG_PRIORITY = 1u << 0, /* jump the queue (system dialogs, touch feedback) */
+    HAL_UPD_FLAG_BINARY_PREVIEW = 1u << 1, /* DU: threshold old binary pixels; keep old gray for refinement */
 };
 
 void hal_display_get_info(hal_panel_info_t *out);

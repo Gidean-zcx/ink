@@ -1,7 +1,7 @@
 # Reader: open the library from home, open the Chinese book, read 14 pages
 # (keys, swipes, tap zones), idle long enough for the position to be saved,
 # go home. Coordinates in dp / % (portable).
-@3s      tap   116dp 160dp        # "阅读" on home (16..216 x 132..188 dp)
+@3s      tap   68% 92%        # "阅读" on home (16..216 x 132..188 dp)
 +2500ms  snap  library
 +500ms   tap   50% 228dp          # third book (64 + 2*68 dp): 测试长书 (40 parts)
 +3s      snap  page1

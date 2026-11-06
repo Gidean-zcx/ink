@@ -52,6 +52,7 @@ static struct {
     ink_db_t *held; /* the current member's inbox stays loaded */
     char member[INK_MEMBER_ID_MAX];
     uint32_t generation;
+    uint32_t publishing, publication;
     int unread;
     int h_unread;
     ink_exec_job_t haptic_job;
@@ -61,17 +62,14 @@ static struct {
     ink_interrupt_t alarm_it; /* the timer task's: its stack is small */
 } NS INK_PSRAM_BSS;
 
-/* The current member's inbox, for one use: a switch of members may close the held one at any time. It is
- * loaded, so this only counts a reference. */
+/* Warm inbox reads follow the current member even while the BG watcher is queued. */
 static ink_db_t *inbox(void) {
     char who[INK_MEMBER_ID_MAX];
-    const char *now = ink_member_current()->id;
     ink_svc_lock();
-    bool open = NS.held != NULL && !strcmp(NS.member, now); /* this service follows on the background executor: until it has, nothing of the last one's */
-    snprintf(who, sizeof who, "%s", NS.member);
-    uint32_t generation = NS.generation;
+    snprintf(who, sizeof who, "%s", ink_member_current()->id);
+    uint32_t generation = ink_member_generation(who);
     ink_svc_unlock();
-    return open ? ink_db_open_member(&INBOX, who, generation) : NULL;
+    return ink_db_open_cached_member(&INBOX, who, generation);
 }
 
 /* ------------------------------------------------------------ the inbox */
@@ -205,6 +203,8 @@ typedef struct {
     uint8_t src;
     uint32_t generation;
     int channel;
+    int prio;
+    char title[96];
     int64_t sort;
     char json[];
 } away_t;
@@ -214,14 +214,31 @@ static void post_away(void *arg) { /* exec.bg: another member's inbox, nobody is
     if (!a->generation || a->generation != ink_member_generation(a->member)) { osal_free(a); return; }
     if (prefs_off(a->member, a->generation) & (1u << a->channel)) ink_probe_count("notify.channel_off");
     else {
+        ink_svc_lock();
+        NS.publishing++;
+        NS.publication++;
+        ink_svc_unlock();
         ink_db_t *db = ink_db_open_member(&INBOX, a->member, a->generation);
         ink_db_write_t w = {.sort = a->sort, .data = a->json, .len = strlen(a->json), .src = a->src};
-        if (!db || ink_db_put(db, &w, NULL) != INK_DB_OK) ink_probe_count("notify.dropped");
+        uint32_t wrote = 0;
+        bool posted = db && ink_db_put(db, &w, &wrote) == INK_DB_OK;
+        if (!posted) ink_probe_count("notify.dropped");
         ink_db_close(db);
         ink_svc_lock();
-        bool now_theirs = !strcmp(NS.member, a->member); /* the device changed hands while this waited */
+        bool now_theirs = posted && a->generation == ink_member_generation(a->member) &&
+                          !strcmp(ink_member_current()->id, a->member);
+        ink_svc_unlock();
+        if (now_theirs && a->prio >= INK_NOTIFY_HIGH && !ink_setting_get("notify.dnd")) {
+            ink_probe_count("notify.alerted");
+            ink_audio_tone(INK_TONE_DONE, 0, NULL);
+            ink_exec_post(INK_EXEC_BG, &NS.haptic_job, haptic_job, NULL);
+        }
+        ink_svc_lock();
+        NS.publishing--;
+        NS.publication++;
         ink_svc_unlock();
         if (now_theirs) recount();
+        if (now_theirs) announce(wrote, NS.ch[a->channel]->id, a->title, a->prio, a->member, a->generation);
     }
     osal_free(a);
 }
@@ -273,6 +290,8 @@ int ink_notify_post_for(const ink_notify_t *n, uint32_t *out_id, const char *mem
         a->generation = generation;
         a->src = n->src;
         a->channel = ci;
+        a->prio = prio;
+        snprintf(a->title, sizeof a->title, "%s", n->title);
         a->sort = sort;
         memcpy(a->json, buf, (size_t)len + 1);
         osal_free(buf);
@@ -287,6 +306,10 @@ int ink_notify_post_for(const ink_notify_t *n, uint32_t *out_id, const char *mem
         ink_probe_count("notify.channel_off");
         return 0;
     }
+    ink_svc_lock();
+    NS.publishing++;
+    NS.publication++;
+    ink_svc_unlock();
     ink_db_t *db = ink_db_open_member(&INBOX, who, generation);
     uint32_t wrote = 0;
     ink_db_write_t w = {.written_ver = n->written_ver, .id = db && n->tag ? find_tag(db, n->tag) : 0, .sort = sort, .data = buf, .len = (size_t)len, .src = n->src};
@@ -294,26 +317,31 @@ int ink_notify_post_for(const ink_notify_t *n, uint32_t *out_id, const char *mem
     ink_db_close(db);
     osal_free(buf);
     if (r != INK_DB_OK) {
+        ink_svc_lock();
+        NS.publishing--;
+        NS.publication++;
+        ink_svc_unlock();
         ink_probe_count("notify.dropped");
         return -1;
     }
     if (out_id) *out_id = wrote;
-    recount();
-    ink_probe_count("notify.posted");
     ink_svc_lock();
-    mine = generation == NS.generation && generation == ink_member_generation(who) && !strcmp(who, NS.member);
+    mine = generation == NS.generation && generation == ink_member_generation(who) &&
+           !strcmp(who, NS.member) && !strcmp(who, ink_member_current()->id);
     ink_svc_unlock();
-    if (!mine) return 0; /* someone else came meanwhile: it is in the right inbox, not for them to hear about */
-    announce(wrote, channel, n->title, prio, who, generation);
-    ink_svc_lock();
-    mine = generation == NS.generation && generation == ink_member_generation(who) && !strcmp(who, NS.member);
-    ink_svc_unlock();
-    if (!mine) return 0;
-    if (prio >= INK_NOTIFY_HIGH && !ink_setting_get("notify.dnd")) { /* no banner: e-ink would need a refresh for it to go away too */
+    if (mine && prio >= INK_NOTIFY_HIGH && !ink_setting_get("notify.dnd")) { /* no banner: e-ink would need a refresh for it to go away too */
         ink_probe_count("notify.alerted");
         ink_audio_tone(INK_TONE_DONE, 0, NULL);
         ink_exec_post(INK_EXEC_BG, &NS.haptic_job, haptic_job, NULL);
     }
+    /* Publish the record only after its alert is queued, then tell readers. */
+    ink_svc_lock();
+    NS.publishing--;
+    NS.publication++;
+    ink_svc_unlock();
+    recount();
+    ink_probe_count("notify.posted");
+    if (mine) announce(wrote, channel, n->title, prio, who, generation);
     return 0;
 }
 
@@ -381,6 +409,12 @@ int ink_notify_clear(void) {
 }
 
 int ink_notify_next(ink_db_cursor_t *c, ink_notify_view_t *out) {
+    ink_svc_lock();
+    uint32_t publication = NS.publication;
+    bool publishing = NS.publishing != 0;
+    ink_svc_unlock();
+    if (publishing) return 0;
+    ink_db_cursor_t before = *c;
     ink_db_t *db = inbox();
     if (!db) return 0;
     char *buf = osal_malloc(RECORD_CAP, OSAL_MEM_EXTERNAL);
@@ -412,6 +446,10 @@ int ink_notify_next(ink_db_cursor_t *c, ink_notify_view_t *out) {
     osal_free(j);
     osal_free(buf);
     ink_db_close(db);
+    ink_svc_lock();
+    publishing = NS.publishing != 0 || publication != NS.publication;
+    ink_svc_unlock();
+    if (publishing) { *c = before; return 0; }
     return got == 1 ? 1 : 0;
 }
 
@@ -580,8 +618,9 @@ static void on_alarm(void *ctx, const char *id, const ink_args_t *p) { /* the ti
     it->nactions = 2;
     snprintf(it->title, sizeof it->title, "闹钟");
     ink_args_get_str(p, "title", it->body, sizeof it->body);
-    action(&it->actions[0], "关闭", "alarm.dismiss", args);
-    action(&it->actions[1], "稍后", "alarm.snooze", args);
+    action(&it->actions[0], "这次不再响", "alarm.dismiss", args);
+    snprintf(args, sizeof args, "{\"id\":%u,\"minutes\":10}", (unsigned)ref);
+    action(&it->actions[1], "再睡 10 分钟", "alarm.snooze", args);
     ink_interrupt_raise(it);
 }
 

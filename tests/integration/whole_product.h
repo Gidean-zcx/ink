@@ -181,7 +181,8 @@ static void key(hal_key_t k) {
 }
 
 /* What the screen shows, as the UI task sees it. */
-static char g_top[32], g_snap[256];
+/* Match the production AI request's SNAPSHOT_CAP, including the input context. */
+static char g_top[32], g_snap[3072];
 static int g_btn_x[3], g_btn_y[3], g_btn_n;
 static void find_buttons(lv_obj_t *o) {
     for (uint32_t i = 0; i < lv_obj_get_child_count(o); i++) {

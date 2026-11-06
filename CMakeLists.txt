@@ -227,6 +227,10 @@ add_library(ink_system STATIC
   system/text/layout.c
   system/ui/lock_mark.c
   system/ui/ui_task.c
+  system/ui/theme.c
+  system/ui/icons.c
+  system/ui/shell/navigation.c
+  system/ui/shell/ai_panel.c
   system/ui/app.c
   system/apps/remote/remote.c)
 target_include_directories(ink_system PUBLIC system/include PRIVATE system/services/display third_party/jsmn)
@@ -266,11 +270,86 @@ if(EXISTS ${INK_CJK_FONT} AND Python3_FOUND)
     list(APPEND INK_FONT_FILES ${out})
   endforeach()
   add_custom_target(ink_fonts ALL DEPENDS ${INK_FONT_FILES})
+  # Additional faces are optional system packages (Ubuntu fonts-noto-cjk-extra),
+  # otherwise fetch the pinned OFL release into this checkout's ignored build-deps.
+  foreach(weight Medium Bold)
+    string(TOUPPER ${weight} upper)
+    find_file(INK_CJK_${upper}_FONT NAMES NotoSansCJK-${weight}.ttc NotoSansCJKsc-${weight}.otf
+      PATHS /usr/share/fonts/opentype/noto ${CMAKE_SOURCE_DIR}/build-deps/fonts
+      NO_DEFAULT_PATH)
+    if(NOT INK_CJK_${upper}_FONT)
+      set(INK_CJK_${upper}_FONT ${CMAKE_SOURCE_DIR}/build-deps/fonts/NotoSansCJKsc-${weight}.otf CACHE FILEPATH "CJK ${weight} face" FORCE)
+      if(weight STREQUAL "Medium")
+        set(hash ca094f6b0001fb048ca39ddd797a0cdb0179e1e55c6561e111c49c3e6a61d7b7)
+      else()
+        set(hash b5f0d1a190a7f9b43c310a8850630af12553df32c4c050543f9059732d9b4c0a)
+      endif()
+      file(MAKE_DIRECTORY ${CMAKE_SOURCE_DIR}/build-deps/fonts)
+      file(DOWNLOAD https://raw.githubusercontent.com/notofonts/noto-cjk/Sans2.004/Sans/OTF/SimplifiedChinese/NotoSansCJKsc-${weight}.otf
+        ${INK_CJK_${upper}_FONT} EXPECTED_HASH SHA256=${hash} TLS_VERIFY ON STATUS status)
+      list(GET status 0 code)
+      if(NOT code EQUAL 0)
+        message(FATAL_ERROR "Missing ${weight} CJK font. Install fonts-noto-cjk-extra or set INK_CJK_${upper}_FONT (${status})")
+      endif()
+    endif()
+    if(NOT EXISTS ${INK_CJK_${upper}_FONT})
+      message(FATAL_ERROR "Missing required CJK ${weight} face: ${INK_CJK_${upper}_FONT}")
+    endif()
+  endforeach()
+  file(GLOB_RECURSE INK_UI_TEXT CONFIGURE_DEPENDS system/ui/*.c apps/*.c system/services/*.c system/policy/*.c)
+  add_custom_command(OUTPUT ${INK_ASSETS_DIR}/fonts/ui-fonts.stamp
+    COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/fontgen/ui_fonts.py
+      --regular ${INK_CJK_FONT} --face ${INK_CJK_FACE} --medium ${INK_CJK_MEDIUM_FONT} --bold ${INK_CJK_BOLD_FONT}
+      --out ${INK_ASSETS_DIR}/fonts
+    DEPENDS ${INK_FONT_FILES} ${INK_UI_TEXT} tools/fontgen/fontgen.py tools/fontgen/ui_fonts.py system/ui/ink/ui_theme.h third_party/fonts/Outfit.ttf
+    COMMENT "fontgen: contract UI sizes, CJK weights and Outfit digits")
+  add_custom_target(ink_ui_fonts ALL DEPENDS ${INK_ASSETS_DIR}/fonts/ui-fonts.stamp)
   set(INK_HAVE_FONTS ON)
 else()
-  message(WARNING "No CJK font (${INK_CJK_FONT}) or Python 3: CJK fonts not generated, reader scenarios skipped. "
-                  "Debian/Ubuntu: apt install fonts-noto-cjk python3-pil")
+  message(FATAL_ERROR "The shell requires CJK fonts and Python 3 (${INK_CJK_FONT}). "
+                      "Debian/Ubuntu: apt install fonts-noto-cjk fonts-noto-cjk-extra python3-pil")
 endif()
+
+# Icons are checked in as extracted geometry, not screenshots or design boards.
+add_executable(ink-icon-raster tools/icongen/raster.c)
+target_compile_options(ink-icon-raster PRIVATE -w)
+target_link_libraries(ink-icon-raster PRIVATE m)
+file(READ ${CMAKE_SOURCE_DIR}/assets/icons/manifest.json INK_ICON_MANIFEST)
+string(JSON INK_ICON_COUNT LENGTH "${INK_ICON_MANIFEST}" names)
+math(EXPR INK_ICON_LAST "${INK_ICON_COUNT} - 1")
+set(INK_ICON_FILES)
+foreach(index RANGE ${INK_ICON_LAST})
+  string(JSON icon GET "${INK_ICON_MANIFEST}" names ${index})
+  foreach(look line duo solid)
+    set(svg ${CMAKE_SOURCE_DIR}/assets/icons/${icon}-${look}.svg)
+    if(NOT EXISTS ${svg})
+      message(FATAL_ERROR "Missing required design icon ${icon}-${look}")
+    endif()
+    foreach(px 28 36 44 64 88)
+      set(out ${INK_ASSETS_DIR}/icons/${icon}-${look}-${px}.inki)
+      add_custom_command(OUTPUT ${out}
+        COMMAND ${CMAKE_COMMAND} -E make_directory ${INK_ASSETS_DIR}/icons
+        COMMAND ink-icon-raster ${svg} ${px} ${out}
+        DEPENDS ink-icon-raster ${svg})
+      list(APPEND INK_ICON_FILES ${out})
+      if(look STREQUAL "solid")
+        set(inverse ${INK_ASSETS_DIR}/icons/${icon}-${look}-inv-${px}.inki)
+        add_custom_command(OUTPUT ${inverse}
+          COMMAND ink-icon-raster ${svg} ${px} ${inverse} inverse
+          DEPENDS ink-icon-raster ${svg})
+        list(APPEND INK_ICON_FILES ${inverse})
+      endif()
+    endforeach()
+  endforeach()
+endforeach()
+add_custom_target(ink_icons ALL DEPENDS ${INK_ICON_FILES})
+add_custom_target(ink_ui_resource_check ALL
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/icongen/check.py
+          --header ${CMAKE_BINARY_DIR}/generated/ink/ui_icon_names.h
+  BYPRODUCTS ${CMAKE_BINARY_DIR}/generated/ink/ui_icon_names.h
+  COMMENT "Check required design icon geometry")
+add_dependencies(ink_system ink_ui_resource_check)
+target_include_directories(ink_system PUBLIC ${CMAKE_BINARY_DIR}/generated)
 
 # Scenario content: the committed sample books + a generated long book (pagination stress).
 set(INK_TEST_CONTENT ${CMAKE_BINARY_DIR}/test-content)
@@ -381,6 +460,54 @@ if(INK_HAVE_FONTS)
 endif()
 add_test(NAME backup-restore-recovery COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/backup_restore/run.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(backup-restore-recovery PROPERTIES TIMEOUT 240 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")
+target_compile_options(sim-backup-restore PRIVATE -Wno-format-truncation) # a test path cut short fails the test anyway
+add_test(NAME ui-scale COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/ui_scale_check.py)
+add_test(NAME ui-scale-regressions COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/ui_scale_check_test.py)
+add_test(NAME ui-compare-regressions COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/ui_compare_test.py)
+add_test(NAME ui-icons COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/icongen/check.py)
+add_test(NAME ui-icons-regressions COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/ui_icon_check_test.py)
+add_test(NAME ui-assets COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/ui_assets_check.py ${INK_ASSETS_DIR})
+add_executable(sim-ui-scenes simulator/runtime/sim_main.c tests/ui_shell_scenes.c)
+target_link_libraries(sim-ui-scenes PRIVATE ink_apps ink_system ink_port_sim)
+target_compile_options(sim-ui-scenes PRIVATE ${INK_WARN} -Wno-format-truncation)
+set(INK_SHELL_SCENES Main Today Apps Lock LockPage Control Notifications Members MembersBack Pin PinWrong
+  ImePinyin ImeCandidates ImeEdit ImePassword ImeVoice Confirm ConfirmDelete ConfirmSecret AiListen AiThink Ai
+  Settings SetDisplay SetSound SetNetwork PowerMenu PowerOff PhoneIncoming ClockRing Components ComponentsDock ComponentsPanel)
+foreach(scene ${INK_SHELL_SCENES})
+  if(scene STREQUAL "PowerOff")
+    set(budget ui_off_scene)
+  else()
+    set(budget ui_scene)
+  endif()
+  add_test(NAME ui-scene-${scene}
+    COMMAND ${CMAKE_COMMAND} -E env INK_UI_SCENE=${scene} $<TARGET_FILE:sim-ui-scenes>
+      --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json --script ${CMAKE_SOURCE_DIR}/tests/ui_shell.script
+      --hub ${CMAKE_SOURCE_DIR}/tests/ui_shell.hub.json
+      --budget ${CMAKE_SOURCE_DIR}/tests/${budget}.budget.json --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+      --out ${CMAKE_BINARY_DIR}/test-out/ui-scene-${scene} --quiet --no-random-outages)
+endforeach()
+add_executable(sim-ui-shell-test simulator/runtime/sim_main.c tests/ui_shell_test.c)
+target_link_libraries(sim-ui-shell-test PRIVATE ink_apps ink_system ink_port_sim)
+target_compile_options(sim-ui-shell-test PRIVATE ${INK_WARN} -Wno-format-truncation)
+add_test(NAME ui-shell-priorities
+  COMMAND sim-ui-shell-test --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+    --script ${CMAKE_SOURCE_DIR}/tests/ui_shell_test.script --budget ${CMAKE_SOURCE_DIR}/tests/ui_shell.budget.json
+    --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT} --out ${CMAKE_BINARY_DIR}/test-out/ui-shell --quiet --no-random-outages)
+add_test(NAME ui-panel-restore
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/ui_panel_check.py ${CMAKE_BINARY_DIR}/test-out/ui-shell)
+set_tests_properties(ui-panel-restore PROPERTIES DEPENDS ui-shell-priorities)
+add_executable(sim-ui-regressions simulator/runtime/sim_main.c tests/ui_shell_regressions.c)
+target_link_libraries(sim-ui-regressions PRIVATE ink_apps ink_system ink_port_sim)
+target_compile_options(sim-ui-regressions PRIVATE ${INK_WARN} -Wno-format-truncation)
+foreach(profile metalio-plus desktop-lcd)
+  foreach(regression confirm slider context privacy answer snapshot alarm)
+    add_test(NAME ui-${regression}-regressions-${profile}
+      COMMAND ${CMAKE_COMMAND} -E env INK_UI_REGRESSION=${regression} $<TARGET_FILE:sim-ui-regressions>
+        --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/${profile}.json --script ${CMAKE_SOURCE_DIR}/tests/ui_shell_regressions.script
+        --budget ${CMAKE_SOURCE_DIR}/tests/ui_scene.budget.json --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+        --out ${CMAKE_BINARY_DIR}/test-out/ui-${regression}-${profile} --quiet --no-random-outages)
+  endforeach()
+endforeach()
 ink_sim_executable(sim-pairing tests/pairing/device.c)
 target_link_libraries(sim-pairing PRIVATE ink_apps ink_system)
 if(INK_HAVE_FONTS)
@@ -528,6 +655,15 @@ add_test(NAME selftest-expander-dead
           --i2c-faults 1.0:io-expander)
 set_tests_properties(selftest-expander-dead PROPERTIES ENVIRONMENT "INK_SELFTEST_EXPANDER_DEAD=1")
 # Unit tests: one part on its own, checked against its reference (here the pools against TLSF).
+ink_sim_executable(sim-binary-preview tests/simulator/binary_preview.c)
+add_test(NAME selftest-binary-preview COMMAND sim-binary-preview
+  --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+  --budget ${CMAKE_SOURCE_DIR}/tests/simulator/binary_preview.budget.json
+  --out ${CMAKE_BINARY_DIR}/test-out/binary-preview --end 8s --quiet --no-random-outages)
+add_executable(pmic-retry-test tests/unit/pmic_retry_test.c drivers/chips/tps65185/tps65185.c)
+target_include_directories(pmic-retry-test PRIVATE platform/include drivers/chips)
+target_compile_options(pmic-retry-test PRIVATE ${INK_WARN})
+add_test(NAME unit-pmic-retry COMMAND pmic-retry-test)
 add_executable(pools-test tests/unit/pools_test.c)
 target_include_directories(pools-test PRIVATE simulator/memory simulator/kernel/vtk)
 target_link_libraries(pools-test PRIVATE ink_platform ink_tlsf)

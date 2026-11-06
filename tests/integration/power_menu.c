@@ -38,7 +38,7 @@ static void look_at_mark(lv_obj_t *o) {
 }
 static void read_mark(void) {
     g_mark_ok = false;
-    look_at_mark(lv_layer_top());
+    look_at_mark(lv_layer_sys());
 }
 
 static void test_main(void) {

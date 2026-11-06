@@ -54,50 +54,62 @@ static bool hidden_key(const char *k) {
     return strstr(k, "password") || strstr(k, "secret") || strstr(k, "token") || strstr(k, "psk") || !strcmp(k, "pin") || (n > 4 && !strcmp(k + n - 4, "_pin"));
 }
 
-static void put_text(char *out, size_t cap, size_t *n, const char *s) {
+static bool put_text(char *out, size_t cap, size_t *n, const char *s) {
     size_t have = strlen(s);
+    bool complete = *n + have < cap;
     if (*n + have >= cap) have = cap - *n - 1;
     while (have && (s[have] & 0xC0) == 0x80) have--; /* not in the middle of a character */
     memcpy(out + *n, s, have);
     *n += have;
     out[*n] = 0;
+    return complete;
 }
 
-static void put_value(char *out, size_t cap, size_t *n, const ink_args_t *a, const char *key) {
+static bool put_value(char *out, size_t cap, size_t *n, const ink_args_t *a, const char *key) {
     const ink_arg_t *v = ink_args_find(a, key);
     char num[24];
-    if (!v) return;
-    if (hidden_key(key)) put_text(out, cap, n, "***");
-    else if (v->type == INK_ARG_BOOL) put_text(out, cap, n, v->i ? "是" : "否");
+    if (!v) return true;
+    if (hidden_key(key)) return put_text(out, cap, n, "***");
+    else if (v->type == INK_ARG_BOOL) return put_text(out, cap, n, v->i ? "是" : "否");
     else if (v->type == INK_ARG_INT) {
         snprintf(num, sizeof num, "%lld", (long long)v->i);
-        put_text(out, cap, n, num);
-    } else if (v->type == INK_ARG_STR || v->type == INK_ARG_JSON) put_text(out, cap, n, a->text + v->off);
+        return put_text(out, cap, n, num);
+    } else if (v->type == INK_ARG_STR || v->type == INK_ARG_JSON) return put_text(out, cap, n, a->text + v->off);
+    return true;
 }
 
-static void describe(const ink_cap_t *c, const ink_args_t *a, char *out, size_t cap) {
+static bool describe(const ink_cap_t *c, const ink_args_t *a, char *out, size_t cap) {
     size_t n = 0;
+    bool complete = true;
     out[0] = 0;
     if (c->ask) {
-        for (const char *p = c->ask; *p && n < cap - 1;) {
+        for (const char *p = c->ask; *p;) {
             const char *open = *p == '{' ? strchr(p, '}') : NULL;
             if (open && open - p < 32) {
                 char key[32];
                 snprintf(key, sizeof key, "%.*s", (int)(open - p - 1), p + 1);
-                put_value(out, cap, &n, a, key);
+                complete &= put_value(out, cap, &n, a, key);
                 p = open + 1;
-            } else out[n++] = *p++;
+            } else {
+                const char *end = p + 1;
+                while ((*end & 0xc0) == 0x80) end++;
+                char ch[8];
+                snprintf(ch, sizeof ch, "%.*s", (int)(end - p), p);
+                complete &= put_text(out, cap, &n, ch);
+                p = end;
+            }
         }
         out[n] = 0;
-        return;
+        return complete;
     }
     for (int i = 0; i < a->n; i++) {
         const char *k = ink_args_key(a, &a->a[i]);
-        if (i) put_text(out, cap, &n, "；");
-        put_text(out, cap, &n, k);
-        put_text(out, cap, &n, "：");
-        put_value(out, cap, &n, a, k);
+        if (i) complete &= put_text(out, cap, &n, "；");
+        complete &= put_text(out, cap, &n, k);
+        complete &= put_text(out, cap, &n, "：");
+        complete &= put_value(out, cap, &n, a, k);
     }
+    return complete;
 }
 
 /* ---- the table ---- */
@@ -231,7 +243,13 @@ ink_rc_t ink_confirm_hold(const ink_cap_t *c, const ink_args_t *args, ink_source
     h->page_gen = page_gen;
     h->expires_us = osal_now_us() + EXPIRE_US;
     snprintf(h->member, sizeof h->member, "%s", ink_member_current()->id);
-    describe(c, args, h->detail, sizeof h->detail);
+    if (!describe(c, args, h->detail, sizeof h->detail)) {
+        osal_free(h);
+        rc->status = INK_RC_REJECTED;
+        snprintf(rc->detail, sizeof rc->detail, "confirmation detail is too long");
+        snprintf(rc->say, sizeof rc->say, "说明太长，不能完整显示，请分成几次操作。");
+        return rc->status;
+    }
     bool full = true;
     ink_svc_lock();
     for (int i = 0; i < MAX_HELD && full; i++)

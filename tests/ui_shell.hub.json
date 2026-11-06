@@ -1,0 +1,13 @@
+{
+  "rules": [
+    {"method": "hello", "think_ms": 40, "result": {"session": "ui-fixture", "proto": 1}},
+    {"method": "ping", "think_ms": 5, "result": {}},
+    {"method": "ai.ask", "think_ms": 10000,
+     "stream": {"notify": "ai.delta", "interval_ms": 100,
+                "chunks": ["测试答案：小满在夜里替别人送信。这段是场景测试夹具，用来核对面板身份、完整回答和翻页。下一页还会解释收信人的心情，以及这封信为什么让他们重新开始说话。"]},
+     "result": {"done": true, "source": "page"}},
+    {"method": "ai.listen", "think_ms": 10000,
+     "listen": {"stt_ms": 300, "transcript": "场景测试提问"}, "result": {"done": true}},
+    {"method": "*", "think_ms": 30, "error": {"code": -32601, "message": "not in scene fixture"}}
+  ]
+}
