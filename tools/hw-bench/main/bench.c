@@ -479,9 +479,11 @@ void app_main(void) {
     g_said = heap_caps_malloc(SAID_CAP, MALLOC_CAP_SPIRAM);
     printf("BENCH_START\n");
 #ifdef INK_BENCH_LAB
-    /* After a crash the panel is not touched again: what comes next would be the same crash. */
+    /* After a crash the panel is not touched again: what comes next would be the same crash. This firmware
+     * restarts itself only when the guard stops it or the power chip does not come up, and that counts too. */
     const esp_reset_reason_t why = esp_reset_reason();
-    const bool crashed = why == ESP_RST_PANIC || why == ESP_RST_INT_WDT || why == ESP_RST_TASK_WDT || why == ESP_RST_WDT || why == ESP_RST_BROWNOUT;
+    const bool crashed = why == ESP_RST_SW || why == ESP_RST_PANIC || why == ESP_RST_INT_WDT || why == ESP_RST_TASK_WDT || why == ESP_RST_WDT ||
+                         why == ESP_RST_BROWNOUT;
     sys_info();
     i2c_scan();
     bool up = MetalioEpd_Init(); /* first: the USB link may die here (second run), and then early is best */

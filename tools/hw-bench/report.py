@@ -14,16 +14,20 @@ def scrub(text):
 def parse(path):
     rows = []
     lines = open(path, errors="replace").readlines()
-    # The bench says everything again at the end. That copy is whole; the first may have holes.
-    start = max((n for n, line in enumerate(lines) if "BENCH_REPLAY" in line), default=-1) + 1
-    for line in lines[start:]:
-        i = line.find("BENCH {")
-        if i < 0:
-            continue
-        try:
-            rows.append(json.loads(line[i + 6:]))
-        except ValueError:
-            rows.append({"test": "bad_line"})
+    # A restart in the middle (the lab's guard) starts over: what came before it still counts.
+    starts = [n for n, line in enumerate(lines) if "BENCH_START" in line] or [0]
+    for begin, end in zip(starts, starts[1:] + [len(lines)]):
+        boot = lines[begin:end]
+        # The bench says everything again at the end. That copy is whole; the first may have holes.
+        start = max((n for n, line in enumerate(boot) if "BENCH_REPLAY" in line), default=-1) + 1
+        for line in boot[start:]:
+            i = line.find("BENCH {")
+            if i < 0:
+                continue
+            try:
+                rows.append(json.loads(line[i + 6:]))
+            except ValueError:
+                rows.append({"test": "bad_line"})
     return rows
 
 

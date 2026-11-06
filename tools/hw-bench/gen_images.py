@@ -3,7 +3,8 @@
 
 gen_images.py [--lab] font.ttc out.h name=picture.png ...
 The first picture is drawn here: numbered dots to tap, at places the report can compare with.
---lab adds what the refresh test shows: the wedge, reading pages, plain white, the last picture.
+--lab has what the refresh test shows instead of the dots: the wedge, reading pages, plain white, a page of
+grays to choose from, the last picture.
 """
 import os
 import sys
@@ -40,7 +41,7 @@ def wedge(font):
     d = ImageDraw.Draw(im)
     w = WEDGE
     title, small = font_at(font, 36), font_at(font, 26)
-    d.text((W // 2, 52), "拍一张照，拍好后点一下屏幕", font=title, fill=0, anchor="mm")
+    d.text((W // 2, 52), "等方块变了再拍照，拍好点一下屏幕", font=title, fill=0, anchor="mm")
     half = w["WEDGE_ROWS"] // 2
     for r in range(w["WEDGE_ROWS"]):
         for c in range(w["WEDGE_COLS"]):
@@ -54,6 +55,30 @@ def wedge(font):
         d.rectangle((x, STRIP_Y, x + 39, STRIP_Y + STRIP_H - 1), fill=level * 17)
     for x, y in ((6, 6), (W - 6 - MARK, 6), (6, H - 6 - MARK), (W - 6 - MARK, H - 6 - MARK)):
         d.rectangle((x, y, x + MARK - 1, y + MARK - 1), fill=0)
+    return im
+
+
+def grays(font):
+    """Which grays read well on the real panel: to choose from by eye. The numbers are the panel's 16 levels."""
+    im = Image.new("L", (W, H), 255)
+    d = ImageDraw.Draw(im)
+    title, body, note = font_at(font, 36), font_at(font, 38), font_at(font, 31)
+    d.text((W // 2, 46), "选灰度：记下数字，再点一下屏幕", font=title, fill=0, anchor="mm")
+    d.text((38, 110), "灰色底：哪个数字刚好看得清", font=note, fill=0, anchor="lm")
+    y = 146
+    for level in (13, 12, 11, 10, 9, 8):
+        d.rounded_rectangle((38, y, W - 38, y + 72), radius=20, fill=level * 17)
+        d.text((62, y + 36), str(level), font=body, fill=0, anchor="lm")
+        d.text((150, y + 36), "今日 设置 通知", font=body, fill=0, anchor="lm")
+        y += 84
+    y += 26
+    d.text((38, y), "次要文字：哪个数字读着舒服", font=note, fill=0, anchor="lm")
+    y += 36
+    for level in (6, 5, 4, 3, 2, 0):
+        d.text((62, y + 32), str(level), font=body, fill=0, anchor="lm")
+        d.text((150, y + 32), "下午 3 点 还有 2 项", font=body, fill=level * 17, anchor="lm")
+        d.text((W - 38, y + 32), "14:30", font=note, fill=level * 17, anchor="rm")
+        y += 72
     return im
 
 
@@ -108,7 +133,7 @@ def main():
     if lab:
         args.remove("--lab")
     font, out, wanted = args[0], args[1], [a.split("=", 1) for a in args[2:]]
-    pictures = [("dots", dots(font))]
+    pictures = [] if lab else [("dots", dots(font))]
     for name, path in wanted:
         if not lab or name in ("Main", "Settings", "Today"):
             pictures.append((name, Image.open(path).convert("L").resize((W, H))))
@@ -117,6 +142,7 @@ def main():
         pictures.append(("wedge", wedge(font)))
         pictures += [(f"read{i + 1}", page) for i, page in enumerate(reading_pages(font, book))]
         pictures.append(("white", Image.new("L", (W, H), 255)))
+        pictures.append(("grays", grays(font)))
         done = Image.new("L", (W, H), 255)
         ImageDraw.Draw(done).text((W // 2, H // 2), "测完了，马上恢复", font=font_at(font, 60), fill=0, anchor="mm")
         pictures.append(("done", done))

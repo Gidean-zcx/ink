@@ -3,7 +3,8 @@
 
 wedge_photo.py photo.jpg [--corners x,y,x,y,x,y,x,y] [--debug out.png]
 Finds the four corner marks, straightens the screen, reads every patch against the factory's 16 gray
-levels in the strip, with the white paper next to each as its local light. Needs numpy and Pillow.
+levels in the strip, with the white paper next to each as its local light. Needs numpy and Pillow, which
+the system python3 has here and build-deps does not.
 """
 import argparse
 import os
@@ -28,8 +29,8 @@ def load(path):
     return ImageOps.exif_transpose(Image.open(path)).convert("L")
 
 
-def find_marks(im):
-    """Small dark squares; the ones furthest out in each corner direction are the marks."""
+def find_blobs(im):
+    """Small dark squares in the photo: (x, y, size)."""
     scale = 800 / max(im.size)
     small = np.asarray(im.resize((int(im.width * scale), int(im.height * scale)), Image.BILINEAR), dtype=np.float32)
     dark = small < 0.55 * np.percentile(small, 80)
@@ -51,22 +52,71 @@ def find_marks(im):
         p = np.array(pts)
         dy, dx = np.ptp(p[:, 0]) + 1, np.ptp(p[:, 1]) + 1
         if 4 <= dx <= 40 and 4 <= dy <= 40 and 0.6 < dx / dy < 1.7 and len(pts) > 0.6 * dx * dy:
-            blobs.append((p[:, 1].mean() / scale, p[:, 0].mean() / scale))
-    if len(blobs) < 4:
-        sys.exit("cannot find the corner marks: pass --corners")
-    b = np.array(blobs)
-    pick = lambda v: tuple(b[np.argmax(v)])
-    return [pick(-b[:, 0] - b[:, 1]), pick(b[:, 0] - b[:, 1]), pick(-b[:, 0] + b[:, 1]), pick(b[:, 0] + b[:, 1])]
+            blobs.append((p[:, 1].mean() / scale, p[:, 0].mean() / scale, (dx + dy) / 2 / scale))
+    return blobs
 
 
-def straighten(im, corners):
-    """PIL's perspective map goes from the output to the photo."""
+def transform_for(corners):
+    """Screen to photo, the form PIL's perspective map wants."""
     a, r = [], []
     for (x, y), (u, v) in zip(MARKS, corners):
         a.append([x, y, 1, 0, 0, 0, -u * x, -u * y])
         a.append([0, 0, 0, x, y, 1, -v * x, -v * y])
         r += [u, v]
-    return im.transform((W, H), Image.PERSPECTIVE, np.linalg.solve(np.array(a, float), np.array(r, float)), Image.BICUBIC)
+    return np.linalg.solve(np.array(a, float), np.array(r, float))
+
+
+def strip_in_photo(px, t):
+    """The 16 levels as the photo has them, without straightening it first."""
+    out = []
+    for level in range(16):
+        x, y = 42 + level * 40, STRIP_Y + STRIP_H / 2
+        w = t[6] * x + t[7] * y + 1
+        u, v = int((t[0] * x + t[1] * y + t[2]) / w), int((t[3] * x + t[4] * y + t[5]) / w)
+        if not (4 <= u < px.shape[1] - 4 and 4 <= v < px.shape[0] - 4):
+            return None
+        out.append(float(px[v - 4:v + 4, u - 4:u + 4].mean()))
+    return np.array(out)
+
+
+def looks_like_strip(strip):
+    """Dark to light from one end to the other, which the phone's tone curve and the top levels' sameness leave alone."""
+    return strip is not None and strip[-1] > 1.5 * strip[:3].mean() and np.corrcoef(strip, np.arange(16))[0, 1] > 0.85
+
+
+def find_marks(im):
+    """Anything dark and square may be a mark, keys and icons around the device too. The four that make a screen of
+    the right shape, and put the gray strip where it belongs, are the marks."""
+    blobs = find_blobs(im)
+    px = np.asarray(im, dtype=np.float32)
+    cx, cy = im.width / 2, im.height / 2
+    parts = [[b for b in blobs if (b[0] < cx) == left and (b[1] < cy) == top] for top in (True, False) for left in (True, False)]
+    best, best_area = None, 0
+    for tl in parts[0]:
+        for tr in parts[1]:
+            if tr[0] - tl[0] < 0.25 * im.width or abs(tr[1] - tl[1]) > 0.2 * (tr[0] - tl[0]):
+                continue
+            for bl in parts[2]:
+                for br in parts[3]:
+                    if br[0] - bl[0] < 0.25 * im.width or abs(br[1] - bl[1]) > 0.2 * (br[0] - bl[0]):
+                        continue
+                    sizes = (tl[2], tr[2], bl[2], br[2])
+                    if max(sizes) > 2.5 * min(sizes):
+                        continue
+                    wide, tall = (tr[0] - tl[0] + br[0] - bl[0]) / 2, (bl[1] - tl[1] + br[1] - tr[1]) / 2
+                    if not 1.4 < tall / wide < 2.3 or abs(bl[0] - tl[0]) > 0.25 * tall or abs(br[0] - tr[0]) > 0.25 * tall:
+                        continue
+                    corners = [(b[0], b[1]) for b in (tl, tr, bl, br)]
+                    if wide * tall > best_area and looks_like_strip(strip_in_photo(px, transform_for(corners))):
+                        best, best_area = corners, wide * tall
+    if best is None:
+        sys.exit("cannot find the corner marks: pass --corners")
+    return best
+
+
+def straighten(im, corners):
+    """PIL's perspective map goes from the output to the photo."""
+    return im.transform((W, H), Image.PERSPECTIVE, transform_for(corners), Image.BICUBIC)
 
 
 def analyse(flat):
@@ -78,6 +128,7 @@ def analyse(flat):
         white = mean(x + 8, STRIP_Y - 16, x + 32, STRIP_Y - 6)
         strip.append(mean(x + 8, STRIP_Y + 10, x + 32, STRIP_Y + STRIP_H - 10) / white)
     strip = np.array(strip)
+    rising = np.maximum.accumulate(strip) + np.arange(16) * 1e-6  # the darkest levels can come out in the wrong order
     rows = {"toward_black": {}, "toward_white": {}}
     for r in range(ROWS):
         for c in range(COLS):
@@ -85,7 +136,7 @@ def analyse(flat):
             n = (r % (ROWS // 2)) * COLS + c + 1
             white = mean(x - 16, y + 20, x - 6, y + 64)
             value = mean(x + 21, y + 21, x + 63, y + 63) / white
-            level = float(np.interp(value, strip, np.arange(16))) if np.all(np.diff(strip) > 0) else float(np.argmin(abs(strip - value)))
+            level = float(np.interp(value, rising, np.arange(16)))
             rows["toward_black" if r < ROWS // 2 else "toward_white"][n] = level
     return strip, rows
 
@@ -115,10 +166,16 @@ def main():
     if a.debug:
         flat.save(a.debug)
     strip, rows = analyse(flat)
+    if not (strip[-1] > 1.5 * strip[:3].mean() and np.corrcoef(strip, np.arange(16))[0, 1] > 0.85):
+        sys.exit("this does not read as the gray strip: the corners are wrong, pass --corners and look at --debug")
     print("factory levels, against white:", " ".join(f"{v:.2f}" for v in strip))
     for name, levels in rows.items():
+        start = 15 if name == "toward_black" else 0
         print(f"{name}:", " ".join(f"{n}:{levels[n]:.1f}" for n in sorted(levels)))
-        print(f"  full swing about {swing(levels)} pushes, first push moves {abs(levels[1] - (15 if name == 'toward_black' else 0)):.1f} levels")
+        if abs(levels[max(levels)] - start) < 3:
+            print("  these patches have not moved: the photo is from before the pushes, or the pushes did nothing")
+        else:
+            print(f"  full swing about {swing(levels)} pushes, first push moves {abs(levels[1] - start):.1f} levels")
 
 
 if __name__ == "__main__":
