@@ -82,6 +82,8 @@ int ink_fs_dir_next(ink_fs_dir_t *d, ink_fs_stat_t *out);
 void ink_fs_dir_close(ink_fs_dir_t *d);
 /** Makes the missing parents too. An existing directory is fine. */
 int ink_fs_mkdir(const char *path);
+/** Delayed service work retains the member that requested the directory. */
+int ink_fs_mkdir_member_generation(const char *member, uint32_t generation, const char *path);
 /** A file or an empty directory. Whole trees: ink_fs_delete_start. */
 int ink_fs_remove(const char *path);
 int ink_fs_remove_member_generation(const char *member, uint32_t generation, const char *path);
@@ -89,6 +91,15 @@ int ink_fs_remove_member_generation(const char *member, uint32_t generation, con
 int ink_fs_move(const char *from, const char *to);
 /** Replace or create a whole file through a temporary one. */
 int ink_fs_write_atomic(const char *path, const void *data, size_t n);
+/** Backup service only: install this member's .backup/down<stage> at a /me path, under the edit lock.
+ *  Checks the previous hash (zero = absent), rejects open writers/jobs and changed originals. */
+int ink_fs_restore(const char *member, uint32_t generation, unsigned stage, const char *path, const uint8_t expected_sha256[32]);
+/** Trusted backup continuation: after hashing outside the edit lock, install only if the card revision
+ *  still matches. Open writers and jobs also refuse installation; a busy edit lock returns BUSY.
+ *  Revision sampling never waits: zero means an edit, writer, job or USB is active; retry later.
+ *  Sample before reading metadata/content, then verify the same nonzero revision afterwards. */
+uint32_t ink_fs_revision(void);
+int ink_fs_restore_if_revision(const char *member, uint32_t generation, unsigned stage, const char *path, uint32_t revision);
 int ink_fs_free(uint64_t *free_bytes, uint64_t *total_bytes);
 /** A member was removed: their folder, which nobody can delete by its path. Blocks on the card. INK_FS_OK, or why not. */
 int ink_fs_forget_member(const char *id);

@@ -125,6 +125,12 @@ void ink_db_flush(ink_db_t *db);
 int ink_db_wait(ink_db_t *db, uint32_t ver, int64_t timeout_us);
 /** The last write failed (a write retried later, what is in memory stays): non-zero until one works. */
 int ink_db_error(ink_db_t *db);
+/** Consistent, durable snapshot for backup (BG only). Caller frees *out with osal_free.
+ *  Refuses while writes/folding are outstanding; never exports accepted-only changes. */
+int ink_db_export(ink_db_t *db, void **out, size_t *len);
+/** Validate and atomically install an exported snapshot, retaining ids and versions. BG only.
+ *  Refuses concurrent edits/folding; a failed write leaves the original collection intact. */
+int ink_db_import(ink_db_t *db, const void *data, size_t len, uint32_t expected_ver);
 /** Everything that waits, of every collection: locking, power off, low battery. Any task. */
 void ink_db_flush_all(void);
 /** A member is gone: what is held of theirs goes, unwritten or not. */

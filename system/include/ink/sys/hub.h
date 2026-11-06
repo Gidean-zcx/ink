@@ -74,6 +74,8 @@ int ink_hub_send_frame_for(const void *data, size_t len, int cls, const char *me
 typedef void (*ink_hub_binary_fn)(void *ctx, const uint8_t *data, size_t len);
 /** The (single) receiver of binary messages from the hub; runs in the hub task. */
 void ink_hub_on_binary(ink_hub_binary_fn fn, void *ctx);
+/** Connection-level blob frames (kind 6, sid 0), separate from realtime sessions. */
+void ink_hub_on_blob(ink_hub_binary_fn fn, void *ctx);
 
 /**
  * Requests FROM the hub (integer ids), e.g. "tools/call" when the model uses a device action.
