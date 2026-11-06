@@ -540,14 +540,15 @@ static void turn(int delta) {
     if (N.home_page == 2 && ((delta > 0 && N.apps_page + 1 < N.apps_pages) || (delta < 0 && N.apps_page > 0))) {
         N.apps_page += delta;
         ink_ui_content_changed();
+        ink_ui_hint_frame(INK_REFRESH_FLASH_UI);
         draw_home_content();
         return;
     }
     int next = N.home_page + delta;
     if (!N.content || next < 0 || next > 2) return;
     N.home_page = next;
-    ink_ui_stage_next();
     ink_ui_content_changed();
+    ink_ui_hint_frame(INK_REFRESH_FLASH_UI); /* D-108: all of it is new, no ghost of the last page */
     draw_home_content();
     ink_probe_count("home.page_turns");
 }
@@ -1147,7 +1148,7 @@ static void turn_body(int delta) {
     if (!N.page_body || page < 0 || page >= N.body_pages) return;
     N.body_page = page;
     ink_ui_content_changed();
-    ink_ui_stage_next();
+    ink_ui_hint_frame(INK_REFRESH_FLASH_UI);
     draw_page_body();
 }
 static bool page_key(ink_key_t key, bool lng) {
@@ -1260,7 +1261,7 @@ static void cap_nav(ink_call_t *c) {
             else if (!strcmp(c->cap->id, "shell.notify_prev") && N.notify_page)
                 N.notify_page--;
             ink_ui_content_changed();
-            ink_ui_stage_next();
+            ink_ui_hint_frame(INK_REFRESH_FLASH_UI);
             draw_page_body();
         }
     } else if (!strcmp(c->cap->id, "shell.wifi_next") || !strcmp(c->cap->id, "shell.wifi_prev")) {
@@ -1270,7 +1271,7 @@ static void cap_nav(ink_call_t *c) {
             else if (!strcmp(c->cap->id, "shell.wifi_prev") && N.wifi_page)
                 N.wifi_page--;
             ink_ui_content_changed();
-            ink_ui_stage_next();
+            ink_ui_hint_frame(INK_REFRESH_FLASH_UI);
             draw_page_body();
         }
     } else if (!strcmp(c->cap->id, "shell.wifi_pick")) {

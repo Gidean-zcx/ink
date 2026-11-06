@@ -28,6 +28,7 @@ static void save_frame(void) {
     if (!before) before = osal_malloc(frame_bytes, OSAL_MEM_EXTERNAL);
     ink_display_lock(); memcpy(before, ink_display_fb(), frame_bytes); ink_display_unlock();
 }
+static void staged_redraw(void) { ink_ui_stage_next(); lv_obj_invalidate(lv_screen_active()); }
 static void compare_frame(void) {
     ink_display_lock(); same = !memcmp(before, ink_display_fb(), frame_bytes); ink_display_unlock();
 }
@@ -114,9 +115,13 @@ static void test_task(void *arg) {
     CHECK(same && !strcmp(ink_ui_top_name(), "confirm"), "the confirmation returns pixel for pixel after a call");
     key(HAL_KEY_HOME); quiet(); CHECK(!strcmp(ink_ui_top_name(), "home") && hit == 0, "HOME cancels confirmation without executing it");
 
-    double preview = sim_metric_value("display.two_phase.preview"), gray = sim_metric_value("display.two_phase.gray");
+    double clean = sim_metric_value("display.dispatch.FLASH_UI+clean");
     key(HAL_KEY_NEXT); quiet();
-    CHECK(sim_metric_value("display.two_phase.preview") > preview && sim_metric_value("display.two_phase.gray") > gray, "a page has a binary preview and gray refinement");
+    CHECK(sim_metric_value("display.dispatch.FLASH_UI+clean") > clean, "a home page turn is all new content: a clean refresh, no ghost (D-108)");
+    double preview = sim_metric_value("display.two_phase.preview"), gray = sim_metric_value("display.two_phase.gray");
+    on_ui(staged_redraw); quiet();
+    CHECK(sim_metric_value("display.two_phase.preview") > preview && sim_metric_value("display.two_phase.gray") > gray, "a staged frame has a binary preview and gray refinement");
+    key(HAL_KEY_PREV); quiet();
     for (int i = 0; i < 8; i++) {
         char title[48]; snprintf(title, sizeof title, "测试通知 %d", i);
         ink_notify_t note = {.title = title, .body = "分页测试", .prio = INK_NOTIFY_LOW, .src = INK_SRC_SYSTEM};

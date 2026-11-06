@@ -84,6 +84,7 @@ def main():
     ap.add_argument("--backup", help="restore: full flash backup (source of ota_1's original bytes)")
     ap.add_argument("--log-seconds", type=float, default=60.0)
     ap.add_argument("--until", help="install: stop logging at the first console line holding this text")
+    ap.add_argument("--after", help="install: --until counts only after a console line holding this text")
     ap.add_argument("--approved", action="store_true", help="the user approved this write")
     a = ap.parse_args()
     if a.mode == "verify":
@@ -137,6 +138,7 @@ def main():
         t0 = time.monotonic()
         with open(out, "a", buffering=1, encoding="utf-8") as f:
             s, buf = None, b""
+            armed, last_line, warned = not a.after, time.monotonic(), False
             while time.monotonic() - t0 < a.log_seconds:
                 if s is None:
                     p = find_port(a.port)
@@ -147,6 +149,9 @@ def main():
                     if s is None:
                         time.sleep(0.1)
                         continue
+                if not warned and time.monotonic() - last_line > 90:
+                    print("USB_STUCK: nothing from the device for 90 s; replug the USB cable", flush=True)
+                    warned = True
                 try:
                     buf += s.read(4096)
                 except OSError:
@@ -156,7 +161,10 @@ def main():
                     line, buf = buf.split(b"\n", 1)
                     text = line.rstrip(b"\r").decode("utf-8", "replace")
                     f.write(f"[{datetime.datetime.now():%H:%M:%S.%f}] {text}\n")
-                    if a.until and a.until in text:
+                    last_line, warned = time.monotonic(), False
+                    if a.after and a.after in text:
+                        armed = True
+                    if a.until and a.until in text and armed:
                         print(f"console said {a.until}")
                         t0 = -1e12
         print(f"console log: {out}")

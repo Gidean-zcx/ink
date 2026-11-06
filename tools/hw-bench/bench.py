@@ -4,7 +4,7 @@
 Without --approved it only checks the backup and prints what it would do; nothing touches the device.
 With it, a failure at any point after writing still restores. Raw logs stay in ink-hw, outside the repo.
 """
-import argparse, datetime, hashlib, os, shutil, subprocess, sys
+import argparse, datetime, hashlib, os, shutil, subprocess, sys, time
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
@@ -61,15 +61,25 @@ def main():
                            "--slot", "1", "--slots", "2", "-o", os.path.join(work, "otadata_ota1.bin")])
     flash = [py, os.path.join(tool, "flash_probe.py")]
     common = ["--port", a.port, "--dir", work]
-    installed = subprocess.call(flash + ["install"] + common + ["--log-seconds", str(a.seconds), "--until", "BENCH_DONE",
+    installed = subprocess.call(flash + ["install"] + common + ["--log-seconds", str(a.seconds), "--until", "BENCH_DONE", "--after", "BENCH_REPLAY",
                                                                 "--approved"])
     print("install exit", installed)
-    restored = subprocess.call(flash + ["restore"] + common + ["--backup", BACKUP, "--approved"])
+    # The USB link can die while the panel starts, and then only replugging brings it back (second run).
+    for attempt in range(40):
+        restored = subprocess.call(flash + ["restore"] + common + ["--backup", BACKUP, "--approved"])
+        if restored == 0:
+            break
+        print("USB_STUCK: cannot reach the chip to restore; replug the USB cable. Trying again.", flush=True)
+        time.sleep(10)
     verified = subprocess.call(flash + ["verify"] + common + ["--backup", BACKUP]) if restored == 0 else 1
     console = os.path.join(work, "probe_console.txt")
     if os.path.exists(console):
         day = datetime.date.today().isoformat()
         out = os.path.join(ROOT, "ink", "docs", "hardware", f"{day}-bench.md")
+        for n in range(2, 20):
+            if not os.path.exists(out):
+                break
+            out = os.path.join(ROOT, "ink", "docs", "hardware", f"{day}-bench-{n}.md")
         subprocess.call([sys.executable, os.path.join(HERE, "report.py"), console, "-o", out,
                          "--restored", "yes" if verified == 0 else "NO"])
         print("report", out)

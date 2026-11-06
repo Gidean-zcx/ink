@@ -16,13 +16,9 @@
     "max": 400,
     "why": "first visible change after an action (screen idle) <= 350 ms target + margin"
   },
-  "ui.action_to_visible_ms.FAST.p95": {
-    "max": 600,
-    "why": "touch feedback fully visible"
-  },
-  "ui.action_to_visible_ms.TEXT.p95": {
+  "ui.action_to_visible_ms.FLASH_UI.p95": {
     "max": 1200,
-    "why": "page turn fully visible"
+    "why": "page turn fully visible; all new content, so a clean refresh (D-108)"
   },
   "mem.internal.failed_allocs": {
     "max": 0

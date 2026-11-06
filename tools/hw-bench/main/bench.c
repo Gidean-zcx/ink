@@ -6,6 +6,7 @@
  *  - the panel, showing test pictures through the factory driver.
  * It asks the modem only questions. It never opens NVS and prints no MAC, IMEI, ICCID or Wi-Fi name.
  */
+#include <stdarg.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -38,8 +39,29 @@
 #endif
 #endif
 
-/* The USB console drops lines while the panel is busy: give each one time to leave. */
-#define R(fmt, ...) do { printf("BENCH {" fmt "}\n", ##__VA_ARGS__); fflush(stdout); vTaskDelay(pdMS_TO_TICKS(20)); } while (0)
+/* What has been said, to say again at the end: the USB link can die when the panel starts (second run,
+ * 2026-11-06), and the results should not die with it. Each line also gets time to leave. */
+#define SAID_CAP (32 * 1024)
+static char *g_said;
+static size_t g_said_n;
+
+__attribute__((format(printf, 1, 2))) static void R(const char *fmt, ...) {
+    char line[512];
+    va_list ap;
+    va_start(ap, fmt);
+    int n = vsnprintf(line, sizeof line, fmt, ap);
+    va_end(ap);
+    if (n < 0) return;
+    if (n >= (int) sizeof line) n = sizeof line - 1;
+    printf("BENCH {%s}\n", line);
+    fflush(stdout);
+    if (g_said && g_said_n + (size_t) n + 1 < SAID_CAP) {
+        memcpy(g_said + g_said_n, line, (size_t) n);
+        g_said_n += (size_t) n;
+        g_said[g_said_n++] = '\n';
+    }
+    vTaskDelay(pdMS_TO_TICKS(20));
+}
 #define SDA 0
 #define SCL 1
 #define TEST_REGION (256 * 1024)
@@ -420,6 +442,7 @@ static void battery_again(const char *when) {
 
 void app_main(void) {
     vTaskDelay(pdMS_TO_TICKS(500));
+    g_said = heap_caps_malloc(SAID_CAP, MALLOC_CAP_SPIRAM);
     printf("BENCH_START\n");
     sys_info();
     copy_speed("internal_to_internal", MALLOC_CAP_INTERNAL, MALLOC_CAP_INTERNAL, 16 * 1024);
@@ -441,6 +464,16 @@ void app_main(void) {
     R("\"test\":\"panel_init\",\"ok\":false,\"error\":\"built without the panel driver\"");
 #endif
     heap("end");
-    printf("BENCH_DONE\n");
-    for (;;) vTaskDelay(pdMS_TO_TICKS(1000));
+    for (;;) { /* until the computer has it: the panel is idle now, restoring may interrupt this at any point */
+        printf("BENCH_REPLAY\n");
+        for (size_t at = 0; at < g_said_n;) {
+            const char *end = memchr(g_said + at, '\n', g_said_n - at);
+            int n = (int) (end - (g_said + at));
+            printf("BENCH {%.*s}\n", n, g_said + at);
+            at += (size_t) n + 1;
+        }
+        printf("BENCH_DONE\n");
+        fflush(stdout);
+        vTaskDelay(pdMS_TO_TICKS(8000));
+    }
 }

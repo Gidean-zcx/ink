@@ -121,7 +121,7 @@ static void blit(const ink_font_t *f, const ink_glyph_t *g, uint8_t *buf, int st
             int bit = x * bpp;
             int a = (row[bit >> 3] >> (8 - bpp - (bit & 7))) & levels;
             if (!a) continue;
-            int v = 255 - a * 255 / levels; /* black ink over white paper */
+            int v = 255 - ink_font_darken(a * 255 / levels); /* black ink over white paper */
             if (v < dst[bx]) dst[bx] = (uint8_t)v;
         }
     }

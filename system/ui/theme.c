@@ -65,7 +65,7 @@ static const void *glyph_bitmap(lv_font_glyph_dsc_t *dsc, lv_draw_buf_t *out) {
         osal_cost_units("glyph.blit", 1);
         for (int y = 0; y < g.h; y++)
             for (int x = 0; x < g.w; x++)
-                out->data[(size_t)y * stride + x] = (uint8_t)(coverage(g.bits, row_bytes, bpp, x, y) * 255 / levels);
+                out->data[(size_t)y * stride + x] = ink_font_darken(coverage(g.bits, row_bytes, bpp, x, y) * 255 / levels);
         return out;
     }
     /* Every other size comes from the same face. Each new pixel averages the source pixels under it:
@@ -86,7 +86,7 @@ static const void *glyph_bitmap(lv_font_glyph_dsc_t *dsc, lv_draw_buf_t *out) {
                     sum += coverage(g.bits, row_bytes, bpp, sx, sy) * (wx * wy >> 8);
                 }
             }
-            out->data[(size_t)y * stride + x] = (uint8_t)LV_MIN(255, sum * 255 / levels / (window * window >> 8));
+            out->data[(size_t)y * stride + x] = ink_font_darken(LV_MIN(255, sum * 255 / levels / (window * window >> 8)));
         }
         /* A bold word may have a character only the regular face holds: thicken it, or the word looks broken. */
         uint8_t *row = out->data + (size_t)y * stride;
@@ -112,8 +112,9 @@ static int offset_y(lv_obj_t *parent) {
 }
 lv_color_t ink_ui_paper(void) { return lv_color_white(); }
 lv_color_t ink_ui_ink(void) { return lv_color_black(); }
-lv_color_t ink_ui_gray(void) { return lv_color_hex(0xe6e6e6); }
-lv_color_t ink_ui_secondary(void) { return lv_color_hex(0x5f5f5f); }
+/* Whole levels of the 16 the panel has. Seen on the panel: one level from white hardly shows. */
+lv_color_t ink_ui_gray(void) { return lv_color_hex(0xdddddd); }
+lv_color_t ink_ui_secondary(void) { return lv_color_hex(0x444444); }
 
 /* 字号 moves all text by one factor; a child reads one step above the middle (docs/product/legibility.md).
  * Digit faces do not move, and what is already large does not grow. */

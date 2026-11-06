@@ -30,6 +30,9 @@ ink_font_t *ink_font_open(const char *asset);
 bool ink_font_glyph(const ink_font_t *f, uint32_t cp, ink_glyph_t *out);
 /** About to read the glyph's bitmap (lets simulators charge flash cache misses). */
 void ink_font_touch_bitmap(const ink_font_t *f, const ink_glyph_t *g);
+/** How dark to draw a pixel that a glyph covers partly (0..255). Thin strokes come out pale on e-ink,
+ *  more so when scaled: this lifts the part-covered pixels and leaves paper and full ink alone. */
+static inline uint8_t ink_font_darken(int cover) { return (uint8_t)(cover + (255 - cover) * cover / 510); }
 bool ink_font_has(const ink_font_t *f, uint32_t cp);
 int ink_font_px(const ink_font_t *f);
 int ink_font_bpp(const ink_font_t *f);

@@ -138,7 +138,7 @@ static const void *lv_get_bitmap(lv_font_glyph_dsc_t *dsc, lv_draw_buf_t *draw_b
         for (int x = 0; x < g.w; x++) {
             int bit = x * bpp;
             int v = (row[bit >> 3] >> (8 - bpp - (bit & 7))) & levels;
-            out[(size_t)y * stride_out + x] = (uint8_t)(v * 255 / levels);
+            out[(size_t)y * stride_out + x] = ink_font_darken(v * 255 / levels);
         }
     }
     return draw_buf;

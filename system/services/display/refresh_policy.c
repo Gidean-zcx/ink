@@ -54,7 +54,7 @@ void rp_init(rp_state_t *s, int panel_w, int panel_h, uint32_t waveforms, bool l
     s->panel_h = panel_h;
     s->waveforms = waveforms;
     s->lcd = lcd;
-    s->text_cleanup_every = 6;
+    s->text_cleanup_every = 4; /* D-108: seen on the panel, one non-flashing turn already leaves a visible ghost */
 }
 
 static void remove_at(rp_state_t *s, int i) {
