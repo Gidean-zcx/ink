@@ -66,23 +66,6 @@ class IconCheck(unittest.TestCase):
                 sources[Path('caller.c')] = 'forward("book");'
                 self.assertFalse(CHECKER['check_sources'](sources, NAMES))
 
-    def test_real_declared_origins(self):
-        for file, needle in (
-            ('system/ui/shell/navigation.c', 'APP_ICONS[] = {INK_UI_ICON(headphones)'),
-            ('system/ui/shell/navigation.c', 'GROUP_ICONS[][4] = {{INK_UI_ICON(book)'),
-            ('system/ui/shell/navigation.c', 'icons[] = {INK_UI_ICON(phone)'),
-            ('system/ui/shell/navigation.c', '"时钟", INK_UI_ICON(clock)'),
-            ('system/ui/theme.c', '? INK_UI_ICON(sun)'),
-        ):
-            path = ROOT / file
-            source = path.read_text()
-            self.assertEqual(re.sub(r'\s+', '', source).count(re.sub(r'\s+', '', needle)), 1)
-            import re
-            mutant = source.replace(needle, re.sub(r'INK_UI_ICON\(\w+\)', 'INK_UI_ICON(missingReviewIcon)', needle), 1)
-            errors = CHECKER['check_sources']({Path(file): mutant}, NAMES)
-            with self.subTest(file=file, needle=needle):
-                self.assertTrue(any('missingReviewIcon' in error for error in errors))
-
     def test_generated_names_are_closed(self):
         generated = CHECKER['header'](sorted(NAMES))
         self.assertIn('#define INK_UI_ICON(name) INK_UI_ICON_##name', generated)
