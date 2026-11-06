@@ -585,12 +585,17 @@ static int wipe_tree(const char *phys) {
 }
 
 int ink_fs_wipe_personal(void) {
+    if (FS.ready) osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
     int r = ink_fs_card_hold();
-    if (r) return r;
-    r = wipe_tree("/content/.m");
-    if (!r) r = wipe_tree("/content/.update");
-    if (!r) r = wipe_tree("/cache");
-    return card_done(r);
+    if (!r) {
+        __atomic_add_fetch(&FS.revision, 1, __ATOMIC_RELAXED);
+        r = wipe_tree("/content/.m");
+        if (!r) r = wipe_tree("/content/.update");
+        if (!r) r = wipe_tree("/cache");
+        r = card_done(r);
+    }
+    if (FS.ready) osal_mutex_unlock(FS.edits);
+    return r;
 }
 
 static int fs_write_atomic_unlocked(const file_context_t *c, const char *path, const void *data, size_t n) {
@@ -1032,6 +1037,7 @@ int ink_fs_forget_member(const char *id) {
     }
     int r = ink_fs_card_hold();
     if (r) { osal_mutex_unlock(FS.edits); return r; }
+    __atomic_add_fetch(&FS.revision, 1, __ATOMIC_RELAXED);
     r = wipe_tree(phys);
     if (!r) r = wipe_tree("/cache");
     if (!r && hal_fs_size(phys) >= 0 && hal_fs_remove(phys) != 0) r = INK_FS_ERR_IO;
@@ -1207,7 +1213,16 @@ int ink_file_service_init(void) {
     return ink_file_caps_init();
 }
 
-uint32_t ink_fs_revision(void) { return __atomic_load_n(&FS.revision, __ATOMIC_RELAXED); }
+uint32_t ink_fs_revision(void) {
+    if (osal_mutex_lock(FS.edits, 0) != OSAL_OK) return 0;
+    ink_svc_lock();
+    bool busy = FS.job_active || FS.usb_lent;
+    for (int i = 0; i < MAX_OPEN; i++) busy |= FS.files[i].used && FS.files[i].writable;
+    uint32_t revision = busy ? 0 : __atomic_load_n(&FS.revision, __ATOMIC_RELAXED);
+    ink_svc_unlock();
+    osal_mutex_unlock(FS.edits);
+    return revision;
+}
 
 uint32_t ink_fs_file_revision(ink_fs_file_t *f) { return f ? f->revision : 0; }
 

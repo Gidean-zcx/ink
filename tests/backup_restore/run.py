@@ -22,7 +22,7 @@ peer = work / "hub"
 peer.mkdir()
 
 
-def boot(area, phase, cut=None, server=None, length=None):
+def boot(area, phase, cut=None, server=None, length=None, race_length=None):
     area.mkdir(parents=True, exist_ok=True)
     server = server or peer
     server.mkdir(exist_ok=True)
@@ -35,6 +35,8 @@ def boot(area, phase, cut=None, server=None, length=None):
            "UBSAN_OPTIONS": "halt_on_error=1"}
     if length:
         env["INK_BACKUP_BYTES"] = str(length)
+    if race_length:
+        env["INK_BACKUP_RACE_BYTES"] = str(race_length)
     if cut:
         env["INK_BACKUP_CUT"] = str(cut)
     run = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, timeout=90, env=env)
@@ -112,6 +114,12 @@ if not a.quick:
         boot(target, "reused-id", server=server)
         boot(target, "identity-reboot", server=server)
     boot(work / "deep", "deep", server=work / "deep-hub")
+    for label, length, race_length, phase in (("atomic", 98304, 8388608, "atomic-race"),
+                                              ("atomic-same", 1048576, 1048576, "atomic-race"),
+                                              ("atomic-absent", 98304, 8388608, "atomic-absent")):
+        target, server = work / label, work / (label + "-hub")
+        boot(target, "atomic-seed", server=server, length=length)
+        boot(target, phase, server=server, length=length, race_length=race_length)
     for length in (2097152, 8388608):
         target = work / ("large-" + str(length))
         server = work / ("large-hub-" + str(length))

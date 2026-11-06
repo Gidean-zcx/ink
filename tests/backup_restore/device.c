@@ -2,6 +2,7 @@
 #include "../services_finish/product.h"
 #include "ink/hal_power.h"
 #include "ink/sys/backup.h"
+#include "ink/sys/backup_format.h"
 #include "ink/sys/crc.h"
 #include "ink/sys/layout.h"
 #include "ink/sys/sha256.h"
@@ -185,6 +186,9 @@ static void api_checks(void *arg) {
     revision=ink_fs_revision();
     CHECK(ink_fs_restore_if_revision("owner",ink_member_generation("owner")+1,127,"/me/cas/guard.txt",revision)==INK_FS_ERR_DENIED,"revision restore retains original member generation");
     CHECK(ink_fs_restore_if_revision("owner",ink_member_generation("owner"),127,"/me/cas/guard.txt",revision)==0,"unchanged revision installs without whole-file lock-time hashing");
+    ink_fs_file_t *writer=NULL;
+    CHECK(ink_fs_open("/me/cas/guard.txt",INK_FS_WRITE,&writer)==0 && ink_fs_revision()==0,"open writer cannot yield a stable restore revision");
+    if(writer) CHECK(ink_fs_close(writer)==0 && ink_fs_revision()!=0,"closing writer permits stable sampling again");
     uint32_t generation=ink_member_generation("owner");
     CHECK(ink_member_switch("kid")==0,"another member arrives before a delayed directory creation");
     CHECK(ink_fs_mkdir_member_generation("owner",generation,"/me/restore-parent")==0,"delayed directory keeps original member");
@@ -239,9 +243,69 @@ static void responsive_wait(const char *wanted, int seconds) {
     }
     CHECK(false,"large-file work completes (%s)",g_result);
 }
+
+static char race_stage[160];
+static size_t race_bytes = 8u * 1024u * 1024u;
+static volatile int race_done;
+static void race_writer(void *arg) {
+    (void)arg;
+    uint8_t *bytes=osal_malloc(race_bytes,OSAL_MEM_EXTERNAL);
+    CHECK(bytes,"concurrent writer buffer");
+    if(bytes) {
+        memset(bytes,'C',race_bytes);
+        CHECK(WAIT_FOR(hal_fs_size(race_stage)==(int64_t)file_bytes,90000),"restore body arrives before concurrent atomic write");
+        ink_probe_count("test.atomic_started");
+        CHECK(ink_fs_write_atomic(file_path,bytes,race_bytes)==0,"concurrent atomic write commits successfully");
+        osal_free(bytes);
+    }
+    race_done=1;
+}
+static void atomic_race(void) {
+    if(!strcmp(phase,"atomic-absent")) CHECK(ink_fs_remove(file_path)==0,"target absent before preview");
+    else {
+        uint8_t *bytes=osal_malloc(file_bytes,OSAL_MEM_EXTERNAL); CHECK(bytes,"local edit buffer");
+        if(bytes) { memset(bytes,'B',file_bytes); CHECK(ink_fs_write_atomic(file_path,bytes,file_bytes)==0,"local edit before preview"); osal_free(bytes); }
+    }
+    char token[33]=""; preview(token);
+    ink_backup_manifest_t *manifest=osal_malloc(sizeof *manifest,OSAL_MEM_EXTERNAL);
+    hal_file_t *f=hal_fs_open("/content/.m/owner/.backup/preview0",HAL_O_READ);
+    CHECK(manifest && f && hal_fs_read(f,manifest,sizeof *manifest)>=(ssize_t)offsetof(ink_backup_manifest_t,item),"read real preview item index");
+    if(f) CHECK(hal_fs_close(f)==0,"preview index closed");
+    unsigned index=128;
+    if(manifest) {
+        for(unsigned i=0;i<manifest->count && i<128;i++) if(manifest->item[i].kind==3 && !strcmp(manifest->item[i].name,file_name)) index=i;
+        osal_free(manifest);
+    }
+    CHECK(index<128,"find personal file in approved preview");
+    snprintf(race_stage,sizeof race_stage,"/content/.m/owner/.backup/down%u",index);
+    osal_task_cfg_t cfg={.name="atomic-writer",.fn=race_writer,.stack_bytes=4096,.priority=OSAL_PRIO_NORMAL,.core=-1,.flags=OSAL_TASK_STACK_EXTERNAL};
+    CHECK(osal_task_create(&cfg,NULL)==OSAL_OK,"start concurrent atomic writer");
+    unsigned confirm=request_apply(token); CHECK(ink_confirm_decide(confirm,true,INK_SRC_TOUCH)==0,"person approves restore before newer write");
+    bool terminal=false;
+    for(int i=0;i<600;i++) {
+        ink_power_activity(osal_now_us());
+        if(status("\"phase\":\"failed\"") || strstr(g_result,"\"phase\":\"done\"")) { terminal=true; break; }
+        delay_ms(200);
+    }
+    CHECK(terminal && WAIT_FOR(race_done,15000),"restore and concurrent writer finish");
+    ink_fs_file_t *opened=NULL;
+    CHECK(ink_fs_open(file_path,INK_FS_READ,&opened)==0,"read newer committed file");
+    uint8_t *bytes=osal_malloc(16384,OSAL_MEM_EXTERNAL); CHECK(bytes,"verification buffer");
+    size_t total=0; int64_t n=-1; bool correct=true;
+    if(opened && bytes) while((n=ink_fs_read(opened,bytes,16384))>0) {
+        total+=(size_t)n;
+        for(int64_t i=0;i<n;i++) if(bytes[i]!='C') correct=false;
+    }
+    if(opened) CHECK(ink_fs_close(opened)==0,"newer file closed");
+    osal_free(bytes);
+    CHECK(n==0 && total==race_bytes && correct,"restore retains whole newer successful atomic write");
+    CHECK(strstr(g_result,"\"phase\":\"failed\"") && sim_metric_value("backup.restored")==0,"concurrent edit rejects restore instead of reporting success");
+}
 static void run(void *arg) {
     (void)arg;
-    if (!strcmp(phase,"rejoin")) {
+    if (!strcmp(phase,"atomic-race") || !strcmp(phase,"atomic-absent")) {
+        atomic_race();
+    } else if (!strcmp(phase,"rejoin")) {
         CHECK(AI("restore.preview",NULL) && g_rc.status==INK_RC_FAILED,"factory-reset identities cannot claim old backups by display id");
         api_done=0;
         CHECK(ink_exec_post(INK_EXEC_BG,&api_job,family_state,(void *)(intptr_t)1)==0 && WAIT_FOR(api_done,10000),"simulate independently authorized family reprovisioning");
@@ -311,7 +375,7 @@ static void run(void *arg) {
     } else if (!strcmp(phase,"collect-resume")) {
         responsive_wait("\"phase\":\"saved\"",300);
         CHECK(AI("backup.manifest",NULL) && g_rc.status==INK_RC_DONE && strstr(g_result,file_name),"restart rebuilds capture and uploads complete manifest");
-    } else if (!strcmp(phase,"large-seed") || !strcmp(phase,"deep")) {
+    } else if (!strcmp(phase,"large-seed") || !strcmp(phase,"deep") || !strcmp(phase,"atomic-seed")) {
         set_fault(4); fixtures("owner");
         CHECK(AI("backup.now",NULL) && g_rc.status==INK_RC_QUEUED,"large or deep backup returns queued before collection");
         responsive_wait("\"phase\":\"saved\"",300);
@@ -434,6 +498,8 @@ static void run(void *arg) {
 void ink_main(void) {
     phase=getenv("INK_BACKUP_PHASE"); if(!phase)phase="seed";
     const char *length=getenv("INK_BACKUP_BYTES"); if(length)file_bytes=(size_t)strtoul(length,NULL,10);
+    const char *race_length=getenv("INK_BACKUP_RACE_BYTES"); if(race_length)race_bytes=(size_t)strtoul(race_length,NULL,10);
+    if(!strncmp(phase,"atomic-",7)) { file_path="/me/test.bin"; file_dir="/me"; file_name="test.bin"; }
     if(!strcmp(phase,"deep")) {
         file_path="/me/d1/d2/d3/d4/d5/d6/d7/d8/test.bin";
         file_dir="/me/d1/d2/d3/d4/d5/d6/d7/d8";
@@ -441,7 +507,7 @@ void ink_main(void) {
     }
     product_main();
     CHECK(ink_db_register(&NOTES)==0,"register synthetic member collection");
-    if (!strcmp(phase,"seed") || !strcmp(phase,"large-seed")) CHECK(ink_db_register(&MISSING)==0,"register a collection only present at backup time");
+    if (!strcmp(phase,"seed") || !strcmp(phase,"large-seed") || !strcmp(phase,"atomic-seed")) CHECK(ink_db_register(&MISSING)==0,"register a collection only present at backup time");
     osal_task_cfg_t cfg={.name="backup-test",.fn=run,.stack_bytes=16384,.priority=OSAL_PRIO_NORMAL,.core=-1,.flags=OSAL_TASK_STACK_EXTERNAL};
     CHECK(osal_task_create(&cfg,NULL)==OSAL_OK,"backup test task");
 }

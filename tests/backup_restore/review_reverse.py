@@ -65,13 +65,15 @@ def replace_once(source, old, new):
     return source.replace(old, new)
 
 
-def boot(area, binary, phase, server, *, failure=None, warning=None, length=None):
+def boot(area, binary, phase, server, *, failure=None, warning=None, length=None, race_length=None):
     area.mkdir(exist_ok=True)
     server.mkdir(exist_ok=True)
     out = area / phase
     env = {**os.environ, "INK_BACKUP_PHASE": phase, "INK_SIM_BACKUP_DIR": str(server)}
     if length:
         env["INK_BACKUP_BYTES"] = str(length)
+    if race_length:
+        env["INK_BACKUP_RACE_BYTES"] = str(race_length)
     args = [str(binary), "--profile", str(ROOT / "simulator/profiles/metalio-plus.json"),
             "--assets", str(build / "assets"), "--content", str(build / "test-content"),
             "--out", str(out), "--end", "500s", "--quiet", "--no-random-outages",
@@ -164,6 +166,21 @@ boot(area, binary, "large-restore", area / "hub", length=8388608,
 area, binary = variant("revision-cas", "system/services/file/file_service.c", lambda s: replace_once(
     s, "    if (!r && revision && !inverse_ready(revision)) r = INK_FS_ERR_EXISTS;", "    if (false) r = INK_FS_ERR_EXISTS;"))
 boot(area, binary, "api", area / "hub", failure="revision restore refuses intervening same-size edit")
+
+
+def unstable_revision(s):
+    start, end = s.index("uint32_t ink_fs_revision(void) {"), s.index("\nuint32_t ink_fs_file_revision(")
+    return s[:start] + "uint32_t ink_fs_revision(void) { return __atomic_load_n(&FS.revision, __ATOMIC_RELAXED); }\n" + s[end:]
+
+
+area, binary = variant("in-flight-revision", "system/services/file/file_service.c", unstable_revision)
+boot(area, binary, "api", area / "api-hub", failure="open writer cannot yield a stable restore revision")
+for label, length, race_length, phase in (("different", 98304, 8388608, "atomic-race"),
+                                          ("absent", 98304, 8388608, "atomic-absent")):
+    target, server = area / label, area / (label + "-hub")
+    boot(target, binary, "atomic-seed", server, length=length)
+    boot(target, binary, phase, server, length=length, race_length=race_length,
+         failure="restore retains whole newer successful atomic write")
 
 def no_preview_recovery(s):
     start = s.index('    if (load_manifest("preview", false)) {', s.index("static int restore_step("))

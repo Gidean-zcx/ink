@@ -215,8 +215,10 @@ static struct {
 } H INK_PSRAM_BSS;
 
 static int hash_file(const char *path, uint8_t hash[32], uint32_t *size) {
-    int64_t len = hal_fs_size(path);
     uint32_t revision = ink_fs_revision();
+    if (!revision) { H.valid = false; return 1; }
+    int64_t len = hal_fs_size(path);
+    if (revision != ink_fs_revision()) { H.valid = false; return 1; }
     if (len < 0 || len > UINT32_MAX) return -1;
     if (!H.valid || strcmp(H.path, path) || H.size != (uint32_t)len || H.revision != revision) {
         memset(&H, 0, sizeof H);
@@ -229,7 +231,8 @@ static int hash_file(const char *path, uint8_t hash[32], uint32_t *size) {
         size_t n = H.size - H.offset; if (n > CHUNK) n = CHUNK;
         bool ok = f && hal_fs_seek(f, H.offset, SEEK_SET) == 0 && hal_fs_read(f, B.buf, n) == (ssize_t)n;
         if (f && hal_fs_close(f) != 0) ok = false;
-        if (!ok || hal_fs_size(path) != len || revision != ink_fs_revision()) { H.valid = false; return -1; }
+        if (!ok) { H.valid = false; return -1; }
+        if (hal_fs_size(path) != len || revision != ink_fs_revision()) { H.valid = false; return 1; }
         ink_sha256_update(&H.sha, B.buf, n); H.offset += (uint32_t)n;
         if (H.offset != H.size) return 1;
         ink_sha256_final(&H.sha, H.hash); H.ready = true;
@@ -375,6 +378,14 @@ static int capture_step(void) {
             C->depth = C->dirs[0] ? 1 : 0; C->mode++;
         }
     } else if (C->mode == 3 && C->file[0]) {
+        if (!C->revision) {
+            uint32_t revision = ink_fs_revision();
+            if (!revision) return 1;
+            int64_t len = hal_fs_size(C->path);
+            if (revision != ink_fs_revision()) return 1;
+            if (len < 0 || len > UINT32_MAX) return -2;
+            C->length = (uint32_t)len; C->offset = 0; C->revision = revision; ink_sha256_init(&C->sha);
+        }
         size_t n = C->length - C->offset; if (n > CHUNK) n = CHUNK;
         hal_file_t *in = hal_fs_open(C->path, HAL_O_READ);
         hal_file_t *out = hal_fs_open(C->staged, HAL_O_WRITE | HAL_O_CREATE | (C->offset ? HAL_O_APPEND : HAL_O_TRUNC));
@@ -415,9 +426,8 @@ static int capture_step(void) {
                 C->dirs[C->depth++] = d;
                 snprintf(C->relative, sizeof C->relative, "%s", C->file); C->file[0] = 0;
             } else {
-                int64_t len = hal_fs_size(C->path);
-                if (len < 0 || len > UINT32_MAX || !stage_path(C->staged, sizeof C->staged, "up", B.m->count)) return -2;
-                C->length = (uint32_t)len; C->offset = 0; C->revision = ink_fs_revision(); ink_sha256_init(&C->sha);
+                if (!stage_path(C->staged, sizeof C->staged, "up", B.m->count)) return -2;
+                C->revision = 0;
             }
         }
     } else {
@@ -658,7 +668,11 @@ static int current_hash(const item_t *it, uint8_t hash[32], uint32_t *revision) 
     }
     char path[256]; if (!physical(it, path, sizeof path)) return -1;
     if (it->kind == ITEM_FILE) {
-        if (hal_fs_size(path) < 0) { if (revision) *revision = ink_fs_revision(); return 0; }
+        uint32_t stable = ink_fs_revision();
+        if (!stable) return 1;
+        int64_t len = hal_fs_size(path);
+        if (stable != ink_fs_revision()) return 1;
+        if (len < 0) { if (revision) *revision = stable; return 0; }
         int rc = hash_file(path, hash, NULL);
         if (!rc && revision) *revision = H.revision;
         return rc;
