@@ -1,6 +1,6 @@
 # ui-cards 执行报告
 
-基线：`1bbf1a49fb8d79d513d6260820fb164a89dedef1`。仅做 F5 服务卡片，产品代码预算 250 行。里程碑：实现、定向测试和六项反向对照完成；全量复测和内存检查进行中。
+基线：`1bbf1a49fb8d79d513d6260820fb164a89dedef1`。日期：2026-11-09。F5 实现、定向测试、六项反向对照、全量与内存检查均已执行；验收 1～4 通过，第 5 项部分通过。
 
 ## 验收表
 
@@ -10,11 +10,11 @@
 | 2 成员过滤及反例 | 【实测】通过 | 成人→孩子→成人，数据与应用可见性隔离；撤掉成员过滤失败 7 项，撤掉应用过滤失败 1 项 | 下述定向命令与反向对照 |
 | 3 可见更新及节流 | 【实测】通过 | Main、控制中心覆盖、另一活动下各 0 次；10 次连续变更合并为 1 次；解除覆盖补 1 次；无变更无心跳 | 下述定向命令 |
 | 4 同一打开能力 | 【实测】通过 | 真实触摸与 AI 调用快照里的同一能力，各打开同一个实际页面一次 | 下述定向命令 |
-| 5 全量、内存及代码预算 | 待验证 | — | — |
+| 5 全量、内存及代码预算 | 【实测】部分通过，全量未全绿 | 普通与 ASan/UBSan 各 204 通过、1 文档失败、3 缺依赖跳过；无内存诊断；产品改动含 CMake 共 173 行，未超 250 | 下述全量命令、`git diff --numstat` |
 
 ## 没做到的
 
-全量复测和内存检查尚未结束。未运行 Linux／gcc 和实机。首轮全量发现共享能力总表过期，以及三项旧 Today 快照期望；后者已改为检查 F1 结构。能力总表按任务规则第 7 节留给合并会话统一生成，不能将该项写成通过。三项中枢测试因现有 Python 环境缺少锁定依赖而跳过，未安装或升级依赖。
+第 5 项要求的全量全绿未达到。能力总表按[总规则第 7 节](../codex-rules.md)留给合并会话统一生成，因此 `capability-table-doc` 仍失败；没有规避或修改这项检查。三项中枢测试因现有 Python 环境缺少锁定依赖而跳过，未安装或升级依赖。未运行 Linux／gcc 和实机。
 
 ## 和设计不一致的
 
@@ -28,11 +28,11 @@
 
 ## 要用户定的
 
-【实现】既有阅读卡提供者 `apps/reader/reader.c` 仍依赖 `RD.text`，离开阅读页后没有这张卡。F5 如实显示空态，未扩展到阅读进度持久化或开发其它业务应用。
+无。本轮按任务边界保留五个卡位，不增加主页编辑或业务应用。
 
 ## 顺手发现
 
-无。
+【实现】既有阅读卡提供者 `apps/reader/reader.c` 仍依赖 `RD.text`，离开阅读页后没有这张卡。F5 如实显示空态，未扩展到阅读进度持久化或开发其它业务应用。
 
 ## 新增的机制
 
@@ -73,3 +73,24 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R
 ## 架构审视
 
 【实现】数据提供者经原应用目录暴露 `app.cards`；成员过滤集中一处；今日页只读能力回执并呈现 F1 模型。触摸与 AI 都经能力总线，F1/F2 实现未改。UI 定时器和模型只在 UI 任务使用，没有服务访问 LVGL，也未新增原生能力、应用注册机制、常驻任务或持久化。
+
+## 全量与内存检查
+
+配置使用总规则第 5 节的字体、Python 和 LVGL 参数，`INK_WERROR=ON`；内存检查只换成 `build-asan` 并加 `INK_SANITIZE=ON`。构建最多三路、CTest 最多两路，逐轮串行。
+
+```sh
+taskpolicy -c utility cmake --build build -j3
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
+taskpolicy -c utility cmake --build build-asan -j3
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
+```
+
+【实测】普通全量：208 项中 204 通过、1 失败、3 跳过，CTest 退出 8，耗时 87.47 秒。唯一失败为 `capability-table-doc`；跳过为 `hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e`，原因是缺少锁定中枢依赖。Today 普通／大字号／儿童场景、F1、F2 与阅读确定性检查全部通过。日志：`build/ui-cards-ctest.log`、`build/Testing/Temporary/LastTest.log`。
+
+【实测】ASan/UBSan 全量：同样 204 通过、1 文档失败、3 缺依赖跳过，CTest 退出 8，耗时 197.46 秒。确认 `INK_SANITIZE=ON`、`INK_WERROR=ON`，系统实际编译参数含地址与未定义行为检查；完整 `LastTest.log` 中无 ASan、LeakSanitizer 错误或 UBSan runtime error。定向场景仍为 104 项检查通过、十次变更合并为一次。日志：`build-asan/ui-cards-ctest.log`、`build-asan/Testing/Temporary/LastTest.log`。
+
+【实测】定向场景内部内存最低余量 47,840 字节，内外部内存分配失败均为 0；原资源门槛未变。全量的 `gui-smoke` 使用既有 SDL dummy 路径，无交互窗口。
+
+## 提交与隐私检查
+
+【实测】按总规则第 6 节对基线至 HEAD 的差异执行原隐私检查命令：grep 退出 1，无匹配。`git diff --check` 通过，`git diff --stat` 与产品行数已核对，仅包含任务相关源码、测试、报告及基线后已有的任务书；未提交设计稿、构建产物或本机路径。全部改动已在本地分支分里程碑提交，未推送。
