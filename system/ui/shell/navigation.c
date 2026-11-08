@@ -19,6 +19,7 @@
 #include "ink/sys/state.h"
 #include "ink/sys/textfield.h"
 #include "ink/sys/time.h"
+#include "ink/sys/ui_semantics.h"
 #include "ink/ui_shell.h"
 
 typedef struct {
@@ -66,6 +67,15 @@ static struct {
     ink_notify_view_t control_items[2], notify_items[6];
     int control_count, notify_count;
     ink_exec_job_t refresh;
+    ink_card_t cards[5];
+    ink_ui_field_spec_t card_fields[5];
+    ink_ui_action_spec_t card_actions[5];
+    char card_objects[5][48];
+    ink_ui_page_spec_t today;
+    lv_timer_t *cards_timer;
+    int64_t cards_rev;
+    uint64_t cards_at;
+    bool cards_ok;
 } N INK_PSRAM_BSS;
 static void draw_page_body(void);
 static void draw_home_content(void);
@@ -246,9 +256,90 @@ static bool bookmark(ink_card_t *out) {
         const ink_app_def_t *a = ink_app_at(i);
         if (!ink_app_visible(a)) continue;
         for (int j = 0; a->card && a->card(j, out) == 1; j++)
-            if (out->bookmark) return true;
+            if (out->bookmark && ink_app_card_visible(out)) return true;
     }
     return false;
+}
+
+static const char *const CARD_APPS[] = {"reader", "listen", "news", "word", "upcoming"};
+static const char *const CARD_TITLES[] = {"继续读", "继续听", "今日报纸", "单词", "接下来"};
+static const char *const CARD_EMPTY[] = {"还没有开始读书", "还没有在听的内容", "今天的还没到", "还没有记下的词", "还没有接下来的事"};
+
+static void cards_reply(void *ctx, const ink_receipt_t *rc) {
+    (void)ctx;
+    ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
+    N.cards_ok = j && rc->status == INK_RC_DONE && rc->result && ink_json_parse(j, rc->result, strlen(rc->result)) == 0;
+    if (N.cards_ok) for (int t = 1; t < j->ntok; t++) {
+        if (j->tok[t].type != 1) continue;
+        for (int i = 0; i < 5; i++) {
+            bool home_alarm = i == 4 && ink_json_eq(j, ink_json_find(j, t, "app"), "home") &&
+                              ink_json_eq(j, ink_json_find(j, t, "id"), "upcoming");
+            if (N.cards[i].id[0] || (!home_alarm && !ink_json_eq(j, ink_json_find(j, t, "app"), CARD_APPS[i]))) continue;
+            ink_card_t *c = &N.cards[i];
+            ink_json_str(j, ink_json_find(j, t, "id"), c->id, sizeof c->id);
+            ink_json_str(j, ink_json_find(j, t, "title"), c->title, sizeof c->title);
+            ink_json_str(j, ink_json_find(j, t, "text"), c->text, sizeof c->text);
+            ink_json_str(j, ink_json_find(j, t, "action"), c->action, sizeof c->action);
+            int64_t rev = 0;
+            ink_json_int(j, ink_json_find(j, t, "rev"), &rev);
+            c->rev = (uint32_t)rev;
+        }
+    }
+    osal_free(j);
+}
+
+static void read_cards(void) {
+    memset(N.cards, 0, sizeof N.cards);
+    N.cards_ok = false;
+    ink_call_opts_t opts = {.src = INK_SRC_SYSTEM, .reply_exec = INK_EXEC_DIRECT, .done = cards_reply};
+    ink_cap_call("app.cards", NULL, &opts);
+    N.cards_rev = integer("app.cards_rev");
+    N.cards_at = osal_now_us();
+    for (int i = 0; i < 5; i++) {
+        ink_card_t *c = &N.cards[i];
+        snprintf(N.card_objects[i], sizeof N.card_objects[i], "%s:%s", CARD_APPS[i], c->id);
+        ink_ui_object_ref_t object = {N.card_objects[i], c->rev};
+        N.card_fields[i] = (ink_ui_field_spec_t){CARD_APPS[i], "card", c->title[0] ? c->title : CARD_TITLES[i],
+                                                c->id[0] ? c->text : CARD_EMPTY[i], object, false};
+        N.card_actions[i] = (ink_ui_action_spec_t){CARD_APPS[i], N.card_fields[i].label, c->action, "{}", object,
+                                                  c->id[0] && c->action[0]};
+    }
+    N.today = (ink_ui_page_spec_t){"home", "今日", {"app.cards", (uint32_t)N.cards_rev}, N.card_fields, 5, N.card_actions, 5};
+    ink_probe_count("home.cards_updates");
+}
+
+static void card_clicked(lv_event_t *e) {
+    int i = (int)(intptr_t)lv_event_get_user_data(e);
+    if (!current_session(N.epoch)) return;
+    ink_ui_action_target_t target = {ink_ui_content_version(), N.card_actions[i].object};
+    ink_receipt_t rc;
+    ink_ui_semantics_action(&N.today, CARD_APPS[i], &target, INK_SRC_TOUCH, &rc);
+}
+static void bind_card(lv_obj_t *obj, int i) {
+    if (N.card_actions[i].enabled && ink_cap_available(N.card_actions[i].capability)) {
+        lv_obj_add_flag(obj, LV_OBJ_FLAG_CLICKABLE);
+        lv_obj_add_event_cb(obj, card_clicked, LV_EVENT_CLICKED, (void *)(intptr_t)i);
+    }
+}
+
+static void cards_due(lv_timer_t *timer) {
+    (void)timer;
+    N.cards_timer = NULL;
+    ink_shell_home_settle();
+}
+void ink_shell_home_settle(void) {
+    if (!N.home || N.home_page != 0 || strcmp(ink_ui_top_name(), "home") || !ink_ui_page_current() ||
+        !current_session(N.epoch) || ink_power_state() == INK_PWR_LOCKED || N.cards_rev == integer("app.cards_rev")) return;
+    uint64_t now = osal_now_us();
+    if (now < N.cards_at + 1000000) {
+        if (!N.cards_timer) {
+            N.cards_timer = lv_timer_create(cards_due, (uint32_t)((N.cards_at + 1000000 - now + 999) / 1000), NULL);
+            lv_timer_set_repeat_count(N.cards_timer, 1);
+        }
+        return;
+    }
+    ink_ui_content_changed();
+    draw_home_content();
 }
 
 static void draw_dots(void) {
@@ -376,6 +467,7 @@ static void search_entered(void *ctx, const char *value) {
 
 static void draw_home_content(void) {
     if (!N.content) return;
+    if (N.cards_timer) { lv_timer_delete(N.cards_timer); N.cards_timer = NULL; }
     for (unsigned i = 0; i < sizeof N.status / sizeof *N.status; i++) {
         if (N.status[i] && lv_obj_get_parent(N.status[i]) == N.home && N.status_time[i] != (N.home_page != 1)) {
             lv_obj_delete(N.status[i]);
@@ -388,7 +480,7 @@ static void draw_home_content(void) {
     char clock[16], date[96];
     ink_shell_time_strings(clock, sizeof clock, date, sizeof date);
     ink_card_t card;
-    bool has_book = bookmark(&card);
+    bool has_book = N.home_page == 1 && bookmark(&card);
     int page_top = INK_GAP_S;
     if (N.home_page == 1) {
         N.date = ink_ui_label(N.content, date, INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_MARGIN, INK_BLOCK, width());
@@ -413,6 +505,7 @@ static void draw_home_content(void) {
             if (!(child() && i == 7))
                 tile(N.content, APP_IDS[i], APP_TITLES[i], APP_ICONS[i], i % 4, i / 4, grid, false);
     } else if (N.home_page == 0) {
+        read_cards();
         ink_ui_label(N.content, "今日", INK_FONT_HEADING, INK_WEIGHT_BOLD, INK_MARGIN, page_top, 2 * INK_PRIMARY);
         const char *separator = strstr(date, " · ");
         char short_date[96];
@@ -425,39 +518,25 @@ static void draw_home_content(void) {
         lv_obj_set_style_text_align(today_date, LV_TEXT_ALIGN_RIGHT, 0);
         int first = below_heading() + INK_GAP_XS, h = (home_room() - first - 2 * INK_GAP) / 3;
         lv_obj_t *c = ink_ui_card(N.content, INK_MARGIN, first, width(), h, INK_SURFACE_BLACK);
-        ink_ui_line(c, "继续读", INK_FONT_NOTE, INK_WEIGHT_MEDIUM, INK_MARGIN, INK_GAP_L, width() - 2 * INK_MARGIN);
+        ink_ui_line(c, N.card_fields[0].label, INK_FONT_NOTE, INK_WEIGHT_MEDIUM, INK_MARGIN, INK_GAP_L, width() - 2 * INK_MARGIN);
         lv_obj_t *reading =
-            ink_ui_label(c, has_book ? card.text : "还没有开始读书", INK_FONT_TITLE, INK_WEIGHT_BOLD, INK_MARGIN,
+            ink_ui_label(c, N.card_fields[0].value, INK_FONT_TITLE, INK_WEIGHT_BOLD, INK_MARGIN,
                          INK_GAP_L + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_S, width() - 2 * INK_MARGIN);
         lv_label_set_long_mode(reading, LV_LABEL_LONG_DOT);
         lv_obj_set_height(reading, ink_ui_px(2 * ink_ui_line_height(INK_FONT_TITLE)));
-        ink_shell_bind(c, "shell.resume", NULL);
-        const char *const empty[] = {"还没有在听的内容", "今天的还没到", "还没有记下的词", "还没有接下来的事"};
-        const char *const titles[] = {"继续听", "今日报纸", "单词", "接下来"};
+        bind_card(c, 0);
         for (int i = 0; i < 4; i++) {
             int w = (width() - INK_GAP) / 2;
             int y = first + h + INK_GAP + (i / 2) * (h + INK_GAP);
             lv_obj_t *small = ink_ui_card(N.content, INK_MARGIN + (i % 2) * (w + INK_GAP), y, w, h, INK_SURFACE_WHITE);
             ink_ui_icon(small, APP_ICONS[i], INK_ICON_MEDIUM, INK_ICON_LINE, INK_GAP_L, INK_GAP_L, false);
-            ink_ui_line(small, titles[i], INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_GAP_L + INK_ICON_MEDIUM + INK_GAP_S,
+            ink_ui_line(small, N.card_fields[i + 1].label, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_GAP_L + INK_ICON_MEDIUM + INK_GAP_S,
                         INK_GAP_L, w - 2 * INK_GAP_L - INK_ICON_MEDIUM - INK_GAP_S);
-            const char *text = empty[i];
-            char next[96];
-            if (i == 3) {
-                int cursor = 0;
-                ink_alarm_t alarm;
-                if (ink_alarm_next(&cursor, INK_ALARM, &alarm) == 1) {
-                    snprintf(next, sizeof next, "%s %d:%02d", alarm.title, alarm.hour, alarm.min);
-                    text = next;
-                }
-            }
-            lv_obj_t *what = ink_ui_label(small, text, INK_FONT_LIST, INK_WEIGHT_BOLD, INK_GAP_L,
+            lv_obj_t *what = ink_ui_label(small, N.card_fields[i + 1].value, INK_FONT_LIST, INK_WEIGHT_BOLD, INK_GAP_L,
                                           INK_GAP_L + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_M, w - 2 * INK_GAP_L);
             lv_label_set_long_mode(what, LV_LABEL_LONG_DOT);
             lv_obj_set_height(what, ink_ui_px(2 * ink_ui_line_height(INK_FONT_LIST)));
-            char json[64];
-            snprintf(json, sizeof json, "{\"id\":\"%s\"}", APP_IDS[i]);
-            ink_shell_bind(small, "shell.launch", json);
+            bind_card(small, i + 1);
         }
     } else {
         ink_ui_label(N.content, "全部", INK_FONT_HEADING, INK_WEIGHT_BOLD, INK_MARGIN, page_top, width());
@@ -533,6 +612,7 @@ lv_obj_t *ink_shell_dock(lv_obj_t *parent) {
 }
 
 void ink_shell_home_destroy(void) {
+    if (N.cards_timer) { lv_timer_delete(N.cards_timer); N.cards_timer = NULL; }
     N.home = N.content = N.dots = N.clock = N.date = N.message = NULL;
 }
 
@@ -574,6 +654,10 @@ bool ink_shell_home_key(ink_key_t key, bool long_press) {
 
 int ink_shell_home_snapshot(char *buf, size_t cap) {
     if (!current_session(N.epoch)) return snprintf(buf, cap, "空间锁定或正在切换；AI 无权读取。");
+    if (N.home_page == 0) {
+        if (cap) buf[0] = 0;
+        return N.cards_ok ? ink_ui_semantics_snapshot(&N.today, buf, cap) : -1;
+    }
     ink_card_t card;
     bool has = bookmark(&card);
     if (N.home_page == 2) {
@@ -1411,6 +1495,10 @@ static void refresh(void *unused) {
 }
 static void changed(void *ctx, int h, const char *id) {
     (void) h;
+    if (ctx && !strcmp(id, "app.cards_rev")) {
+        ink_exec_post(INK_EXEC_UI, &N.refresh, refresh, NULL);
+        return;
+    }
     if (!ctx && !strcmp(id, "display.font_size")) {
         ink_ui_redraw();
         return;

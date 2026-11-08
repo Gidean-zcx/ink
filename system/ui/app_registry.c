@@ -365,7 +365,12 @@ ink_db_t *ink_app_db_open(const char *app, const ink_db_def_t *def) {
 
 void ink_app_card_changed(const char *id) {
     (void)id;
+    if (!AP.ready) return;
     ink_state_set_int(AP.h_cards_rev, __atomic_add_fetch(&AP.cards_rev, 1, __ATOMIC_ACQ_REL));
+}
+
+bool ink_app_card_visible(const ink_card_t *card) {
+    return ink_member_space_open() && (!card->member[0] || !strcmp(card->member, ink_member_current()->id));
 }
 
 bool ink_app_foreground_may(const char *permission) {
@@ -449,6 +454,7 @@ static void cap_cards(ink_call_t *c) { /* UI task: apps have no other */
             for (int k = 0; k < 8; k++) {
                 memset(card, 0, sizeof *card);
                 if (d->card(k, card) != 1) break;
+                if (!ink_app_card_visible(card)) continue;
                 ink_jw_raw(&w, first ? "{\"app\":" : ",{\"app\":");
                 first = false;
                 ink_jw_str(&w, d->id);
@@ -458,6 +464,8 @@ static void cap_cards(ink_call_t *c) { /* UI task: apps have no other */
                 ink_jw_str(&w, card->title);
                 ink_jw_raw(&w, ",\"text\":");
                 ink_jw_str(&w, card->text);
+                ink_jw_raw(&w, ",\"rev\":");
+                ink_jw_int(&w, card->rev);
                 if (card->action[0]) {
                     ink_jw_raw(&w, ",\"action\":");
                     ink_jw_str(&w, card->action);

@@ -28,6 +28,7 @@
 #include "ink/sys/members.h"
 #include "ink/sys/power.h"
 #include "ink/sys/settings.h"
+#include "ink/sys/appreg.h"
 #include "ink/sys/state.h"
 #include "ink/sys/svc.h"
 #include "ink/sys/time.h"
@@ -298,6 +299,7 @@ static void rtc_job(void *arg) { /* exec.bg: the shared I2C bus */
 
 /* The earliest of the table goes to the deadline, the power service and the RTC. */
 static void reschedule(void) {
+    ink_app_card_changed("home");
     if (!ink_time_valid()) return;
     int64_t next = 0;
     ink_svc_lock();

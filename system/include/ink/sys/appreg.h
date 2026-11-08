@@ -43,6 +43,7 @@ typedef struct {
     bool has_value;
     bool bookmark; /* where someone was: worth leaving on the panel when the device goes off */
     uint32_t rev;
+    char member[16]; /* owner; empty means the provider already scoped it to the current member */
 } ink_card_t;
 
 struct ink_activity;
@@ -80,6 +81,8 @@ int ink_app_background(const char *id, uint32_t kind, bool on);
 ink_db_t *ink_app_db_open(const char *app, const ink_db_def_t *def);
 /** Its cards changed (any task): home and the AI read them again (state app.cards_rev). */
 void ink_app_card_changed(const char *id);
+/** Shared member filter for service cards and retained bookmarks. */
+bool ink_app_card_visible(const ink_card_t *card);
 /** Does the app in the foreground declare this permission? Asked by the policy gate for what apps call. */
 bool ink_app_foreground_may(const char *permission);
 
