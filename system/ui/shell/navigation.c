@@ -268,22 +268,34 @@ static const char *const CARD_EMPTY[] = {"还没有开始读书", "还没有在�
 static void cards_reply(void *ctx, const ink_receipt_t *rc) {
     (void)ctx;
     ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
-    N.cards_ok = j && rc->status == INK_RC_DONE && rc->result && ink_json_parse(j, rc->result, strlen(rc->result)) == 0;
-    if (N.cards_ok) for (int t = 1; t < j->ntok; t++) {
-        if (j->tok[t].type != 1) continue;
+    const char *p = rc->result;
+    N.cards_ok = j && rc->status == INK_RC_DONE && p && *p++ == '[';
+    while (N.cards_ok && *p != ']') {
+        const char *end = p;
+        bool quoted = false;
+        /* app.cards emits flat objects; delimiters inside strings are data. */
+        for (; *end; end++) {
+            if (quoted && *end == '\\' && end[1]) end++;
+            else if (*end == '"') quoted = !quoted;
+            else if (*end == '}' && !quoted) break;
+        }
+        N.cards_ok = *end && ink_json_parse(j, p, (size_t)(end - p + 1)) == 0;
+        if (!N.cards_ok) break;
         for (int i = 0; i < 5; i++) {
-            bool home_alarm = i == 4 && ink_json_eq(j, ink_json_find(j, t, "app"), "home") &&
-                              ink_json_eq(j, ink_json_find(j, t, "id"), "upcoming");
-            if (N.cards[i].id[0] || (!home_alarm && !ink_json_eq(j, ink_json_find(j, t, "app"), CARD_APPS[i]))) continue;
+            bool home_alarm = i == 4 && ink_json_eq(j, ink_json_find(j, 0, "app"), "home") &&
+                              ink_json_eq(j, ink_json_find(j, 0, "id"), "upcoming");
+            if (N.cards[i].id[0] || (!home_alarm && !ink_json_eq(j, ink_json_find(j, 0, "app"), CARD_APPS[i]))) continue;
             ink_card_t *c = &N.cards[i];
-            ink_json_str(j, ink_json_find(j, t, "id"), c->id, sizeof c->id);
-            ink_json_str(j, ink_json_find(j, t, "title"), c->title, sizeof c->title);
-            ink_json_str(j, ink_json_find(j, t, "text"), c->text, sizeof c->text);
-            ink_json_str(j, ink_json_find(j, t, "action"), c->action, sizeof c->action);
+            ink_json_str(j, ink_json_find(j, 0, "id"), c->id, sizeof c->id);
+            ink_json_str(j, ink_json_find(j, 0, "title"), c->title, sizeof c->title);
+            ink_json_str(j, ink_json_find(j, 0, "text"), c->text, sizeof c->text);
+            ink_json_str(j, ink_json_find(j, 0, "action"), c->action, sizeof c->action);
             int64_t rev = 0;
-            ink_json_int(j, ink_json_find(j, t, "rev"), &rev);
+            ink_json_int(j, ink_json_find(j, 0, "rev"), &rev);
             c->rev = (uint32_t)rev;
         }
+        p = end + 1;
+        if (*p == ',') p++;
     }
     osal_free(j);
 }
@@ -293,6 +305,7 @@ static void read_cards(void) {
     N.cards_ok = false;
     ink_call_opts_t opts = {.src = INK_SRC_SYSTEM, .reply_exec = INK_EXEC_DIRECT, .done = cards_reply};
     ink_cap_call("app.cards", NULL, &opts);
+    if (!N.cards_ok) memset(N.cards, 0, sizeof N.cards);
     N.cards_rev = integer("app.cards_rev");
     N.cards_at = osal_now_us();
     for (int i = 0; i < 5; i++) {
@@ -300,7 +313,7 @@ static void read_cards(void) {
         snprintf(N.card_objects[i], sizeof N.card_objects[i], "%s:%s", CARD_APPS[i], c->id);
         ink_ui_object_ref_t object = {N.card_objects[i], c->rev};
         N.card_fields[i] = (ink_ui_field_spec_t){CARD_APPS[i], "card", c->title[0] ? c->title : CARD_TITLES[i],
-                                                c->id[0] ? c->text : CARD_EMPTY[i], object, false};
+                                                !N.cards_ok ? "卡片没能读取" : c->id[0] ? c->text : CARD_EMPTY[i], object, false};
         N.card_actions[i] = (ink_ui_action_spec_t){CARD_APPS[i], N.card_fields[i].label, c->action, "{}", object,
                                                   c->id[0] && c->action[0]};
     }
@@ -1496,7 +1509,7 @@ static void refresh(void *unused) {
 static void changed(void *ctx, int h, const char *id) {
     (void) h;
     if (ctx && !strcmp(id, "app.cards_rev")) {
-        ink_exec_post(INK_EXEC_UI, &N.refresh, refresh, NULL);
+        ink_ui_kick();
         return;
     }
     if (!ctx && !strcmp(id, "display.font_size")) {

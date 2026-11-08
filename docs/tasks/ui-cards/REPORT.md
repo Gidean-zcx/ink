@@ -1,6 +1,64 @@
 # ui-cards 执行报告
 
-基线：`1bbf1a49fb8d79d513d6260820fb164a89dedef1`。日期：2026-11-09。F5 实现、定向测试、六项反向对照、全量与内存检查均已执行；验收 1～4 通过，第 5 项部分通过。
+任务基线：`1bbf1a49fb8d79d513d6260820fb164a89dedef1`。日期：2026-11-09。最新结论见“复查后的修复”；其后各节保留首轮执行时的结果，便于追溯。
+
+## 复查后的修复
+
+修复起点：`b0b22da6`。REVIEW 只有两个中级问题，均已修复；严重、高、低均无待修条目。
+
+- 【实现】R1：`app.cards_rev` 只调用已有 `ink_ui_kick()`，由 UI 任务现有 settle 检查可见性和一秒节流，不再调用重建状态栏的 `refresh()`。
+- 【实现】R2：仅在 `cards_reply()` 中切分生产端的扁平数组元素，逐卡复用 JSON 解析和五个卡位的原选择逻辑；切分跳过字符串内的引号、反斜杠和分隔符。全局仍为 128 tokens，回执仍为 2 KiB。读取失败清掉半成品、禁用动作、显示“卡片没能读取”，快照明确失败；下次普通变更可恢复。
+- 【实测】`tests/ui_cards.c` 共 149 项检查通过，`test.finished=1`，无失败、无警告。Main 隐藏和控制中心覆盖时实际渲染／显示提交均为 0；十次可见变更合并为一次读取、一次额外渲染和提交（另有无变化的翻页对照各 1 次）。七卡、八卡加真实闹钟均保持首卡、打开能力、Today 标签和 AI 页面快照同源；八卡确实超过原整数组 token 上限。超长来源失败及恢复也通过。已查看 `build/test-out/ui-cards/clean-today-eight-cards.png`，听书和闹钟正常显示。
+
+### 验收表（本轮）
+
+| 编号 | 结论 | 证据／命令 |
+| --- | --- | --- |
+| 1 同源卡片 | 【实测】通过 | `ui-cards` 包含原单卡及新增七／八卡、闹钟、转义字符场景 |
+| 2 成员过滤 | 【实测】通过 | 保留成人→孩子→成人及应用可见性全部原断言，149 项中通过 |
+| 3 可见更新与节流 | 【实测】通过 | 新增 `LV_EVENT_REFR_READY` 与 `ink_display_commits()` 断言；`test.cards_burst_updates/renders/commits=1`，`test.cards_covered_commits=0` |
+| 4 同一打开能力 | 【实测】通过 | 原真实触摸及 AI 打开同一页面断言保留，多卡仍导出同一能力 |
+| 5 全量、内存、预算 | 【实测】通过 | 普通、ASan/UBSan 各 208/208，均 0 失败、0 跳过，无内存诊断；累计产品代码 186/250 行 |
+
+### 反向对照
+
+【实测】只在忽略目录生成独立 `navigation.c` 对象，依次链接同一份新测试；未原地撤改工作区，也未修改断言或预算。三例编译、链接退出均为 0，模拟器均退出 1 且运行到 `test.finished=1`：
+
+| 撤掉的修复 | 失败检查数 | 决定性证据 |
+| --- | ---: | --- |
+| R1：恢复状态栏通用刷新 | 4 | 十次变化产生 11 次额外渲染／提交；覆盖态四次变更多提交 4 次 |
+| R2：恢复整数组一次解析 | 3 | 八卡时页面快照失败、首卡及闹钟丢失 |
+| R2：恢复空态文案 | 1 | 来源读取失败被显示成“还没有在听的内容” |
+
+命令：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" -B work/ui-cards-fix-negative.py`。结果及每例完整编译／链接／运行命令：`work/ui-cards-fix-negative/results.json`、同目录日志。生成能力表前的 `tools/capabilities.py --check` 退出 1，补齐生成表后退出 0，是文档失败的反向对照。
+
+### 原有失败与跳过的处理
+
+- 【实测】`capability-table-doc` 只是生成文档过期：本轮按用户“原来就失败的测试查清并处理、全量全过”的明确要求，更新此前留给合并会话的共享生成表，仅补 `app.cards_rev` 一行。运行原生成器，不改检查程序，250 项定义校验通过。
+- 【实测】此前构建所选的通用 Python 缺 `pytest`、`pytest_asyncio`、`aiohttp`、`yaml` 和中枢包，导致 `hub-contract`、依赖其消息的 `hub-json-crosscheck`、`hub-simulator-e2e` 跳过。改用已存在的只读 `$INK_DEPS/hub/.venv/bin/python`：Python 3.11.15，pytest 8.4.2、pytest-asyncio 1.2.0、aiohttp 3.12.15、PyYAML 6.0.3，全部 18 个适用于 macOS 的包与 `hub/uv.lock` 一致。无需安装或升级依赖。设置 `PYTHONPATH="$PWD/hub"` 并核对模块来自本任务检出，避免误测依赖目录代码；禁写 bytecode。环境核对见 `work/ui-cards-fix-hub-env.log`。
+
+### 全量与内存检查（本轮）
+
+配置沿用总规则的字体、Python、LVGL 与 `INK_WERROR=ON`，两目录均选上述现有中枢 Python；只有 `build-asan` 加 `INK_SANITIZE=ON`。已核查编译参数包含 `-fsanitize=address,undefined`。构建最多三路、CTest 最多两路，两轮顺序运行：
+
+```sh
+export PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$PWD/hub"
+# 总规则配置参数另加：-DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"
+taskpolicy -c utility cmake --build build -j3
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
+taskpolicy -c utility cmake --build build-asan -j3
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
+```
+
+【实测】普通全量 208/208 通过，122.71 秒；ASan/UBSan 全量 208/208 通过，223.59 秒。两轮均 0 失败、0 跳过，配置、构建、CTest 全部退出 0；原四项失败／跳过测试均实际通过。两份完整 `Testing/Temporary/LastTest.log` 无 ASan、LeakSanitizer 错误或 UBSan runtime error。两轮定向场景均为 149 项检查通过，内部内存最低余量仍为 47,840 字节，内外部内存分配失败均为 0。逐阶段退出码和耗时见 `work/ui-cards-fix-validation.json`；完整命令及输出见 `work/ui-cards-fix-build-{configure,build,ctest}.log` 和 `work/ui-cards-fix-build-asan-{configure,build,ctest}.log`。
+
+### 改动边界
+
+【实现】本轮产品只改 `navigation.c`，新增 26、删除 13 行；任务基线起累计新增 161、删除 25，共 186 行（含 CMake），未超 250 行。不新增任务、线程、定时器、状态机、格式、缓存、重试、队列、配置项或抽象层。原 `app.cards` 能力、UI 执行器和 F1 快照／动作路径继续共用，成员过滤不变。
+
+改过的已有测试仅 `tests/ui_cards.c`：保留全部原断言；扩展合成提供者的卡数及超限模式，新增实际渲染／提交与多卡断言。新测试用同一翻页的无变化调用作对照，并在尾随更新后经原 UI 作业入口等待本轮绘制完成；没有加 sleep 掩盖问题，没有放宽任何期望或预算。没有其它验收内未完成项；未测 Linux/gcc、实机或交互窗口。其它页面视觉差异及阅读离页卡片缺口维持首轮报告的归属，不扩展修复。
+
+【实测】`git diff --check` 通过，`git diff --stat` 只含本轮两处修复、配套测试、此报告和一行生成文档。按总规则对任务基线至提交差异做本机路径／MAC 扫描，grep 退出 1、无匹配。仅本地提交，未推送。
 
 ## 验收表
 
