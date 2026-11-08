@@ -8,10 +8,43 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 不可复现；无需新增修复 | 【实测】已有 private 回归 33 通过、0 失败、旧语音新增 0 ms；仅在临时音频副本关闭身份校验，同一回归 32 通过、1 失败，检出 810 ms。两次均 `test.finished=1`、模拟器退出 0。原审计语音探针 case/control 各 11 通过、0 ms。 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^device-events$' --output-on-failure -j2`；负面对照命令见下次更新 |
-| 2 | 全量验证进行中 | 【实测】首轮 CTest 202 通过、3 跳过、0 失败（109.11 s）；正补齐只读 Python 环境后重跑。产品代码增删 0 行。内存与隐私检查待执行。 | 待补最终命令与结果 |
+| 1 | 适用任务书“不可复现”分支；无需新增修复 | 【实测】已有 private 回归 33 通过、0 失败、旧语音新增 0 ms；仅在临时音频副本关闭身份校验，同一回归 32 通过、1 失败，检出 810 ms。两次均 `test.finished=1`、模拟器退出 0。原审计语音探针 case/control 各 11 通过、0 ms。 | 全量 CTest 中的 `device-events`；负面对照见下方脚本 |
+| 2 | 普通全量通过，内存验证进行中 | 【实测】补齐解释器后普通 CTest 205/205 通过、0 跳过（112.74 s）；private 再次 33/0、旧语音新增 0 ms。产品代码增删 0 行。内存与隐私检查待执行。 | 配置采用总规则 §5，另加 `-DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"`；`taskpolicy -c utility cmake --build build -j3`；`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2` |
 
 【实现】`git merge-base --is-ancestor 39b7dcf4 291da676` 退出 0。修复已在基线内：[音频身份校验](../../../system/services/audio/audio_service.c)的 `playback_owner_matches`、`stage_next`、`staged_wanted`、`service_playback` 分别覆盖待播流、PCM 与播放出口；不只依赖成员状态通知。[既有回归](../../../tests/device_events/private.c)第 94–113 行先断言回答已结束且仍有超过 20 帧待播，再同时暂停 UI 与成员通知，等待 200 ms 后观察 800 ms 的扬声器增量。
+
+负面对照可在完成构建与全量 CTest 后重建：下列脚本只改 `work/` 中的音频副本，将 `playback_owner_matches` 改为恒真，重链接已有 private 测试；目标失败仍是原断言。用 `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python"` 执行；内存版在命令前加 `INK_REVIEW_BUILD=build-asan`。脚本退出 0 表示检出了预期失败，不表示破坏后的产品通过。
+
+```python
+import json, os, re, shlex, subprocess
+from pathlib import Path
+b = Path(os.getenv("INK_REVIEW_BUILD", "build")).resolve()
+w = Path("work/speech-cache", "reverse-" + b.name).resolve()
+w.mkdir(parents=True, exist_ok=True)
+s, n = re.subn(r"(static bool playback_owner_matches\([^\n]+\) \{)\n.*?\n\}",
+               r"\1\n    return true;\n}",
+               Path("system/services/audio/audio_service.c").read_text(), count=1, flags=re.S)
+assert n == 1
+(w / "audio.c").write_text(s)
+t = b / "CMakeFiles/sim-device-events-private.dir"
+f = dict(line.split(" = ", 1) for line in (t / "flags.make").read_text().splitlines() if " = " in line)
+link = shlex.split((t / "link.txt").read_text())
+flags = sum((shlex.split(f[k]) for k in ("C_DEFINES", "C_INCLUDES", "C_FLAGS")), [])
+subprocess.run([link[0], *flags, "-c", str(w / "audio.c"), "-o", str(w / "audio.o")], cwd=b, check=True)
+link[link.index("-o") + 1] = str(w / "private-negative")
+link.insert(next(i for i, v in enumerate(link) if v.endswith(".a")), str(w / "audio.o"))
+subprocess.run(link, cwd=b, check=True)
+r = subprocess.run([str(w / "private-negative"), "--profile", "simulator/profiles/metalio-plus.json",
+    "--assets", str(b / "assets"), "--content", str(b / "test-content"),
+    "--hub", str(b / "test-out/device-events/private-hub.json"), "--out", str(w / "out"),
+    "--end", "90s", "--quiet", "--no-random-outages"], capture_output=True, text=True,
+    timeout=60, env={**os.environ, "UBSAN_OPTIONS": "halt_on_error=1"})
+(w / "run.log").write_text(r.stdout + r.stderr)
+m = json.loads((w / "out/metrics.json").read_text())["metrics"]
+print({k: m.get(k) for k in ("test.pass", "test.fail", "test.finished", "test.private_speech_after_handoff_ms")})
+assert r.returncode == 0 and m.get("test.finished") == 1 and m.get("test.fail") == 1
+assert m["test.private_speech_after_handoff_ms"]["max"] > 0
+```
 
 ## 没做到的
 
