@@ -7,14 +7,28 @@
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
 | P-01 硬件取舍 | 已核查【实现】 | [硬件记录][hw]、[背景][bg]、[硬件对照][parity]；见下方硬件边界 | V1 |
-| P-02 能力及设置逐项状态 | 已核查【实现】 | 下表逐项链接到源码、测试或设计；未找到实现的明确标注 | V1、V2 |
+| P-02 能力及设置逐项状态 | 已核查【实现】 | 79 项：有 13、部分 56、没有 4、未查到 6；覆盖代码中全部 16 个设置项 | V1、V2、V3 |
 | P-03 backlog 归属、工作量 | 已列建议【估算】 | 使用 [backlog][backlog] 的真实任务名；未覆盖项单列，不视为已排期 | V1 |
 | P-04 验证边界、依赖顺序 | 已列【实现／估算】 | 区分模拟器、历史局部硬件测量、真实服务器；末节列顺序 | V1、V2 |
-| P-05 文件、链接及隐私 | 待最终检查 | 只允许本报告发生差异 | V3 |
+| P-05 文件、链接及隐私 | 通过【实测】 | 仅本报告；118 个本地引用目标有效；空白检查通过；隐私扫描 0 匹配 | V3 |
 
 V1：`taskpolicy -c utility rg --files system apps platform drivers boards ports tests hub docs/tasks`；配合 `rg -n`、`sed -n` 定位下表实现、任务书及文档。
 V2：静态阅读表内测试文件及 `CMakeLists.txt` 的登记；**没有运行测试**，不把历史报告的“通过”写成本次实测。
-V3：最终检查命令及结果待补。
+V3【实测】：静态检查确认 79 行均有状态／证据／归属／估算、16 个设置逐项出现、backlog 名称有效、118 个引用文件及行号片段有效，文件小于 5 MB。`taskpolicy -c utility git diff 291da676..HEAD --check` 退出 0；同范围 `--stat` 只有本报告。按总规则 §6 原隐私正则扫描基线到 HEAD，0 匹配（grep 退出 1）。复核提交后再执行同样的差异与隐私检查。
+
+本地引用目标可直接复核（文档检查，不运行产品测试）：
+
+```sh
+taskpolicy -c utility python3 - <<'PY'
+from pathlib import Path
+import re
+p = Path("docs/tasks/phone-gap/REPORT.md")
+links = re.findall(r"^\\[[^\\]]+\\]:\\s*(\\S+)", p.read_text(), re.M)
+assert len(links) == 118
+assert all((p.parent / u.split("#")[0]).is_file() for u in links)
+print("118 个本地引用目标有效")
+PY
+```
 
 ## 硬件边界与估算口径
 
