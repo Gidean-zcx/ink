@@ -66,7 +66,7 @@ T3：同一配置改用 `build-asan`，加 `-DINK_SANITIZE=ON`，保留 `INK_WER
 
 ## 复查后的修复
 
-日期：2026-11-09。从 `cb69b938` 接续；复查共两项中级问题，无严重、高级或低级问题。
+日期：2026-11-09。从 `cb69b938` 接续；复查共两项中级问题，无严重、高级或低级问题。本节为本轮最新结果，上文保留首次提交时的记录。
 
 | 编号 | 结论 | 修复及证据 | 命令 |
 | --- | --- | --- | --- |
@@ -75,6 +75,17 @@ T3：同一配置改用 `build-asan`，加 `-DINK_SANITIZE=ON`，保留 `INK_WER
 
 【实测】本轮 T1 四组通过，共 591 个检查（49 + 13 + 11 + 518），退出 0。日志：`build/file-index-fix-focused.log`。R1 修复前，同一新增回归的共享目录、自己目录及分页结束共四条断言失败，退出 1；日志：`build/file-index-fix-r1-before.log`。R2 分别仅从编译输入撤去 `delete_step` 中目录子文件、单文件的 `index_edit(..., NULL)`，两种反向变体各准确失败一条“重建换号”断言，另外三组仍通过；脚本核对 `test.fail=1`、`test.finished=1`，退出 0，产品源码未改写。命令：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" build/file-index-fix-negative.py`；日志：`build/file-index-fix-negative.log`。
 
-【实测】原有 `capability-table-doc` 失败已复现：任务要求不提交生成能力表，当前表缺 `file.index`、`file.lookup`、`file.index_state`；按 T2 临时生成后将跑全量，再恢复原文件。原字体 Python 环境缺 `pytest`、`pytest_asyncio`、`aiohttp`、`PyYAML`，此前三项中枢测试因此跳过；依赖目录的现成 `hub/.venv` 四项齐全，沿用 `INK_HUB_PYTHON`，不安装或升级依赖。
+【实测】原有 `capability-table-doc` 失败已复现：任务要求不提交生成能力表，当前表缺 `file.index`、`file.lookup`、`file.index_state`；按 T2 临时生成后，两套全量中的该测试均通过，测试后已逐字节恢复原文件。干净检出仍须先按 T2 生成能力表再跑测试。原字体 Python 环境缺 `pytest`、`pytest_asyncio`、`aiohttp`、`PyYAML`，此前三项中枢测试因此跳过；依赖目录的现成 `hub/.venv` 四项齐全，配置 `INK_HUB_PYTHON` 后三项在两套全量中均通过。本次实际选用的环境无缺依赖，没有安装或升级依赖。
 
-普通全量及 ASan/UBSan 全量待跑。规模：【实现】本轮产品代码 2 行增加、1 行删除，任务累计新增 218 行，低于 250 行预算；只改文件服务过滤顺序。新增的机制：无。已有测试只增强断言和增加场景，保留原有作业完成条件、等待时限和预算；无设计差异、无新增待决事项或共享文档修改。
+【实测】按 T2、T3 重新配置、构建并串行跑全量，均保留 `INK_WERROR=ON`，ASan 构建同时启用 `-fsanitize=address,undefined`。构建与 CTest 均退出 0：
+
+| 检查 | 结果 | 耗时 | 日志 |
+| --- | --- | --- | --- |
+| T2 普通全量 | 206/206，无跳过 | 112.73 秒 | `build/file-index-fix-ctest.log` |
+| T3 ASan/UBSan 全量 | 206/206，无跳过、无 sanitizer 报错 | 201.69 秒 | `build-asan/file-index-fix-ctest.log` |
+
+两套全量的文件索引回归均为上述 591 个检查。构建日志分别为 `build/file-index-fix-build.log`、`build-asan/file-index-fix-build.log`；窗口冒烟测试沿用 SDL dummy 模式。
+
+规模：【实现】本轮产品代码 2 行增加、1 行删除，任务累计新增 218 行，低于 250 行预算；只改文件服务过滤顺序。新增的机制：无。已有测试 `tests/services_finish/file_index.c` 只增强断言和增加场景，保留原有作业完成条件、等待时限和预算；没有放宽既有期望。无设计差异、无新增待决事项或共享文档修改；证据仍限于 macOS 模拟器。
+
+【实测】最终核对本轮差异仅文件服务、对应测试和本报告；`git diff --check` 通过，基线至最终改动按总规则 §6 的隐私正则检查命中 0。未提交构建产物、临时反向变体脚本或生成能力表。
