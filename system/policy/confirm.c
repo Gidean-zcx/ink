@@ -92,7 +92,7 @@ static uint32_t journal(uint32_t token, const char *state, const ink_receipt_t *
     }
     ink_jw_raw(&w, "}");
     uint32_t ver = 0;
-    ink_db_write_t put = {.id = token, .sort = (int64_t)token * 4, .data = s->out, .len = w.len, .written_ver = &ver};
+    ink_db_write_t put = {.id = token, .flags = !strcmp(state, "pending") ? INK_DB_LAZY : 0, .sort = (int64_t)token * 4, .data = s->out, .len = w.len, .written_ver = &ver};
     if (w.overflow || ink_db_put(CF.db, &put, NULL) != 0) ver = 0;
     osal_free(s);
     return ver;

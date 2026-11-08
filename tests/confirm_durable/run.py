@@ -10,7 +10,7 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[2]
 p = argparse.ArgumentParser()
 p.add_argument('--build', default='build')
-p.add_argument('--mutant', choices=['member', 'version', 'commit', 'ack', 'sent', 'receipt', 'expiry', 'failure'])
+p.add_argument('--mutant', choices=['member', 'version', 'commit', 'ack', 'sent', 'receipt', 'expiry', 'failure', 'deadline'])
 p.add_argument('--case', choices=['all', 'core', 'receipts', 'capacity', 'failure'], default='all')
 a = p.parse_args()
 build = (ROOT / a.build).resolve()
@@ -37,6 +37,7 @@ if a.mutant:
         'receipt': [('rc->status == INK_RC_DONE || rc->status == INK_RC_UNDONE || rc->status == INK_RC_PARTIAL', 'rc->status == INK_RC_DONE', 1)],
         'expiry': [('expires <= 0 || osal_now_us() >= (uint64_t)expires', 'false', 1)],
         'failure': [('confirmed_done(h, &rc); return;', 'osal_free(h); return;', 1)],
+        'deadline': [('ink_db_wait(CF.db, ver, remaining)', 'ink_db_wait(CF.db, ver, 5000000)', 1)],
     }[a.mutant]
     for old, new, count in replacements:
         assert source.count(old) == count, 'counterexample must remove the intended guards'
@@ -46,7 +47,7 @@ if a.mutant:
     macro = 'CAP' if a.mutant in ('version', 'ack', 'sent') else 'CONFIRM'
     defines.append('-DINK_TEST_' + macro + '_SOURCE=' + json.dumps(str(target)))
 objects = []
-for n, source in enumerate(['regression.c', 'confirm_boundary.c', 'cap_boundary.c']):
+for n, source in enumerate(['../integration/dictation.c' if a.mutant == 'deadline' else 'regression.c', 'confirm_boundary.c', 'cap_boundary.c']):
     obj = work / f'{n}.o'
     subprocess.run([link[0], *flags['C_DEFINES'], *defines, *flags['C_INCLUDES'],
                     *flags['C_FLAGS'], '-Wno-unused-function', '-c', str(ROOT / 'tests/confirm_durable' / source), '-o', str(obj)],
@@ -59,6 +60,19 @@ link[index:index] = objects[1:]
 binary = work / 'regression'
 link[link.index('-o') + 1] = str(binary)
 subprocess.run(link, cwd=build, check=True)
+
+if a.mutant == 'deadline':
+    line = next(x for x in (build / 'CTestTestfile.cmake').read_text().splitlines()
+                if x.startswith('add_test(integration-dictation '))
+    command = shlex.split(line[len('add_test('):-1])[1:]
+    command[0] = str(binary)
+    out = work / 'dictation'
+    command[command.index('--out') + 1] = str(out)
+    result = subprocess.run(command, cwd=build, capture_output=True, text=True, timeout=120)
+    (work / 'dictation.log').write_text(result.stdout + result.stderr)
+    data = json.loads((out / 'metrics.json').read_text(errors='replace'))
+    print('deadline reverse:', result.returncode, data.get('warnings'), 'Evidence:', work.relative_to(ROOT), flush=True)
+    raise SystemExit(0 if result.returncode == 0 and data['metrics'].get('test.finished') == 1 and not data['metrics'].get('test.fail', 0) else 1)
 
 def boot(path, label, phase, cut=None, expected=None):
     path.mkdir(exist_ok=True)

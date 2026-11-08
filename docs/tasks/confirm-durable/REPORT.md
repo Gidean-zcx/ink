@@ -1,5 +1,7 @@
 # confirm-durable 整改报告
 
+> 上半部分保留 old-confirm 的历史整改记录；本次验收结论见文末“移植到主线”。
+
 日期：2026-11-09。基线：`5e73902ecf637a74697b4f3f2e52dab6eaf2b35d`；从复查提交 `67052ca9` 继续，开工工作区干净。分支：`claude/codex-confirm-durable`。首次交付记录保留在 Git 历史，独立复查见 [REVIEW.md](REVIEW.md)。
 
 **仍不可合并：R1 未解决，完整验收未通过。** R2～R5 已完成修复或补证；R1 只修复提交失败后的静默丢弃。普通与内存版全量均为 197/207 通过、10 项失败；ASan/UBSan 日志未见错误，但失败场景不算内存验收通过。实现提交：`2c3d57ef`、`c69670cb`、`46fcd9e7`。
@@ -73,11 +75,55 @@
 
 ## 移植到主线
 
-2026-11-09，基线 `dccc7d89a80e7d3f74f815cc0917e322bda59007`。本节为本次移植结论；上文保留旧分支整改记录，不代表本次验收结果。
+2026-11-09。分支 `claude/codex-confirm-durable-2`；基线 `dccc7d89a80e7d3f74f815cc0917e322bda59007`。**本次通过：R1～R5 均已修复或完成所缺证据，普通与 ASan/UBSan 全量各 206/206，通过 300 行预算。** 以下实测均为本机模拟器、假中枢和合成数据，不是设备实测。
 
-- 【实现】只移植 `old-quiesce..old-confirm` 的确认持久化差异，跳过只添加任务书的提交；`REVIEW.md` 原样保留。没有移植 member-quiesce 的实现或测试。
-- 【实现】R1：收卡和期限更新在答复时完成；界面答复交给现有 BG 执行器写盘，PIN 回调所在 BG 及其他非界面调用保留完成顺序。写盘等待限于这张确认卡原有的剩余有效期，写盘失败仍返回 failed；提交后统一检查成员、代次、期限和连接，再在原执行器进入能力关口核查内容版本。没有延长既有测试的等待或动作期限。
-- 【实现】删去重复的结果包装和绑定读取，复用同一条完成路径；重启有效性直接用已预留的 token 区间判断，不再重复保存 lease。相对本次基线，产品源文件新增 300 行、删除 48 行；另有 3 行 CMake 专项测试注册，不计产品代码。没有通过压缩空白或提高预算达标。
-- 【实测】原听写、通知、成员和确认卡断言已恢复通过，断电专项通过。最终普通全量、全部反例和 ASan/UBSan 验证进行中，尚不宣布完成。
-- 已有测试的期望变化：`device_events/protocol.c` 的分配期间 A→B→A 检查，仍要求副作用为零；同一连接必须回对应 id 的 stale。若自动结果的私密事件未 ACK，现有中枢会关闭旧连接，此时改为核对连接确已撤销、没有在新连接回复旧 id、当前成员握手恢复。没有移除或放宽执行与隐私检查。专项成员反例改从实际 UI 答复路径排队，避免非 UI 同步答复先执行后才切人的无效夹具。
-- 生成能力目录原本因 `confirm.status` 新增而失败；为满足本次明确要求的全量通过，已用 `python3 tools/capabilities.py` 同步生成文件，仅增加该能力及计数。其余共享文档未修改。
+【实现】只移植 `old-quiesce..old-confirm` 的确认持久化差异，跳过只添加任务书的提交。移植提交 `a0174733`，主要修复提交 `fd04f512`。没有移植 member-quiesce 的实现、接口、构建注册或测试；成员、服务归属检查沿用主线。`REVIEW.md` 与 old-confirm 逐字节一致。
+
+### 本次验收表
+
+命令缩写：`T = taskpolicy -c utility python3 tests/confirm_durable/run.py --build build`。反例只在忽略目录生成临时源码；表内反例均预期退出 1，并核对命中的具体断言，编译失败不算反例。
+
+| 编号 | 结论 | 证据 | 命令 |
+| --- | --- | --- | --- |
+| 原验收 1 | 通过 | 【实测】确认、自动动作各四个断电切点及复用镜像重启；执行前有持久 running，重启不重放 request_id、不复用 token，无最终回执报 unknown。两套专项各 21 阶段、4149 检查、0 失败 | `T`；内存版换 `--build build-asan`，两者均退出 0 |
+| 原验收 2 | 通过 | 【实测】pending、accepted、rejected、expired、done，以及 failed、withdrawn、member_changed、unknown 均有断言；回执可重启查询 | 同上 |
+| 原验收 3／R5 中 | 通过 | 【实测】换成员、改内容版本均不执行。成员反例保留查询隔离，撤执行绑定后副作用从 1 增至 2；版本反例使旧内容实际执行；提交反例命中“副作用之前必须有持久 running” | `T --mutant member --case core`、`--mutant version --case core`、`--mutant commit --case core` |
+| R1 高 | 已修 | 【实现】先收卡，pending 使用已有 lazy 批次与执行前记录合并；在原确认期限内等待提交，避免固定五秒把正常动作丢弃。界面答复不阻塞，PIN 所在 BG 和非界面调用保持完成顺序；提交后重查成员、代次、期限、连接，能力关口再查版本。【实测】既有听写、通知、成员、确认卡断言不变且通过。恢复五秒等待，原听写四项断言失败；丢弃失败回执的反例也失败 | `T --mutant deadline`；`T --case failure`（0）、`T --mutant failure --case failure`（1）；全量命令见下 |
+| R2 高 | 已修并重验 | 【实测】1200 次自动写入、最近 16 条、错 boot ACK、跳过发送的事件、未 ACK 旧记录、后续 ACK、容量运行后重启均通过。撤回 ACK 回收，第 943 次写入失败；撤发送标记，未送达结果被误回收而断言失败。REVIEW 附录原文四场景共 1234 检查、0 失败，重启前后均保留 17 条（元数据及最近 16 条） | `T --case capacity`（0）；`--mutant ack --case capacity`、`--mutant sent --case capacity`（各 1）；REVIEW 附录“执行”（0） |
+| R3 中 | 已修并重验 | 【实测】真实 notify.post → system.undo 删除通知，持久查询为 done，原 receipt.status 为 undone；恢复旧映射后失败。queued/pending_confirmation 映射 running、partial 映射 done 为代码核查，不冒称新增实测 | `T --case receipts`（0）；`T --mutant receipt --case receipts`（1） |
+| R4 中 | 已修并重验 | 【实测】十秒期限内查 accepted，十一秒后查 expired；撤期限比较后失败。同启动还检查成员与连接，重启按预留 token 区间失效 | `T --case receipts`（0）；`T --mutant expiry --case receipts`（1） |
+| 原验收 4 | 通过 | 【实现】confirm.status 在能力表注册，confirm/request 为专用协议方法，人工确认按钮仍不开放给 AI。【实测】两套构建退出 0；两套全量各 206/206、无跳过；ASan/UBSan 日志无错误；产品新增恰好 300 行 | 下述构建、全量、扫描及行数核对 |
+
+### 本次改法、规模和新增的机制
+
+- 【实现】没有新任务、线程、状态机、文件格式、配置项、后台重试、缓存或队列。确认和自动动作共用已有数据服务及执行器；ACK 回收沿用事件 ACK 和集合 sort 元数据，不覆盖未确认接收的结果。
+- 【实现】删除重复的 binding 缓冲、二次结果读取和完成包装；执行前后的重复检查合并到实际派发处，回到 UI 后仍检查。重启有效性复用已经持久预留的 token 区间，删掉重复 lease 字段；成员、参数摘要和内容版本绑定均保留。没有修改业务服务、成员切换流程或输入／UI／文件／传输服务。
+- 【实测】`git diff dccc7d89 --numstat -- system`：confirm.h 新增 6／删除 1，cap.c 新增 37／删除 5，confirm.c 新增 257／删除 42；合计新增 **300**、删除 48、增删 348。含注释和空行，沿用 REVIEW 接受的新增口径。CMake 另有 3 行专项测试注册，属于测试代码。
+- 为什么不能更小：执行前记录、跨重启编号、成员及版本绑定、结果查询和 ACK 回收均为任务或复查要求。只在执行后写盘、扩大集合或覆盖旧记录，都不能满足断电与回收验收。此次减少的是重复工作，没有逐个服务补丁。
+
+### 本次改过的已有测试
+
+- `tests/integration/ai_surface.c`：沿用移植中的 confirm.status 目录期望。
+- `tests/device_events/protocol.c`：分配期间 A→B→A 仍要求零新增副作用。同连接必须回对应 id 的 stale；自动结果的私密事件未 ACK 时，现有 `hub_link.c` 会关闭旧连接，此分支改查确因成员事件撤销连接、不在新连接回复旧 id、握手和能力目录恢复后继续原测试。没有放行旧动作或发送旧结果，也没有扩大原两秒断言期限。
+- `tests/integration/listening.c`：将一次锁定宽限设置放到录音前；后两处改为确认该设置仍为 30 秒，避免在录音中重复确认已生效的相同值、等待音频释放写盘而拖过场景终点。所有锁定、唤醒、麦克风和隐私断言保留，400 秒脚本、等待上限和资源预算不变。
+- 专项复用原夹具：成员执行反例从 UI 答复后切人；反例替换匹配合并后的检查位置；新增 deadline 反例直接重链、运行原 dictation 测试。容量、断电和查询断言保留。
+
+### 本次没做到的、和设计不一致的、要用户定的
+
+- 没有未修复的 REVIEW 问题。Linux gcc 和设备未运行；本次证据只覆盖 macOS clang 的普通版及 ASan/UBSan 版。
+- 沿用此前披露的范围：重启不恢复待执行动作；没有 request_id 的新提交不能识别为同一请求；摘要只排序顶层参数；中枢自己的内容版本由中枢执行前核查。三秒自动撤销窗口仍未建设，相关请求继续拒绝，不能把本次通过解释为这些功能已实现。
+- 未收到有效 ACK 的结果继续保留，长时间无 ACK 仍可能耗尽集合；不会为腾空间丢掉未知是否送达的结果。
+- 没有新增需要用户决定的事项。
+
+### 本次顺手发现和要改的文档
+
+新增 confirm.status 会使 capability-table-doc 失败。为满足用户本次明确要求的全量通过，已运行 `python3 tools/capabilities.py` 同步生成能力目录，仅增加该能力及计数；其余禁止修改的共享文档未改。协议中 result_ver 和 ACK 回收的说明仍按旧报告交主会话同步。
+
+### 本次验证命令与收尾
+
+- 配置按总规则使用 INK_DEPS 中的字体、Python、LVGL、SDL2、ImGui 和锁定的 hub Python；两个目录 Werror 均 ON，内存版只增加 INK_SANITIZE=ON。构建均为 `taskpolicy -c utility cmake --build <目录> -j3`，全量均为 `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir <目录> --output-on-failure -j2`。
+- 【实测】普通全量 206/206，107.16 秒；内存版 206/206，255.81 秒；均退出 0。日志 `work/confirm-durable/final-normal-ctest.log`、`work/confirm-durable/final-asan-ctest.log`；构建日志 `fixtures-build.log`、`asan-build.log` 位于同目录。
+- 【实测】专项证据 `build/confirm-durable-v9umezxx/`、`build-asan/confirm-durable-lwlpnj5h/`。扫描内存版构建、全量、LastTest 和专项 21 个日志，共 24 文件，未发现 AddressSanitizer、LeakSanitizer 或 UBSan 错误；汇总 `work/confirm-durable/acceptance-summary.json`。
+- 【实测】九个反例均退出 1，均命中具体功能断言；命令和结果见 `work/confirm-durable/reverse-results.json`，单项日志为同目录 `reverse-<名称>.log`。REVIEW 附录原文复现器退出 0，日志 `review-repro.log`。
+- 【实测】REVIEW 逐字节比较、生成能力表校验、修改文件的 Markdown 链接和 `git diff --check` 均通过。核对相对指定基线的文件清单，未夹带 member-quiesce、构建产物或任务外资料；提交差异按总规则的本机路径／MAC 表达式扫描，无命中。
+- 没有 push、PR、远端发布、设备操作、真实账号或付费服务调用。

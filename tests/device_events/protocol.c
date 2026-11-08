@@ -108,7 +108,7 @@ static void run(void *arg) {
         CHECK(reply_is("\"id\":2000000000") && reply_is("-32023"), "same connection explicitly rejects stale delivery");
     else
         CHECK(sim_metric_value("hub.member_events_cancelled") > cancelled && !reply_is("\"id\":2000000000") &&
-              WAIT_FOR(ink_hub_member_matches("owner", ink_hub_member_epoch(), ink_hub_connection()), 2000),
+              WAIT_FOR(ink_cap_available("asr.stream") && ink_hub_member_matches("owner", ink_hub_member_epoch(), ink_hub_connection()), 2000),
               "unacknowledged private result closes the old connection without replying on the new one");
     snprintf(meta, sizeof meta, "{\"member\":\"owner\",\"epoch\":%u,\"asked\":true,\"undo_ms\":3000}", ink_hub_member_epoch());
     send_named("message.send", meta);
