@@ -19,21 +19,14 @@ for line in (target / "flags.make").read_text().splitlines():
         flags[key] = shlex.split(value)
 template = shlex.split((target / "link.txt").read_text())
 service = root / "system/services/file/transfer.c"
-hal = root / "ports/sim/hal/hal_transfer_sim.c"
 cases = {
     "no_service": (service, 'return ink_cap_register(TRANSFER_CAPS, sizeof TRANSFER_CAPS / sizeof TRANSFER_CAPS[0]);', '(void)TRANSFER_CAPS; return 0;'),
     "no_code_check": (service, 'if (!code || strcmp(code, expected))', 'if (false)'),
-    "no_timeouts": (service, 'if (osal_now_us() >= T.expires || (T.connected && osal_now_us() >= T.idle))', 'if (false)'),
+    "no_timeouts": (service, 'if ((!T.used && !T.response && osal_now_us() >= T.expires) || (T.connected && osal_now_us() >= T.idle))', 'if (false)'),
     "no_nul_validation": (service, 'v < 32 || v == 127 || ', ''),
     "no_usb_lease": (service, 'ink_fs_card_hold()', '0'),
-    "no_response_drain": (hal, '''            char discard[512];
-            shutdown(client, SHUT_WR);
-            for (size_t drained = 0; drained < 65536;) {
-                ssize_t n = recv(client, discard, sizeof discard, 0);
-                if (n <= 0) break;
-                drained += (size_t)n;
-            }
-''', ''),
+    "no_response_drain": (service, 'T.response = text;', 'T.response = text; T.left = 0;'),
+    "expiry_during_upload": (service, '!T.used && !T.response && osal_now_us() >= T.expires', 'osal_now_us() >= T.expires'),
 }
 with tempfile.TemporaryDirectory(prefix="wireless-reverse-", dir=build) as directory:
     work = Path(directory)

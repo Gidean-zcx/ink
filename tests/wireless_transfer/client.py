@@ -17,10 +17,10 @@ root = Path(__file__).resolve().parents[2]
 build = a.build.resolve()
 pattern = b"SYNTHETIC\0UPLOAD\n"
 names = {"dotdot": "..", "absolute": "/outside.txt", "nested": "../outside.txt",
-         "control": "bad\x01.txt", "nul": "bad\0.txt", "backslash": "bad\\file.txt"}
+         "control": "bad\x01.txt", "nul": "bad\0.txt", "backslash": "bad\\file.txt", "invalid_large": ".."}
 
-def request(session, name, body, code=None):
-    conn = http.client.HTTPConnection("127.0.0.1", session["port"], timeout=5)
+def request(session, name, body, code=None, timeout=5):
+    conn = http.client.HTTPConnection("127.0.0.1", session["port"], timeout=timeout)
     try:
         conn.request("POST", "/upload", body, {"X-Ink-Code": code or session["code"], "X-Ink-Name": name})
         response = conn.getresponse()
@@ -28,16 +28,16 @@ def request(session, name, body, code=None):
     finally:
         conn.close()
 
-def begin(session, name, size):
+def begin(session, name, size, code=None):
     sock = socket.create_connection(("127.0.0.1", session["port"]), timeout=5)
-    head = f"POST /upload HTTP/1.1\r\nX-Ink-Code: {session['code']}\r\nX-Ink-Name: {name}\r\nContent-Length: {size}\r\n\r\n"
+    head = f"POST /upload HTTP/1.1\r\nX-Ink-Code: {code or session['code']}\r\nX-Ink-Name: {name}\r\nContent-Length: {size}\r\n\r\n"
     sock.sendall(head.encode("ascii") + b"SYNTHETIC")
     return sock
 
 with tempfile.TemporaryDirectory(prefix="wireless-", dir=build) as temp:
     out = Path(temp)
     script = out / "network.script"
-    script.write_text("@0 net wifi\n@400s end\n")
+    script.write_text("@0 net wifi\n@600s end\n")
     command = [str(a.sim.resolve() if a.sim else build / "sim-wireless-transfer"), "--profile", str(root / "simulator/profiles/metalio-plus.json"),
                "--assets", str(build / "assets"), "--content", str(build / "test-content"),
                "--out", str(out), "--script", str(script), "--realtime=20", "--quiet", "--no-random-outages"]
@@ -74,9 +74,17 @@ with tempfile.TemporaryDirectory(prefix="wireless-", dir=build) as temp:
                         raise AssertionError("used authorization accepted a replay")
                 elif case in names or case == "utf8":
                     encoded = "%FF.txt" if case == "utf8" else urllib.parse.quote(names[case], safe="")
-                    assert request(session, encoded, pattern * 4096)[0] == 400
+                    body = pattern * (131072 if case == "invalid_large" else 4096)
+                    assert request(session, encoded, body) == (400, "文件名或长度不合法" if case != "utf8" else "文件名不合法")
                 elif case == "wrong_code":
-                    assert request(session, "wrong.txt", pattern, "000000")[0] == 403
+                    assert request(session, "wrong.txt", pattern * 131072, "000000") == (403, "授权码不正确或已失效")
+                elif case == "large":
+                    assert request(session, "large.bin", pattern * 1048576, timeout=20) == (201, "文件已收到")
+                elif case == "reject_idle":
+                    saved = begin(session, "reject-idle.txt", 2097152, "000000")
+                    response = http.client.HTTPResponse(saved)
+                    response.begin()
+                    assert (response.status, response.read().decode()) == (403, "授权码不正确或已失效")
                 elif case == "raw_nul":
                     raw = socket.create_connection(("127.0.0.1", session["port"]), timeout=5)
                     head = f"POST /upload HTTP/1.1\r\nX-Ink-Code: {session['code']}\r\nContent-Length: 16\r\nX-Ink-Name: "

@@ -22,7 +22,7 @@ static struct {
     size_t head_len;
     ink_fs_file_t *file;
     char head[2048], buf[2048], path[INK_FS_PATH_MAX], part[INK_FS_PATH_MAX];
-    const char *result;
+    const char *result, *response;
     ink_exec_job_t job;
     ink_svc_deadline_t tick;
 } T INK_PSRAM_BSS;
@@ -46,7 +46,7 @@ static void finish(const char *result) {
         ink_fs_card_release();
         ink_power_release(INK_NEED_AWAKE);
     }
-    T.active = false; T.code = 0; T.result = result;
+    T.active = false; T.code = 0; T.result = result; T.response = NULL;
     ink_svc_cancel(&T.tick);
 }
 
@@ -55,8 +55,7 @@ static void reply(int status, const char *text, bool html) {
     int n = snprintf(header, sizeof header, "HTTP/1.0 %d Result\r\nContent-Type: %s; charset=utf-8\r\nContent-Length: %zu\r\n\r\n",
                      status, html ? "text/html" : "text/plain", strlen(text));
     if (hal_transfer_write(header, (size_t)n) == 0) hal_transfer_write(text, strlen(text));
-    hal_transfer_close(0); T.connected = false; T.head_len = 0;
-    if (T.used) finish(text);
+    T.response = text;
 }
 
 static const char PAGE[] =
@@ -97,14 +96,15 @@ static void headers(void) {
         else if (!strcasecmp(line, "Content-Length") && !length) length = colon;
         else if (!strcasecmp(line, "Transfer-Encoding")) { reply(400, "不支持此传输方式", false); return; }
     }
+    bool valid_length = length && *length && strlen(length) <= 18 && strspn(length, "0123456789") == strlen(length);
+    if (valid_length) T.left = strtoull(length, NULL, 10);
     char expected[8]; snprintf(expected, sizeof expected, "%06u", T.code);
     if (!code || strcmp(code, expected)) { reply(403, "授权码不正确或已失效", false); return; }
     T.used = true; T.code = 0;
     char filename[INK_FS_NAME_MAX];
-    if (!name || !decode_name(filename, name) || !length || !*length || strspn(length, "0123456789") != strlen(length) || strlen(length) > 18) {
+    if (!name || !decode_name(filename, name) || !valid_length) {
         reply(400, "文件名或长度不合法", false); return;
     }
-    T.left = strtoull(length, NULL, 10);
     snprintf(T.path, sizeof T.path, INBOX "%s", filename);
     ink_fs_stat_t st;
     int r = fs_stat_for(&T.actor, T.path, &st);
@@ -124,22 +124,25 @@ static void poll_upload(void *arg) {
     if (!T.active) return;
     uint64_t wait_us = 20000;
     hal_link_status_t link; hal_net_link_status(&link);
-    if (osal_now_us() >= T.expires || (T.connected && osal_now_us() >= T.idle)) { finish("授权或接收已超时"); return; }
+    if ((!T.used && !T.response && osal_now_us() >= T.expires) || (T.connected && osal_now_us() >= T.idle)) { finish("授权或接收已超时"); return; }
     if (T.epoch != ink_member_epoch() || !ink_member_space_open()) { finish("成员已变化"); return; }
     if (!link.up || link.type != HAL_LINK_WIFI) { finish("无线连接已断开"); return; }
     if (!T.connected) {
         int r = hal_transfer_accept();
         if (r < 0) { finish("连接失败"); return; }
         T.connected = r == 1; T.idle = osal_now_us() + 10000000;
+        if (T.connected) { T.left = 0; T.response = NULL; }
     }
     if (T.connected) {
-        int n = hal_transfer_read(T.buf, T.file ? sizeof T.buf : 1);
+        int n = hal_transfer_read(T.buf, T.file || T.response ? sizeof T.buf : 1);
         if (n < 0) {
-            if (T.used) { finish("传输中断"); return; }
-            hal_transfer_close(0); T.connected = false; T.head_len = 0;
+            if (T.used) { finish(T.response ? T.response : "传输中断"); return; }
+            hal_transfer_close(0); T.connected = false; T.head_len = 0; T.response = NULL;
         } else if (n > 0) {
             T.idle = osal_now_us() + 10000000;
-            if (!T.file) {
+            if (T.response) {
+                T.left -= (uint64_t)n < T.left ? (uint64_t)n : T.left;
+            } else if (!T.file) {
                 wait_us = 100;
                 if (!T.buf[0]) reply(400, "请求不合法", false);
                 else {
@@ -148,18 +151,25 @@ static void poll_upload(void *arg) {
                     else if (T.head_len == sizeof T.head - 1) reply(400, "请求过长", false);
                 }
             } else {
-                if ((uint64_t)n > T.left) { reply(400, "文件长度不符", false); return; }
-                int64_t written = ink_fs_write(T.file, T.buf, (size_t)n);
-                if (written != n) { reply(507, "存储空间不足或写入失败", false); return; }
-                T.left -= (uint64_t)n;
+                if ((uint64_t)n > T.left) { T.left = 0; reply(400, "文件长度不符", false); }
+                else {
+                    T.left -= (uint64_t)n;
+                    int64_t written = ink_fs_write(T.file, T.buf, (size_t)n);
+                    if (written != n) reply(507, "存储空间不足或写入失败", false);
+                }
             }
         }
-        if (T.active && T.file && !T.left) {
+        if (T.active && T.file && !T.left && !T.response) {
             int r = ink_fs_sync(T.file); int closed = ink_fs_close(T.file); T.file = NULL;
             if (!r) r = closed;
             if (!r) r = fs_move_for(&T.actor, T.part, T.path, 0, NULL);
             if (!r) T.part[0] = 0;
             reply(r ? 500 : 201, r ? "文件保存失败" : "文件已收到", false);
+        }
+        if (T.response && !T.left) {
+            hal_transfer_close(0); T.connected = false; T.head_len = 0;
+            if (T.used) finish(T.response);
+            T.response = NULL;
         }
     }
     if (T.active) ink_svc_at(&T.tick, osal_now_us() + wait_us, tick, NULL);

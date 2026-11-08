@@ -16,13 +16,14 @@ static void check_ack(void *arg) {
     snprintf(path, sizeof path, "%s/ack-%u", g_sim.out_dir, sequence);
     acknowledged = stat(path, &st) == 0;
 }
-static void exchange(const char *name) {
+static void exchange_for(const char *name, uint64_t timeout_us) {
     sequence++; case_name = name; acknowledged = false;
     vtk_host_call(announce, NULL);
-    uint64_t end = osal_now_us() + 60000000;
+    uint64_t end = osal_now_us() + timeout_us;
     while (!acknowledged && osal_now_us() < end) { delay_ms(20); vtk_host_call(check_ack, NULL); }
     CHECK(acknowledged, "external HTTP client acknowledged %s", name);
 }
+static void exchange(const char *name) { exchange_for(name, 60000000); }
 static void start_transfer(void) {
     CHECK(BY_HAND("transfer.start", NULL) && g_rc.status == INK_RC_DONE && strstr(g_result, "\"active\":true"), "authorize transfer: %.80s / %.150s", g_rc.detail, g_result);
 }
@@ -36,7 +37,7 @@ static void no_file(const char *name) {
     snprintf(path, sizeof path, "/me/收件箱/%s.part", name);
     CHECK(ink_fs_stat(path, &st) == INK_FS_ERR_NOT_FOUND, "no abandoned part %s", name);
 }
-static uint32_t verify_file(const char *name, bool large) {
+static uint32_t verify_file(const char *name, size_t repeats) {
     char path[160]; snprintf(path, sizeof path, "/me/收件箱/%s", name);
     ink_fs_file_t *f = NULL;
     CHECK(ink_fs_open(path, INK_FS_READ, &f) == 0, "open uploaded file in member inbox");
@@ -46,7 +47,7 @@ static uint32_t verify_file(const char *name, bool large) {
         for (int64_t i = 0; i < n; i++) if (buf[i] != pattern[(offset + (size_t)i) % (sizeof pattern - 1)]) same = false;
         offset += (size_t)n;
     }
-    CHECK(f && n == 0 && same && offset == (large ? 4096 : 1) * (sizeof pattern - 1), "exact binary content from external client (%zu bytes)", offset);
+    CHECK(f && n == 0 && same && offset == repeats * (sizeof pattern - 1), "exact binary content from external client (%zu bytes)", offset);
     if (f) ink_fs_close(f);
     uint32_t cursor = 0, id = 0; ink_fs_entry_t e;
     while (ink_fs_index("/me/收件箱", INK_FS_ANY, &cursor, &e) == 1) if (!strcmp(e.path, path)) id = e.id;
@@ -57,16 +58,23 @@ static void run(void *arg) {
     (void)arg; delay_ms(4000);
     start_transfer(); exchange("success");
     CHECK(inactive("文件已收到"), "successful upload consumes authorization");
-    uint32_t owner_file = verify_file("合成.txt", true);
-    const char *bad[] = {"dotdot", "absolute", "nested", "control", "nul", "backslash", "utf8"};
+    uint32_t owner_file = verify_file("合成.txt", 4096);
+    const char *bad[] = {"dotdot", "absolute", "nested", "control", "nul", "backslash", "utf8", "invalid_large"};
     for (size_t i = 0; i < sizeof bad / sizeof bad[0]; i++) {
         start_transfer(); exchange(bad[i]);
-        CHECK(inactive("不合法"), "invalid name fails honestly: %s", bad[i]);
+        CHECK(WAIT_FOR(inactive("不合法"), 30000), "invalid name fails honestly after request cleanup: %s", bad[i]);
     }
     start_transfer(); exchange("wrong_code");
     CHECK(BY_HAND("transfer.status", NULL) && strstr(g_result, "\"active\":true"), "wrong code does not grant write access");
     no_file("wrong.txt");
     CHECK(BY_HAND("transfer.stop", NULL) && inactive("关闭"), "explicit stop closes authorization");
+    start_transfer();
+    uint64_t began = osal_now_us();
+    exchange_for("large", 300000000);
+    CHECK(osal_now_us() - began >= 120000000 && inactive("文件已收到"), "progressing upload completes after authorization deadline");
+    verify_file("large.bin", 1048576);
+    start_transfer(); exchange("reject_idle"); delay_ms(11000);
+    CHECK(inactive("超时"), "rejected request also uses the receive idle timeout"); no_file("reject-idle.txt");
     start_transfer(); exchange("raw_nul");
     no_file("bad");
     CHECK(BY_HAND("transfer.stop", NULL) && inactive("关闭"), "malformed header did not create a file");
@@ -74,13 +82,13 @@ static void run(void *arg) {
     CHECK(WAIT_FOR(inactive("中断"), 5000), "disconnect is reported"); no_file("disconnect.txt");
     sim_sd_set_free(3);
     start_transfer(); exchange("full");
-    CHECK(inactive("空间不足"), "preflight insufficient space"); no_file("full.txt");
+    CHECK(WAIT_FOR(inactive("空间不足"), 5000), "preflight insufficient space"); no_file("full.txt");
     sim_sd_set_free(-1);
     start_transfer(); exchange("midfull");
     ink_fs_stat_t part_stat;
     CHECK(WAIT_FOR(ink_fs_stat("/me/收件箱/midfull.txt.part", &part_stat) == 0 && part_stat.size == 9, 5000), "partial bytes reached storage before injecting full card");
     sim_sd_set_free(0); exchange("midfull_finish");
-    CHECK(inactive("空间不足"), "mid-transfer short write is reported"); no_file("midfull.txt");
+    CHECK(WAIT_FOR(inactive("空间不足"), 5000), "mid-transfer short write is reported after client disconnects"); no_file("midfull.txt");
     sim_sd_set_free(-1);
     start_transfer(); exchange("idle"); delay_ms(11000);
     CHECK(inactive("超时"), "stalled receiver times out"); no_file("idle.txt");
@@ -104,7 +112,7 @@ static void run(void *arg) {
     ink_fs_entry_t e;
     CHECK(ink_fs_lookup(owner_file, &e) == INK_FS_ERR_DENIED, "child cannot resolve parent's uploaded file");
     start_transfer(); exchange("child");
-    CHECK(inactive("文件已收到"), "child upload succeeds"); verify_file("child.txt", false);
+    CHECK(inactive("文件已收到"), "child upload succeeds"); verify_file("child.txt", 1);
     CHECK(ink_member_switch("owner") == 0, "return to owner"); no_file("child.txt");
     CHECK(AI("transfer.start", NULL) && g_rc.status == INK_RC_DONE, "AI uses the same transfer capability");
     CHECK(AI("transfer.stop", NULL) && inactive("关闭"), "AI closes through the same service");
