@@ -402,4 +402,8 @@ static const ink_cap_t FILE_CAPS[] = {
     {.id = "usb.changed", .title = "电脑连上、断开或 U 盘状态变了", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},
 };
 
-int ink_file_caps_init(void) { return ink_cap_register(FILE_CAPS, (int)(sizeof FILE_CAPS / sizeof FILE_CAPS[0])); }
+int ink_transfer_caps_init(void);
+int ink_file_caps_init(void) {
+    int r = ink_cap_register(FILE_CAPS, (int)(sizeof FILE_CAPS / sizeof FILE_CAPS[0]));
+    return r ? r : ink_transfer_caps_init();
+}

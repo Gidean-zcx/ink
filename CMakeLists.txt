@@ -113,6 +113,7 @@ add_library(ink_port_sim STATIC
   ports/sim/hal/hal_power_sim.c
   ports/sim/hal/hal_assets_sim.c
   ports/sim/hal/hal_net_sim.c
+  ports/sim/hal/hal_transfer_sim.c
   ports/sim/hal/hal_provision_sim.c
   ports/sim/hal/hal_audio_sim.c
   ports/sim/hal/hal_cellular_sim.c
@@ -184,6 +185,7 @@ add_library(ink_system STATIC
   system/services/backup/backup_service.c
   system/services/file/file_service.c
   system/services/file/file_caps.c
+  system/services/file/transfer.c
   system/services/time/lunar.c
   system/services/time/time_service.c
   system/services/update/update_service.c
@@ -763,6 +765,11 @@ add_test(NAME integration-files
           --script ${CMAKE_BINARY_DIR}/test-out/files.script
           --out ${CMAKE_BINARY_DIR}/test-out/files --quiet --no-random-outages)
 # The time service: the clock, zones, alarms and reminders, waking from sleep (tests/integration/timesvc.c).
+ink_sim_executable(sim-wireless-transfer tests/wireless_transfer/device.c)
+target_link_libraries(sim-wireless-transfer PRIVATE ink_apps ink_system)
+add_test(NAME integration-wireless-transfer COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/wireless_transfer/client.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(integration-wireless-transfer PROPERTIES TIMEOUT 65)
 add_executable(sim-time simulator/runtime/sim_main.c tests/integration/timesvc.c)
 target_link_libraries(sim-time PRIVATE ink_system ink_port_sim)
 target_compile_options(sim-time PRIVATE ${INK_WARN} -Wno-format-truncation) # a message cut short does no harm
