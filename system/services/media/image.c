@@ -9,7 +9,7 @@ static uint32_t be32(const uint8_t *p) {
     return (uint32_t)p[0] << 24 | (uint32_t)p[1] << 16 | (uint32_t)p[2] << 8 | p[3];
 }
 
-/* stb ignores PNG CRCs and tolerates JPEG truncation; check the envelope first. */
+/* stb ignores PNG CRCs; JPEG scan integrity is checked by the patched decoder. */
 static bool complete(const uint8_t *p, size_t n) {
     if (n >= 4 && p[0] == 0xff && p[1] == 0xd8) return p[n - 2] == 0xff && p[n - 1] == 0xd9;
     if (n < 8 || memcmp(p, "\x89PNG\r\n\x1a\n", 8)) return false;
@@ -32,12 +32,18 @@ int ink_image_decode(const void *data, size_t size, ink_image_t *out) {
     if (w <= 0 || h <= 0 || (unsigned)w > INK_IMAGE_MAX_EDGE || (unsigned)h > INK_IMAGE_MAX_EDGE ||
         (size_t)w * (size_t)h > INK_IMAGE_MAX_PIXELS) return INK_IMAGE_LIMIT;
     if (!complete(data, size)) return INK_IMAGE_ERROR;
+    /* Uncalibrated cycle estimates for compressed bytes and decoded pixels. */
+    osal_cost_cycles((uint64_t)size * 80 + (uint64_t)w * h * 200);
     uint8_t *p = stbi_load_from_memory(data, (int)size, &w, &h, &channels, 4);
     if (!p) return INK_IMAGE_ERROR;
-    for (size_t i = 0; i < (size_t)w * h; i++) {
-        unsigned gray = (77u * p[4*i] + 150u * p[4*i+1] + 29u * p[4*i+2] + 128u) >> 8;
-        unsigned alpha = p[4*i+3];
-        p[i] = (uint8_t)((gray * alpha + 255u * (255u - alpha) + 127u) / 255u);
+    for (unsigned y = 0; y < (unsigned)h; y++) {
+        for (unsigned x = 0; x < (unsigned)w; x++) {
+            size_t i = (size_t)y * w + x;
+            unsigned gray = (77u * p[4*i] + 150u * p[4*i+1] + 29u * p[4*i+2] + 128u) >> 8;
+            unsigned alpha = p[4*i+3];
+            p[i] = (uint8_t)((gray * alpha + 255u * (255u - alpha) + 127u) / 255u);
+        }
+        osal_cost_cycles((uint64_t)w * 64);
     }
     *out = (ink_image_t){(unsigned)w, (unsigned)h, p};
     return INK_IMAGE_OK;
@@ -62,6 +68,7 @@ void ink_image_dither(ink_image_t *image) {
             if (fraction > (bayer[(y % 4) * 4 + x % 4] + .5f) / 16.f) l++;
             image->pixels[i] = (uint8_t)(l * 17);
         }
+        osal_cost_cycles((uint64_t)image->width * 128);
         osal_preempt_point();
     }
 }
@@ -107,9 +114,11 @@ int ink_image_thumbnail(ink_thumb_cache_t *cache, uint64_t object, uint64_t vers
     if (cache->count == INK_THUMB_SLOTS) drop(cache, 0);
     ink_image_t thumb = {w, h, osal_malloc((size_t)w * h, OSAL_MEM_EXTERNAL)};
     if (!thumb.pixels) { ink_image_free(&source); return INK_IMAGE_ERROR; }
-    for (unsigned y = 0; y < h; y++)
+    for (unsigned y = 0; y < h; y++) {
         for (unsigned x = 0; x < w; x++)
             thumb.pixels[(size_t)y * w + x] = source.pixels[(size_t)(y * source.height / h) * source.width + x * source.width / w];
+        osal_cost_cycles((uint64_t)w * 32);
+    }
     ink_image_free(&source);
     ink_image_dither(&thumb);
     cache->entries[cache->count++] = (entry_t){object, version, thumb};

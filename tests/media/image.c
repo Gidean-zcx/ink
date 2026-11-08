@@ -1,6 +1,7 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
+#include "ink/hal_audio.h"
 #include "ink/hal_display.h"
 #include "ink/osal.h"
 #include "ink/probe.h"
@@ -19,6 +20,20 @@ static void solid(const ink_image_t *im, unsigned value) {
         CHECK(im->pixels[i] == value, "expected decoded/dithered pixel value");
 }
 
+static void jpeg_cuts(const uint8_t *data, size_t size) {
+    ink_image_t im;
+    CHECK(ink_image_decode(data, size, &im) == 0, "complete JPEG including restart markers");
+    ink_image_free(&im);
+    uint8_t *bad = osal_malloc(size, OSAL_MEM_EXTERNAL);
+    CHECK(bad != NULL, "JPEG truncation fixture allocated");
+    for (size_t cut = 2; cut < size - 2; cut++) {
+        memcpy(bad, data, cut); bad[cut] = 255; bad[cut + 1] = 217;
+        CHECK(ink_image_decode(bad, cut + 2, &im) == INK_IMAGE_ERROR &&
+              !im.pixels && !im.width && !im.height, "JPEG truncated before EOI");
+    }
+    osal_free(bad);
+}
+
 static void decode(void) {
     ink_image_t im;
     CHECK(DECODE(color_png, &im) == 0 && im.width == 17 && im.height == 9, "real color PNG dimensions");
@@ -29,8 +44,19 @@ static void decode(void) {
     CHECK(DECODE(gray_jpeg, &im) == 0 && im.width == 19 && im.height == 13, "baseline grayscale JPEG");
     solid(&im, 90); ink_image_free(&im);
     CHECK(DECODE(alpha_png, &im) == 0, "RGBA PNG"); solid(&im, 255); ink_image_free(&im);
+    uint64_t started = osal_now_us();
     CHECK(DECODE(max_png, &im) == 0 && (size_t)im.width * im.height == INK_IMAGE_MAX_PIXELS,
-          "pixel limit is inclusive"); ink_image_free(&im);
+          "pixel limit is inclusive");
+    uint64_t elapsed = osal_now_us() - started;
+    CHECK(elapsed > 900000, "large decode and conversion charge modeled CPU time");
+    ink_probe_value("test.image.decode_large_us", elapsed);
+    started = osal_now_us(); ink_image_dither(&im); elapsed = osal_now_us() - started;
+    CHECK(elapsed > 300000, "large dither charges modeled CPU time");
+    ink_probe_value("test.image.dither_large_us", elapsed); ink_image_free(&im);
+    jpeg_cuts(color_jpeg, sizeof color_jpeg);
+    jpeg_cuts(gray_jpeg, sizeof gray_jpeg);
+    jpeg_cuts(restart_jpeg, sizeof restart_jpeg);
+    jpeg_cuts(restart_gray_jpeg, sizeof restart_gray_jpeg);
     CHECK(DECODE(large_png, &im) == INK_IMAGE_LIMIT && !im.pixels && !im.width && !im.height, "oversized PNG area");
     CHECK(DECODE(large_jpeg, &im) == INK_IMAGE_LIMIT && !im.pixels, "oversized JPEG area");
     CHECK(DECODE(edge_png, &im) != 0 && !im.pixels, "oversized PNG edge");
@@ -45,6 +71,7 @@ static void decode(void) {
     CHECK(bad != NULL, "corruption fixture allocated");
     memcpy(bad, color_png, sizeof(color_png)); bad[29] ^= 1;
     CHECK(ink_image_decode(bad, sizeof(color_png), &im) != 0 && !im.pixels, "PNG CRC error");
+    memcpy(bad, color_png, sizeof(color_png));
     memset(bad + 33, 255, 4);
     CHECK(ink_image_decode(bad, sizeof(color_png), &im) != 0 && !im.pixels, "invalid chunk length");
     osal_free(bad);
@@ -64,7 +91,11 @@ static void dither(void) {
         im.pixels[y * 256 + x] = x;
         original += PANEL_LEVEL[0] + (PANEL_LEVEL[15] - PANEL_LEVEL[0]) * x / 255.;
     }
+    uint64_t started = osal_now_us();
     ink_image_dither(&im);
+    uint64_t elapsed = osal_now_us() - started;
+    CHECK(elapsed > 10000, "dither charges modeled CPU time");
+    ink_probe_value("test.image.dither_us", elapsed);
     unsigned seen = 0;
     for (size_t i = 0; i < 256u * 256u; i++) {
         CHECK(im.pixels[i] % 17 == 0, "only 16 factory gray codes");
@@ -157,6 +188,9 @@ static void run(void *arg) {
 
 void ink_main(void) {
     static ink_exec_job_t job;
+    /* Wait on audio's boot lock before taking global heap baselines. */
+    CHECK(hal_audio_play_start() == 0, "platform audio boot completed");
+    hal_audio_play_stop(false);
     CHECK(ink_exec_init() == 0 && ink_exec_ready(INK_EXEC_MEDIA) == 0, "existing media executor ready");
     done = osal_sem_create(0, 1);
     CHECK(done != NULL, "completion semaphore");

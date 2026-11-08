@@ -13,6 +13,8 @@ def main():
         ("color_png", "RGB", (17, 9), (200, 100, 40), "PNG"),
         ("color_jpeg", "RGB", (17, 9), (200, 100, 40), "JPEG"),
         ("gray_jpeg", "L", (19, 13), 90, "JPEG"),
+        ("restart_jpeg", "RGB", (33, 17), (200, 100, 40), "JPEG"),
+        ("restart_gray_jpeg", "L", (25, 19), 90, "JPEG"),
         ("alpha_png", "RGBA", (3, 2), (0, 0, 0, 0), "PNG"),
         ("palette_png", "P", (7, 5), 0, "PNG"),
         ("black_png", "L", (256, 256), 0, "PNG"),
@@ -30,7 +32,7 @@ def main():
         if mode == "P":
             image.putpalette([200, 100, 40] + [0] * 765)
         encoded = io.BytesIO()
-        image.save(encoded, format=fmt)
+        image.save(encoded, format=fmt, **({"restart_marker_blocks": 1} if name.startswith("restart_") else {}))
         data = encoded.getvalue()
         fixtures.append(f"static const unsigned char {name}[] = {{\n" +
                         "\n".join(",".join(str(b) for b in data[i:i+24]) + ","

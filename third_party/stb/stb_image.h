@@ -1,4 +1,4 @@
-/* ink modification: PNG inflate context and Huffman workspace use STBI_MALLOC instead of the task stack.
+/* ink modification: strict JPEG scans; PNG workspaces use STBI_MALLOC instead of the task stack.
    Original: LVGL v9.5.0 src/libs/gltf/stb_image/stb_image.h (v2.30). */
 /* stb_image - v2.30 - public domain image loader - http://nothings.org/stb
                                   no warranty implied; use at your own risk
@@ -2212,7 +2212,9 @@ static void stbi__build_fast_ac(stbi__int16 * fast_ac, stbi__huffman * h)
 static void stbi__grow_buffer_unsafe(stbi__jpeg * j)
 {
     do {
-        unsigned int b = j->nomore ? 0 : stbi__get8(j->s);
+        unsigned int b;
+        if(j->nomore) return;
+        b = stbi__get8(j->s);
         if(b == 0xff) {
             int c = stbi__get8(j->s);
             while(c == 0xff) c = stbi__get8(j->s);  // consume fill bytes
@@ -2356,6 +2358,8 @@ static int stbi__jpeg_decode_block(stbi__jpeg * j, short data[64], stbi__huffman
     // 0 all the ac values now so we can do it 32-bits at a time
     memset(data, 0, 64 * sizeof(data[0]));
 
+    if(j->code_bits < t) stbi__grow_buffer_unsafe(j);
+    if(j->code_bits < t) return stbi__err("short DC", "Corrupt JPEG");
     diff = t ? stbi__extend_receive(j, t) : 0;
     if(!stbi__addints_valid(j->img_comp[b].dc_pred, diff)) return stbi__err("bad delta", "Corrupt JPEG");
     dc = j->img_comp[b].dc_pred + diff;
@@ -2394,6 +2398,8 @@ static int stbi__jpeg_decode_block(stbi__jpeg * j, short data[64], stbi__huffman
                 k += r;
                 // decode into unzigzag'd location
                 zig = stbi__jpeg_dezigzag[k++];
+                if(j->code_bits < s) stbi__grow_buffer_unsafe(j);
+                if(j->code_bits < s) return stbi__err("short AC", "Corrupt JPEG");
                 data[zig] = (short)(stbi__extend_receive(j, s) * dequant[zig]);
             }
         }
@@ -3138,9 +3144,7 @@ static int stbi__parse_entropy_coded_data(stbi__jpeg * z)
                     // every data block is an MCU, so countdown the restart interval
                     if(--z->todo <= 0) {
                         if(z->code_bits < 24) stbi__grow_buffer_unsafe(z);
-                        // if it's NOT a restart, then just bail, so we get corrupt data
-                        // rather than no data
-                        if(!STBI__RESTART(z->marker)) return 1;
+                        if(!STBI__RESTART(z->marker)) return i == w - 1 && j == h - 1;
                         stbi__jpeg_reset(z);
                     }
                 }
@@ -3172,7 +3176,7 @@ static int stbi__parse_entropy_coded_data(stbi__jpeg * z)
                     // so now count down the restart interval
                     if(--z->todo <= 0) {
                         if(z->code_bits < 24) stbi__grow_buffer_unsafe(z);
-                        if(!STBI__RESTART(z->marker)) return 1;
+                        if(!STBI__RESTART(z->marker)) return i == z->img_mcu_x - 1 && j == z->img_mcu_y - 1;
                         stbi__jpeg_reset(z);
                     }
                 }
@@ -3600,7 +3604,7 @@ static stbi_uc stbi__skip_jpeg_junk_at_end(stbi__jpeg * j)
 // decode image to YCbCr format
 static int stbi__decode_jpeg_image(stbi__jpeg * j)
 {
-    int m;
+    int m, scanned = 0;
     for(m = 0; m < 4; m++) {
         j->img_comp[m].raw_data = NULL;
         j->img_comp[m].raw_coeff = NULL;
@@ -3612,6 +3616,7 @@ static int stbi__decode_jpeg_image(stbi__jpeg * j)
         if(stbi__SOS(m)) {
             if(!stbi__process_scan_header(j)) return 0;
             if(!stbi__parse_entropy_coded_data(j)) return 0;
+            for(m = 0; m < j->scan_n; m++) scanned |= 1 << j->order[m];
             if(j->marker == STBI__MARKER_none) {
                 j->marker = stbi__skip_jpeg_junk_at_end(j);
                 // if we reach eof without hitting a marker, stbi__get_marker() below will fail and we'll eventually return 0
@@ -3628,10 +3633,11 @@ static int stbi__decode_jpeg_image(stbi__jpeg * j)
             m = stbi__get_marker(j);
         }
         else {
-            if(!stbi__process_marker(j, m)) return 1;
+            if(!stbi__process_marker(j, m)) return 0;
             m = stbi__get_marker(j);
         }
     }
+    if(scanned != (1 << j->s->img_n) - 1) return stbi__err("missing scan", "Corrupt JPEG");
     if(j->progressive)
         stbi__jpeg_finish(j);
     return 1;
