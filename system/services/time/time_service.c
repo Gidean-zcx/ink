@@ -56,7 +56,8 @@ static struct {
     int n;
     ink_db_t *db;
     ring_t rings[MAX_RINGING];
-    int h_synced, h_zone, h_minute, h_ringing;
+    int h_synced, h_zone, h_minute, h_ringing, h_alarms_rev;
+    int64_t alarms_rev; /* bumped on every reschedule; whoever shows the next alarm re-reads it */
     bool valid, synced;
     ink_svc_deadline_t due_at, minute_at, ring_at;
     ink_exec_job_t rtc_job;
@@ -298,6 +299,7 @@ static void rtc_job(void *arg) { /* exec.bg: the shared I2C bus */
 
 /* The earliest of the table goes to the deadline, the power service and the RTC. */
 static void reschedule(void) {
+    ink_state_set_int(T.h_alarms_rev, __atomic_add_fetch(&T.alarms_rev, 1, __ATOMIC_ACQ_REL));
     if (!ink_time_valid()) return;
     int64_t next = 0;
     ink_svc_lock();
@@ -752,6 +754,7 @@ static const ink_state_def_t ST_SYNCED = {.id = "time.synced", .type = INK_ST_BO
 static const ink_state_def_t ST_ZONE = {.id = "time.zone", .type = INK_ST_STR, .title = "时区"};
 static const ink_state_def_t ST_MINUTE = {.id = "time.minute", .type = INK_ST_INT, .title = "本地时间（当天第几分钟）"};
 static const ink_state_def_t ST_RINGING = {.id = "alarm.ringing", .type = INK_ST_INT, .title = "正在响的闹钟数"};
+static const ink_state_def_t ST_ALARMS_REV = {.id = "alarm.revision", .type = INK_ST_INT, .title = "闹钟和提醒的版本（变了就重读）"};
 
 static void load_alarms(void) {
     T.db = ink_db_open(&ALARMS_DB, NULL);
@@ -781,6 +784,7 @@ int ink_time_init(void) {
     T.h_zone = ink_state_define(&ST_ZONE);
     T.h_minute = ink_state_define(&ST_MINUTE);
     T.h_ringing = ink_state_define(&ST_RINGING);
+    T.h_alarms_rev = ink_state_define(&ST_ALARMS_REV);
     ink_state_set_bool(T.h_synced, false);
     ink_state_set_str(T.h_zone, ink_time_zone());
     ink_state_set_int(T.h_ringing, 0);

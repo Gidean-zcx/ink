@@ -35,9 +35,10 @@ static const ink_ui_overlay_t OVERLAY = {.name = "off", .level = 5, .snapshot = 
 static void add_bookmark(void) { /* the first card that is one */
     for (int i = 0; i < ink_app_count(); i++) {
         const ink_app_def_t *d = ink_app_at(i);
+        if (!ink_app_visible(d)) continue;
         ink_card_t c = {0};
         for (int k = 0; d->card && d->card(k, &c) == 1; k++)
-            if (c.bookmark) {
+            if (c.bookmark && ink_app_card_visible(&c)) {
                 size_t n = strlen(O.body);
                 snprintf(O.body + n, sizeof O.body - n, "\n%s：%s", c.title, c.text);
                 return;

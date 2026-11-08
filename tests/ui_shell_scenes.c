@@ -171,6 +171,7 @@ static void assert_identity(void) {
     else if (!strncmp(scene, "Components", 10)) { top = "Components"; page = "Components"; expected_text = "测试输入页"; }
     else if (!strcmp(scene, "Settings") || !strncmp(scene, "Set", 3) || !strcmp(scene, "Notifications")) page = scene;
     if (!strncmp(scene, "Ai", 2) || !strcmp(scene, "LockPage") || !strcmp(scene, "PowerOff")) page = "book";
+    if (!strcmp(scene, "Today")) expected_text = "\"title\":\"今日\"";
     CHECK(!strcmp(ink_ui_top_name(), top), "%s requires overlay/page %s, got %s", scene, top, ink_ui_top_name());
     CHECK(!strcmp(ink_ui_page_name(), page), "%s requires activity %s, got %s", scene, page, ink_ui_page_name());
     if (!strcmp(top, "home")) CHECK(!strcmp(ink_shell_board(), scene), "%s is the selected home screen", scene);
@@ -195,7 +196,13 @@ static void assert_identity(void) {
         CHECK(snapshot_has(size) && snapshot_has("自动锁屏秒=600"), "display settings have their current values");
     }
     if (!strcmp(scene, "SetNetwork")) CHECK(snapshot_has("网络组=1") && snapshot_has("SIM="), "network selection context is present");
-    if (!strcmp(scene, "Today")) CHECK(snapshot_has("今日报纸=") && snapshot_has("单词=") && snapshot_has("接下来="), "all Today cards have semantic context");
+    if (!strcmp(scene, "Today")) CHECK(
+        snapshot_has("\"id\":\"reader\",\"role\":\"card\",\"label\":\"继续读\",\"value\":\"还没有开始读书\"") &&
+        snapshot_has("\"id\":\"listen\",\"role\":\"card\",\"label\":\"继续听\",\"value\":\"还没有在听的内容\"") &&
+        snapshot_has("\"id\":\"news\",\"role\":\"card\",\"label\":\"今日报纸\",\"value\":\"今天的还没到\"") &&
+        snapshot_has("\"id\":\"word\",\"role\":\"card\",\"label\":\"单词\",\"value\":\"还没有记下的词\"") &&
+        snapshot_has("\"id\":\"upcoming\",\"role\":\"card\",\"label\":\"接下来\",\"value\":\"还没有接下来的事\"") &&
+        snapshot_has("\"actions\":[]"), "all five Today cards have structured semantic context and no fabricated empty-state action");
 }
 
 /* No text cut off by what holds it, and no two lines of text on top of each other. Whatever the

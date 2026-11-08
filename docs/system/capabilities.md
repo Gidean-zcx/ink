@@ -7,7 +7,7 @@ python3 tools/capabilities.py
 python3 tools/capabilities.py --check
 ```
 
-当前共 191 项：可调用能力 161、事件 30；设置 16 项、状态 43 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
+当前共 191 项：可调用能力 161、事件 30；设置 16 项、状态 44 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
 
 风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。
 
@@ -253,7 +253,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 设置：`ai.read_clipboard`、`audio.child_max`、`audio.volume`、`cell.sim_slot`、`display.font_size`、`display.light`、`display.lock_style`、`display.warmth`、`member.idle_return_s`、`net.prefer`、`notify.dnd`、`power.lock_after_s`、`time.auto`、`time.zone`、`update.auto_download`、`voice.handsfree`。
 
-状态：`alarm.ringing`、`app.cards_rev`、`app.foreground`、`audio.listening`、`audio.mic`、`audio.now_playing`、`audio.recording`、`audio.route`、`battery.charging`、`battery.level`、`battery.low`、`bt.available`、`bt.connected`、`bt.device`、`cell.registered`、`cell.sim`、`confirm.pending`、`interrupt.active`、`job.running`、`media.state`、`member.authed`、`member.current`、`net.online`、`net.signal`、`net.type`、`notify.unread`、`pairing.state`、`power.state`、`storage.card`、`storage.free`、`storage.mode`、`storage.user_free`、`text.focused`、`text.voice`、`time.minute`、`time.synced`、`time.zone`、`update.progress`、`update.state`、`update.version`、`usb.connected`、`wifi.ssid`、`wifi.state`。
+状态：`alarm.revision`、`alarm.ringing`、`app.cards_rev`、`app.foreground`、`audio.listening`、`audio.mic`、`audio.now_playing`、`audio.recording`、`audio.route`、`battery.charging`、`battery.level`、`battery.low`、`bt.available`、`bt.connected`、`bt.device`、`cell.registered`、`cell.sim`、`confirm.pending`、`interrupt.active`、`job.running`、`media.state`、`member.authed`、`member.current`、`net.online`、`net.signal`、`net.type`、`notify.unread`、`pairing.state`、`power.state`、`storage.card`、`storage.free`、`storage.mode`、`storage.user_free`、`text.focused`、`text.voice`、`time.minute`、`time.synced`、`time.zone`、`update.progress`、`update.state`、`update.version`、`usb.connected`、`wifi.ssid`、`wifi.state`。
 
 事件：—。
 
@@ -403,7 +403,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 设置：`time.auto`、`time.zone`。
 
-状态：`alarm.ringing`、`time.minute`、`time.synced`、`time.zone`。
+状态：`alarm.revision`、`alarm.ringing`、`time.minute`、`time.synced`、`time.zone`。
 
 事件：`alarm.ended`、`alarm.fired`、`alarm.missed`、`reminder.fired`、`reminder.missed`、`time.changed`。
 
@@ -423,7 +423,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 设置：—。
 
-状态：`app.cards_rev`、`app.foreground`、`member.authed`、`member.current`。
+状态：`alarm.revision`、`app.cards_rev`、`app.foreground`、`member.authed`、`member.current`。
 
 事件：`app.state`。
 
@@ -473,7 +473,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 设置：`audio.volume`、`cell.sim_slot`、`display.font_size`、`display.light`、`display.lock_style`、`display.warmth`、`net.prefer`、`notify.dnd`、`power.lock_after_s`、`voice.handsfree`。
 
-状态：`audio.mic`、`audio.route`、`battery.level`、`bt.connected`、`cell.registered`、`member.authed`、`member.current`、`net.type`、`notify.unread`、`power.state`、`wifi.ssid`。
+状态：`app.cards_rev`、`audio.mic`、`audio.route`、`battery.level`、`bt.connected`、`cell.registered`、`member.authed`、`member.current`、`net.type`、`notify.unread`、`power.state`、`wifi.ssid`。
 
 事件：—。
 
@@ -504,6 +504,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 | 状态 id | 描述 | 类型 | AI 可读 | 定义 |
 | --- | --- | --- | --- | --- |
+| `alarm.revision` | 闹钟和提醒的版本（变了就重读） | `INK_ST_INT` | 是 | [system/services/time/time_service.c](../../system/services/time/time_service.c) |
 | `alarm.ringing` | 正在响的闹钟数 | `INK_ST_INT` | 是 | [system/services/time/time_service.c](../../system/services/time/time_service.c) |
 | `app.cards_rev` | 服务卡片的版本（变了就重读） | `INK_ST_INT` | 是 | [system/ui/app_registry.c](../../system/ui/app_registry.c) |
 | `app.foreground` | 前台应用 | `INK_ST_STR` | 是 | [system/ui/app_registry.c](../../system/ui/app_registry.c) |

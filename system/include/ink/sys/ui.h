@@ -85,6 +85,7 @@ void ink_shell_home_destroy(void);
 bool ink_shell_home_key(ink_key_t key, bool long_press);
 bool ink_shell_home_swipe(ink_swipe_dir_t dir);
 int ink_shell_home_snapshot(char *buf, size_t cap);
+void ink_shell_home_settle(void);
 /** Close everything above the root activity and build the root afresh, with `between` called when nothing is open. UI task. */
 void ink_ui_restart(void (*between)(void));
 /** The stack has no room for another activity. */
