@@ -10,7 +10,7 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[2]
 p = argparse.ArgumentParser()
 p.add_argument('--build', default='build')
-p.add_argument('--mutant', choices=['member', 'version', 'commit', 'ack', 'receipt', 'expiry', 'failure'])
+p.add_argument('--mutant', choices=['member', 'version', 'commit', 'ack', 'sent', 'receipt', 'expiry', 'failure'])
 p.add_argument('--case', choices=['all', 'core', 'receipts', 'capacity', 'failure'], default='all')
 a = p.parse_args()
 build = (ROOT / a.build).resolve()
@@ -23,7 +23,7 @@ for line in (build / 'CMakeFiles/sim-media.dir/flags.make').read_text().splitlin
 link = shlex.split((build / 'CMakeFiles/sim-media.dir/link.txt').read_text())
 defines = []
 if a.mutant:
-    path = 'system/policy/cap.c' if a.mutant in ('version', 'ack') else 'system/policy/confirm.c'
+    path = 'system/policy/cap.c' if a.mutant in ('version', 'ack', 'sent') else 'system/policy/confirm.c'
     source = (ROOT / path).read_text()
     replacements = {
         'member': [
@@ -34,6 +34,7 @@ if a.mutant:
         'version': [('page_gen != ink_ui_content_version()', 'false', 1)],
         'commit': [('journal(h->token, hub ? "accepted" : "running", NULL, NULL)', '1', 1)],
         'ack': [('ink_confirm_ack(token[i], ver[i]);', '(void)token[i], (void)ver[i];', 1)],
+        'sent': [('e->delivered && e->seq > ev_acked', 'e->seq > ev_acked', 1)],
         'receipt': [('rc->status == INK_RC_DONE || rc->status == INK_RC_UNDONE || rc->status == INK_RC_PARTIAL', 'rc->status == INK_RC_DONE', 1)],
         'expiry': [('expires <= 0 || osal_now_us() >= (uint64_t)expires', 'false', 1)],
         'failure': [('changed(); confirmed_done(h, &rc); return;', 'changed(); osal_free(h); return;', 1)],
@@ -43,7 +44,7 @@ if a.mutant:
         source = source.replace(old, new)
     target = work / Path(path).name
     target.write_text(source)
-    macro = 'CAP' if a.mutant in ('version', 'ack') else 'CONFIRM'
+    macro = 'CAP' if a.mutant in ('version', 'ack', 'sent') else 'CONFIRM'
     defines.append('-DINK_TEST_' + macro + '_SOURCE=' + json.dumps(str(target)))
 objects = []
 for n, source in enumerate(['regression.c', 'confirm_boundary.c', 'cap_boundary.c']):

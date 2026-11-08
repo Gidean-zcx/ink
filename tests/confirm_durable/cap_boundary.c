@@ -18,11 +18,19 @@ bool review_sent(uint32_t token) {
     osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
     for (int i = 0; i < EVENTS_KEPT; i++) {
         int64_t t = 0;
-        if (EV[i].seq && EV[i].seq <= ev_sent && !strcmp(EV[i].id, "confirm.result") &&
+        if (EV[i].delivered && EV[i].seq && EV[i].seq <= ev_sent && !strcmp(EV[i].id, "confirm.result") &&
             ink_args_get_int(&EV[i].args, "token", &t) && t == token) sent = true;
     }
     osal_mutex_unlock(CB.lock);
     return sent;
+}
+void review_forget_delivery(uint32_t token) { /* Model an event skipped by the member filter. */
+    osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+    for (int i = 0; i < EVENTS_KEPT; i++) {
+        int64_t t = 0;
+        if (ink_args_get_int(&EV[i].args, "token", &t) && t == token) EV[i].delivered = false;
+    }
+    osal_mutex_unlock(CB.lock);
 }
 void review_ack(bool valid) {
     ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);

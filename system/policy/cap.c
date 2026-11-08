@@ -900,6 +900,7 @@ static void event_job(void *arg) {
 #define EVENTS_KEPT 8
 static struct {
     uint32_t seq;
+    bool delivered;
     int64_t at_s;
     char id[48];
     char member[INK_MEMBER_ID_MAX]; /* whose it is: who it says, or who was there when it happened */
@@ -960,6 +961,7 @@ static void keep_event(const char *id, const ink_args_t *payload, const char *wh
     uint32_t seq = ++ev_next;
     typeof(EV[0]) *e = &EV[seq % EVENTS_KEPT];
     e->seq = seq;
+    e->delivered = false;
     
     e->at_s = wall > 0 ? wall / 1000000 : 0;
     snprintf(e->id, sizeof e->id, "%s", id);
@@ -1011,6 +1013,7 @@ static void send_events(void) { /* hub task */
         osal_free(out);
         if (r != 0) return; /* the queue is full: the next time round */
         osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+        if (theirs && body >= 0 && EV[seq % EVENTS_KEPT].seq == seq) EV[seq % EVENTS_KEPT].delivered = true;
         if (ev_sent + 1 == seq) ev_sent = seq; /* still the oldest: nothing wrote over it */
         osal_mutex_unlock(CB.lock);
     }
@@ -1680,7 +1683,7 @@ static void event_ack(void *ctx, const char *method, const ink_json_t *j, int pa
         for (int i = 0; i < EVENTS_KEPT; i++) {
             const typeof(EV[0]) *e = &EV[i];
             int64_t t = 0, v = 0;
-            if (e->seq > ev_acked && e->seq <= (uint32_t)upto && !strcmp(e->id, "confirm.result") &&
+            if (e->delivered && e->seq > ev_acked && e->seq <= (uint32_t)upto && !strcmp(e->id, "confirm.result") &&
                 !strcmp(e->member, ink_member_current()->id) && ink_args_get_int(&e->args, "token", &t) &&
                 ink_args_get_int(&e->args, "result_ver", &v) && t > 1 && v > 0) { token[n] = (uint32_t)t; ver[n++] = (uint32_t)v; }
         }

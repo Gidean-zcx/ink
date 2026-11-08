@@ -7,6 +7,7 @@ extern bool review_running_durable(uint32_t token);
 extern unsigned review_count(void), review_last_token(void);
 extern bool review_sent(uint32_t token);
 extern void review_ack(bool valid);
+extern void review_forget_delivery(uint32_t token);
 static const ink_db_def_t EFFECT = {.name="test.confirm_effect", .scope=INK_DB_DEVICE, .schema=1};
 static ink_db_t *effects;
 static uint32_t active_token;
@@ -112,12 +113,13 @@ static void result_cases(const char *phase) {
             CHECK(done, "automatic write %d durable (%s)", i + 1, g_result);
             if (!done) break;
             CHECK(WAIT_FOR(review_sent(last), 10000), "automatic result %d sent", i + 1);
-            if (!i) { review_ack(false); state(unacked, "rejected"); }
+            if (!i) { review_ack(false); state(unacked, "rejected"); review_forget_delivery(last); }
             review_ack(true); completed++;
         }
         CHECK(completed == 1200, "acknowledged results never exhaust the store (%d)", completed);
-        CHECK(review_count() <= 18, "only metadata, unacked and recent results retained (%u)", review_count());
-        state(first, "unknown");
+        CHECK(review_count() <= 19, "only metadata, unacked and recent results retained (%u)", review_count());
+        state(first, "done"); /* A skipped event is not acknowledged by a later cumulative ACK. */
+        state(first + 1, "unknown");
         /* The first ACK also covered the confirmation: test a genuinely missing ACK separately below. */
         for (uint32_t t = last - 15; t <= last; t++) state(t, "done");
         uint32_t pending = hold("test.confirm");
