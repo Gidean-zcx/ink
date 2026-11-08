@@ -80,6 +80,7 @@ static const struct {
 
 static const char *const STATES[] = {
     "pairing.state",
+    "file.index_state",
     "storage.user_free", "storage.free", "storage.card", "storage.mode", "usb.connected", "time.synced", "time.zone", "time.minute", "alarm.ringing", "notify.unread", "interrupt.active",
     "confirm.pending", "app.foreground", "app.cards_rev", "power.state", "battery.level", "battery.charging", "battery.low", "member.current", "text.focused", "audio.now_playing", "audio.route", "audio.listening", "audio.mic", "audio.recording", "job.running", "media.state", "bt.connected", "bt.device", "bt.available", "wifi.state", "wifi.ssid", "member.authed", "update.state", "update.version", "update.progress", "text.voice", NULL,
 };
