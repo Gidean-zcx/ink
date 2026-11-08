@@ -26,6 +26,11 @@
 extern "C" {
 #endif
 
+/* Member handoff only: stop admissions, drain, then resume after publication. */
+bool ink_cap_quiesce(void);
+void ink_cap_resume(void);
+bool ink_cap_quiescing(void);
+
 typedef enum {
     INK_FX_READ = 0,          /* read the current page, list the shelf */
     INK_FX_NAVIGATE,          /* open a book, go to a page (can go back) */

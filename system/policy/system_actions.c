@@ -77,6 +77,11 @@ static void switch_member(ink_call_t *c) {
     char id[16];
     ink_args_get_str(&c->args, "id", id, sizeof id); /* required by the schema */
     int r = ink_member_switch(id);
+    if (r == -3) {
+        rc->status = INK_RC_CANCELLED;
+        snprintf(rc->detail, sizeof rc->detail, "member change cancelled: an operation is still finishing");
+        return;
+    }
     if (r == -2) {
         rc->status = INK_RC_REJECTED;
         snprintf(rc->detail, sizeof rc->detail, "switching to an adult needs the PIN on the device");

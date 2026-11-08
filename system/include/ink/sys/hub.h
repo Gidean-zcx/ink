@@ -59,6 +59,8 @@ int ink_hub_on_online(void (*fn)(void *ctx), void *ctx);
 void ink_hub_set_tick(void (*fn)(void));
 /** Have it look soon (any task, never waits). */
 void ink_hub_wake(void);
+/* Latest queued upload deadline; 1 for queued/sending frames, 0 when drained. */
+uint64_t ink_hub_drain_deadline(void);
 /* Enrollment service: reconnect after durable configuration/identity changes. */
 void ink_hub_reconnect(void);
 int ink_hub_pair_call(const char *method, const char *params);

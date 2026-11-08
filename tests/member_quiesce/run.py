@@ -55,7 +55,7 @@ hub.write_text(json.dumps({'rules': [
     {'method': 'ai.ask', 'think_ms': 100, 'result': {'done': True}},
 ]}))
 failed = []
-for mode in args.modes or ['data', 'alarm', 'reminder', 'cancel', 'events', 'publication', 'upload', 'queued', 'idle']:
+for mode in args.modes or ['data', 'alarm', 'reminder', 'cancel', 'events', 'publication', 'upload', 'queued', 'running', 'idle']:
     out = work / mode
     result = subprocess.run([str(binary), '--profile', str(ROOT / 'simulator/profiles/metalio-plus.json'),
                              '--assets', str(build / 'assets'), '--content', str(build / 'test-content'),

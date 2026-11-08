@@ -41,9 +41,15 @@ static bool submit(const char *id, const char *args) {
     return ink_cap_call(id, NULL, &opts) == 0;
 }
 static void count_start(ink_call_t *c) { (void)c; starts++; }
+static void held_start(ink_call_t *c) {
+    (void)c; blocked = true;
+    while (!unblock) delay_ms(1);
+    starts++;
+}
 static const ink_cap_t FIXTURES[] = {
     {.id="fixture.new", .run=count_start, .child_ok=true, .exec=INK_EXEC_DIRECT},
     {.id="fixture.queued", .run=count_start, .child_ok=true, .exec=INK_EXEC_MEDIA, .timeout_ms=80},
+    {.id="fixture.running", .run=held_start, .child_ok=true, .exec=INK_EXEC_DIRECT, .timeout_ms=80},
 };
 static void hold(void *arg) {
     (void)arg; blocked = true;
@@ -107,7 +113,7 @@ static void calls(const char *mode) {
     ink_probe_value("test.switch.inflight_ms", switch_us / 1000.0);
     if (notify) CHECK(event_count == 1, "private local event delivered exactly once before handoff");
     if (cancel) {
-        CHECK(receipt == INK_RC_REJECTED, "child cancellation retains child permissions");
+        CHECK(receipt == INK_RC_FAILED, "unauthorized child cancellation reports the provider's failure");
         CHECK(AI("alarm.list", NULL) && strstr(g_result, "SYNTH_PRIVATE"), "adult alarm remains");
     } else {
         CHECK(receipt == INK_RC_DONE, "completed original operation has an honest success receipt");
@@ -150,7 +156,8 @@ static void upload(void) {
     CHECK(WAIT_FOR(test_upload_waiting(), 3000), "real upload paused at socket send");
     begin_switch(); check_stopped("owner"); test_upload_release();
     CHECK(WAIT_FOR(switched, 10000) && switch_result == 0, "handoff waits for accepted upload");
-    CHECK(sim_metric_value("test.wire.asks.owner") == 1, "accepted private upload stays on original connection");
+    CHECK(WAIT_FOR(sim_metric_value("test.wire.asks.owner") == 1, 3000) &&
+        sim_metric_value("test.wire.asks.kid") == 0, "accepted private upload stays on original connection");
     ink_probe_value("test.switch.upload_ms", switch_us / 1000.0);
 }
 static void queued(void) {
@@ -163,14 +170,27 @@ static void queued(void) {
     CHECK(starts == 0, "cancelled queued provider never runs later");
     ink_probe_value("test.switch.timeout_ms", switch_us / 1000.0);
 }
+static void running(void) {
+    provider_id = "fixture.running"; provider_args = NULL; spawn(provider_task, "held-provider");
+    CHECK(WAIT_FOR(blocked, 1000), "synchronous provider is executing");
+    begin_switch();
+    CHECK(WAIT_FOR(switched, 5000) && switch_result == -3 && !strcmp(ink_member_current()->id, "owner"),
+        "uncancellable running provider cancels handoff and retains old identity");
+    CHECK(replied && receipt == INK_RC_CANCELLED, "running timeout is reported as cancellation");
+    unblock = true;
+    CHECK(WAIT_FOR(starts == 1, 1000), "old provider finishes in original space");
+    CHECK(ink_member_switch("kid") == 0, "handoff can be retried after provider exits");
+    ink_probe_value("test.switch.running_timeout_ms", switch_us / 1000.0);
+}
 static void run(void *arg) {
     (void)arg;
     CHECK(WAIT_FOR(ink_hub_online() && ink_cap_available("voice.chat"), 30000), "synthetic hub ready");
-    CHECK(ink_cap_register(FIXTURES, 2) == 0, "synthetic capabilities registered");
+    CHECK(ink_cap_register(FIXTURES, 3) == 0, "synthetic capabilities registered");
     const char *mode = getenv("INK_QUIESCE_MODE");
     if (!strcmp(mode, "publication")) publication();
     else if (!strcmp(mode, "upload")) upload();
     else if (!strcmp(mode, "queued")) queued();
+    else if (!strcmp(mode, "running")) running();
     else if (!strcmp(mode, "idle")) {
         uint64_t at = osal_now_us();
         CHECK(ink_member_switch("kid") == 0, "idle handoff succeeds");

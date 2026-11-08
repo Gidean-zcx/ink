@@ -196,6 +196,7 @@ typedef struct {
     char member[INK_MEMBER_ID_MAX]; /* ink_call_opts_t.member */
     uint32_t origin_epoch;
     uint8_t identity[32];
+    osal_task_t *runner;
 } pending_t;
 
 typedef struct {
@@ -222,6 +223,9 @@ static struct {
     osal_timer_t *timer;
     uint64_t timer_due;
     uint32_t boot_tag, next_rid;
+    osal_task_t *changing;
+    unsigned events;
+    bool sealed;
 } CB;
 
 static void activity_flush(void *arg);
@@ -355,12 +359,13 @@ int ink_cap_init(void) {
     return CB.lock && CB.pool && CB.seen && CB.dir && CB.timer && next_boot() ? 0 : -1;
 }
 
-static pending_t *claim(const char *rid, const char *member, const uint8_t identity[32],
+static pending_t *claim(const char *rid, const char *member, const uint8_t identity[32], uint32_t epoch,
                         ink_rc_t verdict, bool *repeat) {
     pending_t *p = NULL;
     *repeat = false;
     if (rid && !*rid) rid = NULL;
     osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+    if (CB.changing || epoch != ink_member_epoch()) { osal_mutex_unlock(CB.lock); return NULL; }
     for (int i = 0; i < POOL_N && !p; i++) if (!CB.pool[i].used) p = &CB.pool[i];
     if (p) {
         memset(p, 0, sizeof *p);
@@ -527,8 +532,8 @@ static void timeout_cb(void *arg) { /* timer task: answer the overdue, re-arm fo
         pending_t *p = &CB.pool[i];
         if (!p->used || !p->accepted || p->remote || p->replied) continue;
         if (p->deadline_us <= now) {
-            ink_receipt_t rc = {.status = INK_RC_FAILED};
-            snprintf(rc.detail, sizeof rc.detail, "%s", p->started ? "timed out, it may still finish" : "timed out before it started");
+            ink_receipt_t rc = {.status = CB.changing ? INK_RC_CANCELLED : INK_RC_FAILED};
+            snprintf(rc.detail, sizeof rc.detail, "%s", p->started ? "timed out, it may still finish" : CB.changing ? "cancelled before it started" : "timed out before it started");
             settle(p, &rc);
             due[n++] = p;
         } else if (!next || p->deadline_us < next) next = p->deadline_us;
@@ -556,6 +561,7 @@ static void start(void *arg) {
     if (expired) p->finished = true;
     else {
         p->started = true;
+        p->runner = osal_task_self();
         p->refs++; /* the provider may complete it from anywhere while run() is still on this stack */
     }
     if (expired) {
@@ -587,6 +593,7 @@ static void start(void *arg) {
     }
     osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
     p->refs--;
+    p->runner = NULL;
     bool later = ran && p->deferred; /* ink_cap_done or the deadline answers (ink_cap_done may have come already) */
     bool too_late = !later && !p->finished && p->replied, reply = !later && provider_done(p);
     unlock_retire(p);
@@ -628,7 +635,7 @@ static pending_t *prepare(const char *id, const ink_cap_t *c, const ink_args_t *
         osal_free(encoded);
     } else ink_sha256_update(&sum, json ? json : "{}", json ? strlen(json) : 2);
     ink_sha256_final(&sum, identity);
-    pending_t *p = claim(o->request_id, member, identity, verdict, repeat);
+    pending_t *p = claim(o->request_id, member, identity, origin_epoch, verdict, repeat);
     if (!p || *repeat) {
         osal_free(json);
         if (p) { /* the first receipt again, or "queued": told like any other */
@@ -884,6 +891,7 @@ int ink_cap_subscribe(const char *prefix, ink_event_fn fn, void *ctx, ink_exec_t
 static void event_job(void *arg) {
     event_job_t *e = arg;
     if (ink_member_exists(e->member)) e->fn(e->ctx, e->id, &e->payload);
+    osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER); CB.events--; osal_mutex_unlock(CB.lock);
     osal_free(e);
 }
 
@@ -898,6 +906,50 @@ static struct {
     ink_args_t args;
 } EV[EVENTS_KEPT] INK_PSRAM_BSS;
 static uint32_t ev_next, ev_sent, ev_acked; /* sequence numbers, under CB.lock */
+
+bool ink_cap_quiescing(void) { return __atomic_load_n(&CB.changing, __ATOMIC_ACQUIRE) != NULL; }
+void ink_cap_resume(void) {
+    if (!CB.lock) return;
+    osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+    if (CB.changing == osal_task_self()) { CB.sealed = false; __atomic_store_n(&CB.changing, NULL, __ATOMIC_RELEASE); }
+    osal_mutex_unlock(CB.lock);
+}
+bool ink_cap_quiesce(void) {
+    if (!CB.lock) return true; /* The initial member table precedes the bus. */
+    osal_task_t *self = osal_task_self();
+    osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+    if (CB.changing) { osal_mutex_unlock(CB.lock); return false; }
+    __atomic_store_n(&CB.changing, self, __ATOMIC_RELEASE);
+    osal_mutex_unlock(CB.lock);
+    uint64_t until = osal_now_us() + (uint64_t)timeout_ms(NULL) * 1000;
+    for (;;) {
+        uint64_t hub = ink_hub_drain_deadline(), now = osal_now_us();
+        if (hub > until) until = hub;
+        osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+        bool busy = CB.events != 0;
+        for (int i = 0; i < POOL_N; i++) {
+            pending_t *p = &CB.pool[i];
+            if (p->used && p->accepted && now >= p->deadline_us && (p->runner == self || !strcmp(p->id, "member.unlock") || !strcmp(p->id, "member.set_pin")))
+                { osal_mutex_unlock(CB.lock); ink_cap_resume(); return false; }
+            if (!p->used || p->runner == self || !strcmp(p->id, "member.unlock") || !strcmp(p->id, "member.set_pin")) continue;
+            if (p->deadline_us > until) until = p->deadline_us;
+            busy |= p->refs || !p->answered || (!p->finished && (p->started || !p->replied));
+        }
+        if ((now >= until || !ink_hub_online()) && ev_sent != ev_next) {
+            ink_probe_count("cap.events_cancelled"); ev_sent = ev_acked = ev_next;
+        }
+        busy |= ev_sent != ev_next || hub != 0;
+        if (!busy) busy = ink_hub_drain_deadline() != 0;
+        if (!busy) CB.sealed = true;
+        osal_mutex_unlock(CB.lock);
+        if (!busy) return true;
+        if (now >= until) { ink_cap_resume(); return false; }
+        for (int e = 0; e < INK_EXEC_COUNT; e++)
+            if (e != INK_EXEC_DIRECT && ink_exec_is_current((ink_exec_t)e)) ink_exec_run((ink_exec_t)e);
+        ink_hub_wake();
+        osal_task_delay_us(1000);
+    }
+}
 
 static void keep_event(const char *id, const ink_args_t *payload, const char *whose) {
     const ink_cap_t *c = ink_cap_find(id);
@@ -965,7 +1017,11 @@ static void send_events(void) { /* hub task */
 }
 
 void ink_cap_emit_for(const char *id, const ink_args_t *payload, const char *whose) {
-    if (!whose || !ink_member_exists(whose)) return;
+    if (!CB.lock || !whose || !ink_member_exists(whose)) return;
+    osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+    if (CB.sealed) { osal_mutex_unlock(CB.lock); ink_probe_count("cap.events_cancelled"); return; }
+    CB.events++;
+    osal_mutex_unlock(CB.lock);
     char key[64];
     snprintf(key, sizeof key, "event.%s", id);
     ink_probe_count(key);
@@ -987,11 +1043,14 @@ void ink_cap_emit_for(const char *id, const ink_args_t *payload, const char *who
         if (payload) e->payload = *payload;
         else ink_args_init(&e->payload);
         ink_args_str(&e->payload, "member", whose);
+        osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER); CB.events++; osal_mutex_unlock(CB.lock);
         if (ink_exec_post(SUBS[i].exec, &e->job, event_job, e) != 0) {
+            osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER); CB.events--; osal_mutex_unlock(CB.lock);
             ink_probe_count("event.dropped");
             osal_free(e);
         }
     }
+    osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER); CB.events--; osal_mutex_unlock(CB.lock);
 }
 
 void ink_cap_emit(const char *id, const ink_args_t *payload) {

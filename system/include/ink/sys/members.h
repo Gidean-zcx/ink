@@ -54,7 +54,7 @@ bool ink_member_removing(const char *id);
 /** Who there is. NULL past the last. */
 const ink_member_t *ink_member_at(int i);
 bool ink_member_has_pin(const char *id);
-/** Switch member. Returns 0, -1 (unknown member) or -2 (they have a PIN: it must be entered). */
+/** Switch member. 0, -1 (unknown), -2 (PIN needed), -3 (handoff cancelled: provider still busy). */
 int ink_member_switch(const char *id);
 /** Tests only: back to the first member without a PIN. */
 void ink_member_test_reset(void);

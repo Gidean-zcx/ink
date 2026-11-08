@@ -22,6 +22,7 @@
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/hub.h"
+#include "ink/sys/cap.h"
 #include "ink/sys/members.h"
 #include "ink/sys/layout.h"
 #include "ink/sys/state.h"
@@ -70,6 +71,7 @@ typedef struct {
     char member[INK_MEMBER_ID_MAX];
     ink_hub_reply_fn cb;
     void *ctx;
+    bool counted;
 } call_req_t; /* lives in PSRAM; only its pointer travels through the (internal-RAM) queue */
 
 typedef struct {
@@ -90,6 +92,7 @@ typedef struct {
     ink_hub_reply_fn cb;
     void *ctx;
     bool sent, used;
+    bool counted;
     uint32_t member_epoch;
     char member[INK_MEMBER_ID_MAX];
     uint32_t events_before; /* a reply acknowledges events sent ahead of this request on the same socket */
@@ -100,6 +103,8 @@ static struct {
     osal_queue_t *q;
     osal_task_t *task;
     osal_mutex_t *id_lock;
+    unsigned inflight;
+    uint64_t drain_until;
     hal_ws_t *ws;
     hal_link_type_t ws_link; /* hub task: the link it was made on */
     uint32_t ws_gen; /* hub task: the current connection's number (its callback's ctx) */
@@ -203,6 +208,7 @@ static void finish(pending_t *p, int status, const ink_json_t *msg, int tok) {
     char *params = p->params; /* the callback may make a new request, in this slot */
     p->params = NULL;
     ink_hub_reply_fn cb = p->cb;
+    bool counted = p->counted;
     void *ctx = p->ctx;
     if (p->sent_at && status == INK_HUB_OK) ink_probe_value("hub.request_ms", (double)(osal_now_us() - p->sent_at) / 1000.0);
     if (status != INK_HUB_OK) {
@@ -211,6 +217,7 @@ static void finish(pending_t *p, int status, const ink_json_t *msg, int tok) {
         ink_probe_count(key);
     }
     if (cb) cb(ctx, status, msg, tok);
+    if (counted) __atomic_sub_fetch(&H.inflight, 1, __ATOMIC_ACQ_REL);
     osal_free(params);
 }
 
@@ -256,6 +263,7 @@ static int send_request(pending_t *p) {
     int r = hal_ws_send(H.ws, false, buf, total, 2000000);
     osal_free(buf);
     if (r == 0) {
+        if (p->counted) { p->counted = false; __atomic_sub_fetch(&H.inflight, 1, __ATOMIC_ACQ_REL); }
         p->sent = true;
         p->events_before = H.events_sent;
         p->sent_at = osal_now_us();
@@ -490,7 +498,6 @@ static void drain_tx(bool online) {
             if (!(cls == INK_HUB_TX_BACKGROUND && paced) && (it = H.tx_head[cls])) {
                 H.tx_head[cls] = it->next;
                 if (!H.tx_head[cls]) H.tx_tail[cls] = NULL;
-                H.tx_bytes -= it->len;
                 break;
             }
         osal_mutex_unlock(H.tx_lock);
@@ -505,6 +512,7 @@ static void drain_tx(bool online) {
             if (it->event_seq) H.events_sent = it->event_seq;
             if (session && cls == INK_HUB_TX_BACKGROUND) H.bg_next = H.last_activity + BG_GAP_US;
         }
+        osal_mutex_lock(H.tx_lock, OSAL_WAIT_FOREVER); H.tx_bytes -= it->len; osal_mutex_unlock(H.tx_lock);
         release_tx(it);
     }
 }
@@ -533,6 +541,7 @@ static void accept_call(call_req_t *r, uint64_t now) {
     pending_t *p = slot_new();
     if (!p) {
         if (r->cb) r->cb(r->ctx, INK_HUB_ERR_NOMEM, NULL, -1);
+        if (r->counted) __atomic_sub_fetch(&H.inflight, 1, __ATOMIC_ACQ_REL);
         osal_free(r->params);
     } else {
         memset(p, 0, sizeof *p);
@@ -544,6 +553,7 @@ static void accept_call(call_req_t *r, uint64_t now) {
         memcpy(p->member, r->member, sizeof p->member);
         p->cb = r->cb;
         p->ctx = r->ctx;
+        p->counted = r->counted;
         p->used = true;
         H.last_activity = now;
         if (now >= p->deadline) finish(p, INK_HUB_ERR_OFFLINE, NULL, -1);
@@ -717,6 +727,10 @@ int ink_hub_call_for(const char *method, const char *params_json, int64_t timeou
     ink_member_identity_t identity;
     ink_member_identity(&identity);
     uint64_t deadline = osal_now_us() + (uint64_t)(timeout_us > 0 ? timeout_us : 20000000);
+    osal_mutex_lock(H.id_lock, OSAL_WAIT_FOREVER);
+    if (ink_cap_quiescing() || identity.epoch != ink_member_epoch()) { osal_mutex_unlock(H.id_lock); return INK_HUB_ERR_LOST; }
+    if (__atomic_add_fetch(&H.inflight, 1, __ATOMIC_ACQ_REL) == 1 || deadline > H.drain_until) H.drain_until = deadline;
+    osal_mutex_unlock(H.id_lock);
     const char *prev = osal_mem_tag("hub");
     call_req_t *r = osal_calloc(1, sizeof *r, OSAL_MEM_EXTERNAL);
     const char *pj = params_json ? params_json : "{}";
@@ -724,8 +738,10 @@ int ink_hub_call_for(const char *method, const char *params_json, int64_t timeou
     osal_mem_tag(prev);
     if (!r || !r->params) {
         if (r) osal_free(r);
+        __atomic_sub_fetch(&H.inflight, 1, __ATOMIC_ACQ_REL);
         return INK_HUB_ERR_NOMEM;
     }
+    r->counted = true;
     r->id = new_id();
     snprintf(r->method, sizeof r->method, "%s", method);
     r->deadline = deadline;
@@ -743,6 +759,17 @@ int ink_hub_call_for(const char *method, const char *params_json, int64_t timeou
     hub_msg_t m = {.type = HE_CALL, .req = r};
     osal_queue_send(H.q, &m, OSAL_WAIT_FOREVER);
     return (int)id;
+}
+
+uint64_t ink_hub_drain_deadline(void) {
+    if (!H.id_lock) return 0;
+    osal_mutex_lock(H.id_lock, OSAL_WAIT_FOREVER);
+    uint64_t until = __atomic_load_n(&H.inflight, __ATOMIC_ACQUIRE) ? H.drain_until : 0;
+    osal_mutex_unlock(H.id_lock);
+    osal_mutex_lock(H.tx_lock, OSAL_WAIT_FOREVER);
+    if (!until && H.tx_bytes) until = 1;
+    osal_mutex_unlock(H.tx_lock);
+    return until;
 }
 
 int ink_hub_call(const char *method, const char *params_json, int64_t timeout_us, ink_hub_reply_fn cb, void *ctx) {
@@ -811,7 +838,7 @@ static int enqueue_tx(bool binary, int cls, const void *data, size_t len, const 
     if (!connection) connection = ink_hub_connection();
     tx_item_t *it = NULL;
     osal_mutex_lock(H.tx_lock, OSAL_WAIT_FOREVER); /* reserve the budget first: producers race */
-    bool full = H.tx_bytes + len > TX_MAX_BYTES;
+    bool full = H.tx_bytes + len > TX_MAX_BYTES || (binary && ink_cap_quiescing());
     if (!full) {
         H.tx_bytes += len;
         if (binary && len <= TXP_PAYLOAD && H.tx_free) { /* a pooled item: no allocation per frame */
