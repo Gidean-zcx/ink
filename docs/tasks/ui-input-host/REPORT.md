@@ -8,12 +8,12 @@
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
 | R1 | 【实测】已修复 | 现有符号行补 `=`、`_`、`%`、`#`；实际查找可见键、切换模式并触摸，得到 `example.com/a_b?x=1%20#c`。单独撤掉修复后 5 项断言失败 | 定向命令；反向对照 |
-| R2 | 【实测】已修复 | `compose_line()` 按标签字体、字距和像素宽度调整窗口起点，为光标留宽；40 字符网址末尾 `?x=1` 和完整光标均在可见区。单独撤掉修复后 1 项断言失败 | 同上 |
+| R2 | 【实测】已修复 | `compose_line()` 为已绑定的短宿主按标签字体、字距和像素宽度调整窗口起点，为光标留宽；40 字符网址末尾 `?x=1` 和完整光标均在可见区。单独撤掉修复后 1 项断言失败 | 同上 |
 | 1 | 【实测】通过 | 搜索／网址的快照矩形与实际 LVGL 一致，字段不被遮挡，字母／符号切换保持键盘矩形；实际按键均在固定区域内 | 定向命令 |
 | 2 | 【实测】通过 | 焦点轮廓、光标可见；完成／HOME 后字段和相邻标题恢复原坐标；新增普通长度网址的光标可见性断言 | 同上 |
 | 3 | 【实测】通过 | 人工粘贴与 AI `text.insert` 的字段值、change／submit 事件相同；网址由真实触摸输入，不再直接注入键码 | 同上 |
 | 4 | 【实测】通过 | 换人后旧 insert／submit 拒绝，字段与事件无副作用；仅撤成员检查时 2 项断言失败 | 同上；反向对照 |
-| 5 | 本轮全量及内存检查进行中 | 本轮定向 251 项断言通过；累计产品改动保守计数 166 行，不超过 250 | 完整验证命令 |
+| 5 | 【实测】本机通过 | 普通及 ASan／UBSan 全量各 207/207、零跳过；两套 F2 均 251 项断言通过；累计产品改动保守计数 166 行，不超过 250 | 完整验证命令 |
 
 定向命令：
 
@@ -24,7 +24,7 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R
 
 ## 没做到的
 
-- 本轮全量和内存检查待结束；R1、R2 均已完成定向修复与反例。
+- 本轮 R1、R2 均已修复，无未处理的严重／高问题；五项本机验收均完成。
 - Linux／gcc、实机未运行；只接入任务要求的测试页面，未迁移既有业务页，未做长文／表单编辑页。
 
 ## 和设计不一致的
@@ -55,9 +55,10 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R
 
 ## 阶段证据与规模
 
-- 【实测】本轮定向构建与测试均退出 0，`test.pass=251`、无失败、`test.finished=1`、无警告；人工查看 `clean-url-symbols.png`、`clean-url-long-cursor.png`，四个符号、网址末尾和光标均可见。截图在 `build/test-out/ui-input-host/`，不提交。
+- 【实测】本轮定向构建与测试均退出 0，`test.pass=251`、无失败、`test.finished=1`、无警告，内部 RAM 总池最低余量 47,840 字节，原门槛 32,768 未改；人工查看 `clean-url-symbols.png`、`clean-url-long-cursor.png`，四个符号、网址末尾和光标均可见。截图在 `build/test-out/ui-input-host/`，不提交。
 - 【实现】本轮产品新增 12、删除 1，共 13 行：补键 2 行、裁窗 11 行。相对指定基线，产品新增 149、删除 11，连 CMake 6 行计入共 166，低于 250。累计超过 100 行来自原 F2 的字段身份、同源快照、固定键盘与位置恢复；仅包装 `ink_text_focus` 缺少这些验收项，不能替代。两项复查修复均未超过单问题默认 30 行。
 - 【实现】R-061：按键继续调用能力总线，文本编辑和成员校验复用文本服务；像素裁窗和字符位置映射集中在 UI 字段，不为页面或 AI 另建编辑入口。现有秘密字段规则与 AI 快照边界未变。
+- 【实测】首轮普通全量 206/207，`integration-text-main` 的两项旧断言失败：它要求非短宿主的长字段固定保留前 30 字符，且点击首字对应索引 12。将像素裁窗限定为 F2 已绑定的短宿主后，相关两项测试通过、普通全量重跑 207/207；没有修改这两项断言。旧长字段的像素裁窗仍未处理，属长文任务范围。
 
 ## 反向对照
 
@@ -83,5 +84,6 @@ taskpolicy -c utility cmake --build build-asan -j3
 UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
 ```
 
-- 本轮普通／ASan 全量运行中；日志分别为 `build/ui-input-host-fix-{build,ctest}.log` 和 `build-asan/ui-input-host-fix-{build,ctest}.log`。
-- 提交前待核对 `git diff --stat`、`git diff --check`、相对基线的规定隐私扫描与报告文件链接。
+- 【实测】两套构建均退出 0；普通全量退出 0，207/207、零失败、零跳过，110.01 秒；ASan／UBSan 全量退出 0，207/207、零失败、零跳过，192.96 秒。日志分别为 `build/ui-input-host-fix-{build,ctest}.log` 和 `build-asan/ui-input-host-fix-{build,ctest}.log`。包含确定性、分层、SDK 边界、F1 与旧文本集成测试；GUI 冒烟使用既有 SDL dummy，没有启动窗口版。
+- 【实测】两套 F2 均 `test.pass=251`、无失败、`test.finished=1`、无警告、无预算违规，内部 RAM 总池最低余量均为 47,840 字节。没有更改测试预算。
+- 【实测】`git diff --stat` 核对无夹带，本轮只改两个产品文件、F2 测试和本报告；F1、旧文本测试及资源门槛文件相对复查提交无差异。`git diff --check` 退出 0；报告链接有效。按总规则第 6 节对基线至 HEAD 的隐私扫描零匹配（grep 退出 1），包含工作区的同规则扫描也零匹配。

@@ -63,7 +63,7 @@ static void compose_line(field_t *f, const char *v, const char *c, char *line, s
     f->window = start > WINDOW_CHARS ? start - WINDOW_CHARS : 0;
     lv_obj_update_layout(f->obj);
     const char *cursor = char_at(v, start);
-    while (f->window < start) {
+    while (f->semantic && f->window < start) {
         const char *first = char_at(v, f->window);
         snprintf(line, cap, "%.*s%s|", (int)(cursor - first), first, start == end ? c : "");
         lv_point_t size;
