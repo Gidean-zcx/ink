@@ -206,7 +206,7 @@ static void run(void *arg) {
         durable(); state(token, "member_changed");
         token = hold("test.confirm");
         ink_exec_job_t switch_job = {0};
-        CHECK(ink_exec_post(INK_EXEC_BG, &switch_job, accept_and_switch, (void *)(uintptr_t)token) == 0, "queue accepted-member execution check");
+        CHECK(ink_exec_post(INK_EXEC_UI, &switch_job, accept_and_switch, (void *)(uintptr_t)token) == 0, "queue accepted-member execution check");
         CHECK(WAIT_FOR(!strcmp(ink_member_current()->id, "kid"), 10000), "accepted member changed");
         delay_ms(500); durable();
         CHECK(runs == 1, "old accepted member action has no side effect (%u)", runs);

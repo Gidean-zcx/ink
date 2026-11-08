@@ -27,17 +27,16 @@ if a.mutant:
     source = (ROOT / path).read_text()
     replacements = {
         'member': [
-            ('strcmp(h->member, ink_member_current()->id) || h->epoch != ink_member_epoch()', 'false', 2),
-            ('if (h->epoch != ink_member_epoch() || osal_now_us()', 'if (osal_now_us()', 1),
+            ('strcmp(h->member, ink_member_current()->id) || h->epoch != ink_member_epoch()', 'false', 1),
             ('.member = h->member', '.member = NULL', 1),
         ],
         'version': [('page_gen != ink_ui_content_version()', 'false', 1)],
-        'commit': [('journal(h->token, hub ? "accepted" : "running", NULL, NULL)', '1', 1)],
+        'commit': [('journal(h->token, hub ? "accepted" : "running", NULL, NULL, NULL)', '1', 1)],
         'ack': [('ink_confirm_ack(token[i], ver[i]);', '(void)token[i], (void)ver[i];', 1)],
         'sent': [('e->delivered && e->seq > ev_acked', 'e->seq > ev_acked', 1)],
         'receipt': [('rc->status == INK_RC_DONE || rc->status == INK_RC_UNDONE || rc->status == INK_RC_PARTIAL', 'rc->status == INK_RC_DONE', 1)],
         'expiry': [('expires <= 0 || osal_now_us() >= (uint64_t)expires', 'false', 1)],
-        'failure': [('changed(); confirmed_done(h, &rc); return;', 'changed(); osal_free(h); return;', 1)],
+        'failure': [('confirmed_done(h, &rc); return;', 'osal_free(h); return;', 1)],
     }[a.mutant]
     for old, new, count in replacements:
         assert source.count(old) == count, 'counterexample must remove the intended guards'

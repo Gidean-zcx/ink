@@ -1384,11 +1384,9 @@ typedef struct {
 
 static void tool_done(void *ctx, const ink_receipt_t *rc) { /* where the capability finished */
     tool_job_t *t = ctx;
-    if (t->confirm_token) ink_confirm_tracked_done(t->confirm_token, t->name, t->member, rc);
     if (!ink_hub_member_matches(t->member, t->epoch, t->connection)) {
         if (t->connection == ink_hub_connection()) ink_hub_respond_error(t->id, -32023, "stale_member");
-        osal_free(t);
-        return;
+        goto finished;
     }
     char key[48];
     snprintf(key, sizeof key, "tools.calls.%s", ink_rc_name(rc->status));
@@ -1403,6 +1401,8 @@ static void tool_done(void *ctx, const ink_receipt_t *rc) { /* where the capabil
         ink_hub_respond_for(t->id, out, t->member, t->epoch, t->connection);
     }
     osal_free(out);
+finished:
+    if (t->confirm_token) ink_confirm_result(t->confirm_token, t->name, "accepted", rc, t->member);
     osal_free(t);
 }
 
@@ -1414,6 +1414,16 @@ static void tool_run(void *arg) { /* UI task */
         if (t->connection == ink_hub_connection()) ink_hub_respond_error(t->id, -32023, "stale_member");
         osal_free(t);
         return;
+    }
+    if (ink_exec_is_current(INK_EXEC_BG)) {
+        ink_receipt_t rc = {0};
+        const ink_cap_t *c = ink_cap_find(t->name);
+        ink_call_opts_t o = {.member = t->member, .page_gen = t->page_gen, .request_id = t->rid[0] ? t->rid : NULL, .args_json = t->args};
+        if (gate(c, INK_SRC_AI, t->page_gen, t->asked, &rc) == INK_RC_DONE) {
+            t->confirm_token = ink_confirm_track(c, &o, &rc);
+            if (!t->confirm_token) { tool_done(t, &rc); return; }
+        }
+        ink_exec_post(INK_EXEC_UI, &t->job, tool_run, t); return;
     }
     if (t->list) { /* paged (architecture: progressive disclosure): caps.domains and caps.find say what there is */
         const char *prev = osal_mem_tag("tools");
@@ -1438,17 +1448,6 @@ static void tool_run(void *arg) { /* UI task */
         ink_hub_respond_error(t->id, -32603, "busy");
         osal_free(t);
     }
-}
-
-static void tool_commit(void *arg) { /* exec.bg: commit, then resume the original UI dispatch */
-    tool_job_t *t = arg; ink_receipt_t rc = {0};
-    const ink_cap_t *c = ink_cap_find(t->name);
-    ink_call_opts_t o = {.member = t->member, .page_gen = t->page_gen, .request_id = t->rid[0] ? t->rid : NULL, .args_json = t->args};
-    if (ink_hub_member_matches(t->member, t->epoch, t->connection) && gate(c, INK_SRC_AI, t->page_gen, t->asked, &rc) == INK_RC_DONE) {
-        t->confirm_token = ink_confirm_track(c, &o, &rc);
-        if (!t->confirm_token) { tool_done(t, &rc); return; }
-    }
-    if (ink_exec_post(INK_EXEC_UI, &t->job, tool_run, t) != 0) { rc.status = INK_RC_FAILED; tool_done(t, &rc); }
 }
 
 static void on_tools(void *ctx, int64_t id, const char *method, const ink_json_t *j, int params) { /* hub task */
@@ -1530,8 +1529,8 @@ static void on_tools(void *ctx, int64_t id, const char *method, const ink_json_t
         t->args[alen] = 0;
     }
     const ink_cap_t *c = list ? NULL : ink_cap_find(t->name);
-    bool commit = c && needs_activity(c, INK_SRC_AI) && confirm_for(c, INK_SRC_AI, t->asked) == INK_CONFIRM_NONE;
-    if (ink_exec_post(commit ? INK_EXEC_BG : INK_EXEC_UI, &t->job, commit ? tool_commit : tool_run, t) != 0) {
+    bool commit = c && ink_hub_member_matches(t->member, t->epoch, t->connection) && needs_activity(c, INK_SRC_AI) && confirm_for(c, INK_SRC_AI, t->asked) == INK_CONFIRM_NONE;
+    if (ink_exec_post(commit ? INK_EXEC_BG : INK_EXEC_UI, &t->job, tool_run, t) != 0) {
         ink_hub_respond_error(id, -32603, "busy");
         osal_free(t);
     } else ink_probe_count("tools.accepted");

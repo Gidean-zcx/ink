@@ -99,9 +99,17 @@ static void run(void *arg) {
     snprintf(meta, sizeof meta, "{\"member\":\"owner\",\"epoch\":%u}", ink_hub_member_epoch());
     send_call(meta);
     CHECK(WAIT_FOR(reply_is("\"status\":\"done\""), 2000) && runs == 1, "matching metadata invokes the atomic capability");
+    uint32_t handoff_connection = ink_hub_connection();
+    double cancelled = sim_metric_value("hub.member_events_cancelled");
     test_on_hub(test_cap_accept_handoff);
-    CHECK(WAIT_FOR(reply_is("\"id\":2000000000"), 2000) && reply_is("-32023") && runs == 1,
+    CHECK(WAIT_FOR(reply_is("\"id\":2000000000") || ink_hub_connection() != handoff_connection, 2000) && runs == 1,
           "validation-to-allocation handoff cannot rebind a delivered call");
+    if (ink_hub_connection() == handoff_connection)
+        CHECK(reply_is("\"id\":2000000000") && reply_is("-32023"), "same connection explicitly rejects stale delivery");
+    else
+        CHECK(sim_metric_value("hub.member_events_cancelled") > cancelled && !reply_is("\"id\":2000000000") &&
+              WAIT_FOR(ink_hub_member_matches("owner", ink_hub_member_epoch(), ink_hub_connection()), 2000),
+              "unacknowledged private result closes the old connection without replying on the new one");
     snprintf(meta, sizeof meta, "{\"member\":\"owner\",\"epoch\":%u,\"asked\":true,\"undo_ms\":3000}", ink_hub_member_epoch());
     send_named("message.send", meta);
     CHECK(WAIT_FOR(reply_is("-32021"), 2000) && sim_net_sms_sent() == 0, "unsupported automatic window never sends a message immediately");
