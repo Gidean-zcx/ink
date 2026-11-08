@@ -24,6 +24,27 @@ static bool confirmed(const char *id, const char *args) {
     return sscanf(g_rc.object, "confirm:%u", &token) == 1 && ink_confirm_decide(token, true, INK_SRC_TOUCH) == 0;
 }
 
+static void unrelated_long_path(void) {
+    char path[INK_FS_PATH_MAX];
+    snprintf(path, sizeof path, "/me/%058d/%054d.txt", 0, 0);
+    CHECK(strlen(path) == 121 && ink_fs_write_atomic(path, "SYNTH_PRIVATE", 13) == 0, "create valid long private path");
+    CHECK(find("/me", path, INK_FS_TEXT) != 0, "index long private path");
+    CHECK(ink_fs_write_atomic("/family/review/public.txt", "SYNTH_PUBLIC", 12) == 0, "create shared subtree fixture");
+    uint32_t shared = find("/family/review", "/family/review/public.txt", INK_FS_TEXT);
+    CHECK(shared != 0, "owner can query shared subtree");
+    CHECK(ink_member_switch("kid") == 0, "enter existing child space");
+    uint32_t cursor = 0; ink_fs_entry_t e; int r;
+    r = ink_fs_index("/family/review", INK_FS_TEXT, &cursor, &e);
+    CHECK(r == 1 && e.id == shared && !strcmp(e.path, "/family/review/public.txt"), "child can query unrelated shared subtree (r=%d)", r);
+    CHECK(ink_fs_index("/family/review", INK_FS_TEXT, &cursor, &e) == 0, "child shared pagination ends");
+    CHECK(ink_fs_write_atomic("/me/review/local.txt", "SYNTH_CHILD", 11) == 0, "create child subtree fixture");
+    cursor = 0;
+    r = ink_fs_index("/me/review", INK_FS_TEXT, &cursor, &e);
+    CHECK(r == 1 && !strcmp(e.path, "/me/review/local.txt"), "child can query own subtree despite unrelated long path (r=%d)", r);
+    CHECK(ink_fs_index("/me/review", INK_FS_TEXT, &cursor, &e) == 0, "child private pagination ends");
+    CHECK(ink_member_switch("owner") == 0, "return to owner after long-path regression");
+}
+
 static void create(void) {
     char path[INK_FS_PATH_MAX];
     for (size_t i = 0; i < sizeof names / sizeof names[0]; i++) {
@@ -59,9 +80,19 @@ static void create(void) {
     CHECK(ink_fs_write_atomic("/me/moved/renamed.PNG", "NEW_SYNTHETIC", 13) == 0, "recreate same name");
     proof[0] = find("/me/moved", "/me/moved/renamed.PNG", INK_FS_IMAGE);
     CHECK(proof[0] && proof[0] != first && ink_fs_lookup(first, &e) == INK_FS_ERR_NOT_FOUND, "deleted id never aliases recreated file");
-    int job = ink_fs_delete_start("/me/moved/nested"); ink_fs_job_status_t st;
-    CHECK(job > 0 && WAIT_FOR(ink_fs_job_status(job, &st) == 0 && st.state != INK_FS_JOB_RUNNING, 5000) && st.state == INK_FS_JOB_DONE, "indexed directory deletion uses existing executor");
+    const char *const deleted[] = {"/me/moved/nested/two.jpg", "/me/moved/second.md"};
+    for (size_t i = 0; i < sizeof deleted / sizeof deleted[0]; i++) {
+        uint32_t old = find("/me/moved", deleted[i], INK_FS_ANY);
+        CHECK(old != 0, "save id before background deletion: %s", deleted[i]);
+        int job = ink_fs_delete_start(i ? deleted[i] : "/me/moved/nested"); ink_fs_job_status_t st;
+        CHECK(job > 0 && WAIT_FOR(ink_fs_job_status(job, &st) == 0 && st.state != INK_FS_JOB_RUNNING, 5000) && st.state == INK_FS_JOB_DONE, "indexed background deletion completes: %s", deleted[i]);
+        CHECK(ink_fs_lookup(old, &e) == INK_FS_ERR_NOT_FOUND, "background deletion invalidates id: %s", deleted[i]);
+        CHECK(ink_fs_write_atomic(deleted[i], "NEW_SYNTHETIC", 13) == 0, "recreate background-deleted path: %s", deleted[i]);
+        uint32_t replacement = find("/me/moved", deleted[i], INK_FS_ANY);
+        CHECK(replacement && replacement != old && ink_fs_lookup(old, &e) == INK_FS_ERR_NOT_FOUND, "background-deleted id never aliases recreated file: %s", deleted[i]);
+    }
     CHECK(ink_fs_write_atomic("/me/index-proof.bin", proof, sizeof proof) == 0, "save synthetic ids for real reboot");
+    unrelated_long_path();
 }
 
 static void read_proof(void) {

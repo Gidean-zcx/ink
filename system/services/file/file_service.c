@@ -1510,6 +1510,7 @@ int fs_index_for(const file_context_t *c, const char *root, ink_fs_type_t type, 
         if (memcmp(e.card, card, 16)) { if (!root) r = INK_FS_ERR_CARD_CHANGED; else continue; }
         if (r) break;
         if (root && !strcmp(phys, "/content") && !strncmp(e.path, "/content/.", 10)) continue;
+        if (root && !index_under(e.path, phys)) continue;
         char own[PHYS_MAX]; snprintf(own, sizeof own, "/content/.m/%s", c->member);
         const char *suffix = e.path + 8, *prefix = "/family";
         if (index_under(e.path, own)) { suffix = e.path + strlen(own); prefix = "/me"; }
@@ -1517,7 +1518,7 @@ int fs_index_for(const file_context_t *c, const char *root, ink_fs_type_t type, 
         if (snprintf(out->path, sizeof out->path, "%s%s", prefix, suffix) >= (int)sizeof out->path) { r = INK_FS_ERR_PATH; break; }
         ink_fs_stat_t st;
         int access = fs_stat_for(c, out->path, &st);
-        if (access || (root && !index_under(e.path, phys))) { if (!root) { r = access; break; } continue; }
+        if (access) { if (!root) { r = access; break; } continue; }
         out->type = index_type(e.path);
         if (root && type != INK_FS_ANY && type != out->type) continue;
         out->id = rec.id; out->size = st.size; *cursor = rec.id;
