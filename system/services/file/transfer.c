@@ -27,6 +27,17 @@ static struct {
     ink_svc_deadline_t tick;
 } T INK_PSRAM_BSS;
 
+static const char *reason(int r) {
+    switch (r) {
+    case INK_FS_ERR_USB: return "U 盘模式已开启";
+    case INK_FS_ERR_NO_CARD: return "未插存储卡";
+    case INK_FS_ERR_NO_SPACE: return "存储空间不足";
+    case INK_FS_ERR_EXISTS: return "文件已存在";
+    case INK_FS_ERR_PATH: return "文件名不合法";
+    default: return "文件操作失败";
+    }
+}
+
 static void finish(const char *result) {
     hal_transfer_close(1);
     if (T.file) { ink_fs_close(T.file); T.file = NULL; }
@@ -100,10 +111,10 @@ static void headers(void) {
     if (r != INK_FS_ERR_NOT_FOUND) { reply(r == 0 ? 409 : 400, r == 0 ? "文件已存在" : "文件名不合法", false); return; }
     uint64_t free_bytes = 0, total;
     r = ink_fs_free(&free_bytes, &total);
-    if (r || T.left > free_bytes) { reply(507, r ? ink_fs_err_name(r) : "存储空间不足", false); return; }
+    if (r || T.left > free_bytes) { reply(507, r ? reason(r) : "存储空间不足", false); return; }
     snprintf(T.part, sizeof T.part, INBOX "%s.part", filename);
     r = fs_open_for(&T.actor, T.part, INK_FS_WRITE | INK_FS_CREATE | INK_FS_EXCL, &T.file);
-    if (r) { T.part[0] = 0; reply(409, ink_fs_err_name(r), false); }
+    if (r) { T.part[0] = 0; reply(409, reason(r), false); }
 }
 
 static void poll_upload(void *arg);
@@ -111,6 +122,7 @@ static void tick(void *arg) { (void)arg; ink_exec_post(INK_EXEC_BG, &T.job, poll
 static void poll_upload(void *arg) {
     (void)arg;
     if (!T.active) return;
+    uint64_t wait_us = 20000;
     hal_link_status_t link; hal_net_link_status(&link);
     if (osal_now_us() >= T.expires || (T.connected && osal_now_us() >= T.idle)) { finish("授权或接收已超时"); return; }
     if (T.epoch != ink_member_epoch() || !ink_member_space_open()) { finish("成员已变化"); return; }
@@ -128,9 +140,13 @@ static void poll_upload(void *arg) {
         } else if (n > 0) {
             T.idle = osal_now_us() + 10000000;
             if (!T.file) {
-                T.head[T.head_len++] = T.buf[0]; T.head[T.head_len] = 0;
-                if (T.head_len >= 4 && !strcmp(T.head + T.head_len - 4, "\r\n\r\n")) headers();
-                else if (T.head_len == sizeof T.head - 1) reply(400, "请求过长", false);
+                wait_us = 100;
+                if (!T.buf[0]) reply(400, "请求不合法", false);
+                else {
+                    T.head[T.head_len++] = T.buf[0]; T.head[T.head_len] = 0;
+                    if (T.head_len >= 4 && !strcmp(T.head + T.head_len - 4, "\r\n\r\n")) headers();
+                    else if (T.head_len == sizeof T.head - 1) reply(400, "请求过长", false);
+                }
             } else {
                 if ((uint64_t)n > T.left) { reply(400, "文件长度不符", false); return; }
                 int64_t written = ink_fs_write(T.file, T.buf, (size_t)n);
@@ -146,7 +162,7 @@ static void poll_upload(void *arg) {
             reply(r ? 500 : 201, r ? "文件保存失败" : "文件已收到", false);
         }
     }
-    if (T.active) ink_svc_at(&T.tick, osal_now_us() + (T.connected && !T.file ? 100 : 20000), tick, NULL);
+    if (T.active) ink_svc_at(&T.tick, osal_now_us() + wait_us, tick, NULL);
 }
 
 static void status(ink_call_t *c) {
@@ -174,7 +190,7 @@ static void start(ink_call_t *c) {
             }
         }
     }
-    if (r) { c->rc.status = INK_RC_FAILED; snprintf(c->rc.detail, sizeof c->rc.detail, "%s", r == INK_FS_ERR_BUSY ? "传输已开启、空间未解锁或无线网络不可用" : ink_fs_err_name(r)); }
+    if (r) { c->rc.status = INK_RC_FAILED; snprintf(c->rc.detail, sizeof c->rc.detail, "%s", r == INK_FS_ERR_BUSY ? "传输已开启、空间未解锁或无线网络不可用" : reason(r)); }
     else status(c);
 }
 static void stop(ink_call_t *c) { finish("传输已关闭"); status(c); }

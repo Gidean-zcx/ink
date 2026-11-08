@@ -7,13 +7,16 @@
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
 | 1 | 【实测】通过 | 外部 Python 进程通过真实 TCP/HTTP 上传 64 KiB 二进制文件，核对全部字节；固定落在 `/me/收件箱/`，索引与编号查询成功 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^integration-wireless-transfer$' --output-on-failure -j2` |
-| 2 | 【实测】通过 | 17 个客户端阶段、85 项设备检查：断开、两分钟授权过期、十秒接收超时、写前及写中空间不足、非法名称、错误授权码、重放、成员切换与儿童隔离；失败不留下目标或临时文件 | 同上；`work/wireless-transfer/focused.log` |
+| 2 | 【实测】通过 | 18 个客户端阶段、90 项设备检查：断开、两分钟授权过期、十秒接收超时、写前及写中空间不足、非法名称（含编码及原始 NUL）、错误授权码、重放、成员切换与儿童隔离；失败不留下目标或临时文件 | 同上；最终全量测试的 `build/Testing/Temporary/LastTest.log` |
 | 3 | 【实测】通过 | U 盘已开启时拒绝传输；授权等待期间即占用存储卡，U 盘返回忙；关闭传输后 U 盘恢复 | 同上 |
-| 4 | 进行中 | 【实现】能力已注册为 `transfer.start/stop/status`；首次 Werror 构建通过；全量测试、反向对照和内存检查待补 | `taskpolicy -c utility cmake --build build -j3` |
+| 4 | 部分通过，尚待内存检查 | 【实测】Werror 构建通过；全量 203 通过、3 跳过、1 失败（禁止修改的共享能力文档过期）；AI 能力清单及确定性测试通过。【实现】按新增行保守计数 305 行，含 CMake 测试注册行，低于 400 行 | `taskpolicy -c utility cmake --build build -j3`；`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`（退出 8）；`work/wireless-transfer/ctest-final.log` |
 
 ## 没做到的
 
-- 全量测试、反向对照和内存检查仍在执行。
+- ASan/UBSan 和反向对照仍在执行。
+- 普通全量不是全绿：`capability-table-doc` 需要重新生成共享能力文档，任务规则 §7 明确禁止本分支修改该文件。保留失败，不跳过检查；候选生成结果在忽略的 `build/wireless-capabilities.md`。
+- 3 项中枢测试（`hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e`）因既有锁定 Python 环境缺失而跳过，没有安装或更改依赖。
+- 本次仅在 macOS clang 上实测；未运行 Linux/gcc，没有触发远端 CI。
 - 模拟器仅监听本机环回地址；设备端 HAL、真实 Wi-Fi 与浏览器界面操作尚未实测。
 
 ## 和设计不一致的
@@ -22,11 +25,11 @@
 
 ## 改过的已有测试
 
-- 暂无。
+- `tests/integration/ai_surface.c`：在 `FOR_AI` 明确加入 `transfer.start`、`transfer.stop`、`transfer.status`，三项均无必填参数；这是新增能力的完整性预期，未删除或放宽任何断言。原测试先失败 3 项，补入后通过。
 
 ## 要用户定的
 
-- 暂无。
+- 暂无阻塞实现的选择。超时暂取授权 120 秒、接收无进展 10 秒；沿用共享定时器，没有新增配置项。
 
 ## 顺手发现
 

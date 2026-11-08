@@ -37,6 +37,7 @@ static const struct {
     {"data.delete", "collection,id"}, {"data.status", "collection"}, {"job.list", NULL}, {"job.cancel", "id"}, {"file.list", "path"}, {"file.stat", "path"}, {"file.read", "path"}, {"file.write", "path,text"},
     {"file.mkdir", "path"}, {"file.copy", "from,to"}, {"file.move", "from,to"}, {"file.delete", "path"}, {"file.free", NULL}, {"usb.status", NULL},
     {"file.index", "path"}, {"file.lookup", "id"},
+    {"transfer.start", NULL}, {"transfer.stop", NULL}, {"transfer.status", NULL},
     {"usb.mount", NULL}, {"usb.unmount", NULL}, {"time.now", NULL}, {"time.set", "utc_s"}, {"time.lunar", ""}, {"alarm.set", "hour,minute"},
     {"alarm.list", NULL}, {"alarm.cancel", "id"}, {"alarm.dismiss", ""}, {"alarm.snooze", ""}, {"reminder.add", "at,title"}, {"reminder.list", NULL},
     {"reminder.cancel", "id"}, {"notify.post", "title"}, {"notify.list", ""}, {"notify.read", ""}, {"notify.dismiss", "id"}, {"notify.clear", NULL},

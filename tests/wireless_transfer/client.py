@@ -11,6 +11,7 @@ import urllib.parse
 
 p = argparse.ArgumentParser()
 p.add_argument("--build", type=Path, required=True)
+p.add_argument("--sim", type=Path)
 a = p.parse_args()
 root = Path(__file__).resolve().parents[2]
 build = a.build.resolve()
@@ -37,7 +38,7 @@ with tempfile.TemporaryDirectory(prefix="wireless-", dir=build) as temp:
     out = Path(temp)
     script = out / "network.script"
     script.write_text("@0 net wifi\n@400s end\n")
-    command = [str(build / "sim-wireless-transfer"), "--profile", str(root / "simulator/profiles/metalio-plus.json"),
+    command = [str(a.sim.resolve() if a.sim else build / "sim-wireless-transfer"), "--profile", str(root / "simulator/profiles/metalio-plus.json"),
                "--assets", str(build / "assets"), "--content", str(build / "test-content"),
                "--out", str(out), "--script", str(script), "--realtime=20", "--quiet", "--no-random-outages"]
     saved = None
@@ -76,6 +77,15 @@ with tempfile.TemporaryDirectory(prefix="wireless-", dir=build) as temp:
                     assert request(session, encoded, pattern)[0] == 400
                 elif case == "wrong_code":
                     assert request(session, "wrong.txt", pattern, "000000")[0] == 403
+                elif case == "raw_nul":
+                    raw = socket.create_connection(("127.0.0.1", session["port"]), timeout=5)
+                    head = f"POST /upload HTTP/1.1\r\nX-Ink-Code: {session['code']}\r\nContent-Length: 16\r\nX-Ink-Name: "
+                    raw.sendall(head.encode() + b"bad\0.txt\r\n\r\n" + pattern)
+                    response = http.client.HTTPResponse(raw)
+                    response.begin()
+                    assert response.status == 400
+                    response.read()
+                    raw.close()
                 elif case == "disconnect":
                     saved = begin(session, "disconnect.txt", 1000)
                     saved.close()

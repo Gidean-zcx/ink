@@ -67,6 +67,9 @@ static void run(void *arg) {
     CHECK(BY_HAND("transfer.status", NULL) && strstr(g_result, "\"active\":true"), "wrong code does not grant write access");
     no_file("wrong.txt");
     CHECK(BY_HAND("transfer.stop", NULL) && inactive("关闭"), "explicit stop closes authorization");
+    start_transfer(); exchange("raw_nul");
+    no_file("bad");
+    CHECK(BY_HAND("transfer.stop", NULL) && inactive("关闭"), "malformed header did not create a file");
     start_transfer(); exchange("disconnect");
     CHECK(WAIT_FOR(inactive("中断"), 5000), "disconnect is reported"); no_file("disconnect.txt");
     sim_sd_set_free(3);
@@ -85,7 +88,7 @@ static void run(void *arg) {
     CHECK(inactive("超时"), "authorization expires without an upload");
     hw(HW_USB_ON, 0, 0);
     CHECK(ink_usb_disk_start() == 0, "enter USB mode");
-    CHECK(BY_HAND("transfer.start", NULL) && g_rc.status == INK_RC_FAILED && strstr(g_rc.detail, "lent"), "USB mode refuses wireless with its reason");
+    CHECK(BY_HAND("transfer.start", NULL) && g_rc.status == INK_RC_FAILED && strstr(g_rc.detail, "U 盘"), "USB mode refuses wireless with its reason");
     CHECK(ink_usb_disk_stop() == 0, "leave USB mode");
     start_transfer();
     CHECK(ink_usb_disk_start() == INK_FS_ERR_BUSY && !ink_usb_disk_active(), "wireless authorization refuses USB before any file opens");
