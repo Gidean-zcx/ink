@@ -24,7 +24,7 @@ static void exchange(const char *name) {
     CHECK(acknowledged, "external HTTP client acknowledged %s", name);
 }
 static void start_transfer(void) {
-    CHECK(BY_HAND("transfer.start", NULL) && g_rc.status == INK_RC_DONE && strstr(g_result, "\"active\":true"), "authorize transfer: %s / %s", g_rc.detail, g_result);
+    CHECK(BY_HAND("transfer.start", NULL) && g_rc.status == INK_RC_DONE && strstr(g_result, "\"active\":true"), "authorize transfer: %.80s / %.150s", g_rc.detail, g_result);
 }
 static bool inactive(const char *reason) {
     return BY_HAND("transfer.status", NULL) && strstr(g_result, "\"active\":false") && strstr(g_result, reason) && strstr(g_result, "\"code\":\"000000\"");

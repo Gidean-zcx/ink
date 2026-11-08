@@ -74,7 +74,7 @@ with tempfile.TemporaryDirectory(prefix="wireless-", dir=build) as temp:
                         raise AssertionError("used authorization accepted a replay")
                 elif case in names or case == "utf8":
                     encoded = "%FF.txt" if case == "utf8" else urllib.parse.quote(names[case], safe="")
-                    assert request(session, encoded, pattern)[0] == 400
+                    assert request(session, encoded, pattern * 4096)[0] == 400
                 elif case == "wrong_code":
                     assert request(session, "wrong.txt", pattern, "000000")[0] == 403
                 elif case == "raw_nul":

@@ -57,4 +57,4 @@ with tempfile.TemporaryDirectory(prefix="wireless-reverse-", dir=build) as direc
         # Compiler/link failures do not count as a negative runtime control.
         assert run.returncode != 0, f"removed guard was not detected: {name}"
         evidence = next((line.strip() for line in reversed(run.stderr.splitlines()) if line.strip()), "")
-        print(f"PASS: {name} rejected, client exit={run.returncode}: {evidence}", flush=True)
+        print(f"PASS: {name} rejected, client exit={run.returncode}: {evidence[:240]}", flush=True)
