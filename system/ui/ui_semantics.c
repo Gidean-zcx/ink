@@ -46,7 +46,7 @@ int ink_ui_semantics_snapshot(const ink_ui_page_spec_t *page, char *out, size_t 
     bool first = true;
     for (size_t i = 0; i < page->action_count; i++) {
         const ink_ui_action_spec_t *a = &page->actions[i];
-        if (!a->enabled || !ink_cap_available(a->capability)) continue;
+        if (!a->enabled || !ink_cap_ai_callable(ink_cap_find(a->capability))) continue;
         ink_jw_raw(&w, first ? "{\"id\":" : ",{\"id\":"); ink_jw_str(&w, a->id);
         first = false;
         ink_jw_raw(&w, ",\"label\":"); ink_jw_str(&w, a->label);

@@ -117,6 +117,8 @@ const ink_cap_t *ink_cap_find(const char *id);
 const ink_cap_t *ink_cap_at(int i);
 /** Registered and usable now (a page-bound capability only while its page is on top). */
 bool ink_cap_available(const char *id);
+/** Local capability is callable in the current member's AI directory; NULL is false. */
+bool ink_cap_ai_callable(const ink_cap_t *cap);
 
 /**
  * Invoke and wait (UI task). `args` may be NULL. `page_gen`, if not 0, is the content version the

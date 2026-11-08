@@ -40,7 +40,9 @@ static void save(ink_call_t *call) {
 /* A global capability makes the F1 version check decisive, independently of the bus's activity gate. */
 static const ink_cap_t CAPS[] = {
     {.id = "test.semantic_save", .title = "保存合成备忘", .child_ok = true, .effect = INK_FX_LOCAL_WRITE,
-     .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\"},\"revision\":{\"type\":\"integer\"}},\"required\":[\"id\",\"revision\"]}", .run = save}
+     .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\"},\"revision\":{\"type\":\"integer\"}},\"required\":[\"id\",\"revision\"]}", .run = save},
+    {.id = "test.semantic_adult", .title = "合成成人操作", .run = save},
+    {.id = "test.semantic_system", .title = "合成系统操作", .effect = INK_FX_SYSTEM, .child_ok = true, .run = save}
 };
 static void clicked(lv_event_t *event) {
     ink_receipt_t receipt;
@@ -70,6 +72,42 @@ static bool json_text(const ink_json_t *j, int obj, const char *key, const char 
     return ink_json_str(j, ink_json_find(j, obj, key), text, sizeof text) >= 0 && !strcmp(text, expected);
 }
 static void open_page(void) { ink_ui_push(&PAGE, NULL); }
+static void policy_snapshot(void) {
+    static const ink_ui_action_spec_t bindings[] = {
+        {.id = "owner", .label = "本人确认", .capability = "confirm.accept", .args_json = "{\"token\":42}", .enabled = true},
+        {.id = "event", .label = "确认事件", .capability = "confirm.result", .enabled = true},
+        {.id = "adult", .label = "成人操作", .capability = "test.semantic_adult", .enabled = true},
+        {.id = "system", .label = "系统操作", .capability = "test.semantic_system", .enabled = true},
+        {.id = "allowed", .label = "允许操作", .capability = "test.semantic_save", .enabled = true}
+    };
+    bool adult = ink_member_current()->role == INK_ROLE_ADULT;
+    bool expected[] = {false, false, adult, adult, true};
+    ink_ui_page_spec_t page = model;
+    page.actions = bindings; page.action_count = sizeof bindings / sizeof *bindings;
+    char *directory = osal_malloc(16384, OSAL_MEM_EXTERNAL);
+    CHECK(directory && ink_cap_ids_json(directory, 16384) > 0 &&
+          ink_ui_semantics_snapshot(&page, previous, sizeof previous) > 0, "policy directory and semantic snapshot are complete");
+    if (!directory) return;
+    for (size_t i = 0; i < page.action_count; i++) {
+        CHECK((strstr(directory, bindings[i].capability) != NULL) == expected[i],
+              "the AI directory applies member policy to %s", bindings[i].capability);
+        CHECK((strstr(previous, bindings[i].capability) != NULL) == expected[i] &&
+              (strstr(previous, bindings[i].label) != NULL) == expected[i],
+              "the semantic snapshot applies the same policy to %s", bindings[i].capability);
+    }
+    CHECK(!strstr(previous, "token"), "a hidden owner-only action does not leak its bound arguments");
+    ink_receipt_t receipt;
+    ink_ui_action_target_t now = {ink_ui_content_version(), model.object};
+    int before = effects;
+    CHECK(ink_ui_semantics_action(&page, "owner", &now, INK_SRC_AI, &receipt) == INK_RC_INVALID &&
+          ink_ui_semantics_action(&page, "event", &now, INK_SRC_AI, &receipt) == INK_RC_INVALID,
+          "AI still cannot invoke owner-only actions or events");
+    if (!adult) CHECK(ink_ui_semantics_action(&page, "adult", &now, INK_SRC_AI, &receipt) == INK_RC_REJECTED &&
+                      ink_ui_semantics_action(&page, "system", &now, INK_SRC_AI, &receipt) == INK_RC_REJECTED,
+                      "the child's AI cannot invoke adult or system actions");
+    CHECK(effects == before, "hidden actions have no side effects");
+    osal_free(directory);
+}
 static void inspect(void) {
     const char *name = NULL;
     CHECK(ink_ui_snapshot(snapshot, sizeof snapshot, &name) > 0 && name && !strcmp(name, model.id), "the real activity exports the semantic snapshot");
@@ -123,7 +161,6 @@ static void actions_test(void) {
     CHECK(ink_ui_semantics_action(&model, "save", &target, INK_SRC_AI, &receipt) == INK_RC_DONE && effects == 3, "a current target succeeds after the version changes");
     ink_ui_home();
     CHECK(ink_ui_semantics_action(&model, "save", &target, INK_SRC_AI, &receipt) == INK_RC_STALE && effects == 3, "a closed page cannot act through its old binding");
-    ink_probe_count("test.finished");
 }
 static void button_position(void) {
     lv_obj_update_layout(button);
@@ -138,9 +175,14 @@ static void run(void *arg) {
     CHECK(WAIT_FOR(settled(), 10000), "home settles");
     on_ui(open_page);
     CHECK(WAIT_FOR(settled(), 10000), "the C page settles");
-    on_ui(inspect); on_ui(button_position);
+    on_ui(inspect); on_ui(policy_snapshot); on_ui(button_position);
     tap(g_btn_x[0], g_btn_y[0]);
     on_ui(actions_test);
+    CHECK(ink_member_switch("kid") == 0, "switch to the real child space for snapshot policy");
+    on_ui(open_page);
+    CHECK(WAIT_FOR(settled(), 10000), "the child's C page settles");
+    on_ui(policy_snapshot);
+    ink_probe_count("test.finished");
 }
 void ink_main(void) {
     product_main();

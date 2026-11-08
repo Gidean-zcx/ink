@@ -76,3 +76,13 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-as
 - 【实测】普通全量退出 0，206/206，零失败、零跳过；耗时 109.48 秒，本地日志 `build/ui-semantics-ctest.log`。包含确定性、分层与 SDK 边界检查；GUI 冒烟测试使用 SDL dummy，无窗口。
 - 【实测】ASan／UBSan 构建退出 0，全量退出 0，206/206，零失败、零跳过；耗时 216.59 秒，本地日志 `build-asan/ui-semantics-ctest.log`。两套配置均为 `INK_WERROR=ON`；F1 均为 29 项断言通过、`test.finished=1`，内部 RAM 最低余量 47,840 字节（原阈值 32,768）。
 - 【实测】基线至当前提交的 `git diff --stat` 仅有 7 个任务相关文件；`git diff --check` 退出 0。按总规则第 6 节原样运行隐私扫描，零匹配（grep 退出 1）。
+
+## 复查后的修复
+
+2026-11-09，接续提交 `3e503e74`。复查仅有 US-R1-001（中）尚未修复，严重、高、低均无待修项。
+
+- US-R1-001【实测】：已修。公开 `ink_cap_ai_callable()`，只组合既有 `listed()` 和事件排除；语义快照、完整能力目录、分页目录和编号目录共用这一判断。原调用策略、成员模块及 AI 服务未改。
+- 回归【实测】：在真实成人／儿童空间分别检查 `confirm.accept`、`confirm.result`、儿童非白名单能力、系统能力和允许能力，并校验隐藏动作的参数未导出、执行仍被拒、没有副作用。原实现 52 项通过、8 项失败、`finished=1`，定向 CTest 退出 8；修复后 60 项通过、零失败，退出 0。日志为 `build/ui-semantics-review-red.log`、`build/ui-semantics-review-red-metrics.json`、`build/ui-semantics-review-green.log`。
+- 历史跳过原因【实测】：默认构建 Python 缺 `pytest`、`pytest-asyncio`、`aiohttp`、`PyYAML`，会使 `hub-contract`、`hub-simulator-e2e` 跳过，并使依赖消息样本的 `hub-json-crosscheck` 跳过。本轮使用已有 `INK_HUB_PYTHON`；四项版本为 8.4.2、1.2.0、3.12.15、6.0.3，与 `hub/uv.lock` 一致，确认导入本检出的 `hub/ink_hub`，未安装或升级依赖。
+- 规模【实测】：本轮产品代码 8 行新增、4 行删除；相对 F1 原始基线保守计 165 行（新增与删除均计入，含 CMake 接线），低于 300 行。没有新增任务、状态机、缓存、格式或配置项；仅提取现有判断，未改已有测试期望与预算，完成标记移至新增儿童检查之后。
+- 本轮全量测试、ASan／UBSan、预算与隐私检查：待运行。此前验收结果保留为历史证据，不代替本轮验证。
