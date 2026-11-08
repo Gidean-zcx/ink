@@ -2,20 +2,21 @@
 
 日期：2026-11-08。基线：`3e503e74daa9c8003bcd788073fe00e74c0def04`。
 范围：应用框架 F2，短字段输入宿主；产品代码预算 250 行。
+实现见[字段宿主](../../../system/ui/textfield.c)、[公开接口](../../../system/include/ink/sys/textfield.h)、[测试页面](../../../tests/ui_input_host.c)。
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 【实测】定向通过 | 搜索／网址的 JSON 快照矩形与实际 LVGL 矩形一致，字段不被键盘遮住，符号切换位置不变；生成无窗口 PNG | `ctest --test-dir build -R '^ui-input-host$' --output-on-failure -j2` |
-| 2 | 【实测】定向通过 | 快照标出字段与焦点，实际显示黑色焦点轮廓和光标；完成、HOME 收起后字段和相邻内容坐标逐项相同 | 同上 |
-| 3 | 【实测】定向通过 | 人在系统键盘粘贴与 AI `text.insert`，字段值、`VALUE_CHANGED` 与提交回调记录完全相同；触摸和 AI 聚焦走同一声明能力 | 同上 |
+| 1 | 【实测】通过 | 搜索／网址的 JSON 快照矩形与实际 LVGL 矩形一致，字段不被键盘遮住，符号切换位置不变；生成无窗口 PNG | `ctest --test-dir build -R '^ui-input-host$' --output-on-failure -j2` |
+| 2 | 【实测】通过 | 快照标出字段与焦点，实际显示黑色焦点轮廓和光标；完成、HOME 收起后字段和相邻内容坐标逐项相同 | 同上 |
+| 3 | 【实测】通过 | 人在系统键盘粘贴与 AI `text.insert`，字段值、`VALUE_CHANGED` 与提交回调记录完全相同；触摸和 AI 聚焦走同一声明能力 | 同上 |
 | 4 | 【实测】通过，反向失败符合预期 | 换人后旧 `text.insert`／`text.submit` 均返回 stale，值及事件计数不变；移除成员检查时 2 项断言失败，CTest 退出 8 | 同上；见反向对照 |
-| 5 | 【实测】普通全量通过，内存检查进行中 | 普通全量 207/207，零跳过；保守产品改动 153 行，不超过 250 | 见完整验证命令 |
+| 5 | 【实测】本机通过 | 普通及 ASan／UBSan 全量各 207/207，零跳过；保守产品改动 153 行，不超过 250 | 见完整验证命令 |
 
 ## 没做到的
 
-- 定向 184 项断言及普通全量通过，反向对照有效；ASan／UBSan 检查进行中。
+- 五项本机验收全部完成；只接入任务要求的测试页面，未迁移已有系统页面。
 - Linux／gcc 未运行，不能以本机 macOS／clang 结果代替。
 - 按任务边界不做长文、表单编辑页和实机验证。
 
@@ -57,7 +58,7 @@
 ## 反向对照
 
 - 【实测】临时去掉 `system/services/text/text_caps.c` 中 `target_ok()` 的 `ink_text_session_current()` 拒绝分支；不改测试，仅构建 `sim-ui-input-host` 并执行验收表的定向命令。构建退出 0，CTest 退出 8；旧会话写入被接受，且字段／事件被改变，2 项断言失败，`test.finished=1`。本地证据：`build/ui-input-host-negative-test.log`、`build/ui-input-host-negative-metrics.json`。
-- 【实测】实验结束后恢复源码，`git diff --exit-code -- system/services/text/text_caps.c` 退出 0；最终构建会重新编译恢复后的检查。
+- 【实测】实验结束后恢复源码，`git diff --exit-code -- system/services/text/text_caps.c` 退出 0；最终两套构建都重新编译了恢复后的检查。
 - 【实现】成员检查已由现有文本服务提供，本任务复用并补反例，没有再加一套输入会话状态机。
 
 ## 完整验证命令
@@ -79,4 +80,6 @@ UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/
 ```
 
 - 【实测】普通构建退出 0；全量日志 `build/ui-input-host-ctest.log`。F2 为 184 项断言通过，内部 RAM 最低余量 47,840 字节，无警告。
+- 【实测】ASan／UBSan 配置、构建及全量均退出 0，207/207、零失败、零跳过，220.07 秒；日志 `build-asan/ui-input-host-ctest.log`。F2 同为 184 项断言通过，内部 RAM 最低余量 47,840 字节，无警告。两套全量都包含确定性、分层、SDK 边界和 F1；GUI 冒烟由既有测试以 SDL dummy 运行，没有启动窗口版。
+- 【实测】人工查看生成的搜索／网址 PNG，焦点轮廓、光标和键盘均可见；截图保留在各构建目录的 `test-out/ui-input-host/`，不提交构建产物。
 - 【实测】基线至当前提交的 `git diff --stat` 只有本任务相关文件及初始任务书；F1 源码、接口与测试相对基线无差异，`git diff --check` 退出 0。按总规则第 6 节原样运行隐私扫描，零匹配（grep 退出 1）。
