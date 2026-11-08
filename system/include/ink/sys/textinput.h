@@ -16,7 +16,7 @@
 extern "C" {
 #endif
 
-typedef enum { INK_TEXT_PLAIN = 0, INK_TEXT_NUMBER, INK_TEXT_PHONE, INK_TEXT_PASSWORD } ink_text_type_t;
+typedef enum { INK_TEXT_PLAIN = 0, INK_TEXT_NUMBER, INK_TEXT_PHONE, INK_TEXT_PASSWORD, INK_TEXT_URL } ink_text_type_t;
 typedef enum { INK_ENTER_DONE = 0, INK_ENTER_SEND, INK_ENTER_SEARCH, INK_ENTER_NEXT } ink_text_enter_t;
 
 typedef struct {

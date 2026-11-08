@@ -6,8 +6,11 @@
 #include "ink/osal.h"
 #include "ink/sys/ai.h"
 #include "ink/sys/font.h"
+#include "ink/sys/json.h"
+#include "ink/sys/members.h"
 #include "ink/sys/textfield.h"
 #include "ink/ui_theme.h"
+#include "ink/ui_shell.h"
 
 typedef struct {
     lv_obj_t *obj, *label, *menu;
@@ -21,6 +24,11 @@ typedef struct {
     size_t displayed;
     void (*entered)(void *ctx, const char *value);
     void *ctx;
+    const ink_ui_page_spec_t *page;
+    ink_ui_field_spec_t *semantic;
+    const ink_ui_action_spec_t *focus_action;
+    uint32_t owner_epoch;
+    int32_t home_x, home_y;
 } field_t;
 
 #define WINDOW_CHARS 30
@@ -59,7 +67,7 @@ static void compose_line(field_t *f, const char *v, const char *c, char *line, s
     for (;;) {
         if (at == start && start != end) line_piece(f, line, cap, &bytes, "[", 1, at, at);
         if (at == end && start != end) line_piece(f, line, cap, &bytes, "]", 1, at, at);
-        if (start == end && at == end && (*p || *c)) {
+        if (start == end && at == end && (*p || *c || f->semantic)) {
             for (const char *q = c; *q;) {
                 const char *next = char_at(q, 1);
                 line_piece(f, line, cap, &bytes, q, (size_t)(next - q), at, at); q = next;
@@ -84,10 +92,14 @@ static void show(field_t *f) {
         if (n >= sizeof line) n = sizeof line - 1;
         memset(line, '*', n);
         line[n] = 0;
-    } else if (!v[0] && !c[0]) snprintf(line, sizeof line, "%s", f->hint);
+    } else if (!v[0] && !c[0] && (!f->semantic || !f->session)) snprintf(line, sizeof line, "%s", f->hint);
     else if (f->session) compose_line(f, v, c, line, sizeof line);
     else snprintf(line, sizeof line, "%s%s", v, c);
     lv_label_set_text(f->label, line);
+    if (f->semantic) {
+        if (f->session) lv_obj_add_state(f->obj, LV_STATE_FOCUSED);
+        else lv_obj_remove_state(f->obj, LV_STATE_FOCUSED);
+    }
     ink_ui_hint_obj(f->obj, INK_REFRESH_FAST);
 }
 
@@ -99,30 +111,61 @@ static void cl_changed(void *ctx) {
     field_t *f = ctx;
     remember(f);
     show(f);
+    if (f->semantic) {
+        ink_ui_content_changed();
+        lv_obj_send_event(f->obj, LV_EVENT_VALUE_CHANGED, NULL);
+    }
 }
 
 static void cl_entered(void *ctx, const char *value) {
     field_t *f = ctx;
     remember(f);
+    if (f->semantic) { ink_text_blur(f->session); value = f->text; }
     if (f->entered) f->entered(f->ctx, value);
 }
 
 static void cl_ended(void *ctx) {
     field_t *f = ctx;
+    if (f->semantic && f->session) {
+        lv_obj_set_pos(f->obj, f->home_x, f->home_y);
+        ink_ui_content_changed();
+    }
     f->session = 0;
     show(f);
 }
 
 static const ink_text_client_t CLIENT = {cl_changed, cl_entered, cl_ended};
 
-static void focus(field_t *f) {
-    if (f->session) return;
+static bool short_current(field_t *f) {
+    return ink_ui_page_current() && f->owner_epoch == ink_member_epoch() &&
+           lv_obj_get_screen(f->obj) == lv_screen_active() && !strcmp(f->page->id, ink_ui_page_name());
+}
+
+static bool focus(field_t *f) {
+    if (f->semantic && !short_current(f)) return false;
+    if (f->session) return true;
+    if (f->semantic) {
+        lv_area_t field, keyboard;
+        lv_obj_update_layout(f->obj);
+        lv_obj_get_coords(f->obj, &field);
+        ink_shell_keyboard_area(&keyboard);
+        int top = keyboard.y1 - ink_ui_px(INK_GAP) - lv_area_get_height(&field);
+        lv_area_t parent; lv_obj_get_content_coords(lv_obj_get_parent(f->obj), &parent);
+        if (top < parent.y1 || field.x1 < 0 || field.x2 > keyboard.x2) return false;
+        f->home_x = lv_obj_get_x(f->obj); f->home_y = lv_obj_get_y(f->obj);
+        if (field.y1 > top) lv_obj_set_y(f->obj, f->home_y + top - field.y1);
+    }
     ink_text_cfg_t c = f->cfg;
     c.initial = f->text;
     c.hint = f->hint;
     f->session = ink_text_focus(&c, &CLIENT, f);
     if (f->session < 0) f->session = 0;
+    if (f->semantic) {
+        if (!f->session) lv_obj_set_pos(f->obj, f->home_x, f->home_y);
+        else ink_ui_content_changed();
+    }
     show(f);
+    return f->session != 0;
 }
 
 static void close_menu(field_t *f) {
@@ -180,8 +223,7 @@ static void on_paste(lv_event_t *e) {
     char *clip = osal_malloc(INK_CLIP_MAX + 1, OSAL_MEM_EXTERNAL);
     close_menu(f);
     if (!clip) return;
-    focus(f);
-    if (ink_clip_get(clip, INK_CLIP_MAX + 1, 0, NULL) > 0) ink_text_commit_utf8(clip);
+    if (focus(f) && ink_clip_get(clip, INK_CLIP_MAX + 1, 0, NULL) > 0) ink_text_commit_utf8(clip);
     osal_free(clip);
 }
 
@@ -208,7 +250,12 @@ static void field_event(lv_event_t *e) {
     if (code == LV_EVENT_SHORT_CLICKED) { /* a plain click also comes after a long press */
         close_menu(f);
         if (f->session) ink_text_set_cursor(place_of(f, e)); /* the first tap is to start typing */
-        focus(f);
+        if (f->semantic) {
+            const ink_ui_object_ref_t *object = f->focus_action->object.id ? &f->focus_action->object : &f->page->object;
+            ink_ui_action_target_t target = {ink_ui_content_version(), *object};
+            ink_receipt_t rc;
+            ink_ui_semantics_action(f->page, f->focus_action->id, &target, INK_SRC_TOUCH, &rc);
+        } else focus(f);
     } else if (code == LV_EVENT_LONG_PRESSED) {
         close_menu(f);
         if (f->session && f->cfg.type != INK_TEXT_PASSWORD) ink_text_select_word(place_of(f, e));
@@ -231,6 +278,7 @@ static void field_event(lv_event_t *e) {
     } else if (code == LV_EVENT_DELETE) {
         close_menu(f);
         if (f->session) ink_text_blur(f->session);
+        if (f->semantic && f->semantic->value == f->text) f->semantic->value = NULL;
         if (f->cfg.type == INK_TEXT_PASSWORD) memset(f->text, 0, f->cap + 1);
         osal_free(f->text);
         osal_free(f);
@@ -290,4 +338,48 @@ lv_obj_t *ink_textfield_create(lv_obj_t *parent, const ink_text_cfg_t *cfg, void
 const char *ink_textfield_text(lv_obj_t *field) {
     field_t *f = lv_obj_get_user_data(field);
     return f ? f->text : "";
+}
+
+int ink_textfield_bind_short(lv_obj_t *field, const ink_ui_page_spec_t *page,
+                             ink_ui_field_spec_t *spec, const ink_ui_action_spec_t *focus_action) {
+    field_t *f = lv_obj_get_user_data(field);
+    if (!f || f->session || !page || !spec || !focus_action || spec->secret || f->cfg.ai_hidden ||
+        (f->cfg.type != INK_TEXT_PLAIN && f->cfg.type != INK_TEXT_URL)) return -1;
+    f->page = page; f->semantic = spec; f->focus_action = focus_action;
+    f->owner_epoch = ink_member_epoch();
+    spec->value = f->text;
+    lv_obj_set_style_border_width(field, ink_ui_px(2 * INK_STROKE), LV_STATE_FOCUSED);
+    show(f);
+    return 0;
+}
+
+int ink_textfield_short_focus(lv_obj_t *field) {
+    field_t *f = lv_obj_get_user_data(field);
+    return f && f->semantic && focus(f) ? 0 : -1;
+}
+
+static void rect_json(ink_jw_t *w, const lv_area_t *area) {
+    ink_jw_raw(w, "{\"x\":"); ink_jw_int(w, area->x1);
+    ink_jw_raw(w, ",\"y\":"); ink_jw_int(w, area->y1);
+    ink_jw_raw(w, ",\"width\":"); ink_jw_int(w, lv_area_get_width(area));
+    ink_jw_raw(w, ",\"height\":"); ink_jw_int(w, lv_area_get_height(area)); ink_jw_raw(w, "}");
+}
+
+int ink_textfield_short_snapshot(lv_obj_t *field, char *out, size_t cap) {
+    if (!out || !cap) return -1;
+    out[0] = 0;
+    field_t *f = lv_obj_get_user_data(field);
+    if (!f || !f->semantic || !short_current(f)) return -1;
+    ink_jw_t w; ink_jw_init(&w, out, cap);
+    int n = ink_ui_semantics_snapshot(f->page, out, cap);
+    if (n < 1) return -1;
+    w.len = (size_t)n - 1;
+    lv_area_t area, keyboard;
+    lv_obj_update_layout(field); lv_obj_get_coords(field, &area);
+    ink_shell_keyboard_area(&keyboard);
+    ink_jw_raw(&w, ",\"input\":{\"field\":"); ink_jw_str(&w, f->semantic->id);
+    ink_jw_raw(&w, f->session ? ",\"focused\":true,\"rect\":" : ",\"focused\":false,\"rect\":"); rect_json(&w, &area);
+    ink_jw_raw(&w, ",\"keyboard_rect\":"); rect_json(&w, &keyboard); ink_jw_raw(&w, "}}");
+    if (w.overflow) { out[0] = 0; return -1; }
+    return (int)w.len;
 }

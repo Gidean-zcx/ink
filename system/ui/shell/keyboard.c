@@ -33,6 +33,13 @@ static const lv_font_t *font(void) { return ink_ui_font_px(INK_FONT_LIST, INK_WE
 
 static void sync(void);
 
+void ink_shell_keyboard_area(lv_area_t *area) {
+    int height = ink_ui_px(ink_ui_line_height(INK_FONT_LIST) + INK_CONTROL + 4 * INK_KEY +
+                           5 * INK_GAP_XS + 2 * INK_GAP_S + 2 * INK_STROKE);
+    *area = (lv_area_t){0, lv_display_get_vertical_resolution(NULL) - height,
+                       lv_display_get_horizontal_resolution(NULL) - 1, lv_display_get_vertical_resolution(NULL) - 1};
+}
+
 static bool may_edit(ink_call_t *c) {
     if (!ink_text_focused() || ((c->src != INK_SRC_TOUCH && c->src != INK_SRC_KEY) &&
         (ink_text_type() == INK_TEXT_PASSWORD || ink_text_ai_hidden()))) {
@@ -192,7 +199,9 @@ static void build(int kind) {
     K.root = lv_obj_create(lv_layer_sys());
     lv_obj_remove_style_all(K.root);
     lv_obj_remove_flag(K.root, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_set_size(K.root, LV_PCT(100), LV_SIZE_CONTENT);
+    lv_area_t area;
+    ink_shell_keyboard_area(&area);
+    lv_obj_set_size(K.root, LV_PCT(100), lv_area_get_height(&area));
     lv_obj_align(K.root, LV_ALIGN_BOTTOM_MID, 0, 0);
     lv_obj_set_style_bg_color(K.root, lv_color_white(), 0);
     lv_obj_set_style_bg_opa(K.root, LV_OPA_COVER, 0);
