@@ -29,10 +29,20 @@ static short black[PH][PW], white[PH][PW]; /* pushes of the last change */
         }                                                                                                              \
     } while (0)
 
+/* everything one setup() allocates, freed by the next one and at the end: CI runs the leak checker */
+static void *owned[16];
+static int nowned;
+
 static void *zalloc(size_t n) {
     void *p = calloc(1, n);
-    if (!p) abort();
+    if (!p || nowned == (int)(sizeof owned / sizeof owned[0])) abort();
+    owned[nowned++] = p;
     return p;
+}
+
+static void release(void) {
+    while (nowned) free(owned[--nowned]);
+    fb = NULL;
 }
 
 static void set_px(int x, int y, int level) {
@@ -47,7 +57,8 @@ static void setup(int level) {
     C.H = PH;
     C.ntx = PW / PQBN_TPX;
     C.nty = PH / PQBN_TPY;
-    if (!fb) fb = zalloc((size_t)PW * PH / 2);
+    release();
+    fb = zalloc((size_t)PW * PH / 2);
     memset(fb, level | (level << 4), (size_t)PW * PH / 2);
     C.fb4 = fb;
     C.hot = zalloc((size_t)PW * PH / 2);
@@ -142,6 +153,7 @@ int main(void) {
     drive();
     CHECK(black[3][3] == 12 && white[3][3] >= 1 && white[3][3] <= 3, "white to level 2: %d black, %d white pushes", black[3][3], white[3][3]);
 
+    release();
     if (fails) return 1;
     printf("pqbn path: grays come the short way, what does not change stays still\n");
     return 0;

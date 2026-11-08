@@ -67,3 +67,16 @@ $INK_DEPS/build-deps/pyenv/bin/ctest --test-dir build --output-on-failure -j3
 - 结束前：全量测试和内存检查都跑一遍；`git diff --stat` 看有没有夹带；查隐私：`git diff <基线>..HEAD | grep -nE '/Users/|/private/tmp|[0-9A-Fa-f]{2}(:[0-9A-Fa-f]{2}){5}'`，结果写进报告。
 - 报告的结构固定：验收表（每条一行：编号、结论、证据、命令）；没做到的；和设计不一致的；改过的已有测试；要用户定的；顺手发现。写短，不复述任务书。
 - 只有每条验收都有结论、测试跑过、提交完，最后一条消息的第一行才写 `TASK_COMPLETE`，后面用几行说结果。没到这一步不要结束，不要写“接下来我会”。
+
+## 7. 2026-11-08 补充（和上面冲突时以这里为准）
+
+用户说过 Codex 的品味差、容易钻牛角尖，为一个小问题改一大片或加一堆机制。所以：
+
+- 预算是产品代码行数（不算测试和文档），看任务书。快超了就停下，在报告里写原因，不要硬塞。
+- 不新增机制，除非任务书明确要。一个根因在一处修，不逐个服务改。
+- 只做验收里列的情况。想到的其它极端情况写进报告的“没做到的”，不要去做。
+- 同一个测试修了 3 次还不过：停下，写清楚卡在哪，照样交 `TASK_COMPLETE`。
+- 每个任务大约一小时的量。
+- 现在同时有三个任务在跑：构建最多 `-j3`，`ctest` 最多 `-j2`，命令前加 `taskpolicy -c utility`。
+- 这些共享文档不改，合并时由主会话统一改：docs/tasks/backlog.md、docs/system/ui-dependencies.md、生成的 docs/system/capabilities.md、docs/requirements.md、docs/ideas.md、docs/decisions/。要改的写进报告的“要改的文档”一节。
+- 不碰设备，不读 ink-hw。
