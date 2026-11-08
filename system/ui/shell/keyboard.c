@@ -300,7 +300,7 @@ static void build(int kind) {
             char_row("1234567890");
             char_row("-/:;()@&\"'");
             lv_obj_t *r = new_row();
-            for (const char *p = ".,?!"; *p; p++) {
+            for (const char *p = ".,?!=_%#"; *p; p++) {
                 char s[2] = {*p, 0};
                 key(r, s, *p, 1);
             }

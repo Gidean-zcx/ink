@@ -15,6 +15,7 @@ static const ink_ui_page_spec_t page = {
     .fields = &spec, .field_count = 1, .actions = &action, .action_count = 1
 };
 static lv_obj_t *field, *heading;
+static const char URL[] = "example.com/a_b?x=1%20#c";
 static ink_text_type_t kind = INK_TEXT_PLAIN;
 static lv_area_t original, heading_original, fixed_keyboard;
 static char snapshot[3072], page_json[2048], events[768], hand_events[768], submitted[128], stale_args[256];
@@ -86,6 +87,25 @@ static lv_obj_t *find_label(lv_obj_t *root, const char *text) {
     }
     return NULL;
 }
+static const char *key_label;
+static lv_point_t key_point;
+static bool key_visible;
+static void locate_key(void) {
+    lv_obj_update_layout(lv_layer_sys());
+    lv_obj_t *label = find_label(lv_layer_sys(), key_label);
+    key_visible = label && lv_obj_is_visible(label);
+    CHECK(key_visible, "the visible keyboard has the requested key: %s", key_label);
+    if (!key_visible) return;
+    lv_area_t button, keyboard;
+    lv_obj_get_coords(lv_obj_get_parent(label), &button); ink_shell_keyboard_area(&keyboard);
+    CHECK(button.x1 >= keyboard.x1 && button.x2 <= keyboard.x2 && button.y1 >= keyboard.y1 && button.y2 <= keyboard.y2,
+          "the actual key is inside the fixed keyboard: %s", key_label);
+    key_point = (lv_point_t){(button.x1 + button.x2) / 2, (button.y1 + button.y2) / 2};
+}
+static void tap_keyboard(const char *label) {
+    key_label = label; on_ui(locate_key);
+    if (key_visible) tap(key_point.x, key_point.y);
+}
 static void inspect_focus(void) {
     const char *name = NULL;
     CHECK(ink_ui_snapshot(snapshot, sizeof snapshot, &name) > 0 && name && !strcmp(name, "Keyboard"),
@@ -149,8 +169,26 @@ static void compare_events(void) {
           "human paste and AI fill produce identical field values and change/submit events");
 }
 static void inspect_url(void) {
-    CHECK(!strcmp(ink_textfield_text(field), "example.com/path?x=1") && !ink_text_composing()[0],
-          "URL keys insert exact characters without pinyin composition");
+    CHECK(!strcmp(ink_textfield_text(field), URL) && !ink_text_composing()[0],
+          "real URL key taps insert exact characters without pinyin composition");
+}
+static void inspect_long_url(void) {
+    const char *value = "https://example.com/abcdefghijklmnop?x=1";
+    ink_text_select(0, 128); ink_text_commit_utf8(value);
+    lv_obj_update_layout(field);
+    lv_obj_t *label = lv_obj_get_child(field, 0);
+    const char *line = lv_label_get_text(label), *cursor = strchr(line, '|');
+    CHECK(!strcmp(ink_textfield_text(field), value) && ink_text_cursor() == strlen(value) && strstr(line, "?x=1|"),
+          "the full short URL is retained and its tail and caret are rendered");
+    CHECK(cursor != NULL, "the focused URL has a caret");
+    if (!cursor) return;
+    lv_point_t point;
+    lv_label_get_letter_pos(label, (uint32_t)(cursor - line), &point);
+    lv_area_t content, area;
+    lv_obj_get_content_coords(field, &content); lv_obj_get_coords(label, &area);
+    int width = lv_font_get_glyph_width(lv_obj_get_style_text_font(label, 0), '|', 0);
+    CHECK(area.x1 + point.x >= content.x1 && area.x1 + point.x + width <= content.x2 + 1,
+          "the complete caret at x=%d fits the visible field %d..%d", area.x1 + point.x, content.x1, content.x2);
 }
 static void handoff(void) {
     char before[128]; snprintf(before, sizeof before, "%s", ink_textfield_text(field));
@@ -192,18 +230,20 @@ static void run(void *arg) {
           AI("text.submit", "{}") && g_rc.status == INK_RC_DONE, "AI fills and completes through the shared text capabilities");
     on_ui(inspect_done); on_ui(compare_events);
     kind = INK_TEXT_URL; on_ui(open_page); on_ui(ai_focus); on_ui(inspect_focus);
-    for (const char *p = "example.com/path?x=1"; *p; p++) {
-        char args[32]; snprintf(args, sizeof args, "{\"code\":%d}", (int)*p);
-        CHECK(BY_HAND("keyboard.key", args) && g_rc.status == INK_RC_DONE, "type a URL character through the keyboard bus");
+    bool symbols = false;
+    for (const char *p = URL; *p; p++) {
+        bool next_symbols = !(*p >= 'a' && *p <= 'z');
+        if (symbols != next_symbols) { tap_keyboard(symbols ? "字母" : "符号"); symbols = next_symbols; }
+        char label[2] = {*p, 0}; tap_keyboard(label);
     }
+    if (symbols) tap_keyboard("字母");
     on_ui(inspect_url); capture("url-focused"); on_ui(inspect_focus);
-    CHECK(BY_HAND("keyboard.key", "{\"code\":1}") && g_rc.status == INK_RC_DONE, "switch to symbols");
-    on_ui(inspect_focus);
-    CHECK(BY_HAND("keyboard.key", "{\"code\":1}") && g_rc.status == INK_RC_DONE, "return to letters");
+    tap_keyboard("符号"); capture("url-symbols"); on_ui(inspect_focus);
+    tap_keyboard("字母");
     on_ui(inspect_focus);
     key(HAL_KEY_HOME); capture("url-restored"); on_ui(inspect_restored);
     CHECK(!ink_text_focused(), "the Plus HOME key first closes the short input session");
-    on_ui(ai_focus); on_ui(inspect_focus); on_ui(handoff);
+    on_ui(ai_focus); on_ui(inspect_long_url); capture("url-long-cursor"); on_ui(inspect_focus); on_ui(handoff);
 }
 void ink_main(void) {
     product_main();

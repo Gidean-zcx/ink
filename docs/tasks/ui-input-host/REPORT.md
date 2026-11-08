@@ -1,75 +1,79 @@
 # ui-input-host 任务报告
 
-日期：2026-11-08。基线：`3e503e74daa9c8003bcd788073fe00e74c0def04`。
-范围：应用框架 F2，短字段输入宿主；产品代码预算 250 行。
-实现见[字段宿主](../../../system/ui/textfield.c)、[公开接口](../../../system/include/ink/sys/textfield.h)、[测试页面](../../../tests/ui_input_host.c)。
+日期：2026-11-09。基线：`3e503e74daa9c8003bcd788073fe00e74c0def04`。
+范围：应用框架 F2，产品代码预算 250 行；本轮接续 `8e960a88`，修复[独立复查](REVIEW.md)的 R1（高）、R2（中）。初始工作区干净，复查为严重 0、高 1、中 1；保留复查原文。
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 【实测】通过 | 搜索／网址的 JSON 快照矩形与实际 LVGL 矩形一致，字段不被键盘遮住，符号切换位置不变；生成无窗口 PNG | `ctest --test-dir build -R '^ui-input-host$' --output-on-failure -j2` |
-| 2 | 【实测】通过 | 快照标出字段与焦点，实际显示黑色焦点轮廓和光标；完成、HOME 收起后字段和相邻内容坐标逐项相同 | 同上 |
-| 3 | 【实测】通过 | 人在系统键盘粘贴与 AI `text.insert`，字段值、`VALUE_CHANGED` 与提交回调记录完全相同；触摸和 AI 聚焦走同一声明能力 | 同上 |
-| 4 | 【实测】通过，反向失败符合预期 | 换人后旧 `text.insert`／`text.submit` 均返回 stale，值及事件计数不变；移除成员检查时 2 项断言失败，CTest 退出 8 | 同上；见反向对照 |
-| 5 | 【实测】本机通过 | 普通及 ASan／UBSan 全量各 207/207，零跳过；保守产品改动 153 行，不超过 250 | 见完整验证命令 |
+| R1 | 【实测】已修复 | 现有符号行补 `=`、`_`、`%`、`#`；实际查找可见键、切换模式并触摸，得到 `example.com/a_b?x=1%20#c`。单独撤掉修复后 5 项断言失败 | 定向命令；反向对照 |
+| R2 | 【实测】已修复 | `compose_line()` 按标签字体、字距和像素宽度调整窗口起点，为光标留宽；40 字符网址末尾 `?x=1` 和完整光标均在可见区。单独撤掉修复后 1 项断言失败 | 同上 |
+| 1 | 【实测】通过 | 搜索／网址的快照矩形与实际 LVGL 一致，字段不被遮挡，字母／符号切换保持键盘矩形；实际按键均在固定区域内 | 定向命令 |
+| 2 | 【实测】通过 | 焦点轮廓、光标可见；完成／HOME 后字段和相邻标题恢复原坐标；新增普通长度网址的光标可见性断言 | 同上 |
+| 3 | 【实测】通过 | 人工粘贴与 AI `text.insert` 的字段值、change／submit 事件相同；网址由真实触摸输入，不再直接注入键码 | 同上 |
+| 4 | 【实测】通过 | 换人后旧 insert／submit 拒绝，字段与事件无副作用；仅撤成员检查时 2 项断言失败 | 同上；反向对照 |
+| 5 | 本轮全量及内存检查进行中 | 本轮定向 251 项断言通过；累计产品改动保守计数 166 行，不超过 250 | 完整验证命令 |
+
+定向命令：
+
+```bash
+taskpolicy -c utility cmake --build build --target sim-ui-input-host -j3
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^ui-input-host$' --output-on-failure -j2
+```
 
 ## 没做到的
 
-- 五项本机验收全部完成；只接入任务要求的测试页面，未迁移已有系统页面。
-- Linux／gcc 未运行，不能以本机 macOS／clang 结果代替。
-- 按任务边界不做长文、表单编辑页和实机验证。
+- 本轮全量和内存检查待结束；R1、R2 均已完成定向修复与反例。
+- Linux／gcc、实机未运行；只接入任务要求的测试页面，未迁移既有业务页，未做长文／表单编辑页。
 
 ## 和设计不一致的
 
-- F2 范围内暂无已知差异；短宿主要求固定位置的父容器，长文／表单由后续宿主负责。
+- 本轮未发现 F2 范围内新增差异。短宿主仍要求固定位置的父容器；复查列出的既有输入法外观差异未在本轮改动，不能将本报告当作完整业务页还原验收。
 
 ## 改过的已有测试
 
-- 暂无。
+- `tests/ui_input_host.c`：网址样例从 `example.com/path?x=1` 改成包含全部四个缺失符号的 `example.com/a_b?x=1%20#c`；逐字注入 `keyboard.key` 改为查找可见标签、读取按键矩形并触摸其中心。保留完整值、无拼音组合的断言，新增按键存在与区域断言。
+- 同一测试的符号切换改走真实触摸；新增 40 字符网址的完整模型值、末尾内容和整个光标位于字段内的断言及两张截图。没有删用例、放宽已有断言或修改资源门槛。
 
 ## 要用户定的
 
-- 暂无。
+- 无。
 
 ## 顺手发现
 
-- 工作区初始干净，当前分支含任务书提交 `463b4aee`，其父提交是指定基线；继续在该分支上追加。
-- Plus 档案没有实体 BACK 键；新增测试改用真实存在的 HOME 键核对“先收键盘、留在原页”。没有改设备档案或已有测试。
+- 无新增范围外修复；未改 F1、策略、文件／传输服务。没有推送、开 PR、访问设备或调用外部服务。
 
 ## 新增的机制
 
-- 短字段语义绑定、固定键盘矩形与位置恢复：F2 任务要求，复用既有字段、键盘、输入会话和 F1 能力绑定。
-- URL 字段类型：F2 的网址输入要求，直接接收字符，不进入拼音组合，不自动访问网址。
-- 没有新增产品任务、线程、状态机、持久格式、队列、缓存或配置项。
+- 本轮无新增任务、线程、状态机、持久格式、配置项、缓存、队列或抽象层。
+- 原任务的短字段绑定、固定键盘区域、位置恢复和 URL 类型均来自 F2；本轮只补现有符号行和既有字段裁窗。
 
 ## 要改的文档
 
-- 主会话可在 backlog 和 UI 依赖表关联 F2 的真实验收结果；能力文档可说明短字段通过页面声明能力聚焦、复用 `text.*` 编辑。本任务不改这些共享文档。
+- 主会话可在共享 backlog、UI 依赖表关联 F2 及本轮 R1／R2 的实测结果；本任务不改共享文档或生成的能力表。
 
 ## 阶段证据与规模
 
-- 【实测】定向构建与测试退出 0，184 项断言、`test.finished=1`，无警告，内部 RAM 最低余量 47,840 字节，原预算 32,768 未修改。
-- 【实现】产品新增 137 行、删除 10 行；连测试接线的 CMake 6 行也计入，保守合计 153 行，小于 250。超过 100 行因为同时包含可调用的字段绑定、快照和位置恢复；看过仅包装 `ink_text_focus` 的更小方案，缺少字段身份、可见焦点和恢复位置，不能满足验收。没有重复实现输入状态机。
-- 【实现】R-061：布局、焦点和 F1 快照留在 UI 框架，文字仍由文本服务处理；触摸与 AI 通过同一页面聚焦能力和既有编辑能力进入同一输入会话，没有直接写服务内部状态。F1 源码和接口未改。
-- 新测试首轮有一次 JSON 辅助函数名误用导致编译失败，已改用现有 `ink_json_eq`；运行时发现输入代次随浮层变化，宿主改为核对所属屏幕；没有放宽断言或预算。
-- 【实测】首轮普通全量 206/207，通过以外仅 `ui-scale` 失败；焦点线宽改成规范的 `INK_STROKE` 轮廓线，坐标用 LVGL 点保存，并按现有检查器约定注释其运行时来源。定向 `ui-scale` 随后退出 0；普通全量重跑 207/207、零跳过，退出 0，113.51 秒。没有修改检查器或加入尺寸例外。
+- 【实测】本轮定向构建与测试均退出 0，`test.pass=251`、无失败、`test.finished=1`、无警告；人工查看 `clean-url-symbols.png`、`clean-url-long-cursor.png`，四个符号、网址末尾和光标均可见。截图在 `build/test-out/ui-input-host/`，不提交。
+- 【实现】本轮产品新增 12、删除 1，共 13 行：补键 2 行、裁窗 11 行。相对指定基线，产品新增 149、删除 11，连 CMake 6 行计入共 166，低于 250。累计超过 100 行来自原 F2 的字段身份、同源快照、固定键盘与位置恢复；仅包装 `ink_text_focus` 缺少这些验收项，不能替代。两项复查修复均未超过单问题默认 30 行。
+- 【实现】R-061：按键继续调用能力总线，文本编辑和成员校验复用文本服务；像素裁窗和字符位置映射集中在 UI 字段，不为页面或 AI 另建编辑入口。现有秘密字段规则与 AI 快照边界未变。
 
 ## 反向对照
 
-- 【实测】临时去掉 `system/services/text/text_caps.c` 中 `target_ok()` 的 `ink_text_session_current()` 拒绝分支；不改测试，仅构建 `sim-ui-input-host` 并执行验收表的定向命令。构建退出 0，CTest 退出 8；旧会话写入被接受，且字段／事件被改变，2 项断言失败，`test.finished=1`。本地证据：`build/ui-input-host-negative-test.log`、`build/ui-input-host-negative-metrics.json`。
-- 【实测】实验结束后恢复源码，`git diff --exit-code -- system/services/text/text_caps.c` 退出 0；最终两套构建都重新编译了恢复后的检查。
-- 【实现】成员检查已由现有文本服务提供，本任务复用并补反例，没有再加一套输入会话状态机。
+【实测】保留本轮测试，逐项临时撤掉产品修复。R1／R2 分别用 `git show 8e960a88:<对应文件>` 的内容；成员反例只删除 `text_caps.c` 的 `ink_text_session_current()` 拒绝分支。每次运行上述定向构建、CTest，随后恢复原字节；实验程序用 `finally` 保证恢复，最终全量会重新构建恢复后的源码。
+
+| 仅撤掉什么 | 编译／CTest 退出码 | 实际失败 |
+| --- | --- | --- |
+| R1：`system/ui/shell/keyboard.c` 的补键 | 0／8 | `_`、`=`、`%`、`#` 四个可见按键缺失，且完整网址值不符，5 项失败；`test.finished=1` |
+| R2：`system/ui/textfield.c` 的像素裁窗 | 0／8 | 光标 x=685，字段内容范围 79..604，完整光标越界，1 项失败；`test.finished=1` |
+| 成员检查：`system/services/text/text_caps.c` | 0／8 | 旧 insert 被接受、字段／事件被改，2 项失败；`test.finished=1`。submit 此时仍被 revision 拒绝，不声称单独验证了 submit 反例 |
+
+本地证据：`work/ui-input-host-fix/{r1,r2,member}-{build,test}.log`、对应 `*-metrics.json` 及 R1／R2 的反例 PNG，不提交。恢复后 `git diff --exit-code -- system/services/text/text_caps.c` 退出 0。
 
 ## 完整验证命令
 
-配置使用[总规则第 5 节](../codex-rules.md)的全部参数，`build-asan` 仅额外启用 `-DINK_SANITIZE=ON`。两套配置都启用 `INK_WERROR=ON`，并用以下现成依赖映射，避免写入依赖检出目录：
-
-```bash
--DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"
--DFETCHCONTENT_SOURCE_DIR_SDL2="$INK_DEPS/build/_deps/sdl2-src"
--DFETCHCONTENT_SOURCE_DIR_IMGUI="$INK_DEPS/build/_deps/imgui-src"
-```
+复用已有两套配置，均为 `INK_WERROR=ON`；`build-asan` 另有 `INK_SANITIZE=ON`。字体、Python、LVGL、SDL2、ImGui 和中枢 Python 使用原报告已配置的 `$INK_DEPS` 只读依赖，未更改版本或配置。
 
 ```bash
 export PYTHONPATH="$PWD/hub" PYTHONDONTWRITEBYTECODE=1
@@ -79,7 +83,5 @@ taskpolicy -c utility cmake --build build-asan -j3
 UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
 ```
 
-- 【实测】普通构建退出 0；全量日志 `build/ui-input-host-ctest.log`。F2 为 184 项断言通过，内部 RAM 最低余量 47,840 字节，无警告。
-- 【实测】ASan／UBSan 配置、构建及全量均退出 0，207/207、零失败、零跳过，220.07 秒；日志 `build-asan/ui-input-host-ctest.log`。F2 同为 184 项断言通过，内部 RAM 最低余量 47,840 字节，无警告。两套全量都包含确定性、分层、SDK 边界和 F1；GUI 冒烟由既有测试以 SDL dummy 运行，没有启动窗口版。
-- 【实测】人工查看生成的搜索／网址 PNG，焦点轮廓、光标和键盘均可见；截图保留在各构建目录的 `test-out/ui-input-host/`，不提交构建产物。
-- 【实测】基线至当前提交的 `git diff --stat` 只有本任务相关文件及初始任务书；F1 源码、接口与测试相对基线无差异，`git diff --check` 退出 0。按总规则第 6 节原样运行隐私扫描，零匹配（grep 退出 1）。
+- 本轮普通／ASan 全量运行中；日志分别为 `build/ui-input-host-fix-{build,ctest}.log` 和 `build-asan/ui-input-host-fix-{build,ctest}.log`。
+- 提交前待核对 `git diff --stat`、`git diff --check`、相对基线的规定隐私扫描与报告文件链接。

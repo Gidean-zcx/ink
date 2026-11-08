@@ -61,6 +61,17 @@ static void compose_line(field_t *f, const char *v, const char *c, char *line, s
     size_t start, end;
     ink_text_selection(&start, &end);
     f->window = start > WINDOW_CHARS ? start - WINDOW_CHARS : 0;
+    lv_obj_update_layout(f->obj);
+    const char *cursor = char_at(v, start);
+    while (f->window < start) {
+        const char *first = char_at(v, f->window);
+        snprintf(line, cap, "%.*s%s|", (int)(cursor - first), first, start == end ? c : "");
+        lv_point_t size;
+        lv_text_get_size(&size, line, lv_obj_get_style_text_font(f->label, 0),
+                         lv_obj_get_style_text_letter_space(f->label, 0), 0, LV_COORD_MAX, LV_TEXT_FLAG_NONE);
+        if (size.x <= lv_obj_get_content_width(f->label)) break;
+        f->window++;
+    }
     const char *p = char_at(v, f->window);
     size_t bytes = 0, at = f->window;
     f->displayed = 0; f->display_map[0] = at;
