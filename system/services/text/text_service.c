@@ -341,6 +341,11 @@ void ink_text_key(char c) {
         if ((unsigned char)c < 0x20) return;
         put(one);
         break;
+    case INK_TEXT_URL:
+        if ((unsigned char)c <= 0x20) return;
+        before_edit(EDIT_KEYS);
+        put(one);
+        break;
     }
     changed();
 }

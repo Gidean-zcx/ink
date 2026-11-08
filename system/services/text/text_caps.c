@@ -44,7 +44,7 @@ static bool editable(ink_call_t *c);
 int ink_text_snapshot(char *out, size_t cap) {
     uint32_t epoch = ink_member_epoch();
     if (!ink_text_session_current()) { if (cap) out[0] = 0; return -1; }
-    static const char *const TYPE[] = {"plain", "number", "phone", "password"};
+    static const char *const TYPE[] = {"plain", "number", "phone", "password", "url"};
     ink_jw_t w;
     ink_jw_init(&w, out, cap);
     if (!ink_text_focused()) ink_jw_raw(&w, "{\"focused\":false}");
