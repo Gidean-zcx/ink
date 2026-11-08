@@ -605,6 +605,9 @@ add_test(NAME services-mid-regressions COMMAND ${Python3_EXECUTABLE}
   ${CMAKE_SOURCE_DIR}/tests/services_finish/run.py --build ${CMAKE_BINARY_DIR}
   update_history offpanel text_window keyboard_snapshot undo empty_removal)
 set_tests_properties(services-mid-regressions PROPERTIES TIMEOUT 180 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")
+add_test(NAME member-quiesce COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/member_quiesce/run.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(member-quiesce PROPERTIES TIMEOUT 180 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")
 ink_sim_executable(sim-hub-bridge-state tests/hub/bridge_state.c)
 ink_sim_executable(sim-device-events tests/device_events/protocol.c tests/device_events/cap_boundary.c
   tests/device_events/hub_boundary.c tests/device_events/ai_boundary.c)
