@@ -1,6 +1,6 @@
 # file-index-2 执行报告
 
-基线：`291da6760931601e4783ebaddabc08e5bcab22eb`。状态：实现与反向对照完成，内存检查进行中。
+基线：`291da6760931601e4783ebaddabc08e5bcab22eb`。状态：完成；仅本地提交，未推送。
 
 ## 验收表
 
@@ -10,7 +10,7 @@
 | 2 | 通过 | 【实测】渐变只含 16 个工厂灰阶，全部档位出现；平均亮度误差 `0.0003515518`，小于最小相邻间隔 `0.01`；256 种纯灰的 4×4 块也全部小于该间隔，重复计算一致 | `ctest --test-dir build -R '^image-dither$' --output-on-failure -j2` |
 | 3 | 通过 | 【实测】最长边 128，保比例且不放大小图；单图 ≤16384 B，4 槽载荷 ≤65536 B；第 5 张淘汰最早插入者，命中不改顺序；持续插入不增长，不占内部堆，释放恢复 PSRAM | `ctest --test-dir build -R '^image-cache$' --output-on-failure -j2` |
 | 4 | 通过 | 【实测】同编号黑图 v1 换白图 v2 不复用；失败的 v3 也移除 v2；不同缓存上下文互不串图 | `ctest --test-dir build -R '^image-version$' --output-on-failure -j2` |
-| 5 | 部分验证 | 【实测】普通全量 206 项通过，3 项中枢测试因缺 Python 依赖跳过；ASan/UBSan 进行中。产品代码低于 250 行，精确计数待补 | 下方全量命令 |
+| 5 | 通过 | 【实测】普通和 ASan/UBSan 全量各 209 项通过，零失败、零跳过；两次构建及测试均返回 0。【实现】产品代码 182 行，连同第三方局部补丁 204 行，低于 250 行 | 下方全量命令，分别使用 `build`、`build-asan` |
 
 上表 `ctest` 实际使用 `$INK_DEPS/build-deps/pyenv/bin/ctest`，所有命令前置 `taskpolicy -c utility`。
 
@@ -45,12 +45,20 @@ taskpolicy -c utility cmake -S . -B build -DINK_WERROR=ON \
   -DINK_CJK_MEDIUM_FONT="$INK_DEPS/build-deps/fonts/NotoSansCJKsc-Medium.otf" \
   -DINK_CJK_BOLD_FONT="$INK_DEPS/build-deps/fonts/NotoSansCJKsc-Bold.otf" \
   -DPython3_EXECUTABLE="$INK_DEPS/build-deps/pyenv/bin/python" \
+  -DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python" \
   -DFETCHCONTENT_SOURCE_DIR_LVGL="$INK_DEPS/build/_deps/lvgl-src"
 taskpolicy -c utility cmake --build build -j3
-taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
+taskpolicy -c utility env PYTHONPATH="$PWD/hub/src" PYTHONDONTWRITEBYTECODE=1 \
+  "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
 ```
 
 ASan/UBSan 使用同样设置，目录换成 `build-asan`，增加 `-DINK_SANITIZE=ON`；另将 SDL2、ImGui 的 `FETCHCONTENT_SOURCE_DIR_*` 指向依赖目录中相同固定版本，避免重复下载。
+
+【实测】普通全量耗时 110.14 s；ASan/UBSan 全量耗时 217.25 s。确定性、分层和 SDK 边界检查包含在全量测试中。GUI 冒烟沿用既有 SDL dummy 无头脚本，未打开窗口。内存检查日志没有 AddressSanitizer 错误或 UBSan `runtime error`。
+
+【实测】中枢测试复用依赖目录已有虚拟环境，aiohttp/PyYAML/pytest/pytest-asyncio 分别为 3.12.15/6.0.3/8.4.2/1.2.0，与项目锁定版本一致；未安装或升级依赖。`PYTHONPATH` 保证加载本检出的中枢源码。
+
+【实现】行数含空行、注释与接口：新 C/H 共 172 行、CMake 产品接入 7 行、HAL 查询 3 行，共 182 行；第三方局部补丁另有 22 行新增/替换。未将整个第三方头文件冒充自写代码。
 
 第三方：复用 LVGL **v9.5.0** 附带的 **stb_image v2.30**，选 MIT 许可，原许可证完整保留在头文件尾部；无新增下载或升级依赖。原文件 303477 B，SHA-256 `d81d95287ae188e472fe66ddcad8635041e8f29d51a799cc77c65c6e94400f1c`。原样复用触发解码栈超限，故保存本地副本，仅把 PNG 解压状态和 Huffman 工作区移到分配钩子；标记了修改。最终文件 **303860 B**，SHA-256 `fa53291210010dd3c8e1bafbd2abafb583b2971ecb3a98684f0c216d28748e28`。来源、许可及修改见[第三方说明](../../../third_party/stb/README.md)。
 
@@ -77,7 +85,8 @@ ASan/UBSan 使用同样设置，目录换成 `build-asan`，增加 `-DINK_SANITI
 ## 顺手发现
 
 - 既有 SDL2 弃用警告和重复静态库链接提示仍存在，未扩大范围修复。
-- 最终差异范围、隐私扫描及内存检查结果待补。
+- 【实测】基线至最终内容的规定隐私扫描：零命中，`grep` 返回 1。报告相对链接和 `git diff --check` 通过。
+- 【实测】`git diff --stat` 核查共 13 个相关文件：媒体帮助接口/实现、HAL 查询、CMake 接入、新测试、第三方头文件/来源说明及本报告；未夹带产物，文件服务与共享文档未改。
 
 ## 新增的机制
 
