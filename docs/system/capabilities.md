@@ -7,7 +7,7 @@ python3 tools/capabilities.py
 python3 tools/capabilities.py --check
 ```
 
-当前共 191 项：可调用能力 161、事件 30；设置 16 项、状态 44 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
+当前共 193 项：可调用能力 163、事件 30；设置 16 项、状态 45 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
 
 风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。
 
@@ -70,7 +70,9 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `file.copy` | 拷贝文件或目录（大的在后台做） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s15](#s15) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
 | `file.delete` | 删除文件或目录（不能撤销） | 人、AI | 高 / local_destructive | 人、AI 均在设备确认 | 成人、儿童（无需白名单） | [s15](#s15) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
 | `file.free` | 存储卡还剩多少空间 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s15](#s15) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
+| `file.index` | 按类型分页查询目录树的文件索引 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s15](#s15) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
 | `file.list` | 列出目录（/me 自己的文件，/family 全家的内容） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s15](#s15) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
+| `file.lookup` | 按稳定编号查询文件 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s15](#s15) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
 | `file.mkdir` | 新建目录 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s15](#s15) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
 | `file.move` | 移动或改名（可撤销） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s15](#s15) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
 | `file.read` | 读文本文件（每次最多 2 KiB） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s15](#s15) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
@@ -253,7 +255,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 设置：`ai.read_clipboard`、`audio.child_max`、`audio.volume`、`cell.sim_slot`、`display.font_size`、`display.light`、`display.lock_style`、`display.warmth`、`member.idle_return_s`、`net.prefer`、`notify.dnd`、`power.lock_after_s`、`time.auto`、`time.zone`、`update.auto_download`、`voice.handsfree`。
 
-状态：`alarm.revision`、`alarm.ringing`、`app.cards_rev`、`app.foreground`、`audio.listening`、`audio.mic`、`audio.now_playing`、`audio.recording`、`audio.route`、`battery.charging`、`battery.level`、`battery.low`、`bt.available`、`bt.connected`、`bt.device`、`cell.registered`、`cell.sim`、`confirm.pending`、`interrupt.active`、`job.running`、`media.state`、`member.authed`、`member.current`、`net.online`、`net.signal`、`net.type`、`notify.unread`、`pairing.state`、`power.state`、`storage.card`、`storage.free`、`storage.mode`、`storage.user_free`、`text.focused`、`text.voice`、`time.minute`、`time.synced`、`time.zone`、`update.progress`、`update.state`、`update.version`、`usb.connected`、`wifi.ssid`、`wifi.state`。
+状态：`alarm.revision`、`alarm.ringing`、`app.cards_rev`、`app.foreground`、`audio.listening`、`audio.mic`、`audio.now_playing`、`audio.recording`、`audio.route`、`battery.charging`、`battery.level`、`battery.low`、`bt.available`、`bt.connected`、`bt.device`、`cell.registered`、`cell.sim`、`confirm.pending`、`file.index_state`、`interrupt.active`、`job.running`、`media.state`、`member.authed`、`member.current`、`net.online`、`net.signal`、`net.type`、`notify.unread`、`pairing.state`、`power.state`、`storage.card`、`storage.free`、`storage.mode`、`storage.user_free`、`text.focused`、`text.voice`、`time.minute`、`time.synced`、`time.zone`、`update.progress`、`update.state`、`update.version`、`usb.connected`、`wifi.ssid`、`wifi.state`。
 
 事件：—。
 
@@ -333,7 +335,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 设置：—。
 
-状态：`storage.card`、`storage.free`、`storage.mode`、`usb.connected`。
+状态：`file.index_state`、`storage.card`、`storage.free`、`storage.mode`、`usb.connected`。
 
 事件：`file.changed`、`file.job_done`、`usb.changed`。
 
@@ -522,6 +524,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `cell.registered` | 4G 在线 | `INK_ST_BOOL` | 是 | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
 | `cell.sim` | 在用的 SIM 卡 | `INK_ST_STR` | 是 | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
 | `confirm.pending` | 等人确认的请求数 | `INK_ST_INT` | 是 | [system/policy/confirm.c](../../system/policy/confirm.c) |
+| `file.index_state` | 文件索引状态（ready 可用，unavailable 不可用，changed 已换卡） | `INK_ST_STR` | 是 | [system/services/file/file_service.c](../../system/services/file/file_service.c) |
 | `interrupt.active` | 正在打断（none、call、alarm、low_battery） | `INK_ST_STR` | 是 | [system/services/notify/interrupt.c](../../system/services/notify/interrupt.c) |
 | `job.running` | 后台有几件事在做 | `INK_ST_INT` | 是 | [system/services/res/task.c](../../system/services/res/task.c) |
 | `media.state` | 播放状态（idle、playing、paused） | `INK_ST_STR` | 是 | [system/services/audio/media_service.c](../../system/services/audio/media_service.c) |

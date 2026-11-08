@@ -317,7 +317,51 @@ static void cap_usb_unmount(ink_call_t *c) {
 #define PATH_ARG(name) "\"" name "\":{\"type\":\"string\",\"maxLength\":127}"
 #define PATH_OBJ(name) "{\"type\":\"object\",\"properties\":{" PATH_ARG(name) "},\"required\":[\"" name "\"]}"
 
+static void cap_index_query(ink_call_t *c, bool lookup) {
+    static const char *const types[] = {"all", "other", "image", "audio", "text"};
+    file_context_t context;
+    if (!fs_context_for_call(&context, c)) return;
+    char path[INK_FS_PATH_MAX], kind[12] = "all";
+    int64_t id = 0, limit = 10; ink_fs_type_t type = INK_FS_ANY;
+    if (lookup) ink_args_get_int(&c->args, "id", &id);
+    else {
+        if (!arg_path(c, "path", path, sizeof path)) return;
+        ink_args_get_int(&c->args, "cursor", &id); ink_args_get_int(&c->args, "limit", &limit);
+        if (ink_args_get_str(&c->args, "type", kind, sizeof kind) < 0) snprintf(kind, sizeof kind, "all");
+        while (type <= INK_FS_TEXT && strcmp(kind, types[type + 1])) type++;
+    }
+    if (id < 0 || id > UINT32_MAX || (lookup && !id) || type > INK_FS_TEXT || limit < 1 || limit > 10) { refuse(c, INK_FS_ERR_PATH); return; }
+    char *out = osal_malloc(RESULT_CAP, OSAL_MEM_EXTERNAL);
+    if (!out) { refuse(c, INK_FS_ERR_IO); return; }
+    ink_jw_t w; ink_jw_init(&w, out, RESULT_CAP);
+    ink_jw_raw(&w, "{\"entries\":[");
+    uint32_t cursor = (uint32_t)id; ink_fs_entry_t e; int r = 0, shown = 0;
+    while (shown < (lookup ? 1 : limit) && (r = fs_index_for(&context, lookup ? NULL : path, type, &cursor, &e)) == 1) {
+        if (shown++) ink_jw_raw(&w, ",");
+        ink_jw_raw(&w, "{\"id\":"); ink_jw_int(&w, e.id);
+        ink_jw_raw(&w, ",\"path\":"); ink_jw_str(&w, e.path);
+        ink_jw_raw(&w, ",\"type\":"); ink_jw_str(&w, types[e.type + 1]);
+        ink_jw_raw(&w, ",\"size\":"); ink_jw_int(&w, e.size); ink_jw_raw(&w, "}");
+    }
+    ink_jw_raw(&w, "]");
+    if (!lookup && shown == limit) {
+        uint32_t next = cursor;
+        r = fs_index_for(&context, path, type, &next, &e);
+        if (r == 1) { ink_jw_raw(&w, ",\"next\":"); ink_jw_int(&w, cursor); }
+    }
+    ink_jw_raw(&w, "}");
+    if (r < 0 || (lookup && !shown) || w.overflow) refuse(c, r < 0 ? r : lookup ? INK_FS_ERR_NOT_FOUND : INK_FS_ERR_IO);
+    else ink_cap_result(c, out);
+    osal_free(out);
+}
+static void cap_index(ink_call_t *c) { cap_index_query(c, false); }
+static void cap_lookup(ink_call_t *c) { cap_index_query(c, true); }
+
 static const ink_cap_t FILE_CAPS[] = {
+    {.id = "file.index", .title = "按类型分页查询目录树的文件索引", .input = "{\"type\":\"object\",\"properties\":{" PATH_ARG("path") ",\"type\":{\"type\":\"string\",\"enum\":[\"all\",\"image\",\"audio\",\"text\",\"other\"]},\"cursor\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":4294967295},\"limit\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":10}},\"required\":[\"path\"]}", .output = "{\"type\":\"object\"}",
+     .effect = INK_FX_READ, .child_ok = true, .permission = "file", .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_index},
+    {.id = "file.lookup", .title = "按稳定编号查询文件", .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}},\"required\":[\"id\"]}", .output = "{\"type\":\"object\"}",
+     .effect = INK_FX_READ, .child_ok = true, .permission = "file", .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_lookup},
     {.id = "file.list",
      .title = "列出目录（/me 自己的文件，/family 全家的内容）",
      .input = "{\"type\":\"object\",\"properties\":{" PATH_ARG("path") ",\"cursor\":{\"type\":\"string\",\"maxLength\":15},\"limit\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":200}},\"required\":[\"path\"]}",

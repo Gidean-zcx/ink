@@ -14,10 +14,12 @@
 #include <string.h>
 
 #include "ink/hal_storage.h"
+#include "ink/hal_device.h"
 #include "ink/hal_usb.h"
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/cap.h"
+#include "ink/sys/data.h"
 #include "ink/sys/file.h"
 #include "ink/sys/layout.h"
 #include "ink/sys/members.h"
@@ -96,9 +98,16 @@ static struct {
     } rel[MAX_RELEASE];
     int nrel;
     int h_free, h_card, h_mode, h_usb;
+    int h_index;
+    bool index_seen;
+    uint8_t index_card[16];
     ink_exec_job_t usb_job, refresh_job;
     ink_svc_deadline_t refresh_at;
 } FS INK_PSRAM_BSS;
+
+static int index_edit(const char *from, const char *to);
+static const ink_db_def_t INDEX_DEF = {.name = "file.index", .title = "文件编号", .scope = INK_DB_DEVICE, .schema = 1,
+    .max_records = INK_FS_INDEX_MAX, .max_bytes = INK_FS_INDEX_MAX * 216u};
 
 const char *ink_fs_err_name(int e) {
     switch (e) {
@@ -113,6 +122,8 @@ const char *ink_fs_err_name(int e) {
     case INK_FS_ERR_BUSY: return "busy";
     case INK_FS_ERR_IS_DIR: return "a directory";
     case INK_FS_ERR_NO_HOST: return "no computer connected";
+    case INK_FS_ERR_INDEX_FULL: return "file index is full";
+    case INK_FS_ERR_CARD_CHANGED: return "the storage card changed";
     default: return "read or write error";
     }
 }
@@ -223,6 +234,7 @@ static int resolve_for(const file_context_t *c, const char *path, bool write, ch
     if (FS.usb_lent) return INK_FS_ERR_USB;
     if (!hal_fs_card_present()) {
         ink_state_set_bool(FS.h_card, false);
+        ink_state_set_str(FS.h_index, "unavailable");
         return INK_FS_ERR_NO_CARD;
     }
     return INK_FS_OK;
@@ -520,6 +532,8 @@ static int fs_remove_unlocked(const file_context_t *c, const char *path) {
     if (r) return r;
     if (hal_fs_size(phys) < 0) return card_done(hal_fs_card_present() ? INK_FS_ERR_NOT_FOUND : card_error());
     if (hal_fs_remove(phys) != 0) return card_done(card_error());
+    r = index_edit(phys, NULL);
+    if (r) return card_done(r);
     changed(c, path, "removed");
     return card_done(INK_FS_OK);
 }
@@ -537,6 +551,8 @@ static int fs_move_unlocked(const file_context_t *c, const char *from, const cha
     if (!strncmp(a, b, an) && b[an] == '/') return card_done(INK_FS_ERR_PATH); /* into itself */
     make_parents(b);
     if (hal_fs_rename(a, b) != 0) return card_done(card_error());
+    r = index_edit(a, b);
+    if (r) return card_done(r);
     changed(c, from, "moved");
     changed(c, to, "moved");
     return card_done(INK_FS_OK);
@@ -569,6 +585,7 @@ static int wipe_tree(const char *phys) {
             if (snprintf(path + n, PHYS_MAX - n, "/%s", e->name) >= (int)(PHYS_MAX - n)) r = INK_FS_ERR_IO;
             else if (!e->is_dir) {
                 if (hal_fs_remove(path) != 0) r = INK_FS_ERR_IO;
+                else r = index_edit(path, NULL);
                 path[n] = 0;
             }
         } else if (more < 0) r = INK_FS_ERR_IO;
@@ -633,6 +650,7 @@ void ink_fs_refresh_state(void) {
     ink_state_set_bool(FS.h_usb, hal_usb_host_connected());
     bool card = hal_fs_card_present();
     ink_state_set_bool(FS.h_card, card);
+    if (!card || FS.usb_lent) ink_state_set_str(FS.h_index, "unavailable");
     uint64_t free_bytes = 0;
     if (card && ink_fs_free(&free_bytes, NULL) == INK_FS_OK) ink_state_set_int(FS.h_free, (int64_t)free_bytes);
 }
@@ -814,6 +832,7 @@ static bool delete_step(fjob_t *j) {
     hal_dir_t *d = hal_fs_opendir(j->from);
     if (!d) { /* a file */
         if (hal_fs_remove(j->from) != 0) job_failed(j, card_error());
+        else if (index_edit(j->from, NULL)) job_failed(j, INK_FS_ERR_IO);
         else j->st.files_done++;
         return true;
     }
@@ -835,6 +854,7 @@ static bool delete_step(fjob_t *j) {
             job_failed(j, card_error());
             return true;
         }
+        if (index_edit(child, NULL)) { job_failed(j, INK_FS_ERR_IO); hal_fs_closedir(d); return true; }
         j->st.files_done++;
         removed++;
     }
@@ -1099,6 +1119,7 @@ int ink_fs_card_hold(void) {
     else if (!hal_fs_card_present()) r = INK_FS_ERR_NO_CARD;
     else FS.nopen++;
     ink_svc_unlock();
+    if (r) ink_state_set_str(FS.h_index, "unavailable");
     return r;
 }
 
@@ -1194,6 +1215,7 @@ static const ink_state_def_t ST_FREE = {.id = "storage.free", .type = INK_ST_INT
 static const ink_state_def_t ST_CARD = {.id = "storage.card", .type = INK_ST_BOOL, .title = "存储卡在且能用"};
 static const ink_state_def_t ST_MODE = {.id = "storage.mode", .type = INK_ST_STR, .title = "存储卡在哪（normal 系统用，usb 借给电脑）"};
 static const ink_state_def_t ST_USB = {.id = "usb.connected", .type = INK_ST_BOOL, .title = "连着电脑"};
+static const ink_state_def_t ST_INDEX = {.id = "file.index_state", .type = INK_ST_STR, .title = "文件索引状态（ready 可用，unavailable 不可用，changed 已换卡）"};
 
 int ink_file_service_init(void) {
     FS.revision = 1;
@@ -1204,6 +1226,9 @@ int ink_file_service_init(void) {
     FS.h_card = ink_state_define(&ST_CARD);
     FS.h_mode = ink_state_define(&ST_MODE);
     FS.h_usb = ink_state_define(&ST_USB);
+    FS.h_index = ink_state_define(&ST_INDEX);
+    if (ink_db_register(&INDEX_DEF)) return -1;
+    ink_state_set_str(FS.h_index, "unavailable");
     ink_state_set_str(FS.h_mode, "normal");
     ink_state_set_bool(FS.h_card, hal_fs_card_present());
     ink_state_set_bool(FS.h_usb, hal_usb_host_connected());
@@ -1373,4 +1398,142 @@ int ink_fs_restore(const char *member, unsigned stage, const char *path, const u
 int ink_fs_restore_if_revision(const char *member, unsigned stage, const char *path, uint32_t revision) {
     if (!revision) return INK_FS_ERR_EXISTS;
     return restore_file(member, stage, path, NULL, revision);
+}
+
+/* The data store owns ids and durability; only the random card identity lives on FAT. */
+#define INDEX_CARD "/content/.file-index-card"
+typedef struct { uint8_t card[16]; char path[PHYS_MAX]; } index_rec_t;
+
+static int index_open(uint8_t card[16], ink_db_t **db) {
+    int64_t size = hal_fs_size(INDEX_CARD);
+    hal_file_t *f = hal_fs_open(size < 0 ? INDEX_CARD ".tmp" : INDEX_CARD, size < 0 ? HAL_O_WRITE | HAL_O_CREATE | HAL_O_TRUNC : HAL_O_READ);
+    if (!f) return card_error();
+    if (size < 0) hal_random_fill(card, 16);
+    ssize_t n = size < 0 ? hal_fs_write(f, card, 16) : hal_fs_read(f, card, 16);
+    int r = size < 0 ? hal_fs_sync(f) : 0;
+    int closed = hal_fs_close(f);
+    if (n != 16 || r || closed || (size >= 0 && size != 16)) return INK_FS_ERR_IO;
+    if (size < 0 && hal_fs_rename(INDEX_CARD ".tmp", INDEX_CARD)) return card_error();
+    ink_state_set_str(FS.h_index, FS.index_seen && memcmp(card, FS.index_card, 16) ? "changed" : "ready");
+    memcpy(FS.index_card, card, 16); FS.index_seen = true;
+    *db = ink_db_open(&INDEX_DEF, NULL);
+    return *db ? 0 : INK_FS_ERR_IO;
+}
+
+static int index_save(ink_db_t *db, uint32_t id, const index_rec_t *e, uint32_t *written) {
+    ink_db_write_t w = {.id = id, .data = e, .len = sizeof *e};
+    int r = e ? ink_db_put(db, &w, written) : ink_db_del(db, id, 0);
+    return r ? (r == INK_DB_ERR_FULL ? INK_FS_ERR_INDEX_FULL : INK_FS_ERR_IO) :
+        ink_db_wait(db, ink_db_last_ver(db), 3000000) ? INK_FS_ERR_IO : 0;
+}
+
+static bool index_under(const char *path, const char *root) {
+    size_t n = strlen(root);
+    return !strncmp(path, root, n) && (!path[n] || path[n] == '/');
+}
+
+static int index_edit(const char *from, const char *to) {
+    if (!FS.ready || hal_fs_size(INDEX_CARD) < 0) return 0;
+    uint8_t card[16]; ink_db_t *db = NULL;
+    int r = index_open(card, &db);
+    index_rec_t e; ink_rec_t rec; ink_db_cursor_t cur = {0};
+    while (!r && ink_db_next(db, &cur, &rec, &e, sizeof e) == 1) {
+        if (memcmp(card, e.card, 16) || !index_under(e.path, from)) continue;
+        if (to) {
+            char path[PHYS_MAX];
+            if (snprintf(path, sizeof path, "%s%s", to, e.path + strlen(from)) >= (int)sizeof path) { r = INK_FS_ERR_PATH; break; }
+            memcpy(e.path, path, strlen(path) + 1);
+        }
+        r = index_save(db, rec.id, to ? &e : NULL, NULL);
+    }
+    ink_db_close(db);
+    return r;
+}
+
+static ink_fs_type_t index_type(const char *path) {
+    const char *ext = strrchr(path, '.'); char lower[12];
+    if (!ext || strlen(ext) >= sizeof lower) return INK_FS_OTHER;
+    size_t i; for (i = 0; ext[i]; i++) lower[i] = ext[i] >= 'A' && ext[i] <= 'Z' ? (char)(ext[i] + 'a' - 'A') : ext[i];
+    lower[i] = 0;
+    static const char *const kinds[] = {"", ".png.jpg.jpeg.bmp.gif.webp.", ".mp3.wav.ogg.opus.flac.m4a.", ".txt.md.csv.json.html.htm."};
+    for (int k = INK_FS_IMAGE; k <= INK_FS_TEXT; k++) {
+        const char *p = strstr(kinds[k], lower);
+        if (p && p[strlen(lower)] == '.') return (ink_fs_type_t)k;
+    }
+    return INK_FS_OTHER;
+}
+
+static int index_add(const file_context_t *c, ink_db_t *db, const uint8_t card[16], const char *path) {
+    index_rec_t e = {0}, old; ink_rec_t rec; ink_db_cursor_t cur = {0};
+    int r = resolve_for(c, path, false, e.path, sizeof e.path);
+    if (r) return r;
+    memcpy(e.card, card, 16);
+    while (ink_db_next(db, &cur, &rec, &old, sizeof old) == 1)
+        if (!memcmp(e.card, old.card, 16) && !strcmp(e.path, old.path)) return 0;
+    return index_save(db, 0, &e, NULL);
+}
+
+static int index_scan(const file_context_t *c, ink_db_t *db, const uint8_t card[16], const char *root) {
+    ink_fs_dir_t **dirs = osal_calloc(JOB_DEPTH, sizeof *dirs, OSAL_MEM_EXTERNAL);
+    if (!dirs) return INK_FS_ERR_IO;
+    char path[INK_FS_PATH_MAX]; snprintf(path, sizeof path, "%s", root);
+    int depth = 0, r = fs_dir_open_for(c, path, &dirs[0]);
+    if (!r) depth = 1;
+    ink_fs_stat_t st;
+    while (!r && depth) {
+        int n = ink_fs_dir_next(dirs[depth - 1], &st);
+        if (n < 0) { r = n; break; }
+        if (!n) { ink_fs_dir_close(dirs[--depth]); if (depth) *strrchr(path, '/') = 0; continue; }
+        size_t len = strlen(path);
+        if (snprintf(path + len, sizeof path - len, "/%s", st.name) >= (int)(sizeof path - len)) { r = INK_FS_ERR_PATH; break; }
+        if (!st.is_dir) { r = index_add(c, db, card, path); path[len] = 0; }
+        else if (depth == JOB_DEPTH) r = INK_FS_ERR_PATH;
+        else { r = fs_dir_open_for(c, path, &dirs[depth]); if (!r) depth++; }
+    }
+    while (depth) ink_fs_dir_close(dirs[--depth]);
+    osal_free(dirs);
+    return r;
+}
+
+int fs_index_for(const file_context_t *c, const char *root, ink_fs_type_t type, uint32_t *cursor, ink_fs_entry_t *out) {
+    osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
+    int r = ink_fs_card_hold();
+    if (r) { osal_mutex_unlock(FS.edits); return r; }
+    uint8_t card[16]; ink_db_t *db = NULL; char phys[PHYS_MAX] = "";
+    r = FS.job_active ? INK_FS_ERR_BUSY : root ? resolve_for(c, root, false, phys, sizeof phys) : 0;
+    if (!r && root && strncmp(phys, "/content", 8)) r = INK_FS_ERR_DENIED;
+    if (!r) r = index_open(card, &db);
+    if (!r && root && !*cursor) r = index_scan(c, db, card, root);
+    index_rec_t e; ink_rec_t rec; ink_db_cursor_t cur = {.id = *cursor, .started = *cursor != 0};
+    int more = 0;
+    while (!r && (more = root ? ink_db_next(db, &cur, &rec, &e, sizeof e) : ink_db_get(db, *cursor, &rec, &e, sizeof e) == 0 ? 1 : 0) == 1) {
+        if (memcmp(e.card, card, 16)) { if (!root) r = INK_FS_ERR_CARD_CHANGED; else continue; }
+        if (r) break;
+        if (root && !strcmp(phys, "/content") && !strncmp(e.path, "/content/.", 10)) continue;
+        if (root && !index_under(e.path, phys)) continue;
+        char own[PHYS_MAX]; snprintf(own, sizeof own, "/content/.m/%s", c->member);
+        const char *suffix = e.path + 8, *prefix = "/family";
+        if (index_under(e.path, own)) { suffix = e.path + strlen(own); prefix = "/me"; }
+        else if (!strncmp(e.path, "/content/.m/", 12)) { suffix = e.path + 12; prefix = "/members/"; }
+        if (snprintf(out->path, sizeof out->path, "%s%s", prefix, suffix) >= (int)sizeof out->path) { r = INK_FS_ERR_PATH; break; }
+        ink_fs_stat_t st;
+        int access = fs_stat_for(c, out->path, &st);
+        if (access) { if (!root) { r = access; break; } continue; }
+        out->type = index_type(e.path);
+        if (root && type != INK_FS_ANY && type != out->type) continue;
+        out->id = rec.id; out->size = st.size; *cursor = rec.id;
+        break;
+    }
+    ink_db_close(db); ink_fs_card_release(); osal_mutex_unlock(FS.edits);
+    return r ? r : more;
+}
+
+int ink_fs_index(const char *path, ink_fs_type_t type, uint32_t *cursor, ink_fs_entry_t *out) {
+    file_context_t c = current_context();
+    return fs_index_for(&c, path, type, cursor, out);
+}
+int ink_fs_lookup(uint32_t id, ink_fs_entry_t *out) {
+    file_context_t c = current_context();
+    int r = fs_index_for(&c, NULL, INK_FS_ANY, &id, out);
+    return r == 1 ? 0 : r ? r : INK_FS_ERR_NOT_FOUND;
 }

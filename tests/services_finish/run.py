@@ -18,6 +18,7 @@ a = p.parse_args()
 build = (ROOT / a.build).resolve()
 work = Path(tempfile.mkdtemp(prefix='services-finish-', dir=build))
 suites = {
+    'file_index': ('sim-media', ['file_index_boundary.c'], '100s'),
     'member_caps': ('sim-media', ['member_time_boundary.c', 'member_data_boundary.c', 'member_notify_boundary.c', 'time_caps_boundary.c', 'notify_caps_boundary.c'], '30s'),
     'file_events': ('sim-media', ['file_handoff_boundary.c', 'media_record_boundary.c'], '30s'),
     'file_paths': ('sim-media', ['file_handoff_boundary.c'], '30s'),
@@ -112,7 +113,7 @@ def review_matrix(name, binary):
         out = path / label
         cmd = [str(binary), '--profile', str(ROOT / 'simulator/profiles/metalio-plus.json'),
                '--assets', str(build / 'assets'), '--content', str(build / 'test-content'),
-               '--out', str(out), '--end', '25s', '--quiet', '--no-random-outages',
+               '--out', str(out), '--end', '100s' if name == 'file_index' else '25s', '--quiet', '--no-random-outages',
                '--flash-image', str(path / 'user.img'), '--sd-dir', str(path / 'sd')]
         if name == 'file_events': cmd += ['--script', str(ROOT / 'tests/services_finish/voice.script')]
         run = subprocess.run(cmd, cwd=ROOT, capture_output=True, text=True, timeout=180,
@@ -130,7 +131,15 @@ def review_matrix(name, binary):
             for warning in metrics.get('warnings', []): print(warning)
         all_ok &= ok
 
-    if name == 'member_caps':
+    if name == 'file_index':
+        path = work / 'file-index'
+        (path / 'sd').mkdir(parents=True)
+        for stage in ('create', 'reboot', 'swap'):
+            boot(path, stage, {'INK_INDEX_STAGE': stage})
+        path = work / 'file-index-capacity'
+        (path / 'sd').mkdir(parents=True)
+        boot(path, 'capacity', {'INK_INDEX_STAGE': 'capacity'})
+    elif name == 'member_caps':
         for mode in ('data', 'data_delete', 'alarm', 'reminder', 'cancel', 'events', 'alarm_events', 'reminder_events'):
             for change in (False, True):
                 path = work / (mode + ('-switch' if change else '-control'))
@@ -327,7 +336,7 @@ for name in a.suites:
     if name == 'update':
         failed |= not update_matrix(binary)
         continue
-    if name in ('upgrade_crash', 'removal', 'removal_alarm', 'empty_removal', 'update_history', 'reader_late', 'member_inventory', 'late_writers', 'file_late', 'file_events', 'file_paths', 'member_caps'):
+    if name in ('file_index', 'upgrade_crash', 'removal', 'removal_alarm', 'empty_removal', 'update_history', 'reader_late', 'member_inventory', 'late_writers', 'file_late', 'file_events', 'file_paths', 'member_caps'):
         failed |= not review_matrix(name, binary)
         continue
     out = work / (name + '-out')
