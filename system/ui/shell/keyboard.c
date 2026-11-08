@@ -3,6 +3,7 @@
  * cards, over the page. It shows what the input session says and feeds in what is pressed; the page above it stays usable.
  * What changes is driven with the fast waveform (foundation §4.8).
  */
+/* ui-scale-runtime: dimension area.y1 Theme-derived keyboard rectangle in display pixels. */
 #include <stdio.h>
 #include <string.h>
 
@@ -201,7 +202,7 @@ static void build(int kind) {
     lv_obj_remove_flag(K.root, LV_OBJ_FLAG_SCROLLABLE);
     lv_area_t area;
     ink_shell_keyboard_area(&area);
-    lv_obj_set_size(K.root, LV_PCT(100), lv_area_get_height(&area));
+    lv_obj_set_size(K.root, LV_PCT(100), ink_ui_height() - area.y1);
     lv_obj_align(K.root, LV_ALIGN_BOTTOM_MID, 0, 0);
     lv_obj_set_style_bg_color(K.root, lv_color_white(), 0);
     lv_obj_set_style_bg_opa(K.root, LV_OPA_COVER, 0);

@@ -115,8 +115,8 @@ static void inspect_focus(void) {
     lv_obj_get_coords(field, &actual); lv_obj_get_coords(heading, &other);
     CHECK(actual.y1 == y && lv_area_get_height(&actual) == height && same_area(&other, &heading_original),
           "snapshot geometry matches LVGL and surrounding content stays in place");
-    CHECK(lv_obj_has_state(field, LV_STATE_FOCUSED) && lv_obj_get_style_border_width(field, 0) == ink_ui_px(2 * INK_STROKE),
-          "the real focused field has a visible black border");
+    CHECK(lv_obj_has_state(field, LV_STATE_FOCUSED) && lv_obj_get_style_outline_width(field, 0) == ink_ui_px(INK_STROKE),
+          "the real focused field has a visible black outline using the standard stroke");
     lv_obj_t *space = find_label(lv_layer_sys(), "空格");
     CHECK(space != NULL, "the real system keyboard has a space key");
     if (space) {

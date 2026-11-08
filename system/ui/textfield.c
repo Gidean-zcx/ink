@@ -1,4 +1,5 @@
 /* A text field for pages (see ink/sys/textfield.h). The session is the text service's; this shows it. */
+/* ui-scale-runtime: dimension home.x,home.y,position.y Saved LVGL coordinates, adjusted once to the theme keyboard safe area. */
 #include <stdio.h>
 #include <string.h>
 
@@ -28,7 +29,7 @@ typedef struct {
     ink_ui_field_spec_t *semantic;
     const ink_ui_action_spec_t *focus_action;
     uint32_t owner_epoch;
-    int32_t home_x, home_y;
+    lv_point_t home;
 } field_t;
 
 #define WINDOW_CHARS 30
@@ -126,8 +127,9 @@ static void cl_entered(void *ctx, const char *value) {
 
 static void cl_ended(void *ctx) {
     field_t *f = ctx;
-    if (f->semantic && f->session) {
-        lv_obj_set_pos(f->obj, f->home_x, f->home_y);
+    if (f->semantic) {
+        lv_point_t home = f->home;
+        lv_obj_set_pos(f->obj, home.x, home.y);
         ink_ui_content_changed();
     }
     f->session = 0;
@@ -152,8 +154,9 @@ static bool focus(field_t *f) {
         int top = keyboard.y1 - ink_ui_px(INK_GAP) - lv_area_get_height(&field);
         lv_area_t parent; lv_obj_get_content_coords(lv_obj_get_parent(f->obj), &parent);
         if (top < parent.y1 || field.x1 < 0 || field.x2 > keyboard.x2) return false;
-        f->home_x = lv_obj_get_x(f->obj); f->home_y = lv_obj_get_y(f->obj);
-        if (field.y1 > top) lv_obj_set_y(f->obj, f->home_y + top - field.y1);
+        f->home = (lv_point_t){lv_obj_get_x(f->obj), lv_obj_get_y(f->obj)};
+        lv_point_t position = f->home; position.y += top - field.y1;
+        if (field.y1 > top) lv_obj_set_y(f->obj, position.y);
     }
     ink_text_cfg_t c = f->cfg;
     c.initial = f->text;
@@ -161,7 +164,7 @@ static bool focus(field_t *f) {
     f->session = ink_text_focus(&c, &CLIENT, f);
     if (f->session < 0) f->session = 0;
     if (f->semantic) {
-        if (!f->session) lv_obj_set_pos(f->obj, f->home_x, f->home_y);
+        if (!f->session) cl_ended(f);
         else ink_ui_content_changed();
     }
     show(f);
@@ -348,7 +351,9 @@ int ink_textfield_bind_short(lv_obj_t *field, const ink_ui_page_spec_t *page,
     f->page = page; f->semantic = spec; f->focus_action = focus_action;
     f->owner_epoch = ink_member_epoch();
     spec->value = f->text;
-    lv_obj_set_style_border_width(field, ink_ui_px(2 * INK_STROKE), LV_STATE_FOCUSED);
+    lv_obj_set_style_outline_width(field, ink_ui_px(INK_STROKE), LV_STATE_FOCUSED);
+    lv_obj_set_style_outline_pad(field, ink_ui_px(INK_GAP_XS), LV_STATE_FOCUSED);
+    lv_obj_set_style_outline_color(field, ink_ui_ink(), LV_STATE_FOCUSED);
     show(f);
     return 0;
 }
