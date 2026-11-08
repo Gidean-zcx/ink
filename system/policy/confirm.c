@@ -61,6 +61,8 @@ static ink_cap_t HUB_CARD[2]; /* Private card templates, never registered as too
 
 /* Only bindings and receipts go to the existing store, never the arguments. */
 static uint32_t journal(uint32_t token, const char *state, const ink_receipt_t *rc, const held_t *h) {
+    if (rc) state = rc->status == INK_RC_DONE || rc->status == INK_RC_UNDONE || rc->status == INK_RC_PARTIAL ? "done" :
+        rc->status == INK_RC_QUEUED || rc->status == INK_RC_PENDING_CONFIRMATION ? "running" : "failed";
     struct scratch { ink_json_t j; char out[2048], binding[768], receipt[1024]; };
     struct scratch *s = osal_calloc(1, sizeof *s, OSAL_MEM_EXTERNAL);
     if (!s) return 0;
@@ -75,6 +77,7 @@ static uint32_t journal(uint32_t token, const char *state, const ink_receipt_t *
         ink_jw_raw(&w, ",\"lease\":"); ink_jw_int(&w, CF.limit);
         ink_jw_raw(&w, ",\"epoch\":"); ink_jw_int(&w, h->epoch);
         ink_jw_raw(&w, ",\"connection\":"); ink_jw_int(&w, h->connection);
+        ink_jw_raw(&w, ",\"expires_us\":"); ink_jw_int(&w, (int64_t)h->expires_us);
         ink_jw_raw(&w, "}");
     } else {
         ink_rec_t rec;
@@ -94,7 +97,7 @@ static uint32_t journal(uint32_t token, const char *state, const ink_receipt_t *
     }
     ink_jw_raw(&w, "}");
     uint32_t ver = 0;
-    ink_db_write_t put = {.id = token, .data = s->out, .len = w.len, .written_ver = &ver};
+    ink_db_write_t put = {.id = token, .sort = (int64_t)token * 2, .data = s->out, .len = w.len, .written_ver = &ver};
     if (w.overflow || ink_db_put(CF.db, &put, NULL) != 0) ver = 0;
     osal_free(s);
     return ver;
@@ -232,12 +235,12 @@ static void changed(void) {
 }
 
 static void tell(uint32_t token, const char *cap, const char *decision, const ink_receipt_t *rc, const char *who, const char *digest) {
-    if (rc || strcmp(decision, "accepted"))
-        journal(token, rc ? (rc->status == INK_RC_DONE ? "done" : "failed") : decision, rc, NULL);
+    ink_rec_t rec;
+    uint32_t ver = rc || strcmp(decision, "accepted") ? journal(token, decision, rc, NULL) :
+        ink_db_get(CF.db, token, &rec, NULL, 0) == 0 ? rec.ver : 0;
     char hub_digest[65] = "";
     if (!digest && !strcmp(cap, "hub.confirm")) {
         struct scratch { ink_json_t j; char out[2048]; } *s = osal_calloc(1, sizeof *s, OSAL_MEM_EXTERNAL);
-        ink_rec_t rec;
         if (s && !ink_db_get(CF.db, token, &rec, s->out, sizeof s->out - 1) && !ink_json_parse(&s->j, s->out, rec.len))
             ink_json_str(&s->j, ink_json_find(&s->j, 0, "binding.digest"), hub_digest, sizeof hub_digest);
         osal_free(s); digest = hub_digest;
@@ -251,6 +254,7 @@ static void tell(uint32_t token, const char *cap, const char *decision, const in
     }
     ink_args_init(a);
     ink_args_int(a, "token", token);
+    ink_args_int(a, "result_ver", ver);
     ink_args_str(a, "cap", cap);
     ink_args_str(a, "decision", decision);
     if (digest) ink_args_str(a, "digest", digest);
@@ -423,7 +427,11 @@ static void accept_job(void *arg) { /* exec.bg: commit before any side effect */
         osal_now_us() >= h->expires_us || (hub && !ink_hub_member_matches(h->member, h->epoch, h->connection)) ? "expired" : NULL;
     if (invalid) { changed(); tell(h->token, h->cap->id, invalid, NULL, h->member, NULL); osal_free(h); return; }
     uint32_t ver = journal(h->token, hub ? "accepted" : "running", NULL, NULL);
-    if (!ver || ink_db_wait(CF.db, ver, 5000000) != 0) { changed(); osal_free(h); return; }
+    if (!ver || ink_db_wait(CF.db, ver, 5000000) != 0) {
+        ink_receipt_t rc = {.status = INK_RC_FAILED};
+        snprintf(rc.detail, sizeof rc.detail, "confirmation could not be committed");
+        changed(); confirmed_done(h, &rc); return;
+    }
     if (strcmp(h->member, ink_member_current()->id) || h->epoch != ink_member_epoch() || osal_now_us() >= h->expires_us ||
         (hub && !ink_hub_member_matches(h->member, h->epoch, h->connection))) {
         changed(); tell(h->token, h->cap->id, "expired", NULL, h->member, NULL); osal_free(h); return;
@@ -663,8 +671,24 @@ uint32_t ink_confirm_track(const ink_cap_t *cap, const ink_call_opts_t *o, ink_r
     return saved ? token : 0;
 }
 
-void ink_confirm_tracked_done(uint32_t token, const ink_receipt_t *rc) {
-    journal(token, rc->status == INK_RC_DONE ? "done" : "failed", rc, NULL);
+void ink_confirm_tracked_done(uint32_t token, const char *cap, const char *member, const ink_receipt_t *rc) {
+    tell(token, cap, "accepted", rc, member, NULL);
+}
+
+void ink_confirm_ack(uint32_t token, uint32_t ver) {
+    char *out = osal_malloc(2048, OSAL_MEM_EXTERNAL);
+    ink_rec_t rec;
+    if (out && token > 1 && !ink_db_get(CF.db, token, &rec, out, 2048) && rec.ver == ver) {
+        /* Even sort keys await ACK; odd ones were received. Token order stays intact. */
+        ink_db_write_t put = {.id = token, .sort = (int64_t)token * 2 + 1, .data = out, .len = rec.len};
+        ink_db_put(CF.db, &put, NULL);
+    }
+    osal_free(out);
+    ink_db_cursor_t at = {.desc = true};
+    int keep = 16;
+    while (ink_db_next(CF.db, &at, &rec, NULL, 0) == 1)
+        if (rec.id != 1 && keep-- <= 0 && rec.sort == (int64_t)rec.id * 2 + 1)
+            ink_db_del_if_ver(CF.db, rec.id, INK_SRC_SYSTEM, rec.ver);
 }
 
 static void cap_status(ink_call_t *c) {
@@ -687,7 +711,9 @@ static void cap_status(ink_call_t *c) {
             ink_svc_unlock();
             if (!live) state = "expired";
         }
-        int64_t lease = 0, epoch = 0, connection = 0;
+        int64_t lease = 0, epoch = 0, connection = 0, expires = 0;
+        if (ink_json_eq(&s->j, st, "accepted") && (!ink_json_int(&s->j, ink_json_find(&s->j, 0, "binding.expires_us"), &expires) ||
+            expires <= 0 || osal_now_us() >= (uint64_t)expires)) state = "expired";
         if (ink_json_eq(&s->j, st, "accepted") && (!ink_json_int(&s->j, ink_json_find(&s->j, 0, "binding.lease"), &lease) || lease != CF.limit)) state = "expired";
         if (ink_json_eq(&s->j, st, "accepted") && (!ink_json_int(&s->j, ink_json_find(&s->j, 0, "binding.epoch"), &epoch) ||
             !ink_json_int(&s->j, ink_json_find(&s->j, 0, "binding.connection"), &connection) || !ink_hub_member_matches(ink_member_current()->id, (uint32_t)epoch, (uint32_t)connection))) state = "expired";

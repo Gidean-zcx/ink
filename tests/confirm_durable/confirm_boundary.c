@@ -28,14 +28,27 @@ static int cut_put(ink_db_t *db, const ink_db_write_t *w, uint32_t *id) {
     return result;
 }
 
+static int result_wait(ink_db_t *db, uint32_t ver, int64_t timeout) {
+    const char *phase = getenv("INK_CONFIRM_PHASE");
+    if (phase && !strcmp(phase, "failure")) {
+        ink_db_cursor_t at = {0}; ink_rec_t rec; char out[2048];
+        while (ink_db_next(db, &at, &rec, out, sizeof out) == 1)
+            if (rec.ver == ver && strstr(out, "\"state\":\"running\"")) return -1;
+    }
+    return ink_db_wait(db, ver, timeout);
+}
+#define ink_db_wait result_wait
 #define ink_db_put cut_put
 #ifndef INK_TEST_CONFIRM_SOURCE
 #define INK_TEST_CONFIRM_SOURCE "../../system/policy/confirm.c"
 #endif
 #include INK_TEST_CONFIRM_SOURCE
 #undef ink_db_put
+#undef ink_db_wait
 
 void review_request(const ink_json_t *j) { on_request(NULL, 100, "confirm/request", j, 0); }
+unsigned review_count(void) { return (unsigned)ink_db_count(CF.db); }
+unsigned review_last_token(void) { return CF.next_token; }
 bool review_running_durable(uint32_t token) {
     if (!token) token = CF.next_token;
     ink_rec_t rec;

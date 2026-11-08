@@ -1440,7 +1440,7 @@ typedef struct {
 
 static void tool_done(void *ctx, const ink_receipt_t *rc) { /* where the capability finished */
     tool_job_t *t = ctx;
-    if (t->confirm_token) ink_confirm_tracked_done(t->confirm_token, rc);
+    if (t->confirm_token) ink_confirm_tracked_done(t->confirm_token, t->name, t->member, rc);
     if (!ink_hub_member_matches(t->member, t->epoch, t->connection)) {
         if (t->connection == ink_hub_connection()) ink_hub_respond_error(t->id, -32023, "stale_member");
         osal_free(t);
@@ -1673,10 +1673,22 @@ static void event_ack(void *ctx, const char *method, const ink_json_t *j, int pa
     int64_t boot, upto;
     if (strcmp(method, "device/event_ack") || !ink_json_int(j, ink_json_find(j, params, "boot"), &boot) ||
         !ink_json_int(j, ink_json_find(j, params, "upto"), &upto) || boot != CB.boot_tag || upto <= 0 || upto > UINT32_MAX) return;
+    uint32_t token[EVENTS_KEPT], ver[EVENTS_KEPT];
+    int n = 0;
     osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
-    if ((uint32_t)upto > ev_acked && (uint32_t)upto <= ev_sent) ev_acked = (uint32_t)upto;
+    if ((uint32_t)upto > ev_acked && (uint32_t)upto <= ev_sent) {
+        for (int i = 0; i < EVENTS_KEPT; i++) {
+            const typeof(EV[0]) *e = &EV[i];
+            int64_t t = 0, v = 0;
+            if (e->seq > ev_acked && e->seq <= (uint32_t)upto && !strcmp(e->id, "confirm.result") &&
+                !strcmp(e->member, ink_member_current()->id) && ink_args_get_int(&e->args, "token", &t) &&
+                ink_args_get_int(&e->args, "result_ver", &v) && t > 1 && v > 0) { token[n] = (uint32_t)t; ver[n++] = (uint32_t)v; }
+        }
+        ev_acked = (uint32_t)upto;
+    }
     bool all = ev_acked == ev_next;
     osal_mutex_unlock(CB.lock);
+    for (int i = 0; i < n; i++) ink_confirm_ack(token[i], ver[i]);
     if (all) ink_hub_events_acked();
 }
 
