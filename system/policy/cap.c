@@ -1431,6 +1431,7 @@ typedef struct {
     char domain[16];   /* tools/list: only this domain */
     uint32_t page_gen;
     uint32_t epoch, connection;
+    uint32_t confirm_token;
     uint64_t received_us;
     char name[48];
     char rid[RID_CAP]; /* _meta.request_id: a retry gets the first receipt again */
@@ -1439,6 +1440,7 @@ typedef struct {
 
 static void tool_done(void *ctx, const ink_receipt_t *rc) { /* where the capability finished */
     tool_job_t *t = ctx;
+    if (t->confirm_token) ink_confirm_tracked_done(t->confirm_token, rc);
     if (!ink_hub_member_matches(t->member, t->epoch, t->connection)) {
         if (t->connection == ink_hub_connection()) ink_hub_respond_error(t->id, -32023, "stale_member");
         osal_free(t);
@@ -1452,7 +1454,10 @@ static void tool_done(void *ctx, const ink_receipt_t *rc) { /* where the capabil
     char *out = osal_malloc(cap, OSAL_MEM_EXTERNAL);
     osal_mem_tag(prev);
     if (!out || ink_receipt_json(rc, out, cap) < 0) ink_hub_respond_error(t->id, -32603, out ? "receipt too long" : "out of memory");
-    else ink_hub_respond_for(t->id, out, t->member, t->epoch, t->connection);
+    else {
+        if (t->confirm_token) { size_t n = strlen(out); snprintf(out + n - 1, cap - n + 1, ",\"confirm_token\":%u}", t->confirm_token); }
+        ink_hub_respond_for(t->id, out, t->member, t->epoch, t->connection);
+    }
     osal_free(out);
     osal_free(t);
 }
@@ -1489,6 +1494,17 @@ static void tool_run(void *arg) { /* UI task */
         ink_hub_respond_error(t->id, -32603, "busy");
         osal_free(t);
     }
+}
+
+static void tool_commit(void *arg) { /* exec.bg: commit, then resume the original UI dispatch */
+    tool_job_t *t = arg; ink_receipt_t rc = {0};
+    const ink_cap_t *c = ink_cap_find(t->name);
+    ink_call_opts_t o = {.member = t->member, .page_gen = t->page_gen, .request_id = t->rid[0] ? t->rid : NULL, .args_json = t->args};
+    if (ink_hub_member_matches(t->member, t->epoch, t->connection) && gate(c, INK_SRC_AI, t->page_gen, t->asked, &rc) == INK_RC_DONE) {
+        t->confirm_token = ink_confirm_track(c, &o, &rc);
+        if (!t->confirm_token) { tool_done(t, &rc); return; }
+    }
+    if (ink_exec_post(INK_EXEC_UI, &t->job, tool_run, t) != 0) { rc.status = INK_RC_FAILED; tool_done(t, &rc); }
 }
 
 static void on_tools(void *ctx, int64_t id, const char *method, const ink_json_t *j, int params) { /* hub task */
@@ -1569,7 +1585,9 @@ static void on_tools(void *ctx, int64_t id, const char *method, const ink_json_t
         if (alen) memcpy(t->args, j->text + j->tok[args_t].start, alen);
         t->args[alen] = 0;
     }
-    if (ink_exec_post(INK_EXEC_UI, &t->job, tool_run, t) != 0) {
+    const ink_cap_t *c = list ? NULL : ink_cap_find(t->name);
+    bool commit = c && needs_activity(c, INK_SRC_AI) && confirm_for(c, INK_SRC_AI, t->asked) == INK_CONFIRM_NONE;
+    if (ink_exec_post(commit ? INK_EXEC_BG : INK_EXEC_UI, &t->job, commit ? tool_commit : tool_run, t) != 0) {
         ink_hub_respond_error(id, -32603, "busy");
         osal_free(t);
     } else ink_probe_count("tools.accepted");
