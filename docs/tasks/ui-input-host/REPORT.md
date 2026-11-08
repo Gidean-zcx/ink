@@ -11,11 +11,12 @@
 | 2 | 【实测】定向通过 | 快照标出字段与焦点，实际显示黑色焦点轮廓和光标；完成、HOME 收起后字段和相邻内容坐标逐项相同 | 同上 |
 | 3 | 【实测】定向通过 | 人在系统键盘粘贴与 AI `text.insert`，字段值、`VALUE_CHANGED` 与提交回调记录完全相同；触摸和 AI 聚焦走同一声明能力 | 同上 |
 | 4 | 【实测】通过，反向失败符合预期 | 换人后旧 `text.insert`／`text.submit` 均返回 stale，值及事件计数不变；移除成员检查时 2 项断言失败，CTest 退出 8 | 同上；见反向对照 |
-| 5 | 待验证 | 全量、ASan／UBSan 与产品行数 | 待补 |
+| 5 | 【实测】普通全量通过，内存检查进行中 | 普通全量 207/207，零跳过；保守产品改动 153 行，不超过 250 | 见完整验证命令 |
 
 ## 没做到的
 
-- 定向 184 项断言通过，反向对照有效；全量检查进行中。
+- 定向 184 项断言及普通全量通过，反向对照有效；ASan／UBSan 检查进行中。
+- Linux／gcc 未运行，不能以本机 macOS／clang 结果代替。
 - 按任务边界不做长文、表单编辑页和实机验证。
 
 ## 和设计不一致的
@@ -51,10 +52,31 @@
 - 【实现】产品新增 137 行、删除 10 行；连测试接线的 CMake 6 行也计入，保守合计 153 行，小于 250。超过 100 行因为同时包含可调用的字段绑定、快照和位置恢复；看过仅包装 `ink_text_focus` 的更小方案，缺少字段身份、可见焦点和恢复位置，不能满足验收。没有重复实现输入状态机。
 - 【实现】R-061：布局、焦点和 F1 快照留在 UI 框架，文字仍由文本服务处理；触摸与 AI 通过同一页面聚焦能力和既有编辑能力进入同一输入会话，没有直接写服务内部状态。F1 源码和接口未改。
 - 新测试首轮有一次 JSON 辅助函数名误用导致编译失败，已改用现有 `ink_json_eq`；运行时发现输入代次随浮层变化，宿主改为核对所属屏幕；没有放宽断言或预算。
-- 【实测】首轮普通全量 206/207，通过以外仅 `ui-scale` 失败；焦点线宽改成规范的 `INK_STROKE` 轮廓线，坐标用 LVGL 点保存，并按现有检查器约定注释其运行时来源。定向 `ui-scale` 随后退出 0；全量重跑与内存检查进行中。没有修改检查器或加入尺寸例外。
+- 【实测】首轮普通全量 206/207，通过以外仅 `ui-scale` 失败；焦点线宽改成规范的 `INK_STROKE` 轮廓线，坐标用 LVGL 点保存，并按现有检查器约定注释其运行时来源。定向 `ui-scale` 随后退出 0；普通全量重跑 207/207、零跳过，退出 0，113.51 秒。没有修改检查器或加入尺寸例外。
 
 ## 反向对照
 
 - 【实测】临时去掉 `system/services/text/text_caps.c` 中 `target_ok()` 的 `ink_text_session_current()` 拒绝分支；不改测试，仅构建 `sim-ui-input-host` 并执行验收表的定向命令。构建退出 0，CTest 退出 8；旧会话写入被接受，且字段／事件被改变，2 项断言失败，`test.finished=1`。本地证据：`build/ui-input-host-negative-test.log`、`build/ui-input-host-negative-metrics.json`。
 - 【实测】实验结束后恢复源码，`git diff --exit-code -- system/services/text/text_caps.c` 退出 0；最终构建会重新编译恢复后的检查。
 - 【实现】成员检查已由现有文本服务提供，本任务复用并补反例，没有再加一套输入会话状态机。
+
+## 完整验证命令
+
+配置使用[总规则第 5 节](../codex-rules.md)的全部参数，`build-asan` 仅额外启用 `-DINK_SANITIZE=ON`。两套配置都启用 `INK_WERROR=ON`，并用以下现成依赖映射，避免写入依赖检出目录：
+
+```bash
+-DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"
+-DFETCHCONTENT_SOURCE_DIR_SDL2="$INK_DEPS/build/_deps/sdl2-src"
+-DFETCHCONTENT_SOURCE_DIR_IMGUI="$INK_DEPS/build/_deps/imgui-src"
+```
+
+```bash
+export PYTHONPATH="$PWD/hub" PYTHONDONTWRITEBYTECODE=1
+taskpolicy -c utility cmake --build build -j3
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
+taskpolicy -c utility cmake --build build-asan -j3
+UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
+```
+
+- 【实测】普通构建退出 0；全量日志 `build/ui-input-host-ctest.log`。F2 为 184 项断言通过，内部 RAM 最低余量 47,840 字节，无警告。
+- 【实测】基线至当前提交的 `git diff --stat` 只有本任务相关文件及初始任务书；F1 源码、接口与测试相对基线无差异，`git diff --check` 退出 0。按总规则第 6 节原样运行隐私扫描，零匹配（grep 退出 1）。
