@@ -160,7 +160,12 @@ target_compile_definitions(ink_lvgl PUBLIC LV_CONF_INCLUDE_SIMPLE)
 target_compile_options(ink_lvgl PRIVATE -w)
 
 # ---------------------------------------------------------------- portable system + apps
+add_library(ink_image_codec STATIC system/services/media/image_codec.c)
+target_include_directories(ink_image_codec PRIVATE system/include third_party/stb)
+target_link_libraries(ink_image_codec PRIVATE ink_platform)
+target_compile_options(ink_image_codec PRIVATE -w) # upstream stb implementation
 add_library(ink_system STATIC
+  system/services/media/image.c
   system/services/display/display_service.c
   system/services/display/light.c
   system/services/camera/camera_service.c
@@ -233,8 +238,8 @@ add_library(ink_system STATIC
   system/ui/shell/ai_panel.c
   system/ui/app.c
   system/apps/remote/remote.c)
-target_include_directories(ink_system PUBLIC system/include PRIVATE system/services/display third_party/jsmn)
-target_link_libraries(ink_system PUBLIC ink_platform ink_lvgl ink_lz4 ink_sha256)
+target_include_directories(ink_system PUBLIC system/include PRIVATE system/services/display third_party/jsmn third_party/stb)
+target_link_libraries(ink_system PUBLIC ink_platform ink_lvgl ink_lz4 ink_sha256 PRIVATE ink_image_codec)
 # The system calls the HAL; in this build the simulator port implements it. Link-only (no headers
 # leak into the system or the apps), and it puts the port after the system on every link line, which
 # GNU ld needs for HAL functions only the system references (e.g. hal_cell_*).
@@ -453,6 +458,19 @@ endif()
 
 # ---------------------------------------------------------------- tests
 enable_testing()
+set(INK_IMAGE_FIXTURES ${CMAKE_BINARY_DIR}/generated/image_fixtures.h)
+add_custom_command(OUTPUT ${INK_IMAGE_FIXTURES}
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/media/fixtures.py ${INK_IMAGE_FIXTURES}
+  DEPENDS tests/media/fixtures.py)
+ink_sim_executable(sim-image tests/media/image.c ${INK_IMAGE_FIXTURES})
+target_include_directories(sim-image PRIVATE ${CMAKE_BINARY_DIR}/generated)
+target_link_libraries(sim-image PRIVATE ink_system)
+foreach(case decode dither cache version)
+  add_test(NAME image-${case} COMMAND ${CMAKE_COMMAND} -E env INK_IMAGE_TEST=${case} $<TARGET_FILE:sim-image>
+    --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+    --budget ${CMAKE_SOURCE_DIR}/tests/media/image.budget.json
+    --out ${CMAKE_BINARY_DIR}/test-out/image-${case} --end 10s --quiet --no-random-outages)
+endforeach()
 ink_sim_executable(sim-backup-restore tests/backup_restore/device.c)
 target_link_libraries(sim-backup-restore PRIVATE ink_apps ink_system)
 target_compile_options(sim-backup-restore PRIVATE -Wno-format-truncation) # a test path cut short fails the test anyway

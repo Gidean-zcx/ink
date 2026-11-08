@@ -1504,6 +1504,7 @@ static void driver_task(void *arg) {
 /* -------------------------------------------------------------------- API */
 
 void hal_display_get_info(hal_panel_info_t *out) { *out = D.info; }
+float hal_display_level_luminance(unsigned level) { return PANEL_LEVEL[level < 16 ? level : 15]; }
 
 uint32_t hal_display_update(const hal_rect_t *area, const uint8_t *gray8, int stride, hal_waveform_t wf, uint32_t flags,
                             hal_display_done_fn done, void *ctx) {

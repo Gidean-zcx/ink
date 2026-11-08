@@ -74,6 +74,8 @@ enum {
 };
 
 void hal_display_get_info(hal_panel_info_t *out);
+/** Relative brightness of a factory gray level (0..15), from the panel calibration. */
+float hal_display_level_luminance(unsigned level);
 
 /**
  * Queue an update of `area` with new pixel content.
