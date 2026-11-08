@@ -47,8 +47,8 @@ static int result_wait(ink_db_t *db, uint32_t ver, int64_t timeout) {
 #undef ink_db_wait
 
 void review_request(const ink_json_t *j) { on_request(NULL, 100, "confirm/request", j, 0); }
-unsigned review_count(void) { return (unsigned)ink_db_count(CF.db); }
-unsigned review_last_token(void) { return CF.next_token; }
+unsigned test_result_count(void) { return (unsigned)ink_db_count(CF.db); }
+unsigned test_last_token(void) { return CF.next_token; }
 bool review_running_durable(uint32_t token) {
     if (!token) token = CF.next_token;
     ink_rec_t rec;

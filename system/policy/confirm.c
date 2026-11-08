@@ -97,7 +97,7 @@ static uint32_t journal(uint32_t token, const char *state, const ink_receipt_t *
     }
     ink_jw_raw(&w, "}");
     uint32_t ver = 0;
-    ink_db_write_t put = {.id = token, .sort = (int64_t)token * 2, .data = s->out, .len = w.len, .written_ver = &ver};
+    ink_db_write_t put = {.id = token, .sort = (int64_t)token * 4, .data = s->out, .len = w.len, .written_ver = &ver};
     if (w.overflow || ink_db_put(CF.db, &put, NULL) != 0) ver = 0;
     osal_free(s);
     return ver;
@@ -679,15 +679,15 @@ void ink_confirm_ack(uint32_t token, uint32_t ver) {
     char *out = osal_malloc(2048, OSAL_MEM_EXTERNAL);
     ink_rec_t rec;
     if (out && token > 1 && !ink_db_get(CF.db, token, &rec, out, 2048) && rec.ver == ver) {
-        /* Even sort keys await ACK; odd ones were received. Token order stays intact. */
-        ink_db_write_t put = {.id = token, .sort = (int64_t)token * 2 + 1, .data = out, .len = rec.len};
+        /* Low bits: received, and receipt already durable before this metadata write. */
+        ink_db_write_t put = {.id = token, .sort = (int64_t)token * 4 + 1 + (rec.ver <= ink_db_durable_ver(CF.db) ? 2 : 0), .data = out, .len = rec.len};
         ink_db_put(CF.db, &put, NULL);
     }
     osal_free(out);
     ink_db_cursor_t at = {.desc = true};
     int keep = 16;
     while (ink_db_next(CF.db, &at, &rec, NULL, 0) == 1)
-        if (rec.id != 1 && keep-- <= 0 && rec.sort == (int64_t)rec.id * 2 + 1)
+        if (rec.id != 1 && keep-- <= 0 && rec.sort / 4 == rec.id && (rec.sort & 1))
             ink_db_del_if_ver(CF.db, rec.id, INK_SRC_SYSTEM, rec.ver);
 }
 
@@ -703,7 +703,7 @@ static void cap_status(ink_call_t *c) {
     else {
         const char *state = NULL;
         int st = ink_json_find(&s->j, 0, "state");
-        if (ink_json_eq(&s->j, st, "running") || rec.ver > ink_db_durable_ver(CF.db)) state = "unknown";
+        if (ink_json_eq(&s->j, st, "running") || (rec.ver > ink_db_durable_ver(CF.db) && rec.sort != (int64_t)token * 4 + 3)) state = "unknown";
         if (ink_json_eq(&s->j, st, "pending")) {
             bool live = false;
             ink_svc_lock();

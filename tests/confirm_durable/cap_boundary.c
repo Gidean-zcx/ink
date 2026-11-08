@@ -32,7 +32,7 @@ void review_forget_delivery(uint32_t token) { /* Model an event skipped by the m
     }
     osal_mutex_unlock(CB.lock);
 }
-void review_ack(bool valid) {
+void test_event_ack(bool valid) {
     ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
     char text[100];
     snprintf(text, sizeof text, "{\"boot\":%u,\"upto\":%u}", CB.boot_tag + !valid, ev_sent);

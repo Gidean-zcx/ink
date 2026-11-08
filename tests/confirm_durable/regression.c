@@ -4,9 +4,9 @@
 extern void review_request(const ink_json_t *j);
 extern void review_tools(const ink_json_t *j);
 extern bool review_running_durable(uint32_t token);
-extern unsigned review_count(void), review_last_token(void);
+extern unsigned test_result_count(void), test_last_token(void);
 extern bool review_sent(uint32_t token);
-extern void review_ack(bool valid);
+extern void test_event_ack(bool valid);
 extern void review_forget_delivery(uint32_t token);
 static const ink_db_def_t EFFECT = {.name="test.confirm_effect", .scope=INK_DB_DEVICE, .schema=1};
 static ink_db_t *effects;
@@ -66,7 +66,7 @@ static void automatic(void) {
     snprintf(json, sizeof json, "{\"name\":\"test.auto\",\"arguments\":{},\"_meta\":{\"member\":\"owner\",\"epoch\":%u,\"request_id\":\"SYNTHETIC-AUTO\",\"asked\":true}}", ink_hub_member_epoch());
     gateway(json, true);
 }
-static void send_tool(const char *name, const char *args, const char *rid) {
+static void test_send_tool(const char *name, const char *args, const char *rid) {
     char json[1024];
     snprintf(json, sizeof json, "{\"name\":\"%s\",\"arguments\":%s,\"_meta\":{\"member\":\"owner\",\"epoch\":%u,\"request_id\":\"%s\",\"asked\":true}}", name, args ? args : "{}", ink_hub_member_epoch(), rid);
     gateway(json, true);
@@ -86,8 +86,8 @@ static void result_cases(const char *phase) {
     if (!strcmp(phase, "receipts")) {
         CHECK(AI("notify.post", "{\"title\":\"SYNTHETIC-UNDO\"}") && g_rc.status == INK_RC_DONE, "real undoable notification");
         char args[120]; snprintf(args, sizeof args, "{\"object\":\"%s\"}", g_rc.object);
-        unsigned token = review_last_token() + 1;
-        send_tool("system.undo", args, "SYNTHETIC-UNDO");
+        unsigned token = test_last_token() + 1;
+        test_send_tool("system.undo", args, "SYNTHETIC-UNDO");
         CHECK(WAIT_FOR(query_done(token), 10000), "successful undo is durable done (%s)", g_result);
         CHECK(strstr(g_result, "\"status\":\"undone\""), "original undo receipt retained");
         CHECK(AI("notify.list", NULL) && !strstr(g_result, "SYNTHETIC-UNDO"), "notification actually removed");
@@ -101,23 +101,23 @@ static void result_cases(const char *phase) {
         return;
     }
     if (!strcmp(phase, "capacity")) {
-        uint32_t unacked = hold("test.confirm"), first = review_last_token() + 1, last = 0;
+        uint32_t unacked = hold("test.confirm"), first = test_last_token() + 1, last = 0;
         CHECK(ink_confirm_decide(unacked, false, INK_SRC_TOUCH) == 0, "unacknowledged confirmation result");
         durable();
         int completed = 0;
         for (int i = 0; i < 1200; i++) {
             char rid[40]; snprintf(rid, sizeof rid, "SYNTHETIC-CAPACITY-%04d", i);
-            last = review_last_token() + 1;
-            send_tool("clipboard.write", "{\"text\":\"SYNTHETIC\"}", rid);
+            last = test_last_token() + 1;
+            test_send_tool("clipboard.write", "{\"text\":\"SYNTHETIC\"}", rid);
             bool done = WAIT_FOR(query_done(last), 10000);
             CHECK(done, "automatic write %d durable (%s)", i + 1, g_result);
             if (!done) break;
             CHECK(WAIT_FOR(review_sent(last), 10000), "automatic result %d sent", i + 1);
-            if (!i) { review_ack(false); state(unacked, "rejected"); review_forget_delivery(last); }
-            review_ack(true); completed++;
+            if (!i) { test_event_ack(false); state(unacked, "rejected"); review_forget_delivery(last); }
+            test_event_ack(true); completed++;
         }
         CHECK(completed == 1200, "acknowledged results never exhaust the store (%d)", completed);
-        CHECK(review_count() <= 19, "only metadata, unacked and recent results retained (%u)", review_count());
+        CHECK(test_result_count() <= 19, "only metadata, unacked and recent results retained (%u)", test_result_count());
         state(first, "done"); /* A skipped event is not acknowledged by a later cumulative ACK. */
         state(first + 1, "unknown");
         /* The first ACK also covered the confirmation: test a genuinely missing ACK separately below. */
@@ -132,17 +132,17 @@ static void result_cases(const char *phase) {
         durable();
         for (int i = 0; i < 20; i++) {
             char rid[40]; snprintf(rid, sizeof rid, "SYNTHETIC-AFTER-UNACKED-%02d", i);
-            uint32_t t = review_last_token() + 1;
-            send_tool("clipboard.write", "{\"text\":\"SYNTHETIC\"}", rid);
+            uint32_t t = test_last_token() + 1;
+            test_send_tool("clipboard.write", "{\"text\":\"SYNTHETIC\"}", rid);
             CHECK(WAIT_FOR(query_done(t), 10000) && WAIT_FOR(review_sent(t), 10000), "later automatic result %d", i);
-            review_ack(true);
+            test_event_ack(true);
         }
         durable(); state(pending, "rejected");
-        CHECK(review_count() >= 30, "unacknowledged old results survive later ACKs (%u)", review_count());
+        CHECK(test_result_count() >= 30, "unacknowledged old results survive later ACKs (%u)", test_result_count());
     } else {
-        CHECK(review_count() >= 30 && review_count() < 50, "retained results survive restart (%u)", review_count());
-        uint32_t token = review_last_token() + 1;
-        send_tool("clipboard.write", "{\"text\":\"SYNTHETIC-RESTART\"}", "SYNTHETIC-RESTART");
+        CHECK(test_result_count() >= 30 && test_result_count() < 50, "retained results survive restart (%u)", test_result_count());
+        uint32_t token = test_last_token() + 1;
+        test_send_tool("clipboard.write", "{\"text\":\"SYNTHETIC-RESTART\"}", "SYNTHETIC-RESTART");
         CHECK(WAIT_FOR(query_done(token), 10000), "new automatic write works after capacity restart (%s)", g_result);
         durable();
     }

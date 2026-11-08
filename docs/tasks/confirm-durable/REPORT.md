@@ -11,11 +11,11 @@
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
 | R1 高 | 未解决；失败回执已补 | 【实测】注入执行前提交失败时，不执行副作用、发出 failed、持久查询保留失败原因。正常听写/清通知的写盘延误仍在；三种小方案及停止原因见下文 | `T --case failure`（0）；`T --mutant failure --case failure`（1），`build/repair-reverse-failure.log` |
-| R2 高 | 已修 | 【实现】确认和自动动作共用 confirm.result；事件携带结果版本和实际发送标记，真实 event_ack 只确认已送出的对应版本；成员过滤跳过的事件不因累计水位被误回收。沿用集合 sort 元数据记 ACK，仅删除已 ACK 且不在最近 16 条内的记录。【实测】1200 次自动写入、最近 16 条、错 boot ACK、跳过事件、未 ACK 旧记录、后续 20 次 ACK、重启后的新动作均通过。禁用回收，第 897 次起失败 | `T --case capacity`（0）；`T --mutant ack --case capacity`、`T --mutant sent --case capacity`（各 1），`build/repair-reverse-ack.log`、`build/repair-reverse-sent.log` |
+| R2 高 | 已修 | 【实现】确认和自动动作共用 confirm.result；事件携带结果版本和实际发送标记，真实 event_ack 只确认已送出的对应版本；成员过滤跳过的事件不因累计水位被误回收。沿用集合 sort 元数据记 ACK 和原回执的持久性，ACK 元数据写入不会把已落盘 done 降回 unknown；仅删除已 ACK 且不在最近 16 条内的记录。【实测】1200 次自动写入、最近 16 条、错 boot ACK、跳过事件、未 ACK 旧记录、后续 20 次 ACK、重启后的新动作均通过。禁用回收，第 897 次起失败。复查报告附录原文复现器四场景共 1234 检查通过，真实假中枢自动 ACK 下完成 1200 次写入，重启仍为 17 条（元数据加最近 16 条） | `T --case capacity`（0）；`T --mutant ack --case capacity`、`T --mutant sent --case capacity`（各 1）；附录原文命令（0）；`build/repair-reverse-ack.log`、`build/repair-reverse-sent.log` |
 | R3 中 | 已修 | 【实现】回执映射集中在 journal：done/undone/partial 为 done，queued/pending_confirmation 保持 running，原回执保留。【实测】真实 notify.post → system.undo 删除通知且查询 done/undone；恢复旧二分映射后断言失败。queued/partial 的映射仅作代码核查，未另称实测 | `T --case receipts`（0）；`T --mutant receipt --case receipts`（1） |
 | R4 中 | 已修 | 【实现】binding 保存 expires_us；accepted 查询继续检查同启动 lease、成员、连接和期限。【实测】10 秒确认期限内 accepted，11 秒后 expired；撤掉期限比较后仍报 accepted，测试失败 | `T --case receipts`（0）；`T --mutant expiry --case receipts`（1） |
 | R5 中 | 已补齐执行路径反例 | 【实测】同一个后台执行轮次内，先真实人工同意，再切换成员，旧动作副作用为 0。变异撤掉确认执行前的成员/epoch 检查及执行调用的成员绑定；查询隔离不变，旧动作实际多执行一次，副作用反例失败 | `T --case core`（0）；`T --mutant member --case core`（1），`build/repair-reverse-member.log` |
-| 原验收 1 | 专项通过 | 【实测】确认/自动动作各四个断电切点并复用镜像重启；不重用 token、不重放 request_id，无最终持久回执则 unknown | `T`（0），21 阶段共 4150 检查、0 失败；`build/confirm-durable-ir3gcrgx/` |
+| 原验收 1 | 专项通过 | 【实测】确认/自动动作各四个断电切点并复用镜像重启；不重用 token、不重放 request_id，无最终持久回执则 unknown | `T`（0），21 阶段共 4151 检查、0 失败；最终两套证据待补 |
 | 原验收 2 | 专项通过 | 【实测】原状态覆盖及本轮撤销、到期、ACK 回收、重启场景通过 | 同上 |
 | 原验收 3 | 通过 | 【实测】成员、内容版本、执行前提交反例命中副作用或持久标记断言；不是仅以脚本退出非零作证 | `T --mutant member/version/commit --case core`（分别运行）；`build/repair-reverse-*.log` |
 | 原验收 4 | 未通过 | 【实现】confirm.status 仍经能力表开放，人工确认入口未向 AI 开放；没有修改 UI/文本/文件/传输服务。产品代码相对基线新增 331、删除 46，新增超 300 行预算 31 行；不冒称预算通过。两套全量结果待补 | 下述收尾命令 |
@@ -38,7 +38,7 @@
 
 - `tests/confirm_durable/regression.c`：原来要求第 16 条之外的 accepted 结果在收到 ACK 后仍可查，改为 unknown，理由是 R2 明确允许回收；此前“刚同意查 accepted”的断言保留。增加容量、重启、撤销、到期、提交失败、已同意后换成员的副作用检查；原断电、查询隔离、版本和提交断言保留。
 - `tests/confirm_durable/run.py`：member 变异改为撤执行绑定，保留查询隔离；增加对应修复的变异和可选 case。容量阶段使用复查复现器已有的 2000 秒模拟时长；原 core/cut 时限未放宽。模拟器警告可能按字节截断中文，读取 metrics 用 UTF-8 replacement 解析该诊断文本，test.fail/test.finished 的判定不变。
-- capacity 夹具屏蔽假中枢自动 ACK，改为显式投递真实 event_ack 入口；正常产品注册和 ACK 处理不受影响。这让“没收到 ACK”的反例成立。另在 ACK 边界将一条发送标记清除，模拟成员过滤跳过的事件；其结果在后续累计 ACK 后仍能查询。容量计数上限由 18 改为 19，对应多保留的这一条未接收结果，不是扩大产品预算。
+- capacity 夹具屏蔽假中枢自动 ACK，改为显式投递真实 event_ack 入口；正常产品注册和 ACK 处理不受影响。这让“没收到 ACK”的反例成立。新增辅助函数使用独立名称，保持 REVIEW 附录探针可原文编译，不修改复查报告。另在 ACK 边界将一条发送标记清除，模拟成员过滤跳过的事件；其结果在后续累计 ACK 后仍能查询。容量计数上限由 18 改为 19，对应多保留的这一条未接收结果，不是扩大产品预算。
 - 本轮没有修改既有 integration 断言、预算、等待上限或测试选择。先前 ai_surface 只增加 confirm.status 目录期望的改动仍在。
 
 ## 要用户定的
@@ -53,7 +53,7 @@
 ## 新增的机制
 
 - 无新任务、线程、状态机、文件格式、配置项、后台重试、缓存或队列。
-- R2 要求的 ACK 回收沿用原集合元数据及现有事件 ACK；自动动作共用原 confirm.result，事件增加 result_ver 以免旧 ACK 确认新版本；原事件条目增加实际发送标记，不以被跳过的序号冒充送达。R4 在原 binding 增加期限。
+- R2 要求的 ACK 回收沿用原集合元数据及现有事件 ACK；自动动作共用原 confirm.result，事件增加 result_ver 以免旧 ACK 确认新版本；原事件条目增加实际发送标记，不以被跳过的序号冒充送达；sort 低位区分 ACK 和原回执已落盘，保持查询结果的持久性判断。R4 在原 binding 增加期限。
 - 首次任务已有的共用集合、持久 token 区间、执行前记录、confirm.status 与 confirm/request 保留。
 
 ## 要改的文档
