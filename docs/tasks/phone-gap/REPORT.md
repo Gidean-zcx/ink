@@ -23,7 +23,7 @@ taskpolicy -c utility python3 - <<'PY'
 from pathlib import Path
 import re
 p = Path("docs/tasks/phone-gap/REPORT.md")
-links = re.findall(r"^\\[[^\\]]+\\]:\\s*(\\S+)", p.read_text(), re.M)
+links = re.findall(r"^\[[^\]]+\]:\s*(\S+)", p.read_text(), re.M)
 assert len(links) == 118
 assert all((p.parent / u.split("#")[0]).is_file() for u in links)
 print("118 个本地引用目标有效")
