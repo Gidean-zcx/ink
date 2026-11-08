@@ -37,6 +37,8 @@ typedef enum {
     INK_FS_ERR_BUSY = -9,      /* too many files open, a job already runs, files in use */
     INK_FS_ERR_IS_DIR = -10,
     INK_FS_ERR_NO_HOST = -11,  /* no computer at the other end of the cable */
+    INK_FS_ERR_INDEX_FULL = -12,
+    INK_FS_ERR_CARD_CHANGED = -13,
 } ink_fs_err_t;
 
 /** A short word for people and the model. */
@@ -55,6 +57,14 @@ typedef struct {
     bool is_dir;
     int64_t size;
 } ink_fs_stat_t;
+
+typedef enum { INK_FS_ANY = -1, INK_FS_OTHER, INK_FS_IMAGE, INK_FS_AUDIO, INK_FS_TEXT } ink_fs_type_t;
+typedef struct { uint32_t id; ink_fs_type_t type; char path[INK_FS_PATH_MAX]; int64_t size; } ink_fs_entry_t;
+#define INK_FS_INDEX_MAX 512
+/** BG only. First page scans this tree (up to 8 directories deep); cursor is the last id, initially 0. */
+int ink_fs_index(const char *path, ink_fs_type_t type, uint32_t *cursor, ink_fs_entry_t *out);
+/** BG only. Rechecks the card and the caller's access. 0, or a file error. */
+int ink_fs_lookup(uint32_t id, ink_fs_entry_t *out);
 
 int ink_file_service_init(void);
 /** Refresh the state items that say how the card is (blocks on the card: not for the UI task). */
