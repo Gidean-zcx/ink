@@ -11,12 +11,16 @@
 #include "ink/probe.h"
 #include "ink/sys/cap.h"
 #include "ink/sys/confirm.h"
+#include "ink/sys/data.h"
+#include "ink/sys/hub.h"
 #include "ink/sys/json.h"
 #include "ink/sys/layout.h"
 #include "ink/sys/members.h"
 #include "ink/sys/power.h"
 #include "ink/sys/state.h"
 #include "ink/sys/svc.h"
+#include "ink/sys/ui.h"
+#include "ink/sys/sha256.h"
 
 #define MAX_HELD 4
 #define EXPIRE_US 60000000ull
@@ -33,18 +37,93 @@ typedef struct {
     char detail[160];
     uint64_t expires_us;
     bool parent;
+    uint32_t epoch, connection;
+    char digest[65], request_id[40];
+    ink_exec_job_t job;
+    bool ui;
 } held_t;
 
 static struct {
     bool ready;
     held_t held[MAX_HELD];
     uint32_t next_token;
+    uint32_t limit;
+    ink_db_t *db;
     ink_svc_deadline_t expiry;
     ink_confirm_presenter_t presenter;
     bool has_presenter;
     ink_exec_job_t present_job;
     int h_pending;
 } CF INK_PSRAM_BSS;
+
+static const ink_db_def_t RESULTS = {.name = "confirm.results", .title = "确认和自动动作的结果", .scope = INK_DB_DEVICE, .schema = 1, .json = true};
+static ink_cap_t HUB_CARD[2]; /* Private card templates, never registered as tools. */
+
+/* Only bindings and receipts go to the existing store, never the arguments. */
+static uint32_t journal(uint32_t token, const char *state, const ink_receipt_t *rc, const held_t *h) {
+    if (rc) state = rc->status == INK_RC_DONE || rc->status == INK_RC_UNDONE || rc->status == INK_RC_PARTIAL ? "done" :
+        rc->status == INK_RC_QUEUED || rc->status == INK_RC_PENDING_CONFIRMATION ? "running" : "failed";
+    struct scratch { ink_json_t j; char out[2048], binding[768], receipt[1024]; };
+    struct scratch *s = osal_calloc(1, sizeof *s, OSAL_MEM_EXTERNAL);
+    if (!s) return 0;
+    ink_jw_t w;
+    if (h) {
+        ink_jw_init(&w, s->binding, sizeof s->binding);
+        ink_jw_raw(&w, "{\"member\":"); ink_jw_str(&w, h->member);
+        ink_jw_raw(&w, ",\"cap\":"); ink_jw_str(&w, h->cap->id);
+        ink_jw_raw(&w, ",\"digest\":"); ink_jw_str(&w, h->digest);
+        ink_jw_raw(&w, ",\"request_id\":"); ink_jw_str(&w, h->request_id);
+        ink_jw_raw(&w, ",\"page_gen\":"); ink_jw_int(&w, h->page_gen);
+        ink_jw_raw(&w, ",\"lease\":"); ink_jw_int(&w, CF.limit);
+        ink_jw_raw(&w, ",\"epoch\":"); ink_jw_int(&w, h->epoch);
+        ink_jw_raw(&w, ",\"connection\":"); ink_jw_int(&w, h->connection);
+        ink_jw_raw(&w, ",\"expires_us\":"); ink_jw_int(&w, (int64_t)h->expires_us);
+        ink_jw_raw(&w, "}");
+    } else {
+        ink_rec_t rec;
+        if (ink_db_get(CF.db, token, &rec, s->out, sizeof s->out - 1) != 0 ||
+            ink_json_parse(&s->j, s->out, rec.len) != 0) { osal_free(s); return 0; }
+        int b = ink_json_find(&s->j, 0, "binding");
+        if (b < 0) { osal_free(s); return 0; }
+        s->out[s->j.tok[b].end] = 0;
+        snprintf(s->binding, sizeof s->binding, "%s", s->out + s->j.tok[b].start);
+    }
+    ink_jw_init(&w, s->out, sizeof s->out);
+    ink_jw_raw(&w, "{\"binding\":"); ink_jw_raw(&w, s->binding);
+    ink_jw_raw(&w, ",\"state\":"); ink_jw_str(&w, state);
+    if (rc) {
+        if (ink_receipt_json(rc, s->receipt, sizeof s->receipt) < 0) w.overflow = true;
+        else { ink_jw_raw(&w, ",\"receipt\":"); ink_jw_raw(&w, s->receipt); }
+    }
+    ink_jw_raw(&w, "}");
+    uint32_t ver = 0;
+    ink_db_write_t put = {.id = token, .sort = (int64_t)token * 4, .data = s->out, .len = w.len, .written_ver = &ver};
+    if (w.overflow || ink_db_put(CF.db, &put, NULL) != 0) ver = 0;
+    osal_free(s);
+    return ver;
+}
+
+static uint32_t new_token(void) {
+    ink_svc_lock();
+    uint32_t token = CF.next_token < CF.limit ? ++CF.next_token : 0;
+    ink_svc_unlock();
+    return token;
+}
+
+static bool bind_args(held_t *h) {
+    for (int i = 1; i < h->args.n; i++)
+        for (int k = i; k > 0 && strcmp(ink_args_key(&h->args, &h->args.a[k - 1]), ink_args_key(&h->args, &h->args.a[k])) > 0; k--) {
+            ink_arg_t a = h->args.a[k]; h->args.a[k] = h->args.a[k - 1]; h->args.a[k - 1] = a;
+        }
+    char *encoded = osal_malloc(INK_ARGS_TEXT * 2, OSAL_MEM_EXTERNAL); uint8_t digest[32]; ink_sha256_t sha;
+    if (!encoded) return false;
+    int n = ink_args_to_json(&h->args, encoded, INK_ARGS_TEXT * 2);
+    ink_sha256_init(&sha); ink_sha256_update(&sha, encoded, n > 0 ? (size_t)n : 0); ink_sha256_final(&sha, digest);
+    osal_free(encoded);
+    for (int i = 0; i < 32; i++) snprintf(h->digest + i * 2, 3, "%02x", digest[i]);
+    h->epoch = ink_member_epoch();
+    return n > 0;
+}
 
 /* ---- what the card says ---- */
 
@@ -155,7 +234,17 @@ static void changed(void) {
     present();
 }
 
-static void tell(uint32_t token, const char *cap, const char *decision, const ink_receipt_t *rc, const char *who) {
+static void tell(uint32_t token, const char *cap, const char *decision, const ink_receipt_t *rc, const char *who, const char *digest) {
+    ink_rec_t rec;
+    uint32_t ver = rc || strcmp(decision, "accepted") ? journal(token, decision, rc, NULL) :
+        ink_db_get(CF.db, token, &rec, NULL, 0) == 0 ? rec.ver : 0;
+    char hub_digest[65] = "";
+    if (!digest && !strcmp(cap, "hub.confirm")) {
+        struct scratch { ink_json_t j; char out[2048]; } *s = osal_calloc(1, sizeof *s, OSAL_MEM_EXTERNAL);
+        if (s && !ink_db_get(CF.db, token, &rec, s->out, sizeof s->out - 1) && !ink_json_parse(&s->j, s->out, rec.len))
+            ink_json_str(&s->j, ink_json_find(&s->j, 0, "binding.digest"), hub_digest, sizeof hub_digest);
+        osal_free(s); digest = hub_digest;
+    }
     const char *prev = osal_mem_tag("confirm");
     ink_args_t *a = osal_malloc(sizeof *a, OSAL_MEM_EXTERNAL);
     osal_mem_tag(prev);
@@ -165,8 +254,10 @@ static void tell(uint32_t token, const char *cap, const char *decision, const in
     }
     ink_args_init(a);
     ink_args_int(a, "token", token);
+    ink_args_int(a, "result_ver", ver);
     ink_args_str(a, "cap", cap);
     ink_args_str(a, "decision", decision);
+    if (digest) ink_args_str(a, "digest", digest);
     ink_args_str(a, "member", who); /* whose it was: not told to whoever came after */
     if (rc) {
         ink_args_str(a, "status", ink_rc_name(rc->status));
@@ -212,7 +303,7 @@ static void expiry_cb(void *arg) { /* the timer task */
             }
         ink_svc_unlock();
         if (!token) break;
-        tell(token, cap, "expired", NULL, who);
+        tell(token, cap, "expired", NULL, who, NULL);
     }
     changed();
 }
@@ -240,8 +331,16 @@ ink_rc_t ink_confirm_hold(const ink_cap_t *c, const ink_args_t *args, ink_source
     h->cap = c;
     h->args = *args;
     h->src = src;
-    h->page_gen = page_gen;
+    h->page_gen = page_gen ? page_gen : (c->activity ? ink_ui_content_version() : 0);
+    if (!bind_args(h)) { osal_free(h); rc->status = INK_RC_FAILED; return rc->status; }
     h->expires_us = osal_now_us() + EXPIRE_US;
+    if (c == HUB_CARD || c == HUB_CARD + 1) {
+        int64_t ms = 0;
+        ink_args_get_str(args, "digest", h->digest, sizeof h->digest);
+        ink_args_get_int(args, "expires_ms", &ms);
+        h->expires_us = osal_now_us() + (uint64_t)ms * 1000;
+        h->connection = ink_hub_connection();
+    }
     snprintf(h->member, sizeof h->member, "%s", ink_member_current()->id);
     if (!describe(c, args, h->detail, sizeof h->detail)) {
         osal_free(h);
@@ -250,16 +349,18 @@ ink_rc_t ink_confirm_hold(const ink_cap_t *c, const ink_args_t *args, ink_source
         snprintf(rc->say, sizeof rc->say, "说明太长，不能完整显示，请分成几次操作。");
         return rc->status;
     }
+    h->token = new_token();
     bool full = true;
     ink_svc_lock();
-    for (int i = 0; i < MAX_HELD && full; i++)
+    for (int i = 0; h->token && i < MAX_HELD; i++)
         if (!CF.held[i].used) {
-            h->token = ++CF.next_token;
             CF.held[i] = *h;
             full = false;
+            break;
         }
     ink_svc_unlock();
     uint32_t token = h->token;
+    if (!full && !journal(token, "pending", NULL, h)) { take(token, h); full = true; }
     osal_free(h);
     if (full) {
         ink_probe_count("confirm.queue_full");
@@ -292,6 +393,7 @@ int ink_confirm_list(ink_confirm_view_t *out, int max) {
         v->token = first->token;
         snprintf(v->cap, sizeof v->cap, "%s", first->cap->id);
         snprintf(v->title, sizeof v->title, "%s", first->cap->title);
+        if (first->cap == HUB_CARD || first->cap == HUB_CARD + 1) ink_args_get_str(&first->args, "title", v->title, sizeof v->title);
         snprintf(v->detail, sizeof v->detail, "%s", first->detail);
         v->src = (uint8_t)first->src;
         v->parent = first->parent;
@@ -301,16 +403,43 @@ int ink_confirm_list(ink_confirm_view_t *out, int max) {
     return n;
 }
 
-typedef struct {
-    uint32_t token;
-    char cap[48];
-    char who[INK_MEMBER_ID_MAX];
-} ran_t;
-
 static void confirmed_done(void *ctx, const ink_receipt_t *rc) {
-    ran_t *r = ctx;
-    tell(r->token, r->cap, "accepted", rc, r->who);
-    osal_free(r);
+    held_t *h = ctx;
+    tell(h->token, h->cap->id, "accepted", rc, h->member, NULL);
+    osal_free(h);
+}
+
+static void run_confirmed(void *arg) { /* UI task, as with the person's original answer */
+    held_t *h = arg;
+    changed();
+    if (h->epoch != ink_member_epoch() || osal_now_us() >= h->expires_us) { tell(h->token, h->cap->id, "expired", NULL, h->member, NULL); osal_free(h); return; }
+    ink_call_opts_t o = {.src = INK_SRC_CONFIRMED, .page_gen = h->page_gen, .member = h->member,
+                        .reply_exec = INK_EXEC_DIRECT, .done = confirmed_done, .ctx = h};
+    if (ink_cap_call(h->cap->id, &h->args, &o) == 0) return;
+    ink_receipt_t rc = {.status = INK_RC_FAILED};
+    confirmed_done(h, &rc);
+}
+
+static void accept_job(void *arg) { /* exec.bg: commit before any side effect */
+    held_t *h = arg;
+    bool hub = h->cap == HUB_CARD || h->cap == HUB_CARD + 1;
+    const char *invalid = strcmp(h->member, ink_member_current()->id) || h->epoch != ink_member_epoch() ? "member_changed" :
+        osal_now_us() >= h->expires_us || (hub && !ink_hub_member_matches(h->member, h->epoch, h->connection)) ? "expired" : NULL;
+    if (invalid) { changed(); tell(h->token, h->cap->id, invalid, NULL, h->member, NULL); osal_free(h); return; }
+    uint32_t ver = journal(h->token, hub ? "accepted" : "running", NULL, NULL);
+    if (!ver || ink_db_wait(CF.db, ver, 5000000) != 0) {
+        ink_receipt_t rc = {.status = INK_RC_FAILED};
+        snprintf(rc.detail, sizeof rc.detail, "confirmation could not be committed");
+        changed(); confirmed_done(h, &rc); return;
+    }
+    if (strcmp(h->member, ink_member_current()->id) || h->epoch != ink_member_epoch() || osal_now_us() >= h->expires_us ||
+        (hub && !ink_hub_member_matches(h->member, h->epoch, h->connection))) {
+        changed(); tell(h->token, h->cap->id, "expired", NULL, h->member, NULL); osal_free(h); return;
+    }
+    if (hub) { changed(); tell(h->token, h->cap->id, "accepted", NULL, h->member, h->digest); osal_free(h); return; }
+    if (ink_exec_post(h->ui ? INK_EXEC_UI : INK_EXEC_BG, &h->job, run_confirmed, h) == 0) return;
+    ink_receipt_t rc = {.status = INK_RC_FAILED};
+    confirmed_done(h, &rc);
 }
 
 static int decide(uint32_t token, bool accept);
@@ -359,35 +488,14 @@ int ink_confirm_accept_with_pin(uint32_t token, const char *pin, ink_pin_done_fn
 }
 
 static int decide(uint32_t token, bool accept) {
-    const char *prev = osal_mem_tag("confirm");
     held_t *h = osal_malloc(sizeof *h, OSAL_MEM_EXTERNAL);
-    ran_t *r = osal_malloc(sizeof *r, OSAL_MEM_EXTERNAL);
-    osal_mem_tag(prev);
-    if (!h || !r || !take(token, h)) {
-        osal_free(h);
-        osal_free(r);
-        return -1;
-    }
-    changed();
-    r->token = token;
-    snprintf(r->cap, sizeof r->cap, "%s", h->cap->id);
-    snprintf(r->who, sizeof r->who, "%s", h->member);
-    if (!accept) tell(token, r->cap, "rejected", NULL, r->who);
-    else if (strcmp(h->member, ink_member_current()->id)) tell(token, r->cap, "member_changed", NULL, r->who);
-    else {
-        ink_call_opts_t o = {.src = INK_SRC_CONFIRMED, .page_gen = h->page_gen, .member = h->member, .reply_exec = INK_EXEC_DIRECT, .done = confirmed_done, .ctx = r};
-        int started = ink_cap_call(r->cap, &h->args, &o);
-        osal_free(h);
-        if (started == 0) return 0; /* confirmed_done frees it */
-        ink_receipt_t busy = {.status = INK_RC_FAILED};
-        snprintf(busy.detail, sizeof busy.detail, "could not be started");
-        tell(token, r->cap, "accepted", &busy, r->who);
-        osal_free(r);
-        return 0;
-    }
+    if (!h || !take(token, h)) { osal_free(h); return -1; }
+    h->ui = ink_ui_is_current();
+    if (!accept) { changed(); tell(token, h->cap->id, "rejected", NULL, h->member, NULL); osal_free(h); return 0; }
+    if (ink_exec_post(INK_EXEC_BG, &h->job, accept_job, h) == 0) return 0;
     osal_free(h);
-    osal_free(r);
-    return 0;
+    changed();
+    return -1;
 }
 
 int ink_confirm_withdraw(uint32_t token, ink_source_t src) {
@@ -409,7 +517,7 @@ int ink_confirm_withdraw(uint32_t token, ink_source_t src) {
     ink_svc_unlock();
     if (!got) return -1;
     changed();
-    tell(token, cap, "withdrawn", NULL, who);
+    tell(token, cap, "withdrawn", NULL, who, NULL);
     return 0;
 }
 
@@ -443,7 +551,7 @@ static void on_member(void *ctx, int h, const char *id) { /* wherever the switch
         ink_svc_unlock();
         if (!token) return;
         changed();
-        tell(token, cap, "member_changed", NULL, who);
+        tell(token, cap, "member_changed", NULL, who, NULL);
     }
 }
 
@@ -518,9 +626,135 @@ static void cap_reject(ink_call_t *c) {
     if (ink_confirm_decide((uint32_t)token, false, c->src) != 0) fail(c, INK_RC_FAILED, "not waiting any more");
 }
 
+static bool read_result(uint32_t *token, const char *rid, char *out, ink_json_t *j, ink_rec_t *rec) {
+    ink_db_cursor_t at = {0};
+    do {
+        int found = *token ? ink_db_get(CF.db, *token, rec, out, 2047) == 0 : ink_db_next(CF.db, &at, rec, out, 2047) == 1;
+        if (!found) return false;
+        out[rec->len] = 0;
+        if (rec->id == 1 || ink_json_parse(j, out, rec->len) != 0) continue;
+        char saved_rid[40];
+        if (ink_json_eq(j, ink_json_find(j, 0, "binding.member"), ink_member_current()->id) &&
+            (*token || (rid && *rid && ink_json_str(j, ink_json_find(j, 0, "binding.request_id"), saved_rid, sizeof saved_rid) >= 0 && !strcmp(saved_rid, rid)))) {
+            *token = rec->id; return true;
+        }
+        if (*token) return false;
+    } while (!*token);
+    return false;
+}
+
+uint32_t ink_confirm_track(const ink_cap_t *cap, const ink_call_opts_t *o, ink_receipt_t *rc) { /* exec.bg */
+    struct scratch { held_t h; ink_json_t j; char out[2048]; };
+    struct scratch *s = osal_calloc(1, sizeof *s, OSAL_MEM_EXTERNAL);
+    rc->status = INK_RC_FAILED;
+    if (!s) return 0;
+    held_t *h = &s->h; h->cap = cap; h->page_gen = o->page_gen;
+    snprintf(h->member, sizeof h->member, "%s", o->member);
+    snprintf(h->request_id, sizeof h->request_id, "%s", o->request_id ? o->request_id : "");
+    const char *json = o->args_json && *o->args_json ? o->args_json : "{}";
+    char why[96];
+    if (ink_args_from_json(&h->args, json, strlen(json), cap->input, why, sizeof why) || !bind_args(h)) { osal_free(s); return 0; }
+    uint32_t token = 0; ink_rec_t rec;
+    if (h->request_id[0] && read_result(&token, h->request_id, s->out, &s->j, &rec)) {
+        int64_t page = 0;
+        rc->status = ink_json_eq(&s->j, ink_json_find(&s->j, 0, "binding.digest"), h->digest) &&
+            ink_json_eq(&s->j, ink_json_find(&s->j, 0, "binding.cap"), cap->id) &&
+            ink_json_int(&s->j, ink_json_find(&s->j, 0, "binding.page_gen"), &page) && page == h->page_gen ? INK_RC_QUEUED : INK_RC_STALE;
+        snprintf(rc->object, sizeof rc->object, "confirm:%u", token);
+        snprintf(rc->detail, sizeof rc->detail, "query confirm.status; do not retry");
+        osal_free(s); return 0;
+    }
+    token = new_token();
+    uint32_t ver = token ? journal(token, "running", NULL, h) : 0;
+    bool saved = ver && ink_db_wait(CF.db, ver, 5000000) == 0;
+    osal_free(s);
+    return saved ? token : 0;
+}
+
+void ink_confirm_tracked_done(uint32_t token, const char *cap, const char *member, const ink_receipt_t *rc) {
+    tell(token, cap, "accepted", rc, member, NULL);
+}
+
+void ink_confirm_ack(uint32_t token, uint32_t ver) {
+    char *out = osal_malloc(2048, OSAL_MEM_EXTERNAL);
+    ink_rec_t rec;
+    if (out && token > 1 && !ink_db_get(CF.db, token, &rec, out, 2048) && rec.ver == ver) {
+        /* Low bits: received, and receipt already durable before this metadata write. */
+        ink_db_write_t put = {.id = token, .sort = (int64_t)token * 4 + 1 + (rec.ver <= ink_db_durable_ver(CF.db) ? 2 : 0), .data = out, .len = rec.len};
+        ink_db_put(CF.db, &put, NULL);
+    }
+    osal_free(out);
+    ink_db_cursor_t at = {.desc = true};
+    int keep = 16;
+    while (ink_db_next(CF.db, &at, &rec, NULL, 0) == 1)
+        if (rec.id != 1 && keep-- <= 0 && rec.sort / 4 == rec.id && (rec.sort & 1))
+            ink_db_del_if_ver(CF.db, rec.id, INK_SRC_SYSTEM, rec.ver);
+}
+
+static void cap_status(ink_call_t *c) {
+    struct scratch { ink_json_t j; char out[2048], rid[40]; };
+    struct scratch *s = osal_calloc(1, sizeof *s, OSAL_MEM_EXTERNAL);
+    if (!s) { fail(c, INK_RC_FAILED, "out of memory"); return; }
+    int64_t requested = 0; ink_rec_t rec;
+    ink_args_get_int(&c->args, "token", &requested);
+    ink_args_get_str(&c->args, "request_id", s->rid, sizeof s->rid);
+    uint32_t token = (uint32_t)requested;
+    if (!read_result(&token, s->rid, s->out, &s->j, &rec)) ink_cap_result(c, "{\"state\":\"unknown\"}");
+    else {
+        const char *state = NULL;
+        int st = ink_json_find(&s->j, 0, "state");
+        if (ink_json_eq(&s->j, st, "running") || (rec.ver > ink_db_durable_ver(CF.db) && rec.sort != (int64_t)token * 4 + 3)) state = "unknown";
+        if (ink_json_eq(&s->j, st, "pending")) {
+            bool live = false;
+            ink_svc_lock();
+            for (int i = 0; i < MAX_HELD; i++) live |= CF.held[i].used && CF.held[i].token == token;
+            ink_svc_unlock();
+            if (!live) state = "expired";
+        }
+        int64_t lease = 0, epoch = 0, connection = 0, expires = 0;
+        if (ink_json_eq(&s->j, st, "accepted") && (!ink_json_int(&s->j, ink_json_find(&s->j, 0, "binding.expires_us"), &expires) ||
+            expires <= 0 || osal_now_us() >= (uint64_t)expires)) state = "expired";
+        if (ink_json_eq(&s->j, st, "accepted") && (!ink_json_int(&s->j, ink_json_find(&s->j, 0, "binding.lease"), &lease) || lease != CF.limit)) state = "expired";
+        if (ink_json_eq(&s->j, st, "accepted") && (!ink_json_int(&s->j, ink_json_find(&s->j, 0, "binding.epoch"), &epoch) ||
+            !ink_json_int(&s->j, ink_json_find(&s->j, 0, "binding.connection"), &connection) || !ink_hub_member_matches(ink_member_current()->id, (uint32_t)epoch, (uint32_t)connection))) state = "expired";
+        if (state) { char result[48]; snprintf(result, sizeof result, "{\"state\":\"%s\"}", state); ink_cap_result(c, result); }
+        else ink_cap_result(c, s->out);
+    }
+    osal_free(s);
+}
+
+static int request_text(const ink_json_t *j, int t, char *out, size_t cap) {
+    return t < 0 || (size_t)(j->tok[t].end - j->tok[t].start) >= cap ? -1 : ink_json_str(j, t, out, cap);
+}
+
+static void on_request(void *ctx, int64_t id, const char *method, const ink_json_t *j, int p) {
+    (void)ctx;
+    char member[INK_MEMBER_ID_MAX], target[INK_MEMBER_ID_MAX]; int64_t epoch = 0, ms = 0;
+    if (strcmp(method, "confirm/request")) { ink_hub_respond_error(id, -32601, "unknown confirm method"); return; }
+    if (request_text(j, ink_json_find(j, p, "_meta.member"), member, sizeof member) <= 0 ||
+        !ink_json_int(j, ink_json_find(j, p, "_meta.epoch"), &epoch) || epoch <= 0 || epoch > UINT32_MAX ||
+        request_text(j, ink_json_find(j, p, "member"), target, sizeof target) <= 0 || strcmp(member, target) ||
+        !ink_hub_member_matches(member, (uint32_t)epoch, ink_hub_connection())) { ink_hub_respond_error(id, -32023, "stale_member"); return; }
+    ink_args_t *a = osal_calloc(1, sizeof *a, OSAL_MEM_EXTERNAL); char title[48], body[160], digest[65];
+    int parent = ink_json_find(j, p, "parent");
+    bool valid = a && request_text(j, ink_json_find(j, p, "title"), title, sizeof title) > 0 &&
+        request_text(j, ink_json_find(j, p, "body"), body, sizeof body) > 0 &&
+        request_text(j, ink_json_find(j, p, "digest"), digest, sizeof digest) == 64 && strspn(digest, "0123456789abcdef") == 64 &&
+        parent >= 0 && j->tok[parent].type == 8 && (ink_json_eq(j, parent, "true") || ink_json_eq(j, parent, "false")) &&
+        ink_json_int(j, ink_json_find(j, p, "expires_ms"), &ms) && ms > 0 && ms <= 60000;
+    if (!valid) { osal_free(a); ink_hub_respond_error(id, -32602, "invalid confirmation"); return; }
+    valid = !ink_args_str(a, "title", title) && !ink_args_str(a, "body", body) && !ink_args_str(a, "digest", digest) && !ink_args_int(a, "expires_ms", ms);
+    ink_receipt_t rc = {0};
+    if (!valid || ink_confirm_hold(&HUB_CARD[ink_json_eq(j, parent, "true")], a, INK_SRC_REMOTE, 0, &rc) != INK_RC_PENDING_CONFIRMATION)
+        ink_hub_respond_error(id, -32603, "cannot queue confirmation");
+    else { unsigned token = 0; char out[40]; sscanf(rc.object, "confirm:%u", &token); snprintf(out, sizeof out, "{\"token\":%u}", token); ink_hub_respond(id, out); }
+    osal_free(a);
+}
+
 #define TOKEN_ARG "{\"type\":\"object\",\"properties\":{\"token\":{\"type\":\"integer\",\"minimum\":1}},\"required\":[\"token\"]}"
 
 static const ink_cap_t CONFIRM_CAPS[] = {
+    {.id = "confirm.status", .title = "查询确认和自动动作的结果", .input = "{\"type\":\"object\",\"properties\":{\"token\":{\"type\":\"integer\",\"minimum\":2,\"maximum\":4294967295},\"request_id\":{\"type\":\"string\",\"maxLength\":39}}}", .output = "{\"type\":\"object\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_status},
     {.id = "confirm.list", .title = "有什么在等人确认", .output = "{\"type\":\"array\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_list},
     {.id = "confirm.withdraw", .title = "撤回自己发起、还在等确认的请求", .input = TOKEN_ARG, .effect = INK_FX_NAVIGATE, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_withdraw},
     {.id = "confirm.accept", .title = "确认（只有人在设备上能按）", .input = TOKEN_ARG, .effect = INK_FX_NAVIGATE, .child_ok = true, .expose = INK_EXPOSE_OWNER, .exec = INK_EXEC_DIRECT, .run = cap_accept},
@@ -531,6 +765,19 @@ static const ink_cap_t CONFIRM_CAPS[] = {
 static const ink_state_def_t ST_PENDING = {.id = "confirm.pending", .type = INK_ST_INT, .title = "等人确认的请求数"};
 
 int ink_confirm_init(void) {
+    HUB_CARD[0].id = "hub.confirm";
+    HUB_CARD[0].title = "中枢请求确认";
+    HUB_CARD[0].ask = "{body}";
+    HUB_CARD[1] = HUB_CARD[0];
+    HUB_CARD[1].parent_pin = true;
+    if (ink_data_init() || ink_db_register(&RESULTS) || !(CF.db = ink_db_open(&RESULTS, NULL))) return -1;
+    ink_rec_t rec = {.sort = 1};
+    if (ink_db_get(CF.db, 1, &rec, NULL, 0) && ink_db_count(CF.db)) return -1;
+    if (rec.sort < 1 || rec.sort > UINT32_MAX - 65536) return -1;
+    CF.next_token = (uint32_t)rec.sort; CF.limit = (uint32_t)rec.sort + 65536;
+    uint32_t ver = 0;
+    ink_db_write_t put = {.id = 1, .sort = CF.limit, .data = "{}", .len = 2, .written_ver = &ver};
+    if (ink_db_put(CF.db, &put, NULL) || ink_db_wait(CF.db, ver, 5000000) || ink_hub_on_request("confirm/", on_request, NULL)) return -1;
     CF.h_pending = ink_state_define(&ST_PENDING);
     ink_state_set_int(CF.h_pending, 0);
     if (ink_cap_register(CONFIRM_CAPS, (int)(sizeof CONFIRM_CAPS / sizeof CONFIRM_CAPS[0])) != 0) return -1;

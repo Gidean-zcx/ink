@@ -35,6 +35,11 @@ typedef struct {
 } ink_confirm_presenter_t;
 
 int ink_confirm_init(void);
+/** Gateway automatic actions: commit before dispatch (BG), then record the receipt. Zero: return *rc. */
+uint32_t ink_confirm_track(const ink_cap_t *cap, const ink_call_opts_t *opts, ink_receipt_t *rc);
+void ink_confirm_tracked_done(uint32_t token, const char *cap, const char *member, const ink_receipt_t *rc);
+/** A delivered result event was acknowledged; retain at least the newest sixteen results. */
+void ink_confirm_ack(uint32_t token, uint32_t ver);
 /** The gate, or a handler that found out by itself (settings.set): keep this call for a person's yes. Fills the
  *  receipt: pending with object "confirm:<token>", or rejected (the queue is full, 4 at a time). */
 ink_rc_t ink_confirm_hold(const ink_cap_t *c, const ink_args_t *args, ink_source_t src, uint32_t page_gen, ink_receipt_t *rc);
