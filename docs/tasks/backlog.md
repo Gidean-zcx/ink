@@ -2,7 +2,7 @@
 
 用户要求：先夯实系统层的能力缺口和质量，再补齐系统级别的应用与应用框架，**暂不开发具体应用**（阅读、听、报纸、单词都不做），都做完再做底层性能优化。总规则见 [codex-rules.md](codex-rules.md)。
 
-**状态（2026-11-06）：** 已合入 `services-mid`、`member-wake`、`capability-table`、`device-events`、`pairing`、`backup-restore`。没开始 `member-quiesce`、`confirm-durable`、`file-index`、`wireless-transfer`。等应用框架选择：`text-long`、应用框架和系统应用各节、性能。
+**状态（2026-11-09）：** 已合入 `services-mid`、`member-wake`、`capability-table`、`device-events`、`pairing`、`backup-restore`，以及只写报告的 `phone-gap`（对照完成标准 R-068 查缺口）和 `speech-cache`（DE-R6 早已修好）。`member-quiesce` 做完但不合入，原因见该节。`confirm-durable`、`file-index`（拆成 `file-index-1`、`file-index-2`）、`wireless-transfer`，以及应用框架的 F1、F2、F5（`ui-semantics`、`ui-input-host`、`ui-cards`）已由 Codex 做完、审过一轮，正在收尾。应用框架的选择已定（D-111），`text-long`、应用框架和系统应用各节不再等待。
 
 **只做你被分配的那一节。** 每节按一小时左右规划，最多两小时；做不完的写进报告的“没做到的”，不要半成品冒充完成。报告写到 `docs/tasks/<节名>/REPORT.md`。
 
@@ -37,6 +37,8 @@
 ## member-quiesce
 
 预算 150 行产品代码。`docs/tasks/services-finish/REVIEW.md` 的 R6-01、R6-02 和 device-events 的 DE-R5 是同一个根因：换成员时还有在途调用、事件和上传。**不要逐个服务传递身份。** 在换成员这一处集中解决：切换时先不接新调用，等在途能力调用和排队的事件、上传结束（有超时，超时的取消并如实回执），再切换。已按成员绑定的长作业（文件、下载）不动。验收：这三条的复现不再成立；换成员的额外时延【实测】写进报告；列出哪些逐服务的代次检查因此可以删（只列，不删）。
+
+**结果（2026-11-09）：不合入。** 这三条在当前主线上已经复现不出来：各服务按原成员打开数据、按指定成员发通知、页面快照查归属，成员编号也不再复用。Codex 做的集中收尾（分支 `claude/codex-member-quiesce`，[报告](member-quiesce/REPORT.md)）让 6 个已有测试失败：后台忙时干脆不让换人，有一处等待会卡住。有在途操作时，换人还要多等 100～180 毫秒；各服务现有的检查也一个都删不掉。所以保留现在逐服务的检查，集中收尾以后需要时再拿出来。
 
 ## confirm-durable
 
