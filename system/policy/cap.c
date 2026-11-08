@@ -1008,6 +1008,8 @@ static bool listed(const ink_cap_t *c) {
     return m->role != INK_ROLE_CHILD || (c->effect != INK_FX_SYSTEM && ink_member_allows(c->id, c->child_ok));
 }
 
+bool ink_cap_ai_callable(const ink_cap_t *c) { return c && listed(c) && c->form != INK_FORM_EVENT; }
+
 static void manifest_entry(ink_jw_t *w, const ink_cap_t *c, bool first);
 
 int ink_cap_manifest_json(char *out, size_t cap) {
@@ -1016,7 +1018,7 @@ int ink_cap_manifest_json(char *out, size_t cap) {
     ink_jw_raw(&w, "[");
     bool first = true;
     for (int i = 0; i < nreg; i++) {
-        if (!listed(REG[i]) || REG[i]->form == INK_FORM_EVENT) continue;
+        if (!ink_cap_ai_callable(REG[i])) continue;
         manifest_entry(&w, REG[i], first);
         first = false;
     }
@@ -1033,7 +1035,7 @@ int ink_cap_manifest_page(int start, const char *prefix, char *out, size_t cap, 
     *next = -1;
     size_t plen = prefix ? strlen(prefix) : 0;
     for (int i = start < 0 ? 0 : start; i < nreg; i++) {
-        if (!listed(REG[i]) || REG[i]->form == INK_FORM_EVENT || (plen && strncmp(REG[i]->id, prefix, plen))) continue;
+        if (!ink_cap_ai_callable(REG[i]) || (plen && strncmp(REG[i]->id, prefix, plen))) continue;
         size_t before = w.len;
         manifest_entry(&w, REG[i], first);
         if (w.overflow) { /* the next page starts here; one entry alone must fit */
@@ -1089,7 +1091,7 @@ int ink_cap_ids_json(char *out, size_t cap) {
     ink_jw_raw(&w, "[");
     bool first = true;
     for (int i = 0; i < nreg; i++) {
-        if (!listed(REG[i]) || REG[i]->form == INK_FORM_EVENT) continue; /* what can be called */
+        if (!ink_cap_ai_callable(REG[i])) continue; /* what can be called */
         if (!first) ink_jw_raw(&w, ",");
         first = false;
         ink_jw_str(&w, REG[i]->id);

@@ -227,6 +227,7 @@ add_library(ink_system STATIC
   system/text/layout.c
   system/ui/lock_mark.c
   system/ui/ui_task.c
+  system/ui/ui_semantics.c
   system/ui/theme.c
   system/ui/icons.c
   system/ui/shell/navigation.c
@@ -519,6 +520,12 @@ set_tests_properties(ui-panel-restore PROPERTIES DEPENDS ui-shell-priorities)
 add_executable(sim-ui-regressions simulator/runtime/sim_main.c tests/ui_shell_regressions.c)
 target_link_libraries(sim-ui-regressions PRIVATE ink_apps ink_system ink_port_sim)
 target_compile_options(sim-ui-regressions PRIVATE ${INK_WARN} -Wno-format-truncation)
+ink_sim_executable(sim-ui-semantics tests/ui_semantics.c)
+target_link_libraries(sim-ui-semantics PRIVATE ink_apps ink_system)
+add_test(NAME ui-semantics
+  COMMAND sim-ui-semantics --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+    --script ${CMAKE_SOURCE_DIR}/tests/ui_semantics.script --budget ${CMAKE_SOURCE_DIR}/tests/ui_scene.budget.json
+    --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT} --out ${CMAKE_BINARY_DIR}/test-out/ui-semantics --quiet --no-random-outages)
 foreach(profile metalio-plus desktop-lcd)
   foreach(regression confirm slider context privacy answer snapshot alarm)
     add_test(NAME ui-${regression}-regressions-${profile}
