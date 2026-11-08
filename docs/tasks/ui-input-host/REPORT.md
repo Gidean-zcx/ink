@@ -87,3 +87,29 @@ UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/
 - 【实测】两套构建均退出 0；普通全量退出 0，207/207、零失败、零跳过，110.01 秒；ASan／UBSan 全量退出 0，207/207、零失败、零跳过，192.96 秒。日志分别为 `build/ui-input-host-fix-{build,ctest}.log` 和 `build-asan/ui-input-host-fix-{build,ctest}.log`。包含确定性、分层、SDK 边界、F1 与旧文本集成测试；GUI 冒烟使用既有 SDL dummy，没有启动窗口版。
 - 【实测】两套 F2 均 `test.pass=251`、无失败、`test.finished=1`、无警告、无预算违规，内部 RAM 总池最低余量均为 47,840 字节。没有更改测试预算。
 - 【实测】`git diff --stat` 核对无夹带，本轮只改两个产品文件、F2 测试和本报告；F1、旧文本测试及资源门槛文件相对复查提交无差异。`git diff --check` 退出 0；报告链接有效。按总规则第 6 节对基线至 HEAD 的隐私扫描零匹配（grep 退出 1），包含工作区的同规则扫描也零匹配。
+
+## 复查后的修复
+
+2026-11-09 再次接续，起点为 `1bbf1a49`，工作区干净。【实现】[复查](REVIEW.md)只列 R1（高）、R2（中），没有严重或低级条目；两项修复及对应测试已在 `72cf1a29`、`1bbf1a49` 提交。本次核对实际源码、重做反向对照和完整验证，补齐本节，不重复改产品代码。
+
+| 问题 | 最小修复与回归测试 | 本次结果 |
+| --- | --- | --- |
+| R1：网址缺少实际按键 | 现有符号行补 `=`、`_`、`%`、`#`；`tests/ui_input_host.c` 查找可见键、检查矩形并触摸输入 `example.com/a_b?x=1%20#c` | 【实测】正常用例通过；仅换回复查时的 `keyboard.c` 后，四个缺键和完整网址共 5 项断言失败 |
+| R2：短网址末尾及光标被裁 | `compose_line()` 只对已绑定短宿主按字体、字距、实际宽度裁窗并留光标宽度；同一测试检查 40 字符网址的完整值、末尾及整个光标范围 | 【实测】正常用例通过；仅换回复查时的 `textfield.c` 后，光标越界断言失败 |
+| 成员拒绝回归 | 保留旧 insert／submit 及无副作用断言；反例只撤 `target_ok()` 的成员检查 | 【实测】正常用例通过；反例旧 insert 被接受、字段／事件改变，2 项断言失败；submit 仍受 revision 检查，未声称其单独反例通过 |
+
+【实测】三个反例均沿用正常测试对象，从标准输入编译单个替代产品对象并在 `libink_system.a` 前链接，不修改源码或正常二进制；编译／链接退出码均为 0，反例程序均退出 1、`test.finished=1`，告警均为上述预期断言失败。前后源码 SHA-256 一致。产物和日志为 `work/ui-input-host-recheck/{r1,r2,member}-{compile,link,test}.log` 及对应 `*-out/metrics.json`，不提交。
+
+### 原有失败和跳过项
+
+| 原有记录 | 原因及处理 | 本次验证 |
+| --- | --- | --- |
+| `integration-text-main` 两项断言失败；开工时仍有旧 `LastTestsFailed.log` 标记 | 中间提交曾对旧长字段也启用像素裁窗，改变原有窗口和点击索引；`1bbf1a49` 已限定到 `f->semantic` 短宿主，保留旧测试期望 | 【实测】普通与 ASan／UBSan 全量中均通过；旧标记不代表本次失败 |
+| `hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e` 曾跳过 | 【实测】默认构建 Python 缺 `pytest`、`pytest-asyncio`、`aiohttp`、`PyYAML`；契约测试缺依赖返回 77，样例交叉检查随缺少样例跳过。两套配置均已指向现成 `$INK_DEPS/hub/.venv/bin/python`；上述依赖版本分别为 8.4.2、1.2.0、3.12.15、6.0.3，与 `hub/uv.lock` 一致，导入本检出的 `hub/ink_hub`；未安装或升级依赖 | 【实测】普通与 ASan／UBSan 全量中三项均执行并通过 |
+
+### 本次完整验证与规模
+
+- 【实测】普通构建退出 0；定向 `ui-input-host` 退出 0，251 项断言通过、`test.finished=1`、零告警、零预算违规。已查看本次 `clean-url-symbols.png`、`clean-url-long-cursor.png`：四个符号可见，网址末尾及完整光标在框内。
+- 【实测】普通全量退出 0，207/207、零失败、零跳过，96.47 秒；ASan／UBSan 构建及全量均退出 0，全量 207/207、零失败、零跳过，183.30 秒。使用前节完整验证命令，日志另存为两套目录下的 `ui-input-host-recheck-{build,ctest}.log`。两套 F2 均为 251 项断言通过、零告警、零预算违规，内部 RAM 总池最低余量均为 47,840 字节。
+- 【实测／实现】相对任务基线累计产品新增及删除（连 CMake 也计入）仍为 166 行，小于 250；R1、R2 修复合计 13 行。本次不改产品、测试期望或预算，不新增机制。软总线、AI 同源编辑和秘密字段边界沿用前述结论。
+- 【实测】本次差异只含本报告；F1、旧文本测试和资源门槛未改。`git diff --check` 退出 0，报告链接有效；按规定对基线至 HEAD 及包含工作区的差异扫描，均零隐私匹配（grep 退出 1）。原始复查保留，未推送。
