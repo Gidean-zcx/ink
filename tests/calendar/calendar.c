@@ -50,8 +50,10 @@ static uint32_t add(int kind, int day, int hour, const char *title, bool daily) 
 }
 static void capture_event(void *arg) {
     const char *name = arg; CHECK(settled(), "the captured frame is fully presented");
-    ink_probe_count("test.snapshot.settled");
-    ink_probe_count(!strcmp(name, "Upcoming") ? "test.snapshot.Upcoming" : "test.snapshot.Calendar");
+    if (!strcmp(scene, name)) {
+        ink_probe_count("test.snapshot.settled");
+        ink_probe_count(!strcmp(name, "Upcoming") ? "test.snapshot.Upcoming" : "test.snapshot.Calendar");
+    }
     sim_display_snapshot(!strcmp(scene, name) ? "scene" : name);
 }
 static void capture(const char *name) {
