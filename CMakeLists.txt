@@ -503,7 +503,8 @@ target_link_libraries(sim-ui-scenes PRIVATE ink_apps ink_system ink_port_sim)
 target_compile_options(sim-ui-scenes PRIVATE ${INK_WARN} -Wno-format-truncation)
 set(INK_SHELL_SCENES Main Today Apps Lock LockPage Control Notifications Members MembersBack Pin PinWrong
   ImePinyin ImeCandidates ImeEdit ImePassword ImeVoice Confirm ConfirmDelete ConfirmSecret AiListen AiThink Ai
-  Settings SetDisplay SetSound SetNetwork PowerMenu PowerOff PhoneIncoming ClockRing Components ComponentsDock ComponentsPanel)
+  Settings SetDisplay SetSound SetNetwork SetVoice SetAbout SetPrivacy ImeSymbols
+  PowerMenu PowerOff PhoneIncoming ClockRing Components ComponentsDock ComponentsPanel)
 foreach(scene ${INK_SHELL_SCENES})
   if(scene STREQUAL "PowerOff")
     set(budget ui_off_scene)
@@ -605,7 +606,7 @@ ink_sim_executable(sim-text-long tests/text_long/editor.c)
 target_link_libraries(sim-text-long PRIVATE ink_apps ink_system)
 add_test(NAME text-long COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/text_long/run.py --build ${CMAKE_BINARY_DIR})
 foreach(profile metalio-plus desktop-lcd)
-  foreach(regression confirm slider context privacy answer snapshot alarm)
+  foreach(regression confirm slider context privacy answer snapshot alarm theme)
     add_test(NAME ui-${regression}-regressions-${profile}
       COMMAND ${CMAKE_COMMAND} -E env INK_UI_REGRESSION=${regression} $<TARGET_FILE:sim-ui-regressions>
         --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/${profile}.json --script ${CMAKE_SOURCE_DIR}/tests/ui_shell_regressions.script

@@ -61,6 +61,88 @@ static void check_segments(void) {
     }
     lv_obj_delete(root);
 }
+static void theme_clicked(lv_event_t *event) {
+    int *clicks = lv_event_get_user_data(event);
+    (*clicks)++;
+}
+static void check_group_row(lv_obj_t *row, bool separated) {
+    int circles = 0, dividers = 0;
+    lv_area_t bounds; lv_obj_get_coords(row, &bounds);
+    for (uint32_t i = 0; i < lv_obj_get_child_count(row); i++) {
+        lv_obj_t *o = lv_obj_get_child(row, (int32_t)i);
+        if (lv_obj_get_style_bg_opa(o, 0) != LV_OPA_COVER ||
+            !lv_color_eq(lv_obj_get_style_bg_color(o, 0), ink_ui_paper())) continue;
+        lv_area_t a; lv_obj_get_coords(o, &a);
+        if (lv_obj_get_style_radius(o, 0) == LV_RADIUS_CIRCLE) {
+            circles++;
+            CHECK(lv_obj_get_width(o) == ink_ui_px(INK_CIRCLE_SMALL) &&
+                  lv_obj_get_height(o) == ink_ui_px(INK_CIRCLE_SMALL) &&
+                  a.x1 - bounds.x1 == ink_ui_px(INK_GAP) && abs(a.y1 + a.y2 - bounds.y1 - bounds.y2) <= 1,
+                  "shared list icon circle uses the scaled tokens and is centered in either row height");
+            CHECK(!lv_obj_get_style_border_width(o, 0) && !lv_obj_has_flag(o, LV_OBJ_FLAG_CLICKABLE) && count_icons(o) == 1,
+                  "shared list icon has a white circle, one icon and no button outline or hit target");
+        } else if (lv_obj_get_height(o) <= ink_ui_px(INK_STROKE)) {
+            dividers++;
+            CHECK(a.x1 - bounds.x1 == ink_ui_px(INK_CIRCLE_SMALL + INK_GAP_XL) &&
+                  a.y1 == bounds.y1 && a.x2 == bounds.x2 && lv_obj_get_height(o) == ink_ui_px(INK_STROKE),
+                  "shared group divider starts after the icon and uses the scaled stroke");
+        }
+    }
+    CHECK(circles == 1 && dividers == (separated ? 1 : 0), "shared group has one icon circle and a divider only between rows");
+}
+static void check_theme(void) {
+    int64_t original = ink_setting_get("display.font_size");
+    for (int level = 1; level <= 3; level += 2) {
+        ink_receipt_t rc; ink_setting_set("display.font_size", level, INK_SRC_TOUCH, &rc);
+        int w = INK_CANVAS_W - 2 * INK_MARGIN, clicks = 0;
+        lv_obj_t *root = ink_ui_box(lv_layer_sys(), 0, 0, INK_CANVAS_W, INK_CANVAS_H, 0, INK_SURFACE_WHITE, false);
+        for (int lines = 0; lines < 2; lines++) {
+            int h = lines ? ink_ui_row_double() : INK_CONTROL;
+            lv_obj_t *group = ink_ui_card(root, INK_MARGIN, INK_MARGIN, w, 2 * h, INK_SURFACE_STATIC);
+            lv_obj_t *first = ink_ui_list_row(group, "wifi", "合成网络", "未连接", 0, 0, w, lines, NULL, NULL);
+            lv_obj_t *second = ink_ui_list_row(group, "volume", "合成声音", "60%", 0, h, w, lines, theme_clicked, &clicks);
+            lv_obj_update_layout(root);
+            check_group_row(first, false); check_group_row(second, true);
+            CHECK(!lv_obj_has_flag(first, LV_OBJ_FLAG_CLICKABLE) && lv_obj_has_flag(second, LV_OBJ_FLAG_CLICKABLE),
+                  "row decoration preserves the existing row hit targets");
+            lv_obj_send_event(second, LV_EVENT_CLICKED, NULL);
+            lv_obj_delete(group);
+        }
+        lv_obj_t *single = ink_ui_list_row(root, "book", "合成单行", "", INK_MARGIN, INK_CONTROL, w, false, NULL, NULL);
+        lv_obj_update_layout(root); check_group_row(single, false);
+        lv_obj_t *decor = ink_ui_circle(root, "info", 0, 0, INK_CIRCLE_SMALL, INK_ICON_SMALL, INK_SURFACE_WHITE, NULL, NULL);
+        CHECK(!lv_obj_get_style_border_width(decor, 0) && !lv_obj_has_flag(decor, LV_OBJ_FLAG_CLICKABLE),
+              "a shared decorative circle has no button outline");
+        lv_obj_t *button = ink_ui_circle(root, "back", 0, 0, INK_CIRCLE, INK_ICON_LIST, INK_SURFACE_WHITE, theme_clicked, &clicks);
+        CHECK(lv_obj_get_style_border_width(button, 0) == ink_ui_px(INK_STROKE) && lv_obj_has_flag(button, LV_OBJ_FLAG_CLICKABLE),
+              "a directly bound circle keeps its button outline");
+        lv_obj_send_event(button, LV_EVENT_CLICKED, NULL);
+        ink_shell_bind(decor, "shell.back", NULL);
+        CHECK(lv_obj_get_style_border_width(decor, 0) == ink_ui_px(INK_STROKE) &&
+              lv_obj_has_flag(decor, LV_OBJ_FLAG_CLICKABLE) && !strcmp(ink_shell_bound_cap(decor), "shell.back"),
+              "a circle bound after construction also keeps its outline and capability");
+        const char *const labels[] = {"合成甲", "合成乙", "合成丙"};
+        lv_obj_t *segments = ink_ui_segments(root, labels, 3, 0, 0, 0, w, NULL, NULL);
+        for (int i = 0; i < 3; i++) {
+            lv_obj_t *part = lv_obj_get_child(segments, i);
+            ink_shell_bind(part, "shell.back", NULL);
+            CHECK(!lv_obj_get_style_border_width(part, 0), "binding segmented pills does not add circle outlines");
+        }
+        for (int on = 0; on < 2; on++) {
+            lv_obj_t *toggle = ink_ui_toggle(root, "合成开关", on, 0, 0, w, theme_clicked, &clicks);
+            lv_obj_t *track = lv_obj_get_child(toggle, 1), *knob = lv_obj_get_child(track, 0);
+            CHECK(lv_obj_get_style_bg_opa(toggle, 0) == LV_OPA_TRANSP &&
+                  lv_obj_get_style_bg_opa(track, 0) == LV_OPA_COVER && lv_obj_get_style_bg_opa(knob, 0) == LV_OPA_COVER &&
+                  lv_color_eq(lv_obj_get_style_bg_color(track, 0), on ? ink_ui_ink() : ink_ui_paper()) &&
+                  lv_color_eq(lv_obj_get_style_bg_color(knob, 0), on ? ink_ui_paper() : ink_ui_ink()),
+                  "shared toggle removes only the rectangular tile and retains its black/white state");
+            lv_obj_send_event(toggle, LV_EVENT_CLICKED, NULL);
+        }
+        CHECK(clicks == 5, "shared row, circle and both toggle states preserve their callbacks and context");
+        lv_obj_delete(root);
+    }
+    ink_receipt_t rc; ink_setting_set("display.font_size", original, INK_SRC_TOUCH, &rc);
+}
 static void check_search_layout(void) {
     lv_obj_update_layout(lv_screen_active());
     lv_obj_t *label = find_label(lv_screen_active(), "查找应用");
@@ -576,6 +658,7 @@ static void test_task(void *unused) {
     else if (!strcmp(mode, "answer")) answer_tests();
     else if (!strcmp(mode, "snapshot")) snapshot_tests();
     else if (!strcmp(mode, "alarm")) alarm_tests();
+    else if (!strcmp(mode, "theme")) on_ui(check_theme);
     else confirmation_tests();
     ink_probe_count("test.finished");
 }

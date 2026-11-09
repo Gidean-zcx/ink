@@ -88,6 +88,7 @@ static void draw(void) {
             ink_ui_circle(card, icons[2 * i + k], INK_GAP, k * INK_CONTROL + INK_GAP_S, INK_CIRCLE_SMALL, INK_ICON_SMALL, INK_SURFACE_WHITE, NULL, NULL);
             ink_ui_label(card, rows[2 * i + k], INK_FONT_NOTE, INK_WEIGHT_MEDIUM, INK_CIRCLE_SMALL + INK_GAP_XL, k * INK_CONTROL + INK_GAP_L, w - INK_CIRCLE_SMALL - INK_GAP_XL - (i && k ? INK_PRIMARY : INK_GAP));
         }
+        ink_ui_group_divider(card, INK_CONTROL, w);
         if (i) {
             ink_ui_label(card, "也可以一起清空", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_CIRCLE_SMALL + INK_GAP_XL, INK_CONTROL + INK_LINE_LIST + INK_GAP, w - INK_CIRCLE_SMALL - INK_GAP_XL - INK_PRIMARY);
             ink_ui_toggle(card, "", F.media, w - INK_PRIMARY - INK_GAP, INK_CONTROL, INK_PRIMARY, click, action("一起清空存储卡上的书和音频", "factory.media", F.media ? "{\"clear_media\":false}" : "{\"clear_media\":true}"));
