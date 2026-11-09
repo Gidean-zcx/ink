@@ -77,6 +77,8 @@ static const struct {
     {"sms.text", NULL}, {"sms.long", NULL}, {"sms.prev", NULL}, {"sms.next", NULL},
     {"memo.save", "id,draft,page"}, {"memo.delete", "id"}, {"memo.undo", "id"}, {"memo.convert", "id"}, {"memo.check", "id,index"},
     {"memo.open", "id"}, {"memo.edit", ""}, {"memo.next", NULL}, {"memo.prev", NULL}, {"memo.retry", NULL},
+    {"shell.ai_log", NULL}, {"shell.ai_receipts", ""}, {"ai.pages.close", NULL}, {"ai.pages.retry", NULL},
+    {"ai.pages.next", NULL}, {"ai.pages.prev", NULL},
     {NULL, NULL},
 };
 

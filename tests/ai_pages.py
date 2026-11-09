@@ -21,7 +21,7 @@ if args.mutant:
     old, new = {
         "errors": ("if (kind < 0) return;", "return;"),
         "member": ('ink_db_find_def("activity.log"), ink_member_current()->id', 'ink_db_find_def("activity.log"), "owner"'),
-        "receipts": ("return words[i];", 'return "做好了";'),
+        "receipts": ("return words[i];", "return words[0];"),
         "snapshot": ("return ink_ui_semantics_snapshot(&E.page, out, cap);", "return -1;"),
     }[args.mutant]
     assert source.count(old) == 1
@@ -83,7 +83,8 @@ for case in cases:
         target = build / "ai-pages-compare" / scene
         target.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(folder / f"snap-{scene}.png", target / "snap-scene.png")
-        proof = {"test.snapshot.settled": 1, f"test.snapshot.{scene}": 1, "test.finished": 1, "test.fail": 0}
+        proof = {"test.snapshot.settled": counts[f"test.snapshot.{scene}"], f"test.snapshot.{scene}": counts[f"test.snapshot.{scene}"],
+                 "test.finished": counts["test.finished"], "test.fail": counts.get("test.fail", 0)}
         (target / "metrics.json").write_text(json.dumps({"metrics": proof}) + "\n")
 if ok and not os.environ.get("INK_KEEP_EVIDENCE"):
     shutil.rmtree(work)

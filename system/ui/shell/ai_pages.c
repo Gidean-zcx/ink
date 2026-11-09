@@ -39,7 +39,7 @@ void ink_ai_pages_status(const char *status, lv_obj_t *parent) {
     int h = y + title_h + INK_GAP_S + detail_h + INK_GAP_XXL + INK_PRIMARY + INK_MARGIN;
     lv_obj_set_y(parent, ink_ui_px(INK_CANVAS_H - h));
     lv_obj_set_height(parent, ink_ui_px(h + INK_RADIUS_PANEL));
-    E.root = ink_ui_box(parent, 0, 0, INK_CANVAS_W, h + INK_RADIUS_PANEL, INK_RADIUS_PANEL, INK_SURFACE_WHITE, true);
+    E.root = ink_ui_box(parent, 0, 0, INK_CANVAS_W, h + INK_RADIUS_PANEL, INK_RADIUS_PANEL, INK_SURFACE_WHITE, false);
     lv_obj_add_flag(E.root, LV_OBJ_FLAG_CLICKABLE);
     lv_obj_add_event_cb(E.root, error_deleted, LV_EVENT_DELETE, NULL);
     ink_ui_box(E.root, (INK_CANVAS_W - INK_ICON_STATE) / 2, INK_GAP_M, INK_ICON_STATE, INK_GAP_S, -1, INK_SURFACE_BLACK, false);

@@ -11,7 +11,7 @@
 #undef ink_main
 #include "integration/whole_product.h"
 
-static char mode[24], snapshot[8192], background[3072];
+static char mode[24], snapshot[3072], background[3072];
 static const char *scene;
 static bool found;
 static int x, y;
