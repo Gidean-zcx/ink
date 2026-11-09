@@ -2,13 +2,15 @@
 
 基线：`1705e7ca4c9e3fde0ff8465f636893a8d9567db4`。当前分支：`claude/codex-index-durable`。
 
+**未达到全部验收，不建议合入。** 断电恢复和耗时对照通过，普通与内存检查各有四项新回归；按总规则 §7 的三次停止规则交付。
+
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
 | 1 新建、改名后断电恢复 | 通过【实测】 | 原样的 `audit5-b5-02` 四个进程各 10 项检查通过；旧格式迁移、再次启动均保留原编号 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2 -R '^(audit5-b5-02|index-durable)$'` |
 | 2 界面活动时文件操作增量 ≤100 ms | 通过【实测，模拟器】 | 同基线同夹具、每种操作各 5 次，均确认与实际刷新交叠；见下表 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/index_durable/run.py --build build` |
-| 3 全量、内存检查、S31 构建 | 未通过；内存检查和 S31 仍在执行 | 普通全量 274 项：267 通过、4 失败、3 跳过；改用依赖齐全的中枢 Python 后，跳过的 3 项补测通过，合计 270/274 | `PYTHONDONTWRITEBYTECODE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`；日志 `work/index-durable/full-tests.log`、`hub-tests.log` |
+| 3 全量、内存检查、S31 构建 | 未通过；S31 编译通过【实测】 | 普通全量加中枢补测合计 270/274；ASan/UBSan 270/274、无跳过，同四项功能回归，未报告内存/未定义行为错误；S31 脚本退出 0，镜像 1,230,010 B | 普通与内存：下文命令；S31：`taskpolicy -c utility bash ports/esp32s31/build.sh`；日志 `work/index-durable/{full-tests,hub-tests,asan-tests,s31-build}.log` |
 
 耗时单位 ms，最大值比较（模拟器虚拟时间，不是实机或光学时延）：
 
@@ -22,6 +24,16 @@
 
 反向对照【实测】：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/audit5_fix/run.py --build build --case index --baseline 1705e7ca4c9e3fde0ff8465f636893a8d9567db4` 退出 1。基线 create-reboot 失败 3 项（统计、数量、新编号），rename-reboot 失败 2 项（统计、原编号）；对应修复版均通过。日志：`work/index-durable/reverse-index.log`。
 
+构建遵循总规则 §5（`INK_WERROR=ON`），最多 `-j2`、均带 `taskpolicy -c utility`；内存版只加 `INK_SANITIZE=ON`。两版额外复用只读依赖的 `sdl2-src`、`imgui-src`，分别通过 `FETCHCONTENT_SOURCE_DIR_SDL2`、`FETCHCONTENT_SOURCE_DIR_IMGUI` 指向 `$INK_DEPS/build/_deps/` 下的同名目录。普通全量首次有 3 项中枢依赖跳过，设置 `-DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"` 后单独补测通过；内存版从开始就使用该配置。未升级或修改依赖。
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
+PYTHONDONTWRITEBYTECODE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2 -R '^(hub-contract|hub-json-crosscheck|hub-simulator-e2e)$'
+PYTHONDONTWRITEBYTECODE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
+```
+
+范围核查【实测】：基线至当前只有 7 个相关文件；产品增删 89 行，计入 CMake 为 96 行，低于 200 行预算。`git diff --check` 通过。按总规则 §6 的隐私表达式扫描提交差异，无匹配（grep 退出 1）。构建产物、证据、设计稿未提交；仅本地提交，未 push。
+
 ## 没做到的
 
 - `files-app` 的 write 阶段在 `files_app.c:30` 失败：点“我的”后仍停在 Files，未进入 FileList。临时诊断定位到原测试第 230 行的 `wait_page("FileList")`。232 B 追加元数据、216 B 复用字段、复用目录元数据三版均在该处失败，按总规则 §7 停止继续尝试；没有修改原测试、点按脚本或时限。第三轮证据：`build/files-app-3pwofl6p/summary.json`。
@@ -32,7 +44,7 @@
 
 ## 和设计不一致的
 
-- 尚未发现接口或分层偏离。按钮与 AI 继续使用同一文件服务；本任务不新增页面或能力。上述回归使验收第 3 条未满足。
+- 持久化实现与分层无已知偏离，按钮与 AI 继续使用同一文件服务；本任务不新增页面或能力。上述四个场景的行为不满足原测试，验收第 3 条未满足。
 
 ## 改过的已有测试
 
