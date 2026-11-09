@@ -15,6 +15,7 @@
 #include "ink/sys/state.h"
 #include "ink/sys/svc.h"
 #include "ink/sys/textinput.h"
+#include "ink/sys/text.h"
 #include "text_internal.h"
 
 #define VALUE_DEFAULT 1024
@@ -26,6 +27,8 @@
 
 /* What the member picked, by a hash of the word: the count, then the word. */
 static const ink_db_def_t USER_FREQ = {.name = "text.user_freq", .title = "输入法学到的词频", .scope = INK_DB_MEMBER, .schema = 1, .max_records = 512, .drop_oldest = true};
+static const ink_db_def_t DRAFTS = {.name = "text.drafts", .title = "页面草稿", .scope = INK_DB_MEMBER, .schema = 1};
+typedef struct { char page[48], value[VALUE_MAX + 1], composing[COMPOSING_MAX + 1]; uint32_t cursor, anchor; } draft_t;
 
 typedef struct {
     char *text;
@@ -54,15 +57,42 @@ static struct {
     void *ctx;
     void (*presenter)(void);
     ink_db_t *freq;
+    ink_db_t *drafts;
+    uint32_t draft_id;
+    char draft_page[48];
+    int draft_error;
     ink_text_cand_t cands[MAX_CANDS];
     int ncands;
     bool cands_valid;
     int h_focused;
 } TS INK_PSRAM_BSS;
 
+static void save_draft(void) {
+    if (!TS.drafts) return;
+    draft_t *d = osal_calloc(1, sizeof *d, OSAL_MEM_EXTERNAL);
+    TS.draft_error = INK_DB_ERR_NOMEM;
+    if (!d) return;
+    snprintf(d->page, sizeof d->page, "%s", TS.draft_page);
+    strcpy(d->value, TS.value); strcpy(d->composing, TS.composing);
+    d->cursor = (uint32_t)TS.cursor; d->anchor = (uint32_t)TS.anchor;
+    ink_db_write_t w = {.id = TS.draft_id, .data = d, .len = sizeof *d};
+    TS.draft_error = ink_db_put(TS.drafts, &w, NULL);
+    ink_db_flush(TS.drafts);
+    osal_free(d);
+}
+uint32_t ink_text_draft_id(void) { return TS.draft_id; }
+int ink_text_draft_saved(void) {
+    if (!TS.drafts || TS.draft_error || ink_db_error(TS.drafts)) return -1;
+    return ink_db_last_ver(TS.drafts) <= ink_db_durable_ver(TS.drafts) ? 1 : 0;
+}
+int ink_text_turn_page(int direction) {
+    if (!ink_text_session_current() || !TS.drafts || !TS.client || !TS.client->page) return -1;
+    TS.client->page(TS.ctx, direction); return 0;
+}
 static void changed(void) {
     if (++TS.revision == 0) TS.revision++;
     TS.cands_valid = false;
+    save_draft();
     if (TS.client && TS.client->changed) TS.client->changed(TS.ctx);
     if (TS.presenter) TS.presenter();
 }
@@ -82,6 +112,7 @@ static void on_dict_ready(void) { /* UI task: the keyboard asks again */
 
 int ink_text_focus(const ink_text_cfg_t *cfg, const ink_text_client_t *client, void *ctx) {
     if (!cfg) return -1;
+    if (cfg->draft_page && (cfg->type == INK_TEXT_PASSWORD || cfg->ai_hidden || strlen(cfg->draft_page) >= sizeof TS.draft_page)) return -1;
     if (TS.session) ink_text_blur(TS.session);
     ink_member_identity(&TS.owner);
     text_voice_clear_notice();
@@ -105,11 +136,28 @@ int ink_text_focus(const ink_text_cfg_t *cfg, const ink_text_client_t *client, v
     TS.ai_hidden = cfg->ai_hidden;
     snprintf(TS.hint, sizeof TS.hint, "%s", cfg->hint ? cfg->hint : "");
     TS.composing[0] = 0;
+    TS.draft_id = 0; TS.draft_error = 0;
+    if (cfg->draft_page) {
+        TS.drafts = ink_db_open_member(&DRAFTS, TS.owner.member);
+        draft_t *d = osal_calloc(1, sizeof *d, OSAL_MEM_EXTERNAL);
+        ink_rec_t r;
+        bool ok = TS.drafts && d;
+        if (ok && cfg->draft_id) {
+            ok = ink_db_get(TS.drafts, cfg->draft_id, &r, d, sizeof *d) == 0 && r.len == sizeof *d &&
+                 !strcmp(d->page, cfg->draft_page) && strlen(d->value) <= cap;
+            if (ok) { strcpy(v, d->value); strcpy(TS.composing, d->composing); TS.cursor = d->cursor; TS.anchor = d->anchor; }
+        }
+        osal_free(d);
+        if (!ok) { ink_db_close(TS.drafts); TS.drafts = NULL; osal_free(v); TS.value = NULL; return -1; }
+        TS.draft_id = cfg->draft_id ? cfg->draft_id : ink_db_new_id(TS.drafts);
+        snprintf(TS.draft_page, sizeof TS.draft_page, "%s", cfg->draft_page);
+    }
     TS.client = client;
     TS.ctx = ctx;
     TS.session = ++TS.next_session;
     TS.revision = 1;
     TS.cands_valid = false;
+    if (cfg->draft_page && !cfg->draft_id) save_draft();
     if (cfg->type == INK_TEXT_PLAIN) {
         TS.freq = ink_db_open(&USER_FREQ, NULL);
         py_want_dict(on_dict_ready);
@@ -174,6 +222,7 @@ void ink_text_blur(int session) {
     TS.session = 0;
     TS.client = NULL;
     ink_db_close(TS.freq);
+    ink_db_close(TS.drafts); TS.drafts = NULL; TS.draft_id = 0;
     TS.freq = NULL;
     forget_snaps(TS.undo, &TS.nundo);
     forget_snaps(TS.redo, &TS.nredo);
@@ -393,21 +442,32 @@ void ink_text_commit_utf8(const char *s) {
 
 /* ---- the cursor, the selection and undo: in characters, as a label and the AI count them ---- */
 
-static size_t to_chars(size_t bytes) {
-    size_t n = 0;
-    for (size_t i = 0; i < bytes && TS.value[i]; i++) n += (TS.value[i] & 0xC0) != 0x80;
+size_t ink_text_char_offset(const char *text, size_t bytes) {
+    size_t n = 0, i = 0, len = strlen(text);
+    while (i < len) { ink_utf8_next(text, len, &i); if (i > bytes) break; n++; }
     return n;
 }
-
-static size_t to_bytes(size_t chars) { /* past the end: the end */
-    size_t i = 0;
-    while (TS.value[i] && chars) {
-        i++;
-        while ((TS.value[i] & 0xC0) == 0x80) i++;
-        chars--;
+size_t ink_text_byte_offset(const char *text, size_t chars) {
+    size_t i = 0, len = strlen(text);
+    while (i < len && chars--) ink_utf8_next(text, len, &i);
+    return i;
+}
+size_t ink_text_cluster_end(const char *text, size_t start) {
+    size_t len = strlen(text), i = start;
+    uint32_t prev = ink_utf8_next(text, len, &i); unsigned regional = prev >= 0x1F1E6 && prev <= 0x1F1FF;
+    while (i < len) {
+        size_t next = i; uint32_t cp = ink_utf8_next(text, len, &next);
+        bool extend = (cp >= 0x300 && cp <= 0x36F) || (cp >= 0x1AB0 && cp <= 0x1AFF) ||
+            (cp >= 0x1DC0 && cp <= 0x1DFF) || (cp >= 0x20D0 && cp <= 0x20FF) || (cp >= 0xFE00 && cp <= 0xFE0F) ||
+            (cp >= 0xFE20 && cp <= 0xFE2F) || (cp >= 0x1F3FB && cp <= 0x1F3FF) || (cp >= 0xE0100 && cp <= 0xE01EF);
+        if (!extend && cp != 0x200D && prev != 0x200D && !(regional == 1 && cp >= 0x1F1E6 && cp <= 0x1F1FF)) break;
+        if (cp >= 0x1F1E6 && cp <= 0x1F1FF) regional++;
+        prev = cp; i = next;
     }
     return i;
 }
+static size_t to_chars(size_t bytes) { return ink_text_char_offset(TS.value, bytes); }
+static size_t to_bytes(size_t chars) { return ink_text_byte_offset(TS.value, chars); }
 
 static void moved(void) { /* the next key starts something new to undo */
     TS.edit_kind = EDIT_NONE;
@@ -553,6 +613,6 @@ int ink_text_service_init(void) {
     py_init();
     clip_init();
     if (text_voice_init() != 0) return -1;
-    if (ink_db_register(&USER_FREQ) != 0 || ink_settings_define(TEXT_SETTINGS, 1) != 0 || ink_state_watch("member.current", on_member, NULL, INK_EXEC_UI) != 0) return -1;
+    if (ink_db_register(&DRAFTS) != 0 || ink_db_register(&USER_FREQ) != 0 || ink_settings_define(TEXT_SETTINGS, 1) != 0 || ink_state_watch("member.current", on_member, NULL, INK_EXEC_UI) != 0) return -1;
     return text_caps_init();
 }

@@ -142,6 +142,7 @@ static int snapshot(char *buf, size_t cap) {
 }
 static bool overlay_key(ink_key_t k, bool lng) {
     if (!lng && (k == INK_KEY_HOME || k == INK_KEY_BACK)) ink_text_blur(0);
+    if (!lng && (k == INK_KEY_NEXT || k == INK_KEY_PREV)) invoke("text.page", k == INK_KEY_NEXT ? "{\"direction\":1}" : "{\"direction\":-1}");
     return true;
 }
 static const ink_ui_overlay_t OVERLAY = {.name = "Keyboard", .level = -2, .on_key = overlay_key, .snapshot = snapshot};

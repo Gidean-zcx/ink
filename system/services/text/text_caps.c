@@ -8,6 +8,8 @@
 #include "ink/sys/json.h"
 #include "ink/sys/members.h"
 #include "ink/sys/textinput.h"
+#include "ink/sys/ai.h"
+#include "ink/sys/data.h"
 #include "text_internal.h"
 
 static void fail(ink_call_t *c, ink_rc_t st, const char *why) {
@@ -61,6 +63,10 @@ int ink_text_snapshot(char *out, size_t cap) {
             ink_jw_int(&w, ink_text_edit_revision());
             ink_jw_raw(&w, ",\"value\":");
             ink_jw_str(&w, ink_text_value());
+            if (ink_text_draft_id()) {
+                ink_jw_raw(&w, ",\"draft_id\":"); ink_jw_int(&w, ink_text_draft_id());
+                ink_jw_raw(&w, ",\"draft_saved\":"); ink_jw_int(&w, ink_text_draft_saved());
+            }
             ink_jw_raw(&w, ",\"composing\":");
             ink_jw_str(&w, ink_text_composing());
             size_t sel_start, sel_end;
@@ -216,6 +222,30 @@ static void cap_redo(ink_call_t *c) { /* UI task */
     else text_result(c, session);
 }
 
+static const ink_db_def_t WORDS = {.name = "text.words", .title = "选区加入的单词", .scope = INK_DB_MEMBER, .schema = 1};
+static void cap_page(ink_call_t *c) {
+    int64_t direction = 1; ink_args_get_int(&c->args, "direction", &direction);
+    if (editable(c) && ink_text_turn_page((int)direction) != 0) fail(c, INK_RC_FAILED, "没有长文在编辑");
+}
+static void selection_action(ink_call_t *c, bool ask) {
+    if (!editable(c)) return;
+    char *text = osal_malloc(INK_CLIP_MAX + 1, OSAL_MEM_EXTERNAL);
+    if (!text) { fail(c, INK_RC_FAILED, "内存不够"); return; }
+    int n = ink_text_selected(text, INK_CLIP_MAX + 1);
+    if (n <= 0 || (ask && n >= 384)) fail(c, INK_RC_FAILED, "请选择一小段文字");
+    else if (ask) ink_ai_ask_text(text);
+    else {
+        ink_db_t *db = ink_db_open_member(&WORDS, ink_member_current()->id); uint32_t id = 0;
+        ink_db_write_t w = {.data = text, .len = (size_t)n + 1, .src = (uint8_t)c->src};
+        if (!db || ink_db_put(db, &w, &id) != 0) fail(c, INK_RC_FAILED, "单词没能存下");
+        else { ink_db_flush(db); snprintf(c->rc.object, sizeof c->rc.object, "text.words:%u", id); }
+        ink_db_close(db);
+    }
+    osal_free(text);
+}
+static void cap_ask(ink_call_t *c) { selection_action(c, true); }
+static void cap_word(ink_call_t *c) { selection_action(c, false); }
+
 static void cap_clip_write(ink_call_t *c) {
     char *text = osal_malloc(INK_ARGS_TEXT, OSAL_MEM_EXTERNAL);
     if (!text) {
@@ -233,6 +263,9 @@ static void cap_clip_write(ink_call_t *c) {
 #define TARGET_SCHEMA "{\"type\":\"object\",\"properties\":{" TARGET_FIELDS "}}"
 
 static const ink_cap_t TEXT_CAPS[] = {
+    {.id = "text.page", .title = "翻长文的文字页", .input = "{\"type\":\"object\",\"properties\":{" TARGET_FIELDS ",\"direction\":{\"type\":\"integer\",\"enum\":[-1,1]}},\"required\":[\"direction\"]}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = cap_page},
+    {.id = "text.ask_ai", .title = "问 AI 选中的文字", .input = TARGET_SCHEMA, .effect = INK_FX_EXTERNAL, .child_ok = true, .run = cap_ask},
+    {.id = "text.add_word", .title = "把选中的文字加入单词", .input = TARGET_SCHEMA, .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = cap_word},
     {.id = "text.state", .title = "现在有没有文本框在输入，里面是什么（密码不给看）", .output = "{\"type\":\"object\"}", .effect = INK_FX_READ, .child_ok = true, .run = cap_state},
     {.id = "text.insert", .title = "往有焦点的文本框里写字（等于替用户打字）", .input = "{\"type\":\"object\",\"properties\":{" TARGET_FIELDS ",\"text\":{\"type\":\"string\",\"maxLength\":300}},\"required\":[\"text\"]}", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = cap_insert},
     {.id = "text.select", .title = "放光标或选一段字（按字数算；不给 end 就是放光标。text.insert 写在这里，选中的被替换）",
@@ -249,4 +282,4 @@ static const ink_cap_t TEXT_CAPS[] = {
     {.id = "clipboard.write", .title = "写剪贴板", .input = "{\"type\":\"object\",\"properties\":{\"text\":{\"type\":\"string\",\"maxLength\":300},\"sensitive\":{\"type\":\"boolean\"}},\"required\":[\"text\"]}", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_clip_write},
 };
 
-int text_caps_init(void) { return ink_cap_register(TEXT_CAPS, (int)(sizeof TEXT_CAPS / sizeof TEXT_CAPS[0])); }
+int text_caps_init(void) { return ink_db_register(&WORDS) || ink_cap_register(TEXT_CAPS, (int)(sizeof TEXT_CAPS / sizeof TEXT_CAPS[0])); }
