@@ -17,6 +17,7 @@
 #include "ink/probe.h"
 #include "ink/rotation.h"
 #include "ink/sys/ai.h"
+#include "ink/sys/audio.h"
 #include "shell/ai_chat.h"
 #include "ink/sys/exec.h"
 #include "ink/sys/ui.h"
@@ -95,6 +96,7 @@ static struct {
     ink_member_identity_t overlay_owner[MAX_OVERLAYS];
     int noverlays;
     bool skip_touch; /* a finger went down before the screen changed under it: nothing until it lifts */
+    bool click_tone;
     volatile uint32_t generation;
     bool interactive;
     uint64_t last_input_us;
@@ -428,6 +430,7 @@ static void btn_event_cb(lv_event_t *e) {
     if (code == LV_EVENT_PRESSED || code == LV_EVENT_RELEASED || code == LV_EVENT_PRESS_LOST)
         ink_ui_hint_obj(lv_event_get_target_obj(e), INK_REFRESH_FAST); /* press feedback: fast waveform */
 }
+static void click_tone(lv_event_t *e) { (void)e; UI.click_tone = true; }
 
 /* No pressed-state inversion by default: on a panel without a fast A2 waveform,
  * "invert on press, restore on release" costs two DU refreshes (~320 ms each) and
@@ -766,6 +769,7 @@ static void handle(const umsg_t *m, uint64_t *first_cause, const char **first_ta
     uint64_t before = UI.cause_us;
     if (m->type == UM_INPUT) handle_input(m);
     else if (m->type == UM_CALL) ink_exec_run(INK_EXEC_UI);
+    if (UI.click_tone) { UI.click_tone = false; ink_audio_key_tone(); }
     bool action = !(m->type == UM_INPUT && m->ev.kind == INK_EV_POINTER && m->ev.phase != INK_PTR_RELEASE);
     if (action && !*first_cause && UI.cause_us && UI.cause_us != before) {
         *first_cause = UI.cause_us;
@@ -839,6 +843,7 @@ static void ui_task(void *arg) {
     lv_indev_set_type(UI.indev, LV_INDEV_TYPE_POINTER);
     lv_indev_set_read_cb(UI.indev, indev_read);
     lv_indev_set_mode(UI.indev, LV_INDEV_MODE_EVENT);
+    lv_indev_add_event_cb(UI.indev, click_tone, LV_EVENT_CLICKED, NULL);
 
     styles_init();
     UI.frame_intent = INK_REFRESH_UI;

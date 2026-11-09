@@ -1196,8 +1196,13 @@ static void body_blocks(void) {
             heading("提示");
             F.y += heading_h();
             lv_obj_t *g = group(2);
-            group_row(g, "bell", "按键提示音", "暂无选项", 0, NULL);
-            group_row(g, "wave", "振动", "暂无选项", 1, NULL);
+            const char *ids[] = {"audio.key_tone", "audio.vibration"}, *labels[] = {"按键提示音", "振动"};
+            for (int i = 0; i < 2; i++) {
+                ink_ui_icon(g, i ? "wave" : "bell", INK_ICON_LIST, INK_ICON_LINE, INK_GAP_L, i * INK_CONTROL + (INK_CONTROL - INK_ICON_LIST) / 2, false);
+                lv_obj_t *toggle = ink_ui_toggle(g, labels[i], ink_setting_get(ids[i]), INK_ROW_DOUBLE, i * INK_CONTROL, width() - INK_ROW_DOUBLE - INK_GAP_L, NULL, NULL);
+                lv_obj_set_style_bg_opa(toggle, LV_OPA_TRANSP, 0);
+                bind_toggle(toggle, ids[i]);
+            }
             F.y -= heading_h();
         }
         F.y += h + INK_GAP_L;
@@ -1205,8 +1210,15 @@ static void body_blocks(void) {
             heading("铃声");
             F.y += heading_h();
             lv_obj_t *g = group(2);
-            group_row(g, "phone", "来电", "系统提示音", 0, NULL);
-            group_row(g, "clock", "闹钟", "系统提示音", 1, NULL);
+            const char *ids[] = {"audio.call_ring", "audio.alarm_ring"}, *labels[] = {"来电", "闹钟"};
+            const char *names[] = {"清音", "双音", "柔音"};
+            for (int i = 0; i < 2; i++) {
+                int v = (int)ink_setting_get(ids[i]); char value[64], args[96];
+                snprintf(value, sizeof value, "%s · 点按换音试听", names[v]);
+                lv_obj_t *row = ink_ui_list_row(g, i ? "clock" : "phone", labels[i], value, 0, i * INK_CONTROL, width(), false, NULL, NULL);
+                snprintf(args, sizeof args, "{\"id\":\"%s\",\"value\":%d}", ids[i], (v + 1) % 3);
+                ink_shell_bind(row, "settings.set", args);
+            }
             F.y -= heading_h();
         }
         F.y += h;
@@ -1403,6 +1415,8 @@ static bool page_key(ink_key_t key, bool lng) {
 static int page_snapshot(char *buf, size_t cap) {
     if (!current_session(N.epoch)) return snprintf(buf, cap, "空间锁定或正在切换；AI 无权读取。");
     if (N.notify_list) return ink_ui_list_snapshot(N.notify_list, buf, cap);
+    if (N.page_id == PAGE_SOUND)
+        return snprintf(buf, cap, "SetSound；音量=%lld；勿扰=%lld；按键提示音(audio.key_tone)=%lld；振动(audio.vibration)=%lld；来电铃声(audio.call_ring)=%lld；闹钟铃声(audio.alarm_ring)=%lld；铃声：0清音、1双音、2柔音；settings.set(id,value)更改并试听；shell.page_next、shell.page_prev、shell.back。", (long long)ink_setting_get("audio.volume"), (long long)ink_setting_get("notify.dnd"), (long long)ink_setting_get("audio.key_tone"), (long long)ink_setting_get("audio.vibration"), (long long)ink_setting_get("audio.call_ring"), (long long)ink_setting_get("audio.alarm_ring"));
     int n = snprintf(buf, cap, "%s；当前=%s；亮度=%lld；暖光=%lld；音量=%lld；网络偏好=%lld；通知=%d。",
                      PAGES[N.page_id].name, ink_member_current()->name, (long long) ink_setting_get("display.light"),
                      (long long) ink_setting_get("display.warmth"), (long long) ink_setting_get("audio.volume"),

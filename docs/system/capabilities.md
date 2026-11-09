@@ -7,7 +7,7 @@ python3 tools/capabilities.py
 python3 tools/capabilities.py --check
 ```
 
-当前共 359 项：可调用能力 325、事件 34；设置 17 项、状态 48 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
+当前共 365 项：可调用能力 331、事件 34；设置 21 项、状态 48 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
 
 风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。
 
@@ -82,6 +82,12 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `clock.open` | 查看闹钟 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Clock | [s04](#s04) | [system/apps/clock/clock.c](../../system/apps/clock/clock.c) |
 | `clock.prev` | 闹钟上一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Clock | [s04](#s04) | [system/apps/clock/clock.c](../../system/apps/clock/clock.c) |
 | `clock.save` | 保存闹钟 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单）；页面 ClockAlarm | [s04](#s04) | [system/apps/clock/clock.c](../../system/apps/clock/clock.c) |
+| `clock.timer` | 计时 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Clock | [s04](#s04) | [system/apps/clock/clock.c](../../system/apps/clock/clock.c) |
+| `clock.timer_cancel` | 取消计时 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单）；页面 ClockTimer | [s04](#s04) | [system/apps/clock/clock.c](../../system/apps/clock/clock.c) |
+| `clock.timer_dismiss` | 关闭计时响铃 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单）；锁定时仅人工入口 | [s04](#s04) | [system/apps/clock/clock.c](../../system/apps/clock/clock.c) |
+| `clock.timer_pause` | 暂停计时 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单）；页面 ClockTimer | [s04](#s04) | [system/apps/clock/clock.c](../../system/apps/clock/clock.c) |
+| `clock.timer_set` | 设定计时时长 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单）；页面 ClockTimer | [s04](#s04) | [system/apps/clock/clock.c](../../system/apps/clock/clock.c) |
+| `clock.timer_start` | 开始或继续计时 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单）；页面 ClockTimer | [s04](#s04) | [system/apps/clock/clock.c](../../system/apps/clock/clock.c) |
 | `confirm.accept` | 确认（只有人在设备上能按） | 仅人（设备） | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s13](#s13) | [system/policy/confirm.c](../../system/policy/confirm.c) |
 | `confirm.list` | 有什么在等人确认 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s13](#s13) | [system/policy/confirm.c](../../system/policy/confirm.c) |
 | `confirm.page` | 翻阅确认说明（只由人在设备上操作） | 仅人（设备） | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s41](#s41) | [system/ui/shell/confirm_card.c](../../system/ui/shell/confirm_card.c) |
@@ -495,7 +501,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 ### s15 — `system/policy/settings`
 
-设置：`ai.read_clipboard`、`audio.child_max`、`audio.volume`、`cell.sim_slot`、`display.font_size`、`display.light`、`display.lock_style`、`display.wallpaper_file`、`display.warmth`、`member.idle_return_s`、`net.prefer`、`notify.dnd`、`power.lock_after_s`、`time.auto`、`time.zone`、`update.auto_download`、`voice.handsfree`。
+设置：`ai.read_clipboard`、`audio.alarm_ring`、`audio.call_ring`、`audio.child_max`、`audio.key_tone`、`audio.vibration`、`audio.volume`、`cell.sim_slot`、`display.font_size`、`display.light`、`display.lock_style`、`display.wallpaper_file`、`display.warmth`、`member.idle_return_s`、`net.prefer`、`notify.dnd`、`power.lock_after_s`、`time.auto`、`time.zone`、`update.auto_download`、`voice.handsfree`。
 
 状态：—。
 
@@ -505,7 +511,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 ### s16 — `system/policy/system_actions`
 
-设置：`ai.read_clipboard`、`audio.child_max`、`audio.volume`、`cell.sim_slot`、`display.font_size`、`display.light`、`display.lock_style`、`display.wallpaper_file`、`display.warmth`、`member.idle_return_s`、`net.prefer`、`notify.dnd`、`power.lock_after_s`、`time.auto`、`time.zone`、`update.auto_download`、`voice.handsfree`。
+设置：`ai.read_clipboard`、`audio.alarm_ring`、`audio.call_ring`、`audio.child_max`、`audio.key_tone`、`audio.vibration`、`audio.volume`、`cell.sim_slot`、`display.font_size`、`display.light`、`display.lock_style`、`display.wallpaper_file`、`display.warmth`、`member.idle_return_s`、`net.prefer`、`notify.dnd`、`power.lock_after_s`、`time.auto`、`time.zone`、`update.auto_download`、`voice.handsfree`。
 
 状态：`alarm.revision`、`alarm.ringing`、`app.cards_rev`、`app.foreground`、`audio.listening`、`audio.mic`、`audio.now_playing`、`audio.recording`、`audio.route`、`battery.charging`、`battery.level`、`battery.low`、`bt.available`、`bt.connected`、`bt.device`、`cell.registered`、`cell.sim`、`confirm.pending`、`file.index_state`、`interrupt.active`、`job.revision`、`job.running`、`media.state`、`member.authed`、`member.current`、`member.time_up`、`net.online`、`net.signal`、`net.type`、`notify.unread`、`pairing.state`、`power.saving`、`power.state`、`storage.card`、`storage.free`、`storage.mode`、`storage.user_free`、`text.focused`、`text.voice`、`time.minute`、`time.synced`、`time.zone`、`update.progress`、`update.state`、`update.version`、`usb.connected`、`wifi.ssid`、`wifi.state`。
 
@@ -515,9 +521,9 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 ### s17 — `system/services/audio`
 
-设置：`audio.child_max`、`audio.volume`、`voice.handsfree`。
+设置：`audio.alarm_ring`、`audio.call_ring`、`audio.child_max`、`audio.key_tone`、`audio.vibration`、`audio.volume`、`voice.handsfree`。
 
-状态：`audio.listening`、`audio.mic`、`audio.now_playing`、`audio.recording`、`audio.route`、`media.state`、`member.authed`、`member.current`。
+状态：`audio.listening`、`audio.mic`、`audio.now_playing`、`audio.recording`、`audio.route`、`interrupt.active`、`media.state`、`member.authed`、`member.current`。
 
 事件：`audio.record_done`、`media.finished`。
 
@@ -815,7 +821,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 ### s47 — `system/ui/shell/navigation`
 
-设置：`audio.child_max`、`audio.volume`、`cell.sim_slot`、`display.font_size`、`display.light`、`display.lock_style`、`display.warmth`、`net.prefer`、`notify.dnd`、`power.lock_after_s`、`voice.handsfree`。
+设置：`audio.alarm_ring`、`audio.call_ring`、`audio.child_max`、`audio.key_tone`、`audio.vibration`、`audio.volume`、`cell.sim_slot`、`display.font_size`、`display.light`、`display.lock_style`、`display.warmth`、`net.prefer`、`notify.dnd`、`power.lock_after_s`、`voice.handsfree`。
 
 状态：`app.cards_rev`、`audio.mic`、`audio.route`、`battery.level`、`bt.connected`、`cell.registered`、`member.authed`、`member.current`、`net.type`、`notify.unread`、`power.state`、`wifi.ssid`。
 
@@ -878,7 +884,11 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | 设置 id | 描述 | 类型 | 读取 / 写入能力 | 允许修改的成员 | 风险 / 确认 | 定义 |
 | --- | --- | --- | --- | --- | --- | --- |
 | `ai.read_clipboard` | AI 可以读剪贴板 | `INK_SET_BOOL` | `settings.get` / `settings.set` | 仅成人 | 高 / 人、AI 均需确认 | [system/services/text/text_service.c](../../system/services/text/text_service.c) |
+| `audio.alarm_ring` | 闹钟铃声 | `INK_SET_ENUM` | `settings.get` / `settings.set` | 成人、儿童（无需白名单） | 中 / 无需 | [system/services/audio/audio_service.c](../../system/services/audio/audio_service.c) |
+| `audio.call_ring` | 来电铃声 | `INK_SET_ENUM` | `settings.get` / `settings.set` | 成人、儿童（无需白名单） | 中 / 无需 | [system/services/audio/audio_service.c](../../system/services/audio/audio_service.c) |
 | `audio.child_max` | 孩子的音量上限 | `INK_SET_INT` | `settings.get` / `settings.set` | 仅成人 | 高 / 人、AI 均需确认 | [system/services/audio/audio_service.c](../../system/services/audio/audio_service.c) |
+| `audio.key_tone` | 按键提示音 | `INK_SET_BOOL` | `settings.get` / `settings.set` | 成人、儿童（无需白名单） | 中 / 无需 | [system/services/audio/audio_service.c](../../system/services/audio/audio_service.c) |
+| `audio.vibration` | 振动 | `INK_SET_BOOL` | `settings.get` / `settings.set` | 成人、儿童（无需白名单） | 中 / 无需 | [system/services/audio/audio_service.c](../../system/services/audio/audio_service.c) |
 | `audio.volume` | 音量 | `INK_SET_INT` | `settings.get` / `settings.set` | 成人、儿童（无需白名单） | 中 / 无需 | [system/services/audio/audio_service.c](../../system/services/audio/audio_service.c) |
 | `cell.sim_slot` | SIM 卡 | `INK_SET_ENUM` | `settings.get` / `settings.set` | 仅成人 | 中 / 无需 | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
 | `display.font_size` | 字号 | `INK_SET_ENUM` | `settings.get` / `settings.set` | 仅成人 | 中 / 无需 | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |

@@ -76,6 +76,8 @@ static const struct {
     {"contacts.next", NULL}, {"contacts.prev", NULL}, {"contacts.name", NULL}, {"contacts.number", NULL},
     {"clock.prev", NULL}, {"clock.next", NULL}, {"clock.new", NULL}, {"clock.open", "id"},
     {"clock.draft", ""}, {"clock.focus", NULL}, {"clock.save", NULL},
+    {"clock.timer", NULL}, {"clock.timer_set", "seconds"}, {"clock.timer_start", NULL},
+    {"clock.timer_pause", NULL}, {"clock.timer_cancel", NULL}, {"clock.timer_dismiss", "id"},
     {"alarm.update", "id"},
     {"shell.ai_home", NULL}, {"shell.ai_ask", NULL}, {"shell.ai_send", NULL}, {"shell.ai_stop", NULL}, {"shell.ai_key", ""},
     {"phone.open", ""}, {"phone.contacts", NULL}, {"contacts.open", NULL}, {"phone.recents", NULL},

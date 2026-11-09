@@ -1,0 +1,152 @@
+{
+  "issue": "SC-H2",
+  "merge_parent": "168eba7f",
+  "merge_commit": "d3610346283b429c5ac776da7296843a0f56df1d",
+  "time_unit": "simulated milliseconds since boot unless named otherwise",
+  "startup_before": {
+    "test.hub_member_confirmed_ms": 6024.69,
+    "test.hub_member_pending_ms": 2282.494,
+    "test.hub_member_ready_ms": 6028.077,
+    "test.hub_product_ready_ms": 2090.021
+  },
+  "startup_after": {
+    "test.hub_member_confirmed_ms": 2398.129,
+    "test.hub_member_pending_ms": 2091.031,
+    "test.hub_member_ready_ms": 2399.53,
+    "test.hub_product_ready_ms": 2090.285
+  },
+  "priority_controls": {
+    "input_12_feeders_24": {
+      "test.hub_member_confirmed_ms": 2398.102,
+      "test.hub_member_pending_ms": 2091.005,
+      "test.hub_member_ready_ms": 2399.504,
+      "test.hub_product_ready_ms": 2090.259
+    },
+    "input_24_feeders_24": {
+      "test.hub_member_confirmed_ms": 6044.69,
+      "test.hub_member_pending_ms": 2282.494,
+      "test.hub_member_ready_ms": 6048.077,
+      "test.hub_product_ready_ms": 2090.021
+    }
+  },
+  "rejected_candidates": {
+    "foreground_flash_guard": {
+      "ready_ms": 5679.251,
+      "product_code_retained": false
+    },
+    "storage_priority_9": {
+      "ready_ms": 6027.95,
+      "product_code_retained": false
+    }
+  },
+  "cause": {
+    "main_core": 0,
+    "input_affinity_before": -1,
+    "input_affinity_after": 0,
+    "input_priority_unchanged": 24,
+    "feeder_priority_unchanged": 23,
+    "confirmation_write_wait_ms_before": 2605.147,
+    "confirmation_write_wait_ms_after": 0.133,
+    "pending_receipt_wait_ms_before": 192.473,
+    "pending_receipt_wait_ms_after": 0.746,
+    "member_switch_ms_before": 3.387,
+    "member_switch_ms_after": 1.401,
+    "input_cpu_ms_second_1_before": 0.308639,
+    "i2c_expander_max_wait_ms_before": 0.058285
+  },
+  "short_press_after": {
+    "keys_delivered": 8,
+    "first_touch_read_us": 19564563.789,
+    "key_up_us": 19580000,
+    "dispatch_us": 74.053,
+    "tool_done": 4,
+    "tool_stale": 1
+  },
+  "targeted": {
+    "passed": 6,
+    "failed": 0,
+    "skipped": 0,
+    "ctest_exit": 0
+  },
+  "product_lines_total": 239,
+  "product_lines_this_round": 3,
+  "new_mechanisms": [],
+  "full_validation": {
+    "normal": {
+      "tests": 284,
+      "passed": 283,
+      "failed": 1,
+      "skipped": 0,
+      "exempt_failures": [
+        "capability-table-doc"
+      ],
+      "seconds": 205.46,
+      "ctest_exit": 8
+    },
+    "asan_ubsan": {
+      "tests": 284,
+      "passed": 283,
+      "failed": 1,
+      "skipped": 0,
+      "exempt_failures": [
+        "capability-table-doc"
+      ],
+      "seconds": 366.68,
+      "ctest_exit": 8
+    }
+  },
+  "negative_control": {
+    "variant": "input-affinity",
+    "test_exit": 1,
+    "detected": true,
+    "member_ready_ms": 6028.077,
+    "control_script_exit": 0,
+    "failure": "tool_calls=0"
+  },
+  "capability_temp_check": {
+    "definitions": 434,
+    "generate_exit": 0,
+    "check_exit": 0
+  },
+  "dependencies": {
+    "pytest": "8.4.2",
+    "pytest-asyncio": "1.2.0",
+    "aiohttp": "3.12.15",
+    "PyYAML": "6.0.3",
+    "installation_changed": false
+  },
+  "sanitizer_diagnostics": 0,
+  "builds": {
+    "normal": {
+      "exit": 0,
+      "werror": true
+    },
+    "asan_ubsan": {
+      "exit": 0,
+      "werror": true,
+      "sanitize": "address,undefined"
+    }
+  },
+  "e2e_full_validation": {
+    "build": {
+      "member_ready_ms": 2399.53,
+      "turns": 1,
+      "tool_calls": 1,
+      "mic_lost_ms": 0
+    },
+    "build-asan": {
+      "member_ready_ms": 2399.53,
+      "turns": 1,
+      "tool_calls": 1,
+      "mic_lost_ms": 0
+    }
+  },
+  "privacy_scan": {
+    "task_baseline_matches": 4,
+    "second_round_baseline_matches": 0,
+    "task_baseline_matches_reason": "主线合入的四行合成耳机 MAC，均为任务规则允许的固定假数据",
+    "host_path_matches": 0
+  },
+  "protected_shared_docs_changed_in_second_round": false,
+  "product_budget_reference": "168eba7f"
+}

@@ -124,6 +124,7 @@ static struct {
     uint64_t stream_cause;
     uint64_t heard_cause;
     bool ring_on;    /* a call or an alarm rings */
+    bool ring_call;
     uint32_t ring_t; /* samples since it began */
     int ring_focus;
     struct {
@@ -340,7 +341,7 @@ static void close_output(bool drain) {
 
 static void make_tone(ink_tone_t t) {
     /* placeholders until the sound design; each fits in the DMA ring (60 ms here), see the top */
-    static const struct { double f; int ms; } T[] = {{880, 60}, {660, 60}, {330, 60}};
+    static const struct { double f; int ms; } T[] = {{880, 60}, {660, 60}, {330, 60}, {1100, 30}};
     int n = HAL_AUDIO_RATE * T[t].ms / 1000, fade = HAL_AUDIO_RATE * 6 / 1000;
     int ring = AU.info.runway_ms > 0 ? HAL_AUDIO_RATE * AU.info.runway_ms / 1000 : n;
     if (n > ring) n = ring;
@@ -361,15 +362,19 @@ static void make_tone(ink_tone_t t) {
 
 /* Two tones, on and off: 400 ms of each, 800 ms of quiet. Service task. */
 static void make_ring(void) {
+    static const double F[] = {880, 660, 330};
+    int tone = (int)ink_setting_get(AU.ring_call ? "audio.call_ring" : "audio.alarm_ring");
+    ink_probe_value(AU.ring_call ? "audio.ring.call" : "audio.ring.alarm", tone);
     for (int i = 0; i < RING_CHUNK; i++, AU.ring_t++) {
         uint32_t ms = AU.ring_t / (HAL_AUDIO_RATE / 1000) % 1600;
-        double f = ms < 400 ? 880.0 : ms < 800 ? 660.0 : 0.0;
+        double f = ms < 400 ? F[tone] : ms < 800 ? F[(tone + 1) % 3] : 0.0;
         AU.pcm[i] = f > 0 ? (int16_t)(RING_LEVEL * sin(2 * M_PI * f * AU.ring_t / HAL_AUDIO_RATE)) : 0;
     }
     osal_cost_units("tone.sample", RING_CHUNK);
     AU.pcm_off = 0;
     AU.pcm_len = RING_CHUNK;
     AU.staged_stream = 0;
+    if (ink_member_current()->role == INK_ROLE_CHILD) apply_volume(AU.pcm, RING_CHUNK);
 }
 
 static void free_jb(void) { /* under lock */
@@ -617,16 +622,19 @@ static void service_playback(void) {
 
 /* While playing or recording: flash writes wait (they would freeze the DMA refill), the chip stays
  * awake (also when the device is locked: an audiobook keeps playing) and the codec runs at full clock. */
-static void update_write_hold(void) {
-    lock();
+static void hold_writes_locked(void) {
     bool want = AU.cap_on || AU.stream || AU.out_open || AU.ring_on;
-    bool awake = want || AU.listen_on; /* listening keeps the chip up but lets the flash be written (a gap, not a stop) */
-    bool codec = AU.cap_on || AU.stream || AU.listen_on;
-    unlock();
     if (want != AU.holding_writes) {
         AU.holding_writes = want;
         ink_storage_hold_writes(want);
     }
+}
+static void update_write_hold(void) {
+    lock();
+    hold_writes_locked();
+    bool awake = AU.holding_writes || AU.listen_on; /* listening keeps the chip up but lets the flash be written (a gap, not a stop) */
+    bool codec = AU.cap_on || AU.stream || AU.listen_on;
+    unlock();
     if (awake != AU.holding_awake) {
         AU.holding_awake = awake;
         if (awake) ink_power_hold(INK_NEED_AUDIO);
@@ -780,8 +788,14 @@ static void on_capture_owner(void *ctx, int h, const char *id) { /* direct: the 
 /* When the device listens for its wake word (D-52: a setting, by default only while the screen is
  * on and unlocked). Takes effect with the voice front end (detailed design §7). */
 static const char *const HANDSFREE[] = {"screen_on", "always", "off", NULL};
+static const char *const RINGTONES[] = {"清音", "双音", "柔音", NULL};
+static void preview_ring(void *ctx, int64_t v) { (void)ctx; ink_audio_tone((ink_tone_t)v, osal_now_us(), "audio.preview"); }
 
 static const ink_setting_def_t AUDIO_SETTINGS[] = {
+    {.id = "audio.key_tone", .title = "按键提示音", .type = INK_SET_BOOL, .child_may_change = true},
+    {.id = "audio.vibration", .title = "振动", .type = INK_SET_BOOL, .def = 1, .child_may_change = true},
+    {.id = "audio.call_ring", .title = "来电铃声", .type = INK_SET_ENUM, .choices = RINGTONES, .child_may_change = true, .apply = preview_ring, .apply_exec = INK_EXEC_DIRECT},
+    {.id = "audio.alarm_ring", .title = "闹钟铃声", .type = INK_SET_ENUM, .choices = RINGTONES, .child_may_change = true, .apply = preview_ring, .apply_exec = INK_EXEC_DIRECT},
     {.id = "audio.volume", .title = "音量", .type = INK_SET_INT, .min = 0, .max = 100, .def = 70, .child_may_change = true,
      .apply = volume_apply, .apply_exec = INK_EXEC_DIRECT},
     {.id = "voice.handsfree", .title = "叫名字（什么时候在等）", .type = INK_SET_ENUM, .def = 0, .choices = HANDSFREE},
@@ -793,7 +807,7 @@ int ink_audio_init(void) {
     /* the saved volume; 70 where the settings table is not running (some test programs) */
     AU.volume = 70;
     AU.child_max = 60;
-    if (ink_settings_define(AUDIO_SETTINGS, 3) == 0) {
+    if (ink_settings_define(AUDIO_SETTINGS, sizeof AUDIO_SETTINGS / sizeof *AUDIO_SETTINGS) == 0) {
         AU.volume = (int)ink_setting_get("audio.volume");
         AU.child_max = (int)ink_setting_get("audio.child_max");
     }
@@ -897,6 +911,7 @@ static int capture_begin_locked(ink_audio_frame_fn fn, void *ctx, bool local) { 
     AU.cap_seq = 0;
     if (!listening) AU.rd = AU.wr = 0;
     AU.cap_on = true;
+    hold_writes_locked();
     AU.cap_local = local;
     AU.cap_ending = false;
     g_capture_revoked = false;
@@ -905,6 +920,7 @@ static int capture_begin_locked(ink_audio_frame_fn fn, void *ctx, bool local) { 
     if (!listening && hal_audio_capture_start(capture_cb, NULL) != 0) {
         lock();
         AU.cap_on = false;
+        hold_writes_locked();
         AU.cap_fn = NULL;
         AU.enc = NULL;
         unlock();
@@ -1189,7 +1205,8 @@ void ink_audio_stop_all(void) { /* what is being said; a book being listened to 
 void ink_audio_tone(ink_tone_t tone, uint64_t cause_us, const char *probe) {
     if (!AU.info.has_speaker || !AU.task) return;
     lock();
-    if (focus_top_locked() >= INK_AUDIO_PRIO_ALERT) { /* nothing is said over a call or an alarm */
+    if (focus_top_locked() >= INK_AUDIO_PRIO_ALERT || (tone == INK_TONE_KEY && AU.tone_pending)) {
+        /* Calls, alarms and an already requested preview precede a key tick. */
         unlock();
         ink_probe_count("audio.tones_dropped");
         return;
@@ -1202,10 +1219,18 @@ void ink_audio_tone(ink_tone_t tone, uint64_t cause_us, const char *probe) {
     osal_sem_give(AU.wake);
 }
 
+void ink_audio_key_tone(void) {
+    if (ink_setting_get("audio.key_tone")) ink_audio_tone(INK_TONE_KEY, osal_now_us(), "audio.key");
+}
+void ink_audio_haptic(void) {
+    if (ink_setting_get("audio.vibration")) hal_haptic_pulse(0);
+}
 void ink_audio_ring(bool on) {
     if (!AU.info.has_speaker || !AU.task) return;
+    char active[16] = ""; ink_state_get_str(ink_state_find("interrupt.active"), active, sizeof active);
     lock();
     bool was = AU.ring_on;
+    AU.ring_call = !strcmp(active, "call");
     if (on && !was) AU.ring_t = 0;
     AU.ring_on = on;
     int token = AU.ring_focus;

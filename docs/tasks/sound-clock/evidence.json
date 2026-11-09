@@ -1,0 +1,80 @@
+{
+  "sound": {
+    "audio.key": {
+      "count": 6,
+      "mean": 30.8365,
+      "min": 30.799,
+      "p50": 30.799,
+      "p95": 31,
+      "p99": 31,
+      "max": 31
+    },
+    "audio.preview": {
+      "count": 7,
+      "mean": 51.413428571428575,
+      "min": 30.799,
+      "p50": 31.15,
+      "p95": 113.06,
+      "p99": 113.06,
+      "max": 113.06
+    },
+    "audio.ring.alarm": {
+      "count": 22,
+      "mean": 0.5454545454545454,
+      "min": 0,
+      "p50": 1,
+      "p95": 1,
+      "p99": 1,
+      "max": 1
+    },
+    "audio.ring.call": {
+      "count": 15,
+      "mean": 2,
+      "min": 2,
+      "p50": 2,
+      "p95": 2,
+      "p99": 2,
+      "max": 2
+    },
+    "haptics.pulses": 3,
+    "test.finished": 1,
+    "test.pass": 93
+  },
+  "timer": {
+    "audio.key": {
+      "count": 7,
+      "mean": 30.869714285714284,
+      "min": 30.799,
+      "p50": 30.809,
+      "p95": 31.254,
+      "p99": 31.254,
+      "max": 31.254
+    },
+    "audio.ring.alarm": {
+      "count": 215,
+      "mean": 1,
+      "min": 1,
+      "p50": 1,
+      "p95": 1,
+      "p99": 1,
+      "max": 1
+    },
+    "haptics.pulses": 3,
+    "test.finished": 1,
+    "test.pass": 93
+  },
+  "restart": {
+    "audio.key": {
+      "count": 1,
+      "mean": 30.799,
+      "min": 30.799,
+      "p50": 30.799,
+      "p95": 30.799,
+      "p99": 30.799,
+      "max": 30.799
+    },
+    "test.finished": 1,
+    "test.pass": 15
+  },
+  "source": "build/test-out/sound-clock-syqwh94u"
+}

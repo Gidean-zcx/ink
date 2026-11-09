@@ -41,7 +41,7 @@
 #define MAX_TOUCH 2
 #define KEY_FIFO 32
 #define INPUT_STACK 3072
-#define INPUT_PRIO 12
+#define INPUT_PRIO OSAL_PRIO_MAX /* Read short contacts before the display feeders. */
 #define BG_STACK 2048
 
 typedef struct {
@@ -835,7 +835,8 @@ void sim_input_init(void) {
         }
     }
     if (sim_board_present() && !(IN.sample_lock = osal_mutex_create())) osal_panic("input driver init failed: no memory");
-    osal_task_cfg_t cfg = {.name = "input", .fn = input_task, .stack_bytes = INPUT_STACK, .priority = INPUT_PRIO, .core = -1};
+    /* Keep control input on the boot core; UI work can run on the other core. */
+    osal_task_cfg_t cfg = {.name = "input", .fn = input_task, .stack_bytes = INPUT_STACK, .priority = INPUT_PRIO, .core = 0};
     if (osal_task_create(&cfg, &IN.task) != OSAL_OK) osal_panic("input driver init failed");
     if (g_profile.i2c_background_poll_ms) {
         osal_task_cfg_t bg = {.name = "i2c_bg", .fn = i2c_background_task, .stack_bytes = BG_STACK,
