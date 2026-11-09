@@ -180,8 +180,13 @@ void ink_cap_undoable(ink_call_t *call, const char *cap, const ink_args_t *args,
  * hub and the model see them, but subscribed to rather than called. The payload is a copy.
  */
 typedef void (*ink_event_fn)(void *ctx, const char *id, const ink_args_t *payload);
-/** fn on `exec` for every event whose id starts with `prefix`. Up to 16. */
+/** fn on `exec` for every event whose id starts with `prefix`. Up to 64. */
 int ink_cap_subscribe(const char *prefix, ink_event_fn fn, void *ctx, ink_exec_t exec);
+/** Removable subscription: positive handle or -1. UI/MEDIA/BG only; prefix lives until unsubscribe.
+ * Unsubscribe on that executor, after any active callback; queued callbacks are discarded.
+ * Inside a callback, only that invocation continues. subscribe() still returns 0/-1. */
+int ink_cap_subscribe_handle(const char *prefix, ink_event_fn fn, void *ctx, ink_exec_t exec);
+int ink_cap_unsubscribe(int handle); /* 0 removed, -1 stale handle or wrong executor */
 /** The providing service emits an event (any task). */
 void ink_cap_emit(const char *id, const ink_args_t *payload);
 /** Delayed producers keep the original member incarnation, including across handoff. */

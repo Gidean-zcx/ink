@@ -115,8 +115,8 @@ static void verify_records(void) {
     ink_db_close(records);
 }
 static void open_app(void) {
-    CHECK(ink_jot_prepare() == 0, "load this member's data outside UI");
     CHECK(AI("jot.open", NULL) && g_rc.status == INK_RC_DONE, "the card's capability opens the app"); quiet();
+    CHECK(WAIT_FOR((on_ui(inspect), strstr(snapshot, "\"total\":")), 10000), "the app loads its own collection asynchronously");
     on_ui(inspect);
 }
 static void close_app(void) {

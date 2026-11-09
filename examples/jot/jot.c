@@ -4,6 +4,7 @@
 #include "ink/sys/appreg.h"
 #include "ink/sys/json.h"
 #include "ink/sys/members.h"
+#include "ink/sys/state.h"
 #include "ink/sys/textfield.h"
 #include "ink/sys/ui_list.h"
 #include "ink/ui_shell.h"
@@ -14,6 +15,9 @@ static ink_db_t *ink_jot_db;
 static ink_ui_list_t *ink_jot_list;
 static ink_ui_list_position_t ink_jot_position;
 static lv_obj_t *ink_jot_field;
+static lv_obj_t *ink_jot_notice;
+static int ink_jot_watch;
+static const char *ink_jot_status;
 static char ink_jot_ids[3][32], ink_jot_texts[3][96];
 static const ink_activity_t INK_JOT_LIST, INK_JOT_EDIT;
 
@@ -23,10 +27,6 @@ static const ink_db_def_t INK_JOT_DATA = {
     .schema = 1, .json = true, .ai_read = true, .ai_write = false,
     .max_records = 8, .max_bytes = 8192
 };
-int ink_jot_prepare(void) {
-    if (!ink_jot_db) ink_jot_db = ink_app_db_open("jot", &INK_JOT_DATA);
-    return ink_jot_db ? 0 : -1;
-}
 /* end snippet */
 
 static const ink_ui_action_spec_t INK_JOT_LIST_ACTIONS[] = {
@@ -87,9 +87,12 @@ static void ink_jot_save(ink_call_t *c) {
 /* end snippet */
 
 static void ink_jot_open(ink_call_t *c) {
-    if (!ink_jot_db || ink_app_open("jot", NULL, NULL) != 0) c->rc.status = INK_RC_FAILED;
+    if (ink_app_open("jot", NULL, NULL) != 0) c->rc.status = INK_RC_FAILED;
 }
-static void ink_jot_new(ink_call_t *c) { (void)c; ink_ui_push(&INK_JOT_EDIT, NULL); }
+static void ink_jot_new(ink_call_t *c) {
+    if (ink_jot_db) ink_ui_push(&INK_JOT_EDIT, NULL);
+    else c->rc.status = INK_RC_FAILED;
+}
 static void ink_jot_focus(ink_call_t *c) {
     if (ink_textfield_short_focus(ink_jot_field) != 0) c->rc.status = INK_RC_STALE;
 }
@@ -130,10 +133,39 @@ static void ink_jot_bind(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *fiel
         ink_ui_line(slot, "", INK_FONT_LIST, INK_WEIGHT_REGULAR, INK_GAP, INK_GAP, INK_CANVAS_W - 2 * INK_MARGIN - 2 * INK_GAP);
     lv_label_set_text(lv_obj_get_child(slot, 0), field->value);
 }
+/* snippet: subscriptions */
+static void ink_jot_changed(void *ctx, int h, const char *id) {
+    (void)ctx; (void)h; (void)id;
+    if (ink_jot_list) ink_ui_list_refresh(ink_jot_list, (size_t)ink_db_count(ink_jot_db));
+}
+static void ink_jot_list_destroy(void) {
+    ink_state_unwatch(ink_jot_watch);
+    ink_jot_list = NULL; ink_jot_notice = NULL;
+}
+/* end snippet */
+/* snippet: open */
+static void ink_jot_loaded(void *ctx, ink_db_t *db) {
+    (void)ctx;
+    if (db) { ink_jot_db = db; ink_ui_redraw(); }
+    else {
+        ink_jot_status = "暂时读不了记录，请返回后重试";
+        lv_label_set_text(ink_jot_notice, ink_jot_status);
+        ink_ui_content_changed();
+    }
+}
+/* end snippet */
 /* snippet: list */
 static void ink_jot_list_create(lv_obj_t *screen, void *arg) {
     (void)arg;
     ink_shell_topbar(screen, INK_JOT_LIST_MODEL.title);
+    ink_jot_watch = ink_state_watch_handle("app.cards_rev", ink_jot_changed, NULL, INK_EXEC_UI);
+    if (ink_jot_watch < 0) ink_app_fail("jot subscription failed");
+    if (!ink_jot_db) {
+        ink_jot_status = "正在读取记录";
+        ink_jot_notice = ink_ui_notice(screen, ink_jot_status, INK_STATUS_BAR + INK_PRIMARY + INK_GAP);
+        if (ink_app_db_open_async("jot", &INK_JOT_DATA, screen, ink_jot_loaded, NULL) != 0) ink_jot_loaded(NULL, NULL);
+        return;
+    }
     lv_obj_t *body = ink_ui_box(screen, 0, INK_STATUS_BAR + INK_PRIMARY + INK_GAP,
         INK_CANVAS_W, INK_CANVAS_H - INK_STATUS_BAR - 2 * INK_PRIMARY - 2 * INK_GAP - INK_MARGIN, 0, INK_SURFACE_WHITE, false);
     ink_jot_list = ink_ui_list_create(body, &INK_JOT_LIST_MODEL, &ink_jot_position,
@@ -144,8 +176,12 @@ static void ink_jot_list_create(lv_obj_t *screen, void *arg) {
         INK_CANVAS_W - 2 * INK_MARGIN, INK_PRIMARY, true, ink_jot_click, "new");
 }
 /* end snippet */
-static int ink_jot_list_snapshot(char *out, size_t cap) { return ink_ui_list_snapshot(ink_jot_list, out, cap); }
-static void ink_jot_list_destroy(void) { ink_jot_list = NULL; }
+static int ink_jot_list_snapshot(char *out, size_t cap) {
+    if (ink_jot_list) return ink_ui_list_snapshot(ink_jot_list, out, cap);
+    ink_ui_field_spec_t status = {.id = "status", .role = "status", .label = "读取状态", .value = ink_jot_status};
+    ink_ui_page_spec_t page = {.id = "jot.list", .title = "记一笔", .fields = &status, .field_count = 1};
+    return ink_ui_semantics_snapshot(&page, out, cap);
+}
 static bool ink_jot_key(ink_key_t key, bool long_press) { return ink_ui_list_key(ink_jot_list, key, long_press); }
 
 /* snippet: input */
