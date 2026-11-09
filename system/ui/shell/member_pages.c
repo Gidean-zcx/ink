@@ -7,6 +7,8 @@
 #include "ink/osal.h"
 #include "ink/sys/exec.h"
 #include "ink/sys/members.h"
+#include "ink/sys/power.h"
+#include "ink/sys/state.h"
 #include "ink/ui_shell.h"
 #include "shell_card.h"
 #include "member_pages.h"
@@ -19,8 +21,10 @@ static struct {
     char id[16], name[32], pin[9], old[9], status[160];
     int mode, result;
     uint32_t wait_s;
+    uint32_t epoch;
     uint64_t retry_us;
     bool busy;
+    lv_timer_t *wait_timer;
     ink_exec_job_t result_job;
 } P;
 static void draw(void);
@@ -38,9 +42,24 @@ static int snapshot(char *out, size_t cap) {
         P.overlay->name, P.name, P.status, (unsigned)remaining(), actions);
 }
 static void close_page(void) {
+    if (P.wait_timer) { lv_timer_delete(P.wait_timer); P.wait_timer = NULL; }
     if (P.card.root) { ink_ui_overlay_remove(P.overlay); shell_card_close(&P.card); }
     P.dots = P.message = NULL;
     erase(P.pin, sizeof P.pin); erase(P.old, sizeof P.old);
+}
+static bool current(void) {
+    if (P.card.root && (P.epoch != ink_member_epoch() || ink_power_state() == INK_PWR_LOCKED)) close_page();
+    return P.card.root != NULL;
+}
+static void changed(void *ctx, int h, const char *id) {
+    (void)ctx; (void)h; (void)id; current();
+}
+static void wait_done(lv_timer_t *timer) {
+    (void)timer; P.wait_timer = NULL;
+    if (!current()) return;
+    P.retry_us = 0;
+    snprintf(P.status, sizeof P.status, "%s", P.mode == OLD || P.mode == NEW ? "四到八位数字" : P.mode == PARENT ? "请家长本人输入" : "输入密码");
+    draw();
 }
 static bool key(ink_key_t k, bool lng) {
     if (!lng && !P.busy && (k == INK_KEY_HOME || k == INK_KEY_BACK)) close_page();
@@ -71,7 +90,7 @@ static void dots(void) {
     ink_ui_hint_obj(P.dots, INK_REFRESH_FAST);
 }
 static void digit(lv_event_t *e) {
-    if (P.busy || remaining()) return;
+    if (!current() || P.busy || remaining()) return;
     int d = (int)(intptr_t)lv_event_get_user_data(e);
     size_t n = strlen(P.pin);
     if (d == 10) { if (n) P.pin[n - 1] = 0; }
@@ -79,6 +98,8 @@ static void digit(lv_event_t *e) {
     dots();
 }
 static void draw(void) {
+    if (!P.card.root) P.epoch = ink_member_epoch();
+    if (P.wait_timer) { lv_timer_delete(P.wait_timer); P.wait_timer = NULL; }
     if (P.card.root) { ink_ui_overlay_remove(P.overlay); shell_card_close(&P.card); }
     P.overlay = &VIEWS[remaining() ? 4 : P.mode == SWITCH ? 0 : P.mode == UNLOCK ? 1 : P.mode == FORGOT || P.mode == PARENT ? 3 : 2];
     shell_card_open(&P.card);
@@ -139,12 +160,18 @@ static void draw(void) {
         ink_ui_pill_text(b, row == 3 && col != 1 ? INK_FONT_LIST : INK_FONT_HEADING, INK_WEIGHT_REGULAR);
     }
     ink_ui_capture_touch(P.card.panel);
+    uint64_t now = osal_now_us();
+    if (P.retry_us > now) {
+        P.wait_timer = lv_timer_create(wait_done, (uint32_t)((P.retry_us - now + 999) / 1000) + 1, NULL);
+        lv_timer_set_repeat_count(P.wait_timer, 1);
+    }
 }
 static void completed_ui(void *arg) {
     (void)arg; P.busy = false;
     erase(P.pin, sizeof P.pin); erase(P.old, sizeof P.old);
-    P.retry_us = P.wait_s ? osal_now_us() + (uint64_t)P.wait_s * 1000000 : 0;
     if (P.result == INK_PIN_OK && P.mode != PARENT) { close_page(); ink_shell_member_gate_done(); return; }
+    if (!current()) return;
+    P.retry_us = P.wait_s ? osal_now_us() + (uint64_t)P.wait_s * 1000000 : 0;
     if (P.result == INK_PIN_OK) {
         P.mode = FORGOT;
         snprintf(P.status, sizeof P.status, "家长已验证。本机还不能重置密码，请在家庭服务器处理。");
@@ -159,7 +186,7 @@ static void completed(void *ctx, int result, uint32_t wait_s) {
     ink_exec_post(INK_EXEC_UI, &P.result_job, completed_ui, NULL);
 }
 static void submit(ink_call_t *c) {
-    if (!P.card.root || P.busy || P.mode == SWITCH || P.mode == FORGOT) { c->rc.status = INK_RC_REJECTED; return; }
+    if (!current() || P.busy || P.mode == SWITCH || P.mode == FORGOT) { c->rc.status = INK_RC_REJECTED; return; }
     if (remaining()) { erase(P.pin, sizeof P.pin); draw(); return; }
     if (P.mode == OLD) {
         snprintf(P.old, sizeof P.old, "%s", P.pin); erase(P.pin, sizeof P.pin);
@@ -183,7 +210,7 @@ static void action(ink_call_t *c) {
         snprintf(P.id, sizeof P.id, "%s", ink_member_current()->id); snprintf(P.name, sizeof P.name, "%s", ink_member_current()->name);
         P.retry_us = 0; snprintf(P.status, sizeof P.status, "四到八位数字"); draw(); return;
     }
-    if (!P.card.root) { c->rc.status = INK_RC_STALE; return; }
+    if (!current()) { c->rc.status = INK_RC_STALE; return; }
     if (!strcmp(id, "shell.pin_cancel")) close_page();
     else if (!strcmp(id, "shell.member_choose") && P.mode == SWITCH) { close_page(); ink_shell_members_open(true); }
     else if (!strcmp(id, "shell.pin_forgot") && P.mode == UNLOCK) {
@@ -216,5 +243,7 @@ int ink_member_pages_init(void) {
         {.id = "shell.pin_submit", .title = "本人提交设备上的密码", .expose = INK_EXPOSE_OWNER, .effect = INK_FX_NAVIGATE,
             .child_ok = true, .while_locked = true, .run = submit}
     };
-    return ink_cap_register(caps, sizeof caps / sizeof *caps);
+    return ink_cap_register(caps, sizeof caps / sizeof *caps) ||
+        ink_state_watch("member.", changed, NULL, INK_EXEC_UI) ||
+        ink_state_watch("power.state", changed, NULL, INK_EXEC_UI) ? -1 : 0;
 }

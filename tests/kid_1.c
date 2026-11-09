@@ -133,6 +133,39 @@ static void recover(void) {
     CHECK(strstr(g_snap, "还不能重置"), "the missing reset operation is reported honestly"); context();
     touch("返回");
 }
+static void stale_session(void) {
+    touch("我"); enter("13572468"); wait_for_unlock();
+    CHECK(BY_HAND("shell.pin_set", NULL) && g_rc.status == INK_RC_DONE, "open the adult change form"); quiet();
+    enter("13572468");
+    CHECK(P.mode == NEW && P.old[0], "pause after the adult entered the old PIN");
+    key(HAL_KEY_POWER);
+    CHECK(WAIT_FOR(ink_power_state() == INK_PWR_LOCKED, 3000), "the real power key locks the screen");
+    delay_ms(121000); key(HAL_KEY_POWER); quiet();
+    CHECK(WAIT_FOR(ink_power_state() != INK_PWR_LOCKED, 3000) && !ink_member_space_open(), "the adult grace expires before wake");
+    CHECK(page("member_gate"), "wake returns to the actual member picker");
+    touch("小");
+    CHECK(!strcmp(ink_member_current()->id, "kid"), "the child selects their own space by touch");
+    CHECK(!P.card.root && !P.old[0] && !P.pin[0], "discard the expired adult form and both credential buffers");
+    if (P.card.root) enter("90817263");
+    CHECK(BY_HAND("shell.pin_submit", NULL) && g_rc.status == INK_RC_REJECTED, "an expired change session rejects local submission");
+    CHECK(sim_metric_value("members.pin_set") == 0, "the child cannot replace the adult PIN with a saved old credential");
+    choose_owner(); enter("90817263");
+    CHECK(!strcmp(ink_member_current()->id, "kid"), "the child's chosen PIN cannot open the adult space");
+    enter("13572468"); wait_for_unlock();
+}
+static char visible_message[192];
+static void read_message(void) {
+    read_screen();
+    snprintf(visible_message, sizeof visible_message, "%s", P.message ? lv_label_get_text(P.message) : "");
+}
+static void wait_expiry(void) {
+    wrong_pins();
+    delay_ms(31000); quiet(); on_ui(read_message);
+    CHECK(remaining() == 0 && page("member_gate"), "expiry restores the regular PIN page without another submit");
+    CHECK(!strcmp(visible_message, "输入密码"), "visible text restores the input prompt at expiry");
+    touch("1"); on_ui(read_message);
+    CHECK(!strcmp(P.pin, "1") && !strcmp(visible_message, "输入密码"), "the first digit works without a stale wait message");
+}
 static void test_task(void *arg) {
     (void)arg; ink_power_hold(INK_NEED_AWAKE); quiet();
     if (!strcmp(phase, "preview")) preview();
@@ -140,6 +173,8 @@ static void test_task(void *arg) {
     else if (!strcmp(phase, "verify")) verify_pins();
     else if (!strcmp(phase, "wait")) wrong_pins();
     else if (!strcmp(phase, "recover")) recover();
+    else if (!strcmp(phase, "session")) stale_session();
+    else if (!strcmp(phase, "expiry")) wait_expiry();
     else CHECK(false, "unknown kid-1 phase");
     ink_probe_count("test.finished");
 }

@@ -10,7 +10,7 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser()
 parser.add_argument("--build", required=True, type=Path)
-parser.add_argument("--mutant", choices=("unlock", "set", "parent", "privacy", "locked"))
+parser.add_argument("--mutant", choices=("unlock", "set", "parent", "privacy", "locked", "session", "expiry"))
 args = parser.parse_args()
 build = args.build.resolve()
 work = Path(tempfile.mkdtemp(prefix="kid-1-", dir=build))
@@ -24,6 +24,8 @@ if args.mutant:
         "privacy": ("P.overlay->name, P.name, P.status", "P.overlay->name, P.pin, P.status"),
         "locked": ("ink_ui_pill(P.card.panel, text, x, y, w, INK_CONTROL, primary, clicked, (void *)cap)",
                    "ink_shell_bind(ink_ui_pill(P.card.panel, text, x, y, w, INK_CONTROL, primary, NULL, NULL), cap, NULL)"),
+        "session": ("if (P.card.root && (P.epoch != ink_member_epoch() || ink_power_state() == INK_PWR_LOCKED)) close_page();", "/* Keep the expired form, as before the fix. */"),
+        "expiry": ("\n    draw();\n}\nstatic bool key", "\n}\nstatic bool key"),
     }[args.mutant]
     assert source.count(old) == 1
     (work / "member-mutant.c").write_text(source.replace(old, new))
@@ -45,7 +47,7 @@ if args.mutant:
     subprocess.run(link, cwd=build, check=True)
 
 ok = True
-for phase, scene in (("preview", "MemberSwitch"), ("write", "PinSet"), ("verify", ""), ("wait", "PinWait"), ("recover", "PinForgot")):
+for phase, scene in (("preview", "MemberSwitch"), ("write", "PinSet"), ("verify", ""), ("session", ""), ("wait", "PinWait"), ("recover", "PinForgot"), ("expiry", "")):
     out = work / phase
     result = subprocess.run([str(binary), "--profile", str(ROOT / "simulator/profiles/metalio-plus.json"),
         "--script", str(ROOT / "tests/kid_1.script"), "--budget", str(ROOT / "tests/ui_scene.budget.json"),
