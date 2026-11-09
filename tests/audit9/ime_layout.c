@@ -66,8 +66,8 @@ static void inspect(void) {
     for (int i = 0; i < n; i++) {
         lv_obj_t *button = lv_obj_get_child(row, i), *word = lv_obj_get_child(button, 0);
         bool shown = !lv_obj_has_flag(button, LV_OBJ_FLAG_HIDDEN);
-        char expected[sizeof choices[i].word + 32]; /* the whole word: a cut one would match a different snapshot */
-        snprintf(expected, sizeof expected, "候选[%d]=%s；", i, choices[i].word);
+        char expected[sizeof choices[i].word + 32]; /* the whole word (at most 39 bytes): a cut one would match another */
+        snprintf(expected, sizeof expected, "候选[%d]=%.39s；", i, choices[i].word);
         CHECK((strstr(g_snap, expected) != NULL) == shown, "snapshot lists exactly the displayed candidate %d", i);
         if (!shown) continue;
         visible++;
