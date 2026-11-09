@@ -1,7 +1,7 @@
 # audit9-fix 修复报告
 
 基线：`5f2648809457522b0901366d54e5fa52c18ec9ee`。日期：2026-11-10。
-范围仅 B9-01～B9-03；本报告随里程碑更新。证据标记：【实测】本轮命令；【实现】代码核查；【估算】。
+范围仅 B9-01～B9-03；全部验收完成，修改已本地提交，未推送。证据标记：【实测】本轮命令；【实现】代码核查；【估算】。
 
 ## 验收表
 
@@ -10,13 +10,13 @@
 | B9-01 | 通过 | 【实测】`audit9-bt-ai` 修前 6 条失败，修后通过；AI 关、开、配对连接后的快照和可见标签一致 | `ctest --test-dir build -R '^audit9-' --output-on-failure -j2` |
 | B9-02 | 通过 | 【实测】`audit9-ime-layout` 初次 22 条失败；加入固定位置检查后反向 25 条失败，修后通过；三种输入／字号下按钮完整可触摸，长词在展开页完整显示 | 同上 |
 | B9-03 | 通过 | 【实测】`audit9-font-coverage` 修前 508 项含缺字，修后 23,783 项全部有字形 | 同上 |
-| 全量与内存检查 | 普通通过，内存待运行 | 【实测】普通 295/295，213.20 秒，退出 0 | `ctest --test-dir build --output-on-failure -j2` |
+| 全量与内存检查 | 通过 | 【实测】普通与 ASan/UBSan 均 295/295、退出 0；213.20／378.14 秒；无跳过或 sanitizer 诊断 | `ctest --test-dir build --output-on-failure -j2`；内存版改为 `--test-dir build-asan` |
 | S31 | 通过 | 【实测】完整编译、链接、尺寸和栈报告生成，脚本退出 0 | `taskpolicy -c utility bash ports/esp32s31/build.sh` |
 | 资源与重复生成 | 通过 | 【实测】1,048,549 B；重复生成字节相同；90 条首选 75、前五 83 | `python tests/ime_lexicon/run.py --build build` |
 
 ## 没做到的
 
-ASan/UBSan 尚在验证中。没有操作设备；没有运行原生 Linux CI。
+B9-01～03 的验收范围内无未完成项。未操作设备，未执行 S31 固件自检或原生 Linux CI；本轮证据为模拟器测试及 S31 离线编译。
 
 ## 和设计不一致的
 
@@ -24,7 +24,7 @@ ASan/UBSan 尚在验证中。没有操作设备；没有运行原生 Linux CI。
 
 ## 改过的已有测试
 
-暂无。
+未改既有测试的期望、断言或预算；只新增三项 CTest 和手工反向驱动。
 
 ## 要用户定的
 
@@ -37,6 +37,9 @@ ASan/UBSan 尚在验证中。没有操作设备；没有运行原生 Linux CI。
 ## 新增的机制
 
 无新增产品任务、线程、状态机、文件格式、配置项或抽象层。B9-03 要求的过滤只进入现有宿主生成器，设备继续读取 IKD1；计量仍写已有 JSON。
+
+- `bt-ai-test`：B9-01 要求的有界测试线程，只进入测试二进制。
+- `ime-layout-test`：B9-02 要求的有界测试线程，只进入测试二进制。
 
 ## 要改的文档
 
@@ -64,7 +67,7 @@ ASan/UBSan 尚在验证中。没有操作设备；没有运行原生 Linux CI。
 | 90 条首选命中 | 75/90（83.33%） | 75/90（83.33%） |
 | 90 条前五命中 | 83/90（92.22%） | 83/90（92.22%） |
 
-【实测】新文件 SHA-256：`c27739624e271c1a12afc97bddafa06dc3e4b915a5d3163e9858a2dc82823cf8`；加载 879.95 ms、词库 PSRAM 1,048,549 B；固定测试集不代表真实输入分布。前后质量日志分别为 `build/audit9/quality-before.log` 和 `build/audit9/ctest-fix.log` 对应保留的 `ime-lexicon-*/summary.json`。
+【实测】新文件 SHA-256：`c27739624e271c1a12afc97bddafa06dc3e4b915a5d3163e9858a2dc82823cf8`；模拟器加载 879.95 ms、词库 PSRAM 1,048,549 B；固定测试集不代表真实输入分布。前后质量日志分别为 `build/audit9/quality-before.log` 和 `build/audit9/ctest-fix.log` 对应保留的 `ime-lexicon-*/summary.json`。
 
 【实测】已目视核对三种折叠栏和长词展开页截图，见 `build/test-out/audit9-sim-audit9-ime-layout/clean-*.png`；带面板残影的 `snap-*.png` 同目录保留，不将干净渲染当作真屏测量。
 
@@ -95,3 +98,7 @@ taskpolicy -c utility cmake --build build -j2
 INK_KEEP_EVIDENCE=1 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$PWD/hub" \
   taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
 ```
+
+- 【实测】ASan/UBSan 配置、构建及全量 CTest 均退出 0，295/295；证据 `build-asan/audit9/{configure,build,ctest}.log`。实际编译含 `-fsanitize=address,undefined`，仍启用 `INK_WERROR=ON`；两套 `LastTest.log` 的 sanitizer 诊断和跳过标记均为 0，汇总 `build/audit9/final-checks.json`。
+- 【实测】两套构建生成的正式词库逐字节一致；既有 `ime-lexicon` 在两套全量中均通过重复生成和缺文件反向检查。
+- 【实测】最终基线差异仅 11 个任务相关文件；`git diff --check` 通过。按总规则的隐私正则扫描，本机路径匹配 0，地址匹配 1，唯一匹配为蓝牙测试中允许的假地址；证据 `build/audit9/privacy.{log,json}`。未提交构建产物、设计稿或受限共享文档。
