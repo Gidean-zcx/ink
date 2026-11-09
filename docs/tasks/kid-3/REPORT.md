@@ -26,6 +26,8 @@
 ## 改过的已有测试
 
 - `tests/ui_cards.c` 一处页面名断言：孩子由 `Today` 改为任务要求的 `KidToday`，大人仍断言 `Today`；数据、版本、内存和动作断言不变。
+- `tests/ui_shell_scenes.c`：孩子三页的画板名改为 KidHome、KidToday、KidApps；孩子今日第五格按画板改查真实用时文本，其他四格及空动作断言保留，大人的五格不变。
+- `tests/ui_shell_regressions.c`：成员切换后的孩子主页由 Main 改查 KidHome；成人查询、延迟回执、输入内容的隔离断言不变，仍在两个设备档案运行。
 
 ## 要用户定的
 
@@ -43,6 +45,7 @@
 
 - 【实测】`taskpolicy -c utility cmake --build build -j2` 通过，`INK_WERROR=ON`。
 - 【实测】定向命令：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2 -R '^(kid-3|kid-2|fw-f8|ui-cards|ui-scale)$'`，5/5 通过。
+- 首次全量 253/258 通过；五项失败均是上述旧页面名或孩子第五格期望，已逐项核对原始警告后更新，未放宽权限、预算或空动作断言。最终全量结果待补。
 - 截图和快照：`build/kid-3-evidence/{KidHome,KidToday,KidApps}/`；拼接对照图和 `scores.json` 在其父目录。已目检并修复孩子主页用时与图标重叠，新增断言防回归。构建目录不提交。
 - 【实测】反向命令：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/kid_3_reverse.py --build build`。基线导航替换对象后 19 条断言失败；将今日配置错误地统一读大人后 7 条失败，包含明确的 TodayEdit 反例。两轮都运行到 `test.finished`；未修改工作源码，摘要在 `build/kid-3-reverse/summary.json`。
 - 【实测】画板命令：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.py --build build --design "$INK_DESIGN" --out build/kid-3-evidence --scenes KidHome KidToday KidApps --reuse`。每屏有一份已核实的稳态帧，分数如上。

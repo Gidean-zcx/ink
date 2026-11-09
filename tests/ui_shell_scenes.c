@@ -159,6 +159,12 @@ static bool snapshot_has(const char *text) {
 }
 static void assert_identity(void) {
     const char *top = scene, *page = "home", *expected_text = scene;
+    const char *home_board = scene;
+    if (ink_member_current()->role == INK_ROLE_CHILD) {
+        if (!strcmp(scene, "Main")) home_board = expected_text = "KidHome";
+        else if (!strcmp(scene, "Today")) home_board = "KidToday";
+        else if (!strcmp(scene, "Apps")) home_board = expected_text = "KidApps";
+    }
     if (!strcmp(scene, "Main") || !strcmp(scene, "Today") || !strcmp(scene, "Apps")) top = "home";
     else if (!strcmp(scene, "Lock") || !strcmp(scene, "LockPage")) { top = "LockPage"; expected_text = "设备已锁定"; }
     else if (!strcmp(scene, "Members") || !strcmp(scene, "MembersBack") || !strncmp(scene, "Pin", 3)) { top = "member_gate"; expected_text = !strncmp(scene, "Pin", 3) ? "密码内容不可见" : "请选择家人"; }
@@ -175,7 +181,7 @@ static void assert_identity(void) {
     if (!strcmp(scene, "Control") && ink_member_current()->role == INK_ROLE_CHILD) top = "KidControl";
     CHECK(!strcmp(ink_ui_top_name(), top), "%s requires overlay/page %s, got %s", scene, top, ink_ui_top_name());
     CHECK(!strcmp(ink_ui_page_name(), page), "%s requires activity %s, got %s", scene, page, ink_ui_page_name());
-    if (!strcmp(top, "home")) CHECK(!strcmp(ink_shell_board(), scene), "%s is the selected home screen", scene);
+    if (!strcmp(top, "home")) CHECK(!strcmp(ink_shell_board(), home_board), "%s is the selected home screen", home_board);
     CHECK(snapshot_has(expected_text), "%s snapshot must contain %s", scene, expected_text);
     if (!strcmp(scene, "Lock") || !strcmp(scene, "LockPage"))
         CHECK(ink_setting_get("display.lock_style") == !strcmp(scene, "Lock") && ink_power_state() == INK_PWR_LOCKED, "the requested lock variant is actually locked");
@@ -202,7 +208,9 @@ static void assert_identity(void) {
         snapshot_has("\"id\":\"listen\",\"role\":\"card\",\"label\":\"继续听\",\"value\":\"还没有在听的内容\"") &&
         snapshot_has("\"id\":\"news\",\"role\":\"card\",\"label\":\"今日报纸\",\"value\":\"今天的还没到\"") &&
         snapshot_has("\"id\":\"word\",\"role\":\"card\",\"label\":\"单词\",\"value\":\"还没有记下的词\"") &&
-        snapshot_has("\"id\":\"upcoming\",\"role\":\"card\",\"label\":\"接下来\",\"value\":\"还没有接下来的事\"") &&
+        (ink_member_current()->role == INK_ROLE_CHILD
+            ? snapshot_has("\"id\":\"time\",\"role\":\"text\",\"label\":\"今天\",\"value\":\"今天不限时\"")
+            : snapshot_has("\"id\":\"upcoming\",\"role\":\"card\",\"label\":\"接下来\",\"value\":\"还没有接下来的事\"")) &&
         snapshot_has("\"actions\":[]"), "all five Today cards have structured semantic context and no fabricated empty-state action");
 }
 

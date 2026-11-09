@@ -314,7 +314,7 @@ static void member_privacy_tests(void) {
     CHECK(!strcmp(ink_member_current()->id, "kid"), "touch really switches to the child");
     on_ui(read_context);
     CHECK(!strstr(context, "PRIVATE_OWNER_TEST_QUERY"), "the child snapshot has no adult query");
-    CHECK(!strcmp(ink_shell_board(), "Main"), "a different member starts on their main page");
+    CHECK(!strcmp(ink_shell_board(), "KidHome"), "a different member starts on their child home page");
     wanted = "PRIVATE_OWNER_TEST_QUERY"; on_ui(read_view);
     CHECK(label_x < 0, "the child screen has no adult query");
     __atomic_store_n(&bg_release, true, __ATOMIC_RELEASE);
