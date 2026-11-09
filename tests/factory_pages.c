@@ -73,6 +73,11 @@ static int64_t saved_time(void) {
     if (j && !ink_json_parse(j, g_result, strlen(g_result))) ink_json_int(j, ink_json_find(j, 0, "saved_s"), &saved);
     osal_free(j); return saved;
 }
+static bool time_shown(int64_t saved) {
+    ink_tm_t tm; ink_time_to_local(saved, &tm); char text[80];
+    snprintf(text, sizeof text, "上次备份：%d月%d日 %02d:%02d", tm.month, tm.day, tm.hour, tm.min);
+    return at("FactoryReset") && strstr(g_snap, text);
+}
 static uint32_t confirmation(void) {
     ink_confirm_view_t v;
     CHECK(WAIT_FOR(ink_confirm_list(&v, 1) == 1, 3000) && !strcmp(v.cap, "system.factory_reset") && v.parent,
@@ -100,11 +105,14 @@ static void prepare(bool clear) {
     press("先备份");
     CHECK(WAIT_FOR(saved_time() > 0, 120000), "backup button really commits to the synthetic peer");
     int64_t first = saved_time();
-    CHECK(WAIT_FOR(at("FactoryReset") && strstr(g_snap, "上次备份"), 6000), "page follows real backup timestamp");
+    CHECK(WAIT_FOR(time_shown(first), 6000), "page follows real backup timestamp");
+    delay_ms(61000); /* Advance a displayed minute before the second backup. */
     memo("{\"body\":\"备份后修改的测试备忘\"}");
     CHECK(WAIT_FOR(at("FactoryReset") && strstr(g_snap, "之后有东西还没备份"), 6000), "page reports actual unbacked changes");
     press("先备份");
     CHECK(WAIT_FOR(saved_time() > first, 120000), "second real backup advances saved time");
+    int64_t second = saved_time();
+    CHECK(WAIT_FOR(time_shown(second), 6000) && second - first >= 60, "visible backup minute follows the second actual receipt");
     file("/me/after-backup.txt", "test-only-unbacked-file");
     CHECK(WAIT_FOR(at("FactoryReset") && strstr(g_snap, "之后有东西还没备份"), 6000), "new file after backup is unbacked");
     capture("FactoryReset");

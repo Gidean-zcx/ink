@@ -148,8 +148,7 @@ void ink_factory_reset_resume(void) { /* boot: nothing else runs yet */
     }
     if (ink_storage_size(RESET_CARD_MARK) < 0) return;
     bool media = false;
-    ink_storage_read(RESET_CARD_MARK, &media, 1);
-    g_card_waits = ink_fs_wipe_reset(media) != INK_FS_OK;
+    g_card_waits = ink_storage_read(RESET_CARD_MARK, &media, 1) < 0 || ink_fs_wipe_reset(media) != INK_FS_OK;
     if (g_card_waits) return;
     ink_storage_run(forget_card_mark, NULL, true);
     ink_probe_count("system.factory_reset_card_at_boot");
@@ -172,8 +171,7 @@ static void card_job(void *arg) { /* exec.bg */
     if (!g_card_waits) return;
     if (hal_fs_card_present() && ink_fs_card_hold() == INK_FS_OK) {
         bool media = false;
-        ink_storage_read(RESET_CARD_MARK, &media, 1);
-        bool cleared = ink_fs_wipe_reset(media) == INK_FS_OK;
+        bool cleared = ink_storage_read(RESET_CARD_MARK, &media, 1) >= 0 && ink_fs_wipe_reset(media) == INK_FS_OK;
         ink_fs_card_release();
         if (cleared) {
             g_card_waits = false;
