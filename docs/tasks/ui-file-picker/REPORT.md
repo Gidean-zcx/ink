@@ -1,6 +1,8 @@
 # ui-file-picker 执行报告
 
-基线：`c6dede1945807b2cd688e6967c7299154813827e`。状态：实施中；仅本地提交，不推送。
+日期：2026-11-09。基线：`c6dede1945807b2cd688e6967c7299154813827e`。状态：本机功能验收完成；视觉分数未达目标。仅本地提交，未推送。
+
+代码：[接口](../../../system/include/ink/sys/file_picker.h)、[选择器](../../../system/ui/file_picker.c)、[测试调用方](../../../tests/ui_file_picker.c)、[取消后画面检查](../../../tests/ui_file_picker_frames.py)。实现提交：`02326868`；夹具修订：`7c6f4691`；换人收尾：`3ab4830d`。
 
 ## 验收表
 
@@ -9,12 +11,13 @@
 | 1 | 【实测】通过 | 7 张图片按 4/3 分页；混入音频和文字不出现；触摸、AI 均返回同一稳定编号，调用方 lookup 成功 | T1 |
 | 2 | 【实测】通过 | 原活动不重建，第十页第二项的位置与快照不变；取消前后每个像素相同 | T1 |
 | 3 | 【实测】通过 | 孩子仅见家庭及自己的图片；私有编号伪造失败；换人关闭旧浮层；撤掉文件服务的一处权限检查，2 条断言失败，恢复后通过 | T1、N1、N2 |
-| 4 | 待验证 | 全量、ASan/UBSan、250 行产品代码预算 | 待补 |
+| 4 | 【实测】通过 | 普通、ASan/UBSan 全量各 219/219，零跳过；产品代码新增及删除合计 201 行 | T2、T3 |
 
 ## 没做到的
 
-- 尚待最终普通与内存检查全量结果；没有运行 Linux/gcc 或真机。
+- 没有运行 Linux/gcc 或真机；证据限 macOS/clang 模拟器。没有碰设备、运行可见窗口或对外发布。
 - 按任务范围只做系统选择器和测试调用方，未实现文件应用、缩略图、解码或转换流程。图片资格沿用文件服务的扩展名分类及访问权限；不声称文件内容可解码。
+- 生成能力表按规则留给合并者统一提交；干净检出需先运行下文的生成命令再跑全量。
 
 ## 和设计不一致的
 
@@ -32,7 +35,7 @@
 
 ## 顺手发现
 
-【实测】首轮普通全量 218/219，唯一失败是新测试重复运行时上次留下的孩子图片进入大人总数。已在新测试开头定点清理该合成夹具，未改产品代码或放宽断言；其后普通全量 219/219，零跳过，122.24 秒，退出 0。最终复核补上换人时关闭旧浮层，正在重跑两套全量。
+【实测】首轮普通全量 218/219，唯一失败是新测试重复运行时上次留下的孩子图片进入大人总数。已在新测试开头定点清理该合成夹具，未改产品代码或放宽断言。最终复核时又用新增断言复现换人后旧浮层残留，已在选择器这一处修复，见 N2。
 
 ## 新增的机制
 
@@ -40,7 +43,9 @@ F9 要求的临时文件选择模型、结果回调和四项能力；数据放 P
 
 ## 要改的文档
 
-待合并时统一更新共享能力表及界面依赖记录，本任务不提交共享文档修改。
+- 合并者更新 `docs/tasks/backlog.md` 和 `docs/system/ui-dependencies.md`：F9 已有真实索引、按类型分页、编号返回、取消恢复和 AI 接线，视觉差异见本报告。
+- 合并者运行 `tools/capabilities.py`，统一提交 `file_picker.prev/next/cancel/select` 的能力总表；本任务未提交共享文档修改。
+- 后续 F13 应用开发说明可收录 `file_picker.h`：UI 上打开、用回调取编号、BG 上 lookup；成员或认证变化丢弃旧会话回调。
 
 ## 命令与证据
 
@@ -49,8 +54,31 @@ F9 要求的临时文件选择模型、结果回调和四项能力；数据放 P
 - N2：新增测试先在大人的选择器仍打开时切到孩子。修复前“旧浮层移除”断言确实失败，`test.finished=1`、`test.fail=1`、CTest 退出 8；接入已有 `member.*` UI 状态通知后 T1 通过。换人或认证变化会关闭旧浮层，并丢弃旧调用方回调，避免对已经销毁的调用方回调。日志：`work/ui-file-picker/handoff-before-test.log`、`handoff-after-test.log`。最终版本再次执行 N1，仍准确失败 2 条、恢复后通过。
 - 视觉：将 T1 产生的 `snap-scene.png` 和 `metrics.json` 复制到 `work/ui-file-picker/compare/FilePicker/`，执行 `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.py --build build --design "$INK_DESIGN" --out work/ui-file-picker/compare --scenes FilePicker --reuse`。使用真实、已静止且断言通过的截图，未改图。
 
+T2/T3 配置沿用[总规则](../codex-rules.md)第 5 节的全部参数，两个目录都额外指定 `-DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"`；T3 仅改目录 `build-asan`，再加 `-DINK_SANITIZE=ON`。两者均保留 `INK_WERROR=ON`。实际编译参数已核对含 `-Werror -fsanitize=address,undefined -fno-omit-frame-pointer`。
+
+按第 7 节不提交生成能力表：测试前备份其原内容，运行 `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/capabilities.py` 临时生成，两套全量结束后已逐字节恢复，并核对与 HEAD 原内容相同。合并者仍须统一生成能力表；干净检出的全量测试先执行该生成命令。
+
+```bash
+export PYTHONPATH="$PWD/hub" PYTHONDONTWRITEBYTECODE=1
+taskpolicy -c utility cmake --build build -j3
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
+taskpolicy -c utility cmake --build build-asan -j3
+UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
+```
+
+【实测】T2、T3 配置、完整构建、最终 CTest 均退出 0；没有安装或升级依赖。全部命令遵守构建 `-j3`、测试 `-j2`，两套串行；GUI 冒烟沿用已有 SDL dummy 模式，没有可见窗口。
+
+| 检查 | 最终结果 | 耗时 | 日志 |
+| --- | --- | --- | --- |
+| T2 普通全量 | 219/219，零失败、零跳过 | 151.46 秒 | `build/ui-file-picker-final-ctest.log` |
+| T3 ASan/UBSan 全量 | 219/219，零失败、零跳过，未见 sanitizer 报错 | 285.63 秒 | `build-asan/ui-file-picker-ctest.log` |
+
+【实测】最终两套选择器测试均 91 条断言通过、零失败、`finished=1`；取消后的画面对照均通过。普通与内存检查版的内部 RAM 最低余量同为 47,472 字节，内部及外部分配失败均为 0。确定性、分层、SDK、能力清单和中枢契约检查均保留并通过。
+
 ## 规模与架构审视
 
 【实现】产品保守计数 201 行（增加 200、删除 1；包括 9 行 CMake 接线），低于 250 行。为什么不能更小：须同时提供选择会话、真实服务的后台读取、F4 绑定、系统浮层、异步编号回传、成员归属、四个共用能力和 AI 快照。只用 `file.list` 会裸传路径；在 UI 直接调用索引会阻塞，两种更小方案均不满足任务要求。
 
 【实现】文件身份与权限归文件服务；选择器只保存临时编号和名称，全部放 PSRAM。选择前再次 lookup，回调和 AI 最终回执只返回编号。输入经能力总线，快照来自同一组 F1/F4 声明；没有直接修改文件服务状态。浮层保留原活动对象，取消只移除浮层。能力注册及 CMake 均追加，未重排共用清单。
+
+【实测】最终差异只含选择器、UI 接线、测试和本报告；未修改文件服务、共享文档或已有调研、简报、审计资料。`git diff --check` 通过，本报告链接均存在；按总规则第 6 节指定正则扫描基线至最终提交的补丁，隐私项零命中（grep 退出 1）。构建产物、设计稿、对照图及反向脚本均未提交。
