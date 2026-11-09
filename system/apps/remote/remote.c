@@ -529,7 +529,7 @@ static void remote_create(lv_obj_t *scr, void *arg) {
     const char *url = arg ? arg : "";
     if (!RS.lock) RS.lock = osal_mutex_create();
     RS.w = lv_display_get_horizontal_resolution(NULL);
-    RS.h = lv_display_get_vertical_resolution(NULL);
+    RS.h = lv_display_get_vertical_resolution(NULL) - ink_ui_px(INK_PRIMARY + INK_GAP);
     size_t size = (size_t)RS.w * (size_t)RS.h;
     osal_mutex_lock(RS.lock, OSAL_WAIT_FOREVER);
     RS.active = true; /* from here on the release job leaves the canvases alone */
