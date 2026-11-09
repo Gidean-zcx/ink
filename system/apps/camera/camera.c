@@ -88,7 +88,7 @@ static void camera_create(lv_obj_t *root, void *arg) {
     ink_shell_bind(b, "shell.back", NULL);
     timer = lv_timer_create(preview, 3000, NULL); preview(NULL);
 }
-static void camera_destroy(void) { if (timer) lv_timer_delete(timer); timer = NULL; view = notice = NULL; }
+static void camera_destroy(void) { if (timer) { lv_timer_delete(timer); } timer = NULL; view = notice = NULL; }
 static int camera_snapshot(char *out, size_t cap) { return ink_ui_semantics_snapshot(&CAMERA_PAGE, out, cap); }
 static const ink_activity_t CAMERA = {.name = "Camera", .app = "camera", .create = camera_create, .destroy = camera_destroy, .snapshot = camera_snapshot};
 static const ink_cap_t CAMERA_APP_CAPS[] = {

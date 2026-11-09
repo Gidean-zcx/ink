@@ -61,7 +61,7 @@ static bool pictures_ready(void) {
 static bool ready;
 static void inspect_grid(void) { ready = pictures_ready(); }
 static void grid_ready(void) {
-    for (unsigned i = 0; i < 500; i++) { on_ui(inspect_grid); if (ready) break; delay_ms(20); }
+    for (unsigned i = 0; i < 500; i++) { on_ui(inspect_grid); if (ready) { break; } delay_ms(20); }
     CHECK(ready, "all visible F4 thumbnail slots loaded: page=%s top=%s count=%zu position=%zu", ink_ui_page_name(), ink_ui_top_name(), G.count, G.position.page); quiet();
 }
 static void gray_pixels(const ink_image_t *im) {
@@ -92,7 +92,7 @@ static void inspect_last_thumb(void) {
 static bool photo_ready;
 static void inspect_photo_ready(void) { photo_ready = G.box && lv_obj_get_child_count(G.box) && G.path[0]; }
 static void wait_photo(void) {
-    for (unsigned i = 0; i < 500; i++) { on_ui(inspect_photo_ready); if (photo_ready) break; delay_ms(20); }
+    for (unsigned i = 0; i < 500; i++) { on_ui(inspect_photo_ready); if (photo_ready) { break; } delay_ms(20); }
     CHECK(photo_ready, "photo viewer loads a real indexed file"); quiet();
 }
 static void inspect_photo(void) {

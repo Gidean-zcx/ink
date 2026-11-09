@@ -11,15 +11,16 @@
 | 3 | 【实测】通过 | 原尺寸 16 灰阶看图；AI/触摸删除共用 `file.delete`，人确认、取消保留、AI 自批拒绝、卡和索引同步删除 | 同上 |
 | 4 | 【实测】通过 | 孩子看不到大人照片、已知编号也不能打开；孩子拍照只进自己目录。撤掉页面归属检查后相同场景退出 1、3 条断言失败 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/camera_gallery/run.py --build build --negative` |
 | 5 | 【实测】通过 | 三页完整快照均适配实际 AI 的 3072 字节缓冲；真实触摸与 AI 走同能力 | 同上 |
-| 6 | 【实测】未全过；行数通过 | 普通全量 233 项：226 通过、4 失败、3 被既有脚本标记跳过，退出 8；产品 349/400 行。ASan/UBSan 正在跑 | `taskpolicy -c utility cmake --build build -j2`；`UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2` |
+| 6 | 【实测】未全过；行数通过 | 普通与 ASan/UBSan 全量各 233 项：226 通过、同样 4 失败、3 被既有脚本标记跳过，均退出 8；无 sanitizer 错误；产品 349/400 行 | `taskpolicy -c utility cmake --build build -j2`；`UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`；ASan 换 `build-asan`、配置加 `-DINK_SANITIZE=ON` |
 
 ## 没做到的
 
 实机验证没做，任务禁止接设备。扫码结果不在本任务范围。
 
-- 全量尚未全绿。按任务“共用的文件只在末尾加行”和总规则第 7 节禁止修改共享能力文档，没有改三份现有测试的内部固定清单或预期；具体失败如下，需主会话合并时核对。
+- 两轮全量均未全绿。按任务“共用的文件只在末尾加行”和总规则第 7 节禁止修改共享能力文档，没有改三份现有测试的内部固定清单或预期；具体失败如下，需主会话合并时核对。
 - Linux/GCC 没在这台 Mac 上执行，不能将本机 clang 的 `-Werror` 结果当 Linux 通过。
 - 原有三项 hub 测试被各自脚本标记跳过，本任务没有新增 skip 或隐藏跳过。
+- “问这张图”接既有 AI 面板和当前页上下文；本任务没有新增图像上传或视觉推理，也没有验证模型能识别照片。Camera 快照提供取景状态和动作，未提供未保存帧的完整像素读取能力。
 
 ## 和设计不一致的
 
@@ -37,7 +38,7 @@
 
 ## 顺手发现
 
-普通全量四项失败均由本任务注册的新页面/能力触发，不冒充基线失败：
+普通与 ASan/UBSan 全量的同四项失败均由本任务注册的新页面/能力触发，不冒充基线失败：
 
 | 检查 | 证据及需要主会话处理的地方 |
 | --- | --- |
@@ -60,9 +61,14 @@
 - 【实测】普通 `-Werror` 完整构建退出 0；PNG 编码对象的 macOS `__TEXT` 为 11,384 字节（`size build/CMakeFiles/ink_camera_png.dir/system/apps/camera/png.c.o`），不是设备固件大小。全部编码分配走 PSRAM。
 - 【实测】定向场景内部 RAM 最低余量 47,840 字节，MEDIA 标记 PSRAM 峰值 2,923,976 字节，相机保留帧峰值 614,416 字节，PSRAM 最低余量 9,786,472 字节；内部与外部失败分配均为 0（含分配器开销、基于模拟器，非实机）。
 - stb_image_write.h SHA-256：`cbd5f0ad7a9cf4468affb36354a1d2338034f2c12473cf1a8e32053cb6914a05`，复用既有文件、许可证未改。
+- 第三方来源：`https://github.com/nothings/stb`，仓库固定提交 `d14d46f6b44456eb88beac58cba833a4135d4c89`，头文件末尾保留 MIT / Unlicense 双许可。
 - 【实测】首轮定向测试发现两处测试夹具错误：索引顺序不等于目录名字顺序；Plus 档案没有 BACK 实体键（模拟器明确忽略）。已按真实索引计算预期灰度，返回改为触摸真实顶栏按钮；未改已有测试或产品输入行为。
 - 【实现】删除按钮直接绑定 `file.delete` 及实际文件参数，与快照里的 AI 动作完全相同；删掉最初的转发包装，避免把等待确认的结果变成仅表示排队的回执。
 - 【实测】定向四轮均退出 0：Camera、Gallery、Photo 各 156 项断言，restart 22 项；证据 `build/camera-gallery-a2zbg0vx/`，命令输出 `build/camera-targeted.log`。Python/Pillow 另外验证卡上文件确为 640×480 RGB PNG，保留彩色信息。
 - 【实测】产品代码按最保守算法计 349 行：新目录 317 行（含头文件、编码包装）、服务增量 19 行、boot 2 行、CMake 11 行（含测试接线），未超过 400。第三方源码是已存在的 stb 文件，没有新增第三方行。
 - 为什么不能更小：三个页面的 F1/F4 声明、异步文件与图片处理、像素所有权、成员核对、存储及能力接线共同构成完整链路。看过只展示 `camera.capture` 的内存帧或只画图标的更小方案，分别缺落卡和真实缩略图；没有采用。
 - 【实测】反向对照的编译、链接退出 0，变异程序退出 1，151 条通过、3 条失败、finished=1；脚本验证期望失败后退出 0。证据 `build/camera-gallery-wjx60d8o/`；正常产品源码、可执行文件没有改。普通全量日志 `build/camera-ctest.log`，307.12 秒，新增 camera-gallery 通过。
+- 【实测】ASan/UBSan 配置及完整构建退出 0；全量 651.14 秒，camera-gallery 通过，无 AddressSanitizer、UndefinedBehaviorSanitizer 或 runtime error 报错。确认测试编译参数含 `-Werror -fsanitize=address,undefined -fno-omit-frame-pointer`；日志 `build-asan/camera-build.log`、`build-asan/camera-ctest.log`。两轮 layering、determinism、determinism-reader 均通过。
+- 配置沿用任务书字体/Python/LVGL 参数；额外只读复用 `$INK_DEPS/build/_deps/` 下已有 SDL2、ImGui 源码，普通与 ASan 配置一致，未下载或升级依赖。所有构建/测试均为 utility，最大并行 2，无窗口。
+- 【实测】最终仅为三处单行 `if` 补上花括号，按任务的 GCC 书写规则消除歧义，没有改变行为或断言。两种构建的定向目标再次编译成功，各 156 + 22 条断言通过；日志 `build/camera-final-targeted.log`、`build-asan/camera-final-targeted.log`，证据 `build/camera-gallery-c_1tixiz/`、`build-asan/camera-gallery-8nvqhatk/`。
+- 【实测】`git diff --check` 退出 0；基线到提交的 `git diff --stat` 仅 11 个相关文件。任务书第 6 节隐私扫描无匹配（grep 退出 1），未提交设计稿、构建产物或禁止保存的信息。所有代码和报告只作本地提交，未推送。
