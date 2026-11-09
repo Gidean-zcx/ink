@@ -26,11 +26,11 @@ static void open_list(void) {
     CHECK(WAIT_FOR(S.list != NULL, 10000), "member data loads on the background executor"); quiet(); on_ui(snapshot_page);
 }
 static int stored(const char *member) {
-    ink_db_t *db = ink_db_open_member(&MESSAGES, member);
+    ink_db_t *db = ink_db_open_member(ink_db_find_def("sms.messages"), member);
     int count = db ? ink_db_count(db) : -1; ink_db_close(db); return count;
 }
 static bool has_status(const char *status) {
-    ink_db_t *db = ink_db_open_member(&MESSAGES, "owner"); ink_db_cursor_t cur = {0}; ink_rec_t rec;
+    ink_db_t *db = ink_db_open_member(ink_db_find_def("sms.messages"), "owner"); ink_db_cursor_t cur = {0}; ink_rec_t rec;
     char peer[24], text[355], value[96]; bool found = false;
     while (db && ink_db_next(db, &cur, &rec, NULL, 0) == 1) {
         if (read_message(db, rec.id, peer, text, value) && !strcmp(value, status)) found = true;
@@ -38,7 +38,7 @@ static bool has_status(const char *status) {
     ink_db_close(db); return found;
 }
 static bool durable(void) {
-    ink_db_t *db = ink_db_open_member(&MESSAGES, "owner");
+    ink_db_t *db = ink_db_open_member(ink_db_find_def("sms.messages"), "owner");
     bool done = db && ink_db_durable_ver(db) == ink_db_last_ver(db); ink_db_close(db); return done;
 }
 static void incoming(void *arg) { (void)arg; CHECK(sim_net_deliver_sms(PEER, "合成短信：回家后联系"), "modem accepts synthetic incoming SMS"); }
@@ -64,20 +64,21 @@ static void inspect_long(void) {
     CHECK(S.field && !strcmp(ink_textfield_text(S.field), body), "long input retains every Chinese character");
     CHECK(S.field && ink_textfield_long_snapshot(S.field, snap, sizeof snap) > 0 && strstr(snap, "ImeLong"), "long editor exposes its owned viewport");
 }
-static bool rendered_body(lv_obj_t *obj) {
-    if (lv_obj_check_type(obj, &lv_label_class) && !strcmp(lv_label_get_text(obj), body)) {
+static bool rendered_text(lv_obj_t *obj, const char *text) {
+    if (lv_obj_check_type(obj, &lv_label_class) && !strcmp(lv_label_get_text(obj), text)) {
         lv_area_t label, card; lv_obj_update_layout(obj); lv_obj_get_coords(obj, &label); lv_obj_get_coords(lv_obj_get_parent(obj), &card);
         return label.x1 >= card.x1 && label.x2 <= card.x2 && label.y1 >= card.y1 && label.y2 <= card.y2 &&
             lv_color_eq(lv_obj_get_style_text_color(obj, 0), ink_ui_paper());
     }
-    for (uint32_t i = 0; i < lv_obj_get_child_count(obj); i++) if (rendered_body(lv_obj_get_child(obj, i))) return true;
+    for (uint32_t i = 0; i < lv_obj_get_child_count(obj); i++) if (rendered_text(lv_obj_get_child(obj, i), text)) return true;
     return false;
 }
+static bool rendered_body(lv_obj_t *obj) { return rendered_text(obj, body); }
 static void inspect_thread(void) {
     snapshot_page(); CHECK(S.list && S.count && strstr(snap, body) && strstr(snap, "已发出"), "thread snapshot shows the complete long outgoing SMS and receipt");
     CHECK(rendered_body(lv_screen_active()), "the actual long label fits completely inside its message card");
 }
-static void inspect_compose(void) { snapshot_page(); CHECK(S.field && strstr(snap, "sms.send") && strstr(snap, "00000000001"), "compose snapshot exposes its exact recipient and send capability"); }
+static void inspect_compose(void) { snapshot_page(); CHECK(S.field && strstr(snap, "message.send") && strstr(snap, "00000000001"), "compose snapshot exposes its exact recipient and send capability"); }
 static lv_obj_t *located;
 static const char *wanted;
 static void find_label(lv_obj_t *o) {
@@ -90,8 +91,10 @@ static void locate(void) {
     if (located) { lv_area_t a; lv_obj_update_layout(lv_obj_get_parent(located)); lv_obj_get_coords(lv_obj_get_parent(located), &a); g_btn_x[0] = (a.x1 + a.x2) / 2; g_btn_y[0] = (a.y1 + a.y2) / 2; }
 }
 static void tap_text(const char *label) { wanted = label; on_ui(locate); if (located) tap(g_btn_x[0], g_btn_y[0]); quiet(); }
-static void no_registration(void) { ink_state_set_bool(ink_state_find("cell.registered"), false); }
-static void restore_registration(void) { ink_state_set_bool(ink_state_find("cell.registered"), true); }
+static void remove_card(void *arg) { (void)arg; sim_net_set_card(0, false, false, false); }
+static void replace_card(void *arg) { (void)arg; sim_net_set_card(0, true, true, true); sim_net_modem_power(false); sim_net_modem_power(true); }
+static void no_registration(void) { vtk_event_at(vtk_now() + SIM_MS(1), remove_card, NULL); }
+static void restore_registration(void) { vtk_event_at(vtk_now() + SIM_MS(1), replace_card, NULL); }
 static void fail_modem(void *arg) { (void)arg; sim_net_set_card(0, true, false, true); }
 static void restore_modem(void *arg) { (void)arg; sim_net_set_card(0, true, true, true); }
 static volatile bool confirmation_done;
@@ -115,12 +118,93 @@ static void isolation(void) {
     CHECK(ink_member_switch("owner") == 0, "return to synthetic adult"); quiet(); open_list();
     CHECK(strstr(snap, "合成短信") || strstr(snap, "已发出") || S.count > 0, "adult retains their conversations");
 }
+
+static void incoming_long(void *arg) { (void)arg; CHECK(sim_net_deliver_sms(PEER, body), "AT model accepts long inbound SMS"); }
+static bool long_event;
+static void check_long_event(void *ctx, const char *event, const ink_args_t *a) {
+    (void)ctx; (void)event; char member[16], text[355];
+    ink_args_get_str(a, "member", member, sizeof member); ink_args_get_str(a, "text", text, sizeof text);
+    CHECK(!strcmp(member, "owner") && !strcmp(text, body), "long event retains both full body and member metadata"); long_event = true;
+}
+static bool failure_injected;
+static void inject_failure(void *arg) { fail_modem(arg); failure_injected = true; }
+static void check_receipt(void) {
+    lv_area_t notice, button; lv_obj_update_layout(S.notice); lv_obj_get_coords(S.notice, &notice);
+    CHECK(!strcmp(lv_label_get_text(S.notice), S.result), "receipt label has the final result");
+    wanted = "写长短信"; located = NULL; find_label(lv_screen_active());
+    CHECK(located, "long editor button exists");
+    if (located) {
+        lv_obj_get_coords(lv_obj_get_parent(located), &button);
+        CHECK(notice.y2 < button.y1, "final receipt stays above the button: %d..%d vs %d..%d",
+            notice.y1, notice.y2, button.y1, button.y2);
+    }
+}
+static char pieces[355];
+static void inspect_piece(void) {
+    const char *text = S.texts[S.position.page % 4];
+    snapshot_page(); CHECK(rendered_text(lv_screen_active(), text), "every visible page fits its real message card");
+    CHECK(strlen(pieces) + strlen(text) < sizeof pieces, "page text stays within the original message");
+    if (strlen(pieces) + strlen(text) < sizeof pieces) strcat(pieces, text);
+}
+static void check_long_record(void) {
+    ink_db_t *db = ink_db_open_member(ink_db_find_def("sms.messages"), "owner");
+    ink_db_cursor_t cur = {0}; ink_rec_t rec; char peer[24], text[355], status[96];
+    CHECK(db && ink_db_count(db) == 1 && ink_db_next(db, &cur, &rec, NULL, 0) == 1 &&
+        read_message(db, rec.id, peer, text, status) && !strcmp(text, body) && !strcmp(status, "收到"),
+        "all long inbound bytes and receipt survive persistence"); ink_db_close(db);
+}
+static bool review_phase(void) {
+    if (!strcmp(phase, "legacy-send")) {
+        CHECK(ink_cap_find("message.send")->run == ink_cap_find("sms.send")->run, "both public send names share one implementation");
+        CHECK(BY_HAND("message.send", "{\"to\":\"00000000001\",\"text\":\"合成短信\"}") && g_rc.status == INK_RC_DONE,
+            "legacy send succeeds through AT");
+        CHECK(sim_net_sms_sent() == 1 && stored("owner") == 1 && has_status("已发出"), "legacy send is durably recorded once");
+    } else if (!strcmp(phase, "long-rx") || !strcmp(phase, "long-rx-read")) {
+        if (!strcmp(phase, "long-rx")) {
+            CHECK(ink_cap_subscribe("message.received", check_long_event, NULL, INK_EXEC_BG) == 0, "observe the real long incoming event");
+            vtk_event_at(vtk_now() + SIM_MS(1), incoming_long, NULL);
+            CHECK(WAIT_FOR(stored("owner") == 1 && long_event, 10000), "long inbound reaches the member store");
+        }
+        check_long_record();
+    } else if (!strcmp(phase, "cold-thread")) {
+        deliver(); CHECK(AI("sms.thread", "{\"peer\":\"00000000001\"}") && g_rc.status == INK_RC_DONE, "cold AI thread navigation succeeds");
+        CHECK(WAIT_FOR(S.list != NULL, 10000), "cold thread loads"); quiet();
+        CHECK(!strcmp(S.peer, PEER) && S.count == 1, "first navigation preserves the requested peer and records");
+        on_ui(snapshot_page); CHECK(strstr(snap, "合成短信"), "cold thread snapshot contains the incoming message");
+    } else if (!strcmp(phase, "multiline")) {
+        body[0] = 0; for (int i = 0; i < 16; i++) strcat(body, i ? "\n中中中中中" : "中中中中中");
+        ink_jw_t w; ink_jw_init(&w, arguments, sizeof arguments); ink_jw_raw(&w, "{\"to\":\"00000000001\",\"text\":"); ink_jw_str(&w, body); ink_jw_raw(&w, "}");
+        CHECK(BY_HAND("message.send", arguments) && g_rc.status == INK_RC_DONE, "send valid multiline SMS");
+        CHECK(sim_net_sent_sms(0, sent_number, sizeof sent_number, sent_text, sizeof sent_text) == 1 && !strcmp(sent_text, body), "AT receives all multiline bytes");
+        CHECK(AI("sms.thread", "{\"peer\":\"00000000001\"}") && g_rc.status == INK_RC_DONE, "open multiline thread"); quiet();
+        char peer[24], text[355], status[96]; CHECK(S.count == 1 && read_message(S.db, S.rows[0], peer, text, status) && !strcmp(text, body), "multiline SMS is stored unchanged");
+        size_t pages = S.pages[S.count]; CHECK(pages > 1, "multiline body exposes continuation pages");
+        for (size_t i = 0; i < pages; i++) { on_ui(inspect_piece); if (i + 1 < pages) { CHECK(AI("sms.next", NULL) && g_rc.status == INK_RC_DONE, "AI turns to the next body page"); quiet(); } }
+        CHECK(!strcmp(pieces, body), "visible pages reconstruct the exact multiline SMS");
+        CHECK(AI("sms.prev", NULL) && g_rc.status == INK_RC_DONE && S.position.page + 2 == pages, "previous page returns to earlier text");
+    } else if (!strncmp(phase, "receipt-", 8)) {
+        open_list(); compose(); CHECK(AI("sms.text", NULL) && g_rc.status == INK_RC_DONE, "focus short editor"); on_ui(type_short);
+        if (!strcmp(phase, "receipt-fail")) { on_ui(no_registration); CHECK(WAIT_FOR(!sim_net_modem_registered(), 10000), "modem is actually unregistered"); }
+        if (!strcmp(phase, "receipt-unknown")) { vtk_event_at(vtk_now() + SIM_MS(1), inject_failure, NULL); CHECK(WAIT_FOR(failure_injected, 10000), "modem failure applied"); }
+        tap_text("发送"); CHECK(WAIT_FOR(S.result[0] && settled(), 10000), "final UI receipt arrives");
+        CHECK(!strcmp(S.result, !strcmp(phase, "receipt-ok") ? "已发出" : !strcmp(phase, "receipt-fail") ? "发送失败，未发出" : "结果未知，请先核实"), "UI reports the actual send outcome"); on_ui(check_receipt);
+    } else if (!strcmp(phase, "draft-write") || !strcmp(phase, "draft-read")) {
+        ink_db_t *db = ink_db_open_member(ink_db_find_def("text.drafts"), "owner");
+        if (!strcmp(phase, "draft-read")) CHECK(db && ink_db_count(db) == 1, "saved draft exists after process restart"); ink_db_close(db);
+        open_list(); compose(); CHECK(AI("sms.long", NULL) && g_rc.status == INK_RC_DONE, "open or resume F3");
+        if (!strcmp(phase, "draft-write")) on_ui(type_long);
+        on_ui(inspect_long); CHECK(WAIT_FOR(ink_text_draft_saved() == 1, 10000), "F3 reports durable draft");
+        db = ink_db_open_member(ink_db_find_def("text.drafts"), "owner"); CHECK(db && ink_db_count(db) == 1, "resume reuses the original draft reference"); ink_db_close(db);
+    } else return false;
+    quiet(); vtk_event_at(vtk_now() + SIM_MS(1), capture, NULL); return true;
+}
 static void run(void *arg) {
     (void)arg; vtk_host_call(read_phase, NULL);
     CHECK(WAIT_FOR(ink_member_space_open(), 10000), "member space opens");
     CHECK(WAIT_FOR(sim_net_modem_registered() && registered(), 10000), "simulated AT modem publishes registration"); quiet();
     for (int i = 0; i < 118; i++) memcpy(body + i * 3, "中", 3); body[354] = 0;
-    if (!strcmp(phase, "legacy")) {
+    if (review_phase()) { /* Covered above, with isolated flash images. */
+    } else if (!strcmp(phase, "legacy")) {
         open_list(); deliver(); CHECK(ink_member_switch("kid") == 0, "probe the original SMS capability after handoff"); quiet();
         CHECK(AI("message.list", NULL) && g_rc.status == INK_RC_DONE && !strstr(g_rc.say, "合成短信"), "legacy message.list must not expose the adult inbox");
     } else if (!strcmp(phase, "verify")) {
@@ -146,7 +230,9 @@ static void run(void *arg) {
         CHECK(sim_net_sent_sms(0, sent_number, sizeof sent_number, sent_text, sizeof sent_text) == 1 && !strcmp(sent_text, body) && !strcmp(sent_number, PEER), "118 Chinese characters arrive unchanged at the simulated AT boundary");
         CHECK(AI("sms.thread", "{\"peer\":\"00000000001\"}") && g_rc.status == INK_RC_DONE, "open long message"); quiet(); on_ui(inspect_thread);
         snprintf(arguments, sizeof arguments, "{\"to\":\"%s\",\"text\":\"合成回执\"}", PEER);
-        on_ui(no_registration); CHECK(BY_HAND("sms.send", arguments) && g_rc.status != INK_RC_DONE && has_status("发送失败，未发出"), "known preflight failure is persisted as not sent"); on_ui(restore_registration);
+        on_ui(no_registration); CHECK(WAIT_FOR(!sim_net_modem_registered(), 10000), "remove the simulated SIM before sending");
+        CHECK(BY_HAND("sms.send", arguments) && g_rc.status != INK_RC_DONE && has_status("发送失败，未发出"), "known preflight failure is persisted as not sent"); on_ui(restore_registration);
+        CHECK(WAIT_FOR(sim_net_modem_registered(), 10000), "restored simulated SIM registers again");
         vtk_event_at(vtk_now() + SIM_MS(1), fail_modem, NULL); delay_ms(5);
         CHECK(BY_HAND("sms.send", arguments) && g_rc.status == INK_RC_FAILED && has_status("结果未知，请先核实"), "undifferentiated modem error is honestly unknown");
         vtk_event_at(vtk_now() + SIM_MS(1), restore_modem, NULL); delay_ms(5);

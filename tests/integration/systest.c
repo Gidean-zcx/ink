@@ -537,8 +537,9 @@ static void service_checks(void) {
           "sent by touch (%s, %s)", ink_rc_name(g_bus_rc.status), g_bus_rc.detail);
     for (int w = 0; w < 200 && !g_sms_events; w++) osal_task_delay_us(100000); /* the script sends one at 24 s */
     CHECK(g_sms_events == 1 && strstr(g_sms_text, "测试短信"), "an incoming message is an event with its text (%d, %s)", g_sms_events, g_sms_text);
-    CHECK(ink_cap_invoke("message.list", NULL, INK_SRC_AI, 0, &rc) == INK_RC_DONE && rc.revision == 1 && strstr(rc.say, "10086"), "message.list (%s)",
-          rc.say);
+    before = g_bus_done; o.src = INK_SRC_AI;
+    CHECK(ink_cap_call("message.list", NULL, &o) == 0 && wait_done(before + 1, 3000000) && g_bus_rc.status == INK_RC_DONE &&
+          g_bus_rc.revision == 1 && strstr(g_bus_rc.say, "10086"), "message.list (%s)", g_bus_rc.say);
 
     /* the card in use is a setting; the switch is the driver's (R-044) */
     CHECK(ink_setting_set("cell.sim_slot", 1, INK_SRC_TOUCH, &rc) == INK_RC_DONE, "choose the internal card");

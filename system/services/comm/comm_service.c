@@ -21,12 +21,13 @@
 #include "ink/sys/audio.h"
 #include "ink/sys/cap.h"
 #include "ink/sys/comm.h"
+#include "ink/sys/data.h"
+#include "ink/sys/json.h"
 #include "ink/sys/settings.h"
 #include "ink/sys/state.h"
 
 #define COMM_STACK 8192 /* PSRAM: never touches the flash; AT replies and SMS text are parsed on it */
 #define COMM_PRIO 3
-#define MSG_KEEP 16
 #define STATUS_DELAY_US 5000000ull /* first look at the modem, after it had time to register */
 #define SIM_RETRY_FIRST_US 10000000ull /* a card that could not be selected, or a modem that does not answer: tried again */
 #define SIM_RETRY_MAX_US 300000000ull
@@ -35,15 +36,16 @@
 
 typedef struct {
     char from[24];
-    char text[200];
+    char text[355];
 } msg_t;
+
+static const ink_db_def_t MESSAGES = {.name = "sms.messages", .title = "短信会话", .scope = INK_DB_MEMBER,
+    .schema = 1, .json = true, .ai_read = true, .max_records = 512};
 
 static struct {
     osal_mutex_t *lock;
     osal_mutex_t *at; /* the modem takes one AT command at a time, and some requests are several: the comm task
                        * and exec.bg both talk to it. Held while a request runs, up to the seconds it takes */
-    msg_t msg[MSG_KEEP]; /* newest last */
-    int nmsg;
     bool ringing;
     int h_registered, h_sim;
     ink_exec_job_t sim_job;
@@ -53,6 +55,22 @@ static struct {
     msg_t rx;
     ink_args_t rx_args, ev_args;
 } CM INK_PSRAM_BSS;
+
+static bool save_message(ink_db_t *db, uint32_t *id, const char *peer, const char *text, const char *status, uint8_t src) {
+    char raw[1024]; ink_jw_t w; ink_jw_init(&w, raw, sizeof raw);
+    ink_jw_raw(&w, "{\"peer\":"); ink_jw_str(&w, peer); ink_jw_raw(&w, ",\"text\":"); ink_jw_str(&w, text);
+    ink_jw_raw(&w, ",\"status\":"); ink_jw_str(&w, status); ink_jw_raw(&w, "}");
+    if (!*id) *id = ink_db_new_id(db);
+    uint32_t ver = 0; ink_db_write_t wr = {.id = *id, .sort = *id, .data = raw, .len = w.len, .src = src, .written_ver = &ver};
+    return !w.overflow && ink_db_put(db, &wr, NULL) == INK_DB_OK && ink_db_wait(db, ver, 3000000) == 0;
+}
+static void received(void *ctx, const char *event, const ink_args_t *a) {
+    (void)ctx; (void)event; char member[16], peer[24], text[355];
+    ink_args_get_str(a, "member", member, sizeof member); ink_args_get_str(a, "from", peer, sizeof peer); ink_args_get_str(a, "text", text, sizeof text);
+    ink_db_t *db = ink_db_open_member(&MESSAGES, member); uint32_t id = 0;
+    if (!db || !save_message(db, &id, peer, text, "收到", INK_SRC_SYSTEM)) ink_probe_count("sms.save_failed");
+    ink_db_close(db);
+}
 
 /* Cut a UTF-8 string so it does not end inside a character. */
 static void utf8_clip(char *s) {
@@ -100,11 +118,6 @@ static void on_sms(int index) { /* comm task */
         return;
     }
     utf8_clip(m->text);
-    osal_mutex_lock(CM.lock, OSAL_WAIT_FOREVER);
-    if (CM.nmsg == MSG_KEEP) memmove(&CM.msg[0], &CM.msg[1], sizeof CM.msg[0] * (MSG_KEEP - 1));
-    else CM.nmsg++;
-    CM.msg[CM.nmsg - 1] = *m;
-    osal_mutex_unlock(CM.lock);
     ink_args_init(a);
     ink_args_str(a, "from", m->from);
     ink_args_str(a, "text", m->text);
@@ -192,35 +205,44 @@ static void comm_task(void *arg) {
 /* ------------------------------------------------------------ capabilities */
 
 static void cap_send(ink_call_t *c) { /* exec.bg */
-    char to[24], text[INK_ARGS_TEXT]; /* a message is never cut: 118 Chinese characters fit in the arguments (INK_ARGS_TEXT);
-                                       * with other 4-byte characters the arguments may refuse it, also never cut */
+    char to[24], text[355]; /* 118 Han characters; reject rather than truncate longer byte strings. */
     ink_args_get_str(&c->args, "to", to, sizeof to);
-    ink_args_get_str(&c->args, "text", text, sizeof text);
+    int bytes = ink_args_get_str(&c->args, "text", text, sizeof text);
+    bool valid = to[0] && bytes > 0 && bytes < (int)sizeof text;
+    for (size_t i = 0; to[i]; i++) if ((to[i] < '0' || to[i] > '9') && !(i == 0 && to[i] == '+' && to[1])) valid = false;
+    if (!valid) { c->rc.status = INK_RC_INVALID; return; }
+    ink_db_t *db = ink_db_open_member(&MESSAGES, ink_cap_call_member(c)); uint32_t id = 0;
+    if (!db || !save_message(db, &id, to, text, "结果未知，请先核实", c->src)) {
+        ink_db_close(db); c->rc.status = INK_RC_FAILED; snprintf(c->rc.say, sizeof c->rc.say, "短信没能存下，未发送"); return;
+    }
     osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
+    hal_cell_status_t st; bool known = hal_cell_status(&st);
     uint32_t left = ink_cap_time_left_ms(c); /* the time it waited for this executor and the modem counts */
-    int r = left < SMS_MIN_LEFT_MS ? 1 : hal_cell_sms_send(to, text, left < 20000 ? left : 20000);
+    int r = (known && !st.registered) || left < SMS_MIN_LEFT_MS ? 1 : hal_cell_sms_send(to, text, left < 20000 ? left : 20000);
     osal_mutex_unlock(CM.at);
-    if (r > 0) {
-        c->rc.status = INK_RC_FAILED;
-        snprintf(c->rc.detail, sizeof c->rc.detail, "not sent: no time left");
-        return;
-    }
-    if (r != 0) {
-        c->rc.status = INK_RC_FAILED;
-        snprintf(c->rc.detail, sizeof c->rc.detail, "the message was not sent");
-        return;
-    }
-    ink_probe_count("comm.sms_sent");
+    const char *status = r == 0 ? "已发出" : r > 0 ? "发送失败，未发出" : "结果未知，请先核实";
+    if (r != 0) { c->rc.status = INK_RC_FAILED; snprintf(c->rc.detail, sizeof c->rc.detail, "%s", r > 0 ? "not sent: offline or no time left" : "send result unknown"); }
+    else ink_probe_count("comm.sms_sent");
     snprintf(c->rc.object, sizeof c->rc.object, "message:to:%s", to);
-    snprintf(c->rc.say, sizeof c->rc.say, "短信发出去了");
+    snprintf(c->rc.say, sizeof c->rc.say, "%s", status);
+    if (!save_message(db, &id, to, text, status, c->src)) { c->rc.status = INK_RC_FAILED; snprintf(c->rc.say, sizeof c->rc.say, "发送结果没能存下，请先核实"); }
+    ink_db_close(db);
 }
 
 static void cap_list(ink_call_t *c) {
-    osal_mutex_lock(CM.lock, OSAL_WAIT_FOREVER);
-    int n = CM.nmsg;
-    if (n) snprintf(c->rc.say, sizeof c->rc.say, "%d 条短信，最近一条来自 %s：%s", n, CM.msg[n - 1].from, CM.msg[n - 1].text);
+    ink_db_t *db = ink_db_open_member(&MESSAGES, ink_cap_call_member(c));
+    if (!db) { c->rc.status = INK_RC_FAILED; return; }
+    ink_db_cursor_t cur = {.desc = true}; ink_rec_t rec; char raw[1024] = {0}, peer[24], text[355];
+    ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL); int n = 0;
+    if (!j) { ink_db_close(db); c->rc.status = INK_RC_FAILED; return; }
+    while (ink_db_next(db, &cur, &rec, raw, sizeof raw - 1) == 1) {
+        raw[rec.len] = 0;
+        if (ink_json_parse(j, raw, rec.len) || !ink_json_eq(j, ink_json_find(j, 0, "status"), "收到")) continue;
+        if (!n++) { ink_json_str(j, ink_json_find(j, 0, "peer"), peer, sizeof peer); ink_json_str(j, ink_json_find(j, 0, "text"), text, sizeof text); }
+    }
+    if (n) snprintf(c->rc.say, sizeof c->rc.say, "%d 条短信，最近一条来自 %s：%s", n, peer, text);
     else snprintf(c->rc.say, sizeof c->rc.say, "没有新短信");
-    osal_mutex_unlock(CM.lock);
+    osal_free(j); ink_db_close(db);
     utf8_clip(c->rc.say);
     snprintf(c->rc.object, sizeof c->rc.object, "messages");
     c->rc.revision = (uint32_t)n;
@@ -273,7 +295,8 @@ static const ink_cap_t COMM_CAPS[] = {
      .timeout_ms = 30000,
      .exec = INK_EXEC_BG,
      .run = cap_send},
-    {.id = "message.list", .title = "最近的短信", .effect = INK_FX_READ, .child_ok = true, .permission = "message", .exec = INK_EXEC_DIRECT, .run = cap_list},
+    {.id = "message.list", .title = "最近的短信", .effect = INK_FX_READ, .child_ok = true, .permission = "message", .exec = INK_EXEC_BG, .run = cap_list},
+    {.id = "sms.send", .title = "保存并发送短信", .ask = "发短信给 {to}：{text}", .input = "{\"type\":\"object\",\"properties\":{\"to\":{\"type\":\"string\",\"maxLength\":20},\"text\":{\"type\":\"string\",\"maxLength\":118}},\"required\":[\"to\",\"text\"]}", .effect = INK_FX_EXTERNAL, .child_ok = true, .permission = "message", .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .timeout_ms = 30000, .run = cap_send},
     {.id = "call.dial",
      .title = "打电话",
      .ask = "打电话给 {number}",
@@ -312,6 +335,7 @@ static const ink_setting_def_t COMM_SETTINGS[] = {
 };
 
 int ink_comm_init(void) {
+    if (ink_db_register(&MESSAGES) || ink_cap_subscribe("message.received", received, NULL, INK_EXEC_BG)) return -1;
     CM.lock = osal_mutex_create();
     CM.at = osal_mutex_create();
     if (!CM.lock || !CM.at) return -1;

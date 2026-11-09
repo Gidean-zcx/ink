@@ -28,8 +28,11 @@ if mutant:
     link[link.index("-o") + 1] = str(sim)
     subprocess.run(link, cwd=build, check=True)
 ok = True
-for phase in ("write", "verify", "SmsThread", "SmsCompose"):
+for phase in ("write", "verify", "SmsThread", "SmsCompose", "legacy", "legacy-send", "long-rx", "long-rx-read",
+              "cold-thread", "multiline", "receipt-ok", "receipt-fail", "receipt-unknown", "draft-write", "draft-read"):
     image = output / ("user.img" if phase in ("write", "verify") else f"{phase}.img")
+    if phase.startswith("draft-"): image = output / "draft.img"
+    if phase.startswith("long-rx"): image = output / "long-rx.img"
     out = output / phase
     command = [str(sim), "--profile", str(root / "simulator/profiles/metalio-plus.json"),
                "--script", str(root / "tests/sms/sms.script"), "--budget", str(root / "tests/ui_scene.budget.json"),
@@ -49,7 +52,7 @@ for phase in ("write", "verify", "SmsThread", "SmsCompose"):
             print(warning)
         ok = False
         break
-    if phase != "verify":
+    if phase in ("write", "SmsThread", "SmsCompose"):
         scene = "Sms" if phase == "write" else phase
         target = output.parent / "sms-compare" / scene
         target.mkdir(parents=True, exist_ok=True)
