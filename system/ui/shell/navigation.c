@@ -407,6 +407,7 @@ static int tools(tool_t out[24]) {
     for (int i = 0; i < ink_app_count() && count < 16; i++) {
         const ink_app_def_t *a = ink_app_at(i);
         if (!a->entry || !ink_app_visible(a) || !strcmp(a->id, "home") || !strcmp(a->id, "reader")) continue;
+        if (!strcmp(a->id, "phone")) continue; /* Already in the contact group. */
         out[count++] = (tool_t){a->id, a->title, a->icon ? a->icon : INK_UI_ICON(grid)};
     }
     static const tool_t MORE[] = {{"clock", "时钟", INK_UI_ICON(clock)},     {"camera", "相机", INK_UI_ICON(camera)},

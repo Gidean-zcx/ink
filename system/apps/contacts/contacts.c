@@ -214,7 +214,8 @@ static int snapshot(char *out, size_t cap) {
         P.actions[3] = (ink_ui_action_spec_t){.id = "select", .label = "选择这个号码", .capability = "contacts.select", .args_json = P.record_args, .enabled = P.id != 0};
         P.actions[4] = (ink_ui_action_spec_t){.id = "delete", .label = "删除联系人", .capability = "contacts.delete", .args_json = P.record_args, .enabled = P.id != 0};
         P.form.actions = P.actions; P.form.action_count = 5;
-        return ink_ui_semantics_snapshot(&P.form, out, cap);
+        unsigned focused = lv_obj_has_state(P.fields[1], LV_STATE_FOCUSED) ? 1 : 0;
+        return ink_textfield_short_snapshot(P.fields[focused], out, cap);
     }
     return snprintf(out, cap, "联系人：%s", P.notice ? lv_label_get_text(P.notice) : "暂时打不开");
 }

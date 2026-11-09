@@ -79,9 +79,23 @@ static void locate_field(void) {
     lv_area_t a; lv_obj_update_layout(P.fields[field_at]); lv_obj_get_coords(P.fields[field_at], &a);
     g_btn_x[0] = (a.x1 + a.x2) / 2; g_btn_y[0] = (a.y1 + a.y2) / 2;
 }
+static void inspect_short_focus(void) {
+    char page_json[3072], field[24];
+    ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
+    bool parsed = j && ink_ui_snapshot(snap, sizeof snap, NULL) > 0 &&
+        ink_json_parse(j, snap, strlen(snap)) == 0 &&
+        ink_json_str(j, ink_json_find(j, 0, "page"), page_json, sizeof page_json) > 0 &&
+        ink_json_parse(j, page_json, strlen(page_json)) == 0;
+    int input = parsed ? ink_json_find(j, 0, "input") : -1;
+    CHECK(parsed && ink_json_str(j, ink_json_find(j, input, "field"), field, sizeof field) > 0 &&
+          !strcmp(field, field_at ? "number" : "name") && ink_json_eq(j, ink_json_find(j, input, "focused"), "true"),
+          "AI snapshot identifies the actual focused short field");
+    osal_free(j);
+}
 static void type_field(unsigned index, const char *text) {
     field_at = index; on_ui(locate_field); tap(g_btn_x[0], g_btn_y[0]); quiet();
     CHECK(ink_text_focused(), "physical touch focuses the F2 short input");
+    on_ui(inspect_short_focus);
     snprintf(call_args, sizeof call_args, "{\"text\":\"%s\"}", text);
     CHECK(AI("text.insert", call_args) && g_rc.status == INK_RC_DONE, "shared text service edits the field");
     CHECK(AI("text.submit", NULL) && g_rc.status == INK_RC_DONE, "finish the same input session"); quiet();
