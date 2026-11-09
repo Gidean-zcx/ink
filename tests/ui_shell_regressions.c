@@ -288,7 +288,7 @@ static void context_tests(void) {
     CHECK(!strstr(context, "shell.settings") && !strstr(context, "shell.members"), "the child snapshot does not advertise adult controls");
     on_ui(check_child_actions);
     CHECK(AI("shell.settings", NULL) && g_rc.status == INK_RC_REJECTED, "a globally registered setting entry is actually denied to the child");
-    CHECK(!strcmp(ink_ui_top_name(), "Control"), "the denied operation cannot navigate away");
+    CHECK(!strcmp(ink_ui_top_name(), "KidControl"), "the denied operation stays in the child control center");
 }
 static ink_exec_job_t blocked_job, drained_job;
 static volatile bool bg_started, bg_release, bg_drained;

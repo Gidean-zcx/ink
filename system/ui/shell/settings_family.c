@@ -42,6 +42,22 @@ static void setting(const char *id, const char *title, int64_t next) {
     if (!strcmp(id, "display.wallpaper_file")) snprintf(value, sizeof value, "%s", v ? "已选择" : "还没有选壁纸");
     row(id, title, value, "settings.set", args);
 }
+static void time_reply(void *ctx, const ink_receipt_t *rc) {
+    if ((uint32_t)(uintptr_t)ctx != S.generation || !current() || S.page != KID) return;
+    ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL); int64_t minutes = 0; char id[16];
+    if (j && rc->result && !ink_json_parse(j, rc->result, strlen(rc->result)) && ink_json_int(j, ink_json_find(j, 0, "minutes"), &minutes)) {
+        ink_json_str(j, ink_json_find(j, 0, "id"), id, sizeof id);
+        if (!minutes) snprintf(S.values[2], sizeof S.values[2], "不限");
+        else snprintf(S.values[2], sizeof S.values[2], minutes % 60 ? "%lld 分钟" : "%lld 小时", (long long)(minutes % 60 ? minutes : minutes / 60));
+        snprintf(S.args[2], sizeof S.args[2], "{\"id\":\"%s\",\"minutes\":%d}", id, minutes == 0 ? 30 : minutes <= 30 ? 60 : minutes <= 60 ? 120 : 0);
+        snprintf(S.caps[2], sizeof S.caps[2], "member.time_set"); ink_ui_list_refresh(S.list, S.count);
+    }
+    osal_free(j);
+}
+static void time_changed(void *ctx, const char *id, const ink_args_t *args) {
+    (void)ctx; (void)id; (void)args;
+    if (current() && S.page == KID) ink_ui_redraw();
+}
 static void bind_row(lv_obj_t *slot, size_t i, ink_ui_field_spec_t *f, ink_ui_action_spec_t *a, void *ctx) {
     (void)ctx;
     *f = (ink_ui_field_spec_t){.id = S.ids[i], .role = "text", .label = S.titles[i], .value = S.values[i], .object = {S.ids[i], 0}};
@@ -131,7 +147,12 @@ static void create(lv_obj_t *screen, void *arg) {
         }
         if (kid) snprintf(apps + strlen(apps), sizeof apps - strlen(apps), "%s电话和短信不限制", apps[0] ? "；" : ""); /* D-25 */
         row("apps", "能用什么", kid ? apps : "还没有孩子家人", NULL, NULL);
-        row("hours", "可用时段", "暂时不能设置可用时段", NULL, NULL);
+        row("time", "每天能用多久", kid ? "正在读取" : "还没有孩子家人", NULL, NULL);
+        if (kid) {
+            snprintf(args, sizeof args, "{\"id\":\"%s\"}", kid->id);
+            ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .args_json = args, .reply_exec = INK_EXEC_UI, .done = time_reply, .ctx = (void *)(uintptr_t)S.generation};
+            ink_cap_call("member.time_get", NULL, &o);
+        }
         setting("audio.child_max", "孩子的音量上限", ink_setting_get("audio.child_max") >= 100 ? 10 : ink_setting_get("audio.child_max") + 10);
     } else if (S.page == WALLPAPER) {
         setting("display.lock_style", "锁屏时显示", (ink_setting_get("display.lock_style") + 1) % 3);
@@ -220,5 +241,6 @@ int ink_settings_family_init(void) {
         {.id = "family.prev", .title = "家人设置上一页", .effect = INK_FX_NAVIGATE, .run = action},
         {.id = "family.next", .title = "家人设置下一页", .effect = INK_FX_NAVIGATE, .run = action}};
     return ink_cap_register(caps, sizeof caps / sizeof *caps) || ink_settings_watch("", changed, NULL, INK_EXEC_UI) ||
-        ink_cap_subscribe("member.changed", members_changed, NULL, INK_EXEC_UI) ? -1 : 0;
+        ink_cap_subscribe("member.changed", members_changed, NULL, INK_EXEC_UI) ||
+        ink_cap_subscribe("confirm.result", time_changed, NULL, INK_EXEC_UI) ? -1 : 0;
 }

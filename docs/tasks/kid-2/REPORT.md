@@ -1,0 +1,127 @@
+# kid-2 执行报告
+
+## 复查后的修复
+
+复查基线：`1d5312ec`。已按最新主线重新配置、完整编译普通和 ASAN／UBSAN 版本，均保留 `INK_WERROR=ON`，退出码 0。下面是本轮记录；后面的首轮记录保留作历史。
+
+| 编号 | 结论 | 证据、命令 |
+| --- | --- | --- |
+| K2-1 | 【实测】通过 | `tests/kid_2.py --build build --phase settings`：实际点击 SetKid，在不限、30 分钟、1 小时之间切换；错误密码和未确认时不改，正确密码后读回并刷新；模拟时间用满一小时出现 KidTimeUp。删除“可用时段”占位，按钮与 AI 同用 `member.time_set`。 |
+| K2-2 | 【实测】通过 | `tests/kid_2.py --build build --phase no-pin`：83 个断言；KidLimit、KidTimeUp、SetKid 三个入口的屏幕和 AI 快照均出现指定说明，无密码仍不能放行、改时长、加时间。 |
+| 全量、内存检查 | 【实测】除获豁免的能力总表文档外全部通过 | 普通和 ASAN／UBSAN 各 243 项：242 通过、1 文档失败、0 跳过；分别 382.20 秒和 543.75 秒。没有新增内存错误。 |
+
+本轮所有 Python／CTest 命令均使用总规则指定的依赖环境，命令前加 `taskpolicy -c utility`，构建和 CTest 均为 `-j2`。单独留存证据的专项设置 `INK_KEEP_EVIDENCE=1 UBSAN_OPTIONS=halt_on_error=1`；最终全量按默认清理临时证据，保留 CTest 日志及四页对照指标。
+
+两轮最终全量命令：
+
+```bash
+PYTHONPATH="$PWD/hub/src" UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
+PYTHONPATH="$PWD/hub/src" UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
+```
+
+退出码均为 8，唯一失败是主会话已豁免的 `capability-table-doc`；`services-mid-capability-doc` 两轮都通过。日志在 `build/kid-2-review-ctest-final.log`、`build-asan/kid-2-review-ctest-final.log`；各目录的 `Testing/Temporary/LastTest.log` 留有每项结果。没有将整轮描述为零失败，也没有修改或跳过共享文档检查。
+
+【实测】反向对照全部命中目标断言，均为模拟器正常完成后的断言失败，不是编译失败：
+
+| 撤掉的修复 | `tests/kid_2_negative.py --build build --case` | 断言失败总数 |
+| --- | --- | ---: |
+| SetKid 用时策略接线，恢复复查前文件 | `settings` | 36 |
+| 孩子页面的无密码说明 | `child-notice` | 4 |
+| SetKid 确认卡的无密码说明 | `settings-notice` | 3 |
+| 无密码时复用现有说明页，避免键盘遮字 | `no-pin-layout` | 2 |
+| 确认卡按提示实际高度留位置 | `confirm-layout` | 1 |
+
+原有四项反向对照也重跑通过：`parent`、`locked`、`volume`、`entry`，分别有 1、3、2、26 个断言失败，均命中指定目标。日志为 `build/kid-2-review-negative-<case>-final.log`。
+
+【实测】布局核对发现长提示会被键盘／按钮遮住，已复用原说明页，并将确认卡原有布局的一行高度改为测量提示高度；未加页面、任务或新状态。回归检查完整文字的位置和无用密码键盘的缺席，并保存三个入口的截图，已逐张查看。最新无密码专项证据在 `build/kid-2-dobhzk48`。
+
+原有三个跳过的中枢测试，原因是构建用 Python 缺少 `pytest`、`pytest_asyncio`、`aiohttp`、`yaml`。改用已有的 `$INK_DEPS/hub/.venv/bin/python` 作为 `INK_HUB_PYTHON`，其中版本依次为 8.4.2、1.2.0、3.12.15、PyYAML 6.0.3，符合锁定依赖；不安装、不升级依赖。完整测试还设置 `PYTHONPATH=$PWD/hub/src`，保证导入本分支的中枢代码。首次复跑的 `hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e` 均通过；最终结果见上表。
+
+【实测】SetKid 对照分数 **49.974/255**（`tools/ui_compare.py --build build --design "$INK_DESIGN" --out build/kid-2-compare --reuse --scenes SetKid`）。沿用 settings-b 已有的双行列表，与原画板的分组、开关和头像布局仍有差别；本轮只接时长和去掉占位，没有重画整页。
+
+改过的已有测试：`kid_2.c` 的策略读取显式指定合成孩子编号，使成人 SetKid 场景也查孩子的策略；原先四阶段的断言保留。截图改按场景名保存，以留存三个无密码入口；对照工具入口仍保留 `snap-scene.png`。测试预算、原有断言和超时没有放宽。
+
+新增的机制：本轮无。复用成员策略能力、既有家长密码页、确认结果事件和原列表；不改后端密码检查。
+
+【实测】原有四阶段加本轮两阶段，普通和 ASAN／UBSAN 专项各 **525 个断言**通过。四页留存指标的最低内部 RAM 余量均为 **47,224 字节**，内部和外部分配失败均为 0；预算未放宽。
+
+预算与结束检查：本轮产品代码 33 行新增、9 行删除；剔除合入主线、避免重复计算旧新增行后，任务累计产品新增 **336 行**，低于 350 行预算。`git diff --check`、报告本地链接和 5 MiB 文件限制检查通过；相对 `1d5312ec` 的提交差异隐私扫描匹配 0 行。未夹带构建产物或其它任务改动；开工时已存在的未跟踪 `REVIEW.md` 保持原样。
+
+要改的文档：共享能力总表和服务设计 §1.3 按主会话授权保留。本轮已完成旧报告里待合并接线的 SetKid 时长行。
+
+没做到的：本轮两项复查修复没有遗留项；没有在 Linux 或实机运行，SetKid 与原画板的既有布局差异如上记录。实现和回归测试提交为 `2101e185`；本次补交最终验证结果。
+
+基线：`50fd91821b47d6a9cacd42e7ba07fbd3b8084de4`。状态：任务范围内实现和验证已完成；未达项如下，没有把文档失败算作全量通过。
+
+## 验收表
+
+| 编号 | 结论 | 证据 | 命令 |
+| --- | --- | --- | --- |
+| 1 | 【实测】通过 | 两分钟到时；锁屏 90 秒不计时；自动跨本地零点清零；第四页阅读位置保留 | `python tests/kid_2.py --build build` |
+| 2 | 【实测】通过 | 错密码不改、不加；正确密码加 15 分钟；孩子未获验证不执行；去掉家长密码标记时测试失败 | 同上；`python tests/kid_2_negative.py --build build --case parent` |
+| 3 | 【实测】通过 | AI、通知进入受限应用均出现 KidLimit；正确密码只打开一次，下一次仍拦；目录隐藏受限应用 | 同上；反向对照 `--case entry` |
+| 4 | 【实测】范围内通过 | KidControl 四项及音量上限；本任务三页有真实快照，按钮复用能力。SetKid 归 settings-b | 同上；反向对照 `--case volume`；`python tools/ui_scale_check.py` |
+| 5 | 【实测】重启、内存、预算通过；全量留一项文档失败 | 独立进程重启保留用时和加时；普通及 ASAN 专项各 306 个断言通过；产品新增 305 行。ASAN 全量 238 通过、3 既有跳过、1 文档失败 | 同上；全量命令见结束检查 |
+
+## 没做到的
+
+- 普通和 ASAN 全量仍有能力总表过期一项待主会话统一生成。没有达到“全量零失败”；未在 Linux 或实机上运行。
+- 检查点每分钟落盘，锁屏、换人及策略调用也保存。没有测试检查点之间突然断电，最多一分钟的未落盘用时不保证恢复。
+- SetKid 按任务边界由 settings-b 接线；没有声称其第四页快照在本任务完成。
+
+## 和设计不一致的
+
+已查看四张画板。对照分数：KidTimeUp **24.608**、KidLimit **23.687**、KidControl **43.693** /255，均超过目标 12。
+
+按更新的规格使用 1.2 倍尺寸、孩子 110% 字号、#888888 底色和纯黑次要字；原稿仍是较小字号和浅灰。KidControl 按文字规范增加暖光，使用真实的空通知状态，原稿有两条示例通知。TimeUp 增加短信入口以落实 D-25，原稿只有电话。没有为分数改规格。
+
+## 改过的已有测试
+
+- `tests/ui_shell_scenes.c`：孩子的 Control 场景期望名称改为 KidControl，成人期望保留。
+- `tests/ui_shell_regressions.c`：孩子打开设置被拒后，必须仍在 KidControl（原期望为 Control）。
+- `tests/integration/ai_surface.c`：末尾追加 10 个新能力及必填参数，保留“每个能力恰好进一张表”的严格校验。
+
+没有删除测试、放宽预算、跳过测试或放宽原有断言。
+
+## 要用户定的
+
+“爸爸妈妈加时间”暂按每次 15 分钟，密码页明确写出加时量；能力允许指定 0～1440 分钟。任务书未规定界面默认加多少，没有新增设置项。
+
+## 顺手发现
+
+- `reader.open_book` 直接压页面，导航栈满（6 层）时可能返回完成却不打开。本任务不改阅读器；阅读位置测试先回主页再打开已保存的书。
+- 文件应用当前标成 child_ok，与“孩子主页不显示文件”的文字规范不一致；没有改并行的文件应用。受限跳转测试使用明确的合成家长应用。
+
+## 新增的机制
+
+- 现有 member.table 记录尾部追加用时字段：任务书明确要求和成员数据一起保存；保留旧长度读取。
+- 复用现有服务定时器和后台执行器做分钟检查点、到时与跨日通知：任务书要求计时和重启保留。
+- 无新任务、线程、队列、通用框架或配置项。
+
+为什么不能更小：后端策略和落盘、统一权限关口、两个阻挡页、控制中心及本地密码复用需要一起交付。已采用的更小方案是复用成员记录、原确认流程、原密码页和原控制中心，没有为每个孩子新增设置，也没有逐应用加计时器。产品新增 305 行，低于 350 行预算。
+
+## 要改的文档
+
+- SetKid 的“每天能用多久”接 `member.time_get`、`member.time_set`；`id` 是孩子编号，读自己可省略，`minutes` 为 0～1440，0 表示不限；当天加时用 `member.time_add`。修改与加时进入现有家长密码确认。
+- 主会话统一更新 `docs/system/ui-dependencies.md` 对应状态，并重新生成 `docs/system/capabilities.md`（新增 10 个能力与 member.time_up 状态）。遵守总规则第 7 节，没有改这两份共享文档，也没有改 settings_family.c。
+- 服务设计 §1.3 仅追加任务书要求的三项用时能力和状态登记，没有改设计规则；相应文档检查已复测通过。
+
+## 结束检查
+
+【实测】普通全量首次 5 项失败：两处旧名称断言（共三项测试）、新增能力清单未登记、生成能力总表过期。更新名称和追加清单后，最终全量 237 项通过、3 项既有跳过、2 项文档检查失败（242 项，445.53 秒）。补充服务设计接口登记后，`services-mid-capability-doc` 单独复测通过。剩余失败是按任务要求未改的生成能力总表。
+
+【实测】四项反向对照均命中指定断言：家长密码标记、锁屏暂停、音量钳位、受限应用准入；不是编译失败或缺资源导致的失败。专项与三个页面的最低内部 RAM 余量均为 47,736 字节，分配失败为 0。
+
+【实测】ASAN／UBSAN 全量：238 通过、3 项既有跳过、1 项文档失败，242 项共 321.91 秒。失败仅为生成能力总表过期；服务设计文档检查已通过。随后用 `UBSAN_OPTIONS=halt_on_error=1`、`INK_KEEP_EVIDENCE=1` 运行 `tests/kid_2.py --build build-asan`，四阶段共 306 个断言通过，四份日志没有 AddressSanitizer 或 undefined behavior 报错。
+
+构建配置使用总规则 §5 的全部依赖参数，保留 `INK_WERROR=ON`；内存构建另加 `INK_SANITIZE=ON`。所有构建 `taskpolicy -c utility cmake --build <build 或 build-asan> -j2`；全量 `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir <目录> --output-on-failure -j2`。命令输出保留在各构建目录的 kid-2 日志中。
+
+`tools/ui_compare.py --build build --design "$INK_DESIGN" --out build/kid-2-compare --reuse --scenes KidTimeUp KidLimit KidControl` 已运行。能力总表在 `build/kid-2-capabilities.md` 临时生成并用 `--check` 校验通过，没有写共享文件。
+
+普通专项证据在 `build/kid-2-23qp37j0`；严格内存专项证据在 `build-asan/kid-2-9gi6rpfs`。最终四项反向对照的命令为 `tests/kid_2_negative.py --build build --case parent`、`--case locked`、`--case volume`、`--case entry`；各有 `build/kid-2-negative-*-final.log`，对应目标断言分别失败 1、3、2、26 次。
+
+以上 Python 命令均使用 `$INK_DEPS/build-deps/pyenv/bin/python`。普通与内存构建退出码为 0；全量 ctest 的退出码为 8（文档失败），服务文档单项复测和全部专项验证退出码为 0。
+
+架构审视：【实现】成员模块负责策略与落盘，能力入口统一准入，界面只读状态并调用能力；电话／短信所需输入与三种通讯集合有集中例外，其他数据读写仍拒绝。密码输入保持设备专用，AI 无权填写或提交。
+
+【实测】结束检查：相对基线产品代码新增 305 行、删除 19 行（合计 324 行也未超 350）；`git diff --check` 通过；改动文件均小于 5 MiB。按总规则的隐私表达式扫描提交差异，匹配 0 行。差异中没有设计稿、构建产物或其他任务文件。

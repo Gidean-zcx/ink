@@ -38,6 +38,8 @@
 #define IDLE_RETURN_S 120        /* provisional lock grace (D-95); member.idle_return_s overrides it */
 #define REMOVING 0x80u /* Kept in the stored role byte without changing the record format. */
 
+typedef struct __attribute__((packed)) { uint32_t minutes, extra, day; uint64_t used_us; } kid_time_t;
+
 typedef struct {
     bool used;
     bool removing;
@@ -48,6 +50,7 @@ typedef struct {
     bool has_pin;
     uint32_t fails;
     int64_t not_before_s;
+    kid_time_t time;
 } slot_t;
 
 typedef struct __attribute__((packed)) {
@@ -57,6 +60,7 @@ typedef struct __attribute__((packed)) {
     uint32_t fails;
     int64_t not_before_s;
     uint8_t identity[16];
+    kid_time_t time;
 } stored_t;
 
 /* Hashes and salts: no AI, no hub, no app reads this. */
@@ -76,11 +80,19 @@ static struct {
     int h_member, h_authed;
     ink_svc_deadline_t idle_at;
     ink_exec_job_t idle_job;
+    ink_exec_job_t time_job;
+    ink_svc_deadline_t time_at;
+    slot_t *timed;
+    uint64_t time_since;
+    bool counting, time_dirty, time_started;
+    int h_time_up;
 } M = {.epoch = 1, .return_after_us = IDLE_RETURN_S * 1000000ull,
        .s = {[0] = {.used = true, .m = {.id = "owner", .name = "我", .role = INK_ROLE_ADULT}},
              [1] = {.used = true, .m = {.id = "kid", .name = "小朋友", .role = INK_ROLE_CHILD, .allow = {"reader.", "ai.", "system.home"}}}}};
 
 static slot_t *cur(void) { return M.cur ? M.cur : &M.s[0]; }
+static void time_account(void);
+static void time_queue(void *arg);
 
 static slot_t *find(const char *id) {
     for (int i = 0; i < INK_MEMBERS_MAX; i++)
@@ -202,6 +214,7 @@ static int save_slot(ink_db_t *db, const slot_t *s) {
     memcpy(r.salt, s->salt, sizeof r.salt);
     memcpy(r.hash, s->hash, sizeof r.hash);
     memcpy(r.identity, s->identity, sizeof r.identity);
+    r.time = s->time;
     ink_db_write_t w = {.id = record_id(s->m.id), .data = &r, .len = sizeof r, .src = INK_SRC_SYSTEM};
     return ink_db_put(db, &w, NULL);
 }
@@ -255,7 +268,7 @@ static int read_table(slot_t *fresh) {
     stored_t st = {0};
     int n = 0;
     while (n < INK_MEMBERS_MAX && ink_db_next(db, &c, &r, &st, sizeof st) == 1) {
-        if (r.len != sizeof st && r.len != offsetof(stored_t, identity)) continue;
+        if (r.len != sizeof st && r.len != offsetof(stored_t, time) && r.len != offsetof(stored_t, identity)) continue;
         slot_t *s = &fresh[n++];
         s->used = true;
         snprintf(s->m.id, sizeof s->m.id, "%.15s", st.id);
@@ -267,7 +280,8 @@ static int read_table(slot_t *fresh) {
         memcpy(s->hash, st.hash, sizeof s->hash);
         s->fails = st.fails;
         s->not_before_s = st.not_before_s;
-        if (r.len == sizeof st) memcpy(s->identity, st.identity, sizeof s->identity);
+        if (r.len >= offsetof(stored_t, time)) memcpy(s->identity, st.identity, sizeof s->identity);
+        if (r.len == sizeof st) s->time = st.time;
         set_allow(s);
     }
     memset(&st, 0, sizeof st);
@@ -319,6 +333,7 @@ void ink_members_init(void) {
 }
 
 int ink_member_switch(const char *id) {
+    time_account();
     ink_svc_lock();
     slot_t *t = find(id);
     int r = !t || t->removing ? -1 : t == cur() ? (ink_member_space_open() ? 0 : -2) :
@@ -328,6 +343,8 @@ int ink_member_switch(const char *id) {
     M.cur = t;
     M.authed = false;
     ink_svc_unlock();
+    time_account();
+    time_queue(NULL);
     ink_probe_count("members.switches");
     publish();
     return 0;
@@ -390,6 +407,8 @@ static void idle_check(void *arg) { /* the timer task */
 
 static void on_power(void *ctx, ink_power_state_t from, ink_power_state_t to, uint64_t cause_us) { /* power task */
     (void)ctx;
+    time_account();
+    time_queue(NULL);
     if (to == INK_PWR_LOCKED) {
         __atomic_store_n(&M.locked_since, osal_now_us(), __ATOMIC_RELEASE);
         arm_idle();
@@ -505,6 +524,7 @@ static void pin_job(void *arg) { /* exec.bg: slow by design */
             if (!s->has_pin) r = INK_PIN_OK;
             else r = try_pin(s, j->pin, &wait_s);
             if (r == INK_PIN_OK) {
+                time_account();
                 uint64_t locked_since = ink_power_state() == INK_PWR_LOCKED ? osal_now_us() : 0;
                 ink_svc_lock();
                 /* the same person unlocking an open space changes nothing */
@@ -515,6 +535,7 @@ static void pin_job(void *arg) { /* exec.bg: slow by design */
                 ink_svc_unlock();
                 ink_power_activity(osal_now_us()); /* the person is here: however long the slow part took */
                 publish();
+                time_account(); time_queue(NULL);
                 if (M.authed) arm_idle();
                 ink_probe_count("members.unlocked");
             }
@@ -805,6 +826,90 @@ static void cap_set_pin(ink_call_t *c) {
     memset(new_pin, 0, sizeof new_pin);
 }
 
+/* ---- daily child time, checkpointed with the member table ---- */
+static void time_account(void) {
+    ink_tm_t local = {0};
+    if (ink_time_valid()) ink_time_to_local(ink_time_now_s(), &local);
+    uint32_t day = local.year ? (uint32_t)(local.year * 10000 + local.month * 100 + local.day) : 0;
+    uint64_t now = osal_now_us(), elapsed;
+    ink_svc_lock();
+    elapsed = M.time_since ? now - M.time_since : 0;
+    bool crossed = M.timed && day && M.timed->time.day != day;
+    for (int i = 0; day && i < INK_MEMBERS_MAX; i++)
+        if (M.s[i].used && M.s[i].time.day != day) {
+            M.s[i].time.day = day; M.s[i].time.extra = 0; M.s[i].time.used_us = 0;
+        }
+    if (crossed) {
+        uint64_t today = (uint64_t)(local.hour * 3600 + local.min * 60 + local.sec) * 1000000;
+        if (elapsed > today) elapsed = today;
+    }
+    if (M.timed && M.counting && elapsed) { M.timed->time.used_us += elapsed; M.time_dirty = true; }
+    M.time_since = now;
+    M.timed = cur()->m.role == INK_ROLE_CHILD ? cur() : NULL;
+    M.counting = M.timed && ink_power_state() != INK_PWR_LOCKED;
+    ink_svc_unlock();
+}
+
+bool ink_member_time_up(void) {
+    time_account();
+    ink_svc_lock();
+    kid_time_t t = cur()->time;
+    bool up = cur()->m.role == INK_ROLE_CHILD && t.minutes && t.used_us >= (uint64_t)(t.minutes + t.extra) * 60000000;
+    ink_svc_unlock();
+    return up;
+}
+
+bool ink_member_time_allows(const char *id) {
+    if (!ink_member_time_up()) return true;
+    if (!strncmp(id, "text.", 5) || !strncmp(id, "keyboard.", 9)) {
+        char app[32] = ""; ink_state_get_str(ink_state_find("app.foreground"), app, sizeof app);
+        return !strcmp(app, "phone") || !strcmp(app, "message");
+    }
+    static const char *const allowed[] = {"phone.", "sms.", "call.", "message.", "contacts.", "data.list", "data.get", "confirm.",
+        "member.time_", "shell.pin_", "shell.kid_", "app.open", "shell.launch", "shell.back", "shell.close", "shell.lock", "system.home", "system.set_volume", "interrupt."};
+    for (size_t i = 0; i < sizeof allowed / sizeof *allowed; i++)
+        if (!strncmp(id, allowed[i], strlen(allowed[i]))) return true;
+    return false;
+}
+
+static void time_job(void *arg) {
+    (void)arg; time_account();
+    ink_state_set_bool(M.h_time_up, ink_member_time_up());
+    if (M.time_dirty) { save_all(); M.time_dirty = false; }
+    if (!M.timed) return;
+    if (!M.counting) return;
+    uint64_t delay = 60000000, used = cur()->time.used_us;
+    uint64_t limit = (uint64_t)(cur()->time.minutes + cur()->time.extra) * 60000000;
+    if (cur()->time.minutes && limit > used && limit - used < delay) delay = limit - used;
+    ink_tm_t tm; ink_time_to_local(ink_time_now_s(), &tm);
+    uint64_t midnight = (uint64_t)(86400 - tm.hour * 3600 - tm.min * 60 - tm.sec) * 1000000;
+    if (midnight < delay) delay = midnight;
+    ink_svc_at(&M.time_at, osal_now_us() + delay, time_queue, NULL);
+}
+static void time_queue(void *arg) { (void)arg; if (M.time_started) ink_exec_post(INK_EXEC_BG, &M.time_job, time_job, NULL); }
+
+static void cap_time(ink_call_t *c) {
+    char id[16] = ""; int64_t minutes = 0;
+    ink_args_get_str(&c->args, "id", id, sizeof id);
+    slot_t *s = id[0] ? find(id) : cur();
+    bool read = !strcmp(c->cap->id, "member.time_get");
+    if (!s || s->m.role != INK_ROLE_CHILD || s->removing ||
+        (cur()->m.role == INK_ROLE_CHILD && s != cur())) { fail(c, INK_RC_REJECTED, "not this child's policy"); return; }
+    if (!read && (c->src != INK_SRC_CONFIRMED || !ink_member_any_pin())) { fail(c, INK_RC_REJECTED, "parent PIN required"); return; }
+    time_account();
+    ink_args_get_int(&c->args, "minutes", &minutes);
+    ink_svc_lock();
+    if (!read && !strcmp(c->cap->id, "member.time_set")) s->time.minutes = (uint32_t)minutes;
+    else if (!read) s->time.extra += (uint32_t)minutes;
+    kid_time_t t = s->time;
+    ink_svc_unlock();
+    save_all(); time_queue(NULL);
+    char out[192];
+    snprintf(out, sizeof out, "{\"id\":\"%s\",\"minutes\":%u,\"extra_minutes\":%u,\"used_seconds\":%llu,\"day\":%u}",
+        s->m.id, t.minutes, t.extra, (unsigned long long)(t.used_us / 1000000), t.day);
+    ink_cap_result(c, out);
+}
+#define TIME_INPUT "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":15},\"minutes\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":1440}},\"required\":[\"minutes\"]}"
 static void cap_rename(ink_call_t *c) {
     char id[16], name[32];
     ink_args_get_str(&c->args, "id", id, sizeof id);
@@ -817,7 +922,9 @@ static void cap_rename(ink_call_t *c) {
 static const ink_cap_t MEMBER_CAPS[] = {
     {.id = "member.rename", .title = "修改家人的称呼", .effect = INK_FX_LOCAL_WRITE, .exec = INK_EXEC_BG,
         .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":15},\"name\":{\"type\":\"string\",\"description\":\"称呼最多31个UTF-8字节\",\"minLength\":1,\"maxLength\":31}},\"required\":[\"id\",\"name\"]}", .run = cap_rename},
-
+    {.id = "member.time_get", .title = "查看孩子今天的用时和每天的时长", .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":15}}}", .output = "{\"type\":\"object\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_BG, .run = cap_time},
+    {.id = "member.time_set", .title = "改孩子每天能用多久", .ask = "每天能用 {minutes} 分钟（0 表示不限）", .input = TIME_INPUT, .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .ask_by_hand = true, .parent_pin = true, .exec = INK_EXEC_BG, .run = cap_time},
+    {.id = "member.time_add", .title = "给孩子今天加时间", .ask = "今天加 {minutes} 分钟", .input = TIME_INPUT, .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .ask_by_hand = true, .parent_pin = true, .exec = INK_EXEC_BG, .run = cap_time},
     {.id = "member.list", .title = "家里有哪些人", .output = "{\"type\":\"array\"}", .effect = INK_FX_READ, .child_ok = true, .while_locked = true, .exec = INK_EXEC_DIRECT, .run = cap_list},
     {.id = "member.add", .title = "加一位家人", .ask = "加一位家人：{name}（{role}）",
      .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":15},\"name\":{\"type\":\"string\",\"description\":\"称呼最多31个UTF-8字节\",\"maxLength\":31},\"role\":{\"type\":\"string\",\"enum\":[\"adult\",\"child\"]}},\"required\":[\"id\"]}",
@@ -843,5 +950,8 @@ static const ink_setting_def_t MEMBER_SETTINGS[] = {
 int ink_members_start(void) {
     if (ink_settings_define(MEMBER_SETTINGS, 1) != 0 || ink_power_subscribe(on_power, NULL) != 0) return -1;
     apply_return_after(NULL, ink_setting_get("member.idle_return_s"));
+    static const ink_state_def_t time_up = {.id = "member.time_up", .title = "今天的时间到了", .type = INK_ST_BOOL};
+    M.h_time_up = ink_state_define(&time_up); M.time_started = true;
+    time_queue(NULL);
     return ink_cap_register(MEMBER_CAPS, (int)(sizeof MEMBER_CAPS / sizeof MEMBER_CAPS[0]));
 }

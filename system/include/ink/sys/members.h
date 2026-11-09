@@ -66,6 +66,9 @@ bool ink_member_allows(const char *action_id, bool child_ok);
 bool ink_member_space_open(void);
 /** Is any adult's PIN set: what only a parent may do has something to ask for. */
 bool ink_member_any_pin(void);
+/** Daily child allowance and the shared capability gate. */
+bool ink_member_time_up(void);
+bool ink_member_time_allows(const char *action_id);
 
 /* What a PIN does, on the background executor. Told how it went: */
 enum { INK_PIN_OK = 0, INK_PIN_WRONG = -1, INK_PIN_WAIT = -2, INK_PIN_NO_MEMBER = -3, INK_PIN_BAD_FORM = -4 };

@@ -6,6 +6,7 @@
 #include <string.h>
 #include "ink/osal.h"
 #include "ink/sys/exec.h"
+#include "ink/sys/confirm.h"
 #include "ink/sys/members.h"
 #include "ink/sys/power.h"
 #include "ink/sys/state.h"
@@ -21,7 +22,7 @@ static struct {
     char id[16], name[32], pin[9], old[9], status[160];
     int mode, result;
     uint32_t wait_s;
-    uint32_t epoch;
+    uint32_t epoch, parent_token;
     uint64_t retry_us;
     bool busy;
     lv_timer_t *wait_timer;
@@ -44,7 +45,7 @@ static int snapshot(char *out, size_t cap) {
 static void close_page(void) {
     if (P.wait_timer) { lv_timer_delete(P.wait_timer); P.wait_timer = NULL; }
     if (P.card.root) { ink_ui_overlay_remove(P.overlay); shell_card_close(&P.card); }
-    P.dots = P.message = NULL;
+    P.dots = P.message = NULL; P.parent_token = 0;
     erase(P.pin, sizeof P.pin); erase(P.old, sizeof P.old);
 }
 static bool current(void) {
@@ -119,7 +120,7 @@ static void draw(void) {
     lv_obj_remove_flag(ink_shell_statusbar(P.card.panel, true), LV_OBJ_FLAG_CLICKABLE);
     if (P.mode == FORGOT) {
         ink_ui_circle(P.card.panel, "back", INK_MARGIN, INK_STATUS_BAR, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_STATIC, clicked, "shell.pin_cancel");
-        ink_ui_label(P.card.panel, "忘记密码", INK_FONT_TITLE, INK_WEIGHT_BOLD, INK_MARGIN + INK_CONTROL + INK_GAP, INK_STATUS_BAR + INK_GAP, w - INK_CONTROL - INK_GAP);
+        ink_ui_label(P.card.panel, ink_member_any_pin() ? "忘记密码" : "还没有密码", INK_FONT_TITLE, INK_WEIGHT_BOLD, INK_MARGIN + INK_CONTROL + INK_GAP, INK_STATUS_BAR + INK_GAP, w - INK_CONTROL - INK_GAP);
         ink_ui_circle(P.card.panel, "lock", (INK_CANVAS_W - INK_CIRCLE_LARGE) / 2, INK_CANVAS_H / 2 - INK_CIRCLE_LARGE,
             INK_CIRCLE_LARGE, INK_ICON_STATE, INK_SURFACE_STATIC, NULL, NULL);
         center("请家长验证", INK_FONT_SUBTITLE, INK_CANVAS_H / 2 + INK_GAP_L, true);
@@ -169,7 +170,7 @@ static void draw(void) {
 static void completed_ui(void *arg) {
     (void)arg; P.busy = false;
     erase(P.pin, sizeof P.pin); erase(P.old, sizeof P.old);
-    if (P.result == INK_PIN_OK && P.mode != PARENT) { close_page(); ink_shell_member_gate_done(); return; }
+    if (P.result == INK_PIN_OK && (P.mode != PARENT || P.parent_token)) { close_page(); ink_shell_member_gate_done(); return; }
     if (!current()) return;
     P.retry_us = P.wait_s ? osal_now_us() + (uint64_t)P.wait_s * 1000000 : 0;
     if (P.result == INK_PIN_OK) {
@@ -193,7 +194,7 @@ static void submit(ink_call_t *c) {
         P.mode = NEW; snprintf(P.status, sizeof P.status, "四到八位数字"); draw(); return;
     }
     if (strlen(P.pin) < 4) { snprintf(P.status, sizeof P.status, "请输入四到八位数字"); draw(); return; }
-    int r = P.mode == PARENT ? ink_member_check_parent(P.pin, completed, NULL) :
+    int r = P.parent_token ? ink_confirm_accept_with_pin(P.parent_token, P.pin, completed, NULL) : P.mode == PARENT ? ink_member_check_parent(P.pin, completed, NULL) :
         P.mode == NEW ? ink_member_set_pin(P.id, P.old, P.pin, completed, NULL) : ink_member_unlock(P.id, P.pin, completed, NULL);
     erase(P.pin, sizeof P.pin); erase(P.old, sizeof P.old);
     P.busy = r == 0;
@@ -217,7 +218,7 @@ static void action(ink_call_t *c) {
         erase(P.pin, sizeof P.pin); P.mode = FORGOT; P.retry_us = 0;
         snprintf(P.status, sizeof P.status, "先请家长输入密码。忘记密码后的重置还未接通。"); draw();
     } else if (!strcmp(id, "shell.pin_parent") && P.mode == FORGOT) {
-        if (!ink_member_any_pin()) { snprintf(P.status, sizeof P.status, "还没有家长密码，请在家庭服务器处理。"); draw(); return; }
+        if (!ink_member_any_pin()) { snprintf(P.status, sizeof P.status, INK_PARENT_PIN_MISSING); draw(); return; }
         P.mode = PARENT; snprintf(P.status, sizeof P.status, "请家长本人输入"); draw();
     } else c->rc.status = INK_RC_REJECTED;
 }
@@ -246,4 +247,10 @@ int ink_member_pages_init(void) {
     return ink_cap_register(caps, sizeof caps / sizeof *caps) ||
         ink_state_watch("member.", changed, NULL, INK_EXEC_UI) ||
         ink_state_watch("power.state", changed, NULL, INK_EXEC_UI) ? -1 : 0;
+}
+
+void ink_shell_member_parent_open(uint32_t token, const char *why) {
+    if (P.busy) return;
+    close_page(); P.mode = ink_member_any_pin() ? PARENT : FORGOT; P.parent_token = token; P.retry_us = 0;
+    snprintf(P.name, sizeof P.name, "家长"); snprintf(P.status, sizeof P.status, "%s", ink_member_any_pin() ? why : INK_PARENT_PIN_MISSING); draw();
 }
