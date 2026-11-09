@@ -398,8 +398,23 @@ static void sync(void) { /* UI task */
         K.first = 0;
         n = ink_text_candidates(0, c, INK_TEXT_PAGE + 1);
     }
+    int shown = n < INK_TEXT_PAGE ? n : INK_TEXT_PAGE;
+    if (!K.expanded) {
+        int room = lv_display_get_horizontal_resolution(NULL) - 2 * ink_ui_px(INK_GAP + INK_STROKE) -
+                   ink_ui_px(INK_CONTROL + INK_GAP_XS);
+        if (ink_text_voice_possible()) room -= ink_ui_px(INK_PRIMARY + INK_GAP_XS);
+        for (int i = 0; i < shown; i++) {
+            lv_point_t size;
+            lv_text_get_size(&size, c[i].word, font(), 0, 0, LV_COORD_MAX, LV_TEXT_FLAG_NONE);
+            room -= size.x + 2 * ink_ui_px(INK_GAP_XS) + (i ? ink_ui_px(INK_GAP_XS) : 0);
+            if (room < 0) {
+                shown = i;
+                break;
+            }
+        }
+    }
     for (int i = 0; i < INK_TEXT_PAGE; i++) {
-        if (i < n) {
+        if (i < shown) {
             lv_label_set_text(K.cand_label[i], c[i].word);
             lv_obj_set_style_bg_color(K.cand_btn[i], i == 0 ? ink_ui_ink() : ink_ui_paper(), 0);
             lv_obj_set_style_text_color(K.cand_label[i], i == 0 ? ink_ui_paper() : ink_ui_ink(), 0);
@@ -426,7 +441,7 @@ static void sync(void) { /* UI task */
     lv_obj_set_flex_flow(K.cands, K.expanded ? LV_FLEX_FLOW_ROW_WRAP : LV_FLEX_FLOW_ROW);
     lv_obj_set_height(K.cands, K.expanded ? LV_SIZE_CONTENT : ink_ui_px(INK_CONTROL));
     for (int i = 0; i < INK_TEXT_PAGE; i++) {
-        lv_obj_set_flex_grow(K.cand_btn[i], K.expanded ? 0 : 1);
+        lv_obj_set_flex_grow(K.cand_btn[i], 0);
         if (K.expanded) lv_obj_set_width(K.cand_btn[i], ink_ui_px((INK_CANVAS_W - 2 * INK_GAP - 2 * INK_GAP_XS) / 3));
         else lv_obj_set_width(K.cand_btn[i], LV_SIZE_CONTENT);
     }

@@ -374,12 +374,26 @@ add_custom_command(OUTPUT ${INK_TEST_CONTENT}/books/测试长书.txt
   COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/tests/fixtures/content ${INK_TEST_CONTENT}
   COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/testdata/make_long_book.py
           ${CMAKE_SOURCE_DIR}/tests/fixtures/content/books/星星邮差.txt ${INK_TEST_CONTENT}/books/测试长书.txt 40
-  COMMAND ${CMAKE_COMMAND} -E make_directory ${INK_TEST_CONTENT}/.system/ime
-  COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/imedict/imedict.py ${CMAKE_SOURCE_DIR}/tests/fixtures/ime/mini.tsv ${INK_TEST_CONTENT}/.system/ime/base.ikd
   DEPENDS ${CMAKE_SOURCE_DIR}/tools/testdata/make_long_book.py ${CMAKE_SOURCE_DIR}/tests/fixtures/content/books/星星邮差.txt
-          ${CMAKE_SOURCE_DIR}/tools/imedict/imedict.py ${CMAKE_SOURCE_DIR}/tests/fixtures/ime/mini.tsv
   COMMENT "test content: long book")
-add_custom_target(ink_test_content ALL DEPENDS ${INK_TEST_CONTENT}/books/测试长书.txt)
+add_custom_command(OUTPUT ${INK_TEST_CONTENT}/.system/ime/base.ikd
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/imedict/build_base.py
+          --cache ${CMAKE_SOURCE_DIR}/build-deps/imedict --out ${INK_TEST_CONTENT}/.system/ime/base.ikd
+  DEPENDS tools/imedict/build_base.py tools/imedict/imedict.py tools/imedict/sources.lock.json tools/imedict/common.tsv
+          tools/imedict/licenses/jieba-MIT.txt tools/imedict/licenses/pypinyin-MIT.txt
+          tools/imedict/licenses/pinyin-data-MIT.txt tools/imedict/licenses/phrase-pinyin-data-MIT.txt
+  COMMENT "imedict: hash-locked full pinyin and initials within 1 MiB")
+add_custom_target(ink_test_content ALL DEPENDS ${INK_TEST_CONTENT}/books/测试长书.txt ${INK_TEST_CONTENT}/.system/ime/base.ikd)
+
+# Keep the engine's original ordering fixture separate from the shipping data.
+set(INK_MINI_CONTENT ${CMAKE_BINARY_DIR}/mini-content)
+add_custom_command(OUTPUT ${INK_MINI_CONTENT}/.system/ime/base.ikd
+  COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_SOURCE_DIR}/tests/fixtures/content ${INK_MINI_CONTENT}
+  COMMAND ${CMAKE_COMMAND} -E make_directory ${INK_MINI_CONTENT}/.system/ime
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/imedict/imedict.py
+          ${CMAKE_SOURCE_DIR}/tests/fixtures/ime/mini.tsv ${INK_MINI_CONTENT}/.system/ime/base.ikd
+  DEPENDS tools/imedict/imedict.py tests/fixtures/ime/mini.tsv)
+add_custom_target(ink_mini_content ALL DEPENDS ${INK_MINI_CONTENT}/.system/ime/base.ikd)
 
 # The full system on the simulated device.
 add_executable(ink-sim simulator/runtime/sim_main.c)
@@ -470,6 +484,15 @@ endif()
 # ---------------------------------------------------------------- tests
 enable_testing()
 add_test(NAME unit-s31-osal-ticks COMMAND test-s31-osal-ticks)
+set(INK_IME_CASES ${CMAKE_BINARY_DIR}/generated/ime_cases.h)
+add_custom_command(OUTPUT ${INK_IME_CASES}
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/ime_lexicon/fixtures.py ${INK_IME_CASES}
+  DEPENDS tests/ime_lexicon/fixtures.py tests/ime_lexicon/cases.tsv)
+ink_sim_executable(sim-ime-lexicon tests/ime_lexicon/device.c ${INK_IME_CASES})
+target_include_directories(sim-ime-lexicon PRIVATE ${CMAKE_BINARY_DIR}/generated)
+target_link_libraries(sim-ime-lexicon PRIVATE ink_apps ink_system)
+add_dependencies(sim-ime-lexicon ink_fonts ink_test_content)
+add_test(NAME ime-lexicon COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/ime_lexicon/run.py --build ${CMAKE_BINARY_DIR})
 set(INK_IMAGE_FIXTURES ${CMAKE_BINARY_DIR}/generated/image_fixtures.h)
 add_custom_command(OUTPUT ${INK_IMAGE_FIXTURES}
   COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/media/fixtures.py ${INK_IMAGE_FIXTURES}
@@ -969,13 +992,14 @@ if(INK_HAVE_FONTS)
   add_executable(sim-textinput simulator/runtime/sim_main.c tests/integration/textinput.c)
   target_link_libraries(sim-textinput PRIVATE ink_apps ink_system ink_port_sim)
   target_compile_options(sim-textinput PRIVATE ${INK_WARN} -Wno-format-truncation) # a message cut short does no harm
+  add_dependencies(sim-textinput ink_mini_content)
   foreach(v main nocard baddict)
     add_test(NAME integration-text-${v}
       COMMAND ${CMAKE_COMMAND} -E env INK_TEXT_PHASE=${v}
               $<TARGET_FILE:sim-textinput> --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
               --budget ${CMAKE_SOURCE_DIR}/tests/integration/textinput.budget.json
               --script ${CMAKE_SOURCE_DIR}/tests/integration/textinput_${v}.script
-              --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+              --assets ${INK_ASSETS_DIR} --content ${INK_MINI_CONTENT}
               --out ${CMAKE_BINARY_DIR}/test-out/text-${v} --quiet --no-random-outages)
   endforeach()
   # What the AI can reach, against the table in the design (tests/integration/ai_surface.c).
