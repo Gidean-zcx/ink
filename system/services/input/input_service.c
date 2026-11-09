@@ -202,12 +202,13 @@ static bool power_filter(const hal_input_event_t *h) {
 
 static void hal_sink(const hal_input_event_t *h, void *ctx) {
     (void)ctx;
+    if (!power_filter(h)) {
+        if ((h->type == HAL_IN_TOUCH && h->touch.phase != HAL_TOUCH_MOVE) || h->type == HAL_IN_KEY)
+            hal_display_wake(WAKE_HOLD_MS);
+        if (h->type == HAL_IN_TOUCH) on_touch(h);
+        else if (h->type == HAL_IN_KEY) on_key(h);
+    }
     if (h->type == HAL_IN_KEY && h->key.pressed) ink_audio_key_tone();
-    if (power_filter(h)) return;
-    if ((h->type == HAL_IN_TOUCH && h->touch.phase != HAL_TOUCH_MOVE) || h->type == HAL_IN_KEY)
-        hal_display_wake(WAKE_HOLD_MS);
-    if (h->type == HAL_IN_TOUCH) on_touch(h);
-    else if (h->type == HAL_IN_KEY) on_key(h);
 }
 
 void ink_input_set_power_key_hook(bool (*fn)(void)) { IS.power_key_hook = fn; }

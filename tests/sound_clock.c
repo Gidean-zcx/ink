@@ -65,6 +65,10 @@ static void sound(void) {
     CHECK(sim_metric_value("audio.key") == keys + 2, "two physical presses produce exactly two short tones");
     keys = sim_metric_value("audio.key"); press("振动"); press("振动");
     CHECK(sim_metric_value("audio.key") == keys + 2, "two confirmed touches produce exactly two short tones");
+    keys = sim_metric_value("audio.key"); press("按键提示音");
+    CHECK(sim_metric_value("audio.key") == keys, "disabling the tone takes effect before touch feedback");
+    press("按键提示音");
+    CHECK(sim_metric_value("audio.key") == keys + 1, "enabling the tone takes effect before touch feedback");
     vibrations = sim_metric_value("haptics.pulses"); note();
     CHECK(WAIT_FOR(sim_metric_value("haptics.pulses") == vibrations + 1, 5000), "enabled notification produces one hardware pulse");
     set("audio.call_ring", 0, true); set("audio.alarm_ring", 0, false);

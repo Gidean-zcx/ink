@@ -41,7 +41,7 @@
 #define MAX_TOUCH 2
 #define KEY_FIFO 32
 #define INPUT_STACK 3072
-#define INPUT_PRIO 12
+#define INPUT_PRIO OSAL_PRIO_MAX /* Read short contacts before the display feeders. */
 #define BG_STACK 2048
 
 typedef struct {

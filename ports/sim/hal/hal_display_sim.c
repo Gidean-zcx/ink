@@ -10,7 +10,7 @@
  *   diff     upstream epd_hl_update_area builds a difference image over the
  *            full-width rows of the area (PSRAM in, PSRAM out) — driver task
  *   play     every phase scans the whole panel (full_frame_scan). Two
- *            max-priority feeder tasks (PSRAM stacks) convert the lines into
+ *            high-priority feeder tasks (PSRAM stacks) convert the lines into
  *            per-feeder queues — fixed odd/even ownership (upstream) or the
  *            next free feeder — and the LCD bounce-buffer interrupt pulls them
  *            (on core 0, which slows feeder 0). The scan starts once the
@@ -1602,8 +1602,9 @@ tasks:
         for (int c = 0; c < g_profile.cores && c < 2; c++) {
             char name[16];
             snprintf(name, sizeof name, "epd_prep%d", c);
+            /* Short controller reads must precede waveform preparation. */
             osal_task_cfg_t fc = {.name = name, .fn = feeder_task, .arg = (void *)(intptr_t)c, .stack_bytes = FEEDER_STACK,
-                                  .priority = OSAL_PRIO_MAX, .core = c, .flags = OSAL_TASK_STACK_EXTERNAL};
+                                  .priority = OSAL_PRIO_MAX - 1, .core = c, .flags = OSAL_TASK_STACK_EXTERNAL};
             if (osal_task_create(&fc, NULL) != OSAL_OK) osal_panic("display driver init failed: cannot create %s", name);
         }
     }

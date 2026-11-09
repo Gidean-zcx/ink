@@ -1281,6 +1281,8 @@ ink_sim_executable(sim-sound-clock tests/sound_clock.c)
 target_link_libraries(sim-sound-clock PRIVATE ink_apps ink_system)
 add_test(NAME sound-clock COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/sound_clock.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(sound-clock PROPERTIES TIMEOUT 300)
+add_test(NAME sound-clock-input COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/sound_clock_input.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(sound-clock-input PROPERTIES TIMEOUT 90)
 # AI chat pages use the existing service and input hosts.
 target_sources(ink_system PRIVATE system/ui/shell/ai_chat.c)
 ink_sim_executable(sim-ai-chat tests/ai_chat.c)

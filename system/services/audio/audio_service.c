@@ -622,16 +622,19 @@ static void service_playback(void) {
 
 /* While playing or recording: flash writes wait (they would freeze the DMA refill), the chip stays
  * awake (also when the device is locked: an audiobook keeps playing) and the codec runs at full clock. */
-static void update_write_hold(void) {
-    lock();
+static void hold_writes_locked(void) {
     bool want = AU.cap_on || AU.stream || AU.out_open || AU.ring_on;
-    bool awake = want || AU.listen_on; /* listening keeps the chip up but lets the flash be written (a gap, not a stop) */
-    bool codec = AU.cap_on || AU.stream || AU.listen_on;
-    unlock();
     if (want != AU.holding_writes) {
         AU.holding_writes = want;
         ink_storage_hold_writes(want);
     }
+}
+static void update_write_hold(void) {
+    lock();
+    hold_writes_locked();
+    bool awake = AU.holding_writes || AU.listen_on; /* listening keeps the chip up but lets the flash be written (a gap, not a stop) */
+    bool codec = AU.cap_on || AU.stream || AU.listen_on;
+    unlock();
     if (awake != AU.holding_awake) {
         AU.holding_awake = awake;
         if (awake) ink_power_hold(INK_NEED_AUDIO);
@@ -910,6 +913,7 @@ static int capture_begin_locked(ink_audio_frame_fn fn, void *ctx, bool local) { 
     AU.cap_seq = 0;
     if (!listening) AU.rd = AU.wr = 0;
     AU.cap_on = true;
+    hold_writes_locked();
     AU.cap_local = local;
     AU.cap_ending = false;
     g_capture_revoked = false;
@@ -918,6 +922,7 @@ static int capture_begin_locked(ink_audio_frame_fn fn, void *ctx, bool local) { 
     if (!listening && hal_audio_capture_start(capture_cb, NULL) != 0) {
         lock();
         AU.cap_on = false;
+        hold_writes_locked();
         AU.cap_fn = NULL;
         AU.enc = NULL;
         unlock();
@@ -1202,7 +1207,8 @@ void ink_audio_stop_all(void) { /* what is being said; a book being listened to 
 void ink_audio_tone(ink_tone_t tone, uint64_t cause_us, const char *probe) {
     if (!AU.info.has_speaker || !AU.task) return;
     lock();
-    if (focus_top_locked() >= INK_AUDIO_PRIO_ALERT) { /* nothing is said over a call or an alarm */
+    if (focus_top_locked() >= INK_AUDIO_PRIO_ALERT || (tone == INK_TONE_KEY && AU.tone_pending)) {
+        /* Calls, alarms and an already requested preview precede a key tick. */
         unlock();
         ink_probe_count("audio.tones_dropped");
         return;
