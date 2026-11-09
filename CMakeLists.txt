@@ -1280,3 +1280,8 @@ ink_sim_executable(sim-power-pages tests/power_pages.c)
 target_link_libraries(sim-power-pages PRIVATE ink_apps ink_system)
 add_test(NAME power-pages COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/power_pages.py
   $<TARGET_FILE:sim-power-pages> ${CMAKE_SOURCE_DIR} ${INK_ASSETS_DIR} ${INK_TEST_CONTENT} ${CMAKE_BINARY_DIR}/test-out/power-pages)
+target_sources(ink_system PRIVATE system/apps/sms/sms.c)
+ink_sim_executable(sim-sms tests/sms/sms.c)
+target_link_libraries(sim-sms PRIVATE ink_apps ink_system)
+add_test(NAME sms COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/sms/run.py
+  $<TARGET_FILE:sim-sms> ${CMAKE_SOURCE_DIR} ${INK_ASSETS_DIR} ${INK_TEST_CONTENT} ${CMAKE_BINARY_DIR}/test-out/sms)

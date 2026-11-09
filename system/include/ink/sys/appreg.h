@@ -75,6 +75,8 @@ const char *ink_app_state_name(ink_app_state_t s);
 int ink_app_open(const char *id, void *from, void *arg);
 /** UI task. Save, stop, off the screen. 0, or -1 (no such app, or one that is kept). */
 int ink_app_close(const char *id);
+/** UI task: persist the existing save_state payload without closing the app. */
+int ink_app_save_state(const char *id);
 /** Any task: it starts or finishes background work of a kind it declared. 0, or -1 (not declared). */
 int ink_app_background(const char *id, uint32_t kind, bool on);
 /** One of its own collections: `def->name` must start with "<app>.". */

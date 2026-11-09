@@ -420,6 +420,10 @@ static int tools(tool_t out[24]) {
         for (int k = 0; k < count; k++) present |= !strcmp(out[k].id, MORE[i].id);
         if (!present) out[count++] = MORE[i];
     }
+    for (int i = 0; i < count; i++) if (!strcmp(out[i].id, "message")) {
+        memmove(&out[i], &out[i + 1], (size_t)(count - i - 1) * sizeof out[0]);
+        count--; break; /* SMS already belongs to the contact group. */
+    }
     return count;
 }
 

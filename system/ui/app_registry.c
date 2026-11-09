@@ -121,6 +121,11 @@ static void restore(app_t *a) {
     osal_free(buf);
 }
 
+int ink_app_save_state(const char *id) {
+    app_t *a = find(id);
+    return a && save(a) ? 0 : -1;
+}
+
 static void freeze(app_t *a) {
     if (!save(a)) { /* the only copy of what it keeps is in it: it stays as it is, and is tried again after the same while */
         a->left_at = osal_now_us();

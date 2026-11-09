@@ -71,6 +71,8 @@ static const struct {
     {"shell.ai_home", NULL}, {"shell.ai_ask", NULL}, {"shell.ai_send", NULL}, {"shell.ai_stop", NULL}, {"shell.ai_key", ""},
     {"phone.open", ""}, {"phone.contacts", NULL}, {"contacts.open", NULL}, {"phone.recents", NULL},
     {"phone.number", NULL}, {"phone.key", "key"}, {"phone.prev", NULL}, {"phone.next", NULL},
+    {"sms.send", "to,text"}, {"sms.thread", "peer"}, {"sms.compose", NULL}, {"sms.recipient", "id"},
+    {"sms.text", NULL}, {"sms.long", NULL}, {"sms.prev", NULL}, {"sms.next", NULL},
     {NULL, NULL},
 };
 
