@@ -9,7 +9,7 @@
 | 1 | 完成 | 【实测，模拟器】前后各 264/264 通过，1,057 份运行逐一对照；全部数据见 [MEASUREMENTS.md](MEASUREMENTS.md)，堆、静态与栈分开列于下文 | V1、V2、V4 |
 | 2 | 完成 | 最紧正常产品场景 AI 工具调用：内部最低余量 33,272 → 37,376 B，增加 4,104 B；PSRAM 峰值 4,509,040 → 4,513,144 B。故意耗尽内存的自检不改善，见下表 | V3、V4 |
 | 3 | 部分完成，保守保持栈大小 | 【实测，S31 交叉编译】124 个可移植单元编过，提供函数帧与已知调用链；缺少 S31 端口，不能取得完整任务调用链或 `idf.py size`，不据此缩栈或加预算 | V5 |
-| 4 | 普通版通过；内存检查进行中 | 产品代码增 3 行、删 1 行，共 4 行；普通全量与确定性通过；ASan／UBSan 已构建，正在全量运行 | V1、V4、V6 |
+| 4 | 完成 | 产品代码增 3 行、删 1 行，共 4 行；普通版、ASan／UBSan 各 264/264 通过，均含确定性测试；无预算放宽 | V1、V4、V6、V8 |
 
 ## 没做到的
 
@@ -53,8 +53,9 @@
 - **V3【实测】反向对照**：用未含修复的基线二进制运行新增预算，`ctest -R '^scenario-ai_tools-metalio-plus$'` 退出 8，唯一失败为 `33272 < min 35840`。改后同一测试通过，未改场景输入。日志 `work/perf-memory/reverse.log`。
 - **V4【实测】改后**：Werror 构建退出 0；全量 264/264 通过、零跳过，305.17 秒，包括 `determinism`、`determinism-reader`。日志 `work/perf-memory/{build-after,ctest-after,measure-after}.log`。悲观档 1,026 例内部余量增加 4,096～4,112 B；三例故意耗尽 RAM 的自检仍为 3,136 B。PSRAM 峰值增量 0～4,248 B，全部保留在对照表，无预算放宽。
 - **V5【实测】S31 编译**：Espressif GCC 15.2.0，S31 ISA／ABI、`-Os -fstack-usage -fcallgraph-info=su`，124/124 单元成功；对象可写数据为内部 9,846 B、外部 386,227 B（覆盖范围有限，不能替代链接尺寸）。`.su`、`.ci`、`objects.json` 留在 `work/perf-memory/s31/`。配置未启用 LTO，`INK_PSRAM_BSS` 按外部 BSS 放置。
-- **V6**：ASan／UBSan 构建退出 0，已核对编译和链接含 `-fsanitize=address,undefined`；内存检查全量进行中。
+- **V6【实测】内存检查**：Werror + ASan／UBSan 构建退出 0，已核对编译和链接含 `-fsanitize=address,undefined`；全量 **264/264 通过**、零跳过，退出 0，用时 **492.98 秒**。完整日志未见 sanitizer 错误。日志 `work/perf-memory/{configure-asan,build-asan,ctest-asan}.log`。
 - **V7【实测】列表对照**：仅把改动的 HAL 翻译单元编回原内部栈配置，复制并替换临时 archive 中对应对象，分别链接原版和改后 `sim-ui-list-paging`；都用全新输出目录。两边退出 0，1,441 项断言均过，最终 PNG SHA-256 同为 `6d4b30dc7fe47dfa140dce2511e4e1ed1d1fced2696974e31fd0dcc5c9477610`。未修改工作区产品源码或测试。日志 `work/perf-memory/list-control.log`。
+- **V8【实测】交付核查**：`git diff --stat` 只有本任务 6 个文件，产品改动 4 行；`git diff --check` 通过；报告相对链接有效，测量脚本重生成的逐案例表与提交内容完全相同，两个脚本语法检查通过。按任务书第 6 节对基线到 HEAD 的 diff 执行指定隐私扫描：无匹配，`grep` 退出 1（表示未命中）；未提交改动亦核查。未提交原始指标、构建产物、设计稿或本机路径。
 
 所有构建与全量测试依次运行，命令前加 `taskpolicy -c utility`，最多 `-j2`；没有启动窗口、触碰设备、付费调用或写远端。
 
@@ -180,4 +181,4 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" \
 
 【实现＋交叉编译】`ink_json_parse` 的 S31 帧仍有 2,656 B，启动已知链并不小，不能把 `main` 的接近上限完全归咎于 64 位主机。相反，`stb_image.h` 若干未用的 zlib 导出函数有 6,592～6,608 B 帧，但 PNG 实际调用的 `stbi_zlib_decode_malloc_guesssize_headerflag` 已把大结构放堆上，帧只有 48 B；直接把最大 `.su` 数字当成 `exec.media` 的实际调用链会误判。现有证据没有证明哪个任务必须加栈，也不足以接受缩栈。
 
-隐私及提交检查待最终更新。
+里程碑提交：`b7fb7776`（建立报告）、`238c221b`（优化、反向对照、全量对照及 S31 分析）；最终验证与隐私核查单独提交。全部只在本地分支提交，未 push。
