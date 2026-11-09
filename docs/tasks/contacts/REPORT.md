@@ -9,7 +9,7 @@
 | 1 | 【实测】定向通过 | 真正的两次进程启动；增改删持久化，成人／孩子集合隔离，越界查改反例 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^contacts$' --output-on-failure -j2` |
 | 2 | 【实测】功能通过；视觉超标 | 0、1、4、5 条及末页；9 份分页快照＋1 份表单快照；短输入的姓名／号码焦点；视觉 52.004/255 | 同上；`tests/contacts/run.py` 校验 JSON；`tools/ui_compare.py --scenes PhoneContacts --reuse` |
 | 3 | 【实测】定向通过 | 实际触摸和 AI 均执行 `contacts.select`，同编号、同号码、来源分别为 touch／ai | 同上 |
-| 4 | 进行中 | 注册 8 项新能力，产品代码未超 300 行；全量及内存检查待跑 | 待补 |
+| 4 | 【实测】能力与规模通过；全量未全过 | 注册 8 项新能力，运行时清单一致；产品 249 行。普通／ASan 全量各 217/218，唯一失败为禁止本任务修改的共享能力文档 | 下文完整构建／CTest 命令及清单核对命令 |
 
 ## 没做到的
 
@@ -30,7 +30,7 @@
 
 ## 要用户定的
 
-- 无。
+- 集合暂设每成员最多 200 条，姓名最多 32 个字符且 UTF-8 不超过 96 字节，号码最多 24 字符；任务未给容量数字，取了可逆的小容量。是否扩大集合上限、同一联系人是否需要多个号码，留给用户定；当前按任务的姓名＋号码完成一条一号。
 
 ## 顺手发现
 
@@ -84,4 +84,12 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/capabilities
 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.py --build build --design "$INK_DESIGN" --out work/contacts-compare --scenes PhoneContacts --reuse
 ```
 
-最后一条对照命令的 `work/contacts-compare/PhoneContacts/` 需先复制 `build/test-out/contacts/write/` 下的 `snap-scene.png` 和 `metrics.json`；截图来自已完成刷新、完整验收通过的真实联系人页面。
+最后一条对照命令的 `work/contacts-compare/PhoneContacts/` 需先复制 `build/test-out/contacts/write/` 下的 `snap-scene.png` 和 `metrics.json`；截图来自已完成刷新、联系人测试通过的真实页面。
+
+## 最终验证
+
+- 【实测】两套完整构建均退出 0。最终普通全量 **217/218**，204.30 秒；ASan／UBSan 全量 **217/218**，335.84 秒；两轮 CTest 均退出 8，唯一失败 `capability-table-doc`，没有跳过测试。`build-asan/Testing/Temporary/LastTest.log` 中没有 AddressSanitizer、LeakSanitizer 错误或 UBSan 的 `runtime error`。
+- 【实测】普通和 ASan 的联系人测试各通过写入 117 项、重启 21 项断言；内部 RAM 最低余量各 47,840 字节（原门槛 32,768），内外部内存分配失败均为 0。确定性测试在两套全量中均通过，预算未改。
+- 【实测】`tools/capabilities.py --output work/contacts/capabilities.md --runtime … --check` 在普通和 ASan 注册表均通过，205 项能力、16 项设置；待合并会话生成共享文档的命令是 `python3 tools/capabilities.py`。
+- 【实测】差异仅 11 个相关文件；通信服务、设计稿、共享文档及历史资料未改。`git diff --check` 退出 0。按规定对基线至 HEAD 及包含最终报告的差异执行隐私扫描，零匹配（搜索退出 1）；未提交设计稿或构建产物。
+- 本地提交：`92db0381`（开工报告）、`c771b6fe`（联系人实现与验收）、`cadf2ce8`（目录接线和输入快照）；最终报告另作本地提交，未推送。
