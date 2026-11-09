@@ -98,7 +98,51 @@
       "exit": 0
     }
   },
-  "sanitized": null,
+  "sanitized": {
+    "priority": {
+      "test.finished": 1,
+      "test.order.background_before_sync": 0,
+      "test.order.index_writes": 1,
+      "test.order.sync_wait_ms": 20,
+      "test.pass": 14,
+      "exit": 0
+    },
+    "index": {
+      "test.finished": 1,
+      "test.order.index_writes": 3,
+      "test.pass": 5,
+      "exit": 0
+    },
+    "limit": {
+      "test.finished": 1,
+      "test.order.index_writes": 3,
+      "test.pass": 5,
+      "exit": 0
+    },
+    "pressure": {
+      "test.finished": 1,
+      "test.order.index_writes": 1,
+      "test.order.pending_bytes": 252,
+      "test.order.pressure_accepted": 1041,
+      "test.pass": 7,
+      "exit": 0
+    },
+    "input": {
+      "test.finished": 1,
+      "test.order.index_writes": 3,
+      "test.order.keys": 10,
+      "test.order.mic_lost_ms": 0,
+      "test.order.touches": 10,
+      "test.pass": 12,
+      "exit": 0
+    },
+    "quiet": {
+      "test.finished": 1,
+      "test.order.index_writes": 1,
+      "test.pass": 16,
+      "exit": 0
+    }
+  },
   "full_validation": {
     "normal": {
       "passed": 269,
@@ -107,7 +151,13 @@
       "seconds": 428.07,
       "log": "build/final-tests.log"
     },
-    "sanitized": "pending"
+    "sanitized": {
+      "passed": 269,
+      "total": 269,
+      "skipped": 0,
+      "seconds": 616.63,
+      "log": "build-asan/full-tests.log"
+    }
   },
   "commands": {
     "configure_normal": "taskpolicy -c utility cmake -S . -B build -DINK_WERROR=ON -DINK_CJK_FONT=\"$INK_DEPS/build-deps/fonts/NotoSansCJK-Regular.ttc\" -DINK_CJK_FACE=2 -DINK_CJK_MEDIUM_FONT=\"$INK_DEPS/build-deps/fonts/NotoSansCJKsc-Medium.otf\" -DINK_CJK_BOLD_FONT=\"$INK_DEPS/build-deps/fonts/NotoSansCJKsc-Bold.otf\" -DPython3_EXECUTABLE=\"$INK_DEPS/build-deps/pyenv/bin/python\" -DFETCHCONTENT_SOURCE_DIR_LVGL=\"$INK_DEPS/build/_deps/lvgl-src\" -DINK_HUB_PYTHON=\"$INK_DEPS/hub/.venv/bin/python\"",
