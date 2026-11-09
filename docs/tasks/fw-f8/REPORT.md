@@ -92,3 +92,4 @@ taskpolicy -c utility "$F8_PYTHON" tools/ui_compare.py --build build --design "$
 - 【实测】普通定向 10/10 通过（F8、卡片、字号、两种设备快照、AI 暴露、中枢及其夹具）；反向对照 7/7 得到预期失败，恢复透明入口失败 25 项、断开设置行绑定失败 21 项。截图确认新行完整可见。日志：`build/fw-f8-evidence/review-focused.log`、`review-reverse.log`；截图与内存记录：`build/fw-f8-evidence/review/`。
 - 【实测】上次三项中枢跳过是 Python 环境选错：只读依赖目录现有 `hub/.venv` 包含 Python 3.11.15、pytest 8.4.2、pytest-asyncio 1.2.0、aiohttp 3.12.15、PyYAML 6.0.3。改用 CMake 的 `INK_HUB_PYTHON` 并令 `PYTHONPATH="$PWD/hub"` 指向本分支，三项已全部通过；不安装或升级依赖。
 - 验证进行中：普通全量、ASan/UBSan 全量与最终隐私检查待填写。当前对原任务基线统计产品代码新增 297 行、删除 8 行，未超过 300 行预算。
+- 【实测】首轮普通全量发现 `ui-scene-big-SetDisplay` 的旧测试固定在第一页点自动锁屏；新增行触发既有分页后，该控件位于下一页。测试现按可见性翻页，保留原来的点击与 1800 秒断言，并追加默认、特大字号下点击新行进入 TodayEdit 的断言。产品分页逻辑与原有测试期望均未修改。

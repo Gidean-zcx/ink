@@ -298,8 +298,14 @@ static void assert_operation(void) {
         }
         CHECK(ink_setting_get(!strcmp(scene, "Control") ? "display.light" : "audio.volume") == 80, "the visible slider reaches the setting service");
     } else if (!strcmp(scene, "SetDisplay")) {
+        wanted = "自动锁屏 10 分钟"; on_ui(find_label);
+        if (label_x < 0) {
+            CHECK(BY_HAND("shell.page_next", NULL) && g_rc.status == INK_RC_DONE, "page to the lock interval at large text size"); quiet();
+        }
         CHECK(press_label("自动锁屏 10 分钟"), "touch the current lock interval"); quiet();
         CHECK(ink_setting_get("power.lock_after_s") == 1800, "the lock interval changes instead of writing 600 again");
+        CHECK(press_label("今日屏放什么"), "touch the visible Today editor row at every text size"); quiet();
+        CHECK(!strcmp(ink_ui_page_name(), "TodayEdit"), "display settings opens TodayEdit at every text size");
     } else if (!strcmp(scene, "SetNetwork")) {
         CHECK(press_label("4G"), "touch the network preference"); quiet();
         CHECK(ink_setting_get("net.prefer") == 2, "network preference is applied by the service");
