@@ -54,7 +54,8 @@ try:
                     sequence = session['sequence']
                     stage, state = session['stage'], session['session']
                     if stage == 'begin':
-                        sock = socket.create_connection(('127.0.0.1', state['port']), timeout=10)
+                        assert state['host'] == '127.0.0.1', 'simulator reports its actual listening address'
+                        sock = socket.create_connection((state['host'], state['port']), timeout=10)
                         head = (f'POST /upload HTTP/1.1\r\nX-Ink-Code: {state["code"]}\r\n'
                                 'X-Ink-Name: SYNTH_UPLOAD.txt\r\nContent-Length: 12288\r\n\r\n')
                         sock.sendall(head.encode() + b'U' * 4096)

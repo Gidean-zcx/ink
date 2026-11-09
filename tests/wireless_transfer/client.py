@@ -117,7 +117,7 @@ with tempfile.TemporaryDirectory(prefix="wireless-", dir=build) as temp:
                     saved.close()
                 elif case == "idle":
                     saved = begin(session, "idle.txt", 1000)
-                elif case in ("expired", "switched"):
+                elif case in ("expired", "switched", "child"):
                     if saved:
                         saved.close()
                     try:
@@ -126,8 +126,6 @@ with tempfile.TemporaryDirectory(prefix="wireless-", dir=build) as temp:
                         pass
                     else:
                         raise AssertionError("expired/member-switched session still listens")
-                elif case == "child":
-                    assert request(session, "child.txt", pattern)[0] == 201
                 else:
                     raise AssertionError(case)
                 (out / f"ack-{sequence}").touch()

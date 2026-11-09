@@ -1,9 +1,11 @@
 /* Synthetic HTTP bytes and real transfer, USB, confirmation and file pages. */
 #include "../../system/ui/shell/transfer_pages.c"
 #include "../services_finish/product.h"
+#include "ink/hal_transfer.h"
 #include "cJSON.h"
 #include <sys/stat.h>
 
+extern int ink_test_transfer_host_mode;
 static char scene[32], selected_scene[32], saved_code[8], saved_address[80];
 static const char *wanted, *stage;
 static int touch_x, touch_y;
@@ -42,6 +44,8 @@ static void announce(void *arg) {
     (void)arg; char path[768]; snprintf(path, sizeof path, "%s/session.json", g_sim.out_dir);
     FILE *f = fopen(path, "wb");
     if (!f || fprintf(f, "{\"sequence\":%u,\"stage\":\"%s\",\"session\":%s}\n", sequence, stage, g_result) < 0 || fclose(f)) abort();
+    /* Anchor the existing response window after expensive host rendering. */
+    vtk_set_realtime_speed(g_sim.realtime_speed);
 }
 static void ack(void *arg) {
     (void)arg; char path[768]; struct stat st;
@@ -88,24 +92,57 @@ static void capture(const char *name) {
 }
 static void wireless_contract(void) {
     CHECK(P.active && !strcmp(P.code, saved_code) && !strcmp(P.address, saved_address), "address and digits come from transfer.status");
+    wanted = saved_address; target(); CHECK(touch_x >= 0, "visible address equals status host and port");
+    wanted = "用手机扫，或在电脑上打开"; target(); CHECK(touch_x >= 0, "wireless instruction matches Transfer design");
+    lv_obj_t *qr = NULL;
+    for (uint32_t i = 0; i < lv_obj_get_child_count(P.screen); i++)
+        if (lv_obj_check_type(lv_obj_get_child(P.screen, (int)i), &lv_qrcode_class)) qr = lv_obj_get_child(P.screen, (int)i);
+    CHECK(qr != NULL, "active transfer displays a real LVGL QR code");
+    if (qr) {
+        lv_draw_buf_t *actual = lv_canvas_get_draw_buf(qr);
+        lv_obj_t *expected = lv_qrcode_create(P.screen); lv_obj_add_flag(expected, LV_OBJ_FLAG_HIDDEN);
+        lv_qrcode_set_size(expected, (int32_t)actual->header.w);
+        lv_qrcode_set_dark_color(expected, lv_color_black()); lv_qrcode_set_light_color(expected, lv_color_white());
+        CHECK(lv_qrcode_update(expected, saved_address, (uint32_t)strlen(saved_address)) == LV_RESULT_OK, "encode expected status endpoint");
+        lv_draw_buf_t *reference = lv_canvas_get_draw_buf(expected);
+        CHECK(actual->data_size == reference->data_size && !memcmp(actual->data, reference->data, actual->data_size), "QR bitmap encodes status host and port");
+        lv_obj_delete(expected);
+    }
+    CHECK(ink_ui_context_snapshot(g_snap, sizeof g_snap, NULL) > 0 && !strstr(g_snap, saved_code), "authorization digits stay out of AI context");
+}
+static void unavailable_wireless(void) {
+    wanted = "还没连上 Wi-Fi"; target(); CHECK(touch_x >= 0, "missing HAL address is visible on page");
+    CHECK(!P.address[0] && !strstr(g_snap, "http://"), "missing HAL address exposes no fake URL");
     bool qr = false;
     for (uint32_t i = 0; i < lv_obj_get_child_count(P.screen); i++)
         if (lv_obj_check_type(lv_obj_get_child(P.screen, (int)i), &lv_qrcode_class)) qr = true;
-    CHECK(qr, "active transfer displays a real LVGL QR code");
-    CHECK(ink_ui_context_snapshot(g_snap, sizeof g_snap, NULL) > 0 && !strstr(g_snap, saved_code), "authorization digits stay out of AI context");
+    CHECK(!qr, "missing HAL address exposes no stale QR code");
 }
 static bool active(void) { return AI("transfer.status", NULL) && strstr(g_result, "\"active\":true"); }
 static bool stopped(void) { return AI("transfer.status", NULL) && strstr(g_result, "\"active\":false"); }
-static void start_wireless(void) {
-    press("开始"); CHECK(WAIT_FOR(active(), 5000), "touch starts actual wireless service");
-    ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL); int64_t port = 0;
+static void remember_wireless(void) {
+    CHECK(AI("transfer.status", NULL) && g_rc.status == INK_RC_DONE, "read current wireless status");
+    ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL); int64_t port = 0; char host[64] = "", actual[64] = "";
     CHECK(j && !ink_json_parse(j, g_result, strlen(g_result)), "parse service status");
     if (j) {
         ink_json_str(j, ink_json_find(j, 0, "code"), saved_code, sizeof saved_code);
         ink_json_int(j, ink_json_find(j, 0, "port"), &port);
+        ink_json_str(j, ink_json_find(j, 0, "host"), host, sizeof host);
     }
-    snprintf(saved_address, sizeof saved_address, "http://127.0.0.1:%u/", (unsigned)port); osal_free(j);
+    CHECK(!hal_transfer_host(actual, sizeof actual) && host[0] && !strcmp(host, actual), "status host equals read-only HAL address");
+    snprintf(saved_address, sizeof saved_address, "http://%s:%u/", host, (unsigned)(uint16_t)port); osal_free(j);
     CHECK(WAIT_FOR(at("Transfer") && strstr(g_snap, saved_address), 5000), "page reads the real endpoint");
+}
+static void start_wireless(void) {
+    press("开始"); CHECK(WAIT_FOR(active(), 5000), "touch starts actual wireless service"); remember_wireless();
+}
+static void address_changes(void) {
+    ink_test_transfer_host_mode = 2; remember_wireless(); on_ui(wireless_contract);
+    ink_test_transfer_host_mode = 1;
+    CHECK(AI("transfer.status", NULL) && strstr(g_result, "\"host\":\"\"") && strstr(g_result, "\"active\":true"), "HAL failure returns empty status host");
+    CHECK(WAIT_FOR(at("Transfer") && strstr(g_snap, "还没连上 Wi-Fi"), 5000), "HAL failure updates the page without a fake endpoint");
+    on_ui(unavailable_wireless);
+    ink_test_transfer_host_mode = 0; remember_wireless(); on_ui(wireless_contract);
 }
 static void authorize_usb(void) {
     ink_confirm_view_t v;
@@ -135,7 +172,7 @@ static void run(void *arg) {
     wanted = "从手机或电脑传入"; on_ui(target);
     CHECK(touch_x >= 0 && control_bounds.y1 > pager_bottom, "transfer entry clears the file pagination");
     if (!strcmp(selected_scene, "Files")) capture("Files");
-    press("从手机或电脑传入"); ready("Transfer"); start_wireless(); on_ui(wireless_contract); capture("Transfer");
+    press("从手机或电脑传入"); ready("Transfer"); start_wireless(); on_ui(wireless_contract); capture("Transfer"); address_changes();
     exchange("begin");
     CHECK(WAIT_FOR(at("TransferLive") && strstr(g_snap, "4096 字节"), 5000), "live page shows bytes actually received");
     capture("TransferLive"); exchange("finish");
@@ -187,6 +224,7 @@ static void run(void *arg) {
     wanted = "从手机或电脑传入"; on_ui(target); CHECK(touch_x < 0, "child has no wireless touch entry");
     wanted = "连电脑"; on_ui(target); CHECK(touch_x < 0, "child has no USB touch entry");
     CHECK(AI("transfer.open", NULL) && g_rc.status == INK_RC_REJECTED, "child direct wireless navigation is rejected");
+    CHECK(AI("transfer.start", NULL) && g_rc.status == INK_RC_REJECTED, "child AI cannot start wireless transfer");
     CHECK(BY_HAND("transfer.usb", NULL) && g_rc.status == INK_RC_REJECTED, "child direct USB navigation is rejected");
     CHECK(AI("usb.mount", NULL) && g_rc.status == INK_RC_REJECTED, "child cannot lend entire card");
     ink_probe_count("test.finished");

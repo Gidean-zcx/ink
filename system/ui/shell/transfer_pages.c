@@ -70,7 +70,7 @@ static void draw(void) {
     P.model = (ink_ui_page_spec_t){NAMES[P.page], title, {NAMES[P.page], P.epoch}, P.fields, 6, P.actions, 1};
     P.actions[0] = (ink_ui_action_spec_t){.id = "back", .label = "返回", .capability = "shell.back", .enabled = true};
     P.fields[0] = (ink_ui_field_spec_t){.id = "member", .role = "text", .label = "家人", .value = P.member};
-    P.fields[1] = (ink_ui_field_spec_t){.id = "address", .role = "text", .label = "电脑地址", .value = P.active ? P.address : "尚未开启"};
+    P.fields[1] = (ink_ui_field_spec_t){.id = "address", .role = "text", .label = "电脑地址", .value = P.active ? (P.address[0] ? P.address : "还没连上 Wi-Fi") : "尚未开启"};
     P.fields[2] = (ink_ui_field_spec_t){.id = "code", .role = "text", .label = "一次性数字", .value = P.active ? P.code : "", .secret = true};
     P.fields[3] = (ink_ui_field_spec_t){.id = "progress", .role = "text", .label = "接收进度", .value = P.progress};
     P.fields[4] = (ink_ui_field_spec_t){.id = "status", .role = "text", .label = "说明", .value = P.detail};
@@ -80,8 +80,8 @@ static void draw(void) {
     int w = INK_CANVAS_W - 2 * INK_MARGIN, bottom = INK_CANVAS_H - INK_MARGIN - INK_PRIMARY;
     int middle = INK_CANVAS_H / 2, icon_y = middle - INK_CIRCLE_LARGE;
     if (P.page == WIRELESS) {
-        text("用电脑打开（仅本机）", INK_FONT_LIST, INK_STATUS_BAR + INK_PRIMARY + INK_GAP_XXL);
-        if (P.active) {
+        text("用手机扫，或在电脑上打开", INK_FONT_LIST, INK_STATUS_BAR + INK_PRIMARY + INK_GAP_XXL);
+        if (P.active && P.address[0]) {
             int edge = 2 * INK_ROW_DOUBLE, y = INK_STATUS_BAR + INK_PRIMARY + INK_BLOCK_L;
             lv_obj_t *qr = lv_qrcode_create(P.screen);
             lv_qrcode_set_size(qr, ink_ui_px(edge)); lv_qrcode_set_dark_color(qr, lv_color_black()); lv_qrcode_set_light_color(qr, lv_color_white());
@@ -91,7 +91,7 @@ static void draw(void) {
             text(P.address, INK_FONT_NOTE, y + edge + INK_GAP_L);
             text("再输这个数字", INK_FONT_LIST, middle + INK_GAP_XXL);
             text(P.code, INK_FONT_NUMBER, middle + INK_GAP_XXL + INK_LINE_LIST);
-        }
+        } else if (P.active) text("还没连上 Wi-Fi", INK_FONT_LIST, middle);
         text(P.active ? P.progress : P.detail, INK_FONT_NOTE, bottom - 2 * INK_LINE_NOTE - INK_GAP_L);
         text("只能放到‘传进来的’。关掉这页就断开。", INK_FONT_NOTE, bottom - INK_LINE_NOTE - INK_GAP);
         button(P.active ? "关闭" : "开始", P.active ? "shell.back" : "transfer.start", INK_MARGIN, bottom, P.active ? w : (w - INK_GAP) / 2, !P.active);
@@ -137,11 +137,13 @@ static void reply(void *ctx, const ink_receipt_t *rc) {
         active = ink_json_eq(j, ink_json_find(j, 0, "active"), "true"); ink_json_int(j, ink_json_find(j, 0, "port"), &port);
         ink_json_int(j, ink_json_find(j, 0, "received"), &received);
         ink_json_str(j, ink_json_find(j, 0, "result"), result, sizeof result); ink_json_str(j, ink_json_find(j, 0, "code"), code, sizeof code);
-        bool changed = active != P.active || received != P.received || strcmp(P.result, result) || strcmp(P.code, code);
+        char host[64] = "", address[80] = "";
+        ink_json_str(j, ink_json_find(j, 0, "host"), host, sizeof host);
+        if (host[0]) snprintf(address, sizeof address, "http://%s:%u/", host, (unsigned)(uint16_t)port);
+        bool changed = active != P.active || received != P.received || strcmp(P.result, result) || strcmp(P.code, code) || strcmp(P.address, address);
         P.active = active; P.received = received;
         snprintf(P.result, sizeof P.result, "%s", result); snprintf(P.code, sizeof P.code, "%s", code);
-        /* The current HAL listens on loopback only; no phone-reachable address is available. */
-        snprintf(P.address, sizeof P.address, "http://127.0.0.1:%u/", (unsigned)port);
+        snprintf(P.address, sizeof P.address, "%s", address);
         snprintf(P.progress, sizeof P.progress, "已收到 %d 个，%lld 字节", !strcmp(result, "文件已收到") ? 1 : 0, (long long)received);
         snprintf(P.title, sizeof P.title, "%.90s", active ? received > 0 ? "正在接收文件" : "等待传入" : result);
         snprintf(P.detail, sizeof P.detail, "%s", active ? "只能放到‘传进来的’。关掉这页就断开。" : result);

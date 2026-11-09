@@ -114,8 +114,10 @@ static void run(void *arg) {
     CHECK(inactive("成员"), "new member cannot read previous authorization"); exchange("switched");
     ink_fs_entry_t e;
     CHECK(ink_fs_lookup(owner_file, &e) == INK_FS_ERR_DENIED, "child cannot resolve parent's uploaded file");
-    start_transfer(); exchange("child");
-    CHECK(inactive("文件已收到"), "child upload succeeds"); verify_file("child.txt", 1);
+    CHECK(BY_HAND("transfer.start", NULL) && g_rc.status == INK_RC_REJECTED, "child touch cannot start wireless transfer");
+    CHECK(AI("transfer.start", NULL) && g_rc.status == INK_RC_REJECTED, "child AI cannot start wireless transfer");
+    CHECK(inactive("成员"), "child can query status but no authorization was opened"); exchange("child"); no_file("child.txt");
+    CHECK(AI("transfer.stop", NULL) && inactive("关闭"), "child can still close wireless transfer");
     CHECK(ink_member_switch("owner") == 0, "return to owner"); no_file("child.txt");
     CHECK(AI("transfer.start", NULL) && g_rc.status == INK_RC_DONE, "AI uses the same transfer capability");
     CHECK(AI("transfer.stop", NULL) && inactive("关闭"), "AI closes through the same service");

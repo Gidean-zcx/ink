@@ -50,6 +50,11 @@ static void on_host(void *arg) {
             done += (size_t)n;
         }
         r->result = 0;
+    } else if (r->op == 6) {
+        struct sockaddr_in addr;
+        socklen_t n = sizeof addr;
+        if (listener >= 0 && !getsockname(listener, (struct sockaddr *)&addr, &n) &&
+            inet_ntop(AF_INET, &addr.sin_addr, r->data, r->len)) r->result = 0;
     } else {
         if (client >= 0) {
             char discard[512];
@@ -69,6 +74,10 @@ static void on_host(void *arg) {
 
 int hal_transfer_listen(uint16_t *port) {
     request_t r = {.op = 0, .port = *port}; vtk_host_call(on_host, &r); *port = r.port; return r.result;
+}
+int hal_transfer_host(char *out, size_t cap) {
+    if (cap) out[0] = 0;
+    request_t r = {.op = 6, .data = out, .len = cap}; vtk_host_call(on_host, &r); return r.result;
 }
 int hal_transfer_accept(void) { request_t r = {.op = 1}; vtk_host_call(on_host, &r); return r.result; }
 int hal_transfer_read(void *data, size_t cap) {
