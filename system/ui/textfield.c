@@ -140,6 +140,7 @@ static void show(field_t *f) {
         lv_obj_update_layout(f->obj); long_bounds(f, v, line); compose_line(f, v, c, line, line_cap);
     } else if (!v[0] && !c[0] && (!f->semantic || !f->session)) snprintf(line, line_cap, "%s", f->hint);
     else if (f->session) compose_line(f, v, c, line, line_cap);
+    else if (f->cfg.draft_page) snprintf(line, line_cap, "%.*s", (int)(char_at(v, f->page_end) - char_at(v, f->window)), char_at(v, f->window));
     else snprintf(line, line_cap, "%s%s", v, c);
     lv_label_set_text(f->label, line);
     if (line != short_line) osal_free(line);
@@ -175,6 +176,7 @@ static void cl_entered(void *ctx, const char *value) {
 
 static void cl_ended(void *ctx) {
     field_t *f = ctx;
+    if (f->saved_timer) lv_timer_pause(f->saved_timer);
     if (f->semantic) {
         lv_point_t home = f->home;
         lv_obj_set_pos(f->obj, home.x, home.y);
@@ -447,7 +449,7 @@ int ink_textfield_long_snapshot(lv_obj_t *field, char *out, size_t cap) {
     ink_jw_raw(&w, ",\"start\":"); ink_jw_int(&w, (int64_t)f->window);
     ink_jw_raw(&w, ",\"end\":"); ink_jw_int(&w, (int64_t)f->page_end);
     ink_jw_raw(&w, ",\"value\":"); ink_jw_str(&w, f->text);
-    ink_jw_raw(&w, ",\"actions\":[\"text.page\",\"text.ask_ai\",\"text.add_word\"]}");
+    ink_jw_raw(&w, f->session ? ",\"actions\":[\"text.page\",\"text.ask_ai\",\"text.add_word\"]}" : ",\"actions\":[]}");
     if (w.overflow) { if (cap) out[0] = 0; return -1; } return (int)w.len;
 }
 

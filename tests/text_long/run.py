@@ -12,13 +12,14 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[2]
 parser = argparse.ArgumentParser()
 parser.add_argument("--build", type=Path, default=ROOT / "build")
-parser.add_argument("--mutant", choices=("mapping", "clusters", "member", "draft"))
+parser.add_argument("--mutant", choices=("mapping", "clusters", "member", "draft", "page", "selection", "viewport"))
 args = parser.parse_args()
 build = args.build.resolve()
 work = Path(tempfile.mkdtemp(prefix="text-long-", dir=build))
 binary = build / "sim-text-long"
 if args.mutant:
-    source = (ROOT / "system/services/text/text_service.c").read_text()
+    service = "text_caps.c" if args.mutant == "selection" else "textfield.c" if args.mutant == "viewport" else "text_service.c"
+    source = (ROOT / ("system/ui" if args.mutant == "viewport" else "system/services/text") / service).read_text()
     if args.mutant == "member":
         old = 'return !TS.session || (identity.authed && !strcmp(TS.owner.member, identity.member));'
         assert source.count(old) == 1
@@ -27,6 +28,18 @@ if args.mutant:
         old = "static void save_draft(void) {"
         assert source.count(old) == 1
         source = source.replace(old, old + "\n    return;")
+    elif args.mutant == "page":
+        old = '!strcmp(d->page, cfg->draft_page) &&'
+        assert source.count(old) == 1
+        source = source.replace(old, "true &&")
+    elif args.mutant == "selection":
+        old = "int n = ink_text_selected(text, INK_CLIP_MAX + 1);"
+        assert source.count(old) == 1
+        source = source.replace(old, 'int n = snprintf(text, INK_CLIP_MAX + 1, "%s", ink_text_value());')
+    elif args.mutant == "viewport":
+        old = '    else if (f->cfg.draft_page) snprintf(line, line_cap, "%.*s", (int)(char_at(v, f->page_end) - char_at(v, f->window)), char_at(v, f->window));\n'
+        assert source.count(old) == 1
+        source = source.replace(old, "")
     else:
         name = "ink_text_byte_offset" if args.mutant == "mapping" else "ink_text_cluster_end"
         pattern = r"size_t " + name + r"\([^)]*\) \{.*?\n\}"
@@ -34,7 +47,7 @@ if args.mutant:
                       if args.mutant == "mapping" else "size_t ink_text_cluster_end(const char *text, size_t start) { return start < strlen(text) ? start + 1 : start; }")
         source, count = re.subn(pattern, substitute, source, count=1, flags=re.S)
         assert count == 1
-    target = work / "text_service.c"
+    target = work / service
     target.write_text(source)
     flags = {}
     for line in (build / "CMakeFiles/ink_system.dir/flags.make").read_text().splitlines():

@@ -87,6 +87,11 @@ static void recover(void) {
 }
 static void wrong_page(void) {
     ink_text_blur(0);
+    CHECK(ink_textfield_long_snapshot(field, snapshot, sizeof snapshot) > 0 && strstr(snapshot, "\"actions\":[]"),
+          "closed keyboard keeps the page readable without advertising unfocused editing actions");
+    lv_obj_t *label = lv_obj_get_child(field, 0);
+    CHECK(strlen(lv_label_get_text(label)) < strlen(initial) && !strncmp(lv_label_get_text(label), initial, strlen(lv_label_get_text(label))),
+          "closing input retains the actual first page instead of displaying the whole document in its viewport");
     ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .max = 4095, .draft_page = "OtherPage", .draft_id = 1};
     CHECK(ink_text_focus(&cfg, NULL, NULL) < 0, "another page cannot load this draft reference");
 }
@@ -188,7 +193,7 @@ static void run(void *arg) {
     on_ui(open_page);
     if (!field) { ink_probe_count("test.finished"); return; }
     if (recovering) {
-        on_ui(recover); on_ui(wrong_page); on_ui(another_page); on_ui(secrets);
+        on_ui(recover); on_ui(check_words); on_ui(wrong_page); on_ui(another_page); on_ui(secrets);
         reference = 1; on_ui(open_page); on_ui(stale_target);
         delay_ms(500); on_ui(kid_draft);
         CHECK(WAIT_FOR(ink_text_draft_saved() == 1, 10000), "child draft reaches durable storage separately");
@@ -210,10 +215,12 @@ static void run(void *arg) {
     ink_hub_demand(); CHECK(WAIT_FOR(ink_hub_online(), 30000), "synthetic hub online");
     menu_action("问 AI"); CHECK(WAIT_FOR(sim_hub_last_ask() != NULL, 5000), "human selection question is sent"); on_ui(inspect_question);
     key(HAL_KEY_HOME);
+    double asks = sim_metric_value("hub.requests.ai.ask");
     CHECK(AI("text.ask_ai", "{}") && g_rc.status == INK_RC_PENDING_CONFIRMATION, "unsolicited AI external action follows existing confirmation policy");
     unsigned token = 0; sscanf(g_rc.object, "confirm:%u", &token);
     CHECK(token && ink_confirm_decide(token, true, INK_SRC_TOUCH) == 0, "person confirms the same selection action");
-    CHECK(WAIT_FOR(!strcmp(ink_ui_top_name(), "Ai"), 5000), "confirmed AI action opens the real answer panel"); on_ui(inspect_question);
+    CHECK(WAIT_FOR(!strcmp(ink_ui_top_name(), "Ai"), 5000), "confirmed AI action opens the real answer panel");
+    CHECK(WAIT_FOR(sim_metric_value("hub.requests.ai.ask") > asks, 5000), "confirmed AI capability sends a second real question"); on_ui(inspect_question);
     key(HAL_KEY_HOME); on_ui(save_position);
     ink_db_flush_all();
     CHECK(WAIT_FOR(ink_text_draft_saved() == 1 && ink_db_idle() && !ink_storage_pending(), 10000), "all accepted text and composition are durable before the abrupt cut");
