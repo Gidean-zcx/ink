@@ -1,6 +1,6 @@
 # kid-1 执行报告
 
-基线：`3fce2beea07d9e25a814cd24c64e8d5305ea9222`。状态：页面实现完成，最终全量与内存检查待记录。
+基线：`3fce2beea07d9e25a814cd24c64e8d5305ea9222`。状态：实现和检查已完成；未通过项与缺口如下。
 
 【实现】新页面在 `system/ui/shell/member_pages.c`；成员门只接入口，PIN 的哈希格式、尝试次数和等待策略未改。新增产品代码保守按全部新增行计为 246 行（含头文件、构建接线，未抵扣删除行）。
 
@@ -12,7 +12,7 @@
 | 2 | 【实测】通过 | 真实触摸设置和修改八位测试 PIN；独立进程重启后旧 PIN 失败、新 PIN 成功 | 同上；`tests/kid_1.py` 的 write、verify |
 | 3 | 【实测】验证通过，重置缺口见下 | 错误家长 PIN 计数；正确 PIN 只报告家长已验证，不切换身份、不删除 PIN | 同上；recover |
 | 4 | 【实测】通过 | 各步快照和文本日志无测试 PIN；AI 提交被拒绝 | 同上；各阶段逐字检查 |
-| 5 | 【实测】普通构建 232/233；内存检查进行中 | 唯一失败是禁止修改的共享能力表文档；无跳过；新增产品代码 246/300 行 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2` |
+| 5 | 【实测】未全通过：两轮各 232/233；246/300 行 | 普通与 ASan/UBSan 唯一失败均是共享能力表文档；无跳过；未检出 sanitizer 错误 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`；内存检查同命令换 `build-asan` |
 
 ## 没做到的
 
@@ -46,11 +46,15 @@
 
 页面内输入阶段（原密码→新密码、家长核验）：任务书明确要求。没有新增常驻任务、持久格式、配置项、后台重试、缓存或队列；慢校验复用现有执行器。
 
+【实现】架构审视：显示和本机输入留在 UI，校验与持久化仍归成员策略；导航和提交均过能力关口。五个新导航能力对 AI 开放，提交为 owner-only，数字输入不经过总线；四页均有不含凭据的快照，已有 AI 能力面测试覆盖这六项权限。
+
 为什么不能更小：超过 100 行的原因是四页的呈现、异步结果回 UI、凭据清除和两阶段修改都需覆盖。看过直接复用 `pinpad.c` 的更小方案，但旧控件只有单次输入，没有等待禁输、家长入口及修改阶段，外观改动也会牵涉共用的确认卡键盘。本次只在新文件内共用一套输入界面。
 
 ## 要改的文档
 
 按总规则第 7 节，本分支不改共享文件：主会话需在合并时重新生成 `docs/system/capabilities.md`（新增 6 个能力），更新 `docs/system/ui-dependencies.md` 中本任务四页的实际状态并保留重置缺口。未改 backlog、需求、想法、决策及调研资料。
+
+【实测】临时能力表已生成到 `build/kid-1-capabilities.md`，共 330 个定义；运行时能力、权限与登记检查均通过。不能通过改测试或跳过检查来消除共享文档差异。
 
 ## 验证记录
 
@@ -72,4 +76,6 @@
 
 【实测】画板复现：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.py --build build --design "$INK_DESIGN" --out build/kid-1-compare --scenes MemberSwitch PinWait PinForgot PinSet --reuse`。四帧均由实际服务与触摸流程产生，并等到面板提交完成。
 
-ASan/UBSan 与最终差异、隐私扫描在最后一个提交补齐。
+【实测】内存检查按任务书同配置加 `-DINK_SANITIZE=ON`，保留 `-DINK_WERROR=ON`，同样使用共享中枢 Python 依赖；构建与测试并行度均为 2，命令均带 `taskpolicy -c utility`。全量耗时 511.67 秒，232/233 通过，唯一失败为同一个 `capability-table-doc`；`Testing/Temporary/LastTest.log` 中 sanitizer 错误扫描为 0。新功能仍为 816 条断言、最低内部 RAM 47,840 字节。证据：`build-asan/kid-1-odyknh20/`、`build-asan/kid-1-verification/`。
+
+【实测】结束核对：相对基线仅 12 个相关文件；`git diff --check` 无问题。按任务书第 6 节的隐私正则扫描基线至 HEAD 的完整差异，0 命中（grep 返回 1 表示无匹配）；未提交绝对本机路径、MAC、构建产物或设计稿。全部变更仅本地提交，未推送、开 PR、碰设备或调用付费接口。
