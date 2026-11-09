@@ -1594,7 +1594,9 @@ tasks:
     D.q = osal_queue_create(sizeof(req_t), QUEUE_LEN);
     g_pwr_lock = osal_mutex_create();
     if (!D.q || !g_pwr_lock) osal_panic("display driver init failed: no memory for its request queue and lock");
-    osal_task_cfg_t cfg = {.name = "epd", .fn = driver_task, .stack_bytes = DRIVER_STACK, .priority = DRIVER_PRIO, .core = -1};
+    /* Like the feeders, this task uses PSRAM and never calls the flash API. */
+    osal_task_cfg_t cfg = {.name = "epd", .fn = driver_task, .stack_bytes = DRIVER_STACK, .priority = DRIVER_PRIO, .core = -1,
+                           .flags = OSAL_TASK_STACK_EXTERNAL};
     if (osal_task_create(&cfg, &D.task) != OSAL_OK) osal_panic("display driver init failed: cannot create its task");
     if (D.info.tech == HAL_PANEL_EPD && g_profile.feeders_cpu) {
         for (int c = 0; c < g_profile.cores && c < 2; c++) {
