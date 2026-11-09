@@ -12,11 +12,13 @@
 | 2 | 【实测】通过 | 真实触摸设置和修改八位测试 PIN；独立进程重启后旧 PIN 失败、新 PIN 成功 | 同上；`tests/kid_1.py` 的 write、verify |
 | 3 | 【实测】验证通过，重置缺口见下 | 错误家长 PIN 计数；正确 PIN 只报告家长已验证，不切换身份、不删除 PIN | 同上；recover |
 | 4 | 【实测】通过 | 各步快照和文本日志无测试 PIN；AI 提交被拒绝 | 同上；各阶段逐字检查 |
-| 5 | 待验证 | 全量测试、内存检查与 300 行预算 | 待记录 |
+| 5 | 【实测】普通构建 232/233；内存检查进行中 | 唯一失败是禁止修改的共享能力表文档；无跳过；新增产品代码 246/300 行 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2` |
 
 ## 没做到的
 
 忘记 PIN 后的重置未做：现有成员接口只有旧 PIN 修改和家长核验，没有核验后重置接口；本任务禁止改存储格式和尝试规则，页面明确提示缺口，没有伪造成功。
+
+视觉对照未达到 12/255；未在 Linux 上执行，本次环境为 macOS。共享文档校验不能称为通过，原因和合并后的处理见“要改的文档”。
 
 ## 和设计不一致的
 
@@ -44,10 +46,30 @@
 
 页面内输入阶段（原密码→新密码、家长核验）：任务书明确要求。没有新增常驻任务、持久格式、配置项、后台重试、缓存或队列；慢校验复用现有执行器。
 
+为什么不能更小：超过 100 行的原因是四页的呈现、异步结果回 UI、凭据清除和两阶段修改都需覆盖。看过直接复用 `pinpad.c` 的更小方案，但旧控件只有单次输入，没有等待禁输、家长入口及修改阶段，外观改动也会牵涉共用的确认卡键盘。本次只在新文件内共用一套输入界面。
+
 ## 要改的文档
 
 按总规则第 7 节，本分支不改共享文件：主会话需在合并时重新生成 `docs/system/capabilities.md`（新增 6 个能力），更新 `docs/system/ui-dependencies.md` 中本任务四页的实际状态并保留重置缺口。未改 backlog、需求、想法、决策及调研资料。
 
-## 验证接续
+## 验证记录
 
-初轮全量暴露锁定后通用页面绑定不执行 PIN 提交的回归。已在本页改为经能力关口调用，7 项针对性复测全部通过，未修改通用导航绑定。最终全量、ASan/UBSan、反向对照、隐私扫描在后续提交补齐。
+【实测】初轮全量暴露锁定后通用页面绑定不执行 PIN 提交的回归。只修本页经能力关口调用，7 项针对性复测全部通过，未修改通用导航绑定。最终普通全量耗时 348.64 秒，232/233 通过；唯一失败为 `capability-table-doc`。中枢依赖使用已有选项 `-DINK_HUB_PYTHON=$INK_DEPS/hub/.venv/bin/python`，因此 3 项中枢测试均执行通过，没有跳过。
+
+【实测】`kid-1` 五个独立进程阶段共 816 条断言，内部 RAM 最低余量 47,840 字节（下限 32,768）。保留证据：`build/kid-1-u15brd0k/`；普通全量与构建日志：`build/kid-1-verification/`。
+
+【实测】反向对照：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/kid_1.py --build build --mutant <名称>`。只在构建目录编译变体，不改工作树；均退出 1 并触发断言失败，未把编译错误当证据：
+
+| 名称 | 撤掉的关键行为 | 实际失败 |
+| --- | --- | --- |
+| unlock | 不把本人输入交给解锁校验 | verify，3 条 |
+| set | 不把新密码交给设置接口 | write，11 条 |
+| parent | 把家长核验错接为成员解锁 | recover，1 条 |
+| privacy | 让输入内容进入快照 | write，3 条 |
+| locked | 改回普通页面按钮绑定 | verify，2 条 |
+
+五份日志在 `build/kid-1-negatives/`。正确版本随后完成普通全量。
+
+【实测】画板复现：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.py --build build --design "$INK_DESIGN" --out build/kid-1-compare --scenes MemberSwitch PinWait PinForgot PinSet --reuse`。四帧均由实际服务与触摸流程产生，并等到面板提交完成。
+
+ASan/UBSan 与最终差异、隐私扫描在最后一个提交补齐。
