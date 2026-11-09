@@ -89,6 +89,8 @@ static const struct {
     {"camera.preview", NULL}, {"camera.photo", NULL}, {"gallery.prev", NULL}, {"gallery.next", NULL}, {"photo.open", "id"},
     {"shell.ai_log", NULL}, {"shell.ai_receipts", ""}, {"ai.pages.close", NULL}, {"ai.pages.retry", NULL},
     {"ai.pages.next", NULL}, {"ai.pages.prev", NULL},
+    {"remote.address", NULL}, {"remote.focus", NULL}, {"remote.submit", NULL}, {"remote.retry", NULL},
+    {"remote.close", NULL}, {"remote.prev", NULL}, {"remote.next", NULL}, {"remote.pointer", "x,y"},
     {NULL, NULL},
 };
 
