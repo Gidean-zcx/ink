@@ -1,0 +1,4 @@
+@0 net wifi
++0 sim external sms
++0 cell on -90
+@240s end
