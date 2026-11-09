@@ -12,7 +12,7 @@ typedef struct {
     char name[INK_FS_NAME_MAX];
 } picker_item_t;
 typedef struct {
-    lv_obj_t *root, *notice;
+    lv_obj_t *root, *notice, *caller;
     ink_ui_list_t *list;
     ink_ui_list_position_t position;
     ink_exec_job_t job;
@@ -29,6 +29,7 @@ typedef struct {
 } picker_t;
 static picker_t *P;
 static const ink_ui_overlay_t OVERLAY;
+static void caller_deleted(lv_event_t *e);
 static const ink_ui_action_spec_t ACTIONS[] = {
     {.id = "prev", .label = "上一页", .capability = "file_picker.prev"},
     {.id = "next", .label = "下一页", .capability = "file_picker.next"},
@@ -40,6 +41,7 @@ static const char *status(picker_t *p) {
 static void close_picker(uint32_t id) {
     picker_t *p = P;
     P = NULL;
+    lv_obj_remove_event_cb_with_user_data(p->caller, caller_deleted, p);
     ink_ui_overlay_remove(&OVERLAY); lv_obj_delete(p->root);
     ink_ui_content_changed(); ink_ui_hint_frame(INK_REFRESH_FLASH_UI);
     if (p->call) {
@@ -47,8 +49,12 @@ static void close_picker(uint32_t id) {
         p->call->rc.status = id ? INK_RC_DONE : INK_RC_CANCELLED;
         ink_cap_result(p->call, result); ink_cap_done(p->call); p->call = NULL;
     }
-    if (p->epoch == ink_member_epoch()) p->done(p->ctx, id);
+    if (p->done && p->epoch == ink_member_epoch()) p->done(p->ctx, id);
     if (!p->working) osal_free(p);
+}
+static void caller_deleted(lv_event_t *e) {
+    picker_t *p = lv_event_get_user_data(e);
+    p->done = NULL; close_picker(0);
 }
 static void bind_item(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, ink_ui_action_spec_t *action, void *ctx) {
     picker_t *p = ctx;
@@ -58,7 +64,7 @@ static void bind_item(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, 
     if (!lv_obj_get_child_count(slot)) {
         ink_ui_icon(slot, p->type == INK_FS_IMAGE ? "camera" : "book", INK_ICON_LIST, INK_ICON_LINE, INK_GAP, INK_GAP_L, false);
         ink_ui_line(slot, "", INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_CIRCLE, INK_GAP_S, INK_CANVAS_W - 2 * INK_MARGIN - INK_CIRCLE - INK_GAP);
-        ink_ui_line(slot, ready, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_CIRCLE, INK_GAP_S + INK_LINE_LIST, INK_CANVAS_W - 2 * INK_MARGIN - INK_CIRCLE - INK_GAP);
+        ink_ui_line(slot, ready, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_CIRCLE, INK_GAP_S + ink_ui_line_height(INK_FONT_LIST), INK_CANVAS_W - 2 * INK_MARGIN - INK_CIRCLE - INK_GAP);
     }
     lv_label_set_text(lv_obj_get_child(slot, 1), item->name);
     snprintf(p->ids[at], sizeof p->ids[at], "file:%u", (unsigned)item->id);
@@ -160,6 +166,7 @@ int ink_file_picker_open(ink_fs_type_t type, ink_file_picker_done_fn done, void 
     p->notice = ink_ui_notice(p->root, status(p), INK_CANVAS_H - INK_PRIMARY);
     p->list = ink_ui_list_create(body, &page, &p->position, 4, 1, INK_ROW_DOUBLE, "这里还没有可选的文件", bind_item, p);
     if (!p->list || ink_exec_post(INK_EXEC_BG, &p->job, read_files, p)) { lv_obj_delete(p->root); osal_free(p); return -1; }
+    p->caller = lv_screen_active(); lv_obj_add_event_cb(p->caller, caller_deleted, LV_EVENT_DELETE, p);
     P = p; ink_ui_overlay_add(&OVERLAY, p->root); ink_ui_list_refresh(p->list, 0);
     ink_ui_hint_frame(INK_REFRESH_FLASH_UI);
     return 0;

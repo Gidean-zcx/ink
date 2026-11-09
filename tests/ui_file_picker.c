@@ -8,21 +8,24 @@
 #include <stdlib.h>
 
 static unsigned callbacks, creates;
+static bool caller_destroyed;
+static void caller_destroy(void) { caller_destroyed = true; }
 static uint32_t selected, expected;
 static unsigned caller_page = 9;
 static ink_fs_type_t wanted_type = INK_FS_IMAGE;
 static char before[3072], expected_path[INK_FS_PATH_MAX];
 static lv_obj_t *caller_screen;
 static void caller_create(lv_obj_t *screen, void *arg) {
-    (void)arg; creates++; caller_screen = screen;
+    (void)arg; creates++; caller_screen = screen; caller_destroyed = false;
     ink_shell_topbar(screen, "合成调用页");
     ink_ui_label(screen, "合成位置：第十页，第二项", INK_FONT_BODY, INK_WEIGHT_REGULAR,
                  INK_MARGIN, INK_STATUS_BAR + INK_PRIMARY, INK_CANVAS_W - 2 * INK_MARGIN);
 }
 static int caller_snapshot(char *out, size_t cap) { return snprintf(out, cap, "合成调用页，page=%u，selected=example:item-2", caller_page); }
-static const ink_activity_t CALLER = {.name = "test.picker-caller", .create = caller_create, .snapshot = caller_snapshot};
+static const ink_activity_t CALLER = {.name = "test.picker-caller", .create = caller_create, .snapshot = caller_snapshot, .destroy = caller_destroy};
 static void push_caller(void) { ink_ui_push(&CALLER, NULL); }
 static void chosen(void *ctx, uint32_t id) {
+    CHECK(!caller_destroyed, "a destroyed caller never receives a picker result");
     CHECK(ctx == &caller_page && ink_ui_is_current(), "the original caller receives its result on UI");
     selected = id; callbacks++;
 }
@@ -79,6 +82,29 @@ static void snap(const char *name) { quiet(); vtk_event_at(vtk_now() + SIM_MS(1)
 static void child_page(void) {
     CHECK(ink_ui_snapshot(g_snap, sizeof g_snap, NULL) > 0 && !strstr(g_snap, "SYNTH_PRIVATE") && !strstr(g_snap, "SYNTH_ADULT_SECRET"), "child cannot see the adult's private image on any picker page");
 }
+static unsigned text_rows;
+static void check_item_text(lv_obj_t *root) {
+    if (lv_obj_has_flag(root, LV_OBJ_FLAG_HIDDEN)) return;
+    for (uint32_t i = 0; i < lv_obj_get_child_count(root); i++) {
+        lv_obj_t *c = lv_obj_get_child(root, (int32_t)i);
+        if (lv_obj_check_type(c, &lv_label_class) && !strncmp(lv_label_get_text(c), "SYNTH_IMAGE_", 12)) {
+            text_rows++;
+            lv_obj_t *note = lv_obj_get_child(root, (int32_t)i + 1);
+            lv_area_t first, second;
+            lv_obj_get_coords(c, &first); lv_obj_get_coords(note, &second);
+            CHECK(first.y2 < second.y1, "file name and status line boxes do not overlap at this font size");
+        }
+        check_item_text(c);
+    }
+}
+static void text_fits(void) {
+    text_rows = 0; lv_obj_update_layout(lv_layer_sys()); check_item_text(lv_layer_sys());
+    CHECK(text_rows == 4, "check all four visible file rows");
+}
+static void home_closed(void) {
+    CHECK(!strcmp(ink_ui_page_name(), "home") && caller_destroyed, "system.home destroys the caller and returns home");
+    CHECK(strcmp(ink_ui_top_name(), "FilePicker"), "the departed caller's picker is no longer on screen");
+}
 static void run(void *arg) {
     (void)arg;
     CHECK(WAIT_FOR(ink_member_space_open(), 10000), "the real owner space opens"); quiet();
@@ -110,10 +136,17 @@ static void run(void *arg) {
     char args[64]; snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)expected);
     CHECK(AI("file_picker.select", args) && g_rc.status == INK_RC_DONE && strstr(g_result, "\"id\":"), "AI gets the same selected id in its final receipt");
     CHECK(callbacks == 3 && selected == expected, "AI and touch share the same selection callback");
+    CHECK(BY_HAND("settings.set", "{\"id\":\"display.font_size\",\"value\":3}") && g_rc.status == INK_RC_DONE, "set the actual largest text size"); quiet();
+    on_ui(open_picker); wait_ready(); on_ui(text_fits); snap("large-text");
+    CHECK(AI("system.home", NULL) && g_rc.status == INK_RC_DONE, "leave the picker through the real home capability");
+    quiet(); on_ui(home_closed);
+    (void)BY_HAND("file_picker.cancel", NULL); quiet();
+    CHECK(callbacks == 3, "home and a later cancel discard the departed caller's callback");
+    CHECK(BY_HAND("settings.set", "{\"id\":\"display.font_size\",\"value\":1}") && g_rc.status == INK_RC_DONE, "restore the actual default text size");
     CHECK(ink_member_switch("kid") == 0, "switch to the real child");
     on_ui(ink_ui_home); quiet(); on_ui(push_caller); quiet(); on_ui(remember_caller);
     CHECK(ink_fs_write_atomic("/me/SYNTH_CHILD.png", "SYNTHETIC", 9) == 0, "create the child's own image");
-    on_ui(open_picker); wait_ready(); on_ui(child_page);
+    on_ui(open_picker); wait_ready(); on_ui(child_page); on_ui(text_fits); snap("child-text");
     CHECK(AI("file_picker.select", args) && g_rc.status == INK_RC_INVALID && callbacks == 3, "a forged adult id is not selectable by the child");
     key(INK_KEY_NEXT); quiet(); on_ui(child_page);
     label = "SYNTH_CHILD"; on_ui(locate); if (found) tap(g_btn_x[0], g_btn_y[0]);
