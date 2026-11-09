@@ -1354,3 +1354,8 @@ target_sources(ink_system PRIVATE system/ui/shell/ai_pages.c)
 ink_sim_executable(sim-ai-pages tests/ai_pages.c)
 target_link_libraries(sim-ai-pages PRIVATE ink_apps ink_system)
 add_test(NAME ai-pages COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/ai_pages.py --build ${CMAKE_BINARY_DIR})
+
+target_sources(ink_system PRIVATE system/ui/shell/activity_card.c)
+ink_sim_executable(sim-activity-card tests/activity_card.c)
+target_link_libraries(sim-activity-card PRIVATE ink_apps ink_system)
+add_test(NAME activity-card COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/activity_card.py --build ${CMAKE_BINARY_DIR})

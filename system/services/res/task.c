@@ -36,7 +36,8 @@ static struct {
     task_t t[TASKS_MAX];
     int next_id;
     uint32_t next_order;
-    int h_running;
+    int h_running, h_revision;
+    uint32_t revision;
     bool ready;
 } T INK_PSRAM_BSS;
 
@@ -49,6 +50,7 @@ static void publish_running(void) {
     for (int i = 0; i < TASKS_MAX; i++) n += T.t[i].id && T.t[i].state == INK_TASK_RUNNING;
     ink_svc_unlock();
     ink_state_set_int(T.h_running, n);
+    ink_state_set_int(T.h_revision, __atomic_add_fetch(&T.revision, 1, __ATOMIC_ACQ_REL));
 }
 
 static task_t *find(int id) { /* under the lock */
@@ -117,6 +119,7 @@ void ink_task_progress(int id, int percent, const char *stage) {
         if (stage) snprintf(t->stage, sizeof t->stage, "%s", stage);
     }
     ink_svc_unlock();
+    publish_running();
 }
 
 void ink_task_end(int id, ink_task_state_t how, const char *result, const char *object) {
@@ -269,8 +272,10 @@ static const ink_cap_t TASK_CAPS[] = {
 };
 
 static const ink_state_def_t ST_RUNNING = {.id = "job.running", .type = INK_ST_INT, .title = "后台有几件事在做"};
+static const ink_state_def_t ST_REVISION = {.id = "job.revision", .type = INK_ST_INT, .title = "后台作业列表和阶段的版本"};
 
 int ink_task_init(void) {
+    T.h_revision = ink_state_define(&ST_REVISION);
     T.h_running = ink_state_define(&ST_RUNNING);
     ink_state_set_int(T.h_running, 0);
     T.ready = true;

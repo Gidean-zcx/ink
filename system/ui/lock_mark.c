@@ -8,6 +8,7 @@
 #include "ink/sys/state.h"
 #include "ink/sys/time.h"
 #include "ink/ui_shell.h"
+#include "shell/activity_card.h"
 
 static lv_obj_t *g_mark, *g_clock;
 static uint64_t g_unlock_cause;
@@ -16,6 +17,9 @@ static ink_exec_job_t g_job;
 
 static int snapshot(char *buf, size_t cap) { return snprintf(buf, cap, "设备已锁定，AI 无权读取。只能用电源键或 AI 键唤醒。"); }
 static const ink_ui_overlay_t OVERLAY = {.name = "LockPage", .level = 2, .snapshot = snapshot};
+static const char *mark_text(void) {
+    return ink_setting_get("display.lock_style") == 0 && ink_activity_listening() ? "正在听，按电源键或 AI 键唤醒" : "已锁定，按电源键或 AI 键唤醒";
+}
 
 static void update_clock(void) {
     if (!g_clock) return;
@@ -68,7 +72,7 @@ static void show(void) {
     }
     lv_obj_t *strip = clock ? ink_ui_box(g_mark, INK_MARGIN, INK_CANVAS_H - INK_CONTROL - INK_GAP_S,
                                   INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, 0, INK_SURFACE_WHITE, false) : g_mark;
-    lv_obj_t *l = ink_ui_label(strip, "已锁定，按电源键或 AI 键唤醒", INK_FONT_NOTE, INK_WEIGHT_REGULAR, 0,
+    lv_obj_t *l = ink_ui_label(strip, mark_text(), INK_FONT_NOTE, INK_WEIGHT_REGULAR, 0,
                                (INK_CONTROL - ink_ui_line_height(INK_FONT_NOTE)) / 2, INK_CANVAS_W - 2 * INK_MARGIN);
     lv_obj_set_style_text_align(l, LV_TEXT_ALIGN_CENTER, 0);
     ink_ui_overlay_add(&OVERLAY, g_mark);
@@ -90,7 +94,14 @@ static void on_power(void *ctx, ink_power_state_t from, ink_power_state_t to, ui
     ink_exec_post(INK_EXEC_UI, &g_job, sync_mark, NULL);
 }
 static void on_minute(void *ctx, int h, const char *id) { (void)ctx; (void)h; (void)id; update_clock(); }
+static void on_audio(void *ctx, int h, const char *id) {
+    (void)ctx; (void)h; (void)id;
+    if (!g_mark || g_clock || ink_setting_get("display.lock_style") != 0) return;
+    lv_label_set_text(lv_obj_get_child(g_mark, 0), mark_text());
+    ink_ui_hint_obj(g_mark, INK_REFRESH_FAST);
+}
 int ink_ui_lock_mark_init(void) {
+    if (ink_state_watch("media.state", on_audio, NULL, INK_EXEC_UI) || ink_state_watch("audio.now_playing", on_audio, NULL, INK_EXEC_UI)) return -1;
     if (ink_power_add_busy_check(ink_ui_busy) != 0 || ink_state_watch("time.minute", on_minute, NULL, INK_EXEC_UI) != 0) return -1;
     return ink_power_subscribe(on_power, NULL);
 }

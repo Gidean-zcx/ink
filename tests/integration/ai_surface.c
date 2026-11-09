@@ -27,6 +27,7 @@
 static const struct {
     const char *id, *args;
 } FOR_AI[] = {
+    {"phone.return", NULL}, {"shell.tasks", NULL}, {"tasks.prev", NULL}, {"tasks.next", NULL},
     {"backup.open", NULL}, {"backup.status", NULL}, {"backup.manifest", ""}, {"backup.now", NULL}, {"restore.preview", ""}, {"restore.apply", "preview"},
     {"pairing.status", NULL}, {"pairing.configure", "url"}, {"pairing.reject", "txid"},
     {"pairing.restart", NULL}, {"pairing.import", NULL}, {"pairing.hotspot_start", NULL}, {"pairing.hotspot_stop", NULL},
