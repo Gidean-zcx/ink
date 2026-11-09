@@ -1,15 +1,17 @@
 # ai-chat 执行报告
 
-基线：`d0cacd1d4b348a8e885904026f3796a10996c646`。状态：内存检查进行中。实现提交：`b6567320`；实体键播放中打断场景：`80938251`。仅本地提交，未推送。
+基线：`d0cacd1d4b348a8e885904026f3796a10996c646`。本次执行结束，验收缺口如下。实现末次提交：`597fad47`。仅本地提交，未推送。
+
+[页面实现](../../../system/ui/shell/ai_chat.c)、[场景测试](../../../tests/ai_chat.c)、[快照校验](../../../tests/ai_chat_snapshots.py)。
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 【实测】场景通过，视觉待评分 | 五页及等待页截图位于 `build/test-out/ai-chat/` | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^ai-chat$' --output-on-failure -j2` |
+| 1 | 【实测】流程通过，视觉未达目标 | 97 项断言；文字、语音、等待、分页、实体键打断、两种停止及记录入口。五页及等待页截图位于 `build/test-out/ai-chat/` | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^ai-chat$' --output-on-failure -j2` |
 | 2 | 【实测】通过 | 五页 F1 JSON 校验；触摸、实体翻页键和 AI 调用同一分页能力；语音统一键能力 | `ctest --test-dir build -R '^ai-chat.*$' --output-on-failure -j2`，均加 `taskpolicy -c utility` |
 | 3 | 【实测】通过，含反例 | 取消原有 `turn_allowed()` 身份检查：构建退出 0，场景退出 1，6 项隔离断言失败，`test.finished=1`；已恢复并构建 | 见“反向对照” |
-| 4 | 【实测】普通全量 218/219，内存检查待完成；219 行产品代码 | 唯一失败是 `capability-table-doc`：按总规则第 7 节，本分支不能改生成的共享能力文档。其它测试无失败、无跳过 | 见“完整验证命令” |
+| 4 | 【实测】部分通过：普通与 ASan／UBSan 全量均 218/219；219 行产品代码 | 唯一失败均为 `capability-table-doc`：按总规则第 7 节，本分支不能改生成的共享能力文档。其余无失败、无跳过；无内存检查报错，预算未放宽 | 见“完整验证命令” |
 
 ## 没做到的
 
@@ -53,8 +55,8 @@
 ## 阶段记录
 
 - 【实测】完整普通构建退出 0；初轮问题框在屏幕装载前请求焦点，F2 拒绝打开。已改用现有 UI 执行队列在装载后请求焦点，没有新增任务。
-- 【实测】五页场景通过；内部 RAM 最低余量 34,512 字节，高于原下限 32,768 字节；内外部内存分配失败均为 0。全量与内存检查进行中。
-- 【实测】首轮普通全量 212/219；修正面板自动更新误改上下文版本、朗读覆盖错误提示，以及上述已有测试后，8 项定向回归全部通过。生成的能力总表按共享文档限制留给主会话更新，最终全量结果待补。
+- 【实测】最终普通与 ASan／UBSan 场景均为 97 项断言通过、零失败、`test.finished=1`；内部 RAM 最低余量均为 34,512 字节，高于原下限 32,768 字节；内外部内存分配失败均为 0。
+- 【实测】首轮普通全量 212/219；修正面板自动更新误改上下文版本、朗读覆盖错误提示，以及上述已有测试后，8 项定向回归全部通过。最终仅生成能力总表检查未过，按共享文档限制留给主会话更新。
 - 【实测】新增“服务器发送完成、扬声器仍有语音排队”用例：旧停止接口有 1 项断言失败、92 项通过、`test.finished=1`，ASan CTest 退出 8。停止目标改用当前轮次的最后播放编号，避免发送结束清空传输编号后停不住；只改一行，没有扩展协议。反例日志及指标在 `work/ai-chat-queued-red.log`、`work/ai-chat-queued-red-metrics.json`。
 - 【实测】新增“从提问页回对话记录”用例：仅恢复应用会重开旧提问页，旧实现有 1 项断言失败、96 项通过、`test.finished=1`。现在共用一个记录入口，用既有导航接口关闭该应用的旧页面再打开首页；不累计页面、不改服务轮次。修复后普通场景 97 项断言全部通过。反例日志与指标在 `work/ai-chat-home-red.log`、`work/ai-chat-home-red-metrics.json`。
 
@@ -74,6 +76,7 @@ taskpolicy -c utility build/sim-ai-chat --profile simulator/profiles/metalio-plu
 - 【实测】产品保守计数 202 行新增＋17 行删除＝219 行，连 CMake 的 12 行测试接线也计入；低于 350 行。新页面在 `ai_chat.c`；共用 CMake 只在末尾接线。导航仅修改 AI 图标入口和 Dock 能力绑定；UI 输入仅替换 AI 键的集中转发，没有修改其它并行页面。
 - 为什么不能小于 100 行：两页的主题控件、文字输入生命周期、五页 F1 声明、统一实体键和触摸／AI 入口，以及真实音频状态和停止接口缺一不可。只沿用旧面板不能提供对话入口和文字提问；手写纯文本快照更短，但不满足 F1。同一问题只在对应的公共入口修复。
 - 服务仍拥有协议、轮次、成员检查及语音传输；页面只通过能力调用，不访问服务内部状态。朗读状态读既有系统状态；输入和结果放 PSRAM。面板自动更新不改变底页的上下文版本，显式答案翻页才更新版本，以保留已有 AI 工具的页码约束。
+- 两个新活动在新文件中，三个面板状态复用现有面板；F1 快照的 `page` 保留底页身份，`board` 字段标明当前面板，符合现有上下文读取方式。
 
 ## 完整验证命令
 
@@ -88,6 +91,11 @@ UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/
 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.py --build build --out build/ai-chat-compare --reuse --scenes AiHome AiAsk AiListenTap AiLong AiSpeak
 ```
 
-- 【实测】普通构建退出 0；全量 CTest 退出 8，218/219，耗时 249.91 秒；唯一失败为被禁止本分支更新的生成能力文档。确定性、分层、SDK、原 AI 工具与成员回归均通过。日志 `work/ai-chat-ctest-final.log`。
+- 【实测】普通构建退出 0；最终全量 CTest 退出 8，218/219，耗时 172.20 秒；唯一失败为生成能力文档。确定性、分层、SDK、原 AI 工具与成员回归均通过。日志 `work/ai-chat-build-final.log`、`work/ai-chat-ctest-final.log`。
 - 【实测】服务器测试依赖版本核对：pytest 8.4.2、pytest-asyncio 1.2.0、aiohttp 3.12.15、PyYAML 6.0.3，导入的是当前检出的 `hub/ink_hub`；未安装或升级依赖。
-- ASan／UBSan 结果待补。
+- 【实测】ASan／UBSan 构建退出 0；最终全量 CTest 退出 8，218/219，耗时 315.06 秒；唯一失败相同，无跳过、无 ASan／UBSan 报错。编译参数核对包含 `-Werror -fsanitize=address,undefined -fno-omit-frame-pointer`。日志 `work/ai-chat-asan-build-final.log`、`work/ai-chat-asan-ctest-final.log`。
+
+## 收尾检查
+
+- 【实测】相对基线仅 18 个任务相关文件；共享文档和其它并行页面没有差异。报告的三个本地链接均存在，`git diff --check` 退出 0；产品、测试和 CMake 与已验证的代码提交一致。
+- 【实测】按总规则第 6 节扫描基线到最终差异，本机绝对路径与 MAC 模式零匹配（grep 退出 1）。构建产物、设计稿和本地测试日志均未提交。
