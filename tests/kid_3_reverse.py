@@ -24,7 +24,9 @@ needle = "ink_db_open_member(&TODAY_DB, ink_member_current()->id)"
 assert needle in source
 cases = [("baseline", baseline, "child Apps snapshot uses KidApps"),
     ("shared-adult-cards", source.replace(needle, 'ink_db_open_member(&TODAY_DB, "owner")'),
-        "adult TodayEdit changes cannot remove the child's cards (counterexample)")]
+        "adult TodayEdit changes cannot remove the child's cards (counterexample)"),
+    ("overlap-active-work", source.replace("bool kid_idle = child() && !call_offset;", "bool kid_idle = child();"),
+        "KidHome gives active work its own row without an overlapping allowance")]
 flags = (build / "CMakeFiles/ink_system.dir/flags.make").read_text()
 options = []
 for key in ("C_DEFINES", "C_INCLUDES", "C_FLAGS"):

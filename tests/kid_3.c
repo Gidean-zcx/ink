@@ -4,6 +4,7 @@
 #undef ink_main
 #include "integration/whole_product.h"
 #include "ink/sys/appreg.h"
+#include "ink/sys/task.h"
 #include "ink/ui_shell.h"
 #include <stdlib.h>
 
@@ -124,6 +125,19 @@ static void check_home(void) {
     CHECK(time_area.y2 < icon_label.y1 - ink_ui_px(INK_CIRCLE_APP + INK_GAP_S), "KidHome allowance never overlaps the application icons");
     wanted = "设置"; find(); CHECK(!label, "KidHome has no adult settings tile");
 }
+static void check_activity(void) {
+    inspect();
+    CHECK(strstr(view, "合成正在进行") && strstr(view, "shell.tasks"), "KidHome exposes the child's actual running work");
+    wanted = "今天不限时"; find();
+    CHECK(!label, "KidHome gives active work its own row without an overlapping allowance");
+    char clock[16], date[96]; ink_shell_time_strings(clock, sizeof clock, date, sizeof date);
+    wanted = date; find();
+    CHECK(label, "the active child home retains its date");
+    if (label) {
+        lv_area_t area; lv_obj_get_coords(label, &area);
+        CHECK(area.y1 >= ink_ui_px(INK_STATUS_BAR), "active work never pushes the child's date into the status bar");
+    }
+}
 static void snapshot_event(void *arg) {
     const char *name = arg;
     CHECK(settled(), "capture a settled child frame");
@@ -187,6 +201,10 @@ static void run(void *arg) {
     CHECK(ink_member_switch("kid") == 0, "enter the child's actual member space"); quiet();
     call_ok("reader.open_book", "{\"title\":\"测试长书\"}"); call_ok("reader.goto_page", "{\"page\":2}");
     on_ui(home); quiet(); on_ui(check_home); capture("KidHome");
+    int job = ink_task_begin("example", "合成正在进行", false, NULL, NULL);
+    CHECK(job > 0, "start synthetic work through the actual task service");
+    ink_task_progress(job, -1, "正在准备"); on_ui(ink_ui_redraw); quiet(); on_ui(check_activity);
+    ink_task_end(job, INK_TASK_DONE, "做好了", NULL); on_ui(ink_ui_redraw); quiet(); on_ui(check_home);
     unsigned before = opened;
     touch("听", true); CHECK(opened == before + 1, "KidHome touch launches through shell.launch");
     on_ui(home); quiet(); call_ok("shell.launch", "{\"id\":\"listen\"}");

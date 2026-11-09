@@ -14,7 +14,7 @@
 
 ## 没做到的
 
-- 全量测试、内存检查待补。
+- 最终全量测试、内存检查待补。
 - 未改阅读器已有缺口：【实现】`apps/reader/reader.c:495` 返回主页时释放阅读状态，`:529` 只在正文仍打开时提供阅读卡片。本任务的成员阅读卡片隔离用合成提供方验证，不能据此宣称真实阅读器回主页后的卡片已经可用；真实服务没数据时显示空状态。
 
 ## 和设计不一致的
@@ -45,11 +45,12 @@
 
 - 【实测】`taskpolicy -c utility cmake --build build -j2` 通过，`INK_WERROR=ON`。
 - 【实测】定向命令：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2 -R '^(kid-3|kid-2|fw-f8|ui-cards|ui-scale)$'`，5/5 通过。
-- 首次全量 253/258 通过；五项失败均是上述旧页面名或孩子第五格期望，已逐项核对原始警告后更新，未放宽权限、预算或空动作断言。最终全量结果待补。
+- 首次全量 253/258 无失败预算的项目完成（含 3 项原有跳过）；五项失败均是上述旧页面名或孩子第五格期望。更新后第二轮 255 通过、3 项中枢测试因 Python 依赖缺失跳过、0 失败。已找到只读依赖目录中的锁定中枢环境，以现有 `INK_HUB_PYTHON` 指定，最终结果待补；没有安装或升级依赖。
+- 【实测】补查孩子主页正在进行的事：通过真实任务服务建立孩子作业，活动行保留，用时行让位，日期不进入状态栏；只有空闲时才上移孩子主页。最新 `tests/kid_3.py` 三轮各 188 条检查通过，内部 RAM 最低余量均为 47,224 字节（原下限 32,768）。
 - 截图和快照：`build/kid-3-evidence/{KidHome,KidToday,KidApps}/`；拼接对照图和 `scores.json` 在其父目录。已目检并修复孩子主页用时与图标重叠，新增断言防回归。构建目录不提交。
-- 【实测】反向命令：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/kid_3_reverse.py --build build`。基线导航替换对象后 19 条断言失败；将今日配置错误地统一读大人后 7 条失败，包含明确的 TodayEdit 反例。两轮都运行到 `test.finished`；未修改工作源码，摘要在 `build/kid-3-reverse/summary.json`。
-- 【实测】画板命令：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.py --build build --design "$INK_DESIGN" --out build/kid-3-evidence --scenes KidHome KidToday KidApps --reuse`。每屏有一份已核实的稳态帧，分数如上。
-- 【实测】产品源码差异 90 行新增、8 行删除，合计 98 行；另有 CMake 测试登记 4 行，即保守计算 102 行，低于 250 行预算。不能更小：只改页名、删除三个占位入口的方案无法覆盖注册应用、能力白名单、用时耗尽、卡片说明及剩余用时；过滤集中在一个孩子入口判断中，没有逐应用补丁。
+- 【实测】反向命令：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/kid_3_reverse.py --build build`。基线导航替换对象后 22 条断言失败；将今日配置错误地统一读大人后 7 条失败；撤掉空闲布局判断后 2 条失败。三轮都运行到 `test.finished`；未修改工作源码，摘要在 `build/kid-3-reverse/summary.json`。
+- 【实测】画板命令：先用 `INK_KEEP_EVIDENCE=1` 运行 `tests/kid_3.py --build build`，再运行 `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.py --build build --design "$INK_DESIGN" --out build/test-out/kid-3-sim-kid-3 --scenes KidHome KidToday KidApps --reuse`。每屏有一份已核实的稳态帧，分数如上；已另存证据供本次复核。
+- 【实测】产品源码差异 91 行新增、8 行删除，合计 99 行；另有 CMake 测试登记 4 行，即保守计算 103 行，低于 250 行预算。不能更小：只改页名、删除三个占位入口的方案无法覆盖注册应用、能力白名单、用时耗尽、卡片说明及剩余用时；过滤集中在一个孩子入口判断中，没有逐应用补丁。
 
 ## 要改的文档
 

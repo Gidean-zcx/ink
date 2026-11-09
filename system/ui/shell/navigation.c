@@ -568,7 +568,8 @@ static void draw_home_content(void) {
     int page_top = INK_GAP_S;
     if (N.home_page == 1) {
         int call_offset = ink_activity_home_offset();
-        if (child()) call_offset -= INK_BLOCK;
+        bool kid_idle = child() && !call_offset;
+        if (kid_idle) call_offset -= INK_BLOCK;
         N.date = ink_ui_label(N.content, date, INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_MARGIN, INK_BLOCK + call_offset, width());
         lv_obj_set_style_text_align(N.date, LV_TEXT_ALIGN_CENTER, 0);
         N.clock = ink_ui_label(N.content, clock, INK_FONT_CLOCK, INK_WEIGHT_REGULAR, INK_MARGIN,
@@ -587,7 +588,7 @@ static void draw_home_content(void) {
                     width() - 3 * INK_GAP_L - INK_ICON_MEDIUM - 2 * INK_GAP_M);
         ink_shell_bind(resume, "shell.resume", NULL);
         }
-        if (child()) {
+        if (kid_idle) {
             N.kid_time_label = ink_ui_line(N.content, N.kid_time, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN,
                 y + INK_CONTROL + INK_GAP_M, width());
             lv_obj_set_style_text_align(N.kid_time_label, LV_TEXT_ALIGN_CENTER, 0);
