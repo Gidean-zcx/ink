@@ -230,6 +230,16 @@ static void cap_send(ink_call_t *c) { /* exec.bg */
     ink_db_close(db);
 }
 
+/* What snprintf cut short ends on a whole character: a half character would be read out as noise. */
+static void whole_characters(char *s) {
+    size_t n = strlen(s), j = n;
+    while (j && ((unsigned char)s[j - 1] & 0xC0) == 0x80) j--;
+    if (!j--) return;
+    unsigned char b = (unsigned char)s[j];
+    size_t len = b < 0xC0 ? 1 : b < 0xE0 ? 2 : b < 0xF0 ? 3 : 4;
+    if (j + len > n) s[j] = 0;
+}
+
 static void cap_list(ink_call_t *c) {
     ink_db_t *db = ink_db_open_member(&MESSAGES, ink_cap_call_member(c));
     if (!db) { c->rc.status = INK_RC_FAILED; return; }
@@ -241,7 +251,8 @@ static void cap_list(ink_call_t *c) {
         if (ink_json_parse(j, raw, rec.len) || !ink_json_eq(j, ink_json_find(j, 0, "status"), "收到")) continue;
         if (!n++) { ink_json_str(j, ink_json_find(j, 0, "peer"), peer, sizeof peer); ink_json_str(j, ink_json_find(j, 0, "text"), text, sizeof text); }
     }
-    if (n) snprintf(c->rc.say, sizeof c->rc.say, "%d 条短信，最近一条来自 %s：%s", n, peer, text);
+    if (n && snprintf(c->rc.say, sizeof c->rc.say, "%d 条短信，最近一条来自 %s：%s", n, peer, text) >= (int)sizeof c->rc.say)
+        whole_characters(c->rc.say); /* a long message is cut to what can be said */
     else snprintf(c->rc.say, sizeof c->rc.say, "没有新短信");
     osal_free(j); ink_db_close(db);
     utf8_clip(c->rc.say);

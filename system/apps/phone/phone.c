@@ -151,7 +151,9 @@ static void bind_item(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, 
     ink_tm_t tm; ink_time_to_local(time, &tm);
     snprintf(P.details[at], sizeof P.details[at], "%s · %lld 分钟  %02d:%02d", kind, (long long)minutes, tm.hour, tm.min);
     snprintf(P.ids[at], sizeof P.ids[at], "call:%u", (unsigned)rec.id);
-    snprintf(P.args[at], sizeof P.args[at], "{\"number\":\"%s\"}", P.numbers[at]);
+    char number[sizeof P.numbers[0]]; /* both live in P: copy the number out before writing into P */
+    snprintf(number, sizeof number, "%s", P.numbers[at]);
+    snprintf(P.args[at], sizeof P.args[at], "{\"number\":\"%s\"}", number);
     lv_obj_set_y(slot, ink_ui_px(at * INK_ROW_DOUBLE));
     lv_obj_set_style_bg_opa(slot, LV_OPA_TRANSP, 0); lv_obj_set_style_border_width(slot, 0, 0);
     if (!lv_obj_get_child_count(slot)) {

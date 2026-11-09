@@ -75,7 +75,9 @@ static void bind_row(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, i
     snprintf(time, sizeof time, "%u:%02u", a->hour, a->min);
     snprintf(C.ids[at], sizeof C.ids[at], "alarm:%u", (unsigned)a->id);
     snprintf(C.args[at], sizeof C.args[at], "{\"id\":%u}", (unsigned)a->id);
-    snprintf(C.values[at], sizeof C.values[at], "%s · %s · %s · %s", time, a->title, repeat, a->enabled ? "开启" : "关闭");
+    char title[sizeof a->title]; /* the row lives in C too: copy it out before writing into C */
+    snprintf(title, sizeof title, "%s", a->title);
+    snprintf(C.values[at], sizeof C.values[at], "%s · %s · %s · %s", time, title, repeat, a->enabled ? "开启" : "关闭");
     *field = (ink_ui_field_spec_t){.id = C.ids[at], .role = "listitem", .label = C.ids[at], .value = C.values[at], .object = {C.ids[at], 1}};
     *act = (ink_ui_action_spec_t){.id = C.ids[at], .label = "查看闹钟", .capability = "clock.open", .args_json = C.args[at], .object = field->object, .enabled = true};
     int w = INK_CANVAS_W - 2 * INK_MARGIN;

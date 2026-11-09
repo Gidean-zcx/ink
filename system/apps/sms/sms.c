@@ -124,7 +124,8 @@ static void build_rows(bool picking, bool thread) {
         if (!picking) {
             if (!read_message(S.db, r.id, peer, text, status) || (thread && strcmp(peer, S.peer))) continue;
             bool seen = false; if (!thread) for (size_t i = 0; i < S.count; i++) if (!strcmp(S.peers[i], peer)) seen = true;
-            if (seen) continue; snprintf(S.peers[S.count], sizeof S.peers[0], "%s", peer);
+            if (seen) continue;
+            snprintf(S.peers[S.count], sizeof S.peers[0], "%s", peer);
         }
         S.pages[S.count + 1] = S.pages[S.count];
         if (thread) { size_t end = 0; do { end = text_end(text, end); S.pages[S.count + 1]++; } while (text[end]); }
