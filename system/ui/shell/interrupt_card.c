@@ -125,3 +125,5 @@ int ink_shell_interrupt_card_init(void) {
     ink_interrupt_set_presenter(&P);
     return 0;
 }
+
+void ink_shell_interrupt_present(const ink_interrupt_t *top) { show(top); }

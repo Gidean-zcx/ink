@@ -82,7 +82,7 @@ flowchart TB
 | Wi-Fi | `wifi.scan`、`wifi.list`、`wifi.connect`（系统级，确认）、`wifi.forget`（确认） | — | `wifi.state`、`wifi.ssid` | `net.prefer` | `wifi.changed` | 选网、入网步骤 |
 | 成员 | `member.list`、`system.switch_member`（孩子到成人仍要 PIN）；`member.add`、`member.remove`（系统级，确认） | `member.unlock`、`member.set_pin`（PIN 只在设备上输入） | `member.current`、`member.authed` | `member.idle_return_s` | `member.changed` | PIN 校验值、盐 |
 | 升级 | `update.status`、`update.check`、`update.download`（移动数据下要人来） | `system.upgrade`、`system.upgrade_from_card`（底座设计 §6.2：AI 不能发起升级，安装时设备几分钟不能用；清单里也没有） | `update.state`、`update.version`、`update.progress` | `update.auto_download` | `update.available`、`update.result` | 写槽、回滚、自检 |
-| 系统 | `state.list`、`settings.list`、`settings.get`、`settings.set`、`caps.domains`、`caps.find`、`system.undo`、`system.home`、`system.full_refresh`、`system.set_volume`；`system.reboot`、`system.shutdown`、`system.factory_reset`（系统级，确认） | — | `power.state`、`battery.level`、`battery.charging`、`battery.low` | `power.lock_after_s` | `battery.low` | 电源轨、睡眠 |
+| 系统 | `state.list`、`settings.list`、`settings.get`、`settings.set`、`caps.domains`、`caps.find`、`system.undo`、`system.home`、`system.full_refresh`、`system.set_volume`；`power.set_saving`（运行期最多 60 秒锁屏，不改原设置）；`system.reboot`、`system.shutdown`、`system.factory_reset`（系统级，确认） | — | `power.state`、`power.saving`、`battery.level`、`battery.charging`、`battery.low` | `power.lock_after_s` | `battery.low` | 电源轨、睡眠 |
 | 文件缩略图 | `file.thumb`（参数 id；返回宽、高与按行排列的 `gray4` 灰阶；每个十六进制字符对应一个像素） | — | — | — | — | 文件编号与内容版本接线，复用有界缩略图缓存 |
 
 自动检查之外，每轮审计人工对照这张表和代码（[审计任务说明 K 节](../audits/codex-audit-prompt.md)）。

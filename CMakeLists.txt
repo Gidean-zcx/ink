@@ -1274,3 +1274,9 @@ ink_sim_executable(sim-phone-calls tests/phone_calls/phone_calls.c)
 target_link_libraries(sim-phone-calls PRIVATE ink_apps ink_system)
 add_test(NAME phone-calls COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/phone_calls/run.py
   $<TARGET_FILE:sim-phone-calls> ${CMAKE_SOURCE_DIR} ${INK_ASSETS_DIR} ${INK_TEST_CONTENT} ${CMAKE_BINARY_DIR}/test-out/phone-calls)
+
+target_sources(ink_system PRIVATE system/ui/shell/power_pages.c)
+ink_sim_executable(sim-power-pages tests/power_pages.c)
+target_link_libraries(sim-power-pages PRIVATE ink_apps ink_system)
+add_test(NAME power-pages COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/power_pages.py
+  $<TARGET_FILE:sim-power-pages> ${CMAKE_SOURCE_DIR} ${INK_ASSETS_DIR} ${INK_TEST_CONTENT} ${CMAKE_BINARY_DIR}/test-out/power-pages)

@@ -33,6 +33,7 @@ static const struct {
     {"caps.domains", NULL}, {"caps.find", "query"}, {"system.undo", "object"}, {"system.home", NULL}, {"system.full_refresh", NULL},
     {"system.set_volume", "percent"}, {"system.switch_member", "id"}, {"system.shutdown", NULL}, {"system.factory_reset", NULL},
     {"system.reboot", NULL}, {"state.list", NULL}, {"settings.list", NULL}, {"settings.get", "id"}, {"settings.set", "id,value"},
+    {"power.set_saving", "enabled"},
     {"data.collections", NULL}, {"data.list", "collection"}, {"data.get", "collection,id"}, {"data.put", "collection,value"},
     {"data.delete", "collection,id"}, {"data.status", "collection"}, {"job.list", NULL}, {"job.cancel", "id"}, {"file.list", "path"}, {"file.stat", "path"}, {"file.read", "path"}, {"file.write", "path,text"},
     {"file.mkdir", "path"}, {"file.copy", "from,to"}, {"file.move", "from,to"}, {"file.delete", "path"}, {"file.free", NULL}, {"usb.status", NULL},
@@ -90,6 +91,7 @@ static const struct {
 };
 
 static const char *const STATES[] = {
+    "power.saving",
     "pairing.state",
     "file.index_state",
     "storage.user_free", "storage.free", "storage.card", "storage.mode", "usb.connected", "time.synced", "time.zone", "time.minute", "alarm.ringing", "notify.unread", "interrupt.active",

@@ -7,7 +7,7 @@ python3 tools/capabilities.py
 python3 tools/capabilities.py --check
 ```
 
-当前共 237 项：可调用能力 204、事件 33；设置 16 项、状态 45 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
+当前共 238 项：可调用能力 205、事件 33；设置 16 项、状态 46 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
 
 风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。
 
@@ -146,6 +146,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `phone.open` | 打开拨号盘，可填入号码 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s04](#s04) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
 | `phone.prev` | 通话记录上一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 PhoneRecents | [s04](#s04) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
 | `phone.recents` | 打开最近通话 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s04](#s04) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
+| `power.set_saving` | 开关省电（最多 1 分钟锁屏，不改原设置） | 人、AI | 高 / system | 无需 | 仅成人 | [s22](#s22) | [system/services/power/power_service.c](../../system/services/power/power_service.c) |
 | `reader.goto_page` | 跳到第几页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 book | [s01](#s01) | [apps/reader/reader.c](../../apps/reader/reader.c) |
 | `reader.list_books` | 书架上有哪些书 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s01](#s01) | [apps/reader/reader.c](../../apps/reader/reader.c) |
 | `reader.next_page` | 下一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 book | [s01](#s01) | [apps/reader/reader.c](../../apps/reader/reader.c) |
@@ -326,7 +327,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 设置：`ai.read_clipboard`、`audio.child_max`、`audio.volume`、`cell.sim_slot`、`display.font_size`、`display.light`、`display.lock_style`、`display.warmth`、`member.idle_return_s`、`net.prefer`、`notify.dnd`、`power.lock_after_s`、`time.auto`、`time.zone`、`update.auto_download`、`voice.handsfree`。
 
-状态：`alarm.revision`、`alarm.ringing`、`app.cards_rev`、`app.foreground`、`audio.listening`、`audio.mic`、`audio.now_playing`、`audio.recording`、`audio.route`、`battery.charging`、`battery.level`、`battery.low`、`bt.available`、`bt.connected`、`bt.device`、`cell.registered`、`cell.sim`、`confirm.pending`、`file.index_state`、`interrupt.active`、`job.running`、`media.state`、`member.authed`、`member.current`、`net.online`、`net.signal`、`net.type`、`notify.unread`、`pairing.state`、`power.state`、`storage.card`、`storage.free`、`storage.mode`、`storage.user_free`、`text.focused`、`text.voice`、`time.minute`、`time.synced`、`time.zone`、`update.progress`、`update.state`、`update.version`、`usb.connected`、`wifi.ssid`、`wifi.state`。
+状态：`alarm.revision`、`alarm.ringing`、`app.cards_rev`、`app.foreground`、`audio.listening`、`audio.mic`、`audio.now_playing`、`audio.recording`、`audio.route`、`battery.charging`、`battery.level`、`battery.low`、`bt.available`、`bt.connected`、`bt.device`、`cell.registered`、`cell.sim`、`confirm.pending`、`file.index_state`、`interrupt.active`、`job.running`、`media.state`、`member.authed`、`member.current`、`net.online`、`net.signal`、`net.type`、`notify.unread`、`pairing.state`、`power.saving`、`power.state`、`storage.card`、`storage.free`、`storage.mode`、`storage.user_free`、`text.focused`、`text.voice`、`time.minute`、`time.synced`、`time.zone`、`update.progress`、`update.state`、`update.version`、`usb.connected`、`wifi.ssid`、`wifi.state`。
 
 事件：—。
 
@@ -446,7 +447,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 设置：`power.lock_after_s`。
 
-状态：`battery.charging`、`battery.level`、`battery.low`、`power.state`。
+状态：`battery.charging`、`battery.level`、`battery.low`、`power.saving`、`power.state`。
 
 事件：`battery.low`。
 
@@ -626,6 +627,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `net.type` | 网络 | `INK_ST_STR` | 是 | [system/services/net/net_service.c](../../system/services/net/net_service.c) |
 | `notify.unread` | 没看的通知数 | `INK_ST_INT` | 是 | [system/services/notify/notify_service.c](../../system/services/notify/notify_service.c) |
 | `pairing.state` | 加入家庭的进度 | `INK_ST_STR` | 是 | [system/services/hub/pairing.c](../../system/services/hub/pairing.c) |
+| `power.saving` | 省电：最多 1 分钟锁屏，不改原设置 | `INK_ST_BOOL` | 是 | [system/services/power/power_service.c](../../system/services/power/power_service.c) |
 | `power.state` | 使用状态（活跃 / 空闲 / 锁屏） | `INK_ST_STR` | 是 | [system/services/power/power_service.c](../../system/services/power/power_service.c) |
 | `storage.card` | 存储卡在且能用 | `INK_ST_BOOL` | 是 | [system/services/file/file_service.c](../../system/services/file/file_service.c) |
 | `storage.free` | 存储卡剩余空间（字节） | `INK_ST_INT` | 是 | [system/services/file/file_service.c](../../system/services/file/file_service.c) |
