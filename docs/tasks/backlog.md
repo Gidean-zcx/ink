@@ -2,7 +2,7 @@
 
 用户要求：先夯实系统层的能力缺口和质量，再补齐系统级别的应用与应用框架，**暂不开发具体应用**（阅读、听、报纸、单词都不做），都做完再做底层性能优化。总规则见 [codex-rules.md](codex-rules.md)。
 
-**状态（2026-11-09）：** 已合入 `services-mid`、`member-wake`、`capability-table`、`device-events`、`pairing`、`backup-restore`、`confirm-durable`、`file-index`（拆成 `file-index-1`、`file-index-2`）、`wireless-transfer`，应用框架的 F1、F2、F5（`ui-semantics`、`ui-input-host`、`ui-cards`），以及只写报告的 `phone-gap`（对照完成标准 R-068 查缺口）和 `speech-cache`（DE-R6 早已修好）。下午又合入：框架 F4、F9（`ui-list-paging`、`ui-file-picker`）、`text-long`、`thumb-wiring`，系统应用 `boot-flow`、`contacts`、`clock-alarm`、`ai-chat`、`phone-calls`、`sms`、`memo`、`settings-a`、`power-pages`。`member-quiesce` 做完但不合入，原因见该节。应用框架的选择已定（D-111）。晚上又合入：`kid-1`、`update-pages`、`calendar`、`confirm-pages`、`search`（F7）、`files-app-1`、`camera-gallery`、`backup-pages`、`ai-pages-2`、`settings-b`；从 batch3 起每个任务由主会话复查、合并后整批交 astra 审一轮（1 小时以内）。batch4 已合入：`activity-card`（F6）、`remote-app`、`fw-f8`、`kid-2`、`storage-usage`、`transfer-pages`，以及 batch3 审计的九条修复 `audit3-fix`；batch4 的 astra 审计在跑。在跑（batch5）：`privacy-records`、`kid-3`、`file-index-3`、`factory-pages`、`fw-f13`、`port-skeleton`，任务书在本目录。合并时记下的后续事项见文末“合并时记下的”。
+**状态（2026-11-09）：** 已合入 `services-mid`、`member-wake`、`capability-table`、`device-events`、`pairing`、`backup-restore`、`confirm-durable`、`file-index`（拆成 `file-index-1`、`file-index-2`）、`wireless-transfer`，应用框架的 F1、F2、F5（`ui-semantics`、`ui-input-host`、`ui-cards`），以及只写报告的 `phone-gap`（对照完成标准 R-068 查缺口）和 `speech-cache`（DE-R6 早已修好）。下午又合入：框架 F4、F9（`ui-list-paging`、`ui-file-picker`）、`text-long`、`thumb-wiring`，系统应用 `boot-flow`、`contacts`、`clock-alarm`、`ai-chat`、`phone-calls`、`sms`、`memo`、`settings-a`、`power-pages`。`member-quiesce` 做完但不合入，原因见该节。应用框架的选择已定（D-111）。晚上又合入：`kid-1`、`update-pages`、`calendar`、`confirm-pages`、`search`（F7）、`files-app-1`、`camera-gallery`、`backup-pages`、`ai-pages-2`、`settings-b`；从 batch3 起每个任务由主会话复查、合并后整批交 astra 审一轮（1 小时以内）。batch4 已合入：`activity-card`（F6）、`remote-app`、`fw-f8`、`kid-2`、`storage-usage`、`transfer-pages`，以及 batch3 审计的九条修复 `audit3-fix`；batch4 审计的三条修复 `audit4-fix` 已合入。**2026-11-10：** batch5（`privacy-records`、`kid-3`、`file-index-3`、`factory-pages`、`fw-f13`、`port-skeleton`）和 batch6（`perf-memory`、`perf-latency`、`script-s31`）都已合入，两批合在一起的 astra 审计（batch5）在跑。在跑（batch7）：`storage-order`、`fw-gaps`、`sound-clock`、`phone-2`、`ui-fidelity`，任务书在本目录。合并时记下的后续事项见文末“合并时记下的”。
 
 **只做你被分配的那一节。** 每节按一小时左右规划，最多两小时；做不完的写进报告的“没做到的”，不要半成品冒充完成。报告写到 `docs/tasks/<节名>/REPORT.md`。
 
@@ -150,12 +150,28 @@
 - 【建议】`MemoRecord`、`MemoPending` 要先有“录成文件”（`audio.record`，界面依赖表第 52 行）；编码按依赖表写的 Opus 需要引入 libopus，先评估体积和内部 RAM 再定。
 - 【做法】CI 改成 `make -k`，一次列出所有编译错误；合并时扫 gcc 才报的写法不能截断输出（这次漏了一条就是因为只看了前 5 条）。
 
+## 合并时记下的（2026-11-10）
+
+- 【已做】`file-index-3`：开机、插拔卡、出现新文件时后台自动建整卡索引，分批让路，建好就停（不再轮询）；`file.usage` 不会把旧数当成已就绪；卡身份文件一次打不开不再被覆盖。索引上限 512→1024 条。合并时改了：只有出现新路径才重扫（改名、删除、覆盖写不重扫），见 [复核记录](file-index-3/REVIEW.md#主会话复核修复轮2026-11-10)。
+- 【后续，batch7 storage-order】存储写盘先来先写，后台写盘会排在有人在等的落盘前面；写闪存时任务停顿，碰上短按或开始录音会丢输入、丢开头的声音。hub 端到端测试的第一下点按因此从 3 秒改到 7 秒，camera_gallery、media 两个测试加了“先等落盘再按键”，storage-order 要把这三处改回去。
+- 【已知】`index_save` 不再等落盘：改名、删除后马上断电，重启会留下旧路径的记录（编号不复用，查询时找不到文件）。
+- 【已知，问用户】阅读器回主页就释放阅读状态，今日屏的“继续读”卡片随之消失（kid-3 报告记下的，`apps/reader/reader.c`）。阅读属于内置应用，要不要现在修等用户定。
+- 【已做，batch7 fw-gaps 补】`fw-f13` 写好了“怎么写一个应用”（docs/system/app-framework.md）和能跑的示例 examples/jot；还没有的两样：后台打开集合、取消订阅。
+- 【已知】MicroQuickJS 在 UBSan 下异常退出（script-s31 记下）；脚本候选只测量，不进出厂固件。
+- 【真机要看】perf-memory 把显示协调任务的栈放到 PSRAM（模拟器里最紧场景的内部 RAM 余量 33,272→37,376 字节）；真机端口要用同样的栈分配并核实性能。主机估算接近上限的栈（main 4000/4096 等）等真机高水位再定。
+- 【已知】factory-pages：页面只看当前家人的备份状态；FactoryReset、FactoryDone 与画板对照 51.6、27.6（batch7 ui-fidelity 处理）。privacy-records：对话没有读取历史的后端，页面如实写“暂时读不到次数”。
+- 【已做】port-skeleton：ESP32-S31 端口能编译、链接（固件约 1.2 MB），每次相关推送都在 CI 里编一遍（`s31-port.yml`）；HAL 还是空实现，驱动接上要上机。
+
 ## 性能
 
 ## perf-memory
 
 内部 RAM 和 PSRAM：找最大的几项，有实测收益才改。存储任务的栈 2026-11-09 按主机估算从 3584 加到 4096，能编 S31 后用 `-fstack-usage` 核实，能降回就降。验收：各场景内部 RAM 最低余量和 PSRAM 峰值的前后对比表【实测，模拟器】；行为不变，测试和确定性都过；没有收益的尝试写明，不留改动。
 
+**结果（2026-11-10）：已合入**（[报告](perf-memory/REPORT.md)）。显示协调任务的栈放到 PSRAM，最紧的正常场景（AI 工具调用）内部 RAM 最低余量多出 4,104 字节；产品代码 4 行。栈大小都没动：当时还没有 S31 端口，拿不到完整调用链。
+
 ## perf-latency
 
 点按到反馈、翻页、开机到主页、打开应用的时延：同样要前后对比，只留有实测收益的改动。真机才能确认的标清楚。
+
+**结果（2026-11-10）：已合入**（[报告](perf-latency/REPORT.md)）。点名的四处：活动卡、AiLog 计数、缩略图解码持锁改了，长文本每字落盘量下来不值得改；整体 p50/p95 基本不变（点按到第一帧约 234 ms，翻一页到可读约 601 ms，模拟器）。
