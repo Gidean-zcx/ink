@@ -1,6 +1,6 @@
 # factory-pages 执行报告
 
-基线：`2228df7de99de9fea15fddc22868a0de1caae770`。仅模拟器；实现与验证已结束。全量未全过，不能按绿色验收合入。以下构建、测试均以 `taskpolicy -c utility` 运行，并行最多 `-j2`。
+基线：`2228df7de99de9fea15fddc22868a0de1caae770`。仅模拟器；下文先保留首轮执行记录，最新修复与验收结果见末节“复查后的修复”。以下构建、测试均以 `taskpolicy -c utility` 运行，并行最多 `-j2`。
 
 ## 验收表
 
@@ -75,6 +75,23 @@ FactoryReset 对照 51.608/255，FactoryDone 27.647/255，超过 12：使用现�
 - 【实现】根因是原有启动顺序：`ink_backup_start()` 立即派发断电恢复，而 `ink_memo_init()` 等集合注册在其后。清空标记多出一字节会改变 LittleFS 布局及后续物理操作分布；断点计数在预览后重新设为 45，并非把前面 wipe 的写入累加进去。
 - 【实现】只在 `system/boot/main.c` 把既有 `ink_backup_start()` 移到所有应用初始化之后；不放松成员、预览哈希、版本或确认校验。删掉本任务页面中无用的 `draw` 前置声明，给这一行移动腾出预算；本轮没有新增机制。任务累计产品代码新增 200 行、删除 18 行。
 - 【实测】普通构建的恢复全部既有断点（1、8、20、45、75、120）通过；页面测试及三个原来跳过的中枢测试通过，共 6/6（含能力导出夹具）。命令：`INK_KEEP_EVIDENCE=1 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$PWD/hub" taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^(backup-restore-recovery|factory-pages|hub-contract|hub-json-crosscheck|hub-simulator-e2e)$' --output-on-failure -j2`；日志：`build/factory-review-targeted.log`。
-- 【实测】新增反向验证脚本只编译启动入口的副本：撤回本次移动后，原断点表在 flash-45 如期失败；用旧代码制造的同一份断电镜像交给修复后的代码，恢复完成，原有逐项校验全部通过。命令：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/factory_pages_recovery_reverse.py --build build`；脚本退出 0，内部失败用例退出 1；证据：`build/factory-review-reverse.log`、`build/factory-review-reverse/`，含断电镜像 SHA-256。产品源码哈希不变，已有测试、断点表及断言均未改。
+- 【实测】新增反向验证脚本只在编译副本里撤回启动顺序：撤回本次移动后，原断点表在 flash-45 如期失败；用旧代码制造的同一份断电镜像交给修复后的代码，恢复完成，原有逐项校验全部通过。命令：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/factory_pages_recovery_reverse.py --build build`；脚本退出 0，内部失败用例退出 1；证据：`build/factory-review-reverse.log`、`build/factory-review-reverse/`，含断电镜像 SHA-256。产品源码哈希不变，已有测试、断点表及断言均未改。
 - 【实测】原来三个跳过项缺的是所选 Python 环境中的 `aiohttp`、`PyYAML`、`pytest`、`pytest-asyncio`；依赖目录已有完整环境，未安装或升级依赖。两套 CMake 均增设 `-DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"`，测试设 `PYTHONPATH="$PWD/hub"`，确保导入本检出的中枢代码。已核对 Python 3.11.15、aiohttp 3.12.15、PyYAML 6.0.3、pytest 8.4.2、pytest-asyncio 1.2.0，与锁定版本一致。
-- 普通、ASan 全量及 ASan 全断点结果待填。能力表文档同步检查按用户本轮明确要求不处理；没有改生成文档、跳过规则或预算。
+- 【实现】补充更正首轮基线证据：旧 `tests/factory_pages_baseline.py` 只替换 `device.c` 中的直接 include，而启动入口实际上经 `product.h` 间接包含，因此“启动入口也已换回基线”的说法不成立。本轮新脚本显式展开该头文件再替换入口；根因依据启动代码核查、修前失败、反向对照及同镜像恢复，不依赖旧脚本。该脚本问题记为顺手发现，未扩展本轮修复范围。
+
+| 编号 | 结论 | 证据 | 命令 |
+| --- | --- | --- | --- |
+| FP-H1 | 【实测】已修复，普通和 ASan 的全部既有断点通过 | 1、8、20、45、75、120 各自在断电后恢复完成；完整逐断点输出在两套 `factory-review-tests.log` | 以下全量命令均包含 `backup-restore-recovery` |
+| 验收 1～4 | 【实测】回归通过 | 两套页面测试各 193 条检查；保留／清卡、密码与孩子拒绝、备份时间与未备份提示、完成页到开机流程均通过；截图和快照路径沿用首轮 | 以下全量命令均包含 `factory-pages` |
+| 验收 5：普通全量 | 【实测】按本轮豁免通过 | 258 项中 257 通过、1 项能力表文档同步失败、0 跳过；222.11 秒；`build/factory-review-full.log` | 下方命令，目录 `build` |
+| 验收 5：内存检查 | 【实测】按本轮豁免通过 | ASan/UBSan 同为 257 通过、1 项能力表文档同步失败、0 跳过；540.67 秒；`build-asan/factory-review-full.log`；完整日志无 sanitizer 错误诊断 | 下方命令，目录换为 `build-asan` |
+
+```sh
+INK_KEEP_EVIDENCE=1 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$PWD/hub" taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
+INK_KEEP_EVIDENCE=1 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$PWD/hub" taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
+```
+
+- 【实测】两套 CTest 均退出 8，唯一失败为 `capability-table-doc`（能力表未重新生成）。这是用户本轮明确豁免的文档同步检查，仍实际执行；没有改生成文档、跳过规则、已有测试期望或预算。原有恢复失败和三个跳过项均已处理，无剩余缺失依赖；两套 `hub-contract` 内部各 135 项 Python 测试也全通过，无跳过。
+- 【实测】两套完整测试日志另存为 `build/factory-review-tests.log`、`build-asan/factory-review-tests.log`；本轮恢复数据在 `build/backup-restore-6kb1q2ks/`、`build-asan/backup-restore-cvblb7hg/`。页面内部 RAM 最低余量均为清空前 45,176 字节、完成页 47,224 字节，预算仍为 32,768 字节。
+- 【实现】架构审视：在启动入口满足集合注册这一既有依赖，恢复仍由备份服务执行；能力、成员策略、页面快照及 AI 调用路径未增加分支。本轮新增机制：无。没有改存储格式或断点表，没有用写入次数调整避开故障。
+- 【实测】收尾检查：本轮仅 4 个相关文件，任务累计产品新增 200 行、删除 18 行；`git diff --check` 通过，基线到最终差异的隐私扫描为 0 匹配（rg 退出 1）。未提交构建产物、设计稿或主会话提供的未跟踪 `REVIEW.md`；未推送、未运行真机或 Linux/CI。
