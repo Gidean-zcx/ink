@@ -75,6 +75,18 @@ static void incoming(bool answer) {
     CHECK(WAIT_FOR(!H.active && strcmp(active_state(), "call"), 10000), "answer or rejection ends the simulated call");
     CHECK(WAIT_FOR(ink_db_idle(), 10000), "incoming outcome is persisted"); quiet();
 }
+static void reopen_and_hangup(void) {
+    CHECK(BY_HAND("system.home", NULL) && g_rc.status == INK_RC_DONE, "leave the active call for home"); quiet();
+    CHECK(BY_HAND("shell.launch", "{\"id\":\"phone\"}") && g_rc.status == INK_RC_DONE, "reopen phone during the call"); quiet(); inspect();
+    CHECK(sim_net_call(NULL, 0) == 1, "the AT call remains active after navigation");
+    bool resumed = !strcmp(ink_ui_page_name(), "PhoneCall") && strstr(snap, "call.hangup") && strstr(snap, "00000000001");
+    CHECK(resumed, "PC-R1-01: active call must remain reachable");
+    if (resumed) hangup();
+    else { /* Clean up the negative control without cascading failures. */
+        CHECK(BY_HAND("call.hangup", NULL) && g_rc.status == INK_RC_DONE, "clean up the unreachable call");
+        CHECK(WAIT_FOR(!H.active && ink_db_idle(), 10000), "unreachable call is stored"); quiet();
+    }
+}
 static void check_records(void) {
     ink_db_cursor_t cursor = {0}; ink_rec_t rec; char raw[256] = {0};
     const char *kinds[] = {"打出", "未接", "打来", "打出", "打出"};
@@ -100,7 +112,10 @@ static void write_phase(void) {
     CHECK(AI("phone.number", NULL) && g_rc.status == INK_RC_DONE, "phone focuses the F2 number input"); quiet();
     CHECK(AI("text.insert", "{\"text\":\"00000000001\"}") && g_rc.status == INK_RC_DONE, "F2 edits the live dial number");
     CHECK(AI("text.submit", NULL) && g_rc.status == INK_RC_DONE, "F2 submits the live number"); quiet();
-    outgoing(); hangup(); incoming(false); incoming(true); history(3);
+    outgoing(); reopen_and_hangup(); incoming(false); history(2); incoming(true); inspect();
+    CHECK(ink_db_count(P.db) == 3, "the incoming call is stored while history stays open");
+    CHECK(!strcmp(ink_ui_page_name(), "PhoneRecents") && strstr(snap, "\"total\":3") && strstr(snap, "00000000002"), "PC-R1-02: open history must refresh");
+    history(3);
     CHECK(strstr(g_result, "未接") && strstr(g_result, "打来") && strstr(g_result, "打出"), "all three call outcomes are readable through the data service");
     open_phone("00000000004");
     CHECK(AI("call.dial", "{\"number\":\"00000000004\"}") && g_rc.status == INK_RC_PENDING_CONFIRMATION, "AI dial still asks for confirmation"); quiet();

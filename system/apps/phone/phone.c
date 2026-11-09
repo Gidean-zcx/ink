@@ -24,7 +24,8 @@ static struct {
 static struct {
     char member[16], number[24], call_member[16], calling[24], status[96], dial_args[64];
     char ids[4][32], numbers[4][24], details[4][96], args[4][64];
-    bool selecting;
+    bool selecting, active;
+    ink_exec_job_t refresh;
     ink_db_t *db;
     ink_ui_list_t *list;
     ink_ui_list_position_t position;
@@ -37,6 +38,13 @@ static struct {
 static void show(const ink_activity_t *page) {
     ink_ui_drop_app("phone");
     ink_ui_push(page, NULL);
+}
+static void resume_call(void) {
+    if (P.active && !strcmp(P.call_member, ink_member_current()->id) && ink_member_space_open()) show(&CALL);
+}
+static void refresh_history(void *db) {
+    if (P.db == db && !strcmp(P.member, ink_member_current()->id) && ink_member_space_open() &&
+        !strcmp(ink_ui_page_name(), RECENTS.name)) ink_ui_redraw();
 }
 static void on_call(void *ctx, const char *id, const ink_args_t *a) {
     (void)ctx;
@@ -57,7 +65,10 @@ static void on_call(void *ctx, const char *id, const ink_args_t *a) {
         ink_jw_raw(&w, ",\"minutes\":"); ink_jw_int(&w, H.answered ? (int64_t)((ink_now_us() - H.started) / 60000000) : 0);
         ink_jw_raw(&w, ",\"at\":"); ink_jw_int(&w, H.at); ink_jw_raw(&w, "}");
         ink_db_write_t wr = {.sort = H.at, .data = raw, .len = w.len, .src = INK_SRC_SYSTEM};
-        ink_db_put(db, &wr, NULL); ink_db_flush(db); ink_db_close(db);
+        if (ink_db_put(db, &wr, NULL) == INK_DB_OK) {
+            ink_db_flush(db); ink_exec_post(INK_EXEC_UI, &P.refresh, refresh_history, db);
+        }
+        ink_db_close(db);
     }
 }
 static void changed(void *ctx, const char *id, const ink_args_t *a) {
@@ -68,11 +79,12 @@ static void changed(void *ctx, const char *id, const ink_args_t *a) {
         ink_args_get_str(a, "number", P.number, sizeof P.number); P.selecting = false; show(&ink_phone_page); return;
     }
     if (!strcmp(id, "call.incoming") || !strcmp(id, "call.dialed")) {
+        P.active = true;
         snprintf(P.call_member, sizeof P.call_member, "%s", member);
         ink_args_get_str(a, !strcmp(id, "call.incoming") ? "from" : "number", P.calling, sizeof P.calling);
         snprintf(P.status, sizeof P.status, "%s", !strcmp(id, "call.incoming") ? "来电" : "正在拨号");
     } else if (!strcmp(id, "call.answered") || !strcmp(id, "call.connected")) snprintf(P.status, sizeof P.status, "通话中");
-    else if (!strcmp(id, "call.ended")) snprintf(P.status, sizeof P.status, "通话已结束");
+    else if (!strcmp(id, "call.ended")) { P.active = false; snprintf(P.status, sizeof P.status, "通话已结束"); }
     else return;
     if (!strcmp(P.call_member, ink_member_current()->id) && ink_member_space_open()) {
         if (!strcmp(id, "call.dialed")) show(&CALL);
@@ -231,7 +243,7 @@ static int snapshot(char *out, size_t cap) {
     return ink_ui_semantics_snapshot(&P.model, out, cap);
 }
 static bool page_key(ink_key_t k, bool lng) { return P.list && ink_ui_list_key(P.list, k, lng); }
-const ink_activity_t ink_phone_page = {.name = "Phone", .app = "phone", .create = create, .destroy = destroy, .snapshot = snapshot};
+const ink_activity_t ink_phone_page = {.name = "Phone", .app = "phone", .create = create, .destroy = destroy, .snapshot = snapshot, .settle = resume_call};
 static const ink_activity_t RECENTS = {.name = "PhoneRecents", .app = "phone", .create = create, .destroy = destroy, .snapshot = snapshot, .on_key = page_key};
 static const ink_activity_t CALL = {.name = "PhoneCall", .app = "phone", .create = create, .destroy = destroy, .snapshot = snapshot};
 static const ink_cap_t CAPS[] = {

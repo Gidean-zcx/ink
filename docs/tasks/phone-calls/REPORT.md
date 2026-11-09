@@ -2,17 +2,21 @@
 
 基线：`f0b0c539f3f8a30bca03f663484287d65c76de33`。验收 1–4 通过，5 部分通过；仅限模拟器 AT 模型。
 
+本轮复修（2026-11-09）：PC-R1-01（高）、PC-R1-02（中）已修复并通过定向回归；修复前新增回归恰好失败两项。全量和内存检查正在重跑；下文 T3、T4 暂为上轮记录，待补本轮结果。
+
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
+| PC-R1-01（高） | 【实测】已修复 | 通话接通后回主页，再从电话入口恢复到当前成员的 `PhoneCall`；页面有原号码和 `call.hangup`，实际点按钮挂断 | T1、T7 |
+| PC-R1-02（中） | 【实测】已修复 | 保持最近通话页打开，接听并挂断后直接读取原页面：集合和快照均为 3 条，包含新来电号码；未先重新进入 | T1、T7 |
 | 1 | 【实测】通过 | AT 拨出、接通、挂断；接听与拒接各记一条；新进程读回大人 5 条、孩子 1 条 | T1 |
 | 2 | 【实测】通过 | 真实联系人编辑页点“选择这个号码”，`contacts.select` 返回后填入拨号盘，再点拨出 | T1 |
 | 3 | 【实测】通过，含反例 | 去掉读取时的成员绑定，孩子记录数断言失败；恢复后通过 | T2 |
 | 4 | 【实测】通过 | 三页快照能放进 3072 字节 AI 上下文；按钮与 AI 同用 `call.dial` / `call.hangup`；AI 拨号先待确认，AI 不能自己确认 | T1 |
 | 5 | 【实测】部分通过 | 常规及 ASan/UBSan 各 224/225 通过，无跳过；唯一失败为共享生成能力表未更新。新操作已注册且源码/运行时一致；产品改动 276 行 | T3、T4、T6 |
 
-T1：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^(phone-calls|contacts)$' --output-on-failure -j2`，2/2 通过。电话测试五阶段共 251 个断言。
+T1：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^(phone-calls|contacts)$' --output-on-failure -j2`，本轮 2/2 通过。电话五阶段分别为 184、33、14、20、20 个断言，共 271 个；证据 `build/phone-r1-focused.log` 和 `build/test-out/phone-calls/*/metrics.json`。
 
 T2：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/phone_calls/reverse.py build`。反例把唯一一处 `ink_db_open_cached_member(&HISTORY, P.member)` 改为固定读大人；3 个隔离断言失败。脚本恢复源码、重新构建后全五阶段通过。证据：`build/phone-reverse-summary.log`、`build/phone-reverse.log`、`build/phone-restored.log`。
 
@@ -25,6 +29,8 @@ T4：同 T3，仅目录换为 `build-asan`，退出 8，391.93 秒；证据 `bui
 T5：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.py --build build --design "$INK_DESIGN" --out build/test-out/phone-calls --scenes Phone PhoneRecents PhoneCall --reuse`。证据为该目录的 `scores.json`、三张拼图及各页面的 `snap-scene.png`；保留证据，未提交设计稿或产物。
 
 T6：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/capabilities.py --output build/phone-capabilities.md --runtime build/test-out/capability-table/capability-inventory.json`，退出 0；`git diff f0b0c539..HEAD --numstat` 计数产品改动。
+
+T7：【实测】在复修前版本 `15ac0ca5` 的产品代码上，仅补充本轮回归并构建 `sim-phone-calls`，运行 `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/phone_calls/run.py build/sim-phone-calls . build/assets build/test-content build/test-out/phone-r1-before`，退出 1；写入阶段 180 个断言通过、恰好 PC-R1-01 和 PC-R1-02 两项失败，`test.finished=1`。保留相同测试，加入修复后 T1 通过。证据 `build/phone-r1-before.log` 和 `build/test-out/phone-r1-before/write/metrics.json`；没有放宽断言或预算。
 
 ## 没做到的
 
@@ -43,6 +49,7 @@ T6：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/capabi
 
 - `tests/contacts/contacts.c`：原入口断言改为电话入口能打开，再调用 `contacts.open` 进入联系人；原联系人 CRUD、选择、隔离和确认断言保留。
 - `tests/integration/ai_surface.c`：在 AI 预期清单追加 8 个新操作，核查 `phone.open` 的可选号码参数、`phone.key` 的必需参数 `key`，并追加 3 个事件注册断言。原断言不变；首轮漏登导致 10 个断言失败，补登后实测通过。
+- 本轮 `tests/phone_calls/phone_calls.c`：在既有首次外呼后插入主页往返并实际点挂断；在已有来电接听前打开最近通话页，结束后先检查原页，再保留原历史检查。大人 5 条、孩子 1 条等既有期望不变；反例分支仅在“无法回到通话”断言已经失败后清理模拟通话，避免连带失败。
 
 ## 要用户定的
 
@@ -59,6 +66,7 @@ T6：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/capabi
 - `phone.calls` 成员数据集合：任务书要求保存通话记录；复用数据服务现有 JSON 日志格式及默认 256 KiB 限额，不自动删除历史。
 - `call.dialed`、`call.connected`、`contacts.selected` 事件：让电话页面接收到已有能力的实际结果，接通事件来自模拟 AT 的 `+CLCC`。
 - 无新增常驻任务、线程、后台重试、队列、缓存、配置项或独立文件格式。
+- 本轮无新增机制：PC-R1-01 复用已有通话 UI 事件状态及活动页 `settle` 钩子；PC-R1-02 按复查要求，在 `ink_db_put` 成功后复用 UI 执行器投递刷新，只有仍持有同一集合且属于当前成员的最近通话页会重画。
 
 ## 要改的文档
 
