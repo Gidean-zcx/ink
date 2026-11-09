@@ -1467,8 +1467,8 @@ held_back(ink_call_t *c) { /* sound holds the flash back; saving the journal now
 }
 
 static void cap_backup(ink_call_t *c) {
-    if (held_back(c)) return;
     if (!for_call(c)) return;
+    if (held_back(c)) goto failed;
     if (active()) {
         c->rc.status = INK_RC_QUEUED;
         result(c, false);
@@ -1478,7 +1478,7 @@ static void cap_backup(ink_call_t *c) {
     if (ink_fs_card_hold() != INK_FS_OK) {
         c->rc.status = INK_RC_FAILED;
         snprintf(c->rc.say, sizeof c->rc.say, "请插入存储卡后备份");
-        return;
+        goto failed;
     }
     ink_fs_card_release();
     free_capture();
@@ -1492,13 +1492,16 @@ static void cap_backup(ink_call_t *c) {
     if (save_journal()) {
         c->rc.status = INK_RC_FAILED;
         snprintf(c->rc.say, sizeof c->rc.say, "备份记录暂时写不进去，请稍后再试");
-        return;
+        goto failed;
     }
     (*task_id()) = ink_task_begin_for("backup", "备份资料", B.j.member, NULL, NULL);
     event("backup.changed");
     c->rc.status = INK_RC_QUEUED;
     result(c, false);
     schedule();
+    return;
+failed:
+    mark_failed(c->rc.say);
 }
 
 static void cap_preview(ink_call_t *c) {

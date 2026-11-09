@@ -91,6 +91,12 @@ static void changed(void *ctx, int h, const char *id) {
     (void)ctx; (void)h; (void)id;
     if (current() && !S.field) ink_ui_redraw();
 }
+static void members_changed(void *ctx, const char *id, const ink_args_t *args) {
+    (void)ctx; (void)id; (void)args;
+    if (current() && S.page == MEMBERS && (!S.field || (S.target[0] && !ink_member_exists(S.target)))) {
+        ink_text_blur(0); ink_ui_redraw();
+    }
+}
 static int snapshot(char *out, size_t cap) {
     if (!current()) return -1;
     return S.field ? ink_textfield_short_snapshot(S.field, out, cap) : ink_ui_list_snapshot(S.list, out, cap);
@@ -157,7 +163,7 @@ static void action(ink_call_t *c) {
     } else if (!current()) c->rc.status = INK_RC_STALE;
     else if (!strcmp(id, "family.focus")) { if (S.field) ink_textfield_short_focus(S.field); }
     else if (!strcmp(id, "family.save")) {
-        if (!S.field) { c->rc.status = INK_RC_STALE; return; }
+        if (!S.field || (S.target[0] && !ink_member_exists(S.target))) { c->rc.status = INK_RC_STALE; return; }
         ink_args_t args; ink_args_init(&args); char member[16];
         snprintf(member, sizeof member, "p%llx", (unsigned long long)osal_wall_us() & 0xffffffffffffull);
         ink_args_str(&args, "id", S.target[0] ? S.target : member);
@@ -213,5 +219,6 @@ int ink_settings_family_init(void) {
         {.id = "family.role", .title = "选择添加大人或孩子", .activity = "SetMembers", .effect = INK_FX_NAVIGATE, .run = action},
         {.id = "family.prev", .title = "家人设置上一页", .effect = INK_FX_NAVIGATE, .run = action},
         {.id = "family.next", .title = "家人设置下一页", .effect = INK_FX_NAVIGATE, .run = action}};
-    return ink_cap_register(caps, sizeof caps / sizeof *caps) || ink_settings_watch("", changed, NULL, INK_EXEC_UI) ? -1 : 0;
+    return ink_cap_register(caps, sizeof caps / sizeof *caps) || ink_settings_watch("", changed, NULL, INK_EXEC_UI) ||
+        ink_cap_subscribe("member.changed", members_changed, NULL, INK_EXEC_UI) ? -1 : 0;
 }

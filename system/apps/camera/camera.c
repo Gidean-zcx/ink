@@ -64,7 +64,7 @@ static void take(ink_call_t *c) {
         osal_free(png);
         uint32_t cursor = 0; ink_fs_entry_t e; bool indexed = false;
         if (!r && p->epoch == ink_member_epoch()) while (ink_fs_index("/me/照片", INK_FS_IMAGE, &cursor, &e) == 1)
-            if (!strcmp(e.path, path)) { indexed = true; snprintf(c->rc.object, sizeof c->rc.object, "file:%u", e.id); break; }
+            if (!strcmp(e.path, path)) { indexed = true; snprintf(c->rc.object, sizeof c->rc.object, "file:%u", (unsigned)e.id); break; }
         if (r || !indexed) c->rc.status = INK_RC_FAILED;
     }
     p->ok = c->rc.status == INK_RC_DONE;

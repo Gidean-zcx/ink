@@ -55,7 +55,7 @@ static void cap_capture(ink_call_t *c) { /* exec.media */
     } else {
         snprintf(c->rc.object, sizeof c->rc.object, "photo:%u", (unsigned)CAM.seq);
         c->rc.revision = CAM.seq;
-        snprintf(c->rc.say, sizeof c->rc.say, "拍好了");
+        snprintf(c->rc.say, sizeof c->rc.say, "取好了，没有存到相册");
     }
     __atomic_store_n(&CAM.busy, 0, __ATOMIC_RELEASE);
     osal_mutex_unlock(CAM.lock);
@@ -63,7 +63,7 @@ static void cap_capture(ink_call_t *c) { /* exec.media */
 
 static const ink_cap_t CAMERA_CAPS[] = {
     {.id = "camera.capture",
-     .title = "拍一张照片",
+     .title = "取一帧画面给 AI 看，不保存",
      .output = "{\"type\":\"object\",\"properties\":{\"object\":{\"type\":\"string\"}}}",
      .effect = INK_FX_LOCAL_WRITE,
      .child_ok = true,

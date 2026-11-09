@@ -50,13 +50,12 @@ static void changed(void *ctx, int h, const char *id) {
     ink_exec_post(INK_EXEC_MEDIA, &W.load, load, NULL);
 }
 static void selected(void *ctx, uint32_t id) {
-    (void)ctx;
     if (!id) return;
     ink_args_t args; ink_args_init(&args); ink_args_str(&args, "id", "display.wallpaper_file"); ink_args_int(&args, "value", id);
-    ink_call_opts_t o = {.src = INK_SRC_TOUCH}; ink_cap_call("settings.set", &args, &o);
+    ink_call_opts_t o = {.src = (ink_source_t)(uintptr_t)ctx}; ink_cap_call("settings.set", &args, &o);
 }
 static void choose(ink_call_t *c) {
-    if (ink_file_picker_open(INK_FS_IMAGE, selected, NULL)) c->rc.status = INK_RC_FAILED;
+    if (ink_file_picker_open(INK_FS_IMAGE, selected, (void *)(uintptr_t)c->src)) c->rc.status = INK_RC_FAILED;
 }
 int ink_wallpaper_init(void) {
     static const ink_setting_def_t setting = {.id = "display.wallpaper_file", .title = "壁纸图片编号", .type = INK_SET_INT, .max = UINT32_MAX};

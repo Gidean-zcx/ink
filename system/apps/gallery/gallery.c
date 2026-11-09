@@ -72,8 +72,8 @@ static void thumb_ready(void *ctx, const ink_receipt_t *rc) {
 }
 static void bind_photo(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, ink_ui_action_spec_t *action, void *ctx) {
     (void)ctx; unsigned at = index % 9; G.slots[at] = slot; lv_obj_clean(slot);
-    snprintf(G.objects[at], sizeof G.objects[at], "file:%u", G.ids[index]);
-    snprintf(G.args[at], sizeof G.args[at], "{\"id\":%u}", G.ids[index]);
+    snprintf(G.objects[at], sizeof G.objects[at], "file:%u", (unsigned)G.ids[index]);
+    snprintf(G.args[at], sizeof G.args[at], "{\"id\":%u}", (unsigned)G.ids[index]);
     *field = (ink_ui_field_spec_t){.id = G.objects[at], .role = "image", .label = "照片", .value = G.objects[at], .object = {G.objects[at], 1}};
     *action = (ink_ui_action_spec_t){.id = G.objects[at], .label = "查看照片", .capability = "photo.open", .args_json = G.args[at], .object = field->object, .enabled = true};
     thumb_t *t = osal_malloc(sizeof *t, OSAL_MEM_EXTERNAL);
@@ -167,19 +167,31 @@ static int photo_snapshot(char *out, size_t cap) { return ink_ui_semantics_snaps
 static bool gallery_key(ink_key_t k, bool lng) { return G.list && ink_ui_list_key(G.list, k, lng); }
 static const ink_activity_t GALLERY = {.name = "Gallery", .app = "gallery", .create = gallery_create, .destroy = gallery_destroy, .snapshot = gallery_snapshot, .on_key = gallery_key};
 static const ink_activity_t PHOTO = {.name = "Photo", .app = "gallery", .create = photo_create, .destroy = photo_destroy, .snapshot = photo_snapshot};
+static void photo_found(void *ctx, const ink_receipt_t *rc) {
+    ink_call_t *c = ctx;
+    ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
+    int64_t id = 0; ink_args_get_int(&c->args, "id", &id);
+    bool found = j && rc->status == INK_RC_DONE && rc->result && !ink_json_parse(j, rc->result, strlen(rc->result)) &&
+        ink_json_eq(j, ink_json_find(j, ink_json_find(j, 0, "entries") + 1, "type"), "image");
+    osal_free(j);
+    if (!found) c->rc.status = INK_RC_REJECTED;
+    else if (strcmp(ink_cap_call_member(c), ink_member_current()->id) || !ink_member_space_open()) c->rc.status = INK_RC_STALE;
+    else ink_ui_push(&PHOTO, (void *)(uintptr_t)id);
+    ink_cap_done(c);
+}
 static void gallery_action(ink_call_t *c) {
     if (!strcmp(c->cap->id, "photo.open")) {
-        int64_t id = 0; ink_args_get_int(&c->args, "id", &id); bool found = false;
-        if (G.epoch == ink_member_epoch()) for (size_t i = 0; i < G.count; i++) if (id == G.ids[i]) found = true;
-        if (!found) { c->rc.status = INK_RC_REJECTED; return; }
-        ink_ui_push(&PHOTO, (void *)(uintptr_t)id); return;
+        ink_call_opts_t o = {.src = c->src, .member = ink_cap_call_member(c), .reply_exec = INK_EXEC_UI, .done = photo_found, .ctx = c};
+        ink_cap_defer(c);
+        if (ink_cap_call("file.lookup", &c->args, &o)) { c->rc.status = INK_RC_FAILED; ink_cap_done(c); }
+        return;
     }
     if (G.list) ink_ui_list_turn(G.list, !strcmp(c->cap->id, "gallery.next") ? 1 : -1);
 }
 static const ink_cap_t GALLERY_CAPS[] = {
     {.id = "gallery.prev", .title = "相册上一页", .activity = "Gallery", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = gallery_action},
     {.id = "gallery.next", .title = "相册下一页", .activity = "Gallery", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = gallery_action},
-    {.id = "photo.open", .title = "查看相册中的照片", .activity = "Gallery", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = gallery_action,
+    {.id = "photo.open", .title = "查看有权访问的图片文件", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = gallery_action,
      .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}},\"required\":[\"id\"]}"}
 };
 static void photos_changed(void *ctx, const char *id, const ink_args_t *args) {
