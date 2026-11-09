@@ -2,6 +2,8 @@
 
 基线：`291da6760931601e4783ebaddabc08e5bcab22eb`。状态：完成；仅本地提交，未推送。
 
+最新修复和验证见[复查后的修复](#复查后的修复)；此前各节保留首轮执行记录。
+
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
@@ -102,15 +104,30 @@ ASan/UBSan 使用同样设置，目录换成 `build-asan`，增加 `-DINK_SANITI
 
 ## 复查后的修复
 
-2026-11-09，接续基线 `e750154a`。前文保留首次执行证据，本次结果以本节为准。复查只有三项中级问题，严重、高级、低级均为零；三项均已修复，定向及反向验证通过，全量及内存检查待完成。
+2026-11-09，接续基线 `e750154a`。前文保留首次执行证据，本次结果以本节为准。复查只有三项中级问题，严重、高级、低级均为零；三项均已修复，定向、反向、普通全量和 ASan/UBSan 全量验证全部通过。
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| FI2-R1-001 | 定向通过 | 【实测】彩色、灰度及两种带重启标记的基线 JPEG 正常解码；四张图逐字节截断并补 EOI，均报错且输出清零。四类解码容错分别撤回后均失败 | `ctest --test-dir build -R '^image-decode$' --output-on-failure -j2`；下方反向命令 |
-| FI2-R1-002 | 定向通过 | 【实测】最大像素 PNG 解码和逐像素转换、1024×1024 抖动均消耗模拟 CPU 时间；分别撤掉解码、转换、抖动计费均失败 | 同上及 `ctest --test-dir build -R '^image-dither$' --output-on-failure -j2` |
-| FI2-R1-003 | 定向通过 | 【实测】坏长度用例先恢复有效 CRC；仅撤掉长度保护时程序越界失败，恢复后通过 | 同上；反向用例 `chunk_length` |
-| 验收 1～4 | 定向通过 | 【实测】四组图片测试全部通过，未放宽原断言或资源预算 | `ctest --test-dir build -R '^image-' --output-on-failure -j2` |
-| 验收 5 | 待完成 | 普通、ASan/UBSan 全量待完成；【实现】自写产品代码 191 行，加第三方新增/替换 34 行，共 225 行，低于 250 行 | 沿用前文全量命令 |
+| FI2-R1-001 | 通过 | 【实测】彩色、灰度及两种带重启标记的基线 JPEG 正常解码；四张图共 2021 个逐字节截断并补 EOI 的输入均报错且输出清零。四类解码容错分别撤回后均失败 | `ctest --test-dir build -R '^image-decode$' --output-on-failure -j2`；下方反向命令 |
+| FI2-R1-002 | 通过 | 【实测】1024×1024 PNG 解码与转换耗时 996002 μs、抖动耗时 482345 μs；两种构建数值一致。分别撤掉解码、转换、抖动计费均失败 | 同上及 `ctest --test-dir build -R '^image-dither$' --output-on-failure -j2` |
+| FI2-R1-003 | 通过 | 【实测】坏长度用例先恢复有效 CRC；仅撤掉长度保护时程序越界失败，恢复后通过 | 同上；反向用例 `chunk_length` |
+| 验收 1～4 | 通过 | 【实测】四组图片测试全部通过，未放宽原断言或资源预算；亮度误差仍为 `0.0003515518 < 0.01` | `ctest --test-dir build -R '^image-' --output-on-failure -j2` |
+| 验收 5 | 通过 | 【实测】普通、ASan/UBSan 全量各 209/209，零失败、零跳过；【实现】自写产品代码 191 行，加第三方新增/替换 34 行，共 225 行，低于 250 行 | 下方全量命令 |
+
+【实测】两次配置、构建和全量均退出 0，普通耗时 143.18 s，ASan/UBSan 耗时 198.35 s。两套均为 `INK_WERROR=ON`；内存检查另为 `INK_SANITIZE=ON`，解码库编译参数确含 `-fsanitize=address,undefined`。扫描两套全量日志和 `Testing/Temporary/LastTest.log`，没有 AddressSanitizer 错误、UBSan `runtime error` 或泄漏诊断。四组测试分配失败均为 0，结束时媒体 PSRAM 仅保留原执行器栈 8192 B；普通构建最大媒体栈估计 7136 B，小于原 8192 B 预算。
+
+全量命令如下，配置参数沿用前文（内存检查依赖目录沿用原缓存）：
+
+```sh
+taskpolicy -c utility cmake --build build -j3
+taskpolicy -c utility env PYTHONPATH="$PWD/hub/src" PYTHONDONTWRITEBYTECODE=1 UBSAN_OPTIONS=halt_on_error=1 \
+  "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
+taskpolicy -c utility cmake --build build-asan -j3
+taskpolicy -c utility env PYTHONPATH="$PWD/hub/src" PYTHONDONTWRITEBYTECODE=1 UBSAN_OPTIONS=halt_on_error=1 \
+  "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
+```
+
+日志为两套目录的 `fix-configure.log`、`fix-build.log`、`fix-ctest.log`；汇总在 `build/fix-final-verification.json`。开工时只有过期的 `image-decode` 失败索引：最新图片测试日志及原复查两套全量日志均通过，本轮反向对照会再次写入该索引。全量 209/209 通过后它仍存在，已保存为 `build/fix-previous-failure-index.log` 并清除过期索引。本次没有未处理的失败或跳过；没有缺失依赖，复用已有字体、Pillow 13.0.0 和前文锁定的中枢虚拟环境，未安装或升级依赖。
 
 【实现】JPEG 只改现有解码器：停止用零补齐缺失的熵数据，校验 DC/AC 位数、分量扫描完成和过早缺失的重启标记，错误标记返回失败；最后一个 MCU 允许没有尾随重启标记。没有另加解析器。媒体模块仅在既有解码边界、灰度转换、抖动和缩放循环调用既有 OSAL 成本接口，保留抖动让出点。
 
@@ -132,3 +149,5 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/media/negati
 - `tests/media/negative.py`：完整性检查反向预期由 `truncated JPEG` 改为 `PNG CRC error`，因为 JPEG 截断现在由解码器自身拒绝；原有 CRC 检查仍需独立验证。新增反向变体；每次构建前移除两份生成对象，避免 Make 同秒时间戳复用上一个变体造成假结果。完整重跑通过。
 
 【实现】本次产品差异为媒体实现新增/替换 15 行、第三方新增/替换 14 行；没有新机制，没有改接口、文件服务或共享文档。第三方仍是原版本和 MIT 许可；现文件 304260 B，SHA-256 `97d51a9fb2bd50f9a7f3ecdabb9c3603d6c7ff972c4bc5aa556fac8178b99580`，来源说明已补充 JPEG 修改。架构边界及未接文件服务、Linux 与实机未验证的限制沿用前文；本次没有新增用户动作或页面。
+
+【实测】本次差异只有上述产品、测试、第三方来源说明和本报告共 7 个文件；任务基线以来共 14 个（含既有复查报告）。文件与相对链接检查、差异空白检查通过。规定隐私扫描在本次差异中零命中；完整任务差异有 1 处命中，是既有 `REVIEW.md` 中扫描表达式自身，并非本机路径或真实标识，保留独立复查原文。
