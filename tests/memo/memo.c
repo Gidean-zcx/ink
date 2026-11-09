@@ -106,7 +106,10 @@ static void write_phase(void) {
     command("system.home", NULL); open_list(); new_note("合成撤销记录");
     record_args(4); command("memo.open", call_args); quiet(); touch("删除备忘");
     CHECK(WAIT_FOR(!strcmp(ink_ui_page_name(), "MemoUndo"), 15000), "deletion opens its undo page"); snap("MemoUndo");
+    record_args(removed_id); command("memo.delete", call_args); quiet();
+    CHECK(M.model.action_count == 1 && !strcmp(M.actions[0].capability, "memo.undo") && strstr(M.actions[0].args_json, "\"id\":2"), "undo targets the latest deletion, including a lower record id");
     touch("已删除一条备忘 · 撤销");
+    command("memo.undo", "{\"id\":4}"); quiet();
     record_args(removed_id); command("memo.delete", call_args); quiet();
     command("system.home", NULL); open_list(); snap("Memo"); on_ui(inspect_saved);
     command("memo.edit", NULL); quiet(); on_ui(make_long);
@@ -149,6 +152,7 @@ static void fail_phase(void) {
     CHECK(WAIT_FOR(!strcmp(ink_ui_page_name(), "MemoSaveFail"), 15000), "storage rejection shows the real failure page"); quiet();
     CHECK(M.field && !strcmp(ink_textfield_text(M.field), "保存失败也不能丢的测试正文"), "failure preserves exact editor content");
     CHECK(M.notice && strstr(lv_label_get_text(M.notice), "没存上"), "failure is explained in Chinese"); on_ui(visible_failure); snap("MemoSaveFail");
+    CHECK(strstr(snapshot_json, "没存上") && strstr(snapshot_json, "memo.retry"), "AI receives the same failure notice and retry capability");
     CHECK(ink_text_draft_saved() == 1 || WAIT_FOR(ink_text_draft_saved() == 1, 15000), "the same content also has a durable long-text draft");
     refuse_write = false; touch("重试");
     CHECK(WAIT_FOR(!M.saving && ink_db_idle(), 15000), "explicit retry becomes durable");

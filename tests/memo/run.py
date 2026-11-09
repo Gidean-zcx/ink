@@ -11,7 +11,7 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[2]
 parser = argparse.ArgumentParser()
 parser.add_argument("--build", type=Path, required=True)
-parser.add_argument("--mutant", choices=("member", "write", "failure"))
+parser.add_argument("--mutant", choices=("member", "write", "failure", "undo"))
 parser.add_argument("--visual", action="store_true")
 args = parser.parse_args()
 build = args.build.resolve()
@@ -21,9 +21,10 @@ if args.mutant:
     source = (ROOT / "system/apps/memo/memo.c").read_text()
     old, new = {
         "member": ("ink_db_open_member(&MEMOS, ink_cap_call_member(c))", 'ink_db_open_member(&MEMOS, "owner")'),
-        "write": ("ink_db_put(db, &wr, NULL)", "0"),
+        "write": ("ink_db_put(db, &wr, NULL)", "(save ? 0 : ink_db_put(db, &wr, NULL))"),
         "failure": ("if (rc->status != INK_RC_DONE && M.field && M.mode == EDIT)",
                     "if (false && rc->status != INK_RC_DONE && M.field && M.mode == EDIT)"),
+        "undo": ("rec.ver > undo_ver", "rec.id > undo_ver"),
     }[args.mutant]
     assert source.count(old) == 1
     source = source.replace(old, new)
@@ -31,8 +32,8 @@ if args.mutant:
         old = "ink_db_open_cached_member(&MEMOS, M.member)"
         assert source.count(old) == 1
         source = source.replace(old, 'ink_db_open_cached_member(&MEMOS, "owner")')
-    if args.mutant == "write":
-        source = source.replace("ink_db_write_t wr =", "ink_db_write_t wr __attribute__((unused)) =")
+    if args.mutant == "undo":
+        source = source.replace("undo_ver = rec.ver", "undo_ver = rec.id")
     target = work / "memo-product.c"
     target.write_text(source)
     test = (ROOT / "tests/memo/memo.c").read_text().replace(
@@ -48,12 +49,13 @@ if args.mutant:
             flags[key] = shlex.split(value)
     link = shlex.split((build / "CMakeFiles/sim-memo.dir/link.txt").read_text())
     obj = work / "memo-test.o"
-    subprocess.run([link[0], *flags["C_DEFINES"], *flags["C_INCLUDES"], *flags["C_FLAGS"],
-                    "-c", str(driver), "-o", str(obj)], cwd=build, check=True)
+    compiled = subprocess.run([link[0], *flags["C_DEFINES"], *flags["C_INCLUDES"], *flags["C_FLAGS"],
+                               "-c", str(driver), "-o", str(obj)], cwd=build)
+    if compiled.returncode: raise SystemExit(2)
     link = [str(obj) if word.endswith("tests/memo/memo.c.o") else word for word in link]
     binary = work / "sim-memo"
     link[link.index("-o") + 1] = str(binary)
-    subprocess.run(link, cwd=build, check=True)
+    if subprocess.run(link, cwd=build).returncode: raise SystemExit(2)
 
 ok = True
 seen = set()

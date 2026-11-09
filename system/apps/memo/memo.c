@@ -21,10 +21,9 @@ static struct {
     lv_obj_t *field, *notice;
     memo_t note;
     char member[16], sent[4096], ids[4][32], args[4][96], labels[4][128], object[32], target[64], save_args[160];
-    uint32_t id, draft;
+    uint32_t id;
     int mode;
     bool saving, retry;
-    ink_ui_field_spec_t fields[4];
     ink_ui_action_spec_t actions[4];
     ink_ui_page_spec_t model;
     ink_exec_job_t refresh;
@@ -200,10 +199,13 @@ static void create(lv_obj_t *screen, void *arg) {
         }
         return;
     }
-    size_t total = 0; uint32_t undo = 0;
+    size_t total = 0; uint32_t undo = 0, undo_ver = 0;
     if (list) {
         ink_db_cursor_t cur = {0}; ink_rec_t rec; memo_t *n = ink_app_alloc(sizeof *n, true);
-        while (n && ink_db_next(M.db, &cur, &rec, NULL, 0) == 1) if (read_note(M.db, rec.id, n)) { if (n->deleted) undo = rec.id; else total++; }
+        while (n && ink_db_next(M.db, &cur, &rec, NULL, 0) == 1) if (read_note(M.db, rec.id, n)) {
+            if (!n->deleted) total++;
+            else if (rec.ver > undo_ver) { undo = rec.id; undo_ver = rec.ver; }
+        }
         ink_app_free(n);
     } else total = mode == CHECKLIST ? lines(M.note.body) : (ink_text_char_offset(M.note.body, strlen(M.note.body)) + 23) / 24;
     ink_ui_page_spec_t model = {.id = ink_ui_page_name(), .title = "备忘", .object = {"memo.notes", ink_db_last_ver(M.db)}, .actions = PAGING, .action_count = 3};
@@ -233,7 +235,12 @@ static int snapshot(char *out, size_t cap) {
     if (body && actions && ink_ui_semantics_snapshot(&M.model, actions, cap) > 0) {
         int n = M.field ? ink_textfield_long_snapshot(M.field, body, cap) : M.list ? ink_ui_list_snapshot(M.list, body, cap) : 0;
         if (!n) snprintf(body, cap, "{}");
-        if (n >= 0) { result = snprintf(out, cap, "{\"content\":%s,\"controls\":%s}", body, actions); if (result >= (int)cap) result = -1; }
+        if (n >= 0) {
+            ink_jw_t w; ink_jw_init(&w, out, cap);
+            ink_jw_raw(&w, "{\"status\":"); ink_jw_str(&w, M.notice ? lv_label_get_text(M.notice) : "");
+            ink_jw_raw(&w, ",\"content\":"); ink_jw_raw(&w, body); ink_jw_raw(&w, ",\"controls\":"); ink_jw_raw(&w, actions); ink_jw_raw(&w, "}");
+            result = w.overflow ? -1 : (int)w.len;
+        }
     }
     ink_app_free(actions); ink_app_free(body); if (result < 0 && cap) out[0] = 0; return result;
 }
