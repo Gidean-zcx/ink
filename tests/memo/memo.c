@@ -149,24 +149,89 @@ static void visible_failure(void) {
 static void fail_phase(void) {
     open_list(); command("memo.edit", NULL); quiet(); refuse_write = true;
     command("text.insert", "{\"text\":\"保存失败也不能丢的测试正文\"}");
-    CHECK(WAIT_FOR(!strcmp(ink_ui_page_name(), "MemoSaveFail"), 15000), "storage rejection shows the real failure page"); quiet();
+    CHECK(WAIT_FOR(M.mode == FAIL, 15000), "storage rejection shows the failure view in the live editor"); quiet();
     CHECK(M.field && !strcmp(ink_textfield_text(M.field), "保存失败也不能丢的测试正文"), "failure preserves exact editor content");
     CHECK(M.notice && strstr(lv_label_get_text(M.notice), "没存上"), "failure is explained in Chinese"); on_ui(visible_failure); snap("MemoSaveFail");
-    CHECK(strstr(snapshot_json, "没存上") && strstr(snapshot_json, "memo.retry"), "AI receives the same failure notice and retry capability");
+    CHECK(strstr(snapshot_json, "MemoSaveFail") && strstr(snapshot_json, "没存上") && strstr(snapshot_json, "memo.retry"), "AI receives the same failure view, notice and retry capability");
     CHECK(ink_text_draft_saved() == 1 || WAIT_FOR(ink_text_draft_saved() == 1, 15000), "the same content also has a durable long-text draft");
     refuse_write = false; touch("重试");
     CHECK(WAIT_FOR(!M.saving && ink_db_idle(), 15000), "explicit retry becomes durable");
     memo_t *n = ink_app_alloc(sizeof *n, true);
     CHECK(n && read_note(M.db, M.id, n) && !strcmp(n->body, "保存失败也不能丢的测试正文"), "retry stores the unchanged content"); ink_app_free(n);
     uint32_t id = M.id, draft = ink_text_draft_id();
-    snprintf(call_args, sizeof call_args, "{\"id\":%u,\"draft\":%u,\"page\":\"MemoSaveFail\"}", (unsigned)id, (unsigned)draft);
+    snprintf(call_args, sizeof call_args, "{\"id\":%u,\"draft\":%u,\"page\":\"%s\"}", (unsigned)id, (unsigned)draft, M.note.page);
     command("memo.save", call_args);
     CHECK(ink_db_durable_ver(M.db) == ink_db_last_ver(M.db), "AI and editor save use the same durable provider");
 }
+static const char *review_text;
+static void review_type(void) { ink_text_commit_utf8(review_text); }
+static void review_fill(const char *text) { review_text = text; on_ui(select_all); on_ui(review_type); quiet(); CHECK(WAIT_FOR(!M.saving && ink_db_idle(), 15000), "review write settles"); }
+static void review_saved(void) { CHECK(WAIT_FOR(ink_text_draft_saved() == 1, 15000), "review draft durable before navigation"); quiet(); }
+static void review_reopen(uint32_t id) { command("system.home", NULL); open_list(); record_args(id); command("memo.edit", call_args); quiet(); }
+static void review_draft_loss(void) {
+    open_list(); new_note("ORIGINAL"); command("memo.edit", "{\"id\":1}"); quiet();
+    uint32_t draft = ink_text_draft_id(); lv_obj_t *field = M.field;
+    refuse_write = true; review_fill("UNSAVED");
+    CHECK(WAIT_FOR(M.mode == FAIL, 15000), "failure reached");
+    CHECK(M.field == field && ink_text_focused() && ink_text_draft_id() == draft, "failure reuses the original focused editor and draft");
+    command("text.insert", "{\"text\":\"_CONTINUED\"}"); review_saved();
+    refuse_write = false; review_reopen(1);
+    CHECK(M.field && !strcmp(ink_textfield_text(M.field), "UNSAVED_CONTINUED"), "failure draft survives leave and reopen");
+}
+static void review_retry_edit(void) {
+    open_list(); new_note("ORIGINAL"); command("memo.edit", "{\"id\":1}"); quiet();
+    refuse_write = true; review_fill("RETRY");
+    CHECK(WAIT_FOR(M.mode == FAIL, 15000), "failure reached"); review_saved();
+    refuse_write = false; touch("重试"); quiet();
+    command("text.insert", "{\"text\":\"_AFTER_SUCCESS\"}"); review_saved();
+    CHECK(WAIT_FOR(!M.saving && ink_db_idle(), 15000), "subsequent edit autosave finishes before leaving");
+    memo_t *n = ink_app_alloc(sizeof *n, true);
+    CHECK(n && read_note(M.db, 1, n) && !strcmp(n->body, "RETRY_AFTER_SUCCESS"), "retry restores autosave without an exit or second retry"); ink_app_free(n);
+    review_reopen(1);
+    CHECK(M.field && !strcmp(ink_textfield_text(M.field), "RETRY_AFTER_SUCCESS"), "successful retry restores subsequent autosave");
+}
+static void review_check_edit(void) {
+    open_list(); new_note("alpha\\nbeta\\ngamma"); command("memo.convert", "{\"id\":1}"); command("memo.check", "{\"id\":1,\"index\":1}"); quiet();
+    command("memo.edit", "{\"id\":1}"); quiet(); review_fill("beta\ngamma"); command("text.submit", NULL); quiet();
+    command("memo.open", "{\"id\":1}"); quiet();
+    CHECK(M.note.checked == 1, "deleting an earlier checklist line preserves completion on beta");
+    command("memo.edit", "{\"id\":1}"); quiet(); review_fill("new\nbeta\ngamma"); command("text.submit", NULL); quiet();
+    command("memo.open", "{\"id\":1}"); quiet();
+    CHECK(M.note.checked == 2, "inserting an unchecked first item moves beta completion with its text");
+}
+static void review_full_snapshot(void) {
+    open_list(); command("memo.edit", NULL); quiet();
+    review_fill("一二三四五六七八九十一二三四五六七八九十一二三四\n一二三四五六七八九十一二三四五六七八九十一二三四\n一二三四五六七八九十一二三四五六七八九十一二三四\n一二三四五六七八九十一二三四五六七八九十一二三四");
+    command("text.submit", NULL); quiet(); command("memo.convert", "{\"id\":1}"); command("memo.open", "{\"id\":1}"); quiet();
+    snprintf(scene, sizeof scene, "MemoChecklist-full"); on_ui(snapshot_page);
+}
+static void review_long_line(void) {
+    open_list(); new_note("123456789012345678901234TAIL_MUST_READ"); command("memo.convert", "{\"id\":1}"); command("memo.open", "{\"id\":1}"); quiet();
+    snprintf(scene, sizeof scene, "MemoChecklist-long"); on_ui(snapshot_page);
+    CHECK(strstr(snapshot_json, "…") && strstr(snapshot_json, "content_truncated\":true") && strstr(snapshot_json, "memo.edit"),
+          "long checklist item declares its omitted tail and complete reading action");
+    touch("编辑备忘");
+    CHECK(M.field && !strcmp(ink_textfield_text(M.field), "123456789012345678901234TAIL_MUST_READ"), "editing exposes the entire checklist item");
+}
+static void review_burst_ui(void) { ink_text_commit_utf8("BURST_FINAL"); ink_text_enter(); }
+static void review_burst(void) {
+    open_list(); new_note("ORIGINAL"); command("memo.edit", "{\"id\":1}"); quiet(); on_ui(select_all); on_ui(review_burst_ui); quiet();
+    CHECK(WAIT_FOR(ink_db_idle(), 15000), "final save completes after the editor has lost focus");
+    memo_t *n = ink_app_alloc(sizeof *n, true);
+    CHECK(n && read_note(M.db, 1, n) && !strcmp(n->body, "BURST_FINAL"), "last edit immediately followed by done reaches memo record"); ink_app_free(n);
+    command("memo.open", "{\"id\":1}"); quiet();
+}
+
 static void run(void *arg) {
     (void)arg; vtk_host_call(host_phase, NULL);
     CHECK(WAIT_FOR(ink_member_space_open(), 10000), "member space opens"); test_start_home(); quiet();
-    if (!strcmp(phase, "write")) write_phase(); else if (!strcmp(phase, "verify")) verify_phase(); else fail_phase();
+    if (!strcmp(phase, "draft_loss")) review_draft_loss();
+    else if (!strcmp(phase, "retry_edit")) review_retry_edit();
+    else if (!strcmp(phase, "check_edit")) review_check_edit();
+    else if (!strcmp(phase, "long_line")) review_long_line();
+    else if (!strcmp(phase, "burst")) review_burst();
+    else if (!strcmp(phase, "full_snapshot")) review_full_snapshot();
+    else if (!strcmp(phase, "write")) write_phase(); else if (!strcmp(phase, "verify")) verify_phase(); else fail_phase();
     CHECK(WAIT_FOR(ink_db_idle(), 15000), "all memo and draft writes finish"); ink_probe_count("test.finished");
 }
 void ink_main(void) {

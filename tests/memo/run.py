@@ -11,8 +11,9 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[2]
 parser = argparse.ArgumentParser()
 parser.add_argument("--build", type=Path, required=True)
-parser.add_argument("--mutant", choices=("member", "write", "failure", "undo"))
+parser.add_argument("--mutant", choices=("member", "write", "failure", "undo", "draft-session", "resume", "checks", "long-item", "final-save"))
 parser.add_argument("--visual", action="store_true")
+parser.add_argument("--phase", choices=("draft_loss", "retry_edit", "check_edit", "long_line", "burst", "full_snapshot"))
 args = parser.parse_args()
 build = args.build.resolve()
 work = Path(tempfile.mkdtemp(prefix="memo-", dir=build))
@@ -25,6 +26,12 @@ if args.mutant:
         "failure": ("if (rc->status != INK_RC_DONE && M.field && M.mode == EDIT)",
                     "if (false && rc->status != INK_RC_DONE && M.field && M.mode == EDIT)"),
         "undo": ("rec.ver > undo_ver", "rec.id > undo_ver"),
+        "draft-session": ("save_failed(true);", "ink_ui_push(&PAGES[FAIL], (void *)(uintptr_t)M.id);"),
+        "resume": ("else if (rc->status == INK_RC_DONE && M.field && M.mode == FAIL)",
+                   "else if (false && rc->status == INK_RC_DONE && M.field && M.mode == FAIL)"),
+        "checks": ("n->checked = remap_checks(raw, n->body, n->checked)", "(void)remap_checks(raw, n->body, n->checked)"),
+        "long-item": ('bool truncated = M.mode == CHECKLIST && strcspn(text, "\\n") > len', "bool truncated = false"),
+        "final-save": ("if (M.field && M.mode != FAIL && ink_ui_page_current()", "if (false && M.field && M.mode != FAIL && ink_ui_page_current()"),
     }[args.mutant]
     assert source.count(old) == 1
     source = source.replace(old, new)
@@ -60,6 +67,13 @@ if args.mutant:
 ok = True
 seen = set()
 runs = [("fail", "MemoSaveFail")] if args.mutant == "failure" else [("write", "Memo"), ("verify", ""), ("fail", "MemoSaveFail")]
+reverse_phase = {"draft-session": "draft_loss", "resume": "retry_edit", "checks": "check_edit", "long-item": "long_line", "final-save": "burst"}
+if args.mutant in reverse_phase:
+    runs = [(reverse_phase[args.mutant], "")]
+if not args.mutant:
+    runs += [(name, "") for name in ("draft_loss", "retry_edit", "check_edit", "long_line", "burst", "full_snapshot")]
+if args.phase:
+    runs = [(args.phase, "")]
 if args.visual:
     runs += [("write", name) for name in ("MemoDetail", "MemoEdit", "MemoChecklist", "MemoUndo")]
 for phase, capture_scene in runs:
@@ -68,7 +82,7 @@ for phase, capture_scene in runs:
     result = subprocess.run([str(binary), "--profile", str(ROOT / "simulator/profiles/metalio-plus.json"),
         "--script", str(ROOT / "tests/memo/memo.script"), "--budget", str(ROOT / "tests/ui_scene.budget.json"),
         "--assets", str(build / "assets"), "--content", str(build / "test-content"),
-        "--flash-image", str(work / ("user.img" if capture_scene in ("Memo", "") else run_name + ".img")),
+        "--flash-image", str(work / ("user.img" if phase in ("write", "verify") and capture_scene in ("Memo", "") else run_name + ".img")),
         "--sd-dir", str(work / "sd"), "--out", str(out), "--quiet", "--no-random-outages"],
         env={**os.environ, "INK_MEMO_PHASE": phase, "INK_MEMO_SCENE": capture_scene}, capture_output=True, text=True, timeout=150)
     (work / f"{run_name}.log").write_text(result.stdout + result.stderr)
@@ -85,14 +99,14 @@ for phase, capture_scene in runs:
     for line in (out / "snapshots.ndjson").read_text().splitlines() if (out / "snapshots.ndjson").exists() else []:
         item = json.loads(line)
         scene = item["scene"]
-        if scene.startswith("Memo"): seen.add(scene)
+        if scene in {"Memo", "MemoDetail", "MemoEdit", "MemoChecklist", "MemoUndo", "MemoSaveFail"}: seen.add(scene)
         assert item["snapshot"]
         if scene != capture_scene: continue
         target = build / "memo-compare" / scene
         target.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(out / "snap-scene.png", target / "snap-scene.png")
         shutil.copyfile(out / "metrics.json", target / "metrics.json")
-if ok and not args.mutant:
+if ok and not args.mutant and not args.phase:
     assert seen == {"Memo", "MemoDetail", "MemoEdit", "MemoChecklist", "MemoUndo", "MemoSaveFail"}, seen
 if ok and not os.environ.get("INK_KEEP_EVIDENCE"):
     shutil.rmtree(work)

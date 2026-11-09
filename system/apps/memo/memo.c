@@ -18,7 +18,7 @@ static struct {
     ink_db_t *db;
     ink_ui_list_t *list;
     ink_ui_list_position_t position;
-    lv_obj_t *field, *notice;
+    lv_obj_t *field, *notice, *retry_button, *delete_button;
     memo_t note;
     char member[16], sent[4096], ids[4][32], args[4][96], labels[4][128], object[32], target[64], save_args[160];
     uint32_t id;
@@ -46,6 +46,23 @@ static bool read_note(ink_db_t *db, uint32_t id, memo_t *note) {
     ink_app_free(j); ink_app_free(raw); return ok;
 }
 static unsigned lines(const char *s) { unsigned n = *s ? 1 : 0; for (; *s; s++) n += *s == '\n'; return n; }
+static uint32_t remap_checks(const char *old, const char *text, uint32_t checked) {
+    uint32_t used = 0, result = 0;
+    for (unsigned i = 0; *text && i < 32; i++) {
+        size_t len = strcspn(text, "\n"); const char *p = old;
+        for (unsigned j = 0; *p && j < 32; j++) {
+            size_t size = strcspn(p, "\n"); uint32_t bit = UINT32_C(1) << j;
+            if (!(used & bit) && len == size && !memcmp(text, p, len)) { used |= bit; if (checked & bit) result |= UINT32_C(1) << i; break; }
+            p += size; if (*p) p++;
+        }
+        text += len; if (*text) text++;
+    }
+    return result;
+}
+static bool clipped(const char *text) {
+    while (*text) { size_t len = strcspn(text, "\n"); if (len > ink_text_byte_offset(text, 24)) return true; text += len; if (*text) text++; }
+    return false;
+}
 static void refresh(void *arg) {
     (void)arg;
     if (!M.db || !ink_ui_page_current() || strcmp(M.member, ink_member_current()->id)) return;
@@ -63,8 +80,10 @@ static void mutate(ink_call_t *c) {
     else if (!read_note(db, (uint32_t)id, n) && !save) c->rc.status = INK_RC_INVALID;
     if (c->rc.status == INK_RC_DONE) {
         if (save) {
+            memcpy(raw, n->body, sizeof n->body);
             ink_args_get_int(&c->args, "draft", &draft); ink_args_get_str(&c->args, "page", n->page, sizeof n->page);
             if (n->deleted || ink_text_draft_read(ink_cap_call_member(c), n->page, (uint32_t)draft, n->body, sizeof n->body) < 0) c->rc.status = INK_RC_INVALID;
+            if (n->checklist) n->checked = remap_checks(raw, n->body, n->checked);
             n->draft = (uint32_t)draft;
         } else if (!strcmp(c->cap->id, "memo.undo")) n->deleted = false;
         else if (n->deleted) c->rc.status = INK_RC_INVALID;
@@ -91,10 +110,20 @@ static void mutate(ink_call_t *c) {
     if (c->rc.status == INK_RC_DONE) ink_exec_post(INK_EXEC_UI, &M.refresh, refresh, NULL);
     ink_app_free(raw); ink_app_free(n); ink_db_close(db);
 }
+static void save_failed(bool failed) {
+    int delta = (failed - (M.mode == FAIL)) * ink_ui_px(INK_PRIMARY);
+    lv_obj_set_y(M.field, lv_obj_get_y(M.field) + delta); lv_obj_set_height(M.field, lv_obj_get_height(M.field) - delta);
+    lv_obj_t *label = lv_obj_get_child(M.field, 0); lv_obj_set_height(label, lv_obj_get_height(label) - delta);
+    M.mode = failed ? FAIL : EDIT;
+    lv_obj_set_y(M.notice, ink_ui_px(failed ? INK_STATUS_BAR + INK_PRIMARY + INK_GAP_S : INK_CANVAS_H - INK_PRIMARY - INK_CONTROL - INK_GAP_L));
+    if (failed) lv_obj_remove_flag(M.retry_button, LV_OBJ_FLAG_HIDDEN); else lv_obj_add_flag(M.retry_button, LV_OBJ_FLAG_HIDDEN);
+    if (failed) lv_obj_add_flag(M.delete_button, LV_OBJ_FLAG_HIDDEN); else lv_obj_remove_flag(M.delete_button, LV_OBJ_FLAG_HIDDEN);
+}
 static void reply(void *ctx, const ink_receipt_t *rc) {
     if ((uint32_t)(uintptr_t)ctx != ink_ui_generation() || !ink_ui_page_current() || strcmp(M.member, ink_member_current()->id)) return;
     M.saving = false;
-    if (rc->status != INK_RC_DONE && M.field && M.mode == EDIT) { ink_ui_push(&PAGES[FAIL], (void *)(uintptr_t)M.id); return; }
+    if (rc->status != INK_RC_DONE && M.field && M.mode == EDIT) save_failed(true);
+    else if (rc->status == INK_RC_DONE && M.field && M.mode == FAIL) save_failed(false);
     if (M.notice) lv_label_set_text(M.notice, rc->say);
     if (rc->status == INK_RC_DONE && !M.field) ink_ui_redraw();
     ink_ui_content_changed();
@@ -115,13 +144,16 @@ static void navigate(ink_call_t *c) {
         ink_app_free(n);
     }
 }
+static void save_current(void) {
+    ink_args_t a; ink_args_init(&a); ink_args_int(&a, "id", M.id); ink_args_int(&a, "draft", M.note.draft); ink_args_str(&a, "page", M.note.page);
+    snprintf(M.sent, sizeof M.sent, "%s", ink_textfield_text(M.field)); M.retry = false; M.saving = true; request("memo.save", &a);
+}
 static void settle(void) {
     if (!M.field || M.saving || !ink_ui_page_current()) return;
     ink_textfield_long_refresh(M.field);
     const char *text = ink_textfield_text(M.field);
     if (!M.retry && (!strcmp(text, M.sent) || M.mode == FAIL)) return;
-    ink_args_t a; ink_args_init(&a); ink_args_int(&a, "id", M.id); ink_args_int(&a, "draft", ink_text_draft_id()); ink_args_str(&a, "page", ink_ui_page_name());
-    snprintf(M.sent, sizeof M.sent, "%s", text); M.retry = false; M.saving = true; request("memo.save", &a);
+    save_current();
 }
 static void retry(lv_event_t *e) { (void)e; ink_args_t a; ink_args_init(&a); request("memo.retry", &a); }
 static const ink_ui_action_spec_t PAGING[] = {
@@ -145,7 +177,8 @@ static void bind_item(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, 
     else if (!list) text += ink_text_byte_offset(text, index * 24);
     size_t len = ink_text_byte_offset(text, 24);
     if (M.mode == CHECKLIST && strcspn(text, "\n") < len) len = strcspn(text, "\n");
-    snprintf(M.labels[at], sizeof M.labels[at], "%.*s", (int)len, text);
+    bool truncated = M.mode == CHECKLIST && strcspn(text, "\n") > len;
+    snprintf(M.labels[at], sizeof M.labels[at], "%.*s%s", (int)len, text, truncated ? "…" : "");
     if (list) for (char *p = M.labels[at]; *p; p++) if (*p == '\n') *p = ' ';
     snprintf(M.ids[at], sizeof M.ids[at], "memo:%u:%zu", (unsigned)id, list ? 0 : index);
     snprintf(M.args[at], sizeof M.args[at], "{\"id\":%u,\"index\":%zu}", (unsigned)id, index);
@@ -188,15 +221,10 @@ static void create(lv_obj_t *screen, void *arg) {
     if (mode == EDIT || mode == FAIL) {
         ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .max = 4095, .initial = M.note.body, .draft_page = ink_ui_page_name(), .draft_id = !strcmp(M.note.page, ink_ui_page_name()) ? M.note.draft : 0};
         M.field = ink_textfield_long_create(screen, &cfg); snprintf(M.sent, sizeof M.sent, "%s", mode == FAIL ? M.note.body : "\1");
-        if (mode == EDIT) ink_shell_bind(ink_ui_circle(screen, "trash", INK_CANVAS_W - INK_MARGIN - INK_CONTROL, INK_STATUS_BAR + INK_GAP_S, INK_CONTROL, INK_ICON_LIST, INK_SURFACE_WHITE, NULL, NULL), "memo.delete", M.target);
-        if (mode == FAIL) {
-            lv_obj_set_y(M.notice, ink_ui_px(INK_STATUS_BAR + INK_PRIMARY + INK_GAP_S));
-            lv_obj_set_y(M.field, lv_obj_get_y(M.field) + ink_ui_px(INK_PRIMARY));
-            lv_obj_set_height(M.field, lv_obj_get_height(M.field) - ink_ui_px(INK_PRIMARY));
-            lv_obj_t *label = lv_obj_get_child(M.field, 0); lv_obj_set_height(label, lv_obj_get_height(label) - ink_ui_px(INK_PRIMARY));
-            M.actions[0] = (ink_ui_action_spec_t){.id = "retry", .label = "重试", .capability = "memo.retry", .enabled = true}; M.model.action_count = 1;
-            ink_ui_pill(screen, "重试", INK_CANVAS_W - INK_MARGIN - INK_PRIMARY, INK_STATUS_BAR, INK_PRIMARY, INK_CONTROL, false, retry, NULL);
-        }
+        M.note.draft = ink_text_draft_id(); snprintf(M.note.page, sizeof M.note.page, "%s", ink_ui_page_name());
+        M.delete_button = ink_ui_circle(screen, "trash", INK_CANVAS_W - INK_MARGIN - INK_CONTROL, INK_STATUS_BAR + INK_GAP_S, INK_CONTROL, INK_ICON_LIST, INK_SURFACE_WHITE, NULL, NULL); ink_shell_bind(M.delete_button, "memo.delete", M.target);
+        M.retry_button = ink_ui_pill(screen, "重试", INK_CANVAS_W - INK_MARGIN - INK_PRIMARY, INK_STATUS_BAR, INK_PRIMARY, INK_CONTROL, false, retry, NULL);
+        lv_obj_add_flag(M.retry_button, LV_OBJ_FLAG_HIDDEN);
         return;
     }
     size_t total = 0; uint32_t undo = 0, undo_ver = 0;
@@ -208,6 +236,7 @@ static void create(lv_obj_t *screen, void *arg) {
         }
         ink_app_free(n);
     } else total = mode == CHECKLIST ? lines(M.note.body) : (ink_text_char_offset(M.note.body, strlen(M.note.body)) + 23) / 24;
+    if (mode == CHECKLIST && clipped(M.note.body)) lv_label_set_text(M.notice, "长项已省略，编辑备忘可看全文");
     ink_ui_page_spec_t model = {.id = ink_ui_page_name(), .title = "备忘", .object = {"memo.notes", ink_db_last_ver(M.db)}, .actions = PAGING, .action_count = 3};
     lv_obj_t *body = ink_ui_box(screen, 0, INK_STATUS_BAR + INK_PRIMARY + INK_GAP_L, INK_CANVAS_W, 4 * (INK_ROW_DOUBLE + INK_GAP_M) + INK_PRIMARY, 0, INK_SURFACE_WHITE, false);
     M.list = ink_ui_list_create(body, &model, &M.position, 4, 1, INK_ROW_DOUBLE, "还没有备忘，写一条吧", bind_item, NULL);
@@ -223,21 +252,24 @@ static void create(lv_obj_t *screen, void *arg) {
     } else for (int i = 0; i < 3; i++) if (M.actions[i].enabled) ink_shell_bind(ink_ui_pill(screen, M.actions[i].label, INK_MARGIN + i * (INK_CANVAS_W - 2 * INK_MARGIN) / 3, INK_CANVAS_H - INK_PRIMARY - INK_MARGIN, (INK_CANVAS_W - 2 * INK_MARGIN) / 3, INK_CONTROL, false, NULL, NULL), M.actions[i].capability, M.target);
 }
 static void destroy(void) {
-    if (M.field) { snprintf(M.note.body, sizeof M.note.body, "%s", ink_textfield_text(M.field)); M.note.draft = 0; }
-    ink_db_close(M.db); M.db = NULL; M.list = NULL; M.field = M.notice = NULL;
+    if (M.field && M.mode != FAIL && ink_ui_page_current() && !strcmp(M.member, ink_member_current()->id) && strcmp(ink_textfield_text(M.field), M.sent)) save_current();
+    ink_db_close(M.db); M.db = NULL; M.list = NULL; M.field = M.notice = M.retry_button = M.delete_button = NULL;
 }
 static int snapshot(char *out, size_t cap) {
     char *body = ink_app_alloc(cap, true), *actions = ink_app_alloc(cap, true); int result = -1;
-    if (M.field && M.mode == EDIT) {
-        snprintf(M.save_args, sizeof M.save_args, "{\"id\":%u,\"draft\":%u,\"page\":\"MemoEdit\"}", (unsigned)M.id, (unsigned)ink_text_draft_id());
-        M.actions[3] = (ink_ui_action_spec_t){.id = "save", .label = "记下当前草稿", .capability = "memo.save", .args_json = M.save_args, .enabled = true}; M.model.action_count = 4;
+    if (M.field) {
+        snprintf(M.save_args, sizeof M.save_args, "{\"id\":%u,\"draft\":%u,\"page\":\"%s\"}", (unsigned)M.id, (unsigned)M.note.draft, M.note.page);
+        M.actions[3] = M.mode == FAIL ? (ink_ui_action_spec_t){.id = "retry", .label = "重试", .capability = "memo.retry", .enabled = true} : (ink_ui_action_spec_t){.id = "save", .label = "记下当前草稿", .capability = "memo.save", .args_json = M.save_args, .enabled = true};
+        M.model.actions = M.mode == FAIL ? M.actions + 3 : M.actions; M.model.action_count = M.mode == FAIL ? 1 : 4;
     }
     if (body && actions && ink_ui_semantics_snapshot(&M.model, actions, cap) > 0) {
         int n = M.field ? ink_textfield_long_snapshot(M.field, body, cap) : M.list ? ink_ui_list_snapshot(M.list, body, cap) : 0;
         if (!n) snprintf(body, cap, "{}");
         if (n >= 0) {
             ink_jw_t w; ink_jw_init(&w, out, cap);
-            ink_jw_raw(&w, "{\"status\":"); ink_jw_str(&w, M.notice ? lv_label_get_text(M.notice) : "");
+            ink_jw_raw(&w, "{\"view\":"); ink_jw_str(&w, PAGES[M.mode].name);
+            ink_jw_raw(&w, ",\"content_truncated\":"); ink_jw_raw(&w, M.mode == CHECKLIST && clipped(M.note.body) ? "true,\"read_full\":\"memo.edit\"" : "false");
+            ink_jw_raw(&w, ",\"status\":"); ink_jw_str(&w, M.notice ? lv_label_get_text(M.notice) : "");
             ink_jw_raw(&w, ",\"content\":"); ink_jw_raw(&w, body); ink_jw_raw(&w, ",\"controls\":"); ink_jw_raw(&w, actions); ink_jw_raw(&w, "}");
             result = w.overflow ? -1 : (int)w.len;
         }
