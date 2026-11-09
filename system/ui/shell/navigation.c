@@ -544,8 +544,6 @@ static void draw_home_content(void) {
                 tile(N.content, APP_IDS[i], APP_TITLES[i], APP_ICONS[i], i % 4, i / 4, grid, false);
     } else if (N.home_page == 0) {
         read_cards();
-        ink_shell_bind(ink_ui_box(N.content, INK_MARGIN, page_top, 2 * INK_PRIMARY, INK_CONTROL, 0,
-            INK_SURFACE_WHITE, false), "shell.today_edit", NULL);
         ink_ui_label(N.content, "今日", INK_FONT_HEADING, INK_WEIGHT_BOLD, INK_MARGIN, page_top, 2 * INK_PRIMARY);
         const char *separator = strstr(date, " · ");
         char short_date[96];
@@ -1065,6 +1063,9 @@ static void body_blocks(void) {
             lv_obj_t *lock = ink_ui_pill(N.page_body, label, INK_MARGIN, F.y, width(), INK_CONTROL, false, NULL, NULL);
             ink_shell_bind(lock, "settings.set", args);
         }
+        F.y += INK_CONTROL + INK_GAP;
+        if (block(INK_CONTROL))
+            group_row(group(1), "grid", "今日屏放什么", "", 0, "shell.today_edit");
         F.y += INK_CONTROL;
     } else if (N.page_id == PAGE_SOUND) {
         const char *const about = "听书、AI 和提示音用这个音量";
@@ -1329,6 +1330,8 @@ static int page_snapshot(char *buf, size_t cap) {
     const char *actions =
         N.page_id == PAGE_NETWORK ? "动作：settings.set、wifi.scan、wifi.list、shell.back、shell.control、shell.wifi_"
                                       "next、shell.wifi_prev、shell.wifi_pick；设置设备：shell.launch(id=boot)。"
+                                    : N.page_id == PAGE_DISPLAY
+                                        ? "动作：settings.set、shell.today_edit、shell.back、shell.control。"
                                     : "动作：settings.set、shell.back、shell.control。";
     if (n >= 0 && (size_t) n < cap) n += snprintf(buf + n, cap - (size_t) n, "%s", actions);
     return n < 0 ? 0 : (size_t) n < cap ? n : (int) cap - 1;

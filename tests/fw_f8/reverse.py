@@ -23,6 +23,12 @@ options = []
 for key in ('C_DEFINES', 'C_INCLUDES', 'C_FLAGS'):
     options += shlex.split(re.search(r'^' + key + r' = (.*)$', flags, re.M)[1])
 cases = [
+    ('missing-settings-entry', '"grid", "今日屏放什么", "", 0, "shell.today_edit"',
+     '"grid", "今日屏放什么", "", 0, NULL', 'visible settings row opens TodayEdit by touch'),
+    ('hidden-today-entry', 'read_cards();\n        ink_ui_label(N.content, "今日"',
+     'read_cards();\n        ink_shell_bind(ink_ui_box(N.content, INK_MARGIN, page_top, 2 * INK_PRIMARY, INK_CONTROL, 0,\n'
+     '            INK_SURFACE_WHITE, false), "shell.today_edit", NULL);\n        ink_ui_label(N.content, "今日"',
+     'Today has no invisible editor touch region'),
     ('ignore-order', 'if (!T.saved || !slot) return', 'if (true) return', 'four selected cards retain their exact order'),
     ('shared-member', 'ink_db_open_member(&TODAY_DB, ink_member_current()->id)', 'ink_db_open_member(&TODAY_DB, "owner")',
      'adult choices and adult card data do not affect the child default Today'),

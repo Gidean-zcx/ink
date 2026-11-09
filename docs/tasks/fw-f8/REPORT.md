@@ -82,3 +82,13 @@ taskpolicy -c utility "$F8_PYTHON" tools/ui_compare.py --build build --design "$
 - 【实测】最终 F8 写入 129 项、重启 39 项断言通过；内部 RAM 最小余量 47736 字节，原预算 32768 字节未放宽。最终导航修正后的 ASan 定向为 6/6；ASan 全量完成于该修正前，其后按影响范围补验。
 - 全量日志：`build/fw-f8-evidence/full.log`、`build/fw-f8-evidence/asan-full.log`；最终定向与内存指标：`build/fw-f8-evidence/asan-final/`；截图：`build/fw-f8-evidence/write/`、`build/fw-f8-evidence/compare/`。
 - 【实测】结束差异检查仅含本任务 8 个文件，`git diff --check` 通过；共享文档、历史调研、设计稿与构建产物均未提交。按规则扫描基线到最终改动，隐私匹配为 0（grep 返回 1，表示无匹配），证据为 `build/fw-f8-evidence/privacy.txt`。
+
+## 复查后的修复
+
+复查依据：主会话 2026-11-09 的 `REVIEW.md`，仅有 FW-L1，无严重、高或中级未结项。
+
+- 【实现】FW-L1：删除今日标题上的透明点击区域；“显示和亮度”新增可见的“今日屏放什么”列表行，按钮与 AI 复用 `shell.today_edit`，设置页快照列出同一能力。未新增机制。
+- 【实现】扩展 F8 场景：从 Settings 点进显示设置，再点可见列表行进入 TodayEdit；核对能力绑定、行高和完整可见，遍历今日页确认无编辑入口绑定，并实点标题确认不跳页。反向对照分别恢复透明区域、断开设置行绑定。
+- 【实测】普通定向 10/10 通过（F8、卡片、字号、两种设备快照、AI 暴露、中枢及其夹具）；反向对照 7/7 得到预期失败，恢复透明入口失败 25 项、断开设置行绑定失败 21 项。截图确认新行完整可见。日志：`build/fw-f8-evidence/review-focused.log`、`review-reverse.log`；截图与内存记录：`build/fw-f8-evidence/review/`。
+- 【实测】上次三项中枢跳过是 Python 环境选错：只读依赖目录现有 `hub/.venv` 包含 Python 3.11.15、pytest 8.4.2、pytest-asyncio 1.2.0、aiohttp 3.12.15、PyYAML 6.0.3。改用 CMake 的 `INK_HUB_PYTHON` 并令 `PYTHONPATH="$PWD/hub"` 指向本分支，三项已全部通过；不安装或升级依赖。
+- 验证进行中：普通全量、ASan/UBSan 全量与最终隐私检查待填写。当前对原任务基线统计产品代码新增 297 行、删除 8 行，未超过 300 行预算。

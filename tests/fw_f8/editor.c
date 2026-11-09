@@ -58,6 +58,29 @@ static void touch(const char *text) {
     if (label) tap(x, y);
     quiet();
 }
+static bool has_editor_binding(lv_obj_t *o) {
+    const char *cap = ink_shell_bound_cap(o);
+    if (cap && !strcmp(cap, "shell.today_edit")) return true;
+    for (uint32_t i = 0; i < lv_obj_get_child_count(o); i++)
+        if (has_editor_binding(lv_obj_get_child(o, (int)i))) return true;
+    return false;
+}
+static void check_today_entry(void) {
+    CHECK(!has_editor_binding(lv_screen_active()), "Today has no invisible editor touch region");
+}
+static void check_settings_entry(void) {
+    inspect();
+    CHECK(strstr(snapshot, "shell.today_edit"), "display settings snapshot exposes the existing editor capability");
+    wanted = "今日屏放什么"; find();
+    CHECK(label, "display settings has a visible Today editor row");
+    if (!label) return;
+    lv_obj_t *row = lv_obj_get_parent(label);
+    const char *cap = ink_shell_bound_cap(row);
+    CHECK(cap && !strcmp(cap, "shell.today_edit"), "settings row and AI share the existing editor capability");
+    lv_area_t a; lv_obj_get_coords(row, &a);
+    CHECK(a.y1 >= 0 && a.y2 < ink_ui_height() && lv_obj_get_height(row) >= ink_ui_px(INK_CONTROL),
+        "the complete settings row fits the screen with the standard touch height");
+}
 static void home(void) { ink_ui_home(); }
 static void child_space(void) { CHECK(ink_member_switch("kid") == 0, "switch to child"); }
 static void check_order(void) {
@@ -139,7 +162,20 @@ static void run(void *arg) {
         CHECK(ink_alarm_add(&alarm) > 0, "seed the existing upcoming card provider");
         CHECK(BY_HAND("home.prev", NULL), "open the unchanged default Today"); quiet(); on_ui(inspect);
         CHECK(strstr(snapshot, "\"id\":\"listen\"") && strstr(snapshot, "\"id\":\"upcoming\""), "unconfigured Today retains its defaults");
-        touch("今日"); CHECK(!strcmp(ink_ui_page_name(), "TodayEdit"), "Today heading opens the editor by touch");
+        on_ui(check_today_entry); touch("今日");
+        CHECK(!strcmp(ink_ui_page_name(), "home") && !strcmp(ink_shell_board(), "Today"), "Today heading no longer opens the editor");
+        CHECK(BY_HAND("shell.settings", NULL) && g_rc.status == INK_RC_DONE, "open Settings"); quiet();
+        CHECK(!strcmp(ink_ui_page_name(), "Settings"), "start the visible editor path in Settings");
+        touch("显示和亮度");
+        CHECK(!strcmp(ink_ui_page_name(), "SetDisplay"), "Settings row opens display settings");
+        for (int page = 0; page < 3; page++) {
+            wanted = "今日屏放什么"; on_ui(find);
+            if (label) break;
+            CHECK(BY_HAND("shell.page_next", NULL) && g_rc.status == INK_RC_DONE, "page to the display settings editor row"); quiet();
+        }
+        on_ui(check_settings_entry); capture("SetDisplayToday");
+        touch("今日屏放什么");
+        CHECK(!strcmp(ink_ui_page_name(), "TodayEdit"), "visible settings row opens TodayEdit by touch");
         on_ui(record_editor); capture("TodayEdit"); ink_probe_count("test.snapshot.TodayEdit");
         touch("报纸");
         CHECK(AI("shell.today_card", "{\"card\":\"home:upcoming\"}") && g_rc.status == INK_RC_DONE, "AI removes the same kind of card through the shared capability"); quiet();
@@ -148,7 +184,8 @@ static void run(void *arg) {
         on_ui(locate_up_b); if (label) tap(x, y); quiet();
         for (int i = 0; i < 2; i++) CHECK(AI("shell.today_card", "{\"card\":\"example:b\",\"up\":true}") && g_rc.status == INK_RC_DONE, "AI uses the same up capability as touch");
         CHECK(AI("shell.today_card", "{\"card\":\"news:daily\"}") && g_rc.status == INK_RC_REJECTED, "a fifth card is refused without replacing a selection");
-        CHECK(BY_HAND("shell.back", NULL), "return to Today"); quiet(); on_ui(check_order); capture("TodayOrder");
+        CHECK(BY_HAND("shell.back", NULL) && BY_HAND("shell.back", NULL) && BY_HAND("shell.back", NULL),
+            "return to Today through display settings and Settings"); quiet(); on_ui(check_order); capture("TodayOrder");
         CHECK(BY_HAND("home.next", NULL) && BY_HAND("home.next", NULL), "open All apps"); quiet();
         on_ui(locate_listen_icon); unsigned before = opens, prior_launches = launches; if (label) tap(x, y); quiet();
         CHECK(launches == prior_launches + 1 && opens == before && !strcmp(ink_ui_page_name(), LISTEN_PAGE.name), "short press still opens the application");
