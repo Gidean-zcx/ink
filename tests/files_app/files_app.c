@@ -188,9 +188,11 @@ static void review_regressions(void) {
     CHECK(ink_fs_mkdir("/me/2026/notes") == 0 && ink_fs_mkdir("/family/2026/notes") == 0 &&
           ink_fs_mkdir("/members/kid/SYNTH_NEST") == 0, "create synthetic parent-boundary directories");
     browse_path("/me", "FileList"); browse_path("/me/2026", "FileList"); browse_path("/me/2026/notes", "FileList");
-    if (up_to("FileList", "/me/2026") && up_to("FileList", "/me")) up_to("Files", ""); roots();
+    if (up_to("FileList", "/me/2026") && up_to("FileList", "/me")) up_to("Files", "");
+    roots();
     browse_path("/family/2026/notes", "FileList");
-    if (up_to("FileList", "/family/2026") && up_to("FileList", "/family")) up_to("Files", ""); roots();
+    if (up_to("FileList", "/family/2026") && up_to("FileList", "/family")) up_to("Files", "");
+    roots();
     browse_path("/members/kid/SYNTH_NEST", "FileList"); if (up_to("FileList", "/members/kid")) up_to("Files", ""); roots();
     browse_path("/members/owner", "FileList"); up_to("Files", ""); roots();
     browse(); select_id(kept); touch("打开"); quiet(); on_ui(preview_check); on_ui(notice_check); snap("FileActionsPreview");

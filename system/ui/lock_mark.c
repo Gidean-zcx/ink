@@ -28,13 +28,19 @@ static void update_clock(void) {
 static void show(void) {
     if (g_mark) return;
     bool clock = ink_setting_get("display.lock_style") == 1;
-    g_mark = clock ? lv_obj_create(lv_layer_sys()) : ink_ui_box(lv_layer_sys(), INK_MARGIN,
+    bool image = ink_setting_get("display.lock_style") == 2 && ink_wallpaper_ready();
+    g_mark = clock || image ? lv_obj_create(lv_layer_sys()) : ink_ui_box(lv_layer_sys(), INK_MARGIN,
              INK_CANVAS_H - INK_CONTROL - INK_GAP_S, INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, 0, INK_SURFACE_WHITE, false);
-    if (clock) {
+    if (clock || image) {
         lv_obj_remove_style_all(g_mark);
         lv_obj_set_size(g_mark, LV_PCT(100), LV_PCT(100));
     }
     lv_obj_remove_flag(g_mark, LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_CLICKABLE);
+    if (image) {
+        ink_wallpaper_draw(g_mark);
+        ink_ui_overlay_add(&OVERLAY, g_mark); ink_ui_hint_obj(g_mark, INK_REFRESH_FLASH_UI);
+        return;
+    }
     if (clock) {
         lv_obj_set_style_bg_color(g_mark, ink_ui_paper(), 0);
         lv_obj_set_style_bg_opa(g_mark, LV_OPA_COVER, 0);

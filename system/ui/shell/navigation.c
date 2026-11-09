@@ -927,7 +927,7 @@ static void draw_who(int y) {
     const ink_member_t *me = ink_member_current();
     int h = ink_ui_row_double();
     lv_obj_t *who = ink_ui_pill(N.page_body, "", INK_MARGIN, y, width(), h, true, NULL, NULL);
-    ink_shell_bind(who, "shell.members", NULL);
+    ink_shell_bind(who, "shell.family", NULL);
     char first[8] = {0}, family[32];
     size_t len = 1;
     while (len < sizeof first - 1 && (me->name[len] & 0xc0) == 0x80) len++;
@@ -1010,8 +1010,8 @@ static void body_blocks(void) {
         F.y += 3 * INK_CONTROL + INK_GAP;
         if (block(3 * INK_CONTROL)) {
             lv_obj_t *g = group(3);
-            group_row(g, "lock", "锁屏和壁纸", ink_setting_get("display.lock_style") ? "时钟和待办" : "这一页", 0,
-                      "shell.display");
+            char lock_after[32]; snprintf(lock_after, sizeof lock_after, "%lld 分钟", (long long)ink_setting_get("power.lock_after_s") / 60);
+            group_row(g, "lock", "锁屏和壁纸", lock_after, 0, "shell.wallpaper");
             group_row(g, "storage", "存储和备份", "", 1, "shell.storage");
             group_row(g, "info", "关于和更新", "", 2, "shell.about");
         }
@@ -1339,6 +1339,7 @@ void ink_shell_open_page(const char *name) {
             ink_ui_push(&PAGES[i], (void *) (intptr_t) i);
             return;
         }
+    ink_settings_family_open(name);
 }
 
 const char *ink_shell_board(void) {
@@ -1560,7 +1561,7 @@ static void changed(void *ctx, int h, const char *id) {
     ink_exec_post(INK_EXEC_UI, &N.refresh, refresh, NULL);
 }
 static const char *const FONT_CHOICES[] = {"小", "中", "大", "特大", NULL};
-static const char *const LOCK_CHOICES[] = {"这一页", "时钟和待办", NULL};
+static const char *const LOCK_CHOICES[] = {"这一页", "时钟和待办", "壁纸", NULL};
 static const ink_setting_def_t SETTINGS[] = {
     {.id = "display.font_size", .title = "字号", .type = INK_SET_ENUM, .def = 1, .choices = FONT_CHOICES},
     {.id = "display.lock_style",

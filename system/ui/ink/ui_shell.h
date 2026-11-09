@@ -43,4 +43,10 @@ void ink_shell_ai_reveal(void);
 void ink_ai_tap(void);
 int ink_shell_ai_snapshot(char *buf, size_t cap);
 
+int ink_settings_family_init(void);
+void ink_settings_family_open(const char *name);
+int ink_wallpaper_init(void);
+bool ink_wallpaper_ready(void);
+void ink_wallpaper_draw(lv_obj_t *parent);
+
 #endif

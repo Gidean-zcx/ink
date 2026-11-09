@@ -21,7 +21,7 @@ jobs:
       - name: Configure (warnings are errors)
         run: cmake -S . -B build -DINK_WERROR=ON
       - name: Build
-        run: cmake --build build -j
+        run: cmake --build build -j -- -k
       - name: Scenarios and budgets
         run: ctest --test-dir build --output-on-failure
       - name: HTML reports (what the simulated panel showed, latencies, CPU, memory)
@@ -60,7 +60,7 @@ jobs:
       - name: Configure (warnings are errors)
         run: cmake -S . -B build -DINK_WERROR=ON -DINK_CJK_FONT=$PWD/fonts/NotoSansCJK-Regular.ttc -DINK_CJK_FACE=2 -DPython3_EXECUTABLE=$(which python) -DCMAKE_DISABLE_FIND_PACKAGE_SDL2=ON
       - name: Build
-        run: cmake --build build -j
+        run: cmake --build build -j -- -k
       - name: Scenarios and budgets
         run: ctest --test-dir build --output-on-failure
 

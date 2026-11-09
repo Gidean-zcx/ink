@@ -904,7 +904,17 @@ static void cap_time(ink_call_t *c) {
     ink_cap_result(c, out);
 }
 #define TIME_INPUT "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":15},\"minutes\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":1440}},\"required\":[\"minutes\"]}"
+static void cap_rename(ink_call_t *c) {
+    char id[16], name[32];
+    ink_args_get_str(&c->args, "id", id, sizeof id); ink_args_get_str(&c->args, "name", name, sizeof name);
+    slot_t *s = find(id);
+    if (!s || s->removing || !name[0]) { fail(c, INK_RC_INVALID, "unknown member or empty name"); return; }
+    ink_svc_lock(); snprintf(s->m.name, sizeof s->m.name, "%s", name); ink_svc_unlock();
+    save_all(); ink_cap_emit("member.changed", NULL);
+}
 static const ink_cap_t MEMBER_CAPS[] = {
+    {.id = "member.rename", .title = "修改家人的称呼", .effect = INK_FX_LOCAL_WRITE, .exec = INK_EXEC_BG,
+        .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":15},\"name\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":31}},\"required\":[\"id\",\"name\"]}", .run = cap_rename},
     {.id = "member.time_get", .title = "查看孩子今天的用时和每天的时长", .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":15}}}", .output = "{\"type\":\"object\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_BG, .run = cap_time},
     {.id = "member.time_set", .title = "改孩子每天能用多久", .ask = "每天能用 {minutes} 分钟（0 表示不限）", .input = TIME_INPUT, .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .ask_by_hand = true, .parent_pin = true, .exec = INK_EXEC_BG, .run = cap_time},
     {.id = "member.time_add", .title = "给孩子今天加时间", .ask = "今天加 {minutes} 分钟", .input = TIME_INPUT, .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .ask_by_hand = true, .parent_pin = true, .exec = INK_EXEC_BG, .run = cap_time},

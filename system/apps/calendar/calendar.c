@@ -64,8 +64,10 @@ static void bind_row(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, i
     (void)ctx; unsigned n = index % 4; ink_alarm_t *a = &C.rows[index]; ink_tm_t t;
     ink_time_to_local(a->next_s, &t);
     snprintf(C.ids[n], sizeof C.ids[n], "%s:%u", a->kind == INK_ALARM ? "alarm" : "reminder", (unsigned)a->id);
+    char named[sizeof a->title]; /* a copy: gcc refuses snprintf from C into C */
+    memcpy(named, a->title, sizeof named); named[sizeof named - 1] = 0;
     snprintf(C.values[n], sizeof C.values[n], "%d月%d日 %02d:%02d %s · %s", t.month, t.day, t.hour, t.min,
-        a->kind == INK_ALARM ? "闹钟" : "提醒", a->title);
+        a->kind == INK_ALARM ? "闹钟" : "提醒", named);
     *field = (ink_ui_field_spec_t){.id = C.ids[n], .role = "listitem", .label = a->kind == INK_ALARM ? "闹钟" : "提醒", .value = C.values[n], .object = {C.ids[n], 1}};
     *action = (ink_ui_action_spec_t){.id = C.ids[n], .label = "查看", .capability = "calendar.open", .enabled = false};
     if (!lv_obj_get_child_count(slot)) {

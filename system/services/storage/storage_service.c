@@ -39,7 +39,7 @@
 #include "ink/sys/sha256.h"
 
 #define MAX_JOBS 8
-#define ST_STACK 3584
+#define ST_STACK 4096 /* 3584 was exceeded by the Linux host estimate (3624, settings-b); confirm with -fstack-usage on S31 */
 #define ST_PRIO 3
 #define IDLE_POLL_US 50000
 #define MAX_DEFER_US 30000000ull /* writes held off longer than this are forced (counted) */
