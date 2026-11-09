@@ -1591,7 +1591,23 @@ int fs_thumb_for(const file_context_t *c, uint32_t id, ink_image_t *out) {
         hal_file_t *f = data ? hal_fs_open(phys, HAL_O_READ) : NULL;
         int64_t n = f ? hal_fs_read(f, data, (size_t)e.size) : -1;
         int closed = f ? hal_fs_close(f) : -1;
-        if (n != e.size || closed || ink_image_thumbnail(FS.thumbs, id, version, data, (size_t)e.size, &im)) r = INK_FS_ERR_IO;
+        if (n != e.size || closed) r = INK_FS_ERR_IO;
+        else {
+            /* MEDIA owns the cache while decoding; file operations can continue. */
+            ink_thumb_cache_t *cache = FS.thumbs;
+            FS.thumbs = NULL;
+            uint32_t revision = __atomic_load_n(&FS.revision, __ATOMIC_RELAXED);
+            osal_mutex_unlock(FS.edits);
+            int decoded = ink_image_thumbnail(cache, id, version, data, (size_t)e.size, &im);
+            osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
+            if (epoch != ink_member_epoch() || revision != __atomic_load_n(&FS.revision, __ATOMIC_RELAXED)) {
+                ink_thumb_cache_destroy(cache);
+                r = INK_FS_ERR_BUSY;
+            } else {
+                FS.thumbs = cache;
+                if (decoded) r = INK_FS_ERR_IO;
+            }
+        }
         osal_free(data);
     }
     if (!r) {

@@ -106,8 +106,7 @@ bool ink_activity_listening(void) {
     ink_state_get_str(ink_state_find("audio.now_playing"), playing, sizeof playing);
     return st.state == INK_MEDIA_PLAYING || !strcmp(playing, "voice");
 }
-int ink_activity_card_draw(lv_obj_t *parent, int y) {
-    read_activity();
+static int draw_activity(lv_obj_t *parent, int y) {
     if (!A.cap) return 0;
     int h = ink_ui_row_double(), w = INK_CANVAS_W - 2 * INK_MARGIN;
     lv_obj_t *card = ink_ui_box(parent, INK_MARGIN, y, w, h, -1, INK_SURFACE_WHITE, true);
@@ -121,6 +120,10 @@ int ink_activity_card_draw(lv_obj_t *parent, int y) {
         ink_ui_pill(card, A.action, w - button_w - INK_GAP, (h - INK_CONTROL) / 2, button_w, INK_CONTROL, false, NULL, NULL);
     ink_shell_bind(button, A.cap, "{}");
     return h + INK_GAP_M;
+}
+int ink_activity_card_draw(lv_obj_t *parent, int y) {
+    read_activity();
+    return draw_activity(parent, y);
 }
 int ink_activity_card_snapshot(char *out, size_t cap) {
     return A.cap ? snprintf(out, cap, "正在进行=%s；%s；动作=%s（%s）。", A.title, A.detail, A.action, A.cap) : snprintf(out, cap, "没有正在进行的事。");
@@ -211,7 +214,7 @@ int ink_activity_home_offset(void) {
     return !A.cap ? 0 : !strcmp(A.cap, "phone.return") ? INK_GAP_L : -INK_GAP_L;
 }
 bool ink_activity_home_draw(lv_obj_t *parent, int y) {
-    if (!A.cap || strcmp(A.cap, "phone.return")) return ink_activity_card_draw(parent, y) != 0;
+    if (!A.cap || strcmp(A.cap, "phone.return")) return draw_activity(parent, y) != 0;
     int w = INK_CANVAS_W - 2 * INK_MARGIN;
     lv_obj_t *banner = ink_ui_box(parent, INK_MARGIN, 0, w, INK_CONTROL, -1, INK_SURFACE_BLACK, false);
     ink_ui_icon(banner, "phone", INK_ICON_SMALL, INK_ICON_SOLID, INK_GAP_L, (INK_CONTROL - INK_ICON_SMALL) / 2, true);
