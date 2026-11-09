@@ -26,7 +26,7 @@ static int counted_readdir(hal_dir_t *d, hal_dirent_t *e) {
     return hal_fs_readdir(d, e);
 }
 static int64_t counted_size(const char *path) {
-    bool content = measuring && strncmp(path, INDEX_CARD, strlen(INDEX_CARD));
+    bool content = measuring;
     uint64_t start = osal_now_us();
     if (content) { sizes++; locked_sizes += edit_owner == osal_task_self(); }
     if (content && edit_on_size && edit_owner != osal_task_self()) {

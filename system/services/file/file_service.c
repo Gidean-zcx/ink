@@ -1426,11 +1426,14 @@ static bool storage_index_ready(void) {
 }
 
 static int index_open(uint8_t card[16], ink_db_t **db) {
-    int64_t size = hal_fs_size(INDEX_CARD);
-    hal_file_t *f = hal_fs_open(size < 0 ? INDEX_CARD ".tmp" : INDEX_CARD, size < 0 ? HAL_O_WRITE | HAL_O_CREATE | HAL_O_TRUNC : HAL_O_READ);
+    hal_file_t *f = hal_fs_open(INDEX_CARD, HAL_O_READ);
+    int64_t size = f ? 16 : -1;
+    if (!f) f = hal_fs_open(INDEX_CARD ".tmp", HAL_O_WRITE | HAL_O_CREATE | HAL_O_TRUNC);
     if (!f) return card_error();
     if (size < 0) hal_random_fill(card, 16);
     ssize_t n = size < 0 ? hal_fs_write(f, card, 16) : hal_fs_read(f, card, 16);
+    uint8_t extra;
+    if (size >= 0 && n == 16 && hal_fs_read(f, &extra, 1) != 0) n = -1;
     int r = size < 0 ? hal_fs_sync(f) : 0;
     int closed = hal_fs_close(f);
     if (n != 16 || r || closed || (size >= 0 && size != 16)) return INK_FS_ERR_IO;

@@ -111,6 +111,23 @@ static void test_units(void) {
     }
     write_file(paths[0], sizes[0][0]);
 }
+static void test_card_marker(void) {
+    uint8_t card[16]; hal_file_t *f = hal_fs_open("/content/.file-index-card", HAL_O_READ);
+    CHECK(f && hal_fs_read(f, card, sizeof card) == sizeof card, "read synthetic card identity");
+    if (!f) return;
+    CHECK(hal_fs_close(f) == 0, "close synthetic card identity");
+    for (int i = 0; i < 3; i++) {
+        f = hal_fs_open("/content/.file-index-card", HAL_O_WRITE | HAL_O_TRUNC);
+        size_t n = i == 0 ? 15 : sizeof card;
+        CHECK(f && hal_fs_write(f, card, n) == (ssize_t)n, "synthetic card identity length fixture");
+        if (f) {
+            if (i == 1) CHECK(hal_fs_write(f, "X", 1) == 1, "oversized card identity");
+            CHECK(hal_fs_close(f) == 0, "close card identity fixture");
+        }
+        CHECK(AI("file.usage", NULL) && g_rc.status == (i < 2 ? INK_RC_FAILED : INK_RC_DONE),
+            "card identity must be exactly 16 bytes; intact identity recovers");
+    }
+}
 static void capture_event(void *arg) {
     (void)arg; CHECK(settled(), "settled comparison frame");
     sim_display_snapshot("scene"); captured = true;
@@ -242,7 +259,7 @@ static void run(void *arg) {
         CHECK(number("device", kinds[k]) == base[k] + sizes[0][k] + sizes[1][k], "device category unchanged %s", kinds[k]);
     }
     CHECK(ink_member_switch("owner") == 0, "return before cleanup");
-    test_usage_cache(); test_units(); test_cleanup();
+    test_usage_cache(); test_card_marker(); test_units(); test_cleanup();
     CHECK(ink_member_switch("kid") == 0, "enter child space");
     CHECK(AI("shell.storage", NULL) && g_rc.status == INK_RC_REJECTED, "child cannot open cleanup page via AI");
     CHECK(AI("file.cleanup_preview", NULL) && g_rc.status == INK_RC_REJECTED, "child cannot list device cleanup");

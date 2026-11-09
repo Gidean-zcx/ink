@@ -73,11 +73,12 @@
 - 复查基线：`b40d6f52`；主会话提出 SU-M1、SU-L1，本轮只处理这两项。
 - SU-M1：【实现】移除 `file.usage` 内的目录扫描，由现有 `file.index` 流程标记共享目录和成员根目录的索引完成情况；未完成时返回 `organizing`，页面显示“正在整理”。索引完成沿用 `file.changed` 刷新页面。统计缓存按卡、成员与文件 revision 复用；逐文件查大小在编辑锁外进行，结束后核对 revision 和索引版本，过期结果不发布。
 - SU-L1：【实现】存储页分类、清理及剩余空间统一使用 KB、MB、GB；换算沿用现有的 1024 进位。
-- 【实测】专项 `storage-usage` 155 项检查通过：未建索引不扫描、索引完成刷新、写后只重算一次、第二次零次已索引文件大小查询、KB/MB/GB 分类与剩余空间的真实页面快照，以及统计时发生写入后丢弃旧结果、下次重算并缓存。与文件页联合复跑 `storage-usage|files-app` 也通过，未放宽既有预算。命令：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^(storage-usage|files-app)$' --output-on-failure -j2`；日志：`build/review-focused.log`。
-- 【实测】锁探针共 5 次统计：普通查询每次只进入编辑锁 2 次，注入写入的一次含写操作共 3 次；查已索引文件大小时持锁次数为 0，最长单次持锁 12.178 毫秒。两次缓存命中均查 0 个已索引文件大小；非缓存查询各查 11 个，期间不扫目录。卡标识文件的固定元数据校验仍保留，不计入已索引文件探针。证据：`build/storage-compare/SetStorage/metrics.json`。过期写入由大小查询探针确定性注入普通写文件 API；未使用线程暂停或 sleep，锁探针作为本次并发要求的证据。
-- 【实测】10 个反向对照均按预期失败并完成场景：原有 3 项为成员口径 13 条、用户目录 4 条、确认标题 1 条；本轮为禁用缓存 2 条、恢复统计内扫描 1 条、去掉过期检查 1 条、恢复重复索引通知 1 条、恢复分类单位 3 条、恢复剩余空间单位 2 条、恢复全程持锁 6 条。命令：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/storage_usage/reverse.py --build build`；证据：`build/storage-reverse/summary.json`、`build/review-reverse.log`。两份产品文件的哈希前后相同，编译变体仅放在忽略的构建目录。
+- 【实测】专项 `storage-usage` 167 项检查通过：未建索引不扫描、索引完成刷新、写后只重算一次、第二次零次文件大小查询、KB/MB/GB 分类与剩余空间的真实页面快照，以及统计时发生写入后丢弃旧结果、下次重算并缓存。与文件页联合复跑 `storage-usage|files-app` 也通过，未放宽既有预算。命令：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^(storage-usage|files-app)$' --output-on-failure -j2`；日志：`build/review-focused.log`。
+- 【实测】锁探针共 5 次统计：普通查询每次只进入编辑锁 2 次，注入写入的一次含写操作共 3 次；查文件大小时持锁次数为 0，最长单次持锁 12.227 毫秒。两次缓存命中均为全部 `hal_fs_size` 调用 0 次；非缓存查询各查 11 个，期间不扫目录。卡标识校验复用既有读取并检查 EOF，不再额外查大小；15/17 字节异常标识被拒绝，恢复 16 字节后可正常统计。证据：`build/storage-compare/SetStorage/metrics.json`。过期写入由大小查询探针确定性注入普通写文件 API；未使用线程暂停或 sleep，锁探针作为本次并发要求的证据。
+- 【实测】11 个反向对照均按预期失败并完成场景：原有 3 项为成员口径 13 条、用户目录 4 条、确认标题 1 条；本轮为禁用缓存 2 条、恢复卡标识大小查询 4 条、恢复统计内扫描 1 条、去掉过期检查 1 条、恢复重复索引通知 1 条、恢复分类单位 3 条、恢复剩余空间单位 2 条、恢复全程持锁 6 条。命令：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/storage_usage/reverse.py --build build`；证据：`build/storage-reverse/summary.json`、`build/review-reverse.log`。两份产品文件的哈希前后相同，编译变体仅放在忽略的构建目录。
 - 改过的已有测试：原来“首次 `file.usage` 自动建索引”和“统计扫描期间索引状态为 organizing”的断言改为“未建索引只返回 organizing、不读目录，现有 `file.index` 流程完成后页面自动刷新”。这是 SU-M1 明确要求改变的职责；原分类精度、成员隔离、清理范围、确认、儿童限制及预算断言均保留。
 - 【实现】完成标记要求共享根目录和所有现有成员根目录都经过既有索引流程；未建立索引的新文件仍由该流程纳入，纳入前不计入分类统计，统计入口不主动补扫。未新增全卡自动建索引调度，也未验证实机性能。
 - 【实测】首轮普通全量为 240/242：除已知能力表文档外，`files-app` 在 180 秒虚拟时间仍未完成。根因是索引已就绪后重复扫描仍发送 `file.changed`，文件页重绘又触发索引。已将通知收紧到“首次完成或索引版本变化”，增加重复索引不发事件的测试及反向对照；未修改文件页或放宽时间预算。初轮日志：`build/review-ctest-initial.log`；失败证据：`build/files-app-p_62ym1m/write/metrics.json`。
-- 【实测】相对任务基线，产品代码新增 226 行；连删除行和 CMake 计入为 242 行，均低于 250 行。全量与内存检查正在执行，最终结果待补充。
+- 【实测】相对任务基线，产品代码新增 231 行；连删除行和 CMake 计入为 249 行，均低于 250 行。全量与内存检查正在执行，最终结果待补充。
+- 过程记录：补齐卡标识零次大小查询时，停止中间轮测试的信号被当前环境拒绝，构建曾与该轮测试短暂重叠；该轮日志保存在 `build/review-ctest-intermediate.log`，不作为最终全量证据。后续恢复串行，构建和 CTest 均最多 `-j2`，使用 `taskpolicy -c utility`。
 - 新增的机制：仅 SU-M1 明确要求的内存统计缓存及现有索引完成标记；没有新增任务、线程、文件格式、配置、重试或队列。

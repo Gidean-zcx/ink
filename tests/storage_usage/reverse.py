@@ -33,6 +33,8 @@ cases = [
      '.title = "清理临时文件、缓存和未传完的文件", .effect = INK_FX_LOCAL_DESTRUCTIVE', 'confirmation title stays complete UTF-8'),
     ('usage-cache', 'bool cached = ready && storage.revision == revision',
      'bool cached = false && ready && storage.revision == revision', 'second query reads no indexed file sizes'),
+    ('card-stat', 'int64_t size = f ? 16 : -1;', 'int64_t size = f ? hal_fs_size(INDEX_CARD) : -1;',
+     'second query reads no indexed file sizes'),
     ('usage-rescan', 'bool ready = !r && storage_index_ready();',
      'bool ready = !r && storage_index_ready();\n    if (!r && !ready) r = index_scan(&c, db, card, "/family");',
      'unbuilt index reports organizing without scanning the card'),
