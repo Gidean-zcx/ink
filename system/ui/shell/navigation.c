@@ -990,15 +990,15 @@ static void body_blocks(void) {
                       wake == 2   ? "叫名字已关闭"
                       : wake == 1 ? "一直能叫名字"
                                   : "使用时能叫名字",
-                      2, NULL);
+                      2, "shell.voice");
         }
         F.y += 3 * INK_CONTROL + INK_GAP;
         if (block(3 * INK_CONTROL)) {
             lv_obj_t *g = group(3);
             group_row(g, "lock", "锁屏和壁纸", ink_setting_get("display.lock_style") ? "时钟和待办" : "这一页", 0,
                       "shell.display");
-            group_row(g, "storage", "存储和备份", "还没有备份", 1, NULL);
-            group_row(g, "info", "关于和更新", "", 2, NULL);
+            group_row(g, "storage", "存储和备份", "", 1, "shell.storage");
+            group_row(g, "info", "关于和更新", "", 2, "shell.about");
         }
     } else if (N.page_id == PAGE_DISPLAY) {
         if (block(INK_SLIDER))
@@ -1316,6 +1316,7 @@ static int page_snapshot(char *buf, size_t cap) {
 }
 
 void ink_shell_open_page(const char *name) {
+    ink_settings_page_open(name);
     for (unsigned i = 0; i < sizeof PAGES / sizeof *PAGES; i++)
         if (!strcmp(name, PAGES[i].name)) {
             if (child() && i != PAGE_NOTIFICATIONS) return;
@@ -1557,6 +1558,7 @@ static const ink_setting_def_t SETTINGS[] = {
 int ink_shell_ai_init(void);
 
 int ink_shell_init(void) {
+    if (ink_settings_pages_init() != 0) return -1;
     if (ink_boot_flow_init() != 0) return -1;
     if (ink_shell_ai_init() != 0) return -1;
     if (ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) ||
