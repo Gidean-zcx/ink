@@ -640,7 +640,6 @@ static int fs_write_atomic_unlocked(const file_context_t *c, const char *path, c
     int r = resolve_held(c, path, true, phys, sizeof phys);
     if (r) return r;
     bool added = hal_fs_size(phys) < 0 && !strncmp(phys, "/content/", 9);
-    if (added && (r = index_invalidate(true))) return card_done(r);
     snprintf(tmp, sizeof tmp, "%s" TMP_SUFFIX, phys);
     make_parents(phys);
     hal_file_t *f = hal_fs_open(tmp, HAL_O_WRITE | HAL_O_CREATE | HAL_O_TRUNC);
@@ -656,6 +655,7 @@ static int fs_write_atomic_unlocked(const file_context_t *c, const char *path, c
         hal_fs_remove(tmp);
         return card_done(card_error());
     }
+    if (added && (r = index_invalidate(true))) return card_done(r);
     changed(c, path, "written");
     return card_done(INK_FS_OK);
 }
@@ -1418,9 +1418,8 @@ static int restore_file(const char *member, unsigned stage, const char *path, co
         if (ink_layout_member_files(root, sizeof root, member) < 0) r = INK_FS_ERR_PATH;
         else {
             snprintf(source, sizeof source, "%s/.backup/down%u", root, stage);
-            r = index_invalidate(true);
-            if (!r && hal_fs_rename(source, target) != 0) r = INK_FS_ERR_IO;
-            else if (!r) { __atomic_add_fetch(&FS.revision, 1, __ATOMIC_RELAXED); r = changed(&c, path, "restored"); }
+            if (hal_fs_rename(source, target) != 0) r = INK_FS_ERR_IO;
+            else { __atomic_add_fetch(&FS.revision, 1, __ATOMIC_RELAXED); r = changed(&c, path, "restored"); }
         }
     }
     osal_mutex_unlock(FS.edits);
@@ -1459,17 +1458,19 @@ static int index_invalidate(bool durable) {
     ink_state_set_str(FS.h_index, hal_fs_card_present() && !FS.usb_lent ? "organizing" : "unavailable");
     ink_svc_at(&FS.index_at, osal_now_us() + 50000ull, index_refresh_cb, NULL);
     if (!durable) return INK_FS_OK;
-    uint8_t card[16]; int r = index_open(card, NULL);
-    ink_db_t *done = r ? NULL : ink_db_open(&INDEX_DONE_DEF, NULL);
-    if (!r && !done) r = INK_FS_ERR_IO;
-    index_rec_t e; ink_rec_t rec; ink_db_cursor_t cur = {0};
-    while (!r && ink_db_next(done, &cur, &rec, &e, sizeof e) == 1) {
-        if (memcmp(card, e.card, 16)) continue;
+    ink_db_t *done = ink_db_open(&INDEX_DONE_DEF, NULL);
+    if (!done) return INK_FS_ERR_IO;
+    bool recorded = ink_db_count(done) > 0;
+    uint8_t card[16]; int r = recorded ? index_open(card, NULL) : 0;
+    uint8_t saved_card[16]; ink_rec_t rec; ink_db_cursor_t cur = {0};
+    while (recorded && !r && ink_db_next(done, &cur, &rec, saved_card, sizeof saved_card) == 1) {
+        if (memcmp(card, saved_card, 16)) continue;
         /* Only the first mutation after completion removes a durable marker. */
         if (ink_db_del(done, rec.id, 0)) r = INK_FS_ERR_IO;
         break;
     }
-    if (!r && ink_db_wait(done, ink_db_last_ver(done), 3000000)) r = INK_FS_ERR_IO;
+    uint32_t version = ink_db_last_ver(done);
+    if (!r && ink_db_durable_ver(done) < version && ink_db_wait(done, version, 3000000)) r = INK_FS_ERR_IO;
     ink_db_close(done);
     return r;
 }
@@ -1495,10 +1496,10 @@ static int index_open(uint8_t card[16], ink_db_t **db) {
     int closed = hal_fs_close(f);
     if (n != 16 || r || closed || (size >= 0 && size != 16)) return INK_FS_ERR_IO;
     if (size < 0 && hal_fs_rename(INDEX_CARD ".tmp", INDEX_CARD)) return card_error();
+    if (!db) return 0;
     ink_state_set_str(FS.h_index, FS.index_seen && memcmp(card, FS.index_card, 16) ? "changed" : storage_index_ready() ? "ready" : "organizing");
     if (memcmp(card, FS.index_card, 16)) { ink_thumb_cache_destroy(FS.thumbs); FS.thumbs = NULL; memset(&storage, 0, sizeof storage); }
     memcpy(FS.index_card, card, 16); FS.index_seen = true;
-    if (!db) return 0;
     *db = ink_db_open(&INDEX_DEF, NULL);
     return *db ? 0 : INK_FS_ERR_IO;
 }

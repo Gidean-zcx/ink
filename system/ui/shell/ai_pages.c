@@ -120,7 +120,8 @@ static void bind_row(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, i
     bool undo = !strcmp(L.member, ink_member_current()->id) && L.receipts && object[0] && undo_ms > 0 && age >= 0 && age * 1000 < undo_ms;
     const ink_cap_t *definition = ink_cap_find(cap);
     snprintf(L.ids[i], sizeof L.ids[i], "activity:%u", (unsigned)rec.id);
-    snprintf(L.args[i], sizeof L.args[i], "{\"id\":%u,\"member\":\"%s\"}", (unsigned)rec.id, L.member);
+    char member[16]; snprintf(member, sizeof member, "%s", L.member);
+    snprintf(L.args[i], sizeof L.args[i], "{\"id\":%u,\"member\":\"%s\"}", (unsigned)rec.id, member);
     if (undo) {
         ink_jw_t w; ink_jw_init(&w, L.args[i], sizeof L.args[i]);
         ink_jw_raw(&w, "{\"object\":"); ink_jw_str(&w, object);
