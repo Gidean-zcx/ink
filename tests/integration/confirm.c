@@ -120,8 +120,15 @@ static void accepted(void) {
     CHECK(call_as("confirm.accept", args, INK_SRC_APP) && g_rc.status == INK_RC_INVALID, "nor to an app");
     CHECK(ink_confirm_decide(token, true, INK_SRC_AI) != 0 && ink_confirm_decide(token, true, INK_SRC_SYSTEM) != 0 && ink_confirm_decide(token, true, INK_SRC_CONFIRMED) != 0, "nor through the C interface");
     char *list = malloc(32768);
-    int n = ink_cap_manifest_json(list, 32768);
-    CHECK(n > 0 && !strstr(list, "confirm.accept") && !strstr(list, "confirm.reject") && strstr(list, "confirm.list") && strstr(list, "confirm.withdraw"), "and not in its tool list");
+    int next = 0, n;
+    bool has_list = false, has_withdraw = false;
+    do {
+        n = ink_cap_manifest_page(next, NULL, list, 32768, &next);
+        CHECK(n > 0 && !strstr(list, "confirm.accept") && !strstr(list, "confirm.reject"), "and not in any page of its tool list");
+        has_list |= strstr(list, "confirm.list") != NULL;
+        has_withdraw |= strstr(list, "confirm.withdraw") != NULL;
+    } while (n > 0 && next >= 0);
+    CHECK(has_list && has_withdraw, "public confirmation tools remain in its tool list");
     free(list);
     CHECK(g_runs == 0 && pending_state() == 1, "so it still waits");
 
