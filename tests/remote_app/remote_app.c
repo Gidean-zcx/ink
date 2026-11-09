@@ -28,6 +28,8 @@ static int observed_send(int sid, uint8_t kind, const void *data, size_t len, ui
 #undef ink_main
 #include "../integration/whole_product.h"
 
+const char *test_remote_hub_url(void);
+
 static char snapshot[8192];
 static uint32_t picture_hash, before_outage;
 static void hash_picture(void) {
@@ -74,6 +76,31 @@ static void password_typed(void) { ink_text_commit_utf8("SYNTHETIC_SECRET"); }
 static void finish_password(void) { ink_text_enter(); }
 static void outage(void *arg) { sim_net_outage(SIM_MS((uintptr_t)arg)); }
 static void disconnect_ms(int ms) { vtk_event_at(vtk_now() + SIM_MS(1), outage, (void *)(uintptr_t)ms); delay_ms(5); }
+static void locked_open(void) {
+    ink_power_hold(INK_NEED_AWAKE); /* Keep the test driver runnable while the screen is locked. */
+    ink_power_lock();
+    CHECK(WAIT_FOR(!strcmp(power_state(), "locked"), 2000), "lock before opening remote page");
+    double sessions = sim_metric_value("hub.remote.sessions");
+    double checks = sim_metric_value("remote.link_checks");
+    CHECK(AI("remote.open", "{\"url\":\"https://example.com/locked\"}") && g_rc.status == INK_RC_DONE, "AI opens URL while screen is locked");
+    delay_ms(1600);
+    CHECK(RS.suspended && RS.sid == 0 && sim_metric_value("hub.remote.sessions") == sessions, "locked AI open sends no hub session");
+    CHECK(sim_metric_value("remote.link_checks") == checks, "locked open pauses link checks");
+    CHECK(ink_power_unlock(osal_now_us()), "unlock pending URL");
+    CHECK(WAIT_FOR(sim_metric_value("hub.remote.sessions") == sessions + 1 && RS.first_shown, 12000), "unlock opens exactly one pending session");
+    CHECK(!strcmp(test_remote_hub_url(), "https://example.com/locked"), "hub receives original pending URL after unlock");
+    ink_power_lock();
+    CHECK(WAIT_FOR(!strcmp(power_state(), "locked") && RS.suspended && RS.sid == 0, 2000), "locking existing remote page closes its session");
+    sessions = sim_metric_value("hub.remote.sessions");
+    CHECK(AI("remote.open", "{\"url\":\"https://example.com/edited\"}") && g_rc.status == INK_RC_DONE, "AI replaces pending URL while locked");
+    delay_ms(1600);
+    CHECK(RS.sid == 0 && sim_metric_value("hub.remote.sessions") == sessions, "locked address replacement sends no hub session");
+    CHECK(ink_power_unlock(osal_now_us()), "unlock edited URL");
+    CHECK(WAIT_FOR(sim_metric_value("hub.remote.sessions") == sessions + 1 && RS.first_shown, 12000), "unlock resumes edited pending session");
+    CHECK(!strcmp(test_remote_hub_url(), "https://example.com/edited"), "hub receives edited pending URL after unlock");
+    CHECK(AI("remote.close", NULL) && g_rc.status == INK_RC_DONE, "close lock regression page");
+    ink_power_release(INK_NEED_AWAKE);
+}
 static void run(void *arg) {
     (void)arg; delay_ms(1800); quiet();
     CHECK(AI("remote.open", NULL) && g_rc.status == INK_RC_DONE, "open address editor through bus");
@@ -85,12 +112,18 @@ static void run(void *arg) {
     hold_credit = true;
     CHECK(AI("text.submit", NULL) && g_rc.status == INK_RC_DONE, "address enter opens hub session");
     CHECK(strstr(RS.params, "https://example.com/synthetic"), "opening request contains entered URL");
-    delay_ms(1800);
-    CHECK(!RS.first_shown && RS.page == LOADING, "slow first screen shows Loading within 1.5 seconds");
+    delay_ms(1500);
+    CHECK(!RS.first_shown && RS.page == LOADING && osal_now_us() - RS.opened_us <= 2000000ull,
+          "slow first screen shows Loading in the 1.5 to 2 second window");
     capture("RemoteLoading");
     on_ui(release_credit);
     CHECK(WAIT_FOR(RS.first_shown && RS.page == REMOTE, 12000), "frame replaces Loading");
     capture("Remote");
+    double checks = sim_metric_value("remote.link_checks");
+    delay_ms(10000);
+    checks = sim_metric_value("remote.link_checks") - checks;
+    ink_probe_value("test.remote.link_checks_10s", checks);
+    CHECK(RS.page == REMOTE && checks > 0 && checks <= 25, "open page checks link at most 25 times in ten seconds");
     double pages = sim_metric_value("hub.remote.pages");
     key(HAL_KEY_NEXT); quiet(); key(HAL_KEY_PREV); quiet();
     CHECK(WAIT_FOR(sim_metric_value("hub.remote.pages") == pages + 2, 5000), "both physical paging keys reach hub");
@@ -135,6 +168,7 @@ static void run(void *arg) {
     delay_ms(20000);
     CHECK(RS.ended && RS.sid == 0, "late return does not silently reopen timed-out page");
     CHECK(AI("remote.close", NULL) && g_rc.status == INK_RC_DONE, "close through same bus");
+    locked_open();
     CHECK(ink_member_switch("kid") == 0, "switch to child"); quiet();
     CHECK(AI("remote.open", "{\"url\":\"https://example.com\"}") && g_rc.status == INK_RC_REJECTED, "child direct call denied");
     CHECK(AI("app.open", "{\"id\":\"remote\"}") && g_rc.status == INK_RC_REJECTED, "child app entry denied");

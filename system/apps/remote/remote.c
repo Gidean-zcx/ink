@@ -411,12 +411,13 @@ static void session_restart(void *arg) { /* UI task */
 /* UI task: the realtime service reannounces; the device bounds the recovery window. */
 static void link_check(lv_timer_t *t) {
     (void)t;
+    ink_probe_count("remote.link_checks");
     if (RS.suspended || RS.ended || !RS.sid) return;
     uint64_t now = osal_now_us();
     int64_t online = 1;
     ink_state_get_int(ink_state_find("net.online"), &online);
     RS.down_ticks = ink_rt_ready(RS.sid) ? 0 : RS.down_ticks + 1;
-    bool down = !online || (RS.first_shown && RS.down_ticks >= 30);
+    bool down = !online || (RS.first_shown && RS.down_ticks >= 6);
     if (down && !RS.down_us) RS.down_us = now;
     if (RS.down_us && now - RS.down_us >= 300000000ull) {
         session_close();
@@ -577,10 +578,10 @@ static void remote_create(lv_obj_t *scr, void *arg) {
     lv_timer_pause(RS.credit_timer); /* until the hub confirmed the session */
     RS.spot_timer = lv_timer_create(spot_expired, FEEDBACK_MS, NULL);
     lv_timer_pause(RS.spot_timer);
-    RS.link_timer = lv_timer_create(link_check, 100, NULL);
+    RS.link_timer = lv_timer_create(link_check, 500, NULL);
     RS.spot_on = false;
     RS.owed = 0;
-    RS.suspended = RS.ended = RS.down_shown = false;
+    RS.ended = RS.down_shown = false;
     RS.down_ticks = 0;
     RS.first_shown = RS.waiting_display = RS.pulled = false;
     RS.tap_us = 0;
@@ -589,6 +590,10 @@ static void remote_create(lv_obj_t *scr, void *arg) {
     RS.down_us = 0;
     RS.secret = false;
     RS.url[0] = 0;
+    char ps[16] = "";
+    ink_state_get_str(ink_state_find("power.state"), ps, sizeof ps);
+    RS.suspended = !strcmp(ps, "locked");
+    if (RS.suspended) lv_timer_pause(RS.link_timer);
     if (url[0]) address_open(url);
     else page_show(ADDRESS);
 }
@@ -684,8 +689,8 @@ static void address_open(const char *url) {
     RS.ended = RS.down_shown = RS.first_shown = false;
     RS.down_us = 0; RS.opened_us = osal_now_us();
     page_show(LOADING);
-    if (!w.overflow) session_open();
-    else { RS.ended = true; page_show(OFFLINE); }
+    if (w.overflow) { RS.ended = true; page_show(OFFLINE); }
+    else if (!RS.suspended) session_open();
 }
 static void entered(void *ctx, const char *value) {
     (void)ctx; (void)value;

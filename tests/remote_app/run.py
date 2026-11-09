@@ -11,7 +11,7 @@ import tempfile
 root = Path(__file__).resolve().parents[2]
 p = argparse.ArgumentParser()
 p.add_argument("--build", type=Path, required=True)
-p.add_argument("--mutant", choices=("stream", "loading", "page", "long", "blocked", "timeout", "child"))
+p.add_argument("--mutant", choices=("stream", "loading", "page", "long", "blocked", "timeout", "child", "locked-create", "locked-address", "link-rate"))
 a = p.parse_args()
 build = a.build.resolve()
 work = Path(tempfile.mkdtemp(prefix="remote-app-", dir=build))
@@ -25,6 +25,9 @@ if a.mutant:
         "blocked": ("page_show(kind == 3 ? BLOCKED : TYPE);", "page_show(kind == 3 ? REMOTE : TYPE);"),
         "timeout": ("300000000ull", "600000000ull"),
         "child": ("if (ink_member_current()->role == INK_ROLE_CHILD)", "if (false)"),
+        "locked-create": ('RS.suspended = !strcmp(ps, "locked");', 'RS.suspended = false;'),
+        "locked-address": ("else if (!RS.suspended) session_open();", "else session_open();"),
+        "link-rate": ("lv_timer_create(link_check, 500, NULL)", "lv_timer_create(link_check, 100, NULL)"),
     }
     if a.mutant == "stream":
         source = source.replace("static void page_show(remote_page_t page) {", """static void stream_edit(lv_event_t *e) {
@@ -72,7 +75,9 @@ if a.mutant:
     expected = {"stream": "no text leaves device while typing", "loading": "slow first screen shows Loading",
                 "page": "both physical paging keys reach hub", "long": "long press reaches hub",
                 "blocked": "hub block ends rendering session", "timeout": "five minute limit closes old session",
-                "child": "child direct call denied"}[a.mutant]
+                "child": "child direct call denied", "locked-create": "locked AI open sends no hub session",
+                "locked-address": "locked AI open sends no hub session",
+                "link-rate": "open page checks link at most 25 times in ten seconds"}[a.mutant]
     assert not ok and any(expected in str(w) for w in data.get("warnings", [])), "intended negative control was not detected"
     print(f"PASS: negative {a.mutant} detected, {counts['test.fail']} failed assertions")
     if not os.environ.get("INK_KEEP_EVIDENCE"): shutil.rmtree(work)
