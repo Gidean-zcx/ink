@@ -149,6 +149,7 @@ static void directory(void) {
     CHECK(AI("app.list", NULL) && strstr(g_result, "\"id\":\"alpha\"") && strstr(g_result, "\"title\":\"甲\"") && strstr(g_result, "\"state\":\"stopped\"") && strstr(g_result, "\"id\":\"reader\"") && strstr(g_result, "\"system\":true"),
           "the AI reads the directory (%s)", g_result);
     CHECK(!strstr(g_result, "gamma"), "what this device lacks for is not in it (%s)", g_result);
+    CHECK(!strstr(g_result, "\"id\":\"backup\""), "backup stays in settings, outside the app directory");
     CHECK(strstr(g_result, "delta") != NULL, "what is for adults is, for an adult");
     CHECK(AI("app.open", "{\"id\":\"gamma\"}") && g_rc.status == INK_RC_REJECTED, "it cannot be opened (%s)", ink_rc_name(g_rc.status));
     CHECK(AI("app.open", "{\"id\":\"nope\"}") && g_rc.status == INK_RC_INVALID, "no such app");

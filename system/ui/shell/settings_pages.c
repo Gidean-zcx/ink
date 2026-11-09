@@ -21,7 +21,7 @@ static const row_t VOICE_ROWS[] = {
     {"ai.memory", "AI 记得的事", "记忆页面还没接入", NULL, NULL, "ai", NULL, "你说的事 AI 会直接做。花钱、填密码、删了找不回来的，才会问你。"},
     {"text.assist", "打字时帮你接话", "暂不能设置", NULL, NULL, "edit", "打字", NULL}};
 static const row_t STORAGE_ROWS[] = {
-    {"backup", "备份", NULL, NULL, "backup.now", "cloud", NULL, NULL},
+    {"backup", "备份", NULL, NULL, "backup.open", "cloud", NULL, NULL},
     {"storage.free", "空间", NULL, NULL, NULL, NULL, "空间", NULL},
     {"storage.books", "书", "暂不能查看分类占用", NULL, NULL, "book", NULL, NULL},
     {"storage.audio", "音频", "暂不能查看分类占用", NULL, NULL, "headphones", NULL, NULL},
