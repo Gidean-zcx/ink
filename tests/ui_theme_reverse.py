@@ -37,6 +37,7 @@ mutations = [
      '        lv_color_eq(lv_obj_get_style_bg_color(obj, 0), ink_ui_paper()))\n'
      '        lv_obj_set_style_border_width(obj, ink_ui_px(INK_STROKE), 0);\n', ''),
     ('settings-divider', 'shell/settings_pages.c', '            ink_ui_group_divider(bg, 0, w);\n', ''),
+    ('settings-row-gap', 'shell/settings_pages.c', 'S.y += h + (join_next ? 0 : INK_STROKE);', 'S.y += h + INK_STROKE;'),
 ]
 results = []
 for name, filename, fixed, previous in mutations:
@@ -45,7 +46,7 @@ for name, filename, fixed, previous in mutations:
     source = area / (name + '.c')
     source.write_text(original.replace(fixed, previous))
     obj = source.with_suffix('.o')
-    target = 'sim-settings-a' if name == 'settings-divider' else 'sim-ui-regressions'
+    target = 'sim-settings-a' if name.startswith('settings-') else 'sim-ui-regressions'
     link = shlex.split((build / f'CMakeFiles/{target}.dir/link.txt').read_text())
     subprocess.run([link[0], *flags['C_DEFINES'], *flags['C_INCLUDES'], *flags['C_FLAGS'],
                     '-I', str(ROOT / 'system/ui/shell'), '-c', str(source), '-o', str(obj)], check=True)
@@ -58,7 +59,7 @@ for name, filename, fixed, previous in mutations:
                '--script', str(ROOT / 'tests/ui_shell_regressions.script'),
                '--budget', str(ROOT / 'tests/ui_scene.budget.json'), '--assets', str(build / 'assets'),
                '--content', str(build / 'test-content'), '--out', str(out), '--no-random-outages', '--quiet']
-    if name == 'settings-divider':
+    if name.startswith('settings-'):
         command = [sys.executable, str(ROOT / 'tests/settings_a.py'), '--build', str(build), '--binary', str(binary)]
         out = build / 'test-out' / ('settings-a-' + binary.name) / 'write'
     run = subprocess.run(command, env={**os.environ, 'INK_UI_REGRESSION': 'theme'},

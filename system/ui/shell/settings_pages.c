@@ -139,9 +139,11 @@ static void bind_row(lv_obj_t *slot, size_t i, ink_ui_field_spec_t *field, ink_u
     if (!strcmp(r->id, "privacy.child")) action->args_json = "{\"children\":true}";
     if (S.page == STORAGE) storage_action(i, action);
     int w = INK_CANVAS_W - 2 * INK_MARGIN, head = heading(i), body = row_body(i), h = row_height(i);
+    bool join_next = r->icon && (i + 1) % S.capacity && i + 1 < PAGES[S.page].count &&
+        PAGES[S.page].rows[i + 1].icon && !PAGES[S.page].rows[i + 1].section && !r->note;
     if (!(i % S.capacity)) S.y = 0;
     if (footer(i)) S.y = INK_CANVAS_H - INK_STATUS_BAR - INK_PRIMARY - INK_GAP_XS - INK_CONTROL - 2 * INK_GAP - h;
-    lv_obj_set_pos(slot, ink_ui_px(INK_MARGIN), ink_ui_px(S.y)); S.y += h + INK_STROKE;
+    lv_obj_set_pos(slot, ink_ui_px(INK_MARGIN), ink_ui_px(S.y)); S.y += h + (join_next ? 0 : INK_STROKE);
     lv_obj_set_height(slot, ink_ui_px(h));
     lv_obj_set_style_bg_opa(slot, LV_OPA_TRANSP, 0);
     lv_obj_set_style_border_width(slot, 0, 0);
@@ -165,7 +167,7 @@ static void bind_row(lv_obj_t *slot, size_t i, ink_ui_field_spec_t *field, ink_u
             ink_ui_box(bg, 0, 0, w, body / 2, 0, INK_SURFACE_STATIC, false);
             ink_ui_group_divider(bg, 0, w);
         }
-        if ((i + 1) % S.capacity && i + 1 < PAGES[S.page].count && PAGES[S.page].rows[i + 1].icon && !PAGES[S.page].rows[i + 1].section && !r->note)
+        if (join_next)
             ink_ui_box(bg, 0, body / 2, w, body - body / 2, 0, INK_SURFACE_STATIC, false);
         ink_ui_circle(slot, r->icon, INK_GAP, head + (body - INK_CIRCLE_SMALL) / 2,
             INK_CIRCLE_SMALL, INK_ICON_MEDIUM, INK_SURFACE_WHITE, NULL, NULL);

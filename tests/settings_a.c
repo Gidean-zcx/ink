@@ -71,6 +71,16 @@ static bool row_has_icon(lv_obj_t *slot) {
                     lv_obj_get_height(part) == ink_ui_px(INK_STROKE)) divided = true;
             }
             CHECK(joined == divided, "every joined settings row uses the shared divider, including later pages");
+            if (joined) {
+                lv_obj_t *parent = lv_obj_get_parent(slot);
+                int bottom = 0;
+                for (uint32_t k = 0; k < lv_obj_get_child_count(parent); k++) {
+                    lv_obj_t *previous = lv_obj_get_child(parent, (int32_t)k);
+                    if (!lv_obj_has_flag(previous, LV_OBJ_FLAG_HIDDEN) && lv_obj_get_y(previous) < lv_obj_get_y(slot))
+                        bottom = LV_MAX(bottom, lv_obj_get_y(previous) + lv_obj_get_height(previous));
+                }
+                CHECK(bottom == lv_obj_get_y(slot), "joined rows have no full-width white gap under the shared divider");
+            }
             return true;
         }
     }

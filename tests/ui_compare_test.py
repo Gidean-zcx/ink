@@ -15,6 +15,7 @@ MAIN = runpy.run_path(str(ROOT / 'tools/ui_compare.py'))['main']
 
 class CompareTest(unittest.TestCase):
     def test_fidelity_collects_the_latest_verified_frame(self):
+        (ROOT / 'work').mkdir(exist_ok=True)
         with tempfile.TemporaryDirectory(dir=ROOT / 'work') as tmp:
             root = Path(tmp)
             reference = root / 'design/png'
