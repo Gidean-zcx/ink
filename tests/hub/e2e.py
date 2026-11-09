@@ -47,6 +47,7 @@ async def run(args):
         metrics = json.loads((output / "sim/metrics.json").read_text())
         device = metrics["metrics"]
         assert device.get("test.hub_member_ready", 0) == 1
+        assert device["test.hub_member_ready_ms"]["max"] < 3000, "member fixture missed the original first tap"
         assert device.get("ai.answers", 0) == 1
         assert device.get("action.ai.reader.next_page", 0) == 1
         assert device.get("audio.speaker.played_ms", 0) >= 300

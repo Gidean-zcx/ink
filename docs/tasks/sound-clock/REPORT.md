@@ -138,3 +138,30 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/sound_clock_
 # 内存全量使用相同依赖环境，并遇到未定义行为立即失败
 UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
 ```
+
+## 第二轮复查后的修复
+
+- 本轮仅处理 SC-H2，保留 SC-H1 修复。已执行 `git fetch origin`，合入 `origin/claude/system-layer`（`168eba7f`），自动合并无冲突。
+- 【实测】原样复现 `hub-simulator-e2e` 的 `tool_calls=0`。不是输入任务不停扫描、误报活动或反复唤屏：第 1～2 秒间输入任务只用 0.309 ms CPU，共享 I2C 的扩展器等待最大 0.0583 ms。主要延迟在确认前，成员切换只用 3.387 ms。
+- 【实现＋实测】模拟器启动任务固定在核心 0；原来可跨核心的高优先级输入改变了交接顺序，确认回执唤醒启动任务时，UI 已占住核心 0 渲染确认卡。回执从产品初始化结束到被夹具收到，多等了 192.473 ms；确认写入因此排到刷屏后，又等 2605.147 ms。3 秒第一次点按落在引导页，继续产生刷新，最后 6028.077 ms 才切好成员。原优先级 12/24 的临时对象对照为 2399.504 ms；仅升输入到 24、送行仍为 24 则为 6048.077 ms，和复查一致。
+- 【实现＋实测】只将现有输入任务固定在核心 0，使输入与启动控制的交接留在同一核心，另一核心可并行渲染 UI。输入优先级仍为 24，送行仍为 23。确认回执等待降到 0.746 ms，确认落盘等待降到 0.133 ms，原样端到端通过。没有保留试过但不足以修复的存储调度修改：前台写入提前申请闪存保护仍要 5679.251 ms，只提高存储任务优先级仍要 6027.950 ms。
+
+| SC-H2 检查 | 修复前 | 修复后 | 命令 |
+| --- | --- | --- | --- |
+| 产品初始化完成 | 2090.021 ms | 2090.285 ms | C10 |
+| 收到待确认回执（此时不代表已落盘） | 2282.494 ms | 2091.031 ms | C10 |
+| 确认完成 | 6024.690 ms | 2398.129 ms | C10 |
+| 成员切换完成 | 6028.077 ms | 2399.530 ms，早于原定 3 秒点按 | C10 |
+| 原样短按及新增输入回归 | 两项已过 | 两项仍过；送达 8 次，19.564564 s 开始读取，松键仍为 19.580000 s；芯片就绪后等待 0.0741 ms | C10 |
+| 声音计时、原录音场景、存储排序 | 已有测试 | 三项通过，未改脚本、时间、预算或已有断言 | C10 |
+
+- 改过的已有测试：`tests/hub/e2e_device.c` 仅分段计量原有操作，超时和条件保持；`tests/hub/e2e.py` 新增成员就绪必须早于 3000 ms 的断言。`tests/sound_clock_negative.py` 增加只撤掉本轮亲和性的对照入口。未重做 SC-H1，未修改声音页、计时器、音频或存储服务。
+- 新增的机制：无。只改一个现有任务的核心配置；不新增任务、状态、持久格式、队列、配置项或抽象层。该配置属于平台内部调度，不新增用户能力或改变按钮和 AI 的调用路径（R-061）。
+- 【实测】本轮产品代码增删 3 行，任务累计 239 行，低于 300 行。计量汇总见 [second-review-evidence.json](second-review-evidence.json)。全量与反向对照进行中，最终结果随后补齐。
+
+```bash
+# C10：原样场景及相关回归；依赖环境沿用 C3/C4
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2 -R '^(hub-simulator-e2e|scenario-ai_page_version-metalio-plus|sound-clock-input|storage-order|sound-clock|scenario-ai_tools-metalio-plus)$'
+# C11：只撤掉本轮核心配置，运行原样端到端测试
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/sound_clock_negative.py --build build --second-review-only
+```
