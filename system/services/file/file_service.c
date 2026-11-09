@@ -125,7 +125,7 @@ static void thumb_clear(void *ctx, const char *id, const ink_args_t *args) {
 }
 static const ink_db_def_t INDEX_DEF = {.name = "file.index", .title = "文件编号", .scope = INK_DB_DEVICE, .schema = 3,
     .max_records = INK_FS_INDEX_MAX, .max_bytes = INK_FS_INDEX_MAX * 216u};
-static const ink_db_def_t INDEX_DONE_DEF = {.name = "file.index_ready", .title = "索引完成记录", .scope = INK_DB_DEVICE, .schema = 1,
+static const ink_db_def_t INDEX_DONE_DEF = {.name = "file.index_ready", .title = "索引完成记录", .scope = INK_DB_DEVICE, .schema = 2,
     .max_records = INK_FS_INDEX_MAX, .max_bytes = INK_FS_INDEX_MAX * 216u};
 
 const char *ink_fs_err_name(int e) {
@@ -1730,7 +1730,7 @@ static int index_scan(const file_context_t *c, ink_db_t *db, const uint8_t card[
     index_manual = false;
     return r;
 }
-/* Completion keeps its fixed payload; its schema also versions the index. */
+/* Completion is independent of the index payload encoding. */
 static void index_signature(index_rec_t *e, const uint8_t card[16]) {
     memset(e, 0, sizeof *e); memcpy(e->card, card, 16);
     size_t used = 0;
@@ -1764,9 +1764,10 @@ static void index_background(void *arg) {
         if (done_id && ink_db_del(done, done_id, 0)) r = INK_FS_ERR_IO;
         done_id = 0;
     }
+    bool complete = done_id && rec.schema >= 1 && rec.schema <= INDEX_DONE_DEF.schema && !memcmp(&saved, &expected, sizeof saved);
     if (!r && inverse_ready(__atomic_load_n(&FS.revision, __ATOMIC_RELAXED)) && !storage_index_scanned()) {
         if (!done) r = INK_FS_ERR_IO;
-        else if (!index_walk && done_id && rec.schema == INDEX_DEF.schema && !memcmp(&saved, &expected, sizeof saved)) {
+        else if (!index_walk && complete) {
             storage.family = true;
             for (int i = 0; ink_member_at(i); i++) snprintf(storage.indexed[i], sizeof storage.indexed[i], "%s", ink_member_at(i)->id);
             ink_state_set_str(FS.h_index, "ready");
@@ -1801,8 +1802,8 @@ static void index_background(void *arg) {
         index_walk_close(index_walk); osal_free(index_walk); index_walk = NULL;
     }
     if (!r && storage_index_scanned() && ink_db_durable_ver(db) == ink_db_last_ver(db)) index_done(NULL, "", true);
-    if (!r && storage_index_ready() && done && (!done_id || rec.schema != INDEX_DEF.schema || memcmp(&saved, &expected, sizeof saved))) {
-        ink_db_write_t put = {.id = done_id, .data = &expected, .len = sizeof expected, .schema = INDEX_DEF.schema};
+    if (!r && storage_index_ready() && done && !complete) {
+        ink_db_write_t put = {.id = done_id, .data = &expected, .len = sizeof expected, .schema = INDEX_DONE_DEF.schema};
         if (ink_db_put(done, &put, NULL)) r = INK_FS_ERR_IO;
     }
     bool durable = !r && done && ink_db_durable_ver(db) == ink_db_last_ver(db) && ink_db_durable_ver(done) == ink_db_last_ver(done);

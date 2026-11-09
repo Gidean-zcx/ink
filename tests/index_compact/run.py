@@ -37,6 +37,7 @@ if a.baseline:
     subprocess.run(link, cwd=build, check=True, capture_output=True)
 
 summary = {}
+negative_failures = 0
 for schema in (1, 2):
     path = area / f'v{schema}'
     content = path / 'sd/content'
@@ -46,12 +47,12 @@ for schema in (1, 2):
         file.write_bytes(b'X' * (i + 1))
         os.utime(file, (1, 1))
     ids = None
-    for stage in (f'seed{schema}', 'upgrade', 'reboot'):
+    for stage in (f'seed{schema}', 'unchanged', 'rewrite', 'mixed', 'upgrade', 'reboot'):
         out = path / stage
         result = subprocess.run([str(binary), '--profile', str(ROOT / 'simulator/profiles/metalio-plus.json'),
             '--assets', str(build / 'assets'), '--sd-dir', str(path / 'sd'), '--flash-image', str(path / 'user.img'),
             '--out', str(out), '--end', '60s', '--quiet', '--no-random-outages'], cwd=ROOT,
-            env={**os.environ, 'INK_COMPACT_STAGE': stage, 'UBSAN_OPTIONS': 'halt_on_error=1'},
+            env={**os.environ, 'INK_COMPACT_STAGE': stage, 'INK_COMPACT_SCHEMA': str(schema), 'UBSAN_OPTIONS': 'halt_on_error=1'},
             capture_output=True, text=True, timeout=60)
         (path / f'{stage}.log').write_text(result.stdout + result.stderr)
         data = json.loads((out / 'metrics.json').read_text())
@@ -59,8 +60,11 @@ for schema in (1, 2):
         ok = result.returncode == 0 and m.get('test.finished') == 1 and not m.get('test.fail', 0) and not data.get('warnings')
         summary[f'v{schema}-{stage}'] = {k: v for k, v in m.items() if k.startswith('test.')}
         if a.baseline:
-            assert not ok and m.get('test.fail', 0) > 0 and all(
-                '155-byte UTF-8 path' in str(w) or 'every upgraded record' in str(w)
+            negative_failures += m.get('test.fail', 0)
+            assert result.returncode == 0 and m.get('test.finished') == 1 and all(
+                any(message in str(w) for message in ('155-byte UTF-8 path', 'every upgraded record',
+                    'completion', 'completed legacy or mixed restart', 'unchanged legacy and mixed',
+                    'writing one legacy record'))
                 for w in data.get('warnings', [])), (stage, result.stderr[-2000:], data.get('warnings'))
         elif not ok:
             raise SystemExit(f'FAIL v{schema}-{stage}: exit={result.returncode} {data.get("warnings")}\n{result.stderr[-2000:]}')
@@ -68,8 +72,10 @@ for schema in (1, 2):
         if ids is None:
             ids = current
         assert current == ids and all(ids), 'migration and restart preserve every original id'
-        print(f'{"EXPECTED_FAIL" if a.baseline else "PASS"} v{schema}-{stage}: ids={current} '
+        print(f'{"NEGATIVE_CONTROL" if a.baseline else "PASS"} v{schema}-{stage}: ids={current} '
               f'checks={m.get("test.pass")} failures={m.get("test.fail", 0)}', flush=True)
 (area / 'summary.json').write_text(json.dumps(summary, ensure_ascii=False, indent=2) + '\n')
+if a.baseline:
+    assert negative_failures > 0, 'removing the fix must fail a regression assertion'
 if not os.environ.get('INK_KEEP_EVIDENCE'):
     shutil.rmtree(area)

@@ -26,15 +26,16 @@ bool ink_test_compact_seed(unsigned schema) {
     return !r;
 }
 
-bool ink_test_compact_records(unsigned schema) {
+bool ink_test_compact_records(unsigned schema, unsigned rewritten) {
     ink_db_t *db = ink_db_open(&INDEX_DEF, NULL);
     uint8_t raw[216]; ink_rec_t rec; ink_db_cursor_t cur = {0}; int n = 0; unsigned count = 0;
     bool ok = db != NULL;
     while (db && (n = ink_db_next(db, &cur, &rec, raw, sizeof raw)) == 1) {
-        const char *path = (const char *)raw + (schema == 3 ? 32 : 16);
-        size_t len = schema == 3 ? 32 + strnlen(path, sizeof raw - 32) + 1 : 216;
-        ok = ok && rec.schema == schema && rec.len == len;
-        if (schema == 3) {
+        unsigned expected = rec.id == rewritten ? 3 : schema;
+        const char *path = (const char *)raw + (expected == 3 ? 32 : 16);
+        size_t len = expected == 3 ? 32 + strnlen(path, sizeof raw - 32) + 1 : 216;
+        ok = ok && rec.schema == expected && rec.len == len;
+        if (expected == 3 && rec.schema == expected) {
             int64_t size, mtime;
             memcpy(&size, raw + 16, 8); memcpy(&mtime, raw + 24, 8);
             ok = ok && size == hal_fs_size(path) && mtime == hal_fs_mtime(path);
@@ -44,6 +45,31 @@ bool ink_test_compact_records(unsigned schema) {
     ink_probe_value("test.compact.records", count);
     ink_db_close(db);
     return ok && n == 0 && count == 3;
+}
+
+bool ink_test_compact_completion(unsigned schema) {
+    ink_db_t *db = ink_db_open(&INDEX_DONE_DEF, NULL);
+    index_rec_t saved, expected; ink_rec_t rec;
+    uint32_t id = db ? index_saved(db, FS.index_card, &saved, &rec) : 0;
+    index_signature(&expected, FS.index_card);
+    bool ok = id && rec.schema == schema && rec.len == sizeof saved && !memcmp(&saved, &expected, sizeof saved);
+    ink_db_close(db);
+    return ok;
+}
+
+bool ink_test_compact_rewrite(unsigned id) {
+    ink_db_t *db = ink_db_open(&INDEX_DEF, NULL);
+    uint8_t raw[216]; ink_rec_t rec; index_rec_t e = {0};
+    int r = db ? ink_db_get(db, id, &rec, raw, sizeof raw) : -1;
+    if (!r) {
+        memcpy(e.card, raw, 16);
+        snprintf(e.path, sizeof e.path, "%.183s", (char *)raw + (rec.schema == 3 ? 32 : 16));
+        e.size = hal_fs_size(e.path); e.mtime = hal_fs_mtime(e.path);
+        r = index_save(db, id, &e, NULL);
+    }
+    if (!r) r = ink_db_wait(db, ink_db_last_ver(db), INDEX_WAIT_US);
+    ink_db_close(db);
+    return !r;
 }
 
 bool ink_test_compact_long(bool create) {

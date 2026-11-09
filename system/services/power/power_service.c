@@ -54,10 +54,11 @@ static struct {
     osal_mutex_t *lock;
     osal_sem_t *kick;
     osal_task_t *task;
-    ink_power_state_t state, notified;
+    ink_power_state_t state;
+    _Atomic ink_power_state_t notified;
     uint64_t last_activity, cause_us, locked_at;
     int holds[INK_NEED_COUNT];
-    bool lock_req;
+    _Atomic bool lock_req;
     bool keep_modem;
     struct {
         ink_power_fn fn;
@@ -260,12 +261,12 @@ static void power_task(void *arg) {
         set_state(s);
         ink_power_state_t from = PS.notified;
         uint64_t cause = PS.cause_us;
-        PS.notified = s;
         uint64_t deadline = s == INK_PWR_ACTIVE ? (PS.holds[INK_NEED_NET] ? 0 : PS.last_activity + IDLE_AFTER_US)
                             : s == INK_PWR_IDLE && !PS.holds[INK_NEED_NO_LOCK] ? PS.last_activity + lock_after()
                                                                                 : 0;
         unlock();
         if (from != s) notify(from, s, cause);
+        PS.notified = s;
         if (PS.powering_off) publish_battery();
         if (s == INK_PWR_LOCKED) {
             locked_step();
@@ -418,6 +419,10 @@ void ink_power_lock(void) {
     PS.lock_req = true;
     unlock();
     osal_sem_give(PS.kick);
+}
+
+bool ink_power_transition_pending(void) {
+    return PS.lock_req || __atomic_load_n(&PS.state, __ATOMIC_SEQ_CST) != PS.notified;
 }
 
 bool ink_power_unlock(uint64_t t_us) {

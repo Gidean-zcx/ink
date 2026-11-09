@@ -92,3 +92,37 @@ INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python
 ## 要改的文档
 
 - 主会话可在 `docs/system/system-services-design.md` 同步 schema 3 布局、schema 1/2 随后台补建升级及本次模拟器计量；共享文档与历史调研均未改。
+
+## 复查后的修复
+
+- 复查基线：`6d47a1f6`。`REVIEW.md` 仅有 `IC-H1`（高），没有其他未修的严重、高、中、低项。以下为本次接续记录；上文保留初次实现的测量和失败历史，最终验收结果待两套全量完成后更新。
+
+| 修复 | 根因与改动【实现】 | 测试和反向对照【实测】 |
+| --- | --- | --- |
+| 完成标记与记录格式解耦 | `file.index_ready` 保持既有版本 2，接受版本 1/2 的有效完成标记；不会仅因 payload 升级而扫描整卡。旧记录继续读取，单条重写或后续正常扫描时写成 schema 3 | `index-compact` 扩为 12 阶段、134 个检查，覆盖旧完成标记、混合格式、逐条升级、完整升级、重启零扫描/零写盘/零通知，编号始终为 `[2, 1, 3]`。只换回复查基线文件服务，新增断言出现 24 次预期失败 |
+| 短信及时投递重画 | `message.received` 的回调只负责投递 UI 工作，改为直接执行，去掉先在 BG 排队的一跳 | 原 `sms` 的 15 阶段通过；仅撤回这一处，原 `capture is settled` 断言再次失败 |
+| 锁屏请求纳入界面忙碌 | 既有锁屏请求、状态和通知进度尚未交付时不能报告界面空闲；通知结束后才更新既有 `notified`。两项既有标志改为原子访问，查询不取锁 | 原 `settings-b` write/restart 通过；仅撤回忙碌判断中的电源查询，原第 226 行断言再次失败 |
+| 去掉无效状态栏重画 | 电源状态变化不改变任何状态栏字段，导航回调明确忽略 `power.state`，保留时间、网络、通知等真正可见状态的刷新 | 原 `confirm-pages` 六场景通过；仅撤回这一处，ConfirmWeb 的原截图断言再次失败 |
+| 降低阅读场景绘制开销 | 既有 LVGL 条带由 96 行改为 128 行，减少大字跨条带重复绘制；该屏幕多用 PSRAM `684 × 32 = 21888 B`，没有增加内部 RAM 或缓存 | 原 reader_basic 预算通过，反馈 p95 `456.628 ms ≤ 460 ms`；五张 `clean-*.png` 与修复前逐像素相同，UI 总 CPU 从 `2655.724` 降到 `2635.774 ms`。仅恢复 96 行，原预算再次失败（`460.756 ms`） |
+
+【实测，原因核查】初次四项失败均从新镜像启动，没有旧完成记录。reader、sms、ConfirmWeb 各扫描 3 个根目录、发出 2 次 `indexed`；settings-b 全过程 7 次扫描、7 次通知，4 次 `ink_fs_lookup` 全部成功。因此旧完成标记和壁纸编号丢失均不是这四项失败的原因，不修改本来可以读取旧编号的查询路径。reader 的通知在约 `1.387 s`，sms/ConfirmWeb 在约 `2.757 s`，settings-b 最后一次约 `71.046 s`，均早于对应失败时刻（`44.872 / 18.265 / 9.311 / 83.880 s`）。完整计数和时间在 `work/index-compact/observe-before/summary.json`。
+
+【实测，阅读时延】基线和紧凑记录的 UI 总 CPU、缓存命中/缺失、最终画面一致；最后一次 HOME 的慢扫描额外延迟分别为 `37.139525 / 50.262229 ms`，差值 `13.122704 ms`，与反馈时延差值一致。【实现】Flash 时序和触控慢扫描共用模拟器随机序列，写盘量改变会影响后续样本。没有改随机数、种子、硬件模型或预算；通过减少实际绘制工作留下余量。
+
+【实测，验证进度】原四项定向测试 4/4；第一轮普通全量 288/289，唯一新增失败是能力目录的源码提取结果变化，已用明确忽略状态的等价分支修复，不改共享生成文档。第二轮普通全量进行中；ASan/UBSan、S31 和最终检查待完成。
+
+反向命令只在忽略目录生成替换对象，不修改工作区产品源码，也不注册为依赖历史的 ctest：
+
+```bash
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/index_compact/run.py --build build --baseline 6d47a1f6
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/index_compact/check_baseline.py --build build --revert strip
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/index_compact/check_baseline.py --build build --revert sms
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/index_compact/check_baseline.py --build build --revert lock
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/index_compact/check_baseline.py --build build --revert navigation
+```
+
+【实现，范围】相对任务基线，产品代码累计 105 行增删，其中文件服务 83 行，UI/电源/短信 22 行；加上原来的 4 行 CMake 为 109 行，低于 180 行预算。只改完成版本已实测不能修复原四项回归，因此补上对应的小修；没有改存储服务、帧格式、队列、写盘顺序或 D-110。没有新增任务、状态机、持久格式、缓存、配置项或抽象层；电源查询只读取已有状态。
+
+【改过的已有测试】`index-durable` 的旧记录升级断言前增加一次普通索引查询：已完成旧卡现在按复查要求延迟升级，不能再断言开机强制迁移。仍要求 schema 3、精确长度和编号不变；没有改原四项回归的测试、等待或预算。新兼容测试增加断言，原手动对照工具增加逐项撤回入口。
+
+【架构审视】文件记录仍是文件服务的内部编码；界面通过既有电源服务读取待交付状态，短信经既有 UI 执行器更新。用户与 AI 的原子能力、成员鉴权、软总线事件和能力开放范围均不变。
