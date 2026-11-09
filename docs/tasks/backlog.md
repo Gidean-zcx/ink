@@ -2,7 +2,7 @@
 
 用户要求：先夯实系统层的能力缺口和质量，再补齐系统级别的应用与应用框架，**暂不开发具体应用**（阅读、听、报纸、单词都不做），都做完再做底层性能优化。总规则见 [codex-rules.md](codex-rules.md)。
 
-**状态（2026-11-09）：** 已合入 `services-mid`、`member-wake`、`capability-table`、`device-events`、`pairing`、`backup-restore`、`confirm-durable`、`file-index`（拆成 `file-index-1`、`file-index-2`）、`wireless-transfer`，应用框架的 F1、F2、F5（`ui-semantics`、`ui-input-host`、`ui-cards`），以及只写报告的 `phone-gap`（对照完成标准 R-068 查缺口）和 `speech-cache`（DE-R6 早已修好）。下午又合入：框架 F4、F9（`ui-list-paging`、`ui-file-picker`）、`text-long`、`thumb-wiring`，系统应用 `boot-flow`、`contacts`、`clock-alarm`、`ai-chat`、`phone-calls`、`sms`、`memo`、`settings-a`、`power-pages`。`member-quiesce` 做完但不合入，原因见该节。应用框架的选择已定（D-111）。晚上又合入：`kid-1`、`update-pages`、`calendar`、`confirm-pages`、`search`（F7）、`files-app-1`、`camera-gallery`、`backup-pages`、`ai-pages-2`、`settings-b`；从 batch3 起每个任务由主会话复查、合并后整批交 astra 审一轮（1 小时以内）。在跑（batch4）：`kid-2`、`transfer-pages`、`remote-app`、`activity-card`（F6）、`fw-f8`、`storage-usage`，任务书在本目录。合并时记下的后续事项见文末“合并时记下的”。
+**状态（2026-11-09）：** 已合入 `services-mid`、`member-wake`、`capability-table`、`device-events`、`pairing`、`backup-restore`、`confirm-durable`、`file-index`（拆成 `file-index-1`、`file-index-2`）、`wireless-transfer`，应用框架的 F1、F2、F5（`ui-semantics`、`ui-input-host`、`ui-cards`），以及只写报告的 `phone-gap`（对照完成标准 R-068 查缺口）和 `speech-cache`（DE-R6 早已修好）。下午又合入：框架 F4、F9（`ui-list-paging`、`ui-file-picker`）、`text-long`、`thumb-wiring`，系统应用 `boot-flow`、`contacts`、`clock-alarm`、`ai-chat`、`phone-calls`、`sms`、`memo`、`settings-a`、`power-pages`。`member-quiesce` 做完但不合入，原因见该节。应用框架的选择已定（D-111）。晚上又合入：`kid-1`、`update-pages`、`calendar`、`confirm-pages`、`search`（F7）、`files-app-1`、`camera-gallery`、`backup-pages`、`ai-pages-2`、`settings-b`；从 batch3 起每个任务由主会话复查、合并后整批交 astra 审一轮（1 小时以内）。batch4 已合入：`activity-card`（F6）、`remote-app`、`fw-f8`、`kid-2`、`storage-usage`、`transfer-pages`，以及 batch3 审计的九条修复 `audit3-fix`；batch4 的 astra 审计在跑。在跑（batch5）：`privacy-records`、`kid-3`、`file-index-3`、`factory-pages`、`fw-f13`、`port-skeleton`，任务书在本目录。合并时记下的后续事项见文末“合并时记下的”。
 
 **只做你被分配的那一节。** 每节按一小时左右规划，最多两小时；做不完的写进报告的“没做到的”，不要半成品冒充完成。报告写到 `docs/tasks/<节名>/REPORT.md`。
 
@@ -132,7 +132,7 @@
 
 ## 合并时记下的（2026-11-09）
 
-- 【在做】存储服务补“书、音频、照片各占多少”和清理临时文件：batch4 的 `storage-usage`。
+- 【已做】存储页的分类占用和清理（`storage-usage`）。新卡上要等整张卡的索引建好才有数，后台建索引在 batch5 的 `file-index-3`。
 - 【建议】通用列表只有一页时不画“1/1”分页条（画板里没有）。
 - 【要用户定】省电开关现在重启后回到关闭，要不要保留。
 - 【性能】长文本每打一个字就整篇写盘并落盘；缩略图解码时一直拿着文件服务的锁；第一次建文件索引时每个文件单独写盘、逐条查重。归到下面的性能一节。
@@ -140,8 +140,11 @@
 - 【上限】能力表上限从 256 提到 512、状态订阅表从 32 提到 64（都在外部内存）；每个订阅用 64 位记变化，所以状态表、设置表各自最多 64 项，状态现在 46 项。
 - 【上限】应用表从 16 提到 32（系统应用已有 15 个），`app.list` 的输出缓冲 8 KB；`app.cards` 仍是 2 KB，卡片超长要明确失败。“全部”页的工具组最多列 16 个已注册应用（`tools()` 里的 `count < 16`），装第三方应用前要改。
 - 【合并时改的】“全部”页查找只排匹配项、从第一页排起（原来只是把不匹配的藏起来，结果可能在第二页、第一页空着）；日历注册为 `upcoming` 后不再在工具组重复出现；`AiLog`、`Backup` 不是应用，分别从 SetVoice／Records／对话记录和 SetStorage 进。
-- 【建议】`Records` 按画板做成汇总页：AI 替你做过的事（进 `AiLog`）、和 AI 说过的话（进对话记录）、AI 记得的事、运行记录、保留多久的说明，入口在 `SetPrivacy`；`SetPrivacy` 还没做。现在的 `Records` 自己分页列 AI 记录，和 `AiLog` 重复。下一批做（privacy-records）。
-- 【建议】SetKid 的“每天能用多久”接 `kid-2` 的用时策略，合并 kid-2 时接。
+- 【在做，batch5 privacy-records】`Records` 按画板做成汇总页：AI 替你做过的事（进 `AiLog`）、和 AI 说过的话（进对话记录）、AI 记得的事、运行记录、保留多久的说明，入口在 `SetPrivacy`；`SetPrivacy` 还没做。现在的 `Records` 自己分页列 AI 记录，和 `AiLog` 重复。下一批做（privacy-records）。
+- 【已做】SetKid 的“每天能用多久”已接 `kid-2` 的用时策略。
+- 【上限】事件订阅表从 32 提到 64（系统里已有 27 处订阅，测试再加就满，相机和相册曾因此起不来）。
+- 【合并时改的】孩子的控制中心不画“正在进行”卡片和“正在做的事”（规格给 KidControl 四样，画了以后孩子的场景测试一直停不下来）。
+- 【已做】batch3 审计（docs/audits/batch3）九条由 `audit3-fix` 修完：相机 PNG 编码在内存失败时不再写坏内存、没卡时搜索保留能搜的、AI 触发的备份失败也更新页面、两个拍照能力说清楚哪个保存、文件里的图片进大图、改名按字节核对等。
 - 【缺后端】`AiMemory`：设备和中枢都没有列出、删除记忆的接口，页面如实显示不可用；运行记录同样没有。
 - 【等中枢】导入书（`Import` 四页）要等中枢的放书协议接上。
 - 【建议】`MemoRecord`、`MemoPending` 要先有“录成文件”（`audio.record`，界面依赖表第 52 行）；编码按依赖表写的 Opus 需要引入 libopus，先评估体积和内部 RAM 再定。
