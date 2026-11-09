@@ -1,0 +1,11 @@
+{
+  "removed": "Lua allocator quota guard only",
+  "unchanged_check_failed": true,
+  "restored_check_passed": true,
+  "source_restored_byte_for_byte": true,
+  "clock_settlement_check_failed_without_fix": true,
+  "startup_us_without_settlement": 1,
+  "startup_us_restored": 86,
+  "mquickjs_without_interrupt_timed_out": true,
+  "mquickjs_restored_passed": true
+}

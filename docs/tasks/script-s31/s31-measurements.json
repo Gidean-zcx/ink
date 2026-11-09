@@ -1,0 +1,365 @@
+{
+  "evidence": "【实测】ESP32-S31 compile/link only; no device execution",
+  "baseline_commit": "96887c78874e3e58945fb6aaf6f511911f739e88",
+  "default_bin_sha256": "00fd4b36e4774a3dfa8413440a9bd0d7214b973c71beb66a88064ff2d3f06965",
+  "default_bin_bytes": 1212288,
+  "default_unchanged": true,
+  "default": {
+    "Flash": {
+      "name": "Flash",
+      "total": 0,
+      "used": 1148400,
+      "free": 0,
+      "parts": {
+        ".text": {
+          "size": 912828
+        },
+        ".rodata": {
+          "size": 235052
+        },
+        ".appdesc": {
+          "size": 256
+        },
+        ".init_array": {
+          "size": 224
+        },
+        ".tbss": {
+          "size": 24
+        },
+        ".tdata": {
+          "size": 16
+        }
+      }
+    },
+    "External RAM": {
+      "name": "External RAM",
+      "total": 0,
+      "used": 382152,
+      "free": 0,
+      "parts": {
+        ".bss": {
+          "size": 382152
+        }
+      }
+    },
+    "DIRAM": {
+      "name": "DIRAM",
+      "total": 503744,
+      "used": 82958,
+      "free": 420786,
+      "parts": {
+        ".text": {
+          "size": 50020
+        },
+        ".bss": {
+          "size": 19160
+        },
+        ".data": {
+          "size": 13778
+        }
+      }
+    },
+    "LP SRAM": {
+      "name": "LP SRAM",
+      "total": 32768,
+      "used": 24,
+      "free": 32744,
+      "parts": {
+        ".rtc_reserved": {
+          "size": 24
+        }
+      }
+    }
+  },
+  "candidates": {
+    "c": {
+      "absolute": {
+        "Flash": {
+          "name": "Flash",
+          "total": 0,
+          "used": 1152272,
+          "free": 0,
+          "parts": {
+            ".text": {
+              "size": 915108
+            },
+            ".rodata": {
+              "size": 236644
+            },
+            ".appdesc": {
+              "size": 256
+            },
+            ".init_array": {
+              "size": 224
+            },
+            ".tbss": {
+              "size": 24
+            },
+            ".tdata": {
+              "size": 16
+            }
+          }
+        },
+        "External RAM": {
+          "name": "External RAM",
+          "total": 0,
+          "used": 382152,
+          "free": 0,
+          "parts": {
+            ".bss": {
+              "size": 382152
+            }
+          }
+        },
+        "DIRAM": {
+          "name": "DIRAM",
+          "total": 503744,
+          "used": 83046,
+          "free": 420698,
+          "parts": {
+            ".text": {
+              "size": 50020
+            },
+            ".bss": {
+              "size": 19248
+            },
+            ".data": {
+              "size": 13778
+            }
+          }
+        },
+        "LP SRAM": {
+          "name": "LP SRAM",
+          "total": 32768,
+          "used": 24,
+          "free": 32744,
+          "parts": {
+            ".rtc_reserved": {
+              "size": 24
+            }
+          }
+        }
+      },
+      "delta": {
+        "Flash": 3872,
+        "DIRAM": 88,
+        "External RAM": 0
+      },
+      "map_sha256": "98688da184ac97faf5bba066c37f401dcca4707da1a34cda61d7dbf12b399575"
+    },
+    "json": {
+      "absolute": {
+        "Flash": {
+          "name": "Flash",
+          "total": 0,
+          "used": 1152630,
+          "free": 0,
+          "parts": {
+            ".text": {
+              "size": 915730
+            },
+            ".rodata": {
+              "size": 236380
+            },
+            ".appdesc": {
+              "size": 256
+            },
+            ".init_array": {
+              "size": 224
+            },
+            ".tbss": {
+              "size": 24
+            },
+            ".tdata": {
+              "size": 16
+            }
+          }
+        },
+        "External RAM": {
+          "name": "External RAM",
+          "total": 0,
+          "used": 382152,
+          "free": 0,
+          "parts": {
+            ".bss": {
+              "size": 382152
+            }
+          }
+        },
+        "DIRAM": {
+          "name": "DIRAM",
+          "total": 503744,
+          "used": 83046,
+          "free": 420698,
+          "parts": {
+            ".text": {
+              "size": 50020
+            },
+            ".bss": {
+              "size": 19248
+            },
+            ".data": {
+              "size": 13778
+            }
+          }
+        },
+        "LP SRAM": {
+          "name": "LP SRAM",
+          "total": 32768,
+          "used": 24,
+          "free": 32744,
+          "parts": {
+            ".rtc_reserved": {
+              "size": 24
+            }
+          }
+        }
+      },
+      "delta": {
+        "Flash": 4230,
+        "DIRAM": 88,
+        "External RAM": 0
+      },
+      "map_sha256": "3eeec21f84e2506290bc5175d2d818c65edce6c0da1ab2fd392041d9d4df619f"
+    },
+    "lua": {
+      "absolute": {
+        "Flash": {
+          "name": "Flash",
+          "total": 0,
+          "used": 1243846,
+          "free": 0,
+          "parts": {
+            ".text": {
+              "size": 1002434
+            },
+            ".rodata": {
+              "size": 240892
+            },
+            ".appdesc": {
+              "size": 256
+            },
+            ".init_array": {
+              "size": 224
+            },
+            ".tbss": {
+              "size": 24
+            },
+            ".tdata": {
+              "size": 16
+            }
+          }
+        },
+        "External RAM": {
+          "name": "External RAM",
+          "total": 0,
+          "used": 382152,
+          "free": 0,
+          "parts": {
+            ".bss": {
+              "size": 382152
+            }
+          }
+        },
+        "DIRAM": {
+          "name": "DIRAM",
+          "total": 503744,
+          "used": 83062,
+          "free": 420682,
+          "parts": {
+            ".text": {
+              "size": 50020
+            },
+            ".bss": {
+              "size": 19264
+            },
+            ".data": {
+              "size": 13778
+            }
+          }
+        },
+        "LP SRAM": {
+          "name": "LP SRAM",
+          "total": 32768,
+          "used": 24,
+          "free": 32744,
+          "parts": {
+            ".rtc_reserved": {
+              "size": 24
+            }
+          }
+        }
+      },
+      "delta": {
+        "Flash": 95446,
+        "DIRAM": 104,
+        "External RAM": 0
+      },
+      "map_sha256": "fce006fde3a9ef04112f06a30cbf1d462a24d658e066f5b8a7b90fa2f23e1ed0"
+    },
+    "mquickjs": {
+      "absolute": {
+        "Flash": {
+          "name": "Flash",
+          "total": 0,
+          "used": 1287568,
+          "free": 0,
+          "parts": {
+            ".text": {
+              "size": 1032996
+            },
+            ".rodata": {
+              "size": 254020
+            },
+            ".appdesc": {
+              "size": 288
+            },
+            ".init_array": {
+              "size": 224
+            },
+            ".tbss": {
+              "size": 24
+            },
+            ".tdata": {
+              "size": 16
+            }
+          }
+        },
+        "External RAM": {
+          "name": "External RAM",
+          "total": 0,
+          "used": 382152,
+          "free": 0,
+          "parts": {
+            ".bss": {
+              "size": 382152
+            }
+          }
+        },
+        "DIRAM": {
+          "name": "DIRAM",
+          "total": 503744,
+          "used": 83070,
+          "free": 420674,
+          "parts": {
+            ".text": {
+              "size": 50020
+            },
+            ".bss": {
+              "size": 19272
+            },
+            ".data": {
+              "size": 13778
+            }
+          }
+        }
+      },
+      "delta": {
+        "Flash": 139168,
+        "DIRAM": 112,
+        "External RAM": 0
+      },
+      "map_sha256": "795c07d19ec23fb6c40a99916249a513db8e7056f3e416f1d598046f416b28dc"
+    }
+  }
+}

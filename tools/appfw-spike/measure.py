@@ -13,7 +13,7 @@ from pathlib import Path
 from PIL import Image, ImageChops
 
 ROOT = Path(__file__).resolve().parents[2]
-FRONTENDS = {"c": "candidate_c.c", "json": "page.json", "lua": "page.lua"}
+FRONTENDS = {"c": "candidate_c.c", "json": "page.json", "lua": "page.lua", "mquickjs": "page.js"}
 LABELS = ["显示进度", "显示页码", "记住位置", "阅读提醒", "词语提示", "显示注释", "听书续播", "显示书名"]
 
 
@@ -24,9 +24,11 @@ def check(result, metrics, candidate):
     assert m["action.user.spike.set"] == 1 and m["action.ai.spike.set"] == 3
     assert m["action.user.spike.submit"] == 1
     # An unsettled VM startup only advances the 0.5 us clock-read annotation.
-    if candidate == "lua" and metrics["cpu_mode"] == "measured":
+    if candidate in ("lua", "mquickjs") and metrics["cpu_mode"] == "measured":
         assert result["startup_us"] > 1, "unsettled_cpu_clock"
-    for name in ({"json": ["bad_json_rejected"], "lua": ["modules_hidden", "loop_stopped", "quota_rejected", "invalid_row_rejected"]}.get(candidate, [])):
+    for name in ({"json": ["bad_json_rejected"], "lua": ["modules_hidden", "loop_stopped", "quota_rejected", "invalid_row_rejected"],
+                  "mquickjs": ["modules_hidden", "loop_stopped", "quota_rejected", "invalid_row_rejected",
+                               "invalid_type_rejected", "subset_rejected", "recovered"]}.get(candidate, [])):
         assert m[f"spike.{name}"]["min"] == 1, name
     assert result["released"]
     before, after = copy.deepcopy(result["snapshot"]), copy.deepcopy(result["snapshot_after"])
@@ -38,14 +40,15 @@ def check(result, metrics, candidate):
     assert before["actions"] == ["spike.set", "text.insert", "text.submit", "spike.submit"]
 
 
-def run(build, out, candidate, mode):
+def run(build, out, candidate, mode, timeout=45):
     out.mkdir(parents=True, exist_ok=True)
-    env = {**os.environ, "INK_SPIKE_SOURCE": str(ROOT / "tools/appfw-spike" / FRONTENDS[candidate])}
+    env = {**os.environ, "INK_SPIKE_SOURCE": str(ROOT / "tools/appfw-spike" / FRONTENDS[candidate]),
+           "UBSAN_OPTIONS": os.environ.get("UBSAN_OPTIONS", "") + ":halt_on_error=1"}
     command = [str(build / "appfw-spike" / f"appfw-{candidate}"), "--profile", "simulator/profiles/metalio-plus.json",
                "--assets", str(build / "assets"), "--content", str(build / "test-content"), "--out", str(out),
                "--cpu", mode, "--end", "90s", "--quiet", "--no-random-outages"]
     with (out / "run.log").open("w") as log:
-        subprocess.run(command, cwd=ROOT, env=env, check=True, stdout=log, stderr=subprocess.STDOUT, timeout=45)
+        subprocess.run(command, cwd=ROOT, env=env, check=True, stdout=log, stderr=subprocess.STDOUT, timeout=timeout)
     result = json.loads((out / "spike.json").read_text())
     metrics = json.loads((out / "metrics.json").read_text())
     check(result, metrics, candidate)
@@ -100,10 +103,11 @@ def main():
                               "actual_c_flags": actual_flags,
                               "werror": cache["INK_WERROR"], "sanitize": cache["INK_SANITIZE"],
                               "font_sha256": hashlib.sha256(font.read_bytes()).hexdigest(), "font_face": 2,
-                              "lvgl": "9.5.0", "lua": "5.4.8", "profile": "metalio-plus", "measured_cpu_factor": 1},
+                              "lvgl": "9.5.0", "lua": "5.4.8", "mquickjs": "4119f6819ccb5bae2d21a18a106e89522d18ad45",
+                              "profile": "metalio-plus", "measured_cpu_factor": 1},
               "definitions": {"timing": "simulator host-thread CPU x1 plus scheduler/fixed-time costs; cycle annotations disabled; NOT S31 wall time",
                               "heap": "whole-scenario simulated TLSF pool peak; includes shared product and input service",
-                              "vm_peak": "Lua tag peak in simulated PSRAM, allocator bookkeeping included",
+                              "vm_peak": "VM tag peak in simulated PSRAM including allocator bookkeeping; MicroQuickJS reserves a fixed 128 KiB arena",
                               "characters": "Unicode code points, original whitespace, no prompt/schema/tool overhead"},
               "candidates": {}}
     golden = None

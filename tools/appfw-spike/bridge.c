@@ -6,7 +6,9 @@
 #include "ink/sys/members.h"
 #include "ink/sys/textfield.h"
 #include "spike.h"
+#ifndef INK_SPIKE_S31
 #include "vtk.h"
+#endif
 
 ink_spike_model_t *ink_spike_model;
 lv_obj_t *ink_spike_switches[INK_SPIKE_ROWS], *ink_spike_field, *ink_spike_button;
@@ -16,7 +18,12 @@ size_t ink_spike_vm_peak;
 static const lv_font_t *font;
 
 /* Commit host CPU accounting before reading each interval boundary. */
-static uint64_t boundary(void) { vtk_sched_point(); return osal_now_us(); }
+static uint64_t boundary(void) {
+#ifndef INK_SPIKE_S31
+    vtk_sched_point();
+#endif
+    return osal_now_us();
+}
 
 void *ink_spike_alloc(size_t size) {
     const char *prev = osal_mem_tag("appfw.model");

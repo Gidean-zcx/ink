@@ -1,0 +1,63 @@
+{
+  "evidence": "【实测】ASan/UBSan prototype checks; MicroQuickJS failure is not a pass",
+  "environment": {
+    "system": "Darwin",
+    "release": "24.6.0",
+    "machine": "arm64",
+    "macos": "15.7.9",
+    "processor": "arm",
+    "processor_probe": "CPU model unavailable in sandbox; using platform.processor",
+    "compiler": "Apple clang version 17.0.0 (clang-1700.6.3.2)",
+    "build_type": "RelWithDebInfo",
+    "build_type_defaulted": true,
+    "cflags": "",
+    "build_type_flags": "-O2 -g -DNDEBUG",
+    "actual_c_flags": "-O2 -g -DNDEBUG -std=gnu11 -isysroot <sdk> -mmacosx-version-min=15.7 -fsanitize=address,undefined -fno-omit-frame-pointer -Wall -Wextra -Wshadow -Wno-unused-parameter -Werror",
+    "werror": "ON",
+    "sanitize": "ON",
+    "font_sha256": "b76b0433203017ca80401b2ee0dd69350349871c4b19d504c34dbdd80541690a",
+    "font_face": 2,
+    "lvgl": "9.5.0",
+    "lua": "5.4.8",
+    "mquickjs": "4119f6819ccb5bae2d21a18a106e89522d18ad45",
+    "profile": "metalio-plus",
+    "measured_cpu_factor": 1
+  },
+  "candidates": {
+    "c": {
+      "common_checks_passed": 21,
+      "released": true,
+      "sanitizer_run": "passed"
+    },
+    "json": {
+      "common_checks_passed": 21,
+      "released": true,
+      "sanitizer_run": "passed"
+    },
+    "lua": {
+      "common_checks_passed": 21,
+      "released": true,
+      "sanitizer_run": "passed"
+    },
+    "mquickjs": {
+      "common_checks_regular": 21,
+      "sanitizer_run": "failed",
+      "driver_exit": 1,
+      "native_signal": "SIGABRT (6)",
+      "diagnostics_recovery_run": [
+        "mquickjs.c:2384:24: runtime error: member access within null pointer of type 'JSObject' (aka 'struct JSObject')",
+        "mquickjs.c:1021:30: runtime error: left shift of negative value -1",
+        "mquickjs.c:11931:20: runtime error: member access within null pointer of type 'JSObject' (aka 'struct JSObject')"
+      ],
+      "first_strict_diagnostic": "mquickjs.c:2384:24: runtime error: member access within null pointer of type 'JSObject' (aka 'struct JSObject')"
+    }
+  },
+  "reverse_control": {
+    "without_halt_on_error_driver_exit": 0,
+    "diagnostics_were_present": true,
+    "with_halt_on_error_driver_exit": 1,
+    "strict_success_summary_created": false
+  },
+  "upstream_source_modified": false,
+  "sanitizer_checks_disabled": false
+}
