@@ -338,7 +338,7 @@ ink_rc_t ink_confirm_hold(const ink_cap_t *c, const ink_args_t *args, ink_source
         h->connection = ink_hub_connection();
     }
     snprintf(h->member, sizeof h->member, "%s", ink_member_current()->id);
-    if (!describe(c, &h->args, h->detail, sizeof h->detail)) {
+    if (!describe(c, !strcmp(c->id, "call.dtmf") ? &h->args : args, h->detail, sizeof h->detail)) {
         osal_free(h);
         rc->status = INK_RC_REJECTED;
         snprintf(rc->detail, sizeof rc->detail, "confirmation detail is too long");

@@ -10,12 +10,12 @@
 | B7-02 | 专项通过 | 【实现】序列留在通信服务供本机显示，事件不带按键值，快照仅有秘密字段的有无与位数；沿用不记参数的活动日志。【实测】实际点按合成序列后，模组和本机显示保留原值，两个快照、六个事件、实际活动记录及运行日志不泄露序列；AI 自发按键仍需确认；基线对照失败 | `audit7-b7-02`、`phone-calls` |
 | B7-03 | 专项通过 | 【实现】借卡前同步写入现有 dirty 标记，失败则不借出；归还及重启走已有补建和清标记流程。【实测】电脑新增 5 B 后归还即断电，重启新文件有编号，占用从旧的 3 B 更新为 8 B；基线漏编号、统计仍 3 B | `audit7-b7-03`、`audit5-b5-02` |
 | B7-04 | 专项通过 | 【实现】删去路径编辑内的两次逐文件元数据查询，保留原大小、修改时间。【实测】同配置、300 个 1 B 文件：最大持锁 14,828,930 → 289,027 μs，操作 14,828,959 → 289,056 μs，大小查询 304 → 4；300 个编号、路径、大小及总量保持正确。此为模拟计时 | `audit7-b7-04`、`index-durable` |
-| 全量、内存检查、S31 构建 | 待执行 | 待补 | 待补 |
-| 产品代码净增 ≤150 行、隐私检查 | 待执行 | 待补 | 待补 |
+| 全量、内存检查、S31 构建 | 普通首轮通过；其余进行中 | 【实测】普通 290/290（244.87 s），无跳过；ASan/UBSan 构建完成，内存检查全量正在执行 | `build/audit7-fix/ctest-initial.log`；最终命令与结果待补 |
+| 产品代码净增 ≤150 行、隐私检查 | 当前通过，结束前重查 | 【实测】产品文件含头文件、注释净增 57 行；指定基线到当前提交的隐私正则零命中，diff 检查通过 | `git diff <基线>..HEAD --numstat -- system platform apps drivers boards ports`；`build/audit7-fix/privacy.log` |
 
 ## 没做到的
 
-普通全量、内存检查、S31 构建正在执行，尚未验收。未做实机测试、真实电话或 Ubuntu 原生 gcc 验证。
+最终全量复测、内存检查、S31 构建尚未全部验收。未做实机测试、真实电话或 Ubuntu 原生 gcc 验证。
 
 ## 和设计不一致的
 
@@ -47,10 +47,15 @@
 
 ```sh
 INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2 -R '^audit7-|^phone-calls$|^index-durable$|^audit5-b5-02$'
-# 手动反向对照：每个 N 分别取 b7-01、b7-02、b7-03、b7-04，均预期退出 1。
-INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/audit7_fix/run.py --build build --case "$N" --baseline 10e14629b4464e8d6a4c06319ae415d3e0506238
+# 手动反向对照：四项均预期退出 1。
+for N in b7-01 b7-02 b7-03 b7-04; do
+  INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/audit7_fix/run.py --build build --case "$N" --baseline 10e14629b4464e8d6a4c06319ae415d3e0506238
+  test "$?" -eq 1 || exit 1
+done
 ```
 
-【实测】四种基线对照均退出 1，固定版本相关七项 CTest 全部通过。反向对照只在显式 `--baseline` 下读取历史并临时编译原始产品源码；注册的四项 CTest 不依赖 Git 历史。两侧使用相同测试和依赖。
+【实测】四种最终基线对照均退出 1，模拟器进程本身正常退出 0，失败来自断言：B7-01 为 6 条（包含第二通实际收到旧按键），B7-02 为 7 条（六次事件及快照），B7-03 为借出阶段 2 条、重启阶段 2 条，B7-04 为持锁和查询次数 2 条。固定版本分别为 33、58、22、611 条通过；相关七项 CTest 全部通过。反向对照只在显式 `--baseline` 下读取历史并临时编译原始产品源码；注册的四项 CTest 不依赖 Git 历史。两侧使用相同测试和依赖。
+
+首次只构建专项可执行文件时缺字体/图标，完整构建后重测；首次过期结果查询早于落盘，按已有查询契约等待该结果集合落盘后重测。均未放宽断言或预算。复核又把确认说明的绑定参数仅用于 DTMF，其他能力保留原来的显示顺序，最终版本会再跑普通全量。
 
 证据：`build/test-out/audit7-b7-0{1,2,3,4}{,-baseline}/summary.json`、各场景日志与 `metrics.json`；专项汇总为 `build/audit7-fix/targeted.log`。所有产物均在忽略的构建目录。
