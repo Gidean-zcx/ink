@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Build the card dictionary from hash-locked, permissively licensed sources."""
 import argparse
+from collections import defaultdict
 import hashlib
 import json
 from math import isqrt
@@ -14,6 +15,8 @@ from imedict import build
 
 ROOT = Path(__file__).resolve().parent
 DICT_MAX = 1024 * 1024
+INITIALS_LIMIT = 32
+DAILY_BONUS = 16384
 
 
 def source_files(cache):
@@ -57,6 +60,7 @@ def generate(dictionary):
         words[word] = max(words.get(word, 0), int(frequency))
         readings[word] = syllables.split()
     keys, lines = set(), []
+    initials = defaultdict(list)
     size, kept, characters, abbreviations = 32, 0, 0, 0
     for word, frequency in sorted(words.items(), key=lambda row: (-row[1], row[0])):
         if len(word) == 1:
@@ -79,16 +83,28 @@ def generate(dictionary):
             keys.add(key)
             # Secondary character readings must not dominate common homophones.
             weight = max(1, score // 4) if len(word) == 1 and key != primary else score
-            lines.append(f"{key}\t{word}\t{weight}\n")
+            if short:
+                # Conversation/device priors apply only to initials, never full pinyin.
+                weight = min(65535, weight + (DAILY_BONUS if word in readings else 0))
+                initials[key].append((word, weight))
+            else:
+                lines.append(f"{key}\t{word}\t{weight}\n")
             abbreviations += short
         size += cost
         kept += 1
         characters += len(word) == 1
         minimum = frequency
+    abbreviations = 0
+    for key, candidates in initials.items():
+        # Keep the admission cut unchanged so every full-pinyin entry survives.
+        for word, weight in sorted(candidates, key=lambda row: -row[1])[:INITIALS_LIMIT]:
+            lines.append(f"{key}\t{word}\t{weight}\n")
+            abbreviations += 1
     data = build(lines)
-    assert len(data) == size <= DICT_MAX
-    stats = {"bytes": size, "words": kept, "characters": characters,
+    assert len(data) <= size <= DICT_MAX
+    stats = {"bytes": len(data), "words": kept, "characters": characters,
              "keys": len(keys), "entries": len(lines), "abbreviations": abbreviations,
+             "initials_limit": INITIALS_LIMIT, "daily_bonus": DAILY_BONUS,
              "minimum_source_frequency": minimum,
              "sha256": hashlib.sha256(data).hexdigest()}
     return data, stats

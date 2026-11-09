@@ -25,8 +25,8 @@
 #define COMPOSING_MAX 40
 #define MAX_CANDS 60
 
-/* What the member picked, by a hash of the word: the count, then the word. */
-static const ink_db_def_t USER_FREQ = {.name = "text.user_freq", .title = "输入法学到的词频", .scope = INK_DB_MEMBER, .schema = 1, .max_records = 512, .drop_oldest = true};
+/* Counts keyed by the consumed pinyin and word, private to this member. */
+static const ink_db_def_t USER_FREQ = {.name = "text.user_freq", .title = "输入法学到的词频", .scope = INK_DB_MEMBER, .schema = 2, .max_records = 512, .max_bytes = 2048, .drop_oldest = true};
 static const ink_db_def_t DRAFTS = {.name = "text.drafts", .title = "页面草稿", .scope = INK_DB_MEMBER, .schema = 1};
 typedef struct { char page[48], value[VALUE_MAX + 1], composing[COMPOSING_MAX + 1]; uint32_t cursor, anchor; } draft_t;
 
@@ -159,7 +159,7 @@ int ink_text_focus(const ink_text_cfg_t *cfg, const ink_text_client_t *client, v
     TS.cands_valid = false;
     if (cfg->draft_page && !cfg->draft_id) save_draft();
     if (cfg->type == INK_TEXT_PLAIN) {
-        TS.freq = ink_db_open(&USER_FREQ, NULL);
+        TS.freq = ink_db_open_member(&USER_FREQ, TS.owner.member);
         py_want_dict(on_dict_ready);
     }
     ink_state_set_bool(TS.h_focused, true);
@@ -258,25 +258,29 @@ static void put(const char *s) {
     TS.cursor = TS.anchor = lo + add;
 }
 
-static uint32_t word_id(const char *word) {
-    uint32_t id = ink_crc32(0, word, strlen(word)) & 0x7FFFFFFF;
+static uint32_t word_id(const ink_text_cand_t *c) {
+    uint32_t key = ink_crc32(0, TS.composing, c->consumed);
+    uint32_t id = ink_crc32(key, c->word, strlen(c->word)) & 0x7FFFFFFF;
     return id ? id : 1;
 }
 
 /* How often this member took it. */
-static uint32_t picked_count(const char *word) {
+static uint32_t picked_count(const ink_text_cand_t *c) {
     uint32_t n = 0;
     if (!TS.freq) return 0;
     ink_rec_t r;
-    if (ink_db_get(TS.freq, word_id(word), &r, &n, sizeof n) != INK_DB_OK) return 0;
-    return n;
+    if (ink_db_get(TS.freq, word_id(c), &r, &n, sizeof n) != INK_DB_OK || r.len != sizeof n || r.schema != USER_FREQ.schema) return 0;
+    return n > UINT16_MAX ? UINT16_MAX : n;
 }
 
-static void learn(const char *word) {
+static void learn(const ink_text_cand_t *c) {
     if (!TS.freq || TS.type == INK_TEXT_PASSWORD) return;
-    uint32_t n = picked_count(word) + 1;
-    int64_t wall = osal_wall_us();
-    ink_db_write_t w = {.id = word_id(word), .sort = wall > 0 ? wall / 1000000 : 0, .data = &n, .len = sizeof n, .flags = INK_DB_LAZY};
+    uint32_t n = picked_count(c);
+    if (n < UINT16_MAX) n++;
+    ink_db_cursor_t cursor = {.desc = true};
+    ink_rec_t last;
+    int64_t order = ink_db_next(TS.freq, &cursor, &last, NULL, 0) == 1 ? last.sort + 1 : 1;
+    ink_db_write_t w = {.id = word_id(c), .sort = order, .data = &n, .len = sizeof n, .flags = INK_DB_LAZY};
     ink_db_put(TS.freq, &w, NULL);
 }
 
@@ -303,7 +307,7 @@ static void compute_cands(void) {
     }
     ink_svc_unlock();
     /* what this member picks comes first within what is as long; the database has its own lock */
-    for (int i = 0; i < n; i++) score[i] += picked_count(TS.cands[i].word) * 2000u;
+    for (int i = 0; i < n; i++) score[i] += picked_count(&TS.cands[i]) * 65536u;
     for (int i = 1; i < n; i++) { /* a short list: insertion keeps the longest keys first and the order stable */
         ink_text_cand_t c = TS.cands[i];
         uint32_t s = score[i];
@@ -345,7 +349,7 @@ void ink_text_pick(int index) {
     ink_text_cand_t c = TS.cands[index];
     before_edit(EDIT_KEYS);
     put(c.word);
-    learn(c.word);
+    learn(&c);
     memmove(TS.composing, TS.composing + c.consumed, strlen(TS.composing + c.consumed) + 1);
     ink_probe_count("text.picks");
     changed();

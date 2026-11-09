@@ -494,6 +494,10 @@ target_include_directories(sim-ime-lexicon PRIVATE ${CMAKE_BINARY_DIR}/generated
 target_link_libraries(sim-ime-lexicon PRIVATE ink_apps ink_system)
 add_dependencies(sim-ime-lexicon ink_fonts ink_test_content)
 add_test(NAME ime-lexicon COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/ime_lexicon/run.py --build ${CMAKE_BINARY_DIR})
+ink_sim_executable(sim-ime-learning tests/ime_lexicon/learning.c)
+target_link_libraries(sim-ime-learning PRIVATE ink_apps ink_system)
+add_dependencies(sim-ime-learning ink_fonts ink_ui_fonts ink_icons)
+add_test(NAME ime-learning COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/ime_lexicon/learning.py --build ${CMAKE_BINARY_DIR})
 set(INK_IMAGE_FIXTURES ${CMAKE_BINARY_DIR}/generated/image_fixtures.h)
 add_custom_command(OUTPUT ${INK_IMAGE_FIXTURES}
   COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/media/fixtures.py ${INK_IMAGE_FIXTURES}

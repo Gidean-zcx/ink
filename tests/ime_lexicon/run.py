@@ -60,9 +60,17 @@ for phase in ("dictionary", "fallback", "reverse"):
     assert first == metrics.get("ime.first", 0) and five == metrics.get("ime.five", 0)
     if phase == "dictionary":
         assert first >= 75 and five >= 83, "fixed quality corpus regressed"
+    groups = {}
+    for name, selected in (("full", [r for r in details if not r["category"].startswith("简拼") and r["category"] != "未收录短句"]),
+                           ("initials", [r for r in details if r["category"].startswith("简拼")])):
+        groups[name] = {"cases": len(selected), "first": sum(r["first"] for r in selected),
+                        "five": sum(r["five"] for r in selected)}
+    if phase == "dictionary":
+        assert groups["full"]["first"] >= 71 and groups["full"]["five"] >= 73, groups
+        assert groups["initials"]["first"] >= 10 and groups["initials"]["five"] >= 14, groups
     summary[phase] = {"first": first, "five": five, "first_percent": round(first * 100 / len(corpus), 2),
                       "five_percent": round(five * 100 / len(corpus), 2),
-                      "load_ms": metrics["ime.load_ms"], "external_bytes": metrics["ime.external_bytes"]}
+                      "load_ms": metrics["ime.load_ms"], "external_bytes": metrics["ime.external_bytes"], "groups": groups}
     (work / (phase + "-candidates.json")).write_text(json.dumps(details, ensure_ascii=False, indent=2) + "\n")
 assert summary["dictionary"]["first"] > summary["fallback"]["first"]
 assert summary["dictionary"]["five"] > summary["fallback"]["five"]

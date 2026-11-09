@@ -1,5 +1,26 @@
 # Project-authored everyday phrases and device vocabulary, not corpus counts.
 # Syllables<TAB>word<TAB>priority floor; 1000 keeps these within the size cut.
+# Zero keeps corpus frequencies; these add only an initials prior.
+ni hao	你好	0
+xie xie	谢谢	0
+zai jian	再见	0
+shi jian	时间	0
+jin tian	今天	0
+ming tian	明天	0
+zuo tian	昨天	0
+dian hua	电话	0
+duan xin	短信	0
+yin yue	音乐	0
+she zhi	设置	0
+chi fan	吃饭	0
+he shui	喝水	0
+shui jiao	睡觉	0
+qi chuang	起床	0
+hui jia	回家	0
+chu men	出门	0
+da kai	打开	0
+guan bi	关闭	0
+bao cun	保存	0
 da dian hua	打电话	1000
 fa duan xin	发短信	1000
 fa xiao xi	发消息	1000
