@@ -61,5 +61,10 @@ int hal_cell_wait_event(hal_cell_event_t *ev, uint32_t timeout_ms) {
         ev->type = HAL_CELL_EV_CALL_ENDED;
         return 1;
     }
+    int index, direction, status;
+    if (sscanf(line, "+CLCC: %d,%d,%d", &index, &direction, &status) == 3 && direction == 0 && status == 0) {
+        ev->type = HAL_CELL_EV_CALL_ACTIVE;
+        return 1;
+    }
     return 0; /* RING itself (the +CLIP that follows carries the number), registration, others */
 }

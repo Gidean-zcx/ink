@@ -1269,3 +1269,8 @@ add_test(NAME ai-chat COMMAND sim-ai-chat --profile ${CMAKE_SOURCE_DIR}/simulato
 add_test(NAME ai-chat-snapshots COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/ai_chat_snapshots.py
   ${CMAKE_BINARY_DIR}/test-out/ai-chat ${CMAKE_BINARY_DIR}/ai-chat-compare)
 set_tests_properties(ai-chat-snapshots PROPERTIES DEPENDS ai-chat)
+target_sources(ink_system PRIVATE system/apps/phone/phone.c)
+ink_sim_executable(sim-phone-calls tests/phone_calls/phone_calls.c)
+target_link_libraries(sim-phone-calls PRIVATE ink_apps ink_system)
+add_test(NAME phone-calls COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/phone_calls/run.py
+  $<TARGET_FILE:sim-phone-calls> ${CMAKE_SOURCE_DIR} ${INK_ASSETS_DIR} ${INK_TEST_CONTENT} ${CMAKE_BINARY_DIR}/test-out/phone-calls)

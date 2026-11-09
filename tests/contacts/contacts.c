@@ -53,7 +53,8 @@ static bool put(const char *name, const char *number, uint32_t id) {
     return AI("contacts.put", call_args) && g_rc.status == INK_RC_DONE;
 }
 static void open_list(void) {
-    CHECK(BY_HAND("shell.launch", "{\"id\":\"phone\"}") && g_rc.status == INK_RC_DONE, "the existing phone launcher opens contacts");
+    CHECK(BY_HAND("shell.launch", "{\"id\":\"phone\"}") && g_rc.status == INK_RC_DONE, "the existing phone launcher opens the phone");
+    CHECK(BY_HAND("contacts.open", NULL) && g_rc.status == INK_RC_DONE, "the contact entry opens contacts");
     CHECK(WAIT_FOR(P.list != NULL, 10000), "background loading produces the real list"); quiet();
 }
 static void find_label(lv_obj_t *o) {

@@ -172,7 +172,8 @@ static void comm_task(void *arg) {
                 call_focus(true);
                 ink_args_str(a, "from", ev.number);
                 ink_cap_emit("call.incoming", a);
-            } else if (ev.type == HAL_CELL_EV_CALL_ENDED) {
+            } else if (ev.type == HAL_CELL_EV_CALL_ACTIVE) ink_cap_emit("call.connected", a);
+            else if (ev.type == HAL_CELL_EV_CALL_ENDED) {
                 CM.ringing = false;
                 call_focus(false);
                 ink_cap_emit("call.ended", a);
@@ -241,6 +242,7 @@ static void cap_dial(ink_call_t *c) {
     osal_mutex_unlock(CM.at);
     if (r == 0) call_focus(true);
     call_result(c, r, "正在拨号", "the call could not be placed");
+    if (r == 0) ink_cap_emit_for("call.dialed", &c->args, ink_cap_call_member(c));
 }
 
 static void cap_answer(ink_call_t *c) {
@@ -292,6 +294,8 @@ static const ink_cap_t COMM_CAPS[] = {
     {.id = "call.incoming", .title = "来电", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true, .permission = "call"},
     {.id = "call.answered", .title = "电话接通了", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true, .permission = "call"},
     {.id = "call.ended", .title = "通话结束", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true, .permission = "call"},
+    {.id = "call.dialed", .title = "电话已拨出", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true, .permission = "call"},
+    {.id = "call.connected", .title = "拨出的电话已接通", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true, .permission = "call"},
 };
 
 /* ------------------------------------------------------------ state and settings */

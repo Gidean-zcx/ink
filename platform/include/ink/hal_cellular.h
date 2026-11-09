@@ -25,6 +25,7 @@ typedef enum {
     HAL_CELL_EV_SMS = 1,    /* a text message is waiting: `sms_index` */
     HAL_CELL_EV_RING,       /* an incoming call rings (repeats while it rings): `number` */
     HAL_CELL_EV_CALL_ENDED, /* the call ended or the caller gave up */
+    HAL_CELL_EV_CALL_ACTIVE, /* the outgoing call was answered */
 } hal_cell_ev_type_t;
 
 typedef struct {

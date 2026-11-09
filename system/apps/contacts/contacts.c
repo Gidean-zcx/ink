@@ -82,6 +82,7 @@ static void record(ink_call_t *c) { /* BG: first load and durable writes may wai
         snprintf(c->rc.object, sizeof c->rc.object, "contact:%u", (unsigned)id);
         ink_jw_t w; ink_jw_init(&w, raw, sizeof raw);
         ink_jw_raw(&w, "{\"id\":"); ink_jw_int(&w, id); ink_jw_raw(&w, ",\"number\":"); ink_jw_str(&w, number); ink_jw_raw(&w, "}"); ink_cap_result(c, raw);
+        if (!put && !del) { ink_args_str(&c->args, "number", number); ink_cap_emit_for("contacts.selected", &c->args, ink_cap_call_member(c)); }
     }
     snprintf(c->rc.say, sizeof c->rc.say, "%s", c->rc.status == INK_RC_STALE ? "联系人已被修改，请返回列表重新打开后重试" : c->rc.status != INK_RC_DONE ? "没有完成，请检查姓名和号码后重试" : put ? "已保存联系人" : del ? "已删除联系人" : "已选择这个号码");
     ink_db_close(db);
@@ -234,7 +235,8 @@ static int snapshot(char *out, size_t cap) {
 static bool page_key(ink_key_t k, bool lng) { return P.list && ink_ui_list_key(P.list, k, lng); }
 static const ink_activity_t LIST = {.name = "PhoneContacts", .app = "phone", .create = create, .destroy = destroy, .snapshot = snapshot, .on_key = page_key};
 static const ink_activity_t EDIT = {.name = "ContactEdit", .app = "phone", .create = create, .destroy = destroy, .snapshot = snapshot};
-static const ink_app_def_t APP = {.id = "phone", .title = "联系人", .icon = INK_UI_ICON(phone), .entry = &LIST, .system_app = true, .child_ok = true};
+extern const ink_activity_t ink_phone_page;
+static const ink_app_def_t APP = {.id = "phone", .title = "电话", .icon = INK_UI_ICON(phone), .entry = &ink_phone_page, .system_app = true, .child_ok = true};
 #define ID "\"id\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}"
 #define RECORD "{\"type\":\"object\",\"properties\":{" ID "},\"required\":[\"id\"]}"
 #define VERSION "\"if_revision\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}"
@@ -252,3 +254,4 @@ static const ink_cap_t CAPS[] = {
 int ink_contacts_init(void) {
     return ink_db_register(&CONTACTS) || ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_app_register(&APP) ? -1 : 0;
 }
+void ink_contacts_open(void) { ink_ui_push(&LIST, NULL); }
