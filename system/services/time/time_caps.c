@@ -189,6 +189,22 @@ static void cap_reminder_add(ink_call_t *c) {
     answer_add(c, &a, "reminder.cancel");
 }
 
+static void cap_alarm_update(ink_call_t *c) {
+    ink_alarm_t a; int cursor = 0; int64_t id = 0, v;
+    const char *member = ink_cap_call_member(c); ink_args_get_int(&c->args, "id", &id);
+    while (ink_time_alarm_next_for(&cursor, INK_ALARM, &a, member) == 1) if (a.id == (uint32_t)id) {
+        if (ink_args_get_int(&c->args, "hour", &v)) a.hour = (uint8_t)v;
+        if (ink_args_get_int(&c->args, "minute", &v)) a.min = (uint8_t)v;
+        if (ink_args_get_int(&c->args, "weekdays", &v)) { a.weekdays = (uint8_t)v; a.repeat = v ? INK_REPEAT_WEEKDAYS : INK_REPEAT_NONE; }
+        ink_args_get_bool(&c->args, "enabled", &a.enabled);
+        ink_args_get_str(&c->args, "title", a.title, sizeof a.title); a.src = (uint8_t)c->src;
+        if (ink_time_alarm_update_for(&a, member)) fail(c, INK_RC_FAILED, "alarm update failed");
+        else snprintf(c->rc.object, sizeof c->rc.object, "alarm:%u", (unsigned)a.id);
+        return;
+    }
+    fail(c, INK_RC_STALE, "no such alarm");
+}
+
 static void list_kind(ink_call_t *c, ink_alarm_kind_t kind) {
     const char *member = ink_cap_call_member(c);
     char *out = osal_malloc(4096, OSAL_MEM_EXTERNAL);
@@ -291,6 +307,9 @@ static const ink_cap_t TIME_CAPS[] = {
      .exec = INK_EXEC_DIRECT,
      .run = cap_alarm_set},
     {.id = "alarm.list", .title = "我的闹钟", .output = "{\"type\":\"array\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_alarm_list},
+    {.id = "alarm.update", .title = "修改或开关我的闹钟", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_alarm_update,
+     .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295},\"hour\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":23},\"minute\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":59},"
+              "\"weekdays\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":127},\"title\":{\"type\":\"string\",\"maxLength\":15},\"enabled\":{\"type\":\"boolean\"}},\"required\":[\"id\"]}"},
     {.id = "alarm.cancel", .title = "删闹钟", .input = ID_ARG, .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_cancel},
     {.id = "alarm.dismiss",
      .title = "关掉正在响的闹钟",

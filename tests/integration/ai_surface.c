@@ -64,6 +64,9 @@ static const struct {
     {"file_picker.prev", NULL}, {"file_picker.next", NULL}, {"file_picker.cancel", NULL}, {"file_picker.select", "id"},
     {"contacts.put", "name,number"}, {"contacts.delete", "id,if_revision,name,number"}, {"contacts.select", "id"}, {"contacts.edit", ""},
     {"contacts.next", NULL}, {"contacts.prev", NULL}, {"contacts.name", NULL}, {"contacts.number", NULL},
+    {"clock.prev", NULL}, {"clock.next", NULL}, {"clock.new", NULL}, {"clock.open", "id"},
+    {"clock.draft", ""}, {"clock.focus", NULL}, {"clock.save", NULL},
+    {"alarm.update", "id"},
     {NULL, NULL},
 };
 

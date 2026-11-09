@@ -249,6 +249,7 @@ target_link_libraries(ink_system PUBLIC ink_platform ink_lvgl ink_lz4 ink_sha256
 # leak into the system or the apps), and it puts the port after the system on every link line, which
 # GNU ld needs for HAL functions only the system references (e.g. hal_cell_*).
 target_link_libraries(ink_system INTERFACE $<LINK_ONLY:ink_port_sim>)
+target_sources(ink_system PRIVATE system/apps/clock/clock.c)
 target_compile_options(ink_system PRIVATE ${INK_WARN})
 
 add_library(ink_apps STATIC apps/home/home.c apps/reader/reader.c)
@@ -1254,3 +1255,6 @@ ink_sim_executable(sim-contacts tests/contacts/contacts.c)
 target_link_libraries(sim-contacts PRIVATE ink_apps ink_system)
 add_test(NAME contacts COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/contacts/run.py
   $<TARGET_FILE:sim-contacts> ${CMAKE_SOURCE_DIR} ${INK_ASSETS_DIR} ${INK_TEST_CONTENT} ${CMAKE_BINARY_DIR}/test-out/contacts)
+ink_sim_executable(sim-clock-alarm tests/clock_alarm.c)
+target_link_libraries(sim-clock-alarm PRIVATE ink_apps ink_system)
+add_test(NAME clock-alarm COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/clock_alarm.py --build ${CMAKE_BINARY_DIR})

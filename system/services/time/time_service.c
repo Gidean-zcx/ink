@@ -613,6 +613,27 @@ int ink_alarm_add_versioned(ink_alarm_t *a, uint32_t *written) {
 
 int ink_alarm_add(ink_alarm_t *a) { return ink_alarm_add_versioned(a, NULL); }
 
+int ink_time_alarm_update_for(ink_alarm_t *a, const char *member) {
+    osal_mutex_lock(T.edits, OSAL_WAIT_FOREVER);
+    bool live = ink_member_io_begin(member);
+    ink_svc_lock();
+    int i = find_alarm(a->id);
+    bool mine = live && i >= 0 && T.a[i].kind == INK_ALARM && !strcmp(T.a[i].owner, member);
+    ink_svc_unlock();
+    int r = -1;
+    if (mine && alarm_valid(a)) {
+        int64_t now = ink_time_now_s(); a->snooze_until = 0; a->next_s = a->enabled && now ? next_of(a, now) : 0;
+        ink_db_write_t w = {.id = a->id, .sort = a->next_s, .data = a, .len = sizeof *a, .src = a->src};
+        if (ink_db_put(T.db, &w, NULL) == INK_DB_OK) {
+            ink_svc_lock(); i = find_alarm(a->id); T.a[i] = *a; alarm_changed(i); ink_svc_unlock(); r = 0;
+        }
+    }
+    osal_mutex_unlock(T.edits);
+    if (live) ink_member_io_end(member);
+    if (!r) { if (!a->enabled) ink_alarm_dismiss(a->id); reschedule(); }
+    return r;
+}
+
 int ink_time_alarm_cancel_for(uint32_t id, uint32_t revision, const char *member) {
     osal_mutex_lock(T.edits, OSAL_WAIT_FOREVER);
     bool live = ink_member_io_begin(member), adult = false;

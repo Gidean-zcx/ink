@@ -98,4 +98,7 @@ void ink_main(void) {
     ink_power_battery_policy_start();
     ink_update_boot_check();
     ink_probe_mark("system-started");
+    extern const ink_app_def_t ink_appdef_clock;
+    int ink_clock_init(void);
+    if (ink_clock_init() != 0 || ink_app_register(&ink_appdef_clock) != 0) osal_panic("clock app failed to start");
 }
