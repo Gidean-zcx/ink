@@ -15,7 +15,7 @@ static const ink_ui_object_ref_t *action_object(const ink_ui_page_spec_t *page, 
 }
 
 static bool current_page(const ink_ui_page_spec_t *page) {
-    return page && page->id && ink_ui_is_current() && ink_ui_page_current() && !strcmp(page->id, ink_ui_page_name());
+    return page && page->id && ink_ui_is_current() && ink_ui_page_current() && !strcmp(page->id, ink_ui_action_page());
 }
 
 int ink_ui_semantics_snapshot(const ink_ui_page_spec_t *page, char *out, size_t cap) {
