@@ -109,4 +109,6 @@ void ink_main(void) {
     if (ink_memo_init() != 0) osal_panic("memo failed to start");
     extern int ink_member_pages_init(void);
     if (ink_member_pages_init() != 0) osal_panic("member pages failed to start");
+    extern int ink_calendar_init(void);
+    if (ink_calendar_init() != 0) osal_panic("calendar failed to start");
 }

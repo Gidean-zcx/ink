@@ -77,6 +77,8 @@ static const struct {
     {"sms.text", NULL}, {"sms.long", NULL}, {"sms.prev", NULL}, {"sms.next", NULL},
     {"memo.save", "id,draft,page"}, {"memo.delete", "id"}, {"memo.undo", "id"}, {"memo.convert", "id"}, {"memo.check", "id,index"},
     {"memo.open", "id"}, {"memo.edit", ""}, {"memo.next", NULL}, {"memo.prev", NULL}, {"memo.retry", NULL},
+    {"calendar.open", NULL}, {"calendar.prev", NULL}, {"calendar.next", NULL}, {"calendar.month_prev", NULL},
+    {"calendar.month_next", NULL}, {"calendar.select", "day"},
     {"shell.member_choose", NULL}, {"shell.pin_set", NULL},
     {"shell.pin_forgot", NULL}, {"shell.pin_parent", NULL}, {"shell.pin_cancel", NULL},
     {"shell.update", NULL}, {"shell.update_close", NULL},

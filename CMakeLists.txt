@@ -1304,3 +1304,8 @@ ink_sim_executable(sim-update-pages tests/update_pages.c)
 target_link_libraries(sim-update-pages PRIVATE ink_apps ink_system)
 add_test(NAME update-pages COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/update_pages.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(update-pages PROPERTIES TIMEOUT 240)
+
+target_sources(ink_system PRIVATE system/apps/calendar/calendar.c)
+ink_sim_executable(sim-calendar tests/calendar/calendar.c)
+target_link_libraries(sim-calendar PRIVATE ink_apps ink_system)
+add_test(NAME calendar COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/calendar/run.py --build ${CMAKE_BINARY_DIR})
