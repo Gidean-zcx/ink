@@ -52,7 +52,8 @@
 - **已合入并推送，main 在 fa7c188**：确认结果落盘（confirm-durable）、文件编号和媒体索引（file-index-1）、图片解码和抖动及缩略图（file-index-2）、无线传输（wireless-transfer）、框架 F1 控件语义、F2 短输入框、F5 服务卡片，以及两份报告：[查缺口](tasks/phone-gap/REPORT.md)、语音缓存（DE-R6 早已修好）。合并时主会话补了两处：时间服务不再直接调界面层（改成发布 `alarm.revision`），无线传输的授权码错 3 次即关闭。
 - **没合入**：member-quiesce，原因见 [backlog](tasks/backlog.md) 该节。
 - **下午又合入**：框架 F4 通用列表、F9 文件选择器，长文本和草稿，缩略图接文件编号；系统应用开机配网、联系人、电话、短信、闹钟、备忘、AI 对话、设置前四页、电量页面。合并时主会话补了：恢复页改读备份汇总（条目一多就超出 JSON 解析器容量），能力表上限 256→512、状态订阅表 32→64（都被撑满过），测试跑通后删掉自己的临时证据目录（磁盘曾满到 100%）。还记下的事见 [backlog 文末](tasks/backlog.md#合并时记下的2026-11-09)。
-- **在跑，没合入**：`kid-1`、`ai-pages-2`、`confirm-pages`、`update-pages`、`calendar`、`files-app-1`，在 Codex 的克隆里。合并后删掉各自的克隆。
+- **晚上合入**：`kid-1`、`update-pages`、`calendar`、`confirm-pages`、`search`、`files-app-1`、`camera-gallery`、`backup-pages`、`ai-pages-2`、`settings-b`。从 batch3 起按用户的新做法：Codex 只开发，主会话逐个复查、写复查意见让 Codex 修一次、主会话复核后合并；整批合完交 astra 审一轮，限 1 小时，同时下一批照常开发。合并时主会话补的见 [backlog 文末](tasks/backlog.md#合并时记下的2026-11-09)，Linux gcc 报的三处已修（2739bc4f）。
+- **在跑**：batch4（`kid-2`、`transfer-pages`、`remote-app`、`activity-card`、`fw-f8`、`storage-usage`）；batch3 的 astra 审计（范围 9b3d2da6..de4de522）。
 - **记着以后做**：缩略图和文件编号的接线；第一次建索引对每个文件单独写盘、逐条查重（性能一节）；页面迁移到控件语义；服务卡片的长按图标。
 - **攒着问用户的**：查缺口报告里的紧急呼叫、语言和地区范围、蓝牙音箱和翻页器入口；AI 图标（D-109）；D-40 的理解；reader_basic 预算的调整；刷新算法最后一组改动没上过真屏。
 
