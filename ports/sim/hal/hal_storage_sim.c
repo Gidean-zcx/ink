@@ -286,6 +286,10 @@ static struct {
 static bool sd_ok(void) { return !SD.absent && !SD.lent && !SD.dirty; }
 
 bool hal_fs_card_present(void) { return sd_ok(); }
+void hal_fs_new_card_id(uint8_t out[16]) {
+    static unsigned entropy = 1; entropy ^= g_sim.seed ^ (uint32_t)osal_now_us();
+    for (size_t i = 0; i < 16; i++) out[i] = (uint8_t)rand_r(&entropy);
+}
 static void sd_changed(void *arg) { (void)arg; if (SD.cb) SD.cb(SD.ctx); }
 void hal_fs_set_card_callback(void (*cb)(void *ctx), void *ctx) { SD.cb = cb; SD.ctx = ctx; }
 void sim_sd_set_present(bool present) { /* ISR (script) */

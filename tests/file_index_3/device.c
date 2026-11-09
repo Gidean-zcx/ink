@@ -9,10 +9,11 @@ unsigned ink_test_index_reads(void);
 unsigned ink_test_index_path_id(const char *path);
 void ink_test_index_report(void);
 void ink_test_fail_identity_open(void);
+void ink_test_index_probe_on_append(void);
+bool ink_test_index_probe_queued(void);
+bool ink_test_index_probe_reached(void);
 static bool organizing, exchanged;
 static unsigned notifications;
-static bool bg_reached;
-static void bg_probe(void *arg) { (void)arg; bg_reached = true; }
 static char page[32768];
 static bool ready(void) {
     char state[32];
@@ -90,13 +91,10 @@ static void run(void *arg) {
         CHECK(ink_test_index_count() < 1000, "user write finishes before card index");
         if (!strcmp(mode, "busy")) {
             ink_storage_hold_writes(true);
-            const ink_db_def_t *def = ink_db_find_def("file.index");
-            ink_db_t *db = ink_db_open(def, NULL);
-            CHECK(WAIT_FOR(ink_db_last_ver(db) > ink_db_durable_ver(db), 5000), "index batch waits behind a real storage write hold");
-            static ink_exec_job_t job;
-            CHECK(!ink_exec_post(INK_EXEC_BG, &job, bg_probe, NULL), "queue unrelated background work");
-            CHECK(WAIT_FOR(bg_reached, 500), "index durability never blocks unrelated BG work");
-            ink_storage_hold_writes(false); ink_db_close(db);
+            ink_test_index_probe_on_append();
+            CHECK(WAIT_FOR(ink_test_index_probe_queued(), 5000), "index batch submits a write behind a real storage hold");
+            CHECK(WAIT_FOR(ink_test_index_probe_reached(), 500), "index durability never blocks unrelated BG work");
+            ink_storage_hold_writes(false);
         }
         if (!strcmp(mode, "remove") || !strcmp(mode, "swap")) {
             unsigned id = 1; ink_fs_entry_t prefix;
@@ -186,7 +184,7 @@ static void run(void *arg) {
         uint32_t expected = sim_rand();
         expected ^= expected << 13; expected ^= expected >> 17; expected ^= expected << 5;
         uint8_t first[16], second[16];
-        hal_random_fill(first, sizeof first); hal_random_fill(second, sizeof second);
+        hal_fs_new_card_id(first); hal_fs_new_card_id(second);
         CHECK(sim_rand() == expected, "card identity entropy never changes hardware timing or fault randomness");
         CHECK(memcmp(first, second, sizeof first), "independent device entropy still changes on each call");
     }

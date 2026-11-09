@@ -398,6 +398,11 @@ static void confirmed_done(void *ctx, const ink_receipt_t *rc) {
 
 static void accept_job(void *arg) { /* Commit off UI, then return to the caller's executor. */
     held_t *h = arg;
+    if (strcmp(h->member, ink_member_current()->id) || h->epoch != ink_member_epoch()) {
+        ink_confirm_result(h->token, h->cap->id, "member_changed", NULL, h->member);
+        osal_free(h);
+        return;
+    }
     ink_receipt_t rc = {.status = INK_RC_FAILED};
     bool hub = h->cap == HUB_CARD || h->cap == HUB_CARD + 1;
     if (!ink_ui_is_current()) {

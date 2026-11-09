@@ -62,11 +62,13 @@ if a.baseline or a.mutant:
     link[link.index('-o') + 1] = str(binary)
     link = [str(obj) if x.endswith('/tests/file_index_3/boundary.c.o') else x for x in link]
     if a.mutant == 'entropy':
-        power = (ROOT / 'ports/sim/hal/hal_power_sim.c').read_text()
-        old = 'p[i] = (uint8_t)(entropy >> 24);'
+        power = (ROOT / 'ports/sim/hal/hal_storage_sim.c').read_text()
+        old = 'out[i] = (uint8_t)rand_r(&entropy);'
         assert power.count(old) == 1, 'counterexample must restore shared model randomness'
-        target = area / 'hal_power_sim.c'
-        target.write_text(power.replace(old, 'p[i] = (uint8_t)(sim_rand01() * 256);'))
+        seed_line = '    static unsigned entropy = 1; entropy ^= g_sim.seed ^ (uint32_t)osal_now_us();\n'
+        assert power.count(seed_line) == 1, 'counterexample removes the unused private stream'
+        target = area / 'hal_storage_sim.c'
+        target.write_text(power.replace(old, 'out[i] = (uint8_t)(sim_rand01() * 256);').replace(seed_line, ''))
         power_flags = {}
         for line in (build / 'CMakeFiles/ink_port_sim.dir/flags.make').read_text().splitlines():
             if ' = ' in line:

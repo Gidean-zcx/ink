@@ -225,6 +225,7 @@ static void child_open(void) {
 }
 static void run(void *arg) {
     (void)arg; delay_ms(1800); test_start_home();
+    CHECK(WAIT_FOR(index_ready(), 10000), "background index finishes without a query or application warmup");
     unsigned reads = ink_test_storage_reads();
     CHECK(AI("file.usage", NULL) && g_rc.status == INK_RC_DONE && !strstr(g_result, "\"organizing\"") &&
         ink_test_storage_reads() == reads, "background-built index reports numbers without usage scanning the card");

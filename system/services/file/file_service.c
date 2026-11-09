@@ -682,10 +682,8 @@ void fs_refresh_cb(void *arg) { /* timer task: what it does blocks on the card *
     (void)arg;
     ink_exec_post(INK_EXEC_BG, &FS.refresh_job, refresh_job, NULL);
 }
-
 static void on_card(void *ctx) {
-    (void)ctx;
-    __atomic_add_fetch(&FS.revision, 1, __ATOMIC_RELAXED);
+    (void)ctx; __atomic_add_fetch(&FS.revision, 1, __ATOMIC_RELAXED);
     index_invalidate();
     fs_refresh_cb(NULL);
 }
@@ -1254,6 +1252,8 @@ int ink_file_service_init(void) {
     FS.h_index = ink_state_define(&ST_INDEX);
     if (ink_db_register(&INDEX_DEF)) return -1;
     if (ink_db_register(&INDEX_DONE_DEF)) return -1;
+    ink_db_close(ink_db_open(&INDEX_DEF, NULL));
+    ink_db_close(ink_db_open(&INDEX_DONE_DEF, NULL));
     if (ink_cap_subscribe("member.changed", thumb_clear, NULL, INK_EXEC_BG)) return -1;
     ink_state_set_str(FS.h_index, "unavailable");
     ink_state_set_str(FS.h_mode, "normal");
@@ -1449,7 +1449,6 @@ static void index_invalidate(void) {
     ink_state_set_str(FS.h_index, hal_fs_card_present() && !FS.usb_lent ? "organizing" : "unavailable");
     ink_svc_at(&FS.index_at, osal_now_us() + 50000ull, index_refresh_cb, NULL);
 }
-
 static int index_open(uint8_t card[16], ink_db_t **db) {
     hal_file_t *f = hal_fs_open(INDEX_CARD, HAL_O_READ);
     int64_t size = f ? 16 : -1;
@@ -1464,7 +1463,7 @@ static int index_open(uint8_t card[16], ink_db_t **db) {
     }
     if (!f) f = hal_fs_open(INDEX_CARD ".tmp", HAL_O_WRITE | HAL_O_CREATE | HAL_O_TRUNC);
     if (!f) return card_error();
-    if (size < 0) hal_random_fill(card, 16);
+    if (size < 0) hal_fs_new_card_id(card);
     ssize_t n = size < 0 ? hal_fs_write(f, card, 16) : hal_fs_read(f, card, 16);
     uint8_t extra;
     if (size >= 0 && n == 16 && hal_fs_read(f, &extra, 1) != 0) n = -1;
@@ -1536,7 +1535,6 @@ typedef struct {
 } index_walk_t;
 static index_walk_t *index_walk;
 static bool index_manual;
-
 static void index_walk_close(index_walk_t *w) {
     while (w->depth) ink_fs_dir_close(w->dirs[--w->depth]);
 }
@@ -1563,7 +1561,6 @@ static index_slot_t *index_slot(index_walk_t *w, ink_db_t *db, const char *path)
         at = (at + 1) % (INK_FS_INDEX_MAX * 2);
     }
 }
-/* Read once outside edits; this scratch set lasts only for the current walk. */
 static int index_walk_load(index_walk_t *w, ink_db_t *db, const uint8_t card[16]) {
     memcpy(w->card, card, 16);
     index_rec_t e; ink_rec_t rec; ink_db_cursor_t cur = {0}; int n;
@@ -1609,7 +1606,6 @@ static void index_done(const file_context_t *c, const char *root) {
         if (!was_ready) for (int i = 0; ink_member_at(i); i++) changed_for(ink_member_at(i)->id, "/", "indexed");
     }
 }
-/* The synchronous first-page API uses the same batches, releasing edits for durability. */
 static int index_scan(const file_context_t *c, ink_db_t *db, const uint8_t card[16], const char *root) {
     index_manual = true;
     if (index_walk) index_walk->revision = 0;
@@ -1656,7 +1652,7 @@ static void index_background(void *arg) {
     if (ink_storage_pending() || ink_jobs_held() || ink_exec_waiting(INK_EXEC_BG)) { ink_svc_at(&FS.index_at, osal_now_us() + 500000ull, index_refresh_cb, NULL); return; }
     ink_db_t *loaded = ink_db_open(&INDEX_DEF, NULL), *done = ink_db_open(&INDEX_DONE_DEF, NULL);
     osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
-    if (index_manual) { osal_mutex_unlock(FS.edits); ink_db_close(done); ink_db_close(loaded); return; }
+    if (index_manual) { osal_mutex_unlock(FS.edits); ink_db_close(done); ink_db_close(loaded); ink_svc_at(&FS.index_at, osal_now_us() + 500000ull, index_refresh_cb, NULL); return; }
     uint64_t begin = osal_now_us();
     int r = ink_fs_card_hold(); bool held = !r;
     uint8_t card[16]; ink_db_t *db = NULL;
@@ -1677,7 +1673,6 @@ static void index_background(void *arg) {
             storage.family = true;
             for (int i = 0; ink_member_at(i); i++) snprintf(storage.indexed[i], sizeof storage.indexed[i], "%s", ink_member_at(i)->id);
             ink_state_set_str(FS.h_index, "ready");
-            ink_probe_count("file.index.reused");
         } else {
             if (!index_walk) {
                 file_context_t c = current_context(); c.adult = true;
@@ -1721,7 +1716,7 @@ static int index_query(const file_context_t *c, const char *root, ink_fs_type_t 
     int r = ink_fs_card_hold();
     if (r) return r;
     uint8_t card[16]; ink_db_t *db = NULL; char phys[PHYS_MAX] = "";
-    r = FS.job_active ? INK_FS_ERR_BUSY : root ? resolve_for(c, root, false, phys, sizeof phys) : 0;
+    r = FS.job_active && FS.job.st.state == INK_FS_JOB_RUNNING ? INK_FS_ERR_BUSY : root ? resolve_for(c, root, false, phys, sizeof phys) : 0;
     if (!r && root && strncmp(phys, "/content", 8)) r = INK_FS_ERR_DENIED;
     if (!r) r = index_open(card, &db);
     if (!r && root && !*cursor) r = index_scan(c, db, card, root);

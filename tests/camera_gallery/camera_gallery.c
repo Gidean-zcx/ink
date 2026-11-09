@@ -118,6 +118,13 @@ static bool pictures_ready(void) {
     return true;
 }
 static bool ready;
+static bool index_ready(void) {
+    char state[24];
+    return ink_state_get_str(ink_state_find("file.index_state"), state, sizeof state) && !strcmp(state, "ready");
+}
+static void inspect_next_page(void) { ready = G.position.page == 1; }
+static bool next_page_selected(void) { on_ui(inspect_next_page); return ready; }
+static void index_completed(void) { ink_cap_emit("file.changed", NULL); }
 static void inspect_grid(void) { ready = pictures_ready(); }
 static void grid_ready(void) {
     for (unsigned i = 0; i < 500; i++) { on_ui(inspect_grid); if (ready) { break; } delay_ms(20); }
@@ -223,7 +230,13 @@ static void run(void *arg) {
         ok("camera.photo", NULL); CHECK(count_images() == 2, "AI shutter uses the same durable save path"); get_saved();
         fixtures(); ok("app.open", "{\"id\":\"gallery\"}"); grid_ready(); on_ui(read_snapshot);
         CHECK(strstr(snapshot, "\"total\":10") && strstr(snapshot, "\"visible\":9") && strstr(snapshot, "photo.open"), "F4 exposes nine visible items, real IDs and the next page"); capture("Gallery");
-        key(INK_KEY_NEXT); grid_ready();
+        CHECK(WAIT_FOR(index_ready(), 10000), "automatic index completes after gallery queries");
+        ink_db_flush_all();
+        CHECK(WAIT_FOR(ink_db_idle() && !ink_storage_pending(), 10000), "fixture metadata is durable before the short physical key press");
+        CHECK(WAIT_FOR(!strcmp(ink_ui_top_name(), "Gallery"), 10000), "Gallery owns keys after transient overlays (%s)", ink_ui_top_name());
+        key(INK_KEY_NEXT);
+        CHECK(WAIT_FOR(next_page_selected(), 5000), "physical next key selects the second page");
+        on_ui(index_completed); grid_ready();
         ink_fs_entry_t last; CHECK(ink_fs_lookup(G.ids[9], &last) == 0, "resolve the actual final fixture id");
         last_gray = strstr(last.path, "/7.png") ? 255 : 0; on_ui(inspect_last_thumb);
         ok("gallery.prev", NULL); grid_ready(); on_ui(first_slot); tap(point.x, point.y); wait_photo(); on_ui(inspect_photo); capture("Photo");
