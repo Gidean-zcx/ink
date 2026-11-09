@@ -1,6 +1,6 @@
 # boot-flow 执行报告
 
-基线：`fa7c18803f8f0eefc44db39acc2da053c7aa9386`。2026-11-09 中断后接续，保留原实现与测试，未重新开发。只在本地分支提交，不 push。
+基线：`fa7c18803f8f0eefc44db39acc2da053c7aa9386`。依据[任务书](../boot-flow.md)与[总规则](../codex-rules.md)。2026-11-09 中断后接续，保留原实现与测试，未重新开发。只在本地分支提交，不 push。
 
 ## 验收表
 
@@ -22,7 +22,7 @@
 - T2：T1 换为 `build-asan`，其已有配置包含 `-DINK_SANITIZE=ON`。构建、全量测试均退出 0，216/216，220.34 秒；没有跳过测试或非预期 sanitizer 诊断。日志 `work/boot-flow/resume-build-asan.log`、`resume-full-asan.log`。
 - T3：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" -B tests/boot_flow_reverse.py --build build --asan-build build-asan`。退出 0；两项正向探针退出 0；撤掉重试文案更新、F2 密码支持、SYSTEM 热点二维码回执、pairing.changed 订阅后分别出现 1、4、1、1 项失败，退出 1；撤掉动作 id 的持有副本触发 ASan `stack-use-after-scope`，退出 -6。只在构建目录编译替换对象，源码哈希及正常二进制保持不变。证据 `build/boot-reverse/summary.json`、`commands.json`，日志 `work/boot-flow/resume-reverse.log`。
 - T4：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" -B tools/ui_compare.py --build build --design "$INK_DESIGN" --out build/boot-compare --reuse --scenes FirstBoot BootWifi BootWifiPass BootJoining BootJoinFail BootClaim BootNoHub BootConfirm BootRestore BootHello BootRevoked`。退出 0；分数见 `build/boot-compare/scores.json`，对照图 `build/boot-compare/<页面>.png`。原始截图在 `build/test-out/boot-flow-{fresh,restore}/snap-<页面>.png`；内存检查有同名目录。
-- T5：`git diff --stat <基线>..HEAD`、`git diff --check <基线>..HEAD`；总规则 §6 隐私扫描、文件大小与报告本地链接检查，待最终提交后核对。
+- T5：`git diff --stat <基线>..HEAD`、`git diff --check <基线>..HEAD` 均退出 0；只有预期的 13 个文件，均小于 5 MB。按总规则 §6 的原始表达式扫描 `git diff <基线>..HEAD`，0 命中，grep 退出 1。报告两个本地链接有效。证据 `work/boot-flow/resume-precommit-checks.log`、`resume-final-checks.log`。
 
 **为什么不能更小【实现】**：11 页共用一个 create、动作声明、快照和回执处理，页面文件 299 行；其余产品及构建变更 22 行。看过直接沿用普通输入框的更小方案，不能满足任务指定的 F2 与密码保护；只监听 pairing.state 的方案会漏掉同一状态中的邀请变化（T3 可复现）。没有拆出 11 套布局或另建配对机制。
 
@@ -79,4 +79,5 @@
 
 - 开始：已核对分支与基线，工作区干净；读取任务规则和任务书，准备检查画板及现有接口。
 - 实现：11 屏共用布局、F2 密码支持、服务事件连接及合成场景已完成；中断前留下的全量结果与截图保留。
-- 接续核验：重新阅读代码与画板，五项反向对照符合预期；普通与内存全量均 216/216 再次通过。最终隐私与工作区检查待补。
+- 接续核验：重新阅读代码与画板，五项反向对照符合预期；普通与内存全量均 216/216 再次通过。
+- 收尾：实现与测试提交为 `f8e3c15d`；完成差异、预算、隐私及报告链接检查。功能、设计缺项与模拟器证据边界如实保留，报告另行本地提交。
