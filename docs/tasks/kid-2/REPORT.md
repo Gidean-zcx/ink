@@ -8,13 +8,22 @@
 | --- | --- | --- |
 | K2-1 | 【实测】通过 | `tests/kid_2.py --build build --phase settings`：实际点击 SetKid，在不限、30 分钟、1 小时之间切换；错误密码和未确认时不改，正确密码后读回并刷新；模拟时间用满一小时出现 KidTimeUp。删除“可用时段”占位，按钮与 AI 同用 `member.time_set`。 |
 | K2-2 | 【实测】通过 | `tests/kid_2.py --build build --phase no-pin`：83 个断言；KidLimit、KidTimeUp、SetKid 三个入口的屏幕和 AI 快照均出现指定说明，无密码仍不能放行、改时长、加时间。 |
-| 全量、内存检查 | 验证中 | 最终普通和 ASAN／UBSAN 全量完成后补充结果。 |
+| 全量、内存检查 | 【实测】除获豁免的能力总表文档外全部通过 | 普通和 ASAN／UBSAN 各 243 项：242 通过、1 文档失败、0 跳过；分别 382.20 秒和 543.75 秒。没有新增内存错误。 |
 
-本轮所有 Python／CTest 命令均使用总规则指定的依赖环境，命令前加 `taskpolicy -c utility`，构建和 CTest 均为 `-j2`。专项设置 `INK_KEEP_EVIDENCE=1 UBSAN_OPTIONS=halt_on_error=1`。
+本轮所有 Python／CTest 命令均使用总规则指定的依赖环境，命令前加 `taskpolicy -c utility`，构建和 CTest 均为 `-j2`。单独留存证据的专项设置 `INK_KEEP_EVIDENCE=1 UBSAN_OPTIONS=halt_on_error=1`；最终全量按默认清理临时证据，保留 CTest 日志及四页对照指标。
+
+两轮最终全量命令：
+
+```bash
+PYTHONPATH="$PWD/hub/src" UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
+PYTHONPATH="$PWD/hub/src" UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
+```
+
+退出码均为 8，唯一失败是主会话已豁免的 `capability-table-doc`；`services-mid-capability-doc` 两轮都通过。日志在 `build/kid-2-review-ctest-final.log`、`build-asan/kid-2-review-ctest-final.log`；各目录的 `Testing/Temporary/LastTest.log` 留有每项结果。没有将整轮描述为零失败，也没有修改或跳过共享文档检查。
 
 【实测】反向对照全部命中目标断言，均为模拟器正常完成后的断言失败，不是编译失败：
 
-| 撤掉的修复 | `tests/kid_2_negative.py --build build --case` | 目标断言失败数 |
+| 撤掉的修复 | `tests/kid_2_negative.py --build build --case` | 断言失败总数 |
 | --- | --- | ---: |
 | SetKid 用时策略接线，恢复复查前文件 | `settings` | 36 |
 | 孩子页面的无密码说明 | `child-notice` | 4 |
@@ -22,7 +31,7 @@
 | 无密码时复用现有说明页，避免键盘遮字 | `no-pin-layout` | 2 |
 | 确认卡按提示实际高度留位置 | `confirm-layout` | 1 |
 
-原有四项反向对照也重跑通过：`parent`、`locked`、`volume`、`entry`，分别命中 1、3、2、26 次断言。日志为 `build/kid-2-review-negative-<case>-final.log`。
+原有四项反向对照也重跑通过：`parent`、`locked`、`volume`、`entry`，分别有 1、3、2、26 个断言失败，均命中指定目标。日志为 `build/kid-2-review-negative-<case>-final.log`。
 
 【实测】布局核对发现长提示会被键盘／按钮遮住，已复用原说明页，并将确认卡原有布局的一行高度改为测量提示高度；未加页面、任务或新状态。回归检查完整文字的位置和无用密码键盘的缺席，并保存三个入口的截图，已逐张查看。最新无密码专项证据在 `build/kid-2-dobhzk48`。
 
@@ -34,7 +43,13 @@
 
 新增的机制：本轮无。复用成员策略能力、既有家长密码页、确认结果事件和原列表；不改后端密码检查。
 
+【实测】原有四阶段加本轮两阶段，普通和 ASAN／UBSAN 专项各 **525 个断言**通过。四页留存指标的最低内部 RAM 余量均为 **47,224 字节**，内部和外部分配失败均为 0；预算未放宽。
+
+预算与结束检查：本轮产品代码 33 行新增、9 行删除；剔除合入主线、避免重复计算旧新增行后，任务累计产品新增 **336 行**，低于 350 行预算。`git diff --check`、报告本地链接和 5 MiB 文件限制检查通过；相对 `1d5312ec` 的提交差异隐私扫描匹配 0 行。未夹带构建产物或其它任务改动；开工时已存在的未跟踪 `REVIEW.md` 保持原样。
+
 要改的文档：共享能力总表和服务设计 §1.3 按主会话授权保留。本轮已完成旧报告里待合并接线的 SetKid 时长行。
+
+没做到的：本轮两项复查修复没有遗留项；没有在 Linux 或实机运行，SetKid 与原画板的既有布局差异如上记录。实现和回归测试提交为 `2101e185`；本次补交最终验证结果。
 
 基线：`50fd91821b47d6a9cacd42e7ba07fbd3b8084de4`。状态：任务范围内实现和验证已完成；未达项如下，没有把文档失败算作全量通过。
 
