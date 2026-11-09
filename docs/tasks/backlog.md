@@ -2,7 +2,7 @@
 
 用户要求：先夯实系统层的能力缺口和质量，再补齐系统级别的应用与应用框架，**暂不开发具体应用**（阅读、听、报纸、单词都不做），都做完再做底层性能优化。总规则见 [codex-rules.md](codex-rules.md)。
 
-**状态（2026-11-09）：** 已合入 `services-mid`、`member-wake`、`capability-table`、`device-events`、`pairing`、`backup-restore`、`confirm-durable`、`file-index`（拆成 `file-index-1`、`file-index-2`）、`wireless-transfer`，应用框架的 F1、F2、F5（`ui-semantics`、`ui-input-host`、`ui-cards`），以及只写报告的 `phone-gap`（对照完成标准 R-068 查缺口）和 `speech-cache`（DE-R6 早已修好）。`member-quiesce` 做完但不合入，原因见该节。应用框架的选择已定（D-111）。下一批：`ui-list-paging`（F4）、`text-long`、`boot-flow`，任务书在本目录。
+**状态（2026-11-09）：** 已合入 `services-mid`、`member-wake`、`capability-table`、`device-events`、`pairing`、`backup-restore`、`confirm-durable`、`file-index`（拆成 `file-index-1`、`file-index-2`）、`wireless-transfer`，应用框架的 F1、F2、F5（`ui-semantics`、`ui-input-host`、`ui-cards`），以及只写报告的 `phone-gap`（对照完成标准 R-068 查缺口）和 `speech-cache`（DE-R6 早已修好）。下午又合入：框架 F4、F9（`ui-list-paging`、`ui-file-picker`）、`text-long`、`thumb-wiring`，系统应用 `boot-flow`、`contacts`、`clock-alarm`、`ai-chat`、`phone-calls`、`sms`、`memo`、`settings-a`、`power-pages`。`member-quiesce` 做完但不合入，原因见该节。应用框架的选择已定（D-111）。在跑：`kid-1`、`ai-pages-2`、`confirm-pages`、`update-pages`、`calendar`、`files-app-1`，任务书在本目录。合并时记下的后续事项见文末“合并时记下的”。
 
 **只做你被分配的那一节。** 每节按一小时左右规划，最多两小时；做不完的写进报告的“没做到的”，不要半成品冒充完成。报告写到 `docs/tasks/<节名>/REPORT.md`。
 
@@ -127,6 +127,17 @@
 ## remote-app
 
 `Remote` `RemoteLoading` `RemoteOffline` `RemoteAddress` `RemoteType` `RemoteBlocked`，在现有 `system/apps/remote` 上补地址编辑、翻页、长按、提交文字，用 `sim_hub` 替身。
+
+**系统应用的进度（2026-11-09）：** 已合入 `boot-flow`（BootHello 的离线示例正文、就地问 AI 教程、回到上次阅读位置没做）、`contacts`、`phone-calls`、`sms`（phone-sms 三块）、`clock-alarm`、`memo`（MemoRecord、MemoPending 没做）、`ai-chat`（ai-pages 前五页）、`settings-a`（设置前四页）、`power-pages`（电量四页）。
+
+## 合并时记下的（2026-11-09）
+
+- 【建议】存储服务补“书、音频、照片各占多少”和清理临时文件；`SetStorage` 现在如实写“暂不能查看”“暂不能清理”。
+- 【建议】通用列表只有一页时不画“1/1”分页条（画板里没有）。
+- 【要用户定】省电开关现在重启后回到关闭，要不要保留。
+- 【性能】长文本每打一个字就整篇写盘并落盘；缩略图解码时一直拿着文件服务的锁；第一次建文件索引时每个文件单独写盘、逐条查重。归到下面的性能一节。
+- 【真机要看】`INK_ARGS_TEXT` 从 384 加到 416 字节（为整条长短信），每个参数结构大 32 字节；模拟器两套构建的内存余量都过了。
+- 【上限】能力表上限从 256 提到 512、状态订阅表从 32 提到 64（都在外部内存）；每个订阅用 64 位记变化，所以状态表、设置表各自最多 64 项，状态现在 46 项。
 
 ## 性能
 
