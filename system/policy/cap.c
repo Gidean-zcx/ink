@@ -23,7 +23,7 @@
 #include "ink/sys/sha256.h"
 #include "ink/sys/storage.h"
 
-#define MAX_CAPS 256
+#define MAX_CAPS 512 /* pointers in PSRAM; 256 filled up on 2026-11-09 as the system apps arrived */
 
 static const ink_cap_t *REG[MAX_CAPS] INK_PSRAM_BSS;
 static int nreg;
@@ -37,11 +37,9 @@ static const char *FORM_NAME[] = {"call", "stream", "event", "session"};
 const char *ink_rc_name(ink_rc_t rc) { return (unsigned)rc < sizeof RC_NAME / sizeof RC_NAME[0] ? RC_NAME[rc] : "?"; }
 const char *ink_effect_name(ink_effect_t fx) { return (unsigned)fx < sizeof FX_NAME / sizeof FX_NAME[0] ? FX_NAME[fx] : "?"; }
 
-int ink_cap_register(const ink_cap_t *table, int n) {
-    for (int i = 0; i < n; i++) {
-        if (nreg >= MAX_CAPS) return -1;
-        REG[nreg++] = &table[i];
-    }
+int ink_cap_register(const ink_cap_t *table, int n) { /* all of the table or none of it */
+    if (n < 0 || nreg + n > MAX_CAPS) return -1;
+    for (int i = 0; i < n; i++) REG[nreg++] = &table[i];
     return 0;
 }
 

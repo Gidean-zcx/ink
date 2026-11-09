@@ -73,6 +73,8 @@ static const struct {
     {"phone.number", NULL}, {"phone.key", "key"}, {"phone.prev", NULL}, {"phone.next", NULL},
     {"sms.send", "to,text"}, {"sms.thread", "peer"}, {"sms.compose", NULL}, {"sms.recipient", "id"},
     {"sms.text", NULL}, {"sms.long", NULL}, {"sms.prev", NULL}, {"sms.next", NULL},
+    {"memo.save", "id,draft,page"}, {"memo.delete", "id"}, {"memo.undo", "id"}, {"memo.convert", "id"}, {"memo.check", "id,index"},
+    {"memo.open", "id"}, {"memo.edit", ""}, {"memo.next", NULL}, {"memo.prev", NULL}, {"memo.retry", NULL},
     {NULL, NULL},
 };
 

@@ -105,4 +105,6 @@ void ink_main(void) {
     if (ink_clock_init() != 0 || ink_app_register(&ink_appdef_clock) != 0) osal_panic("clock app failed to start");
     extern int ink_sms_init(void);
     if (ink_sms_init() != 0) osal_panic("SMS failed to start");
+    extern int ink_memo_init(void);
+    if (ink_memo_init() != 0) osal_panic("memo failed to start");
 }
