@@ -23,7 +23,7 @@ area = Path(tempfile.mkdtemp(prefix='transfer-pages-', dir=build))
 binary = a.binary.resolve() if a.binary else build / 'sim-transfer-pages'
 summaries = []
 try:
-    for scene in SCENES if a.visual else ['Transfer']:
+    for scene in SCENES if a.visual else [os.environ.get('INK_TRANSFER_SCENE', 'Transfer')]:
         out = area / scene
         out.mkdir()
         (out / 'usb-fixture.txt').write_text('SYNTHETIC_USB')

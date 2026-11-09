@@ -128,10 +128,7 @@ static void reply(void *ctx, const ink_receipt_t *rc) {
     if (P.usb) {
         bool lent = false, connected = false;
         lent = ink_json_eq(j, ink_json_find(j, 0, "lent"), "true"); connected = ink_json_eq(j, ink_json_find(j, 0, "connected"), "true");
-        if (P.page == USB_ON && !lent) {
-            int64_t card = 0; ink_state_get_int(ink_state_find("storage.card"), &card);
-            if (card) ink_ui_pop(); else show(USB_FAIL);
-        } else if (lent && P.page != USB_ON) show(USB_ON);
+        if (lent && P.page != USB_ON) show(USB_ON);
         else if (!connected && P.page == USB_BUSY && strcmp(P.title, "请先连上电脑")) {
             snprintf(P.title, sizeof P.title, "请先连上电脑"); show(USB_BUSY);
         }
@@ -160,7 +157,7 @@ static void create(lv_obj_t *screen, void *arg) {
         snprintf(P.detail, sizeof P.detail, "这期间书和音频打不开。用完在电脑上弹出，或者点‘结束’。");
     } else if (P.page == USB_FAIL) {
         snprintf(P.title, sizeof P.title, "读不了这张存储卡");
-        snprintf(P.detail, sizeof P.detail, "不会自动格式化。到电脑上修复后再插回来。");
+        snprintf(P.detail, sizeof P.detail, "不会自动格式化。\n请到电脑上修复，再插回来。");
     }
     draw(); P.timer = lv_timer_create(poll, 1000, NULL); poll(NULL);
 }
@@ -192,10 +189,18 @@ static void confirmed(void *ctx, const char *id, const ink_args_t *a) {
         reply((void *)(uintptr_t)P.generation, &rc);
     } else poll(NULL);
 }
+static void usb_changed(void *ctx, const char *id, const ink_args_t *a) {
+    (void)ctx; (void)id;
+    bool lent = true; ink_args_get_bool(a, "lent", &lent);
+    if (!current() || !P.usb || P.page != USB_ON || lent) return;
+    int64_t card = 0; ink_state_get_int(ink_state_find("storage.card"), &card);
+    if (card) ink_ui_pop(); else show(USB_FAIL);
+}
 int ink_transfer_pages_init(void) {
     static const ink_cap_t caps[] = {
         {.id = "transfer.open", .title = "打开从手机或电脑传入页面", .effect = INK_FX_NAVIGATE, .run = open_page},
         {.id = "transfer.usb", .title = "打开连电脑页面", .effect = INK_FX_NAVIGATE, .run = open_page}
     };
-    return ink_cap_register(caps, 2) || ink_cap_subscribe("confirm.result", confirmed, NULL, INK_EXEC_UI) ? -1 : 0;
+    return ink_cap_register(caps, 2) || ink_cap_subscribe("confirm.result", confirmed, NULL, INK_EXEC_UI) ||
+        ink_cap_subscribe("usb.changed", usb_changed, NULL, INK_EXEC_UI) ? -1 : 0;
 }

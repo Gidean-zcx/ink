@@ -29,7 +29,7 @@ cases = [
     ('inline-status', '    P.pending = true;\n    if (ink_cap_call(cap, NULL, &opts)) P.pending = false;',
      '    P.pending = ink_cap_call(cap, NULL, &opts) == 0;', 'USB waits for adult confirmation'),
     ('close', '    if (!P.usb && !P.switching) {', '    if (false && !P.usb && !P.switching) {', 'back closes wireless service'),
-    ('progress', 'ink_json_int(j, ink_json_find(j, 0, "received"), &received);', '(void)received;', 'live page shows bytes actually received'),
+    ('progress', '!strcmp(result, "文件已收到") ? 1 : 0', '0', 'completion returns to Transfer with actual size and count'),
     ('child', '.effect = INK_FX_NAVIGATE, .run = open_page', '.effect = INK_FX_NAVIGATE, .child_ok = true, .run = open_page', 'child direct wireless navigation is rejected'),
     ('bad-card', 'if (card) ink_ui_pop(); else show(USB_FAIL);', '(void)card; ink_ui_pop();', 'page TransferUsbFail is presented'),
 ]
