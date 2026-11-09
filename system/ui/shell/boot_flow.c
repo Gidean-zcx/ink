@@ -318,6 +318,7 @@ static void backup_changed(void *ctx, const char *id, const ink_args_t *args) {
     if (current() && B.page == RESTORE) request("backup.manifest", summary(), RESTORE_REPLY, INK_SRC_SYSTEM);
 }
 void ink_boot_flow_resume(void) {
+    if (ink_factory_reset_completed()) { ink_factory_done_open(); return; }
     int page = B.resume;
     if (page < FIRST || page > REVOKED) return;
     if (page == JOINING) page = B.picked[0] ? PASSWORD : WIFI;

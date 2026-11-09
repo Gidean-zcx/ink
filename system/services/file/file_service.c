@@ -606,7 +606,7 @@ static int wipe_tree(const char *phys) {
     return r;
 }
 
-int ink_fs_wipe_personal(void) {
+int ink_fs_wipe_reset(bool media) {
     if (FS.ready) osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
     int r = ink_fs_card_hold();
     if (!r) {
@@ -614,11 +614,14 @@ int ink_fs_wipe_personal(void) {
         r = wipe_tree("/content/.m");
         if (!r) r = wipe_tree("/content/.update");
         if (!r) r = wipe_tree("/cache");
+        if (!r && media) r = wipe_tree("/content/books");
+        if (!r && media) r = wipe_tree("/content/audio");
         r = card_done(r);
     }
     if (FS.ready) osal_mutex_unlock(FS.edits);
     return r;
 }
+int ink_fs_wipe_personal(void) { return ink_fs_wipe_reset(false); }
 
 static int fs_write_atomic_unlocked(const file_context_t *c, const char *path, const void *data, size_t n) {
     char phys[PHYS_MAX], tmp[PHYS_MAX + 8];

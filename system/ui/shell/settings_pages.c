@@ -35,7 +35,7 @@ static const row_t ABOUT_ROWS[] = {
     {"device.details", "设备详情", "暂不能查看", NULL, NULL, "display", "", NULL},
     {"licenses", "开源许可", "许可页面还没接入", NULL, NULL, "list", NULL, NULL},
     {"update.auto_download", "自动下载新版本", NULL, "update.auto_download", NULL, NULL, "", NULL},
-    {"reset", "清空这台设备", "清掉所有家人的数据，找不回来", NULL, "system.factory_reset", NULL, NULL, NULL}};
+    {"reset", "清空这台设备", "清掉所有家人的数据，找不回来", NULL, "factory.open", NULL, NULL, NULL}};
 static const row_t PRIVACY_ROWS[] = {
     {"privacy.storage", "你的东西放在哪", "设置和备忘在设备里，书和录音在存储卡上；备份在家庭服务器上。", NULL, NULL, NULL, NULL, NULL},
     {"privacy.ai", "AI 能看到什么", "提问时能看到当前页。密码框里的字看不到；语音和页面会交给家庭选择的模型服务商。", NULL, NULL, NULL, NULL, NULL},

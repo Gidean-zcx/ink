@@ -105,22 +105,26 @@ static void switch_member(ink_call_t *c) {
 
 #define CARD_LOOK_US 5000000ull
 
-static bool g_card_waits, g_card_cleared;
+static bool g_card_waits, g_card_cleared, g_reset_done;
 static ink_exec_job_t g_reset_job, g_card_job;
 static ink_svc_deadline_t g_card_at;
 
-static bool write_reset_mark(void) { /* the storage task */
+typedef struct { bool media, marked; } reset_request_t;
+static bool write_reset_mark(bool media) { /* the storage task */
     hal_fs_mkdir("/user/sys");
     hal_file_t *f = hal_fs_open(RESET_MARK, HAL_O_WRITE | HAL_O_CREATE | HAL_O_TRUNC);
-    return f && hal_fs_close(f) == 0;
+    if (!f) return false;
+    bool ok = hal_fs_write(f, &media, 1) == 1;
+    return hal_fs_close(f) == 0 && ok;
 }
 
 static void mark_reset(void *arg) { /* the storage task, guarded */
     static const char *const KEEP_NOTHING[] = {NULL};
-    if (write_reset_mark()) *(bool *)arg = true;
+    reset_request_t *r = arg;
+    if (write_reset_mark(r->media)) r->marked = true;
     else { /* the flash is full, the very reason for this perhaps: what is there goes now */
         ink_storage_wipe_user(KEEP_NOTHING);
-        *(bool *)arg = write_reset_mark();
+        r->marked = write_reset_mark(r->media);
     }
 }
 
@@ -143,12 +147,16 @@ void ink_factory_reset_resume(void) { /* boot: nothing else runs yet */
         ink_probe_count("system.factory_reset_done");
     }
     if (ink_storage_size(RESET_CARD_MARK) < 0) return;
-    g_card_waits = ink_fs_wipe_personal() != INK_FS_OK;
+    bool media = false;
+    g_card_waits = ink_storage_read(RESET_CARD_MARK, &media, 1) < 0 || ink_fs_wipe_reset(media) != INK_FS_OK;
     if (g_card_waits) return;
     ink_storage_run(forget_card_mark, NULL, true);
     ink_probe_count("system.factory_reset_card_at_boot");
     g_card_cleared = !just_now; /* the person was told it would wait */
+    g_reset_done = just_now;
 }
+
+bool ink_factory_reset_completed(void) { bool done = g_reset_done; g_reset_done = false; return done; }
 
 static void tell_card_cleared(void) {
     ink_probe_count("system.factory_reset_card_done");
@@ -162,7 +170,8 @@ static void card_job(void *arg) { /* exec.bg */
     (void)arg;
     if (!g_card_waits) return;
     if (hal_fs_card_present() && ink_fs_card_hold() == INK_FS_OK) {
-        bool cleared = ink_fs_wipe_personal() == INK_FS_OK;
+        bool media = false;
+        bool cleared = ink_storage_read(RESET_CARD_MARK, &media, 1) >= 0 && ink_fs_wipe_reset(media) == INK_FS_OK;
         ink_fs_card_release();
         if (cleared) {
             g_card_waits = false;
@@ -199,9 +208,10 @@ static void factory_reset(ink_call_t *c) { /* exec.bg */
         snprintf(c->rc.say, sizeof c->rc.say, "存储卡借给电脑了，先收回再清空");
         return;
     }
-    bool marked = false;
-    ink_storage_run(mark_reset, &marked, true);
-    if (!marked) {
+    reset_request_t r = {0};
+    ink_args_get_bool(&c->args, "clear_media", &r.media);
+    ink_storage_run(mark_reset, &r, true);
+    if (!r.marked) {
         c->rc.status = INK_RC_FAILED;
         snprintf(c->rc.detail, sizeof c->rc.detail, "cannot write to the flash");
         snprintf(c->rc.say, sizeof c->rc.say, "这台设备的存储写不进去，没能清空");
@@ -214,9 +224,9 @@ static void factory_reset(ink_call_t *c) { /* exec.bg */
 
 /* The authenticated hub already obtained the parent's explicit wipe choice. */
 int ink_factory_reset_from_hub(void) { /* exec.bg */
-    bool marked = false;
-    ink_storage_run(mark_reset, &marked, true);
-    if (!marked) return -1;
+    reset_request_t r = {0};
+    ink_storage_run(mark_reset, &r, true);
+    if (!r.marked) return -1;
     ink_probe_count("system.factory_resets");
     return ink_exec_post(INK_EXEC_BG, &g_reset_job, restart_job, NULL);
 }
@@ -267,7 +277,7 @@ static const ink_cap_t SYSTEM_ACTIONS[] = {
      .run = switch_member},
     {.id = "state.list", .title = "系统现在的状态（电量、网络、前台应用……）", .output = "{\"type\":\"object\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = state_list},
     {.id = "settings.list", .title = "所有设置，各自的类型、取值范围和现在的值", .output = "{\"type\":\"array\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = settings_list},
-    {.id = "system.factory_reset", .title = "清空这台设备（清掉所有家人的数据，不能撤销）", .ask = "清空这台设备：清掉所有家人的数据，不能撤销", .effect = INK_FX_SYSTEM, .ask_by_hand = true, .parent_pin = true, .child_ok = false, .exec = INK_EXEC_BG, .run = factory_reset},
+    {.id = "system.factory_reset", .title = "清空这台设备（清掉所有家人的数据，不能撤销）", .input = "{\"type\":\"object\",\"properties\":{\"clear_media\":{\"type\":\"boolean\"}}}", .ask = "清空这台设备：清掉所有家人的数据，不能撤销", .effect = INK_FX_SYSTEM, .ask_by_hand = true, .parent_pin = true, .child_ok = false, .exec = INK_EXEC_BG, .run = factory_reset},
     {.id = "system.reboot", .title = "重启", .effect = INK_FX_SYSTEM, .child_ok = true, .while_locked = true, .exec = INK_EXEC_BG, .run = cap_reboot},
 };
 

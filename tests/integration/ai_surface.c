@@ -28,11 +28,12 @@ static const struct {
     const char *id, *args;
 } FOR_AI[] = {
     {"phone.return", NULL}, {"shell.tasks", NULL}, {"tasks.prev", NULL}, {"tasks.next", NULL},
-    {"backup.open", NULL}, {"backup.status", NULL}, {"backup.manifest", ""}, {"backup.now", NULL}, {"restore.preview", ""}, {"restore.apply", "preview"},
+    {"backup.open", NULL}, {"backup.status", ""}, {"backup.manifest", ""}, {"backup.now", NULL}, {"restore.preview", ""}, {"restore.apply", "preview"},
+    {"factory.open", NULL}, {"factory.media", "clear_media"}, {"factory.finish", NULL},
     {"pairing.status", NULL}, {"pairing.configure", "url"}, {"pairing.reject", "txid"},
     {"pairing.restart", NULL}, {"pairing.import", NULL}, {"pairing.hotspot_start", NULL}, {"pairing.hotspot_stop", NULL},
     {"caps.domains", NULL}, {"caps.find", "query"}, {"system.undo", "object"}, {"system.home", NULL}, {"system.full_refresh", NULL},
-    {"system.set_volume", "percent"}, {"system.switch_member", "id"}, {"system.shutdown", NULL}, {"system.factory_reset", NULL},
+    {"system.set_volume", "percent"}, {"system.switch_member", "id"}, {"system.shutdown", NULL}, {"system.factory_reset", ""},
     {"system.reboot", NULL}, {"state.list", NULL}, {"settings.list", NULL}, {"settings.get", "id"}, {"settings.set", "id,value"},
     {"power.set_saving", "enabled"},
     {"data.collections", NULL}, {"data.list", "collection"}, {"data.get", "collection,id"}, {"data.put", "collection,value"},
