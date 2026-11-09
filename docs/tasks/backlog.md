@@ -2,7 +2,7 @@
 
 用户要求：先夯实系统层的能力缺口和质量，再补齐系统级别的应用与应用框架，**暂不开发具体应用**（阅读、听、报纸、单词都不做），都做完再做底层性能优化。总规则见 [codex-rules.md](codex-rules.md)。
 
-**状态（2026-11-09）：** 已合入 `services-mid`、`member-wake`、`capability-table`、`device-events`、`pairing`、`backup-restore`，以及只写报告的 `phone-gap`（对照完成标准 R-068 查缺口）和 `speech-cache`（DE-R6 早已修好）。`member-quiesce` 做完但不合入，原因见该节。`confirm-durable`、`file-index`（拆成 `file-index-1`、`file-index-2`）、`wireless-transfer`，以及应用框架的 F1、F2、F5（`ui-semantics`、`ui-input-host`、`ui-cards`）已由 Codex 做完、审过一轮，正在收尾。应用框架的选择已定（D-111），`text-long`、应用框架和系统应用各节不再等待。
+**状态（2026-11-09）：** 已合入 `services-mid`、`member-wake`、`capability-table`、`device-events`、`pairing`、`backup-restore`、`confirm-durable`、`file-index`（拆成 `file-index-1`、`file-index-2`）、`wireless-transfer`，应用框架的 F1、F2、F5（`ui-semantics`、`ui-input-host`、`ui-cards`），以及只写报告的 `phone-gap`（对照完成标准 R-068 查缺口）和 `speech-cache`（DE-R6 早已修好）。`member-quiesce` 做完但不合入，原因见该节。应用框架的选择已定（D-111）。下一批：`ui-list-paging`（F4）、`text-long`、`boot-flow`，任务书在本目录。
 
 **只做你被分配的那一节。** 每节按一小时左右规划，最多两小时；做不完的写进报告的“没做到的”，不要半成品冒充完成。报告写到 `docs/tasks/<节名>/REPORT.md`。
 
@@ -44,6 +44,8 @@
 
 预算 300 行产品代码。确认结果落盘、`confirm.status`、`confirm/request`，自动待执行动作的持久标识和结果查询（中枢设计 §7.5）。验收：断电和重启后能查到结果，不重复执行；绑定成员和内容版本的检查不放松。
 
+**结果（2026-11-09）：已合入。** 先建在 member-quiesce 上做完，后来移到主线（[报告](confirm-durable/REPORT.md)），300 行。
+
 ## pairing
 
 配网和家庭绑定的设备端：配对状态机（未配对到已吊销）、配网和令牌分开（设备协议 §3.2、§4）、设备热点和小网页在模拟器里的模型、存储卡配对文件（中枢设计 §6.1、§13）。验收：每一步掉线、确认丢失、重启都能恢复；吊销后退回未配对且数据按设计处理。
@@ -56,9 +58,13 @@
 
 预算 500 行产品代码。文件服务缺口（`ui-dependencies.md` §4.1）：稳定的文件编号和类型、媒体索引、缩略图、图片解码和抖动到 16 灰阶。验收：改名和移动后编号不变，卡拔出和换卡有明确状态，索引不占内部 RAM，缩略图有上限。
 
+**结果（2026-11-09）：已合入，拆成两半。** [file-index-1](file-index-1/REPORT.md)：编号、类型、媒体索引、换卡状态，218 行。[file-index-2](file-index-2/REPORT.md)：解码、抖动、缩略图，191 行，加上 LVGL 自带的 stb_image（两处补丁，记在 third_party/stb/README.md）。还没做：缩略图和文件编号的接线；第一次建索引对每个文件单独写盘和逐条查重，留到性能一节。
+
 ## wireless-transfer
 
 预算 400 行产品代码。无线传输：一次性数字授权、只放一个目录、超时断开、和 U 盘模式互斥、按成员。服务在模拟器里真能传文件。验收：传输过程断开、授权过期、空间不足、文件名不合法都有测试。
+
+**结果（2026-11-09）：已合入**（[报告](wireless-transfer/REPORT.md)），315 行。合并时补了一条：授权码连续错 3 次就关闭这次授权。页面在 files-app 做。
 
 ## text-long
 
@@ -70,9 +76,13 @@
 
 服务卡片（`Today`、长按图标；界面和 AI 读同一份，更新节流）；活动卡（`ActivityCard` `MainPlaying` `ControlPlaying` `LockPlaying` `MainInCall`）；任务列表 `Tasks`；全局搜索（`Search` `SearchEmpty`：按成员、分页、结果有类型和返回位置）；`IconMenu` `TodayEdit`。
 
+**进度（2026-11-09）：** 今日屏的服务卡片已合入（F5，[ui-cards](ui-cards/REPORT.md)）；长按图标、活动卡、任务列表、搜索、`IconMenu`、`TodayEdit` 还没做。按 [应用框架设计](../system/app-framework-design.md) §9 的 F6～F8 拆。
+
 ## app-framework-2
 
 系统文件选择器 `FilePicker`；通用列表和分页组件；页面状态恢复（草稿、导航）；控件带语义，AI 快照自动生成，敏感字段遮蔽。写一份简短的 `docs/system/app-framework.md`：系统应用怎么写，配一个测试里的最小示例。
+
+**进度（2026-11-09）：** 控件语义合同（F1，[ui-semantics](ui-semantics/REPORT.md)）和短输入框（F2，[ui-input-host](ui-input-host/REPORT.md)）已合入；通用列表和分页（F4）的任务书是 [ui-list-paging](ui-list-paging.md)。文件选择器（F9）、页面状态恢复、`app-framework.md`（F13）还没做。
 
 ## 系统应用
 
