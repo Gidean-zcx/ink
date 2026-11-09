@@ -31,6 +31,13 @@ cases = [
      '    int pending = changes ? unbacked() : -1;',
      '    int pending = changes ? (unbacked(), 0) : -1;',
      'page reports actual unbacked changes'),
+    ('saved-revisions', 'system/services/backup/backup_service.c',
+     '        uint32_t version = 0;\n'
+     '        for (unsigned k = 0; k < B.m->count; k++)\n'
+     '            if (B.m->item[k].kind == ITEM_DB && !strcmp(B.m->item[k].name, d->name)) version = B.m->item[k].revision;\n'
+     '        changed = !db ? -1 : ink_db_last_ver(db) != version;',
+     '        changed = !db ? -1 : ink_db_last_ver(db) != ink_db_acked_ver(db);',
+     'unchanged collections and files are reported as backed up'),
     ('password-policy', 'system/policy/system_actions.c',
      '.ask_by_hand = true, .parent_pin = true, .child_ok = false',
      '.ask_by_hand = true, .parent_pin = false, .child_ok = false',

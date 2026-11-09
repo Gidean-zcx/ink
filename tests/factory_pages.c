@@ -105,6 +105,7 @@ static void prepare(bool clear) {
     press("先备份");
     CHECK(WAIT_FOR(saved_time() > 0, 120000), "backup button really commits to the synthetic peer");
     int64_t first = saved_time();
+    CHECK(strstr(g_result, "\"unbacked\":false"), "unchanged collections and files are reported as backed up (%.24s)", strstr(g_result, "\"unbacked\"") ? strstr(g_result, "\"unbacked\"") : g_result);
     CHECK(WAIT_FOR(time_shown(first), 6000), "page follows real backup timestamp");
     delay_ms(61000); /* Advance a displayed minute before the second backup. */
     memo("{\"body\":\"备份后修改的测试备忘\"}");
@@ -112,6 +113,7 @@ static void prepare(bool clear) {
     press("先备份");
     CHECK(WAIT_FOR(saved_time() > first, 120000), "second real backup advances saved time");
     int64_t second = saved_time();
+    CHECK(strstr(g_result, "\"unbacked\":false"), "second receipt clears the actual unbacked changes (%.24s)", strstr(g_result, "\"unbacked\"") ? strstr(g_result, "\"unbacked\"") : g_result);
     CHECK(WAIT_FOR(time_shown(second), 6000) && second - first >= 60, "visible backup minute follows the second actual receipt");
     file("/me/after-backup.txt", "test-only-unbacked-file");
     CHECK(WAIT_FOR(at("FactoryReset") && strstr(g_snap, "之后有东西还没备份"), 6000), "new file after backup is unbacked");

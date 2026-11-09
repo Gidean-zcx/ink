@@ -1357,7 +1357,10 @@ static int unbacked(void) {
         const ink_db_def_t *d = ink_db_def_at(i);
         if (d->scope != INK_DB_MEMBER) continue;
         ink_db_t *db = ink_db_open_member(d, B.j.member);
-        changed = !db ? -1 : ink_db_last_ver(db) != ink_db_acked_ver(db);
+        uint32_t version = 0;
+        for (unsigned k = 0; k < B.m->count; k++)
+            if (B.m->item[k].kind == ITEM_DB && !strcmp(B.m->item[k].name, d->name)) version = B.m->item[k].revision;
+        changed = !db ? -1 : ink_db_last_ver(db) != version;
         ink_db_close(db);
     }
     ink_fs_entry_t entry; uint32_t cursor = 0; int more = 0;
