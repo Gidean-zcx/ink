@@ -26,6 +26,8 @@ cases = [
     ('member-scope', 'if (index_under(e.path, own)) bytes[0][k]', 'if (true) bytes[0][k]', 'owner category'),
     ('user-directory', 'int k = cache ? 1 : ext && !strcmp(ext, TMP_SUFFIX) ? 0 : ext && !strcmp(ext, PART_SUFFIX) ? 2 : -1;',
      'int k = cache ? 1 : (ext ? 0 : 0);', 'ordinary user files, suffix directories and backups survive cleanup'),
+    ('confirmation-title', '.title = "清理临时文件", .effect = INK_FX_LOCAL_DESTRUCTIVE',
+     '.title = "清理临时文件、缓存和未传完的文件", .effect = INK_FX_LOCAL_DESTRUCTIVE', 'confirmation title stays complete UTF-8'),
 ]
 summary = []
 for name, needle, replacement, expected in cases:

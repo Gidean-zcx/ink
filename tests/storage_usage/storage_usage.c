@@ -1,8 +1,10 @@
 #include "../services_finish/product.h"
 #include "ink/ui_shell.h"
+#include "image_fixtures.h"
 
 unsigned ink_test_storage_reads(void);
 unsigned ink_test_storage_organizing(void);
+bool ink_test_storage_has_thumbs(void);
 static const char *const kinds[] = {"books", "audio", "photos", "other"};
 static const char *const paths[] = {"/me/SYNTH_BOOK.epub", "/me/SYNTH_AUDIO.mp3", "/me/SYNTH_PHOTO.jpg", "/me/SYNTH_OTHER.bin"};
 static const int sizes[2][4] = {{17, 23, 31, 7}, {19, 29, 37, 11}};
@@ -79,6 +81,13 @@ static void test_cleanup(void) {
     write_file("/cache/sys/thumbs/SYNTH.raw", 11);
     write_file("/me/SYNTH_USER.bin", 13);
     write_file("/me/folder.tmp/keep.bin", 19);
+    CHECK(ink_fs_write_atomic("/me/SYNTH_CACHE.png", black_png, sizeof black_png) == 0, "real encoded thumbnail source");
+    uint32_t cursor = 0, picture = 0; ink_fs_entry_t entry; int next;
+    while ((next = ink_fs_index("/me", INK_FS_IMAGE, &cursor, &entry)) == 1)
+        if (!strcmp(entry.path, "/me/SYNTH_CACHE.png")) picture = entry.id;
+    CHECK(next == 0 && picture, "index real thumbnail source");
+    char thumb_args[64]; snprintf(thumb_args, sizeof thumb_args, "{\"id\":%u}", picture);
+    CHECK(AI("file.thumb", thumb_args) && g_rc.status == INK_RC_DONE && ink_test_storage_has_thumbs(), "populate actual PSRAM thumbnail cache through file.thumb");
     CHECK(hal_fs_mkdir("/content/.m/owner/.backup") == 0, "reserved backup directory");
     raw_file("/content/.m/owner/.backup/keep.part", 17);
     char args[128]; cleanup_args(args, sizeof args);
@@ -97,12 +106,15 @@ static void test_cleanup(void) {
     tap(label_x, label_y);
     ink_confirm_view_t card;
     CHECK(WAIT_FOR(ink_confirm_list(&card, 1) == 1, 2000), "actual button opens confirmation");
+    CHECK(!strcmp(card.title, "清理临时文件"), "confirmation title stays complete UTF-8");
     CHECK(!strcmp(card.cap, "file.cleanup") && ink_confirm_decide(card.token, true, INK_SRC_TOUCH) == 0, "human confirms button cleanup");
     CHECK(WAIT_FOR(hal_fs_size("/content/.m/owner/orphan.txt.tmp") < 0, 5000), "temporary file removed");
     CHECK(hal_fs_size("/content/.m/owner/收件箱/unfinished.bin.part") < 0 && hal_fs_size("/cache/sys/thumbs/SYNTH.raw") < 0,
         "partial transfer and thumbnail cache removed");
     CHECK(hal_fs_size("/content/.m/owner/SYNTH_USER.bin") == 13 && hal_fs_size("/content/.m/owner/folder.tmp/keep.bin") == 19 &&
         hal_fs_size("/content/.m/owner/.backup/keep.part") == 17, "ordinary user files, suffix directories and backups survive cleanup");
+    CHECK(!ink_test_storage_has_thumbs() && hal_fs_size("/content/.m/owner/SYNTH_CACHE.png") == (int64_t)sizeof black_png,
+        "actual thumbnail cache is released while its user image survives");
     cleanup_args(args, sizeof args);
     CHECK(number(NULL, "bytes") == 0, "removed bytes equal displayed reclaimable bytes");
     CHECK(BY_HAND("system.home", NULL), "leave storage for cache-only check");

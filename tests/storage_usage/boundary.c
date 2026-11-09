@@ -16,3 +16,4 @@ static int counted_readdir(hal_dir_t *d, hal_dirent_t *e) {
 }
 unsigned ink_test_storage_reads(void) { return reads; }
 unsigned ink_test_storage_organizing(void) { return organizing_reads; }
+bool ink_test_storage_has_thumbs(void) { return FS.thumbs != NULL; }

@@ -1706,7 +1706,7 @@ static const ink_cap_t STORAGE_CAPS[] = {
     {.id = "file.cache_clear", .title = "清理可重新生成的缓存", .effect = INK_FX_LOCAL_WRITE,
      .input = "{\"type\":\"object\",\"properties\":{\"revision\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}},\"required\":[\"revision\"]}",
      .exec = INK_EXEC_BG, .qos = INK_QOS_BACKGROUND, .run = storage_cleanup},
-    {.id = "file.cleanup", .title = "清理临时文件、缓存和未传完的文件", .effect = INK_FX_LOCAL_DESTRUCTIVE, .ask_by_hand = true,
+    {.id = "file.cleanup", .title = "清理临时文件", .effect = INK_FX_LOCAL_DESTRUCTIVE, .ask_by_hand = true,
      .ask = "清理临时文件和未传完的文件，删了找不回来；缓存可以重新生成",
      .input = "{\"type\":\"object\",\"properties\":{\"revision\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}},\"required\":[\"revision\"]}",
      .exec = INK_EXEC_BG, .qos = INK_QOS_BACKGROUND, .run = storage_cleanup}};

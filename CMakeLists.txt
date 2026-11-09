@@ -1353,3 +1353,5 @@ ink_sim_executable(sim-storage-usage tests/storage_usage/storage_usage.c tests/s
 target_link_libraries(sim-storage-usage PRIVATE ink_apps ink_system)
 add_test(NAME storage-usage COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/storage_usage/run.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(storage-usage PROPERTIES TIMEOUT 180 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")
+add_dependencies(sim-storage-usage sim-image)
+target_include_directories(sim-storage-usage PRIVATE ${CMAKE_BINARY_DIR}/generated)
