@@ -1,6 +1,6 @@
 # confirm-pages 开发报告
 
-基线：`3fce2beea07d9e25a814cd24c64e8d5305ea9222`。状态：功能完成，正在全量和内存检查；只在本地任务分支提交，不推送。
+基线：`3fce2beea07d9e25a814cd24c64e8d5305ea9222`。状态：功能及普通全量检查完成，正在内存检查；只在本地任务分支提交，不推送。
 
 ## 验收表
 
@@ -10,13 +10,15 @@
 | 2 | 【实测】通过 | 四项先进先出，第五项拒绝；第二项同意执行，其余拒绝，各有对应回执；快照随队列变化 | 同上，`StressConfirm` |
 | 3 | 【实测】通过 | AI、系统、应用、远端、已确认来源均不能直接回答；AI 不能代翻说明。仅移除人类来源检查后，设置场景失败 16 条，退出 1 | `python tests/confirm_pages/run.py --build build --mutant ai-source --scene ConfirmSetting` |
 | 4 | 【实测】通过 | 六类快照均含页面身份、家人、确认编号、阅读进度和队列长度；密码页无密码。六场景共 498 条断言 | `python tests/confirm_pages/run.py --build build` |
-| 5 | 待最终验证 | 普通构建通过；产品文件新增 137 行，连同 5 行测试注册保守计 142 行，小于 300；全量和内存检查进行中 | `cmake --build build -j2`；`git diff --numstat` |
+| 5 | 部分通过，内存检查中 | 【实测】普通构建通过；全量 233 项中 229 通过、3 项中枢环境依赖跳过、1 项生成能力目录校验失败；产品文件新增 137 行，连同 5 行测试注册保守计 142 行，小于 300 | `cmake --build build -j2`；`ctest --test-dir build --output-on-failure -j2`；`git diff --numstat` |
 
 以上命令均加 `taskpolicy -c utility`，Python/CTest 使用 `$INK_DEPS/build-deps/pyenv/bin/`，构建参数与总规则一致。
 
 【实测】反向对照：只把确认卡替换回基线版本，网页场景失败 8 条，退出 1。命令：`python tests/confirm_pages/run.py --build build --baseline 3fce2beea07d9e25a814cd24c64e8d5305ea9222 --scene ConfirmWeb`。两种反例均只编译构建目录中的副本，不改工作树。
 
 【实测】各场景内部 RAM 最低余量均为 47,840 字节，未放宽 32,768 字节预算。证据保留在 `build/test-out/confirm-pages-current/`，反例在相邻 `confirm-pages-ai-source/`、`confirm-pages-baseline/`。
+
+【实测】普通全量耗时 198.68 秒，CTest 退出 8。唯一失败是 `capability-table-doc`；`confirm-pages`、原确认集成、确认持久化、两种屏幕配置的 UI 回归、确定性、分层和预算检查均通过。3 项跳过是 `hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e`，没有修改它们的跳过条件。
 
 ## 没做到的
 
@@ -52,7 +54,7 @@
 
 ## 顺手发现
 
-能力目录检查会因本页新增对 `confirm.result`、`confirm.pending`、`interrupt.active` 的实际订阅/读取而要求更新生成目录。按总规则第 7 节，任务内不改共享目录；最终全量结果据实记录。
+能力目录检查因本页新增对 `confirm.result`、`confirm.pending`、`interrupt.active` 的实际订阅/读取而要求更新生成目录。基线该检查通过，当前失败差异仅为该模块的两项状态依赖和一项事件依赖。按总规则第 7 节，任务内不改共享目录，不隐藏或跳过此失败。
 
 ## 新增的机制
 
@@ -68,3 +70,8 @@
 
 - 合并时将 `docs/system/ui-dependencies.md` 中六个页面的状态改为实际情况，并保留本报告列出的接口和视觉差异。
 - 合并时运行 `python tools/capabilities.py`，同步确认卡的状态/事件依赖；能力 id 没有增加。
+
+## 结束检查
+
+- 【实测】`git diff --check` 无错误；基线到当前提交的 `git diff --stat` 只有确认卡、尾部测试注册、四个新增测试文件和本报告。
+- 【实测】按总规则指定表达式检查基线到 HEAD 的提交差异，零匹配（grep 退出 1）。最终提交后再核对一次。
