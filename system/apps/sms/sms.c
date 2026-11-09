@@ -18,7 +18,7 @@ static struct {
     ink_db_t *db, *contacts;
     ink_ui_list_t *list;
     ink_ui_list_position_t position;
-    lv_obj_t *field, *notice;
+    lv_obj_t *field, *notice, *send;
     char member[16], peer[24], to[24], draft[355], result[160];
     uint32_t rows[512]; size_t count;
     char peers[512][24], ids[4][32], args[4][64], texts[4][355], labels[4][96];
@@ -58,7 +58,7 @@ typedef struct { ink_call_t *call; ink_db_t *db; uint32_t id; } sending_t;
 static void sent(void *ctx, const ink_receipt_t *rc) {
     sending_t *s = ctx; ink_call_t *c = s->call;
     char peer[24], text[355], old[96]; read_message(s->db, s->id, peer, text, old);
-    const char *status = rc->status == INK_RC_DONE ? "已发出" : rc->status == INK_RC_STALE || rc->status == INK_RC_INVALID || rc->status == INK_RC_REJECTED || strstr(rc->detail, "no time left") ? "发送失败，未发出" : "结果未知，请先核实";
+    const char *status = rc->status == INK_RC_DONE ? "已发出" : rc->status == INK_RC_INVALID || rc->status == INK_RC_REJECTED || strstr(rc->detail, "no time left") ? "发送失败，未发出" : "结果未知，请先核实";
     c->rc.status = rc->status; snprintf(c->rc.say, sizeof c->rc.say, "%s", status);
     if (!save_message(s->db, &s->id, peer, text, status, c->src)) { c->rc.status = INK_RC_FAILED; snprintf(c->rc.say, sizeof c->rc.say, "发送结果没能存下，请先核实"); }
     snprintf(c->rc.object, sizeof c->rc.object, "sms:%u", (unsigned)s->id);
@@ -83,12 +83,13 @@ static void send_message(ink_call_t *c) {
 }
 static void reply(void *ctx, const ink_receipt_t *rc) {
     if ((uint32_t)(uintptr_t)ctx != ink_ui_generation() || strcmp(S.member, ink_member_current()->id)) return;
+    if (S.send) lv_obj_remove_state(S.send, LV_STATE_DISABLED);
     snprintf(S.result, sizeof S.result, "%s", rc->say[0] ? rc->say : rc->status == INK_RC_DONE ? "" : "没有完成，请重试");
     if (rc->status == INK_RC_DONE) ink_ui_redraw(); else if (S.notice) lv_label_set_text(S.notice, S.result);
 }
 static void request(const char *cap, const ink_args_t *args) {
     ink_call_opts_t o = {.src = INK_SRC_TOUCH, .member = S.member, .reply_exec = INK_EXEC_UI, .done = reply, .ctx = (void *)(uintptr_t)ink_ui_generation()};
-    if (ink_cap_call(cap, args, &o) != 0 && S.notice) lv_label_set_text(S.notice, "没有完成，请重试");
+    if (ink_cap_call(cap, args, &o) != 0) { if (S.send) lv_obj_remove_state(S.send, LV_STATE_DISABLED); if (S.notice) lv_label_set_text(S.notice, "没有完成，请重试"); }
 }
 static void selected(void *ctx, const ink_receipt_t *rc) {
     ink_call_t *c = ctx; c->rc.status = rc->status;
@@ -118,6 +119,7 @@ static void navigate(ink_call_t *c) {
 static void entered(void *ctx, const char *value) { (void)ctx; snprintf(S.draft, sizeof S.draft, "%s", value); }
 static void send_clicked(lv_event_t *e) {
     (void)e; ink_args_t *a = ink_app_alloc(sizeof *a, true); if (!a) return;
+    lv_obj_add_state(S.send, LV_STATE_DISABLED); ink_ui_busy_control(S.send, true);
     ink_args_init(a); ink_args_str(a, "to", S.to); ink_args_str(a, "text", ink_textfield_text(S.field)); request("sms.send", a); ink_app_free(a);
 }
 static void bind_item(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, ink_ui_action_spec_t *action, void *ctx) {
@@ -133,7 +135,7 @@ static void bind_item(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, 
     snprintf(S.ids[at], sizeof S.ids[at], "sms:%u", (unsigned)S.rows[index]);
     if (!lv_obj_get_child_count(slot)) { ink_ui_line(slot, "", INK_FONT_NOTE, INK_WEIGHT_MEDIUM, INK_GAP, INK_GAP_S, INK_CANVAS_W - 2 * INK_MARGIN - 2 * INK_GAP); ink_ui_label(slot, "", INK_FONT_LIST, INK_WEIGHT_REGULAR, INK_GAP, INK_LINE_NOTE + INK_GAP_M, INK_CANVAS_W - 2 * INK_MARGIN - 2 * INK_GAP); }
     lv_obj_set_style_bg_color(slot, thread && strcmp(S.labels[at], "收到") ? ink_ui_ink() : ink_ui_gray(), 0);
-    lv_obj_set_style_text_color(slot, thread && strcmp(S.labels[at], "收到") ? ink_ui_paper() : ink_ui_ink(), 0);
+    for (int i = 0; i < 2; i++) lv_obj_set_style_text_color(lv_obj_get_child(slot, i), thread && strcmp(S.labels[at], "收到") ? ink_ui_paper() : ink_ui_ink(), 0);
     lv_label_set_text(lv_obj_get_child(slot, 0), S.labels[at]); lv_label_set_text(lv_obj_get_child(slot, 1), S.texts[at]);
     *field = (ink_ui_field_spec_t){.id = S.ids[at], .role = "listitem", .label = S.labels[at], .value = S.texts[at], .object = {S.ids[at], ink_db_last_ver(picking ? S.contacts : S.db)}};
     *action = (ink_ui_action_spec_t){.id = S.ids[at], .label = picking ? "选择这个号码" : "打开会话", .capability = picking ? "sms.recipient" : "sms.thread", .args_json = S.args[at], .object = field->object, .enabled = !thread};
@@ -170,9 +172,10 @@ static void create(lv_obj_t *screen, void *arg) {
         S.field_spec = (ink_ui_field_spec_t){.id = "text", .role = "textbox", .label = "短信内容"}; S.form.fields = &S.field_spec; S.form.field_count = 1;
         ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .enter = INK_ENTER_DONE, .max = 354, .initial = S.draft, .hint = "写短信"};
         S.field = ink_textfield_create(screen, &cfg, entered, NULL, false); lv_obj_set_pos(S.field, ink_ui_px(INK_MARGIN), ink_ui_px(INK_STATUS_BAR + INK_PRIMARY + INK_CONTROL));
+        lv_obj_set_width(S.field, ink_ui_px(INK_CANVAS_W - 2 * INK_MARGIN));
         ink_textfield_bind_short(S.field, &S.form, &S.field_spec, &S.actions[0]);
         lv_obj_t *long_button = ink_ui_pill(screen, "写长短信", INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_PRIMARY - INK_CONTROL - INK_GAP_L, INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, false, NULL, NULL); ink_shell_bind(long_button, "sms.long", "{}");
-        ink_ui_pill(screen, "发送", INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_PRIMARY, INK_CANVAS_W - 2 * INK_MARGIN, INK_PRIMARY, true, send_clicked, NULL); return;
+        S.send = ink_ui_pill(screen, "发送", INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_PRIMARY, INK_CANVAS_W - 2 * INK_MARGIN, INK_PRIMARY, true, send_clicked, NULL); return;
     }
     S.db = ink_db_open_cached_member(&MESSAGES, S.member);
     S.contacts = compose ? ink_db_open_cached_member(ink_db_find_def("phone.contacts"), S.member) : NULL;
@@ -186,7 +189,7 @@ static void create(lv_obj_t *screen, void *arg) {
 }
 static void destroy(void) {
     if (S.field) snprintf(S.draft, sizeof S.draft, "%s", ink_textfield_text(S.field));
-    ink_db_close(S.db); ink_db_close(S.contacts); S.db = S.contacts = NULL; S.list = NULL; S.field = S.notice = NULL;
+    ink_db_close(S.db); ink_db_close(S.contacts); S.db = S.contacts = NULL; S.list = NULL; S.field = S.notice = S.send = NULL;
 }
 static int snapshot(char *out, size_t cap) {
     if (strcmp(S.member, ink_member_current()->id)) { if (cap) out[0] = 0; return -1; }
@@ -200,11 +203,11 @@ static int snapshot(char *out, size_t cap) {
     return ink_ui_semantics_snapshot(&S.form, out, cap);
 }
 static bool page_key(ink_key_t k, bool lng) { return S.list && ink_ui_list_key(S.list, k, lng); }
-static const ink_activity_t LIST = {.name = "Sms", .app = "sms", .create = create, .destroy = destroy, .snapshot = snapshot, .on_key = page_key};
-static const ink_activity_t THREAD = {.name = "SmsThread", .app = "sms", .create = create, .destroy = destroy, .snapshot = snapshot, .on_key = page_key};
-static const ink_activity_t COMPOSE = {.name = "SmsCompose", .app = "sms", .create = create, .destroy = destroy, .snapshot = snapshot, .on_key = page_key};
-static const ink_activity_t LONG = {.name = "ImeLong", .app = "sms", .create = create, .destroy = destroy, .snapshot = snapshot};
-static const ink_app_def_t APP = {.id = "sms", .title = "短信", .icon = INK_UI_ICON(message), .entry = &LIST, .system_app = true, .child_ok = true};
+static const ink_activity_t LIST = {.name = "Sms", .app = "message", .create = create, .destroy = destroy, .snapshot = snapshot, .on_key = page_key};
+static const ink_activity_t THREAD = {.name = "SmsThread", .app = "message", .create = create, .destroy = destroy, .snapshot = snapshot, .on_key = page_key};
+static const ink_activity_t COMPOSE = {.name = "SmsCompose", .app = "message", .create = create, .destroy = destroy, .snapshot = snapshot, .on_key = page_key};
+static const ink_activity_t LONG = {.name = "ImeLong", .app = "message", .create = create, .destroy = destroy, .snapshot = snapshot};
+static const ink_app_def_t APP = {.id = "message", .title = "短信", .icon = INK_UI_ICON(message), .entry = &LIST, .system_app = true, .child_ok = true};
 static const ink_cap_t CAPS[] = {
     {.id = "sms.send", .title = "保存并发送短信", .ask = "发短信给 {to}：{text}", .input = "{\"type\":\"object\",\"properties\":{\"to\":{\"type\":\"string\",\"maxLength\":20},\"text\":{\"type\":\"string\",\"maxLength\":118}},\"required\":[\"to\",\"text\"]}", .effect = INK_FX_EXTERNAL, .child_ok = true, .permission = "message", .exec = INK_EXEC_BG, .timeout_ms = 30000, .run = send_message},
     {.id = "sms.thread", .title = "打开短信会话", .input = "{\"type\":\"object\",\"properties\":{\"peer\":{\"type\":\"string\",\"maxLength\":20}},\"required\":[\"peer\"]}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},

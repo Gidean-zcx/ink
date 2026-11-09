@@ -9,6 +9,7 @@ import sys
 
 mutant = sys.argv[-1] == "--mutant"
 sim, root, assets, content, output = map(Path, sys.argv[1:-1] if mutant else sys.argv[1:])
+sim, root, assets, content, output = (p.resolve() for p in (sim, root, assets, content, output))
 shutil.rmtree(output, ignore_errors=True)
 output.mkdir(parents=True)
 if mutant:
