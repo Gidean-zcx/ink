@@ -10,7 +10,7 @@
 | CP-R1-02 | 【实测】密码页增加可触摸的“取消”，复用 `on_answer` 的拒绝路径；输入一位后取消不执行。错误密码、正确密码、密码遮蔽及 HOME 拒绝仍通过 | 只换回受审确认卡，`ConfirmParent` 失败 1 条、退出 1，检出触摸取消未拒绝 |
 | CP-R1-03 | 【实测】逐项检查回执 token、decision、status，以及执行次数和实际参数；只有第二项 `n=11` 执行一次 | 第二项改按取消：失败 5 条、退出 1；真正把执行参数替换成 `n=12`：失败 4 条、退出 1 |
 
-【实测】普通专项六场景共 546 条断言通过；内部 RAM 最低余量为 42,200 字节（新增来电回归），高于原预算 32,768 字节。密码页截图已实际查看，取消、说明、密码提示与数字键均可见，没有重叠。仅去掉人类来源检查的原反例仍失败 16 条、退出 1。
+【实测】普通与 ASan/UBSan 专项六场景各 546 条断言通过；内部 RAM 最低余量均为 42,200 字节（新增来电回归），高于原预算 32,768 字节。密码页截图已实际查看，取消、说明、密码提示与数字键均可见，没有重叠。仅去掉人类来源检查的原反例仍失败 16 条、退出 1。
 
 【实现】本轮产品只改 `system/ui/shell/confirm_card.c`，11 行新增、1 行删除；相对原任务基线产品文件共 147 行新增、18 行删除，加 CMake 注册 5 行，即使把增删都算入也只有 170 行，低于 300 行。新增机制：无；复用已有状态通知、UI 执行器和拒绝路径，没有新任务、轮询、队列或服务接口。
 
@@ -18,7 +18,20 @@
 
 环境跳过原因已定位：普通构建 Python 缺少 `pytest==8.4.2`、`pytest-asyncio==1.2.0`、`aiohttp==3.12.15`、`PyYAML==6.0.3`。`$INK_DEPS/hub/.venv/bin/python` 已具备这些锁定版本和 Python 3.11.15，构建选择该 `INK_HUB_PYTHON`；测试设置 `PYTHONPATH="$PWD/hub"`，已确认加载本工作树的中枢源码。没有安装或升级依赖，没有修改依赖目录。
 
-全量与 ASan/UBSan 验证进行中；生成能力表校验按用户补充留给合并会话，不修改或掩盖该检查。
+【实测】两种构建均退出 0；两轮全量结果如下。唯一失败均是用户指定留给合并会话的 `capability-table-doc`；原来跳过的 `hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e` 均实际通过。没有删除、放宽或修改跳过条件。
+
+| 全量 | 通过 / 总数 | 跳过 | CTest 退出码 | 耗时 |
+| --- | --- | --- | --- | --- |
+| 普通 | 232 / 233 | 0 | 8 | 310.39 秒 |
+| ASan/UBSan | 232 / 233 | 0 | 8 | 641.70 秒 |
+
+【实测】两份 `Testing/Temporary/LastTestsFailed.log` 都只有 `capability-table-doc`；完整日志均无 AddressSanitizer、LeakSanitizer 或 UBSan 错误。内存构建的缓存为 `INK_SANITIZE=ON`、`INK_WERROR=ON`，产品库与确认页测试编译参数均含 `-fsanitize=address,undefined`。本轮没有实机或 Linux 实跑。
+
+全量命令为 `ctest --test-dir build --output-on-failure -j2`，内存检查换 `build-asan`；均使用 `$INK_DEPS/build-deps/pyenv/bin/ctest`，并加 `PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$PWD/hub" INK_KEEP_EVIDENCE=1 taskpolicy -c utility`。两种构建均按总规则配置，额外选择 `-DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"`，内存构建仅再加 `-DINK_SANITIZE=ON`；两次全量之间串行构建，构建最多 `-j2`。证据为两目录内的 `confirm-review-configure.log`、`confirm-review-build.log`、`confirm-review-ctest.log` 与 `Testing/Temporary/LastTest.log`。
+
+【实测】本轮重新运行 `tools/ui_compare.py --reuse --design "$INK_DESIGN" --out build/test-out/confirm-pages-current --scenes ConfirmWeb ConfirmParent ConfirmCall ConfirmSetting ConfirmExpired StressConfirm`。家长页为 33.225/255，其余五屏与初次交付分数一致，仍未达到 12/255。新增取消在说明下方，数字键盘底行继续保留“删除 / 0 / 确定”，与旧画板左下取消的位置不同；没有为追分修改字号、灰度或评分口径。
+
+要改的文档：合并会话仍需生成 `docs/system/capabilities.md`；本轮又增加了 `power.state` 状态依赖。成员状态使用已有 `member.` 前缀通知；能力 id 和确认规则没有变化。
 
 可重跑的专项与反例（命令均加 `INK_KEEP_EVIDENCE=1 taskpolicy -c utility`，Python 使用 `$INK_DEPS/build-deps/pyenv/bin/python`）：
 
@@ -33,7 +46,11 @@ python tests/confirm_pages/run.py --build build --mutant ai-source --scene Confi
 
 反例仅编译构建目录副本。证据为 `build/confirm-review-negative-*.log`；两份旧卡结果另存 `build/test-out/confirm-review-before-expired/`、`confirm-review-before-parent/`，队列反例在 `confirm-pages-queue-reject/`、`confirm-pages-queue-target/`。
 
-基线：`3fce2beea07d9e25a814cd24c64e8d5305ea9222`。状态：本地交付；功能、全量、内存和视觉检查均已跑完，未全通过的项目如下。未推送。
+结束检查：【实测】`git diff --check` 通过；相对复查基线 `132c3969` 只有确认卡、三个确认页测试文件和本报告发生变化。原任务基线到本轮改动按总规则隐私表达式扫描零匹配（`rg` 退出 1）；构建产物、截图和设计稿未提交。修复提交为 `633dd044`，验证结果另作报告提交，均未推送。
+
+以下保留初次交付时的验收与限制；最新结果以“复查后的修复”为准。
+
+基线：`3fce2beea07d9e25a814cd24c64e8d5305ea9222`。初次交付状态：本地交付；功能、全量、内存和视觉检查均已跑完，未全通过的项目如下。未推送。
 
 ## 验收表
 
