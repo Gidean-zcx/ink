@@ -64,6 +64,8 @@ static const struct {
     {"file_picker.prev", NULL}, {"file_picker.next", NULL}, {"file_picker.cancel", NULL}, {"file_picker.select", "id"},
     {"contacts.put", "name,number"}, {"contacts.delete", "id,if_revision,name,number"}, {"contacts.select", "id"}, {"contacts.edit", ""},
     {"contacts.next", NULL}, {"contacts.prev", NULL}, {"contacts.name", NULL}, {"contacts.number", NULL},
+    {"phone.open", ""}, {"phone.contacts", NULL}, {"contacts.open", NULL}, {"phone.recents", NULL},
+    {"phone.number", NULL}, {"phone.key", "key"}, {"phone.prev", NULL}, {"phone.next", NULL},
     {NULL, NULL},
 };
 
@@ -93,7 +95,7 @@ static const char *const STATES[] = {
 static const char *const SETTINGS[] = {"notify.dnd", "time.zone", "time.auto", "power.lock_after_s", "audio.volume", "audio.child_max", "voice.handsfree", "ai.read_clipboard", "member.idle_return_s", "update.auto_download", NULL};
 
 /* Events the design promises the AI hears about (the rest of the table by the same rule: registered is forwarded). */
-static const char *const EVENTS[] = {"backup.changed", "backup.failed", "pairing.changed", "data.write_failed", "file.changed", "file.job_done", "job.finished", "usb.changed", "alarm.fired", "reminder.fired", "time.changed", "notify.posted", "confirm.result", "app.state", "battery.low", "media.finished", "audio.record_done", "bt.changed", "wifi.changed", "member.changed", "update.available", "update.result", "text.voice_ended", NULL};
+static const char *const EVENTS[] = {"backup.changed", "backup.failed", "pairing.changed", "data.write_failed", "file.changed", "file.job_done", "job.finished", "usb.changed", "alarm.fired", "reminder.fired", "time.changed", "notify.posted", "confirm.result", "app.state", "battery.low", "media.finished", "audio.record_done", "bt.changed", "wifi.changed", "member.changed", "update.available", "update.result", "text.voice_ended", "call.dialed", "call.connected", "contacts.selected", NULL};
 
 static int for_ai(const char *id) {
     for (int i = 0; FOR_AI[i].id; i++)

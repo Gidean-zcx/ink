@@ -31,6 +31,7 @@ T2：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/phone_
 ## 改过的已有测试
 
 - `tests/contacts/contacts.c`：原入口断言改为电话入口能打开，再调用 `contacts.open` 进入联系人；原联系人 CRUD、选择、隔离和确认断言保留。
+- `tests/integration/ai_surface.c`：在 AI 预期清单追加 8 个新操作，核查 `phone.open` 的可选号码参数、`phone.key` 的必需参数 `key`，并追加 3 个事件注册断言。原断言不变；首轮漏登导致 10 个断言失败，补登后实测通过。
 
 ## 要用户定的
 
@@ -38,7 +39,8 @@ T2：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/phone_
 
 ## 顺手发现
 
-- 暂无。
+- 【实现】既有 `call.dial` 只限制号码长度，没有校验字符；本任务未改通信参数验证策略。
+- 【实测】默认 Python 缺少中枢测试依赖，首轮有 3 项跳过；改选依赖检出中现成的中枢 Python 后，`hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e` 全部通过，未安装或升级依赖。
 
 ## 新增的机制
 
@@ -48,7 +50,8 @@ T2：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/phone_
 
 ## 要改的文档
 
-- 按总规则第 7 节，共享能力表和界面依赖状态交主会话合并时更新。
+- 按总规则第 7 节，主会话合并后运行 `python tools/capabilities.py` 更新共享能力表；本分支只在 `build/phone-capabilities.md` 生成核查副本。源码与运行时校验通过：224 个能力、16 项设置，共 285 个定义。
+- `docs/system/ui-dependencies.md`：Phone / PhoneRecents / PhoneCall 可标为模拟器已接线；通话附加控件、姓名头像和画板分数差距仍需保留。共享文件未修改。
 
 ## 规模与边界
 
