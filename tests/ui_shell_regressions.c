@@ -356,8 +356,28 @@ static void read_answer(void) {
     if (next) { lv_area_t a; lv_obj_get_coords(next, &a); next_x = (a.x1 + a.x2) / 2; next_y = (a.y1 + a.y2) / 2; }
     if (prev) { lv_area_t a; lv_obj_get_coords(prev, &a); label_x = (a.x1 + a.x2) / 2; label_y = (a.y1 + a.y2) / 2; }
 }
+static void check_long_layout(void) {
+    lv_obj_update_layout(answer_root);
+    int height = ink_ui_height() - lv_obj_get_y(answer_root);
+    CHECK(height * 100 >= ink_ui_height() * 53 && height * 100 <= ink_ui_height() * 55,
+          "a long answer expands to about 54 percent of the screen");
+    CHECK(lv_obj_get_height(answer_label) >= ink_ui_px(5 * ink_ui_line_height(INK_FONT_BODY)), "the expanded answer has five body lines");
+    lv_obj_t *source = find_label(answer_root, "出自这一页");
+    lv_obj_t *next = bound(answer_root, "ai.panel.next");
+    CHECK(source && next && lv_obj_get_y(answer_label) + lv_obj_get_height(answer_label) <= lv_obj_get_y(source) &&
+          lv_obj_get_y(source) + lv_obj_get_height(source) <= lv_obj_get_y(lv_obj_get_parent(next)) &&
+          lv_obj_get_y(lv_obj_get_parent(next)) + lv_obj_get_height(lv_obj_get_parent(next)) <= height,
+          "expanded text, source and paging controls fit without overlap");
+}
+static void check_short_layout(void) {
+    lv_obj_update_layout(answer_root);
+    int height = ink_ui_height() - lv_obj_get_y(answer_root);
+    CHECK(height * 100 >= ink_ui_height() * 42 && height * 100 <= ink_ui_height() * 44 &&
+          lv_obj_get_height(answer_label) == ink_ui_px(3 * ink_ui_line_height(INK_FONT_BODY)), "a short answer returns to the compact panel");
+}
 static void traverse_answer(const char *text) {
     answer_words = text; on_ui(open_answer); on_ui(update_answer); quiet(); on_ui(read_answer);
+    on_ui(check_long_layout);
     CHECK(page == 1 && pages > 1 && answer_prev_disabled, "a long answer has a visible page count and starts on its first page");
     answer_seen[0] = 0;
     int total = pages;
@@ -388,16 +408,17 @@ static void traverse_answer(const char *text) {
     on_ui(close_answer); quiet();
 }
 static void answer_tests(void) {
-    traverse_answer("第一行\n第二行\n第三行\n第四行\n第五行");
+    traverse_answer("第一行\n第二行\n第三行\n第四行\n第五行\n第六行\n第七行\n第八行");
     static char long_text[1800] INK_PSRAM_BSS;
     for (int i = 0; i < 30; i++) strcat(long_text, "中文答案 mixed words 123，阅读这一页。 ");
     traverse_answer(long_text);
-    answer_words = "第一行\n第二行\n第三行\n第四行\n第五行"; on_ui(open_answer); on_ui(update_answer); quiet();
+    answer_words = "第一行\n第二行\n第三行\n第四行\n第五行\n第六行\n第七行\n第八行"; on_ui(open_answer); on_ui(update_answer); quiet();
     CHECK(AI("ai.panel.next", NULL) && g_rc.status == INK_RC_DONE, "advance before replacing streamed content");
     answer_words = "回答"; on_ui(update_answer); quiet(); on_ui(read_answer);
+    on_ui(check_short_layout);
     CHECK(page == 1 && pages == 1 && !strcmp(answer_text, "回答") && answer_next_disabled && answer_prev_disabled, "shorter streamed content clamps the page and updates both buttons");
     static char many_lines[4096] INK_PSRAM_BSS;
-    for (size_t i = 0; i < sizeof many_lines - 2; i += 2) { many_lines[i] = 'a'; many_lines[i + 1] = '\n'; }
+    memset(many_lines, '\n', sizeof many_lines - 1);
     answer_words = many_lines; on_ui(update_answer); quiet(); on_ui(read_answer);
     CHECK(pages >= 1000 && pager_fits, "four-digit page counts fit the visible pager on one line");
     on_ui(close_answer); quiet();

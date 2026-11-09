@@ -83,11 +83,23 @@ static void draw_words(void) {
     ink_ui_hint_obj(A.answer, INK_REFRESH_UI);
     ink_ui_hint_obj(A.actions, INK_REFRESH_UI);
 }
+static void layout(bool expanded) {
+    int extra = expanded ? 2 * ink_ui_line_height(INK_FONT_BODY) + INK_GAP_M : 0;
+    int height = PANEL_HEIGHT + extra;
+    lv_obj_set_y(A.root, ink_ui_px(INK_CANVAS_H - height));
+    lv_obj_set_height(A.root, ink_ui_px(height + INK_RADIUS_PANEL));
+    lv_obj_set_height(A.answer, ink_ui_px(3 * ink_ui_line_height(INK_FONT_BODY) + extra));
+    lv_obj_set_y(A.source, ink_ui_px(height - INK_GAP_L - INK_CONTROL - INK_GAP_S - ink_ui_line_height(INK_FONT_NOTE)));
+    lv_obj_set_y(A.actions, ink_ui_px(height - INK_GAP_L - INK_CONTROL));
+    lv_obj_set_y(A.stop, ink_ui_px(height - INK_GAP_L - INK_CONTROL));
+}
 void ink_shell_ai_words(const char *text) {
     if (!A.root) return;
     snprintf(A.words, sizeof A.words, "%s", text);
     if (text[0]) { lv_obj_add_flag(A.question, LV_OBJ_FLAG_HIDDEN); lv_obj_remove_flag(A.answer, LV_OBJ_FLAG_HIDDEN); }
-    paginate(); draw_words();
+    layout(false); paginate();
+    if (A.pages > 1) { layout(true); paginate(); }
+    draw_words();
     audio_changed(NULL, 0, NULL);
 }
 

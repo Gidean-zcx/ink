@@ -16,6 +16,23 @@ static char snapshot[8192], visible[4096], all[4096];
 static const char *scene;
 static int x, y, page, pages;
 static bool found;
+static uint32_t send_version;
+
+static void remember_send_version(void) { send_version = ink_ui_content_version(); }
+static void stale_send(void) {
+    CHECK(send_version != ink_ui_content_version(), "editing advances the question page version");
+    ink_receipt_t rc;
+    ink_cap_invoke("shell.ai_send", NULL, INK_SRC_AI, send_version, &rc);
+    CHECK(rc.status == INK_RC_STALE, "an AI send prepared before editing is rejected");
+    ink_cap_invoke("shell.ai_send", NULL, INK_SRC_REMOTE, send_version, &rc);
+    CHECK(rc.status == INK_RC_STALE, "a remote send prepared before editing is rejected");
+    CHECK(ink_text_focused() && strstr(ink_text_value(), "后来补充"), "stale sends preserve the edited question and keyboard");
+}
+static void current_send(void) {
+    ink_receipt_t rc;
+    ink_cap_invoke("shell.ai_send", NULL, INK_SRC_AI, ink_ui_content_version(), &rc);
+    CHECK(rc.status == INK_RC_DONE, "an AI send with the current page version succeeds");
+}
 
 static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
 static bool speaking(void) {
@@ -114,12 +131,15 @@ static void run(void *arg) {
     press("shell.ai_ask"); capture("AiAsk");
     CHECK(strstr(snapshot, "AiAsk") && ink_text_focused(), "question field and real keyboard are open");
     CHECK(AI("text.insert", "{\"text\":\"PRIVATE_QUESTION：这一页讲了什么？\"}") && g_rc.status == INK_RC_DONE, "AI and keyboard share the input service");
+    on_ui(remember_send_version);
+    CHECK(AI("text.insert", "{\"text\":\"后来补充的问题\"}") && g_rc.status == INK_RC_DONE, "edit after preparing a send request");
+    on_ui(stale_send);
     CHECK(AI("text.submit", NULL) && g_rc.status == INK_RC_DONE, "submit through the real enter action");
     capture("AiWait");
     CHECK(strstr(snapshot, "正在看这一页"), "typed question waits on the service");
     CHECK(WAIT_FOR(sim_metric_value("ai.answers") >= 1, 20000), "typed answer arrives");
     capture("AiLong"); on_ui(read_answer);
-    CHECK(pages > 2 && page == 1, "long answer is paginated");
+    CHECK(pages > 3 && page == 1, "long answer has enough pages to exercise touch, hardware and AI navigation");
     all[0] = 0; int total = pages;
     for (int i = 1; i <= total && i < 100; i++) {
         CHECK(page == i && visible[0], "page %d has text", i);
@@ -165,6 +185,9 @@ static void run(void *arg) {
     quiet(); on_ui(check_cleared);
     CHECK(AI("shell.ai_ask", NULL) && g_rc.status == INK_RC_DONE, "child opens empty question field");
     quiet(); CHECK(!ink_text_value()[0], "question draft does not cross members");
+    CHECK(AI("text.insert", "{\"text\":\"合成当前版本问题\"}") && g_rc.status == INK_RC_DONE, "prepare a current-version AI send");
+    answered = sim_metric_value("ai.answers"); on_ui(current_send);
+    CHECK(WAIT_FOR(sim_metric_value("ai.answers") > answered, 20000), "the accepted current-version send reaches the AI service");
     CHECK(AI("shell.ai_home", NULL) && g_rc.status == INK_RC_DONE, "return from the question page to conversation records");
     quiet(); on_ui(read_snapshot);
     CHECK(!strcmp(ink_ui_page_name(), "AiHome") && !ink_text_focused() && strstr(snapshot, "还没有对话记录"), "records action reaches its entry page rather than resuming the question field");
