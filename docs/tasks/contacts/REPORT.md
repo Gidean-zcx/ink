@@ -8,7 +8,7 @@
 - 【实现／实测】编辑保存携带读取版本，旧表单返回 `STALE` 并保留草稿；删除确认绑定版本并显示姓名、号码。复用现有记录版本、条件删除及确认描述，不加通用机制。当前产品累计 263 行。
 - 【实测】定向回归通过，原 CRUD／重启断言保留；新增旧表单触摸保存和 AI 重放、原确认后更新、同值重写、描述不符及列表页 AI 删除。最终代码临时反向编译逐项撤掉保存版本校验、删除版本校验、中文描述、内容匹配，各失败 5／7／1／3 项，均完成执行；最大姓名／号码及两种输入焦点的生产上下文也通过。最终证据在忽略目录 `work/checks-6slkbsuo/`，确认卡实际截图已打开核对。
 - 【实现】`contacts.delete` 现在必传读取时的 `id、if_revision、name、number`，缺项返回 `INVALID`，不生成仅编号卡片。按钮和页面快照携带原记录的值；页面外 AI 先用 `data.get/list` 读取再提交。确认执行时再次核对当前成员记录的版本、完整姓名和号码，内容不符返回 `STALE`。`contacts.put` 的直接新增／更新仍可用，重放表单则携带读取版本。
-- 【实测】最终普通完整构建退出 0，CTest 为 217/218（143.53 秒），唯一失败是禁止本任务修改的共享能力文档。ASan／UBSan 完整构建、全量测试进行中，结果另补。普通首轮曾为 216/218（190.33 秒），另一个失败是按旧必填参数检查的 AI 表面测试，同步精确清单后已通过。
+- 【实测】本轮关闭高 2 项、中 1 项；没有遗留严重／高问题。最终普通及 ASan／UBSan 完整构建均退出 0，完整 CTest 各 217/218（143.53／242.33 秒），唯一失败是禁止本任务修改的共享能力文档。普通首轮曾为 216/218（190.33 秒），另一个失败是按旧必填参数检查的 AI 表面测试，同步精确清单后已通过。
 
 ## 验收表
 
@@ -17,7 +17,7 @@
 | 1 | 【实测】定向通过 | 真正的两次进程启动；增改删持久化，成人／孩子集合隔离，越界查改反例 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^contacts$' --output-on-failure -j2` |
 | 2 | 【实测】功能通过；视觉超标 | 0、1、4、5 条及末页；9 份分页快照＋1 份表单快照；短输入的姓名／号码焦点；视觉 52.004/255 | 同上；`tests/contacts/run.py` 校验 JSON；`tools/ui_compare.py --scenes PhoneContacts --reuse` |
 | 3 | 【实测】定向通过 | 实际触摸和 AI 均执行 `contacts.select`，同编号、同号码、来源分别为 touch／ai | 同上 |
-| 4 | 【实测】能力、规模通过；普通全量有 1 项共享文档失败，ASan 待完成 | 仍为 8 项新增能力；当前产品 263 行，未超过 300 行。普通全量 217/218；临时能力表与运行时 205 项能力、16 项设置一致 | 下文完整构建／CTest 命令及清单核对命令 |
+| 4 | 【实测】能力、规模与内存检查通过；两套全量各有 1 项共享文档失败 | 仍为 8 项新增能力；当前产品 263 行，未超过 300 行。普通及 ASan／UBSan 各 217/218；临时能力表与两套运行时 205 项能力、16 项设置一致 | 下文完整构建／CTest 命令及清单核对命令 |
 | C1-01（高） | 【实测】已修复 | 旧表单触摸保存与 AI 重放返回过期；已保存号码不变，草稿保留；返回重开后可正常保存 | 上述联系人 CTest 的 `stale` 场景 |
 | C1-02（高） | 【实测】已修复 | 原确认后 AI 更新不再删除；同值重写也按版本拒绝；最新记录重新确认可删除 | 上述联系人 CTest 的 `delete` 场景 |
 | C1-03（中） | 【实测】已修复 | 触摸／列表页 AI 删除卡显示姓名、号码和中文说明；不符描述不能执行。实际截图已人工核对 | 同上；忽略目录内的临时截图探针 |
@@ -44,7 +44,7 @@
 
 ## 和设计不一致的
 
-- 【实测】PhoneContacts 对照分数 **52.004/255，未达到 12/255**。产物在忽略目录 `work/contacts-compare/`，已经人工看图。原稿灰底很浅、字号和头像较小，按合同采用现行主题的第 8 级灰及放大后的规格。原稿顶部分段包含后续拨号／最近页面，本次只做联系人页头；新增底部添加入口，分页条在其上方；列表第二行显示真实号码，未实现原图的常用／家人标签。测试姓名和页数也与原图不同，没有为了分数改规格或写死示例。
+- 【实测】PhoneContacts 对照分数 **52.004/255，未达到 12/255**。本轮重跑产物在忽略目录 `work/contacts-review-compare/`，已经人工看图，分数与原开发一致。原稿灰底很浅、字号和头像较小，按合同采用现行主题的第 8 级灰及放大后的规格。原稿顶部分段包含后续拨号／最近页面，本次只做联系人页头；新增底部添加入口，分页条在其上方；列表第二行显示真实号码，未实现原图的常用／家人标签。测试姓名和页数也与原图不同，没有为了分数改规格或写死示例。
 - 姓名和号码的编辑页原稿尚缺（规范第 12 节已列缺口），本次直接复用短输入框和既有主题。每条联系人保存一个号码，选中能力返回该记录编号和这个号码。
 
 ## 改过的已有测试
@@ -74,7 +74,7 @@
 
 - 合并时更新 `docs/system/ui-dependencies.md` 的联系人状态，重新生成 `docs/system/capabilities.md`；本任务不修改这些共享文件。
 
-## 执行记录
+## 原开发阶段执行记录（历史）
 
 - 开工：工作区干净，HEAD 与指定基线一致，尚无此前任务报告或任务提交。
 - 已读取任务规则及 G1–G5。按第 7 节：命令使用 utility 优先级，构建和测试最多各 `-j2`，不 push，不开窗口，不碰设备。
@@ -109,11 +109,11 @@ taskpolicy -c utility cmake --build build -j2
 PYTHONPATH="$PWD/hub" PYTHONDONTWRITEBYTECODE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
 taskpolicy -c utility cmake --build build-asan -j2
 PYTHONPATH="$PWD/hub" PYTHONDONTWRITEBYTECODE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
-taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/capabilities.py --output work/contacts/capabilities.md --runtime build/test-out/capability-table/capability-inventory.json
-taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.py --build build --design "$INK_DESIGN" --out work/contacts-compare --scenes PhoneContacts --reuse
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/capabilities.py --output work/contacts-review-capabilities.md --runtime build/test-out/capability-table/capability-inventory.json
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.py --build build --design "$INK_DESIGN" --out work/contacts-review-compare --scenes PhoneContacts --reuse
 ```
 
-最后一条对照命令的 `work/contacts-compare/PhoneContacts/` 需先复制 `build/test-out/contacts/write/` 下的 `snap-scene.png` 和 `metrics.json`；截图来自已完成刷新、联系人测试通过的真实页面。
+最后一条对照命令的 `work/contacts-review-compare/PhoneContacts/` 需先复制 `build/test-out/contacts/write/` 下的 `snap-scene.png` 和 `metrics.json`；截图来自已完成刷新、联系人测试通过的真实页面。
 
 ## 原开发阶段最终验证（历史）
 
@@ -125,7 +125,8 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.p
 
 ## 本轮最终验证
 
-- 【实测】普通完整构建退出 0；完整 CTest 217/218，退出 8，143.53 秒；唯一失败 `capability-table-doc`。没有跳过测试。ASan／UBSan 结果待补。
-- 【实测】普通联系人四阶段通过 117／21／44／57 项断言，全部 `test.finished=1`、零警告；各阶段内部总池最低余量 47,840 字节，原门槛 32,768，内外部内存分配失败均为 0。
-- 【实测】临时能力表生成和 `--check` 均退出 0，源码与运行时 205 项能力、16 项设置一致。命令为 `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/capabilities.py --output work/contacts-review-capabilities.md --runtime build/test-out/capability-table/capability-inventory.json`，第二次追加 `--check`；未改共享能力文档。
-- 差异、隐私扫描和最终提交核对待补。
+- 【实测】普通与 ASan／UBSan 完整构建均退出 0；两套配置均 `INK_WERROR=ON`，后者 `INK_SANITIZE=ON`。完整 CTest 均为 217/218、退出 8，耗时 143.53／242.33 秒；唯一失败 `capability-table-doc`。没有跳过测试。确定性、分层／SDK、原有应用、确认和 AI 表面测试在两套全量均通过。
+- 【实测】两套联系人四阶段各通过 117／21／44／57 项断言，全部 `test.finished=1`、零警告；各阶段内部总池最低余量 47,840 字节，原门槛 32,768，内外部内存分配失败均为 0。两套 `Testing/Temporary/LastTest.log` 均没有 ASan／LSan 错误或 UBSan `runtime error`。
+- 【实测】临时能力表生成和两套运行时的 `--check` 均退出 0，源码与运行时 205 项能力、16 项设置一致。命令为 `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/capabilities.py --output work/contacts-review-capabilities.md --runtime build/test-out/capability-table/capability-inventory.json`，第二次追加 `--check`，第三次换成 `build-asan/test-out/…` 并保留 `--check`；未改共享能力文档。
+- 【实测】本轮相比入场 `893cddf8` 仅改 5 个相关文件；指定基线后累计 12 个文件，含原复查报告。`git diff --check` 退出 0，规定的基线至 HEAD 隐私扫描以及包含最终报告的工作区差异扫描均零匹配（搜索退出 1）。未夹带共享文档、预算、构建产物或设计稿。
+- 本轮本地提交：`16b05d22`（接续报告）、`e2d3fcae`（版本绑定和回归）、`18604e81`（完整内容匹配及 AI 参数清单）；最终验证随本报告提交。未推送、开 PR、调用付费接口或碰设备。
