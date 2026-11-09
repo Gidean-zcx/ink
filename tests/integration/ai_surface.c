@@ -67,6 +67,7 @@ static const struct {
     {"clock.prev", NULL}, {"clock.next", NULL}, {"clock.new", NULL}, {"clock.open", "id"},
     {"clock.draft", ""}, {"clock.focus", NULL}, {"clock.save", NULL},
     {"alarm.update", "id"},
+    {"shell.ai_home", NULL}, {"shell.ai_ask", NULL}, {"shell.ai_send", NULL}, {"shell.ai_stop", NULL}, {"shell.ai_key", ""},
     {NULL, NULL},
 };
 

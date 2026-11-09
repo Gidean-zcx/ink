@@ -625,7 +625,7 @@ lv_obj_t *ink_shell_dock(lv_obj_t *parent) {
                           INK_SEGMENT, INK_ICON_APP, i == 2 ? INK_SURFACE_BLACK : INK_SURFACE_STATIC, NULL, NULL);
         char json[64];
         snprintf(json, sizeof json, "{\"id\":\"%s\"}", ids[i]);
-        ink_shell_bind(b, "shell.launch", json);
+        ink_shell_bind(b, i == 2 ? "ai.panel.listen" : "shell.launch", i == 2 ? NULL : json);
     }
     return dock;
 }
@@ -1406,7 +1406,7 @@ static void cap_launch(ink_call_t *c) {
         return;
     }
     if (!strcmp(id, "ai")) {
-        ink_ai_tap();
+        ink_cap_invoke("shell.ai_home", NULL, c->src, 0, &c->rc);
         return;
     }
     if (c->src == INK_SRC_TOUCH) ink_probe_count("home.taps");

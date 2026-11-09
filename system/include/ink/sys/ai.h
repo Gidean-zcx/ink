@@ -18,6 +18,8 @@ int ink_ai_init(void);
 void ink_ai_key(bool pressed, uint64_t t_us);
 /** UI task: a question in words, about what is on screen; the answer comes on the sheet, as for a spoken one. */
 void ink_ai_ask_text(const char *text);
+/** UI task: stop this turn's speech, including later frames; keep its text. */
+void ink_ai_stop_speech(void);
 /** UI task: close the sheet if open; returns true if it was open. */
 bool ink_ai_dismiss(void);
 

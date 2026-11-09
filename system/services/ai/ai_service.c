@@ -166,6 +166,16 @@ static void end_capture(bool discard) {
 static void turn_focus_end(void);
 static void turn_focus_watch(void);
 
+void ink_ai_stop_speech(void) {
+    osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
+    int stream = AI.tts_opened;
+    AI.tts_stream = 0;
+    AI.tts_done_for = AI.stream;
+    osal_mutex_unlock(AI.lock);
+    if (stream > 0) ink_audio_stream_abort(stream);
+    turn_focus_end();
+}
+
 bool ink_ai_dismiss(void) {
     if (!AI.open) return false;
     turn_focus_end();
