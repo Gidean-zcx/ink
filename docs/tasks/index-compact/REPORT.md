@@ -1,14 +1,14 @@
 # index-compact 执行报告
 
-基线：`5e1e3964b5aafae3587b805c2edcf13922cccd44`。工作分支 `claude/codex-index-compact`，开工工作区干净。实现、计量、定向测试与反向对照完成，全量、内存检查与 S31 编译待完成。
+基线：`5e1e3964b5aafae3587b805c2edcf13922cccd44`。工作分支 `claude/codex-index-compact`，开工工作区干净。实现、计量、定向测试与反向对照完成；普通全量出现 4 项回归，内存检查与 S31 编译待完成。
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
 | 1 | 通过【实测，模拟器】 | 下表及 [before.csv](before.csv)、[after.csv](after.csv)；重新从基线源码编译的汇总、逐次 CSV 与开工测量完全一致 | 下文计量命令 |
-| 2 | 定向通过【实测】，待全量复核 | schema 1/2 的 6 个种子、升级、重启阶段通过，编号均为 `[2, 1, 3]`；重启目录读取、索引写盘均为 0；155 B 中文路径持久化回读；换回基线后 6 阶段均预期失败 | `ctest --test-dir build -R '^(index-compact|index-durable|file-index-3)$' --output-on-failure -j2`；下文反向命令 |
-| 3 | 待测：全量、内存检查及 S31 编译 | 待记录 | 待记录 |
+| 2 | 通过【实测】，普通全量已复核 | schema 1/2 的 6 个种子、升级、重启阶段共 50 个检查通过，编号均为 `[2, 1, 3]`；旧记录迁移前即可查询；重启目录读取、索引写盘均为 0；155 B 中文路径持久化回读；换回基线后 6 阶段均预期失败 | `ctest --test-dir build -R '^(index-compact|index-durable|file-index-3)$' --output-on-failure -j2`；下文反向命令 |
+| 3 | 未通过【实测】：普通全量 285/289；内存检查、S31 待完成 | 普通全量 4 项失败、0 跳过，334.45 s，退出 8；下表列失败及基线对照 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2` |
 
 ## 计量与实现
 
@@ -22,7 +22,7 @@
 | 压缩耗时 | 4426.503 | 1659.688 |
 | 竞争探针的压缩耗时 | 4428.007 | 1660.259 |
 | 等待任务排队与索引写盘重叠 | 4427.878 | 1660.130 |
-| 等待任务全部排队时间 | 4428.110 | 1660.379 |
+| 等待任务全部排队时间 | 4428.110 | 1660.362 |
 | 同步等待总耗时 | 4442.595 | 1683.199 |
 | 空卡对照与索引重叠 | 0 | 0 |
 
@@ -43,9 +43,22 @@ INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python
 
 【实测】定向测试 3/3，退出 0。反向对照只在构建目录替换文件服务，基线 6 阶段失败数为 `1, 2, 2, 1, 2, 2`，仅变长布局及升级后 schema/长度断言失败；工具确认这些预期失败后退出 0。ctest 新测试直接构造旧 payload，不依赖 Git 历史。原始日志在 `work/index-compact/`，保留的重启镜像和指标在 `build/test-out/index-compact/`。
 
+## 全量未通过项
+
+【实测】同一构建依赖、其他产品源码均不变，只将文件服务替换为任务基线并重新链接，以下 4 项均通过。因此不能把它们归为基线已有失败。未删除断言、改预算、增加等待或改刷新算法来掩盖结果。
+
+| 测试 | 当前失败证据 | 基线文件服务对照 |
+| --- | --- | --- |
+| `scenario-reader_basic-metalio-plus-pqbn` | 首次可见反馈 p95 460.733 ms，预算 460 ms | 447.611 ms，退出 0 |
+| `sms` | `tests/sms/sms.c:49`，`capture is settled` | 15 阶段均通过，退出 0 |
+| `settings-b` | `tests/settings_b.c:226`，`image style has no labels over the photo` | write/restart 均通过，退出 0 |
+| `confirm-pages` | `tests/confirm_pages/pages.c:67`，ConfirmWeb 的 `screenshot is fully presented`；其余 5 场景过 | ConfirmWeb 通过，退出 0 |
+
+【实现】检索所有产品调用，索引记录的直接读取都已接入统一解码，完成记录单独保留定长格式；未发现其他产品文件绕过文件服务读原始索引。记录长度改变伴随仿真时序变化是回归原因的假设，尚未定位和修复这四项的具体根因。基线复核脚本与日志保留在 `work/index-compact/check_baseline.py`、`baseline-check.log`、`baseline-check-build/`；脚本使用 CMake 编译/链接参数及 `git show` 的原文件，不改工作区源码。复核命令：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" work/index-compact/check_baseline.py --build build`。
+
 ## 没做到的
 
-- 全量、内存检查与 S31 尚在验证，不宣称已通过。未连接设备或运行 Linux/远端 CI。
+- 尚未使全量测试通过：上表 4 项回归未修，保留失败证据；内存检查与 S31 尚在验证。未连接设备或运行 Linux/远端 CI。
 
 ## 和设计不一致的
 
@@ -59,7 +72,7 @@ INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python
 
 ## 要用户定的
 
-- 暂无。
+- 是否另开明确范围修复上表 UI 回归。本任务保留索引实现及失败证据，未扩展到刷新、截图同步或锁屏实现；验收 3 当前未达到。
 
 ## 顺手发现
 
