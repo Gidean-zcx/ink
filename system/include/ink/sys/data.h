@@ -121,7 +121,7 @@ uint32_t ink_db_last_ver(ink_db_t *db);
 uint32_t ink_db_durable_ver(ink_db_t *db);
 /** The newest change the hub has confirmed (ink_db_ack). */
 uint32_t ink_db_acked_ver(ink_db_t *db);
-/** Hand what waits to the storage service now. */
+/** Hand what waits to the storage service now, with waiting-caller priority until the batches drain. */
 void ink_db_flush(ink_db_t *db);
 /** Flush without a waiting caller: keep background priority and the interaction quiet window. */
 void ink_db_flush_background(ink_db_t *db);

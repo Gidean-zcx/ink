@@ -146,7 +146,7 @@ static void pressure(void) {
 static void options(void *arg) {
     (void)arg;
     const char *s = getenv("INK_ORDER_MODE");
-    snprintf(mode, sizeof mode, "%s", s ? s : "index");
+    snprintf(mode, sizeof mode, "%.23s", s ? s : "index");
 }
 static void run(void *arg) {
     (void)arg;

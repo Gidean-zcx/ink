@@ -1047,7 +1047,10 @@ int ink_db_wait(ink_db_t *db, uint32_t ver, int64_t timeout_us) {
     uint64_t end = osal_now_us() + (uint64_t)timeout_us;
     int result = 0;
     while (ink_db_durable_ver(db) < ver) {
-        if (osal_now_us() >= end) { result = -1; break; }
+        if (osal_now_us() >= end) {
+            result = -1;
+            break;
+        }
         osal_task_delay_us(10000);
     }
     __atomic_sub_fetch(&db->waiters, 1, __ATOMIC_ACQ_REL);
