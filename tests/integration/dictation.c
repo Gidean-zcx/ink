@@ -524,10 +524,12 @@ static void ended_by(void) {
     hw(HW_CALL, 0, 0);
     CHECK(WAIT_FOR(!strcmp(active_state(), "call"), 5000), "it rings (%s)", active_state());
     CHECK(!ink_audio_capture_busy() || WAIT_FOR(!ink_audio_capture_busy(), 500), "the microphone is free for it");
+    double captured = sim_metric_value("audio.mic.captured_ms");
+    CHECK(WAIT_FOR(state_is(INK_VOICE_IDLE), 3000), "pre-call speech finishes uploading (%d)", g_state);
     double frames = sim_metric_value("hub.asr_frames");
     delay_ms(1000);
+    CHECK(sim_metric_value("audio.mic.captured_ms") == captured, "the call captures no further dictation audio");
     CHECK(sim_metric_value("hub.asr_frames") == frames, "and nothing of the call goes to the hub (%.0f)", sim_metric_value("hub.asr_frames") - frames);
-    CHECK(WAIT_FOR(state_is(INK_VOICE_IDLE), 3000), "a call: over");
     CHECK(WAIT_FOR(g_ended > ended, 500) && !strcmp(g_ended_how, "interrupted"), "and says how (%s)", g_ended_how);
     look();
     CHECK(strstr(g_value, "锁之前") && strstr(g_value, "来电话了。"), "what was said goes in (%s)", g_value);

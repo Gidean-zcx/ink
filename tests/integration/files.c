@@ -67,6 +67,7 @@ static bool listed(const char *dir, const char *name) {
 }
 
 static volatile int g_changed, g_jobs_done, g_tasks_finished;
+static volatile int g_rescanned;
 static char g_task_state[16];
 static char g_last_path[INK_FS_PATH_MAX], g_last_kind[16];
 static bool g_job_ok;
@@ -77,6 +78,7 @@ static void on_file(void *ctx, const char *id, const ink_args_t *a) {
     if (!strcmp(id, "file.changed")) {
         ink_args_get_str(a, "path", g_last_path, sizeof g_last_path);
         ink_args_get_str(a, "kind", g_last_kind, sizeof g_last_kind);
+        if (!strcmp(g_last_kind, "rescan")) g_rescanned++;
         g_changed++;
     } else if (!strcmp(id, "job.finished")) {
         ink_args_get_str(a, "state", g_task_state, sizeof g_task_state);
@@ -498,12 +500,12 @@ static void usb_disk(void) {
     CHECK(sim_power_sleeps() == sleeps0, "locking does not put USB to sleep");
     ink_power_unlock(osal_now_us());
     /* the computer ejects at 50 s */
-    int changed0 = g_changed;
+    int changed0 = g_changed, rescanned0 = g_rescanned;
     wait_until_s(51);
     CHECK(!ink_usb_disk_active(), "ejected: the card comes back");
     ink_state_get_str(ink_state_find("storage.mode"), mode, sizeof mode);
     CHECK(!strcmp(mode, "normal"), "state says so");
-    CHECK(g_changed > changed0 && !strcmp(g_last_kind, "rescan"), "and everyone is told to look again (%s)", g_last_kind);
+    CHECK(g_changed > changed0 && g_rescanned > rescanned0, "and everyone is told to look again (%s)", g_last_kind);
     CHECK(read_text("/family/from-pc/hello.txt", buf, sizeof buf) == 0 && !strcmp(buf, "copied by the computer\n"), "what the computer copied is there (%s)", buf);
     CHECK(write_text("/me/after.txt", "back") == 0, "and the card works again");
 

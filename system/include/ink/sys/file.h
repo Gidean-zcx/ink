@@ -60,7 +60,7 @@ typedef struct {
 
 typedef enum { INK_FS_ANY = -1, INK_FS_OTHER, INK_FS_IMAGE, INK_FS_AUDIO, INK_FS_TEXT } ink_fs_type_t;
 typedef struct { uint32_t id; ink_fs_type_t type; char path[INK_FS_PATH_MAX]; int64_t size; } ink_fs_entry_t;
-#define INK_FS_INDEX_MAX 512
+#define INK_FS_INDEX_MAX 1024
 /** BG only. First page scans this tree (up to 8 directories deep); cursor is the last id, initially 0. */
 int ink_fs_index(const char *path, ink_fs_type_t type, uint32_t *cursor, ink_fs_entry_t *out);
 /** BG only. Rechecks the card and the caller's access. 0, or a file error. */

@@ -503,18 +503,23 @@ static void headset(void) {
     CHECK(AI("bt.connect", "{\"addr\":\"" HEADSET "\"}") && g_rc.status == INK_RC_FAILED, "it must be paired again");
 }
 
-static void volume_keys(void) {
+static void volume_fixture(int volume) {
     ink_receipt_t rc;
-    ink_setting_set("audio.volume", 50, INK_SRC_TOUCH, &rc);
+    ink_setting_set("audio.volume", volume, INK_SRC_TOUCH, &rc);
+    ink_db_flush_all();
+    CHECK(WAIT_FOR(ink_db_idle() && !ink_storage_pending(), 10000), "volume fixture is durable before a short physical key");
+}
+static void volume_keys(void) {
+    volume_fixture(50);
     key(HAL_KEY_VOL_UP);
     CHECK(WAIT_FOR(ink_setting_get("audio.volume") == 60, 500), "up (%d)", (int)ink_setting_get("audio.volume"));
     key(HAL_KEY_VOL_DOWN);
     key(HAL_KEY_VOL_DOWN);
     CHECK(WAIT_FOR(ink_setting_get("audio.volume") == 40, 500), "down twice (%d)", (int)ink_setting_get("audio.volume"));
-    ink_setting_set("audio.volume", 95, INK_SRC_TOUCH, &rc);
+    volume_fixture(95);
     key(HAL_KEY_VOL_UP);
     CHECK(WAIT_FOR(ink_setting_get("audio.volume") == 100, 500), "not past the top (%d)", (int)ink_setting_get("audio.volume"));
-    ink_setting_set("audio.volume", 40, INK_SRC_TOUCH, &rc);
+    volume_fixture(40);
     /* locked, nothing playing: it does not even wake */
     ink_power_lock();
     CHECK(WAIT_FOR(!strcmp(power_state(), "locked"), 2000), "locked");

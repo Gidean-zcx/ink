@@ -180,6 +180,8 @@ int hal_fs_readdir(hal_dir_t *d, hal_dirent_t *out) { return -1; }
 void hal_fs_closedir(hal_dir_t *d) {  }
 int hal_fs_volume_info(const char *volume , hal_fs_volume_info_t *out) { return -1; }
 bool hal_fs_card_present(void) { return false; }
+void hal_fs_set_card_callback(void (*cb)(void *ctx), void *ctx) {  }
+void hal_fs_new_card_id(uint8_t out[16]) { esp_fill_random(out, 16); }
 
 /* TODO: ESP-IDF lwIP local TCP listener. */
 int hal_transfer_listen(uint16_t *port) { return -1; }
