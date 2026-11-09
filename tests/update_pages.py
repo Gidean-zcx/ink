@@ -26,8 +26,12 @@ def run(mode, *, shared=False, package=None, reboot=False, badboot=False):
     if package:
         env['INK_SIM_UPDATE_PKG'] = str(package)
         env['INK_UPDATE_GOOD_PKG'] = str(area / 'good.inkfw')
+    script = ROOT / 'tests/update_pages.script'
+    if mode == 'check-retry':
+        script = area / 'offline.script'
+        script.write_text('@0 net none\n@300s end\n')
     command = [str(sim), '--profile', str(ROOT / 'simulator/profiles/metalio-plus.json'),
-               '--script', str(ROOT / 'tests/update_pages.script'), '--budget', str(ROOT / 'tests/ui_scene.budget.json'),
+               '--script', str(script), '--budget', str(ROOT / 'tests/ui_scene.budget.json'),
                '--assets', str(build / 'assets'), '--content', str(build / 'test-content'), '--out', str(out),
                '--quiet', '--no-random-outages']
     if shared:
@@ -52,7 +56,12 @@ def run(mode, *, shared=False, package=None, reboot=False, badboot=False):
 
 
 if a.mode:
-    run(a.mode)
+    package = None
+    if a.mode == 'entry':
+        package = area / 'good.inkfw'
+        subprocess.run([sys.executable, str(ROOT / 'tools/inkfw/make_inkfw.py'), str(package),
+                        '--version', '1.3.0', '--code', '130', '--app-size', '1048576'], check=True, capture_output=True)
+    run(a.mode, package=package)
 else:
     tool = ROOT / 'tools/inkfw/make_inkfw.py'
     for name, version, code, extra in [('bad', '1.3.0', 130, ['--corrupt-signature']),
@@ -61,6 +70,8 @@ else:
                         '--code', str(code), '--app-size', '1048576', *extra], check=True, capture_output=True)
     for name in ['Update', 'UpdateReady', 'UpdateBlocked', 'UpdateFail', 'UpdateInstall', 'UpdateDone', 'BootRecovery']:
         run(name)
+    run('entry', package=area / 'good.inkfw')
+    run('check-retry')
     run('flow', shared=True, package=area / 'bad.inkfw', reboot=True)
     run('done', shared=True)
     run('rollback', shared=True, package=area / 'next.inkfw', reboot=True)

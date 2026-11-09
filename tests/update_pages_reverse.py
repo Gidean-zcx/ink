@@ -40,5 +40,30 @@ assert result.returncode != 0 and counts.get('test.finished') == 1 and counts.ge
 assert 'AI snapshot names the visible update page' in result.stderr
 assert hashlib.sha256(path.read_bytes()).hexdigest() == before
 summary = {'baseline_exit': result.returncode, 'test_fail': counts['test.fail'], 'test_finished': counts['test.finished']}
+for issue, file, mode, failure in [
+    ('UP-R1-01', 'settings_pages.c', 'entry', 'existing update row opens the known offer'),
+    ('UP-R1-02', 'update_pages.c', 'check-retry', 'failed check exposes checking rather than downloading'),
+]:
+    path = ROOT / 'system/ui/shell' / file
+    before = hashlib.sha256(path.read_bytes()).hexdigest()
+    source = subprocess.run(['git', 'show', 'c4227291848bb085054a565527356fd9ab857009:system/ui/shell/' + file],
+                            cwd=ROOT, check=True, capture_output=True, text=True).stdout
+    obj, binary = area / (issue + '.o'), area / issue
+    subprocess.run([link[0], *options, '-iquote', str(path.parent), '-x', 'c', '-', '-c', '-o', str(obj)],
+                   cwd=build, input=source, text=True, check=True, capture_output=True)
+    command = shlex.split((build / 'CMakeFiles/sim-update-pages.dir/link.txt').read_text())
+    command[command.index('-o') + 1] = str(binary)
+    command.insert(next(i for i, arg in enumerate(command) if arg.endswith('libink_system.a')), str(obj))
+    subprocess.run(command, cwd=build, check=True, capture_output=True)
+    result = subprocess.run([os.sys.executable, str(ROOT / 'tests/update_pages.py'), '--build', str(build),
+                             '--binary', str(binary), '--mode', mode], cwd=ROOT,
+                            env=dict(os.environ, INK_KEEP_EVIDENCE='1'), capture_output=True, text=True, timeout=90)
+    (area / (issue + '.log')).write_text(result.stdout + result.stderr)
+    data = json.loads((build / 'test-out' / ('update-pages-' + issue) / mode / 'metrics.json').read_text())
+    counts = data['metrics']
+    assert result.returncode != 0 and counts.get('test.finished') == 1 and counts.get('test.fail', 0) > 0
+    assert failure in result.stderr
+    assert hashlib.sha256(path.read_bytes()).hexdigest() == before
+    summary[issue] = {'exit': result.returncode, 'test_fail': counts['test.fail'], 'test_finished': counts['test.finished']}
 (area / 'summary.json').write_text(json.dumps(summary, indent=2) + '\n')
 print(summary)

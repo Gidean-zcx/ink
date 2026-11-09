@@ -30,7 +30,7 @@ static const row_t STORAGE_ROWS[] = {
 static const row_t ABOUT_ROWS[] = {
     {"device", "这台设备", NULL, NULL, NULL, NULL, NULL, NULL},
     {"update.version", "系统版本", NULL, NULL, NULL, NULL, NULL, NULL},
-    {"update.check", "系统更新", NULL, NULL, "update.check", "update", NULL, NULL},
+    {"update.check", "系统更新", NULL, NULL, "shell.update", "update", NULL, NULL},
     {"privacy", "隐私", "查看", NULL, "shell.privacy", "shield", NULL, NULL},
     {"device.details", "设备详情", "暂不能查看", NULL, NULL, "display", "", NULL},
     {"licenses", "开源许可", "许可页面还没接入", NULL, NULL, "list", NULL, NULL},

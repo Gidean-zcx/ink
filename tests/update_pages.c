@@ -34,7 +34,7 @@ static void find_label(lv_obj_t *root) {
         find_label(o);
     }
 }
-static void locate(void) { x = y = -1; find_label(lv_layer_sys()); }
+static void locate(void) { x = y = -1; find_label(lv_screen_active()); find_label(lv_layer_sys()); }
 static void press(const char *label) {
     quiet(); wanted = label; on_ui(locate);
     CHECK(x >= 0 && y >= 0, "visible update control: %s", label);
@@ -100,6 +100,32 @@ static void ui_fixture(void) {
         ink_cap_emit("update.result", &a);
     }
 }
+static void entry(void) {
+    ink_hub_demand(); CHECK(WAIT_FOR(ink_hub_online(), 30000), "hub online before opening settings");
+    CHECK(AI("update.check", NULL) && g_rc.status == INK_RC_DONE, "discover the real offer before entering settings");
+    CHECK(WAIT_FOR(!strcmp(state_of("update.state"), "available"), 5000), "offer already available before entering settings");
+    CHECK(BY_HAND("shell.about", NULL) && WAIT_FOR(page("SetAbout"), 3000), "open the existing about page");
+    for (int i = 0; i < 2; i++) {
+        quiet(); on_ui(read_screen);
+        CHECK(strstr(g_snap, "\"capability\":\"shell.update\""), "about snapshot exposes the same update navigation");
+        press("系统更新");
+        CHECK(WAIT_FOR(page("Update"), 5000) && strstr(g_snap, U.offer_version), "existing update row opens the known offer on visit %d", i + 1);
+        press("返回"); CHECK(WAIT_FOR(page("SetAbout"), 3000), "return to about after visit %d", i + 1);
+    }
+}
+static void check_retry(void) {
+    CHECK(!U.offer_code && !ink_hub_online(), "offline boot has no package to download");
+    CHECK(BY_HAND("shell.update", NULL) && WAIT_FOR(page("Update"), 3000), "open update before any offer is known");
+    press("检查更新");
+    CHECK(WAIT_FOR(page("UpdateFail"), 30000), "offline check reaches the failure page");
+    quiet(); on_ui(read_screen);
+    CHECK(strstr(g_snap, "\"capability\":\"update.check\"") && !strstr(g_snap, "\"capability\":\"update.download\""), "failed check exposes checking rather than downloading");
+    CHECK(strstr(g_snap, "重新检查") && !strstr(g_snap, "重新下载"), "failed check explains the available retry");
+    double calls = sim_metric_value("action.user.update.check");
+    press("重新检查");
+    CHECK(WAIT_FOR(sim_metric_value("action.user.update.check") == calls + 1, 3000), "retry touch calls the real check capability again");
+    CHECK(WAIT_FOR(page("UpdateFail"), 30000) && !U.offer_code, "another offline check remains retryable without a package");
+}
 static void flow(void) {
     CHECK(AI("shell.update", NULL) && g_rc.status == INK_RC_DONE, "AI opens the same update surface");
     ink_hub_demand(); CHECK(WAIT_FOR(ink_hub_online(), 30000), "synthetic hub is online");
@@ -157,6 +183,10 @@ static void run(void *arg) {
         if (!strcmp(mode, "flow")) { flow(); return; }
         if (!strcmp(mode, "rollback")) { rollback(); return; }
         if (!strcmp(mode, "badboot")) return;
+        if (!strcmp(mode, "entry") || !strcmp(mode, "check-retry")) {
+            if (!strcmp(mode, "entry")) entry(); else check_retry();
+            ink_probe_count("test.finished"); return;
+        }
         CHECK(AI("shell.update", NULL) && g_rc.status == INK_RC_DONE, "open fixture surface");
         on_ui(ui_fixture); CHECK(WAIT_FOR(page(mode), 5000), "service fixture selects %s", mode);
         capture(mode);

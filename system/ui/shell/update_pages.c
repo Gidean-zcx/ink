@@ -86,6 +86,7 @@ static void render(void) {
     const char *why = blocked();
     int page = installing ? INSTALL : P.result ? (P.result > 0 ? DONE : RECOVERY) : P.error[0] || is_state("failed") ? FAIL :
         (is_state("ready") || is_state("available")) && why ? BLOCKED : is_state("ready") ? READY : UPDATE;
+    bool download = is_state("available") || (page == FAIL && P.version[0]);
     close_page(); P.page = page; P.epoch = ink_member_epoch();
     shell_card_open(&P.card); shell_card_full(&P.card); lv_obj_clean(P.card.panel);
     ink_ui_overlay_add(&PAGES[page], P.card.root); ink_ui_content_changed();
@@ -100,7 +101,7 @@ static void render(void) {
     P.model = (ink_ui_page_spec_t){NAMES[page], "系统更新", {"system:update", ink_ui_content_version()}, P.fields, 4, P.actions, 0};
     snprintf(P.percent, sizeof P.percent, "%d%%", P.progress);
     snprintf(P.title, sizeof P.title, "%s", page == BLOCKED ? "现在装不了" : page == FAIL ? "这次更新没完成" : page == INSTALL ? "正在安装，不要关机" : "系统更新");
-    snprintf(P.body, sizeof P.body, "%s", page == BLOCKED ? why : page == FAIL ? "可以重新下载。原来的系统仍然保留。" :
+    snprintf(P.body, sizeof P.body, "%s", page == BLOCKED ? why : page == FAIL ? (download ? "可以重新下载。原来的系统仍然保留。" : "可以重新检查。原来的系统仍然保留。") :
         page == READY ? "安装要几分钟，这期间不能用。" : page == INSTALL ? "如果新系统不能正常启动，会自动退回原来的系统。" :
         page == DONE ? "更新已完成。更新说明暂不能查看。" : page == RECOVERY ? "你的东西都在。之后可以再试一次。" :
         is_state("downloading") ? "下载完再问你要不要安装。" : is_state("available") ? "发现新版本，可以下载。" : "可以向家庭服务器检查新版本。");
@@ -156,8 +157,8 @@ static void render(void) {
     button(page == READY ? "以后再装" : page == FAIL ? "先不管" : pair ? "返回" : "知道了", "shell.update_close", "{}",
         downloading ? INK_MARGIN + half + INK_GAP : INK_MARGIN, pair ? half : w, !pair || downloading);
     if (page == READY) button("现在安装", "system.upgrade", "{}", INK_MARGIN + half + INK_GAP, half, true);
-    else if (page == FAIL || (page == UPDATE && !downloading)) button(page == FAIL ? "重新下载" : is_state("available") ? "下载" : "检查更新",
-        page == FAIL || is_state("available") ? "update.download" : "update.check", "{}", INK_MARGIN + half + INK_GAP, half, true);
+    else if (page == FAIL || (page == UPDATE && !downloading)) button(page == FAIL ? (download ? "重新下载" : "重新检查") : download ? "下载" : "检查更新",
+        download ? "update.download" : "update.check", "{}", INK_MARGIN + half + INK_GAP, half, true);
     else if (downloading) {
         snprintf(P.cancel, sizeof P.cancel, "{\"id\":%d}", P.task);
         button("暂停", "job.cancel", P.cancel, INK_MARGIN, half, false);
