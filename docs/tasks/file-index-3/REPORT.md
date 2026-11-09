@@ -37,12 +37,13 @@
 | confirm-durable | 通过，含原 2000 秒容量场景 | 通过，含原 2000 秒容量场景 |
 | hub-simulator-e2e | 通过 | 通过 |
 | integration-races | 通过 | 通过 |
-| scenario-reader_basic-metalio-plus-pqbn | 通过，原 460 ms 上限保留 | 通过，原 460 ms 上限保留 |
+| scenario-reader_basic-metalio-plus-pqbn | 通过，p95 447.984 ms，原上限 460 ms | 通过，p95 447.984 ms，原上限 460 ms |
 | scenario-ai_page_version-metalio-plus | 通过，done 4、stale 1 | 通过，done 4、stale 1 |
 
 ## 没做到的
 
 - Linux/gcc、实机未执行；未单独增加索引完成记录版本失配、旧固件升级场景的实测。本机注册的全部测试无缺依赖、无跳过。
+- 阅读首屏反馈通过原 460 ms CI 上限，原 SRS 的 350 ms 目标仍未达到；两项预算均保留原值。
 
 ## 和设计不一致的
 
@@ -81,6 +82,8 @@
 ## 命令与证据
 
 所有构建、测试均使用 `taskpolicy -c utility`，构建及 CTest 最多 `-j2`；依赖使用提供的 INK_DEPS，未安装或升级依赖。配置沿用总规则的字体、Python、LVGL 参数，均启用 INK_WERROR，内存构建仅另加 INK_SANITIZE。
+
+中枢测试的配置缓存 `INK_HUB_PYTHON` 指向 `$INK_DEPS/hub/.venv/bin/python`（已有 aiohttp、PyYAML 等依赖）；独立复现时需使用同一环境。
 
 - T1：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2 -R '^(file-index-3|file-index-regressions|storage-usage)$'`；内存构建换为 build-asan。证据为两套 `test-out/file-index-3/summary.json` 及 metrics.json；专项统计不含宿主时间。
 - T2：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/file_index_3/run.py --build build --baseline 2228df7de99de9fea15fddc22868a0de1caae770`，退出 0；`build/review-reverse-final.log`。只替换基线文件服务编译输入，统一使用 1024 条容量（原 512 条装不下夹具）；原算法显式查询共享目录，新实现自动启动且还扫描两位成员的文件。基线持锁 122.472 秒，自动索引反例确实失败。
