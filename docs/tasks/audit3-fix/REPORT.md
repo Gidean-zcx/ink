@@ -9,19 +9,19 @@
 | B3-01 | 【实测】PNG 逐块跟踪申请，失败统一释放并返回 NULL | `audit3-b3-01`：795 个申请失败点全部通过；基线进程段错误（-11） | C1、C2（n=1） |
 | B3-02 | 【实测】搜索按来源降级，返回并显示暂不可用分类 | `audit3-b3-02`：拔卡仍有电话、音量，插回后文件恢复；基线 5 条失败 | C1、C2（n=2） |
 | B3-03 | 【实测】记录和回执独立保留分页，重开或换成员重置 | `audit3-b3-03`：两页分别返回、重开及换成员通过；基线 3 条失败 | C1、C2（n=3） |
-| B3-04 | 【实测】即时失败进入备份服务状态，按钮也从状态读取 | `audit3-b3-04`：AI 拔卡失败、backup.status、开着的页面和按钮一致；基线 5 条失败 | C1、C2（n=4） |
+| B3-04 | 【实测】缺卡失败进入备份服务状态，按钮也从状态读取 | `audit3-b3-04`：AI 拔卡失败、backup.status、开着的页面和按钮一致；基线 5 条失败 | C1、C2（n=4） |
 | B3-05 | 【实测】取帧标题、回执明确不保存，保存仍走 camera.photo | `audit3-b3-05`：取帧不添文件，拍照添一张；基线 2 条失败 | C1、C2（n=5） |
 | B3-06 | 【实测】文件“打开”接 Photo，通过 file.lookup 核对图片与权限 | `audit3-b3-06`：触摸打开、未列入相册的新图片、儿童允许与拒绝通过；基线 6 条失败 | C1、C2（n=6） |
 | B3-07 | 【实测】成员事件刷新列表和快照，保留编辑内容，删除目标后操作失效 | `audit3-b3-07`：屏幕新称呼、编辑保留和删除目标通过；基线 3 条失败 | C1、C2（n=7） |
 | B3-08 | 【实测】新增、改名统一检查原始字节数，超长回执“称呼太长” | `audit3-b3-08`：两能力拒绝 11 汉字、完整保存 10 汉字；输入框上限 31 字节；基线 2 条失败 | C1、C2（n=8） |
 | B3-09 | 【实测】选择器回调保留 wallpaper.choose 的调用来源 | `audit3-b3-09`：AI 选择壁纸的 settings.set 进入活动记录；基线 1 条失败 | C1、C2（n=9） |
 | 构建与全量测试 | 【实测】构建通过；全量 250/251，通过项无跳过 | 唯一失败是禁改共享能力表的新鲜度检查；454.13 秒 | C3 |
-| 内存检查 | 待执行 | 待补 | 待补 |
+| 内存检查 | 【实测】ASan/UBSan 构建通过；全量 250/251，通过项无跳过 | 九项新增回归均通过；日志中无 sanitizer 诊断；唯一失败同为共享能力表；709.56 秒 | C4 |
 | 规模与隐私 | 【实测】产品代码 +130/-43，净增 87 行；隐私扫描 0 命中 | 指定基线至本地提交的差异；检查退出 0，隐私 grep 退出 1（无匹配） | C5 |
 
 ## 没做到的
 
-普通全量没有全绿：`capability-table-doc` 要求同步 `docs/system/capabilities.md`，但总规则第 7 节明确禁止本任务改共享生成文档。因此保留这条失败，不跳过、不放宽；其余 250 项通过。内存检查正在执行。未进行真机或 Linux 验证。
+普通和 ASan/UBSan 全量都没有全绿：`capability-table-doc` 要求同步 `docs/system/capabilities.md`，但总规则第 7 节明确禁止本任务改共享生成文档。因此保留这条失败，不跳过、不放宽；两轮其余 250 项全部通过。未进行真机或 Linux 验证。
 
 ## 和设计不一致的
 
@@ -36,7 +36,7 @@
 ## 新增的机制
 
 - PNG 编码期间的临时申请链与失败跳转：任务 B3-01 明确要求，用于释放 stb 未能自行清理的全部内存；只在 `png.c` 内，编码结束即清空。
-- 无新增任务、线程、状态机、持久文件格式、后台重试、缓存、队列或配置项。新增的成员事件订阅、两个列表位置均复用现有机制。
+- 无新增产品任务、线程、状态机、持久文件格式、后台重试、缓存、队列或配置项。新增的成员事件订阅、两个列表位置均复用现有机制。
 
 ## 要用户定的
 
@@ -55,14 +55,15 @@
 - C1：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2 -R '^audit3-b3-'`；9/9 通过，2.71 秒。
 - C2：对 n=1～9 分别运行 `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/audit3_fix.py --build build --case "$n" --baseline`；全部确认基线失败。驱动和断言不变，仅将该问题涉及的产品编译单元换成指定基线源码，不修改工作区。
 - C3：按总规则配置，另指定 `-DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"`；`taskpolicy -c utility cmake --build build -j2` 退出 0；`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2` 退出 8，250/251，通过项无跳过，仅能力表新鲜度失败。
-- C5：`git diff --check`、指定基线至 HEAD 的 `git diff --stat` / `--numstat -- system apps`，以及总规则要求的绝对路径与 MAC 模式扫描；净增 87 行，0 命中。最终提交后再核对。
-- 证据：`build/test-out/audit3-b3-0N/{result.json,run.log}`；反向对照在同名加 `-baseline` 的目录。构建目录被忽略，不提交产物。
+- C4：C3 相同配置换为 `build-asan`，增加 `-DINK_SANITIZE=ON`；`taskpolicy -c utility cmake --build build-asan -j2` 退出 0；`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2` 退出 8，250/251，通过项无跳过，仅能力表新鲜度失败。核对系统与 PNG 编译参数均有 address/undefined；扫描内存检查全部日志及 stderr，0 条 sanitizer 诊断。
+- C5：`git diff --check`、指定基线至 HEAD 的 `git diff --stat` / `--numstat -- system apps`，以及总规则要求的绝对路径与 MAC 模式扫描；净增 87 行，0 命中。
+- 证据：`build/test-out/audit3-b3-0N/{result.json,run.log}`，内存检查同路径换为 `build-asan`；反向对照在普通构建同名加 `-baseline` 的目录。全量及构建日志在两构建目录的 `audit3-fix-evidence/`，普通构建还保留 `reverse.log`、`regressions.log`、`camera-negative.log`。构建目录被忽略，不提交产物。
 
 ## 执行记录
 
 - 工作区初始干净，HEAD 与指定基线一致；已读取任务规则和审计报告，无前次修复记录。
 - 里程碑 1：九项修复、三个格式位置和九项回归完成；普通定向 9/9 通过，九项反向对照均复现原问题。首次编译遗漏独立 PNG 测试的头文件路径，已通过链接已有平台目标修正；没有修改已有测试期望。
 - 复查保留了声音播放期间原有的备份拒绝入口，避免把该拒绝分支接到需要写入日志的失败处理；任务要求的缺卡和日志写入失败仍由备份服务统一发布。
-- 首轮全量 248/251：录音期间的备份拒绝、备份页旧重开预期、共享能力表新鲜度失败；前两项据具体日志修正，能力表按任务禁改规则留给主会话同步。最终结果待复跑。
+- 首轮全量 248/251：录音期间的备份拒绝、备份页旧重开预期、共享能力表新鲜度失败；前两项据具体日志修正并复跑，能力表按任务禁改规则留给主会话同步。
 - 里程碑 2：【实测】修改后的九项回归、`backup-pages`、`backup-restore-recovery` 共 11/11 通过（60.83 秒）；已有相机授权反向对照也检出原断言失败。未放宽预算或跳过检查。
-- 普通最终全量 250/251，唯一失败为禁改能力表的新鲜度检查；开始 ASan/UBSan 构建和全量检查。
+- 里程碑 3：【实测】普通最终全量 250/251，ASan/UBSan 最终全量 250/251；仅能力表新鲜度失败。隐私扫描、差异检查完成，未提交构建产物、共享文档或本机路径，未推送。
