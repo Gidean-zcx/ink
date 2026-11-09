@@ -11,12 +11,12 @@
 | B9-02 | 通过 | 【实测】`audit9-ime-layout` 初次 22 条失败；加入固定位置检查后反向 25 条失败，修后通过；三种输入／字号下按钮完整可触摸，长词在展开页完整显示 | 同上 |
 | B9-03 | 通过 | 【实测】`audit9-font-coverage` 修前 508 项含缺字，修后 23,783 项全部有字形 | 同上 |
 | 全量与内存检查 | 普通通过，内存待运行 | 【实测】普通 295/295，213.20 秒，退出 0 | `ctest --test-dir build --output-on-failure -j2` |
-| S31 | 待构建 | 仅编译，不操作设备 | 待补 |
+| S31 | 通过 | 【实测】完整编译、链接、尺寸和栈报告生成，脚本退出 0 | `taskpolicy -c utility bash ports/esp32s31/build.sh` |
 | 资源与重复生成 | 通过 | 【实测】1,048,549 B；重复生成字节相同；90 条首选 75、前五 83 | `python tests/ime_lexicon/run.py --build build` |
 
 ## 没做到的
 
-内存检查及 S31 尚在验证中。没有操作设备；没有运行原生 Linux CI。
+ASan/UBSan 尚在验证中。没有操作设备；没有运行原生 Linux CI。
 
 ## 和设计不一致的
 
@@ -75,4 +75,23 @@
 ```sh
 INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" \
   tests/audit9/reverse.py --build build --baseline 5f2648809457522b0901366d54e5fa52c18ec9ee
+```
+
+- 【实测】S31 编译脚本退出 0；证据 `build-s31/audit9/build.log`、`build-s31/{size,size-components,stack}.txt`。仅离线构建，未运行固件自检或操作设备。
+
+复现配置（内存版仅将构建目录改为 `build-asan` 并加 `-DINK_SANITIZE=ON`）：
+
+```sh
+taskpolicy -c utility cmake -S . -B build -DINK_WERROR=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+  -DINK_CJK_FONT="$INK_DEPS/build-deps/fonts/NotoSansCJK-Regular.ttc" -DINK_CJK_FACE=2 \
+  -DINK_CJK_MEDIUM_FONT="$INK_DEPS/build-deps/fonts/NotoSansCJKsc-Medium.otf" \
+  -DINK_CJK_BOLD_FONT="$INK_DEPS/build-deps/fonts/NotoSansCJKsc-Bold.otf" \
+  -DPython3_EXECUTABLE="$INK_DEPS/build-deps/pyenv/bin/python" \
+  -DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python" \
+  -DFETCHCONTENT_SOURCE_DIR_LVGL="$INK_DEPS/build/_deps/lvgl-src" \
+  -DFETCHCONTENT_SOURCE_DIR_SDL2="$INK_DEPS/build/_deps/sdl2-src" \
+  -DFETCHCONTENT_SOURCE_DIR_IMGUI="$INK_DEPS/build/_deps/imgui-src"
+taskpolicy -c utility cmake --build build -j2
+INK_KEEP_EVIDENCE=1 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$PWD/hub" \
+  taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
 ```
