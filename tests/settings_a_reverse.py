@@ -21,7 +21,17 @@ cases = [
      'child cannot open a private settings page through the direct presenter path'),
     ('setting-guard', 'system/policy/settings.c',
      'if (ink_member_current()->role == INK_ROLE_CHILD && (d->system || !d->child_may_change)) {', 'if (false) {',
-     'child cannot write the adult voice setting via AI')]
+     'child cannot write the adult voice setting via AI'),
+    ('row-visibility', 'system/ui/shell/settings_pages.c',
+     '    lv_obj_remove_flag(lv_obj_get_child(slot, 1), LV_OBJ_FLAG_HIDDEN);', '',
+     'field value is visible: 记忆页面还没接入'),
+    ('backup-start-event', 'system/services/backup/backup_service.c',
+     '    (*task_id()) = ink_task_begin_for("backup", "备份资料", B.j.member, NULL, NULL);\n    event("backup.changed");',
+     '    (*task_id()) = ink_task_begin_for("backup", "备份资料", B.j.member, NULL, NULL);',
+     'accepted backup refreshes the visible page and its AI snapshot'),
+    ('paging-disabled', 'system/ui/shell/settings_pages.c',
+     'else ink_ui_list_turn(S.list, !strcmp(c->cap->id, "shell.settings_next") ? 1 : -1);', 'else (void)0;',
+     'next actually displays the second voice page and its memory field')]
 before = {path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest() for _, path, *_ in cases}
 commands, summary = [], []
 

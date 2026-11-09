@@ -116,6 +116,8 @@ static void bind_row(lv_obj_t *slot, size_t i, ink_ui_field_spec_t *field, ink_u
     lv_obj_set_style_border_width(slot, 0, 0);
     lv_label_set_text(lv_obj_get_child(slot, 0), r->title);
     lv_label_set_text(lv_obj_get_child(slot, 1), S.values[i]);
+    lv_obj_remove_flag(lv_obj_get_child(slot, 0), LV_OBJ_FLAG_HIDDEN);
+    lv_obj_remove_flag(lv_obj_get_child(slot, 1), LV_OBJ_FLAG_HIDDEN);
     while (lv_obj_get_child_count(slot) > 2) lv_obj_delete(lv_obj_get_child(slot, 2));
     if (r->setting && strcmp(r->setting, "voice.handsfree")) {
         lv_obj_add_flag(lv_obj_get_child(slot, 0), LV_OBJ_FLAG_HIDDEN);

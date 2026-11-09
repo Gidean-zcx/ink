@@ -1495,6 +1495,7 @@ static void cap_backup(ink_call_t *c) {
         return;
     }
     (*task_id()) = ink_task_begin_for("backup", "备份资料", B.j.member, NULL, NULL);
+    event("backup.changed");
     c->rc.status = INK_RC_QUEUED;
     result(c, false);
     schedule();

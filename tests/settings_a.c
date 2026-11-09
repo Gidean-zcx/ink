@@ -9,6 +9,7 @@
 static bool restarting;
 static const char *wanted, *opening;
 static int x, y;
+static int page_number, page_offset, page_visible, first_visible;
 static char snapshot[4096], bound[128];
 static const char *const PAGES[] = {"SetVoice", "SetStorage", "SetAbout", "SetPrivacy"};
 static const char *const CAPS[] = {"shell.voice", "shell.storage", "shell.about", "shell.privacy"};
@@ -38,6 +39,50 @@ static void find_label_at(lv_obj_t *o) {
     for (uint32_t i = 0; i < lv_obj_get_child_count(o); i++) find_label_at(lv_obj_get_child(o, i));
 }
 static void find_label(void) { x = y = -1; find_label_at(lv_screen_active()); }
+static void inspect_visible_page(void) {
+    read_snapshot();
+    const char *p = strstr(snapshot, "\"pagination\":");
+    int pages, total;
+    CHECK(p && sscanf(p, "\"pagination\":{\"page\":%d,\"pages\":%d,\"total\":%d,\"offset\":%d,\"visible\":%d",
+        &page_number, &pages, &total, &page_offset, &page_visible) == 5, "pagination has real coordinates");
+    p = strstr(snapshot, "\"fields\":[");
+    ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
+    char text[384];
+    if (p && j) for (p += strlen("\"fields\":["); *p == '{'; ) {
+        const char *end = strstr(p, "}}");
+        CHECK(end && !ink_json_parse(j, p, (size_t)(end - p) + 2), "visible field parses");
+        if (!end) break;
+        ink_json_str(j, ink_json_find(j, 0, "label"), text, sizeof text);
+        wanted = text; find_label();
+        CHECK(x >= 0 && y >= 0, "field title is visible: %s", text);
+        if (!ink_json_eq(j, ink_json_find(j, 0, "role"), "setting")) {
+            ink_json_str(j, ink_json_find(j, 0, "value"), text, sizeof text);
+            wanted = text; find_label();
+            CHECK(!text[0] || (x >= 0 && y >= 0), "field value is visible: %s", text);
+        }
+        p = end + 2;
+        if (*p == ',') p++;
+    }
+    osal_free(j);
+}
+static void inspect_second_page(void) {
+    inspect_visible_page();
+    CHECK(page_number == 2 && page_offset == first_visible && strstr(snapshot, "\"id\":\"ai.memory\""),
+        "next actually displays the second voice page and its memory field");
+}
+static void inspect_first_page(void) {
+    inspect_visible_page();
+    CHECK(page_number == 1 && page_offset == 0 && strstr(snapshot, "voice.handsfree"),
+        "the physical previous key restores the first F4 page");
+}
+static void outage_event(void *arg) { (void)arg; sim_net_outage(SIM_MS(60000)); }
+static void inspect_backup_started(void) {
+    read_snapshot();
+    CHECK(strstr(snapshot, "备份或恢复正在进行") && !strstr(snapshot, "还没有备份"),
+        "accepted backup refreshes the visible page and its AI snapshot");
+    wanted = "备份或恢复正在进行"; find_label();
+    CHECK(x >= 0 && y >= 0, "the running backup is visible on screen");
+}
 static void press(const char *label) {
     wanted = label; on_ui(find_label);
     CHECK(x >= 0 && y >= 0, "visible button: %s", label);
@@ -115,9 +160,16 @@ static void run(void *arg) {
             "AI executes the exact action exported for the same control"); quiet();
         press("使用时"); CHECK(ink_setting_get("voice.handsfree") == 0, "the segment button uses the same settings capability");
         CHECK(AI("settings.set", "{\"id\":\"voice.handsfree\",\"value\":2}") && g_rc.status == INK_RC_DONE, "restore the persisted voice value"); quiet();
+        on_ui(inspect_visible_page); first_visible = page_visible;
         CHECK(AI("shell.settings_next", NULL) && g_rc.status == INK_RC_DONE, "AI uses the F4 next capability"); quiet();
-        key(INK_KEY_PREV); quiet(); on_ui(read_snapshot);
-        CHECK(strstr(snapshot, "voice.handsfree"), "the physical previous key restores the first F4 page");
+        on_ui(inspect_second_page);
+        key(INK_KEY_PREV); quiet(); on_ui(inspect_first_page);
+        CHECK(AI("settings.set", "{\"id\":\"display.font_size\",\"value\":3}"), "use the largest text setting"); quiet();
+        CHECK(AI("shell.voice", NULL), "reopen voice at the largest text size"); quiet();
+        on_ui(inspect_visible_page); first_visible = page_visible;
+        CHECK(AI("shell.settings_next", NULL), "turn voice at the largest text size"); quiet(); on_ui(inspect_second_page);
+        key(INK_KEY_PREV); quiet(); on_ui(inspect_first_page);
+        CHECK(AI("settings.set", "{\"id\":\"display.font_size\",\"value\":1}"), "restore normal text size"); quiet();
         CHECK(BY_HAND("system.home", NULL), "close voice before opening about");
         CHECK(AI("shell.about", NULL), "open about controls"); quiet(); press("自动下载新版本");
         CHECK(ink_setting_get("update.auto_download") == 1, "about toggle reaches the existing backend");
@@ -130,6 +182,12 @@ static void run(void *arg) {
         on_ui(backend_changes);
         CHECK(BY_HAND("system.home", NULL), "close privacy");
         CHECK(AI("shell.storage", NULL), "open updated storage"); quiet(); on_ui(inspect_backend);
+        vtk_event_at(vtk_now() + SIM_MS(1), outage_event, NULL);
+        CHECK(WAIT_FOR(!ink_hub_online(), 10000), "ordinary network outage before backup");
+        press("备份");
+        CHECK(AI("backup.status", NULL) && g_rc.status == INK_RC_DONE && !strstr(g_result, "\"phase\":\"none\""),
+            "the real backup service accepted the task");
+        quiet(); on_ui(inspect_backup_started);
         on_ui(unavailable_card); quiet(); on_ui(check_no_card);
         CHECK(AI("shell.about", NULL), "open updated version"); quiet(); on_ui(inspect_backend);
         CHECK(BY_HAND("system.home", NULL), "return home before switching members"); quiet();

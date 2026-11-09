@@ -64,3 +64,13 @@
 【实测】最终普通构建的定向复查 3/3 通过：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^(settings-a|integration-ai-surface|ui-scale)$' --output-on-failure -j2`，退出 0，日志 `build/settings-final.log`。最后一次改动只删去了隐私说明中无法验证的保留策略归属；最终 ASan/UBSan 全量运行和此复查均包含该改动。
 
 【实测】基线至提交的差分隐私扫描零命中（按总规则第 6 节原正则，`grep` 退出 1 表示无匹配）；`git diff --check` 通过。差分仅包含四页及其入口、构建注册、测试和本报告。
+
+## 复查后的修复
+
+复查基线：`418d66dd`。按用户要求修复全部四个中级问题；共享能力表文档仍交合并主会话生成。
+
+- R1-01：【实现】绑定复用行时统一清除两个基础文字的隐藏标志；默认和特大字号均检查第二页正文可见。
+- R1-02：【实现】备份服务成功保存启动意图并建立任务后，补发已有的 `backup.changed`；复用页面现有订阅，不加轮询。回归用真实触摸启动断网备份，核对后端阶段、可见文字和 AI 快照。
+- R1-03：【实现】下一页后立即核对页码、偏移和记忆字段，再用实体上一页键核对回到第一页；增加禁用翻页的反向对照。
+- 【实测】未修产品时新增回归准确报出四条失败：两个字号的记忆正文隐藏、备份快照陈旧、备份正文未刷新；`build/settings-fixes-before.log`。修复后的定向运行通过，见 `build/settings-fixes-after.log`。五项反向对照全部按预期退出 1，涵盖原有两个儿童限制、可见性、备份启动事件和翻页执行；`build/settings-fixes-reverse.log`。
+- R1-04：正在恢复四页分组和版面；本节后续补齐布局测试、逐页图像核对及最终全量验收结果。
