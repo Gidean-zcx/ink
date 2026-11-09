@@ -6,7 +6,7 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 待验证 | 沿用原有全拼与简拼用例，先测基线 | 待补 |
+| 1 | 【实测】达到目标，待最终回归 | 原 90 条用例不变；简拼首选 4/16 → 12/16，前五 10/16 → 16/16；全拼 71/73、73/73 不变 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2 -R '^ime-lexicon$'` |
 | 2 | 待实现 | 成员独立学习、持久化、密码排除、容量与淘汰 | 待补 |
 | 3 | 待验证 | 全量测试、ASan/UBSan、词库不超过 1 MB | 待补 |
 
@@ -41,3 +41,4 @@
 ## 里程碑与复现
 
 - 开工：已核对 HEAD 与指定基线一致，工作区干净，分支为 `claude/codex-ime-quality`；已阅读任务规则（第 7 节优先）和任务书。
+- 简拼里程碑：【实测】基线专项通过；新词库专项通过，90 条合计首选 75 → 83、前五 83 → 89，未收录短句仍未命中。词库从 1,048,560 缩到 969,866 字节，同输入重复生成逐字节一致。基线与新候选证据分别为 `work/baseline-candidates.json`、`build/ime-lexicon-w_0xkvu6/dictionary-candidates.json`。
