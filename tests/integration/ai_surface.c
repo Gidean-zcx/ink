@@ -77,6 +77,8 @@ static const struct {
     {"sms.text", NULL}, {"sms.long", NULL}, {"sms.prev", NULL}, {"sms.next", NULL},
     {"memo.save", "id,draft,page"}, {"memo.delete", "id"}, {"memo.undo", "id"}, {"memo.convert", "id"}, {"memo.check", "id,index"},
     {"memo.open", "id"}, {"memo.edit", ""}, {"memo.next", NULL}, {"memo.prev", NULL}, {"memo.retry", NULL},
+    {"files.browse", "path"}, {"files.select", "id"}, {"files.move", NULL}, {"files.name", NULL},
+    {"files.preview", "id"}, {"files.next", NULL}, {"files.prev", NULL}, {"files.up", NULL},
     {NULL, NULL},
 };
 
