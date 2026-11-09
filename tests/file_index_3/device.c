@@ -33,8 +33,9 @@ static void exchange(void *arg) {
     snprintf(content, sizeof content, "%s/content", sim_sd_root());
     snprintf(saved, sizeof saved, "%s/card-a", sim_sd_root());
     snprintf(other, sizeof other, "%s/card-b", sim_sd_root());
+    struct stat st;
     exchanged = arg ? rename(content, other) == 0 && rename(saved, content) == 0 :
-        rename(content, saved) == 0 && mkdir(content, 0700) == 0;
+        rename(content, saved) == 0 && (stat(other, &st) == 0 ? rename(other, content) == 0 : mkdir(content, 0700) == 0);
 }
 static void run(void *arg) {
     (void)arg;
@@ -80,6 +81,15 @@ static void run(void *arg) {
             CHECK(WAIT_FOR(ready(), 30000), "insertion resumes automatically without an application query");
             ink_fs_entry_t resumed;
             CHECK(ink_fs_lookup(id, &resumed) == 0 && !strcmp(prefix.path, resumed.path), "resume preserves already assigned ids");
+            if (!strcmp(mode, "swap")) {
+                unsigned reads = ink_test_index_reads();
+                vtk_host_call(exchange, NULL); CHECK(exchanged, "return to completed second card");
+                CHECK(ink_fs_lookup(id, &resumed) == INK_FS_ERR_CARD_CHANGED, "lookup observes replacement before background batch");
+                CHECK(WAIT_FOR(ready(), 10000), "completed second card reused");
+                vtk_host_call(exchange, (void *)1); CHECK(exchanged, "return to completed original card");
+                CHECK(ink_fs_lookup(id, &resumed) == 0, "original id available before reuse notification");
+                CHECK(WAIT_FOR(ready(), 10000) && ink_test_index_reads() == reads, "both completed cards retain independent completion markers");
+            }
         } else CHECK(WAIT_FOR(ready(), 30000), "whole card finishes with no application query");
         CHECK(ink_test_index_count() == 1003, "all shared and member files including concurrent write indexed exactly once");
         CHECK(ink_test_index_writes() <= 100, "1000-file indexing writes stay below one tenth of baseline");
