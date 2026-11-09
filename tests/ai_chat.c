@@ -18,6 +18,11 @@ static int x, y, page, pages;
 static bool found;
 
 static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
+static bool speaking(void) {
+    char state[16] = "";
+    ink_state_get_str(ink_state_find("audio.now_playing"), state, sizeof state);
+    return !strcmp(state, "voice");
+}
 static void quiet(void) { CHECK(WAIT_FOR(settled(), 12000), "screen settles"); }
 static void read_snapshot(void) {
     CHECK(ink_ui_snapshot(snapshot, sizeof snapshot, NULL) > 0, "complete AI snapshot");
@@ -143,6 +148,11 @@ static void run(void *arg) {
     hw(HW_KEY_UP, HAL_KEY_AI, 0);
     CHECK(WAIT_FOR(sim_metric_value("action.user.shell.ai_key") + sim_metric_value("action.ai.shell.ai_key") >= 4, 5000), "physical and tap speech share the key capability");
     CHECK(WAIT_FOR(sim_metric_value("ai.presses") >= 2, 5000), "held AI key starts another real turn");
+    CHECK(WAIT_FOR(speaking(), 20000), "the held-key turn reaches actual speech playback");
+    hw(HW_KEY_DOWN, HAL_KEY_AI, 0);
+    CHECK(WAIT_FOR(ink_audio_capture_busy() && !speaking(), 5000), "pressing AI while it speaks interrupts playback and starts capture");
+    hw(HW_KEY_UP, HAL_KEY_AI, 0);
+    CHECK(WAIT_FOR(sim_metric_value("action.user.shell.ai_key") >= 4, 5000), "both held-key turns use the common capability");
     quiet(); on_ui(read_snapshot);
     CHECK(ink_member_switch("kid") == 0, "switch member with conversation active");
     quiet(); on_ui(check_cleared);

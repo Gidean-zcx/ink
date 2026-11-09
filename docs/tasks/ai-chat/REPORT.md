@@ -56,10 +56,10 @@
 
 ## 反向对照
 
-【实测】仅临时将 `system/services/ai/ai_service.c` 的 `turn_allowed()` 中 `if (!g_turn_revoked && (!identity.authed ||` 改为 `if (false && !g_turn_revoked && (!identity.authed ||`，测试不动。构建 `sim-ai-chat` 退出 0；用原场景、夹具、预算运行，输出改到 `build/test-out/ai-chat-negative/`，退出 1，6 项断言失败、86 项流程继续运行到 `test.finished=1`。旧面板没有随成员关闭，画面仍有旧会话；快照的另一层归属保护拒绝输出。日志摘要在 `work/ai-chat-negative-summary.json`。已恢复源码并重新构建，未把临时改动提交。
+【实测】仅临时将 `system/services/ai/ai_service.c` 的 `turn_allowed()` 中 `if (!g_turn_revoked && (!identity.authed ||` 改为 `if (false && !g_turn_revoked && (!identity.authed ||`，测试不动。构建 `sim-ai-chat` 退出 0；用原场景、夹具、预算运行，输出改到 `build/test-out/ai-chat-negative/`，退出 1，6 项断言失败，测试继续运行到 `test.finished=1`。旧面板没有随成员关闭，画面仍有旧会话；快照的另一层归属保护拒绝输出。日志摘要在 `work/ai-chat-negative-summary.json`。已恢复源码并重新构建，未把临时改动提交。
 
 ## 规模与架构审视
 
-- 产品代码最终行数待核对；预算 350 行。新页面在 `ai_chat.c`；共用 CMake 只在末尾接线。导航仅修改 AI 图标入口和 Dock 能力绑定；UI 输入仅替换 AI 键的集中转发，没有修改其它并行页面。
+- 【实测】产品保守计数 202 行新增＋17 行删除＝219 行，连 CMake 的 12 行测试接线也计入；低于 350 行。新页面在 `ai_chat.c`；共用 CMake 只在末尾接线。导航仅修改 AI 图标入口和 Dock 能力绑定；UI 输入仅替换 AI 键的集中转发，没有修改其它并行页面。
 - 为什么不能小于 100 行：两页的主题控件、文字输入生命周期、五页 F1 声明、统一实体键和触摸／AI 入口，以及真实音频状态和停止接口缺一不可。只沿用旧面板不能提供对话入口和文字提问；手写纯文本快照更短，但不满足 F1。同一问题只在对应的公共入口修复。
 - 服务仍拥有协议、轮次、成员检查及语音传输；页面只通过能力调用，不访问服务内部状态。朗读状态读既有系统状态；输入和结果放 PSRAM。面板自动更新不改变底页的上下文版本，显式答案翻页才更新版本，以保留已有 AI 工具的页码约束。
