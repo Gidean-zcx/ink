@@ -4,20 +4,25 @@
 
 以下命令使用任务提供的 `INK_DEPS`、`INK_DESIGN`；构建与 CTest 最多 `-j2`，均使用 `taskpolicy -c utility`。构建参数照总规则；内存检查只换 `build-asan` 并加 `-DINK_SANITIZE=ON`。
 
+全量另设 `PYTHONDONTWRITEBYTECODE=1`、`PYTHONPATH="$PWD/hub:$INK_DEPS/hub/.venv/lib/python3.11/site-packages"`，只读复用现成中枢依赖，不因缺依赖跳过测试。
+
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
 | 1 开关、搜索、配对、连接、忘记、入口 | 模拟器专项通过；底层在途扫描不能硬取消 | 【实测】普通和 ASan/UBSan 专项通过；覆盖空搜索、配对失败与成功、点按断开/重连、长按忘记、扫描中关闭、超时、三个入口、孩子权限、重启保留；证据在 `build/test-out/bluetooth/` | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2 -R '^bluetooth-settings$'`（内存版换目录） |
 | 2 截图与画板对照 | 截图已检查；原始差分超过工具的 12/255 参考线 | 【实测】SetBluetooth **31.816/255**，未修改设计稿、阈值或截图；[三栏对照](../../../build/bluetooth-compare/SetBluetooth.png)；空搜索、配对失败、超时、孩子截图同在专项证据目录 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/bluetooth_compare.py --build build --design "$INK_DESIGN"` |
-| 3 全量测试与内存检查 | 待验证 | 构建成功，专项已通过；正在全量复验 | 待补 |
+| 3 全量测试与内存检查 | 普通全量未全通过；内存全量运行中 | 【实测】普通 **286/287 通过、1 失败、0 跳过**，退出 8，308.28 秒；唯一失败为共享能力文档过期，按规则留给主会话统一生成 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`（加上述环境；内存版换目录） |
 
 【实测】反向对照：分别撤去开关门禁、配对后连接的实现，编译替换对象链接同一验收程序；两次退出均为 1，分别检出 18、2 个失败，均跑到结束。产品源码哈希前后相同；正常实现的专项退出 0。复现：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/bluetooth_reverse.py --build build`；命令和结果在 `build/bluetooth-reverse/{commands,summary}.json`。
 
+【实测】普通日志 `work/test-final.log`。基线能力文档检查通过（434 项定义，`work/baseline-catalogue.log`）；当前目录已在忽略路径生成并校验（438 项定义，`work/capabilities-set-bluetooth.md`），没有修改共享文档。首次全量的电话测试因导航流程变化失败；更新既有流程后专项及最终普通全量均通过。
+
 ## 没做到的
 
-- 【实现】HAL 只有阻塞的 `hal_bt_scan`，没有取消接口。关闭开关后退出页面搜索状态、拒绝新扫描/配对/连接并丢弃在途结果；当前模型的扫描调用仍最多等待 1.5 秒返回，随后执行断开。没有修改模型的时长、行为或 HAL 契约，不能称为已实现底层扫描硬取消。
+- 【实现】[HAL](../../../platform/include/ink/hal_bt.h) 只有阻塞的 `hal_bt_scan`，没有取消接口。关闭开关后退出页面搜索状态、拒绝新扫描/配对/连接并丢弃在途结果；[当前模型](../../../ports/sim/hal/hal_bt_sim.c)的扫描调用仍最多等待 1.5 秒返回，随后执行断开。没有修改模型的时长、行为或 HAL 契约，不能称为已实现底层扫描硬取消。
 - 未操作设备，未验证真实无线协议、音质或功耗；未执行 Linux/gcc 构建。
+- 未覆盖连续快速开关和超长设备名等验收外场景。
 
 ## 和设计不一致的
 
@@ -37,7 +42,7 @@
 
 - 【实测】起始 HEAD 与指定基线一致，工作区干净；相关未结 Issue/PR 搜索无结果。
 - 决策板链接无法由读取工具访问；按任务书和仓库现有记录继续，不修改共享决策文件。
-- 首次专项发现快照缺少字段角色导致崩溃，已补齐，普通与内存专项复验通过。`ui-scale` 静态检查通过。
+- 开发中专项发现快照缺少字段角色及测试宿主调用位置问题，已修复，普通与内存专项复验通过。`ui-scale` 静态检查通过。
 
 ## 新增的机制
 
