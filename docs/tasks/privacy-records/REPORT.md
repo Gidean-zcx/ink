@@ -1,6 +1,6 @@
 # privacy-records 执行报告
 
-基线：`2228df7de99de9fea15fddc22868a0de1caae770`。分支：`claude/codex-privacy-records`。状态：实现及定向验证完成，首轮全量已跑；补齐接口契约清单后重跑全量，内存检查待运行。
+基线：`2228df7de99de9fea15fddc22868a0de1caae770`。分支：`claude/codex-privacy-records`。状态：实现和普通构建全量验证完成，ASan/UBSan 构建进行中。
 
 ## 验收表
 
@@ -10,13 +10,15 @@
 | 2 | 通过 | 【实测】大人查看孩子，孩子读自己；指定大人被拒；孩子的 181 天旧记录不进入件数或 AiLog | 同上；`python tests/privacy_records/reverse.py build` |
 | 3 | 通过（现有数据范围） | 【实测】删除前确认、AI 不能代确认、取消保留、本人及孩子活动记录清空并归零、互不影响；页面说明其余记录暂不能删除 | 同上 |
 | 4 | 通过 | 【实测】隐私页两入口分别打开本人、孩子段；页面文字与返回的 365/180 天一致 | 同上 |
-| 5 | 待全量结果 | 【实测】严格构建、相关已有测试、截图、反向对照已跑；全量和内存检查进行中 | 见下文 |
+| 5 | 未全绿，内存检查进行中 | 【实测】普通构建全量 254 通过、3 跳过、1 共享文档检查失败；预算未放宽，截图已留存 | 见下文 |
+
+全量命令均带 `taskpolicy -c utility`，构建 `cmake --build build -j2`，测试 `"$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`。普通构建最终全量：254 通过、3 跳过、1 失败，退出 8；日志 `build/ctest-full-final.log`。唯一失败为 `capability-table-doc`（任务禁止改生成的共享文档）。`hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e` 因没有锁定的中枢 Python 测试依赖而按已有规则返回跳过，未更改或绕过检查。
 
 定向检查：`ui-scale`、`settings-a`、`settings-b`、`ai-pages` 均通过；新测试 151 项断言通过，内部 RAM 最低余量 47,224 字节，高于 32,768 字节门槛。证据在 `build/test-out/privacy-records-sim-privacy-records/`。
 
 反向对照：只编译替换对象，不修改产品源文件；放开成员权限、取消实际删除、接错活动入口、取消孩子入口参数，分别产生 1、4、3、1 项失败，退出码均为 1。命令：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/privacy_records/reverse.py build`；摘要：`build/privacy-records-reverse/summary.json`。
 
-产品改动目前增加 195 行、删除 64 行；含构建接线增加 200 行，增删合计 264 行，均低于 300 行预算。超过 100 行的原因：四行汇总、分段、说明、删除入口和快照需要同屏布局，活动接口及 AiLog 还需同时支持孩子权限和真实期限。更小方案：保留原 Records 分页列表不符合汇总页合同；直接用数据库原始件数会把过期记录计入；两者均未采用。没有新增后端、常驻任务或通用组件。
+产品改动增加 195 行、删除 64 行；含构建接线增加 200 行，增删合计 264 行，均低于 300 行预算。超过 100 行的原因：四行汇总、分段、说明、删除入口和快照需要同屏布局，活动接口及 AiLog 还需同时支持孩子权限和真实期限。更小方案：保留原 Records 分页列表不符合汇总页合同；直接用数据库原始件数会把过期记录计入；两者均未采用。没有新增后端、常驻任务或通用组件。
 
 ## 没做到的
 
@@ -33,6 +35,7 @@
 
 - `tests/settings_b.c` 的 25 条活动遍历：从 Records 点进 AiLog，再用 `ai.pages.next` 遍历；原来在 Records 使用 `family.next` 和“更早记录”的预期改为新导航合同。保留全部 25 条可达断言、JSON 可读断言及持久化检查；截图名改为 AiLog25。
 
+- `tests/ai_pages.py`：随成员参数和孩子回执只读的实现更新两处反向对照文本锚点；未改变断言。既有 `--mutant member`、`--mutant undo` 均实跑并返回预期的 1，日志为 `build/ai-pages-reverse-member.log`、`build/ai-pages-reverse-undo.log`。
 - `tests/integration/ai_surface.c` 的能力契约清单：登记 `activity.clear`（必填 `member`）和 `shell.runtime_records`（无参数）；`shell.records`、`shell.ai_log` 从无参数改为可选参数。对应产品接口已改变，保留原有“能力必须入表”和 schema 必填项检查。首轮全量据此检出 5 项旧契约预期，已按实际接口修正。
 
 ## 要用户定的

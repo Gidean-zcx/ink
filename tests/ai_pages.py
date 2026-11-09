@@ -22,7 +22,7 @@ if args.mutant:
     source = (ROOT / "system/ui/shell" / product).read_text()
     old, new = {
         "errors": ("if (kind < 0) return NULL;", "if (kind < 0 || true) return NULL;"),
-        "member": ('ink_db_find_def("activity.log"), ink_member_current()->id', 'ink_db_find_def("activity.log"), "owner"'),
+        "member": ('ink_db_find_def("activity.log"), L.member', 'ink_db_find_def("activity.log"), "owner"'),
         "receipts": ("return words[i];", "return words[0];"),
         "snapshot": ("return ink_ui_semantics_snapshot(&E.page, out, cap);", "return -1;"),
         "hide": ("return &ERROR_OVERLAYS[kind];",
@@ -31,7 +31,7 @@ if args.mutant:
         "load": ('if (ink_cap_call("activity.list", NULL, &opts))', 'if ((void)opts, 1)'),
         "recover": ("if (L.list && !L.db)", "if (false)"),
         "wrap": ("(L.receipts ? ink_ui_label : ink_ui_line)", "ink_ui_line"),
-        "undo": ("bool undo = L.receipts &&", "bool undo = false && L.receipts &&"),
+        "undo": ("bool undo = !strcmp(L.member, ink_member_current()->id) && L.receipts &&", "bool undo = false && L.receipts &&"),
         "typed": ("ink_ai_pages_status(error, A.root)",
                   'ink_ai_pages_status(!strcmp(s, "现在没有网络，稍后再问我") ? INK_AI_ERROR_OFFLINE : !strcmp(s, "网络断了，回答没收全，请再试一次") ? INK_AI_ERROR_LOST : !strcmp(s, "家庭服务器没有回应，请再试一次") ? INK_AI_ERROR_TIMEOUT : !strcmp(s, "今天的额度用完了") ? INK_AI_ERROR_BUDGET : INK_AI_ERROR_NONE, A.root)'),
         "overlay": ('''    const ink_ui_overlay_t *overlay = ink_ai_pages_status(error, A.root);
