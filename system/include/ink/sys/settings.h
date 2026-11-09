@@ -55,8 +55,11 @@ int64_t ink_setting_get(const char *id);
 /** Change a setting past the policy gate; applies it, tells watchers, saves it. rc->status: the
  *  value is stored and on its way to `apply`; what the hardware does is its owner's to report (state). */
 ink_rc_t ink_setting_set(const char *id, int64_t v, ink_source_t src, ink_receipt_t *rc);
-/** fn(ctx, index, id) on `exec` when a setting whose id starts with `prefix` changes. Up to 16. */
+/** fn(ctx, index, id) on `exec` when a setting whose id starts with `prefix` changes. Up to 64. */
 int ink_settings_watch(const char *prefix, ink_state_fn fn, void *ctx, ink_exec_t exec);
+/** Removable watch; same handle, lifetime and executor contract as ink_state_watch_handle. */
+int ink_settings_watch_handle(const char *prefix, ink_state_fn fn, void *ctx, ink_exec_t exec);
+int ink_settings_unwatch(int handle);
 /** The table for the settings app and the AI: [{id,title,type,value,...}]. Bytes or -1. */
 int ink_settings_json(char *out, size_t cap);
 /** Static metadata, NULL past the last item. No values or storage access. */

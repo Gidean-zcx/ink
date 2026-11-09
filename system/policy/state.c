@@ -163,8 +163,12 @@ int ink_state_get_str(int h, char *out, size_t cap) {
 }
 
 int ink_state_watch(const char *prefix, ink_state_fn fn, void *ctx, ink_exec_t exec) {
-    return watch_add(&ST.watch, prefix, fn, ctx, exec) >= 0 ? 0 : -1;
+    return watch_add(&ST.watch, prefix, fn, ctx, exec, false) >= 0 ? 0 : -1;
 }
+int ink_state_watch_handle(const char *prefix, ink_state_fn fn, void *ctx, ink_exec_t exec) {
+    return exec == INK_EXEC_DIRECT ? -1 : watch_add(&ST.watch, prefix, fn, ctx, exec, true);
+}
+int ink_state_unwatch(int handle) { return watch_remove(&ST.watch, handle); }
 
 int ink_state_json(char *out, size_t cap, uint8_t expose) {
     ink_jw_t w;

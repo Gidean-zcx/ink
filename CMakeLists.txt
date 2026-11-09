@@ -556,6 +556,10 @@ target_link_libraries(sim-jot PRIVATE ink_apps ink_system)
 add_test(NAME app-framework-example COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/jot/run.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(app-framework-example PROPERTIES TIMEOUT 320)
 add_test(NAME app-framework-snippets COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/jot/check_doc.py)
+ink_sim_executable(sim-fw-gaps tests/fw_gaps/app.c tests/fw_gaps/db_probe.c)
+target_link_libraries(sim-fw-gaps PRIVATE ink_apps ink_system)
+add_test(NAME app-framework-gaps COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/fw_gaps/run.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(app-framework-gaps PROPERTIES TIMEOUT 180 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")
 add_test(NAME ui-semantics
   COMMAND sim-ui-semantics --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
     --script ${CMAKE_SOURCE_DIR}/tests/ui_semantics.script --budget ${CMAKE_SOURCE_DIR}/tests/ui_scene.budget.json

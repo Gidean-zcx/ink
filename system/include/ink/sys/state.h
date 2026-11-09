@@ -46,9 +46,14 @@ bool ink_state_get_int(int h, int64_t *out);
 /** String value: its length (copied, truncated to cap), -1 without a value. */
 int ink_state_get_str(int h, char *out, size_t cap);
 
-/** fn(ctx, h, id) on executor `exec` when an item whose id starts with `prefix` changes. Up to 16. */
+/** fn(ctx, h, id) on executor `exec` when an item whose id starts with `prefix` changes. Up to 64. */
 typedef void (*ink_state_fn)(void *ctx, int h, const char *id);
 int ink_state_watch(const char *prefix, ink_state_fn fn, void *ctx, ink_exec_t exec);
+/** Removable watch: positive handle, -1 on failure. UI/MEDIA/BG only; prefix lives until unwatch.
+ * Unwatch on that same executor: queued callbacks are discarded, active callbacks finish there.
+ * From inside a callback, only that invocation continues. Old watch() keeps returning 0/-1. */
+int ink_state_watch_handle(const char *prefix, ink_state_fn fn, void *ctx, ink_exec_t exec);
+int ink_state_unwatch(int handle); /* 0 removed, -1 stale handle or wrong executor */
 /** {"id": value, ...} of the items with a value that `expose` (INK_EXPOSE_* bit, 0 = all) may see. */
 int ink_state_json(char *out, size_t cap, uint8_t expose);
 

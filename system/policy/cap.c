@@ -864,32 +864,57 @@ static struct {
     ink_event_fn fn;
     void *ctx;
     ink_exec_t exec;
+    int handle;
 } SUBS[SUBS_MAX] INK_PSRAM_BSS;
-static int nsubs;
+static int nsubs, next_sub_handle;
 
 typedef struct {
     ink_exec_job_t job;
     ink_event_fn fn;
     void *ctx;
+    int sub, handle;
     char id[48], member[INK_MEMBER_ID_MAX];
     ink_args_t payload;
 } event_job_t;
 
-int ink_cap_subscribe(const char *prefix, ink_event_fn fn, void *ctx, ink_exec_t exec) {
+static int subscribe(const char *prefix, ink_event_fn fn, void *ctx, ink_exec_t exec, bool removable) {
     if (!CB.lock || !fn) return -1;
     osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
     int r = -1;
-    if (nsubs < SUBS_MAX) {
-        SUBS[nsubs] = (typeof(SUBS[0])){prefix ? prefix : "", prefix ? strlen(prefix) : 0, fn, ctx, exec};
-        r = nsubs++;
+    for (int i = 0; i < SUBS_MAX; i++) if (!SUBS[i].fn) {
+        r = ++next_sub_handle;
+        SUBS[i] = (typeof(SUBS[0])){prefix ? prefix : "", prefix ? strlen(prefix) : 0, fn, ctx, exec, removable ? r : 0};
+        if (i == nsubs) nsubs++;
+        break;
     }
     osal_mutex_unlock(CB.lock);
-    return r < 0 ? -1 : 0;
+    return r;
+}
+int ink_cap_subscribe(const char *prefix, ink_event_fn fn, void *ctx, ink_exec_t exec) {
+    return subscribe(prefix, fn, ctx, exec, false) < 0 ? -1 : 0;
+}
+int ink_cap_subscribe_handle(const char *prefix, ink_event_fn fn, void *ctx, ink_exec_t exec) {
+    return exec == INK_EXEC_DIRECT ? -1 : subscribe(prefix, fn, ctx, exec, true);
+}
+int ink_cap_unsubscribe(int handle) {
+    if (!CB.lock || handle <= 0) return -1;
+    osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+    int r = -1;
+    for (int i = 0; i < SUBS_MAX; i++) if (SUBS[i].handle == handle && SUBS[i].fn &&
+        SUBS[i].exec != INK_EXEC_DIRECT && ink_exec_is_current(SUBS[i].exec)) { SUBS[i].fn = NULL; r = 0; }
+    osal_mutex_unlock(CB.lock);
+    return r;
 }
 
 static void event_job(void *arg) {
     event_job_t *e = arg;
-    if (ink_member_exists(e->member)) e->fn(e->ctx, e->id, &e->payload);
+    bool live = true;
+    if (e->handle) {
+        osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+        live = SUBS[e->sub].handle == e->handle && SUBS[e->sub].fn;
+        osal_mutex_unlock(CB.lock);
+    }
+    if (live && ink_member_exists(e->member)) e->fn(e->ctx, e->id, &e->payload);
     osal_free(e);
 }
 
@@ -979,28 +1004,33 @@ void ink_cap_emit_for(const char *id, const ink_args_t *payload, const char *who
     snprintf(key, sizeof key, "event.%s", id);
     ink_probe_count(key);
     keep_event(id, payload, whose);
+    osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
     for (int i = 0; i < nsubs; i++) {
-        if (strncmp(id, SUBS[i].prefix, SUBS[i].plen)) continue;
+        typeof(SUBS[0]) sub = SUBS[i];
+        if (!sub.fn || strncmp(id, sub.prefix, sub.plen)) continue;
+        osal_mutex_unlock(CB.lock);
         const char *prev = osal_mem_tag("cap");
         event_job_t *e = osal_calloc(1, sizeof *e, OSAL_MEM_EXTERNAL);
         osal_mem_tag(prev);
         if (!e) {
             ink_probe_count("event.dropped");
+            osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
             continue;
         }
         snprintf(e->member, sizeof e->member, "%s", whose);
         
-        e->fn = SUBS[i].fn;
-        e->ctx = SUBS[i].ctx;
+        e->fn = sub.fn; e->ctx = sub.ctx; e->sub = i; e->handle = sub.handle;
         snprintf(e->id, sizeof e->id, "%s", id);
         if (payload) e->payload = *payload;
         else ink_args_init(&e->payload);
         ink_args_str(&e->payload, "member", whose);
-        if (ink_exec_post(SUBS[i].exec, &e->job, event_job, e) != 0) {
+        if (ink_exec_post(sub.exec, &e->job, event_job, e) != 0) {
             ink_probe_count("event.dropped");
             osal_free(e);
         }
+        osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
     }
+    osal_mutex_unlock(CB.lock);
 }
 
 void ink_cap_emit(const char *id, const ink_args_t *payload) {
