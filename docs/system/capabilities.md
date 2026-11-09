@@ -7,7 +7,7 @@ python3 tools/capabilities.py
 python3 tools/capabilities.py --check
 ```
 
-当前共 348 项：可调用能力 315、事件 33；设置 17 项、状态 48 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
+当前共 350 项：可调用能力 317、事件 33；设置 17 项、状态 48 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
 
 风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。
 
@@ -23,6 +23,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 | 能力 id | 描述 | 谁能调 | 风险 / effect | 是否确认 | 成员范围 | 关联面 | 定义 |
 | --- | --- | --- | --- | --- | --- | --- | --- |
+| `activity.clear` | 删除全部活动记录 | 人、AI | 高 / local_destructive | 人、AI 均在设备确认 | 成人；儿童须白名单 | [s12](#s12) | [system/policy/cap.c](../../system/policy/cap.c) |
 | `activity.list` | 查看 AI 做过的事 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s12](#s12) | [system/policy/cap.c](../../system/policy/cap.c) |
 | `ai.pages.close` | 继续读 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s38](#s38) | [system/ui/shell/ai_pages.c](../../system/ui/shell/ai_pages.c) |
 | `ai.pages.next` | 下一页 AI 记录 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s38](#s38) | [system/ui/shell/ai_pages.c](../../system/ui/shell/ai_pages.c) |
@@ -268,6 +269,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `shell.privacy` | 打开隐私 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s48](#s48) | [system/ui/shell/settings_pages.c](../../system/ui/shell/settings_pages.c) |
 | `shell.records` | 查看使用记录 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s47](#s47) | [system/ui/shell/settings_family.c](../../system/ui/shell/settings_family.c) |
 | `shell.resume` | 接着读 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s46](#s46) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
+| `shell.runtime_records` | 查看运行记录 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s47](#s47) | [system/ui/shell/settings_family.c](../../system/ui/shell/settings_family.c) |
 | `shell.search` | 查找应用 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 home | [s46](#s46) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
 | `shell.settings` | 打开设置 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s46](#s46) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
 | `shell.settings_next` | 设置下一页 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s48](#s48) | [system/ui/shell/settings_pages.c](../../system/ui/shell/settings_pages.c) |

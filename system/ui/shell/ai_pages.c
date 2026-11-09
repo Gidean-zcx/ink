@@ -73,6 +73,7 @@ const ink_ui_overlay_t *ink_ai_pages_status(ink_ai_error_t error, lv_obj_t *pare
 
 static struct {
     ink_db_t *db; ink_ui_list_t *list; ink_ui_list_position_t position[2];
+    char member[16]; int64_t keep_s;
     bool receipts; unsigned capacity; uint32_t version, generation, epoch, selected;
     lv_obj_t *notice; const char *status;
     ink_json_t json;
@@ -84,10 +85,22 @@ static const char *receipt_text(const char *status) {
     for (unsigned i = 0; i < sizeof names / sizeof *names; i++) if (!strcmp(status, names[i])) return words[i];
     return "结果不确定，不会自动重试";
 }
+static int next_record(ink_db_cursor_t *cursor, ink_rec_t *rec, char *row, size_t cap) {
+    int got; int64_t now = osal_wall_us() / 1000000;
+    do { got = ink_db_next(L.db, cursor, rec, row, cap); }
+    while (got == 1 && rec->sort > 0 && now > 0 && rec->sort < now - L.keep_s);
+    return got;
+}
+static size_t list_count(void) {
+    if (!L.db) return 0;
+    ink_db_cursor_t cursor = {0}; ink_rec_t rec; size_t n = 0;
+    while (next_record(&cursor, &rec, NULL, 0) == 1) n++;
+    return n;
+}
 static void bind_row(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, ink_ui_action_spec_t *action, void *ctx) {
     (void)ctx;
     unsigned i = index % L.capacity; ink_db_cursor_t cursor = {.desc = true}; ink_rec_t rec = {0};
-    for (size_t at = 0; at <= index; at++) if (ink_db_next(L.db, &cursor, &rec, L.row, sizeof L.row - 1) != 1) return;
+    for (size_t at = 0; at <= index; at++) if (next_record(&cursor, &rec, L.row, sizeof L.row - 1) != 1) return;
     L.row[rec.len < sizeof L.row ? rec.len : sizeof L.row - 1] = 0;
     if (ink_json_parse(&L.json, L.row, strlen(L.row))) return;
     char cap[48] = "", status[32] = "", object[48] = "";
@@ -99,7 +112,7 @@ static void bind_row(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, i
     ink_json_int(&L.json, ink_json_find(&L.json, 0, "undo_ms"), &undo_ms);
     ink_json_int(&L.json, ink_json_find(&L.json, 0, "when"), &when_s);
     age = osal_wall_us() / 1000000 - when_s;
-    bool undo = L.receipts && object[0] && undo_ms > 0 && age >= 0 && age * 1000 < undo_ms;
+    bool undo = !strcmp(L.member, ink_member_current()->id) && L.receipts && object[0] && undo_ms > 0 && age >= 0 && age * 1000 < undo_ms;
     const ink_cap_t *definition = ink_cap_find(cap);
     snprintf(L.ids[i], sizeof L.ids[i], "activity:%u", (unsigned)rec.id);
     snprintf(L.args[i], sizeof L.args[i], "{\"id\":%u}", (unsigned)rec.id);
@@ -137,19 +150,21 @@ static ink_ui_action_spec_t list_actions[] = {
 };
 static void list_loaded(void *ctx, const ink_receipt_t *rc) {
     if (!L.list || (uintptr_t)ctx != L.generation || !ink_ui_page_current()) return;
-    if (rc->status == INK_RC_DONE) L.db = ink_db_open_cached_member(ink_db_find_def("activity.log"), ink_member_current()->id);
+    if (rc->status == INK_RC_DONE) L.db = ink_db_open_cached_member(ink_db_find_def("activity.log"), L.member);
     if (rc->status == INK_RC_DONE && L.db) { ink_ui_redraw(); return; }
     L.status = "记录暂时读不了，请返回后重试";
     lv_label_set_text(L.notice, L.status); ink_ui_content_changed(); ink_ui_hint_obj(L.notice, INK_REFRESH_UI);
 }
 static void list_create(lv_obj_t *screen, void *arg) {
     L.receipts = !strcmp(ink_ui_page_name(), "AiReceipts");
-    if (L.epoch != ink_member_epoch()) { memset(L.position, 0, sizeof L.position); L.epoch = ink_member_epoch(); }
-    L.db = ink_db_open_cached_member(ink_db_find_def("activity.log"), ink_member_current()->id);
+    if (L.epoch != ink_member_epoch()) { memset(L.position, 0, sizeof L.position); L.epoch = ink_member_epoch(); snprintf(L.member, sizeof L.member, "%s", ink_member_current()->id); }
+    L.keep_s = 365ll * 86400;
+    for (int i = 0; ink_member_at(i); i++) if (!strcmp(ink_member_at(i)->id, L.member) && ink_member_at(i)->role == INK_ROLE_CHILD) L.keep_s = 180ll * 86400;
+    L.db = ink_db_open_cached_member(ink_db_find_def("activity.log"), L.member);
     L.version = L.db ? ink_db_last_ver(L.db) : 0;
     L.generation = ink_ui_generation(); L.status = L.db ? "" : "正在读取记录"; L.notice = NULL;
     ink_shell_statusbar(screen, true);
-    const char *title = L.receipts ? "AI 做事的结果" : "AI 替你做过的事";
+    const char *title = L.receipts ? "AI 做事的结果" : (!strcmp(L.member, ink_member_current()->id) ? "AI 替你做过的事" : "孩子的 AI 活动记录");
     ink_shell_topbar(screen, title);
     int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP;
     int row_h = L.receipts ? 2 * ink_ui_line_height(INK_FONT_LIST) + 4 * ink_ui_line_height(INK_FONT_NOTE) + INK_CONTROL + 3 * INK_GAP_M : ink_ui_row_double();
@@ -161,16 +176,17 @@ static void list_create(lv_obj_t *screen, void *arg) {
     (void)arg; uint32_t selected = L.selected;
     if (selected && L.db) {
         ink_db_cursor_t cursor = {.desc = true}; ink_rec_t rec; size_t index = 0;
-        while (ink_db_next(L.db, &cursor, &rec, NULL, 0) == 1 && rec.id != selected) index++;
+        while (next_record(&cursor, &rec, NULL, 0) == 1 && rec.id != selected) index++;
         L.position[L.receipts].page = index / L.capacity; L.selected = 0;
     }
     L.list = ink_ui_list_create(body, &page, &L.position[L.receipts], L.capacity, 1, row_h,
         L.db ? "还没有 AI 做过的事" : "", bind_row, NULL);
-    if (L.list) ink_ui_list_refresh(L.list, L.db ? (size_t)ink_db_count(L.db) : 0);
+    if (L.list) ink_ui_list_refresh(L.list, list_count());
     if (!L.db && L.list) {
         L.notice = ink_ui_notice(body, L.status, INK_GAP_L);
         ink_call_opts_t opts = {.src = INK_SRC_APP, .member = ink_member_current()->id, .reply_exec = INK_EXEC_UI,
             .done = list_loaded, .ctx = (void *)(uintptr_t)L.generation};
+        char args[64]; snprintf(args, sizeof args, "{\"member\":\"%s\"}", L.member); opts.args_json = args;
         if (ink_cap_call("activity.list", NULL, &opts)) list_loaded(opts.ctx, &(ink_receipt_t){.status = INK_RC_FAILED});
     }
 }
@@ -185,11 +201,11 @@ static int list_snapshot(char *out, size_t cap) {
 static bool list_key(ink_key_t k, bool lng) { return L.list && ink_ui_list_key(L.list, k, lng); }
 static void list_settle(void) {
     if (L.list && !L.db) {
-        L.db = ink_db_open_cached_member(ink_db_find_def("activity.log"), ink_member_current()->id);
+        L.db = ink_db_open_cached_member(ink_db_find_def("activity.log"), L.member);
         if (L.db) ink_ui_redraw();
     }
     if (L.db && L.list && L.version != ink_db_last_ver(L.db)) {
-        L.version = ink_db_last_ver(L.db); ink_ui_list_refresh(L.list, (size_t)ink_db_count(L.db));
+        L.version = ink_db_last_ver(L.db); ink_ui_list_refresh(L.list, list_count());
     }
 }
 static const ink_activity_t LOG = {.name = "AiLog", .app = "ai-log", .create = list_create, .destroy = list_destroy,
@@ -198,7 +214,16 @@ static const ink_activity_t RECEIPTS = {.name = "AiReceipts", .app = "ai-log", .
     .on_key = list_key, .snapshot = list_snapshot, .settle = list_settle};
 static void action(ink_call_t *c) {
     const char *id = c->cap->id;
-    if (!strcmp(id, "shell.ai_log")) { ink_ai_dismiss(); ink_ui_drop_app("ai-log"); memset(&L.position[0], 0, sizeof L.position[0]); L.selected = 0; ink_ui_push(&LOG, NULL); } /* entered from SetVoice, Records and AiHome, not an app */
+    if (!strcmp(id, "shell.ai_log")) {
+        char member[16]; snprintf(member, sizeof member, "%s", ink_member_current()->id);
+        ink_args_get_str(&c->args, "member", member, sizeof member);
+        bool allowed = !strcmp(member, ink_member_current()->id);
+        for (int i = 0; ink_member_at(i); i++) if (!strcmp(member, ink_member_at(i)->id) && ink_member_at(i)->role == INK_ROLE_CHILD && ink_member_current()->role == INK_ROLE_ADULT) allowed = true;
+        if (!allowed) { c->rc.status = INK_RC_REJECTED; return; }
+        ink_ai_dismiss(); ink_ui_drop_app("ai-log");
+        snprintf(L.member, sizeof L.member, "%s", member); L.epoch = ink_member_epoch();
+        memset(&L.position[0], 0, sizeof L.position[0]); L.selected = 0; ink_ui_push(&LOG, NULL);
+    } /* entered from SetVoice, Records and AiHome, not an app */
     else if (!strcmp(id, "shell.ai_receipts")) {
         int64_t selected = 0; ink_args_get_int(&c->args, "id", &selected);
         memset(&L.position[1], 0, sizeof L.position[1]); L.selected = (uint32_t)selected;
@@ -213,7 +238,8 @@ static void action(ink_call_t *c) {
 }
 #define PAGE_CAP(id_, title_) {.id = id_, .title = title_, .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action}
 static const ink_cap_t CAPS[] = {
-    PAGE_CAP("shell.ai_log", "查看 AI 做过的事"),
+    {.id = "shell.ai_log", .title = "查看 AI 做过的事", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action,
+     .input = "{\"type\":\"object\",\"properties\":{\"member\":{\"type\":\"string\",\"maxLength\":15}}}"},
     {.id = "shell.ai_receipts", .title = "查看 AI 做事的结果", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action,
      .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}}}"},
     PAGE_CAP("ai.pages.close", "继续读"), PAGE_CAP("ai.pages.retry", "重新用话筒问"),

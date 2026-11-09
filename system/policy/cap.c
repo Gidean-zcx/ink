@@ -269,7 +269,7 @@ static void activity_flush(void *arg) { /* exec.bg */
 }
 
 static bool needs_activity(const ink_cap_t *c, ink_source_t src) {
-    return AL.ready && c && c->effect >= INK_FX_LOCAL_WRITE &&
+    return AL.ready && c && strcmp(c->id, "activity.clear") && c->effect >= INK_FX_LOCAL_WRITE &&
            (src == INK_SRC_AI || src == INK_SRC_REMOTE || src == INK_SRC_CONFIRMED);
 }
 
@@ -1292,10 +1292,40 @@ static void cap_find(ink_call_t *c) {
     osal_free(out);
 }
 
+static const ink_member_t *activity_member(ink_call_t *c, char *member) {
+    snprintf(member, INK_MEMBER_ID_MAX, "%s", ink_cap_call_member(c));
+    ink_args_get_str(&c->args, "member", member, INK_MEMBER_ID_MAX);
+    for (int i = 0; ink_member_at(i); i++) {
+        const ink_member_t *m = ink_member_at(i);
+        if (strcmp(m->id, member)) continue;
+        if (!strcmp(member, ink_cap_call_member(c)) ||
+            (ink_member_current()->role == INK_ROLE_ADULT && m->role == INK_ROLE_CHILD)) return m;
+        break;
+    }
+    reject(&c->rc, INK_RC_REJECTED, "not your or your child's records");
+    return NULL;
+}
+
+static void cap_activity_clear(ink_call_t *c) {
+    char member[INK_MEMBER_ID_MAX];
+    if (!activity_member(c, member)) return;
+    ink_db_t *db = ink_db_open_member(&ACTIVITY, member);
+    if (!db) { reject(&c->rc, INK_RC_FAILED, "activity log unavailable"); return; }
+    ink_db_cursor_t cursor = {0}; ink_rec_t rec;
+    int got;
+    while ((got = ink_db_next(db, &cursor, &rec, NULL, 0)) == 1) {
+        if (ink_db_del(db, rec.id, c->src) != INK_DB_OK) { got = -1; break; }
+    }
+    if (got < 0 || ink_db_wait(db, ink_db_last_ver(db), 5000000) != INK_DB_OK)
+        reject(&c->rc, INK_RC_FAILED, "some activity records could not be deleted");
+    ink_db_close(db);
+}
+
 static void cap_activity_list(ink_call_t *c) { /* exec.bg */
     char member[INK_MEMBER_ID_MAX], cursor[48] = "";
-    snprintf(member, sizeof member, "%s", ink_member_current()->id);
-    ink_db_t *db = ink_db_open(&ACTIVITY, member);
+    const ink_member_t *target = activity_member(c, member);
+    if (!target) return;
+    ink_db_t *db = ink_db_open_member(&ACTIVITY, member);
     char *out = osal_malloc(16384, OSAL_MEM_EXTERNAL);
     if (!db || !out) {
         if (db) ink_db_close(db);
@@ -1316,15 +1346,18 @@ static void cap_activity_list(ink_call_t *c) { /* exec.bg */
     int64_t limit = 20;
     ink_args_get_int(&c->args, "limit", &limit);
     int64_t now = osal_wall_us() / 1000000;
-    int64_t keep = (ink_member_current()->role == INK_ROLE_CHILD ? 180ll : 365ll) * 86400;
+    int64_t keep = (target->role == INK_ROLE_CHILD ? 180ll : 365ll) * 86400;
     ink_jw_t w;
     ink_jw_init(&w, out, 16384 - 80);
     ink_jw_raw(&w, "{\"items\":[");
     ink_rec_t rec;
     char row[512];
-    int shown = 0;
+    int shown = 0, total = 0;
     bool more = false;
     ink_db_cursor_t last = at;
+    ink_db_cursor_t count_at = {0};
+    while (ink_db_next(db, &count_at, &rec, NULL, 0) == 1)
+        if (!(rec.sort > 0 && now > 0 && rec.sort < now - keep)) total++;
     while (ink_db_next(db, &at, &rec, row, sizeof row - 1) == 1) {
         if (rec.sort > 0 && now > 0 && rec.sort < now - keep) continue;
         if (shown >= limit) { more = true; break; }
@@ -1336,7 +1369,8 @@ static void cap_activity_list(ink_call_t *c) { /* exec.bg */
         shown++;
         last = at;
     }
-    ink_jw_raw(&w, "]");
+    ink_jw_raw(&w, "],\"total\":"); ink_jw_int(&w, total);
+    ink_jw_raw(&w, ",\"keep_days\":"); ink_jw_int(&w, keep / 86400);
     if (more) {
         char next[80];
         snprintf(next, sizeof next, ",\"next\":\"%lld:%u\"", (long long)last.sort, (unsigned)last.id);
@@ -1344,14 +1378,17 @@ static void cap_activity_list(ink_call_t *c) { /* exec.bg */
     }
     ink_jw_raw(&w, "}");
     ink_db_close(db);
-    if (strcmp(member, ink_member_current()->id) || !ink_member_space_open()) reject(&c->rc, INK_RC_STALE, "member changed");
+    if (strcmp(ink_cap_call_member(c), ink_member_current()->id) || !ink_member_space_open()) reject(&c->rc, INK_RC_STALE, "member changed");
     else ink_cap_result(c, out);
     osal_free(out);
 }
 
 static const ink_cap_t BUS_CAPS[] = {
+    {.id = "activity.clear", .title = "删除全部活动记录", .ask = "删除 {member} 的全部活动记录，找不回来。对话、记忆和运行记录暂不能删除。",
+     .effect = INK_FX_LOCAL_DESTRUCTIVE, .ask_by_hand = true, .exec = INK_EXEC_BG,
+     .input = "{\"type\":\"object\",\"properties\":{\"member\":{\"type\":\"string\",\"maxLength\":15}},\"required\":[\"member\"]}", .run = cap_activity_clear},
     {.id = "activity.list", .title = "查看 AI 做过的事", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_BG,
-     .input = "{\"type\":\"object\",\"properties\":{\"cursor\":{\"type\":\"string\",\"maxLength\":47},\"limit\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":100}}}",
+     .input = "{\"type\":\"object\",\"properties\":{\"member\":{\"type\":\"string\",\"maxLength\":15},\"cursor\":{\"type\":\"string\",\"maxLength\":47},\"limit\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":100}}}",
      .run = cap_activity_list},
     {.id = "system.undo",
      .title = "撤销刚才的操作",

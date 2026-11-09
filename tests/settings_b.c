@@ -112,7 +112,8 @@ static void test_records(void) {
     }
     CHECK(ink_cap_register(caps, 25) == 0, "register synthetic activity fixtures");
     for (int i = 0; i < 25; i++) CHECK(AI(ids[i], NULL) && g_rc.status == INK_RC_DONE, "write real activity %d", i);
-    CHECK(AI("shell.records", NULL), "open more than twenty real records"); quiet();
+    CHECK(AI("shell.records", NULL), "open activity summary"); quiet();
+    press("AI 替你做过的事"); CHECK(!strcmp(ink_ui_page_name(), "AiLog"), "summary opens paginated activity log");
     uint32_t seen = 0;
     for (int page = 0; page < 30; page++) {
         on_ui(read_snapshot);
@@ -122,13 +123,11 @@ static void test_records(void) {
         for (int i = 0; i < 25; i++) if (strstr(snapshot, titles[i])) seen |= 1u << i;
         if (seen == (1u << 25) - 1) break;
         uint32_t version = ink_ui_content_version();
-        label = "更早记录"; on_ui(find);
-        if (x >= 0 && y >= 0) press("更早记录");
-        else CHECK(AI("family.next", NULL), "read the next local page or backend cursor");
+        CHECK(AI("ai.pages.next", NULL), "read the next activity log page");
         CHECK(WAIT_FOR(ink_ui_content_version() != version, 5000), "record pagination produces new content"); quiet();
     }
     CHECK(seen == (1u << 25) - 1, "all 25 records, including records beyond 20, are reachable");
-    capture("Records25");
+    capture("AiLog25");
 }
 static void run(void *arg) {
     (void)arg;
