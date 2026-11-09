@@ -14,6 +14,8 @@ from imedict import build
 
 ROOT = Path(__file__).resolve().parent
 DICT_MAX = 1024 * 1024
+sys.path.insert(0, str(ROOT.parent / "fontgen"))
+from fontgen import charset
 
 
 def source_files(cache):
@@ -56,6 +58,10 @@ def generate(dictionary):
         syllables, word, frequency = line.split("\t")
         words[word] = max(words.get(word, 0), int(frequency))
         readings[word] = syllables.split()
+    source_words = len(words)
+    supported = set(charset("ascii,punct,pinyin,gb2312"))
+    words = {word: frequency for word, frequency in words.items()
+             if all(ord(char) in supported for char in word)}
     keys, lines = set(), []
     size, kept, characters, abbreviations = 32, 0, 0, 0
     for word, frequency in sorted(words.items(), key=lambda row: (-row[1], row[0])):
@@ -88,6 +94,8 @@ def generate(dictionary):
     data = build(lines)
     assert len(data) == size <= DICT_MAX
     stats = {"bytes": size, "words": kept, "characters": characters,
+             "source_words": source_words, "font_filtered_words": source_words - len(words),
+             "font_supported_words": len(words),
              "keys": len(keys), "entries": len(lines), "abbreviations": abbreviations,
              "minimum_source_frequency": minimum,
              "sha256": hashlib.sha256(data).hexdigest()}

@@ -54,6 +54,12 @@ static void inspect(void) {
     CHECK(lv_indev_search_obj(lv_layer_sys(), &edge) == more, "right edge of more is touchable");
     lv_obj_t *mic = lv_obj_get_child(row, -1);
     CHECK(ink_text_voice_possible() && fits(mic), "microphone keeps a fully visible position");
+    if (!expanded) {
+        lv_area_t mic_area, row_area;
+        lv_obj_get_coords(mic, &mic_area); lv_obj_get_coords(row, &row_area);
+        CHECK(mic_area.x2 == row_area.x2 && a.x2 + ink_ui_px(INK_GAP_XS) + 1 == mic_area.x1,
+              "more and microphone keep their reserved positions at the right edge");
+    }
     CHECK(strstr(g_snap, "text.voice_start") != NULL, "snapshot exposes the visible microphone");
     ink_text_cand_t choices[INK_TEXT_PAGE];
     int n = ink_text_candidates(0, choices, INK_TEXT_PAGE), visible = 0;

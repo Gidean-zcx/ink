@@ -380,7 +380,7 @@ add_custom_command(OUTPUT ${INK_TEST_CONTENT}/books/测试长书.txt
 add_custom_command(OUTPUT ${INK_TEST_CONTENT}/.system/ime/base.ikd
   COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/imedict/build_base.py
           --cache ${CMAKE_SOURCE_DIR}/build-deps/imedict --out ${INK_TEST_CONTENT}/.system/ime/base.ikd
-  DEPENDS tools/imedict/build_base.py tools/imedict/imedict.py tools/imedict/sources.lock.json tools/imedict/common.tsv
+  DEPENDS tools/imedict/build_base.py tools/imedict/imedict.py tools/imedict/sources.lock.json tools/imedict/common.tsv tools/fontgen/fontgen.py
           tools/imedict/licenses/jieba-MIT.txt tools/imedict/licenses/pypinyin-MIT.txt
           tools/imedict/licenses/pinyin-data-MIT.txt tools/imedict/licenses/phrase-pinyin-data-MIT.txt
   COMMENT "imedict: hash-locked full pinyin and initials within 1 MiB")
