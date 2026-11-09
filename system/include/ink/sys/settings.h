@@ -59,6 +59,8 @@ ink_rc_t ink_setting_set(const char *id, int64_t v, ink_source_t src, ink_receip
 int ink_settings_watch(const char *prefix, ink_state_fn fn, void *ctx, ink_exec_t exec);
 /** The table for the settings app and the AI: [{id,title,type,value,...}]. Bytes or -1. */
 int ink_settings_json(char *out, size_t cap);
+/** Static metadata, NULL past the last item. No values or storage access. */
+const ink_setting_def_t *ink_setting_at(int index);
 
 #ifdef __cplusplus
 }
