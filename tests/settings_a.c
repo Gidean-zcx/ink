@@ -9,6 +9,7 @@
 static bool restarting;
 static const char *wanted, *opening;
 static int x, y;
+static lv_obj_t *found;
 static int page_number, page_offset, page_visible, first_visible;
 static char snapshot[4096], bound[128];
 static const char *const PAGES[] = {"SetVoice", "SetStorage", "SetAbout", "SetPrivacy"};
@@ -35,10 +36,32 @@ static void find_label_at(lv_obj_t *o) {
     if (lv_obj_check_type(o, &lv_label_class) && !strcmp(lv_label_get_text(o), wanted)) {
         lv_area_t a; lv_obj_update_layout(o); lv_obj_get_coords(o, &a);
         x = (a.x1 + a.x2) / 2; y = (a.y1 + a.y2) / 2;
+        found = o;
     }
     for (uint32_t i = 0; i < lv_obj_get_child_count(o); i++) find_label_at(lv_obj_get_child(o, i));
 }
-static void find_label(void) { x = y = -1; find_label_at(lv_screen_active()); }
+static void find_label(void) { x = y = -1; found = NULL; find_label_at(lv_screen_active()); }
+static bool fully_visible(void) {
+    if (!found) return false;
+    lv_area_t a, clip; lv_obj_get_coords(found, &a);
+    for (lv_obj_t *p = lv_obj_get_parent(found); p; p = lv_obj_get_parent(p)) {
+        lv_obj_get_coords(p, &clip);
+        if (a.x1 < clip.x1 || a.x2 > clip.x2 || a.y1 < clip.y1 || a.y2 > clip.y2) {
+            CHECK(false, "clipped %s: [%d,%d,%d,%d] outside [%d,%d,%d,%d]", wanted,
+                a.x1, a.y1, a.x2, a.y2, clip.x1, clip.y1, clip.x2, clip.y2);
+            return false;
+        }
+    }
+    return true;
+}
+static bool row_has_icon(lv_obj_t *slot) {
+    for (uint32_t i = 0; i < lv_obj_get_child_count(slot); i++) {
+        lv_obj_t *o = lv_obj_get_child(slot, i);
+        if (lv_obj_get_width(o) == ink_ui_px(INK_CIRCLE_SMALL) && lv_obj_get_height(o) == ink_ui_px(INK_CIRCLE_SMALL) &&
+            lv_color_eq(lv_obj_get_style_bg_color(o, 0), ink_ui_paper()) && lv_obj_get_child_count(o)) return true;
+    }
+    return false;
+}
 static void inspect_visible_page(void) {
     read_snapshot();
     const char *p = strstr(snapshot, "\"pagination\":");
@@ -49,21 +72,105 @@ static void inspect_visible_page(void) {
     ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
     char text[384];
     if (p && j) for (p += strlen("\"fields\":["); *p == '{'; ) {
+        lv_obj_t *slot = NULL;
         const char *end = strstr(p, "}}");
         CHECK(end && !ink_json_parse(j, p, (size_t)(end - p) + 2), "visible field parses");
         if (!end) break;
-        ink_json_str(j, ink_json_find(j, 0, "label"), text, sizeof text);
-        wanted = text; find_label();
-        CHECK(x >= 0 && y >= 0, "field title is visible: %s", text);
+        if (!ink_json_eq(j, ink_json_find(j, 0, "id"), "device") && !ink_json_eq(j, ink_json_find(j, 0, "id"), "update.version")) {
+            ink_json_str(j, ink_json_find(j, 0, "label"), text, sizeof text);
+            wanted = text; find_label();
+            CHECK(fully_visible(), "field title is visible without clipping: %s", text);
+            if (found) slot = lv_obj_get_parent(found);
+            static const char *const GROUPED[] = {"voice.name", "voice.interrupt", "ai.records", "ai.memory", "text.assist", "backup",
+                "storage.books", "storage.audio", "storage.photos", "storage.clean", "update.check", "privacy", "device.details", "licenses"};
+            for (size_t k = 0; k < sizeof GROUPED / sizeof *GROUPED; k++)
+                if (ink_json_eq(j, ink_json_find(j, 0, "id"), GROUPED[k]))
+                    CHECK(slot && row_has_icon(slot) && lv_color_eq(lv_obj_get_style_bg_color(lv_obj_get_child(slot, 0), 0), ink_ui_gray()),
+                        "grouped row retains the design's icon and theme background: %s", GROUPED[k]);
+        }
         if (!ink_json_eq(j, ink_json_find(j, 0, "role"), "setting")) {
             ink_json_str(j, ink_json_find(j, 0, "value"), text, sizeof text);
-            wanted = text; find_label();
-            CHECK(!text[0] || (x >= 0 && y >= 0), "field value is visible: %s", text);
+            wanted = text;
+            if (slot) { x = y = -1; found = NULL; find_label_at(slot); } else find_label();
+            CHECK(!text[0] || fully_visible(), "field value is visible: %s", text);
         }
         p = end + 2;
         if (*p == ',') p++;
     }
     osal_free(j);
+}
+static void inspect_layout(void) {
+    inspect_visible_page();
+    if (!strcmp(ink_ui_page_name(), "SetVoice")) {
+        wanted = page_number == 1 ? "没锁屏时才听，不影响待机。" : "AI"; find_label();
+        CHECK(fully_visible(), "voice preserves the design's explanation and AI section");
+        CHECK(strstr(snapshot, wanted), "the AI snapshot includes the visible explanation or section");
+        if (page_number == 2) { wanted = "打字"; find_label(); CHECK(fully_visible(), "voice preserves the typing section"); }
+    } else if (!strcmp(ink_ui_page_name(), "SetStorage") && page_number == 1) {
+        wanted = "空间"; find_label();
+        CHECK(fully_visible() && lv_obj_get_x(found) == 0, "storage restores the space section at the page margin");
+        wanted = "还能放 4.0 GB"; find_label();
+        CHECK(fully_visible(), "storage presents the real capacity in readable units");
+        CHECK(found && lv_obj_get_style_text_font(found, 0) == ink_ui_font_px(INK_FONT_LIST, INK_WEIGHT_REGULAR),
+            "space summary uses the current theme's list text size");
+        if (found) {
+            lv_obj_t *bg = lv_obj_get_child(lv_obj_get_parent(found), 0);
+            CHECK(lv_obj_get_style_border_width(bg, 0) == ink_ui_px(INK_STROKE), "space summary has the design's outline");
+        }
+    } else if (!strcmp(ink_ui_page_name(), "SetAbout") && page_number == 1) {
+        char name[96]; snprintf(name, sizeof name, "%s的设备", ink_member_current()->name);
+        wanted = name; find_label();
+        CHECK(fully_visible() && x == (INK_CANVAS_W - 1) / 2 && lv_obj_get_style_text_align(found, 0) == LV_TEXT_ALIGN_CENTER,
+            "about centers the live device name");
+        if (found) {
+            lv_obj_t *slot = lv_obj_get_parent(found); bool logo = false;
+            for (uint32_t i = 0; i < lv_obj_get_child_count(slot); i++) {
+                lv_obj_t *o = lv_obj_get_child(slot, i);
+                if (lv_obj_get_width(o) == ink_ui_px(INK_CIRCLE_APP) && lv_obj_get_height(o) == ink_ui_px(INK_CIRCLE_APP) &&
+                    lv_color_eq(lv_obj_get_style_bg_color(o, 0), ink_ui_ink())) logo = true;
+            }
+            CHECK(logo, "about restores the centered black identity mark");
+        }
+    } else if (!strcmp(ink_ui_page_name(), "SetPrivacy") && page_number == 1) {
+        wanted = "你的东西放在哪"; find_label();
+        CHECK(fully_visible() && lv_obj_get_style_text_font(found, 0) == ink_ui_font_px(INK_FONT_SUBTITLE, INK_WEIGHT_MEDIUM),
+            "privacy uses paragraph headings from the current theme");
+        if (found) {
+            lv_area_t a; lv_obj_get_coords(found, &a);
+            CHECK(a.x1 == INK_MARGIN, "privacy paragraphs start at the page margin without a second card inset");
+            CHECK(lv_obj_get_style_bg_opa(lv_obj_get_parent(found), 0) == LV_OPA_TRANSP,
+                "privacy paragraphs have no card wrapper");
+        }
+    }
+    if (strstr(snapshot, "\"id\":\"reset\"") || strstr(snapshot, "\"id\":\"privacy.records\"")) {
+        wanted = !strcmp(ink_ui_page_name(), "SetAbout") ? "清空这台设备" : "查看和删除记录"; find_label();
+        CHECK(fully_visible() && y > INK_CANVAS_H - 3 * INK_CONTROL, "the final action sits at the bottom above pagination");
+        if (found) CHECK(lv_obj_get_style_border_width(lv_obj_get_child(lv_obj_get_parent(found), 0), 0) ==
+            (!strcmp(ink_ui_page_name(), "SetAbout") ? 0 : ink_ui_px(INK_STROKE)),
+            "about uses a text footer and privacy uses an outlined footer");
+    }
+}
+static char frame_name[80];
+static volatile bool captured;
+static void capture_frame(void *arg) { sim_display_snapshot(arg); captured = true; }
+static void inspect_all_layouts(void) {
+    for (int font = 1; font <= 3; font += 2) {
+        char args[80]; snprintf(args, sizeof args, "{\"id\":\"display.font_size\",\"value\":%d}", font);
+        CHECK(AI("settings.set", args) && g_rc.status == INK_RC_DONE, "set the real font size for layout checks"); quiet();
+        for (int i = 0; i < 4; i++) {
+            CHECK(AI(CAPS[i], NULL), "open every layout at both text sizes"); quiet();
+            for (int n = 0; n < 4; n++) {
+                on_ui(inspect_layout);
+                snprintf(frame_name, sizeof frame_name, "font%d-%s-%d", font, PAGES[i], page_number);
+                captured = false; vtk_event_at(vtk_now() + SIM_MS(1), capture_frame, frame_name);
+                CHECK(WAIT_FOR(captured, 1000), "capture the settled layout page");
+                if (!strstr(snapshot, "\"id\":\"next\"")) break;
+                CHECK(AI("shell.settings_next", NULL) && g_rc.status == INK_RC_DONE, "visit every F4 layout page"); quiet();
+            }
+            CHECK(BY_HAND("system.home", NULL), "close the inspected layout"); quiet();
+        }
+    }
+    CHECK(AI("settings.set", "{\"id\":\"display.font_size\",\"value\":1}"), "restore the default layout size"); quiet();
 }
 static void inspect_second_page(void) {
     inspect_visible_page();
@@ -85,6 +192,10 @@ static void inspect_backup_started(void) {
 }
 static void press(const char *label) {
     wanted = label; on_ui(find_label);
+    for (int i = 0; x < 0 && i < 3; i++) {
+        CHECK(AI("shell.settings_next", NULL), "find the control on a later page"); quiet();
+        wanted = label; on_ui(find_label);
+    }
     CHECK(x >= 0 && y >= 0, "visible button: %s", label);
     if (x >= 0 && y >= 0) tap(x, y);
     quiet();
@@ -96,9 +207,9 @@ static void inspect_backend(void) {
     if (!strcmp(ink_ui_page_name(), "SetVoice"))
         CHECK(strstr(snapshot, "voice.handsfree") && strstr(snapshot, "settings.set"), "voice exposes the existing setting capability");
     if (!strcmp(ink_ui_page_name(), "SetStorage")) {
-        int64_t bytes = -1; char expected[64];
+        int64_t bytes = -1;
         CHECK(ink_state_get_int(ink_state_find("storage.free"), &bytes), "storage backend has a real value");
-        snprintf(expected, sizeof expected, "还能放 %lld KiB", (long long)bytes / 1024);
+        const char *expected = bytes == 4321 * 1024 ? "还能放 4.2 MB" : "还能放 4.0 GB";
         CHECK(strstr(snapshot, expected), "storage page reads the real service rather than design example sizes");
     }
     if (!strcmp(ink_ui_page_name(), "SetAbout")) {
@@ -107,7 +218,7 @@ static void inspect_backend(void) {
             "about reads the update service's current version");
     }
     if (!strcmp(ink_ui_page_name(), "SetPrivacy"))
-        CHECK(strstr(snapshot, "密码框里的字看不到") && strstr(snapshot, "ai.read_clipboard"), "privacy exports its text and live permission");
+        CHECK(strstr(snapshot, "密码框里的字看不到") && strstr(snapshot, "privacy.storage"), "privacy exports its visible explanation");
 }
 static void extract_action(void) {
     read_snapshot();
@@ -153,6 +264,7 @@ static void run(void *arg) {
             CHECK(!strcmp(ink_ui_page_name(), PAGES[i]), "the requested real page opens"); on_ui(inspect_backend);
             CHECK(BY_HAND("shell.back", NULL) && g_rc.status == INK_RC_DONE, "back closes only one page"); quiet();
         }
+        inspect_all_layouts();
         CHECK(AI("shell.voice", NULL), "open voice controls"); quiet(); press("什么时候能叫名字");
         CHECK(ink_setting_get("voice.handsfree") == 1, "a real touch uses settings.set");
         on_ui(extract_action);

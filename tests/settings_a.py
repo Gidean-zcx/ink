@@ -36,11 +36,26 @@ for phase in ('write', 'restart'):
         raise SystemExit(f'{phase}: FAIL exit={result.returncode}\n{result.stderr[-2000:]}\n{data.get("warnings", [])}')
     if phase == 'write':
         snapshots = [json.loads(line) for line in (out / 'snapshots.ndjson').read_text().splitlines()]
-        assert {item['page'] for item in snapshots} == {'SetVoice', 'SetStorage', 'SetAbout', 'SetPrivacy'}
+        expected = {
+            'SetVoice': ['voice.handsfree', 'voice.name', 'voice.interrupt', 'ai.records', 'ai.memory', 'text.assist'],
+            'SetStorage': ['backup', 'storage.free', 'storage.books', 'storage.audio', 'storage.photos', 'storage.clean'],
+            'SetAbout': ['device', 'update.version', 'update.check', 'privacy', 'device.details', 'licenses', 'update.auto_download', 'reset'],
+            'SetPrivacy': ['privacy.storage', 'privacy.ai', 'privacy.retention', 'privacy.child', 'ai.read_clipboard', 'privacy.records'],
+        }
+        seen = {page: set() for page in expected}
+        assert {item['page'] for item in snapshots} == set(expected)
         for item in snapshots:
             assert item['fields'] and item['pagination']['visible'] == len(item['fields'])
+            pagination = item['pagination']
+            offset, visible = pagination['offset'], pagination['visible']
+            ids = [field['id'] for field in item['fields']]
+            assert pagination['total'] == len(expected[item['page']])
+            assert ids == expected[item['page']][offset:offset + visible], (item['page'], pagination, ids)
+            seen[item['page']].update(ids)
+            assert all(isinstance(note, str) for note in item['notes'])
             for action in item['actions']:
                 assert isinstance(json.loads(action['args_json']), dict)
+        assert all(seen[page] == set(ids) for page, ids in expected.items()), seen
     print(f'{phase}: PASS checks={counts.get("test.pass")}', flush=True)
 if not os.environ.get('INK_KEEP_EVIDENCE'):
     shutil.rmtree(area)
