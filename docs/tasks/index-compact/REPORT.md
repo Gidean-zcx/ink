@@ -1,6 +1,6 @@
 # index-compact 执行报告
 
-基线：`5e1e3964b5aafae3587b805c2edcf13922cccd44`。工作分支 `claude/codex-index-compact`，开工工作区干净。实现、计量、定向测试与反向对照完成；普通全量出现 4 项回归，内存检查与 S31 编译待完成。
+日期：2026-11-10。基线：`5e1e3964b5aafae3587b805c2edcf13922cccd44`。工作分支 `claude/codex-index-compact`，开工工作区干净。验收 1、2 通过；验收 3 未通过，普通及 ASan/UBSan 全量均有 4 项回归，S31 编译通过。全部只本地提交，未推送。
 
 ## 验收表
 
@@ -8,7 +8,7 @@
 | --- | --- | --- | --- |
 | 1 | 通过【实测，模拟器】 | 下表及 [before.csv](before.csv)、[after.csv](after.csv)；重新从基线源码编译的汇总、逐次 CSV 与开工测量完全一致 | 下文计量命令 |
 | 2 | 通过【实测】，普通全量已复核 | schema 1/2 的 6 个种子、升级、重启阶段共 50 个检查通过，编号均为 `[2, 1, 3]`；旧记录迁移前即可查询；重启目录读取、索引写盘均为 0；155 B 中文路径持久化回读；换回基线后 6 阶段均预期失败 | `ctest --test-dir build -R '^(index-compact|index-durable|file-index-3)$' --output-on-failure -j2`；下文反向命令 |
-| 3 | 未通过【实测】：普通全量 285/289；内存检查、S31 待完成 | 普通全量 4 项失败、0 跳过，334.45 s，退出 8；下表列失败及基线对照 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2` |
+| 3 | 未通过【实测】：普通和 ASan/UBSan 全量均 285/289；S31 编译通过 | 两种全量均 4 项失败、0 跳过，分别 334.45 / 444.78 s，均退出 8；57 份内存版日志 sanitizer 扫描 0 匹配；S31 完整构建退出 0 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`；内存版换 `build-asan` 并设 `UBSAN_OPTIONS=halt_on_error=1`；`taskpolicy -c utility bash ports/esp32s31/build.sh` |
 
 ## 计量与实现
 
@@ -43,9 +43,13 @@ INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python
 
 【实测】定向测试 3/3，退出 0。反向对照只在构建目录替换文件服务，基线 6 阶段失败数为 `1, 2, 2, 1, 2, 2`，仅变长布局及升级后 schema/长度断言失败；工具确认这些预期失败后退出 0。ctest 新测试直接构造旧 payload，不依赖 Git 历史。原始日志在 `work/index-compact/`，保留的重启镜像和指标在 `build/test-out/index-compact/`。
 
+【实测】普通及内存版的 6 个新回归阶段均通过，各 50 个检查；既有 `index-durable`、`file-index-3` 在两轮全量中也均通过。配置沿用总规则 §5 字体、Python、LVGL 参数，增加 `-DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"` 复用中枢锁定依赖，内存版只换目录、加 `-DINK_SANITIZE=ON`，两版都开 `INK_WERROR`。构建命令是 `taskpolicy -c utility cmake --build build -j2`（内存版换目录），均退出 0；没有安装或升级依赖。
+
+【实测】S31 使用既有 ESP-IDF 和 GCC 15.2.0，完整编译、链接并生成尺寸及栈报告，退出 0；Flash 静态占用 1179504 B、内部 DIRAM 83042 B、外部静态 BSS 507648 B，非实机内存测量。证据：`work/index-compact/s31-build.log`、`build-s31/size.txt`、`build-s31/stack.txt`。仅构建，没有连接设备。结束时清理未引用的生成图片、镜像和二进制，保留日志、JSON、索引及失败场景证据。
+
 ## 全量未通过项
 
-【实测】同一构建依赖、其他产品源码均不变，只将文件服务替换为任务基线并重新链接，以下 4 项均通过。因此不能把它们归为基线已有失败。未删除断言、改预算、增加等待或改刷新算法来掩盖结果。
+【实测】同一构建依赖、其他产品源码均不变，只将文件服务替换为任务基线并重新链接，以下 4 项在普通及内存构建中均通过。因此不能把它们归为基线已有失败。未删除断言、改预算、增加等待或改刷新算法来掩盖结果。
 
 | 测试 | 当前失败证据 | 基线文件服务对照 |
 | --- | --- | --- |
@@ -54,11 +58,11 @@ INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python
 | `settings-b` | `tests/settings_b.c:226`，`image style has no labels over the photo` | write/restart 均通过，退出 0 |
 | `confirm-pages` | `tests/confirm_pages/pages.c:67`，ConfirmWeb 的 `screenshot is fully presented`；其余 5 场景过 | ConfirmWeb 通过，退出 0 |
 
-【实现】检索所有产品调用，索引记录的直接读取都已接入统一解码，完成记录单独保留定长格式；未发现其他产品文件绕过文件服务读原始索引。记录长度改变伴随仿真时序变化是回归原因的假设，尚未定位和修复这四项的具体根因。基线复核脚本与日志保留在 `work/index-compact/check_baseline.py`、`baseline-check.log`、`baseline-check-build/`；脚本使用 CMake 编译/链接参数及 `git show` 的原文件，不改工作区源码。复核命令：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" work/index-compact/check_baseline.py --build build`。
+【实现】检索所有产品调用，索引记录的直接读取都已接入统一解码，完成记录单独保留定长格式；未发现其他产品文件绕过文件服务读原始索引。记录长度改变伴随仿真时序变化是回归原因的假设，尚未定位和修复这四项的具体根因。基线复核日志保留在 `work/index-compact/baseline-check.log`、`baseline-check-asan.log` 和两个 `baseline-check-build*` 目录；脚本使用 CMake 编译/链接参数及 `git show` 的原文件，不改工作区源码。复核命令：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/index_compact/check_baseline.py --build build`；内存版换 `build-asan`。两版均退出 0。
 
 ## 没做到的
 
-- 尚未使全量测试通过：上表 4 项回归未修，保留失败证据；内存检查与 S31 尚在验证。未连接设备或运行 Linux/远端 CI。
+- 尚未使全量测试通过：上表 4 项回归未修，普通及内存构建都复现；因此不能报告全部验收通过。未连接设备或运行 Linux/远端 CI。
 
 ## 和设计不一致的
 
@@ -80,7 +84,8 @@ INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python
 
 ## 新增的机制
 
-- schema 3 变长 payload：任务书第 1 项明确要求。沿用既有任务、完成记录与后台补建；无新增任务、状态机、配置项或迁移流程。
+- schema 3 变长 payload：任务书第 1 项明确要求。沿用既有任务、完成记录与后台补建；产品无新增任务、状态机、配置项或迁移流程。
+- `compact-test` 测试任务与 `SYNTH.compact` 合成集合：验收 2，检查旧格式和长路径；只进入模拟器测试，不进入固件。
 
 ## 要改的文档
 
