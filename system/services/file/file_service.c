@@ -123,7 +123,7 @@ static void thumb_clear(void *ctx, const char *id, const ink_args_t *args) {
     if (!storage_index_ready()) ink_svc_at(&FS.index_at, osal_now_us() + 50000ull, index_refresh_cb, NULL);
     osal_mutex_unlock(FS.edits);
 }
-static const ink_db_def_t INDEX_DEF = {.name = "file.index", .title = "文件编号", .scope = INK_DB_DEVICE, .schema = 2,
+static const ink_db_def_t INDEX_DEF = {.name = "file.index", .title = "文件编号", .scope = INK_DB_DEVICE, .schema = 3,
     .max_records = INK_FS_INDEX_MAX, .max_bytes = INK_FS_INDEX_MAX * 216u};
 static const ink_db_def_t INDEX_DONE_DEF = {.name = "file.index_ready", .title = "索引完成记录", .scope = INK_DB_DEVICE, .schema = 1,
     .max_records = INK_FS_INDEX_MAX, .max_bytes = INK_FS_INDEX_MAX * 216u};
@@ -1445,8 +1445,46 @@ int ink_fs_restore_if_revision(const char *member, unsigned stage, const char *p
     return restore_file(member, stage, path, NULL, revision);
 }
 
-/* Virtual paths map to at most 155 bytes; reuse v1's spare path bytes for metadata. */
+/* In memory and in completion records; index payloads use the codec below. */
 typedef struct { uint8_t card[16]; char path[PHYS_MAX - 16]; int64_t size, mtime; } index_rec_t;
+static size_t index_path_bytes(const char *path, size_t cap) {
+    size_t n = strnlen(path, cap);
+    return n > 9 && n < cap && n < sizeof(((index_rec_t *)0)->path) && !strncmp(path, "/content/", 9) ? n + 1 : 0;
+}
+static bool index_decode(const ink_rec_t *rec, const uint8_t *raw, index_rec_t *e) {
+    if (rec->schema < 1 || rec->schema > INDEX_DEF.schema ||
+        (rec->schema == 3 ? rec->len <= 32 || rec->len > sizeof *e : rec->len != sizeof *e)) return false;
+    const char *path = (const char *)raw + (rec->schema == 3 ? 32 : 16);
+    size_t cap = rec->schema == 3 ? rec->len - 32 : rec->schema == 2 ? sizeof e->path : PHYS_MAX;
+    size_t n = index_path_bytes(path, cap);
+    if (!n || (rec->schema == 3 && n != cap)) return false;
+    memset(e, 0, sizeof *e);
+    memcpy(e->card, raw, 16); memcpy(e->path, path, n);
+    if (rec->schema >= 2) {
+        size_t at = rec->schema == 3 ? 16 : 16 + sizeof e->path;
+        memcpy(&e->size, raw + at, 8); memcpy(&e->mtime, raw + at + 8, 8);
+    }
+    return true;
+}
+static int index_get(ink_db_t *db, uint32_t id, ink_rec_t *rec, index_rec_t *e) {
+    uint8_t raw[sizeof *e];
+    int r = ink_db_get(db, id, rec, raw, sizeof raw);
+    return r ? r : index_decode(rec, raw, e) ? 0 : INK_FS_ERR_IO;
+}
+static int index_next(ink_db_t *db, ink_db_cursor_t *cur, ink_rec_t *rec, index_rec_t *e) {
+    uint8_t raw[sizeof *e];
+    int r = ink_db_next(db, cur, rec, raw, sizeof raw);
+    return r == 1 && !index_decode(rec, raw, e) ? INK_FS_ERR_IO : r;
+}
+static int index_put(ink_db_t *db, uint32_t id, const index_rec_t *e, uint32_t *written, uint32_t flags) {
+    uint8_t raw[sizeof *e];
+    size_t n = index_path_bytes(e->path, sizeof e->path);
+    if (!n) return INK_DB_ERR_ARG;
+    memcpy(raw, e->card, 16); memcpy(raw + 16, &e->size, 8); memcpy(raw + 24, &e->mtime, 8);
+    memcpy(raw + 32, e->path, n);
+    ink_db_write_t w = {.id = id, .data = raw, .len = 32 + n, .schema = INDEX_DEF.schema, .flags = flags};
+    return ink_db_put(db, &w, written);
+}
 static struct {
     bool family, saving;
     char indexed[INK_MEMBERS_MAX][INK_MEMBER_ID_MAX], member[INK_MEMBER_ID_MAX];
@@ -1511,8 +1549,7 @@ static int index_open(uint8_t card[16], ink_db_t **db) {
 }
 
 static int index_save(ink_db_t *db, uint32_t id, const index_rec_t *e, uint32_t *written) {
-    ink_db_write_t w = {.id = id, .data = e, .len = sizeof *e};
-    int r = e ? ink_db_put(db, &w, written) : ink_db_del(db, id, 0);
+    int r = e ? index_put(db, id, e, written, 0) : ink_db_del(db, id, 0);
     return r ? (r == INK_DB_ERR_FULL ? INK_FS_ERR_INDEX_FULL : INK_FS_ERR_IO) : 0;
 }
 
@@ -1525,8 +1562,8 @@ static int index_edit(const char *from, const char *to) {
     if (!FS.ready || hal_fs_size(INDEX_CARD) < 0) return 0;
     uint8_t card[16]; ink_db_t *db = NULL;
     int r = index_open(card, &db);
-    index_rec_t e; ink_rec_t rec; ink_db_cursor_t cur = {0};
-    while (!r && ink_db_next(db, &cur, &rec, &e, sizeof e) == 1) {
+    index_rec_t e; ink_rec_t rec; ink_db_cursor_t cur = {0}; int n = 0;
+    while (!r && (n = index_next(db, &cur, &rec, &e)) == 1) {
         if (memcmp(card, e.card, 16) || !index_under(e.path, from)) continue;
         if (to) {
             char path[sizeof e.path];
@@ -1538,7 +1575,7 @@ static int index_edit(const char *from, const char *to) {
         r = index_save(db, rec.id, to ? &e : NULL, NULL);
     }
     ink_db_close(db);
-    return r;
+    return r ? r : n < 0 ? INK_FS_ERR_IO : 0;
 }
 
 static ink_fs_type_t index_type(const char *path) {
@@ -1590,7 +1627,7 @@ static index_slot_t *index_slot(index_walk_t *w, ink_db_t *db, const char *path)
         if (!slot->id) { slot->hash = hash; return slot; }
         if (slot->hash == hash) {
             index_rec_t old; ink_rec_t rec;
-            if (!ink_db_get(db, slot->id, &rec, &old, sizeof old) && !strcmp(old.path, path)) return slot;
+            if (!index_get(db, slot->id, &rec, &old) && !strcmp(old.path, path)) return slot;
         }
         at = (at + 1) % (INK_FS_INDEX_MAX * 2);
     }
@@ -1599,11 +1636,11 @@ static index_slot_t *index_slot(index_walk_t *w, ink_db_t *db, const char *path)
 static int index_walk_load(index_walk_t *w, ink_db_t *db, const uint8_t card[16]) {
     memcpy(w->card, card, 16);
     index_rec_t e; ink_rec_t rec; ink_db_cursor_t cur = {0}; int n;
-    while ((n = ink_db_next(db, &cur, &rec, &e, sizeof e)) == 1) {
+    while ((n = index_next(db, &cur, &rec, &e)) == 1) {
         if (memcmp(card, e.card, 16)) continue;
         index_slot(w, db, e.path)->id = rec.id;
         /* Check absence only for metadata matches of a new path, not every known record. */
-        if (rec.schema == INDEX_DEF.schema && rec.len == sizeof e)
+        if (rec.schema >= 2)
             w->missing[w->nmissing++] = rec.id;
     }
     return n < 0 ? INK_FS_ERR_IO : 0;
@@ -1612,8 +1649,8 @@ static uint32_t index_renamed(index_walk_t *w, ink_db_t *db, const index_rec_t *
     /* Metadata is from the last scan: an edited then renamed file may receive a new id after power loss. */
     uint32_t id = 0;
     for (unsigned i = 0; i < w->nmissing; i++) {
-        index_rec_t old;
-        if (!w->missing[i] || ink_db_get(db, w->missing[i], NULL, &old, sizeof old)) continue;
+        index_rec_t old; ink_rec_t rec;
+        if (!w->missing[i] || index_get(db, w->missing[i], &rec, &old)) continue;
         if (old.size != e->size || old.mtime != e->mtime || hal_fs_size(old.path) >= 0) continue;
         if (id) return 0; /* Ambiguous metadata must not steal another file's id. */
         id = w->missing[i];
@@ -1636,10 +1673,9 @@ static int index_walk_step(index_walk_t *w, ink_db_t *db, const uint8_t card[16]
             index_slot_t *slot = r ? NULL : index_slot(w, db, e.path);
             if (slot && !slot->id) slot->id = index_renamed(w, db, &e);
             index_rec_t old; ink_rec_t rec;
-            if (slot && (!slot->id || ink_db_get(db, slot->id, &rec, &old, sizeof old) ||
-                rec.schema != INDEX_DEF.schema || rec.len != sizeof old || memcmp(&old, &e, sizeof old))) {
-                ink_db_write_t put = {.id = slot->id, .data = &e, .len = sizeof e, .flags = INK_DB_LAZY};
-                int added = ink_db_put(db, &put, &slot->id);
+            if (slot && (!slot->id || index_get(db, slot->id, &rec, &old) ||
+                rec.schema != INDEX_DEF.schema || memcmp(&old, &e, sizeof old))) {
+                int added = index_put(db, slot->id, &e, &slot->id, INK_DB_LAZY);
                 if (added) r = added == INK_DB_ERR_FULL ? INK_FS_ERR_INDEX_FULL : INK_FS_ERR_IO;
             }
             w->path[len] = 0;
@@ -1694,7 +1730,7 @@ static int index_scan(const file_context_t *c, ink_db_t *db, const uint8_t card[
     index_manual = false;
     return r;
 }
-/* Completion uses ordinary data records, with the same payload as file.index. */
+/* Completion keeps its fixed payload; its schema also versions the index. */
 static void index_signature(index_rec_t *e, const uint8_t card[16]) {
     memset(e, 0, sizeof *e); memcpy(e->card, card, 16);
     size_t used = 0;
@@ -1789,7 +1825,7 @@ static int index_query(const file_context_t *c, const char *root, ink_fs_type_t 
     if (!r && root && !*cursor) r = index_scan(c, db, card, root);
     index_rec_t e; ink_rec_t rec; ink_db_cursor_t cur = {.id = *cursor, .started = *cursor != 0};
     int more = 0;
-    while (!r && (more = root ? ink_db_next(db, &cur, &rec, &e, sizeof e) : ink_db_get(db, *cursor, &rec, &e, sizeof e) == 0 ? 1 : 0) == 1) {
+    while (!r && (more = root ? index_next(db, &cur, &rec, &e) : index_get(db, *cursor, &rec, &e) == 0 ? 1 : 0) == 1) {
         if (memcmp(e.card, card, 16)) { if (!root) r = INK_FS_ERR_CARD_CHANGED; else continue; }
         if (r) break;
         if (root && !strcmp(phys, "/content") && !strncmp(e.path, "/content/.", 10)) continue;
@@ -1898,7 +1934,7 @@ static void storage_usage(ink_call_t *call) {
     osal_mutex_unlock(FS.edits);
     char own[64]; snprintf(own, sizeof own, "/content/.m/%s", c.member);
     index_rec_t e; ink_rec_t rec; ink_db_cursor_t cur = {0}; int more = 0;
-    while (!r && ready && !cached && (more = ink_db_next(db, &cur, &rec, &e, sizeof e)) == 1) {
+    while (!r && ready && !cached && (more = index_next(db, &cur, &rec, &e)) == 1) {
         if (memcmp(e.card, card, 16)) continue;
         int64_t size = hal_fs_size(e.path);
         if (size < 0) continue;
