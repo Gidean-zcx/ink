@@ -8,7 +8,7 @@ import sys
 
 sim, root, assets, content, out = map(Path, sys.argv[1:])
 shutil.rmtree(out, ignore_errors=True)
-for scene in ("BatteryLow", "BatterySaving", "Charging", "PowerOffEmpty"):
+for scene in ("BatteryLow", "BatterySaving", "Charging", "PowerOffEmpty", "PowerOffNoBookmark"):
     target = out / scene
     command = [str(sim), "--profile", str(root / "simulator/profiles/metalio-plus.json"),
                "--script", str(root / "tests/power_pages.script"), "--budget", str(root / "tests/ui_scene.budget.json"),

@@ -39,6 +39,7 @@
 #define PW_PRIO 4
 #define IDLE_AFTER_US 5000000ull
 #define LOCK_AFTER_US 600000000ull
+#define SAVING_LOCK_US 60000000ull
 #define SLICE_US 60000000ull
 #define QUIET_POLL_US 200000
 #define WAKE_CONFIRM_US 1000000
@@ -66,6 +67,7 @@ static struct {
     bool (*checks[6])(void);
     int nchecks;
     uint64_t lock_after_us; /* the setting power.lock_after_s */
+    bool saving;           /* runtime cap on the same auto-lock deadline */
     uint64_t wake_at;       /* ink_power_wake_at */
     uint64_t next_battery_us;
     bool battery_policy;    /* ink_power_battery_policy_start */
@@ -74,10 +76,13 @@ static struct {
     int battery_level;      /* what has been told: 0 fine, 1 low, 2 very low, 3 powering off */
     bool powering_off;
     uint64_t off_at;
-    int h_state, h_level, h_charging, h_low;
+    int h_state, h_level, h_charging, h_low, h_saving;
 } PS;
 
-static uint64_t lock_after(void) { return __atomic_load_n(&PS.lock_after_us, __ATOMIC_RELAXED); }
+static uint64_t lock_after(void) {
+    uint64_t us = __atomic_load_n(&PS.lock_after_us, __ATOMIC_RELAXED);
+    return __atomic_load_n(&PS.saving, __ATOMIC_RELAXED) && us > SAVING_LOCK_US ? SAVING_LOCK_US : us;
+}
 
 static const char *STATE_NAME[] = {"active", "idle", "locked"};
 
@@ -281,6 +286,16 @@ static const ink_state_def_t ST_STATE = {.id = "power.state", .type = INK_ST_STR
 static const ink_state_def_t ST_LEVEL = {.id = "battery.level", .type = INK_ST_INT, .title = "电量（%）"};
 static const ink_state_def_t ST_CHARGING = {.id = "battery.charging", .type = INK_ST_BOOL, .title = "在充电"};
 static const ink_state_def_t ST_LOW = {.id = "battery.low", .type = INK_ST_BOOL, .title = "电量低"};
+static const ink_state_def_t ST_SAVING = {.id = "power.saving", .type = INK_ST_BOOL, .title = "省电：最多 1 分钟锁屏，不改原设置"};
+
+static void cap_saving(ink_call_t *c) {
+    bool enabled;
+    if (!ink_args_get_bool(&c->args, "enabled", &enabled)) { c->rc.status = INK_RC_INVALID; return; }
+    __atomic_store_n(&PS.saving, enabled, __ATOMIC_RELAXED);
+    ink_state_set_bool(PS.h_saving, enabled);
+    osal_sem_give(PS.kick);
+    snprintf(c->rc.say, sizeof c->rc.say, "%s", enabled ? "已打开省电，1 分钟锁屏，原设置保留" : "已关闭省电，按原设置锁屏");
+}
 
 static void apply_lock_after(void *ctx, int64_t s) {
     (void)ctx;
@@ -312,6 +327,9 @@ static void cap_shutdown(ink_call_t *c) { /* exec.bg */
 
 static const ink_cap_t POWER_CAPS[] = {
     {.id = "system.shutdown", .title = "关机", .effect = INK_FX_SYSTEM, .child_ok = true, .while_locked = true, .exec = INK_EXEC_BG, .run = cap_shutdown},
+    {.id = "power.set_saving", .title = "开关省电（最多 1 分钟锁屏，不改原设置）",
+     .input = "{\"type\":\"object\",\"properties\":{\"enabled\":{\"type\":\"boolean\"}},\"required\":[\"enabled\"]}",
+     .effect = INK_FX_SYSTEM, .exec = INK_EXEC_DIRECT, .run = cap_saving},
 };
 
 int ink_power_init(void) {
@@ -320,8 +338,10 @@ int ink_power_init(void) {
     PS.h_level = ink_state_define(&ST_LEVEL);
     PS.h_charging = ink_state_define(&ST_CHARGING);
     PS.h_low = ink_state_define(&ST_LOW);
+    PS.h_saving = ink_state_define(&ST_SAVING);
+    ink_state_set_bool(PS.h_saving, false);
     if (ink_settings_define(POWER_SETTINGS, 1) == 0) PS.lock_after_us = (uint64_t)ink_setting_get("power.lock_after_s") * 1000000ull;
-    ink_cap_register(POWER_CAPS, 1);
+    ink_cap_register(POWER_CAPS, (int)(sizeof POWER_CAPS / sizeof POWER_CAPS[0]));
     const char *prev = osal_mem_tag("power");
     PS.lock = osal_mutex_create();
     PS.kick = osal_sem_create(0, 1);
