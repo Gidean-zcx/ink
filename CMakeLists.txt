@@ -602,7 +602,7 @@ ink_sim_executable(sim-text-long tests/text_long/editor.c)
 target_link_libraries(sim-text-long PRIVATE ink_apps ink_system)
 add_test(NAME text-long COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/text_long/run.py --build ${CMAKE_BINARY_DIR})
 foreach(profile metalio-plus desktop-lcd)
-  foreach(regression confirm slider context privacy answer snapshot alarm)
+  foreach(regression confirm slider context privacy answer snapshot alarm theme)
     add_test(NAME ui-${regression}-regressions-${profile}
       COMMAND ${CMAKE_COMMAND} -E env INK_UI_REGRESSION=${regression} $<TARGET_FILE:sim-ui-regressions>
         --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/${profile}.json --script ${CMAKE_SOURCE_DIR}/tests/ui_shell_regressions.script

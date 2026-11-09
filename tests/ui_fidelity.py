@@ -31,7 +31,8 @@ for path in sorted((a.design / 'png').glob('*.png')):
             components.append({'board': path.stem, 'size': list(image.size)})
 sources = json.loads((out / 'sources.json').read_text()) if a.variants_only else {}
 paths = [] if a.variants_only else sorted(build.rglob('metrics.json'), key=lambda path: (
-    0 if '-compare' in str(path) else 1 if path.parent.name.startswith('ui-scene-') else 2, str(path)))
+    0 if '-compare' in str(path) else 1 if path.parent.name.startswith('ui-scene-') else 2,
+    -path.stat().st_mtime_ns, str(path)))
 for path in paths:
     relative = path.relative_to(build)
     if (out.is_relative_to(path.parent) or path.is_relative_to(out)

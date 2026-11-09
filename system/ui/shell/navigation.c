@@ -210,6 +210,10 @@ void ink_shell_bind(lv_obj_t *obj, const char *cap, const char *json) {
     snprintf(b->args, sizeof b->args, "%s", json ? json : "");
     b->epoch = N.epoch;
     lv_obj_add_flag(obj, LV_OBJ_FLAG_CLICKABLE);
+    if (lv_obj_get_style_radius(obj, 0) == LV_RADIUS_CIRCLE &&
+        lv_obj_get_style_width(obj, 0) == lv_obj_get_style_height(obj, 0) &&
+        lv_color_eq(lv_obj_get_style_bg_color(obj, 0), ink_ui_paper()))
+        lv_obj_set_style_border_width(obj, ink_ui_px(INK_STROKE), 0);
     lv_obj_add_event_cb(obj, binding_event, LV_EVENT_CLICKED, b);
     lv_obj_add_event_cb(obj, binding_event, LV_EVENT_DELETE, b);
 }
@@ -984,13 +988,6 @@ bool ink_shell_close(void) {
 static void group_row(lv_obj_t *group, const char *icon, const char *title, const char *value, int row,
                       const char *action) {
     lv_obj_t *r = ink_ui_list_row(group, icon, title, value, 0, row * INK_CONTROL, width(), false, NULL, NULL);
-    if (N.page_id == PAGE_SETTINGS) {
-        lv_obj_t *base = ink_ui_box(r, INK_GAP, (INK_CONTROL - INK_CIRCLE_SMALL) / 2,
-                                   INK_CIRCLE_SMALL, INK_CIRCLE_SMALL, -1, INK_SURFACE_WHITE, false);
-        lv_obj_move_background(base);
-        if (row) ink_ui_box(r, INK_CIRCLE_SMALL + INK_GAP_XL, 0,
-                           width() - INK_CIRCLE_SMALL - INK_GAP_XL, INK_STROKE, 0, INK_SURFACE_WHITE, false);
-    }
     if (action) {
         ink_shell_bind(r, action, NULL);
         ink_ui_icon(r, "next", INK_ICON_SMALL, INK_ICON_LINE, width() - INK_READING_MARGIN,

@@ -257,7 +257,7 @@ void ink_ui_pill_text(lv_obj_t *pill, int px, ink_ui_weight_t weight) {
 
 lv_obj_t *ink_ui_circle(lv_obj_t *parent, const char *icon, int x, int y, int diameter, int icon_px,
                         ink_ui_surface_t surface, lv_event_cb_t cb, void *ctx) {
-    lv_obj_t *b = ink_ui_box(parent, x, y, diameter, diameter, -1, surface, surface == INK_SURFACE_WHITE);
+    lv_obj_t *b = ink_ui_box(parent, x, y, diameter, diameter, -1, surface, surface == INK_SURFACE_WHITE && cb);
     bind(b, cb, ctx);
     ink_ui_icon(b, icon, icon_px, surface == INK_SURFACE_BLACK ? INK_ICON_SOLID : INK_ICON_LINE,
                 (diameter - icon_px) / 2, (diameter - icon_px) / 2, surface == INK_SURFACE_BLACK);
@@ -266,6 +266,7 @@ lv_obj_t *ink_ui_circle(lv_obj_t *parent, const char *icon, int x, int y, int di
 
 lv_obj_t *ink_ui_toggle(lv_obj_t *parent, const char *title, bool on, int x, int y, int w, lv_event_cb_t cb, void *ctx) {
     lv_obj_t *row = ink_ui_box(parent, x, y, w, INK_CONTROL, 0, INK_SURFACE_WHITE, false);
+    lv_obj_set_style_bg_opa(row, LV_OPA_TRANSP, 0);
     bind(row, cb, ctx);
     ink_ui_line(row, title, INK_FONT_LIST, INK_WEIGHT_MEDIUM, 0, (INK_CONTROL - ink_ui_line_height(INK_FONT_LIST)) / 2, w - INK_PRIMARY - INK_GAP);
     lv_obj_t *track = ink_ui_box(row, w - INK_PRIMARY, (INK_CONTROL - INK_RADIUS_PANEL) / 2,
@@ -326,12 +327,19 @@ static int value_width(const char *title, const char *value, int room) {
     return room - title_w > room / 4 ? room - title_w : room / 4;
 }
 
+void ink_ui_group_divider(lv_obj_t *parent, int y, int w) {
+    int left = INK_CIRCLE_SMALL + INK_GAP_XL;
+    ink_ui_box(parent, left, y, w - left, INK_STROKE, 0, INK_SURFACE_WHITE, false);
+}
+
 lv_obj_t *ink_ui_list_row(lv_obj_t *parent, const char *icon, const char *title, const char *value,
                          int x, int y, int w, bool two_lines, lv_event_cb_t cb, void *ctx) {
     int h = two_lines ? ink_ui_row_double() : INK_CONTROL;
     lv_obj_t *r = ink_ui_box(parent, x, y, w, h, 0, INK_SURFACE_STATIC, false);
     bind(r, cb, ctx);
-    ink_ui_icon(r, icon, INK_ICON_MEDIUM, INK_ICON_LINE, INK_GAP + (INK_CIRCLE_SMALL - INK_ICON_MEDIUM) / 2, (h - INK_ICON_MEDIUM) / 2, false);
+    ink_ui_circle(r, icon, INK_GAP, (h - INK_CIRCLE_SMALL) / 2, INK_CIRCLE_SMALL, INK_ICON_MEDIUM,
+                  INK_SURFACE_WHITE, NULL, NULL);
+    if (y && lv_color_eq(lv_obj_get_style_bg_color(parent, 0), ink_ui_gray())) ink_ui_group_divider(r, 0, w);
     int left = INK_CIRCLE_SMALL + INK_GAP_XL, room = w - left - INK_BLOCK - INK_GAP, value_w = value_width(title, value, room);
     ink_ui_line(r, title, INK_FONT_LIST, INK_WEIGHT_REGULAR, left, (h - ink_ui_line_height(INK_FONT_LIST)) / 2, room - value_w);
     if (value_w) {

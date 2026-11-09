@@ -121,14 +121,13 @@ static void records_create(void) {
     for (int i = 0; i < 4; i++) {
         lv_obj_t *r = ink_ui_box(group, 0, i * h, w, h, 0, INK_SURFACE_WHITE, false);
         lv_obj_set_style_bg_opa(r, LV_OPA_TRANSP, 0); ink_shell_bind(r, caps[i], i == 0 ? R.args : NULL);
-        lv_obj_t *icon = ink_ui_circle(r, icons[i], INK_GAP, (h - INK_CIRCLE_SMALL) / 2, INK_CIRCLE_SMALL, INK_ICON_MEDIUM, INK_SURFACE_WHITE, NULL, NULL);
-        lv_obj_set_style_border_width(icon, 0, 0);
+        ink_ui_circle(r, icons[i], INK_GAP, (h - INK_CIRCLE_SMALL) / 2, INK_CIRCLE_SMALL, INK_ICON_MEDIUM, INK_SURFACE_WHITE, NULL, NULL);
         int left = INK_CIRCLE_SMALL + INK_GAP_XL, top = (h - ink_ui_line_height(INK_FONT_LIST) - ink_ui_line_height(INK_FONT_NOTE)) / 2;
         ink_ui_line(r, titles[i], INK_FONT_LIST, INK_WEIGHT_MEDIUM, left, top, w - left - INK_READING_MARGIN);
         lv_obj_t *v = ink_ui_line(r, values[i], INK_FONT_NOTE, INK_WEIGHT_REGULAR, left, top + ink_ui_line_height(INK_FONT_LIST), w - left - INK_READING_MARGIN);
         if (!i) R.count_label = v;
         ink_ui_icon(r, "next", INK_ICON_SMALL, INK_ICON_LINE, w - INK_READING_MARGIN, (h - INK_ICON_SMALL) / 2, false);
-        if (i) ink_ui_box(r, left, 0, w - left, INK_STROKE, 0, INK_SURFACE_WHITE, false);
+        if (i) ink_ui_group_divider(r, 0, w);
         R.fields[i] = (ink_ui_field_spec_t){.id = ids[i], .role = "text", .label = titles[i], .value = values[i]};
         R.actions[i] = (ink_ui_action_spec_t){.id = ids[i], .label = titles[i], .capability = caps[i], .args_json = i == 0 ? R.args : NULL, .enabled = true};
     }
