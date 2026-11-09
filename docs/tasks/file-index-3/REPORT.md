@@ -7,10 +7,10 @@
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
 | 1 | 【实测】通过 | 无应用、无 file.index 预热时自动索引共享及全部成员；真实存储页由“正在整理”更新为数值；个人 17 字节、全机 1031 字节 | T1 |
-| 2 | 【实测】通过 | 每批最多 32 项；后台持锁最大 77.721 ms，全部编辑段最大 77.723 ms；并行用户写入 71.228 ms，写完时索引仍未完成；存储写入挂起时其他 BG 工作仍能执行 | T1、R |
+| 2 | 【实测】通过 | 每批最多 32 项；后台持锁最大 78.056 ms，含用户操作的全部编辑段最大 155.090 ms；并行用户写入最大 74.542 ms，写完时索引仍未完成；存储写入挂起时其他 BG 工作仍能执行 | T1、R |
 | 3 | 【实测】通过 | 1000 共享文件：写盘 1008→41 次，减少 24.6 倍；包含日志、快照及完成记录；原上限 100 次保留；数据库迭代 500501→2041 | T1、T2 |
 | 4 | 【实测】通过 | 实际进程重启后目录读取、索引写入均为 0，编号不变；拔卡停止，插回续建、换卡拒绝旧编号；同卡离线新增和改大小后重插自动更新统计，保留既有编号 | T1 |
-| 5 | 待最终全量 | 累计产品代码新增 250 行、删除 51 行；测试登记不计入产品预算；两套最终全量结果待补 | T3、T4、P |
+| 5 | 【实测】通过 | 普通及 ASan/UBSan 各 258/258，无跳过、无 sanitizer 错误；累计产品代码新增 250 行、删除 51 行，测试登记不计入产品预算 | T3、T4、P |
 
 ## 复查后的修复
 
@@ -30,12 +30,19 @@
 - 中枢端到端、阅读时延及页面版本场景：创建卡身份推进了模拟硬件时序／故障的随机序列。卡身份生成移到存储 HAL，模拟端仅为此用途使用种子和虚拟时刻驱动的私有随机状态；通用随机接口沿用原实现，不读取宿主时间。新增直接检查模型随机序列未被推进的测试，恢复共用取数后失败。
 - 索引作业已经结束但清理回调尚未完成时，编号查询原先仍返回 busy；只在作业实际运行时拒绝查询。原文件索引回归中的“后台删除后旧编号立即失效”断言保留。
 
-最终普通及 ASan/UBSan 五项结果待补。上述五项原测试、脚本、预算均无改动。
+【实测】五项原回归结果；原测试、脚本、预算经差异核对均未改动：
+
+| 原回归 | 普通构建 | ASan/UBSan |
+| --- | --- | --- |
+| confirm-durable | 通过，含原 2000 秒容量场景 | 通过，含原 2000 秒容量场景 |
+| hub-simulator-e2e | 通过 | 通过 |
+| integration-races | 通过 | 通过 |
+| scenario-reader_basic-metalio-plus-pqbn | 通过，原 460 ms 上限保留 | 通过，原 460 ms 上限保留 |
+| scenario-ai_page_version-metalio-plus | 通过，done 4、stale 1 | 通过，done 4、stale 1 |
 
 ## 没做到的
 
-- 本轮两套最终全量尚待结束；不以重点测试代替全量。
-- Linux/gcc、实机未执行；未单独增加索引完成记录版本失配、旧固件升级场景的实测。
+- Linux/gcc、实机未执行；未单独增加索引完成记录版本失配、旧固件升级场景的实测。本机注册的全部测试无缺依赖、无跳过。
 
 ## 和设计不一致的
 
@@ -76,11 +83,11 @@
 所有构建、测试均使用 `taskpolicy -c utility`，构建及 CTest 最多 `-j2`；依赖使用提供的 INK_DEPS，未安装或升级依赖。配置沿用总规则的字体、Python、LVGL 参数，均启用 INK_WERROR，内存构建仅另加 INK_SANITIZE。
 
 - T1：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2 -R '^(file-index-3|file-index-regressions|storage-usage)$'`；内存构建换为 build-asan。证据为两套 `test-out/file-index-3/summary.json` 及 metrics.json；专项统计不含宿主时间。
-- T2：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/file_index_3/run.py --build build --baseline 2228df7de99de9fea15fddc22868a0de1caae770`，退出 0；`build/review-reverse-final.log`。只替换基线文件服务编译输入，统一使用 1024 条容量；原算法显式查询启动，新实现自动启动。基线持锁 122.472 秒，自动索引反例确实失败。
+- T2：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/file_index_3/run.py --build build --baseline 2228df7de99de9fea15fddc22868a0de1caae770`，退出 0；`build/review-reverse-final.log`。只替换基线文件服务编译输入，统一使用 1024 条容量（原 512 条装不下夹具）；原算法显式查询共享目录，新实现自动启动且还扫描两位成员的文件。基线持锁 122.472 秒，自动索引反例确实失败。
 - R：同 T2，去掉 baseline，分别加 `--mutant polling`、`blocking`、`file-change`、`card-change`、`identity`、`entropy`；六项均退出 0，分别确认撤掉修复后对应断言失败。源码副本和二进制在忽略的构建目录，未临时撤改产品源码。`build/review-reverse-final.log`。
-- T3：普通全量结果待补；命令为 T1 去掉 R 参数，日志 `build/review-normal-final.log`。
-- T4：ASan/UBSan 全量结果待补；命令同 T3，目录 build-asan。
-- P：最终补丁、隐私正则及链接检查结果待补。
+- T3：【实测】普通全量 258/258，无跳过，173.03 秒，退出 0；命令为 T1 去掉 `-R` 及正则筛选，日志 `build/review-normal-final.log`。
+- T4：【实测】ASan/UBSan 全量 258/258，无跳过，322.46 秒，退出 0；命令同 T3，目录 `build-asan`，并设置 `UBSAN_OPTIONS=halt_on_error=1`；日志 `build-asan/review-asan-final.log`。扫描两套构建的日志未发现 AddressSanitizer、LeakSanitizer 或 UBSan 错误；专项内部总余量最低 47,224 字节，内部、外部堆分配失败均为 0。
+- P：【实测】基线至最终提交按总规则指定隐私正则检查为零匹配（grep 退出 1）；`git diff --check` 和报告文件／链接检查通过。五项原回归相关文件差异为零；产品 C/H 新增 250 行、删除 51 行，无构建产物、设计稿或并行任务文件。主会话提供的 REVIEW 保留原样，未纳入本人提交。
 
 【实现】超过 100 行的原因：任务要求后台续步、分批落盘、换卡停止、完成记录复用。已看过的更小方案是每批遍历整库，但会产生长持锁；当前保留一次加载和扫描期去重，没有搭建通用框架。
 
