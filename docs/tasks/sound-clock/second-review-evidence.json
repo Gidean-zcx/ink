@@ -71,6 +71,82 @@
   "product_lines_total": 239,
   "product_lines_this_round": 3,
   "new_mechanisms": [],
-  "full_validation": "pending",
-  "negative_control": "pending"
+  "full_validation": {
+    "normal": {
+      "tests": 284,
+      "passed": 283,
+      "failed": 1,
+      "skipped": 0,
+      "exempt_failures": [
+        "capability-table-doc"
+      ],
+      "seconds": 205.46,
+      "ctest_exit": 8
+    },
+    "asan_ubsan": {
+      "tests": 284,
+      "passed": 283,
+      "failed": 1,
+      "skipped": 0,
+      "exempt_failures": [
+        "capability-table-doc"
+      ],
+      "seconds": 366.68,
+      "ctest_exit": 8
+    }
+  },
+  "negative_control": {
+    "variant": "input-affinity",
+    "test_exit": 1,
+    "detected": true,
+    "member_ready_ms": 6028.077,
+    "control_script_exit": 0,
+    "failure": "tool_calls=0"
+  },
+  "capability_temp_check": {
+    "definitions": 434,
+    "generate_exit": 0,
+    "check_exit": 0
+  },
+  "dependencies": {
+    "pytest": "8.4.2",
+    "pytest-asyncio": "1.2.0",
+    "aiohttp": "3.12.15",
+    "PyYAML": "6.0.3",
+    "installation_changed": false
+  },
+  "sanitizer_diagnostics": 0,
+  "builds": {
+    "normal": {
+      "exit": 0,
+      "werror": true
+    },
+    "asan_ubsan": {
+      "exit": 0,
+      "werror": true,
+      "sanitize": "address,undefined"
+    }
+  },
+  "e2e_full_validation": {
+    "build": {
+      "member_ready_ms": 2399.53,
+      "turns": 1,
+      "tool_calls": 1,
+      "mic_lost_ms": 0
+    },
+    "build-asan": {
+      "member_ready_ms": 2399.53,
+      "turns": 1,
+      "tool_calls": 1,
+      "mic_lost_ms": 0
+    }
+  },
+  "privacy_scan": {
+    "task_baseline_matches": 4,
+    "second_round_baseline_matches": 0,
+    "task_baseline_matches_reason": "主线合入的四行合成耳机 MAC，均为任务规则允许的固定假数据",
+    "host_path_matches": 0
+  },
+  "protected_shared_docs_changed_in_second_round": false,
+  "product_budget_reference": "168eba7f"
 }

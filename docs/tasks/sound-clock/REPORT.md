@@ -142,7 +142,7 @@ UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/
 ## 第二轮复查后的修复
 
 - 本轮仅处理 SC-H2，保留 SC-H1 修复。已执行 `git fetch origin`，合入 `origin/claude/system-layer`（`168eba7f`），自动合并无冲突。
-- 【实测】原样复现 `hub-simulator-e2e` 的 `tool_calls=0`。不是输入任务不停扫描、误报活动或反复唤屏：第 1～2 秒间输入任务只用 0.309 ms CPU，共享 I2C 的扩展器等待最大 0.0583 ms。主要延迟在确认前，成员切换只用 3.387 ms。
+- 【实测】原样复现 `hub-simulator-e2e` 的 `tool_calls=0`。不是输入任务不停扫描、误报活动或反复唤屏：第 1～2 秒间输入任务只用 0.309 ms CPU，共享 I2C 的扩展器等待最大 0.0583 ms。主要延迟在确认写盘及前后的调度，成员切换只用 3.387 ms。
 - 【实现＋实测】模拟器启动任务固定在核心 0；原来可跨核心的高优先级输入改变了交接顺序，确认回执唤醒启动任务时，UI 已占住核心 0 渲染确认卡。回执从产品初始化结束到被夹具收到，多等了 192.473 ms；确认写入因此排到刷屏后，又等 2605.147 ms。3 秒第一次点按落在引导页，继续产生刷新，最后 6028.077 ms 才切好成员。原优先级 12/24 的临时对象对照为 2399.504 ms；仅升输入到 24、送行仍为 24 则为 6048.077 ms，和复查一致。
 - 【实现＋实测】只将现有输入任务固定在核心 0，使输入与启动控制的交接留在同一核心，另一核心可并行渲染 UI。输入优先级仍为 24，送行仍为 23。确认回执等待降到 0.746 ms，确认落盘等待降到 0.133 ms，原样端到端通过。没有保留试过但不足以修复的存储调度修改：前台写入提前申请闪存保护仍要 5679.251 ms，只提高存储任务优先级仍要 6027.950 ms。
 
@@ -154,14 +154,28 @@ UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/
 | 成员切换完成 | 6028.077 ms | 2399.530 ms，早于原定 3 秒点按 | C10 |
 | 原样短按及新增输入回归 | 两项已过 | 两项仍过；送达 8 次，19.564564 s 开始读取，松键仍为 19.580000 s；芯片就绪后等待 0.0741 ms | C10 |
 | 声音计时、原录音场景、存储排序 | 已有测试 | 三项通过，未改脚本、时间、预算或已有断言 | C10 |
+| 撤掉本轮修复的反向对照 | 恢复跨核心输入 | 原样端到端退出 1，确认退回 6028.077 ms；对照脚本退出 0，检出成功 | C11 |
+| 普通全量 | 曾有端到端失败 | 283 过、0 跳过；仅 1 项能力表文档豁免失败，205.46 s，原始退出 8 | C12 |
+| ASan/UBSan 全量 | 需合入主线后复验 | 283 过、0 跳过；同一项文档豁免失败，366.68 s，原始退出 8；无内存或未定义行为报错 | C13 |
 
 - 改过的已有测试：`tests/hub/e2e_device.c` 仅分段计量原有操作，超时和条件保持；`tests/hub/e2e.py` 新增成员就绪必须早于 3000 ms 的断言。`tests/sound_clock_negative.py` 增加只撤掉本轮亲和性的对照入口。未重做 SC-H1，未修改声音页、计时器、音频或存储服务。
 - 新增的机制：无。只改一个现有任务的核心配置；不新增任务、状态、持久格式、队列、配置项或抽象层。该配置属于平台内部调度，不新增用户能力或改变按钮和 AI 的调用路径（R-061）。
-- 【实测】本轮产品代码增删 3 行，任务累计 239 行，低于 300 行。计量汇总见 [second-review-evidence.json](second-review-evidence.json)。全量与反向对照进行中，最终结果随后补齐。
+- 【实测】普通和内存构建均启用 `INK_WERROR=ON`、退出 0；内存版启用 `-fsanitize=address,undefined`，未定义行为遇错即停。两套全量和反向对照已完成，原始全量命令均因豁免文档项退出 8，没有将其写成退出 0。计量汇总见 [second-review-evidence.json](second-review-evidence.json)。
+- 【实测】本轮产品代码增删 3 行；相对合入主线 `168eba7f`，本任务累计 239 行（含 6 行 CMake 接线），低于 300 行。没有新增没做到的功能、设计差异或待用户定事项；本轮仅在 macOS 模拟器验证，未做 Linux 或实机测试。
+- 原失败及跳过项：唯一遗留失败是主会话明确豁免的 `capability-table-doc`，本轮也未修改共享生成文档；C14 的临时生成及核对为 434 项定义，均退出 0。原来缺的四项 Python 依赖，本轮仍从指定只读依赖目录加载：`pytest 8.4.2`、`pytest-asyncio 1.2.0`、`aiohttp 3.12.15`、`PyYAML 6.0.3`，两套全量三项原跳过测试均已实际执行通过。未安装、升级依赖；没有新增缺失依赖。
+- 最终检查：【实测】`git diff --check`、报告链接与文件尺寸检查通过。本轮相对合并提交的隐私扫描零命中；相对原任务基线共命中 4 行主线合入的合成耳机 MAC，均为规则允许的固定假数据，无本机路径及真实标识。本轮只提交修复、测试、报告和计量；用户提供的未跟踪 `REVIEW.md` 保留原样，未纳入提交。共享文档仍由主会话统一生成。
 
 ```bash
 # C10：原样场景及相关回归；依赖环境沿用 C3/C4
 INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2 -R '^(hub-simulator-e2e|scenario-ai_page_version-metalio-plus|sound-clock-input|storage-order|sound-clock|scenario-ai_tools-metalio-plus)$'
 # C11：只撤掉本轮核心配置，运行原样端到端测试
 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/sound_clock_negative.py --build build --second-review-only
+# C12 / C13：完整检查；普通及内存构建均沿用总规则的字体和 LVGL 参数
+export PYTHONDONTWRITEBYTECODE=1
+export PYTHONPATH="$PWD/hub:$INK_DEPS/hub/.venv/lib/python3.11/site-packages"
+UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
+UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
+# C14：在工作目录生成并核对，不写共享文档
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/capabilities.py --output work/sc-h2-capabilities.md
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/capabilities.py --output work/sc-h2-capabilities.md --check
 ```
