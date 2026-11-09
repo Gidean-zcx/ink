@@ -26,7 +26,7 @@ typedef struct {
     watch_fn fn;
     void *ctx;
     ink_exec_t exec;
-    int handle, posting;
+    int handle, posting, scheduled;
     uint64_t pending; /* items changed since the last delivery (bit = item index, < 64) */
     ink_exec_job_t job;
 } watch_t;

@@ -238,7 +238,7 @@ static const ink_app_ops_t INK_JOT_OPS = {
 
 出处：[data.h:38，集合定义](../../system/include/ink/sys/data.h#L38)、[data.h:89，打开与成员身份](../../system/include/ink/sys/data.h#L89)、[data.h:102，写入／分页](../../system/include/ink/sys/data.h#L102)、[data.h:120，落盘状态](../../system/include/ink/sys/data.h#L120)、[appreg.h:83，应用集合命名](../../system/include/ink/sys/appreg.h#L83)。
 
-集合名以应用 id 加点开头；`INK_DB_MEMBER` 隔离家人，`INK_DB_DEVICE` 是设备级，不能拿来存私人备忘。注册定义须长期有效。`ink_app_db_open()` 是可能读盘的同步调用。页面使用 [appreg.h:84，后台打开](../../system/include/ink/sys/appreg.h#L84) 的 `ink_app_db_open_async(app, def, page, done, ctx)`：在界面任务发起，`page` 为页面持有的 LVGL 根对象，后台执行器按发起时捕获的家人身份打开，完成后回界面任务调用 `done(ctx, db)`。返回 0 表示接受，-1 表示未发起且不回调；完成时 `db=NULL` 表示打开失败。页面根对象删除、换家人或认证变化后不回调，框架关闭取得的引用；正常回调接管该引用并配对关闭。定义须活到完成。
+集合名以应用 id 加点开头；`INK_DB_MEMBER` 隔离家人，`INK_DB_DEVICE` 是设备级，不能拿来存私人备忘。注册定义须使用静态存储期。`ink_app_db_open()` 是可能读盘的同步调用。页面使用 [appreg.h:84，后台打开](../../system/include/ink/sys/appreg.h#L84) 的 `ink_app_db_open_async(app, def, page, done, ctx)`：在界面任务发起，`page` 为页面持有的 LVGL 根对象，后台执行器按发起时捕获的家人身份打开，完成后回界面任务调用 `done(ctx, db)`。返回 0 表示接受，-1 表示未发起且不回调；完成时 `db=NULL` 表示打开失败。页面根对象删除、换家人或认证变化后不回调，框架关闭取得的引用；正常回调接管该引用并配对关闭。
 
 ```c
 static const ink_db_def_t INK_JOT_DATA = {

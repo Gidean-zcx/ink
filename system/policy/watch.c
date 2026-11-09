@@ -17,7 +17,7 @@ int watch_add(watch_list_t *l, const char *prefix, watch_fn fn, void *ctx, ink_e
     int r = -1;
     int i = 0;
     while (i < l->n && (l->w[i].fn || (l->w[i].exec != exec &&
-           (l->w[i].posting || __atomic_load_n(&l->w[i].job.queued, __ATOMIC_ACQUIRE))))) i++;
+           (l->w[i].posting || l->w[i].scheduled)))) i++;
     if (i < WATCH_MAX) {
         watch_t *w = &l->w[i];
         w->list = l; w->prefix = prefix ? prefix : ""; w->plen = strlen(w->prefix);
@@ -50,6 +50,7 @@ static void deliver(void *arg) { /* on the watcher's executor */
     uint64_t bits = w->pending;
     int handle = w->handle;
     w->pending = 0;
+    w->scheduled = 0;
     osal_mutex_unlock(l->lock);
     if (!handle) { /* permanent legacy watchers cannot be removed */
         for (int i = 0; bits; i++, bits >>= 1)
@@ -75,6 +76,7 @@ void watch_changed(watch_list_t *l, int idx, const char *id) {
         watch_t *w = &l->w[i];
         if (!w->fn || strncmp(id, w->prefix, w->plen)) continue;
         w->pending |= 1ull << idx;
+        w->scheduled = 1;
         w->posting++;
         post[np++] = w;
     }
