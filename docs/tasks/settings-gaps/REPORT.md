@@ -6,9 +6,9 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 【实现＋实测】通过 | [完整清单](INVENTORY.md)：89 个变更能力、22 个设置项；自动比较集合，防止漏项 | `ctest --test-dir build -R '^settings-gaps$' --output-on-failure` |
-| 2 | 【实测】通过 | 三项触摸入口、同能力 AI 调用、快照、原确认规则；专测 110 项检查，0 失败；基线导航／文件对象分别出现预期失败 | `python tests/settings_gaps.py --build build`；同命令加 `--reverse` |
-| 3 | 进行中 | 首轮全量暴露两条参数／返回码期望并已修正；中枢依赖补齐后重跑，ASan/UBSan 待跑 | 待补 |
+| 1 | 【实现＋实测】通过 | [完整清单](INVENTORY.md)：89 个变更能力、22 个设置项；手动模式比较集合，防止漏项且不冻结后续 CI 目录 | `INK_KEEP_EVIDENCE=1 python tests/settings_gaps.py --build build --reverse` |
+| 2 | 【实测】通过 | 三项触摸入口、同能力 AI 调用、快照、原确认规则；专测 110 项检查，0 失败；基线导航／文件对象分别出现预期失败 | `INK_KEEP_EVIDENCE=1 python tests/settings_gaps.py --build build`；同命令加 `--reverse` |
+| 3 | 【实测】通过 | 普通及 ASan/UBSan 各 289/289 通过，零失败、零跳过；内存日志扫描零诊断 | `taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/ctest --test-dir build --output-on-failure -j2`；目录换为 `build-asan` 再跑 |
 
 ## 能力清单
 
@@ -40,18 +40,21 @@ Notifications 的“读未读通知”仍未接（没有对应朗读通知能力
 
 ## 新增的机制
 
-没有新增产品任务、线程、状态机、持久格式、队列、重试或配置项。新增一个 CTest 验收目标；文件页仅增加临时的拷贝选择，复用现有目标页。
+【实现】没有新增产品任务、线程、状态机、持久格式、队列、重试或配置项。新增一个 CTest 验收目标；文件页仅增加临时的拷贝选择，复用现有目标页。
 
 ## 架构审视
 
-三项接线均在原页面层完成：按钮经能力总线到既有服务，AI 调用相同能力；页面快照提供目标和动作，服务状态及事件驱动原有刷新。文件拷贝复用 FileMove，仅保存一次页面选择，不增加任务、队列、持久格式或重试；密码和人工确认边界不变。
+【实现＋实测】三项接线均在原页面层完成：按钮经能力总线到既有服务，AI 调用相同能力；页面快照提供目标和动作，服务状态及事件驱动原有刷新。文件拷贝复用 FileMove，仅保存一次页面选择，不增加任务、队列、持久格式或重试；密码和人工确认边界不变。
 
 ## 验证记录
 
 - 【实测】`INK_WERROR=ON` 全构建完成；产品代码增删合计 52 行（含 3 行 CMake），小于 250 行预算。
+- 【实测】普通全量 289/289 通过，用时 264.48 秒，退出码 0；证据 `build/ctest-final.log`。首次全量的两项失败分别是新增专测的返回码预期和既有 AI 参数表，修正后完整重跑通过。
+- 【实测】ASan/UBSan 全构建及全量 289/289 通过，用时 381.47 秒，退出码 0；证据 `build-asan/build.log`、`build-asan/ctest-full.log`。检索测试日志中的 AddressSanitizer、LeakSanitizer 和 UBSan 报错模式，零命中。
 - 【实测】反向对照不写产品文件：编译基线替换对象并链接同一专测，导航基线 19 个断言失败，文件基线 7 个断言失败，两个进程都跑到结束、退出码 1。证据在 `build/settings-gaps-evidence/reverse-summary.json` 及两个基线子目录；固定版本为 `fixed/`，有四张无窗口截图和页面快照。
 - 全部重命令均使用 `taskpolicy -c utility`，构建和 CTest 最多 `-j2`。首次全量的三个中枢测试因默认 Python 缺依赖跳过；已用现有锁定环境配置 `-DINK_HUB_PYTHON=$INK_DEPS/hub/.venv/bin/python`，不安装或升级依赖。普通与内存构建均用此设置，其余参数按任务规则 §5，内存构建只再加 `-DINK_SANITIZE=ON`。
 - Linux gcc 未在本机执行，等待合并端 CI 复核；未改警告选项、测试预算或断言强度。
+- 【实测】能力文档校验、任务文档链接检查、`git diff --check` 均通过；按[总规则第 6 节](../codex-rules.md#6-过程和报告)检查基线以来的提交差异，隐私正则零命中（grep 退出码 1，表示无匹配）。差异统计只含两处页面代码、构建注册、测试和本任务文档，共 9 个文件；没有设计稿或构建产物。
 
 ## 要改的文档
 

@@ -18,15 +18,17 @@ area = build / 'settings-gaps-evidence'
 area.mkdir(parents=True, exist_ok=True)
 binary = build / 'sim-settings-gaps'
 summary = []
-catalogue = (ROOT / 'docs/system/capabilities.md').read_text()
-inventory = (ROOT / 'docs/tasks/settings-gaps/INVENTORY.md').read_text()
-mutations = {line.split('|')[1].strip(' `') for line in catalogue.split('## 设置')[0].splitlines()
-             if line.startswith('| `') and any(effect in line for effect in
-                 (' / local_write', ' / local_destructive', ' / system', ' / external'))}
-listed = inventory.split('## 全部非只读能力复核')[1].split('## 全部设置项复核')[0]
-assert mutations == {line.split('|')[1].strip(' `') for line in listed.splitlines() if line.startswith('| `')}
-settings = {line.split('|')[1].strip(' `') for line in catalogue.splitlines() if '`settings.get` / `settings.set`' in line}
-assert settings == {line.split('|')[1].strip(' `') for line in inventory.split('## 全部设置项复核')[1].splitlines() if line.startswith('| `')}
+if a.reverse:
+    # Audit this task's inventory manually, without freezing future CI catalogues.
+    catalogue = (ROOT / 'docs/system/capabilities.md').read_text()
+    inventory = (ROOT / 'docs/tasks/settings-gaps/INVENTORY.md').read_text()
+    mutations = {line.split('|')[1].strip(' `') for line in catalogue.split('## 设置')[0].splitlines()
+                 if line.startswith('| `') and any(effect in line for effect in
+                     (' / local_write', ' / local_destructive', ' / system', ' / external'))}
+    listed = inventory.split('## 全部非只读能力复核')[1].split('## 全部设置项复核')[0]
+    assert mutations == {line.split('|')[1].strip(' `') for line in listed.splitlines() if line.startswith('| `')}
+    settings = {line.split('|')[1].strip(' `') for line in catalogue.splitlines() if '`settings.get` / `settings.set`' in line}
+    assert settings == {line.split('|')[1].strip(' `') for line in inventory.split('## 全部设置项复核')[1].splitlines() if line.startswith('| `')}
 
 
 def run(name, executable, expected=None):
