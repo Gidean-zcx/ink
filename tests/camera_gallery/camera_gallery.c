@@ -1,7 +1,36 @@
 /* Real pages and bus, synthetic camera frames and member data only. */
 #include <stdlib.h>
+#include "ink/sys/file.h"
+#include "ink/sys/camera.h"
+#include "ink/hal_camera.h"
+static unsigned photo_opens, camera_yields, camera_waits;
+static bool camera_failure;
+static bool reclaimed_during_capture;
+static size_t reclaim(void *ctx, size_t want);
+static int photo_open(const char *member, const char *path, int mode, ink_fs_file_t **out) {
+    if (mode & INK_FS_EXCL) photo_opens++;
+    return ink_fs_open_for(member, path, mode, out);
+}
+#define ink_fs_open_for photo_open
 #include "../../system/apps/camera/camera.c"
+#undef ink_fs_open_for
 #include "../../system/apps/gallery/gallery.c"
+static void camera_yield(void) { camera_yields++; osal_task_yield(); }
+static osal_err_t camera_lock(osal_mutex_t *m, int64_t timeout) {
+    if (timeout == OSAL_WAIT_FOREVER) camera_waits++;
+    return osal_mutex_lock(m, timeout);
+}
+static int camera_frame(uint8_t *buf, size_t cap, uint32_t timeout) {
+    if (reclaim(NULL, 1)) reclaimed_during_capture = true;
+    return camera_failure ? -2 : hal_camera_capture(buf, cap, timeout);
+}
+#define osal_task_yield camera_yield
+#define osal_mutex_lock camera_lock
+#define hal_camera_capture camera_frame
+#include "../../system/services/camera/camera_service.c"
+#undef hal_camera_capture
+#undef osal_mutex_lock
+#undef osal_task_yield
 #define ink_main product_main
 #include "../../system/boot/main.c"
 #undef ink_main
@@ -14,6 +43,36 @@ static const char *wanted_cap;
 static lv_point_t point;
 static bool found;
 static uint8_t last_gray;
+static int rgb_started, rgb_done;
+static ink_exec_job_t rgb_job;
+static void read_rgb(void *arg) {
+    (void)arg; int w = 0, h = 0;
+    __atomic_store_n(&rgb_started, 1, __ATOMIC_RELEASE);
+    CHECK(reclaim(NULL, 1) == 0, "MEDIA allocation reclaim never waits for the camera lock");
+    uint8_t *rgb = ink_camera_read_rgb(&w, &h);
+    CHECK(rgb && w == 640 && h == 480, "public RGB interface captures without a capability call object");
+    CHECK(rgb && rgb[0] == ((CAM.frame[0] >> 3) * 255 / 31), "public RGB output matches the captured frame");
+    CHECK(!reclaimed_during_capture, "allocation pressure cannot reclaim a frame while it is captured or copied");
+    CHECK(reclaim(NULL, 1) == CAM.info.frame_bytes && !CAM.frame, "MEDIA can reclaim the idle last frame after the copy");
+    osal_free(rgb); __atomic_store_n(&rgb_done, 1, __ATOMIC_RELEASE);
+}
+static void camera_service_tests(void) {
+    (void)camera_yield;
+    osal_mutex_lock(CAM.lock, OSAL_WAIT_FOREVER);
+    camera_yields = camera_waits = 0;
+    CHECK(ink_exec_post(INK_EXEC_MEDIA, &rgb_job, read_rgb, NULL) == 0, "queue public RGB capture on MEDIA");
+    delay_ms(20);
+    CHECK(__atomic_load_n(&rgb_started, __ATOMIC_ACQUIRE) && !__atomic_load_n(&rgb_done, __ATOMIC_ACQUIRE), "RGB capture waits while the frame is locked");
+    CHECK(camera_waits == 1 && camera_yields == 0, "camera contention blocks without yielding in a busy loop");
+    osal_mutex_unlock(CAM.lock);
+    CHECK(WAIT_FOR(__atomic_load_n(&rgb_done, __ATOMIC_ACQUIRE), 5000), "RGB capture finishes after unlock");
+    CHECK(AI("app.open", "{\"id\":\"camera\"}") && g_rc.status == INK_RC_DONE, "open Camera before exercising its preview capability");
+    camera_failure = true;
+    CHECK(AI("camera.preview", NULL) && g_rc.status == INK_RC_FAILED, "public capture failure reaches the app receipt");
+    CHECK(AI("camera.capture", NULL) && g_rc.status == INK_RC_FAILED, "bus capture failure still reports failure");
+    camera_failure = false;
+    CHECK(AI("camera.capture", NULL) && g_rc.status == INK_RC_DONE, "failed capture releases the shared camera lock");
+}
 static bool settled(void) { return !ink_ui_busy() && !ink_display_busy() && !__atomic_load_n(&taking, __ATOMIC_ACQUIRE); }
 static void quiet(void) { CHECK(WAIT_FOR(settled(), 10000), "page and camera settle"); }
 static void read_snapshot(void) {
@@ -140,7 +199,19 @@ static void member_isolation(void) {
 }
 static void run(void *arg) {
     (void)arg; CHECK(WAIT_FOR(ink_member_space_open(), 10000), "member space opens"); test_start_home(); quiet();
-    if (!strcmp(phase, "restart")) {
+    if (!strcmp(phase, "many") || !strcmp(phase, "many-restart")) {
+        bool restarted = !strcmp(phase, "many-restart");
+        CHECK(count_images() == (restarted ? 301u : 300u), "existing album and media index are ready before capture");
+        ok("app.open", "{\"id\":\"camera\"}");
+        photo_opens = 0; ok("camera.photo", NULL);
+        ink_probe_value("test.camera.file_opens", photo_opens);
+        CHECK(photo_opens >= 1 && photo_opens <= 2, "300 existing photos require at most two exclusive file opens (got %u)", photo_opens);
+        ink_fs_stat_t st;
+        CHECK(ink_fs_stat(restarted ? "/me/照片/照片-302.png" : "/me/照片/照片-301.png", &st) == 0, "capture continues after the largest existing number across restart");
+        CHECK(count_images() == (restarted ? 302u : 301u), "capture adds exactly one photo to the large existing album");
+    } else if (!strcmp(phase, "service")) {
+        camera_service_tests();
+    } else if (!strcmp(phase, "restart")) {
         CHECK(count_images() == 9, "nine adult photos remain across process restart after one deletion"); get_saved();
         ok("app.open", "{\"id\":\"gallery\"}"); delay_ms(500); quiet(); on_ui(read_snapshot);
         CHECK(strstr(snapshot, "\"total\":9"), "restarted Gallery rebuilds from persisted files and index");

@@ -14,21 +14,34 @@ p = argparse.ArgumentParser()
 p.add_argument("--build", type=Path, required=True)
 p.add_argument("--negative", action="store_true")
 p.add_argument("--visual", action="store_true")
+p.add_argument("--revert", choices=("api", "names", "wait"))
 a = p.parse_args()
 build = a.build.resolve()
 work = Path(tempfile.mkdtemp(prefix="camera-gallery-", dir=build))
 binary = build / "sim-camera-gallery"
-if a.negative:
-    original = (ROOT / "system/apps/gallery/gallery.c").read_text()
-    old = "if (!found) { c->rc.status = INK_RC_REJECTED; return; }"
-    assert original.count(old) == 1
-    mutant = work / "gallery.c"
-    mutant.write_text(original.replace(old, "if (false && !found) { c->rc.status = INK_RC_REJECTED; return; }"))
+if a.negative or a.revert:
+    relative = "../../system/apps/gallery/gallery.c" if a.negative else "../../system/services/camera/camera_service.c" if a.revert == "wait" else "../../system/apps/camera/camera.c"
+    original = (ROOT / "tests/camera_gallery" / relative).resolve().read_text()
+    if a.negative:
+        old = "if (!found) { c->rc.status = INK_RC_REJECTED; return; }"
+        assert original.count(old) == 1
+        changed = original.replace(old, "if (false && !found) { c->rc.status = INK_RC_REJECTED; return; }")
+    elif a.revert == "api":
+        changed = original.replace('#include "ink/sys/camera.h"', 'uint8_t *ink_camera_read_rgb(ink_call_t *c, int *w, int *h);')
+        changed = changed.replace("ink_camera_read_rgb(&w, &h)", "ink_camera_read_rgb(c, &w, &h)")
+    elif a.revert == "names":
+        start = original.index("        unsigned seq = 0, n;")
+        end = original.index("        ink_fs_dir_close(dir);", start) + len("        ink_fs_dir_close(dir);")
+        changed = original[:start] + "        static unsigned seq;" + original[end:]
+    else:
+        start = original.index("uint8_t *ink_camera_read_rgb(")
+        changed = original[:start] + original[start:].replace("osal_mutex_lock(CAM.lock, OSAL_WAIT_FOREVER);", "while (osal_mutex_lock(CAM.lock, 0) != OSAL_OK) osal_task_yield();", 1)
+    mutant = work / Path(relative).name
+    mutant.write_text(changed)
     source = (ROOT / "tests/camera_gallery/camera_gallery.c").read_text()
-    for relative in ("../../system/apps/camera/camera.c", "../../system/boot/main.c", "../integration/whole_product.h"):
-        absolute = (ROOT / "tests/camera_gallery" / relative).resolve()
-        source = source.replace(f'"{relative}"', f'"{absolute}"')
-    source = source.replace('"../../system/apps/gallery/gallery.c"', f'"{mutant}"')
+    for include in ("../../system/apps/camera/camera.c", "../../system/apps/gallery/gallery.c", "../../system/services/camera/camera_service.c", "../../system/boot/main.c", "../integration/whole_product.h"):
+        absolute = mutant if include == relative else (ROOT / "tests/camera_gallery" / include).resolve()
+        source = source.replace(f'"{include}"', f'"{absolute}"')
     driver = work / "driver.c"
     driver.write_text(source)
     flags = {}
@@ -39,8 +52,19 @@ if a.negative:
     link = shlex.split((build / "CMakeFiles/sim-camera-gallery.dir/link.txt").read_text())
     obj = work / "driver.o"
     command = [link[0], *flags["C_DEFINES"], *flags["C_INCLUDES"], *flags["C_FLAGS"],
-               "-I", str(ROOT / "system/apps/gallery"), "-c", str(driver), "-o", str(obj)]
-    if subprocess.run(command, cwd=build).returncode:
+               "-I", str(ROOT / "system/apps/gallery"), "-I", str(ROOT / "system/apps/camera"), "-c", str(driver), "-o", str(obj)]
+    compiled = subprocess.run(command, cwd=build, capture_output=True, text=True)
+    (work / "compile.log").write_text(compiled.stdout + compiled.stderr)
+    if a.revert == "api":
+        assert compiled.returncode and "conflicting types for 'ink_camera_read_rgb'" in compiled.stderr, compiled.stderr
+        print("PASS: private capability-dependent declaration violates the public RGB interface")
+        if os.environ.get("INK_KEEP_EVIDENCE"):
+            print("Evidence:", work.relative_to(ROOT))
+        else:
+            shutil.rmtree(work)
+        raise SystemExit(0)
+    if compiled.returncode:
+        print(compiled.stderr)
         raise SystemExit("negative-control compile failed")
     link = [str(obj) if part.endswith("tests/camera_gallery/camera_gallery.c.o") else part for part in link]
     binary = work / "sim-negative"
@@ -48,18 +72,30 @@ if a.negative:
     if subprocess.run(link, cwd=build).returncode:
         raise SystemExit("negative-control link failed")
 
-phases = [("write", "Camera"), ("restart", "")]
+phases = [("write", "Camera"), ("restart", ""), ("service", ""), ("many", ""), ("many-restart", "")]
 if a.visual:
     phases += [("write", "Gallery"), ("write", "Photo")]
 if a.negative:
     phases = [("write", "")]
+elif a.revert:
+    phases = [("many", "")] if a.revert == "names" else [("service", "")]
 for phase, scene in phases:
     label = scene or phase
     target = work / label
-    state = work / ("normal" if scene in ("", "Camera") else scene)
+    state = work / ("many-state" if phase.startswith("many") else "service-state" if phase == "service" else "normal" if scene in ("", "Camera") else scene)
     state.mkdir(exist_ok=True)
     sd = state / "sd"
     sd.mkdir(exist_ok=True)
+    if phase == "many":
+        folder = sd / "content/.m/owner/照片"
+        folder.mkdir(parents=True)
+        fixture = next((work / "normal/sd/content/.m/owner/照片").glob("*.png"), None)
+        for i in range(1, 301):
+            target_photo = folder / f"照片-{i}.png"
+            if fixture:
+                shutil.copyfile(fixture, target_photo)
+            else:
+                Image.new("RGB", (1, 1), "black").save(target_photo)
     command = [str(binary), "--profile", str(ROOT / "simulator/profiles/metalio-plus.json"),
                "--script", str(ROOT / "tests/camera_gallery/camera.script"),
                "--assets", str(build / "assets"), "--content", str(build / "test-content"),
@@ -73,15 +109,17 @@ for phase, scene in phases:
     passed = result.returncode == 0 and counts.get("test.finished") == 1 and not counts.get("test.fail", 0)
     print(label, "PASS" if passed else "FAIL", "exit", result.returncode,
           "assertions", counts.get("test.pass", 0), "failures", counts.get("test.fail", 0), flush=True)
-    if a.negative:
+    if a.negative or a.revert:
         evidence = result.stdout + result.stderr + json.dumps(metrics.get("warnings", []))
-        expected = "child cannot open an adult photo by known id"
+        expected = "child cannot open an adult photo by known id" if a.negative else "300 existing photos require at most two exclusive file opens" if a.revert == "names" else "camera contention blocks without yielding in a busy loop"
         assert not passed and counts.get("test.finished") == 1 and expected in evidence, evidence[-4000:]
-        print("PASS: removing the photo ownership check fails the unchanged child-isolation assertions")
+        print("PASS: removing the fix fails the unchanged regression assertion:", expected)
         break
     if not passed:
         print("Evidence:", work.relative_to(ROOT))
         raise SystemExit(json.dumps(metrics.get("warnings", []), ensure_ascii=False) + result.stderr[-2500:])
+    if phase == "service":
+        continue
     photos = list(sd.glob("content/.m/owner/照片/*.png"))
     assert photos, "no persisted adult camera files"
     for photo in photos:

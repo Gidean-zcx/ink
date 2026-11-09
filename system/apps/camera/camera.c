@@ -1,6 +1,7 @@
 /* Still-frame viewfinder; capture and encoding stay on the media executor. */
 #include "ink/osal.h"
 #include "ink/sys/appreg.h"
+#include "ink/sys/camera.h"
 #include "ink/sys/file.h"
 #include "ink/sys/members.h"
 #include "ink/sys/ui_semantics.h"
@@ -9,7 +10,6 @@
 #include <stdio.h>
 #include <string.h>
 
-uint8_t *ink_camera_read_rgb(ink_call_t *c, int *w, int *h);
 uint8_t *ink_camera_png(const uint8_t *rgb, int w, int h, int *bytes);
 static lv_obj_t *view, *notice;
 static lv_timer_t *timer;
@@ -39,12 +39,18 @@ static void take(ink_call_t *c) {
     if (!p) { c->rc.status = INK_RC_FAILED; return; }
     __atomic_store_n(&taking, 1, __ATOMIC_RELEASE);
     p->epoch = ink_member_epoch(); p->generation = ink_ui_generation(); p->saved = !strcmp(c->cap->id, "camera.photo");
-    int w = 0, h = 0; uint8_t *rgb = ink_camera_read_rgb(c, &w, &h);
+    int w = 0, h = 0; uint8_t *rgb = ink_camera_read_rgb(&w, &h);
+    if (!rgb) c->rc.status = INK_RC_FAILED;
     if (rgb && p->saved) {
         int bytes = 0; uint8_t *png = ink_camera_png(rgb, w, h, &bytes);
         const char *member = ink_cap_call_member(c); char path[INK_FS_PATH_MAX]; ink_fs_file_t *f = NULL;
         int r = png ? ink_fs_mkdir_for(member, "/me/照片") : INK_FS_ERR_IO;
-        static unsigned seq;
+        unsigned seq = 0, n; ink_fs_dir_t *dir = NULL; ink_fs_stat_t entry;
+        if (!r && p->epoch != ink_member_epoch()) r = INK_FS_ERR_DENIED;
+        if (!r) r = ink_fs_dir_open("/me/照片", &dir);
+        if (!r) while ((r = ink_fs_dir_next(dir, &entry)) == 1)
+            if (!entry.is_dir && sscanf(entry.name, "照片-%u.png", &n) == 1 && n > seq) seq = n;
+        ink_fs_dir_close(dir);
         if (!r) for (unsigned i = 0; i < INK_FS_INDEX_MAX; i++) {
             snprintf(path, sizeof path, "/me/照片/照片-%u.png", ++seq);
             r = ink_fs_open_for(member, path, INK_FS_WRITE | INK_FS_CREATE | INK_FS_EXCL, &f);
