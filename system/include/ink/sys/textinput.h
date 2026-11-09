@@ -131,6 +131,9 @@ int ink_clip_set(const char *text, bool sensitive, uint8_t src);
 int ink_clip_get(char *out, size_t cap, uint8_t src, bool *sensitive);
 void ink_clip_clear(void);
 
+/* BG: copy an owned long-editor draft without reading UI state; -1 if unavailable. */
+int ink_text_draft_read(const char *member, const char *page, uint32_t id, char *out, size_t cap);
+
 #ifdef __cplusplus
 }
 #endif

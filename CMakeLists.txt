@@ -1254,3 +1254,7 @@ ink_sim_executable(sim-contacts tests/contacts/contacts.c)
 target_link_libraries(sim-contacts PRIVATE ink_apps ink_system)
 add_test(NAME contacts COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/contacts/run.py
   $<TARGET_FILE:sim-contacts> ${CMAKE_SOURCE_DIR} ${INK_ASSETS_DIR} ${INK_TEST_CONTENT} ${CMAKE_BINARY_DIR}/test-out/contacts)
+target_sources(ink_system PRIVATE system/apps/memo/memo.c)
+ink_sim_executable(sim-memo tests/memo/memo.c)
+target_link_libraries(sim-memo PRIVATE ink_apps ink_system)
+add_test(NAME memo COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/memo/run.py --build ${CMAKE_BINARY_DIR})

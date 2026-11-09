@@ -616,3 +616,14 @@ int ink_text_service_init(void) {
     if (ink_db_register(&DRAFTS) != 0 || ink_db_register(&USER_FREQ) != 0 || ink_settings_define(TEXT_SETTINGS, 1) != 0 || ink_state_watch("member.current", on_member, NULL, INK_EXEC_UI) != 0) return -1;
     return text_caps_init();
 }
+
+int ink_text_draft_read(const char *member, const char *page, uint32_t id, char *out, size_t cap) {
+    ink_db_t *db = ink_db_open_member(&DRAFTS, member);
+    draft_t *d = osal_calloc(1, sizeof *d, OSAL_MEM_EXTERNAL);
+    ink_rec_t r; int result = -1;
+    if (db && d && page && out && ink_db_get(db, id, &r, d, sizeof *d) == 0 && r.len == sizeof *d &&
+        !strcmp(d->page, page) && strlen(d->value) < cap) {
+        result = (int)strlen(d->value); memcpy(out, d->value, (size_t)result + 1);
+    }
+    osal_free(d); ink_db_close(db); return result;
+}
