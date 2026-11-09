@@ -1,6 +1,7 @@
 #include "ink/sys/file_picker.h"
 #include "ink/sys/ui_list.h"
 #include "ink/sys/members.h"
+#include "ink/sys/state.h"
 #include "ink/ui_shell.h"
 #include "ink/osal.h"
 #include <stdio.h>
@@ -46,7 +47,7 @@ static void close_picker(uint32_t id) {
         p->call->rc.status = id ? INK_RC_DONE : INK_RC_CANCELLED;
         ink_cap_result(p->call, result); ink_cap_done(p->call); p->call = NULL;
     }
-    p->done(p->ctx, id);
+    if (p->epoch == ink_member_epoch()) p->done(p->ctx, id);
     if (!p->working) osal_free(p);
 }
 static void bind_item(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, ink_ui_action_spec_t *action, void *ctx) {
@@ -81,6 +82,10 @@ static bool on_key(ink_key_t key, bool lng) {
     return ink_ui_list_key(P->list, key, lng);
 }
 static const ink_ui_overlay_t OVERLAY = {.name = "FilePicker", .level = 0, .on_key = on_key, .snapshot = snapshot};
+static void member_changed(void *ctx, int h, const char *id) {
+    (void)ctx; (void)h; (void)id;
+    if (P && P->epoch != ink_member_epoch()) close_picker(0);
+}
 static void loaded(void *arg) {
     picker_t *p = arg;
     p->working = false;
@@ -167,5 +172,6 @@ int ink_file_picker_init(void) {
         {.id = "file_picker.select", .title = "选择文件编号", .activity = "FilePicker", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action,
          .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1}},\"required\":[\"id\"]}"}
     };
-    return ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS);
+    if (ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS)) return -1;
+    return ink_state_watch("member.", member_changed, NULL, INK_EXEC_UI);
 }

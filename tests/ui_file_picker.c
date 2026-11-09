@@ -121,6 +121,12 @@ static void run(void *arg) {
     CHECK(ink_fs_lookup(selected, &e) == 0 && !strcmp(e.path, "/me/SYNTH_CHILD.png"), "the child receives their own service object");
     CHECK(ink_fs_lookup(expected, &e) == INK_FS_ERR_DENIED, "file lookup also refuses the adult's private id");
     quiet(); on_ui(restored);
+    CHECK(ink_member_switch("owner") == 0, "prepare an adult picker before member handoff");
+    on_ui(ink_ui_home); quiet(); on_ui(push_caller); on_ui(open_picker); wait_ready();
+    CHECK(ink_member_switch("kid") == 0, "switch to child while the adult picker is open");
+    on_ui(ink_ui_home); quiet(); on_ui(read_screen);
+    CHECK(strcmp(g_top, "FilePicker"), "member handoff removes the previous private overlay");
+    CHECK(callbacks == 4, "a departed caller does not receive a callback in another member's space");
     ink_probe_count("test.finished");
 }
 void ink_main(void) {
