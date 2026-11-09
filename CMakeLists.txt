@@ -547,6 +547,11 @@ target_link_libraries(sim-ui-regressions PRIVATE ink_apps ink_system ink_port_si
 target_compile_options(sim-ui-regressions PRIVATE ${INK_WARN} -Wno-format-truncation)
 ink_sim_executable(sim-ui-semantics tests/ui_semantics.c)
 target_link_libraries(sim-ui-semantics PRIVATE ink_apps ink_system)
+ink_sim_executable(sim-jot tests/jot/app.c examples/jot/jot.c)
+target_link_libraries(sim-jot PRIVATE ink_apps ink_system)
+add_test(NAME app-framework-example COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/jot/run.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(app-framework-example PROPERTIES TIMEOUT 320)
+add_test(NAME app-framework-snippets COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/jot/check_doc.py)
 add_test(NAME ui-semantics
   COMMAND sim-ui-semantics --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
     --script ${CMAKE_SOURCE_DIR}/tests/ui_semantics.script --budget ${CMAKE_SOURCE_DIR}/tests/ui_scene.budget.json
