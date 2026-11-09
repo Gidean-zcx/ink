@@ -80,5 +80,5 @@ $INK_DEPS/build-deps/pyenv/bin/ctest --test-dir build --output-on-failure -j3
 - 现在同时有六七个任务在跑：构建最多 `-j2`，`ctest` 最多 `-j2`，命令前加 `taskpolicy -c utility`。
 - 这些共享文档不改，合并时由主会话统一改：docs/tasks/backlog.md、docs/system/ui-dependencies.md、生成的 docs/system/capabilities.md、docs/requirements.md、docs/ideas.md、docs/decisions/。要改的写进报告的“要改的文档”一节。
 - 不碰设备，不读 ink-hw。
-- CI 在 Linux 上用 gcc 编译，警告当错误；本机的 Apple clang 不报这些。所以：`if`、`for`、`while` 后面的语句如果写在同一行，同一行里不要再跟第二句；`snprintf` 把可能很长的字符串（快照、JSON、正文）写进小缓冲时，用 `%.200s` 这样的精度限长，或者检查返回值并处理截断（截断要落在完整的字上）；不要把同一个结构体里的字段既当来源又当目标传给 `snprintf`，先拷到局部变量。测试里 `CHECK` 的消息缓冲只有 300 字节，打印 `g_result` 这类 4 KB 的缓冲也要限长（例如 `%.150s`），否则 gcc 报 `-Wformat-truncation`。
+- CI 在 Linux 上用 gcc 编译，警告当错误；本机的 Apple clang 不报这些。所以：`if`、`for`、`while` 后面的语句如果写在同一行，同一行里不要再跟第二句；`snprintf` 把可能很长的字符串（快照、JSON、正文）写进小缓冲时，用 `%.200s` 这样的精度限长，或者检查返回值并处理截断（截断要落在完整的字上）；不要把同一个结构体里的字段既当来源又当目标传给 `snprintf`，先拷到局部变量。测试里 `CHECK` 的消息缓冲只有 300 字节，打印 `g_result` 这类 4 KB 的缓冲也要限长（例如 `%.150s`），否则 gcc 报 `-Wformat-truncation`。CI 只检出一个提交：注册进 ctest 的测试不能用 `git show <基线提交>` 这类依赖历史的做法；和基线对比放在手动运行的模式里，或者取不到时明确跳过并说明。
 - 测试跑通后，构建目录里的临时证据目录会自动删掉（以前每跑一次留一份，把磁盘塞满了）；要留着给报告引用，就在命令前加 `INK_KEEP_EVIDENCE=1`。
