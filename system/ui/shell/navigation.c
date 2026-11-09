@@ -90,6 +90,7 @@ static void today_model(void);
 static int today_slots(void);
 static const char *today_icon(int slot);
 static void icon_bind(lv_obj_t *obj, const char *id);
+static void icon_event(lv_event_t *e);
 static bool icon_close(void);
 static int today_init(void);
 
@@ -175,6 +176,7 @@ void ink_shell_bind(lv_obj_t *obj, const char *cap, const char *json) {
 const char *ink_shell_bound_cap(lv_obj_t *obj) {
     for (uint32_t i = 0; i < lv_obj_get_event_count(obj); i++) {
         lv_event_dsc_t *d = lv_obj_get_event_dsc(obj, i);
+        if (lv_event_dsc_get_cb(d) == icon_event) return "shell.launch";
         if (lv_event_dsc_get_cb(d) == binding_event) return ((binding_t *) lv_event_dsc_get_user_data(d))->cap;
     }
     return NULL;
