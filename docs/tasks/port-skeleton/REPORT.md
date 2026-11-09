@@ -9,8 +9,8 @@
 | 1 | 【实测】通过 | 固件已链接；106 个 system、11 个 drivers、3 个 boards、2 个 apps 的 C 文件全部交叉编译 | `taskpolicy -c utility bash ports/esp32s31/build.sh` |
 | 2 | 【实现】完成；【实测】自检已交叉编译、主机换算测试通过 | PSRAM 任务栈、heap_caps、FreeRTOS 同步和队列、esp_timer；开机自检未上机执行 | 同上；`ctest --test-dir build -R unit-s31-osal-ticks` |
 | 3 | 【估算】见下表，保留存储 4096 字节 | `.su` 入口帧、`.ci` 直接调用链；主机普通构建场景估算 | `python3 tests/esp32s31/stack_report.py build-s31 --host build/test-out` |
-| 4 | 【实测】本地同脚本通过；远端未运行 | 原 workflow 复用现有 IDF 安装，新增端口编译；失败直接返回非零，上传尺寸与栈报告 | `bash ports/esp32s31/build.sh` |
-| 5 | 【实测】普通及 ASan/UBSan 各覆盖 258 项：255 项全量通过，3 项补跑通过 | 全量日志及补测日志在 `work/`；没有改已有测试或预算 | 总规则 §5 参数，`ctest --test-dir build --output-on-failure -j2`；ASan 换 `build-asan`，补测命令见下 |
+| 4 | 【实测】本地同脚本和 YAML 检查通过；远端未运行 | 独立 `s31-port.yml` 自动响应相关推送、PR，也可手动运行；按 IDF 版本和提交缓存源码与工具；编译失败直接返回非零 | `bash ports/esp32s31/build.sh`；`python tests/esp32s31/workflow.py`（锁定中枢环境） |
+| 5 | 【实测】复查后普通及 ASan/UBSan 均 258/258 全量通过，0 失败、0 跳过 | 本轮日志 `work/recheck-host-tests.log`、`work/recheck-asan-tests.log`；没有改已有测试或预算 | 总规则 §5 参数，`ctest --test-dir build --output-on-failure -j2`；ASan 换 `build-asan`，中枢依赖与环境见“复查后的修复” |
 
 尺寸（`idf.py size`，字节）：
 
@@ -63,7 +63,7 @@
 主机配置沿用总规则 §5，另外复用 `$INK_DEPS/build/_deps/sdl2-src` 和 `imgui-src`，避免下载。中枢补测配置与命令（两种构建各执行一次；同一时间只跑一轮）：
 
 ```bash
-export PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$PWD/hub/src"
+export PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$PWD/hub"
 cmake -S . -B build -DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"
 taskpolicy -c utility cmake --build build -j2
 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build \
@@ -103,6 +103,7 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build \
 - FreeRTOS OSAL、HAL 不可用桩和 ESP-IDF 构建配置：任务书明确要求。OSAL 使用 IDF 原生对象及 WithCaps 生命周期，没有自写调度、重试或持久格式。
 - `osal-test` 短任务及自检定时器：验收 2 要求，检查 PSRAM 栈、任务名称与定时器语义，随后释放。
 - IDF 的 `esp_timer` 服务及 WithCaps 自删除清理任务：OSAL 映射所需，直接使用 SDK 实现。
+- CI 的 IDF 源码与工具缓存：主会话复查 PS-M1 明确要求；只复用 SDK 安装，不缓存工程编译结果。
 - 端口产品文件共 549 行（含 CMake、配置和构建脚本，不含 76 行自检及文档），在 600 行预算内。超过 100 行的原因是 OSAL 全接口和 134 个 HAL 声明均需落地；考虑过用统一桩宏缩短，保留逐项函数以便核对失败语义。
 
 `sdkconfig.defaults` 的配置项：
@@ -128,3 +129,34 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build \
 
 - 合并时更新 `README.md`、项目入口、`docs/system/platform-and-simulator.md` 中“端口待写”的状态及本次尺寸、栈证据；本任务未修改共享文档。
 - `docs/system/capabilities.md` 无新增能力，不需重生成。
+
+## 复查后的修复
+
+本轮基线：`bf08a23a`。按主会话的 `REVIEW.md` 处理唯一的中级问题 PS-M1。
+
+- 【实现】新增独立的 `s31-port.yml`，在相关源码、端口和工作流变更的推送、PR 中编译，保留手动触发；原尺寸基线工作流仍只手动运行。
+- 【实现】用 `actions/cache@v4` 同时缓存 IDF 源码和工具，键含操作系统、架构、IDF 版本和提交号；未命中时按原尺寸脚本克隆子模块、核对提交并安装 S31 工具。命中时跳过下载和安装，编译每次都执行。
+- 【实测】新增 `tests/esp32s31/workflow.py` 的 6 项检查全过：两份 YAML 语法、触发路径、缓存命中时跳过安装、未命中时克隆与安装，以及提交不符、安装失败、编译失败的退出行为。仅在临时副本撤掉推送触发、工具缓存、安装条件、提交校验或编译失败阻断，5 个反向对照均退出 1；工作区源码未回退。
+- 【实测】同一 `ports/esp32s31/build.sh` 本地执行成功，复用只读的已安装 IDF，增量构建耗时 45.85 秒；固件 1,205,648 字节，Flash 1,141,764、DIRAM 82,958、外部静态 BSS 381,560 字节，栈报告与上表一致。
+- 【估算】GitHub 缓存命中时约 4～8 分钟，未命中约 12～25 分钟。假设 Linux 网络正常、并行 2、两种情况均从空工程构建目录开始；缓存只存 SDK 源码和工具，不存工程编译产物。未命中多出约 1 GB 下载和工具、Python 依赖安装。没有实际调用 GitHub 缓存或运行 Actions，也没有安装 act；本地增量耗时不当作干净 CI 耗时。
+- 【实测】普通全量 258/258 通过，0 失败、0 跳过，耗时 210.95 秒；ASan/UBSan 全量同样 258/258 通过，0 失败、0 跳过，耗时 338.25 秒，未发现内存错误。普通与内存检查构建分别耗时 81.71、133.16 秒，均启用 `INK_WERROR=ON`，并行 2、utility 优先级。能力表文档检查本轮也通过，无需使用豁免。
+- 【实现】上次跳过的 `hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e` 原因是默认字体生成用的 Python 缺少 `aiohttp`、`PyYAML`、`pytest`、`pytest-asyncio`；JSON 交叉检查还依赖契约测试生成的消息。现有锁定中枢环境已包含全部依赖，本轮未安装新依赖、没有剩余缺项。旧报告的 `PYTHONPATH="$PWD/hub/src"` 指向不存在的目录；本轮使用 `PYTHONPATH="$PWD/hub"` 并核实 `ink_hub` 从当前检出导入，依赖解释器仍复用 `$INK_DEPS/hub/.venv/bin/python`。
+- 本轮产品代码新增 0 行，端口仍为 549 行；仅新增复查明确要求的 CI 缓存，没有新增设备端机制。
+- 【实测】`git diff --check`、报告相对链接、两份工作流 YAML 与内嵌 Bash 语法检查通过。按总规则 §6 扫描任务原始基线至本轮修改，无隐私命中（grep 退出 1）；差异仅含两份工作流、回归测试与本报告，未改主会话提供的 `REVIEW.md`。本轮未改已有测试、未放宽预算、未增加跳过项。
+
+本轮复现命令（构建配置沿用总规则 §5，并指定 `INK_HUB_PYTHON` 和已有的 SDL2、ImGui 源码）：
+
+```bash
+export PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$PWD/hub"
+taskpolicy -c utility "$INK_DEPS/hub/.venv/bin/python" tests/esp32s31/workflow.py -v
+taskpolicy -c utility bash ports/esp32s31/build.sh
+taskpolicy -c utility cmake --build build -j2
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" \
+  --test-dir build --output-on-failure -j2
+# 内存检查：使用相同配置，加 -DINK_SANITIZE=ON，目录换成 build-asan。
+taskpolicy -c utility cmake --build build-asan -j2
+UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" \
+  --test-dir build-asan --output-on-failure -j2
+```
+
+本轮证据：`work/recheck-workflow.log`、`work/recheck-workflow-negative.log`、`work/recheck-s31-build.log`、`work/recheck-host-{config,build,tests}.log`、`work/recheck-asan-{config,build,tests}.log`。安装步骤的成功与失败用假命令验证，真实 S31 编译使用已安装 SDK；没有重新下载安装 SDK，也没有实际访问 GitHub Actions。
