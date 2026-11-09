@@ -1,0 +1,68 @@
+name: ESP32-S31 port
+
+on:
+  push:
+    paths:
+      - 'system/**'
+      - 'platform/**'
+      - 'drivers/**'
+      - 'boards/**'
+      - 'apps/**'
+      - 'ports/esp32s31/**'
+      - 'third_party/**'
+      - 'tests/esp32s31/**'
+      - '.github/workflows/s31-port.yml'
+  pull_request:
+    paths:
+      - 'system/**'
+      - 'platform/**'
+      - 'drivers/**'
+      - 'boards/**'
+      - 'apps/**'
+      - 'ports/esp32s31/**'
+      - 'third_party/**'
+      - 'tests/esp32s31/**'
+      - '.github/workflows/s31-port.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  IDF_VER: v6.1
+  IDF_COMMIT: fff9895c82d744c7237be8847347bdd1b07c6643
+  IDF_PATH: ${{ github.workspace }}/.s31-size/esp-idf
+  IDF_TOOLS_PATH: ${{ github.workspace }}/.s31-size/tools
+
+jobs:
+  compile:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cache ESP-IDF source and tools
+        id: idf-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{ env.IDF_PATH }}
+            ${{ env.IDF_TOOLS_PATH }}
+          key: esp-idf-${{ runner.os }}-${{ runner.arch }}-${{ env.IDF_VER }}-${{ env.IDF_COMMIT }}
+      - name: Install ESP-IDF on a cache miss
+        if: steps.idf-cache.outputs.cache-hit != 'true'
+        run: |
+          git clone --depth 1 --branch "$IDF_VER" --recurse-submodules --shallow-submodules \
+            https://github.com/espressif/esp-idf.git "$IDF_PATH"
+          test "$(git -C "$IDF_PATH" rev-parse HEAD)" = "$IDF_COMMIT"
+          "$IDF_PATH/install.sh" esp32s31
+      - name: Compile the ink ESP32-S31 port
+        run: bash ports/esp32s31/build.sh
+      - name: Upload port build reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s31-port-reports
+          path: |
+            build-s31/size*.txt
+            build-s31/stack.txt
+            build-s31/log/

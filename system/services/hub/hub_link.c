@@ -223,7 +223,7 @@ static int send_request(pending_t *p) {
     }
     char head[96];
     size_t plen = strlen(p->params ? p->params : "{}");
-    snprintf(head, sizeof head, "{\"jsonrpc\":\"2.0\",\"id\":%u,\"method\":\"%s\",\"params\":", p->id, p->method);
+    snprintf(head, sizeof head, "{\"jsonrpc\":\"2.0\",\"id\":%u,\"method\":\"%s\",\"params\":", (unsigned)p->id, p->method);
     bool ai = !strcmp(p->method, "ai.listen") || !strcmp(p->method, "ai.ask");
     const char *body = p->params ? p->params + 1 : "}";
     if (ai && !strncmp(body, "\"budget_ms\":", 12)) {
@@ -350,7 +350,7 @@ static bool sync_member(void) { /* hub task: precedes online callbacks and priva
     char wire[192];
     int n = snprintf(wire, sizeof wire,
         "{\"jsonrpc\":\"2.0\",\"method\":\"ink/member\",\"params\":{\"member\":\"%s\",\"authed\":%s,\"epoch\":%u}}",
-        identity.member, identity.authed ? "true" : "false", identity.epoch);
+        identity.member, identity.authed ? "true" : "false", (unsigned)identity.epoch);
     if (n < 0 || (size_t)n >= sizeof wire || hal_ws_send(H.ws, false, wire, (size_t)n, 2000000) != 0) {
         enter_backoff();
         return false;
@@ -456,7 +456,7 @@ static void send_hello(void) {
         if (ink_pairing_handshake(hello.method, params, 2048) != 0) { osal_free(params); enter_backoff(); return; }
         H.pair_begin = !strcmp(hello.method, "pair/begin");
     } else snprintf(params, sizeof legacy, "{\"proto\":1,\"device\":\"%s\",\"member\":\"%s\",\"authed\":%s,\"epoch\":%u}",
-                    di.profile_id ? di.profile_id : "?", identity.member, identity.authed ? "true" : "false", identity.epoch);
+                    di.profile_id ? di.profile_id : "?", identity.member, identity.authed ? "true" : "false", (unsigned)identity.epoch);
     hello.params = params;
     H.hello_sent_us = osal_now_us();
     if (send_request(&hello) != 0) enter_backoff();

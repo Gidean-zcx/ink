@@ -239,7 +239,7 @@ static void selection_action(ink_call_t *c, bool ask) {
         ink_db_t *db = ink_db_open_member(&WORDS, ink_member_current()->id); uint32_t id = 0;
         ink_db_write_t w = {.data = text, .len = (size_t)n + 1, .src = (uint8_t)c->src};
         if (!db || ink_db_put(db, &w, &id) != 0) fail(c, INK_RC_FAILED, "单词没能存下");
-        else { ink_db_flush(db); snprintf(c->rc.object, sizeof c->rc.object, "text.words:%u", id); }
+        else { ink_db_flush(db); snprintf(c->rc.object, sizeof c->rc.object, "text.words:%u", (unsigned)id); }
         ink_db_close(db);
     }
     osal_free(text);

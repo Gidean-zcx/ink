@@ -70,7 +70,7 @@ static uint32_t journal(uint32_t token, const char *state, const ink_receipt_t *
     if (h) {
         /* Member/capability ids and the hexadecimal digest are system-owned. Escape the request id. */
         int n = snprintf(s->out, sizeof s->out, "{\"binding\":{\"member\":\"%s\",\"cap\":\"%s\",\"digest\":\"%s\",\"page_gen\":%u,\"epoch\":%u,\"connection\":%u,\"expires_us\":%llu,\"request_id\":",
-                         h->member, h->cap->id, h->digest, h->page_gen, h->epoch, h->connection, (unsigned long long)h->expires_us);
+                         h->member, h->cap->id, h->digest, (unsigned)h->page_gen, (unsigned)h->epoch, (unsigned)h->connection, (unsigned long long)h->expires_us);
         if (n < 0 || (size_t)n >= w.cap) { osal_free(s); return 0; }
         w.len = (size_t)n;
         ink_jw_str(&w, h->request_id); ink_jw_raw(&w, "}");

@@ -767,7 +767,7 @@ int ink_shell_home_snapshot(char *buf, size_t cap) {
     if (N.home_page == 0) {
         if (cap) buf[0] = 0;
         if (child()) {
-            int n = snprintf(buf, cap, "{\"page\":\"KidToday\",\"page_version\":%u,\"notice\":\"爸爸妈妈可以看到你的记录\",\"content\":", ink_ui_content_version());
+            int n = snprintf(buf, cap, "{\"page\":\"KidToday\",\"page_version\":%u,\"notice\":\"爸爸妈妈可以看到你的记录\",\"content\":", (unsigned)ink_ui_content_version());
             if (n < 0 || (size_t)n + 2 >= cap) {
                 if (cap) buf[0] = 0;
                 return -1;
