@@ -150,7 +150,8 @@ static void capacity(void) {
         CHECK(ink_fs_write_atomic(path, "X", 1) == 0, "capacity fixture %d", i);
     }
     uint32_t cursor = 0; ink_fs_entry_t e;
-    CHECK(ink_fs_index("/me/capacity", INK_FS_ANY, &cursor, &e) == INK_FS_ERR_INDEX_FULL, "one extra file honestly exceeds the device index limit");
+    int full = ink_fs_index("/me/capacity", INK_FS_ANY, &cursor, &e);
+    CHECK(full == INK_FS_ERR_INDEX_FULL, "one extra file honestly exceeds the device index limit (%d)", full);
     CHECK(ink_fs_lookup(1, &e) == 0, "full index keeps previously assigned ids");
     uint32_t old = e.id;
     int removed = ink_fs_remove(e.path);

@@ -173,6 +173,10 @@ static bool describe(const ink_cap_t *c, const ink_args_t *a, char *out, size_t 
                 p = end;
             }
         }
+        if (!strcmp(c->id, "system.factory_reset")) {
+            bool media = false; ink_args_get_bool(a, "clear_media", &media);
+            complete &= put_text(out, cap, &n, media ? "；同时清空存储卡上的书和音频" : "；存储卡上的书和音频保留");
+        }
         out[n] = 0;
         return complete;
     }

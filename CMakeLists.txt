@@ -1415,6 +1415,16 @@ ink_sim_executable(sim-storage-order tests/storage_order/device.c tests/storage_
 target_link_libraries(sim-storage-order PRIVATE ink_apps ink_system)
 add_test(NAME storage-order COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/storage_order/run.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(storage-order PROPERTIES TIMEOUT 180 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")
+
+ink_sim_executable(sim-audit5-fix tests/audit5_fix/device.c tests/file_index_3/boundary.c)
+target_link_libraries(sim-audit5-fix PRIVATE ink_apps ink_system)
+# b5-02 (index durability after a file change) waits for its own task: syncing inside file operations cost ~1.75 s each.
+foreach(pair "b5-01;confirmation" "b5-03;receipts")
+    list(GET pair 0 number)
+    list(GET pair 1 scenario)
+    add_test(NAME audit5-${number} COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/audit5_fix/run.py --build ${CMAKE_BINARY_DIR} --case ${scenario})
+    set_tests_properties(audit5-${number} PROPERTIES TIMEOUT 240)
+endforeach()
 target_sources(ink_system PRIVATE system/ui/shell/transfer_pages.c)
 ink_sim_executable(sim-transfer-pages tests/transfer_pages/device.c)
 target_link_libraries(sim-transfer-pages PRIVATE ink_apps ink_system)

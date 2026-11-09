@@ -1616,6 +1616,7 @@ static void index_done(const file_context_t *c, const char *root, bool durable) 
         ink_state_set_str(FS.h_index, "ready");
     }
 }
+#define INDEX_WAIT_US 10000000ll /* a compaction rewrites the whole index (1024 records) in one write: seconds */
 /* The synchronous first-page API uses the same batches, releasing edits for durability. */
 static int index_scan(const file_context_t *c, ink_db_t *db, const uint8_t card[16], const char *root) {
     index_manual = true;
@@ -1632,7 +1633,7 @@ static int index_scan(const file_context_t *c, ink_db_t *db, const uint8_t card[
         if (!r) r = index_walk_step(w, db, card);
         ink_probe_value("file.index.hold_us", (double)(osal_now_us() - begin));
         osal_mutex_unlock(FS.edits);
-        if (ink_db_wait(db, ink_db_last_ver(db), 3000000)) r = INK_FS_ERR_IO;
+        if (ink_db_wait(db, ink_db_last_ver(db), INDEX_WAIT_US) && !r) r = INK_FS_ERR_IO; /* a full index stays INDEX_FULL */
         osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
         uint8_t now[16]; ink_db_t *check = NULL;
         if (!r) r = index_open(now, &check);
