@@ -194,6 +194,7 @@ static void assert_identity(void) {
     if (!strcmp(scene, "ImeCandidates")) CHECK(label_visible("键盘"), "expanded candidates, not the alphabet layout");
     if (!strcmp(scene, "ImeEdit")) { size_t a, b; ink_text_selection(&a, &b); CHECK(a == 2 && b == 4 && label_visible("复制"), "the real selection and edit tools are visible"); }
     if (!strcmp(scene, "ImeVoice")) CHECK(ink_text_voice_state() == INK_VOICE_LISTENING && label_visible("用键盘"), "the real dictation is listening");
+    if (!strcmp(scene, "ImeSymbols")) CHECK(label_visible("字母"), "the real symbol layout is selected");
     if (!strcmp(scene, "Components")) CHECK(label_visible("开关") && label_visible("自动"), "component controls exist");
     if (!strcmp(scene, "ComponentsPanel")) CHECK(label_visible("底部面板"), "the panel component exists");
     if (!strcmp(scene, "ComponentsDock")) CHECK(lv_obj_get_child_count(lv_screen_active()) > 1 && !label_visible("开关") && !label_visible("底部面板"), "Dock fixture has its own variant");
@@ -393,6 +394,8 @@ static void test_task(void *arg) {
         }
     } else if (!strcmp(scene, "ImeCandidates")) {
         CHECK(press_label("更多"), "expand real candidates");
+    } else if (!strcmp(scene, "ImeSymbols")) {
+        CHECK(press_label("符号"), "switch the real keyboard to symbols");
     } else if (!strcmp(scene, "Lock") || !strcmp(scene, "LockPage")) {
         ink_power_hold(INK_NEED_AWAKE); /* Snapshot while locked, before simulated light sleep. */
         set_level("display.lock_style", !strcmp(scene, "Lock")); ink_power_lock();
