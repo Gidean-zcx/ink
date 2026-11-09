@@ -44,6 +44,7 @@ static const struct {
     {"notify.channels", NULL}, {"notify.set_channel", "id,enabled"}, {"interrupt.list", NULL}, {"interrupt.ack", NULL}, {"confirm.list", NULL},
     {"confirm.withdraw", "token"}, {"confirm.status", ""}, {"app.list", NULL}, {"app.open", "id"}, {"app.close", "id"}, {"app.cards", NULL}, {"text.state", NULL},
     {"text.insert", "text"}, {"text.select", "start"}, {"text.undo", ""}, {"text.redo", ""}, {"text.submit", ""}, {"clipboard.read", NULL}, {"clipboard.write", "text"}, {"media.play", "path"},
+    {"text.page", "direction"}, {"text.ask_ai", ""}, {"text.add_word", ""},
     {"media.pause", NULL}, {"media.resume", NULL}, {"media.seek", "ms"}, {"media.stop", NULL}, {"media.status", NULL}, {"audio.record", ""},
     {"audio.record_stop", NULL}, {"bt.scan", NULL}, {"bt.list", NULL}, {"bt.pair", "addr"}, {"bt.connect", "addr"}, {"bt.disconnect", NULL},
     {"bt.forget", "addr"}, {"wifi.scan", NULL}, {"wifi.list", NULL}, {"wifi.connect", "ssid"}, {"wifi.forget", "ssid"}, {"member.list", NULL},

@@ -25,12 +25,15 @@ typedef struct {
     const char *initial, *hint;
     size_t max;      /* bytes; 0 = 1 KiB, at most 4 KiB */
     bool ai_hidden;  /* the AI does not see what is typed here (a password is never seen) */
+    const char *draft_page; /* long editor: stable page/object namespace, never a secret field */
+    uint32_t draft_id; /* 0 creates a draft; navigation keeps only this reference and page */
 } ink_text_cfg_t;
 
 typedef struct {
     void (*changed)(void *ctx);                    /* value or composing changed */
     void (*entered)(void *ctx, const char *value); /* the enter key, nothing being composed */
     void (*ended)(void *ctx);                      /* the session is over, whoever ended it */
+    void (*page)(void *ctx, int direction);
 } ink_text_client_t;
 
 typedef struct {
@@ -46,6 +49,13 @@ void ink_text_blur(int session);
 bool ink_text_focused(void);
 /** UI task: semantic input snapshot, with credential contents masked. */
 int ink_text_snapshot(char *out, size_t cap);
+int ink_text_input_snapshot(char *out, size_t cap); /* long editor supplies the visible body */
+size_t ink_text_byte_offset(const char *text, size_t chars);
+size_t ink_text_char_offset(const char *text, size_t bytes); /* floors an interior byte */
+size_t ink_text_cluster_end(const char *text, size_t start);
+uint32_t ink_text_draft_id(void);
+int ink_text_draft_saved(void); /* -1 failed, 0 pending, 1 durable */
+int ink_text_turn_page(int direction);
 ink_text_type_t ink_text_type(void);
 ink_text_enter_t ink_text_enter_kind(void);
 const char *ink_text_hint(void);

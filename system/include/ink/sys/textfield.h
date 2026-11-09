@@ -29,6 +29,11 @@ int ink_textfield_bind_short(lv_obj_t *field, const ink_ui_page_spec_t *page,
 int ink_textfield_short_focus(lv_obj_t *field);
 /* F1 page snapshot plus field identity, visible focus and fixed rectangles. */
 int ink_textfield_short_snapshot(lv_obj_t *field, char *out, size_t cap);
+/* Dedicated editor page: cfg names its page and draft reference; header/return belong to the caller.
+ * Refresh is also usable from settle; the control polls pending save receipts while editing. */
+lv_obj_t *ink_textfield_long_create(lv_obj_t *parent, const ink_text_cfg_t *cfg);
+void ink_textfield_long_refresh(lv_obj_t *field);
+int ink_textfield_long_snapshot(lv_obj_t *field, char *out, size_t cap);
 
 #ifdef __cplusplus
 }

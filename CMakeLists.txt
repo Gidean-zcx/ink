@@ -568,6 +568,9 @@ add_test(NAME ui-cards
   COMMAND sim-ui-cards --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
     --script ${CMAKE_SOURCE_DIR}/tests/ui_cards.script --budget ${CMAKE_SOURCE_DIR}/tests/ui_scene.budget.json
     --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT} --out ${CMAKE_BINARY_DIR}/test-out/ui-cards --quiet --no-random-outages)
+ink_sim_executable(sim-text-long tests/text_long/editor.c)
+target_link_libraries(sim-text-long PRIVATE ink_apps ink_system)
+add_test(NAME text-long COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/text_long/run.py --build ${CMAKE_BINARY_DIR})
 foreach(profile metalio-plus desktop-lcd)
   foreach(regression confirm slider context privacy answer snapshot alarm)
     add_test(NAME ui-${regression}-regressions-${profile}

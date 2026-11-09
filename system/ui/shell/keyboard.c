@@ -128,7 +128,7 @@ static int snapshot(char *buf, size_t cap) {
     size_t start, end;
     ink_text_selection(&start, &end);
     int n = snprintf(buf, cap, "键盘；类型=普通文字；内容=%s；组合=%s；光标=%zu；选区=%zu..%zu；展开=%d；候选起点=%d；",
-                     ink_text_value(), ink_text_composing(), ink_text_cursor(), start, end, K.expanded, K.first);
+                     ink_text_draft_id() ? "" : ink_text_value(), ink_text_composing(), ink_text_cursor(), start, end, K.expanded, K.first);
     if (K.cands && !lv_obj_has_flag(K.keys, LV_OBJ_FLAG_HIDDEN) && !lv_obj_has_flag(K.cands, LV_OBJ_FLAG_HIDDEN)) {
         for (int i = 0; i < INK_TEXT_PAGE && n >= 0 && (size_t)n < cap; i++) if (!lv_obj_has_flag(K.cand_btn[i], LV_OBJ_FLAG_HIDDEN))
             n += snprintf(buf + n, cap - (size_t)n, "候选[%d]=%s；", K.first + i, lv_label_get_text(K.cand_label[i]));
@@ -142,6 +142,7 @@ static int snapshot(char *buf, size_t cap) {
 }
 static bool overlay_key(ink_key_t k, bool lng) {
     if (!lng && (k == INK_KEY_HOME || k == INK_KEY_BACK)) ink_text_blur(0);
+    if (!lng && (k == INK_KEY_NEXT || k == INK_KEY_PREV)) invoke("text.page", k == INK_KEY_NEXT ? "{\"direction\":1}" : "{\"direction\":-1}");
     return true;
 }
 static const ink_ui_overlay_t OVERLAY = {.name = "Keyboard", .level = -2, .on_key = overlay_key, .snapshot = snapshot};

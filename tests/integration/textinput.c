@@ -36,7 +36,7 @@ static void cl_ended(void *ctx) {
     (void)ctx;
     g_ended++;
 }
-static const ink_text_client_t CLIENT = {cl_changed, cl_entered, cl_ended};
+static const ink_text_client_t CLIENT = {cl_changed, cl_entered, cl_ended, NULL};
 
 /* Everything about the session runs on the UI task. */
 static ink_text_cfg_t g_cfg;

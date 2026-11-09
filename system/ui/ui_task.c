@@ -326,7 +326,7 @@ static int snapshot_content(char *buf, size_t cap, const char **name, bool conte
     char *page = osal_malloc(cap, OSAL_MEM_EXTERNAL);
     char *text = osal_malloc(cap, OSAL_MEM_EXTERNAL);
     int pn = page ? (top && top->snapshot ? top->snapshot(page, cap) : snprintf(page, cap, "%s", top ? top->name : "")) : -1;
-    int tn = text ? ink_text_snapshot(text, cap) : -1;
+    int tn = text ? ink_text_input_snapshot(text, cap) : -1;
     ink_jw_t w;
     ink_jw_init(&w, buf, cap);
     if (pn >= 0 && (size_t)pn < cap && tn >= 0) {
