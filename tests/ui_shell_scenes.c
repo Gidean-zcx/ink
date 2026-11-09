@@ -108,7 +108,7 @@ static void prepare(void) {
     } else if (!strcmp(scene, "AiListen")) ink_ai_key(true, osal_now_us());
     else if (!strcmp(scene, "AiThink")) ink_ai_ask_text("这页是什么意思？");
     else if (!strcmp(scene, "Ai")) ink_ai_ask_text("夜邮是什么意思？");
-    else if (!strcmp(scene, "Members")) ink_shell_members_open(false);
+    else if (!strcmp(scene, "Members")) ink_shell_members_open(true);
 }
 
 static void find_member(void) {
@@ -161,7 +161,7 @@ static void assert_identity(void) {
     const char *top = scene, *page = "home", *expected_text = scene;
     if (!strcmp(scene, "Main") || !strcmp(scene, "Today") || !strcmp(scene, "Apps")) top = "home";
     else if (!strcmp(scene, "Lock") || !strcmp(scene, "LockPage")) { top = "LockPage"; expected_text = "设备已锁定"; }
-    else if (!strcmp(scene, "Members") || !strcmp(scene, "MembersBack") || !strncmp(scene, "Pin", 3)) { top = "member_gate"; expected_text = "请选择家人"; }
+    else if (!strcmp(scene, "Members") || !strcmp(scene, "MembersBack") || !strncmp(scene, "Pin", 3)) { top = "member_gate"; expected_text = !strncmp(scene, "Pin", 3) ? "密码内容不可见" : "请选择家人"; }
     else if (!strncmp(scene, "Ime", 3)) { top = "Keyboard"; page = "test.text"; expected_text = password ? "密码输入" : "键盘"; }
     else if (!strncmp(scene, "Confirm", 7)) { top = "confirm"; expected_text = !strcmp(scene, "ConfirmDelete") ? "测试文件" : !strcmp(scene, "ConfirmSecret") ? "******" : "example.com"; }
     else if (!strncmp(scene, "Ai", 2)) { top = "Ai"; expected_text = !strcmp(scene, "AiListen") ? "正在听" : !strcmp(scene, "AiThink") ? "正在看这一页" : "测试答案"; }
