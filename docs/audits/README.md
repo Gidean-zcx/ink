@@ -31,6 +31,7 @@
 | 2026-11-04 家庭中枢设计复核（第七轮，小范围） | `claude/hub-design-8fd433` 9c050dc（设计 v0.8） | [2026-11-04-codex-hub-design-r7/TASK.md](2026-11-04-codex-hub-design-r7/TASK.md) | [report.md](2026-11-04-codex-hub-design-r7/report.md)、[verification.json](2026-11-04-codex-hub-design-r7/verification.json)、[findings.json](2026-11-04-codex-hub-design-r7/findings.json)、[experiments/](2026-11-04-codex-hub-design-r7/experiments/README.md) | 第六轮 2 条已解决；**没有严重和高问题**。可以作为第 1 步本机、合成数据开发的依据 |
 | 2026-11-04 家庭中枢产品审查（产品负责人视角） | `claude/hub-design-8fd433` 2059f32（设计 v0.5） | [2026-11-04-codex-hub-jobs/TASK.md](2026-11-04-codex-hub-jobs/TASK.md) | [report.md](2026-11-04-codex-hub-jobs/report.md)、[findings.json](2026-11-04-codex-hub-jobs/findings.json) | 必须改 5、应该改 7、可以想 2；只看简单、专注、值得喜欢，处理见下 |
 | 2026-11-09 batch3 合并后的独立复查（Codex，gpt-6-astra，推理 max；一轮，限 1 小时） | `claude/system-layer` 9b3d2da..de4de52（search、files-app-1、camera-gallery、backup-pages、ai-pages-2、settings-b） | [batch3/TASK.md](batch3/TASK.md) | [batch3/report.md](batch3/report.md) | 高 1、中 7、低 1。第一段 17 分钟被服务方的安全分类器打断，主会话补记中断前查到的 B3-01，同一轮在剩下的时间里续完；九条交 `audit3-fix` 修，主会话复核 |
+| 2026-11-09 batch4 合并后的独立复查（Codex，gpt-6-astra，推理 max；一轮，限 1 小时） | `claude/system-layer` 9eac583..533b072（activity-card、remote-app、fw-f8、kid-2、storage-usage、transfer-pages） | [batch4/TASK.md](batch4/TASK.md) | [batch4/report.md](batch4/report.md) | 高 2、中 4。B4-02/03/04（存储索引和卡身份）并进 batch5 的 `file-index-3` 复查修；B4-01/05/06 交 `audit4-fix`；主会话复核 |
 
 此前的三次独立评审都由助手发起的子代理完成。问题与处理分别记在：
 
