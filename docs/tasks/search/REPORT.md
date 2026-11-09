@@ -1,6 +1,6 @@
 # search 任务报告
 
-基线：`558c7ba8604fc321073b943716f49512a7dc3690`。状态：普通全量完成，最终 ASan 全量检查中。
+基线：`558c7ba8604fc321073b943716f49512a7dc3690`。状态：完成交付；验收 5 的共享文档检查未通过，画板对照未达标，交主会话复核。
 
 ## 验收表
 
@@ -10,7 +10,7 @@
 | 2 | 【实测】通过 | 孩子看不到大人的联系人、备忘、文件；旧快照、旧打开参数拒绝；去掉数据库成员过滤后，模拟器退出 1、出现 4 条预期失败 | 同上加 `--reverse`（反例驱动退出 0） |
 | 3 | 【实测】通过 | `SearchEmpty` 活动、可见空文案及 AI 同文案；旧查询回执被拒绝 | 同 1 |
 | 4 | 【实测】通过 | 人用真实键盘、AI 用 `text.insert` 提交，都进入 `search.query`；六个能力和必填参数进入真实 AI 目录 | 同 1；`ctest --test-dir build -R '^integration-ai-surface$' --output-on-failure` |
-| 5 | 【实测】未全部通过 | 普通全量 232/233 通过、0 跳过，唯一失败为按规则未更新的共享能力文档；最终 ASan 待补。产品新增 282、删除 1 行，合计改动 283 行，含全部 CMake 接线，未超 300 | 下列全量命令；`git diff 558c7ba8..HEAD --numstat -- system CMakeLists.txt` |
+| 5 | 【实测】未全部通过 | 普通和 ASan/UBSan 全量均 232/233 通过、0 跳过；唯一失败均为按规则未更新的共享能力文档，无内存错误。产品新增 282、删除 1 行，合计改动 283 行，含全部 CMake 接线，未超 300 | 下列全量命令；`git diff 558c7ba8..HEAD --numstat -- system CMakeLists.txt` |
 
 ## 没做到的
 
@@ -46,7 +46,7 @@
 ## 新增的机制
 
 - 查询游标、查询版本、成员归属、三条可见结果和返回位置：由任务书 F7 要求，复用 F2/F4；各应用数据、存储格式不变。
-- 新任务/线程、持久文件格式、配置项、后台重试：均无；复用现有 BG/UI 执行器。
+- 产品新任务/线程、持久文件格式、配置项、后台重试：均无；复用现有 BG/UI 执行器。
 - 服务小接口：`ink_setting_at` 只读取静态设置元数据；没有另建搜索索引或缓存框架。
 
 ## 为什么不能更小
@@ -56,6 +56,8 @@
 ## 过程证据
 
 - 【实测】普通和 ASan 均以 `INK_WERROR=ON` 构建成功，最多 `-j2`；界面尺寸检查通过。
+- 【实测】普通全量耗时 520.55 秒，ASan/UBSan 全量 656.56 秒；各 233 项、232 通过、1 失败、0 跳过，失败项均为 `capability-table-doc`。
+- 【实测】再以 `UBSAN_OPTIONS=halt_on_error=1` 单独复核搜索，1/1 通过，耗时 4.18 秒，证据 `build-asan/search-ubsan-strict.log`。
 - 【实测】最终普通搜索两场景各 108 条断言；内部 RAM 最低余量 47,840 字节（预算 32,768），PSRAM 最低余量 13,027,272 字节；BG 栈估计 4,784 字节。仅为模拟器证据。
 - 【实测】首轮测试发现文件信息页字段缺少 `role`，ASan 定位到快照空指针；仅补该声明后同一场景通过，没有新增防御框架。
 - 【实测】最终反例证据 `build/search-yapxa42q/`，普通全量日志 `build/search-ctest-final.log`，ASan 全量日志 `build-asan/search-ctest-final.log`，对照图和分数 `build/search-compare/`；构建产物不提交。
@@ -66,12 +68,13 @@
 ```sh
 PYTHONDONTWRITEBYTECODE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
 PYTHONDONTWRITEBYTECODE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
+UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2 -R '^search$'
 INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" -B tests/search/run.py --build build --reverse
 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.py --build build --out build/search-compare --scenes Search SearchEmpty --reuse
 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/capabilities.py --output build/search-capabilities.md --runtime build/test-out/capability-table/capability-inventory.json
 ```
 
-结束检查：`git diff --check` 通过；基线至 HEAD 的隐私扫描待最终提交后复核（无绝对路径、设备号或真实凭据）。
+结束检查：`git diff --check` 通过；`git diff --stat` 核对仅 12 个相关文件；基线至 HEAD 按总规则的隐私扫描无匹配（`rg` 退出 1），没有提交绝对路径、设备号、真实凭据、设计稿或构建产物。
 
 ## 要改的文档
 
