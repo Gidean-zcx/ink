@@ -1,0 +1,23 @@
+# Project-authored everyday phrases and device vocabulary, not corpus counts.
+# Syllables<TAB>word<TAB>priority floor; 1000 keeps these within the size cut.
+da dian hua	打电话	1000
+fa duan xin	发短信	1000
+fa xiao xi	发消息	1000
+she nao zhong	设闹钟	1000
+nao zhong	闹钟	1000
+zao shang hao	早上好	1000
+wan shang hao	晚上好	1000
+wan an	晚安	1000
+dui bu qi	对不起	1000
+bu ke qi	不客气	1000
+mei guan xi	没关系	1000
+mei wen ti	没问题	1000
+wo zhi dao le	我知道了	1000
+wo hui lai le	我回来了	1000
+ming tian jian	明天见	1000
+ting shu	听书	1000
+bei wang lu	备忘录	1000
+ji suan qi	计算器	1000
+lan ya	蓝牙	1000
+wu xian wang luo	无线网络	1000
+lv cha	绿茶	1000

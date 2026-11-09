@@ -426,7 +426,7 @@ static void sync(void) { /* UI task */
     lv_obj_set_flex_flow(K.cands, K.expanded ? LV_FLEX_FLOW_ROW_WRAP : LV_FLEX_FLOW_ROW);
     lv_obj_set_height(K.cands, K.expanded ? LV_SIZE_CONTENT : ink_ui_px(INK_CONTROL));
     for (int i = 0; i < INK_TEXT_PAGE; i++) {
-        lv_obj_set_flex_grow(K.cand_btn[i], K.expanded ? 0 : 1);
+        lv_obj_set_flex_grow(K.cand_btn[i], 0);
         if (K.expanded) lv_obj_set_width(K.cand_btn[i], ink_ui_px((INK_CANVAS_W - 2 * INK_GAP - 2 * INK_GAP_XS) / 3));
         else lv_obj_set_width(K.cand_btn[i], LV_SIZE_CONTENT);
     }
