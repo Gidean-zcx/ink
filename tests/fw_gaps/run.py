@@ -24,7 +24,7 @@ if args.mutant:
         "close": ("system/ui/app_registry.c", "else ink_db_close(p->db);", "else (void)p->db;"),
         "state": ("system/policy/state.c", "return watch_remove(&ST.watch, handle);", "(void)handle; return 0;"),
         "settings": ("system/policy/settings.c", "return watch_remove(&SE.watch, handle);", "(void)handle; return 0;"),
-        "event": ("system/policy/cap.c", "bool live = SUBS[e->sub].handle == e->handle && SUBS[e->sub].fn;", "bool live = true;"),
+        "event": ("system/policy/cap.c", "live = SUBS[e->sub].handle == e->handle && SUBS[e->sub].fn;", "live = true;"),
     }[args.mutant]
     source = (ROOT / file).read_text()
     assert source.count(before) == 1

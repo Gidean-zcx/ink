@@ -11,7 +11,7 @@ int watch_list_init(watch_list_t *l, osal_mutex_t *lock, const char *(*id_of)(in
     return lock ? 0 : -1;
 }
 
-int watch_add(watch_list_t *l, const char *prefix, watch_fn fn, void *ctx, ink_exec_t exec) {
+int watch_add(watch_list_t *l, const char *prefix, watch_fn fn, void *ctx, ink_exec_t exec, bool removable) {
     if (!l->lock || !fn) return -1;
     osal_mutex_lock(l->lock, OSAL_WAIT_FOREVER);
     int r = -1;
@@ -22,7 +22,7 @@ int watch_add(watch_list_t *l, const char *prefix, watch_fn fn, void *ctx, ink_e
         watch_t *w = &l->w[i];
         w->list = l; w->prefix = prefix ? prefix : ""; w->plen = strlen(w->prefix);
         w->fn = fn; w->ctx = ctx; w->exec = exec; w->pending = 0;
-        r = w->handle = ++l->next_handle;
+        r = ++l->next_handle; w->handle = removable ? r : 0;
         if (i == l->n) l->n++;
     }
     osal_mutex_unlock(l->lock);
@@ -51,12 +51,18 @@ static void deliver(void *arg) { /* on the watcher's executor */
     int handle = w->handle;
     w->pending = 0;
     osal_mutex_unlock(l->lock);
+    if (!handle) { /* permanent legacy watchers cannot be removed */
+        for (int i = 0; bits; i++, bits >>= 1)
+            if (bits & 1) w->fn(w->ctx, i, l->id_of(i));
+        return;
+    }
     for (int i = 0; bits; i++, bits >>= 1) {
+        if (!(bits & 1)) continue;
         osal_mutex_lock(l->lock, OSAL_WAIT_FOREVER);
         watch_fn fn = w->handle == handle ? w->fn : NULL;
         void *ctx = w->ctx;
         osal_mutex_unlock(l->lock);
-        if ((bits & 1) && fn) fn(ctx, i, l->id_of(i));
+        if (fn) fn(ctx, i, l->id_of(i));
     }
 }
 

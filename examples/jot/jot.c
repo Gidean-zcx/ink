@@ -97,6 +97,7 @@ static void ink_jot_focus(ink_call_t *c) {
     if (ink_textfield_short_focus(ink_jot_field) != 0) c->rc.status = INK_RC_STALE;
 }
 static void ink_jot_turn(ink_call_t *c) {
+    if (!ink_jot_list) { c->rc.status = INK_RC_FAILED; return; }
     ink_ui_list_turn(ink_jot_list, !strcmp(c->cap->id, "jot.next") ? 1 : -1);
     if (ink_app_save_state("jot") != 0) c->rc.status = INK_RC_FAILED;
 }
@@ -182,7 +183,7 @@ static int ink_jot_list_snapshot(char *out, size_t cap) {
     ink_ui_page_spec_t page = {.id = "jot.list", .title = "记一笔", .fields = &status, .field_count = 1};
     return ink_ui_semantics_snapshot(&page, out, cap);
 }
-static bool ink_jot_key(ink_key_t key, bool long_press) { return ink_ui_list_key(ink_jot_list, key, long_press); }
+static bool ink_jot_key(ink_key_t key, bool long_press) { return ink_jot_list && ink_ui_list_key(ink_jot_list, key, long_press); }
 
 /* snippet: input */
 static void ink_jot_edit_create(lv_obj_t *screen, void *arg) {

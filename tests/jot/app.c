@@ -20,6 +20,8 @@ static lv_point_t point;
 static bool found;
 static int forbidden_runs;
 static ink_card_t adult_card;
+static osal_sem_t *load_gate, *load_entered;
+static ink_exec_job_t load_job;
 static const char SAME[] = "合成记录😀";
 
 static void forbidden(ink_call_t *call) { (void)call; forbidden_runs++; }
@@ -114,8 +116,27 @@ static void verify_records(void) {
           a.src == INK_SRC_TOUCH && b.src == INK_SRC_AI, "touch and AI persist identical payloads through the same handler, retaining provenance");
     ink_db_close(records);
 }
+static void hold_load(void *arg) {
+    (void)arg;
+    osal_sem_give(load_entered);
+    CHECK(osal_sem_take(load_gate, OSAL_WAIT_FOREVER) == OSAL_OK, "release the first app load");
+}
 static void open_app(void) {
+    bool first = !load_gate;
+    if (first) {
+        load_gate = osal_sem_create(0, 1); load_entered = osal_sem_create(0, 1);
+        CHECK(load_gate && load_entered && ink_exec_post(INK_EXEC_BG, &load_job, hold_load, NULL) == 0 &&
+              osal_sem_take(load_entered, OSAL_WAIT_FOREVER) == OSAL_OK, "hold the first load on the existing executor");
+    }
     CHECK(AI("jot.open", NULL) && g_rc.status == INK_RC_DONE, "the card's capability opens the app"); quiet();
+    if (first) {
+        on_ui(inspect);
+        CHECK(strstr(snapshot, "正在读取记录"), "loading state is exported before data arrives");
+        CHECK(AI("jot.next", NULL) && g_rc.status == INK_RC_FAILED && AI("jot.new", NULL) && g_rc.status == INK_RC_FAILED,
+              "loading page rejects list actions before the collection arrives");
+        key(HAL_KEY_NEXT); key(HAL_KEY_PREV);
+        osal_sem_give(load_gate);
+    }
     CHECK(WAIT_FOR((on_ui(inspect), strstr(snapshot, "\"total\":")), 10000), "the app loads its own collection asynchronously");
     on_ui(inspect);
 }

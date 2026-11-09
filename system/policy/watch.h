@@ -41,7 +41,7 @@ struct watch_list {
 
 /** `lock`: the table's mutex; watch_changed must be called without holding it. */
 int watch_list_init(watch_list_t *l, osal_mutex_t *lock, const char *(*id_of)(int idx), const char *probe_dropped);
-int watch_add(watch_list_t *l, const char *prefix, watch_fn fn, void *ctx, ink_exec_t exec);
+int watch_add(watch_list_t *l, const char *prefix, watch_fn fn, void *ctx, ink_exec_t exec, bool removable);
 int watch_remove(watch_list_t *l, int handle);
 /** Item `idx` (named `id`) changed: mark it for every matching watcher and schedule delivery. Any task. */
 void watch_changed(watch_list_t *l, int idx, const char *id);

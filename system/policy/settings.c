@@ -247,10 +247,10 @@ ink_rc_t ink_setting_set(const char *id, int64_t v, ink_source_t src, ink_receip
 }
 
 int ink_settings_watch(const char *prefix, ink_state_fn fn, void *ctx, ink_exec_t exec) {
-    return watch_add(&SE.watch, prefix, fn, ctx, exec) >= 0 ? 0 : -1;
+    return watch_add(&SE.watch, prefix, fn, ctx, exec, false) >= 0 ? 0 : -1;
 }
 int ink_settings_watch_handle(const char *prefix, ink_state_fn fn, void *ctx, ink_exec_t exec) {
-    return exec == INK_EXEC_DIRECT ? -1 : watch_add(&SE.watch, prefix, fn, ctx, exec);
+    return exec == INK_EXEC_DIRECT ? -1 : watch_add(&SE.watch, prefix, fn, ctx, exec, true);
 }
 int ink_settings_unwatch(int handle) { return watch_remove(&SE.watch, handle); }
 
