@@ -1,6 +1,6 @@
 # fw-gaps 执行报告
 
-基线：`62b0e83da1d34f50629b5e576807db1381b26078`。状态：进行中。
+基线：`62b0e83da1d34f50629b5e576807db1381b26078`。状态：完成，仅本地提交，未推送。
 
 ## 验收表
 
@@ -9,12 +9,12 @@
 | 1 后台打开与页面、成员隔离 | 通过【实测】 | 正常及失败回调在 UI；页面删除、切换成员均不回调，真实集合引用归零，后台仍用原成员 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" -B tests/fw_gaps/run.py --build build` |
 | 2 三种退订与反复开关 100 次 | 通过【实测】 | UI/MEDIA/BG 各测三种订阅；排队后退订、复用槽位、旧句柄、错误执行器；100 次真实页面开关剩余容量一致 | 同上，`app-framework-gaps` |
 | 3 jot 与逐字文档检查 | 通过【实测】 | 应用自行读盘；12 个逐字 C 片段、47 处头文件引用；示例 263/300 行；两进程恢复、触摸与 AI、成员隔离、加载时快照和翻页均通过 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^app-framework-' --output-on-failure -j2` |
-| 4 全量测试与内存检查 | 最终复测中 | 上一轮 269 项全通过，无跳过；最终代码全量和 ASan/UBSan 待完成 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`；内存检查换 `build-asan` |
+| 4 全量测试与内存检查 | 通过【实测】 | 最终代码普通全量 269/269、ASan/UBSan 全量 269/269，均无跳过 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`；内存检查换 `build-asan` |
 
 ## 没做到的
 
-- 最终全量与内存检查仍在运行。
 - 没有实机操作；Linux/gcc 未在本机运行，不把 macOS 的结果写成 Linux 实测。
+- 未额外覆盖执行器启动失败、资源耗尽和句柄计数耗尽；按任务边界未扩展这些故障场景。
 
 ## 和设计不一致的
 
@@ -42,15 +42,18 @@
 
 ## 要改的文档
 
-- 暂无共享文档变更。
+- 合并时由主会话更新 `docs/tasks/backlog.md:5、159`：标记 fw-gaps 完成，删去后台打开和取消订阅“还没有”的描述，链接本报告。
 
 ## 过程与核查
 
 - 【实测】工作区干净，当前分支为任务分支，HEAD 与指定基线一致。
 - 已读任务书与规则；构建、测试均限制为 `taskpolicy -c utility`、最多 `-j2`。
+- 【实测】最终普通全量 269/269 通过，472.96 秒；使用现有锁定中枢环境，零跳过。总规则的配置参数另外增加 `-DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"`，没有安装或升级依赖。`build-asan` 参数相同，另加 `-DINK_SANITIZE=ON`。
+- 【实测】ASan/UBSan 全量 269/269 通过，374.23 秒，零跳过。最终八个反向对照再次全部触发预期失败。日志保留在 `work/fw-gaps/normal-final.log`、`asan-full.log`、`negative-final.log`，不提交构建证据。
 - 【实测】定向三项测试通过。首轮容量探针发现空槽不能跨执行器复用，已修复并原样复测通过。
 - 【实测】最终七个反向对照 `tests/fw_gaps/run.py --build build --mutant <page|member|identity|close|state|settings|event>` 均编译、运行并退出 1；行为断言分别失败 3、2、1、2、509、502、4 项。`tests/jot/run.py --build build --mutant loading` 去掉加载保护后模拟器退出 -11，检查程序退出 1。临时变体不修改产品源码，共八个反向对照。
 - 【实测】全量首轮发现额外订阅校验开销改变了文件索引、确认卡容量和语音输入场景的时序；临时换回相关五个基线源文件可通过。保留常驻订阅原有投递路径，并只为可退订订阅检查句柄；不扫描状态空位，也不逐个锁住不匹配事件。六项重点回归全部通过，断言与预算未改。
 - 【实现】产品代码增删共 198 行（含 4 行测试目标装配），不超过 200 行。超过 100 行因需同时提供两种生命周期接口、三个兼容入口和排队回调失效检查，并保持常驻订阅原有开销。看过更小方案：直接把原返回值改为正句柄会破坏现有 `!=0` 判断；仅清空槽位会把旧投递交给新订阅；仅检查页面名称挡不住重建。采用原接口包装、现有任务及页面删除通知，无需新线程或通用取消框架。
 - 【实现】表内待投递标志覆盖执行器已取走节点、回调尚未开始的区间，跨执行器复用须等它清除；同执行器仍可立即复用并丢弃旧变化。
 - 【实现】边界审视：后台读盘仍经数据服务；订阅集中在原表实现；jot 的触摸和 AI 继续走原能力与快照，加载状态也可被 AI 读取；没有绕开软总线或新增仅按钮可用的用户动作。
+- 【实测】基线到提交差异的隐私扫描零命中（指定 grep 表达式退出 1，表示未匹配）；`git diff --check` 通过。差异仅 20 个相关文件，没有构建产物、设计稿或超过 5 MB 的文件；共享文档按规则交主会话更新。
