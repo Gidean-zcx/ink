@@ -10,11 +10,11 @@
 | 2 | 【实测】定向通过 | 注入数据服务拒绝写入，进入真实失败页，正文和长文草稿保留；提示位于编辑区和键盘上方；触摸重试及 AI 保存都落盘 | 同上 |
 | 3 | 【实测】通过；反例有效 | 成人／孩子各自存储；故意把两处成员集合打开固定到成人后，空列表及禁止删除断言失败，执行完成标记仍出现 | `tests/memo/run.py --build build --mutant member` |
 | 4 | 【实测／实现】通过 | 六页 JSON 快照均放入实际 3,072 字节 AI 上下文，包含真实失败说明；触摸与 AI 调用同一组 `memo.*` 能力；已有 AI surface 全量检查通过 | 定向命令、`integration-ai-surface` |
-| 5 | 待验证 | 能力注册、全量、内存与 350 行预算 | 待补 |
+| 5 | 【实测】普通功能检查通过；文档检查失败；内存待完成 | 运行时能力目录一致；普通全量 224/225，仅禁止修改的能力文档过期；产品 288 行 | 完整验证命令 |
 
 ## 没做到的
 
-- 全量与 ASan／UBSan 正在执行，尚不声明通过。
+- 普通全量 224/225，没有全绿：唯一失败是本任务禁止更新的共享能力文档；ASan／UBSan 正在执行。
 - 没有实机或 Linux／gcc 运行证据；不做录音页、离线待整理页。
 - 上限沿用长文编辑的 4,095 字节；清单最多 32 行，最多 200 条记录（含可撤销删除的数据）。没有新增清空历史、独立清单项删除按钮或跨应用提醒／短信建议。
 
@@ -88,3 +88,9 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.p
 - `undo`：撤销目标改回按最大编号而非最新记录版本选择；两项断言失败，其中一项明确要求最后删除的较小编号，`test.finished=1`。
 - 反例只在忽略的构建目录生成临时源码、对象及可执行文件，不改工作区产品代码；未删除、放宽断言或加 sleep 掩盖问题。
 - 命令：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/memo/run.py --build build --mutant <member|write|failure|undo>`。各变体编译、链接成功，模拟器退出 1，反向测试退出 1；源码哈希前后相同。日志：`build/memo-reverse-<名称>.log`；最终证据目录依次 `build/memo-6qchsizq/`、`build/memo-j_e93w2o/`、`build/memo-awebaaw8/`、`build/memo-gbnmmb0g/`。
+
+## 完整验证结果
+
+- 【实测】普通构建退出 0；最终全量 CTest 退出 8，224/225、零跳过，285.86 秒。唯一失败 `capability-table-doc`：新增十项能力及源码行号使受保护的生成文档过期，没有修改检查器或跳过该项。日志：`build/memo-final-build.log`、`build/memo-final-ctest.log`。
+- 【实测】运行时目录与代码生成预览完全一致：223 项能力、16 项设置；预览含 284 项能力／状态／设置定义。命令：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/capabilities.py --output build/memo-capabilities.md --runtime build/test-out/capability-table/capability-inventory.json`，退出 0。
+- 【实测】首轮全量 221/225 的三个功能失败均已处理：两个重复工具快照由产品去重修复；应用数量精确断言按新增备忘更新。四项相关检查（含 AI surface）定向和最终全量均通过，未改它们的资源门槛。首轮证据：`build/memo-first-ctest.log`；复查：`build/memo-existing-checks.log`。
