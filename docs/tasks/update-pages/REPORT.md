@@ -6,15 +6,15 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 待验证 | 新版本、下载、准备、安装、完成 | 待补 |
-| 2 | 待验证 | 电量/存储阻止、失败重试、启动恢复 | 待补 |
-| 3 | 待验证 | 七页 AI 快照 | 待补 |
+| 1 | 【实测】通过 | `flow`、`done`：真实模拟下载、人工确认、写槽、重启、自检和完成页 | T |
+| 2 | 【实测】通过 | 23% 阻止，充电恢复；注入已发布的剩余空间不足；坏签名重试；新版本自检失败后回滚 | T |
+| 3 | 【实测】通过 | 七页快照含版本、说明和能力；AI 无安装能力；12 阶段共 218 条断言，内部 RAM 最少 37968 字节 | T |
 | 4 | 待验证 | 全量测试、内存检查、300 行预算 | 待补 |
-| G4 | 待验证 | 先查看七张画板，再实现与对照 | 待补 |
+| G4 | 【实测】超过目标 | 先看七张画板；七页对照为 20.421～34.514/255，未达到 12/255 | V |
 
 ## 没做到的
 
-执行中。七页已实现，新增只读元数据接口，构建退出 0、尺寸检查 0 违规。新增测试待复测；首轮夹具使用设备没有的返回键且在启动任务内格式化环境变量，已改为实体主页键和 `sim_copy_name`。
+最终全量与内存检查执行中。新增 12 阶段测试和反向对照通过：单独链接基线呈现器后，测试退出 1，触发 6 条断言失败，且执行到测试结束。首次普通全量 233 项中 227 通过、3 失败、3 跳过；旧文案和能力清单期望已更新并定向复测 2/2 通过，缺依赖的中枢测试已选用现成锁定环境，等待最终全量。
 
 ## 和设计不一致的
 
@@ -22,7 +22,8 @@
 
 ## 改过的已有测试
 
-暂无。
+1. `tests/integration/update.c`：旧安装文案改为 `UpdateInstall` 和“正在安装，不要关机”；保留无按钮断言，新增 AI 动作为空断言。
+2. `tests/integration/ai_surface.c`：严格白名单追加 `shell.update`、`shell.update_close`，仍要求每个注册能力恰好出现在一张表中。未删除测试、跳过测试、放宽预算或断言。
 
 ## 要用户定的
 
@@ -43,3 +44,15 @@
 ## 为什么不能更小
 
 七页共用一个呈现函数、现有主题、浮层和控件语义；删除旧安装占位浮层。更小的仅更换安装卡方案无法覆盖阻止、失败重试和重启结果。服务只追加读取版本、包大小和下载任务编号的接口，未改校验、签名或回滚逻辑。
+
+## 复现命令
+
+以下命令均从仓库根目录执行，依赖路径使用用户给定环境变量。
+
+```sh
+# T：12 阶段及反向对照，保留本地证据。
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/update_pages.py --build build
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/update_pages_reverse.py --build build
+# V：已验证的七张实际面板截图。
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.py --build build --design "$INK_DESIGN" --out build/test-out/update-pages --reuse --scenes Update UpdateReady UpdateBlocked UpdateFail UpdateInstall UpdateDone BootRecovery
+```

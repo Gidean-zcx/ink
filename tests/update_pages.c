@@ -60,10 +60,17 @@ static void capture(const char *name) {
 }
 static bool self_check_fails(void) { return false; }
 static void test_boot_check(void) {
-    if (!strcmp(mode, "badboot")) CHECK(ink_update_self_check_add(self_check_fails) == 0, "inject a failed new-system self check");
+    if (!strcmp(mode, "badboot") && ink_update_self_check_add(self_check_fails)) osal_panic("cannot inject the failed self check");
     ink_update_boot_check();
 }
 static void test_reboot(void) {
+    if (!strcmp(mode, "badboot")) {
+        CHECK(U.me.pending_verify, "failed candidate is still awaiting boot acceptance");
+        CHECK(sim_metric_value("update.self_check_failed") == 1, "actual self-check failure asks for this reboot");
+        CHECK(!strcmp(U.st.state, "trying"), "failed candidate never commits the installation");
+        CHECK(!strcmp(U.me.version, "1.4.0"), "self-check ran on the new synthetic candidate");
+        ink_probe_count("test.finished");
+    }
     if (!strcmp(mode, "flow") || !strcmp(mode, "rollback")) {
         CHECK(WAIT_FOR(page("UpdateInstall"), 5000), "real installation reaches its full-screen presenter");
         snprintf(scene, sizeof scene, "UpdateInstall"); quiet(); on_ui(inspect);
@@ -78,6 +85,7 @@ static void battery(int percent, bool charging) {
 }
 static void storage_low(void) { ink_state_set_int(ink_state_find("storage.free"), 1); }
 static void restore_space(void) { ink_state_set_int(ink_state_find("storage.free"), 4ll * 1024 * 1024 * 1024); }
+static void link_event(void *arg) { sim_net_set_link(arg); }
 static void offer_good(void *arg) { (void)arg; CHECK(setenv("INK_SIM_UPDATE_PKG", getenv("INK_UPDATE_GOOD_PKG"), 1) == 0, "replace only the synthetic corrupt package"); }
 static void ui_fixture(void) {
     snprintf(U.offer_version, sizeof U.offer_version, "1.3.0"); U.offer_size = 1024 * 1024;
@@ -87,6 +95,7 @@ static void ui_fixture(void) {
     if (!strcmp(mode, "UpdateBlocked")) ink_state_set_int(ink_state_find("battery.level"), 23);
     if (!strcmp(mode, "UpdateDone") || !strcmp(mode, "BootRecovery")) {
         set_state("idle");
+        ink_state_set_str(U.h_version, !strcmp(mode, "UpdateDone") ? "1.3.0" : "1.2.0");
         ink_args_t a; ink_args_init(&a); ink_args_bool(&a, "ok", !strcmp(mode, "UpdateDone"));
         ink_cap_emit("update.result", &a);
     }
@@ -94,14 +103,19 @@ static void ui_fixture(void) {
 static void flow(void) {
     CHECK(AI("shell.update", NULL) && g_rc.status == INK_RC_DONE, "AI opens the same update surface");
     ink_hub_demand(); CHECK(WAIT_FOR(ink_hub_online(), 30000), "synthetic hub is online");
-    press("检查更新");
+    CHECK(AI("update.check", NULL) && g_rc.status == INK_RC_DONE, "check the real hub offer");
     CHECK(WAIT_FOR(!strcmp(state_of("update.state"), "available"), 5000), "real service finds a new version");
     CHECK(WAIT_FOR(page("Update"), 5000), "new-version page is visible");
-    on_ui(storage_low); CHECK(WAIT_FOR(page("UpdateBlocked"), 2000) && strstr(g_snap, "空间不够"), "insufficient published storage reaches UpdateBlocked");
-    on_ui(restore_space); CHECK(WAIT_FOR(page("Update"), 2000), "space recovery restores download action");
+    on_ui(storage_low); CHECK(AI("shell.update", NULL), "reread throttled storage summary");
+    CHECK(WAIT_FOR(page("UpdateBlocked"), 2000) && strstr(g_snap, "空间不够"), "insufficient published storage reaches UpdateBlocked");
+    on_ui(restore_space); CHECK(AI("shell.update", NULL), "reread restored storage summary");
+    CHECK(WAIT_FOR(page("Update"), 2000), "space recovery restores download action");
     press("下载");
     CHECK(WAIT_FOR(!strcmp(state_of("update.state"), "downloading"), 2000), "touch starts the real download capability");
+    vtk_event_at(vtk_now() + SIM_MS(1), link_event, "none"); delay_ms(5);
     press("暂停"); CHECK(WAIT_FOR(!strcmp(state_of("update.state"), "available"), 5000), "pause cancels the real background job");
+    vtk_event_at(vtk_now() + SIM_MS(1), link_event, "wifi"); delay_ms(5);
+    CHECK(WAIT_FOR(ink_hub_online(), 30000), "network returns before retrying");
     press("下载"); CHECK(WAIT_FOR(!strcmp(state_of("update.state"), "failed"), 60000), "corrupt signature fails the real download");
     CHECK(WAIT_FOR(page("UpdateFail"), 5000), "failed download enters UpdateFail");
     snprintf(scene, sizeof scene, "UpdateFail"); quiet(); on_ui(inspect);

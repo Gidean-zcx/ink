@@ -40,7 +40,7 @@ def run(mode, *, shared=False, package=None, reboot=False, badboot=False):
     counts = metrics['metrics']
     assert result.returncode == 0 and not counts.get('test.fail') and not metrics.get('warnings'), (
         mode, result.returncode, result.stderr[-3000:], metrics.get('warnings'))
-    assert counts.get('test.finished') == 1 or badboot, (mode, 'not finished')
+    assert counts.get('test.finished') == 1, (mode, 'not finished')
     if reboot:
         assert counts.get('power.reboot') == 1, (mode, 'not rebooted')
     if badboot:

@@ -65,7 +65,7 @@ static void reply(void *ctx, const ink_receipt_t *rc) {
     if ((uint32_t)(uintptr_t)ctx != ink_member_epoch() || !P.card.root) return;
     if (rc->status == INK_RC_FAILED || rc->status == INK_RC_REJECTED || rc->status == INK_RC_INVALID) {
         snprintf(P.error, sizeof P.error, "没能完成这次更新，可以再试一次。"); render();
-    }
+    } else if (rc->status == INK_RC_DONE) render();
 }
 static void clicked(lv_event_t *e) {
     const ink_ui_action_spec_t *a = lv_event_get_user_data(e);
@@ -108,6 +108,7 @@ static void render(void) {
     if (page == DONE) snprintf(P.title, sizeof P.title, "已经是 %s 了", P.current);
     if (page == RECOVERY) snprintf(P.title, sizeof P.title, "新版本没装好，退回了 %s", P.current);
     if (page == UPDATE) snprintf(P.title, sizeof P.title, is_state("downloading") ? "正在下载 %s，可以继续读" : "系统版本 %s", is_state("downloading") ? P.version : P.current);
+    if (page == UPDATE && is_state("available")) snprintf(P.title, sizeof P.title, "发现新版本 %s", P.version);
     int w = INK_CANVAS_W - 2 * INK_MARGIN, half = (w - INK_GAP) / 2;
     if (page == UPDATE) {
         int y = INK_STATUS_BAR + INK_PRIMARY + INK_MARGIN;
