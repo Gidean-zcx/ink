@@ -55,6 +55,7 @@ typedef struct {
     char name[256];
     int is_dir;
     int64_t size;
+    int64_t mtime; /* card metadata, nanoseconds; -1 if unavailable */
 } hal_dirent_t;
 
 hal_dir_t *hal_fs_opendir(const char *path);

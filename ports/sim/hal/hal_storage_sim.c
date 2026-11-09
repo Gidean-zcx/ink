@@ -585,14 +585,16 @@ int64_t hal_fs_size(const char *path) {
 }
 
 typedef struct { const char *path; int64_t stamp; } sd_mtime_t;
+static int64_t sd_stamp(const struct stat *st) {
+#ifdef __APPLE__
+    return (int64_t)st->st_mtimespec.tv_sec * 1000000000 + st->st_mtimespec.tv_nsec;
+#else
+    return (int64_t)st->st_mtim.tv_sec * 1000000000 + st->st_mtim.tv_nsec;
+#endif
+}
 static void sd_mtime_on_host(void *arg) {
     sd_mtime_t *a = arg; struct stat st;
-    if (stat(a->path, &st) < 0) return;
-#ifdef __APPLE__
-    a->stamp = (int64_t)st.st_mtimespec.tv_sec * 1000000000 + st.st_mtimespec.tv_nsec;
-#else
-    a->stamp = (int64_t)st.st_mtim.tv_sec * 1000000000 + st.st_mtim.tv_nsec;
-#endif
+    if (stat(a->path, &st) == 0) a->stamp = sd_stamp(&st);
 }
 int64_t hal_fs_mtime(const char *path) {
     char p[512];
@@ -636,6 +638,7 @@ static void sd_readdir_on_host(void *p) {
         snprintf(a->out->name, sizeof a->out->name, "%s", e->d_name);
         a->out->is_dir = S_ISDIR(st.st_mode);
         a->out->size = st.st_size;
+        a->out->mtime = sd_stamp(&st);
         a->r = 1;
         return;
     }
@@ -681,6 +684,7 @@ int hal_fs_readdir(hal_dir_t *d, hal_dirent_t *out) {
             snprintf(out->name, sizeof out->name, "%s", info.name);
             out->is_dir = info.type == LFS_TYPE_DIR;
             out->size = info.size;
+            out->mtime = -1;
             return 1;
         }
     }
