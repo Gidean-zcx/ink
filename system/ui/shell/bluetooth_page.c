@@ -135,7 +135,7 @@ static void changed(void *ctx, int h, const char *id) {
         B.busy = false;
         while (B.count && !B.devices[B.count - 1].paired) B.count--;
         snprintf(B.status, sizeof B.status, "蓝牙已关闭");
-    }
+    } else if (!strcmp(B.status, "蓝牙已关闭")) B.status[0] = 0;
     draw();
 }
 static void event(void *ctx, const char *id, const ink_args_t *args) {

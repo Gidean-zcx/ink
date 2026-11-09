@@ -125,19 +125,20 @@ static void edit_action(lv_event_t *e) {
 static int snapshot(char *buf, size_t cap) {
     bool secret = ink_text_type() == INK_TEXT_PASSWORD || ink_text_ai_hidden();
     if (secret) return snprintf(buf, cap, "密码输入；内容=******。只能由人在设备上填写，没有 AI 写入、提交或话筒动作。");
+    if (K.root) lv_obj_update_layout(K.root);
     size_t start, end;
     ink_text_selection(&start, &end);
     int n = snprintf(buf, cap, "键盘；类型=普通文字；内容=%s；组合=%s；光标=%zu；选区=%zu..%zu；展开=%d；候选起点=%d；",
                      ink_text_draft_id() ? "" : ink_text_value(), ink_text_composing(), ink_text_cursor(), start, end, K.expanded, K.first);
-    if (K.cands && !lv_obj_has_flag(K.keys, LV_OBJ_FLAG_HIDDEN) && !lv_obj_has_flag(K.cands, LV_OBJ_FLAG_HIDDEN)) {
-        for (int i = 0; i < INK_TEXT_PAGE && n >= 0 && (size_t)n < cap; i++) if (!lv_obj_has_flag(K.cand_btn[i], LV_OBJ_FLAG_HIDDEN))
+    if (K.cands && lv_obj_is_visible(K.cands)) {
+        for (int i = 0; i < INK_TEXT_PAGE && n >= 0 && (size_t)n < cap; i++) if (lv_obj_is_visible(K.cand_btn[i]))
             n += snprintf(buf + n, cap - (size_t)n, "候选[%d]=%s；", K.first + i, lv_label_get_text(K.cand_label[i]));
     }
     if (K.panel && !lv_obj_has_flag(K.panel, LV_OBJ_FLAG_HIDDEN) && n >= 0 && (size_t)n < cap)
         n += snprintf(buf + n, cap - (size_t)n, "听写=%s；听到=%s；动作：text.voice_finish、text.voice_cancel。", lv_label_get_text(K.status), lv_label_get_text(K.heard));
     else if (n >= 0 && (size_t)n < cap)
         n += snprintf(buf + n, cap - (size_t)n, "更多候选=%d；动作：text.insert、text.select、text.submit、keyboard.key、keyboard.pick、keyboard.candidates、keyboard.edit%s。",
-                      K.more && !lv_obj_has_flag(K.more, LV_OBJ_FLAG_HIDDEN), ink_text_voice_possible() ? "、text.voice_start" : "");
+                      K.more && lv_obj_is_visible(K.more), K.mic && lv_obj_is_visible(K.mic) ? "、text.voice_start" : "");
     return n < 0 ? 0 : (size_t)n < cap ? n : (int)cap - 1;
 }
 static bool overlay_key(ink_key_t k, bool lng) {
@@ -425,10 +426,20 @@ static void sync(void) { /* UI task */
     }
     lv_obj_set_flex_flow(K.cands, K.expanded ? LV_FLEX_FLOW_ROW_WRAP : LV_FLEX_FLOW_ROW);
     lv_obj_set_height(K.cands, K.expanded ? LV_SIZE_CONTENT : ink_ui_px(INK_CONTROL));
+    lv_obj_update_layout(K.cands);
+    int gap = ink_ui_px(INK_GAP_XS);
+    int remaining = lv_obj_get_content_width(K.cands) - ink_ui_px(INK_CONTROL);
+    if (ink_text_voice_possible()) remaining -= ink_ui_px(INK_PRIMARY) + gap;
     for (int i = 0; i < INK_TEXT_PAGE; i++) {
-        lv_obj_set_flex_grow(K.cand_btn[i], 0);
-        if (K.expanded) lv_obj_set_width(K.cand_btn[i], ink_ui_px((INK_CANVAS_W - 2 * INK_GAP - 2 * INK_GAP_XS) / 3));
-        else lv_obj_set_width(K.cand_btn[i], LV_SIZE_CONTENT);
+        lv_obj_set_flex_grow(K.cand_btn[i], !K.expanded && i == 0 ? 1 : 0);
+        if (i >= n) continue;
+        int width = ink_ui_px(ink_ui_text_width(c[i].word, INK_FONT_LIST, INK_WEIGHT_REGULAR) + 2 * INK_GAP_XS);
+        lv_obj_set_style_min_width(K.cand_btn[i], width, 0);
+        lv_obj_set_width(K.cand_btn[i], width);
+        if (!K.expanded && width + gap > remaining) {
+            lv_obj_add_flag(K.cand_btn[i], LV_OBJ_FLAG_HIDDEN);
+            remaining = 0;
+        } else remaining -= width + gap;
     }
     if (K.expanded) {
         lv_obj_remove_flag(K.fold, LV_OBJ_FLAG_HIDDEN);

@@ -17,6 +17,8 @@ ROOT = Path(__file__).resolve().parent
 DICT_MAX = 1024 * 1024
 INITIALS_LIMIT = 32
 DAILY_BONUS = 16384
+sys.path.insert(0, str(ROOT.parent / "fontgen"))
+from fontgen import charset
 
 
 def source_files(cache):
@@ -59,6 +61,10 @@ def generate(dictionary):
         syllables, word, frequency = line.split("\t")
         words[word] = max(words.get(word, 0), int(frequency))
         readings[word] = syllables.split()
+    source_words = len(words)
+    supported = set(charset("ascii,punct,pinyin,gb2312"))
+    words = {word: frequency for word, frequency in words.items()
+             if all(ord(char) in supported for char in word)}
     keys, lines = set(), []
     initials = defaultdict(list)
     size, kept, characters, abbreviations = 32, 0, 0, 0
@@ -103,6 +109,8 @@ def generate(dictionary):
     data = build(lines)
     assert len(data) <= size <= DICT_MAX
     stats = {"bytes": len(data), "words": kept, "characters": characters,
+             "source_words": source_words, "font_filtered_words": source_words - len(words),
+             "font_supported_words": len(words),
              "keys": len(keys), "entries": len(lines), "abbreviations": abbreviations,
              "initials_limit": INITIALS_LIMIT, "daily_bonus": DAILY_BONUS,
              "minimum_source_frequency": minimum,

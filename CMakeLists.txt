@@ -380,7 +380,7 @@ add_custom_command(OUTPUT ${INK_TEST_CONTENT}/books/测试长书.txt
 add_custom_command(OUTPUT ${INK_TEST_CONTENT}/.system/ime/base.ikd
   COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/imedict/build_base.py
           --cache ${CMAKE_SOURCE_DIR}/build-deps/imedict --out ${INK_TEST_CONTENT}/.system/ime/base.ikd
-  DEPENDS tools/imedict/build_base.py tools/imedict/imedict.py tools/imedict/sources.lock.json tools/imedict/common.tsv
+  DEPENDS tools/imedict/build_base.py tools/imedict/imedict.py tools/imedict/sources.lock.json tools/imedict/common.tsv tools/fontgen/fontgen.py
           tools/imedict/licenses/jieba-MIT.txt tools/imedict/licenses/pypinyin-MIT.txt
           tools/imedict/licenses/pinyin-data-MIT.txt tools/imedict/licenses/phrase-pinyin-data-MIT.txt
   COMMENT "imedict: hash-locked full pinyin and initials within 1 MiB")
@@ -1361,6 +1361,16 @@ ink_sim_executable(sim-bluetooth tests/bluetooth.c)
 target_link_libraries(sim-bluetooth PRIVATE ink_apps ink_system)
 add_test(NAME bluetooth-settings COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/bluetooth.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(bluetooth-settings PROPERTIES TIMEOUT 360)
+foreach(case bt-ai ime-layout)
+  string(REPLACE "-" "_" source ${case})
+  ink_sim_executable(sim-audit9-${case} tests/audit9/${source}.c)
+  target_link_libraries(sim-audit9-${case} PRIVATE ink_apps ink_system)
+  add_dependencies(sim-audit9-${case} ink_fonts ink_test_content)
+  add_test(NAME audit9-${case} COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/audit9/run.py
+    --build ${CMAKE_BINARY_DIR} --case ${case})
+endforeach()
+add_test(NAME audit9-font-coverage COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/audit9/font_coverage.py
+  --build ${CMAKE_BINARY_DIR})
 target_sources(ink_system PRIVATE system/ui/shell/member_pages.c)
 ink_sim_executable(sim-kid-1 tests/kid_1.c)
 target_link_libraries(sim-kid-1 PRIVATE ink_apps ink_system)
