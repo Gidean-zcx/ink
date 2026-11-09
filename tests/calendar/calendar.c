@@ -91,9 +91,11 @@ static void run(void *arg) {
     CHECK(AI("calendar.select", "{\"day\":31}") && g_rc.status == INK_RC_INVALID, "November 31 is rejected"); quiet();
     CHECK(AI("calendar.select", "{\"day\":0}") && g_rc.status == INK_RC_INVALID, "day zero is rejected by the shared schema"); quiet();
     call_ok("calendar.month_prev", NULL); expect("2026年10月1日");
-    press("calendar.select", 30); expect("2026年10月31日"); visible("上月"); visible("下月");
+    call_ok("calendar.month_prev", NULL); call_ok("calendar.month_prev", NULL); expect("2026年8月1日");
+    press("calendar.select", 30); expect("2026年8月31日"); visible("上月"); visible("下月");
     add(INK_ALARM, 4, 7, "每天合成闹钟", true); quiet();
-    call_ok("calendar.month_next", NULL); call_ok("calendar.select", "{\"day\":7}"); expect("每天合成闹钟");
+    call_ok("calendar.month_next", NULL); call_ok("calendar.month_next", NULL); call_ok("calendar.month_next", NULL);
+    call_ok("calendar.select", "{\"day\":7}"); expect("每天合成闹钟");
     call_ok("shell.back", NULL); expect("今晚读书"); expect("每天合成闹钟");
     CHECK(ink_member_switch("kid") == 0, "switch to the synthetic child"); quiet();
     call_ok("app.open", "{\"id\":\"upcoming\"}"); expect("\"total\":0"); absent("起床"); absent("家长会"); absent("每天合成闹钟");
