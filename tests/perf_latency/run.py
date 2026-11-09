@@ -61,10 +61,15 @@ for i in range(a.runs + 1):
                 samples.setdefault(name, []).append(e["args"]["value"])
         trace.unlink()  # retain the small measured samples, not the waveform trace
 
-# Each run has one boot/open/page sample. Multi-sample path distributions stay per run.
+# Each run has one boot/open/page sample; pool individual trace samples for hot paths.
+cpu_names = ("task.ui.cpu_ms", "task.exec.media.cpu_ms")
+for name in cpu_names:
+    samples[name] = [r["metrics"][name] for r in rows]
 names = sorted(k for k in rows[0]["metrics"] if k.startswith("perf.") or k in
-               ("ui.action_to_first_change_ms", "ui.action_to_visible_ms", "reader.page_render_ms"))
+               (*cpu_names, "ui.action_to_first_change_ms", "ui.action_to_visible_ms", "reader.page_render_ms"))
 summary = {"runs": a.runs, "cpu_mode": rows[0]["cpu_mode"], "metrics": {}}
+summary["profile"] = "simulator/profiles/metalio-plus.json"
+summary["host_to_target_default"] = json.loads((ROOT / summary["profile"]).read_text())["cpu"]["host_to_target_default"]
 for name in names:
     distributions = [r["metrics"][name] for r in rows if name in r["metrics"]]
     if name in samples:

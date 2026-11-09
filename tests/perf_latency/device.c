@@ -69,7 +69,12 @@ static void count_log(void) {
     size_t n = perf_log_count(log_db, retention, &steps);
     ink_probe_value("perf.log_count_ms", (osal_now_us() - start) / 1000.0);
     ink_probe_value("perf.log_scans", steps);
-    CHECK(n == expected, "count keeps zero sort and inclusive retention (%zu/%zu)", n, expected);
+    CHECK(n == expected, "count keeps undated and retained records (%zu/%zu)", n, expected);
+    CHECK(!regression || steps <= 4, "recent records need no full scan (%u)", steps);
+}
+static void count_child_log(void) {
+    unsigned steps;
+    CHECK(perf_log_count(log_db, 180ll * 86400, &steps) == 512, "child retention excludes both older records");
     CHECK(!regression || steps <= 4, "recent records need no full scan (%u)", steps);
 }
 static void type_key(void) {
@@ -130,7 +135,7 @@ static void run(void *arg) {
         CHECK(ink_db_put(log_db, &w, NULL) == INK_DB_OK, "seed activity %u", i);
     }
     for (unsigned i = 0; i < 20; i++) on_ui(count_log);
-    retention = 180ll * 86400; expected = 512; on_ui(count_log);
+    on_ui(count_child_log);
     ink_db_close(log_db);
     began = osal_now_us(); on_ui(open_log); quiet(); home();
     on_ui(focus); quiet();

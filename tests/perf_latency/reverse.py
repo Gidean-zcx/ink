@@ -11,9 +11,13 @@ ROOT = Path(__file__).resolve().parents[2]
 BASE = "c680b4b52454df342a79251d8a40bb3cd60243ec"
 p = argparse.ArgumentParser(description=__doc__)
 p.add_argument("--build", type=Path, required=True)
+p.add_argument("--measure-baseline", action="store_true")
+p.add_argument("--out", type=Path)
 a = p.parse_args()
 build = a.build.resolve()
-work = Path(tempfile.mkdtemp(prefix="perf-reverse-", dir=build))
+work = a.out.resolve() if a.out else Path(tempfile.mkdtemp(prefix="perf-reverse-", dir=build))
+work.mkdir(parents=True, exist_ok=True)
+objects = []
 
 def flags(target):
     found = {}
@@ -42,6 +46,9 @@ for case, product, wrapper, expected in (
     obj = work / f"{case}.o"
     subprocess.run([link[0], *opts["C_DEFINES"], *opts["C_INCLUDES"], *opts["C_FLAGS"],
                     "-I" + str(ROOT / Path(product).parent), "-c", str(driver), "-o", str(obj)], cwd=build, check=True)
+    objects.append((wrapper, obj))
+    if a.measure_baseline:
+        continue
     if wrapper:
         suffix = f"tests/perf_latency/{wrapper}.o"
         link = [str(obj) if part.endswith(suffix) else part for part in link]
@@ -59,4 +66,16 @@ for case, product, wrapper, expected in (
     if result.returncode != 1 or not errors or not all(expected in w for w in errors):
         raise SystemExit(f"{case}: unexpected negative control: exit={result.returncode}, errors={errors}")
     print(f"{case}: expected FAIL exit={result.returncode}, matching failures={len(errors)}", flush=True)
+if a.measure_baseline:
+    link = shlex.split((build / "CMakeFiles/sim-perf-latency.dir/link.txt").read_text())
+    for wrapper, obj in objects:
+        if wrapper:
+            link = [str(obj) if part.endswith(f"tests/perf_latency/{wrapper}.o") else part for part in link]
+        else:
+            link.insert(next(i for i, part in enumerate(link) if part.endswith(".a")), str(obj))
+    binary = work / "sim-baseline"
+    link[link.index("-o") + 1] = str(binary)
+    subprocess.run(link, cwd=build, check=True, capture_output=True)
+    subprocess.run([os.sys.executable, str(ROOT / "tests/perf_latency/run.py"), "--build", str(build),
+                    "--binary", str(binary), "--runs", "20", "--out", str(work / "measurements")], cwd=ROOT, check=True)
 print("Evidence:", work.relative_to(ROOT))

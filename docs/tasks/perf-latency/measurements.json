@@ -2,7 +2,7 @@
   "before": {
     "runs": 20,
     "cpu_mode": "measured",
-    "warnings": 248,
+    "warnings": 245,
     "metrics": {
       "perf.activity_job_reads": {
         "count": 400,
@@ -11,18 +11,18 @@
       },
       "perf.activity_read_ms": {
         "count": 400,
-        "p50": 1.197,
-        "p95": 2.078
+        "p50": 1.042,
+        "p95": 1.885
       },
       "perf.boot_home_ms": {
         "count": 20,
-        "p50": 1640.019,
-        "p95": 1860.024
+        "p50": 1600.02,
+        "p95": 1720.017
       },
       "perf.log_count_ms": {
         "count": 400,
-        "p50": 16.252,
-        "p95": 21.517
+        "p50": 15.479,
+        "p95": 18.086
       },
       "perf.log_scans": {
         "count": 400,
@@ -31,65 +31,77 @@
       },
       "perf.lookup_during_thumbnail_ms": {
         "count": 20,
-        "p50": 120.001,
-        "p95": 149.99
+        "p50": 110.003,
+        "p95": 149.995
       },
       "perf.open_ai_ms": {
         "count": 20,
-        "p50": 982.238,
-        "p95": 1026.437
+        "p50": 973.179,
+        "p95": 1022.604
       },
       "perf.open_files_ms": {
         "count": 20,
-        "p50": 1022.534,
-        "p95": 1124.905
+        "p50": 1012.499,
+        "p95": 1043.538
       },
       "perf.open_gallery_ms": {
         "count": 20,
-        "p50": 874.899,
-        "p95": 1032.067
+        "p50": 851.139,
+        "p95": 987.657
       },
       "perf.open_log_ms": {
         "count": 20,
-        "p50": 1233.65,
-        "p95": 1296.359
+        "p50": 1154.396,
+        "p95": 1310.158
       },
       "perf.open_settings_ms": {
         "count": 20,
-        "p50": 1131.79,
-        "p95": 1295.02
+        "p50": 1132.548,
+        "p95": 1183.541
       },
       "perf.open_sms_ms": {
         "count": 20,
-        "p50": 943.467,
-        "p95": 975.111
+        "p50": 941.886,
+        "p95": 972.222
       },
       "perf.page_readable_ms": {
         "count": 20,
-        "p50": 602.26,
-        "p95": 628.837
+        "p50": 601.075,
+        "p95": 629.396
       },
       "perf.tap_first_change_ms": {
         "count": 20,
-        "p50": 234.899,
-        "p95": 236.846
+        "p50": 234.281,
+        "p95": 235.692
       },
       "perf.text_key_ms": {
         "count": 400,
-        "p50": 2.668,
-        "p95": 4.437
+        "p50": 2.437,
+        "p95": 4.216
       },
       "perf.thumbnail_decode_ms": {
         "count": 20,
-        "p50": 103.652,
-        "p95": 143.629
+        "p50": 99.034,
+        "p95": 130.469
+      },
+      "task.ui.cpu_ms": {
+        "count": 20,
+        "p50": 4319.759288,
+        "p95": 5218.795144
+      },
+      "task.exec.media.cpu_ms": {
+        "count": 20,
+        "p50": 154.1658,
+        "p95": 197.70412
       }
-    }
+    },
+    "profile": "simulator/profiles/metalio-plus.json",
+    "host_to_target_default": 40.0
   },
   "after": {
     "runs": 20,
     "cpu_mode": "measured",
-    "warnings": 247,
+    "warnings": 240,
     "metrics": {
       "perf.activity_job_reads": {
         "count": 400,
@@ -98,18 +110,18 @@
       },
       "perf.activity_read_ms": {
         "count": 400,
-        "p50": 0.557,
-        "p95": 1.139
+        "p50": 0.543,
+        "p95": 1.259
       },
       "perf.boot_home_ms": {
         "count": 20,
-        "p50": 1570.019,
-        "p95": 1770.02
+        "p50": 1560.022,
+        "p95": 1630.02
       },
       "perf.log_count_ms": {
         "count": 400,
-        "p50": 0.13,
-        "p95": 0.227
+        "p50": 0.129,
+        "p95": 0.267
       },
       "perf.log_scans": {
         "count": 400,
@@ -118,59 +130,71 @@
       },
       "perf.lookup_during_thumbnail_ms": {
         "count": 20,
-        "p50": 19.995,
-        "p95": 20.015
+        "p50": 19.997,
+        "p95": 20.007
       },
       "perf.open_ai_ms": {
         "count": 20,
-        "p50": 973.39,
-        "p95": 1044.882
+        "p50": 972.366,
+        "p95": 983.61
       },
       "perf.open_files_ms": {
         "count": 20,
-        "p50": 1012.381,
-        "p95": 1083.833
+        "p50": 1002.947,
+        "p95": 1014.194
       },
       "perf.open_gallery_ms": {
         "count": 20,
-        "p50": 853.519,
-        "p95": 972.551
+        "p50": 844.779,
+        "p95": 863.176
       },
       "perf.open_log_ms": {
         "count": 20,
-        "p50": 1133.198,
-        "p95": 1271.702
+        "p50": 1102.796,
+        "p95": 1152.907
       },
       "perf.open_settings_ms": {
         "count": 20,
-        "p50": 1082.574,
-        "p95": 1256.877
+        "p50": 1113.213,
+        "p95": 1132.786
       },
       "perf.open_sms_ms": {
         "count": 20,
-        "p50": 942.591,
-        "p95": 953.884
+        "p50": 942.421,
+        "p95": 943.589
       },
       "perf.page_readable_ms": {
         "count": 20,
-        "p50": 602.558,
-        "p95": 627.885
+        "p50": 601.388,
+        "p95": 607.057
       },
       "perf.tap_first_change_ms": {
         "count": 20,
-        "p50": 234.34,
-        "p95": 235.909
+        "p50": 234.36,
+        "p95": 235.298
       },
       "perf.text_key_ms": {
         "count": 400,
-        "p50": 2.275,
-        "p95": 4.121
+        "p50": 2.33,
+        "p95": 3.814
       },
       "perf.thumbnail_decode_ms": {
         "count": 20,
-        "p50": 83.627,
-        "p95": 122.239
+        "p50": 98.362,
+        "p95": 112.95
+      },
+      "task.ui.cpu_ms": {
+        "count": 20,
+        "p50": 3867.008781,
+        "p95": 4002.508377
+      },
+      "task.exec.media.cpu_ms": {
+        "count": 20,
+        "p50": 145.17984,
+        "p95": 164.25964
       }
-    }
+    },
+    "profile": "simulator/profiles/metalio-plus.json",
+    "host_to_target_default": 40.0
   }
 }
