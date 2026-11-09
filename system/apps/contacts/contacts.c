@@ -69,8 +69,8 @@ static void record(ink_call_t *c) { /* BG: first load and durable writes may wai
             else id = got;
         }
     } else if (del && c->rc.status == INK_RC_DONE) {
-        ink_args_get_str(&c->args, "name", raw, 97); ink_args_get_str(&c->args, "number", raw + 97, 25);
-        if (strcmp(name, raw) || strcmp(number, raw + 97)) c->rc.status = INK_RC_STALE;
+        const ink_arg_t *target_name = ink_args_find(&c->args, "name"), *target_number = ink_args_find(&c->args, "number");
+        if (strcmp(name, c->args.text + target_name->off) || strcmp(number, c->args.text + target_number->off)) c->rc.status = INK_RC_STALE;
         else if (ink_db_del_if_ver(db, (uint32_t)id, c->src, (uint32_t)expected) != INK_DB_OK) c->rc.status = INK_RC_STALE;
         c->rc.revision = ink_db_last_ver(db);
     }
