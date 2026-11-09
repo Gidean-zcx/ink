@@ -101,7 +101,8 @@ static void records_create(void) {
     const ink_member_t *kid = NULL;
     for (int i = 0; ink_member_at(i); i++) if (ink_member_at(i)->role == INK_ROLE_CHILD) { kid = ink_member_at(i); break; }
     if (!R.member[0]) snprintf(R.member, sizeof R.member, "%s", ink_member_current()->id);
-    snprintf(R.args, sizeof R.args, "{\"member\":\"%s\"}", R.member);
+    char member[16]; memcpy(member, R.member, sizeof member);
+    snprintf(R.args, sizeof R.args, "{\"member\":\"%s\"}", member);
     const char *const labels[] = {"我", "孩子"};
     lv_obj_t *tabs = ink_ui_segments(S.body, labels, adult ? 2 : 1, strcmp(R.member, ink_member_current()->id) != 0, INK_MARGIN, y, w, NULL, NULL);
     ink_shell_bind(lv_obj_get_child(tabs, 0), "shell.records", NULL);
