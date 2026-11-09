@@ -29,12 +29,12 @@ static struct {
 } B INK_PSRAM_BSS;
 
 static int snapshot(char *buf, size_t cap) {
-    if (B.off && !ink_member_space_open()) return snprintf(buf, cap, "PowerOffEmpty：已关机。%s", !strcmp(B.why, "battery_unsaved") ? "有些内容没保存。充上电再开机" : "东西都存好了。充上电再开机");
+    if (B.off && !ink_member_space_open()) return snprintf(buf, cap, "PowerOffEmpty：已关机。没电了，%s", !strcmp(B.why, "battery_unsaved") ? "有些内容没保存。充上电再开机" : "东西都存好了。充上电再开机");
     if (B.off) return snprintf(buf, cap, "PowerOffEmpty：已关机。%s%s%s", B.body,
         ink_member_space_open() ? "；" : "", ink_member_space_open() ? B.title : "");
     if (B.mode == 3) return snprintf(buf, cap, "Charging：正在充电，%d%%。已锁定，按电源键或 AI 键唤醒。", B.percent);
     if (B.mode == 2) return snprintf(buf, cap, "BatterySaving：电量用完了，正在存东西。存好就关机。");
-    return snprintf(buf, cap, "BatteryLow：电量只剩 %d%%。到 2%% 时先保存再关机。%s操作 interrupt.ack。",
+    return snprintf(buf, cap, "BatteryLow：电量只剩 %d%%。到 2%% 时先保存再关机。%s知道了：interrupt.ack。",
                     B.percent, ink_member_space_open() && ink_member_current()->role != INK_ROLE_CHILD ?
                     ink_setting_get("power.lock_after_s") == 60 ? "省电：1 分钟锁屏=开；settings.set（power.lock_after_s：60/600）；" :
                     "省电：1 分钟锁屏=关；settings.set（power.lock_after_s：60/600）；" : "");
@@ -115,8 +115,9 @@ static void changed(void *ctx, int h, const char *id) {
     render(mode);
 }
 static void present(const ink_interrupt_t *top) {
-    B.interrupt = top && top->kind == INK_INT_LOW_BATTERY ? top->id : 0;
-    B.blocked = top && top->kind != INK_INT_LOW_BATTERY;
+    B.interrupt = top && top->kind == INK_INT_LOW_BATTERY && top->nactions == 1 && top->actions[0].cap &&
+                  !strcmp(top->actions[0].cap, "interrupt.ack") ? top->id : 0;
+    B.blocked = top && !B.interrupt;
     ink_shell_interrupt_present(B.interrupt ? NULL : top);
     changed(NULL, 0, "");
 }
