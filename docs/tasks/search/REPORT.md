@@ -24,6 +24,8 @@
 
 `tests/ui_shell_test.c`：主页搜索提交后应进入 `Search`，原先预期留在 `Apps`；新增返回原 `Apps` 的断言。原有 `shell.search` 应用过滤能力保持兼容；没有删测试或放宽断言。
 
+`tests/integration/ai_surface.c`：在已有 AI 能力合同中新增六个搜索能力及必填参数；保留完整目录和参数断言。
+
 ## 要用户定的
 
 暂无。
@@ -45,6 +47,7 @@
 - 【实测】普通和 ASan 构建均成功；尺寸检查 `ui-scale: 34 files, 0 violations`。
 - 【实测】首轮搜索测试暴露文件信息页字段缺少 `role`，ASan 定位到快照空指针；在字段声明补齐后，两场景均通过 103 条断言，内部 RAM 最低余量 47,840 字节。未增加通用防御层。
 - 【实测】成员反例证据在 `build/search-dmolsb9a/`；正常 ASan 场景在 `build-asan/search-cfy0qxxe/`。构建目录不提交。
+- 【实测】首轮全量 233 项：228 通过、2 失败、3 跳过；六个新能力补入已有 AI 合同后，`search|integration-ai-surface|ui-shell-priorities` 三项复核全部通过。最终全量已改用依赖目录的现成中枢 Python 环境。
 
 ## 要改的文档
 

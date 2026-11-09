@@ -63,6 +63,8 @@ static const struct {
     {"ai.panel.next", NULL}, {"ai.panel.prev", NULL},
     {"keyboard.key", "code"}, {"keyboard.pick", "index"}, {"keyboard.candidates", ""}, {"keyboard.edit", "action"},
     {"shell.search", "query"}, {"shell.page_next", NULL}, {"shell.page_prev", NULL}, {"shell.notify_next", NULL}, {"shell.notify_prev", NULL},
+    {"search.query", "query"}, {"search.show", "query"}, {"search.open", "id,version"},
+    {"search.focus", NULL}, {"search.next", NULL}, {"search.prev", NULL},
     {"shell.wifi_next", NULL}, {"shell.wifi_prev", NULL}, {"shell.wifi_pick", "index"},
     {"file_picker.prev", NULL}, {"file_picker.next", NULL}, {"file_picker.cancel", NULL}, {"file_picker.select", "id"},
     {"contacts.put", "name,number"}, {"contacts.delete", "id,if_revision,name,number"}, {"contacts.select", "id"}, {"contacts.edit", ""},

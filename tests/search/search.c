@@ -60,6 +60,7 @@ static void check_return(void) {
 static void check_empty(void) {
     read_snapshot();
     CHECK(!strcmp(ink_ui_page_name(), "SearchEmpty") && !S.total && !S.list && !S.error[0], "no match displays the real SearchEmpty activity");
+    CHECK(strstr(snap, "没有找到相关内容"), "AI reads the same empty-state text as the person");
     wanted = "没有找到相关内容"; found = NULL; find_label(lv_screen_active());
     CHECK(found, "the empty-state text is visible");
 }

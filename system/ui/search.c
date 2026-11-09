@@ -29,6 +29,7 @@ static struct {
     ink_ui_page_spec_t model;
     bool pending;
 } S INK_PSRAM_BSS;
+static const char *status(void) { return S.pending ? "正在搜索" : S.error[0] ? S.error : S.total ? "" : "没有找到相关内容"; }
 typedef struct { char query[193], member[16], raw[INK_DB_RECORD_MAX + 1], text[4096];
     ink_json_t json; ink_jw_t writer; size_t total, cursor; unsigned shown; } query_t;
 static bool visible(void) {
@@ -121,7 +122,8 @@ static void bind_item(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, 
     }
     lv_label_set_text(lv_obj_get_child(slot, 1), r->title);
     lv_label_set_text(lv_obj_get_child(slot, 2), TYPES[r->kind]);
-    snprintf(S.args[at], sizeof S.args[at], "{\"id\":\"%s\",\"version\":%u}", r->id, (unsigned)S.version);
+    char id[64]; memcpy(id, r->id, sizeof id);
+    snprintf(S.args[at], sizeof S.args[at], "{\"id\":\"%s\",\"version\":%u}", id, (unsigned)S.version);
     *field = (ink_ui_field_spec_t){.id = r->id, .label = r->title, .value = TYPES[r->kind], .role = "listitem", .object = {r->id, r->revision}};
     *action = (ink_ui_action_spec_t){.id = r->id, .label = "打开", .capability = "search.open", .args_json = S.args[at], .object = field->object, .enabled = !S.pending};
 }
@@ -186,7 +188,7 @@ static void create(lv_obj_t *screen, void *arg) {
     if (!S.total) {
         int middle = (INK_CANVAS_H - INK_CIRCLE_LARGE) / 2;
         ink_ui_circle(screen, "search", (INK_CANVAS_W - INK_CIRCLE_LARGE) / 2, middle, INK_CIRCLE_LARGE, INK_ICON_STATE, INK_SURFACE_STATIC, NULL, NULL);
-        lv_obj_t *label = ink_ui_label(screen, S.pending ? "正在搜索" : S.error[0] ? S.error : "没有找到相关内容", INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, INK_MARGIN, middle + INK_CIRCLE_LARGE + INK_GAP_XL, INK_CANVAS_W - 2 * INK_MARGIN);
+        lv_obj_t *label = ink_ui_label(screen, status(), INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, INK_MARGIN, middle + INK_CIRCLE_LARGE + INK_GAP_XL, INK_CANVAS_W - 2 * INK_MARGIN);
         lv_obj_set_style_text_align(label, LV_TEXT_ALIGN_CENTER, 0);
         return;
     }
@@ -203,7 +205,8 @@ static int snapshot(char *out, size_t cap) {
     ink_jw_t w = {.buf = out, .cap = cap, .len = (size_t)n - 1};
     ink_jw_raw(&w, ",\"query\":"); ink_jw_str(&w, S.query);
     ink_jw_raw(&w, ",\"query_version\":"); ink_jw_int(&w, S.version);
-    ink_jw_raw(&w, ",\"pending\":"); ink_jw_raw(&w, S.pending ? "true}" : "false}");
+    ink_jw_raw(&w, ",\"pending\":"); ink_jw_raw(&w, S.pending ? "true" : "false");
+    ink_jw_raw(&w, ",\"status\":"); ink_jw_str(&w, status()); ink_jw_raw(&w, "}");
     if (w.overflow) { out[0] = 0; return -1; }
     return (int)w.len;
 }
