@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[2]
 p = argparse.ArgumentParser()
 p.add_argument("--build", type=Path, required=True)
 p.add_argument("--visual", action="store_true")
-p.add_argument("--mutant", choices=("child", "browse", "thumb", "rename", "paging", "preview"))
+p.add_argument("--mutant", choices=("child", "browse", "thumb", "rename", "paging", "preview", "ai-panel"))
 a = p.parse_args()
 build = a.build.resolve()
 work = Path(tempfile.mkdtemp(prefix="files-app-", dir=build))
@@ -23,12 +23,11 @@ if a.mutant:
         "child": ("if (ink_member_current()->role == INK_ROLE_ADULT) for", "if (true) for"),
         "browse": ("if (!allowed || (F.mode == MOVE && !writable(path)))", "if (false && (!allowed || (F.mode == MOVE && !writable(path))))"),
         "thumb": ("lv_image_set_src(F.images[at], &F.thumbs[at]);", "(void)F.thumbs[at];"),
-        "rename": ('const char *cap, const ink_args_t *args, ink_cap_done_fn done, unsigned slot', 'const char *cap, const ink_args_t *args, ink_cap_done_fn done, unsigned slot'),
+        "rename": ('if (ink_cap_call(a->capability, NULL, &opts))', 'if (strcmp(a->id, "rename") && ink_cap_call(a->capability, NULL, &opts))'),
         "paging": ("ink_ui_list_turn(F.list, !strcmp(id, \"files.next\") ? 1 : -1)", "(false)"),
         "preview": ("lv_label_set_text(F.preview, F.preview_text)", "lv_label_set_text(F.preview, \"\")"),
+        "ai-panel": ("strcmp(ink_ui_action_page(), PAGES[F.mode].name)", "strcmp(ink_ui_top_name(), PAGES[F.mode].name)"),
     }[a.mutant]
-    if a.mutant == "rename":
-        old, new = ('if (ink_cap_call(a->capability, NULL, &opts))', 'if (strcmp(a->capability, "file.move") && ink_cap_call(a->capability, NULL, &opts))')
     assert source.count(old) == 1, old
     (work / "files-product.c").write_text(source.replace(old, new))
     driver = (ROOT / "tests/files_app/files_app.c").read_text().replace(

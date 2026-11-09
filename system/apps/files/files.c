@@ -196,7 +196,7 @@ static void selected(void *ctx, const ink_receipt_t *rc) {
     F.model.object = (ink_ui_object_ref_t){F.object, F.epoch}; F.model.action_count = 5;
 }
 static void navigate(ink_call_t *c) {
-    if (!ink_ui_page_current() || F.epoch != ink_member_epoch() || strcmp(ink_ui_top_name(), PAGES[F.mode].name)) { c->rc.status = INK_RC_STALE; return; }
+    if (!ink_ui_page_current() || F.epoch != ink_member_epoch() || strcmp(ink_ui_action_page(), PAGES[F.mode].name)) { c->rc.status = INK_RC_STALE; return; }
     const char *id = c->cap->id;
     if (!strcmp(id, "files.name")) { if (!F.field || !writable(F.selected.path)) c->rc.status = INK_RC_REJECTED; else ink_textfield_short_focus(F.field); return; }
     if (F.busy) { c->rc.status = INK_RC_FAILED; return; }

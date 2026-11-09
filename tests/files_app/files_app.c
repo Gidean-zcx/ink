@@ -93,6 +93,17 @@ static void first_page(void) {
     CHECK(ink_ui_snapshot(g_snap, sizeof g_snap, NULL) > 0 && strstr(g_snap, pages) && strstr(g_snap, "\"visible\":4"), "F4 pages only four visible rows");
     CHECK(strstr(g_snap, "files.select") && strstr(g_snap, "files.browse") && strstr(g_snap, "files.next"), "AI sees the same row and paging capabilities");
 }
+static lv_obj_t *ai_panel;
+static void show_ai(void) {
+    lv_obj_t *caption, *question, *answer;
+    ink_shell_ai_open(&ai_panel, &caption, &question, &answer);
+    CHECK(ai_panel && !strcmp(ink_ui_top_name(), "Ai"), "use the real AI panel above the file page");
+}
+static void close_ai(void) { ink_shell_ai_closed(); lv_obj_delete(ai_panel); ai_panel = NULL; }
+static void ai_page(void) {
+    CHECK(F.position.page == 1, "AI can turn the underlying file page with its panel open");
+    CHECK(ink_ui_context_snapshot(g_snap, sizeof g_snap, NULL) > 0 && strstr(g_snap, "FileList"), "AI context still describes its underlying file page");
+}
 static void third_page(void) { CHECK(F.position.page == 2 && ink_ui_snapshot(g_snap, sizeof g_snap, NULL) > 0 && strstr(g_snap, "\"visible\":2"), "last page has two entries"); }
 static void thumb_check(void) {
     bool visible = false;
@@ -142,6 +153,7 @@ static void verify_restart(void) {
 static void exercise(void) {
     fixture(); roots(); snap("Files");
     touch("我的"); wait_page("FileList"); browse(); on_ui(first_page); snap("FileList");
+    on_ui(show_ai); quiet(); command("files.next", NULL); quiet(); on_ui(ai_page); on_ui(close_ai); command("files.prev", NULL); quiet();
     check_list_thumb(); key(INK_KEY_NEXT); quiet(); command("files.next", NULL); quiet(); on_ui(third_page);
     command("files.prev", NULL); key(INK_KEY_PREV); quiet(); on_ui(first_page);
     select_id(picture_id); on_ui(thumb_check); command("files.up", NULL); wait_page("FileList");
