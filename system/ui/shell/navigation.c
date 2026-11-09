@@ -984,6 +984,13 @@ bool ink_shell_close(void) {
 static void group_row(lv_obj_t *group, const char *icon, const char *title, const char *value, int row,
                       const char *action) {
     lv_obj_t *r = ink_ui_list_row(group, icon, title, value, 0, row * INK_CONTROL, width(), false, NULL, NULL);
+    if (N.page_id == PAGE_SETTINGS) {
+        lv_obj_t *base = ink_ui_box(r, INK_GAP, (INK_CONTROL - INK_CIRCLE_SMALL) / 2,
+                                   INK_CIRCLE_SMALL, INK_CIRCLE_SMALL, -1, INK_SURFACE_WHITE, false);
+        lv_obj_move_background(base);
+        if (row) ink_ui_box(r, INK_CIRCLE_SMALL + INK_GAP_XL, 0,
+                           width() - INK_CIRCLE_SMALL - INK_GAP_XL, INK_STROKE, 0, INK_SURFACE_WHITE, false);
+    }
     if (action) {
         ink_shell_bind(r, action, NULL);
         ink_ui_icon(r, "next", INK_ICON_SMALL, INK_ICON_LINE, width() - INK_READING_MARGIN,
