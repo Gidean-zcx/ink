@@ -11,13 +11,15 @@ import subprocess
 ROOT = Path(__file__).resolve().parents[2]
 p = argparse.ArgumentParser(description=__doc__)
 p.add_argument('--build', type=Path, required=True)
+p.add_argument('--case', choices=('inline-status', 'close', 'progress', 'child', 'bad-card', 'entry-layout'))
 a = p.parse_args()
 build = a.build.resolve()
 area = build / 'transfer-reverse'
 area.mkdir(exist_ok=True)
 source = ROOT / 'system/ui/shell/transfer_pages.c'
-original = source.read_text()
-before = hashlib.sha256(source.read_bytes()).hexdigest()
+sources = {'ui': source, 'files': ROOT / 'system/apps/files/files.c'}
+originals = {unit: path.read_text() for unit, path in sources.items()}
+before = {unit: hashlib.sha256(path.read_bytes()).hexdigest() for unit, path in sources.items()}
 flags = (build / 'CMakeFiles/sim-transfer-pages.dir/flags.make').read_text()
 options = []
 for key in ('C_DEFINES', 'C_INCLUDES', 'C_FLAGS'):
@@ -25,14 +27,18 @@ for key in ('C_DEFINES', 'C_INCLUDES', 'C_FLAGS'):
 driver = (ROOT / 'tests/transfer_pages/device.c').read_text().replace(
     '#include "../../system/ui/shell/transfer_pages.c"', '#include "mutant.c"').replace(
     '#include "../services_finish/product.h"', f'#include "{ROOT}/tests/services_finish/product.h"')
-cases = [
+cases = [('ui', *case) for case in [
     ('inline-status', '    P.pending = true;\n    if (ink_cap_call(cap, NULL, &opts)) P.pending = false;',
      '    P.pending = ink_cap_call(cap, NULL, &opts) == 0;', 'USB waits for adult confirmation'),
     ('close', '    if (!P.usb && !P.switching) {', '    if (false && !P.usb && !P.switching) {', 'back closes wireless service'),
     ('progress', '!strcmp(result, "文件已收到") ? 1 : 0', '0', 'completion returns to Transfer with actual size and count'),
     ('child', '.effect = INK_FX_NAVIGATE, .run = open_page', '.effect = INK_FX_NAVIGATE, .child_ok = true, .run = open_page', 'child direct wireless navigation is rejected'),
     ('bad-card', 'if (card) ink_ui_pop(); else show(USB_FAIL);', '(void)card; ink_ui_pop();', 'page TransferUsbFail is presented'),
-]
+]]
+cases.append(('files', 'entry-layout',
+    'INK_CONTROL;\n        button(4, screen, "从手机或电脑传入", "transfer.open", NULL, INK_MARGIN, bottom - INK_CONTROL',
+    'INK_PRIMARY;\n        button(4, screen, "从手机或电脑传入", "transfer.open", NULL, INK_MARGIN, bottom - INK_PRIMARY',
+    'transfer entry clears the file pagination'))
 commands, summary = [], []
 
 
@@ -41,7 +47,10 @@ def run(cmd, **kwargs):
     return subprocess.run(cmd, cwd=build, capture_output=True, text=True, timeout=120, **kwargs)
 
 
-for name, old, new, expected in cases:
+for unit, name, old, new, expected in cases:
+    if a.case and a.case != name:
+        continue
+    original = originals[unit]
     assert old in original, name
     work = area / name
     work.mkdir(exist_ok=True)
@@ -49,9 +58,12 @@ for name, old, new, expected in cases:
     (work / 'driver.c').write_text(driver)
     link = shlex.split((build / 'CMakeFiles/sim-transfer-pages.dir/link.txt').read_text())
     obj = work / 'mutant.o'
-    compiled = run([link[0], *options, '-c', str(work / 'driver.c'), '-o', str(obj)])
+    compiled = run([link[0], *options, '-c', str(work / ('driver.c' if unit == 'ui' else 'mutant.c')), '-o', str(obj)])
     assert compiled.returncode == 0, compiled.stderr
-    link = [str(obj) if s.endswith('tests/transfer_pages/device.c.o') else s for s in link]
+    if unit == 'ui':
+        link = [str(obj) if s.endswith('tests/transfer_pages/device.c.o') else s for s in link]
+    else:
+        link.insert(next(i for i, s in enumerate(link) if s.endswith('libink_system.a')), str(obj))
     binary = work / 'sim-transfer-pages'
     link[link.index('-o') + 1] = str(binary)
     linked = run(link)
@@ -63,6 +75,7 @@ for name, old, new, expected in cases:
     assert result.returncode != 0 and expected in output, (name, output[-7000:])
     summary.append({'case': name, 'exit': result.returncode, 'expected_failure': expected})
     print(f'{name}: expected test failure (exit {result.returncode})', flush=True)
-assert hashlib.sha256(source.read_bytes()).hexdigest() == before
-(area / 'commands.json').write_text(json.dumps(commands, indent=2) + '\n')
-(area / 'summary.json').write_text(json.dumps(summary, indent=2) + '\n')
+assert {unit: hashlib.sha256(path.read_bytes()).hexdigest() for unit, path in sources.items()} == before
+suffix = '-' + a.case if a.case else ''
+(area / ('commands' + suffix + '.json')).write_text(json.dumps(commands, indent=2) + '\n')
+(area / ('summary' + suffix + '.json')).write_text(json.dumps(summary, indent=2) + '\n')

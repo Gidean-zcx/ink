@@ -1,11 +1,13 @@
 /* Synthetic HTTP bytes and real transfer, USB, confirmation and file pages. */
 #include "../../system/ui/shell/transfer_pages.c"
 #include "../services_finish/product.h"
+#include "cJSON.h"
 #include <sys/stat.h>
 
 static char scene[32], selected_scene[32], saved_code[8], saved_address[80];
 static const char *wanted, *stage;
 static int touch_x, touch_y;
+static lv_area_t control_bounds;
 static unsigned sequence;
 static bool acknowledged;
 static void options(void *arg) {
@@ -24,6 +26,7 @@ static void locate(lv_obj_t *o) {
     if (!lv_obj_is_visible(o)) return;
     if (lv_obj_check_type(o, &lv_label_class) && !strcmp(lv_label_get_text(o), wanted)) {
         lv_area_t a; lv_obj_get_coords(o, &a); touch_x = (a.x1 + a.x2) / 2; touch_y = (a.y1 + a.y2) / 2;
+        lv_obj_get_coords(lv_obj_get_parent(o), &control_bounds);
     }
     for (uint32_t i = 0; i < lv_obj_get_child_count(o); i++) locate(lv_obj_get_child(o, (int)i));
 }
@@ -53,11 +56,14 @@ static void exchange(const char *name) {
 }
 static void save_snapshot(void *arg) {
     (void)arg; char path[768]; snprintf(path, sizeof path, "%s/snapshots.ndjson", g_sim.out_dir);
+    cJSON *json = cJSON_Parse(g_snap);
+    CHECK(json != NULL, "host parser validates the complete snapshot"); cJSON_Delete(json);
     FILE *f = fopen(path, "ab");
     if (!f || fprintf(f, "{\"scene\":\"%s\",\"snapshot\":%s}\n", scene, g_snap) < 0 || fclose(f)) abort();
 }
 static void inspect(void) {
     CHECK(ink_ui_context_snapshot(g_snap, sizeof g_snap, NULL) > 0 && strstr(g_snap, scene), "page fits production AI context: %s", scene);
+    if (!strcmp(scene, "Files")) { vtk_host_call(save_snapshot, NULL); return; }
     ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
     CHECK(j && !ink_json_parse(j, g_snap, strlen(g_snap)), "snapshot is complete JSON");
     if (j && !ink_json_parse(j, g_snap, strlen(g_snap))) {
@@ -124,6 +130,11 @@ static bool busy_result(void) { return at("TransferUsbBusy") && strstr(g_snap, "
 static void run(void *arg) {
     (void)arg; vtk_host_call(options, NULL); delay_ms(4000); test_start_home(); roots();
     CHECK(strstr(g_snap, "transfer.open") && strstr(g_snap, "transfer.usb"), "adult file home exposes both entries to AI");
+    wanted = "1 / 1"; on_ui(target); int pager_bottom = control_bounds.y2;
+    CHECK(touch_x >= 0, "file home exposes its pagination");
+    wanted = "从手机或电脑传入"; on_ui(target);
+    CHECK(touch_x >= 0 && control_bounds.y1 > pager_bottom, "transfer entry clears the file pagination");
+    if (!strcmp(selected_scene, "Files")) capture("Files");
     press("从手机或电脑传入"); ready("Transfer"); start_wireless(); on_ui(wireless_contract); capture("Transfer");
     exchange("begin");
     CHECK(WAIT_FOR(at("TransferLive") && strstr(g_snap, "4096 字节"), 5000), "live page shows bytes actually received");

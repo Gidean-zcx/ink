@@ -263,8 +263,8 @@ static void create(lv_obj_t *screen, void *arg) {
     }
     ink_ui_list_refresh(F.list, F.count);
     if (F.mode == HOME && ink_member_current()->role == INK_ROLE_ADULT) {
-        int width = INK_CANVAS_W - 2 * INK_MARGIN, bottom = INK_CANVAS_H - INK_MARGIN - INK_PRIMARY;
-        button(4, screen, "从手机或电脑传入", "transfer.open", NULL, INK_MARGIN, bottom - INK_PRIMARY - INK_GAP, width, false);
+        int width = INK_CANVAS_W - 2 * INK_MARGIN, bottom = INK_CANVAS_H - INK_MARGIN - INK_CONTROL;
+        button(4, screen, "从手机或电脑传入", "transfer.open", NULL, INK_MARGIN, bottom - INK_CONTROL - INK_GAP, width, false);
         button(5, screen, "连电脑", "transfer.usb", NULL, INK_MARGIN, bottom, width, false);
     }
 }

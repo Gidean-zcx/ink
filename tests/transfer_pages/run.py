@@ -81,7 +81,7 @@ try:
                 assert not data.get('warnings'), data['warnings']
                 assert counts.get('test.snapshot.settled') == 1 and (out / 'snap-scene.png').is_file()
                 snapshots = [json.loads(line) for line in (out / 'snapshots.ndjson').read_text().splitlines()]
-                assert {s['scene'] for s in snapshots} == set(SCENES)
+                assert {s['scene'] for s in snapshots} == set(SCENES) | ({'Files'} if scene == 'Files' else set())
                 target = build / 'transfer-compare' / scene
                 target.mkdir(parents=True, exist_ok=True)
                 for name in ('snap-scene.png', 'metrics.json', 'snapshots.ndjson'):
