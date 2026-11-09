@@ -1243,6 +1243,15 @@ static void body_blocks(void) {
             ink_ui_notice(N.page_body, connected, F.y + heading_h());
         }
         F.y += h + INK_GAP_L;
+        if (ssid[0]) {
+            if (block(INK_CONTROL)) {
+                char args[256]; ink_jw_t w; ink_jw_init(&w, args, sizeof args);
+                ink_jw_raw(&w, "{\"ssid\":"); ink_jw_str(&w, ssid); ink_jw_raw(&w, "}");
+                ink_shell_bind(ink_ui_pill(N.page_body, "忘掉这个网络", INK_MARGIN, F.y, width(), INK_CONTROL,
+                    false, NULL, NULL), "wifi.forget", args);
+            }
+            F.y += INK_CONTROL + INK_GAP_M;
+        }
         if (N.picked_ssid[0]) {
             if (block(INK_CONTROL)) {
                 ink_text_cfg_t cfg = {.type = INK_TEXT_PASSWORD,
@@ -1345,8 +1354,11 @@ static void draw_page_body(void) {
                 ink_ui_row_double(), "还没有通知", notify_bind, NULL);
             lv_obj_t *read = ink_ui_pill(N.page_body, "全部已读", INK_MARGIN,
                 INK_CANVAS_H - INK_STATUS_BAR - INK_PRIMARY - INK_GAP_XS - INK_CONTROL - INK_GAP_M,
-                width(), INK_CONTROL, false, NULL, NULL);
+                (width() - INK_GAP) / 2, INK_CONTROL, false, NULL, NULL);
             ink_shell_bind(read, "notify.read", "{\"id\":0}");
+            ink_shell_bind(ink_ui_pill(N.page_body, "全部清除", INK_MARGIN + (width() + INK_GAP) / 2,
+                INK_CANVAS_H - INK_STATUS_BAR - INK_PRIMARY - INK_GAP_XS - INK_CONTROL - INK_GAP_M,
+                (width() - INK_GAP) / 2, INK_CONTROL, false, NULL, NULL), "notify.clear", NULL);
         }
         ink_db_cursor_t cursor = {0}; ink_notify_view_t n; size_t total = 0;
         while (ink_notify_next(&cursor, &n) == 1) total++;
@@ -1414,7 +1426,13 @@ static bool page_key(ink_key_t key, bool lng) {
 }
 static int page_snapshot(char *buf, size_t cap) {
     if (!current_session(N.epoch)) return snprintf(buf, cap, "空间锁定或正在切换；AI 无权读取。");
-    if (N.notify_list) return ink_ui_list_snapshot(N.notify_list, buf, cap);
+    if (N.notify_list) {
+        int n = ink_ui_list_snapshot(N.notify_list, buf, cap);
+        if (n <= 0) return n;
+        int more = snprintf(buf + n - 1, cap - (size_t)n + 1,
+            ",\"clear_action\":{\"label\":\"全部清除\",\"capability\":\"notify.clear\",\"args_json\":\"{}\"}}");
+        return more < 0 || (size_t)more >= cap - (size_t)n + 1 ? -1 : n - 1 + more;
+    }
     if (N.page_id == PAGE_SOUND)
         return snprintf(buf, cap, "SetSound；音量=%lld；勿扰=%lld；按键提示音(audio.key_tone)=%lld；振动(audio.vibration)=%lld；来电铃声(audio.call_ring)=%lld；闹钟铃声(audio.alarm_ring)=%lld；铃声：0清音、1双音、2柔音；settings.set(id,value)更改并试听；shell.page_next、shell.page_prev、shell.back。", (long long)ink_setting_get("audio.volume"), (long long)ink_setting_get("notify.dnd"), (long long)ink_setting_get("audio.key_tone"), (long long)ink_setting_get("audio.vibration"), (long long)ink_setting_get("audio.call_ring"), (long long)ink_setting_get("audio.alarm_ring"));
     int n = snprintf(buf, cap, "%s；当前=%s；亮度=%lld；暖光=%lld；音量=%lld；网络偏好=%lld；通知=%d。",
@@ -1438,6 +1456,11 @@ static int page_snapshot(char *buf, size_t cap) {
                       (long long) integer("cell.registered"));
         for (int i = N.wifi_page * 2; i < N.wifi_count && i < (N.wifi_page + 1) * 2 && n >= 0 && (size_t) n < cap; i++)
             n += snprintf(buf + n, cap - (size_t) n, "网络[%d]=%s；", i, N.wifi_ssid[i]);
+        if (ssid[0] && n >= 0 && (size_t)n < cap) {
+            char args[256]; ink_jw_t w; ink_jw_init(&w, args, sizeof args);
+            ink_jw_raw(&w, "{\"ssid\":"); ink_jw_str(&w, ssid); ink_jw_raw(&w, "}");
+            n += snprintf(buf + n, cap - (size_t)n, "忘掉这个网络：wifi.forget(%s)；", args);
+        }
     }
     const char *actions =
         N.page_id == PAGE_NETWORK ? "动作：settings.set、wifi.scan、wifi.list、shell.back、shell.control、shell.wifi_"
