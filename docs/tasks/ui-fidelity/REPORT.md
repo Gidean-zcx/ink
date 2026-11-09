@@ -9,8 +9,9 @@
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
 | 1 | 【实测】全量前后分数完成 | 177 张图中 145 个已有整屏页面，逐页见下表；9 张没有对应页面，23 张为组件或规范图 | T1、T2 |
-| 2 | 【实测】已修两页的三个画板，均改善；仍超过 12，逐页说明例外 | Settings 81.175→76.744，大字设置 85.418→80.657，FactoryReset 51.608→51.346；前后图在忽略的证据目录 | T2 |
-| 3 | 【实测】普通及内存全量通过 | 普通 276/276（296.89 秒）；ASan/UBSan 276/276（657.87 秒），均零失败、零跳过；未放宽预算 | T3 |
+| 2 | 【实测】145 屏已重测；仍超过 12，保留逐页未达原因 | 复查前后表见“复查后的修复”；Settings 和 FactoryReset 保持原修复像素，其余共用样式统一；截图链接均指向保留证据 | T2、T5 |
+| 3 | 【实测】最终普通及内存全量通过 | 普通 278/278（269.36 秒）；ASan/UBSan 278/278（466.83 秒），均零失败、零跳过；未放宽预算 | T6 |
+| UF-M1 | 【实测／实现】已修复，无未修复的复查问题 | 共用控件及设置分页回归通过；逐项撤修触发失败，详见下节 | T5 |
 
 ## 全量分数表
 
@@ -216,14 +217,15 @@
 - CMake 的现有 UI 场景列表新增 `SetVoice`、`SetAbout`、`SetPrivacy`、`ImeSymbols`，默认及最大字号各跑一次；符号页通过真实“符号”按钮进入并检查“字母”返回键。既有场景、断言和预算未删除或放宽。
 - 四张压力图增加显式页面映射，原有计数和页面身份仍校验；大字设置修前用基线页面与修前测试入口重新链接、实测成功，没有拿修后截图冒充。
 - `tests/ui_fidelity.py` 只收集成功且刷新完成、页面身份正确的已有场景；用原工具比较，保留原指标和截图哈希，不把没有截图的页面默认为通过。
+- 复查增加共用控件矩阵、设置子页分隔线及相邻行边界、最新截图选择回归；全部为新增断言，未修改既有期望，撤修结果见下节。
 
 ## 要用户定的
 
-- 暂无必须等待的产品决定；按任务继续保留规范 §1。
+- 选按现行规格重出画板，或改用布局结构和元素位置等对照方法，见报告开头；本次保留规范 §1 和原指标，不代选。
 
 ## 顺手发现
 
-- 默认构建 Python 缺少中枢测试依赖，基线 3 项跳过；只读依赖目录的 `hub/.venv/bin/python` 已有锁定版本 pytest 8.4.2、pytest-asyncio 1.2.0、aiohttp 3.12.15、PyYAML 6.0.3。最终测试使用该解释器，不安装或升级依赖；普通和内存版均零跳过。
+- 【实测／实现】历史跳过的是 `hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e`：默认构建 Python 缺少 **pytest、pytest-asyncio、aiohttp、PyYAML**，适配脚本以 77 明确跳过；本轮逐项检查这四个导入均不存在。只读依赖目录的 `hub/.venv/bin/python` 已有锁定版本 8.4.2、1.2.0、3.12.15、6.0.3，配置 `INK_HUB_PYTHON` 使用该环境，不安装或升级依赖。修前、最终普通及内存版均无失败、无跳过。
 - 过程偏差：首次补采基线大字截图的单文件编译和场景运行曾与内存全量短暂重叠；随后在全量结束后串行复跑，最终采用复跑证据。
 
 ## 实现范围
@@ -241,8 +243,61 @@
 - 【实测】定向 4/4 通过：共用控件在 Plus 和桌面显示档案均测试默认／最大字号、单／双行、首行／续行／独立行、开关两态、直接／后绑定按钮及分段选项；`settings-a` 遍历四个设置子页的各分页，检查共用样式。原页面断言和原预算保留，既有期望未改。
 - 【实测】`tests/ui_theme_reverse.py --build build` 在忽略目录编译撤修对象并重链接，不改产品源文件。撤掉装饰圆描边、开关方底、列表底圆、列表分隔线、后绑定按钮描边、设置子页分隔线、相连行去白缝后，分别失败 **12／4／10／4／2／18／18** 条断言，均实际跑完；撤掉收集器的最新截图选择后，新增 Python 回归失败 1 条。证据：`build/ui-fidelity/recheck-reverse/results.json`。
 - 【实现／实测】收集器同优先级优先选最新成功场景，避免保留证据时误选上一轮截图；新增合成黑／白截图回归，指标和阈值不变。修前 276/276（255.98 秒），零失败、零跳过；145 屏已重新采集，位于 `build/ui-fidelity/recheck-before/`。
-- 【实现／实测】截图复核发现设置子页原有的整行白缝会叠加共用分隔线，已沿用现有相连行判断去除白缝，并增加相邻行边界断言；定向回归再次 4/4 通过。首轮普通全量 278/278（233.36 秒）后做了这处调整，旧版内存轮已中止（退出 130），不作为最终证据。最终版本两套全量和修后分数待补。
-- 【实现】相对任务原始基线的产品改动 **36/300 行**（26 增、10 删）；没有新增产品机制。只修改原页面无法消除复查所指的页面特判，因此将原有分隔线绘制集中到 4 行共用函数；其余保留既有组件和绑定入口。
+- 【实现／实测】截图复核发现设置子页原有的整行白缝会叠加共用分隔线，已沿用现有相连行判断去除白缝，并增加相邻行边界断言；定向回归再次 4/4 通过。首轮普通全量 278/278（233.36 秒）后做了这处调整，旧版内存轮已中止（退出 130），不作为最终证据。最终版本普通全量 **278/278（269.36 秒）**，ASan/UBSan 全量 **278/278（466.83 秒）**，均零失败、零跳过。
+- 【实现】相对任务原始基线的产品改动 **36/300 行**（26 增、10 删）；按每次提交的增删累计也只有 **66/300 行**。没有新增产品机制。只修改原页面无法消除复查所指的页面特判，因此将原有分隔线绘制集中到 4 行共用函数；其余保留既有组件和绑定入口。
+
+【实测，模拟器】复查前为 `53d4003f`，最终实现为 `20a7017e`（含 `2b759e48`）。145 屏全部重新计分，105 屏截图逐字节不变；每张图均核对来源完整指标、页面计数、刷新完成标记和 SHA-256。五套独立视觉场景在共用样式修复后均通过；随后仅调整设置子页白缝，重测该布局并重新跑最终全量。完整表、原图和拼图分别在 `build/ui-fidelity/recheck-before/`、`recheck-after/`。
+
+下表列出所有像素发生变化的画板和重点复测页，单位 /255。`Transfer` 变化在临时地址与二维码区域，`TransferUsbFail` 只在状态栏，不算修复成果。其余变化来自共用底圆、分隔线、透明开关行底及装饰／不可点击圆的描边；通话、声音等并行页面仅受共用样式影响，未修改页面分支。`MembersBack` 的分数略升是装饰锁标记去描边，不为旧画板分数保留页面特判。所有页面仍超过 12，原表的规格、实际数据及分页差异仍适用，未把像素目标写成通过。
+
+| 页面 | 复查前 | 复查后 |
+| --- | ---: | ---: |
+| SmsThread | [100.430](../../../build/ui-fidelity/recheck-before/SmsThread.png) | [99.925](../../../build/ui-fidelity/recheck-after/SmsThread.png) |
+| StressThread | [94.687](../../../build/ui-fidelity/recheck-before/StressThread.png) | [94.174](../../../build/ui-fidelity/recheck-after/StressThread.png) |
+| StressLarge | [80.657](../../../build/ui-fidelity/recheck-before/StressLarge.png) | [80.657](../../../build/ui-fidelity/recheck-after/StressLarge.png) |
+| Settings | [76.744](../../../build/ui-fidelity/recheck-before/Settings.png) | [76.744](../../../build/ui-fidelity/recheck-after/Settings.png) |
+| Gallery | [73.001](../../../build/ui-fidelity/recheck-before/Gallery.png) | [72.830](../../../build/ui-fidelity/recheck-after/Gallery.png) |
+| Wallpaper | [61.845](../../../build/ui-fidelity/recheck-before/Wallpaper.png) | [61.435](../../../build/ui-fidelity/recheck-after/Wallpaper.png) |
+| Files | [58.807](../../../build/ui-fidelity/recheck-before/Files.png) | [58.405](../../../build/ui-fidelity/recheck-after/Files.png) |
+| Records | [57.446](../../../build/ui-fidelity/recheck-before/Records.png) | [57.446](../../../build/ui-fidelity/recheck-after/Records.png) |
+| SetDisplay | [55.491](../../../build/ui-fidelity/recheck-before/SetDisplay.png) | [54.962](../../../build/ui-fidelity/recheck-after/SetDisplay.png) |
+| MemoUndo | [55.471](../../../build/ui-fidelity/recheck-before/MemoUndo.png) | [55.040](../../../build/ui-fidelity/recheck-after/MemoUndo.png) |
+| PhoneRecents | [52.382](../../../build/ui-fidelity/recheck-before/PhoneRecents.png) | [52.127](../../../build/ui-fidelity/recheck-after/PhoneRecents.png) |
+| PhoneContacts | [52.030](../../../build/ui-fidelity/recheck-before/PhoneContacts.png) | [51.775](../../../build/ui-fidelity/recheck-after/PhoneContacts.png) |
+| FactoryReset | [51.346](../../../build/ui-fidelity/recheck-before/FactoryReset.png) | [51.346](../../../build/ui-fidelity/recheck-after/FactoryReset.png) |
+| SetStorage | [51.174](../../../build/ui-fidelity/recheck-before/SetStorage.png) | [50.424](../../../build/ui-fidelity/recheck-after/SetStorage.png) |
+| SetKid | [49.974](../../../build/ui-fidelity/recheck-before/SetKid.png) | [49.524](../../../build/ui-fidelity/recheck-after/SetKid.png) |
+| SetMembers | [49.042](../../../build/ui-fidelity/recheck-before/SetMembers.png) | [48.565](../../../build/ui-fidelity/recheck-after/SetMembers.png) |
+| SetAbout | [47.930](../../../build/ui-fidelity/recheck-before/SetAbout.png) | [47.268](../../../build/ui-fidelity/recheck-after/SetAbout.png) |
+| IconMenu | [46.353](../../../build/ui-fidelity/recheck-before/IconMenu.png) | [45.883](../../../build/ui-fidelity/recheck-after/IconMenu.png) |
+| Memo | [46.208](../../../build/ui-fidelity/recheck-before/Memo.png) | [45.778](../../../build/ui-fidelity/recheck-after/Memo.png) |
+| SetSound | [46.001](../../../build/ui-fidelity/recheck-before/SetSound.png) | [44.811](../../../build/ui-fidelity/recheck-after/SetSound.png) |
+| TodayEdit | [45.104](../../../build/ui-fidelity/recheck-before/TodayEdit.png) | [44.729](../../../build/ui-fidelity/recheck-after/TodayEdit.png) |
+| StressConfirm | [43.802](../../../build/ui-fidelity/recheck-before/StressConfirm.png) | [43.649](../../../build/ui-fidelity/recheck-after/StressConfirm.png) |
+| Clock | [43.577](../../../build/ui-fidelity/recheck-before/Clock.png) | [43.062](../../../build/ui-fidelity/recheck-after/Clock.png) |
+| Transfer | [43.433](../../../build/ui-fidelity/recheck-before/Transfer.png) | [43.488](../../../build/ui-fidelity/recheck-after/Transfer.png) |
+| SetVoice | [41.051](../../../build/ui-fidelity/recheck-before/SetVoice.png) | [40.735](../../../build/ui-fidelity/recheck-after/SetVoice.png) |
+| Calendar | [37.069](../../../build/ui-fidelity/recheck-before/Calendar.png) | [36.919](../../../build/ui-fidelity/recheck-after/Calendar.png) |
+| SetNetwork | [36.303](../../../build/ui-fidelity/recheck-before/SetNetwork.png) | [36.303](../../../build/ui-fidelity/recheck-after/SetNetwork.png) |
+| SetPrivacy | [36.130](../../../build/ui-fidelity/recheck-before/SetPrivacy.png) | [35.891](../../../build/ui-fidelity/recheck-after/SetPrivacy.png) |
+| Sms | [32.312](../../../build/ui-fidelity/recheck-before/Sms.png) | [31.801](../../../build/ui-fidelity/recheck-after/Sms.png) |
+| Tasks | [32.283](../../../build/ui-fidelity/recheck-before/Tasks.png) | [31.772](../../../build/ui-fidelity/recheck-after/Tasks.png) |
+| Upcoming | [30.835](../../../build/ui-fidelity/recheck-before/Upcoming.png) | [30.577](../../../build/ui-fidelity/recheck-after/Upcoming.png) |
+| FileList | [28.887](../../../build/ui-fidelity/recheck-before/FileList.png) | [28.376](../../../build/ui-fidelity/recheck-after/FileList.png) |
+| MemoDetail | [28.821](../../../build/ui-fidelity/recheck-before/MemoDetail.png) | [28.340](../../../build/ui-fidelity/recheck-after/MemoDetail.png) |
+| AiLog | [28.666](../../../build/ui-fidelity/recheck-before/AiLog.png) | [28.149](../../../build/ui-fidelity/recheck-after/AiLog.png) |
+| FilePicker | [28.414](../../../build/ui-fidelity/recheck-before/FilePicker.png) | [28.153](../../../build/ui-fidelity/recheck-after/FilePicker.png) |
+| StressFiles | [28.312](../../../build/ui-fidelity/recheck-before/StressFiles.png) | [27.801](../../../build/ui-fidelity/recheck-after/StressFiles.png) |
+| AiMemory | [28.311](../../../build/ui-fidelity/recheck-before/AiMemory.png) | [27.800](../../../build/ui-fidelity/recheck-after/AiMemory.png) |
+| PowerMenu | [27.871](../../../build/ui-fidelity/recheck-before/PowerMenu.png) | [27.608](../../../build/ui-fidelity/recheck-after/PowerMenu.png) |
+| FactoryDone | [27.647](../../../build/ui-fidelity/recheck-before/FactoryDone.png) | [27.647](../../../build/ui-fidelity/recheck-after/FactoryDone.png) |
+| TransferUsbFail | [26.802](../../../build/ui-fidelity/recheck-before/TransferUsbFail.png) | [26.798](../../../build/ui-fidelity/recheck-after/TransferUsbFail.png) |
+| FileMove | [26.450](../../../build/ui-fidelity/recheck-before/FileMove.png) | [25.939](../../../build/ui-fidelity/recheck-after/FileMove.png) |
+| StressNotes | [26.232](../../../build/ui-fidelity/recheck-before/StressNotes.png) | [25.740](../../../build/ui-fidelity/recheck-after/StressNotes.png) |
+| MemoChecklist | [25.131](../../../build/ui-fidelity/recheck-before/MemoChecklist.png) | [24.620](../../../build/ui-fidelity/recheck-after/MemoChecklist.png) |
+| Notifications | [24.323](../../../build/ui-fidelity/recheck-before/Notifications.png) | [23.812](../../../build/ui-fidelity/recheck-after/Notifications.png) |
+| MembersBack | [21.235](../../../build/ui-fidelity/recheck-before/MembersBack.png) | [21.310](../../../build/ui-fidelity/recheck-after/MembersBack.png) |
+| PhoneIncoming | [20.422](../../../build/ui-fidelity/recheck-before/PhoneIncoming.png) | [20.000](../../../build/ui-fidelity/recheck-after/PhoneIncoming.png) |
 
 ## 要改的文档
 
@@ -288,3 +343,31 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/ui_fidelity.
 【实测】作为差异解释，按原算法的 1/4 缩图，仅统计“实图灰值 136、画板灰值 200～245”的重叠区域，对总 MAE 的贡献：Settings 16.271，大字设置 15.781；这部分本身已超过 12。该分析不修改主分数，不把它当作调整布局后分数的数学下界。原数据：`build/ui-fidelity/color-contributions.json`。
 
 首次交付结束检查：`git diff --check` 通过；当时基线至最终提交差异仅任务报告、两处页面装饰、测量与回归测试及 CMake 场景登记。按总规则 §6 的原隐私正则检查，0 命中（grep 退出 1）；证据 `build/ui-fidelity/privacy-hits.txt`。没有提交截图、设计稿、构建产物、实际设备数据或本机绝对路径。未推送。
+
+T5：复查定向回归和逐项撤修；使用 T1 的普通构建及现成 Python：
+
+```sh
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" \
+  --test-dir build --output-on-failure -j2 \
+  -R '^(ui-theme-regressions-.*|ui-compare-regressions|settings-a)$'
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" \
+  tests/ui_theme_reverse.py --build build
+```
+
+T6：复查前在 `53d4003f` 按 T1 全量采样并补留六项会清理临时证据的场景（`power-pages`、`update-pages`、`confirm-pages`、`kid-3`、`settings-b`、`fw-f8`）；计分目录用 `recheck-before`。复查后沿用 T1 配置，普通与内存构建／测试始终串行；内存配置只换目录并增加 `INK_SANITIZE=ON`，仍为 `INK_WERROR=ON`、相同字体、LVGL 和中枢 Python。最终验证及计分命令：
+
+```sh
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" \
+  --test-dir build --output-on-failure -j2
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/ui_fidelity.py \
+  --build build --out build/ui-fidelity/recheck-after
+taskpolicy -c utility cmake --build build-asan -j2
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" \
+  --test-dir build-asan --output-on-failure -j2
+```
+
+【实测】382 个报告本地链接均存在；两套计分证据中 290 张截图的 SHA-256、完整原始指标、页面身份和完成标记均核对通过；40 张变化图均有实际像素差异。检查结果与原始分数分别保留在 `build/ui-fidelity/recheck-score-delta.json`、`recheck-pixel-regions.json`。
+
+【实测】最终普通及 ASan/UBSan 全量均退出 0，无 sanitizer 错误诊断；两套缓存的字体、Python、LVGL 和 `INK_WERROR` 配置逐项一致，内存版实际编译含 `-fsanitize=address,undefined`。两种显示档案的共用控件各 60 条检查，设置子页写入阶段 694 条检查，两套构建结果一致；Plus 的共用控件及设置子页内部 RAM 最低余量均为 **51,328 字节**，原预算未改。汇总：`build/ui-fidelity/recheck-validation.json`；最终、反向和已中止轮次的独立日志：`build/ui-fidelity/recheck-logs/`。
+
+本次复查结束检查：【实测】`git diff --check` 通过；检查原任务基线至本次的 `git diff --stat`，仅共用样式、已有页面样式调用、回归／计分工具及本任务报告和复查记录。按总规则 §6 原隐私正则，0 命中（grep 退出 1），证据 `build/ui-fidelity/recheck-logs/privacy-hits.txt`。未提交截图、设计稿、构建产物或本机绝对路径；未推送。
