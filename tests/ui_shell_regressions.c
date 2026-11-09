@@ -275,9 +275,10 @@ static void context_tests(void) {
     key(HAL_KEY_HOME); quiet();
     CHECK(AI("settings.set", "{\"id\":\"voice.handsfree\",\"value\":2}") && g_rc.status == INK_RC_DONE, "change the actual wake setting");
     CHECK(AI("settings.set", "{\"id\":\"display.lock_style\",\"value\":1}") && g_rc.status == INK_RC_DONE, "change the actual lock style");
+    CHECK(AI("settings.set", "{\"id\":\"power.lock_after_s\",\"value\":600}") && g_rc.status == INK_RC_DONE, "set the actual automatic lock time");
     CHECK(AI("shell.settings", NULL) && g_rc.status == INK_RC_DONE, "return to the settings overview"); quiet();
     wanted = "叫名字已关闭"; on_ui(read_view); CHECK(label_x >= 0, "the overview reflects the wake setting");
-    wanted = "时钟和待办"; on_ui(read_view); CHECK(label_x >= 0, "the overview reflects the lock style");
+    wanted = "10 分钟"; on_ui(read_view); CHECK(label_x >= 0, "the overview reflects the automatic lock time");
     /* A UI-only connection-state fixture; no pairing or real radio is used. */
     ink_state_set_bool(ink_state_find("bt.connected"), true); quiet();
     wanted = "已连接"; on_ui(read_view); CHECK(label_x >= 0, "a connection-state event updates the visible Bluetooth status");

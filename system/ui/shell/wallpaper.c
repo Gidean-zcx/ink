@@ -15,7 +15,7 @@ void ink_wallpaper_draw(lv_obj_t *parent) {
     if (!ink_wallpaper_ready()) return;
     lv_obj_t *im = lv_image_create(parent); lv_image_set_src(im, &W.dsc);
     lv_obj_set_size(im, ink_ui_px(INK_CANVAS_W), ink_ui_px(INK_CANVAS_H));
-    lv_image_set_inner_align(im, LV_IMAGE_ALIGN_STRETCH); lv_obj_move_background(im);
+    lv_image_set_inner_align(im, LV_IMAGE_ALIGN_COVER); lv_obj_move_background(im);
 }
 static void install(void *arg) {
     loaded_t *result = arg;
@@ -60,7 +60,7 @@ static void choose(ink_call_t *c) {
 }
 int ink_wallpaper_init(void) {
     static const ink_setting_def_t setting = {.id = "display.wallpaper_file", .title = "壁纸图片编号", .type = INK_SET_INT, .max = UINT32_MAX};
-    static const ink_cap_t cap = {.id = "wallpaper.choose", .title = "选择主页和锁屏壁纸", .effect = INK_FX_NAVIGATE, .run = choose};
+    static const ink_cap_t cap = {.id = "wallpaper.choose", .title = "选择锁屏壁纸", .effect = INK_FX_NAVIGATE, .run = choose};
     if (ink_settings_define(&setting, 1) || ink_cap_register(&cap, 1) ||
         ink_settings_watch("display.wallpaper_file", changed, NULL, INK_EXEC_UI) || ink_state_watch("member.", changed, NULL, INK_EXEC_UI)) return -1;
     changed(NULL, 0, NULL); return 0;

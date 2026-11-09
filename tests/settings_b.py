@@ -39,9 +39,12 @@ for phase in ('write', 'restart'):
         for page in ['SetMembers', 'SetKid', 'Wallpaper', 'Records', 'AiMemory']:
             snap = json.loads((out / f'{page}.json').read_text())
             assert snap['page'] == page and snap['fields']
-        for name in ['HomeWallpaper', 'LockWallpaper']:
-            im = Image.open(out / f'snap-{name}.png').convert('L')
-            assert len(im.crop((10, 400, 30, 800)).getcolors(256) or []) > 2, name
+        before = Image.open(out / 'snap-HomeBefore.png').convert('L')
+        after = Image.open(out / 'snap-HomeAfter.png').convert('L')
+        assert before.tobytes() == after.tobytes(), 'selecting a wallpaper must leave home unchanged'
+        locks = [Image.open(out / f'snap-{name}.png').convert('L') for name in ('LockPage', 'LockClock', 'LockImage')]
+        assert len({im.tobytes() for im in locks}) == 3, 'three lock styles have different screenshots'
+        assert len(locks[2].crop((10, 400, 30, 800)).getcolors(256) or []) > 2, 'wallpaper is visible'
     print(f'{phase}: PASS checks={counts.get("test.pass")}', flush=True)
 if not os.environ.get('INK_KEEP_EVIDENCE'):
     shutil.rmtree(area)

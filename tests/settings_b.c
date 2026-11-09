@@ -1,6 +1,11 @@
 /* Five real settings pages, shared capabilities, persistence and member isolation. */
 #include "ink/sys/file_picker.h"
 #include "ink/ui_shell.h"
+/* A second include must not redeclare the family API outside its guard. */
+enum { ink_settings_family_header_guard = 1 };
+#define ink_settings_family_init ink_settings_family_header_guard
+#include "ink/ui_shell.h"
+#undef ink_settings_family_init
 #define ink_main product_main
 #include "../system/boot/main.c"
 #undef ink_main
@@ -62,12 +67,71 @@ static const ink_member_t *member(const char *id) {
 static bool renamed(void) { const ink_member_t *m = member("kid"); return m && !strcmp(m->name, "合成孩子"); }
 static void direct_open(void) { ink_shell_open_page(opening); }
 static void hidden(void) { CHECK(!strcmp(ink_ui_page_name(), "home"), "child direct page guard denies all five pages"); }
-static void type_pin(void) { ink_text_commit_utf8("2468"); }
+static void seek_press(const char *text, const char *next) {
+    for (int i = 0; i < 12; i++) {
+        label = text; on_ui(find);
+        if (x >= 0 && y >= 0) {
+            if (!strcmp(text, "锁屏和壁纸")) {
+                char minutes[32]; snprintf(minutes, sizeof minutes, "%lld 分钟", (long long)ink_setting_get("power.lock_after_s") / 60);
+                label = minutes; on_ui(find); CHECK(x >= 0 && y >= 0, "settings lock row shows the actual automatic lock time");
+            }
+            press(text); return;
+        }
+        CHECK(AI(next, NULL), "turn to the requested settings control"); quiet();
+    }
+    CHECK(false, "settings control is reachable: %s", text);
+}
+static bool clock_label, lock_image, lock_strip;
+static void inspect_lock_tree(lv_obj_t *o, const char *time) {
+    if (lv_obj_check_type(o, &lv_label_class)) {
+        clock_label |= !strcmp(lv_label_get_text(o), time);
+        lock_strip |= !strcmp(lv_label_get_text(o), "已锁定，按电源键或 AI 键唤醒");
+    }
+    if (lv_obj_check_type(o, &lv_image_class) && lv_obj_get_width(o) == ink_ui_px(INK_CANVAS_W)) {
+        lock_image = true;
+        CHECK(lv_image_get_inner_align(o) == LV_IMAGE_ALIGN_COVER, "wallpaper covers without stretching");
+        CHECK(lv_obj_get_height(o) == ink_ui_px(INK_CANVAS_H) && lv_obj_get_height(lv_obj_get_parent(o)) == ink_ui_px(INK_CANVAS_H), "wallpaper fills the whole screen");
+    }
+    for (uint32_t i = 0; i < lv_obj_get_child_count(o); i++) inspect_lock_tree(lv_obj_get_child(o, i), time);
+}
+static void inspect_lock(void) {
+    char time[24], date[96]; ink_shell_time_strings(time, sizeof time, date, sizeof date);
+    clock_label = lock_image = lock_strip = false;
+    inspect_lock_tree(lv_layer_sys(), time);
+}
+static void wake(void) {
+    key(HAL_KEY_POWER); CHECK(WAIT_FOR(ink_member_space_open(), 10000), "wake without changing identity"); quiet();
+}
+static void note(ink_call_t *c) { (void)c; }
+static void test_records(void) {
+    static ink_cap_t caps[25]; static char ids[25][32], titles[25][48];
+    for (int i = 0; i < 25; i++) {
+        snprintf(ids[i], sizeof ids[i], "sb.record%02d", i);
+        snprintf(titles[i], sizeof titles[i], "合成记录%02d", i);
+        caps[i] = (ink_cap_t){.id = ids[i], .title = titles[i], .effect = INK_FX_LOCAL_WRITE, .run = note};
+    }
+    CHECK(ink_cap_register(caps, 25) == 0, "register synthetic activity fixtures");
+    for (int i = 0; i < 25; i++) CHECK(AI(ids[i], NULL) && g_rc.status == INK_RC_DONE, "write real activity %d", i);
+    CHECK(AI("shell.records", NULL), "open more than twenty real records"); quiet();
+    uint32_t seen = 0;
+    for (int page = 0; page < 30; page++) {
+        on_ui(read_snapshot);
+        bool readable = !strstr(snapshot, "记录暂时读不出来");
+        CHECK(readable, "records parse within the JSON token limit");
+        if (!readable) break;
+        for (int i = 0; i < 25; i++) if (strstr(snapshot, titles[i])) seen |= 1u << i;
+        if (seen == (1u << 25) - 1) break;
+        uint32_t version = ink_ui_content_version();
+        label = "更早记录"; on_ui(find);
+        if (x >= 0 && y >= 0) press("更早记录");
+        else CHECK(AI("family.next", NULL), "read the next local page or backend cursor");
+        CHECK(WAIT_FOR(ink_ui_content_version() != version, 5000), "record pagination produces new content"); quiet();
+    }
+    CHECK(seen == (1u << 25) - 1, "all 25 records, including records beyond 20, are reachable");
+    capture("Records25");
+}
 static void run(void *arg) {
     (void)arg;
-    if (restarting && ink_member_has_pin("owner")) {
-        CHECK(BY_HAND("member.unlock", "{\"id\":\"owner\",\"pin\":\"2468\"}") && g_rc.status == INK_RC_DONE, "saved PIN authenticates after restart");
-    }
     CHECK(WAIT_FOR(ink_member_space_open(), 10000), "member space is open"); test_start_home(); quiet();
     if (scene) {
         for (int i = 0; i < 5; i++) if (!strcmp(scene, PAGES[i])) {
@@ -78,6 +142,26 @@ static void run(void *arg) {
         CHECK(false, "unknown requested scene"); return;
     }
     if (!restarting) {
+        CHECK(ink_cap_find("family.pin") == NULL && ink_cap_find("family.old_pin") == NULL && ink_cap_find("family.pin_save") == NULL, "duplicate password capabilities are removed");
+        CHECK(ink_cap_find("member.rename") != NULL, "member startup registers rename with the other member capabilities");
+        CHECK(AI("shell.settings", NULL), "open the real settings entry page"); quiet();
+        press(ink_member_current()->name);
+        CHECK(!strcmp(ink_ui_page_name(), "SetMembers"), "settings family card opens SetMembers");
+        press("我的密码"); CHECK(!strcmp(ink_ui_top_name(), "PinSet"), "member password row opens shared PinSet");
+        CHECK(BY_HAND("shell.pin_cancel", NULL), "close shared password overlay"); quiet();
+        CHECK(AI("family.edit", "{\"id\":\"kid\"}"), "open the member editor"); quiet();
+        press("改我的密码"); CHECK(!strcmp(ink_ui_top_name(), "PinSet"), "member editor password button opens shared PinSet");
+        CHECK(BY_HAND("shell.pin_cancel", NULL), "close shared password overlay"); quiet();
+        CHECK(BY_HAND("system.home", NULL) && AI("shell.settings", NULL), "return to settings"); quiet();
+        seek_press("锁屏和壁纸", "shell.page_next");
+        CHECK(!strcmp(ink_ui_page_name(), "Wallpaper"), "settings lock row opens Wallpaper");
+        CHECK(BY_HAND("system.home", NULL) && AI("shell.voice", NULL), "open voice settings"); quiet();
+        seek_press("AI 记得的事", "shell.settings_next");
+        CHECK(!strcmp(ink_ui_page_name(), "AiMemory"), "voice settings open AiMemory");
+        CHECK(BY_HAND("system.home", NULL) && AI("shell.voice", NULL), "reopen voice settings"); quiet();
+        seek_press("使用记录", "shell.settings_next");
+        CHECK(!strcmp(ink_ui_page_name(), "Records"), "voice settings open Records");
+        CHECK(BY_HAND("system.home", NULL), "close settings entry regression"); quiet();
         for (int i = 0; i < 5; i++) {
             CHECK(AI(CAPS[i], NULL) && g_rc.status == INK_RC_DONE, "AI opens %s", PAGES[i]); quiet();
             CHECK(!strcmp(ink_ui_page_name(), PAGES[i]), "real activity opens"); capture(PAGES[i]);
@@ -110,6 +194,8 @@ static void run(void *arg) {
         CHECK(ink_member_exists(added), "member is not removed before human confirmation"); confirm();
         CHECK(WAIT_FOR(!ink_member_exists(added), 10000), "confirmed removal completes");
         CHECK(AI("shell.kid_settings", NULL), "open child controls"); quiet();
+        on_ui(read_snapshot);
+        CHECK(strstr(snapshot, "阅读、AI、主页") && !strstr(snapshot, "电话和短信"), "child page lists only the actual allow policy");
         press("孩子的音量上限"); confirm(); CHECK(WAIT_FOR(ink_setting_get("audio.child_max") == 70, 10000), "touch uses the existing child setting");
         CHECK(AI("settings.set", "{\"id\":\"audio.child_max\",\"value\":90}") && g_rc.status == INK_RC_PENDING_CONFIRMATION, "AI uses the same settings policy");
         confirm(); CHECK(WAIT_FOR(ink_setting_get("audio.child_max") == 90, 10000), "AI change reaches backend");
@@ -117,6 +203,7 @@ static void run(void *arg) {
         uint32_t cursor = 0, image = 0; ink_fs_entry_t entry;
         while (ink_fs_index("/family", INK_FS_IMAGE, &cursor, &entry) == 1) if (strstr(entry.path, "SYNTH_WALL")) image = entry.id;
         CHECK(image != 0, "image has a stable service id");
+        CHECK(BY_HAND("system.home", NULL), "capture home before selecting wallpaper"); quiet(); capture("HomeBefore");
         CHECK(AI("shell.wallpaper", NULL), "open wallpaper page"); quiet(); press("从相册选");
         bool picker_ready = false;
         for (int i = 0; i < 200; i++) { on_ui(read_snapshot); if (strstr(snapshot, "\"status\":\"\"")) { picker_ready = true; break; } delay_ms(20); }
@@ -124,18 +211,30 @@ static void run(void *arg) {
         snprintf(args, sizeof args, "{\"id\":%u}", image);
         CHECK(AI("file_picker.select", args) && g_rc.status == INK_RC_DONE, "AI selects the same image as touch");
         CHECK(WAIT_FOR(ink_wallpaper_ready(), 20000), "image decode and dithering reach the UI"); quiet(); capture("WallpaperSelected");
-        CHECK(BY_HAND("system.home", NULL), "show wallpaper on home"); quiet(); capture("HomeWallpaper");
-        CHECK(BY_HAND("shell.lock", NULL), "lock with the chosen wallpaper"); quiet(); capture("LockWallpaper");
-        key(HAL_KEY_POWER); CHECK(WAIT_FOR(ink_member_space_open(), 10000), "wake without changing identity"); quiet();
-        CHECK(AI("shell.family", NULL), "open PIN settings"); quiet(); CHECK(BY_HAND("family.pin", NULL), "enter real PIN form"); quiet();
-        CHECK(BY_HAND("family.focus", NULL), "focus the private new PIN"); quiet(); on_ui(type_pin); on_ui(read_snapshot);
-        CHECK(!strstr(snapshot, "2468"), "PIN is masked in AI snapshots");
-        CHECK(AI("text.insert", "{\"text\":\"9999\"}") && g_rc.status == INK_RC_REJECTED, "AI cannot fill a password");
-        CHECK(AI("family.pin_save", NULL) && g_rc.status == INK_RC_INVALID, "AI cannot submit the password");
-        CHECK(BY_HAND("family.pin_save", NULL), "person submits the PIN through member.set_pin");
-        CHECK(WAIT_FOR(ink_member_has_pin("owner"), 10000), "PIN reaches the member backend");
-        quiet(); on_ui(read_snapshot); CHECK(!strstr(snapshot, "2468"), "page snapshot remains available and masked after setting a PIN");
-        CHECK(BY_HAND("system.home", NULL), "leave the private form"); quiet();
+        CHECK(ink_setting_get("display.lock_style") == 0, "selecting an image does not force the clock style");
+        for (int style = 1; style <= 3; style++) {
+            press("锁屏时显示");
+            CHECK(ink_setting_get("display.lock_style") == style % 3, "wallpaper control cycles through all three styles");
+            on_ui(read_snapshot); CHECK(strstr(snapshot, style % 3 == 2 ? "壁纸" : style % 3 == 1 ? "时钟和待办" : "这一页"), "style value matches its label");
+        }
+        CHECK(BY_HAND("system.home", NULL), "show unchanged home after selecting wallpaper"); quiet(); capture("HomeAfter");
+        static const char *const locks[] = {"LockPage", "LockClock", "LockImage"};
+        for (int style = 0; style < 3; style++) {
+            snprintf(args, sizeof args, "{\"id\":\"display.lock_style\",\"value\":%d}", style);
+            CHECK(AI("settings.set", args) && g_rc.status == INK_RC_DONE, "select lock style through the same capability"); quiet();
+            CHECK(BY_HAND("shell.lock", NULL), "lock the selected style"); quiet(); on_ui(inspect_lock); capture(locks[style]);
+            CHECK(clock_label == (style == 1) && lock_image == (style == 2), "three styles keep clock and wallpaper separate");
+            CHECK(lock_strip == (style != 2), "image style has no labels over the photo"); wake();
+        }
+        CHECK(AI("settings.set", "{\"id\":\"display.wallpaper_file\",\"value\":0}") && g_rc.status == INK_RC_DONE, "remove the source image");
+        CHECK(WAIT_FOR(!ink_wallpaper_ready(), 10000), "unavailable image is released"); quiet();
+        CHECK(BY_HAND("shell.lock", NULL), "lock when the wallpaper is unavailable"); quiet(); on_ui(inspect_lock);
+        CHECK(!clock_label && !lock_image && lock_strip, "unavailable wallpaper falls back to the current-page mark"); capture("LockFallback"); wake();
+        snprintf(args, sizeof args, "{\"id\":\"display.wallpaper_file\",\"value\":%u}", image);
+        CHECK(AI("settings.set", args) && g_rc.status == INK_RC_DONE, "restore the indexed source for restart");
+        CHECK(WAIT_FOR(ink_wallpaper_ready(), 20000), "restored wallpaper loads"); quiet();
+        test_records();
+        CHECK(BY_HAND("system.home", NULL), "leave the records page"); quiet();
         CHECK(WAIT_FOR(sim_metric_value("settings.saved") > 0 && ink_storage_pending() == 0, 10000), "all settings reach persistent storage");
         CHECK(ink_member_switch("kid") == 0, "enter the child space"); quiet();
         for (int i = 0; i < 5; i++) {
@@ -148,6 +247,7 @@ static void run(void *arg) {
         CHECK(renamed(), "renamed member survives a fresh process");
         CHECK(ink_setting_get("audio.child_max") == 90, "child setting survives a fresh process");
         CHECK(ink_setting_get("display.wallpaper_file") > 0, "chosen wallpaper id survives a fresh process");
+        CHECK(ink_setting_get("display.lock_style") == 2, "third lock style survives a fresh process");
         CHECK(ink_member_at(2) == NULL, "deleted member stays deleted after restart");
         CHECK(WAIT_FOR(ink_wallpaper_ready(), 20000), "saved source image is decoded after restart");
         CHECK(AI("shell.records", NULL), "read the persisted AI activity"); quiet(); capture("RecordsRestart");
