@@ -1,43 +1,32 @@
-# memo 任务报告
+# memo 复查修复报告
 
-基线：`f0b0c539f3f8a30bca03f663484287d65c76de33`。分支：`claude/codex-memo`。
-
-## 第 1 轮复查修复进度（2026-11-09）
-
-本次从 `96434807` 接续，工作区起始干净。下文原验收结果保留为历史证据；复查发现的问题以本节后续核验为准。
-
-| 编号 | 级别 | 当前结论 |
-| --- | --- | --- |
-| R1 | 高 | 【实测】定向通过；失败就地提示，原编辑器与草稿不变；重试后恢复自动保存。撤掉两部分修复分别失败 2／1 项。 |
-| R2 | 中 | 【实测】删除、插入前行后，勾选位跟随原条目；撤掉重排失败 1 项。 |
-| R3 | 中 | 【实测】长项有省略号、快照说明截断和完整正文入口；触摸编辑能读全；撤掉省略标识失败 1 项。 |
-| R4 | 中 | 【实测】同批输入后立即完成，记录包含最终正文；撤掉统一退页补交失败 1 项。 |
-
-仅修改上述问题所需的备忘产品代码、定向测试和任务报告；不改受保护共享文档。全部修复由根代理实施与核验，不调用付费接口或操作设备。
-
-【实测】修复前五个问题场景各失败 1 项，四行中文快照通过；日志 `build/memo-repair-before.log`。修复后原三阶段为 142／22／31 项，新六阶段为 34／41／39／28／25／21 项，全部通过；六页截图重新生成，证据 `build/memo-visf3m3y/`。九组反向对照均编译、链接成功、退出 1，均有结束标记；汇总 `build/memo-repair-reverses.json`。产品累计 320 行，低于 350。普通全量和内存检查尚在进行，本节尚不作全量结论。
+日期：2026-11-09。任务基线：`f0b0c539f3f8a30bca03f663484287d65c76de33`；本轮从 `96434807` 接续，起始工作区干净，分支 `claude/codex-memo`。原[复查记录](REVIEW.md)保留不改；本报告更新原来的验收结论。
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 【实测】通过 | 新建、编辑、删除、撤销、清单触摸勾选与 AI 勾选；另一进程重启核查；1,800 字节正文完整保存 | `tests/memo/run.py --build build --visual` |
-| 2 | 【实测】通过 | 注入数据服务拒绝写入，进入真实失败页，正文和长文草稿保留；提示位于编辑区和键盘上方；触摸重试及 AI 保存都落盘 | 同上 |
-| 3 | 【实测】通过；反例有效 | 成人／孩子各自存储；故意把两处成员集合打开固定到成人后，空列表及禁止删除断言失败，执行完成标记仍出现 | `tests/memo/run.py --build build --mutant member` |
-| 4 | 【实测／实现】通过 | 六页 JSON 快照均放入实际 3,072 字节 AI 上下文，包含真实失败说明；触摸与 AI 调用同一组 `memo.*` 能力；已有 AI surface 全量检查通过 | 定向命令、`integration-ai-surface` |
-| 5 | 【实测】两套全量均 224/225；共享文档待同步 | 运行时能力目录一致；普通及 ASan／UBSan 唯一失败均为受保护的生成文档；无内存诊断；产品 288 行 | 完整验证命令 |
+| R1（高） | 【实测】已修 | 失败提示留在原编辑器，焦点、控件和草稿编号不变；继续输入后离开重开全文保留；重试后新字在离页前自动落盘。两阶段 34／41 项断言通过 | 定向命令；可单跑 `--phase draft_loss`、`--phase retry_edit` |
+| R2（中） | 【实测】已修 | 在 `memo.save` 一处按完整行重排勾选位；删除前行后 beta 仍勾选，插入新前行后 beta 跟随移动，新项未勾选。39 项断言通过 | `tests/memo/run.py --build build --phase check_edit` |
+| R3（中） | 【实测】已修 | 超过 24 字的清单项显示省略号和中文说明；快照明确 `content_truncated=true`、`read_full=memo.edit`；触摸编辑入口可读完整尾部。28 项断言通过，四行中文另有 21 项通过 | `--phase long_line`、`--phase full_snapshot` |
+| R4（中） | 【实测】已修 | 统一销毁入口用已保留的草稿引用补交最终 `memo.save`，不依赖失焦后归零的引用；同批输入并完成后记录为 `BURST_FINAL`。25 项断言通过 | `--phase burst` |
+| 1 新建、编辑、撤销、清单、重启 | 【实测】通过 | 原写入／重启 142／22 项通过，1,800 字节正文和孩子私有数据重启保留；清单组合编辑和同批完成由 R2／R4 补齐 | 定向命令 |
+| 2 保存失败内容不丢 | 【实测】通过 | 原失败阶段 31 项通过，中文提示位于正文和键盘上方；R1 覆盖继续输入、离开恢复、重试后继续编辑 | 定向命令 |
+| 3 成员隔离 | 【实测】通过，反例有效 | 成人、孩子集合独立；固定到成人集合的反例检出读取及删除两项失败，正常执行到结束 | `--mutant member` |
+| 4 AI 快照与同源能力 | 【实测／实现】通过 | 六个视图均有快照并装入真实 3,072 字节上下文；失败视图与长项读取入口均明确；按钮和 AI 仍调用相同的十项 `memo.*` | 定向命令、全量 `integration-ai-surface` |
+| 5 能力表、全量、内存、规模 | 【实测】文档同步未完成，其余通过 | 普通与 ASan／UBSan 全量均 224/225，只失败共享能力文档；无内存诊断。运行时 223 项能力、16 项设置与生成预览一致；产品累计 320 行，未超过 350 | 完整验证命令、能力预览命令 |
+
+原复查无严重项；其 1 项高和 3 项中均已修复。普通定向与 ASan／UBSan 定向的九阶段均通过，完整内存检查无诊断；共享文档仍需合并主会话同步。
 
 ## 没做到的
 
-- 普通及 ASan／UBSan 全量均 224/225，没有全绿：唯一失败是总规则第 7 节禁止本任务更新的共享能力文档，留合并主会话生成；未跳过该项或修改检查器。
-- 没有实机或 Linux／gcc 运行证据。按任务排除录音页 `MemoRecord` 和离线待整理页 `MemoPending`。
-- 上限沿用长文编辑的 4,095 字节；清单最多 32 行，最多 200 条记录（含可撤销删除的数据），集合沿用数据服务默认的 256 KiB 字节上限。没有新增清空历史、独立清单项删除按钮或跨应用提醒／短信建议。
+- 全量没有全绿：两套唯一失败均为 `capability-table-doc`，正式能力文档未纳入备忘能力及新行号。总规则第 7 节禁止本任务改共享文档，需合并主会话生成；未跳过该测试、改检查器或放宽断言。
+- 没有 Linux／gcc 或实机运行证据；本任务禁止碰设备。录音 `MemoRecord`、离线待整理 `MemoPending` 按原任务排除。
+- 原有上限不变：正文 4,095 字节、清单 32 行、200 条记录（含可撤销删除数据）。勾选按完整行文字及同名行的出现顺序匹配；改成不同文字视为新项，未新增条目编号或独立存储框架。
 
 ## 和设计不一致的
 
-- 已查看六张原画板和最终实际截图。使用现有主题、F4 与长文键盘，未修改设计。六页均超过 12/255，不能标为视觉通过。
-- 列表使用统一分页卡片；详情显示真实文字及编辑／删除／转清单。画板里的录音播放器和 AI 提取事项没有实现，本任务没有录音数据或相应建议服务。
-- `MemoEdit` 按规范没有保存按钮；保留长文编辑器及其固定键盘。`MemoSaveFail` 保留编辑器并提供明确重试，未接入“腾出空间”的文件页面。
+【实测】已看失败页、清单原稿及最终实际截图，重新生成六页对照。分数仍全部超过 12/255，不标视觉通过。统一 F4 卡片、现行放大字号、加深灰色及已有长文键盘与旧稿有差异；保留原报告披露的无录音播放器、无 AI 提取事项、未接“腾出空间”文件入口等边界，本轮不扩展功能。
 
 | 页面 | 1/4 灰度平均差（/255） |
 | --- | ---: |
@@ -46,78 +35,80 @@
 | MemoEdit | 32.268 |
 | MemoChecklist | 25.131 |
 | MemoUndo | 55.471 |
-| MemoSaveFail | 35.612 |
+| MemoSaveFail | 35.804 |
 
-证据：`build/memo-compare/scores.json` 和同目录对照拼图。列表是合成文字记录，没有画板的录音卡及内容密度；清单是 F4 卡片与分页，保留编辑入口，单项添加／删除通过长文编辑逐行完成；时间、电量、当前字号、灰度和键盘采用真实模拟器与现行主题，没有为接近旧画板改变规格。
+失败提示现在直接呈现在 `MemoEdit` 中，不再压入另一活动；快照用 `view=MemoSaveFail` 表达失败视图，动作页和草稿仍归 `MemoEdit`，不修改框架的页面归属检查。提示、重试和键盘都保留；失败提示仍会换行，未遮挡正文。证据：`build/memo-compare/scores.json`、`build/memo-compare/MemoSaveFail/snap-scene.png`。
 
 ## 改过的已有测试
 
-- `tests/integration/ai_surface.c` 只在 `FOR_AI` 表末追加十项能力及必填参数，未删除或放宽原有断言。
-- `tests/integration/apps.c` 的精确应用数从 7 改为 8，描述补上本任务新增的 `memo`；首轮实际值为 8，仅此断言失败。其余生命周期、权限和资源断言不变，不是提高资源预算。
+- 本轮 `tests/memo/memo.c`：失败断言从“跳入另一活动”改为“原编辑器内的 FAIL 视图”，并额外要求快照明确 `MemoSaveFail`、保留原焦点和草稿编号；AI 保存参数使用实际草稿页面，原有正文、提示位置、落盘断言保留。
+- 本轮 `tests/memo/run.py`：新增六个复查阶段、五个反向变体和单场景运行入口；新阶段各用独立镜像，写入／重启继续共用镜像。六个正式视图仍逐个强制核对，新快照场景标签单独处理；未删除原断言、提高预算或加 sleep。
+- 上次已改的 `tests/integration/apps.c`（应用数 7 → 8）和 `tests/integration/ai_surface.c`（追加十项能力）本轮不再修改；原因仍是原任务注册了备忘应用。
 
 ## 要用户定的
 
-无。
+无；未新增产品范围或配置决定。
 
 ## 顺手发现
 
-- 【实测】首次全量的两项 Apps 快照回归失败：注册备忘后，它同时出现在固定的“记和联系”分组和动态工具列表，挤动了第二页。为解除全量阻塞，在共享 `navigation.c` 的既有电话排除项后只追加一行备忘排除；没有修改原快照断言。这是共用文件尾部追加规则的一处必要例外；首轮两项失败即为撤掉该行时的反向证据。
+无需要扩展修复的其它问题。共享能力文档过期是已披露的合并事项。
 
 ## 新增的机制
 
-- 任务要求的成员备忘集合 `memo.notes`，JSON schema 1：正文、清单标志、勾选位、可撤销删除标志和已有草稿引用。没有新建持久文件格式。
-- 任务要求的删除撤销：同一记录保留内容并标记删除，撤销恢复原编号；复用数据服务落盘。
-- 无新增产品任务、线程、状态机、队列、后台重试、配置项或通用框架。
+- 本轮无新增任务、线程、状态机、队列、缓存、后台重试、配置项或持久文件格式；复用原来的 EDIT／FAIL 状态、长文草稿、数据服务与能力执行器，未新增服务接口。
+- 原任务要求的成员集合 `memo.notes`（schema 1）和删除标记撤销继续沿用，未另建清单项存储。
 
 ## 要改的文档
 
-- 合并主会话重新生成 `docs/system/capabilities.md`，纳入十项 `memo.*` 能力；本任务只生成忽略目录中的预览。
-- 由合并主会话更新 `docs/system/ui-dependencies.md` 和 `docs/tasks/backlog.md` 的备忘状态；按总规则第 7 节，本任务不改共享文档。
+- 合并主会话重新生成 `docs/system/capabilities.md`，纳入十项 `memo.*` 与实际源码位置；本任务只生成忽略目录中的预览。
+- 合并主会话更新 `docs/system/ui-dependencies.md`、`docs/tasks/backlog.md` 的备忘状态；本轮不改这些共享文件或需求、想法、决策记录。
 
-## 里程碑与规模
+## 反向对照
 
-- 开工时工作区干净，HEAD 与给定基线一致；已先提交报告。
-- 【实现】新增页面和能力均在 `system/apps/memo/`；共用 CMake、启动函数、文本头文件与文本服务只在末尾追加接线或接口。唯一服务增量 `ink_text_draft_read` 按成员和页面读取已有草稿，后台无需访问 LVGL，也无需把长正文塞进 384 字节能力参数表。
-- 超过 100 行的原因：六页、十个原子能力、成员数据读写、草稿接线和快照均为任务要求。看过的更小方案：仅保存编辑框内容无法提供可靠失败回执；只传正文会撞上能力参数 384 字节限制；应用复制长文草稿格式会形成第二份合同。最终复用现有数据服务、长文服务、F1／F4 和两个既有执行器。
-- 【实测】产品保守计数 288 行：应用 267、共用启动／接口／实现／列表去重 17、CMake 4；新增和删除都计，不计测试及文档。未超过 350。
-- 【实测】最终定向写入 142、重启 22、失败处理 31 项断言通过，零告警、零预算违规；内部 RAM 总余量最低 47,840 字节，原门槛 32,768 字节未改。六页视觉证据来自独立、仅截一次已稳定帧的真实运行，不改写指标。证据：`build/memo-xwc6zl68/`；日志：`build/memo-final-functional.log`。
+【实测】修复前新增的五个问题场景各失败 1 项，四行中文快照场景通过；日志 `build/memo-repair-before.log`。下面九组均在忽略目录内生成替代对象，编译、链接成功后模拟器与运行器退出 1，均有 `test.finished=1`；没有以编译失败冒充反例。源文件哈希前后相同，未改工作区产品源码。
 
-## 验证命令
+| 变体 | 临时撤掉什么 | 失败断言数 |
+| --- | --- | ---: |
+| draft-session | 失败改回压入另一活动，重建编辑器 | 2 |
+| resume | 重试成功后恢复编辑状态 | 1 |
+| checks | 保存时重排勾选位 | 1 |
+| long-item | 长清单项的省略号 | 1 |
+| final-save | 统一退页时补交保存 | 1 |
+| member | 两处成员集合改为固定成人 | 2 |
+| write | 跳过真正的备忘写入 | 25 |
+| failure | 不呈现失败视图 | 5 |
+| undo | 撤销改回按最大编号选择 | 2 |
 
-命令均在仓库根目录执行，设置用户给定的 `INK_DEPS`、`INK_DESIGN`。构建与全量测试串行，构建及 CTest 均不超过 `-j2`，均以 `taskpolicy -c utility` 启动；不启动窗口版。
+命令：`tests/memo/run.py --build build --mutant <变体>`，使用下节相同 Python 和 `taskpolicy`。汇总：`build/memo-repair-reverses.json`，逐项日志 `build/memo-repair-reverse-<变体>.log`。
+
+## 规模与架构审视
+
+- 【实测】本轮仅改一份产品文件：新增 52、删除 20 行；相对任务基线累计产品 320 行（应用 299、原共享接线及接口 17、CMake 4），低于 350。产品超过 100 行来自原任务要求的六个视图、十项能力、成员数据与草稿读写；更小的“再建失败草稿”流程已删除，未采用第二份草稿合同或长正文能力参数。
+- 【实现】清单重排在后台 `memo.save` 一处完成；统一退页继续走同一能力，UI 不直接改服务内部状态；成员集合和 AI 可读策略未改，LVGL 只在 UI 路径使用。没有需要新增子系统的依据。
+- 里程碑：`88ce9c0c` 记录接续范围；`826a5033` 提交修复和定向测试。本轮只作本地提交，不推送、不建 PR、不动设备或调用付费服务。
+
+## 完整验证命令与结果
+
+命令在仓库根目录执行，`INK_DEPS`、`INK_DESIGN` 使用用户指定值。两份既有配置已核对：字体、Python、LVGL／SDL2／ImGui、中枢 Python 一致，均 `INK_WERROR=ON`；内存检查另启用 `INK_SANITIZE=ON`，对象实际使用 `-fsanitize=address,undefined`。未安装或升级依赖；构建与全量串行，最多 `-j2`，没有启动窗口版。
 
 ```sh
 taskpolicy -c utility cmake --build build -j2
 INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/memo/run.py --build build --visual
-PYTHONPATH="$PWD/hub" PYTHONDONTWRITEBYTECODE=1 INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
-taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.py --build build --design "$INK_DESIGN" --out build/memo-compare --scenes Memo MemoDetail MemoEdit MemoChecklist MemoUndo MemoSaveFail --reuse
+PYTHONPATH="$PWD/hub" PYTHONDONTWRITEBYTECODE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
 taskpolicy -c utility cmake --build build-asan -j2
-PYTHONPATH="$PWD/hub" PYTHONDONTWRITEBYTECODE=1 INK_KEEP_EVIDENCE=1 UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
+INK_KEEP_EVIDENCE=1 UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/memo/run.py --build build-asan
+PYTHONPATH="$PWD/hub" PYTHONDONTWRITEBYTECODE=1 UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/capabilities.py --output build/memo-repair-capabilities.md --runtime build/test-out/capability-table/capability-inventory.json
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.py --build build --design "$INK_DESIGN" --out build/memo-compare --scenes Memo MemoDetail MemoEdit MemoChecklist MemoUndo MemoSaveFail --reuse
 ```
 
-配置按总规则第 5 节，启用 `INK_WERROR=ON`，字体、Python 与 LVGL 来自只读依赖目录。另指定现有 SDL2／ImGui 源码镜像及依赖齐全的 `INK_HUB_PYTHON=$INK_DEPS/hub/.venv/bin/python`，没有安装或升级依赖。
-
-ASan 配置只改构建目录为 `build-asan` 并加 `INK_SANITIZE=ON`。已实查两份 CMake cache 的字体、依赖、Python 和 Werror 参数一致，且系统对象实际使用 `-fsanitize=address,undefined`。
-
-## 反向对照
-
-- `member`：两处数据库打开故意固定到成人集合；失败 2 项，均是实际跨成员读取／删除，`test.finished=1`。最初尝试把集合改为设备级，会先被缓存接口拒绝，无法抵达成员场景；该尝试不作为隔离证据。
-- `failure`：仅撤掉保存失败后进入失败页的分支；最终失败 6 项，覆盖真实页面、提示位置、AI 状态、可见重试及原内容保存，`test.finished=1`。
-- `write`：保存时跳过真正的 `ink_db_put`；编译／链接成功，25 项断言失败，`test.finished=1`。最初直接替换成常量使测试注入函数变为未使用，触发 `-Werror`；该编译失败不算反向证据，已修正临时变体并成功执行。
-- `undo`：撤销目标改回按最大编号而非最新记录版本选择；两项断言失败，其中一项明确要求最后删除的较小编号，`test.finished=1`。
-- 反例只在忽略的构建目录生成临时源码、对象及可执行文件，不改工作区产品代码；未删除、放宽断言或加 sleep 掩盖问题。
-- 命令：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/memo/run.py --build build --mutant <member|write|failure|undo>`。各变体编译、链接成功，模拟器退出 1，反向测试退出 1；源码哈希前后相同。日志：`build/memo-reverse-<名称>.log`；最终证据目录依次 `build/memo-6qchsizq/`、`build/memo-j_e93w2o/`、`build/memo-awebaaw8/`、`build/memo-gbnmmb0g/`。
-
-## 完整验证结果
-
-- 【实测】普通构建退出 0；最终全量 CTest 退出 8，224/225、零跳过，285.86 秒。唯一失败 `capability-table-doc`：新增十项能力及源码行号使受保护的生成文档过期，没有修改检查器或跳过该项。日志：`build/memo-final-build.log`、`build/memo-final-ctest.log`。
-- 【实测】运行时目录与代码生成预览完全一致：223 项能力、16 项设置；预览含 284 项能力／状态／设置定义。命令：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/capabilities.py --output build/memo-capabilities.md --runtime build/test-out/capability-table/capability-inventory.json`，退出 0。
-- 【实测】首轮全量 221/225 的三个功能失败均已处理：两个重复工具快照由产品去重修复；应用数量精确断言按新增备忘更新。四项相关检查（含 AI surface）定向和最终全量均通过，未改它们的资源门槛。首轮证据：`build/memo-first-ctest.log`；复查：`build/memo-existing-checks.log`。
-- 【实测】ASan／UBSan 配置和构建退出 0；全量 CTest 退出 8，224/225、零跳过，330.41 秒，同样仅 `capability-table-doc` 失败。无 AddressSanitizer 或未定义行为诊断。日志：`build-asan/memo-config.log`、`build-asan/memo-build.log`、`build-asan/memo-ctest.log`。
-- 【实测】普通及内存检查中的备忘三阶段均为 142／22／31 项断言，零告警、零预算违规，内部 RAM 总余量最低均 47,840 字节。最终证据：`build/memo-oskz1rxz/`、`build-asan/memo-nacf_vbm/`；汇总：`build/memo-final-summary.json`。没有抬高原来的 32,768 字节预算门槛。
+- 【实测】普通构建退出 0，普通全量退出 8：224/225、零跳过，151.10 秒，唯一失败 `capability-table-doc`；日志 `build/memo-repair-build.log`、`build/memo-repair-ctest.log`。
+- 【实测】ASan／UBSan 构建及定向退出 0；全量退出 8：224/225、零跳过，295.91 秒，同样只失败 `capability-table-doc`，无 AddressSanitizer 或未定义行为诊断。日志 `build-asan/memo-repair-build.log`、`build-asan/memo-repair-focused.log`、`build-asan/memo-repair-ctest.log`。
+- 【实测】两套定向九阶段均为 142／22／31／34／41／39／28／25／21 项通过；普通另产出六视图截图。所有阶段零告警、零预算违规，内部 RAM 最低余量均 47,840 字节，门槛仍为 32,768 字节。证据 `build/memo-visf3m3y/`、`build-asan/memo-921fxj61/`，汇总 `build/memo-repair-summary.json`。
+- 【实测】能力预览与运行时一致：223 项能力、16 项设置，共 284 项定义；视觉命令退出 0 仅表示产出有效对照，分数仍未达标。
 
 ## 结束检查
 
-- 【实测】`git diff --check`、报告结构与本地链接检查通过；相对基线共 12 个相关文件，产品 288 行。受保护的共享文档、历史调研／审计资料及其它并行任务文件没有差异。
-- 【实测】按总规则第 6 节对基线至 HEAD 的完整差异扫描，本机路径及 MAC 模式零匹配，grep 退出 1；本次待提交报告同样零匹配。构建产物、截图、临时反例、设计稿均未提交。
-- 只在本地分支提交；未推送、未开 PR、未操作设备、未访问真实通信或付费接口。
+- 【实测】`git diff --check`、报告结构、本地链接和证据路径检查通过；`git diff --stat` 确认本轮仅四个相关文件。原复查报告、受保护共享文档、历史调研／审计和其它任务文件均未改。
+- 【实测】任务基线是当前 HEAD 的祖先；对基线至 HEAD 的完整差异及待提交报告分别扫描，本机绝对路径和 MAC 模式均零匹配，两次 grep 均退出 1。最终九组反向对照再次通过预期失败检查，源码哈希与当前文件一致。
+- 只提交产品、测试和中文报告；构建产物、日志、截图、反例与设计稿均留在忽略目录，未提交。核对结果：`build/memo-repair-end-check.json`。
