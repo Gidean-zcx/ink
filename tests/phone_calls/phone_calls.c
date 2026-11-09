@@ -36,7 +36,8 @@ static void locate(void) {
 }
 static void click(const char *text, const char *cap) {
     label = text; bound = cap; on_ui(locate);
-    if (found) tap(g_btn_x[0], g_btn_y[0]); quiet();
+    if (found) tap(g_btn_x[0], g_btn_y[0]);
+    quiet();
 }
 static void open_phone(const char *number) {
     char args[80]; snprintf(args, sizeof args, "{\"number\":\"%s\"}", number);

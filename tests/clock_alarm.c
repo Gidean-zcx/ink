@@ -28,7 +28,8 @@ static void locate(lv_obj_t *root) {
 static void locate_label(void) { found = false; lv_obj_update_layout(lv_screen_active()); locate(lv_screen_active()); locate(lv_layer_sys()); }
 static void press(const char *label) {
     wanted = label; on_ui(locate_label); CHECK(found, "the actual page has the button %s", label);
-    if (found) tap(point.x, point.y); quiet();
+    if (found) tap(point.x, point.y);
+    quiet();
 }
 static void visible(const char *label) {
     wanted = label; locate_label(); CHECK(found, "the visible LVGL labels contain %s", label);
@@ -44,7 +45,8 @@ static void locate_switch(void) {
 }
 static void toggle(const char *time) {
     wanted = time; on_ui(locate_switch); CHECK(found, "the real list has the switch beside %s", time);
-    if (found) tap(point.x, point.y); quiet();
+    if (found) tap(point.x, point.y);
+    quiet();
     CHECK(!strcmp(ink_ui_page_name(), "Clock"), "toggling stays on the list");
 }
 static void read_snapshot(void) {

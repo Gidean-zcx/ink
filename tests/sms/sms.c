@@ -190,7 +190,8 @@ static bool review_phase(void) {
         CHECK(!strcmp(S.result, !strcmp(phase, "receipt-ok") ? "已发出" : !strcmp(phase, "receipt-fail") ? "发送失败，未发出" : "结果未知，请先核实"), "UI reports the actual send outcome"); on_ui(check_receipt);
     } else if (!strcmp(phase, "draft-write") || !strcmp(phase, "draft-read")) {
         ink_db_t *db = ink_db_open_member(ink_db_find_def("text.drafts"), "owner");
-        if (!strcmp(phase, "draft-read")) CHECK(db && ink_db_count(db) == 1, "saved draft exists after process restart"); ink_db_close(db);
+        if (!strcmp(phase, "draft-read")) CHECK(db && ink_db_count(db) == 1, "saved draft exists after process restart");
+        ink_db_close(db);
         open_list(); compose(); CHECK(AI("sms.long", NULL) && g_rc.status == INK_RC_DONE, "open or resume F3");
         if (!strcmp(phase, "draft-write")) on_ui(type_long);
         on_ui(inspect_long); CHECK(WAIT_FOR(ink_text_draft_saved() == 1, 10000), "F3 reports durable draft");
@@ -202,7 +203,8 @@ static void run(void *arg) {
     (void)arg; vtk_host_call(read_phase, NULL);
     CHECK(WAIT_FOR(ink_member_space_open(), 10000), "member space opens");
     CHECK(WAIT_FOR(sim_net_modem_registered() && registered(), 10000), "simulated AT modem publishes registration"); quiet();
-    for (int i = 0; i < 118; i++) memcpy(body + i * 3, "中", 3); body[354] = 0;
+    for (int i = 0; i < 118; i++) memcpy(body + i * 3, "中", 3);
+    body[354] = 0;
     if (review_phase()) { /* Covered above, with isolated flash images. */
     } else if (!strcmp(phase, "legacy")) {
         open_list(); deliver(); CHECK(ink_member_switch("kid") == 0, "probe the original SMS capability after handoff"); quiet();
@@ -220,7 +222,8 @@ static void run(void *arg) {
         CHECK(AI("sms.thread", "{\"peer\":\"00000000001\"}") && g_rc.status == INK_RC_DONE, "open the long conversation"); quiet(); on_ui(inspect_thread); scene("SmsThread");
     } else {
         open_list(); CHECK(stored("owner") == 0, "fresh SMS page has no invented data");
-        for (int i = 0; i < 17; i++) deliver(); open_list(); CHECK(S.count == 1, "17 incoming messages group into one peer conversation"); scene("Sms");
+        for (int i = 0; i < 17; i++) deliver();
+        open_list(); CHECK(S.count == 1, "17 incoming messages group into one peer conversation"); scene("Sms");
         compose(); CHECK(AI("sms.text", NULL) && g_rc.status == INK_RC_DONE, "focus the F2 short host"); on_ui(type_short);
         CHECK(AI("sms.long", NULL) && g_rc.status == INK_RC_DONE, "open F3 long editor");
         on_ui(type_long);

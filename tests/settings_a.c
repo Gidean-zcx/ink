@@ -79,7 +79,7 @@ static void inspect_visible_page(void) {
         if (!ink_json_eq(j, ink_json_find(j, 0, "id"), "device") && !ink_json_eq(j, ink_json_find(j, 0, "id"), "update.version")) {
             ink_json_str(j, ink_json_find(j, 0, "label"), text, sizeof text);
             wanted = text; find_label();
-            CHECK(fully_visible(), "field title is visible without clipping: %s", text);
+            CHECK(fully_visible(), "field title is visible without clipping: %.200s", text);
             if (found) slot = lv_obj_get_parent(found);
             static const char *const GROUPED[] = {"voice.name", "voice.interrupt", "ai.records", "ai.memory", "text.assist", "backup",
                 "storage.books", "storage.audio", "storage.photos", "storage.clean", "update.check", "privacy", "device.details", "licenses"};
@@ -92,7 +92,7 @@ static void inspect_visible_page(void) {
             ink_json_str(j, ink_json_find(j, 0, "value"), text, sizeof text);
             wanted = text;
             if (slot) { x = y = -1; found = NULL; find_label_at(slot); } else find_label();
-            CHECK(!text[0] || fully_visible(), "field value is visible: %s", text);
+            CHECK(!text[0] || fully_visible(), "field value is visible: %.200s", text);
         }
         p = end + 2;
         if (*p == ',') p++;

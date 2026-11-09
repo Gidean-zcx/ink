@@ -59,9 +59,9 @@ static void battery(int percent, bool charging) {
 }
 static void shutdown_check(void) {
     on_ui(read_screen);
-    CHECK(!strcmp(g_top, "off") && strstr(g_snap, "PowerOffEmpty"), "AI sees the empty-battery off frame: %s", g_snap);
+    CHECK(!strcmp(g_top, "off") && strstr(g_snap, "PowerOffEmpty"), "AI sees the empty-battery off frame: %.200s", g_snap);
     CHECK(ink_display_busy() == 0 && !ink_ui_busy() && sim_metric_value("ui.off_picture_on_panel") == 1, "shutdown waits for the actual panel commit");
-    CHECK(strstr(g_snap, unsaved ? "没保存" : "东西都存好了") != NULL, "the off frame reports the actual save result: %s", g_snap);
+    CHECK(strstr(g_snap, unsaved ? "没保存" : "东西都存好了") != NULL, "the off frame reports the actual save result: %.200s", g_snap);
     if (unsaved) CHECK(!strstr(g_snap, "都存好了"), "a failed save never claims success");
     else if (strcmp(scene, "PowerOffNoBookmark")) CHECK(strstr(g_snap, "星星邮差"), "the retained bookmark comes from the reader");
     on_ui(check_heading);
@@ -75,7 +75,7 @@ static void low(void) {
     CHECK(!ink_interrupt_active(), "15 percent is a notification, not a full-screen interruption");
     battery(5, false);
     CHECK(WAIT_FOR(page("BatteryLow"), 3000), "5 percent enters the real interruption channel");
-    CHECK(strstr(g_snap, "power.set_saving") && strstr(g_snap, "interrupt.ack") && strstr(g_snap, "120"), "AI sees the same real actions and original timeout: %s", g_snap);
+    CHECK(strstr(g_snap, "power.set_saving") && strstr(g_snap, "interrupt.ack") && strstr(g_snap, "120"), "AI sees the same real actions and original timeout: %.200s", g_snap);
     CHECK(ink_cap_find("power.set_saving") && ink_cap_find("interrupt.ack"), "both controls are registered atomic capabilities");
     capture();
     toggle_saving();
@@ -124,7 +124,7 @@ static void charging(void) {
     ink_power_lock(); CHECK(WAIT_FOR(!strcmp(power_state(), "locked"), 2000), "lock before showing the charging surface");
     battery(62, true);
     CHECK(WAIT_FOR(page("Charging"), 3000), "plugging in shows the charging surface on the lock screen");
-    CHECK(strstr(g_snap, "正在充电") && strstr(g_snap, "62%") && strstr(g_snap, "AI 键"), "AI has charge and wake context: %s", g_snap);
+    CHECK(strstr(g_snap, "正在充电") && strstr(g_snap, "62%") && strstr(g_snap, "AI 键"), "AI has charge and wake context: %.200s", g_snap);
     capture();
     battery(72, true);
     CHECK(WAIT_FOR(page("Charging") && strstr(g_snap, "72%"), 2000), "a ten-percent increase updates the retained percentage");

@@ -8,7 +8,7 @@ static char selected_result[128];
 static void observed_result(ink_call_t *c, const char *json) {
     if (!strcmp(c->cap->id, "contacts.select")) {
         selected_source = c->src;
-        snprintf(selected_result, sizeof selected_result, "%s", json);
+        snprintf(selected_result, sizeof selected_result, "%.*s", (int)sizeof selected_result - 1, json);
     }
     ink_cap_result(c, json);
 }
@@ -73,7 +73,8 @@ static void locate_button(void) {
 }
 static void tap_label(const char *label) {
     wanted_label = label; on_ui(locate_button);
-    if (located) tap(g_btn_x[0], g_btn_y[0]); quiet();
+    if (located) tap(g_btn_x[0], g_btn_y[0]);
+    quiet();
 }
 static unsigned field_at;
 static void locate_field(void) {
@@ -168,7 +169,8 @@ static void write_phase(void) {
     CHECK(ink_confirm_list(pending, 1) == 1, "irrecoverable deletion asks for device confirmation");
     CHECK(ink_confirm_decide(pending[0].token, true, INK_SRC_TOUCH) == 0, "human confirms deletion"); quiet();
     CHECK(WAIT_FOR(!strcmp(ink_ui_page_name(), "PhoneContacts"), 10000), "confirmed deletion returns to the list");
-    for (int i = 0; i < 3; i++) CHECK(put("合成联系人", "00000000004", 0), "add fixture %d for a full page", i); quiet();
+    for (int i = 0; i < 3; i++) CHECK(put("合成联系人", "00000000004", 0), "add fixture %d for a full page", i);
+    quiet();
     page("four"); CHECK(strstr(snap, "\"pages\":1,\"total\":4"), "four contacts fit one complete page");
     CHECK(put("末页测试", "00000000005", 0), "add a second-page fixture"); quiet(); page("multi");
     vtk_event_at(vtk_now() + SIM_MS(1), capture_frame, NULL); delay_ms(5);
