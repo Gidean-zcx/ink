@@ -10,11 +10,11 @@
 | 2 | 【实测】通过 | 外部 HTTP 传入 12288 字节，Live 显示 4096 字节，完成显示 1 个；逐字节核对，文件应用可见 | 同上；`tests/transfer_pages/run.py --build build --visual` |
 | 3 | 【实测】流程通过；占用者名单未完成 | 占卡拒绝、停用后确认交出、结束及弹出后 rescan、新文件可读；坏卡零 SD 写入，卡内容哈希不变 | 同上；`build/transfer-compare/*/snapshots.ndjson` |
 | 4 | 【实测】页面部分通过；既有儿童后端权限未改 | 儿童无两行入口，直接调用两项新导航能力被拒，USB 挂载被拒；五页快照在 3072 字节内，动作能力供 AI 调用 | 同上；反向对照 `tests/transfer_pages/reverse.py --build build` |
-| 5 | 两轮全量均 241/242；最终位置修正后复跑中 | 唯一失败为禁止本分支修改的共享能力文档过期。产品源文件新增 227 行，连 CMake 保守计 233 行；截图已留存 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`；内存版换 `build-asan` |
+| 5 | 【实测】未全部通过：最终普通与内存全量各 241/242 | 唯一失败为禁止本分支修改的共享能力文档过期；无 sanitizer 报错。产品源文件新增 227 行，连 CMake 保守计 233 行；截图已留存，分数未达目标 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`；内存版换 `build-asan` |
 
 ## 没做到的
 
-- 普通与内存全量均不是全绿，能力文档需主会话生成；未改或跳过检查。最后的首页位置修正正在复跑专项与两轮全量。
+- 普通与内存全量均不是全绿，能力文档需主会话生成；未改或跳过检查。
 - 后端没有手机可达地址和卡占用者名单，未改后端行为，也未添加真实手机传入或逐应用停止能力。
 - 【实现】既有 `transfer.start/stop/status` 仍为 `child_ok=true`，本次只拒绝儿童进入新页面和挂载整卡。若“直接调用被拒”包括既有无线后端，尚未达到；改变它会修改后端行为。
 - 未运行 Linux/gcc 或实机测试。
@@ -56,6 +56,8 @@
 
 【实现】五页共用一个 presenter、一个状态请求入口和一套快照声明，文件应用只增加入口、收件箱名称映射和初始化接线。服务只补只读字节数。复用纯静态状态图会丢掉真实进度、关页收尾和 USB 结果，直接改服务状态会绕开能力与确认规则；未采用这些更小但不满足验收的做法。
 
+架构审视：【实现】页面负责显示和查询，接收、存储及 USB 仍归原服务；按钮和 AI 调用同一能力，没有界面直接写服务状态。五页公开同一份结构化快照，一次性数字只在屏幕显示。服务尚未开放的数据、权限差异均在本报告列明。
+
 ## 截图对照
 
 截图、并排图和分数留在 `build/transfer-compare/`。各画面均等待显示稳定后获取；对照目标为 12/255。
@@ -63,7 +65,7 @@
 | 页面 | 1/4 灰度平均差 | 主要差异 |
 | --- | ---: | --- |
 | Files | 58.807/255 | 保留基线的真实成员目录与分页布局，仅加任务要求的两行；画板的类型分类和容量摘要未在本任务重做 |
-| Transfer | 43.063/255 | 六位真实数字和动态端口、环回地址提示；未画分段切换；现行字号与底部按钮高度 |
+| Transfer | 43.046/255 | 六位真实数字和动态端口、环回地址提示；未画分段切换；现行字号与底部按钮高度 |
 | TransferLive | 27.889/255 | 真实接收数量与字节替代示例书名和进度条；现行字号与图标大小 |
 | TransferUsbBusy | 26.949/255 | 后端无占用者名单，说明改为真实缺失状态；现行深灰底与控件尺寸 |
 | TransferUsbOn | 26.663/255 | 现行字号、图标和底部按钮尺寸、共享状态栏的真实状态 |
@@ -84,6 +86,8 @@
 - 【实测】第一轮 ASan/UBSan 全量同为 241/242、零跳过、退出 8，用时 689.60 秒，唯一失败仍为共享能力文档；`work/transfer-pages/asan-ctest.log`。
 - 【实测】最后核对首页发现新增入口的 101 高度被按 125 排列，会压住分页条。只修正入口两处高度引用，专项 170 项检查通过，新增真实控件边界断言与首页截图；`work/transfer-pages/entry-focused-2.log`、`build/transfer-compare/Files/`。
 - 【实测】最终六项反向对照全部命中预期断言，新增“恢复错误入口高度会遮住分页条”；源码哈希不变。`work/transfer-pages/reverse-final-all.log`、`build/transfer-reverse/summary.json`。
+- 【实测】最终代码 Werror 普通全量 241/242、零跳过、退出 8，用时 194.71 秒；Werror + ASan/UBSan 全量同为 241/242、零跳过、退出 8，用时 324.77 秒。唯一失败均是 `capability-table-doc`；完整内存日志没有 AddressSanitizer、LeakSanitizer 或未定义行为报错。日志 `work/transfer-pages/ctest-final.log`、`work/transfer-pages/asan-ctest-final.log`。
+- 【实测】最终两版的新页面专项各 167 项检查通过；内部 RAM 最低余量均为 47736 字节，未放宽 32768 字节门槛。结束、弹出后的重整、坏卡无写入、成员入口和五页快照均覆盖。
 
 ## 复现与结束检查
 
@@ -92,7 +96,10 @@
 ```bash
 INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/transfer_pages/run.py --build build --visual
 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/transfer_pages/reverse.py --build build
-taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.py --build build --out build/transfer-compare --reuse --scenes Transfer TransferLive TransferUsbBusy TransferUsbOn TransferUsbFail FileList
+INK_TRANSFER_SCENE=Files taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/transfer_pages/run.py --build build
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.py --build build --out build/transfer-compare --reuse --scenes Files Transfer TransferLive TransferUsbBusy TransferUsbOn TransferUsbFail FileList
 ```
 
-`INK_DESIGN` 由任务环境提供；截图不提交。内存检查和最终隐私、差异核对结果待写。
+`INK_DESIGN` 由任务环境提供；截图不提交。全量、反向对照均执行完成，构建与测试最多并行 2，均使用 utility 优先级。
+
+【实测】基线至最终代码提交按总规则原命令做隐私扫描，0 匹配，grep 退出 1；`git diff --check` 通过。差异共 9 个任务相关文件，无构建产物、设计稿或受限共享文档。只做本地提交，未推送、未开 PR、未碰设备。
