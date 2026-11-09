@@ -192,7 +192,8 @@ static void ota1(void) {
     CHECK(WAIT_FOR(!strcmp(state_of("update.state"), "installing"), 3000), "installing (%s)", state_of("update.state"));
     delay_ms(3000);
     on_ui(read_screen);
-    CHECK(strstr(g_snap, "正在安装新系统") && g_btn_n == 0, "a card over everything, no way out of it (%s, %d)", g_snap, g_btn_n);
+    CHECK(!strcmp(g_top, "UpdateInstall") && strstr(g_snap, "正在安装，不要关机") && strstr(g_snap, "\"actions\":[]") && g_btn_n == 0,
+          "a card over everything, no way out of it (%s, %d)", g_snap, g_btn_n);
     ink_state_get_int(ink_state_find("update.progress"), &pct);
     CHECK(pct > 0 && pct < 100 && sim_metric_value("ota.bytes_written") > 0, "under way (%d)", (int)pct);
     delay_ms(300000);

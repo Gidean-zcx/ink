@@ -79,6 +79,7 @@ static const struct {
     {"memo.open", "id"}, {"memo.edit", ""}, {"memo.next", NULL}, {"memo.prev", NULL}, {"memo.retry", NULL},
     {"shell.member_choose", NULL}, {"shell.pin_set", NULL},
     {"shell.pin_forgot", NULL}, {"shell.pin_parent", NULL}, {"shell.pin_cancel", NULL},
+    {"shell.update", NULL}, {"shell.update_close", NULL},
     {NULL, NULL},
 };
 

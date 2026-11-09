@@ -7,7 +7,7 @@ python3 tools/capabilities.py
 python3 tools/capabilities.py --check
 ```
 
-当前共 268 项：可调用能力 235、事件 33；设置 16 项、状态 46 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
+当前共 270 项：可调用能力 237、事件 33；设置 16 项、状态 46 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
 
 风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。
 
@@ -207,6 +207,8 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `shell.settings_prev` | 设置上一页 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s38](#s38) | [system/ui/shell/settings_pages.c](../../system/ui/shell/settings_pages.c) |
 | `shell.sound` | 声音 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s37](#s37) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
 | `shell.storage` | 打开存储和备份设置 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s38](#s38) | [system/ui/shell/settings_pages.c](../../system/ui/shell/settings_pages.c) |
+| `shell.update` | 打开系统更新 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s39](#s39) | [system/ui/shell/update_pages.c](../../system/ui/shell/update_pages.c) |
+| `shell.update_close` | 返回更新前的页面 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s39](#s39) | [system/ui/shell/update_pages.c](../../system/ui/shell/update_pages.c) |
 | `shell.voice` | 打开语音和 AI 设置 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s38](#s38) | [system/ui/shell/settings_pages.c](../../system/ui/shell/settings_pages.c) |
 | `shell.wifi_next` | 附近网络下一组 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s37](#s37) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
 | `shell.wifi_pick` | 选附近网络（密码由人在设备上填写） | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s37](#s37) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
@@ -640,6 +642,16 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 状态：`storage.card`、`storage.free`、`storage.mode`、`update.state`、`update.version`。
 
 事件：`backup.changed`。
+
+<a id="s39"></a>
+
+### s39 — `system/ui/shell/update_pages`
+
+设置：—。
+
+状态：`battery.charging`、`battery.level`、`storage.card`、`storage.free`、`storage.mode`、`update.progress`、`update.state`、`update.version`。
+
+事件：`confirm.result`、`update.available`、`update.result`。
 
 ## 每个设置项的能力覆盖
 

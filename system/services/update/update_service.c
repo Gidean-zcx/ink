@@ -1142,3 +1142,15 @@ int ink_update_init(void) {
     if (ink_state_watch("storage.card", on_card_state, NULL, INK_EXEC_DIRECT) != 0 || ink_hub_on_online(on_online, NULL) != 0) return -1;
     return ink_cap_register(UPDATE_CAPS, (int)(sizeof UPDATE_CAPS / sizeof UPDATE_CAPS[0]));
 }
+
+/* Read-only page metadata; no storage access on the UI task. */
+void ink_update_page_info(char *version, size_t cap, uint32_t *bytes, int *task) {
+    char state[16] = "";
+    ink_state_get_str(U.h_state, state, sizeof state);
+    ink_svc_lock();
+    bool downloaded = U.job || !strcmp(state, "ready") || !strcmp(state, "installing") || !strcmp(state, "rebooting");
+    snprintf(version, cap, "%s", downloaded ? U.dl_version : U.offer_version);
+    *bytes = downloaded ? U.dl_size : U.offer_size;
+    *task = U.task;
+    ink_svc_unlock();
+}
