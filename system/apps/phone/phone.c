@@ -247,7 +247,7 @@ static void create(lv_obj_t *screen, void *arg) {
         } else {
             const char *labels[] = {P.muted ? "已静音" : "静音", "键盘", connected ? "耳机" : "耳机未连", "录音"};
             const char *icons[] = {"mute", "keypad", "headphones", "mic"};
-            const char *caps[] = {"call.mute", "phone.keypad", "call.route", "call.record"};
+            const char *caps[] = {"call.mute", "phone.keypad", connected ? "call.route" : "shell.bluetooth", "call.record"};
             const char *args[] = {P.muted ? "{\"on\":false}" : "{\"on\":true}", "{}", headset ? "{\"headset\":false}" : "{\"headset\":true}", "{}"};
             for (int i = 0; i < 4; i++) {
                 int x = INK_MARGIN + i * 160;

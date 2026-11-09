@@ -15,6 +15,7 @@
 #include "ink/sys/data.h"
 #include "ink/sys/json.h"
 #include "ink/sys/power.h"
+#include "ink/sys/settings.h"
 #include "ink/sys/state.h"
 #include "ink/sys/svc.h"
 
@@ -35,6 +36,10 @@ static void fail(ink_call_t *c, ink_rc_t st, const char *why) {
 }
 
 static bool usable(ink_call_t *c) {
+    if (!ink_setting_get("bt.enabled")) {
+        fail(c, INK_RC_REJECTED, "Bluetooth is off");
+        return false;
+    }
     if (hal_bt_available()) return true;
     fail(c, INK_RC_FAILED, "this device cannot use a Bluetooth headset yet");
     return false;
@@ -86,6 +91,10 @@ static void cap_scan(ink_call_t *c) { /* exec.bg */
         ink_power_hold(INK_NEED_AWAKE);
         int n = hal_bt_scan(d, MAX_SCAN, SCAN_MS);
         ink_power_release(INK_NEED_AWAKE);
+        if (!usable(c) || n < 0) {
+            if (n < 0) fail(c, INK_RC_FAILED, "scan failed");
+            osal_free(out); osal_free(d); return;
+        }
         ink_jw_t w;
         ink_jw_init(&w, out, 1024);
         ink_jw_raw(&w, "[");
@@ -131,6 +140,7 @@ static void cap_list(ink_call_t *c) { /* exec.bg: the list may need reading */
     ink_db_close(db);
 }
 
+static void cap_connect(ink_call_t *c);
 static void cap_pair(ink_call_t *c) { /* exec.bg */
     char addr[18], name[32] = "";
     ink_args_get_str(&c->args, "addr", addr, sizeof addr);
@@ -139,6 +149,7 @@ static void cap_pair(ink_call_t *c) { /* exec.bg */
     ink_power_hold(INK_NEED_AWAKE); /* the chip does not sleep in the middle of it */
     int paired = hal_bt_pair(addr);
     ink_power_release(INK_NEED_AWAKE);
+    if (!usable(c)) return;
     if (paired != 0) {
         fail(c, INK_RC_FAILED, "it did not pair: is it on and looking?");
         return;
@@ -158,6 +169,8 @@ static void cap_pair(ink_call_t *c) { /* exec.bg */
         ink_db_close(db);
     }
     told("paired");
+    bool connect = false;
+    if (ink_args_get_bool(&c->args, "connect", &connect) && connect) cap_connect(c);
 }
 
 static void cap_connect(ink_call_t *c) { /* exec.bg */
@@ -167,6 +180,10 @@ static void cap_connect(ink_call_t *c) { /* exec.bg */
     ink_power_hold(INK_NEED_AWAKE);
     int linked = hal_bt_connect(addr);
     ink_power_release(INK_NEED_AWAKE);
+    if (!usable(c)) {
+        hal_bt_disconnect();
+        return;
+    }
     if (linked != 0) {
         fail(c, INK_RC_FAILED, "it did not connect: is it on, near and paired?");
         return;
@@ -199,12 +216,22 @@ static void cap_forget(ink_call_t *c) { /* exec.bg */
     told("forgotten");
 }
 
+static void enabled(void *ctx, int64_t on) {
+    (void)ctx;
+    if (!on) {
+        hal_bt_disconnect();
+        set_connected(NULL);
+    }
+}
+static const ink_setting_def_t ENABLED = {.id = "bt.enabled", .title = "蓝牙", .type = INK_SET_BOOL,
+    .def = 1, .child_may_change = true, .apply = enabled, .apply_exec = INK_EXEC_BG};
+
 #define ADDR_ARG "{\"type\":\"object\",\"properties\":{\"addr\":{\"type\":\"string\",\"maxLength\":17}},\"required\":[\"addr\"]}"
 
 static const ink_cap_t BT_CAPS[] = {
     {.id = "bt.scan", .title = "找附近的蓝牙耳机（要几秒）", .output = "{\"type\":\"array\"}", .effect = INK_FX_READ, .child_ok = true, .timeout_ms = 10000, .exec = INK_EXEC_BG, .run = cap_scan},
     {.id = "bt.list", .title = "配对过的耳机", .output = "{\"type\":\"array\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_BG, .run = cap_list},
-    {.id = "bt.pair", .title = "配对一副耳机", .input = "{\"type\":\"object\",\"properties\":{\"addr\":{\"type\":\"string\",\"maxLength\":17},\"name\":{\"type\":\"string\",\"maxLength\":31}},\"required\":[\"addr\"]}",
+    {.id = "bt.pair", .title = "配对一副耳机", .input = "{\"type\":\"object\",\"properties\":{\"addr\":{\"type\":\"string\",\"maxLength\":17},\"name\":{\"type\":\"string\",\"maxLength\":31},\"connect\":{\"type\":\"boolean\"}},\"required\":[\"addr\"]}",
      .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .timeout_ms = 20000, .exec = INK_EXEC_BG, .run = cap_pair},
     {.id = "bt.connect", .title = "连上耳机，声音走耳机", .input = ADDR_ARG, .effect = INK_FX_NAVIGATE, .child_ok = true, .timeout_ms = 20000, .exec = INK_EXEC_BG, .run = cap_connect},
     {.id = "bt.disconnect", .title = "断开耳机，声音回到外放", .effect = INK_FX_NAVIGATE, .child_ok = true, .exec = INK_EXEC_BG, .run = cap_disconnect},
@@ -217,6 +244,7 @@ static const ink_state_def_t ST_CONNECTED = {.id = "bt.connected", .type = INK_S
 static const ink_state_def_t ST_DEVICE = {.id = "bt.device", .type = INK_ST_STR, .title = "连着的耳机"};
 
 int ink_bt_service_init(void) {
+    if (ink_settings_define(&ENABLED, 1)) return -1;
     BT.h_available = ink_state_define(&ST_AVAILABLE);
     BT.h_connected = ink_state_define(&ST_CONNECTED);
     BT.h_device = ink_state_define(&ST_DEVICE);

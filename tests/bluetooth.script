@@ -1,0 +1,3 @@
+@0 net wifi
+@0 headset add 00:11:22:33:44:55 我的耳机
+@240s end
