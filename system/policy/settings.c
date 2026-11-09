@@ -202,6 +202,8 @@ static ink_rc_t setting_set(const char *id, int64_t v, ink_source_t src, bool ch
     osal_mutex_unlock(SE.lock);
     if (!d) return refuse(rc, INK_RC_INVALID, "unknown setting");
     if (!valid(d, v)) return refuse(rc, INK_RC_INVALID, "value out of range");
+    if (ink_member_current()->role == INK_ROLE_CHILD && !strcmp(id, "audio.volume") && v > ink_setting_get("audio.child_max"))
+        v = ink_setting_get("audio.child_max");
     if (ink_member_current()->role == INK_ROLE_CHILD && (d->system || !d->child_may_change)) {
         ink_probe_count("policy.rejected");
         return refuse(rc, INK_RC_REJECTED, "children cannot change this setting");

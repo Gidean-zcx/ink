@@ -6,6 +6,8 @@
 #include "ink/sys/cap.h"
 
 int ink_shell_init(void);
+int ink_kid_pages_init(void);
+void ink_shell_kid_limit(const char *app);
 int ink_settings_pages_init(void);
 void ink_settings_page_open(const char *name);
 int ink_boot_flow_init(void);

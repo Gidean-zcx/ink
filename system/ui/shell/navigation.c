@@ -2,6 +2,7 @@
 /* ui-scale-runtime: dimension width Canvas width minus theme margins, shared by all shell pages. */
 /* ui-scale-runtime: dimension notifications Returns the bottom of theme-sized notification rows. */
 /* ui-scale-runtime: dimension y tile and notifications accept a theme-derived row position. */
+/* ui-scale-runtime: dimension top Child volume marker uses the configured percentage. */
 /* ui-scale-runtime: dimension F.y,heading_h,notice_h,home_room,below_heading Page flow: theme sizes added up, plus text measured at the current size. */
 #include <stdio.h>
 #include <string.h>
@@ -84,6 +85,7 @@ static struct {
 } N INK_PSRAM_BSS;
 static void draw_page_body(void);
 static void draw_home_content(void);
+static void kid_volume_mark(lv_obj_t *slider, int top);
 
 static bool current_session(uint32_t epoch) {
     return epoch == __atomic_load_n(&N.session, __ATOMIC_ACQUIRE) && !strcmp(N.member, ink_member_current()->id) &&
@@ -713,8 +715,11 @@ int ink_shell_home_snapshot(char *buf, size_t cap) {
         upcoming, N.result);
 }
 
+static int kid_control_snapshot(char *buf, size_t cap);
+static void notify_open(ink_call_t *c);
 static int control_snapshot(char *buf, size_t cap) {
     if (!current_session(N.epoch)) return snprintf(buf, cap, "空间锁定或正在切换；AI 无权读取。");
+    if (child()) return kid_control_snapshot(buf, cap);
     char ssid[64];
     state_text("wifi.ssid", ssid, sizeof ssid);
     int n = snprintf(buf, cap,
@@ -728,7 +733,7 @@ static int control_snapshot(char *buf, size_t cap) {
     for (int i = 0; i < N.control_count && n >= 0 && (size_t) n < cap; i++)
         n += snprintf(buf + n, cap - (size_t) n, "通知[%u]=%s，%s；已读=%d；", (unsigned) N.control_items[i].id,
                       N.control_items[i].title, N.control_items[i].body, N.control_items[i].read);
-    const char *actions = child() ? "动作：settings.set、system.set_volume、notify.read、shell.close。"
+    const char *actions = child() ? "动作：settings.set、system.set_volume、shell.notify_open、notify.read、shell.close。"
                                   : "动作：settings.set、system.set_volume、notify.read、shell.members、shell."
                                     "settings、shell.network、shell.more、shell.close。";
     if (n >= 0 && (size_t) n < cap) n += snprintf(buf + n, cap - (size_t) n, "%s", actions);
@@ -740,6 +745,7 @@ static bool control_key(ink_key_t key, bool lng) {
 }
 static const ink_ui_overlay_t CONTROL = {
     .name = "Control", .level = 0, .on_key = control_key, .snapshot = control_snapshot};
+static const ink_ui_overlay_t KID_CONTROL = {.name = "KidControl", .level = 0, .on_key = control_key, .snapshot = control_snapshot};
 
 static void slider_changed(lv_event_t *e) {
     const char *id = lv_event_get_user_data(e);
@@ -784,7 +790,7 @@ static int notifications(lv_obj_t *parent, int y, int limit) {
                     text_y + ink_ui_line_height(INK_FONT_LIST), width() - INK_ROW_DOUBLE - INK_MARGIN);
         char args[64];
         snprintf(args, sizeof args, "{\"id\":%u}", (unsigned) n.id);
-        ink_shell_bind(card, "notify.read", args);
+        ink_shell_bind(card, "shell.notify_open", args);
         count++;
         y += ink_ui_row_double() + INK_GAP_M;
     }
@@ -816,9 +822,14 @@ static void draw_control(void) {
     ink_ui_slider(N.control, "亮度", (int) ink_setting_get("display.light") / 10, INK_MARGIN, y, width(),
                   slider_changed, (void *) "display.light");
     y += INK_SLIDER + INK_GAP_M;
-    ink_ui_slider(N.control, "音量", (int) ink_setting_get("audio.volume") / 10, INK_MARGIN, y, width(), slider_changed,
-                  (void *) "audio.volume");
+    int volume = (int)ink_setting_get("audio.volume"), top = (int)ink_setting_get("audio.child_max");
+    lv_obj_t *slider = ink_ui_slider(N.control, "音量", (child() && volume > top ? top : volume) / 10, INK_MARGIN, y, width(), slider_changed, (void *)"audio.volume");
+    if (child()) kid_volume_mark(slider, top);
     y += INK_SLIDER + INK_GAP_M;
+    if (child()) {
+        ink_ui_slider(N.control, "暖光", (int)ink_setting_get("display.warmth") / 10, INK_MARGIN, y, width(), slider_changed, (void *)"display.warmth");
+        y += INK_SLIDER + INK_GAP_M;
+    }
     if (!child()) {
         const char *const labels[] = {"勿扰", "叫名字", N.more ? "收起" : "更多"};
         int w = (width() - 2 * INK_GAP_M) / 3;
@@ -862,12 +873,12 @@ void ink_shell_control(void) {
     if (!ink_member_space_open() || N.control) return;
     N.control = ink_ui_box(lv_layer_sys(), 0, 0, INK_CANVAS_W, INK_CANVAS_H, 0, INK_SURFACE_WHITE, false);
     lv_obj_add_flag(N.control, LV_OBJ_FLAG_CLICKABLE);
-    ink_ui_overlay_add(&CONTROL, N.control);
+    ink_ui_overlay_add(child() ? &KID_CONTROL : &CONTROL, N.control);
     draw_control();
 }
 bool ink_shell_close(void) {
     if (!N.control) return false;
-    ink_ui_overlay_remove(&CONTROL);
+    ink_ui_overlay_remove(child() ? &KID_CONTROL : &CONTROL);
     lv_obj_delete(N.control);
     N.control = NULL;
     ink_ui_hint_frame(INK_REFRESH_FLASH_UI);
@@ -1191,7 +1202,7 @@ static void notify_bind(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field
     snprintf(N.notify_args[at], sizeof N.notify_args[at], "{\"id\":%u}", (unsigned)n->id);
     *field = (ink_ui_field_spec_t){.id = N.notify_ids[at], .role = "listitem", .label = n->title,
         .value = n->body, .object = {N.notify_ids[at], (uint32_t)n->read}};
-    *action = (ink_ui_action_spec_t){.id = N.notify_ids[at], .label = "标为已读", .capability = "notify.read",
+    *action = (ink_ui_action_spec_t){.id = N.notify_ids[at], .label = "打开通知", .capability = "shell.notify_open",
         .args_json = N.notify_args[at], .object = field->object, .enabled = true};
     int h = ink_ui_row_double(), text_y = (h - ink_ui_line_height(INK_FONT_LIST) - ink_ui_line_height(INK_FONT_NOTE)) / 2;
     if (!lv_obj_get_child_count(slot)) {
@@ -1331,7 +1342,7 @@ void ink_shell_open_page(const char *name) {
 }
 
 const char *ink_shell_board(void) {
-    if (N.control) return "Control";
+    if (N.control) return child() ? "KidControl" : "Control";
     if (N.home && !strcmp(ink_ui_page_name(), "home"))
         return N.home_page == 0 ? "Today" : N.home_page == 1 ? "Main" : "Apps";
     return ink_ui_top_name();
@@ -1562,13 +1573,42 @@ static const ink_setting_def_t SETTINGS[] = {
 int ink_shell_ai_init(void);
 
 int ink_shell_init(void) {
-    if (ink_search_init() != 0) return -1;
+    static const ink_cap_t notify = {.id = "shell.notify_open", .title = "打开通知并标为已读", .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1}},\"required\":[\"id\"]}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = notify_open};
+    if (ink_search_init() != 0 || ink_cap_register(&notify, 1) != 0) return -1;
     if (ink_settings_pages_init() != 0) return -1;
     if (ink_boot_flow_init() != 0) return -1;
-    if (ink_shell_ai_init() != 0) return -1;
+    if (ink_shell_ai_init() != 0 || ink_kid_pages_init() != 0) return -1;
     if (ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) ||
         ink_settings_define(SETTINGS, sizeof SETTINGS / sizeof *SETTINGS))
         return -1;
     if (ink_settings_watch("", changed, NULL, INK_EXEC_UI)) return -1;
     return ink_state_watch("", changed, (void *) 1, INK_EXEC_DIRECT);
+}
+
+static int kid_control_snapshot(char *buf, size_t cap) {
+    int n = snprintf(buf, cap, "KidControl；当前=%s；亮度=%lld；暖光=%lld；音量=%lld；音量上限=%lld；通知=%d；动作：settings.set、system.set_volume、shell.notify_open、notify.read、shell.close。",
+        ink_member_current()->name, (long long)ink_setting_get("display.light"), (long long)ink_setting_get("display.warmth"),
+        (long long)ink_setting_get("audio.volume"), (long long)ink_setting_get("audio.child_max"), ink_notify_unread());
+    for (int i = 0; i < N.control_count && n >= 0 && (size_t)n < cap; i++)
+        n += snprintf(buf + n, cap - (size_t)n, "通知[%u]=%s，%s；", (unsigned)N.control_items[i].id, N.control_items[i].title, N.control_items[i].body);
+    return n;
+}
+
+static void notify_open(ink_call_t *c) {
+    int64_t id = 0; ink_args_get_int(&c->args, "id", &id);
+    ink_db_cursor_t cursor = {0}; ink_notify_view_t n;
+    while (ink_notify_next(&cursor, &n) == 1) if (n.id == (uint32_t)id) {
+        ink_notify_mark_read(n.id);
+        if (n.action[0]) {
+            ink_shell_close();
+            ink_call_opts_t opts = {.src = INK_SRC_APP, .args_json = n.action_args, .reply_exec = INK_EXEC_UI};
+            if (ink_cap_call(n.action, NULL, &opts) != 0) c->rc.status = INK_RC_FAILED;
+        }
+        return;
+    }
+    c->rc.status = INK_RC_STALE;
+}
+
+static void kid_volume_mark(lv_obj_t *slider, int top) {
+    ink_ui_box(slider, width() * top / 100, 0, INK_STROKE, INK_SLIDER, 0, INK_SURFACE_BLACK, false);
 }

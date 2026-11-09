@@ -22,6 +22,7 @@
 #include "ink/sys/storage.h"
 #include "ink/sys/svc.h"
 #include "ink/sys/ui.h"
+#include "ink/ui_shell.h"
 
 #define MAX_APPS 32 /* 15 system apps by now, room for installed ones */
 #define FREEZE_AFTER_US 10000000ull
@@ -309,7 +310,8 @@ int ink_app_count(void) { return AP.n; }
 const ink_app_def_t *ink_app_at(int i) { return i >= 0 && i < AP.n ? AP.a[i].def : NULL; }
 
 bool ink_app_visible(const ink_app_def_t *def) {
-    if (ink_member_current()->role == INK_ROLE_CHILD && !def->child_ok) return false;
+    if (ink_member_current()->role == INK_ROLE_CHILD && (!def->child_ok ||
+        (ink_member_time_up() && strcmp(def->id, "phone") && strcmp(def->id, "message")))) return false;
     for (const char *const *n = def->needs; n && *n; n++)
         if (!ink_cap_find(*n)) return false;
     return true;
@@ -326,7 +328,7 @@ ink_app_state_t ink_app_state_of(const char *id) {
 int ink_app_open(const char *id, void *from, void *arg) {
     app_t *a = find(id);
     if (!a || !a->def->entry) return -1;
-    if (!ink_app_visible(a->def)) return -2;
+    if (!ink_app_visible(a->def)) { ink_shell_kid_limit(id); return -2; }
     if (ink_ui_bring_up(id)) return 0;
     if (ink_ui_full()) ink_ui_home();
     if (from) ink_ui_open(from, a->def->entry, arg);
