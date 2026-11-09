@@ -1,6 +1,6 @@
 # set-bluetooth 执行报告
 
-基线：`a6f4140df5790c22d3f8ff5cfb00557289f3455c`。日期：2026-11-10。页面与专项验证完成，全量验证中；仅本地提交，不推送。【实测】产品代码增删合计 **229 行**，含 CMake 测试注册，低于 250 行预算。
+基线：`a6f4140df5790c22d3f8ff5cfb00557289f3455c`。日期：2026-11-10。执行结束，限制与验收结论见下表；仅本地提交，不推送。【实测】产品代码增删合计 **229 行**，含 CMake 测试注册，低于 250 行预算。
 
 以下命令使用任务提供的 `INK_DEPS`、`INK_DESIGN`；构建与 CTest 最多 `-j2`，均使用 `taskpolicy -c utility`。构建参数照总规则；内存检查只换 `build-asan` 并加 `-DINK_SANITIZE=ON`。
 
@@ -12,11 +12,17 @@
 | --- | --- | --- | --- |
 | 1 开关、搜索、配对、连接、忘记、入口 | 模拟器专项通过；底层在途扫描不能硬取消 | 【实测】普通和 ASan/UBSan 专项通过；覆盖空搜索、配对失败与成功、点按断开/重连、长按忘记、扫描中关闭、超时、三个入口、孩子权限、重启保留；证据在 `build/test-out/bluetooth/` | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2 -R '^bluetooth-settings$'`（内存版换目录） |
 | 2 截图与画板对照 | 截图已检查；原始差分超过工具的 12/255 参考线 | 【实测】SetBluetooth **31.816/255**，未修改设计稿、阈值或截图；[三栏对照](../../../build/bluetooth-compare/SetBluetooth.png)；空搜索、配对失败、超时、孩子截图同在专项证据目录 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/bluetooth_compare.py --build build --design "$INK_DESIGN"` |
-| 3 全量测试与内存检查 | 普通全量未全通过；内存全量运行中 | 【实测】普通 **286/287 通过、1 失败、0 跳过**，退出 8，308.28 秒；唯一失败为共享能力文档过期，按规则留给主会话统一生成 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`（加上述环境；内存版换目录） |
+| 3 全量测试与内存检查 | **未全通过**；唯一遗留为共享能力文档检查 | 【实测】普通、ASan/UBSan 均为 **286/287 通过、1 失败、0 跳过**，退出 8；唯一失败 `capability-table-doc`，按规则留给主会话统一生成。内存日志无 Sanitizer 错误 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`（加上述环境；内存版换目录） |
 
 【实测】反向对照：分别撤去开关门禁、配对后连接的实现，编译替换对象链接同一验收程序；两次退出均为 1，分别检出 18、2 个失败，均跑到结束。产品源码哈希前后相同；正常实现的专项退出 0。复现：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/bluetooth_reverse.py --build build`；命令和结果在 `build/bluetooth-reverse/{commands,summary}.json`。
 
-【实测】普通日志 `work/test-final.log`。基线能力文档检查通过（434 项定义，`work/baseline-catalogue.log`）；当前目录已在忽略路径生成并校验（438 项定义，`work/capabilities-set-bluetooth.md`），没有修改共享文档。首次全量的电话测试因导航流程变化失败；更新既有流程后专项及最终普通全量均通过。
+【实测】普通、内存构建均成功。最终日志：`work/test-final.log`（308.28 秒）、`work/test-asan.log`（407.12 秒）；内存完整输出见 `build-asan/Testing/Temporary/LastTest.log`。基线能力文档检查通过（434 项定义，`work/baseline-catalogue.log`）；当前目录已在忽略路径生成并校验（438 项定义，`work/capabilities-set-bluetooth.md`），没有修改共享文档。首次全量的电话测试因导航流程变化失败；更新流程后电话专项及两轮最终全量中的电话测试均通过。
+
+【实测】`git diff --check`、报告 3 个本地链接检查通过；基线差异的隐私正则命中 2 处，均为规则指定的假耳机地址，本机路径及真实标识命中 0 处。范围为 14 个任务相关文件，没有共享文档、设计稿、构建产物或硬件模型改动；记录在 `work/privacy-summary.json`。
+
+【实现】架构审视：页面只依赖系统能力、设置/状态与 UI，不引用 HAL 或模拟器。设置和配对由蓝牙服务拥有；按钮与 AI 共用 `settings.set`、`bt.*`，页面提供字段、动作、状态和分页快照，忘记动作也可由 `bt.forget` 调用。
+
+【实现／实测】孩子沿用 `bt.*` 的 `child_ok=true`：可从通话入口或 `shell.bluetooth` 打开耳机页，也可改 `bt.enabled`；通用设置和声音设置入口仍遵守既有成人权限。设置是设备级的，全家共用；普通蓝牙操作不弹确认卡。
 
 ## 没做到的
 
@@ -36,7 +42,6 @@
 ## 要用户定的
 
 - 暂无新的产品决定。蓝牙音箱与翻页器按任务范围不实现，已有接口保留。
-- 【实现／实测】孩子沿用 `bt.*` 的 `child_ok=true`：可从通话入口或 `shell.bluetooth` 打开耳机页，也可改 `bt.enabled`；通用设置和声音设置入口仍遵守既有成人权限。设置是设备级的，全家共用；普通蓝牙操作不弹确认卡。
 
 ## 顺手发现
 
