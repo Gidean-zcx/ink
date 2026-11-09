@@ -1,6 +1,6 @@
 # kid-2 执行报告
 
-基线：`50fd91821b47d6a9cacd42e7ba07fbd3b8084de4`。状态：实现和专项验证完成，最终全量与内存检查执行中。
+基线：`50fd91821b47d6a9cacd42e7ba07fbd3b8084de4`。状态：任务范围内实现和验证已完成；未达项如下，没有把文档失败算作全量通过。
 
 ## 验收表
 
@@ -10,11 +10,11 @@
 | 2 | 【实测】通过 | 错密码不改、不加；正确密码加 15 分钟；孩子未获验证不执行；去掉家长密码标记时测试失败 | 同上；`python tests/kid_2_negative.py --build build --case parent` |
 | 3 | 【实测】通过 | AI、通知进入受限应用均出现 KidLimit；正确密码只打开一次，下一次仍拦；目录隐藏受限应用 | 同上；反向对照 `--case entry` |
 | 4 | 【实测】范围内通过 | KidControl 四项及音量上限；本任务三页有真实快照，按钮复用能力。SetKid 归 settings-b | 同上；反向对照 `--case volume`；`python tools/ui_scale_check.py` |
-| 5 | 部分已验证 | 独立进程重启保留用时和加时；专项 306 个断言通过；产品新增 305 行。最终全量与内存结果待补 | 同上；全量命令见结束检查 |
+| 5 | 【实测】重启、内存、预算通过；全量留一项文档失败 | 独立进程重启保留用时和加时；普通及 ASAN 专项各 306 个断言通过；产品新增 305 行。ASAN 全量 238 通过、3 既有跳过、1 文档失败 | 同上；全量命令见结束检查 |
 
 ## 没做到的
 
-- 普通全量仍有能力总表过期一项待主会话统一生成；内存检查执行中。未在 Linux 或实机上运行。
+- 普通和 ASAN 全量仍有能力总表过期一项待主会话统一生成。没有达到“全量零失败”；未在 Linux 或实机上运行。
 - 检查点每分钟落盘，锁屏、换人及策略调用也保存。没有测试检查点之间突然断电，最多一分钟的未落盘用时不保证恢复。
 - SetKid 按任务边界由 settings-b 接线；没有声称其第四页快照在本任务完成。
 
@@ -61,8 +61,16 @@
 
 【实测】四项反向对照均命中指定断言：家长密码标记、锁屏暂停、音量钳位、受限应用准入；不是编译失败或缺资源导致的失败。专项与三个页面的最低内部 RAM 余量均为 47,736 字节，分配失败为 0。
 
+【实测】ASAN／UBSAN 全量：238 通过、3 项既有跳过、1 项文档失败，242 项共 321.91 秒。失败仅为生成能力总表过期；服务设计文档检查已通过。随后用 `UBSAN_OPTIONS=halt_on_error=1`、`INK_KEEP_EVIDENCE=1` 运行 `tests/kid_2.py --build build-asan`，四阶段共 306 个断言通过，四份日志没有 AddressSanitizer 或 undefined behavior 报错。
+
 构建配置使用总规则 §5 的全部依赖参数，保留 `INK_WERROR=ON`；内存构建另加 `INK_SANITIZE=ON`。所有构建 `taskpolicy -c utility cmake --build <build 或 build-asan> -j2`；全量 `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir <目录> --output-on-failure -j2`。命令输出保留在各构建目录的 kid-2 日志中。
 
 `tools/ui_compare.py --build build --design "$INK_DESIGN" --out build/kid-2-compare --reuse --scenes KidTimeUp KidLimit KidControl` 已运行。能力总表在 `build/kid-2-capabilities.md` 临时生成并用 `--check` 校验通过，没有写共享文件。
 
-内存结果和隐私检查待补。
+普通专项证据在 `build/kid-2-23qp37j0`；严格内存专项证据在 `build-asan/kid-2-9gi6rpfs`。最终四项反向对照的命令为 `tests/kid_2_negative.py --build build --case parent`、`--case locked`、`--case volume`、`--case entry`；各有 `build/kid-2-negative-*-final.log`，对应目标断言分别失败 1、3、2、26 次。
+
+以上 Python 命令均使用 `$INK_DEPS/build-deps/pyenv/bin/python`。普通与内存构建退出码为 0；全量 ctest 的退出码为 8（文档失败），服务文档单项复测和全部专项验证退出码为 0。
+
+架构审视：【实现】成员模块负责策略与落盘，能力入口统一准入，界面只读状态并调用能力；电话／短信所需输入与三种通讯集合有集中例外，其他数据读写仍拒绝。密码输入保持设备专用，AI 无权填写或提交。
+
+【实测】结束检查：相对基线产品代码新增 305 行、删除 19 行（合计 324 行也未超 350）；`git diff --check` 通过；改动文件均小于 5 MiB。按总规则的隐私表达式扫描提交差异，匹配 0 行。差异中没有设计稿、构建产物或其他任务文件。
