@@ -34,8 +34,8 @@
 
 static int g_fail_appends, g_fail_snapshots;
 static const char *g_fail_load; /* the file whose reading fails, the next time */
-static int test_append(const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx);
-static int test_write_borrow(const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx);
+static int test_append(const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx, const unsigned *waiters);
+static int test_write_borrow(const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx, const unsigned *waiters);
 static int test_load(const char *path, void **out, size_t *len);
 #define ink_storage_append test_append
 #define ink_storage_write_borrow test_write_borrow
@@ -74,7 +74,7 @@ static void fail_later(void *arg) {
     g_failed_done(g_failed_ctx, -1);
 }
 
-static int test_append(const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx) {
+static int test_append(const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx, const unsigned *waiters) {
     if (g_fail_appends > 0) {
         g_fail_appends--;
         g_failed_done = done;
@@ -82,10 +82,10 @@ static int test_append(const char *path, const void *data, size_t len, ink_stora
         ink_exec_post(INK_EXEC_BG, &g_fail_job, fail_later, NULL);
         return 0;
     }
-    return ink_storage_append(path, data, len, done, ctx);
+    return ink_storage_append(path, data, len, done, ctx, waiters);
 }
 
-static int test_write_borrow(const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx) {
+static int test_write_borrow(const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx, const unsigned *waiters) {
     if (g_fail_snapshots > 0) {
         g_fail_snapshots--;
         g_failed_done = done;
@@ -93,7 +93,7 @@ static int test_write_borrow(const char *path, const void *data, size_t len, ink
         ink_exec_post(INK_EXEC_BG, &g_fail_job, fail_later, NULL);
         return 0;
     }
-    return ink_storage_write_borrow(path, data, len, done, ctx);
+    return ink_storage_write_borrow(path, data, len, done, ctx, waiters);
 }
 
 static const ink_db_def_t NOTES = {.name = "test.notes", .title = "测试笔记", .schema = 2, .json = true, .ai_read = true, .ai_write = true};

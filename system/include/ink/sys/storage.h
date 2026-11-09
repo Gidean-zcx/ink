@@ -54,20 +54,22 @@ int ink_storage_pending(void);
 int ink_storage_failed(void);
 
 /*
- * Work with a result (system services design §3.1). Jobs run in the order they were accepted; `done`
+ * Work with a result (system services design §3.1). Waited writes precede background work; each path stays FIFO. `done`
  * runs in the storage task when one has finished (result 0, or < 0): keep it short. `data` is
  * borrowed: it stays valid until `done`. Directories a path needs are made when it is first
  * written. -1: the queue is full (8), nothing happened and `done` will not run: try again later.
  */
 typedef void (*ink_storage_done_fn)(void *ctx, int result);
-/** Atomic replace, without a copy, told when it is on the flash (not merged with other writes). */
-int ink_storage_write_borrow(const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx);
+/** Atomic replace, without a copy, told when it is on the flash (not merged with other writes).
+ *  waiters has the same meaning as append; NULL with done gives a waiting caller priority. */
+int ink_storage_write_borrow(const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx, const unsigned *waiters);
 /** Conditional restore in queue order. expected_sha256 is borrowed through done; all zero means absent.
  *  -3 from done means the original changed; no replacement is made or exposed to readers. */
 int ink_storage_restore(const char *path, const void *data, size_t len, const uint8_t expected_sha256[32], ink_storage_done_fn done, void *ctx);
 /** Append to a file, creating it. All of it or nothing: a failure leaves the file as it was. Reads do not
- *  see an append until it is written: the data store keeps what it appends in memory. */
-int ink_storage_append(const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx);
+ *  see an append until it is written: the data store keeps what it appends in memory. `waiters`, borrowed
+ *  through done, is an atomic counter: zero defers background work, nonzero gives waiting callers priority. */
+int ink_storage_append(const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx, const unsigned *waiters);
 /** Remove a file; one that does not exist counts as removed. Reads see it gone at once. `done` may be NULL. */
 int ink_storage_remove(const char *path, ink_storage_done_fn done, void *ctx);
 /** Remove in a saved member incarnation; the same lifetime protection as write_member_atomic. */

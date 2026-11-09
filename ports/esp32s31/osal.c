@@ -72,13 +72,7 @@ void osal_mem_stats(uint32_t caps, osal_mem_stats_t *out) {
 }
 const char *osal_mem_tag(const char *tag) { (void)tag; return NULL; }
 static TickType_t wait_ticks(int64_t us) {
-    /* Read both clocks without migration or a tick interrupt between them. */
-    portMUX_TYPE lock = portMUX_INITIALIZER_UNLOCKED;
-    portENTER_CRITICAL(&lock);
-    uint64_t now = osal_now_us();
-    TickType_t tick = xTaskGetTickCount();
-    portEXIT_CRITICAL(&lock);
-    return ink_s31_wait_ticks(now, tick, us, configTICK_RATE_HZ, portMAX_DELAY);
+    return ink_s31_wait_ticks(0, 0, us, configTICK_RATE_HZ, portMAX_DELAY);
 }
 osal_task_t *osal_task_self(void) { return pvTaskGetThreadLocalStoragePointer(NULL, TASK_TLS); }
 const char *osal_task_name(const osal_task_t *t) { return t ? t->name : pcTaskGetName(NULL); }

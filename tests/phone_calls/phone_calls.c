@@ -141,6 +141,58 @@ static void verify_phase(void) {
     CHECK(ink_member_switch("kid") == 0, "switch to child after a new process boot"); quiet(); history(1);
     CHECK(strstr(snap, "00000000009") && !strstr(snap, "00000000001"), "member isolation and exact history survive reboot");
 }
+static void add_call_headset(void *arg) { (void)arg; sim_headset_add("00:11:22:33:44:55", "合成耳机"); }
+static void lose_call_headset(void *arg) { (void)arg; sim_headset_range("00:11:22:33:44:55", false); }
+static void recording_reason(void) {
+    CHECK(P.notice && strstr(lv_label_get_text(P.notice), "暂不能录音"), "record button explains why recording is unavailable");
+}
+static void controls_phase(void) {
+    open_phone("00000000001"); outgoing();
+    CHECK(sim_net_call_audio(160) == 3, "unmuted call has uplink and speaker audio");
+    click("静音", NULL);
+    CHECK(WAIT_FOR(P.muted, 3000), "mute button waits for modem acknowledgement and readback"); quiet(); inspect();
+    CHECK(strstr(snap, "已静音") && sim_net_call_audio(160) == 2, "muted call has no uplink, but downlink stays audible");
+    CHECK(AI("call.mute", "{\"on\":false}") && g_rc.status == INK_RC_DONE, "AI unmutes through the same capability without confirmation");
+    CHECK(WAIT_FOR(!P.muted, 3000) && sim_net_call_audio(160) == 3, "modem readback and uplink recover"); quiet();
+    click("耳机未连", NULL);
+    CHECK(ink_audio_route() == INK_ROUTE_SPEAKER, "disconnected headset button leaves the actual route alone");
+    click("键盘", NULL); inspect();
+    CHECK(!strcmp(ink_ui_page_name(), "PhoneKeypad") && strstr(snap, "已发送的按键") && strstr(snap, "call.dtmf"), "keypad has the real AI snapshot and digit actions");
+    click("1", NULL); click("0", NULL); click("*", NULL); click("#", NULL);
+    CHECK(!strcmp(sim_net_call_tones(), "10*#") && !strcmp(P.tones, "10*#"), "touch digits equal the sequence accepted by AT+VTS");
+    CHECK(AI("call.dtmf", "{\"key\":\"2\"}") && g_rc.status == INK_RC_PENDING_CONFIRMATION, "unrequested AI DTMF uses the D-105 external-action gate");
+    CHECK(!strcmp(sim_net_call_tones(), "10*#"), "unconfirmed AI has sent no tone");
+    ink_confirm_view_t pending[1];
+    CHECK(ink_confirm_list(pending, 1) == 1, "DTMF confirmation is visible");
+    CHECK(ink_confirm_decide(pending[0].token, true, INK_SRC_AI) != 0, "AI cannot confirm its own DTMF");
+    CHECK(ink_confirm_decide(pending[0].token, true, INK_SRC_TOUCH) == 0, "human confirms the exact digit");
+    CHECK(WAIT_FOR(!strcmp(P.tones, "10*#2"), 3000) && !strcmp(sim_net_call_tones(), "10*#2"), "confirmed AI and touch share the modem path"); quiet(); inspect();
+    CHECK(strstr(snap, "10*#2"), "acknowledged digits are in the keypad snapshot");
+    CHECK(BY_HAND("call.dtmf", "{\"key\":\"Z\"}") && g_rc.status == INK_RC_INVALID && !strcmp(sim_net_call_tones(), "10*#2"), "invalid DTMF never reaches the modem");
+    click(NULL, "phone.keypad");
+    vtk_event_at(vtk_now() + SIM_MS(1), add_call_headset, NULL); delay_ms(5);
+    CHECK(BY_HAND("bt.pair", "{\"addr\":\"00:11:22:33:44:55\"}") && g_rc.status == INK_RC_DONE, "pair synthetic call headset");
+    CHECK(BY_HAND("bt.connect", "{\"addr\":\"00:11:22:33:44:55\"}") && g_rc.status == INK_RC_DONE, "connect during the active call");
+    CHECK(WAIT_FOR(ink_audio_route() == INK_ROUTE_HEADSET, 3000), "active call really switches the audio chip mode"); quiet(); inspect();
+    CHECK(sim_net_call_audio(160) == 5 && strstr(snap, "声音走耳机"), "downlink goes only to headset and UI tells the actual route");
+    click("耳机", NULL);
+    CHECK(WAIT_FOR(ink_audio_route() == INK_ROUTE_SPEAKER, 3000) && sim_net_call_audio(160) == 3, "call button switches back to speaker"); quiet();
+    CHECK(AI("call.route", "{\"headset\":true}") && g_rc.status == INK_RC_DONE, "AI switches to the connected headset without confirmation");
+    CHECK(WAIT_FOR(ink_audio_route() == INK_ROUTE_HEADSET, 3000), "AI route request reaches hardware");
+    vtk_event_at(vtk_now() + SIM_MS(1), lose_call_headset, NULL);
+    CHECK(WAIT_FOR(ink_audio_route() == INK_ROUTE_SPEAKER, 3000), "headset loss returns to the actual speaker route"); quiet();
+    click("录音", NULL); on_ui(recording_reason); inspect();
+    CHECK(strstr(snap, "通话音频接线未核实，暂不能录音"), "AI sees the honest recording limitation");
+    CHECK(AI("call.record", NULL) && g_rc.status == INK_RC_FAILED && strstr(g_rc.say, "暂不能录音"), "unavailable AI recording reports the same reason without opening a microphone");
+    CHECK(ink_member_switch("kid") == 0, "switch away from the call owner"); quiet();
+    CHECK(AI("call.mute", "{\"on\":true}") && g_rc.status == INK_RC_STALE, "child cannot control the adult call");
+    CHECK(AI("phone.keypad", NULL) && g_rc.status == INK_RC_STALE, "another member cannot open the owned call keypad"); quiet(); inspect();
+    CHECK(!strstr(snap, "00000000001") && !strstr(snap, "10*#2"), "child keypad discloses neither number nor entered tones");
+    CHECK(ink_member_switch("owner") == 0, "return to call owner"); quiet();
+    CHECK(BY_HAND("phone.return", NULL) && g_rc.status == INK_RC_DONE, "return to the owned call"); quiet(); hangup();
+    CHECK(!P.tones[0] && !sim_net_call_tones()[0] && sim_net_call_audio(160) == 0, "hangup clears both digit displays and all call audio");
+    CHECK(BY_HAND("call.mute", "{\"on\":true}") && g_rc.status == INK_RC_STALE, "ended calls reject mute");
+}
 static void capture(void *arg) {
     (void)arg; CHECK(settled(), "comparison frame is fully presented");
     char key_name[64]; snprintf(key_name, sizeof key_name, "test.snapshot.%s", scene);
@@ -150,6 +202,7 @@ static void scene_phase(void) {
     if (!strcmp(scene, "Phone")) open_phone("00000000001");
     else if (!strcmp(scene, "PhoneRecents")) history(5);
     else { open_phone("00000000001"); outgoing(); }
+    if (!strcmp(scene, "PhoneKeypad")) { click("键盘", NULL); click("1", NULL); }
     inspect(); quiet(); vtk_event_at(vtk_now() + SIM_MS(1), capture, NULL); delay_ms(5);
 }
 static void run(void *arg) {
@@ -158,6 +211,7 @@ static void run(void *arg) {
     ink_time_set(1793803620, false);
     if (!strcmp(phase, "write")) write_phase();
     else if (!strcmp(phase, "verify")) verify_phase();
+    else if (!strcmp(phase, "controls")) controls_phase();
     else scene_phase();
     CHECK(WAIT_FOR(ink_db_idle(), 10000), "no phone writes remain outstanding");
     ink_probe_count("test.finished");

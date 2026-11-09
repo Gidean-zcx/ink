@@ -54,8 +54,8 @@ static void run(void *arg) {
     CHECK(WAIT_FOR(ink_db_idle() && !ink_storage_pending(), 4000), "start with an empty queue");
     ink_storage_hold_writes(true);
     for (int i = 0; i < 8; i++)
-        CHECK(ink_storage_write_borrow("/user/m/oldadult/synthetic.raw", "SYNTH", 5, NULL, NULL) == 0, "queue slot %d", i);
-    CHECK(ink_storage_append("/user/m/oldadult/synthetic.raw", "SYNTH", 5, NULL, NULL) != 0 &&
+        CHECK(ink_storage_write_borrow("/user/m/oldadult/synthetic.raw", "SYNTH", 5, NULL, NULL, NULL) == 0, "queue slot %d", i);
+    CHECK(ink_storage_append("/user/m/oldadult/synthetic.raw", "SYNTH", 5, NULL, NULL, NULL) != 0 &&
           ink_storage_write_atomic("/user/m/oldadult/synthetic.other", "SYNTH", 5) != 0 &&
           ink_storage_remove("/user/m/oldadult/synthetic.raw", NULL, NULL) != 0, "full queue returns all registrations");
     ink_storage_hold_writes(false);

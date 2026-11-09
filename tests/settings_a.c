@@ -58,7 +58,31 @@ static bool row_has_icon(lv_obj_t *slot) {
     for (uint32_t i = 0; i < lv_obj_get_child_count(slot); i++) {
         lv_obj_t *o = lv_obj_get_child(slot, i);
         if (lv_obj_get_width(o) == ink_ui_px(INK_CIRCLE_SMALL) && lv_obj_get_height(o) == ink_ui_px(INK_CIRCLE_SMALL) &&
-            lv_color_eq(lv_obj_get_style_bg_color(o, 0), ink_ui_paper()) && lv_obj_get_child_count(o)) return true;
+            lv_color_eq(lv_obj_get_style_bg_color(o, 0), ink_ui_paper()) && lv_obj_get_child_count(o)) {
+            CHECK(!lv_obj_get_style_border_width(o, 0) && !lv_obj_has_flag(o, LV_OBJ_FLAG_CLICKABLE),
+                "settings presenters use the shared decorative circle");
+            lv_obj_t *bg = lv_obj_get_child(slot, 0);
+            bool joined = false, divided = false;
+            for (uint32_t k = 0; k < lv_obj_get_child_count(bg); k++) {
+                lv_obj_t *part = lv_obj_get_child(bg, (int32_t)k);
+                if (lv_obj_get_y(part)) continue;
+                if (lv_obj_get_width(part) == lv_obj_get_width(bg)) joined = true;
+                if (lv_color_eq(lv_obj_get_style_bg_color(part, 0), ink_ui_paper()) &&
+                    lv_obj_get_height(part) == ink_ui_px(INK_STROKE)) divided = true;
+            }
+            CHECK(joined == divided, "every joined settings row uses the shared divider, including later pages");
+            if (joined) {
+                lv_obj_t *parent = lv_obj_get_parent(slot);
+                int bottom = 0;
+                for (uint32_t k = 0; k < lv_obj_get_child_count(parent); k++) {
+                    lv_obj_t *previous = lv_obj_get_child(parent, (int32_t)k);
+                    if (!lv_obj_has_flag(previous, LV_OBJ_FLAG_HIDDEN) && lv_obj_get_y(previous) < lv_obj_get_y(slot))
+                        bottom = LV_MAX(bottom, lv_obj_get_y(previous) + lv_obj_get_height(previous));
+                }
+                CHECK(bottom == lv_obj_get_y(slot), "joined rows have no full-width white gap under the shared divider");
+            }
+            return true;
+        }
     }
     return false;
 }

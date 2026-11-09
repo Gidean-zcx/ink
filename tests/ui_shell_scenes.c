@@ -25,6 +25,7 @@ static bool password;
 static volatile int pin_done;
 static const char *wanted;
 static int label_x, label_y;
+static lv_obj_t *found_label;
 static void label_at(lv_obj_t *root) {
     for (uint32_t i = 0; i < lv_obj_get_child_count(root); i++) {
         lv_obj_t *c = lv_obj_get_child(root, (int32_t)i);
@@ -32,11 +33,12 @@ static void label_at(lv_obj_t *root) {
         if (lv_obj_check_type(c, &lv_label_class) && !strcmp(lv_label_get_text(c), wanted)) {
             lv_area_t a; lv_obj_update_layout(c); lv_obj_get_coords(c, &a);
             label_x = (a.x1 + a.x2) / 2; label_y = (a.y1 + a.y2) / 2;
+            found_label = c;
         }
         label_at(c);
     }
 }
-static void find_label(void) { label_x = label_y = -1; label_at(lv_screen_active()); label_at(lv_layer_sys()); }
+static void find_label(void) { found_label = NULL; label_x = label_y = -1; label_at(lv_screen_active()); label_at(lv_layer_sys()); }
 static bool press_label(const char *label) { wanted = label; on_ui(find_label); if (label_x < 0) return false; tap(label_x, label_y); return true; }
 
 static void pin_result(void *ctx, int result, uint32_t wait_s) { (void)ctx; (void)result; (void)wait_s; pin_done++; }
@@ -157,6 +159,26 @@ static bool snapshot_has(const char *text) {
     osal_free(snapshot);
     return found;
 }
+static void assert_settings_decoration(void) {
+    const char *rows[] = {"网络和 SIM 卡", "蓝牙", "显示和亮度", "声音", "语音和 AI", "锁屏和壁纸", "存储和备份", "关于和更新"};
+    for (unsigned i = 0; i < sizeof rows / sizeof *rows; i++) {
+        wanted = rows[i]; find_label();
+        CHECK(found_label, "settings row is visible: %s", wanted);
+        if (!found_label) continue;
+        lv_obj_t *row = lv_obj_get_parent(found_label);
+        bool base = false, divider = false;
+        for (uint32_t j = 0; j < lv_obj_get_child_count(row); j++) {
+            lv_obj_t *o = lv_obj_get_child(row, (int32_t)j);
+            if (lv_obj_get_style_bg_opa(o, 0) != LV_OPA_COVER || !lv_color_eq(lv_obj_get_style_bg_color(o, 0), ink_ui_paper())) continue;
+            int w = lv_obj_get_width(o), h = lv_obj_get_height(o);
+            if (w == h && lv_obj_get_style_radius(o, 0) >= w / 2)
+                base = !lv_obj_get_style_border_width(o, 0) && !lv_obj_has_flag(o, LV_OBJ_FLAG_CLICKABLE);
+            if (w > lv_obj_get_width(row) / 2 && h <= ink_ui_px(INK_STROKE)) divider = true;
+        }
+        CHECK(base, "settings icon contrasts with the gray group without a button outline: %s", wanted);
+        if (i != 0 && i != 2 && i != 5) CHECK(divider, "settings rows are visually separated: %s", wanted);
+    }
+}
 static void assert_identity(void) {
     const char *top = scene, *page = "home", *expected_text = scene;
     const char *home_board = scene;
@@ -194,6 +216,8 @@ static void assert_identity(void) {
     if (!strcmp(scene, "ImeCandidates")) CHECK(label_visible("键盘"), "expanded candidates, not the alphabet layout");
     if (!strcmp(scene, "ImeEdit")) { size_t a, b; ink_text_selection(&a, &b); CHECK(a == 2 && b == 4 && label_visible("复制"), "the real selection and edit tools are visible"); }
     if (!strcmp(scene, "ImeVoice")) CHECK(ink_text_voice_state() == INK_VOICE_LISTENING && label_visible("用键盘"), "the real dictation is listening");
+    if (!strcmp(scene, "ImeSymbols")) CHECK(label_visible("字母"), "the real symbol layout is selected");
+    if (!strcmp(scene, "Settings")) assert_settings_decoration();
     if (!strcmp(scene, "Components")) CHECK(label_visible("开关") && label_visible("自动"), "component controls exist");
     if (!strcmp(scene, "ComponentsPanel")) CHECK(label_visible("底部面板"), "the panel component exists");
     if (!strcmp(scene, "ComponentsDock")) CHECK(lv_obj_get_child_count(lv_screen_active()) > 1 && !label_visible("开关") && !label_visible("底部面板"), "Dock fixture has its own variant");
@@ -393,6 +417,8 @@ static void test_task(void *arg) {
         }
     } else if (!strcmp(scene, "ImeCandidates")) {
         CHECK(press_label("更多"), "expand real candidates");
+    } else if (!strcmp(scene, "ImeSymbols")) {
+        CHECK(press_label("符号"), "switch the real keyboard to symbols");
     } else if (!strcmp(scene, "Lock") || !strcmp(scene, "LockPage")) {
         ink_power_hold(INK_NEED_AWAKE); /* Snapshot while locked, before simulated light sleep. */
         set_level("display.lock_style", !strcmp(scene, "Lock")); ink_power_lock();

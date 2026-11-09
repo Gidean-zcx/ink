@@ -81,6 +81,11 @@ int ink_app_save_state(const char *id);
 int ink_app_background(const char *id, uint32_t kind, bool on);
 /** One of its own collections: `def->name` must start with "<app>.". */
 ink_db_t *ink_app_db_open(const char *app, const ink_db_def_t *def);
+typedef void (*ink_app_db_done_fn)(void *ctx, ink_db_t *db);
+/** UI task: open on BG as the captured member, then done on UI (NULL db: open failed).
+ * page is the caller's LVGL root; deleting it or changing member/auth drops done and closes db.
+ * 0 accepted, -1 rejected without callback. def has static storage; done owns the db reference. */
+int ink_app_db_open_async(const char *app, const ink_db_def_t *def, void *page, ink_app_db_done_fn done, void *ctx);
 /** Its cards changed (any task): home and the AI read them again (state app.cards_rev). */
 void ink_app_card_changed(const char *id);
 /** Shared member filter for service cards and retained bookmarks. */

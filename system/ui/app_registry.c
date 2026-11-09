@@ -366,10 +366,46 @@ int ink_app_background(const char *id, uint32_t kind, bool on) {
     return ok ? 0 : -1;
 }
 
-ink_db_t *ink_app_db_open(const char *app, const ink_db_def_t *def) {
-    size_t n = strlen(app);
-    if (!def || !def->name || strncmp(def->name, app, n) || def->name[n] != '.') return NULL;
-    return ink_db_open(def, NULL);
+static bool app_collection(const char *app, const ink_db_def_t *def) {
+    size_t n = app ? strlen(app) : 0;
+    return n && def && def->name && !strncmp(def->name, app, n) && def->name[n] == '.';
+}
+ink_db_t *ink_app_db_open(const char *app, const ink_db_def_t *def) { return app_collection(app, def) ? ink_db_open(def, NULL) : NULL; }
+
+typedef struct {
+    ink_exec_job_t job;
+    ink_member_identity_t owner;
+    const ink_db_def_t *def;
+    ink_db_t *db;
+    lv_obj_t *page;
+    ink_app_db_done_fn done;
+    void *ctx;
+} app_open_t;
+static void app_open_deleted(lv_event_t *e) { ((app_open_t *)lv_event_get_user_data(e))->page = NULL; }
+static void app_open_done(void *arg) {
+    app_open_t *p = arg;
+    if (p->page) lv_obj_remove_event_cb_with_user_data(p->page, app_open_deleted, p);
+    if (p->page && p->owner.epoch == ink_member_epoch() && ink_member_space_open()) p->done(p->ctx, p->db);
+    else ink_db_close(p->db);
+    osal_free(p);
+}
+static void app_open_bg(void *arg) {
+    app_open_t *p = arg;
+    p->db = ink_db_open(p->def, p->owner.member);
+    ink_exec_post(INK_EXEC_UI, &p->job, app_open_done, p);
+}
+int ink_app_db_open_async(const char *app, const ink_db_def_t *def, void *page, ink_app_db_done_fn done, void *ctx) {
+    if (!ink_ui_is_current() || !page || !done || !app_collection(app, def)) return -1;
+    app_open_t *p = osal_calloc(1, sizeof *p, OSAL_MEM_EXTERNAL);
+    if (!p) return -1;
+    ink_member_identity(&p->owner);
+    if (!p->owner.authed) { osal_free(p); return -1; }
+    p->def = def; p->page = page; p->done = done; p->ctx = ctx;
+    lv_obj_add_event_cb(page, app_open_deleted, LV_EVENT_DELETE, p);
+    if (ink_exec_post(INK_EXEC_BG, &p->job, app_open_bg, p) == 0) return 0;
+    lv_obj_remove_event_cb_with_user_data(page, app_open_deleted, p);
+    osal_free(p);
+    return -1;
 }
 
 void ink_app_card_changed(const char *id) {

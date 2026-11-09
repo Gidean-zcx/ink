@@ -56,10 +56,10 @@ static void offline_edit(void *arg) {
 static void usage_after_change(int64_t total) {
     CHECK(AI("file.usage", NULL) && g_rc.status == INK_RC_DONE &&
         (strstr(g_result, "organizing") || number("device", "books") == total),
-        "changed card never reports old totals as ready: %s", g_result);
+        "changed card never reports old totals as ready: %.150s", g_result);
     CHECK(WAIT_FOR(ready(), 30000), "change triggers automatic index repair");
     CHECK(AI("file.usage", NULL) && g_rc.status == INK_RC_DONE && number("device", "books") == total,
-        "repaired usage has current bytes: %s", g_result);
+        "repaired usage has current bytes: %.150s", g_result);
 }
 static bool identity(uint8_t out[16]) {
     hal_file_t *f = hal_fs_open("/content/.file-index-card", HAL_O_READ);

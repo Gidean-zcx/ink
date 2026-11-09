@@ -503,7 +503,8 @@ target_link_libraries(sim-ui-scenes PRIVATE ink_apps ink_system ink_port_sim)
 target_compile_options(sim-ui-scenes PRIVATE ${INK_WARN} -Wno-format-truncation)
 set(INK_SHELL_SCENES Main Today Apps Lock LockPage Control Notifications Members MembersBack Pin PinWrong
   ImePinyin ImeCandidates ImeEdit ImePassword ImeVoice Confirm ConfirmDelete ConfirmSecret AiListen AiThink Ai
-  Settings SetDisplay SetSound SetNetwork PowerMenu PowerOff PhoneIncoming ClockRing Components ComponentsDock ComponentsPanel)
+  Settings SetDisplay SetSound SetNetwork SetVoice SetAbout SetPrivacy ImeSymbols
+  PowerMenu PowerOff PhoneIncoming ClockRing Components ComponentsDock ComponentsPanel)
 foreach(scene ${INK_SHELL_SCENES})
   if(scene STREQUAL "PowerOff")
     set(budget ui_off_scene)
@@ -556,6 +557,10 @@ target_link_libraries(sim-jot PRIVATE ink_apps ink_system)
 add_test(NAME app-framework-example COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/jot/run.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(app-framework-example PROPERTIES TIMEOUT 320)
 add_test(NAME app-framework-snippets COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/jot/check_doc.py)
+ink_sim_executable(sim-fw-gaps tests/fw_gaps/app.c tests/fw_gaps/db_probe.c)
+target_link_libraries(sim-fw-gaps PRIVATE ink_apps ink_system)
+add_test(NAME app-framework-gaps COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/fw_gaps/run.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(app-framework-gaps PROPERTIES TIMEOUT 180 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")
 add_test(NAME ui-semantics
   COMMAND sim-ui-semantics --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
     --script ${CMAKE_SOURCE_DIR}/tests/ui_semantics.script --budget ${CMAKE_SOURCE_DIR}/tests/ui_scene.budget.json
@@ -601,7 +606,7 @@ ink_sim_executable(sim-text-long tests/text_long/editor.c)
 target_link_libraries(sim-text-long PRIVATE ink_apps ink_system)
 add_test(NAME text-long COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/text_long/run.py --build ${CMAKE_BINARY_DIR})
 foreach(profile metalio-plus desktop-lcd)
-  foreach(regression confirm slider context privacy answer snapshot alarm)
+  foreach(regression confirm slider context privacy answer snapshot alarm theme)
     add_test(NAME ui-${regression}-regressions-${profile}
       COMMAND ${CMAKE_COMMAND} -E env INK_UI_REGRESSION=${regression} $<TARGET_FILE:sim-ui-regressions>
         --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/${profile}.json --script ${CMAKE_SOURCE_DIR}/tests/ui_shell_regressions.script
@@ -1412,6 +1417,21 @@ ink_sim_executable(sim-file-index-3 tests/file_index_3/device.c tests/file_index
 target_link_libraries(sim-file-index-3 PRIVATE ink_apps ink_system)
 add_test(NAME file-index-3 COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/file_index_3/run.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(file-index-3 PROPERTIES TIMEOUT 180 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")
+ink_sim_executable(sim-storage-order tests/storage_order/device.c tests/storage_order/data_boundary.c
+  tests/storage_order/storage_boundary.c tests/file_index_3/boundary.c)
+target_link_libraries(sim-storage-order PRIVATE ink_apps ink_system)
+add_test(NAME storage-order COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/storage_order/run.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(storage-order PROPERTIES TIMEOUT 180 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")
+
+ink_sim_executable(sim-audit5-fix tests/audit5_fix/device.c tests/file_index_3/boundary.c)
+target_link_libraries(sim-audit5-fix PRIVATE ink_apps ink_system)
+# b5-02 (index durability after a file change) waits for its own task: syncing inside file operations cost ~1.75 s each.
+foreach(pair "b5-01;confirmation" "b5-03;receipts")
+    list(GET pair 0 number)
+    list(GET pair 1 scenario)
+    add_test(NAME audit5-${number} COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/audit5_fix/run.py --build ${CMAKE_BINARY_DIR} --case ${scenario})
+    set_tests_properties(audit5-${number} PROPERTIES TIMEOUT 240)
+endforeach()
 target_sources(ink_system PRIVATE system/ui/shell/transfer_pages.c)
 ink_sim_executable(sim-transfer-pages tests/transfer_pages/device.c)
 target_link_libraries(sim-transfer-pages PRIVATE ink_apps ink_system)

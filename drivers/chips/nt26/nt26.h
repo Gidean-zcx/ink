@@ -42,6 +42,8 @@ nt26_result_t nt26_sms_delete(int index);
 nt26_result_t nt26_dial(const char *number); /* voice call (VoLTE) */
 nt26_result_t nt26_answer(void);
 nt26_result_t nt26_hangup(void);
+nt26_result_t nt26_mute(bool on, bool *muted);
+nt26_result_t nt26_dtmf(char key);
 /* UTF-8 <-> UCS2 hex as AT+CSCS="UCS2" wants it */
 int nt26_utf8_to_ucs2_hex(const char *utf8, char *hex, int cap);
 int nt26_ucs2_hex_to_utf8(const char *hex, char *utf8, int cap);

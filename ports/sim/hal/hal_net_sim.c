@@ -521,7 +521,7 @@ bool sim_net_modem_registered(void) { return g_profile.lte.present && cell_ok();
  * 4 incoming), an incoming call rings (RING, +CLIP) every 3 s, the end is NO CARRIER. Which
  * unsolicited lines the EC718PM firmware really sends is an ASSUMPTION until its AT manual is
  * checked. SMS needs a card with SMS, calls one with voice (VoLTE), and both a registration.
- * Call audio is not modelled (how the modem's voice reaches the speaker is not known). */
+ * Call audio injection below assumes a path through BH1098G; the board wiring is unverified. */
 #define SMS_SEND_MS 2000
 #define SMS_SLOTS 16
 #define URC_SLOTS 16
@@ -539,6 +539,8 @@ static struct {
     vtk_waitq_t urc_wq;
     int call;        /* 0 idle, 2 dialling, 3 alerting, 4 incoming, 1 active */
     bool call_out;
+    bool muted;
+    char tones[65];
     char call_number[24];
     bool auto_answer;
     vtk_event_id_t call_ev;
@@ -642,6 +644,8 @@ static void call_end(void) { /* ISR or locked */
     MS.call_ev = 0;
     if (!MS.call) return;
     MS.call = 0;
+    MS.muted = false;
+    MS.tones[0] = 0;
     call_report();
 }
 
@@ -689,7 +693,7 @@ static hal_at_result_t at_run(const char *cmd, const char *payload, char *resp, 
     if (resp && resp_cap) resp[0] = 0;
     if (!g_profile.lte.present) return HAL_AT_NO_MODEM;
     enum { K_AT, K_CFUN_Q, K_CFUN0, K_CFUN1, K_SLOT_Q, K_SLOT_SET, K_CPIN, K_CEREG, K_RST, K_CMGF, K_CSCS, K_CNMI, K_CMGS, K_CMGR,
-           K_CMGD, K_ATD, K_ATA, K_CHUP, K_CLCC, K_BAD } k = K_BAD;
+           K_CMGD, K_ATD, K_ATA, K_CHUP, K_CLCC, K_CMUT, K_CMUT_Q, K_VTS, K_BAD } k = K_BAD;
     unsigned lat_ms = CELL_AT_MS;
     int slot = -1, idx = -1;
     char arg[100] = "";
@@ -713,6 +717,9 @@ static hal_at_result_t at_run(const char *cmd, const char *payload, char *resp, 
     else if (!strcmp(cmd, "ATA")) k = K_ATA;
     else if (!strcmp(cmd, "ATH") || !strcmp(cmd, "AT+CHUP")) k = K_CHUP;
     else if (!strcmp(cmd, "AT+CLCC")) k = K_CLCC;
+    else if (!strcmp(cmd, "AT+CMUT?")) k = K_CMUT_Q;
+    else if (!strcmp(cmd, "AT+CMUT=0") || !strcmp(cmd, "AT+CMUT=1")) k = K_CMUT;
+    else if (strlen(cmd) == 10 && !strncmp(cmd, "AT+VTS=\"", 8) && cmd[9] == '"' && strchr("0123456789*#ABCD", cmd[8])) k = K_VTS;
     uint64_t t0 = vtk_now(), limit = t0 + SIM_MS(timeout_ms);
     uint64_t done = CELL.deaf_until == VTK_TIME_INF ? VTK_TIME_INF : (t0 > CELL.deaf_until ? t0 : CELL.deaf_until) + SIM_MS(lat_ms);
     if (done > limit) { /* deaf (in reset, unpowered, rebooting) or slower than the caller waits: lost */
@@ -814,6 +821,17 @@ static hal_at_result_t at_run(const char *cmd, const char *payload, char *resp, 
         }
         break;
     case K_CHUP: call_end(); break;
+    case K_CMUT_Q: sim_copy_name(info, sizeof info, MS.muted ? "+CMUT: 1" : "+CMUT: 0"); break;
+    case K_CMUT:
+        if (MS.call != 1) r = HAL_AT_ERROR;
+        else MS.muted = cmd[8] == '1';
+        break;
+    case K_VTS: {
+        size_t n = strlen(MS.tones);
+        if (MS.call != 1 || n == sizeof MS.tones - 1) r = HAL_AT_ERROR;
+        else { MS.tones[n] = cmd[8]; MS.tones[n + 1] = 0; }
+        break;
+    }
     case K_CLCC:
         if (MS.call)
             snprintf(info, sizeof info, "+CLCC: 1,%d,%d,0,0,\"%s\",129", MS.call_out ? 0 : 1, MS.call == 1 ? 0 : MS.call, MS.call_number);
@@ -873,6 +891,16 @@ int sim_net_call(char *number, size_t cap) {
     if (number && cap) snprintf(number, cap, "%s", MS.call_number);
     return MS.call;
 }
+
+/* Inject a call frame: bit 0 uplink, bit 1 speaker, bit 2 headset. No system policy. */
+int sim_net_call_audio(unsigned samples) {
+    if (MS.call != 1) return 0;
+    int route = sim_bt_audio_mode() == 2 ? 4 : 2;
+    sim_metric_add(MS.muted ? "cell.call.muted_samples" : "cell.call.uplink_samples", samples);
+    sim_metric_add(route == 4 ? "cell.call.headset_samples" : "cell.call.speaker_samples", samples);
+    return route | (MS.muted ? 0 : 1);
+}
+const char *sim_net_call_tones(void) { return MS.tones; }
 
 int sim_net_sent_sms(int i, char *number, size_t ncap, char *text, size_t tcap) {
     if (i < 0 || i >= MS.sent_n || i < MS.sent_n - 8) return MS.sent_n;

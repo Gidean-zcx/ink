@@ -249,3 +249,22 @@ nt26_result_t nt26_hangup(void) {
     char resp[32];
     return at("AT+CHUP", resp, sizeof resp, NT26_QUERY_TIMEOUT_MS);
 }
+
+/* TS 27.007; target firmware support still needs its NT26 AT manual. */
+nt26_result_t nt26_mute(bool on, bool *muted) {
+    char resp[48];
+    nt26_result_t r = at(on ? "AT+CMUT=1" : "AT+CMUT=0", resp, sizeof resp, NT26_QUERY_TIMEOUT_MS);
+    if (r != NT26_OK) return r;
+    r = at("AT+CMUT?", resp, sizeof resp, NT26_QUERY_TIMEOUT_MS);
+    const char *p = strstr(resp, "+CMUT: ");
+    if (r != NT26_OK || !p || (p[7] != '0' && p[7] != '1')) return NT26_AT_FAILED;
+    *muted = p[7] == '1';
+    return NT26_OK;
+}
+
+nt26_result_t nt26_dtmf(char key) {
+    char cmd[20], resp[32];
+    if (!key || !strchr("0123456789*#ABCD", key)) return NT26_AT_FAILED;
+    snprintf(cmd, sizeof cmd, "AT+VTS=\"%c\"", key);
+    return at(cmd, resp, sizeof resp, NT26_QUERY_TIMEOUT_MS);
+}

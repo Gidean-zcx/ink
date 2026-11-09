@@ -1,5 +1,6 @@
 """The comparison tool must refuse stale final images and unverified snapshots."""
 import json
+import os
 from pathlib import Path
 import runpy
 import sys
@@ -13,6 +14,27 @@ MAIN = runpy.run_path(str(ROOT / 'tools/ui_compare.py'))['main']
 
 
 class CompareTest(unittest.TestCase):
+    def test_fidelity_collects_the_latest_verified_frame(self):
+        (ROOT / 'work').mkdir(exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=ROOT / 'work') as tmp:
+            root = Path(tmp)
+            reference = root / 'design/png'
+            reference.mkdir(parents=True)
+            Image.new('L', (684, 1216), 255).save(reference / 'Settings.png')
+            metrics = {'test.finished': 1, 'test.snapshot.settled': 1, 'test.snapshot.Settings': 1}
+            for name, stamp, gray in (('a-old', 10, 255), ('z-new', 20, 0)):
+                source = root / 'build' / name
+                source.mkdir(parents=True)
+                Image.new('L', (684, 1216), gray).save(source / 'snap-scene.png')
+                path = source / 'metrics.json'
+                path.write_text(json.dumps({'metrics': metrics}))
+                os.utime(path, (stamp, stamp))
+            args = ['ui_fidelity', '--build', str(root / 'build'), '--design', str(root / 'design'), '--out', str(root / 'out')]
+            with patch.object(sys, 'argv', args): runpy.run_path(str(ROOT / 'tests/ui_fidelity.py'))
+            sources = json.loads((root / 'out/sources.json').read_text())
+            self.assertTrue(sources['Settings']['frame'].endswith('z-new/snap-scene.png'))
+            self.assertEqual(json.loads((root / 'out/scores.json').read_text())[0]['mae_quarter'], 255)
+
     def test_reuse_requires_a_verified_scene_frame(self):
         (ROOT / 'work').mkdir(exist_ok=True)
         with tempfile.TemporaryDirectory(dir=ROOT / 'work') as tmp:

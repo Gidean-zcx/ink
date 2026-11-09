@@ -30,7 +30,7 @@ if a.baseline or a.mutant:
                         'ink_svc_at(&FS.index_at, osal_now_us() + (more ? 50000ull : 1000000ull), index_refresh_cb, NULL);'),
             'file-change': ('    if (added) index_invalidate();\n', '    (void)added;\n'),
             'card-change': ('index_invalidate();\n    fs_refresh_cb(NULL);', 'fs_refresh_cb(NULL);'),
-            'blocking': ('    ink_db_flush(db);\n    osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);',
+            'blocking': ('    if (scanned) ink_db_flush_background(db);\n    osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);',
                          '    if (db && ink_db_wait(db, ink_db_last_ver(db), 3000000)) r = INK_FS_ERR_IO;\n    osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);'),
             'identity': ('''    if (!f) {
         hal_dir_t *d = hal_fs_opendir("/content");

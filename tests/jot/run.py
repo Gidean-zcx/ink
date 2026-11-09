@@ -11,7 +11,7 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[2]
 parser = argparse.ArgumentParser()
 parser.add_argument("--build", type=Path, required=True)
-parser.add_argument("--mutant", choices=("source", "state", "snapshot", "child"))
+parser.add_argument("--mutant", choices=("source", "state", "snapshot", "child", "loading"))
 args = parser.parse_args()
 build = args.build.resolve()
 work = Path(tempfile.mkdtemp(prefix="jot-", dir=build))
@@ -19,6 +19,7 @@ binary = build / "sim-jot"
 if args.mutant:
     source = (ROOT / "examples/jot/jot.c").read_text()
     before, after = {
+        "loading": ("    if (!ink_jot_list) { c->rc.status = INK_RC_FAILED; return; }\n", ""),
         "source": (".len = json.len, .src = c->src", ".len = json.len, .src = INK_SRC_TOUCH"),
         "state": ("*(uint8_t *)buf = (uint8_t)ink_jot_position.page;\n    return 1;",
                   "*(uint8_t *)buf = (uint8_t)ink_jot_position.page;\n    return 0;"),

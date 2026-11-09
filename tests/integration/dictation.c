@@ -340,7 +340,10 @@ static void offline(void) {
     vtk_event_at(vtk_now() + SIM_MS(1), net_none, NULL);
     CHECK(WAIT_FOR(state_is(INK_VOICE_IDLE), 40000), "the link goes, and it ends (%d)", g_state);
     look();
-    CHECK(!strcmp(g_value, "断之前的。") && strstr(g_notice, "连不上"), "what was final stays (%s, %s)", g_value, g_notice);
+    /* What was final stays; half a sentence heard by then stays too (fail_with), so the rest may be the start of the next one. */
+    const char *first = "断之前的。", *rest = g_value + strlen(first);
+    CHECK(!strncmp(g_value, first, strlen(first)) && !strncmp("断之后的。", rest, strlen(rest)) && strstr(g_notice, "连不上"),
+          "what was final stays (%s, %s)", g_value, g_notice);
     CHECK(WAIT_FOR(over_and_free(), 1000), "free");
     net_up();
     delay_ms(2000);

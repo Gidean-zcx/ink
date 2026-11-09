@@ -120,7 +120,8 @@ static void bind_row(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, i
     bool undo = !strcmp(L.member, ink_member_current()->id) && L.receipts && object[0] && undo_ms > 0 && age >= 0 && age * 1000 < undo_ms;
     const ink_cap_t *definition = ink_cap_find(cap);
     snprintf(L.ids[i], sizeof L.ids[i], "activity:%u", (unsigned)rec.id);
-    snprintf(L.args[i], sizeof L.args[i], "{\"id\":%u}", (unsigned)rec.id);
+    char member[16]; snprintf(member, sizeof member, "%s", L.member);
+    snprintf(L.args[i], sizeof L.args[i], "{\"id\":%u,\"member\":\"%s\"}", (unsigned)rec.id, member);
     if (undo) {
         ink_jw_t w; ink_jw_init(&w, L.args[i], sizeof L.args[i]);
         ink_jw_raw(&w, "{\"object\":"); ink_jw_str(&w, object);
@@ -169,7 +170,8 @@ static void list_create(lv_obj_t *screen, void *arg) {
     L.version = L.db ? ink_db_last_ver(L.db) : 0;
     L.generation = ink_ui_generation(); L.status = L.db ? "" : "正在读取记录"; L.notice = NULL;
     ink_shell_statusbar(screen, true);
-    const char *title = L.receipts ? "AI 做事的结果" : (!strcmp(L.member, ink_member_current()->id) ? "AI 替你做过的事" : "孩子的 AI 活动记录");
+    bool self = !strcmp(L.member, ink_member_current()->id);
+    const char *title = L.receipts ? (self ? "AI 做事的结果" : "孩子的 AI 做事结果") : (self ? "AI 替你做过的事" : "孩子的 AI 活动记录");
     ink_shell_topbar(screen, title);
     int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP;
     int row_h = L.receipts ? 2 * ink_ui_line_height(INK_FONT_LIST) + 4 * ink_ui_line_height(INK_FONT_NOTE) + INK_CONTROL + 3 * INK_GAP_M : ink_ui_row_double();
@@ -219,21 +221,22 @@ static const ink_activity_t RECEIPTS = {.name = "AiReceipts", .app = "ai-log", .
     .on_key = list_key, .snapshot = list_snapshot, .settle = list_settle};
 static void action(ink_call_t *c) {
     const char *id = c->cap->id;
-    if (!strcmp(id, "shell.ai_log")) {
+    if (!strcmp(id, "shell.ai_log") || !strcmp(id, "shell.ai_receipts")) {
+        bool receipts = !strcmp(id, "shell.ai_receipts");
         char member[16]; snprintf(member, sizeof member, "%s", ink_member_current()->id);
         ink_args_get_str(&c->args, "member", member, sizeof member);
         bool allowed = !strcmp(member, ink_member_current()->id);
         for (int i = 0; ink_member_at(i); i++) if (!strcmp(member, ink_member_at(i)->id) && ink_member_at(i)->role == INK_ROLE_CHILD && ink_member_current()->role == INK_ROLE_ADULT) allowed = true;
         if (!allowed) { c->rc.status = INK_RC_REJECTED; return; }
-        ink_ai_dismiss(); ink_ui_drop_app("ai-log");
+        ink_ai_dismiss();
+        if (!receipts || strcmp(member, L.member)) ink_ui_drop_app("ai-log");
         snprintf(L.member, sizeof L.member, "%s", member); L.epoch = ink_member_epoch();
-        memset(&L.position[0], 0, sizeof L.position[0]); L.selected = 0; ink_ui_push(&LOG, NULL);
+        int64_t selected = 0;
+        if (receipts) ink_args_get_int(&c->args, "id", &selected);
+        memset(&L.position[receipts], 0, sizeof L.position[receipts]); L.selected = (uint32_t)selected;
+        ink_ui_push(receipts ? &RECEIPTS : &LOG, NULL);
     } /* entered from SetVoice, Records and AiHome, not an app */
-    else if (!strcmp(id, "shell.ai_receipts")) {
-        int64_t selected = 0; ink_args_get_int(&c->args, "id", &selected);
-        memset(&L.position[1], 0, sizeof L.position[1]); L.selected = (uint32_t)selected;
-        ink_ai_dismiss(); ink_ui_push(&RECEIPTS, NULL);
-    } else if (!strcmp(id, "ai.pages.close") || !strcmp(id, "ai.pages.retry")) {
+    else if (!strcmp(id, "ai.pages.close") || !strcmp(id, "ai.pages.retry")) {
         if (!E.root) { c->rc.status = INK_RC_STALE; return; }
         bool retry = !strcmp(id, "ai.pages.retry") && E.kind < 2;
         ink_ai_dismiss();
@@ -246,7 +249,7 @@ static const ink_cap_t CAPS[] = {
     {.id = "shell.ai_log", .title = "查看 AI 做过的事", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action,
      .input = "{\"type\":\"object\",\"properties\":{\"member\":{\"type\":\"string\",\"maxLength\":15}}}"},
     {.id = "shell.ai_receipts", .title = "查看 AI 做事的结果", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action,
-     .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}}}"},
+     .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295},\"member\":{\"type\":\"string\",\"maxLength\":15}}}"},
     PAGE_CAP("ai.pages.close", "继续读"), PAGE_CAP("ai.pages.retry", "重新用话筒问"),
     PAGE_CAP("ai.pages.next", "下一页 AI 记录"), PAGE_CAP("ai.pages.prev", "上一页 AI 记录")
 };

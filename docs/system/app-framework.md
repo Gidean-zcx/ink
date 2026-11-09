@@ -1,6 +1,6 @@
 # 应用写法：以已实现的 C 接口为准
 
-核查日期：2026-11-09；基线：`2228df7de99de9fea15fddc22868a0de1caae770`。本文是 F13 的接入说明，不把[设计建议](app-framework-design.md)中的接口草图当成 SDK。
+核查日期：2026-11-10；任务基线：`62b0e83da1d34f50629b5e576807db1381b26078`。本文是 F13 的接入说明，不把[设计建议](app-framework-design.md)中的接口草图当成 SDK。
 
 [“记一笔”示例](../../examples/jot/jot.c)只链接到 `sim-jot` 测试程序，不加入出厂应用。它有三个可见槽位的列表、一页短输入、六个原子能力和一张服务卡片，最多保存八笔，每笔不超过 95 字节。代码块逐字摘自该文件，由 `app-framework-snippets` 检查；整个示例随测试编译。
 
@@ -22,7 +22,7 @@ int ink_jot_init(void) {
 }
 ```
 
-示例的测试宿主通过仅用于该测试的启动包装，在产品启动流程调用 `ink_ui_start()` 前注册 `ink_jot_init()`；真实集成应放进自己的启动装配位置。首次加载集合可能做 I/O，示例在测试驱动中先调用 `ink_jot_prepare()`，再调用 `jot.open`，不在创建页面时读盘。切换家人时先关闭应用，让 `on_stop` 释放旧集合，再为新家人准备数据。[测试宿主](../../tests/jot/app.c)展示完整顺序。
+示例的测试宿主通过仅用于该测试的启动包装，在产品启动流程调用 `ink_ui_start()` 前注册 `ink_jot_init()`；真实集成应放进自己的启动装配位置。首次加载集合由应用在创建页面时调用 `ink_app_db_open_async()` 发起，后台执行器读盘，界面执行器收到结果后重绘；读取期间显示状态并提供快照。[测试宿主](../../tests/jot/app.c)只调用 `jot.open`，不再替应用预先读盘。切换家人时 `on_stop` 释放旧集合；尚未完成的打开由框架按原成员身份收尾。
 
 大块数据使用 `ink_app_alloc`，把 `psram` 参数设为 true，并用 `ink_app_free` 释放。应用不自行建任务；耗时工作交给已有执行器再回界面。**还没有**可安装应用包加载器、完整脚本 SDK 或从设计草图自动生成的页面运行时。
 
@@ -129,6 +129,14 @@ AI 代填普通字段走 `text.insert` 等现有能力，带当前会话与编�
 static void ink_jot_list_create(lv_obj_t *screen, void *arg) {
     (void)arg;
     ink_shell_topbar(screen, INK_JOT_LIST_MODEL.title);
+    ink_jot_watch = ink_state_watch_handle("app.cards_rev", ink_jot_changed, NULL, INK_EXEC_UI);
+    if (ink_jot_watch < 0) ink_app_fail("jot subscription failed");
+    if (!ink_jot_db) {
+        ink_jot_status = "正在读取记录";
+        ink_jot_notice = ink_ui_notice(screen, ink_jot_status, INK_STATUS_BAR + INK_PRIMARY + INK_GAP);
+        if (ink_app_db_open_async("jot", &INK_JOT_DATA, screen, ink_jot_loaded, NULL) != 0) ink_jot_loaded(NULL, NULL);
+        return;
+    }
     lv_obj_t *body = ink_ui_box(screen, 0, INK_STATUS_BAR + INK_PRIMARY + INK_GAP,
         INK_CANVAS_W, INK_CANVAS_H - INK_STATUS_BAR - 2 * INK_PRIMARY - 2 * INK_GAP - INK_MARGIN, 0, INK_SURFACE_WHITE, false);
     ink_jot_list = ink_ui_list_create(body, &INK_JOT_LIST_MODEL, &ink_jot_position,
@@ -140,7 +148,7 @@ static void ink_jot_list_create(lv_obj_t *screen, void *arg) {
 }
 ```
 
-页面动作的前两个固定为上一页／下一页能力，可再带一个页面动作。能力处理函数调 `ink_ui_list_turn()`，物理键可委托 `ink_ui_list_key()`；快照用 `ink_ui_list_snapshot()`，包含总项数、页数、当前偏移、可见项和截断说明。空页和末页由组件处理；点击可用 `ink_ui_list_action()` 共用 F1 检查。容器删除会释放视图，应用的 `destroy` 只清空借用指针。本例每页三笔，八笔上限明确，绑定时最多扫描八条；这不是无限列表的数据源实现。
+页面动作的前两个固定为上一页／下一页能力，可再带一个页面动作。能力处理函数调 `ink_ui_list_turn()`，物理键可委托 `ink_ui_list_key()`；快照用 `ink_ui_list_snapshot()`，包含总项数、页数、当前偏移、可见项和截断说明。空页和末页由组件处理；点击可用 `ink_ui_list_action()` 共用 F1 检查。容器删除会释放视图，应用的 `destroy` 退订状态并清空借用指针。本例每页三笔，八笔上限明确，绑定时最多扫描八条；这不是无限列表的数据源实现。
 
 ## 7. F9：文件选择器
 
@@ -152,7 +160,7 @@ static void ink_jot_list_create(lv_obj_t *screen, void *arg) {
 
 ## 8. F5：服务卡片
 
-出处：[appreg.h:40，卡片结构](../../system/include/ink/sys/appreg.h#L40)、[appreg.h:61，提供者](../../system/include/ink/sys/appreg.h#L61)、[appreg.h:85，变更和成员过滤](../../system/include/ink/sys/appreg.h#L85)；现有能力注册在 [app_registry.c:503](../../system/ui/app_registry.c#L503)。
+出处：[appreg.h:40，卡片结构](../../system/include/ink/sys/appreg.h#L40)、[appreg.h:61，提供者](../../system/include/ink/sys/appreg.h#L61)、[appreg.h:90，变更和成员过滤](../../system/include/ink/sys/appreg.h#L90)；现有能力注册在 [app_registry.c:539](../../system/ui/app_registry.c#L539)。
 
 `card(index, out)` 每次返回 1 表示有这一张，0 表示结束；回调必须轻，不依赖应用已经打开，不阻塞、不建页。用稳定 `id`、标题、真实内容和打开能力，家庭成员专属内容填 `member`。为空表示提供者已按当前家人过滤，不表示允许共享私密内容。`app.cards` 与“今日”共读同一来源，`ink_app_card_visible()` 做成员过滤。
 
@@ -174,7 +182,7 @@ static int ink_jot_card(int index, ink_card_t *out) {
 
 ## 9. 状态、设置的读写与订阅
 
-出处：[state.h:27，状态定义](../../system/include/ink/sys/state.h#L27)、[state.h:43，读取与订阅](../../system/include/ink/sys/state.h#L43)、[settings.h:32，设置定义](../../system/include/ink/sys/settings.h#L32)、[settings.h:54，读写与订阅](../../system/include/ink/sys/settings.h#L54)、[exec.h:1，已有执行器](../../system/include/ink/sys/exec.h#L1)。
+出处：[state.h:52，状态退订](../../system/include/ink/sys/state.h#L52)、[settings.h:60，设置退订](../../system/include/ink/sys/settings.h#L60)、[state.h:27，状态定义](../../system/include/ink/sys/state.h#L27)、[state.h:43，读取与订阅](../../system/include/ink/sys/state.h#L43)、[settings.h:32，设置定义](../../system/include/ink/sys/settings.h#L32)、[settings.h:54，读写与订阅](../../system/include/ink/sys/settings.h#L54)、[exec.h:1，已有执行器](../../system/include/ink/sys/exec.h#L1)。
 
 | 数据 | 读取 | 修改者与方式 | 订阅 |
 | --- | --- | --- | --- |
@@ -183,7 +191,22 @@ static int ink_jot_card(int index, ink_card_t *out) {
 
 界面订阅选择 `INK_EXEC_UI`，后台服务选择合适的已有执行器；回调短小，不能在输入或中枢回调里阻塞。不要用一份应用私有变量代替系统状态。设置写入接受后会异步保存，`apply` 可能尚未运行；设置的 `system`、`child_may_change`、`ask_by_hand` 控制实际权限和确认，见 [settings.c:195](../../system/policy/settings.c#L195)。
 
-**还没有**状态和设置订阅的取消句柄／退订接口。别在每次创建页面时注册一个持有旧控件指针的订阅；当前可把订阅放在长寿命拥有者处，在回调中判断页面是否仍有效。此示例不订阅状态，不增加一个用不到的常驻回调。
+页面用 `ink_state_watch_handle`／`ink_settings_watch_handle` 取得正整数句柄，失败为 -1；分别配对 `ink_state_unwatch`／`ink_settings_unwatch`。能力事件对应 `ink_cap_subscribe_handle`／`ink_cap_unsubscribe`，见 [cap.h:185，事件退订](../../system/include/ink/sys/cap.h#L185)。原来的三个订阅接口仍返回 0／-1，已有调用方不用改。
+
+可退订的订阅选择 UI、MEDIA 或 BG；退订必须在订阅的同一个串行执行器上调用，返回 0 才能释放上下文，错误执行器、失效句柄返回 -1。该执行器先结束正在运行的回调，再执行退订；排队中的旧回调会被丢弃。回调内部退订会阻止后续调用，当前调用继续到返回，所以不要在它仍使用上下文时释放上下文。名称前缀也须保留到退订。DIRECT 没有串行执行器，可退订接口拒绝它；原有 DIRECT 常驻订阅继续可用。
+
+本例列表页创建时订阅 `app.cards_rev`，收到变更后读取最新记录数，销毁时退订：
+
+```c
+static void ink_jot_changed(void *ctx, int h, const char *id) {
+    (void)ctx; (void)h; (void)id;
+    if (ink_jot_list) ink_ui_list_refresh(ink_jot_list, (size_t)ink_db_count(ink_jot_db));
+}
+static void ink_jot_list_destroy(void) {
+    ink_state_unwatch(ink_jot_watch);
+    ink_jot_list = NULL; ink_jot_notice = NULL;
+}
+```
 
 ## 10. 恢复状态与业务数据分开
 
@@ -215,7 +238,7 @@ static const ink_app_ops_t INK_JOT_OPS = {
 
 出处：[data.h:38，集合定义](../../system/include/ink/sys/data.h#L38)、[data.h:89，打开与成员身份](../../system/include/ink/sys/data.h#L89)、[data.h:102，写入／分页](../../system/include/ink/sys/data.h#L102)、[data.h:120，落盘状态](../../system/include/ink/sys/data.h#L120)、[appreg.h:83，应用集合命名](../../system/include/ink/sys/appreg.h#L83)。
 
-集合名以应用 id 加点开头；`INK_DB_MEMBER` 隔离家人，`INK_DB_DEVICE` 是设备级，不能拿来存私人备忘。注册定义须长期有效。`ink_app_db_open()` 校验应用名前缀，以当前家人打开；首次打开可能读盘，放到后台。延迟工作保留原始身份，按需要用 `ink_cap_call_member()` 和 `ink_db_open_member()`，不要完成时临时取“现在是谁”。
+集合名以应用 id 加点开头；`INK_DB_MEMBER` 隔离家人，`INK_DB_DEVICE` 是设备级，不能拿来存私人备忘。注册定义须使用静态存储期。`ink_app_db_open()` 是可能读盘的同步调用。页面使用 [appreg.h:84，后台打开](../../system/include/ink/sys/appreg.h#L84) 的 `ink_app_db_open_async(app, def, page, done, ctx)`：在界面任务发起，`page` 为页面持有的 LVGL 根对象，后台执行器按发起时捕获的家人身份打开，完成后回界面任务调用 `done(ctx, db)`。返回 0 表示接受，-1 表示未发起且不回调；完成时 `db=NULL` 表示打开失败。页面根对象删除、换家人或认证变化后不回调，框架关闭取得的引用；正常回调接管该引用并配对关闭。
 
 ```c
 static const ink_db_def_t INK_JOT_DATA = {
@@ -223,9 +246,19 @@ static const ink_db_def_t INK_JOT_DATA = {
     .schema = 1, .json = true, .ai_read = true, .ai_write = false,
     .max_records = 8, .max_bytes = 8192
 };
-int ink_jot_prepare(void) {
-    if (!ink_jot_db) ink_jot_db = ink_app_db_open("jot", &INK_JOT_DATA);
-    return ink_jot_db ? 0 : -1;
+```
+
+示例的打开调用见第 6 节 `create`，完成回调如下；失败状态同时显示并进入页面快照：
+
+```c
+static void ink_jot_loaded(void *ctx, ink_db_t *db) {
+    (void)ctx;
+    if (db) { ink_jot_db = db; ink_ui_redraw(); }
+    else {
+        ink_jot_status = "暂时读不了记录，请返回后重试";
+        lv_label_set_text(ink_jot_notice, ink_jot_status);
+        ink_ui_content_changed();
+    }
 }
 ```
 
@@ -262,4 +295,4 @@ static void ink_jot_save(ink_call_t *c) {
 
 测试宿主会在同一模拟闪存上运行两个独立进程；比较触摸与 AI 的记录正文和来源、逐项比较快照和实际 LVGL 标签、核验孩子允许／拒绝、跨家人隔离和恢复页码。可选反向对照见 [run.py](../../tests/jot/run.py)，只编译临时的示例变体，不改框架或原文件。要保留临时证据设置 `INK_KEEP_EVIDENCE=1`。
 
-这里只验证 C 接口与模拟器行为，没有操作设备，没有测实机时延、内存和功耗。长文本、文件选择和状态／设置在本文按现有头文件说明；这个最小应用没有假装实现附件、长文或设置页。验收结果、缺口与建议见 [FW-F13 报告](../tasks/fw-f13/REPORT.md)。
+这里只验证 C 接口与模拟器行为，没有操作设备，没有测实机时延、内存和功耗。长文本、文件选择和设置在本文按现有头文件说明；示例实际使用后台打开和状态退订，没有附件、长文或设置页。后台取消、三类退订及 100 次页面开关由 `app-framework-gaps` 检查，反向对照见 [run.py](../../tests/fw_gaps/run.py)。验收结果、缺口与建议见 [FW-F13 报告](../tasks/fw-f13/REPORT.md)。

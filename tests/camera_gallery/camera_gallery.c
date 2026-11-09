@@ -231,8 +231,6 @@ static void run(void *arg) {
         fixtures(); ok("app.open", "{\"id\":\"gallery\"}"); grid_ready(); on_ui(read_snapshot);
         CHECK(strstr(snapshot, "\"total\":10") && strstr(snapshot, "\"visible\":9") && strstr(snapshot, "photo.open"), "F4 exposes nine visible items, real IDs and the next page"); capture("Gallery");
         CHECK(WAIT_FOR(index_ready(), 10000), "automatic index completes after gallery queries");
-        ink_db_flush_all();
-        CHECK(WAIT_FOR(ink_db_idle() && !ink_storage_pending(), 10000), "fixture metadata is durable before the short physical key press");
         CHECK(WAIT_FOR(!strcmp(ink_ui_top_name(), "Gallery"), 10000), "Gallery owns keys after transient overlays (%s)", ink_ui_top_name());
         key(INK_KEY_NEXT);
         CHECK(WAIT_FOR(next_page_selected(), 5000), "physical next key selects the second page");

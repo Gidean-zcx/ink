@@ -339,6 +339,8 @@ void sim_net_remote_answer(void);
 void sim_net_remote_hangup(void);
 void sim_net_auto_answer(bool on);
 int sim_net_call(char *number, size_t cap);                     /* 0 idle, 1 active, 3 ringing out, 4 ringing in */
+int sim_net_call_audio(unsigned samples); /* Assumed call path; inject a frame and meter its destinations. */
+const char *sim_net_call_tones(void);
 int sim_net_sent_sms(int i, char *number, size_t ncap, char *text, size_t tcap); /* returns how many were sent */
 void sim_net_hub_send(struct hal_ws *ws, uint64_t t_send, const void *data, size_t len, bool binary); /* ISR */
 /* The hub's rendering capability "browser.session" (sim_remote.c), ISR: */

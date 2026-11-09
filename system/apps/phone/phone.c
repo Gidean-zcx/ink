@@ -5,6 +5,7 @@
 #include "ink/sys/data.h"
 #include "ink/sys/json.h"
 #include "ink/sys/members.h"
+#include "ink/sys/state.h"
 #include "ink/sys/textfield.h"
 #include "ink/sys/time.h"
 #include "ink/sys/ui_list.h"
@@ -12,7 +13,7 @@
 
 extern void ink_contacts_open(void);
 const ink_activity_t ink_phone_page;
-static const ink_activity_t RECENTS, CALL;
+static const ink_activity_t RECENTS, CALL, KEYPAD;
 static const ink_db_def_t HISTORY = {.name = "phone.calls", .title = "通话记录", .scope = INK_DB_MEMBER,
     .schema = 1, .json = true, .ai_read = true};
 static struct {
@@ -24,14 +25,15 @@ static struct {
 static struct {
     char member[16], number[24], call_member[16], calling[24], status[96], dial_args[64];
     char ids[4][32], numbers[4][24], details[4][96], args[4][64];
-    bool selecting, active;
+    char tones[65], route[80], tone_args[12][16];
+    bool selecting, active, muted;
     ink_exec_job_t refresh;
     ink_db_t *db;
     ink_ui_list_t *list;
     ink_ui_list_position_t position;
     lv_obj_t *field, *notice;
-    ink_ui_field_spec_t fields[2];
-    ink_ui_action_spec_t actions[5];
+    ink_ui_field_spec_t fields[5];
+    ink_ui_action_spec_t actions[14];
     ink_ui_page_spec_t model;
 } P INK_PSRAM_BSS; /* UI executor only. */
 
@@ -74,32 +76,45 @@ static void on_call(void *ctx, const char *id, const ink_args_t *a) {
 static void changed(void *ctx, const char *id, const ink_args_t *a) {
     (void)ctx;
     char member[16] = ""; ink_args_get_str(a, "member", member, sizeof member);
+    if (!strcmp(id, "call.controls")) {
+        if (!P.active || strcmp(member, P.call_member)) return;
+        ink_args_get_bool(a, "muted", &P.muted);
+        char key[4] = ""; size_t n = strlen(P.tones);
+        if (ink_args_get_str(a, "key", key, sizeof key) == 1 && n < sizeof P.tones - 1) { P.tones[n] = key[0]; P.tones[n + 1] = 0; }
+    }
     if (!strcmp(id, "contacts.selected")) {
         if (!P.selecting || strcmp(P.member, member) || strcmp(member, ink_member_current()->id)) return;
         ink_args_get_str(a, "number", P.number, sizeof P.number); P.selecting = false; show(&ink_phone_page); return;
     }
     if (!strcmp(id, "call.incoming") || !strcmp(id, "call.dialed")) {
+        P.tones[0] = 0; P.muted = false;
         P.active = true;
         snprintf(P.call_member, sizeof P.call_member, "%s", member);
         ink_args_get_str(a, !strcmp(id, "call.incoming") ? "from" : "number", P.calling, sizeof P.calling);
         snprintf(P.status, sizeof P.status, "%s", !strcmp(id, "call.incoming") ? "来电" : "正在拨号");
     } else if (!strcmp(id, "call.answered") || !strcmp(id, "call.connected")) snprintf(P.status, sizeof P.status, "通话中");
-    else if (!strcmp(id, "call.ended")) { P.active = false; snprintf(P.status, sizeof P.status, "通话已结束"); }
-    else return;
+    else if (!strcmp(id, "call.ended")) { P.active = false; P.tones[0] = 0; P.muted = false; snprintf(P.status, sizeof P.status, "通话已结束"); }
+    else if (strcmp(id, "call.controls")) return;
     if (!strcmp(P.call_member, ink_member_current()->id) && ink_member_space_open()) {
         if (!strcmp(id, "call.dialed")) show(&CALL);
-        else if (!strcmp(ink_ui_page_name(), CALL.name)) ink_ui_redraw();
+        else if (!strcmp(ink_ui_page_name(), CALL.name) || !strcmp(ink_ui_page_name(), KEYPAD.name)) ink_ui_redraw();
     }
 }
 static void reply(void *ctx, const ink_receipt_t *rc) {
     if ((uint32_t)(uintptr_t)ctx != ink_ui_generation() || !ink_ui_page_current()) return;
-    if (P.notice && rc->status != INK_RC_DONE) lv_label_set_text(P.notice, "没有完成，请检查号码后重试");
+    if (P.notice && rc->status != INK_RC_DONE) lv_label_set_text(P.notice, rc->say[0] ? rc->say : "没有完成，请重试");
     if (rc->status == INK_RC_DONE && !strcmp(ink_ui_page_name(), RECENTS.name)) ink_ui_redraw();
 }
 static void request(const char *cap, const ink_args_t *a) {
     ink_call_opts_t o = {.src = INK_SRC_TOUCH, .member = P.member, .reply_exec = INK_EXEC_UI,
         .done = reply, .ctx = (void *)(uintptr_t)ink_ui_generation()};
     if (ink_cap_call(cap, a, &o) != 0 && P.notice) lv_label_set_text(P.notice, "没有完成，请重试");
+}
+static void control(lv_event_t *e) {
+    const ink_ui_action_spec_t *a = &P.actions[(intptr_t)lv_event_get_user_data(e)];
+    ink_call_opts_t o = {.src = INK_SRC_TOUCH, .member = P.member, .args_json = a->args_json, .reply_exec = INK_EXEC_UI,
+        .done = reply, .ctx = (void *)(uintptr_t)ink_ui_generation()};
+    ink_cap_call(a->capability, NULL, &o);
 }
 static void dial(lv_event_t *e) {
     (void)e;
@@ -110,6 +125,10 @@ static void navigate(ink_call_t *c) {
     const char *id = c->cap->id;
     if (strcmp(P.member, ink_member_current()->id)) { P.number[0] = 0; memset(&P.position, 0, sizeof P.position); snprintf(P.member, sizeof P.member, "%s", ink_member_current()->id); }
     if (!strcmp(id, "phone.return")) { ink_shell_close(); resume_call(); }
+    else if (!strcmp(id, "phone.keypad")) {
+        if (!P.active || strcmp(P.call_member, P.member)) { c->rc.status = INK_RC_STALE; return; }
+        show(!strcmp(ink_ui_page_name(), KEYPAD.name) ? &CALL : &KEYPAD);
+    }
     else if (!strcmp(id, "phone.contacts") || !strcmp(id, "contacts.open")) { P.selecting = !strcmp(id, "phone.contacts"); ink_contacts_open(); }
     else if (!strcmp(id, "phone.recents")) show(&RECENTS);
     else if (!strcmp(id, "phone.open")) {
@@ -174,31 +193,73 @@ static void tabs(lv_obj_t *screen, bool recent) {
 }
 static void entered(void *ctx, const char *value) { (void)ctx; snprintf(P.number, sizeof P.number, "%s", value); }
 static void edited(lv_event_t *e) { entered(NULL, ink_textfield_text(lv_event_get_target_obj(e))); }
+static void call_route_changed(void *ctx, int h, const char *id) {
+    (void)ctx; (void)h; (void)id;
+    if (!strcmp(P.call_member, ink_member_current()->id) && ink_member_space_open() &&
+        (!strcmp(ink_ui_page_name(), CALL.name) || !strcmp(ink_ui_page_name(), KEYPAD.name))) ink_ui_redraw();
+}
 static void create(lv_obj_t *screen, void *arg) {
     (void)arg;
     if (strcmp(P.member, ink_member_current()->id)) {
         P.number[0] = 0; P.selecting = false; memset(&P.position, 0, sizeof P.position);
         snprintf(P.member, sizeof P.member, "%s", ink_member_current()->id);
     }
-    bool recent = !strcmp(ink_ui_page_name(), RECENTS.name), call = !strcmp(ink_ui_page_name(), CALL.name);
+    bool keypad = !strcmp(ink_ui_page_name(), KEYPAD.name);
+    bool recent = !strcmp(ink_ui_page_name(), RECENTS.name), call = keypad || !strcmp(ink_ui_page_name(), CALL.name);
     ink_shell_statusbar(screen, true);
     if (!call) { ink_shell_topbar(screen, ""); tabs(screen, recent); }
     P.fields[0] = (ink_ui_field_spec_t){.id = "status", .role = "status", .label = "通话记录", .value = "正在读取通话记录"};
     P.model = (ink_ui_page_spec_t){.id = ink_ui_page_name(), .title = call ? "通话" : recent ? "最近通话" : "拨号", .object = {"phone", 1}, .fields = P.fields, .field_count = 1, .actions = P.actions};
     P.notice = ink_ui_notice(screen, "", INK_CANVAS_H - INK_PRIMARY - INK_CONTROL - INK_GAP_L);
     if (call) {
-        bool owned = !strcmp(P.call_member, P.member);
-        ink_ui_circle(screen, "person", (INK_CANVAS_W - INK_CIRCLE_LARGE) / 2, INK_STATUS_BAR + INK_BLOCK, INK_CIRCLE_LARGE, INK_ICON_STATE, INK_SURFACE_STATIC, NULL, NULL);
-        lv_obj_t *name = ink_ui_line(screen, owned ? P.calling : "没有通话", INK_FONT_TITLE, INK_WEIGHT_BOLD, INK_MARGIN, INK_STATUS_BAR + INK_BLOCK + INK_CIRCLE_LARGE + INK_MARGIN, INK_CANVAS_W - 2 * INK_MARGIN);
+        bool owned = !strcmp(P.call_member, P.member), enabled = owned && P.active;
+        char route[32] = ""; int64_t connected = 0;
+        ink_state_get_str(ink_state_find("audio.route"), route, sizeof route);
+        ink_state_get_int(ink_state_find("bt.connected"), &connected);
+        bool headset = !strcmp(route, "bt_headset");
+        snprintf(P.route, sizeof P.route, "%s", headset ? "声音走耳机" : "声音走喇叭");
+        lv_obj_set_y(P.notice, ink_ui_px(keypad ? 800 : 500));
+        if (!keypad) ink_ui_circle(screen, "person", (INK_CANVAS_W - INK_CIRCLE_LARGE) / 2, INK_STATUS_BAR + INK_BLOCK, INK_CIRCLE_LARGE, INK_ICON_STATE, INK_SURFACE_STATIC, NULL, NULL);
+        lv_obj_t *name = ink_ui_line(screen, owned ? P.calling : "没有通话", INK_FONT_TITLE, INK_WEIGHT_BOLD, INK_MARGIN, keypad ? 90 : INK_STATUS_BAR + INK_BLOCK + INK_CIRCLE_LARGE + INK_MARGIN, INK_CANVAS_W - 2 * INK_MARGIN);
         lv_obj_set_style_text_align(name, LV_TEXT_ALIGN_CENTER, 0);
-        lv_obj_t *status = ink_ui_notice(screen, owned ? P.status : "", INK_STATUS_BAR + INK_BLOCK + INK_CIRCLE_LARGE + INK_MARGIN + INK_LINE_TITLE);
+        lv_obj_t *status = ink_ui_notice(screen, owned ? P.status : "", keypad ? 165 : INK_STATUS_BAR + INK_BLOCK + INK_CIRCLE_LARGE + INK_MARGIN + INK_LINE_TITLE);
         lv_obj_set_style_text_align(status, LV_TEXT_ALIGN_CENTER, 0);
-        ink_ui_notice(screen, "静音、通话键盘、耳机和录音暂不可用", INK_CANVAS_H - 2 * INK_CIRCLE_LARGE - INK_MARGIN);
-        lv_obj_t *hang = ink_ui_circle(screen, "callEnd", (INK_CANVAS_W - INK_CIRCLE_LARGE) / 2, INK_CANVAS_H - INK_MARGIN - INK_CIRCLE_LARGE, INK_CIRCLE_LARGE, INK_ICON_APP, INK_SURFACE_BLACK, NULL, NULL);
+        lv_obj_t *hang = ink_ui_circle(screen, "callEnd", (INK_CANVAS_W - INK_CIRCLE_LARGE) / 2, INK_CANVAS_H - INK_MARGIN - INK_CIRCLE_LARGE - INK_LINE_NOTE, INK_CIRCLE_LARGE, INK_ICON_APP, INK_SURFACE_BLACK, NULL, NULL);
         ink_shell_bind(hang, "call.hangup", "{}");
+        lv_obj_t *end = ink_ui_notice(screen, "挂断", INK_CANVAS_H - INK_MARGIN - INK_LINE_NOTE); lv_obj_set_style_text_align(end, LV_TEXT_ALIGN_CENTER, 0);
         P.fields[0] = (ink_ui_field_spec_t){.id = "number", .role = "text", .label = "号码", .value = owned ? P.calling : ""};
         P.fields[1] = (ink_ui_field_spec_t){.id = "status", .role = "status", .label = "通话状态", .value = owned ? P.status : "没有通话"}; P.model.field_count = 2;
-        P.actions[0] = (ink_ui_action_spec_t){.id = "hangup", .label = "挂断", .capability = "call.hangup", .enabled = owned}; P.model.action_count = 1;
+        P.fields[2] = (ink_ui_field_spec_t){.id = "mute", .role = "status", .label = "麦克风", .value = !owned ? "没有通话" : P.muted ? "已静音" : "未静音"};
+        P.fields[3] = (ink_ui_field_spec_t){.id = "route", .role = "status", .label = "声音去向", .value = P.route};
+        P.fields[4] = (ink_ui_field_spec_t){.id = "tones", .role = "text", .label = "已发送的按键", .value = owned ? P.tones : ""}; P.model.field_count = 5;
+        P.actions[0] = (ink_ui_action_spec_t){.id = "hangup", .label = "挂断", .capability = "call.hangup", .enabled = enabled};
+        P.actions[1] = (ink_ui_action_spec_t){.id = "keypad", .label = keypad ? "收起键盘" : "键盘", .capability = "phone.keypad", .enabled = enabled}; P.model.action_count = 2;
+        if (keypad) {
+            static const char *const keys[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "*", "0", "#"};
+            lv_obj_t *typed = ink_ui_notice(screen, owned ? P.tones : "", 270); lv_obj_set_style_text_align(typed, LV_TEXT_ALIGN_CENTER, 0);
+            for (int i = 0; i < 12; i++) {
+                snprintf(P.tone_args[i], sizeof P.tone_args[i], "{\"key\":\"%s\"}", keys[i]);
+                ink_ui_pill(screen, keys[i], INK_MARGIN + (i % 3) * 210 + 50, 350 + (i / 3) * 110, INK_CONTROL, INK_CONTROL, false, control, (void *)(intptr_t)(i + 2));
+                P.actions[i + 2] = (ink_ui_action_spec_t){.id = keys[i], .label = keys[i], .capability = "call.dtmf", .args_json = P.tone_args[i], .enabled = enabled};
+            }
+            P.model.action_count = 14;
+            ink_shell_bind(ink_ui_pill(screen, "收起键盘", INK_MARGIN, 945, 200, INK_CONTROL, false, NULL, NULL), "phone.keypad", "{}");
+        } else {
+            const char *labels[] = {P.muted ? "已静音" : "静音", "键盘", connected ? "耳机" : "耳机未连", "录音"};
+            const char *icons[] = {"mute", "keypad", "headphones", "mic"};
+            const char *caps[] = {"call.mute", "phone.keypad", "call.route", "call.record"};
+            const char *args[] = {P.muted ? "{\"on\":false}" : "{\"on\":true}", "{}", headset ? "{\"headset\":false}" : "{\"headset\":true}", "{}"};
+            for (int i = 0; i < 4; i++) {
+                int x = INK_MARGIN + i * 160;
+                ink_ui_circle(screen, icons[i], x, 653, 125, INK_ICON_LIST, (i == 0 && P.muted) || (i == 2 && headset) ? INK_SURFACE_BLACK : INK_SURFACE_WHITE, control, (void *)(intptr_t)(i + 1));
+                lv_obj_t *text = ink_ui_line(screen, labels[i], INK_FONT_NOTE, INK_WEIGHT_MEDIUM, x, 790, 125); lv_obj_set_style_text_align(text, LV_TEXT_ALIGN_CENTER, 0);
+                lv_obj_add_flag(text, LV_OBJ_FLAG_CLICKABLE); lv_obj_add_event_cb(text, control, LV_EVENT_CLICKED, (void *)(intptr_t)(i + 1));
+                P.actions[i + 1] = (ink_ui_action_spec_t){.id = icons[i], .label = labels[i], .capability = caps[i], .args_json = args[i], .enabled = enabled};
+            }
+            P.model.action_count = 5;
+            lv_obj_t *route_label = ink_ui_notice(screen, P.route, 850); lv_obj_set_style_text_align(route_label, LV_TEXT_ALIGN_CENTER, 0);
+            P.fields[4] = (ink_ui_field_spec_t){.id = "recording", .role = "status", .label = "录音", .value = "通话音频接线未核实，暂不能录音"};
+        }
     } else if (recent) {
         P.db = ink_db_open_cached_member(&HISTORY, P.member);
         if (!P.db) {
@@ -249,7 +310,9 @@ static bool page_key(ink_key_t k, bool lng) { return P.list && ink_ui_list_key(P
 const ink_activity_t ink_phone_page = {.name = "Phone", .app = "phone", .create = create, .destroy = destroy, .snapshot = snapshot, .settle = resume_call};
 static const ink_activity_t RECENTS = {.name = "PhoneRecents", .app = "phone", .create = create, .destroy = destroy, .snapshot = snapshot, .on_key = page_key};
 static const ink_activity_t CALL = {.name = "PhoneCall", .app = "phone", .create = create, .destroy = destroy, .snapshot = snapshot};
+static const ink_activity_t KEYPAD = {.name = "PhoneKeypad", .app = "phone", .create = create, .destroy = destroy, .snapshot = snapshot};
 static const ink_cap_t CAPS[] = {
+    {.id = "phone.keypad", .title = "打开或收起通话键盘", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "phone.return", .title = "回到通话", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "phone.open", .title = "打开拨号盘，可填入号码", .input = "{\"type\":\"object\",\"properties\":{\"number\":{\"type\":\"string\",\"maxLength\":20}}}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "phone.contacts", .title = "从联系人选择号码", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
@@ -264,7 +327,7 @@ static const ink_cap_t CAPS[] = {
 int ink_phone_init(void) {
     return ink_db_register(&HISTORY) || ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) ||
         ink_cap_subscribe("call.", on_call, NULL, INK_EXEC_BG) || ink_cap_subscribe("call.", changed, NULL, INK_EXEC_UI) ||
-        ink_cap_subscribe("contacts.selected", changed, NULL, INK_EXEC_UI) ? -1 : 0;
+        ink_cap_subscribe("contacts.selected", changed, NULL, INK_EXEC_UI) || ink_state_watch("audio.route", call_route_changed, NULL, INK_EXEC_UI) || ink_state_watch("bt.connected", call_route_changed, NULL, INK_EXEC_UI) ? -1 : 0;
 }
 
 bool ink_phone_activity(char *title, size_t cap) {

@@ -65,6 +65,7 @@ lv_obj_t *ink_ui_segments(lv_obj_t *parent, const char *const *labels, int count
                           int x, int y, int w, lv_event_cb_t cb, void *ctx);
 lv_obj_t *ink_ui_list_row(lv_obj_t *parent, const char *icon, const char *title, const char *value,
                          int x, int y, int w, bool two_lines, lv_event_cb_t cb, void *ctx);
+void ink_ui_group_divider(lv_obj_t *parent, int y, int w);
 lv_obj_t *ink_ui_panel(lv_obj_t *parent, int height, bool modal);
 lv_obj_t *ink_ui_pagebar(lv_obj_t *parent, int page, int total, int y, lv_event_cb_t cb);
 lv_obj_t *ink_ui_notice(lv_obj_t *parent, const char *text, int y);
