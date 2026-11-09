@@ -80,9 +80,7 @@ static void bind_row(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, i
     *act = (ink_ui_action_spec_t){.id = C.ids[at], .label = "查看闹钟", .capability = "clock.open", .args_json = C.args[at], .object = field->object, .enabled = true};
     int w = INK_CANVAS_W - 2 * INK_MARGIN;
     if (!lv_obj_get_child_count(slot)) {
-        lv_obj_t *row = ink_ui_toggle(slot, "", a->enabled, INK_GAP, INK_GAP_L, w - 2 * INK_GAP, NULL, NULL);
-        lv_obj_t *track = lv_obj_get_child(row, 1); lv_obj_add_flag(track, LV_OBJ_FLAG_CLICKABLE);
-        lv_obj_add_event_cb(track, toggled, LV_EVENT_CLICKED, (void *)(uintptr_t)at);
+        ink_ui_toggle(slot, "", a->enabled, w - INK_GAP - INK_PRIMARY, INK_GAP_L, INK_PRIMARY, toggled, (void *)(uintptr_t)at);
         ink_ui_line(slot, "", INK_FONT_HEADING, INK_WEIGHT_REGULAR, INK_GAP_L, INK_GAP_XS, w - INK_PRIMARY - 2 * INK_GAP_L);
         ink_ui_line(slot, "", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_GAP_L, INK_LINE_HEADING + INK_GAP_XS, w - INK_PRIMARY - 2 * INK_GAP_L);
     }

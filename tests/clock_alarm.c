@@ -37,6 +37,8 @@ static void locate_switch(void) {
     locate_label();
     if (found) {
         lv_obj_t *track = lv_obj_get_child(lv_obj_get_child(lv_obj_get_parent(hit), 0), 1);
+        lv_obj_t *target = lv_obj_get_parent(track);
+        CHECK(lv_obj_has_flag(target, LV_OBJ_FLAG_CLICKABLE) && lv_obj_get_width(target) >= ink_ui_px(82) && lv_obj_get_height(target) >= ink_ui_px(82), "the switch has a full touch target");
         lv_area_t a; lv_obj_get_coords(track, &a); point = (lv_point_t){(a.x1 + a.x2) / 2, (a.y1 + a.y2) / 2};
     }
 }
