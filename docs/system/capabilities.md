@@ -7,7 +7,7 @@ python3 tools/capabilities.py
 python3 tools/capabilities.py --check
 ```
 
-当前共 342 项：可调用能力 309、事件 33；设置 17 项、状态 48 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
+当前共 346 项：可调用能力 313、事件 33；设置 17 项、状态 48 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
 
 风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。
 
@@ -104,6 +104,9 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `family.prev` | 家人设置上一页 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s47](#s47) | [system/ui/shell/settings_family.c](../../system/ui/shell/settings_family.c) |
 | `family.role` | 选择添加大人或孩子 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单；页面 SetMembers | [s47](#s47) | [system/ui/shell/settings_family.c](../../system/ui/shell/settings_family.c) |
 | `family.save` | 保存家人的称呼 | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单；页面 SetMembers | [s47](#s47) | [system/ui/shell/settings_family.c](../../system/ui/shell/settings_family.c) |
+| `file.cache_clear` | 清理可重新生成的缓存 | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单 | [s24](#s24) | [system/services/file/file_service.c](../../system/services/file/file_service.c) |
+| `file.cleanup` | 清理临时文件 | 人、AI | 高 / local_destructive | 人、AI 均在设备确认 | 成人；儿童须白名单 | [s24](#s24) | [system/services/file/file_service.c](../../system/services/file/file_service.c) |
+| `file.cleanup_preview` | 列出临时文件、缓存和未传完文件可清理的字节数 | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s24](#s24) | [system/services/file/file_service.c](../../system/services/file/file_service.c) |
 | `file.copy` | 拷贝文件或目录（大的在后台做） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s24](#s24) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
 | `file.delete` | 删除文件或目录（不能撤销） | 人、AI | 高 / local_destructive | 人、AI 均在设备确认 | 成人、儿童（无需白名单） | [s24](#s24) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
 | `file.free` | 存储卡还剩多少空间 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s24](#s24) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
@@ -115,6 +118,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `file.read` | 读文本文件（每次最多 2 KiB） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s24](#s24) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
 | `file.stat` | 一个文件或目录的信息 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s24](#s24) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
 | `file.thumb` | 按文件编号读取缩略图（gray4 按行排列，每个十六进制字符表示一个灰阶） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s24](#s24) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
+| `file.usage` | 读取当前成员和整台设备的书、音频、照片和其他文件字节数 | 人、AI | 低 / read | 无需 | 成人；儿童须白名单 | [s24](#s24) | [system/services/file/file_service.c](../../system/services/file/file_service.c) |
 | `file.write` | 写文本文件（新文件，或追加） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s24](#s24) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
 | `file_picker.cancel` | 取消选文件 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 FilePicker | [s34](#s34) | [system/ui/file_picker.c](../../system/ui/file_picker.c) |
 | `file_picker.next` | 下一页文件 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 FilePicker | [s34](#s34) | [system/ui/file_picker.c](../../system/ui/file_picker.c) |
@@ -813,7 +817,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 状态：`storage.card`、`storage.free`、`storage.mode`、`update.state`、`update.version`。
 
-事件：`backup.changed`。
+事件：`backup.changed`、`file.changed`。
 
 <a id="s49"></a>
 

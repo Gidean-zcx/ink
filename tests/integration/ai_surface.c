@@ -100,6 +100,7 @@ static const struct {
     {"member.time_get", ""}, {"member.time_set", "minutes"}, {"member.time_add", "minutes"},
     {"shell.notify_open", "id"}, {"shell.kid_allow", "id"}, {"shell.kid_parent", NULL},
     {"shell.kid_add", NULL}, {"shell.kid_sms", NULL}, {"shell.kid_phone", NULL}, {"shell.kid_cancel", NULL},
+    {"file.usage", NULL}, {"file.cleanup_preview", NULL}, {"file.cache_clear", "revision"}, {"file.cleanup", "revision"},
     {NULL, NULL},
 };
 

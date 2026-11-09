@@ -29,6 +29,7 @@
 #include "ink/sys/svc.h"
 #include "ink/sys/task.h"
 #include "ink/sys/sha256.h"
+#include "ink/sys/json.h"
 #include "file_internal.h"
 
 #define MAX_OPEN 8
@@ -1411,19 +1412,34 @@ int ink_fs_restore_if_revision(const char *member, unsigned stage, const char *p
 /* The data store owns ids and durability; only the random card identity lives on FAT. */
 #define INDEX_CARD "/content/.file-index-card"
 typedef struct { uint8_t card[16]; char path[PHYS_MAX]; } index_rec_t;
+static struct {
+    bool family;
+    char indexed[INK_MEMBERS_MAX][INK_MEMBER_ID_MAX], member[INK_MEMBER_ID_MAX];
+    uint32_t revision;
+    uint64_t bytes[2][4];
+} storage INK_PSRAM_BSS;
+static bool storage_index_ready(void) {
+    if (!storage.family) return false;
+    for (int i = 0; ink_member_at(i); i++)
+        if (strcmp(storage.indexed[i], ink_member_at(i)->id)) return false;
+    return true;
+}
 
 static int index_open(uint8_t card[16], ink_db_t **db) {
-    int64_t size = hal_fs_size(INDEX_CARD);
-    hal_file_t *f = hal_fs_open(size < 0 ? INDEX_CARD ".tmp" : INDEX_CARD, size < 0 ? HAL_O_WRITE | HAL_O_CREATE | HAL_O_TRUNC : HAL_O_READ);
+    hal_file_t *f = hal_fs_open(INDEX_CARD, HAL_O_READ);
+    int64_t size = f ? 16 : -1;
+    if (!f) f = hal_fs_open(INDEX_CARD ".tmp", HAL_O_WRITE | HAL_O_CREATE | HAL_O_TRUNC);
     if (!f) return card_error();
     if (size < 0) hal_random_fill(card, 16);
     ssize_t n = size < 0 ? hal_fs_write(f, card, 16) : hal_fs_read(f, card, 16);
+    uint8_t extra;
+    if (size >= 0 && n == 16 && hal_fs_read(f, &extra, 1) != 0) n = -1;
     int r = size < 0 ? hal_fs_sync(f) : 0;
     int closed = hal_fs_close(f);
     if (n != 16 || r || closed || (size >= 0 && size != 16)) return INK_FS_ERR_IO;
     if (size < 0 && hal_fs_rename(INDEX_CARD ".tmp", INDEX_CARD)) return card_error();
     ink_state_set_str(FS.h_index, FS.index_seen && memcmp(card, FS.index_card, 16) ? "changed" : "ready");
-    if (memcmp(card, FS.index_card, 16)) { ink_thumb_cache_destroy(FS.thumbs); FS.thumbs = NULL; }
+    if (memcmp(card, FS.index_card, 16)) { ink_thumb_cache_destroy(FS.thumbs); FS.thumbs = NULL; memset(&storage, 0, sizeof storage); }
     memcpy(FS.index_card, card, 16); FS.index_seen = true;
     *db = ink_db_open(&INDEX_DEF, NULL);
     return *db ? 0 : INK_FS_ERR_IO;
@@ -1465,7 +1481,7 @@ static ink_fs_type_t index_type(const char *path) {
     if (!ext || strlen(ext) >= sizeof lower) return INK_FS_OTHER;
     size_t i; for (i = 0; ext[i]; i++) lower[i] = ext[i] >= 'A' && ext[i] <= 'Z' ? (char)(ext[i] + 'a' - 'A') : ext[i];
     lower[i] = 0;
-    static const char *const kinds[] = {"", ".png.jpg.jpeg.bmp.gif.webp.", ".mp3.wav.ogg.opus.flac.m4a.", ".txt.md.csv.json.html.htm."};
+    static const char *const kinds[] = {"", ".png.jpg.jpeg.bmp.gif.webp.", ".mp3.wav.ogg.opus.flac.m4a.", ".txt.md.csv.json.html.htm.epub.pdf.mobi.azw.azw3."};
     for (int k = INK_FS_IMAGE; k <= INK_FS_TEXT; k++) {
         const char *p = strstr(kinds[k], lower);
         if (p && p[strlen(lower)] == '.') return (ink_fs_type_t)k;
@@ -1484,11 +1500,13 @@ static int index_add(const file_context_t *c, ink_db_t *db, const uint8_t card[1
 }
 
 static int index_scan(const file_context_t *c, ink_db_t *db, const uint8_t card[16], const char *root) {
+    bool was_ready = storage_index_ready(); uint32_t version = ink_db_last_ver(db);
     ink_fs_dir_t **dirs = osal_calloc(JOB_DEPTH, sizeof *dirs, OSAL_MEM_EXTERNAL);
     if (!dirs) return INK_FS_ERR_IO;
     char path[INK_FS_PATH_MAX]; snprintf(path, sizeof path, "%s", root);
     int depth = 0, r = fs_dir_open_for(c, path, &dirs[0]);
     if (!r) depth = 1;
+    if (r == INK_FS_ERR_NOT_FOUND && virtual_root(root)) r = 0;
     ink_fs_stat_t st;
     while (!r && depth) {
         int n = ink_fs_dir_next(dirs[depth - 1], &st);
@@ -1502,6 +1520,16 @@ static int index_scan(const file_context_t *c, ink_db_t *db, const uint8_t card[
     }
     while (depth) ink_fs_dir_close(dirs[--depth]);
     osal_free(dirs);
+    if (!r) {
+        storage.revision = 0;
+        if (!strcmp(root, "/family")) storage.family = true;
+        for (int i = 0; ink_member_at(i); i++) {
+            char member_root[64]; snprintf(member_root, sizeof member_root, "/members/%s", ink_member_at(i)->id);
+            if (!strcmp(root, member_root) || (!strcmp(root, "/me") && !strcmp(c->member, ink_member_at(i)->id)))
+                snprintf(storage.indexed[i], sizeof storage.indexed[i], "%s", ink_member_at(i)->id);
+        }
+        if (storage_index_ready() && (!was_ready || version != ink_db_last_ver(db))) changed(c, root, "indexed");
+    }
     return r;
 }
 
@@ -1584,3 +1612,128 @@ int ink_fs_lookup(uint32_t id, ink_fs_entry_t *out) {
     int r = fs_index_for(&c, NULL, INK_FS_ANY, &id, out);
     return r == 1 ? 0 : r ? r : INK_FS_ERR_NOT_FOUND;
 }
+
+/* Cache one member's view; the index workflow owns directory scans. */
+static void storage_error(ink_call_t *c, int r) {
+    c->rc.status = INK_RC_FAILED;
+    snprintf(c->rc.detail, sizeof c->rc.detail, "%s", ink_fs_err_name(r));
+}
+static void storage_usage(ink_call_t *call) {
+    file_context_t c;
+    if (!fs_context_for_call(&c, call)) return;
+    osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
+    int r = ink_fs_card_hold();
+    bool held = !r;
+    uint8_t card[16]; ink_db_t *db = NULL;
+    uint64_t bytes[2][4] = {{0}};
+    uint32_t revision = __atomic_load_n(&FS.revision, __ATOMIC_RELAXED);
+    if (!r && !inverse_ready(revision)) r = INK_FS_ERR_BUSY;
+    if (!r) r = index_open(card, &db);
+    bool ready = !r && storage_index_ready();
+    bool cached = ready && storage.revision == revision && !strcmp(storage.member, c.member);
+    if (cached) memcpy(bytes, storage.bytes, sizeof bytes);
+    uint32_t version = db ? ink_db_last_ver(db) : 0;
+    osal_mutex_unlock(FS.edits);
+    char own[64]; snprintf(own, sizeof own, "/content/.m/%s", c.member);
+    index_rec_t e; ink_rec_t rec; ink_db_cursor_t cur = {0}; int more = 0;
+    while (!r && ready && !cached && (more = ink_db_next(db, &cur, &rec, &e, sizeof e)) == 1) {
+        if (memcmp(e.card, card, 16)) continue;
+        int64_t size = hal_fs_size(e.path);
+        if (size < 0) continue;
+        ink_fs_type_t type = index_type(e.path);
+        int k = type == INK_FS_TEXT ? 0 : type == INK_FS_AUDIO ? 1 : type == INK_FS_IMAGE ? 2 : 3;
+        bytes[1][k] += (uint64_t)size;
+        if (index_under(e.path, own)) bytes[0][k] += (uint64_t)size;
+    }
+    if (more < 0) r = INK_FS_ERR_IO;
+    osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
+    ready = ready && inverse_ready(revision) && version == ink_db_last_ver(db) && storage_index_ready();
+    if (!r && ready && !cached) {
+        memcpy(storage.bytes, bytes, sizeof bytes); storage.revision = revision;
+        snprintf(storage.member, sizeof storage.member, "%s", c.member);
+    }
+    ink_db_close(db);
+    if (held) ink_fs_card_release();
+    osal_mutex_unlock(FS.edits);
+    if (r) { storage_error(call, r); return; }
+    if (!ready) { ink_cap_result(call, "{\"status\":\"organizing\"}"); return; }
+    char out[512]; ink_jw_t w; ink_jw_init(&w, out, sizeof out);
+    static const char *const keys[] = {"books", "audio", "photos", "other"};
+    ink_jw_raw(&w, "{\"status\":\"ready\"");
+    for (int scope = 0; scope < 2; scope++) {
+        ink_jw_raw(&w, scope ? ",\"device\":{" : ",\"member\":{");
+        for (int k = 0; k < 4; k++) {
+            if (k) ink_jw_raw(&w, ",");
+            ink_jw_str(&w, keys[k]); ink_jw_raw(&w, ":"); ink_jw_int(&w, (int64_t)bytes[scope][k]);
+        }
+        ink_jw_raw(&w, "}");
+    }
+    ink_jw_raw(&w, "}"); ink_cap_result(call, out);
+}
+
+/* Fixed roots, hidden service data excluded; suffixes are never directory rules. */
+static int storage_sweep(char *path, unsigned depth, bool cache, bool remove, uint64_t bytes[3]) {
+    if (depth == JOB_DEPTH) return INK_FS_ERR_PATH;
+    hal_dir_t *dir = hal_fs_opendir(path);
+    if (!dir) return hal_fs_size(path) < 0 ? 0 : INK_FS_ERR_IO;
+    hal_dirent_t *e = osal_malloc(sizeof *e, OSAL_MEM_EXTERNAL);
+    int r = e ? 0 : INK_FS_ERR_IO, more = 0; size_t len = strlen(path);
+    while (!r && (more = hal_fs_readdir(dir, e)) == 1) {
+        if (e->name[0] == '.' && strcmp(e->name, ".m")) continue;
+        if (!path_down(path, PHYS_MAX, e->name)) { r = INK_FS_ERR_PATH; break; }
+        const char *ext = strrchr(e->name, '.');
+        int k = cache ? 1 : ext && !strcmp(ext, TMP_SUFFIX) ? 0 : ext && !strcmp(ext, PART_SUFFIX) ? 2 : -1;
+        if (e->is_dir) r = storage_sweep(path, depth + 1, cache, remove, bytes);
+        else if (k >= 0) {
+            if (remove && hal_fs_remove(path)) r = INK_FS_ERR_IO;
+            else bytes[k] += (uint64_t)e->size;
+        }
+        path[len] = 0;
+    }
+    if (more < 0) r = INK_FS_ERR_IO;
+    osal_free(e); hal_fs_closedir(dir); return r;
+}
+static void storage_cleanup(ink_call_t *call) {
+    file_context_t c;
+    if (!fs_context_for_call(&c, call)) return;
+    bool preview = !strcmp(call->cap->id, "file.cleanup_preview");
+    bool cache_only = !strcmp(call->cap->id, "file.cache_clear");
+    int64_t expected = 0; ink_args_get_int(&call->args, "revision", &expected);
+    osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
+    int r = ink_fs_card_hold(); bool held = !r;
+    uint32_t revision = __atomic_load_n(&FS.revision, __ATOMIC_RELAXED);
+    if (!r && !inverse_ready(preview ? revision : (uint32_t)expected)) r = INK_FS_ERR_BUSY;
+    bool attempted = !preview && !r;
+    uint64_t bytes[3] = {0}; char path[PHYS_MAX] = "/cache";
+    if (!r) r = storage_sweep(path, 0, true, !preview, bytes);
+    if (!r && !cache_only) {
+        snprintf(path, sizeof path, "/content");
+        r = storage_sweep(path, 0, false, !preview, bytes);
+    }
+    if (attempted) {
+        __atomic_add_fetch(&FS.revision, 1, __ATOMIC_RELAXED);
+        ink_thumb_cache_destroy(FS.thumbs); FS.thumbs = NULL;
+    }
+    if (held) ink_fs_card_release();
+    osal_mutex_unlock(FS.edits);
+    if (!preview && !r) { ink_fs_refresh_state(); changed(&c, "/", "cleaned"); }
+    if (r) { storage_error(call, r); return; }
+    char out[240];
+    snprintf(out, sizeof out, "{\"temporary\":%llu,\"cache\":%llu,\"partial\":%llu,\"bytes\":%llu,\"revision\":%u}",
+        (unsigned long long)bytes[0], (unsigned long long)bytes[1], (unsigned long long)bytes[2],
+        (unsigned long long)(bytes[0] + bytes[1] + bytes[2]), revision);
+    ink_cap_result(call, out);
+}
+static const ink_cap_t STORAGE_CAPS[] = {
+    {.id = "file.usage", .title = "读取当前成员和整台设备的书、音频、照片和其他文件字节数", .effect = INK_FX_READ,
+     .output = "{\"type\":\"object\"}", .exec = INK_EXEC_BG, .qos = INK_QOS_BACKGROUND, .run = storage_usage},
+    {.id = "file.cleanup_preview", .title = "列出临时文件、缓存和未传完文件可清理的字节数", .effect = INK_FX_READ,
+     .output = "{\"type\":\"object\"}", .exec = INK_EXEC_BG, .qos = INK_QOS_BACKGROUND, .run = storage_cleanup},
+    {.id = "file.cache_clear", .title = "清理可重新生成的缓存", .effect = INK_FX_LOCAL_WRITE,
+     .input = "{\"type\":\"object\",\"properties\":{\"revision\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}},\"required\":[\"revision\"]}",
+     .exec = INK_EXEC_BG, .qos = INK_QOS_BACKGROUND, .run = storage_cleanup},
+    {.id = "file.cleanup", .title = "清理临时文件", .effect = INK_FX_LOCAL_DESTRUCTIVE, .ask_by_hand = true,
+     .ask = "清理临时文件和未传完的文件，删了找不回来；缓存可以重新生成",
+     .input = "{\"type\":\"object\",\"properties\":{\"revision\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}},\"required\":[\"revision\"]}",
+     .exec = INK_EXEC_BG, .qos = INK_QOS_BACKGROUND, .run = storage_cleanup}};
+int ink_storage_usage_caps_init(void) { return ink_cap_register(STORAGE_CAPS, sizeof STORAGE_CAPS / sizeof *STORAGE_CAPS); }

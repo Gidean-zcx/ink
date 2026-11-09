@@ -23,10 +23,10 @@ static const row_t VOICE_ROWS[] = {
 static const row_t STORAGE_ROWS[] = {
     {"backup", "备份", NULL, NULL, "backup.open", "cloud", NULL, NULL},
     {"storage.free", "空间", NULL, NULL, NULL, NULL, "空间", NULL},
-    {"storage.books", "书", "暂不能查看分类占用", NULL, NULL, "book", NULL, NULL},
-    {"storage.audio", "音频", "暂不能查看分类占用", NULL, NULL, "headphones", NULL, NULL},
-    {"storage.photos", "照片和其他", "暂不能查看分类占用", NULL, NULL, "gallery", NULL, NULL},
-    {"storage.clean", "清理临时文件", "暂不能清理", NULL, NULL, "trash", "", NULL}};
+    {"storage.books", "书", NULL, NULL, NULL, "book", NULL, NULL},
+    {"storage.audio", "音频", NULL, NULL, NULL, "headphones", NULL, NULL},
+    {"storage.photos", "照片和其他", NULL, NULL, NULL, "gallery", NULL, NULL},
+    {"storage.clean", "清理临时文件", NULL, NULL, "file.cleanup", "trash", "", "仅清理临时文件、缓存和未传完的文件。"}};
 static const row_t ABOUT_ROWS[] = {
     {"device", "这台设备", NULL, NULL, NULL, NULL, NULL, NULL},
     {"update.version", "系统版本", NULL, NULL, NULL, NULL, NULL, NULL},
@@ -58,6 +58,9 @@ static struct {
     ink_ui_list_t *list;
     ink_ui_list_position_t position;
 } S INK_PSRAM_BSS;
+static void storage_value(size_t i, char *out, size_t cap);
+static void storage_action(size_t i, ink_ui_action_spec_t *action);
+static void storage_request(void *ctx, const char *id, const ink_args_t *args);
 static bool current(void) {
     return S.list && ink_ui_page_current() && !strcmp(ink_ui_page_name(), PAGES[S.page].name) &&
         ink_member_space_open() && !strcmp(S.member, ink_member_current()->id);
@@ -79,6 +82,7 @@ static void value(size_t i) {
             (long long)(!strcmp(r->setting, "voice.handsfree") ? (v + 1) % 3 : !v));
     } else if (r->value) snprintf(out, cap, "%s", r->value);
     else if (!strcmp(r->id, "backup")) snprintf(out, cap, "%s", S.backup);
+    else if (S.page == STORAGE && i > 1) storage_value(i, out, cap);
     else if (!strcmp(r->id, "device")) snprintf(out, cap, "%s的设备", ink_member_current()->name);
     else if (!strcmp(r->id, "storage.free")) {
         int64_t present = 0; char mode[32] = "";
@@ -89,7 +93,7 @@ static void value(size_t i) {
         else if (state_number(r->id, &v) && v >= 0) {
             int64_t unit = v >= 1024LL * 1024 * 1024 ? 1024LL * 1024 * 1024 : v >= 1024 * 1024 ? 1024 * 1024 : 1024;
             snprintf(out, cap, "还能放 %lld.%lld %s", (long long)(v / unit), (long long)(v % unit * 10 / unit),
-                unit > 1024 * 1024 ? "GB" : unit > 1024 ? "MB" : "KiB");
+                unit > 1024 * 1024 ? "GB" : unit > 1024 ? "MB" : "KB");
         }
         else snprintf(out, cap, "暂时读不出来");
     } else if (!strcmp(r->id, "update.check")) {
@@ -132,6 +136,7 @@ static void bind_row(lv_obj_t *slot, size_t i, ink_ui_field_spec_t *field, ink_u
         .value = S.values[i], .object = {r->id, 0}};
     *action = (ink_ui_action_spec_t){.id = r->id, .label = r->title, .capability = r->setting ? "settings.set" : r->cap,
         .args_json = r->setting ? S.args[i] : NULL, .object = field->object, .enabled = r->setting || r->cap};
+    if (S.page == STORAGE) storage_action(i, action);
     int w = INK_CANVAS_W - 2 * INK_MARGIN, head = heading(i), body = row_body(i), h = row_height(i);
     if (!(i % S.capacity)) S.y = 0;
     if (footer(i)) S.y = INK_CANVAS_H - INK_STATUS_BAR - INK_PRIMARY - INK_GAP_XS - INK_CONTROL - 2 * INK_GAP - h;
@@ -270,7 +275,7 @@ static void create(lv_obj_t *screen, void *arg) {
     }
     int cell_h = room / (int)S.capacity - INK_GAP_M;
     S.list = ink_ui_list_create(S.body, &page, &S.position, S.capacity, 1, cell_h, "这里还没有内容", bind_row, NULL);
-    refresh(); backup_changed(NULL, NULL, NULL);
+    refresh(); backup_changed(NULL, NULL, NULL); storage_request(NULL, NULL, NULL);
 }
 static void destroy(void) { S.generation++; S.list = NULL; S.body = NULL; }
 static int snapshot(char *out, size_t cap) {
@@ -320,5 +325,65 @@ static const ink_cap_t CAPS[] = {
 int ink_settings_pages_init(void) {
     if (ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_settings_watch("", changed, NULL, INK_EXEC_UI) ||
         ink_state_watch("storage.", changed, NULL, INK_EXEC_UI) || ink_state_watch("update.", changed, NULL, INK_EXEC_UI)) return -1;
+    if (ink_cap_subscribe("file.changed", storage_request, NULL, INK_EXEC_UI)) return -1;
     return ink_cap_subscribe("backup.changed", backup_changed, NULL, INK_EXEC_UI);
+}
+
+static struct { uint32_t generation; int state[2]; int64_t bytes[2][4], clean[3], revision; } U INK_PSRAM_BSS;
+static void storage_size(int64_t n, char *out, size_t cap) {
+    int64_t unit = n >= 1073741824 ? 1073741824 : n >= 1048576 ? 1048576 : n >= 1024 ? 1024 : 1;
+    if (unit == 1) snprintf(out, cap, "%lld B", (long long)n);
+    else snprintf(out, cap, "%lld.%lld %s", (long long)(n / unit), (long long)(n % unit * 10 / unit),
+        unit == 1024 ? "KB" : unit == 1048576 ? "MB" : "GB");
+}
+static void storage_value(size_t i, char *out, size_t cap) {
+    int state = U.generation == S.generation ? U.state[i == 5] : 0;
+    if (state != 1) { snprintf(out, cap, "%s", state ? "暂时读不出来" : "正在整理"); return; }
+    char a[32], b[32];
+    if (i == 5) {
+        storage_size(U.clean[0] + U.clean[1] + U.clean[2], a, sizeof a);
+        snprintf(out, cap, "能腾出 %s", a);
+    } else {
+        int k = (int)i - 2;
+        storage_size(U.bytes[0][k] + (k == 2 ? U.bytes[0][3] : 0), a, sizeof a);
+        storage_size(U.bytes[1][k] + (k == 2 ? U.bytes[1][3] : 0), b, sizeof b);
+        snprintf(out, cap, "我 %s / 全机 %s", a, b);
+    }
+}
+static void storage_action(size_t i, ink_ui_action_spec_t *action) {
+    if (i != 5) return;
+    action->capability = U.clean[0] || U.clean[2] ? "file.cleanup" : "file.cache_clear";
+    snprintf(S.args[i], sizeof S.args[i], "{\"revision\":%lld}", (long long)U.revision);
+    action->args_json = S.args[i];
+    action->enabled = U.generation == S.generation && U.state[1] == 1 && U.clean[0] + U.clean[1] + U.clean[2] > 0;
+}
+static void storage_reply(void *ctx, const ink_receipt_t *rc, bool clean) {
+    if ((uint32_t)(uintptr_t)ctx != S.generation || !current() || S.page != STORAGE) return;
+    ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
+    U.state[clean] = 2;
+    if (j && rc->status == INK_RC_DONE && rc->result && !ink_json_parse(j, rc->result, strlen(rc->result))) {
+        if (!clean && strstr(rc->result, "\"organizing\"")) { U.state[0] = 0; osal_free(j); refresh(); return; }
+        U.state[clean] = 1;
+        static const char *const keys[] = {"books", "audio", "photos", "other", "temporary", "cache", "partial"};
+        for (int s = 0; s < (clean ? 1 : 2); s++) {
+            int root = clean ? 0 : ink_json_find(j, 0, s ? "device" : "member");
+            for (int k = 0; k < (clean ? 3 : 4); k++)
+                ink_json_int(j, ink_json_find(j, root, keys[clean ? k + 4 : k]), clean ? &U.clean[k] : &U.bytes[s][k]);
+        }
+        if (clean) ink_json_int(j, ink_json_find(j, 0, "revision"), &U.revision);
+    }
+    osal_free(j); refresh();
+}
+static void storage_usage_reply(void *ctx, const ink_receipt_t *rc) { storage_reply(ctx, rc, false); }
+static void storage_clean_reply(void *ctx, const ink_receipt_t *rc) { storage_reply(ctx, rc, true); }
+static void storage_request(void *ctx, const char *id, const ink_args_t *args) {
+    (void)ctx; (void)id; (void)args;
+    if (!current() || S.page != STORAGE) return;
+    memset(&U, 0, sizeof U); U.generation = S.generation;
+    ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .member = S.member, .reply_exec = INK_EXEC_UI,
+        .done = storage_usage_reply, .ctx = (void *)(uintptr_t)S.generation};
+    if (ink_cap_call("file.usage", NULL, &o)) U.state[0] = 2;
+    o.done = storage_clean_reply;
+    if (ink_cap_call("file.cleanup_preview", NULL, &o)) U.state[1] = 2;
+    refresh();
 }
