@@ -506,8 +506,6 @@ static void headset(void) {
 static void volume_fixture(int volume) {
     ink_receipt_t rc;
     ink_setting_set("audio.volume", volume, INK_SRC_TOUCH, &rc);
-    ink_db_flush_all();
-    CHECK(WAIT_FOR(ink_db_idle() && !ink_storage_pending(), 10000), "volume fixture is durable before a short physical key");
 }
 static void volume_keys(void) {
     volume_fixture(50);

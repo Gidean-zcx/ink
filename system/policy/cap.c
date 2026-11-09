@@ -339,7 +339,7 @@ static bool next_boot(void) {
     b.value[1] = b.value[0] ^ 0x494e4b42u;
     b.done = osal_sem_create(0, 1);
     if (!b.done) return false;
-    r = ink_storage_write_borrow("/user/hub-event-boot", b.value, sizeof b.value, boot_written, &b);
+    r = ink_storage_write_borrow("/user/hub-event-boot", b.value, sizeof b.value, boot_written, &b, NULL);
     if (!r) osal_sem_take(b.done, OSAL_WAIT_FOREVER);
     osal_sem_delete(b.done);
     if (r || b.result) return false;

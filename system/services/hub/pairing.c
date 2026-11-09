@@ -89,7 +89,7 @@ static bool durable(const char *path, void *data, size_t size) {
     if (!P.saved) return false;
     uint32_t crc = ink_crc32(0, data, size - sizeof crc);
     memcpy((char *) data + size - sizeof crc, &crc, sizeof crc);
-    bool ok = ink_storage_write_borrow(path, data, size, saved, NULL) == 0 &&
+    bool ok = ink_storage_write_borrow(path, data, size, saved, NULL, NULL) == 0 &&
               osal_sem_take(P.saved, OSAL_WAIT_FOREVER) == OSAL_OK && P.save_result == 0;
     osal_sem_delete(P.saved);
     P.saved = NULL;

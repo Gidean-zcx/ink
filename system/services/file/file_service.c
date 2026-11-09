@@ -1439,17 +1439,18 @@ int ink_fs_restore_if_revision(const char *member, unsigned stage, const char *p
 #define INDEX_CARD "/content/.file-index-card"
 typedef struct { uint8_t card[16]; char path[PHYS_MAX]; } index_rec_t;
 static struct {
-    bool family;
+    bool family, saving;
     char indexed[INK_MEMBERS_MAX][INK_MEMBER_ID_MAX], member[INK_MEMBER_ID_MAX];
     uint32_t revision;
     uint64_t bytes[2][4];
 } storage INK_PSRAM_BSS;
-static bool storage_index_ready(void) {
+static bool storage_index_scanned(void) {
     if (__atomic_load_n(&FS.index_dirty, __ATOMIC_RELAXED) || !storage.family) return false;
     for (int i = 0; ink_member_at(i); i++)
         if (strcmp(storage.indexed[i], ink_member_at(i)->id)) return false;
     return true;
 }
+static bool storage_index_ready(void) { return !storage.saving && storage_index_scanned(); }
 
 static void index_invalidate(void) {
     __atomic_store_n(&FS.index_dirty, true, __ATOMIC_RELAXED);
@@ -1600,7 +1601,7 @@ static int index_walk_step(index_walk_t *w, ink_db_t *db, const uint8_t card[16]
     storage.revision = 0;
     return r;
 }
-static void index_done(const file_context_t *c, const char *root) {
+static void index_done(const file_context_t *c, const char *root, bool durable) {
     bool was_ready = storage_index_ready();
     if (!strcmp(root, "/family")) storage.family = true;
     for (int i = 0; ink_member_at(i); i++) {
@@ -1608,10 +1609,11 @@ static void index_done(const file_context_t *c, const char *root) {
         if (!strcmp(root, member_root) || (!strcmp(root, "/me") && !strcmp(c->member, ink_member_at(i)->id)))
             snprintf(storage.indexed[i], sizeof storage.indexed[i], "%s", ink_member_at(i)->id);
     }
+    storage.saving = !durable;
     if (storage_index_ready()) {
         ink_svc_cancel(&FS.index_at);
-        ink_state_set_str(FS.h_index, "ready");
         if (!was_ready) for (int i = 0; ink_member_at(i); i++) changed_for(ink_member_at(i)->id, "/", "indexed");
+        ink_state_set_str(FS.h_index, "ready");
     }
 }
 /* The synchronous first-page API uses the same batches, releasing edits for durability. */
@@ -1637,7 +1639,7 @@ static int index_scan(const file_context_t *c, ink_db_t *db, const uint8_t card[
         if (!r && memcmp(card, now, 16)) r = INK_FS_ERR_CARD_CHANGED;
         ink_db_close(check);
     } while (!r && w->depth);
-    if (!r) index_done(c, root);
+    if (!r) index_done(c, root, true);
     if (!r && was_ready && version != ink_db_last_ver(db)) changed(c, root, "indexed");
     index_walk_close(w); osal_free(w);
     index_manual = false;
@@ -1677,7 +1679,7 @@ static void index_background(void *arg) {
         if (done_id && ink_db_del(done, done_id, 0)) r = INK_FS_ERR_IO;
         done_id = 0;
     }
-    if (!r && !FS.job_active && !storage_index_ready()) {
+    if (!r && !FS.job_active && !storage_index_scanned()) {
         if (!done) r = INK_FS_ERR_IO;
         else if (!index_walk && done_id && rec.schema == INDEX_DEF.schema && !memcmp(&saved, &expected, sizeof saved)) {
             storage.family = true;
@@ -1704,13 +1706,16 @@ static void index_background(void *arg) {
         }
     }
     ink_probe_value("file.index.hold_us", (double)(osal_now_us() - begin));
+    if (!r && index_walk && !index_walk->depth && index_walk->revision == __atomic_load_n(&FS.revision, __ATOMIC_RELAXED))
+        index_done(&index_walk->context, index_walk->root, false);
+    bool scanned = !r && storage_index_scanned();
     osal_mutex_unlock(FS.edits);
-    ink_db_flush(db);
+    if (scanned) ink_db_flush_background(db);
     osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
-    if (index_walk && (r || (!index_walk->depth && ink_db_durable_ver(db) == ink_db_last_ver(db)))) {
-        if (!r && index_walk->revision == __atomic_load_n(&FS.revision, __ATOMIC_RELAXED)) index_done(&index_walk->context, index_walk->root);
+    if (index_walk && (r || !index_walk->depth)) {
         index_walk_close(index_walk); osal_free(index_walk); index_walk = NULL;
     }
+    if (!r && storage_index_scanned() && ink_db_durable_ver(db) == ink_db_last_ver(db)) index_done(NULL, "", true);
     if (!r && storage_index_ready() && done && (!done_id || rec.schema != INDEX_DEF.schema || memcmp(&saved, &expected, sizeof saved))) {
         ink_db_write_t put = {.id = done_id, .data = &expected, .len = sizeof expected, .schema = INDEX_DEF.schema};
         if (ink_db_put(done, &put, NULL)) r = INK_FS_ERR_IO;

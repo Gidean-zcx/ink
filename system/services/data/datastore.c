@@ -106,6 +106,8 @@ struct ink_db {
     int n, cap, live, tombs;
     size_t bytes; /* of record contents */
     uint32_t last_ver, next_id, acked_ver, durable_ver;
+    unsigned waiters;
+    bool flush_waiting;
     /* the log */
     uint32_t gen, snap_gen;
     size_t gen_bytes, old_bytes, snap_bytes; /* in the log in use, in the older log, in the snapshot */
@@ -298,6 +300,10 @@ static void append_done(void *ctx, int result) { /* storage task */
         c->err = 0;
         c->retry_us = 0;
         flush_locked(c); /* what piled up meanwhile (a lazy batch waits for its own time only when alone) */
+        if (c->flush_waiting && !c->fly && !c->pend_len) {
+            c->flush_waiting = false;
+            __atomic_sub_fetch(&c->waiters, 1, __ATOMIC_ACQ_REL);
+        }
         want_compaction(c);
     } else { /* it stays and is tried again; nothing of it reached the file (LittleFS commits whole) */
         ink_probe_count("data.write_errors");
@@ -329,7 +335,7 @@ static void flush_locked(ink_db_t *c) {
     char path[INK_LAYOUT_PATH_MAX];
     if (log_path(c, c->gen, path, sizeof path) < 0) return;
     c->in_flight = true;
-    if (ink_storage_append(path, c->fly, c->fly_len, append_done, c) != 0) {
+    if (ink_storage_append(path, c->fly, c->fly_len, append_done, c, &c->waiters) != 0) {
         c->in_flight = false;
         ink_svc_at(&c->flush_at, osal_now_us() + QUEUE_FULL_US, flush_cb, c);
     }
@@ -338,6 +344,7 @@ static void flush_locked(ink_db_t *c) {
 /* Under the lock: one change, as a frame, into what waits. False: no room for it. */
 static bool frame_add(ink_db_t *c, uint8_t op, const rec_t *r, const void *content) {
     size_t need = FRAME_SIZE(r->len);
+    if (c->pend_len + need > PEND_MAX) flush_locked(c);
     if (c->pend_len + need > PEND_MAX) return false;
     if (c->pend_len + need > c->pend_cap) {
         size_t cap = c->pend_cap ? c->pend_cap * 2 : 512;
@@ -473,7 +480,7 @@ static ink_job_step_t compact_step(void *ctx) {
     __atomic_add_fetch(&DB.used, len, __ATOMIC_ACQ_REL); /* now it counts */
     c->snap_buf = buf;
     c->snap_len = len;
-    int r = pn > 0 ? ink_storage_write_borrow(path, buf, len, compact_done, c) : -1;
+    int r = pn > 0 ? ink_storage_write_borrow(path, buf, len, compact_done, c, &c->waiters) : -1;
     if (r != 0) { /* the queue is full: next time */
         mem_put(c->snap_buf, c->snap_len);
         c->snap_buf = NULL;
@@ -1018,18 +1025,33 @@ uint32_t ink_db_acked_ver(ink_db_t *db) {
 void ink_db_flush(ink_db_t *db) {
     if (!db) return;
     lock();
+    if (!db->flush_waiting && (db->pend_len || db->fly)) {
+        db->flush_waiting = true;
+        __atomic_add_fetch(&db->waiters, 1, __ATOMIC_ACQ_REL);
+    }
+    flush_locked(db);
+    unlock();
+}
+
+void ink_db_flush_background(ink_db_t *db) {
+    if (!db) return;
+    lock();
     flush_locked(db);
     unlock();
 }
 
 int ink_db_wait(ink_db_t *db, uint32_t ver, int64_t timeout_us) {
+    if (!db) return -1;
+    __atomic_add_fetch(&db->waiters, 1, __ATOMIC_ACQ_REL);
     ink_db_flush(db);
     uint64_t end = osal_now_us() + (uint64_t)timeout_us;
+    int result = 0;
     while (ink_db_durable_ver(db) < ver) {
-        if (osal_now_us() >= end) return -1;
+        if (osal_now_us() >= end) { result = -1; break; }
         osal_task_delay_us(10000);
     }
-    return 0;
+    __atomic_sub_fetch(&db->waiters, 1, __ATOMIC_ACQ_REL);
+    return result;
 }
 
 int ink_db_error(ink_db_t *db) {
@@ -1127,7 +1149,7 @@ int ink_db_import(ink_db_t *db, const void *data, size_t len, uint32_t expected_
     char path[INK_LAYOUT_PATH_MAX];
     install_result_t result = {0};
     if (ok && snap_path(db, path, sizeof path) > 0 &&
-        ink_storage_write_borrow(path, copy, len, install_done, &result) == 0) {
+        ink_storage_write_borrow(path, copy, len, install_done, &result, NULL) == 0) {
         while (!__atomic_load_n(&result.done, __ATOMIC_ACQUIRE)) osal_task_delay_us(1000);
         ok = result.result == 0;
     } else ok = false;

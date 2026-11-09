@@ -123,6 +123,8 @@ uint32_t ink_db_durable_ver(ink_db_t *db);
 uint32_t ink_db_acked_ver(ink_db_t *db);
 /** Hand what waits to the storage service now. */
 void ink_db_flush(ink_db_t *db);
+/** Flush without a waiting caller: keep background priority and the interaction quiet window. */
+void ink_db_flush_background(ink_db_t *db);
 /** Wait until `ver` is durable (not in the UI task): 0, or -1 after the timeout. */
 int ink_db_wait(ink_db_t *db, uint32_t ver, int64_t timeout_us);
 /** The last write failed (a write retried later, what is in memory stays): non-zero until one works. */
