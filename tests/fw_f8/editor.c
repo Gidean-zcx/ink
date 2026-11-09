@@ -64,7 +64,15 @@ static void check_order(void) {
     inspect();
     const char *b = strstr(snapshot, "\"id\":\"example:b\""), *listen = strstr(snapshot, "\"id\":\"listen:resume\"");
     const char *word = strstr(snapshot, "\"id\":\"word:review\""), *a = strstr(snapshot, "\"id\":\"example:a\"");
-    CHECK(b && listen && word && a && b < listen && listen < word && word < a, "four selected cards retain their exact order");
+    const char *vb = strstr(snapshot, "成人合成合成卡乙"), *vl = strstr(snapshot, "成人合成听");
+    const char *vw = strstr(snapshot, "成人合成单词"), *va = strstr(snapshot, "成人合成合成卡甲");
+    CHECK(b && listen && word && a && vb && vl && vw && va && b < vb && vb < listen && listen < vl && vl < word &&
+        word < vw && vw < a && a < va, "four selected cards retain their exact order");
+    const char *contents[] = {"成人合成合成卡乙", "成人合成听", "成人合成单词", "成人合成合成卡甲"};
+    for (unsigned i = 0; i < sizeof contents / sizeof *contents; i++) {
+        wanted = contents[i]; find();
+        CHECK(label, "selected card content is really drawn: %s", contents[i]);
+    }
     CHECK(!strstr(snapshot, "成人合成报纸") && strstr(snapshot, "\"id\":\"reader\""), "reading stays above the four selected cards");
 }
 static void check_child_default(void) {
