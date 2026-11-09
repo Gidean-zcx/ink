@@ -15,7 +15,7 @@
 #include "ink/sys/power.h"
 #include "ink/sys/state.h"
 #include "ink/sys/ui.h"
-#include "pinpad.h"
+#include "member_pages.h"
 #include "shell_card.h"
 #include "ink/ui_shell.h"
 
@@ -23,11 +23,9 @@ static struct {
     shell_card_t card;
     char picked[16];
     lv_obj_t *pad;
-    int result;
-    uint32_t wait_s;
     bool requested;
     int page;
-    ink_exec_job_t sync_job, result_job;
+    ink_exec_job_t sync_job;
 } G;
 
 static void sync_gate(void *arg);
@@ -60,34 +58,11 @@ static int snapshot(char *buf, size_t cap) {
 
 static const ink_ui_overlay_t OVERLAY = {.name = "member_gate", .level = 2, .snapshot = snapshot, .on_key = on_key};
 
-static void result_job(void *arg) { /* UI task */
-    (void)arg;
-    if (G.result == INK_PIN_OK) { G.requested = false; sync_gate(NULL); return; }
-    char s[48];
-    if (G.result == INK_PIN_WAIT || G.wait_s) snprintf(s, sizeof s, "请等 %u 秒再试", (unsigned)G.wait_s);
-    else snprintf(s, sizeof s, "密码不对");
-    shell_pinpad_clear();
-    shell_pinpad_say(s);
-}
-
-static void pin_result(void *ctx, int result, uint32_t wait_s) { /* exec.bg */
-    (void)ctx;
-    G.result = result;
-    G.wait_s = wait_s;
-    ink_exec_post(INK_EXEC_UI, &G.result_job, result_job, NULL);
-}
-
-static void pin_entered(const char *pin) { /* UI task */
-    ink_member_unlock(G.picked, pin, pin_result, NULL);
-    shell_pinpad_clear();
-    shell_pinpad_say("正在核对…");
-}
-
 static void on_member(lv_event_t *e) {
     const ink_member_t *m = lv_event_get_user_data(e);
     snprintf(G.picked, sizeof G.picked, "%s", m->id);
     if (ink_member_has_pin(m->id)) {
-        if (!G.pad) G.pad = shell_pinpad(G.card.root, pin_entered);
+        ink_shell_member_pin_open(m->id);
     } else if (ink_member_switch(m->id) == 0) {
         G.requested = false;
         ink_exec_post(INK_EXEC_UI, &G.sync_job, sync_gate, NULL);
@@ -156,19 +131,26 @@ static void sync_gate(void *arg) { /* UI task */
                             : INK_CANVAS_H - INK_BLOCK - diameter - ink_ui_line_height(INK_FONT_BODY) - INK_CONTROL;
         member_tile(m, x, y, diameter, i == 0);
     }
-    if (pages > 1) ink_ui_pagebar(G.card.panel, G.page + 1, pages, INK_CANVAS_H - INK_MARGIN - INK_CONTROL, page_clicked);
+    if (G.requested && ink_member_space_open() && current->role == INK_ROLE_ADULT) {
+        lv_obj_t *b = ink_ui_pill(G.card.panel, "设置或修改密码", INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_CONTROL,
+                                  INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, false, NULL, NULL);
+        ink_shell_bind(b, "shell.pin_set", NULL);
+    }
+    if (pages > 1) ink_ui_pagebar(G.card.panel, G.page + 1, pages, INK_CANVAS_H - INK_MARGIN - 2 * INK_CONTROL - INK_GAP, page_clicked);
     /* the one whose space it is first */
     snprintf(G.picked, sizeof G.picked, "%s", ink_member_current()->id);
     G.pad = NULL;
 }
 
 void ink_shell_members_open(bool returning) {
-    (void)returning;
+    if (!returning) { ink_shell_member_switch_open(); return; }
     G.requested = true;
     G.page = 0;
     ink_shell_close();
     sync_gate(NULL);
 }
+
+void ink_shell_member_gate_done(void) { G.requested = false; sync_gate(NULL); }
 
 static void on_change(void *ctx, int h, const char *id) {
     (void)ctx;
