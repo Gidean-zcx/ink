@@ -54,6 +54,12 @@ static void swipe(int x0, int y0, int x1, int y1) {
 static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
 static void quiet(void) { CHECK(WAIT_FOR(settled(), 10000), "the panel settles"); }
 static void snapshot_event(void *name) { sim_display_snapshot(name); }
+static bool same_page_content(const char *a, const char *b) {
+    const char *av = strstr(a, "\"page_version\":"), *bv = strstr(b, "\"page_version\":");
+    if (!av || !bv || av - a != bv - b) return false;
+    const char *at = strchr(av, ','), *bt = strchr(bv, ',');
+    return at && bt && !strncmp(a, b, (size_t)(av - a)) && !strcmp(at, bt);
+}
 static void panel(const char *name) { vtk_event_at(vtk_now() + SIM_MS(1), snapshot_event, (void *)name); delay_ms(5); }
 static bool clock_tile;
 static void find_clock_in(lv_obj_t *root) {
@@ -132,7 +138,8 @@ static void test_task(void *arg) {
     CHECK(BY_HAND("shell.notify_next", NULL) && g_rc.status == INK_RC_DONE, "the notification page advances through its capability"); quiet();
     on_ui(read_screen); CHECK(strcmp(first, g_snap), "the next page shows different real records");
     CHECK(BY_HAND("shell.notify_prev", NULL) && g_rc.status == INK_RC_DONE, "the notification page returns through the same capability"); quiet();
-    on_ui(read_screen); CHECK(!strcmp(first, g_snap), "the previous six records are restored");
+    on_ui(read_screen); CHECK(same_page_content(first, g_snap), "the previous records, actions and pagination are restored");
+    CHECK(strcmp(first, g_snap), "returning to the same records gives a fresh page version");
     ink_probe_count("test.finished");
 }
 void ink_main(void) {
