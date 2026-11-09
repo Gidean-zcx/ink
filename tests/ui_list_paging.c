@@ -136,7 +136,7 @@ static void restored(void) {
     read_snapshot();
     CHECK(position.page == 1 && !strcmp(position.selected, expected) && !strcmp(opened, expected), "return restores the original page and stable selected file id");
     CHECK(strstr(snapshot, expected) && strstr(snapshot, file_label), "renaming the real file updates its label without changing its identity");
-    CHECK(lv_obj_get_style_border_width(slots[1], 0) == INK_STROKE, "the restored selection is visible");
+    CHECK(lv_obj_get_style_outline_width(slots[1], 0) == INK_STROKE, "the restored selection is visible");
 }
 static void ai_open(void) {
     ink_receipt_t rc;

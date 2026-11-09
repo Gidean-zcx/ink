@@ -85,7 +85,7 @@ void ink_ui_list_refresh(ink_ui_list_t *l, size_t total) {
         }
         l->fields[i] = (ink_ui_field_spec_t){0}; l->actions[i + l->fixed] = (ink_ui_action_spec_t){0};
         l->bind(l->slots[i], offset + i, &l->fields[i], &l->actions[i + l->fixed], l->ctx);
-        lv_obj_set_style_border_width(l->slots[i], l->fields[i].object.id &&
+        lv_obj_set_style_outline_width(l->slots[i], l->fields[i].object.id &&
             !strcmp(l->fields[i].object.id, l->position->selected) ? INK_STROKE : 0, 0);
     }
     l->page.field_count = l->visible; l->page.action_count = l->visible + l->fixed;
