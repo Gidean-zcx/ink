@@ -182,9 +182,15 @@ static void poll_upload(void *arg) {
 
 static void status(ink_call_t *c) {
     if (T.active && T.epoch != ink_member_epoch()) finish("成员已变化");
-    char out[240];
-    snprintf(out, sizeof out, "{\"active\":%s,\"port\":%u,\"code\":\"%06u\",\"directory\":\"" INBOX "\",\"result\":\"%s\"}",
-             T.active ? "true" : "false", T.port, T.code, T.result ? T.result : "尚未开启");
+    int64_t received = 0;
+    if (T.epoch == ink_member_epoch()) {
+        ink_fs_stat_t st;
+        if (T.file) received = ink_fs_tell(T.file);
+        else if (T.result && !strcmp(T.result, "文件已收到") && !fs_stat_for(&T.actor, T.path, &st)) received = st.size;
+    }
+    char out[288];
+    snprintf(out, sizeof out, "{\"active\":%s,\"port\":%u,\"code\":\"%06u\",\"directory\":\"" INBOX "\",\"result\":\"%s\",\"received\":%lld}",
+             T.active ? "true" : "false", T.port, T.code, T.result ? T.result : "尚未开启", (long long)received);
     ink_cap_result(c, out);
 }
 static void start(ink_call_t *c) {

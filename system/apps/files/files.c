@@ -101,6 +101,7 @@ static void thumb_done(void *ctx, const ink_receipt_t *rc) {
 static void thumbnail(unsigned at, uint32_t id) { ink_args_t a; ink_args_init(&a); ink_args_int(&a, "id", id); request("file.thumb", &a, thumb_done, at); }
 static void bind_item(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, ink_ui_action_spec_t *action, void *ctx) {
     (void)ctx; unsigned at = index % 4; item_t *item = &F.items[index];
+    if (!strcmp(item->path, "/me/收件箱")) snprintf(item->name, sizeof item->name, "传进来的");
     if (!lv_obj_get_child_count(slot)) {
         ink_ui_line(slot, "", INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_CIRCLE, INK_GAP_S, INK_CANVAS_W - 2 * INK_MARGIN - INK_CIRCLE - INK_GAP);
         ink_ui_line(slot, "", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_CIRCLE, INK_GAP_S + ink_ui_line_height(INK_FONT_LIST), INK_CANVAS_W - 2 * INK_MARGIN - INK_CIRCLE - INK_GAP);
@@ -232,6 +233,7 @@ static void create(lv_obj_t *screen, void *arg) {
     ink_shell_statusbar(screen, true);
     ink_shell_bind(ink_ui_circle(screen, "back", INK_MARGIN, INK_STATUS_BAR + INK_GAP_S, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_STATIC, NULL, NULL), "files.up", NULL);
     const char *title = directory()[0] && F.mode == LIST ? !strcmp(directory(), "/me") ? "我的" : !strcmp(directory(), "/family") ? "家庭" : strrchr(directory(), '/') + 1 : F.model.title;
+    if (!strcmp(directory(), "/me/收件箱")) title = "传进来的";
     ink_ui_line(screen, title, INK_FONT_TITLE, INK_WEIGHT_BOLD, INK_MARGIN + INK_CONTROL + INK_GAP, INK_STATUS_BAR + INK_GAP_S, INK_CANVAS_W - 2 * INK_MARGIN - INK_CONTROL - INK_GAP);
     int notice_y = INK_CANVAS_H - INK_PRIMARY - INK_CONTROL - INK_GAP_L;
     if (F.mode == ACTIONS) notice_y = INK_CANVAS_H - INK_MARGIN - 2 * INK_PRIMARY - INK_GAP - 2 * ink_ui_line_height(INK_FONT_NOTE) - INK_GAP_L;
@@ -260,6 +262,11 @@ static void create(lv_obj_t *screen, void *arg) {
         snprintf(item->path, sizeof item->path, "/members/%s", m->id); snprintf(item->name, sizeof item->name, "%s的文件", m->name);
     }
     ink_ui_list_refresh(F.list, F.count);
+    if (F.mode == HOME && ink_member_current()->role == INK_ROLE_ADULT) {
+        int width = INK_CANVAS_W - 2 * INK_MARGIN, bottom = INK_CANVAS_H - INK_MARGIN - INK_PRIMARY;
+        button(4, screen, "从手机或电脑传入", "transfer.open", NULL, INK_MARGIN, bottom - INK_PRIMARY - INK_GAP, width, false);
+        button(5, screen, "连电脑", "transfer.usb", NULL, INK_MARGIN, bottom, width, false);
+    }
 }
 static void destroy(void) { F.serial++; F.list = NULL; F.field = F.notice = F.preview = NULL; memset(F.images, 0, sizeof F.images); }
 static int snapshot(char *out, size_t cap) {
@@ -267,7 +274,9 @@ static int snapshot(char *out, size_t cap) {
     if (n < 0) return -1;
     ink_jw_t w = {.buf = out, .cap = cap, .len = (size_t)n - 1}; ink_jw_raw(&w, ",\"status\":"); ink_jw_str(&w, F.notice ? lv_label_get_text(F.notice) : "");
     ink_jw_raw(&w, ",\"directory\":"); ink_jw_str(&w, directory()); ink_jw_raw(&w, ",\"back\":\"files.up\"");
-    if (F.mode == MOVE) ink_jw_raw(&w, ",\"cancel\":\"shell.back\""); ink_jw_raw(&w, "}"); if (w.overflow) { out[0] = 0; return -1; } return (int)w.len;
+    if (F.mode == MOVE) ink_jw_raw(&w, ",\"cancel\":\"shell.back\"");
+    if (F.mode == HOME && ink_member_current()->role == INK_ROLE_ADULT) ink_jw_raw(&w, ",\"transfer_actions\":[{\"capability\":\"transfer.open\",\"label\":\"从手机或电脑传入\"},{\"capability\":\"transfer.usb\",\"label\":\"连电脑\"}]");
+    ink_jw_raw(&w, "}"); if (w.overflow) { out[0] = 0; return -1; } return (int)w.len;
 }
 static bool page_key(ink_key_t key, bool lng) { return F.list && ink_ui_list_key(F.list, key, lng); }
 static void changed(void *ctx, const char *id, const ink_args_t *args) {
@@ -291,4 +300,5 @@ static const ink_cap_t CAPS[] = {
     {.id = "files.prev", .title = "文件上一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "files.up", .title = "返回文件上一级", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate}
 };
-int ink_files_init(void) { return ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_app_register(&APP) || ink_cap_subscribe("file.changed", changed, NULL, INK_EXEC_UI) < 0 ? -1 : 0; }
+int ink_transfer_pages_init(void);
+int ink_files_init(void) { return ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_app_register(&APP) || ink_cap_subscribe("file.changed", changed, NULL, INK_EXEC_UI) < 0 || ink_transfer_pages_init() ? -1 : 0; }
