@@ -99,4 +99,19 @@
 
 ### 最终验收
 
-全量普通测试、ASan/UBSan 和最终反向对照正在执行，结果补在本小节。
+修复提交：`19567727`、`6f70a411`。
+
+| 编号 | 结论 | 证据与命令 |
+| --- | --- | --- |
+| 1 | 【实测】通过 | 四页真实值、备份启动后的可见状态和 AI 快照一致；三项设置重启恢复；`settings-a` 正常进程 580 项、重启进程 10 项通过 |
+| 2 | 【实测】通过 | 15 个分页画面逐字段可见性与布局断言；说明进入 AI 快照，原有触摸／AI 共用能力和确认测试保留；`build/settings-fixes-final-target.log` 定向 3/3 通过 |
+| 3 | 【实测】通过 | 两项儿童限制和七项功能／版面反向对照，九项均正常结束并准确退出 1；`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/settings_a_reverse.py --build build` |
+| 4（普通全量） | 【实测】除用户豁免项外全过 | 224/225、0 跳过、130.58 秒；唯一失败 `capability-table-doc`。命令：`INK_KEEP_EVIDENCE=1 PYTHONDONTWRITEBYTECODE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`；日志 `build/settings-full-final.log` |
+| 4（内存检查） | 【实测】除用户豁免项外全过 | 224/225、0 跳过、247.29 秒；唯一失败 `capability-table-doc`，无 ASan/UBSan 错误。命令同普通全量，目录换为 `build-asan` 并加 `UBSAN_OPTIONS=halt_on_error=1`；日志 `build-asan/settings-fixes-full.log` |
+| G4 | 【实测】分组／版面回归通过；原始像素目标仍未达 | 对照分数、必要分页及规范／真实数据差异见上表；未更改主题迎合旧图 |
+
+【实测】依赖原因已核清：构建用 Python 缺 `pytest`、`pytest_asyncio`、`aiohttp`、`yaml`，中枢适配器因此会返回 77。保留 `INK_HUB_PYTHON=$INK_DEPS/hub/.venv/bin/python`，实测可加载 pytest 8.4.2、pytest-asyncio 1.2.0、aiohttp 3.12.15、PyYAML 6.0.3；三项中枢测试实际运行，不以跳过计通过。没有安装或升级依赖。
+
+【实测】普通构建和内存构建都以 `taskpolicy -c utility cmake --build <目录> -j2` 完成；后者保留 `INK_WERROR=ON`、启用 `INK_SANITIZE=ON`，实际编译参数含 address 和 undefined 两种 sanitizer。两轮全量串行且均退出 8，仅因能力表文档不同步；用户已明确由合并主会话重新生成，没有跳过或放宽检查。两种构建的设置场景均为 580＋10 项通过；内部 RAM 最低余量均为写入进程 47840 字节、重启进程 43736 字节，高于 32768；内外部分配失败均为 0。
+
+【实测】`git diff --check f0b0c539` 通过；差分只涉及本任务。全任务差分隐私扫描唯一命中是原有 `REVIEW.md:88` 扫描命令中的正则字面量，不含真实机器路径或设备标识；本轮 `418d66dd..HEAD` 差分零匹配。未改 `REVIEW.md`、共享文档、其它并行任务文件或资源预算；未提交证据图片和构建产物。Linux/gcc 与实机仍未验证。
