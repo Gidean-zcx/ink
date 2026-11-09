@@ -1,6 +1,6 @@
 # kid-3 执行报告
 
-基线：`2228df7de99de9fea15fddc22868a0de1caae770`。状态：实现、定向回归完成；全量及内存检查进行中。
+基线：`2228df7de99de9fea15fddc22868a0de1caae770`。状态：本地交付完成。
 
 ## 验收表
 
@@ -10,11 +10,11 @@
 | 2 | 【实测】通过 | 两页应用均无禁止入口；白名单能力可用；用时耗尽后目录恰好两项且电话、短信能打开；说明完整显示 | 下文定向命令 |
 | 3 | 【实测】通过 | 大人两次改变 TodayEdit，孩子故事、报纸不受影响；`fw-f8` 继续验证孩子独立选择的持久化 | 下文定向命令 |
 | 4 | 【实测】截图、同能力通过；画板差值超标 | 三页稳态截图；主页和全部触摸、AI 共用 `shell.launch`，今日卡片共用提供方能力 | 下文定向、画板命令 |
-| 5 | 待验证 | 全量、内存检查、产品代码预算 | 待补 |
+| 5 | 【实测】本机通过 | 普通及 ASan/UBSan 各 258/258，均 0 失败、0 跳过；产品源码 99 行，含测试登记保守计 103 行 | 下文全量命令 |
 
 ## 没做到的
 
-- 最终全量测试、内存检查待补。
+- 未在 Linux/GCC 上运行，本次执行环境是 macOS/Apple Clang，功能证据来自本机模拟器。
 - 未改阅读器已有缺口：【实现】`apps/reader/reader.c:495` 返回主页时释放阅读状态，`:529` 只在正文仍打开时提供阅读卡片。本任务的成员阅读卡片隔离用合成提供方验证，不能据此宣称真实阅读器回主页后的卡片已经可用；真实服务没数据时显示空状态。
 
 ## 和设计不一致的
@@ -39,18 +39,30 @@
 
 ## 新增的机制
 
-- 无新增任务、线程、定时器、状态机、文件格式、配置项或服务接口。剩余用时复用 `member.time_get`、现有 UI 回调和时间刷新；页面操作沿用已有能力。
+- 无新增产品任务、线程、定时器、状态机、文件格式、配置项或服务接口。剩余用时复用 `member.time_get`、现有 UI 回调和时间刷新；页面操作沿用已有能力。
 
 ## 验证记录
 
 - 【实测】`taskpolicy -c utility cmake --build build -j2` 通过，`INK_WERROR=ON`。
+- 【实测】`taskpolicy -c utility cmake --build build-asan -j2` 通过；配置与普通版相同，仅增加 `INK_SANITIZE=ON`。
+- 【实测】普通全量 258/258 通过，0 失败、0 跳过，用时 214.08 秒；日志 `build/kid-3-ctest.log`。
+- 【实测】ASan/UBSan 全量 258/258 通过，0 失败、0 跳过，用时 450.44 秒；日志 `build/kid-3-asan-ctest.log`。
 - 【实测】定向命令：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2 -R '^(kid-3|kid-2|fw-f8|ui-cards|ui-scale)$'`，5/5 通过。
-- 首次全量 253/258 无失败预算的项目完成（含 3 项原有跳过）；五项失败均是上述旧页面名或孩子第五格期望。更新后第二轮 255 通过、3 项中枢测试因 Python 依赖缺失跳过、0 失败。已找到只读依赖目录中的锁定中枢环境，以现有 `INK_HUB_PYTHON` 指定，最终结果待补；没有安装或升级依赖。
+- 首次全量 250 通过、5 失败、3 跳过；五项失败均是上述旧页面名或孩子第五格期望。更新后第二轮 255 通过、3 项中枢测试因 Python 依赖缺失跳过、0 失败。用只读依赖目录中的锁定中枢环境指定已有的 `INK_HUB_PYTHON` 后，最终两轮均实际执行并通过了这三项；没有安装或升级依赖。
 - 【实测】补查孩子主页正在进行的事：通过真实任务服务建立孩子作业，活动行保留，用时行让位，日期不进入状态栏；只有空闲时才上移孩子主页。最新 `tests/kid_3.py` 三轮各 188 条检查通过，内部 RAM 最低余量均为 47,224 字节（原下限 32,768）。
 - 截图和快照：`build/kid-3-evidence/{KidHome,KidToday,KidApps}/`；拼接对照图和 `scores.json` 在其父目录。已目检并修复孩子主页用时与图标重叠，新增断言防回归。构建目录不提交。
 - 【实测】反向命令：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/kid_3_reverse.py --build build`。基线导航替换对象后 22 条断言失败；将今日配置错误地统一读大人后 7 条失败；撤掉空闲布局判断后 2 条失败。三轮都运行到 `test.finished`；未修改工作源码，摘要在 `build/kid-3-reverse/summary.json`。
 - 【实测】画板命令：先用 `INK_KEEP_EVIDENCE=1` 运行 `tests/kid_3.py --build build`，再运行 `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.py --build build --design "$INK_DESIGN" --out build/test-out/kid-3-sim-kid-3 --scenes KidHome KidToday KidApps --reuse`。每屏有一份已核实的稳态帧，分数如上；已另存证据供本次复核。
 - 【实测】产品源码差异 91 行新增、8 行删除，合计 99 行；另有 CMake 测试登记 4 行，即保守计算 103 行，低于 250 行预算。不能更小：只改页名、删除三个占位入口的方案无法覆盖注册应用、能力白名单、用时耗尽、卡片说明及剩余用时；过滤集中在一个孩子入口判断中，没有逐应用补丁。
+- 配置沿用总规则第 5 节，另用只读依赖目录指定 SDL2、ImGui 的 `FETCHCONTENT_SOURCE_DIR_*` 和已有参数 `-DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"`。`PYTHONPATH` 指向本工作区，已核对实际加载的是本工作区中枢源码。
+- 【实测】结束检查：`git diff --check` 通过；相对基线的差异仅 10 个相关文件，无共享文档、设计稿或构建产物夹带。按总规则第 6 节扫描提交差异，隐私匹配 0 条（grep 返回 1，表示没有匹配）。
+
+全量命令（顺序运行）：
+
+```sh
+PYTHONPATH="$PWD/hub" taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
+PYTHONPATH="$PWD/hub" taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
+```
 
 ## 要改的文档
 
