@@ -1,0 +1,4 @@
+@0 net wifi
++0 sim external voice
++0 cell on -90
+@420s end

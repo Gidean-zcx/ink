@@ -1309,3 +1309,8 @@ target_sources(ink_system PRIVATE system/apps/calendar/calendar.c)
 ink_sim_executable(sim-calendar tests/calendar/calendar.c)
 target_link_libraries(sim-calendar PRIVATE ink_apps ink_system)
 add_test(NAME calendar COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/calendar/run.py --build ${CMAKE_BINARY_DIR})
+
+ink_sim_executable(sim-confirm-pages tests/confirm_pages/pages.c tests/confirm_pages/boundary.c)
+target_link_libraries(sim-confirm-pages PRIVATE ink_apps ink_system)
+add_test(NAME confirm-pages COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/confirm_pages/run.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(confirm-pages PROPERTIES TIMEOUT 180 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")
