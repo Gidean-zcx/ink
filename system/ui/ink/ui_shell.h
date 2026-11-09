@@ -6,6 +6,7 @@
 
 int ink_shell_init(void);
 int ink_boot_flow_init(void);
+void ink_boot_flow_resume(void);
 bool ink_boot_flow_launch(ink_call_t *call);
 void ink_ui_stage_next(void);
 const char *ink_ui_action_page(void);

@@ -105,18 +105,95 @@ static void password_snapshot(void) {
 static bool backup_phase(const char *phase) {
     return AI("backup.status", NULL) && g_rc.status == INK_RC_DONE && strstr(g_result, phase);
 }
+static void poweroff(void *arg) { (void)arg; sim_power_off("boot flow checkpoint"); }
+static void checkpoint(const char *page) {
+    CHECK(ready(page), "checkpoint reaches %s", page);
+    ink_db_flush_all();
+    CHECK(WAIT_FOR(ink_db_idle() && ink_storage_pending() == 0 && settled(), 15000), "progress is durable before power loss");
+    ink_probe_count("test.finished");
+    vtk_event_at(vtk_now() + SIM_MS(1), poweroff, NULL);
+}
+static void resume_run(const char *phase) {
+    if (!strcmp(phase, "cold")) {
+        ink_db_t *members = ink_db_open(ink_db_find_def("member.table"), NULL);
+        CHECK(members && ink_db_count(members) == 0 && !ink_pairing_enabled(), "blank flash has no saved members or pairing");
+        if (members) ink_db_close(members);
+        CHECK(ready("FirstBoot") && sim_provision_active(), "blank device starts setup without a network settings action");
+        checkpoint("FirstBoot");
+    } else if (!strcmp(phase, "wifi")) {
+        CHECK(ready("FirstBoot"), "first page survives a restart");
+        press("在设备上设置");
+        CHECK(WAIT_FOR(at("BootWifi") && strstr(g_snap, "test-wifi"), 8000), "scan completes before checkpoint");
+        checkpoint("BootWifi");
+    } else if (!strcmp(phase, "password")) {
+        CHECK(WAIT_FOR(at("BootWifi") && strstr(g_snap, "test-wifi"), 8000), "saved Wi-Fi page rescans after restart");
+        press("test-wifi"); CHECK(ready("BootWifiPass"), "enter selected network password");
+        native_type(WRONG); checkpoint("BootWifiPass");
+    } else if (!strcmp(phase, "failure")) {
+        CHECK(ready("BootWifiPass") && strstr(g_snap, "test-wifi"), "password page keeps selected network after restart");
+        CHECK(ink_text_type() == INK_TEXT_PASSWORD && !ink_text_value()[0], "password draft is never restored");
+        native_type(WRONG);
+        CHECK(BY_HAND("keyboard.key", "{\"code\":10}") && g_rc.status == INK_RC_DONE, "person submits wrong password after reboot");
+        checkpoint("BootJoinFail");
+    } else if (!strcmp(phase, "joining")) {
+        CHECK(ready("BootJoinFail"), "failure page survives restart");
+        press("重新输入"); CHECK(ready("BootWifiPass"), "resume failure through protected input");
+        native_type(SECRET);
+        CHECK(BY_HAND("keyboard.key", "{\"code\":10}") && g_rc.status == INK_RC_DONE, "person connects after reboot");
+        checkpoint("BootJoining");
+    } else if (!strcmp(phase, "offline")) {
+        CHECK(ready("BootWifiPass") && strstr(g_snap, "test-wifi") && !ink_text_value()[0], "interrupted join resumes protected input without a saved password draft");
+        native_type(SECRET);
+        CHECK(BY_HAND("keyboard.key", "{\"code\":10}") && g_rc.status == INK_RC_DONE, "person retries interrupted connection");
+        checkpoint("BootNoHub");
+    } else if (!strcmp(phase, "claim")) {
+        CHECK(ready("BootNoHub"), "offline page survives restart");
+        CHECK(BY_HAND("pairing.configure", CONFIG) && g_rc.status == INK_RC_DONE, "configure synthetic server after reboot");
+        checkpoint("BootClaim");
+    } else if (!strcmp(phase, "confirm")) {
+        CHECK(ready("BootClaim"), "claim page survives restart");
+        CHECK(ink_pairing_state() == INK_PAIR_PAIRING, "pairing reconnects without becoming authorized before confirmation");
+        vtk_event_at(vtk_now() + SIM_MS(1), offer_event, NULL); checkpoint("BootConfirm");
+    } else if (!strcmp(phase, "restore")) {
+        CHECK(ready("BootConfirm") && strstr(g_snap, "测试家庭"), "pending invitation is reconstructed from pairing service");
+        CHECK(AI("pairing.accept", "{\"txid\":\"test-tx-1\"}") && g_rc.status != INK_RC_DONE, "reboot never permits AI confirmation");
+        press("加入");
+        CHECK(WAIT_FOR(at("BootRestore") && strstr(g_snap, "还没有可恢复"), 20000), "restored invitation completes through real services");
+        checkpoint("BootRestore");
+    } else if (!strcmp(phase, "hello")) {
+        CHECK(WAIT_FOR(at("BootRestore") && strstr(g_snap, "还没有可恢复"), 20000), "restore page queries backups again after reboot");
+        press("当新设备用"); checkpoint("BootHello");
+    } else if (!strcmp(phase, "complete")) {
+        CHECK(ready("BootHello"), "welcome page survives restart until person leaves it");
+        press("跳过"); checkpoint("home");
+    } else if (!strcmp(phase, "done")) {
+        CHECK(ready("home") && !sim_provision_active(), "completed setup does not restart on the next boot");
+        checkpoint("home");
+    } else if (!strcmp(phase, "revoke")) {
+        CHECK(ready("home"), "revocation starts from the completed device");
+        vtk_event_at(vtk_now() + SIM_MS(1), revoke_event, NULL); delay_ms(10); ink_hub_reconnect();
+        checkpoint("BootRevoked");
+    } else if (!strcmp(phase, "revoked")) {
+        CHECK(ready("BootRevoked"), "revoked page survives reboot without exposing a former invitation");
+        press("重新加入"); checkpoint("FirstBoot");
+    } else CHECK(false, "unknown reboot phase");
+}
 static void run(void *arg) {
     (void)arg;
     CHECK(WAIT_FOR(settled(), 15000), "initial page settles");
     vtk_event_at(vtk_now() + SIM_MS(1), environment, NULL); delay_ms(10);
+    const char *phase = getenv("INK_BOOT_PHASE");
+    if (phase) { resume_run(phase); return; }
+    ink_db_t *members = ink_db_open(ink_db_find_def("member.table"), NULL);
+    CHECK(members && ink_db_count(members) == 0 && !ink_pairing_enabled(), "real first boot has no saved members or pairing");
+    if (members) ink_db_close(members);
+    CHECK(ready("FirstBoot"), "initial entry is FirstBoot before creating any backup fixture");
     if (restore_mode) {
         CHECK(ink_fs_write_atomic("/me/boot-note.txt", "synthetic saved note", 20) == INK_FS_OK, "create synthetic member backup data");
         CHECK(AI("backup.now", NULL) && g_rc.status == INK_RC_QUEUED, "create a real backup fixture");
         CHECK(WAIT_FOR(ink_hub_online(), 20000), "backup request opens the on-demand synthetic hub connection");
         CHECK(WAIT_FOR(backup_phase("\"phase\":\"saved\""), 60000), "backup fixture received by simulated hub");
     }
-    CHECK(BY_HAND("shell.network", NULL) && g_rc.status == INK_RC_DONE, "open the network settings entry");
-    CHECK(WAIT_FOR(settled(), 10000), "network settings settles"); press("设置设备");
     capture("FirstBoot");
     CHECK(sim_provision_active(), "FirstBoot starts the actual modeled setup hotspot");
     press("在设备上设置");

@@ -190,6 +190,7 @@ static void take_snapshot(void *name) { sim_display_snapshot(name); }
 static void capture(const char *name) { quiet(); vtk_event_at(vtk_now() + SIM_MS(1), take_snapshot, (void *)name); delay_ms(5); }
 static void run(void *arg) {
     (void)arg;
+    ink_power_hold(INK_NEED_NET); /* Keep idle status-bar redraws outside the card render measurements. */
     delay_ms(1800); quiet();
     on_ui(watch_renders);
     unsigned drawn = render_count(), committed = ink_display_commits();
@@ -260,10 +261,11 @@ static void run(void *arg) {
     CHECK(WAIT_FOR(sim_metric_value("home.cards_updates") > before, 1500), "a source error reaches Today"); quiet(); on_ui(inspect_failed);
     before = sim_metric_value("home.cards_updates"); on_ui(restore_cards);
     CHECK(WAIT_FOR(sim_metric_value("home.cards_updates") > before, 1500), "cards recover on the next ordinary change"); quiet(); on_ui(inspect); on_ui(inspect_alarm);
+    ink_power_release(INK_NEED_NET);
     ink_probe_count("test.finished");
 }
 void ink_main(void) {
-    product_main();
+    product_main(); test_start_home();
     CHECK(ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) == 0 && ink_app_register(&LISTEN) == 0 && ink_app_register(&NEWS) == 0,
           "register only synthetic test providers");
     osal_task_cfg_t cfg = {.name = "ui-cards-test", .fn = run, .stack_bytes = 16384, .priority = OSAL_PRIO_NORMAL, .core = -1, .flags = OSAL_TASK_STACK_EXTERNAL};

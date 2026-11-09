@@ -686,6 +686,7 @@ static void event_job(void *arg) {
                 valid = (code[i] >= 'A' && code[i] <= 'Z') || (code[i] >= '2' && code[i] <= '9');
             if (valid && ink_json_int(j, ink_json_find(j, obj, "expires_s"), &seconds) && seconds > 0 &&
                 seconds <= 600) {
+                bool already_pairing = s->state == INK_PAIR_PAIRING;
                 if (s->state == INK_PAIR_UNPAIRED) {
                     s->state = INK_PAIR_PAIRING;
                     if (!store_identity(s)) goto done;
@@ -694,6 +695,7 @@ static void event_job(void *arg) {
                 memcpy(P.code, code, sizeof code);
                 P.expires = osal_now_us() + (uint64_t) seconds * 1000000;
                 unlock();
+                if (already_pairing) publish();
             }
         }
     } else if (e->kind == PE_OFFER && obj >= 0) {

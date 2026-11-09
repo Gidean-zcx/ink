@@ -554,7 +554,7 @@ static void test_task(void *arg) {
 }
 
 void ink_main(void) {
-    product_main();
+    product_main(); test_start_home();
     osal_task_cfg_t cfg = {.name = "peopletest", .fn = test_task, .stack_bytes = 16384, .priority = OSAL_PRIO_NORMAL, .core = -1, .flags = OSAL_TASK_STACK_EXTERNAL};
     if (osal_task_create(&cfg, NULL) != OSAL_OK) osal_panic("test task");
 }

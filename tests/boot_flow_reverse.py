@@ -28,6 +28,14 @@ def command(args, cwd=ROOT, source=None, env=None):
 
 
 def run(binary, label, mode, folder, expected=None, sanitizer=False):
+    if mode == 'reboot':
+        result = command([str(Path(os.sys.executable)), '-B', str(ROOT / 'tests/boot_flow_reboot.py'),
+            '--build', str(folder), '--binary', str(binary)], env={**os.environ, 'UBSAN_OPTIONS': 'halt_on_error=1'})
+        (out / (label + '-run.log')).write_text(result.stdout + result.stderr)
+        assert result.returncode != 0 and expected in result.stdout + result.stderr, (label, result.stdout, result.stderr)
+        results.append({'case': label, 'exit': result.returncode, 'expected': expected})
+        print(json.dumps(results[-1]), flush=True)
+        return
     result = command([str(binary), '--profile', str(ROOT / 'simulator/profiles/metalio-plus.json'),
         '--script', str(ROOT / 'tests/boot_flow.script'), '--assets', str(folder / 'assets'),
         '--content', str(folder / 'test-content'), '--out', str(out / (label + '-out')),
@@ -93,7 +101,19 @@ needle = 'B.actions[i] = (ink_ui_action_spec_t){B.ids[i], label, cap, B.args[i],
 assert boot.count(needle) == 1
 borrowed = boot.replace(needle, 'B.actions[i] = (ink_ui_action_spec_t){!strcmp(cap, "shell.launch") ? value : cap, label, cap, B.args[i], {NULL, 0}, true};')
 variant('borrowed-id', borrowed, 'probe-password', sanitizer=True)
+needle = '    int page = B.resume;'
+assert boot.count(needle) == 1
+variant('auto-entry', boot.replace(needle, '    int page = -1;'), 'reboot', 'blank device starts setup without a network settings action')
+needle = '    remember(B.page);\n'
+assert boot.count(needle) == 1
+variant('save-progress', boot.replace(needle, ''), 'reboot', 'saved Wi-Fi page rescans after restart')
+needle = '                if (already_pairing) publish();'
+assert pair.count(needle) == 1
+variant('claim-ready-event', pair.replace(needle, '                (void)already_pairing;'), 'reboot', 'claim page survives restart')
+needle = 'B.txid[0] && B.claim[0] && ink_pairing_state() == INK_PAIR_PAIRING'
+assert boot.count(needle) == 1
+variant('confirm-ready', boot.replace(needle, 'B.txid[0] && ink_pairing_state() == INK_PAIR_PAIRING'), 'reboot', 'restored invitation completes through real services')
 assert before == {path: hashlib.sha256((ROOT / path).read_bytes()).hexdigest() for path in paths}
 (out / 'commands.json').write_text(json.dumps(commands, indent=2) + '\n')
 (out / 'summary.json').write_text(json.dumps(results, indent=2) + '\n')
-print('All five negative controls rejected; product sources and normal binaries unchanged.')
+print('All nine negative controls rejected; product sources and normal binaries unchanged.')

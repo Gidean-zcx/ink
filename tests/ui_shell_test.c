@@ -136,7 +136,7 @@ static void test_task(void *arg) {
     ink_probe_count("test.finished");
 }
 void ink_main(void) {
-    product_main(); ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS);
+    product_main(); test_start_home(); ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS);
     osal_task_cfg_t cfg = {.name = "ui-test", .fn = test_task, .stack_bytes = 16384, .priority = OSAL_PRIO_NORMAL, .core = -1, .flags = OSAL_TASK_STACK_EXTERNAL};
     if (osal_task_create(&cfg, NULL) != OSAL_OK) osal_panic("UI test task");
 }

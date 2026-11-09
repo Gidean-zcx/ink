@@ -135,6 +135,12 @@ const ink_member_t *ink_member_at(int i) {
         if (M.s[k].used && seen++ == i) return &M.s[k].m;
     return NULL;
 }
+bool ink_members_configured(void) {
+    ink_svc_lock();
+    bool configured = M.table_is_real || M.table_unread;
+    ink_svc_unlock();
+    return configured;
+}
 
 bool ink_member_has_pin(const char *id) {
     const slot_t *s = find(id);

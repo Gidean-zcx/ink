@@ -14,6 +14,7 @@
 #include "ink/probe.h"
 #include "ink/sys/cap.h"
 #include "ink/sys/confirm.h"
+#include "ink/sys/power.h"
 #include "ink/sys/exec.h"
 #include "ink/sys/json.h"
 #include "ink/sys/state.h"
@@ -79,6 +80,17 @@ static bool call_as(const char *id, const char *args, ink_source_t src) {
 }
 #define AI(id, args) call_as(id, args, INK_SRC_AI)
 #define BY_HAND(id, args) call_as(id, args, INK_SRC_TOUCH)
+
+/* Existing feature tests start from home; first-boot tests deliberately do not call this. */
+static void test_start_home(void) {
+    if (ink_member_space_open()) {
+        CHECK(BY_HAND("pairing.hotspot_stop", NULL) && g_rc.status == INK_RC_DONE, "close setup hotspot before feature scenario");
+        CHECK(BY_HAND("shell.launch", "{\"id\":\"boot.hello\"}") &&
+              (g_rc.status == INK_RC_DONE || g_rc.status == INK_RC_STALE), "skip setup tutorial for existing feature fixtures");
+        CHECK(BY_HAND("system.home", NULL) && g_rc.status == INK_RC_DONE, "start feature scenario at home");
+        ink_power_activity(osal_now_us()); /* Match the physical HOME key's activity accounting. */
+    }
+}
 
 static bool setting_by_hand(const char *id, int64_t value) {
     ink_receipt_t rc;

@@ -417,7 +417,7 @@ static void test_task(void *arg) {
 void ink_main(void) {
     const char *requested = getenv("INK_UI_SCENE");
     snprintf(scene, sizeof scene, "%s", requested ? requested : "Main");
-    product_main();
+    product_main(); test_start_home();
     ink_cap_register(FIXTURES, sizeof FIXTURES / sizeof *FIXTURES);
     osal_task_cfg_t cfg = {.name = "ui-scenes", .fn = test_task, .stack_bytes = 16384, .priority = OSAL_PRIO_NORMAL,
                           .core = -1, .flags = OSAL_TASK_STACK_EXTERNAL};

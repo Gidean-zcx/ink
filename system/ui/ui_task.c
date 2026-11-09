@@ -842,6 +842,7 @@ static void ui_task(void *arg) {
     styles_init();
     UI.frame_intent = INK_REFRESH_UI;
     ink_ui_push(g_home, NULL);
+    if (g_home->app && !strcmp(g_home->app, "home")) ink_boot_flow_resume();
     ink_input_init(input_handler, NULL);
 
     for (;;) {

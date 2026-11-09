@@ -6,6 +6,7 @@
 #include <string.h>
 #include "ink/osal.h"
 #include "ink/sys/cap.h"
+#include "ink/sys/data.h"
 #include "ink/sys/json.h"
 #include "ink/sys/members.h"
 #include "ink/sys/pairing.h"
@@ -20,6 +21,8 @@ static const char *const TITLES[] = {"你好", "选一个 Wi-Fi", "网络密码"
     "用手机扫一下，加入家庭", "找不到家庭服务器", "加入这个家庭？", "备份和恢复", "不懂就问", "这台设备不在家庭里了"};
 static struct {
     int page, count, wifi_page;
+    int resume;
+    ink_db_t *progress;
     uint32_t epoch;
     lv_obj_t *screen, *field, *qr;
     char ssid[12][33], picked[33], claim[256], txid[40], family[64], by[64], check[24], preview[33], message[192];
@@ -29,8 +32,20 @@ static struct {
     ink_ui_page_spec_t model;
     ink_exec_job_t focus;
 } B INK_PSRAM_BSS;
+static const ink_db_def_t PROGRESS = {.name = "boot.progress", .title = "开机设置进度", .scope = INK_DB_DEVICE,
+    .schema = 1, .json = true, .max_records = 1};
+static void remember(int page) {
+    if (!B.progress) return;
+    char saved[256]; ink_jw_t w; ink_jw_init(&w, saved, sizeof saved);
+    ink_jw_raw(&w, "{\"network\":"); ink_jw_str(&w, B.picked); ink_jw_raw(&w, "}");
+    ink_rec_t old; char previous[256];
+    if (ink_db_get(B.progress, 1, &old, previous, sizeof previous) == INK_DB_OK && old.sort == page &&
+        old.len == strlen(saved) && !memcmp(previous, saved, old.len)) return;
+    ink_db_write_t rec = {.id = 1, .sort = page, .data = saved, .len = strlen(saved), .src = INK_SRC_SYSTEM};
+    if (ink_db_put(B.progress, &rec, NULL) != INK_DB_OK) snprintf(B.message, sizeof B.message, "设置进度还没保存，请稍后再试。");
+}
 static void create(lv_obj_t *screen, void *arg);
-static void destroy(void) { ink_text_blur(0); B.screen = B.field = B.qr = NULL; }
+static void destroy(void) { if (B.page == HELLO) remember(-1); ink_text_blur(0); B.screen = B.field = B.qr = NULL; }
 static int snapshot(char *out, size_t cap) {
     return B.field ? ink_textfield_short_snapshot(B.field, out, cap) : ink_ui_semantics_snapshot(&B.model, out, cap);
 }
@@ -112,6 +127,7 @@ static void focus_password(void *ctx) {
 static void create(lv_obj_t *screen, void *arg) {
     (void)arg; B.screen = screen; B.epoch = ink_member_epoch();
     for (B.page = 0; B.page < REVOKED; B.page++) if (!strcmp(ink_ui_page_name(), PAGES[B.page].name)) break;
+    remember(B.page);
     memset(B.fields, 0, sizeof B.fields);
     B.model = (ink_ui_page_spec_t){PAGES[B.page].name, TITLES[B.page], {PAGES[B.page].name, 1}, B.fields, 2, B.actions, 0};
     B.fields[0] = (ink_ui_field_spec_t){"message", "text", "说明", B.message, {NULL, 0}, B.page == CLAIM};
@@ -239,7 +255,7 @@ static void reply(void *ctx, const ink_receipt_t *rc) {
             B.preview[0] = 0; snprintf(B.message, sizeof B.message, "正在查找这位家人的备份。");
             show(RESTORE); request("restore.preview", NULL, RESTORE_REPLY, INK_SRC_SYSTEM);
         } else if (B.page == CLAIM || B.page == NO_HUB || B.page == CONFIRM || B.page == FIRST) {
-            if (B.txid[0] && ink_pairing_state() == INK_PAIR_PAIRING) show(CONFIRM);
+            if (B.txid[0] && B.claim[0] && ink_pairing_state() == INK_PAIR_PAIRING) show(CONFIRM);
             else if (B.claim[0]) show(CLAIM);
             else if (B.page != FIRST) show(NO_HUB);
         }
@@ -293,7 +309,30 @@ static void backup_changed(void *ctx, const char *id, const ink_args_t *args) {
     (void)ctx; (void)id; (void)args;
     if (current() && B.page == RESTORE) request("backup.manifest", NULL, RESTORE_REPLY, INK_SRC_SYSTEM);
 }
+void ink_boot_flow_resume(void) {
+    int page = B.resume;
+    if (page < FIRST || page > REVOKED) return;
+    if (page == JOINING) page = B.picked[0] ? PASSWORD : WIFI;
+    if (page == CONFIRM) page = CLAIM;
+    show(page);
+    if (page == WIFI) request("wifi.scan", NULL, SCAN_REPLY, INK_SRC_SYSTEM);
+    else if (page == RESTORE) request("restore.preview", NULL, RESTORE_REPLY, INK_SRC_SYSTEM);
+    else if (page <= CONFIRM) request("pairing.status", NULL, PAIR_REPLY, INK_SRC_SYSTEM);
+}
 int ink_boot_flow_init(void) {
+    B.resume = -1;
+    if (ink_db_register(&PROGRESS) == 0) B.progress = ink_db_open(&PROGRESS, NULL);
+    if (!ink_members_configured() && ink_pairing_state() != INK_PAIR_BOUND) B.resume = FIRST;
+    char saved[256]; ink_rec_t rec;
+    if (B.progress && ink_db_get(B.progress, 1, &rec, saved, sizeof saved - 1) == INK_DB_OK && rec.len < sizeof saved) {
+        saved[rec.len] = 0;
+        ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
+        if (j && ink_json_parse(j, saved, rec.len) == 0 && rec.sort >= -1 && rec.sort <= REVOKED) {
+            B.resume = (int)rec.sort;
+            ink_json_str(j, ink_json_find(j, 0, "network"), B.picked, sizeof B.picked);
+        }
+        osal_free(j);
+    }
     return ink_cap_subscribe("pairing.changed", changed, NULL, INK_EXEC_UI) ||
         ink_cap_subscribe("backup.", backup_changed, NULL, INK_EXEC_UI) ? -1 : 0;
 }

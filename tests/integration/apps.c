@@ -533,7 +533,7 @@ static void test_task(void *arg) {
 void ink_main(void) {
     /* before the UI starts, as an app built into the system does */
     CHECK(ink_app_register(&ALPHA) == 0 && ink_app_register(&BETA) == 0 && ink_app_register(&GAMMA) == 0 && ink_app_register(&DELTA) == 0, "the test's apps");
-    product_main();
+    product_main(); test_start_home();
     osal_task_cfg_t cfg = {.name = "appstest", .fn = test_task, .stack_bytes = 16384, .priority = OSAL_PRIO_NORMAL, .core = -1, .flags = OSAL_TASK_STACK_EXTERNAL};
     if (osal_task_create(&cfg, NULL) != OSAL_OK) osal_panic("test task");
 }
