@@ -1412,6 +1412,18 @@ int ink_fs_restore_if_revision(const char *member, unsigned stage, const char *p
 /* The data store owns ids and durability; only the random card identity lives on FAT. */
 #define INDEX_CARD "/content/.file-index-card"
 typedef struct { uint8_t card[16]; char path[PHYS_MAX]; } index_rec_t;
+static struct {
+    bool family;
+    char indexed[INK_MEMBERS_MAX][INK_MEMBER_ID_MAX], member[INK_MEMBER_ID_MAX];
+    uint32_t revision;
+    uint64_t bytes[2][4];
+} storage INK_PSRAM_BSS;
+static bool storage_index_ready(void) {
+    if (!storage.family) return false;
+    for (int i = 0; ink_member_at(i); i++)
+        if (strcmp(storage.indexed[i], ink_member_at(i)->id)) return false;
+    return true;
+}
 
 static int index_open(uint8_t card[16], ink_db_t **db) {
     int64_t size = hal_fs_size(INDEX_CARD);
@@ -1424,7 +1436,7 @@ static int index_open(uint8_t card[16], ink_db_t **db) {
     if (n != 16 || r || closed || (size >= 0 && size != 16)) return INK_FS_ERR_IO;
     if (size < 0 && hal_fs_rename(INDEX_CARD ".tmp", INDEX_CARD)) return card_error();
     ink_state_set_str(FS.h_index, FS.index_seen && memcmp(card, FS.index_card, 16) ? "changed" : "ready");
-    if (memcmp(card, FS.index_card, 16)) { ink_thumb_cache_destroy(FS.thumbs); FS.thumbs = NULL; }
+    if (memcmp(card, FS.index_card, 16)) { ink_thumb_cache_destroy(FS.thumbs); FS.thumbs = NULL; memset(&storage, 0, sizeof storage); }
     memcpy(FS.index_card, card, 16); FS.index_seen = true;
     *db = ink_db_open(&INDEX_DEF, NULL);
     return *db ? 0 : INK_FS_ERR_IO;
@@ -1490,6 +1502,7 @@ static int index_scan(const file_context_t *c, ink_db_t *db, const uint8_t card[
     char path[INK_FS_PATH_MAX]; snprintf(path, sizeof path, "%s", root);
     int depth = 0, r = fs_dir_open_for(c, path, &dirs[0]);
     if (!r) depth = 1;
+    if (r == INK_FS_ERR_NOT_FOUND && virtual_root(root)) r = 0;
     ink_fs_stat_t st;
     while (!r && depth) {
         int n = ink_fs_dir_next(dirs[depth - 1], &st);
@@ -1503,6 +1516,16 @@ static int index_scan(const file_context_t *c, ink_db_t *db, const uint8_t card[
     }
     while (depth) ink_fs_dir_close(dirs[--depth]);
     osal_free(dirs);
+    if (!r) {
+        storage.revision = 0;
+        if (!strcmp(root, "/family")) storage.family = true;
+        for (int i = 0; ink_member_at(i); i++) {
+            char member_root[64]; snprintf(member_root, sizeof member_root, "/members/%s", ink_member_at(i)->id);
+            if (!strcmp(root, member_root) || (!strcmp(root, "/me") && !strcmp(c->member, ink_member_at(i)->id)))
+                snprintf(storage.indexed[i], sizeof storage.indexed[i], "%s", ink_member_at(i)->id);
+        }
+        if (storage_index_ready()) changed(c, root, "indexed");
+    }
     return r;
 }
 
@@ -1586,9 +1609,7 @@ int ink_fs_lookup(uint32_t id, ink_fs_entry_t *out) {
     return r == 1 ? 0 : r ? r : INK_FS_ERR_NOT_FOUND;
 }
 
-/* Reuse the index until content changes; no new on-disk summary. */
-static uint32_t storage_index_revision;
-static uint8_t storage_index_card[16];
+/* Cache one member's view; the index workflow owns directory scans. */
 static void storage_error(ink_call_t *c, int r) {
     c->rc.status = INK_RC_FAILED;
     snprintf(c->rc.detail, sizeof c->rc.detail, "%s", ink_fs_err_name(r));
@@ -1601,23 +1622,17 @@ static void storage_usage(ink_call_t *call) {
     bool held = !r;
     uint8_t card[16]; ink_db_t *db = NULL;
     uint64_t bytes[2][4] = {{0}};
-    if (!r && !inverse_ready(__atomic_load_n(&FS.revision, __ATOMIC_RELAXED))) r = INK_FS_ERR_BUSY;
+    uint32_t revision = __atomic_load_n(&FS.revision, __ATOMIC_RELAXED);
+    if (!r && !inverse_ready(revision)) r = INK_FS_ERR_BUSY;
     if (!r) r = index_open(card, &db);
-    if (!r && (storage_index_revision != FS.revision || memcmp(storage_index_card, card, 16))) {
-        ink_state_set_str(FS.h_index, "organizing");
-        r = index_scan(&c, db, card, "/family");
-        for (int i = 0; !r && ink_member_at(i); i++) {
-            char root[64], phys[PHYS_MAX];
-            snprintf(root, sizeof root, "/members/%s", ink_member_at(i)->id);
-            r = resolve_for(&c, root, false, phys, sizeof phys);
-            if (!r && hal_fs_size(phys) >= 0) r = index_scan(&c, db, card, root);
-        }
-        if (!r) { storage_index_revision = FS.revision; memcpy(storage_index_card, card, 16); }
-        ink_state_set_str(FS.h_index, r ? "unavailable" : "ready");
-    }
+    bool ready = !r && storage_index_ready();
+    bool cached = ready && storage.revision == revision && !strcmp(storage.member, c.member);
+    if (cached) memcpy(bytes, storage.bytes, sizeof bytes);
+    uint32_t version = db ? ink_db_last_ver(db) : 0;
+    osal_mutex_unlock(FS.edits);
     char own[64]; snprintf(own, sizeof own, "/content/.m/%s", c.member);
     index_rec_t e; ink_rec_t rec; ink_db_cursor_t cur = {0}; int more = 0;
-    while (!r && (more = ink_db_next(db, &cur, &rec, &e, sizeof e)) == 1) {
+    while (!r && ready && !cached && (more = ink_db_next(db, &cur, &rec, &e, sizeof e)) == 1) {
         if (memcmp(e.card, card, 16)) continue;
         int64_t size = hal_fs_size(e.path);
         if (size < 0) continue;
@@ -1627,10 +1642,17 @@ static void storage_usage(ink_call_t *call) {
         if (index_under(e.path, own)) bytes[0][k] += (uint64_t)size;
     }
     if (more < 0) r = INK_FS_ERR_IO;
+    osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
+    ready = ready && inverse_ready(revision) && version == ink_db_last_ver(db) && storage_index_ready();
+    if (!r && ready && !cached) {
+        memcpy(storage.bytes, bytes, sizeof bytes); storage.revision = revision;
+        snprintf(storage.member, sizeof storage.member, "%s", c.member);
+    }
     ink_db_close(db);
     if (held) ink_fs_card_release();
     osal_mutex_unlock(FS.edits);
     if (r) { storage_error(call, r); return; }
+    if (!ready) { ink_cap_result(call, "{\"status\":\"organizing\"}"); return; }
     char out[512]; ink_jw_t w; ink_jw_init(&w, out, sizeof out);
     static const char *const keys[] = {"books", "audio", "photos", "other"};
     ink_jw_raw(&w, "{\"status\":\"ready\"");

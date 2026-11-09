@@ -3,7 +3,12 @@
 #include "image_fixtures.h"
 
 unsigned ink_test_storage_reads(void);
-unsigned ink_test_storage_organizing(void);
+unsigned ink_test_storage_sizes(void);
+unsigned ink_test_storage_locked_sizes(void);
+unsigned ink_test_storage_holds(void);
+void ink_test_storage_begin(void);
+void ink_test_storage_end(void);
+void ink_test_storage_edit_on_size(void (*edit)(void));
 bool ink_test_storage_has_thumbs(void);
 static const char *const kinds[] = {"books", "audio", "photos", "other"};
 static const char *const paths[] = {"/me/SYNTH_BOOK.epub", "/me/SYNTH_AUDIO.mp3", "/me/SYNTH_PHOTO.jpg", "/me/SYNTH_OTHER.bin"};
@@ -41,6 +46,65 @@ static void open_storage(void) {
 static bool usage_visible(void) {
     on_ui(read_page);
     return strstr(g_snap, "我 17 B") && !strstr(g_snap, "正在整理");
+}
+static void index_device(void) {
+    for (int i = -1; i < INK_MEMBERS_MAX && (i < 0 || ink_member_at(i)); i++) {
+        char root[64]; uint32_t cursor = 0; ink_fs_entry_t entry; int r;
+        if (i < 0) snprintf(root, sizeof root, "/family");
+        else snprintf(root, sizeof root, "/members/%s", ink_member_at(i)->id);
+        while ((r = ink_fs_index(root, INK_FS_ANY, &cursor, &entry)) == 1) {}
+        CHECK(r == 0, "existing index workflow completes %s (%d)", root, r);
+    }
+}
+static void edit_during_usage(void) { write_file(paths[0], 18); }
+static void test_usage_cache(void) {
+    CHECK(BY_HAND("system.home", NULL), "leave storage before counting usage work");
+    write_file(paths[0], sizes[0][0]);
+    for (int i = 0; i < 2; i++) {
+        unsigned reads = ink_test_storage_reads();
+        ink_test_storage_begin();
+        CHECK(AI("file.usage", NULL) && g_rc.status == INK_RC_DONE && number("member", "books") == 17,
+            "usage after an indexed file write is exact");
+        CHECK(ink_test_storage_reads() == reads, "usage never scans the card after a write");
+        CHECK(i ? ink_test_storage_sizes() == 0 : ink_test_storage_sizes() > 0,
+            "write invalidates usage once; second query reads no indexed file sizes");
+        CHECK(ink_test_storage_locked_sizes() == 0 && ink_test_storage_holds() == 2,
+            "size reads hold no file edit lock; only two bounded edit sections");
+        ink_test_storage_end();
+    }
+    write_file(paths[0], sizes[0][0]);
+    ink_test_storage_begin(); ink_test_storage_edit_on_size(edit_during_usage);
+    CHECK(AI("file.usage", NULL) && g_rc.status == INK_RC_DONE && strstr(g_result, "\"organizing\""),
+        "write during size lookup discards the expired revision");
+    ink_test_storage_edit_on_size(NULL); ink_test_storage_end();
+    for (int i = 0; i < 2; i++) {
+        ink_test_storage_begin();
+        CHECK(AI("file.usage", NULL) && g_rc.status == INK_RC_DONE && number("member", "books") == 18,
+            "next query recomputes the changed file exactly");
+        CHECK(i ? ink_test_storage_sizes() == 0 : ink_test_storage_sizes() > 0,
+            "expired statistics are recomputed once and then cached");
+        ink_test_storage_end();
+    }
+    write_file(paths[0], sizes[0][0]);
+}
+static void test_units(void) {
+    static const char *const labels[] = {"1.0 KB", "1.0 MB", "1.0 GB"};
+    int64_t n = 1;
+    for (int i = 0; i < 3; i++) {
+        n *= 1024;
+        ink_fs_file_t *f = NULL;
+        CHECK(ink_fs_open(paths[0], INK_FS_WRITE, &f) == 0, "open synthetic sparse unit fixture");
+        CHECK(f && ink_fs_seek(f, n - 1, 0) == 0 && ink_fs_write(f, "X", 1) == 1, "write sparse unit fixture");
+        if (f) CHECK(ink_fs_close(f) == 0, "close sparse unit fixture");
+        ink_state_set_int(ink_state_find("storage.free"), n);
+        CHECK(AI("shell.storage", NULL) && WAIT_FOR(settled(), 10000), "show unit on real storage page");
+        on_ui(read_page);
+        CHECK(strstr(g_snap, labels[i]) && !strstr(g_snap, "iB"), "production snapshot uses %s", labels[i]);
+        char free_label[64]; snprintf(free_label, sizeof free_label, "还能放 %s", labels[i]);
+        CHECK(strstr(g_snap, free_label), "remaining space also uses %s", labels[i]);
+        CHECK(BY_HAND("system.home", NULL), "leave storage between unit fixtures");
+    }
+    write_file(paths[0], sizes[0][0]);
 }
 static void capture_event(void *arg) {
     (void)arg; CHECK(settled(), "settled comparison frame");
@@ -132,7 +196,11 @@ static void child_open(void) {
 }
 static void run(void *arg) {
     (void)arg; delay_ms(1800); test_start_home();
-    CHECK(AI("file.usage", NULL) && g_rc.status == INK_RC_DONE, "initial device index");
+    unsigned reads = ink_test_storage_reads();
+    CHECK(AI("file.usage", NULL) && g_rc.status == INK_RC_DONE && strstr(g_result, "\"organizing\"") &&
+        ink_test_storage_reads() == reads, "unbuilt index reports organizing without scanning the card");
+    index_device();
+    CHECK(AI("file.usage", NULL) && g_rc.status == INK_RC_DONE, "initial device usage from existing index");
     for (int k = 0; k < 4; k++) base[k] = number("device", kinds[k]);
     CHECK(BY_HAND("member.add", "{\"id\":\"guest\",\"role\":\"adult\"}") && g_rc.status == INK_RC_PENDING_CONFIRMATION, "add synthetic second adult");
     unsigned token = 0; CHECK(sscanf(g_rc.object, "confirm:%u", &token) == 1 && ink_confirm_decide(token, true, INK_SRC_TOUCH) == 0, "authorize synthetic member");
@@ -143,14 +211,16 @@ static void run(void *arg) {
     CHECK(ink_member_switch("owner") == 0, "return to owner");
     on_ui(open_storage);
     CHECK(initial_organizing, "unfinished index displays 正在整理 without invented zeroes");
+    CHECK(AI("file.usage", NULL) && g_rc.status == INK_RC_DONE && strstr(g_result, "\"organizing\""),
+        "new member root stays organizing until existing indexing completes");
+    index_device();
     CHECK(WAIT_FOR(usage_visible(), 10000), "completed index automatically refreshes screen and AI snapshot");
-    CHECK(ink_test_storage_organizing() > 0, "real index traversal was observed while organizing");
     CHECK(AI("file.usage", NULL) && g_rc.status == INK_RC_DONE, "AI reads the same indexed usage");
     for (int k = 0; k < 4; k++) {
         CHECK(number("member", kinds[k]) == sizes[0][k], "owner category %s exact bytes", kinds[k]);
         CHECK(number("device", kinds[k]) == base[k] + sizes[0][k] + sizes[1][k], "device category %s exact bytes", kinds[k]);
     }
-    unsigned reads = ink_test_storage_reads();
+    reads = ink_test_storage_reads();
     CHECK(AI("file.usage", NULL) && g_rc.status == INK_RC_DONE && ink_test_storage_reads() == reads,
         "unchanged usage query performs no directory traversal");
     CHECK(WAIT_FOR(settled(), 10000), "storage display settles");
@@ -163,7 +233,8 @@ static void run(void *arg) {
         CHECK(number("member", kinds[k]) == sizes[1][k], "personal category changes with member %s", kinds[k]);
         CHECK(number("device", kinds[k]) == base[k] + sizes[0][k] + sizes[1][k], "device category unchanged %s", kinds[k]);
     }
-    CHECK(ink_member_switch("owner") == 0, "return before cleanup"); test_cleanup();
+    CHECK(ink_member_switch("owner") == 0, "return before cleanup");
+    test_usage_cache(); test_units(); test_cleanup();
     CHECK(ink_member_switch("kid") == 0, "enter child space");
     CHECK(AI("shell.storage", NULL) && g_rc.status == INK_RC_REJECTED, "child cannot open cleanup page via AI");
     CHECK(AI("file.cleanup_preview", NULL) && g_rc.status == INK_RC_REJECTED, "child cannot list device cleanup");

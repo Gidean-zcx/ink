@@ -93,7 +93,7 @@ static void value(size_t i) {
         else if (state_number(r->id, &v) && v >= 0) {
             int64_t unit = v >= 1024LL * 1024 * 1024 ? 1024LL * 1024 * 1024 : v >= 1024 * 1024 ? 1024 * 1024 : 1024;
             snprintf(out, cap, "还能放 %lld.%lld %s", (long long)(v / unit), (long long)(v % unit * 10 / unit),
-                unit > 1024 * 1024 ? "GB" : unit > 1024 ? "MB" : "KiB");
+                unit > 1024 * 1024 ? "GB" : unit > 1024 ? "MB" : "KB");
         }
         else snprintf(out, cap, "暂时读不出来");
     } else if (!strcmp(r->id, "update.check")) {
@@ -334,7 +334,7 @@ static void storage_size(int64_t n, char *out, size_t cap) {
     int64_t unit = n >= 1073741824 ? 1073741824 : n >= 1048576 ? 1048576 : n >= 1024 ? 1024 : 1;
     if (unit == 1) snprintf(out, cap, "%lld B", (long long)n);
     else snprintf(out, cap, "%lld.%lld %s", (long long)(n / unit), (long long)(n % unit * 10 / unit),
-        unit == 1024 ? "KiB" : unit == 1048576 ? "MiB" : "GiB");
+        unit == 1024 ? "KB" : unit == 1048576 ? "MB" : "GB");
 }
 static void storage_value(size_t i, char *out, size_t cap) {
     int state = U.generation == S.generation ? U.state[i == 5] : 0;
@@ -362,6 +362,7 @@ static void storage_reply(void *ctx, const ink_receipt_t *rc, bool clean) {
     ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
     U.state[clean] = 2;
     if (j && rc->status == INK_RC_DONE && rc->result && !ink_json_parse(j, rc->result, strlen(rc->result))) {
+        if (!clean && strstr(rc->result, "\"organizing\"")) { U.state[0] = 0; osal_free(j); refresh(); return; }
         U.state[clean] = 1;
         static const char *const keys[] = {"books", "audio", "photos", "other", "temporary", "cache", "partial"};
         for (int s = 0; s < (clean ? 1 : 2); s++) {
