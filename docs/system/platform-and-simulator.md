@@ -300,7 +300,7 @@ cmake -S . -B build && cmake --build build -j && ctest --test-dir build --output
 | 墨水屏驱动（4096） | 1720 | 1648 | 1488 / 3040 |
 | `i2c_bg`（2048） | 792 | 928 | 256 / 1776 |
 
-“原口径 Linux”一列来自 CI 诊断（[run 41585010018](https://github.com/Gidean-zcx/ink/actions/runs/41585010018)），只含直接运行模拟器的测试，不含断电、老化镜像、确定性三项和之后新增的 6 项；其余三列是全部 32 项，Linux 新口径来自 [run 41589992162](https://github.com/Gidean-zcx/ink/actions/runs/41589992162)。存储和中枢连接两个任务离配置的栈最近。估计在主机上偏悲观（RV32 的栈帧更小），要不要加栈，以 S31 编译的 `-fstack-usage` 为准。没有真实代码的驱动不计在内，例如 SD 卡在模拟器里是主机文件，FatFS 的栈没有算。
+“原口径 Linux”一列来自 CI 诊断（[run 41585010018](https://github.com/Gidean-zcx/ink/actions/runs/41585010018)），只含直接运行模拟器的测试，不含断电、老化镜像、确定性三项和之后新增的 6 项；其余三列是全部 32 项，Linux 新口径来自 [run 41589992162](https://github.com/Gidean-zcx/ink/actions/runs/41589992162)。存储和中枢连接两个任务离配置的栈最近。估计在主机上偏悲观（RV32 的栈帧更小），要不要加栈，以 S31 编译的 `-fstack-usage` 为准。2026-11-09：settings-b 的场景（25 条记录、反复写盘）让存储任务在 Linux 上估到 3624 字节，超过 3584，macOS 上各场景最大是 3472；系统代码还编不了 S31，先把存储任务的栈加到 4096（多用 512 字节内部 RAM），能编 S31 后用 `-fstack-usage` 核实，能降就降。没有真实代码的驱动不计在内，例如 SD 卡在模拟器里是主机文件，FatFS 的栈没有算。
 
 ### 5.8 芯片模型：屏幕电源链路（D-41 方案 A 第一步，2026-11-03）
 
