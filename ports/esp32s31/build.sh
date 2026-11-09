@@ -10,6 +10,7 @@ export IDF_COMPONENT_MANAGER=0 CCACHE_DISABLE=1
 : "${IDF_PATH:=$HOME/esp/esp-idf}"
 : "${IDF_TOOLS_PATH:=$HOME/esp/.espressif}"
 export IDF_PATH IDF_TOOLS_PATH
+unset IDF_DEACTIVATE_FILE_PATH
 . "$IDF_PATH/export.sh" > "$BUILD/export.log" 2>&1
 # IDF v6.1 hardcodes cpu_count+2 for Makefiles. Limit that fallback in memory.
 idf_limited() {
@@ -32,8 +33,10 @@ if [[ -z ${INK_LVGL_SOURCE_DIR:-} ]]; then
     fi
 fi
 cd "$ROOT/ports/esp32s31"
+cp sdkconfig.defaults "$BUILD/sdkconfig"
 idf_limited --preview -B "$BUILD" -DIDF_TARGET=esp32s31 -DSDKCONFIG="$BUILD/sdkconfig" reconfigure
 export CMAKE_BUILD_PARALLEL_LEVEL=2 IDF_PY_BUILD_JOBS=2 MAKEFLAGS=-j2
 idf_limited --preview -B "$BUILD" build
 idf_limited --preview -B "$BUILD" size | tee "$BUILD/size.txt"
 idf_limited --preview -B "$BUILD" size-components > "$BUILD/size-components.txt"
+python "$ROOT/tests/esp32s31/stack_report.py" "$BUILD" > "$BUILD/stack.txt"

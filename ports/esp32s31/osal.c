@@ -13,7 +13,7 @@
 #include "freertos/semphr.h"
 #include "freertos/idf_additions.h"
 
-struct osal_task { TaskHandle_t handle; osal_task_fn fn; void *arg; };
+struct osal_task { osal_task_fn fn; void *arg; char name[configMAX_TASK_NAME_LEN]; };
 struct osal_timer { esp_timer_handle_t handle; osal_timer_fn fn; void *arg; uint64_t period; bool first, deleting; };
 static portMUX_TYPE wall_lock = portMUX_INITIALIZER_UNLOCKED;
 static int64_t wall_base;
@@ -81,7 +81,7 @@ static TickType_t wait_ticks(int64_t us) {
     return ink_s31_wait_ticks(now, tick, us, configTICK_RATE_HZ, portMAX_DELAY);
 }
 osal_task_t *osal_task_self(void) { return pvTaskGetThreadLocalStoragePointer(NULL, TASK_TLS); }
-const char *osal_task_name(const osal_task_t *t) { return pcTaskGetName(t ? t->handle : NULL); }
+const char *osal_task_name(const osal_task_t *t) { return t ? t->name : pcTaskGetName(NULL); }
 void osal_task_exit(void) {
     osal_task_t *t = osal_task_self();
     vTaskSetThreadLocalStoragePointer(NULL, TASK_TLS, NULL);
@@ -90,7 +90,6 @@ void osal_task_exit(void) {
 }
 static void task_entry(void *arg) {
     osal_task_t *t = arg;
-    t->handle = xTaskGetCurrentTaskHandle();
     vTaskSetThreadLocalStoragePointer(NULL, TASK_TLS, t);
     t->fn(t->arg);
     osal_task_exit();
@@ -104,9 +103,11 @@ osal_err_t osal_task_create(const osal_task_cfg_t *cfg, osal_task_t **out) {
     if (!t) return OSAL_NO_MEM;
     t->fn = cfg->fn;
     t->arg = cfg->arg;
+    const char *name = cfg->name ? cfg->name : "ink";
+    memcpy(t->name, name, strnlen(name, sizeof t->name - 1));
     if (out) *out = t;
     uint32_t caps = MALLOC_CAP_8BIT | (cfg->flags & OSAL_TASK_STACK_EXTERNAL ? MALLOC_CAP_SPIRAM : MALLOC_CAP_INTERNAL);
-    if (xTaskCreatePinnedToCoreWithCaps(task_entry, cfg->name ? cfg->name : "ink", cfg->stack_bytes,
+    if (xTaskCreatePinnedToCoreWithCaps(task_entry, t->name, cfg->stack_bytes,
             t, cfg->priority, NULL, cfg->core < 0 ? tskNO_AFFINITY : cfg->core, caps) == pdPASS) return OSAL_OK;
     if (out) *out = NULL;
     osal_free(t);

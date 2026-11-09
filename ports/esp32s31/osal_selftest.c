@@ -5,7 +5,9 @@
 #include <string.h>
 #define CHECK(x) do { if (!(x)) osal_panic("OSAL selftest: %s", #x); } while (0)
 static void signal_timer(void *arg) { osal_sem_give(arg); }
+static osal_sem_t *worker_start;
 static void worker(void *arg) {
+    CHECK(osal_sem_take(worker_start, 1000000) == OSAL_OK);
     CHECK(osal_task_self() != NULL);
     CHECK(strcmp(osal_task_name(osal_task_self()), "osal-test") == 0);
     unsigned char local;
@@ -49,8 +51,13 @@ void ink_s31_osal_selftest(void) {
     CHECK(s && osal_sem_take(s, 0) == OSAL_TIMEOUT);
     osal_task_cfg_t cfg = {.name = "osal-test", .fn = worker, .arg = s, .stack_bytes = 2048,
         .priority = OSAL_PRIO_NORMAL, .core = -1, .flags = OSAL_TASK_STACK_EXTERNAL};
-    CHECK(osal_task_create(&cfg, NULL) == OSAL_OK);
+    worker_start = osal_sem_create(0, 1);
+    osal_task_t *task;
+    CHECK(worker_start && osal_task_create(&cfg, &task) == OSAL_OK);
+    CHECK(strcmp(osal_task_name(task), "osal-test") == 0);
+    osal_sem_give(worker_start);
     CHECK(osal_sem_take(s, 1000000) == OSAL_OK);
+    osal_sem_delete(worker_start);
     osal_timer_t *t = osal_timer_create("osal-test", signal_timer, s);
     start = osal_now_us();
     CHECK(t && osal_timer_start(t, 20001, 30001) == OSAL_OK);

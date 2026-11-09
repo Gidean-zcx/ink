@@ -34,4 +34,5 @@ jobs:
           name: s31-port-reports
           path: |
             build-s31/size*.txt
+            build-s31/stack.txt
             build-s31/log/
