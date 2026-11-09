@@ -7,6 +7,7 @@ root="$PWD"
 out="$root/work/appfw-spike/s31-evidence"
 build="$root/build-s31-spike"
 mkdir -p "$out" "$build/tmp" "$build/cache"
+rm -f "$out/summary.json"
 bash tools/appfw-spike/run.sh fetch
 bash ports/esp32s31/build.sh > "$out/default-before.log" 2>&1
 cp build-s31/ink-s31.map "$out/default-before.map"

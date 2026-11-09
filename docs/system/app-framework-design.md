@@ -429,10 +429,10 @@ void ink_input_viewport_changed(int x, int y, int width, int height);
 
 | 入口 | Flash 静态增量（字节） | 内部 DIRAM 静态增量（字节） | PSRAM 静态增量（字节） |
 | --- | --- | --- | --- |
-| C＋LVGL | +3486 | +80 | 0 |
-| 受限 JSON | +3844 | +80 | 0 |
-| Lua 5.4.8 | +95060 | +104 | 0 |
-| MicroQuickJS `4119f681` | +138806 | +112 | 0 |
+| C＋LVGL | +3872 | +88 | 0 |
+| 受限 JSON | +4230 | +88 | 0 |
+| Lua 5.4.8 | +95446 | +104 | 0 |
+| MicroQuickJS `4119f681` | +139168 | +112 | 0 |
 
 【实测】默认 `ports/esp32s31/build.sh` 前后均通过，镜像 1212288 字节且 SHA-256 相同，链接图逐字相同；默认固件未增加解释器。表内 PSRAM 是静态区，运行时堆、VM arena、任务栈与字体资源另计；Flash 是 IDF 的 Flash 分类而非镜像文件字节数。绝对值和分节值见 [S31 测量 JSON](../tasks/script-s31/s31-measurements.json)，复现命令为 `bash tools/appfw-spike/s31.sh`（macOS 加 `taskpolicy -c utility`）。以上只是编译链接数字，没有设备端动态内存或时间实测；不选择脚本赢家，不进入出厂固件。
 

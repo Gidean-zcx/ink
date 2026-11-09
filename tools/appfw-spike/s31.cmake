@@ -7,7 +7,8 @@ target_sources(__idf_main PRIVATE "${spike}/bridge.c" "${spike}/candidate_${INK_
 target_include_directories(__idf_main PRIVATE "${spike}")
 target_compile_definitions(__idf_main PRIVATE INK_SPIKE_S31=1)
 # Retain the actual page lifecycle and touch callback; discard host-only tests.
-target_link_options(__idf_main INTERFACE -Wl,--undefined=ink_spike_activity -Wl,--undefined=ink_spike_toggle)
+target_link_options(__idf_main INTERFACE -Wl,--undefined=ink_spike_activity
+  -Wl,--undefined=ink_spike_toggle -Wl,--undefined=ink_spike_register)
 set(page_source "")
 if(INK_SPIKE_CANDIDATE STREQUAL "json")
   set(page_source "page.json")

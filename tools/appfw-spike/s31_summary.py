@@ -37,7 +37,7 @@ def main():
             assert delta[name] == map_delta[name]["used_diff"], (candidate, name)
         symbols = (out / f"{candidate}.map").read_text()
         retained = symbols.split("Linker script and memory map", 1)[-1].split("Cross Reference Table", 1)[0]
-        assert "ink_spike_activity" in retained and "ink_spike_toggle" in retained
+        assert all(name in retained for name in ("ink_spike_activity", "ink_spike_toggle", "ink_spike_register"))
         assert "ink_spike_tests" not in retained
         report["candidates"][candidate] = {"absolute": layout, "delta": delta,
                                               "map_sha256": digest(out / f"{candidate}.map")}

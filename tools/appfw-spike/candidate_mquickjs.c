@@ -71,7 +71,11 @@ int ink_spike_runtime_start(void) {
     if (!memory) return -1;
     ink_spike_vm_peak = INK_SPIKE_VM_LIMIT;
     vm = JS_NewContext(memory, INK_SPIKE_VM_LIMIT, &js_stdlib);
-    if (!vm) { osal_free(memory); memory = NULL; return -1; }
+    if (!vm) {
+        osal_free(memory);
+        memory = NULL;
+        return -1;
+    }
     JS_SetInterruptHandler(vm, interrupt);
     return 0;
 }

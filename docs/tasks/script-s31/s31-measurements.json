@@ -77,14 +77,14 @@
         "Flash": {
           "name": "Flash",
           "total": 0,
-          "used": 1151886,
+          "used": 1152272,
           "free": 0,
           "parts": {
             ".text": {
-              "size": 914874
+              "size": 915108
             },
             ".rodata": {
-              "size": 236492
+              "size": 236644
             },
             ".appdesc": {
               "size": 256
@@ -114,14 +114,14 @@
         "DIRAM": {
           "name": "DIRAM",
           "total": 503744,
-          "used": 83038,
-          "free": 420706,
+          "used": 83046,
+          "free": 420698,
           "parts": {
             ".text": {
               "size": 50020
             },
             ".bss": {
-              "size": 19240
+              "size": 19248
             },
             ".data": {
               "size": 13778
@@ -141,25 +141,25 @@
         }
       },
       "delta": {
-        "Flash": 3486,
-        "DIRAM": 80,
+        "Flash": 3872,
+        "DIRAM": 88,
         "External RAM": 0
       },
-      "map_sha256": "3d63f2a3d5a2d19ca6abcf70bbf691e0d5071f1f3082de29b7688f651e68509c"
+      "map_sha256": "98688da184ac97faf5bba066c37f401dcca4707da1a34cda61d7dbf12b399575"
     },
     "json": {
       "absolute": {
         "Flash": {
           "name": "Flash",
           "total": 0,
-          "used": 1152244,
+          "used": 1152630,
           "free": 0,
           "parts": {
             ".text": {
-              "size": 915496
+              "size": 915730
             },
             ".rodata": {
-              "size": 236228
+              "size": 236380
             },
             ".appdesc": {
               "size": 256
@@ -189,14 +189,14 @@
         "DIRAM": {
           "name": "DIRAM",
           "total": 503744,
-          "used": 83038,
-          "free": 420706,
+          "used": 83046,
+          "free": 420698,
           "parts": {
             ".text": {
               "size": 50020
             },
             ".bss": {
-              "size": 19240
+              "size": 19248
             },
             ".data": {
               "size": 13778
@@ -216,25 +216,25 @@
         }
       },
       "delta": {
-        "Flash": 3844,
-        "DIRAM": 80,
+        "Flash": 4230,
+        "DIRAM": 88,
         "External RAM": 0
       },
-      "map_sha256": "8de19f33bf685851c8962f97c0fecce74a57de0bba69b0f629a080afb49e2d40"
+      "map_sha256": "3eeec21f84e2506290bc5175d2d818c65edce6c0da1ab2fd392041d9d4df619f"
     },
     "lua": {
       "absolute": {
         "Flash": {
           "name": "Flash",
           "total": 0,
-          "used": 1243460,
+          "used": 1243846,
           "free": 0,
           "parts": {
             ".text": {
-              "size": 1002200
+              "size": 1002434
             },
             ".rodata": {
-              "size": 240740
+              "size": 240892
             },
             ".appdesc": {
               "size": 256
@@ -291,25 +291,25 @@
         }
       },
       "delta": {
-        "Flash": 95060,
+        "Flash": 95446,
         "DIRAM": 104,
         "External RAM": 0
       },
-      "map_sha256": "f354b67396bcc0e17bc9e40628dbf3d654969c13242c6602712efcc7a396eb0e"
+      "map_sha256": "fce006fde3a9ef04112f06a30cbf1d462a24d658e066f5b8a7b90fa2f23e1ed0"
     },
     "mquickjs": {
       "absolute": {
         "Flash": {
           "name": "Flash",
           "total": 0,
-          "used": 1287206,
+          "used": 1287568,
           "free": 0,
           "parts": {
             ".text": {
-              "size": 1032762
+              "size": 1032996
             },
             ".rodata": {
-              "size": 253892
+              "size": 254020
             },
             ".appdesc": {
               "size": 288
@@ -366,11 +366,11 @@
         }
       },
       "delta": {
-        "Flash": 138806,
+        "Flash": 139168,
         "DIRAM": 112,
         "External RAM": 0
       },
-      "map_sha256": "0ec85a5cf4ced41aaa1f07400134cd3253bdd7eb93e7a82ea4c1d6ef663edef2"
+      "map_sha256": "2bf736c4dd53c6207489d881b6630975ccac26e0206a216fb80fcaedcac4e6f4"
     }
   }
 }
