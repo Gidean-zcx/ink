@@ -1,14 +1,14 @@
 # script-s31 执行报告
 
-基线：`96887c78874e3e58945fb6aaf6f511911f739e88`。范围：框架原型测量，不改产品代码，不连接设备，不选择运行时。
+基线：`96887c78874e3e58945fb6aaf6f511911f739e88`。执行日期：2026-11-09～10。范围：框架原型测量，产品代码改动 0 行，不连接设备，不选择运行时。
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 【实测】主机普通配置通过，内存检查待补 | 四候选各 21 项共用检查、两轮确定性回放、五轮计时；截图逐像素相同；MicroQuickJS 七项独立防护检查通过；[完整样本](host-measurements.json)、[反向对照](negative-controls.json) | `taskpolicy -c utility bash tools/appfw-spike/run.sh all`；`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/appfw-spike/negative.py` |
+| 1 | 【实测】功能及计量通过；MicroQuickJS 的 UBSan 未通过 | 四候选各 21 项共用检查、两轮确定性回放、五轮计时，截图相同；MicroQuickJS 七项防护检查通过；[完整样本](host-measurements.json)、[反向对照](negative-controls.json)、[内存检查](sanitizer-checks.json) | `taskpolicy -c utility bash tools/appfw-spike/run.sh all`；`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/appfw-spike/negative.py` |
 | 2 | 【实测】通过 | 下表、[分节绝对值与增量](s31-measurements.json)，已补 §6.5；页面、触摸、能力注册入口均保留，防护测试已裁掉 | `taskpolicy -c utility bash tools/appfw-spike/s31.sh` |
-| 3 | 【实测】默认固件与普通全量通过；内存检查执行中 | 默认镜像及链接图逐字相同；普通全量 265/265，无跳过；产品代码无修改 | 同上；全量命令如下 |
+| 3 | 【实测】通过 | 默认镜像及链接图逐字相同；普通全量和 ASan／UBSan 全量均 265/265，无跳过；产品代码无修改 | 同上；全量命令如下，内存检查换 `build-asan` 并加 `-DINK_SANITIZE=ON` |
 
 主机全量构建参数如下；内存检查仅把目录换成 `build-asan` 并加 `-DINK_SANITIZE=ON`，均使用 `-j2`，桌面冒烟测试通过 SDL dummy 驱动运行，不开窗口。
 
@@ -27,12 +27,9 @@ PYTHONPATH="$PWD/hub" PYTHONDONTWRITEBYTECODE=1 \
   taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
 ```
 
-## 没做到的
+原型内存检查：`INK_SPIKE_BUILD=build-spike-asan INK_SPIKE_SANITIZE=ON INK_SPIKE_OUT=work/appfw-spike/evidence-asan taskpolicy -c utility bash tools/appfw-spike/run.sh all`。C／JSON／Lua 通过；MicroQuickJS 严格检查时原型进程收到 SIGABRT（6），脚本退出 1，不生成成功汇总。
 
-- 内存检查执行中；Linux 宿主未运行，本机为 macOS，S31 GCC 交叉编译不能代替 Linux 宿主测试。
-- 未上机，未测 S31 动态堆、栈、GC 最坏停顿及真实显示时延；本任务只要求编译链接。
-
-## 已测基线
+默认基线及 S31 增量：
 
 - 【实测】默认 S31 构建退出 0；Flash 1,148,400、DIRAM 82,958、PSRAM 静态 BSS 382,152 字节。镜像 1,212,288 字节，SHA-256 `00fd4b36e4774a3dfa8413440a9bd0d7214b973c71beb66a88064ff2d3f06965`。
 
@@ -49,6 +46,14 @@ Flash 是 IDF 分类值，镜像文件另有对齐和内部段装载数据；静
 
 【实测】反向对照：去掉 MicroQuickJS 中断回调，无限循环在 5 秒宿主超时后被测试进程终止；恢复后同一套检查通过。Lua 配额与 CPU 结算反向对照也通过，所有临时源码改动逐字恢复。旧工具缺资源及未带文字会话版本时已实际失败；只补原型依赖、复用既有 `AI()` 帮手，不改产品策略。
 
+【实测】普通全量耗时 189.61 秒，ASan／UBSan 全量 334.62 秒，均退出 0；原型严格检查退出 1。`git diff --check`、Python／Shell 语法、JSON、文档链接及文件大小检查通过；按[总规则](../codex-rules.md)的隐私正则检查 0 命中。24 个改动文件均在任务范围内，产品代码 0 行，无构建产物或设计稿。
+
+## 没做到的
+
+- MicroQuickJS 没通过 UBSan：锁定上游 `mquickjs.c:2384`／`:11931` 的 `offsetof` 宏展开触发空指针成员访问诊断，`:1021` 对 `-1` 左移触发诊断。严格模式在首条终止，未修补上游或关闭检查；普通功能与释放检查通过。任务只测量，此处保留为候选缺陷。
+- Linux 宿主未运行，本机为 macOS，S31 GCC 交叉编译不能代替 Linux 宿主测试。
+- 未上机，未测 S31 动态堆、栈、GC 最坏停顿及真实显示时延；本任务只要求编译链接。
+
 ## 和设计不一致的
 
 - 无。本次是单页、有界测量，不选择运行时，不实现应用安装／完整 A2UI 或扩展 F10 的验收范围。
@@ -56,7 +61,7 @@ Flash 是 IDF 分类值，镜像文件另有对齐和内部段装载数据；静
 ## 改过的已有测试
 
 - `harness.c`：文字操作复用既有 `AI()` 帮手读取 `text.state` 的会话／版本，再走能力调用；原来的“调用成功且文本可见”拆成两个断言，均保留。页面释放检查纳入 MicroQuickJS 标签。
-- `measure.py`：增加第四候选与七项防护检查，保留原有所有断言。
+- `measure.py`：增加第四候选与七项防护检查，保留原有所有断言；设置 UBSan `halt_on_error=1`，防止运行时诊断后恢复执行被误写成通过。反向对照：原设置退出 0 但有三条诊断；严格设置退出 1 且无成功汇总。
 - `negative.py`：构建并行度降到 2；计时反向对照适应多行计时边界，仍只移除同一 `vtk_sched_point`。
 - `tools/appfw-spike/CMakeLists.txt`：补当前基线已要求的 `ink_ui_fonts`／`ink_icons` 资源依赖；原工具单建目标会因缺图标直接退出。未改根工程或全量测试期望，未放宽预算。
 

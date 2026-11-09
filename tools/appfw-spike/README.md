@@ -17,6 +17,8 @@ INK_SPIKE_BUILD=build-spike-asan INK_SPIKE_SANITIZE=ON \
   INK_SPIKE_OUT=work/appfw-spike/evidence-asan taskpolicy -c utility bash tools/appfw-spike/run.sh all
 ```
 
+子进程始终设置 `UBSAN_OPTIONS=...:halt_on_error=1`，诊断即失败，不写成功汇总。【实测】本次 C／JSON／Lua 原型的 ASan／UBSan 检查通过；锁定的 MicroQuickJS 上游触发 `offsetof` 宏展开与负数左移诊断，内存检查未通过，见 [S31 报告](../../docs/tasks/script-s31/REPORT.md)。不关闭检查或修改上游源码来换取通过。
+
 计时区间：初始化包含公共模型的分配和候选初始化入口；建页包含解析／执行、共同控件创建与布局，不含文件读取、首屏绘制和屏幕波形；开关是 `LV_EVENT_VALUE_CHANGED` 回调到同一能力完成，不含触控传输、队列等待和屏幕显示。各区间两端显式调用 `vtk_sched_point`，让模拟器先结算尚未记入虚拟时钟的宿主 CPU 工作，再读 `osal_now_us`。测量模式把宿主线程 CPU 时间乘 1，加调度和固定时间成本；此模式停用 `sim_charge_cycles` 的周期标注，**未经 S31 标定，不能把微秒数当真机速度**。确定性模式不为 Lua 解释计算另加猜测成本，仅用于行为回放。
 
 内存记录两类：整个模拟场景的内部 RAM／PSRAM 堆高水位（包含既有系统、字库缓存、编辑器和测试任务）；`appfw.model`、VM（`appfw.lua` 或 `appfw.mquickjs`）、`lvgl` 标签分别记录分配峰值。标签峰值发生时间可能不同，不相加当作同一时刻峰值。`appfw.model` 包含固定 8194 字节源码暂存区和 JSON 解析临时区；C 没有源码暂存区。Lua 另列分配器请求字节峰值和包含分配器开销的 PSRAM 标签峰值。MicroQuickJS 使用固定 128 KiB PSRAM arena，VM 两个字段均计预留容量，未量 arena 内部活跃字节。模拟器池不计本机静态数据，宿主文件／PNG／输出内存走 `vtk_host_call`，不冒充设备内存。

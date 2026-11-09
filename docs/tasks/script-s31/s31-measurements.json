@@ -352,17 +352,6 @@
               "size": 13778
             }
           }
-        },
-        "LP SRAM": {
-          "name": "LP SRAM",
-          "total": 32768,
-          "used": 24,
-          "free": 32744,
-          "parts": {
-            ".rtc_reserved": {
-              "size": 24
-            }
-          }
         }
       },
       "delta": {
@@ -370,7 +359,7 @@
         "DIRAM": 112,
         "External RAM": 0
       },
-      "map_sha256": "2bf736c4dd53c6207489d881b6630975ccac26e0206a216fb80fcaedcac4e6f4"
+      "map_sha256": "795c07d19ec23fb6c40a99916249a513db8e7056f3e416f1d598046f416b28dc"
     }
   }
 }

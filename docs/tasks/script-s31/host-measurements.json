@@ -184,24 +184,444 @@
         "startup_us": {
           "median": 1,
           "min": 1,
-          "max": 2
+          "max": 1
         },
         "build_us": {
-          "median": 1147,
-          "min": 1131,
-          "max": 1178
+          "median": 1083,
+          "min": 1076,
+          "max": 1108
         },
         "toggle_us": {
-          "median": 234,
-          "min": 231,
-          "max": 236
+          "median": 227,
+          "min": 225,
+          "max": 232
         }
       },
       "samples": [
         {
           "candidate": "c",
-          "startup_us": 2,
-          "build_us": 1131,
+          "startup_us": 1,
+          "build_us": 1108,
+          "toggle_us": 227,
+          "heap_baseline_internal": 112008,
+          "heap_baseline_psram": 3088584,
+          "heap_peak_internal": 112008,
+          "heap_peak_psram": 3088584,
+          "model_peak_psram": 848,
+          "vm_peak_psram": 0,
+          "lvgl_peak_psram": 214336,
+          "vm_peak_requested": 0,
+          "model_peak_internal": 0,
+          "vm_peak_internal": 0,
+          "lvgl_peak_internal": 0,
+          "released": true,
+          "snapshot": {
+            "page": "appfw-spike",
+            "member": "owner",
+            "version": 4,
+            "title": "阅读偏好",
+            "rows": [
+              {
+                "id": 0,
+                "label": "显示进度",
+                "value": true
+              },
+              {
+                "id": 1,
+                "label": "显示页码",
+                "value": false
+              },
+              {
+                "id": 2,
+                "label": "记住位置",
+                "value": true
+              },
+              {
+                "id": 3,
+                "label": "阅读提醒",
+                "value": false
+              },
+              {
+                "id": 4,
+                "label": "词语提示",
+                "value": true
+              },
+              {
+                "id": 5,
+                "label": "显示注释",
+                "value": false
+              },
+              {
+                "id": 6,
+                "label": "听书续播",
+                "value": true
+              },
+              {
+                "id": 7,
+                "label": "显示书名",
+                "value": false
+              }
+            ],
+            "field": {
+              "id": "note",
+              "role": "textbox",
+              "label": "备注",
+              "value": "每天读一会儿"
+            },
+            "button": "完成",
+            "actions": [
+              "spike.set",
+              "text.insert",
+              "text.submit",
+              "spike.submit"
+            ]
+          },
+          "snapshot_after": {
+            "page": "appfw-spike",
+            "member": "owner",
+            "version": 7,
+            "title": "阅读偏好",
+            "rows": [
+              {
+                "id": 0,
+                "label": "显示进度",
+                "value": true
+              },
+              {
+                "id": 1,
+                "label": "显示页码",
+                "value": false
+              },
+              {
+                "id": 2,
+                "label": "记住位置",
+                "value": true
+              },
+              {
+                "id": 3,
+                "label": "阅读提醒",
+                "value": false
+              },
+              {
+                "id": 4,
+                "label": "词语提示",
+                "value": true
+              },
+              {
+                "id": 5,
+                "label": "显示注释",
+                "value": false
+              },
+              {
+                "id": 6,
+                "label": "听书续播",
+                "value": true
+              },
+              {
+                "id": 7,
+                "label": "显示书名",
+                "value": false
+              }
+            ],
+            "field": {
+              "id": "note",
+              "role": "textbox",
+              "label": "备注",
+              "value": "每天读一会儿"
+            },
+            "button": "完成",
+            "actions": [
+              "spike.set",
+              "text.insert",
+              "text.submit",
+              "spike.submit"
+            ]
+          }
+        },
+        {
+          "candidate": "c",
+          "startup_us": 1,
+          "build_us": 1076,
+          "toggle_us": 227,
+          "heap_baseline_internal": 112008,
+          "heap_baseline_psram": 3088584,
+          "heap_peak_internal": 112008,
+          "heap_peak_psram": 3088584,
+          "model_peak_psram": 848,
+          "vm_peak_psram": 0,
+          "lvgl_peak_psram": 214336,
+          "vm_peak_requested": 0,
+          "model_peak_internal": 0,
+          "vm_peak_internal": 0,
+          "lvgl_peak_internal": 0,
+          "released": true,
+          "snapshot": {
+            "page": "appfw-spike",
+            "member": "owner",
+            "version": 4,
+            "title": "阅读偏好",
+            "rows": [
+              {
+                "id": 0,
+                "label": "显示进度",
+                "value": true
+              },
+              {
+                "id": 1,
+                "label": "显示页码",
+                "value": false
+              },
+              {
+                "id": 2,
+                "label": "记住位置",
+                "value": true
+              },
+              {
+                "id": 3,
+                "label": "阅读提醒",
+                "value": false
+              },
+              {
+                "id": 4,
+                "label": "词语提示",
+                "value": true
+              },
+              {
+                "id": 5,
+                "label": "显示注释",
+                "value": false
+              },
+              {
+                "id": 6,
+                "label": "听书续播",
+                "value": true
+              },
+              {
+                "id": 7,
+                "label": "显示书名",
+                "value": false
+              }
+            ],
+            "field": {
+              "id": "note",
+              "role": "textbox",
+              "label": "备注",
+              "value": "每天读一会儿"
+            },
+            "button": "完成",
+            "actions": [
+              "spike.set",
+              "text.insert",
+              "text.submit",
+              "spike.submit"
+            ]
+          },
+          "snapshot_after": {
+            "page": "appfw-spike",
+            "member": "owner",
+            "version": 7,
+            "title": "阅读偏好",
+            "rows": [
+              {
+                "id": 0,
+                "label": "显示进度",
+                "value": true
+              },
+              {
+                "id": 1,
+                "label": "显示页码",
+                "value": false
+              },
+              {
+                "id": 2,
+                "label": "记住位置",
+                "value": true
+              },
+              {
+                "id": 3,
+                "label": "阅读提醒",
+                "value": false
+              },
+              {
+                "id": 4,
+                "label": "词语提示",
+                "value": true
+              },
+              {
+                "id": 5,
+                "label": "显示注释",
+                "value": false
+              },
+              {
+                "id": 6,
+                "label": "听书续播",
+                "value": true
+              },
+              {
+                "id": 7,
+                "label": "显示书名",
+                "value": false
+              }
+            ],
+            "field": {
+              "id": "note",
+              "role": "textbox",
+              "label": "备注",
+              "value": "每天读一会儿"
+            },
+            "button": "完成",
+            "actions": [
+              "spike.set",
+              "text.insert",
+              "text.submit",
+              "spike.submit"
+            ]
+          }
+        },
+        {
+          "candidate": "c",
+          "startup_us": 1,
+          "build_us": 1076,
+          "toggle_us": 227,
+          "heap_baseline_internal": 112008,
+          "heap_baseline_psram": 3088584,
+          "heap_peak_internal": 112008,
+          "heap_peak_psram": 3088584,
+          "model_peak_psram": 848,
+          "vm_peak_psram": 0,
+          "lvgl_peak_psram": 214336,
+          "vm_peak_requested": 0,
+          "model_peak_internal": 0,
+          "vm_peak_internal": 0,
+          "lvgl_peak_internal": 0,
+          "released": true,
+          "snapshot": {
+            "page": "appfw-spike",
+            "member": "owner",
+            "version": 4,
+            "title": "阅读偏好",
+            "rows": [
+              {
+                "id": 0,
+                "label": "显示进度",
+                "value": true
+              },
+              {
+                "id": 1,
+                "label": "显示页码",
+                "value": false
+              },
+              {
+                "id": 2,
+                "label": "记住位置",
+                "value": true
+              },
+              {
+                "id": 3,
+                "label": "阅读提醒",
+                "value": false
+              },
+              {
+                "id": 4,
+                "label": "词语提示",
+                "value": true
+              },
+              {
+                "id": 5,
+                "label": "显示注释",
+                "value": false
+              },
+              {
+                "id": 6,
+                "label": "听书续播",
+                "value": true
+              },
+              {
+                "id": 7,
+                "label": "显示书名",
+                "value": false
+              }
+            ],
+            "field": {
+              "id": "note",
+              "role": "textbox",
+              "label": "备注",
+              "value": "每天读一会儿"
+            },
+            "button": "完成",
+            "actions": [
+              "spike.set",
+              "text.insert",
+              "text.submit",
+              "spike.submit"
+            ]
+          },
+          "snapshot_after": {
+            "page": "appfw-spike",
+            "member": "owner",
+            "version": 7,
+            "title": "阅读偏好",
+            "rows": [
+              {
+                "id": 0,
+                "label": "显示进度",
+                "value": true
+              },
+              {
+                "id": 1,
+                "label": "显示页码",
+                "value": false
+              },
+              {
+                "id": 2,
+                "label": "记住位置",
+                "value": true
+              },
+              {
+                "id": 3,
+                "label": "阅读提醒",
+                "value": false
+              },
+              {
+                "id": 4,
+                "label": "词语提示",
+                "value": true
+              },
+              {
+                "id": 5,
+                "label": "显示注释",
+                "value": false
+              },
+              {
+                "id": 6,
+                "label": "听书续播",
+                "value": true
+              },
+              {
+                "id": 7,
+                "label": "显示书名",
+                "value": false
+              }
+            ],
+            "field": {
+              "id": "note",
+              "role": "textbox",
+              "label": "备注",
+              "value": "每天读一会儿"
+            },
+            "button": "完成",
+            "actions": [
+              "spike.set",
+              "text.insert",
+              "text.submit",
+              "spike.submit"
+            ]
+          }
+        },
+        {
+          "candidate": "c",
+          "startup_us": 1,
+          "build_us": 1083,
           "toggle_us": 232,
           "heap_baseline_internal": 112008,
           "heap_baseline_psram": 3088584,
@@ -341,428 +761,8 @@
         {
           "candidate": "c",
           "startup_us": 1,
-          "build_us": 1147,
-          "toggle_us": 236,
-          "heap_baseline_internal": 112008,
-          "heap_baseline_psram": 3088584,
-          "heap_peak_internal": 112008,
-          "heap_peak_psram": 3088584,
-          "model_peak_psram": 848,
-          "vm_peak_psram": 0,
-          "lvgl_peak_psram": 214336,
-          "vm_peak_requested": 0,
-          "model_peak_internal": 0,
-          "vm_peak_internal": 0,
-          "lvgl_peak_internal": 0,
-          "released": true,
-          "snapshot": {
-            "page": "appfw-spike",
-            "member": "owner",
-            "version": 4,
-            "title": "阅读偏好",
-            "rows": [
-              {
-                "id": 0,
-                "label": "显示进度",
-                "value": true
-              },
-              {
-                "id": 1,
-                "label": "显示页码",
-                "value": false
-              },
-              {
-                "id": 2,
-                "label": "记住位置",
-                "value": true
-              },
-              {
-                "id": 3,
-                "label": "阅读提醒",
-                "value": false
-              },
-              {
-                "id": 4,
-                "label": "词语提示",
-                "value": true
-              },
-              {
-                "id": 5,
-                "label": "显示注释",
-                "value": false
-              },
-              {
-                "id": 6,
-                "label": "听书续播",
-                "value": true
-              },
-              {
-                "id": 7,
-                "label": "显示书名",
-                "value": false
-              }
-            ],
-            "field": {
-              "id": "note",
-              "role": "textbox",
-              "label": "备注",
-              "value": "每天读一会儿"
-            },
-            "button": "完成",
-            "actions": [
-              "spike.set",
-              "text.insert",
-              "text.submit",
-              "spike.submit"
-            ]
-          },
-          "snapshot_after": {
-            "page": "appfw-spike",
-            "member": "owner",
-            "version": 7,
-            "title": "阅读偏好",
-            "rows": [
-              {
-                "id": 0,
-                "label": "显示进度",
-                "value": true
-              },
-              {
-                "id": 1,
-                "label": "显示页码",
-                "value": false
-              },
-              {
-                "id": 2,
-                "label": "记住位置",
-                "value": true
-              },
-              {
-                "id": 3,
-                "label": "阅读提醒",
-                "value": false
-              },
-              {
-                "id": 4,
-                "label": "词语提示",
-                "value": true
-              },
-              {
-                "id": 5,
-                "label": "显示注释",
-                "value": false
-              },
-              {
-                "id": 6,
-                "label": "听书续播",
-                "value": true
-              },
-              {
-                "id": 7,
-                "label": "显示书名",
-                "value": false
-              }
-            ],
-            "field": {
-              "id": "note",
-              "role": "textbox",
-              "label": "备注",
-              "value": "每天读一会儿"
-            },
-            "button": "完成",
-            "actions": [
-              "spike.set",
-              "text.insert",
-              "text.submit",
-              "spike.submit"
-            ]
-          }
-        },
-        {
-          "candidate": "c",
-          "startup_us": 2,
-          "build_us": 1178,
-          "toggle_us": 231,
-          "heap_baseline_internal": 112008,
-          "heap_baseline_psram": 3088584,
-          "heap_peak_internal": 112008,
-          "heap_peak_psram": 3088584,
-          "model_peak_psram": 848,
-          "vm_peak_psram": 0,
-          "lvgl_peak_psram": 214336,
-          "vm_peak_requested": 0,
-          "model_peak_internal": 0,
-          "vm_peak_internal": 0,
-          "lvgl_peak_internal": 0,
-          "released": true,
-          "snapshot": {
-            "page": "appfw-spike",
-            "member": "owner",
-            "version": 4,
-            "title": "阅读偏好",
-            "rows": [
-              {
-                "id": 0,
-                "label": "显示进度",
-                "value": true
-              },
-              {
-                "id": 1,
-                "label": "显示页码",
-                "value": false
-              },
-              {
-                "id": 2,
-                "label": "记住位置",
-                "value": true
-              },
-              {
-                "id": 3,
-                "label": "阅读提醒",
-                "value": false
-              },
-              {
-                "id": 4,
-                "label": "词语提示",
-                "value": true
-              },
-              {
-                "id": 5,
-                "label": "显示注释",
-                "value": false
-              },
-              {
-                "id": 6,
-                "label": "听书续播",
-                "value": true
-              },
-              {
-                "id": 7,
-                "label": "显示书名",
-                "value": false
-              }
-            ],
-            "field": {
-              "id": "note",
-              "role": "textbox",
-              "label": "备注",
-              "value": "每天读一会儿"
-            },
-            "button": "完成",
-            "actions": [
-              "spike.set",
-              "text.insert",
-              "text.submit",
-              "spike.submit"
-            ]
-          },
-          "snapshot_after": {
-            "page": "appfw-spike",
-            "member": "owner",
-            "version": 7,
-            "title": "阅读偏好",
-            "rows": [
-              {
-                "id": 0,
-                "label": "显示进度",
-                "value": true
-              },
-              {
-                "id": 1,
-                "label": "显示页码",
-                "value": false
-              },
-              {
-                "id": 2,
-                "label": "记住位置",
-                "value": true
-              },
-              {
-                "id": 3,
-                "label": "阅读提醒",
-                "value": false
-              },
-              {
-                "id": 4,
-                "label": "词语提示",
-                "value": true
-              },
-              {
-                "id": 5,
-                "label": "显示注释",
-                "value": false
-              },
-              {
-                "id": 6,
-                "label": "听书续播",
-                "value": true
-              },
-              {
-                "id": 7,
-                "label": "显示书名",
-                "value": false
-              }
-            ],
-            "field": {
-              "id": "note",
-              "role": "textbox",
-              "label": "备注",
-              "value": "每天读一会儿"
-            },
-            "button": "完成",
-            "actions": [
-              "spike.set",
-              "text.insert",
-              "text.submit",
-              "spike.submit"
-            ]
-          }
-        },
-        {
-          "candidate": "c",
-          "startup_us": 1,
-          "build_us": 1138,
-          "toggle_us": 234,
-          "heap_baseline_internal": 112008,
-          "heap_baseline_psram": 3088584,
-          "heap_peak_internal": 112008,
-          "heap_peak_psram": 3088584,
-          "model_peak_psram": 848,
-          "vm_peak_psram": 0,
-          "lvgl_peak_psram": 214336,
-          "vm_peak_requested": 0,
-          "model_peak_internal": 0,
-          "vm_peak_internal": 0,
-          "lvgl_peak_internal": 0,
-          "released": true,
-          "snapshot": {
-            "page": "appfw-spike",
-            "member": "owner",
-            "version": 4,
-            "title": "阅读偏好",
-            "rows": [
-              {
-                "id": 0,
-                "label": "显示进度",
-                "value": true
-              },
-              {
-                "id": 1,
-                "label": "显示页码",
-                "value": false
-              },
-              {
-                "id": 2,
-                "label": "记住位置",
-                "value": true
-              },
-              {
-                "id": 3,
-                "label": "阅读提醒",
-                "value": false
-              },
-              {
-                "id": 4,
-                "label": "词语提示",
-                "value": true
-              },
-              {
-                "id": 5,
-                "label": "显示注释",
-                "value": false
-              },
-              {
-                "id": 6,
-                "label": "听书续播",
-                "value": true
-              },
-              {
-                "id": 7,
-                "label": "显示书名",
-                "value": false
-              }
-            ],
-            "field": {
-              "id": "note",
-              "role": "textbox",
-              "label": "备注",
-              "value": "每天读一会儿"
-            },
-            "button": "完成",
-            "actions": [
-              "spike.set",
-              "text.insert",
-              "text.submit",
-              "spike.submit"
-            ]
-          },
-          "snapshot_after": {
-            "page": "appfw-spike",
-            "member": "owner",
-            "version": 7,
-            "title": "阅读偏好",
-            "rows": [
-              {
-                "id": 0,
-                "label": "显示进度",
-                "value": true
-              },
-              {
-                "id": 1,
-                "label": "显示页码",
-                "value": false
-              },
-              {
-                "id": 2,
-                "label": "记住位置",
-                "value": true
-              },
-              {
-                "id": 3,
-                "label": "阅读提醒",
-                "value": false
-              },
-              {
-                "id": 4,
-                "label": "词语提示",
-                "value": true
-              },
-              {
-                "id": 5,
-                "label": "显示注释",
-                "value": false
-              },
-              {
-                "id": 6,
-                "label": "听书续播",
-                "value": true
-              },
-              {
-                "id": 7,
-                "label": "显示书名",
-                "value": false
-              }
-            ],
-            "field": {
-              "id": "note",
-              "role": "textbox",
-              "label": "备注",
-              "value": "每天读一会儿"
-            },
-            "button": "完成",
-            "actions": [
-              "spike.set",
-              "text.insert",
-              "text.submit",
-              "spike.submit"
-            ]
-          }
-        },
-        {
-          "candidate": "c",
-          "startup_us": 1,
-          "build_us": 1154,
-          "toggle_us": 234,
+          "build_us": 1096,
+          "toggle_us": 225,
           "heap_baseline_internal": 112008,
           "heap_baseline_psram": 3088584,
           "heap_peak_internal": 112008,
@@ -1057,25 +1057,25 @@
         "startup_us": {
           "median": 1,
           "min": 1,
-          "max": 2
+          "max": 1
         },
         "build_us": {
-          "median": 1146,
-          "min": 1119,
-          "max": 1157
+          "median": 1099,
+          "min": 1075,
+          "max": 1123
         },
         "toggle_us": {
-          "median": 246,
-          "min": 233,
-          "max": 263
+          "median": 226,
+          "min": 224,
+          "max": 227
         }
       },
       "samples": [
         {
           "candidate": "json",
-          "startup_us": 2,
-          "build_us": 1146,
-          "toggle_us": 263,
+          "startup_us": 1,
+          "build_us": 1123,
+          "toggle_us": 226,
           "heap_baseline_internal": 112008,
           "heap_baseline_psram": 3096792,
           "heap_peak_internal": 112008,
@@ -1214,8 +1214,8 @@
         {
           "candidate": "json",
           "startup_us": 1,
-          "build_us": 1119,
-          "toggle_us": 233,
+          "build_us": 1075,
+          "toggle_us": 226,
           "heap_baseline_internal": 112008,
           "heap_baseline_psram": 3096792,
           "heap_peak_internal": 112008,
@@ -1354,8 +1354,8 @@
         {
           "candidate": "json",
           "startup_us": 1,
-          "build_us": 1145,
-          "toggle_us": 248,
+          "build_us": 1099,
+          "toggle_us": 225,
           "heap_baseline_internal": 112008,
           "heap_baseline_psram": 3096792,
           "heap_peak_internal": 112008,
@@ -1494,8 +1494,8 @@
         {
           "candidate": "json",
           "startup_us": 1,
-          "build_us": 1151,
-          "toggle_us": 234,
+          "build_us": 1092,
+          "toggle_us": 224,
           "heap_baseline_internal": 112008,
           "heap_baseline_psram": 3096792,
           "heap_peak_internal": 112008,
@@ -1634,8 +1634,8 @@
         {
           "candidate": "json",
           "startup_us": 1,
-          "build_us": 1157,
-          "toggle_us": 246,
+          "build_us": 1106,
+          "toggle_us": 227,
           "heap_baseline_internal": 112008,
           "heap_baseline_psram": 3096792,
           "heap_peak_internal": 112008,
@@ -1938,27 +1938,27 @@
       },
       "timing_us": {
         "startup_us": {
-          "median": 29,
-          "min": 24,
-          "max": 33
+          "median": 22,
+          "min": 21,
+          "max": 25
         },
         "build_us": {
-          "median": 1158,
-          "min": 1111,
-          "max": 1220
+          "median": 1098,
+          "min": 1088,
+          "max": 1112
         },
         "toggle_us": {
-          "median": 236,
-          "min": 234,
-          "max": 240
+          "median": 227,
+          "min": 226,
+          "max": 228
         }
       },
       "samples": [
         {
           "candidate": "lua",
-          "startup_us": 30,
-          "build_us": 1183,
-          "toggle_us": 237,
+          "startup_us": 22,
+          "build_us": 1102,
+          "toggle_us": 228,
           "heap_baseline_internal": 112008,
           "heap_baseline_psram": 3096792,
           "heap_peak_internal": 112008,
@@ -2096,9 +2096,9 @@
         },
         {
           "candidate": "lua",
-          "startup_us": 33,
-          "build_us": 1220,
-          "toggle_us": 240,
+          "startup_us": 21,
+          "build_us": 1112,
+          "toggle_us": 226,
           "heap_baseline_internal": 112008,
           "heap_baseline_psram": 3096792,
           "heap_peak_internal": 112008,
@@ -2236,9 +2236,9 @@
         },
         {
           "candidate": "lua",
-          "startup_us": 24,
-          "build_us": 1111,
-          "toggle_us": 235,
+          "startup_us": 21,
+          "build_us": 1098,
+          "toggle_us": 227,
           "heap_baseline_internal": 112008,
           "heap_baseline_psram": 3096792,
           "heap_peak_internal": 112008,
@@ -2376,9 +2376,9 @@
         },
         {
           "candidate": "lua",
-          "startup_us": 29,
-          "build_us": 1158,
-          "toggle_us": 234,
+          "startup_us": 23,
+          "build_us": 1093,
+          "toggle_us": 228,
           "heap_baseline_internal": 112008,
           "heap_baseline_psram": 3096792,
           "heap_peak_internal": 112008,
@@ -2516,9 +2516,9 @@
         },
         {
           "candidate": "lua",
-          "startup_us": 29,
-          "build_us": 1157,
-          "toggle_us": 236,
+          "startup_us": 25,
+          "build_us": 1088,
+          "toggle_us": 226,
           "heap_baseline_internal": 112008,
           "heap_baseline_psram": 3096792,
           "heap_peak_internal": 112008,
@@ -2848,311 +2848,31 @@
       },
       "timing_us": {
         "startup_us": {
-          "median": 11,
-          "min": 9,
-          "max": 14
+          "median": 10,
+          "min": 8,
+          "max": 12
         },
         "build_us": {
-          "median": 1161,
-          "min": 1124,
-          "max": 1182
+          "median": 1108,
+          "min": 1101,
+          "max": 1123
         },
         "toggle_us": {
-          "median": 237,
-          "min": 235,
-          "max": 244
+          "median": 228,
+          "min": 227,
+          "max": 232
         }
       },
       "samples": [
         {
           "candidate": "mquickjs",
-          "startup_us": 12,
-          "build_us": 1182,
-          "toggle_us": 237,
+          "startup_us": 10,
+          "build_us": 1107,
+          "toggle_us": 228,
           "heap_baseline_internal": 112008,
           "heap_baseline_psram": 3096792,
           "heap_peak_internal": 112008,
           "heap_peak_psram": 3101880,
-          "model_peak_psram": 9048,
-          "vm_peak_psram": 131072,
-          "lvgl_peak_psram": 214336,
-          "vm_peak_requested": 131072,
-          "model_peak_internal": 0,
-          "vm_peak_internal": 0,
-          "lvgl_peak_internal": 0,
-          "released": true,
-          "snapshot": {
-            "page": "appfw-spike",
-            "member": "owner",
-            "version": 4,
-            "title": "阅读偏好",
-            "rows": [
-              {
-                "id": 0,
-                "label": "显示进度",
-                "value": true
-              },
-              {
-                "id": 1,
-                "label": "显示页码",
-                "value": false
-              },
-              {
-                "id": 2,
-                "label": "记住位置",
-                "value": true
-              },
-              {
-                "id": 3,
-                "label": "阅读提醒",
-                "value": false
-              },
-              {
-                "id": 4,
-                "label": "词语提示",
-                "value": true
-              },
-              {
-                "id": 5,
-                "label": "显示注释",
-                "value": false
-              },
-              {
-                "id": 6,
-                "label": "听书续播",
-                "value": true
-              },
-              {
-                "id": 7,
-                "label": "显示书名",
-                "value": false
-              }
-            ],
-            "field": {
-              "id": "note",
-              "role": "textbox",
-              "label": "备注",
-              "value": "每天读一会儿"
-            },
-            "button": "完成",
-            "actions": [
-              "spike.set",
-              "text.insert",
-              "text.submit",
-              "spike.submit"
-            ]
-          },
-          "snapshot_after": {
-            "page": "appfw-spike",
-            "member": "owner",
-            "version": 7,
-            "title": "阅读偏好",
-            "rows": [
-              {
-                "id": 0,
-                "label": "显示进度",
-                "value": true
-              },
-              {
-                "id": 1,
-                "label": "显示页码",
-                "value": false
-              },
-              {
-                "id": 2,
-                "label": "记住位置",
-                "value": true
-              },
-              {
-                "id": 3,
-                "label": "阅读提醒",
-                "value": false
-              },
-              {
-                "id": 4,
-                "label": "词语提示",
-                "value": true
-              },
-              {
-                "id": 5,
-                "label": "显示注释",
-                "value": false
-              },
-              {
-                "id": 6,
-                "label": "听书续播",
-                "value": true
-              },
-              {
-                "id": 7,
-                "label": "显示书名",
-                "value": false
-              }
-            ],
-            "field": {
-              "id": "note",
-              "role": "textbox",
-              "label": "备注",
-              "value": "每天读一会儿"
-            },
-            "button": "完成",
-            "actions": [
-              "spike.set",
-              "text.insert",
-              "text.submit",
-              "spike.submit"
-            ]
-          }
-        },
-        {
-          "candidate": "mquickjs",
-          "startup_us": 9,
-          "build_us": 1170,
-          "toggle_us": 235,
-          "heap_baseline_internal": 112008,
-          "heap_baseline_psram": 3096792,
-          "heap_peak_internal": 112008,
-          "heap_peak_psram": 3101880,
-          "model_peak_psram": 9048,
-          "vm_peak_psram": 131072,
-          "lvgl_peak_psram": 214336,
-          "vm_peak_requested": 131072,
-          "model_peak_internal": 0,
-          "vm_peak_internal": 0,
-          "lvgl_peak_internal": 0,
-          "released": true,
-          "snapshot": {
-            "page": "appfw-spike",
-            "member": "owner",
-            "version": 4,
-            "title": "阅读偏好",
-            "rows": [
-              {
-                "id": 0,
-                "label": "显示进度",
-                "value": true
-              },
-              {
-                "id": 1,
-                "label": "显示页码",
-                "value": false
-              },
-              {
-                "id": 2,
-                "label": "记住位置",
-                "value": true
-              },
-              {
-                "id": 3,
-                "label": "阅读提醒",
-                "value": false
-              },
-              {
-                "id": 4,
-                "label": "词语提示",
-                "value": true
-              },
-              {
-                "id": 5,
-                "label": "显示注释",
-                "value": false
-              },
-              {
-                "id": 6,
-                "label": "听书续播",
-                "value": true
-              },
-              {
-                "id": 7,
-                "label": "显示书名",
-                "value": false
-              }
-            ],
-            "field": {
-              "id": "note",
-              "role": "textbox",
-              "label": "备注",
-              "value": "每天读一会儿"
-            },
-            "button": "完成",
-            "actions": [
-              "spike.set",
-              "text.insert",
-              "text.submit",
-              "spike.submit"
-            ]
-          },
-          "snapshot_after": {
-            "page": "appfw-spike",
-            "member": "owner",
-            "version": 7,
-            "title": "阅读偏好",
-            "rows": [
-              {
-                "id": 0,
-                "label": "显示进度",
-                "value": true
-              },
-              {
-                "id": 1,
-                "label": "显示页码",
-                "value": false
-              },
-              {
-                "id": 2,
-                "label": "记住位置",
-                "value": true
-              },
-              {
-                "id": 3,
-                "label": "阅读提醒",
-                "value": false
-              },
-              {
-                "id": 4,
-                "label": "词语提示",
-                "value": true
-              },
-              {
-                "id": 5,
-                "label": "显示注释",
-                "value": false
-              },
-              {
-                "id": 6,
-                "label": "听书续播",
-                "value": true
-              },
-              {
-                "id": 7,
-                "label": "显示书名",
-                "value": false
-              }
-            ],
-            "field": {
-              "id": "note",
-              "role": "textbox",
-              "label": "备注",
-              "value": "每天读一会儿"
-            },
-            "button": "完成",
-            "actions": [
-              "spike.set",
-              "text.insert",
-              "text.submit",
-              "spike.submit"
-            ]
-          }
-        },
-        {
-          "candidate": "mquickjs",
-          "startup_us": 11,
-          "build_us": 1161,
-          "toggle_us": 237,
-          "heap_baseline_internal": 112008,
-          "heap_baseline_psram": 3096792,
-          "heap_peak_internal": 112008,
-          "heap_peak_psram": 3101936,
           "model_peak_psram": 9048,
           "vm_peak_psram": 131072,
           "lvgl_peak_psram": 214336,
@@ -3287,8 +3007,8 @@
         {
           "candidate": "mquickjs",
           "startup_us": 10,
-          "build_us": 1124,
-          "toggle_us": 244,
+          "build_us": 1113,
+          "toggle_us": 228,
           "heap_baseline_internal": 112008,
           "heap_baseline_psram": 3096792,
           "heap_peak_internal": 112008,
@@ -3426,13 +3146,293 @@
         },
         {
           "candidate": "mquickjs",
-          "startup_us": 14,
-          "build_us": 1125,
-          "toggle_us": 236,
+          "startup_us": 9,
+          "build_us": 1123,
+          "toggle_us": 227,
           "heap_baseline_internal": 112008,
           "heap_baseline_psram": 3096792,
           "heap_peak_internal": 112008,
           "heap_peak_psram": 3101880,
+          "model_peak_psram": 9048,
+          "vm_peak_psram": 131072,
+          "lvgl_peak_psram": 214336,
+          "vm_peak_requested": 131072,
+          "model_peak_internal": 0,
+          "vm_peak_internal": 0,
+          "lvgl_peak_internal": 0,
+          "released": true,
+          "snapshot": {
+            "page": "appfw-spike",
+            "member": "owner",
+            "version": 4,
+            "title": "阅读偏好",
+            "rows": [
+              {
+                "id": 0,
+                "label": "显示进度",
+                "value": true
+              },
+              {
+                "id": 1,
+                "label": "显示页码",
+                "value": false
+              },
+              {
+                "id": 2,
+                "label": "记住位置",
+                "value": true
+              },
+              {
+                "id": 3,
+                "label": "阅读提醒",
+                "value": false
+              },
+              {
+                "id": 4,
+                "label": "词语提示",
+                "value": true
+              },
+              {
+                "id": 5,
+                "label": "显示注释",
+                "value": false
+              },
+              {
+                "id": 6,
+                "label": "听书续播",
+                "value": true
+              },
+              {
+                "id": 7,
+                "label": "显示书名",
+                "value": false
+              }
+            ],
+            "field": {
+              "id": "note",
+              "role": "textbox",
+              "label": "备注",
+              "value": "每天读一会儿"
+            },
+            "button": "完成",
+            "actions": [
+              "spike.set",
+              "text.insert",
+              "text.submit",
+              "spike.submit"
+            ]
+          },
+          "snapshot_after": {
+            "page": "appfw-spike",
+            "member": "owner",
+            "version": 7,
+            "title": "阅读偏好",
+            "rows": [
+              {
+                "id": 0,
+                "label": "显示进度",
+                "value": true
+              },
+              {
+                "id": 1,
+                "label": "显示页码",
+                "value": false
+              },
+              {
+                "id": 2,
+                "label": "记住位置",
+                "value": true
+              },
+              {
+                "id": 3,
+                "label": "阅读提醒",
+                "value": false
+              },
+              {
+                "id": 4,
+                "label": "词语提示",
+                "value": true
+              },
+              {
+                "id": 5,
+                "label": "显示注释",
+                "value": false
+              },
+              {
+                "id": 6,
+                "label": "听书续播",
+                "value": true
+              },
+              {
+                "id": 7,
+                "label": "显示书名",
+                "value": false
+              }
+            ],
+            "field": {
+              "id": "note",
+              "role": "textbox",
+              "label": "备注",
+              "value": "每天读一会儿"
+            },
+            "button": "完成",
+            "actions": [
+              "spike.set",
+              "text.insert",
+              "text.submit",
+              "spike.submit"
+            ]
+          }
+        },
+        {
+          "candidate": "mquickjs",
+          "startup_us": 8,
+          "build_us": 1108,
+          "toggle_us": 227,
+          "heap_baseline_internal": 112008,
+          "heap_baseline_psram": 3096792,
+          "heap_peak_internal": 112008,
+          "heap_peak_psram": 3101936,
+          "model_peak_psram": 9048,
+          "vm_peak_psram": 131072,
+          "lvgl_peak_psram": 214336,
+          "vm_peak_requested": 131072,
+          "model_peak_internal": 0,
+          "vm_peak_internal": 0,
+          "lvgl_peak_internal": 0,
+          "released": true,
+          "snapshot": {
+            "page": "appfw-spike",
+            "member": "owner",
+            "version": 4,
+            "title": "阅读偏好",
+            "rows": [
+              {
+                "id": 0,
+                "label": "显示进度",
+                "value": true
+              },
+              {
+                "id": 1,
+                "label": "显示页码",
+                "value": false
+              },
+              {
+                "id": 2,
+                "label": "记住位置",
+                "value": true
+              },
+              {
+                "id": 3,
+                "label": "阅读提醒",
+                "value": false
+              },
+              {
+                "id": 4,
+                "label": "词语提示",
+                "value": true
+              },
+              {
+                "id": 5,
+                "label": "显示注释",
+                "value": false
+              },
+              {
+                "id": 6,
+                "label": "听书续播",
+                "value": true
+              },
+              {
+                "id": 7,
+                "label": "显示书名",
+                "value": false
+              }
+            ],
+            "field": {
+              "id": "note",
+              "role": "textbox",
+              "label": "备注",
+              "value": "每天读一会儿"
+            },
+            "button": "完成",
+            "actions": [
+              "spike.set",
+              "text.insert",
+              "text.submit",
+              "spike.submit"
+            ]
+          },
+          "snapshot_after": {
+            "page": "appfw-spike",
+            "member": "owner",
+            "version": 7,
+            "title": "阅读偏好",
+            "rows": [
+              {
+                "id": 0,
+                "label": "显示进度",
+                "value": true
+              },
+              {
+                "id": 1,
+                "label": "显示页码",
+                "value": false
+              },
+              {
+                "id": 2,
+                "label": "记住位置",
+                "value": true
+              },
+              {
+                "id": 3,
+                "label": "阅读提醒",
+                "value": false
+              },
+              {
+                "id": 4,
+                "label": "词语提示",
+                "value": true
+              },
+              {
+                "id": 5,
+                "label": "显示注释",
+                "value": false
+              },
+              {
+                "id": 6,
+                "label": "听书续播",
+                "value": true
+              },
+              {
+                "id": 7,
+                "label": "显示书名",
+                "value": false
+              }
+            ],
+            "field": {
+              "id": "note",
+              "role": "textbox",
+              "label": "备注",
+              "value": "每天读一会儿"
+            },
+            "button": "完成",
+            "actions": [
+              "spike.set",
+              "text.insert",
+              "text.submit",
+              "spike.submit"
+            ]
+          }
+        },
+        {
+          "candidate": "mquickjs",
+          "startup_us": 12,
+          "build_us": 1101,
+          "toggle_us": 232,
+          "heap_baseline_internal": 112008,
+          "heap_baseline_psram": 3096792,
+          "heap_peak_internal": 112008,
+          "heap_peak_psram": 3101936,
           "model_peak_psram": 9048,
           "vm_peak_psram": 131072,
           "lvgl_peak_psram": 214336,
@@ -3664,11 +3664,11 @@
       "sha256": "c96f9aeb715bb3f1254a5ac241163c3858c53d06c095646dc9fca093289c8e41"
     },
     "candidate_mquickjs.c": {
-      "lines": 123,
-      "nonblank_lines": 120,
-      "characters": 4895,
-      "utf8_bytes": 4895,
-      "sha256": "d1634d8d9529bd319bd5afdbb26dfe58c2eceac3cb83c98d0dfdc73f219090a1"
+      "lines": 127,
+      "nonblank_lines": 124,
+      "characters": 4923,
+      "utf8_bytes": 4923,
+      "sha256": "932ebd9a64648056a2e488a83ac87bc0726df3832467bde38facf74862049d79"
     },
     "fetch_mquickjs.py": {
       "lines": 36,
@@ -3692,11 +3692,11 @@
       "sha256": "9370f3006dee911e6221538ffaac3749b6d2900f23e5f84e0abc05ec5f09a14a"
     },
     "measure.py": {
-      "lines": 145,
-      "nonblank_lines": 133,
-      "characters": 9582,
-      "utf8_bytes": 9678,
-      "sha256": "8ef75b2dd7a1e971e6cdb0be9d9fc63d3dbfa327cff89aab8faf67a7e468e56b"
+      "lines": 146,
+      "nonblank_lines": 134,
+      "characters": 9668,
+      "utf8_bytes": 9764,
+      "sha256": "6aa932105aa5ea1c1c7919312c4bf146311c54df70a768860a945d5007bf5b73"
     },
     "mquickjs.cmake": {
       "lines": 19,
@@ -3734,25 +3734,25 @@
       "sha256": "fc3ebcd13b768a1234939b69780a748e246879acc550cea434b20fe28211e68b"
     },
     "s31.cmake": {
-      "lines": 49,
-      "nonblank_lines": 49,
-      "characters": 2519,
-      "utf8_bytes": 2519,
-      "sha256": "4c9ce887024152cbc5a48d4899d9b1d13d3b5db9a842679a178b2f93d75f03fe"
+      "lines": 50,
+      "nonblank_lines": 50,
+      "characters": 2556,
+      "utf8_bytes": 2556,
+      "sha256": "8aeb4bc0b6526b3eec1440aaa78e00571828a533f3743eb590090d13fce0a957"
     },
     "s31.sh": {
-      "lines": 56,
-      "nonblank_lines": 56,
-      "characters": 2917,
-      "utf8_bytes": 2917,
-      "sha256": "7dc6d731ca3a8e24e57a1ea66c44c1ab22285deecf8529dc20a55fe2100f12ca"
+      "lines": 57,
+      "nonblank_lines": 57,
+      "characters": 2943,
+      "utf8_bytes": 2943,
+      "sha256": "bba0b1fd29bad7fb2f256500973e60a4fd666b35a3007d44b4531196c2e4e6f0"
     },
     "s31_summary.py": {
       "lines": 49,
       "nonblank_lines": 43,
-      "characters": 2526,
-      "utf8_bytes": 2534,
-      "sha256": "f78a8fe571fb99d183d9df06be7eb02eafc4f9913b0ce2bf0c1368d9ad55dcbb"
+      "characters": 2557,
+      "utf8_bytes": 2565,
+      "sha256": "553b4cfc15d471f74e36f850ba0c06ced8569b8ce77790bf4c39fe614a271641"
     },
     "spike.h": {
       "lines": 39,
