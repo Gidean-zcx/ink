@@ -399,6 +399,7 @@ static void session_close(void) { /* UI task: what is queued no longer lands any
     osal_mutex_unlock(RS.lock);
     if (sid > 0) ink_rt_close(sid);
     ink_exec_post(INK_EXEC_MEDIA, &RS.drain_job, drain, NULL);
+    if (RS.page == TYPE && RS.field) page_show(REMOTE);
 }
 
 static void session_restart(void *arg) { /* UI task */
@@ -428,7 +429,7 @@ static void link_check(lv_timer_t *t) {
     if (down && !RS.down_shown) {
         RS.down_shown = true;
         ink_probe_count("remote.offline_shown");
-        page_show(OFFLINE);
+        if (RS.page != TYPE) page_show(OFFLINE);
         note_set("连接断了，正在重连…", "Connection lost, reconnecting...");
     } else if (!down && RS.down_shown) {
         RS.down_shown = false;

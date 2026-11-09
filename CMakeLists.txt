@@ -1400,3 +1400,11 @@ target_link_libraries(sim-transfer-pages PRIVATE ink_apps ink_system)
 add_test(NAME transfer-pages COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/transfer_pages/run.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(transfer-pages PROPERTIES TIMEOUT 120)
 target_sources(sim-transfer-pages PRIVATE tests/transfer_pages/hal.c)
+
+ink_sim_executable(sim-audit4-fix tests/audit4_fix.c)
+target_link_libraries(sim-audit4-fix PRIVATE ink_apps ink_system)
+foreach(n 1 5 6)
+  add_test(NAME audit4-b4-0${n} COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/audit4_fix.py
+    --build ${CMAKE_BINARY_DIR} --case ${n})
+  set_tests_properties(audit4-b4-0${n} PROPERTIES TIMEOUT 240)
+endforeach()
