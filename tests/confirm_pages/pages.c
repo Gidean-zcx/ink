@@ -177,7 +177,9 @@ static void run(void *arg) {
             if (!strcmp(scene, "ConfirmSetting")) CHECK(ink_setting_get(SETTING.id) == 1, "accepted setting changes");
             if (!strcmp(scene, "ConfirmParent") || !strcmp(scene, "StressConfirm")) CHECK(runs == 1, "one accepted fixture executes once");
         } else if (operation == 1) {
-            press("取消"); CHECK(WAIT_FOR(result_token == token, 5000) && !strcmp(decision, "rejected"), "human rejection completes");
+            if (!strcmp(scene, "ConfirmParent")) { read_all(token); press("输入密码"); key(HAL_KEY_HOME); }
+            else press("取消");
+            CHECK(WAIT_FOR(result_token == token, 5000) && !strcmp(decision, "rejected"), "human rejection completes");
         } else {
             CHECK(WAIT_FOR(result_token == token, 62000) && !strcmp(decision, "expired"), "each kind expires");
             view(); CHECK(!strcmp(g_top, "ConfirmExpired") && strstr(g_snap, "已经过期"), "expiration has an AI-readable result page");
