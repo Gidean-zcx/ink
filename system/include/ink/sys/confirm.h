@@ -43,6 +43,8 @@ void ink_confirm_ack(uint32_t token, uint32_t ver);
 /** The gate, or a handler that found out by itself (settings.set): keep this call for a person's yes. Fills the
  *  receipt: pending with object "confirm:<token>", or rejected (the queue is full, 4 at a time). */
 ink_rc_t ink_confirm_hold(const ink_cap_t *c, const ink_args_t *args, ink_source_t src, uint32_t page_gen, ink_receipt_t *rc);
+/** End pending requests for a capability whose target no longer exists. */
+void ink_confirm_expire(const char *cap);
 /** What waits, oldest first: how many (up to max). */
 int ink_confirm_list(ink_confirm_view_t *out, int max);
 /** Only touch and keys can answer. Off UI this may wait until expiry; UI answers never wait. 0, or -1. */

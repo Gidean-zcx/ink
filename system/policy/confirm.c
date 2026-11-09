@@ -10,6 +10,7 @@
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/cap.h"
+#include "ink/sys/comm.h"
 #include "ink/sys/confirm.h"
 #include "ink/sys/data.h"
 #include "ink/sys/hub.h"
@@ -277,8 +278,7 @@ static bool take(uint32_t token, held_t *out) {
     return hit;
 }
 
-static void expiry_cb(void *arg) { /* the timer task */
-    (void)arg;
+static void expiry_cb(void *arg) { /* NULL: deadline; otherwise the vanished target's capability. */
     uint64_t now = osal_now_us();
     for (;;) {
         uint32_t token = 0;
@@ -286,7 +286,7 @@ static void expiry_cb(void *arg) { /* the timer task */
         char who[INK_MEMBER_ID_MAX] = "";
         ink_svc_lock();
         for (int i = 0; i < MAX_HELD && !token; i++)
-            if (CF.held[i].used && CF.held[i].expires_us <= now) {
+            if (CF.held[i].used && (arg ? !strcmp(CF.held[i].cap->id, arg) : CF.held[i].expires_us <= now)) {
                 CF.held[i].used = false;
                 token = CF.held[i].token;
                 cap = CF.held[i].cap->id;
@@ -298,6 +298,8 @@ static void expiry_cb(void *arg) { /* the timer task */
     }
     changed();
 }
+
+void ink_confirm_expire(const char *cap) { if (cap) expiry_cb((void *)cap); }
 
 ink_rc_t ink_confirm_hold(const ink_cap_t *c, const ink_args_t *args, ink_source_t src, uint32_t page_gen, ink_receipt_t *rc) {
     rc->status = INK_RC_PENDING_CONFIRMATION;
@@ -321,6 +323,9 @@ ink_rc_t ink_confirm_hold(const ink_cap_t *c, const ink_args_t *args, ink_source
     h->parent = c->parent_pin && ink_member_any_pin();
     h->cap = c;
     h->args = *args;
+    if (!strcmp(c->id, "call.dtmf") && !ink_comm_bind_dtmf(&h->args)) {
+        osal_free(h); rc->status = INK_RC_STALE; return rc->status;
+    }
     h->src = src;
     h->page_gen = page_gen ? page_gen : (c->activity ? ink_ui_content_version() : 0);
     if (!bind_args(h)) { osal_free(h); rc->status = INK_RC_FAILED; return rc->status; }
@@ -333,7 +338,7 @@ ink_rc_t ink_confirm_hold(const ink_cap_t *c, const ink_args_t *args, ink_source
         h->connection = ink_hub_connection();
     }
     snprintf(h->member, sizeof h->member, "%s", ink_member_current()->id);
-    if (!describe(c, args, h->detail, sizeof h->detail)) {
+    if (!describe(c, !strcmp(c->id, "call.dtmf") ? &h->args : args, h->detail, sizeof h->detail)) {
         osal_free(h);
         rc->status = INK_RC_REJECTED;
         snprintf(rc->detail, sizeof rc->detail, "confirmation detail is too long");

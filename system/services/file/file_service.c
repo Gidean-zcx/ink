@@ -1192,11 +1192,12 @@ int ink_usb_disk_start(void) {
         }
         osal_task_delay_us(50000);
     }
-    if (hal_usb_disk_start() != 0) {
+    int r = index_prepare("/content/");
+    if (r || hal_usb_disk_start() != 0) {
         ink_svc_lock();
         FS.usb_lent = false;
         ink_svc_unlock();
-        return hal_fs_card_present() ? INK_FS_ERR_NO_HOST : INK_FS_ERR_NO_CARD;
+        return r ? r : hal_fs_card_present() ? INK_FS_ERR_NO_HOST : INK_FS_ERR_NO_CARD;
     }
     ink_power_hold(INK_NEED_NO_LOCK);
     ink_power_hold(INK_NEED_AWAKE); /* USB has to answer */
@@ -1532,7 +1533,6 @@ static int index_edit(const char *from, const char *to) {
             char path[sizeof e.path];
             if (snprintf(path, sizeof path, "%s%s", to, e.path + strlen(from)) >= (int)sizeof path) { r = INK_FS_ERR_PATH; break; }
             memcpy(e.path, path, strlen(path) + 1);
-            e.size = hal_fs_size(e.path); e.mtime = hal_fs_mtime(e.path);
         }
         if (!to) ink_thumb_cache_remove(FS.thumbs, rec.id);
         r = index_save(db, rec.id, to ? &e : NULL, NULL);
