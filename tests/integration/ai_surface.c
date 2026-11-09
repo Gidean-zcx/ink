@@ -95,7 +95,7 @@ static const struct {
     {"shell.member_choose", NULL}, {"shell.pin_set", NULL},
     {"shell.pin_forgot", NULL}, {"shell.pin_parent", NULL}, {"shell.pin_cancel", NULL},
     {"shell.update", NULL}, {"shell.update_close", NULL},
-    {"files.browse", "path"}, {"files.select", "id"}, {"files.move", NULL}, {"files.name", NULL},
+    {"files.browse", "path"}, {"files.select", "id"}, {"files.move", ""}, {"files.name", NULL},
     {"files.preview", "id"}, {"files.next", NULL}, {"files.prev", NULL}, {"files.up", NULL},
     {"camera.preview", NULL}, {"camera.photo", NULL}, {"gallery.prev", NULL}, {"gallery.next", NULL}, {"photo.open", "id"},
     {"shell.ai_log", ""}, {"shell.ai_receipts", ""}, {"ai.pages.close", NULL}, {"ai.pages.retry", NULL},

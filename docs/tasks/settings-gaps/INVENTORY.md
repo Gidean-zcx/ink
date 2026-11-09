@@ -14,14 +14,11 @@
 
 Wi-Fi 仅给当前已连网络提供动作。未连的已记网络管理没有画板，列入待定；不会把扫描到的陌生网络当成已保存网络。
 
-## 只给 AI 的通用接口
+## 只给 AI 的
 
 | 能力 | 人工对应位置 | 不另加按钮的依据 |
 | --- | --- | --- |
-| `data.put` | 各应用自己的编辑页 | 通用集合写接口；现有业务编辑器负责字段和校验，没有任意集合编辑器的设计。 |
-| `data.delete` | 各应用自己的详情页 | 通用集合删接口；现有业务删除动作负责对象选择，没有任意集合编辑器的设计。 |
 | `notify.post` | Notifications 展示结果 | 目录明确为 AI 发给用户的通知，不是让用户给自己发通知的编辑器。 |
-| `clipboard.write` | ImeEdit／文字选择菜单 | 任意文本写剪贴板供 AI／应用使用；人的复制、剪切已经从选择菜单进入相同剪贴板服务。 |
 
 没有查到“其余缺失操作一律只供 AI”的设计授权。下面的缺口全部留给用户决定。
 
@@ -29,6 +26,8 @@ Wi-Fi 仅给当前已连网络提供动作。未连的已记网络管理没有�
 
 | 能力／设置 | 应在何处 | 目前为什么没有／本次边界 |
 | --- | --- | --- |
+| `data.put` | 相应应用编辑页／通用集合编辑器（未设计） | 业务编辑页已有；直接写任意集合的入口未设计，不能因此认定只给 AI。 |
+| `data.delete` | 相应应用详情页／通用集合编辑器（未设计） | 业务删除动作已有；通用记录选择和删除界面未设计，保留待定。 |
 | `audio.record` | Memo → MemoRecord（已有画板） | 尚无录音页和语音备忘数据关联；单接按钮只能留下文件，不能实现画板的“记好了／不要了”和备忘回看。新增持久字段或录音生命周期不属于本任务允许的接线；没做。 |
 | `file.mkdir` | FileList（位置待定） | 画板、规范没有新建文件夹按钮和命名流程；保留能力，待补设计。 |
 | `file.write` | 文件文本编辑页（未设计） | FileActions 只有打开、拷贝、移动、删除；没有写文件的页面和保存流程。 |
@@ -66,7 +65,7 @@ Wi-Fi 仅给当前已连网络提供动作。未连的已记网络管理没有�
 | `call.dtmf` | 已有：phone | [system/apps/phone/phone.c](../../../system/apps/phone/phone.c#L243) |
 | `camera.capture` | 已有：camera | [system/apps/camera/camera.c](../../../system/apps/camera/camera.c#L105) |
 | `camera.photo` | 已有：camera | [system/apps/camera/camera.c](../../../system/apps/camera/camera.c#L19) |
-| `clipboard.write` | AI／应用接口：ImeEdit／文字选择菜单 | [system/services/text/text_caps.c](../../../system/services/text/text_caps.c) |
+| `clipboard.write` | 已有：ImeEdit／文字选择菜单；任意文本写入为编程接口 | [system/services/text/text_caps.c](../../../system/services/text/text_caps.c) |
 | `clock.save` | 已有：clock | [system/apps/clock/clock.c](../../../system/apps/clock/clock.c#L170) |
 | `clock.timer_cancel` | 已有：clock | [system/apps/clock/clock.c](../../../system/apps/clock/clock.c#L279) |
 | `clock.timer_dismiss` | 已有：clock | [system/apps/clock/clock.c](../../../system/apps/clock/clock.c#L232) |
@@ -75,8 +74,8 @@ Wi-Fi 仅给当前已连网络提供动作。未连的已记网络管理没有�
 | `clock.timer_start` | 已有：clock | [system/apps/clock/clock.c](../../../system/apps/clock/clock.c#L252) |
 | `contacts.delete` | 已有：contacts | [system/apps/contacts/contacts.c](../../../system/apps/contacts/contacts.c#L53) |
 | `contacts.put` | 已有：contacts | [system/apps/contacts/contacts.c](../../../system/apps/contacts/contacts.c#L53) |
-| `data.delete` | AI／应用接口：各应用自己的详情页 | [system/services/data/data_caps.c](../../../system/services/data/data_caps.c) |
-| `data.put` | AI／应用接口：各应用自己的编辑页 | [system/services/data/data_caps.c](../../../system/services/data/data_caps.c) |
+| `data.delete` | 待定：通用集合编辑器；业务删除已有 | [system/services/data/data_caps.c](../../../system/services/data/data_caps.c) |
+| `data.put` | 待定：通用集合编辑器；业务编辑已有 | [system/services/data/data_caps.c](../../../system/services/data/data_caps.c) |
 | `family.save` | 已有：SetMembers | [system/ui/shell/settings_family.c](../../../system/ui/shell/settings_family.c#L151) |
 | `file.cache_clear` | 已有：settings_pages | [system/ui/shell/settings_pages.c](../../../system/ui/shell/settings_pages.c#L359) |
 | `file.cleanup` | 已有：settings_pages | [system/ui/shell/settings_pages.c](../../../system/ui/shell/settings_pages.c#L29) |

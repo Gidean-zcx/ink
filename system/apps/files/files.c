@@ -30,7 +30,7 @@ static struct {
     uint32_t epoch, serial, selected_id, index_cursor;
     size_t count;
     int mode;
-    bool busy, indexing;
+    bool busy, indexing, copy;
 } F INK_PSRAM_BSS;
 
 static const char *directory(void) { return F.mode == MOVE ? F.dest : F.path; }
@@ -192,11 +192,13 @@ static void selected(void *ctx, const ink_receipt_t *rc) {
     F.actions[2].enabled = !strcmp(type, "text") || !strcmp(type, "audio") || !strcmp(type, "image");
     if (!strcmp(type, "image")) { F.images[0] = lv_image_create(F.screen); lv_obj_set_pos(F.images[0], ink_ui_px(INK_MARGIN), ink_ui_px(y + 2 * (INK_CONTROL + INK_GAP_L))); thumbnail(0, F.selected_id); }
     if (!F.actions[2].enabled) { lv_obj_add_flag(open, LV_OBJ_FLAG_HIDDEN); status("这种文件暂时打不开"); } else status("");
+    int cell = writable(F.selected.path) ? (width - 2 * INK_GAP) / 3 : width;
+    button(5, F.screen, "拷贝", "files.move", "{\"copy\":true}", INK_MARGIN, INK_CANVAS_H - INK_PRIMARY - INK_MARGIN, cell, false); F.actions[5].id = "copy";
     if (writable(F.selected.path)) {
-        button(3, F.screen, "移动", "files.move", NULL, INK_MARGIN, INK_CANVAS_H - INK_PRIMARY - INK_MARGIN, (width - INK_GAP) / 2, false);
-        button(4, F.screen, "删除", "file.delete", F.source, INK_MARGIN + (width + INK_GAP) / 2, INK_CANVAS_H - INK_PRIMARY - INK_MARGIN, (width - INK_GAP) / 2, false);
+        button(3, F.screen, "移动", "files.move", NULL, INK_MARGIN + cell + INK_GAP, INK_CANVAS_H - INK_PRIMARY - INK_MARGIN, cell, false);
+        button(4, F.screen, "删除", "file.delete", F.source, INK_MARGIN + 2 * (cell + INK_GAP), INK_CANVAS_H - INK_PRIMARY - INK_MARGIN, cell, false);
     }
-    F.model.object = (ink_ui_object_ref_t){F.object, F.epoch}; F.model.action_count = 5;
+    F.model.object = (ink_ui_object_ref_t){F.object, F.epoch}; F.model.action_count = 6;
 }
 static void navigate(ink_call_t *c) {
     if (!ink_ui_page_current() || F.epoch != ink_member_epoch() || strcmp(ink_ui_action_page(), PAGES[F.mode].name)) { c->rc.status = INK_RC_STALE; return; }
@@ -212,7 +214,11 @@ static void navigate(ink_call_t *c) {
         if (F.mode == HOME) ink_ui_push(&PAGES[LIST], NULL); else ink_ui_redraw();
     } else if (!strcmp(id, "files.select")) {
         int64_t value = 0; ink_args_get_int(&c->args, "id", &value); F.selected_id = (uint32_t)value; ink_ui_push(&PAGES[ACTIONS], NULL);
-    } else if (!strcmp(id, "files.move")) { if (F.mode != ACTIONS || !F.selected.id || !writable(F.selected.path)) c->rc.status = INK_RC_REJECTED; else { F.dest[0] = 0; ink_ui_push(&PAGES[MOVE], NULL); } }
+    } else if (!strcmp(id, "files.move")) {
+        bool copy = false; ink_args_get_bool(&c->args, "copy", &copy);
+        if (F.mode != ACTIONS || !F.selected.id || (!copy && !writable(F.selected.path))) c->rc.status = INK_RC_REJECTED;
+        else { F.copy = copy; F.dest[0] = 0; ink_ui_push(&PAGES[MOVE], NULL); }
+    }
     else if (!strcmp(id, "files.preview")) {
         int64_t value = 0; ink_args_get_int(&c->args, "id", &value);
         if (F.mode != ACTIONS || value != F.selected_id || !F.selected.id) { c->rc.status = INK_RC_INVALID; return; }
@@ -250,7 +256,7 @@ static void create(lv_obj_t *screen, void *arg) {
         pair_json(F.target, sizeof F.target, "from", F.selected.path, "to", place ? path : "");
         int width = (INK_CANVAS_W - 2 * INK_MARGIN - INK_GAP) / 2;
         button(3, screen, "取消", "shell.back", NULL, INK_MARGIN, INK_CANVAS_H - INK_PRIMARY - INK_MARGIN, width, false);
-        button(2, screen, "放到这里", "file.move", F.target, INK_MARGIN + width + INK_GAP, INK_CANVAS_H - INK_PRIMARY - INK_MARGIN, width, true); F.actions[2].enabled = place; F.model.action_count = 3;
+        button(2, screen, F.copy ? "拷贝到这里" : "放到这里", F.copy ? "file.copy" : "file.move", F.target, INK_MARGIN + width + INK_GAP, INK_CANVAS_H - INK_PRIMARY - INK_MARGIN, width, true); F.actions[2].enabled = place; F.model.action_count = 3;
     }
     lv_obj_t *body = ink_ui_box(screen, 0, INK_STATUS_BAR + INK_PRIMARY + INK_GAP_L + (F.mode == MOVE ? INK_LINE_NOTE + INK_GAP_L : 0), INK_CANVAS_W, 4 * (INK_ROW_DOUBLE + INK_GAP_M) + INK_PRIMARY, 0, INK_SURFACE_WHITE, false);
     F.list = ink_ui_list_create(body, &F.model, &F.position, 4, 1, INK_ROW_DOUBLE, "这里还没有文件", bind_item, NULL);
@@ -287,7 +293,7 @@ static void changed(void *ctx, const char *id, const ink_args_t *args) {
     (void)ctx; (void)id;
     if (!ink_ui_page_current() || F.epoch != ink_member_epoch() || strcmp(ink_ui_page_name(), PAGES[F.mode].name)) return;
     char path[INK_FS_PATH_MAX], kind[16]; ink_args_get_str(args, "path", path, sizeof path); ink_args_get_str(args, "kind", kind, sizeof kind);
-    if ((F.mode == MOVE && !strcmp(kind, "moved")) || (F.mode == ACTIONS && !strcmp(kind, "removed") && !strcmp(path, F.selected.path))) ink_ui_pop(); else ink_ui_redraw();
+    if ((F.mode == MOVE && !strcmp(kind, F.copy ? "copied" : "moved")) || (F.mode == ACTIONS && !strcmp(kind, "removed") && !strcmp(path, F.selected.path))) ink_ui_pop(); else ink_ui_redraw();
 }
 #define PAGE(name_) {.name = name_, .app = "files", .create = create, .destroy = destroy, .snapshot = snapshot, .on_key = page_key}
 static const ink_activity_t PAGES[] = {PAGE("Files"), PAGE("FileList"), PAGE("FileActions"), PAGE("FileMove")};
@@ -297,7 +303,7 @@ static const ink_app_def_t APP = {.id = "files", .title = "文件", .icon = INK_
 static const ink_cap_t CAPS[] = {
     {.id = "files.browse", .title = "浏览文件夹", .input = "{\"type\":\"object\",\"properties\":{\"path\":{\"type\":\"string\",\"maxLength\":127}},\"required\":[\"path\"]}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "files.select", .title = "按编号查看文件操作", .input = ID_INPUT, .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "files.move", .title = "选移动目标文件夹", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "files.move", .title = "选移动目标文件夹", .input = "{\"type\":\"object\",\"properties\":{\"copy\":{\"type\":\"boolean\"}}}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "files.name", .title = "编辑文件名", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "files.preview", .title = "预览当前文本文件开头", .input = ID_INPUT, .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "files.next", .title = "文件下一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
