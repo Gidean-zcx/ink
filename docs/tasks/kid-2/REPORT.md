@@ -1,5 +1,41 @@
 # kid-2 执行报告
 
+## 复查后的修复
+
+复查基线：`1d5312ec`。已按最新主线重新配置、完整编译普通和 ASAN／UBSAN 版本，均保留 `INK_WERROR=ON`，退出码 0。下面是本轮记录；后面的首轮记录保留作历史。
+
+| 编号 | 结论 | 证据、命令 |
+| --- | --- | --- |
+| K2-1 | 【实测】通过 | `tests/kid_2.py --build build --phase settings`：实际点击 SetKid，在不限、30 分钟、1 小时之间切换；错误密码和未确认时不改，正确密码后读回并刷新；模拟时间用满一小时出现 KidTimeUp。删除“可用时段”占位，按钮与 AI 同用 `member.time_set`。 |
+| K2-2 | 【实测】通过 | `tests/kid_2.py --build build --phase no-pin`：83 个断言；KidLimit、KidTimeUp、SetKid 三个入口的屏幕和 AI 快照均出现指定说明，无密码仍不能放行、改时长、加时间。 |
+| 全量、内存检查 | 验证中 | 最终普通和 ASAN／UBSAN 全量完成后补充结果。 |
+
+本轮所有 Python／CTest 命令均使用总规则指定的依赖环境，命令前加 `taskpolicy -c utility`，构建和 CTest 均为 `-j2`。专项设置 `INK_KEEP_EVIDENCE=1 UBSAN_OPTIONS=halt_on_error=1`。
+
+【实测】反向对照全部命中目标断言，均为模拟器正常完成后的断言失败，不是编译失败：
+
+| 撤掉的修复 | `tests/kid_2_negative.py --build build --case` | 目标断言失败数 |
+| --- | --- | ---: |
+| SetKid 用时策略接线，恢复复查前文件 | `settings` | 36 |
+| 孩子页面的无密码说明 | `child-notice` | 4 |
+| SetKid 确认卡的无密码说明 | `settings-notice` | 3 |
+| 无密码时复用现有说明页，避免键盘遮字 | `no-pin-layout` | 2 |
+| 确认卡按提示实际高度留位置 | `confirm-layout` | 1 |
+
+原有四项反向对照也重跑通过：`parent`、`locked`、`volume`、`entry`，分别命中 1、3、2、26 次断言。日志为 `build/kid-2-review-negative-<case>-final.log`。
+
+【实测】布局核对发现长提示会被键盘／按钮遮住，已复用原说明页，并将确认卡原有布局的一行高度改为测量提示高度；未加页面、任务或新状态。回归检查完整文字的位置和无用密码键盘的缺席，并保存三个入口的截图，已逐张查看。最新无密码专项证据在 `build/kid-2-dobhzk48`。
+
+原有三个跳过的中枢测试，原因是构建用 Python 缺少 `pytest`、`pytest_asyncio`、`aiohttp`、`yaml`。改用已有的 `$INK_DEPS/hub/.venv/bin/python` 作为 `INK_HUB_PYTHON`，其中版本依次为 8.4.2、1.2.0、3.12.15、PyYAML 6.0.3，符合锁定依赖；不安装、不升级依赖。完整测试还设置 `PYTHONPATH=$PWD/hub/src`，保证导入本分支的中枢代码。首次复跑的 `hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e` 均通过；最终结果见上表。
+
+【实测】SetKid 对照分数 **49.974/255**（`tools/ui_compare.py --build build --design "$INK_DESIGN" --out build/kid-2-compare --reuse --scenes SetKid`）。沿用 settings-b 已有的双行列表，与原画板的分组、开关和头像布局仍有差别；本轮只接时长和去掉占位，没有重画整页。
+
+改过的已有测试：`kid_2.c` 的策略读取显式指定合成孩子编号，使成人 SetKid 场景也查孩子的策略；原先四阶段的断言保留。截图改按场景名保存，以留存三个无密码入口；对照工具入口仍保留 `snap-scene.png`。测试预算、原有断言和超时没有放宽。
+
+新增的机制：本轮无。复用成员策略能力、既有家长密码页、确认结果事件和原列表；不改后端密码检查。
+
+要改的文档：共享能力总表和服务设计 §1.3 按主会话授权保留。本轮已完成旧报告里待合并接线的 SetKid 时长行。
+
 基线：`50fd91821b47d6a9cacd42e7ba07fbd3b8084de4`。状态：任务范围内实现和验证已完成；未达项如下，没有把文档失败算作全量通过。
 
 ## 验收表

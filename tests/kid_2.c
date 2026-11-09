@@ -17,6 +17,7 @@ static int pin_result;
 static int64_t used, minutes, extra;
 static const char *wanted, *scene;
 static lv_point_t point;
+static lv_area_t label_area;
 static bool found;
 static void pin_reply(void *ctx, int result, uint32_t wait) { (void)ctx; (void)wait; pin_result = result; pin_done = true; }
 static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
@@ -27,7 +28,7 @@ static void call_ok(const char *cap, const char *args) { CHECK(AI(cap, args) && 
 static void locate(lv_obj_t *obj) {
     if (!lv_obj_is_visible(obj)) return;
     if (lv_obj_check_type(obj, &lv_label_class) && !strcmp(lv_label_get_text(obj), wanted)) {
-        lv_area_t a; lv_obj_get_coords(obj, &a); point = (lv_point_t){(a.x1 + a.x2) / 2, (a.y1 + a.y2) / 2}; found = true;
+        lv_area_t a; lv_obj_get_coords(obj, &a); label_area = a; point = (lv_point_t){(a.x1 + a.x2) / 2, (a.y1 + a.y2) / 2}; found = true;
     }
     for (uint32_t i = 0; i < lv_obj_get_child_count(obj); i++) locate(lv_obj_get_child(obj, (int32_t)i));
 }
@@ -35,7 +36,7 @@ static void find_label(void) { found = false; lv_obj_update_layout(lv_screen_act
 static void touch(const char *label) { quiet(); wanted = label; on_ui(find_label); CHECK(found, "visible button: %s", label); if (found) tap(point.x, point.y); quiet(); }
 static void enter(const char *pin) { for (const char *p = pin; *p; p++) { char label[2] = {*p, 0}; touch(label); } touch("确定"); }
 static void counters(void) {
-    CHECK(AI("member.time_get", NULL) && g_rc.status == INK_RC_DONE, "the child can read their policy");
+    CHECK(AI("member.time_get", "{\"id\":\"kid\"}") && g_rc.status == INK_RC_DONE, "read the synthetic child's policy");
     ink_json_t j; CHECK(ink_json_parse(&j, g_result, strlen(g_result)) == 0, "policy is structured JSON");
     CHECK(ink_json_int(&j, ink_json_find(&j, 0, "used_seconds"), &used) &&
         ink_json_int(&j, ink_json_find(&j, 0, "minutes"), &minutes) &&
@@ -57,7 +58,7 @@ static void change(const char *cap, const char *args) { unsigned token = request
 static void save(void) { ink_db_flush_all(); CHECK(WAIT_FOR(ink_db_idle() && !ink_storage_pending(), 15000), "member time and parent additions are durable"); }
 static void capture_event(void *arg) {
     (void)arg; CHECK(settled(), "capture the settled physical frame");
-    ink_probe_count("test.snapshot.settled"); char name[64]; snprintf(name, sizeof name, "test.snapshot.%s", scene); ink_probe_count(name); sim_display_snapshot("scene");
+    ink_probe_count("test.snapshot.settled"); char name[64]; snprintf(name, sizeof name, "test.snapshot.%s", scene); ink_probe_count(name); sim_display_snapshot(scene);
 }
 static void capture(const char *name) { scene = name; quiet(); on_ui(context); vtk_event_at(vtk_now() + SIM_MS(1), capture_event, NULL); delay_ms(5); }
 static void home(void) { ink_ui_home(); }
@@ -142,9 +143,64 @@ static void control(void) {
     call_ok("settings.set", "{\"id\":\"audio.volume\",\"value\":100}"); CHECK(ink_setting_get("audio.volume") <= ink_setting_get("audio.child_max") && ink_audio_effective_volume() <= ink_setting_get("audio.child_max"), "settings and actual audio both enforce child_max");
     call_ok("system.set_volume", "{\"percent\":100}"); CHECK(ink_setting_get("audio.volume") <= ink_setting_get("audio.child_max"), "volume keys and AI share the central cap");
 }
+static void set_parent_pin(const char *old, const char *next) {
+    pin_done = false;
+    CHECK(ink_member_set_pin("owner", old, next, pin_reply, NULL) == 0 && WAIT_FOR(pin_done, 6000) && pin_result == INK_PIN_OK, "change the synthetic parent's PIN");
+}
+static void settings(void) {
+    set_parent_pin("", "24681357"); call_ok("shell.kid_settings", NULL);
+    CHECK(page("SetKid") && strstr(g_snap, "每天能用多久") && strstr(g_snap, "不限") && strstr(g_snap, "member.time_set") && !strstr(g_snap, "可用时段"), "SetKid shows the real daily policy without a timeslot placeholder");
+    touch("每天能用多久"); CHECK(page("confirm") && strstr(g_snap, "ConfirmParent"), "SetKid uses the existing parent confirmation");
+    counters(); CHECK(minutes == 0, "opening confirmation does not change the policy");
+    touch("输入密码"); enter("90817263"); counters(); CHECK(minutes == 0, "a wrong SetKid PIN leaves the policy unchanged");
+    enter("24681357"); quiet(); counters();
+    CHECK(minutes == 30 && page("SetKid") && strstr(g_snap, "30 分钟"), "SetKid refreshes its value from member.time_get after confirmation");
+    touch("每天能用多久"); touch("输入密码"); enter("24681357"); quiet(); counters();
+    CHECK(minutes == 60 && page("SetKid") && strstr(g_snap, "1 小时"), "the parent sets one hour in SetKid"); capture("SetKid");
+    CHECK(ink_member_switch("kid") == 0, "use the policy set by the parent"); quiet(); counters();
+    int left = 3600 - (int)used;
+    if (left > 5) delay_ms((left - 5) * 1000);
+    CHECK(!ink_member_time_up(), "SetKid's hour is still usable just before expiry");
+    delay_ms(6000); CHECK(WAIT_FOR(page("KidTimeUp"), 8000), "one hour set in SetKid produces KidTimeUp");
+}
+static void no_pin_notice(void) {
+    const char *message = "家里还没有大人设密码，请大人先在设置里设一个";
+    quiet(); on_ui(context); CHECK(strstr(g_snap, message), "missing parent PIN is explained in the page snapshot");
+    wanted = message; on_ui(find_label); CHECK(found, "missing parent PIN is explained on the visible page");
+    CHECK(found && label_area.y1 >= 0 && label_area.y2 < ink_ui_px(INK_CANVAS_H - INK_MARGIN - INK_CONTROL), "the complete no-PIN explanation fits above the page buttons");
+    wanted = "确定"; on_ui(find_label); CHECK(!found, "missing PIN is explained without an unusable password keypad");
+}
+static void dismiss_parent_request(void) {
+    call_ok("shell.pin_cancel", NULL);
+    ink_confirm_view_t view;
+    if (ink_confirm_list(&view, 1)) CHECK(ink_confirm_decide(view.token, false, INK_SRC_TOUCH) == 0, "cancel the unfulfilled parent request");
+    quiet();
+}
+static void no_pin(void) {
+    CHECK(!ink_member_any_pin(), "the fixture starts without any parent PIN");
+    CHECK(ink_member_switch("kid") == 0, "enter the child without a parent PIN"); quiet(); on_ui(register_parent_app);
+    CHECK(AI("app.open", "{\"id\":\"test.parents\"}") && g_rc.status == INK_RC_REJECTED && page("KidLimit"), "no-PIN fixture reaches KidLimit");
+    touch("请他们输密码"); no_pin_notice(); capture("NoPinLimit");
+    CHECK(call_as("shell.kid_allow", "{\"id\":\"test.parents\"}", INK_SRC_CONFIRMED) && g_rc.status == INK_RC_REJECTED, "no-PIN notice keeps one-time permission denied");
+    dismiss_parent_request(); touch("算了");
+    CHECK(ink_member_switch("owner") == 0, "return to the adult without a PIN"); quiet(); call_ok("shell.kid_settings", NULL);
+    touch("每天能用多久"); no_pin_notice(); capture("NoPinSetKid");
+    ink_confirm_view_t view;
+    CHECK(ink_confirm_list(&view, 1) == 1 && ink_confirm_decide(view.token, true, INK_SRC_TOUCH) == 0, "ordinary confirmation cannot stand in for a missing parent PIN");
+    quiet(); counters(); CHECK(minutes == 0, "SetKid cannot change time without a parent PIN");
+    set_parent_pin("", "24681357"); change("member.time_set", "{\"id\":\"kid\",\"minutes\":2}");
+    set_parent_pin("24681357", ""); CHECK(!ink_member_any_pin(), "remove the only parent PIN through the real member service");
+    CHECK(ink_member_switch("kid") == 0, "return to the child's timed space"); quiet();
+    delay_ms(121000); CHECK(WAIT_FOR(page("KidTimeUp"), 8000), "no-PIN fixture reaches KidTimeUp");
+    touch("爸爸妈妈加时间"); no_pin_notice();
+    CHECK(call_as("member.time_add", "{\"minutes\":15}", INK_SRC_CONFIRMED) && g_rc.status == INK_RC_REJECTED, "no-PIN notice keeps additions denied");
+    counters(); CHECK(extra == 0 && ink_member_time_up(), "the no-PIN explanation grants no extra time");
+    capture("NoPinTimeUp");
+}
 static void run(void *arg) {
     (void)arg; ink_power_hold(INK_NEED_AWAKE); ink_power_hold(INK_NEED_NO_LOCK); quiet();
     if (!strcmp(phase, "limit")) limit(); else if (!strcmp(phase, "restart")) restart(); else if (!strcmp(phase, "blocked")) blocked(); else if (!strcmp(phase, "control")) control();
+    else if (!strcmp(phase, "settings")) settings(); else if (!strcmp(phase, "no-pin")) no_pin();
     else CHECK(false, "unknown phase");
     ink_probe_count("test.finished");
 }

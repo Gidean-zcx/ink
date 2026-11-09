@@ -10,6 +10,7 @@
 #include "ink/sys/power.h"
 #include "ink/sys/state.h"
 #include "pinpad.h"
+#include "member_pages.h"
 #include "shell_card.h"
 #include "ink/ui_shell.h"
 
@@ -59,6 +60,7 @@ static const char *title_text(void) {
 }
 
 static const char *notice_text(void) {
+    if (!strncmp(C.now.cap, "member.time_", 12) && !ink_member_any_pin()) return INK_PARENT_PIN_MISSING;
     if (C.page + 1 != C.pages) return "请翻完说明，再决定是否继续。";
     if (C.now.parent) return "需要大人的密码确认。";
     if (!strcmp(C.now.cap, "call.dial")) return "不确认就不会打。";
@@ -125,8 +127,8 @@ static void on_answer(lv_event_t *e) {
 static int snapshot(char *buf, size_t cap) {
     int64_t pending = 0;
     ink_state_get_int(ink_state_find("confirm.pending"), &pending);
-    int n = snprintf(buf, cap, "页面=%s；家人=%s；确认编号=%u；%s：%s。%s。阅读=%d/%d；排队=%lld；可确认=%d；%s。动作：%s。",
-                     page_name(), C.owner.member, (unsigned)C.now.token, C.expired ? "这件事没有做" : "等你确认", title_text(), C.now.detail,
+    int n = snprintf(buf, cap, "页面=%s；家人=%s；确认编号=%u；%s：%s。%s。%s。阅读=%d/%d；排队=%lld；可确认=%d；%s。动作：%s。",
+                     page_name(), C.owner.member, (unsigned)C.now.token, C.expired ? "这件事没有做" : "等你确认", title_text(), C.now.detail, notice_text(),
                      C.page + 1, C.pages, (long long)pending, !C.expired && !C.pad && C.read && C.page + 1 == C.pages,
                      C.pad ? "需要大人在设备上输入密码；密码内容不可见" : C.expired ? "已经过期，请重新发起" : "只能由你确认或取消",
                      C.expired ? "confirm.page（delta=0，关闭说明，只由人在设备上操作）" : "confirm.withdraw");
@@ -214,7 +216,7 @@ static void fit_to_words(void) {
     lv_obj_set_height(C.card.body, ink_ui_px(words_h));
 }
 static int notice_y(void) { return C.head_h + C.preview_h + INK_GAP_S; }
-static int pager_y(void) { return notice_y() + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_S; }
+static int pager_y(void) { return notice_y() + ink_ui_text_height(notice_text(), INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_CANVAS_W - 2 * INK_MARGIN) + INK_GAP_S; }
 
 static void paginate(void) {
     lv_obj_update_layout(C.card.body);

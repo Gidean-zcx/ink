@@ -120,7 +120,7 @@ static void draw(void) {
     lv_obj_remove_flag(ink_shell_statusbar(P.card.panel, true), LV_OBJ_FLAG_CLICKABLE);
     if (P.mode == FORGOT) {
         ink_ui_circle(P.card.panel, "back", INK_MARGIN, INK_STATUS_BAR, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_STATIC, clicked, "shell.pin_cancel");
-        ink_ui_label(P.card.panel, "忘记密码", INK_FONT_TITLE, INK_WEIGHT_BOLD, INK_MARGIN + INK_CONTROL + INK_GAP, INK_STATUS_BAR + INK_GAP, w - INK_CONTROL - INK_GAP);
+        ink_ui_label(P.card.panel, ink_member_any_pin() ? "忘记密码" : "还没有密码", INK_FONT_TITLE, INK_WEIGHT_BOLD, INK_MARGIN + INK_CONTROL + INK_GAP, INK_STATUS_BAR + INK_GAP, w - INK_CONTROL - INK_GAP);
         ink_ui_circle(P.card.panel, "lock", (INK_CANVAS_W - INK_CIRCLE_LARGE) / 2, INK_CANVAS_H / 2 - INK_CIRCLE_LARGE,
             INK_CIRCLE_LARGE, INK_ICON_STATE, INK_SURFACE_STATIC, NULL, NULL);
         center("请家长验证", INK_FONT_SUBTITLE, INK_CANVAS_H / 2 + INK_GAP_L, true);
@@ -218,7 +218,7 @@ static void action(ink_call_t *c) {
         erase(P.pin, sizeof P.pin); P.mode = FORGOT; P.retry_us = 0;
         snprintf(P.status, sizeof P.status, "先请家长输入密码。忘记密码后的重置还未接通。"); draw();
     } else if (!strcmp(id, "shell.pin_parent") && P.mode == FORGOT) {
-        if (!ink_member_any_pin()) { snprintf(P.status, sizeof P.status, "还没有家长密码，请在家庭服务器处理。"); draw(); return; }
+        if (!ink_member_any_pin()) { snprintf(P.status, sizeof P.status, INK_PARENT_PIN_MISSING); draw(); return; }
         P.mode = PARENT; snprintf(P.status, sizeof P.status, "请家长本人输入"); draw();
     } else c->rc.status = INK_RC_REJECTED;
 }
@@ -251,6 +251,6 @@ int ink_member_pages_init(void) {
 
 void ink_shell_member_parent_open(uint32_t token, const char *why) {
     if (P.busy) return;
-    close_page(); P.mode = PARENT; P.parent_token = token; P.retry_us = 0;
-    snprintf(P.name, sizeof P.name, "家长"); snprintf(P.status, sizeof P.status, "%s", why); draw();
+    close_page(); P.mode = ink_member_any_pin() ? PARENT : FORGOT; P.parent_token = token; P.retry_us = 0;
+    snprintf(P.name, sizeof P.name, "家长"); snprintf(P.status, sizeof P.status, "%s", ink_member_any_pin() ? why : INK_PARENT_PIN_MISSING); draw();
 }
