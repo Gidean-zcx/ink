@@ -7,12 +7,13 @@
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
 | 1 | 【实测】通过 | 1,048,560 字节；同输入逐字节一致；四份 MIT 许可证随词库分发 | `python tools/imedict/build_base.py --cache build-deps/imedict --out work/base.ikd` |
-| 2 | 部分完成 | 【实测】90 项质量：首选 75/90，前五 83/90；兜底均 16/90；普通全量 287/287，一行样式缩简后专项 17/17；内存检查进行中 | `ctest --test-dir build -j2 --output-on-failure`；专项加 `-R 'ime-lexicon\|integration-text\|ui-scene.*Ime'` |
+| 2 | 【实测】通过 | 90 项质量：首选 75/90，前五 83/90；兜底均 16/90；普通全量 287/287、最终代码 ASan/UBSan 全量 287/287，均无跳过；最终专项 17/17 | `ctest --test-dir build -j2 --output-on-failure`；内存检查换 `build-asan`；专项命令见下文 |
 | 3 | 【实现】通过 | 来源、锁定哈希、频率裁剪、人工短语、多音字与简拼局限见 [工具说明](../../../tools/imedict/README.md) | 见说明中的复现命令 |
 
 ## 没做到的
 
-- ASan/UBSan 尚在进行；不宣称内存检查通过。
+- 没有做实机加载或 Linux 实测；本次证据限 macOS 模拟器，没有运行远端 CI。
+- 生僻词、新词、未覆盖的多音字和简拼冲突仍有缺口，详见下文；没有任意短句自动组句。超过五字的长候选展开排版未逐项验证。
 
 ## 和设计不一致的
 
@@ -43,10 +44,10 @@
 | 正式词库 | 75/90（83.33%） | 83/90（92.22%） | 879.95 ms | 1,048,560 字节 |
 | 19 字兜底 | 16/90（17.78%） | 16/90（17.78%） | 29.95 ms（未找到文件） | 0 字节 |
 
-- 计时含后台排队、读卡与校验，20 ms 轮询，单次样本，排除键盘绘制；PSRAM 数字不含分配器元数据和其他文本缓冲。全部是模拟器证据，未上机。
+- 计时为默认 annotated CPU 档案的虚拟时间，20 ms 轮询，单次样本，排除键盘绘制。后台排队、读卡和校验确实执行，CRC 沿用平台的 `crc32.byte` 成本标注；键表/词表校验循环未单独标注 CPU 开销，不能外推为实机加载耗时。PSRAM 数字不含分配器元数据和其他文本缓冲。未上机。
 - 测试集手写，部分与人工词表重合，不代表真实输入分布。全拼 73 条：71 条首选、73 条前五；简拼 16 条：4 条首选、10 条前五；另 1 条未收录短句两者都未命中。
 - 简拼的前五缺口：`nh`→你好、`xx`→谢谢、`dx`→短信、`nz`→闹钟、`yy`→音乐、`sz`→设置；“你好”在 `nh` 第 9，测试确实通过公共文本服务选中并提交它。其余生僻词、新词、低频专名受裁剪影响，未收录多音词可能读错，不提供任意短句组句。
-- 【实测】反向对照：不改二进制，只移走词库后，正式验收退出 1、`test.fail=3`；恢复词库通过。候选栏修复前全量的普通/大字/儿童 `ImePinyin` 三项都报“今天”裁切，修复后原断言三项通过。
+- 【实测】反向对照：不改二进制，只移走词库后，正式验收退出 1、`test.fail=3`；恢复词库通过。另实际撤掉一行候选样式修复并重编译，普通/大字/儿童 `ImePinyin` 三项全部报“今天”裁切（CTest 退出 8）；原样恢复源文件、重建后专项 17/17、退出 0。证据为 `work/ime-ui-negative.json` 和 `work/ime-ui-negative.log`。
 
 ## 为什么不能更小
 
@@ -54,7 +55,7 @@
 
 ## 架构审视
 
-- 【实现】电脑端处理数据、模拟器和设备沿用同一引擎与读卡接口；无系统层引用模拟器头文件。候选预览仅在 UI 任务测量宽度，按钮和 AI 继续共用文本能力，已有快照只列实际可见候选；没有新增权限路径或成员数据。
+- 【实现】电脑端处理数据、模拟器和设备沿用同一引擎与读卡接口；无系统层引用模拟器头文件。候选按钮由 UI 任务按原有内容宽度排版，按钮和 AI 继续共用文本能力，已有快照只列实际可见候选；没有新增权限路径或成员数据。
 
 ## 新增的机制
 
@@ -63,4 +64,22 @@
 
 ## 要改的文档
 
-- 待核对；本任务不修改共享文档。
+- 主会话合并时更新 `docs/tasks/backlog.md`、`docs/system/ui-dependencies.md` 的正式词库状态，以及 `docs/system/system-services-design.md` §9.2、§15 的“来源待定/正式词库未做”描述。这里不修改这些文档。
+
+## 验证记录
+
+- 普通构建为 macOS Apple clang、`INK_WERROR=ON`、`taskpolicy -c utility`、`-j2`；全量 287/287，446.74 秒，无跳过。最终一行样式缩简后补跑输入法/键盘专项 17/17。
+- 中枢依赖另指定 `-DINK_HUB_PYTHON=$INK_DEPS/hub/.venv/bin/python`；测试时 `PYTHONPATH="$PWD/hub"`，已核对导入的是当前检出，不修改依赖目录。
+- ASan/UBSan 同样以 `INK_WERROR=ON`、`-j2` 构建，加 `INK_SANITIZE=ON`；最终代码全量 287/287，464.10 秒，无跳过。日志为 `work/full-tests.log`、`work/asan-tests.log`；撤回/恢复后最后一次普通专项 17/17，4.99 秒。
+- 正常与 ASan 构建生成的词库逐字节一致。完整质量证据保留在 `build/ime-lexicon-*/summary.json` 和 `dictionary-candidates.json`（含 `load_ms` 的最终测量）；重跑时加 `INK_KEEP_EVIDENCE=1`。
+- 【实测】按总规则 §6 对基线到 HEAD 的差异执行隐私扫描：0 行匹配，grep 退出 1（无匹配）；`git diff --check` 与两份新增 Markdown 的相对链接检查通过。差异共 15 个相关文件，无词库二进制、原始语料、设计稿、构建产物或共享文档夹带。只提交到本地分支。
+
+复现时先按[总规则](../codex-rules.md) §5 配置两个构建目录，构建并行度改为 `-j2`；两者都加上上述 `INK_HUB_PYTHON` 参数。然后执行：
+
+```sh
+PYTHONPATH="$PWD/hub" taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
+PYTHONPATH="$PWD/hub" taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2 -R 'ime-lexicon|integration-text|ui-scene.*Ime'
+```
+
+候选栏反向对照：将唯一一行候选按钮的 `flex_grow` 临时恢复为基线的 `K.expanded ? 0 : 1`，重建 `sim-ui-scenes`，执行 `ctest --test-dir build --output-on-failure -j2 -R '^ui-scene(-big|-child)?-ImePinyin$'`；验证三项失败后恢复为 `0` 并重建，补跑上面的专项。未改变已有测试期望。

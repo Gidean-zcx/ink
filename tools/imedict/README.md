@@ -41,7 +41,7 @@ content/.system/ime/pinyin-data-MIT.txt
 content/.system/ime/phrase-pinyin-data-MIT.txt
 ```
 
-即将 `build/test-content/.system/ime/` 整个目录复制到卡的 `content/.system/ime/`。这里的 `/content` 是设备挂载路径，不能再多套一层 `test-content`。模拟器使用 `--content build/test-content`。本任务没有接触设备或写卡。
+即将 `build/test-content/.system/ime/` 整个目录复制到卡的 `content/.system/ime/`。设备看到的逻辑路径为 `/content/.system/ime/base.ikd`，不能再多套一层 `test-content`。模拟器使用 `--content build/test-content`。本任务没有接触设备或写卡。
 
 第一次需要词库时仍由现有后台执行器读入 PSRAM，内存紧张时可回收；坏文件或缺卡仍走 19 字兜底表。`build/mini-content` 单独保留原有引擎顺序测试的人工小词表。
 
