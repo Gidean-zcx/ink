@@ -2,8 +2,12 @@
 #ifndef INK_UI_SHELL_H
 #define INK_UI_SHELL_H
 #include "ink/ui_theme.h"
+#include "ink/sys/cap.h"
 
 int ink_shell_init(void);
+int ink_boot_flow_init(void);
+void ink_boot_flow_resume(void);
+bool ink_boot_flow_launch(ink_call_t *call);
 void ink_ui_stage_next(void);
 const char *ink_ui_action_page(void);
 void ink_shell_keyboard_area(lv_area_t *area);

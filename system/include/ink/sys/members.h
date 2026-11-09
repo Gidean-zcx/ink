@@ -28,6 +28,8 @@ typedef struct {
 
 /** Publish member.current (after the state table started); read the table if the data store is up. */
 void ink_members_init(void);
+/** Saved membership exists or could not be read; the in-memory first-boot placeholders do not count. */
+bool ink_members_configured(void);
 /** The capabilities and the lock grace watch: after the data store, the power service and the settings. */
 int ink_members_start(void);
 const ink_member_t *ink_member_current(void);

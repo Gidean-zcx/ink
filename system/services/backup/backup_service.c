@@ -1381,9 +1381,13 @@ static void result(ink_call_t *c, bool include_items) {
     ink_jw_str(&w, B.j.reason);
     ink_jw_raw(&w, ",\"restart_required\":");
     ink_jw_raw(&w, B.j.phase == PH_DONE ? "true" : "false");
-    if (include_items && B.m) {
+    if (B.m) { /* the summary: a fixed-size JSON reader cannot hold a long item list */
         ink_jw_raw(&w, ",\"created_s\":");
         ink_jw_int(&w, B.m->created_s);
+        ink_jw_raw(&w, ",\"item_count\":");
+        ink_jw_int(&w, B.m->count);
+    }
+    if (include_items && B.m) {
         ink_jw_raw(&w, ",\"items\":[");
         for (unsigned i = 0; i < B.m->count; i++) {
             item_t *it = &B.m->item[i];
@@ -1444,10 +1448,12 @@ static void cap_manifest(ink_call_t *c) {
     }
     bool preview = B.j.phase == PH_PREPARE || B.j.phase == PH_PREVIEW || B.j.phase == PH_CHECK ||
                    B.j.phase == PH_RESTORE || B.j.phase == PH_DONE || (B.j.phase == PH_FAILED && B.j.preview[0]);
+    bool summary = false;
+    ink_args_get_bool(&c->args, "summary", &summary);
     if (!resources() || load_manifest(preview ? "preview" : "manifest", !preview))
         c->rc.status = INK_RC_FAILED;
     else
-        result(c, true);
+        result(c, !summary);
     free_resources();
     ink_fs_card_release();
 }
@@ -1575,6 +1581,10 @@ static void cap_apply(ink_call_t *c) {
     ink_fs_card_release();
 }
 
+#define SUMMARY_INPUT                                                                                                   \
+    "{\"type\":\"object\",\"properties\":{\"summary\":{\"type\":\"boolean\",\"description\":\"只要创建时间和条目数，" \
+    "不要条目列表\"}}}"
+
 static const ink_cap_t CAPS[] = {
     {.id = "backup.status",
      .title = "查看这位成员的备份、上传回执和恢复进度",
@@ -1584,6 +1594,7 @@ static const ink_cap_t CAPS[] = {
      .run = cap_status},
     {.id = "backup.manifest",
      .title = "查看备份清单、覆盖项目和未恢复项目",
+     .input = SUMMARY_INPUT,
      .effect = INK_FX_READ,
      .child_ok = true,
      .exec = INK_EXEC_BG,
@@ -1597,6 +1608,7 @@ static const ink_cap_t CAPS[] = {
      .run = cap_backup},
     {.id = "restore.preview",
      .title = "预览恢复这位成员的备份和将被替换的资料",
+     .input = SUMMARY_INPUT,
      .effect = INK_FX_READ,
      .child_ok = true,
      .exec = INK_EXEC_BG,

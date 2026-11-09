@@ -142,7 +142,7 @@ static void run(void *unused) {
 }
 
 void ink_main(void) {
-    product_main();
+    product_main(); test_start_home();
     osal_task_cfg_t cfg = {.name = "catalogue-policy", .fn = run, .stack_bytes = 16384,
         .priority = OSAL_PRIO_NORMAL, .core = -1, .flags = OSAL_TASK_STACK_EXTERNAL};
     REQUIRE(osal_task_create(&cfg, NULL) == OSAL_OK);

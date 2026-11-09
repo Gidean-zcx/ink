@@ -23,7 +23,8 @@ const char *ink_textfield_text(lv_obj_t *field);
  * Declarations live until widget deletion; spec->value borrows its live buffer.
  * Touch invokes focus_action through F1; its capability calls short_focus().
  * VALUE_CHANGED and entered report the same edits for touch and AI text.insert.
- * Call before focusing. Long text, forms and secret fields use other hosts. */
+ * Call before focusing. Passwords require secret=true and ai_hidden=true;
+ * the input service allows only the person to edit or submit them. */
 int ink_textfield_bind_short(lv_obj_t *field, const ink_ui_page_spec_t *page,
                              ink_ui_field_spec_t *spec, const ink_ui_action_spec_t *focus_action);
 int ink_textfield_short_focus(lv_obj_t *field);

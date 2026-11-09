@@ -196,6 +196,7 @@ add_library(ink_system STATIC
   system/services/update/update_service.c
   system/ui/shell/update_card.c
   system/ui/shell/power_menu.c
+  system/ui/shell/boot_flow.c
   system/ui/shell/off_picture.c
   system/services/time/time_caps.c
   system/services/notify/notify_service.c
@@ -563,6 +564,14 @@ add_test(NAME ui-input-host
     --script ${CMAKE_SOURCE_DIR}/tests/ui_input_host.script --budget ${CMAKE_SOURCE_DIR}/tests/ui_scene.budget.json
     --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT} --out ${CMAKE_BINARY_DIR}/test-out/ui-input-host --quiet --no-random-outages)
 ink_sim_executable(sim-ui-cards tests/ui_cards.c)
+ink_sim_executable(sim-boot-flow tests/boot_flow.c)
+ink_sim_executable(sim-configured tests/configured_boot.c)
+target_link_libraries(sim-configured PRIVATE ink_apps ink_system)
+target_link_libraries(sim-boot-flow PRIVATE ink_apps ink_system)
+add_test(NAME boot-flow COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/boot_flow_check.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(boot-flow PROPERTIES TIMEOUT 200)
+add_test(NAME boot-flow-reboot COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/boot_flow_reboot.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(boot-flow-reboot PROPERTIES TIMEOUT 200)
 target_link_libraries(sim-ui-cards PRIVATE ink_apps ink_system)
 add_test(NAME ui-cards
   COMMAND sim-ui-cards --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
@@ -863,7 +872,7 @@ add_test(NAME determinism
 # System scenarios: the real system on simulated devices, judged by budgets.
 function(ink_scenario name profile)
   add_test(NAME scenario-${name}-${profile}
-    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/${profile}.json
+    COMMAND sim-configured --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/${profile}.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/${name}.script
             --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/${name}.budget.json
             --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
@@ -874,7 +883,7 @@ ink_scenario(home_basic metalio-plus-psram16)
 # Panel power safety (D-41): the board driver against the PMIC model must flag a VCOM that differs
 # from the panel's (here a panel labelled 1.50 V while the board drives 1.20 V).
 add_test(NAME selftest-panel-vcom-mismatch
-  COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+  COMMAND sim-configured --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
           --script ${CMAKE_SOURCE_DIR}/tests/scenarios/home_basic.script
           --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
           --out ${CMAKE_BINARY_DIR}/test-out/selftest-vcom --no-random-outages --panel-vcom-mv 1500 --end 8s)
@@ -1080,63 +1089,63 @@ if(INK_HAVE_FONTS)
   # The spoken answer over a pessimistic LTE link does not depend on one lucky run: seeds where a shorter prebuffer cut into it.
   foreach(seed 26 29)
     add_test(NAME scenario-ai_ask-metalio-plus-seed-${seed}
-      COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+      COMMAND sim-configured --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
               --script ${CMAKE_SOURCE_DIR}/tests/scenarios/ai_ask.script
               --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/ai_ask.budget.json
               --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT} --seed ${seed}
               --out ${CMAKE_BINARY_DIR}/test-out/ai_ask-seed-${seed} --quiet --no-random-outages)
   endforeach()
   add_test(NAME scenario-ai_mic_unavailable-metalio-plus
-    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+    COMMAND sim-configured --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/ai_mic_unavailable.script
             --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/ai_mic_unavailable.budget.json
             --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
             --out ${CMAKE_BINARY_DIR}/test-out/ai_mic_unavailable-metalio-plus --quiet --trace --frames --no-random-outages
             --i2c-faults 1.0:io-expander)
   add_test(NAME scenario-reader_empty-metalio-plus
-    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+    COMMAND sim-configured --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/reader_empty.script
             --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/reader_empty.budget.json
             --assets ${INK_ASSETS_DIR} --content ${CMAKE_SOURCE_DIR}/tests/fixtures/content-bad
             --out ${CMAKE_BINARY_DIR}/test-out/reader_empty-metalio-plus --quiet --trace --frames --no-random-outages)
   # PQ-BN direct drive (research PR #7) on the same scenarios and budgets, plus its flash pause
   add_test(NAME scenario-reader_basic-metalio-plus-pqbn
-    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus-pqbn.json
+    COMMAND sim-configured --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus-pqbn.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/reader_basic.script
             --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/reader_basic.pqbn.budget.json
             --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
             --out ${CMAKE_BINARY_DIR}/test-out/reader_basic-metalio-plus-pqbn --quiet --trace --frames --no-random-outages)
   ink_scenario(ai_ask metalio-plus-pqbn)
   add_test(NAME scenario-pqbn_flash_pause-metalio-plus-pqbn
-    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus-pqbn.json
+    COMMAND sim-configured --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus-pqbn.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/pqbn_flash_pause.script
             --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/pqbn_flash_pause.budget.json
             --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
             --out ${CMAKE_BINARY_DIR}/test-out/pqbn_flash_pause --quiet --trace --no-random-outages)
   # requests about the screen: content version and retries (audit F-6)
   add_test(NAME scenario-ai_page_version-metalio-plus
-    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+    COMMAND sim-configured --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/ai_page_version.script
             --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/ai_page_version.budget.json
             --hub ${CMAKE_SOURCE_DIR}/tests/scenarios/ai_page_version.hub.json
             --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
             --out ${CMAKE_BINARY_DIR}/test-out/ai_page_version-metalio-plus --quiet --trace --frames --no-random-outages)
   add_test(NAME scenario-remote_browse-metalio-plus
-    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+    COMMAND sim-configured --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/remote_browse.script
             --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/remote_browse.budget.json
             --hub ${CMAKE_SOURCE_DIR}/tests/scenarios/remote_browse.hub.json
             --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
             --out ${CMAKE_BINARY_DIR}/test-out/remote_browse-metalio-plus --quiet --trace --frames --no-random-outages)
   add_test(NAME scenario-remote_reconnect-metalio-plus
-    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+    COMMAND sim-configured --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/remote_reconnect.script
             --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/remote_reconnect.budget.json
             --hub ${CMAKE_SOURCE_DIR}/tests/scenarios/remote_browse.hub.json
             --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
             --out ${CMAKE_BINARY_DIR}/test-out/remote_reconnect-metalio-plus --quiet --trace --frames --no-random-outages)
   add_test(NAME scenario-ai_tools-metalio-plus
-    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+    COMMAND sim-configured --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/ai_tools.script
             --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/ai_tools.budget.json
             --hub ${CMAKE_SOURCE_DIR}/tests/scenarios/ai_tools.hub.json
@@ -1144,14 +1153,14 @@ if(INK_HAVE_FONTS)
             --out ${CMAKE_BINARY_DIR}/test-out/ai_tools-metalio-plus --quiet --trace --frames --no-random-outages)
   # Power cut in the middle of a position save, reboot from the torn flash image.
   add_test(NAME scenario-powercut-during-save
-    COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:ink-sim>
+    COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:sim-configured>
             -DPROFILE=${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
             -DOUT=${CMAKE_BINARY_DIR}/test-out/powercut -DSRC=${CMAKE_SOURCE_DIR}/tests/scenarios
             -DASSETS=${INK_ASSETS_DIR} -DCONTENT=${INK_TEST_CONTENT}
             -P ${CMAKE_SOURCE_DIR}/tests/scenarios/powercut.cmake)
   # The real system must be bit-for-bit deterministic too (budgets compare single runs).
   add_test(NAME determinism-reader
-    COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:ink-sim>
+    COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:sim-configured>
             -DPROFILE=${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
             -DSCRIPT=${CMAKE_SOURCE_DIR}/tests/scenarios/reader_basic.script
             -DOUT=${CMAKE_BINARY_DIR}/test-out/determinism-reader
@@ -1159,7 +1168,7 @@ if(INK_HAVE_FONTS)
             -P ${CMAKE_SOURCE_DIR}/tests/simulator/determinism.cmake)
   # Same reader on the upstream display pipeline (timing comparison; lenient budget).
   add_test(NAME scenario-reader_basic-upstream-pipeline
-    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus-upstream-display.json
+    COMMAND sim-configured --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus-upstream-display.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/reader_basic.script
             --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/upstream_pipeline.budget.json
             --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
@@ -1173,7 +1182,7 @@ if(INK_HAVE_FONTS)
             -P ${CMAKE_SOURCE_DIR}/tests/scenarios/aged_image.cmake)
   set_tests_properties(fixture-aged-user-image PROPERTIES FIXTURES_SETUP aged_user)
   add_test(NAME scenario-reader_basic-aged-flash-max
-    COMMAND ${CMAKE_COMMAND} -DMODE=run -DSIM=$<TARGET_FILE:ink-sim>
+    COMMAND ${CMAKE_COMMAND} -DMODE=run -DSIM=$<TARGET_FILE:sim-configured>
             -DPROFILE=${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
             -DIMAGE=${CMAKE_BINARY_DIR}/test-out/aged-user.img -DOUT=${CMAKE_BINARY_DIR}/test-out/reader_basic-aged
             -DSCRIPT=${CMAKE_SOURCE_DIR}/tests/scenarios/reader_basic.script
@@ -1185,7 +1194,7 @@ if(INK_HAVE_FONTS)
   # Shared-bus faults on the panel power path (D-41): 2 % of hal_i2c transfers time out, as one did on
   # the device in phase 0; the driver must recover by its retries and never scan an unpowered panel.
   add_test(NAME scenario-reader_basic-panel-power-faults
-    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+    COMMAND sim-configured --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/reader_basic.script
             --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/panel_power_faults.budget.json
             --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
@@ -1194,7 +1203,7 @@ if(INK_HAVE_FONTS)
 endif()
 # The panel supply never comes up: every refresh fails (ok = false) instead of pretending.
 add_test(NAME scenario-home-panel-power-dead
-  COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+  COMMAND sim-configured --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
           --script ${CMAKE_SOURCE_DIR}/tests/scenarios/home_basic.script
           --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/panel_power_dead.budget.json
           --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
@@ -1202,7 +1211,7 @@ add_test(NAME scenario-home-panel-power-dead
 # Portability smoke runs: same system, other panels/classes (budget: no panic, input works)
 foreach(p pinenote-rk3566 desktop-lcd metalio-plus-pqbn)
   add_test(NAME portability-home-${p}
-    COMMAND ink-sim --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/${p}.json
+    COMMAND sim-configured --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/${p}.json
             --script ${CMAKE_SOURCE_DIR}/tests/scenarios/home_basic.script
             --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/portability.budget.json
             --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}

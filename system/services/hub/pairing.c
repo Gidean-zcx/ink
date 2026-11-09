@@ -686,6 +686,7 @@ static void event_job(void *arg) {
                 valid = (code[i] >= 'A' && code[i] <= 'Z') || (code[i] >= '2' && code[i] <= '9');
             if (valid && ink_json_int(j, ink_json_find(j, obj, "expires_s"), &seconds) && seconds > 0 &&
                 seconds <= 600) {
+                bool already_pairing = s->state == INK_PAIR_PAIRING;
                 if (s->state == INK_PAIR_UNPAIRED) {
                     s->state = INK_PAIR_PAIRING;
                     if (!store_identity(s)) goto done;
@@ -694,6 +695,7 @@ static void event_job(void *arg) {
                 memcpy(P.code, code, sizeof code);
                 P.expires = osal_now_us() + (uint64_t) seconds * 1000000;
                 unlock();
+                if (already_pairing) publish();
             }
         }
     } else if (e->kind == PE_OFFER && obj >= 0) {
@@ -835,7 +837,7 @@ static void cap_hotspot(ink_call_t *c) {
         /* The Wi-Fi QR payload is handed to the owner's UI only. */
         char result[128];
         snprintf(result, sizeof result, "{\"wifi_qr\":\"WIFI:T:WPA;S:ink-setup;P:%s;;\"}", password);
-        if (c->src == INK_SRC_TOUCH || c->src == INK_SRC_KEY) ink_cap_result(c, result);
+        if (c->src == INK_SRC_TOUCH || c->src == INK_SRC_KEY || c->src == INK_SRC_SYSTEM) ink_cap_result(c, result);
         memset(password, 0, sizeof password);
     } else
         hal_provision_stop();
