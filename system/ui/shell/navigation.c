@@ -84,6 +84,8 @@ static struct {
     int64_t cards_rev;
     uint64_t cards_at;
     bool cards_ok;
+    char kid_time[80];
+    lv_obj_t *kid_time_label;
 } N INK_PSRAM_BSS;
 static void draw_page_body(void);
 static void draw_home_content(void);
@@ -96,6 +98,7 @@ static void icon_bind(lv_obj_t *obj, const char *id);
 static void icon_event(lv_event_t *e);
 static bool icon_close(void);
 static int today_init(void);
+static void kid_today_model(void);
 static void kid_volume_mark(lv_obj_t *slider, int top);
 
 static bool current_session(uint32_t epoch) {
@@ -134,6 +137,40 @@ static int width(void) {
 }
 static bool child(void) {
     return ink_member_current()->role == INK_ROLE_CHILD;
+}
+static bool kid_app_visible(const char *id) {
+    if (!strcmp(id, "settings") || !strcmp(id, "files") || !strcmp(id, "remote")) return false;
+    if (ink_member_time_up()) return !strcmp(id, "phone") || !strcmp(id, "message");
+    for (int i = 0; i < ink_app_count(); i++) {
+        const ink_app_def_t *app = ink_app_at(i);
+        if (strcmp(app->id, id)) continue;
+        if (!app->entry || !ink_app_visible(app)) return false;
+        for (const char *const *need = app->needs; need && *need; need++)
+            if (!ink_cap_ai_callable(ink_cap_find(*need))) return false;
+        return true;
+    }
+    return !strcmp(id, "ai") && ink_cap_ai_callable(ink_cap_find("shell.ai_home"));
+}
+static void kid_time_reply(void *ctx, const ink_receipt_t *rc) {
+    if (!current_session((uint32_t)(uintptr_t)ctx) || !child() || rc->status != INK_RC_DONE || !rc->result) return;
+    ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
+    int64_t minutes = 0, extra = 0, used = 0;
+    bool ok = j && ink_json_parse(j, rc->result, strlen(rc->result)) == 0 &&
+        ink_json_int(j, ink_json_find(j, 0, "minutes"), &minutes) &&
+        ink_json_int(j, ink_json_find(j, 0, "extra_minutes"), &extra) &&
+        ink_json_int(j, ink_json_find(j, 0, "used_seconds"), &used);
+    osal_free(j);
+    if (!ok) return;
+    int64_t left = (minutes + extra) * 60 - used;
+    if (!minutes) snprintf(N.kid_time, sizeof N.kid_time, "今天不限时");
+    else snprintf(N.kid_time, sizeof N.kid_time, "今天还能用 %lld 分钟", (long long)(left > 0 ? (left + 59) / 60 : 0));
+    if (N.kid_time_label) lv_label_set_text(N.kid_time_label, N.kid_time);
+    ink_ui_content_changed();
+}
+static void kid_time_read(void) {
+    ink_call_opts_t opts = {.src = INK_SRC_SYSTEM, .reply_exec = INK_EXEC_UI, .done = kid_time_reply,
+        .ctx = (void *)(uintptr_t)N.epoch, .member = ink_member_current()->id};
+    ink_cap_call("member.time_get", NULL, &opts);
 }
 static int64_t integer(const char *id) {
     int64_t v = 0;
@@ -337,6 +374,7 @@ static void read_cards(void) {
     }
     N.today = (ink_ui_page_spec_t){"home", "今日", {"app.cards", (uint32_t)N.cards_rev}, N.card_fields, 5, N.card_actions, 5};
     today_model();
+    if (child()) kid_today_model();
     ink_probe_count("home.cards_updates");
 }
 
@@ -389,6 +427,7 @@ static bool matches(const char *title, const char *id) {
 }
 static void tile(lv_obj_t *parent, const char *id, const char *title, const char *icon, int col, int row, int y,
                  bool compact) {
+    if (child() && !kid_app_visible(id)) return;
     if (N.home_page == 2 && !matches(title, id)) return;
     int cell = width() / 4, d = compact ? INK_CIRCLE : INK_CIRCLE_APP;
     int x = INK_MARGIN + col * cell + (cell - d) / 2;
@@ -426,6 +465,7 @@ static int tools(tool_t out[24]) {
         if (!strcmp(a->id, "phone")) continue; /* Already in the contact group. */
         if (!strcmp(a->id, "memo")) continue; /* Already in the memo/contact group. */
         if (!strcmp(a->id, "upcoming")) continue; /* The calendar is 接下来 in the same group. */
+        if (child() && (!strcmp(a->id, "listen") || !strcmp(a->id, "news") || !strcmp(a->id, "word"))) continue;
         out[count++] = (tool_t){a->id, a->title, a->icon ? a->icon : INK_UI_ICON(grid)};
     }
     static const tool_t MORE[] = {{"clock", "时钟", INK_UI_ICON(clock)},     {"camera", "相机", INK_UI_ICON(camera)},
@@ -472,6 +512,7 @@ static int apps_walk(bool draw, tile_list_t *list) {
         int total = 0;
         for (int k = 0; k < (g < 2 ? 4 : count); k++) {
             tool_t t = g < 2 ? (tool_t){GROUP_IDS[g][k], GROUP_TITLES[g][k], GROUP_ICONS[g][k]} : items[k];
+            if (child() && !kid_app_visible(t.id)) continue;
             if (matches(t.title, t.id)) shown[total++] = t;
         }
         for (int i = 0; i < total; i += 4) {
@@ -518,6 +559,7 @@ static void draw_home_content(void) {
         }
     }
     N.clock = N.date = N.message = NULL;
+    N.kid_time_label = NULL;
     lv_obj_clean(N.content);
     char clock[16], date[96];
     ink_shell_time_strings(clock, sizeof clock, date, sizeof date);
@@ -526,6 +568,8 @@ static void draw_home_content(void) {
     int page_top = INK_GAP_S;
     if (N.home_page == 1) {
         int call_offset = ink_activity_home_offset();
+        bool kid_idle = child() && !call_offset;
+        if (kid_idle) call_offset -= INK_BLOCK;
         N.date = ink_ui_label(N.content, date, INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_MARGIN, INK_BLOCK + call_offset, width());
         lv_obj_set_style_text_align(N.date, LV_TEXT_ALIGN_CENTER, 0);
         N.clock = ink_ui_label(N.content, clock, INK_FONT_CLOCK, INK_WEIGHT_REGULAR, INK_MARGIN,
@@ -533,6 +577,7 @@ static void draw_home_content(void) {
         lv_obj_set_style_text_align(N.clock, LV_TEXT_ALIGN_CENTER, 0);
         char text[160];
         snprintf(text, sizeof text, "%s", has_book ? card.text : "还没有读到一半的书");
+        if (child() && has_book) snprintf(text, sizeof text, "继续读 %s", card.text);
         int y = INK_BLOCK + call_offset + ink_ui_line_height(INK_FONT_LIST) + ink_ui_line_height(INK_FONT_CLOCK) + INK_GAP_M;
         if (!ink_activity_home_draw(N.content, y)) {
         lv_obj_t *resume = ink_ui_box(N.content, INK_MARGIN + INK_GAP_L, y, width() - 2 * INK_GAP_L, INK_CONTROL, -1,
@@ -543,12 +588,19 @@ static void draw_home_content(void) {
                     width() - 3 * INK_GAP_L - INK_ICON_MEDIUM - 2 * INK_GAP_M);
         ink_shell_bind(resume, "shell.resume", NULL);
         }
+        if (kid_idle) {
+            N.kid_time_label = ink_ui_line(N.content, N.kid_time, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN,
+                y + INK_CONTROL + INK_GAP_M, width());
+            lv_obj_set_style_text_align(N.kid_time_label, LV_TEXT_ALIGN_CENTER, 0);
+        }
         int bottom =
             INK_CANVAS_H - INK_STATUS_BAR - INK_DOCK - INK_MARGIN - ink_ui_line_height(INK_FONT_LIST) - INK_GAP_S;
         int grid = bottom - 2 * (INK_CIRCLE_APP + INK_GAP_S + ink_ui_line_height(INK_FONT_NOTE)) - INK_GAP_L;
-        for (int i = 0; i < 8; i++)
-            if (!(child() && i == 7))
-                tile(N.content, APP_IDS[i], APP_TITLES[i], APP_ICONS[i], i % 4, i / 4, grid, false);
+        static const int kid_order[] = {0, 1, 2, 5, 6, 3, 4};
+        for (int i = 0; i < (child() ? 7 : 8); i++) {
+            int at = child() ? kid_order[i] : i;
+            tile(N.content, APP_IDS[at], APP_TITLES[at], APP_ICONS[at], i % 4, i / 4, grid, false);
+        }
     } else if (N.home_page == 0) {
         read_cards();
         ink_ui_label(N.content, "今日", INK_FONT_HEADING, INK_WEIGHT_BOLD, INK_MARGIN, page_top, 2 * INK_PRIMARY);
@@ -561,7 +613,8 @@ static void draw_home_content(void) {
                          page_top + ink_ui_line_height(INK_FONT_HEADING) - ink_ui_line_height(INK_FONT_NOTE),
                          INK_CANVAS_W / 2 - INK_MARGIN);
         lv_obj_set_style_text_align(today_date, LV_TEXT_ALIGN_RIGHT, 0);
-        int first = below_heading() + INK_GAP_XS, h = (home_room() - first - 2 * INK_GAP) / 3;
+        int notice = child() ? ink_ui_line_height(INK_FONT_NOTE) + INK_GAP : 0;
+        int first = below_heading() + INK_GAP_XS, h = (home_room() - notice - first - 2 * INK_GAP) / 3;
         lv_obj_t *c = ink_ui_card(N.content, INK_MARGIN, first, width(), h, INK_SURFACE_BLACK);
         ink_ui_line(c, N.card_fields[0].label, INK_FONT_NOTE, INK_WEIGHT_MEDIUM, INK_MARGIN, INK_GAP_L, width() - 2 * INK_MARGIN);
         lv_obj_t *reading =
@@ -581,7 +634,13 @@ static void draw_home_content(void) {
                                           INK_GAP_L + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_M, w - 2 * INK_GAP_L);
             lv_label_set_long_mode(what, LV_LABEL_LONG_DOT);
             lv_obj_set_height(what, ink_ui_px(2 * ink_ui_line_height(INK_FONT_LIST)));
+            if (child() && !strcmp(N.card_fields[i + 1].id, "time")) N.kid_time_label = what;
             bind_card(small, i + 1);
+        }
+        if (child()) {
+            lv_obj_t *note = ink_ui_line(N.content, "爸爸妈妈可以看到你的记录", INK_FONT_NOTE, INK_WEIGHT_REGULAR,
+                INK_MARGIN, home_room() - ink_ui_line_height(INK_FONT_NOTE), width());
+            lv_obj_set_style_text_align(note, LV_TEXT_ALIGN_CENTER, 0);
         }
     } else {
         ink_ui_label(N.content, "全部", INK_FONT_HEADING, INK_WEIGHT_BOLD, INK_MARGIN, page_top, width());
@@ -603,6 +662,7 @@ static void draw_home_content(void) {
             lv_obj_set_style_text_align(pages, LV_TEXT_ALIGN_RIGHT, 0);
         }
     }
+    if (child() && N.home_page != 2) kid_time_read();
     N.message =
         ink_ui_notice(N.content, N.result, INK_STATUS_BAR + INK_BLOCK_L + 2 * ink_ui_line_height(INK_FONT_CLOCK));
     ink_ui_hint_obj(N.content, INK_REFRESH_TEXT);
@@ -614,6 +674,7 @@ void ink_shell_home_create(lv_obj_t *screen) {
     if (N.epoch != session || strcmp(N.member, ink_member_current()->id) || !ink_member_space_open()) {
         ink_shell_close();
         N.search[0] = N.result[0] = N.picked_ssid[0] = 0;
+        N.kid_time[0] = 0;
         memset(N.wifi_ssid, 0, sizeof N.wifi_ssid);
         N.home_page = 1;
         N.apps_page = N.wifi_page = N.wifi_count = 0;
@@ -647,6 +708,7 @@ lv_obj_t *ink_shell_dock(lv_obj_t *parent) {
     lv_obj_set_width(dock, dock_width);
     int cell = dock_width * INK_CANVAS_W / ink_ui_px(INK_CANVAS_W) / 5;
     for (int i = 0; i < 5; i++) {
+        if (child() && !kid_app_visible(ids[i])) continue;
         lv_obj_t *b =
             ink_ui_circle(dock, icons[i], i * cell + (cell - INK_SEGMENT) / 2, (INK_DOCK - INK_SEGMENT) / 2,
                           INK_SEGMENT, INK_ICON_APP, i == 2 ? INK_SURFACE_BLACK : INK_SURFACE_STATIC, NULL, NULL);
@@ -661,6 +723,7 @@ void ink_shell_home_destroy(void) {
     icon_close();
     if (N.cards_timer) { lv_timer_delete(N.cards_timer); N.cards_timer = NULL; }
     N.home = N.content = N.dots = N.clock = N.date = N.message = NULL;
+    N.kid_time_label = NULL;
 }
 
 static void turn(int delta) {
@@ -703,12 +766,23 @@ int ink_shell_home_snapshot(char *buf, size_t cap) {
     if (!current_session(N.epoch)) return snprintf(buf, cap, "空间锁定或正在切换；AI 无权读取。");
     if (N.home_page == 0) {
         if (cap) buf[0] = 0;
+        if (child()) {
+            int n = snprintf(buf, cap, "{\"page\":\"KidToday\",\"page_version\":%u,\"notice\":\"爸爸妈妈可以看到你的记录\",\"content\":", ink_ui_content_version());
+            if (n < 0 || (size_t)n + 2 >= cap) {
+                if (cap) buf[0] = 0;
+                return -1;
+            }
+            int size = N.cards_ok ? ink_ui_semantics_snapshot(&N.today, buf + n, cap - (size_t)n - 1) : -1;
+            if (size < 0) { buf[0] = 0; return -1; }
+            memcpy(buf + n + size, "}", 2);
+            return n + size + 1;
+        }
         return N.cards_ok ? ink_ui_semantics_snapshot(&N.today, buf, cap) : -1;
     }
     ink_card_t card;
     bool has = bookmark(&card);
     if (N.home_page == 2) {
-        int n = snprintf(buf, cap, "Apps；当前=%s；查找=%s；工具页=%d/%d；", ink_member_current()->name, N.search,
+        int n = snprintf(buf, cap, "%s；当前=%s；查找=%s；工具页=%d/%d；", ink_shell_board(), ink_member_current()->name, N.search,
                          N.apps_page + 1, N.apps_pages);
         tile_list_t list = {buf, cap, n};
         apps_walk(false, &list);
@@ -729,8 +803,8 @@ int ink_shell_home_snapshot(char *buf, size_t cap) {
         buf, cap,
         "页面=%s；当前=%s；日期=%s；时间=%s；继续读=%s；继续听=还没有在听的内容；今日报纸=今天的还没到；单词="
         "还没有记下的词；接下来=%s；%s。%s 动作：shell.launch、shell.resume、home.next、home.prev、shell.control、shell.tasks。",
-        N.home_page == 0 ? "Today" : "Main", ink_member_current()->name, date, clock, has ? card.text : "没有阅读进度",
-        upcoming, N.result, activity);
+        ink_shell_board(), ink_member_current()->name, date, clock, has ? card.text : "没有阅读进度",
+        upcoming, child() ? N.kid_time : N.result, activity);
 }
 
 static int kid_control_snapshot(char *buf, size_t cap);
@@ -1371,8 +1445,10 @@ void ink_shell_open_page(const char *name) {
 
 const char *ink_shell_board(void) {
     if (N.control) return child() ? "KidControl" : "Control";
-    if (N.home && !strcmp(ink_ui_page_name(), "home"))
+    if (N.home && !strcmp(ink_ui_page_name(), "home")) {
+        if (child()) return N.home_page == 0 ? "KidToday" : N.home_page == 1 ? "KidHome" : "KidApps";
         return N.home_page == 0 ? "Today" : N.home_page == 1 ? "Main" : "Apps";
+    }
     return ink_ui_top_name();
 }
 
@@ -1542,6 +1618,7 @@ static void refresh(void *unused) {
     (void) unused;
     if (ink_power_state() == INK_PWR_LOCKED) return;
     if (!current_session(N.epoch)) return;
+    if (child() && N.home && N.home_page != 2) kid_time_read();
     bool body = __atomic_exchange_n(&N.need_body, false, __ATOMIC_ACQ_REL);
     if (body && N.control && ink_member_space_open()) draw_control();
     if (body && N.page_body && ink_member_space_open() && !N.picked_ssid[0]) draw_page_body();
@@ -1694,6 +1771,7 @@ static bool today_match(const ink_json_t *j, int slot) {
     return slot <= T.count && !strcmp(key, T.selected[slot - 1]);
 }
 static const char *today_icon(int slot) {
+    if (child() && !T.saved && slot == 3) return INK_UI_ICON(clock);
     if (!T.saved) return APP_ICONS[slot];
     for (int i = 0; i < ink_app_count(); i++) {
         const ink_app_def_t *a = ink_app_at(i);
@@ -1711,6 +1789,11 @@ static void today_model(void) {
         }
     }
     N.today.field_count = N.today.action_count = today_slots() + 1;
+}
+static void kid_today_model(void) {
+    if (T.saved) return;
+    N.card_fields[4] = (ink_ui_field_spec_t){"time", "text", "今天", N.kid_time, {"member.time", 0}, false};
+    N.card_actions[4].enabled = false;
 }
 static void today_bind(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, ink_ui_action_spec_t *action, void *ctx) {
     (void)ctx;

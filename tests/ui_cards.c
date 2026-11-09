@@ -72,7 +72,7 @@ static bool text_is(const ink_json_t *j, int object, const char *key, const char
 static void inspect(void) {
     ink_call_opts_t opts = {.src = INK_SRC_AI, .reply_exec = INK_EXEC_DIRECT, .done = cards_done};
     CHECK(ink_cap_call("app.cards", NULL, &opts) == 0, "AI reads the production card capability");
-    CHECK(!strcmp(ink_shell_board(), "Today") && ink_ui_snapshot(view, sizeof view, NULL) > 0,
+    CHECK(!strcmp(ink_shell_board(), ink_member_current()->role == INK_ROLE_CHILD ? "KidToday" : "Today") && ink_ui_snapshot(view, sizeof view, NULL) > 0,
           "the real Today page exports its model");
     CHECK(ink_ui_context_snapshot(context, sizeof context, NULL) > 0 && !strcmp(view, context), "AI sees exactly the Today snapshot");
     const char *mine = !strcmp(ink_member_current()->id, "kid") ? "孩子" : "成人";
