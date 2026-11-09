@@ -139,7 +139,13 @@ static void run(void *arg) {
     CHECK(WAIT_FOR(phase("\"phase\":\"preview\""), 180000), "touch loads the latest backup preview");
     CHECK(WAIT_FOR(at("Restore") && strstr(g_snap, "restore.apply"), 5000), "summary enables the actual overwrite button");
     capture("Restore"); get_preview();
-    if (getenv("INK_BACKUP_PAGE_PROBE")) { ink_probe_count("test.finished"); return; }
+    const char *probe = getenv("INK_BACKUP_PAGE_PROBE");
+    if (probe && !strcmp(probe, "summary")) { ink_probe_count("test.finished"); return; }
+    if (probe && !strcmp(probe, "routing")) {
+        CHECK(AI("backup.now", NULL) && g_rc.status == INK_RC_QUEUED, "AI can start a backup from restore preview");
+        CHECK(ready("Backup"), "AI backup replaces a restore preview with Backup");
+        ink_probe_count("test.finished"); return;
+    }
     CHECK(AI("backup.manifest", NULL) && g_rc.status == INK_RC_DONE, "large full manifest exists");
     ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
     CHECK(j && ink_json_parse(j, g_result, strlen(g_result)) != 0, "full manifest exceeds the UI JSON reader");
@@ -158,6 +164,11 @@ static void run(void *arg) {
     capture("RestoreDone"); check_file("SAVED");
     press("开始用"); CHECK(ready("home"), "restored flow returns home");
     CHECK(AI("shell.launch", "{\"id\":\"backup\"}") && ready("Backup"), "reopen after restore");
+    press("恢复备份");
+    CHECK(WAIT_FOR(phase("\"phase\":\"preview\""), 180000) && ready("Restore"), "reenter preview before the next AI backup");
+    CHECK(AI("backup.now", NULL) && g_rc.status == INK_RC_QUEUED, "AI can start a backup from restore preview");
+    CHECK(ready("Backup"), "AI backup replaces a restore preview with Backup");
+    CHECK(WAIT_FOR(phase("\"phase\":\"saved\""), 180000), "AI-requested backup actually finishes");
     vtk_event_at(vtk_now() + SIM_MS(1), corrupt_event, NULL); delay_ms(10);
     CHECK(AI("restore.preview", "{\"summary\":true}") && g_rc.status == INK_RC_QUEUED, "AI preview uses the same summary capability as touch");
     CHECK(WAIT_FOR(phase("\"phase\":\"failed\""), 30000), "corrupted backup is rejected");

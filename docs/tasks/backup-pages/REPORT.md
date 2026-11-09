@@ -6,18 +6,19 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 通过 | 【实测】171 项检查，触摸备份、预览、取消确认、AI 发起恢复、人确认、原文件内容恢复 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2 -R '^backup-pages$'` |
+| 1 | 通过 | 【实测】178 项检查，触摸备份、预览、取消确认、AI 发起恢复、人确认、原文件内容恢复 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2 -R '^backup-pages$'` |
 | 2 | 通过 | 【实测】缺卡错误保留、损坏备份失败、断网可返回、联网后服务继续；失败重试能到保存完成 | 同上 |
 | 3 | 通过 | 【实测】六页真实快照、上下文可解析、动作已注册；触摸和 AI 均调用 `backup.now`、`restore.preview`、`restore.apply`；AI 不能批准覆盖 | 同上 |
-| 4 | 待执行 | 全量测试、内存检查、300 行预算 | 待补 |
+| 4 | 普通全量已跑；最终复验和内存检查进行中 | 【实测】一轮 233/233，无跳过；【实现】C 产品代码 208 行，含构建接线 214 行 | 待补最终结果 |
 | G4 | 六页已对照，均超目标 | 【实测】分数及差异见下表；未改设计稿和阈值 | `INK_DESIGN="$INK_DESIGN" taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.py --build build --reuse --out build/backup-compare --scenes Backup BackupFail Restore RestoreRun RestoreDone RestoreFail` |
 
-反向对照【实测】：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/backup_pages_reverse.py --build build` 通过；替换对象分别撤去 summary 参数和错误保留判断，两次运行均以 1 退出并命中对应失败断言。产品源文件哈希未变；命令和结果留在 `build/backup-pages-reverse/{commands,summary}.json`。
+反向对照【实测】：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/backup_pages_reverse.py --build build` 通过；替换对象分别撤去 summary 参数、错误保留判断、服务阶段决定页面的判断，三次运行均以 1 退出并命中对应失败断言（分别 1、2、2 个失败）。产品源文件哈希未变；命令和结果留在 `build/backup-pages-reverse/{commands,summary}.json`。
 
 ## 没做到的
 
 - 全量及内存检查尚在执行。
 - 【实现】服务只提供当前家人的最新备份，无历史备份选择、全家汇总和自动备份设置接口；页面只提供最新备份预览，并显示限制。
+- 【实现】完成页没有逐项失败清单和各人的阅读位置；当前仅展示服务明确的排除类目，不编造数量。
 - 未实测 Linux/gcc、真机或真实家庭服务器。
 
 ## 和设计不一致的
@@ -36,7 +37,7 @@
 | Restore | 37.020/255 | 当前家人一行、真实日期和 36 项；无全家分类数量和设备来源 |
 | RestoreRun | 22.200/255 | 进度按实际 checking/restoring，末项提示重启；未承诺恢复失败后全部原样 |
 | RestoreDone | 38.558/255 | 显示当前家人与实际备份日期、服务明确排除的内容；无阅读位置或虚构遗漏数量 |
-| RestoreFail | 25.355/255 | 多返回顶栏；显示服务校验失败原因，保留取消和重试 |
+| RestoreFail | 25.358/255 | 多返回顶栏；显示服务校验失败原因，保留取消和重试 |
 
 ## 改过的已有测试
 
@@ -46,11 +47,11 @@
 
 暂无。
 
-【实测】首轮全量 233 项中，应用总数旧断言失败，已按新增入口精确更新；3 项中枢测试因默认 Python 缺依赖显式跳过。后续使用只读依赖目录现成的 `hub/.venv/bin/python` 配置 `INK_HUB_PYTHON`，不安装或升级依赖。
-
 ## 顺手发现
 
-暂无。
+- 【实测】首轮全量的应用总数旧断言失败，已精确更新；默认 Python 缺中枢依赖导致 3 项显式跳过。改用只读依赖目录现成的 `hub/.venv/bin/python` 配置既有 `INK_HUB_PYTHON` 后，233 项全部通过，没有安装或升级依赖。
+- 【实测】初次缺卡失败会被下一轮无变化的状态查询覆盖；现保持错误直至服务阶段变化，反向对照验证有效。
+- 【实测】AI 在恢复预览时调用备份曾留下恢复模式；现统一按 collecting/uploading/saved 决定备份页，测试与反向对照均验证。
 
 ## 新增的机制
 
@@ -62,4 +63,5 @@
 ## 要改的文档
 
 按总规则第 7 节，不直接修改共享文档；页面完成后需主会话更新 `docs/system/ui-dependencies.md` 对应状态。
+
 - 合并时将 `SetStorage` 的备份行从直接 `backup.now` 改接页面入口；该文件由 settings-b 同时开发，本任务未改。

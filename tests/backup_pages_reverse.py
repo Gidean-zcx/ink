@@ -20,11 +20,14 @@ original = source.read_text()
 before = hashlib.sha256(source.read_bytes()).hexdigest()
 cases = [
     ('summary', '"{\\"summary\\":true}"', '"{\\"summary\\":false}"',
-     'large manifest produces a usable summary preview'),
+     'large manifest produces a usable summary preview', 'summary'),
     ('failure-visible',
      '    if (!changed && (B.page == BACKUP_FAIL || B.page == RESTORE_FAIL) &&\n'
      '        (!strcmp(phase, "none") || !strcmp(phase, "saved") || !strcmp(phase, "preview") || !strcmp(phase, "done"))) { osal_free(j); return; }\n',
-     '', 'page BackupFail is presented')]
+     '', 'page BackupFail is presented', 'summary'),
+    ('ai-routing',
+     '    if (!strcmp(phase, "collecting") || !strcmp(phase, "uploading") || !strcmp(phase, "saved")) B.restore = false;\n',
+     '', 'AI backup replaces a restore preview with Backup', 'routing')]
 flags = (build / 'CMakeFiles/ink_system.dir/flags.make').read_text()
 options = []
 for key in ('C_DEFINES', 'C_INCLUDES', 'C_FLAGS'):
@@ -37,7 +40,7 @@ def run(cmd, **kwargs):
     return subprocess.run(cmd, cwd=build, capture_output=True, text=True, timeout=180, **kwargs)
 
 
-for name, needle, replacement, expected in cases:
+for name, needle, replacement, expected, probe in cases:
     assert needle in original, name
     obj, binary = area / (name + '.o'), area / name
     link = shlex.split((build / 'CMakeFiles/sim-backup-pages.dir/link.txt').read_text())
@@ -49,7 +52,7 @@ for name, needle, replacement, expected in cases:
     linked = run(link)
     assert linked.returncode == 0, linked.stderr
     result = run([os.sys.executable, str(ROOT / 'tests/backup_pages.py'), '--build', str(build), '--binary', str(binary)],
-                 env={**os.environ, 'INK_BACKUP_PAGE_PROBE': '1', 'INK_KEEP_EVIDENCE': '1'})
+                 env={**os.environ, 'INK_BACKUP_PAGE_PROBE': probe, 'INK_KEEP_EVIDENCE': '1'})
     (area / (name + '.log')).write_text(result.stdout + result.stderr)
     assert result.returncode != 0 and expected in result.stdout + result.stderr, (name, result.stdout, result.stderr)
     metrics = json.loads((build / 'test-out' / ('backup-pages-' + name) / 'device/metrics.json').read_text())['metrics']

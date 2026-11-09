@@ -105,7 +105,8 @@ static void draw(void) {
         text(OMITTED, INK_FONT_NOTE, 2 * INK_PRIMARY + INK_GAP + INK_ROW_DOUBLE + INK_GAP_L, false);
         text("这位家人现在的资料会被替换。", INK_FONT_NOTE, bottom - INK_LINE_NOTE - INK_GAP, true);
         button("取消", "shell.back", NULL, INK_MARGIN, bottom, (w - INK_GAP) / 2, false);
-        snprintf(B.args, sizeof B.args, "{\"preview\":\"%s\"}", B.preview);
+        char preview[sizeof B.preview]; memcpy(preview, B.preview, sizeof preview);
+        snprintf(B.args, sizeof B.args, "{\"preview\":\"%s\"}", preview);
         button(B.preview[0] ? "恢复到这台设备" : "再查一次", B.preview[0] ? "restore.apply" : "restore.preview",
             B.preview[0] ? B.args : "{\"summary\":true}", INK_MARGIN + (w + INK_GAP) / 2, bottom, (w - INK_GAP) / 2, true);
     } else if (B.page == RESTORE_RUN) {
@@ -154,6 +155,7 @@ static void reply(void *ctx, const ink_receipt_t *rc) {
     if (!changed && (B.page == BACKUP_FAIL || B.page == RESTORE_FAIL) &&
         (!strcmp(phase, "none") || !strcmp(phase, "saved") || !strcmp(phase, "preview") || !strcmp(phase, "done"))) { osal_free(j); return; }
     snprintf(B.phase, sizeof B.phase, "%s", phase);
+    if (!strcmp(phase, "collecting") || !strcmp(phase, "uploading") || !strcmp(phase, "saved")) B.restore = false;
     if (!strcmp(phase, "fetching") || !strcmp(phase, "preparing") || !strcmp(phase, "preview") ||
         !strcmp(phase, "checking") || !strcmp(phase, "restoring")) B.restore = true;
     ink_json_str(j, ink_json_find(j, 0, "preview"), B.preview, sizeof B.preview);
