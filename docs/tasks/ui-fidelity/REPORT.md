@@ -6,13 +6,15 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 【实测】修前全量完成 | 177 张图中 141 个已有整屏页面，逐页见下表；13 张没有对应页面，23 张为组件或规范图 | T1、T2 |
+| 1 | 【实测】全量前后分数完成 | 177 张图中 141 个已有整屏页面，逐页见下表；13 张没有对应页面，23 张为组件或规范图 | T1、T2 |
 | 2 | 【实测】已修两屏，均改善；仍超过 12，逐页说明例外 | Settings 81.175→76.744，FactoryReset 51.608→51.346；前后图在忽略的证据目录 | T2 |
-| 3 | 进行中 | 基线全量零失败，但缺中枢 Python 依赖而明确跳过 3 项；已找到只读依赖目录的现成解释器，最终两轮将显式选用 | T3 |
+| 3 | 【实测】普通全量通过；内存版进行中 | 普通 276/276、零跳过，296.89 秒；ASan/UBSan 正在构建 | T3 |
 
 ## 全量分数表
 
-【实测，模拟器】单位 /255，指标完全沿用 `tools/ui_compare.py` 的 1/4 灰度 MAE，没有改阈值、裁图、校色或重采样规则。所有页采用同一 Plus 档案、现行字体和主题。按修前分数从高到低排列。数字链接打开设计／实图／绝对差拼图；每页原始截图、来源 SHA-256、完整来源指标及场景校验证据均保留在 `build/ui-fidelity/before/`，后测放在 `after/`。
+【实测，模拟器】单位 /255，指标完全沿用 `tools/ui_compare.py` 的 1/4 灰度 MAE，没有改阈值、裁图、校色或重采样规则。所有页采用同一 Plus 档案、现行字体和主题。按修前分数从高到低排列。数字链接打开设计／实图／绝对差拼图；每页原始截图、来源 SHA-256、完整来源指标及场景校验证据均保留在 `build/ui-fidelity/before/`，后测放在 `after/`。所有场景已在修后重跑。
+
+【实测】除两处修复外，136 屏截图逐字节相同；`FilePicker`、`TransferUsbFail` 的小幅变化只在状态栏，`Transfer` 的变化位于临时传输地址与二维码区域。五套独立视觉场景均再次通过；未将动态数据变化算作修复成果。
 
 规范 §1 已明确：画板仍是旧尺寸，现行规格统一放大 1.2 倍；旧浅灰改为 #888888、次要文字纯黑。任务要求规范优先，不能把主题缩回去争取分数。下列原因是逐页未达项，并非像素目标通过。
 
@@ -55,7 +57,7 @@
 | TodayEdit | [45.104](../../../build/ui-fidelity/before/TodayEdit.png) | [45.104](../../../build/ui-fidelity/after/TodayEdit.png) | 现行字号、图标、深灰与旧图不同；应用目录、阅读进度和服务卡片是实际成员数据。 |
 | AiTimeout | [44.719](../../../build/ui-fidelity/before/AiTimeout.png) | [44.719](../../../build/ui-fidelity/after/AiTimeout.png) | 实际问题、答案、错误及执行记录与示例不同；保留现行字号、面板比例与深灰。 |
 | StressConfirm | [43.802](../../../build/ui-fidelity/before/StressConfirm.png) | [43.802](../../../build/ui-fidelity/after/StressConfirm.png) | 真实确认事务、参数、提示和底页与示例不同；保留现行不透明面板及字号、按钮尺寸。 |
-| Transfer | [43.755](../../../build/ui-fidelity/before/Transfer.png) | [43.755](../../../build/ui-fidelity/after/Transfer.png) | 实际授权、网址、传输和 USB 状态与示例不同；保留现行字号、控件与二维码。 |
+| Transfer | [43.755](../../../build/ui-fidelity/before/Transfer.png) | [43.687](../../../build/ui-fidelity/after/Transfer.png) | 实际授权、网址、传输和 USB 状态与示例不同；保留现行字号、控件与二维码。 |
 | KidControl | [43.693](../../../build/ui-fidelity/before/KidControl.png) | [43.693](../../../build/ui-fidelity/after/KidControl.png) | 实际连接、通知和儿童允许项与示例不同；保留现行字号、控件和深灰。 |
 | Clock | [43.577](../../../build/ui-fidelity/before/Clock.png) | [43.577](../../../build/ui-fidelity/after/Clock.png) | 并行任务边界，本任务未改；实际声音／闹钟／通话与示例不同，且现行尺寸已放大。 |
 | Apps | [43.119](../../../build/ui-fidelity/before/Apps.png) | [43.119](../../../build/ui-fidelity/after/Apps.png) | 现行字号、图标、深灰与旧图不同；应用目录、阅读进度和服务卡片是实际成员数据。 |
@@ -114,7 +116,7 @@
 | UpdateReady | [29.362](../../../build/ui-fidelity/before/UpdateReady.png) | [29.362](../../../build/ui-fidelity/after/UpdateReady.png) | 实际固件、进度、阻塞／回退状态与示例不同；保留现行状态图标、字号和按钮尺寸。 |
 | BootWifiPass | [29.293](../../../build/ui-fidelity/before/BootWifiPass.png) | [29.293](../../../build/ui-fidelity/after/BootWifiPass.png) | 真实配网、加入码、恢复预览和离线示例状态；现行字号、图标、按钮与旧图不同。 |
 | MemoDetail | [28.821](../../../build/ui-fidelity/before/MemoDetail.png) | [28.821](../../../build/ui-fidelity/after/MemoDetail.png) | 实际备忘、长文／清单和失败／撤销状态与示例不同；现行字号、分页和深灰。 |
-| FilePicker | [28.415](../../../build/ui-fidelity/before/FilePicker.png) | [28.415](../../../build/ui-fidelity/after/FilePicker.png) | 实际目录、文件名、缩略图、分页与示例不同；现行行高、图标、深灰。 |
+| FilePicker | [28.415](../../../build/ui-fidelity/before/FilePicker.png) | [28.414](../../../build/ui-fidelity/after/FilePicker.png) | 实际目录、文件名、缩略图、分页与示例不同；现行行高、图标、深灰。 |
 | AiMemory | [28.311](../../../build/ui-fidelity/before/AiMemory.png) | [28.311](../../../build/ui-fidelity/after/AiMemory.png) | 现行字号、行高、分组深灰及实际服务值；内容按原有分页显示，不能缩回旧图。 |
 | MemberSwitch | [28.298](../../../build/ui-fidelity/before/MemberSwitch.png) | [28.298](../../../build/ui-fidelity/after/MemberSwitch.png) | 实际家人、密码状态和儿童限时与示例不同；现行字距、圆形图标、键盘和按钮尺寸。 |
 | Pin | [28.178](../../../build/ui-fidelity/before/Pin.png) | [28.178](../../../build/ui-fidelity/after/Pin.png) | 实际家人、密码状态和儿童限时与示例不同；现行字距、圆形图标、键盘和按钮尺寸。 |
@@ -125,7 +127,7 @@
 | PinWait | [27.370](../../../build/ui-fidelity/before/PinWait.png) | [27.370](../../../build/ui-fidelity/after/PinWait.png) | 实际家人、密码状态和儿童限时与示例不同；现行字距、圆形图标、键盘和按钮尺寸。 |
 | FileActions | [27.000](../../../build/ui-fidelity/before/FileActions.png) | [27.000](../../../build/ui-fidelity/after/FileActions.png) | 实际目录、文件名、缩略图、分页与示例不同；现行行高、图标、深灰。 |
 | TransferUsbBusy | [26.949](../../../build/ui-fidelity/before/TransferUsbBusy.png) | [26.949](../../../build/ui-fidelity/after/TransferUsbBusy.png) | 实际授权、网址、传输和 USB 状态与示例不同；保留现行字号、控件与二维码。 |
-| TransferUsbFail | [26.798](../../../build/ui-fidelity/before/TransferUsbFail.png) | [26.798](../../../build/ui-fidelity/after/TransferUsbFail.png) | 实际授权、网址、传输和 USB 状态与示例不同；保留现行字号、控件与二维码。 |
+| TransferUsbFail | [26.798](../../../build/ui-fidelity/before/TransferUsbFail.png) | [26.802](../../../build/ui-fidelity/after/TransferUsbFail.png) | 实际授权、网址、传输和 USB 状态与示例不同；保留现行字号、控件与二维码。 |
 | TransferUsbOn | [26.663](../../../build/ui-fidelity/before/TransferUsbOn.png) | [26.663](../../../build/ui-fidelity/after/TransferUsbOn.png) | 实际授权、网址、传输和 USB 状态与示例不同；保留现行字号、控件与二维码。 |
 | PinWrong | [26.593](../../../build/ui-fidelity/before/PinWrong.png) | [26.593](../../../build/ui-fidelity/after/PinWrong.png) | 实际家人、密码状态和儿童限时与示例不同；现行字距、圆形图标、键盘和按钮尺寸。 |
 | Members | [26.504](../../../build/ui-fidelity/before/Members.png) | [26.504](../../../build/ui-fidelity/after/Members.png) | 实际家人、密码状态和儿童限时与示例不同；现行字距、圆形图标、键盘和按钮尺寸。 |
@@ -162,7 +164,7 @@
 
 ## 没做到的
 
-- 141 屏修前均未达到 12；不通过修改真实数据、主题或行为迎合旧图。
+- 141 屏最终均未达到 12；按任务允许的例外逐页说明原因，不将像素目标写成通过。不通过修改真实数据、主题或行为迎合旧图。
 - 无对应页面的 13 张整屏参考：`ImeAi`；`Import`、`ImportFind`、`ImportJob`、`ImportFail`；`MemoPending`、`MemoRecord`；`SetBluetooth`；`Stepper`；`StressFiles`、`StressLarge`、`StressNotes`、`StressThread`。其中 Stepper、Stress 系列为组件／压力设计参考，没有独立页面；没有借这项任务实现它们。
 - 23 张组件／规范展示图不是完整页面，尺寸也不等于 684×1216：
 
@@ -210,7 +212,7 @@
 
 ## 顺手发现
 
-- 默认构建 Python 缺少中枢测试依赖，基线 3 项跳过；只读依赖目录的 `hub/.venv/bin/python` 已有锁定版本 pytest 8.4.2、pytest-asyncio 1.2.0、aiohttp 3.12.15、PyYAML 6.0.3。最终测试将使用该解释器，不安装或升级依赖。
+- 默认构建 Python 缺少中枢测试依赖，基线 3 项跳过；只读依赖目录的 `hub/.venv/bin/python` 已有锁定版本 pytest 8.4.2、pytest-asyncio 1.2.0、aiohttp 3.12.15、PyYAML 6.0.3。最终测试使用该解释器，不安装或升级依赖；普通版零跳过。
 
 ## 新增的机制
 
@@ -223,6 +225,8 @@
 ## 复现命令与证据
 
 环境变量使用任务提供的 `INK_DEPS` 和 `INK_DESIGN`；不在报告写本机绝对路径。
+
+修前复现版本为 `88817c36`：只加测量脚本和截图场景，产品代码与给定基线完全相同（`git diff 62b0e83d..88817c36 -- system apps platform drivers ports` 为空）；修后实现为 `8879f33a`。分别在这两个版本运行 T1、T2，可复现前后数据。
 
 T1：先按总规则配置构建，额外选现成中枢测试 Python：
 
@@ -243,4 +247,4 @@ done
 
 T2：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/ui_fidelity.py --build build --out build/ui-fidelity/before`。修后将输出目录换为 `build/ui-fidelity/after`；二者的 `scores.json`、`sources.json`、`unmatched.json`、`components.json` 和逐页拼图全部保留，不提交二进制产物。
 
-T3：普通与 ASan/UBSan 最终全量待运行；内存目录只将 T1 的构建目录换成 `build-asan`，并增加 `-DINK_SANITIZE=ON`。始终 `INK_WERROR=ON`、utility 优先级、构建和测试最多 `-j2`，逐轮串行。
+T3：普通全量已通过；内存目录只将 T1 的构建目录换成 `build-asan`，并增加 `-DINK_SANITIZE=ON`。始终 `INK_WERROR=ON`、utility 优先级、构建和测试最多 `-j2`，逐轮串行。日志：`work/ui-fidelity/ctest-final.log`、`configure-asan.log`、`build-asan.log`、`ctest-asan.log`；每步退出状态与用时保存在 `work/ui-fidelity/validation.json`。
