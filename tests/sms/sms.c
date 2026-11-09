@@ -14,6 +14,7 @@
 static char phase[24], body[355], arguments[768], snap[4096], sent_text[400], sent_number[24];
 static const char PEER[] = "00000000001";
 static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
+static bool registered(void) { int64_t value = 0; return ink_state_get_int(ink_state_find("cell.registered"), &value) && value; }
 static void quiet(void) { CHECK(WAIT_FOR(settled(), 10000), "SMS display settles"); }
 static void read_phase(void *arg) { (void)arg; snprintf(phase, sizeof phase, "%s", getenv("INK_SMS_PHASE")); }
 static void snapshot_page(void) {
@@ -117,7 +118,7 @@ static void isolation(void) {
 static void run(void *arg) {
     (void)arg; vtk_host_call(read_phase, NULL);
     CHECK(WAIT_FOR(ink_member_space_open(), 10000), "member space opens");
-    CHECK(WAIT_FOR(sim_net_modem_registered(), 10000), "simulated AT modem registers"); delay_ms(5000); quiet();
+    CHECK(WAIT_FOR(sim_net_modem_registered() && registered(), 10000), "simulated AT modem publishes registration"); quiet();
     for (int i = 0; i < 118; i++) memcpy(body + i * 3, "中", 3); body[354] = 0;
     if (!strcmp(phase, "legacy")) {
         open_list(); deliver(); CHECK(ink_member_switch("kid") == 0, "probe the original SMS capability after handoff"); quiet();
