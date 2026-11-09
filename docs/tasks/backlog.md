@@ -2,7 +2,7 @@
 
 用户要求：先夯实系统层的能力缺口和质量，再补齐系统级别的应用与应用框架，**暂不开发具体应用**（阅读、听、报纸、单词都不做），都做完再做底层性能优化。总规则见 [codex-rules.md](codex-rules.md)。
 
-**状态（2026-11-09）：** 已合入 `services-mid`、`member-wake`、`capability-table`、`device-events`、`pairing`、`backup-restore`、`confirm-durable`、`file-index`（拆成 `file-index-1`、`file-index-2`）、`wireless-transfer`，应用框架的 F1、F2、F5（`ui-semantics`、`ui-input-host`、`ui-cards`），以及只写报告的 `phone-gap`（对照完成标准 R-068 查缺口）和 `speech-cache`（DE-R6 早已修好）。下午又合入：框架 F4、F9（`ui-list-paging`、`ui-file-picker`）、`text-long`、`thumb-wiring`，系统应用 `boot-flow`、`contacts`、`clock-alarm`、`ai-chat`、`phone-calls`、`sms`、`memo`、`settings-a`、`power-pages`。`member-quiesce` 做完但不合入，原因见该节。应用框架的选择已定（D-111）。晚上又合入：`kid-1`、`update-pages`、`calendar`、`confirm-pages`、`search`（F7）、`files-app-1`、`camera-gallery`、`backup-pages`、`ai-pages-2`、`settings-b`；从 batch3 起每个任务由主会话复查、合并后整批交 astra 审一轮（1 小时以内）。batch4 已合入：`activity-card`（F6）、`remote-app`、`fw-f8`、`kid-2`、`storage-usage`、`transfer-pages`，以及 batch3 审计的九条修复 `audit3-fix`；batch4 审计的三条修复 `audit4-fix` 已合入。**2026-11-10：** batch5（`privacy-records`、`kid-3`、`file-index-3`、`factory-pages`、`fw-f13`、`port-skeleton`）和 batch6（`perf-memory`、`perf-latency`、`script-s31`）都已合入，两批合在一起的 astra 审计（batch5）在跑。在跑（batch7）：`storage-order`、`fw-gaps`、`sound-clock`、`phone-2`、`ui-fidelity`，任务书在本目录。合并时记下的后续事项见文末“合并时记下的”。
+**状态（2026-11-09）：** 已合入 `services-mid`、`member-wake`、`capability-table`、`device-events`、`pairing`、`backup-restore`、`confirm-durable`、`file-index`（拆成 `file-index-1`、`file-index-2`）、`wireless-transfer`，应用框架的 F1、F2、F5（`ui-semantics`、`ui-input-host`、`ui-cards`），以及只写报告的 `phone-gap`（对照完成标准 R-068 查缺口）和 `speech-cache`（DE-R6 早已修好）。下午又合入：框架 F4、F9（`ui-list-paging`、`ui-file-picker`）、`text-long`、`thumb-wiring`，系统应用 `boot-flow`、`contacts`、`clock-alarm`、`ai-chat`、`phone-calls`、`sms`、`memo`、`settings-a`、`power-pages`。`member-quiesce` 做完但不合入，原因见该节。应用框架的选择已定（D-111）。晚上又合入：`kid-1`、`update-pages`、`calendar`、`confirm-pages`、`search`（F7）、`files-app-1`、`camera-gallery`、`backup-pages`、`ai-pages-2`、`settings-b`；从 batch3 起每个任务由主会话复查、合并后整批交 astra 审一轮（1 小时以内）。batch4 已合入：`activity-card`（F6）、`remote-app`、`fw-f8`、`kid-2`、`storage-usage`、`transfer-pages`，以及 batch3 审计的九条修复 `audit3-fix`；batch4 审计的三条修复 `audit4-fix` 已合入。**2026-11-10：** batch5（`privacy-records`、`kid-3`、`file-index-3`、`factory-pages`、`fw-f13`、`port-skeleton`）和 batch6（`perf-memory`、`perf-latency`、`script-s31`）都已合入，两批合在一起的 astra 审计（batch5，高 1、中 2）的修复 `audit5-fix`（B5-01、B5-03、S31 等待换算）和 `index-durable`（B5-02）已合入。batch7（`storage-order`、`fw-gaps`、`sound-clock`、`phone-2`、`ui-fidelity`）全部合入，还没有交 astra 审。合并时记下的后续事项见文末“合并时记下的”。
 
 **只做你被分配的那一节。** 每节按一小时左右规划，最多两小时；做不完的写进报告的“没做到的”，不要半成品冒充完成。报告写到 `docs/tasks/<节名>/REPORT.md`。
 
@@ -161,6 +161,19 @@
 - 【真机要看】perf-memory 把显示协调任务的栈放到 PSRAM（模拟器里最紧场景的内部 RAM 余量 33,272→37,376 字节）；真机端口要用同样的栈分配并核实性能。主机估算接近上限的栈（main 4000/4096 等）等真机高水位再定。
 - 【已知】factory-pages：页面只看当前家人的备份状态；FactoryReset、FactoryDone 与画板对照 51.6、27.6（batch7 ui-fidelity 处理）。privacy-records：对话没有读取历史的后端，页面如实写“暂时读不到次数”。
 - 【已做】port-skeleton：ESP32-S31 端口能编译、链接（固件约 1.2 MB），每次相关推送都在 CI 里编一遍（`s31-port.yml`）；HAL 还是空实现，驱动接上要上机。
+
+## 合并时记下的（2026-11-10，batch7）
+
+- 【已做】`storage-order`：有人在等的落盘排在后台写盘前面（同一路径仍按先后）；输入、录音、通话之后 500 ms 内不开始后台写盘，最多等 10 秒，队列过半照写；整卡索引 1000 个文件写盘 39→3 次。hub 端到端测试改回 3 秒。
+- 【已做】`phone-2`：通话页静音、拨号键盘、蓝牙耳机切换；AI 发拨号音要人确认。录音没做：证明不了通话声音经过本机音频芯片。
+- 【已做】`fw-gaps`：应用在后台打开集合（`ink_app_db_open_async`），状态、设置、事件订阅可以退订（只在界面、媒体、后台三个执行器上保证）。
+- 【已做】`sound-clock`：按键提示音、振动、来电和闹钟铃声（程序生成的三种音色）、时钟的倒计时（重启取消）。顺带：输入任务改为最高优先级并固定在启动核（屏幕送数据任务降一级），80 ms 短按不再被屏幕刷新挤掉；开始录音前先暂停写闪存，开头不再丢 90 ms。
+- 【已做】`ui-fidelity`：145 个有画板的页面全部量过，分组行的图标白底、分隔线、装饰圆无描边做进共用组件。
+- 【已做】`index-durable`：卡上的“索引不全”标记加记录里的大小和修改时间（格式 2，仍 216 字节），文件改动后马上断电也不出错，改名后编号不变；覆盖写、删除不触发任何后台工作。每批建索引 16 个文件。
+- 【要用户定】画板是界面统一放大 1.2 倍以前的尺寸，145 页没有一页能到 12/255：按现行规格重出画板，还是改用布局和位置的对照。计时页没有画板，截图在 docs/tasks/sound-clock/。
+- 【后续】文件索引集合 1024 条、约 220 KB 放在内部闪存，压缩一次整体重写在模拟器里要 4.7 秒，期间别的写盘都要排队。考虑把卡的索引放到卡上，或缩小记录。
+- 【真机要看】输入任务最高优先级、固定在 0 号核，刷新时有输入屏幕会不会出瑕疵，0 号核上的 Wi-Fi 受不受影响；后台写盘静默期 500 ms 和上限 10 秒要按真机校准；NT26 的 `AT+CMUT`、`AT+VTS` 要核对；S31 端口实现目录读取时要填 `mtime`。
+- 【已知】`ink_ui_list_row` 按父容器是否灰底决定画不画分隔线；`ink_shell_bind` 把可点的白圆补上描边。都是样式推断，换主题时要一起看。
 
 ## 性能
 
