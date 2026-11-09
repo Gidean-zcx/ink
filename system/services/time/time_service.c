@@ -832,3 +832,9 @@ int ink_time_init(void) {
     }
     return ink_time_caps_init();
 }
+
+int64_t ink_alarm_occurrence(const ink_alarm_t *alarm, int64_t from_s) {
+    if (!alarm->enabled) return 0;
+    if (alarm->repeat == INK_REPEAT_NONE) return alarm->next_s >= from_s ? alarm->next_s : 0;
+    return next_of(alarm, from_s - 1);
+}

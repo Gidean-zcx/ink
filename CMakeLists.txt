@@ -1294,3 +1294,8 @@ target_sources(ink_system PRIVATE system/apps/memo/memo.c)
 ink_sim_executable(sim-memo tests/memo/memo.c)
 target_link_libraries(sim-memo PRIVATE ink_apps ink_system)
 add_test(NAME memo COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/memo/run.py --build ${CMAKE_BINARY_DIR})
+
+target_sources(ink_system PRIVATE system/apps/calendar/calendar.c)
+ink_sim_executable(sim-calendar tests/calendar/calendar.c)
+target_link_libraries(sim-calendar PRIVATE ink_apps ink_system)
+add_test(NAME calendar COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/calendar/run.py --build ${CMAKE_BINARY_DIR})
