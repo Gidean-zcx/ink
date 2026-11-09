@@ -16,7 +16,7 @@ static const char *const NAMES[] = {"SetMembers", "SetKid", "Wallpaper", "Record
 static const char *const TITLES[] = {"家人", "孩子的设置", "锁屏和壁纸", "记录", "AI 记得的事"};
 static struct {
     int page, count;
-    uint32_t epoch, generation;
+    uint32_t generation;
     lv_obj_t *body, *field, *old_pin, *role;
     bool adult, pin;
     ink_ui_list_t *list;
@@ -26,7 +26,7 @@ static struct {
     ink_ui_action_spec_t form[5];
     ink_ui_page_spec_t model;
 } S INK_PSRAM_BSS;
-static bool current(void) { return S.body && S.epoch == ink_member_epoch() && !strcmp(ink_ui_page_name(), NAMES[S.page]); }
+static bool current(void) { return S.body && ink_ui_page_current() && !strcmp(ink_ui_page_name(), NAMES[S.page]); }
 static void row(const char *id, const char *title, const char *value, const char *cap, const char *args) {
     int i = S.count++;
     snprintf(S.ids[i], sizeof S.ids[i], "%s", id); snprintf(S.titles[i], sizeof S.titles[i], "%s", title);
@@ -66,7 +66,7 @@ static void records_reply(void *ctx, const ink_receipt_t *rc) {
         while (t + 1 < j->ntok && j->tok[t + 1].start < end) t++;
     }
     if (!S.count) row("activity", "AI 替你做过的事", items >= 0 ? "还没有记录" : "记录暂时读不出来", NULL, NULL);
-    row("runtime", "运行记录", "设备还没有提供运行记录接口", NULL, NULL);
+    row("runtime", "运行记录", "暂时读不到运行记录", NULL, NULL);
     row("memory", "AI 记得的事", "查看", "shell.ai_memory", NULL);
     osal_free(j); ink_ui_list_refresh(S.list, S.count);
 }
@@ -76,7 +76,10 @@ static void entered(void *ctx, const char *value) {
     ink_receipt_t rc; ink_cap_invoke(S.pin ? "family.pin_save" : "family.save", NULL, INK_SRC_TOUCH, 0, &rc);
 }
 static void saved(void *ctx, const ink_receipt_t *rc) {
-    ink_call_t *c = ctx; c->rc = *rc; c->rc.result = NULL; ink_cap_done(c);
+    ink_call_t *c = ctx; c->rc = *rc; c->rc.result = NULL;
+    if (rc->status == INK_RC_DONE && !strcmp(c->cap->id, "family.pin_save") && S.body && ink_ui_page_current() &&
+        !strcmp(ink_ui_page_name(), "SetMembers") && !strcmp(ink_cap_call_member(c), ink_member_current()->id)) ink_ui_redraw();
+    ink_cap_done(c);
 }
 static void changed(void *ctx, int h, const char *id) {
     (void)ctx; (void)h; (void)id;
@@ -87,7 +90,7 @@ static int snapshot(char *out, size_t cap) {
     return S.field ? ink_textfield_short_snapshot(S.field, out, cap) : ink_ui_list_snapshot(S.list, out, cap);
 }
 static void create(lv_obj_t *screen, void *arg) {
-    S.page = (int)(intptr_t)arg; S.epoch = ink_member_epoch(); S.generation++; S.count = 0; S.field = S.old_pin = NULL; S.pin = false;
+    S.page = (int)(intptr_t)arg; S.generation++; S.count = 0; S.field = S.old_pin = NULL; S.pin = false;
     memset(&S.pos, 0, sizeof S.pos);
     ink_shell_statusbar(screen, true); ink_shell_topbar(screen, TITLES[S.page]);
     int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP_XS, h = INK_CANVAS_H - y, w = INK_CANVAS_W - 2 * INK_MARGIN;
@@ -104,6 +107,7 @@ static void create(lv_obj_t *screen, void *arg) {
             row(m->id, m->name, !strcmp(m->id, ink_member_current()->id) ? "正在用" : m->role == INK_ROLE_CHILD ? "孩子" : "大人", "family.edit", args);
         }
         row("add", "加一位家人", "", "family.edit", NULL);
+        row("pin", "我的密码", "设置或更改", "family.pin", NULL);
     } else if (S.page == KID) {
         const ink_member_t *kid = NULL;
         for (int i = 0; ink_member_at(i); i++) if (ink_member_at(i)->role == INK_ROLE_CHILD) { kid = ink_member_at(i); break; }
@@ -111,7 +115,7 @@ static void create(lv_obj_t *screen, void *arg) {
         bool reader = false, ai = false;
         for (int i = 0; kid && i < 8 && kid->allow[i]; i++) { reader |= !strcmp(kid->allow[i], "reader."); ai |= !strcmp(kid->allow[i], "ai."); }
         row("apps", "能用什么", kid ? reader && ai ? "阅读、AI；电话和短信不限制" : "按家人的已有能力策略开放" : "还没有孩子家人", NULL, NULL);
-        row("hours", "可用时段", "儿童时段策略还没有接入", NULL, NULL);
+        row("hours", "可用时段", "暂时不能设置可用时段", NULL, NULL);
         setting("audio.child_max", "孩子的音量上限", ink_setting_get("audio.child_max") >= 100 ? 10 : ink_setting_get("audio.child_max") + 10);
     } else if (S.page == WALLPAPER) {
         setting("display.lock_style", "锁屏时显示", !ink_setting_get("display.lock_style"));
@@ -122,7 +126,7 @@ static void create(lv_obj_t *screen, void *arg) {
         row("activity", "AI 替你做过的事", "正在读取", NULL, NULL);
         ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .args_json = "{\"limit\":20}", .reply_exec = INK_EXEC_UI, .done = records_reply, .ctx = (void *)(uintptr_t)S.generation};
         ink_cap_call("activity.list", NULL, &o);
-    } else row("unavailable", "暂时看不到 AI 记得的事", "家庭服务器还没有提供记忆接口", NULL, NULL);
+    } else row("unavailable", "暂时看不到 AI 记得的事", "暂时无法查看和删除记忆", NULL, NULL);
     ink_ui_list_refresh(S.list, S.count);
     if (S.page == MEMBERS) {
         ink_shell_bind(ink_ui_pill(screen, "孩子的设置", INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_CONTROL, w, INK_CONTROL, false, NULL, NULL), "shell.kid_settings", NULL);
@@ -157,7 +161,7 @@ static void action(ink_call_t *c) {
         memset(&args, 0, sizeof args);
     } else if (!strcmp(id, "family.role")) {
         if (!S.field || S.pin || S.target[0]) { c->rc.status = INK_RC_STALE; return; }
-        S.adult = !S.adult; lv_label_set_text(lv_obj_get_child(S.role, 0), S.adult ? "大人" : "孩子"); ink_ui_content_changed();
+        S.adult = !S.adult; S.input[1].value = S.adult ? "大人" : "孩子"; lv_label_set_text(lv_obj_get_child(S.role, 0), S.input[1].value); ink_ui_content_changed();
     }
     else if (!strcmp(id, "family.edit")) {
         if (S.field) { c->rc.status = INK_RC_STALE; return; }
@@ -167,9 +171,11 @@ static void action(ink_call_t *c) {
         S.form[1] = (ink_ui_action_spec_t){.id = "save", .label = "保存称呼", .capability = "family.save", .enabled = true};
         S.form[2] = (ink_ui_action_spec_t){.id = "role", .label = "大人或孩子", .capability = "family.role", .enabled = !S.target[0]};
         S.form[3] = (ink_ui_action_spec_t){.id = "remove", .label = "移除这位家人", .capability = "member.remove", .enabled = S.target[0]};
-        S.form[4] = (ink_ui_action_spec_t){.id = "pin", .label = "改密码", .capability = "family.pin", .enabled = true};
+        S.form[4] = (ink_ui_action_spec_t){.id = "pin", .label = "改我的密码", .capability = "family.pin", .enabled = true};
         S.input[0] = (ink_ui_field_spec_t){.id = "name", .role = "textbox", .label = "称呼"};
+        S.input[1] = (ink_ui_field_spec_t){.id = "role", .role = "status", .label = "新家人的身份", .value = "孩子"};
         S.model.fields = S.input; S.model.field_count = 1; S.model.actions = S.form; S.model.action_count = 5; S.adult = false;
+        if (!S.target[0]) S.model.field_count = 2;
         ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .max = 31, .hint = "输入称呼，按完成保存"};
         S.field = ink_textfield_create(S.body, &cfg, entered, NULL, false);
         lv_obj_set_pos(S.field, ink_ui_px(INK_MARGIN), ink_ui_px(INK_GAP_L));

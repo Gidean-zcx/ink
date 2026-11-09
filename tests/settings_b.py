@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 import shutil
 import subprocess
-from PIL import Image, ImageChops, ImageStat
+from PIL import Image
 
 ROOT = Path(__file__).resolve().parents[1]
 p = argparse.ArgumentParser(description=__doc__)

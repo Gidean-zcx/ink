@@ -84,6 +84,11 @@ static void run(void *arg) {
             CHECK(strstr(snapshot, "\"fields\"") && strstr(snapshot, "\"actions\""), "F1 exposes fields and actions");
             CHECK(BY_HAND("system.home", NULL), "close settings page"); quiet();
         }
+        CHECK(AI("shell.family", NULL), "open the page before changing authentication"); quiet();
+        CHECK(BY_HAND("member.set_pin", "{\"id\":\"owner\",\"new_pin\":\"2468\"}") && g_rc.status == INK_RC_DONE, "set a PIN without a wallpaper redraw");
+        quiet(); on_ui(read_snapshot); CHECK(strstr(snapshot, "SetMembers"), "same member page remains readable after PIN setup");
+        CHECK(BY_HAND("member.set_pin", "{\"id\":\"owner\",\"old_pin\":\"2468\",\"new_pin\":\"\"}") && g_rc.status == INK_RC_DONE, "clear the temporary test PIN");
+        CHECK(BY_HAND("system.home", NULL), "close the authentication regression page"); quiet();
         CHECK(AI("shell.family", NULL), "open member management"); quiet();
         CHECK(AI("family.edit", "{\"id\":\"kid\"}"), "select the real child"); quiet();
         CHECK(AI("family.focus", NULL), "open F2 name input"); quiet();
@@ -129,6 +134,7 @@ static void run(void *arg) {
         CHECK(AI("family.pin_save", NULL) && g_rc.status == INK_RC_INVALID, "AI cannot submit the password");
         CHECK(BY_HAND("family.pin_save", NULL), "person submits the PIN through member.set_pin");
         CHECK(WAIT_FOR(ink_member_has_pin("owner"), 10000), "PIN reaches the member backend");
+        quiet(); on_ui(read_snapshot); CHECK(!strstr(snapshot, "2468"), "page snapshot remains available and masked after setting a PIN");
         CHECK(BY_HAND("system.home", NULL), "leave the private form"); quiet();
         CHECK(WAIT_FOR(sim_metric_value("settings.saved") > 0 && ink_storage_pending() == 0, 10000), "all settings reach persistent storage");
         CHECK(ink_member_switch("kid") == 0, "enter the child space"); quiet();
