@@ -1277,6 +1277,10 @@ add_test(NAME contacts COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/c
 ink_sim_executable(sim-clock-alarm tests/clock_alarm.c)
 target_link_libraries(sim-clock-alarm PRIVATE ink_apps ink_system)
 add_test(NAME clock-alarm COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/clock_alarm.py --build ${CMAKE_BINARY_DIR})
+ink_sim_executable(sim-sound-clock tests/sound_clock.c)
+target_link_libraries(sim-sound-clock PRIVATE ink_apps ink_system)
+add_test(NAME sound-clock COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/sound_clock.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(sound-clock PROPERTIES TIMEOUT 300)
 # AI chat pages use the existing service and input hosts.
 target_sources(ink_system PRIVATE system/ui/shell/ai_chat.c)
 ink_sim_executable(sim-ai-chat tests/ai_chat.c)

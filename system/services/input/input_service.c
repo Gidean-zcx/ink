@@ -10,6 +10,7 @@
 #include "ink/osal.h"
 #include "ink/rotation.h"
 #include "ink/sys/input.h"
+#include "ink/sys/audio.h"
 #include "ink/sys/power.h"
 #include "ink/sys/svc.h"
 
@@ -201,6 +202,7 @@ static bool power_filter(const hal_input_event_t *h) {
 
 static void hal_sink(const hal_input_event_t *h, void *ctx) {
     (void)ctx;
+    if (h->type == HAL_IN_KEY && h->key.pressed) ink_audio_key_tone();
     if (power_filter(h)) return;
     if ((h->type == HAL_IN_TOUCH && h->touch.phase != HAL_TOUCH_MOVE) || h->type == HAL_IN_KEY)
         hal_display_wake(WAKE_HOLD_MS);

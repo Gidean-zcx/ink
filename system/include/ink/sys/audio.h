@@ -37,6 +37,7 @@ typedef enum {
     INK_TONE_LISTEN = 0, /* push-to-talk: the microphone is open */
     INK_TONE_DONE,
     INK_TONE_ERROR,
+    INK_TONE_KEY,
 } ink_tone_t;
 
 int ink_audio_init(void);
@@ -108,6 +109,8 @@ int ink_audio_last_command(void);
 /** A call or an alarm rings (generated here, needs no file): it goes on, in this task, whatever the UI does, until
  *  turned off. It plays over a stream, which waits. Any task, never waits. */
 void ink_audio_ring(bool on);
+void ink_audio_key_tone(void);
+void ink_audio_haptic(void);
 
 /** Speaker volume 0..100 (software gain). */
 void ink_audio_set_volume(int percent);

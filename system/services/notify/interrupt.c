@@ -35,6 +35,7 @@ static struct {
     bool holding;  /* the screen and the chip are kept up for us */
     bool relock;   /* it was locked underneath: it locks again when the last one ends */
     bool ring_on;  /* what the audio service was last told */
+    bool ring_call;
     bool applying, apply_again;
     ink_int_presenter_t presenter;
     bool has_presenter;
@@ -79,7 +80,9 @@ static void apply(void) {
         bool any = top != NULL, want_ring = top && top->ringing;
         ink_int_kind_t kind = any ? top->kind : INK_INT_LOW_BATTERY;
         bool hold = any && !IT.holding, release = !any && IT.holding, relock = release && IT.relock;
-        bool ring_changed = want_ring != IT.ring_on;
+        bool incoming = kind == INK_INT_CALL;
+        bool ring_changed = want_ring != IT.ring_on || incoming != IT.ring_call;
+        IT.ring_call = incoming;
         if (hold) IT.holding = true;
         if (release) {
             IT.holding = false;
@@ -93,8 +96,8 @@ static void apply(void) {
             ink_power_hold(INK_NEED_AWAKE);
             ink_power_hold(INK_NEED_NO_LOCK);
         }
-        if (ring_changed) ink_audio_ring(want_ring);
         ink_state_set_str(IT.h_active, any ? KIND_NAME[kind] : "none");
+        if (ring_changed) ink_audio_ring(want_ring);
         if (present) ink_exec_post(exec, &IT.show_job, show_job, NULL);
         if (release) {
             ink_power_release(INK_NEED_NO_LOCK);
@@ -122,6 +125,7 @@ int ink_interrupt_raise(const ink_interrupt_t *it) {
     e->raised_us = now;
     ink_svc_unlock();
     ink_probe_count("interrupt.raised");
+    if (it->ringing && it->kind >= INK_INT_ALARM) ink_audio_haptic();
     if (ink_power_state() == INK_PWR_LOCKED) {
         ink_svc_lock();
         IT.relock = true;

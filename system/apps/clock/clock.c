@@ -6,12 +6,16 @@
 #include "ink/sys/state.h"
 #include "ink/sys/textfield.h"
 #include "ink/sys/time.h"
+#include "ink/sys/interrupt.h"
+#include "ink/sys/power.h"
+#include "ink/sys/svc.h"
 #include "ink/sys/ui_list.h"
 #include "ink/ui_shell.h"
 #include <stdio.h>
 #include <string.h>
 
-static const ink_activity_t CLOCK, DETAIL;
+static const ink_activity_t CLOCK, DETAIL, TIMER;
+static void timer_open(ink_call_t *c);
 static struct {
     ink_ui_list_t *list;
     ink_ui_list_position_t position;
@@ -100,12 +104,15 @@ static void create_list(lv_obj_t *screen, void *arg) {
     ink_alarm_t a; int cursor = 0; size_t total = 0; int64_t next = 0;
     while (ink_alarm_next(&cursor, INK_ALARM, &a) == 1) { total++; if (a.enabled && a.next_s && (!next || a.next_s < next)) next = a.next_s; }
     int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP;
-    ink_ui_notice(screen, "下一个闹钟", y);
+    const char *tabs[] = {"闹钟", "计时"};
+    lv_obj_t *seg = ink_ui_segments(screen, tabs, 2, 0, INK_MARGIN, y, INK_CANVAS_W - 2 * INK_MARGIN, NULL, NULL);
+    ink_shell_bind(lv_obj_get_child(seg, 1), "clock.timer", "{}"); y += INK_SEGMENT + INK_GAP;
     ink_tm_t t; ink_time_to_local(next, &t); char text[32];
     if (next) snprintf(text, sizeof text, "%d:%02d", t.hour, t.min); else snprintf(text, sizeof text, "%s", total ? "没有已开启的闹钟" : "还没有闹钟");
     snprintf(C.next, sizeof C.next, "%s", text);
-    ink_ui_line(screen, text, next ? INK_FONT_NUMBER : INK_FONT_SUBTITLE, INK_WEIGHT_REGULAR, INK_MARGIN, y + INK_LINE_NOTE, INK_CANVAS_W - 2 * INK_MARGIN);
-    y += INK_LINE_NOTE + INK_LINE_NUMBER + INK_GAP;
+    char summary[80]; snprintf(summary, sizeof summary, "下一个闹钟：%s", text);
+    ink_ui_line(screen, summary, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y, INK_CANVAS_W - 2 * INK_MARGIN);
+    y += INK_LINE_NOTE + INK_GAP;
     lv_obj_t *body = ink_ui_box(screen, 0, y, INK_CANVAS_W, INK_CANVAS_H - y - INK_MARGIN - INK_PRIMARY, 0, INK_SURFACE_WHITE, false);
     C.list = ink_ui_list_create(body, &LIST, &C.position, 3, 1, INK_DIGIT, "还没有闹钟，点下面加一个", bind_row, NULL);
     if (C.list) ink_ui_list_refresh(C.list, total);
@@ -168,7 +175,7 @@ static void destroy_detail(void) { C.name = NULL; }
 static int list_snapshot(char *out, size_t cap) {
     int n = C.list ? ink_ui_list_snapshot(C.list, out, cap) : -1;
     if (n < 0) return -1;
-    int more = snprintf(out + n - 1, cap - (size_t)n + 1, ",\"next_alarm\":\"%s\"}", C.next);
+    int more = snprintf(out + n - 1, cap - (size_t)n + 1, ",\"next_alarm\":\"%s\",\"timer_action\":\"clock.timer\"}", C.next);
     if (more < 0 || (size_t)more >= cap - (size_t)n + 1) { out[0] = 0; return -1; }
     return n - 1 + more;
 }
@@ -181,6 +188,110 @@ static int detail_snapshot(char *out, size_t cap) {
 static bool list_key(ink_key_t key, bool lng) { return C.list && ink_ui_list_key(C.list, key, lng); }
 static const ink_activity_t CLOCK = {.name = "Clock", .app = "clock", .create = create_list, .destroy = destroy_list, .snapshot = list_snapshot, .on_key = list_key};
 static const ink_activity_t DETAIL = {.name = "ClockAlarm", .app = "clock", .create = create_detail, .destroy = destroy_detail, .snapshot = detail_snapshot};
+
+/* Volatile, member-owned countdowns; the shared service timer also runs off-page. */
+typedef struct {
+    char owner[16];
+    uint64_t left, end;
+    bool running;
+    int ringing;
+    ink_svc_deadline_t due;
+} countdown_t;
+static countdown_t timers[INK_MEMBERS_MAX] INK_PSRAM_BSS;
+static ink_exec_job_t timer_redraw;
+static char timer_text[48] INK_PSRAM_BSS, timer_status[32] INK_PSRAM_BSS;
+static ink_ui_field_spec_t timer_fields[3] INK_PSRAM_BSS;
+static ink_ui_action_spec_t timer_actions[8] INK_PSRAM_BSS;
+static ink_ui_page_spec_t timer_page = {.id = "ClockTimer", .title = "计时", .object = {"clock:timer", 1}, .fields = timer_fields, .field_count = 3, .actions = timer_actions, .action_count = 8};
+static countdown_t *my_timer(void) { /* UI task */
+    for (int i = 0; i < INK_MEMBERS_MAX; i++) if (!strcmp(timers[i].owner, ink_member_current()->id)) return &timers[i];
+    for (int i = 0; i < INK_MEMBERS_MAX; i++) if (!timers[i].owner[0]) {
+        snprintf(timers[i].owner, sizeof timers[i].owner, "%s", ink_member_current()->id); timers[i].left = 300000000;
+        return &timers[i];
+    }
+    return NULL;
+}
+static uint64_t remaining(countdown_t *t) {
+    uint64_t now = osal_now_us();
+    return t->running ? (t->end > now ? t->end - now : 0) : t->left;
+}
+static void timer_refresh(void *arg) {
+    (void)arg;
+    if (ink_ui_page_current() && !strcmp(ink_ui_page_name(), "ClockTimer")) ink_ui_redraw();
+}
+static void timer_tick(void *arg) {
+    countdown_t *t = arg;
+    ink_svc_lock();
+    bool active = t->running; uint64_t left = remaining(t), end = t->end;
+    if (active && !left) { t->running = false; t->left = 0; }
+    ink_svc_unlock();
+    if (!active) return;
+    if (left) ink_svc_at(&t->due, end - ((left - 1) / 60000000) * 60000000, timer_tick, t);
+    else {
+        ink_interrupt_t it = {.kind = INK_INT_ALARM, .ringing = true, .title = "计时结束", .body = "设定的时间到了", .nactions = 2,
+            .actions = {{.label = "关闭", .cap = "clock.timer_dismiss"}, {.label = "知道了", .cap = "clock.timer_dismiss"}}};
+        for (int i = 0; i < 2; i++) snprintf(it.actions[i].args, sizeof it.actions[i].args, "{\"id\":%d}", (int)(t - timers));
+        if (ink_member_exists(t->owner)) t->ringing = ink_interrupt_raise(&it);
+        ink_power_release(INK_NEED_AWAKE);
+    }
+    ink_exec_post(INK_EXEC_UI, &timer_redraw, timer_refresh, NULL);
+}
+static void timer_open(ink_call_t *c) { (void)c; ink_ui_push(&TIMER, NULL); }
+static void timer_dismiss(ink_call_t *c) {
+    int64_t id = 0; ink_args_get_int(&c->args, "id", &id);
+    ink_interrupt_end(timers[id].ringing); timers[id].ringing = 0;
+}
+static void timer_change(ink_call_t *c) {
+    countdown_t *t = my_timer(); int64_t seconds = 0;
+    if (!t) { c->rc.status = INK_RC_FAILED; return; }
+    ink_svc_lock();
+    bool was = t->running; uint64_t left = remaining(t);
+    if (!strcmp(c->cap->id, "clock.timer_set")) {
+        if (was) c->rc.status = INK_RC_REJECTED;
+        else { ink_args_get_int(&c->args, "seconds", &seconds); t->left = (uint64_t)seconds * 1000000; t->end = 0; }
+    } else if (!strcmp(c->cap->id, "clock.timer_start")) {
+        if (!was && t->left) { t->running = true; t->end = osal_now_us() + t->left; }
+        else c->rc.status = INK_RC_REJECTED;
+    } else { t->running = false; t->left = !strcmp(c->cap->id, "clock.timer_pause") ? left : 300000000; if (strcmp(c->cap->id, "clock.timer_pause")) t->end = 0; }
+    bool running = t->running;
+    ink_svc_unlock();
+    if (!was && running) ink_power_hold(INK_NEED_AWAKE);
+    if (was && !running) ink_power_release(INK_NEED_AWAKE);
+    if (running) timer_tick(t); else ink_svc_cancel(&t->due);
+    ink_ui_redraw();
+}
+static void create_timer(lv_obj_t *screen, void *arg) {
+    (void)arg; countdown_t *t = my_timer(); if (!t) return;
+    ink_svc_lock(); uint64_t left = remaining(t); bool running = t->running, started = t->end != 0; ink_svc_unlock();
+    snprintf(timer_text, sizeof timer_text, "%llu 分钟", (unsigned long long)((left + 59999999) / 60000000));
+    snprintf(timer_status, sizeof timer_status, "%s", running ? "正在计时" : started ? (left ? "已暂停" : "计时结束") : "设定时长");
+    timer_fields[0] = (ink_ui_field_spec_t){.id = "remaining", .label = "剩余时间", .role = "text", .value = timer_text};
+    timer_fields[1] = (ink_ui_field_spec_t){.id = "status", .label = "状态", .role = "text", .value = timer_status};
+    timer_fields[2] = (ink_ui_field_spec_t){.id = "restart", .label = "重新启动", .role = "text", .value = started ? "重新启动会取消计时" : "重新启动后，之前的计时已取消"};
+    ink_shell_statusbar(screen, true); ink_shell_topbar(screen, "时钟"); int w = INK_CANVAS_W - 2 * INK_MARGIN, y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP;
+    const char *tabs[] = {"闹钟", "计时"}; lv_obj_t *seg = ink_ui_segments(screen, tabs, 2, 1, INK_MARGIN, y, w, NULL, NULL);
+    ink_shell_bind(lv_obj_get_child(seg, 0), "shell.back", "{}"); y += INK_SEGMENT + INK_GAP_L;
+    ink_ui_line(screen, timer_status, INK_FONT_SUBTITLE, INK_WEIGHT_MEDIUM, INK_MARGIN, y, w); y += INK_LINE_SUBTITLE + INK_GAP;
+    ink_ui_line(screen, timer_text, INK_FONT_NUMBER, INK_WEIGHT_REGULAR, INK_MARGIN, y, w); y += INK_LINE_NUMBER + INK_GAP_L;
+    ink_ui_notice(screen, "按分钟显示剩余时间，到点响铃", y);
+    y += ink_ui_text_height("按分钟显示剩余时间，到点响铃", INK_FONT_NOTE, INK_WEIGHT_REGULAR, w) + INK_GAP;
+    const char *labels[] = {"1 分钟", "5 分钟", "15 分钟", "30 分钟", started && !running && left ? "继续" : "开始", "暂停", "取消", "闹钟"};
+    const char *caps[] = {"clock.timer_set", "clock.timer_set", "clock.timer_set", "clock.timer_set", "clock.timer_start", "clock.timer_pause", "clock.timer_cancel", "shell.back"};
+    const char *args[] = {"{\"seconds\":60}", "{\"seconds\":300}", "{\"seconds\":900}", "{\"seconds\":1800}", "{}", "{}", "{}", "{}"};
+    int base = INK_CANVAS_H - INK_MARGIN - 3 * (INK_CONTROL + INK_GAP);
+    for (int i = 0; i < 8; i++) {
+        bool enabled = i < 4 ? !running : i == 4 ? !running && left : i == 5 ? running : true;
+        timer_actions[i] = (ink_ui_action_spec_t){.id = labels[i], .label = labels[i], .capability = caps[i], .args_json = args[i], .enabled = enabled};
+        if (i < 7) {
+            int cols = i < 4 ? 2 : 3, col = i < 4 ? i % 2 : i - 4, row = i < 4 ? i / 2 : 2;
+            lv_obj_t *b = ink_ui_pill(screen, labels[i], INK_MARGIN + col * (w + INK_GAP_M) / cols, base + row * (INK_CONTROL + INK_GAP), (w - (cols - 1) * INK_GAP_M) / cols, INK_CONTROL, i == (running ? 5 : 4), NULL, NULL);
+            ink_shell_bind(b, caps[i], args[i]); if (!enabled) lv_obj_remove_flag(b, LV_OBJ_FLAG_CLICKABLE);
+        }
+    }
+    ink_ui_notice(screen, timer_fields[2].value, y);
+}
+static int timer_snapshot(char *out, size_t cap) { return ink_ui_semantics_snapshot(&timer_page, out, cap); }
+static const ink_activity_t TIMER = {.name = "ClockTimer", .app = "clock", .create = create_timer, .snapshot = timer_snapshot};
 static void navigate(ink_call_t *c) {
     if (!strcmp(c->cap->id, "clock.prev") || !strcmp(c->cap->id, "clock.next")) { if (C.list) ink_ui_list_turn(C.list, !strcmp(c->cap->id, "clock.next") ? 1 : -1); return; }
     C.draft = (ink_alarm_t){.kind = INK_ALARM, .hour = 7, .enabled = true};
@@ -208,6 +319,12 @@ static void save(ink_call_t *c) {
     else { snprintf(C.error, sizeof C.error, "%s", c->rc.status == INK_RC_INVALID ? "名称最多15个字，请缩短后保存" : "没能保存，请重试"); ink_ui_redraw(); }
 }
 static const ink_cap_t CAPS[] = {
+    {.id = "clock.timer_dismiss", .title = "关闭计时响铃", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .while_locked = true, .exec = INK_EXEC_DIRECT, .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":7}},\"required\":[\"id\"]}", .run = timer_dismiss},
+    {.id = "clock.timer", .title = "计时", .activity = "Clock", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = timer_open},
+    {.id = "clock.timer_set", .title = "设定计时时长", .activity = "ClockTimer", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .input = "{\"type\":\"object\",\"properties\":{\"seconds\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":86400}},\"required\":[\"seconds\"]}", .run = timer_change},
+    {.id = "clock.timer_start", .title = "开始或继续计时", .activity = "ClockTimer", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = timer_change},
+    {.id = "clock.timer_pause", .title = "暂停计时", .activity = "ClockTimer", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = timer_change},
+    {.id = "clock.timer_cancel", .title = "取消计时", .activity = "ClockTimer", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = timer_change},
     {.id = "clock.prev", .title = "闹钟上一页", .activity = "Clock", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "clock.next", .title = "闹钟下一页", .activity = "Clock", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "clock.new", .title = "加闹钟", .activity = "Clock", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},

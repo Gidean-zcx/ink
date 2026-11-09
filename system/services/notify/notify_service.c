@@ -173,7 +173,7 @@ static void announce(uint32_t id, const char *channel, const char *title, int pr
 
 static void haptic_job(void *arg) { /* exec.bg: the motor is on the shared I2C bus */
     (void)arg;
-    hal_haptic_pulse(0);
+    ink_audio_haptic();
 }
 
 /* The channels someone turned off. Waits for the flash when it is not the current member. */
