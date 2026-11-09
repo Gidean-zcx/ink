@@ -237,6 +237,7 @@ add_library(ink_system STATIC
   system/ui/ui_task.c
   system/ui/ui_semantics.c
   system/ui/ui_list.c
+  system/ui/search.c
   system/ui/theme.c
   system/ui/icons.c
   system/ui/shell/navigation.c
@@ -556,6 +557,10 @@ target_link_libraries(sim-settings-a PRIVATE ink_apps ink_system)
 add_test(NAME settings-a COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/settings_a.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(settings-a PROPERTIES TIMEOUT 180)
 target_link_libraries(sim-ui-list-paging PRIVATE ink_apps ink_system)
+ink_sim_executable(sim-search tests/search/search.c)
+target_link_libraries(sim-search PRIVATE ink_apps ink_system)
+add_test(NAME search COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/search/run.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(search PROPERTIES TIMEOUT 240)
 add_test(NAME ui-list-paging
   COMMAND sim-ui-list-paging --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
     --script ${CMAKE_SOURCE_DIR}/tests/ui_list_paging.script --budget ${CMAKE_SOURCE_DIR}/tests/ui_scene.budget.json
@@ -1300,3 +1305,30 @@ ink_sim_executable(sim-settings-b tests/settings_b.c)
 target_link_libraries(sim-settings-b PRIVATE ink_apps ink_system)
 add_test(NAME settings-b COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/settings_b.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(settings-b PROPERTIES TIMEOUT 360)
+target_sources(ink_system PRIVATE system/ui/shell/member_pages.c)
+ink_sim_executable(sim-kid-1 tests/kid_1.c)
+target_link_libraries(sim-kid-1 PRIVATE ink_apps ink_system)
+add_test(NAME kid-1 COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/kid_1.py --build ${CMAKE_BINARY_DIR})
+
+target_sources(ink_system PRIVATE system/ui/shell/update_pages.c)
+ink_sim_executable(sim-update-pages tests/update_pages.c)
+target_link_libraries(sim-update-pages PRIVATE ink_apps ink_system)
+add_test(NAME update-pages COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/update_pages.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(update-pages PROPERTIES TIMEOUT 240)
+
+target_sources(ink_system PRIVATE system/apps/calendar/calendar.c)
+ink_sim_executable(sim-calendar tests/calendar/calendar.c)
+target_link_libraries(sim-calendar PRIVATE ink_apps ink_system)
+add_test(NAME calendar COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/calendar/run.py --build ${CMAKE_BINARY_DIR})
+
+ink_sim_executable(sim-confirm-pages tests/confirm_pages/pages.c tests/confirm_pages/boundary.c)
+target_link_libraries(sim-confirm-pages PRIVATE ink_apps ink_system)
+add_test(NAME confirm-pages COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/confirm_pages/run.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(confirm-pages PROPERTIES TIMEOUT 180 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")
+
+target_sources(ink_system PRIVATE system/apps/files/files.c)
+ink_sim_executable(sim-files-app tests/files_app/files_app.c)
+target_link_libraries(sim-files-app PRIVATE ink_apps ink_system)
+add_dependencies(sim-files-app sim-image)
+target_include_directories(sim-files-app PRIVATE ${CMAKE_BINARY_DIR}/generated)
+add_test(NAME files-app COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/files_app/run.py --build ${CMAKE_BINARY_DIR})

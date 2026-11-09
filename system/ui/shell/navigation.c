@@ -16,6 +16,7 @@
 #include "ink/sys/notify.h"
 #include "ink/sys/power.h"
 #include "ink/sys/settings.h"
+#include "ink/sys/search.h"
 #include "ink/sys/state.h"
 #include "ink/sys/textfield.h"
 #include "ink/sys/time.h"
@@ -409,6 +410,7 @@ static int tools(tool_t out[24]) {
         if (!a->entry || !ink_app_visible(a) || !strcmp(a->id, "home") || !strcmp(a->id, "reader")) continue;
         if (!strcmp(a->id, "phone")) continue; /* Already in the contact group. */
         if (!strcmp(a->id, "memo")) continue; /* Already in the memo/contact group. */
+        if (!strcmp(a->id, "upcoming")) continue; /* The calendar is 接下来 in the same group. */
         out[count++] = (tool_t){a->id, a->title, a->icon ? a->icon : INK_UI_ICON(grid)};
     }
     static const tool_t MORE[] = {{"clock", "时钟", INK_UI_ICON(clock)},     {"camera", "相机", INK_UI_ICON(camera)},
@@ -484,7 +486,7 @@ static void search_entered(void *ctx, const char *value) {
     ink_args_init(args);
     ink_args_str(args, "query", value);
     ink_receipt_t rc;
-    ink_cap_invoke("shell.search", args, INK_SRC_TOUCH, 0, &rc);
+    ink_cap_invoke("search.show", args, INK_SRC_TOUCH, 0, &rc);
     osal_free(args);
 }
 
@@ -1569,6 +1571,7 @@ static const ink_setting_def_t SETTINGS[] = {
 int ink_shell_ai_init(void);
 
 int ink_shell_init(void) {
+    if (ink_search_init() != 0) return -1;
     if (ink_settings_pages_init() != 0) return -1;
     if (ink_boot_flow_init() != 0) return -1;
     if (ink_shell_ai_init() != 0) return -1;

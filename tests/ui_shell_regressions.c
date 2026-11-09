@@ -307,6 +307,7 @@ static void member_privacy_tests(void) {
     wanted = "找附近的 Wi-Fi"; on_ui(read_view);
     CHECK(label_x >= 0, "find the real scan button"); if (label_x >= 0) tap(label_x, label_y); quiet();
     CHECK(BY_HAND("shell.members", NULL) && g_rc.status == INK_RC_DONE, "open the actual member picker"); quiet();
+    CHECK(BY_HAND("shell.member_choose", NULL) && g_rc.status == INK_RC_DONE, "continue from the member handoff preview"); quiet();
     wanted = "小"; on_ui(read_view);
     CHECK(label_x >= 0, "find the child's avatar"); if (label_x >= 0) tap(label_x, label_y); quiet();
     CHECK(!strcmp(ink_member_current()->id, "kid"), "touch really switches to the child");

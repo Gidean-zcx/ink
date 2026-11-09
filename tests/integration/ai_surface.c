@@ -63,6 +63,8 @@ static const struct {
     {"ai.panel.next", NULL}, {"ai.panel.prev", NULL},
     {"keyboard.key", "code"}, {"keyboard.pick", "index"}, {"keyboard.candidates", ""}, {"keyboard.edit", "action"},
     {"shell.search", "query"}, {"shell.page_next", NULL}, {"shell.page_prev", NULL}, {"shell.notify_next", NULL}, {"shell.notify_prev", NULL},
+    {"search.query", "query"}, {"search.show", "query"}, {"search.open", "id,version"},
+    {"search.focus", NULL}, {"search.next", NULL}, {"search.prev", NULL},
     {"shell.wifi_next", NULL}, {"shell.wifi_prev", NULL}, {"shell.wifi_pick", "index"},
     {"file_picker.prev", NULL}, {"file_picker.next", NULL}, {"file_picker.cancel", NULL}, {"file_picker.select", "id"},
     {"contacts.put", "name,number"}, {"contacts.delete", "id,if_revision,name,number"}, {"contacts.select", "id"}, {"contacts.edit", ""},
@@ -80,6 +82,13 @@ static const struct {
     {"shell.family", NULL}, {"shell.kid_settings", NULL}, {"shell.wallpaper", NULL}, {"shell.records", NULL}, {"shell.ai_memory", NULL},
     {"family.edit", ""}, {"family.focus", NULL}, {"family.save", NULL}, {"family.role", NULL}, {"family.pin", NULL},
     {"family.prev", NULL}, {"family.next", NULL}, {"wallpaper.choose", NULL}, {"member.rename", "id,name"},
+    {"calendar.open", NULL}, {"calendar.prev", NULL}, {"calendar.next", NULL}, {"calendar.month_prev", NULL},
+    {"calendar.month_next", NULL}, {"calendar.select", "day"},
+    {"shell.member_choose", NULL}, {"shell.pin_set", NULL},
+    {"shell.pin_forgot", NULL}, {"shell.pin_parent", NULL}, {"shell.pin_cancel", NULL},
+    {"shell.update", NULL}, {"shell.update_close", NULL},
+    {"files.browse", "path"}, {"files.select", "id"}, {"files.move", NULL}, {"files.name", NULL},
+    {"files.preview", "id"}, {"files.next", NULL}, {"files.prev", NULL}, {"files.up", NULL},
     {NULL, NULL},
 };
 
@@ -98,6 +107,7 @@ static const struct {
     {"system.upgrade_from_card", "a person installs: it may fetch and tell, the device is gone for minutes (design §12.7)", ""},
     {"family.old_pin", "only a person enters a PIN on the device", NULL},
     {"family.pin_save", "only a person submits a PIN on the device", NULL},
+    {"shell.pin_submit", "only the person submits the local PIN buffer", NULL},
     {NULL, NULL, NULL},
 };
 

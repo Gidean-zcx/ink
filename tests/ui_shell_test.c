@@ -93,8 +93,9 @@ static void test_task(void *arg) {
     CHECK(AI("text.insert", "{\"text\":\"阅读\"}") && g_rc.status == INK_RC_DONE, "the AI can fill the same application query");
     CHECK(BY_HAND("text.submit", NULL) && g_rc.status == INK_RC_DONE, "the search key submits through the text capability");
     quiet(); on_ui(read_screen);
-    CHECK(strstr(g_snap, "查找=阅读") && !ink_text_focused(), "the real query filters Apps and closes its keyboard");
+    CHECK(!strcmp(ink_ui_page_name(), "Search") && strstr(g_snap, "阅读") && !ink_text_focused(), "the real query opens global Search and closes its keyboard");
     on_ui(find_clock); CHECK(!clock_tile, "the nonmatching Clock tile is absent from the rendered tree");
+    CHECK(BY_HAND("shell.back", NULL) && g_rc.status == INK_RC_DONE, "global search returns to the original Apps page");
     CHECK(BY_HAND("shell.search", "{\"query\":\"\"}") && g_rc.status == INK_RC_DONE, "clearing the same query restores Apps");
     on_ui(find_clock); CHECK(clock_tile, "clearing the query restores the rendered tile");
     key(HAL_KEY_PREV); quiet();

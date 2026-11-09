@@ -109,4 +109,10 @@ void ink_main(void) {
     if (ink_memo_init() != 0) osal_panic("memo failed to start");
     extern int ink_settings_family_init(void), ink_member_rename_init(void), ink_wallpaper_init(void);
     if (ink_settings_family_init() || ink_member_rename_init() || ink_wallpaper_init()) osal_panic("family settings failed to start");
+    extern int ink_member_pages_init(void);
+    if (ink_member_pages_init() != 0) osal_panic("member pages failed to start");
+    extern int ink_calendar_init(void);
+    if (ink_calendar_init() != 0) osal_panic("calendar failed to start");
+    extern int ink_files_init(void);
+    if (ink_files_init() != 0) osal_panic("files failed to start");
 }
