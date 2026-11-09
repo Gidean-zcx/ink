@@ -10,7 +10,7 @@
 | 2 | 【实测】通过 | 10 张照片两页、九宫格；硬件 NEXT 与 AI 上一页；实际 LVGL 缩略图尺寸和逐像素灰度核查 | 同上 |
 | 3 | 【实测】通过 | 原尺寸 16 灰阶看图；AI/触摸删除共用 `file.delete`，人确认、取消保留、AI 自批拒绝、卡和索引同步删除 | 同上 |
 | 4 | 【实测】通过 | 孩子看不到大人照片、已知编号也不能打开；孩子拍照只进自己目录。撤掉页面归属检查后相同场景退出 1、3 条断言失败 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/camera_gallery/run.py --build build --negative` |
-| 5 | 【实测】通过 | 三页完整快照均适配实际 AI 的 3072 字节缓冲；真实触摸与 AI 走同能力 | 同上 |
+| 5 | 【实测】通过 | 三页完整快照均适配实际 AI 的 3072 字节缓冲；真实触摸与 AI 走同能力 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/camera_gallery/run.py --build build` |
 | 6 | 【实测】未全过；行数通过 | 普通与 ASan/UBSan 全量各 233 项：226 通过、同样 4 失败、3 被既有脚本标记跳过，均退出 8；无 sanitizer 错误；产品 349/400 行 | `taskpolicy -c utility cmake --build build -j2`；`UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`；ASan 换 `build-asan`、配置加 `-DINK_SANITIZE=ON` |
 
 ## 没做到的
