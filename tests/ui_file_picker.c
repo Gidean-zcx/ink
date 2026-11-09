@@ -82,6 +82,8 @@ static void child_page(void) {
 static void run(void *arg) {
     (void)arg;
     CHECK(WAIT_FOR(ink_member_space_open(), 10000), "the real owner space opens"); quiet();
+    int removed = ink_fs_remove("/members/kid/SYNTH_CHILD.png");
+    CHECK(removed == 0 || removed == INK_FS_ERR_NOT_FOUND, "reset only the previous synthetic child fixture");
     for (int i = 0; i < 6; i++) {
         char path[INK_FS_PATH_MAX]; snprintf(path, sizeof path, "/family/picker/SYNTH_IMAGE_%d.png", i);
         CHECK(ink_fs_write_atomic(path, "SYNTHETIC_IMAGE", 15) == 0, "create synthetic image %d", i);
