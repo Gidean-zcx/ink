@@ -11,6 +11,7 @@ p = argparse.ArgumentParser()
 p.add_argument("--build", type=Path, required=True)
 a = p.parse_args()
 build = a.build.resolve()
+(build / "test-out").mkdir(parents=True, exist_ok=True)
 area = Path(tempfile.mkdtemp(prefix="clock-alarm-", dir=build / "test-out"))
 (area / "sd").mkdir()
 for phase in ("create", "restart"):

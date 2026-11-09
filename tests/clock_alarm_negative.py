@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 import shlex
 import subprocess
+import tempfile
 
 ROOT = Path(__file__).resolve().parents[1]
 p = argparse.ArgumentParser()
@@ -29,7 +30,7 @@ link.insert(next(i for i, value in enumerate(link) if value.endswith(".a")), str
 binary = work / "sim-clock-alarm"
 link[link.index("-o") + 1] = str(binary)
 subprocess.run(link, cwd=build, check=True)
-out = work / "run"
+out = Path(tempfile.mkdtemp(prefix="run-", dir=work))
 result = subprocess.run([str(binary), "--profile", str(ROOT / "simulator/profiles/metalio-plus.json"),
     "--assets", str(build / "assets"), "--content", str(build / "test-content"), "--out", str(out), "--end", "120s",
     "--quiet", "--no-random-outages", "--budget", str(ROOT / "tests/ui_scene.budget.json")], capture_output=True, text=True, timeout=120)

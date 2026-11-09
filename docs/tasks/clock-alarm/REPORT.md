@@ -61,18 +61,19 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R
 
 ## 反向对照
 
-- 【实测】仅在独立编译对象中撤掉“输入期间不重复列出页面动作”的修复；编译、链接均为 0，原测试程序退出 1，162 项通过、4 项失败、finished=1。四次名称输入均触发 AI 快照缓冲断言，未改原源码、断言或正常可执行文件。日志及指标在 `build/clock-negative/`。
+- 【实测】仅在独立编译对象中撤掉“输入期间不重复列出页面动作”的修复；编译、链接均为 0，原测试程序退出 1，162 项通过、4 项失败、finished=1。四次名称输入均触发 AI 快照缓冲断言，未改原源码、断言或正常可执行文件；每轮使用独立输出目录，避免读取旧指标。最终复跑同样成立，日志及指标在 `build/clock-negative/`，命令输出见 `build/clock-negative-final.log`。
 - 可复现命令：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/clock_alarm_negative.py --build build`。
 
 ## 规模与验证
 
 - 【实测】产品源文件 220 行，boot 注册 3 行，CMake 共 5 行（含测试接线也计入），保守合计 228 行，不超过 300。超过 100 行是因为包含列表、表单、详情、F1／F2／F4 接线和七个能力声明；看过只接 `alarm.set` 的更小方案，但它不提供新建表单、分页和同源快照。未增加时间服务实现。
-- 【实测】普通全量首轮 215/218；更新上面两份固定清单后为 217/218，CTest 退出 8，210.85 秒，无跳过。仅 `capability-table-doc` 因共享目录过期失败；单独生成到 `build/clock-capabilities.md` 并 `--check` 通过，265 条定义。
+- 【实测】普通全量首轮 215/218；更新上面两份固定清单后，最终重跑为 217/218，CTest 退出 8，409.81 秒，无跳过。仅 `capability-table-doc` 因共享目录过期失败；单独生成到 `build/clock-capabilities.md` 并 `--check` 通过，265 条定义。最终配置／构建参数不变，日志为 `build/clock-build-final.log`、`build/clock-ctest-final.log`。
 - 【实测】ASan／UBSan 的配置和完整构建退出 0；已核对产品及场景测试编译参数含 `-Werror -fsanitize=address,undefined -fno-omit-frame-pointer`，全量启用 `UBSAN_OPTIONS=halt_on_error=1`。217/218，退出 8，368.31 秒，无跳过；唯一失败同为 `capability-table-doc`，没有 Sanitizer 错误。日志：`build-asan/clock-build.log`、`build-asan/clock-ctest.log`。
 - 【实测】新场景创建轮 166 项断言通过，重启轮 24 项通过；内部 RAM 最低余量分别为 48,192 和 47,840 字节，原门槛 32,768；内外部内存分配失败均为 0。`ui_scale_check.py system/apps/clock/clock.c` 通过。
+- 【实测】最终 ASan／UBSan 定向复跑退出 0，创建／重启仍全部通过；日志为 `build-asan/clock-targeted-final.log`。
 - 【实测】对照图及分数在 `build/clock-compare/`。命令为 `tools/ui_compare.py --build build --out build/clock-compare --reuse --scenes Clock ClockRing`；Clock 截图和指标直接复制自成功验收场景，ClockRing 由该工具的正常场景入口生成。
 
-完整验证命令：配置使用总规则第 5 节全部依赖参数；额外指定 `-DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"` 使用已有、只读的服务器测试依赖。ASan 目录只另启用 `-DINK_SANITIZE=ON`，未更改其他设置；未安装或升级依赖。
+完整验证命令：配置使用总规则第 5 节全部依赖参数；额外指定 `-DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"` 使用已有、只读的服务器测试依赖。ASan 目录只另启用 `-DINK_SANITIZE=ON`，未更改其他设置；未安装系统或 Python 包，CMake 仅在忽略的构建目录按仓库固定版本准备 SDL2／ImGui，未升级依赖。
 
 ```bash
 export PYTHONPATH="$PWD/hub" PYTHONDONTWRITEBYTECODE=1
@@ -82,3 +83,9 @@ taskpolicy -c utility cmake --build build-asan -j2
 export UBSAN_OPTIONS=halt_on_error=1
 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
 ```
+
+## 最终检查
+
+- 【实测】基线至最终提交共九个任务相关文件；产品代码保守计数仍为 228 行，未夹带共享文档、设计稿或构建产物；`git diff --check` 通过，报告的两个本地链接均存在。
+- 【实测】按总规则第 6 节原样扫描基线至 HEAD 的提交差异：零匹配，grep 退出 1；没有本机绝对路径、MAC 或其他实际身份数据。
+- 本地提交，未推送、未开 PR、未碰设备。验收 1 部分完成、验收 4 未全通过，不能把本报告当作全部功能验收通过。
