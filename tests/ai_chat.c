@@ -149,10 +149,15 @@ static void run(void *arg) {
     CHECK(WAIT_FOR(sim_metric_value("action.user.shell.ai_key") + sim_metric_value("action.ai.shell.ai_key") >= 4, 5000), "physical and tap speech share the key capability");
     CHECK(WAIT_FOR(sim_metric_value("ai.presses") >= 2, 5000), "held AI key starts another real turn");
     CHECK(WAIT_FOR(speaking(), 20000), "the held-key turn reaches actual speech playback");
+    double answered = sim_metric_value("ai.answers");
     hw(HW_KEY_DOWN, HAL_KEY_AI, 0);
     CHECK(WAIT_FOR(ink_audio_capture_busy() && !speaking(), 5000), "pressing AI while it speaks interrupts playback and starts capture");
     hw(HW_KEY_UP, HAL_KEY_AI, 0);
     CHECK(WAIT_FOR(sim_metric_value("action.user.shell.ai_key") >= 4, 5000), "both held-key turns use the common capability");
+    CHECK(WAIT_FOR(sim_metric_value("ai.answers") > answered, 20000), "the interrupted turn's replacement finishes downloading");
+    CHECK(speaking(), "completed answer still has real speech queued");
+    CHECK(AI("shell.ai_stop", NULL) && g_rc.status == INK_RC_DONE, "AI uses the same stop capability for queued speech");
+    CHECK(WAIT_FOR(!speaking(), 5000), "stop also aborts playback after the server has finished sending");
     quiet(); on_ui(read_snapshot);
     CHECK(ink_member_switch("kid") == 0, "switch member with conversation active");
     quiet(); on_ui(check_cleared);

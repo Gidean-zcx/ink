@@ -168,7 +168,7 @@ static void turn_focus_watch(void);
 
 void ink_ai_stop_speech(void) {
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
-    int stream = AI.tts_stream;
+    int stream = AI.tts_opened;
     AI.tts_stream = 0;
     AI.tts_done_for = AI.stream;
     osal_mutex_unlock(AI.lock);
