@@ -8,6 +8,7 @@
 #include "ink/sys/exec.h"
 #include "ink/sys/state.h"
 #include "ai_chat.h"
+#include "ai_pages.h"
 #include "ink/ui_shell.h"
 
 #define PANEL_HEIGHT (INK_GAP_L + INK_CONTROL + INK_GAP_S + 3 * ink_ui_line_height(INK_FONT_BODY) + INK_GAP_S + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_S + INK_CONTROL + INK_GAP_L)
@@ -18,6 +19,7 @@ static struct {
     uint16_t starts[4097];
     int page, pages;
     bool hidden, speaking;
+    const ink_ui_overlay_t *overlay;
     ink_exec_job_t refine;
 } A INK_PSRAM_BSS;
 static void audio_changed(void *ctx, int handle, const char *id);
@@ -107,20 +109,20 @@ bool ink_shell_ai_hide(void) {
     if (!A.root || A.hidden) return false;
     ink_ui_hint_obj(A.root, INK_REFRESH_FLASH_UI);
     lv_obj_add_flag(A.root, LV_OBJ_FLAG_HIDDEN);
-    ink_ui_overlay_remove(&OVERLAY);
+    ink_ui_overlay_remove(A.overlay);
     A.hidden = true;
     return true;
 }
 void ink_shell_ai_reveal(void) {
     if (!A.root || !A.hidden) return;
     lv_obj_remove_flag(A.root, LV_OBJ_FLAG_HIDDEN);
-    ink_ui_overlay_add(&OVERLAY, A.root);
+    ink_ui_overlay_add(A.overlay, A.root);
     A.hidden = false;
 }
 void ink_shell_ai_closed(void) {
     if (!A.root) return;
     ink_ui_hint_obj(A.root, INK_REFRESH_FLASH_UI);
-    ink_ui_overlay_remove(&OVERLAY);
+    ink_ui_overlay_remove(A.overlay);
     A.root = A.status = A.question = A.answer = A.source = A.actions = A.prev = A.next = A.counter = A.stop = NULL;
     memset(A.words, 0, sizeof A.words); memset(A.text, 0, sizeof A.text);
     A.page = A.pages = 0; A.hidden = false;
@@ -138,7 +140,7 @@ static void audio_changed(void *ctx, int handle, const char *id) {
     else { lv_obj_remove_flag(A.actions, LV_OBJ_FLAG_HIDDEN); lv_obj_remove_flag(A.source, LV_OBJ_FLAG_HIDDEN); }
 }
 
-void ink_shell_ai_status(const char *s) {
+void ink_shell_ai_status(const char *s, ink_ai_error_t error) {
     if (!A.root) return;
     bool done = strstr(s, "回答完成") || !strcmp(s, "回答中");
     const char *caption = strstr(s, "声音没能播放") ? (done ? "回答完成 · 声音没能播放" : "声音没能播放") : done ? "" : strstr(s, "正在听") ? (ink_ai_chat_tapped() ? "正在听 · 停一下自动结束" : "正在听 · 松开结束") : strstr(s, "正在想") ? "正在看这一页" : s;
@@ -154,6 +156,13 @@ void ink_shell_ai_status(const char *s) {
     }
     ink_ui_hint_obj(A.status, done ? INK_REFRESH_UI : INK_REFRESH_FAST);
     audio_changed(NULL, 0, NULL);
+    const ink_ui_overlay_t *overlay = ink_ai_pages_status(error, A.root);
+    if (!overlay) overlay = &OVERLAY;
+    if (A.overlay != overlay) {
+        ink_ui_overlay_remove(A.overlay);
+        A.overlay = overlay;
+        if (!A.hidden) ink_ui_overlay_add(A.overlay, A.root);
+    }
 }
 
 static void action(ink_call_t *c) {
@@ -207,7 +216,7 @@ void ink_shell_ai_open(lv_obj_t **root, lv_obj_t **status, lv_obj_t **question, 
     A.hidden = false; A.page = 0; A.pages = 1; A.words[0] = 0; A.starts[0] = A.starts[1] = 0;
     A.caption[0] = 0; A.speaking = false;
     draw_words();
-    ink_ui_overlay_add(&OVERLAY, A.root);
+    A.overlay = &OVERLAY; ink_ui_overlay_add(A.overlay, A.root);
     ink_ui_hint_obj(A.root, INK_REFRESH_FAST);
     ink_exec_post(INK_EXEC_UI, &A.refine, refine, NULL);
     *root = A.root; *status = A.status; *question = A.question; *answer = A.answer;

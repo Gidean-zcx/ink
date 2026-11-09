@@ -150,6 +150,7 @@ static void directory(void) {
           "the AI reads the directory (%s)", g_result);
     CHECK(!strstr(g_result, "gamma"), "what this device lacks for is not in it (%s)", g_result);
     CHECK(!strstr(g_result, "\"id\":\"backup\""), "backup stays in settings, outside the app directory");
+    CHECK(!strstr(g_result, "\"id\":\"ai-log\""), "the AI log opens from SetVoice and Records, outside the app directory");
     CHECK(strstr(g_result, "delta") != NULL, "what is for adults is, for an adult");
     CHECK(AI("app.open", "{\"id\":\"gamma\"}") && g_rc.status == INK_RC_REJECTED, "it cannot be opened (%s)", ink_rc_name(g_rc.status));
     CHECK(AI("app.open", "{\"id\":\"nope\"}") && g_rc.status == INK_RC_INVALID, "no such app");

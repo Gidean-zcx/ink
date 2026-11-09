@@ -117,4 +117,6 @@ void ink_main(void) {
     if (ink_camera_app_init() != 0 || ink_gallery_init() != 0) osal_panic("camera/gallery failed to start");
     extern int ink_backup_pages_init(void);
     if (ink_backup_pages_init() != 0) osal_panic("backup pages failed to start");
+    extern int ink_ai_pages_init(void);
+    if (ink_ai_pages_init() != 0) osal_panic("AI pages failed to start");
 }

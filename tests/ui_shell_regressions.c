@@ -341,7 +341,7 @@ static lv_obj_t *bound(lv_obj_t *root, const char *id) {
     return NULL;
 }
 static void open_answer(void) { ink_shell_ai_open(&answer_root, &answer_status, &answer_question, &answer_label); }
-static void update_answer(void) { ink_shell_ai_words(answer_words); ink_shell_ai_status("回答完成"); }
+static void update_answer(void) { ink_shell_ai_words(answer_words); ink_shell_ai_status("回答完成", INK_AI_ERROR_NONE); }
 static void close_answer(void) { ink_shell_ai_closed(); lv_obj_delete(answer_root); answer_root = NULL; }
 static void read_answer(void) {
     read_view();

@@ -125,7 +125,7 @@ static void sheet_open(void) {
 
 static void set_status(const char *s) {
     if (!AI.open) return;
-    ink_shell_ai_status(s);
+    ink_shell_ai_status(s, INK_AI_ERROR_NONE);
 }
 
 static void free_buffered(void);
@@ -262,7 +262,10 @@ static void ui_apply(void *arg) { /* UI task */
                           : p->status == INK_HUB_ERR_TIMEOUT ? "家庭服务器没有回应，请再试一次"
                           : p->status == INK_HUB_ERR_LOST    ? "网络断了，回答没收全，请再试一次"
                                                              : "出了点问题，请再试一次";
-        set_status(msg);
+        ink_ai_error_t error = !strcmp(p->text, "budget") ? INK_AI_ERROR_BUDGET :
+            p->status == INK_HUB_ERR_OFFLINE ? INK_AI_ERROR_OFFLINE : p->status == INK_HUB_ERR_LOST ? INK_AI_ERROR_LOST :
+            p->status == INK_HUB_ERR_TIMEOUT ? INK_AI_ERROR_TIMEOUT : INK_AI_ERROR_NONE;
+        ink_shell_ai_status(error == INK_AI_ERROR_BUDGET ? "今天的额度用完了" : msg, error);
         ink_ui_cause(AI.t_release, "ai.release_to_error_visible_ms");
         ink_probe_count("ai.failures");
         ink_audio_tone(INK_TONE_ERROR, 0, NULL);
@@ -355,7 +358,9 @@ static void on_reply(void *ctx, int status, const ink_json_t *j, int result) { /
     (void)j;
     (void)result;
     int id = (int)(intptr_t)ctx;
-    post(id, status == INK_HUB_OK ? 1 : 2, status, NULL);
+    bool budget = status == INK_HUB_ERR_REMOTE && j && (ink_json_eq(j, ink_json_find(j, result, "message"), "budget") ||
+        ink_json_eq(j, ink_json_find(j, result, "data.code"), "budget"));
+    post(id, status == INK_HUB_OK ? 1 : 2, status, budget ? "budget" : NULL);
     ink_power_release(INK_NEED_NET); /* the turn is over (answer, error or timeout) */
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
     int sid = 0;
