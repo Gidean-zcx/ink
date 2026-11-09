@@ -143,8 +143,8 @@ static void run(void *arg) {
     CHECK(strstr(g_snap, "存储卡"), "backup failure reports the actual missing card");
     CHECK(AI("shell.back", NULL) && ready("SetStorage"), "backup failure returns to storage settings");
     vtk_event_at(vtk_now() + SIM_MS(1), card_event, (void *)1); delay_ms(50);
-    CHECK(AI("backup.open", NULL) && ready("Backup"), "backup failure can reopen");
-    press("现在备份一次");
+    CHECK(AI("backup.open", NULL) && ready("BackupFail"), "backup failure remains visible when reopened");
+    press("再试一次");
     CHECK(WAIT_FOR(phase("\"phase\":\"saved\""), 180000), "touch actually backs up files to the synthetic peer");
     CHECK(WAIT_FOR(at("Backup") && strstr(g_snap, "已备份到家庭服务器"), 5000), "saved service state updates the UI");
     capture("Backup");

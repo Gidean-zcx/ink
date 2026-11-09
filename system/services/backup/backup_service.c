@@ -1467,8 +1467,8 @@ held_back(ink_call_t *c) { /* sound holds the flash back; saving the journal now
 }
 
 static void cap_backup(ink_call_t *c) {
+    if (held_back(c)) return;
     if (!for_call(c)) return;
-    if (held_back(c)) goto failed;
     if (active()) {
         c->rc.status = INK_RC_QUEUED;
         result(c, false);
