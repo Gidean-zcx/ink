@@ -60,6 +60,8 @@ static const struct {
     {"keyboard.key", "code"}, {"keyboard.pick", "index"}, {"keyboard.candidates", ""}, {"keyboard.edit", "action"},
     {"shell.search", "query"}, {"shell.page_next", NULL}, {"shell.page_prev", NULL}, {"shell.notify_next", NULL}, {"shell.notify_prev", NULL},
     {"shell.wifi_next", NULL}, {"shell.wifi_prev", NULL}, {"shell.wifi_pick", "index"},
+    {"clock.prev", NULL}, {"clock.next", NULL}, {"clock.new", NULL}, {"clock.open", "id"},
+    {"clock.draft", ""}, {"clock.focus", NULL}, {"clock.save", NULL},
     {NULL, NULL},
 };
 

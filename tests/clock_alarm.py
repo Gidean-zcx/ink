@@ -9,14 +9,13 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[1]
 p = argparse.ArgumentParser()
 p.add_argument("--build", type=Path, required=True)
-p.add_argument("--binary", type=Path)
 a = p.parse_args()
 build = a.build.resolve()
 area = Path(tempfile.mkdtemp(prefix="clock-alarm-", dir=build / "test-out"))
 (area / "sd").mkdir()
 for phase in ("create", "restart"):
     out = area / phase
-    cmd = [str(a.binary.resolve() if a.binary else build / "sim-clock-alarm"), "--profile", str(ROOT / "simulator/profiles/metalio-plus.json"),
+    cmd = [str(build / "sim-clock-alarm"), "--profile", str(ROOT / "simulator/profiles/metalio-plus.json"),
            "--assets", str(build / "assets"), "--content", str(build / "test-content"), "--out", str(out),
            "--end", "120s", "--flash-image", str(area / "user.img"), "--sd-dir", str(area / "sd"),
            "--quiet", "--no-random-outages", "--budget", str(ROOT / "tests/ui_scene.budget.json")]

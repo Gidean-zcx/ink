@@ -9,7 +9,7 @@
 | 1 | 【实测】部分完成 | 真实触摸新建、能力删除、同一模拟闪存重启后保留三条；编辑、开关缺服务接口，未做 | 定向命令 |
 | 2 | 【实测】通过 | 每天 127、工作日 62、自选周日／周六 65；显示、原始记录、重启读取均断言 | 定向命令 |
 | 3 | 【实测】通过 | 实际响铃，触摸稍后响保存十分钟，AI 调原能力关掉；页面与 AI 的 3072 字节快照一致 | 定向命令 |
-| 4 | 进行中 | Werror 构建及定向测试通过；全量、内存检查、最终规模待补 | 待补 |
+| 4 | 【实测】未全通过，内存检查进行中 | 普通全量 217/218，唯一失败为禁止本任务修改的共享能力目录；产品 228 行 | 完整验证命令待补 |
 
 ## 没做到的
 
@@ -18,11 +18,12 @@
 
 ## 和设计不一致的
 
-- Clock 未放任务排除的“计时”入口；下一个闹钟只显示真实时间；增加 F4 页码条。已有闹钟详情明确提示暂不支持修改和开关。画板对照分数待补；尺寸均取当前主题。
+- Clock 对照 43.297/255，ClockRing 为 35.467/255，均超过 12。Clock 未放任务排除的“计时”入口；下一个闹钟只显示真实时间；增加 F4 页码条。已有闹钟详情明确提示暂不支持修改和开关；字号、比例、灰色均取当前主题，不为分数改规格。ClockRing presenter 本任务未改。
 
 ## 改过的已有测试
 
-- 暂无。
+- `tests/integration/apps.c`：精确应用数量 6 → 7，新增时钟应用；并追加其初始状态应为 stopped 的断言，原有状态检查保留。
+- `tests/integration/ai_surface.c`：在 AI 能力白名单末尾追加七个时钟能力；open 必须有 id，draft 参数可选，其余无需参数。没有删除断言、放宽资源预算或跳过测试。
 
 ## 要用户定的
 
@@ -55,3 +56,15 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R
 ```
 
 日志：`build/clock-build.log`、`build/clock-targeted.log`；截图、模拟闪存及两轮结果在忽略目录 `build/test-out/clock-alarm-*/`。
+
+## 反向对照
+
+- 【实测】仅在独立编译对象中撤掉“输入期间不重复列出页面动作”的修复；编译、链接均为 0，原测试程序退出 1，162 项通过、4 项失败、finished=1。四次名称输入均触发 AI 快照缓冲断言，未改原源码、断言或正常可执行文件。日志及指标在 `build/clock-negative/`。
+- 可复现命令：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/clock_alarm_negative.py --build build`。
+
+## 规模与验证
+
+- 【实测】产品源文件 220 行，boot 注册 3 行，CMake 共 5 行（含测试接线也计入），保守合计 228 行，不超过 300。超过 100 行是因为包含列表、表单、详情、F1／F2／F4 接线和七个能力声明；看过只接 `alarm.set` 的更小方案，但它不提供新建表单、分页和同源快照。未增加时间服务实现。
+- 【实测】普通全量首轮 215/218；更新上面两份固定清单后为 217/218，CTest 退出 8，210.85 秒，无跳过。仅 `capability-table-doc` 因共享目录过期失败；单独生成到 `build/clock-capabilities.md` 并 `--check` 通过，265 条定义。
+- 【实测】新场景创建轮 166 项断言通过，重启轮 24 项通过；内部 RAM 最低余量分别为 48,192 和 47,840 字节，原门槛 32,768；内外部内存分配失败均为 0。`ui_scale_check.py system/apps/clock/clock.c` 通过。
+- 【实测】对照图及分数在 `build/clock-compare/`。命令为 `tools/ui_compare.py --build build --out build/clock-compare --reuse --scenes Clock ClockRing`；Clock 截图和指标直接复制自成功验收场景，ClockRing 由该工具的正常场景入口生成。

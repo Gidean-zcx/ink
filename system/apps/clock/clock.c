@@ -1,4 +1,5 @@
 /* Clock pages use the existing schedule service; UI task only. */
+/* ui-scale-runtime: dimension w,x,y Theme-derived button coordinates supplied by this page. */
 #include "ink/osal.h"
 #include "ink/sys/appreg.h"
 #include "ink/sys/members.h"
@@ -94,7 +95,7 @@ static void create_list(lv_obj_t *screen, void *arg) {
     int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP;
     ink_ui_notice(screen, "下一个闹钟", y);
     ink_tm_t t; ink_time_to_local(next, &t); char text[32];
-    if (next) snprintf(text, sizeof text, "%d:%02d", t.hour, t.min); else snprintf(text, sizeof text, "还没有闹钟");
+    if (next) snprintf(text, sizeof text, "%d:%02d", t.hour, t.min); else snprintf(text, sizeof text, "%s", total ? "没有已开启的闹钟" : "还没有闹钟");
     snprintf(C.next, sizeof C.next, "%s", text);
     ink_ui_line(screen, text, next ? INK_FONT_NUMBER : INK_FONT_SUBTITLE, INK_WEIGHT_REGULAR, INK_MARGIN, y + INK_LINE_NOTE, INK_CANVAS_W - 2 * INK_MARGIN);
     y += INK_LINE_NOTE + INK_LINE_NUMBER + INK_GAP;
