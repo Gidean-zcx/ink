@@ -36,7 +36,7 @@ static bool key(ink_key_t k, bool lng) {
     ink_ai_dismiss();
     return true;
 }
-static const ink_ui_overlay_t OVERLAY = {.name = "Ai", .level = -1, .on_key = key, .snapshot = ink_shell_ai_snapshot};
+static ink_ui_overlay_t OVERLAY = {.name = "Ai", .level = -1, .on_key = key, .snapshot = ink_shell_ai_snapshot};
 
 static void refine(void *arg) {
     (void)arg;
@@ -154,8 +154,9 @@ void ink_shell_ai_status(const char *s) {
     }
     ink_ui_hint_obj(A.status, done ? INK_REFRESH_UI : INK_REFRESH_FAST);
     audio_changed(NULL, 0, NULL);
-    extern void ink_ai_pages_status(const char *status, lv_obj_t *parent);
-    ink_ai_pages_status(s, A.root);
+    extern void ink_ai_pages_status(const char *status, lv_obj_t *parent, ink_ui_overlay_t *overlay);
+    OVERLAY.name = "Ai"; OVERLAY.level = -1; OVERLAY.snapshot = ink_shell_ai_snapshot;
+    ink_ai_pages_status(s, A.root, &OVERLAY);
 }
 
 static void action(ink_call_t *c) {

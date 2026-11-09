@@ -11,7 +11,8 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser()
 parser.add_argument("--build", type=Path, required=True)
-parser.add_argument("--mutant", choices=("errors", "member", "receipts", "snapshot"))
+parser.add_argument("--mutant", choices=("errors", "member", "receipts", "snapshot", "hide", "lost", "load", "recover", "wrap", "undo"))
+parser.add_argument("--case", choices=("offline", "timeout", "budget", "records", "hide", "lost", "newmember", "loadfail", "real"))
 args = parser.parse_args()
 build = args.build.resolve()
 work = Path(tempfile.mkdtemp(prefix="ai-pages-", dir=build))
@@ -23,8 +24,15 @@ if args.mutant:
         "member": ('ink_db_find_def("activity.log"), ink_member_current()->id', 'ink_db_find_def("activity.log"), "owner"'),
         "receipts": ("return words[i];", "return words[0];"),
         "snapshot": ("return ink_ui_semantics_snapshot(&E.page, out, cap);", "return -1;"),
+        "hide": ("overlay->name = BOARDS[kind]; overlay->level = 0; overlay->snapshot = error_snapshot;",
+                 "static ink_ui_overlay_t orphan; orphan = *overlay; orphan.name = BOARDS[kind]; orphan.level = 0; orphan.snapshot = error_snapshot; ink_ui_overlay_add(&orphan, E.root);"),
+        "lost": (" || lost ? 0 :", " ? 0 :"),
+        "load": ('if (ink_cap_call("activity.list", NULL, &opts))', 'if ((void)opts, 1)'),
+        "recover": ("if (L.list && !L.db)", "if (false)"),
+        "wrap": ("(L.receipts ? ink_ui_label : ink_ui_line)", "ink_ui_line"),
+        "undo": ("bool undo = L.receipts &&", "bool undo = false && L.receipts &&"),
     }[args.mutant]
-    assert source.count(old) == 1
+    assert source.count(old) == ({"member": 3, "wrap": 2}.get(args.mutant, 1))
     source = source.replace(old, new)
     target = work / "ai-pages-product.c"
     target.write_text(source)
@@ -43,18 +51,20 @@ if args.mutant:
     link[link.index("-o") + 1] = str(binary)
     if subprocess.run(link, cwd=build).returncode: raise SystemExit(2)
 
-cases = ["offline", "timeout", "budget", "records"]
-if args.mutant: cases = ["offline"] if args.mutant in ("errors", "snapshot") else ["records"]
+cases = ["offline", "timeout", "budget", "records", "hide", "lost", "newmember", "loadfail", "real"]
+if args.mutant: cases = [{"errors": "offline", "snapshot": "offline", "member": "records", "receipts": "records", "hide": "hide", "lost": "lost", "load": "newmember", "recover": "loadfail", "wrap": "real", "undo": "real"}[args.mutant]]
+if args.case: cases = [args.case]
 ok = True
 for case in cases:
     folder = work / case
     folder.mkdir()
     script = folder / "case.script"
-    script.write_text(("@0 net wifi\n" if case != "offline" else "@0 net none\n") + "@150s end\n")
+    script.write_text(("@0 net none\n" if case in ("offline", "hide") else "@0 net wifi\n") +
+                      ("@10s net none\n" if case == "lost" else "") + "@150s end\n")
     hub = folder / "hub.json"
     hub.write_text(json.dumps({"rules": [
         {"method": "hello", "think_ms": 20, "result": {"session": "synthetic-ai-pages", "proto": 1}},
-        {"method": "ai.ask", "think_ms": 60000 if case == "timeout" else 20,
+        {"method": "ai.ask", "think_ms": 60000 if case in ("timeout", "lost") else 20,
          "error": {"code": -32000, "message": "synthetic budget response", "data": {"code": "budget"}}},
         {"method": "*", "think_ms": 10, "result": {}}
     ]}))
