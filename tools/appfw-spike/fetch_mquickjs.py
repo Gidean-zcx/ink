@@ -28,7 +28,9 @@ def main():
         assert actual == expected, "upstream file inventory differs"
         for member in files:
             assert (WORK / member.name).read_bytes() == archive.extractfile(member).read(), member.name
-    assert (SOURCE / "LICENSE").read_bytes() == Path("tools/appfw-spike/licenses/MicroQuickJS.txt").read_bytes()
+    # Normalize the upstream license's one whitespace-only line in our copy.
+    license_text = (SOURCE / "LICENSE").read_bytes().replace(b"\n \n", b"\n\n")
+    assert license_text == Path("tools/appfw-spike/licenses/MicroQuickJS.txt").read_bytes()
     print(f"MicroQuickJS {COMMIT}: archive and extracted files verified")
 
 
