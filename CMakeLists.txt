@@ -197,6 +197,7 @@ add_library(ink_system STATIC
   system/ui/shell/update_card.c
   system/ui/shell/power_menu.c
   system/ui/shell/boot_flow.c
+  system/ui/shell/factory_pages.c
   system/ui/shell/off_picture.c
   system/services/time/time_caps.c
   system/services/notify/notify_service.c
@@ -1349,6 +1350,10 @@ ink_sim_executable(sim-backup-pages tests/backup_pages.c)
 target_link_libraries(sim-backup-pages PRIVATE ink_apps ink_system)
 add_test(NAME backup-pages COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/backup_pages.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(backup-pages PROPERTIES TIMEOUT 180)
+ink_sim_executable(sim-factory-pages tests/factory_pages.c)
+target_link_libraries(sim-factory-pages PRIVATE ink_apps ink_system)
+add_test(NAME factory-pages COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/factory_pages.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(factory-pages PROPERTIES TIMEOUT 420)
 
 target_sources(ink_system PRIVATE system/ui/shell/ai_pages.c)
 ink_sim_executable(sim-ai-pages tests/ai_pages.c)

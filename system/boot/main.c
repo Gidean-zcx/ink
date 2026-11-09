@@ -117,8 +117,9 @@ void ink_main(void) {
     if (ink_files_init() != 0) osal_panic("files failed to start");
     extern int ink_camera_app_init(void), ink_gallery_init(void);
     if (ink_camera_app_init() != 0 || ink_gallery_init() != 0) osal_panic("camera/gallery failed to start");
-    extern int ink_backup_pages_init(void);
+    extern int ink_backup_pages_init(void), ink_factory_pages_init(void);
     if (ink_backup_pages_init() != 0) osal_panic("backup pages failed to start");
+    if (ink_factory_pages_init() != 0) osal_panic("factory pages failed to start");
     extern int ink_ai_pages_init(void);
     if (ink_ai_pages_init() != 0) osal_panic("AI pages failed to start");
     extern int ink_remote_app_init(void);

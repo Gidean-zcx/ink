@@ -1348,7 +1348,38 @@ static bool for_call(ink_call_t *c) {
     return true;
 }
 
+static int unbacked(void) {
+    if (B.j.phase != PH_SAVED || !B.j.received || !B.j.durable || ink_fs_card_hold()) return -1;
+    int changed = -1;
+    if (!resources() || load_manifest("manifest", true)) goto done;
+    changed = 0;
+    for (int i = 0; ink_db_def_at(i) && !changed; i++) {
+        const ink_db_def_t *d = ink_db_def_at(i);
+        if (d->scope != INK_DB_MEMBER) continue;
+        ink_db_t *db = ink_db_open_member(d, B.j.member);
+        changed = !db ? -1 : ink_db_last_ver(db) != ink_db_acked_ver(db);
+        ink_db_close(db);
+    }
+    ink_fs_entry_t entry; uint32_t cursor = 0; int more = 0;
+    while (!changed && (more = ink_fs_index("/me", INK_FS_ANY, &cursor, &entry)) == 1) {
+        bool found = false;
+        for (unsigned i = 0; i < B.m->count; i++)
+            if (B.m->item[i].kind == ITEM_FILE && !strcmp(B.m->item[i].name, entry.path + 4)) found = true;
+        if (!found) changed = 1;
+    }
+    if (more < 0) changed = -1;
+    for (unsigned i = 0; i < B.m->count && !changed; i++) {
+        item_t *it = &B.m->item[i]; uint8_t hash[32]; int r = 1;
+        if (it->kind == ITEM_DB) continue;
+        for (uint32_t n = 0; r == 1 && n <= it->size / CHUNK; n++) r = current_hash(it, hash, NULL);
+        changed = r ? -1 : memcmp(hash, it->hash, 32) != 0;
+    }
+done:
+    free_resources(); ink_fs_card_release(); return changed;
+}
 static void result(ink_call_t *c, bool include_items) {
+    bool changes = false; ink_args_get_bool(&c->args, "changes", &changes);
+    int pending = changes ? unbacked() : -1;
     char *out = osal_malloc(RESULT_CAP, OSAL_MEM_EXTERNAL);
     if (!out) {
         c->rc.status = INK_RC_FAILED;
@@ -1377,6 +1408,7 @@ static void result(ink_call_t *c, bool include_items) {
     ink_jw_int(&w, B.j.conflicts);
     ink_jw_raw(&w, ",\"saved_s\":");
     ink_jw_int(&w, B.j.saved_s);
+    if (changes) { ink_jw_raw(&w, ",\"unbacked\":"); ink_jw_raw(&w, pending < 0 ? "null" : pending ? "true" : "false"); }
     ink_jw_raw(&w, ",\"reason\":");
     ink_jw_str(&w, B.j.reason);
     ink_jw_raw(&w, ",\"restart_required\":");
@@ -1592,6 +1624,7 @@ static void cap_apply(ink_call_t *c) {
 static const ink_cap_t CAPS[] = {
     {.id = "backup.status",
      .title = "查看这位成员的备份、上传回执和恢复进度",
+     .input = "{\"type\":\"object\",\"properties\":{\"changes\":{\"type\":\"boolean\"}}}",
      .effect = INK_FX_READ,
      .child_ok = true,
      .exec = INK_EXEC_BG,
