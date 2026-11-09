@@ -278,13 +278,22 @@ static struct {
     bool absent;       /* taken out (script "sd remove") */
     bool lent;         /* lent to a computer as a USB disk: unmounted */
     bool dirty;        /* the computer did not eject it: the next mount fails */
+    void (*cb)(void *ctx);
+    void *ctx;
     int64_t free_left; /* < 0: half of the capacity, as a fixed number; else what writes may still use (script "sd full") */
 } SD;
 
 static bool sd_ok(void) { return !SD.absent && !SD.lent && !SD.dirty; }
 
 bool hal_fs_card_present(void) { return sd_ok(); }
-void sim_sd_set_present(bool present) { SD.absent = !present; if (present) SD.dirty = false; } /* ISR (script) */
+static void sd_changed(void *arg) { (void)arg; if (SD.cb) SD.cb(SD.ctx); }
+void hal_fs_set_card_callback(void (*cb)(void *ctx), void *ctx) { SD.cb = cb; SD.ctx = ctx; }
+void sim_sd_set_present(bool present) { /* ISR (script) */
+    bool changed = SD.absent == present || (present && SD.dirty);
+    SD.absent = !present;
+    if (present) SD.dirty = false;
+    if (changed) sim_sys_evt(sd_changed, NULL);
+}
 void sim_sd_set_free(int64_t bytes) { SD.free_left = bytes; }                                   /* ISR (script); < 0: no limit */
 void sim_sd_lend(bool lent, bool dirty) { /* the USB disk model */
     SD.lent = lent;

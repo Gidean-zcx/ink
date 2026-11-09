@@ -62,9 +62,14 @@ static void index_device(void) {
     }
 }
 static void edit_during_usage(void) { write_file(paths[0], 18); }
+static bool index_ready(void) {
+    char state[32];
+    return ink_state_get_str(ink_state_find("file.index_state"), state, sizeof state) && !strcmp(state, "ready");
+}
 static void test_usage_cache(void) {
     CHECK(BY_HAND("system.home", NULL), "leave storage before counting usage work");
     write_file(paths[0], sizes[0][0]);
+    CHECK(WAIT_FOR(index_ready(), 10000), "automatic index repair finishes before measuring usage cache");
     for (int i = 0; i < 2; i++) {
         unsigned reads = ink_test_storage_reads();
         ink_test_storage_begin();
@@ -78,10 +83,12 @@ static void test_usage_cache(void) {
         ink_test_storage_end();
     }
     write_file(paths[0], sizes[0][0]);
+    CHECK(WAIT_FOR(index_ready(), 10000), "automatic repair finishes before concurrent usage edit");
     ink_test_storage_begin(); ink_test_storage_edit_on_size(edit_during_usage);
     CHECK(AI("file.usage", NULL) && g_rc.status == INK_RC_DONE && strstr(g_result, "\"organizing\""),
         "write during size lookup discards the expired revision");
     ink_test_storage_edit_on_size(NULL); ink_test_storage_end();
+    CHECK(WAIT_FOR(index_ready(), 10000), "concurrent edit triggers automatic index repair");
     for (int i = 0; i < 2; i++) {
         ink_test_storage_begin();
         CHECK(AI("file.usage", NULL) && g_rc.status == INK_RC_DONE && number("member", "books") == 18,

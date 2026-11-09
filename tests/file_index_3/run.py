@@ -11,16 +11,43 @@ ROOT = Path(__file__).resolve().parents[2]
 p = argparse.ArgumentParser(description=__doc__)
 p.add_argument('--build', type=Path, required=True)
 p.add_argument('--baseline')
+p.add_argument('--mutant', choices=['polling', 'blocking', 'file-change', 'card-change', 'identity', 'entropy'])
 a = p.parse_args()
 build = a.build.resolve()
-area = build / 'test-out' / ('file-index-3-baseline' if a.baseline else 'file-index-3')
+area = build / 'test-out' / ('file-index-3-baseline' if a.baseline else 'file-index-3-' + a.mutant if a.mutant else 'file-index-3')
 if area.exists():
     shutil.rmtree(area)
 area.mkdir(parents=True)
 binary = build / 'sim-file-index-3'
-if a.baseline:
+if a.baseline or a.mutant:
     source = area / 'file_service.c'
-    source.write_bytes(subprocess.check_output(['git', 'show', f'{a.baseline}:system/services/file/file_service.c'], cwd=ROOT))
+    if a.baseline:
+        source.write_bytes(subprocess.check_output(['git', 'show', f'{a.baseline}:system/services/file/file_service.c'], cwd=ROOT))
+    else:
+        current = (ROOT / 'system/services/file/file_service.c').read_text()
+        replacements = {
+            'polling': ('if (!r && more) ink_svc_at(&FS.index_at, osal_now_us() + 50000ull, index_refresh_cb, NULL);',
+                        'ink_svc_at(&FS.index_at, osal_now_us() + (more ? 50000ull : 1000000ull), index_refresh_cb, NULL);'),
+            'file-change': ('if (strcmp(kind, "indexed")) index_invalidate();', '(void)kind;'),
+            'card-change': ('index_invalidate();\n    fs_refresh_cb(NULL);', 'fs_refresh_cb(NULL);'),
+            'blocking': ('    ink_db_flush(db);\n    osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);',
+                         '    if (db && ink_db_wait(db, ink_db_last_ver(db), 3000000)) r = INK_FS_ERR_IO;\n    osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);'),
+            'identity': ('''    if (!f) {
+        hal_dir_t *d = hal_fs_opendir("/content");
+        if (!d) return card_error();
+        hal_dirent_t e; int more;
+        while ((more = hal_fs_readdir(d, &e)) == 1)
+            if (!strcmp(e.name, ".file-index-card")) break;
+        hal_fs_closedir(d);
+        if (more) return card_error();
+    }
+''', ''),
+        }
+        if a.mutant != 'entropy':
+            old, new = replacements[a.mutant]
+            assert current.count(old) == 1, 'counterexample must remove exactly the intended fix'
+            current = current.replace(old, new)
+        source.write_text(current)
     flags = {}
     for line in (build / 'CMakeFiles/sim-file-index-3.dir/flags.make').read_text().splitlines():
         if ' = ' in line:
@@ -34,6 +61,21 @@ if a.baseline:
     binary = area / 'baseline'
     link[link.index('-o') + 1] = str(binary)
     link = [str(obj) if x.endswith('/tests/file_index_3/boundary.c.o') else x for x in link]
+    if a.mutant == 'entropy':
+        power = (ROOT / 'ports/sim/hal/hal_power_sim.c').read_text()
+        old = 'p[i] = (uint8_t)(entropy >> 24);'
+        assert power.count(old) == 1, 'counterexample must restore shared model randomness'
+        target = area / 'hal_power_sim.c'
+        target.write_text(power.replace(old, 'p[i] = (uint8_t)(sim_rand01() * 256);'))
+        power_flags = {}
+        for line in (build / 'CMakeFiles/ink_port_sim.dir/flags.make').read_text().splitlines():
+            if ' = ' in line:
+                k, v = line.split(' = ', 1)
+                power_flags[k] = shlex.split(v)
+        obj = area / 'power.o'
+        subprocess.run([link[0], *power_flags['C_DEFINES'], *power_flags['C_INCLUDES'], *power_flags['C_FLAGS'],
+            '-c', str(target), '-o', str(obj)], cwd=build, check=True)
+        link.insert(next(i for i, word in enumerate(link) if word.endswith('.a')), str(obj))
     subprocess.run(link, cwd=build, check=True, capture_output=True)
 
 
@@ -74,7 +116,11 @@ def run(path, stage, negative=False):
     return m
 
 
-if a.baseline:
+if a.mutant:
+    path = area / 'negative'
+    seed(path)
+    run(path, {'polling': 'idle', 'blocking': 'busy'}.get(a.mutant, a.mutant), negative=True)
+elif a.baseline:
     path = area / 'comparison'
     seed(path)
     old = run(path, 'compare')
@@ -89,7 +135,7 @@ else:
     first = run(path, 'boot')
     second = run(path, 'reboot')
     assert first['test.index.first_id']['max'] == second['test.index.first_id']['max'], 'actual restart retains ids'
-    for stage in ('ui', 'remove', 'swap'):
+    for stage in ('ui', 'remove', 'swap', 'idle', 'busy', 'file-change', 'card-change', 'identity', 'entropy'):
         path = area / stage
         seed(path)
         run(path, stage)

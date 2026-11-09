@@ -407,11 +407,11 @@ static void accept_job(void *arg) { /* Commit off UI, then return to the caller'
             snprintf(rc.detail, sizeof rc.detail, "confirmation could not be committed");
             confirmed_done(h, &rc); return;
         }
-        if (h->ui) { ink_exec_post(INK_EXEC_UI, &h->job, accept_job, h); return; }
     }
     const char *invalid = strcmp(h->member, ink_member_current()->id) || h->epoch != ink_member_epoch() ? "member_changed" :
         osal_now_us() >= h->expires_us || (hub && !ink_hub_member_matches(h->member, h->epoch, h->connection)) ? "expired" : NULL;
     if (invalid) { ink_confirm_result(h->token, h->cap->id, invalid, NULL, h->member); osal_free(h); return; }
+    if (h->ui && !ink_ui_is_current()) { ink_exec_post(INK_EXEC_UI, &h->job, accept_job, h); return; }
     if (hub) { ink_confirm_result(h->token, h->cap->id, "accepted", NULL, h->member); osal_free(h); return; }
     ink_call_opts_t o = {.src = INK_SRC_CONFIRMED, .page_gen = h->page_gen, .member = h->member,
                         .reply_exec = INK_EXEC_DIRECT, .done = confirmed_done, .ctx = h};

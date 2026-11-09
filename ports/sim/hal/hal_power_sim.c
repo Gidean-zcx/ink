@@ -656,7 +656,12 @@ void hal_device_get_info(hal_device_info_t *out) { *out = g_profile.info; }
 
 void hal_random_fill(void *out, size_t n) {
     uint8_t *p = out;
-    for (size_t i = 0; i < n; i++) p[i] = (uint8_t)(sim_rand01() * 256);
+    static uint32_t entropy = 0x9e3779b9u;
+    entropy = (entropy ^ g_sim.seed ^ (uint32_t)osal_now_us()) | 1u;
+    for (size_t i = 0; i < n; i++) {
+        entropy ^= entropy << 13; entropy ^= entropy >> 17; entropy ^= entropy << 5;
+        p[i] = (uint8_t)(entropy >> 24);
+    }
 }
 
 const char *hal_device_reset_reason(void) { return g_sim.reset_reason ? g_sim.reset_reason : "poweron"; }

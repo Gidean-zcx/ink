@@ -8,8 +8,11 @@ unsigned ink_test_index_comparisons(void);
 unsigned ink_test_index_reads(void);
 unsigned ink_test_index_path_id(const char *path);
 void ink_test_index_report(void);
+void ink_test_fail_identity_open(void);
 static bool organizing, exchanged;
 static unsigned notifications;
+static bool bg_reached;
+static void bg_probe(void *arg) { (void)arg; bg_reached = true; }
 static char page[32768];
 static bool ready(void) {
     char state[32];
@@ -37,6 +40,32 @@ static void exchange(void *arg) {
     exchanged = arg ? rename(content, other) == 0 && rename(saved, content) == 0 :
         rename(content, saved) == 0 && (stat(other, &st) == 0 ? rename(other, content) == 0 : mkdir(content, 0700) == 0);
 }
+static void offline_edit(void *arg) {
+    (void)arg;
+    char path[600];
+    snprintf(path, sizeof path, "%s/content/SYNTH_0001.txt", sim_sd_root());
+    FILE *f = fopen(path, "wb");
+    exchanged = f && fwrite("XXXXXXXXXXXXXXXXXXXXXXXXXXXXX", 1, 29, f) == 29;
+    if (f && fclose(f)) exchanged = false;
+    snprintf(path, sizeof path, "%s/content/SYNTH_OFFLINE.txt", sim_sd_root());
+    f = fopen(path, "wb");
+    exchanged = f && fwrite("XXXX", 1, 4, f) == 4 && exchanged;
+    if (f && fclose(f)) exchanged = false;
+}
+static void usage_after_change(int64_t total) {
+    CHECK(AI("file.usage", NULL) && g_rc.status == INK_RC_DONE &&
+        (strstr(g_result, "organizing") || number("device", "books") == total),
+        "changed card never reports old totals as ready: %s", g_result);
+    CHECK(WAIT_FOR(ready(), 30000), "change triggers automatic index repair");
+    CHECK(AI("file.usage", NULL) && g_rc.status == INK_RC_DONE && number("device", "books") == total,
+        "repaired usage has current bytes: %s", g_result);
+}
+static bool identity(uint8_t out[16]) {
+    hal_file_t *f = hal_fs_open("/content/.file-index-card", HAL_O_READ);
+    if (!f) return false;
+    bool ok = hal_fs_read(f, out, 16) == 16;
+    return hal_fs_close(f) == 0 && ok;
+}
 static void run(void *arg) {
     (void)arg;
     const char *mode = getenv("INK_INDEX_3_STAGE");
@@ -59,6 +88,16 @@ static void run(void *arg) {
         CHECK(ink_fs_write_atomic("/family/SYNTH_DURING.txt", "XYZ", 3) == 0, "user write during indexing");
         ink_probe_value("test.index.user_write_us", (double)(osal_now_us() - start));
         CHECK(ink_test_index_count() < 1000, "user write finishes before card index");
+        if (!strcmp(mode, "busy")) {
+            ink_storage_hold_writes(true);
+            const ink_db_def_t *def = ink_db_find_def("file.index");
+            ink_db_t *db = ink_db_open(def, NULL);
+            CHECK(WAIT_FOR(ink_db_last_ver(db) > ink_db_durable_ver(db), 5000), "index batch waits behind a real storage write hold");
+            static ink_exec_job_t job;
+            CHECK(!ink_exec_post(INK_EXEC_BG, &job, bg_probe, NULL), "queue unrelated background work");
+            CHECK(WAIT_FOR(bg_reached, 500), "index durability never blocks unrelated BG work");
+            ink_storage_hold_writes(false); ink_db_close(db);
+        }
         if (!strcmp(mode, "remove") || !strcmp(mode, "swap")) {
             unsigned id = 1; ink_fs_entry_t prefix;
             CHECK(ink_fs_lookup(id, &prefix) == 0, "retain an id from the completed prefix");
@@ -83,12 +122,16 @@ static void run(void *arg) {
             CHECK(ink_fs_lookup(id, &resumed) == 0 && !strcmp(prefix.path, resumed.path), "resume preserves already assigned ids");
             if (!strcmp(mode, "swap")) {
                 unsigned reads = ink_test_index_reads();
+                sim_sd_set_present(false); delay_ms(100);
                 vtk_host_call(exchange, NULL); CHECK(exchanged, "return to completed second card");
+                sim_sd_set_present(true); delay_ms(100);
                 CHECK(ink_fs_lookup(id, &resumed) == INK_FS_ERR_CARD_CHANGED, "lookup observes replacement before background batch");
-                CHECK(WAIT_FOR(ready(), 10000), "completed second card reused");
+                CHECK(WAIT_FOR(ready(), 10000), "reinserted second card is rechecked");
+                sim_sd_set_present(false); delay_ms(100);
                 vtk_host_call(exchange, (void *)1); CHECK(exchanged, "return to completed original card");
+                sim_sd_set_present(true); delay_ms(100);
                 CHECK(ink_fs_lookup(id, &resumed) == 0, "original id available before reuse notification");
-                CHECK(WAIT_FOR(ready(), 10000) && ink_test_index_reads() == reads, "both completed cards retain independent completion markers");
+                CHECK(WAIT_FOR(ready(), 30000) && ink_test_index_reads() > reads, "reinsertion rechecks offline changes while preserving ids");
             }
         } else CHECK(WAIT_FOR(ready(), 30000), "whole card finishes with no application query");
         CHECK(ink_test_index_count() == 1003, "all shared and member files including concurrent write indexed exactly once");
@@ -100,6 +143,52 @@ static void run(void *arg) {
     if (strcmp(mode, "compare") && strcmp(mode, "legacy")) {
         CHECK(AI("file.usage", NULL) && g_rc.status == INK_RC_DONE && !strstr(g_result, "organizing"), "file.usage becomes numerical automatically");
         CHECK(number("member", "books") == 17 && number("device", "books") == 1031, "usage includes shared and every member with unchanged scope");
+    }
+    if (!strcmp(mode, "idle")) {
+        double runs = sim_metric_value("file.index.background_runs");
+        unsigned reads = ink_test_index_reads(), writes = ink_test_index_writes();
+        delay_ms(10000);
+        CHECK(sim_metric_value("file.index.background_runs") == runs, "completed index has zero background runs for ten seconds");
+        CHECK(ink_test_index_reads() == reads && ink_test_index_writes() == writes, "idle index does no directory reads or writes");
+    } else if (!strcmp(mode, "file-change")) {
+        CHECK(ink_fs_write_atomic("/family/SYNTH_NEW.txt", "XXXXX", 5) == 0, "create after completion");
+        usage_after_change(1036);
+        CHECK(ink_test_index_path_id("/content/SYNTH_NEW.txt") != 0, "new file receives an id automatically");
+        ink_fs_file_t *f = NULL;
+        CHECK(ink_fs_open("/family/SYNTH_EMPTY.txt", INK_FS_WRITE | INK_FS_CREATE, &f) == 0 && ink_fs_close(f) == 0, "create empty file after completion");
+        usage_after_change(1036);
+        CHECK(ink_test_index_path_id("/content/SYNTH_EMPTY.txt") != 0, "empty file receives an id automatically");
+        CHECK(ink_fs_open("/family/SYNTH_0000.txt", INK_FS_WRITE, &f) == 0 && ink_fs_write(f, "XXXXXXX", 7) == 7 && ink_fs_close(f) == 0,
+            "write existing file after completion");
+        usage_after_change(1042);
+        CHECK(ink_fs_move("/family/SYNTH_NEW.txt", "/family/SYNTH_MOVED.txt") == 0, "rename after completion");
+        usage_after_change(1042);
+        CHECK(ink_fs_remove("/family/SYNTH_MOVED.txt") == 0, "delete after completion");
+        usage_after_change(1037);
+    } else if (!strcmp(mode, "card-change")) {
+        unsigned id = ink_test_index_path_id("/content/SYNTH_0000.txt");
+        sim_sd_set_present(false); delay_ms(100);
+        vtk_host_call(offline_edit, NULL); CHECK(exchanged, "change size and add file while card is absent");
+        sim_sd_set_present(true); delay_ms(20);
+        usage_after_change(1063);
+        ink_fs_entry_t e;
+        CHECK(ink_fs_lookup(id, &e) == 0 && !strcmp(e.path, "/family/SYNTH_0000.txt"), "same-card offline edits preserve prior ids");
+        CHECK(ink_test_index_path_id("/content/SYNTH_OFFLINE.txt") != 0, "offline addition is indexed on insertion");
+    } else if (!strcmp(mode, "identity")) {
+        unsigned id = ink_test_index_path_id("/content/SYNTH_0000.txt");
+        uint8_t before[16], after[16]; ink_fs_entry_t e;
+        CHECK(identity(before), "read existing identity before transient failure");
+        ink_test_fail_identity_open();
+        CHECK(ink_fs_lookup(id, &e) == INK_FS_ERR_IO, "existing identity open failure returns IO");
+        CHECK(identity(after) && !memcmp(before, after, sizeof before), "transient open failure preserves identity bytes");
+        CHECK(ink_fs_lookup(id, &e) == 0 && !strcmp(e.path, "/family/SYNTH_0000.txt"), "old file id works after transient failure");
+    } else if (!strcmp(mode, "entropy")) {
+        uint32_t expected = sim_rand();
+        expected ^= expected << 13; expected ^= expected >> 17; expected ^= expected << 5;
+        uint8_t first[16], second[16];
+        hal_random_fill(first, sizeof first); hal_random_fill(second, sizeof second);
+        CHECK(sim_rand() == expected, "card identity entropy never changes hardware timing or fault randomness");
+        CHECK(memcmp(first, second, sizeof first), "independent device entropy still changes on each call");
     }
     ink_probe_value("test.index.writes", ink_test_index_writes());
     ink_probe_value("test.index.first_id", ink_test_index_path_id("/content/SYNTH_0000.txt"));

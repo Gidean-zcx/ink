@@ -71,6 +71,8 @@ int hal_fs_volume_info(const char *volume /* "/user" ... */, hal_fs_volume_info_
 /** The card is in and mounted: /content and /cache work (they fail otherwise). Does not wait; whether a
  *  card pulled out is noticed before the next access depends on the board (no card-detect line known). */
 bool hal_fs_card_present(void);
+/** Mount availability changed; callback runs in the platform event task. */
+void hal_fs_set_card_callback(void (*cb)(void *ctx), void *ctx);
 
 #ifdef __cplusplus
 }

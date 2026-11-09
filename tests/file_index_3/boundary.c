@@ -8,10 +8,13 @@ static int counted_next(ink_db_t *db, ink_db_cursor_t *c, ink_rec_t *out, void *
 static osal_err_t counted_lock(osal_mutex_t *m, int64_t timeout);
 static void counted_unlock(osal_mutex_t *m);
 static int counted_readdir(hal_dir_t *d, hal_dirent_t *e);
+static hal_file_t *checked_open(const char *path, int flags);
+static bool fail_identity_open;
 #define ink_db_next counted_next
 #define osal_mutex_lock counted_lock
 #define osal_mutex_unlock counted_unlock
 #define hal_fs_readdir counted_readdir
+#define hal_fs_open checked_open
 #ifndef INK_INDEX_SOURCE
 #define INK_INDEX_SOURCE "../../system/services/file/file_service.c"
 #endif
@@ -20,6 +23,15 @@ static int counted_readdir(hal_dir_t *d, hal_dirent_t *e);
 #undef osal_mutex_lock
 #undef osal_mutex_unlock
 #undef hal_fs_readdir
+#undef hal_fs_open
+static hal_file_t *checked_open(const char *path, int flags) {
+    if (fail_identity_open && flags == HAL_O_READ && !strcmp(path, INDEX_CARD)) {
+        fail_identity_open = false;
+        return NULL;
+    }
+    return hal_fs_open(path, flags);
+}
+void ink_test_fail_identity_open(void) { fail_identity_open = true; }
 static int counted_readdir(hal_dir_t *d, hal_dirent_t *e) { directory_reads++; return hal_fs_readdir(d, e); }
 static int counted_next(ink_db_t *db, ink_db_cursor_t *c, ink_rec_t *out, void *buf, size_t cap) {
     comparisons++;
