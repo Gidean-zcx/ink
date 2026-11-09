@@ -6,14 +6,14 @@
 
 接续 `4733a9b1`，保留上一轮实现与验证记录。本轮处理高优先级 UP-R1-01 和小工作量中级 UP-R1-02：仅改关于页的一处入口绑定与失败页的重试选择，不扩展服务事件或重试机制。当前用户要求修复全部高优先级问题，因此覆盖原任务“共用文件只在末尾加行”对这一处绑定的限制。
 
-【实测】两项已修，定向验证通过。普通及 ASan/UBSan 全量正在收尾，以下暂保留上一轮全量结果。
+【实测】两项已修，提交 `2a3d4d8b`。普通与 ASan/UBSan 全量均 232/233；唯一失败是任务规则禁止改动的共享能力文档，未声称全绿。
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
 | UP-R1-01（高） | 【实测】已修 | 真实服务先发现新版本，再点击关于页“系统更新”，返回后再次点击；26 条断言通过。快照与按钮均为 `shell.update`。只换回旧入口绑定时有 6 条断言失败，并执行到结束 | T、R |
 | UP-R1-02（中） | 【实测】已修 | 断网、无升级包时，失败页文案和快照提供“重新检查”；点击后 `action.user.update.check` 增加 1；18 条断言通过。只换回旧失败页时有 4 条断言失败，并执行到结束。已有包的坏签名重新下载仍通过 | T、R |
 
-【实测】本轮普通构建退出 0；14 阶段共 262 条断言、0 失败，内部 RAM 最少 37968 字节。日志：`build/update-pages-r1-build.log`、`build/update-pages-r1-tests.log`。反向对照脚本退出 0，三个对照子测试均退出 1：原卡片 6 条失败、旧入口 6 条失败、旧失败页 4 条失败；源码未被替换，证据：`build/update-pages-reverse/summary.json`、`build/update-pages-r1-reverse.log`。
+【实测】本轮普通及 ASan/UBSan 构建均退出 0；两种构建的 14 阶段各 262 条断言、0 失败、0 警告，内部 RAM 最少 37968 字节。日志：`build/update-pages-r1-build.log`、`build-asan/update-pages-r1-build.log`、`build/update-pages-r1-tests.log`；各阶段指标保留在两种构建的 `test-out/update-pages/`。反向对照脚本退出 0，三个对照子测试均退出 1：原卡片 6 条失败、旧入口 6 条失败、旧失败页 4 条失败；源码未被替换，证据：`build/update-pages-reverse/summary.json`、`build/update-pages-r1-reverse.log`。
 
 ## 验收表
 
@@ -22,15 +22,15 @@
 | 1 | 【实测】通过 | 已发现版本后从关于页触摸进入、返回重进，再验证 `flow`、`done` 的真实模拟下载、人工确认、写槽、重启、自检和完成页 | T |
 | 2 | 【实测】通过本任务场景 | 23% 阻止，充电恢复；注入已发布的剩余空间不足；无包时检查失败重试、有包时坏签名重试；新版本自检失败后回滚 | T |
 | 3 | 【实测】通过 | 七页快照含版本、说明和能力；AI 无安装能力；14 阶段共 262 条断言，内部 RAM 最少 37968 字节 | T |
-| 4 | 【实测】部分，待本轮全量 | 上一轮普通、ASan/UBSan 全量均 232/233，无跳过；唯一失败为禁止改动的共享能力文档。产品代码保守计 224/300 行 | B、N、A |
+| 4 | 【实测】部分 | 普通与 ASan/UBSan 全量均 232/233，无跳过；唯一失败为禁止改动的共享能力文档。未发现 sanitizer 报错；产品代码保守计 224/300 行 | B、N、A |
 | G2 | 【实测】通过 | 临时生成目录与运行时一致：264 项能力、16 项设置；共 326 项源码定义 | C |
-| G4 | 【实测】超过目标 | 先看七张画板；七页对照为 20.421～34.514/255，未达到 12/255 | V |
+| G4 | 【实测，上轮】超过目标 | 七页对照为 20.421～34.514/255，未达到 12/255；本轮看过相关画板和实际断网失败页，未改布局 | V |
 
 ## 没做到的
 
 - `capability-table-doc` 未通过：任务规则第 7 节禁止修改生成的共享能力文档。临时生成表与运行时一致，合并主会话需统一生成文档。
 - 七页画板对照均超过 12/255，分数与原因见下节。
-- 上一轮普通全量退出 8，232/233、无跳过，432.12 秒；ASan/UBSan 全量退出 8，232/233、无跳过，491.57 秒。日志分别为 `build/update-pages-full-final.log`、`build-asan/update-pages-full-final.log`；两轮唯一失败均为 `capability-table-doc`。本轮结果待补。
+- 本轮普通全量退出 8，232/233、无跳过，293.74 秒；ASan/UBSan 全量退出 8，232/233、无跳过，503.16 秒。唯一失败均为 `capability-table-doc`，未发现内存或未定义行为报错；日志 `build/update-pages-r1-full.log`、`build-asan/update-pages-r1-full.log`。上一轮全量记录保留在 `build/update-pages-full-final.log`、`build-asan/update-pages-full-final.log`。
 - 空间不足测试仍是注入已发布的服务状态，未填满存储卡。检查失败重试验证了离线再次调用真实 `update.check`，未验证联网恢复后与自动检查的先后次序。
 
 ## 和设计不一致的
@@ -102,11 +102,11 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/update_pages
 # V：已验证的七张实际面板截图。
 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.py --build build --design "$INK_DESIGN" --out build/test-out/update-pages --reuse --scenes Update UpdateReady UpdateBlocked UpdateFail UpdateInstall UpdateDone BootRecovery
 # C：只向忽略的工作目录生成能力表，并校验真实运行时清单。
-taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/capabilities.py --output work/update-pages/capabilities.md --runtime build/test-out/capability-table/capability-inventory.json
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/capabilities.py --output build/update-pages-r1/capabilities.md --runtime build/test-out/capability-table/capability-inventory.json
 ```
 
 ## 范围与收尾检查
 
 【实测】仅 macOS 模拟器；升级签名使用既有模拟替身。未连接设备、打开窗口版模拟器、调用付费接口、推送或开 PR；Linux 未实测。
 
-【实测】提交差异扫描无本机路径或硬件标识匹配（扫描退出 1 表示无匹配）；`git diff --check` 退出 0。差异只含本任务产品、测试和报告，未改共享文档。
+【实测】`git diff 3fce2beea07d9e25a814cd24c64e8d5305ea9222..HEAD` 的本机路径和硬件标识正则扫描 0 匹配（扫描退出 1 表示无匹配）；`git diff --check` 退出 0。已看差异统计：本轮只改 6 个任务相关文件，累计基线差异 13 个文件；未提交构建证据、设计稿或共享文档。
