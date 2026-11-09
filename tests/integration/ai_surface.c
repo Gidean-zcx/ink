@@ -60,6 +60,7 @@ static const struct {
     {"keyboard.key", "code"}, {"keyboard.pick", "index"}, {"keyboard.candidates", ""}, {"keyboard.edit", "action"},
     {"shell.search", "query"}, {"shell.page_next", NULL}, {"shell.page_prev", NULL}, {"shell.notify_next", NULL}, {"shell.notify_prev", NULL},
     {"shell.wifi_next", NULL}, {"shell.wifi_prev", NULL}, {"shell.wifi_pick", "index"},
+    {"shell.ai_home", NULL}, {"shell.ai_ask", NULL}, {"shell.ai_send", NULL}, {"shell.ai_stop", NULL}, {"shell.ai_key", ""},
     {NULL, NULL},
 };
 

@@ -17,6 +17,7 @@
 #include "ink/probe.h"
 #include "ink/rotation.h"
 #include "ink/sys/ai.h"
+#include "shell/ai_chat.h"
 #include "ink/sys/exec.h"
 #include "ink/sys/ui.h"
 #include "ink/ui_theme.h"
@@ -729,7 +730,7 @@ static void handle_input(const umsg_t *m) {
     case INK_EV_KEY_LONG: {
         bool lng = e->kind == INK_EV_KEY_LONG;
         if (e->key == HAL_KEY_AI) { /* system-wide: push-to-talk, handled by the AI service; an overlay comes first, but one already talking may let go */
-            if (e->kind == INK_EV_KEY && (!UI.noverlays || UI.overlays[UI.noverlays - 1]->level <= 0 || !e->pressed)) ink_ai_key(e->pressed, e->t_us);
+            if (e->kind == INK_EV_KEY && (!UI.noverlays || UI.overlays[UI.noverlays - 1]->level <= 0 || !e->pressed)) ink_ai_chat_key(e->pressed, e->t_us);
             return;
         }
         if (e->kind == INK_EV_KEY && (!e->pressed || (e->flags & INK_EVF_AFTER_LONG))) {

@@ -1225,3 +1225,15 @@ if(INK_GUI AND INK_HAVE_FONTS)
             -P ${CMAKE_SOURCE_DIR}/tests/simulator/gui_smoke.cmake)
   set_tests_properties(gui-smoke PROPERTIES TIMEOUT 180)
 endif()
+
+# AI chat pages use the existing service and input hosts.
+target_sources(ink_system PRIVATE system/ui/shell/ai_chat.c)
+ink_sim_executable(sim-ai-chat tests/ai_chat.c)
+target_link_libraries(sim-ai-chat PRIVATE ink_apps ink_system)
+add_test(NAME ai-chat COMMAND sim-ai-chat --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+  --script ${CMAKE_SOURCE_DIR}/tests/ai_chat.script --hub ${CMAKE_SOURCE_DIR}/tests/ai_chat.hub.json
+  --budget ${CMAKE_SOURCE_DIR}/tests/ai_chat.budget.json
+  --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT} --out ${CMAKE_BINARY_DIR}/test-out/ai-chat --quiet --no-random-outages)
+add_test(NAME ai-chat-snapshots COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/ai_chat_snapshots.py
+  ${CMAKE_BINARY_DIR}/test-out/ai-chat ${CMAKE_BINARY_DIR}/ai-chat-compare)
+set_tests_properties(ai-chat-snapshots PROPERTIES DEPENDS ai-chat)

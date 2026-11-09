@@ -1,0 +1,10 @@
+{
+  "test.fail": {"max": 0, "optional": true},
+  "test.pass": {"min": 40},
+  "test.finished": {"min": 1, "max": 1},
+  "panic.count": {"max": 0, "optional": true},
+  "warnings.count": {"max": 0, "optional": true},
+  "mem.internal_total.min_free_bytes": {"min": 32768},
+  "mem.internal.failed_allocs": {"max": 0},
+  "mem.external.failed_allocs": {"max": 0}
+}

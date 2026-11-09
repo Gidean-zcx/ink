@@ -366,7 +366,9 @@ static void traverse_answer(const char *text) {
         size_t used = strlen(answer_seen), size = strlen(answer_text);
         CHECK(used + size < sizeof answer_seen, "the traversed fixture fits its complete-text buffer");
         if (used + size < sizeof answer_seen) memcpy(answer_seen + used, answer_text, size + 1);
-        on_ui(read_context); CHECK(strstr(context, answer_text) && strstr(context, "页码="), "AI sees the displayed page and page count");
+        on_ui(read_context);
+        static char escaped[8192]; ink_jw_t writer; ink_jw_init(&writer, escaped, sizeof escaped); ink_jw_str(&writer, answer_text);
+        CHECK(!writer.overflow && strstr(context, escaped) && strstr(context, "页码="), "AI sees the displayed page and page count in F1 JSON");
         if (i < total) {
             CHECK(!answer_next_disabled, "a further page has an enabled next button");
             if (i % 2) tap(next_x, next_y);
@@ -455,12 +457,12 @@ static void snapshot_tests(void) {
     CHECK(BY_HAND("shell.search", "{\"query\":\"\"}") && g_rc.status == INK_RC_DONE, "open Apps with a two-page tool fixture"); quiet(); on_ui(read_context);
     on_ui(check_search_layout);
     CHECK(strstr(context, "工具页=1/2") && strstr(context, "工具甲（tool_a）") && strstr(context, "短信（message）"), "Apps includes the visible registered, built-in and fixed-group entries");
-    CHECK(!strstr(context, "设置（settings）") && !strstr(context, "对话记录（ai）"), "Apps omits tools on the next page");
+    CHECK(!strstr(context, "设置（settings）") && strstr(context, "对话记录（ai）"), "Apps includes registered AI and omits settings on the next page");
     wanted = "工具甲"; on_ui(read_view); CHECK(label_x >= 0, "the advertised tool is visible"); if (label_x >= 0) tap(label_x, label_y); quiet();
     CHECK(!strcmp(ink_ui_page_name(), "fake-tool-a"), "touch launches the advertised stable id");
     on_ui(ink_ui_home); quiet();
     CHECK(AI("home.next", NULL) && g_rc.status == INK_RC_DONE, "turn the tools page through the same capability"); quiet(); on_ui(read_context);
-    CHECK(strstr(context, "工具页=2/2") && strstr(context, "设置（settings）") && !strstr(context, "工具甲（tool_a）") && !strstr(context, "相机（camera）"), "the next-page snapshot matches only its visible tools");
+    CHECK(strstr(context, "工具页=2/2") && strstr(context, "设置（settings）") && !strstr(context, "工具甲（tool_a）") && strstr(context, "相机（camera）"), "the next-page snapshot matches only its visible tools");
     CHECK(AI("shell.launch", "{\"id\":\"settings\"}") && g_rc.status == INK_RC_DONE, "AI can use the visible settings id"); quiet(); CHECK(!strcmp(ink_ui_page_name(), "Settings"), "the advertised id opens actual settings");
     on_ui(ink_ui_home); quiet();
     CHECK(AI("shell.search", "{\"query\":\"工具甲\"}") && g_rc.status == INK_RC_DONE, "filter Apps through its capability"); quiet(); on_ui(read_context);
