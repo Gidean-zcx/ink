@@ -39,10 +39,10 @@ static const row_t ABOUT_ROWS[] = {
 static const row_t PRIVACY_ROWS[] = {
     {"privacy.storage", "你的东西放在哪", "设置和备忘在设备里，书和录音在存储卡上；备份在家庭服务器上。", NULL, NULL, NULL, NULL, NULL},
     {"privacy.ai", "AI 能看到什么", "提问时能看到当前页。密码框里的字看不到；语音和页面会交给家庭选择的模型服务商。", NULL, NULL, NULL, NULL, NULL},
-    {"privacy.retention", "留多久", "语音文字和运行记录的保留期限，这里暂不能查看。", NULL, NULL, NULL, NULL, NULL},
-    {"privacy.child", "孩子的记录", "爸爸妈妈可以查看和删除。孩子能看到这一点；记录页面还没接入。", NULL, NULL, NULL, NULL, NULL},
+    {"privacy.retention", "留多久", "活动记录：大人 1 年，孩子 180 天。对话、记忆和运行记录的期限暂时查不到。", NULL, NULL, NULL, NULL, NULL},
+    {"privacy.child", "孩子的记录", "爸爸妈妈可以查看孩子的活动记录，确认后删除；其他记录暂不能删除。", NULL, "shell.records", NULL, NULL, NULL},
     {"ai.read_clipboard", "AI 可以读剪贴板", NULL, "ai.read_clipboard", NULL, NULL, NULL, NULL},
-    {"privacy.records", "查看和删除记录", "记录页面还没接入", NULL, NULL, NULL, NULL, NULL}};
+    {"privacy.records", "查看和删除记录", "", NULL, "shell.records", NULL, NULL, NULL}};
 static const struct { const char *name, *title, *cap; const row_t *rows; size_t count; } PAGES[] = {
     {"SetVoice", "语音和 AI", "shell.voice", VOICE_ROWS, sizeof VOICE_ROWS / sizeof *VOICE_ROWS},
     {"SetStorage", "存储和备份", "shell.storage", STORAGE_ROWS, sizeof STORAGE_ROWS / sizeof *STORAGE_ROWS},
@@ -136,6 +136,7 @@ static void bind_row(lv_obj_t *slot, size_t i, ink_ui_field_spec_t *field, ink_u
         .value = S.values[i], .object = {r->id, 0}};
     *action = (ink_ui_action_spec_t){.id = r->id, .label = r->title, .capability = r->setting ? "settings.set" : r->cap,
         .args_json = r->setting ? S.args[i] : NULL, .object = field->object, .enabled = r->setting || r->cap};
+    if (!strcmp(r->id, "privacy.child")) action->args_json = "{\"children\":true}";
     if (S.page == STORAGE) storage_action(i, action);
     int w = INK_CANVAS_W - 2 * INK_MARGIN, head = heading(i), body = row_body(i), h = row_height(i);
     if (!(i % S.capacity)) S.y = 0;

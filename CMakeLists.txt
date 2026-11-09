@@ -1395,3 +1395,8 @@ target_link_libraries(sim-transfer-pages PRIVATE ink_apps ink_system)
 add_test(NAME transfer-pages COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/transfer_pages/run.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(transfer-pages PROPERTIES TIMEOUT 120)
 target_sources(sim-transfer-pages PRIVATE tests/transfer_pages/hal.c)
+
+ink_sim_executable(sim-privacy-records tests/privacy_records/device.c)
+target_link_libraries(sim-privacy-records PRIVATE ink_apps ink_system)
+add_test(NAME privacy-records COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/privacy_records/run.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(privacy-records PROPERTIES TIMEOUT 200)
