@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "ink/osal.h"
-#include "ink/sys/appreg.h"
+#include "ink/sys/cap.h"
 #include "ink/sys/json.h"
 #include "ink/sys/members.h"
 #include "ink/sys/state.h"
@@ -200,7 +200,13 @@ static void destroy(void) {
     if (B.timer) lv_timer_delete(B.timer);
     B.timer = NULL; B.screen = NULL; B.pending = false; B.generation++;
 }
+static void open_page(ink_call_t *c) {
+    (void)c;
+    ink_shell_close();
+    ink_ui_drop_app("backup");
+    ink_ui_push(&PAGES[BACKUP], NULL);
+}
 int ink_backup_pages_init(void) {
-    static const ink_app_def_t app = {.id = "backup", .title = "备份", .icon = "cloud", .entry = &PAGES[BACKUP], .system_app = true};
-    return ink_app_register(&app);
+    static const ink_cap_t cap = {.id = "backup.open", .title = "打开备份", .effect = INK_FX_NAVIGATE, .run = open_page};
+    return ink_cap_register(&cap, 1);
 }

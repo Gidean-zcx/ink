@@ -297,6 +297,11 @@ static void run(void *arg) {
         vtk_event_at(vtk_now() + SIM_MS(1), outage_event, NULL);
         CHECK(WAIT_FOR(!ink_hub_online(), 10000), "ordinary network outage before backup");
         press("备份");
+        CHECK(!strcmp(ink_ui_page_name(), "Backup"), "storage row opens the backup page");
+        CHECK(AI("backup.status", NULL) && g_rc.status == INK_RC_DONE && strstr(g_result, "\"phase\":\"none\""),
+            "opening backup does not accept a backup task");
+        CHECK(BY_HAND("shell.back", NULL) && g_rc.status == INK_RC_DONE, "return to storage before observing backup events"); quiet();
+        CHECK(AI("backup.now", NULL) && g_rc.status == INK_RC_QUEUED, "AI starts a backup while storage stays visible");
         CHECK(AI("backup.status", NULL) && g_rc.status == INK_RC_DONE && !strstr(g_result, "\"phase\":\"none\""),
             "the real backup service accepted the task");
         quiet(); on_ui(inspect_backup_started);

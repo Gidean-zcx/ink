@@ -15,19 +15,27 @@ a = p.parse_args()
 build = a.build.resolve()
 area = build / 'backup-pages-reverse'
 area.mkdir(parents=True, exist_ok=True)
-source = ROOT / 'system/ui/shell/backup_pages.c'
-original = source.read_text()
-before = hashlib.sha256(source.read_bytes()).hexdigest()
+sources = {name: ROOT / f'system/ui/shell/{name}_pages.c' for name in ('backup', 'settings')}
+originals = {name: source.read_text() for name, source in sources.items()}
+before = {name: hashlib.sha256(source.read_bytes()).hexdigest() for name, source in sources.items()}
 cases = [
-    ('summary', '"{\\"summary\\":true}"', '"{\\"summary\\":false}"',
+    ('summary', 'backup', '"{\\"summary\\":true}"', '"{\\"summary\\":false}"',
      'large manifest produces a usable summary preview', 'summary'),
-    ('failure-visible',
+    ('failure-visible', 'backup',
      '    if (!changed && (B.page == BACKUP_FAIL || B.page == RESTORE_FAIL) &&\n'
      '        (!strcmp(phase, "none") || !strcmp(phase, "saved") || !strcmp(phase, "preview") || !strcmp(phase, "done"))) { osal_free(j); return; }\n',
      '', 'page BackupFail is presented', 'summary'),
-    ('ai-routing',
+    ('ai-routing', 'backup',
      '    if (!strcmp(phase, "collecting") || !strcmp(phase, "uploading") || !strcmp(phase, "saved")) B.restore = false;\n',
-     '', 'AI backup replaces a restore preview with Backup', 'routing')]
+     '', 'AI backup replaces a restore preview with Backup', 'routing'),
+    ('app-directory', 'backup', '    return ink_cap_register(&cap, 1);',
+     '    static const ink_app_def_t app = {.id = "backup", .title = "备份", .icon = "cloud", .entry = &PAGES[BACKUP], .system_app = true};\n'
+     '    return ink_app_register(&app) || ink_cap_register(&cap, 1);',
+     'backup stays in settings, outside the app directory', 'navigation'),
+    ('storage-entry', 'settings',
+     '    {"backup", "备份", NULL, NULL, "backup.open", "cloud", NULL, NULL},',
+     '    {"backup", "备份", NULL, NULL, "backup.now", "cloud", NULL, NULL},',
+     'storage row declares backup.open for both touch and AI', 'navigation')]
 flags = (build / 'CMakeFiles/ink_system.dir/flags.make').read_text()
 options = []
 for key in ('C_DEFINES', 'C_INCLUDES', 'C_FLAGS'):
@@ -40,12 +48,13 @@ def run(cmd, **kwargs):
     return subprocess.run(cmd, cwd=build, capture_output=True, text=True, timeout=180, **kwargs)
 
 
-for name, needle, replacement, expected, probe in cases:
+for name, unit, needle, replacement, expected, probe in cases:
+    source, original = sources[unit], originals[unit]
     assert needle in original, name
     obj, binary = area / (name + '.o'), area / name
     link = shlex.split((build / 'CMakeFiles/sim-backup-pages.dir/link.txt').read_text())
     compiled = run([link[0], *options, '-iquote', str(source.parent), '-x', 'c', '-', '-c', '-o', str(obj)],
-                   input=original.replace(needle, replacement))
+                   input='#include "ink/sys/appreg.h"\n' + original.replace(needle, replacement))
     assert compiled.returncode == 0, compiled.stderr
     link[link.index('-o') + 1] = str(binary)
     link.insert(next(i for i, arg in enumerate(link) if arg.endswith('libink_system.a')), str(obj))
@@ -59,6 +68,6 @@ for name, needle, replacement, expected, probe in cases:
     assert metrics.get('test.finished') == 1 and metrics.get('test.fail', 0) > 0, name
     summary.append({'case': name, 'exit': result.returncode, 'failures': metrics['test.fail'], 'expected': expected})
     print(f'{name}: expected test failure, exit={result.returncode}', flush=True)
-assert before == hashlib.sha256(source.read_bytes()).hexdigest()
+assert before == {name: hashlib.sha256(source.read_bytes()).hexdigest() for name, source in sources.items()}
 (area / 'commands.json').write_text(json.dumps(commands, indent=2) + '\n')
 (area / 'summary.json').write_text(json.dumps(summary, indent=2) + '\n')

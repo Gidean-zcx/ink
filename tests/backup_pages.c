@@ -121,15 +121,29 @@ static unsigned confirmation(void) {
 }
 static void run(void *arg) {
     (void)arg; test_start_home();
-    CHECK(AI("shell.launch", "{\"id\":\"backup\"}") && g_rc.status == INK_RC_DONE, "open production backup entry");
+    CHECK(AI("app.list", NULL) && g_rc.status == INK_RC_DONE && !strstr(g_result, "\"id\":\"backup\""),
+        "backup stays in settings, outside the app directory");
+    CHECK(AI("shell.storage", NULL) && g_rc.status == INK_RC_DONE && ready("SetStorage"), "open storage settings");
+    CHECK(strstr(g_snap, "\"capability\":\"backup.open\"") && !strstr(g_snap, "\"capability\":\"backup.now\""),
+        "storage row declares backup.open for both touch and AI");
+    press("备份");
     CHECK(ready("Backup"), "empty backup status is reachable");
+    CHECK(phase("\"phase\":\"none\""), "opening the storage row does not start a backup");
+    CHECK(AI("shell.back", NULL) && ready("SetStorage"), "backup returns to storage settings");
+    CHECK(AI("backup.open", NULL) && g_rc.status == INK_RC_DONE && ready("Backup"), "AI opens the same backup page");
+    CHECK(AI("backup.open", NULL) && g_rc.status == INK_RC_DONE && ready("Backup"), "AI can reopen backup without stacking pages");
+    CHECK(phase("\"phase\":\"none\""), "AI navigation does not start a backup");
+    CHECK(AI("shell.back", NULL) && ready("SetStorage"), "reopening still returns directly to storage settings");
+    const char *probe = getenv("INK_BACKUP_PAGE_PROBE");
+    if (probe && !strcmp(probe, "navigation")) { ink_probe_count("test.finished"); return; }
+    press("备份"); CHECK(ready("Backup"), "reenter backup from storage settings");
     fixture();
     vtk_event_at(vtk_now() + SIM_MS(1), card_event, NULL); delay_ms(50);
     press("现在备份一次"); capture("BackupFail");
     CHECK(strstr(g_snap, "存储卡"), "backup failure reports the actual missing card");
-    CHECK(AI("shell.back", NULL) && ready("home"), "backup failure returns to home");
+    CHECK(AI("shell.back", NULL) && ready("SetStorage"), "backup failure returns to storage settings");
     vtk_event_at(vtk_now() + SIM_MS(1), card_event, (void *)1); delay_ms(50);
-    CHECK(AI("shell.launch", "{\"id\":\"backup\"}") && ready("Backup"), "backup failure can reopen");
+    CHECK(AI("backup.open", NULL) && ready("Backup"), "backup failure can reopen");
     press("现在备份一次");
     CHECK(WAIT_FOR(phase("\"phase\":\"saved\""), 180000), "touch actually backs up files to the synthetic peer");
     CHECK(WAIT_FOR(at("Backup") && strstr(g_snap, "已备份到家庭服务器"), 5000), "saved service state updates the UI");
@@ -139,7 +153,6 @@ static void run(void *arg) {
     CHECK(WAIT_FOR(phase("\"phase\":\"preview\""), 180000), "touch loads the latest backup preview");
     CHECK(WAIT_FOR(at("Restore") && strstr(g_snap, "restore.apply"), 5000), "summary enables the actual overwrite button");
     capture("Restore"); get_preview();
-    const char *probe = getenv("INK_BACKUP_PAGE_PROBE");
     if (probe && !strcmp(probe, "summary")) { ink_probe_count("test.finished"); return; }
     if (probe && !strcmp(probe, "routing")) {
         CHECK(AI("backup.now", NULL) && g_rc.status == INK_RC_QUEUED, "AI can start a backup from restore preview");
@@ -163,7 +176,7 @@ static void run(void *arg) {
     CHECK(WAIT_FOR(phase("\"phase\":\"done\""), 180000), "real service restores the backup");
     capture("RestoreDone"); check_file("SAVED");
     press("开始用"); CHECK(ready("home"), "restored flow returns home");
-    CHECK(AI("shell.launch", "{\"id\":\"backup\"}") && ready("Backup"), "reopen after restore");
+    CHECK(AI("backup.open", NULL) && ready("Backup"), "reopen after restore");
     press("恢复备份");
     CHECK(WAIT_FOR(phase("\"phase\":\"preview\""), 180000) && ready("Restore"), "reenter preview before the next AI backup");
     CHECK(AI("backup.now", NULL) && g_rc.status == INK_RC_QUEUED, "AI can start a backup from restore preview");
@@ -175,7 +188,7 @@ static void run(void *arg) {
     capture("RestoreFail"); check_file("SAVED");
     press("先不恢复"); CHECK(ready("home"), "restore failure returns home");
     vtk_event_at(vtk_now() + SIM_MS(1), clear_fault, NULL); delay_ms(10);
-    CHECK(AI("shell.launch", "{\"id\":\"backup\"}") && ready("BackupFail"), "failed operation remains visible");
+    CHECK(AI("backup.open", NULL) && ready("BackupFail"), "failed operation remains visible");
     press("再试一次");
     CHECK(WAIT_FOR(phase("\"phase\":\"saved\""), 180000), "backup failure retry reaches saved again");
     vtk_event_at(vtk_now() + SIM_MS(1), outage, NULL);
@@ -186,10 +199,11 @@ static void run(void *arg) {
     vtk_event_at(vtk_now() + SIM_MS(1), reconnect, NULL);
     CHECK(WAIT_FOR(phase("\"phase\":\"saved\""), 180000), "existing service resumes after network recovery");
     CHECK(ink_member_switch("kid") == 0, "switch to synthetic child");
-    CHECK(AI("shell.launch", "{\"id\":\"backup\"}") && g_rc.status != INK_RC_DONE, "child cannot enter adult backup pages");
+    CHECK(AI("backup.open", NULL) && g_rc.status == INK_RC_REJECTED, "child cannot enter adult backup pages");
+    CHECK(BY_HAND("backup.open", NULL) && g_rc.status == INK_RC_REJECTED, "child touch cannot enter adult backup pages");
     CHECK(ink_fs_write_atomic("/me/child-only.txt", "测试孩子私有", strlen("测试孩子私有")) == INK_FS_OK, "child owns separate fixture");
     CHECK(ink_member_switch("owner") == 0, "return to adult");
-    CHECK(AI("shell.launch", "{\"id\":\"backup\"}") && ready("Backup"), "new member incarnation reopens cleanly");
+    CHECK(AI("backup.open", NULL) && ready("Backup"), "new member incarnation reopens cleanly");
     picture = "Backup"; on_ui(read_page); on_ui(inspect);
     ink_probe_count("test.snapshot.settled"); ink_probe_count("test.finished");
 }
