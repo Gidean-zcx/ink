@@ -56,7 +56,7 @@ if a.negative or a.revert:
     compiled = subprocess.run(command, cwd=build, capture_output=True, text=True)
     (work / "compile.log").write_text(compiled.stdout + compiled.stderr)
     if a.revert == "api":
-        assert compiled.returncode and "conflicting types for 'ink_camera_read_rgb'" in compiled.stderr, compiled.stderr
+        assert compiled.returncode and "conflicting types" in compiled.stderr and "ink_camera_read_rgb" in compiled.stderr, compiled.stderr
         print("PASS: private capability-dependent declaration violates the public RGB interface")
         if os.environ.get("INK_KEEP_EVIDENCE"):
             print("Evidence:", work.relative_to(ROOT))

@@ -11,15 +11,15 @@
 | 3 | 【实测】通过 | 原尺寸 16 灰阶看图；AI/触摸删除共用 `file.delete`，人确认、取消保留、AI 自批拒绝、卡和索引同步删除 | 同上 |
 | 4 | 【实测】通过 | 孩子看不到大人照片、已知编号也不能打开；孩子拍照只进自己目录。撤掉页面归属检查后相同场景退出 1、3 条断言失败 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/camera_gallery/run.py --build build --negative` |
 | 5 | 【实测】通过 | 三页完整快照均适配实际 AI 的 3072 字节缓冲；真实触摸与 AI 走同能力 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/camera_gallery/run.py --build build` |
-| 6 | 【实测】未全过；行数通过 | 普通与 ASan/UBSan 全量各 233 项：226 通过、同样 4 失败、3 被既有脚本标记跳过，均退出 8；无 sanitizer 错误；产品 349/400 行 | `taskpolicy -c utility cmake --build build -j2`；`UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`；ASan 换 `build-asan`、配置加 `-DINK_SANITIZE=ON` |
+| 6 | 【实测】除用户豁免的三项共用清单外通过 | 普通与 ASan/UBSan 全量各 233 项：230 通过、3 项豁免失败、0 跳过，均退出 8；无 sanitizer 错误；产品 378/400 行 | `taskpolicy -c utility cmake --build build -j2`；`PYTHONPATH="$PWD/hub/src" UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`；ASan 换 `build-asan`、配置加 `-DINK_SANITIZE=ON`；详见文末 |
 
 ## 没做到的
 
 实机验证没做，任务禁止接设备。扫码结果不在本任务范围。
 
-- 两轮全量均未全绿。按任务“共用的文件只在末尾加行”和总规则第 7 节禁止修改共享能力文档，没有改三份现有测试的内部固定清单或预期；具体失败如下，需主会话合并时核对。
+- 首次交付的两轮全量均未全绿。本轮已修页面回归；普通全量只剩应用个数、AI 能力清单、能力表文档三项，按用户补充由主会话合并时对齐，没有修改它们的固定清单或预期。
 - Linux/GCC 没在这台 Mac 上执行，不能将本机 clang 的 `-Werror` 结果当 Linux 通过。
-- 原有三项 hub 测试被各自脚本标记跳过，本任务没有新增 skip 或隐藏跳过。
+- 首次交付的三项 Hub skip 本轮已查明依赖并处理，三项均已实际通过，详见“复查后的修复”。
 - “问这张图”接既有 AI 面板和当前页上下文；本任务没有新增图像上传或视觉推理，也没有验证模型能识别照片。Camera 快照提供取景状态和动作，未提供未保存帧的完整像素读取能力。
 
 ## 和设计不一致的
@@ -38,7 +38,7 @@
 
 ## 顺手发现
 
-普通与 ASan/UBSan 全量的同四项失败均由本任务注册的新页面/能力触发，不冒充基线失败：
+首次交付的普通与 ASan/UBSan 全量有同四项失败，均由本任务注册的新页面/能力触发，不冒充基线失败。下表保留当时原因；本轮页面回归已修，其余三项按用户补充留给主会话：
 
 | 检查 | 证据及需要主会话处理的地方 |
 | --- | --- |
@@ -83,7 +83,12 @@
 | CG-L2 | 【实现】保存前只枚举一次照片目录，从现有最大编号继续；保留独占创建。测试准备 300 张已入索引的照片，分别在首次启动及新进程重启后拍摄，核查新增编号 301/302、数量和独占文件打开次数不超过 2。恢复从 1 试探的反向对照被同一断言捕获。 |
 | CG-L3 | 【实现】用 OSAL 阻塞互斥锁替换原让出 CPU 的自旋，采集和 RGB 复制在同一临界区；回收只尝试锁，原 busy 标志防止分配时回收自己的帧。测试覆盖锁竞争、零 yield、拍摄中不能回收、复制后可以回收、失败后解锁。恢复忙等的反向对照被同一断言捕获。 |
 
-- 【实测】原有页面回归在 Plus 和 desktop-lcd 均通过：相机/相册注册后“工具甲”移到第二页，测试按真实能力可用性翻页，再核查可见项、触摸启动和 AI 搜索；没有修改产品导航或放宽分页断言。原三项 Hub skip 的原因是通用字体 Python 缺 `pytest`、`pytest_asyncio`、`aiohttp`、`yaml`，已选择 `$INK_DEPS/hub/.venv/bin/python`，并以 `PYTHONPATH="$PWD/hub/src"` 指向本工作树。该环境版本为 pytest 8.4.2、pytest-asyncio 1.2.0、aiohttp 3.12.15、PyYAML 6.0.3；三项及能力导出前置检查全部通过（6/6，含两项页面回归），日志 `build/camera-review-prior-failures.log`。
+- 【实测】原有页面回归在 Plus 和 desktop-lcd 均通过：相机/相册注册后“工具甲”移到第二页，测试按真实能力可用性翻页，再核查可见项、触摸启动和 AI 搜索；没有修改产品导航或放宽分页断言。原三项 Hub skip 的原因是通用字体 Python 缺 `pytest`、`pytest_asyncio`、`aiohttp`、`yaml`，CMake 改选已有配置 `-DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"`，并以 `PYTHONPATH="$PWD/hub/src"` 指向本工作树。该环境版本为 pytest 8.4.2、pytest-asyncio 1.2.0、aiohttp 3.12.15、PyYAML 6.0.3；三项及能力导出前置检查全部通过（6/6，含两项页面回归），日志 `build/camera-review-prior-failures.log`。
 - 【实现】没有新增任务、定时器、配置、队列或文件格式；互斥锁替换原帧自旋锁，仍复用 MEDIA 执行器。共享能力/应用清单及文档按用户补充留给主会话；不改共享资料。
 - 【实测】300 张夹具首次建立媒体索引时触发既有 15 秒能力超时；改为先准备“已入索引”的现有相册再测拍照，没有调整超时或索引实现。首次建索引逐项落盘慢是既有文件索引问题，本次未扩展修复。
-- 全量测试、ASan/UBSan、最终行数和隐私检查：待本轮结束后补齐。
+- 【实测】最终定向测试 238 条断言全部通过：Camera 156、restart 22、service 22、many 19、many-restart 19。两次大相册拍摄的 `test.camera.file_opens` 均为 1；证据 `build/camera-gallery-n9d_adv_/`。命令：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/camera_gallery/run.py --build build`。
+- 【实测】同脚本的 `--revert api` 恢复私有签名，编译退出 1；`--revert names` 恢复从 1 试探，实际打开 301 次、18 通过/1 失败；`--revert wait` 恢复忙等，21 通过/1 失败，均命中对应断言。`--negative` 的成员隔离反例仍为 151 通过/3 失败。包装脚本均在确认预期失败后退出 0，未改工作树源码；日志 `build/camera-review-final-controls.log`，反例证据依次为 `build/camera-gallery-9jew8vd_/`、`build/camera-gallery-jjdv45vm/`、`build/camera-gallery-cpfhxogk/`、`build/camera-gallery-6_tfzd0_/`。
+- 【实测】普通 `-Werror` 完整构建退出 0；全量 233 项，230 通过、3 失败、0 跳过，204.11 秒，退出 8。只剩用户明确豁免的 `capability-table-doc`、`integration-ai-surface`、`integration-apps`；没有排除或跳过它们。命令：`taskpolicy -c utility cmake --build build -j2`；`PYTHONPATH="$PWD/hub/src" UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`。日志 `build/camera-review-build.log`、`build/camera-review-ctest.log`。
+- 【实测】产品代码按基线至本轮的新增行数保守计算为 **378/400 行**（新应用目录 323、服务 38、公开头文件 4、boot 2、CMake 11；删除行不抵扣）。本轮产品文件新增 39 行、删除 23 行；没有新增第三方代码。`git diff --check` 通过；任务书隐私扫描无匹配（退出 1）。
+- 【实测】ASan/UBSan 的配置、完整构建退出 0；全量 233 项，同样 230 通过、3 项豁免失败、0 跳过，416.12 秒，退出 8。命令与普通构建、全量相同，构建目录换 `build-asan`，配置加 `-DINK_SANITIZE=ON`；已核对服务及相机测试编译参数均有 `-Werror -fsanitize=address,undefined -fno-omit-frame-pointer`。完整构建日志、CTest 输出和 `Testing/Temporary/LastTest.log` 均无 AddressSanitizer、UndefinedBehaviorSanitizer、LeakSanitizer 或 runtime error 诊断。两轮的 camera-gallery、三项 Hub 测试、两档页面回归、layering、determinism、determinism-reader 全部通过；日志 `build-asan/camera-review-build.log`、`build-asan/camera-review-ctest.log`。
+- 【实测】最后仅将 `--revert api` 的编译诊断匹配改为兼容 GCC/Clang 引号的关键词匹配，随后该反向对照和 Python 语法检查均退出 0；不影响默认全量路径或产品。最终复查涉及 7 个相关文件，原有 `REVIEW.md` 保持未改、未加入提交；没有构建产物或设计稿。
