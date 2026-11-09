@@ -73,4 +73,7 @@ for phase in ("guard-begin-wipe", "guard-pinned-wipe", "guard-preauth-wipe", "gu
         (target / "sd/content/ink-pair.json").write_text(json.dumps({"url": "wss://example.com/v1/device", "pin": "11" * 32, "preauth": "test-once"}))
     boot(target, phase)
     if "wipe" in phase: boot(target, "guard-preserved")
-print("Evidence directory:", work.relative_to(ROOT))
+if os.environ.get("INK_KEEP_EVIDENCE"):
+    print("Evidence directory:", work.relative_to(ROOT))
+else:
+    shutil.rmtree(work, ignore_errors=True)  # only a pass gets here: it leaves nothing behind

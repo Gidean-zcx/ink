@@ -7,6 +7,7 @@ import os
 from pathlib import Path
 import shlex
 import subprocess
+import shutil
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -357,5 +358,8 @@ for name in a.suites:
         for warning in metrics.get('warnings', []):
             print(warning)
     failed |= not ok
-print('Evidence directory:', work.relative_to(ROOT))
+if not failed and not os.environ.get('INK_KEEP_EVIDENCE'):
+    shutil.rmtree(work, ignore_errors=True)  # a pass leaves nothing behind; INK_KEEP_EVIDENCE=1 keeps it
+else:
+    print('Evidence directory:', work.relative_to(ROOT))
 raise SystemExit(1 if failed else 0)

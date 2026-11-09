@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 import shlex
 import subprocess
+import shutil
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -114,5 +115,8 @@ for mode in ['', '-auto'] if a.case == 'all' else []:
         path = work / (cut + mode)
         ok = boot(path, 'cut', 'cut' + mode, cut=cut) and ok
         ok = boot(path, 'restart', 'restart' + mode, expected=cut) and ok
-print('Evidence:', work.relative_to(ROOT), flush=True)
+if ok and not os.environ.get('INK_KEEP_EVIDENCE'):
+    shutil.rmtree(work, ignore_errors=True)  # a pass leaves nothing behind; INK_KEEP_EVIDENCE=1 keeps it
+else:
+    print('Evidence:', work.relative_to(ROOT), flush=True)
 raise SystemExit(0 if ok else 1)

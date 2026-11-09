@@ -4,6 +4,7 @@ import json
 import os
 from pathlib import Path
 import subprocess
+import shutil
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -35,4 +36,7 @@ for mode in range(1, 11):
         print(mode, label, "PASS" if ok else "FAIL", "exit=" + str(run.returncode), "checks=" + str(metrics.get("test.pass", 0)), flush=True)
         if not ok:
             print(run.stderr[-2500:]); print(data.get("warnings", [])); raise SystemExit(1)
-print("Evidence directory:", work.relative_to(ROOT))
+if os.environ.get("INK_KEEP_EVIDENCE"):
+    print("Evidence directory:", work.relative_to(ROOT))
+else:
+    shutil.rmtree(work, ignore_errors=True)  # only a pass gets here: it leaves nothing behind

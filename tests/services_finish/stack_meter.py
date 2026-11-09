@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 import shlex
 import subprocess
+import shutil
 import tempfile
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -31,5 +32,8 @@ subprocess.run([compiler, *flags['C_DEFINES'], *defines, *flags['C_INCLUDES'], *
                 str(ROOT / 'tests/services_finish/stack_meter.c'), '-pthread', '-lm', '-o', str(binary)],
                cwd=build, check=True)
 r = subprocess.run([str(binary)], env={**os.environ, 'UBSAN_OPTIONS': 'halt_on_error=1'}, check=False)
-print('Evidence directory:', work.relative_to(ROOT), flush=True)
+if r.returncode == 0 and not os.environ.get('INK_KEEP_EVIDENCE'):
+    shutil.rmtree(work, ignore_errors=True)  # a pass leaves nothing behind; INK_KEEP_EVIDENCE=1 keeps it
+else:
+    print('Evidence directory:', work.relative_to(ROOT), flush=True)
 raise SystemExit(r.returncode)

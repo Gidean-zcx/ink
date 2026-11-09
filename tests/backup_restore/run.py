@@ -152,4 +152,7 @@ if not a.quick:
         boot(target, "flash-verify")
     if torn < 3:
         raise SystemExit(f"FAIL: only {torn} flash cuts actually tore a write")
-print("Evidence:", work.relative_to(ROOT))
+if os.environ.get("INK_KEEP_EVIDENCE"):
+    print("Evidence:", work.relative_to(ROOT))
+else:
+    shutil.rmtree(work, ignore_errors=True)  # only a pass gets here: it leaves nothing behind

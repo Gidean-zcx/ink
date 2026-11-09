@@ -80,3 +80,4 @@ $INK_DEPS/build-deps/pyenv/bin/ctest --test-dir build --output-on-failure -j3
 - 现在同时有六七个任务在跑：构建最多 `-j2`，`ctest` 最多 `-j2`，命令前加 `taskpolicy -c utility`。
 - 这些共享文档不改，合并时由主会话统一改：docs/tasks/backlog.md、docs/system/ui-dependencies.md、生成的 docs/system/capabilities.md、docs/requirements.md、docs/ideas.md、docs/decisions/。要改的写进报告的“要改的文档”一节。
 - 不碰设备，不读 ink-hw。
+- 测试跑通后，构建目录里的临时证据目录会自动删掉（以前每跑一次留一份，把磁盘塞满了）；要留着给报告引用，就在命令前加 `INK_KEEP_EVIDENCE=1`。

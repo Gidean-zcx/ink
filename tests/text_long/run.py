@@ -108,5 +108,8 @@ for phase in phases:
         compare.mkdir(parents=True, exist_ok=True)
         for name in ("snap-scene.png", "metrics.json"): shutil.copyfile(out / name, compare / name)
     if not passed and phase == "write": break
-print("Evidence:", work.relative_to(ROOT), flush=True)
+if ok and not os.environ.get("INK_KEEP_EVIDENCE"):
+    shutil.rmtree(work, ignore_errors=True)  # a pass leaves nothing behind; INK_KEEP_EVIDENCE=1 keeps it
+else:
+    print("Evidence:", work.relative_to(ROOT), flush=True)
 raise SystemExit(0 if ok else 1)
