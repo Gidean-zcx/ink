@@ -12,24 +12,34 @@ ROOT = Path(__file__).resolve().parents[2]
 p = argparse.ArgumentParser()
 p.add_argument("--build", type=Path, required=True)
 p.add_argument("--visual", action="store_true")
-p.add_argument("--mutant", choices=("child", "browse", "thumb", "rename", "paging", "preview", "ai-panel"))
+p.add_argument("--mutant", choices=("child", "browse", "thumb", "rename", "paging", "preview", "ai-panel", "up", "long-snapshot", "notice"))
 a = p.parse_args()
 build = a.build.resolve()
 work = Path(tempfile.mkdtemp(prefix="files-app-", dir=build))
 binary = build / "sim-files-app"
 if a.mutant:
     source = (ROOT / "system/apps/files/files.c").read_text()
-    old, new = {
-        "child": ("if (ink_member_current()->role == INK_ROLE_ADULT) for", "if (true) for"),
-        "browse": ("if (!allowed || (F.mode == MOVE && !writable(path)))", "if (false && (!allowed || (F.mode == MOVE && !writable(path))))"),
-        "thumb": ("lv_image_set_src(F.images[at], &F.thumbs[at]);", "(void)F.thumbs[at];"),
-        "rename": ('if (ink_cap_call(a->capability, NULL, &opts))', 'if (strcmp(a->id, "rename") && ink_cap_call(a->capability, NULL, &opts))'),
-        "paging": ("ink_ui_list_turn(F.list, !strcmp(id, \"files.next\") ? 1 : -1)", "(false)"),
-        "preview": ("lv_label_set_text(F.preview, F.preview_text)", "lv_label_set_text(F.preview, \"\")"),
-        "ai-panel": ("strcmp(ink_ui_action_page(), PAGES[F.mode].name)", "strcmp(ink_ui_top_name(), PAGES[F.mode].name)"),
+    changes = {
+        "child": [("if (ink_member_current()->role == INK_ROLE_ADULT) for", "if (true) for")],
+        "browse": [("if (!allowed || (F.mode == MOVE && !writable(path)))", "if (false && (!allowed || (F.mode == MOVE && !writable(path))))")],
+        "thumb": [("lv_image_set_src(F.images[at], &F.thumbs[at]);", "(void)F.thumbs[at];")],
+        "rename": [('if (ink_cap_call(a->capability, NULL, &opts))', 'if (strcmp(a->id, "rename") && ink_cap_call(a->capability, NULL, &opts))')],
+        "paging": [("ink_ui_list_turn(F.list, !strcmp(id, \"files.next\") ? 1 : -1)", "(false)")],
+        "preview": [("lv_label_set_text(F.preview, F.preview_text)", "lv_label_set_text(F.preview, \"\")")],
+        "ai-panel": [("strcmp(ink_ui_action_page(), PAGES[F.mode].name)", "strcmp(ink_ui_top_name(), PAGES[F.mode].name)")],
+        "up": [("end != path && !member_root", "end != path && end != path + 8 && (member_root || true)")],
+        "long-snapshot": [
+            ('char ids[4][32]', 'char ids[4][INK_FS_PATH_MAX + 8]'),
+            ('"dir:%zu", index', '"dir:%s", item->path'),
+            ('.label = item->dir ? F.names[at] : item->name', '.label = item->name'),
+            ('strcmp(F.names[at], item->name) ? "文件夹（名称已截断）" : "文件夹"', '"文件夹"'),
+        ],
+        "notice": [("notice_y = INK_CANVAS_H - INK_MARGIN - 2 * INK_PRIMARY - INK_GAP - 2 * ink_ui_line_height(INK_FONT_NOTE) - INK_GAP_L;", "(void)notice_y;")],
     }[a.mutant]
-    assert source.count(old) == 1, old
-    (work / "files-product.c").write_text(source.replace(old, new))
+    for old, new in changes:
+        assert source.count(old) == 1, old
+        source = source.replace(old, new)
+    (work / "files-product.c").write_text(source)
     driver = (ROOT / "tests/files_app/files_app.c").read_text().replace(
         '#include "../../system/apps/files/files.c"', '#include "files-product.c"').replace(
         '#include "../../system/boot/main.c"', f'#include "{ROOT}/system/boot/main.c"').replace(
@@ -49,18 +59,19 @@ if a.mutant:
     link[link.index("-o") + 1] = str(binary)
     subprocess.run(link, cwd=build, check=True)
 
-runs = [("write", ""), ("verify", "")]
+runs = [("write", ""), ("verify", ""), ("review", "")]
 if a.mutant:
-    runs = [("write", "")]
+    runs = [("review" if a.mutant in ("up", "long-snapshot", "notice") else "write", "")]
 if a.visual:
     runs += [("write", name) for name in ("Files", "FileList", "FileActions", "FileMove")]
+    runs += [("review", name) for name in ("FileActionsPreview", "FileListLong", "FileMoveLong")]
 ok = True
 seen = set()
 summary = []
 for phase, scene in runs:
     name = phase + ("-" + scene if scene else "")
     out = work / name
-    scope = scene or "persistence"
+    scope = scene or ("review" if phase == "review" else "persistence")
     result = subprocess.run([str(binary), "--profile", str(ROOT / "simulator/profiles/metalio-plus.json"),
         "--script", str(ROOT / "tests/files_app/files_app.script"), "--budget", str(ROOT / "tests/ui_scene.budget.json"),
         "--assets", str(build / "assets"), "--content", str(build / "test-content"),
@@ -83,13 +94,23 @@ for phase, scene in runs:
         snap = json.loads(line)
         seen.add(snap["scene"])
         assert snap["snapshot"], snap
+        if snap["scene"] in ("FileListLong", "FileMoveLong"):
+            page = snap["snapshot"]
+            fields = page["fields"]
+            assert len(fields) == 4 and len({f["id"] for f in fields}) == 4, fields
+            for field in fields:
+                assert field["label"].endswith("…") and "名称已截断" in field["value"], field
+                assert len(field["id"]) < 24 and field["object"]["id"] == field["id"], field
+            paths = {json.loads(action["args_json"])["path"] for action in page["actions"] if action["capability"] == "files.browse"}
+            expected = {"/me/SYNTH_资料目录/SYNTH_" + "测" * 17 + str(i) for i in range(4)}
+            assert paths == expected, paths
     if scene:
         target = build / "files-app-compare" / scene
         target.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(out / "snap-scene.png", target / "snap-scene.png")
         shutil.copyfile(out / "metrics.json", target / "metrics.json")
 if ok and not a.mutant:
-    assert seen == {"Files", "FileList", "FileActions", "FileMove"}, seen
+    assert seen == {"Files", "FileList", "FileActions", "FileMove", "FileActionsPreview", "FileListLong", "FileMoveLong"}, seen
 (work / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n")
 if ok and not os.environ.get("INK_KEEP_EVIDENCE"):
     shutil.rmtree(work)

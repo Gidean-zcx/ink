@@ -48,7 +48,8 @@ static void host_snapshot(void *unused) {
     if (!f || fprintf(f, "{\"scene\":\"%s\",\"snapshot\":%s}\n", scene, snapshot_json) < 0 || fclose(f)) abort();
 }
 static void snapshot_page(void) {
-    CHECK(ink_ui_snapshot(snapshot_json, sizeof snapshot_json, NULL) > 0 && strstr(snapshot_json, scene), "%s has a semantic snapshot", scene);
+    const char *page = F.mode == ACTIONS ? "FileActions" : F.mode == MOVE ? "FileMove" : F.mode == LIST ? "FileList" : "Files";
+    CHECK(ink_ui_snapshot(snapshot_json, sizeof snapshot_json, NULL) > 0 && strstr(snapshot_json, page), "%s has a semantic snapshot", scene);
     CHECK(ink_ui_context_snapshot(g_snap, sizeof g_snap, NULL) > 0, "%s fits the production AI buffer", scene);
     vtk_host_call(host_snapshot, NULL);
 }
@@ -128,6 +129,19 @@ static void action_contract(void) {
     CHECK(!strcmp(F.actions[1].capability, "file.move") && !strcmp(F.actions[4].capability, "file.delete"), "touch bindings are the existing AI file capabilities");
 }
 static void preview_check(void) { CHECK(!strcmp(F.preview_text, "SYNTHETIC_FILE_PREVIEW") && !strcmp(lv_label_get_text(F.preview), F.preview_text), "opening reads actual text into the visible preview"); }
+static void notice_check(void) {
+    lv_obj_update_layout(F.screen);
+    lv_area_t notice; lv_obj_get_coords(F.notice, &notice);
+    CHECK(lv_label_get_text(F.notice)[0] && !lv_obj_has_flag(F.notice, LV_OBJ_FLAG_HIDDEN) &&
+          notice.y1 >= 0 && notice.y2 < ink_ui_height(), "operation result is visible inside the screen");
+    for (uint32_t i = 0; i < lv_obj_get_child_count(F.screen); i++) {
+        lv_obj_t *obj = lv_obj_get_child(F.screen, (int)i);
+        if (obj == F.notice || lv_obj_has_flag(obj, LV_OBJ_FLAG_HIDDEN) || !lv_obj_has_flag(obj, LV_OBJ_FLAG_CLICKABLE)) continue;
+        lv_area_t control; lv_obj_get_coords(obj, &control);
+        CHECK(notice.x2 < control.x1 || control.x2 < notice.x1 || notice.y2 < control.y1 || control.y2 < notice.y1,
+              "operation result does not intersect an action control");
+    }
+}
 static void name_selected(void) { ink_text_select(0, ink_text_char_offset(ink_text_value(), strlen(ink_text_value()))); }
 static void move_contract(void) {
     CHECK(F.mode == MOVE && !strcmp(F.actions[2].capability, "file.move") && F.actions[2].enabled, "destination button calls the same file.move as AI");
@@ -136,6 +150,64 @@ static void move_contract(void) {
 static void child_roots(void) {
     CHECK(ink_ui_snapshot(g_snap, sizeof g_snap, NULL) > 0 && !strstr(g_snap, "/members/"), "child roots hide every other member's private directory");
     for (size_t i = 0; i < F.count; i++) CHECK(!strncmp(F.items[i].path, "/me", 3) || !strncmp(F.items[i].path, "/family", 7), "all child entry paths are their own or shared");
+}
+static const char *expected_directory;
+static void parent_check(void) {
+    ready = !strcmp(ink_ui_page_name(), expected_page) && !strcmp(directory(), expected_directory);
+    CHECK(ready,
+          "up returns to %s at %s, got %s at %s", expected_page, expected_directory, ink_ui_page_name(), directory());
+}
+static bool up_to(const char *page, const char *path) {
+    command("files.up", NULL); quiet();
+    CHECK(WAIT_FOR(!F.busy, 10000), "parent directory finishes reading");
+    expected_page = page; expected_directory = path; on_ui(parent_check);
+    return ready;
+}
+static void browse_path(const char *path, const char *page) {
+    char args[384]; snprintf(args, sizeof args, "{\"path\":\"%s\"}", path);
+    command("files.browse", args); wait_page(page);
+}
+static void long_rows(void) {
+    CHECK(F.count == 4, "all four legal long directory names are listed");
+    CHECK(ink_ui_context_snapshot(g_snap, sizeof g_snap, NULL) > 0, "long directory names fit the 3072-byte production AI buffer");
+    CHECK(strstr(g_snap, "名称已截断"), "AI snapshot explains shortened directory names");
+    ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
+    CHECK(j != NULL, "allocate action argument parser");
+    if (!j) return;
+    for (size_t i = 0; i < F.count && i < 4; i++) {
+        char path[INK_FS_PATH_MAX];
+        CHECK(ink_json_parse(j, F.args[i], strlen(F.args[i])) == 0 &&
+              ink_json_str(j, ink_json_find(j, 0, "path"), path, sizeof path) > 0 && !strcmp(path, F.items[i].path),
+              "shortened row retains its complete browse path");
+    }
+    osal_free(j);
+}
+static void review_regressions(void) {
+    fixture(); roots();
+    CHECK(ink_fs_mkdir("/me/2026/notes") == 0 && ink_fs_mkdir("/family/2026/notes") == 0 &&
+          ink_fs_mkdir("/members/kid/SYNTH_NEST") == 0, "create synthetic parent-boundary directories");
+    browse_path("/me", "FileList"); browse_path("/me/2026", "FileList"); browse_path("/me/2026/notes", "FileList");
+    if (up_to("FileList", "/me/2026") && up_to("FileList", "/me")) up_to("Files", ""); roots();
+    browse_path("/family/2026/notes", "FileList");
+    if (up_to("FileList", "/family/2026") && up_to("FileList", "/family")) up_to("Files", ""); roots();
+    browse_path("/members/kid/SYNTH_NEST", "FileList"); if (up_to("FileList", "/members/kid")) up_to("Files", ""); roots();
+    browse_path("/members/owner", "FileList"); up_to("Files", ""); roots();
+    browse(); select_id(kept); touch("打开"); quiet(); on_ui(preview_check); on_ui(notice_check); snap("FileActionsPreview");
+    command("settings.set", "{\"id\":\"display.font_size\",\"value\":3}"); quiet(); wait_page("FileActions");
+    touch("打开"); quiet(); on_ui(preview_check); on_ui(notice_check);
+    touch("移动"); wait_page("FileMove"); browse_path("/me/2026/notes", "FileMove");
+    if (up_to("FileMove", "/me/2026") && up_to("FileMove", "/me")) up_to("FileMove", "");
+    browse_path("/members/kid/SYNTH_NEST", "FileMove"); if (up_to("FileMove", "/members/kid")) up_to("FileMove", "");
+    const char *parent = "/me/SYNTH_资料目录";
+    for (int i = 0; i < 4; i++) {
+        char path[INK_FS_PATH_MAX]; snprintf(path, sizeof path, "%s/SYNTH_测测测测测测测测测测测测测测测测测%d", parent, i);
+        CHECK(ink_fs_mkdir(path) == 0, "create legal synthetic long directory %d", i);
+    }
+    browse_path(parent, "FileMove"); on_ui(long_rows); snap("FileMoveLong");
+    roots(); browse_path(parent, "FileList"); on_ui(long_rows); snap("FileListLong");
+    on_ui(show_ai); quiet(); on_ui(long_rows); on_ui(close_ai);
+    touch("SYNTH_测…"); wait_page("FileList");
+    CHECK(!strncmp(F.path, parent, strlen(parent)) && strlen(F.path) > strlen(parent), "touch opens the full long directory path");
 }
 static void verify_restart(void) {
     ink_fs_file_t *f = NULL; char ids[64] = {0};
@@ -198,7 +270,7 @@ static void exercise(void) {
 static void run(void *unused) {
     (void)unused; vtk_host_call(host_options, NULL);
     CHECK(WAIT_FOR(ink_member_space_open(), 10000), "member space opens"); test_start_home(); quiet();
-    if (!strcmp(phase, "verify")) verify_restart(); else exercise();
+    if (!strcmp(phase, "verify")) verify_restart(); else if (!strcmp(phase, "review")) review_regressions(); else exercise();
     CHECK(WAIT_FOR(ink_db_idle(), 10000), "file index is durable before stopping"); quiet(); ink_probe_count("test.finished");
 }
 void ink_main(void) {
