@@ -2,6 +2,7 @@
 #ifndef INK_UI_SHELL_H
 #define INK_UI_SHELL_H
 #include "ink/ui_theme.h"
+#include "ink/sys/ai.h"
 #include "ink/sys/cap.h"
 
 int ink_shell_init(void);
@@ -32,7 +33,7 @@ const char *ink_shell_board(void);
 void ink_shell_members_open(bool returning);
 void ink_shell_ai_open(lv_obj_t **root, lv_obj_t **status, lv_obj_t **question, lv_obj_t **answer);
 void ink_shell_ai_closed(void);
-void ink_shell_ai_status(const char *status);
+void ink_shell_ai_status(const char *status, ink_ai_error_t error);
 void ink_shell_ai_words(const char *text);
 bool ink_shell_ai_hide(void);
 void ink_shell_ai_reveal(void);

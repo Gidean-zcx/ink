@@ -13,6 +13,11 @@
 extern "C" {
 #endif
 
+typedef enum {
+    INK_AI_ERROR_NONE, INK_AI_ERROR_OFFLINE, INK_AI_ERROR_LOST,
+    INK_AI_ERROR_TIMEOUT, INK_AI_ERROR_BUDGET
+} ink_ai_error_t;
+
 int ink_ai_init(void);
 /** UI task: the AI key went down / up at physical time t_us. */
 void ink_ai_key(bool pressed, uint64_t t_us);

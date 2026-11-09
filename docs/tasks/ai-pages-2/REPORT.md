@@ -78,6 +78,40 @@
 
 ## 复查后的修复
 
+### 主会话补充 AP-L1、AP-L2
+
+本次从 `50ccea4b` 接续；主会话追加的复查记录原样保留，不计入本次提交。
+
+| 问题 | 修复 | 验证 |
+| --- | --- | --- |
+| AP-L1 中 | 【实现】AI 服务传明确的离线、断线、超时、额度类型，页面不再按提示文案判断错误 | 【实测】`python tests/ai_pages.py --build build --case typed`，与 AP-L2 合计 62 项检查通过；相同改写文案对应四种错误，只有旧错误文案而没有错误类型时不建错误页 |
+| AP-L2 中 | 【实现】普通面板与三种错误页各用常量浮层描述，始终只登记一个 AI 浮层；面板集中移除／登记当前描述，收起、展开、关闭沿用同一生命周期；声明移入头文件 | 【实测】同一场景验证同层浮层登记排序、正常与错误互换、隐藏期间换错误、展开及关闭，62 项检查通过；证据 `build/ai-pages-3dv42u4g/typed/` |
+
+新增机制：无。没有新线程、任务、状态机、缓存、配置或重试。已有测试只适配带错误类型的函数签名，未改原断言与预算。
+
+【实测】普通 Werror 构建成功，日志 `build/ap-l-configure.log`、`build/ap-l-build.log`。相对任务基线产品新增 264、删除 9 行，合计 273／300 行（含新头文件，不含测试和文档）。
+
+【实测】普通全量 233 项：231 通过、0 跳过，仅 `capability-table-doc`、`services-mid-capability-doc` 两项获准忽略的既有文档同步失败，CTest 退出 8，303.07 秒。AI 十场景全部通过，检查数为 21／20／30／117／32／22／38／38／60／62；证据 `build/ai-pages-4365yz7w/`，日志 `build/ap-l-ctest.log`、`build/Testing/Temporary/LastTest.log`。
+
+【实测】ASan／UBSan 全量也为 231 通过、0 跳过、上述两项文档失败，CTest 退出 8，284.55 秒。构建保留 Werror，实际编译参数含 `-fsanitize=address,undefined -fno-omit-frame-pointer`；完整 `LastTest.log` 未见 sanitizer 或运行期未定义行为诊断。十场景检查数与普通构建相同，证据 `build-asan/ai-pages-819i07tx/`；日志 `build-asan/ap-l-configure.log`、`build-asan/ap-l-build.log`、`build-asan/ap-l-ctest.log`、`build-asan/Testing/Temporary/LastTest.log`。两套十场景均完成、零失败、零预算违规；内 RAM 最低余量均为 41728 字节，原下限 32768；内部、外部 failed_allocs 均为 0。
+
+【实测】十二组反向对照均编译成功、`test.finished=1`，运行退出 1。本次新增两组如下；前十组失败数与上轮一致。只编译构建目录内的临时副本，没有撤改工作区产品文件。命令：`python tests/ai_pages.py --build build --mutant <名称>`；汇总 `build/ap-l-mutants.json`，逐组日志 `build/ap-l-mutant-<名称>.log`。
+
+| 变体 | 撤掉的修复 | 通过／失败 | 证据 |
+| --- | --- | --- | --- |
+| typed | AP-L1：恢复按中文提示比对错误种类 | 29／33 | `build/ai-pages-d6tupr70/typed/` |
+| overlay | AP-L2：恢复运行时修改已登记的浮层描述 | 45／17 | `build/ai-pages-o1y8id_5/typed/` |
+
+【实现＋实测】原三项环境跳过均恢复通过：`hub-contract` 的 125 个 pytest 用例通过，`hub-json-crosscheck`、`hub-simulator-e2e` 通过。所需依赖已齐，无需安装：`$INK_DEPS/hub/.venv/bin/python` 为 Python 3.11.15，其中 aiohttp 3.12.15、PyYAML 6.0.3、pytest 8.4.2、pytest-asyncio 1.2.0 均可导入。继续指定 `INK_HUB_PYTHON`，运行加 `PYTHONPATH="$PWD/hub"`，根因和设置方法同下方前一轮记录。
+
+【实测】`tools/ui_scale_check.py`：35 文件、0 违规。按原命令复算四页对照仍为 46.807／44.719／46.222／34.283，未改变布局；已查看断线与额度页截图。超过 12/255 的差异原因同首轮。
+
+本次改过的已有测试：`tests/ui_shell_regressions.c` 仅补 `INK_AI_ERROR_NONE` 实参；`tests/ai_pages.c` 增加 typed 场景，`tests/ai_pages.py` 适配原反向变体并增加 typed／overlay。没有放宽断言、删除测试、增加跳过或修改资源预算。没做到的／和设计不一致：沿用上轮已披露项，R1-06 仍超过一两行，按本次范围保留。要用户定的：无；要改的共享文档：仍由主会话合并时处理。
+
+【实测】两套构建、全量及反向命令均使用 `taskpolicy -c utility`；构建与 CTest 均最多 `-j2`，串行进行。全量、配置和定向命令沿用下方前缀与参数。本次产品修复新增 50、删除 21 行；提交范围为六个产品文件、三份测试和本报告，没有共享文档、依赖或构建产物。任务基线至暂存版本的 `git diff --cached 3fce2bee --check` 通过；按总规则的隐私表达式扫描该差异，0 匹配（grep 退出 1）。
+
+### 前一轮修复记录
+
 复查起点：`d0d793e9`。下面是本次修复的结论；上文保留首轮执行时的结果。
 
 | 问题 | 修复与定向证据 | 命令（前缀见下文） |

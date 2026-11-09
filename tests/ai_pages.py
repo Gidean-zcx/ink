@@ -11,29 +11,44 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser()
 parser.add_argument("--build", type=Path, required=True)
-parser.add_argument("--mutant", choices=("errors", "member", "receipts", "snapshot", "hide", "lost", "load", "recover", "wrap", "undo"))
-parser.add_argument("--case", choices=("offline", "timeout", "budget", "records", "hide", "lost", "newmember", "loadfail", "real"))
+parser.add_argument("--mutant", choices=("errors", "member", "receipts", "snapshot", "hide", "lost", "load", "recover", "wrap", "undo", "typed", "overlay"))
+parser.add_argument("--case", choices=("offline", "timeout", "budget", "records", "hide", "lost", "newmember", "loadfail", "real", "typed"))
 args = parser.parse_args()
 build = args.build.resolve()
 work = Path(tempfile.mkdtemp(prefix="ai-pages-", dir=build))
 binary = build / "sim-ai-pages"
 if args.mutant:
-    source = (ROOT / "system/ui/shell/ai_pages.c").read_text()
+    product = "ai_panel.c" if args.mutant in ("typed", "overlay") else "ai_pages.c"
+    source = (ROOT / "system/ui/shell" / product).read_text()
     old, new = {
-        "errors": ("if (kind < 0) return;", "return;"),
+        "errors": ("if (kind < 0) return NULL;", "if (kind < 0 || true) return NULL;"),
         "member": ('ink_db_find_def("activity.log"), ink_member_current()->id', 'ink_db_find_def("activity.log"), "owner"'),
         "receipts": ("return words[i];", "return words[0];"),
         "snapshot": ("return ink_ui_semantics_snapshot(&E.page, out, cap);", "return -1;"),
-        "hide": ("overlay->name = BOARDS[kind]; overlay->level = 0; overlay->snapshot = error_snapshot;",
-                 "static ink_ui_overlay_t orphan; orphan = *overlay; orphan.name = BOARDS[kind]; orphan.level = 0; orphan.snapshot = error_snapshot; ink_ui_overlay_add(&orphan, E.root);"),
+        "hide": ("return &ERROR_OVERLAYS[kind];",
+                 'static const ink_ui_overlay_t orphan = {.name = "AiOffline", .snapshot = error_snapshot}; ink_ui_overlay_add(&orphan, E.root); return &ERROR_OVERLAYS[kind];'),
         "lost": (" || lost ? 0 :", " ? 0 :"),
         "load": ('if (ink_cap_call("activity.list", NULL, &opts))', 'if ((void)opts, 1)'),
         "recover": ("if (L.list && !L.db)", "if (false)"),
         "wrap": ("(L.receipts ? ink_ui_label : ink_ui_line)", "ink_ui_line"),
         "undo": ("bool undo = L.receipts &&", "bool undo = false && L.receipts &&"),
+        "typed": ("ink_ai_pages_status(error, A.root)",
+                  'ink_ai_pages_status(!strcmp(s, "现在没有网络，稍后再问我") ? INK_AI_ERROR_OFFLINE : !strcmp(s, "网络断了，回答没收全，请再试一次") ? INK_AI_ERROR_LOST : !strcmp(s, "家庭服务器没有回应，请再试一次") ? INK_AI_ERROR_TIMEOUT : !strcmp(s, "今天的额度用完了") ? INK_AI_ERROR_BUDGET : INK_AI_ERROR_NONE, A.root)'),
+        "overlay": ('''    const ink_ui_overlay_t *overlay = ink_ai_pages_status(error, A.root);
+    if (!overlay) overlay = &OVERLAY;
+    if (A.overlay != overlay) {
+        ink_ui_overlay_remove(A.overlay);
+        A.overlay = overlay;
+        if (!A.hidden) ink_ui_overlay_add(A.overlay, A.root);
+    }''', '''    OVERLAY = (ink_ui_overlay_t){.name = "Ai", .level = -1, .on_key = key, .snapshot = ink_shell_ai_snapshot};
+    const ink_ui_overlay_t *overlay = ink_ai_pages_status(error, A.root);
+    if (overlay) OVERLAY = *overlay;
+    A.overlay = &OVERLAY;'''),
     }[args.mutant]
     assert source.count(old) == ({"member": 3, "wrap": 2}.get(args.mutant, 1))
     source = source.replace(old, new)
+    if args.mutant == "overlay":
+        source = source.replace("static const ink_ui_overlay_t OVERLAY", "static ink_ui_overlay_t OVERLAY")
     target = work / "ai-pages-product.c"
     target.write_text(source)
     flags = {}
@@ -41,6 +56,7 @@ if args.mutant:
         if " = " in line:
             key, value = line.split(" = ", 1)
             flags[key] = shlex.split(value)
+    flags["C_INCLUDES"].append("-I" + str(ROOT / "system/ui/shell"))
     link = shlex.split((build / "CMakeFiles/sim-ai-pages.dir/link.txt").read_text())
     obj = work / "ai-pages-product.o"
     result = subprocess.run([link[0], *flags["C_DEFINES"], *flags["C_INCLUDES"], *flags["C_FLAGS"],
@@ -51,8 +67,8 @@ if args.mutant:
     link[link.index("-o") + 1] = str(binary)
     if subprocess.run(link, cwd=build).returncode: raise SystemExit(2)
 
-cases = ["offline", "timeout", "budget", "records", "hide", "lost", "newmember", "loadfail", "real"]
-if args.mutant: cases = [{"errors": "offline", "snapshot": "offline", "member": "records", "receipts": "records", "hide": "hide", "lost": "lost", "load": "newmember", "recover": "loadfail", "wrap": "real", "undo": "real"}[args.mutant]]
+cases = ["offline", "timeout", "budget", "records", "hide", "lost", "newmember", "loadfail", "real", "typed"]
+if args.mutant: cases = [{"errors": "offline", "snapshot": "offline", "member": "records", "receipts": "records", "hide": "hide", "lost": "lost", "load": "newmember", "recover": "loadfail", "wrap": "real", "undo": "real", "typed": "typed", "overlay": "typed"}[args.mutant]]
 if args.case: cases = [args.case]
 ok = True
 for case in cases:

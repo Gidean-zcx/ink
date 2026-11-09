@@ -134,6 +134,39 @@ static void hide_panel(void) {
     read_snapshot(); CHECK(!strstr(snapshot, "AiOffline"), "hidden error is absent from AI snapshot");
 }
 static void reveal_panel(void) { ink_shell_ai_reveal(); }
+static void typed_error_checks(void) {
+    static const ink_ai_error_t errors[] = {INK_AI_ERROR_OFFLINE, INK_AI_ERROR_LOST, INK_AI_ERROR_TIMEOUT, INK_AI_ERROR_BUDGET};
+    static const char *const boards[] = {"AiOffline", "AiOffline", "AiTimeout", "AiBudget"};
+    static const ink_ui_overlay_t peer = {.name = "SyntheticAiPeer", .level = 0};
+    for (unsigned i = 0; i < 4; i++) {
+        ink_shell_ai_status("合成普通状态", INK_AI_ERROR_NONE);
+        lv_obj_t *root = ink_ui_box(lv_layer_sys(), 0, 0, 1, 1, 0, INK_SURFACE_WHITE, false);
+        ink_ui_overlay_add(&peer, root);
+        CHECK(!strcmp(ink_ui_top_name(), peer.name), "ordinary AI panel is below the peer overlay");
+        ink_shell_ai_status("合成提示已改写", errors[i]);
+        CHECK(!strcmp(ink_ui_top_name(), boards[i]), "typed error replaces and reorders the registered overlay: %u", i);
+        read_snapshot(); CHECK(strstr(snapshot, boards[i]) && strstr(snapshot, "ai.pages.close"), "changed wording preserves the typed error snapshot: %u", i);
+        CHECK((strstr(snapshot, "回答没收全") != NULL) == (errors[i] == INK_AI_ERROR_LOST), "only lost connection reports an incomplete answer");
+        CHECK(ink_shell_ai_hide() && !strcmp(ink_ui_top_name(), peer.name), "hide removes the active error descriptor");
+        unsigned next = (i + 1) % 4;
+        ink_shell_ai_status("另一句合成提示", errors[next]);
+        CHECK(!strcmp(ink_ui_top_name(), peer.name), "changing a hidden error does not register it");
+        ink_shell_ai_reveal(); read_snapshot();
+        CHECK(!strcmp(ink_ui_top_name(), boards[next]) && strstr(snapshot, boards[next]), "reveal registers the new error descriptor");
+        ink_shell_ai_status("现在没有网络，稍后再问我", INK_AI_ERROR_NONE);
+        CHECK(!strcmp(ink_ui_top_name(), peer.name), "normal status restores the lower overlay level");
+        ink_ui_overlay_remove(&peer); lv_obj_delete(root); read_snapshot();
+        CHECK(!strcmp(ink_ui_top_name(), "Ai") && !strstr(snapshot, "ai.pages.close") && strstr(snapshot, "现在没有网络，稍后再问我"),
+            "error-like display text alone cannot create an error page");
+        button = "ai.pages.close"; locate(); CHECK(!found, "normal status deletes the old error controls");
+    }
+    CHECK(ink_ai_dismiss() && !strcmp(ink_ui_top_name(), ink_ui_page_name()), "close removes the final active descriptor");
+}
+static void typed_errors(void) {
+    on_ui(ask);
+    CHECK(WAIT_FOR(sim_metric_value("ai.failures") >= 1, 55000), "open panel through a real AI error");
+    quiet(); on_ui(typed_error_checks); quiet();
+}
 static bool has_snapshot(const char *text) { on_ui(read_snapshot); return strstr(snapshot, text) != NULL; }
 static void open_cold_log(void) {
     ink_receipt_t rc; ink_cap_invoke("shell.ai_log", NULL, INK_SRC_AI, 0, &rc);
@@ -208,6 +241,7 @@ static void run(void *ctx) {
     (void)ctx; vtk_host_call(get_mode, NULL); delay_ms(1800); quiet(); test_start_home(); quiet();
     if (!strcmp(mode, "newmember") || !strcmp(mode, "loadfail")) cold_records();
     else if (!strcmp(mode, "real")) real_receipts();
+    else if (!strcmp(mode, "typed")) typed_errors();
     else if (strcmp(mode, "records")) {
         CHECK(BY_HAND("reader.open_book", "{\"title\":\"星星邮差\"}") && g_rc.status == INK_RC_DONE, "open the real reader below the error panel");
         quiet(); on_ui(read_snapshot); snprintf(background, sizeof background, "%s", snapshot);

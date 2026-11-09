@@ -10,8 +10,8 @@
 #include "ink/sys/time.h"
 #include "ink/sys/ui_list.h"
 #include "ink/ui_shell.h"
+#include "ai_pages.h"
 
-static const char *const BOARDS[] = {"AiOffline", "AiTimeout", "AiBudget"};
 static const char *const TITLES[] = {"暂时问不了 AI，书还能继续读", "等得太久，先停了", "今天的额度用完了"};
 static struct { lv_obj_t *root; int kind; ink_ui_page_spec_t page; } E;
 static ink_ui_field_spec_t error_fields[2];
@@ -20,13 +20,22 @@ static ink_ui_action_spec_t error_actions[] = {
     {.id = "retry", .label = "再说一次", .capability = "ai.pages.retry", .enabled = true}
 };
 static int error_snapshot(char *out, size_t cap) { return ink_ui_semantics_snapshot(&E.page, out, cap); }
+static bool error_key(ink_key_t key, bool lng) {
+    if (lng || (key != INK_KEY_HOME && key != INK_KEY_BACK)) return false;
+    ink_ai_dismiss(); return true;
+}
+static const ink_ui_overlay_t ERROR_OVERLAYS[] = {
+    {.name = "AiOffline", .on_key = error_key, .snapshot = error_snapshot},
+    {.name = "AiTimeout", .on_key = error_key, .snapshot = error_snapshot},
+    {.name = "AiBudget", .on_key = error_key, .snapshot = error_snapshot}
+};
 static void error_deleted(lv_event_t *e) { (void)e; E.root = NULL; }
-void ink_ai_pages_status(const char *status, lv_obj_t *parent, ink_ui_overlay_t *overlay) {
+const ink_ui_overlay_t *ink_ai_pages_status(ink_ai_error_t error, lv_obj_t *parent) {
     if (E.root) lv_obj_delete(E.root);
-    bool lost = !strcmp(status, "网络断了，回答没收全，请再试一次");
-    int kind = !strcmp(status, "现在没有网络，稍后再问我") || lost ? 0 :
-        !strcmp(status, "家庭服务器没有回应，请再试一次") ? 1 : !strcmp(status, "今天的额度用完了") ? 2 : -1;
-    if (kind < 0) return;
+    bool lost = error == INK_AI_ERROR_LOST;
+    int kind = error == INK_AI_ERROR_OFFLINE || lost ? 0 :
+        error == INK_AI_ERROR_TIMEOUT ? 1 : error == INK_AI_ERROR_BUDGET ? 2 : -1;
+    if (kind < 0) return NULL;
     E.kind = kind;
     const char *detail = kind == 0 ? (lost ? "网络断了，回答没收全，不会自动重试。" : "连不上家庭服务器。") : kind == 1 ? "没有收到结果，不会自动重试。" :
         ink_member_current()->role == INK_ROLE_CHILD ? "可以问爸爸妈妈。书还能继续读。" : "明天恢复，也可以在手机上加。书还能继续读。";
@@ -56,10 +65,10 @@ void ink_ai_pages_status(const char *status, lv_obj_t *parent, ink_ui_overlay_t 
     ink_shell_bind(b, "ai.pages.close", NULL);
     error_fields[0] = (ink_ui_field_spec_t){.id = "status", .role = "status", .label = "状态", .value = TITLES[kind]};
     error_fields[1] = (ink_ui_field_spec_t){.id = "detail", .role = "text", .label = "说明", .value = detail};
-    E.page = (ink_ui_page_spec_t){.id = BOARDS[kind], .title = TITLES[kind], .object = {"ai:error", 1},
+    E.page = (ink_ui_page_spec_t){.id = ERROR_OVERLAYS[kind].name, .title = TITLES[kind], .object = {"ai:error", 1},
         .fields = error_fields, .field_count = 2, .actions = error_actions, .action_count = kind == 2 ? 1 : 2};
-    overlay->name = BOARDS[kind]; overlay->level = 0; overlay->snapshot = error_snapshot;
     ink_ui_content_changed(); ink_ui_hint_obj(parent, INK_REFRESH_FLASH_UI);
+    return &ERROR_OVERLAYS[kind];
 }
 
 static struct {

@@ -125,7 +125,7 @@ static void sheet_open(void) {
 
 static void set_status(const char *s) {
     if (!AI.open) return;
-    ink_shell_ai_status(s);
+    ink_shell_ai_status(s, INK_AI_ERROR_NONE);
 }
 
 static void free_buffered(void);
@@ -262,8 +262,10 @@ static void ui_apply(void *arg) { /* UI task */
                           : p->status == INK_HUB_ERR_TIMEOUT ? "家庭服务器没有回应，请再试一次"
                           : p->status == INK_HUB_ERR_LOST    ? "网络断了，回答没收全，请再试一次"
                                                              : "出了点问题，请再试一次";
-        set_status(msg);
-        if (!strcmp(p->text, "budget")) set_status("今天的额度用完了");
+        ink_ai_error_t error = !strcmp(p->text, "budget") ? INK_AI_ERROR_BUDGET :
+            p->status == INK_HUB_ERR_OFFLINE ? INK_AI_ERROR_OFFLINE : p->status == INK_HUB_ERR_LOST ? INK_AI_ERROR_LOST :
+            p->status == INK_HUB_ERR_TIMEOUT ? INK_AI_ERROR_TIMEOUT : INK_AI_ERROR_NONE;
+        ink_shell_ai_status(error == INK_AI_ERROR_BUDGET ? "今天的额度用完了" : msg, error);
         ink_ui_cause(AI.t_release, "ai.release_to_error_visible_ms");
         ink_probe_count("ai.failures");
         ink_audio_tone(INK_TONE_ERROR, 0, NULL);
