@@ -42,7 +42,7 @@ static void commit(void) {
         if (!strcmp(all_candidates[i].word, "你好") && all_candidates[i].consumed == 2) selected = i;
     CHECK(selected >= 0, "nh offers nihao as a selectable candidate");
     if (selected >= 0) ink_text_pick(selected);
-    snprintf(value, sizeof value, "%.60s", ink_text_value());
+    strcpy(value, ink_text_value());
     ink_text_blur(session);
 }
 static void run(void *arg) {

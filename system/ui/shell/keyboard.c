@@ -398,23 +398,8 @@ static void sync(void) { /* UI task */
         K.first = 0;
         n = ink_text_candidates(0, c, INK_TEXT_PAGE + 1);
     }
-    int shown = n < INK_TEXT_PAGE ? n : INK_TEXT_PAGE;
-    if (!K.expanded) {
-        int room = lv_display_get_horizontal_resolution(NULL) - 2 * ink_ui_px(INK_GAP + INK_STROKE) -
-                   ink_ui_px(INK_CONTROL + INK_GAP_XS);
-        if (ink_text_voice_possible()) room -= ink_ui_px(INK_PRIMARY + INK_GAP_XS);
-        for (int i = 0; i < shown; i++) {
-            lv_point_t size;
-            lv_text_get_size(&size, c[i].word, font(), 0, 0, LV_COORD_MAX, LV_TEXT_FLAG_NONE);
-            room -= size.x + 2 * ink_ui_px(INK_GAP_XS) + (i ? ink_ui_px(INK_GAP_XS) : 0);
-            if (room < 0) {
-                shown = i;
-                break;
-            }
-        }
-    }
     for (int i = 0; i < INK_TEXT_PAGE; i++) {
-        if (i < shown) {
+        if (i < n) {
             lv_label_set_text(K.cand_label[i], c[i].word);
             lv_obj_set_style_bg_color(K.cand_btn[i], i == 0 ? ink_ui_ink() : ink_ui_paper(), 0);
             lv_obj_set_style_text_color(K.cand_label[i], i == 0 ? ink_ui_paper() : ink_ui_ink(), 0);
