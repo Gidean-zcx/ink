@@ -1,6 +1,6 @@
 /*
  * The file service on the soft bus (R-052, R-061): what the file app's buttons do, and what the AI and
- * other apps can do. Everything runs on the background executor: the card is slow. Long copies answer
+ * other apps can do. Card work stays off the UI task; thumbnails use media. Long copies answer
  * "queued" with the job as their object; file.job_done tells the end. An app's own files and the
  * caches are not on offer.
  */

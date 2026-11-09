@@ -19,7 +19,7 @@ enum { INK_IMAGE_OK = 0, INK_IMAGE_ERROR = -1, INK_IMAGE_LIMIT = -2 };
 /* PNG or baseline JPEG, white alpha background; owned gray8 pixels in PSRAM.
  * Output is zeroed on failure; ERROR includes malformed input/allocation failure.
  * Run on the existing INK_EXEC_MEDIA executor (8 KiB PSRAM stack), never from
- * input or hub callbacks. Cache calls must use that same serialized context. */
+ * input or hub callbacks. The owner must serialize all cache access. */
 int ink_image_decode(const void *data, size_t size, ink_image_t *out);
 void ink_image_free(ink_image_t *image);
 /* In-place: black..white maps to the panel's measured black..paper range.
