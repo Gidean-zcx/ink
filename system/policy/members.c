@@ -866,7 +866,8 @@ bool ink_member_time_allows(const char *id) {
         return !strcmp(app, "phone") || !strcmp(app, "message");
     }
     static const char *const allowed[] = {"phone.", "sms.", "call.", "message.", "contacts.", "data.list", "data.get", "confirm.",
-        "member.time_", "shell.pin_", "shell.kid_", "app.open", "shell.launch", "shell.back", "shell.close", "shell.lock", "system.home", "system.set_volume", "interrupt."};
+        "member.time_", "shell.pin_", "shell.kid_", "app.open", "shell.launch", "shell.back", "shell.close", "shell.lock", "system.home", "system.set_volume", "interrupt.",
+        "media.pause", "media.stop", "shell.ai_stop"};
     for (size_t i = 0; i < sizeof allowed / sizeof *allowed; i++)
         if (!strncmp(id, allowed[i], strlen(allowed[i]))) return true;
     return false;
@@ -874,7 +875,13 @@ bool ink_member_time_allows(const char *id) {
 
 static void time_job(void *arg) {
     (void)arg; time_account();
-    ink_state_set_bool(M.h_time_up, ink_member_time_up());
+    bool up = ink_member_time_up();
+    if (up) {
+        ink_call_opts_t opts = {.src = INK_SRC_SYSTEM, .reply_exec = INK_EXEC_UI};
+        ink_cap_call("media.pause", NULL, &opts);
+        ink_cap_call("shell.ai_stop", NULL, &opts);
+    }
+    ink_state_set_bool(M.h_time_up, up);
     if (M.time_dirty) { save_all(); M.time_dirty = false; }
     if (!M.timed) return;
     if (!M.counting) return;

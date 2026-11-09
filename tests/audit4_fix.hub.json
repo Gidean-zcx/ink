@@ -1,0 +1,12 @@
+{
+  "rules": [
+    {"method": "hello", "think_ms": 40, "result": {"session": "audit4-synthetic", "proto": 1}},
+    {"method": "ping", "think_ms": 5, "result": {}},
+    {"method": "ai.listen", "think_ms": 300,
+     "listen": {"stt_ms": 100, "transcript": "合成朗读问题", "tts_first_ms": 100, "tts_chars_per_s": 0.5, "tts_speed": 1},
+     "stream": {"notify": "ai.delta", "interval_ms": 100,
+       "chunks": ["这是一段合成朗读，用来核对孩子时间到以后扬声器会及时停下。测试中的故事、声音和文字全部是假的，不使用任何真实家庭资料。"]},
+     "result": {"done": true}},
+    {"method": "*", "think_ms": 30, "error": {"code": -32601, "message": "not in synthetic fixture"}}
+  ]
+}

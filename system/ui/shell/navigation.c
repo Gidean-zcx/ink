@@ -1904,7 +1904,7 @@ static void notify_open(ink_call_t *c) {
         ink_notify_mark_read(n.id);
         if (n.action[0]) {
             ink_shell_close();
-            ink_call_opts_t opts = {.src = INK_SRC_APP, .args_json = n.action_args, .reply_exec = INK_EXEC_UI};
+            ink_call_opts_t opts = {.src = c->src, .args_json = n.action_args, .reply_exec = INK_EXEC_UI};
             if (ink_cap_call(n.action, NULL, &opts) != 0) c->rc.status = INK_RC_FAILED;
         }
         return;
