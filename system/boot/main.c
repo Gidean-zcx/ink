@@ -34,6 +34,7 @@
 #include "ink/sys/task.h"
 #include "ink/sys/time.h"
 #include "ink/sys/ui.h"
+#include "ink/sys/file_picker.h"
 #include "ink/sys/update.h"
 
 extern const ink_activity_t ink_app_home;
@@ -87,6 +88,7 @@ void ink_main(void) {
         osal_panic("action registry failed to start");
     if (ink_apps_init() != 0 || ink_app_register(&ink_appdef_home) != 0 || ink_app_register(&ink_appdef_reader) != 0) osal_panic("app directory failed to start");
     if (ink_ui_start(&ink_app_home) != 0 || ink_ui_lock_mark_init() != 0 || ink_shell_interrupt_card_init() != 0 || ink_shell_confirm_card_init() != 0 || ink_shell_keyboard_init() != 0 || ink_shell_member_gate_init() != 0 || ink_shell_update_card_init() != 0 || ink_shell_power_menu_init() != 0 || ink_shell_off_picture_init() != 0) osal_panic("ui failed to start");
+    if (ink_file_picker_init() != 0) osal_panic("file picker failed to start");
     ink_fs_refresh_state(); /* blocks on the card: here, not in anyone's way */
     ink_pairing_start();
     ink_backup_start();

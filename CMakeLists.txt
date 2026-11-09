@@ -1225,3 +1225,12 @@ if(INK_GUI AND INK_HAVE_FONTS)
             -P ${CMAKE_SOURCE_DIR}/tests/simulator/gui_smoke.cmake)
   set_tests_properties(gui-smoke PROPERTIES TIMEOUT 180)
 endif()
+
+target_sources(ink_system PRIVATE system/ui/file_picker.c)
+ink_sim_executable(sim-ui-file-picker tests/ui_file_picker.c)
+target_link_libraries(sim-ui-file-picker PRIVATE ink_apps ink_system)
+add_test(NAME ui-file-picker COMMAND sim-ui-file-picker --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+  --script ${CMAKE_SOURCE_DIR}/tests/ui_file_picker.script --budget ${CMAKE_SOURCE_DIR}/tests/ui_scene.budget.json
+  --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT} --out ${CMAKE_BINARY_DIR}/test-out/ui-file-picker --quiet --no-random-outages)
+add_test(NAME ui-file-picker-frames COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/ui_file_picker_frames.py ${CMAKE_BINARY_DIR}/test-out/ui-file-picker)
+set_tests_properties(ui-file-picker-frames PROPERTIES DEPENDS ui-file-picker)
