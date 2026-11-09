@@ -7,7 +7,7 @@ python3 tools/capabilities.py
 python3 tools/capabilities.py --check
 ```
 
-当前共 196 项：可调用能力 166、事件 30；设置 16 项、状态 45 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
+当前共 197 项：可调用能力 167、事件 30；设置 16 项、状态 45 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
 
 风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。
 
@@ -60,6 +60,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `confirm.list` | 有什么在等人确认 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s04](#s04) | [system/policy/confirm.c](../../system/policy/confirm.c) |
 | `confirm.page` | 翻阅确认说明（只由人在设备上操作） | 仅人（设备） | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s26](#s26) | [system/ui/shell/confirm_card.c](../../system/ui/shell/confirm_card.c) |
 | `confirm.reject` | 取消（只有人在设备上能按） | 仅人（设备） | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s04](#s04) | [system/policy/confirm.c](../../system/policy/confirm.c) |
+| `confirm.status` | 查询确认和自动动作的结果 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s04](#s04) | [system/policy/confirm.c](../../system/policy/confirm.c) |
 | `confirm.withdraw` | 撤回自己发起、还在等确认的请求 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s04](#s04) | [system/policy/confirm.c](../../system/policy/confirm.c) |
 | `data.collections` | 有哪些数据集合 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s13](#s13) | [system/services/data/data_caps.c](../../system/services/data/data_caps.c) |
 | `data.delete` | 删除一条数据 | 人、AI | 高 / local_destructive | 人、AI 均在设备确认 | 成人、儿童（无需白名单） | [s13](#s13) | [system/services/data/data_caps.c](../../system/services/data/data_caps.c) |
@@ -220,7 +221,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 状态：—。
 
-事件：—。
+事件：`confirm.result`。
 
 <a id="s04"></a>
 

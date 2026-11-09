@@ -892,6 +892,7 @@ static void event_job(void *arg) {
 #define EVENTS_KEPT 8
 static struct {
     uint32_t seq;
+    bool delivered;
     int64_t at_s;
     char id[48];
     char member[INK_MEMBER_ID_MAX]; /* whose it is: who it says, or who was there when it happened */
@@ -908,6 +909,7 @@ static void keep_event(const char *id, const ink_args_t *payload, const char *wh
     uint32_t seq = ++ev_next;
     typeof(EV[0]) *e = &EV[seq % EVENTS_KEPT];
     e->seq = seq;
+    e->delivered = false;
     
     e->at_s = wall > 0 ? wall / 1000000 : 0;
     snprintf(e->id, sizeof e->id, "%s", id);
@@ -959,6 +961,7 @@ static void send_events(void) { /* hub task */
         osal_free(out);
         if (r != 0) return; /* the queue is full: the next time round */
         osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
+        if (theirs && body >= 0 && EV[seq % EVENTS_KEPT].seq == seq) EV[seq % EVENTS_KEPT].delivered = true;
         if (ev_sent + 1 == seq) ev_sent = seq; /* still the oldest: nothing wrote over it */
         osal_mutex_unlock(CB.lock);
     }
@@ -1374,6 +1377,7 @@ typedef struct {
     char domain[16];   /* tools/list: only this domain */
     uint32_t page_gen;
     uint32_t epoch, connection;
+    uint32_t confirm_token;
     uint64_t received_us;
     char name[48];
     char rid[RID_CAP]; /* _meta.request_id: a retry gets the first receipt again */
@@ -1384,8 +1388,7 @@ static void tool_done(void *ctx, const ink_receipt_t *rc) { /* where the capabil
     tool_job_t *t = ctx;
     if (!ink_hub_member_matches(t->member, t->epoch, t->connection)) {
         if (t->connection == ink_hub_connection()) ink_hub_respond_error(t->id, -32023, "stale_member");
-        osal_free(t);
-        return;
+        goto finished;
     }
     char key[48];
     snprintf(key, sizeof key, "tools.calls.%s", ink_rc_name(rc->status));
@@ -1395,8 +1398,13 @@ static void tool_done(void *ctx, const ink_receipt_t *rc) { /* where the capabil
     char *out = osal_malloc(cap, OSAL_MEM_EXTERNAL);
     osal_mem_tag(prev);
     if (!out || ink_receipt_json(rc, out, cap) < 0) ink_hub_respond_error(t->id, -32603, out ? "receipt too long" : "out of memory");
-    else ink_hub_respond_for(t->id, out, t->member, t->epoch, t->connection);
+    else {
+        if (t->confirm_token) { size_t n = strlen(out); snprintf(out + n - 1, cap - n + 1, ",\"confirm_token\":%u}", t->confirm_token); }
+        ink_hub_respond_for(t->id, out, t->member, t->epoch, t->connection);
+    }
     osal_free(out);
+finished:
+    if (t->confirm_token) ink_confirm_result(t->confirm_token, t->name, "accepted", rc, t->member);
     osal_free(t);
 }
 
@@ -1408,6 +1416,16 @@ static void tool_run(void *arg) { /* UI task */
         if (t->connection == ink_hub_connection()) ink_hub_respond_error(t->id, -32023, "stale_member");
         osal_free(t);
         return;
+    }
+    if (ink_exec_is_current(INK_EXEC_BG)) {
+        ink_receipt_t rc = {0};
+        const ink_cap_t *c = ink_cap_find(t->name);
+        ink_call_opts_t o = {.member = t->member, .page_gen = t->page_gen, .request_id = t->rid[0] ? t->rid : NULL, .args_json = t->args};
+        if (gate(c, INK_SRC_AI, t->page_gen, t->asked, &rc) == INK_RC_DONE) {
+            t->confirm_token = ink_confirm_track(c, &o, &rc);
+            if (!t->confirm_token) { tool_done(t, &rc); return; }
+        }
+        ink_exec_post(INK_EXEC_UI, &t->job, tool_run, t); return;
     }
     if (t->list) { /* paged (architecture: progressive disclosure): caps.domains and caps.find say what there is */
         const char *prev = osal_mem_tag("tools");
@@ -1512,7 +1530,9 @@ static void on_tools(void *ctx, int64_t id, const char *method, const ink_json_t
         if (alen) memcpy(t->args, j->text + j->tok[args_t].start, alen);
         t->args[alen] = 0;
     }
-    if (ink_exec_post(INK_EXEC_UI, &t->job, tool_run, t) != 0) {
+    const ink_cap_t *c = list ? NULL : ink_cap_find(t->name);
+    bool commit = c && ink_hub_member_matches(t->member, t->epoch, t->connection) && needs_activity(c, INK_SRC_AI) && confirm_for(c, INK_SRC_AI, t->asked) == INK_CONFIRM_NONE;
+    if (ink_exec_post(commit ? INK_EXEC_BG : INK_EXEC_UI, &t->job, tool_run, t) != 0) {
         ink_hub_respond_error(id, -32603, "busy");
         osal_free(t);
     } else ink_probe_count("tools.accepted");
@@ -1598,10 +1618,22 @@ static void event_ack(void *ctx, const char *method, const ink_json_t *j, int pa
     int64_t boot, upto;
     if (strcmp(method, "device/event_ack") || !ink_json_int(j, ink_json_find(j, params, "boot"), &boot) ||
         !ink_json_int(j, ink_json_find(j, params, "upto"), &upto) || boot != CB.boot_tag || upto <= 0 || upto > UINT32_MAX) return;
+    uint32_t token[EVENTS_KEPT], ver[EVENTS_KEPT];
+    int n = 0;
     osal_mutex_lock(CB.lock, OSAL_WAIT_FOREVER);
-    if ((uint32_t)upto > ev_acked && (uint32_t)upto <= ev_sent) ev_acked = (uint32_t)upto;
+    if ((uint32_t)upto > ev_acked && (uint32_t)upto <= ev_sent) {
+        for (int i = 0; i < EVENTS_KEPT; i++) {
+            const typeof(EV[0]) *e = &EV[i];
+            int64_t t = 0, v = 0;
+            if (e->delivered && e->seq > ev_acked && e->seq <= (uint32_t)upto && !strcmp(e->id, "confirm.result") &&
+                !strcmp(e->member, ink_member_current()->id) && ink_args_get_int(&e->args, "token", &t) &&
+                ink_args_get_int(&e->args, "result_ver", &v) && t > 1 && v > 0) { token[n] = (uint32_t)t; ver[n++] = (uint32_t)v; }
+        }
+        ev_acked = (uint32_t)upto;
+    }
     bool all = ev_acked == ev_next;
     osal_mutex_unlock(CB.lock);
+    for (int i = 0; i < n; i++) ink_confirm_ack(token[i], ver[i]);
     if (all) ink_hub_events_acked();
 }
 

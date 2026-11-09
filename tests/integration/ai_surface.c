@@ -42,7 +42,7 @@ static const struct {
     {"alarm.list", NULL}, {"alarm.cancel", "id"}, {"alarm.dismiss", ""}, {"alarm.snooze", ""}, {"reminder.add", "at,title"}, {"reminder.list", NULL},
     {"reminder.cancel", "id"}, {"notify.post", "title"}, {"notify.list", ""}, {"notify.read", ""}, {"notify.dismiss", "id"}, {"notify.clear", NULL},
     {"notify.channels", NULL}, {"notify.set_channel", "id,enabled"}, {"interrupt.list", NULL}, {"interrupt.ack", NULL}, {"confirm.list", NULL},
-    {"confirm.withdraw", "token"}, {"app.list", NULL}, {"app.open", "id"}, {"app.close", "id"}, {"app.cards", NULL}, {"text.state", NULL},
+    {"confirm.withdraw", "token"}, {"confirm.status", ""}, {"app.list", NULL}, {"app.open", "id"}, {"app.close", "id"}, {"app.cards", NULL}, {"text.state", NULL},
     {"text.insert", "text"}, {"text.select", "start"}, {"text.undo", ""}, {"text.redo", ""}, {"text.submit", ""}, {"clipboard.read", NULL}, {"clipboard.write", "text"}, {"media.play", "path"},
     {"media.pause", NULL}, {"media.resume", NULL}, {"media.seek", "ms"}, {"media.stop", NULL}, {"media.status", NULL}, {"audio.record", ""},
     {"audio.record_stop", NULL}, {"bt.scan", NULL}, {"bt.list", NULL}, {"bt.pair", "addr"}, {"bt.connect", "addr"}, {"bt.disconnect", NULL},

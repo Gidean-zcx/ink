@@ -35,12 +35,17 @@ typedef struct {
 } ink_confirm_presenter_t;
 
 int ink_confirm_init(void);
+/** Gateway automatic actions: commit before dispatch (BG), then record the receipt. Zero: return *rc. */
+uint32_t ink_confirm_track(const ink_cap_t *cap, const ink_call_opts_t *opts, ink_receipt_t *rc);
+void ink_confirm_result(uint32_t token, const char *cap, const char *decision, const ink_receipt_t *rc, const char *member);
+/** A delivered result event was acknowledged; retain at least the newest sixteen results. */
+void ink_confirm_ack(uint32_t token, uint32_t ver);
 /** The gate, or a handler that found out by itself (settings.set): keep this call for a person's yes. Fills the
  *  receipt: pending with object "confirm:<token>", or rejected (the queue is full, 4 at a time). */
 ink_rc_t ink_confirm_hold(const ink_cap_t *c, const ink_args_t *args, ink_source_t src, uint32_t page_gen, ink_receipt_t *rc);
 /** What waits, oldest first: how many (up to max). */
 int ink_confirm_list(ink_confirm_view_t *out, int max);
-/** A person answered: only touch and keys can. 0, or -1 (not waiting any more, or not a person). */
+/** Only touch and keys can answer. Off UI this may wait until expiry; UI answers never wait. 0, or -1. */
 int ink_confirm_decide(uint32_t token, bool accept, ink_source_t src);
 /** The yes of a card that needs a parent. Told how the PIN went (exec.bg). 0: it will be told. */
 int ink_confirm_accept_with_pin(uint32_t token, const char *pin, ink_pin_done_fn done, void *ctx);

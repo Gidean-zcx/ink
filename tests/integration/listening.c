@@ -82,6 +82,7 @@ static void test_task(void *arg) {
     delay_ms(1500);
     ink_hub_demand();
     CHECK(WAIT_FOR(ink_hub_online(), 30000), "online");
+    CHECK(setting_by_hand("member.idle_return_s", 30), "set the lock grace before audio holds flash writes");
 
     /* by default: while the screen is on and unlocked */
     CHECK(listening(), "it listens from the start");
@@ -146,7 +147,7 @@ static void test_task(void *arg) {
     /* nor into a space that is closed: an adult's, with a PIN, locked. What was said goes nowhere */
     int d = g_pin_done;
     CHECK(ink_member_set_pin("owner", NULL, "1234", pin_told, NULL) == 0 && WAIT_FOR(g_pin_done > d, 5000) && g_pin_result == INK_PIN_OK, "a PIN");
-    CHECK(setting_by_hand("member.idle_return_s", 30), "a short lock grace for the closed-space checks");
+    CHECK(ink_setting_get("member.idle_return_s") == 30, "a short lock grace for the closed-space checks");
     lock();
     CHECK(WAIT_FOR(!ink_member_space_open(), 32000), "the lock grace expires: the space is closed");
     delay_ms(2000);
@@ -176,7 +177,7 @@ static void test_task(void *arg) {
     double sent = sim_metric_value("hub.binary_bytes");
     delay_ms(500);
     CHECK(sim_metric_value("hub.binary_bytes") > sent, "and it goes to the hub");
-    CHECK(setting_by_hand("member.idle_return_s", 30), "the same lock grace applies during a turn");
+    CHECK(ink_setting_get("member.idle_return_s") == 30, "the same lock grace applies during a turn");
     lock();
     CHECK(ink_member_space_open(), "locking keeps the authenticated grace");
     CHECK(WAIT_FOR(!ink_member_space_open(), 32000), "the lock grace expires: the space is closed");
