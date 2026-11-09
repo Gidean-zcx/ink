@@ -90,10 +90,35 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/remote_app/r
 | 编号 | 结论与证据 | 复验命令 |
 | --- | --- | --- |
 | RA-M1 | 【实测】通过。创建时读取 `power.state`，锁屏暂停检查；`address_open` 集中延后建会话，解锁沿用原回调。锁屏新开、替换地址均未新增中枢会话；两次解锁均只新增一个会话，接收端观察到对应的完整网址。撤掉初始化或延后打开分别触发 5、4 条断言失败。 | `ctest --test-dir build -R ^remote-app$ --output-on-failure -j2`；`tests/remote_app/run.py --build build --mutant locked-create` / `locked-address` |
-| RA-M2 | 【实测】通过。复用原检查定时器，100 → 500 毫秒；连续未就绪阈值 30 → 6，保持约 3 秒断线判断。探针实测十秒 20 次（上限 25）；慢首屏在打开后 1.5～2 秒检查窗口内已显示 Loading。恢复 100 毫秒后实测十秒 91 次并触发断言。 | 同上；`tests/remote_app/run.py --build build --mutant link-rate` |
+| RA-M2 | 【实现】复用原检查定时器，100 → 500 毫秒；连续未就绪阈值 30 → 6，保持约 3 秒断线判断。【实测】通过：探针十秒 20 次（上限 25）；慢首屏在打开后 1.5～2 秒检查窗口内已显示 Loading。恢复 100 毫秒后实测十秒 91 次并触发断言。 | 同上；`tests/remote_app/run.py --build build --mutant link-rate` |
 
 【实测】网页专项 99 条断言、六页快照全部通过，内部 RAM 最低余量 45104 字节。额外撤掉 Loading 的反向对照触发 2 条失败；全部反向对照均只在构建目录编译变体。锁屏测试用已有 `INK_NEED_AWAKE` 保持测试驱动可运行，实际电源状态仍为 locked；没有改产品的睡眠逻辑。
 
 本次改过的已有测试只有慢首屏检查：从 1.8 秒检查提前到 1.5 秒，并增加打开后不超过 2 秒的断言；没有放宽旧断言或资源预算。测试接收探针和构建接线只用于网页专项。
 
-【实现】产品修改集中在 `remote.c`，本次 10 行新增、5 行删除；相对任务基线设备端保守计 299 行（remote.c 新增 257、删除 40，启动接线新增 2），低于 350 行。不新增任务、定时器、状态、文件格式、配置或其他机制；沿用原子能力与系统状态边界。普通和 ASan/UBSan 两套全量验证待本轮结束补记。能力表文档同步检查按本次明确指示留给主会话重新生成。
+【实现】产品修改集中在 `remote.c`，本次 10 行新增、5 行删除；相对任务基线设备端保守计 299 行（remote.c 新增 257、删除 40，启动接线新增 2），低于 350 行。不新增任务、定时器、状态、文件格式、配置或其他机制；沿用原子能力与系统状态边界。
+
+【实测】两套构建重新按总规则配置、完整构建成功，均启用 `INK_WERROR=ON`；内存检查构建增加 `INK_SANITIZE=ON`，已核对编译与链接均含 `-fsanitize=address,undefined`。
+
+| 全量 | 通过 / 总数 | 跳过 | 用时 | 退出码 |
+| --- | --- | --- | --- | --- |
+| 普通 | 241 / 242 | 0 | 449.95 秒 | 8 |
+| ASan/UBSan | 241 / 242 | 0 | 679.25 秒 | 8 |
+
+两轮唯一失败均为原有的 `capability-table-doc`：共享能力目录尚未生成新增的 8 项能力。按本次明确豁免留给主会话重新生成，没有排除这项测试。其余测试全部通过，包括两轮中枢 pytest 各 135 项、网页专项各 99 条断言、浏览与重连场景、内存预算及确定性检查。已核对 JUnit 的全部 242 条结果与完整测试日志，未见地址或未定义行为诊断；内存检查额外设置 `UBSAN_OPTIONS=halt_on_error=1`。
+
+【实测】没有缺失依赖或遗留跳过项。两套构建显式使用 `$INK_DEPS/hub/.venv/bin/python`，版本为 Python 3.11.15、pytest 8.4.2、pytest-asyncio 1.2.0、aiohttp 3.12.15、PyYAML 6.0.3。设置 `PYTHONPATH` 并核对导入路径，确保中枢运行本任务检出的代码。日志与 JUnit 分别在两套构建目录的 `remote-review-full.log`、`remote-review-full.xml`；详细输出在 `Testing/Temporary/LastTest.log`。
+
+本轮完整复验命令（从仓库根目录运行；环境路径按任务提供的 `INK_DEPS`）：
+
+```sh
+export PYTHONPATH="$PWD/hub"
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2 --output-junit "$PWD/build/remote-review-full.xml"
+UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2 --output-junit "$PWD/build-asan/remote-review-full.xml"
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/remote_app/run.py --build build --mutant locked-create
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/remote_app/run.py --build build --mutant locked-address
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/remote_app/run.py --build build --mutant link-rate
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/remote_app/run.py --build build --mutant loading
+```
+
+【实测】修复提交为 `f2602673`。`git diff --check` 通过；已核对本轮 6 个文件的差异及累计预算，原任务基线与本轮基线至最终提交的隐私表达式扫描均为 0 项匹配。未提交构建产物、设计稿或输入的 `REVIEW.md`；该文件维持开工时的未跟踪状态。仅本地提交，不推送。
