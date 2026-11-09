@@ -612,6 +612,7 @@ void ink_shell_home_create(lv_obj_t *screen) {
                         INK_SURFACE_WHITE, false);
     ink_shell_dock(screen);
     draw_home_content();
+    if (ink_wallpaper_ready()) { lv_obj_set_style_bg_opa(N.content, LV_OPA_TRANSP, 0); ink_wallpaper_draw(screen); }
 }
 
 lv_obj_t *ink_shell_dock(lv_obj_t *parent) {
@@ -1168,6 +1169,15 @@ static void body_blocks(void) {
         }
         F.y += h;
     }
+    if (N.page_id == PAGE_SETTINGS) {
+        if (block(3 * INK_CONTROL)) {
+            lv_obj_t *g = group(3);
+            group_row(g, "list", "管理家人", "", 0, "shell.family");
+            group_row(g, "gallery", "更换壁纸", "", 1, "shell.wallpaper");
+            group_row(g, "ai", "使用记录", "", 2, "shell.records");
+        }
+        F.y += 3 * INK_CONTROL;
+    }
 }
 
 static void body_page_clicked(lv_event_t *e) {
@@ -1324,6 +1334,7 @@ void ink_shell_open_page(const char *name) {
             ink_ui_push(&PAGES[i], (void *) (intptr_t) i);
             return;
         }
+    ink_settings_family_open(name);
 }
 
 const char *ink_shell_board(void) {

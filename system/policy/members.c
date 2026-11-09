@@ -827,3 +827,17 @@ int ink_members_start(void) {
     apply_return_after(NULL, ink_setting_get("member.idle_return_s"));
     return ink_cap_register(MEMBER_CAPS, (int)(sizeof MEMBER_CAPS / sizeof MEMBER_CAPS[0]));
 }
+
+static void cap_rename(ink_call_t *c) {
+    char id[16], name[32];
+    ink_args_get_str(&c->args, "id", id, sizeof id); ink_args_get_str(&c->args, "name", name, sizeof name);
+    slot_t *s = find(id);
+    if (!s || s->removing || !name[0]) { fail(c, INK_RC_INVALID, "unknown member or empty name"); return; }
+    ink_svc_lock(); snprintf(s->m.name, sizeof s->m.name, "%s", name); ink_svc_unlock();
+    save_all(); ink_cap_emit("member.changed", NULL);
+}
+int ink_member_rename_init(void) {
+    static const ink_cap_t cap = {.id = "member.rename", .title = "修改家人的称呼", .effect = INK_FX_LOCAL_WRITE, .exec = INK_EXEC_BG,
+        .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":15},\"name\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":31}},\"required\":[\"id\",\"name\"]}", .run = cap_rename};
+    return ink_cap_register(&cap, 1);
+}

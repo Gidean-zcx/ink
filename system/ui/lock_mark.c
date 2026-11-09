@@ -27,7 +27,7 @@ static void update_clock(void) {
 
 static void show(void) {
     if (g_mark) return;
-    bool clock = ink_setting_get("display.lock_style") == 1;
+    bool clock = ink_setting_get("display.lock_style") == 1 || ink_wallpaper_ready();
     g_mark = clock ? lv_obj_create(lv_layer_sys()) : ink_ui_box(lv_layer_sys(), INK_MARGIN,
              INK_CANVAS_H - INK_CONTROL - INK_GAP_S, INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, 0, INK_SURFACE_WHITE, false);
     if (clock) {
@@ -67,6 +67,7 @@ static void show(void) {
     lv_obj_set_style_text_align(l, LV_TEXT_ALIGN_CENTER, 0);
     ink_ui_overlay_add(&OVERLAY, g_mark);
     ink_ui_hint_obj(clock ? g_mark : strip, clock ? INK_REFRESH_UI : INK_REFRESH_FAST);
+    ink_wallpaper_draw(g_mark);
 }
 static void hide(void) {
     if (!g_mark) return;

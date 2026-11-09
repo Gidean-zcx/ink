@@ -77,6 +77,9 @@ static const struct {
     {"sms.text", NULL}, {"sms.long", NULL}, {"sms.prev", NULL}, {"sms.next", NULL},
     {"memo.save", "id,draft,page"}, {"memo.delete", "id"}, {"memo.undo", "id"}, {"memo.convert", "id"}, {"memo.check", "id,index"},
     {"memo.open", "id"}, {"memo.edit", ""}, {"memo.next", NULL}, {"memo.prev", NULL}, {"memo.retry", NULL},
+    {"shell.family", NULL}, {"shell.kid_settings", NULL}, {"shell.wallpaper", NULL}, {"shell.records", NULL}, {"shell.ai_memory", NULL},
+    {"family.edit", ""}, {"family.focus", NULL}, {"family.save", NULL}, {"family.role", NULL}, {"family.pin", NULL},
+    {"family.prev", NULL}, {"family.next", NULL}, {"wallpaper.choose", NULL}, {"member.rename", "id,name"},
     {NULL, NULL},
 };
 
@@ -93,6 +96,8 @@ static const struct {
     {"member.set_pin", "a PIN is entered on the device, it goes through nobody else", "id,new_pin"},
     {"system.upgrade", "a person installs: it may fetch and tell, the device is gone for minutes (design §12.7)", NULL},
     {"system.upgrade_from_card", "a person installs: it may fetch and tell, the device is gone for minutes (design §12.7)", ""},
+    {"family.old_pin", "only a person enters a PIN on the device", NULL},
+    {"family.pin_save", "only a person submits a PIN on the device", NULL},
     {NULL, NULL, NULL},
 };
 
