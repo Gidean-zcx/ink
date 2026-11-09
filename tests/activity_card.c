@@ -61,8 +61,11 @@ static void media_case(void) {
     home(); CHECK(strstr(snap, "星星邮差.opus") && strstr(snap, "media.pause"), "home exposes real title and pause");
     CHECK(has_text("星星邮差.opus"), "home visibly renders the real media title");
     const char *a = strstr(snap, "正在进行=");
-    snprintf(home_activity, sizeof home_activity, "%s", a ? a : "");
-    char *end = strstr(home_activity, " 动作："); if (end) *end = 0;
+    const char *end = a ? strstr(a, " 动作：") : NULL;
+    size_t bytes = end ? (size_t)(end - a) : 0;
+    CHECK(bytes && bytes < sizeof home_activity, "complete activity fits the comparison buffer");
+    home_activity[0] = 0;
+    if (bytes && bytes < sizeof home_activity) { memcpy(home_activity, a, bytes); home_activity[bytes] = 0; }
     screenshot("MainPlaying");
     CHECK(AI("shell.control", NULL) && g_rc.status == INK_RC_DONE, "AI opens control centre"); inspect();
     CHECK(home_activity[0] && strstr(snap, home_activity), "home and control share identical activity title and action");
@@ -109,7 +112,9 @@ static void tasks_case(void) {
     ink_task_progress(next, -1, "等网络");
     int done = ink_task_begin("test", "星星邮差", false, NULL, NULL);
     ink_task_end(done, INK_TASK_DONE, "可以读了", NULL);
-    CHECK(AI("shell.tasks", NULL) && g_rc.status == INK_RC_DONE, "open Tasks with AI"); inspect();
+    CHECK(BY_HAND("shell.control", NULL) && g_rc.status == INK_RC_DONE, "open Tasks entry in control centre"); quiet();
+    click_cap("shell.tasks"); inspect();
+    CHECK(!strcmp(ink_ui_page_name(), "Tasks"), "control centre opens actual Tasks page");
     CHECK(strstr(snap, "小王子") && strstr(snap, "正在准备") && strstr(snap, "做好了") && strstr(snap, "可以读了"), "Tasks lists real stages and finished results in two groups");
     CHECK(strstr(snap, "job.cancel") && !strstr(snap, "percent"), "snapshot has actual cancel and no invented progress");
     screenshot("Tasks");

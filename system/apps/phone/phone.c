@@ -268,7 +268,7 @@ int ink_phone_init(void) {
 }
 
 bool ink_phone_activity(char *title, size_t cap) {
-    if (!P.active || strcmp(P.call_member, ink_member_current()->id) || !ink_member_space_open()) return false;
+    if (!P.active || strcmp(P.status, "通话中") || strcmp(P.call_member, ink_member_current()->id) || !ink_member_space_open()) return false;
     snprintf(title, cap, "和%s通话", P.calling);
     return true;
 }

@@ -12,7 +12,7 @@
 #include "ink/sys/ui_list.h"
 
 typedef struct {
-    char title[64], detail[96], id[24], args[32];
+    char title[64], detail[96], id[32], args[32];
     bool running, cancel, heading;
 } job_row_t;
 static struct {
@@ -72,6 +72,7 @@ static void read_activity(void) {
     A.title[0] = A.detail[0] = 0;
     A.cap = A.action = NULL;
     if (!ink_member_space_open()) return;
+    A.count = 0; A.jobs_ok = false;
     ink_call_opts_t opts = {.src = INK_SRC_SYSTEM, .reply_exec = INK_EXEC_DIRECT, .done = jobs_reply};
     ink_cap_call("job.list", NULL, &opts);
     A.icon = "phone";
@@ -90,8 +91,9 @@ static void read_activity(void) {
         A.cap = st.state == INK_MEDIA_PLAYING ? "media.pause" : "media.resume";
         A.icon = "headphones";
     } else if (A.count && A.rows[0].running) {
-        snprintf(A.title, sizeof A.title, "%s", A.rows[0].title);
-        snprintf(A.detail, sizeof A.detail, "%s", A.rows[0].detail);
+        job_row_t row = A.rows[0];
+        snprintf(A.title, sizeof A.title, "%s", row.title);
+        snprintf(A.detail, sizeof A.detail, "%s", row.detail);
         A.action = "查看"; A.cap = "shell.tasks"; A.icon = "download";
     }
 }
@@ -119,7 +121,6 @@ int ink_activity_card_draw(lv_obj_t *parent, int y) {
     return h + INK_GAP_M;
 }
 int ink_activity_card_snapshot(char *out, size_t cap) {
-    read_activity();
     return A.cap ? snprintf(out, cap, "正在进行=%s；%s；动作=%s（%s）。", A.title, A.detail, A.action, A.cap) : snprintf(out, cap, "没有正在进行的事。");
 }
 static void bind_job(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *f, ink_ui_action_spec_t *action, void *ctx) {
@@ -173,10 +174,14 @@ static const ink_activity_t TASKS = {.name = "Tasks", .create = create, .destroy
 static void refresh(void *arg) {
     (void)arg;
     if (!ink_member_space_open() || ink_power_state() == INK_PWR_LOCKED) return;
+    char title[sizeof A.title], detail[sizeof A.detail];
+    memcpy(title, A.title, sizeof title); memcpy(detail, A.detail, sizeof detail);
+    const char *cap = A.cap;
+    read_activity();
     if (A.list && !strcmp(A.member, ink_member_current()->id)) {
-        read_activity(); ink_ui_list_refresh(A.list, A.count);
+        ink_ui_list_refresh(A.list, A.count);
     }
-    ink_shell_activity_refresh();
+    if (cap != A.cap || strcmp(title, A.title) || strcmp(detail, A.detail)) ink_shell_activity_refresh();
 }
 static void changed(void *ctx, int h, const char *id) {
     (void)ctx; (void)h; (void)id;
@@ -199,13 +204,12 @@ int ink_activity_card_init(void) {
         ink_cap_subscribe("job.finished", event, NULL, INK_EXEC_UI) ? -1 : 0;
 }
 
-int ink_activity_call_offset(void) {
-    char title[128];
-    return ink_phone_activity(title, sizeof title) ? INK_GAP_L : 0;
+int ink_activity_home_offset(void) {
+    read_activity();
+    return !A.cap ? 0 : !strcmp(A.cap, "phone.return") ? INK_GAP_L : -INK_GAP_L;
 }
 bool ink_activity_home_draw(lv_obj_t *parent, int y) {
-    if (!ink_activity_call_offset()) return ink_activity_card_draw(parent, y) != 0;
-    read_activity();
+    if (!A.cap || strcmp(A.cap, "phone.return")) return ink_activity_card_draw(parent, y) != 0;
     int w = INK_CANVAS_W - 2 * INK_MARGIN;
     lv_obj_t *banner = ink_ui_box(parent, INK_MARGIN, 0, w, INK_CONTROL, -1, INK_SURFACE_BLACK, false);
     ink_ui_icon(banner, "phone", INK_ICON_SMALL, INK_ICON_SOLID, INK_GAP_L, (INK_CONTROL - INK_ICON_SMALL) / 2, true);

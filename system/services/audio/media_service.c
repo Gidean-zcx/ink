@@ -19,6 +19,7 @@
 #include "ink/sys/layout.h"
 #include "ink/sys/media.h"
 #include "ink/sys/members.h"
+#include "ink/sys/power.h"
 #include "ink/sys/state.h"
 #include "ink/sys/svc.h"
 #include "ink/sys/time.h"
@@ -640,7 +641,9 @@ static void cap_play(ink_call_t *c) { /* executor */
 }
 
 static void need_session(ink_call_t *c, void (*act)(void)) {
-    if (!M.r) fail(c, INK_RC_FAILED, "nothing is playing");
+    if ((c->src == INK_SRC_AI || c->src == INK_SRC_REMOTE) && ink_power_state() == INK_PWR_LOCKED)
+        fail(c, INK_RC_REJECTED, "wake the device first");
+    else if (!M.r) fail(c, INK_RC_FAILED, "nothing is playing");
     else if (!playback_current()) fail(c, INK_RC_STALE, "someone else is using the device now");
     else act();
 }

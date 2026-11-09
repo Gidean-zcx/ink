@@ -18,7 +18,6 @@
 #include "ink/sys/json.h"
 #include "ink/sys/layout.h"
 #include "ink/sys/members.h"
-#include "ink/sys/power.h"
 #include "ink/sys/ui.h"
 #include "ink/ui_shell.h"
 #include "ink/sys/sha256.h"
@@ -101,8 +100,6 @@ static ink_rc_t gate(const ink_cap_t *c, ink_source_t src, uint32_t page_gen, bo
     if (src == INK_SRC_CONFIRMED ? c->activity && (!ink_ui_page_current() || strcmp(ink_ui_page_name(), c->activity)) : !on_its_page(c)) return reject(rc, INK_RC_INVALID, "not available on this page");
     if (c->form == INK_FORM_EVENT || !c->run) return reject(rc, INK_RC_INVALID, "an event: subscribe to it");
     if (!exposed(c, src)) return reject(rc, INK_RC_INVALID, "not offered to this caller");
-    if ((src == INK_SRC_AI || src == INK_SRC_REMOTE) && ink_power_state() == INK_PWR_LOCKED)
-        return reject(rc, INK_RC_REJECTED, "wake the device first");
     const ink_member_t *m = ink_member_current();
     if (m->role == INK_ROLE_CHILD) {
         if (c->effect == INK_FX_SYSTEM && !(c->child_ok && (src == INK_SRC_TOUCH || src == INK_SRC_KEY))) { /* turning it off is anyone's who holds it */

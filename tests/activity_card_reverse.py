@@ -3,6 +3,7 @@ import argparse
 import json
 from pathlib import Path
 import subprocess
+import sys
 
 ROOT = Path(__file__).resolve().parents[1]
 ap = argparse.ArgumentParser()
@@ -11,14 +12,12 @@ a = ap.parse_args()
 build = a.build.resolve()
 evidence = build / "activity-card-reverse"
 evidence.mkdir(parents=True, exist_ok=True)
-python = str(build / "CMakeCache.txt")
-python = next(line.split("=", 1)[1] for line in Path(python).read_text().splitlines()
-              if line.startswith("Python3_EXECUTABLE:FILEPATH="))
+python = sys.executable
 mutations = [
     ("media-card", "system/ui/shell/navigation.c", "if (!ink_activity_home_draw(N.content, y))", "if (true)", "home visibly renders"),
     ("call-return", "system/apps/phone/phone.c", 'if (!strcmp(id, "phone.return")) { ink_shell_close(); resume_call(); }',
      'if (!strcmp(id, "phone.return")) { ink_shell_close(); }', "return button reaches active call page"),
-    ("lock-gate", "system/policy/cap.c", 'if ((src == INK_SRC_AI || src == INK_SRC_REMOTE) && ink_power_state() == INK_PWR_LOCKED)',
+    ("lock-gate", "system/services/audio/media_service.c", 'if ((c->src == INK_SRC_AI || c->src == INK_SRC_REMOTE) && ink_power_state() == INK_PWR_LOCKED)',
      'if (false)', "locked AI cannot pause either"),
     ("lock-mark", "system/ui/lock_mark.c", '"正在听，按电源键或 AI 键唤醒"', '"已锁定，按电源键或 AI 键唤醒"', "LockPlaying uses the listening mark"),
     ("job-cancel", "system/ui/shell/activity_card.c", 'ink_shell_bind(button, "job.cancel", r->args);',

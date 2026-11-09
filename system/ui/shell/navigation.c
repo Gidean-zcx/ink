@@ -2,7 +2,7 @@
 /* ui-scale-runtime: dimension width Canvas width minus theme margins, shared by all shell pages. */
 /* ui-scale-runtime: dimension notifications Returns the bottom of theme-sized notification rows. */
 /* ui-scale-runtime: dimension y tile and notifications accept a theme-derived row position. */
-/* ui-scale-runtime: dimension ink_activity_card_draw,ink_activity_call_offset F6 returns theme-sized row heights and offsets. */
+/* ui-scale-runtime: dimension ink_activity_card_draw,ink_activity_home_offset F6 returns theme-sized row heights and offsets. */
 /* ui-scale-runtime: dimension F.y,heading_h,notice_h,home_room,below_heading Page flow: theme sizes added up, plus text measured at the current size. */
 #include <stdio.h>
 #include <string.h>
@@ -512,7 +512,7 @@ static void draw_home_content(void) {
     bool has_book = N.home_page == 1 && bookmark(&card);
     int page_top = INK_GAP_S;
     if (N.home_page == 1) {
-        int call_offset = ink_activity_call_offset();
+        int call_offset = ink_activity_home_offset();
         N.date = ink_ui_label(N.content, date, INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_MARGIN, INK_BLOCK + call_offset, width());
         lv_obj_set_style_text_align(N.date, LV_TEXT_ALIGN_CENTER, 0);
         N.clock = ink_ui_label(N.content, clock, INK_FONT_CLOCK, INK_WEIGHT_REGULAR, INK_MARGIN,
@@ -861,7 +861,9 @@ static void draw_control(void) {
     }
     int close_y = INK_CANVAS_H - INK_CONTROL - INK_MARGIN, fits = (close_y - y) / (ink_ui_row_double() + INK_GAP_M);
     if (fits > 0) notifications(N.control, y, fits < 2 ? fits : 2);
-    lv_obj_t *close = ink_ui_pill(N.control, "收起", (INK_CANVAS_W - INK_CIRCLE_LARGE) / 2, close_y, INK_CIRCLE_LARGE,
+    lv_obj_t *tasks = ink_ui_pill(N.control, "正在做的事", INK_MARGIN, close_y, 2 * INK_PRIMARY, INK_CONTROL, false, NULL, NULL);
+    ink_shell_bind(tasks, "shell.tasks", NULL);
+    lv_obj_t *close = ink_ui_pill(N.control, "收起", INK_CANVAS_W - INK_MARGIN - INK_CIRCLE_LARGE, close_y, INK_CIRCLE_LARGE,
                                   INK_CONTROL, false, NULL, NULL);
     ink_shell_bind(close, "shell.close", NULL);
     ink_ui_hint_obj(N.control, INK_REFRESH_FLASH_UI);
