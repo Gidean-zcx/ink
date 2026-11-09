@@ -63,7 +63,7 @@ static const ink_activity_t HOME = {.name = "AiHome", .app = "ai", .create = hom
 static const ink_app_def_t APP = {.id = "ai", .title = "对话记录", .icon = "ai", .entry = &HOME, .system_app = true, .child_ok = true};
 static void action(ink_call_t *c) {
     const char *id = c->cap->id;
-    if (!strcmp(id, "shell.ai_home")) { ink_shell_ai_hide(); if (ink_app_open("ai", NULL, NULL)) c->rc.status = INK_RC_FAILED; }
+    if (!strcmp(id, "shell.ai_home")) { ink_shell_ai_hide(); ink_ui_drop_app("ai"); if (ink_app_open("ai", NULL, NULL)) c->rc.status = INK_RC_FAILED; }
     else if (!strcmp(id, "shell.ai_ask")) {
         if (!strcmp(ink_ui_page_name(), ASK.name)) { if (!field || ink_textfield_short_focus(field)) c->rc.status = INK_RC_FAILED; }
         else ink_ui_push(&ASK, NULL);

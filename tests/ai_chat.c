@@ -165,6 +165,9 @@ static void run(void *arg) {
     quiet(); on_ui(check_cleared);
     CHECK(AI("shell.ai_ask", NULL) && g_rc.status == INK_RC_DONE, "child opens empty question field");
     quiet(); CHECK(!ink_text_value()[0], "question draft does not cross members");
+    CHECK(AI("shell.ai_home", NULL) && g_rc.status == INK_RC_DONE, "return from the question page to conversation records");
+    quiet(); on_ui(read_snapshot);
+    CHECK(!strcmp(ink_ui_page_name(), "AiHome") && !ink_text_focused() && strstr(snapshot, "还没有对话记录"), "records action reaches its entry page rather than resuming the question field");
     ink_probe_count("test.finished");
 }
 void ink_main(void) {

@@ -1402,7 +1402,7 @@ static void cap_launch(ink_call_t *c) {
         return;
     }
     if (!strcmp(id, "ai")) {
-        if (ink_app_open("ai", NULL, NULL)) c->rc.status = INK_RC_REJECTED;
+        ink_cap_invoke("shell.ai_home", NULL, c->src, 0, &c->rc);
         return;
     }
     if (c->src == INK_SRC_TOUCH) ink_probe_count("home.taps");
