@@ -34,7 +34,8 @@ static void locate(lv_obj_t *root) {
 static void locate_target(void) { found = false; lv_obj_update_layout(lv_screen_active()); locate(lv_screen_active()); }
 static void press(const char *cap, int index) {
     wanted_cap = cap; pick = index; on_ui(locate_target); CHECK(found, "touch target %s exists", cap);
-    if (found) tap(point.x, point.y); quiet();
+    if (found) tap(point.x, point.y);
+    quiet();
 }
 static void visible(const char *label) {
     wanted_cap = NULL; wanted_label = label; pick = 0; on_ui(locate_target); CHECK(found, "visible label: %s", label);

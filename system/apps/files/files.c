@@ -112,10 +112,12 @@ static void bind_item(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, 
     for (unsigned i = 0; i < 4; i++) { lv_obj_t *obj = lv_obj_get_child(slot, (int)i + 2); if (i == icon) lv_obj_remove_flag(obj, LV_OBJ_FLAG_HIDDEN); else lv_obj_add_flag(obj, LV_OBJ_FLAG_HIDDEN); }
     F.images[at] = lv_obj_get_child(slot, 6); lv_obj_add_flag(F.images[at], LV_OBJ_FLAG_HIDDEN);
     lv_obj_set_style_bg_color(slot, ink_ui_gray(), 0); lv_obj_set_style_border_width(slot, 0, 0);
-    snprintf(F.names[at], sizeof F.names[at], "%s", item->name);
-    const char *ext = strrchr(item->name, '.');
+    char name[sizeof item->name]; /* a copy: gcc refuses snprintf from F into F */
+    memcpy(name, item->name, sizeof name); name[sizeof name - 1] = 0;
+    snprintf(F.names[at], sizeof F.names[at], "%s", name);
+    const char *ext = strrchr(name, '.');
     if (ink_ui_text_width(F.names[at], INK_FONT_LIST, INK_WEIGHT_MEDIUM) > INK_CANVAS_W - 2 * INK_MARGIN - INK_CIRCLE - INK_GAP)
-        snprintf(F.names[at], sizeof F.names[at], "%.*s…%s", (int)ink_text_byte_offset(item->name, 7), item->name, ext && strlen(ext) < 12 ? ext : "");
+        snprintf(F.names[at], sizeof F.names[at], "%.*s…%s", (int)ink_text_byte_offset(name, 7), name, ext && strlen(ext) < 12 ? ext : "");
     lv_label_set_text(lv_obj_get_child(slot, 0), F.names[at]);
     if (item->dir) snprintf(F.values[at], sizeof F.values[at], "%s", strcmp(F.names[at], item->name) ? "文件夹（名称已截断）" : "文件夹"); else snprintf(F.values[at], sizeof F.values[at], "%lld 字节", (long long)item->size);
     lv_label_set_text(lv_obj_get_child(slot, 1), F.values[at]);
@@ -267,7 +269,10 @@ static int snapshot(char *out, size_t cap) {
     if (n < 0) return -1;
     ink_jw_t w = {.buf = out, .cap = cap, .len = (size_t)n - 1}; ink_jw_raw(&w, ",\"status\":"); ink_jw_str(&w, F.notice ? lv_label_get_text(F.notice) : "");
     ink_jw_raw(&w, ",\"directory\":"); ink_jw_str(&w, directory()); ink_jw_raw(&w, ",\"back\":\"files.up\"");
-    if (F.mode == MOVE) ink_jw_raw(&w, ",\"cancel\":\"shell.back\""); ink_jw_raw(&w, "}"); if (w.overflow) { out[0] = 0; return -1; } return (int)w.len;
+    if (F.mode == MOVE) ink_jw_raw(&w, ",\"cancel\":\"shell.back\"");
+    ink_jw_raw(&w, "}");
+    if (w.overflow) { out[0] = 0; return -1; }
+    return (int)w.len;
 }
 static bool page_key(ink_key_t key, bool lng) { return F.list && ink_ui_list_key(F.list, key, lng); }
 static void changed(void *ctx, const char *id, const ink_args_t *args) {
