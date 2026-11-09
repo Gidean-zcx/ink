@@ -263,6 +263,7 @@ static void ui_apply(void *arg) { /* UI task */
                           : p->status == INK_HUB_ERR_LOST    ? "网络断了，回答没收全，请再试一次"
                                                              : "出了点问题，请再试一次";
         set_status(msg);
+        if (!strcmp(p->text, "budget")) set_status("今天的额度用完了");
         ink_ui_cause(AI.t_release, "ai.release_to_error_visible_ms");
         ink_probe_count("ai.failures");
         ink_audio_tone(INK_TONE_ERROR, 0, NULL);
@@ -355,7 +356,9 @@ static void on_reply(void *ctx, int status, const ink_json_t *j, int result) { /
     (void)j;
     (void)result;
     int id = (int)(intptr_t)ctx;
-    post(id, status == INK_HUB_OK ? 1 : 2, status, NULL);
+    bool budget = status == INK_HUB_ERR_REMOTE && j && (ink_json_eq(j, ink_json_find(j, result, "message"), "budget") ||
+        ink_json_eq(j, ink_json_find(j, result, "data.code"), "budget"));
+    post(id, status == INK_HUB_OK ? 1 : 2, status, budget ? "budget" : NULL);
     ink_power_release(INK_NEED_NET); /* the turn is over (answer, error or timeout) */
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
     int sid = 0;

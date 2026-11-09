@@ -107,4 +107,6 @@ void ink_main(void) {
     if (ink_sms_init() != 0) osal_panic("SMS failed to start");
     extern int ink_memo_init(void);
     if (ink_memo_init() != 0) osal_panic("memo failed to start");
+    extern int ink_ai_pages_init(void);
+    if (ink_ai_pages_init() != 0) osal_panic("AI pages failed to start");
 }

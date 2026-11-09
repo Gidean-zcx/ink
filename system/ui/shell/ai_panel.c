@@ -154,6 +154,8 @@ void ink_shell_ai_status(const char *s) {
     }
     ink_ui_hint_obj(A.status, done ? INK_REFRESH_UI : INK_REFRESH_FAST);
     audio_changed(NULL, 0, NULL);
+    extern void ink_ai_pages_status(const char *status, lv_obj_t *parent);
+    ink_ai_pages_status(s, A.root);
 }
 
 static void action(ink_call_t *c) {

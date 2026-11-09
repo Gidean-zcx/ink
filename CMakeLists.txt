@@ -1294,3 +1294,8 @@ target_sources(ink_system PRIVATE system/apps/memo/memo.c)
 ink_sim_executable(sim-memo tests/memo/memo.c)
 target_link_libraries(sim-memo PRIVATE ink_apps ink_system)
 add_test(NAME memo COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/memo/run.py --build ${CMAKE_BINARY_DIR})
+
+target_sources(ink_system PRIVATE system/ui/shell/ai_pages.c)
+ink_sim_executable(sim-ai-pages tests/ai_pages.c)
+target_link_libraries(sim-ai-pages PRIVATE ink_apps ink_system)
+add_test(NAME ai-pages COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/ai_pages.py --build ${CMAKE_BINARY_DIR})
