@@ -76,7 +76,11 @@ static void capture(const char *name) {
     char metric[80]; snprintf(metric, sizeof metric, "test.snapshot.%s", name); ink_probe_count(metric);
 }
 static void card_event(void *arg) { sim_sd_set_present((intptr_t)arg != 0); }
-static void outage(void *arg) { (void)arg; sim_net_outage(SIM_MS(6000)); }
+static void outage(void *arg) { (void)arg; sim_net_set_link("none"); }
+static void reconnect(void *arg) { (void)arg; sim_net_set_link("wifi"); }
+static bool online(void) {
+    int64_t v = 0; ink_state_get_int(ink_state_find("net.online"), &v); return v != 0;
+}
 static void corrupt_event(void *arg) { (void)arg; sim_backup_faults(2); }
 static void clear_fault(void *arg) { (void)arg; sim_backup_faults(0); }
 static void fixture(void) {
@@ -135,6 +139,7 @@ static void run(void *arg) {
     CHECK(WAIT_FOR(phase("\"phase\":\"preview\""), 180000), "touch loads the latest backup preview");
     CHECK(WAIT_FOR(at("Restore") && strstr(g_snap, "restore.apply"), 5000), "summary enables the actual overwrite button");
     capture("Restore"); get_preview();
+    if (getenv("INK_BACKUP_PAGE_PROBE")) { ink_probe_count("test.finished"); return; }
     CHECK(AI("backup.manifest", NULL) && g_rc.status == INK_RC_DONE, "large full manifest exists");
     ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
     CHECK(j && ink_json_parse(j, g_result, strlen(g_result)) != 0, "full manifest exceeds the UI JSON reader");
@@ -162,10 +167,12 @@ static void run(void *arg) {
     CHECK(AI("shell.launch", "{\"id\":\"backup\"}") && ready("BackupFail"), "failed operation remains visible");
     press("再试一次");
     CHECK(WAIT_FOR(phase("\"phase\":\"saved\""), 180000), "backup failure retry reaches saved again");
-    vtk_event_at(vtk_now() + SIM_MS(1), outage, NULL); delay_ms(50);
+    vtk_event_at(vtk_now() + SIM_MS(1), outage, NULL);
+    CHECK(WAIT_FOR(!online(), 3000), "network fixture is actually offline");
     CHECK(AI("backup.now", NULL) && g_rc.status == INK_RC_QUEUED, "AI starts the same backup.now operation offline");
     CHECK(WAIT_FOR(at("BackupFail") && strstr(g_snap, "连不上家庭服务器"), 5000), "offline backup branch is reachable");
     CHECK(AI("shell.back", NULL) && ready("home"), "offline page can return without cancelling service work");
+    vtk_event_at(vtk_now() + SIM_MS(1), reconnect, NULL);
     CHECK(WAIT_FOR(phase("\"phase\":\"saved\""), 180000), "existing service resumes after network recovery");
     CHECK(ink_member_switch("kid") == 0, "switch to synthetic child");
     CHECK(AI("shell.launch", "{\"id\":\"backup\"}") && g_rc.status != INK_RC_DONE, "child cannot enter adult backup pages");

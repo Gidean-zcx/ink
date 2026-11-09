@@ -6,11 +6,13 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 待执行 | 备份至恢复的模拟器流程 | 待补 |
-| 2 | 待执行 | 断网、备份失败、恢复失败及返回 | 待补 |
-| 3 | 待执行 | 六页 AI 快照、按钮与 AI 共用能力 | 待补 |
+| 1 | 通过 | 【实测】171 项检查，触摸备份、预览、取消确认、AI 发起恢复、人确认、原文件内容恢复 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2 -R '^backup-pages$'` |
+| 2 | 通过 | 【实测】缺卡错误保留、损坏备份失败、断网可返回、联网后服务继续；失败重试能到保存完成 | 同上 |
+| 3 | 通过 | 【实测】六页真实快照、上下文可解析、动作已注册；触摸和 AI 均调用 `backup.now`、`restore.preview`、`restore.apply`；AI 不能批准覆盖 | 同上 |
 | 4 | 待执行 | 全量测试、内存检查、300 行预算 | 待补 |
-| G4 | 画板已查看；对照待执行 | 【实现】六页遵循现有主题，真实数据替代画板示例 | 待补 |
+| G4 | 六页已对照，均超目标 | 【实测】分数及差异见下表；未改设计稿和阈值 | `INK_DESIGN="$INK_DESIGN" taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.py --build build --reuse --out build/backup-compare --scenes Backup BackupFail Restore RestoreRun RestoreDone RestoreFail` |
+
+反向对照【实测】：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/backup_pages_reverse.py --build build` 通过；替换对象分别撤去 summary 参数和错误保留判断，两次运行均以 1 退出并命中对应失败断言。产品源文件哈希未变；命令和结果留在 `build/backup-pages-reverse/{commands,summary}.json`。
 
 ## 没做到的
 
@@ -25,13 +27,26 @@
 - 【实现】服务要求恢复后重启，完成页显示提示；未新增重启确认流程。
 - 【实现】为避开同时开发的 settings-b 文件，入口复用“全部／工具”的应用注册，ID 为 `backup`。存储页现有行的后续接线列在“要改的文档”。
 
+六页共同差异：设计稿为旧字号、旧浅灰和示例状态栏；实现使用现行主题（灰色为 #888888），没有变更规格迁就分数。
+
+| 页面 | 1/4 灰度平均差 | 其它可见差异 |
+| --- | ---: | --- |
+| Backup | 30.124/255 | 显示服务器已收到的实际时间；自动备份无接口，改为说明；增加恢复入口 |
+| BackupFail | 25.495/255 | 截图为真实缺卡失败，不虚构未备份条数 |
+| Restore | 37.020/255 | 当前家人一行、真实日期和 36 项；无全家分类数量和设备来源 |
+| RestoreRun | 22.200/255 | 进度按实际 checking/restoring，末项提示重启；未承诺恢复失败后全部原样 |
+| RestoreDone | 38.558/255 | 显示当前家人与实际备份日期、服务明确排除的内容；无阅读位置或虚构遗漏数量 |
+| RestoreFail | 25.355/255 | 多返回顶栏；显示服务校验失败原因，保留取消和重试 |
+
 ## 改过的已有测试
 
-无。
+- `tests/integration/apps.c` 应用数量断言由 11 精确改为 12，描述加入 backup：新增可见页面入口必然增加一项，未放宽为区间或删除断言。
 
 ## 要用户定的
 
 暂无。
+
+【实测】首轮全量 233 项中，应用总数旧断言失败，已按新增入口精确更新；3 项中枢测试因默认 Python 缺依赖显式跳过。后续使用只读依赖目录现成的 `hub/.venv/bin/python` 配置 `INK_HUB_PYTHON`，不安装或升级依赖。
 
 ## 顺手发现
 

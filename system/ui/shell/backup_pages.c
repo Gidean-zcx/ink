@@ -114,17 +114,20 @@ static void draw(void) {
         int active = !strcmp(B.phase, "checking") ? 1 : 2;
         for (int i = 0; i < 4; i++) {
             int y = 2 * INK_PRIMARY + INK_GAP_XL + i * INK_SEGMENT;
-            ink_ui_circle(B.screen, i < active ? "check" : "download", INK_MARGIN, y, INK_CIRCLE_SMALL,
-                INK_ICON_SMALL, i < active ? INK_SURFACE_BLACK : INK_SURFACE_WHITE, NULL, NULL);
+            if (i < active) ink_ui_circle(B.screen, "check", INK_MARGIN, y, INK_CIRCLE_SMALL,
+                INK_ICON_SMALL, INK_SURFACE_BLACK, NULL, NULL);
+            else ink_ui_box(B.screen, INK_MARGIN, y, INK_CIRCLE_SMALL, INK_CIRCLE_SMALL, -1, INK_SURFACE_WHITE, true);
+            if (i == active) ink_ui_box(B.screen, INK_MARGIN + (INK_CIRCLE_SMALL - INK_ICON_SMALL) / 2,
+                y + (INK_CIRCLE_SMALL - INK_ICON_SMALL) / 2, INK_ICON_SMALL, INK_ICON_SMALL, -1, INK_SURFACE_BLACK, false);
             ink_ui_label(B.screen, steps[i], INK_FONT_LIST, i == active ? INK_WEIGHT_BOLD : INK_WEIGHT_REGULAR,
                 INK_MARGIN + INK_CIRCLE_SMALL + INK_GAP_L, y + INK_GAP, w - INK_CIRCLE_SMALL - INK_GAP_L);
         }
         text("不要关机。中途失败时，有些资料可能已经放回。", INK_FONT_NOTE, bottom, true);
     } else if (B.page == RESTORE_DONE) {
         text("放回来了", INK_FONT_TITLE, INK_STATUS_BAR + INK_GAP_XXL, false);
-        ink_ui_card(B.screen, INK_MARGIN, 2 * INK_PRIMARY, w, INK_ROW_DOUBLE, INK_SURFACE_STATIC);
-        text(B.member, INK_FONT_SUBTITLE, 2 * INK_PRIMARY + INK_GAP, false);
-        text(B.info, INK_FONT_NOTE, 2 * INK_PRIMARY + INK_GAP + INK_LINE_SUBTITLE, false);
+        lv_obj_t *card = ink_ui_card(B.screen, INK_MARGIN, 2 * INK_PRIMARY, w, INK_ROW_DOUBLE, INK_SURFACE_STATIC);
+        ink_ui_label(card, B.member, INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, INK_GAP_XL, INK_GAP, w - 2 * INK_GAP_XL);
+        ink_ui_label(card, B.info, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_GAP_XL, INK_GAP + INK_LINE_SUBTITLE, w - 2 * INK_GAP_XL);
         text("以下内容没有放回", INK_FONT_SUBTITLE, 2 * INK_PRIMARY + INK_ROW_DOUBLE + INK_GAP_XL, false);
         text(OMITTED, INK_FONT_NOTE, 2 * INK_PRIMARY + INK_ROW_DOUBLE + INK_GAP_XL + INK_LINE_SUBTITLE + INK_GAP, false);
         text("请重启设备，让放回的资料生效。", INK_FONT_NOTE, bottom - INK_LINE_NOTE - INK_GAP, false);
@@ -148,6 +151,8 @@ static void reply(void *ctx, const ink_receipt_t *rc) {
     char phase[24] = "", reason[160] = "";
     ink_json_str(j, ink_json_find(j, 0, "phase"), phase, sizeof phase);
     bool changed = strcmp(B.phase, phase) != 0;
+    if (!changed && (B.page == BACKUP_FAIL || B.page == RESTORE_FAIL) &&
+        (!strcmp(phase, "none") || !strcmp(phase, "saved") || !strcmp(phase, "preview") || !strcmp(phase, "done"))) { osal_free(j); return; }
     snprintf(B.phase, sizeof B.phase, "%s", phase);
     if (!strcmp(phase, "fetching") || !strcmp(phase, "preparing") || !strcmp(phase, "preview") ||
         !strcmp(phase, "checking") || !strcmp(phase, "restoring")) B.restore = true;
@@ -164,7 +169,7 @@ static void reply(void *ctx, const ink_receipt_t *rc) {
         if (summary) snprintf(B.detail, sizeof B.detail, "共 %d 项", (int)count);
     }
     ink_state_get_int(ink_state_find("net.online"), &online);
-    bool failed = !strcmp(phase, "failed"), offline = !online && (!strcmp(phase, "uploading") || !strcmp(phase, "fetching"));
+    bool failed = !strcmp(phase, "failed"), offline = !online && (!strcmp(phase, "collecting") || !strcmp(phase, "uploading") || !strcmp(phase, "fetching"));
     int page = B.restore ? RESTORE : BACKUP;
     if (failed || offline) {
         page = B.restore ? RESTORE_FAIL : BACKUP_FAIL;
@@ -187,7 +192,7 @@ static void create(lv_obj_t *screen, void *arg) {
         snprintf(B.title, sizeof B.title, "正在读取备份记录");
     }
     snprintf(B.member, sizeof B.member, "%s", ink_member_current()->name);
-    draw(); B.timer = lv_timer_create(poll, 200, NULL); request("backup.status", NULL);
+    draw(); B.timer = lv_timer_create(poll, 1000, NULL); request("backup.status", NULL);
 }
 static void destroy(void) {
     if (B.timer) lv_timer_delete(B.timer);
