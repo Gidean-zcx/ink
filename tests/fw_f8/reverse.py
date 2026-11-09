@@ -26,6 +26,8 @@ cases = [
     ('ignore-order', 'if (!T.saved || !slot) return', 'if (true) return', 'four selected cards retain their exact order'),
     ('shared-member', 'ink_db_open_member(&TODAY_DB, ink_member_current()->id)', 'ink_db_open_member(&TODAY_DB, "owner")',
      'adult choices and adult card data do not affect the child default Today'),
+    ('retain-navigation', 'T.position = (ink_ui_list_position_t){0};', '(void)0;',
+     'child editor does not retain the adult navigation selection'),
     ('swallow-short', 'LV_EVENT_SHORT_CLICKED, (void *)id', 'LV_EVENT_LONG_PRESSED_REPEAT, (void *)id', 'short press still opens the application'),
     ('replace-shortcut', 'ink_shell_bind(resume, card->action, NULL)', 'ink_shell_bind(resume, "shell.close", NULL)',
      'menu shortcut uses the app capability and dismisses the menu'),

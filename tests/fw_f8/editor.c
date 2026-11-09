@@ -177,6 +177,7 @@ static void run(void *arg) {
     if (!restarting) {
         on_ui(check_child_default);
         CHECK(AI("shell.today_edit", NULL) && g_rc.status == INK_RC_DONE, "child can edit only their own Today"); quiet(); on_ui(inspect);
+        CHECK(strstr(snapshot, "\"selected\":\"\""), "child editor does not retain the adult navigation selection");
         CHECK(!strstr(snapshot, "news:daily"), "adult-only app is absent from the child editor");
         CHECK(AI("shell.today_card", "{\"card\":\"news:daily\"}") && g_rc.status == INK_RC_REJECTED, "child cannot select an adult-only card via AI");
         CHECK(AI("shell.today_card", "{\"card\":\"listen:resume\"}") && g_rc.status == INK_RC_DONE, "child changes their own selection");

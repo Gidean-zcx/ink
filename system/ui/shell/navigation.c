@@ -1597,7 +1597,6 @@ static struct {
     int count, total;
     char selected[4][48], keys[6][48], args[6][96], up[6][96], order[6][32];
     ink_card_t items[6];
-    const ink_app_def_t *apps[6];
     ink_ui_list_t *list;
     ink_ui_list_position_t position;
     lv_obj_t *menu;
@@ -1683,16 +1682,17 @@ static void today_model(void) {
 static void today_bind(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, ink_ui_action_spec_t *action, void *ctx) {
     (void)ctx;
     unsigned i = index % 6;
-    T.apps[i] = today_item((int)index, &T.items[i], T.keys[i]);
-    if (!T.apps[i]) return;
-    int picked = today_selected(T.keys[i]);
-    snprintf(T.args[i], sizeof T.args[i], "{\"card\":\"%s\"}", T.keys[i]);
-    snprintf(T.up[i], sizeof T.up[i], "{\"card\":\"%s\",\"up\":true}", T.keys[i]);
+    const ink_app_def_t *app = today_item((int)index, &T.items[i], T.keys[i]);
+    if (!app) return;
+    char key[48]; memcpy(key, T.keys[i], sizeof key);
+    int picked = today_selected(key);
+    snprintf(T.args[i], sizeof T.args[i], "{\"card\":\"%s\"}", key);
+    snprintf(T.up[i], sizeof T.up[i], "{\"card\":\"%s\",\"up\":true}", key);
     snprintf(T.order[i], sizeof T.order[i], picked < 0 ? "未选" : "第 %d 张", picked + 1);
     *field = (ink_ui_field_spec_t){T.keys[i], "card", T.items[i].title, T.order[i], {T.keys[i], T.items[i].rev}, false};
     *action = (ink_ui_action_spec_t){T.keys[i], "选择卡片", "shell.today_card", T.args[i], field->object, true};
     lv_obj_clean(slot);
-    ink_ui_circle(slot, T.apps[i]->icon ? T.apps[i]->icon : "grid", INK_GAP, 0, INK_CIRCLE_SMALL, INK_ICON_MEDIUM, INK_SURFACE_STATIC, NULL, NULL);
+    ink_ui_circle(slot, app->icon ? app->icon : "grid", INK_GAP, 0, INK_CIRCLE_SMALL, INK_ICON_MEDIUM, INK_SURFACE_STATIC, NULL, NULL);
     ink_ui_line(slot, T.items[i].title, INK_FONT_LIST, INK_WEIGHT_REGULAR, INK_CIRCLE + INK_GAP, 0,
         width() - INK_CIRCLE - 2 * INK_PRIMARY - 2 * INK_GAP);
     ink_ui_line(slot, T.order[i], INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_CIRCLE + INK_GAP, INK_LINE_LIST,
@@ -1707,6 +1707,7 @@ static int icon_snapshot(char *buf, size_t cap) { return ink_ui_semantics_snapsh
 static void today_create(lv_obj_t *screen, void *arg) {
     (void)arg;
     today_load();
+    T.position = (ink_ui_list_position_t){0};
     ink_shell_statusbar(screen, true); ink_shell_topbar(screen, "今日屏放什么");
     int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP;
     ink_ui_list_row(screen, "book", "继续读", "总在最上面", INK_MARGIN, y, width(), false, NULL, NULL);
@@ -1749,7 +1750,8 @@ static void icon_show(const ink_app_def_t *app, const ink_card_t *card, const ch
         INK_MARGIN + ink_ui_line_height(INK_FONT_SUBTITLE), width() - INK_CIRCLE - INK_GAP);
     T.fields[0] = (ink_ui_field_spec_t){"app", "card", app->title, card->text, {app->id, card->rev}, false};
     T.fields[1] = (ink_ui_field_spec_t){"today", "toggle", "放到今日屏", today_selected(key) >= 0 ? "开" : "关", {key, 0}, false};
-    snprintf(T.args[0], sizeof T.args[0], "{\"card\":\"%s\"}", key);
+    char args[96]; snprintf(args, sizeof args, "{\"card\":\"%s\"}", key);
+    memcpy(T.args[0], args, sizeof args);
     T.actions[0] = (ink_ui_action_spec_t){"resume", !strcmp(app->id, "listen") ? "接着听" : "接着做", card->action, NULL, {app->id, card->rev}, card->action[0] != 0};
     T.actions[1] = (ink_ui_action_spec_t){"today", "放到今日屏", "shell.today_card", T.args[0], {key, 0}, key[0] != 0};
     T.actions[2] = (ink_ui_action_spec_t){"close", "关闭", "shell.back", NULL, {NULL, 0}, true};
