@@ -6,10 +6,10 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 设置、声音、振动 | 【实测】专项通过；最终复验待完成 | 人和 AI 更改四项设置；两个实体键、两次触摸各恰好两声；高优先级通知、来电、闹钟各一震；来电选柔音、闹钟选双音；进程重启后四项保留 | C1 |
-| 2 倒计时 | 【实测】专项通过；最终复验待完成 | 触摸及 AI 开始、暂停、继续、取消、到点响铃和关闭；成人、孩子分别计时；分钟更新，2 秒内没有额外刷新；重启明确取消 | C1 |
+| 1 设置、声音、振动 | 【实测】最终专项通过 | 人和 AI 更改四项设置；两个实体键、两次触摸各恰好两声；高优先级通知、来电、闹钟各一震；来电选柔音、闹钟选双音；进程重启后四项保留 | C1 |
+| 2 倒计时 | 【实测】最终专项通过 | 触摸及 AI 开始、暂停、继续、取消、到点响铃和关闭；成人、孩子分别计时；分钟更新，2 秒内没有额外刷新；重启明确取消 | C1 |
 | 3 声音页对照、计时截图 | 【实测】46.001/255，超过 12；基线也是 46.001 | 原有字号、灰度、分页造成首屏与画板不同；新开关和铃声在第二页。计时截图见下，**没有画板，待用户看** | C2 |
-| 4 全量及内存检查 | 进行中，不能报通过 | 第一轮发现文档过期、响铃钩子、AI 清单和 AI 页面版本场景四项失败；前两处代码/测试接线已修并定向通过，最后两项处理边界见下 | C3、C4 |
+| 4 全量及内存检查 | 【实测】两轮均未全绿；无 ASan/UBSan 错误 | 最终原生 264 过、2 失败、3 依赖跳过；三项补跑全过。ASan 全量 267 过、同样 2 失败、无跳过；失败均为能力文档及短按键场景 | C3、C4 |
 
 复现命令（依赖位置使用任务指定的环境变量，先按总规则配置并构建）：
 
@@ -18,7 +18,10 @@
 INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2 -R '^(sound-clock|clock-alarm|integration-races|integration-ai-surface)$'
 # C2：与外部画板比较；外部画板未入库
 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.py --build build --design "$INK_DESIGN" --out work/ui-compare --scenes SetSound
-# C3 / C4：完整检查，保留实际失败，不跳过断言
+# C3 / C4：完整检查，保留实际失败，不跳过断言；原命令有三个依赖跳过
+# 加载现成锁定依赖和本仓库服务器包，以补齐这三个测试
+export PYTHONDONTWRITEBYTECODE=1
+export PYTHONPATH="$PWD/hub:$INK_DEPS/hub/.venv/lib/python3.11/site-packages"
 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
 # C5：撤掉关键实现，要求测试确实失败
@@ -38,7 +41,7 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/capabilities
 
 【实现】声音在 `system/services/audio/audio_service.c` 程序生成，无下载素材、无第三方音源；音色基频为 880、660、330 Hz，按键为 1100 Hz，许可见 [SOUNDS-LICENSE.txt](SOUNDS-LICENSE.txt)。
 
-产品代码规模待最终统计。为什么不能更小：现有时间服务是持久的墙钟闹钟，不能直接表达可暂停的单调倒计时；已检查复用其记录的方案，会混入闹钟列表并改变重启语义。采用应用内倒计时数据及现有定时节点，四个设置、两处输入接线、振动和选音均复用现有服务。
+【实测】产品代码增删合计 196 行（含 4 行构建接线），未超过 300 行预算。为什么不能更小：现有时间服务是持久的墙钟闹钟，不能直接表达可暂停的单调倒计时；已检查复用其记录的方案，会混入闹钟列表并改变重启语义。采用应用内倒计时数据及现有定时节点，四个设置、两处输入接线、振动和选音均复用现有服务。
 
 ## 截图
 
@@ -61,7 +64,7 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/capabilities
 ## 没做到的
 
 - 全量还不能报通过。`capability-table-doc` 检出新增六项能力、四项设置尚未汇入共享生成文档；总规则第 7 节禁止改该文件，留给合并主会话，C7 的临时生成/核对通过（428 项定义）。
-- AI 页面版本场景仍失败：【实测】当前版本工具结果为 done=5、缺少 stale；仅恢复基线 `clock.c` 后 done=4、stale=1、退出 0。19.5 秒的 80 毫秒翻页键，当前版底层送达计量为 6 次（只含三次 AI 键的按下/松开），基线计量为 8 次。具体丢键原因未确定，不能说是基线就有的失败；没有拉长脚本按键、加等待或放宽预算。
+- AI 页面版本场景仍失败：【实测】当前版本工具结果为 done=5、缺少 stale；仅恢复基线 `clock.c` 后 done=4、stale=1、退出 0。19.5 秒的 80 毫秒翻页键，当前版底层送达计量为 6 次（只含三次 AI 键的按下/松开），基线计量为 8 次。【实测】当前首次触摸 I2C 读取在 19.581722 秒，按键已在 19.580000 秒松开；基线首次读取在 19.570783 秒，仍能读到。【实现】既有盖板键模型经过 20 ms 检出、最多 60 ms 监测扫描延迟以及 I2C 排队，80 ms 按键存在被漏掉的边界。不能说基线同样失败；没有改模型、拉长脚本按键、加等待或放宽预算。
 - 未接触设备，未做真机听感、振动或续航测试；未在 Linux 上实际运行。
 
 ## 和设计不一致的
@@ -84,7 +87,10 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/capabilities
 
 ## 新增的机制
 
-- 四个设置项：按键提示音、振动、来电铃声、闹钟铃声，均由任务书第 1、2 项要求；复用既有设置文件。
+- `audio.key_tone`：按键提示音开关，任务书第 1 项要求；复用既有设置文件。
+- `audio.vibration`：振动开关，任务书第 1 项要求；复用既有设置文件。
+- `audio.call_ring`：来电铃声选项，任务书第 2 项要求；复用既有设置文件。
+- `audio.alarm_ring`：闹钟铃声选项，任务书第 2 项要求；复用既有设置文件。
 - 倒计时运行、暂停和取消状态及每成员定时节点：任务书第 3 项要求；复用现有共享定时器、UI 执行器、唤醒引用与打断卡。
 - 无新增常驻任务、线程、文件格式、后台重试、缓存、队列或通用抽象层。
 
@@ -96,4 +102,6 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/capabilities
 
 ## 最终检查
 
-待完成最终全量、内存检查、截图复核、隐私扫描及提交。
+【实测】最终原生和 ASan 构建均退出 0；全量结果见 [validation.json](validation.json)，专项计量见 [evidence.json](evidence.json)。三个原生依赖跳过项使用现成锁定环境补跑全部通过，未改依赖或安装软件。原生及 ASan 全量命令均因上述两项失败退出 8，不能称为全量通过。
+
+【实测】报告内链接与截图文件均存在，单文件远低于 5 MB；`git diff --check` 通过。产品增删 196 行，无刷新算法、时间服务、硬件驱动或受保护共享文档的改动。按总规则扫描基线至提交及工作区改动，均为零命中（grep 退出 1）。实现与最终证据分别提交在本任务分支。

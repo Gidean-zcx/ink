@@ -1,0 +1,77 @@
+{
+  "baseline": "62b0e83da1d34f50629b5e576807db1381b26078",
+  "product_lines_including_build_wiring": 196,
+  "normal_full": {
+    "passed": 264,
+    "failed": [
+      "scenario-ai_page_version-metalio-plus",
+      "capability-table-doc"
+    ],
+    "skipped": [
+      "hub-contract",
+      "hub-json-crosscheck",
+      "hub-simulator-e2e"
+    ],
+    "total": 269
+  },
+  "normal_hub_supplement": {
+    "hub-contract": "Passed",
+    "hub-json-crosscheck": "Passed",
+    "hub-simulator-e2e": "Passed"
+  },
+  "asan_full": {
+    "passed": 267,
+    "failed": [
+      "capability-table-doc",
+      "scenario-ai_page_version-metalio-plus"
+    ],
+    "skipped": [],
+    "total": 269
+  },
+  "asan_memory_errors": 0,
+  "negative": [
+    {
+      "variant": "key-switch",
+      "exit": 1,
+      "detected": true
+    },
+    {
+      "variant": "vibration-switch",
+      "exit": 1,
+      "detected": true
+    },
+    {
+      "variant": "ring-choice",
+      "exit": 1,
+      "detected": true
+    },
+    {
+      "variant": "persistence",
+      "exit": 1,
+      "detected": true
+    },
+    {
+      "variant": "pause",
+      "exit": 1,
+      "detected": true
+    },
+    {
+      "variant": "expiry",
+      "exit": 1,
+      "detected": true
+    },
+    {
+      "variant": "member",
+      "exit": 1,
+      "detected": true
+    }
+  ],
+  "baseline_clock": {
+    "baseline_clock_exit": 0,
+    "keys_delivered": 8,
+    "tools_done": 4,
+    "tools_stale": 1
+  },
+  "setsound_mae": 46.001,
+  "baseline_setsound_mae": 46.001
+}
