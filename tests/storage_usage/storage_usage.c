@@ -17,6 +17,11 @@ static int64_t base[4];
 static bool initial_organizing, captured;
 static char action_args[128], action_cap[64];
 static int label_x, label_y;
+static unsigned indexed_events;
+static void index_event(void *ctx, const char *id, const ink_args_t *args) {
+    (void)ctx; (void)id; char kind[16];
+    if (ink_args_get_str(args, "kind", kind, sizeof kind) > 0 && !strcmp(kind, "indexed")) indexed_events++;
+}
 
 static int64_t number(const char *scope, const char *key) {
     ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
@@ -202,6 +207,9 @@ static void run(void *arg) {
     index_device();
     CHECK(AI("file.usage", NULL) && g_rc.status == INK_RC_DONE, "initial device usage from existing index");
     for (int k = 0; k < 4; k++) base[k] = number("device", kinds[k]);
+    on_ui(read_page); unsigned events = indexed_events;
+    index_device(); on_ui(read_page);
+    CHECK(indexed_events == events, "unchanged repeated indexing emits no file change and cannot trigger redraw loops");
     CHECK(BY_HAND("member.add", "{\"id\":\"guest\",\"role\":\"adult\"}") && g_rc.status == INK_RC_PENDING_CONFIRMATION, "add synthetic second adult");
     unsigned token = 0; CHECK(sscanf(g_rc.object, "confirm:%u", &token) == 1 && ink_confirm_decide(token, true, INK_SRC_TOUCH) == 0, "authorize synthetic member");
     CHECK(WAIT_FOR(ink_member_exists("guest"), 5000), "second adult exists");
@@ -244,6 +252,7 @@ static void run(void *arg) {
 }
 void ink_main(void) {
     product_main();
+    CHECK(!ink_cap_subscribe("file.changed", index_event, NULL, INK_EXEC_UI), "observe index completion notifications");
     osal_task_cfg_t cfg = {.name = "storage-usage-test", .fn = run, .stack_bytes = 16384, .priority = OSAL_PRIO_NORMAL, .core = -1, .flags = OSAL_TASK_STACK_EXTERNAL};
     CHECK(osal_task_create(&cfg, NULL) == OSAL_OK, "test task");
 }

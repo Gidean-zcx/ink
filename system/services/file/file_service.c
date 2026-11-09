@@ -1497,6 +1497,7 @@ static int index_add(const file_context_t *c, ink_db_t *db, const uint8_t card[1
 }
 
 static int index_scan(const file_context_t *c, ink_db_t *db, const uint8_t card[16], const char *root) {
+    bool was_ready = storage_index_ready(); uint32_t version = ink_db_last_ver(db);
     ink_fs_dir_t **dirs = osal_calloc(JOB_DEPTH, sizeof *dirs, OSAL_MEM_EXTERNAL);
     if (!dirs) return INK_FS_ERR_IO;
     char path[INK_FS_PATH_MAX]; snprintf(path, sizeof path, "%s", root);
@@ -1524,7 +1525,7 @@ static int index_scan(const file_context_t *c, ink_db_t *db, const uint8_t card[
             if (!strcmp(root, member_root) || (!strcmp(root, "/me") && !strcmp(c->member, ink_member_at(i)->id)))
                 snprintf(storage.indexed[i], sizeof storage.indexed[i], "%s", ink_member_at(i)->id);
         }
-        if (storage_index_ready()) changed(c, root, "indexed");
+        if (storage_index_ready() && (!was_ready || version != ink_db_last_ver(db))) changed(c, root, "indexed");
     }
     return r;
 }

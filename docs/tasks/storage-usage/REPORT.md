@@ -9,11 +9,11 @@
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
 | 1 | 【实测】通过 | 两位成人分别放入 17/23/31/7 与 19/29/37/11 字节的四类文件，逐类核对个人与设备总量；重复查询不调用目录遍历 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^storage-usage$' --output-on-failure -j2` |
-| 2 | 【实测】通过 | 索引未完成时真实页面显示“正在整理”，索引遍历期间观察到 organizing，完成后无需重开页面即可读到数值 | 同上 |
+| 2 | 【实测】通过 | 索引未完成时 `file.usage` 不扫描目录，真实页面显示“正在整理”；现有索引流程完成后无需重开页面即可读到数值 | 同上 |
 | 3 | 【实测】通过 | 5 字节临时文件、11 字节磁盘缓存夹具、7 字节半截文件共 23 字节被移除；另经 file.thumb 生成并清除实际 PSRAM 缩略图缓存，原图保留；普通文件、以 .tmp 结尾的目录内普通文件、备份均保留；缓存免确认，残留须确认，预览过期时拒绝删除 | 同上；`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/storage_usage/reverse.py --build build` |
 | 4 | 【实测】通过 | 页面与 AI 读取同一结果，真实触摸与 AI 使用同一能力及 revision；孩子从导航、直接页面接口、AI 和触摸能力均不能清理 | 同上 |
 | 5 | 【实测】未全绿；行数通过 | 普通与 ASan/UBSan 均为 241/242，无跳过、无内存错误；两套唯一失败均是按规则未更新的生成能力文档。产品新增 200 行，连删除行和 CMake 计入为 214 行 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`；内存检查改为 `--test-dir build-asan` |
-| G4 | 【实测】未达到画板差异目标 | 51.184/255，目标 ≤12，差异原因见下文 | `INK_DESIGN="$INK_DESIGN" taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.py --build build --out build/storage-compare --scenes SetStorage --reuse` |
+| G4 | 【实测】未达到画板差异目标 | 复查后 51.174/255，目标 ≤12，差异原因见下文 | `INK_DESIGN="$INK_DESIGN" taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.py --build build --out build/storage-compare --scenes SetStorage --reuse` |
 
 ## 没做到的
 
@@ -25,7 +25,7 @@
 
 ## 和设计不一致的
 
-- 【实测】SetStorage 的 1/4 灰度差为 **51.184/255**，未达到 ≤12。查看了生成图：现有主题放大后的标题、灰色卡片、底部分页控件、空间卡缺少总容量和比例条，均与画板不同；真实备份状态、两种统计口径及新增的清理说明也改变文字。未改备份行及公共绘制样式。既有 settings-a 报告为 52.353/255，场景数据不同，不把两个分数当作严格前后对照。
+- 【实测】SetStorage 的 1/4 灰度差首轮为 **51.184/255**，复查后为 **51.174/255**，未达到 ≤12。查看了生成图：现有主题放大后的标题、灰色卡片、底部分页控件、空间卡缺少总容量和比例条，均与画板不同；真实备份状态、两种统计口径及新增的清理说明也改变文字。未改备份行及公共绘制样式。既有 settings-a 报告为 52.353/255，场景数据不同，不把两个分数当作严格前后对照。
 - 【实现】沿用设计的“照片和其他”合并行；`file.usage` 中照片、其他仍分别返回，页面合计展示。
 
 ## 改过的已有测试
@@ -42,7 +42,7 @@
 
 ## 新增的机制
 
-- 一个索引完成版本标记（内存中的文件服务 revision 和卡标识）：由本任务“不要每次遍历整张卡”要求；只在服务 revision 变化或换卡后重建目录索引，不新增文件格式、任务、线程、队列、配置项或持久汇总。
+- 首轮使用索引完成版本标记（内存中的文件服务 revision 和卡标识）；复查后按 SU-M1 改为沿用既有目录索引流程的完成标记及内存统计缓存，统计入口不再建索引。不新增文件格式、任务、线程、队列、配置项或持久汇总。
 - 其余复用文件编辑锁、后台执行器、确认卡、文件变化事件与 F1/F4 页面语义。新增四个原子能力：`file.usage`、`file.cleanup_preview`、`file.cache_clear`、`file.cleanup`。
 - 架构审视：【实现】统计与清理由文件服务持有，经 HAL 访问卡；界面与 AI 共用能力和结构化结果，清理结果经 `file.changed` 通知；页面语义与确认卡均沿用统一框架，儿童沿用策略和页面入口限制。
 
@@ -73,10 +73,11 @@
 - 复查基线：`b40d6f52`；主会话提出 SU-M1、SU-L1，本轮只处理这两项。
 - SU-M1：【实现】移除 `file.usage` 内的目录扫描，由现有 `file.index` 流程标记共享目录和成员根目录的索引完成情况；未完成时返回 `organizing`，页面显示“正在整理”。索引完成沿用 `file.changed` 刷新页面。统计缓存按卡、成员与文件 revision 复用；逐文件查大小在编辑锁外进行，结束后核对 revision 和索引版本，过期结果不发布。
 - SU-L1：【实现】存储页分类、清理及剩余空间统一使用 KB、MB、GB；换算沿用现有的 1024 进位。
-- 【实测】专项 `storage-usage` 148 项检查通过：未建索引不扫描、索引完成刷新、写后只重算一次、第二次零次已索引文件大小查询、KB/MB/GB 分类与剩余空间的真实页面快照，以及统计时发生写入后丢弃旧结果、下次重算并缓存。命令：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^storage-usage$' --output-on-failure -j2`。
-- 【实测】锁探针共 5 次统计：普通查询每次只进入编辑锁 2 次，注入写入的一次含写操作共 3 次；查已索引文件大小时持锁次数为 0，最长单次持锁 12.148 毫秒。两次缓存命中均查 0 个已索引文件大小；非缓存查询各查 11 个，期间不扫目录。卡标识文件的固定元数据校验仍保留，不计入已索引文件探针。证据：`build/storage-compare/SetStorage/metrics.json`。过期写入由大小查询探针确定性注入普通写文件 API；未使用线程暂停或 sleep，锁探针作为本次并发要求的证据。
-- 【实测】9 个反向对照均按预期失败并完成场景：原有 3 项为成员口径 13 条、用户目录 4 条、确认标题 1 条；本轮为禁用缓存 2 条、恢复统计内扫描 1 条、去掉过期检查 1 条、恢复分类单位 3 条、恢复剩余空间单位 2 条、恢复全程持锁 6 条。命令：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/storage_usage/reverse.py --build build`；证据：`build/storage-reverse/summary.json`、`build/review-reverse.log`。两份产品文件的哈希前后相同，编译变体仅放在忽略的构建目录。
+- 【实测】专项 `storage-usage` 155 项检查通过：未建索引不扫描、索引完成刷新、写后只重算一次、第二次零次已索引文件大小查询、KB/MB/GB 分类与剩余空间的真实页面快照，以及统计时发生写入后丢弃旧结果、下次重算并缓存。与文件页联合复跑 `storage-usage|files-app` 也通过，未放宽既有预算。命令：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^(storage-usage|files-app)$' --output-on-failure -j2`；日志：`build/review-focused.log`。
+- 【实测】锁探针共 5 次统计：普通查询每次只进入编辑锁 2 次，注入写入的一次含写操作共 3 次；查已索引文件大小时持锁次数为 0，最长单次持锁 12.178 毫秒。两次缓存命中均查 0 个已索引文件大小；非缓存查询各查 11 个，期间不扫目录。卡标识文件的固定元数据校验仍保留，不计入已索引文件探针。证据：`build/storage-compare/SetStorage/metrics.json`。过期写入由大小查询探针确定性注入普通写文件 API；未使用线程暂停或 sleep，锁探针作为本次并发要求的证据。
+- 【实测】10 个反向对照均按预期失败并完成场景：原有 3 项为成员口径 13 条、用户目录 4 条、确认标题 1 条；本轮为禁用缓存 2 条、恢复统计内扫描 1 条、去掉过期检查 1 条、恢复重复索引通知 1 条、恢复分类单位 3 条、恢复剩余空间单位 2 条、恢复全程持锁 6 条。命令：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/storage_usage/reverse.py --build build`；证据：`build/storage-reverse/summary.json`、`build/review-reverse.log`。两份产品文件的哈希前后相同，编译变体仅放在忽略的构建目录。
 - 改过的已有测试：原来“首次 `file.usage` 自动建索引”和“统计扫描期间索引状态为 organizing”的断言改为“未建索引只返回 organizing、不读目录，现有 `file.index` 流程完成后页面自动刷新”。这是 SU-M1 明确要求改变的职责；原分类精度、成员隔离、清理范围、确认、儿童限制及预算断言均保留。
-- 【实现】完成标记要求共享根目录和所有现有成员根目录都经过既有索引流程；未建立索引的新文件仍由该流程纳入，统计入口不主动补扫。未新增全卡自动建索引调度，也未验证实机性能；本轮不会把部分索引冒充整机结果。
-- 【实测】相对任务基线，产品代码新增 225 行；连删除行和 CMake 计入为 241 行，均低于 250 行。全量与内存检查正在执行，最终结果待补充。
+- 【实现】完成标记要求共享根目录和所有现有成员根目录都经过既有索引流程；未建立索引的新文件仍由该流程纳入，纳入前不计入分类统计，统计入口不主动补扫。未新增全卡自动建索引调度，也未验证实机性能。
+- 【实测】首轮普通全量为 240/242：除已知能力表文档外，`files-app` 在 180 秒虚拟时间仍未完成。根因是索引已就绪后重复扫描仍发送 `file.changed`，文件页重绘又触发索引。已将通知收紧到“首次完成或索引版本变化”，增加重复索引不发事件的测试及反向对照；未修改文件页或放宽时间预算。初轮日志：`build/review-ctest-initial.log`；失败证据：`build/files-app-p_62ym1m/write/metrics.json`。
+- 【实测】相对任务基线，产品代码新增 226 行；连删除行和 CMake 计入为 242 行，均低于 250 行。全量与内存检查正在执行，最终结果待补充。
 - 新增的机制：仅 SU-M1 明确要求的内存统计缓存及现有索引完成标记；没有新增任务、线程、文件格式、配置、重试或队列。
