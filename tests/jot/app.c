@@ -27,7 +27,7 @@ static const ink_cap_t ADULT = {
     .id = "test.jot_adult", .title = "合成大人操作", .effect = INK_FX_LOCAL_WRITE, .run = forbidden
 };
 static int ink_jot_start_ui(const ink_activity_t *home) {
-    CHECK(ink_jot_init() == 0 && ink_cap_register(&ADULT, 1) == 0, "register the example before UI starts, only in this test binary");
+    if (ink_jot_init() != 0 || ink_cap_register(&ADULT, 1) != 0) return -1;
     return ink_ui_start(home);
 }
 static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }

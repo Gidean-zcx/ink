@@ -258,7 +258,7 @@ static void ink_jot_save(ink_call_t *c) {
 
 ## 12. 复现与证据边界
 
-构建依赖和环境按[任务总规则 §5、§7](../tasks/codex-rules.md)。配置后用 `taskpolicy -c utility cmake --build build --target sim-jot -j2` 编译，`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^app-framework-' --output-on-failure -j2` 跑示例与片段检查；Linux 没有 `taskpolicy` 时直接运行后面的命令。内存检查用同样配置加 `-DINK_SANITIZE=ON` 的 `build-asan`。
+构建依赖和环境按[任务总规则 §5、§7](../tasks/codex-rules.md)，先完成全量构建，生成字库和测试内容。改示例后可用 `taskpolicy -c utility cmake --build build --target sim-jot -j2` 编译，`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^app-framework-' --output-on-failure -j2` 跑示例与片段检查；Linux 没有 `taskpolicy` 时直接运行后面的命令。内存检查用同样配置加 `-DINK_SANITIZE=ON` 的 `build-asan`。
 
 测试宿主会在同一模拟闪存上运行两个独立进程；比较触摸与 AI 的记录正文和来源、逐项比较快照和实际 LVGL 标签、核验孩子允许／拒绝、跨家人隔离和恢复页码。可选反向对照见 [run.py](../../tests/jot/run.py)，只编译临时的示例变体，不改框架或原文件。要保留临时证据设置 `INK_KEEP_EVIDENCE=1`。
 
