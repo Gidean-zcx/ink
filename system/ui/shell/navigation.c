@@ -1126,8 +1126,10 @@ static void body_blocks(void) {
         }
         if (block(INK_CONTROL)) {
             lv_obj_t *scan = ink_ui_pill(N.page_body, N.scan_busy ? "正在找附近的 Wi-Fi" : "找附近的 Wi-Fi", INK_MARGIN,
-                                         F.y, width(), INK_CONTROL, N.scan_busy, NULL, NULL);
+                                         F.y, (width() - INK_GAP) / 2, INK_CONTROL, N.scan_busy, NULL, NULL);
             ink_shell_bind(scan, "wifi.scan", NULL);
+            ink_shell_bind(ink_ui_pill(N.page_body, "设置设备", INK_MARGIN + (width() + INK_GAP) / 2, F.y,
+                (width() - INK_GAP) / 2, INK_CONTROL, false, NULL, NULL), "shell.launch", "{\"id\":\"boot\"}");
         }
         F.y += INK_CONTROL + INK_GAP_M;
         for (int i = N.wifi_page * 2; i < N.wifi_count && i < (N.wifi_page + 1) * 2; i++) {
@@ -1286,7 +1288,7 @@ static int page_snapshot(char *buf, size_t cap) {
         N.page_id == PAGE_NOTIFICATIONS
             ? "动作：notify.read、notify.dismiss、shell.back、shell.control、shell.notify_next、shell.notify_prev。"
         : N.page_id == PAGE_NETWORK ? "动作：settings.set、wifi.scan、wifi.list、shell.back、shell.control、shell.wifi_"
-                                      "next、shell.wifi_prev、shell.wifi_pick。"
+                                      "next、shell.wifi_prev、shell.wifi_pick；设置设备：shell.launch(id=boot)。"
                                     : "动作：settings.set、shell.back、shell.control。";
     if (n >= 0 && (size_t) n < cap) n += snprintf(buf + n, cap - (size_t) n, "%s", actions);
     return n < 0 ? 0 : (size_t) n < cap ? n : (int) cap - 1;
@@ -1385,6 +1387,7 @@ static void cap_nav(ink_call_t *c) {
 }
 
 static void cap_launch(ink_call_t *c) {
+    if (ink_boot_flow_launch(c)) return;
     char id[32];
     ink_args_get_str(&c->args, "id", id, sizeof id);
     if (!strcmp(id, "settings")) {
@@ -1541,6 +1544,7 @@ static const ink_setting_def_t SETTINGS[] = {
 int ink_shell_ai_init(void);
 
 int ink_shell_init(void) {
+    if (ink_boot_flow_init() != 0) return -1;
     if (ink_shell_ai_init() != 0) return -1;
     if (ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) ||
         ink_settings_define(SETTINGS, sizeof SETTINGS / sizeof *SETTINGS))

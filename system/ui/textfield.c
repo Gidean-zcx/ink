@@ -357,8 +357,10 @@ const char *ink_textfield_text(lv_obj_t *field) {
 int ink_textfield_bind_short(lv_obj_t *field, const ink_ui_page_spec_t *page,
                              ink_ui_field_spec_t *spec, const ink_ui_action_spec_t *focus_action) {
     field_t *f = lv_obj_get_user_data(field);
-    if (!f || f->session || !page || !spec || !focus_action || spec->secret || f->cfg.ai_hidden ||
-        (f->cfg.type != INK_TEXT_PLAIN && f->cfg.type != INK_TEXT_URL)) return -1;
+    if (!f || f->session || !page || !spec || !focus_action) return -1;
+    bool password = f->cfg.type == INK_TEXT_PASSWORD && spec->secret && f->cfg.ai_hidden;
+    if (!password && (spec->secret || f->cfg.ai_hidden ||
+        (f->cfg.type != INK_TEXT_PLAIN && f->cfg.type != INK_TEXT_URL))) return -1;
     f->page = page; f->semantic = spec; f->focus_action = focus_action;
     f->owner_epoch = ink_member_epoch();
     spec->value = f->text;

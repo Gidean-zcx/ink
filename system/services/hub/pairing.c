@@ -835,7 +835,7 @@ static void cap_hotspot(ink_call_t *c) {
         /* The Wi-Fi QR payload is handed to the owner's UI only. */
         char result[128];
         snprintf(result, sizeof result, "{\"wifi_qr\":\"WIFI:T:WPA;S:ink-setup;P:%s;;\"}", password);
-        if (c->src == INK_SRC_TOUCH || c->src == INK_SRC_KEY) ink_cap_result(c, result);
+        if (c->src == INK_SRC_TOUCH || c->src == INK_SRC_KEY || c->src == INK_SRC_SYSTEM) ink_cap_result(c, result);
         memset(password, 0, sizeof password);
     } else
         hal_provision_stop();

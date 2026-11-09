@@ -196,6 +196,7 @@ add_library(ink_system STATIC
   system/services/update/update_service.c
   system/ui/shell/update_card.c
   system/ui/shell/power_menu.c
+  system/ui/shell/boot_flow.c
   system/ui/shell/off_picture.c
   system/services/time/time_caps.c
   system/services/notify/notify_service.c
@@ -553,6 +554,10 @@ add_test(NAME ui-input-host
     --script ${CMAKE_SOURCE_DIR}/tests/ui_input_host.script --budget ${CMAKE_SOURCE_DIR}/tests/ui_scene.budget.json
     --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT} --out ${CMAKE_BINARY_DIR}/test-out/ui-input-host --quiet --no-random-outages)
 ink_sim_executable(sim-ui-cards tests/ui_cards.c)
+ink_sim_executable(sim-boot-flow tests/boot_flow.c)
+target_link_libraries(sim-boot-flow PRIVATE ink_apps ink_system)
+add_test(NAME boot-flow COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/boot_flow_check.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(boot-flow PROPERTIES TIMEOUT 200)
 target_link_libraries(sim-ui-cards PRIVATE ink_apps ink_system)
 add_test(NAME ui-cards
   COMMAND sim-ui-cards --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
