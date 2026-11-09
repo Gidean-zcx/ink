@@ -58,6 +58,7 @@ suites = {
     'activity': ('sim-media', [], '200s'),
     'upgrade_crash': ('sim-media', [], '20s'),
     'removal': ('sim-media', ['removal_files.c'], '25s'),
+    'thumb_wiring': ('sim-media', ['thumb_wiring_boundary.c'], '60s'),
 }
 
 def compile_suite(name):

@@ -30,6 +30,7 @@ void ink_image_dither(ink_image_t *image);
  * Key is caller's object ID + content version, independent of file paths. */
 ink_thumb_cache_t *ink_thumb_cache_create(void);
 void ink_thumb_cache_destroy(ink_thumb_cache_t *cache);
+void ink_thumb_cache_remove(ink_thumb_cache_t *cache, uint64_t object);
 /* Borrowed result, valid until the next cache call. Fixed edge, no upscaling.
  * Hits may omit data; hits do not change FIFO order. A new version invalidates
  * the old entry even if decoding fails. Caller must not free/modify the result. */

@@ -101,11 +101,18 @@ static struct {
     int h_index;
     bool index_seen;
     uint8_t index_card[16];
+    ink_thumb_cache_t *thumbs;
+    uint32_t thumb_epoch;
     ink_exec_job_t usb_job, refresh_job;
     ink_svc_deadline_t refresh_at;
 } FS INK_PSRAM_BSS;
 
 static int index_edit(const char *from, const char *to);
+static void thumb_clear(void *ctx, const char *id, const ink_args_t *args) {
+    osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
+    ink_thumb_cache_destroy(FS.thumbs); FS.thumbs = NULL;
+    osal_mutex_unlock(FS.edits);
+}
 static const ink_db_def_t INDEX_DEF = {.name = "file.index", .title = "文件编号", .scope = INK_DB_DEVICE, .schema = 1,
     .max_records = INK_FS_INDEX_MAX, .max_bytes = INK_FS_INDEX_MAX * 216u};
 
@@ -1228,6 +1235,7 @@ int ink_file_service_init(void) {
     FS.h_usb = ink_state_define(&ST_USB);
     FS.h_index = ink_state_define(&ST_INDEX);
     if (ink_db_register(&INDEX_DEF)) return -1;
+    if (ink_cap_subscribe("member.changed", thumb_clear, NULL, INK_EXEC_BG)) return -1;
     ink_state_set_str(FS.h_index, "unavailable");
     ink_state_set_str(FS.h_mode, "normal");
     ink_state_set_bool(FS.h_card, hal_fs_card_present());
@@ -1415,6 +1423,7 @@ static int index_open(uint8_t card[16], ink_db_t **db) {
     if (n != 16 || r || closed || (size >= 0 && size != 16)) return INK_FS_ERR_IO;
     if (size < 0 && hal_fs_rename(INDEX_CARD ".tmp", INDEX_CARD)) return card_error();
     ink_state_set_str(FS.h_index, FS.index_seen && memcmp(card, FS.index_card, 16) ? "changed" : "ready");
+    if (memcmp(card, FS.index_card, 16)) { ink_thumb_cache_destroy(FS.thumbs); FS.thumbs = NULL; }
     memcpy(FS.index_card, card, 16); FS.index_seen = true;
     *db = ink_db_open(&INDEX_DEF, NULL);
     return *db ? 0 : INK_FS_ERR_IO;
@@ -1444,6 +1453,7 @@ static int index_edit(const char *from, const char *to) {
             if (snprintf(path, sizeof path, "%s%s", to, e.path + strlen(from)) >= (int)sizeof path) { r = INK_FS_ERR_PATH; break; }
             memcpy(e.path, path, strlen(path) + 1);
         }
+        if (!to) ink_thumb_cache_remove(FS.thumbs, rec.id);
         r = index_save(db, rec.id, to ? &e : NULL, NULL);
     }
     ink_db_close(db);
@@ -1495,10 +1505,9 @@ static int index_scan(const file_context_t *c, ink_db_t *db, const uint8_t card[
     return r;
 }
 
-int fs_index_for(const file_context_t *c, const char *root, ink_fs_type_t type, uint32_t *cursor, ink_fs_entry_t *out) {
-    osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
+static int index_query(const file_context_t *c, const char *root, ink_fs_type_t type, uint32_t *cursor, ink_fs_entry_t *out) {
     int r = ink_fs_card_hold();
-    if (r) { osal_mutex_unlock(FS.edits); return r; }
+    if (r) return r;
     uint8_t card[16]; ink_db_t *db = NULL; char phys[PHYS_MAX] = "";
     r = FS.job_active ? INK_FS_ERR_BUSY : root ? resolve_for(c, root, false, phys, sizeof phys) : 0;
     if (!r && root && strncmp(phys, "/content", 8)) r = INK_FS_ERR_DENIED;
@@ -1524,8 +1533,46 @@ int fs_index_for(const file_context_t *c, const char *root, ink_fs_type_t type, 
         out->id = rec.id; out->size = st.size; *cursor = rec.id;
         break;
     }
-    ink_db_close(db); ink_fs_card_release(); osal_mutex_unlock(FS.edits);
+    ink_db_close(db); ink_fs_card_release();
     return r ? r : more;
+}
+int fs_index_for(const file_context_t *c, const char *root, ink_fs_type_t type, uint32_t *cursor, ink_fs_entry_t *out) {
+    osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
+    int r = index_query(c, root, type, cursor, out);
+    osal_mutex_unlock(FS.edits); return r;
+}
+
+int fs_thumb_for(const file_context_t *c, uint32_t id, ink_image_t *out) {
+    *out = (ink_image_t){0};
+    osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
+    ink_fs_entry_t e; int r = index_query(c, NULL, INK_FS_ANY, &id, &e);
+    r = r == 1 ? 0 : r ? r : INK_FS_ERR_NOT_FOUND;
+    int held = ink_fs_card_hold(); char phys[PHYS_MAX];
+    if (!r) r = held ? held : resolve_for(c, e.path, false, phys, sizeof phys);
+    uint32_t epoch = ink_member_epoch();
+    if (r || FS.thumb_epoch != epoch) { ink_thumb_cache_destroy(FS.thumbs); FS.thumbs = NULL; }
+    FS.thumb_epoch = epoch;
+    int64_t stamp = r ? -1 : hal_fs_mtime(phys);
+    if (!r && stamp < 0) r = INK_FS_ERR_IO;
+    if (!r && !FS.thumbs) FS.thumbs = ink_thumb_cache_create();
+    if (!r && !FS.thumbs) r = INK_FS_ERR_IO;
+    ink_image_t im = {0};
+    uint64_t version = (uint64_t)stamp ^ ((uint64_t)(r ? 0 : e.size) * UINT64_C(0x9e3779b97f4a7c15));
+    if (!r && ink_image_thumbnail(FS.thumbs, id, version, NULL, 0, &im)) {
+        void *data = e.size > 0 && e.size <= INK_IMAGE_MAX_INPUT ? osal_malloc((size_t)e.size, OSAL_MEM_EXTERNAL) : NULL;
+        hal_file_t *f = data ? hal_fs_open(phys, HAL_O_READ) : NULL;
+        int64_t n = f ? hal_fs_read(f, data, (size_t)e.size) : -1;
+        int closed = f ? hal_fs_close(f) : -1;
+        if (n != e.size || closed || ink_image_thumbnail(FS.thumbs, id, version, data, (size_t)e.size, &im)) r = INK_FS_ERR_IO;
+        osal_free(data);
+    }
+    if (!r) {
+        *out = im; out->pixels = osal_malloc((size_t)im.width * im.height, OSAL_MEM_EXTERNAL);
+        if (out->pixels) memcpy(out->pixels, im.pixels, (size_t)im.width * im.height);
+        else { *out = (ink_image_t){0}; r = INK_FS_ERR_IO; }
+    }
+    if (!held) ink_fs_card_release();
+    osal_mutex_unlock(FS.edits); return r;
 }
 
 int ink_fs_index(const char *path, ink_fs_type_t type, uint32_t *cursor, ink_fs_entry_t *out) {

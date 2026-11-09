@@ -90,6 +90,10 @@ void ink_thumb_cache_destroy(ink_thumb_cache_t *cache) {
     while (cache->count) drop(cache, 0);
     osal_free(cache);
 }
+void ink_thumb_cache_remove(ink_thumb_cache_t *cache, uint64_t object) {
+    if (cache) for (unsigned i = 0; i < cache->count; i++)
+        if (cache->entries[i].object == object) { drop(cache, i); break; }
+}
 
 int ink_image_thumbnail(ink_thumb_cache_t *cache, uint64_t object, uint64_t version,
                         const void *data, size_t size, ink_image_t *out) {

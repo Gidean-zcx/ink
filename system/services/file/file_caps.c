@@ -357,6 +357,24 @@ static void cap_index_query(ink_call_t *c, bool lookup) {
 static void cap_index(ink_call_t *c) { cap_index_query(c, false); }
 static void cap_lookup(ink_call_t *c) { cap_index_query(c, true); }
 
+static void cap_thumb(ink_call_t *c) {
+    file_context_t context;
+    if (!fs_context_for_call(&context, c)) return;
+    int64_t id = 0; ink_image_t im;
+    if (!ink_args_get_int(&c->args, "id", &id) || id < 1 || id > UINT32_MAX) { refuse(c, INK_FS_ERR_PATH); return; }
+    int r = fs_thumb_for(&context, (uint32_t)id, &im);
+    if (r) { refuse(c, r); return; }
+    size_t count = (size_t)im.width * im.height;
+    char *out = osal_malloc(count + 96, OSAL_MEM_EXTERNAL);
+    if (!out) refuse(c, INK_FS_ERR_IO);
+    else {
+        int n = snprintf(out, 96, "{\"id\":%u,\"width\":%u,\"height\":%u,\"gray4\":\"", (uint32_t)id, im.width, im.height);
+        for (size_t i = 0; i < count; i++) out[n + i] = "0123456789abcdef"[im.pixels[i] / 17];
+        memcpy(out + n + count, "\"}", 3); ink_cap_result(c, out);
+    }
+    osal_free(out); ink_image_free(&im);
+}
+
 static const ink_cap_t FILE_CAPS[] = {
     {.id = "file.index", .title = "按类型分页查询目录树的文件索引", .input = "{\"type\":\"object\",\"properties\":{" PATH_ARG("path") ",\"type\":{\"type\":\"string\",\"enum\":[\"all\",\"image\",\"audio\",\"text\",\"other\"]},\"cursor\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":4294967295},\"limit\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":10}},\"required\":[\"path\"]}", .output = "{\"type\":\"object\"}",
      .effect = INK_FX_READ, .child_ok = true, .permission = "file", .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_index},
@@ -400,6 +418,8 @@ static const ink_cap_t FILE_CAPS[] = {
     {.id = "usb.mount", .title = "把存储卡借给电脑当 U 盘", .effect = INK_FX_SYSTEM, .ask_by_hand = true, .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_usb_mount},
     {.id = "usb.unmount", .title = "从电脑收回存储卡", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_usb_unmount},
     {.id = "usb.changed", .title = "电脑连上、断开或 U 盘状态变了", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},
+    {.id = "file.thumb", .title = "按文件编号读取缩略图（gray4 按行排列，每个十六进制字符表示一个灰阶）", .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}},\"required\":[\"id\"]}", .output = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"width\":{\"type\":\"integer\"},\"height\":{\"type\":\"integer\"},\"gray4\":{\"type\":\"string\"}}}",
+     .effect = INK_FX_READ, .child_ok = true, .permission = "file", .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_MEDIA, .run = cap_thumb},
 };
 
 int ink_transfer_caps_init(void);
