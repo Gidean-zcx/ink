@@ -8,7 +8,7 @@
 | --- | --- | --- | --- |
 | 1 | 【实测】通过 | 原 90 条用例不变；简拼首选 4/16 → 12/16，前五 10/16 → 16/16；全拼 71/73、73/73 不变 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2 -R '^ime-lexicon$'` |
 | 2 | 【实测】通过 | 单次选择提升；全拼/简拼及前缀隔离；成人与儿童各自记忆；新进程重启保留；密码不学；513 个合成键验证 512 条限额及最近使用淘汰；AI 读取被拒绝 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2 -R '^ime-learning$'` |
-| 3 | 【实测】普通全量通过；内存检查进行中 | 普通全量 289/289，无跳过；词库 969,866 字节 | 见下方全量命令 |
+| 3 | 【实测】通过 | 普通全量与 ASan/UBSan 全量均 289/289，无跳过；词库 969,866 字节，两个构建目录逐字节一致 | 见下方全量命令 |
 
 | 原测试集【实测，模拟器】 | 基线首选 | 完成版首选 | 基线前五 | 完成版前五 |
 | --- | --- | --- | --- | --- |
@@ -54,6 +54,8 @@
 - 学习里程碑：【实现】引擎不变，文本服务增 18 / 删 14，合计 32/200 行。计数按拼音前缀和文字的哈希存储，同长度候选按次数优先，单次选择已可超越基础词频；计数封顶避免排序溢出。淘汰使用持久化顺序，不依赖墙钟是否设置或是否倒退。【实测】两个专项 2/2，学习证据在 `build/ime-learning-08f3nbeb/summary.json`。
 - 反向对照：【实测】只将生成器、人工词表和文本服务临时恢复为指定基线版本，保留全部新断言；两个专项均失败，CTest 退出 8。简拼回到 4/16、10/16，学习写入/重启/满额淘汰均有实际断言失败，四阶段都运行完成；证据 `work/reverse-tests.log`、`build/ime-learning-if50nvid/summary.json`。随后逐字节恢复实现，工作区核对无遗留，并完成 `-Werror` 全量构建。
 - 普通全量：【实测】289/289，431.85 秒，无跳过，退出 0；`INK_WERROR=ON`，构建和测试均为 `taskpolicy -c utility`、`-j2`。日志 `work/full-build.log`、`work/full-tests.log`。中枢测试用 `-DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"`，并指定当前检出的 `PYTHONPATH`。
+- 内存检查：【实测】ASan/UBSan 全量 289/289，449.39 秒，无跳过，退出 0；同样 `INK_WERROR=ON`、`-j2`，仅增加 `INK_SANITIZE=ON`。日志 `work/asan-build.log`、`work/asan-tests.log`；`build-asan/Testing/Temporary/LastTest.log` 无 AddressSanitizer 错误或 UBSan 运行时错误。两个构建目录的词库逐字节相同。
+- 最终核对：【实测】基线到 HEAD 仅 9 个相关文件；引擎不变，文本服务增删合计 32/200 行，未改原预算、共享文档或设计稿。`git diff --check`、Markdown 相对链接检查通过；按总规则 §6 对基线到 HEAD 的差异作隐私扫描，0 行匹配，grep 退出 1（无匹配）。仅本地提交，未推送。
 
 先按[总规则](../codex-rules.md) §5 配置（增加上述中枢 Python 参数），再执行：
 
@@ -61,7 +63,7 @@
 taskpolicy -c utility cmake --build build -j2
 PYTHONPATH="$PWD/hub" INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
 taskpolicy -c utility cmake --build build-asan -j2
-PYTHONPATH="$PWD/hub" INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
+PYTHONPATH="$PWD/hub" UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
 ```
 
 ## 架构审视
