@@ -7,7 +7,7 @@ python3 tools/capabilities.py
 python3 tools/capabilities.py --check
 ```
 
-当前共 319 项：可调用能力 286、事件 33；设置 17 项、状态 47 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
+当前共 327 项：可调用能力 294、事件 33；设置 17 项、状态 47 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
 
 风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。
 
@@ -198,7 +198,15 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `reminder.add` | 加提醒（at 本地时间 YYYY-MM-DD HH:MM；repeat: daily weekly monthly yearly lunar_yearly） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s31](#s31) | [system/services/time/time_caps.c](../../system/services/time/time_caps.c) |
 | `reminder.cancel` | 删提醒 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s31](#s31) | [system/services/time/time_caps.c](../../system/services/time/time_caps.c) |
 | `reminder.list` | 我的提醒 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s31](#s31) | [system/services/time/time_caps.c](../../system/services/time/time_caps.c) |
-| `remote.open` | 打开网页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s10](#s10) | [system/apps/remote/remote.c](../../system/apps/remote/remote.c) |
+| `remote.address` | 输入网址 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单；页面 remote | [s10](#s10) | [system/apps/remote/remote.c](../../system/apps/remote/remote.c) |
+| `remote.close` | 关闭网页 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单；页面 remote | [s10](#s10) | [system/apps/remote/remote.c](../../system/apps/remote/remote.c) |
+| `remote.focus` | 输入网页文字 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单；页面 remote | [s10](#s10) | [system/apps/remote/remote.c](../../system/apps/remote/remote.c) |
+| `remote.next` | 网页下一页 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单；页面 remote | [s10](#s10) | [system/apps/remote/remote.c](../../system/apps/remote/remote.c) |
+| `remote.open` | 打开网页 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s10](#s10) | [system/apps/remote/remote.c](../../system/apps/remote/remote.c) |
+| `remote.pointer` | 点按或长按网页 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单；页面 remote | [s10](#s10) | [system/apps/remote/remote.c](../../system/apps/remote/remote.c) |
+| `remote.prev` | 网页上一页 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单；页面 remote | [s10](#s10) | [system/apps/remote/remote.c](../../system/apps/remote/remote.c) |
+| `remote.retry` | 重新打开网页 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单；页面 remote | [s10](#s10) | [system/apps/remote/remote.c](../../system/apps/remote/remote.c) |
+| `remote.submit` | 完成网页输入 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单；页面 remote | [s10](#s10) | [system/apps/remote/remote.c](../../system/apps/remote/remote.c) |
 | `restore.apply` | 按预览覆盖这位成员的资料 | 人、AI | 高 / local_destructive | 人、AI 均确认；已设成人 PIN 时还需 PIN | 成人、儿童（无需白名单） | [s18](#s18) | [system/services/backup/backup_service.c](../../system/services/backup/backup_service.c) |
 | `restore.preview` | 预览恢复这位成员的备份和将被替换的资料 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s18](#s18) | [system/services/backup/backup_service.c](../../system/services/backup/backup_service.c) |
 | `search.focus` | 输入搜索关键词 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s35](#s35) | [system/ui/search.c](../../system/ui/search.c) |

@@ -14,6 +14,7 @@ from ink_hub.data.scope import Authority
 from ink_hub.jobs.queue import JobQueue
 from ink_hub.jobs.runner import Runner
 from ink_hub.models.fake import FakeModel
+from ink_hub.remote.input import handle_input
 from ink_hub.ops.metrics import Metrics
 from ink_hub.speech.fake import FakeASR, FakeTTS
 from ink_hub.voice.flow import run_turn, run_dictation
@@ -28,6 +29,7 @@ class Session:
     frames: list = field(default_factory=list)
     size: int = 0
     seq: int = 0
+    browser: object = None
     ended: asyncio.Event = field(default_factory=asyncio.Event)
 
 
@@ -189,6 +191,14 @@ class Connection:
                 kind, sid, seq, _, _, payload = parse_frame(raw)
                 session = self.sessions.get(sid)
                 if not session or session.epoch != self.epoch:
+                    return
+                if session.cap == "browser.session" and kind == 4 and session.browser is not None:
+                    self.hub.authority.check(self.scope)
+                    if self.hub.authority.role(self.scope) == "child":
+                        await self.end_session(sid)
+                        await self.notify("rt.nav", {"sid": sid, "blocked": True})
+                        return
+                    await handle_input(session.browser, payload)
                     return
                 if kind != 1 or seq != session.seq or session.size + len(payload) > 128 * 1024:
                     await self.end_session(sid)

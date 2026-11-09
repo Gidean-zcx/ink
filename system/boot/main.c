@@ -121,4 +121,6 @@ void ink_main(void) {
     if (ink_backup_pages_init() != 0) osal_panic("backup pages failed to start");
     extern int ink_ai_pages_init(void);
     if (ink_ai_pages_init() != 0) osal_panic("AI pages failed to start");
+    extern int ink_remote_app_init(void);
+    if (ink_remote_app_init() != 0) osal_panic("remote app failed to start");
 }

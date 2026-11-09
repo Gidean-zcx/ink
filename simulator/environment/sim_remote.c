@@ -152,6 +152,7 @@ static void push(rs_t *s, uint64_t t) {
         for (int r = y; r < y + h && last_y < y; r++)
             if (memcmp(s->now + (size_t)r * (size_t)s->w, s->shown + (size_t)r * (size_t)s->w, (size_t)s->w)) last_y = y;
     }
+    if (last_y < 0) { sim_host_free(f); s->dirty = false; return; }
     size_t total = 0;
     for (int b = 0; b < bands && last_y >= 0; b++) {
         int y = b * BAND, h = y + BAND > s->h ? s->h - y : BAND, x0 = s->w, x1 = -1;
@@ -214,8 +215,10 @@ static rs_t *find(struct hal_ws *ws, int sid) {
 
 bool sim_remote_open(struct hal_ws *ws, uint64_t t, int sid, int w, int h) {
     if (find(ws, sid)) return true;
+    int page = 0;
     for (int i = 0; i < 2; i++)
-        if (RS[i].used && RS[i].ws != ws) { /* a new connection: the hub has forgotten the old one's sessions */
+        if (RS[i].used && RS[i].ws != ws) { /* Resume the same session; its new picture starts from white. */
+            if (RS[i].sid == sid && RS[i].w == w && RS[i].h == h) page = RS[i].page;
             sim_host_free(RS[i].shown);
             sim_host_free(RS[i].now);
             RS[i].used = false;
@@ -228,7 +231,7 @@ bool sim_remote_open(struct hal_ws *ws, uint64_t t, int sid, int w, int h) {
             s->now = sim_host_malloc((size_t)s->w * (size_t)s->h);
             if (!s->shown || !s->now) abort();
             memset(s->shown, 0xFF, (size_t)s->w * (size_t)s->h); /* the device starts white */
-            navigate(s, t, 0, RENDER_FIRST_MS);
+            navigate(s, t, page, RENDER_FIRST_MS);
             sim_metric_add("hub.remote.sessions", 1);
             return true;
         }
@@ -271,6 +274,16 @@ bool sim_remote_frame(struct hal_ws *ws, uint64_t t, const uint8_t *d, size_t le
                 navigate(s, t, (s->page + (i ? 1 : PAGES - 1)) % PAGES, RENDER_MS);
             }
         }
+    }    else if (d[0] == 4 && len == 12 && d[10] == 2 && d[11] <= 1) {
+        sim_metric_add("hub.remote.pages", 1);
+        navigate(s, t, (s->page + (d[11] ? 1 : PAGES - 1)) % PAGES, RENDER_MS);
+    } else if (d[0] == 4 && len == 15 && d[10] == 3) {
+        sim_metric_add("hub.remote.long_presses", 1);
+    } else if (d[0] == 4 && len >= 11 && d[10] == 4) {
+        sim_metric_add("hub.remote.submits", 1);
+        sim_metric_sample("hub.remote.submit_bytes", (double)(len - 11));
+        navigate(s, t, s->page, RENDER_MS);
     }
+
     return true;
 }
