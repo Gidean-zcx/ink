@@ -18,7 +18,6 @@ static struct {
     ink_ui_field_spec_t fields[5];
     ink_ui_action_spec_t actions[4];
 } F INK_PSRAM_BSS;
-static void draw(void);
 static void create(lv_obj_t *screen, void *arg);
 static void destroy(void) { if (F.timer) lv_timer_delete(F.timer); F.timer = NULL; F.screen = NULL; F.generation++; }
 static int snapshot(char *out, size_t cap) { return ink_ui_semantics_snapshot(&F.model, out, cap); }

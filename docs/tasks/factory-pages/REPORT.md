@@ -65,3 +65,16 @@ FactoryReset 对照 51.608/255，FactoryDone 27.647/255，超过 12：使用现�
 - 【实测】内部 RAM 最低余量：清空前 45,176 字节，完成页 47,224 字节，均高于 32,768；预算未改。ASan 配置仅在总规则命令基础上改构建目录并加 `-DINK_SANITIZE=ON`。
 - 【实测】最终画板对照为 51.608／27.647；PNG、快照 JSON 和指标在 `build/test-out/factory-pages-sim-factory-pages/clear/`，对照图与分数在 `build/factory-compare/`。设计稿和构建产物未提交。
 - 【实测】`git diff --check`、新增文件及报告引用路径核对通过。对基线到 HEAD 的差异按总规则隐私表达式扫描：0 匹配（grep 退出 1）。`git diff --stat` 仅任务相关的 16 个文件，共享文档未改。
+
+## 复查后的修复
+
+复查起点：`0a79b043`；主会话复查仅有 FP-H1（高）。以下为本轮记录，前文保留上一轮的实测结果。
+
+- 【实测】修前重跑 `backup-restore-recovery`，稳定在 flash-45 后的 `flash-verify` 失败；证据：`build/factory-review-baseline.log`。
+- 【实测】临时编译诊断副本，不改产品源码和断点表：第 45 次 Flash 操作是 `backup.journal.tmp` → `backup.journal` 重命名中的 384 字节 program，40% 时断电；LittleFS 保留上一份 `PH_CHECK/next=5` 日志。重启在 `next=10` 校验 `memo.notes` 时，集合尚未注册，`current_hash` 返回全零，与预览时空集合的有效哈希不同，于是报“预览后资料有改动”。证据：`build/factory-review-trace/flash-cut.log`、`flash-verify.log`。
+- 【实现】根因是原有启动顺序：`ink_backup_start()` 立即派发断电恢复，而 `ink_memo_init()` 等集合注册在其后。清空标记多出一字节会改变 LittleFS 布局及后续物理操作分布；断点计数在预览后重新设为 45，并非把前面 wipe 的写入累加进去。
+- 【实现】只在 `system/boot/main.c` 把既有 `ink_backup_start()` 移到所有应用初始化之后；不放松成员、预览哈希、版本或确认校验。删掉本任务页面中无用的 `draw` 前置声明，给这一行移动腾出预算；本轮没有新增机制。任务累计产品代码新增 200 行、删除 18 行。
+- 【实测】普通构建的恢复全部既有断点（1、8、20、45、75、120）通过；页面测试及三个原来跳过的中枢测试通过，共 6/6（含能力导出夹具）。命令：`INK_KEEP_EVIDENCE=1 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$PWD/hub" taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^(backup-restore-recovery|factory-pages|hub-contract|hub-json-crosscheck|hub-simulator-e2e)$' --output-on-failure -j2`；日志：`build/factory-review-targeted.log`。
+- 【实测】新增反向验证脚本只编译启动入口的副本：撤回本次移动后，原断点表在 flash-45 如期失败；用旧代码制造的同一份断电镜像交给修复后的代码，恢复完成，原有逐项校验全部通过。命令：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/factory_pages_recovery_reverse.py --build build`；脚本退出 0，内部失败用例退出 1；证据：`build/factory-review-reverse.log`、`build/factory-review-reverse/`，含断电镜像 SHA-256。产品源码哈希不变，已有测试、断点表及断言均未改。
+- 【实测】原来三个跳过项缺的是所选 Python 环境中的 `aiohttp`、`PyYAML`、`pytest`、`pytest-asyncio`；依赖目录已有完整环境，未安装或升级依赖。两套 CMake 均增设 `-DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"`，测试设 `PYTHONPATH="$PWD/hub"`，确保导入本检出的中枢代码。已核对 Python 3.11.15、aiohttp 3.12.15、PyYAML 6.0.3、pytest 8.4.2、pytest-asyncio 1.2.0，与锁定版本一致。
+- 普通、ASan 全量及 ASan 全断点结果待填。能力表文档同步检查按用户本轮明确要求不处理；没有改生成文档、跳过规则或预算。
