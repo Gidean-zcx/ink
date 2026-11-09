@@ -98,4 +98,6 @@ void ink_main(void) {
     ink_power_battery_policy_start();
     ink_update_boot_check();
     ink_probe_mark("system-started");
+    extern int ink_sms_init(void);
+    if (ink_sms_init() != 0) osal_panic("SMS failed to start");
 }

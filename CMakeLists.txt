@@ -1254,3 +1254,8 @@ ink_sim_executable(sim-contacts tests/contacts/contacts.c)
 target_link_libraries(sim-contacts PRIVATE ink_apps ink_system)
 add_test(NAME contacts COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/contacts/run.py
   $<TARGET_FILE:sim-contacts> ${CMAKE_SOURCE_DIR} ${INK_ASSETS_DIR} ${INK_TEST_CONTENT} ${CMAKE_BINARY_DIR}/test-out/contacts)
+target_sources(ink_system PRIVATE system/apps/sms/sms.c)
+ink_sim_executable(sim-sms tests/sms/sms.c)
+target_link_libraries(sim-sms PRIVATE ink_apps ink_system)
+add_test(NAME sms COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/sms/run.py
+  $<TARGET_FILE:sim-sms> ${CMAKE_SOURCE_DIR} ${INK_ASSETS_DIR} ${INK_TEST_CONTENT} ${CMAKE_BINARY_DIR}/test-out/sms)

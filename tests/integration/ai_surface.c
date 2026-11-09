@@ -64,6 +64,8 @@ static const struct {
     {"file_picker.prev", NULL}, {"file_picker.next", NULL}, {"file_picker.cancel", NULL}, {"file_picker.select", "id"},
     {"contacts.put", "name,number"}, {"contacts.delete", "id,if_revision,name,number"}, {"contacts.select", "id"}, {"contacts.edit", ""},
     {"contacts.next", NULL}, {"contacts.prev", NULL}, {"contacts.name", NULL}, {"contacts.number", NULL},
+    {"sms.send", "to,text"}, {"sms.thread", "peer"}, {"sms.compose", NULL}, {"sms.recipient", "id"},
+    {"sms.text", NULL}, {"sms.long", NULL}, {"sms.prev", NULL}, {"sms.next", NULL},
     {NULL, NULL},
 };
 
