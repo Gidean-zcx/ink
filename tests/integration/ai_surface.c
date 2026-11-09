@@ -53,6 +53,7 @@ static const struct {
     {"bt.forget", "addr"}, {"wifi.scan", NULL}, {"wifi.list", NULL}, {"wifi.connect", "ssid"}, {"wifi.forget", "ssid"}, {"member.list", NULL},
     {"member.add", "id"}, {"member.remove", "id"}, {"camera.capture", NULL}, {"message.send", "to,text"}, {"message.list", NULL},
     {"call.dial", "number"}, {"call.answer", NULL}, {"call.hangup", NULL}, {"remote.open", ""}, {"reader.list_books", NULL},
+    {"call.mute", "on"}, {"call.dtmf", "key"}, {"call.route", "headset"}, {"call.record", NULL}, {"phone.keypad", NULL},
     {"reader.open_book", "title"}, {"reader.next_page", NULL}, {"reader.prev_page", NULL}, {"reader.goto_page", "page"}, {"reader.read_page", NULL},
     {"activity.list", ""}, {"activity.clear", "member"}, {"update.status", NULL}, {"update.check", NULL}, {"update.download", NULL},
     {"text.voice_start", ""}, {"text.voice_finish", ""}, {"text.voice_cancel", ""},

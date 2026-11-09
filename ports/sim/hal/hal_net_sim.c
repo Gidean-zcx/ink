@@ -821,7 +821,7 @@ static hal_at_result_t at_run(const char *cmd, const char *payload, char *resp, 
         }
         break;
     case K_CHUP: call_end(); break;
-    case K_CMUT_Q: snprintf(info, sizeof info, "+CMUT: %d", MS.muted); break;
+    case K_CMUT_Q: sim_copy_name(info, sizeof info, MS.muted ? "+CMUT: 1" : "+CMUT: 0"); break;
     case K_CMUT:
         if (MS.call != 1) r = HAL_AT_ERROR;
         else MS.muted = cmd[8] == '1';
