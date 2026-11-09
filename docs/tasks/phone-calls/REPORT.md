@@ -2,7 +2,7 @@
 
 基线：`f0b0c539f3f8a30bca03f663484287d65c76de33`。验收 1–4 通过，5 部分通过；仅限模拟器 AT 模型。
 
-本轮复修（2026-11-09）：PC-R1-01（高）、PC-R1-02（中）已修复并通过定向回归；修复前新增回归恰好失败两项。全量和内存检查正在重跑；下文 T3、T4 暂为上轮记录，待补本轮结果。
+本轮复修（2026-11-09）：复查的严重 0、高 1、中 1 中，PC-R1-01（高）、PC-R1-02（中）均已修复；回归和撤掉修复的反向对照有效。常规及 ASan/UBSan 全量各 224/225 通过，仍仅共享能力文档检查失败，原因见“没做到的”。
 
 ## 验收表
 
@@ -14,27 +14,29 @@
 | 2 | 【实测】通过 | 真实联系人编辑页点“选择这个号码”，`contacts.select` 返回后填入拨号盘，再点拨出 | T1 |
 | 3 | 【实测】通过，含反例 | 去掉读取时的成员绑定，孩子记录数断言失败；恢复后通过 | T2 |
 | 4 | 【实测】通过 | 三页快照能放进 3072 字节 AI 上下文；按钮与 AI 同用 `call.dial` / `call.hangup`；AI 拨号先待确认，AI 不能自己确认 | T1 |
-| 5 | 【实测】部分通过 | 常规及 ASan/UBSan 各 224/225 通过，无跳过；唯一失败为共享生成能力表未更新。新操作已注册且源码/运行时一致；产品改动 276 行 | T3、T4、T6 |
+| 5 | 【实测】部分通过 | 常规及 ASan/UBSan 各 224/225 通过，无跳过；唯一失败为共享生成能力表未更新。新操作已注册且源码/运行时一致；产品改动 288 行 | T3、T4、T6 |
 
 T1：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^(phone-calls|contacts)$' --output-on-failure -j2`，本轮 2/2 通过。电话五阶段分别为 184、33、14、20、20 个断言，共 271 个；证据 `build/phone-r1-focused.log` 和 `build/test-out/phone-calls/*/metrics.json`。
 
-T2：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/phone_calls/reverse.py build`。反例把唯一一处 `ink_db_open_cached_member(&HISTORY, P.member)` 改为固定读大人；3 个隔离断言失败。脚本恢复源码、重新构建后全五阶段通过。证据：`build/phone-reverse-summary.log`、`build/phone-reverse.log`、`build/phone-restored.log`。
+T2：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/phone_calls/reverse.py build`，本轮退出 0。反例把唯一一处 `ink_db_open_cached_member(&HISTORY, P.member)` 改为固定读大人，恰好 3 个隔离断言失败；脚本恢复源码、重新构建后全五阶段 271 个断言通过，产品源码与提交完全一致。证据：`build/phone-r1-isolation-reverse.log`、`build/phone-reverse.log`、`build/phone-restored.log`。
 
 构建使用任务书第 5 节的全部参数，两套构建均额外指定现成的 `-DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"`；ASan 仅再加 `-DINK_SANITIZE=ON`。两套 `taskpolicy -c utility cmake --build <目录> -j2` 均退出 0。
 
-T3：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`，退出 8，160.36 秒；证据 `build/ctest-full-final.log`。
+T3：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`，本轮退出 8，224/225 通过，无跳过，134.08 秒；唯一失败为 `capability-table-doc`。构建退出 0；证据 `build/phone-r1-build.log`、`build/phone-r1-ctest-full.log`。
 
-T4：同 T3，仅目录换为 `build-asan`，退出 8，391.93 秒；证据 `build-asan/ctest-full.log`。无内存或未定义行为错误。电话五阶段共 251 个断言通过，两套测试内部 RAM 最低余量均为 **47,840 字节**，门槛 **32,768 字节**，分配失败为 0；预算未放宽。
+T4：同 T3，仅目录换为 `build-asan`，本轮退出 8，224/225 通过，无跳过，245.14 秒；唯一失败仍为 `capability-table-doc`。构建退出 0；证据 `build-asan/phone-r1-build.log`、`build-asan/phone-r1-ctest-full.log`。无内存或未定义行为错误。电话五阶段共 271 个断言通过，两套测试内部 RAM 最低余量均为 **47,840 字节**，门槛 **32,768 字节**，内部、外部及 DMA 分配失败均为 0；预算未放宽。
 
-T5：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.py --build build --design "$INK_DESIGN" --out build/test-out/phone-calls --scenes Phone PhoneRecents PhoneCall --reuse`。证据为该目录的 `scores.json`、三张拼图及各页面的 `snap-scene.png`；保留证据，未提交设计稿或产物。
+T5：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.py --build build --design "$INK_DESIGN" --out build/test-out/phone-calls --scenes Phone PhoneRecents PhoneCall --reuse`，本轮退出 0，分数与上轮一致；已逐张打开三页实际截图核对。证据为 `build/phone-r1-ui-compare.log`、该目录的 `scores.json`、三张拼图及各页面的 `snap-scene.png`；保留证据，未提交设计稿或产物。
 
-T6：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/capabilities.py --output build/phone-capabilities.md --runtime build/test-out/capability-table/capability-inventory.json`，退出 0；`git diff f0b0c539..HEAD --numstat` 计数产品改动。
+T6：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/capabilities.py --output build/phone-capabilities.md --runtime build/test-out/capability-table/capability-inventory.json`，本轮退出 0，285 个定义通过，运行时匹配 224 项能力/事件及 16 项设置；证据 `build/phone-r1-capabilities.log`。`git diff f0b0c539..HEAD --numstat` 计数产品改动。
 
 T7：【实测】在复修前版本 `15ac0ca5` 的产品代码上，仅补充本轮回归并构建 `sim-phone-calls`，运行 `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/phone_calls/run.py build/sim-phone-calls . build/assets build/test-content build/test-out/phone-r1-before`，退出 1；写入阶段 180 个断言通过、恰好 PC-R1-01 和 PC-R1-02 两项失败，`test.finished=1`。保留相同测试，加入修复后 T1 通过。证据 `build/phone-r1-before.log` 和 `build/test-out/phone-r1-before/write/metrics.json`；没有放宽断言或预算。
 
+修复后再做一次撤回对照：用 `git show 15ac0ca5:system/apps/phone/phone.c` 导出原实现到 `build/test-out/phone-r1-reversed-copy/phone.c`，让当前测试副本引用它；复用 `build/CMakeFiles/sim-phone-calls.dir/{flags.make,link.txt}` 编译、链接，构建退出 0。以该副本运行同一 `tests/phone_calls/run.py`，退出 1，仍恰好上述两项失败、180 个断言通过；未修改工作区源码。证据为该目录的 `build.log`、`negative.log` 和 `run/write/metrics.json`。
+
 ## 没做到的
 
-- 全量测试仍未全绿：共享生成能力表按任务规则留给主会话更新，`capability-table-doc` 因此失败；未跳过或放宽该检查。
+- 全量测试仍未全绿：`docs/system/capabilities.md` 仍写 213 项，源码及运行时为 224 项；总规则第 7 节明确禁止本分支修改共享生成能力表，须留给主会话合并后更新，因此保留 `capability-table-doc` 失败。未跳过或放宽检查；两项编号问题均已修复，无未处理的严重或高问题。
 - 通话静音、通话键盘、耳机通话路由和通话录音没有可用接口；页面如实说明，未伪造操作。
 - 通话页没有持续更新的分钟数；已结束记录保存按单调时钟计算的整分钟数。满额、通话中断电等超出验收的情况未另加机制。
 - 本机仅验证 macOS；没有可用 Linux 执行环境，不声称 Linux 已实测。
@@ -75,8 +77,8 @@ T7：【实测】在复修前版本 `15ac0ca5` 的产品代码上，仅补充本
 
 ## 规模与边界
 
-- 当前产品改动 **274 行新增、2 行替换删除，共 276 行**（含 CMake 接线及空行），低于 350 行。超过 100 行的原因是三页、F1/F2/F4 接入、事件归属与落盘缺一不可；更小的纯占位页不能满足验收，没有加入通用框架。
+- 当前相对基线的产品改动 **286 行新增、2 行替换删除，共 288 行**（含 CMake 接线及空行），低于 350 行。本轮只改电话模块 **16 行新增、4 行删除**。累计超过 100 行的原因是三页、F1/F2/F4 接入、事件归属与落盘缺一不可；更小的纯占位页不能满足验收，没有加入通用框架。
 - 服务增量仅为：通信服务发布拨出/接通事件、模拟蜂窝 HAL 识别外呼接通的 `+CLCC`、联系人选择成功事件与页面入口。未改模组固件或配置路径。
 - 【实现】页面只经能力总线执行通信，记录只经成员数据接口；BG 订阅负责落盘，UI 订阅负责页面。无模拟器头文件进入产品代码。
-- 【实测】`git diff --check` 通过；基线差异共 14 个文件，无其他任务文件、共享需求/决策/生成文档或构建产物。任务书第 6 节的基线至 HEAD 隐私扫描无匹配，`grep` 退出 1。
+- 【实测】`git diff --check` 通过。本轮仅改电话模块、电话测试、报告三份文件；相对任务基线为 14 份开发文件加既有复查报告，无其他任务文件、共享需求/决策/生成文档或构建产物。按总规则第 6 节扫描基线至 HEAD，原始扫描退出 0，唯一命中为既有 `REVIEW.md:98` 的扫描表达式本身，人工核对无真实本机路径或 MAC；本轮相对 `15ac0ca5` 的改动无匹配（退出 1）。
 - 工作仅本地提交，没有推送、开 PR、访问设备、真实通信或调用付费接口。
