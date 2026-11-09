@@ -77,6 +77,6 @@ $INK_DEPS/build-deps/pyenv/bin/ctest --test-dir build --output-on-failure -j3
 - 只做验收里列的情况。想到的其它极端情况写进报告的“没做到的”，不要去做。
 - 同一个测试修了 3 次还不过：停下，写清楚卡在哪，照样交 `TASK_COMPLETE`。
 - 每个任务大约一小时的量。
-- 现在同时有三个任务在跑：构建最多 `-j3`，`ctest` 最多 `-j2`，命令前加 `taskpolicy -c utility`。
+- 现在同时有六七个任务在跑：构建最多 `-j2`，`ctest` 最多 `-j2`，命令前加 `taskpolicy -c utility`。
 - 这些共享文档不改，合并时由主会话统一改：docs/tasks/backlog.md、docs/system/ui-dependencies.md、生成的 docs/system/capabilities.md、docs/requirements.md、docs/ideas.md、docs/decisions/。要改的写进报告的“要改的文档”一节。
 - 不碰设备，不读 ink-hw。
