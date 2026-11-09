@@ -20,7 +20,7 @@ for phase in (a.phase,) if a.phase else ("limit", "restart", "blocked", "control
     image = work / ("user.img" if phase in ("limit", "restart") else f"{phase}.img")
     result = subprocess.run([str(build / "sim-kid-2"), "--profile", str(ROOT / "simulator/profiles/metalio-plus.json"),
         "--script", str(ROOT / "tests/kid_2.script"), "--assets", str(build / "assets"), "--content", str(build / "test-content"),
-        "--flash-image", str(image), "--sd-dir", str(work / "sd"), "--out", str(out), "--quiet", "--no-random-outages",
+        "--wall-start", "1794268800", "--flash-image", str(image), "--sd-dir", str(work / "sd"), "--out", str(out), "--quiet", "--no-random-outages",
         "--budget", str(ROOT / "tests/ui_scene.budget.json")], env={**os.environ, "INK_KID2_PHASE": phase}, capture_output=True, text=True, timeout=150)
     (work / f"{phase}.log").write_text(result.stdout + result.stderr)
     data = json.loads((out / "metrics.json").read_text()) if (out / "metrics.json").exists() else {}

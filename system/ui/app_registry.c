@@ -329,6 +329,7 @@ int ink_app_open(const char *id, void *from, void *arg) {
     app_t *a = find(id);
     if (!a || !a->def->entry) return -1;
     if (!ink_app_visible(a->def)) { ink_shell_kid_limit(id); return -2; }
+    ink_shell_kid_close();
     if (ink_ui_bring_up(id)) return 0;
     if (ink_ui_full()) ink_ui_home();
     if (from) ink_ui_open(from, a->def->entry, arg);

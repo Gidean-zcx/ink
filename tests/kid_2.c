@@ -5,6 +5,7 @@
 #undef ink_main
 #include "integration/whole_product.h"
 #include "ink/sys/appreg.h"
+#include "ink/ui_shell.h"
 #include "ink/sys/audio.h"
 #include "ink/sys/notify.h"
 #include "ink/sys/storage.h"
@@ -69,25 +70,35 @@ static void limit(void) {
     setup(); unsigned token = request("member.time_set", "{\"minutes\":2}");
     approve(token, "90817263", INK_PIN_WRONG); counters(); CHECK(minutes == 0, "wrong PIN leaves the daily allowance unchanged");
     approve(token, "24681357", INK_PIN_OK); counters(); CHECK(minutes == 2 && extra == 0, "two-minute policy belongs to this child");
+    call_ok("reader.open_book", "{\"title\":\"测试长书\"}"); call_ok("reader.goto_page", "{\"page\":4}");
     delay_ms(30000); counters(); int64_t before = used;
     key(HAL_KEY_POWER); CHECK(WAIT_FOR(ink_power_state() == INK_PWR_LOCKED, 3000), "lock through the real power key");
     delay_ms(90000); counters(); CHECK(used >= before && used - before < 3, "locked time is not charged");
     key(HAL_KEY_POWER); CHECK(WAIT_FOR(ink_power_state() != INK_PWR_LOCKED, 3000), "wake through the real power key"); quiet();
     CHECK(!ink_member_time_up(), "ninety locked seconds do not exhaust the allowance");
-    counters(); int left = 120 - (int)used; if (left > 1) delay_ms((left - 1) * 1000);
+    counters(); int left = 120 - (int)used; if (left > 5) delay_ms((left - 5) * 1000);
     CHECK(!ink_member_time_up(), "the child still has time immediately before two minutes");
-    delay_ms(2000); CHECK(WAIT_FOR(page("KidTimeUp"), 8000), "two minutes produces KidTimeUp"); capture("KidTimeUp");
+    delay_ms(6000); CHECK(WAIT_FOR(page("KidTimeUp"), 8000), "two minutes produces KidTimeUp"); capture("KidTimeUp");
     CHECK(strstr(g_snap, "今天的时间到了") && strstr(g_snap, "member.time_get"), "TimeUp exposes its actual state and actions");
-    CHECK(AI("reader.next", NULL) && g_rc.status != INK_RC_DONE, "reader operations cannot continue after time runs out");
-    CHECK(AI("memo.new", NULL) && g_rc.status == INK_RC_REJECTED, "noncommunication capabilities are denied even without UI");
-    touch("打电话"); CHECK(!strcmp(ink_ui_page_name(), "Phone"), "the actual phone remains usable");
-    call_ok("app.open", "{\"id\":\"message\"}"); CHECK(!strcmp(ink_ui_page_name(), "Sms"), "SMS remains usable");
+    CHECK(!ink_cap_ai_callable(ink_cap_find("memo.edit")), "the AI directory hides actions unavailable after time runs out");
+    CHECK(AI("reader.list_books", NULL) && g_rc.status != INK_RC_DONE, "reader operations cannot continue after time runs out");
+    CHECK(AI("memo.edit", NULL) && g_rc.status == INK_RC_REJECTED, "noncommunication capabilities are denied even without UI (%s: %s)", ink_rc_name(g_rc.status), g_rc.detail);
+    touch("短信"); CHECK(!strcmp(ink_ui_page_name(), "Sms"), "the actual SMS entry remains available by touch");
+    call_ok("data.list", "{\"collection\":\"sms.messages\"}");
+    CHECK(AI("data.list", "{\"collection\":\"activity.log\"}") && g_rc.status == INK_RC_REJECTED, "data capabilities cannot expose noncommunication collections after expiry");
+    call_ok("sms.thread", "{\"peer\":\"00000000000\"}"); call_ok("sms.compose", NULL); call_ok("sms.text", NULL); call_ok("text.insert", "{\"text\":\"合成短信\"}");
+    CHECK(strstr(ink_text_value(), "合成短信"), "SMS text entry still works after time runs out");
+    CHECK(AI("app.open", "{\"id\":\"clock\"}") && g_rc.status == INK_RC_REJECTED && page("KidTimeUp"), "SMS cannot be used to escape the time guard");
+    touch("打电话"); CHECK(!strcmp(ink_ui_page_name(), "Phone"), "the actual phone remains usable (page=%s, top=%s)", ink_ui_page_name(), ink_ui_top_name());
+    call_ok("app.open", "{\"id\":\"message\"}"); CHECK(!strcmp(ink_ui_page_name(), "SmsCompose"), "SMS resumes the existing composition");
     CHECK(AI("app.open", "{\"id\":\"clock\"}") && g_rc.status == INK_RC_REJECTED && page("KidTimeUp"), "app.open cannot bypass the time limit");
     touch("爸爸妈妈加时间"); CHECK(page("PinForgot"), "add-time reuses the local parent form");
     enter("90817263"); counters(); CHECK(extra == 0 && ink_member_time_up(), "a wrong local PIN cannot add time");
     enter("24681357"); CHECK(WAIT_FOR(!ink_member_time_up(), 6000), "the right local PIN adds time"); quiet(); counters();
     CHECK(extra == 15 && !strcmp(ink_member_current()->id, "kid"), "the parent adds today's fifteen minutes without switching identity");
     call_ok("app.open", "{\"id\":\"clock\"}"); CHECK(!strcmp(ink_ui_page_name(), "Clock"), "the child resumes ordinary use after addition");
+    on_ui(home); quiet(); call_ok("reader.open_book", "{\"title\":\"测试长书\"}");
+    CHECK(AI("reader.read_page", NULL) && g_rc.status == INK_RC_DONE && g_rc.revision == 4, "time-up keeps the real reading position at page four (%s, rev=%u, %.60s; top=%s)", ink_rc_name(g_rc.status), (unsigned)g_rc.revision, g_rc.detail, ink_ui_top_name());
     key(HAL_KEY_POWER); counters(); CHECK(used >= 120 && used < 240, "usage includes the elapsed unlocked time"); save();
 }
 static void restart(void) {
@@ -95,8 +106,8 @@ static void restart(void) {
     CHECK(ink_member_switch("kid") == 0, "restart in the child's space"); quiet(); counters();
     CHECK(minutes == 2 && extra == 15 && used >= 120, "daily policy, elapsed usage and today's added time survive a separate process");
     ink_tm_t tm; ink_time_to_local(1794268800, &tm); tm.hour = 23; tm.min = 59; tm.sec = 59;
-    ink_time_set(ink_time_from_local(&tm), false); counters(); int64_t day = ink_time_now_s();
-    ink_time_set(day + 2, false); delay_ms(1000); counters(); CHECK(extra == 0 && used <= 3 && minutes == 2, "local midnight clears only today's usage and additions");
+    ink_time_set(ink_time_from_local(&tm), false); counters();
+    delay_ms(2500); counters(); CHECK(extra == 0 && used <= 3 && minutes == 2, "local midnight clears only today's usage and additions");
     change("member.time_set", "{\"minutes\":0}"); counters(); CHECK(minutes == 0 && !ink_member_time_up(), "zero means unlimited");
 }
 static void parent_create(lv_obj_t *screen, void *arg) {

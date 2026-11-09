@@ -878,7 +878,7 @@ void ink_shell_control(void) {
 }
 bool ink_shell_close(void) {
     if (!N.control) return false;
-    ink_ui_overlay_remove(child() ? &KID_CONTROL : &CONTROL);
+    ink_ui_overlay_remove(&CONTROL); ink_ui_overlay_remove(&KID_CONTROL);
     lv_obj_delete(N.control);
     N.control = NULL;
     ink_ui_hint_frame(INK_REFRESH_FLASH_UI);
@@ -1586,9 +1586,10 @@ int ink_shell_init(void) {
 }
 
 static int kid_control_snapshot(char *buf, size_t cap) {
+    int64_t volume = ink_setting_get("audio.volume"), max = ink_setting_get("audio.child_max");
     int n = snprintf(buf, cap, "KidControl；当前=%s；亮度=%lld；暖光=%lld；音量=%lld；音量上限=%lld；通知=%d；动作：settings.set、system.set_volume、shell.notify_open、notify.read、shell.close。",
         ink_member_current()->name, (long long)ink_setting_get("display.light"), (long long)ink_setting_get("display.warmth"),
-        (long long)ink_setting_get("audio.volume"), (long long)ink_setting_get("audio.child_max"), ink_notify_unread());
+        (long long)(volume > max ? max : volume), (long long)max, ink_notify_unread());
     for (int i = 0; i < N.control_count && n >= 0 && (size_t)n < cap; i++)
         n += snprintf(buf + n, cap - (size_t)n, "通知[%u]=%s，%s；", (unsigned)N.control_items[i].id, N.control_items[i].title, N.control_items[i].body);
     return n;

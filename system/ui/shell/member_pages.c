@@ -249,8 +249,8 @@ int ink_member_pages_init(void) {
         ink_state_watch("power.state", changed, NULL, INK_EXEC_UI) ? -1 : 0;
 }
 
-void ink_shell_member_parent_open(uint32_t token) {
+void ink_shell_member_parent_open(uint32_t token, const char *why) {
     if (P.busy) return;
     close_page(); P.mode = PARENT; P.parent_token = token; P.retry_us = 0;
-    snprintf(P.name, sizeof P.name, "家长"); snprintf(P.status, sizeof P.status, "请家长本人输入"); draw();
+    snprintf(P.name, sizeof P.name, "家长"); snprintf(P.status, sizeof P.status, "%s", why); draw();
 }

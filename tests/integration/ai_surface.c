@@ -89,6 +89,9 @@ static const struct {
     {"camera.preview", NULL}, {"camera.photo", NULL}, {"gallery.prev", NULL}, {"gallery.next", NULL}, {"photo.open", "id"},
     {"shell.ai_log", NULL}, {"shell.ai_receipts", ""}, {"ai.pages.close", NULL}, {"ai.pages.retry", NULL},
     {"ai.pages.next", NULL}, {"ai.pages.prev", NULL},
+    {"member.time_get", ""}, {"member.time_set", "minutes"}, {"member.time_add", "minutes"},
+    {"shell.notify_open", "id"}, {"shell.kid_allow", "id"}, {"shell.kid_parent", NULL},
+    {"shell.kid_add", NULL}, {"shell.kid_sms", NULL}, {"shell.kid_phone", NULL}, {"shell.kid_cancel", NULL},
     {NULL, NULL},
 };
 

@@ -855,7 +855,11 @@ bool ink_member_time_up(void) {
 
 bool ink_member_time_allows(const char *id) {
     if (!ink_member_time_up()) return true;
-    static const char *const allowed[] = {"phone.", "sms.", "call.", "message.", "contacts.", "text.", "confirm.",
+    if (!strncmp(id, "text.", 5) || !strncmp(id, "keyboard.", 9)) {
+        char app[32] = ""; ink_state_get_str(ink_state_find("app.foreground"), app, sizeof app);
+        return !strcmp(app, "phone") || !strcmp(app, "message");
+    }
+    static const char *const allowed[] = {"phone.", "sms.", "call.", "message.", "contacts.", "data.list", "data.get", "confirm.",
         "member.time_", "shell.pin_", "shell.kid_", "app.open", "shell.launch", "shell.back", "shell.close", "shell.lock", "system.home", "system.set_volume", "interrupt."};
     for (size_t i = 0; i < sizeof allowed / sizeof *allowed; i++)
         if (!strncmp(id, allowed[i], strlen(allowed[i]))) return true;

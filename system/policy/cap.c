@@ -137,6 +137,12 @@ static ink_rc_t gate(const ink_cap_t *c, ink_source_t src, uint32_t page_gen, bo
     return INK_RC_DONE;
 }
 
+static bool time_data_allows(const ink_call_t *call) {
+    if (!ink_member_time_up() || (strcmp(call->cap->id, "data.list") && strcmp(call->cap->id, "data.get"))) return true;
+    char collection[48] = ""; ink_args_get_str(&call->args, "collection", collection, sizeof collection);
+    return !strcmp(collection, "phone.contacts") || !strcmp(collection, "phone.calls") || !strcmp(collection, "sms.messages");
+}
+
 /* ------------------------------------------------------------ calls (the soft bus, detailed design §3) */
 
 #define POOL_N 16 /* calls in flight */
@@ -577,6 +583,7 @@ static void start(void *arg) {
         int bad = p->json ? ink_args_from_json(&p->call.args, p->json, strlen(p->json), c->input, why, sizeof why)
                           : ink_args_check(&p->call.args, c->input, why, sizeof why);
         if (bad) reject(rc, INK_RC_INVALID, why); /* no card for what could not run anyway */
+        else if (!time_data_allows(&p->call)) reject(rc, INK_RC_REJECTED, "only phone and SMS data after time runs out");
         else if (verdict == INK_RC_PENDING_CONFIRMATION) ink_confirm_hold(c, &p->call.args, p->call.src, p->call.page_gen, rc);
         else {
             rc->status = INK_RC_DONE;
@@ -1007,7 +1014,7 @@ void ink_cap_emit(const char *id, const ink_args_t *payload) {
 static bool listed(const ink_cap_t *c) {
     if (!ink_member_space_open() || !on_its_page(c) || !exposed(c, INK_SRC_AI)) return false;
     const ink_member_t *m = ink_member_current();
-    return m->role != INK_ROLE_CHILD || (c->effect != INK_FX_SYSTEM && ink_member_allows(c->id, c->child_ok));
+    return m->role != INK_ROLE_CHILD || (c->effect != INK_FX_SYSTEM && ink_member_allows(c->id, c->child_ok) && ink_member_time_allows(c->id));
 }
 
 bool ink_cap_ai_callable(const ink_cap_t *c) { return c && listed(c) && c->form != INK_FORM_EVENT; }
