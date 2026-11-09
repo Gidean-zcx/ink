@@ -24,7 +24,7 @@
 
 ## 改过的已有测试
 
-- 暂无。
+- `tests/integration/ai_surface.c`：仅在 `FOR_AI` 末尾增加四项，`file.usage`、`file.cleanup_preview` 无输入，`file.cache_clear`、`file.cleanup` 必须有 `revision`。原因：四个新增能力需要被完整列入工具暴露检查；不改原条目、断言和预算。首轮全量因此报 6 个断言失败，补齐后复跑结果见验证记录。
 
 ## 要用户定的
 
