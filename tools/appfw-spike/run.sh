@@ -31,16 +31,19 @@ with tarfile.open(sys.argv[1]) as archive:
     for member in files:
         assert (Path('work/appfw-spike') / member.name).read_bytes() == archive.extractfile(member).read(), member.name
 PY
+  "$INK_DEPS/build-deps/pyenv/bin/python" tools/appfw-spike/fetch_mquickjs.py
 }
 configure() {
   cmake -S . -B "$spike_build" -DINK_WERROR=ON -DINK_GUI=OFF \
     -DINK_SANITIZE="${INK_SPIKE_SANITIZE:-OFF}" \
     -DINK_CJK_FONT="$INK_DEPS/build-deps/fonts/NotoSansCJK-Regular.ttc" -DINK_CJK_FACE=2 \
+    -DINK_CJK_MEDIUM_FONT="$INK_DEPS/build-deps/fonts/NotoSansCJKsc-Medium.otf" \
+    -DINK_CJK_BOLD_FONT="$INK_DEPS/build-deps/fonts/NotoSansCJKsc-Bold.otf" \
     -DPython3_EXECUTABLE="$INK_DEPS/build-deps/pyenv/bin/python" \
     -DFETCHCONTENT_SOURCE_DIR_LVGL="$INK_DEPS/build/_deps/lvgl-src" \
     -DCMAKE_PROJECT_ink_INCLUDE="$PWD/tools/appfw-spike/inject.cmake"
 }
-build() { cmake --build "$spike_build" --target appfw-c appfw-json appfw-lua -j4; }
+build() { cmake --build "$spike_build" --target appfw-c appfw-json appfw-lua appfw-mquickjs -j2; }
 measure() {
   "$INK_DEPS/build-deps/pyenv/bin/python" tools/appfw-spike/measure.py --build "$spike_build" --out "$spike_out" --samples "${INK_SPIKE_SAMPLES:-5}"
 }

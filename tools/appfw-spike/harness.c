@@ -58,11 +58,15 @@ static void ui_checks(void) {
     CHECK(ink_ui_snapshot(snapshot_after, sizeof snapshot_after, NULL) > 0, "snapshot after touch and AI restore");
     ink_spike_tests();
 }
+static void text_visible(void) {
+    CHECK(strstr(ink_textfield_text(ink_spike_field), "一起读"), "AI edit visible in the shared field");
+}
 static void text_checks(void) {
     CHECK(ink_text_focused(), "a tap opened the shared text service");
-    CHECK(ink_cap_invoke_json("text.insert", "{\"text\":\"一起读\"}", INK_SRC_AI, 0, &g_rc) == INK_RC_DONE &&
-          strstr(ink_textfield_text(ink_spike_field), "一起读"), "AI edits through the shared text capability");
-    CHECK(ink_cap_invoke("text.submit", NULL, INK_SRC_AI, 0, &g_rc) == INK_RC_DONE, "finish editing through text.submit");
+    CHECK(AI("text.insert", "{\"text\":\"一起读\"}") && g_rc.status == INK_RC_DONE,
+          "AI edits through the shared text capability");
+    on_ui(text_visible);
+    CHECK(AI("text.submit", NULL) && g_rc.status == INK_RC_DONE, "finish editing through text.submit");
 }
 static void memory_and_close(void) {
     CHECK(ink_spike_submits == 1, "bottom button invoked spike.submit");
@@ -73,7 +77,8 @@ static void memory_and_close(void) {
         const char *tag;
         size_t cur[POOL_COUNT], peak[POOL_COUNT], live;
         pools_tag_info(i, &tag, cur, peak, &live);
-        int at = !strcmp(tag, "appfw.model") ? 0 : !strcmp(tag, "appfw.lua") ? 1 : !strcmp(tag, "lvgl") ? 2 : -1;
+        int at = !strcmp(tag, "appfw.model") ? 0 :
+                 (!strcmp(tag, "appfw.lua") || !strcmp(tag, "appfw.mquickjs")) ? 1 : !strcmp(tag, "lvgl") ? 2 : -1;
         if (at >= 0) memcpy(tag_peak[at], peak, sizeof peak);
     }
     ink_ui_pop();
@@ -82,7 +87,7 @@ static void memory_and_close(void) {
         const char *tag;
         size_t cur[POOL_COUNT], peak[POOL_COUNT], live;
         pools_tag_info(i, &tag, cur, peak, &live);
-        if ((!strcmp(tag, "appfw.model") || !strcmp(tag, "appfw.lua")) && live) released = 0;
+        if ((!strcmp(tag, "appfw.model") || !strcmp(tag, "appfw.lua") || !strcmp(tag, "appfw.mquickjs")) && live) released = 0;
     }
     CHECK(released, "model and VM allocations released when the page closes");
 }
@@ -117,7 +122,7 @@ static void exercise(void *arg) {
     CHECK(WAIT_FOR(!ink_ui_busy() && !ink_display_busy(), 10000), "switch result became stable");
     tap(300, 980);
     CHECK(WAIT_FOR(ink_text_focused(), 3000), "text field focused");
-    on_ui(text_checks);
+    text_checks();
     CHECK(WAIT_FOR(!ink_text_focused(), 3000), "submit closed the shared editor");
     CHECK(WAIT_FOR(!ink_ui_busy() && !ink_display_busy(), 10000), "keyboard closed");
     tap(300, 1130);

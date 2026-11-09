@@ -21,7 +21,7 @@ def main():
 
     def rebuild(name):
         with (out / name).open("w") as log:
-            subprocess.run(["cmake", "--build", str(build), "--target", "appfw-lua", "-j4"],
+            subprocess.run(["cmake", "--build", str(build), "--target", "appfw-lua", "-j2"],
                            cwd=ROOT, check=True, stdout=log, stderr=subprocess.STDOUT, timeout=120)
 
     caught = False
@@ -43,11 +43,11 @@ def main():
     assert path.read_bytes() == original
     bridge = ROOT / "tools/appfw-spike/bridge.c"
     original_bridge = bridge.read_bytes()
-    boundary = b"static uint64_t boundary(void) { vtk_sched_point(); return osal_now_us(); }"
+    boundary = b"    vtk_sched_point();\n"
     assert original_bridge.count(boundary) == 1
     clock_caught = False
     try:
-        bridge.write_bytes(original_bridge.replace(boundary, b"static uint64_t boundary(void) { return osal_now_us(); }"))
+        bridge.write_bytes(original_bridge.replace(boundary, b""))
         rebuild("without-clock-settlement-build.log")
         try:
             run(build, out / "without-clock-settlement", "lua", "measured:1")
