@@ -49,6 +49,7 @@ void ink_text_blur(int session);
 bool ink_text_focused(void);
 /** UI task: semantic input snapshot, with credential contents masked. */
 int ink_text_snapshot(char *out, size_t cap);
+int ink_text_input_snapshot(char *out, size_t cap); /* long editor supplies the visible body */
 size_t ink_text_byte_offset(const char *text, size_t chars);
 size_t ink_text_char_offset(const char *text, size_t bytes); /* floors an interior byte */
 size_t ink_text_cluster_end(const char *text, size_t start);

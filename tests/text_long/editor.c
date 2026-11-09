@@ -1,6 +1,7 @@
 /* F3: real long-input host, power-cut recovery and synthetic member boundaries. */
 #include "ink/sys/textfield.h"
 #include "ink/ui_shell.h"
+#include "cJSON.h"
 #include <stdlib.h>
 #define ink_main product_main
 #include "../../system/boot/main.c"
@@ -9,7 +10,8 @@
 
 static const char MIX[] = "中A😀e\xCC\x81👩‍👧🇨🇳Z";
 static const char UNIT[] = "中A😀e\xCC\x81👩‍👧🇨🇳Z ";
-static char initial[2048], snapshot[16384], stale[256], remembered[4096];
+static char initial[2048], snapshot[16384], stale[256], remembered[4096], context[3072];
+static const char EDIT[] = "已修改😀e\xCC\x81";
 static lv_obj_t *field;
 static uint32_t reference;
 static const char *page_name = "ImeLong";
@@ -53,6 +55,33 @@ static bool boundary(size_t byte) {
     for (size_t i = 0; i < sizeof starts / sizeof *starts; i++) if (byte % strlen(UNIT) == starts[i]) return true;
     return false;
 }
+static void inspect_context(void) {
+    ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
+    char page[2048] = "", value[1024] = ""; int64_t session = 0, revision = 0, start = -1, end = -1;
+    bool parsed = j && ink_json_parse(j, context, strlen(context)) == 0;
+    CHECK(parsed, "production-sized input context is valid JSON");
+    if (!parsed) { osal_free(j); return; }
+    CHECK(ink_json_int(j, ink_json_find(j, 0, "keyboard.session"), &session) && session > 0 &&
+          ink_json_int(j, ink_json_find(j, 0, "keyboard.revision"), &revision) && revision > 0,
+          "AI context retains the live editing target and revision");
+    CHECK(ink_json_find(j, 0, "keyboard.selection_start") >= 0 && ink_json_find(j, 0, "keyboard.selection_end") >= 0 &&
+          ink_json_find(j, 0, "keyboard.draft_id") >= 0 && ink_json_find(j, 0, "keyboard.value") < 0,
+          "input metadata retains selection and draft reference without a second body");
+    CHECK(ink_json_str(j, ink_json_find(j, 0, "page"), page, sizeof page) > 0 &&
+          ink_json_parse(j, page, strlen(page)) == 0, "AI context retains the actual long page");
+    CHECK(ink_json_int(j, ink_json_find(j, 0, "start"), &start) && ink_json_int(j, ink_json_find(j, 0, "end"), &end) &&
+          start >= 0 && end > start, "AI page has a nonempty character range");
+    int n = ink_json_str(j, ink_json_find(j, 0, "value"), value, sizeof value);
+    const char *body = ink_textfield_text(field);
+    size_t a = ink_text_byte_offset(body, (size_t)start), b = ink_text_byte_offset(body, (size_t)end);
+    CHECK(n > 0 && (size_t)n == b - a && !memcmp(value, body + a, b - a), "AI body is exactly the current visible page");
+    CHECK(strstr(page, "text.page") && strstr(page, "text.ask_ai") && strstr(page, "text.add_word"), "AI page keeps its selection actions");
+    osal_free(j);
+}
+static void read_context(void) {
+    CHECK(ink_ui_context_snapshot(context, sizeof context, NULL) > 0, "input context fits the real AI capacity");
+    inspect_context();
+}
 static void inspect_page(void) {
     CHECK(field && ink_textfield_long_snapshot(field, snapshot, sizeof snapshot) > 0, "long viewport snapshot is available");
     ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
@@ -71,27 +100,38 @@ static void inspect_page(void) {
     lv_area_t area, keyboard; lv_obj_get_coords(field, &area); ink_shell_keyboard_area(&keyboard);
     CHECK(area.y2 < keyboard.y1 && !lv_obj_has_flag(field, LV_OBJ_FLAG_SCROLLABLE), "viewport stays above the F2 keyboard without scrolling");
     osal_free(j);
+    read_context();
 }
 static void select_first(void) { ink_text_select(1, 2); }
 static void start_text(void) { ink_text_set_cursor(0); }
 static void save_position(void) {
+    ink_text_select(0, 1); ink_text_commit_utf8(EDIT);
+    CHECK(strcmp(ink_text_value(), initial), "body is edited after the initial draft became durable");
     ink_text_set_cursor(12);
     ink_text_key('n'); ink_text_key('i');
     CHECK(!strcmp(ink_text_composing(), "ni"), "unconfirmed pinyin remains separate from body");
     snprintf(remembered, sizeof remembered, "%s", ink_text_value());
 }
 static void recover(void) {
-    CHECK(field && !strcmp(ink_text_value(), initial) && !strcmp(ink_text_composing(), "ni") && ink_text_cursor() == 12,
+    snprintf(remembered, sizeof remembered, "%s%s", EDIT, initial + 3);
+    CHECK(field && !strcmp(ink_text_value(), remembered) && !strcmp(ink_text_composing(), "ni") && ink_text_cursor() == 12,
           "power-cut boot restores exact body, composition and cursor");
     CHECK(reference == 1 && ink_text_draft_saved() == 1, "same page/member draft reference was durable");
 }
 static void wrong_page(void) {
-    ink_text_blur(0);
+    CHECK(!ink_text_focused() && first > 0 && page_number == 2, "HOME closes the keyboard on the second page");
     CHECK(ink_textfield_long_snapshot(field, snapshot, sizeof snapshot) > 0 && strstr(snapshot, "\"actions\":[]"),
           "closed keyboard keeps the page readable without advertising unfocused editing actions");
     lv_obj_t *label = lv_obj_get_child(field, 0);
-    CHECK(strlen(lv_label_get_text(label)) < strlen(initial) && !strncmp(lv_label_get_text(label), initial, strlen(lv_label_get_text(label))),
-          "closing input retains the actual first page instead of displaying the whole document in its viewport");
+    ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL); int64_t a = -1, b = -1, p = 0;
+    CHECK(j && ink_json_parse(j, snapshot, strlen(snapshot)) == 0 &&
+          ink_json_int(j, ink_json_find(j, 0, "start"), &a) && ink_json_int(j, ink_json_find(j, 0, "end"), &b) &&
+          ink_json_int(j, ink_json_find(j, 0, "page_number"), &p) &&
+          (size_t)a == first && (size_t)b == last && (size_t)p == page_number, "HOME preserves both bounds and page number");
+    osal_free(j);
+    const char *body = ink_textfield_text(field), *visible = lv_label_get_text(label);
+    size_t start = ink_text_byte_offset(body, first), end = ink_text_byte_offset(body, last);
+    CHECK(strlen(visible) == end - start && !memcmp(visible, body + start, end - start), "closed label is exactly the second page body");
     ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .max = 4095, .draft_page = "OtherPage", .draft_id = 1};
     CHECK(ink_text_focus(&cfg, NULL, NULL) < 0, "another page cannot load this draft reference");
 }
@@ -175,12 +215,45 @@ static void capture(void) {
     vtk_event_at(vtk_now() + SIM_MS(1), take_snapshot, NULL); delay_ms(5);
     ink_probe_count("test.snapshot.settled"); ink_probe_count("test.snapshot.ImeLong");
 }
+static bool request_ok, question_ok, version_ok, actions_ok;
+static void read_question(void *arg) {
+    (void)arg;
+    cJSON *request = cJSON_Parse(sim_hub_last_ask());
+    const cJSON *params = cJSON_GetObjectItemCaseSensitive(request, "params");
+    const cJSON *page = cJSON_GetObjectItemCaseSensitive(params, "page");
+    const cJSON *actions = cJSON_GetObjectItemCaseSensitive(page, "actions");
+    const cJSON *version = cJSON_GetObjectItemCaseSensitive(params, "page_gen");
+    const char *question = cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(params, "question"));
+    const char *text = cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(page, "text"));
+    request_ok = request != NULL; question_ok = question && !strcmp(question, "A");
+    version_ok = cJSON_IsNumber(version) && version->valuedouble > 0;
+    unsigned found = 0;
+    const cJSON *action;
+    cJSON_ArrayForEach(action, actions) {
+        const char *id = cJSON_GetStringValue(action);
+        if (id && !strcmp(id, "text.page")) found |= 1;
+        if (id && !strcmp(id, "text.ask_ai")) found |= 2;
+        if (id && !strcmp(id, "text.add_word")) found |= 4;
+    }
+    actions_ok = found == 7;
+    snprintf(context, sizeof context, "%s", text ? text : "");
+    cJSON_Delete(request);
+}
 static void inspect_question(void) {
-    const char *request = sim_hub_last_ask();
-    ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL); char text[64] = "";
-    CHECK(request && j && ink_json_parse(j, request, strlen(request)) == 0, "real AI request reaches only the synthetic hub");
-    if (request && j) ink_json_str(j, ink_json_find(j, 0, "params.question"), text, sizeof text);
-    CHECK(!strcmp(text, "A"), "AI question uses the selection rather than the whole draft"); osal_free(j);
+    vtk_host_call(read_question, NULL);
+    CHECK(request_ok, "real AI request reaches only the synthetic hub");
+    CHECK(question_ok, "AI question uses the selection rather than the whole draft");
+    CHECK(version_ok, "real AI request has a nonzero page version");
+    CHECK(actions_ok, "real AI request retains the capability list");
+    CHECK(context[0], "real AI request has a readable page");
+    inspect_context();
+}
+static void full_body_context(void) {
+    ink_text_set_cursor(0); ink_text_commit_utf8(initial); ink_text_commit_utf8(initial);
+    CHECK(strlen(ink_text_value()) > sizeof context, "large draft exceeds the AI buffer before pagination");
+    read_context();
+    CHECK(ink_text_snapshot(snapshot, sizeof snapshot) > 0 && strstr(snapshot, ink_text_value()), "text.state still exposes the full draft");
+    CHECK(ink_text_undo() && ink_text_undo() && !strcmp(ink_text_value(), initial), "restore the original body after the context check");
 }
 static void run(void *arg) {
     (void)arg; delay_ms(1800);
@@ -193,12 +266,17 @@ static void run(void *arg) {
     on_ui(open_page);
     if (!field) { ink_probe_count("test.finished"); return; }
     if (recovering) {
-        on_ui(recover); on_ui(check_words); on_ui(wrong_page); on_ui(another_page); on_ui(secrets);
+        on_ui(recover); on_ui(check_words); on_ui(another_page); on_ui(secrets);
         reference = 1; on_ui(open_page); on_ui(stale_target);
         delay_ms(500); on_ui(kid_draft);
         CHECK(WAIT_FOR(ink_text_draft_saved() == 1, 10000), "child draft reaches durable storage separately");
         ink_probe_count("test.finished"); return;
     }
+    CHECK(WAIT_FOR(ink_text_draft_saved() == 1, 10000), "initial body is durable before later edits");
+    on_ui(start_text);
+    CHECK(AI("text.page", "{\"direction\":1}") && g_rc.status == INK_RC_DONE, "open the second page before closing input");
+    on_ui(inspect_page); key(HAL_KEY_HOME); on_ui(wrong_page); on_ui(open_page);
+    if (!field) { ink_probe_count("test.finished"); return; }
     on_ui(start_text); on_ui(inspect_page);
     size_t covered = last, pages = page_count;
     for (size_t i = 1; i < pages; i++) {
@@ -207,7 +285,7 @@ static void run(void *arg) {
     }
     CHECK(ink_text_byte_offset(initial, covered) == strlen(initial), "all bytes are covered by real rendered pages");
     key(HAL_KEY_PREV); on_ui(inspect_page); CHECK(page_number + 1 == page_count, "physical previous key uses the same page capability");
-    on_ui(start_text); capture();
+    on_ui(full_body_context); on_ui(start_text); capture();
     menu_action("加单词");
     CHECK(AI("text.select", "{\"start\":1,\"end\":2}") && g_rc.status == INK_RC_DONE &&
           AI("text.add_word", "{}") && g_rc.status == INK_RC_DONE, "AI selection action uses the registered word capability");
@@ -222,7 +300,6 @@ static void run(void *arg) {
     CHECK(WAIT_FOR(!strcmp(ink_ui_top_name(), "Ai"), 5000), "confirmed AI action opens the real answer panel");
     CHECK(WAIT_FOR(sim_metric_value("hub.requests.ai.ask") > asks, 5000), "confirmed AI capability sends a second real question"); on_ui(inspect_question);
     key(HAL_KEY_HOME); on_ui(save_position);
-    ink_db_flush_all();
     CHECK(WAIT_FOR(ink_text_draft_saved() == 1 && ink_db_idle() && !ink_storage_pending(), 10000), "all accepted text and composition are durable before the abrupt cut");
     ink_probe_count("test.cut"); ink_probe_count("test.finished"); hal_power_reboot();
 }

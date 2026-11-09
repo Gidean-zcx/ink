@@ -12,14 +12,17 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[2]
 parser = argparse.ArgumentParser()
 parser.add_argument("--build", type=Path, default=ROOT / "build")
-parser.add_argument("--mutant", choices=("mapping", "clusters", "member", "draft", "page", "selection", "viewport"))
+parser.add_argument("--mutant", choices=("mapping", "clusters", "member", "draft", "page", "selection", "viewport",
+                                        "closed-page", "context-value", "context-input", "context-keyboard", "stale-body"))
 args = parser.parse_args()
 build = args.build.resolve()
 work = Path(tempfile.mkdtemp(prefix="text-long-", dir=build))
 binary = build / "sim-text-long"
 if args.mutant:
-    service = "text_caps.c" if args.mutant == "selection" else "textfield.c" if args.mutant == "viewport" else "text_service.c"
-    source = (ROOT / ("system/ui" if args.mutant == "viewport" else "system/services/text") / service).read_text()
+    service = {"selection": "services/text/text_caps.c", "viewport": "ui/textfield.c", "closed-page": "ui/textfield.c",
+               "context-value": "ui/textfield.c", "context-input": "ui/ui_task.c", "context-keyboard": "ui/shell/keyboard.c"}.get(
+                   args.mutant, "services/text/text_service.c")
+    source = (ROOT / "system" / service).read_text()
     if args.mutant == "member":
         old = 'return !TS.session || (identity.authed && !strcmp(TS.owner.member, identity.member));'
         assert source.count(old) == 1
@@ -40,6 +43,18 @@ if args.mutant:
         old = '    else if (f->cfg.draft_page) snprintf(line, line_cap, "%.*s", (int)(char_at(v, f->page_end) - char_at(v, f->window)), char_at(v, f->window));\n'
         assert source.count(old) == 1
         source = source.replace(old, "")
+    elif args.mutant in ("closed-page", "context-value", "context-input", "context-keyboard", "stale-body"):
+        old, new = {
+            "closed-page": ('if (!f->cfg.draft_page) f->window = 0;', 'f->window = 0;'),
+            "context-value": ('ink_jw_strn(&w, start, (size_t)(char_at(f->text, f->page_end) - start));', 'ink_jw_str(&w, f->text);'),
+            "context-input": ('ink_text_input_snapshot(text, cap)', 'ink_text_snapshot(text, cap)'),
+            "context-keyboard": ('ink_text_draft_id() ? "" : ink_text_value()', 'ink_text_value()'),
+            "stale-body": ('strcpy(d->value, TS.value);',
+                           'ink_rec_t old; if (ink_db_get(TS.drafts, TS.draft_id, &old, d, sizeof *d) != 0) strcpy(d->value, TS.value);'),
+        }[args.mutant]
+        assert source.count(old) == 1
+        source = source.replace(old, new)
+        if args.mutant == "context-value": source = source.replace('    const char *start = char_at(f->text, f->window);\n', '')
     else:
         name = "ink_text_byte_offset" if args.mutant == "mapping" else "ink_text_cluster_end"
         pattern = r"size_t " + name + r"\([^)]*\) \{.*?\n\}"
@@ -47,7 +62,7 @@ if args.mutant:
                       if args.mutant == "mapping" else "size_t ink_text_cluster_end(const char *text, size_t start) { return start < strlen(text) ? start + 1 : start; }")
         source, count = re.subn(pattern, substitute, source, count=1, flags=re.S)
         assert count == 1
-    target = work / service
+    target = work / Path(service).name
     target.write_text(source)
     flags = {}
     for line in (build / "CMakeFiles/ink_system.dir/flags.make").read_text().splitlines():

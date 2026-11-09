@@ -43,7 +43,7 @@ static void text_result(ink_call_t *c, int session) {
 
 static bool editable(ink_call_t *c);
 
-int ink_text_snapshot(char *out, size_t cap) {
+static int snapshot(char *out, size_t cap, bool body) {
     uint32_t epoch = ink_member_epoch();
     if (!ink_text_session_current()) { if (cap) out[0] = 0; return -1; }
     static const char *const TYPE[] = {"plain", "number", "phone", "password", "url"};
@@ -61,8 +61,7 @@ int ink_text_snapshot(char *out, size_t cap) {
             ink_jw_int(&w, ink_text_target_session());
             ink_jw_raw(&w, ",\"revision\":");
             ink_jw_int(&w, ink_text_edit_revision());
-            ink_jw_raw(&w, ",\"value\":");
-            ink_jw_str(&w, ink_text_value());
+            if (body) { ink_jw_raw(&w, ",\"value\":"); ink_jw_str(&w, ink_text_value()); }
             if (ink_text_draft_id()) {
                 ink_jw_raw(&w, ",\"draft_id\":"); ink_jw_int(&w, ink_text_draft_id());
                 ink_jw_raw(&w, ",\"draft_saved\":"); ink_jw_int(&w, ink_text_draft_saved());
@@ -91,6 +90,8 @@ int ink_text_snapshot(char *out, size_t cap) {
     if (w.overflow || !ink_text_session_current() || epoch != ink_member_epoch()) { if (cap) out[0] = 0; return -1; }
     return (int)w.len;
 }
+int ink_text_snapshot(char *out, size_t cap) { return snapshot(out, cap, true); }
+int ink_text_input_snapshot(char *out, size_t cap) { return snapshot(out, cap, !ink_text_draft_id()); }
 
 static void cap_state(ink_call_t *c) {
     char *out = osal_malloc(16 * 1024, OSAL_MEM_EXTERNAL);

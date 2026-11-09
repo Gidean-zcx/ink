@@ -129,7 +129,7 @@ static void show(field_t *f) {
     char *line = f->cfg.draft_page ? osal_malloc(f->cap + 64, OSAL_MEM_EXTERNAL) : short_line;
     size_t line_cap = f->cfg.draft_page ? f->cap + 64 : sizeof short_line;
     if (!line) return;
-    f->window = 0;
+    if (!f->cfg.draft_page) f->window = 0;
     f->displayed = 0;
     if (f->cfg.type == INK_TEXT_PASSWORD) {
         size_t n = strlen(v);
@@ -448,7 +448,8 @@ int ink_textfield_long_snapshot(lv_obj_t *field, char *out, size_t cap) {
     ink_jw_raw(&w, ",\"pages\":"); ink_jw_int(&w, f->pages);
     ink_jw_raw(&w, ",\"start\":"); ink_jw_int(&w, (int64_t)f->window);
     ink_jw_raw(&w, ",\"end\":"); ink_jw_int(&w, (int64_t)f->page_end);
-    ink_jw_raw(&w, ",\"value\":"); ink_jw_str(&w, f->text);
+    const char *start = char_at(f->text, f->window);
+    ink_jw_raw(&w, ",\"value\":"); ink_jw_strn(&w, start, (size_t)(char_at(f->text, f->page_end) - start));
     ink_jw_raw(&w, f->session ? ",\"actions\":[\"text.page\",\"text.ask_ai\",\"text.add_word\"]}" : ",\"actions\":[]}");
     if (w.overflow) { if (cap) out[0] = 0; return -1; } return (int)w.len;
 }
