@@ -2,6 +2,8 @@
 
 基线：`3fce2beea07d9e25a814cd24c64e8d5305ea9222`。分支：`claude/codex-ai-pages-2`。
 
+首轮执行结果保留如下；本次修复与最新验证见文末“复查后的修复”。
+
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
@@ -108,4 +110,17 @@
 | undo | R1-05：撤掉撤销动作 | 41／10 |
 | errors／member／receipts／snapshot | 保留首轮四组反例 | 15／6、111／6、107／10、18／3 |
 
-内存检查及最终差异检查结果待补齐。
+【实测】ASan／UBSan 全量同为 231 通过、0 跳过、两项获准忽略的文档失败，CTest 退出 8，367.79 秒；构建成功。完整 `LastTest.log` 中没有 sanitizer 或运行期未定义行为诊断。全量中的九场景检查数与上表相同；普通证据 `build/ai-pages-icubdrza/`，内存检查证据 `build-asan/ai-pages-38gux690/`，均完成且零失败、零预算违规。两套九场景的内 RAM 最低余量均为 41728 字节，内部、外部 failed_allocs 均为 0。日志：`build-asan/recheck-build.log`、`build-asan/recheck-ctest.log`、两套 `Testing/Temporary/LastTest.log`。
+
+复现前缀与命令（沿用总规则全部配置参数，另设 `-DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"`；ASan 只再加 `-DINK_SANITIZE=ON`，两套保留 Werror）：
+
+```sh
+taskpolicy -c utility cmake --build build -j2
+PYTHONPATH="$PWD/hub" INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
+taskpolicy -c utility cmake --build build-asan -j2
+PYTHONPATH="$PWD/hub" INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
+# 上述定向／反向命令中的 python 同样使用：
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/ai_pages.py --build build --case real
+```
+
+【实测】修复提交 `fc03f1a1`。相对复查起点只改两个产品文件、两份测试及本报告；产品修复新增 65、删除 23 行。相对任务基线，产品新增 228、删除 2 行，按相加计 230／300 行。没有夹带共享文档、依赖、设计稿或构建产物。`git diff 3fce2bee..HEAD --check` 通过；按总规则对任务基线至 HEAD 差异做隐私扫描，0 命中（grep 退出 1）。
