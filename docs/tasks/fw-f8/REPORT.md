@@ -1,21 +1,20 @@
 # FW-F8 执行报告
 
-基线：`50fd91821b47d6a9cacd42e7ba07fbd3b8084de4`。分支：`claude/codex-fw-f8`；实现提交：`ed86e983`。以下实测均为 macOS 模拟器，卡片与身份使用合成测试数据。
+基线：`50fd91821b47d6a9cacd42e7ba07fbd3b8084de4`。分支：`claude/codex-fw-f8`；初次实现提交：`ed86e983`；本轮修复：`a009d206`，分页回归：`0e013203`。以下实测均为 macOS 模拟器，卡片与身份使用合成测试数据；本轮最终结果见“复查后的修复”。
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 【实测】通过 | 四张实际内容按“合成卡乙、听、单词、合成卡甲”显示；两个进程共用 Flash 验证重启恢复，成人与孩子各自保存 | 下方 F8 命令；写入 129 项、重启 39 项断言 |
+| 1 | 【实测】通过 | 四张实际内容按“合成卡乙、听、单词、合成卡甲”显示；两个进程共用 Flash 验证重启恢复，成人与孩子各自保存 | 下方 F8 命令；本轮写入 146 项、重启 39 项断言 |
 | 2 | 【实测】通过 | 真实长按打开 IconMenu；触摸“接着听”与 AI 都调用合成应用声明的同一能力；菜单开关确实加入卡片 | F8；`build/fw-f8-evidence/asan-final/` |
 | 3 | 【实测】正反向通过 | 短按照旧打开应用，长按不触发短按；保留原图标绑定查询合同，两种设备回归通过；去掉短按绑定时恰好失败 1 项 | F8、反向命令 |
-| 4 | 【实测】通过 | 两页结构化快照均装入 3072 字节 AI 缓冲；触摸与 AI 共用能力；孩子的卡片和导航选中位置均不受成人影响 | F8、反向命令；最终 ASan 定向 6/6 |
-| 5 | 【实测】未完全通过 | 普通全量与 ASan 全量各 238 通过、1 项文档校验失败、3 项缺依赖跳过；无 ASan/UBSan 内存错误。最终修正后 ASan 定向 6/6。产品代码新增 294 行，截图已留存 | 全量、ASan、差异统计；见下方证据 |
+| 4 | 【实测】通过 | 两页结构化快照均装入 3072 字节 AI 缓冲；触摸与 AI 共用能力；孩子的卡片和导航选中位置均不受成人影响 | F8、反向命令；本轮 ASan 全量包含 F8 并通过 |
+| 5 | 【实测】功能和内存检查通过；文档项按用户要求留给合并 | 普通与 ASan 全量各 241 通过、0 跳过，仅能力表文档同步失败；无 ASan/UBSan 内存错误。产品代码新增 297 行，截图已留存 | 本轮全量、ASan、差异统计；见末节 |
 
 ## 没做到的
 
-- `capability-table-doc` 未通过：新能力需要重新生成共享的 `docs/system/capabilities.md`，总规则第 7 节明确本任务不改它。候选文件为 `build/fw-f8-capabilities.md`，独立构建目录中对 369 项定义的生成校验通过。不能据此声称正式全量全绿。
-- `hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e` 被既有脚本跳过：当前 Python 缺少 pytest、pytest_asyncio、aiohttp、yaml，返回码 77。未删测试或改跳过条件，也未安装或升级依赖。
+- `capability-table-doc` 未通过：新能力需要重新生成共享的 `docs/system/capabilities.md`，总规则第 7 节明确本任务不改它，用户本轮再次明确由主会话合并时生成。候选文件为 `build/fw-f8-capabilities.md`，初次独立生成校验通过。两轮全量均执行了该项并如实保留失败，未跳过或改测试。
 - 没有 Linux 实测；本机 clang 开启 `INK_WERROR=ON`。最终参数组装使用局部缓冲，避免结构体字段互作 snprintf 来源与目标。
 
 ## 和设计不一致的
@@ -24,11 +23,14 @@
 
 【实现】TodayEdit 复用分页列表，增加“第几张”和“上移”，行间距、描边、固定读书行与画板不同；卡片内容来自应用，不硬编码画板示例。IconMenu 按任务只从“全部”页打开，画板底图是主屏；控件采用现行规范尺寸和灰度，面板为完整容纳关闭按钮而更高。已通过断言和看图检查文字重叠与关闭按钮裁切。
 
-【实现】编辑入口在今日页标题；按本任务只改今日和全部页的边界，没有接设置列表入口。
+【实现】初次编辑入口在今日页标题；本轮按 FW-L1 删除，改接“显示和亮度”的可见列表行，见末节。
 
 ## 改过的已有测试
 
-仅扩展 `tests/integration/ai_surface.c` 的五项精确期望，继续检查真实注册、AI 暴露和必填参数；未放宽断言或预算。
+初次扩展 `tests/integration/ai_surface.c` 的五项精确期望，继续检查真实注册、AI 暴露和必填参数；未放宽断言或预算。
+
+- 本轮 `tests/fw_f8/editor.c`：把“点今日标题进入编辑页”改为“点标题仍在今日页，从 Settings → 显示和亮度 → 今日屏放什么进入”，依据 FW-L1；返回操作对应退回三层。原排序、重启、成员隔离、短长按断言保留。
+- 本轮 `tests/ui_shell_scenes.c`：特大字号下先翻页找到自动锁屏，保留原来的点击与 1800 秒断言；再验证默认、特大字号下可点新行进入 TodayEdit。没有修改既有结果期望。
 
 | 新增期望 | 必填参数 | 原因 |
 | --- | --- | --- |
@@ -53,17 +55,19 @@
 
 ## 要改的文档
 
-合并时更新 `docs/system/ui-dependencies.md` 的 TodayEdit、IconMenu 状态，并重新生成 `docs/system/capabilities.md`；本任务按总规则不改这两份共享文档。设置列表可接入已提供的 `shell.today_edit`。
+合并时更新 `docs/system/ui-dependencies.md` 的 TodayEdit、IconMenu 状态，并重新生成 `docs/system/capabilities.md`；本任务按总规则不改这两份共享文档。设置列表已在本轮接入 `shell.today_edit`。
 
 ## 为什么不能更小
 
-【实测】产品代码新增 294 行、删除 8 行：navigation.c 新增 289 行，CMake 接线 5 行。需要覆盖成员读写、卡片匹配、选择排序、两页快照和短长按分流；复用已有数据服务、卡片提供者、分页及能力总线。考虑过只存四个应用 id（不能选择同应用的不同卡片）、只存内存（不能重启恢复）、只给 AI 排序（人不能排序），均不满足验收。新增函数追加在 navigation.c 末尾，已有函数仅作接线。
+【实测】产品代码新增 297 行、删除 8 行：navigation.c 新增 292 行，CMake 接线 5 行。需要覆盖成员读写、卡片匹配、选择排序、两页快照和短长按分流；复用已有数据服务、卡片提供者、分页及能力总线。考虑过只存四个应用 id（不能选择同应用的不同卡片）、只存内存（不能重启恢复）、只给 AI 排序（人不能排序），均不满足验收。新增函数追加在 navigation.c 末尾，已有函数仅作接线。
 
 ## 架构审视
 
 【实现】选择属于成员数据，页面只维护视图；五项 shell 能力与应用原有卡片动作同时供按钮和 AI 调用，不直接改应用服务状态。导航位置在新建编辑页时清空，数据仍从当前成员集合读取。无新增服务或通用框架。
 
 ## 验证命令和证据
+
+以下保留初次实施的验证记录，本轮结果见末节。
 
 构建按总规则第 5 节指定依赖配置，使用 `taskpolicy -c utility` 和 `-j2`；内存目录为 `build-asan`，额外开启 `INK_SANITIZE=ON`，保留 `INK_WERROR=ON`。
 
@@ -91,5 +95,18 @@ taskpolicy -c utility "$F8_PYTHON" tools/ui_compare.py --build build --design "$
 - 【实现】扩展 F8 场景：从 Settings 点进显示设置，再点可见列表行进入 TodayEdit；核对能力绑定、行高和完整可见，遍历今日页确认无编辑入口绑定，并实点标题确认不跳页。反向对照分别恢复透明区域、断开设置行绑定。
 - 【实测】普通定向 10/10 通过（F8、卡片、字号、两种设备快照、AI 暴露、中枢及其夹具）；反向对照 7/7 得到预期失败，恢复透明入口失败 25 项、断开设置行绑定失败 21 项。截图确认新行完整可见。日志：`build/fw-f8-evidence/review-focused.log`、`review-reverse.log`；截图与内存记录：`build/fw-f8-evidence/review/`。
 - 【实测】上次三项中枢跳过是 Python 环境选错：只读依赖目录现有 `hub/.venv` 包含 Python 3.11.15、pytest 8.4.2、pytest-asyncio 1.2.0、aiohttp 3.12.15、PyYAML 6.0.3。改用 CMake 的 `INK_HUB_PYTHON` 并令 `PYTHONPATH="$PWD/hub"` 指向本分支，三项已全部通过；不安装或升级依赖。
-- 验证进行中：普通全量、ASan/UBSan 全量与最终隐私检查待填写。当前对原任务基线统计产品代码新增 297 行、删除 8 行，未超过 300 行预算。
+- 【实测】最终普通全量：242 项中 241 项通过、0 项跳过，只有用户明确允许忽略的 `capability-table-doc` 失败；耗时 362.62 秒，CTest 退出码 8。日志：`build/fw-f8-evidence/review-full-final.log`。
 - 【实测】首轮普通全量发现 `ui-scene-big-SetDisplay` 的旧测试固定在第一页点自动锁屏；新增行触发既有分页后，该控件位于下一页。测试现按可见性翻页，保留原来的点击与 1800 秒断言，并追加默认、特大字号下点击新行进入 TodayEdit 的断言。产品分页逻辑与原有测试期望均未修改。
+- 【实测】默认、特大字号的显示设置定向 2/2 通过。最终 ASan/UBSan 全量同样为 241 通过、0 跳过、仅能力表文档失败，耗时 637.71 秒，CTest 退出码 8；完整 `LastTest.log` 未检出 AddressSanitizer、LeakSanitizer 或 UBSan 错误。日志：`build/fw-f8-evidence/review-asan-full.log`、`review-pagination.log`。
+- 【实测】F8 本轮写入 146 项、重启 39 项断言通过，内部 RAM 最小余量 47736 字节，原预算 32768 字节未变。两页对照分数仍为 45.104/255、46.353/255，保留上文已说明的设计差异；证据：`build/fw-f8-evidence/review/`。
+- 【实测】最终差异只含本任务 9 个文件，本轮修改其中 5 个；产品代码累计新增 297 行、删除 8 行，未超过 300 行预算。`git diff --check` 通过；按总规则扫描原任务基线到最终改动，隐私匹配 0（grep 退出码 1），证据：`build/fw-f8-evidence/review-privacy.txt`。本轮没有新增机制，未改共享文档或提交构建产物。
+
+本轮两套配置均增加 `-DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"`，其余依赖沿用总规则；内存构建保留 `INK_WERROR=ON` 并开启 `INK_SANITIZE=ON`，实际编译参数含 `-fsanitize=address,undefined`。构建均为 `taskpolicy -c utility cmake --build <目录> -j2`。主要复现命令：
+
+```sh
+export PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$PWD/hub"
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -j2 --output-on-failure
+UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan -j2 --output-on-failure
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -j2 --output-on-failure -R '^ui-scene-(big-)?SetDisplay$'
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/fw_f8/reverse.py --build build
+```
