@@ -9,15 +9,21 @@
 
 | 复查项 | 结论 | 回归与反向对照 |
 | --- | --- | --- |
-| R1-01 | 定向通过 | 【实测】`/me/2026/notes`、家庭目录、不同长度的成员根目录，覆盖 FileList 和 FileMove；撤掉修复后 2 项断言失败。 |
-| R1-02 | 定向通过 | 【实测】四个 `SYNTH_`＋17 个“测”＋序号的合法目录；FileList、FileMove 及真实 AI 面板下的生产 3072 字节快照均成功，完整动作路径未截断；恢复原实现后 8 项断言失败。 |
-| R1-03 | 定向通过 | 【实测】真实文本预览提示在默认、最大字号下均位于屏内且与所有可见操作控件不相交；恢复原位置后 2 项断言失败。已查看新的预览截图。 |
+| R1-01 | 通过 | 【实测】`/me/2026/notes`、家庭目录、不同长度的成员根目录，覆盖 FileList 和 FileMove；撤掉修复后 2 项断言失败。 |
+| R1-02 | 通过 | 【实测】四个 `SYNTH_`＋17 个“测”＋序号的合法目录；FileList、FileMove 及真实 AI 面板下的生产 3072 字节快照均成功，完整动作路径未截断；恢复原实现后 8 项断言失败。 |
+| R1-03 | 通过 | 【实测】真实文本预览提示在默认、最大字号下均位于屏内且与所有可见操作控件不相交；恢复原位置后 2 项断言失败。已查看新的预览截图。 |
 
 - 【实测】`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/files_app/run.py --build build --visual`：原流程 **193**、重启 **34**、新增复查 **210** 项通过；原四页截图各 **194**，三个新增截图各 **211** 项通过，均零失败。证据：`build/files-review-focused.log`、`build/files-app-mnor05_h/`。合法长目录快照分别 **1801／2039 字节**，七张截图已生成；原四页像素分数保持原值，既有设计差异仍见下文。
 - 【实测】反向对照：同上命令去掉 `--visual`，分别加 `--mutant up`、`--mutant long-snapshot`、`--mutant notice`。三项均成功编译链接、运行退出 1、`test.finished=1`，因断言失败而失败；原七项反例也重跑有效，失败数仍为 1、1、3、4、14、2、3。汇总：`build/files-review-mutants.json`，日志：`build/files-review-reverse-*.log`。工作树产品源码哈希前后一致。
 - 【实现】产品只改 `system/apps/files/files.c`，**9 行新增、6 行删除，净增 3 行**；原任务合计 **303/350 行**。未改服务、公共框架、预算、共享生成文档或并行任务文件；新增机制：**无**。
-- 已有测试调整：文件场景追加独立 `review` 进程及三个截图状态；快照断言按实际页面名核对，以支持截图状态别名；保留原四页、原流程、重启和七项反例的原有断言。未删测试、放宽断言或增加等待掩盖问题。
-- 本轮完整测试、内存检查和结束检查结果待运行后补齐。能力表文档同步失败按用户补充要求不处理；下文保留上一轮报告及其历史测试结果。
+- 已有测试调整：文件场景追加独立 `review` 进程及三个截图状态；仅三个新截图别名映射到固定页面名，原四页仍严格按原场景名检查。保留原流程、重启和七项反例的原有断言，未删测试、放宽断言或增加等待掩盖问题。
+- 【实测】收尾收紧上述测试断言后，两套重新构建 `sim-files-app`，并重跑 `tests/files_app/run.py --build <目录>`，均为 **193＋34＋210 项通过**；三个新反例也再次验证为 **2／8／2 项失败**。最终日志：两套目录中的 `files-review-build-final.log`、`files-review-focused-final.log`；证据：`build/files-app-kej8662v/`、`build-asan/files-app-pawdle7y/`。
+- 【实测】普通、ASan/UBSan 全量均 **232/233、零跳过、退出 8**，分别 **316.01／311.99 秒**；唯一失败都是用户明确豁免的 `capability-table-doc`，所有其他测试通过，无 sanitizer 诊断。命令同下文 T2／T3，另加 `--output-junit "$PWD/<目录>/files-review-ctest.xml"`；没有排除失败项。日志：两套目录中的 `files-review-ctest.log`、`files-review-ctest.xml`；汇总：`build/files-review-validation.json`、`build/files-review-results.json`。
+- 【实测】两套完整构建均退出 0：`taskpolicy -c utility cmake --build <目录> -j2`；沿用已核对的 `INK_WERROR=ON` 缓存，内存版 `INK_SANITIZE=ON`，编译参数包含 `-fsanitize=address,undefined`。构建与测试全部顺序执行，均为 utility 优先级、最多 `-j2`。
+- 【实测】原失败原因已核对：能力表生成文档过期，按用户要求和共享文档限制不改。缺依赖：**无**；两套中枢契约各 **125 项通过**，中枢联调、中文字体和图像场景均执行，未出现跳过。依赖只读取 `$INK_DEPS`，未安装或升级。
+- 【实测】两套最终文件场景均零告警、零预算违规、零分配失败；写入／重启／复查内部 RAM 最低余量分别 **47,728／47,840／47,840 字节**，高于 32,768，没有抬高预算。
+- 【实测】`git diff --check` 通过；复查起点以来只改本报告、文件应用及其两个测试文件。按下文原正则扫描任务基线至最终提交的差异，**0 命中，grep 退出 1**；证据：`build/files-review-privacy.json`、`build/files-review-privacy-hits.txt`。代码和测试里程碑已本地提交为 `56c84d52`；最终测试断言与本节验证随后提交，未推送。
+- 【实现】架构审视：修复均位于文件页面，导航、文件变更、确认和 AI 仍走既有能力与 F4；没有新增服务边界或绕过权限／页面版本检查。下文保留上一轮报告及其历史测试结果，既有格式限制、设计差异及未做实机／Linux 验证仍适用。
 
 基线：`3fce2beea07d9e25a814cd24c64e8d5305ea9222`。分支：`claude/codex-files-app-1`。状态：执行完成，有下列未达项。
 

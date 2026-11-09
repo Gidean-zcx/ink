@@ -48,7 +48,8 @@ static void host_snapshot(void *unused) {
     if (!f || fprintf(f, "{\"scene\":\"%s\",\"snapshot\":%s}\n", scene, snapshot_json) < 0 || fclose(f)) abort();
 }
 static void snapshot_page(void) {
-    const char *page = F.mode == ACTIONS ? "FileActions" : F.mode == MOVE ? "FileMove" : F.mode == LIST ? "FileList" : "Files";
+    const char *page = !strcmp(scene, "FileActionsPreview") ? "FileActions" : !strcmp(scene, "FileMoveLong") ? "FileMove" :
+                       !strcmp(scene, "FileListLong") ? "FileList" : scene;
     CHECK(ink_ui_snapshot(snapshot_json, sizeof snapshot_json, NULL) > 0 && strstr(snapshot_json, page), "%s has a semantic snapshot", scene);
     CHECK(ink_ui_context_snapshot(g_snap, sizeof g_snap, NULL) > 0, "%s fits the production AI buffer", scene);
     vtk_host_call(host_snapshot, NULL);
