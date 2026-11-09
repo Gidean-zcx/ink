@@ -856,7 +856,7 @@ static int remote_call(const char *name, const ink_args_t *args, const ink_call_
 
 /* ------------------------------------------------------------ events */
 
-#define SUBS_MAX 32
+#define SUBS_MAX 64 /* 27 system subscriptions by 2026-11-09, tests add theirs */
 
 static struct {
     const char *prefix;

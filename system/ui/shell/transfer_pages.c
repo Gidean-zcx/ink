@@ -1,0 +1,208 @@
+/* Transfer presenters use the same capabilities as AI. */
+/* ui-scale-runtime: dimension x,y,w,font Theme-derived layout and typography. */
+/* ui-scale-runtime: font font Only theme text sizes are passed below. */
+#include <stdio.h>
+#include <string.h>
+#include "ink/osal.h"
+#include "ink/sys/json.h"
+#include "ink/sys/members.h"
+#include "ink/sys/state.h"
+#include "ink/sys/ui_semantics.h"
+#include "ink/ui_shell.h"
+
+enum { WIRELESS, LIVE, USB_BUSY, USB_ON, USB_FAIL };
+static const char *const NAMES[] = {"Transfer", "TransferLive", "TransferUsbBusy", "TransferUsbOn", "TransferUsbFail"};
+static struct {
+    lv_obj_t *screen;
+    lv_timer_t *timer;
+    uint32_t epoch, generation;
+    int page;
+    bool usb, active, pending, switching;
+    int64_t received;
+    char member[16], address[80], code[8], result[96], title[96], detail[256], progress[96];
+    ink_ui_page_spec_t model;
+    ink_ui_field_spec_t fields[6];
+    ink_ui_action_spec_t actions[4];
+} P INK_PSRAM_BSS;
+static void create(lv_obj_t *screen, void *arg);
+static void destroy(void);
+static void draw(void);
+static int snapshot(char *out, size_t cap) { return ink_ui_semantics_snapshot(&P.model, out, cap); }
+#define PAGE(n_) {.name = n_, .app = "transfer", .create = create, .destroy = destroy, .snapshot = snapshot}
+static const ink_activity_t PAGES[] = {PAGE("Transfer"), PAGE("TransferLive"), PAGE("TransferUsbBusy"), PAGE("TransferUsbOn"), PAGE("TransferUsbFail")};
+static bool current(void) { return P.screen && P.epoch == ink_member_epoch() && !strcmp(ink_ui_page_name(), NAMES[P.page]); }
+static void show(int page) {
+    if (page != P.page) {
+        P.switching = true;
+        ink_ui_drop_app("transfer"); ink_ui_push(&PAGES[page], (void *)(intptr_t)page);
+        P.switching = false;
+    } else { draw(); ink_ui_content_changed(); }
+}
+static void reply(void *ctx, const ink_receipt_t *rc);
+static void request(const char *cap, ink_source_t src) {
+    ink_call_opts_t opts = {.src = src, .member = P.member, .reply_exec = INK_EXEC_UI,
+        .done = reply, .ctx = (void *)(uintptr_t)P.generation};
+    P.pending = true;
+    if (ink_cap_call(cap, NULL, &opts)) P.pending = false;
+}
+static void poll(lv_timer_t *timer) {
+    (void)timer;
+    if (current() && !P.pending) request(P.usb ? "usb.status" : "transfer.status", INK_SRC_SYSTEM);
+}
+static void clicked(lv_event_t *e) {
+    if (!current() || P.pending) return;
+    const ink_ui_action_spec_t *a = lv_event_get_user_data(e);
+    request(a->capability, INK_SRC_TOUCH);
+}
+static void button(const char *label, const char *cap, int x, int y, int w, bool primary) {
+    ink_ui_action_spec_t *a = &P.actions[P.model.action_count++];
+    *a = (ink_ui_action_spec_t){.id = cap, .label = label, .capability = cap, .enabled = true};
+    ink_ui_pill(P.screen, label, x, y, w, INK_PRIMARY, primary, clicked, a);
+}
+static void text(const char *value, int font, int y) {
+    lv_obj_t *o = ink_ui_label(P.screen, value, font, font == INK_FONT_NOTE ? INK_WEIGHT_REGULAR : INK_WEIGHT_BOLD,
+        INK_MARGIN, y, INK_CANVAS_W - 2 * INK_MARGIN);
+    lv_obj_set_style_text_align(o, LV_TEXT_ALIGN_CENTER, 0);
+}
+static void draw(void) {
+    lv_obj_clean(P.screen);
+    const char *title = P.page == WIRELESS ? "从手机或电脑传入" : P.page == USB_FAIL ? "文件" : "和电脑传文件";
+    P.model = (ink_ui_page_spec_t){NAMES[P.page], title, {NAMES[P.page], P.epoch}, P.fields, 6, P.actions, 1};
+    P.actions[0] = (ink_ui_action_spec_t){.id = "back", .label = "返回", .capability = "shell.back", .enabled = true};
+    P.fields[0] = (ink_ui_field_spec_t){.id = "member", .role = "text", .label = "家人", .value = P.member};
+    P.fields[1] = (ink_ui_field_spec_t){.id = "address", .role = "text", .label = "电脑地址", .value = P.active ? (P.address[0] ? P.address : "还没连上 Wi-Fi") : "尚未开启"};
+    P.fields[2] = (ink_ui_field_spec_t){.id = "code", .role = "text", .label = "一次性数字", .value = P.active ? P.code : "", .secret = true};
+    P.fields[3] = (ink_ui_field_spec_t){.id = "progress", .role = "text", .label = "接收进度", .value = P.progress};
+    P.fields[4] = (ink_ui_field_spec_t){.id = "status", .role = "text", .label = "说明", .value = P.detail};
+    P.fields[5] = (ink_ui_field_spec_t){.id = "title", .role = "text", .label = "状态", .value = P.title};
+    ink_shell_statusbar(P.screen, true);
+    if (P.page != USB_ON) ink_shell_topbar(P.screen, title);
+    int w = INK_CANVAS_W - 2 * INK_MARGIN, bottom = INK_CANVAS_H - INK_MARGIN - INK_PRIMARY;
+    int middle = INK_CANVAS_H / 2, icon_y = middle - INK_CIRCLE_LARGE;
+    if (P.page == WIRELESS) {
+        text("用手机扫，或在电脑上打开", INK_FONT_LIST, INK_STATUS_BAR + INK_PRIMARY + INK_GAP_XXL);
+        if (P.active && P.address[0]) {
+            int edge = 2 * INK_ROW_DOUBLE, y = INK_STATUS_BAR + INK_PRIMARY + INK_BLOCK_L;
+            lv_obj_t *qr = lv_qrcode_create(P.screen);
+            lv_qrcode_set_size(qr, ink_ui_px(edge)); lv_qrcode_set_dark_color(qr, lv_color_black()); lv_qrcode_set_light_color(qr, lv_color_white());
+            lv_obj_set_pos(qr, ink_ui_px((INK_CANVAS_W - edge) / 2), ink_ui_px(y));
+            lv_obj_set_style_pad_all(qr, 0, 0); lv_obj_set_style_border_width(qr, 0, 0);
+            lv_qrcode_update(qr, P.address, (uint32_t)strlen(P.address));
+            text(P.address, INK_FONT_NOTE, y + edge + INK_GAP_L);
+            text("再输这个数字", INK_FONT_LIST, middle + INK_GAP_XXL);
+            text(P.code, INK_FONT_NUMBER, middle + INK_GAP_XXL + INK_LINE_LIST);
+        } else if (P.active) text("还没连上 Wi-Fi", INK_FONT_LIST, middle);
+        text(P.active ? P.progress : P.detail, INK_FONT_NOTE, bottom - 2 * INK_LINE_NOTE - INK_GAP_L);
+        text("只能放到‘传进来的’。关掉这页就断开。", INK_FONT_NOTE, bottom - INK_LINE_NOTE - INK_GAP);
+        button(P.active ? "关闭" : "开始", P.active ? "shell.back" : "transfer.start", INK_MARGIN, bottom, P.active ? w : (w - INK_GAP) / 2, !P.active);
+        if (!P.active) button("关闭", "shell.back", INK_MARGIN + (w + INK_GAP) / 2, bottom, (w - INK_GAP) / 2, false);
+    } else {
+        ink_ui_circle(P.screen, P.page == LIVE ? "check" : P.page == USB_ON ? "usb" : "sd",
+            (INK_CANVAS_W - INK_CIRCLE_LARGE) / 2, icon_y, INK_CIRCLE_LARGE, INK_ICON_STATE,
+            P.page == LIVE || P.page == USB_ON ? INK_SURFACE_BLACK : INK_SURFACE_STATIC, NULL, NULL);
+        text(P.title, INK_FONT_SUBTITLE, middle + INK_GAP_XL);
+        text(P.detail, INK_FONT_NOTE, middle + INK_GAP_XL + INK_LINE_SUBTITLE + INK_GAP);
+        if (P.page == LIVE) {
+            text(P.progress, INK_FONT_LIST, bottom - INK_PRIMARY - INK_GAP_L);
+            button("断开", "transfer.stop", INK_MARGIN, bottom, w, false);
+        } else if (P.page == USB_BUSY) {
+            button("先不开", "shell.back", INK_MARGIN, bottom, (w - INK_GAP) / 2, false);
+            button("停下，开始", "usb.mount", INK_MARGIN + (w + INK_GAP) / 2, bottom, (w - INK_GAP) / 2, true);
+        } else button(P.page == USB_ON ? "结束" : "知道了", P.page == USB_ON ? "usb.unmount" : "shell.back", INK_MARGIN, bottom, w, true);
+    }
+}
+static void reply(void *ctx, const ink_receipt_t *rc) {
+    if (!current() || (uint32_t)(uintptr_t)ctx != P.generation) return;
+    P.pending = false;
+    if (rc->status == INK_RC_PENDING_CONFIRMATION || rc->status == INK_RC_CANCELLED) return;
+    if (rc->status != INK_RC_DONE) {
+        snprintf(P.title, sizeof P.title, "%s", !strcmp(rc->detail, "busy") ? "有应用在用存储卡" : "还不能开始传文件");
+        snprintf(P.detail, sizeof P.detail, "%s", !strcmp(rc->detail, "busy") ? "占用的应用暂不能查看。请先停下读书、播放或下载，再开始。" : "请检查无线网络、数据线和存储卡后再试。");
+        if (P.usb && (!strcmp(rc->detail, "no card") || !strcmp(rc->detail, "read or write error"))) show(USB_FAIL);
+        else show(P.usb ? USB_BUSY : WIRELESS);
+        return;
+    }
+    if (!rc->result) { poll(NULL); return; }
+    ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
+    if (!j || ink_json_parse(j, rc->result, strlen(rc->result))) { osal_free(j); return; }
+    if (P.usb) {
+        bool lent = false, connected = false;
+        lent = ink_json_eq(j, ink_json_find(j, 0, "lent"), "true"); connected = ink_json_eq(j, ink_json_find(j, 0, "connected"), "true");
+        if (lent && P.page != USB_ON) show(USB_ON);
+        else if (!connected && P.page == USB_BUSY && strcmp(P.title, "请先连上电脑")) {
+            snprintf(P.title, sizeof P.title, "请先连上电脑"); show(USB_BUSY);
+        }
+    } else {
+        bool active = false; int64_t port = 0, received = 0; char result[96] = "", code[8] = "";
+        active = ink_json_eq(j, ink_json_find(j, 0, "active"), "true"); ink_json_int(j, ink_json_find(j, 0, "port"), &port);
+        ink_json_int(j, ink_json_find(j, 0, "received"), &received);
+        ink_json_str(j, ink_json_find(j, 0, "result"), result, sizeof result); ink_json_str(j, ink_json_find(j, 0, "code"), code, sizeof code);
+        char host[64] = "", address[80] = "";
+        ink_json_str(j, ink_json_find(j, 0, "host"), host, sizeof host);
+        if (host[0]) snprintf(address, sizeof address, "http://%s:%u/", host, (unsigned)(uint16_t)port);
+        bool changed = active != P.active || received != P.received || strcmp(P.result, result) || strcmp(P.code, code) || strcmp(P.address, address);
+        P.active = active; P.received = received;
+        snprintf(P.result, sizeof P.result, "%s", result); snprintf(P.code, sizeof P.code, "%s", code);
+        snprintf(P.address, sizeof P.address, "%s", address);
+        snprintf(P.progress, sizeof P.progress, "已收到 %d 个，%lld 字节", !strcmp(result, "文件已收到") ? 1 : 0, (long long)received);
+        snprintf(P.title, sizeof P.title, "%.90s", active ? received > 0 ? "正在接收文件" : "等待传入" : result);
+        snprintf(P.detail, sizeof P.detail, "%s", active ? "只能放到‘传进来的’。关掉这页就断开。" : result);
+        if (changed) show(active && received > 0 ? LIVE : WIRELESS);
+    }
+    osal_free(j);
+}
+static void create(lv_obj_t *screen, void *arg) {
+    P.screen = screen; P.page = (int)(intptr_t)arg; P.epoch = ink_member_epoch(); P.generation++; P.pending = false;
+    snprintf(P.member, sizeof P.member, "%s", ink_member_current()->id);
+    if (P.page == USB_ON) {
+        snprintf(P.title, sizeof P.title, "存储卡已经连到电脑");
+        snprintf(P.detail, sizeof P.detail, "这期间书和音频打不开。用完在电脑上弹出，或者点‘结束’。");
+    } else if (P.page == USB_FAIL) {
+        snprintf(P.title, sizeof P.title, "读不了这张存储卡");
+        snprintf(P.detail, sizeof P.detail, "不会自动格式化。\n请到电脑上修复，再插回来。");
+    }
+    draw(); P.timer = lv_timer_create(poll, 1000, NULL); poll(NULL);
+}
+static void destroy(void) {
+    if (P.timer) lv_timer_delete(P.timer);
+    P.timer = NULL; P.screen = NULL; P.generation++;
+    if (!P.usb && !P.switching) {
+        ink_call_opts_t opts = {.src = INK_SRC_SYSTEM, .member = P.member};
+        ink_cap_call("transfer.stop", NULL, &opts);
+    }
+}
+static void open_page(ink_call_t *c) {
+    ink_shell_close(); ink_ui_drop_app("transfer");
+    P.usb = !strcmp(c->cap->id, "transfer.usb"); P.active = false; P.received = 0;
+    P.result[0] = P.code[0] = P.progress[0] = 0;
+    snprintf(P.title, sizeof P.title, "准备连电脑");
+    snprintf(P.detail, sizeof P.detail, "%s", P.usb ? "开始前请先停下使用存储卡的应用。占用的应用暂不能查看。" : "只能放到‘传进来的’。关掉这页就断开。");
+    ink_ui_push(&PAGES[P.usb ? USB_BUSY : WIRELESS], (void *)(intptr_t)(P.usb ? USB_BUSY : WIRELESS));
+}
+static void confirmed(void *ctx, const char *id, const ink_args_t *a) {
+    (void)ctx; (void)id;
+    char cap[48] = "", status[24] = "", member[16] = "";
+    ink_args_get_str(a, "cap", cap, sizeof cap); ink_args_get_str(a, "status", status, sizeof status);
+    ink_args_get_str(a, "member", member, sizeof member);
+    if (!current() || !P.usb || strcmp(cap, "usb.mount") || strcmp(member, P.member)) return;
+    if (!strcmp(status, "failed")) {
+        ink_receipt_t rc = {.status = INK_RC_FAILED};
+        ink_args_get_str(a, "detail", rc.detail, sizeof rc.detail);
+        reply((void *)(uintptr_t)P.generation, &rc);
+    } else poll(NULL);
+}
+static void usb_changed(void *ctx, const char *id, const ink_args_t *a) {
+    (void)ctx; (void)id;
+    bool lent = true; ink_args_get_bool(a, "lent", &lent);
+    if (!current() || !P.usb || P.page != USB_ON || lent) return;
+    int64_t card = 0; ink_state_get_int(ink_state_find("storage.card"), &card);
+    if (card) ink_ui_pop(); else show(USB_FAIL);
+}
+int ink_transfer_pages_init(void) {
+    static const ink_cap_t caps[] = {
+        {.id = "transfer.open", .title = "打开从手机或电脑传入页面", .effect = INK_FX_NAVIGATE, .run = open_page},
+        {.id = "transfer.usb", .title = "打开连电脑页面", .effect = INK_FX_NAVIGATE, .run = open_page}
+    };
+    return ink_cap_register(caps, 2) || ink_cap_subscribe("confirm.result", confirmed, NULL, INK_EXEC_UI) ||
+        ink_cap_subscribe("usb.changed", usb_changed, NULL, INK_EXEC_UI) ? -1 : 0;
+}

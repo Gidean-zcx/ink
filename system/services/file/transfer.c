@@ -182,9 +182,16 @@ static void poll_upload(void *arg) {
 
 static void status(ink_call_t *c) {
     if (T.active && T.epoch != ink_member_epoch()) finish("成员已变化");
-    char out[240];
-    snprintf(out, sizeof out, "{\"active\":%s,\"port\":%u,\"code\":\"%06u\",\"directory\":\"" INBOX "\",\"result\":\"%s\"}",
-             T.active ? "true" : "false", T.port, T.code, T.result ? T.result : "尚未开启");
+    int64_t received = 0;
+    if (T.epoch == ink_member_epoch()) {
+        ink_fs_stat_t st;
+        if (T.file) received = ink_fs_tell(T.file);
+        else if (T.result && !strcmp(T.result, "文件已收到") && !fs_stat_for(&T.actor, T.path, &st)) received = st.size;
+    }
+    char out[384], host[64] = "";
+    if (hal_transfer_host(host, sizeof host)) host[0] = 0;
+    snprintf(out, sizeof out, "{\"active\":%s,\"host\":\"%.63s\",\"port\":%u,\"code\":\"%06u\",\"directory\":\"" INBOX "\",\"result\":\"%s\",\"received\":%lld}",
+             T.active ? "true" : "false", host, T.port, T.code, T.result ? T.result : "尚未开启", (long long)received);
     ink_cap_result(c, out);
 }
 static void start(ink_call_t *c) {
@@ -210,7 +217,7 @@ static void start(ink_call_t *c) {
 }
 static void stop(ink_call_t *c) { finish("传输已关闭"); status(c); }
 static const ink_cap_t TRANSFER_CAPS[] = {
-    {.id = "transfer.start", .title = "开启一次无线传文件授权（两分钟内有效）", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .permission = "file", .exec = INK_EXEC_BG, .run = start},
+    {.id = "transfer.start", .title = "开启一次无线传文件授权（两分钟内有效）", .effect = INK_FX_LOCAL_WRITE, .permission = "file", .exec = INK_EXEC_BG, .run = start},
     {.id = "transfer.stop", .title = "关闭无线传文件", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .permission = "file", .exec = INK_EXEC_BG, .run = stop},
     {.id = "transfer.status", .title = "查看无线传文件授权和结果", .effect = INK_FX_READ, .child_ok = true, .permission = "file", .exec = INK_EXEC_BG, .run = status},
 };
