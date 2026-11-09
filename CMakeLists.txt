@@ -237,6 +237,7 @@ add_library(ink_system STATIC
   system/ui/ui_task.c
   system/ui/ui_semantics.c
   system/ui/ui_list.c
+  system/ui/search.c
   system/ui/theme.c
   system/ui/icons.c
   system/ui/shell/navigation.c
@@ -556,6 +557,10 @@ target_link_libraries(sim-settings-a PRIVATE ink_apps ink_system)
 add_test(NAME settings-a COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/settings_a.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(settings-a PROPERTIES TIMEOUT 180)
 target_link_libraries(sim-ui-list-paging PRIVATE ink_apps ink_system)
+ink_sim_executable(sim-search tests/search/search.c)
+target_link_libraries(sim-search PRIVATE ink_apps ink_system)
+add_test(NAME search COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/search/run.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(search PROPERTIES TIMEOUT 240)
 add_test(NAME ui-list-paging
   COMMAND sim-ui-list-paging --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
     --script ${CMAKE_SOURCE_DIR}/tests/ui_list_paging.script --budget ${CMAKE_SOURCE_DIR}/tests/ui_scene.budget.json

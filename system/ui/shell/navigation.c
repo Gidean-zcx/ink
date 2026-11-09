@@ -16,6 +16,7 @@
 #include "ink/sys/notify.h"
 #include "ink/sys/power.h"
 #include "ink/sys/settings.h"
+#include "ink/sys/search.h"
 #include "ink/sys/state.h"
 #include "ink/sys/textfield.h"
 #include "ink/sys/time.h"
@@ -484,7 +485,7 @@ static void search_entered(void *ctx, const char *value) {
     ink_args_init(args);
     ink_args_str(args, "query", value);
     ink_receipt_t rc;
-    ink_cap_invoke("shell.search", args, INK_SRC_TOUCH, 0, &rc);
+    ink_cap_invoke("search.show", args, INK_SRC_TOUCH, 0, &rc);
     osal_free(args);
 }
 
@@ -1558,6 +1559,7 @@ static const ink_setting_def_t SETTINGS[] = {
 int ink_shell_ai_init(void);
 
 int ink_shell_init(void) {
+    if (ink_search_init() != 0) return -1;
     if (ink_settings_pages_init() != 0) return -1;
     if (ink_boot_flow_init() != 0) return -1;
     if (ink_shell_ai_init() != 0) return -1;

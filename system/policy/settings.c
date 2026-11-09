@@ -250,6 +250,13 @@ int ink_settings_watch(const char *prefix, ink_state_fn fn, void *ctx, ink_exec_
 
 static const char *TYPE_NAME[] = {"", "bool", "int", "enum"};
 
+const ink_setting_def_t *ink_setting_at(int index) {
+    osal_mutex_lock(SE.lock, OSAL_WAIT_FOREVER);
+    const ink_setting_def_t *d = index >= 0 && index < SE.n ? SE.it[index].def : NULL;
+    osal_mutex_unlock(SE.lock);
+    return d;
+}
+
 int ink_settings_json(char *out, size_t cap) {
     ink_jw_t w;
     ink_jw_init(&w, out, cap);
