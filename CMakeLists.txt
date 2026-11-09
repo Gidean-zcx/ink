@@ -235,6 +235,7 @@ add_library(ink_system STATIC
   system/ui/lock_mark.c
   system/ui/ui_task.c
   system/ui/ui_semantics.c
+  system/ui/ui_list.c
   system/ui/theme.c
   system/ui/icons.c
   system/ui/shell/navigation.c
@@ -546,6 +547,15 @@ add_test(NAME ui-semantics
   COMMAND sim-ui-semantics --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
     --script ${CMAKE_SOURCE_DIR}/tests/ui_semantics.script --budget ${CMAKE_SOURCE_DIR}/tests/ui_scene.budget.json
     --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT} --out ${CMAKE_BINARY_DIR}/test-out/ui-semantics --quiet --no-random-outages)
+ink_sim_executable(sim-ui-list-paging tests/ui_list_paging.c)
+target_link_libraries(sim-ui-list-paging PRIVATE ink_apps ink_system)
+add_test(NAME ui-list-paging
+  COMMAND sim-ui-list-paging --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+    --script ${CMAKE_SOURCE_DIR}/tests/ui_list_paging.script --budget ${CMAKE_SOURCE_DIR}/tests/ui_scene.budget.json
+    --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT} --out ${CMAKE_BINARY_DIR}/test-out/ui-list-paging --quiet --no-random-outages)
+add_test(NAME ui-list-snapshots COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/ui_list_snapshots.py
+  ${CMAKE_BINARY_DIR}/test-out/ui-list-paging/list-snapshots.ndjson)
+set_tests_properties(ui-list-snapshots PROPERTIES DEPENDS ui-list-paging)
 ink_sim_executable(sim-ui-input-host tests/ui_input_host.c)
 target_link_libraries(sim-ui-input-host PRIVATE ink_apps ink_system)
 add_test(NAME ui-input-host
