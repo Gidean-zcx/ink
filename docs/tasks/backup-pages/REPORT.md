@@ -82,15 +82,31 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-as
 
 ## 复查后的修复
 
-复查基线：`47c4e3f8`。按主会话 `REVIEW.md` 的 BP-L1（中）修复，本轮没有其它未修复条目。
+复查基线：`47c4e3f8`。按主会话 `REVIEW.md` 的 BP-L1（中）修复，本轮没有其它未修复条目。修复与测试提交：`d841ec88`。
 
 - 【实现】取消独立备份应用注册；新增任务明确要求的导航能力 `backup.open`，由现有 UI 执行器打开 `Backup`。`SetStorage` 最上面的备份行和 AI 使用同一能力，进入页面只查询状态，立刻备份仍由页内按钮调用 `backup.now`。
 - 【实现】导航复用现有页面栈和成员策略；重复打开后仍能直接返回存储页。未改服务、确认流程或文件格式，未新增任务、状态机、重试、缓存或配置项。
 - 【实现】测试同步：应用总数精确由 12 改回 11，增加目录不含备份的断言；AI 能力清单列入 `backup.open`。页面流程由存储行进入，新增触摸／AI 导航不触发备份、重复打开后的返回、儿童触摸与 AI 均被拒绝的断言；原备份恢复与失败分支保留。
 - 改过的已有测试补充：`settings-a` 原先把点击存储行当成立刻备份；现断言点击后仅打开页面、服务仍为 `none`，返回存储页后由 AI 发起 `backup.now`，保留原有“服务已接受任务、事件刷新页面与 AI 快照”的全部检查。
 - 【实测】普通构建通过；`backup-pages`（196 项检查）、`settings-a`、`integration-apps`、`integration-ai-surface` 共 4/4 通过。反向对照 5/5 有效：重新注册独立应用、把存储行改回 `backup.now` 均退出 1 并命中新增断言，原有摘要、错误保留、AI 阶段路由的对照也均退出 1；源文件哈希不变。
-- 验证进度：最终普通全量和 ASan/UBSan 检查进行中，完成后补记。首轮普通全量仅 `settings-a` 的旧入口期望及共用能力表文档失败；前者已按上述新行为调整并通过，后者按用户要求留给主会话重新生成。
+- 【实测】最终普通全量和 ASan/UBSan 全量均为 232/233 通过、0 跳过，耗时分别为 268.80、313.51 秒；两种设备档案的 `ui-snapshot-regressions-*` 均通过。唯一失败均为用户明确允许忽略的 `capability-table-doc`（生成文档尚未列入新导航能力），未删除或跳过此测试。首轮额外失败的 `settings-a` 已按上述新行为调整并通过。
+- 【实测】两套构建的备份流程均通过 196 项检查，内部总可用内存最低 45,792 字节（门槛 32,768），内部与外部内存分配失败均为 0；内存检查完整测试日志及保留的测试输出没有 ASan、UBSan 或 LeakSanitizer 错误。
+- 【实测】历史跳过原因已核查：字体工具 Python 缺 `pytest`、`pytest-asyncio`、`aiohttp`、`PyYAML`；两套构建的 `INK_HUB_PYTHON` 沿用 `$INK_DEPS/hub/.venv/bin/python`，其版本分别为 8.4.2、1.2.0、3.12.15、6.0.3，与锁定依赖一致。中枢测试本轮实际运行通过，无安装或升级依赖，无未满足依赖。
 
 【实现】本轮产品代码差异为 10 行新增、4 行删除；相对任务原始基线新增 221 行、删除 1 行，按增删合计 222 行，低于 300 行预算。只在现有导航注册和存储行接线处修改。
+
+复现命令（沿用原配置和依赖，均以 utility 优先级运行）：
+
+```sh
+taskpolicy -c utility cmake --build build -j2
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/backup_pages_reverse.py --build build
+taskpolicy -c utility cmake --build build-asan -j2
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
+```
+
+证据：`build/recheck-focused.log`、两套构建的 `recheck-build.log` 和 `recheck-ctest.log`、`build/backup-pages-reverse/{commands,summary}.json`，以及两套 `test-out/backup-pages-sim-backup-pages/device/` 的指标与截图。首轮失败日志保留在 `build/recheck-ctest-initial.log`。两次全量 CTest 退出 8，均只因上述文档同步项；构建、定向测试和反向对照命令均退出 0。
+
+差异与隐私复核【实测】：本轮仅 8 个相关文件，`git diff --check` 通过；按总规则第 6 节扫描任务原始基线至提交，无匹配（grep 退出 1）。没有构建产物、设计稿或共享文档夹带。主会话原有未跟踪的 `REVIEW.md` 未改动、未加入提交。本轮没有新增未完成项、设计差异或需用户决定的事项。
 
 要改的文档：主会话合并时重新生成 `docs/system/capabilities.md` 并同步 `docs/system/ui-dependencies.md`；上节关于存储行尚待接线的记录已由本轮修复完成。不直接修改共享文档。
