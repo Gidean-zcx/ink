@@ -40,14 +40,14 @@ def check(result, metrics, candidate):
     assert before["actions"] == ["spike.set", "text.insert", "text.submit", "spike.submit"]
 
 
-def run(build, out, candidate, mode):
+def run(build, out, candidate, mode, timeout=45):
     out.mkdir(parents=True, exist_ok=True)
     env = {**os.environ, "INK_SPIKE_SOURCE": str(ROOT / "tools/appfw-spike" / FRONTENDS[candidate])}
     command = [str(build / "appfw-spike" / f"appfw-{candidate}"), "--profile", "simulator/profiles/metalio-plus.json",
                "--assets", str(build / "assets"), "--content", str(build / "test-content"), "--out", str(out),
                "--cpu", mode, "--end", "90s", "--quiet", "--no-random-outages"]
     with (out / "run.log").open("w") as log:
-        subprocess.run(command, cwd=ROOT, env=env, check=True, stdout=log, stderr=subprocess.STDOUT, timeout=45)
+        subprocess.run(command, cwd=ROOT, env=env, check=True, stdout=log, stderr=subprocess.STDOUT, timeout=timeout)
     result = json.loads((out / "spike.json").read_text())
     metrics = json.loads((out / "metrics.json").read_text())
     check(result, metrics, candidate)

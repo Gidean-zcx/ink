@@ -1,6 +1,8 @@
 """Validate IDF size/map differences and emit a path-free measurement summary."""
 import hashlib
 import json
+import os
+import subprocess
 import sys
 from pathlib import Path
 
@@ -20,16 +22,23 @@ def main():
               "default_unchanged": True, "default": baseline_layout, "candidates": {}}
     for candidate in ("c", "json", "lua", "mquickjs"):
         sizes = json.loads((out / f"{candidate}.json").read_text())
-        diff = json.loads((out / f"{candidate}-diff.json").read_text())
+        # IDF's json2 summary omits used_diff; raw preserves the map delta.
+        idf_python = Path(os.environ["IDF_PYTHON_ENV_PATH"]) / "bin/python"
+        raw = out / f"{candidate}-diff-raw.json"
+        subprocess.run([str(idf_python), "-B", str(Path(os.environ["IDF_PATH"]) / "tools/idf_size.py"),
+                        "--format", "raw", "--diff", str(out / "default-before.map"),
+                        str(out / f"{candidate}.map"), "-o", str(raw)], check=True)
+        diff = json.loads(raw.read_text())
         layout = {p["name"]: p for p in sizes["layout"]}
-        map_delta = {p["name"]: p for p in diff["layout"]}
+        map_delta = diff["memory_types"]
         delta = {}
         for name in ("Flash", "DIRAM", "External RAM"):
             delta[name] = layout[name]["used"] - baseline_layout[name]["used"]
-            assert delta[name] == map_delta[name]["used"], (candidate, name)
+            assert delta[name] == map_delta[name]["used_diff"], (candidate, name)
         symbols = (out / f"{candidate}.map").read_text()
-        assert "ink_spike_activity" in symbols and "ink_spike_toggle" in symbols
-        assert "ink_spike_tests" not in symbols.split("Linker script and memory map", 1)[-1]
+        retained = symbols.split("Linker script and memory map", 1)[-1].split("Cross Reference Table", 1)[0]
+        assert "ink_spike_activity" in retained and "ink_spike_toggle" in retained
+        assert "ink_spike_tests" not in retained
         report["candidates"][candidate] = {"absolute": layout, "delta": delta,
                                               "map_sha256": digest(out / f"{candidate}.map")}
         print(f"{candidate}: Flash {delta['Flash']:+}, DIRAM {delta['DIRAM']:+}, PSRAM static {delta['External RAM']:+} bytes")

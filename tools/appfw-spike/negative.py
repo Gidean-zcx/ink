@@ -19,9 +19,9 @@ def main():
     guard = b"    if (new_size > INK_SPIKE_VM_LIMIT - (used - old_size)) return NULL;\n"
     assert original.count(guard) == 1
 
-    def rebuild(name):
+    def rebuild(name, candidate="lua"):
         with (out / name).open("w") as log:
-            subprocess.run(["cmake", "--build", str(build), "--target", "appfw-lua", "-j2"],
+            subprocess.run(["cmake", "--build", str(build), "--target", f"appfw-{candidate}", "-j2"],
                            cwd=ROOT, check=True, stdout=log, stderr=subprocess.STDOUT, timeout=120)
 
     caught = False
@@ -61,11 +61,31 @@ def main():
     restored, _ = run(build, out / "restored-clock", "lua", "measured:1")
     broken = json.loads((out / "without-clock-settlement/spike.json").read_text())
     assert bridge.read_bytes() == original_bridge
+    mquickjs = ROOT / "tools/appfw-spike/candidate_mquickjs.c"
+    original_js = mquickjs.read_bytes()
+    handler = b"    JS_SetInterruptHandler(vm, interrupt);\n"
+    assert original_js.count(handler) == 1
+    interrupted = False
+    try:
+        mquickjs.write_bytes(original_js.replace(handler, b"    JS_SetInterruptHandler(vm, NULL);\n    (void)interrupt;\n"))
+        rebuild("without-js-interrupt-build.log", "mquickjs")
+        try:
+            run(build, out / "without-js-interrupt", "mquickjs", "annotated", timeout=5)
+        except subprocess.TimeoutExpired:
+            interrupted = True
+        assert interrupted, "the infinite loop must time out without the interrupt handler"
+    finally:
+        mquickjs.write_bytes(original_js)
+        rebuild("restored-js-interrupt-build.log", "mquickjs")
+    run(build, out / "restored-js-interrupt", "mquickjs", "annotated", timeout=5)
+    assert mquickjs.read_bytes() == original_js
     (out / "result.json").write_text(json.dumps({"removed": "Lua allocator quota guard only", "unchanged_check_failed": caught,
                                                 "restored_check_passed": True, "source_restored_byte_for_byte": True,
                                                 "clock_settlement_check_failed_without_fix": clock_caught,
                                                 "startup_us_without_settlement": broken["startup_us"],
-                                                "startup_us_restored": restored["startup_us"]}, indent=2) + "\n")
+                                                "startup_us_restored": restored["startup_us"],
+                                                "mquickjs_without_interrupt_timed_out": interrupted,
+                                                "mquickjs_restored_passed": True}, indent=2) + "\n")
     print("negative controls: quota and CPU settlement removed separately -> checks failed; restored -> passed; sources restored byte for byte")
 
 
