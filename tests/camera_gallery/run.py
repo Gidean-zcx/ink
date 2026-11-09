@@ -23,9 +23,9 @@ if a.negative or a.revert:
     relative = "../../system/apps/gallery/gallery.c" if a.negative else "../../system/services/camera/camera_service.c" if a.revert == "wait" else "../../system/apps/camera/camera.c"
     original = (ROOT / "tests/camera_gallery" / relative).resolve().read_text()
     if a.negative:
-        old = "if (!found) { c->rc.status = INK_RC_REJECTED; return; }"
+        old = "if (!found) c->rc.status = INK_RC_REJECTED;"
         assert original.count(old) == 1
-        changed = original.replace(old, "if (false && !found) { c->rc.status = INK_RC_REJECTED; return; }")
+        changed = original.replace(old, "if (false && !found) c->rc.status = INK_RC_REJECTED;")
     elif a.revert == "api":
         changed = original.replace('#include "ink/sys/camera.h"', 'uint8_t *ink_camera_read_rgb(ink_call_t *c, int *w, int *h);')
         changed = changed.replace("ink_camera_read_rgb(&w, &h)", "ink_camera_read_rgb(c, &w, &h)")

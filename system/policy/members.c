@@ -627,10 +627,16 @@ static void retire_id(const char *id) {
     ink_db_close(db);
 }
 
+static bool read_name(ink_call_t *c, char *name, size_t cap) {
+    if (ink_args_get_str(&c->args, "name", name, cap) < (int)cap) return true;
+    fail(c, INK_RC_INVALID, "member name exceeds byte capacity");
+    snprintf(c->rc.say, sizeof c->rc.say, "称呼太长");
+    return false;
+}
 static void cap_add(ink_call_t *c) { /* exec.bg */
     char id[32], name[32] = "", role[8] = "child";
     ink_args_get_str(&c->args, "id", id, sizeof id);
-    ink_args_get_str(&c->args, "name", name, sizeof name);
+    if (!read_name(c, name, sizeof name)) return;
     ink_args_get_str(&c->args, "role", role, sizeof role);
     if (!ink_layout_member_ok(id)) {
         fail(c, INK_RC_INVALID, "not a usable id");
@@ -801,7 +807,8 @@ static void cap_set_pin(ink_call_t *c) {
 
 static void cap_rename(ink_call_t *c) {
     char id[16], name[32];
-    ink_args_get_str(&c->args, "id", id, sizeof id); ink_args_get_str(&c->args, "name", name, sizeof name);
+    ink_args_get_str(&c->args, "id", id, sizeof id);
+    if (!read_name(c, name, sizeof name)) return;
     slot_t *s = find(id);
     if (!s || s->removing || !name[0]) { fail(c, INK_RC_INVALID, "unknown member or empty name"); return; }
     ink_svc_lock(); snprintf(s->m.name, sizeof s->m.name, "%s", name); ink_svc_unlock();
@@ -809,11 +816,11 @@ static void cap_rename(ink_call_t *c) {
 }
 static const ink_cap_t MEMBER_CAPS[] = {
     {.id = "member.rename", .title = "修改家人的称呼", .effect = INK_FX_LOCAL_WRITE, .exec = INK_EXEC_BG,
-        .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":15},\"name\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":31}},\"required\":[\"id\",\"name\"]}", .run = cap_rename},
+        .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":15},\"name\":{\"type\":\"string\",\"description\":\"称呼最多31个UTF-8字节\",\"minLength\":1,\"maxLength\":31}},\"required\":[\"id\",\"name\"]}", .run = cap_rename},
 
     {.id = "member.list", .title = "家里有哪些人", .output = "{\"type\":\"array\"}", .effect = INK_FX_READ, .child_ok = true, .while_locked = true, .exec = INK_EXEC_DIRECT, .run = cap_list},
     {.id = "member.add", .title = "加一位家人", .ask = "加一位家人：{name}（{role}）",
-     .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":15},\"name\":{\"type\":\"string\",\"maxLength\":31},\"role\":{\"type\":\"string\",\"enum\":[\"adult\",\"child\"]}},\"required\":[\"id\"]}",
+     .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":15},\"name\":{\"type\":\"string\",\"description\":\"称呼最多31个UTF-8字节\",\"maxLength\":31},\"role\":{\"type\":\"string\",\"enum\":[\"adult\",\"child\"]}},\"required\":[\"id\"]}",
      .effect = INK_FX_SYSTEM, .ask_by_hand = true, .parent_pin = true, .exec = INK_EXEC_BG, .run = cap_add},
     {.id = "member.remove", .title = "删除一位家人和他们的全部数据（不能撤销）", .ask = "删除家人 {id} 和他们的全部数据，不能撤销",
      .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":15}},\"required\":[\"id\"]}",

@@ -72,8 +72,8 @@ const ink_ui_overlay_t *ink_ai_pages_status(ink_ai_error_t error, lv_obj_t *pare
 }
 
 static struct {
-    ink_db_t *db; ink_ui_list_t *list; ink_ui_list_position_t position;
-    bool receipts; unsigned capacity; uint32_t version, generation;
+    ink_db_t *db; ink_ui_list_t *list; ink_ui_list_position_t position[2];
+    bool receipts; unsigned capacity; uint32_t version, generation, epoch, selected;
     lv_obj_t *notice; const char *status;
     ink_json_t json;
     char row[512], ids[8][64], args[8][256], titles[8][128], values[8][192];
@@ -101,8 +101,8 @@ static void bind_row(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, i
     age = osal_wall_us() / 1000000 - when_s;
     bool undo = L.receipts && object[0] && undo_ms > 0 && age >= 0 && age * 1000 < undo_ms;
     const ink_cap_t *definition = ink_cap_find(cap);
-    snprintf(L.ids[i], sizeof L.ids[i], "activity:%u", rec.id);
-    snprintf(L.args[i], sizeof L.args[i], "{\"id\":%u}", rec.id);
+    snprintf(L.ids[i], sizeof L.ids[i], "activity:%u", (unsigned)rec.id);
+    snprintf(L.args[i], sizeof L.args[i], "{\"id\":%u}", (unsigned)rec.id);
     if (undo) {
         ink_jw_t w; ink_jw_init(&w, L.args[i], sizeof L.args[i]);
         ink_jw_raw(&w, "{\"object\":"); ink_jw_str(&w, object);
@@ -144,7 +144,7 @@ static void list_loaded(void *ctx, const ink_receipt_t *rc) {
 }
 static void list_create(lv_obj_t *screen, void *arg) {
     L.receipts = !strcmp(ink_ui_page_name(), "AiReceipts");
-    memset(&L.position, 0, sizeof L.position);
+    if (L.epoch != ink_member_epoch()) { memset(L.position, 0, sizeof L.position); L.epoch = ink_member_epoch(); }
     L.db = ink_db_open_cached_member(ink_db_find_def("activity.log"), ink_member_current()->id);
     L.version = L.db ? ink_db_last_ver(L.db) : 0;
     L.generation = ink_ui_generation(); L.status = L.db ? "" : "正在读取记录"; L.notice = NULL;
@@ -158,13 +158,13 @@ static void list_create(lv_obj_t *screen, void *arg) {
     lv_obj_t *body = ink_ui_box(screen, 0, y, INK_CANVAS_W, INK_CANVAS_H - y, 0, INK_SURFACE_WHITE, false);
     ink_ui_page_spec_t page = {.id = ink_ui_page_name(), .title = title, .object = {"activity:log", L.version},
         .actions = list_actions, .action_count = 3};
-    uint32_t selected = (uint32_t)(uintptr_t)arg;
+    (void)arg; uint32_t selected = L.selected;
     if (selected && L.db) {
         ink_db_cursor_t cursor = {.desc = true}; ink_rec_t rec; size_t index = 0;
         while (ink_db_next(L.db, &cursor, &rec, NULL, 0) == 1 && rec.id != selected) index++;
-        L.position.page = index / L.capacity;
+        L.position[L.receipts].page = index / L.capacity; L.selected = 0;
     }
-    L.list = ink_ui_list_create(body, &page, &L.position, L.capacity, 1, row_h,
+    L.list = ink_ui_list_create(body, &page, &L.position[L.receipts], L.capacity, 1, row_h,
         L.db ? "还没有 AI 做过的事" : "", bind_row, NULL);
     if (L.list) ink_ui_list_refresh(L.list, L.db ? (size_t)ink_db_count(L.db) : 0);
     if (!L.db && L.list) {
@@ -198,10 +198,11 @@ static const ink_activity_t RECEIPTS = {.name = "AiReceipts", .app = "ai-log", .
     .on_key = list_key, .snapshot = list_snapshot, .settle = list_settle};
 static void action(ink_call_t *c) {
     const char *id = c->cap->id;
-    if (!strcmp(id, "shell.ai_log")) { ink_ai_dismiss(); ink_ui_drop_app("ai-log"); ink_ui_push(&LOG, NULL); } /* entered from SetVoice, Records and AiHome, not an app */
+    if (!strcmp(id, "shell.ai_log")) { ink_ai_dismiss(); ink_ui_drop_app("ai-log"); memset(&L.position[0], 0, sizeof L.position[0]); L.selected = 0; ink_ui_push(&LOG, NULL); } /* entered from SetVoice, Records and AiHome, not an app */
     else if (!strcmp(id, "shell.ai_receipts")) {
         int64_t selected = 0; ink_args_get_int(&c->args, "id", &selected);
-        ink_ai_dismiss(); ink_ui_push(&RECEIPTS, (void *)(uintptr_t)selected);
+        memset(&L.position[1], 0, sizeof L.position[1]); L.selected = (uint32_t)selected;
+        ink_ai_dismiss(); ink_ui_push(&RECEIPTS, NULL);
     } else if (!strcmp(id, "ai.pages.close") || !strcmp(id, "ai.pages.retry")) {
         if (!E.root) { c->rc.status = INK_RC_STALE; return; }
         bool retry = !strcmp(id, "ai.pages.retry") && E.kind < 2;

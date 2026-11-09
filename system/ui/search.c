@@ -31,7 +31,7 @@ static struct {
 } S INK_PSRAM_BSS;
 static const char *status(void) { return S.pending ? "正在搜索" : S.error[0] ? S.error : S.total ? "" : "没有找到相关内容"; }
 typedef struct { char query[193], member[16], raw[INK_DB_RECORD_MAX + 1], text[4096];
-    ink_json_t json; ink_jw_t writer; size_t total, cursor; unsigned shown; } query_t;
+    ink_json_t json; ink_jw_t writer; size_t total, cursor; unsigned shown, unavailable; } query_t;
 static bool visible(void) {
     return ink_ui_page_current() && S.epoch == ink_member_epoch() &&
         (!strcmp(ink_ui_page_name(), "Search") || !strcmp(ink_ui_page_name(), "SearchEmpty"));
@@ -74,9 +74,9 @@ static void query(ink_call_t *c) {
     const char *const collections[] = {"phone.contacts", "memo.notes"};
     for (unsigned i = 0; i < 2; i++) {
         ink_db_t *db = ink_db_open_member(ink_db_find_def(collections[i]), q->member);
-        if (!db) { c->rc.status = INK_RC_FAILED; break; }
-        ink_db_cursor_t cur = {0}; ink_rec_t rec;
-        while (ink_db_next(db, &cur, &rec, q->raw, sizeof q->raw - 1) == 1) {
+        if (!db) { q->unavailable |= 1u << (i + 2); continue; }
+        ink_db_cursor_t cur = {0}; ink_rec_t rec; int r;
+        while ((r = ink_db_next(db, &cur, &rec, q->raw, sizeof q->raw - 1)) == 1) {
             q->raw[rec.len] = 0;
             if (ink_json_parse(&q->json, q->raw, rec.len) != 0 ||
                 (i && ink_json_eq(&q->json, ink_json_find(&q->json, 0, "deleted"), "true"))) continue;
@@ -86,6 +86,7 @@ static void query(ink_call_t *c) {
             if (!i) ink_json_str(&q->json, ink_json_find(&q->json, 0, "number"), value, sizeof value);
             match(q, i + 2, id, q->text, value, rec.ver);
         }
+        if (r < 0) q->unavailable |= 1u << (i + 2);
         ink_db_close(db);
     }
     for (unsigned root = 0; root < 2; root++) {
@@ -94,14 +95,20 @@ static void query(ink_call_t *c) {
             char id[64]; snprintf(id, sizeof id, "file:%u", (unsigned)e.id);
             match(q, 4, id, strrchr(e.path, '/') + 1, e.path, 1);
         }
-        if (r < 0 && r != INK_FS_ERR_NOT_FOUND) c->rc.status = INK_RC_FAILED;
+        if (r < 0 && r != INK_FS_ERR_NOT_FOUND) q->unavailable |= 1u << 4;
     }
     if (strcmp(q->member, ink_member_current()->id) || !ink_member_space_open()) c->rc.status = INK_RC_STALE;
     ink_jw_raw(&q->writer, "],\"total\":"); ink_jw_int(&q->writer, q->total);
     ink_jw_raw(&q->writer, ",\"cursor\":"); ink_jw_int(&q->writer, cursor);
     ink_jw_raw(&q->writer, ",\"next_cursor\":");
     ink_jw_int(&q->writer, q->cursor + q->shown < q->total ? (int64_t)(q->cursor + q->shown) : -1);
-    ink_jw_raw(&q->writer, "}");
+    ink_jw_raw(&q->writer, ",\"unavailable\":[");
+    bool comma = false;
+    for (unsigned i = 2; i < 5; i++) if (q->unavailable & (1u << i)) {
+        if (comma) ink_jw_raw(&q->writer, ",");
+        ink_jw_str(&q->writer, TYPES[i]); comma = true;
+    }
+    ink_jw_raw(&q->writer, "]}");
     if (q->writer.overflow) c->rc.status = INK_RC_FAILED;
     if (c->rc.status == INK_RC_DONE) ink_cap_result(c, out);
 done:
@@ -133,6 +140,12 @@ static void loaded(void *ctx, const ink_receipt_t *rc) {
     ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
     if (rc->status == INK_RC_DONE && j && rc->result && ink_json_parse(j, rc->result, strlen(rc->result)) == 0) {
         int64_t total = 0; ink_json_int(j, ink_json_find(j, 0, "total"), &total); S.total = (size_t)total;
+        int unavailable = ink_json_find(j, 0, "unavailable");
+        for (int t = unavailable + 1; unavailable >= 0 && t < j->ntok && j->tok[t].end < j->tok[unavailable].end; t++) {
+            char category[16]; ink_json_str(j, t, category, sizeof category);
+            size_t n = strlen(S.error); snprintf(S.error + n, sizeof S.error - n, "%s%s", n ? "、" : "", category);
+        }
+        if (S.error[0]) { size_t n = strlen(S.error); snprintf(S.error + n, sizeof S.error - n, "暂时搜不了"); }
         int array = ink_json_find(j, 0, "results"), at = 0;
         memset(S.items, 0, sizeof S.items);
         for (int t = array + 1; array >= 0 && t < j->ntok && j->tok[t].end < j->tok[array].end && at < 3; t++) {
@@ -196,6 +209,7 @@ static void create(lv_obj_t *screen, void *arg) {
     lv_obj_t *body = ink_ui_box(screen, 0, y, INK_CANVAS_W, 3 * (INK_ROW_DOUBLE + INK_GAP_M) + INK_CONTROL + INK_GAP_XL, 0, INK_SURFACE_WHITE, false);
     S.list = ink_ui_list_create(body, &S.model, &S.position, 3, 1, INK_ROW_DOUBLE, "", bind_item, NULL);
     if (S.list) ink_ui_list_refresh(S.list, S.total);
+    if (S.error[0]) ink_ui_notice(screen, S.error, y + 3 * (INK_ROW_DOUBLE + INK_GAP_M) + INK_CONTROL + INK_GAP_XL);
 }
 static void destroy(void) { S.field = NULL; S.list = NULL; }
 static int snapshot(char *out, size_t cap) {

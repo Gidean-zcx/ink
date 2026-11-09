@@ -57,7 +57,7 @@ static void clicked(lv_event_t *e) {
     if (!strcmp(a->capability, "restore.preview")) B.restore = true;
     if (!strcmp(a->capability, "backup.now")) B.restore = false;
     ink_call_opts_t opts = {.src = INK_SRC_TOUCH, .args_json = a->args_json, .reply_exec = INK_EXEC_UI,
-        .done = reply, .ctx = (void *)(uintptr_t)B.generation, .member = ink_member_current()->id};
+        .done = !strcmp(a->capability, "backup.now") ? NULL : reply, .ctx = (void *)(uintptr_t)B.generation, .member = ink_member_current()->id};
     if (strcmp(a->capability, "shell.back") && strcmp(a->capability, "system.home"))
         ink_ui_busy_control(lv_event_get_target_obj(e), true);
     ink_cap_call(a->capability, NULL, &opts);

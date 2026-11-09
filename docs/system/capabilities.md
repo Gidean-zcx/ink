@@ -63,7 +63,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `call.answer` | 接电话 | 人、AI | 高 / external | 人无需；AI 仅 asked=true 时无需 | 成人、儿童（无需白名单）；锁定时仅人工入口 | [s21](#s21) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
 | `call.dial` | 打电话 | 人、AI | 高 / external | 人无需；AI 仅 asked=true 时无需 | 成人、儿童（无需白名单） | [s21](#s21) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
 | `call.hangup` | 挂电话 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；锁定时仅人工入口 | [s21](#s21) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
-| `camera.capture` | 拍一张照片 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s20](#s20) | [system/services/camera/camera_service.c](../../system/services/camera/camera_service.c) |
+| `camera.capture` | 取一帧画面给 AI 看，不保存 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s20](#s20) | [system/services/camera/camera_service.c](../../system/services/camera/camera_service.c) |
 | `camera.photo` | 拍照并保存到存储卡和相册 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单）；页面 Camera | [s03](#s03) | [system/apps/camera/camera.c](../../system/apps/camera/camera.c) |
 | `camera.preview` | 更新相机取景 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单）；页面 Camera | [s03](#s03) | [system/apps/camera/camera.c](../../system/apps/camera/camera.c) |
 | `caps.domains` | 有哪些类能力（每类多少个） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s12](#s12) | [system/policy/cap.c](../../system/policy/cap.c) |
@@ -187,7 +187,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `phone.prev` | 通话记录上一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 PhoneRecents | [s09](#s09) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
 | `phone.recents` | 打开最近通话 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s09](#s09) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
 | `phone.return` | 回到通话 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s09](#s09) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
-| `photo.open` | 查看相册中的照片 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Gallery | [s07](#s07) | [system/apps/gallery/gallery.c](../../system/apps/gallery/gallery.c) |
+| `photo.open` | 查看有权访问的图片文件 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s07](#s07) | [system/apps/gallery/gallery.c](../../system/apps/gallery/gallery.c) |
 | `power.set_saving` | 开关省电（最多 1 分钟锁屏，不改原设置） | 人、AI | 高 / system | 无需 | 仅成人 | [s28](#s28) | [system/services/power/power_service.c](../../system/services/power/power_service.c) |
 | `reader.goto_page` | 跳到第几页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 book | [s01](#s01) | [apps/reader/reader.c](../../apps/reader/reader.c) |
 | `reader.list_books` | 书架上有哪些书 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s01](#s01) | [apps/reader/reader.c](../../apps/reader/reader.c) |
@@ -783,7 +783,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 状态：—。
 
-事件：—。
+事件：`member.changed`。
 
 <a id="s47"></a>
 

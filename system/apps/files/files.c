@@ -185,7 +185,7 @@ static void selected(void *ctx, const ink_receipt_t *rc) {
         button(1, F.screen, "改名", "file.move", F.rename, INK_MARGIN, y + INK_CONTROL + INK_GAP_L, width, false); F.actions[1].id = "rename"; renamed(NULL);
     } else { F.fields[0].role = "text"; ink_ui_line(F.screen, F.selected.name, INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_MARGIN, y, width); }
     F.preview = ink_ui_label(F.screen, "", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y + 2 * (INK_CONTROL + INK_GAP_L), width);
-    const char *open_cap = !strcmp(type, "text") ? "files.preview" : !strcmp(type, "audio") ? "media.play" : "file.thumb";
+    const char *open_cap = !strcmp(type, "text") ? "files.preview" : !strcmp(type, "audio") ? "media.play" : "photo.open";
     snprintf(F.args[0], sizeof F.args[0], "{\"id\":%u}", (unsigned)F.selected_id);
     lv_obj_t *open = button(2, F.screen, "打开", open_cap, !strcmp(type, "audio") ? F.source : F.args[0], INK_MARGIN, INK_CANVAS_H - INK_MARGIN - 2 * INK_PRIMARY - INK_GAP, width, false);
     F.actions[2].enabled = !strcmp(type, "text") || !strcmp(type, "audio") || !strcmp(type, "image");
