@@ -70,11 +70,14 @@ static int log_count(void) {
     int count = db ? ink_db_count(db) : 0; if (db) ink_db_close(db); return count;
 }
 static void all_statuses(void) {
-    static const char *const expected[] = {"已撤销", "已取消", "结果不确定", "操作无效", "页面或家人已变", "不能做", "等你确认", "还没做，等联网", "做好了一部分", "做好了"};
+    static const char *const expected[] = {"已撤销", "已取消", "结果不确定，不会自动重试", "操作无效", "页面或家人已变，操作已停止", "不能做", "等你确认", "还没做，等联网", "做好了一部分", "做好了"};
     bool seen[10] = {0};
     for (int page = 0; page < 10; page++) {
         quiet(); on_ui(read_snapshot);
-        for (int i = 0; i < 10; i++) if (strstr(snapshot, expected[i])) seen[i] = true;
+        for (int i = 0; i < 10; i++) {
+            char label[160]; snprintf(label, sizeof label, "\"label\":\"%s\"", expected[i]);
+            if (strstr(snapshot, label)) seen[i] = true;
+        }
         CHECK(strstr(snapshot, "pagination") && strstr(snapshot, "activity:"), "F4 snapshot identifies records and page");
         if (!strstr(snapshot, "\"id\":\"next\"")) break;
         CHECK(AI("ai.pages.next", NULL) && g_rc.status == INK_RC_DONE, "AI can read the next page");
@@ -86,8 +89,15 @@ static void select_first(void) {
     int py = ink_ui_px(INK_STATUS_BAR + INK_PRIMARY + INK_GAP + ink_ui_row_double() / 2);
     x = px; y = py;
 }
+static bool private_text(lv_obj_t *root) {
+    if (lv_obj_has_flag(root, LV_OBJ_FLAG_HIDDEN)) return false;
+    if (lv_obj_check_type(root, &lv_label_class) && (strstr(lv_label_get_text(root), "合成测试操作") || strstr(lv_label_get_text(root), "synthetic:"))) return true;
+    for (uint32_t i = 0; i < lv_obj_get_child_count(root); i++) if (private_text(lv_obj_get_child(root, (int32_t)i))) return true;
+    return false;
+}
 static void check_child_screen(void) {
     read_snapshot(); CHECK(!strstr(snapshot, "synthetic:") && !strstr(snapshot, "合成测试操作"), "child cannot see adult receipt text");
+    CHECK(!private_text(lv_screen_active()) && !private_text(lv_layer_sys()), "adult receipt text is absent from visible child controls");
 }
 static void run(void *ctx) {
     (void)ctx; vtk_host_call(get_mode, NULL); delay_ms(1800); quiet(); test_start_home(); quiet();
@@ -130,7 +140,7 @@ static void run(void *ctx) {
         CHECK(strstr(snapshot, "AiReceipts") && strstr(snapshot, "synthetic:10") && strstr(snapshot, "已撤销"), "row touch opens the selected operation's receipt");
         all_statuses(); press("shell.back"); quiet(); CHECK(!strcmp(ink_ui_page_name(), "AiLog"), "receipts return to activity list");
         CHECK(AI("shell.ai_receipts", "{\"id\":1}") && g_rc.status == INK_RC_DONE, "open oldest receipt by stable record id");
-        quiet(); on_ui(read_snapshot); CHECK(strstr(snapshot, "synthetic:1\"") || strstr(snapshot, "synthetic:1"), "selected receipt is on its page");
+        quiet(); on_ui(read_snapshot); CHECK(strstr(snapshot, "\"id\":\"activity:1\"") && strstr(snapshot, "synthetic:1\""), "selected receipt is on its page");
         CHECK(ink_member_switch("kid") == 0, "switch away from adult receipts"); quiet(); on_ui(check_child_screen);
         CHECK(AI("shell.ai_log", NULL) && g_rc.status == INK_RC_DONE, "child opens their own log");
         quiet(); on_ui(check_child_screen); CHECK(strstr(snapshot, "\"total\":0"), "child activity list is empty");

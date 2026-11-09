@@ -7,19 +7,19 @@
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
 | 1 | 【实测】通过 | 真实 AI 请求的断网、45 秒超时、明确额度错误；触摸、主页键、AI 关闭后正文和位置不变 | `ctest --test-dir build --output-on-failure -j2 -R '^ai-pages$'` |
-| 2 | 【实测】通过 | 能力总线实际写入十条活动；最新在前，实体键和 AI 分页；孩子读取大人记录编号仍为空 | 同上，`records` 场景 |
+| 2 | 【实测】通过 | 能力总线实际写入十条活动；最新在前，实体键和 AI 分页；孩子读取大人记录编号仍为空，屏幕也无大人记录 | 同上，`records` 场景 |
 | 3 | 【实测】通过 | 点击记录打开对应回执；十种已有回执状态逐页可读 | 同上，`records` 场景 |
 | 4 | 【实测】通过 | 五页结构化快照，使用生产 AI 请求的 3072 字节上限；孩子额度文案与错误页清理 | 同上 |
-| 5 | 【实测】普通全量未全过；ASan 待完成；行数通过 | 普通全量 228 通过、2 文档检查失败、3 环境跳过；含构建接线新增 185 行产品代码、删除 1 行 | `ctest --test-dir build --output-on-failure -j2`；`git diff <基线> --numstat -- system CMakeLists.txt` |
+| 5 | 【实测】全量门槛未通过；内存检查未见运行期错误；行数通过 | 普通、ASan/UBSan 全量各 228 通过、2 文档检查失败、3 环境跳过；含构建接线新增 185 行产品代码、删除 1 行 | `ctest --test-dir build --output-on-failure -j2`；同命令换 `build-asan`；`git diff 3fce2bee..HEAD --numstat -- system CMakeLists.txt` |
 | G4 | 【实测】超过目标，回执图无法直接评分 | 四页分数见下表；回执原图尺寸不同，工具退出 1 | `python tools/ui_compare.py --build build --design "$INK_DESIGN" --out build/ai-pages-compare --scenes AiOffline AiTimeout AiBudget AiLog --reuse` |
 
 ## 没做到的
 
-- 普通全量尚有两项失败：`capability-table-doc` 的生成能力文档过期；`services-mid-capability-doc` 的服务设计 §1.3 缺四个新界面能力。按任务约束未改文档，也未改检查器、跳过或放宽断言。
+- 普通、ASan 全量均有两项失败：`capability-table-doc` 的生成能力文档过期；`services-mid-capability-doc` 的服务设计 §1.3 缺四个新界面能力。按任务约束未改文档，也未改检查器、跳过或放宽断言。
 - 当前中枢没有真实的每日计费状态；设备识别明确的 `error.data.code="budget"`（兼容 `error.message="budget"`），测试使用合成中枢响应，未验证真实厂商额度。
 - ACTIVITY 没有保存完整回执原文和细分失败原因，本次显示现有十种标准状态、操作、时间和对象；未接画板里的撤销/改回控件。
 - 必要接线未严格满足“共用文件只在文件末尾追加”：AI 状态展示函数末尾加两行，服务错误分支加一行、回调替换一行并加两行。没有改其他并行任务的页面文件。
-- ASan 全量执行中；没有在 Linux 或真机上验证。
+- 没有在 Linux 或真机上验证。
 
 ## 和设计不一致的
 
@@ -44,7 +44,7 @@
 
 ## 顺手发现
 
-无。
+锁定的中枢 Python 依赖环境缺失，既有 `hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e` 自动返回跳过；未把它们计为通过，也未安装依赖。
 
 ## 新增的机制
 
@@ -59,7 +59,17 @@
 - 已读任务书与总规则，确认基线、独立分支及干净工作区。
 - 五页及六个导航能力完成；新页面在 `system/ui/shell/ai_pages.c`。AI 状态展示函数末尾加桥接，启动函数末尾注册；服务错误回调增量识别明确额度标记。界面只读已缓存的当前成员活动集合，不做存储 I/O。
 - 【实测】Werror 全量构建成功；四个定向场景通过；`tools/ui_scale_check.py` 检查 34 个文件，0 违规。
-- 规模超过默认 100 行的原因：三个错误视图、两个记录视图、快照及能力接线共约 180 行。已选更小方案：复用原 AI 面板生命周期、现有活动集合及 F4，不再建服务、记录格式或异步加载器。
+- 规模超过默认 100 行的原因：三个错误视图、两个记录视图、快照及能力接线共 180 行 C 代码，另有 5 行构建接线。只替换旧状态文字虽更小，却没有独立页面布局、动作和快照；本次复用原 AI 面板生命周期、现有活动集合及 F4，不再建服务、记录格式或异步加载器。
 - 【实测】普通全量和修正清单后的全量都已运行；界面、预算、确定性、成员隔离测试通过。临时生成的能力文档与 Plus 运行时核对：268 项能力、16 项设置全部匹配。
-- 【实测】正向四场景为 21 / 20 / 30 / 82 个检查，无失败；证据 `build/ai-pages-sjqq8l5v/`。
-- 【实测】反向对照都编译成功、运行退出 1：`--mutant errors` 检出 6 处；`member` 检出 4 处；`receipts` 检出 10 处；`snapshot` 检出 3 处。命令均为 `python tests/ai_pages.py --build build --mutant <名称>`；只编译临时源副本，不改工作区产品源码。
+- 【实测】普通、ASan/UBSan 的正向四场景均为 21 / 20 / 30 / 85 个检查，无失败；最终证据 `build/ai-pages-jxn56dib/`、`build-asan/ai-pages-c9kkzepc/`。命令 `python tests/ai_pages.py --build build`，以及换成 `build-asan`。
+- 【实测】反向对照都编译成功、运行退出 1：`--mutant errors` 检出 6 处；`member` 检出 6 处；`receipts` 检出 10 处；`snapshot` 检出 3 处。命令均为 `python tests/ai_pages.py --build build --mutant <名称>`；只编译临时源副本，不改工作区产品源码。
+- 【实测】构建、测试均使用 `taskpolicy -c utility`、最多 `-j2`，证据用 `INK_KEEP_EVIDENCE=1` 保留；ASan 配置仅在总规则参数上增加 `-DINK_SANITIZE=ON`，保留 Werror。
+
+| 场景 | 普通 / ASan 内部 RAM 最低余量（字节） | 原下限 |
+| --- | ---: | ---: |
+| 离线 | 47832 / 47832 | 32768 |
+| 超时 | 42200 / 42200 | 32768 |
+| 额度 | 41728 / 41728 | 32768 |
+| 记录 | 47840 / 47840 | 32768 |
+
+最终差异仅含五页、必要接线、测试和本报告。`git diff 3fce2bee..HEAD --check` 通过；按总规则第 6 节对该差异做隐私扫描，0 命中（grep 退出 1）。没有提交构建产物、设计图或依赖副本。
