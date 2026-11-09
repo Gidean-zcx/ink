@@ -692,13 +692,11 @@ static void publish_mic(void) { /* audio task */
     }
 }
 
-/* The chip changes mode in this task: the sound stops for that long. Not during a call. */
+/* The chip changes mode in this task: the sound stops for that long. */
 static void apply_route(void) { /* audio task */
     lock();
     ink_audio_route_t want = AU.route_want;
     bool go = want != AU.route;
-    for (int i = 0; i < MAX_FOCUS && go; i++)
-        if (AU.focus[i].token && AU.focus[i].prio == INK_AUDIO_PRIO_CALL) go = false;
     unlock();
     if (!go) return;
     if (AU.out_open) close_output(false);

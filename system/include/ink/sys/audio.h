@@ -130,7 +130,7 @@ int ink_audio_focus_top(void);
 /** How far a stream has come: frames played and still queued. -1: not this stream any more (played is still right for the last one). */
 int ink_audio_stream_progress(int id, uint32_t *played, uint32_t *queued);
 
-/* Where the sound goes (state audio.route). Not during a call: it switches when the call is over. */
+/* Where the sound goes (state audio.route), including during calls. */
 typedef enum { INK_ROUTE_SPEAKER = 0, INK_ROUTE_HEADSET } ink_audio_route_t;
 void ink_audio_set_route(ink_audio_route_t route);
 ink_audio_route_t ink_audio_route(void);

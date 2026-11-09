@@ -7,7 +7,7 @@ python3 tools/capabilities.py
 python3 tools/capabilities.py --check
 ```
 
-当前共 353 项：可调用能力 320、事件 33；设置 17 项、状态 48 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
+当前共 359 项：可调用能力 325、事件 34；设置 17 项、状态 48 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
 
 风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。
 
@@ -63,7 +63,11 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `calendar.select` | 选择当月一天查看闹钟和提醒 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s02](#s02) | [system/apps/calendar/calendar.c](../../system/apps/calendar/calendar.c) |
 | `call.answer` | 接电话 | 人、AI | 高 / external | 人无需；AI 仅 asked=true 时无需 | 成人、儿童（无需白名单）；锁定时仅人工入口 | [s21](#s21) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
 | `call.dial` | 打电话 | 人、AI | 高 / external | 人无需；AI 仅 asked=true 时无需 | 成人、儿童（无需白名单） | [s21](#s21) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
+| `call.dtmf` | 发送一个通话按键 | 人、AI | 高 / external | 人无需；AI 仅 asked=true 时无需 | 成人、儿童（无需白名单） | [s21](#s21) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
 | `call.hangup` | 挂电话 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；锁定时仅人工入口 | [s21](#s21) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
+| `call.mute` | 通话麦克风静音 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s21](#s21) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
+| `call.record` | 查看通话录音不可用的原因 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s21](#s21) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
+| `call.route` | 切换通话耳机或喇叭 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s21](#s21) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
 | `camera.capture` | 取一帧画面给 AI 看，不保存 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s20](#s20) | [system/services/camera/camera_service.c](../../system/services/camera/camera_service.c) |
 | `camera.photo` | 拍照并保存到存储卡和相册 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单）；页面 Camera | [s03](#s03) | [system/apps/camera/camera.c](../../system/apps/camera/camera.c) |
 | `camera.preview` | 更新相机取景 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单）；页面 Camera | [s03](#s03) | [system/apps/camera/camera.c](../../system/apps/camera/camera.c) |
@@ -192,6 +196,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `pairing.status` | 查看加入家庭的进度 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s25](#s25) | [system/services/hub/pairing.c](../../system/services/hub/pairing.c) |
 | `phone.contacts` | 从联系人选择号码 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s09](#s09) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
 | `phone.key` | 按拨号键或删除一位 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Phone | [s09](#s09) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
+| `phone.keypad` | 打开或收起通话键盘 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s09](#s09) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
 | `phone.next` | 通话记录下一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 PhoneRecents | [s09](#s09) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
 | `phone.number` | 输入电话号码 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Phone | [s09](#s09) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
 | `phone.open` | 打开拨号盘，可填入号码 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s09](#s09) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
@@ -432,9 +437,9 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 设置：—。
 
-状态：—。
+状态：`audio.route`、`bt.connected`。
 
-事件：`call.answered`、`call.connected`、`call.dialed`、`call.ended`、`call.incoming`、`contacts.selected`。
+事件：`call.answered`、`call.connected`、`call.controls`、`call.dialed`、`call.ended`、`call.incoming`、`contacts.selected`。
 
 <a id="s10"></a>
 
@@ -552,9 +557,9 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 设置：`cell.sim_slot`。
 
-状态：`cell.registered`、`cell.sim`。
+状态：`bt.connected`、`cell.registered`、`cell.sim`。
 
-事件：`call.answered`、`call.connected`、`call.dialed`、`call.ended`、`call.incoming`、`message.received`。
+事件：`call.answered`、`call.connected`、`call.controls`、`call.dialed`、`call.ended`、`call.incoming`、`message.received`。
 
 <a id="s22"></a>
 
@@ -958,6 +963,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `bt.changed` | 蓝牙耳机的情况变了 | 不可调用；AI 可订阅 | 低 / read | 不适用 | 按原事件成员及代际投递 | [s19](#s19) | [system/services/bt/bt_service.c](../../system/services/bt/bt_service.c) |
 | `call.answered` | 电话接通了 | 不可调用；AI 可订阅 | 低 / read | 不适用 | 按原事件成员及代际投递 | [s21](#s21) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
 | `call.connected` | 拨出的电话已接通 | 不可调用；AI 可订阅 | 低 / read | 不适用 | 按原事件成员及代际投递 | [s21](#s21) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
+| `call.controls` | 通话控制已获模组确认 | 不可调用；AI 可订阅 | 低 / read | 不适用 | 按原事件成员及代际投递 | [s21](#s21) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
 | `call.dialed` | 电话已拨出 | 不可调用；AI 可订阅 | 低 / read | 不适用 | 按原事件成员及代际投递 | [s21](#s21) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
 | `call.ended` | 通话结束 | 不可调用；AI 可订阅 | 低 / read | 不适用 | 按原事件成员及代际投递 | [s21](#s21) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
 | `call.incoming` | 来电 | 不可调用；AI 可订阅 | 低 / read | 不适用 | 按原事件成员及代际投递 | [s21](#s21) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |

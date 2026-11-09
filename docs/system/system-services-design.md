@@ -685,8 +685,8 @@ void ink_media_status(ink_media_status_t *out); /* 路径、位置、总长、�
 **不知道的（§14）**：BH1098G 没有手册；官方只写“模式 2 经蓝牙耳机通话”；扫描、配对、连接的串口协议没有拿到；音质未知；回采声道在模式 2 下有没有未知。所以：
 
 - HAL 只定接口（`hal_bt.h`、`hal_audio_route_*`），**不假设协议**。真机端口在协议弄清之前 `hal_bt_available()` 返回假，系统照常用外放。
-- 模拟器的耳机是行为模型，在 HAL 这一层（不编 AT 命令）：脚本 `headset add|on|off|in|out`；连上后声音算到耳机上（指标 `audio.bt.played_ms`），功放关，麦克风来自耳机且没有回采；切模式只调用已知的 `bh1098g_set_mode`（700 ms，官方代码），不动 P14；通话中不切。
-- 系统：蓝牙服务（扫描、配对、连接、忘记，已配对的存设备集合 `bt.devices`），连上自动切到耳机（`audio.route` = `bt_headset`，接口 `ink_audio_set_route`），断开退回外放（`speaker`）；通话中的切换等通话结束；耳机断开时**媒体暂停**（不让声音突然外放，D-68 里一起记）。
+- 模拟器的耳机是行为模型，在 HAL 这一层（不编 AT 命令）：脚本 `headset add|on|off|in|out`；连上后声音算到耳机上（指标 `audio.bt.played_ms`），功放关，麦克风来自耳机且没有回采；切模式只调用已知的 `bh1098g_set_mode`（700 ms，官方代码），不动 P14；通话中也可以切（phone-2 起，切的那 700 ms 没有声音）。
+- 系统：蓝牙服务（扫描、配对、连接、忘记，已配对的存设备集合 `bt.devices`），连上自动切到耳机（`audio.route` = `bt_headset`，接口 `ink_audio_set_route`），断开退回外放（`speaker`）；通话中可以在通话页切耳机或喇叭（`call.route`，phone-2），通话页的静音、拨号音（`call.mute`、`call.dtmf`）按 TS 27.007 的 `AT+CMUT`、`AT+VTS` 实现，目标模组固件是否支持还没有核实；通话录音（`call.record`）在证实通话声音经过本机音频芯片之前不可用；耳机断开时**媒体暂停**（不让声音突然外放，D-68 里一起记）。
 - 儿童音量上限 `audio.child_max` 在所有路由上都生效（底座设计 §7.4，Sony 的反例）。
 
 采样率仍固定 16 kHz（RK-12）；S31 自带蓝牙不在这一轮（D-63）。

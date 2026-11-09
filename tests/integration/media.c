@@ -488,13 +488,13 @@ static void headset(void) {
     vtk_event_at(vtk_now() + SIM_MS(1), headset_back, NULL);
     delay_ms(100);
 
-    /* not during a call */
+    /* Calls can switch routes (phone-2). */
     int call = ink_audio_focus_acquire(INK_AUDIO_PRIO_CALL, NULL, NULL, INK_EXEC_DIRECT);
     CHECK(AI("bt.connect", "{\"addr\":\"" HEADSET "\"}") && g_rc.status == INK_RC_DONE, "connected during a call (%s, %s)", ink_rc_name(g_rc.status), g_rc.detail);
     delay_ms(1500);
-    CHECK(!strcmp(state_of("audio.route"), "speaker"), "the route waits for it to end (%s)", state_of("audio.route"));
+    CHECK(!strcmp(state_of("audio.route"), "bt_headset"), "the route switches during the call (%s)", state_of("audio.route"));
     ink_audio_focus_release(call);
-    CHECK(WAIT_FOR(!strcmp(state_of("audio.route"), "bt_headset"), 3000), "then it moves");
+    CHECK(WAIT_FOR(!strcmp(state_of("audio.route"), "bt_headset"), 3000), "the headset route stays after the call");
 
     CHECK(AI("bt.disconnect", NULL) && g_rc.status == INK_RC_DONE, "disconnect");
     CHECK(WAIT_FOR(!strcmp(state_of("audio.route"), "speaker"), 3000), "back");
