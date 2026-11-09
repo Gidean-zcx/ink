@@ -24,7 +24,7 @@ int ink_jot_init(void) {
 
 示例的测试宿主通过仅用于该测试的启动包装，在产品启动流程调用 `ink_ui_start()` 前注册 `ink_jot_init()`；真实集成应放进自己的启动装配位置。首次加载集合可能做 I/O，示例在测试驱动中先调用 `ink_jot_prepare()`，再调用 `jot.open`，不在创建页面时读盘。切换家人时先关闭应用，让 `on_stop` 释放旧集合，再为新家人准备数据。[测试宿主](../../tests/jot/app.c)展示完整顺序。
 
-大块数据使用 `ink_app_alloc(size, true)` 放 PSRAM，并用 `ink_app_free()` 释放。应用不自行建任务；耗时工作交给已有执行器再回界面。**还没有**可安装应用包加载器、完整脚本 SDK 或从设计草图自动生成的页面运行时。
+大块数据使用 `ink_app_alloc`，把 `psram` 参数设为 true，并用 `ink_app_free` 释放。应用不自行建任务；耗时工作交给已有执行器再回界面。**还没有**可安装应用包加载器、完整脚本 SDK 或从设计草图自动生成的页面运行时。
 
 ## 2. 页面与生命周期
 
@@ -97,7 +97,7 @@ static const ink_ui_page_spec_t INK_JOT_EDIT_MODEL = {
 
 出处：[textfield.h:18，创建短框](../../system/include/ink/sys/textfield.h#L18)、[textfield.h:21，F2 绑定](../../system/include/ink/sys/textfield.h#L21)、[textfield.h:34，长文宿主](../../system/include/ink/sys/textfield.h#L34)、[textinput.h:22，配置与字节上限](../../system/include/ink/sys/textinput.h#L22)、[textinput.h:47，会话与草稿](../../system/include/ink/sys/textinput.h#L47)。
 
-短框先 `ink_textfield_create(..., false)`，用固定位置父容器，绑定页面字段和聚焦动作，再聚焦。聚焦能力的处理函数调用 `ink_textfield_short_focus()`；`ink_textfield_text()` 取当前值，`VALUE_CHANGED` 与完成回调对应同一输入服务的编辑。短框只移动自身到固定键盘上方，结束后回原位。示例点键盘“完成”只结束输入，再按“保存”调用 `jot.save`。
+短框先用 `ink_textfield_create` 创建，把 `focus` 参数设为 false，用固定位置父容器，绑定页面字段和聚焦动作，再聚焦。聚焦能力的处理函数调用 `ink_textfield_short_focus()`；`ink_textfield_text()` 取当前值，`VALUE_CHANGED` 与完成回调对应同一输入服务的编辑。短框只移动自身到固定键盘上方，结束后回原位。示例点键盘“完成”只结束输入，再按“保存”调用 `jot.save`。
 
 ```c
 static void ink_jot_edit_create(lv_obj_t *screen, void *arg) {
@@ -146,7 +146,7 @@ static void ink_jot_list_create(lv_obj_t *screen, void *arg) {
 
 出处：[file_picker.h:5，回调与打开](../../system/include/ink/sys/file_picker.h#L5)、[file.h:61，类型、稳定编号与查找](../../system/include/ink/sys/file.h#L61)。
 
-在界面任务调用 `ink_file_picker_open(type, done, ctx)`，指定 `INK_FS_IMAGE`／`INK_FS_AUDIO`／`INK_FS_TEXT` 或 `INK_FS_ANY`。它列出当前家人有权读取的文件并分页，保留调用页；回调只给稳定文件编号，0 表示取消。返回 -1 表示没打开，也不会回调。调用页被删、换人或认证变化时会关闭并丢弃回调。
+在界面任务调用 `ink_file_picker_open`，指定文件类型和完成回调；类型可选 `INK_FS_IMAGE`／`INK_FS_AUDIO`／`INK_FS_TEXT` 或 `INK_FS_ANY`。它列出当前家人有权读取的文件并分页，保留调用页；回调只给稳定文件编号，0 表示取消。返回 -1 表示没打开，也不会回调。调用页被删、换人或认证变化时会关闭并丢弃回调。
 
 选择后将文件 id 交给已有后台执行器，在后台调用 `ink_fs_lookup()` 重新核对存储卡、权限并取元数据，不能把选择时的裸路径当成永久授权。需要读文件时仍走文件服务。选择器属于系统组件，示例没有附件功能，因此没有假造一个文件选择调用。**还没有**选择多个文件、选目录或“另存为”对话框的应用接口。
 
@@ -178,8 +178,8 @@ static int ink_jot_card(int index, ink_card_t *out) {
 
 | 数据 | 读取 | 修改者与方式 | 订阅 |
 | --- | --- | --- | --- |
-| 实际状态，如电量、联网情况 | `ink_state_find` 得句柄，`ink_state_get_int`／`ink_state_get_str` 取值；可能尚无值 | 定义它的服务持有 `ink_state_define` 返回的句柄，用对应 `ink_state_set_*` 更新；应用不改别的服务的状态 | `ink_state_watch(prefix, fn, ctx, exec)`，回调再读最新值；服务可用 `min_interval_ms` 合并变化 |
-| 用户设置 | `ink_setting_get`；需元数据时用 `ink_setting_at`／`ink_settings_json` | 页面和 AI 通过 `settings.set`；C 调用可用 `ink_setting_set(id, value, source, receipt)`，仍经过设置策略。定义者用 `ink_settings_define` 提供范围与 `apply` | `ink_settings_watch(prefix, fn, ctx, exec)`；回调读最新值，硬件是否已生效看对应状态 |
+| 实际状态，如电量、联网情况 | `ink_state_find` 得句柄，`ink_state_get_int`／`ink_state_get_str` 取值；可能尚无值 | 定义它的服务持有 `ink_state_define` 返回的句柄，用对应 `ink_state_set_*` 更新；应用不改别的服务的状态 | `ink_state_watch` 按名称前缀订阅，在指定执行器回调中再读最新值；服务可用 `min_interval_ms` 合并变化 |
+| 用户设置 | `ink_setting_get`；需元数据时用 `ink_setting_at`／`ink_settings_json` | 页面和 AI 通过 `settings.set`；C 调用可用 `ink_setting_set`，传实际来源并检查回执，仍经过设置策略。定义者用 `ink_settings_define` 提供范围与 `apply` | `ink_settings_watch` 按名称前缀订阅并指定执行器；回调读最新值，硬件是否已生效看对应状态 |
 
 界面订阅选择 `INK_EXEC_UI`，后台服务选择合适的已有执行器；回调短小，不能在输入或中枢回调里阻塞。不要用一份应用私有变量代替系统状态。设置写入接受后会异步保存，`apply` 可能尚未运行；设置的 `system`、`child_may_change`、`ask_by_hand` 控制实际权限和确认，见 [settings.c:195](../../system/policy/settings.c#L195)。
 
