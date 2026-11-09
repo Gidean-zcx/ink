@@ -245,6 +245,7 @@ add_library(ink_system STATIC
   system/ui/icons.c
   system/ui/shell/navigation.c
   system/ui/shell/settings_pages.c
+  system/ui/shell/bluetooth_page.c
   system/ui/shell/ai_panel.c
   system/ui/app.c
   system/apps/remote/remote.c)
@@ -1349,6 +1350,10 @@ ink_sim_executable(sim-settings-b tests/settings_b.c)
 target_link_libraries(sim-settings-b PRIVATE ink_apps ink_system)
 add_test(NAME settings-b COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/settings_b.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(settings-b PROPERTIES TIMEOUT 360)
+ink_sim_executable(sim-bluetooth tests/bluetooth.c)
+target_link_libraries(sim-bluetooth PRIVATE ink_apps ink_system)
+add_test(NAME bluetooth-settings COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/bluetooth.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(bluetooth-settings PROPERTIES TIMEOUT 360)
 target_sources(ink_system PRIVATE system/ui/shell/member_pages.c)
 ink_sim_executable(sim-kid-1 tests/kid_1.c)
 target_link_libraries(sim-kid-1 PRIVATE ink_apps ink_system)

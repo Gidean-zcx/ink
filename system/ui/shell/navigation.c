@@ -1090,7 +1090,7 @@ static void body_blocks(void) {
             state_text("wifi.ssid", ssid, sizeof ssid);
             lv_obj_t *g = group(2);
             group_row(g, "wifi", "网络和 SIM 卡", ssid[0] ? ssid : "还没有连接", 0, "shell.network");
-            group_row(g, "bluetooth", "蓝牙", integer("bt.connected") ? "已连接" : "没有连接", 1, NULL);
+            group_row(g, "bluetooth", "蓝牙", integer("bt.connected") ? "已连接" : "没有连接", 1, "shell.bluetooth");
         }
         F.y += 2 * INK_CONTROL + INK_GAP;
         if (block(3 * INK_CONTROL)) {
@@ -1182,7 +1182,7 @@ static void body_blocks(void) {
             state_text("audio.route", route, sizeof route);
             lv_obj_t *g = group(2);
             group_row(g, "volume", "喇叭", !strcmp(route, "speaker") ? "当前" : "", 0, "bt.disconnect");
-            group_row(g, "headphones", "蓝牙耳机", !strcmp(route, "bt_headset") ? "当前" : "没有连接", 1, NULL);
+            group_row(g, "headphones", "蓝牙耳机", !strcmp(route, "bt_headset") ? "当前" : "没有连接", 1, "shell.bluetooth");
             F.y -= heading_h();
         }
         F.y += h + INK_GAP_L;
@@ -1450,6 +1450,7 @@ static int page_snapshot(char *buf, size_t cap) {
 }
 
 void ink_shell_open_page(const char *name) {
+    if (!strcmp(name, "SetBluetooth")) { ink_bluetooth_page_open(); return; }
     ink_settings_page_open(name);
     for (unsigned i = 0; i < sizeof PAGES / sizeof *PAGES; i++)
         if (!strcmp(name, PAGES[i].name)) {
@@ -1700,7 +1701,7 @@ int ink_shell_init(void) {
     if (today_init() != 0) return -1;
     static const ink_cap_t notify = {.id = "shell.notify_open", .title = "打开通知并标为已读", .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1}},\"required\":[\"id\"]}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = notify_open};
     if (ink_search_init() != 0 || ink_cap_register(&notify, 1) != 0) return -1;
-    if (ink_settings_pages_init() != 0) return -1;
+    if (ink_settings_pages_init() != 0 || ink_bluetooth_page_init() != 0) return -1;
     if (ink_boot_flow_init() != 0) return -1;
     if (ink_shell_ai_init() != 0 || ink_kid_pages_init() != 0) return -1;
     if (ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) ||

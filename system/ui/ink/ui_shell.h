@@ -10,6 +10,8 @@ int ink_kid_pages_init(void);
 void ink_shell_kid_limit(const char *app);
 void ink_shell_kid_close(void);
 int ink_settings_pages_init(void);
+int ink_bluetooth_page_init(void);
+void ink_bluetooth_page_open(void);
 void ink_settings_page_open(const char *name);
 int ink_boot_flow_init(void);
 void ink_boot_flow_resume(void);

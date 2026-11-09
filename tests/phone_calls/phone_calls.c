@@ -156,6 +156,9 @@ static void controls_phase(void) {
     CHECK(WAIT_FOR(!P.muted, 3000) && sim_net_call_audio(160) == 3, "modem readback and uplink recover"); quiet();
     click("耳机未连", NULL);
     CHECK(ink_audio_route() == INK_ROUTE_SPEAKER, "disconnected headset button leaves the actual route alone");
+    CHECK(!strcmp(ink_ui_page_name(), "SetBluetooth"), "disconnected headset button opens Bluetooth settings");
+    CHECK(BY_HAND("shell.back", NULL) && g_rc.status == INK_RC_DONE, "return from Bluetooth settings"); quiet();
+    CHECK(!strcmp(ink_ui_page_name(), "PhoneCall") && H.active, "Bluetooth settings preserves the active call");
     click("键盘", NULL); inspect();
     CHECK(!strcmp(ink_ui_page_name(), "PhoneKeypad") && strstr(snap, "已发送的按键") && strstr(snap, "call.dtmf"), "keypad has the real AI snapshot and digit actions");
     click("1", NULL); click("0", NULL); click("*", NULL); click("#", NULL);
