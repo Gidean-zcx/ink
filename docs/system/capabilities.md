@@ -7,7 +7,7 @@ python3 tools/capabilities.py
 python3 tools/capabilities.py --check
 ```
 
-当前共 302 项：可调用能力 269、事件 33；设置 16 项、状态 46 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
+当前共 315 项：可调用能力 282、事件 33；设置 17 项、状态 46 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
 
 风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。
 
@@ -98,6 +98,12 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `data.list` | 分页读一个数据集合（默认最新的在前） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s22](#s22) | [system/services/data/data_caps.c](../../system/services/data/data_caps.c) |
 | `data.put` | 写一条数据（新的可以撤销） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s22](#s22) | [system/services/data/data_caps.c](../../system/services/data/data_caps.c) |
 | `data.status` | 一条数据保存到哪一步了（saving 正在写、on_device 已存在这台设备、at_hub 已备份、failed 没写进去） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s22](#s22) | [system/services/data/data_caps.c](../../system/services/data/data_caps.c) |
+| `family.edit` | 编辑家人的称呼或添加家人 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单；页面 SetMembers | [s45](#s45) | [system/ui/shell/settings_family.c](../../system/ui/shell/settings_family.c) |
+| `family.focus` | 输入家人的称呼 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单；页面 SetMembers | [s45](#s45) | [system/ui/shell/settings_family.c](../../system/ui/shell/settings_family.c) |
+| `family.next` | 家人设置下一页 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s45](#s45) | [system/ui/shell/settings_family.c](../../system/ui/shell/settings_family.c) |
+| `family.prev` | 家人设置上一页 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s45](#s45) | [system/ui/shell/settings_family.c](../../system/ui/shell/settings_family.c) |
+| `family.role` | 选择添加大人或孩子 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单；页面 SetMembers | [s45](#s45) | [system/ui/shell/settings_family.c](../../system/ui/shell/settings_family.c) |
+| `family.save` | 保存家人的称呼 | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单；页面 SetMembers | [s45](#s45) | [system/ui/shell/settings_family.c](../../system/ui/shell/settings_family.c) |
 | `file.copy` | 拷贝文件或目录（大的在后台做） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s24](#s24) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
 | `file.delete` | 删除文件或目录（不能撤销） | 人、AI | 高 / local_destructive | 人、AI 均在设备确认 | 成人、儿童（无需白名单） | [s24](#s24) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
 | `file.free` | 存储卡还剩多少空间 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s24](#s24) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
@@ -143,6 +149,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `member.add` | 加一位家人 | 人、AI | 高 / system | 人、AI 均确认；已设成人 PIN 时还需 PIN | 仅成人 | [s14](#s14) | [system/policy/members.c](../../system/policy/members.c) |
 | `member.list` | 家里有哪些人 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单）；锁定时仅人工入口 | [s14](#s14) | [system/policy/members.c](../../system/policy/members.c) |
 | `member.remove` | 删除一位家人和他们的全部数据（不能撤销） | 人、AI | 高 / system | 人、AI 均确认；已设成人 PIN 时还需 PIN | 仅成人 | [s14](#s14) | [system/policy/members.c](../../system/policy/members.c) |
+| `member.rename` | 修改家人的称呼 | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单 | [s14](#s14) | [system/policy/members.c](../../system/policy/members.c) |
 | `member.set_pin` | 设置或修改密码（只能在设备上） | 仅人（设备） | 中 / local_write | 无需 | 成人；儿童须白名单 | [s14](#s14) | [system/policy/members.c](../../system/policy/members.c) |
 | `member.unlock` | 输密码进入家人的空间（只能在设备上） | 仅人（设备） | 低 / navigate | 无需 | 成人、儿童（无需白名单）；锁定时仅人工入口 | [s14](#s14) | [system/policy/members.c](../../system/policy/members.c) |
 | `memo.check` | 勾选或取消清单项 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
@@ -202,11 +209,12 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `settings.get` | 查看一项设置 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s15](#s15) | [system/policy/settings.c](../../system/policy/settings.c) |
 | `settings.list` | 所有设置，各自的类型、取值范围和现在的值 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s16](#s16) | [system/policy/system_actions.c](../../system/policy/system_actions.c) |
 | `settings.set` | 改一项设置 | 人、AI | 中 / local_write | 按设置项（见设置表） | 成人、儿童（无需白名单）；设置写入另受设置项限制 | [s15](#s15) | [system/policy/settings.c](../../system/policy/settings.c) |
-| `shell.about` | 打开关于和更新 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s45](#s45) | [system/ui/shell/settings_pages.c](../../system/ui/shell/settings_pages.c) |
+| `shell.about` | 打开关于和更新 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s46](#s46) | [system/ui/shell/settings_pages.c](../../system/ui/shell/settings_pages.c) |
 | `shell.ai_ask` | 输入问题 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s36](#s36) | [system/ui/shell/ai_chat.c](../../system/ui/shell/ai_chat.c) |
 | `shell.ai_home` | 打开对话记录 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s36](#s36) | [system/ui/shell/ai_chat.c](../../system/ui/shell/ai_chat.c) |
 | `shell.ai_key` | 按住说话或点按听 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s36](#s36) | [system/ui/shell/ai_chat.c](../../system/ui/shell/ai_chat.c) |
 | `shell.ai_log` | 查看 AI 做过的事 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s37](#s37) | [system/ui/shell/ai_pages.c](../../system/ui/shell/ai_pages.c) |
+| `shell.ai_memory` | 查看 AI 记得的事 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s45](#s45) | [system/ui/shell/settings_family.c](../../system/ui/shell/settings_family.c) |
 | `shell.ai_receipts` | 查看 AI 做事的结果 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s37](#s37) | [system/ui/shell/ai_pages.c](../../system/ui/shell/ai_pages.c) |
 | `shell.ai_send` | 发送输入框里的问题 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 AiAsk | [s36](#s36) | [system/ui/shell/ai_chat.c](../../system/ui/shell/ai_chat.c) |
 | `shell.ai_stop` | 停下 AI 的朗读，保留文字 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s36](#s36) | [system/ui/shell/ai_chat.c](../../system/ui/shell/ai_chat.c) |
@@ -214,6 +222,8 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `shell.close` | 收起面板 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s44](#s44) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
 | `shell.control` | 打开控制中心 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s44](#s44) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
 | `shell.display` | 显示和亮度 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s44](#s44) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
+| `shell.family` | 管理家人 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s45](#s45) | [system/ui/shell/settings_family.c](../../system/ui/shell/settings_family.c) |
+| `shell.kid_settings` | 打开孩子的设置 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s45](#s45) | [system/ui/shell/settings_family.c](../../system/ui/shell/settings_family.c) |
 | `shell.launch` | 打开主页上的应用 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s44](#s44) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
 | `shell.lock` | 锁屏 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s44](#s44) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
 | `shell.member_choose` | 选择下一位家人 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s43](#s43) | [system/ui/shell/member_pages.c](../../system/ui/shell/member_pages.c) |
@@ -231,17 +241,19 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `shell.pin_parent` | 请家长在设备上输入密码 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；锁定时仅人工入口 | [s43](#s43) | [system/ui/shell/member_pages.c](../../system/ui/shell/member_pages.c) |
 | `shell.pin_set` | 打开设置或修改密码 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s43](#s43) | [system/ui/shell/member_pages.c](../../system/ui/shell/member_pages.c) |
 | `shell.pin_submit` | 本人提交设备上的密码 | 仅人（设备） | 低 / navigate | 无需 | 成人、儿童（无需白名单）；锁定时仅人工入口 | [s43](#s43) | [system/ui/shell/member_pages.c](../../system/ui/shell/member_pages.c) |
-| `shell.privacy` | 打开隐私 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s45](#s45) | [system/ui/shell/settings_pages.c](../../system/ui/shell/settings_pages.c) |
+| `shell.privacy` | 打开隐私 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s46](#s46) | [system/ui/shell/settings_pages.c](../../system/ui/shell/settings_pages.c) |
+| `shell.records` | 查看使用记录 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s45](#s45) | [system/ui/shell/settings_family.c](../../system/ui/shell/settings_family.c) |
 | `shell.resume` | 接着读 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s44](#s44) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
 | `shell.search` | 查找应用 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 home | [s44](#s44) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
 | `shell.settings` | 打开设置 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s44](#s44) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
-| `shell.settings_next` | 设置下一页 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s45](#s45) | [system/ui/shell/settings_pages.c](../../system/ui/shell/settings_pages.c) |
-| `shell.settings_prev` | 设置上一页 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s45](#s45) | [system/ui/shell/settings_pages.c](../../system/ui/shell/settings_pages.c) |
+| `shell.settings_next` | 设置下一页 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s46](#s46) | [system/ui/shell/settings_pages.c](../../system/ui/shell/settings_pages.c) |
+| `shell.settings_prev` | 设置上一页 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s46](#s46) | [system/ui/shell/settings_pages.c](../../system/ui/shell/settings_pages.c) |
 | `shell.sound` | 声音 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s44](#s44) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
-| `shell.storage` | 打开存储和备份设置 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s45](#s45) | [system/ui/shell/settings_pages.c](../../system/ui/shell/settings_pages.c) |
-| `shell.update` | 打开系统更新 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s46](#s46) | [system/ui/shell/update_pages.c](../../system/ui/shell/update_pages.c) |
-| `shell.update_close` | 返回更新前的页面 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s46](#s46) | [system/ui/shell/update_pages.c](../../system/ui/shell/update_pages.c) |
-| `shell.voice` | 打开语音和 AI 设置 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s45](#s45) | [system/ui/shell/settings_pages.c](../../system/ui/shell/settings_pages.c) |
+| `shell.storage` | 打开存储和备份设置 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s46](#s46) | [system/ui/shell/settings_pages.c](../../system/ui/shell/settings_pages.c) |
+| `shell.update` | 打开系统更新 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s47](#s47) | [system/ui/shell/update_pages.c](../../system/ui/shell/update_pages.c) |
+| `shell.update_close` | 返回更新前的页面 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s47](#s47) | [system/ui/shell/update_pages.c](../../system/ui/shell/update_pages.c) |
+| `shell.voice` | 打开语音和 AI 设置 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s46](#s46) | [system/ui/shell/settings_pages.c](../../system/ui/shell/settings_pages.c) |
+| `shell.wallpaper` | 打开锁屏和壁纸 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s45](#s45) | [system/ui/shell/settings_family.c](../../system/ui/shell/settings_family.c) |
 | `shell.wifi_next` | 附近网络下一组 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s44](#s44) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
 | `shell.wifi_pick` | 选附近网络（密码由人在设备上填写） | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s44](#s44) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
 | `shell.wifi_prev` | 附近网络上一组 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s44](#s44) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
@@ -288,6 +300,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `usb.mount` | 把存储卡借给电脑当 U 盘 | 人、AI | 高 / system | 人、AI 均在设备确认 | 仅成人 | [s24](#s24) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
 | `usb.status` | 是否连着电脑、存储卡是否借给了电脑 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s24](#s24) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
 | `usb.unmount` | 从电脑收回存储卡 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s24](#s24) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
+| `wallpaper.choose` | 选择锁屏壁纸 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s48](#s48) | [system/ui/shell/wallpaper.c](../../system/ui/shell/wallpaper.c) |
 | `wifi.connect` | 连接一个 Wi-Fi 并记住它 | 人、AI | 高 / system | 无需 | 仅成人 | [s26](#s26) | [system/services/net/wifi.c](../../system/services/net/wifi.c) |
 | `wifi.forget` | 忘掉一个 Wi-Fi | 人、AI | 高 / local_destructive | 人、AI 均在设备确认 | 成人；儿童须白名单 | [s26](#s26) | [system/services/net/wifi.c](../../system/services/net/wifi.c) |
 | `wifi.list` | 这台设备记得的 Wi-Fi（只有名字） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s26](#s26) | [system/services/net/wifi.c](../../system/services/net/wifi.c) |
@@ -439,7 +452,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 ### s15 — `system/policy/settings`
 
-设置：`ai.read_clipboard`、`audio.child_max`、`audio.volume`、`cell.sim_slot`、`display.font_size`、`display.light`、`display.lock_style`、`display.warmth`、`member.idle_return_s`、`net.prefer`、`notify.dnd`、`power.lock_after_s`、`time.auto`、`time.zone`、`update.auto_download`、`voice.handsfree`。
+设置：`ai.read_clipboard`、`audio.child_max`、`audio.volume`、`cell.sim_slot`、`display.font_size`、`display.light`、`display.lock_style`、`display.wallpaper_file`、`display.warmth`、`member.idle_return_s`、`net.prefer`、`notify.dnd`、`power.lock_after_s`、`time.auto`、`time.zone`、`update.auto_download`、`voice.handsfree`。
 
 状态：—。
 
@@ -449,7 +462,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 ### s16 — `system/policy/system_actions`
 
-设置：`ai.read_clipboard`、`audio.child_max`、`audio.volume`、`cell.sim_slot`、`display.font_size`、`display.light`、`display.lock_style`、`display.warmth`、`member.idle_return_s`、`net.prefer`、`notify.dnd`、`power.lock_after_s`、`time.auto`、`time.zone`、`update.auto_download`、`voice.handsfree`。
+设置：`ai.read_clipboard`、`audio.child_max`、`audio.volume`、`cell.sim_slot`、`display.font_size`、`display.light`、`display.lock_style`、`display.wallpaper_file`、`display.warmth`、`member.idle_return_s`、`net.prefer`、`notify.dnd`、`power.lock_after_s`、`time.auto`、`time.zone`、`update.auto_download`、`voice.handsfree`。
 
 状态：`alarm.revision`、`alarm.ringing`、`app.cards_rev`、`app.foreground`、`audio.listening`、`audio.mic`、`audio.now_playing`、`audio.recording`、`audio.route`、`battery.charging`、`battery.level`、`battery.low`、`bt.available`、`bt.connected`、`bt.device`、`cell.registered`、`cell.sim`、`confirm.pending`、`file.index_state`、`interrupt.active`、`job.running`、`media.state`、`member.authed`、`member.current`、`net.online`、`net.signal`、`net.type`、`notify.unread`、`pairing.state`、`power.saving`、`power.state`、`storage.card`、`storage.free`、`storage.mode`、`storage.user_free`、`text.focused`、`text.voice`、`time.minute`、`time.synced`、`time.zone`、`update.progress`、`update.state`、`update.version`、`usb.connected`、`wifi.ssid`、`wifi.state`。
 
@@ -737,7 +750,17 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 <a id="s45"></a>
 
-### s45 — `system/ui/shell/settings_pages`
+### s45 — `system/ui/shell/settings_family`
+
+设置：`audio.child_max`、`display.lock_style`、`display.wallpaper_file`、`power.lock_after_s`。
+
+状态：—。
+
+事件：—。
+
+<a id="s46"></a>
+
+### s46 — `system/ui/shell/settings_pages`
 
 设置：`ai.read_clipboard`、`update.auto_download`、`voice.handsfree`。
 
@@ -745,15 +768,25 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 事件：`backup.changed`。
 
-<a id="s46"></a>
+<a id="s47"></a>
 
-### s46 — `system/ui/shell/update_pages`
+### s47 — `system/ui/shell/update_pages`
 
 设置：—。
 
 状态：`battery.charging`、`battery.level`、`storage.card`、`storage.free`、`storage.mode`、`update.progress`、`update.state`、`update.version`。
 
 事件：`confirm.result`、`update.available`、`update.result`。
+
+<a id="s48"></a>
+
+### s48 — `system/ui/shell/wallpaper`
+
+设置：`display.wallpaper_file`。
+
+状态：—。
+
+事件：—。
 
 ## 每个设置项的能力覆盖
 
@@ -768,6 +801,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `display.font_size` | 字号 | `INK_SET_ENUM` | `settings.get` / `settings.set` | 仅成人 | 中 / 无需 | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
 | `display.light` | 亮度 | `INK_SET_INT` | `settings.get` / `settings.set` | 成人、儿童（无需白名单） | 中 / 无需 | [system/services/display/light.c](../../system/services/display/light.c) |
 | `display.lock_style` | 锁屏画面 | `INK_SET_ENUM` | `settings.get` / `settings.set` | 成人、儿童（无需白名单） | 中 / 无需 | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
+| `display.wallpaper_file` | 壁纸图片编号 | `INK_SET_INT` | `settings.get` / `settings.set` | 仅成人 | 中 / 无需 | [system/ui/shell/wallpaper.c](../../system/ui/shell/wallpaper.c) |
 | `display.warmth` | 暖光（越大越暖） | `INK_SET_INT` | `settings.get` / `settings.set` | 成人、儿童（无需白名单） | 中 / 无需 | [system/services/display/light.c](../../system/services/display/light.c) |
 | `member.idle_return_s` | 大人锁屏多久后要重新输密码（秒） | `INK_SET_INT` | `settings.get` / `settings.set` | 仅成人 | 高 / 人、AI 均需确认 | [system/policy/members.c](../../system/policy/members.c) |
 | `net.prefer` | 上网方式 | `INK_SET_ENUM` | `settings.get` / `settings.set` | 仅成人 | 中 / 无需 | [system/services/net/net_service.c](../../system/services/net/net_service.c) |
