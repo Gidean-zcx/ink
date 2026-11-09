@@ -269,7 +269,6 @@ static int resolve_held(const file_context_t *c, const char *path, bool write, c
     int r = ink_fs_card_hold();
     if (r) return r;
     r = resolve_for(c, path, write, phys, cap);
-    if (!r && write) r = index_prepare(phys);
     if (r) ink_fs_card_release();
     return r;
 }
@@ -311,10 +310,8 @@ static int card_error(void) {
 }
 
 static void changed_for(const char *who, const char *path, const char *kind) {
-    /* New or rewritten paths need metadata; index_edit already handles moves and removals. */
-    if (!strcmp(kind, "copied") || !strcmp(kind, "rescan") || !strcmp(kind, "restored") || !strcmp(kind, "written")) index_invalidate();
-    else if (!strcmp(kind, "removed") || !strcmp(kind, "moved"))
-        ink_svc_at(&FS.index_at, osal_now_us() + 50000ull, index_refresh_cb, NULL);
+    /* Known paths keep their records; file.usage follows FS.revision without a walk. */
+    if (!strcmp(kind, "copied") || !strcmp(kind, "rescan") || !strcmp(kind, "restored")) index_invalidate();
     char *block = osal_malloc(sizeof(ink_args_t), OSAL_MEM_EXTERNAL); /* the arguments are large for most stacks */
     if (!block) return;
     ink_args_t *a = (ink_args_t *)block;
@@ -349,6 +346,7 @@ static int fs_open_unlocked(const file_context_t *c, const char *path, int mode,
     int err = INK_FS_OK;
     if ((mode & INK_FS_EXCL) && size >= 0) err = INK_FS_ERR_EXISTS;
     else if (!(mode & INK_FS_CREATE) && size < 0) err = hal_fs_card_present() ? INK_FS_ERR_NOT_FOUND : card_error();
+    else if (size < 0) err = index_prepare(phys);
     hal_file_t *f = NULL;
     if (!err) {
         int flags = 0;
@@ -574,6 +572,8 @@ static int fs_move_unlocked(const file_context_t *c, const char *from, const cha
     if (hal_fs_size(b) >= 0) return card_done(INK_FS_ERR_EXISTS);
     size_t an = strlen(a);
     if (!strncmp(a, b, an) && b[an] == '/') return card_done(INK_FS_ERR_PATH); /* into itself */
+    r = index_prepare(b);
+    if (r) return card_done(r);
     make_parents(b);
     if (hal_fs_rename(a, b) != 0) return card_done(card_error());
     r = index_edit(a, b);
@@ -645,6 +645,7 @@ static int fs_write_atomic_unlocked(const file_context_t *c, const char *path, c
     int r = resolve_held(c, path, true, phys, sizeof phys);
     if (r) return r;
     bool added = hal_fs_size(phys) < 0 && !strncmp(phys, "/content/", 9);
+    if (added && (r = index_prepare(phys))) return card_done(r);
     snprintf(tmp, sizeof tmp, "%s" TMP_SUFFIX, phys);
     make_parents(phys);
     hal_file_t *f = hal_fs_open(tmp, HAL_O_WRITE | HAL_O_CREATE | HAL_O_TRUNC);
@@ -1473,8 +1474,8 @@ static int index_prepare(const char *path) {
         if (!f) return card_error();
         int synced = hal_fs_sync(f), closed = hal_fs_close(f);
         if (synced || closed) return INK_FS_ERR_IO;
+        ink_svc_at(&FS.index_at, osal_now_us() + 50000ull, index_refresh_cb, NULL);
     }
-    ink_svc_at(&FS.index_at, osal_now_us() + 50000ull, index_refresh_cb, NULL);
     return 0;
 }
 static int index_open(uint8_t card[16], ink_db_t **db) {
@@ -1553,7 +1554,7 @@ static ink_fs_type_t index_type(const char *path) {
     return INK_FS_OTHER;
 }
 
-#define INDEX_BATCH 32
+#define INDEX_BATCH 16
 typedef struct { uint32_t hash, id; } index_slot_t;
 typedef struct {
     file_context_t context;
@@ -1601,12 +1602,14 @@ static int index_walk_load(index_walk_t *w, ink_db_t *db, const uint8_t card[16]
     while ((n = ink_db_next(db, &cur, &rec, &e, sizeof e)) == 1) {
         if (memcmp(card, e.card, 16)) continue;
         index_slot(w, db, e.path)->id = rec.id;
-        if (rec.schema == INDEX_DEF.schema && rec.len == sizeof e && hal_fs_size(e.path) < 0)
+        /* Check absence only for metadata matches of a new path, not every known record. */
+        if (rec.schema == INDEX_DEF.schema && rec.len == sizeof e)
             w->missing[w->nmissing++] = rec.id;
     }
     return n < 0 ? INK_FS_ERR_IO : 0;
 }
 static uint32_t index_renamed(index_walk_t *w, ink_db_t *db, const index_rec_t *e) {
+    /* Metadata is from the last scan: an edited then renamed file may receive a new id after power loss. */
     uint32_t id = 0;
     for (unsigned i = 0; i < w->nmissing; i++) {
         index_rec_t old;
