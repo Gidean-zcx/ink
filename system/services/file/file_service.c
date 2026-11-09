@@ -42,6 +42,8 @@
 #define RELEASE_WAIT_US 3000000ull
 #define PART_SUFFIX ".part"
 #define TMP_SUFFIX ".tmp"
+#define INDEX_CARD "/content/.file-index-card"
+#define INDEX_DIRTY "/content/.file-index-dirty"
 
 struct ink_fs_file {
     hal_file_t *f;
@@ -113,6 +115,7 @@ static int index_edit(const char *from, const char *to);
 static void index_background(void *arg);
 static bool storage_index_ready(void);
 static void index_invalidate(void);
+static int index_prepare(const char *path);
 static void index_refresh_cb(void *arg) { ink_exec_post(INK_EXEC_BG, &FS.index_job, index_background, arg); }
 static void thumb_clear(void *ctx, const char *id, const ink_args_t *args) {
     osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
@@ -120,7 +123,7 @@ static void thumb_clear(void *ctx, const char *id, const ink_args_t *args) {
     if (!storage_index_ready()) ink_svc_at(&FS.index_at, osal_now_us() + 50000ull, index_refresh_cb, NULL);
     osal_mutex_unlock(FS.edits);
 }
-static const ink_db_def_t INDEX_DEF = {.name = "file.index", .title = "文件编号", .scope = INK_DB_DEVICE, .schema = 1,
+static const ink_db_def_t INDEX_DEF = {.name = "file.index", .title = "文件编号", .scope = INK_DB_DEVICE, .schema = 2,
     .max_records = INK_FS_INDEX_MAX, .max_bytes = INK_FS_INDEX_MAX * 216u};
 static const ink_db_def_t INDEX_DONE_DEF = {.name = "file.index_ready", .title = "索引完成记录", .scope = INK_DB_DEVICE, .schema = 1,
     .max_records = INK_FS_INDEX_MAX, .max_bytes = INK_FS_INDEX_MAX * 216u};
@@ -307,7 +310,7 @@ static int card_error(void) {
 }
 
 static void changed_for(const char *who, const char *path, const char *kind) {
-    /* Only paths that may be new need a walk; edits of known paths keep their records (index_edit) and file.usage follows FS.revision. */
+    /* Known paths keep their records; file.usage follows FS.revision without a walk. */
     if (!strcmp(kind, "copied") || !strcmp(kind, "rescan") || !strcmp(kind, "restored")) index_invalidate();
     char *block = osal_malloc(sizeof(ink_args_t), OSAL_MEM_EXTERNAL); /* the arguments are large for most stacks */
     if (!block) return;
@@ -343,6 +346,7 @@ static int fs_open_unlocked(const file_context_t *c, const char *path, int mode,
     int err = INK_FS_OK;
     if ((mode & INK_FS_EXCL) && size >= 0) err = INK_FS_ERR_EXISTS;
     else if (!(mode & INK_FS_CREATE) && size < 0) err = hal_fs_card_present() ? INK_FS_ERR_NOT_FOUND : card_error();
+    else if (size < 0) err = index_prepare(phys);
     hal_file_t *f = NULL;
     if (!err) {
         int flags = 0;
@@ -568,6 +572,8 @@ static int fs_move_unlocked(const file_context_t *c, const char *from, const cha
     if (hal_fs_size(b) >= 0) return card_done(INK_FS_ERR_EXISTS);
     size_t an = strlen(a);
     if (!strncmp(a, b, an) && b[an] == '/') return card_done(INK_FS_ERR_PATH); /* into itself */
+    r = index_prepare(b);
+    if (r) return card_done(r);
     make_parents(b);
     if (hal_fs_rename(a, b) != 0) return card_done(card_error());
     r = index_edit(a, b);
@@ -639,6 +645,7 @@ static int fs_write_atomic_unlocked(const file_context_t *c, const char *path, c
     int r = resolve_held(c, path, true, phys, sizeof phys);
     if (r) return r;
     bool added = hal_fs_size(phys) < 0 && !strncmp(phys, "/content/", 9);
+    if (added && (r = index_prepare(phys))) return card_done(r);
     snprintf(tmp, sizeof tmp, "%s" TMP_SUFFIX, phys);
     make_parents(phys);
     hal_file_t *f = hal_fs_open(tmp, HAL_O_WRITE | HAL_O_CREATE | HAL_O_TRUNC);
@@ -993,6 +1000,8 @@ static int job_begin_unlocked(const file_context_t *c, int op, const char *from,
         if (hal_fs_size(b) >= 0) return card_done(INK_FS_ERR_EXISTS);
         size_t an = strlen(a);
         if (!strncmp(a, b, an) && b[an] == '/') return card_done(INK_FS_ERR_PATH); /* into itself */
+        r = index_prepare(b);
+        if (r) return card_done(r);
     }
     ink_svc_lock();
     if (FS.job_active) {
@@ -1393,6 +1402,7 @@ static int restore_file(const char *member, unsigned stage, const char *path, co
     }
     char target[PHYS_MAX], source[PHYS_MAX], root[INK_LAYOUT_PATH_MAX];
     r = resolve_for(&c, path, true, target, sizeof target);
+    if (!r) r = index_prepare(target);
     if (!r && FS.job_active) r = INK_FS_ERR_BUSY;
     for (int i = 0; !r && i < MAX_OPEN; i++)
         if (FS.files[i].used && FS.files[i].writable) r = INK_FS_ERR_BUSY;
@@ -1435,9 +1445,8 @@ int ink_fs_restore_if_revision(const char *member, unsigned stage, const char *p
     return restore_file(member, stage, path, NULL, revision);
 }
 
-/* The data store owns ids and durability; only the random card identity lives on FAT. */
-#define INDEX_CARD "/content/.file-index-card"
-typedef struct { uint8_t card[16]; char path[PHYS_MAX]; } index_rec_t;
+/* Virtual paths map to at most 155 bytes; reuse v1's spare path bytes for metadata. */
+typedef struct { uint8_t card[16]; char path[PHYS_MAX - 16]; int64_t size, mtime; } index_rec_t;
 static struct {
     bool family, saving;
     char indexed[INK_MEMBERS_MAX][INK_MEMBER_ID_MAX], member[INK_MEMBER_ID_MAX];
@@ -1456,6 +1465,18 @@ static void index_invalidate(void) {
     __atomic_store_n(&FS.index_dirty, true, __ATOMIC_RELAXED);
     ink_state_set_str(FS.h_index, hal_fs_card_present() && !FS.usb_lent ? "organizing" : "unavailable");
     ink_svc_at(&FS.index_at, osal_now_us() + 50000ull, index_refresh_cb, NULL);
+}
+/* Mark FAT before the edit; never wait for internal flash while holding edits. */
+static int index_prepare(const char *path) {
+    if (!FS.ready || strncmp(path, "/content/", 9)) return 0;
+    if (hal_fs_size(INDEX_DIRTY) < 0) {
+        hal_file_t *f = hal_fs_open(INDEX_DIRTY, HAL_O_WRITE | HAL_O_CREATE);
+        if (!f) return card_error();
+        int synced = hal_fs_sync(f), closed = hal_fs_close(f);
+        if (synced || closed) return INK_FS_ERR_IO;
+        ink_svc_at(&FS.index_at, osal_now_us() + 50000ull, index_refresh_cb, NULL);
+    }
+    return 0;
 }
 static int index_open(uint8_t card[16], ink_db_t **db) {
     hal_file_t *f = hal_fs_open(INDEX_CARD, HAL_O_READ);
@@ -1479,6 +1500,8 @@ static int index_open(uint8_t card[16], ink_db_t **db) {
     int closed = hal_fs_close(f);
     if (n != 16 || r || closed || (size >= 0 && size != 16)) return INK_FS_ERR_IO;
     if (size < 0 && hal_fs_rename(INDEX_CARD ".tmp", INDEX_CARD)) return card_error();
+    if ((!FS.index_seen || memcmp(card, FS.index_card, 16)) && hal_fs_size(INDEX_DIRTY) >= 0)
+        __atomic_store_n(&FS.index_dirty, true, __ATOMIC_RELAXED);
     ink_state_set_str(FS.h_index, FS.index_seen && memcmp(card, FS.index_card, 16) ? "changed" : storage_index_ready() ? "ready" : "organizing");
     if (memcmp(card, FS.index_card, 16)) { ink_thumb_cache_destroy(FS.thumbs); FS.thumbs = NULL; memset(&storage, 0, sizeof storage); }
     memcpy(FS.index_card, card, 16); FS.index_seen = true;
@@ -1506,9 +1529,10 @@ static int index_edit(const char *from, const char *to) {
     while (!r && ink_db_next(db, &cur, &rec, &e, sizeof e) == 1) {
         if (memcmp(card, e.card, 16) || !index_under(e.path, from)) continue;
         if (to) {
-            char path[PHYS_MAX];
+            char path[sizeof e.path];
             if (snprintf(path, sizeof path, "%s%s", to, e.path + strlen(from)) >= (int)sizeof path) { r = INK_FS_ERR_PATH; break; }
             memcpy(e.path, path, strlen(path) + 1);
+            e.size = hal_fs_size(e.path); e.mtime = hal_fs_mtime(e.path);
         }
         if (!to) ink_thumb_cache_remove(FS.thumbs, rec.id);
         r = index_save(db, rec.id, to ? &e : NULL, NULL);
@@ -1530,7 +1554,7 @@ static ink_fs_type_t index_type(const char *path) {
     return INK_FS_OTHER;
 }
 
-#define INDEX_BATCH 32
+#define INDEX_BATCH 16
 typedef struct { uint32_t hash, id; } index_slot_t;
 typedef struct {
     file_context_t context;
@@ -1540,6 +1564,8 @@ typedef struct {
     uint32_t revision;
     uint8_t card[16];
     index_slot_t known[INK_FS_INDEX_MAX * 2];
+    uint32_t missing[INK_FS_INDEX_MAX];
+    unsigned nmissing;
 } index_walk_t;
 static index_walk_t *index_walk;
 static bool index_manual;
@@ -1573,9 +1599,26 @@ static index_slot_t *index_slot(index_walk_t *w, ink_db_t *db, const char *path)
 static int index_walk_load(index_walk_t *w, ink_db_t *db, const uint8_t card[16]) {
     memcpy(w->card, card, 16);
     index_rec_t e; ink_rec_t rec; ink_db_cursor_t cur = {0}; int n;
-    while ((n = ink_db_next(db, &cur, &rec, &e, sizeof e)) == 1)
-        if (!memcmp(card, e.card, 16)) index_slot(w, db, e.path)->id = rec.id;
+    while ((n = ink_db_next(db, &cur, &rec, &e, sizeof e)) == 1) {
+        if (memcmp(card, e.card, 16)) continue;
+        index_slot(w, db, e.path)->id = rec.id;
+        /* Check absence only for metadata matches of a new path, not every known record. */
+        if (rec.schema == INDEX_DEF.schema && rec.len == sizeof e)
+            w->missing[w->nmissing++] = rec.id;
+    }
     return n < 0 ? INK_FS_ERR_IO : 0;
+}
+static uint32_t index_renamed(index_walk_t *w, ink_db_t *db, const index_rec_t *e) {
+    /* Metadata is from the last scan: an edited then renamed file may receive a new id after power loss. */
+    uint32_t id = 0;
+    for (unsigned i = 0; i < w->nmissing; i++) {
+        index_rec_t old;
+        if (!w->missing[i] || ink_db_get(db, w->missing[i], NULL, &old, sizeof old)) continue;
+        if (old.size != e->size || old.mtime != e->mtime || hal_fs_size(old.path) >= 0) continue;
+        if (id) return 0; /* Ambiguous metadata must not steal another file's id. */
+        id = w->missing[i];
+    }
+    return id;
 }
 static int index_walk_step(index_walk_t *w, ink_db_t *db, const uint8_t card[16]) {
     int r = 0; ink_fs_stat_t st;
@@ -1588,9 +1631,14 @@ static int index_walk_step(index_walk_t *w, ink_db_t *db, const uint8_t card[16]
         if (!st.is_dir) {
             index_rec_t e = {0}; memcpy(e.card, card, 16);
             r = resolve_for(&w->context, w->path, false, e.path, sizeof e.path);
+            e.size = st.size; e.mtime = w->dirs[w->depth - 1]->e.mtime;
+            if (!r && e.mtime < 0) r = INK_FS_ERR_IO;
             index_slot_t *slot = r ? NULL : index_slot(w, db, e.path);
-            if (slot && !slot->id) {
-                ink_db_write_t put = {.data = &e, .len = sizeof e, .flags = INK_DB_LAZY};
+            if (slot && !slot->id) slot->id = index_renamed(w, db, &e);
+            index_rec_t old; ink_rec_t rec;
+            if (slot && (!slot->id || ink_db_get(db, slot->id, &rec, &old, sizeof old) ||
+                rec.schema != INDEX_DEF.schema || rec.len != sizeof old || memcmp(&old, &e, sizeof old))) {
+                ink_db_write_t put = {.id = slot->id, .data = &e, .len = sizeof e, .flags = INK_DB_LAZY};
                 int added = ink_db_put(db, &put, &slot->id);
                 if (added) r = added == INK_DB_ERR_FULL ? INK_FS_ERR_INDEX_FULL : INK_FS_ERR_IO;
             }
@@ -1680,7 +1728,7 @@ static void index_background(void *arg) {
         if (done_id && ink_db_del(done, done_id, 0)) r = INK_FS_ERR_IO;
         done_id = 0;
     }
-    if (!r && !FS.job_active && !storage_index_scanned()) {
+    if (!r && inverse_ready(__atomic_load_n(&FS.revision, __ATOMIC_RELAXED)) && !storage_index_scanned()) {
         if (!done) r = INK_FS_ERR_IO;
         else if (!index_walk && done_id && rec.schema == INDEX_DEF.schema && !memcmp(&saved, &expected, sizeof saved)) {
             storage.family = true;
@@ -1721,7 +1769,10 @@ static void index_background(void *arg) {
         ink_db_write_t put = {.id = done_id, .data = &expected, .len = sizeof expected, .schema = INDEX_DEF.schema};
         if (ink_db_put(done, &put, NULL)) r = INK_FS_ERR_IO;
     }
-    bool more = !r && held && !FS.job_active && !storage_index_ready();
+    bool durable = !r && done && ink_db_durable_ver(db) == ink_db_last_ver(db) && ink_db_durable_ver(done) == ink_db_last_ver(done);
+    if (durable && storage_index_ready() && inverse_ready(__atomic_load_n(&FS.revision, __ATOMIC_RELAXED)) &&
+        hal_fs_size(INDEX_DIRTY) >= 0 && hal_fs_remove(INDEX_DIRTY)) r = INK_FS_ERR_IO;
+    bool more = !r && held && !FS.job_active && (!storage_index_ready() || !durable);
     osal_mutex_unlock(FS.edits);
     ink_db_close(done); ink_db_close(db); ink_db_close(loaded);
     if (held) ink_fs_card_release();
