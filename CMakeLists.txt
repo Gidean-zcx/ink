@@ -6,6 +6,8 @@
 #   cmake -S . -B build && cmake --build build -j && ctest --test-dir build --output-on-failure
 cmake_minimum_required(VERSION 3.16)
 project(ink C)
+add_executable(test-s31-osal-ticks tests/esp32s31/osal_ticks.c)
+target_compile_options(test-s31-osal-ticks PRIVATE -UNDEBUG)
 if(APPLE)
   enable_language(OBJC) # before SDL2's own configure (FetchContent) and the window's camera code
 endif()
@@ -466,6 +468,7 @@ endif()
 
 # ---------------------------------------------------------------- tests
 enable_testing()
+add_test(NAME unit-s31-osal-ticks COMMAND test-s31-osal-ticks)
 set(INK_IMAGE_FIXTURES ${CMAKE_BINARY_DIR}/generated/image_fixtures.h)
 add_custom_command(OUTPUT ${INK_IMAGE_FIXTURES}
   COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/media/fixtures.py ${INK_IMAGE_FIXTURES}

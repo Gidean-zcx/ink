@@ -1721,7 +1721,7 @@ static void storage_cleanup(ink_call_t *call) {
     char out[240];
     snprintf(out, sizeof out, "{\"temporary\":%llu,\"cache\":%llu,\"partial\":%llu,\"bytes\":%llu,\"revision\":%u}",
         (unsigned long long)bytes[0], (unsigned long long)bytes[1], (unsigned long long)bytes[2],
-        (unsigned long long)(bytes[0] + bytes[1] + bytes[2]), revision);
+        (unsigned long long)(bytes[0] + bytes[1] + bytes[2]), (unsigned)revision);
     ink_cap_result(call, out);
 }
 static const ink_cap_t STORAGE_CAPS[] = {

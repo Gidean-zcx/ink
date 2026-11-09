@@ -954,8 +954,8 @@ static void send_events(void) { /* hub task */
         osal_mutex_unlock(CB.lock);
         /* it goes only while it is theirs who is here: the next one's AI does not hear about it */
         bool theirs = ink_member_exists(whose) && ink_member_space_open() && !strcmp(whose, ink_member_current()->id);
-        int head = snprintf(out, EVENT_JSON_CAP, "{\"event\":\"%s\",\"at_s\":%lld,\"seq\":%u,\"boot\":%u,\"member\":\"%s\",\"args\":",
-                            id, (long long)at, seq, CB.boot_tag, whose);
+        int head = snprintf(out, EVENT_JSON_CAP, "{\"event\":\"%s\",\"at_s\":%lld,\"seq\":%lu,\"boot\":%lu,\"member\":\"%s\",\"args\":",
+                            id, (long long)at, (unsigned long)seq, (unsigned long)CB.boot_tag, whose);
         int body = ink_args_to_json(args, out + head, EVENT_JSON_CAP - (size_t)head - 2);
         int r = 0;
         if (!theirs) ink_probe_count("cap.event_for_another_member");
@@ -1405,7 +1405,7 @@ static void tool_done(void *ctx, const ink_receipt_t *rc) { /* where the capabil
     osal_mem_tag(prev);
     if (!out || ink_receipt_json(rc, out, cap) < 0) ink_hub_respond_error(t->id, -32603, out ? "receipt too long" : "out of memory");
     else {
-        if (t->confirm_token) { size_t n = strlen(out); snprintf(out + n - 1, cap - n + 1, ",\"confirm_token\":%u}", t->confirm_token); }
+        if (t->confirm_token) { size_t n = strlen(out); snprintf(out + n - 1, cap - n + 1, ",\"confirm_token\":%lu}", (unsigned long)t->confirm_token); }
         ink_hub_respond_for(t->id, out, t->member, t->epoch, t->connection);
     }
     osal_free(out);

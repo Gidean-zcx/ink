@@ -99,7 +99,7 @@ static void headers(void) {
     }
     bool valid_length = length && *length && strlen(length) <= 18 && strspn(length, "0123456789") == strlen(length);
     if (valid_length) T.left = strtoull(length, NULL, 10);
-    char expected[8]; snprintf(expected, sizeof expected, "%06u", T.code);
+    char expected[8]; snprintf(expected, sizeof expected, "%06u", (unsigned)T.code);
     if (!code || strcmp(code, expected)) {
         T.used = ++T.misses >= 3; /* used: closes once this answer is out */
         reply(403, T.used ? "授权码错误次数过多，已关闭" : "授权码不正确或已失效", false);
@@ -191,7 +191,7 @@ static void status(ink_call_t *c) {
     char out[384], host[64] = "";
     if (hal_transfer_host(host, sizeof host)) host[0] = 0;
     snprintf(out, sizeof out, "{\"active\":%s,\"host\":\"%.63s\",\"port\":%u,\"code\":\"%06u\",\"directory\":\"" INBOX "\",\"result\":\"%s\",\"received\":%lld}",
-             T.active ? "true" : "false", host, T.port, T.code, T.result ? T.result : "尚未开启", (long long)received);
+             T.active ? "true" : "false", host, T.port, (unsigned)T.code, T.result ? T.result : "尚未开启", (long long)received);
     ink_cap_result(c, out);
 }
 static void start(ink_call_t *c) {

@@ -711,7 +711,7 @@ static int upload_block(const char *path, const uint8_t hash[32], uint32_t size,
     hex(hash, 32, sha);
     if (!N.stage) {
         snprintf(params, sizeof params,
-                 "{\"name\":\"backup\",\"size\":%u,\"sha256\":\"%s\",\"member\":\"%s\",\"kind\":\"backup\"}", size, sha,
+                 "{\"name\":\"backup\",\"size\":%u,\"sha256\":\"%s\",\"member\":\"%s\",\"kind\":\"backup\"}", (unsigned)size, sha,
                  B.j.member);
         int called = rpc("blob/put.begin", params, j);
         if (called) return called;
@@ -800,7 +800,7 @@ static int download_block(const char *path, const char *sha, uint32_t size, ink_
             }
             char params[320];
             snprintf(params, sizeof params, "{\"id\":\"sha256:%s\",\"offset\":%u,\"len\":%u,\"member\":\"%s\"}", sha,
-                     (uint32_t) have, n, B.j.member);
+                     (unsigned)have, (unsigned)n, B.j.member);
             int rc = rpc("blob/fetch", params, j);
             if (rc) return rc;
             uint32_t total = 0;
@@ -1099,7 +1099,7 @@ static int upload_step(ink_json_t *j) {
     }
     char params[320];
     snprintf(params, sizeof params, "{\"member\":\"%s\",\"blob\":\"sha256:%s\",\"size\":%u,\"sha256\":\"%s\"}",
-             B.j.member, B.j.manifest_hash, B.j.manifest_size, B.j.manifest_hash);
+             B.j.member, B.j.manifest_hash, (unsigned)B.j.manifest_size, B.j.manifest_hash);
     int called = rpc("backup/commit", params, j);
     if (called) return called;
     char got[65];

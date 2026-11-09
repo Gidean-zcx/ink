@@ -463,7 +463,7 @@ static void tapped(lv_event_t *e) { /* UI task */
     lv_point_t pt;
     lv_indev_get_point(lv_indev_active(), &pt);
     char args[64];
-    snprintf(args, sizeof args, "{\"x\":%d,\"y\":%d,\"long\":%s}", pt.x, pt.y,
+    snprintf(args, sizeof args, "{\"x\":%ld,\"y\":%ld,\"long\":%s}", (long)pt.x, (long)pt.y,
              lv_event_get_code(e) == LV_EVENT_LONG_PRESSED ? "true" : "false");
     ink_receipt_t rc;
     ink_cap_invoke_json("remote.pointer", args, INK_SRC_TOUCH, ink_ui_content_version(), &rc);

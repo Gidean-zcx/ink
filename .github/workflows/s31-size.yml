@@ -22,3 +22,16 @@ jobs:
           path: |
             .s31-size/*.txt
             .s31-size/*.log
+      - name: Compile the ink ESP32-S31 port
+        run: bash ports/esp32s31/build.sh
+        env:
+          IDF_PATH: ${{ github.workspace }}/.s31-size/esp-idf
+          IDF_TOOLS_PATH: /home/runner/.espressif
+      - name: Upload port build reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: s31-port-reports
+          path: |
+            build-s31/size*.txt
+            build-s31/log/

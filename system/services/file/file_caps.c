@@ -368,7 +368,7 @@ static void cap_thumb(ink_call_t *c) {
     char *out = osal_malloc(count + 96, OSAL_MEM_EXTERNAL);
     if (!out) refuse(c, INK_FS_ERR_IO);
     else {
-        int n = snprintf(out, 96, "{\"id\":%u,\"width\":%u,\"height\":%u,\"gray4\":\"", (uint32_t)id, im.width, im.height);
+        int n = snprintf(out, 96, "{\"id\":%u,\"width\":%u,\"height\":%u,\"gray4\":\"", (unsigned)id, im.width, im.height);
         for (size_t i = 0; i < count; i++) out[n + i] = "0123456789abcdef"[im.pixels[i] / 17];
         memcpy(out + n + count, "\"}", 3); ink_cap_result(c, out);
     }

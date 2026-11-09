@@ -906,7 +906,7 @@ static void cap_time(ink_call_t *c) {
     save_all(); time_queue(NULL);
     char out[192];
     snprintf(out, sizeof out, "{\"id\":\"%s\",\"minutes\":%u,\"extra_minutes\":%u,\"used_seconds\":%llu,\"day\":%u}",
-        s->m.id, t.minutes, t.extra, (unsigned long long)(t.used_us / 1000000), t.day);
+        s->m.id, (unsigned)t.minutes, (unsigned)t.extra, (unsigned long long)(t.used_us / 1000000), (unsigned)t.day);
     ink_cap_result(c, out);
 }
 #define TIME_INPUT "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":15},\"minutes\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":1440}},\"required\":[\"minutes\"]}"

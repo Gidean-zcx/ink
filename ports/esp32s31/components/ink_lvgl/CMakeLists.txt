@@ -1,0 +1,10 @@
+set(root ${CMAKE_CURRENT_LIST_DIR}/../../../..)
+set(lvgl $ENV{INK_LVGL_SOURCE_DIR})
+if(NOT EXISTS ${lvgl}/src/lvgl.h AND NOT EXISTS ${lvgl}/lvgl.h)
+    message(FATAL_ERROR "Set INK_LVGL_SOURCE_DIR to the pinned LVGL v9.5.0 checkout")
+endif()
+file(GLOB_RECURSE sources ${lvgl}/src/*.c)
+idf_component_register(SRCS ${sources} ${root}/system/ui/lv_mem_osal.c
+    INCLUDE_DIRS ${lvgl} ${root}/system/ui REQUIRES ink_platform)
+target_compile_definitions(${COMPONENT_LIB} PUBLIC LV_CONF_INCLUDE_SIMPLE)
+target_compile_options(${COMPONENT_LIB} PRIVATE -fstack-usage -fcallgraph-info=su -w)
