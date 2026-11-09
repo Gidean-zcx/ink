@@ -9,18 +9,24 @@
 | 1 | 通过 | 【实测】178 项检查，触摸备份、预览、取消确认、AI 发起恢复、人确认、原文件内容恢复 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2 -R '^backup-pages$'` |
 | 2 | 通过 | 【实测】缺卡错误保留、损坏备份失败、断网可返回、联网后服务继续；失败重试能到保存完成 | 同上 |
 | 3 | 通过 | 【实测】六页真实快照、上下文可解析、动作已注册；触摸和 AI 均调用 `backup.now`、`restore.preview`、`restore.apply`；AI 不能批准覆盖 | 同上 |
-| 4 | 内存检查通过；普通最终复验进行中 | 【实测】ASan/UBSan 233/233，无跳过；此前普通 233/233；【实现】C 产品代码 208 行，含构建接线 214 行 | 待补最终普通结果 |
+| 4 | 通过 | 【实测】最终普通和 ASan/UBSan 各 233/233，无跳过；【实现】C 产品代码 208 行，含构建接线 214 行 | 下列两条全量命令；`git diff --numstat 558c7ba..HEAD -- system/boot/main.c system/ui/shell/backup_pages.c CMakeLists.txt` |
 | G4 | 六页已对照，均超目标 | 【实测】分数及差异见下表；未改设计稿和阈值 | `INK_DESIGN="$INK_DESIGN" taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.py --build build --reuse --out build/backup-compare --scenes Backup BackupFail Restore RestoreRun RestoreDone RestoreFail` |
 
 反向对照【实测】：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/backup_pages_reverse.py --build build` 通过；替换对象分别撤去 summary 参数、错误保留判断、服务阶段决定页面的判断，三次运行均以 1 退出并命中对应失败断言（分别 1、2、2 个失败）。产品源文件哈希未变；命令和结果留在 `build/backup-pages-reverse/{commands,summary}.json`。
 
 实现与测试源码提交：`e707ee25`。配置沿用[总规则第 5 节](../codex-rules.md#5-构建和测试)全部参数，两套均额外选择 `-DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"`；内存检查只换为 `build-asan` 并加 `-DINK_SANITIZE=ON`，仍保留 `-DINK_WERROR=ON`。构建与测试均用 `taskpolicy -c utility`，并发均为 2，未启动窗口程序。
 
-【实测，模拟器】两套新页面流程均通过 178 项检查，内部 RAM 最低余量均为 45,312 字节（门槛 32,768），内部与外部内存分配失败均为 0。ASan/UBSan 全量耗时 689.02 秒；日志为 `build-asan/ctest.log`，页面指标和截图留在两套目录的 `backup-compare/`。普通最终日志为 `build/ctest-release.log`。
+```sh
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
+```
+
+【实测，模拟器】两套新页面流程均通过 178 项检查，`mem.internal_total.min_free_bytes` 均为 45,312 字节（门槛 32,768），内部与外部内存分配失败均为 0。普通全量耗时 214.05 秒，ASan/UBSan 全量 689.02 秒；日志分别为 `build/ctest-release.log`、`build-asan/ctest.log`，页面指标和截图留在两套目录的 `backup-compare/`。内存检查的完整测试日志未发现 ASan/UBSan 错误。
+
+差异和隐私复核【实测】：基线差异仅 9 个相关文件，无构建产物、设计稿或共享设计文档；`git diff --check` 通过。按总规则第 6 节扫描基线至 HEAD，零匹配（grep 退出 1）。只提交本地分支，未推送。
 
 ## 没做到的
 
-- 普通最终全量复验尚在执行。
 - 【实现】服务只提供当前家人的最新备份，无历史备份选择、全家汇总和自动备份设置接口；页面只提供最新备份预览，并显示限制。
 - 【实现】完成页没有逐项失败清单和各人的阅读位置；当前仅展示服务明确的排除类目，不编造数量。
 - 未实测 Linux/gcc、真机或真实家庭服务器。
