@@ -1406,6 +1406,11 @@ ink_sim_executable(sim-file-index-3 tests/file_index_3/device.c tests/file_index
 target_link_libraries(sim-file-index-3 PRIVATE ink_apps ink_system)
 add_test(NAME file-index-3 COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/file_index_3/run.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(file-index-3 PROPERTIES TIMEOUT 180 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")
+ink_sim_executable(sim-storage-order tests/storage_order/device.c tests/storage_order/data_boundary.c
+  tests/storage_order/storage_boundary.c tests/file_index_3/boundary.c)
+target_link_libraries(sim-storage-order PRIVATE ink_apps ink_system)
+add_test(NAME storage-order COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/storage_order/run.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(storage-order PROPERTIES TIMEOUT 180 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")
 target_sources(ink_system PRIVATE system/ui/shell/transfer_pages.c)
 ink_sim_executable(sim-transfer-pages tests/transfer_pages/device.c)
 target_link_libraries(sim-transfer-pages PRIVATE ink_apps ink_system)

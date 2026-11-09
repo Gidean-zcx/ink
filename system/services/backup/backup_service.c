@@ -202,7 +202,7 @@ static void stored(void *ctx, int result) {
 
 static int write_state_file(const char *path, const void *p, size_t n) {
     stored_t s = {0};
-    if (ink_storage_write_borrow(path, p, n, stored, &s) != 0) return -1;
+    if (ink_storage_write_borrow(path, p, n, stored, &s, NULL) != 0) return -1;
     while (!__atomic_load_n(&s.done, __ATOMIC_ACQUIRE)) osal_task_delay_us(1000);
     return s.result;
 }

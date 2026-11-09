@@ -155,7 +155,7 @@ static bool save_state(void) {
     ink_jw_int(&w, U.st.blocked_code);
     ink_jw_raw(&w, "}");
     int result = 1;
-    if (w.overflow || ink_storage_write_borrow(INK_UPDATE_STATE_FILE, buf, w.len, state_saved, &result) != 0) return false;
+    if (w.overflow || ink_storage_write_borrow(INK_UPDATE_STATE_FILE, buf, w.len, state_saved, &result, NULL) != 0) return false;
     /* The stack buffer remains borrowed until the durable completion. Never on UI or input tasks. */
     while (__atomic_load_n(&result, __ATOMIC_ACQUIRE) == 1) osal_task_delay_us(10000);
     return result == 0;

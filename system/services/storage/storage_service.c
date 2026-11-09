@@ -16,8 +16,8 @@
  * writes off (audio streaming).
  *
  * Writes are atomic (temp file + rename); repeated writes of one path
- * coalesce. Appends and removes go through the same queue, in the order they
- * were accepted. Reads see queued writes, including the one being written; then
+ * coalesce. Appends and removes go through the same queue, FIFO per path;
+ * writes with waiting callers go first. Reads see queued writes, including the one being written; then
  * the read cache (small files and "does not exist", LRU),
  * filled by reads, writes and background prefetches; only then the flash.
  * The cache never holds an older version than the newest write: a write
@@ -33,6 +33,8 @@
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/display.h"
+#include "ink/sys/audio.h"
+#include "ink/sys/power.h"
 #include "ink/sys/res.h"
 #include "ink/sys/storage.h"
 #include "ink/sys/members.h"
@@ -42,6 +44,10 @@
 #define ST_STACK 4096 /* 3584 was exceeded by the Linux host estimate (3624, settings-b); confirm with -fstack-usage on S31 */
 #define ST_PRIO 3
 #define IDLE_POLL_US 50000
+#define BG_QUIET_US 500000ull /* longer than a short press and the audio task's first write hold */
+/* Background work waits for quiet no longer than this, and not while it fills the queue: waited
+ * writes must always find a free slot (submit fails when all MAX_JOBS are taken). */
+#define BG_MAX_WAIT_US 10000000ull
 #define MAX_DEFER_US 30000000ull /* writes held off longer than this are forced (counted) */
 /* direct-drive panels (async) can pause between drive phases for a flash operation: a write waits
  * this long for a quiet panel, then goes ahead and pauses the drive (a hiccup, no garbage) instead
@@ -70,6 +76,7 @@ typedef struct {
     uint8_t kind;
     bool used;
     bool inflight; /* taken by the storage task: stays visible to reads, never coalesced into */
+    const unsigned *waiters; /* borrowed with data; checked again before starting a write */
     ink_storage_done_fn done;
     void *ctx;
     const uint8_t *expected;
@@ -97,6 +104,7 @@ static struct {
     int pending;
     int failed; /* writes that failed (e.g. /user full) since boot */
     int holds;
+    uint64_t audio_until;
     uint32_t seq, order;
     centry_t *cache; /* CACHE_MAX, external RAM */
     uint32_t clock;
@@ -388,16 +396,40 @@ static void serve_read(void) {
     osal_sem_give(ST.read_done);
 }
 
-/* Oldest queued job; it stays in its slot (visible to reads) until written. Returns the slot or -1. */
-static int take_job(job_t *out) {
+static bool foreground(const job_t *j) {
+    return j->waiters ? __atomic_load_n(j->waiters, __ATOMIC_ACQUIRE) > 0 : j->done != NULL;
+}
+
+/* Waiters first, FIFO within a path and priority. -2: work exists but must wait. */
+static int take_job(job_t *out, bool panel_ready, bool audio_busy, uint64_t activity, bool *forced) {
+    uint64_t now = osal_now_us();
     osal_mutex_lock(ST.lock, OSAL_WAIT_FOREVER);
+    if (audio_busy) ST.audio_until = now + BG_QUIET_US;
     int best = -1;
-    for (int i = 0; i < MAX_JOBS; i++)
-        if (ST.jobs[i].used && !ST.jobs[i].inflight && (best < 0 || ST.jobs[i].order < ST.jobs[best].order))
+    bool best_fg = false;
+    for (int i = 0; i < MAX_JOBS; i++) {
+        job_t *j = &ST.jobs[i];
+        if (!j->used || j->inflight) continue;
+        bool first = true, fg = foreground(j);
+        for (int k = 0; k < MAX_JOBS; k++)
+            if (ST.jobs[k].used && !strcmp(j->path, ST.jobs[k].path)) {
+                if (ST.jobs[k].order < j->order) first = false;
+                fg = fg || foreground(&ST.jobs[k]);
+            }
+        if (first && (best < 0 || (fg && !best_fg) || (fg == best_fg && j->order < ST.jobs[best].order))) {
             best = i;
+            best_fg = fg;
+        }
+    }
     if (best >= 0) {
-        ST.jobs[best].inflight = true;
-        *out = ST.jobs[best];
+        *forced = ST.holds > 0 && now - ST.jobs[best].queued_us > MAX_DEFER_US;
+        bool quiet = (now >= activity + BG_QUIET_US && now >= ST.audio_until) ||
+                     now - ST.jobs[best].queued_us > BG_MAX_WAIT_US || ST.pending > MAX_JOBS / 2;
+        if ((!best_fg && !quiet) || (!*forced && (ST.holds > 0 || !panel_ready))) best = -2;
+        else {
+            ST.jobs[best].inflight = true;
+            *out = ST.jobs[best];
+        }
     }
     osal_mutex_unlock(ST.lock);
     return best;
@@ -453,25 +485,23 @@ static void storage_task(void *arg) {
             serve_read();
             prefetch_one();
             job_t job;
-            int slot = take_job(&job);
-            if (slot < 0) break;
             /* wait for a quiet panel and no write hold (reads are still served meanwhile) */
             uint64_t t_wait = osal_now_us();
             bool forced = false;
+            int slot;
             for (;;) {
                 serve_read();
                 bool held = writes_held();
-                if (!held && ink_display_busy() <= 0) break;
-                if (!held && ST.panel_async && osal_now_us() - t_wait >= ASYNC_PANEL_WAIT_US) {
-                    ink_probe_count("storage.writes_pausing_panel");
-                    break;
-                }
-                if (held && osal_now_us() - job.queued_us > MAX_DEFER_US) {
-                    forced = true;
+                bool pause = !held && ST.panel_async && osal_now_us() - t_wait >= ASYNC_PANEL_WAIT_US;
+                bool audio = ink_audio_capture_busy() || ink_audio_focus_top() >= INK_AUDIO_PRIO_VOICE;
+                slot = take_job(&job, ink_display_busy() <= 0 || pause, audio, ink_power_last_activity(), &forced);
+                if (slot != -2) {
+                    if (slot >= 0 && pause) ink_probe_count("storage.writes_pausing_panel");
                     break;
                 }
                 osal_sem_take(ST.kick, IDLE_POLL_US); /* a new read wakes us early */
             }
+            if (slot < 0) break;
             if (forced) ink_probe_count("storage.forced_writes");
             ink_display_flash_guard(true);
             uint64_t t0 = osal_now_us();
@@ -578,7 +608,7 @@ int ink_storage_write_member_atomic(const char *path, const void *data, size_t l
     return write_atomic(path, data, len);
 }
 
-static int submit(job_kind_t kind, const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx, const uint8_t *expected) {
+static int submit(job_kind_t kind, const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx, const uint8_t *expected, const unsigned *waiters) {
     char member[16];
     if (!member_begin(path, member)) return -1;
     size_t plen = strlen(path) + 1;
@@ -597,7 +627,8 @@ static int submit(job_kind_t kind, const char *path, const void *data, size_t le
     }
     ST.pending++;
     ST.jobs[slot] = (job_t){.path = block, .data = data, .len = len, .queued_us = osal_now_us(), .seq = ++ST.seq, .order = ++ST.order,
-                            .kind = (uint8_t)kind, .used = true, .done = done, .ctx = ctx, .expected = expected};
+                            .kind = (uint8_t)kind, .used = true, .done = done, .ctx = ctx, .expected = expected,
+                            .waiters = waiters};
     if (kind == J_WRITE) cache_put(path, data, (int)len);
     else if (kind == J_REMOVE) cache_put(path, NULL, -1);
     else cache_drop(path);
@@ -607,22 +638,22 @@ static int submit(job_kind_t kind, const char *path, const void *data, size_t le
     return 0;
 }
 
-int ink_storage_write_borrow(const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx) {
-    return submit(J_WRITE, path, data, len, done, ctx, NULL);
+int ink_storage_write_borrow(const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx, const unsigned *waiters) {
+    return submit(J_WRITE, path, data, len, done, ctx, NULL, waiters);
 }
 
 int ink_storage_restore(const char *path, const void *data, size_t len, const uint8_t expected_sha256[32], ink_storage_done_fn done, void *ctx) {
-    return expected_sha256 ? submit(J_RESTORE, path, data, len, done, ctx, expected_sha256) : -1;
+    return expected_sha256 ? submit(J_RESTORE, path, data, len, done, ctx, expected_sha256, NULL) : -1;
 }
 
-int ink_storage_append(const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx) {
-    return submit(J_APPEND, path, data, len, done, ctx, NULL);
+int ink_storage_append(const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx, const unsigned *waiters) {
+    return submit(J_APPEND, path, data, len, done, ctx, NULL, waiters);
 }
 
-int ink_storage_remove(const char *path, ink_storage_done_fn done, void *ctx) { return submit(J_REMOVE, path, NULL, 0, done, ctx, NULL); }
+int ink_storage_remove(const char *path, ink_storage_done_fn done, void *ctx) { return submit(J_REMOVE, path, NULL, 0, done, ctx, NULL, NULL); }
 
 int ink_storage_remove_member(const char *path, ink_storage_done_fn done, void *ctx) {
-    return submit(J_REMOVE, path, NULL, 0, done, ctx, NULL);
+    return submit(J_REMOVE, path, NULL, 0, done, ctx, NULL, NULL);
 }
 
 /* Hand a request to the storage task and wait for it. */
@@ -782,6 +813,7 @@ void ink_storage_hold_writes(bool hold) {
     osal_mutex_lock(ST.lock, OSAL_WAIT_FOREVER);
     ST.holds += hold ? 1 : -1;
     if (ST.holds < 0) ST.holds = 0;
+    if (!hold && !ST.holds) ST.audio_until = osal_now_us() + BG_QUIET_US;
     osal_mutex_unlock(ST.lock);
     if (!hold) osal_sem_give(ST.kick);
 }

@@ -390,6 +390,7 @@ void ink_power_activity(uint64_t t_us) {
 }
 
 uint64_t ink_power_last_activity(void) {
+    if (!PS.lock) return 0;
     lock();
     uint64_t t = PS.last_activity;
     unlock();

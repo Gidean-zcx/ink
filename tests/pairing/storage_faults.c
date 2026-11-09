@@ -3,11 +3,11 @@
 #include "ink/hal_power.h"
 #include "ink/sys/pairing.h"
 static int refuse;
-static int borrow_fault(const char *, const void *, size_t, ink_storage_done_fn, void *);
+static int borrow_fault(const char *, const void *, size_t, ink_storage_done_fn, void *, const unsigned *);
 #define ink_storage_write_borrow borrow_fault
 #include "../../system/services/hub/pairing.c"
 #undef ink_storage_write_borrow
-static int borrow_fault(const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx) {
+static int borrow_fault(const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx, const unsigned *waiters) {
     if (refuse >= 5) {
         int stage = (refuse - 5) / 2;
         const pair_identity_t *s = data;
@@ -27,7 +27,7 @@ static int borrow_fault(const char *path, const void *data, size_t len, ink_stor
             done(ctx, -1); return 0;
         }
     }
-    return ink_storage_write_borrow(path, data, len, done, ctx);
+    return ink_storage_write_borrow(path, data, len, done, ctx, waiters);
 }
 static void offer_event(void *arg) {
     (void)arg;

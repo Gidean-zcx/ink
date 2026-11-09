@@ -5,12 +5,12 @@ static int state_write(const char *path, const void *data, size_t len) {
     if (refuse_state && !strcmp(path, INK_UPDATE_STATE_FILE)) return -1;
     return ink_storage_write_atomic(path, data, len);
 }
-static int state_borrow(const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx) {
+static int state_borrow(const char *path, const void *data, size_t len, ink_storage_done_fn done, void *ctx, const unsigned *waiters) {
     if (refuse_state && !strcmp(path, INK_UPDATE_STATE_FILE)) {
         if (refuse_state == 2) { done(ctx, -1); return 0; }
         return -1;
     }
-    return ink_storage_write_borrow(path, data, len, done, ctx);
+    return ink_storage_write_borrow(path, data, len, done, ctx, waiters);
 }
 static int state_read(const char *path, void *data, size_t len) {
     if (getenv("INK_FINISH_LOSE_STATE") && !strcmp(path, INK_UPDATE_STATE_FILE)) return -1;
