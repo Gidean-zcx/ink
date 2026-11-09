@@ -1,0 +1,6 @@
+{
+  "warnings.count": {"max": 0, "optional": true},
+  "mem.internal.failed_allocs": {"max": 0},
+  "mem.external.failed_allocs": {"max": 0},
+  "test.pass": {"min": 1}
+}
