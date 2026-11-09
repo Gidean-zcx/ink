@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "ink/sys/app.h"
+#include "ink/sys/comm.h"
 #include "ink/sys/data.h"
 #include "ink/sys/json.h"
 #include "ink/sys/members.h"
@@ -25,14 +26,14 @@ static struct {
 static struct {
     char member[16], number[24], call_member[16], calling[24], status[96], dial_args[64];
     char ids[4][32], numbers[4][24], details[4][96], args[4][64];
-    char tones[65], route[80], tone_args[12][16];
+    char tones[65], tone_count[12], route[80], tone_args[12][16];
     bool selecting, active, muted;
     ink_exec_job_t refresh;
     ink_db_t *db;
     ink_ui_list_t *list;
     ink_ui_list_position_t position;
     lv_obj_t *field, *notice;
-    ink_ui_field_spec_t fields[5];
+    ink_ui_field_spec_t fields[6];
     ink_ui_action_spec_t actions[14];
     ink_ui_page_spec_t model;
 } P INK_PSRAM_BSS; /* UI executor only. */
@@ -79,8 +80,7 @@ static void changed(void *ctx, const char *id, const ink_args_t *a) {
     if (!strcmp(id, "call.controls")) {
         if (!P.active || strcmp(member, P.call_member)) return;
         ink_args_get_bool(a, "muted", &P.muted);
-        char key[4] = ""; size_t n = strlen(P.tones);
-        if (ink_args_get_str(a, "key", key, sizeof key) == 1 && n < sizeof P.tones - 1) { P.tones[n] = key[0]; P.tones[n + 1] = 0; }
+        ink_comm_call_tones(P.tones, sizeof P.tones);
     }
     if (!strcmp(id, "contacts.selected")) {
         if (!P.selecting || strcmp(P.member, member) || strcmp(member, ink_member_current()->id)) return;
@@ -231,7 +231,9 @@ static void create(lv_obj_t *screen, void *arg) {
         P.fields[1] = (ink_ui_field_spec_t){.id = "status", .role = "status", .label = "通话状态", .value = owned ? P.status : "没有通话"}; P.model.field_count = 2;
         P.fields[2] = (ink_ui_field_spec_t){.id = "mute", .role = "status", .label = "麦克风", .value = !owned ? "没有通话" : P.muted ? "已静音" : "未静音"};
         P.fields[3] = (ink_ui_field_spec_t){.id = "route", .role = "status", .label = "声音去向", .value = P.route};
-        P.fields[4] = (ink_ui_field_spec_t){.id = "tones", .role = "text", .label = "已发送的按键", .value = owned ? P.tones : ""}; P.model.field_count = 5;
+        P.fields[4] = (ink_ui_field_spec_t){.id = "tones", .role = "text", .label = "已发送的按键", .value = owned ? P.tones : "", .secret = true};
+        snprintf(P.tone_count, sizeof P.tone_count, "%u", owned ? (unsigned)strlen(P.tones) : 0);
+        P.fields[5] = (ink_ui_field_spec_t){.id = "tone_count", .role = "text", .label = "已发送的按键位数", .value = P.tone_count}; P.model.field_count = 6;
         P.actions[0] = (ink_ui_action_spec_t){.id = "hangup", .label = "挂断", .capability = "call.hangup", .enabled = enabled};
         P.actions[1] = (ink_ui_action_spec_t){.id = "keypad", .label = keypad ? "收起键盘" : "键盘", .capability = "phone.keypad", .enabled = enabled}; P.model.action_count = 2;
         if (keypad) {

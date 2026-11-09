@@ -1,6 +1,9 @@
 /* Drive the real phone, contacts, policy, store and simulated AT modem. */
 #include <stdlib.h>
-#include "../../system/apps/phone/phone.c"
+#ifndef INK_PHONE_SOURCE
+#define INK_PHONE_SOURCE "../../system/apps/phone/phone.c"
+#endif
+#include INK_PHONE_SOURCE
 #define ink_main product_main
 #include "../../system/boot/main.c"
 #undef ink_main
@@ -167,7 +170,7 @@ static void controls_phase(void) {
     CHECK(ink_confirm_decide(pending[0].token, true, INK_SRC_AI) != 0, "AI cannot confirm its own DTMF");
     CHECK(ink_confirm_decide(pending[0].token, true, INK_SRC_TOUCH) == 0, "human confirms the exact digit");
     CHECK(WAIT_FOR(!strcmp(P.tones, "10*#2"), 3000) && !strcmp(sim_net_call_tones(), "10*#2"), "confirmed AI and touch share the modem path"); quiet(); inspect();
-    CHECK(strstr(snap, "10*#2"), "acknowledged digits are in the keypad snapshot");
+    CHECK(!strstr(snap, "10*#2") && strstr(snap, "\"secret\":true") && strstr(snap, "有值"), "acknowledged digits remain secret in the keypad snapshot");
     CHECK(BY_HAND("call.dtmf", "{\"key\":\"Z\"}") && g_rc.status == INK_RC_INVALID && !strcmp(sim_net_call_tones(), "10*#2"), "invalid DTMF never reaches the modem");
     click(NULL, "phone.keypad");
     vtk_event_at(vtk_now() + SIM_MS(1), add_call_headset, NULL); delay_ms(5);
@@ -193,6 +196,67 @@ static void controls_phase(void) {
     CHECK(!P.tones[0] && !sim_net_call_tones()[0] && sim_net_call_audio(160) == 0, "hangup clears both digit displays and all call audio");
     CHECK(BY_HAND("call.mute", "{\"on\":true}") && g_rc.status == INK_RC_STALE, "ended calls reject mute");
 }
+static void audit7_rebind(void) {
+    open_phone("00000000001"); outgoing();
+    CHECK(AI("call.dtmf", "{\"key\":\"7\"}") && g_rc.status == INK_RC_PENDING_CONFIRMATION,
+        "DTMF waits for a human");
+    ink_confirm_view_t pending = {0};
+    CHECK(ink_confirm_list(&pending, 1) == 1, "keep the original confirmation token");
+    CHECK(strstr(pending.detail, "00000000001"), "B7-01: confirmation names the original peer");
+    CHECK(ink_confirm_decide(pending.token, true, INK_SRC_AI) < 0, "AI cannot approve DTMF");
+    hw(HW_HANGUP, 0, 0);
+    CHECK(WAIT_FOR(!H.active, 10000), "first peer ends the call"); quiet();
+    ink_confirm_view_t remaining;
+    CHECK(ink_confirm_list(&remaining, 1) == 0, "B7-01: ending the call removes its pending card");
+    snprintf(g_hw.num, sizeof g_hw.num, "00000000002"); hw(HW_CALL, 0, 0);
+    CHECK(WAIT_FOR(H.active, 10000), "second peer rings");
+    CHECK(BY_HAND("call.answer", NULL) && g_rc.status == INK_RC_DONE && WAIT_FOR(H.answered, 10000), "answer the second call"); quiet();
+    CHECK(ink_confirm_decide(pending.token, true, INK_SRC_TOUCH) < 0, "B7-01: old card cannot execute on the new call");
+    CHECK(AI("call.record", NULL) && g_rc.status == INK_RC_FAILED, "drain prior controls through the same background executor");
+    ink_db_t *results = ink_db_open(ink_db_find_def("confirm.results"), NULL);
+    CHECK(results && ink_db_wait(results, ink_db_last_ver(results), 10000000) == 0, "confirmation result reaches durable storage");
+    ink_db_close(results);
+    char args[64]; snprintf(args, sizeof args, "{\"token\":%u}", pending.token);
+    CHECK(AI("confirm.status", args) && g_rc.status == INK_RC_DONE && strstr(g_result, "\"state\":\"expired\""),
+        "B7-01: old confirmation receipt is expired: %.150s", g_result);
+    CHECK(!sim_net_call_tones()[0], "B7-01: second modem call receives no old tone");
+    CHECK(call_as("call.dtmf", "{\"key\":\"7\",\"_call\":1,\"_peer\":\"00000000001\"}", INK_SRC_CONFIRMED) &&
+        g_rc.status == INK_RC_STALE && !sim_net_call_tones()[0], "B7-01: execution rejects an already accepted old generation");
+    CHECK(BY_HAND("call.hangup", NULL) && g_rc.status == INK_RC_DONE, "end second call");
+}
+static unsigned audit7_events;
+static void audit7_event(void *ctx, const char *id, const ink_args_t *a) {
+    (void)ctx; (void)id;
+    char payload[1024];
+    CHECK(ink_args_to_json(a, payload, sizeof payload) > 0, "serialize real controls event");
+    CHECK(!ink_args_find(a, "key") && !strstr(payload, "246802"), "B7-02: controls event contains no key value");
+    audit7_events++;
+}
+static void audit7_privacy(void) {
+    open_phone("00000000001"); outgoing(); click("键盘", NULL);
+    CHECK(ink_cap_subscribe("call.controls", audit7_event, NULL, INK_EXEC_DIRECT) == 0, "observe real controls payloads");
+    const char *keys[] = {"2", "4", "6", "8", "0", "2"};
+    for (unsigned i = 0; i < sizeof keys / sizeof *keys; i++) click(keys[i], NULL);
+    CHECK(audit7_events == 6 && !strcmp(sim_net_call_tones(), "246802") && !strcmp(P.tones, "246802"),
+        "real touches reach the modem and stay visible locally");
+    inspect();
+    CHECK(!strstr(snap, "246802") && !strstr(g_snap, "246802") && strstr(snap, "\"secret\":true") &&
+        strstr(snap, "有值") && strstr(snap, "\"id\":\"tone_count\"") && strstr(snap, "\"value\":\"6\""),
+        "B7-02: AI snapshots reveal only presence and digit count");
+    CHECK(AI("call.dtmf", "{\"key\":\"3\"}") && g_rc.status == INK_RC_PENDING_CONFIRMATION &&
+        !strcmp(sim_net_call_tones(), "246802"), "AI DTMF still requires confirmation");
+    ink_confirm_view_t pending;
+    CHECK(ink_confirm_list(&pending, 1) == 1 && ink_confirm_decide(pending.token, false, INK_SRC_TOUCH) == 0, "reject AI tone");
+    CHECK(WAIT_FOR(ink_db_idle(), 10000), "activity records settle");
+    ink_db_t *db = ink_db_open_member(ink_db_find_def("activity.log"), "owner");
+    ink_db_cursor_t cursor = {0}; ink_rec_t rec; char raw[2048]; unsigned count = 0;
+    CHECK(db != NULL, "open the real activity log");
+    while (db && ink_db_next(db, &cursor, &rec, raw, sizeof raw - 1) == 1) {
+        raw[rec.len] = 0; count++;
+        CHECK(!strstr(raw, "246802") && !strstr(raw, "\"key\""), "B7-02: activity records contain no entered keys");
+    }
+    CHECK(count > 0, "inspect actual activity records"); ink_db_close(db); hangup();
+}
 static void capture(void *arg) {
     (void)arg; CHECK(settled(), "comparison frame is fully presented");
     char key_name[64]; snprintf(key_name, sizeof key_name, "test.snapshot.%s", scene);
@@ -212,6 +276,8 @@ static void run(void *arg) {
     if (!strcmp(phase, "write")) write_phase();
     else if (!strcmp(phase, "verify")) verify_phase();
     else if (!strcmp(phase, "controls")) controls_phase();
+    else if (!strcmp(phase, "audit7-rebind")) audit7_rebind();
+    else if (!strcmp(phase, "audit7-privacy")) audit7_privacy();
     else scene_phase();
     CHECK(WAIT_FOR(ink_db_idle(), 10000), "no phone writes remain outstanding");
     ink_probe_count("test.finished");

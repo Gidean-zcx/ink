@@ -21,6 +21,7 @@
 #include "ink/sys/audio.h"
 #include "ink/sys/cap.h"
 #include "ink/sys/comm.h"
+#include "ink/sys/confirm.h"
 #include "ink/sys/data.h"
 #include "ink/sys/json.h"
 #include "ink/sys/members.h"
@@ -48,7 +49,9 @@ static struct {
     osal_mutex_t *at; /* the modem takes one AT command at a time, and some requests are several: the comm task
                        * and exec.bg both talk to it. Held while a request runs, up to the seconds it takes */
     bool ringing;
-    char call_member[16]; /* protected by at */
+    char call_member[16], call_peer[24]; /* protected by at; member and tones also by lock */
+    uint32_t call_generation;
+    char tones[65]; /* local display only, protected by lock */
     int h_registered, h_sim;
     ink_exec_job_t sim_job;
     uint64_t sim_retry_at, sim_retry_us; /* comm task's next look at the card, 0 = none due */
@@ -57,6 +60,33 @@ static struct {
     msg_t rx;
     ink_args_t rx_args, ev_args;
 } CM INK_PSRAM_BSS;
+
+static void call_begin(const char *member, const char *peer) { /* at held */
+    CM.call_generation++;
+    osal_mutex_lock(CM.lock, OSAL_WAIT_FOREVER);
+    snprintf(CM.call_member, sizeof CM.call_member, "%s", member);
+    snprintf(CM.call_peer, sizeof CM.call_peer, "%s", peer);
+    CM.tones[0] = 0;
+    osal_mutex_unlock(CM.lock);
+}
+
+bool ink_comm_bind_dtmf(ink_args_t *args) {
+    if (!CM.at) return false;
+    char key[4] = "";
+    ink_args_get_str(args, "key", key, sizeof key);
+    ink_args_init(args);
+    osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
+    bool bound = CM.call_member[0] && !strcmp(CM.call_member, ink_member_current()->id) &&
+        !ink_args_str(args, "key", key) && !ink_args_int(args, "_call", CM.call_generation) && !ink_args_str(args, "_peer", CM.call_peer);
+    osal_mutex_unlock(CM.at);
+    return bound;
+}
+
+void ink_comm_call_tones(char *out, size_t cap) {
+    osal_mutex_lock(CM.lock, OSAL_WAIT_FOREVER);
+    snprintf(out, cap, "%s", ink_member_space_open() && !strcmp(CM.call_member, ink_member_current()->id) ? CM.tones : "");
+    osal_mutex_unlock(CM.lock);
+}
 
 static bool save_message(ink_db_t *db, uint32_t *id, const char *peer, const char *text, const char *status, uint8_t src) {
     char raw[1024]; ink_jw_t w; ink_jw_init(&w, raw, sizeof raw);
@@ -185,7 +215,7 @@ static void comm_task(void *arg) {
             else if (ev.type == HAL_CELL_EV_RING && !CM.ringing) { /* once per call: it rings again every few seconds */
                 CM.ringing = true;
                 osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
-                snprintf(CM.call_member, sizeof CM.call_member, "%s", ink_member_current()->id);
+                call_begin(ink_member_current()->id, ev.number);
                 osal_mutex_unlock(CM.at);
                 call_focus(true);
                 ink_args_str(a, "from", ev.number);
@@ -195,8 +225,11 @@ static void comm_task(void *arg) {
                 CM.ringing = false;
                 call_focus(false);
                 osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
-                CM.call_member[0] = 0; /* call.* controls are bound to whoever placed or got the call */
+                osal_mutex_lock(CM.lock, OSAL_WAIT_FOREVER);
+                CM.call_member[0] = CM.call_peer[0] = CM.tones[0] = 0;
+                osal_mutex_unlock(CM.lock);
                 osal_mutex_unlock(CM.at);
+                ink_confirm_expire("call.dtmf");
                 ink_cap_emit("call.ended", a);
             }
         }
@@ -281,7 +314,7 @@ static void cap_dial(ink_call_t *c) {
     ink_args_get_str(&c->args, "number", number, sizeof number);
     osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
     int r = hal_cell_dial(number);
-    if (!r) snprintf(CM.call_member, sizeof CM.call_member, "%s", ink_cap_call_member(c));
+    if (!r) call_begin(ink_cap_call_member(c), number);
     osal_mutex_unlock(CM.at);
     if (r == 0) call_focus(true);
     call_result(c, r, "正在拨号", "the call could not be placed");
@@ -314,8 +347,18 @@ static void cap_control(ink_call_t *c) { /* exec.bg */
     else if (!strcmp(id, "call.mute")) {
         if (ink_args_get_bool(&c->args, "on", &on)) r = hal_cell_mute(on, &muted);
     } else if (!strcmp(id, "call.dtmf")) {
-        if (ink_args_get_str(&c->args, "key", key, sizeof key) == 1 && strchr("0123456789*#ABCD", key[0])) r = hal_cell_dtmf(key[0]);
+        int64_t generation = 0; char peer[24] = "";
+        ink_args_get_str(&c->args, "_peer", peer, sizeof peer);
+        if (c->src == INK_SRC_CONFIRMED && (!ink_args_get_int(&c->args, "_call", &generation) ||
+            generation != CM.call_generation || strcmp(peer, CM.call_peer))) c->rc.status = INK_RC_STALE;
+        else if (ink_args_get_str(&c->args, "key", key, sizeof key) == 1 && strchr("0123456789*#ABCD", key[0])) r = hal_cell_dtmf(key[0]);
         else c->rc.status = INK_RC_INVALID;
+        if (!r) {
+            osal_mutex_lock(CM.lock, OSAL_WAIT_FOREVER);
+            size_t n = strlen(CM.tones);
+            if (n < sizeof CM.tones - 1) { CM.tones[n] = key[0]; CM.tones[n + 1] = 0; }
+            osal_mutex_unlock(CM.lock);
+        }
     } else if (!strcmp(id, "call.route")) {
         int64_t connected = 0; bool headset = false;
         ink_state_get_int(ink_state_find("bt.connected"), &connected);
@@ -329,7 +372,6 @@ static void cap_control(ink_call_t *c) { /* exec.bg */
     if (!r) {
         ink_args_init(&c->args);
         if (!strcmp(id, "call.mute")) ink_args_bool(&c->args, "muted", muted);
-        if (!strcmp(id, "call.dtmf")) ink_args_str(&c->args, "key", key);
         ink_cap_emit_for("call.controls", &c->args, ink_cap_call_member(c));
     }
 }
@@ -338,7 +380,7 @@ static void cap_control(ink_call_t *c) { /* exec.bg */
 
 static const ink_cap_t COMM_CAPS[] = {
     {.id = "call.mute", .title = "通话麦克风静音", .input = BOOL_ARG("on"), .effect = INK_FX_NAVIGATE, .child_ok = true, .permission = "call", .timeout_ms = 15000, .exec = INK_EXEC_BG, .run = cap_control},
-    {.id = "call.dtmf", .title = "发送一个通话按键", .ask = "向通话发送按键 {key}", .input = "{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":1}},\"required\":[\"key\"]}", .effect = INK_FX_EXTERNAL, .child_ok = true, .permission = "call", .timeout_ms = 10000, .exec = INK_EXEC_BG, .run = cap_control},
+    {.id = "call.dtmf", .title = "发送一个通话按键", .ask = "向 {_peer} 的本次通话发送按键 {key}", .input = "{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":1}},\"required\":[\"key\"]}", .effect = INK_FX_EXTERNAL, .child_ok = true, .permission = "call", .timeout_ms = 10000, .exec = INK_EXEC_BG, .run = cap_control},
     {.id = "call.route", .title = "切换通话耳机或喇叭", .input = BOOL_ARG("headset"), .effect = INK_FX_NAVIGATE, .child_ok = true, .permission = "call", .exec = INK_EXEC_BG, .run = cap_control},
     {.id = "call.record", .title = "查看通话录音不可用的原因", .effect = INK_FX_READ, .child_ok = true, .permission = "call", .exec = INK_EXEC_BG, .run = cap_control},
     {.id = "call.controls", .title = "通话控制已获模组确认", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true, .permission = "call"},
