@@ -86,6 +86,8 @@ static void read_activity(void) {
     if (st.state != INK_MEDIA_IDLE) {
         const char *base = strrchr(st.path, '/');
         snprintf(A.title, sizeof A.title, "%s", base ? base + 1 : st.path);
+        char *ext = strrchr(A.title, '.');
+        if (ext && ext != A.title) *ext = 0;
         snprintf(A.detail, sizeof A.detail, "%s", st.state == INK_MEDIA_PLAYING ? "正在听" : "已暂停");
         A.action = st.state == INK_MEDIA_PLAYING ? "暂停" : "接着放";
         A.cap = st.state == INK_MEDIA_PLAYING ? "media.pause" : "media.resume";

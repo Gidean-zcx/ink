@@ -17,8 +17,11 @@ mutations = [
     ("media-card", "system/ui/shell/navigation.c", "if (!ink_activity_home_draw(N.content, y))", "if (true)", "home visibly renders"),
     ("call-return", "system/apps/phone/phone.c", 'if (!strcmp(id, "phone.return")) { ink_shell_close(); resume_call(); }',
      'if (!strcmp(id, "phone.return")) { ink_shell_close(); }', "return button reaches active call page"),
-    ("lock-gate", "system/services/audio/media_service.c", 'if ((c->src == INK_SRC_AI || c->src == INK_SRC_REMOTE) && ink_power_state() == INK_PWR_LOCKED)',
-     'if (false)', "locked AI cannot pause either"),
+    ("remote-pause", "system/services/audio/media_service.c", 'static void need_session(ink_call_t *c, void (*act)(void)) {\n    if (!M.r)',
+     'static void need_session(ink_call_t *c, void (*act)(void)) {\n    if ((c->src == INK_SRC_AI || c->src == INK_SRC_REMOTE) && ink_power_state() == INK_PWR_LOCKED)\n        fail(c, INK_RC_REJECTED, "wake the device first");\n    else if (!M.r)',
+     "locked remote pause reaches the existing media capability"),
+    ("media-title", "system/ui/shell/activity_card.c", "        char *ext = strrchr(A.title, '.');\n        if (ext && ext != A.title) *ext = 0;\n",
+     "", "home exposes extension-free title and pause"),
     ("lock-mark", "system/ui/lock_mark.c", '"正在听，按电源键或 AI 键唤醒"', '"已锁定，按电源键或 AI 键唤醒"', "LockPlaying uses the listening mark"),
     ("job-cancel", "system/ui/shell/activity_card.c", 'ink_shell_bind(button, "job.cancel", r->args);',
      'ink_shell_bind(button, "job.list", r->args);', "touch invokes job.cancel and stops actual worker"),
@@ -33,7 +36,10 @@ try:
         original = source.read_text()
         assert original.count(old) == 1, name
         try:
-            source.write_text(original.replace(old, new, 1))
+            modified = original.replace(old, new, 1)
+            if name == "remote-pause":
+                modified = '#include "ink/sys/power.h"\n' + modified
+            source.write_text(modified)
             compiled = subprocess.run(commands, cwd=ROOT, capture_output=True, text=True)
             (evidence / f"{name}-build.log").write_text(compiled.stdout + compiled.stderr)
             assert compiled.returncode == 0, name
