@@ -1,99 +1,98 @@
 # ui-file-picker 执行报告
 
-日期：2026-11-09。基线：`c6dede1945807b2cd688e6967c7299154813827e`。状态：第 1 轮复查修复进行中；以下原验收结论保留为历史记录，以文末本轮证据为准。仅本地提交，未推送。
+日期：2026-11-09。基线：`c6dede1945807b2cd688e6967c7299154813827e`。本轮修复提交：`736d7ac6`。状态：两项复查问题均已修复；普通、ASan/UBSan 全量各 218/219，唯一失败为待合并生成的共享能力总表。仅本地提交，未推送。
 
-代码：[接口](../../../system/include/ink/sys/file_picker.h)、[选择器](../../../system/ui/file_picker.c)、[测试调用方](../../../tests/ui_file_picker.c)、[取消后画面检查](../../../tests/ui_file_picker_frames.py)。实现提交：`02326868`；夹具修订：`7c6f4691`；换人收尾：`3ab4830d`。
+前轮实现提交为 `02326868`、`7c6f4691`、`3ab4830d`，原始复查和前轮证据见 [REVIEW.md](REVIEW.md)。复查列出严重 0、高 1、低 1，无中级；本轮两项都修。
+
+代码：[选择器](../../../system/ui/file_picker.c)、[接口](../../../system/include/ink/sys/file_picker.h)、[回归测试](../../../tests/ui_file_picker.c)。
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 【实测】通过 | 7 张图片按 4/3 分页；混入音频和文字不出现；触摸、AI 均返回同一稳定编号，调用方 lookup 成功 | T1 |
-| 2 | 【实测】通过 | 原活动不重建，第十页第二项的位置与快照不变；取消前后每个像素相同 | T1 |
-| 3 | 【实测】通过 | 孩子仅见家庭及自己的图片；私有编号伪造失败；换人关闭旧浮层；撤掉文件服务的一处权限检查，2 条断言失败，恢复后通过 | T1、N1、N2 |
-| 4 | 【实测】通过 | 普通、ASan/UBSan 全量各 219/219，零跳过；产品代码新增及删除合计 201 行 | T2、T3 |
+| R1-01 高 | 【实测】已修复 | 真实 AI `system.home` 销毁调用页，选择器同时关闭；后续取消不回调；单独撤回生命周期修复后 6 条断言失败，包含销毁后回调及后续计数失败 | T1、N1 |
+| R1-02 低 | 【实测】已修复 | 真实最大字号、孩子字号各检查 4 行文字框，均不重叠；单独撤回行高修复后仅这 8 条断言失败；已打开两张截图核对 | T1、N2 |
+| 1 图片过滤、分页、编号和 lookup | 【实测】通过 | 7 张图片按 4/3 分页，音频和文字不出现；触摸、AI 返回稳定编号，调用方 lookup 成功 | T1 |
+| 2 取消恢复原页原位置 | 【实测】通过 | 原活动对象、页位置和快照不变，取消前后 PNG 全像素相同；调用页销毁时按 R1-01 丢弃回调 | T1、N1 |
+| 3 孩子隔离及反例 | 【实测】正向通过；反例沿用前轮证据 | 孩子看不到、不能选择或 lookup 大人私有图片，能选自己的图片；换人关闭旧浮层。前轮独立复查撤掉文件服务权限检查后准确失败 2 条，文件服务本轮未改 | T1；REVIEW.md 的 N1 |
+| 4 全量、内存检查、250 行预算 | 【实测】两套全量各 218/219；【实现】208 行，预算通过 | 唯一失败为待合并生成的能力总表；两套均零跳过，未见 sanitizer 错误；本轮产品增删合计 15 行，未放宽预算或断言 | T2、T3；git diff --numstat |
 
 ## 没做到的
 
-- 没有运行 Linux/gcc 或真机；证据限 macOS/clang 模拟器。没有碰设备、运行可见窗口或对外发布。
-- 按任务范围只做系统选择器和测试调用方，未实现文件应用、缩略图、解码或转换流程。图片资格沿用文件服务的扩展名分类及访问权限；不声称文件内容可解码。
-- 生成能力表按规则留给合并者统一提交；干净检出需先运行下文的生成命令再跑全量。
+- 【实测】两套全量的 `capability-table-doc` 均未通过：提交的总表是 197 项，代码已有 201 项，缺 `file_picker.*` 四项，后续分组编号也随之变化。总规则第 7 节禁止本任务修改共享文档，留给合并者统一生成；本轮保留原表运行全量。
+- 未运行 Linux/gcc 或真机；证据限 macOS/clang 模拟器。没有碰设备、运行可见窗口、调用付费接口或对外发布。
+- 按 F9 任务范围只做系统选择器和测试调用方，文件应用、缩略图、解码或转换未实现。类型资格沿用文件服务分类及权限，不代表文件内容已验证可解码。
 
 ## 和设计不一致的
 
-【实测】`FilePicker` 画板对照 **28.414/255**，超过 12/255。画板是四本书及准备状态，本次验收图是实际图片文件和“可以选择”；F4 现有组件是独立描边行，页码条跟在可见项池后面，画板是灰底分组、页码在底部。规范的字号已统一放大 1.2 倍、静态灰已改深，画板尚未同步。没有为分数改规格或伪造书籍准备状态。对照图：`work/ui-file-picker/compare/FilePicker.png`。
-
-【实现】为使 F1/F4 在系统浮层上导出快照，`ui_semantics.c` 仅将页面身份匹配集中改用已有 `ink_ui_action_page()`；浮层与活动沿用同一能力及成员检查。未改服务接口和设计合同。
+【实测】默认字号 `FilePicker` 画板差值仍为 **28.414/255**，超过 12/255。设计是灰底分组、分隔线和圆形图标底，实现沿用 F4 的四个独立描边行；页码条跟随行池，约比画板高 300 像素，顶部还有额外外框。设计展示书籍准备状态，测试使用合成图片和“可以选择”；现行字号和灰度也与旧画板有差异。本轮按复查范围修生命周期和行距，未更改这些既有样式。对照图：`work/ui-file-picker/r1-compare/FilePicker.png`。
 
 ## 改过的已有测试
 
-`tests/integration/ai_surface.c` 仅追加四项新能力及 `select` 的必填 `id`；`tests/sdk_boundary.cmake` 仅追加公开选择器头文件。已有断言与预算未放宽。
+【实现】`tests/ui_file_picker.c` 追加调用页销毁标记、真实 `system.home` 后关闭和禁止回调检查；通过真实设置切到最大字号、切换到孩子，检查每页四行名称和状态的边界框并截图。保留全部原断言和预算，没有修改既有期望、跳过测试或增加掩盖时序错误的等待。前轮对能力和 SDK 白名单的追加仍保留，本轮未再修改。
 
 ## 要用户定的
 
-无；没有新增产品选择。
+无；未新增产品选择。
 
 ## 顺手发现
 
-【实测】首轮普通全量 218/219，唯一失败是新测试重复运行时上次留下的孩子图片进入大人总数。已在新测试开头定点清理该合成夹具，未改产品代码或放宽断言。最终复核时又用新增断言复现换人后旧浮层残留，已在选择器这一处修复，见 N2。
+【实测】反向夹具初次只撤掉事件绑定，仍保留解绑代码，取消时访问已销毁的页面，临时程序退出信号 11。这不是完整撤回修复，未作为验收证据；改为在编译器输入中完整撤回生命周期修复后得到 N1。未改产品源文件、原库或原测试可执行程序。
 
 ## 新增的机制
 
-F9 要求的临时文件选择模型、结果回调和四项能力；数据放 PSRAM，读取复用现有 BG/UI 执行器，换人取消复用已有成员状态订阅。不新增常驻任务、线程、文件格式或配置项。
+【实现】本轮没有新增任务、线程、状态机、文件格式、配置项、缓存或框架。选择器复用调用页现有 `LV_EVENT_DELETE`，正常结束时解除绑定；成员变化、后台读取及 UI 收尾沿用原实现。
 
 ## 要改的文档
 
-- 合并者更新 `docs/tasks/backlog.md` 和 `docs/system/ui-dependencies.md`：F9 已有真实索引、按类型分页、编号返回、取消恢复和 AI 接线，视觉差异见本报告。
-- 合并者运行 `tools/capabilities.py`，统一提交 `file_picker.prev/next/cancel/select` 的能力总表；本任务未提交共享文档修改。
-- 后续 F13 应用开发说明可收录 `file_picker.h`：UI 上打开、用回调取编号、BG 上 lookup；成员或认证变化丢弃旧会话回调。
+- 按总规则第 7 节，共享文档本轮保留原样。合并者统一生成并提交 `docs/system/capabilities.md`，纳入 `file_picker.prev/next/cancel/select`，再验证 `capability-table-doc`。
+- 合并者更新 `docs/tasks/backlog.md`、`docs/system/ui-dependencies.md` 中 F9 状态，保留本报告的视觉差异和验证范围。
+- 后续应用开发说明可收录 `file_picker.h`：在 UI 打开，以回调获取编号，BG 上 lookup；调用页销毁或成员/认证变化会关闭选择器并丢弃回调。
 
 ## 命令与证据
 
-- T1：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^ui-file-picker' --output-on-failure -j2`。2/2 通过，91 条断言、零告警；内部 RAM 最低余量 47,472 字节，原阈值 32,768；内部和外部分配失败均为 0。日志：`work/ui-file-picker/restored-test.log`。
-- N1：临时仅撤掉 `file_service.c` 的 `resolve_for` 中 `/members/` 分支的 `if (!c->adult) return INK_FS_ERR_DENIED;`，构建 `sim-ui-file-picker -j3`，运行 T1 中的 `^ui-file-picker$`。构建退出 0，测试退出 8，`test.finished=1`、`test.fail=2`；源码逐字节恢复，再构建及 T1 均退出 0。脚本：`work/ui-file-picker/reverse.py`；日志：同目录 `negative-build.log`、`negative-test.log`、`restored-build.log`、`restored-test.log`。首次夹具未清理的反向结果为 4 条失败，已由这次可重复结果替代。
-- N2：新增测试先在大人的选择器仍打开时切到孩子。修复前“旧浮层移除”断言确实失败，`test.finished=1`、`test.fail=1`、CTest 退出 8；接入已有 `member.*` UI 状态通知后 T1 通过。换人或认证变化会关闭旧浮层，并丢弃旧调用方回调，避免对已经销毁的调用方回调。日志：`work/ui-file-picker/handoff-before-test.log`、`handoff-after-test.log`。最终版本再次执行 N1，仍准确失败 2 条、恢复后通过。
-- 视觉：将 T1 产生的 `snap-scene.png` 和 `metrics.json` 复制到 `work/ui-file-picker/compare/FilePicker/`，执行 `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.py --build build --design "$INK_DESIGN" --out work/ui-file-picker/compare --scenes FilePicker --reuse`。使用真实、已静止且断言通过的截图，未改图。
+所有构建和测试均加 `taskpolicy -c utility`，构建最多 `-j3`、CTest 最多 `-j2`，两套全量串行；依赖和设计稿只读。以下路径都相对仓库根目录，构建产物和临时夹具未提交。
 
-T2/T3 配置沿用[总规则](../codex-rules.md)第 5 节的全部参数，两个目录都额外指定 `-DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"`；T3 仅改目录 `build-asan`，再加 `-DINK_SANITIZE=ON`。两者均保留 `INK_WERROR=ON`。实际编译参数已核对含 `-Werror -fsanitize=address,undefined -fno-omit-frame-pointer`。
-
-按第 7 节不提交生成能力表：测试前备份其原内容，运行 `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/capabilities.py` 临时生成，两套全量结束后已逐字节恢复，并核对与 HEAD 原内容相同。合并者仍须统一生成能力表；干净检出的全量测试先执行该生成命令。
+配置使用总规则全部参数，并指定已有中枢 Python：
 
 ```bash
 export PYTHONPATH="$PWD/hub" PYTHONDONTWRITEBYTECODE=1
+taskpolicy -c utility cmake -S . -B build -DINK_WERROR=ON \
+  -DINK_CJK_FONT="$INK_DEPS/build-deps/fonts/NotoSansCJK-Regular.ttc" -DINK_CJK_FACE=2 \
+  -DINK_CJK_MEDIUM_FONT="$INK_DEPS/build-deps/fonts/NotoSansCJKsc-Medium.otf" \
+  -DINK_CJK_BOLD_FONT="$INK_DEPS/build-deps/fonts/NotoSansCJKsc-Bold.otf" \
+  -DPython3_EXECUTABLE="$INK_DEPS/build-deps/pyenv/bin/python" \
+  -DFETCHCONTENT_SOURCE_DIR_LVGL="$INK_DEPS/build/_deps/lvgl-src" \
+  -DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"
+```
+
+T3 配置只把目录改为 `build-asan`，再加 `-DINK_SANITIZE=ON`，保留 `INK_WERROR=ON`。
+
+- T1：`taskpolicy -c utility cmake --build build --target sim-ui-file-picker -j3` 后执行 `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^ui-file-picker' --output-on-failure -j2`。构建和测试退出 0，2/2、121 条断言通过，零失败和告警。日志 `work/ui-file-picker/r1-after-build.log`、`r1-after-test.log`；指标 `r1-after-metrics.json`。内部 RAM 最低余量 47,472 字节，高于原门槛 32,768；内外部分配失败均为 0。
+- N0：新增测试、产品尚未修复时构建退出 0，运行退出 8、`finished=1`、14 条失败；日志 `r1-before-build.log`、`r1-before-test.log`，指标 `r1-before-metrics.json`。修复后同一测试得到 T1。
+- N1/N2：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" work/ui-file-picker/r1-negative.py`。按正常 CMake 参数在编译器标准输入中分别撤回完整生命周期修复、行高修复，链接本轮未修改的测试对象；不写产品源码或原库。两次编译和链接退出 0，运行均退出 1、`finished=1`，分别 6、8 条失败。日志、临时程序和指标在 `work/ui-file-picker/r1-negative-{home,text}*`。
+- 视觉：将 T1 的真实静止截图及通过指标复制到 `work/ui-file-picker/r1-compare/FilePicker/`，执行 `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.py --build build --design "$INK_DESIGN" --out work/ui-file-picker/r1-compare --reuse --scenes FilePicker`，退出 0，28.414/255。已打开 `build/test-out/ui-file-picker/snap-large-text.png` 和 `snap-child-text.png`，未编辑截图。
+
+```bash
+# T2
 taskpolicy -c utility cmake --build build -j3
 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
+# T3
 taskpolicy -c utility cmake --build build-asan -j3
 UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
 ```
 
-【实测】T2、T3 配置、完整构建、最终 CTest 均退出 0；没有安装或升级依赖。全部命令遵守构建 `-j3`、测试 `-j2`，两套串行；GUI 冒烟沿用已有 SDL dummy 模式，没有可见窗口。
+| 检查 | 配置/构建退出码 | CTest 结果 | 耗时 | 日志（work/ui-file-picker/） |
+| --- | --- | --- | --- | --- |
+| T2 普通全量 | 0 / 0 | 218/219，零跳过，退出 8；仅能力总表失败 | 190.64 秒 | r1-configure.log、r1-full-build.log、r1-full-test.log |
+| T3 ASan/UBSan 全量 | 0 / 0 | 218/219，零跳过，退出 8；仅能力总表失败 | 296.00 秒 | r1-asan-configure.log、r1-asan-build.log、r1-asan-test.log |
 
-| 检查 | 最终结果 | 耗时 | 日志 |
-| --- | --- | --- | --- |
-| T2 普通全量 | 219/219，零失败、零跳过 | 151.46 秒 | `build/ui-file-picker-final-ctest.log` |
-| T3 ASan/UBSan 全量 | 219/219，零失败、零跳过，未见 sanitizer 报错 | 285.63 秒 | `build-asan/ui-file-picker-ctest.log` |
-
-【实测】最终两套选择器测试均 91 条断言通过、零失败、`finished=1`；取消后的画面对照均通过。普通与内存检查版的内部 RAM 最低余量同为 47,472 字节，内部及外部分配失败均为 0。确定性、分层、SDK、能力清单和中枢契约检查均保留并通过。
+【实测】两套选择器均 `test.pass=121`、`test.fail=0`、`finished=1`、零告警，取消前后逐像素检查通过。内部 RAM 最低余量均为 47,472 字节，内外部分配失败均为 0。ASan 构建参数含 `-Werror -fsanitize=address,undefined -fno-omit-frame-pointer`，运行设置 `UBSAN_OPTIONS=halt_on_error=1`；完整日志未见 AddressSanitizer/UBSan 错误。分层、SDK、确定性、能力运行时表和中枢契约均通过。
 
 ## 规模与架构审视
 
-【实现】产品保守计数 201 行（增加 200、删除 1；包括 9 行 CMake 接线），低于 250 行。为什么不能更小：须同时提供选择会话、真实服务的后台读取、F4 绑定、系统浮层、异步编号回传、成员归属、四个共用能力和 AI 快照。只用 `file.list` 会裸传路径；在 UI 直接调用索引会阻塞，两种更小方案均不满足任务要求。
+【实现】相对指定基线，产品累计增加 207、删除 1，共 208 行（含 9 行 CMake）；本轮增加 11、删除 4，共 15 行。为什么累计不能更小：F9 须提供选择会话、真实索引的后台读取、F4 列表、系统浮层、编号回传、成员归属、共用能力和 AI 快照。更小的裸路径返回或 UI 上直接读取索引分别违反编号要求和不阻塞 UI 的约束。
 
-【实现】文件身份与权限归文件服务；选择器只保存临时编号和名称，全部放 PSRAM。选择前再次 lookup，回调和 AI 最终回执只返回编号。输入经能力总线，快照来自同一组 F1/F4 声明；没有直接修改文件服务状态。浮层保留原活动对象，取消只移除浮层。能力注册及 CMake 均追加，未重排共用清单。
+【实现】文件身份及权限仍归文件服务；选择器只保存临时编号和名称，模型在 PSRAM。选择前再次 lookup；按钮、实体键和 AI 共用原子能力，快照来自同一 F1/F4 声明。调用页生命周期集中在选择器内处理，未逐调用方加补丁，也未改变服务内部状态。
 
-【实测】最终差异只含选择器、UI 接线、测试和本报告；未修改文件服务、共享文档或已有调研、简报、审计资料。`git diff --check` 通过，本报告链接均存在；按总规则第 6 节指定正则扫描基线至最终提交的补丁，隐私项零命中（grep 退出 1）。构建产物、设计稿、对照图及反向脚本均未提交。
-
-## 第 1 轮复查修复（功能完成，完整验证进行中）
-
-【实现】复查列出严重 0、高 1、低 1，无中级。两项均已修复；选择器集中绑定调用页现有的删除事件，页面销毁时关闭浮层、丢弃回调，正常结束时解除绑定；第二行位置跟随已有动态行高。没有修改导航或文件服务。产品累计 208 行，低于 250 行；本轮产品增删合计 15 行。
-
-| 编号 | 结论 | 证据 | 命令 |
-| --- | --- | --- | --- |
-| R1-01 高 | 【实测】已修复 | 真实 AI `system.home` 销毁调用页，浮层随之消失，后续取消不再回调；单独撤回生命周期修复后 6 条断言失败，包含销毁后回调及其后续计数失败 | R1-T、R1-N |
-| R1-02 低 | 【实测】已修复 | 真实最大字号和孩子字号各检查 4 行文字框，均不重叠；单独撤回行高修复后仅这 8 条断言失败；已打开两张截图核对 | R1-T、R1-N |
-
-- R1-T：`taskpolicy -c utility cmake --build build --target sim-ui-file-picker -j3` 后执行 T1。构建、测试均退出 0，2/2、121 条断言、零失败和告警；内部 RAM 最低余量仍为 47,472 字节，内外部分配失败均为 0。日志 `work/ui-file-picker/r1-after-build.log`、`r1-after-test.log`，指标 `r1-after-metrics.json`。
-- R1-N：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" work/ui-file-picker/r1-negative.py`。只在编译器标准输入中分别撤回完整生命周期修复、行高修复，链接本轮原测试，不改源文件或原库。两次编译、链接退出 0；运行均退出 1、`finished=1`，分别 6、8 条失败。日志及指标在 `work/ui-file-picker/r1-negative-{home,text}*`。初次只撤掉事件绑定，仍保留解绑代码，夹具访问了已销毁的页面而退出信号 11；未将其作为反向证据，改为撤掉完整生命周期修复后得到上述结果。
-- 原始修复前回归也已运行：`r1-before-test.log`，退出 8、`finished=1`、14 条失败；修复后同一测试通过。新增测试保留全部既有断言和预算，没有改已有期望、跳过或增加掩盖错误的等待。
-- 当前默认字号画板差值仍为 28.414/255，原因同“和设计不一致的”；本轮对照在 `work/ui-file-picker/r1-compare/FilePicker.png`。
-- 普通及 ASan/UBSan 全量验证尚在进行；本轮没有新增任务、状态机、文件格式、配置项或其他机制。共享文档按第 7 节保留原样。
+【实测】报告链接均存在，`git diff --check` 通过；差异仅含选择器、接口注释、回归测试和本报告，本轮没有修改共享文档或调研、简报、审计资料。基线至 HEAD 的补丁按总规则指定正则扫描，隐私项零命中（grep 退出 1）；构建产物、截图、设计稿和临时夹具均未提交。
