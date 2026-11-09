@@ -61,3 +61,16 @@
 - 【实测】内存构建按任务规则只换 `build-asan` 并增加 `INK_SANITIZE=ON`，保留 `INK_WERROR=ON`；全量结果与普通构建相同，3 项失败原因见“没做到的”。中枢的 3 项在 ASan 构建也用现成环境补跑通过，日志在 `build-asan/calendar-hub-{contract,crosscheck,e2e}.log`。
 - 【实测】补 6 行月历用例后，产品代码没有变化；两个构建都重建 `sim-calendar`。普通视觉场景各 221 项断言通过；`ctest --test-dir build-asan --output-on-failure -j2 -R '^calendar$'` 通过，219 项断言、0 失败，见 `build-asan/calendar-target-test.log`（普通场景多 2 项截图断言）。
 - 【实测】最终差异仅含本任务的产品代码、测试、构建接线和本报告；文件均小于 5 MB。`git diff --check` 通过；按总规则第 6 节扫描全部基线差异，无本机路径或 MAC 匹配（`rg` 退出 1）。没有提交构建产物或设计稿。
+
+## 复查后的修复
+
+- 2026-11-09 开始续修，起点 `d5bd88b0`。本节记录本次结果，上文保留初次开发时的验证边界。
+- 范围：CAL-R1-01 翻月控件、CAL-R1-02 分钟刷新；CAL-R1-03 按用户补充留给合并主会话，不改共用清单。
+- 【实现】CAL-R1-01：删除底部窄文字按钮，标题右侧复用两个 101 px 图标按钮；保留“上月／下月”的 AI 语义和原能力。CAL-R1-02：删除页面的 `time.minute` 订阅；事项和手动调时沿用 `alarm.revision`，时钟沿用公共状态栏。产品修复只有本页 5 行新增、8 行删除；全任务含 CMake 接线共 200 行，未超 300 行。
+- 【实测】普通构建通过；`tests/calendar/run.py --build build --visual` 退出 0，Upcoming 302 项、Calendar 312 项断言通过。新增孩子 110%、成人特大 120%、六行月份的控件边界、完整图标、标题不重叠及触控翻月检查；截图在 `build/calendar-pi3jeqme/Calendar/`。
+- 【实测】真实跨分钟后页面 generation 不变，AI 日期和事项快照不变、状态栏显示 06:02；Trace 只出现状态栏 DU。前后截图中状态栏以下逐像素一致。日志 `build/calendar-fix-visual.log`。
+- 【实测】分别只撤回一个修复，stdin 编译临时对象、不改源码：CAL-R1-01 变体退出 1，16 项失败，含孩子文字需 81 px／特大需 87 px、实际仅 72 px；CAL-R1-02 变体退出 1，2 项失败，页面 generation 增 1、快照改变。另撤成员过滤的变体退出 1、6 项隔离断言失败；正反例有效。命令 `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" work/calendar-fix-negative.py` 和原 `--negative-member`；日志 `build/calendar-fix-{negative,member}.log`。
+- 【实测】原构建 Python 缺 `pytest`、`pytest-asyncio`、`aiohttp`、`PyYAML`；依赖目录的 `hub/.venv/bin/python` 已具备。用现有 `INK_HUB_PYTHON` 选项选中该环境，不安装或升级依赖。
+- 普通和 ASan/UBSan 全量待本轮运行；CAL-R1-03 的三项已知失败不计入本次修复范围，仍原样运行并记录。
+- 改过的已有测试：本任务六行月历原先只查“上月／下月”标签对象，改查完整控件和实际图标边界，以匹配新布局；保留触控、AI、翻月和成员隔离的全部断言。没有改基线测试期望或预算。
+- 新增的机制：无。共享文档待办仍见“要改的文档”；本轮不改。

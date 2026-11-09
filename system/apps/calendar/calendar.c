@@ -91,9 +91,12 @@ static void create(lv_obj_t *screen, void *arg) {
     ink_shell_statusbar(screen, true);
     char title[64]; snprintf(title, sizeof title, "%d年%d月", C.date.year, C.date.month);
     ink_shell_topbar(screen, C.calendar ? title : "接下来的事");
-    int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP_XS, w = INK_CANVAS_W - 2 * INK_MARGIN, capacity = 4, bar_y = 0;
+    int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP_XS, w = INK_CANVAS_W - 2 * INK_MARGIN, capacity = 4;
     memset(C.actions, 0, sizeof C.actions);
     if (C.calendar && ink_time_valid()) {
+        int x = INK_CANVAS_W - INK_MARGIN - 2 * INK_CONTROL - INK_GAP_XS;
+        ink_shell_bind(ink_ui_circle(screen, "back", x, INK_STATUS_BAR + INK_GAP_S, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_WHITE, NULL, NULL), "calendar.month_prev", "{}");
+        ink_shell_bind(ink_ui_circle(screen, "next", x + INK_CONTROL + INK_GAP_XS, INK_STATUS_BAR + INK_GAP_S, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_WHITE, NULL, NULL), "calendar.month_next", "{}");
         ink_tm_t first = {.year = C.date.year, .month = C.date.month, .day = 1}; ink_time_to_local(ink_time_from_local(&first), &first);
         int days = month_days(C.date.year, C.date.month), rows = (first.wday + days + 6) / 7, cell = w / 7;
         static const char *const WEEK[] = {"日", "一", "二", "三", "四", "五", "六"};
@@ -116,7 +119,6 @@ static void create(lv_obj_t *screen, void *arg) {
         snprintf(C.select_args, sizeof C.select_args, "{\"day\":%d}", C.date.day);
         control(0, "month-prev", "上月", "calendar.month_prev", "{}"); control(1, "month-next", "下月", "calendar.month_next", "{}");
         control(2, "select", "选一天", "calendar.select", C.select_args);
-        bar_y = y + capacity * (INK_CONTROL + INK_GAP_M) + INK_GAP;
     } else {
         snprintf(C.date_text, sizeof C.date_text, "%s", ink_time_valid() ? "今天和之后" : "请先设置时间");
         ink_ui_notice(screen, C.date_text, y); y += INK_LINE_NOTE + INK_GAP;
@@ -134,11 +136,6 @@ static void create(lv_obj_t *screen, void *arg) {
     lv_obj_t *body = ink_ui_box(screen, 0, y, INK_CANVAS_W, capacity * (cell_h + INK_GAP_M) + INK_GAP + INK_CONTROL, 0, INK_SURFACE_WHITE, false);
     C.list = ink_ui_list_create(body, &model, &C.position, (unsigned)capacity, 1, C.calendar ? INK_CONTROL : INK_ROW_DOUBLE, ink_time_valid() ? (C.calendar ? "这一天没有提醒和闹钟" : "还没有接下来的事") : "请先设置时间", bind_row, NULL);
     if (C.list) ink_ui_list_refresh(C.list, C.count);
-    if (bar_y) {
-        int side = (INK_CANVAS_W - (2 * INK_CONTROL + INK_CIRCLE_LARGE + 2 * INK_GAP)) / 2 - INK_MARGIN;
-        ink_shell_bind(ink_ui_pill(screen, "上月", INK_MARGIN, bar_y, side, INK_CONTROL, false, NULL, NULL), "calendar.month_prev", "{}");
-        ink_shell_bind(ink_ui_pill(screen, "下月", INK_CANVAS_W - INK_MARGIN - side, bar_y, side, INK_CONTROL, false, NULL, NULL), "calendar.month_next", "{}");
-    }
 }
 static void destroy(void) { C.list = NULL; }
 static int snapshot(char *out, size_t cap) {
@@ -183,5 +180,5 @@ static void changed(void *ctx, int handle, const char *id) {
     if (ink_ui_page_current() && (!strcmp(ink_ui_page_name(), "Upcoming") || !strcmp(ink_ui_page_name(), "Calendar"))) ink_ui_redraw();
 }
 int ink_calendar_init(void) {
-    return ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_app_register(&APP) || ink_state_watch("alarm.revision", changed, NULL, INK_EXEC_UI) || ink_state_watch("time.minute", changed, NULL, INK_EXEC_UI) ? -1 : 0;
+    return ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_app_register(&APP) || ink_state_watch("alarm.revision", changed, NULL, INK_EXEC_UI) ? -1 : 0;
 }

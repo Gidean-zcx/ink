@@ -43,12 +43,26 @@ for scene in (("Upcoming", "Calendar") if args.visual else ("",)):
     result = subprocess.run([str(binary), "--profile", str(ROOT / "simulator/profiles/metalio-plus.json"),
         "--script", str(ROOT / "tests/calendar/calendar.script"), "--budget", str(ROOT / "tests/ui_scene.budget.json"),
         "--assets", str(build / "assets"), "--content", str(build / "test-content"),
-        "--out", str(out), "--quiet", "--no-random-outages"],
+        "--out", str(out), "--quiet", "--no-random-outages", "--trace"],
         env={**os.environ, "INK_CALENDAR_SCENE": scene}, capture_output=True, text=True, timeout=150)
     (work / f"{scene or 'acceptance'}.log").write_text(result.stdout + result.stderr)
     data = json.loads((out / "metrics.json").read_text()) if (out / "metrics.json").exists() else {}
     counts = data.get("metrics", {})
     passed = result.returncode == 0 and counts.get("test.finished") == 1 and not counts.get("test.fail", 0)
+    trace = json.loads((out / "trace.json").read_text()) if (out / "trace.json").exists() else []
+    marks = {e["name"]: e["ts"] for e in trace if e.get("name") in ("calendar.minute.before", "calendar.minute.after")}
+    updates = [e for e in trace if e.get("name") in ("DU", "GC16", "GL16", "A2") and
+               marks.get("calendar.minute.before", float("inf")) <= e.get("ts", -1) < marks.get("calendar.minute.after", 0)]
+    partial = bool(updates) and all(e["name"] == "DU" and e["args"]["x"] == 0 and e["args"]["y"] == 0 and
+                                  e["args"]["w"] <= 62 and e["args"]["h"] <= 684 for e in updates)
+    print("Minute refresh stays in the status bar:", partial, flush=True)
+    passed &= partial
+    if scene == "Calendar":
+        from PIL import Image, ImageChops
+        with Image.open(out / "snap-MinuteBefore.png") as before, Image.open(out / "snap-MinuteAfter.png") as after:
+            unchanged = ImageChops.difference(before, after).crop((0, 62, before.width, before.height)).getbbox() is None
+        print("Rendered calendar below the status bar is unchanged:", unchanged, flush=True)
+        passed &= unchanged
     if args.negative_member:
         passed = result.returncode != 0 and counts.get("test.finished") == 1 and counts.get("test.fail", 0) > 0
     ok &= passed
