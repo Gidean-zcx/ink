@@ -1,0 +1,172 @@
+{
+  "issue": "SC-H1",
+  "before": {
+    "exit": 1,
+    "keys_delivered": 6,
+    "tools_done": 5,
+    "tools_stale": 0,
+    "first_touch_read_us": 19581722.534,
+    "key_up_us": 19580000.0,
+    "monitor_extra_ms": 52.518442
+  },
+  "dependencies": {
+    "default_python_missing": [
+      "pytest",
+      "pytest_asyncio",
+      "aiohttp",
+      "yaml"
+    ],
+    "locked_versions": {
+      "pytest": "8.4.2",
+      "pytest-asyncio": "1.2.0",
+      "aiohttp": "3.12.15",
+      "PyYAML": "6.0.3"
+    }
+  },
+  "capability_document_exception": "REVIEW.md 明确交给主会话合并时同步；临时生成并核对通过，共 428 项定义。",
+  "negative": [
+    {
+      "variant": "key-switch",
+      "exit": 1,
+      "detected": true
+    },
+    {
+      "variant": "vibration-switch",
+      "exit": 1,
+      "detected": true
+    },
+    {
+      "variant": "ring-choice",
+      "exit": 1,
+      "detected": true
+    },
+    {
+      "variant": "persistence",
+      "exit": 1,
+      "detected": true
+    },
+    {
+      "variant": "pause",
+      "exit": 1,
+      "detected": true
+    },
+    {
+      "variant": "expiry",
+      "exit": 1,
+      "detected": true
+    },
+    {
+      "variant": "member",
+      "exit": 1,
+      "detected": true
+    },
+    {
+      "variant": "touch-feedback-order",
+      "exit": 1,
+      "detected": true
+    },
+    {
+      "variant": "preserve-preview",
+      "exit": 1,
+      "detected": true
+    },
+    {
+      "variant": "input-priority",
+      "exit": 1,
+      "detected": true
+    },
+    {
+      "variant": "display-priority",
+      "exit": 1,
+      "detected": true
+    },
+    {
+      "variant": "capture-lease",
+      "exit": 1,
+      "detected": true
+    }
+  ],
+  "capture_before": {
+    "audio.mic.lost_ms": 90,
+    "audio.mic.overruns": 6,
+    "full_run_exit": 8
+  },
+  "capture_reversed": {
+    "audio.mic.lost_ms": 90,
+    "audio.mic.overruns": 6
+  },
+  "input-priority_reversed": {
+    "exit": 1,
+    "keys_delivered": 6,
+    "first_touch_read_us": 19581722.534,
+    "dispatch_us": 9204.092000001845,
+    "key_up_us": 19580000.0,
+    "tools_done": 5,
+    "tools_stale": null
+  },
+  "display-priority_reversed": {
+    "exit": 0,
+    "keys_delivered": 8,
+    "first_touch_read_us": 19570170.975,
+    "dispatch_us": 5681.239000001493,
+    "key_up_us": 19580000.0,
+    "tools_done": 4,
+    "tools_stale": 1
+  },
+  "normal_after": {
+    "keys_delivered": 8,
+    "first_touch_read_us": 19564570.975,
+    "read_finished_us": 19566407.975,
+    "key_up_us": 19580000.0,
+    "monitor_extra_ms": 44.489736,
+    "dispatch_us": 81.239,
+    "tools_done": 4,
+    "tools_stale": 1,
+    "display_underruns": 0,
+    "warnings": 0
+  },
+  "normal_capture_after": {
+    "audio.mic.lost_ms": 0,
+    "audio.mic.overruns": 0,
+    "audio.speaker.underruns": 0
+  },
+  "normal_full": {
+    "total": 270,
+    "passed": 269,
+    "failed": [
+      "capability-table-doc"
+    ],
+    "skipped": [],
+    "exit": 8
+  },
+  "product_lines_including_build_wiring": 236,
+  "asan_full": {
+    "total": 270,
+    "passed": 269,
+    "failed": [
+      "capability-table-doc"
+    ],
+    "skipped": [],
+    "exit": 8
+  },
+  "asan_memory_errors": 0,
+  "asan_after": {
+    "keys_delivered": 8,
+    "first_touch_read_us": 19564570.975,
+    "read_finished_us": 19566407.975,
+    "key_up_us": 19580000.0,
+    "monitor_extra_ms": 44.489736,
+    "dispatch_us": 81.239,
+    "tools_done": 4,
+    "tools_stale": 1,
+    "display_underruns": 0,
+    "warnings": 0
+  },
+  "asan_capture_after": {
+    "audio.mic.lost_ms": 0,
+    "audio.mic.overruns": 0,
+    "audio.speaker.underruns": 0
+  },
+  "source_commit": "4eb94b18b051160c87ce84503c486dfcce79158a",
+  "new_review_mechanisms": []
+}

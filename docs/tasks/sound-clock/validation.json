@@ -1,18 +1,14 @@
 {
   "baseline": "62b0e83da1d34f50629b5e576807db1381b26078",
-  "product_lines_including_build_wiring": 196,
+  "product_lines_including_build_wiring": 236,
   "normal_full": {
-    "passed": 264,
+    "total": 270,
+    "passed": 269,
     "failed": [
-      "scenario-ai_page_version-metalio-plus",
       "capability-table-doc"
     ],
-    "skipped": [
-      "hub-contract",
-      "hub-json-crosscheck",
-      "hub-simulator-e2e"
-    ],
-    "total": 269
+    "skipped": [],
+    "exit": 8
   },
   "normal_hub_supplement": {
     "hub-contract": "Passed",
@@ -20,13 +16,13 @@
     "hub-simulator-e2e": "Passed"
   },
   "asan_full": {
-    "passed": 267,
+    "total": 270,
+    "passed": 269,
     "failed": [
-      "capability-table-doc",
-      "scenario-ai_page_version-metalio-plus"
+      "capability-table-doc"
     ],
     "skipped": [],
-    "total": 269
+    "exit": 8
   },
   "asan_memory_errors": 0,
   "negative": [
@@ -64,6 +60,31 @@
       "variant": "member",
       "exit": 1,
       "detected": true
+    },
+    {
+      "variant": "touch-feedback-order",
+      "exit": 1,
+      "detected": true
+    },
+    {
+      "variant": "preserve-preview",
+      "exit": 1,
+      "detected": true
+    },
+    {
+      "variant": "input-priority",
+      "exit": 1,
+      "detected": true
+    },
+    {
+      "variant": "display-priority",
+      "exit": 1,
+      "detected": true
+    },
+    {
+      "variant": "capture-lease",
+      "exit": 1,
+      "detected": true
     }
   ],
   "baseline_clock": {
@@ -73,5 +94,7 @@
     "tools_stale": 1
   },
   "setsound_mae": 46.001,
-  "baseline_setsound_mae": 46.001
+  "baseline_setsound_mae": 46.001,
+  "review_evidence": "review-evidence.json",
+  "capability_document_exception": "REVIEW.md 明确交给主会话合并时同步；临时生成并核对通过，共 428 项定义。"
 }

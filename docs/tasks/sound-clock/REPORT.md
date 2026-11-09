@@ -9,7 +9,7 @@
 | 1 设置、声音、振动 | 【实测】最终专项通过 | 人和 AI 更改四项设置；两个实体键、两次触摸各恰好两声；高优先级通知、来电、闹钟各一震；来电选柔音、闹钟选双音；进程重启后四项保留 | C1 |
 | 2 倒计时 | 【实测】最终专项通过 | 触摸及 AI 开始、暂停、继续、取消、到点响铃和关闭；成人、孩子分别计时；分钟更新，2 秒内没有额外刷新；重启明确取消 | C1 |
 | 3 声音页对照、计时截图 | 【实测】46.001/255，超过 12；基线也是 46.001 | 原有字号、灰度、分页造成首屏与画板不同；新开关和铃声在第二页。计时截图见下，**没有画板，待用户看** | C2 |
-| 4 全量及内存检查 | 【实测】两轮均未全绿；无 ASan/UBSan 错误 | 最终原生 264 过、2 失败、3 依赖跳过；三项补跑全过。ASan 全量 267 过、同样 2 失败、无跳过；失败均为能力文档及短按键场景 | C3、C4 |
+| 4 全量及内存检查 | 【实测】两套各 269 项通过、0 跳过，均仅 1 项复查豁免的文档同步失败；无 ASan/UBSan 错误 | 原短按及录音场景通过；能力表在临时目录生成、核对通过，详见复查节 | C3、C4、C7、C8 |
 
 复现命令（依赖位置使用任务指定的环境变量，先按总规则配置并构建）：
 
@@ -18,7 +18,7 @@
 INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2 -R '^(sound-clock|clock-alarm|integration-races|integration-ai-surface)$'
 # C2：与外部画板比较；外部画板未入库
 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.py --build build --design "$INK_DESIGN" --out work/ui-compare --scenes SetSound
-# C3 / C4：完整检查，保留实际失败，不跳过断言；原命令有三个依赖跳过
+# C3 / C4：完整检查，保留实际失败，不跳过断言；此前三个依赖跳过，本轮已补齐
 # 加载现成锁定依赖和本仓库服务器包，以补齐这三个测试
 export PYTHONDONTWRITEBYTECODE=1
 export PYTHONPATH="$PWD/hub:$INK_DEPS/hub/.venv/lib/python3.11/site-packages"
@@ -63,9 +63,8 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/capabilities
 
 ## 没做到的
 
-- 全量还不能报通过。`capability-table-doc` 检出新增六项能力、四项设置尚未汇入共享生成文档；总规则第 7 节禁止改该文件，留给合并主会话，C7 的临时生成/核对通过（428 项定义）。
-- AI 页面版本场景仍失败：【实测】当前版本工具结果为 done=5、缺少 stale；仅恢复基线 `clock.c` 后 done=4、stale=1、退出 0。19.5 秒的 80 毫秒翻页键，当前版底层送达计量为 6 次（只含三次 AI 键的按下/松开），基线计量为 8 次。【实测】当前首次触摸 I2C 读取在 19.581722 秒，按键已在 19.580000 秒松开；基线首次读取在 19.570783 秒，仍能读到。【实现】既有盖板键模型经过 20 ms 检出、最多 60 ms 监测扫描延迟以及 I2C 排队，80 ms 按键存在被漏掉的边界。不能说基线同样失败；没有改模型、拉长脚本按键、加等待或放宽预算。
-- 未接触设备，未做真机听感、振动或续航测试；未在 Linux 上实际运行。
+- `capability-table-doc` 仍失败：新增六项能力、四项设置尚未汇入共享生成文档。`REVIEW.md` 明确豁免、留给主会话合并时生成；总规则第 7 节也禁止改该文件。C7 的临时生成及核对通过（428 项定义），没有跳过此测试或伪称共享文档已同步。
+- 未接触设备，未做真机听感、振动或续航测试；未在 Linux 上实际运行。模型的更慢扫描边界见“顺手发现”。
 
 ## 和设计不一致的
 
@@ -104,9 +103,9 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/capabilities
 
 ## 最终检查
 
-【实测】最终原生和 ASan 构建均退出 0；全量结果见 [validation.json](validation.json)，专项计量见 [evidence.json](evidence.json)。三个原生依赖跳过项使用现成锁定环境补跑全部通过，未改依赖或安装软件。原生及 ASan 全量命令均因上述两项失败退出 8，不能称为全量通过。
+【实测】最终普通及 ASan/UBSan 构建均退出 0。两套全量各 269 项通过、0 跳过，唯一失败均为复查豁免的 `capability-table-doc`，原始全量命令仍退出 8。最终结果见 [validation.json](validation.json)，复查前后计量及十二项反向对照见 [review-evidence.json](review-evidence.json)；原功能计量见 [evidence.json](evidence.json)。此前三个依赖跳过项均在两轮全量中实际执行通过，未安装或升级软件。
 
-【实测】报告内链接与截图文件均存在，单文件远低于 5 MB；`git diff --check` 通过。产品增删 196 行，无刷新算法、时间服务、硬件驱动或受保护共享文档的改动。按总规则扫描基线至提交及工作区改动，均为零命中（grep 退出 1）。实现与最终证据分别提交在本任务分支。
+【实测】报告内链接及截图文件存在，单文件均小于 5 MB；`git diff --check` 通过。产品增删合计 236 行；端口仅改现有任务的优先级，无波形算法、模型检出参数、存储服务或受保护共享文档的改动。按总规则扫描基线至提交及本轮待提交改动，隐私模式零命中。
 
 ## 复查后的修复
 
@@ -117,5 +116,25 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/capabilities
 - 【实现＋实测】首轮普通全量暴露 `scenario-ai_tools-metalio-plus` 的 90 ms 麦克风丢失：录音开始后，禁止 Flash 写入的既有引用直到音频任务下一轮才取得。把取得、失败回退及音频任务后续释放集中到同一个持锁函数，开始硬件采集前先取得引用。原场景及媒体、竞争测试通过；只撤掉采集开始处的取得动作，原场景再次因麦克风丢失失败。未改存储服务或增加避让时长。
 - 【实测】新增 `sound-clock-input` 原样运行既有脚本、模拟器档案、中枢脚本和预算，另查 8 次按键送达、松键前读到芯片，以及本例芯片就绪至首次读取不超过 1 ms。它能检出“仅抬高输入优先级、仍和送行同级”的不完整修复。恢复输入优先级后送达退回 6 次；恢复送行优先级虽有 8 次，但就绪后仍等 5.681239 ms，新增断言失败。恢复旧触摸提示音顺序、去掉试听保护，也分别触发次数断言和原有试听断言失败，均跑到 `test.finished=1`。
 - 【实测】原来跳过的原因已查明：构建用 Python 缺少 `pytest`、`pytest_asyncio`、`aiohttp`、`yaml`。指定依赖目录已有锁定版本 `pytest 8.4.2`、`pytest-asyncio 1.2.0`、`aiohttp 3.12.15`、`PyYAML 6.0.3`；通过上方 C3/C4 的 `PYTHONPATH` 加载，不安装、不升级依赖。
-- 【实测】最终十二项反向对照全部检出（原七项，加触摸反馈顺序、试听保留、输入优先级、送行优先级、录音写盘引用五项）。普通全量复跑及内存全量仍在进行，最终结果补在本节末尾。
+- 【实测】最终十二项反向对照全部检出（原七项，加触摸反馈顺序、试听保留、输入优先级、送行优先级、录音写盘引用五项），反向命令整体退出 0。
 - `capability-table-doc` 按复查明确要求不改共享生成文档，在临时目录生成并核对成功（428 项定义）；保留全量原始结果，单独列明这一例外。复查未新增任务、状态机、持久格式、配置项或抽象层。
+
+复查最终计量（普通和 ASan/UBSan 一致，时间为模拟时间）：
+
+| 检查 | 修复前 | 修复后 |
+| --- | --- | --- |
+| 原样 80 ms 短按场景 | 送达 6 次，done=5、stale=0 | 送达 8 次，done=4、stale=1 |
+| 首次触摸读取 / 松键 | 19.581722534 s / 19.580000000 s | 19.564570975 s 开始，19.566407975 s 读完；松键时刻不变 |
+| 芯片就绪后至首次读取 | 9.204092 ms（慢扫描额外 52.518442 ms） | 0.081239 ms（慢扫描额外 44.489736 ms）；新增回归断言不超过 1 ms |
+| 原录音场景 | 丢 90 ms，6 次 DMA 覆盖 | 丢 0 ms，0 次覆盖 |
+| 普通全量 | 初轮有短按、共享文档失败及三项依赖跳过；复查首轮另暴露录音失败 | 269 过、1 项文档豁免失败、0 跳过，268.89 s，退出 8 |
+| ASan/UBSan 全量 | 初轮短按、共享文档失败 | 269 过、1 项文档豁免失败、0 跳过，458.21 s，退出 8；无内存或未定义行为报错 |
+
+```bash
+# C8：新增输入回归及原样短按、录音场景；两套全量 C3/C4 均已包含
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2 -R '^(sound-clock|sound-clock-input|scenario-ai_page_version-metalio-plus|scenario-ai_tools-metalio-plus)$'
+# C9：本轮五项修复的反向对照；C5 则含原七项，共十二项
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/sound_clock_negative.py --build build --review-only
+# 内存全量使用相同依赖环境，并遇到未定义行为立即失败
+UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
+```
