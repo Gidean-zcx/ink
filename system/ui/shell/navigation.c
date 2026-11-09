@@ -444,16 +444,21 @@ typedef struct {
     int n;
 } tile_list_t;
 
-/* Groups and their rows of tiles, page by page; a group's name stays with its first row. Draws the
+/* Groups and their rows of tiles, page by page; a group's name stays with its first row. A search lays
+ * out only what matches, from the first page, and leaves out groups with nothing found. Draws the
  * tiles of the page being shown and lists them for the AI. Returns the pages. */
 static int apps_walk(bool draw, tile_list_t *list) {
     static const char *const groups[] = {"读和听", "记和联系", "工具"};
-    tool_t items[24];
+    tool_t items[24], shown[24];
     int count = tools(items), top = below_heading() + INK_CONTROL + INK_GAP_L, y = top, page = 0;
     int name_h = ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_S;
     int row_h = INK_CIRCLE + INK_GAP_S + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_L;
     for (int g = 0; g < 3; g++) {
-        int total = g < 2 ? 4 : count;
+        int total = 0;
+        for (int k = 0; k < (g < 2 ? 4 : count); k++) {
+            tool_t t = g < 2 ? (tool_t){GROUP_IDS[g][k], GROUP_TITLES[g][k], GROUP_ICONS[g][k]} : items[k];
+            if (matches(t.title, t.id)) shown[total++] = t;
+        }
         for (int i = 0; i < total; i += 4) {
             int need = (i ? 0 : name_h) + row_h;
             if (y + need - INK_GAP_L > home_room()) {
@@ -464,13 +469,10 @@ static int apps_walk(bool draw, tile_list_t *list) {
                 if (draw && !i)
                     ink_ui_line(N.content, groups[g], INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y, width());
                 for (int k = i; k < i + 4 && k < total; k++) {
-                    const char *id = g < 2 ? GROUP_IDS[g][k] : items[k].id,
-                               *title = g < 2 ? GROUP_TITLES[g][k] : items[k].title;
-                    if (draw)
-                        tile(N.content, id, title, g < 2 ? GROUP_ICONS[g][k] : items[k].icon, k % 4, 0,
-                             y + (i ? 0 : name_h), true);
-                    if (list && matches(title, id) && list->n >= 0 && (size_t) list->n < list->cap)
-                        list->n += snprintf(list->buf + list->n, list->cap - (size_t) list->n, "%s（%s）；", title, id);
+                    if (draw) tile(N.content, shown[k].id, shown[k].title, shown[k].icon, k % 4, 0, y + (i ? 0 : name_h), true);
+                    if (list && list->n >= 0 && (size_t) list->n < list->cap)
+                        list->n += snprintf(list->buf + list->n, list->cap - (size_t) list->n, "%s（%s）；",
+                                            shown[k].title, shown[k].id);
                 }
             }
             y += need;

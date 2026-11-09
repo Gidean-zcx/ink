@@ -23,9 +23,10 @@
 #include "ink/sys/svc.h"
 #include "ink/sys/ui.h"
 
-#define MAX_APPS 16
+#define MAX_APPS 32 /* 15 system apps by now, room for installed ones */
 #define FREEZE_AFTER_US 10000000ull
-#define LIST_CAP 2048
+#define LIST_CAP 8192 /* app.list: about 200 bytes an app, all MAX_APPS fit */
+#define CARDS_CAP 2048 /* app.cards: what Today can read; a bigger source fails */
 
 typedef struct {
     const ink_app_def_t *def;
@@ -444,13 +445,13 @@ static void cap_close(ink_call_t *c) { /* UI task */
 }
 
 static void cap_cards(ink_call_t *c) { /* UI task: apps have no other */
-    char *out = osal_malloc(LIST_CAP, OSAL_MEM_EXTERNAL);
+    char *out = osal_malloc(CARDS_CAP, OSAL_MEM_EXTERNAL);
     ink_card_t *card = osal_malloc(sizeof *card, OSAL_MEM_EXTERNAL);
     if (!out || !card) {
         fail(c, INK_RC_FAILED, "out of memory");
     } else {
         ink_jw_t w;
-        ink_jw_init(&w, out, LIST_CAP);
+        ink_jw_init(&w, out, CARDS_CAP);
         ink_jw_raw(&w, "[");
         bool first = true;
         for (int i = 0; i < AP.n; i++) {

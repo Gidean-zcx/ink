@@ -478,17 +478,22 @@ static void snapshot_tests(void) {
     wanted = "今日报纸"; on_ui(read_view); CHECK(label_x >= 0, "Today labels today's newspaper explicitly");
     CHECK(BY_HAND("shell.search", "{\"query\":\"\"}") && g_rc.status == INK_RC_DONE, "open Apps with a two-page tool fixture"); quiet(); on_ui(read_context);
     on_ui(check_search_layout);
-    CHECK(strstr(context, "工具页=1/2") && strstr(context, "工具甲（tool_a）") && strstr(context, "短信（message）"), "Apps includes the visible registered, built-in and fixed-group entries");
+    /* Which page the fixture lands on depends on how many system tools this device registers. */
+    CHECK(strstr(context, "工具页=1/2") && strstr(context, "时钟（clock）") && strstr(context, "短信（message）"), "Apps includes the visible registered, built-in and fixed-group entries");
     CHECK(!strstr(context, "设置（settings）") && strstr(context, "对话记录（ai）"), "Apps includes registered AI and omits settings on the next page");
+    bool tool_first = strstr(context, "工具甲（tool_a）") != NULL;
+    if (!tool_first) { CHECK(AI("home.next", NULL) && g_rc.status == INK_RC_DONE, "turn to the page with the tool fixture"); quiet(); }
     wanted = "工具甲"; on_ui(read_view); CHECK(label_x >= 0, "the advertised tool is visible"); if (label_x >= 0) tap(label_x, label_y); quiet();
     CHECK(!strcmp(ink_ui_page_name(), "fake-tool-a"), "touch launches the advertised stable id");
     on_ui(ink_ui_home); quiet();
-    CHECK(AI("home.next", NULL) && g_rc.status == INK_RC_DONE, "turn the tools page through the same capability"); quiet(); on_ui(read_context);
-    CHECK(strstr(context, "工具页=2/2") && strstr(context, "设置（settings）") && !strstr(context, "工具甲（tool_a）") && strstr(context, "相机（camera）"), "the next-page snapshot matches only its visible tools");
+    if (tool_first) { CHECK(AI("home.next", NULL) && g_rc.status == INK_RC_DONE, "turn the tools page through the same capability"); quiet(); }
+    on_ui(read_context);
+    CHECK(strstr(context, "工具页=2/2") && strstr(context, "设置（settings）") && !strstr(context, "时钟（clock）") && !strstr(context, "短信（message）") && (strstr(context, "工具甲（tool_a）") != NULL) != tool_first, "the next-page snapshot matches only its visible tools");
     CHECK(AI("shell.launch", "{\"id\":\"settings\"}") && g_rc.status == INK_RC_DONE, "AI can use the visible settings id"); quiet(); CHECK(!strcmp(ink_ui_page_name(), "Settings"), "the advertised id opens actual settings");
     on_ui(ink_ui_home); quiet();
     CHECK(AI("shell.search", "{\"query\":\"工具甲\"}") && g_rc.status == INK_RC_DONE, "filter Apps through its capability"); quiet(); on_ui(read_context);
-    CHECK(strstr(context, "工具甲（tool_a）") && !strstr(context, "工具乙（tool_b）") && !strstr(context, "短信（message）"), "search applies the identical visible-item filter to the snapshot");
+    CHECK(strstr(context, "工具页=1/1") && strstr(context, "工具甲（tool_a）") && !strstr(context, "工具乙（tool_b）") && !strstr(context, "短信（message）"), "search lays out only the matches, from the first page, in the snapshot too");
+    wanted = "工具甲"; on_ui(read_view); CHECK(label_x >= 0, "the match is drawn on the first page");
     CHECK(AI("shell.launch", "{\"id\":\"tool_a\"}") && g_rc.status == INK_RC_DONE, "AI launches the same tool as touch"); quiet(); CHECK(!strcmp(ink_ui_page_name(), "fake-tool-a"), "touch and AI reach the same real activity");
     on_ui(ink_ui_home); quiet();
     const char *titles[] = {"测试通知甲", "测试通知乙", "测试通知丙"}; uint32_t ids[3] = {0};

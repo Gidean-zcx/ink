@@ -86,6 +86,7 @@ static const struct {
     {"shell.update", NULL}, {"shell.update_close", NULL},
     {"files.browse", "path"}, {"files.select", "id"}, {"files.move", NULL}, {"files.name", NULL},
     {"files.preview", "id"}, {"files.next", NULL}, {"files.prev", NULL}, {"files.up", NULL},
+    {"camera.preview", NULL}, {"camera.photo", NULL}, {"gallery.prev", NULL}, {"gallery.next", NULL}, {"photo.open", "id"},
     {NULL, NULL},
 };
 

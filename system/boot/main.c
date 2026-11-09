@@ -113,4 +113,6 @@ void ink_main(void) {
     if (ink_calendar_init() != 0) osal_panic("calendar failed to start");
     extern int ink_files_init(void);
     if (ink_files_init() != 0) osal_panic("files failed to start");
+    extern int ink_camera_app_init(void), ink_gallery_init(void);
+    if (ink_camera_app_init() != 0 || ink_gallery_init() != 0) osal_panic("camera/gallery failed to start");
 }
