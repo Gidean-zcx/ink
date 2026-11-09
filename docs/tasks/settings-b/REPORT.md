@@ -6,15 +6,15 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 部分完成 | 【实测】五页可打开；成员添加、改名、确认删除、密码、儿童音量和壁纸连接真实后端。跨进程重启验证成员名、删除状态、密码、音量、壁纸及活动记录。应用/时段、运行记录和记忆缺口见下文 | C1 |
+| 1 | 部分完成 | 【实测】五页可打开；成员添加、改名、确认删除、儿童音量和壁纸连接真实后端，密码复用 `kid-1`。跨进程重启验证成员名、删除状态、密码、音量、壁纸及活动记录。应用/时段、运行记录和记忆缺口见下文 | C1、C3 |
 | 2 | 通过 | 【实测】儿童通过 AI 和直接打开路径均进不了五页；去掉页面检查，5 条断言失败，测试仍运行结束。反例未修改产品源码 | C1、C2 |
 | 3 | 通过复查规格 | 【实测】F9 选择合成 PNG，经已有解码、抖动后用于第三种锁屏；这一页、时钟、壁纸三种截图独立，壁纸无时钟、比例不变、主页全图不变，重启后可重新加载 | C1 |
-| 4 | 通过已实现部分 | 【实测】五页快照可放入真实 AI 上下文；按钮和 AI 复用能力。密码沿用共用 `PinSet` 的遮蔽及仅人可提交路径；设置密码后成员页仍可读。恢复旧认证代次检查，3 条断言失败 | C1、C2 |
-| 5 | 普通完成，内存检查进行中 | 【实测】普通全量 239 项：237 通过，只有指定的两项共享文档失败，0 跳过；专项 404+20 条通过。ASan/UBSan 正在重新配置和编译。本轮产品代码净减 18 行 | C1、C3 |
+| 4 | 通过已实现部分 | 【实测】五页快照可放入真实 AI 上下文；按钮和 AI 复用能力。密码沿用共用 `PinSet` 的遮蔽及仅人可提交路径；设置密码后成员页仍可读。恢复旧认证代次检查，3 条断言失败 | C1、C2、C3 |
+| 5 | 通过约定范围 | 【实测】普通和 ASan/UBSan 全量各 239 项：237 通过，只有指定的两项共享文档失败，0 跳过；两套专项均 404+20 条通过，没有内存错误。本轮产品代码净减 18 行，累计 316 行 | C1、C3 |
 
 ## 复查后的修复
 
-本轮基线 `f9ca3924`，按主会话复查 SB-M1～M4、SB-L1 执行。开工先按任务参数重新配置、编译。普通全量最终只有指定的两项共享文档失败；ASan/UBSan 进行中，结果完成后补入。
+本轮基线 `f9ca3924`，按主会话复查 SB-M1～M4、SB-L1 执行。开工先按任务参数重新配置、编译。普通和 ASan/UBSan 全量最终都只有指定的两项共享文档失败，均 0 跳过。前次 233 项中缺依赖的三项跳过已处理，不再沿用旧的未完成结论。
 
 | 编号 | 修复 | 测试与反向对照 |
 | --- | --- | --- |
@@ -28,9 +28,11 @@
 
 本轮产品代码 **+72 / -90，净减 18 行**，符合净增 150 行预算；以前次 334 行为口径，累计为 316 行，仍低于原任务 350 行。复用现有能力、游标和整屏刷新，没有新增任务、线程、状态机、格式、配置项或队列。按本次明确复查意见，仅改 `settings_pages.c` 中的两行入口，未扩展其他页面或后端。
 
+【实现】架构审视：成员能力统一归策略层注册，图片仍在 MEDIA 解码、UI 绘制；按钮和 AI 复用现有 shell、settings、activity 能力，五页保留 AI 快照；凭据仅在共用 `PinSet` 本地输入和提交，缺少记忆、运行记录后端时如实显示不可用。
+
 原来三项中枢测试跳过的根因已查明：任务指定 Python 缺 `pytest`、`pytest_asyncio`、`aiohttp`、`yaml`（包名 PyYAML）。本分支 `work/settings-b-hub-venv/` 沿用 Python 3.11.15，按 `hub/uv.lock` 固定版本和分发哈希安装依赖，用本地路径加载本分支 `hub`。没有修改只读依赖目录、锁文件或依赖版本。普通和 ASan 配置共同追加 `-DINK_HUB_PYTHON="$PWD/work/settings-b-hub-venv/bin/python"`；该临时环境未提交。
 
-构建采用任务书的完整 CMake 参数；ASan 仅增加 `-DINK_SANITIZE=ON`。构建和测试均以 `taskpolicy -c utility` 启动，构建 `-j2`、CTest `-j2`。下面命令在仓库根目录执行：
+构建采用任务书的完整 CMake 参数及上面的共用中枢 Python 路径；ASan 相对普通构建仅增加 `-DINK_SANITIZE=ON` 并换构建目录。构建和测试均以 `taskpolicy -c utility` 启动，构建 `-j2`、CTest `-j2`。C1 已在 C3 的全量中执行，也可用下面命令单跑；均从仓库根目录执行：
 
 ```sh
 # C1：最终专项，分别验证写入和独立进程重启
@@ -45,14 +47,14 @@ INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest"
  taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/settings_b_compare.py --build build --design "$INK_DESIGN"
 ```
 
-【实测】普通全量证据：`build/settings-b-review-full-final.log`，两项文档失败使 CTest 退出 8；内存检查证据写入 `build-asan/settings-b-review-full.log`，待运行结束核对。普通专项写入 404 条、独立重启 20 条通过，最低内部 RAM 余量 **47,000 字节**，预算仍为 32,768。反例源码哈希核对一致。截图在 `build/test-out/settings-b-sim-settings-b/write/`：`snap-{LockPage,LockClock,LockImage,LockFallback,HomeBefore,HomeAfter,WallpaperSelected}.png`；25 条记录最后一页为 `Records25.json`。
+【实测】普通全量证据：`build/settings-b-review-full-final.log`；内存检查：`build-asan/settings-b-review-full.log`。各 237/239 通过，两项指定文档失败使两轮 CTest 都退出 8，没有其他失败或跳过；本轮日志、CTest 原始日志及测试输出日志未发现 ASan、LeakSanitizer 或 UBSan 错误。两套专项均写入 404 条、独立重启 20 条通过，最低内部 RAM 余量 **47,000 字节**，预算仍为 32,768。反例源码哈希核对一致。两套目录均保留 `test-out/settings-b-sim-settings-b/write/` 截图：`snap-{LockPage,LockClock,LockImage,LockFallback,HomeBefore,HomeAfter,WallpaperSelected}.png`；25 条记录最后一页为 `Records25.json`。
 
 ## 没做到的
 
 - 【实现】基线儿童策略只有 `members.c:set_allow` 固定白名单、应用 `child_ok` 和 `audio.child_max`，没有可修改的应用白名单、每日时长或禁用时段接口。`SetKid` 读取已有策略并修改音量；应用与时段编辑未完成，本轮未扩展儿童策略后端。
 - 【实现】设备和 `hub/` 没有记忆列举/删除接口，`AiMemory` 如实显示不可用，未伪造条目或删除。
 - 【实现】`Records` 每批读取六条并沿游标查看更早记录；运行记录、跨成员查看和删除尚未实现。后端也未提供稳定活动记录编号，跨批只向更早方向翻，重新打开页面回到最新记录。
-- 【实测】普通全量保留失败：`capability-table-doc`（能力/设置文档未同步）、`services-mid-capability-doc`（服务文档缺 `member.rename`），按用户明确指示留给主会话同步，没有改测试放行。原来缺依赖的三个 `hub-*` 已通过，0 跳过。本机为 Apple clang，未实测 Linux/gcc 或真机。
+- 【实测】两套全量保留失败：`capability-table-doc`（能力/设置文档未同步）、`services-mid-capability-doc`（服务文档缺 `member.rename`），按用户明确指示留给主会话同步，没有改测试放行。原来缺依赖的三个 `hub-*` 在两套全量中均已通过，0 跳过。本机为 Apple clang，未实测 Linux/gcc 或真机。
 - 【实现】壁纸保存稳定文件编号；重启依赖原图仍可读取，没有新增壁纸副本格式。
 
 ## 和设计不一致的
@@ -102,7 +104,7 @@ INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest"
 - 小增量服务能力 `member.rename`：由改名要求引入，沿用成员存储及 `member.changed`，界面不写策略内部状态。
 - 复用 UI、MEDIA 执行器和 F1/F2/F4/F9，没有新增线程、重试、缓存框架或队列。
 
-超过 100 行的原因：五页、成员输入/密码、异步活动查询和跨 MEDIA/UI 的图片生命周期都要接线。已共用 F4 呈现和 F2 输入；更小方案是继续塞进 `settings_pages.c`，但任务禁止修改它；只画静态页面则不能验证后端与重启。未另建通用框架。
+前次五页实现超过 100 行的原因：成员输入、异步活动查询和跨 MEDIA/UI 的图片生命周期都要接线。已共用 F4 呈现和 F2 输入；更小方案是继续塞进 `settings_pages.c`，但原任务要求五页放新文件；只画静态页面则不能验证后端与重启。未另建通用框架。本轮新增仅 72 行、净减 18 行。
 
 ## 要改的文档
 
