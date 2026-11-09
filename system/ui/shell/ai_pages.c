@@ -93,8 +93,13 @@ static int next_record(ink_db_cursor_t *cursor, ink_rec_t *rec, char *row, size_
 }
 static size_t list_count(void) {
     if (!L.db) return 0;
-    ink_db_cursor_t cursor = {0}; ink_rec_t rec; size_t n = 0;
-    while (next_record(&cursor, &rec, NULL, 0) == 1) n++;
+    ink_db_cursor_t cursor = {0}; ink_rec_t rec; size_t n = (size_t)ink_db_count(L.db);
+    int64_t now = osal_wall_us() / 1000000;
+    /* The index is sorted: only the expired prefix needs visiting. */
+    if (now > 0) {
+        while (ink_db_next(L.db, &cursor, &rec, NULL, 0) == 1 && rec.sort < now - L.keep_s)
+            if (rec.sort > 0) n--;
+    }
     return n;
 }
 static void bind_row(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, ink_ui_action_spec_t *action, void *ctx) {
