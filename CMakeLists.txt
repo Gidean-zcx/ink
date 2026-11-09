@@ -1319,3 +1319,10 @@ ink_sim_executable(sim-confirm-pages tests/confirm_pages/pages.c tests/confirm_p
 target_link_libraries(sim-confirm-pages PRIVATE ink_apps ink_system)
 add_test(NAME confirm-pages COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/confirm_pages/run.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(confirm-pages PROPERTIES TIMEOUT 180 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")
+
+target_sources(ink_system PRIVATE system/apps/files/files.c)
+ink_sim_executable(sim-files-app tests/files_app/files_app.c)
+target_link_libraries(sim-files-app PRIVATE ink_apps ink_system)
+add_dependencies(sim-files-app sim-image)
+target_include_directories(sim-files-app PRIVATE ${CMAKE_BINARY_DIR}/generated)
+add_test(NAME files-app COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/files_app/run.py --build ${CMAKE_BINARY_DIR})

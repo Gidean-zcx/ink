@@ -410,6 +410,7 @@ static int tools(tool_t out[24]) {
         if (!a->entry || !ink_app_visible(a) || !strcmp(a->id, "home") || !strcmp(a->id, "reader")) continue;
         if (!strcmp(a->id, "phone")) continue; /* Already in the contact group. */
         if (!strcmp(a->id, "memo")) continue; /* Already in the memo/contact group. */
+        if (!strcmp(a->id, "upcoming")) continue; /* The calendar is 接下来 in the same group. */
         out[count++] = (tool_t){a->id, a->title, a->icon ? a->icon : INK_UI_ICON(grid)};
     }
     static const tool_t MORE[] = {{"clock", "时钟", INK_UI_ICON(clock)},     {"camera", "相机", INK_UI_ICON(camera)},
