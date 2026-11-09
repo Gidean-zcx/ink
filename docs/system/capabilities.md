@@ -7,7 +7,7 @@ python3 tools/capabilities.py
 python3 tools/capabilities.py --check
 ```
 
-当前共 200 项：可调用能力 170、事件 30；设置 16 项、状态 45 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
+当前共 201 项：可调用能力 171、事件 30；设置 16 项、状态 45 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
 
 风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。
 
@@ -78,6 +78,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `file.move` | 移动或改名（可撤销） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s15](#s15) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
 | `file.read` | 读文本文件（每次最多 2 KiB） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s15](#s15) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
 | `file.stat` | 一个文件或目录的信息 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s15](#s15) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
+| `file.thumb` | 按文件编号读取缩略图（gray4 按行排列，每个十六进制字符表示一个灰阶） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s15](#s15) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
 | `file.write` | 写文本文件（新文件，或追加） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s15](#s15) | [system/services/file/file_caps.c](../../system/services/file/file_caps.c) |
 | `home.next` | 主页下一屏 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 home | [s29](#s29) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
 | `home.prev` | 主页上一屏 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 home | [s29](#s29) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
@@ -344,7 +345,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 状态：`file.index_state`、`storage.card`、`storage.free`、`storage.mode`、`usb.connected`。
 
-事件：`file.changed`、`file.job_done`、`usb.changed`。
+事件：`file.changed`、`file.job_done`、`member.changed`、`usb.changed`。
 
 <a id="s16"></a>
 

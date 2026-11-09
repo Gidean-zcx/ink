@@ -6,6 +6,7 @@
 #include <stddef.h>
 #include "ink/sys/cap.h"
 #include "ink/sys/file.h"
+#include "ink/sys/image.h"
 #include "ink/sys/layout.h"
 
 typedef struct {
@@ -22,6 +23,8 @@ int fs_remove_for(const file_context_t *c, const char *path, uint32_t revision);
 int fs_move_for(const file_context_t *c, const char *from, const char *to, uint32_t revision, uint32_t *written);
 int fs_job_begin_for(const file_context_t *c, int op, const char *from, const char *to);
 int fs_index_for(const file_context_t *c, const char *path, ink_fs_type_t type, uint32_t *cursor, ink_fs_entry_t *out);
+/* MEDIA only. Owned thumbnail copy; release with ink_image_free. */
+int fs_thumb_for(const file_context_t *c, uint32_t id, ink_image_t *out);
 
 void fs_refresh_cb(void *arg);
 int fs_resolve(const char *path, bool write, char *phys, size_t cap);

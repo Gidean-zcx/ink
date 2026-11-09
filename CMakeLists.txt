@@ -1228,3 +1228,7 @@ if(INK_GUI AND INK_HAVE_FONTS)
             -P ${CMAKE_SOURCE_DIR}/tests/simulator/gui_smoke.cmake)
   set_tests_properties(gui-smoke PROPERTIES TIMEOUT 180)
 endif()
+
+add_test(NAME thumb-wiring COMMAND ${Python3_EXECUTABLE}
+  ${CMAKE_SOURCE_DIR}/tests/services_finish/run.py --build ${CMAKE_BINARY_DIR} thumb_wiring)
+set_tests_properties(thumb-wiring PROPERTIES TIMEOUT 180 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")

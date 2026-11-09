@@ -571,6 +571,24 @@ int64_t hal_fs_size(const char *path) {
     return -1;
 }
 
+typedef struct { const char *path; int64_t stamp; } sd_mtime_t;
+static void sd_mtime_on_host(void *arg) {
+    sd_mtime_t *a = arg; struct stat st;
+    if (stat(a->path, &st) < 0) return;
+#ifdef __APPLE__
+    a->stamp = (int64_t)st.st_mtimespec.tv_sec * 1000000000 + st.st_mtimespec.tv_nsec;
+#else
+    a->stamp = (int64_t)st.st_mtim.tv_sec * 1000000000 + st.st_mtim.tv_nsec;
+#endif
+}
+int64_t hal_fs_mtime(const char *path) {
+    char p[512];
+    if (route(path, p, sizeof p) != VOL_SD) return -1;
+    sd_cost(0, false);
+    sd_mtime_t a = {p, -1}; vtk_host_call(sd_mtime_on_host, &a);
+    return a.stamp;
+}
+
 struct hal_dir {
     vol_t vol;
     lfs_dir_t ld;

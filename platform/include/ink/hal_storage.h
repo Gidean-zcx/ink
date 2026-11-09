@@ -48,6 +48,7 @@ int hal_fs_remove(const char *path);
 int hal_fs_rename(const char *from, const char *to);
 int hal_fs_mkdir(const char *path);
 int64_t hal_fs_size(const char *path); /* -1 if missing */
+int64_t hal_fs_mtime(const char *path); /* card metadata, nanoseconds; -1 on error */
 
 typedef struct hal_dir hal_dir_t;
 typedef struct {

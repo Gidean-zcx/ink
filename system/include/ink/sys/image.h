@@ -19,7 +19,7 @@ enum { INK_IMAGE_OK = 0, INK_IMAGE_ERROR = -1, INK_IMAGE_LIMIT = -2 };
 /* PNG or baseline JPEG, white alpha background; owned gray8 pixels in PSRAM.
  * Output is zeroed on failure; ERROR includes malformed input/allocation failure.
  * Run on the existing INK_EXEC_MEDIA executor (8 KiB PSRAM stack), never from
- * input or hub callbacks. Cache calls must use that same serialized context. */
+ * input or hub callbacks. The owner must serialize all cache access. */
 int ink_image_decode(const void *data, size_t size, ink_image_t *out);
 void ink_image_free(ink_image_t *image);
 /* In-place: black..white maps to the panel's measured black..paper range.
@@ -30,6 +30,7 @@ void ink_image_dither(ink_image_t *image);
  * Key is caller's object ID + content version, independent of file paths. */
 ink_thumb_cache_t *ink_thumb_cache_create(void);
 void ink_thumb_cache_destroy(ink_thumb_cache_t *cache);
+void ink_thumb_cache_remove(ink_thumb_cache_t *cache, uint64_t object);
 /* Borrowed result, valid until the next cache call. Fixed edge, no upscaling.
  * Hits may omit data; hits do not change FIFO order. A new version invalidates
  * the old entry even if decoding fails. Caller must not free/modify the result. */
