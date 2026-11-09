@@ -15,13 +15,13 @@
 | B3-07 | 【实测】成员事件刷新列表和快照，保留编辑内容，删除目标后操作失效 | `audit3-b3-07`：屏幕新称呼、编辑保留和删除目标通过；基线 3 条失败 | C1、C2（n=7） |
 | B3-08 | 【实测】新增、改名统一检查原始字节数，超长回执“称呼太长” | `audit3-b3-08`：两能力拒绝 11 汉字、完整保存 10 汉字；输入框上限 31 字节；基线 2 条失败 | C1、C2（n=8） |
 | B3-09 | 【实测】选择器回调保留 wallpaper.choose 的调用来源 | `audit3-b3-09`：AI 选择壁纸的 settings.set 进入活动记录；基线 1 条失败 | C1、C2（n=9） |
-| 构建与全量测试 | 待执行 | 待补 | 待补 |
+| 构建与全量测试 | 【实测】构建通过；全量 250/251，通过项无跳过 | 唯一失败是禁改共享能力表的新鲜度检查；454.13 秒 | C3 |
 | 内存检查 | 待执行 | 待补 | 待补 |
-| 规模与隐私 | 产品代码净增上限 250 行；待核对 | 待补 | 待补 |
+| 规模与隐私 | 【实测】产品代码 +130/-43，净增 87 行；隐私扫描 0 命中 | 指定基线至本地提交的差异；检查退出 0，隐私 grep 退出 1（无匹配） | C5 |
 
 ## 没做到的
 
-九项定向及反向测试已完成；全量与内存检查正在执行。未进行真机或 Linux 验证。
+普通全量没有全绿：`capability-table-doc` 要求同步 `docs/system/capabilities.md`，但总规则第 7 节明确禁止本任务改共享生成文档。因此保留这条失败，不跳过、不放宽；其余 250 项通过。内存检查正在执行。未进行真机或 Linux 验证。
 
 ## 和设计不一致的
 
@@ -44,7 +44,7 @@
 
 ## 要改的文档
 
-由主会话更新共享能力表：`camera.capture` 的取帧且不保存语义，`photo.open` 接受有权访问的图片文件；补充成员称呼的 31 字节限制。本任务不改共享文档。
+由主会话运行 `"$INK_DEPS/build-deps/pyenv/bin/python" tools/capabilities.py` 更新共享能力表：本次生成差异只有 `camera.capture` 文案、`photo.open` 文案及取消 Gallery 限定、成员页订阅 `member.changed` 三处。已在 `build/audit3-capabilities.md` 生成待同步内容供核对，原文档未改；成员称呼的 31 字节限制也需由主会话同步相关说明。
 
 ## 顺手发现
 
@@ -54,6 +54,8 @@
 
 - C1：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2 -R '^audit3-b3-'`；9/9 通过，2.71 秒。
 - C2：对 n=1～9 分别运行 `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/audit3_fix.py --build build --case "$n" --baseline`；全部确认基线失败。驱动和断言不变，仅将该问题涉及的产品编译单元换成指定基线源码，不修改工作区。
+- C3：按总规则配置，另指定 `-DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"`；`taskpolicy -c utility cmake --build build -j2` 退出 0；`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2` 退出 8，250/251，通过项无跳过，仅能力表新鲜度失败。
+- C5：`git diff --check`、指定基线至 HEAD 的 `git diff --stat` / `--numstat -- system apps`，以及总规则要求的绝对路径与 MAC 模式扫描；净增 87 行，0 命中。最终提交后再核对。
 - 证据：`build/test-out/audit3-b3-0N/{result.json,run.log}`；反向对照在同名加 `-baseline` 的目录。构建目录被忽略，不提交产物。
 
 ## 执行记录
@@ -63,3 +65,4 @@
 - 复查保留了声音播放期间原有的备份拒绝入口，避免把该拒绝分支接到需要写入日志的失败处理；任务要求的缺卡和日志写入失败仍由备份服务统一发布。
 - 首轮全量 248/251：录音期间的备份拒绝、备份页旧重开预期、共享能力表新鲜度失败；前两项据具体日志修正，能力表按任务禁改规则留给主会话同步。最终结果待复跑。
 - 里程碑 2：【实测】修改后的九项回归、`backup-pages`、`backup-restore-recovery` 共 11/11 通过（60.83 秒）；已有相机授权反向对照也检出原断言失败。未放宽预算或跳过检查。
+- 普通最终全量 250/251，唯一失败为禁改能力表的新鲜度检查；开始 ASan/UBSan 构建和全量检查。
