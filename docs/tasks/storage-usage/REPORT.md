@@ -1,6 +1,8 @@
 # storage-usage 执行报告
 
-基线：`50fd91821b47d6a9cacd42e7ba07fbd3b8084de4`。状态：功能与专项验证完成，全量与内存检查进行中；仅在本地任务分支提交。
+基线：`50fd91821b47d6a9cacd42e7ba07fbd3b8084de4`。状态：执行完毕；验收 1～4 通过，第 5 项保留生成文档检查失败，画板差异未达目标。仅在本地任务分支提交。
+
+证据范围：macOS 模拟器、合成文件和本机工具；未操作实机。
 
 ## 验收表
 
@@ -10,13 +12,16 @@
 | 2 | 【实测】通过 | 索引未完成时真实页面显示“正在整理”，索引遍历期间观察到 organizing，完成后无需重开页面即可读到数值 | 同上 |
 | 3 | 【实测】通过 | 5 字节临时文件、11 字节磁盘缓存夹具、7 字节半截文件共 23 字节被移除；另经 file.thumb 生成并清除实际 PSRAM 缩略图缓存，原图保留；普通文件、以 .tmp 结尾的目录内普通文件、备份均保留；缓存免确认，残留须确认，预览过期时拒绝删除 | 同上；`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/storage_usage/reverse.py --build build` |
 | 4 | 【实测】通过 | 页面与 AI 读取同一结果，真实触摸与 AI 使用同一能力及 revision；孩子从导航、直接页面接口、AI 和触摸能力均不能清理 | 同上 |
-| 5 | 待验证 | 全量、内存检查、250 行预算 | 待补 |
+| 5 | 【实测】未全绿；行数通过 | 普通与 ASan/UBSan 均为 241/242，无跳过、无内存错误；两套唯一失败均是按规则未更新的生成能力文档。产品新增 200 行，连删除行和 CMake 计入为 214 行 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`；内存检查改为 `--test-dir build-asan` |
+| G4 | 【实测】未达到画板差异目标 | 51.184/255，目标 ≤12，差异原因见下文 | `INK_DESIGN="$INK_DESIGN" taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.py --build build --out build/storage-compare --scenes SetStorage --reuse` |
 
 ## 没做到的
 
-- 全量与 ASan/UBSan 检查尚在执行。
+- 生成的 `docs/system/capabilities.md` 尚未更新，因此干净检出的 `capability-table-doc` 会失败；按总规则第 7 节保留给主会话统一生成，没有临时替换文档来取得通过结果。
+- Linux/gcc 未执行，本机使用 Apple clang 和 `INK_WERROR=ON`。
 - 未测实机；模拟器卷空闲值为固定值，释放量的证据是被移除文件的实际字节和清理后预览归零，不声称验证了 FAT 簇分配。
 - 清理仅覆盖 `/cache` 的可见文件，以及 `/content` 普通目录和 `.m` 成员目录内的保留后缀 `.tmp` / `.part` 文件；隐藏的备份、升级及索引元数据目录不清理。
+- 【实现】清理预览单独扫描上述目录，不缓存结果；分类查询不重复遍历的证据仅针对 `file.usage`。索引完成标记跟随文件服务 revision 和卡标识；未验证离线新增文件后重插同一张卡的情况。
 
 ## 和设计不一致的
 
@@ -37,21 +42,26 @@
 
 ## 新增的机制
 
-- 一个索引完成版本标记（内存中的内容 revision 和卡标识）：由本任务“不要每次遍历整张卡”要求；只在内容变化或换卡后重建目录索引，不新增文件格式、任务、线程、队列、配置项或持久汇总。
+- 一个索引完成版本标记（内存中的文件服务 revision 和卡标识）：由本任务“不要每次遍历整张卡”要求；只在服务 revision 变化或换卡后重建目录索引，不新增文件格式、任务、线程、队列、配置项或持久汇总。
 - 其余复用文件编辑锁、后台执行器、确认卡、文件变化事件与 F1/F4 页面语义。新增四个原子能力：`file.usage`、`file.cleanup_preview`、`file.cache_clear`、`file.cleanup`。
 - 架构审视：【实现】统计与清理由文件服务持有，经 HAL 访问卡；界面与 AI 共用能力和结构化结果，清理结果经 `file.changed` 通知；页面语义与确认卡均沿用统一框架，儿童沿用策略和页面入口限制。
 
 ## 要改的文档
 
-- 合并时更新 `docs/system/ui-dependencies.md` 的 SetStorage 状态及生成的 `docs/system/capabilities.md`；遵守任务规则，不直接修改共享文档。
+- 合并时更新 `docs/system/ui-dependencies.md` 的 SetStorage 状态及生成的 `docs/system/capabilities.md`；未修改总规则第 7 节列出的共享文件。
 - 已在 `docs/system/system-services-design.md` §1.3 表末追加本任务的四个增量能力，保留文档与运行时的清单一致性检查；没有改既有设计约束。
 
 ## 验证记录
 
 - 【实测】开工时工作区干净，HEAD 等于给定基线，分支为 `claude/codex-storage-usage`。
-- 【实测】最终普通构建专项 135 项检查通过，内部 RAM 最低余量 47,624 字节，内外部堆分配失败为 0。证据：`build/storage-compare/SetStorage/metrics.json`。ASan/UBSan 专项也已通过；最终全量还在执行。
+- 【实测】最终普通与 ASan/UBSan 专项均为 135 项检查通过，内部 RAM 最低余量均为 47,624 字节，内外部堆分配失败为 0。证据：两套构建目录的 `storage-compare/SetStorage/metrics.json`。
 - 【实测】反向对照 `member-scope` 产生 9 个断言失败，`user-directory` 产生 4 个断言失败，`confirmation-title` 产生 1 个断言失败，三个进程均完成测试；原产品文件哈希未变。证据：`build/storage-reverse/summary.json`，对应日志在同目录。
 - 【实测】画板命令：`INK_DESIGN="$INK_DESIGN" taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.py --build build --out build/storage-compare --scenes SetStorage --reuse`；证据：`build/storage-compare/scores.json` 与 `SetStorage.png`。
+- 【实测】最终普通全量：241/242，无跳过，413.20 秒，CTest 退出 8，仅 `capability-table-doc` 失败；日志：`build/ctest-full.log`。AI 工具总表、服务设计清单、确定性、所有既有预算和三项中枢测试均通过。
+- 【实测】最终 ASan/UBSan 全量：241/242，无跳过，725.74 秒，CTest 退出 8，仅 `capability-table-doc` 失败，无 sanitizer 报错；日志：`build-asan/ctest-full.log`。
+- 【实测】不改共享文档的替代核查：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/capabilities.py --output build/storage-capabilities.md`，再加 `--check --runtime build/test-out/capability-table/capability-inventory.json`，两条均退出 0；368 条定义，运行时 306 项能力和 16 项设置一致。此项不能替代未更新的文档检查。
+- 【实测】构建沿用总规则第 5 节，普通与内存构建都加 `-DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"`，内存构建另加 `-DINK_SANITIZE=ON`；均保留 `INK_WERROR=ON`，`taskpolicy -c utility` 下构建最多 `-j2`，CTest 最多 `-j2`，串行执行构建与全量测试。日志：两套构建目录的 `configure.log`、`build.log`、`ctest-full.log`。
+- 【实测】`tools/ui_scale_check.py`：40 个文件、0 违规；`git diff --check` 通过。差异仅含文件服务、存储页接线、测试、CMake、设计清单表尾一行及本报告；没有构建产物或设计稿。基线到最终提交按总规则第 6 节的隐私正则扫描，0 匹配，grep 退出 1。
 
 ## 为什么不能更小
 
