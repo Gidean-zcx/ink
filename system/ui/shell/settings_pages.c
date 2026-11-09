@@ -40,7 +40,7 @@ static const row_t PRIVACY_ROWS[] = {
     {"privacy.storage", "你的东西放在哪", "设置和备忘在设备里，书和录音在存储卡上；备份在家庭服务器上。", NULL, NULL},
     {"privacy.ai", "AI 能看到什么", "提问时能看到当前页。密码框里的字看不到；语音和页面会交给家庭选择的模型服务商。", NULL, NULL},
     {"ai.read_clipboard", "AI 可以读剪贴板", NULL, "ai.read_clipboard", NULL},
-    {"privacy.retention", "留多久", "保留期限由家庭服务器管理，这里暂不能查看。", NULL, NULL},
+    {"privacy.retention", "留多久", "语音文字和运行记录的保留期限，这里暂不能查看。", NULL, NULL},
     {"privacy.child", "孩子的记录", "爸爸妈妈可以查看和删除。孩子能看到这一点；记录页面还没接入。", NULL, NULL}};
 static const struct { const char *name, *title, *cap; const row_t *rows; size_t count; } PAGES[] = {
     {"SetVoice", "语音和 AI", "shell.voice", VOICE_ROWS, sizeof VOICE_ROWS / sizeof *VOICE_ROWS},
