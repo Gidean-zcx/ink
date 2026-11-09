@@ -70,6 +70,8 @@ int hal_cell_sms_take(int index, char *number, int number_cap, char *utf8, int t
 int hal_cell_dial(const char *number) { return -1; }
 int hal_cell_answer(void) { return -1; }
 int hal_cell_hangup(void) { return -1; }
+int hal_cell_mute(bool on, bool *muted) { return -1; }
+int hal_cell_dtmf(char key) { return -1; }
 int hal_cell_wait_event(hal_cell_event_t *ev, uint32_t timeout_ms) { return -1; }
 
 /* TODO: Upstream libopus (not linked in this skeleton). */

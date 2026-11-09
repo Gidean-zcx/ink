@@ -9,7 +9,7 @@ import sys
 sim, root, assets, content, output = map(Path, sys.argv[1:])
 shutil.rmtree(output, ignore_errors=True)
 output.mkdir(parents=True)
-for phase in ("write", "verify", "Phone", "PhoneRecents", "PhoneCall"):
+for phase in ("write", "verify", "controls", "Phone", "PhoneRecents", "PhoneCall", "PhoneKeypad"):
     target = output / phase
     image = output / "user.img"
     if phase not in ("write", "verify"):
@@ -26,3 +26,8 @@ for phase in ("write", "verify", "Phone", "PhoneRecents", "PhoneCall"):
     assert result.returncode == 0, (phase, result.returncode, result.stderr, metrics.get("warnings"))
     assert metrics["metrics"].get("test.finished") == 1
     print(f'{phase}: {metrics["metrics"]["test.pass"]} assertions')
+    if phase == "controls":
+        assert metrics["metrics"]["cell.call.uplink_samples"] == 640
+        assert metrics["metrics"]["cell.call.muted_samples"] == 160
+        assert metrics["metrics"]["cell.call.speaker_samples"] == 640
+        assert metrics["metrics"]["cell.call.headset_samples"] == 160
