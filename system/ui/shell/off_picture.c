@@ -73,7 +73,9 @@ static void off_picture(const char *why) { /* the task that turns it off */
     ink_probe_count(ok ? "ui.off_picture_on_panel" : "ui.off_picture_late");
 }
 
+int ink_power_pages_init(void (*normal_off)(const char *why));
 int ink_shell_off_picture_init(void) {
     ink_power_set_off_picture(off_picture);
+    if (ink_power_pages_init(off_picture) != 0) return -1;
     return 0;
 }

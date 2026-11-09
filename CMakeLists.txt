@@ -1254,3 +1254,9 @@ ink_sim_executable(sim-contacts tests/contacts/contacts.c)
 target_link_libraries(sim-contacts PRIVATE ink_apps ink_system)
 add_test(NAME contacts COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/contacts/run.py
   $<TARGET_FILE:sim-contacts> ${CMAKE_SOURCE_DIR} ${INK_ASSETS_DIR} ${INK_TEST_CONTENT} ${CMAKE_BINARY_DIR}/test-out/contacts)
+
+target_sources(ink_system PRIVATE system/ui/shell/power_pages.c)
+ink_sim_executable(sim-power-pages tests/power_pages.c)
+target_link_libraries(sim-power-pages PRIVATE ink_apps ink_system)
+add_test(NAME power-pages COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/power_pages.py
+  $<TARGET_FILE:sim-power-pages> ${CMAKE_SOURCE_DIR} ${INK_ASSETS_DIR} ${INK_TEST_CONTENT} ${CMAKE_BINARY_DIR}/test-out/power-pages)
