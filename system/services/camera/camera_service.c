@@ -74,3 +74,22 @@ int ink_camera_init(void) {
     ink_mem_reclaimer("camera-last-photo", 20, reclaim, NULL);
     return ink_cap_register(CAMERA_CAPS, 1);
 }
+
+/* MEDIA only: reuse capture, then copy while the last frame cannot be reclaimed. */
+uint8_t *ink_camera_read_rgb(ink_call_t *c, int *w, int *h) {
+    cap_capture(c);
+    if (c->rc.status != INK_RC_DONE) return NULL;
+    while (__atomic_exchange_n(&CAM.busy, 1, __ATOMIC_ACQ_REL)) osal_task_yield();
+    size_t count = (size_t)CAM.info.width * CAM.info.height;
+    uint8_t *rgb = CAM.frame ? osal_malloc(count * 3, OSAL_MEM_EXTERNAL) : NULL;
+    if (rgb) for (size_t i = 0; i < count; i++) {
+        unsigned v = (unsigned)CAM.frame[i * 2] << 8 | CAM.frame[i * 2 + 1];
+        rgb[i * 3] = ((v >> 11) & 31) * 255 / 31;
+        rgb[i * 3 + 1] = ((v >> 5) & 63) * 255 / 63;
+        rgb[i * 3 + 2] = (v & 31) * 255 / 31;
+    }
+    *w = CAM.info.width; *h = CAM.info.height;
+    __atomic_store_n(&CAM.busy, 0, __ATOMIC_RELEASE);
+    if (!rgb) c->rc.status = INK_RC_FAILED;
+    return rgb;
+}
