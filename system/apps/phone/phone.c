@@ -109,7 +109,8 @@ static void dial(lv_event_t *e) {
 static void navigate(ink_call_t *c) {
     const char *id = c->cap->id;
     if (strcmp(P.member, ink_member_current()->id)) { P.number[0] = 0; memset(&P.position, 0, sizeof P.position); snprintf(P.member, sizeof P.member, "%s", ink_member_current()->id); }
-    if (!strcmp(id, "phone.contacts") || !strcmp(id, "contacts.open")) { P.selecting = !strcmp(id, "phone.contacts"); ink_contacts_open(); }
+    if (!strcmp(id, "phone.return")) { ink_shell_close(); resume_call(); }
+    else if (!strcmp(id, "phone.contacts") || !strcmp(id, "contacts.open")) { P.selecting = !strcmp(id, "phone.contacts"); ink_contacts_open(); }
     else if (!strcmp(id, "phone.recents")) show(&RECENTS);
     else if (!strcmp(id, "phone.open")) {
         char number[24] = ""; ink_args_get_str(&c->args, "number", number, sizeof number);
@@ -249,6 +250,7 @@ const ink_activity_t ink_phone_page = {.name = "Phone", .app = "phone", .create 
 static const ink_activity_t RECENTS = {.name = "PhoneRecents", .app = "phone", .create = create, .destroy = destroy, .snapshot = snapshot, .on_key = page_key};
 static const ink_activity_t CALL = {.name = "PhoneCall", .app = "phone", .create = create, .destroy = destroy, .snapshot = snapshot};
 static const ink_cap_t CAPS[] = {
+    {.id = "phone.return", .title = "回到通话", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "phone.open", .title = "打开拨号盘，可填入号码", .input = "{\"type\":\"object\",\"properties\":{\"number\":{\"type\":\"string\",\"maxLength\":20}}}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "phone.contacts", .title = "从联系人选择号码", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "contacts.open", .title = "打开联系人", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
@@ -263,4 +265,10 @@ int ink_phone_init(void) {
     return ink_db_register(&HISTORY) || ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) ||
         ink_cap_subscribe("call.", on_call, NULL, INK_EXEC_BG) || ink_cap_subscribe("call.", changed, NULL, INK_EXEC_UI) ||
         ink_cap_subscribe("contacts.selected", changed, NULL, INK_EXEC_UI) ? -1 : 0;
+}
+
+bool ink_phone_activity(char *title, size_t cap) {
+    if (!P.active || strcmp(P.call_member, ink_member_current()->id) || !ink_member_space_open()) return false;
+    snprintf(title, cap, "和%s通话", P.calling);
+    return true;
 }

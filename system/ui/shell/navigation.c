@@ -2,6 +2,7 @@
 /* ui-scale-runtime: dimension width Canvas width minus theme margins, shared by all shell pages. */
 /* ui-scale-runtime: dimension notifications Returns the bottom of theme-sized notification rows. */
 /* ui-scale-runtime: dimension y tile and notifications accept a theme-derived row position. */
+/* ui-scale-runtime: dimension ink_activity_card_draw,ink_activity_call_offset F6 returns theme-sized row heights and offsets. */
 /* ui-scale-runtime: dimension F.y,heading_h,notice_h,home_room,below_heading Page flow: theme sizes added up, plus text measured at the current size. */
 #include <stdio.h>
 #include <string.h>
@@ -23,6 +24,7 @@
 #include "ink/sys/ui_semantics.h"
 #include "ink/sys/ui_list.h"
 #include "ink/ui_shell.h"
+#include "activity_card.h"
 
 typedef struct {
     char cap[48], args[192];
@@ -510,14 +512,16 @@ static void draw_home_content(void) {
     bool has_book = N.home_page == 1 && bookmark(&card);
     int page_top = INK_GAP_S;
     if (N.home_page == 1) {
-        N.date = ink_ui_label(N.content, date, INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_MARGIN, INK_BLOCK, width());
+        int call_offset = ink_activity_call_offset();
+        N.date = ink_ui_label(N.content, date, INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_MARGIN, INK_BLOCK + call_offset, width());
         lv_obj_set_style_text_align(N.date, LV_TEXT_ALIGN_CENTER, 0);
         N.clock = ink_ui_label(N.content, clock, INK_FONT_CLOCK, INK_WEIGHT_REGULAR, INK_MARGIN,
-                               INK_BLOCK + ink_ui_line_height(INK_FONT_LIST), width());
+                               INK_BLOCK + call_offset + ink_ui_line_height(INK_FONT_LIST), width());
         lv_obj_set_style_text_align(N.clock, LV_TEXT_ALIGN_CENTER, 0);
         char text[160];
         snprintf(text, sizeof text, "%s", has_book ? card.text : "还没有读到一半的书");
-        int y = INK_BLOCK + ink_ui_line_height(INK_FONT_LIST) + ink_ui_line_height(INK_FONT_CLOCK) + INK_GAP_M;
+        int y = INK_BLOCK + call_offset + ink_ui_line_height(INK_FONT_LIST) + ink_ui_line_height(INK_FONT_CLOCK) + INK_GAP_M;
+        if (!ink_activity_home_draw(N.content, y)) {
         lv_obj_t *resume = ink_ui_box(N.content, INK_MARGIN + INK_GAP_L, y, width() - 2 * INK_GAP_L, INK_CONTROL, -1,
                                       INK_SURFACE_STATIC, false);
         ink_ui_icon(resume, "book", INK_ICON_MEDIUM, INK_ICON_LINE, INK_GAP_L, INK_GAP_L, false);
@@ -525,6 +529,7 @@ static void draw_home_content(void) {
                     (INK_CONTROL - ink_ui_line_height(INK_FONT_LIST)) / 2,
                     width() - 3 * INK_GAP_L - INK_ICON_MEDIUM - 2 * INK_GAP_M);
         ink_shell_bind(resume, "shell.resume", NULL);
+        }
         int bottom =
             INK_CANVAS_H - INK_STATUS_BAR - INK_DOCK - INK_MARGIN - ink_ui_line_height(INK_FONT_LIST) - INK_GAP_S;
         int grid = bottom - 2 * (INK_CIRCLE_APP + INK_GAP_S + ink_ui_line_height(INK_FONT_NOTE)) - INK_GAP_L;
@@ -699,6 +704,7 @@ int ink_shell_home_snapshot(char *buf, size_t cap) {
                           "动作：shell.launch、shell.search、home.next、home.prev、shell.control。");
         return n < 0 ? 0 : (size_t) n < cap ? n : (int) cap - 1;
     }
+    char activity[512]; ink_activity_card_snapshot(activity, sizeof activity);
     char clock[16], date[96], upcoming[96] = "还没有接下来的事";
     ink_shell_time_strings(clock, sizeof clock, date, sizeof date);
     int cursor = 0;
@@ -708,13 +714,14 @@ int ink_shell_home_snapshot(char *buf, size_t cap) {
     return snprintf(
         buf, cap,
         "页面=%s；当前=%s；日期=%s；时间=%s；继续读=%s；继续听=还没有在听的内容；今日报纸=今天的还没到；单词="
-        "还没有记下的词；接下来=%s；%s。动作：shell.launch、shell.resume、home.next、home.prev、shell.control。",
+        "还没有记下的词；接下来=%s；%s。%s 动作：shell.launch、shell.resume、home.next、home.prev、shell.control、shell.tasks。",
         N.home_page == 0 ? "Today" : "Main", ink_member_current()->name, date, clock, has ? card.text : "没有阅读进度",
-        upcoming, N.result);
+        upcoming, N.result, activity);
 }
 
 static int control_snapshot(char *buf, size_t cap) {
     if (!current_session(N.epoch)) return snprintf(buf, cap, "空间锁定或正在切换；AI 无权读取。");
+    char activity[512]; ink_activity_card_snapshot(activity, sizeof activity);
     char ssid[64];
     state_text("wifi.ssid", ssid, sizeof ssid);
     int n = snprintf(buf, cap,
@@ -731,7 +738,7 @@ static int control_snapshot(char *buf, size_t cap) {
     const char *actions = child() ? "动作：settings.set、system.set_volume、notify.read、shell.close。"
                                   : "动作：settings.set、system.set_volume、notify.read、shell.members、shell."
                                     "settings、shell.network、shell.more、shell.close。";
-    if (n >= 0 && (size_t) n < cap) n += snprintf(buf + n, cap - (size_t) n, "%s", actions);
+    if (n >= 0 && (size_t) n < cap) n += snprintf(buf + n, cap - (size_t) n, "%s%s；shell.tasks。", actions, activity);
     return n < 0 ? 0 : (size_t) n < cap ? n : (int) cap - 1;
 }
 static bool control_key(ink_key_t key, bool lng) {
@@ -813,6 +820,8 @@ static void draw_control(void) {
         ink_shell_bind(s, "shell.settings", NULL);
     }
     y += head + INK_GAP_L;
+    int activity_height = ink_activity_card_draw(N.control, y);
+    y += activity_height;
     ink_ui_slider(N.control, "亮度", (int) ink_setting_get("display.light") / 10, INK_MARGIN, y, width(),
                   slider_changed, (void *) "display.light");
     y += INK_SLIDER + INK_GAP_M;
@@ -1562,6 +1571,7 @@ static const ink_setting_def_t SETTINGS[] = {
 int ink_shell_ai_init(void);
 
 int ink_shell_init(void) {
+    if (ink_activity_card_init() != 0) return -1;
     if (ink_search_init() != 0) return -1;
     if (ink_settings_pages_init() != 0) return -1;
     if (ink_boot_flow_init() != 0) return -1;
@@ -1571,4 +1581,11 @@ int ink_shell_init(void) {
         return -1;
     if (ink_settings_watch("", changed, NULL, INK_EXEC_UI)) return -1;
     return ink_state_watch("", changed, (void *) 1, INK_EXEC_DIRECT);
+}
+
+void ink_shell_activity_refresh(void) {
+    if (!current_session(N.epoch)) return;
+    ink_ui_content_changed();
+    if (N.home && N.home_page == 1) draw_home_content();
+    if (N.control) draw_control();
 }
