@@ -1,6 +1,6 @@
 # privacy-records 执行报告
 
-基线：`2228df7de99de9fea15fddc22868a0de1caae770`。分支：`claude/codex-privacy-records`。状态：实现及定向验证完成，正在跑全量与内存检查。
+基线：`2228df7de99de9fea15fddc22868a0de1caae770`。分支：`claude/codex-privacy-records`。状态：实现及定向验证完成，首轮全量已跑；补齐接口契约清单后重跑全量，内存检查待运行。
 
 ## 验收表
 
@@ -27,11 +27,13 @@
 ## 和设计不一致的
 
 - `Records` 用“我／孩子”而非画板的示例姓名；件数为真实合成夹具，其他类显示实际缺口。保留期限仅承诺活动记录，大人 1 年、孩子 180 天，不照抄画板里尚无实现的期限或自动物理删除。
-- 对照分数待最终截图重算。字号按规范放大，灰色按现有主题，未为分数改变规格；SetPrivacy 沿用框架分页，AiMemory 沿用任务指定的不可用状态。
+- 【实测】`tools/ui_compare.py --build build --design "$INK_DESIGN" --out build/privacy-records-compare --scenes Records SetPrivacy AiLog AiMemory --reuse`：Records 57.446、SetPrivacy 36.133、AiLog 28.666、AiMemory 28.311，单位均为 /255，四屏均未达到 12。字号按规范放大，灰色按现有主题，未为分数改变规格；SetPrivacy 沿用框架分页，AiLog 用真实夹具内容且沿用既有列表，AiMemory 沿用任务指定的不可用状态。截图和三列对照在 `build/privacy-records-compare/`。
 
 ## 改过的已有测试
 
 - `tests/settings_b.c` 的 25 条活动遍历：从 Records 点进 AiLog，再用 `ai.pages.next` 遍历；原来在 Records 使用 `family.next` 和“更早记录”的预期改为新导航合同。保留全部 25 条可达断言、JSON 可读断言及持久化检查；截图名改为 AiLog25。
+
+- `tests/integration/ai_surface.c` 的能力契约清单：登记 `activity.clear`（必填 `member`）和 `shell.runtime_records`（无参数）；`shell.records`、`shell.ai_log` 从无参数改为可选参数。对应产品接口已改变，保留原有“能力必须入表”和 schema 必填项检查。首轮全量据此检出 5 项旧契约预期，已按实际接口修正。
 
 ## 要用户定的
 
