@@ -1348,3 +1348,8 @@ target_sources(ink_system PRIVATE system/ui/shell/ai_pages.c)
 ink_sim_executable(sim-ai-pages tests/ai_pages.c)
 target_link_libraries(sim-ai-pages PRIVATE ink_apps ink_system)
 add_test(NAME ai-pages COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/ai_pages.py --build ${CMAKE_BINARY_DIR})
+
+ink_sim_executable(sim-storage-usage tests/storage_usage/storage_usage.c tests/storage_usage/boundary.c)
+target_link_libraries(sim-storage-usage PRIVATE ink_apps ink_system)
+add_test(NAME storage-usage COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/storage_usage/run.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(storage-usage PROPERTIES TIMEOUT 180 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")

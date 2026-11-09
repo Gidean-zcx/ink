@@ -423,7 +423,9 @@ static const ink_cap_t FILE_CAPS[] = {
 };
 
 int ink_transfer_caps_init(void);
+int ink_storage_usage_caps_init(void);
 int ink_file_caps_init(void) {
     int r = ink_cap_register(FILE_CAPS, (int)(sizeof FILE_CAPS / sizeof FILE_CAPS[0]));
-    return r ? r : ink_transfer_caps_init();
+    if (!r) r = ink_transfer_caps_init();
+    return r ? r : ink_storage_usage_caps_init();
 }
