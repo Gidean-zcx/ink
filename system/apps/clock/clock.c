@@ -79,7 +79,7 @@ static void bind_row(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, i
         ink_ui_line(slot, "", INK_FONT_HEADING, INK_WEIGHT_REGULAR, INK_GAP_L, INK_GAP_XS, w - INK_PRIMARY - 2 * INK_GAP_L);
         ink_ui_line(slot, "", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_GAP_L, INK_LINE_HEADING + INK_GAP_XS, w - INK_PRIMARY - 2 * INK_GAP_L);
     }
-    char note[112]; snprintf(note, sizeof note, "%s%s%s", a->title, a->title[0] ? " · " : "", repeat);
+    char note[128]; snprintf(note, sizeof note, "%s%s%s", a->title, a->title[0] ? " · " : "", repeat);
     lv_label_set_text(lv_obj_get_child(slot, 1), time); lv_label_set_text(lv_obj_get_child(slot, 2), note);
     lv_obj_t *track = lv_obj_get_child(lv_obj_get_child(slot, 0), 1), *knob = lv_obj_get_child(track, 0);
     lv_obj_set_style_bg_color(track, a->enabled ? ink_ui_ink() : ink_ui_paper(), 0);
