@@ -148,7 +148,8 @@ static void backup_reply(void *ctx, const ink_receipt_t *rc) {
         ink_json_str(j, ink_json_find(j, 0, "phase"), phase, sizeof phase);
         durable = ink_json_eq(j, ink_json_find(j, 0, "durable"), "true");
         text = !strcmp(phase, "none") ? "还没有备份" : !strcmp(phase, "saved") ?
-            (durable ? "已备份" : "等待服务器保存回执") : !strcmp(phase, "failed") ? "备份或恢复失败" : "备份或恢复正在进行";
+            (durable ? "已备份" : "等待服务器保存回执") : !strcmp(phase, "done") ? "已恢复" :
+            !strcmp(phase, "failed") ? "备份或恢复失败" : "备份或恢复正在进行";
     }
     osal_free(j); snprintf(S.backup, sizeof S.backup, "%s", text); refresh();
 }
