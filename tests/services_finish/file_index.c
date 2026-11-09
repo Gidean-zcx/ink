@@ -2,6 +2,7 @@
 #include <sys/stat.h>
 
 static uint32_t proof[3];
+unsigned ink_test_file_index_count(void);
 static const char *const names[] = {"one.PNG", "nested/two.jpg", "song.OPUS", "note.txt", "other.bin", "second.md"};
 
 static uint32_t find(const char *root, const char *name, ink_fs_type_t type) {
@@ -143,15 +144,17 @@ static void reboot_and_swap(bool swap) {
 
 static void capacity(void) {
     char path[80];
-    for (int i = 0; i <= INK_FS_INDEX_MAX; i++) {
+    unsigned existing = ink_test_file_index_count();
+    for (unsigned i = 0; i <= INK_FS_INDEX_MAX - existing; i++) {
         snprintf(path, sizeof path, "/me/capacity/SYNTH_%04d.txt", i);
         CHECK(ink_fs_write_atomic(path, "X", 1) == 0, "capacity fixture %d", i);
     }
     uint32_t cursor = 0; ink_fs_entry_t e;
-    CHECK(ink_fs_index("/me/capacity", INK_FS_ANY, &cursor, &e) == INK_FS_ERR_INDEX_FULL, "513 files honestly exceed 512-entry limit");
+    CHECK(ink_fs_index("/me/capacity", INK_FS_ANY, &cursor, &e) == INK_FS_ERR_INDEX_FULL, "one extra file honestly exceeds the device index limit");
     CHECK(ink_fs_lookup(1, &e) == 0, "full index keeps previously assigned ids");
     uint32_t old = e.id;
-    CHECK(ink_fs_remove(e.path) == 0, "free one index slot");
+    int removed = ink_fs_remove(e.path);
+    CHECK(removed == 0, "free one index slot (%d)", removed);
     cursor = 0;
     CHECK(ink_fs_index("/me/capacity", INK_FS_ANY, &cursor, &e) == 1 && ink_fs_lookup(old, &e) == INK_FS_ERR_NOT_FOUND, "full index recovers without reusing deleted id");
 }

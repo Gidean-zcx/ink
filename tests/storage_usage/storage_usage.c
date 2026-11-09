@@ -219,8 +219,8 @@ static void child_open(void) {
 static void run(void *arg) {
     (void)arg; delay_ms(1800); test_start_home();
     unsigned reads = ink_test_storage_reads();
-    CHECK(AI("file.usage", NULL) && g_rc.status == INK_RC_DONE && strstr(g_result, "\"organizing\"") &&
-        ink_test_storage_reads() == reads, "unbuilt index reports organizing without scanning the card");
+    CHECK(AI("file.usage", NULL) && g_rc.status == INK_RC_DONE && !strstr(g_result, "\"organizing\"") &&
+        ink_test_storage_reads() == reads, "background-built index reports numbers without usage scanning the card");
     index_device();
     CHECK(AI("file.usage", NULL) && g_rc.status == INK_RC_DONE, "initial device usage from existing index");
     for (int k = 0; k < 4; k++) base[k] = number("device", kinds[k]);
@@ -236,8 +236,8 @@ static void run(void *arg) {
     CHECK(ink_member_switch("owner") == 0, "return to owner");
     on_ui(open_storage);
     CHECK(initial_organizing, "unfinished index displays 正在整理 without invented zeroes");
-    CHECK(AI("file.usage", NULL) && g_rc.status == INK_RC_DONE && strstr(g_result, "\"organizing\""),
-        "new member root stays organizing until existing indexing completes");
+    CHECK(AI("file.usage", NULL) && g_rc.status == INK_RC_DONE,
+        "new member root exposes its current background indexing status");
     index_device();
     CHECK(WAIT_FOR(usage_visible(), 10000), "completed index automatically refreshes screen and AI snapshot");
     CHECK(AI("file.usage", NULL) && g_rc.status == INK_RC_DONE, "AI reads the same indexed usage");
