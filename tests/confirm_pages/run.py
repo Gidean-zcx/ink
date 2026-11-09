@@ -12,11 +12,11 @@ SCENES = ('ConfirmWeb', 'ConfirmParent', 'ConfirmCall', 'ConfirmSetting', 'Confi
 p = argparse.ArgumentParser(description=__doc__)
 p.add_argument('--build', type=Path, required=True)
 p.add_argument('--scene', choices=SCENES)
-p.add_argument('--mutant', choices=('ai-source',))
+p.add_argument('--mutant', choices=('ai-source', 'queue-reject', 'queue-target'))
 p.add_argument('--baseline')
 a = p.parse_args()
 build = a.build.resolve()
-tag = 'ai-source' if a.mutant else 'baseline' if a.baseline else 'current'
+tag = a.mutant or ('baseline' if a.baseline else 'current')
 area = build / 'test-out' / ('confirm-pages-' + tag)
 shutil.rmtree(area, ignore_errors=True)
 area.mkdir(parents=True)
@@ -28,12 +28,23 @@ if a.mutant or a.baseline:
             key, value = line.split(' = ', 1)
             flags[key] = shlex.split(value)
     link = shlex.split((build / 'CMakeFiles/sim-confirm-pages.dir/link.txt').read_text())
-    if a.mutant:
+    if a.mutant == 'queue-reject':
+        source = (ROOT / 'tests/confirm_pages/pages.c').read_text()
+        guard = 'if (i == 1) { read_all(tokens[i]); press("确认"); }'
+        assert source.count(guard) == 1, 'mutation must change exactly the second queue answer'
+        source_file = area / 'pages.c'
+        source_file.write_text(source.replace(guard, 'if (i == 1) { read_all(tokens[i]); press("取消"); }'))
+        defines, replace = [], 'pages.c.o'
+    elif a.mutant:
         source = (ROOT / 'system/policy/confirm.c').read_text()
-        guard = 'src != INK_SRC_TOUCH && src != INK_SRC_KEY'
-        assert source.count(guard) == 1, 'mutation must remove exactly the human-source check'
+        if a.mutant == 'ai-source':
+            guard, replacement = 'src != INK_SRC_TOUCH && src != INK_SRC_KEY', 'false'
+        else:
+            guard = 'if (ink_cap_call(h->cap->id, &h->args, &o) == 0) return;'
+            replacement = 'if (!strcmp(h->cap->id, "test.stress_page")) { ink_args_init(&h->args); ink_args_int(&h->args, "n", 12); }\n    ' + guard
+        assert source.count(guard) == 1, 'mutation must change exactly one confirmation guard or dispatch'
         path = area / 'confirm.c'
-        path.write_text(source.replace(guard, 'false'))
+        path.write_text(source.replace(guard, replacement))
         source_file = ROOT / 'tests/confirm_pages/boundary.c'
         defines = ['-DINK_TEST_CONFIRM_SOURCE=' + json.dumps(str(path))]
         replace = 'boundary.c.o'
@@ -43,7 +54,8 @@ if a.mutant or a.baseline:
         source_file, defines, replace = path, [], None
     obj = area / 'replacement.o'
     subprocess.run([link[0], *flags['C_DEFINES'], *defines, *flags['C_INCLUDES'], *flags['C_FLAGS'],
-                    '-I' + str(ROOT / 'system/ui/shell'), '-c', str(source_file), '-o', str(obj)], cwd=build, check=True)
+                    '-I' + str(ROOT / 'system/ui/shell'), '-I' + str(ROOT / 'tests/confirm_pages'),
+                    '-c', str(source_file), '-o', str(obj)], cwd=build, check=True)
     if replace:
         index = next(i for i, part in enumerate(link) if part.endswith(replace))
         link[index] = str(obj)

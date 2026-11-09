@@ -14,12 +14,13 @@ extern void test_confirm_request(const ink_json_t *j);
 static char scene[32], decision[24], status[24];
 static uint32_t result_token;
 static int runs, px, py;
+static int64_t executed_n;
 static const char *wanted;
 static bool enabled;
 static volatile int pin_done;
 static int pin_result;
 static void pin_told(void *ctx, int result, uint32_t wait) { (void)ctx; (void)wait; pin_result = result; pin_done++; }
-static void effect(ink_call_t *c) { (void)c; runs++; }
+static void effect(ink_call_t *c) { ink_args_get_int(&c->args, "n", &executed_n); runs++; }
 static const ink_cap_t FIXTURES[] = {
     {.id="test.parent_page", .title="移除合成家人？", .ask="合成家人的备忘、录音和进度都会删掉，找不回来。", .ask_by_hand=true,
      .parent_pin=true, .effect=INK_FX_LOCAL_WRITE, .child_ok=true, .exec=INK_EXEC_BG, .run=effect},
@@ -30,6 +31,7 @@ static const ink_cap_t FIXTURES[] = {
 static const ink_setting_def_t SETTING = {.id="test.confirm_page", .title="合成高风险规则", .type=INK_SET_BOOL, .ask_by_hand=true};
 static void result(void *ctx, const char *id, const ink_args_t *a) {
     (void)ctx; (void)id; int64_t token = 0;
+    status[0] = 0;
     ink_args_get_int(a, "token", &token); result_token = (uint32_t)token;
     ink_args_get_str(a, "decision", decision, sizeof decision);
     ink_args_get_str(a, "status", status, sizeof status);
@@ -122,9 +124,11 @@ static void ai_cannot_answer(uint32_t token) {
 }
 static void check_snapshot(void) {
     view();
-    CHECK(strstr(g_snap, scene) && strstr(g_snap, "家人=owner") && strstr(g_snap, "确认编号="), "%s has its own member-bound AI snapshot (%s)", scene, g_snap);
+    CHECK(strstr(g_snap, scene) && strstr(g_snap, "家人=owner") && strstr(g_snap, "确认编号="), "%s has its own member-bound AI snapshot (top=%s)", scene, g_top);
 }
 static void queue_test(void) {
+    int before = runs;
+    executed_n = -1;
     uint32_t tokens[4];
     for (int i = 0; i < 4; i++) tokens[i] = ask(i + 10);
     CHECK(AI("test.stress_page", "{\"n\":99}") && g_rc.status == INK_RC_REJECTED, "fifth request is rejected without replacing the queue");
@@ -135,18 +139,23 @@ static void queue_test(void) {
         if (i == 1) { read_all(tokens[i]); press("确认"); }
         else press("取消");
         CHECK(WAIT_FOR(result_token == tokens[i], 10000), "each queue item gets its own result");
+        CHECK(!strcmp(decision, i == 1 ? "accepted" : "rejected") && (i == 1 ? !strcmp(status, "done") : !status[0]),
+              "queue item %d has the expected decision and execution status (%s/%s)", i, decision, status);
+        CHECK(runs == before + (i >= 1) && executed_n == (i >= 1 ? 11 : -1),
+              "only the second queued object executes: item=%d runs=%d n=%lld", i, runs - before, (long long)executed_n);
     }
+    CHECK(runs == before + 1 && executed_n == 11, "queue executes only n=11 once");
 }
 static void run(void *arg) {
     (void)arg; delay_ms(2000); test_start_home(); ink_power_hold(INK_NEED_AWAKE);
     CHECK(ink_cap_register(FIXTURES, 2) == 0 && ink_settings_define(&SETTING, 1) == 0, "synthetic fixtures register");
     CHECK(ink_cap_subscribe("confirm.result", result, NULL, INK_EXEC_DIRECT) == 0, "observe real confirmation results");
     ink_time_set(1793803620, false);
+    if (!strcmp(scene, "ConfirmParent") || !strcmp(scene, "ConfirmExpired")) {
+        CHECK(ink_member_set_pin("owner", NULL, "1234", pin_told, NULL) == 0 && WAIT_FOR(pin_done, 5000) && pin_result == INK_PIN_OK, "set a synthetic parent password");
+    }
     if (!strcmp(scene, "ConfirmWeb") || !strcmp(scene, "ConfirmExpired")) {
         ink_hub_demand(); CHECK(WAIT_FOR(ink_hub_online() && ink_hub_member_matches("owner", ink_hub_member_epoch(), ink_hub_connection()), 30000), "synthetic hub is connected");
-    }
-    if (!strcmp(scene, "ConfirmParent")) {
-        CHECK(ink_member_set_pin("owner", NULL, "1234", pin_told, NULL) == 0 && WAIT_FOR(pin_done, 5000) && pin_result == INK_PIN_OK, "set a synthetic parent password");
     }
     if (!strcmp(scene, "ConfirmExpired")) {
         uint32_t token = ask(0);
@@ -155,6 +164,25 @@ static void run(void *arg) {
         char args[80]; snprintf(args, sizeof args, "{\"token\":%u,\"delta\":0}", token);
         CHECK(AI("confirm.page", args) && g_rc.status == INK_RC_INVALID, "expired explanation remains a human page");
         press("关闭"); view(); CHECK(strcmp(g_top, "ConfirmExpired"), "close removes the expired page");
+        token = ask(1);
+        CHECK(WAIT_FOR(result_token == token, 62000) && !strcmp(decision, "expired"), "another request really expires");
+        view(); CHECK(!strcmp(g_top, "ConfirmExpired"), "expired card is visible before interruption");
+        snprintf(g_hw.num, sizeof g_hw.num, "00000000000"); hw(HW_CALL, 0, 0);
+        CHECK(WAIT_FOR(!strcmp(active_state(), "call"), 15000), "synthetic incoming call interrupts");
+        hw(HW_HANGUP, 0, 0);
+        CHECK(WAIT_FOR(!strcmp(active_state(), "none"), 15000), "synthetic call ends");
+        view(); CHECK(strcmp(g_top, "ConfirmExpired") && g_snap[0], "expired card stays closed after interruption");
+        token = ask(2);
+        CHECK(WAIT_FOR(result_token == token, 62000) && !strcmp(decision, "expired"), "request expires before member handoff");
+        view(); CHECK(!strcmp(g_top, "ConfirmExpired"), "expired card is visible before locking");
+        key(HAL_KEY_POWER); CHECK(WAIT_FOR(ink_power_state() == INK_PWR_LOCKED, 5000), "lock expired card");
+        view(); CHECK(strcmp(g_top, "ConfirmExpired"), "locking closes expired overlay");
+        delay_ms(121000); key(HAL_KEY_POWER); view();
+        CHECK(!strcmp(g_top, "member_gate"), "late wake requires member choice (%s)", g_top);
+        press("小"); view();
+        CHECK(!strcmp(ink_member_current()->id, "kid"), "touch selects the child");
+        CHECK(strcmp(g_top, "ConfirmExpired") && g_snap[0], "child has an unobstructed nonempty AI snapshot (%s)", g_top);
+        CHECK(!strstr(g_snap, "shop.example.com") && !strstr(g_snap, "家人=owner"), "child snapshot excludes the old confirmation");
     } else for (int operation = 0; operation < 3; operation++) {
         uint32_t token = ask(operation); check_snapshot(); ai_cannot_answer(token);
         if (operation == 0 && strcmp(scene, "ConfirmParent")) screenshot();
@@ -177,8 +205,8 @@ static void run(void *arg) {
             if (!strcmp(scene, "ConfirmSetting")) CHECK(ink_setting_get(SETTING.id) == 1, "accepted setting changes");
             if (!strcmp(scene, "ConfirmParent") || !strcmp(scene, "StressConfirm")) CHECK(runs == 1, "one accepted fixture executes once");
         } else if (operation == 1) {
-            if (!strcmp(scene, "ConfirmParent")) { read_all(token); press("输入密码"); key(HAL_KEY_HOME); }
-            else press("取消");
+            if (!strcmp(scene, "ConfirmParent")) { read_all(token); press("输入密码"); press("1"); }
+            press("取消");
             CHECK(WAIT_FOR(result_token == token, 5000) && !strcmp(decision, "rejected"), "human rejection completes");
         } else {
             CHECK(WAIT_FOR(result_token == token, 62000) && !strcmp(decision, "expired"), "each kind expires");
@@ -189,6 +217,10 @@ static void run(void *arg) {
         if (operation && !strcmp(scene, "ConfirmSetting")) CHECK(ink_setting_get(SETTING.id) == 1, "rejected and expired settings stay unchanged");
         if (operation && (!strcmp(scene, "ConfirmParent") || !strcmp(scene, "StressConfirm"))) CHECK(runs == 1, "rejected and expired fixtures never execute");
         quiet();
+    }
+    if (!strcmp(scene, "ConfirmParent")) {
+        uint32_t token = ask(3); read_all(token); press("输入密码"); key(HAL_KEY_HOME);
+        CHECK(WAIT_FOR(result_token == token, 5000) && !strcmp(decision, "rejected") && runs == 1, "HOME still rejects from the password page without execution");
     }
     if (!strcmp(scene, "StressConfirm")) queue_test();
     ink_probe_count("test.finished");

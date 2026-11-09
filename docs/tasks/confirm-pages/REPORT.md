@@ -1,5 +1,38 @@
 # confirm-pages 开发报告
 
+## 复查后的修复
+
+2026-11-09：三项中级问题均已修复；复查没有严重、高级或低级问题。以下为本轮结果，后文保留初次交付记录。
+
+| 问题 | 修复与回归 | 反向对照 |
+| --- | --- | --- |
+| CP-R1-01 | 【实测】确认卡订阅已有成员、电源和打断状态，在 UI 执行器复用 `hidden()` / `close_card()` 收起过期卡。真实过期后，来电结束不再恢复旧卡；锁屏 121 秒、唤醒后触摸选孩子，旧卡消失，孩子的 AI 快照非空且没有旧确认内容 | 只换回受审确认卡，`ConfirmExpired` 失败 2 条、退出 1，分别检出打断后遗留和孩子空快照 |
+| CP-R1-02 | 【实测】密码页增加可触摸的“取消”，复用 `on_answer` 的拒绝路径；输入一位后取消不执行。错误密码、正确密码、密码遮蔽及 HOME 拒绝仍通过 | 只换回受审确认卡，`ConfirmParent` 失败 1 条、退出 1，检出触摸取消未拒绝 |
+| CP-R1-03 | 【实测】逐项检查回执 token、decision、status，以及执行次数和实际参数；只有第二项 `n=11` 执行一次 | 第二项改按取消：失败 5 条、退出 1；真正把执行参数替换成 `n=12`：失败 4 条、退出 1 |
+
+【实测】普通专项六场景共 546 条断言通过；内部 RAM 最低余量为 42,200 字节（新增来电回归），高于原预算 32,768 字节。密码页截图已实际查看，取消、说明、密码提示与数字键均可见，没有重叠。仅去掉人类来源检查的原反例仍失败 16 条、退出 1。
+
+【实现】本轮产品只改 `system/ui/shell/confirm_card.c`，11 行新增、1 行删除；相对原任务基线产品文件共 147 行新增、18 行删除，加 CMake 注册 5 行，即使把增删都算入也只有 170 行，低于 300 行。新增机制：无；复用已有状态通知、UI 执行器和拒绝路径，没有新任务、轮询、队列或服务接口。
+
+已有测试调整：`tests/confirm_pages/pages.c` 保留原 HOME 取消检查并新增触摸取消，原有断言未放宽；回执夹具每次清空可选的 `status`，避免沿用上条结果；失败诊断只打印页面名，避免长中文快照被截成无效 UTF-8。`pages.script` 的合成卡从短信套餐改为语音套餐，以支持真实来电；结束时间从 240 秒改为 420 秒，容纳三次真实过期和锁屏 121 秒，未增加宿主等待或修改产品超时。
+
+环境跳过原因已定位：普通构建 Python 缺少 `pytest==8.4.2`、`pytest-asyncio==1.2.0`、`aiohttp==3.12.15`、`PyYAML==6.0.3`。`$INK_DEPS/hub/.venv/bin/python` 已具备这些锁定版本和 Python 3.11.15，构建选择该 `INK_HUB_PYTHON`；测试设置 `PYTHONPATH="$PWD/hub"`，已确认加载本工作树的中枢源码。没有安装或升级依赖，没有修改依赖目录。
+
+全量与 ASan/UBSan 验证进行中；生成能力表校验按用户补充留给合并会话，不修改或掩盖该检查。
+
+可重跑的专项与反例（命令均加 `INK_KEEP_EVIDENCE=1 taskpolicy -c utility`，Python 使用 `$INK_DEPS/build-deps/pyenv/bin/python`）：
+
+```sh
+python tests/confirm_pages/run.py --build build
+python tests/confirm_pages/run.py --build build --baseline 132c3969 --scene ConfirmExpired
+python tests/confirm_pages/run.py --build build --baseline 132c3969 --scene ConfirmParent
+python tests/confirm_pages/run.py --build build --mutant queue-reject --scene StressConfirm
+python tests/confirm_pages/run.py --build build --mutant queue-target --scene StressConfirm
+python tests/confirm_pages/run.py --build build --mutant ai-source --scene ConfirmSetting
+```
+
+反例仅编译构建目录副本。证据为 `build/confirm-review-negative-*.log`；两份旧卡结果另存 `build/test-out/confirm-review-before-expired/`、`confirm-review-before-parent/`，队列反例在 `confirm-pages-queue-reject/`、`confirm-pages-queue-target/`。
+
 基线：`3fce2beea07d9e25a814cd24c64e8d5305ea9222`。状态：本地交付；功能、全量、内存和视觉检查均已跑完，未全通过的项目如下。未推送。
 
 ## 验收表

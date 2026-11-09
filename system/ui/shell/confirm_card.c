@@ -31,6 +31,7 @@ static struct {
 
 static void told_job(void *arg);
 static void close_card(void);
+static void on_answer(lv_event_t *e);
 
 static const char *page_name(void) {
     if (C.expired) return "ConfirmExpired";
@@ -97,7 +98,7 @@ static void parent_page(void) {
     int w = INK_CANVAS_W - 2 * INK_MARGIN;
     int title_h = ink_ui_text_height(C.now.title, INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, w);
     int body_h = ink_ui_text_height(C.now.detail, INK_FONT_NOTE, INK_WEIGHT_REGULAR, w);
-    int y = y0 - ink_ui_line_height(INK_FONT_LIST) - 3 * INK_GAP - body_h - title_h - INK_MARGIN;
+    int y = y0 - ink_ui_line_height(INK_FONT_LIST) - 4 * INK_GAP - INK_CONTROL - body_h - title_h - INK_MARGIN;
     if (y < 0) y = 0;
     lv_obj_set_style_bg_opa(C.pad, LV_OPA_TRANSP, 0);
     lv_obj_add_flag(lv_obj_get_child(C.pad, 0), LV_OBJ_FLAG_HIDDEN);
@@ -106,6 +107,8 @@ static void parent_page(void) {
     lv_obj_move_background(panel);
     ink_ui_label(panel, C.now.title, INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, INK_MARGIN, INK_MARGIN, w);
     ink_ui_label(panel, C.now.detail, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, INK_MARGIN + title_h + INK_GAP, w);
+    ink_ui_pill(C.pad, "取消", INK_MARGIN, y0 - ink_ui_line_height(INK_FONT_LIST) - 2 * INK_GAP - INK_CONTROL,
+                w, INK_CONTROL, false, on_answer, NULL);
     ink_ui_hint_obj(C.card.root, INK_REFRESH_FLASH_UI);
 }
 
@@ -158,6 +161,11 @@ static bool hidden(void) {
     ink_state_get_str(ink_state_find("interrupt.active"), active, sizeof active);
     return !ink_member_space_open() || strcmp(C.owner.member, ink_member_current()->id) || C.owner.epoch != ink_member_epoch() ||
         ink_power_state() == INK_PWR_LOCKED || (active[0] && strcmp(active, "none"));
+}
+
+static void state_changed(void *ctx, int h, const char *id) { /* UI task */
+    (void)ctx; (void)h; (void)id;
+    if (C.expired && hidden()) close_card();
 }
 
 static void draw_page(void);
@@ -347,6 +355,8 @@ int ink_shell_confirm_card_init(void) {
         .input = "{\"type\":\"object\",\"properties\":{\"token\":{\"type\":\"integer\",\"minimum\":1},\"delta\":{\"type\":\"integer\",\"minimum\":-1,\"maximum\":1}},\"required\":[\"token\",\"delta\"]}", .run = page_action};
     if (ink_cap_register(&PAGE, 1) != 0) return -1;
     if (ink_cap_subscribe("confirm.result", result, NULL, INK_EXEC_UI) != 0) return -1;
+    if (ink_state_watch("member.", state_changed, NULL, INK_EXEC_UI) != 0 || ink_state_watch("power.state", state_changed, NULL, INK_EXEC_UI) != 0 ||
+        ink_state_watch("interrupt.active", state_changed, NULL, INK_EXEC_UI) != 0) return -1;
     static const ink_confirm_presenter_t P = {.show = show, .exec = INK_EXEC_UI};
     ink_confirm_set_presenter(&P);
     return 0;
