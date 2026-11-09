@@ -7,16 +7,16 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| B9-01 | 定向通过 | 【实测】`audit9-bt-ai` 修前 6 条失败，修后通过；AI 关、开、配对连接后的快照和可见标签一致 | `ctest --test-dir build -R '^audit9-' --output-on-failure -j2` |
-| B9-02 | 定向通过 | 【实测】`audit9-ime-layout` 修前 22 条失败，修后通过；三种输入／字号下按钮完整可触摸，长词在展开页完整显示 | 同上 |
-| B9-03 | 定向通过 | 【实测】`audit9-font-coverage` 修前 508 项含缺字，修后 23,783 项全部有字形 | 同上 |
-| 全量与内存检查 | 待运行 | 普通、ASan/UBSan | 待补 |
+| B9-01 | 通过 | 【实测】`audit9-bt-ai` 修前 6 条失败，修后通过；AI 关、开、配对连接后的快照和可见标签一致 | `ctest --test-dir build -R '^audit9-' --output-on-failure -j2` |
+| B9-02 | 通过 | 【实测】`audit9-ime-layout` 初次 22 条失败；加入固定位置检查后反向 25 条失败，修后通过；三种输入／字号下按钮完整可触摸，长词在展开页完整显示 | 同上 |
+| B9-03 | 通过 | 【实测】`audit9-font-coverage` 修前 508 项含缺字，修后 23,783 项全部有字形 | 同上 |
+| 全量与内存检查 | 普通通过，内存待运行 | 【实测】普通 295/295，213.20 秒，退出 0 | `ctest --test-dir build --output-on-failure -j2` |
 | S31 | 待构建 | 仅编译，不操作设备 | 待补 |
 | 资源与重复生成 | 通过 | 【实测】1,048,549 B；重复生成字节相同；90 条首选 75、前五 83 | `python tests/ime_lexicon/run.py --build build` |
 
 ## 没做到的
 
-全量、内存检查及 S31 尚在验证中。没有操作设备；没有运行原生 Linux CI。
+内存检查及 S31 尚在验证中。没有操作设备；没有运行原生 Linux CI。
 
 ## 和设计不一致的
 
@@ -44,7 +44,7 @@
 
 ## 执行记录
 
-- 修前对照：三个新测试全部失败，CTest 退出 8；日志 `build/audit9/ctest-before.log`，截图及指标 `build/audit9/before-bt/`、`before-layout/`。
+- 修前对照：三个新测试全部失败；日志 `build/audit9/ctest-before.log`，截图及指标 `build/audit9/before-bt/`、`before-layout/`。
 - 以上及后续构建／测试命令均由 `taskpolicy -c utility` 启动，构建和 CTest 最多 `-j2`；本机路径只留在忽略目录。
 
 ## 修复与词库计量
@@ -67,3 +67,12 @@
 【实测】新文件 SHA-256：`c27739624e271c1a12afc97bddafa06dc3e4b915a5d3163e9858a2dc82823cf8`；加载 879.95 ms、词库 PSRAM 1,048,549 B；固定测试集不代表真实输入分布。前后质量日志分别为 `build/audit9/quality-before.log` 和 `build/audit9/ctest-fix.log` 对应保留的 `ime-lexicon-*/summary.json`。
 
 【实测】已目视核对三种折叠栏和长词展开页截图，见 `build/test-out/audit9-sim-audit9-ime-layout/clean-*.png`；带面板残影的 `snap-*.png` 同目录保留，不将干净渲染当作真屏测量。
+
+- 【实测】修后普通全量构建及 CTest 均退出 0，295/295；日志 `build/audit9/build-full.log`、`ctest-full.log`。
+- 【实测】反向驱动退出 0，分别恢复指定基线的两个 UI 对象及未过滤生成器；三个验收均重新失败（子命令退出 1）：蓝牙 6 条、候选栏 25 条、字体缺字 508 项。证据 `build/audit9/reverse/{summary,commands}.json`。仅替换忽略目录中的构建对象，不改产品源码；逆向脚本不注册 CTest，不让浅克隆 CI 依赖历史。
+- 【实现】产品源码净增 19 行（蓝牙、键盘、宿主生成器三文件共增加 26、删除 7），低于 120 行；不改排序权重，不加常驻分配。CMake 仅加测试及字符集依赖。
+
+```sh
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" \
+  tests/audit9/reverse.py --build build --baseline 5f2648809457522b0901366d54e5fa52c18ec9ee
+```
