@@ -27,4 +27,4 @@ for phase in ("create", "restart"):
           f"fail={metrics.get('test.fail', 0)}, finished={metrics.get('test.finished', 0)}; {out.relative_to(ROOT)}", flush=True)
     if result.returncode or metrics.get("test.fail", 0) or metrics.get("test.finished", 0) != 1:
         raise SystemExit(result.stdout + result.stderr)
-print("PASS: real touch, AI snapshots, repeat masks, deletion, ringing and restart persistence")
+print("PASS: visible labels, touch CRUD and toggles, input limits, member isolation, ringing and restart persistence")

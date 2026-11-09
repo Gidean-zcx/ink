@@ -62,6 +62,7 @@ static const struct {
     {"shell.wifi_next", NULL}, {"shell.wifi_prev", NULL}, {"shell.wifi_pick", "index"},
     {"clock.prev", NULL}, {"clock.next", NULL}, {"clock.new", NULL}, {"clock.open", "id"},
     {"clock.draft", ""}, {"clock.focus", NULL}, {"clock.save", NULL},
+    {"alarm.update", "id"},
     {NULL, NULL},
 };
 

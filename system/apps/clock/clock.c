@@ -18,9 +18,9 @@ static struct {
     ink_alarm_t draft, rows[3];
     lv_obj_t *name;
     char owner[16], ids[3][24], values[3][160], args[3][48];
-    char time[16], repeat[64], next[32], object[24], edit_args[17][64];
-    ink_ui_field_spec_t fields[4];
-    ink_ui_action_spec_t actions[17];
+    char time[16], repeat[64], next[32], object[24], edit_args[18][64], error[96];
+    ink_ui_field_spec_t fields[5];
+    ink_ui_action_spec_t actions[18];
 } C INK_PSRAM_BSS;
 static const char *const DAYS[] = {"周日", "周一", "周二", "周三", "周四", "周五", "周六"};
 static const ink_ui_action_spec_t LIST_ACTIONS[] = {
@@ -31,7 +31,7 @@ static const ink_ui_action_spec_t LIST_ACTIONS[] = {
 static const ink_ui_page_spec_t LIST = {.id = "Clock", .title = "时钟", .object = {"clock:list", 1},
     .actions = LIST_ACTIONS, .action_count = 3};
 static ink_ui_page_spec_t EDIT = {.id = "ClockAlarm", .title = "闹钟", .object = {"clock:draft", 1},
-    .fields = C.fields, .field_count = 4, .actions = C.actions, .action_count = 17};
+    .fields = C.fields, .field_count = 5, .actions = C.actions, .action_count = 18};
 
 static void repeat_text(const ink_alarm_t *a, char *out, size_t cap) {
     unsigned days = a->repeat == INK_REPEAT_WEEKDAYS ? a->weekdays : 0;
@@ -62,6 +62,11 @@ static void button(lv_obj_t *root, int i, int x, int y, int w, bool primary) {
 static void name_changed(lv_event_t *e) {
     (void)e; snprintf(C.draft.title, sizeof C.draft.title, "%s", ink_textfield_text(C.name));
 }
+static void toggled(lv_event_t *e) {
+    ink_alarm_t *a = &C.rows[(uintptr_t)lv_event_get_user_data(e)]; char args[64]; ink_receipt_t rc;
+    snprintf(args, sizeof args, "{\"id\":%u,\"enabled\":%s}", (unsigned)a->id, a->enabled ? "false" : "true");
+    ink_cap_invoke_json("alarm.update", args, INK_SRC_TOUCH, ink_ui_content_version(), &rc);
+}
 static void bind_row(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, ink_ui_action_spec_t *act, void *ctx) {
     (void)ctx;
     unsigned at = (unsigned)(index % 3); ink_alarm_t *a = &C.rows[at]; int cursor = 0;
@@ -75,7 +80,9 @@ static void bind_row(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, i
     *act = (ink_ui_action_spec_t){.id = C.ids[at], .label = "查看闹钟", .capability = "clock.open", .args_json = C.args[at], .object = field->object, .enabled = true};
     int w = INK_CANVAS_W - 2 * INK_MARGIN;
     if (!lv_obj_get_child_count(slot)) {
-        ink_ui_toggle(slot, "", a->enabled, INK_GAP, INK_GAP_L, w - 2 * INK_GAP, NULL, NULL);
+        lv_obj_t *row = ink_ui_toggle(slot, "", a->enabled, INK_GAP, INK_GAP_L, w - 2 * INK_GAP, NULL, NULL);
+        lv_obj_t *track = lv_obj_get_child(row, 1); lv_obj_add_flag(track, LV_OBJ_FLAG_CLICKABLE);
+        lv_obj_add_event_cb(track, toggled, LV_EVENT_CLICKED, (void *)(uintptr_t)at);
         ink_ui_line(slot, "", INK_FONT_HEADING, INK_WEIGHT_REGULAR, INK_GAP_L, INK_GAP_XS, w - INK_PRIMARY - 2 * INK_GAP_L);
         ink_ui_line(slot, "", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_GAP_L, INK_LINE_HEADING + INK_GAP_XS, w - INK_PRIMARY - 2 * INK_GAP_L);
     }
@@ -109,24 +116,22 @@ static void create_list(lv_obj_t *screen, void *arg) {
 static void create_detail(lv_obj_t *screen, void *arg) {
     (void)arg; memset(C.actions, 0, sizeof C.actions);
     snprintf(C.object, sizeof C.object, "alarm:%u", (unsigned)C.draft.id); EDIT.object.id = C.object;
-    EDIT.actions = C.draft.id ? &C.actions[16] : C.actions; EDIT.action_count = C.draft.id ? 1 : 16;
+    EDIT.actions = C.actions; EDIT.action_count = C.draft.id ? 18 : 16;
     ink_shell_statusbar(screen, true); ink_shell_topbar(screen, C.draft.id ? "闹钟" : "加闹钟");
     snprintf(C.time, sizeof C.time, "%02u:%02u", C.draft.hour, C.draft.min); repeat_text(&C.draft, C.repeat, sizeof C.repeat);
     C.fields[0] = (ink_ui_field_spec_t){.id = "time", .role = "text", .label = "时间", .value = C.time};
     C.fields[1] = (ink_ui_field_spec_t){.id = "repeat", .role = "text", .label = "重复", .value = C.repeat};
     C.fields[2] = (ink_ui_field_spec_t){.id = "name", .role = "textbox", .label = "名称", .value = C.draft.title};
     C.fields[3] = (ink_ui_field_spec_t){.id = "enabled", .role = "text", .label = "开关", .value = C.draft.enabled ? "开启" : "关闭"};
+    C.fields[4] = (ink_ui_field_spec_t){.id = "error", .role = "status", .label = "提示", .value = C.error};
     int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP, w = INK_CANVAS_W - 2 * INK_MARGIN;
     ink_ui_line(screen, C.time, INK_FONT_HEADING, INK_WEIGHT_REGULAR, INK_MARGIN + INK_CONTROL, y, w - 2 * INK_CONTROL);
     if (C.draft.id) {
-        ink_ui_line(screen, C.draft.title, INK_FONT_SUBTITLE, INK_WEIGHT_MEDIUM, INK_MARGIN, y + INK_PRIMARY, w);
-        ink_ui_line(screen, C.repeat, INK_FONT_LIST, INK_WEIGHT_REGULAR, INK_MARGIN, y + 2 * INK_PRIMARY, w);
-        ink_ui_notice(screen, "暂不支持修改和开关闹钟", y + 3 * INK_PRIMARY);
         char args[48]; snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)C.draft.id);
         action(16, "删除闹钟", "alarm.cancel", args, true);
-        button(screen, 16, INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_CONTROL, w, false); return;
+        action(17, C.draft.enabled ? "关闭" : "开启", "clock.draft", C.draft.enabled ? "{\"enabled\":false}" : "{\"enabled\":true}", true);
     }
-    const char *labels[] = {"时−", "时＋", "分−", "分＋"};
+    const char *labels[] = {"时-", "时＋", "分-", "分＋"};
     for (int i = 0; i < 4; i++) {
         char args[48]; int value = i < 2 ? (C.draft.hour + (i ? 1 : 23)) % 24 : (C.draft.min + (i == 3 ? 1 : 59)) % 60;
         snprintf(args, sizeof args, "{\"%s\":%d}", i < 2 ? "hour" : "minute", value);
@@ -135,7 +140,7 @@ static void create_detail(lv_obj_t *screen, void *arg) {
     }
     y += 2 * INK_CONTROL + INK_GAP;
     action(4, "输入名称", "clock.focus", NULL, true);
-    ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .enter = INK_ENTER_DONE, .initial = C.draft.title, .hint = "闹钟名称", .max = sizeof C.draft.title};
+    ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .enter = INK_ENTER_DONE, .initial = C.draft.title, .hint = "闹钟名称", .max = sizeof C.draft.title - 1};
     C.name = ink_textfield_create(screen, &cfg, NULL, NULL, false);
     lv_obj_set_pos(C.name, ink_ui_px(INK_MARGIN), ink_ui_px(y)); lv_obj_set_width(C.name, ink_ui_px(w));
     ink_textfield_bind_short(C.name, &EDIT, &C.fields[2], &C.actions[4]); lv_obj_add_event_cb(C.name, name_changed, LV_EVENT_VALUE_CHANGED, NULL);
@@ -150,8 +155,13 @@ static void create_detail(lv_obj_t *screen, void *arg) {
         char args[48]; snprintf(args, sizeof args, "{\"weekdays\":%u}", C.draft.weekdays ^ (1u << i)); action(8 + i, DAYS[i], "clock.draft", args, true);
         button(screen, 8 + i, INK_MARGIN + (i % 4) * (w + INK_GAP_M) / 4, y + (i / 4) * (INK_CONTROL + INK_GAP_M), (w - 3 * INK_GAP_M) / 4, C.draft.weekdays & (1u << i));
     }
+    if (C.draft.id) {
+        button(screen, 17, INK_MARGIN + 3 * (w + INK_GAP_M) / 4, y + INK_CONTROL + INK_GAP_M, (w - 3 * INK_GAP_M) / 4, false);
+        button(screen, 16, INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_CONTROL, (w - INK_GAP) / 2, false);
+    }
+    ink_ui_notice(screen, C.error, y + 2 * (INK_CONTROL + INK_GAP_M));
     action(15, "保存闹钟", "clock.save", NULL, true);
-    button(screen, 15, INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_CONTROL, w, true);
+    button(screen, 15, INK_MARGIN + (C.draft.id ? (w + INK_GAP) / 2 : 0), INK_CANVAS_H - INK_MARGIN - INK_CONTROL, C.draft.id ? (w - INK_GAP) / 2 : w, true);
 }
 static void destroy_list(void) { C.list = NULL; }
 static void destroy_detail(void) { C.name = NULL; }
@@ -174,26 +184,28 @@ static const ink_activity_t DETAIL = {.name = "ClockAlarm", .app = "clock", .cre
 static void navigate(ink_call_t *c) {
     if (!strcmp(c->cap->id, "clock.prev") || !strcmp(c->cap->id, "clock.next")) { if (C.list) ink_ui_list_turn(C.list, !strcmp(c->cap->id, "clock.next") ? 1 : -1); return; }
     C.draft = (ink_alarm_t){.kind = INK_ALARM, .hour = 7, .enabled = true};
+    C.error[0] = 0;
     if (!strcmp(c->cap->id, "clock.open")) { int64_t id = 0; ink_args_get_int(&c->args, "id", &id); if (!find_alarm((uint32_t)id, &C.draft)) { c->rc.status = INK_RC_STALE; return; } }
     ink_ui_push(&DETAIL, NULL);
 }
 static void draft(ink_call_t *c) {
-    if (C.draft.id) { c->rc.status = INK_RC_REJECTED; return; }
     int64_t v;
     if (ink_args_get_int(&c->args, "hour", &v)) C.draft.hour = (uint8_t)v;
     if (ink_args_get_int(&c->args, "minute", &v)) C.draft.min = (uint8_t)v;
     if (ink_args_get_int(&c->args, "weekdays", &v)) { C.draft.weekdays = (uint8_t)v; C.draft.repeat = v ? INK_REPEAT_WEEKDAYS : INK_REPEAT_NONE; }
+    ink_args_get_bool(&c->args, "enabled", &C.draft.enabled);
     ink_ui_redraw();
 }
 static void focus(ink_call_t *c) { if (!C.name || ink_textfield_short_focus(C.name)) c->rc.status = INK_RC_STALE; }
 static void save(ink_call_t *c) {
-    if (C.draft.id) { c->rc.status = INK_RC_REJECTED; return; }
     ink_args_t *args = osal_calloc(1, sizeof *args, OSAL_MEM_EXTERNAL);
     if (!args) { c->rc.status = INK_RC_FAILED; return; }
     ink_args_init(args); ink_args_int(args, "hour", C.draft.hour); ink_args_int(args, "minute", C.draft.min);
     ink_args_int(args, "weekdays", C.draft.weekdays); ink_args_str(args, "title", C.draft.title);
-    ink_cap_invoke("alarm.set", args, c->src, 0, &c->rc); osal_free(args);
+    if (C.draft.id) { ink_args_int(args, "id", C.draft.id); ink_args_bool(args, "enabled", C.draft.enabled); }
+    ink_cap_invoke(C.draft.id ? "alarm.update" : "alarm.set", args, c->src, 0, &c->rc); osal_free(args);
     if (c->rc.status == INK_RC_DONE) ink_ui_pop();
+    else { snprintf(C.error, sizeof C.error, "%s", c->rc.status == INK_RC_INVALID ? "名称最多15个字，请缩短后保存" : "没能保存，请重试"); ink_ui_redraw(); }
 }
 static const ink_cap_t CAPS[] = {
     {.id = "clock.prev", .title = "闹钟上一页", .activity = "Clock", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
@@ -201,17 +213,17 @@ static const ink_cap_t CAPS[] = {
     {.id = "clock.new", .title = "加闹钟", .activity = "Clock", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "clock.open", .title = "查看闹钟", .activity = "Clock", .effect = INK_FX_NAVIGATE, .child_ok = true,
      .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1}},\"required\":[\"id\"]}", .run = navigate},
-    {.id = "clock.draft", .title = "选择新闹钟的时间和重复日期", .activity = "ClockAlarm", .effect = INK_FX_NAVIGATE, .child_ok = true,
-     .input = "{\"type\":\"object\",\"properties\":{\"hour\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":23},\"minute\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":59},\"weekdays\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":127}}}", .run = draft},
+    {.id = "clock.draft", .title = "选择闹钟的时间、重复日期和开关", .activity = "ClockAlarm", .effect = INK_FX_NAVIGATE, .child_ok = true,
+     .input = "{\"type\":\"object\",\"properties\":{\"hour\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":23},\"minute\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":59},\"weekdays\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":127},\"enabled\":{\"type\":\"boolean\"}}}", .run = draft},
     {.id = "clock.focus", .title = "输入闹钟名称", .activity = "ClockAlarm", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = focus},
-    {.id = "clock.save", .title = "保存新闹钟", .activity = "ClockAlarm", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = save}
+    {.id = "clock.save", .title = "保存闹钟", .activity = "ClockAlarm", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = save}
 };
 static void changed(void *ctx, int h, const char *id) {
     (void)ctx; (void)h; (void)id;
     if (!ink_ui_page_current()) return;
     if (!strcmp(ink_ui_page_name(), "Clock")) ink_ui_redraw();
     else if (!strcmp(ink_ui_page_name(), "ClockAlarm") && C.draft.id) {
-        if (find_alarm(C.draft.id, &C.draft)) ink_ui_redraw(); else ink_ui_pop();
+        ink_alarm_t current; if (!find_alarm(C.draft.id, &current)) ink_ui_pop();
     }
 }
 int ink_clock_init(void) {
