@@ -84,6 +84,7 @@ flowchart TB
 | 升级 | `update.status`、`update.check`、`update.download`（移动数据下要人来） | `system.upgrade`、`system.upgrade_from_card`（底座设计 §6.2：AI 不能发起升级，安装时设备几分钟不能用；清单里也没有） | `update.state`、`update.version`、`update.progress` | `update.auto_download` | `update.available`、`update.result` | 写槽、回滚、自检 |
 | 系统 | `state.list`、`settings.list`、`settings.get`、`settings.set`、`caps.domains`、`caps.find`、`system.undo`、`system.home`、`system.full_refresh`、`system.set_volume`；`power.set_saving`（运行期最多 60 秒锁屏，不改原设置）；`system.reboot`、`system.shutdown`、`system.factory_reset`（系统级，确认） | — | `power.state`、`power.saving`、`battery.level`、`battery.charging`、`battery.low` | `power.lock_after_s` | `battery.low` | 电源轨、睡眠 |
 | 文件缩略图 | `file.thumb`（参数 id；返回宽、高与按行排列的 `gray4` 灰阶；每个十六进制字符对应一个像素） | — | — | — | — | 文件编号与内容版本接线，复用有界缩略图缓存 |
+| 儿童用时策略（kid-2 任务） | `member.time_get`（读孩子的每日时长、今日加时与用时；孩子只读自己）；`member.time_set`（每日分钟数，0 表示不限）、`member.time_add`（今天加几分钟），修改和加时均需家长密码 | 密码内容（仅设备本地输入） | `member.time_up` | —（存成员记录，不按孩子新增设置） | — | 单调时钟计使用时长、锁屏暂停、本地零点清零、成员记录检查点 |
 
 自动检查之外，每轮审计人工对照这张表和代码（[审计任务说明 K 节](../audits/codex-audit-prompt.md)）。
 

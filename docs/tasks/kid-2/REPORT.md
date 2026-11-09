@@ -14,7 +14,7 @@
 
 ## 没做到的
 
-- 最终全量和内存检查执行中。未进行实机测试。
+- 普通全量仍有能力总表过期一项待主会话统一生成；内存检查执行中。未在 Linux 或实机上运行。
 - 检查点每分钟落盘，锁屏、换人及策略调用也保存。没有测试检查点之间突然断电，最多一分钟的未落盘用时不保证恢复。
 - SetKid 按任务边界由 settings-b 接线；没有声称其第四页快照在本任务完成。
 
@@ -53,7 +53,16 @@
 
 - SetKid 的“每天能用多久”接 `member.time_get`、`member.time_set`；`id` 是孩子编号，读自己可省略，`minutes` 为 0～1440，0 表示不限；当天加时用 `member.time_add`。修改与加时进入现有家长密码确认。
 - 主会话统一更新 `docs/system/ui-dependencies.md` 对应状态，并重新生成 `docs/system/capabilities.md`（新增 10 个能力与 member.time_up 状态）。遵守总规则第 7 节，没有改这两份共享文档，也没有改 settings_family.c。
+- 服务设计 §1.3 仅追加任务书要求的三项用时能力和状态登记，没有改设计规则；相应文档检查已复测通过。
 
 ## 结束检查
 
-待补最终命令、全量结果、内存结果和隐私检查。
+【实测】普通全量首次 5 项失败：两处旧名称断言（共三项测试）、新增能力清单未登记、生成能力总表过期。更新名称和追加清单后，最终全量 237 项通过、3 项既有跳过、2 项文档检查失败（242 项，445.53 秒）。补充服务设计接口登记后，`services-mid-capability-doc` 单独复测通过。剩余失败是按任务要求未改的生成能力总表。
+
+【实测】四项反向对照均命中指定断言：家长密码标记、锁屏暂停、音量钳位、受限应用准入；不是编译失败或缺资源导致的失败。专项与三个页面的最低内部 RAM 余量均为 47,736 字节，分配失败为 0。
+
+构建配置使用总规则 §5 的全部依赖参数，保留 `INK_WERROR=ON`；内存构建另加 `INK_SANITIZE=ON`。所有构建 `taskpolicy -c utility cmake --build <build 或 build-asan> -j2`；全量 `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir <目录> --output-on-failure -j2`。命令输出保留在各构建目录的 kid-2 日志中。
+
+`tools/ui_compare.py --build build --design "$INK_DESIGN" --out build/kid-2-compare --reuse --scenes KidTimeUp KidLimit KidControl` 已运行。能力总表在 `build/kid-2-capabilities.md` 临时生成并用 `--check` 校验通过，没有写共享文件。
+
+内存结果和隐私检查待补。
