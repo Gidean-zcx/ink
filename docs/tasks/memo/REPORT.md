@@ -6,17 +6,17 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 【实测】定向通过 | 新建、编辑、删除、撤销、清单触摸勾选与 AI 勾选；另一进程重启核查；1,800 字节正文完整保存 | `tests/memo/run.py --build build --visual` |
-| 2 | 【实测】定向通过 | 注入数据服务拒绝写入，进入真实失败页，正文和长文草稿保留；提示位于编辑区和键盘上方；触摸重试及 AI 保存都落盘 | 同上 |
+| 1 | 【实测】通过 | 新建、编辑、删除、撤销、清单触摸勾选与 AI 勾选；另一进程重启核查；1,800 字节正文完整保存 | `tests/memo/run.py --build build --visual` |
+| 2 | 【实测】通过 | 注入数据服务拒绝写入，进入真实失败页，正文和长文草稿保留；提示位于编辑区和键盘上方；触摸重试及 AI 保存都落盘 | 同上 |
 | 3 | 【实测】通过；反例有效 | 成人／孩子各自存储；故意把两处成员集合打开固定到成人后，空列表及禁止删除断言失败，执行完成标记仍出现 | `tests/memo/run.py --build build --mutant member` |
 | 4 | 【实测／实现】通过 | 六页 JSON 快照均放入实际 3,072 字节 AI 上下文，包含真实失败说明；触摸与 AI 调用同一组 `memo.*` 能力；已有 AI surface 全量检查通过 | 定向命令、`integration-ai-surface` |
-| 5 | 【实测】普通功能检查通过；文档检查失败；内存待完成 | 运行时能力目录一致；普通全量 224/225，仅禁止修改的能力文档过期；产品 288 行 | 完整验证命令 |
+| 5 | 【实测】两套全量均 224/225；共享文档待同步 | 运行时能力目录一致；普通及 ASan／UBSan 唯一失败均为受保护的生成文档；无内存诊断；产品 288 行 | 完整验证命令 |
 
 ## 没做到的
 
-- 普通全量 224/225，没有全绿：唯一失败是本任务禁止更新的共享能力文档；ASan／UBSan 正在执行。
-- 没有实机或 Linux／gcc 运行证据；不做录音页、离线待整理页。
-- 上限沿用长文编辑的 4,095 字节；清单最多 32 行，最多 200 条记录（含可撤销删除的数据）。没有新增清空历史、独立清单项删除按钮或跨应用提醒／短信建议。
+- 普通及 ASan／UBSan 全量均 224/225，没有全绿：唯一失败是总规则第 7 节禁止本任务更新的共享能力文档，留合并主会话生成；未跳过该项或修改检查器。
+- 没有实机或 Linux／gcc 运行证据。按任务排除录音页 `MemoRecord` 和离线待整理页 `MemoPending`。
+- 上限沿用长文编辑的 4,095 字节；清单最多 32 行，最多 200 条记录（含可撤销删除的数据），集合沿用数据服务默认的 256 KiB 字节上限。没有新增清空历史、独立清单项删除按钮或跨应用提醒／短信建议。
 
 ## 和设计不一致的
 
@@ -76,9 +76,13 @@ taskpolicy -c utility cmake --build build -j2
 INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/memo/run.py --build build --visual
 PYTHONPATH="$PWD/hub" PYTHONDONTWRITEBYTECODE=1 INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.py --build build --design "$INK_DESIGN" --out build/memo-compare --scenes Memo MemoDetail MemoEdit MemoChecklist MemoUndo MemoSaveFail --reuse
+taskpolicy -c utility cmake --build build-asan -j2
+PYTHONPATH="$PWD/hub" PYTHONDONTWRITEBYTECODE=1 INK_KEEP_EVIDENCE=1 UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
 ```
 
 配置按总规则第 5 节，启用 `INK_WERROR=ON`，字体、Python 与 LVGL 来自只读依赖目录。另指定现有 SDL2／ImGui 源码镜像及依赖齐全的 `INK_HUB_PYTHON=$INK_DEPS/hub/.venv/bin/python`，没有安装或升级依赖。
+
+ASan 配置只改构建目录为 `build-asan` 并加 `INK_SANITIZE=ON`。已实查两份 CMake cache 的字体、依赖、Python 和 Werror 参数一致，且系统对象实际使用 `-fsanitize=address,undefined`。
 
 ## 反向对照
 
@@ -94,3 +98,11 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/ui_compare.p
 - 【实测】普通构建退出 0；最终全量 CTest 退出 8，224/225、零跳过，285.86 秒。唯一失败 `capability-table-doc`：新增十项能力及源码行号使受保护的生成文档过期，没有修改检查器或跳过该项。日志：`build/memo-final-build.log`、`build/memo-final-ctest.log`。
 - 【实测】运行时目录与代码生成预览完全一致：223 项能力、16 项设置；预览含 284 项能力／状态／设置定义。命令：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/capabilities.py --output build/memo-capabilities.md --runtime build/test-out/capability-table/capability-inventory.json`，退出 0。
 - 【实测】首轮全量 221/225 的三个功能失败均已处理：两个重复工具快照由产品去重修复；应用数量精确断言按新增备忘更新。四项相关检查（含 AI surface）定向和最终全量均通过，未改它们的资源门槛。首轮证据：`build/memo-first-ctest.log`；复查：`build/memo-existing-checks.log`。
+- 【实测】ASan／UBSan 配置和构建退出 0；全量 CTest 退出 8，224/225、零跳过，330.41 秒，同样仅 `capability-table-doc` 失败。无 AddressSanitizer 或未定义行为诊断。日志：`build-asan/memo-config.log`、`build-asan/memo-build.log`、`build-asan/memo-ctest.log`。
+- 【实测】普通及内存检查中的备忘三阶段均为 142／22／31 项断言，零告警、零预算违规，内部 RAM 总余量最低均 47,840 字节。最终证据：`build/memo-oskz1rxz/`、`build-asan/memo-nacf_vbm/`；汇总：`build/memo-final-summary.json`。没有抬高原来的 32,768 字节预算门槛。
+
+## 结束检查
+
+- 【实测】`git diff --check`、报告结构与本地链接检查通过；相对基线共 12 个相关文件，产品 288 行。受保护的共享文档、历史调研／审计资料及其它并行任务文件没有差异。
+- 【实测】按总规则第 6 节对基线至 HEAD 的完整差异扫描，本机路径及 MAC 模式零匹配，grep 退出 1；本次待提交报告同样零匹配。构建产物、截图、临时反例、设计稿均未提交。
+- 只在本地分支提交；未推送、未开 PR、未操作设备、未访问真实通信或付费接口。
