@@ -183,10 +183,94 @@ static void verify_phase(void) {
     switch_to("kid"); page("kid-reboot");
     CHECK(strstr(snap, "\"total\":1") && strstr(snap, "孩子测试") && !strstr(snap, "测试家人"), "child's isolated contacts survive reboot too");
 }
+static uint32_t editor_revision, confirmation_token;
+static char saved_args[768], confirmed_status[24];
+static volatile bool confirmation_finished;
+static void confirmed(void *ctx, const char *id, const ink_args_t *args) {
+    (void)ctx; (void)id;
+    int64_t token = 0;
+    if (ink_args_get_int(args, "token", &token) && (uint32_t)token == confirmation_token) {
+        ink_args_get_str(args, "status", confirmed_status, sizeof confirmed_status);
+        confirmation_finished = true;
+    }
+}
+static void inspect_editor(void) {
+    ink_rec_t record;
+    CHECK(ink_db_get(P.db, first_id, &record, NULL, 0) == INK_DB_OK, "editor fixture exists");
+    editor_revision = record.ver;
+    CHECK(P.form.object.revision == editor_revision, "editor snapshot targets the loaded record revision");
+    CHECK(ink_ui_context_snapshot(g_snap, sizeof g_snap, NULL) > 0, "versioned editor fits the production AI context");
+    snprintf(saved_args, sizeof saved_args, "%s", P.save_args);
+}
+static void inspect_stale_editor(void) {
+    CHECK(!strcmp(ink_ui_page_name(), "ContactEdit") && P.fields[0] &&
+          strstr(ink_textfield_text(P.fields[0]), "草稿"), "stale save retains the editor and unsaved draft");
+    CHECK(P.notice && strstr(lv_label_get_text(P.notice), "重新打开"), "stale save explains how to reload");
+}
+static void answer(const ink_confirm_view_t *pending, const char *status) {
+    confirmation_token = pending->token; confirmation_finished = false;
+    CHECK(ink_confirm_decide(pending->token, true, INK_SRC_TOUCH) == 0, "human accepts the held deletion");
+    CHECK(WAIT_FOR(confirmation_finished, 10000) && !strcmp(confirmed_status, status), "deletion receipt is %s", status);
+    quiet();
+}
+static void review_phase(void) {
+    open_list();
+    CHECK(put("复查联系人", "00000000001", 0), "create the review fixture"); first_id = result_id(); quiet();
+    snprintf(call_args, sizeof call_args, "{\"id\":%u}", (unsigned)first_id);
+    CHECK(AI("contacts.edit", call_args) && g_rc.status == INK_RC_DONE, "open the review editor"); quiet();
+    on_ui(inspect_editor);
+    if (!strcmp(phase, "stale")) {
+        CHECK(AI("contacts.name", NULL) && g_rc.status == INK_RC_DONE, "focus the existing name field"); quiet();
+        CHECK(AI("text.insert", "{\"text\":\"草稿\"}") && g_rc.status == INK_RC_DONE, "add an unsaved draft through the shared text service");
+        CHECK(AI("text.submit", NULL) && g_rc.status == INK_RC_DONE, "finish editing the draft"); quiet(); on_ui(inspect_editor);
+        CHECK(put("AI修改后的联系人", "00000000002", first_id), "AI updates while a draft is open"); quiet();
+        tap_label("保存联系人");
+        CHECK(read_contact(P.db, first_id, contact_name, contact_number) && !strcmp(contact_number, "00000000002"), "stale touch save preserves the AI update");
+        on_ui(inspect_stale_editor);
+        CHECK(AI("contacts.put", saved_args) && g_rc.status == INK_RC_STALE, "AI replay of the same old save also returns stale");
+        CHECK(BY_HAND("shell.back", NULL), "leave the stale draft"); quiet();
+        snprintf(call_args, sizeof call_args, "{\"id\":%u}", (unsigned)first_id);
+        CHECK(AI("contacts.edit", call_args) && g_rc.status == INK_RC_DONE, "explicitly reopen the current record"); quiet();
+        on_ui(inspect_editor);
+        CHECK(strstr(saved_args, "00000000002"), "reopened editor reads the latest number");
+        tap_label("保存联系人");
+        CHECK(!strcmp(ink_ui_page_name(), "PhoneContacts"), "a current-version save succeeds");
+    } else {
+        CHECK(ink_cap_subscribe("confirm.result", confirmed, NULL, INK_EXEC_DIRECT) == 0, "observe the real confirmation receipt");
+        tap_label("删除联系人");
+        ink_confirm_view_t pending[1];
+        CHECK(ink_confirm_list(pending, 1) == 1, "touch deletion creates a confirmation");
+        CHECK(strstr(pending[0].detail, "复查联系人") && strstr(pending[0].detail, "00000000001"), "confirmation identifies the persisted name and number");
+        CHECK(strstr(pending[0].detail, "删除联系人") && !strstr(pending[0].detail, "id：") && !strstr(pending[0].detail, "if_revision"), "confirmation uses plain Chinese instead of internal argument names");
+        CHECK(put("AI修改后的联系人", "00000000002", first_id), "AI updates while the old deletion waits"); quiet();
+        answer(pending, "stale");
+        CHECK(read_contact(P.db, first_id, contact_name, contact_number) && !strcmp(contact_number, "00000000002"), "old confirmation cannot delete the updated record");
+        CHECK(BY_HAND("shell.back", NULL), "leave the old deletion target"); quiet();
+        CHECK(AI("contacts.edit", call_args) && g_rc.status == INK_RC_DONE, "reload the updated deletion target"); quiet();
+        tap_label("删除联系人");
+        CHECK(ink_confirm_list(pending, 1) == 1, "hold a card for the current revision");
+        CHECK(put("AI修改后的联系人", "00000000002", first_id), "same-value rewrite still advances the record revision"); quiet();
+        answer(pending, "stale");
+        CHECK(ink_db_get(P.db, first_id, NULL, NULL, 0) == INK_DB_OK, "version binding also rejects an equal-content rewrite");
+        CHECK(BY_HAND("shell.back", NULL), "return to the list before AI deletion"); quiet();
+        ink_rec_t record;
+        CHECK(ink_db_get(P.db, first_id, &record, NULL, 0) == INK_DB_OK, "read the current deletion target");
+        snprintf(saved_args, sizeof saved_args, "{\"id\":%u,\"if_revision\":%u,\"name\":\"AI修改后的联系人\",\"number\":\"00000000002\"}", (unsigned)first_id, (unsigned)record.ver);
+        CHECK(AI("contacts.delete", call_args) && g_rc.status == INK_RC_INVALID && !ink_confirm_list(pending, 1), "id alone cannot create an unidentifiable deletion card");
+        snprintf(call_args, sizeof call_args, "{\"id\":%u,\"if_revision\":%u,\"name\":\"不匹配的名字\",\"number\":\"00000000002\"}", (unsigned)first_id, (unsigned)record.ver);
+        CHECK(AI("contacts.delete", call_args) && g_rc.status == INK_RC_PENDING_CONFIRMATION && ink_confirm_list(pending, 1) == 1, "hold a request with a mismatched display name");
+        answer(pending, "stale");
+        CHECK(ink_db_get(P.db, first_id, NULL, NULL, 0) == INK_DB_OK, "a misleading description cannot authorize deletion");
+        CHECK(AI("contacts.delete", saved_args) && g_rc.status == INK_RC_PENDING_CONFIRMATION, "AI can request a bound deletion from the list");
+        CHECK(ink_confirm_list(pending, 1) == 1 && strstr(pending[0].detail, "AI修改后的联系人") && strstr(pending[0].detail, "00000000002"), "AI deletion card identifies the same current record");
+        answer(pending, "done");
+        CHECK(ink_db_get(P.db, first_id, NULL, NULL, 0) == INK_DB_ERR_NOT_FOUND, "a fresh human confirmation deletes its exact target");
+    }
+}
 static void run(void *arg) {
     (void)arg; vtk_host_call(read_phase, NULL);
     CHECK(WAIT_FOR(ink_member_space_open(), 10000), "the member space opens"); quiet();
-    if (!strcmp(phase, "write")) write_phase(); else verify_phase();
+    if (!strcmp(phase, "write")) write_phase(); else if (!strcmp(phase, "verify")) verify_phase(); else review_phase();
     CHECK(WAIT_FOR(ink_db_idle(), 10000), "no contact writes remain outstanding");
     ink_probe_count("test.finished");
 }
