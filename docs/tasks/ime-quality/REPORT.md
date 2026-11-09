@@ -6,9 +6,14 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 【实测】达到目标，待最终回归 | 原 90 条用例不变；简拼首选 4/16 → 12/16，前五 10/16 → 16/16；全拼 71/73、73/73 不变 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2 -R '^ime-lexicon$'` |
-| 2 | 【实测】专项通过，待最终回归 | 单次选择提升；全拼/简拼及前缀隔离；成人与儿童各自记忆；新进程重启保留；密码不学；513 个合成键验证 512 条限额及最近使用淘汰；AI 读取被拒绝 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2 -R '^ime-learning$'` |
-| 3 | 待验证 | 全量测试、ASan/UBSan、词库不超过 1 MB | 待补 |
+| 1 | 【实测】通过 | 原 90 条用例不变；简拼首选 4/16 → 12/16，前五 10/16 → 16/16；全拼 71/73、73/73 不变 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2 -R '^ime-lexicon$'` |
+| 2 | 【实测】通过 | 单次选择提升；全拼/简拼及前缀隔离；成人与儿童各自记忆；新进程重启保留；密码不学；513 个合成键验证 512 条限额及最近使用淘汰；AI 读取被拒绝 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2 -R '^ime-learning$'` |
+| 3 | 【实测】普通全量通过；内存检查进行中 | 普通全量 289/289，无跳过；词库 969,866 字节 | 见下方全量命令 |
+
+| 原测试集【实测，模拟器】 | 基线首选 | 完成版首选 | 基线前五 | 完成版前五 |
+| --- | --- | --- | --- | --- |
+| 全拼 73 条 | 71/73（97.26%） | 71/73（97.26%） | 73/73（100%） | 73/73（100%） |
+| 简拼 16 条 | 4/16（25%） | 12/16（75%） | 10/16（62.5%） | 16/16（100%） |
 
 ## 没做到的
 
@@ -30,7 +35,7 @@
 
 ## 顺手发现
 
-- 暂无。
+- 【实测】只编译原 `sim-ime-lexicon` 目标不会生成全部 UI 字体和图标，首次专项缺资源；按任务规则先全量构建后通过，未修改原目标依赖。
 
 ## 新增的机制
 
@@ -45,8 +50,19 @@
 
 - 开工：已核对 HEAD 与指定基线一致，工作区干净，分支为 `claude/codex-ime-quality`；已阅读任务规则（第 7 节优先）和任务书。
 - 简拼里程碑：【实测】基线专项通过；新词库专项通过，90 条合计首选 75 → 83、前五 83 → 89，未收录短句仍未命中。词库从 1,048,560 缩到 969,866 字节，同输入重复生成逐字节一致。基线与新候选证据分别为 `work/baseline-candidates.json`、`build/ime-lexicon-w_0xkvu6/dictionary-candidates.json`。
+- 【实测】基线与完成版的 25,678 个全拼键/词/频率项逐项相同，原测试集 73 条全拼的前五列表全部相同；结果 `work/full-pinyin-unchanged.txt`。词库 SHA-256 为 `f2e8f00f192c85a43ab1fd9810bdd9642a0e359e96dd2f22a74673f782cbf34b`。
 - 学习里程碑：【实现】引擎不变，文本服务增 18 / 删 14，合计 32/200 行。计数按拼音前缀和文字的哈希存储，同长度候选按次数优先，单次选择已可超越基础词频；计数封顶避免排序溢出。淘汰使用持久化顺序，不依赖墙钟是否设置或是否倒退。【实测】两个专项 2/2，学习证据在 `build/ime-learning-08f3nbeb/summary.json`。
 - 反向对照：【实测】只将生成器、人工词表和文本服务临时恢复为指定基线版本，保留全部新断言；两个专项均失败，CTest 退出 8。简拼回到 4/16、10/16，学习写入/重启/满额淘汰均有实际断言失败，四阶段都运行完成；证据 `work/reverse-tests.log`、`build/ime-learning-if50nvid/summary.json`。随后逐字节恢复实现，工作区核对无遗留，并完成 `-Werror` 全量构建。
+- 普通全量：【实测】289/289，431.85 秒，无跳过，退出 0；`INK_WERROR=ON`，构建和测试均为 `taskpolicy -c utility`、`-j2`。日志 `work/full-build.log`、`work/full-tests.log`。中枢测试用 `-DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"`，并指定当前检出的 `PYTHONPATH`。
+
+先按[总规则](../codex-rules.md) §5 配置（增加上述中枢 Python 参数），再执行：
+
+```sh
+taskpolicy -c utility cmake --build build -j2
+PYTHONPATH="$PWD/hub" INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
+taskpolicy -c utility cmake --build build-asan -j2
+PYTHONPATH="$PWD/hub" INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
+```
 
 ## 架构审视
 
