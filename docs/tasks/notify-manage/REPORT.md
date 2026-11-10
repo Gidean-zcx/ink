@@ -1,6 +1,6 @@
 # notify-manage 任务报告
 
-基线：`eec5d569be028b539e8778690c239a6947767864`。分支：`claude/codex-notify-manage`。状态：进行中。
+基线：`eec5d569be028b539e8778690c239a6947767864`。分支：`claude/codex-notify-manage`。状态：执行完成；共享生成能力表留给主会话更新。
 
 ## 验收表
 
@@ -9,17 +9,17 @@
 | 1a 逐条删除及重启 | 【实测】专项通过 | 已读／未读逐条删，其他通知与未读数正确，第二次启动不回来 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" -B tests/notify_manage.py --build build` |
 | 1b 短信渠道关闭及恢复 | 【实测】专项通过 | 真实模拟短信事件；关闭后仅短信收件，打开后恢复通知；偏好重启保留 | 同上 |
 | 1c AI 删除及渠道设置 | 【实测】专项通过 | AI 和触摸均使用既有 `notify.dismiss`、`notify.set_channel`，页面随结果更新 | 同上 |
-| 1d 孩子限制 | 【实测】专项通过 | 孩子不可打开渠道设置或调用渠道修改；可删除自己的通知，看不到成人收件箱 | 同上 |
-| 2a 原有通知、短信、电话、日历回归 | 【实测】通过 | 最终普通版相关测试通过，原测试未改 | 全量命令见下 |
+| 1d 孩子限制 | 【实测】专项通过 | 默认儿童权限不可打开渠道设置或调用渠道修改；可删除自己的通知，看不到成人收件箱 | 同上 |
+| 2a 原有通知、短信、电话、日历回归 | 【实测】通过 | 普通与 ASan 配置的相关原测试均通过，原测试未改 | 全量命令见下 |
 | 2b 全量 | 【实测】320/321，未全绿 | 唯一失败为受保护的共享能力表过期；原话见下 | 全量命令见下 |
-| 2c 内存检查 | 待验证 | — | — |
+| 2c 内存检查 | 【实测】320/321，未见内存诊断 | ASan+UBSan 全量完成，唯一失败仍为生成能力表；完整测试日志无 sanitizer 错误 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2` |
 | 2d S31 | 【实测】编译通过 | 退出 0，镜像 1,386,144 B，编译警告／错误均为 0；未上机 | `INK_DEPS="$INK_DEPS" taskpolicy -c utility bash ports/esp32s31/build.sh` |
 | 2e GCC | 【实测】通过 | `gcccheck: 5 compiled, 0 with findings`，无跳过 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" -B ../../tools/gcccheck.py build system/ui/shell/navigation.c system/services/notify/notify_caps.c system/services/notify/notify_service.c tests/notify_manage.c tests/integration/ai_surface.c` |
 | 3 中英文页面及快照 | 【实测】通过 | 八张截图及 JSON，含最大字号通知／渠道页；满页长正文符合生产 AI 缓冲 | 同 1a |
 
 ## 没做到的
 
-共享生成能力表按任务书留给主会话，导致 `capability-table-doc` 失败；不能声称全量全绿。内存检查仍在进行。未上机。
+共享生成能力表按任务书留给主会话，导致两轮 `capability-table-doc` 失败；不能声称全量全绿。临时生成版本与两种配置的运行时目录均一致。按任务限制未上机。
 
 ## 和设计不一致的
 
@@ -35,7 +35,7 @@
 
 ## 顺手发现
 
-根 CMake 中既有 `unit-s31-osal-ticks` 先于 sanitizer 选项定义，ASan 配置下仍不带检查标志；未扩大本任务范围修改。已核对三个产品变更文件和新专项测试均带 `-fsanitize=address,undefined`。
+根 CMake 中既有 `unit-s31-osal-ticks` 先于 sanitizer 选项定义，ASan 配置下仍不带检查标志；未扩大本任务范围修改。已核对 `build-asan/compile_commands.json`，三个产品变更文件和新专项测试均带 `-fsanitize=address,undefined`。
 
 ## 新增的机制
 
@@ -52,10 +52,10 @@
 - 【实测】工作区初始干净，HEAD 等于指定基线，已在独立任务分支。已读取任务书及总规则；构建和测试最多 `-j2`，使用 `taskpolicy -c utility`。
 - 产品代码含构建配置、译表合计 **+114/−22，改动 136 行，净增 92 行**；其中 `.c/.h` 为 +98/−22。低于 250 行预算，测试和报告未计入。
 - 【实测】最终专项 `main: exit=0, pass=263, fail=0, finished=1`、`restart: exit=0, pass=11, fail=0, finished=1`；最终 6 项相关回归见 `work/notify-final-focused.log`，检查计数见对应 `metrics.json`。八张截图和 JSON 均存在，最大通知快照 2782 B，小于生产缓冲 3072 B。
-- 【实测】`ui-scale: 50 files, 0 violations`；`gcccheck: 4 compiled, 0 with findings`，无跳过，日志 `work/notify-ui-scale.log`、`work/notify-gcccheck.log`。
+- 【实测】`ui-scale: 50 files, 0 violations`；`gcccheck: 5 compiled, 0 with findings`，无跳过，日志 `work/notify-ui-scale-final.log`、`work/notify-gcccheck-final.log`。
 - 【实现】删除放在每行右侧独立描边按钮，与打开区域留出间距，整颗按钮满足最小触控尺寸。按钮宽度随译文测量，避免英文挤压；不增加回收站或确认步骤，沿用现有单条删除能力的语义。
 - 【实现】渠道入口为“设置 → 声音 → 通知”，与提示行为相关；放在已有声音选项之后，主目录和既有控件位置保留，勿扰不重复。按实际登记表枚举系统、短信、电话、闹钟、提醒、下载、AI 七个渠道；更新发现／结果走系统，下载完成走下载（`update_service.c:507`、`:792`、`:939`），没有独立更新渠道。
-- 【实现】成人设置均不向孩子开放，渠道修改能力也收紧为相同规则；孩子自己的通知仍可读和删，数据和偏好按成员隔离。
+- 【实现】渠道设置沿用成人设置入口与默认儿童权限规则（`child_ok=false`）；孩子自己的通知仍可读和删，数据和偏好按成员隔离。
 
 截图前缀：`build/notify-manage-evidence/sim-notify-manage/main/`。
 
@@ -68,5 +68,8 @@
 - 为什么不能更小：任务涉及列表删除、成人渠道设置、共享变化通知和中英文快照，合计超过 100 行。看过仅补触摸回调的方案，不能覆盖 AI 修改及已读通知删除；新建详情页会多一套导航和生命周期。最终复用列表、设置分页、服务渠道表和总线，两处界面使用既有原子能力。
 - 【实测】最终 GCC 和 S31 均退出 0，日志 `work/notify-gcccheck-final.log`、`work/notify-s31-final.log`；S31 未出现 `warning:`／`error:`，镜像仍为 1,386,144 B。界面尺寸复核仍为 `ui-scale: 50 files, 0 violations`（`work/notify-ui-scale-final.log`）。
 - 【实测】普通全量原话：`99% tests passed, 1 tests failed out of 321`，`Total Test time (real) = 689.01 sec`；唯一失败 `136 - capability-table-doc (Failed)`，日志 `work/notify-ctest-final.log`。完成后仅新增空列表快照断言，产品代码未再改动；最终相关 6 项再次全过（`work/notify-final-focused.log`，20.15 秒），五组反向对照也再次命中。
+- 【实测】ASan/UBSan 全量原话：`99% tests passed, 1 tests failed out of 321`，`Total Test time (real) = 1482.22 sec`；唯一失败同上，日志 `work/notify-asan-ctest.log`。目录 `build-asan` 使用同一配置加 `INK_SANITIZE=ON`；本任务专项、原通知、短信、电话、日历及确定性测试均完成。扫描 `build-asan/Testing/Temporary/LastTest.log` 和全量输出，未发现 sanitizer 错误或 `runtime error:`。
+- 【实测】两种配置的临时生成能力表均与运行时一致：401 个能力、28 个设置；ASan 对照日志 `work/notify-capabilities-asan.log`。没有为了通过文档检查去改受保护文件。
+- 【实测】结束检查：`git diff --check` 退出 0；基线至 HEAD 的 `git diff --stat` 仅 11 个相关文件，无夹带；按总规则的隐私表达式扫描零匹配（grep 退出 1）。未提交构建产物、截图、设计稿或本机路径。
 
 全量命令：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`。配置按总规则，另加 `CMAKE_EXPORT_COMPILE_COMMANDS=ON`，`INK_HUB_PYTHON` 指向 `$INK_DEPS/hub/.venv/bin/python` 复用锁定的中枢测试依赖；不调整预算。
