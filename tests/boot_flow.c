@@ -68,14 +68,23 @@ static void inspect(void) {
         osal_free(page); osal_free(j);
     }
 }
+/* A snapshot is taken only of a settled scene. A periodic refresh can start right after the scene settled (the
+ * status-bar clock at a minute boundary: the restore scene reaches BootHello near 60 s); then wait for it to end
+ * rather than call the scene unpresented. Still a failure if it does not settle within the capture's 2 s. */
+static int snapshot_tries;
 static void snapshot_event(void *arg) {
-    if (!settled()) { CHECK(false, "all scene snapshots must be fully presented"); return; }
+    if (!settled()) {
+        if (++snapshot_tries < 150) { vtk_event_at(vtk_now() + SIM_MS(10), snapshot_event, arg); return; }
+        CHECK(false, "all scene snapshots must be fully presented");
+        return;
+    }
     sim_display_snapshot((const char *)arg); captured = true;
 }
 static void capture(const char *name) {
     if (!ready(name)) return;
     picture = name; on_ui(inspect);
     captured = false;
+    snapshot_tries = 0;
     vtk_event_at(vtk_now() + SIM_MS(1), snapshot_event, (void *)name);
     CHECK(WAIT_FOR(captured, 2000), "settled scene captured: %s", name);
     char metric[80]; snprintf(metric, sizeof metric, "test.snapshot.%s", name); ink_probe_count(metric);
