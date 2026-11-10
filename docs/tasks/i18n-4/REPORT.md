@@ -1,16 +1,21 @@
 # i18n-4 执行报告
 
-基线：`4eabca66395ff1da6610526d79e1c3dfde9cc98b`。工作分支：`claude/codex-i18n-4`。本报告随里程碑更新。
+本报告的实测均为模拟器或编译检查。
 
-产品代码目前新增 292 行、删除 256 行（按基线 diff 统计，包含构建文件，不含测试、文档和译文表），预算 300 行。为什么不能更小：需要覆盖 31 个服务、策略文件的既有文字；已将确认模板、设置回执和无线传输集中翻译，未增加产品机制。农历改用英文数字日期，日历仅加一处短日期适配，字号不变。
+基线：`4eabca66395ff1da6610526d79e1c3dfde9cc98b`。工作分支：`claude/codex-i18n-4`。实现提交：`550a1603`。
+
+产品代码新增 292 行、删除 256 行（按基线 diff 统计，包含构建文件，不含测试、文档和译文表），预算 300 行。为什么不能更小：需要覆盖 31 个服务、策略文件的既有文字；已将确认模板、设置回执和无线传输集中翻译，未增加产品机制。农历改用英文数字日期，日历仅加一处短日期适配，字号不变。
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 服务、策略英文及中文回切、排版、缺译计数 | 部分实测通过，继续补查 | 【实测】新增服务测试通过，10 张实页截图，缺译计数为 0；原有 i18n 两项通过 | `ctest --test-dir build -R '^i18n-(services\|tables\|lang)$' --output-on-failure -j2` |
-| 2 原有测试、全量测试、内存检查、S31、gcccheck | 验证中 | 首轮全量 348 项，唯一失败为已修复的源码行号检查；内存、S31 和 gcccheck 待运行 | 待记录 |
-| 3 文件迁移计数、保留中文原因、英文截图 | 进行中 | 正在清点 | 待记录 |
+| 1 服务、策略英文及中文回切、排版、缺译计数 | 部分通过；未覆盖全部状态页面 | 【实测】代表性页面 9 张 English、1 张中文截图，布局检查通过，`95 pass / 0 fail / i18n.missing=0`；范围外 UI 仍有中文，见下文 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R i18n --output-on-failure -j2` |
+| 2a 原有测试及全量 | 通过 | 【实测】`100% tests passed out of 348`，401.44 秒，无跳过；中枢契约包含 `147 passed` | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2` |
+| 2b 内存检查 | 通过 | 【实测】独立 ASan/UBSan 全量 `100% tests passed out of 348`，953.53 秒，无跳过 | 同配置加 `-DINK_SANITIZE=ON`，在 `build-asan` 执行全量 ctest，`-j2` |
+| 2c S31 | 通过 | 【实测】构建退出 0；镜像 3,219,954 字节；`.rodata.I18N_EN` 在 flash，只读表 5,096 字节 | `INK_S31_LIGHT_SLEEP=OFF taskpolicy -c utility bash ports/esp32s31/build.sh` |
+| 2d gcccheck | 通过 | 【实测】`gcccheck: 35 compiled, 0 with findings` | `taskpolicy -c utility python3 ../../tools/gcccheck.py build $(git diff --name-only 4eabca66..HEAD -- '*.c')` |
+| 3 文件迁移计数、保留中文原因、英文截图 | 已记录，详见下文 | 【实现】31 个源文件；英文表由 322 条增至 637 条 | 译文生成器及下表 |
 
 | 文件 | 新迁移键数（文件内去重） |
 | --- | ---: |
@@ -48,9 +53,33 @@
 
 计数为新增的字面量键；无线传文件为经集中翻译入口处理的 26 个键。确认卡显示标题另在显示时翻译，能力表原文不改。`datastore.c`、`interrupt.c`、`notify_caps.c` 无需新迁移；`pinyin.c` 的汉字是输入内容，保留。其它服务文件没有待迁移中文。
 
+故意保留：能力表、数据库和状态的 AI 元数据；短信的内部判断值“收到”；已有目录标识；可编辑的家人名字；拼音字典和离线识别的中文原话。它们不是系统显示文案，翻译会改变内容或判断。无线传输保留原结果供内部比较，HTTP 回复和状态输出各在原入口调用 `TR()`。已有英文错误详情保留原样。农历的中文月份、日期字样仅用于中文分支，英文走整句数字模板。
+
+反向对照：【实测】`sim-i18n-services-negative` 仅关闭确认模块翻译，返回 1，`93 pass / 2 fail`，准确检出确认卡标题、说明和设置模板未翻译；正常版本 `95 pass / 0 fail / i18n.missing=0`。printf 与具名占位符集合均已校验。命令：`taskpolicy -c utility cmake --build build --target sim-i18n-services-negative -j2`，再运行 `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/i18n_services.py --build build --negative`。
+
+构建使用总规则的字体、Python 和 LVGL 参数，普通与内存检查均启用 `INK_WERROR=ON`；另外选用已有的 `-DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"`。测试前设置 `PYTHONDONTWRITEBYTECODE=1`、`PYTHONPATH="$PWD/hub/src"`，使三个中枢测试实际运行；未安装或升级依赖。所有构建及全量测试顺序执行，均为 utility 优先级，最多 `-j2`。S31 环境按 `ports/esp32s31/README.md`，`INK_UPSTREAM="$INK_DEPS/../ink-hw/upstream/Metalio-E-INK4-Plus"`。
+
+English 模式截图（生成并保留的实际帧；其中界面自身的遗留中文不属于本次迁移）：
+
+```text
+build/test-out/sim-i18n-services/snap-ConfirmCall-en.png
+build/test-out/sim-i18n-services/snap-ConfirmSetting-en.png
+build/test-out/sim-i18n-services/snap-Notifications-en.png
+build/test-out/sim-i18n-services/snap-Channels-en.png
+build/test-out/sim-i18n-services/snap-Channels2-en.png
+build/test-out/sim-i18n-services/snap-Battery-en.png
+build/test-out/sim-i18n-services/snap-IncomingCall-en.png
+build/test-out/sim-i18n-services/snap-ActiveCall-en.png
+build/test-out/sim-i18n-services/snap-Alarm-en.png
+```
+
+中文回切帧：`build/test-out/sim-i18n-services/snap-Notifications-zh.png`。英文低电量通知缩短为 `%d%%. Charge now`，在原字号和行宽内完整显示；其它验证帧未改字号或布局。
+
+命令日志保留于 `work/ctest-final.log`、`work/asan-ctest.log`、`work/s31-build.log`、`work/gcccheck.log`、`work/negative.log` 和 `work/i18n-services-final.log`。构建产物及截图未提交。收尾已核对基线差异统计；隐私模式扫描无匹配（grep 退出 1）。
+
 ## 没做到的
 
-尚未声称整个系统界面都已英文。截图中确认卡标题、拒接、闹钟电源键说明、低电量专页和公历格式仍来自范围外的 UI 文件；更新、备份等全部状态页面尚无逐页英文截图。服务生成文字的迁移和代表性页面已验证。
+验收 1 未全部满足：截图中确认卡标题、拒接、闹钟电源键说明、低电量专页和公历格式仍来自范围外的 UI 文件；更新、备份等全部状态页面尚无逐页英文截图。受任务限定的服务、策略范围及 300 行产品代码预算约束，保留这些界面缺口供主会话合并界面任务后补验；未据此删减产品功能。服务文案的代表性路径已验证，未逐条触发所有错误分支。
 
 ## 和设计不一致的
 
@@ -69,6 +98,8 @@
 ## 顺手发现
 
 【实测】首次全量测试的源码片段检查发现 `settings.c` 新增头文件使文档行号落到空行；将该头文件放进原有空行，保留原行号，检查恢复通过。
+
+【实现】范围外的 `system/include/ink/sys/ai.h:19` 仍含长回答截断提示，须另迁移。
 
 【实现】确认卡、来电、闹钟等周边 UI 还有自行生成的中文（如拒接、确认卡标题、闹钟电源键说明）；服务提供的文案已经迁移，完整界面英文须由界面任务合并。
 
