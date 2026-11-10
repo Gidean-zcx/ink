@@ -40,6 +40,8 @@ class Entry:
         if name not in self.fields:
             return default
         tokens = self.fields[name]
+        if tokens[:2] == ["TR_NOOP", "("] and tokens[-1:] == [")"]:
+            tokens = tokens[2:-1]
         if not tokens or any(not t.startswith('"') for t in tokens):
             raise ValueError(f"{self.path}:{self.line}: {name} must be literal strings")
         return "".join(ast.literal_eval(t) for t in tokens)

@@ -142,3 +142,27 @@
 输入内容	Enter content
 选好了	Done
 重复	Repeat
+闹钟	Alarms
+计时	Timer
+秒表	Stopwatch
+世界时钟	World Clock
+正在计时	Running
+已暂停	Paused
+未开始	Not started
+暂停	Pause
+继续	Resume
+开始	Start
+计次	Lap
+清零	Reset
+%02d:%02d · %+d 小时 · %s	%02d:%02d · %+d hours · %s
+第二天	Next day
+前一天	Previous day
+同一天	Same day
+没能读取城市，请返回重试	Could not read cities. Go back and try again.
+第 %u 次	Lap %u
+重新启动后秒表会清零	Restarting clears the stopwatch
+还没有城市，点下面加一个	No cities yet. Add one below.
+最多计次99条	Up to 99 laps
+加城市	Add City
+删除	Remove
+最多选6个城市	Choose up to 6 cities

@@ -12,6 +12,15 @@ import capabilities as catalogue
 
 
 class InitializerMacroTest(unittest.TestCase):
+    def test_translation_marker_keeps_literal_metadata(self):
+        source = 'static const ink_cap_t CAP = {.id="test.clock", .title=TR_NOOP("秒表"), .effect=INK_FX_NAVIGATE, .run=handler};'
+        entry, = catalogue.parse_source("test.c", source)
+        catalogue.validate([entry])
+        self.assertEqual(entry.string("title"), "秒表")
+        entry.fields["title"] = ["TR", "(", '"秒表"', ")"]
+        with self.assertRaisesRegex(ValueError, "literal strings"):
+            entry.string("title")
+
     def test_object_macros_preserve_fields_and_permissions(self):
         source = r'''
         #define EFFECT INK_FX_SYSTEM
