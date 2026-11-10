@@ -20,6 +20,7 @@
 #undef ink_main
 
 #include "whole_product.h"
+#include "../../system/services/text/text_internal.h"
 
 /* ---- a session, on the UI task ---- */
 
@@ -286,6 +287,31 @@ static void cancelled(void) {
     CHECK(WAIT_FOR(sim_metric_value("hub.asr_cancelled") == was + 1, 1000), "the hub hears it was given up");
     CHECK(WAIT_FOR(over_and_free(), 1000), "free");
     CHECK(there("q"), "the keys");
+    on_ui(do_blur);
+    delay_ms(100);
+}
+
+/* Words heard while the finger is on 说完了 change the page (each result kicks the keyboard), not what the button means:
+ * the tap still ends it. CI on 5cc0a6eb: a result between press and release refused the tap as stale, silently. */
+static void do_kick(void) { text_presenter_kick(); }
+static void held_across_words(void) {
+    focus_as(INK_TEXT_PLAIN, "");
+    delay_ms(300);
+    double ends = sim_metric_value("hub.asr_turn_end");
+    start_talking("一边说着。|还在说的");
+    CHECK(WAIT_FOR((look(), strstr(g_heard, "一边说着。") != NULL), 3000), "held: heard (%s)", g_heard);
+    CHECK(there("说完了"), "held: the button");
+    double delivered = sim_metric_value("input.touch_delivery_ms");
+    hw(HW_PRESS, g_found_x, g_found_y);
+    CHECK(WAIT_FOR(sim_metric_value("input.touch_delivery_ms") > delivered, 1000), "held: the finger is down");
+    delay_ms(40); /* the press has reached the button */
+    on_ui(do_kick); /* what the next heard words do */
+    hw(HW_RELEASE, g_found_x, g_found_y);
+    CHECK(WAIT_FOR(state_is(INK_VOICE_IDLE), 3000), "held: it still ends (%d)", g_state);
+    CHECK(sim_metric_value("hub.asr_turn_end") == ends + 1, "held: the hub was told");
+    look();
+    CHECK(!strncmp(g_value, "一边说着。", strlen("一边说着。")), "held: what was said goes in (%s)", g_value);
+    CHECK(WAIT_FOR(over_and_free(), 1000), "held: free");
     on_ui(do_blur);
     delay_ms(100);
 }
@@ -749,6 +775,7 @@ static void test_task(void *arg) {
         happy();
         pauses();
         cancelled();
+        held_across_words();
         hub_says_no("budget", "额度");
         hub_says_no("vendor", "用不了");
         hub_says_no("too_long", "太长");

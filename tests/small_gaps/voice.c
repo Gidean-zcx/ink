@@ -57,6 +57,16 @@ static void run(void *ctx) {
     test_mic("speech");
     CHECK(WAIT_FOR(sim_metric_value("ai.barge_ins") == barges + 2 && ink_audio_capture_busy(), 1500), "enabled speech edge counts one barge and starts listening");
     CHECK(!test_speaking(), "enabled hands-free speech stops playback"); test_mic("silence");
+    /* Pressed while the panel refreshes: the feeders hold the cores, the audio task falls behind on the microphone, and the
+     * answer the press stopped must read as stopped at once, not once that backlog is worked off (CI on 5cc0a6eb, Linux) */
+    CHECK(WAIT_FOR(test_speaking(), 20000), "the third answer plays");
+    CHECK(WAIT_FOR(ink_display_busy(), 5000), "the panel refreshes while it plays");
+    delay_ms(60);
+    presses = sim_metric_value("ai.presses");
+    hw(HW_KEY_DOWN, HAL_KEY_AI, 0);
+    CHECK(WAIT_FOR(sim_metric_value("ai.presses") == presses + 1, 1500), "a press during the refresh opens a turn");
+    CHECK(WAIT_FOR(!test_speaking(), 150), "the answer it stopped reads as stopped at once");
+    hw(HW_KEY_UP, HAL_KEY_AI, 0);
     ink_probe_count("test.finished");
 }
 void ink_main(void) {

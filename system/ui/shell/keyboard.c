@@ -30,7 +30,7 @@ static struct {
     int first;
     int shown;
     bool symbols, shift, expanded, secret_present;
-    uint32_t version, generation, revision, edit_revision, layout_revision, pressed_layout;
+    uint32_t version, generation, revision, edit_revision, layout_revision, pressed_layout, voice_revision, pressed_voice;
     int built_for; /* 1 letters, 2 symbols, 3 digits */
 } K;
 
@@ -113,7 +113,8 @@ static void edit(ink_call_t *call) {
     osal_free(text);
 }
 
-static void pressed(lv_event_t *e) { (void)e; K.version = ink_ui_content_version(); K.generation = K.revision; K.pressed_layout = K.layout_revision; }
+static void pressed(lv_event_t *e) { (void)e; K.version = ink_ui_content_version(); K.generation = K.revision; K.pressed_layout = K.layout_revision; K.pressed_voice = K.voice_revision; }
+static bool voice_panel_action(const char *id) { return !strcmp(id, "text.voice_finish") || !strcmp(id, "text.voice_cancel"); }
 static void invoke(const char *id, const char *json) {
     ink_ui_action_spec_t action = {.id = id, .label = id, .capability = id, .args_json = json, .enabled = true};
     ink_ui_page_spec_t page = {.id = ink_ui_action_page(), .object = {"keyboard", K.revision}, .actions = &action, .action_count = 1};
@@ -122,6 +123,10 @@ static void invoke(const char *id, const char *json) {
         /* Voice availability changes do not change this control's meaning. */
         page.object = (ink_ui_object_ref_t){"keyboard:layout", K.layout_revision};
         target = (ink_ui_action_target_t){ink_ui_content_version(), {"keyboard:layout", K.version ? K.pressed_layout : K.layout_revision}};
+    } else if (voice_panel_action(id)) {
+        /* Words heard while the finger is down change the page, not what these two buttons mean: they hold until the panel goes. */
+        page.object = (ink_ui_object_ref_t){"keyboard:voice", K.voice_revision};
+        target = (ink_ui_action_target_t){ink_ui_content_version(), {"keyboard:voice", K.version ? K.pressed_voice : K.voice_revision}};
     }
     K.version = 0;
     ink_receipt_t rc; ink_ui_semantics_action(&page, id, &target, INK_SRC_TOUCH, &rc);
@@ -176,6 +181,7 @@ static int semantic_snapshot(char *buf, size_t cap) {
     for (size_t i = 0; i < sizeof CAPS / sizeof *CAPS; i++) {
         actions[i] = (ink_ui_action_spec_t){.id = CAPS[i], .label = CAPS[i], .capability = CAPS[i], .enabled = !secret && (i >= 10 || (voice ? i == 8 || i == 9 : i < 7 || (i == 7 && K.mic && lv_obj_is_visible(K.mic))))};
         if (!strcmp(CAPS[i], "keyboard.candidates")) actions[i].object = (ink_ui_object_ref_t){"keyboard:layout", K.layout_revision};
+        if (voice_panel_action(CAPS[i])) actions[i].object = (ink_ui_object_ref_t){"keyboard:voice", K.voice_revision};
     }
     ink_ui_page_spec_t page = {.id = ink_ui_action_page(), .title = "键盘", .object = {"keyboard", K.revision},
         .fields = fields, .field_count = count, .actions = actions, .action_count = sizeof actions / sizeof *actions};
@@ -400,6 +406,7 @@ static void build(int kind) {
 static void sync_voice(ink_voice_state_t vs) {
     bool on = vs != INK_VOICE_IDLE, was = !lv_obj_has_flag(K.panel, LV_OBJ_FLAG_HIDDEN);
     if (on != was) {
+        K.voice_revision++; /* the voice panel's buttons are new ones */
         if (on) {
             lv_obj_update_layout(K.root);
             lv_obj_set_height(K.panel, lv_obj_get_height(K.keys)); /* the same size: nothing above it moves */

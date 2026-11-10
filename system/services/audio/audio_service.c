@@ -742,11 +742,15 @@ static void audio_task(void *arg) {
         osal_sem_take(AU.wake, active ? AU_TICK_US : OSAL_WAIT_FOREVER);
         apply_route();
         /* the speaker first and again after every encoded frame: the 60 ms DMA ring must not wait
-         * for the encoder to catch up on the capture ring */
-        service_playback();
-        while (capture_step(scratch)) service_playback();
+         * for the encoder to catch up on the capture ring. What plays is told each time too: after a
+         * panel refresh starved this task the capture backlog takes a while, and an answer stopped
+         * meanwhile must not still read as playing until it is worked off (CI 5cc0a6eb) */
+        do {
+            service_playback();
+            publish_playing();
+        } while (capture_step(scratch));
         update_write_hold();
-        publish_playing();
+        publish_playing(); /* the last frame may have been a barge-in */
         afe_transition();
         publish_mic();
     }

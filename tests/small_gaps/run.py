@@ -23,7 +23,7 @@ voice = copy.deepcopy(voice.get('turns', [voice])[0])
 voice['stream']['chunks'] = ['这是一段足够长的合成回答。' * 40]
 voice['listen'].pop('tts_speed', None)
 fixture['rules'] = [r for r in fixture['rules'] if r['method'] not in ('ai.listen', 'ai.ask')]
-fixture['rules'].append({'method': 'ai.listen', 'turns': [voice, copy.deepcopy(voice), copy.deepcopy(voice)]})
+fixture['rules'].append({'method': 'ai.listen', 'turns': [voice] + [copy.deepcopy(voice) for _ in range(3)]})
 for case in ([args.case] if args.case else ('pages', 'phone', 'voice')):
     for lang in ([args.language] if args.language else (('zh',) if case == 'voice' else ('zh', 'en'))):
         out = area / (case + '-' + lang)
