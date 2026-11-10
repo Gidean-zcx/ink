@@ -19,7 +19,7 @@ static ink_exec_job_t g_job;
 static int snapshot(char *buf, size_t cap) { return snprintf(buf, cap, "%s", TR("设备已锁定；可拍照：app.open(id=camera)。电源键或 AI 键唤醒。")); }
 static const ink_ui_overlay_t OVERLAY = {.name = "LockPage", .level = 2, .snapshot = snapshot};
 static const char *mark_text(void) {
-    return ink_setting_get("display.lock_style") == 0 && ink_activity_listening() ? TR("正在听，按电源键唤醒") : TR("已锁定，按电源键唤醒");
+    return ink_setting_get("display.lock_style") == 0 && ink_activity_listening() ? TR("正在听，按电源键或 AI 键唤醒") : TR("已锁定，按电源键或 AI 键唤醒");
 }
 
 static void update_clock(void) {
@@ -34,8 +34,9 @@ static void show(void) {
     if (g_mark) return;
     bool clock = ink_setting_get("display.lock_style") == 1;
     bool image = ink_setting_get("display.lock_style") == 2 && ink_wallpaper_ready();
+    int strip_h = LV_MAX(INK_CONTROL, 2 * ink_ui_line_height(INK_FONT_NOTE));
     g_mark = clock || image ? lv_obj_create(lv_layer_sys()) : ink_ui_box(lv_layer_sys(), INK_MARGIN,
-             INK_CANVAS_H - INK_CONTROL - INK_GAP_S, INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, 0, INK_SURFACE_WHITE, false);
+             INK_CANVAS_H - strip_h - INK_GAP_S, INK_CANVAS_W - 2 * INK_MARGIN, strip_h, 0, INK_SURFACE_WHITE, false);
     if (clock || image) {
         lv_obj_remove_style_all(g_mark);
         lv_obj_set_size(g_mark, LV_PCT(100), LV_PCT(100));
@@ -74,10 +75,10 @@ static void show(void) {
         ink_ui_line(notice, "唤醒后查看", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_ROW_DOUBLE, text_y + ink_ui_line_height(INK_FONT_LIST), INK_CANVAS_W - 2 * INK_ROW_DOUBLE);
     }
     ink_shell_camera_button(g_mark, !clock);
-    lv_obj_t *strip = clock ? ink_ui_box(g_mark, INK_MARGIN, INK_CANVAS_H - INK_CONTROL - INK_GAP_S,
-                                  INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, 0, INK_SURFACE_WHITE, false) : g_mark;
+    lv_obj_t *strip = clock ? ink_ui_box(g_mark, INK_MARGIN, INK_CANVAS_H - strip_h - INK_GAP_S,
+                                  INK_CANVAS_W - 2 * INK_MARGIN, strip_h, 0, INK_SURFACE_WHITE, false) : g_mark;
     lv_obj_t *l = ink_ui_label(strip, mark_text(), INK_FONT_NOTE, INK_WEIGHT_REGULAR, 0,
-                               (INK_CONTROL - ink_ui_line_height(INK_FONT_NOTE)) / 2, INK_CANVAS_W - 2 * INK_MARGIN - (clock ? 0 : INK_CIRCLE + INK_GAP));
+                               (strip_h - ink_ui_line_height(INK_FONT_NOTE)) / 2, INK_CANVAS_W - 2 * INK_MARGIN - (clock ? 0 : INK_CIRCLE + INK_GAP));
     lv_obj_align(l, LV_ALIGN_LEFT_MID, 0, 0);
     lv_obj_set_style_text_align(l, LV_TEXT_ALIGN_CENTER, 0);
     g_label = l;

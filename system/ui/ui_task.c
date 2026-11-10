@@ -27,7 +27,6 @@
 #include "ink/sys/json.h"
 #include "ink/sys/members.h"
 #include "ink/sys/power.h"
-#include "ink/sys/settings.h"
 #include "ink/sys/svc.h"
 
 #define UI_STACK 10240
@@ -677,8 +676,8 @@ static void handle_input(const umsg_t *m) {
     switch (e->kind) {
     case INK_EV_POINTER:
         if (e->phase == INK_PTR_PRESS && ink_power_state() == INK_PWR_LOCKED && !strcmp(ink_ui_top_name(), "LockPage") &&
-            ink_setting_get("display.lock_style") == 0 && (e->x < ink_ui_px(INK_MARGIN) || e->x >= ink_ui_px(INK_CANVAS_W - INK_MARGIN) ||
-            e->y < ink_ui_px(INK_CANVAS_H - INK_CONTROL - INK_GAP_S))) UI.skip_touch = true;
+            (e->x < ink_ui_px(INK_MARGIN) || e->x >= ink_ui_px(INK_CANVAS_W - INK_MARGIN) ||
+            e->y < lv_obj_get_y(UI.overlay_root[UI.noverlays - 1]))) UI.skip_touch = true;
         if (e->phase == INK_PTR_PRESS && e->t_us < UI.touch_invalid_before) {
             UI.skip_touch = true;
             ink_probe_count("ui.touch_under_overlay_dropped");

@@ -83,8 +83,8 @@
 关于和更新	About & Updates
 语言	Language
 飞行模式	Airplane mode
-正在听，按电源键唤醒	Playing. Press power to wake
-已锁定，按电源键唤醒	Locked. Press power to wake
+正在听，按电源键或 AI 键唤醒	Playing. Wake with power or AI
+已锁定，按电源键或 AI 键唤醒	Locked. Wake with power or AI
 设备已锁定；可拍照：app.open(id=camera)。电源键或 AI 键唤醒。	Device locked; camera: app.open(id=camera). Wake with the power or AI key.
 本次已拍 %u 张	%u photos this session
 本次 %u 张，正在看第 %u 张	%u photos this session, viewing %u
