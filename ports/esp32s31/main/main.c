@@ -3,8 +3,10 @@
 #include "ink/hal_display.h"
 void ink_main(void);
 void ink_s31_osal_selftest(void);
+void ink_s31_board_init(void);
 void app_main(void) {
     ink_s31_osal_selftest();
+    ink_s31_board_init();
     hal_panel_info_t panel;
     hal_display_get_info(&panel);
     if (panel.width <= 0 || panel.height <= 0) {

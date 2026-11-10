@@ -17,9 +17,9 @@ taskpolicy -c utility bash ports/esp32s31/build.sh
 - `stack.txt`：GCC `-fstack-usage` 与 `-fcallgraph-info=su` 的入口帧、已知直接调用链。缺失的库函数、间接回调和递归不计，不能当作安全栈上限。
 - `osal_selftest.c`：开机检查内存能力、队列、互斥、信号量、PSRAM 栈、定时器和微秒等待。本任务只编译它，未上机执行。
 
-入口自检后检查屏幕；桩报告无屏幕时记录状态并返回，不启动完整系统。HAL 均标注后续驱动来源，返回不可用或失败；日志和随机数用 IDF 的实现。字体、资源、存储、通信和屏幕驱动尚未接入。
+入口自检后接板级芯片（`s31_board.c`：扩展芯片、充电、电量计、时钟、加速度计、前光、触摸，顺序同模拟器），再检查屏幕；桩报告无屏幕时记录状态并返回，不启动完整系统。I2C（`hal_i2c_s31.c`）、串口（`hal_uart_s31.c`）、GPIO 中断（`s31_irq.c`）用 IDF 驱动实现，引脚在 `s31_board.h`，都还没上机；其余 HAL 在 `hal_stubs.c`，标注后续驱动来源，返回不可用或失败；日志和随机数用 IDF 的实现。字体、资源、存储、通信和屏幕驱动尚未接入。
 
-主机换算测试由根工程的 `unit-s31-osal-ticks` 运行；可移植性修复的正反编译对照：
+主机换算测试由根工程的 `unit-s31-osal-ticks`、`unit-s31-hal-map`（I2C 错误码映射、串口分行）运行；可移植性修复的正反编译对照：
 
 ```bash
 python3 tests/esp32s31/portability.py build-s31

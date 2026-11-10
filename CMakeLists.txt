@@ -31,6 +31,9 @@ if(INK_SANITIZE)
   add_compile_options(-fsanitize=address,undefined -fno-omit-frame-pointer)
   add_link_options(-fsanitize=address,undefined)
 endif()
+add_executable(test-s31-hal-map tests/esp32s31/hal_map.c)
+target_include_directories(test-s31-hal-map PRIVATE tests/esp32s31/stub platform/include)
+target_compile_options(test-s31-hal-map PRIVATE ${INK_WARN} -UNDEBUG)
 # Bind symbols at load (macOS does already): lazily, the dynamic linker would run on the stack of
 # whichever simulated task first calls a libc function, with a CPU-dependent size (XSAVE area).
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
@@ -485,6 +488,7 @@ endif()
 # ---------------------------------------------------------------- tests
 enable_testing()
 add_test(NAME unit-s31-osal-ticks COMMAND test-s31-osal-ticks)
+add_test(NAME unit-s31-hal-map COMMAND test-s31-hal-map)
 set(INK_IME_CASES ${CMAKE_BINARY_DIR}/generated/ime_cases.h)
 add_custom_command(OUTPUT ${INK_IME_CASES}
   COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/ime_lexicon/fixtures.py ${INK_IME_CASES}
