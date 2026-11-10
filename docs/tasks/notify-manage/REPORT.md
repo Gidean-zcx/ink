@@ -13,13 +13,13 @@
 | 2a 原有通知、短信、电话、日历回归 | 待最终验证 | 首轮相关测试通过；原测试未改 | 全量命令见下 |
 | 2b 全量 | 待最终验证 | 共享能力表待主会话生成 | 全量命令见下 |
 | 2c 内存检查 | 待验证 | — | — |
-| 2d S31 | 待验证 | — | — |
-| 2e GCC | 【实测】初次通过，待复核最终文件 | `gcccheck: 4 compiled, 0 with findings` | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" -B ../../tools/gcccheck.py build system/ui/shell/navigation.c system/services/notify/notify_caps.c system/services/notify/notify_service.c tests/notify_manage.c tests/integration/ai_surface.c` |
+| 2d S31 | 【实测】编译通过 | 退出 0，镜像 1,386,144 B，编译警告／错误均为 0；未上机 | `INK_DEPS="$INK_DEPS" taskpolicy -c utility bash ports/esp32s31/build.sh` |
+| 2e GCC | 【实测】通过 | `gcccheck: 5 compiled, 0 with findings`，无跳过 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" -B ../../tools/gcccheck.py build system/ui/shell/navigation.c system/services/notify/notify_caps.c system/services/notify/notify_service.c tests/notify_manage.c tests/integration/ai_surface.c` |
 | 3 中英文页面及快照 | 【实测】通过 | 八张截图及 JSON，含最大字号通知／渠道页；满页长正文符合生产 AI 缓冲 | 同 1a |
 
 ## 没做到的
 
-最终全量、内存检查、S31 尚待完成。未上机。
+最终全量和内存检查尚待完成。未上机。
 
 ## 和设计不一致的
 
@@ -65,3 +65,5 @@
 - 【实测】首轮全量 321 项有 8 项失败（`work/notify-ctest.log`）。除共享能力文档外的 7 项已修正：设置入口挤页、分页旧删除动作、新导航缺运行时目录测试、额外事件挤占离线队列。相关原测试和本任务专项重新构建后 `100% tests passed out of 8`（`work/notify-regressions.log`），原断言均保留。
 - 【实测】五组反向对照逐一撤掉接线／权限／刷新／分页清理，均命中指定失败；不改工作区产品代码。`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" -B tests/notify_manage_reverse.py --build build`，日志 `work/notify-reverse-final.log`。CTest 正常模式不依赖仓库历史。
 - 【实现】通知一页最多四条，确保长正文加全部动作装进既有 3072 字节 AI 缓冲；继续复用翻页，不增大缓冲或放宽预算。
+- 为什么不能更小：任务涉及列表删除、成人渠道设置、共享变化通知和中英文快照，合计超过 100 行。看过仅补触摸回调的方案，不能覆盖 AI 修改及已读通知删除；新建详情页会多一套导航和生命周期。最终复用列表、设置分页、服务渠道表和总线，两处界面使用既有原子能力。
+- 【实测】最终 GCC 和 S31 均退出 0，日志 `work/notify-gcccheck-final.log`、`work/notify-s31.log`；S31 未出现 `warning:`／`error:`。界面尺寸复核仍为 `ui-scale: 50 files, 0 violations`（`work/notify-ui-scale-final.log`）。
