@@ -97,7 +97,7 @@ static ink_rc_t reject(ink_receipt_t *rc, ink_rc_t st, const char *why) {
     snprintf(rc->detail, sizeof rc->detail, "%s", why);
     return st;
 }
-
+static bool opens_emergency(const ink_cap_t *c) { return c && c->locked_entry; }
 /* The policy gate (detailed design §2.4), before anything runs. INK_RC_DONE = may run. */
 static ink_rc_t gate(const ink_cap_t *c, ink_source_t src, uint32_t page_gen, bool asked, ink_receipt_t *rc) {
     if (!c) return reject(rc, INK_RC_INVALID, "unknown action");
@@ -123,7 +123,7 @@ static ink_rc_t gate(const ink_cap_t *c, ink_source_t src, uint32_t page_gen, bo
         (src == INK_SRC_AI || src == INK_SRC_REMOTE || src == INK_SRC_APP);
     if ((!ink_member_space_open() || locked_caller || restricted) && src != INK_SRC_SYSTEM) {
         bool allowed = restricted ? ink_ui_locked_allows(c->id) : c->while_locked;
-        if (src == INK_SRC_AI || src == INK_SRC_REMOTE || src == INK_SRC_APP || !allowed) {
+        if (!opens_emergency(c) && (src == INK_SRC_AI || src == INK_SRC_REMOTE || src == INK_SRC_APP || !allowed)) {
             ink_probe_count("policy.rejected");
             return reject(rc, INK_RC_REJECTED, "this member's space is locked");
         }
@@ -464,7 +464,7 @@ static void answer_job(void *arg) {
     ink_cap_done_fn done = p->o.done; /* NULL once a waiting ink_cap_invoke gave up on it */
     osal_mutex_unlock(CB.lock);
     bool handoff = p->call.cap && !strcmp(p->call.cap->id, "system.switch_member") && p->out.status == INK_RC_DONE && !p->out.result;
-    bool hand_locked = p->hand_locked && (p->o.src == INK_SRC_TOUCH || p->o.src == INK_SRC_KEY);
+    bool hand_locked = opens_emergency(p->call.cap) || (p->hand_locked && (p->o.src == INK_SRC_TOUCH || p->o.src == INK_SRC_KEY));
     if (!handoff && p->member[0] && (!ink_member_exists(p->member) ||
         strcmp(p->member, ink_member_current()->id) || (!ink_member_space_open() && !hand_locked && p->o.src != INK_SRC_SYSTEM && p->out.status == INK_RC_DONE))) {
         memset(&p->out, 0, sizeof p->out); p->out.status = INK_RC_STALE;
@@ -1060,7 +1060,7 @@ void ink_cap_emit(const char *id, const ink_args_t *payload) {
 
 /* What the current member may use now, as the AI sees it. */
 static bool listed(const ink_cap_t *c) {
-    if (!ink_member_space_open() || !on_its_page(c) || !exposed(c, INK_SRC_AI)) return false;
+    if ((!ink_member_space_open() && !opens_emergency(c)) || !on_its_page(c) || !exposed(c, INK_SRC_AI)) return false;
     const ink_member_t *m = ink_member_current();
     return m->role != INK_ROLE_CHILD || (c->effect != INK_FX_SYSTEM && ink_member_allows(c->id, c->child_ok) && ink_member_time_allows(c->id));
 }

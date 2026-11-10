@@ -165,7 +165,7 @@ def validate(entries):
                 raise ValueError(f"{entry.id}: unsupported form")
             if entry.value("form") != "INK_FORM_EVENT" and entry.value("run", "NULL") == "NULL":
                 raise ValueError(f"{entry.id}: callable capability has no handler")
-            for field in ("child_ok", "while_locked", "parent_pin", "ask_by_hand"):
+            for field in ("child_ok", "while_locked", "locked_entry", "parent_pin", "ask_by_hand"):
                 entry.flag(field)
             exposure(entry)
             if "activity" in entry.fields:
@@ -248,7 +248,9 @@ def member_scope(entry):
         rule = "成人；儿童仅人工" if entry.flag("child_ok") else "仅成人"
     else:
         rule = "成人、儿童（无需白名单）" if entry.flag("child_ok") else "成人；儿童须白名单"
-    if entry.flag("while_locked"):
+    if entry.flag("locked_entry"):
+        rule += "；锁定时可打开公开页面（不含成员数据）"
+    elif entry.flag("while_locked"):
         rule += "；锁定时仅人工入口"
     if "activity" in entry.fields:
         rule += "；页面 " + entry.string("activity")

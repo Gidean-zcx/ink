@@ -18,8 +18,11 @@ static uint32_t g_version, g_revision;
 static uint64_t g_unlock_cause;
 static int g_locked;
 static ink_exec_job_t g_job;
-static const ink_ui_action_spec_t CAMERA = {.id = "camera", .label = "拍照", .capability = "app.open", .args_json = "{\"id\":\"camera\"}", .enabled = true};
-static const ink_ui_page_spec_t MODEL = {.id = "LockPage", .title = "设备已锁定", .object = {"LockPage", 0}, .actions = &CAMERA, .action_count = 1};
+static const ink_ui_action_spec_t ACTIONS[] = {
+    {.id = "emergency", .label = "打开紧急呼叫页面", .capability = "phone.emergency_open", .enabled = true},
+    {.id = "camera", .label = "拍照", .capability = "app.open", .args_json = "{\"id\":\"camera\"}", .enabled = true}
+};
+static const ink_ui_page_spec_t MODEL = {.id = "LockPage", .title = "设备已锁定", .object = {"LockPage", 0}, .actions = ACTIONS, .action_count = 2};
 static void changed(void) { g_revision++; g_version = ink_ui_content_version(); }
 static void pressed(lv_event_t *e) { (void)e; g_version = ink_ui_content_version(); }
 static void camera_clicked(lv_event_t *e) {
@@ -34,7 +37,7 @@ static void camera_button(bool strip) {
     lv_obj_t *b = ink_ui_circle(g_mark, "camera", INK_CANVAS_W - (strip ? 2 : 1) * INK_MARGIN - INK_CIRCLE, strip ? 0 : INK_STATUS_BAR + INK_GAP,
         INK_CIRCLE, INK_ICON_MEDIUM, INK_SURFACE_WHITE, camera_clicked, NULL);
     lv_obj_set_style_border_width(b, ink_ui_px(INK_STROKE), 0);
-    ink_shell_bind(b, CAMERA.capability, CAMERA.args_json);
+    ink_shell_bind(b, ACTIONS[1].capability, ACTIONS[1].args_json);
     lv_obj_add_event_cb(b, pressed, LV_EVENT_PRESSED, NULL);
 }
 
@@ -49,7 +52,7 @@ static int semantic_snapshot(char *buf, size_t cap) {
     ink_ui_page_spec_t model = MODEL;
     model.object.revision = g_revision;
     model.fields = fields; model.field_count = g_clock ? sizeof fields / sizeof *fields : 1;
-    model.action_count = ink_cap_find("camera.capture") ? 1 : 0;
+    model.action_count = ink_cap_find("camera.capture") ? 2 : 1;
     return ink_ui_semantics_snapshot(&model, buf, cap);
 }
 static const ink_ui_overlay_t OVERLAY = {.name = "LockPage", .level = 2, .snapshot = semantic_snapshot};
@@ -71,7 +74,8 @@ static void show(void) {
     if (g_mark) return;
     bool clock = ink_setting_get("display.lock_style") == 1;
     bool image = ink_setting_get("display.lock_style") == 2 && ink_wallpaper_ready();
-    int text_h = 2 * ink_ui_line_height(INK_FONT_NOTE);
+    int text_w = INK_CANVAS_W - 2 * INK_MARGIN - (clock ? 0 : INK_CIRCLE + 2 * INK_CONTROL + 4 * INK_GAP);
+    int text_h = ink_ui_text_height(mark_text(), INK_FONT_NOTE, INK_WEIGHT_REGULAR, text_w) + INK_GAP_S;
     int strip_h = text_h > INK_CONTROL ? text_h : INK_CONTROL;
     g_mark = clock || image ? lv_obj_create(lv_layer_sys()) : ink_ui_box(lv_layer_sys(), INK_MARGIN,
              INK_CANVAS_H - strip_h - INK_GAP_S, INK_CANVAS_W - 2 * INK_MARGIN, strip_h, 0, INK_SURFACE_WHITE, false);
@@ -84,6 +88,7 @@ static void show(void) {
     if (image) {
         ink_wallpaper_draw(g_mark);
         camera_button(false);
+        ink_shell_emergency_button(g_mark, false);
         ink_ui_overlay_add(&OVERLAY, g_mark); changed(); ink_ui_hint_obj(g_mark, INK_REFRESH_FLASH_UI);
         return;
     }
@@ -114,11 +119,12 @@ static void show(void) {
         ink_ui_line(notice, "唤醒后查看", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_ROW_DOUBLE, text_y + ink_ui_line_height(INK_FONT_LIST), INK_CANVAS_W - 2 * INK_ROW_DOUBLE);
     }
     camera_button(!clock);
+    ink_shell_emergency_button(g_mark, !clock);
     lv_obj_t *strip = clock ? ink_ui_box(g_mark, INK_MARGIN, INK_CANVAS_H - strip_h - INK_GAP_S,
                                   INK_CANVAS_W - 2 * INK_MARGIN, strip_h, 0, INK_SURFACE_WHITE, false) : g_mark;
     lv_obj_t *l = ink_ui_label(strip, mark_text(), INK_FONT_NOTE, INK_WEIGHT_REGULAR, 0,
-                               (strip_h - ink_ui_line_height(INK_FONT_NOTE)) / 2, INK_CANVAS_W - 2 * INK_MARGIN - (clock ? 0 : INK_CIRCLE + INK_GAP));
-    lv_obj_align(l, LV_ALIGN_LEFT_MID, 0, 0);
+                               (strip_h - ink_ui_line_height(INK_FONT_NOTE)) / 2, text_w);
+    lv_obj_align(l, LV_ALIGN_LEFT_MID, clock ? 0 : ink_ui_px(2 * INK_CONTROL + 3 * INK_GAP), 0);
     lv_obj_set_style_text_align(l, LV_TEXT_ALIGN_CENTER, 0);
     g_label = l;
     ink_ui_overlay_add(&OVERLAY, g_mark);

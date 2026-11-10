@@ -1027,8 +1027,10 @@ static hal_at_result_t at_run(const char *cmd, const char *payload, char *resp, 
         if (idx >= 0 && idx < SMS_SLOTS) MS.sms[idx].used = false;
         else r = HAL_AT_ERROR;
         break;
-    case K_ATD:
-        if (MS.call || !can_call()) {
+    case K_ATD: {
+        /* ASSUMPTION: emergency service without a SIM; NT26 support needs hardware verification. */
+        bool emergency = !strcmp(arg, "110") || !strcmp(arg, "120") || !strcmp(arg, "119") || !strcmp(arg, "112");
+        if (MS.call || !(emergency ? CELL.radio : can_call())) {
             r = HAL_AT_ERROR;
             snprintf(info, sizeof info, "+CME ERROR: %d", !cell_ok() ? 30 : 4);
         } else {
@@ -1040,6 +1042,7 @@ static hal_at_result_t at_run(const char *cmd, const char *payload, char *resp, 
             MS.call_ev = vtk_event_at(vtk_now() + SIM_MS(CALL_ANSWER_MS), call_tick, NULL);
         }
         break;
+    }
     case K_ATA:
         if (MS.call != 4) {
             r = HAL_AT_ERROR;
