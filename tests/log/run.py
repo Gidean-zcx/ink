@@ -5,6 +5,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[2]
 spec = importlib.util.spec_from_file_location("pull", ROOT / "tools/device/pull_logs.py")
@@ -17,12 +18,14 @@ def run(binary):
         root = Path(d) / "device"
         root.mkdir()
         subprocess.run([binary, str(root)], check=True)
-        data = Path(str(root) + ".logs").read_bytes()
+        data = (root / "logs.bin").read_bytes()
         decoded = pull.decode(data)
         assert "问题 #300001" in decoded and "PRIVATE_TEST_SECRET" not in decoded
+        import re
+        assert set(re.findall(r"INFO recent ms=\d+ test.event.(\d+)", decoded)) == {str(i) for i in range(10, 60)}
         assert len(pull.records(data)) <= 128
         subprocess.run([sys.executable, str(ROOT / "tools/device/pull_logs.py"), "--logs",
-                        str(root) + ".logs", "--output", str(Path(d) / "decoded")], check=True)
+                        str(root / "logs.bin"), "--output", str(Path(d) / "decoded")], check=True)
         exported, = (Path(d) / "decoded").glob("*/logs.txt")
         assert exported.read_text() == decoded
         sd_log, = root.glob("content/ink-logs/*/logs.bin")
@@ -44,6 +47,24 @@ def run(binary):
         assert len(pull.records(corrupted)) == 1
         assert len(pull.records(pair[:4096 + 22])) == 1
         assert "write-flash" not in (ROOT / "tools/device/pull_logs.py").read_text()
+        commands = []
+        def fake_read(command, **kwargs):
+            commands.append(command)
+            if "esptool" in command:
+                assert command[command.index("--before") + 1] == "no-reset"
+                assert command[command.index("--after") + 1] == "no-reset"
+                assert command[-4] == "read-flash"
+                address, size = command[-3:-1]
+                assert (address, size) in (("0xf64000", "0x80000"), ("0xfe4000", "0x10000"))
+                Path(command[-1]).write_bytes(data if address == "0xf64000" else b"\xff" * 65536)
+            else:
+                assert command[1:4] == ["-m", "esp_coredump", "info_corefile"]
+                assert command[-1] == "FAKE_FIRMWARE.elf"
+                kwargs["stdout"].write("FAKE backtrace\n")
+            return subprocess.CompletedProcess(command, 0)
+        with patch.object(pull.subprocess, "run", side_effect=fake_read):
+            pull.main(["--port", "FAKE_PORT", "--elf", "FAKE_FIRMWARE.elf", "--output", str(Path(d) / "fake-pull")])
+        assert len(commands) == 3
         print("PASS: independent CRC decode, UTF-8 boundaries, CLI round-trip, raw SD export")
 
 

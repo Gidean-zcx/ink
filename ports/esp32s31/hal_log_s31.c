@@ -38,7 +38,7 @@ const char *hal_device_reset_reason(void) {
 void hal_log_boot_info(char *out, size_t n) {
     const esp_app_desc_t *a = esp_app_get_description();
     const esp_partition_t *p = esp_ota_get_running_partition();
-    snprintf(out, n, "version=%.32s commit=%.40s partition=%.16s", a->version, INK_BUILD_COMMIT, p ? p->label : "unknown");
+    snprintf(out, n, "version=%.32s commit=%.40s partition=%.16s reset_raw=%d", a->version, INK_BUILD_COMMIT, p ? p->label : "unknown", (int)esp_reset_reason());
     if (esp_core_dump_image_check() == ESP_OK) {
         esp_core_dump_summary_t *s = heap_caps_malloc(sizeof *s, MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT);
         if (s && esp_core_dump_get_summary(s) == ESP_OK) {
@@ -52,7 +52,7 @@ void hal_log_tasks(char *out, size_t n) {
     unsigned count = uxTaskGetNumberOfTasks() + 8;
     TaskStatus_t *t = heap_caps_malloc(count * sizeof *t, MALLOC_CAP_SPIRAM | MALLOC_CAP_8BIT);
     unsigned got = t ? uxTaskGetSystemState(t, count, NULL) : 0;
-    int pos = snprintf(out, n, "tasks=%u stack_low=", got);
+    int pos = snprintf(out, n, "tasks=%u sampled=%u stack_low=", count - 8, got);
     for (unsigned i = 0; i < got && i < 5 && pos >= 0 && (size_t)pos < n; i++) {
         unsigned best = i;
         for (unsigned j = i + 1; j < got; j++)

@@ -27,9 +27,6 @@ static const ink_ui_action_spec_t ACTIONS[] = {
     {.id = "system.export_logs", .label = "导出日志", .capability = "system.export_logs", .enabled = true}
 };
 static const ink_ui_field_spec_t FIELDS[] = {
-    {.id = "shutdown", .role = "button", .label = "关机", .value = "关机"},
-    {.id = "reboot", .role = "button", .label = "重启", .value = "重启"},
-    {.id = "lock", .role = "button", .label = "锁屏", .value = "锁屏"},
     {.id = "cancel", .role = "button", .label = "取消", .value = "取消"}
 };
 static const ink_ui_page_spec_t MODEL = {.id = "power_menu", .title = "电源菜单", .object = {"power_menu", 0},
@@ -39,7 +36,7 @@ static int semantic_snapshot(char *buf, size_t cap) {
     ink_ui_page_spec_t page = model();
     ink_ui_field_spec_t fields[sizeof FIELDS / sizeof *FIELDS + 1];
     memcpy(fields, FIELDS, sizeof FIELDS);
-    fields[page.field_count++] = (ink_ui_field_spec_t){.id = "result", .label = "记录结果", .value = M.say};
+    fields[page.field_count++] = (ink_ui_field_spec_t){.id = "result", .role = "status", .label = "记录结果", .value = M.say};
     page.fields = fields;
     return ink_ui_semantics_snapshot(&page, buf, cap);
 }

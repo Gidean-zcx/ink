@@ -16,6 +16,9 @@ static uint64_t now;
 static bool held;
 static const char *reason = "poweron";
 struct osal_mutex { bool held; };
+struct osal_timer { bool used; };
+osal_timer_t *osal_timer_create(const char *name, osal_timer_fn fn, void *arg) { (void)name; (void)fn; (void)arg; static osal_timer_t timer; return &timer; }
+osal_err_t osal_timer_start(osal_timer_t *t, uint64_t delay, uint64_t period) { (void)t; (void)delay; (void)period; return OSAL_OK; }
 struct hal_file { FILE *fp; };
 static char root[1024];
 void vtk_host_call(void (*fn)(void *), void *arg) { fn(arg); }
@@ -88,16 +91,16 @@ int main(int argc, char **argv) {
     ink_log(INK_LOG_INFO, "fixture", "first");
     L.lock->held = true; ink_log(INK_LOG_INFO, "fixture", "must-drop"); L.lock->held = false;
     assert(L.dropped == 1);
-    ink_log_poll(); assert(good_records(text, sizeof text) == 0);
-    now = 30000000; ink_log_poll();
+    ink_log_poll(true); assert(good_records(text, sizeof text) == 0);
+    now = 30000000; ink_log_poll(true);
     assert(good_records(text, sizeof text) && strstr(text, "utc=unknown:0 ms=0 boot=1 INFO fixture first"));
     assert(!strstr(text, "must-drop"));
     uint32_t seq = L.seq;
     for (int i = 0; i < 40; i++) ink_log(INK_LOG_INFO, "fixture", "%0240d", i);
-    ink_log_poll(); assert(L.seq > seq);
+    ink_log_poll(false); assert(L.seq == seq); ink_log_poll(true); assert(L.seq > seq);
     held = true; seq = L.seq;
-    ink_log(INK_LOG_ERROR, "fixture", "error-now"); ink_log_poll(); assert(L.seq == seq);
-    assert(!ink_log_flush()); held = false; ink_log_poll();
+    ink_log(INK_LOG_ERROR, "fixture", "error-now"); ink_log_poll(true); assert(L.seq == seq);
+    assert(!ink_log_flush()); held = false; ink_log_poll(true);
     assert(good_records(text, sizeof text) && strstr(text, "ERROR fixture error-now"));
     /* Wrap the actual 512 KiB file, with real NOR clear-bit semantics. */
     for (int i = 0; i < 140; i++) { ink_log(INK_LOG_INFO, "wrap", "entry=%d", i); assert(ink_log_flush()); }
@@ -126,7 +129,7 @@ int main(int argc, char **argv) {
     assert(good_records(text, sizeof text) && strstr(text, "问题 #300001 page=Reader"));
     assert(strstr(text, "recent ms=") && strstr(text, "test.event.59"));
     assert(!strstr(text, "PRIVATE_TEST_SECRET") && !strstr(text, "FAKE_CHAT") && !strstr(text, "FAKE_NAME"));
-    now = 300000000; ink_log_poll(); assert(ink_log_flush());
+    now = 300000000; ink_log_poll(true); assert(ink_log_flush());
     assert(good_records(text, sizeof text) && strstr(text, "internal=1000/900/800") && strstr(text, "tasks=1"));
     char folder[1400]; path(folder, sizeof folder, "/content"); assert(!mkdir(folder, 0700));
     export_logs(&call); assert(call.rc.status == INK_RC_DONE);

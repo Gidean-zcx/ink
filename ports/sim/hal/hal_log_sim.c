@@ -10,7 +10,7 @@ static void io(void *arg) {
     io_t *q = arg;
     char path[1024];
     const char *base = g_sim.flash_image ? g_sim.flash_image : g_sim.out_dir;
-    int n = snprintf(path, sizeof path, "%s.%s", base, q->core ? "coredump" : "logs");
+    int n = snprintf(path, sizeof path, g_sim.flash_image ? "%s.%s" : "%s/%s.bin", base, q->core ? "coredump" : "logs");
     if (n < 0 || n >= (int)sizeof path) return;
     FILE *f = fopen(path, "r+b");
     if (!f) {
@@ -69,9 +69,9 @@ static void tasks_on_host(void *arg) {
     for (int i = 0; i < count && i < 5 && pos >= 0 && (size_t)pos < f->n; i++) {
         int best = i;
         for (int j = i + 1; j < count; j++)
-            if (t[j].stack_target_bytes - t[j].stack_used_est_bytes < t[best].stack_target_bytes - t[best].stack_used_est_bytes) best = j;
+            if ((int64_t)t[j].stack_target_bytes - t[j].stack_used_est_bytes < (int64_t)t[best].stack_target_bytes - t[best].stack_used_est_bytes) best = j;
         vtk_task_info_t tmp = t[i]; t[i] = t[best]; t[best] = tmp;
-        pos += snprintf(f->out + pos, f->n - (size_t)pos, " %.16s:%u", t[i].name, t[i].stack_target_bytes > t[i].stack_used_est_bytes ? t[i].stack_target_bytes - t[i].stack_used_est_bytes : 0);
+        pos += snprintf(f->out + pos, f->n - (size_t)pos, " %.16s:%u", t[i].name, (unsigned)(t[i].stack_target_bytes > t[i].stack_used_est_bytes ? t[i].stack_target_bytes - t[i].stack_used_est_bytes : 0));
     }
     sim_host_free(t);
 }

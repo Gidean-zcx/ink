@@ -672,7 +672,9 @@ static void log_on_host(void *line) {
             (unsigned long long)(t / 1000000ull % 1000ull), (const char *)line);
 }
 
+__attribute__((weak)) bool ink_log_from_hal(const char *line) { (void)line; return false; }
 void hal_log_write(const char *line) {
+    if (ink_log_from_hal(line)) return;
     if (g_sim.quiet) return;
     vtk_host_call(log_on_host, (void *)line); /* host stdout, not the caller's stack (--quiet must not change it) */
 }

@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <string.h>
 #include "ink/hal_log.h"
 #include "ink/hal_device.h"
@@ -14,6 +13,7 @@
 #define EVENTS 50
 static struct {
     osal_mutex_t *lock;
+    osal_timer_t *timer;
     hal_log_tail_t *tail;
     uint8_t *sector;
     uint32_t seq, page, pending, dropped, issue, events;
@@ -54,6 +54,7 @@ void ink_log(ink_log_level_t level, const char *module, const char *fmt, ...) {
     osal_mutex_unlock(L.lock);
     if (wake) ink_storage_log_ready();
 }
+bool ink_log_from_hal(const char *line) { if (!L.lock) return false; ink_log(INK_LOG_WARN, "hal", "%s", line); return true; }
 void ink_log_display(uint64_t us, bool ok) {
     if (!L.lock) return;
     osal_mutex_lock(L.lock, OSAL_WAIT_FOREVER);
@@ -78,13 +79,15 @@ void ink_log_health(void) {
     hal_battery_t b;
     osal_mem_stats(OSAL_MEM_INTERNAL, &in); osal_mem_stats(OSAL_MEM_EXTERNAL, &ex);
     hal_power_battery(&b);
+    uint32_t count; uint64_t total, longest;
+    osal_mutex_lock(L.lock, OSAL_WAIT_FOREVER); count = L.refreshes; total = L.refresh_us; longest = L.refresh_max; osal_mutex_unlock(L.lock);
     char tasks[224]; hal_log_tasks(tasks, sizeof tasks);
     ink_log(INK_LOG_INFO, "health", "%s", tasks);
     ink_log(INK_LOG_INFO, "health", "internal=%zu/%zu/%zu psram=%zu/%zu/%zu battery=%d charging=%d mv=%d",
             in.free, in.min_free, in.largest_free, ex.free, ex.min_free, ex.largest_free, b.percent, b.charging, b.millivolts);
-    ink_log(INK_LOG_INFO, "health", "refreshes=%u avg_us=%llu max_us=%llu inputs=%u dropped=%u", L.refreshes,
-            (unsigned long long)(L.refreshes ? L.refresh_us / L.refreshes : 0), (unsigned long long)L.refresh_max,
-            __atomic_load_n(&L.inputs, __ATOMIC_RELAXED), __atomic_load_n(&L.dropped, __ATOMIC_RELAXED));
+    ink_log(INK_LOG_INFO, "health", "refreshes=%u avg_us=%llu max_us=%llu inputs=%u dropped=%u", (unsigned)count,
+            (unsigned long long)(count ? total / count : 0), (unsigned long long)longest,
+            (unsigned)__atomic_load_n(&L.inputs, __ATOMIC_RELAXED), (unsigned)__atomic_load_n(&L.dropped, __ATOMIC_RELAXED));
 }
 static bool writable(void) { return !ink_storage_writes_held() && !ink_audio_capture_busy() && !ink_audio_recording() && ink_audio_focus_top() < INK_AUDIO_PRIO_VOICE; }
 static void flush(void *arg) {
@@ -123,14 +126,14 @@ bool ink_log_flush(void) {
     ink_storage_run(flush, &ok, true);
     return ok;
 }
-void ink_log_poll(void) {
+void ink_log_poll(bool quiet) {
     if (!L.ready) return;
     uint64_t now = osal_now_us();
     if (now - L.health_at >= 300000000ull) { L.health_at = now; ink_log_health(); }
     osal_mutex_lock(L.lock, OSAL_WAIT_FOREVER);
-    bool due = L.pending && (L.force || L.pending >= 8192 || now - L.written_at >= 30000000ull);
+    bool urgent = L.force, due = L.pending && (urgent || L.pending >= 8192 || now - L.written_at >= 30000000ull);
     osal_mutex_unlock(L.lock);
-    if (due && writable()) { bool ok; ink_storage_run(flush, &ok, true); }
+    if (due && (urgent || quiet) && writable()) { bool ok; ink_storage_run(flush, &ok, true); }
 }
 static void recover(void *unused) {
     (void)unused;
@@ -166,8 +169,8 @@ static void event(void *ctx, const char *id, const ink_args_t *payload) {
     osal_mutex_unlock(L.lock);
     ink_log(INK_LOG_INFO, "event", "%.48s", id);
 }
-static void state(void *ctx, int h, const char *id) {
-    (void)ctx;
+void ink_log_state(int h, const char *id) {
+    if (!L.lock) return;
     if (!strcmp(id, "power.state") || !strcmp(id, "net.type") || !strcmp(id, "member.current")) {
         char value[24]; ink_state_get_str(h, value, sizeof value);
         ink_log(INK_LOG_INFO, "state", "%.32s=%.23s", id, value);
@@ -182,9 +185,10 @@ static void report(ink_call_t *c) {
     uint32_t n = L.tail->boot * 100000u + ++L.issue;
     char page[48];
     osal_mutex_lock(L.lock, OSAL_WAIT_FOREVER); memcpy(page, L.page_name, sizeof page); osal_mutex_unlock(L.lock);
-    ink_log(INK_LOG_INFO, "problem", "问题 #%u page=%.47s description=[private]", n, page);
+    ink_log(INK_LOG_INFO, "problem", "问题 #%u page=%.47s description=[private]", (unsigned)n, page);
     /* Event metadata only: payloads, free text and screen snapshots may contain credentials. */
-    for (uint32_t i = L.events > EVENTS ? L.events - EVENTS : 0; i < L.events; i++) {
+    uint32_t events; osal_mutex_lock(L.lock, OSAL_WAIT_FOREVER); events = L.events; osal_mutex_unlock(L.lock);
+    for (uint32_t i = events > EVENTS ? events - EVENTS : 0; i < events; i++) {
         char e[80];
         osal_mutex_lock(L.lock, OSAL_WAIT_FOREVER); memcpy(e, L.recent[i % EVENTS], sizeof e); osal_mutex_unlock(L.lock);
         ink_log(INK_LOG_INFO, "recent", "%s", e);
@@ -226,8 +230,10 @@ static const ink_cap_t CAPS[] = {
      .input = "{\"type\":\"object\",\"properties\":{\"description\":{\"type\":\"string\",\"maxLength\":120}},\"additionalProperties\":false}", .run = report},
     {.id = "system.export_logs", .title = "导出日志", .effect = INK_FX_LOCAL_WRITE, .exec = INK_EXEC_BG, .expose = INK_EXPOSE_OWNER, .run = export_logs}
 };
+static void tick(void *ctx) { (void)ctx; ink_storage_log_ready(); }
 int ink_log_start(void) {
     if (!L.lock || !L.tail || !L.sector) return -1;
     ink_log_health();
-    return ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_cap_subscribe("", event, NULL, INK_EXEC_DIRECT) || ink_state_watch("", state, NULL, INK_EXEC_BG);
+    L.timer = osal_timer_create("log", tick, NULL);
+    return !L.timer || osal_timer_start(L.timer, 30000000, 30000000) || ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_cap_subscribe("", event, NULL, INK_EXEC_DIRECT);
 }

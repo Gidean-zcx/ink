@@ -9,6 +9,7 @@
 #include "ink/osal.h"
 #include "ink/sys/json.h"
 #include "ink/sys/state.h"
+#include "ink/sys/log.h"
 #include "watch.h"
 
 typedef struct {
@@ -80,6 +81,7 @@ static bool due_now(item_t *it, uint64_t now) {
 }
 
 static void changed(int h, bool now) {
+    if (now) ink_log_state(h, ST.it[h].def->id);
     if (now) watch_changed(&ST.watch, h, ST.it[h].def->id);
 }
 

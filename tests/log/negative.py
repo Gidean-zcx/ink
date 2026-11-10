@@ -29,7 +29,7 @@ cases = {
     "torn-crc": ("ink_log_valid(r) && r->seq > L.seq", "r->magic == INK_LOG_MAGIC && r->seq > L.seq"),
     "crash-tail": ("L.pending = valid && crash ? L.tail->used : 0", "L.pending = valid && !crash ? L.tail->used : 0"),
     "problem-flush": ("bool ok = ink_log_flush();", "bool ok = true;"),
-    "privacy": ('description=[private]", n, page);', 'description=[private]", n, page); ink_log(INK_LOG_INFO, "problem", "%s", c->args.text);'),
+    "privacy": ('description=[private]", (unsigned)n, page);', 'description=[private]", (unsigned)n, page); ink_log(INK_LOG_INFO, "problem", "%s", c->args.text);'),
 }
 with tempfile.TemporaryDirectory(prefix="ink-log-negative-") as d:
     for name, (old, new) in cases.items():
