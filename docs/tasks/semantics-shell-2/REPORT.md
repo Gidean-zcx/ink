@@ -1,6 +1,6 @@
 # semantics-shell-2 执行报告
 
-基线：`e65bfc261b68e9fb063fc60da507122119ae4fc6`。状态：实现完成，最终验证中。
+基线：`e65bfc261b68e9fb063fc60da507122119ae4fc6`。状态：完成，本地提交，未推送。
 
 ## 验收表
 
@@ -14,9 +14,9 @@
 | A1-6 主页 | 专项通过【实测／实现】 | Main／Apps／Today 共用现有声明与语义导出；旧主页点按和应用图标拒绝 | 同上，测试名换 `semantics-shell2-home` |
 | A2-1 原测试、hub、普通版全量 | 通过【实测】 | `100% tests passed out of 353`；无跳过，400.93 秒，退出 0；已有测试和期望未改 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2` |
 | A2-2 ASan／UBSan 全量 | 通过【实测】 | `100% tests passed out of 353`；无跳过，758.70 秒，退出 0 | `INK_KEEP_EVIDENCE=1 UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2` |
-| A2-4 S31 | 待最终验证 | 正在执行 | 完整结果待补 |
-| A2-3 gcccheck | 通过【实测】 | `gcccheck: 15 compiled, 0 with findings`，无跳过，退出 0 | `taskpolicy -c utility python3 "$INK_DEPS/../ink-codex/tools/gcccheck.py" build <8 个产品 C 文件和 7 个新增测试 C 文件>` |
-| A3 行数与预算 | 通过【实现】 | 产品代码净增 156 行；连 CMake 注册保守计 165 行，低于 250 行 | `git diff --numstat <基线> -- system apps` |
+| A2-3 S31 | 通过【实测】 | GNU 15.2.0 完整编译、链接和打包，尺寸／栈报告生成，退出 0 | `INK_DEPS=<依赖检出> taskpolicy -c utility bash ports/esp32s31/build.sh` |
+| A2-4 gcccheck | 通过【实测】 | `gcccheck: 15 compiled, 0 with findings`，无跳过，退出 0 | `taskpolicy -c utility python3 "$INK_DEPS/../ink-codex/tools/gcccheck.py" build <8 个产品 C 文件和 7 个新增测试 C 文件>` |
+| A3 行数与预算 | 通过【实测】 | 产品代码净增 156 行；连 CMake 注册保守计 165 行，低于 250 行 | `git diff --numstat <基线> -- system apps` |
 
 主机构建／测试均使用 `taskpolicy -c utility`，并行最多 `-j2`。日志保存在忽略目录 `work/semantics-shell-2/`，临时证据保存在 `build/test-out/semantics-shell2-*`。
 
@@ -37,7 +37,6 @@
 
 ## 没做到的
 
-- S31 编译尚在执行。
 - 没有连接设备，也没有运行 Linux CI；不把本机检查写成实机或 Linux 全量结果。
 
 ## 和设计不一致的
@@ -49,6 +48,8 @@
 
 无。只新增专项程序和六项 ctest 注册。专项中对紧凑导出器做观察钩子：核查生产文本，再用同一模型导出标准 F1 JSON，以检查字段、秘密和对象版本；另用原生产输出核查 3072 字节组合快照。原回归仍读取真实生产格式。
 
+新增用例最初把 PIN 数字输入当作语义动作；定位吞键后，改为检查实际声明的“忘记密码”动作过期时不能跳页或改变 PIN。数字输入由原 `kid-1` 的完整输入、等待恢复与家长验证流程覆盖，原断言未修改。
+
 ## 要用户定的
 
 暂无；没有新增产品能力或改变本人确认边界。
@@ -57,6 +58,7 @@
 
 - 【实现】电量页原先对所有 `member.` 事件重画，包括与电量控件无关的时间变化；本次仅保留影响成员身份和授权的变化。
 - 【实现】家人页只核对成员／锁定状态，孩子页只在限制状态切换时重画；键盘只在键盘类型变化时重建，AI 音频订阅更新局部控件；主页已有事件过滤。专项检查了无关事件不重画。
+- 【实现】未注册到 ctest 的 `tests/kid_1.py --mutant privacy` 仍按旧手写快照的参数串定位注入点，迁移后需要同步锚点；本任务没有修改这个原脚本。原 ctest 与本任务新增六组反向对照均已实跑。
 
 ## 新增的机制
 
@@ -80,3 +82,5 @@
 - 六组反向对照：`reverse-final.log`。键盘、家人、孩子、电量、主页替换为指定基线源文件，仅在构建目录编译和链接；各测试程序退出 1，分别 13、10、3、7、8 个断言失败。AI 面板基线已使用 F1，因此该组只撤掉新增的过期点按保护，退出 1，2 个断言失败。六个验证脚本均退出 0；ctest 默认模式不依赖 Git 历史。
 - 最终普通版：`ctest-final.log`，全部 353 项通过，400.93 秒，退出 0，没有跳过项；包括原 hub 契约、原控件／场景、确定性与资源预算检查、新增六项。最终 GCC 复核见 `gcccheck-final.log`。
 - 内存版：与普通版相同配置，仅换目录 `build-asan`、增加 `-DINK_SANITIZE=ON`；保留 `-DINK_WERROR=ON`、字体、依赖和 hub Python。配置、完整构建均退出 0，实际编译参数含 `-fsanitize=address,undefined`。`ctest-asan.log` 原文 `100% tests passed out of 353`、`Total Test time (real) = 758.70 sec`，退出 0，无跳过；执行所有原测试和六项新增回归。
+- S31：`s31-build.log`，完整构建退出 0；`build-s31/size.txt`、`size-components.txt`、`stack.txt` 已生成，镜像静态尺寸 3211486 字节。栈报告只计已知直接调用链，排除了间接回调等，不是实机高水位或完整上界。
+- 收尾：对指定基线执行 `git diff --stat`、`git diff --check`，核对只有任务相关变更；原测试、共享文档和受保护资料无改动。按总规则第 6 节对 `git diff <基线>..HEAD` 执行隐私扫描，无匹配，grep 退出 1，`privacy.log` 为空；未提交构建产物、设计导出或本机路径。
