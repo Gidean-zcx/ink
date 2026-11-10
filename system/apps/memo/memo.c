@@ -25,7 +25,6 @@ static struct {
     bool busy; uint32_t id; char member[16], text[1024]; ink_exec_job_t sweep;
     struct { char member[16]; uint32_t id, fails; uint64_t until; } held[HELD_MAX]; /* failed this boot: not sent again before `until` */
 } T INK_PSRAM_BSS; /* the one being made into words: BG */
-static const char NOT_LOADED[] = "备忘还没读出来，请先打开备忘再试";
 static struct {
     ink_db_t *db;
     ink_ui_list_t *list;
@@ -179,7 +178,7 @@ static void voice(ink_call_t *c, ink_db_t *db, uint32_t id, memo_t *n) { /* a re
 }
 static void mutate(ink_call_t *c) {
     int64_t id = 0, index = 0, draft = 0; ink_args_get_int(&c->args, "id", &id);
-    ink_db_t *db = ink_db_open_cached_member(&MEMOS, ink_cap_call_member(c)); /* no wait on BG: the app's pages read it in */
+    ink_db_t *db = ink_db_open_member(&MEMOS, ink_cap_call_member(c));
     memo_t *n = ink_app_alloc(sizeof *n, true); char *raw = ink_app_alloc(INK_DB_RECORD_MAX + 1, true);
     bool save = !strcmp(c->cap->id, "memo.save"), is_voice = !strcmp(c->cap->id, "memo.voice"), fresh = is_voice && !id;
     if (!db || !n || !raw) c->rc.status = INK_RC_FAILED;
@@ -217,7 +216,7 @@ static void mutate(ink_call_t *c) {
         }
     }
     snprintf(c->rc.object, sizeof c->rc.object, "memo:%u", (unsigned)id);
-    snprintf(c->rc.say, sizeof c->rc.say, "%s", c->rc.status == INK_RC_DONE ? "已记下" : !db ? NOT_LOADED : "这条没存上，字还在这里。请腾出空间后重试");
+    snprintf(c->rc.say, sizeof c->rc.say, "%s", c->rc.status == INK_RC_DONE ? "已记下" : "这条没存上，字还在这里。请腾出空间后重试");
     if (c->rc.status == INK_RC_DONE) ink_exec_post(INK_EXEC_UI, &M.refresh, refresh, NULL);
     if (c->rc.status == INK_RC_DONE && fresh) { ink_exec_post(INK_EXEC_UI, &M.recorded, after_record, (void *)(uintptr_t)id); sweep(NULL); }
     ink_app_free(raw); ink_app_free(n); ink_db_close(db);
@@ -272,8 +271,8 @@ static void record(ink_call_t *c) { /* UI: a recording in the member's memo fold
 static void play_reply(void *ctx, const ink_receipt_t *rc) { ink_call_t *c = ctx; c->rc = *rc; c->rc.result = NULL; ink_cap_done(c); }
 static void play(ink_call_t *c) { /* BG: by the file's number, which a rename or a move keeps */
     int64_t id = 0; ink_args_get_int(&c->args, "id", &id); ink_fs_entry_t e = {0}; const char *who = ink_cap_call_member(c);
-    ink_db_t *db = ink_db_open_cached_member(&MEMOS, who); memo_t *n = ink_app_alloc(sizeof *n, true); /* no wait on BG */
-    if (!db) { c->rc.status = INK_RC_FAILED; snprintf(c->rc.say, sizeof c->rc.say, "%s", NOT_LOADED); }
+    ink_db_t *db = ink_db_open_member(&MEMOS, who); memo_t *n = ink_app_alloc(sizeof *n, true);
+    if (!db) { c->rc.status = INK_RC_FAILED; snprintf(c->rc.say, sizeof c->rc.say, "暂时读不了备忘，请稍后再试"); }
     else if (!n || !read_note(db, (uint32_t)id, n) || n->deleted || !n->path[0]) c->rc.status = INK_RC_INVALID;
     else {
         ink_args_t a; ink_args_init(&a); ink_args_str(&a, "path", ink_fs_lookup(n->audio, &e) == 0 ? e.path : n->path); ink_args_int(&a, "start_ms", 0);
