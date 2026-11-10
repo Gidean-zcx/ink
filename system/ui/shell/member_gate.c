@@ -15,10 +15,13 @@
 #include "ink/sys/power.h"
 #include "ink/sys/state.h"
 #include "ink/sys/ui.h"
+#include "ink/sys/ui_semantics.h"
 #include "member_pages.h"
 #include "shell_card.h"
 #include "ink/ui_shell.h"
 
+enum { GATE_FIELDS = 5, GATE_ACTIONS = 4 };
+_Static_assert(1 + 4 <= GATE_FIELDS, "member page capacity");
 static struct {
     shell_card_t card;
     char picked[16];
@@ -26,10 +29,15 @@ static struct {
     bool requested;
     int page;
     ink_exec_job_t sync_job;
+    ink_ui_page_spec_t model;
+    ink_ui_field_spec_t fields[GATE_FIELDS];
+    ink_ui_action_spec_t actions[GATE_ACTIONS];
+    uint32_t version;
 } G;
 
 static void sync_gate(void *arg);
 static const ink_ui_overlay_t OVERLAY;
+static void pressed(lv_event_t *e) { (void)e; G.version = ink_ui_content_version(); }
 static void page_action(ink_call_t *c) {
     int64_t delta = 0; ink_args_get_int(&c->args, "delta", &delta);
     if (!G.card.root || G.pad) { c->rc.status = INK_RC_REJECTED; return; }
@@ -40,8 +48,9 @@ static void page_action(ink_call_t *c) {
     sync_gate(NULL);
 }
 static void page_clicked(lv_event_t *e) {
-    char args[40]; snprintf(args, sizeof args, "{\"delta\":%d}", (int)(intptr_t)lv_event_get_user_data(e));
-    ink_receipt_t rc; ink_cap_invoke_json("shell.members_page", args, INK_SRC_TOUCH, 0, &rc);
+    ink_ui_action_target_t target = {G.version, G.model.object};
+    ink_receipt_t rc;
+    ink_ui_semantics_action(&G.model, (intptr_t)lv_event_get_user_data(e) < 0 ? "prev" : "next", &target, INK_SRC_TOUCH, &rc);
 }
 static bool on_key(ink_key_t key, bool long_press) {
     if (!long_press && G.requested && ink_member_space_open() && (key == INK_KEY_HOME || key == INK_KEY_BACK)) {
@@ -51,14 +60,12 @@ static bool on_key(ink_key_t key, bool long_press) {
     return true;
 }
 
-static int snapshot(char *buf, size_t cap) {
-    int n = snprintf(buf, cap, "设备锁着：请选择家人，或输入密码。");
-    return n < 0 ? 0 : (size_t)n < cap ? n : (int)cap - 1;
-}
+static int semantic_snapshot(char *buf, size_t cap) { return ink_ui_semantics_snapshot(&G.model, buf, cap); }
 
-static const ink_ui_overlay_t OVERLAY = {.name = "member_gate", .level = 2, .snapshot = snapshot, .on_key = on_key};
+static const ink_ui_overlay_t OVERLAY = {.name = "member_gate", .level = 2, .snapshot = semantic_snapshot, .on_key = on_key};
 
 static void on_member(lv_event_t *e) {
+    if (G.version != ink_ui_content_version()) return;
     const ink_member_t *m = lv_event_get_user_data(e);
     snprintf(G.picked, sizeof G.picked, "%s", m->id);
     if (ink_member_has_pin(m->id)) {
@@ -68,9 +75,18 @@ static void on_member(lv_event_t *e) {
         ink_exec_post(INK_EXEC_UI, &G.sync_job, sync_gate, NULL);
     }
 }
+static void clicked(lv_event_t *e) {
+    lv_event_stop_processing(e);
+    ink_ui_action_target_t target = {G.version, G.model.object};
+    ink_receipt_t rc;
+    ink_ui_semantics_action(&G.model, lv_event_get_user_data(e), &target, INK_SRC_TOUCH, &rc);
+}
 
 static void member_tile(const ink_member_t *m, int x, int y, int diameter, bool primary) {
+    size_t at = G.model.field_count++;
+    G.fields[at] = (ink_ui_field_spec_t){.id = m->id, .role = "button", .label = m->name, .value = ink_member_has_pin(m->id) ? "有密码" : "无密码"};
     lv_obj_t *b = ink_ui_pill(G.card.panel, "", x, y, diameter, diameter, primary, on_member, (void *)m);
+    lv_obj_add_event_cb(b, pressed, LV_EVENT_PRESSED, NULL);
     lv_obj_set_style_border_width(b, 0, 0);
     lv_obj_set_style_clip_corner(b, false, 0); /* The lock badge crosses the avatar's round edge. */
     if (!primary) lv_obj_set_style_bg_color(b, ink_ui_gray(), 0);
@@ -104,8 +120,17 @@ static void sync_gate(void *arg) { /* UI task */
     shell_card_open(&G.card);
     shell_card_full(&G.card);
     ink_ui_overlay_add(&OVERLAY, G.card.root);
+    G.fields[0] = (ink_ui_field_spec_t){.id = "status", .role = "text", .label = "选择家人", .value = "设备锁着：请选择家人，或输入密码。"};
+    G.model = (ink_ui_page_spec_t){"member_gate", G.requested ? "谁在用？" : "选择家人", {"member_gate", ink_ui_generation()}, G.fields, 1, G.actions, 0};
+    G.actions[G.model.action_count++] = (ink_ui_action_spec_t){.id = "camera", .label = "拍照", .capability = "app.open", .args_json = "{\"id\":\"camera\"}", .enabled = ink_cap_find("camera.capture") != NULL};
     ink_shell_statusbar(G.card.panel, true);
-    ink_shell_camera_button(G.card.panel, false);
+    if (ink_cap_find("camera.capture")) {
+        lv_obj_t *camera = ink_ui_circle(G.card.panel, "camera", INK_CANVAS_W - INK_MARGIN - INK_CIRCLE, INK_STATUS_BAR + INK_GAP,
+            INK_CIRCLE, INK_ICON_MEDIUM, INK_SURFACE_WHITE, clicked, "camera");
+        lv_obj_set_style_border_width(camera, ink_ui_px(INK_STROKE), 0);
+        ink_shell_bind(camera, "app.open", "{\"id\":\"camera\"}");
+        lv_obj_add_event_cb(camera, pressed, LV_EVENT_PRESSED, NULL);
+    }
     shell_card_text(&G.card, G.requested ? "谁在用？" : "", "");
     shell_card_clear_buttons(&G.card);
     lv_obj_add_flag(G.card.row, LV_OBJ_FLAG_HIDDEN);
@@ -134,13 +159,22 @@ static void sync_gate(void *arg) { /* UI task */
     }
     if (G.requested && ink_member_space_open() && current->role == INK_ROLE_ADULT) {
         lv_obj_t *b = ink_ui_pill(G.card.panel, "设置或修改密码", INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_CONTROL,
-                                  INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, false, NULL, NULL);
+                                  INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, false, clicked, "pin_set");
+        lv_obj_add_event_cb(b, pressed, LV_EVENT_PRESSED, NULL);
         ink_shell_bind(b, "shell.pin_set", NULL);
+        G.actions[G.model.action_count++] = (ink_ui_action_spec_t){.id = "pin_set", .label = "设置或修改密码", .capability = "shell.pin_set", .enabled = true};
     }
-    if (pages > 1) ink_ui_pagebar(G.card.panel, G.page + 1, pages, INK_CANVAS_H - INK_MARGIN - 2 * INK_CONTROL - INK_GAP, page_clicked);
+    G.actions[G.model.action_count++] = (ink_ui_action_spec_t){.id = "prev", .label = "上一页", .capability = "shell.members_page", .args_json = "{\"delta\":-1}", .enabled = G.page > 0};
+    G.actions[G.model.action_count++] = (ink_ui_action_spec_t){.id = "next", .label = "下一页", .capability = "shell.members_page", .args_json = "{\"delta\":1}", .enabled = G.page + 1 < pages};
+    if (pages > 1) {
+        lv_obj_t *pager = ink_ui_pagebar(G.card.panel, G.page + 1, pages, INK_CANVAS_H - INK_MARGIN - 2 * INK_CONTROL - INK_GAP, page_clicked);
+        lv_obj_add_event_cb(lv_obj_get_child(pager, 0), pressed, LV_EVENT_PRESSED, NULL);
+        lv_obj_add_event_cb(lv_obj_get_child(pager, 2), pressed, LV_EVENT_PRESSED, NULL);
+    }
     /* the one whose space it is first */
     snprintf(G.picked, sizeof G.picked, "%s", ink_member_current()->id);
     G.pad = NULL;
+    G.version = ink_ui_content_version();
 }
 
 void ink_shell_members_open(bool returning) {

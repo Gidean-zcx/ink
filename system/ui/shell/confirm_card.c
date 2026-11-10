@@ -9,6 +9,7 @@
 #include "ink/sys/exec.h"
 #include "ink/sys/power.h"
 #include "ink/sys/state.h"
+#include "ink/sys/ui_semantics.h"
 #include "pinpad.h"
 #include "member_pages.h"
 #include "shell_card.h"
@@ -17,13 +18,15 @@
 static struct {
     shell_card_t card;
     ink_confirm_view_t now;
-    lv_obj_t *pad, *pager, *accept, *notice, *preview;
+    lv_obj_t *pad, *pager, *accept, *notice, *preview, *pin_dots;
     int head_h, preview_h, expired_h, expired_body_y;
     lv_timer_t *read_timer;
     uint16_t starts[161]; /* At most one page per detail byte, plus the end. */
     int page, pages;
     bool drawn, read, watching;
     bool expired;
+    bool pin_present;
+    uint32_t version, revision;
     ink_member_identity_t owner;
     int pin_result;
     uint32_t pin_wait;
@@ -33,6 +36,15 @@ static struct {
 static void told_job(void *arg);
 static void close_card(void);
 static void on_answer(lv_event_t *e);
+static ink_ui_page_spec_t model(void);
+static void changed(void) { C.revision++; C.version = ink_ui_content_version(); }
+static void pressed(lv_event_t *e) { (void)e; C.version = ink_ui_content_version(); }
+static void pin_changed(lv_event_t *e) {
+    (void)e;
+    if (!C.pin_dots) return;
+    bool present = !strncmp(lv_label_get_text(C.pin_dots), "●", strlen("●"));
+    if (present != C.pin_present) { C.pin_present = present; changed(); }
+}
 
 static const char *page_name(void) {
     if (C.expired) return "ConfirmExpired";
@@ -85,17 +97,25 @@ static void told_job(void *arg) { /* UI task */
     else snprintf(s, sizeof s, "密码不对");
     shell_pinpad_clear();
     shell_pinpad_say(s);
+    C.pin_present = false; changed();
 }
 
 static void pin_entered(const char *pin) {
     ink_confirm_accept_with_pin(C.now.token, pin, pin_told, NULL);
     shell_pinpad_clear();
     shell_pinpad_say("正在核对…");
+    C.pin_present = false; changed();
 }
 
 /* Keep the existing password input and verification; add the transaction above it. */
 static void parent_page(void) {
     C.pad = shell_pinpad(C.card.root, pin_entered);
+    C.pin_dots = lv_obj_get_child(C.pad, 1);
+    C.pin_present = false;
+    for (uint32_t i = 2; i < lv_obj_get_child_count(C.pad); i++) {
+        lv_obj_add_event_cb(lv_obj_get_child(C.pad, (int)i), pin_changed, LV_EVENT_CLICKED, NULL);
+        lv_obj_add_event_cb(lv_obj_get_child(C.pad, (int)i), pressed, LV_EVENT_PRESSED, NULL);
+    }
     int y0 = INK_CANVAS_H - INK_READING_MARGIN - 4 * INK_DIGIT - 3 * INK_GAP;
     int w = INK_CANVAS_W - 2 * INK_MARGIN;
     int title_h = ink_ui_text_height(C.now.title, INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, w);
@@ -109,32 +129,55 @@ static void parent_page(void) {
     lv_obj_move_background(panel);
     ink_ui_label(panel, C.now.title, INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, INK_MARGIN, INK_MARGIN, w);
     ink_ui_label(panel, C.now.detail, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, INK_MARGIN + title_h + INK_GAP, w);
-    ink_ui_pill(C.pad, "取消", INK_MARGIN, y0 - ink_ui_line_height(INK_FONT_LIST) - 2 * INK_GAP - INK_CONTROL,
+    lv_obj_t *cancel = ink_ui_pill(C.pad, "取消", INK_MARGIN, y0 - ink_ui_line_height(INK_FONT_LIST) - 2 * INK_GAP - INK_CONTROL,
                 w, INK_CONTROL, false, on_answer, NULL);
+    lv_obj_add_event_cb(cancel, pressed, LV_EVENT_PRESSED, NULL);
     ink_ui_hint_obj(C.card.root, INK_REFRESH_FLASH_UI);
+    changed();
 }
 
 static void on_answer(lv_event_t *e) {
+    if (C.version != ink_ui_content_version()) return;
     bool yes = lv_event_get_user_data(e) != NULL;
     if (yes && (C.page + 1 != C.pages || !C.read)) return;
     if (yes && C.now.parent) { /* a yes here takes a parent */
         if (!C.pad) parent_page();
         return;
     }
-    ink_confirm_decide(C.now.token, yes, INK_SRC_TOUCH);
+    ink_ui_page_spec_t page = model();
+    ink_ui_action_target_t target = {C.version, page.object};
+    ink_receipt_t rc;
+    ink_ui_semantics_action(&page, yes ? "accept" : "reject", &target, INK_SRC_TOUCH, &rc);
 }
 
-static int snapshot(char *buf, size_t cap) {
+static ink_ui_page_spec_t model(void) {
+    enum { FIELD_COUNT = 7, ACTION_COUNT = 6, DELTA_COUNT = 3 };
+    static char identity[128], reading[96], args[DELTA_COUNT][80], choices[96];
+    static ink_ui_field_spec_t fields[FIELD_COUNT] INK_PSRAM_BSS;
+    static ink_ui_action_spec_t actions[ACTION_COUNT] INK_PSRAM_BSS;
     int64_t pending = 0;
     ink_state_get_int(ink_state_find("confirm.pending"), &pending);
-    int n = snprintf(buf, cap, "页面=%s；家人=%s；确认编号=%u；%s：%s。%s。%s。阅读=%d/%d；排队=%lld；可确认=%d；%s。动作：%s。",
-                     page_name(), C.owner.member, (unsigned)C.now.token, C.expired ? "这件事没有做" : "等你确认", title_text(), C.now.detail, notice_text(),
-                     C.page + 1, C.pages, (long long)pending, !C.expired && !C.pad && C.read && C.page + 1 == C.pages,
-                     C.pad ? "需要大人在设备上输入密码；密码内容不可见" : C.expired ? "已经过期，请重新发起" : "只能由你确认或取消",
-                     C.expired ? "confirm.page（delta=0，关闭说明，只由人在设备上操作）" : "confirm.withdraw");
-    if (n < 0 || (size_t)n >= cap) { if (cap) buf[0] = 0; return -1; }
-    return n;
+    snprintf(identity, sizeof identity, "页面=%s；家人=%s；确认编号=%u", page_name(), C.owner.member, (unsigned)C.now.token);
+    bool ready = !C.expired && !C.pad && C.read && C.page + 1 == C.pages;
+    snprintf(reading, sizeof reading, "阅读=%d/%d；排队=%lld；可确认=%d", C.page + 1, C.pages, (long long)pending, ready);
+    snprintf(choices, sizeof choices, "%s、取消", answer_label());
+    fields[0] = (ink_ui_field_spec_t){.id = "transaction", .role = "status", .label = "确认编号", .value = identity};
+    fields[1] = (ink_ui_field_spec_t){.id = "title", .role = "text", .label = "标题", .value = C.expired ? "这件事没有做" : title_text()};
+    fields[2] = (ink_ui_field_spec_t){.id = "detail", .role = "text", .label = "说明", .value = C.expired ? lv_label_get_text(C.card.body) : C.now.detail};
+    fields[3] = (ink_ui_field_spec_t){.id = "notice", .role = "status", .label = "提示", .value = C.pad ? "需要大人在设备上输入密码；密码内容不可见" : C.expired ? "已经过期，请重新发起" : notice_text()};
+    fields[4] = (ink_ui_field_spec_t){.id = "reading", .role = "status", .label = "阅读", .value = reading};
+    fields[5] = (ink_ui_field_spec_t){.id = "buttons", .role = "button", .label = "本人操作", .value = C.expired ? "关闭" : C.pad ? "取消" : choices};
+    fields[6] = (ink_ui_field_spec_t){.id = "pin", .role = "textbox", .label = "密码", .value = C.pin_present ? "1" : "", .secret = true};
+    for (int i = 0; i < DELTA_COUNT; i++) snprintf(args[i], sizeof args[i], "{\"token\":%u,\"delta\":%d}", (unsigned)C.now.token, i - 1);
+    actions[0] = (ink_ui_action_spec_t){.id = "accept", .label = answer_label(), .capability = "confirm.accept", .args_json = args[1], .enabled = ready && !C.now.parent};
+    actions[1] = (ink_ui_action_spec_t){.id = "reject", .label = "取消", .capability = "confirm.reject", .args_json = args[1], .enabled = !C.expired};
+    actions[2] = (ink_ui_action_spec_t){.id = "withdraw", .label = "撤回", .capability = "confirm.withdraw", .args_json = args[1], .enabled = !C.expired};
+    actions[3] = (ink_ui_action_spec_t){.id = "prev", .label = "上一页", .capability = "confirm.page", .args_json = args[0], .enabled = !C.expired && !C.pad && C.read && C.page > 0};
+    actions[4] = (ink_ui_action_spec_t){.id = "next", .label = "下一页", .capability = "confirm.page", .args_json = args[2], .enabled = !C.expired && !C.pad && C.read && C.page + 1 < C.pages};
+    actions[5] = (ink_ui_action_spec_t){.id = "close", .label = "关闭", .capability = "confirm.page", .args_json = args[1], .enabled = C.expired};
+    return (ink_ui_page_spec_t){C.expired ? "ConfirmExpired" : "confirm", page_name(), {"confirm", C.revision}, fields, C.pad ? FIELD_COUNT : FIELD_COUNT - 1, actions, ACTION_COUNT};
 }
+static int semantic_snapshot(char *buf, size_t cap) { ink_ui_page_spec_t page = model(); return ink_ui_semantics_snapshot(&page, buf, cap); }
 
 static bool on_key(ink_key_t key, bool long_press) {
     if ((key == INK_KEY_BACK || key == INK_KEY_HOME) && !long_press) {
@@ -144,15 +187,15 @@ static bool on_key(ink_key_t key, bool long_press) {
     return true;
 }
 
-static const ink_ui_overlay_t OVERLAY = {.name = "confirm", .level = 1, .on_key = on_key, .snapshot = snapshot};
-static const ink_ui_overlay_t EXPIRED = {.name = "ConfirmExpired", .level = 1, .on_key = on_key, .snapshot = snapshot};
+static const ink_ui_overlay_t OVERLAY = {.name = "confirm", .level = 1, .on_key = on_key, .snapshot = semantic_snapshot};
+static const ink_ui_overlay_t EXPIRED = {.name = "ConfirmExpired", .level = 1, .on_key = on_key, .snapshot = semantic_snapshot};
 
 static void close_card(void) {
     if (!C.card.root) return;
     if (C.read_timer) lv_timer_delete(C.read_timer);
     C.read_timer = NULL;
     shell_card_close(&C.card);
-    C.pad = C.pager = C.accept = C.notice = C.preview = NULL;
+    C.pad = C.pager = C.accept = C.notice = C.preview = C.pin_dots = NULL;
     ink_ui_overlay_remove(&OVERLAY);
     ink_ui_overlay_remove(&EXPIRED);
     C.expired = false;
@@ -166,7 +209,8 @@ static bool hidden(void) {
 }
 
 static void state_changed(void *ctx, int h, const char *id) { /* UI task */
-    (void)ctx; (void)h; (void)id;
+    (void)ctx; (void)h;
+    if (!strcmp(id, "confirm.pending") && C.card.root) changed();
     if (C.expired && hidden()) close_card();
 }
 
@@ -174,13 +218,13 @@ static void draw_page(void);
 static void page_drawn(lv_event_t *e) { (void)e; if (C.card.root) C.drawn = true; }
 static void read_ready(lv_timer_t *timer) {
     if (!C.drawn || ink_display_busy()) return;
-    C.read = true;
+    if (!C.read) { C.read = true; changed(); }
     lv_timer_pause(timer);
     if (C.page + 1 == C.pages) lv_obj_remove_state(C.accept, LV_STATE_DISABLED);
 }
 static void read_pressed(lv_event_t *e) {
-    (void)e;
-    if (C.drawn && !ink_display_busy()) C.read = true;
+    pressed(e);
+    if (!C.read && C.drawn && !ink_display_busy()) { C.read = true; changed(); }
 }
 static void page_action(ink_call_t *call) {
     int64_t token = 0, delta = 0;
@@ -193,9 +237,10 @@ static void page_action(ink_call_t *call) {
     draw_page();
 }
 static void page_clicked(lv_event_t *e) {
-    char args[80];
-    snprintf(args, sizeof args, "{\"token\":%u,\"delta\":%d}", (unsigned)C.now.token, (int)(intptr_t)lv_event_get_user_data(e));
-    ink_receipt_t rc; ink_cap_invoke_json("confirm.page", args, INK_SRC_TOUCH, 0, &rc);
+    ink_ui_page_spec_t page = model();
+    ink_ui_action_target_t target = {C.version, page.object};
+    ink_receipt_t rc;
+    ink_ui_semantics_action(&page, (intptr_t)lv_event_get_user_data(e) < 0 ? "prev" : "next", &target, INK_SRC_TOUCH, &rc);
 }
 
 /* From the top of the card: icon and title, the words being confirmed, a line of notice, the page
@@ -270,6 +315,7 @@ static void draw_page(void) {
     ink_ui_hint_obj(C.card.panel, INK_REFRESH_FLASH_UI);
     lv_timer_resume(C.read_timer);
     lv_timer_reset(C.read_timer);
+    changed();
 }
 
 static void show(const ink_confirm_view_t *top) { /* UI task */
@@ -285,7 +331,7 @@ static void show(const ink_confirm_view_t *top) { /* UI task */
     ink_member_identity(&C.owner);
     if (C.pad) {
         lv_obj_delete(C.pad);
-        C.pad = NULL;
+        C.pad = C.pin_dots = NULL;
     }
     if (!C.card.root) {
         shell_card_open(&C.card);
@@ -313,6 +359,7 @@ static void show(const ink_confirm_view_t *top) { /* UI task */
     C.accept = lv_obj_get_child(C.card.row, 0);
     lv_obj_add_event_cb(C.accept, read_pressed, LV_EVENT_PRESSED, NULL);
     shell_card_button(&C.card, "取消", on_answer, NULL);
+    lv_obj_add_event_cb(lv_obj_get_child(C.card.row, 1), pressed, LV_EVENT_PRESSED, NULL);
     lv_obj_set_flex_flow(C.card.row, LV_FLEX_FLOW_ROW_REVERSE);
     paginate();
     draw_page();
@@ -320,9 +367,10 @@ static void show(const ink_confirm_view_t *top) { /* UI task */
 
 static void expired_close(lv_event_t *e) {
     (void)e;
-    char args[80];
-    snprintf(args, sizeof args, "{\"token\":%u,\"delta\":0}", (unsigned)C.now.token);
-    ink_receipt_t rc; ink_cap_invoke_json("confirm.page", args, INK_SRC_TOUCH, 0, &rc);
+    ink_ui_page_spec_t page = model();
+    ink_ui_action_target_t target = {C.version, page.object};
+    ink_receipt_t rc;
+    ink_ui_semantics_action(&page, "close", &target, INK_SRC_TOUCH, &rc);
 }
 
 static void result(void *ctx, const char *id, const ink_args_t *args) {
@@ -350,6 +398,8 @@ static void result(void *ctx, const char *id, const ink_args_t *args) {
     lv_obj_set_y(C.card.row, ink_ui_px(C.expired_h - INK_PRIMARY - INK_MARGIN));
     shell_card_text(&C.card, "这件事没有做", text);
     shell_card_button(&C.card, "关闭", expired_close, NULL);
+    lv_obj_add_event_cb(lv_obj_get_child(C.card.row, 0), pressed, LV_EVENT_PRESSED, NULL);
+    changed();
 }
 
 int ink_shell_confirm_card_init(void) {
@@ -358,7 +408,7 @@ int ink_shell_confirm_card_init(void) {
     if (ink_cap_register(&PAGE, 1) != 0) return -1;
     if (ink_cap_subscribe("confirm.result", result, NULL, INK_EXEC_UI) != 0) return -1;
     if (ink_state_watch("member.", state_changed, NULL, INK_EXEC_UI) != 0 || ink_state_watch("power.state", state_changed, NULL, INK_EXEC_UI) != 0 ||
-        ink_state_watch("interrupt.active", state_changed, NULL, INK_EXEC_UI) != 0) return -1;
+        ink_state_watch("interrupt.active", state_changed, NULL, INK_EXEC_UI) != 0 || ink_state_watch("confirm.pending", state_changed, NULL, INK_EXEC_UI) != 0) return -1;
     static const ink_confirm_presenter_t P = {.show = show, .exec = INK_EXEC_UI};
     ink_confirm_set_presenter(&P);
     return 0;

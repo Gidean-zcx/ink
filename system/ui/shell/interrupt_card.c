@@ -7,8 +7,10 @@
 #include <string.h>
 
 #include "ink/sys/cap.h"
+#include "ink/osal.h"
 #include "ink/sys/interrupt.h"
 #include "ink/sys/members.h"
+#include "ink/sys/ui_semantics.h"
 #include "shell_card.h"
 #include "ink/ui_shell.h"
 
@@ -17,23 +19,52 @@ static struct {
     ink_interrupt_t now;
     lv_obj_t *icon, *date, *notice;
     char clock[16], date_text[96];
+    uint32_t version, revision;
+    bool touching;
 } C;
+
+static ink_ui_page_spec_t model(void) {
+    enum { FIELD_COUNT = 3, ACTION_COUNT = sizeof C.now.actions / sizeof *C.now.actions };
+    static ink_ui_field_spec_t fields[FIELD_COUNT + ACTION_COUNT];
+    static ink_ui_action_spec_t actions[ACTION_COUNT];
+    static const char *const ids[] = {"0", "1", "2"};
+    _Static_assert(sizeof ids / sizeof *ids == ACTION_COUNT, "interrupt action ids");
+    static char time[144];
+    snprintf(time, sizeof time, "时间=%s；日期=%s；", C.clock, C.date_text);
+    fields[0] = (ink_ui_field_spec_t){.id = "title", .role = "text", .label = "标题", .value = C.now.title};
+    fields[1] = (ink_ui_field_spec_t){.id = "body", .role = "text", .label = "内容", .value = C.now.body};
+    fields[2] = (ink_ui_field_spec_t){.id = "time", .role = "text", .label = "时间和日期", .value = time};
+    size_t count = C.now.kind == INK_INT_ALARM ? FIELD_COUNT : FIELD_COUNT - 1;
+    for (int i = 0; i < C.now.nactions; i++) {
+        fields[count++] = (ink_ui_field_spec_t){.id = ids[i], .role = "button", .label = "按钮", .value = C.now.actions[i].label};
+        actions[i] = (ink_ui_action_spec_t){.id = ids[i], .label = C.now.actions[i].label,
+            .capability = C.now.actions[i].cap, .args_json = C.now.actions[i].args, .enabled = C.now.actions[i].cap != NULL};
+    }
+    return (ink_ui_page_spec_t){"interrupt", C.now.title, {"interrupt", C.revision}, fields,
+        count, actions, (size_t)C.now.nactions};
+}
+static void pressed(lv_event_t *e) { (void)e; C.version = ink_ui_content_version(); C.touching = true; }
 
 static void on_button(lv_event_t *e) {
     int index = (int)(intptr_t)lv_event_get_user_data(e);
-    ink_interrupt_action(C.now.id, index, INK_SRC_TOUCH);
+    uint32_t version = C.touching ? C.version : ink_ui_content_version();
+    C.touching = false;
+    if (version != ink_ui_content_version()) return;
+    ink_ui_page_spec_t page = model();
+    ink_ui_action_target_t target = {version, page.object};
+    ink_receipt_t rc;
+    if (C.now.actions[index].cap) ink_ui_semantics_action(&page, page.actions[index].id, &target, INK_SRC_TOUCH, &rc);
+    else ink_interrupt_action(C.now.id, index, INK_SRC_TOUCH);
 }
 
-static int snapshot(char *buf, size_t cap) {
-    if (!ink_member_space_open()) return snprintf(buf, cap, "有系统打断；大人验证前 AI 无权读取个人内容。");
-    int n = snprintf(buf, cap, "%s：%s。", C.now.title, C.now.body);
-    if (C.now.kind == INK_INT_ALARM && n >= 0 && (size_t)n < cap)
-        n += snprintf(buf + n, cap - (size_t)n, "时间=%s；日期=%s；", C.clock, C.date_text);
-    for (int i = 0; i < C.now.nactions && n >= 0 && (size_t)n < cap; i++) n += snprintf(buf + n, cap - (size_t)n, "按钮：%s。", C.now.actions[i].label);
-    return n < 0 ? 0 : (size_t)n < cap ? n : (int)cap - 1;
+static int semantic_snapshot(char *buf, size_t cap) {
+    ink_ui_page_spec_t page = model();
+    ink_ui_field_spec_t locked = {.id = "status", .role = "text", .label = "系统打断", .value = "有系统打断；大人验证前 AI 无权读取个人内容。"};
+    if (!ink_member_space_open()) { page.title = "系统打断"; page.fields = &locked; page.field_count = 1; page.action_count = 0; }
+    return ink_ui_semantics_snapshot(&page, buf, cap);
 }
 
-static const ink_ui_overlay_t OVERLAY = {.name = "interrupt", .level = 3, .snapshot = snapshot}; /* the keys do nothing: only the power key does (in the input service) */
+static const ink_ui_overlay_t OVERLAY = {.name = "interrupt", .level = 3, .snapshot = semantic_snapshot}; /* the keys do nothing: only the power key does (in the input service) */
 
 static void show(const ink_interrupt_t *top) { /* UI task */
     if (!top) {
@@ -44,8 +75,11 @@ static void show(const ink_interrupt_t *top) { /* UI task */
         return;
     }
     bool same = C.card.root && C.now.id == top->id && C.now.kind == top->kind && C.now.nactions == top->nactions && !strcmp(C.now.title, top->title) && !strcmp(C.now.body, top->body);
+    for (int i = 0; same && i < top->nactions; i++) same = !strcmp(C.now.actions[i].label, top->actions[i].label) &&
+        C.now.actions[i].cap == top->actions[i].cap && !strcmp(C.now.actions[i].args, top->actions[i].args);
     C.now = *top;
     if (same) return; /* only the sound changed */
+    C.touching = false;
     if (!C.card.root) {
         shell_card_open(&C.card);
         shell_card_full(&C.card);
@@ -78,6 +112,7 @@ static void show(const ink_interrupt_t *top) { /* UI task */
     for (int i = 0; i < C.now.nactions; i++) {
         int action = alarm_actions ? 1 - i : i;
         shell_card_button(&C.card, C.now.actions[action].label, on_button, (void *)(intptr_t)action);
+        lv_obj_add_event_cb(lv_obj_get_child(C.card.row, i), pressed, LV_EVENT_PRESSED, NULL);
     }
     if (call && C.now.nactions == 2) {
         int h = INK_CIRCLE_LARGE + INK_GAP_M + ink_ui_line_height(INK_FONT_LIST);
@@ -118,6 +153,7 @@ static void show(const ink_interrupt_t *top) { /* UI task */
         lv_obj_set_y(C.card.row, ink_ui_px(INK_CANVAS_H - INK_MARGIN - INK_PRIMARY));
     }
     ink_ui_cause(top->raised_us, "interrupt.to_visible_ms");
+    C.revision++; C.version = ink_ui_content_version();
 }
 
 int ink_shell_interrupt_card_init(void) {

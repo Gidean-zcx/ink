@@ -21,6 +21,7 @@ bool ink_factory_reset_completed(void);
 bool ink_boot_flow_launch(ink_call_t *call);
 void ink_ui_stage_next(void);
 const char *ink_ui_action_page(void);
+bool ink_ui_action_current(void);
 void ink_shell_keyboard_area(lv_area_t *area);
 int ink_ui_context_snapshot(char *buf, size_t cap, const char **name);
 void ink_shell_home_create(lv_obj_t *screen);
