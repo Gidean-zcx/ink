@@ -484,6 +484,19 @@ static void resume1(void) {
     CHECK(0, "the power should have gone");
 }
 
+/* The download's end held up right after it says "available", as when a screen refresh takes both cores from exec.bg:
+ * state watchers on INK_EXEC_DIRECT are told on the writer's task, so this one sleeps there, once. */
+static volatile int g_hold_up;
+static void held_up(void *ctx, int h, const char *id) {
+    (void)ctx;
+    (void)h;
+    (void)id;
+    if (g_hold_up && !strcmp(state_of("update.state"), "available")) {
+        g_hold_up = 0;
+        delay_ms(100);
+    }
+}
+
 static void resume2(void) {
     int64_t part = hal_fs_size("/content/.update/2.0.0.inkfw.part");
     CHECK(part > 400000, "what came is still there (%lld)", (long long)part);
@@ -503,6 +516,8 @@ static void resume2(void) {
     CHECK(AI("job.cancel", args) && g_rc.status == INK_RC_FAILED && strstr(g_rc.detail, "adult"), "and cannot stop it (%s)", g_rc.detail);
     ink_member_test_reset();
     delay_ms(100);
+    CHECK(ink_state_watch("update.state", held_up, NULL, INK_EXEC_DIRECT) == 0, "watching");
+    g_hold_up = 1;
     CHECK(AI("job.cancel", args) && g_rc.status == INK_RC_DONE, "an adult can (%s)", g_rc.detail);
     CHECK(WAIT_FOR(!strcmp(state_of("update.state"), "available"), 5000), "it stops (%s)", state_of("update.state"));
     CHECK(AI("job.list", NULL) && strstr(g_result, "\"state\":\"cancelled\""), "and the list says so (%s)", g_result);

@@ -778,10 +778,10 @@ static void dl_finish(void *ctx, ink_job_step_t how, bool cancelled) { /* exec.b
     ink_svc_unlock();
     piece_release(piece);
     U.job = 0;
-    if (how != INK_JOB_DONE || cancelled) {
+    if (how != INK_JOB_DONE || cancelled) { /* the list first, as below: whoever sees the state sees the job over */
+        ink_task_end(U.task, cancelled ? INK_TASK_CANCELLED : INK_TASK_FAILED, cancelled ? "停下了，下次接着下载" : "没下载成", NULL);
         set_state(cancelled ? "available" : "failed");
         ink_probe_count("update.download_failed");
-        ink_task_end(U.task, cancelled ? INK_TASK_CANCELLED : INK_TASK_FAILED, cancelled ? "停下了，下次接着下载" : "没下载成", NULL);
         return;
     }
     ink_task_end(U.task, INK_TASK_DONE, "下载好了，可以安装", NULL);
