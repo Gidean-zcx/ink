@@ -1,14 +1,14 @@
 # port-hal-2 执行报告
 
-基线：`1a5a7355a5ac57371fb3e3eaa5af0b6e99994ce7`。仅编译和宿主机测试，不接设备，不读 ink-hw，不 push。核查日期：2026-11-10。里程碑 2：最终 S31 编译、模拟器普通全量 317 项、端口普通及 ASan/UBSan 单测均通过；模拟器 ASan/UBSan 全量进行中。
+基线：`1a5a7355a5ac57371fb3e3eaa5af0b6e99994ce7`。仅编译和宿主机测试，不接设备，不读 ink-hw，不 push。核查日期：2026-11-10。最终 S31 编译、模拟器普通及 ASan/UBSan 配置全量、端口单测和反向对照均完成；实机与缺失端口的边界见下文。
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 【实测】最终 S31 退出 0，0 条 `warning:` / `error:`；普通模拟器全量通过 | 原话：`100% tests passed out of 317`，717.52 秒；日志 `work/port-hal-2-host-tests.log`、`work/port-hal-2-s31-final.log` | `taskpolicy -c utility bash ports/esp32s31/build.sh`；总规则 §5 参数，构建与 ctest `-j2` |
+| 1 | 【实测】最终 S31 退出 0，0 条 `warning:` / `error:`；普通、ASan/UBSan 配置的模拟器全量均通过 | 两轮原话均为 `100% tests passed out of 317`，分别 717.52 / 1189.42 秒，均无跳过；日志 `work/port-hal-2-{host-tests,asan-tests,s31-final}.log` | `taskpolicy -c utility bash ports/esp32s31/build.sh`；总规则 §5 参数及下方补充，构建与 ctest `-j2` |
 | 2 | 【实测】普通、ASan/UBSan 各 2/2 通过（含双盖板键）；9/9 反向对照失败，两个原实现对照均通过 | `work/port-hal-2-unit-tests.log`、`work/port-hal-2-unit-asan-tests.log`、`work/port-hal-2-negative.log`；`gcccheck: 3 compiled, 0 with findings` | 下方复现命令；`python3 ../../tools/gcccheck.py build-s31-host ports/esp32s31/tests/logic.c ports/esp32s31/tests/power.c ports/esp32s31/hal_power_s31.c`（工具在 ink-codex 的 tools 目录） |
-| 3 | 【实现】已列逐函数状态、资料行号和上机清单；隐私扫描待最终提交后执行 | 见下表；没有设备标识 | `git diff --check` 已退出 0 |
+| 3 | 【实现/实测】通过：逐函数状态、资料行号和上机清单齐全；隐私扫描无命中 | 总规则 §6 隐私命令无输出，grep 退出 1；文件链接、改动范围检查通过，仅端口与本报告共 23 个文件 | `git diff --check` 退出 0；`git diff --stat`、总规则 §6 隐私扫描（指定基线至 HEAD） |
 
 ## 复现命令与证据
 
@@ -70,11 +70,10 @@ taskpolicy -c utility python3 ports/esp32s31/tests/negative.py build-s31-host
 5. P16 必须先确认板卡接法：仓库记录它可能空闲为低（`docs/research/simulator/hardware-parity.md:41`）；低时只用定时与其他已启用源，不强行改 RTC 接线假设。
 6. 浅睡电流待量，分别测保留/切断 P14；补齐屏总线、TF 停启并确认音频/相机/存储都安静后，才核对整板电流。不要用模拟器估算作为验收结果。
 7. 核对定时、RTC、电源短按后立即释放、保持按住、运动单源与同时唤醒；波形上确认恢复方向前已读取 P1/INT1_SRC，确认 GPIO2 醒后仍能响应下一次按键。
-8. CPU 160/320 MHz 和独立 boost 锁；前光关断；P03 马达低电平结束；P13 15 个 100 ms 高/低脉冲是否实际断电。SRDY 唤醒与 BOOT 唤醒分别验证，不预先算通过。
+8. CPU 160/320 MHz 和独立 boost 锁、输入与电源任务栈水位；前光关断；P03 马达低电平结束；P13 15 个 100 ms 高/低脉冲是否实际断电。SRDY 唤醒与 BOOT 唤醒分别验证，不预先算通过。
 
 ## 没做到的
 
-- 模拟器 ASan/UBSan 全量检查待完成；端口 ASan/UBSan 2 项已通过。
 - 新端口单测用独立 CMake 运行，未接入既有 CI 的根 CTest（不计入 317 项）；遵守只改端口的范围，根 CMake 与工作流未动。Linux 未在本机执行，C 源由真实 GCC 做过检查。
 - 屏总线保持低、恢复输出、SDMMC 停启/唤醒重挂尚无对应端口，未编造占位延时；本批只接已有屏 PMIC 与板级电源轨。音频、相机、Flash 的真实忙状态还需未来端口接入；当前可查显示待处理、音频引用计数、功放和马达。调用方仍须先让系统安静。
 - 没有上机测中断电平、去抖实际手感、睡眠电流、唤醒读取、时钟或振动时延。
@@ -97,7 +96,7 @@ taskpolicy -c utility python3 ports/esp32s31/tests/negative.py build-s31-host
 
 ## 顺手发现
 
-- 普通和 ASan 构建均有既有的 `libink_port_sim.a` 重复链接提示；根 CMake 未改，两次构建退出 0。S31 构建没有警告。
+- 普通和 ASan 构建均有 `libink_port_sim.a` 重复链接提示；根 CMake 未改，两次构建退出 0。S31 构建没有警告。
 - 根工程既有 `unit-s31-osal-ticks` 定义在 sanitizer 选项之前，`build-asan/compile_commands.json` 证明它没有 sanitizer 标志；未越界修改根 CMake。新增端口两项测试的全部编译单元均确认带 ASan/UBSan 标志。
 
 ## 新增的机制
@@ -108,7 +107,7 @@ taskpolicy -c utility python3 ports/esp32s31/tests/negative.py build-s31-host
 
 ## 规模与架构审视
 
-产品 `.c/.h` **+458/−25 行（净增 433）**；CMake/sdkconfig 另 +4/−2；测试与文档不计。为什么不能更小：这是替换输入、电源两组 HAL 桩，需去抖、两个触点及盖板键、醒后边沿、马达、IDF CPU 锁、睡眠进入/退出，超过 100 行并非单个小修。看过的更小方案：直接转发 IRQ 无法保证去抖与抬起；定时轮询所有设备会增加空闲耗电；让马达调用方等待会阻塞输入。采用既有芯片驱动与板级顺序，仅把纯逻辑提成可测头文件，独立测试留在端口目录，根 CMake 与系统/应用均未改。旋转、去抖、采样和空闲主频的固定参数集中在 `s31_board.h`，不在两组实现中重复定义。
+产品代码（含构建配置）**+462/−27 行（净增 435）**，其中 `.c/.h` +458/−25，CMake/sdkconfig +4/−2；测试与文档不计。为什么不能更小：这是替换输入、电源两组 HAL 桩，需去抖、两个触点及盖板键、醒后边沿、马达、IDF CPU 锁、睡眠进入/退出，超过 100 行并非单个小修。看过的更小方案：直接转发 IRQ 无法保证去抖与抬起；定时轮询所有设备会增加空闲耗电；让马达调用方等待会阻塞输入。采用既有芯片驱动与板级顺序，仅把纯逻辑提成可测头文件，独立测试留在端口目录，根 CMake 与系统/应用均未改。旋转、去抖、采样和空闲主频的固定参数集中在 `s31_board.h`，不在两组实现中重复定义。
 
 【实现】R-061：没有新增产品动作、页面、服务或能力；现有输入服务和电源服务仍是唯一上层路径。硬件代码与测试限于端口，系统、应用不引用模拟器或 IDF 头；没有额外 AI 专用实现，也不在 HAL 绕过能力与策略。
 
