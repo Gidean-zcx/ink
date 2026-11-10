@@ -1,16 +1,16 @@
 # index-compact 执行报告
 
-日期：2026-11-10。基线：`5e1e3964b5aafae3587b805c2edcf13922cccd44`。工作分支 `claude/codex-index-compact`，开工工作区干净。验收 1、2 通过；验收 3 未通过，普通及 ASan/UBSan 全量均有 4 项回归，S31 编译通过。全部只本地提交，未推送。
+日期：2026-11-10。任务基线：`5e1e3964b5aafae3587b805c2edcf13922cccd44`；复查基线：`6d47a1f6`。工作分支 `claude/codex-index-compact`。复查问题已修复，三项验收全部通过：普通与 ASan/UBSan 全量各 289/289、0 跳过，S31 编译通过。全部只本地提交，未推送。初次实现的测量与失败历史保留，最新结论见“复查后的修复”。
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 通过【实测，模拟器】 | 下表及 [before.csv](before.csv)、[after.csv](after.csv)；重新从基线源码编译的汇总、逐次 CSV 与开工测量完全一致 | 下文计量命令 |
-| 2 | 通过【实测】，普通全量已复核 | schema 1/2 的 6 个种子、升级、重启阶段共 50 个检查通过，编号均为 `[2, 1, 3]`；旧记录迁移前即可查询；重启目录读取、索引写盘均为 0；155 B 中文路径持久化回读；换回基线后 6 阶段均预期失败 | `ctest --test-dir build -R '^(index-compact|index-durable|file-index-3)$' --output-on-failure -j2`；下文反向命令 |
-| 3 | 未通过【实测】：普通和 ASan/UBSan 全量均 285/289；S31 编译通过 | 两种全量均 4 项失败、0 跳过，分别 334.45 / 444.78 s，均退出 8；57 份内存版日志 sanitizer 扫描 0 匹配；S31 完整构建退出 0 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`；内存版换 `build-asan` 并设 `UBSAN_OPTIONS=halt_on_error=1`；`taskpolicy -c utility bash ports/esp32s31/build.sh` |
+| 1 | 通过【实测，模拟器】 | [before.csv](before.csv) 与最终代码的 [after-review.csv](after-review.csv)：首次追加 252000→92000 B，压缩 252032→92032 B；压缩与等待任务排队重叠 4427.878→1660.162 ms；初次结果另存 [after.csv](after.csv) | 下文计量命令，本次重测不带 `--baseline` |
+| 2 | 通过【实测】，两套全量均通过 | schema 1/2 共 12 阶段、134 个检查；旧完成标记保持原版本，旧/混合记录重启均零扫描、零写盘、零通知；普通扫描时升级且编号保持 `[2, 1, 3]`；155 B 中文路径持久化回读。换回复查前文件服务后，12 阶段共 24 次预期失败 | `ctest --test-dir build -R '^(index-compact|index-durable|file-index-3)$' --output-on-failure -j2`；下文逐项反向命令 |
+| 3 | 通过【实测】：普通及 ASan/UBSan 全量各 289/289，0 跳过；S31 编译通过 | 全量分别 211.93 / 360.30 s，均退出 0；全部输出无 sanitizer 报告；原四项按原样通过，分别撤回修复后均重现原断言/预算失败；S31 完整构建退出 0 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -V -j2`；内存版换 `build-asan` 并设 `UBSAN_OPTIONS=halt_on_error=1`；`taskpolicy -c utility bash ports/esp32s31/build.sh` |
 
-## 计量与实现
+## 初次实现记录（保留）
 
 同一工具、`metalio-plus`、种子 1、`tail` Flash 时序，关闭随机断电。每组为 1000 个合成文件首次建索引；耗时均为虚拟时间，单位 ms。`prepare` 测首次追加和压缩；`probe` 在压缩已被存储任务取走后提交另一集合的同步写盘；`control` 是空卡同内容写盘。没有改存储服务、数据帧、队列、调度或测量断言。
 
@@ -49,7 +49,7 @@ INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python
 
 【实测】结束检查：基线至 HEAD 共 12 个相关文件，产品与 CMake 增删合计 78 行，在 180 行预算内；差异格式、报告链接、单文件大小与范围检查通过。总规则 §6 的基线至 HEAD 隐私扫描 0 匹配（grep 退出 1）；没有构建产物、设计稿或受保护的共享文档入库。本地提交后工作区干净，未推送。
 
-## 全量未通过项
+## 全量未通过项（复查前历史，现已修复）
 
 【实测】同一构建依赖、其他产品源码均不变，只将文件服务替换为任务基线并重新链接，以下 4 项在普通及内存构建中均通过。因此不能把它们归为基线已有失败。未删除断言、改预算、增加等待或改刷新算法来掩盖结果。
 
@@ -64,7 +64,7 @@ INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python
 
 ## 没做到的
 
-- 尚未使全量测试通过：上表 4 项回归未修，普通及内存构建都复现；因此不能报告全部验收通过。未连接设备或运行 Linux/远端 CI。
+- 未连接设备，未运行 Linux/远端 CI；本次验收范围内没有未完成项。
 
 ## 和设计不一致的
 
@@ -78,7 +78,7 @@ INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python
 
 ## 要用户定的
 
-- 是否另开明确范围修复上表 UI 回归。本任务保留索引实现及失败证据，未扩展到刷新、截图同步或锁屏实现；验收 3 当前未达到。
+- 无本次待决事项。
 
 ## 顺手发现
 
@@ -91,15 +91,15 @@ INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python
 
 ## 要改的文档
 
-- 主会话可在 `docs/system/system-services-design.md` 同步 schema 3 布局、schema 1/2 随后台补建升级及本次模拟器计量；共享文档与历史调研均未改。
+- 主会话可在 `docs/system/system-services-design.md` 同步 schema 3 布局、旧记录随正常扫描/重写升级、完成标记独立版本及最终计量；资源说明可同步 128 行绘图条带和 PSRAM 增量。共享文档与历史调研均未改。
 
 ## 复查后的修复
 
-- 复查基线：`6d47a1f6`。`REVIEW.md` 仅有 `IC-H1`（高），没有其他未修的严重、高、中、低项。以下为本次接续记录；上文保留初次实现的测量和失败历史，最终验收结果待两套全量完成后更新。
+- `REVIEW.md` 仅有 `IC-H1`（高），已完成；没有其他未修的严重、高、中、低项。以下为本次接续的最终记录。
 
 | 修复 | 根因与改动【实现】 | 测试和反向对照【实测】 |
 | --- | --- | --- |
-| 完成标记与记录格式解耦 | `file.index_ready` 保持既有版本 2，接受版本 1/2 的有效完成标记；不会仅因 payload 升级而扫描整卡。旧记录继续读取，单条重写或后续正常扫描时写成 schema 3 | `index-compact` 扩为 12 阶段、134 个检查，覆盖旧完成标记、混合格式、逐条升级、完整升级、重启零扫描/零写盘/零通知，编号始终为 `[2, 1, 3]`。只换回复查基线文件服务，新增断言出现 24 次预期失败 |
+| 完成标记与记录格式解耦 | `file.index_ready` 保持既有落盘版本 2，集合定义的默认值同步为 2；接受版本 1/2 的有效完成标记，不改旧标记，不会仅因 payload 升级而扫描整卡。旧记录继续读取，单条重写或后续正常扫描时写成 schema 3 | `index-compact` 扩为 12 阶段、134 个检查，覆盖旧完成标记、混合格式、逐条升级、完整升级、重启零扫描/零写盘/零通知，编号始终为 `[2, 1, 3]`。只换回复查基线文件服务，12 阶段均失败，共 24 次预期断言失败 |
 | 短信及时投递重画 | `message.received` 的回调只负责投递 UI 工作，改为直接执行，去掉先在 BG 排队的一跳 | 原 `sms` 的 15 阶段通过；仅撤回这一处，原 `capture is settled` 断言再次失败 |
 | 锁屏请求纳入界面忙碌 | 既有锁屏请求、状态和通知进度尚未交付时不能报告界面空闲；通知结束后才更新既有 `notified`。两项既有标志改为原子访问，查询不取锁 | 原 `settings-b` write/restart 通过；仅撤回忙碌判断中的电源查询，原第 226 行断言再次失败 |
 | 去掉无效状态栏重画 | 电源状态变化不改变任何状态栏字段，导航回调明确忽略 `power.state`，保留时间、网络、通知等真正可见状态的刷新 | 原 `confirm-pages` 六场景通过；仅撤回这一处，ConfirmWeb 的原截图断言再次失败 |
@@ -109,7 +109,24 @@ INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python
 
 【实测，阅读时延】基线和紧凑记录的 UI 总 CPU、缓存命中/缺失、最终画面一致；最后一次 HOME 的慢扫描额外延迟分别为 `37.139525 / 50.262229 ms`，差值 `13.122704 ms`，与反馈时延差值一致。【实现】Flash 时序和触控慢扫描共用模拟器随机序列，写盘量改变会影响后续样本。没有改随机数、种子、硬件模型或预算；通过减少实际绘制工作留下余量。
 
-【实测，验证进度】原四项定向测试 4/4；第一轮普通全量 288/289，唯一新增失败是能力目录的源码提取结果变化，已用明确忽略状态的等价分支修复，不改共享生成文档。第二轮普通全量进行中；ASan/UBSan、S31 和最终检查待完成。
+【实测，最终验证】普通全量 289/289（211.93 s），ASan/UBSan 全量 289/289（360.30 s），均退出 0、0 跳过；完整输出扫描无 AddressSanitizer、UndefinedBehaviorSanitizer 或 `runtime error:` 报告。内存构建确认使用 `-fsanitize=address,undefined` 和 `INK_WERROR=ON`。没有缺少的必需测试依赖，沿用 `$INK_DEPS` 的字体、LVGL、Python 与中枢锁定虚拟环境，没有安装或升级依赖。日志：`work/index-compact/review-ctest-final.log`、`review-ctest-asan.log`、`review-build-asan.log`。
+
+第一轮普通全量曾为 288/289：唯一新增失败是能力目录的源码提取结果变化，已用明确忽略状态的等价分支修复；最终全量复跑通过，没有改共享生成文档。原报告的四项失败全部查明并处理，不作为“基线已有失败”略过。
+
+【实测，S31】GCC 15.2.0 编译、链接、尺寸和栈报告全部完成，命令退出 0。Flash 静态占用 `1179818 B`，内部 DIRAM `83042 B`，外部静态 BSS `507648 B`。绘图缓冲动态分配于 PSRAM，另增加的 `21888 B` 不计入静态 BSS；这些不是实机内存或栈高水位测量。证据：`work/index-compact/review-s31-build.log`、`build-s31/size.txt`、`build-s31/stack.txt`。
+
+最终代码重测（虚拟时间；同一工具、档案、种子与 Flash 时序；明细见 [after-review.csv](after-review.csv)）：
+
+| 项目 | 任务基线 | 修复后 |
+| --- | ---: | ---: |
+| 首次追加字节 / 耗时 ms | 252000 / 4614.425 | 92000 / 1602.096 |
+| 压缩字节 / 耗时 ms | 252032 / 4426.503 | 92032 / 1659.689 |
+| 竞争时压缩耗时 ms | 4428.007 | 1660.291 |
+| 等待任务排队与压缩重叠 ms | 4427.878 | 1660.162 |
+| 等待任务全部排队 ms | 4428.110 | 1660.394 |
+| 同步等待总耗时 ms | 4442.595 | 1665.952 |
+
+空卡同内容同步写盘耗时 `16.742 ms`，与竞争场景相差 `1649.210 ms`；其中包含 Flash 时序样本差异，直接由索引占用队列的部分以上表重叠值为准。追加/压缩字节量仍减少约 63.5%，等待任务与索引写盘的排队重叠仍减少约 62.5%。
 
 反向命令只在忽略目录生成替换对象，不修改工作区产品源码，也不注册为依赖历史的 ctest：
 
@@ -126,3 +143,5 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/index_compac
 【改过的已有测试】`index-durable` 的旧记录升级断言前增加一次普通索引查询：已完成旧卡现在按复查要求延迟升级，不能再断言开机强制迁移。仍要求 schema 3、精确长度和编号不变；没有改原四项回归的测试、等待或预算。新兼容测试增加断言，原手动对照工具增加逐项撤回入口。
 
 【架构审视】文件记录仍是文件服务的内部编码；界面通过既有电源服务读取待交付状态，短信经既有 UI 执行器更新。用户与 AI 的原子能力、成员鉴权、软总线事件和能力开放范围均不变。
+
+【实测，结束检查】相对任务基线共 19 个相关文件；格式、4 处报告链接、文件大小和改动范围检查通过。全部差异及新增 CSV 的隐私扫描 0 匹配；没有构建产物、设计稿或受保护文档入库。兼容测试最后复跑通过；手动反向对照继续要求每个阶段确实失败、且只出现对应回归断言，没有放宽断言或预算。仅本地提交，未推送。

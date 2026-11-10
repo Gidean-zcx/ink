@@ -37,7 +37,6 @@ if a.baseline:
     subprocess.run(link, cwd=build, check=True, capture_output=True)
 
 summary = {}
-negative_failures = 0
 for schema in (1, 2):
     path = area / f'v{schema}'
     content = path / 'sd/content'
@@ -60,8 +59,7 @@ for schema in (1, 2):
         ok = result.returncode == 0 and m.get('test.finished') == 1 and not m.get('test.fail', 0) and not data.get('warnings')
         summary[f'v{schema}-{stage}'] = {k: v for k, v in m.items() if k.startswith('test.')}
         if a.baseline:
-            negative_failures += m.get('test.fail', 0)
-            assert result.returncode == 0 and m.get('test.finished') == 1 and all(
+            assert not ok and m.get('test.fail', 0) > 0 and result.returncode == 0 and m.get('test.finished') == 1 and all(
                 any(message in str(w) for message in ('155-byte UTF-8 path', 'every upgraded record',
                     'completion', 'completed legacy or mixed restart', 'unchanged legacy and mixed',
                     'writing one legacy record'))
@@ -75,7 +73,5 @@ for schema in (1, 2):
         print(f'{"NEGATIVE_CONTROL" if a.baseline else "PASS"} v{schema}-{stage}: ids={current} '
               f'checks={m.get("test.pass")} failures={m.get("test.fail", 0)}', flush=True)
 (area / 'summary.json').write_text(json.dumps(summary, ensure_ascii=False, indent=2) + '\n')
-if a.baseline:
-    assert negative_failures > 0, 'removing the fix must fail a regression assertion'
 if not os.environ.get('INK_KEEP_EVIDENCE'):
     shutil.rmtree(area)
