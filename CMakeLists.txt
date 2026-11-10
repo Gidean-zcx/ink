@@ -199,6 +199,7 @@ add_library(ink_system STATIC
   system/services/time/lunar.c
   system/services/time/time_service.c
   system/ui/shell/time_settings.c
+  system/ui/shell/mobile_network.c
   system/services/update/update_service.c
   system/ui/shell/update_card.c
   system/ui/shell/power_menu.c
@@ -376,6 +377,7 @@ add_custom_target(ink_ui_resource_check ALL
 add_dependencies(ink_system ink_ui_resource_check)
 # Interface languages: assets/i18n/<code>.tsv, checked and turned into a const lookup table.
 set(INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/system/ui/shell/boot_flow.c ${CMAKE_SOURCE_DIR}/system/ui/shell/navigation.c
+  ${CMAKE_SOURCE_DIR}/system/ui/shell/mobile_network.c
   ${CMAKE_SOURCE_DIR}/system/ui/shell/settings_pages.c ${CMAKE_SOURCE_DIR}/system/ui/shell/time_settings.c
   ${CMAKE_SOURCE_DIR}/system/ui/shell/settings_family.c ${CMAKE_SOURCE_DIR}/system/services/time/time_service.c
   ${CMAKE_SOURCE_DIR}/system/apps/calendar/calendar.c ${CMAKE_SOURCE_DIR}/system/apps/files/files.c
@@ -1401,6 +1403,10 @@ ink_sim_executable(sim-sms-multipart tests/sms_multipart/sms_multipart.c)
 target_link_libraries(sim-sms-multipart PRIVATE ink_apps ink_system)
 add_test(NAME sms-multipart COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/sms_multipart/run.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(sms-multipart PROPERTIES TIMEOUT 600)
+ink_sim_executable(sim-mobile-network tests/mobile_network/mobile_network.c)
+target_link_libraries(sim-mobile-network PRIVATE ink_apps ink_system)
+add_test(NAME mobile-network COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/mobile_network/run.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(mobile-network PROPERTIES TIMEOUT 600)
 target_sources(ink_system PRIVATE system/apps/memo/memo.c)
 ink_sim_executable(sim-memo tests/memo/memo.c)
 target_link_libraries(sim-memo PRIVATE ink_apps ink_system)

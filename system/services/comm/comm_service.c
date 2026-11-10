@@ -26,6 +26,7 @@
 #include <string.h>
 
 #include "ink/hal_cellular.h"
+#include "ink/hal_net.h"
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/audio.h"
@@ -40,6 +41,7 @@
 #include "ink/sys/state.h"
 #include "ink/sys/svc.h"
 #include "ink/sys/textinput.h"
+#include "ink/sys/time.h"
 
 #define COMM_STACK 8192 /* PSRAM: never touches the flash; AT replies and SMS text are parsed on it */
 #define COMM_PRIO 3
@@ -60,6 +62,7 @@ static const ink_db_def_t MESSAGES = {.name = "sms.messages", .title = "短信�
     .schema = 1, .json = true, .ai_read = true, .max_records = 512};
 static const ink_db_def_t PARTS = {.name = "sms.parts", .title = "未收齐的长短信", .scope = INK_DB_DEVICE, .schema = 1,
     .json = true, .max_records = 64};
+static const ink_db_def_t MOBILE = {.name = "net.mobile", .title = "移动网络私有设置", .scope = INK_DB_DEVICE, .schema = 1, .max_records = 2};
 
 typedef struct { char peer[24]; int64_t ref, total; } sms_key_t; /* one long message: sender, reference, parts */
 
@@ -71,12 +74,15 @@ static struct {
     char call_member[16], call_peer[24]; /* protected by at; member and tones also by lock */
     uint32_t call_generation;
     char tones[65]; /* local display only, protected by lock */
-    int h_registered, h_sim;
+    int h_registered, h_sim, h_roaming, h_mobile, mobile_rev;
+    hal_cell_apn_t apn;
+    struct { uint64_t current, previous; int month, day; } usage;
+    uint64_t sampled_bytes;
     ink_exec_job_t sim_job, reg_job;
     ink_svc_deadline_t reg_at;
     uint64_t sim_retry_at, sim_retry_us; /* comm task's next look at the card, 0 = none due */
     int sim_tries;
-    ink_exec_job_t radio_job;
+    ink_exec_job_t radio_job, apn_job;
     /* comm task: too large for its stack, and internal RAM has no room for them */
     hal_cell_sms_t rx;
     ink_args_t rx_args, ev_args;
@@ -161,6 +167,7 @@ static bool refresh_status(hal_cell_status_t *st) {
         return false;
     }
     ink_state_set_bool(CM.h_registered, st->registered);
+    ink_state_set_bool(CM.h_roaming, st->roaming);
     ink_state_set_str(CM.h_sim, st->slot == HAL_CELL_SLOT_INTERNAL ? "internal" : "external");
     return true;
 }
@@ -385,6 +392,7 @@ static void comm_task(void *arg) {
             ink_args_t *a = &CM.ev_args;
             ink_args_init(a);
             if (ev.type == HAL_CELL_EV_SMS) on_sms(ev.sms_index);
+            else if (ev.type == HAL_CELL_EV_REG) { hal_cell_status_t st; refresh_status(&st); }
             else if (ev.type == HAL_CELL_EV_RING && !CM.ringing) { /* once per call: it rings again every few seconds */
                 CM.ringing = true;
                 osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
@@ -674,13 +682,97 @@ static const ink_setting_def_t COMM_SETTINGS[] = {
     {.id = "cell.sim_slot", .title = "SIM 卡", .type = INK_SET_ENUM, .def = 0, .choices = SLOTS, .apply = apply_slot, .apply_exec = INK_EXEC_BG},
 };
 
+static bool mobile_save(uint32_t id, const void *data, size_t len) { /* exec.bg; private records never exported */
+    ink_db_t *db = ink_db_open(&MOBILE, NULL); uint32_t ver = 0;
+    ink_db_write_t w = {.id = id, .data = data, .len = len, .written_ver = &ver};
+    bool ok = db && !ink_db_put(db, &w, NULL) && !ink_db_wait(db, ver, 3000000);
+    ink_db_close(db); return ok;
+}
+static void mobile_apply(void *arg) {
+    (void)arg; osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
+    if (hal_cell_apn(&CM.apn)) ink_probe_count("net.apn_not_applied");
+    osal_mutex_unlock(CM.at);
+}
+static void mobile_sample(void *ctx, int h, const char *id) { /* existing minute event; one checkpoint per local day */
+    (void)ctx; (void)h; (void)id;
+    uint64_t rx = 0, tx = 0; ink_tm_t t;
+    if (!ink_time_valid() || !hal_net_lte_bytes(&rx, &tx)) return;
+    ink_time_to_local(ink_time_now_s(), &t);
+    int month = t.year * 12 + t.month, day = t.year * 10000 + t.month * 100 + t.day;
+    bool changed = CM.usage.month != month || rx + tx != CM.sampled_bytes;
+    if (CM.usage.month != month) {
+        CM.usage.previous = CM.usage.month == month - 1 ? CM.usage.current : 0;
+        CM.usage.current = 0; CM.usage.month = month;
+    }
+    CM.usage.current += rx + tx - CM.sampled_bytes; CM.sampled_bytes = rx + tx;
+    if (CM.usage.day != day && (CM.usage.current || CM.usage.previous)) {
+        int before = CM.usage.day; CM.usage.day = day;
+        if (!mobile_save(2, &CM.usage, sizeof CM.usage)) { CM.usage.day = before; ink_probe_count("net.usage_not_saved"); }
+    }
+    if (changed) ink_state_set_int(CM.h_mobile, ++CM.mobile_rev);
+}
+static void mobile_cap(ink_call_t *c) { /* exec.bg */
+    const char *id = c->cap->id;
+    if (!strcmp(id, "net.apn_set")) {
+        hal_cell_apn_t a = CM.apn; bool automatic = true;
+        ink_args_get_bool(&c->args, "automatic", &automatic);
+        bool password = ink_args_find(&c->args, "password") != NULL;
+        if (password && c->src != INK_SRC_TOUCH && c->src != INK_SRC_KEY) { c->rc.status = INK_RC_REJECTED; return; }
+        if (automatic) memset(&a, 0, sizeof a);
+        else {
+            ink_args_get_str(&c->args, "name", a.name, sizeof a.name); ink_args_get_str(&c->args, "user", a.user, sizeof a.user);
+            if (password) ink_args_get_str(&c->args, "password", a.password, sizeof a.password);
+            if (!a.name[0]) { c->rc.status = INK_RC_INVALID; return; }
+        }
+        osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER); int r = hal_cell_apn(&a); osal_mutex_unlock(CM.at);
+        if (r || !mobile_save(1, &a, sizeof a)) c->rc.status = INK_RC_FAILED;
+        else CM.apn = a;
+        memset(&a, 0, sizeof a);
+    } else if (!strcmp(id, "net.roaming_set")) {
+        bool on = false; ink_args_get_bool(&c->args, "enabled", &on); ink_setting_set("net.roaming", on, c->src, &c->rc);
+    } else {
+        mobile_sample(NULL, 0, NULL);
+        if (!strcmp(id, "net.usage_reset")) {
+            CM.usage.current = CM.usage.previous = 0;
+            if (!mobile_save(2, &CM.usage, sizeof CM.usage)) c->rc.status = INK_RC_FAILED;
+        } else {
+            char out[512]; ink_jw_t w; ink_jw_init(&w, out, sizeof out);
+            uint64_t rx, tx;
+            ink_jw_raw(&w, hal_net_lte_bytes(&rx, &tx) && ink_time_valid() ? "{\"available\":true,\"current\":" : "{\"available\":false,\"current\":"); ink_jw_int(&w, (int64_t)CM.usage.current);
+            ink_jw_raw(&w, ",\"previous\":"); ink_jw_int(&w, (int64_t)CM.usage.previous);
+            ink_jw_raw(&w, ",\"name\":"); ink_jw_str(&w, CM.apn.name); ink_jw_raw(&w, ",\"user\":"); ink_jw_str(&w, CM.apn.user);
+            ink_jw_raw(&w, CM.apn.password[0] ? ",\"password\":true}" : ",\"password\":false}"); ink_cap_result(c, out);
+        }
+    }
+    if (strcmp(id, "net.usage") && c->rc.status == INK_RC_DONE) ink_state_set_int(CM.h_mobile, ++CM.mobile_rev);
+}
+#define MOBILE_STR "{\"type\":\"string\",\"maxLength\":64}"
+static const ink_cap_t MOBILE_CAPS[] = {
+    {.id = "net.apn_set", .title = "设置接入点并重连移动数据", .effect = INK_FX_SYSTEM, .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .run = mobile_cap,
+     .input = "{\"type\":\"object\",\"properties\":{\"automatic\":{\"type\":\"boolean\"},\"name\":{\"type\":\"string\",\"maxLength\":100},\"user\":" MOBILE_STR ",\"password\":" MOBILE_STR "},\"required\":[\"automatic\"]}"},
+    {.id = "net.roaming_set", .title = "开关数据漫游", .effect = INK_FX_SYSTEM, .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .run = mobile_cap,
+     .input = "{\"type\":\"object\",\"properties\":{\"enabled\":{\"type\":\"boolean\"}},\"required\":[\"enabled\"]}"},
+    {.id = "net.usage", .title = "移动流量和接入点（不含密码）", .effect = INK_FX_READ, .child_ok = true, .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .run = mobile_cap},
+    {.id = "net.usage_reset", .title = "清零流量统计", .effect = INK_FX_SYSTEM, .ask_by_hand = true, .ask = "清零本月和上个月的流量统计，不能撤销", .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .run = mobile_cap}};
+
 int ink_comm_init(void) {
+    static const ink_state_def_t mobile = {.id = "net.mobile_rev", .type = INK_ST_INT, .title = "移动网络设置变化"};
+    CM.h_mobile = ink_state_define(&mobile); ink_state_set_int(CM.h_mobile, 0);
+    if (ink_db_register(&MOBILE)) return -1;
+    ink_db_t *db = ink_db_open(&MOBILE, NULL);
+    bool saved = db && !ink_db_get(db, 1, NULL, &CM.apn, sizeof CM.apn);
+    if (db) ink_db_get(db, 2, NULL, &CM.usage, sizeof CM.usage);
+    ink_db_close(db);
+    if (ink_cap_register(MOBILE_CAPS, sizeof MOBILE_CAPS / sizeof *MOBILE_CAPS) || ink_state_watch("time.minute", mobile_sample, NULL, INK_EXEC_BG)) return -1;
     if (ink_db_register(&MESSAGES) || ink_db_register(&PARTS) || ink_cap_subscribe("message.received", received, NULL, INK_EXEC_BG) ||
         ink_cap_subscribe("comm.sms_part", part_arrived, NULL, INK_EXEC_BG)) return -1;
     CM.lock = osal_mutex_create();
     CM.at = osal_mutex_create();
     if (!CM.lock || !CM.at) return -1;
+    if (saved) ink_exec_post(INK_EXEC_BG, &CM.apn_job, mobile_apply, NULL);
     CM.h_registered = ink_state_define(&ST_REGISTERED);
+    static const ink_state_def_t roaming = {.id = "cell.roaming", .type = INK_ST_BOOL, .title = "漫游注册"};
+    CM.h_roaming = ink_state_define(&roaming);
     CM.h_sim = ink_state_define(&ST_SIM);
     ink_settings_define(COMM_SETTINGS, 1);
     if (ink_settings_watch("net.airplane", airplane_changed, NULL, INK_EXEC_BG) != 0) return -1;

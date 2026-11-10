@@ -1362,6 +1362,8 @@ static void body_blocks(void) {
             ink_ui_notice(N.page_body, sim_state, F.y + heading_h() + INK_SEGMENT + INK_GAP_L);
         }
         F.y += h;
+        if (block(INK_CONTROL + INK_GAP_L)) group_row(group(1), "phone", TR("移动网络"), "", 0, "shell.mobile");
+        F.y += INK_CONTROL + INK_GAP_L;
     }
 }
 
@@ -1559,7 +1561,7 @@ static int page_snapshot(char *buf, size_t cap) {
     }
     const char *actions =
         N.page_id == PAGE_NETWORK ? "动作：net.set_airplane、settings.set、wifi.scan、wifi.list、shell.back、shell.control、shell.wifi_"
-                                      "next、shell.wifi_prev、shell.wifi_pick；设置设备：shell.launch(id=boot)。"
+                                      "next、shell.wifi_prev、shell.wifi_pick、shell.mobile；设置设备：shell.launch(id=boot)。"
                                     : N.page_id == PAGE_DISPLAY
                                         ? "动作：settings.set、shell.today_edit、shell.back、shell.control。"
                                     : "动作：settings.set、shell.back、shell.control。";
@@ -1831,7 +1833,7 @@ int ink_shell_init(void) {
     if (today_init() != 0) return -1;
     static const ink_cap_t notify = {.id = "shell.notify_open", .title = "打开通知并标为已读", .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1}},\"required\":[\"id\"]}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = notify_open};
     if (ink_search_init() != 0 || ink_cap_register(&notify, 1) != 0) return -1;
-    if (ink_settings_pages_init() != 0 || ink_bluetooth_page_init() != 0 || ink_time_settings_init() != 0) return -1;
+    if (ink_settings_pages_init() != 0 || ink_bluetooth_page_init() != 0 || ink_time_settings_init() != 0 || ink_mobile_network_init() != 0) return -1;
     if (ink_boot_flow_init() != 0) return -1;
     if (ink_shell_ai_init() != 0 || ink_kid_pages_init() != 0) return -1;
     if (ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) ||

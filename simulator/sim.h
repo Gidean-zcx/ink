@@ -328,6 +328,8 @@ typedef struct {
     bool registered, searching, volte;
 } sim_cell_state_t;
 void sim_net_cell_state(sim_cell_state_t *out);                    /* ISR */
+void sim_net_roaming(bool on); /* ISR: the network's registration status */
+void sim_net_lte_frame(bool tx, size_t bytes); /* ISR/locked: interface receives/transmits a frame */
 void sim_net_set_card(int slot, bool present, bool sms, bool voice); /* ISR (script, window) or locked */
 void sim_net_modem_hold_reset(bool held);  /* board P12 (shared touch + 4G reset); any context */
 void sim_net_modem_power(bool on);         /* board P14 (shared 4G + BT audio + amplifier supply) */

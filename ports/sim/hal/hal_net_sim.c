@@ -22,6 +22,7 @@
 #include <string.h>
 
 #include "ink/hal_net.h"
+#include "ink/hal_cellular.h"
 #include "ink/hal_power.h"
 #include "sim.h"
 
@@ -210,7 +211,17 @@ static struct {
     bool held, unpowered;      /* board: P12 shared reset low, P14 shared supply off */
     bool at_busy;              /* a command is running */
     uint32_t slot_changes, resets;
+    bool roaming, data_off;
+    hal_cell_apn_t apn;
+    uint64_t rx_bytes, tx_bytes;
 } CELL;
+
+bool hal_net_lte_bytes(uint64_t *rx, uint64_t *tx) {
+    vtk_lock(); *rx = CELL.rx_bytes; *tx = CELL.tx_bytes; vtk_unlock(); return g_profile.lte.present;
+}
+void sim_net_lte_frame(bool tx, size_t bytes) {
+    if (N.type == HAL_LINK_LTE && N.up) *(tx ? &CELL.tx_bytes : &CELL.rx_bytes) += bytes;
+}
 
 static bool cell_ok(void) { return CELL.radio && CELL.registered && CELL.present[CELL.active]; }
 
@@ -219,7 +230,7 @@ static void set_link(hal_link_type_t t, bool up) { /* ISR or locked task context
     bool was = N.up;
     N.type = t;
     N.want = up;
-    N.up = up && t != HAL_LINK_NONE && (t != HAL_LINK_LTE || !g_profile.lte.present || cell_ok());
+    N.up = up && t != HAL_LINK_NONE && (t != HAL_LINK_LTE || !g_profile.lte.present || (cell_ok() && !CELL.data_off));
     N.L = t == HAL_LINK_LTE ? &g_profile.lte : t == HAL_LINK_WIFI ? &g_profile.wifi : NULL;
     if (old != t) {
         N.dns_cached = false;
@@ -575,6 +586,8 @@ static void urc_push(const char *line) { /* ISR or locked */
     sim_power_wake(HAL_WAKE_MODEM);
 }
 
+void sim_net_roaming(bool on) { CELL.roaming = on; urc_push(on ? "+CEREG: 5" : "+CEREG: 1"); }
+
 int hal_modem_urc(char *buf, size_t cap, uint32_t timeout_ms) {
     uint64_t deadline = vtk_now() + SIM_MS(timeout_ms);
     vtk_lock();
@@ -862,7 +875,7 @@ hal_at_result_t hal_modem_at_payload(const char *cmd, const char *payload, char 
     bool busy = CELL.at_busy;
     CELL.at_busy = true;
     vtk_unlock();
-    if (busy) sim_warn("modem: %s sent while another AT command runs", cmd);
+    if (busy) sim_warn("modem: command sent while another AT command runs");
     hal_at_result_t r = at_run(cmd, payload, resp, resp_cap, timeout_ms);
     vtk_lock();
     if (!busy) CELL.at_busy = false;
@@ -874,7 +887,7 @@ static hal_at_result_t at_run(const char *cmd, const char *payload, char *resp, 
     if (resp && resp_cap) resp[0] = 0;
     if (!g_profile.lte.present) return HAL_AT_NO_MODEM;
     enum { K_AT, K_CFUN_Q, K_CFUN0, K_CFUN1, K_SLOT_Q, K_SLOT_SET, K_CPIN, K_CEREG, K_RST, K_CMGF, K_CSCS, K_CNMI, K_CMGS, K_CMGR,
-           K_CMGD, K_ATD, K_ATA, K_CHUP, K_CLCC, K_CMUT, K_CMUT_Q, K_VTS, K_CFUN4, K_BAD } k = K_BAD;
+           K_CMGD, K_ATD, K_ATA, K_CHUP, K_CLCC, K_CMUT, K_CMUT_Q, K_VTS, K_CFUN4, K_CTX, K_AUTH, K_CTX_Q, K_AUTH_Q, K_ACT, K_BAD } k = K_BAD;
     unsigned lat_ms = CELL_AT_MS;
     int slot = -1, idx = -1;
     char arg[100] = "";
@@ -888,6 +901,11 @@ static hal_at_result_t at_run(const char *cmd, const char *payload, char *resp, 
         k = K_SLOT_SET, lat_ms = CELL_SLOT_MS;
     else if (!strcmp(cmd, "AT+CPIN?")) k = K_CPIN;
     else if (!strcmp(cmd, "AT+CEREG?")) k = K_CEREG;
+    else if (!strcmp(cmd, "AT+CGDCONT?")) k = K_CTX_Q;
+    else if (!strcmp(cmd, "AT+CGAUTH?")) k = K_AUTH_Q;
+    else if (!strncmp(cmd, "AT+CGDCONT=1,\"IP\",\"", 19)) k = K_CTX;
+    else if (!strncmp(cmd, "AT+CGAUTH=1,", 12)) k = K_AUTH;
+    else if (!strcmp(cmd, "AT+CGACT=0,1") || !strcmp(cmd, "AT+CGACT=1,1")) k = K_ACT;
     else if (!strcmp(cmd, "AT+ECRST")) k = K_RST;
     else if (!strncmp(cmd, "AT+CMGF=", 8)) k = K_CMGF;
     else if (!strncmp(cmd, "AT+CSCS=", 8)) k = K_CSCS;
@@ -914,6 +932,21 @@ static hal_at_result_t at_run(const char *cmd, const char *payload, char *resp, 
     char info[1100] = "";
     vtk_lock();
     switch (k) {
+    case K_CTX_Q: snprintf(info, sizeof info, "+CGDCONT: 1,\"IP\",\"%s\"", CELL.apn.name); break;
+    case K_AUTH_Q: snprintf(info, sizeof info, "+CGAUTH: 1,%d,\"%s\",\"%s\"", CELL.apn.user[0] ? 1 : 0, CELL.apn.user, CELL.apn.password); break;
+    case K_CTX:
+    case K_AUTH: {
+        char *fields[] = {k == K_CTX ? CELL.apn.name : CELL.apn.user, CELL.apn.password};
+        const size_t caps[] = {k == K_CTX ? sizeof CELL.apn.name : sizeof CELL.apn.user, sizeof CELL.apn.password};
+        const char *p = cmd + (k == K_CTX ? 18 : 12);
+        for (int i = 0; i < (k == K_CTX ? 1 : 2); i++) {
+            const char *q = strchr(p, '"'), *end = q ? strchr(q + 1, '"') : NULL;
+            if (!end || (size_t)(end - q) > caps[i]) { r = HAL_AT_ERROR; break; }
+            sim_copy_name(fields[i], caps[i], ""); memcpy(fields[i], q + 1, (size_t)(end - q - 1)); fields[i][end - q - 1] = 0; p = end + 1;
+        }
+        break;
+    }
+    case K_ACT: CELL.data_off = cmd[9] == '0'; cell_relink(); break;
     case K_AT: break;
     case K_CFUN_Q: snprintf(info, sizeof info, "+CFUN: %d", CELL.radio ? 1 : CELL.airplane ? 4 : 0); break;
     case K_CFUN0:
@@ -940,7 +973,7 @@ static hal_at_result_t at_run(const char *cmd, const char *payload, char *resp, 
         else r = HAL_AT_ERROR;
         break;
     case K_CEREG: {
-        int stat = cell_ok() ? 1 : CELL.radio && CELL.present[CELL.active] && CELL.reg_ev ? 2 : 0;
+        int stat = cell_ok() ? (CELL.roaming ? 5 : 1) : CELL.radio && CELL.present[CELL.active] && CELL.reg_ev ? 2 : 0;
         snprintf(info, sizeof info, "+CEREG: 0,%d", stat);
         break;
     }
@@ -1440,6 +1473,7 @@ static void ws_task(void *arg) {
             w->rx_head = m->next;
             if (!w->rx_head) w->rx_tail = NULL;
             sim_charge_cycles(profile_cost("net.byte") * (double)m->len);
+            vtk_lock(); sim_net_lte_frame(false, m->len); vtk_unlock();
             w->cb(w->ctx, m->binary ? HAL_WS_BINARY : HAL_WS_TEXT, m->data, m->len);
             sim_host_free(m);
             continue;
@@ -1451,6 +1485,7 @@ static void ws_task(void *arg) {
             sim_charge_cycles(profile_cost("net.byte") * (double)m->len);
             vtk_lock();
             uint64_t now = vtk_now();
+            sim_net_lte_frame(true, m->len);
             uint64_t t = now > N.up_free ? now : N.up_free;
             t += radio_touch(t);
             uint64_t x = xfer_ns(m->len);

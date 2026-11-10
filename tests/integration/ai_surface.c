@@ -38,6 +38,7 @@ static const struct {
     {"system.set_volume", "percent"}, {"system.switch_member", "id"}, {"system.shutdown", NULL}, {"system.factory_reset", ""},
     {"system.reboot", NULL}, {"state.list", NULL}, {"settings.list", NULL}, {"settings.get", "id"}, {"settings.set", "id,value"},
     {"power.set_saving", "enabled"}, {"net.set_airplane", "enabled"}, {"wifi.set_enabled", "enabled"},
+    {"net.apn_set", "automatic"}, {"net.roaming_set", "enabled"}, {"net.usage", NULL}, {"net.usage_reset", NULL}, {"shell.mobile", NULL},
     {"data.collections", NULL}, {"data.list", "collection"}, {"data.get", "collection,id"}, {"data.put", "collection,value"},
     {"data.delete", "collection,id"}, {"data.status", "collection"}, {"job.list", NULL}, {"job.cancel", "id"}, {"file.list", "path"}, {"file.stat", "path"}, {"file.read", "path"}, {"file.write", "path,text"},
     {"file.mkdir", "path"}, {"file.copy", "from,to"}, {"file.move", "from,to"}, {"file.delete", "path"}, {"file.free", NULL}, {"usb.status", NULL},
@@ -130,6 +131,8 @@ static const struct {
 static const struct {
     const char *id, *why, *args;
 } NOT_FOR_AI[] = {
+    {"shell.mobile_edit", "only a person edits the local credential draft; AI uses net.apn_set", NULL},
+    {"shell.mobile_save", "only a person submits the local credential draft", NULL},
     {"shell.members_page", "member selection stays on the device before adult authentication", "delta"},
     {"pairing.accept", "only a person confirms joining a household", "txid"},
     {"confirm.accept", "only a person on the device can say yes", "token"},
@@ -145,6 +148,7 @@ static const struct {
 };
 
 static const char *const STATES[] = {
+    "cell.roaming", "net.mobile_rev",
     "power.saving",
     "pairing.state",
     "file.index_state",

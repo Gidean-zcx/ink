@@ -64,6 +64,7 @@ int hal_camera_capture(uint8_t *buf, size_t cap, uint32_t timeout_ms) { return -
 bool hal_cell_status(hal_cell_status_t *out) { *out = (hal_cell_status_t){0}; return false; }
 int hal_cell_select_sim(hal_cell_slot_t slot, uint32_t reg_timeout_ms) { return -1; }
 int hal_cell_radio(bool on, uint32_t reg_timeout_ms) { return -1; }
+int hal_cell_apn(const hal_cell_apn_t *apn) { return -1; }
 int hal_cell_sms_parts(const char *utf8) { return -1; }
 int hal_cell_sms_send(const char *number, const char *utf8, uint32_t timeout_ms, int *sent) { *sent = 0; return -1; }
 int hal_cell_sms_take(int index, hal_cell_sms_t *out) { return -1; }
@@ -111,6 +112,7 @@ hal_ws_t *hal_ws_open(const char *url, hal_ws_cb cb, void *ctx) { return NULL; }
 void hal_net_link_status(hal_link_status_t *out) { *out = (hal_link_status_t){0}; }
 void hal_net_use(hal_link_type_t type) {  }
 bool hal_net_available(hal_link_type_t type) { return false; }
+bool hal_net_lte_bytes(uint64_t *rx, uint64_t *tx) { return false; }
 int hal_wifi_scan(hal_wifi_ap_t *out, int max, uint32_t timeout_ms) { return -1; }
 int hal_wifi_connect(const char *ssid, const char *password, uint32_t timeout_ms) { return -1; }
 void hal_wifi_set_known(const hal_wifi_known_t *list, int n) {  }
