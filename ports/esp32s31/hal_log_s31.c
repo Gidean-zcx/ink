@@ -32,10 +32,7 @@ bool hal_log_program(uint32_t off, const void *data, size_t n) {
     return p && off <= INK_LOG_BYTES && n <= INK_LOG_BYTES - off && esp_partition_write(p, 0x480000u + off, data, n) == ESP_OK;
 }
 int hal_log_format(char *out, size_t n, const char *fmt, va_list a) { return vsnprintf(out, n, fmt, a); }
-const char *hal_device_reset_reason(void) {
-    esp_reset_reason_t r = esp_reset_reason();
-    return r == ESP_RST_PANIC ? "panic" : r == ESP_RST_INT_WDT || r == ESP_RST_TASK_WDT || r == ESP_RST_WDT ? "watchdog" : r == ESP_RST_POWERON ? "poweron" : r == ESP_RST_BROWNOUT ? "brownout" : "restart";
-}
+/* hal_device_reset_reason lives in hal_device_s31.c: "panic", "task-watchdog", ... (the log's crash check looks for those words). */
 void hal_log_boot_info(char *out, size_t n) {
     const esp_app_desc_t *a = esp_app_get_description();
     const esp_partition_t *p = esp_ota_get_running_partition();

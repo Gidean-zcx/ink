@@ -46,7 +46,5 @@ int main(void) {
     assert(writes == 1 && erases == 2 && reads == 2);
     hal_log_boot_info(text, sizeof text); assert(strstr(text, "fake-version") && strstr(text, "fake-crash") && strstr(text, "00001234"));
     hal_log_tasks(text, sizeof text); assert(strstr(text, "fake-task:512"));
-    reset = ESP_RST_TASK_WDT; assert(!strcmp(hal_device_reset_reason(), "watchdog"));
-    reset = ESP_RST_PANIC; assert(!strcmp(hal_device_reset_reason(), "panic"));
     return 0;
 }
