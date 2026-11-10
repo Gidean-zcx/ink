@@ -628,7 +628,7 @@ int ink_time_alarm_update_for(ink_alarm_t *a, const char *member) {
     if (mine && alarm_valid(a)) {
         int64_t now = ink_time_now_s(); a->snooze_until = 0; a->next_s = a->enabled && now ? next_of(a, now) : 0;
         ink_db_write_t w = {.id = a->id, .sort = a->next_s, .data = a, .len = sizeof *a, .src = a->src};
-        if ((!a->enabled || !now || a->next_s) && ink_db_put(T.db, &w, NULL) == INK_DB_OK) {
+        if ((a->kind != INK_REMINDER || !a->enabled || !now || a->next_s) && ink_db_put(T.db, &w, NULL) == INK_DB_OK) {
             ink_svc_lock(); i = find_alarm(a->id); T.a[i] = *a; alarm_changed(i); ink_svc_unlock(); r = 0;
         }
     }

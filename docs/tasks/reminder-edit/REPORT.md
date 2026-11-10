@@ -7,20 +7,21 @@
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
 | 1 | 通过【实测】 | 创建 327 项、重启 51 项检查，均零失败；真实触摸、通知提示音、改时、重复、删除、AI 互通和成员隔离 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/reminder_edit/run.py --build build` |
-| 2 | 进行中 | 原有测试、全量、ASan、S31、gcccheck 待执行 | 待执行 |
+| 2 | 部分通过【实测】 | 普通全量 316/318；最终相关 8/8；S31 通过。两项文档目录未同步，ASan 正在执行 | 见执行记录 |
 | 3 | 通过【实测】 | `build/reminder-edit/add.png`、`detail.png`、`modified.png`、`picker.png`；逐张视觉检查，无裁切、遮挡 | 同上 |
 
 ## 没做到的
 
-- 全量、ASan 和 S31 正在执行；未连接设备，当前证据均为模拟器或编译结果。
+- ASan 正在执行；全量通过尚未达成，共享能力目录及设计能力目录等待主会话同步。未连接设备，当前证据均为模拟器或编译结果。
 
 ## 和设计不一致的
 
-- 无。日期时间选择页在 `system/apps/calendar/calendar.c` 的 `editor_create`，复用既有圆形按钮和胶囊按钮，年、月、日、时、分分别选择；合并时可由主会话与 time-settings 统一。
+- `docs/system/system-services-design.md` §1.3 的旧目录尚未列入本任务要求新增的 7 个能力；按总规则保留设计文档，由主会话同步。行为沿用其 §5.4 的提醒通知方式。
+- 日期时间选择页在 `system/apps/calendar/calendar.c` 的 `editor_create`，复用既有圆形按钮和胶囊按钮，年、月、日、时、分分别选择；合并时可由主会话与 time-settings 统一。
 
 ## 改过的已有测试
 
-- 暂无。
+- `tests/integration/ai_surface.c` 的 `FOR_AI` 新增 7 项：`reminder.update` 必填 `id,at,title,repeat`；`reminder.open` 必填 `id`；`reminder.draft` 参数均可选；`reminder.new/time/focus/save` 不收参数。原因：既有测试要求每个可调用能力显式登记并核对中枢收到的 schema。没有删除断言、放宽预算或修改日历／闹钟／时间测试。
 
 ## 要用户定的
 
@@ -37,6 +38,7 @@
 ## 要改的文档
 
 - 能力表按任务重新生成到构建目录，合并时由主会话更新共享的 `docs/system/capabilities.md`。
+- `docs/system/system-services-design.md` §1.3 时间行需补 `reminder.update` 和 `reminder.new/open/time/focus/draft/save`。未修改文档以迁就代码。
 
 ## 执行记录
 
@@ -46,3 +48,10 @@
 - 为什么不能更小：需要两个有 AI 快照的页面、短输入框、五项日期时间选择和四种重复选项；仅补能力或继续用语音入口不能满足手动编辑，直接输入时间字符串也不满足选择组件要求。没有另建选择控件框架或排程机制，产品代码仍低于 300 行预算。
 - 【实测】反向对照：临时把三个产品 C 文件替换为指定基线、重编 `sim-reminder-edit` 后，`run.py --negative` 得到 `exit=1, pass=9, fail=1, finished=1`（缺手动入口）；随后完整恢复文件并重编成功。日志：`build/reminder-edit/reverse/{baseline-build,baseline-test,restored-build}.log`。该手动比较不注册进 ctest，不要求 CI 保留历史。
 - 【实测】`taskpolicy -c utility python3 ../../tools/gcccheck.py build system/apps/calendar/calendar.c system/services/time/time_caps.c system/services/time/time_service.c tests/reminder_edit/reminder_edit.c`：4 个文件、0 个问题；UI 尺寸检查 0 违规，翻译表校验通过。最终验证后还会核对结果。
+- 【实测】能力表生成 467 个定义，运行时匹配 391 个能力、27 个设置：`taskpolicy -c utility python3 tools/capabilities.py --check --output build/reminder-edit-capabilities.md --runtime build/test-out/capability-table/capability-inventory.json`。共享能力表未改。
+- 产品改动：C 源码新增 172、删除 13 行；连同 CMake、翻译文件共新增 206、删除 14 行，均低于 300 行预算。测试和报告另计。
+- 【实测】普通全量：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`，退出 8，原话 `99% tests passed, 2 tests failed out of 318`，501.90 s。初次失败为 `capability-table-doc` 和尚未登记新增能力的 `integration-ai-surface`，日志 `build/reminder-full-ctest.log`。
+- 【实测】补齐 AI 能力清单后，`integration-ai-surface` 通过；`services-mid-capability-doc` 因旧设计目录缺 7 项而失败。日志 `build/reminder-followup-ctest.log`。当前两项待同步检查均是文档目录，没有跳过或放宽它们。
+- 【实测】最终普通版本重编后，`ctest --test-dir build --output-on-failure -j2 -R '^(reminder-edit|calendar|clock-alarm|integration-time-.*|integration-ai-surface)$'`：原话 `100% tests passed out of 8`，17.81 s，退出 0。日志 `build/reminder-final-targeted.log`；原日历、闹钟、时间场景未改。
+- 【实测】S31：`taskpolicy -c utility bash ports/esp32s31/build.sh` 完整编译及最终增量重编均退出 0，生成 `build-s31/size.txt`、`size-components.txt`、`stack.txt`；日志 `build/reminder-s31-final.log`。仅编译，未上机。
+- 【实测】工作区及已提交差异按总规则 §6 隐私模式扫描：退出 1、无匹配。收尾提交后再扫描最终提交范围。
