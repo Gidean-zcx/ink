@@ -14,6 +14,16 @@
 
 所有构建和测试串行安排，最多 `-j2`，没有启动窗口模拟器。依赖目录只读；`INK_DESIGN` 本任务未使用。
 
+模拟器配置沿用总规则 §5 的全部字体与 LVGL 参数，并加 `-DCMAKE_EXPORT_COMPILE_COMMANDS=ON`、`-DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"`、`-DFETCHCONTENT_SOURCE_DIR_SDL2="$INK_DEPS/build/_deps/sdl2-src"`、`-DFETCHCONTENT_SOURCE_DIR_IMGUI="$INK_DEPS/build/_deps/imgui-src"`。ASan 配置仅另加 `-DINK_SANITIZE=ON`、目录换 `build-asan`，没有改测试或预算。
+
+```bash
+export PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$PWD/hub"
+taskpolicy -c utility cmake --build build -j2
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
+taskpolicy -c utility cmake --build build-asan -j2
+INK_KEEP_EVIDENCE=1 UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
+```
+
 ```bash
 taskpolicy -c utility cmake -S ports/esp32s31/tests -B build-s31-host -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 taskpolicy -c utility cmake --build build-s31-host -j2
@@ -79,7 +89,7 @@ taskpolicy -c utility python3 ports/esp32s31/tests/negative.py build-s31-host
 
 ## 改过的已有测试
 
-暂无。
+没有改已有测试、断言或预算。新增端口测试独立运行。
 
 ## 要用户定的
 
@@ -87,7 +97,8 @@ taskpolicy -c utility python3 ports/esp32s31/tests/negative.py build-s31-host
 
 ## 顺手发现
 
-暂无。
+- 普通和 ASan 构建均有既有的 `libink_port_sim.a` 重复链接提示；根 CMake 未改，两次构建退出 0。S31 构建没有警告。
+- 根工程既有 `unit-s31-osal-ticks` 定义在 sanitizer 选项之前，`build-asan/compile_commands.json` 证明它没有 sanitizer 标志；未越界修改根 CMake。新增端口两项测试的全部编译单元均确认带 ASan/UBSan 标志。
 
 ## 新增的机制
 
@@ -97,7 +108,7 @@ taskpolicy -c utility python3 ports/esp32s31/tests/negative.py build-s31-host
 
 ## 规模与架构审视
 
-产品 `.c/.h` **+454/−25 行（净增 429）**；CMake/sdkconfig 另 +4/−2；测试与文档不计。为什么不能更小：这是替换输入、电源两组 HAL 桩，需去抖、两个触点及盖板键、醒后边沿、马达、IDF CPU 锁、睡眠进入/退出，超过 100 行并非单个小修。看过的更小方案：直接转发 IRQ 无法保证去抖与抬起；定时轮询所有设备会增加空闲耗电；让马达调用方等待会阻塞输入。采用既有芯片驱动与板级顺序，仅把纯逻辑提成可测头文件，独立测试留在端口目录，根 CMake 与系统/应用均未改。
+产品 `.c/.h` **+458/−25 行（净增 433）**；CMake/sdkconfig 另 +4/−2；测试与文档不计。为什么不能更小：这是替换输入、电源两组 HAL 桩，需去抖、两个触点及盖板键、醒后边沿、马达、IDF CPU 锁、睡眠进入/退出，超过 100 行并非单个小修。看过的更小方案：直接转发 IRQ 无法保证去抖与抬起；定时轮询所有设备会增加空闲耗电；让马达调用方等待会阻塞输入。采用既有芯片驱动与板级顺序，仅把纯逻辑提成可测头文件，独立测试留在端口目录，根 CMake 与系统/应用均未改。旋转、去抖、采样和空闲主频的固定参数集中在 `s31_board.h`，不在两组实现中重复定义。
 
 【实现】R-061：没有新增产品动作、页面、服务或能力；现有输入服务和电源服务仍是唯一上层路径。硬件代码与测试限于端口，系统、应用不引用模拟器或 IDF 头；没有额外 AI 专用实现，也不在 HAL 绕过能力与策略。
 

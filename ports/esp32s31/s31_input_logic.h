@@ -8,9 +8,7 @@
 #include "ink/rotation.h"
 #include "metalio_plus/metalio_board.h"
 #include "metalio_plus/metalio_touch.h"
-
-#define S31_KEY_DEBOUNCE_US 20000u
-#define S31_TOUCH_POLL_MS 10
+#include "s31_board.h"
 
 typedef struct {
     uint32_t stable, candidate;
@@ -64,7 +62,7 @@ static inline void s31_touch_emit(int id, const s31_contact_t *p, hal_touch_phas
     } else {
         e.touch.id = id;
         e.touch.phase = phase;
-        ink_logical_to_native(MT_PANEL_H, MT_PANEL_W, 90, p->x, p->y, &e.touch.x, &e.touch.y);
+        ink_logical_to_native(MT_PANEL_H, MT_PANEL_W, S31_PANEL_ROTATION, p->x, p->y, &e.touch.x, &e.touch.y);
     }
     emit(&e, ctx);
 }

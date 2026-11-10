@@ -23,7 +23,7 @@ def main():
     power = (port / "hal_power_s31.c").read_text()
     mutations = [
         ("debounce", "logic", "now - k->since >= S31_KEY_DEBOUNCE_US", "true"),
-        ("rotation", "logic", "MT_PANEL_H, MT_PANEL_W, 90", "MT_PANEL_H, MT_PANEL_W, 0"),
+        ("rotation", "logic", "MT_PANEL_H, MT_PANEL_W, S31_PANEL_ROTATION", "MT_PANEL_H, MT_PANEL_W, 0"),
         ("touch-release", "logic", "s31_touch_emit(id, &rp[id], HAL_TOUCH_UP, t, emit, ctx);", "(void)t;"),
         ("motion-cause", "logic", "if ((armed & HAL_WAKE_MOTION) && moved) why |= HAL_WAKE_MOTION;", "(void)moved;"),
         ("cancel", "power", "!(cfg->cancel && cfg->cancel(cfg->cancel_ctx))", "true"),

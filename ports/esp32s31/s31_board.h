@@ -21,6 +21,12 @@
 #define S31_GPIO_AI_KEY 61   /* BOOT key, simulator/profiles/metalio-plus.json */
 #define S31_GPIO_MODEM_SRDY 3 /* NT26 SRDY; wake polarity remains an on-device check */
 
+/* Input/clock defaults from simulator/profiles/metalio-plus.json. */
+#define S31_PANEL_ROTATION 90
+#define S31_KEY_DEBOUNCE_US 20000u
+#define S31_TOUCH_POLL_MS 10
+#define S31_IDLE_MHZ 160
+
 /* hal_uart ports: 1 = BH1098G (UART1, TX39 RX38, 115200), 2 = NT26 (UART2, TX58 RX59). */
 #define S31_UART1_TX 39
 #define S31_UART1_RX 38

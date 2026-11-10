@@ -38,7 +38,7 @@ void hal_power_set_state(hal_power_state_t s) {
     else if (s == HAL_PWR_STATE_IDLE || s == HAL_PWR_STATE_LOCKED) hal_cpu_boost_release(g_active);
 }
 void s31_power_init(void) {
-    esp_pm_config_t cfg = {.max_freq_mhz = CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ, .min_freq_mhz = 160, .light_sleep_enable = false};
+    esp_pm_config_t cfg = {.max_freq_mhz = CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ, .min_freq_mhz = S31_IDLE_MHZ, .light_sleep_enable = false};
     if (esp_pm_configure(&cfg) != ESP_OK || !(g_active = hal_cpu_boost_create("active")))
         osal_panic("power HAL: CPU clock setup failed");
     hal_power_set_state(HAL_PWR_STATE_ACTIVE);
