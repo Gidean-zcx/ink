@@ -12,7 +12,7 @@ from policy import check
 ROOT = Path(__file__).resolve().parents[2]
 p = argparse.ArgumentParser(description=__doc__)
 p.add_argument('--build', type=Path, required=True)
-p.add_argument('--negative', choices=('radio', 'page', 'ownership', 'entry', 'prefix'))
+p.add_argument('--negative', choices=('radio', 'page', 'ownership', 'entry', 'prefix', 'wait'))
 a = p.parse_args()
 build = a.build.resolve()
 work = Path(tempfile.mkdtemp(prefix='emergency-call-', dir=build))
@@ -39,6 +39,7 @@ def compile_copy(path, source, name):
     original_object = command[command.index('-o') + 1]
     command[command.index('-o') + 1] = str(obj)
     command[command.index(str(ROOT / path))] = str(source_path)
+    command += ['-iquote', str((ROOT / path).parent)]
     result = subprocess.run(command, cwd=build, capture_output=True, text=True)
     (work / (name + '-compile.log')).write_text(result.stdout + result.stderr)
     assert result.returncode == 0, result.stderr
@@ -47,13 +48,14 @@ def compile_copy(path, source, name):
 
 link = base_link[:]
 if a.negative:
-    file = 'system/services/comm/comm_service.c' if a.negative == 'radio' else 'system/policy/cap.c' if a.negative == 'entry' else 'system/apps/phone/phone.c'
+    file = 'tests/emergency_call/emergency_call.c' if a.negative == 'wait' else 'system/services/comm/comm_service.c' if a.negative == 'radio' else 'system/policy/cap.c' if a.negative == 'entry' else 'system/apps/phone/phone.c'
     source = (ROOT / file).read_text()
     old, new = {
         'radio': ('if (temporary) r = hal_cell_radio(true, 0) < 0 ? -1 : 0;', ''),
         'page': ('if (emergency_changed(id, a)) return;', '(void)emergency_changed;'),
         'ownership': ('{.id = "phone.emergency_open", .app = NULL', '{.id = "phone.emergency_open", .app = "phone"'),
         'entry': ('return c && c->locked_entry;', 'return false; (void)c;'),
+        'wait': ('#include "../integration/whole_product.h"', '#include "../integration/whole_product.h"\n#undef WAIT_FOR\n#define WAIT_FOR(cond, max_ms) ({ int elapsed = 0; while (!(cond) && elapsed < (max_ms)) { delay_ms(20); elapsed += 20; } (bool)(cond); })'),
     }[a.negative]
     assert source.count(old) == 1
     source = source.replace(old, new)
@@ -86,7 +88,7 @@ body = source[start:end]
 assert body.count(' || !strcmp(app, "phone")') == 1
 source = source[:start] + body.replace(' || !strcmp(app, "phone")', '', 1) + source[end:]
 fixture, _ = compile_copy('system/policy/members.c', source, 'disabled-phone')
-phases = {'radio': ['airplane'], 'page': ['kid'], 'ownership': ['kid-disabled'], 'entry': ['gate']}.get(a.negative,
+phases = {'radio': ['airplane'], 'page': ['kid'], 'ownership': ['kid-disabled'], 'entry': ['gate'], 'wait': ['lock']}.get(a.negative,
     ['lock', 'gate', 'kid', 'airplane', 'nosim', 'en', 'kid-disabled'])
 for phase in phases:
     binary = build / 'sim-emergency-call'
@@ -114,7 +116,8 @@ for phase in phases:
           'checks', counts.get('test.pass'), 'failures', counts.get('test.fail', 0), flush=True)
     if a.negative:
         expected = {'radio': 'emergency AT call connects with RF on', 'page': 'emergency page tracks the active call',
-                    'ownership': 'AI opens the public entry from a locked surface', 'entry': 'the public-entry marker works without a phone name'}[a.negative]
+                    'ownership': 'AI opens the public entry from a locked surface', 'entry': 'the public-entry marker works without a phone name',
+                    'wait': 'wait returns the observed success without sampling it twice'}[a.negative]
         assert not passed and counts.get('test.finished') == 1 and expected in result.stdout + result.stderr + json.dumps(metrics.get('warnings', [])), result.stderr[-4000:]
         print('PASS: removing the fix fails the unchanged regression:', expected, flush=True)
     elif not passed:

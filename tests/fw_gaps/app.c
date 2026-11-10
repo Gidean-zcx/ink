@@ -106,12 +106,6 @@ static void repeat_pages(void) {
     for (int i = 0; i < 100; i++) { ink_ui_push(&PAGE, NULL); changes(); ink_ui_pop(); }
     CHECK(capacity(0) == before[0] && capacity(1) == before[1] && capacity(2) == before[2],
           "100 real page creations/destructions do not consume subscription slots");
-    CHECK(ink_state_watch("legacy.", state_changed, counts, INK_EXEC_DIRECT) == 0 &&
-          ink_settings_watch("legacy.", state_changed, counts, INK_EXEC_DIRECT) == 0 &&
-          ink_cap_subscribe("legacy.", event_changed, counts, INK_EXEC_DIRECT) == 0, "legacy success remains zero");
-    CHECK(ink_state_watch_handle("", state_changed, counts, INK_EXEC_DIRECT) == -1 &&
-          ink_settings_watch_handle("", state_changed, counts, INK_EXEC_DIRECT) == -1 &&
-          ink_cap_subscribe_handle("", event_changed, counts, INK_EXEC_DIRECT) == -1, "removable watches require a serial executor");
 }
 static void run(void *arg) {
     (void)arg;
@@ -157,6 +151,13 @@ static void run(void *arg) {
     executor = INK_EXEC_UI;
     memset(counts, 0, sizeof counts);
     on_ui(repeat_pages); at_executor(barrier);
+    /* Retired UI callbacks drain before slots can be reused on another executor. */
+    CHECK(ink_state_watch("legacy.", state_changed, counts, INK_EXEC_DIRECT) == 0 &&
+          ink_settings_watch("legacy.", state_changed, counts, INK_EXEC_DIRECT) == 0 &&
+          ink_cap_subscribe("legacy.", event_changed, counts, INK_EXEC_DIRECT) == 0, "legacy success remains zero");
+    CHECK(ink_state_watch_handle("", state_changed, counts, INK_EXEC_DIRECT) == -1 &&
+          ink_settings_watch_handle("", state_changed, counts, INK_EXEC_DIRECT) == -1 &&
+          ink_cap_subscribe_handle("", event_changed, counts, INK_EXEC_DIRECT) == -1, "removable watches require a serial executor");
     CHECK(!counts[0] && !counts[1] && !counts[2], "destroyed pages receive no queued callbacks");
     ink_probe_count("test.finished");
 }

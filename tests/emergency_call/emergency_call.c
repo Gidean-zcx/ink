@@ -88,6 +88,10 @@ static void finish_call(bool airplane, bool remote, const char *number) {
 static void run(void *arg) {
     (void)arg; vtk_host_call(read_env, NULL); english = !strcmp(phase, "en");
     ink_power_hold(INK_NEED_AWAKE); /* Keep the UI driver running between locked-page interactions. */
+    if (!strcmp(phase, "lock")) {
+        int observations = 0;
+        CHECK(WAIT_FOR(++observations == 1, 20) && observations == 1, "wait returns the observed success without sampling it twice");
+    }
     bool disabled = !strcmp(phase, "kid-disabled");
     bool gate = !strcmp(phase, "gate"), kid = disabled || !strcmp(phase, "kid");
     bool no_sim = !strcmp(phase, "nosim"), airplane = no_sim || !strcmp(phase, "airplane");
