@@ -631,6 +631,15 @@ foreach(scene confirm interrupt power member lock off)
     --build ${CMAKE_BINARY_DIR} --scene ${scene})
   set_tests_properties(semantics-shell-${scene} PROPERTIES TIMEOUT 120 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")
 endforeach()
+ink_sim_executable(sim-semantics-shell2 tests/semantics_shell2/main.c tests/semantics_shell2/keyboard.c
+  tests/semantics_shell2/ai.c tests/semantics_shell2/member.c tests/semantics_shell2/kid.c
+  tests/semantics_shell2/battery.c tests/semantics_shell2/home.c)
+target_link_libraries(sim-semantics-shell2 PRIVATE ink_apps ink_system)
+foreach(scene keyboard ai member kid battery home)
+  add_test(NAME semantics-shell2-${scene} COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/semantics_shell2/run.py
+    --build ${CMAKE_BINARY_DIR} --scene ${scene})
+  set_tests_properties(semantics-shell2-${scene} PROPERTIES TIMEOUT 120 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")
+endforeach()
 ink_sim_executable(sim-jot tests/jot/app.c examples/jot/jot.c)
 target_link_libraries(sim-jot PRIVATE ink_apps ink_system)
 add_test(NAME app-framework-example COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/jot/run.py --build ${CMAKE_BINARY_DIR})

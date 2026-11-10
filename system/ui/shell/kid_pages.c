@@ -6,21 +6,34 @@
 #include "ink/sys/members.h"
 #include "ink/sys/power.h"
 #include "ink/sys/state.h"
+#include "ink/sys/ui_semantics.h"
 #include "ink/ui_shell.h"
 #include "member_pages.h"
 #include "shell_card.h"
 
 static struct { shell_card_t card; char app[32]; uint32_t epoch; bool up; } K;
 static void action(ink_call_t *c);
-static int snapshot(char *out, size_t cap) {
-    return snprintf(out, cap, "%s；当前=%s；%s；动作：%s。", K.up ? "KidTimeUp" : "KidLimit", ink_member_current()->name,
-        K.up ? "今天的时间到了；读到哪儿都记好了；电话和短信不限制" : "要爸爸妈妈来；请他们输密码；只放行这一次",
-        K.up ? "shell.kid_phone、shell.kid_sms、shell.kid_add、member.time_get" : "shell.kid_cancel、shell.kid_parent");
+static int semantic_snapshot(char *out, size_t cap) {
+    ink_ui_field_spec_t fields[] = {
+        {.id = "member", .role = "text", .label = "当前", .value = ink_member_current()->name},
+        {.id = "status", .role = "status", .label = "说明", .value = K.up ? "今天的时间到了；读到哪儿都记好了；电话和短信不限制" : "要爸爸妈妈来；请他们输密码；只放行这一次"}
+    };
+    ink_ui_action_spec_t actions[] = {
+        {.id = "shell.kid_phone", .label = "打电话", .capability = "shell.kid_phone", .enabled = K.up},
+        {.id = "shell.kid_sms", .label = "短信", .capability = "shell.kid_sms", .enabled = K.up},
+        {.id = "shell.kid_add", .label = "爸爸妈妈加时间", .capability = "shell.kid_add", .enabled = K.up},
+        {.id = "member.time_get", .label = "查看时间", .capability = "member.time_get", .enabled = K.up},
+        {.id = "shell.kid_cancel", .label = "算了", .capability = "shell.kid_cancel", .enabled = !K.up},
+        {.id = "shell.kid_parent", .label = "请他们输密码", .capability = "shell.kid_parent", .enabled = !K.up}
+    };
+    ink_ui_page_spec_t page = {.id = K.up ? "KidTimeUp" : "KidLimit", .title = "孩子使用时间", .object = {"kid:limit", ink_ui_generation()},
+        .fields = fields, .field_count = sizeof fields / sizeof *fields, .actions = actions, .action_count = sizeof actions / sizeof *actions};
+    return ink_ui_semantics_snapshot(&page, out, cap);
 }
 static bool on_key(ink_key_t key, bool lng);
 static const ink_ui_overlay_t VIEWS[] = {
-    {.name = "KidTimeUp", .level = 1, .snapshot = snapshot, .on_key = on_key},
-    {.name = "KidLimit", .level = 1, .snapshot = snapshot, .on_key = on_key}
+    {.name = "KidTimeUp", .level = 1, .snapshot = semantic_snapshot, .on_key = on_key},
+    {.name = "KidLimit", .level = 1, .snapshot = semantic_snapshot, .on_key = on_key}
 };
 static void close_page(void) {
     if (K.card.root) { ink_ui_overlay_remove(&VIEWS[K.up ? 0 : 1]); shell_card_close(&K.card); }
@@ -31,7 +44,6 @@ static bool on_key(ink_key_t key, bool lng) {
     if (!K.up && !lng && (key == INK_KEY_HOME || key == INK_KEY_BACK)) close_page();
     return true;
 }
-static void clicked(lv_event_t *e) { ink_receipt_t rc; ink_cap_invoke(lv_event_get_user_data(e), NULL, INK_SRC_TOUCH, 0, &rc); }
 static void show(bool up) {
     close_page(); ink_shell_close(); K.up = up; K.epoch = ink_member_epoch();
     if (up && !strcmp(ink_ui_page_name(), "book")) ink_ui_redraw();
@@ -47,10 +59,10 @@ static void show(bool up) {
     lv_obj_t *body = ink_ui_label(K.card.panel, up ? "读到哪儿都记好了，明天接着来。" : "请他们输密码，只放行这一次。", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y, w);
     lv_obj_set_style_text_align(body, LV_TEXT_ALIGN_CENTER, 0);
     y = INK_CANVAS_H - INK_MARGIN - INK_PRIMARY;
-    if (up) ink_ui_pill(K.card.panel, "短信", (INK_CANVAS_W - INK_CIRCLE_APP) / 2, y - INK_CONTROL - INK_GAP_M, INK_CIRCLE_APP, INK_CONTROL, false, clicked, "shell.kid_sms");
+    if (up) ink_shell_bind(ink_ui_pill(K.card.panel, "短信", (INK_CANVAS_W - INK_CIRCLE_APP) / 2, y - INK_CONTROL - INK_GAP_M, INK_CIRCLE_APP, INK_CONTROL, false, NULL, NULL), "shell.kid_sms", NULL);
     int left = up ? (w - INK_GAP_M) * 2 / 5 : (w - INK_GAP_M) / 2;
-    ink_ui_pill(K.card.panel, up ? "打电话" : "算了", INK_MARGIN, y, left, INK_PRIMARY, false, clicked, up ? "shell.kid_phone" : "shell.kid_cancel");
-    ink_ui_pill(K.card.panel, up ? "爸爸妈妈加时间" : "请他们输密码", INK_MARGIN + left + INK_GAP_M, y, w - left - INK_GAP_M, INK_PRIMARY, true, clicked, up ? "shell.kid_add" : "shell.kid_parent");
+    ink_shell_bind(ink_ui_pill(K.card.panel, up ? "打电话" : "算了", INK_MARGIN, y, left, INK_PRIMARY, false, NULL, NULL), up ? "shell.kid_phone" : "shell.kid_cancel", NULL);
+    ink_shell_bind(ink_ui_pill(K.card.panel, up ? "爸爸妈妈加时间" : "请他们输密码", INK_MARGIN + left + INK_GAP_M, y, w - left - INK_GAP_M, INK_PRIMARY, true, NULL, NULL), up ? "shell.kid_add" : "shell.kid_parent", NULL);
 }
 void ink_shell_kid_limit(const char *app) {
     if (ink_member_current()->role != INK_ROLE_CHILD) return;
