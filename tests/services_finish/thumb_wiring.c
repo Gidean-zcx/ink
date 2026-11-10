@@ -126,7 +126,7 @@ static void limits_and_isolation(void) {
     CHECK(ink_test_thumb_bytes() == INK_THUMB_CACHE_BYTES, "four full-size thumbnails at capacity");
     CHECK(ink_member_switch("kid") == 0, "switch to child");
     thumb(ids[6], INK_SRC_AI, INK_RC_REJECTED, 0);
-    CHECK(ink_test_thumb_bytes() == 0, "member change clears cache and child cannot read parent");
+    CHECK(WAIT_FOR(ink_test_thumb_bytes() == 0, 3000), "member change clears cache and child cannot read parent");
     CHECK(ink_member_switch("owner") == 0, "return to owner");
     thumb(ids[6], INK_SRC_TOUCH, INK_RC_DONE, '0');
     sim_sd_set_present(false);

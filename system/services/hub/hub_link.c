@@ -397,9 +397,9 @@ static void on_text(const char *txt, size_t len) {
             if (res_t >= 0) {
                 if (ink_pairing_enabled()) ink_pairing_reply(true, INK_HUB_OK, j, res_t);
                 int64_t ms;
+                osal_mutex_lock(H.id_lock, OSAL_WAIT_FOREVER);
                 H.server_ms = ink_json_int(j, ink_json_find(j, res_t, "now_ms"), &ms) ? ms : 0;
                 H.hello_rtt_ms = (uint32_t)((osal_now_us() - H.hello_sent_us) / 1000u);
-                osal_mutex_lock(H.id_lock, OSAL_WAIT_FOREVER);
                 H.server_zone[0] = 0;
                 ink_json_str(j, ink_json_find(j, res_t, "time_zone"), H.server_zone, sizeof H.server_zone);
                 osal_mutex_unlock(H.id_lock);
@@ -473,7 +473,9 @@ static void send_hello(void) {
     } else snprintf(params, sizeof legacy, "{\"proto\":1,\"device\":\"%s\",\"member\":\"%s\",\"authed\":%s,\"epoch\":%u}",
                     di.profile_id ? di.profile_id : "?", identity.member, identity.authed ? "true" : "false", (unsigned)identity.epoch);
     hello.params = params;
+    osal_mutex_lock(H.id_lock, OSAL_WAIT_FOREVER);
     H.hello_sent_us = osal_now_us();
+    osal_mutex_unlock(H.id_lock);
     if (send_request(&hello) != 0) enter_backoff();
     else {
         if (!enrollment) remember_identity(&identity);
@@ -802,10 +804,14 @@ void ink_hub_events_acked(void) {
 }
 
 bool ink_hub_server_time(int64_t *unix_ms, uint32_t *round_trip_ms) {
-    if (!H.server_ms) return false;
-    *unix_ms = H.server_ms + (int64_t)((osal_now_us() - H.hello_sent_us) / 1000u) - H.hello_rtt_ms;
-    *round_trip_ms = H.hello_rtt_ms;
-    return true;
+    osal_mutex_lock(H.id_lock, OSAL_WAIT_FOREVER);
+    bool valid = H.server_ms != 0;
+    if (valid) {
+        *unix_ms = H.server_ms + (int64_t)((osal_now_us() - H.hello_sent_us) / 1000u) - H.hello_rtt_ms;
+        *round_trip_ms = H.hello_rtt_ms;
+    }
+    osal_mutex_unlock(H.id_lock);
+    return valid;
 }
 bool ink_hub_server_zone(char *out, size_t cap) {
     osal_mutex_lock(H.id_lock, OSAL_WAIT_FOREVER);

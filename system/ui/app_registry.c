@@ -468,7 +468,7 @@ static void cap_list(ink_call_t *c) {
 static void cap_open(ink_call_t *c) { /* UI task */
     char id[32];
     ink_args_get_str(&c->args, "id", id, sizeof id);
-    bool locked = ink_power_state() == INK_PWR_LOCKED || !ink_member_space_open() || ink_camera_restricted();
+    bool locked = ink_power_state() == INK_PWR_LOCKED || !ink_member_space_open() || ink_ui_locked_activity();
     if (locked && strcmp(id, "camera")) { fail(c, INK_RC_REJECTED, "only the camera is available while locked"); return; }
     int r = locked ? ink_camera_open_locked() : ink_app_open(id, NULL, NULL);
     if (r == -3) fail(c, INK_RC_REJECTED, TR("家长没有打开这个应用"));
@@ -540,7 +540,7 @@ static void cap_cards(ink_call_t *c) { /* UI task: apps have no other */
 
 static const ink_cap_t APP_CAPS[] = {
     {.id = "app.list", .title = "这台设备上有哪些应用，各自的状态", .output = "{\"type\":\"array\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_list},
-    {.id = "app.open", .title = "打开一个应用", .input = ID_ARG, .effect = INK_FX_NAVIGATE, .child_ok = true, .while_locked = true, .run = cap_open},
+    {.id = "app.open", .locked_owner_only = true, .title = "打开一个应用", .input = ID_ARG, .effect = INK_FX_NAVIGATE, .child_ok = true, .while_locked = true, .run = cap_open},
     {.id = "app.close", .title = "关掉一个应用（它会保存状态）", .input = ID_ARG, .effect = INK_FX_NAVIGATE, .child_ok = true, .run = cap_close},
     {.id = "app.cards", .title = "各应用的服务卡片（和主页看到的一样）", .output = "{\"type\":\"array\"}", .effect = INK_FX_READ, .child_ok = true, .run = cap_cards},
     {.id = "app.state", .title = "一个应用的状态变了（foreground、background、frozen、stopped）", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},

@@ -177,10 +177,52 @@ static void locale(void) {
     for (int i = 0; i < 3; i++) ok("family.next", NULL);
     CHECK(sim_metric_value("i18n.missing") == missing, "all period and weekday rows have English translations");
 }
+static void owner_line(void *arg) {
+    const ink_cap_t *c = arg;
+    printf("OWNERSHIP %s %s\n", c->app, c->id);
+}
+static void forbidden_handler(ink_call_t *c) { (void)c; CHECK(false, "a disabled app handler must never run"); }
+static void ownership(void) {
+    static const ink_cap_t alias = {.id = "audit14.alias", .app = "memo", .title = "合成归属测试", .child_ok = true, .run = forbidden_handler};
+    CHECK(!ink_cap_register(&alias, 1), "register a capability whose name differs from its app");
+    pin_done = false;
+    CHECK(ink_member_set_pin("owner", "", "24681357", pin_reply, NULL) == 0 && WAIT_FOR(pin_done, 6000) && pin_result == INK_PIN_OK, "set the synthetic parent verifier");
+    for (int i = 0; i < ink_app_count(); i++) {
+        const ink_app_def_t *a = ink_app_at(i);
+        if (!a->child_ok || !strcmp(a->id, "home") || !strcmp(a->id, "phone") || !strcmp(a->id, "message")) continue;
+        char args[96]; snprintf(args, sizeof args, "{\"id\":\"kid\",\"app\":\"%s\",\"mode\":0}", a->id);
+        change("kid.app_set", args);
+        CHECK(ink_member_app_mode("kid", a->id) == 0, "parent removes %s from the child's list", a->id);
+    }
+    child();
+    CHECK(!strcmp(ink_cap_find("photo.open")->app, "gallery"), "photo.open belongs to Gallery");
+    CHECK(!ink_cap_find("shell.ai_stop")->app, "stopping speech remains a system action");
+    unsigned total = 0, denied_count = 0;
+    for (int i = 0; ink_cap_at(i); i++) {
+        const ink_cap_t *c = ink_cap_at(i);
+        /* Coverage guards for application tables, including the previously missed aliases. */
+        static const char *const domains[] = {"reader.", "ai.", "calc.", "camera.", "clock.", "files.", "file.", "gallery.", "photo.", "memo.", "message.", "sms.", "phone.", "call.", "contacts.", "calendar.", "reminder.", "alarm.", "remote.", "weather.", "home."};
+        for (size_t k = 0; k < sizeof domains / sizeof *domains; k++)
+            if (!strncmp(c->id, domains[k], strlen(domains[k]))) CHECK(c->app, "application capability declares its owner: %s", c->id);
+        if (!strncmp(c->id, "file.", 5)) CHECK(c->app && !strcmp(c->app, "files"), "every file service capability belongs to Files: %s", c->id);
+        if (!strncmp(c->id, "shell.ai_", 9) && strcmp(c->id, "shell.ai_stop")) CHECK(c->app && !strcmp(c->app, "ai"), "AI entry declares its application: %s", c->id);
+        if (!c->app) continue;
+        vtk_host_call(owner_line, (void *)c); total++;
+        bool required = !strcmp(c->app, "phone") || !strcmp(c->app, "message") || !strcmp(c->app, "home");
+        if (required) { CHECK(ink_member_app_mode(NULL, c->app) == 2 && ink_member_allows(c->id, true), "required app remains allowed: %s", c->id); continue; }
+        CHECK(ink_member_app_mode(NULL, c->app) == 0, "declared application is disabled: %s", c->app);
+        CHECK(!ink_cap_ai_callable(c), "AI discovery removes %s", c->id);
+        denied(c->id, NULL, false); denied(c->id, NULL, true); denied_count++;
+    }
+    CHECK(total > 100 && denied_count > 100, "enumerate all owned capabilities (%u owned, %u denied twice)", total, denied_count);
+    CHECK(AI("app.open", "{\"id\":\"phone\"}") && g_rc.status == INK_RC_DONE, "required phone still opens");
+    CHECK(AI("app.open", "{\"id\":\"message\"}") && g_rc.status == INK_RC_DONE, "required SMS still opens");
+}
 static void run(void *arg) {
     (void)arg; ink_power_hold(INK_NEED_AWAKE); ink_power_hold(INK_NEED_NO_LOCK); quiet();
     if (!strcmp(phase, "policy")) policy();
     else if (!strcmp(phase, "restart")) restart();
+    else if (!strcmp(phase, "ownership")) ownership();
     else locale();
     ink_probe_count("test.finished");
 }

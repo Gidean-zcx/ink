@@ -334,17 +334,17 @@ static const ink_activity_t RECENTS = {.name = "PhoneRecents", .app = "phone", .
 static const ink_activity_t CALL = {.name = "PhoneCall", .app = "phone", .create = create, .destroy = destroy, .snapshot = snapshot};
 static const ink_activity_t KEYPAD = {.name = "PhoneKeypad", .app = "phone", .create = create, .destroy = destroy, .snapshot = snapshot};
 static const ink_cap_t CAPS[] = {
-    {.id = "phone.keypad", .title = "打开或收起通话键盘", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "phone.return", .title = "回到通话", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "phone.open", .title = "打开拨号盘，可填入号码", .input = "{\"type\":\"object\",\"properties\":{\"number\":{\"type\":\"string\",\"maxLength\":20}}}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "phone.contacts", .title = "从联系人选择号码", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "contacts.open", .title = "打开联系人", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "phone.recents", .title = "打开最近通话", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "phone.number", .title = "输入电话号码", .activity = "Phone", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "phone.key", .title = "按拨号键或删除一位", .input = "{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"string\",\"maxLength\":6}},\"required\":[\"key\"]}", .activity = "Phone", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = key_cap},
-    {.id = "phone.prev", .title = "通话记录上一页", .activity = "PhoneRecents", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "phone.next", .title = "通话记录下一页", .activity = "PhoneRecents", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "contacts.selected", .title = "联系人号码已选好", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true}
+    {.id = "phone.keypad", .app = "phone", .title = "打开或收起通话键盘", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "phone.return", .app = "phone", .title = "回到通话", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "phone.open", .app = "phone", .title = "打开拨号盘，可填入号码", .input = "{\"type\":\"object\",\"properties\":{\"number\":{\"type\":\"string\",\"maxLength\":20}}}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "phone.contacts", .app = "phone", .title = "从联系人选择号码", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "contacts.open", .app = "phone", .title = "打开联系人", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "phone.recents", .app = "phone", .title = "打开最近通话", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "phone.number", .app = "phone", .title = "输入电话号码", .activity = "Phone", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "phone.key", .app = "phone", .title = "按拨号键或删除一位", .input = "{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"string\",\"maxLength\":6}},\"required\":[\"key\"]}", .activity = "Phone", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = key_cap},
+    {.id = "phone.prev", .app = "phone", .title = "通话记录上一页", .activity = "PhoneRecents", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "phone.next", .app = "phone", .title = "通话记录下一页", .activity = "PhoneRecents", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "contacts.selected", .app = "phone", .title = "联系人号码已选好", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true}
 };
 int ink_phone_init(void) {
     return ink_db_register(&HISTORY) || ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) ||

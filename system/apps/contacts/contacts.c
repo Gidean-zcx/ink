@@ -242,14 +242,14 @@ static const ink_app_def_t APP = {.id = "phone", .title = "电话", .icon = INK_
 #define VERSION "\"if_revision\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}"
 #define DETAILS "\"name\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":32},\"number\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":24}"
 static const ink_cap_t CAPS[] = {
-    {.id = "contacts.put", .title = "添加或修改联系人（每人一个号码）", .input = "{\"type\":\"object\",\"properties\":{" ID "," VERSION "," DETAILS "},\"required\":[\"name\",\"number\"]}", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_BG, .run = record},
-    {.id = "contacts.delete", .title = "删除联系人", .ask = "删除联系人 {name}（{number}），不能撤销", .input = "{\"type\":\"object\",\"properties\":{" ID "," VERSION "," DETAILS "},\"required\":[\"id\",\"if_revision\",\"name\",\"number\"]}", .effect = INK_FX_LOCAL_DESTRUCTIVE, .ask_by_hand = true, .child_ok = true, .exec = INK_EXEC_BG, .run = record},
-    {.id = "contacts.select", .title = "选联系人和号码，返回编号和号码", .input = RECORD, .output = "{\"type\":\"object\",\"properties\":{" ID ",\"number\":{\"type\":\"string\"}},\"required\":[\"id\",\"number\"]}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_BG, .run = record},
-    {.id = "contacts.edit", .title = "打开联系人或添加联系人", .input = "{\"type\":\"object\",\"properties\":{" ID "}}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "contacts.next", .title = "联系人下一页", .activity = "PhoneContacts", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "contacts.prev", .title = "联系人上一页", .activity = "PhoneContacts", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "contacts.name", .title = "输入联系人姓名", .activity = "ContactEdit", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "contacts.number", .title = "输入联系人号码", .activity = "ContactEdit", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate}
+    {.id = "contacts.put", .app = "phone", .title = "添加或修改联系人（每人一个号码）", .input = "{\"type\":\"object\",\"properties\":{" ID "," VERSION "," DETAILS "},\"required\":[\"name\",\"number\"]}", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_BG, .run = record},
+    {.id = "contacts.delete", .app = "phone", .title = "删除联系人", .ask = "删除联系人 {name}（{number}），不能撤销", .input = "{\"type\":\"object\",\"properties\":{" ID "," VERSION "," DETAILS "},\"required\":[\"id\",\"if_revision\",\"name\",\"number\"]}", .effect = INK_FX_LOCAL_DESTRUCTIVE, .ask_by_hand = true, .child_ok = true, .exec = INK_EXEC_BG, .run = record},
+    {.id = "contacts.select", .app = "phone", .title = "选联系人和号码，返回编号和号码", .input = RECORD, .output = "{\"type\":\"object\",\"properties\":{" ID ",\"number\":{\"type\":\"string\"}},\"required\":[\"id\",\"number\"]}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_BG, .run = record},
+    {.id = "contacts.edit", .app = "phone", .title = "打开联系人或添加联系人", .input = "{\"type\":\"object\",\"properties\":{" ID "}}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "contacts.next", .app = "phone", .title = "联系人下一页", .activity = "PhoneContacts", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "contacts.prev", .app = "phone", .title = "联系人上一页", .activity = "PhoneContacts", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "contacts.name", .app = "phone", .title = "输入联系人姓名", .activity = "ContactEdit", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "contacts.number", .app = "phone", .title = "输入联系人号码", .activity = "ContactEdit", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate}
 };
 int ink_contacts_init(void) {
     return ink_db_register(&CONTACTS) || ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_app_register(&APP) ? -1 : 0;

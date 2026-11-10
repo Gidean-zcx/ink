@@ -22,6 +22,8 @@
 #define READ_MAX 2048
 #define COPY_NOW_BYTES (256u * 1024u) /* a copy this small is waited for */
 #define UNDO_MS 10000
+#define BATCH_FAILURE_MAX 20
+#define BATCH_RESULT_CAP (BATCH_FAILURE_MAX * (INK_FS_NAME_MAX * 6 + 3) + 128)
 
 static bool offered(const char *path) { return path && strncmp(path, "/app", 4) && strncmp(path, "/cache", 6); }
 
@@ -222,9 +224,11 @@ static void batch_publish(batch_t *b, bool ok) {
     ink_args_t a; ink_args_init(&a); ink_args_str(&a, "path", b->path); ink_args_bool(&a, "ok", ok); ink_args_int(&a, "done", b->at); ink_args_int(&a, "total", b->count); ink_cap_emit_for("file.batch_progress", &a, b->context.member);
 }
 static void batch_result(batch_t *b, int err) {
-    if (b->at) ink_jw_raw(&b->w, ",");
-    ink_jw_raw(&b->w, "{\"path\":"); ink_jw_str(&b->w, b->path);
-    ink_jw_raw(&b->w, ",\"error\":"); ink_jw_str(&b->w, err ? ink_fs_err_name(err) : ""); ink_jw_raw(&b->w, "}");
+    if (err && b->failed < BATCH_FAILURE_MAX) {
+        if (b->failed) ink_jw_raw(&b->w, ",");
+        const char *name = strrchr(b->path, '/');
+        ink_jw_str(&b->w, name ? name + 1 : b->path);
+    }
     b->failed += err != 0; b->last_ok = !err; b->at++;
     ink_task_progress(b->task, (int)(b->at * 100 / b->count), NULL);
     if (b->at < b->count) batch_publish(b, !err);
@@ -245,9 +249,17 @@ static void batch_next(batch_t *b) {
         } else r = r < 0 ? r : INK_FS_ERR_NOT_FOUND;
         batch_result(b, r);
     }
-    ink_jw_raw(&b->w, "]}");
+    ink_jw_raw(&b->w, "],\"total\":"); ink_jw_int(&b->w, (int64_t)b->count);
+    ink_jw_raw(&b->w, ",\"succeeded\":"); ink_jw_int(&b->w, (int64_t)(b->count - b->failed));
+    ink_jw_raw(&b->w, ",\"failed\":"); ink_jw_int(&b->w, (int64_t)b->failed);
+    ink_jw_raw(&b->w, ",\"more\":"); ink_jw_int(&b->w, b->failed > BATCH_FAILURE_MAX ? (int64_t)(b->failed - BATCH_FAILURE_MAX) : 0);
+    ink_jw_raw(&b->w, "}");
     b->call->rc.status = b->failed ? INK_RC_PARTIAL : INK_RC_DONE;
     snprintf(b->call->rc.say, sizeof b->call->rc.say, TR("完成 %zu/%zu，失败 %zu"), b->count - b->failed, b->count, b->failed);
+    if (b->failed > BATCH_FAILURE_MAX) {
+        size_t n = strlen(b->call->rc.say);
+        snprintf(b->call->rc.say + n, sizeof b->call->rc.say - n, "，还有 %zu 个", b->failed - BATCH_FAILURE_MAX);
+    }
     ink_task_end(b->task, b->failed ? INK_TASK_FAILED : INK_TASK_DONE, b->call->rc.say, NULL);
     batch_publish(b, b->last_ok);
     ink_cap_result(b->call, b->out); ink_cap_done(b->call); osal_free(b->out); osal_free(b);
@@ -271,10 +283,10 @@ static void cap_batch(ink_call_t *c) {
     }
     osal_free(j);
     if (!ok || !b->count) { osal_free(b); if (c->rc.status == INK_RC_DONE) refuse(c, INK_FS_ERR_PATH); return; }
-    size_t cap = b->count * (INK_FS_PATH_MAX * 6 + 96) + 32; b->out = osal_malloc(cap, OSAL_MEM_EXTERNAL);
+    b->out = osal_malloc(BATCH_RESULT_CAP, OSAL_MEM_EXTERNAL);
     if (!b->out) { osal_free(b); refuse(c, INK_FS_ERR_IO); return; }
     b->task = ink_task_begin_for(c->cap->id, TR("处理选中的文件"), b->context.member, NULL, NULL);
-    ink_jw_init(&b->w, b->out, cap); ink_jw_raw(&b->w, "{\"results\":["); ink_cap_defer(c); batch_publish(b, true); batch_next(b);
+    ink_jw_init(&b->w, b->out, BATCH_RESULT_CAP); ink_jw_raw(&b->w, "{\"failures\":["); ink_cap_defer(c); batch_publish(b, true); batch_next(b);
 }
 
 static void cap_mkdir(ink_call_t *c) {
@@ -458,54 +470,54 @@ static void cap_thumb(ink_call_t *c) {
 }
 
 static const ink_cap_t FILE_CAPS[] = {
-    {.id = "file.index", .title = "按类型分页查询目录树的文件索引", .input = "{\"type\":\"object\",\"properties\":{" PATH_ARG("path") ",\"type\":{\"type\":\"string\",\"enum\":[\"all\",\"image\",\"audio\",\"text\",\"other\"]},\"cursor\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":4294967295},\"limit\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":10}},\"required\":[\"path\"]}", .output = "{\"type\":\"object\"}",
+    {.id = "file.index", .locked_owner_only = true, .app = "files", .title = "按类型分页查询目录树的文件索引", .input = "{\"type\":\"object\",\"properties\":{" PATH_ARG("path") ",\"type\":{\"type\":\"string\",\"enum\":[\"all\",\"image\",\"audio\",\"text\",\"other\"]},\"cursor\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":4294967295},\"limit\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":10}},\"required\":[\"path\"]}", .output = "{\"type\":\"object\"}",
      .effect = INK_FX_READ, .child_ok = true, .permission = "file", .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_index},
-    {.id = "file.lookup", .title = "按稳定编号查询文件", .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}},\"required\":[\"id\"]}", .output = "{\"type\":\"object\"}",
+    {.id = "file.lookup", .locked_owner_only = true, .app = "files", .title = "按稳定编号查询文件", .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}},\"required\":[\"id\"]}", .output = "{\"type\":\"object\"}",
      .effect = INK_FX_READ, .child_ok = true, .permission = "file", .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_lookup},
-    {.id = "file.list",
+    {.id = "file.list", .locked_owner_only = true, .app = "files",
      .title = "列出目录（/me 自己的文件，/family 全家的内容）",
      .input = "{\"type\":\"object\",\"properties\":{" PATH_ARG("path") ",\"cursor\":{\"type\":\"string\",\"maxLength\":15},\"limit\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":200}},\"required\":[\"path\"]}",
      .output = "{\"type\":\"object\",\"properties\":{\"entries\":{\"type\":\"array\"},\"next\":{\"type\":\"string\"}}}",
      .effect = INK_FX_READ, .child_ok = true, .permission = "file", .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_list},
-    {.id = "file.stat", .title = "一个文件或目录的信息", .input = PATH_OBJ("path"), .output = "{\"type\":\"object\"}",
+    {.id = "file.stat", .locked_owner_only = true, .app = "files", .title = "一个文件或目录的信息", .input = PATH_OBJ("path"), .output = "{\"type\":\"object\"}",
      .effect = INK_FX_READ, .child_ok = true, .permission = "file", .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_stat},
-    {.id = "file.read",
+    {.id = "file.read", .locked_owner_only = true, .app = "files",
      .title = "读文本文件（每次最多 2 KiB）",
      .input = "{\"type\":\"object\",\"properties\":{" PATH_ARG("path") ",\"offset\":{\"type\":\"integer\",\"minimum\":0},\"max_bytes\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":2048}},\"required\":[\"path\"]}",
      .output = "{\"type\":\"object\",\"properties\":{\"text\":{\"type\":\"string\"},\"next_offset\":{\"type\":\"integer\"},\"end\":{\"type\":\"boolean\"}}}",
      .effect = INK_FX_READ, .child_ok = true, .permission = "file", .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_read},
-    {.id = "file.write",
+    {.id = "file.write", .locked_owner_only = true, .app = "files",
      .title = "写文本文件（新建、追加，或明确替换 txt）",
      .input = "{\"type\":\"object\",\"properties\":{" PATH_ARG("path") ",\"text\":{\"type\":\"string\"},\"append\":{\"type\":\"boolean\"},\"replace\":{\"type\":\"boolean\"},\"draft\":{\"type\":\"integer\",\"minimum\":1},\"page\":{\"type\":\"string\",\"enum\":[\"FileEdit\"]}},\"required\":[\"path\",\"text\"]}",
      .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .permission = "file", .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_write},
-    {.id = "file.mkdir", .title = "新建目录", .input = PATH_OBJ("path"),
+    {.id = "file.mkdir", .locked_owner_only = true, .app = "files", .title = "新建目录", .input = PATH_OBJ("path"),
      .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .permission = "file", .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_mkdir},
-    {.id = "file.batch", .title = "按文件编号列表移动或拷贝，可选 all_path 的直属文件", .input = "{\"type\":\"object\",\"properties\":{\"op\":{\"type\":\"string\",\"enum\":[\"copy\",\"move\"]},\"ids\":{\"type\":\"array\"}," PATH_ARG("all_path") "," PATH_ARG("to") "},\"required\":[\"op\",\"to\"]}",
+    {.id = "file.batch", .locked_owner_only = true, .app = "files", .title = "按文件编号列表移动或拷贝，可选 all_path 的直属文件", .input = "{\"type\":\"object\",\"properties\":{\"op\":{\"type\":\"string\",\"enum\":[\"copy\",\"move\"]},\"ids\":{\"type\":\"array\"}," PATH_ARG("all_path") "," PATH_ARG("to") "},\"required\":[\"op\",\"to\"]}",
      .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .permission = "file", .exec = INK_EXEC_BG, .qos = INK_QOS_BACKGROUND, .timeout_ms = 300000, .run = cap_batch},
-    {.id = "file.delete_many", .title = "删除选中的文件（不能撤销）", .ask = "删除这些文件 {ids}{all_path}，不能撤销", .input = "{\"type\":\"object\",\"properties\":{\"ids\":{\"type\":\"array\"}," PATH_ARG("all_path") "}}",
+    {.id = "file.delete_many", .locked_owner_only = true, .app = "files", .title = "删除选中的文件（不能撤销）", .ask = "删除这些文件 {ids}{all_path}，不能撤销", .input = "{\"type\":\"object\",\"properties\":{\"ids\":{\"type\":\"array\"}," PATH_ARG("all_path") "}}",
      .effect = INK_FX_LOCAL_DESTRUCTIVE, .ask_by_hand = true, .child_ok = true, .permission = "file", .exec = INK_EXEC_BG, .qos = INK_QOS_BACKGROUND, .timeout_ms = 300000, .run = cap_batch},
-    {.id = "file.batch_progress", .title = "批量文件操作逐项进度", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true, .permission = "file"},
-    {.id = "file.copy",
+    {.id = "file.batch_progress", .locked_owner_only = true, .app = "files", .title = "批量文件操作逐项进度", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true, .permission = "file"},
+    {.id = "file.copy", .locked_owner_only = true, .app = "files",
      .title = "拷贝文件或目录（大的在后台做）",
      .input = "{\"type\":\"object\",\"properties\":{" PATH_ARG("from") "," PATH_ARG("to") "},\"required\":[\"from\",\"to\"]}",
      .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .permission = "file", .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_copy},
-    {.id = "file.move",
+    {.id = "file.move", .locked_owner_only = true, .app = "files",
      .title = "移动或改名（可撤销）",
      .input = "{\"type\":\"object\",\"properties\":{" PATH_ARG("from") "," PATH_ARG("to") "},\"required\":[\"from\",\"to\"]}",
      .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .permission = "file", .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_move},
-    {.id = "file.delete", .title = "删除文件或目录（不能撤销）", .ask = "删除 {path}，不能撤销", .input = PATH_OBJ("path"),
+    {.id = "file.delete", .locked_owner_only = true, .app = "files", .title = "删除文件或目录（不能撤销）", .ask = "删除 {path}，不能撤销", .input = PATH_OBJ("path"),
      .effect = INK_FX_LOCAL_DESTRUCTIVE, .ask_by_hand = true, .child_ok = true, .permission = "file", .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_delete},
-    {.id = "file.free", .title = "存储卡还剩多少空间", .output = "{\"type\":\"object\"}",
+    {.id = "file.free", .locked_owner_only = true, .app = "files", .title = "存储卡还剩多少空间", .output = "{\"type\":\"object\"}",
      .effect = INK_FX_READ, .child_ok = true, .permission = "file", .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_free},
-    {.id = "file.changed", .title = "文件变了", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true, .permission = "file"},
-    {.id = "file.job_done", .title = "后台的拷贝或删除结束了", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true, .permission = "file"},
+    {.id = "file.changed", .locked_owner_only = true, .app = "files", .title = "文件变了", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true, .permission = "file"},
+    {.id = "file.job_done", .locked_owner_only = true, .app = "files", .title = "后台的拷贝或删除结束了", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true, .permission = "file"},
     {.id = "usb.status", .title = "是否连着电脑、存储卡是否借给了电脑", .output = "{\"type\":\"object\"}",
      .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_usb_status},
     /* the computer sees the whole card, all members' files on it: adults, by a person */
     {.id = "usb.mount", .title = "把存储卡借给电脑当 U 盘", .effect = INK_FX_SYSTEM, .ask_by_hand = true, .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_usb_mount},
     {.id = "usb.unmount", .title = "从电脑收回存储卡", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_usb_unmount},
     {.id = "usb.changed", .title = "电脑连上、断开或 U 盘状态变了", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},
-    {.id = "file.thumb", .title = "按文件编号读取缩略图（gray4 按行排列，每个十六进制字符表示一个灰阶）", .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}},\"required\":[\"id\"]}", .output = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"width\":{\"type\":\"integer\"},\"height\":{\"type\":\"integer\"},\"gray4\":{\"type\":\"string\"}}}",
+    {.id = "file.thumb", .locked_owner_only = true, .app = "files", .title = "按文件编号读取缩略图（gray4 按行排列，每个十六进制字符表示一个灰阶）", .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}},\"required\":[\"id\"]}", .output = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"},\"width\":{\"type\":\"integer\"},\"height\":{\"type\":\"integer\"},\"gray4\":{\"type\":\"string\"}}}",
      .effect = INK_FX_READ, .child_ok = true, .permission = "file", .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_MEDIA, .run = cap_thumb},
 };
 

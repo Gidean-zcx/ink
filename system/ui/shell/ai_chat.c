@@ -79,12 +79,12 @@ static void action(ink_call_t *c) {
         else { tapped = true; ink_ai_tap(); }
     }
 }
-#define CHAT_CAP(id_, title_) {.id = id_, .title = title_, .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action}
+#define CHAT_CAP(id_, title_) {.id = id_, .app = "ai", .title = title_, .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action}
 static const ink_cap_t CAPS[] = {
     CHAT_CAP("shell.ai_home", "打开对话记录"), CHAT_CAP("shell.ai_ask", "输入问题"),
-    {.id = "shell.ai_send", .title = "发送输入框里的问题", .activity = "AiAsk", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action},
-    CHAT_CAP("shell.ai_stop", "停下 AI 的朗读，保留文字"),
-    {.id = "shell.ai_key", .title = "按住说话或点按听", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action,
+    {.id = "shell.ai_send", .app = "ai", .title = "发送输入框里的问题", .activity = "AiAsk", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action},
+    {.id = "shell.ai_stop", .title = "停下 AI 的朗读，保留文字", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action},
+    {.id = "shell.ai_key", .app = "ai", .title = "按住说话或点按听", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action,
      .input = "{\"type\":\"object\",\"properties\":{\"pressed\":{\"type\":\"boolean\"},\"t_us\":{\"type\":\"integer\"}}}"}
 };
 void ink_ai_chat_key(bool pressed, uint64_t t_us) {

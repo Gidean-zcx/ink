@@ -225,13 +225,13 @@ static void restore_state(const void *buf, size_t len) { if (len == sizeof S.dra
 static const ink_app_ops_t OPS = {.on_start = member_ready, .save_state = save_state, .restore_state = restore_state};
 static const ink_app_def_t APP = {.id = "message", .title = "短信", .icon = INK_UI_ICON(message), .entry = &LIST, .system_app = true, .child_ok = true, .ops = &OPS};
 static const ink_cap_t CAPS[] = {
-    {.id = "sms.thread", .title = "打开短信会话", .input = "{\"type\":\"object\",\"properties\":{\"peer\":{\"type\":\"string\",\"maxLength\":20}},\"required\":[\"peer\"]}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "sms.compose", .title = "写短信或回复当前会话", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "sms.recipient", .title = "从联系人选择收件人", .activity = "SmsCompose", .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1}},\"required\":[\"id\"]}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "sms.text", .title = "输入短信", .activity = "SmsCompose", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "sms.long", .title = "打开短信长文编辑页", .activity = "SmsCompose", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "sms.prev", .title = "短信上一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "sms.next", .title = "短信下一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate}
+    {.id = "sms.thread", .app = "message", .title = "打开短信会话", .input = "{\"type\":\"object\",\"properties\":{\"peer\":{\"type\":\"string\",\"maxLength\":20}},\"required\":[\"peer\"]}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "sms.compose", .app = "message", .title = "写短信或回复当前会话", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "sms.recipient", .app = "message", .title = "从联系人选择收件人", .activity = "SmsCompose", .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1}},\"required\":[\"id\"]}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "sms.text", .app = "message", .title = "输入短信", .activity = "SmsCompose", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "sms.long", .app = "message", .title = "打开短信长文编辑页", .activity = "SmsCompose", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "sms.prev", .app = "message", .title = "短信上一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "sms.next", .app = "message", .title = "短信下一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate}
 };
 int ink_sms_init(void) {
     return ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_app_register(&APP) || ink_cap_subscribe("message.received", received, NULL, INK_EXEC_BG) ? -1 : 0;

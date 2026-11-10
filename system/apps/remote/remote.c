@@ -794,20 +794,20 @@ static void cap_input(ink_call_t *c) {
 }
 
 static const ink_cap_t REMOTE_CAPS[] = {
-    {.id = "remote.open",
+    {.id = "remote.open", .app = "remote",
      .title = "打开网页",
      .input = "{\"type\":\"object\",\"properties\":{\"url\":{\"type\":\"string\",\"maxLength\":120}}}",
      .effect = INK_FX_NAVIGATE,
      .child_ok = false,
      .run = cap_open},
-    {.id="remote.address", .title="输入网址", .effect=INK_FX_NAVIGATE, .activity="remote", .run=cap_input},
-    {.id="remote.focus", .title="输入网页文字", .effect=INK_FX_NAVIGATE, .activity="remote", .run=cap_input},
-    {.id="remote.submit", .title="完成网页输入", .effect=INK_FX_NAVIGATE, .activity="remote", .run=cap_input},
-    {.id="remote.retry", .title="重新打开网页", .effect=INK_FX_NAVIGATE, .activity="remote", .run=cap_input},
-    {.id="remote.close", .title="关闭网页", .effect=INK_FX_NAVIGATE, .activity="remote", .run=cap_input},
-    {.id="remote.prev", .title="网页上一页", .effect=INK_FX_NAVIGATE, .activity="remote", .run=cap_input},
-    {.id="remote.next", .title="网页下一页", .effect=INK_FX_NAVIGATE, .activity="remote", .run=cap_input},
-    {.id="remote.pointer", .title="点按或长按网页", .effect=INK_FX_NAVIGATE, .activity="remote",
+    {.id="remote.address", .app = "remote", .title="输入网址", .effect=INK_FX_NAVIGATE, .activity="remote", .run=cap_input},
+    {.id="remote.focus", .app = "remote", .title="输入网页文字", .effect=INK_FX_NAVIGATE, .activity="remote", .run=cap_input},
+    {.id="remote.submit", .app = "remote", .title="完成网页输入", .effect=INK_FX_NAVIGATE, .activity="remote", .run=cap_input},
+    {.id="remote.retry", .app = "remote", .title="重新打开网页", .effect=INK_FX_NAVIGATE, .activity="remote", .run=cap_input},
+    {.id="remote.close", .app = "remote", .title="关闭网页", .effect=INK_FX_NAVIGATE, .activity="remote", .run=cap_input},
+    {.id="remote.prev", .app = "remote", .title="网页上一页", .effect=INK_FX_NAVIGATE, .activity="remote", .run=cap_input},
+    {.id="remote.next", .app = "remote", .title="网页下一页", .effect=INK_FX_NAVIGATE, .activity="remote", .run=cap_input},
+    {.id="remote.pointer", .app = "remote", .title="点按或长按网页", .effect=INK_FX_NAVIGATE, .activity="remote",
      .input="{\"type\":\"object\",\"properties\":{\"x\":{\"type\":\"integer\"},\"y\":{\"type\":\"integer\"},\"long\":{\"type\":\"boolean\"}},\"required\":[\"x\",\"y\"]}", .run=cap_input},
 };
 

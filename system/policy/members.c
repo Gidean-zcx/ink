@@ -381,18 +381,6 @@ void ink_member_test_reset(void) {
     publish();
 }
 
-static const char *action_app(const char *id) {
-    if (!strcmp(id, "shell.ai_stop")) return NULL;
-    if (!strncmp(id, "shell.ai_", 9)) return "ai";
-    if (!strncmp(id, "calc.", 5)) return "calculator";
-    if (!strncmp(id, "calendar.", 9)) return "upcoming";
-    if (!strncmp(id, "alarm.", 6) || !strncmp(id, "reminder.", 9)) return "clock";
-    for (int i = 0; i < ink_app_count(); i++) {
-        const char *app = ink_app_at(i)->id; size_t n = strlen(app);
-        if (!strncmp(id, app, n) && id[n] == '.') return app;
-    }
-    return NULL;
-}
 int ink_member_app_mode(const char *member, const char *app) {
     slot_t *s = member ? find(member) : cur();
     if (!s || !app) return 1;
@@ -419,7 +407,8 @@ static bool restricted(void) {
 bool ink_member_allows(const char *action_id, bool child_ok) {
     const ink_member_t *m = ink_member_current();
     if (m->role == INK_ROLE_ADULT) return true;
-    if (!ink_member_app_mode(NULL, action_app(action_id))) return false;
+    const ink_cap_t *cap = ink_cap_find(action_id);
+    if (!ink_member_app_mode(NULL, cap ? cap->app : NULL)) return false;
     if (child_ok) return true;
     for (int i = 0; i < 8 && m->allow[i]; i++)
         if (!strncmp(action_id, m->allow[i], strlen(m->allow[i]))) return true;
@@ -920,7 +909,8 @@ bool ink_member_app_time_allows(const char *app) {
     return !daily_up() && (!restricted() || (app && (!strcmp(app, "home") || ink_member_app_mode(NULL, app) == 2)));
 }
 bool ink_member_time_allows(const char *id) {
-    const char *owner = action_app(id);
+    const ink_cap_t *cap = ink_cap_find(id);
+    const char *owner = cap ? cap->app : NULL;
     if (owner && ink_member_app_time_allows(owner)) return true;
     if (!ink_member_time_up()) return true;
     if (!strncmp(id, "text.", 5) || !strncmp(id, "keyboard.", 9)) {

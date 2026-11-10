@@ -250,11 +250,11 @@ static void action(ink_call_t *c) {
     } else if (!L.list || (strcmp(ink_ui_page_name(), "AiLog") && strcmp(ink_ui_page_name(), "AiReceipts"))) c->rc.status = INK_RC_STALE;
     else if (!ink_ui_list_turn(L.list, !strcmp(id, "ai.pages.next") ? 1 : -1)) c->rc.status = INK_RC_INVALID;
 }
-#define PAGE_CAP(id_, title_) {.id = id_, .title = title_, .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action}
+#define PAGE_CAP(id_, title_) {.id = id_, .app = "ai", .title = title_, .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action}
 static const ink_cap_t CAPS[] = {
-    {.id = "shell.ai_log", .title = "查看 AI 做过的事", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action,
+    {.id = "shell.ai_log", .app = "ai", .title = "查看 AI 做过的事", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action,
      .input = "{\"type\":\"object\",\"properties\":{\"member\":{\"type\":\"string\",\"maxLength\":15}}}"},
-    {.id = "shell.ai_receipts", .title = "查看 AI 做事的结果", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action,
+    {.id = "shell.ai_receipts", .app = "ai", .title = "查看 AI 做事的结果", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action,
      .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295},\"member\":{\"type\":\"string\",\"maxLength\":15}}}"},
     PAGE_CAP("ai.pages.close", "继续读"), PAGE_CAP("ai.pages.retry", "重新用话筒问"),
     PAGE_CAP("ai.pages.next", "下一页 AI 记录"), PAGE_CAP("ai.pages.prev", "上一页 AI 记录")
