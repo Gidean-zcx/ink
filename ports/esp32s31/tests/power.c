@@ -232,6 +232,17 @@ int main(void) {
     reset();
     sources = 1u << ESP_SLEEP_WAKEUP_TIMER;
     assert(hal_power_sleep(&cfg) == HAL_WAKE_TIMER && !strchr(trace, 'b'));
+    for (int i = 0; i < 3; i++) {
+        reset();
+        sources = 1u << ESP_SLEEP_WAKEUP_TIMER;
+        assert(hal_power_sleep(&cfg) == HAL_WAKE_TIMER && saved_timer == 60000000);
+        assert(pos('k') < pos('r') && pos('r') < pos('i') && !timer_us && !paused);
+    }
+    reset();
+    cfg.max_us = 1500000; /* an earlier alarm shortens this slice */
+    sources = 1u << ESP_SLEEP_WAKEUP_TIMER;
+    assert(hal_power_sleep(&cfg) == HAL_WAKE_TIMER && saved_timer == cfg.max_us);
+    cfg.max_us = 60000000;
     reset();
     usb_connected = false;
     wake_pins = 1ull << S31_GPIO_EXP_INT;

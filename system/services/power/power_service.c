@@ -454,6 +454,11 @@ int ink_power_init(void) {
     ink_state_set_str(PS.h_state, STATE_NAME[INK_PWR_ACTIVE]);
     publish_battery();
     osal_task_cfg_t cfg = {.name = "power", .fn = power_task, .stack_bytes = PW_STACK, .priority = PW_PRIO, .core = -1};
+#ifdef ESP_PLATFORM
+    /* Vendor standby_lp: core 0, internal 4096-byte stack, idle + 3. */
+    cfg.core = 0;
+    cfg.priority = OSAL_PRIO_IDLE + 3;
+#endif
     return osal_task_create(&cfg, &PS.task) == OSAL_OK ? 0 : -1;
 }
 
