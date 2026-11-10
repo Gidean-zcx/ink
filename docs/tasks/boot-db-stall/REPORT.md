@@ -1,6 +1,6 @@
 # boot-db-stall 执行报告
 
-基线：`ec78378e05f2694b9fa410780ab2bcf9d8de1c99`。状态：修复、反向对照及普通全量完成，内存检查进行中。
+基线：`ec78378e05f2694b9fa410780ab2bcf9d8de1c99`。状态：完成本地验收。修复提交：`cc0d2ecc`。
 
 ## 验收表
 
@@ -9,10 +9,23 @@
 | 1 开机后台首次打开、文件列表 | 通过【实测】 | 原有 write／verify／review 场景通过；联网时两次备忘调用均完成，空集合返回 INVALID；文件首页点按到驱动后能进入并读完 FileList | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/files_app/run.py --build build --trace` |
 | 1 AI 从未打开备忘时保存 | 通过【实测】 | 新增 cold-save：调用前缓存中没有 memo.notes；AI 保存成功，正文、来源与耐久版本正确，文件列表也读完 | 同上 |
 | 1 反向对照 | 通过【实测】 | 只撤销首页修复，write 恢复失败：实际停在 Files、busy=0；只恢复备忘的缓存限制，cold-save 的保存与记录断言失败。两个命令均预期退出 1 | 上述命令分别加 `--mutant index-redraw`、`--mutant memo-cache` |
-| 2 原有测试、全量 | 通过，3 项待补验【实测】 | 原话 `100% tests passed out of 317`，216.09 秒；314 通过，中枢三项缺依赖跳过；files-app、memo、memo-record、索引系列及确定性都通过 | `taskpolicy -c utility cmake --build build -j4`；`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j3` |
-| 2 内存检查、S31 | 待验证 | ASan/UBSan 全量构建进行中 | 待补 |
-| 2 gcccheck | 产品两项通过，测试有既有问题【实测】 | `gcccheck: 3 compiled, 1 with findings`；基线对照同样报 sscanf 一处、两个参数类型告警；新增修改行无告警 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" ../../tools/gcccheck.py build system/apps/files/files.c system/apps/memo/memo.c tests/files_app/files_app.c` |
+| 2 原有测试、全量 | 通过【实测】 | 原话 `100% tests passed out of 317`，216.09 秒；314 通过、中枢三项缺依赖跳过后全部补验通过（补验原话 `100% tests passed out of 4`，18.82 秒，含前置检查）；files-app、memo、memo-record、索引系列及确定性都通过 | `taskpolicy -c utility cmake --build build -j4`；`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j3`；补验见下 |
+| 2 内存检查 | 通过【实测】 | build-asan 开启 ASan 与 UBSan，完整运行 317 项，原话 `100% tests passed out of 317`，675.12 秒；同三项跳过后补验 `100% tests passed out of 4`，19.88 秒。所有登记用例均已覆盖，无 sanitizer 错误 | 同配置加 `-DINK_SANITIZE=ON`，保留 WERROR；构建目录和 ctest 目录改为 build-asan，仍用 `-j4`／`-j3` |
+| 2 S31 | 通过【实测】 | 脚本退出 0，编译、链接、尺寸与栈报告均生成；Total image size: 1339074 bytes。仅离线编译 | `INK_DEPS="$INK_DEPS" taskpolicy -c utility bash ports/esp32s31/build.sh` |
+| 2 gcccheck | 产品两项通过，测试有既有问题【实测】 | 产品单独检查 `gcccheck: 2 compiled, 0 with findings`，退出 0；连测试检查 `gcccheck: 3 compiled, 1 with findings`，退出 1；基线对照同样报 sscanf 一处、两个参数类型告警，修改行无告警 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" ../../tools/gcccheck.py build system/apps/files/files.c system/apps/memo/memo.c tests/files_app/files_app.c`；去掉测试路径检查产品 |
 | 3 时间线、根因、修法、撤销限制 | 完成【实测／实现】 | 见下；根因与任务书原先假设不同 | 带 `--trace` 的正反对照；临时增加平台 probe 定位后已全部撤销 |
+
+中枢补验只读复用主检出已有虚拟环境，四个依赖版本均与锁文件一致，未安装或升级依赖；设置 PYTHONPATH 保证导入当前检出的中枢代码。先对两个构建目录执行 `taskpolicy -c utility cmake -S . -B <目录> -DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"`，再分别执行：
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$PWD/hub" taskpolicy -c utility \
+  "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j3 \
+  -R '^(hub-contract|hub-json-crosscheck|hub-simulator-e2e)$'
+```
+
+另一轮目录为 build-asan。全量、补验与构建日志均在 `work/boot-db-stall/`，含原始完整 LastTest.log 副本；S31 报告在 `build-s31/{size,size-components,stack}.txt`，未提交构建产物。
+
+收尾【实测】：产品代码新增 5 行、删除 5 行，合计改动 10 行（预算 150）；`git diff <基线>..HEAD --stat` 只有本报告、两个应用与对应测试，共五个文件；`git diff --check` 通过。按任务书第 6 节对提交差异做隐私扫描，无匹配（grep 退出 1），证据 `work/boot-db-stall/privacy.log` 为空。没有写设备、推送或创建 PR。
 
 ## 时间线、根因与修法
 
@@ -74,4 +87,4 @@
 
 ## 要改的文档
 
-合并时可修正 memo-record／audit13-fix 后续说明及 backlog 中“后台首次打开导致文件列表永久等待”的判断；当前实测是首页重建丢点按。共享文档及历史报告本次未改。
+合并时可修正 memo-record／audit13-fix 后续说明、backlog 和 codex-rules 第 8 节中对本现象的判断；当前实测是首页重建丢点按，不能由此推出禁止所有后台同步打开集合。共享文档及历史报告本次未改。
