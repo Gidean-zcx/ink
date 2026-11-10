@@ -3,7 +3,7 @@
 基线：`eec5d569be028b539e8778690c239a6947767864`。执行日期：2026-11-10。
 范围：只修改浅睡相关端口、板级时序和对应测试；只编译、跑宿主机测试，不连接设备。
 
-执行中补充：RTC arm 最终顺序为先建立 RTC 输入基线、最后启用 POWER，保持 P16 锁存为低。中间版本先启用 POWER 再读 P1，导致原有 held-POWER 两项失败；已修正顺序，原有 ASan 两项定向复验 2/2 通过（5.82 秒），未改断言或预算。最终全量正在运行，下表尚未更新为最终验收。
+实现及编译、宿主机验收完成。RTC arm 先建立 RTC 输入基线、最后启用 POWER，保持 P16 锁存为低；原有 held-POWER 断言和预算保留。实机边界见下方清单。
 
 ## 验收表
 
@@ -12,7 +12,7 @@
 | 1 | 通过 | 【实测】S31 构建退出 0，0 条 warning/error；端口普通、ASan/UBSan 各 `100% tests passed out of 3` | 见下方复现命令；`work/port-sleep-s31-final.log`、`work/port-sleep-build-s31-host{,-asan}-tests.log` |
 | 2 | 通过 | 【实测】最终 14/14 反向对照拒绝，原实现三项通过；要求的四项及 RTC arm 检查均编译 0、断言退出 −6 | `taskpolicy -c utility python3 ports/esp32s31/tests/negative.py build-s31-host` |
 | 3 | 通过 | 【实现】下方逐项对照，含缺失端口和保留差异 | 文件/行号见下表 |
-| 4 | 部分完成 | 【实测】最终普通版 `100% tests passed out of 320`，555.15 秒；gcccheck 8 个 C 编译单元，0 findings；最终内存版全量与隐私扫描待完成 | 下方模拟器与 gcccheck 命令 |
+| 4 | 通过 | 【实测】最终普通/ASan+UBSan 全量均 `100% tests passed out of 320`，分别 555.15/817.37 秒；gcccheck 8 个 C 编译单元，0 findings；隐私扫描无命中 | 下方模拟器与 gcccheck 命令、总规则 §6 隐私命令 |
 | 5 | 通过 | 【实现】下方八项上机清单；未把编译写成真机通过 | 本报告“上机先核对清单” |
 
 ## 原厂对照
@@ -46,7 +46,7 @@
 | P16 mask 输出 0、不唤醒，R:134 | M:62、M:81 | mask 一致；任务要求保留 RTC 唤醒，arm 阶段先处理 RTC 基线并拒绝 RTC 已低，最后启用 POWER；S31 共享 INT 不高也取消 |
 | P17 mask 输出 1→输入；先锁存再恢复方向，R:135 | M:62、M:75，P:166 | 一致；短按已松开仍保留电源键语义 |
 | 唤醒链 P17→TCA INT→GPIO2 EXT1 ANY_LOW，R:139，H:105 | P:89、P:147 | 一致；保留任务要求的 RTC、运动，以及 D-37 可接听待机所需的既有保电模组 GPIO3 唤醒，后者极性仍须上机核对 |
-| GPIO61 不作浅睡唤醒，R:104、:139 | P:123 | 一致，删除 GPIO 唤醒配置和原因映射；IDF `soc_caps.h:259` 的 LP 引脚数为 8 |
+| GPIO61 不作浅睡唤醒，R:104、:139 | P:123 | 一致，删除 GPIO 唤醒配置和原因映射；IDF `components/soc/esp32s31/include/soc/soc_caps.h:259` 的 LP 引脚数为 8 |
 | 退出 1：恢复方向前锁存电源键，R:147，H:457 | P:166 | 一致；运动原因同样在恢复前读取 |
 | 退出 2：关唤醒配置、恢复按键、等待稳定，R:148，H:463 | P:171，M:108，P:174 | 一致；输入任务最后恢复，保留已有 20 ms 去抖 |
 | 退出 3：P14→P05、前光保持灭，R:149，H:467 | P:177，M:122 | 一致；音频/模组供电状态通知仍待真实端口 |
@@ -79,6 +79,8 @@ taskpolicy -c utility python3 ports/esp32s31/tests/sdk_check.py "${IDF_PATH:-$HO
 
 【实测】最终普通版全量原话：`100% tests passed out of 320`，`Total Test time (real) = 555.15 sec`；日志 `work/port-sleep-build-tests.log`，没有跳过。
 
+【实测】最终内存版全量原话：`100% tests passed out of 320`，`Total Test time (real) = 817.37 sec`；日志 `work/port-sleep-build-asan-tests.log`，没有跳过、没有 ASan/UBSan 报错。端口独立 3 项不计入上述 320 项。
+
 ```bash
 export PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$PWD/hub"
 taskpolicy -c utility cmake -S . -B build -DINK_WERROR=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
@@ -100,7 +102,7 @@ taskpolicy -c utility python3 ../../tools/gcccheck.py build-s31-host \
 
 ## 上机先核对清单
 
-1. 本任务未连接、烧录或监视设备。后续须在有人能按电源键的条件下测试，遵守 `docs/hardware/2026-11-10-selftest.md:67`。
+1. 本任务未连接、烧录或监视设备。后续先复核当前 UART0 主控制台/USB 副控制台与模组的引脚复用，再在有人能按电源键的条件下测试，遵守 `docs/hardware/2026-11-10-selftest.md:67`。
 2. 浅睡定时、电源键短按后松开/保持按住，分别验证补丁返回、PSRAM 数据完好、看门狗无复位。CPU retention 与非 retention 路径的硬件条件需分别核对；编译不证明低层时序已实测。
 3. USB：电源键/RTC/运动后电脑重新枚举、恢复连续日志；纯定时不主动断开 pad；无主机连接时约 950 ms 内完成恢复等待。SDMMC 后续接入时，必须把 USB 放到 SD 初始化之后再测，当前无 SD/CNNT 恢复不能据此验收该路径。
 4. 共享 GPIO2：空闲高、上拉开启；P16 实际接法与极性、RTC 告警清除、加速度计 INT1 锁存释放；mask、arm 后及即将入睡时拉低，都应取消该次睡眠并恢复方向与电源轨。
@@ -154,3 +156,7 @@ taskpolicy -c utility python3 ../../tools/gcccheck.py build-s31-host \
 自有产品代码（含构建配置和 vendor 文件的两处适配）**+106/−43，按增删合计 149 行**，小于 250 行预算；测试、文档和原厂复制主体不计。为什么不能更小：需同时接入 C++ 原厂补丁与 C HAL、显式构建失败检查、USB 恢复和固定切频；已保留正确的 PMIC、正常方向和电源轨实现，只补验证。看过的更小方案：仅调用 IDF 不含硬件补丁；固定频率下继续用旧 IDF boost 锁不能从 160 升到 320；仅在 arm 前检查 INT 会遗漏恢复 RTC 输入时出现的有效低电平。
 
 【实现】R-061：变更留在端口、板级和构建，系统与应用继续经同一电源 HAL、服务和能力路径；没有新用户动作或页面，无需新增 AI 快照或能力。SDK 和 USB 寄存器属于平台内部机制，未向上层泄漏 IDF 或模拟器依赖。
+
+## 收尾核查
+
+【实测】基线至最终提交仅 21 个相关文件；`git diff --check` 退出 0，文件/本地链接检查通过。总规则 §6 隐私命令无输出，grep 退出 1（无命中），证据 `work/port-sleep-privacy.log`。原厂哈希、MIT 许可证保留，未提交构建产物、设计稿或超过 5 MB 的文件。未 push、未开 PR、未改共享需求和决策文件。
