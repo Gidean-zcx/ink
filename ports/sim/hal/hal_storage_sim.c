@@ -566,6 +566,22 @@ int hal_fs_mkdir(const char *path) {
     return -1;
 }
 
+int hal_fs_exists(const char *path) {
+    char p[512]; struct stat st;
+    vol_t v = route(path, p, sizeof p);
+    if (v == VOL_USER) {
+        struct lfs_info info;
+        lock_user();
+        int r = lfs_stat(&U.lfs, p, &info);
+        unlock_user();
+        return r == 0 ? 1 : r == LFS_ERR_NOENT || r == LFS_ERR_NOTDIR ? 0 : -1;
+    }
+    if (v != VOL_SD) return -1;
+    sd_cost(0, false);
+    if (!stat(p, &st)) return 1;
+    return errno == ENOENT || errno == ENOTDIR ? 0 : -1;
+}
+
 int64_t hal_fs_size(const char *path) {
     char p[512];
     vol_t v = route(path, p, sizeof p);

@@ -177,6 +177,7 @@ int hal_fs_remove(const char *path) { return -1; }
 int hal_fs_rename(const char *from, const char *to) { return -1; }
 int hal_fs_mkdir(const char *path) { return -1; }
 int64_t hal_fs_size(const char *path) { return -1; }
+int hal_fs_exists(const char *path) { return -1; }
 int64_t hal_fs_mtime(const char *path) { return -1; }
 int hal_fs_readdir(hal_dir_t *d, hal_dirent_t *out) { return -1; }
 void hal_fs_closedir(hal_dir_t *d) {  }

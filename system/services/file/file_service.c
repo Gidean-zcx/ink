@@ -1688,19 +1688,21 @@ static int index_walk_step(index_walk_t *w, ink_db_t *db, const uint8_t card[16]
     return r;
 }
 static void index_done(const file_context_t *c, const char *root, bool durable) {
-    bool was_ready = storage_index_ready();
+    bool was_ready = storage_index_ready(), was_scanned = storage_index_scanned();
     if (!strcmp(root, "/family")) storage.family = true;
     for (int i = 0; ink_member_at(i); i++) {
         char member_root[64]; snprintf(member_root, sizeof member_root, "/members/%s", ink_member_at(i)->id);
         if (!strcmp(root, member_root) || (!strcmp(root, "/me") && !strcmp(c->member, ink_member_at(i)->id)))
             snprintf(storage.indexed[i], sizeof storage.indexed[i], "%s", ink_member_at(i)->id);
     }
+    /* A root scan never finishes the card: only the background prune ends with root "". */
+    if (*root && storage_index_scanned() && (storage.saving || !was_scanned)) durable = false;
     storage.saving = !durable;
     if (storage_index_ready()) {
         ink_svc_cancel(&FS.index_at);
         if (!was_ready) for (int i = 0; ink_member_at(i); i++) changed_for(ink_member_at(i)->id, "/", "indexed");
         ink_state_set_str(FS.h_index, "ready");
-    }
+    } else if (*root && storage_index_scanned()) ink_svc_at(&FS.index_at, osal_now_us() + 50000ull, index_refresh_cb, NULL);
 }
 #define INDEX_WAIT_US 10000000ll /* a compaction rewrites the whole index (1024 records) in one write: seconds */
 /* The synchronous first-page API uses the same batches, releasing edits for durability. */
@@ -1753,7 +1755,10 @@ static int index_prune(ink_db_t *db, const uint8_t card[16]) {
         n = index_next(db, &storage.prune, &rec, &e);
         if (n < 0) return INK_FS_ERR_IO;
         if (!n) break;
-        if (memcmp(card, e.card, 16) || hal_fs_size(e.path) >= 0) continue;
+        int exists = memcmp(card, e.card, 16) ? 1 : hal_fs_exists(e.path);
+        /* Only a confirmed absence deletes; an I/O error rechecks the whole card next pass. */
+        if (exists < 0) { memset(&storage.prune, 0, sizeof storage.prune); return INK_FS_ERR_IO; }
+        if (exists) continue;
         stale[count++] = rec.id;
     }
     int r = count ? index_prepare("/content/") : 0;
