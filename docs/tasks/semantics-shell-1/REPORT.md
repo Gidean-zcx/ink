@@ -1,6 +1,6 @@
 # semantics-shell-1 执行报告
 
-基线：`4c64ae16d383ca833084d8f3683478becb9754d8`。状态：普通版和内存版全量通过，S31 编译进行中。
+基线：`4c64ae16d383ca833084d8f3683478becb9754d8`。状态：完成，本地提交，未推送。
 
 ## 验收表
 
@@ -14,7 +14,7 @@
 | A01-6 关机画面 | 通过【实测／实现】 | F1 导出实际说明；没有虚构可操作按钮；旧目标被语义桥拒绝 | 同上，测试名换 `semantics-shell-off` |
 | A02-1 原测试和契约 | 通过【实测】 | 原测试、hub 契约及新增测试均在普通版全量通过；已有测试未修改 | `ctest-final.log`，命令见下文 |
 | A02-2 全量／内存 | 通过【实测】 | 普通版、ASan／UBSan 各 330／330，均无跳过，分别 376.15／1195.92 秒，均退出 0 | `ctest-final.log`、`ctest-asan.log`，命令见下文 |
-| A02-3 S31 | 待验证 | 只编译，不连接设备 | `taskpolicy -c utility bash ports/esp32s31/build.sh` |
+| A02-3 S31 | 通过【实测】 | GNU 15.2.0 完整编译、链接，生成尺寸及栈报告；退出 0，未连接设备 | `INK_DEPS=<依赖检出> taskpolicy -c utility bash ports/esp32s31/build.sh` |
 | A02-4 gcccheck | 通过【实测】 | `gcccheck: 15 compiled, 0 with findings`，退出 0，无跳过 | `taskpolicy -c utility python "$INK_DEPS/../ink-codex/tools/gcccheck.py" build <8 个产品 C 文件和 7 个新增测试 C 文件>` |
 | A03 行数及预算 | 通过【实测】 | 下表；产品 C／头文件净增 194 行，连同 CMake 测试注册保守计 203 行，低于 250 行 | `wc -l <六个文件>`；`git diff --numstat <基线> -- system CMakeLists.txt` |
 
@@ -60,7 +60,8 @@
 
 ## 新增的机制
 
-没有新任务、线程、状态机、持久格式、缓存或配置项。页面模型、对象版本和按下时的动作版本记录均用于任务第 1、2 项，复用既有 F1／LVGL 路径。
+- 产品没有新任务、线程、状态机、持久格式、缓存或配置项。页面模型、对象版本和按下时的动作版本记录均用于任务第 1、2 项，复用既有 F1／LVGL 路径。
+- 测试驱动任务 `shell-semantics-test`：只在新增测试程序中启动，沿用 `whole_product.h` 的驱动方式，服务于验收第 1 项的六页回归。
 
 ## 要改的文档
 
@@ -75,4 +76,6 @@
 - 反向对照：依次运行 `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" -B tests/semantics_shell/run.py --build build --scene <confirm|interrupt|power|member|lock|off> --baseline <基线>`；仅在构建目录中编译对应基线文件替换对象，不修改产品源码。六个基线运行均退出 1，分别 12、10、6、4、7、3 个断言失败，全部命中旧快照不符合 F1 的断言；对照脚本均退出 0。
 - 普通版最终全量：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`；原文 `100% tests passed out of 330`、`Total Test time (real) = 376.15 sec`；退出 0，无跳过。
 - 内存版：同一主机构建配置换到 `build-asan`，增加 `-DINK_SANITIZE=ON`，保留 `-DINK_WERROR=ON`；配置、完整构建均退出 0。运行 `INK_KEEP_EVIDENCE=1 UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2`，执行全部 330 项，包含六项新增测试、hub 契约及所有原测试；原文 `100% tests passed out of 330`、`Total Test time (real) = 1195.92 sec`，退出 0，无跳过。
+- S31：上述只编译命令退出 0；证据 `s31-build.log`、`build-s31/size.txt`、`build-s31/stack.txt`。镜像静态尺寸 1411488 字节；编译器栈报告不是实机栈高水位，也不是完整调用链上界。
+- 收尾：`git diff --stat <基线>` 和 `git diff --check <基线>` 核对通过，无夹带、空白错误或已有测试改动。按总规则第 6 节对 `git diff <基线>..HEAD` 执行隐私扫描，无匹配（grep 退出 1，`privacy.log` 为空）；共享文档及受保护资料未修改。
 - 日志均在忽略目录 `work/semantics-shell-1/`；专项和反向证据在 `build/test-out/semantics-shell-*`。首轮全量为 319／330，通过回归查明并修复兼容问题；最终普通版为 330／330。
