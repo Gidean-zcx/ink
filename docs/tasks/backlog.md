@@ -223,6 +223,15 @@ Codex 额度用完，任务改由 Claude 子代理（思考等级 medium）在�
 
 不做或先不做（用户 11-10 定）：蓝牙音箱和翻页器、无障碍、热点。
 
+## 合并时记下的（2026-11-10 晚上，batch14）
+
+- 【已做】`time-settings`：设置里的日期和时间、按城市选时区（九个时区，美国 2007 年前的规则也有）、手动设置、“离开多久要重新验证”；`reminder-edit`：提醒能手动添加、修改、删除；`port-hal-2`：S31 的按键和电源 HAL，只编译。
+- 【后续】中枢的 hello 要下发 `time_zone`（按家庭设置的 IANA 名称），否则“自动设置时区”一直显示等待；现在 Python 中枢只发 `now_ms`。
+- 【后续】现在有两个日期时间选择（时间设置的 SetDateTime 和提醒编辑页），并进 `small-gaps` 统一成一个。
+- 【后续】时间设置页对 `time.` 下所有状态变化都整页重画（闹钟改动也会），按规则第 8 节只对影响这一页的事件重画，放进这批的审查。
+- 【做法】硬件先查原厂代码（用户 11-10 晚上）：写进 codex-rules 第 9 节和 docs/hardware/README.md 规则第 6 条。port-hal-2 对照原厂查出的问题由 `port-sleep-vendor` 修。
+- 【设备】11-10 自检第二、三轮的浅睡把 USB 弄丢，要人按键救；设备已回到出厂固件，ota_1 的整段比对等连接稳定时补（[记录](../hardware/2026-11-10-selftest.md)）。
+
 ## 这一阶段的完成界限（2026-11-10 晚上定，用户要求“明确完成界限，不要无休止的执行”）
 
 **目标**：模拟器里的系统层达到 R-068（相当于一台没装应用的手机）。下面的任务做完就停，向用户汇报，等新的指示；不再往里加新任务，除非用户要求。
@@ -237,8 +246,10 @@ Codex 额度用完，任务改由 Claude 子代理（思考等级 medium）在�
 
 | 状态 | 任务 |
 | --- | --- |
-| 在做（8） | `sms-multipart`、`boot-db-stall`、`time-settings`、`lock-camera`、`kid-apps`、`files-ops`、`reminder-edit`、`port-hal-2` |
-| 接着做（19） | `emergency-call`、`mobile-network`（都等 sms-multipart 合入）、`clock-extras`（等 time-settings）、`qr-scan`、`notify-manage`、`settings-small`（没连上的已存 Wi-Fi、文字重做）、`ai-speech-long`、`i18n-2`、`i18n-3`、`i18n-4`（其余页面的英文全覆盖）、`semantics-shell-1`、`semantics-shell-2`、`small-gaps-1`（说话能打断回答、设备详情和开源许可、通话分钟数、电量页换家人）、`small-gaps-2`（“继续读”卡片的百分比和插拔卡刷新、“全部”页时钟相机相册的图标、拨号页提示压住键盘、飞行模式面板自动收起）、`port-display-1`（屏幕输出层接厂家现成代码，只编译）、`open-app-latency`、`ui-deps-refresh`、`phone-gap-3`（最后的缺口检查）、最后一轮整批审查 |
+| 已合入（4） | `boot-db-stall`、`time-settings`、`reminder-edit`、`port-hal-2`（只编译；对照原厂代码查出的问题由 `port-sleep-vendor` 修，见下） |
+| 在做（5） | `sms-multipart`（子代理停在跑测试，主会话收尾）、`lock-camera`、`kid-apps`、`files-ops`、`ai-speech-long` |
+| 审查修复 | `port-sleep-vendor`：port-hal-2 的浅睡、调频、唤醒、扩展芯片睡眠配置照原厂代码对齐（2026-11-10 晚上用户要求硬件先查原厂代码）；属于完成条件第 2 条，不算新任务 |
+| 接着做（18） | `emergency-call`、`mobile-network`（都等 sms-multipart 合入）、`clock-extras`（time-settings 已合入，可以开始）、`qr-scan`、`notify-manage`、`settings-small`（没连上的已存 Wi-Fi、文字重做）、`i18n-2`、`i18n-3`、`i18n-4`（其余页面的英文全覆盖）、`semantics-shell-1`、`semantics-shell-2`、`small-gaps-1`（说话能打断回答、设备详情和开源许可、通话分钟数、电量页换家人）、`small-gaps-2`（“继续读”卡片的百分比和插拔卡刷新、“全部”页时钟相机相册的图标、拨号页提示压住键盘、飞行模式面板自动收起）、`port-display-1`（屏幕输出层接厂家现成代码，只编译）、`open-app-latency`、`ui-deps-refresh`、`phone-gap-3`（最后的缺口检查）、最后一轮整批审查 |
 
 **不在这一阶段（到这里就停下问用户）**：
 - 上真机：烧录、驱动调试、真机性能实测（每次写设备都要先整片备份、征得同意）。
