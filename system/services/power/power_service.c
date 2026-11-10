@@ -41,7 +41,10 @@
 #include "ink/sys/state.h"
 #include "ink/sys/storage.h"
 
-#define PW_STACK 3072 /* internal RAM: the light-sleep entry runs on this stack */
+/* Internal RAM: the light-sleep entry runs on this stack. 4096 like the vendor's light-sleep task
+ * (Metalio-E-INK4-Plus power_policy_standby_lp.cc, "standby_lp", internal RAM); 3072 overflowed the
+ * host estimate on Linux once lift-to-wake was added. */
+#define PW_STACK 4096
 #define PW_PRIO 4
 #define IDLE_AFTER_US 5000000ull
 #define LOCK_AFTER_US 600000000ull
