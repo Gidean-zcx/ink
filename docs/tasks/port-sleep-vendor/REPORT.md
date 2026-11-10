@@ -12,7 +12,7 @@
 | 1 | 通过 | 【实测】S31 构建退出 0，0 条 warning/error；端口普通、ASan/UBSan 各 `100% tests passed out of 3` | 见下方复现命令；`work/port-sleep-s31-final.log`、`work/port-sleep-build-s31-host{,-asan}-tests.log` |
 | 2 | 通过 | 【实测】最终 14/14 反向对照拒绝，原实现三项通过；要求的四项及 RTC arm 检查均编译 0、断言退出 −6 | `taskpolicy -c utility python3 ports/esp32s31/tests/negative.py build-s31-host` |
 | 3 | 通过 | 【实现】下方逐项对照，含缺失端口和保留差异 | 文件/行号见下表 |
-| 4 | 部分完成 | 【实测】模拟器普通版 `100% tests passed out of 320`，502.20 秒；gcccheck 8 个 C 编译单元，0 findings；内存版全量与隐私最终扫描待完成 | 下方模拟器与 gcccheck 命令 |
+| 4 | 部分完成 | 【实测】最终普通版 `100% tests passed out of 320`，555.15 秒；gcccheck 8 个 C 编译单元，0 findings；最终内存版全量与隐私扫描待完成 | 下方模拟器与 gcccheck 命令 |
 | 5 | 通过 | 【实现】下方八项上机清单；未把编译写成真机通过 | 本报告“上机先核对清单” |
 
 ## 原厂对照
@@ -77,7 +77,7 @@ taskpolicy -c utility python3 ports/esp32s31/tests/sdk_check.py "${IDF_PATH:-$HO
 
 模拟器普通版的完整复现参数如下；内存检查只把构建目录换为 `build-asan`、加 `-DINK_SANITIZE=ON`。没有改断言、预算或测试集合。
 
-【实测】普通版全量原话：`100% tests passed out of 320`，`Total Test time (real) = 502.20 sec`；日志 `work/port-sleep-build-tests.log`，没有跳过。
+【实测】最终普通版全量原话：`100% tests passed out of 320`，`Total Test time (real) = 555.15 sec`；日志 `work/port-sleep-build-tests.log`，没有跳过。
 
 ```bash
 export PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$PWD/hub"
