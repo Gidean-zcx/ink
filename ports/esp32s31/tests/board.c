@@ -11,6 +11,7 @@ struct hal_i2c_dev { int unused; };
 static struct osal_mutex lock;
 static struct hal_i2c_dev dev;
 static uint8_t regs[8];
+static uint8_t rtc_low;
 static uint64_t now;
 typedef struct { bool read; uint8_t reg, value; uint64_t at; } transfer_t;
 enum { TRANSFER_CAP = 64 };
@@ -49,6 +50,7 @@ hal_i2c_status_t hal_i2c_write_read(hal_i2c_dev_t *d, const uint8_t *w, size_t w
     assert(d == &dev && wn == 1 && rn == 1 && *w < sizeof regs);
     /* No external input is active: input pins high, output pins follow their latch. */
     *r = *w < 2 ? (uint8_t)(regs[2 + *w] | regs[6 + *w]) : regs[*w];
+    if (*w == 1 && rtc_low) *r &= (uint8_t)~MB_P1_RTC_INT;
     record(true, *w, *r);
     return HAL_I2C_OK;
 }
@@ -109,6 +111,11 @@ int main(void) {
     reset_trace();
     assert(metalio_board_cut_rails(true) == HAL_I2C_OK);
     assert(count == 1 && (regs[3] & MB_P1_SHARED_PWR));
+    assert(metalio_board_mask_for_sleep(true) == HAL_I2C_OK);
+    rtc_low = true; /* An alarm became active during masking, before the wake input is enabled. */
+    reset_trace();
+    assert(metalio_board_arm_wake(true, true) == HAL_I2C_ERR);
+    assert(count == 2 && regs[7] == 0); /* Do not enable wake inputs over an already-active RTC. */
     puts("s31 board: PMIC delays, safe latches, wake directions and rail order passed");
     return 0;
 }
