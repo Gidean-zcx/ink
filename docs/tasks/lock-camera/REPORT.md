@@ -1,70 +1,76 @@
 # lock-camera 任务报告
 
-基线：`ec78378e05f2694b9fa410780ab2bcf9d8de1c99`。状态：实现和回归完成，正在跑最终全量、内存和 S31 检查。
+基线：`ec78378e05f2694b9fa410780ab2bcf9d8de1c99`。分支：`claude/codex-lock-camera`。状态：实现、定向、S31、GCC 检查完成；最终两轮全量正在运行。以下证据路径相对仓库根目录，构建产物未提交。
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 【实测】通过（模拟器） | lock 110、gate 138、kid 126 条断言；卡上三张公共照片含前一次拍的照片；孩子场景再加一张采集中 HOME 的照片，仍无儿童归属；本次只回看新拍两张 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/lock_camera/run.py --build build` |
-| 2 | 【实测】定向、S31、GCC 通过；全量和内存检查待结束 | 原有锁屏、成员门、相机相册回归未修改；见下文 | 见下文命令 |
-| 3 | 【实测】通过，逐张看过 | 下表三张为最终布局；另有成员门、密码页截图 | 同第 1 条 |
+| 1 | 【实测】模拟器亮屏锁定、成员门及密码页通过；浅睡边界见下文 | lock 110、gate 138、kid 126，共 374 条断言；两张新照落卡、本次回看、旧照/文件/其他应用拦截、真实 HOME、解锁相册、儿童归属、AI 快照均核查 | 下方定向命令 |
+| 2 | 【实测】原有定向、S31、GCC 通过；最终普通及 ASan/UBSan 全量待结束 | 原有锁屏、成员门、camera-gallery 等测试未改；13 项回归全部通过，32.16 秒；日志 `build/lock-final-ui-regressions.log` | 下方全量、S31、GCC 命令 |
+| 3 | 【实测】通过，逐张看过最终布局 | 下表截图；大字号布局检查原样通过 | 定向命令及 `ui-scene-big-LockPage` |
 
-截图路径相对仓库根目录，未提交构建产物：
-
-| 画面 | 路径 |
+| 画面 | 截图路径 |
 | --- | --- |
-| 默认锁屏入口 | `build/lock-camera-lj7062pt/lock/snap-lock-entry.png` |
-| 受限取景 | `build/lock-camera-lj7062pt/lock/snap-restricted.png` |
-| 本次第二张的拍摄确认 | `build/lock-camera-lj7062pt/lock/snap-confirmation.png` |
-| 成员门、密码页入口 | `build/lock-camera-lj7062pt/gate/snap-member-entry.png`、`build/lock-camera-lj7062pt/gate/snap-pin-entry.png` |
+| 默认锁屏入口 | `build/lock-camera-fg7z2gnh/lock/snap-lock-entry.png` |
+| 受限取景 | `build/lock-camera-fg7z2gnh/lock/snap-restricted.png` |
+| 本次第二张的拍摄确认 | `build/lock-camera-fg7z2gnh/lock/snap-confirmation.png` |
+| 成员门、密码页入口 | `build/lock-camera-fg7z2gnh/gate/snap-member-entry.png`、`build/lock-camera-fg7z2gnh/gate/snap-pin-entry.png` |
 
-【实测】最终反向对照：`run.py --build build --negative` 仅撤掉公共存放选择，变异程序退出 1，122 通过、4 失败、finished=1；包装脚本确认归属断言失败后退出 0。原程序与工作树未变，证据 `build/lock-camera-d9zu4d2m/`，日志 `build/lock-negative.log`。
+【实测】反向对照均只编译临时变异程序，不修改产品源码：`--negative` 撤掉公共归属，变异程序 122 通过、4 失败、finished=1、退出 1；`--late-mode` 恢复到采集后才判断模式，125 通过、1 失败、finished=1、退出 1。包装脚本核对指定归属断言后均退出 0。证据分别为 `build/lock-camera-f9cp94jo/`、`build/lock-camera-d8f43hgw/`，日志 `build/lock-negative.log`、`build/lock-late-mode.log`。
 
-【实测】`taskpolicy -c utility python "$INK_DEPS/../ink-codex/tools/gcccheck.py" build <本次 11 个产品 C 文件及新测试 C 文件>`：`gcccheck: 12 compiled, 0 with findings`，退出 0，日志 `build/lock-gcccheck.log`。
+【实测】S31 完整编译、链接、镜像生成、size、stack 脚本均退出 0。镜像 1,342,576 字节，DIRAM 88,180 字节，PSRAM 静态 BSS 552,728 字节；日志 `build/lock-s31.log`，镜像 `build-s31/ink-s31.bin`。仅编译，未烧录或运行设备。
 
-【实测】`INK_DEPS="$INK_DEPS" taskpolicy -c utility bash ports/esp32s31/build.sh`：完整 S31 编译、链接、镜像生成、size、stack 报告均退出 0。镜像 1,342,416 字节，DIRAM 88,180 字节、PSRAM 静态 BSS 552,728 字节；日志 `build/lock-s31.log`，产物 `build-s31/ink-s31.bin`。仅编译，未烧录或运行设备。
+【实测】GCC：`gcccheck: 12 compiled, 0 with findings`，退出 0；日志 `build/lock-gcccheck.log`。两种宿主构建均为 `-Werror`，内存构建另有 `-fsanitize=address,undefined -fno-omit-frame-pointer`；已核对产品相机与新测试的实际编译参数。
+
+复现命令（配置沿用总规则第 5 节；ASan 目录加 `-DINK_SANITIZE=ON`，两目录同用本地 SDL2、ImGui 和 Hub Python 缓存）：
+
+```bash
+taskpolicy -c utility cmake --build build -j4
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/lock_camera/run.py --build build
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/lock_camera/run.py --build build --negative
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/lock_camera/run.py --build build --late-mode
+INK_KEEP_EVIDENCE=1 PYTHONPATH="$PWD/hub/src" UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j3
+# 内存检查：同一全量命令，目录换成 build-asan，构建也使用 -j4。
+taskpolicy -c utility bash ports/esp32s31/build.sh
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" "$INK_DEPS/../ink-codex/tools/gcccheck.py" build \
+  system/apps/camera/camera.c system/apps/gallery/gallery.c system/policy/cap.c \
+  system/policy/system_actions.c system/services/input/input_service.c system/ui/app_registry.c \
+  system/ui/lock_mark.c system/ui/ui_task.c system/ui/shell/member_gate.c \
+  system/ui/shell/member_pages.c system/ui/shell/navigation.c tests/lock_camera/lock_camera.c
+```
 
 ## 没做到的
 
-【实现】浅睡时触摸不是当前 HAL 的唤醒源（`hal_power.h`、`hal_input_sim.c`）；睡着后仍须按电源键或 AI 键唤醒。拍摄期间复用 `INK_NEED_AWAKE`，不解锁，退出释放。不改唤醒硬件或驱动，不碰设备。
+- 【实现】当前 HAL 不把触摸作为浅睡唤醒源，模拟器明确丢弃睡眠中的触摸。因此未实现“睡着后直接点相机”；须先按唤醒键。本次不宣称已验证实机触摸唤醒。
+- 【实测】采集中的真实 HOME 短按曾未送达输入驱动。拍完后的 HOME 用真实按键通过；采集中退出另用同一 `system.home` 能力核对照片归属、回锁屏和延迟回执。未修改输入驱动。
+- 没有运行 Linux 主机全量或实机测试；本机为 macOS，另跑了提供的 GCC 检查及 S31 交叉编译。
+- 最终普通、内存全量结果及隐私扫描待补。
 
 ## 和设计不一致的
 
-【实现】规范 §3.5 仍写“相机没有入口、锁屏不响应触摸”，与本任务 D-121 相冲突。本次按任务实现入口，不改规范迁就代码。受限拍摄沿用现有 Camera 布局，左下角只回看本次照片，点画面恢复取景。
+【实现】规范 §3.5 仍写“相机没有入口、锁屏不响应触摸”，与任务 D-121 不一致；本次按任务实现入口，没有改规范迁就实现。受限相机沿用 Camera 组件与低频取景，左下角只回看本次，点画面恢复取景。默认入口放在原提示条内，保留电源键、AI 键和“正在听”的完整提示，并按文字行高容纳大字号。
 
 ## 改过的已有测试
 
-无；原有测试保持原样。
+无。只新增 `tests/lock_camera/` 和 CTest 接线。`docs/system/app-framework.md` 仅更新两个源码行号链接，正文未改。
 
 ## 要用户定的
 
-无。按任务授权选独立公共目录 `/family/锁屏拍的照片`，不属于任何家人，解锁后的各成员相册均可见。文件服务的公共写权限由现有成年成员身份执行，只写这个目录，不借其身份访问个人相册。这样无需新增“最后使用的大人”状态或迁移照片。
+无。任务已授权选择独立公共目录 `/family/锁屏拍的照片`，不属于任何家人，解锁后的各成员相册均可见。写公共目录沿用现有大人权限，只写此目录，不读取大人个人相册；无需新增“最后一位大人”状态。归属在采集开始前固定，退出页面也不会转存给孩子。
 
 ## 顺手发现
 
-暂无。
+【实测】负向断言里的长中文按字节截断可能让指标 JSON 含非法 UTF-8；新驱动读取时替换非法字节以展示错误，仍严格核对退出码、finished、失败计数和指定断言，没有放宽功能判断。
 
 ## 新增的机制
 
-受限拍摄浮层、本次照片编号列表：任务书第 2、3 条要求；退出即清空，不写新持久格式。
+- 受限浮层及本次照片编号表：任务第 2、3 条要求；退出即清空，不写新持久格式。
+- `camera.review` 原子能力：任务第 5 条要求；入口、取景、拍照仍走 `app.open`、`camera.preview`、`camera.photo`。
+- 无新任务、线程、队列、重试、配置项或通用框架；保持唤醒、执行器、解码、PNG 和文件服务均复用现有设施。
 
-`camera.review` 原子能力：任务书第 5 条要求；只轮看本次拍摄编号。入口、取景和拍照复用原能力。
-
-无新任务、线程、队列、文件格式、配置项；唤醒引用、图片解码和执行器均复用原设施。
-
-产品代码 140 行增加、35 行删除，共 175 行（含头文件；连同 CMake 3 行和翻译 7 行为 185 行，未超 200 行）。超过 100 行的原因：入口要跨锁屏、成员门与密码页；策略、触摸与返回必须共用现有关口；还要保存、回看和解锁相册。看过只加按钮、直接打开普通相机、存给当前成员三种小方案，分别缺触摸路由、泄露旧相册、把照片存给孩子，不能满足任务。
-
-【实测】初版锁屏用了整屏透明根对象，改变了浅睡与唤醒时序。仅恢复基线 `lock_mark.c` 的隔离对照使成员唤醒、拿起亮屏恢复通过；最终把默认入口放进原有提示条，其他区域用现有 `skip_touch` 丢弃。原有成员唤醒、待机预算、拿起亮屏、camera-gallery，加新 lock-camera 共 5 项均原样通过，`100% tests passed out of 5`，23.39 秒，退出 0。未修改原测试。日志 `build/lock-layout-regressions.log`。
-
-【实测】策略初版扩大到所有锁定操作，回归检出了误拦截。最终只限制锁屏的相机/图片/文件与入口，以及受限拍摄页；原来的宽限期媒体、确认、网页和儿童时限回归均已恢复。只改了文档 `app-framework.md` 的两个源码行号链接，正文与测试未改。
-
-【实测】完整保留“电源键或 AI 键唤醒”和“正在听”提示，并按两个次要文字行高留足提示条高度。大小字号锁屏、成员门、电源菜单、设置、正在听、待机、拿起亮屏、camera-gallery、lock-camera、翻译表和文档链接共 13 项原样通过，32.16 秒，退出 0；日志 `build/lock-final-ui-regressions.log`。
+产品 C/头文件增加 140 行、删除 35 行，共改动 175 行；连同构建接线 3 行和翻译 7 行为 185 行，未超 200。超过 100 行的原因是三种入口、集中策略/输入/返回、会话回看、保存和解锁相册必须接通。看过只加按钮、打开普通相机、保存给当前成员三种更小方案，分别缺触摸路由、暴露旧相册、会存给孩子。默认锁屏继续只画提示条，未增加整屏绘制成本；原有唤醒和待机预算均通过。
 
 ## 要改的文档
 
-合并会话需重新生成 `docs/system/capabilities.md`：新增 `camera.review`，`app.open` 与相机能力的锁定标志改变。独立生成 `build/lock-capabilities.md`，461 项定义校验通过。
-
-合并会话需同步界面规范 §3.5、`docs/system/ui-dependencies.md` 的 D-121 状态；本次不修改禁止的共享文档。
-
-【实测】拍摄中退出：固定在采集开始前选择公共归属；恢复到 RGB 采集后才读模式的 `--late-mode` 对照，变异程序 125 通过、1 失败、finished=1，包装脚本退出 0，证据 `build/lock-camera-f18nhp3d/`。正常锁屏与密码页、孩子场景共 374 条断言通过。拍完两张后的 HOME 用真实按键；采集中的退出用同一 `system.home` 能力，避免把未送达的短按当成相机行为。
+合并会话需重新生成 `docs/system/capabilities.md`：新增 `camera.review`，更新 `app.open`、`camera.preview`、`camera.photo` 的锁定标志与入口限制。已独立生成 `build/lock-capabilities.md`，461 项定义校验通过。还需同步界面规范 §3.5、`docs/system/ui-dependencies.md` 的 D-121 状态和浅睡边界。本次没有修改禁止的共享文档。
