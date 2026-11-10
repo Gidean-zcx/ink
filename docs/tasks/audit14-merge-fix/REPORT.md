@@ -2,14 +2,14 @@
 
 - 基线：`bebb20b98de31214ffa8bbd0742ad8071899db46`。
 - 范围：只修 `boot-flow` 和 `hub-simulator-e2e` 的合并回归；仅宿主机测试与 S31 编译，不接触设备。
-- 状态：一行修复、专项、反向对照及普通全量完成；ASan/UBSan 和跨目标验收进行中。产品代码只替换 1 行（+1/-1）。
+- 状态：一行修复、专项、反向对照、普通及 ASan/UBSan 全量、gcccheck 完成；正在编译 S31。产品代码只替换 1 行（+1/-1）。
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 普通全量通过，ASan 待跑 | 原话 `100% tests passed out of 345`，452.52 秒，退出 0，无跳过；专项 6/6；撤回一行后二者均重现原失败；测试未改 | C1、C2；`focused.log`、`ctest.log`、`reverse-boot.log`、`reverse-hub.log` |
-| 2 | 待验证 | S31 零警告、gcccheck、隐私扫描尚待执行 | 见后续记录 |
+| 1 | 【实测】通过 | 普通及 ASan/UBSan 原话均为 `100% tests passed out of 345`，分别 452.52、529.12 秒，退出均为 0，无跳过；专项 6/6；撤回一行后二者均重现原失败；测试未改 | C1–C3；`focused.log`、`ctest.log`、`ctest-asan.log`、`reverse-boot.log`、`reverse-hub.log` |
+| 2 | gcccheck 通过，S31 进行中 | gcccheck 原话 `gcccheck: 1 compiled, 0 with findings`，退出 0，无跳过；S31 编译中，最终隐私扫描待执行 | C4–C6；`gcccheck.log`、`s31.log` |
 | 3 | 【实现】【实测】原因已定位 | `cap.c:122` 的短路求值跳过原来的电源锁读取；只恢复读取顺序，两项均通过 | 下节及 C1 |
 
 ## 原因和修法
@@ -17,11 +17,14 @@
 - 【实现】合并前 `1390e166` 的 `cap.c` 在普通页面上先执行 `ink_power_state()`，再判断具体能力。`3ba30618` 把 `c->locked_owner_only` 放到了它前面；普通能力的该标记为假，因 `&&` 短路，不再执行这次读取。`ink_power_state()` 不是无副作用的字段读取：`system/services/power/power_service.c:478–482` 会获取和释放电源互斥锁；模拟器的 `ports/sim/osal/osal_sim.c:522–525` 对锁操作计费并允许调度。因此布尔结果相同，任务交错不同。这是两项失败共有的触发点。两分支共同基线为 `41d7f251`；主线随后加入的 `log-1`（`a0e058ad`，能力日志实现在 `35721739`）改变了当前日志、存储和刷新负载，旧审计分支的结果没有覆盖这一组合。
 - 【实测】先只替换旧 `gate()`，两项通过；再保持新 `gate()`，仅交换该表达式的前两个操作数，两项仍通过。最终只改 `system/policy/cap.c:122` 这一行，不改测试、超时、预算或模拟器计费。保留 `.locked_owner_only`、`ink_ui_locked_activity()` 和 `.app`，不恢复能力名前缀特判。
 - 【实测】`hub-simulator-e2e` 的产品初始化时间两边同为 2107.476 ms；失败版成员准备到 5056.542 ms 才结束，3 秒点按先进入 `BootWifi`，后续点按没有进入阅读器，所以模型没有 `reader.next_page` 可调，`tool_calls=0`。修复后准备时间为 2417.653 ms，原定 3 秒点按及工具调用断言通过。证据：`baseline-e2e-metrics.json`、`baseline-e2e.txt`、修复后 `build/test-out/hub-e2e/`。
-- 【实测】恢复场景的 `job.list` 来自正常的 `job.revision` 进度通知，最后一次在 58835 ms，随后已停止，并非无限轮询。`BootHello` 于 58846 ms 打开，原断言在 60321 ms 截图时撞上新一轮界面刷新。保留的 trace 显示 60311.778–60329.761 ms 界面任务正在运行，60334.604 ms 又提交一帧；原截图断言正确拒绝未呈现完成的画面。修复恢复原有交错后，fresh/restore 的 11 张截图全部通过。证据：`baseline-boot.txt`、`current-restore-trace/trace.json`。
+- 【实现】【实测】恢复期间密集的 `job.list` 来自 `activity_card.c:207–209` 对作业进度的订阅；恢复结束到 `BootHello` 截图之间，最近一次调用在 58835 ms，没有继续密集轮询（后续离开设置、切换成员仍会正常调用）。`BootHello` 于 58846 ms 打开；`time_service.c:198–203` 的分钟通知经 `navigation.c:1838–1851` 刷新状态栏，恰与截图相撞。trace 显示 60311.778–60329.761 ms 界面任务正在运行，60334.604 ms 又提交一帧，原截图断言在 60321 ms 正确拒绝未呈现完成的画面。修复恢复原有交错后，fresh/restore 的 11 张截图全部通过。证据：`baseline-boot.txt`、`current-restore-trace/trace.json`。
 - 【实现】这是恢复既有电源锁读取顺序的兼容修复；没有将偶然等待改成延时或增加同步机制，也不声称消除了所有可能的调度敏感窗口。
 - 【实测】反向对照只在临时副本撤回这一行，断言副本与基线 `cap.c` 逐字相同，按现有编译参数重编该对象并链接原测试。`boot_flow_check.py` 退出 1，重现 60.321 秒的同一断言；`e2e.py` 退出 1，重现 `tool_calls=0`。原工作文件未变。复核者也可在基线单独检出，用 C0/C1 复现；无需修改任何测试。
+- 【实现】架构审视（R-061）：改动只在能力网关，按钮和 AI 仍走同一条原子能力路径；成员的应用归属与锁屏声明保持不变，没有新增接口或绕过服务边界。
 
 本节未加目录前缀的诊断文件均在 `work/audit14-merge-fix/`；它们被 Git 忽略，不提交构建产物或本机路径。
+
+内存检查覆盖全部 345 项（包括本机中枢环境），编译命令已核对包含 `-fsanitize=address,undefined` 和 `-Werror`，运行设置 `UBSAN_OPTIONS=halt_on_error=1`。两轮 CTest 和 `LastTest.log` 中均无 ASan/UBSan 错误诊断。
 
 ## 复现命令
 
@@ -49,7 +52,7 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" ../../tools/gccche
 
 ## 没做到的
 
-- ASan/UBSan 及跨目标检查尚待完成，见验收表。
+- S31 和最终隐私扫描尚待完成，见验收表。没有进行实机验证。
 
 ## 和设计不一致的
 
