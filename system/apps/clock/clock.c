@@ -1,7 +1,9 @@
 /* Clock pages use the existing schedule service; UI task only. */
-/* ui-scale-runtime: dimension w,x,y Theme-derived button coordinates supplied by this page. */
+/* ui-scale-runtime: dimension w,x,y,height Theme-derived button coordinates supplied by this page. */
 #include "ink/osal.h"
 #include "ink/sys/appreg.h"
+#include "ink/sys/data.h"
+#include "ink/sys/i18n.h"
 #include "ink/sys/members.h"
 #include "ink/sys/state.h"
 #include "ink/sys/textfield.h"
@@ -14,7 +16,7 @@
 #include <stdio.h>
 #include <string.h>
 
-static const ink_activity_t CLOCK, DETAIL, TIMER;
+static const ink_activity_t CLOCK, DETAIL, TIMER, EXTRAS[2];
 static void timer_open(ink_call_t *c);
 static struct {
     ink_ui_list_t *list;
@@ -104,8 +106,16 @@ static void create_list(lv_obj_t *screen, void *arg) {
     ink_alarm_t a; int cursor = 0; size_t total = 0; int64_t next = 0;
     while (ink_alarm_next(&cursor, INK_ALARM, &a) == 1) { total++; if (a.enabled && a.next_s && (!next || a.next_s < next)) next = a.next_s; }
     int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP;
-    const char *tabs[] = {"闹钟", "计时"};
-    lv_obj_t *seg = ink_ui_segments(screen, tabs, 2, 0, INK_MARGIN, y, INK_CANVAS_W - 2 * INK_MARGIN, NULL, NULL);
+    const char *tabs[] = {TR("闹钟"), TR("计时"), TR("秒表"), TR("世界时钟")};
+    lv_obj_t *seg = ink_ui_segments(screen, tabs, 4, 0, INK_MARGIN, y, INK_CANVAS_W - 2 * INK_MARGIN, NULL, NULL);
+    int used = 0, tab_x = INK_GAP_XS - INK_STROKE;
+    for (int i = 0; i < 4; i++) used += ink_ui_text_width(tabs[i], INK_FONT_NOTE, INK_WEIGHT_REGULAR) + 2 * INK_GAP_S;
+    for (int i = 0; i < 4; i++) {
+        int width = ink_ui_text_width(tabs[i], INK_FONT_NOTE, INK_WEIGHT_REGULAR) + 2 * INK_GAP_S + (INK_CANVAS_W - 2 * INK_MARGIN - 2 * INK_GAP_XS - used) / 4;
+        lv_obj_t *tab = lv_obj_get_child(seg, i); ink_ui_pill_text(tab, INK_FONT_NOTE, INK_WEIGHT_REGULAR);
+        lv_obj_set_x(tab, ink_ui_px(tab_x)); lv_obj_set_width(tab, ink_ui_px(width)); tab_x += width;
+    }
+    ink_shell_bind(lv_obj_get_child(seg, 2), "clock.stopwatch", "{}"); ink_shell_bind(lv_obj_get_child(seg, 3), "clock.world", "{}");
     ink_shell_bind(lv_obj_get_child(seg, 1), "clock.timer", "{}"); y += INK_SEGMENT + INK_GAP;
     ink_tm_t t; ink_time_to_local(next, &t); char text[32];
     if (next) snprintf(text, sizeof text, "%d:%02d", t.hour, t.min); else snprintf(text, sizeof text, "%s", total ? "没有已开启的闹钟" : "还没有闹钟");
@@ -175,7 +185,7 @@ static void destroy_detail(void) { C.name = NULL; }
 static int list_snapshot(char *out, size_t cap) {
     int n = C.list ? ink_ui_list_snapshot(C.list, out, cap) : -1;
     if (n < 0) return -1;
-    int more = snprintf(out + n - 1, cap - (size_t)n + 1, ",\"next_alarm\":\"%s\",\"timer_action\":\"clock.timer\"}", C.next);
+    int more = snprintf(out + n - 1, cap - (size_t)n + 1, ",\"next_alarm\":\"%s\",\"timer_action\":\"clock.timer\",\"stopwatch_action\":\"clock.stopwatch\",\"world_action\":\"clock.world\"}", C.next);
     if (more < 0 || (size_t)more >= cap - (size_t)n + 1) { out[0] = 0; return -1; }
     return n - 1 + more;
 }
@@ -292,6 +302,158 @@ static void create_timer(lv_obj_t *screen, void *arg) {
 }
 static int timer_snapshot(char *out, size_t cap) { return ink_ui_semantics_snapshot(&timer_page, out, cap); }
 static const ink_activity_t TIMER = {.name = "ClockTimer", .app = "clock", .create = create_timer, .snapshot = timer_snapshot};
+
+/* Durations are volatile and member-owned, like countdowns; only visible digits tick. */
+enum { EXTRA_ROWS = 3, EXTRA_FIELDS = EXTRA_ROWS + 1, EXTRA_ACTIONS = EXTRA_ROWS + 3, LAPS_MAX = 99 };
+typedef struct { char owner[16]; uint64_t elapsed, since, laps[LAPS_MAX]; unsigned count; bool running; } stopwatch_t;
+static stopwatch_t watches[INK_MEMBERS_MAX] INK_PSRAM_BSS;
+static const ink_db_def_t WORLD = {.name = "clock.world", .title = TR_NOOP("世界时钟"), .scope = INK_DB_MEMBER,
+    .schema = 1, .json = true, .ai_read = true, .max_records = 6};
+static struct {
+    bool world, picking; unsigned page, total, visible;
+    ink_db_t *db; stopwatch_t *watch; lv_timer_t *tick;
+    lv_obj_t *digits, *times[EXTRA_ROWS]; int zones[EXTRA_ROWS];
+    char values[EXTRA_FIELDS][128], ids[EXTRA_FIELDS][24], args[EXTRA_ACTIONS][32], action_ids[EXTRA_ACTIONS][16];
+    ink_ui_field_spec_t fields[EXTRA_FIELDS]; ink_ui_action_spec_t actions[EXTRA_ACTIONS]; ink_ui_page_spec_t model;
+} X INK_PSRAM_BSS;
+_Static_assert(EXTRA_ROWS + 1 <= EXTRA_FIELDS && EXTRA_ROWS + 3 <= EXTRA_ACTIONS, "extra page rows fit");
+static stopwatch_t *my_watch(void) {
+    for (int i = 0; i < INK_MEMBERS_MAX; i++) if (!strcmp(watches[i].owner, ink_member_current()->id)) return &watches[i];
+    for (int i = 0; i < INK_MEMBERS_MAX; i++) if (!watches[i].owner[0]) {
+        snprintf(watches[i].owner, sizeof watches[i].owner, "%s", ink_member_current()->id); return &watches[i];
+    }
+    return NULL;
+}
+static uint64_t elapsed(stopwatch_t *s) { return s->elapsed + (s->running ? osal_now_us() - s->since : 0); }
+static void duration(char *out, size_t cap, uint64_t us, bool tenths) {
+    uint64_t sec = us / 1000000; char fraction[8] = "";
+    if (tenths) snprintf(fraction, sizeof fraction, ".%u", (unsigned)(us / 100000 % 10));
+    snprintf(out, cap, "%02llu:%02u:%02u%s", (unsigned long long)(sec / 3600), (unsigned)(sec / 60 % 60), (unsigned)(sec % 60), fraction);
+}
+static int city_at(unsigned index) {
+    for (int z = 0; z < ink_time_zone_count(); z++) if (X.picking || ink_db_get(X.db, (uint32_t)z + 1, NULL, NULL, 0) == 0) {
+        if (!index--) return z;
+    }
+    return -1;
+}
+static void world_text(int z, char *out, size_t cap) {
+    if (!ink_time_valid()) { snprintf(out, cap, "%s", TR("时间尚未设置")); return; }
+    int64_t utc = ink_time_now_s(); ink_tm_t here, there; ink_time_to_local(utc, &here); ink_time_to_zone(z, utc, &there);
+    int day = (there.year * 10000 + there.month * 100 + there.day) - (here.year * 10000 + here.month * 100 + here.day);
+    snprintf(out, cap, TR("%02d:%02d · %+d 小时 · %s"), there.hour, there.min, (there.offset_min - here.offset_min) / 60,
+        day > 0 ? TR("第二天") : day < 0 ? TR("前一天") : TR("同一天"));
+}
+static bool extra_current(void) { return ink_ui_page_current() && !strcmp(ink_ui_page_name(), X.world ? "ClockWorld" : "ClockStopwatch"); }
+static void extra_update(void) {
+    if (!extra_current() || ink_power_state() == INK_PWR_LOCKED) return;
+    if (!X.world && X.watch && X.digits) {
+        duration(X.values[0], sizeof X.values[0], elapsed(X.watch), !X.watch->running);
+        lv_label_set_text(X.digits, X.values[0]); ink_ui_hint_obj(X.digits, INK_REFRESH_FAST);
+    }
+    if (X.world) for (unsigned i = 0; i < X.visible; i++) {
+        world_text(X.zones[i], X.values[i + 1], sizeof X.values[i + 1]);
+        lv_label_set_text(X.times[i], X.values[i + 1]); ink_ui_hint_obj(X.times[i], INK_REFRESH_FAST);
+    }
+    ink_ui_content_changed();
+}
+static void stopwatch_tick(lv_timer_t *t) { (void)t; extra_update(); }
+static void extra_changed(void *ctx, int h, const char *id) { (void)ctx; (void)h; (void)id; if (X.world) extra_update(); }
+static void extra_time_changed(void *ctx, const char *id, const ink_args_t *a) { (void)a; extra_changed(ctx, 0, id); }
+static void extra_button(lv_obj_t *parent, const char *label, const char *cap, const char *args, bool enabled, int x, int y, int w, int height, bool primary) {
+    unsigned i = (unsigned)X.model.action_count++;
+    snprintf(X.args[i], sizeof X.args[i], "%s", args ? args : "{}");
+    snprintf(X.action_ids[i], sizeof X.action_ids[i], "action:%u", i);
+    X.actions[i] = (ink_ui_action_spec_t){.id = X.action_ids[i], .label = label, .capability = cap, .args_json = X.args[i], .enabled = enabled};
+    lv_obj_t *b = ink_ui_pill(parent, label, x, y, w, height, primary, NULL, NULL);
+    if (enabled) ink_shell_bind(b, cap, X.args[i]); else lv_obj_add_state(b, LV_STATE_DISABLED);
+}
+static void extra_create(lv_obj_t *screen, void *arg) {
+    X.world = (intptr_t)arg != 0; X.digits = NULL; X.visible = 0; X.watch = X.world ? NULL : my_watch();
+    X.model = (ink_ui_page_spec_t){.id = X.world ? "ClockWorld" : "ClockStopwatch", .title = X.world ? TR("世界时钟") : TR("秒表"), .object = {X.world ? "clock:world" : "clock:stopwatch", 1}, .fields = X.fields, .actions = X.actions};
+    ink_shell_statusbar(screen, true); ink_shell_topbar(screen, X.model.title);
+    int w = INK_CANVAS_W - 2 * INK_MARGIN, y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP;
+    if (X.world) { X.db = ink_db_open_member(&WORLD, ink_member_current()->id); X.total = X.picking ? (unsigned)ink_time_zone_count() : (unsigned)ink_db_count(X.db); }
+    else {
+        if (!X.watch) return;
+        X.total = X.watch->count;
+        snprintf(X.values[0], sizeof X.values[0], "%s", X.watch->running ? TR("正在计时") : X.watch->elapsed ? TR("已暂停") : TR("未开始"));
+        ink_ui_line(screen, X.values[0], INK_FONT_SUBTITLE, INK_WEIGHT_MEDIUM, INK_MARGIN, y, w); y += INK_LINE_SUBTITLE + INK_GAP;
+        duration(X.values[0], sizeof X.values[0], elapsed(X.watch), !X.watch->running);
+        X.digits = ink_ui_line(screen, X.values[0], INK_FONT_NUMBER, INK_WEIGHT_REGULAR, INK_MARGIN, y, w); y += INK_LINE_NUMBER + INK_GAP;
+        const char *labels[] = {X.watch->running ? TR("暂停") : X.watch->elapsed ? TR("继续") : TR("开始"), TR("计次"), TR("清零")};
+        const char *caps[] = {X.watch->running ? "clock.stopwatch_pause" : "clock.stopwatch_start", "clock.stopwatch_lap", "clock.stopwatch_reset"};
+        _Static_assert(sizeof labels / sizeof *labels == EXTRA_ROWS && sizeof caps / sizeof *caps == EXTRA_ROWS, "stopwatch controls fit");
+        for (int i = 0; i < EXTRA_ROWS; i++) extra_button(screen, labels[i], caps[i], NULL, i != 1 || (X.watch->running && X.total < LAPS_MAX), INK_MARGIN + i * (w + INK_GAP_M) / EXTRA_ROWS, y, (w - 2 * INK_GAP_M) / EXTRA_ROWS, INK_CONTROL, i == 0);
+        y += INK_CONTROL + INK_GAP;
+        if (X.watch->running) X.tick = lv_timer_create(stopwatch_tick, 1000, NULL);
+    }
+    if (X.world && !X.db) { ink_ui_notice(screen, TR("没能读取城市，请返回重试"), y); return; }
+    if (X.page * EXTRA_ROWS >= X.total) X.page = X.total ? (X.total - 1) / EXTRA_ROWS : 0;
+    X.fields[0] = (ink_ui_field_spec_t){.id = "elapsed", .role = "text", .label = X.world ? TR("世界时钟") : TR("秒表"), .value = X.world ? "" : X.values[0]};
+    for (unsigned i = 0, at = X.page * EXTRA_ROWS; i < EXTRA_ROWS && at + i < X.total; i++) {
+        int height = X.world ? INK_DIGIT : INK_CIRCLE_SMALL;
+        lv_obj_t *row = ink_ui_card(screen, INK_MARGIN, y + (int)i * (height + INK_GAP_M), w, height, INK_SURFACE_WHITE);
+        if (!X.world) { lv_obj_set_style_radius(row, 0, 0); lv_obj_set_style_border_width(row, 0, 0); }
+        const char *label; char args[32];
+        if (X.world) {
+            int z = city_at(at + i); X.zones[i] = z; label = TR(ink_time_zone_city(z));
+            snprintf(X.ids[i + 1], sizeof X.ids[i + 1], "%s", ink_time_zone_name(z)); world_text(z, X.values[i + 1], sizeof X.values[i + 1]);
+            snprintf(args, sizeof args, "{\"zone\":%d}", z);
+            bool selected = ink_db_get(X.db, (uint32_t)z + 1, NULL, NULL, 0) == 0;
+            extra_button(row, X.picking ? selected ? TR("已选择") : TR("加入") : TR("删除"), X.picking ? "clock.world_add" : "clock.world_remove", args,
+                !X.picking || (!selected && ink_db_count(X.db) < 6), w - INK_DIGIT - INK_GAP_M, INK_GAP_M, INK_DIGIT, INK_CIRCLE_SMALL, false);
+        } else {
+            snprintf(X.ids[i + 1], sizeof X.ids[i + 1], TR("第 %u 次"), at + i + 1); label = X.ids[i + 1];
+            duration(X.values[i + 1], sizeof X.values[i + 1], X.watch->laps[at + i], true);
+        }
+        X.fields[i + 1] = (ink_ui_field_spec_t){.id = X.ids[i + 1], .label = label, .role = "listitem", .value = X.values[i + 1]};
+        ink_ui_line(row, label, X.world ? INK_FONT_LIST : INK_FONT_NOTE, INK_WEIGHT_MEDIUM, INK_GAP_M, INK_GAP_M, X.world ? w - INK_DIGIT - 3 * INK_GAP_M : INK_PRIMARY);
+        X.times[i] = ink_ui_line(row, X.values[i + 1], INK_FONT_NOTE, INK_WEIGHT_REGULAR, X.world ? INK_GAP_M : INK_PRIMARY + INK_GAP_M, X.world ? INK_CIRCLE_SMALL + 2 * INK_GAP_M : INK_GAP_M, w - (X.world ? 2 * INK_GAP_M : INK_PRIMARY + 2 * INK_GAP_M)); X.visible++;
+    }
+    X.model.field_count = X.visible + 1;
+    int bottom = INK_CANVAS_H - INK_MARGIN - INK_CONTROL;
+    extra_button(screen, TR("上一页"), "clock.extra_prev", NULL, X.page > 0, INK_MARGIN, bottom - INK_CONTROL - INK_GAP, (w - INK_GAP) / 2, INK_CONTROL, false);
+    extra_button(screen, TR("下一页"), "clock.extra_next", NULL, (X.page + 1) * EXTRA_ROWS < X.total, INK_MARGIN + (w + INK_GAP) / 2, bottom - INK_CONTROL - INK_GAP, (w - INK_GAP) / 2, INK_CONTROL, false);
+    if (X.world) { ink_ui_notice(screen, TR("最多选6个城市"), bottom - 2 * (INK_CONTROL + INK_GAP)); extra_button(screen, X.picking ? TR("选好了") : TR("加城市"), "clock.world_pick", NULL, true, INK_MARGIN, bottom, w, INK_CONTROL, true); }
+    else ink_ui_notice(screen, TR("重新启动后秒表会清零"), bottom);
+    if (!X.total) ink_ui_notice(screen, X.world ? TR("还没有城市，点下面加一个") : TR("最多计次99条"), y);
+}
+static void extra_destroy(void) {
+    if (X.tick) lv_timer_delete(X.tick);
+    X.tick = NULL; X.digits = NULL; ink_db_close(X.db); X.db = NULL; X.visible = 0;
+}
+static int extra_snapshot(char *out, size_t cap) {
+    int n = ink_ui_semantics_snapshot(&X.model, out, cap); if (n < 0) return n;
+    int k = snprintf(out + n - 1, cap - (size_t)n + 1, ",\"page_number\":%u,\"total\":%u,\"picking\":%s,\"elapsed_ms\":%llu,\"running\":%s}", X.page + 1, X.total,
+        X.world && X.picking ? "true" : "false", (unsigned long long)(!X.world && X.watch ? elapsed(X.watch) / 1000 : 0), !X.world && X.watch && X.watch->running ? "true" : "false");
+    return k < 0 || (size_t)k >= cap - (size_t)n + 1 ? -1 : n - 1 + k;
+}
+static void extra_change(ink_call_t *c) {
+    const char *id = c->cap->id;
+    if (!strcmp(id, "clock.stopwatch") || !strcmp(id, "clock.world")) {
+        X.page = 0; X.picking = false; bool world = !strcmp(id, "clock.world"); ink_ui_push(&EXTRAS[world], (void *)(intptr_t)world); return;
+    }
+    if (!extra_current()) { c->rc.status = INK_RC_STALE; return; }
+    if (!strcmp(id, "clock.extra_prev")) { if (X.page) X.page--; }
+    else if (!strcmp(id, "clock.extra_next")) { if ((X.page + 1) * EXTRA_ROWS < X.total) X.page++; }
+    else if (!strcmp(id, "clock.world_pick")) { X.picking = !X.picking; X.page = 0; }
+    else if (X.world) {
+        int64_t z = 0; ink_args_get_int(&c->args, "zone", &z); char json[32]; snprintf(json, sizeof json, "{\"zone\":%d}", (int)z);
+        ink_db_write_t w = {.id = (uint32_t)z + 1, .sort = z, .data = json, .len = strlen(json), .src = c->src};
+        if (!X.db || (!strcmp(id, "clock.world_add") ? ink_db_put(X.db, &w, NULL) : ink_db_del(X.db, w.id, c->src))) { c->rc.status = INK_RC_FAILED; return; }
+    } else {
+        stopwatch_t *s = my_watch(); if (!s) { c->rc.status = INK_RC_FAILED; return; }
+        uint64_t us = elapsed(s);
+        if (!strcmp(id, "clock.stopwatch_start")) { if (!s->running) { s->since = osal_now_us(); s->running = true; } }
+        else if (!strcmp(id, "clock.stopwatch_pause")) { s->elapsed = us; s->running = false; }
+        else if (!strcmp(id, "clock.stopwatch_lap")) { if (s->running && s->count < LAPS_MAX) s->laps[s->count++] = us; else { c->rc.status = INK_RC_REJECTED; return; } }
+        else { s->elapsed = 0; s->since = 0; s->running = false; s->count = 0; X.page = 0; }
+    }
+    ink_ui_redraw();
+}
+static const ink_activity_t EXTRAS[2] = {
+    {.name = "ClockStopwatch", .app = "clock", .create = extra_create, .destroy = extra_destroy, .snapshot = extra_snapshot},
+    {.name = "ClockWorld", .app = "clock", .create = extra_create, .destroy = extra_destroy, .snapshot = extra_snapshot}};
 static void navigate(ink_call_t *c) {
     if (!strcmp(c->cap->id, "clock.prev") || !strcmp(c->cap->id, "clock.next")) { if (C.list) ink_ui_list_turn(C.list, !strcmp(c->cap->id, "clock.next") ? 1 : -1); return; }
     C.draft = (ink_alarm_t){.kind = INK_ALARM, .hour = 7, .enabled = true};
@@ -319,6 +481,17 @@ static void save(ink_call_t *c) {
     else { snprintf(C.error, sizeof C.error, "%s", c->rc.status == INK_RC_INVALID ? "名称最多15个字，请缩短后保存" : "没能保存，请重试"); ink_ui_redraw(); }
 }
 static const ink_cap_t CAPS[] = {
+    {.id = "clock.stopwatch", .title = TR_NOOP("秒表"), .effect = INK_FX_NAVIGATE, .child_ok = true, .run = extra_change},
+    {.id = "clock.world", .title = TR_NOOP("世界时钟"), .effect = INK_FX_NAVIGATE, .child_ok = true, .run = extra_change},
+    {.id = "clock.stopwatch_start", .title = TR_NOOP("开始"), .activity = "ClockStopwatch", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = extra_change},
+    {.id = "clock.stopwatch_pause", .title = TR_NOOP("暂停"), .activity = "ClockStopwatch", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = extra_change},
+    {.id = "clock.stopwatch_lap", .title = TR_NOOP("计次"), .activity = "ClockStopwatch", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = extra_change},
+    {.id = "clock.stopwatch_reset", .title = TR_NOOP("清零"), .activity = "ClockStopwatch", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = extra_change},
+    {.id = "clock.world_pick", .title = TR_NOOP("加城市"), .activity = "ClockWorld", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = extra_change},
+    {.id = "clock.world_add", .title = TR_NOOP("加城市"), .activity = "ClockWorld", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .input = "{\"type\":\"object\",\"properties\":{\"zone\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":8}},\"required\":[\"zone\"]}", .run = extra_change},
+    {.id = "clock.world_remove", .title = TR_NOOP("删除"), .activity = "ClockWorld", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .input = "{\"type\":\"object\",\"properties\":{\"zone\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":8}},\"required\":[\"zone\"]}", .run = extra_change},
+    {.id = "clock.extra_prev", .title = TR_NOOP("上一页"), .effect = INK_FX_NAVIGATE, .child_ok = true, .run = extra_change},
+    {.id = "clock.extra_next", .title = TR_NOOP("下一页"), .effect = INK_FX_NAVIGATE, .child_ok = true, .run = extra_change},
     {.id = "clock.timer_dismiss", .title = "关闭计时响铃", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .while_locked = true, .exec = INK_EXEC_DIRECT, .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":7}},\"required\":[\"id\"]}", .run = timer_dismiss},
     {.id = "clock.timer", .title = "计时", .activity = "Clock", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = timer_open},
     {.id = "clock.timer_set", .title = "设定计时时长", .activity = "ClockTimer", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .input = "{\"type\":\"object\",\"properties\":{\"seconds\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":86400}},\"required\":[\"seconds\"]}", .run = timer_change},
@@ -344,6 +517,6 @@ static void changed(void *ctx, int h, const char *id) {
     }
 }
 int ink_clock_init(void) {
-    return ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_state_watch("alarm.revision", changed, NULL, INK_EXEC_UI) ? -1 : 0;
+    return ink_db_register(&WORLD) || ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_cap_subscribe("time.changed", extra_time_changed, NULL, INK_EXEC_UI) || ink_state_watch("time.", extra_changed, NULL, INK_EXEC_UI) || ink_state_watch("alarm.revision", changed, NULL, INK_EXEC_UI) ? -1 : 0;
 }
 const ink_app_def_t ink_appdef_clock = {.id = "clock", .title = "时钟", .entry = &CLOCK, .system_app = true, .child_ok = true};

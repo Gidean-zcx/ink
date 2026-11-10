@@ -7,7 +7,7 @@ python3 tools/capabilities.py
 python3 tools/capabilities.py --check
 ```
 
-当前共 413 项：可调用能力 378、事件 35；设置 28 项、状态 49 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
+当前共 424 项：可调用能力 389、事件 35；设置 28 项、状态 49 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
 
 风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。
 
@@ -81,18 +81,29 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `clipboard.read` | 读剪贴板（用户在设置里打开才行） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s32](#s32) | [system/services/text/text_caps.c](../../system/services/text/text_caps.c) |
 | `clipboard.write` | 写剪贴板 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s32](#s32) | [system/services/text/text_caps.c](../../system/services/text/text_caps.c) |
 | `clock.draft` | 选择闹钟的时间、重复日期和开关 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 ClockAlarm | [s05](#s05) | [system/apps/clock/clock.c](../../system/apps/clock/clock.c) |
+| `clock.extra_next` | 下一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s05](#s05) | [system/apps/clock/clock.c](../../system/apps/clock/clock.c) |
+| `clock.extra_prev` | 上一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s05](#s05) | [system/apps/clock/clock.c](../../system/apps/clock/clock.c) |
 | `clock.focus` | 输入闹钟名称 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 ClockAlarm | [s05](#s05) | [system/apps/clock/clock.c](../../system/apps/clock/clock.c) |
 | `clock.new` | 加闹钟 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Clock | [s05](#s05) | [system/apps/clock/clock.c](../../system/apps/clock/clock.c) |
 | `clock.next` | 闹钟下一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Clock | [s05](#s05) | [system/apps/clock/clock.c](../../system/apps/clock/clock.c) |
 | `clock.open` | 查看闹钟 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Clock | [s05](#s05) | [system/apps/clock/clock.c](../../system/apps/clock/clock.c) |
 | `clock.prev` | 闹钟上一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Clock | [s05](#s05) | [system/apps/clock/clock.c](../../system/apps/clock/clock.c) |
 | `clock.save` | 保存闹钟 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单）；页面 ClockAlarm | [s05](#s05) | [system/apps/clock/clock.c](../../system/apps/clock/clock.c) |
+| `clock.stopwatch` | 秒表 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s05](#s05) | [system/apps/clock/clock.c](../../system/apps/clock/clock.c) |
+| `clock.stopwatch_lap` | 计次 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单）；页面 ClockStopwatch | [s05](#s05) | [system/apps/clock/clock.c](../../system/apps/clock/clock.c) |
+| `clock.stopwatch_pause` | 暂停 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单）；页面 ClockStopwatch | [s05](#s05) | [system/apps/clock/clock.c](../../system/apps/clock/clock.c) |
+| `clock.stopwatch_reset` | 清零 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单）；页面 ClockStopwatch | [s05](#s05) | [system/apps/clock/clock.c](../../system/apps/clock/clock.c) |
+| `clock.stopwatch_start` | 开始 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单）；页面 ClockStopwatch | [s05](#s05) | [system/apps/clock/clock.c](../../system/apps/clock/clock.c) |
 | `clock.timer` | 计时 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Clock | [s05](#s05) | [system/apps/clock/clock.c](../../system/apps/clock/clock.c) |
 | `clock.timer_cancel` | 取消计时 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单）；页面 ClockTimer | [s05](#s05) | [system/apps/clock/clock.c](../../system/apps/clock/clock.c) |
 | `clock.timer_dismiss` | 关闭计时响铃 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单）；锁定时仅人工入口 | [s05](#s05) | [system/apps/clock/clock.c](../../system/apps/clock/clock.c) |
 | `clock.timer_pause` | 暂停计时 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单）；页面 ClockTimer | [s05](#s05) | [system/apps/clock/clock.c](../../system/apps/clock/clock.c) |
 | `clock.timer_set` | 设定计时时长 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单）；页面 ClockTimer | [s05](#s05) | [system/apps/clock/clock.c](../../system/apps/clock/clock.c) |
 | `clock.timer_start` | 开始或继续计时 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单）；页面 ClockTimer | [s05](#s05) | [system/apps/clock/clock.c](../../system/apps/clock/clock.c) |
+| `clock.world` | 世界时钟 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s05](#s05) | [system/apps/clock/clock.c](../../system/apps/clock/clock.c) |
+| `clock.world_add` | 加城市 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单）；页面 ClockWorld | [s05](#s05) | [system/apps/clock/clock.c](../../system/apps/clock/clock.c) |
+| `clock.world_pick` | 加城市 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 ClockWorld | [s05](#s05) | [system/apps/clock/clock.c](../../system/apps/clock/clock.c) |
+| `clock.world_remove` | 删除 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单）；页面 ClockWorld | [s05](#s05) | [system/apps/clock/clock.c](../../system/apps/clock/clock.c) |
 | `confirm.accept` | 确认（只有人在设备上能按） | 仅人（设备） | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s15](#s15) | [system/policy/confirm.c](../../system/policy/confirm.c) |
 | `confirm.list` | 有什么在等人确认 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s15](#s15) | [system/policy/confirm.c](../../system/policy/confirm.c) |
 | `confirm.page` | 翻阅确认说明（只由人在设备上操作） | 仅人（设备） | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s45](#s45) | [system/ui/shell/confirm_card.c](../../system/ui/shell/confirm_card.c) |
@@ -452,7 +463,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 状态：`alarm.revision`。
 
-事件：—。
+事件：`time.changed`。
 
 <a id="s06"></a>
 

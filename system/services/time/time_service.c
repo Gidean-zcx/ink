@@ -503,7 +503,7 @@ static void time_set_unlocked(int64_t utc_s, bool from_hub) {
     ink_state_set_bool(T.h_synced, from_hub);
     ink_probe_count("time.clock_moved");
     clock_moved();
-    if (!T.minute_at.armed) minute_cb(NULL);
+    minute_cb(NULL);
     ink_cap_emit("time.changed", NULL);
 }
 

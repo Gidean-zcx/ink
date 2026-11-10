@@ -379,7 +379,7 @@ set(INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/system/ui/shell/boot_flow.c ${CMAKE_SOU
   ${CMAKE_SOURCE_DIR}/system/ui/shell/settings_pages.c ${CMAKE_SOURCE_DIR}/system/ui/shell/time_settings.c
   ${CMAKE_SOURCE_DIR}/system/ui/shell/settings_family.c ${CMAKE_SOURCE_DIR}/system/services/time/time_service.c
   ${CMAKE_SOURCE_DIR}/system/apps/calendar/calendar.c ${CMAKE_SOURCE_DIR}/system/apps/files/files.c
-  ${CMAKE_SOURCE_DIR}/system/services/file/file_caps.c)
+  ${CMAKE_SOURCE_DIR}/system/services/file/file_caps.c ${CMAKE_SOURCE_DIR}/system/apps/clock/clock.c)
 add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h
   COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/i18n/i18n_gen.py ${INK_I18N_TABLES}
           --header ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h --sources ${INK_I18N_SOURCES}
@@ -1340,6 +1340,10 @@ target_link_libraries(sim-contacts PRIVATE ink_apps ink_system)
 add_test(NAME contacts COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/contacts/run.py
   $<TARGET_FILE:sim-contacts> ${CMAKE_SOURCE_DIR} ${INK_ASSETS_DIR} ${INK_TEST_CONTENT} ${CMAKE_BINARY_DIR}/test-out/contacts)
 ink_sim_executable(sim-clock-alarm tests/clock_alarm.c)
+ink_sim_executable(sim-clock-extras tests/clock_extras.c)
+target_link_libraries(sim-clock-extras PRIVATE ink_apps ink_system)
+add_test(NAME clock-extras COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/clock_extras.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(clock-extras PROPERTIES TIMEOUT 240)
 target_link_libraries(sim-clock-alarm PRIVATE ink_apps ink_system)
 add_test(NAME clock-alarm COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/clock_alarm.py --build ${CMAKE_BINARY_DIR})
 ink_sim_executable(sim-sound-clock tests/sound_clock.c)
