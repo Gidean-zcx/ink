@@ -237,7 +237,13 @@ static void family_state(void *arg) {
     ink_db_t *db = ink_db_open(ink_db_find_def("member.table"), NULL);
     void *data = NULL; size_t len = 0;
     if (!load) {
-        CHECK(db && ink_db_export(db, &data, &len)==0,"export synthetic family binding independently of backup");
+        /* Export takes only durable, idle state: wait for the member writes before it, retry past a compaction. */
+        int exported = -1;
+        for (int i = 0; db && exported && i < 50; i++) {
+            ink_db_wait(db, ink_db_last_ver(db), 1000000);
+            if ((exported = ink_db_export(db, &data, &len)) != 0) osal_task_delay_us(100000);
+        }
+        CHECK(db && exported==0,"export synthetic family binding independently of backup");
         hal_file_t *f = hal_fs_open(family_fixture, HAL_O_WRITE|HAL_O_CREATE|HAL_O_TRUNC);
         CHECK(f && hal_fs_write(f,data,len)==(ssize_t)len && hal_fs_sync(f)==0,"save test-only reprovisioning fixture outside member backup");
         if(f) CHECK(hal_fs_close(f)==0,"family fixture closed");
