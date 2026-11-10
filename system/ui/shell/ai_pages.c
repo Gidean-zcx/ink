@@ -7,6 +7,7 @@
 #include "ink/sys/data.h"
 #include "ink/sys/json.h"
 #include "ink/sys/members.h"
+#include "ink/sys/settings.h"
 #include "ink/sys/time.h"
 #include "ink/sys/ui_list.h"
 #include "ink/ui_shell.h"
@@ -37,10 +38,12 @@ const ink_ui_overlay_t *ink_ai_pages_status(ink_ai_error_t error, lv_obj_t *pare
         error == INK_AI_ERROR_TIMEOUT ? 1 : error == INK_AI_ERROR_BUDGET ? 2 : -1;
     if (kind < 0) return NULL;
     E.kind = kind;
-    const char *detail = kind == 0 ? (lost ? "网络断了，回答没收全，不会自动重试。" : "连不上家庭服务器。") : kind == 1 ? "没有收到结果，不会自动重试。" :
+    bool plane = kind == 0 && ink_setting_get("net.airplane"); /* the way out is the switch, not trying again */
+    const char *title = plane ? "飞行模式已打开" : TITLES[kind];
+    const char *detail = plane ? "关闭飞行模式后再问。书还能继续读。" : kind == 0 ? (lost ? "网络断了，回答没收全，不会自动重试。" : "连不上家庭服务器。") : kind == 1 ? "没有收到结果，不会自动重试。" :
         ink_member_current()->role == INK_ROLE_CHILD ? "可以问爸爸妈妈。书还能继续读。" : "明天恢复，也可以在手机上加。书还能继续读。";
     int w = INK_CANVAS_W - 2 * INK_MARGIN, y = INK_GAP_L + INK_CONTROL + INK_GAP_XXL;
-    int title_h = ink_ui_text_height(TITLES[kind], INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, w);
+    int title_h = ink_ui_text_height(title, INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, w);
     int detail_h = ink_ui_text_height(detail, INK_FONT_NOTE, INK_WEIGHT_REGULAR, w);
     int h = y + title_h + INK_GAP_S + detail_h + INK_GAP_XXL + INK_PRIMARY + INK_MARGIN;
     lv_obj_set_y(parent, ink_ui_px(INK_CANVAS_H - h));
@@ -52,20 +55,22 @@ const ink_ui_overlay_t *ink_ai_pages_status(ink_ai_error_t error, lv_obj_t *pare
     ink_ui_circle(E.root, "ai", INK_MARGIN, INK_GAP_L, INK_CIRCLE_SMALL, INK_ICON_MEDIUM, INK_SURFACE_BLACK, NULL, NULL);
     lv_obj_t *b = ink_ui_circle(E.root, "close", INK_CANVAS_W - INK_MARGIN - INK_CONTROL, INK_GAP_L, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_WHITE, NULL, NULL);
     ink_shell_bind(b, "ai.pages.close", NULL);
-    ink_ui_label(E.root, TITLES[kind], INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, INK_MARGIN, y, w);
+    ink_ui_label(E.root, title, INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, INK_MARGIN, y, w);
     ink_ui_label(E.root, detail, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y + title_h + INK_GAP_S, w);
     int primary_x = INK_MARGIN, primary_w = w;
     if (kind < 2) {
         primary_w = (w - INK_GAP) / 2; primary_x += primary_w + INK_GAP;
-        error_actions[1].label = kind ? "再说一次" : "再试一次";
+        error_actions[1].label = plane ? "关闭飞行模式" : kind ? "再说一次" : "再试一次";
+        error_actions[1].capability = plane ? "net.set_airplane" : "ai.pages.retry";
+        error_actions[1].args_json = plane ? "{\"enabled\":false}" : NULL;
         b = ink_ui_pill(E.root, error_actions[1].label, INK_MARGIN, h - INK_MARGIN - INK_PRIMARY, primary_w, INK_PRIMARY, false, NULL, NULL);
-        ink_shell_bind(b, "ai.pages.retry", NULL);
+        ink_shell_bind(b, error_actions[1].capability, error_actions[1].args_json);
     }
     b = ink_ui_pill(E.root, "继续读", primary_x, h - INK_MARGIN - INK_PRIMARY, primary_w, INK_PRIMARY, true, NULL, NULL);
     ink_shell_bind(b, "ai.pages.close", NULL);
-    error_fields[0] = (ink_ui_field_spec_t){.id = "status", .role = "status", .label = "状态", .value = TITLES[kind]};
+    error_fields[0] = (ink_ui_field_spec_t){.id = "status", .role = "status", .label = "状态", .value = title};
     error_fields[1] = (ink_ui_field_spec_t){.id = "detail", .role = "text", .label = "说明", .value = detail};
-    E.page = (ink_ui_page_spec_t){.id = ERROR_OVERLAYS[kind].name, .title = TITLES[kind], .object = {"ai:error", 1},
+    E.page = (ink_ui_page_spec_t){.id = ERROR_OVERLAYS[kind].name, .title = title, .object = {"ai:error", 1},
         .fields = error_fields, .field_count = 2, .actions = error_actions, .action_count = kind == 2 ? 1 : 2};
     ink_ui_content_changed(); ink_ui_hint_obj(parent, INK_REFRESH_FLASH_UI);
     return &ERROR_OVERLAYS[kind];

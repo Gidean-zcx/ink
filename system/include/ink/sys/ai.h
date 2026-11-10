@@ -30,6 +30,9 @@ void ink_ai_key(bool pressed, uint64_t t_us);
 void ink_ai_ask_text(const char *text);
 /** UI task: stop this turn's speech, including later frames; keep its text. */
 void ink_ai_stop_speech(void);
+/** Any task: the device's own words end the current turn on the sheet, e.g. a receipt when the link is about to go;
+ *  what the hub sends after that adds to them, a failure of the link no longer replaces them. */
+void ink_ai_note(const char *text);
 /** UI task: close the sheet if open; returns true if it was open. */
 bool ink_ai_dismiss(void);
 

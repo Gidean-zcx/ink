@@ -111,7 +111,7 @@ static bool turn_allowed(void) { /* under AI.lock */
 typedef struct {
     ink_exec_job_t job;
     int req_id;
-    int kind; /* 0 delta, 1 done, 2 error, 3 stt, 4 the answer's speech could not play */
+    int kind; /* 0 delta, 1 done, 2 error, 3 stt, 4 the answer's speech could not play, 5 ink_ai_note */
     int status;
     char text[];
 } ai_post_t;
@@ -225,8 +225,8 @@ static void ui_apply(void *arg) { /* UI task */
     bool allowed = turn_allowed();
     osal_mutex_unlock(AI.lock);
     if (!allowed) dismiss_revoked_turn();
-    bool match = (p->kind == 0 || p->kind == 3) ? p->req_id == AI.req_id : p->req_id == AI.seq;
-    if (!AI.open || !match) {
+    bool match = p->kind == 5 || ((p->kind == 0 || p->kind == 3) ? p->req_id == AI.req_id : p->req_id == AI.seq);
+    if (!AI.open || !match || (p->kind == 2 && AI.turn_over)) { /* what the sheet says stands */
         osal_free(p);
         return;
     }
@@ -236,7 +236,7 @@ static void ui_apply(void *arg) { /* UI task */
         lv_label_set_text(AI.question, q);
         ink_ui_hint_obj(AI.question, INK_REFRESH_FAST);
         ink_ui_cause(AI.t_release, "ai.release_to_question_visible_ms");
-    } else if (p->kind == 0) {
+    } else if (p->kind == 0 || p->kind == 5) {
         size_t n = strlen(p->text), room = ANSWER_CAP - sizeof INK_AI_ANSWER_CUT - AI.answer_len;
         if (!AI.answer_cut && n > room) { /* cut at a whole character and say so */
             while (room && ((unsigned char)p->text[room] & 0xC0) == 0x80) room--;
@@ -255,6 +255,10 @@ static void ui_apply(void *arg) { /* UI task */
             AI.first_text_seen = true;
             set_status(AI.speech_failed ? "声音没能播放，文字回答在上面" : "回答中");
             ink_ui_cause(AI.t_release, "ai.release_to_first_text_visible_ms");
+        }
+        if (p->kind == 5) {
+            turn_over();
+            set_status("回答完成 · 按 AI 键继续问，按 HOME 关闭");
         }
     } else if (p->kind == 4) { /* this turn's speech failed; the text remains available */
         AI.speech_failed = true;
@@ -294,6 +298,8 @@ static void post(int req_id, int kind, int status, const char *text) {
     memcpy(p->text, text ? text : "", n + 1);
     ink_exec_post(INK_EXEC_UI, &p->job, ui_apply, p);
 }
+
+void ink_ai_note(const char *text) { post(0, 5, 0, text); }
 
 static void on_notify(void *ctx, const char *method, const ink_json_t *j, int params) { /* hub task */
     (void)ctx;
@@ -506,6 +512,12 @@ static int request(const char *method, bool voice) {
     snprintf(member, sizeof member, "%s", g_turn_member);
     uint32_t epoch = g_turn_epoch;
     osal_mutex_unlock(AI.lock);
+    int64_t online = 0;
+    ink_state_get_int(ink_state_find("net.online"), &online);
+    if (ink_setting_get("net.airplane") && !online) { /* nothing reaches the hub: said at once, with the way out */
+        post(AI.seq, 2, INK_HUB_ERR_OFFLINE, NULL);
+        return -1;
+    }
     const char *prev = osal_mem_tag("ai");
     size_t ids_cap = 3;
     for (int i = 0; ink_cap_at(i); i++) ids_cap += strlen(ink_cap_at(i)->id) * 6 + 3;

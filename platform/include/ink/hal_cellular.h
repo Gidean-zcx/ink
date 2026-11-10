@@ -38,6 +38,9 @@ typedef struct {
 bool hal_cell_status(hal_cell_status_t *out);
 /** Use another card, without restarting the modem. 0, 1 (switched but not registered in time), < 0 failed. */
 int hal_cell_select_sim(hal_cell_slot_t slot, uint32_t reg_timeout_ms);
+/** Airplane mode: the radio off (no service, no calls, no messages) or on again, waiting up to reg_timeout_ms for the
+ *  card to register. 0, 1 (on but not registered in time), < 0 failed. Task context, seconds. */
+int hal_cell_radio(bool on, uint32_t reg_timeout_ms);
 /** Send a text message (UTF-8). 0, or < 0 (no service, refused, timed out). Task context, seconds. */
 int hal_cell_sms_send(const char *number, const char *utf8, uint32_t timeout_ms);
 /** Read a waiting message and remove it from the modem's store. Text length, or < 0. */

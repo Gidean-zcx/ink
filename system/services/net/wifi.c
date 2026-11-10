@@ -16,6 +16,7 @@
 #include "ink/sys/json.h"
 #include "ink/sys/net.h"
 #include "ink/sys/power.h"
+#include "ink/sys/settings.h"
 #include "ink/sys/state.h"
 #include "ink/sys/svc.h"
 
@@ -34,6 +35,13 @@ static struct {
 static void fail(ink_call_t *c, ink_rc_t st, const char *why) {
     c->rc.status = st;
     snprintf(c->rc.detail, sizeof c->rc.detail, "%s", why);
+}
+
+static bool wifi_off(ink_call_t *c) { /* the switch (wifi.enabled), also turned off by airplane mode */
+    if (ink_setting_get("wifi.enabled")) return false;
+    fail(c, INK_RC_REJECTED, "Wi-Fi is off");
+    snprintf(c->rc.say, sizeof c->rc.say, "Wi-Fi 已关闭，先打开 Wi-Fi");
+    return true;
 }
 
 static uint32_t ssid_id(const char *ssid) {
@@ -78,6 +86,7 @@ int ink_wifi_wait_saved(uint32_t revision) {
 }
 
 static void cap_scan(ink_call_t *c) { /* exec.bg */
+    if (wifi_off(c)) return;
     hal_wifi_ap_t *ap = osal_malloc(sizeof *ap * MAX_SEEN, OSAL_MEM_EXTERNAL);
     char *out = osal_malloc(1536, OSAL_MEM_EXTERNAL);
     if (!ap || !out) fail(c, INK_RC_FAILED, "out of memory");
@@ -132,6 +141,7 @@ static void cap_list(ink_call_t *c) { /* exec.bg: names only */
 }
 
 static void cap_connect(ink_call_t *c) { /* exec.bg */
+    if (wifi_off(c)) return;
     hal_wifi_known_t *k = osal_calloc(1, sizeof *k, OSAL_MEM_EXTERNAL);
     if (!k) {
         fail(c, INK_RC_FAILED, "out of memory");

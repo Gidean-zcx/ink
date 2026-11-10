@@ -179,6 +179,8 @@ static void wake_conns(void) {
  *  - AT+ECSIMCFG=SimSlot,n changes the slot setting, which the modem keeps across reboots (kept
  *    next to --flash-image). The card in use follows the setting when the radio next comes on
  *    (AT+CFUN=1, end of AT+ECRST): ASSUMPTION, upstream only sets the slot with the radio off.
+ *  - AT+CFUN=4 (airplane mode, 3GPP TS 27.007 §8.2: transmit and receive circuits off, the card stays
+ *    powered) drops the registration and any call like AT+CFUN=0; AT+CFUN? then answers 4.
  *  - AT+CFUN=0 drops the registration; after AT+CFUN=1 the card in use registers CELL_REG_MS later
  *    if it is there. AT+ECRST answers OK, then the modem is deaf for CELL_RESET_MS and comes back
  *    with the radio on.
@@ -199,6 +201,7 @@ static struct {
     int selected;              /* slot setting (AT+ECSIMCFG) */
     int active;                /* slot whose card the radio uses: `selected` at the last radio-on */
     bool radio;                /* AT+CFUN=1 */
+    bool airplane;             /* off by AT+CFUN=4, not AT+CFUN=0 */
     bool present[2], sms[2], voice[2];
     bool registered;
     uint64_t deaf_until;       /* rebooting after AT+ECRST, or held down (VTK_TIME_INF) */
@@ -466,6 +469,7 @@ static void cell_radio(bool on, uint64_t at) { /* ISR or locked */
     if (CELL.reg_ev) vtk_event_cancel(CELL.reg_ev);
     CELL.reg_ev = 0;
     CELL.radio = on;
+    CELL.airplane = false;
     CELL.registered = false;
     if (on) {
         CELL.active = CELL.selected;
@@ -693,7 +697,7 @@ static hal_at_result_t at_run(const char *cmd, const char *payload, char *resp, 
     if (resp && resp_cap) resp[0] = 0;
     if (!g_profile.lte.present) return HAL_AT_NO_MODEM;
     enum { K_AT, K_CFUN_Q, K_CFUN0, K_CFUN1, K_SLOT_Q, K_SLOT_SET, K_CPIN, K_CEREG, K_RST, K_CMGF, K_CSCS, K_CNMI, K_CMGS, K_CMGR,
-           K_CMGD, K_ATD, K_ATA, K_CHUP, K_CLCC, K_CMUT, K_CMUT_Q, K_VTS, K_BAD } k = K_BAD;
+           K_CMGD, K_ATD, K_ATA, K_CHUP, K_CLCC, K_CMUT, K_CMUT_Q, K_VTS, K_CFUN4, K_BAD } k = K_BAD;
     unsigned lat_ms = CELL_AT_MS;
     int slot = -1, idx = -1;
     char arg[100] = "";
@@ -701,6 +705,7 @@ static hal_at_result_t at_run(const char *cmd, const char *payload, char *resp, 
     else if (!strcmp(cmd, "AT+CFUN?")) k = K_CFUN_Q;
     else if (!strcmp(cmd, "AT+CFUN=0")) k = K_CFUN0, lat_ms = CELL_CFUN0_MS;
     else if (!strcmp(cmd, "AT+CFUN=1")) k = K_CFUN1, lat_ms = CELL_CFUN1_MS;
+    else if (!strcmp(cmd, "AT+CFUN=4")) k = K_CFUN4, lat_ms = CELL_CFUN0_MS;
     else if (!strcmp(cmd, "AT+ECSIMCFG?")) k = K_SLOT_Q;
     else if (sscanf(cmd, "AT+ECSIMCFG=SimSlot,%d", &slot) == 1 || sscanf(cmd, "AT+ECSIMCFG=\"SimSlot\",%d", &slot) == 1)
         k = K_SLOT_SET, lat_ms = CELL_SLOT_MS;
@@ -732,9 +737,11 @@ static hal_at_result_t at_run(const char *cmd, const char *payload, char *resp, 
     vtk_lock();
     switch (k) {
     case K_AT: break;
-    case K_CFUN_Q: snprintf(info, sizeof info, "+CFUN: %d", CELL.radio ? 1 : 0); break;
+    case K_CFUN_Q: snprintf(info, sizeof info, "+CFUN: %d", CELL.radio ? 1 : CELL.airplane ? 4 : 0); break;
     case K_CFUN0:
+    case K_CFUN4:
         cell_radio(false, vtk_now());
+        CELL.airplane = k == K_CFUN4;
         call_end();
         break;
     case K_CFUN1:
@@ -750,8 +757,8 @@ static hal_at_result_t at_run(const char *cmd, const char *payload, char *resp, 
             vtk_host_call(cell_save_on_host, NULL);
         }
         break;
-    case K_CPIN: /* the card is powered only with the radio on (ASSUMPTION) */
-        if (CELL.radio && CELL.present[CELL.active]) snprintf(info, sizeof info, "+CPIN: READY");
+    case K_CPIN: /* the card is powered only with the radio on or in airplane mode (ASSUMPTION) */
+        if ((CELL.radio || CELL.airplane) && CELL.present[CELL.active]) snprintf(info, sizeof info, "+CPIN: READY");
         else r = HAL_AT_ERROR;
         break;
     case K_CEREG: {
@@ -915,6 +922,7 @@ void sim_net_cell_state(sim_cell_state_t *out) { /* ISR */
     out->selected = CELL.selected;
     out->active = CELL.active;
     out->radio = CELL.radio;
+    out->airplane = CELL.airplane;
     for (int i = 0; i < 2; i++) {
         out->present[i] = CELL.present[i];
         out->sms[i] = CELL.sms[i];

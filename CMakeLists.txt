@@ -198,6 +198,7 @@ add_library(ink_system STATIC
   system/services/update/update_service.c
   system/ui/shell/update_card.c
   system/ui/shell/power_menu.c
+  system/ui/shell/airplane_card.c
   system/ui/shell/boot_flow.c
   system/ui/shell/factory_pages.c
   system/ui/shell/off_picture.c
@@ -1380,6 +1381,10 @@ ink_sim_executable(sim-bluetooth tests/bluetooth.c)
 target_link_libraries(sim-bluetooth PRIVATE ink_apps ink_system)
 add_test(NAME bluetooth-settings COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/bluetooth.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(bluetooth-settings PROPERTIES TIMEOUT 360)
+ink_sim_executable(sim-airplane-mode tests/airplane_mode.c)
+target_link_libraries(sim-airplane-mode PRIVATE ink_apps ink_system)
+add_test(NAME airplane-mode COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/airplane_mode.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(airplane-mode PROPERTIES TIMEOUT 600)
 foreach(case bt-ai ime-layout)
   string(REPLACE "-" "_" source ${case})
   ink_sim_executable(sim-audit9-${case} tests/audit9/${source}.c)

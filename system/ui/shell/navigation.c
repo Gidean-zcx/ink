@@ -180,6 +180,10 @@ static int64_t integer(const char *id) {
 static void state_text(const char *id, char *buf, size_t cap) {
     if (ink_state_get_str(ink_state_find(id), buf, cap) < 0 && cap) buf[0] = 0;
 }
+static const char *wifi_line(char *ssid, size_t cap) { /* the Wi-Fi network in use, or why there is none */
+    state_text("wifi.ssid", ssid, cap);
+    return !ink_setting_get("wifi.enabled") ? "Wi-Fi 已关闭" : ssid[0] ? ssid : "还没有连接 Wi-Fi";
+}
 
 static void binding_event(lv_event_t *e) {
     binding_t *b = lv_event_get_user_data(e);
@@ -265,11 +269,15 @@ lv_obj_t *ink_shell_statusbar(lv_obj_t *parent, bool show_time) {
     char net[32], mic[32];
     state_text("net.type", net, sizeof net);
     state_text("audio.mic", mic, sizeof mic);
-    ink_ui_icon(bar,
-                !strcmp(net, "wifi")     ? "wifi"
-                : !strcmp(net, "mobile") ? "signal"
-                                         : "wifioff",
-                INK_ICON_SMALL, INK_ICON_LINE, x, icon_y, false);
+    bool plane = ink_setting_get("net.airplane"), wifi = !strcmp(net, "wifi");
+    if (plane) ink_ui_icon(bar, "plane", INK_ICON_SMALL, INK_ICON_LINE, x, icon_y, false); /* Wi-Fi turned on again follows it */
+    if (plane && wifi) x += INK_ICON_LIST;
+    if (!plane || wifi)
+        ink_ui_icon(bar,
+                    wifi                     ? "wifi"
+                    : !strcmp(net, "lte")    ? "signal"
+                                             : "wifioff",
+                    INK_ICON_SMALL, INK_ICON_LINE, x, icon_y, false);
     if (integer("notify.unread"))
         ink_ui_icon(bar, "bell", INK_ICON_SMALL, INK_ICON_LINE, x + INK_ICON_LIST, icon_y, false);
     if (!strcmp(mic, "local"))
@@ -819,15 +827,15 @@ static int control_snapshot(char *buf, size_t cap) {
     if (child()) return kid_control_snapshot(buf, cap);
     char activity[512]; ink_activity_card_snapshot(activity, sizeof activity);
     char ssid[64];
-    state_text("wifi.ssid", ssid, sizeof ssid);
+    const char *net = wifi_line(ssid, sizeof ssid);
     int n = snprintf(buf, cap,
                      "Control；当前=%s；亮度=%lld；音量=%lld；勿扰=%lld；叫名字=%lld；更多=%d；通知=%d；网络=%s；",
                      ink_member_current()->name, (long long) ink_setting_get("display.light"),
                      (long long) ink_setting_get("audio.volume"), (long long) ink_setting_get("notify.dnd"),
-                     (long long) ink_setting_get("voice.handsfree"), N.more, ink_notify_unread(),
-                     ssid[0] ? ssid : "还没有连接 Wi-Fi");
+                     (long long) ink_setting_get("voice.handsfree"), N.more, ink_notify_unread(), net);
     if (N.more && n >= 0 && (size_t) n < cap)
-        n += snprintf(buf + n, cap - (size_t) n, "暖光=%lld；", (long long) ink_setting_get("display.warmth"));
+        n += snprintf(buf + n, cap - (size_t) n, "暖光=%lld；飞行模式=%lld（net.set_airplane）；", (long long) ink_setting_get("display.warmth"),
+                      (long long) ink_setting_get("net.airplane"));
     for (int i = 0; i < N.control_count && n >= 0 && (size_t) n < cap; i++)
         n += snprintf(buf + n, cap - (size_t) n, "通知[%u]=%s，%s；已读=%d；", (unsigned) N.control_items[i].id,
                       N.control_items[i].title, N.control_items[i].body, N.control_items[i].read);
@@ -952,10 +960,13 @@ static void draw_control(void) {
             ink_ui_slider(N.control, "暖光", (int) ink_setting_get("display.warmth") / 10, INK_MARGIN, y, width(),
                           slider_changed, (void *) "display.warmth");
             y += INK_SLIDER + INK_GAP_M;
+            bool plane = ink_setting_get("net.airplane");
+            ink_shell_bind(ink_ui_pill(N.control, "飞行模式", INK_MARGIN, y, w, INK_CONTROL, plane, NULL, NULL), "net.set_airplane",
+                           plane ? "{\"enabled\":false}" : "{\"enabled\":true}");
+            y += INK_CONTROL + INK_GAP_M;
         }
         char ssid[64];
-        state_text("wifi.ssid", ssid, sizeof ssid);
-        lv_obj_t *net = ink_ui_pill(N.control, ssid[0] ? ssid : "还没有连接 Wi-Fi", INK_MARGIN, y, width(), INK_CONTROL,
+        lv_obj_t *net = ink_ui_pill(N.control, wifi_line(ssid, sizeof ssid), INK_MARGIN, y, width(), INK_CONTROL,
                                     false, NULL, NULL);
         ink_shell_bind(net, "shell.network", NULL);
         y += INK_CONTROL + INK_GAP_L;
@@ -1090,7 +1101,7 @@ static void body_blocks(void) {
             char ssid[64];
             state_text("wifi.ssid", ssid, sizeof ssid);
             lv_obj_t *g = group(2);
-            group_row(g, "wifi", "网络和 SIM 卡", ssid[0] ? ssid : "还没有连接", 0, "shell.network");
+            group_row(g, "wifi", "网络和 SIM 卡", ink_setting_get("net.airplane") ? "飞行模式" : ssid[0] ? ssid : "还没有连接", 0, "shell.network");
             group_row(g, "bluetooth", "蓝牙", integer("bt.connected") ? "已连接" : "没有连接", 1, "shell.bluetooth");
         }
         F.y += 2 * INK_CONTROL + INK_GAP;
@@ -1224,6 +1235,19 @@ static void body_blocks(void) {
         }
         F.y += h;
     } else if (N.page_id == PAGE_NETWORK) {
+        if (block(2 * INK_CONTROL)) {
+            lv_obj_t *g = group(2);
+            const char *labels[] = {"飞行模式", "Wi-Fi"}, *icons[] = {"plane", "wifi"};
+            bool plane = ink_setting_get("net.airplane");
+            for (int i = 0; i < 2; i++) {
+                ink_ui_icon(g, icons[i], INK_ICON_LIST, INK_ICON_LINE, INK_GAP_L, i * INK_CONTROL + (INK_CONTROL - INK_ICON_LIST) / 2, false);
+                lv_obj_t *toggle = ink_ui_toggle(g, labels[i], i ? ink_setting_get("wifi.enabled") : plane, INK_ROW_DOUBLE, i * INK_CONTROL, width() - INK_ROW_DOUBLE - INK_GAP_L, NULL, NULL);
+                lv_obj_set_style_bg_opa(toggle, LV_OPA_TRANSP, 0);
+                if (i) bind_toggle(toggle, "wifi.enabled");
+                else ink_shell_bind(toggle, "net.set_airplane", plane ? "{\"enabled\":false}" : "{\"enabled\":true}");
+            }
+        }
+        F.y += 2 * INK_CONTROL + INK_GAP_L;
         const char *const about = "自动：有 Wi-Fi 用 Wi-Fi，没有就用 4G";
         int h = heading_h() + INK_SEGMENT + INK_GAP_M + notice_h(about);
         if (block(h)) {
@@ -1236,8 +1260,7 @@ static void body_blocks(void) {
         }
         F.y += h + INK_GAP_L;
         char ssid[64];
-        state_text("wifi.ssid", ssid, sizeof ssid);
-        const char *const connected = ssid[0] ? ssid : "还没有连接 Wi-Fi";
+        const char *const connected = wifi_line(ssid, sizeof ssid);
         h = heading_h() + notice_h(connected);
         if (block(h)) {
             heading("Wi-Fi");
@@ -1453,7 +1476,8 @@ static int page_snapshot(char *buf, size_t cap) {
     if (N.page_id == PAGE_NETWORK && n >= 0 && (size_t) n < cap) {
         char ssid[64];
         state_text("wifi.ssid", ssid, sizeof ssid);
-        n += snprintf(buf + n, cap - (size_t) n, "已连网络=%s；选中网络=%s；网络组=%d；SIM=%lld；4G在线=%lld；", ssid,
+        n += snprintf(buf + n, cap - (size_t) n, "飞行模式=%lld；Wi-Fi=%lld；已连网络=%s；选中网络=%s；网络组=%d；SIM=%lld；4G在线=%lld；",
+                      (long long) ink_setting_get("net.airplane"), (long long) ink_setting_get("wifi.enabled"), ssid,
                       N.picked_ssid, N.wifi_page + 1, (long long) ink_setting_get("cell.sim_slot"),
                       (long long) integer("cell.registered"));
         for (int i = N.wifi_page * 2; i < N.wifi_count && i < (N.wifi_page + 1) * 2 && n >= 0 && (size_t) n < cap; i++)
@@ -1465,7 +1489,7 @@ static int page_snapshot(char *buf, size_t cap) {
         }
     }
     const char *actions =
-        N.page_id == PAGE_NETWORK ? "动作：settings.set、wifi.scan、wifi.list、shell.back、shell.control、shell.wifi_"
+        N.page_id == PAGE_NETWORK ? "动作：net.set_airplane、settings.set、wifi.scan、wifi.list、shell.back、shell.control、shell.wifi_"
                                       "next、shell.wifi_prev、shell.wifi_pick；设置设备：shell.launch(id=boot)。"
                                     : N.page_id == PAGE_DISPLAY
                                         ? "动作：settings.set、shell.today_edit、shell.back、shell.control。"
