@@ -13,7 +13,7 @@
 
 static void IRAM_ATTR ink_panic_pin(int pin, int high) {
     gpio_ll_set_level(&GPIO, pin, high);
-    esp_rom_delay_us(5); /* 100 kHz, as the factory bus and its recovery pulses. */
+    esp_rom_delay_us(5); /* Factory bus recovery uses 5 us between edges. */
 }
 static bool IRAM_ATTR ink_panic_byte(uint8_t value) {
     for (int bit = 7; bit >= 0; bit--) {

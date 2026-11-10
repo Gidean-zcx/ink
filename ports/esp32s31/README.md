@@ -14,6 +14,8 @@ INK_S31_LIGHT_SLEEP=OFF taskpolicy -c utility bash ports/esp32s31/build.sh
 
 `INK_DEPS` 已设置时使用其 `build/_deps/lvgl-src`（v9.5.0）；也可指定 `INK_LVGL_SOURCE_DIR`。未提供本地源码时下载同版本到 `build-s31/lvgl`。不修改依赖源码、已安装 IDF 或工具目录。临时文件、组件缓存、配置、镜像和报告都在本仓库的 `build-s31/`。脚本每次从提交的 `sdkconfig.defaults` 生成配置，覆盖该目录中的临时 `sdkconfig`，保证本地和 CI 使用相同默认值。
 
+编译用 `partitions-trial.csv` 逐项保持原厂 `690a023` 的 `partitions.csv`，两个应用槽各 5 MiB；不再使用骨架的 1500 KiB 单应用尺寸。它用于 SDK 编译和尺寸检查，设备继续保留原厂分区表，不写生成的分区表或引导程序。
+
 - `size.txt`、`size-components.txt`：IDF 静态尺寸，动态任务栈和堆另计。
 - `stack.txt`：GCC `-fstack-usage` 与 `-fcallgraph-info=su` 的入口帧、已知直接调用链。缺失的库函数、间接回调和递归不计，不能当作安全栈上限。
 - `osal_selftest.c`：开机检查内存能力、队列、互斥、信号量、PSRAM 栈、定时器和微秒等待。本任务只编译它，未上机执行。
