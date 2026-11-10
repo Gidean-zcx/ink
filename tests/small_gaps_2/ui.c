@@ -138,8 +138,9 @@ static void inspect_calculator(void) {
     CHECK(e.y1 >= ink_ui_px(INK_STATUS_BAR + INK_PRIMARY) && e.y2 < r.y1 && r.y2 < key_rect.y1, "expression, result and keypad do not overlap");
 }
 static void calculator(void) {
-    font_size(3); call("app.open", "{\"id\":\"calculator\"}");
+    font_size(1); call("app.open", "{\"id\":\"calculator\"}");
     call("calc.eval", "{\"expr\":\"1.5+1.5*1.5+1.5*1.5+1.5*1.5+1.5*1.5+1.5*1.5+1.5*1.5+1.5*1.5+1.5\"}");
+    frame("calculator-100"); font_size(3);
     on_ui(inspect_calculator); frame("calculator-120");
 }
 

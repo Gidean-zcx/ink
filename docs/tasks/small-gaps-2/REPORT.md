@@ -11,7 +11,7 @@
 | 1.3 拨号页 | 【实测】通过 | 提示移到拨号按钮左侧，100%/120% 下均与 12 个原尺寸数字键不重叠；改前失败 6 条，改后 94 条通过 | 同上，`--case phone`；`work/small-gaps-2/phone-after.log` |
 | 1.4 飞行模式 | 【实测】通过 | 控制面板关闭飞行模式后收起；AI 的“关闭飞行模式”错误面板也收起；仅操作成功时关闭，失败走原拒绝提示。原测试与新增测试 2/2 通过 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^(airplane-mode|small-gaps-2-airplane)$' --output-on-failure -j2` |
 | 1.5 日期时间选择 | 【实测】通过 | 两页复用 `ink_ui_datetime_picker`；5 行文字和 10 个按钮逐一比坐标；原 `time-settings`、`reminder-edit` 未改，3/3 通过，见 `work/small-gaps-2/picker-after.log` | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^(small-gaps-2-picker|time-settings|reminder-edit)$' --output-on-failure -j2` |
-| 1.6 计算器 120% | 待检查、验证 | — | — |
+| 1.6 计算器 120% | 【实测】无需改产品代码 | 63 字符算式完整分两行，文字高度不超容器，标题、算式、结果和按键不重叠；已查看 `work/small-gaps-2/before/calculator/snap-calculator-120.png`，补 100%/120% 回归截图 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/small_gaps_2/run.py --build build --case calculator` |
 | 2 全量、内存、S31、gcccheck | 待验证 | — | — |
 | 3 改前改后截图 | 待生成 | — | — |
 
