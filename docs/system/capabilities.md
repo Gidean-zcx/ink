@@ -7,7 +7,7 @@ python3 tools/capabilities.py
 python3 tools/capabilities.py --check
 ```
 
-当前共 424 项：可调用能力 389、事件 35；设置 28 项、状态 49 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
+当前共 427 项：可调用能力 390、事件 37；设置 28 项、状态 49 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
 
 风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。
 
@@ -224,7 +224,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `notify.list` | 通知列表（新的在前） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s29](#s29) | [system/services/notify/notify_caps.c](../../system/services/notify/notify_caps.c) |
 | `notify.post` | 发一条通知（给用户看的提醒；来源记为 AI） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s29](#s29) | [system/services/notify/notify_caps.c](../../system/services/notify/notify_caps.c) |
 | `notify.read` | 标为已读（id 0 或不给：全部） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s29](#s29) | [system/services/notify/notify_caps.c](../../system/services/notify/notify_caps.c) |
-| `notify.set_channel` | 开关一个通知渠道 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s29](#s29) | [system/services/notify/notify_caps.c](../../system/services/notify/notify_caps.c) |
+| `notify.set_channel` | 开关一个通知渠道 | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单 | [s29](#s29) | [system/services/notify/notify_caps.c](../../system/services/notify/notify_caps.c) |
 | `pairing.accept` | 确认加入屏幕上的家庭 | 仅人（设备） | 高 / system | 无需 | 仅成人 | [s27](#s27) | [system/services/hub/pairing.c](../../system/services/hub/pairing.c) |
 | `pairing.configure` | 设置家庭服务器地址和公钥 | 人、AI | 高 / system | 无需 | 仅成人 | [s27](#s27) | [system/services/hub/pairing.c](../../system/services/hub/pairing.c) |
 | `pairing.hotspot_start` | 开启设备设置热点 | 人、AI | 高 / system | 无需 | 仅成人 | [s27](#s27) | [system/services/hub/pairing.c](../../system/services/hub/pairing.c) |
@@ -317,6 +317,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `shell.notify_next` | 通知下一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s51](#s51) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
 | `shell.notify_open` | 打开通知并标为已读 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s51](#s51) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
 | `shell.notify_prev` | 通知上一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s51](#s51) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
+| `shell.notify_settings` | 通知渠道设置 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s51](#s51) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
 | `shell.page_next` | 设置页的下一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s51](#s51) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
 | `shell.page_prev` | 设置页的上一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s51](#s51) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
 | `shell.pin_cancel` | 收起密码页面 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；锁定时仅人工入口 | [s50](#s50) | [system/ui/shell/member_pages.c](../../system/ui/shell/member_pages.c) |
@@ -703,7 +704,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 状态：`battery.low`、`interrupt.active`、`member.current`、`notify.unread`。
 
-事件：`alarm.ended`、`alarm.fired`、`alarm.missed`、`battery.low`、`call.answered`、`call.ended`、`call.incoming`、`data.write_failed`、`message.received`、`notify.posted`、`reminder.missed`、`usb.changed`。
+事件：`alarm.ended`、`alarm.fired`、`alarm.missed`、`battery.low`、`call.answered`、`call.ended`、`call.incoming`、`data.write_failed`、`message.received`、`notify.changed`、`notify.channels_changed`、`notify.posted`、`reminder.missed`、`usb.changed`。
 
 <a id="s30"></a>
 
@@ -923,7 +924,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 状态：`app.cards_rev`、`audio.mic`、`audio.route`、`battery.level`、`bt.connected`、`cell.registered`、`member.authed`、`member.current`、`net.type`、`notify.unread`、`power.state`、`wifi.ssid`。
 
-事件：—。
+事件：`notify.changed`、`notify.channels_changed`。
 
 <a id="s52"></a>
 
@@ -1103,6 +1104,8 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `media.finished` | 播放结束了（放完、停止、读不了） | 不可调用；AI 可订阅 | 低 / read | 不适用 | 按原事件成员及代际投递 | [s19](#s19) | [system/services/audio/media_service.c](../../system/services/audio/media_service.c) |
 | `member.changed` | 家人有变化（加了、删了） | 不可调用；AI 可订阅 | 低 / read | 不适用 | 按原事件成员及代际投递 | [s16](#s16) | [system/policy/members.c](../../system/policy/members.c) |
 | `message.received` | 收到短信 | 不可调用；AI 可订阅 | 低 / read | 不适用 | 按原事件成员及代际投递 | [s23](#s23) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
+| `notify.changed` | 通知列表有变化 | 不可调用；AI 可订阅 | 低 / read | 不适用 | 按原事件成员及代际投递 | [s29](#s29) | [system/services/notify/notify_caps.c](../../system/services/notify/notify_caps.c) |
+| `notify.channels_changed` | 通知渠道有变化 | 不可调用；AI 可订阅 | 低 / read | 不适用 | 按原事件成员及代际投递 | [s29](#s29) | [system/services/notify/notify_caps.c](../../system/services/notify/notify_caps.c) |
 | `notify.posted` | 有新通知 | 不可调用；AI 可订阅 | 低 / read | 不适用 | 按原事件成员及代际投递 | [s29](#s29) | [system/services/notify/notify_caps.c](../../system/services/notify/notify_caps.c) |
 | `pairing.changed` | 加入家庭的进度变了 | 不可调用；AI 可订阅 | 低 / read | 不适用 | 按原事件成员及代际投递 | [s27](#s27) | [system/services/hub/pairing.c](../../system/services/hub/pairing.c) |
 | `reminder.fired` | 提醒到时间了 | 不可调用；AI 可订阅 | 低 / read | 不适用 | 按原事件成员及代际投递 | [s33](#s33) | [system/services/time/time_caps.c](../../system/services/time/time_caps.c) |
