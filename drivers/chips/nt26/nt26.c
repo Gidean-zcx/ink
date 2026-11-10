@@ -57,8 +57,13 @@ nt26_result_t nt26_select_sim(nt26_slot_t slot, uint32_t reg_timeout_ms) {
         return r;
     }
     osal_task_delay_us(NT26_STEP_PAUSE_US);
-    r = at("AT+CFUN=1", resp, sizeof resp, NT26_CFUN1_TIMEOUT_MS);
-    if (r != NT26_OK) return r;
+    return nt26_radio(true, reg_timeout_ms);
+}
+
+nt26_result_t nt26_radio(bool on, uint32_t reg_timeout_ms) {
+    char resp[64];
+    nt26_result_t r = at(on ? "AT+CFUN=1" : "AT+CFUN=4", resp, sizeof resp, on ? NT26_CFUN1_TIMEOUT_MS : NT26_CFUN0_TIMEOUT_MS);
+    if (r != NT26_OK || !on) return r;
     uint64_t deadline = osal_now_us() + (uint64_t)reg_timeout_ms * 1000u;
     for (;;) {
         bool reg = false;

@@ -31,6 +31,10 @@ nt26_result_t nt26_registered(bool *registered);
 /** Switch to the card in `slot` and wait up to reg_timeout_ms for it to register. The device keeps
  *  running; LTE is down for the few seconds of the switch. */
 nt26_result_t nt26_select_sim(nt26_slot_t slot, uint32_t reg_timeout_ms);
+/** Airplane mode: AT+CFUN=4 turns the radio off, sending and receiving, the card stays powered (3GPP TS 27.007
+ *  §8.2); AT+CFUN=1 turns it on again and waits up to reg_timeout_ms for the card to register. Not kept by the
+ *  modem across a restart: the system says it again. */
+nt26_result_t nt26_radio(bool on, uint32_t reg_timeout_ms);
 const char *nt26_result_name(nt26_result_t r);
 
 /* ---- SMS (text mode, UCS2 so Chinese works) and voice calls (3GPP TS 27.005 / 27.007) ---- */

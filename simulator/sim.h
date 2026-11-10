@@ -321,6 +321,7 @@ typedef struct {
     int selected;                        /* slot setting: 0 external card slot, 1 internal card */
     int active;                          /* slot whose card the radio uses */
     bool radio;
+    bool airplane;                       /* the radio was turned off with AT+CFUN=4 */
     bool present[2], sms[2], voice[2];   /* each slot's card */
     bool registered, searching, volte;
 } sim_cell_state_t;

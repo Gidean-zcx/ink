@@ -11,6 +11,10 @@
  * The card: the setting says which one is wanted, the modem which one is in
  * use, "cell.sim" reports the latter. sim_check() brings them together: at
  * start-up (a saved choice), after every set, and again after a failure.
+ *
+ * Airplane mode (the setting net.airplane): the modem's radio is off, also
+ * after a restart (the modem does not keep it); calls and messages are refused
+ * with the reason, and a card switch waits until the radio is on again.
  */
 #include <stdio.h>
 #include <string.h>
@@ -56,6 +60,7 @@ static struct {
     ink_exec_job_t sim_job;
     uint64_t sim_retry_at, sim_retry_us; /* comm task's next look at the card, 0 = none due */
     int sim_tries;
+    ink_exec_job_t radio_job;
     /* comm task: too large for its stack, and internal RAM has no room for them */
     msg_t rx;
     ink_args_t rx_args, ev_args;
@@ -187,7 +192,7 @@ static void sim_switch(void *arg) { /* exec.bg: the switch takes seconds */
     hal_cell_status_t st;
     osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
     int r = hal_cell_status(&st) ? 0 : -1;
-    bool switched = r == 0 && st.slot != want;
+    bool switched = r == 0 && st.slot != want && !ink_setting_get("net.airplane"); /* the switch turns the radio on */
     if (switched) r = hal_cell_select_sim(want, 60000);
     osal_mutex_unlock(CM.at);
     if (switched) ink_probe_count(r == 0 ? "comm.sim_switched" : r == 1 ? "comm.sim_switched_unregistered" : "comm.sim_switch_failed");
@@ -195,18 +200,41 @@ static void sim_switch(void *arg) { /* exec.bg: the switch takes seconds */
     sim_retry(r != 0); /* 1: on the new card, not registered yet: cell.registered is looked at again too */
 }
 
+static void radio(void *arg) { /* exec.bg: airplane mode changed, or the modem came up with it on */
+    (void)arg;
+    bool on = !ink_setting_get("net.airplane");
+    osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
+    int r = hal_cell_radio(on, 30000);
+    osal_mutex_unlock(CM.at);
+    if (r < 0) ink_probe_count("comm.radio_failed");
+    hal_cell_status_t st;
+    if (!on) refresh_status(&st);
+    else sim_switch(NULL); /* a card chosen meanwhile; it also says what the modem does now */
+}
+static void airplane_changed(void *ctx, int h, const char *id) { (void)ctx; (void)h; (void)id; radio(NULL); }
+
+/* Refused while airplane mode is on: no radio. The way out is said, and the page offers it. */
+static bool airplane(ink_call_t *c, const char *what) {
+    if (!ink_setting_get("net.airplane")) return false;
+    c->rc.status = INK_RC_REJECTED;
+    snprintf(c->rc.detail, sizeof c->rc.detail, "airplane mode is on");
+    snprintf(c->rc.say, sizeof c->rc.say, "飞行模式已打开，关闭飞行模式才能%s", what);
+    return true;
+}
+
 /* Comm task: the first look, and each retry. exec.bg only when there is something to do. */
 static void sim_check(void) {
     hal_cell_status_t st;
     bool up = refresh_status(&st);
-    if (up && st.slot == wanted_slot()) sim_retry(false);
+    if (up && ink_setting_get("net.airplane") && ink_exec_post(INK_EXEC_BG, &CM.radio_job, radio, NULL) == 0) sim_retry(false);
+    else if (up && st.slot == wanted_slot()) sim_retry(false);
     else if (!up) sim_retry(true); /* still starting, or no modem */
     else if (ink_exec_post(INK_EXEC_BG, &CM.sim_job, sim_switch, NULL) != 0) sim_retry(true);
 }
 
 static void comm_task(void *arg) {
     (void)arg;
-    uint64_t status_at = osal_now_us() + STATUS_DELAY_US;
+    uint64_t status_at = osal_now_us() + (ink_setting_get("net.airplane") ? 0 : STATUS_DELAY_US); /* the radio goes off at once */
     for (;;) {
         osal_mutex_lock(CM.lock, OSAL_WAIT_FOREVER);
         uint64_t retry_at = CM.sim_retry_at;
@@ -256,6 +284,7 @@ static void cap_send(ink_call_t *c) { /* exec.bg */
     int bytes = ink_args_get_str(&c->args, "text", text, sizeof text);
     bool valid = to[0] && bytes > 0 && bytes < (int)sizeof text;
     for (size_t i = 0; to[i]; i++) if ((to[i] < '0' || to[i] > '9') && !(i == 0 && to[i] == '+' && to[1])) valid = false;
+    if (airplane(c, "发短信")) return; /* first: what is written does not matter without a radio */
     if (!valid) { c->rc.status = INK_RC_INVALID; return; }
     ink_db_t *db = ink_db_open_member(&MESSAGES, ink_cap_call_member(c)); uint32_t id = 0;
     if (!db || !save_message(db, &id, to, text, "结果未知，请先核实", c->src)) {
@@ -316,6 +345,7 @@ static void call_result(ink_call_t *c, int r, const char *ok, const char *fail) 
 static void cap_dial(ink_call_t *c) {
     char number[24];
     ink_args_get_str(&c->args, "number", number, sizeof number);
+    if (airplane(c, "打电话")) return; /* no exception for emergency numbers yet: not decided */
     osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
     int r = hal_cell_dial(number);
     if (!r) call_begin(ink_cap_call_member(c), number);
@@ -449,6 +479,7 @@ int ink_comm_init(void) {
     CM.h_registered = ink_state_define(&ST_REGISTERED);
     CM.h_sim = ink_state_define(&ST_SIM);
     ink_settings_define(COMM_SETTINGS, 1);
+    if (ink_settings_watch("net.airplane", airplane_changed, NULL, INK_EXEC_BG) != 0) return -1;
     if (ink_cap_register(COMM_CAPS, (int)(sizeof COMM_CAPS / sizeof COMM_CAPS[0])) != 0) return -1;
     osal_task_cfg_t cfg = {.name = "comm", .fn = comm_task, .stack_bytes = COMM_STACK, .priority = COMM_PRIO, .core = -1,
                            .flags = OSAL_TASK_STACK_EXTERNAL};

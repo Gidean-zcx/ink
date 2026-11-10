@@ -289,13 +289,18 @@ static const ink_state_def_t ST_CHARGING = {.id = "battery.charging", .type = IN
 static const ink_state_def_t ST_LOW = {.id = "battery.low", .type = INK_ST_BOOL, .title = "电量低"};
 static const ink_state_def_t ST_SAVING = {.id = "power.saving", .type = INK_ST_BOOL, .title = "省电：最多 1 分钟锁屏，不改原设置"};
 
-static void cap_saving(ink_call_t *c) {
+static void cap_saving(ink_call_t *c) { /* kept like any setting: it survives a restart */
     bool enabled;
     if (!ink_args_get_bool(&c->args, "enabled", &enabled)) { c->rc.status = INK_RC_INVALID; return; }
-    __atomic_store_n(&PS.saving, enabled, __ATOMIC_RELAXED);
-    ink_state_set_bool(PS.h_saving, enabled);
-    osal_sem_give(PS.kick);
+    if (ink_setting_set("power.saving", enabled, c->src, &c->rc) != INK_RC_DONE) return;
     snprintf(c->rc.say, sizeof c->rc.say, "%s", enabled ? "已打开省电，1 分钟锁屏，原设置保留" : "已关闭省电，按原设置锁屏");
+}
+
+static void apply_saving(void *ctx, int64_t on) {
+    (void)ctx;
+    __atomic_store_n(&PS.saving, on != 0, __ATOMIC_RELAXED);
+    ink_state_set_bool(PS.h_saving, on != 0);
+    osal_sem_give(PS.kick);
 }
 
 static void apply_lock_after(void *ctx, int64_t s) {
@@ -307,6 +312,7 @@ static void apply_lock_after(void *ctx, int64_t s) {
 static const ink_setting_def_t POWER_SETTINGS[] = {
     {.id = "power.lock_after_s", .title = "自动锁屏（秒）", .type = INK_SET_INT, .min = 60, .max = 3600, .def = (int64_t)(LOCK_AFTER_US / 1000000ull),
      .apply = apply_lock_after, .apply_exec = INK_EXEC_DIRECT},
+    {.id = "power.saving", .title = "省电", .type = INK_SET_BOOL, .def = 0, .apply = apply_saving, .apply_exec = INK_EXEC_DIRECT},
 };
 
 static void cap_shutdown(ink_call_t *c) { /* exec.bg */
@@ -340,8 +346,9 @@ int ink_power_init(void) {
     PS.h_charging = ink_state_define(&ST_CHARGING);
     PS.h_low = ink_state_define(&ST_LOW);
     PS.h_saving = ink_state_define(&ST_SAVING);
-    ink_state_set_bool(PS.h_saving, false);
-    if (ink_settings_define(POWER_SETTINGS, 1) == 0) PS.lock_after_us = (uint64_t)ink_setting_get("power.lock_after_s") * 1000000ull;
+    if (ink_settings_define(POWER_SETTINGS, 2) == 0) PS.lock_after_us = (uint64_t)ink_setting_get("power.lock_after_s") * 1000000ull;
+    PS.saving = ink_setting_get("power.saving") != 0;
+    ink_state_set_bool(PS.h_saving, PS.saving);
     ink_cap_register(POWER_CAPS, (int)(sizeof POWER_CAPS / sizeof POWER_CAPS[0]));
     const char *prev = osal_mem_tag("power");
     PS.lock = osal_mutex_create();

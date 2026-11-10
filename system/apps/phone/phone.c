@@ -103,6 +103,7 @@ static void changed(void *ctx, const char *id, const ink_args_t *a) {
 static void reply(void *ctx, const ink_receipt_t *rc) {
     if ((uint32_t)(uintptr_t)ctx != ink_ui_generation() || !ink_ui_page_current()) return;
     if (P.notice && rc->status != INK_RC_DONE) lv_label_set_text(P.notice, rc->say[0] ? rc->say : "没有完成，请重试");
+    ink_shell_airplane_card(rc);
     if (rc->status == INK_RC_DONE && !strcmp(ink_ui_page_name(), RECENTS.name)) ink_ui_redraw();
 }
 static void request(const char *cap, const ink_args_t *a) {

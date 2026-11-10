@@ -26,6 +26,11 @@ int hal_cell_select_sim(hal_cell_slot_t slot, uint32_t reg_timeout_ms) {
     return r == NT26_OK ? 0 : r == NT26_NOT_REGISTERED ? 1 : -1;
 }
 
+int hal_cell_radio(bool on, uint32_t reg_timeout_ms) {
+    nt26_result_t r = nt26_radio(on, reg_timeout_ms);
+    return r == NT26_OK ? 0 : r == NT26_NOT_REGISTERED ? 1 : -1;
+}
+
 int hal_cell_sms_send(const char *number, const char *utf8, uint32_t timeout_ms) {
     return nt26_sms_send(number, utf8, timeout_ms) == NT26_OK ? 0 : -1;
 }

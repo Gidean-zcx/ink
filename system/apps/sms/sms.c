@@ -60,6 +60,7 @@ static void reply(void *ctx, const ink_receipt_t *rc) {
     if (S.send) lv_obj_remove_state(S.send, LV_STATE_DISABLED);
     snprintf(S.result, sizeof S.result, "%s", rc->say[0] ? rc->say : rc->status == INK_RC_DONE ? "" : "没有完成，请重试");
     if (rc->status == INK_RC_DONE) ink_ui_redraw(); else if (S.notice) lv_label_set_text(S.notice, S.result);
+    ink_shell_airplane_card(rc);
 }
 static void request(const char *cap, const ink_args_t *args) {
     ink_call_opts_t o = {.src = INK_SRC_TOUCH, .member = S.member, .reply_exec = INK_EXEC_UI, .done = reply, .ctx = (void *)(uintptr_t)ink_ui_generation()};
