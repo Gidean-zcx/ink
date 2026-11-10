@@ -89,6 +89,7 @@ static struct {
     /* activities */
     frame_t stack[MAX_ACTIVITIES];
     int depth;
+    const ink_activity_t *locked_activity; /* atomic: also read by the input task */
     void (*top_hook)(const char *app);
     lv_obj_t *screen;
     ink_member_identity_t page_owner;
@@ -303,6 +304,18 @@ const char *ink_ui_page_name(void) {
     return top && top->name ? top->name : "";
 }
 
+const ink_activity_t *ink_ui_locked_activity(void) { return __atomic_load_n(&UI.locked_activity, __ATOMIC_ACQUIRE); }
+bool ink_ui_locked_allows(const char *cap) {
+    const ink_activity_t *a = ink_ui_locked_activity();
+    if (a) for (const char *const *id = a->locked_caps; *id; id++)
+        if (!strcmp(*id, cap)) return true;
+    return false;
+}
+static void update_locked_activity(void) {
+    const ink_activity_t *a = UI.noverlays ? UI.overlays[UI.noverlays - 1]->activity : UI.depth ? UI.stack[UI.depth - 1].a : NULL;
+    __atomic_store_n(&UI.locked_activity, a && a->locked_caps ? a : NULL, __ATOMIC_RELEASE);
+}
+
 const char *ink_ui_top_name(void) { return UI.noverlays ? UI.overlays[UI.noverlays - 1]->name : ink_ui_page_name(); }
 const char *ink_ui_action_page(void) {
     return UI.noverlays && UI.overlays[UI.noverlays - 1]->level >= 0 ? ink_ui_top_name() : ink_ui_page_name();
@@ -460,6 +473,7 @@ const lv_font_t *ink_ui_font(int role) {
 
 static void show_top(void) {
     frame_t *f = &UI.stack[UI.depth - 1];
+    update_locked_activity();
     ink_member_identity_t owner;
     ink_member_identity(&owner);
     ink_svc_lock(); UI.page_owner = owner; ink_svc_unlock();
@@ -552,6 +566,7 @@ void ink_ui_drop_app(const char *app) {
  * spot where "hang up" appears). The content version stays: the page under it has not changed, and what is prepared
  * for it is still right when the overlay goes (while it is up, the gate refuses what belongs to the page). */
 static void overlays_changed(void) {
+    update_locked_activity();
     UI.generation++;
     UI.touch_invalid_before = osal_now_us();
     lv_indev_reset(UI.indev, NULL);

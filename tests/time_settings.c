@@ -83,6 +83,13 @@ static void manual(void) {
     setting("system.language", 1); quiet();
     CHECK(page_has("Date & Time") && page_has("Automatic Time Zone"), "new page is translated"); evidence("time-en");
     setting("system.language", 0); quiet(); on_ui(observe_controls);
+    CHECK(AI("alarm.set", "{\"hour\":23,\"minute\":59,\"title\":\"SYNTH_NO_REDRAW\"}") && g_rc.status == INK_RC_DONE, "change an alarm while staying on time settings");
+    unsigned unrelated = 0;
+    CHECK(sscanf(g_rc.object, "alarm:%u", &unrelated) == 1, "unrelated alarm has an id"); quiet();
+    CHECK(!clock_controls_deleted && !strcmp(ink_ui_page_name(), "SetTime"), "alarm changes keep the time page controls alive");
+    char cancel_unrelated[48]; snprintf(cancel_unrelated, sizeof cancel_unrelated, "{\"id\":%u}", unrelated);
+    CHECK(AI("alarm.cancel", cancel_unrelated) && g_rc.status == INK_RC_DONE, "remove the unrelated alarm"); quiet();
+    CHECK(!clock_controls_deleted, "alarm cancellation keeps the time page controls alive");
     CHECK(WAIT_FOR(({ int64_t minute = 0; ink_state_get_int(ink_state_find("time.minute"), &minute) && minute == 659; }), 70000), "minute service reaches the next minute");
     CHECK(page_has("10:59") && !clock_controls_deleted, "minute tick updates only the clock label");
     set_clock(local(2026, 11, 10, 10, 58, 0)); quiet(); press("shell.time_edit", 0);
@@ -238,6 +245,8 @@ static void run(void *arg) {
     CHECK(ink_cap_subscribe("alarm.fired", alarm_event, NULL, INK_EXEC_DIRECT) == 0, "observe alarm events");
     CHECK(ink_state_watch("power.state", observe_lock, NULL, INK_EXEC_DIRECT) == 0, "observe lock timestamp");
     ink_hub_demand(); CHECK(WAIT_FOR(ink_hub_online(), 10000), "synthetic network server connects");
+    int64_t server_ms = 0; uint32_t rtt_ms = 0;
+    CHECK(ink_hub_server_time(&server_ms, &rtt_ms) && rtt_ms > 0 && llabs(server_ms / 1000 - (g_sim.wall_start_us / 1000000 + (int64_t)(osal_now_us() / 1000000))) <= 2, "locked server-time read preserves elapsed time and round trip");
     manual(); zones(); dst(); grace();
     CHECK(WAIT_FOR(ink_storage_pending() == 0, 10000), "writes settle"); ink_probe_count("test.finished");
 }

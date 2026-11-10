@@ -191,9 +191,9 @@ static void gallery_action(ink_call_t *c) {
     if (G.list) ink_ui_list_turn(G.list, !strcmp(c->cap->id, "gallery.next") ? 1 : -1);
 }
 static const ink_cap_t GALLERY_CAPS[] = {
-    {.id = "gallery.prev", .title = "相册上一页", .activity = "Gallery", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = gallery_action},
-    {.id = "gallery.next", .title = "相册下一页", .activity = "Gallery", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = gallery_action},
-    {.id = "photo.open", .title = "查看有权访问的图片文件", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = gallery_action,
+    {.id = "gallery.prev", .app = "gallery", .title = "相册上一页", .activity = "Gallery", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = gallery_action},
+    {.id = "gallery.next", .app = "gallery", .title = "相册下一页", .activity = "Gallery", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = gallery_action},
+    {.id = "photo.open", .app = "gallery", .title = "查看有权访问的图片文件", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = gallery_action,
      .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}},\"required\":[\"id\"]}"}
 };
 static void photos_changed(void *ctx, const char *id, const ink_args_t *args) {

@@ -2068,14 +2068,14 @@ static void storage_cleanup(ink_call_t *call) {
     ink_cap_result(call, out);
 }
 static const ink_cap_t STORAGE_CAPS[] = {
-    {.id = "file.usage", .title = "读取当前成员和整台设备的书、音频、照片和其他文件字节数", .effect = INK_FX_READ,
+    {.id = "file.usage", .app = "files", .title = "读取当前成员和整台设备的书、音频、照片和其他文件字节数", .effect = INK_FX_READ,
      .output = "{\"type\":\"object\"}", .exec = INK_EXEC_BG, .qos = INK_QOS_BACKGROUND, .run = storage_usage},
-    {.id = "file.cleanup_preview", .title = "列出临时文件、缓存和未传完文件可清理的字节数", .effect = INK_FX_READ,
+    {.id = "file.cleanup_preview", .app = "files", .title = "列出临时文件、缓存和未传完文件可清理的字节数", .effect = INK_FX_READ,
      .output = "{\"type\":\"object\"}", .exec = INK_EXEC_BG, .qos = INK_QOS_BACKGROUND, .run = storage_cleanup},
-    {.id = "file.cache_clear", .title = "清理可重新生成的缓存", .effect = INK_FX_LOCAL_WRITE,
+    {.id = "file.cache_clear", .app = "files", .title = "清理可重新生成的缓存", .effect = INK_FX_LOCAL_WRITE,
      .input = "{\"type\":\"object\",\"properties\":{\"revision\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}},\"required\":[\"revision\"]}",
      .exec = INK_EXEC_BG, .qos = INK_QOS_BACKGROUND, .run = storage_cleanup},
-    {.id = "file.cleanup", .title = "清理临时文件", .effect = INK_FX_LOCAL_DESTRUCTIVE, .ask_by_hand = true,
+    {.id = "file.cleanup", .app = "files", .title = "清理临时文件", .effect = INK_FX_LOCAL_DESTRUCTIVE, .ask_by_hand = true,
      .ask = "清理临时文件和未传完的文件，删了找不回来；缓存可以重新生成",
      .input = "{\"type\":\"object\",\"properties\":{\"revision\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}},\"required\":[\"revision\"]}",
      .exec = INK_EXEC_BG, .qos = INK_QOS_BACKGROUND, .run = storage_cleanup}};

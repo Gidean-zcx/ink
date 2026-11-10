@@ -297,20 +297,20 @@ static void reminder_action(ink_call_t *call) {
     if (call->rc.status == INK_RC_DONE) ink_ui_pop();
     else { snprintf(E.error, sizeof E.error, "%s", TR("请填写内容（最多15个字）并选择将来的时间")); ink_ui_redraw(); }
 }
-#define REMINDER_NAV(id_, title_) {.id = id_, .title = title_, .effect = INK_FX_NAVIGATE, .child_ok = true, .run = reminder_action}
+#define REMINDER_NAV(id_, title_) {.id = id_, .app = "clock", .title = title_, .effect = INK_FX_NAVIGATE, .child_ok = true, .run = reminder_action}
 static const ink_cap_t CAPS[] = {
     REMINDER_NAV("reminder.new", "手动加提醒"),
-    {.id = "reminder.open", .title = "查看和修改我的提醒", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = reminder_action, .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}},\"required\":[\"id\"]}"},
+    {.id = "reminder.open", .app = "clock", .title = "查看和修改我的提醒", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = reminder_action, .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}},\"required\":[\"id\"]}"},
     REMINDER_NAV("reminder.time", "选择提醒日期和时间"), REMINDER_NAV("reminder.focus", "输入提醒内容"),
-    {.id = "reminder.draft", .title = "选择提醒时间和重复", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = reminder_action,
+    {.id = "reminder.draft", .app = "clock", .title = "选择提醒时间和重复", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = reminder_action,
      .input = "{\"type\":\"object\",\"properties\":{\"year\":{\"type\":\"integer\",\"minimum\":1901,\"maximum\":2100},\"month\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":12},\"day\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":31},\"hour\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":23},\"minute\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":59},\"repeat\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":6}}}"},
-    {.id = "reminder.save", .title = "保存提醒", .activity = "ReminderEdit", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = reminder_action},
-    {.id = "calendar.open", .title = "看月历", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "calendar.prev", .title = "当天事项或接下来上一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "calendar.next", .title = "当天事项或接下来下一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "calendar.month_prev", .title = "月历上个月", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "calendar.month_next", .title = "月历下个月", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "calendar.select", .title = "选择当月一天查看闹钟和提醒", .input = "{\"type\":\"object\",\"properties\":{\"day\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":31}},\"required\":[\"day\"]}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate}
+    {.id = "reminder.save", .app = "clock", .title = "保存提醒", .activity = "ReminderEdit", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = reminder_action},
+    {.id = "calendar.open", .app = "upcoming", .title = "看月历", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "calendar.prev", .app = "upcoming", .title = "当天事项或接下来上一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "calendar.next", .app = "upcoming", .title = "当天事项或接下来下一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "calendar.month_prev", .app = "upcoming", .title = "月历上个月", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "calendar.month_next", .app = "upcoming", .title = "月历下个月", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "calendar.select", .app = "upcoming", .title = "选择当月一天查看闹钟和提醒", .input = "{\"type\":\"object\",\"properties\":{\"day\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":31}},\"required\":[\"day\"]}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate}
 };
 static const ink_app_def_t APP = {.id = "upcoming", .title = "接下来", .icon = INK_UI_ICON(calendar), .entry = &UPCOMING, .system_app = true, .child_ok = true};
 static void changed(void *ctx, int handle, const char *id) {

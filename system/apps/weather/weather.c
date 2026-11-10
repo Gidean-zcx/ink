@@ -279,14 +279,14 @@ static int card(int index, ink_card_t *out) {
     return 1;
 }
 static const ink_cap_t CAPS[] = {
-    {.id = "weather.get", .title = "查天气：现在、今天和之后几天，没联网时给上次的", .effect = INK_FX_READ, .child_ok = true,
+    {.id = "weather.get", .app = "weather", .title = "查天气：现在、今天和之后几天，没联网时给上次的", .effect = INK_FX_READ, .child_ok = true,
      .qos = INK_QOS_NETWORK, .timeout_ms = 10000, .run = run},
-    {.id = "weather.open", .title = "打开天气", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = run},
-    {.id = "weather.city", .title = "设置天气城市", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = run},
-    {.id = "weather.focus", .title = "在天气城市页输入城市名", .effect = INK_FX_NAVIGATE, .child_ok = true, .activity = "WeatherCity", .run = run},
-    {.id = "weather.find", .title = "按名字找天气城市", .input = "{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\",\"maxLength\":60}},\"required\":[\"name\"]}",
+    {.id = "weather.open", .app = "weather", .title = "打开天气", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = run},
+    {.id = "weather.city", .app = "weather", .title = "设置天气城市", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = run},
+    {.id = "weather.focus", .app = "weather", .title = "在天气城市页输入城市名", .effect = INK_FX_NAVIGATE, .child_ok = true, .activity = "WeatherCity", .run = run},
+    {.id = "weather.find", .app = "weather", .title = "按名字找天气城市", .input = "{\"type\":\"object\",\"properties\":{\"name\":{\"type\":\"string\",\"maxLength\":60}},\"required\":[\"name\"]}",
      .effect = INK_FX_READ, .child_ok = true, .qos = INK_QOS_NETWORK, .timeout_ms = 10000, .run = run},
-    {.id = "weather.set_city", .title = "从找到的城市里选一个当天气城市", .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"}},\"required\":[\"id\"]}",
+    {.id = "weather.set_city", .app = "weather", .title = "从找到的城市里选一个当天气城市", .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\"}},\"required\":[\"id\"]}",
      .effect = INK_FX_LOCAL_WRITE, .child_ok = false, .run = run},
 };
 static const ink_app_def_t APP = {.id = "weather", .title = "天气", .icon = INK_UI_ICON(cloudsun), .entry = &WEATHER,

@@ -233,14 +233,14 @@ static void act_open(ink_call_t *c) {
 }
 
 static const ink_cap_t SHELF_ACTIONS[] = {
-    {.id = "reader.list_books", .title = "书架上有哪些书", .effect = INK_FX_READ, .child_ok = true, .run = act_list},
-    {.id = "reader.open_book",
+    {.id = "reader.list_books", .app = "reader", .title = "书架上有哪些书", .effect = INK_FX_READ, .child_ok = true, .run = act_list},
+    {.id = "reader.open_book", .app = "reader",
      .title = "打开一本书",
      .input = "{\"type\":\"object\",\"properties\":{\"title\":{\"type\":\"string\"}},\"required\":[\"title\"]}",
      .effect = INK_FX_NAVIGATE,
      .child_ok = true,
      .run = act_open},
-    {.id = "reader.continue", .title = "接着读上次的书", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = act_continue},
+    {.id = "reader.continue", .app = "reader", .title = "接着读上次的书", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = act_continue},
 };
 
 
@@ -420,16 +420,16 @@ static void act_read(ink_call_t *c) {
 }
 
 static const ink_cap_t BOOK_ACTIONS[] = {
-    {.id = "reader.next_page", .title = "下一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .activity = "book", .run = act_next},
-    {.id = "reader.prev_page", .title = "上一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .activity = "book", .run = act_prev},
-    {.id = "reader.goto_page",
+    {.id = "reader.next_page", .app = "reader", .title = "下一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .activity = "book", .run = act_next},
+    {.id = "reader.prev_page", .app = "reader", .title = "上一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .activity = "book", .run = act_prev},
+    {.id = "reader.goto_page", .app = "reader",
      .title = "跳到第几页",
      .input = "{\"type\":\"object\",\"properties\":{\"page\":{\"type\":\"integer\",\"minimum\":1}},\"required\":[\"page\"]}",
      .effect = INK_FX_NAVIGATE,
      .child_ok = true,
      .activity = "book",
      .run = act_goto},
-    {.id = "reader.read_page", .title = "读出这一页", .effect = INK_FX_READ, .child_ok = true, .activity = "book", .run = act_read},
+    {.id = "reader.read_page", .app = "reader", .title = "读出这一页", .effect = INK_FX_READ, .child_ok = true, .activity = "book", .run = act_read},
 };
 
 static void turn(int delta, ink_source_t src) {

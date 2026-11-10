@@ -86,6 +86,7 @@ typedef struct {
 
 struct ink_cap {
     const char *id;         /* "reader.next_page": named after what it does, never after a chip */
+    const char *app;        /* owning app for member policies; NULL = system capability */
     uint16_t version;       /* 0 means 1 */
     ink_form_t form;
     const char *title;      /* shown to people and to the model: "下一页" */

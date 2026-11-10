@@ -11,7 +11,6 @@
 #include "ink/probe.h"
 #include "ink/sys/appreg.h"
 #include "ink/sys/cap.h"
-#include "ink/sys/camera.h"
 #include "ink/sys/power.h"
 #include "ink/sys/confirm.h"
 #include "ink/sys/data.h"
@@ -54,7 +53,7 @@ const ink_cap_t *ink_cap_find(const char *id) {
     return NULL;
 }
 
-static bool on_its_page(const ink_cap_t *c) { return !c->activity || ((ink_ui_page_current() || ink_camera_restricted()) && !strcmp(ink_ui_action_page(), c->activity)); }
+static bool on_its_page(const ink_cap_t *c) { return !c->activity || ((ink_ui_page_current() || ink_ui_locked_allows(c->id)) && !strcmp(ink_ui_action_page(), c->activity)); }
 
 static bool in_directory(const char *id); /* the hub's directory, below */
 
@@ -99,13 +98,13 @@ static ink_rc_t reject(ink_receipt_t *rc, ink_rc_t st, const char *why) {
 /* The policy gate (detailed design §2.4), before anything runs. INK_RC_DONE = may run. */
 static ink_rc_t gate(const ink_cap_t *c, ink_source_t src, uint32_t page_gen, bool asked, ink_receipt_t *rc) {
     if (!c) return reject(rc, INK_RC_INVALID, "unknown action");
+    const ink_member_t *m = ink_member_current();
+    if (m->role == INK_ROLE_CHILD && !ink_member_allows(c->id, true)) return reject(rc, INK_RC_REJECTED, TR("家长没有打开这个应用"));
     /* the card the member just answered is still over the page it was asked about */
     if (src == INK_SRC_CONFIRMED ? c->activity && (!ink_ui_page_current() || strcmp(ink_ui_page_name(), c->activity)) : !on_its_page(c)) return reject(rc, INK_RC_INVALID, "not available on this page");
     if (c->form == INK_FORM_EVENT || !c->run) return reject(rc, INK_RC_INVALID, "an event: subscribe to it");
     if (!exposed(c, src)) return reject(rc, INK_RC_INVALID, "not offered to this caller");
-    const ink_member_t *m = ink_member_current();
     if (m->role == INK_ROLE_CHILD) {
-        if (!ink_member_allows(c->id, true)) return reject(rc, INK_RC_REJECTED, TR("家长没有打开这个应用"));
         if (!ink_member_time_allows(c->id)) return reject(rc, INK_RC_REJECTED, "today\'s time is up");
         if (c->effect == INK_FX_SYSTEM && !(c->child_ok && (src == INK_SRC_TOUCH || src == INK_SRC_KEY))) { /* turning it off is anyone's who holds it */
             ink_probe_count("policy.rejected");
@@ -116,12 +115,10 @@ static ink_rc_t gate(const ink_cap_t *c, ink_source_t src, uint32_t page_gen, bo
             return reject(rc, INK_RC_REJECTED, "not on this child's whitelist");
         }
     }
-    bool camera_locked = ink_camera_restricted() || (ink_power_state() == INK_PWR_LOCKED &&
-        (src == INK_SRC_AI || src == INK_SRC_REMOTE || src == INK_SRC_APP) &&
-        (!strncmp(c->id, "camera.", 7) || !strncmp(c->id, "photo.", 6) || !strncmp(c->id, "file.", 5) || !strcmp(c->id, "app.open")));
-    if ((!ink_member_space_open() || camera_locked) && src != INK_SRC_SYSTEM) {
-        bool camera_exit = ink_camera_restricted() && (!strcmp(c->id, "shell.back") || !strcmp(c->id, "system.home"));
-        if (src == INK_SRC_AI || src == INK_SRC_REMOTE || src == INK_SRC_APP || (!c->while_locked && !camera_exit)) {
+    bool restricted = ink_ui_locked_activity() != NULL;
+    if ((!ink_member_space_open() || ink_power_state() == INK_PWR_LOCKED || restricted) && src != INK_SRC_SYSTEM) {
+        bool allowed = restricted ? ink_ui_locked_allows(c->id) : c->while_locked;
+        if (src == INK_SRC_AI || src == INK_SRC_REMOTE || src == INK_SRC_APP || !allowed) {
             ink_probe_count("policy.rejected");
             return reject(rc, INK_RC_REJECTED, "this member's space is locked");
         }
@@ -205,6 +202,7 @@ typedef struct {
     bool repeat_safe; /* rid is the caller's: the receipt is kept for retries */
     bool started, deferred, replied, finished, answered;
     bool asked; /* Only the hub tools envelope can set this; never arguments. */
+    bool hand_locked; /* the page allowed this call before its handler could close it */
     activity_note_t *activity;
     char member[INK_MEMBER_ID_MAX]; /* ink_call_opts_t.member */
     uint32_t origin_epoch;
@@ -457,7 +455,7 @@ static void answer_job(void *arg) {
     ink_cap_done_fn done = p->o.done; /* NULL once a waiting ink_cap_invoke gave up on it */
     osal_mutex_unlock(CB.lock);
     bool handoff = p->call.cap && !strcmp(p->call.cap->id, "system.switch_member") && p->out.status == INK_RC_DONE && !p->out.result;
-    bool hand_locked = p->call.cap && p->call.cap->while_locked && (p->o.src == INK_SRC_TOUCH || p->o.src == INK_SRC_KEY);
+    bool hand_locked = p->hand_locked && (p->o.src == INK_SRC_TOUCH || p->o.src == INK_SRC_KEY);
     if (!handoff && p->member[0] && (!ink_member_exists(p->member) ||
         strcmp(p->member, ink_member_current()->id) || (!ink_member_space_open() && !hand_locked && p->o.src != INK_SRC_SYSTEM && p->out.status == INK_RC_DONE))) {
         memset(&p->out, 0, sizeof p->out); p->out.status = INK_RC_STALE;
@@ -587,6 +585,7 @@ static void start(void *arg) {
     bool delivery = !p->o.hub_epoch || ink_hub_member_matches(p->member, p->o.hub_epoch, p->o.hub_connection);
     ink_rc_t verdict = !delivery || !ink_member_exists(p->member) || strcmp(p->member, ink_member_current()->id) ? reject(rc, INK_RC_STALE, "someone else is using the device now") : gate(c, p->call.src, p->call.page_gen, p->asked, rc);
     if (verdict == INK_RC_DONE || verdict == INK_RC_PENDING_CONFIRMATION) {
+        p->hand_locked = c->while_locked || ink_ui_locked_allows(c->id);
         char why[96];
         int bad = p->json ? ink_args_from_json(&p->call.args, p->json, strlen(p->json), c->input, why, sizeof why)
                           : ink_args_check(&p->call.args, c->input, why, sizeof why);

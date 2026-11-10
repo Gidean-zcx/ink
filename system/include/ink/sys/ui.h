@@ -36,6 +36,7 @@ typedef hal_key_t ink_key_t;
 typedef struct ink_activity {
     const char *name;
     const char *app; /* the app it belongs to (ink/sys/appreg.h); NULL = the system's */
+    const char *const *locked_caps; /* NULL-terminated actions of a restricted lock-screen page; NULL = ordinary page */
     /* build the screen; `screen` is a fresh LVGL screen owned by the runtime */
     void (*create)(lv_obj_t *screen, void *arg);
     void (*destroy)(void);
@@ -55,6 +56,7 @@ typedef struct ink_activity {
  * was already down cannot press what appeared under it. What it looks like is its owner's. */
 typedef struct {
     const char *name;
+    const ink_activity_t *activity; /* optional activity presented by this overlay */
     int level; /* the higher is on top: a card asking, then who may use the device, then what cannot wait */
     bool (*on_key)(ink_key_t key, bool long_press); /* NULL: keys do nothing */
     int (*snapshot)(char *buf, size_t cap);
@@ -121,6 +123,9 @@ void ink_ui_cause(uint64_t t_us, const char *tag);
 int ink_ui_snapshot(char *buf, size_t cap, const char **activity_name);
 /** The foreground page belongs to the current open member incarnation. */
 bool ink_ui_page_current(void);
+/** Active restricted page, if any (any task); its static declaration owns the allowlist. */
+const ink_activity_t *ink_ui_locked_activity(void);
+bool ink_ui_locked_allows(const char *cap);
 /** Name of the foreground activity or the top overlay ("" if none). */
 const char *ink_ui_top_name(void);
 /** Name of the foreground activity, under any overlay ("" if none). */

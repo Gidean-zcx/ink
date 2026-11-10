@@ -173,8 +173,8 @@ static void apply(ink_call_t *c) {
 }
 int ink_camera_scan_init(void) {
     static const ink_cap_t caps[] = {
-        {.id = "camera.scan", .title = "打开扫码，返回类型和内容（不含 Wi-Fi 密码）", .output = "{\"type\":\"object\"}", .effect = INK_FX_READ, .child_ok = true, .permission = "camera", .timeout_ms = 15000, .run = scan},
-        {.id = "camera.scan_apply", .title = "执行扫码结果中的操作", .ask = "执行扫码操作：{content}", .effect = INK_FX_EXTERNAL, .child_ok = true, .activity = "Scan", .ask_by_hand = true, .prepare_confirm = prepare, .run = apply}
+        {.id = "camera.scan", .app = "camera", .title = "打开扫码，返回类型和内容（不含 Wi-Fi 密码）", .output = "{\"type\":\"object\"}", .effect = INK_FX_READ, .child_ok = true, .permission = "camera", .timeout_ms = 15000, .run = scan},
+        {.id = "camera.scan_apply", .app = "camera", .title = "执行扫码结果中的操作", .ask = "执行扫码操作：{content}", .effect = INK_FX_EXTERNAL, .child_ok = true, .activity = "Scan", .ask_by_hand = true, .prepare_confirm = prepare, .run = apply}
     };
     return ink_cap_find("camera.capture") ? ink_cap_register(caps, 2) : 0;
 }

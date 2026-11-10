@@ -421,19 +421,19 @@ static const char *const PERMISSIONS[] = {"file", "media", NULL};
 static const ink_app_def_t APP = {.id = "files", .title = "文件", .icon = INK_UI_ICON(folder), .entry = &PAGES[HOME], .system_app = true, .child_ok = true, .permissions = PERMISSIONS};
 #define ID_INPUT "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}},\"required\":[\"id\"]}"
 static const ink_cap_t CAPS[] = {
-    {.id = "files.new", .title = "新建文件夹或文本", .input = "{\"type\":\"object\",\"properties\":{\"text\":{\"type\":\"boolean\"}}}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "files.edit", .title = "编辑当前 txt 文件", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "files.multi", .title = "进入或退出文件多选", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "files.mark", .title = "选择或取消选择文件", .input = ID_INPUT, .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "files.all", .title = "选择当前文件夹的全部文件", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "files.browse", .title = "浏览文件夹", .input = "{\"type\":\"object\",\"properties\":{\"path\":{\"type\":\"string\",\"maxLength\":127}},\"required\":[\"path\"]}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "files.select", .title = "按编号查看文件操作", .input = ID_INPUT, .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "files.move", .title = "选移动目标文件夹", .input = "{\"type\":\"object\",\"properties\":{\"copy\":{\"type\":\"boolean\"}}}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "files.name", .title = "编辑文件名", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "files.preview", .title = "预览当前文本文件开头", .input = ID_INPUT, .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "files.next", .title = "文件下一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "files.prev", .title = "文件上一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "files.up", .title = "返回文件上一级", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate}
+    {.id = "files.new", .app = "files", .title = "新建文件夹或文本", .input = "{\"type\":\"object\",\"properties\":{\"text\":{\"type\":\"boolean\"}}}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "files.edit", .app = "files", .title = "编辑当前 txt 文件", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "files.multi", .app = "files", .title = "进入或退出文件多选", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "files.mark", .app = "files", .title = "选择或取消选择文件", .input = ID_INPUT, .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "files.all", .app = "files", .title = "选择当前文件夹的全部文件", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "files.browse", .app = "files", .title = "浏览文件夹", .input = "{\"type\":\"object\",\"properties\":{\"path\":{\"type\":\"string\",\"maxLength\":127}},\"required\":[\"path\"]}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "files.select", .app = "files", .title = "按编号查看文件操作", .input = ID_INPUT, .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "files.move", .app = "files", .title = "选移动目标文件夹", .input = "{\"type\":\"object\",\"properties\":{\"copy\":{\"type\":\"boolean\"}}}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "files.name", .app = "files", .title = "编辑文件名", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "files.preview", .app = "files", .title = "预览当前文本文件开头", .input = ID_INPUT, .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "files.next", .app = "files", .title = "文件下一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "files.prev", .app = "files", .title = "文件上一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "files.up", .app = "files", .title = "返回文件上一级", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate}
 };
 int ink_transfer_pages_init(void);
 int ink_files_init(void) { return ink_db_register(&DRAFT_REFS) || ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_app_register(&APP) || ink_cap_subscribe("file.changed", changed, NULL, INK_EXEC_UI) < 0 || ink_cap_subscribe("file.batch_progress", batch_progress, NULL, INK_EXEC_UI) < 0 || ink_transfer_pages_init() ? -1 : 0; }

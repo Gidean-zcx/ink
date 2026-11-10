@@ -62,7 +62,7 @@ static void cap_capture(ink_call_t *c) { /* exec.media */
 }
 
 static const ink_cap_t CAMERA_CAPS[] = {
-    {.id = "camera.capture",
+    {.id = "camera.capture", .app = "camera",
      .title = "取一帧画面给 AI 看，不保存",
      .output = "{\"type\":\"object\",\"properties\":{\"object\":{\"type\":\"string\"}}}",
      .effect = INK_FX_LOCAL_WRITE,

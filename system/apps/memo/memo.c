@@ -476,19 +476,19 @@ static const ink_app_def_t APP = {.id = "memo", .title = "备忘", .icon = INK_U
 #define ID "\"id\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}"
 #define ID_ARGS "{\"type\":\"object\",\"properties\":{" ID "},\"required\":[\"id\"]}"
 static const ink_cap_t CAPS[] = {
-    {.id = "memo.save", .title = "记下当前成员的长文草稿", .input = "{\"type\":\"object\",\"properties\":{" ID ",\"draft\":{\"type\":\"integer\",\"minimum\":1},\"page\":{\"type\":\"string\",\"enum\":[\"MemoEdit\",\"MemoSaveFail\"]}},\"required\":[\"id\",\"draft\",\"page\"]}", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_BG, .run = mutate},
-    {.id = "memo.delete", .title = "删除备忘（可撤销）", .input = ID_ARGS, .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_BG, .run = mutate},
-    {.id = "memo.undo", .title = "撤销删除备忘", .input = ID_ARGS, .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_BG, .run = mutate},
-    {.id = "memo.convert", .title = "逐行转成清单（最多 32 项）", .input = ID_ARGS, .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_BG, .run = mutate},
-    {.id = "memo.check", .title = "勾选或取消清单项", .input = "{\"type\":\"object\",\"properties\":{" ID ",\"index\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":31}},\"required\":[\"id\",\"index\"]}", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_BG, .run = mutate},
-    {.id = "memo.open", .title = "查看备忘", .input = ID_ARGS, .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "memo.edit", .title = "写一条或编辑备忘", .input = "{\"type\":\"object\",\"properties\":{" ID "}}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "memo.next", .title = "备忘下一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "memo.prev", .title = "备忘上一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "memo.retry", .title = "重试记下备忘", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "memo.record", .title = "说一句：录一条语音备忘（联网后整理成文字）", .output = "{\"type\":\"object\"}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = record},
-    {.id = "memo.play", .title = "播放语音备忘的录音", .input = ID_ARGS, .effect = INK_FX_NAVIGATE, .child_ok = true, .exec = INK_EXEC_BG, .run = play},
-    {.id = "memo.voice", .title = "把录好的音存成语音备忘，或填上中枢整理的文字", .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":0},\"path\":{\"type\":\"string\",\"maxLength\":127},\"ms\":{\"type\":\"integer\",\"minimum\":0}}}",
+    {.id = "memo.save", .app = "memo", .title = "记下当前成员的长文草稿", .input = "{\"type\":\"object\",\"properties\":{" ID ",\"draft\":{\"type\":\"integer\",\"minimum\":1},\"page\":{\"type\":\"string\",\"enum\":[\"MemoEdit\",\"MemoSaveFail\"]}},\"required\":[\"id\",\"draft\",\"page\"]}", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_BG, .run = mutate},
+    {.id = "memo.delete", .app = "memo", .title = "删除备忘（可撤销）", .input = ID_ARGS, .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_BG, .run = mutate},
+    {.id = "memo.undo", .app = "memo", .title = "撤销删除备忘", .input = ID_ARGS, .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_BG, .run = mutate},
+    {.id = "memo.convert", .app = "memo", .title = "逐行转成清单（最多 32 项）", .input = ID_ARGS, .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_BG, .run = mutate},
+    {.id = "memo.check", .app = "memo", .title = "勾选或取消清单项", .input = "{\"type\":\"object\",\"properties\":{" ID ",\"index\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":31}},\"required\":[\"id\",\"index\"]}", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_BG, .run = mutate},
+    {.id = "memo.open", .app = "memo", .title = "查看备忘", .input = ID_ARGS, .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "memo.edit", .app = "memo", .title = "写一条或编辑备忘", .input = "{\"type\":\"object\",\"properties\":{" ID "}}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "memo.next", .app = "memo", .title = "备忘下一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "memo.prev", .app = "memo", .title = "备忘上一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "memo.retry", .app = "memo", .title = "重试记下备忘", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "memo.record", .app = "memo", .title = "说一句：录一条语音备忘（联网后整理成文字）", .output = "{\"type\":\"object\"}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = record},
+    {.id = "memo.play", .app = "memo", .title = "播放语音备忘的录音", .input = ID_ARGS, .effect = INK_FX_NAVIGATE, .child_ok = true, .exec = INK_EXEC_BG, .run = play},
+    {.id = "memo.voice", .app = "memo", .title = "把录好的音存成语音备忘，或填上中枢整理的文字", .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":0},\"path\":{\"type\":\"string\",\"maxLength\":127},\"ms\":{\"type\":\"integer\",\"minimum\":0}}}",
      .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .expose = INK_EXPOSE_APP, .exec = INK_EXEC_BG, .run = mutate}
 };
 int ink_memo_init(void) {

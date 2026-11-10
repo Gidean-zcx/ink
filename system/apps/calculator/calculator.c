@@ -308,11 +308,11 @@ static int snapshot(char *out, size_t cap) { return ink_ui_semantics_snapshot(&K
 static const ink_activity_t PAGE = {.name = "Calculator", .app = "calculator", .create = create, .destroy = destroy, .snapshot = snapshot};
 static const ink_app_def_t APP = {.id = "calculator", .title = "计算器", .icon = INK_UI_ICON(calc), .entry = &PAGE, .system_app = true, .child_ok = true};
 static const ink_cap_t CAPS[] = {
-    {.id = "calc.eval", .title = "给一个算式求值（加减乘除、百分号，十进制 8 位小数）",
+    {.id = "calc.eval", .app = "calculator", .title = "给一个算式求值（加减乘除、百分号，十进制 8 位小数）",
      .input = "{\"type\":\"object\",\"properties\":{\"expr\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":64}},\"required\":[\"expr\"]}",
      .output = "{\"type\":\"object\",\"properties\":{\"expr\":{\"type\":\"string\"},\"result\":{\"type\":\"string\"}}}",
      .effect = INK_FX_READ, .child_ok = true, .run = eval_cap},
-    {.id = "calc.key", .title = "按计算器的一个键（back 删除一位，neg 正负号，clear 清除）",
+    {.id = "calc.key", .app = "calculator", .title = "按计算器的一个键（back 删除一位，neg 正负号，clear 清除）",
      .input = "{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"string\",\"enum\":[\"0\",\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\","
               "\".\",\"+\",\"-\",\"*\",\"/\",\"%\",\"neg\",\"back\",\"clear\",\"=\"]}},\"required\":[\"key\"]}",
      .activity = "Calculator", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = key_cap}};

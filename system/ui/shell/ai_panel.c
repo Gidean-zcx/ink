@@ -185,10 +185,10 @@ static void action(ink_call_t *c) {
     if (!strcmp(id, "ai.panel.next") || !strcmp(id, "ai.panel.prev")) ink_ui_content_changed();
 }
 static const ink_cap_t CAPS[] = {
-    {.id = "ai.panel.hide", .title = "收起 AI 面板（继续处理）", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action},
-    {.id = "ai.panel.listen", .title = "用话筒问这一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action},
-    {.id = "ai.panel.next", .title = "答案下一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action},
-    {.id = "ai.panel.prev", .title = "答案上一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action}
+    {.id = "ai.panel.hide", .app = "ai", .title = "收起 AI 面板（继续处理）", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action},
+    {.id = "ai.panel.listen", .app = "ai", .title = "用话筒问这一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action},
+    {.id = "ai.panel.next", .app = "ai", .title = "答案下一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action},
+    {.id = "ai.panel.prev", .app = "ai", .title = "答案上一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action}
 };
 
 void ink_shell_ai_open(lv_obj_t **root, lv_obj_t **status, lv_obj_t **question, lv_obj_t **answer) {

@@ -11,11 +11,12 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[2]
 p = argparse.ArgumentParser()
 p.add_argument('--build', type=Path, required=True)
+p.add_argument('--binary', type=Path)
 p.add_argument('--reverse', nargs='?', const='draft', choices=('draft', 'selection'))
 a = p.parse_args()
 build = a.build.resolve()
 work = Path(tempfile.mkdtemp(prefix='files-ops-', dir=build))
-binary = build / 'sim-files-ops'
+binary = a.binary.resolve() if a.binary else build / 'sim-files-ops'
 if a.reverse:
     source = (ROOT / 'system/apps/files/files.c').read_text()
     old, replacement = ('F.ref = rec.id; F.draft = (uint32_t)draft; break;', 'F.ref = rec.id; F.draft = 0; break;') if a.reverse == 'draft' else (

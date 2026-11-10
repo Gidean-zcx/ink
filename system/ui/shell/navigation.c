@@ -198,7 +198,7 @@ static void binding_event(lv_event_t *e) {
         return;
     }
     const ink_cap_t *cap = ink_cap_find(b->cap);
-    bool locked_action = (cap && cap->while_locked) || (ink_camera_restricted() && !strcmp(b->cap, "shell.back"));
+    bool locked_action = ink_ui_locked_activity() ? ink_ui_locked_allows(b->cap) : cap && cap->while_locked;
     if (!current_session(b->epoch) && (b->member_epoch != ink_member_epoch() || !locked_action)) return;
     ink_call_opts_t o = {.src = INK_SRC_TOUCH,
                          .args_json = b->args[0] ? b->args : NULL,
@@ -1598,7 +1598,8 @@ static void cap_nav(ink_call_t *c) {
     } else if (!strcmp(c->cap->id, "shell.close"))
         ink_shell_close();
     else if (!strcmp(c->cap->id, "shell.back")) {
-        if (!ink_camera_close_locked() && !ink_shell_close()) ink_ui_pop();
+        const ink_activity_t *a = ink_ui_locked_activity();
+        if (!(a && a->on_key && a->on_key(INK_KEY_BACK, false)) && !ink_shell_close()) ink_ui_pop();
     } else if (!strcmp(c->cap->id, "shell.members"))
         ink_shell_members_open(false);
     else if (!strcmp(c->cap->id, "shell.more")) {
@@ -1735,13 +1736,13 @@ static const ink_cap_t CAPS[] = {
      .effect = INK_FX_NAVIGATE,
      .child_ok = false,
      .run = cap_nav},
-    {.id = "home.next",
+    {.id = "home.next", .app = "home",
      .title = "主页下一屏",
      .activity = "home",
      .effect = INK_FX_NAVIGATE,
      .child_ok = true,
      .run = cap_nav},
-    {.id = "home.prev",
+    {.id = "home.prev", .app = "home",
      .title = "主页上一屏",
      .activity = "home",
      .effect = INK_FX_NAVIGATE,

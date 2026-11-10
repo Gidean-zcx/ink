@@ -11,7 +11,6 @@
 #include "ink/probe.h"
 #include "ink/sys/ai.h"
 #include "ink/sys/cap.h"
-#include "ink/sys/camera.h"
 #include "ink/sys/data.h"
 #include "ink/sys/file.h"
 #include "ink/sys/input.h"
@@ -26,7 +25,8 @@
 #include "ink/sys/ui.h"
 
 static void go_home(ink_call_t *c) {
-    if (ink_camera_close_locked()) return;
+    const ink_activity_t *a = ink_ui_locked_activity();
+    if (a && a->on_key && a->on_key(INK_KEY_HOME, false)) return;
     ink_receipt_t *rc = &c->rc;
     ink_ui_home();
     snprintf(rc->object, sizeof rc->object, "screen:home");

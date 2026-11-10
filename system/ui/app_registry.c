@@ -468,7 +468,7 @@ static void cap_list(ink_call_t *c) {
 static void cap_open(ink_call_t *c) { /* UI task */
     char id[32];
     ink_args_get_str(&c->args, "id", id, sizeof id);
-    bool locked = ink_power_state() == INK_PWR_LOCKED || !ink_member_space_open() || ink_camera_restricted();
+    bool locked = ink_power_state() == INK_PWR_LOCKED || !ink_member_space_open() || ink_ui_locked_activity();
     if (locked && strcmp(id, "camera")) { fail(c, INK_RC_REJECTED, "only the camera is available while locked"); return; }
     int r = locked ? ink_camera_open_locked() : ink_app_open(id, NULL, NULL);
     if (r == -3) fail(c, INK_RC_REJECTED, TR("家长没有打开这个应用"));

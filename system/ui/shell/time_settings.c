@@ -161,7 +161,7 @@ static void changed(void *ctx, int h, const char *id) {
         }
         return;
     }
-    ink_ui_redraw();
+    if (!strcmp(id, "time.auto") || !strcmp(id, "time.zone_auto") || !strcmp(id, "time.zone") || !strcmp(id, "member.idle_return_s")) ink_ui_redraw();
 }
 int ink_time_settings_init(void) {
     static const ink_cap_t caps[] = {

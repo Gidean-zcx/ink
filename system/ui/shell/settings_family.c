@@ -354,7 +354,7 @@ int ink_settings_family_init(void) {
         {.id = "shell.records", .title = "查看使用记录", .effect = INK_FX_NAVIGATE, .run = action,
          .input = "{\"type\":\"object\",\"properties\":{\"member\":{\"type\":\"string\",\"maxLength\":15},\"children\":{\"type\":\"boolean\"}}}"},
         {.id = "shell.runtime_records", .title = "查看运行记录", .effect = INK_FX_NAVIGATE, .run = action},
-        {.id = "shell.ai_memory", .title = "查看 AI 记得的事", .effect = INK_FX_NAVIGATE, .run = action},
+        {.id = "shell.ai_memory", .app = "ai", .title = "查看 AI 记得的事", .effect = INK_FX_NAVIGATE, .run = action},
         {.id = "family.edit", .title = "编辑家人的称呼或添加家人", .activity = "SetMembers", .effect = INK_FX_NAVIGATE, .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":15}}}", .run = action},
         {.id = "family.focus", .title = "输入家人的称呼", .activity = "SetMembers", .effect = INK_FX_NAVIGATE, .run = action},
         {.id = "family.save", .title = "保存家人的称呼", .activity = "SetMembers", .effect = INK_FX_LOCAL_WRITE, .run = action},

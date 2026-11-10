@@ -102,6 +102,35 @@ static void batch_fixture(const char *directory_path) {
     for (int i = 0; i < 3; i++) { char path[128]; snprintf(path, sizeof path, "%s/SYNTH_%d.txt", directory_path, i); CHECK(!ink_fs_write_atomic(path, "SYNTH", 5), "batch file"); ids[i] = lookup(path); CHECK(ids[i], "file id"); }
 }
 static void batch_args_test(const char *op, const char *to) { snprintf(args_json, sizeof args_json, "{\"ids\":[%u,%u,%u],\"op\":\"%s\",\"to\":\"%s\"}", (unsigned)ids[0], (unsigned)ids[1], (unsigned)ids[2], op, to); }
+static void batch_receipts(void) {
+    CHECK(!ink_fs_mkdir("/me/SYNTH_RECEIPT") && !ink_fs_mkdir("/me/SYNTH_RECEIPT_COPY") && !ink_fs_mkdir("/me/SYNTH_RECEIPT_MOVE"), "receipt fixture folders");
+    for (unsigned i = 0; i < 26; i++) {
+        char path[128]; snprintf(path, sizeof path, "/me/SYNTH_RECEIPT/SYNTH_%02u_回执.txt", i);
+        CHECK(!ink_fs_write_atomic(path, "SYNTH", 5), "receipt source file");
+        if (i < 25) {
+            snprintf(path, sizeof path, "/me/SYNTH_RECEIPT_COPY/SYNTH_%02u_回执.txt", i);
+            CHECK(!ink_fs_write_atomic(path, "OLD", 3), "receipt destination collision");
+        }
+    }
+    CHECK(AI("file.batch", "{\"op\":\"copy\",\"all_path\":\"/me/SYNTH_RECEIPT\",\"to\":\"/me/SYNTH_RECEIPT_COPY\"}") && g_rc.status == INK_RC_PARTIAL, "large mixed batch completes");
+    ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
+    CHECK(j && !ink_json_parse(j, g_result, strlen(g_result)), "bounded receipt is complete JSON");
+    if (j) {
+        int64_t value = 0; int names = ink_json_find(j, 0, "failures");
+        CHECK(ink_json_int(j, ink_json_find(j, 0, "total"), &value) && value == 26, "receipt total counts every file");
+        CHECK(ink_json_int(j, ink_json_find(j, 0, "succeeded"), &value) && value == 1, "receipt counts real success");
+        CHECK(ink_json_int(j, ink_json_find(j, 0, "failed"), &value) && value == 25, "receipt counts all failures");
+        CHECK(ink_json_int(j, ink_json_find(j, 0, "more"), &value) && value == 5 && strstr(g_rc.say, "还有 5 个"), "receipt explains omitted failures");
+        CHECK(names >= 0 && j->tok[names].type == 2 && j->tok[names].size == 20, "receipt contains at most twenty failure names");
+        for (int t = names + 1; names >= 0 && t < j->ntok && j->tok[t].start < j->tok[names].end; t++) {
+            char name[64]; CHECK(ink_json_str(j, t, name, sizeof name) > 0 && !strchr(name, '/') && strstr(name, "回执") && !strstr(name, "SYNTH_25_"), "only complete UTF-8 failure basenames are listed");
+        }
+        osal_free(j);
+    }
+    CHECK(strlen(g_result) < 2048 && !strstr(g_result, "\"results\"") && !strstr(g_result, "\"error\""), "receipt excludes per-file successes and errors");
+    CHECK(AI("file.batch", "{\"op\":\"move\",\"all_path\":\"/me/SYNTH_RECEIPT\",\"to\":\"/me/SYNTH_RECEIPT_MOVE\"}") && g_rc.status == INK_RC_DONE &&
+        strstr(g_result, "\"total\":26") && strstr(g_result, "\"succeeded\":26") && strstr(g_result, "\"failed\":0") && strstr(g_result, "\"failures\":[]") && strstr(g_result, "\"more\":0"), "successful batch returns only totals and an empty failure list");
+}
 static void batch_ops(void) {
     roots(); batch_fixture("/me/SYNTH_BATCH"); CHECK(!ink_fs_mkdir("/me/SYNTH_COPY") && !ink_fs_mkdir("/me/SYNTH_MOVE"), "destinations"); browse("/me/SYNTH_BATCH"); touch("多选"); wait_page("FileList");
     row_marked = true; touch("SYNTH_1.txt"); wait_page("FileList"); on_ui(check_row);
@@ -113,13 +142,14 @@ static void batch_ops(void) {
     roots(); browse("/me/SYNTH_BATCH"); touch("多选"); wait_page("FileList");
     for (int i = 0; i < 3; i++) { snprintf(args_json, sizeof args_json, "{\"id\":%u}", (unsigned)ids[i]); command("files.mark", args_json); wait_page("FileList"); }
     touch("移动"); wait_page("FileMove"); command("files.browse", "{\"path\":\"/me/SYNTH_MOVE\"}"); wait_page("FileMove"); touch("放到这里"); CHECK(WAIT_FOR(!exists("/me/SYNTH_BATCH/SYNTH_2.txt") && exists("/me/SYNTH_MOVE/SYNTH_2.txt"), 15000), "touch moves three"); wait_page("FileMove");
-    batch_args_test("copy", "/me/SYNTH_COPY"); CHECK(AI("file.batch", args_json) && g_rc.status == INK_RC_PARTIAL && strstr(g_result, "SYNTH_0.txt") && strstr(g_result, "exists"), "AI partial collision names failed files: %.150s", g_result);
+    batch_args_test("copy", "/me/SYNTH_COPY"); CHECK(AI("file.batch", args_json) && g_rc.status == INK_RC_PARTIAL && strstr(g_result, "SYNTH_0.txt") && strstr(g_result, "\"failed\":3") && strstr(g_result, "\"succeeded\":0") && !strstr(g_result, "\"error\""), "AI partial collision summarizes failed files: %.150s", g_result);
     CHECK(!ink_fs_mkdir("/me/SYNTH_PARTIAL") && !ink_fs_write_atomic("/me/SYNTH_PARTIAL/SYNTH_1.txt", "OLD", 3), "partial fixture");
     roots(); browse("/me/SYNTH_MOVE"); touch("多选"); wait_page("FileList"); touch("全选"); wait_page("FileList"); touch("拷贝"); wait_page("FileMove");
     command("files.browse", "{\"path\":\"/me/SYNTH_PARTIAL\"}"); wait_page("FileMove"); touch("拷贝到这里");
     CHECK(WAIT_FOR(!F.busy && F.notice && strstr(lv_label_get_text(F.notice), "SYNTH_1.txt"), 15000), "partial touch operation finishes with a named failure");
     CHECK(exists("/me/SYNTH_PARTIAL/SYNTH_0.txt") && exists("/me/SYNTH_PARTIAL/SYNTH_2.txt"), "partial successes are real");
     quiet(); on_ui(check_partial); capture("PartialFailure");
+    batch_receipts();
     command("file.write", "{\"path\":\"/me/SYNTH_AI_TXT.txt\",\"text\":\"SYNTH_AI_NEW\"}"); command("file.write", "{\"path\":\"/me/SYNTH_AI_TXT.txt\",\"text\":\"SYNTH_AI_EDIT\",\"replace\":true}");
     read_file("/me/SYNTH_AI_TXT.txt"); CHECK(!strcmp(saved, "SYNTH_AI_EDIT"), "AI creates and edits through file.write");
     snprintf(args_json, sizeof args_json, "{\"all_path\":\"/me/SYNTH_COPY\"}"); CHECK(AI("file.delete_many", args_json) && g_rc.status == INK_RC_PENDING_CONFIRMATION, "AI batch deletion has same confirmation");
