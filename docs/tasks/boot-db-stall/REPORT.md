@@ -1,6 +1,6 @@
 # boot-db-stall 执行报告
 
-基线：`ec78378e05f2694b9fa410780ab2bcf9d8de1c99`。状态：修复与反向对照完成，全量及内存检查进行中。
+基线：`ec78378e05f2694b9fa410780ab2bcf9d8de1c99`。状态：修复、反向对照及普通全量完成，内存检查进行中。
 
 ## 验收表
 
@@ -9,7 +9,9 @@
 | 1 开机后台首次打开、文件列表 | 通过【实测】 | 原有 write／verify／review 场景通过；联网时两次备忘调用均完成，空集合返回 INVALID；文件首页点按到驱动后能进入并读完 FileList | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/files_app/run.py --build build --trace` |
 | 1 AI 从未打开备忘时保存 | 通过【实测】 | 新增 cold-save：调用前缓存中没有 memo.notes；AI 保存成功，正文、来源与耐久版本正确，文件列表也读完 | 同上 |
 | 1 反向对照 | 通过【实测】 | 只撤销首页修复，write 恢复失败：实际停在 Files、busy=0；只恢复备忘的缓存限制，cold-save 的保存与记录断言失败。两个命令均预期退出 1 | 上述命令分别加 `--mutant index-redraw`、`--mutant memo-cache` |
-| 2 原有测试、全量、内存检查、S31、gcccheck | 待验证 | 普通全量正在运行 | 待补 |
+| 2 原有测试、全量 | 通过，3 项待补验【实测】 | 原话 `100% tests passed out of 317`，216.09 秒；314 通过，中枢三项缺依赖跳过；files-app、memo、memo-record、索引系列及确定性都通过 | `taskpolicy -c utility cmake --build build -j4`；`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j3` |
+| 2 内存检查、S31 | 待验证 | ASan/UBSan 全量构建进行中 | 待补 |
+| 2 gcccheck | 产品两项通过，测试有既有问题【实测】 | `gcccheck: 3 compiled, 1 with findings`；基线对照同样报 sscanf 一处、两个参数类型告警；新增修改行无告警 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" ../../tools/gcccheck.py build system/apps/files/files.c system/apps/memo/memo.c tests/files_app/files_app.c` |
 | 3 时间线、根因、修法、撤销限制 | 完成【实测／实现】 | 见下；根因与任务书原先假设不同 | 带 `--trace` 的正反对照；临时增加平台 probe 定位后已全部撤销 |
 
 ## 时间线、根因与修法
@@ -39,6 +41,8 @@
 
 修复只在文件应用事件入口加一行：HOME 收到 indexed 时保留页面，因为首页只列成员与家庭入口，内容不依赖文件索引。列表、文件操作和移动页仍处理索引变化。备忘 mutate、play 恢复 `ink_db_open_member`；删除“请先打开备忘”提示，真实加载失败仍返回失败。数据存储和调度机制没有改动。
 
+影响范围【实现】：任何让索引完成通知与文件首页点按重叠的后台慢操作都可能触发，备忘只是本次触发源；各成员的 indexed 通知共用这一处修复。读代码还核对了短信、联系人、通话记录、通知、播放进度、备份、搜索及 data.* 的成员集合打开路径；它们共用同一读盘接口，可能等显示守卫，本次没有它们会永久等待的证据，未逐个打补丁。
+
 【实测】修复版联网调用 2.806 秒发起，两个回执在 4.080 秒返回；cold-save 在 4.850 秒从空缓存开始保存，6.630 秒完成，记录已经落盘。证据：`build/files-app-yv7u8q74/`；反例：`build/files-app-fzrh__re/`、`build/files-app-uy5yv5fa/`；初始存储追踪：`work/boot-db-stall/trace-unfixed/`。这些构建产物不提交。
 
 ## 没做到的
@@ -62,7 +66,7 @@
 
 ## 顺手发现
 
-- gcccheck 的 RISC-V 编译指出原 files-app 的 sscanf 用 `%u` 读 uint32_t 指针；该工具上 uint32_t 为 unsigned long。任务前报告已记录同一项，本次未改该代码；正在做基线对照。
+- gcccheck 的 RISC-V 编译指出原 files-app 的 sscanf 用 `%u` 读 uint32_t 指针；该工具上 uint32_t 为 unsigned long。基线第 219 行与修复版第 227 行相同的两个指针都报错，退出 1。本次三个 C 文件中产品代码两项无告警，测试只见这一处既有问题；未改该代码。
 
 ## 新增的机制
 
