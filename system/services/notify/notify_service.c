@@ -88,7 +88,6 @@ static void publish_unread(void) {
     int n = NS.unread;
     ink_svc_unlock();
     ink_state_set_int(NS.h_unread, n);
-    ink_cap_emit("notify.changed", NULL);
 }
 
 static void recount(void) {
@@ -103,9 +102,11 @@ static void recount(void) {
         ink_db_close(db);
     }
     ink_svc_lock();
+    bool unchanged = NS.unread == n;
     NS.unread = n;
     ink_svc_unlock();
     publish_unread();
+    if (unchanged) ink_cap_emit("notify.changed", NULL);
 }
 
 static int encode(char *out, size_t cap, const ink_notify_t *n, const char *channel, int prio, bool read) {
@@ -514,7 +515,7 @@ int ink_notify_channel_set(const char *id, bool on) {
     else NS.off |= 1u << i;
     ink_svc_unlock();
     save_prefs();
-    ink_cap_emit("notify.changed", NULL);
+    ink_cap_emit("notify.channels_changed", NULL);
     return 0;
 }
 

@@ -32,6 +32,9 @@ cases = (
      'if (ink_cap_subscribe("notify.changed", notify_changed, NULL, INK_EXEC_UI)) return -1;',
      'if (ink_cap_subscribe("notify.never", notify_changed, NULL, INK_EXEC_UI)) return -1;',
      'read-notice deletion refreshes list without unread change'),
+    ('page-bindings', 'system/ui/shell/navigation.c',
+     'if (!(index % (size_t)N.notify_capacity)) memset(N.notify_ids, 0, sizeof N.notify_ids);',
+     '(void)index;', 'returned notification page has no stale fields or actions'),
 )
 for name, path, old, new, expected in cases:
     source = (ROOT / path).read_text()

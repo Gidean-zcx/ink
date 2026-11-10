@@ -83,7 +83,7 @@ static void dismiss_ai(uint32_t id) {
 }
 static void deletion(void) {
     CHECK(ink_notify_clear() == 0, "start with clean synthetic inbox");
-    post("SYNTH_KEEP"); uint32_t touch_id = post("SYNTH_TOUCH"), ai_id = post("SYNTH_AI");
+    uint32_t keep_id = post("SYNTH_KEEP"), touch_id = post("SYNTH_TOUCH"), ai_id = post("SYNTH_AI");
     CHECK(count() == 3 && ink_notify_unread() == 3, "three independent unread notices");
     CHECK(AI("shell.notifications", NULL) && g_rc.status == INK_RC_DONE, "open notification list"); quiet();
     CHECK(page_has("notify.dismiss") && page_has("SYNTH_TOUCH"), "snapshot exposes per-notification dismiss arguments");
@@ -99,6 +99,23 @@ static void deletion(void) {
     CHECK(count() == 1 && ink_notify_unread() == 1 && !page_has("SYNTH_AI"), "AI deletion updates list and unread count");
     post("SYNTH_UNREAD"); quiet(); press("SYNTH_UNREAD", "notify.dismiss");
     CHECK(count() == 1 && ink_notify_unread() == 1 && find_notice("SYNTH_KEEP"), "touch deletion of unread notice decrements count");
+    uint32_t extra[5];
+    const char *body = "SYNTH notification body that is deliberately long enough to exercise the production AI context together with every visible action and notification title.";
+    for (unsigned i = 0; i < sizeof extra / sizeof *extra; i++) {
+        char title[48]; snprintf(title, sizeof title, "SYNTH_LONG_NOTIFICATION_WITH_BODY_%u", i);
+        ink_notify_t n = {.channel = "ai", .title = title, .body = body, .prio = INK_NOTIFY_LOW};
+        CHECK(ink_notify_post(&n, &extra[i]) == 0, "post full-page notification fixture");
+    }
+    quiet(); on_ui(read_page);
+    CHECK(AI("shell.notify_next", NULL), "visit notification second page"); quiet();
+    CHECK(page_has("SYNTH_KEEP") && !page_has("SYNTH_LONG_NOTIFICATION_WITH_BODY_4"), "snapshot actions belong only to the current page");
+    CHECK(AI("shell.notify_prev", NULL), "return to notification first page"); quiet();
+    char keep_object[64]; snprintf(keep_object, sizeof keep_object, "\"object\":\"notify:%u\"", (unsigned)keep_id);
+    CHECK(!page_has("SYNTH_KEEP") && !page_has(keep_object), "returned notification page has no stale fields or actions");
+    setting("display.font_size", 3); evidence("notifications-zh-large");
+    setting("system.language", 1); evidence("notifications-en-large");
+    setting("system.language", 0); setting("display.font_size", 1);
+    for (unsigned i = 0; i < sizeof extra / sizeof *extra; i++) dismiss_ai(extra[i]);
 }
 static void sms(void) {
     snprintf(g_hw.num, sizeof g_hw.num, "10000000000"); snprintf(g_hw.text, sizeof g_hw.text, "SYNTH_SMS");
@@ -106,7 +123,11 @@ static void sms(void) {
 }
 static void channels(void) {
     CHECK(AI("shell.settings", NULL) && g_rc.status == INK_RC_DONE, "open settings directory"); quiet();
-    CHECK(locate_label("通知", "shell.notify_settings"), "settings has a notification entry"); press("通知", "shell.notify_settings");
+    press("声音", "shell.sound");
+    for (int i = 0; i < 3 && !locate_label("通知", "shell.notify_settings"); i++) {
+        CHECK(AI("shell.page_next", NULL), "visit next sound settings page"); quiet();
+    }
+    CHECK(locate_label("通知", "shell.notify_settings"), "sound settings has a notification entry"); press("通知", "shell.notify_settings");
     CHECK(!strcmp(ink_ui_page_name(), "SetNotifications"), "touch opens notification settings");
     const ink_notify_channel_t *ch;
     for (int i = 0; (ch = ink_notify_channel_at(i)); i++) {

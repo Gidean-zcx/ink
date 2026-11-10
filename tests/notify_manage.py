@@ -17,7 +17,7 @@ area = build / 'notify-manage-evidence' / binary.name
 shutil.rmtree(area, ignore_errors=True)
 area.mkdir(parents=True)
 frames = ['notifications-zh', 'notifications-en', 'channels-zh', 'channels-en',
-          'channels-zh-large', 'channels-en-large']
+          'channels-zh-large', 'channels-en-large', 'notifications-zh-large', 'notifications-en-large']
 for phase in ('main', 'restart'):
     out = area / phase
     result = subprocess.run([str(binary), '--profile', str(ROOT / 'simulator/profiles/metalio-plus.json'),
