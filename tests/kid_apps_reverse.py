@@ -24,6 +24,11 @@ cases = [
         "Tuesday morning belongs to Monday's overnight period"),
     ("persistence", "r->policy = KP[s - M.s];", "r->policy = (kid_policy_t){0};",
         "overnight period and weekdays survive restart"),
+    ("home-entry", '!strcmp(app, "home") || ink_member_app_mode(NULL, app) == 2',
+        'strcmp(app, "home") && ink_member_app_mode(NULL, app) == 2',
+        "restricted hours allow the real HOME key to reach permitted applications"),
+    ("deadline-notice", '    if (previous_daily != daily) ink_app_card_changed("home");', "    (void)previous_daily;",
+        "daily expiry updates an exempt app inside an already restricted period"),
 ]
 flags = (build / "CMakeFiles/ink_system.dir/flags.make").read_text()
 options = []

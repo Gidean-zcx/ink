@@ -60,6 +60,9 @@ static void capture_event(void *arg) {
 }
 static void capture(const char *name) { scene = name; quiet(); vtk_event_at(vtk_now() + SIM_MS(1), capture_event, NULL); delay_ms(5); }
 static void home(void) { ink_ui_home(); }
+static void all_apps(void) {
+    for (int i = 0; i < 2 && strcmp(ink_shell_board(), "KidApps"); i++) ink_shell_home_swipe(INK_SWIPE_LEFT);
+}
 static void denied(const char *cap, const char *args, bool by_hand) {
     CHECK(call_as(cap, args, by_hand ? INK_SRC_TOUCH : INK_SRC_AI) && g_rc.status == INK_RC_REJECTED, "list denies %s (%s)", cap, ink_rc_name(g_rc.status));
     CHECK(strstr(g_rc.detail, "家长没有打开这个应用"), "denial explains the parent application list: %.150s", g_rc.detail);
@@ -101,7 +104,14 @@ static void policy(void) {
     period("{\"id\":\"kid\",\"index\":1,\"start\":480,\"end\":960,\"days\":4}");
     child(); clock_at(9, 20, 59);
     CHECK(!ink_member_time_up(), "Monday before 21:00 is outside the overnight period");
+    ok("app.open", "{\"id\":\"reader\"}");
     delay_ms(61000); CHECK(WAIT_FOR(page("KidTimeUp"), 5000), "the existing deadline enters TimeUp at the start boundary");
+    key(HAL_KEY_HOME); quiet(); CHECK(page("home"), "restricted hours allow the real HOME key to reach permitted applications");
+    on_ui(all_apps); quiet(); wanted = "时钟"; on_ui(find_label); CHECK(found, "the permitted clock tile is visible");
+    double touches = sim_metric_value("home.taps");
+    if (found) tap(point.x, point.y - ink_ui_px(INK_CIRCLE / 2 + INK_GAP_S + ink_ui_line_height(INK_FONT_NOTE) / 2));
+    CHECK(WAIT_FOR(sim_metric_value("home.taps") > touches, 1000), "the real clock tap reaches its shared capability");
+    quiet(); CHECK(page("Clock"), "the actual app tile opens an exempt clock during restricted hours: %.60s", g_top);
     ok("app.open", "{\"id\":\"clock\"}"); CHECK(page("Clock"), "an explicitly exempt app opens during restricted hours");
     CHECK(AI("app.open", "{\"id\":\"reader\"}") && g_rc.status == INK_RC_REJECTED && page("KidTimeUp"), "ordinary app opens TimeUp during restricted hours");
     ok("app.open", "{\"id\":\"phone\"}"); CHECK(page("Phone"), "required phone remains available");
@@ -113,8 +123,11 @@ static void policy(void) {
     clock_at(8, 23, 0); CHECK(!ink_member_time_up(), "an unselected Sunday is unrestricted");
     parent(); clock_at(10, 12, 0);
     change("member.time_set", "{\"id\":\"kid\",\"minutes\":1}"); child();
+    ok("app.open", "{\"id\":\"clock\"}");
     delay_ms(61000); CHECK(ink_member_time_up() && !ink_member_app_time_allows("clock"), "daily allowance overrides a restricted-hours exemption");
+    CHECK(WAIT_FOR(page("KidTimeUp"), 5000), "daily expiry updates an exempt app inside an already restricted period");
     CHECK(AI("app.open", "{\"id\":\"clock\"}") && g_rc.status == INK_RC_REJECTED && page("KidTimeUp"), "daily allowance still blocks the exempt clock");
+    key(HAL_KEY_HOME); quiet(); CHECK(page("KidTimeUp"), "the daily allowance still prevents HOME from bypassing TimeUp");
     ok("app.open", "{\"id\":\"message\"}"); CHECK(!strcmp(ink_ui_page_name(), "Sms"), "required SMS survives both restrictions");
     parent(); change("member.time_set", "{\"id\":\"kid\",\"minutes\":0}");
     ok("shell.kid_settings", NULL); touch("应用名单"); CHECK(page("SetKidApps"), "SetKid opens its real application list");

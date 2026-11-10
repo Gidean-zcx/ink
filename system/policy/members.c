@@ -917,7 +917,7 @@ bool ink_member_time_up(void) { return daily_up() || restricted(); }
 bool ink_member_app_time_allows(const char *app) {
     if (cur()->m.role != INK_ROLE_CHILD) return true;
     if (app && (!strcmp(app, "phone") || !strcmp(app, "message") || !strcmp(app, "contacts") || !strcmp(app, "settings"))) return true;
-    return !daily_up() && (!restricted() || (app && strcmp(app, "home") && ink_member_app_mode(NULL, app) == 2));
+    return !daily_up() && (!restricted() || (app && (!strcmp(app, "home") || ink_member_app_mode(NULL, app) == 2)));
 }
 bool ink_member_time_allows(const char *id) {
     const char *owner = action_app(id);
@@ -937,6 +937,7 @@ bool ink_member_time_allows(const char *id) {
 
 static void time_job(void *arg) {
     (void)arg; time_account();
+    static bool daily; bool previous_daily = daily; daily = daily_up();
     bool up = ink_member_time_up();
     if (up) {
         ink_call_opts_t opts = {.src = INK_SRC_SYSTEM, .reply_exec = INK_EXEC_UI};
@@ -947,6 +948,7 @@ static void time_job(void *arg) {
     if (M.time_dirty) { save_all(); M.time_dirty = false; }
     if (!M.timed) return;
     if (!M.counting) return;
+    if (previous_daily != daily) ink_app_card_changed("home");
     uint64_t delay = 60000000, used = cur()->time.used_us;
     uint64_t limit = (uint64_t)(cur()->time.minutes + cur()->time.extra) * 60000000;
     if (cur()->time.minutes && limit > used && limit - used < delay) delay = limit - used;

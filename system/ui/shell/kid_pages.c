@@ -27,6 +27,7 @@ static void close_page(void) {
 }
 void ink_shell_kid_close(void) { close_page(); }
 static bool on_key(ink_key_t key, bool lng) {
+    if (K.up && !lng && (key == INK_KEY_HOME || key == INK_KEY_BACK) && ink_member_app_time_allows("home")) { close_page(); ink_ui_home(); return true; }
     if (!K.up && !lng && (key == INK_KEY_HOME || key == INK_KEY_BACK)) close_page();
     return true;
 }
@@ -103,5 +104,6 @@ int ink_kid_pages_init(void) {
         {.id = "shell.kid_cancel", .title = "算了，回到刚才的地方", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action}
     };
     return ink_cap_register(caps, sizeof caps / sizeof *caps) || ink_state_watch("member.", changed, NULL, INK_EXEC_UI) ||
+        ink_state_watch("app.cards_rev", changed, NULL, INK_EXEC_UI) ||
         ink_state_watch("app.foreground", changed, NULL, INK_EXEC_UI) || ink_state_watch("power.state", changed, NULL, INK_EXEC_UI) ? -1 : 0;
 }
