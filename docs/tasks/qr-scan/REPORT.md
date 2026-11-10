@@ -6,8 +6,8 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 【实测】通过：网址/文字复制、电话确认后拨号、MECARD/vCard 确认保存、Wi-Fi 确认联网、失败提示、AI 调用、儿童扫码与成员隔离 | `qr-scan exit 0 assertions 162 failures 0`；`build/qr-scan-7pkutksj/out/metrics.json`；密码不出现在快照、回执及文本日志 | C2；反向对照待补 |
-| 2 | 【实测】部分：普通全量仅共享生成文档检查失败；原相机/相册、联系人、电话及 AI 能力目录通过；S31 编译通过 | 全量原话 `99% tests passed, 1 tests failed out of 321`；317 通过、3 跳过、1 失败；`work/ctest.log`。ASan 全量、最终 gcccheck 待补 | C1～C5 |
+| 1 | 【实测】通过：网址/文字复制、电话确认后拨号、MECARD/vCard 确认保存、Wi-Fi 确认联网、失败提示、AI 调用、儿童扫码与成员隔离 | `qr-scan exit 0 assertions 162 failures 0`；`build/qr-scan-7pkutksj/out/metrics.json`；密码不出现在快照、回执及文本日志 | C2、C6、C7 |
+| 2 | 【实测】部分：普通与 ASan/UBSan 功能测试通过，唯一失败为禁止修改的共享生成文档；S31、gcccheck 通过 | 两轮全量原话均为 `99% tests passed, 1 tests failed out of 321`；各 317 通过、3 跳过、1 失败。3 项已另行补跑通过，汇总各 320 通过、1 失败；`work/ctest.log`、`work/ctest-asan.log`、`work/hub-tests-build*.log` | C1～C5 |
 | 3 | 【实测/实现/估算】选 quirc；两库同图实测及 S31 探针链接完成，中英截图齐全；旧 esp-code-scanner 无可运行目标 | 下表、来源、截图；未用 N/A 冒充测量值 | C8；复现方法见 `tests/qr_scan/README.md` |
 
 ## 选库与硬件依据
@@ -38,7 +38,7 @@
 ## 没做到的
 
 - 旧 esp-code-scanner 的同图识别、RAM、S31 体积及耗时无法测量；ZXing 只做主机与交叉链接基准，没有做完整模拟器适配。
-- 全量未全绿：唯一失败为 `capability-table-doc`，因为本任务明令不改共享生成文档。3 个跳过项为 `hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e`，不是通过。
+- 全量未全绿：唯一失败为 `capability-table-doc`，因为本任务明令不改共享生成文档。首跑跳过的 `hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e` 已使用现有锁定环境，在普通/ASan 版本分别补跑；含导出 fixture，各为 `100% tests passed out of 4`，最终没有未运行的测试。
 - 未上机；既有 S31 相机 HAL 仍为桩，扫码能力跟随 `camera.capture` 的可用性注册。真实采集、识别耗时、PSRAM 争用须接好原有端口后核对。
 - 文本支持 UTF-8、最多 300 字节（与既有剪贴板入口对齐），超限明确失败；联系人支持姓名与一个裸 `TEL:` 号码。未验证带属性/折行/多号码的 vCard、企业 Wi-Fi、隐藏网络及二进制载荷。
 
@@ -66,19 +66,20 @@
 
 ## 要改的文档
 
-合并时由主会话运行 `python tools/capabilities.py` 更新禁止本任务修改的 `docs/system/capabilities.md`；新增两条能力及 Camera 订阅段差异见全量日志。还需同步 `docs/system/ui-dependencies.md` 的扫码完成状态。其他共享需求、决策、审计、调研资料均未改。
+合并时由主会话运行 `python tools/capabilities.py` 更新禁止本任务修改的 `docs/system/capabilities.md`；新增两条能力及数量统计差异见全量日志。还需同步 `docs/system/ui-dependencies.md` 的扫码完成状态。其他共享需求、决策、审计、调研资料均未改。
 
 ## 验证、规模与命令
 
 【实测】保守计新增产品行数 **244 行**：包含 C/H、构建接线、翻译表以及第三方本地补丁 21 行；不含第三方原代码、测试和文档，低于 300 行。为什么不能更小：跨执行器采集、类型解析、凭据隔离、结果页、确认及软总线接线构成验收所需的最小链路。考察过直接回传原文（会暴露密码）和仅返回识别文字（缺少后续操作），均未采用。
 
-- C0：按总规则第 5 节配置 `build` / `build-asan`，两者均 `INK_WERROR=ON`，后者另加 `INK_SANITIZE=ON`；生成编译数据库。
+- C0：按总规则第 5 节配置 `build` / `build-asan`，两者均 `INK_WERROR=ON`，后者另加 `INK_SANITIZE=ON`；生成编译数据库。中枢补跑选择现有 `-DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"`，依赖版本与锁文件一致，没有安装或升级依赖。
 - C1：`taskpolicy -c utility cmake --build build -j2`；退出 0。
 - C2：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`；退出 8，679.39 秒，原话见验收表。
-- C3：同 C1/C2 换 `build-asan`；最终结果待补。早期扫码专项 ASan/UBSan 已有 144 条断言通过，最终版本按全量重新验证。
-- C4：`INK_DEPS=... taskpolicy -c utility bash ports/esp32s31/build.sh`；编译退出 0，`build-s31/size.txt`、`stack.txt`。最新小幅 UI 修改后的增量编译待补。
-- C5：`taskpolicy -c utility python ../../tools/gcccheck.py build system/apps/camera/scan.c system/apps/camera/camera.c tests/qr_scan/device.c tests/integration/ai_surface.c`；最终结果待补。
-- C6：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility python tests/qr_scan/run.py --build build --negative`；待补。
-- C7：`taskpolicy -c utility python tests/qr_scan/stack.py --build build-s31`（再加 `--negative`）；待补。
-- C8：选库及 S31 三次链接的复现命令在 `tests/qr_scan/README.md`，产物 `build-s31/qr-size/`；最终口径重算待补。
-- 隐私及文件检查：按总规则第 6 节检查提交差异，已提交部分命中 0；最终提交后复核待补。`git diff --check` 已通过。
+- C3：同 C1/C2 换 `build-asan`（全量未设保留临时证据）；构建退出 0，ctest 退出 8，1265.04 秒。扫码专项同为 `exit 0 assertions 162 failures 0`，相机/相册、联系人、电话通过；唯一失败仍为生成文档。中枢补跑两版均通过，命令为 C2 换 `-R '^hub-(contract|json-crosscheck|simulator-e2e)$'`，另设 `PYTHONPATH="$PWD/hub"`、`PYTHONDONTWRITEBYTECODE=1`。
+- C4：`taskpolicy -c utility bash ports/esp32s31/build.sh`；初次完整编译和最终增量编译均退出 0；`work/s31-final.log`、`build-s31/size.txt`、`stack.txt`。
+- C5：`taskpolicy -c utility python ../../tools/gcccheck.py build system/apps/camera/scan.c system/apps/camera/camera.c tests/qr_scan/device.c tests/integration/ai_surface.c`；退出 0，原话 `gcccheck: 4 compiled, 0 with findings`；`work/gcc-final.log`。
+- C6：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility python tests/qr_scan/run.py --build build --negative`；对照脚本退出 0，撤掉脱敏的临时二进制为 `exit 1 assertions 153 failures 9`，明确命中原隐私断言；`work/qr-negative.log`、`build/qr-scan-t_a2e2bl`。产品文件不改。
+- C7：`taskpolicy -c utility python tests/qr_scan/stack.py --build build-s31`（再加 `--negative`）；两次脚本退出 0。当前解码栈帧 96，撤掉移栈补丁后为 9280，确实超过 8192 字节限制；`work/stack-current.log`、`work/stack-negative.log`。
+- C8：选库及 S31 三次链接的复现命令在 `tests/qr_scan/README.md`；最终退出 0，`build-s31/qr-size/summary.json` 为 baseline 1383942、quirc 1404848、zxing 1974328 字节。
+- C9：`python tools/capabilities.py --output build/qr-scan-capabilities.md`，再加 `--check --runtime build/test-out/capability-table/capability-inventory.json`；退出 0，`Runtime matches: 400 capabilities, 28 settings`。只生成待合并副本，未修改共享文档。
+- 隐私及文件检查：按总规则第 6 节检查基线到最终提交的差异，命中 0（grep 退出 1）；`git diff --check` 通过。所有第三方逐文件 SHA-256 核验通过，改动文件和报告链接已检查，未夹带构建产物、设计稿或共享文档。
