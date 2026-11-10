@@ -62,7 +62,10 @@ static void run(void *arg) {
             CHECK(WAIT_FOR(ink_test_audit11_faults() == 1 && ink_test_audit11_idle() && ink_db_idle() && !ink_storage_pending(), 30000),
                 "one status error stops the cleanup pass");
             CHECK(!ready() && !ink_test_audit11_done(), "status error leaves completion unset");
-            CHECK(hal_fs_size("/content/.file-index-dirty") >= 0, "status error keeps the dirty marker");
+            /* Ids follow the host's directory order, so the failing record may come before any stale one:
+             * the marker is written only once a record is deleted, and must survive the failed pass. */
+            CHECK(ink_test_audit11_count() == 60 || hal_fs_size("/content/.file-index-dirty") >= 0,
+                "records deleted before the status error leave the dirty marker: %u records", ink_test_audit11_count());
             CHECK(hal_fs_size("/content/SYNTH_0010.txt") == 11 && ink_test_audit11_id("/content/SYNTH_0010.txt") == id,
                 "status error keeps the existing file id");
             /* The next pass: the card is taken out and put back. */
