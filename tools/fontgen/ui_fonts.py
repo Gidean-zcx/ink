@@ -35,6 +35,8 @@ def main():
             # Read only characters actually in the selected CJK face, not comments'
             # private-use markers or unsupported typographic symbols.
             chars.update(c for c in source.read_text() if '\u3400' <= c <= '\u9fff')
+    for table in (ROOT / 'assets/i18n').glob('*.tsv'):  # every character a translation shows
+        chars.update(c for c in table.read_text(encoding='utf-8') if c >= ' ')
     missing = sorted(ord(c) for c in chars if ord(c) not in set(fontgen.charset('ascii,punct,pinyin,gb2312')))
     if missing:
         raise SystemExit('UI text outside the reading font, add it there: ' + ''.join(map(chr, missing)))

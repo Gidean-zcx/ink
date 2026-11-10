@@ -23,13 +23,15 @@
 | `rt.open` | 设备 → 中枢 | 请求 | `{"sid","cap","params"}` | `result` 内容不校验；`error` 则设备判定会话被拒，错误码不交给拥有者（`rt.c:129`） |
 | `rt.close` | 双向 | 通知 | `{"sid"}` | — |
 | `rt.*`（其他） | 中枢 → 设备 | 通知 | `{"sid",…}` | 交给会话的 `on_control` |
-| `ai.listen` | 设备 → 中枢 | 请求，**45 秒超时，从创建请求算，没联网也在计时** | `{"stream","format":"opus","rate":16000,"frame_ms":60,"page_gen","page":{"app","text","actions":[…]}}`；`actions` 放不下 768 字节时是 `[]` | 一轮结束时回答，如 `{"done":true,"source":"page"}`；内容不读 |
-| `ai.ask` | 设备 → 中枢 | 请求，45 秒超时 | `{"question","page_gen","page":{…}}` | **回答里的文字被忽略**，文字只能走 `ai.delta` |
+| `ai.listen` | 设备 → 中枢 | 请求，**45 秒超时，从创建请求算，没联网也在计时** | `{"stream","format":"opus","rate":16000,"frame_ms":60,"page_gen","lang","page":{"app","text","actions":[…]}}`；`actions` 放不下 768 字节时是 `[]` | 一轮结束时回答，如 `{"done":true,"source":"page"}`；内容不读 |
+| `ai.ask` | 设备 → 中枢 | 请求，45 秒超时 | `{"question","page_gen","lang","page":{…}}` | **回答里的文字被忽略**，文字只能走 `ai.delta` |
 | `ai.listen.end` | 设备 → 中枢 | 通知 | `{"stream","frames"}` | — |
 | `ai.stt` | 中枢 → 设备 | 通知 | `{"id","text"}`，`id` 是 `ai.listen` 的请求号；**替换显示**，多条只留最后一条 | — |
 | `ai.delta` | 中枢 → 设备 | 通知 | `{"id","text","seq"?}`；追加，设备一轮最多留 32 KB（`INK_AI_ANSWER_MAX`），超出的在整字处截断，末尾显示“回答太长，只显示了前面部分。” | — |
 | `ai.tts.end` | 中枢 → 设备 | 通知 | `{"id","stream","frames"}` | — |
 | `device/event` | 设备 → 中枢 | 通知（系统服务分支） | `{"event","at_s","args"}`；断网时留最近 8 条 | — |
+
+**界面语言**：`ai.listen` 和 `ai.ask` 都带 `lang`，是设备当前的界面语言代码（`"zh"`、`"en"`，取自设置 `system.language`，i18n-1）。中枢让回答（文字和朗读）用这种语言；没有这个字段时按 `"zh"`；不是字母组成或超过 8 个字符的值按无效参数处理，这一轮回“这次没有完成，请重试。”。
 
 **顺序约定**：`ai.listen` 的回答必须在所有朗读帧和 `ai.tts.end` 之后；设备收到回答就关这一轮的会话，已收到的声音继续放完（详细设计 §6.5）。
 
