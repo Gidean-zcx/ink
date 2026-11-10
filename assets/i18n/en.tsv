@@ -83,3 +83,39 @@
 关于和更新	About & Updates
 语言	Language
 飞行模式	Airplane mode
+
+# Child application and time policy
+家长没有打开这个应用	Your parent has not enabled this app
+只有大人能改孩子的设置	Only adults can change child settings
+应用名单	Allowed Apps
+禁用时段	Restricted Hours
+禁用时段也能用	Available during restricted hours
+可用	Available
+不开放	Disabled
+选择能用的应用	Choose allowed apps
+选择时间和星期	Choose times and weekdays
+时段 %d，共 %d 段	Period %d of %d
+选择时段	Choose period
+开始时间	Start time
+结束时间	End time
+启用时段	Enable period
+星期日	Sunday
+星期一	Monday
+星期二	Tuesday
+星期三	Wednesday
+星期四	Thursday
+星期五	Friday
+星期六	Saturday
+阅读	Reading
+电话	Phone
+时钟	Clock
+短信	Messages
+备忘	Notes
+计算器	Calculator
+天气	Weather
+文件	Files
+相机	Camera
+相册	Photos
+对话记录	Conversations
+开	On
+关	Off

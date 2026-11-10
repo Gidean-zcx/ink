@@ -1605,3 +1605,8 @@ target_include_directories(sim-perf-latency PRIVATE ${CMAKE_BINARY_DIR}/generate
 target_link_libraries(sim-perf-latency PRIVATE ink_apps ink_system)
 add_test(NAME perf-latency COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/perf_latency/run.py --build ${CMAKE_BINARY_DIR} --regression)
 set_tests_properties(perf-latency PROPERTIES TIMEOUT 180)
+
+ink_sim_executable(sim-kid-apps tests/kid_apps.c)
+target_link_libraries(sim-kid-apps PRIVATE ink_apps ink_system)
+add_test(NAME kid-apps COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/kid_apps.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(kid-apps PROPERTIES TIMEOUT 300)

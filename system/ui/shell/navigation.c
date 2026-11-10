@@ -140,8 +140,7 @@ static bool child(void) {
     return ink_member_current()->role == INK_ROLE_CHILD;
 }
 static bool kid_app_visible(const char *id) {
-    if (!strcmp(id, "settings") || !strcmp(id, "files") || !strcmp(id, "remote")) return false;
-    if (ink_member_time_up()) return !strcmp(id, "phone") || !strcmp(id, "message");
+    if (!strcmp(id, "settings")) return false;
     for (int i = 0; i < ink_app_count(); i++) {
         const ink_app_def_t *app = ink_app_at(i);
         if (strcmp(app->id, id)) continue;
@@ -1607,6 +1606,7 @@ static void cap_launch(ink_call_t *c) {
         ink_cap_invoke("shell.ai_home", NULL, c->src, 0, &c->rc);
         return;
     }
+    if (child() && !ink_member_app_mode(NULL, id)) { c->rc.status = INK_RC_REJECTED; snprintf(c->rc.detail, sizeof c->rc.detail, "%s", TR("家长没有打开这个应用")); return; }
     if (c->src == INK_SRC_TOUCH) ink_probe_count("home.taps");
     for (int i = 0; i < ink_app_count(); i++)
         if (!strcmp(ink_app_at(i)->id, id) && ink_app_at(i)->entry) {
