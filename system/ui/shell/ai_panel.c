@@ -30,7 +30,7 @@ static struct {
 static void audio_changed(void *ctx, int handle, const char *id);
 
 int ink_shell_ai_snapshot(char *buf, size_t cap) {
-    return ink_ai_chat_panel_snapshot(A.status ? lv_label_get_text(A.status) : "", A.question && !lv_obj_has_flag(A.question, LV_OBJ_FLAG_HIDDEN) ? lv_label_get_text(A.question) : "",
+    return ink_ai_chat_panel_snapshot(A.status ? lv_label_get_text(A.status) : "", A.caption, A.question && !lv_obj_has_flag(A.question, LV_OBJ_FLAG_HIDDEN) ? lv_label_get_text(A.question) : "",
         A.answer && !lv_obj_has_flag(A.answer, LV_OBJ_FLAG_HIDDEN) ? lv_label_get_text(A.answer) : "", A.page, A.pages, A.speaking, A.revision, buf, cap);
 }
 static bool key(ink_key_t k, bool lng) {

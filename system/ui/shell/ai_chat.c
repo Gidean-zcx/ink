@@ -103,10 +103,10 @@ void ink_ai_chat_key(bool pressed, uint64_t t_us) {
 bool ink_ai_chat_tapped(void) { return tapped; }
 int ink_ai_chat_init(void) { return ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_app_register(&APP); }
 
-int ink_ai_chat_panel_snapshot(const char *status, const char *question, const char *answer,
+int ink_ai_chat_panel_snapshot(const char *status, const char *key, const char *question, const char *answer,
                                int page, int pages, bool speaking, uint32_t revision, char *out, size_t cap) {
     char count[64]; snprintf(count, sizeof count, TR("页码=%d/%d"), page + 1, pages);
-    const char *board = speaking ? "AiSpeak" : strstr(status, TR("正在听")) ? "AiListenTap" : pages > 1 ? "AiLong" : "AiAsk";
+    const char *board = speaking ? "AiSpeak" : strstr(key, "正在听") ? "AiListenTap" : pages > 1 ? "AiLong" : "AiAsk";
     ink_ui_field_spec_t fields[] = {
         {.id = "board", .role = "status", .label = TR("页面"), .value = board},
         {.id = "status", .role = "status", .label = TR("状态"), .value = status},
@@ -120,7 +120,7 @@ int ink_ai_chat_panel_snapshot(const char *status, const char *question, const c
         {.id = "next", .label = TR("下一页"), .capability = "ai.panel.next", .enabled = !speaking && page + 1 < pages},
         {.id = "prev", .label = TR("上一页"), .capability = "ai.panel.prev", .enabled = !speaking && page > 0},
         {.id = "stop", .label = TR("停下"), .capability = "shell.ai_stop", .enabled = speaking},
-        {.id = "record_stop", .label = TR("停止录音"), .capability = "audio.record_stop", .enabled = strstr(status, TR("正在录音")) != NULL},
+        {.id = "record_stop", .label = TR("停止录音"), .capability = "audio.record_stop", .enabled = strstr(key, "正在录音") != NULL},
         {.id = "home", .label = TR("对话记录"), .capability = "shell.ai_home", .enabled = !speaking && answer[0]}
     };
     ink_ui_page_spec_t model = {.id = ink_ui_page_name(), .title = TR("AI 面板"), .object = {"ai:panel", revision},

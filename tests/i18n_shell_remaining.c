@@ -149,6 +149,8 @@ static void run(void *arg) {
     on_ui(ai_open); preview_status = "正在想…"; on_ui(ai_status); capture("AiThink-en", "Reading this page");
     preview_status = "正在听…松开 AI 键结束"; on_ui(ai_status); capture("AiListen-en", "Listening");
     preview_status = "正在录音，先停了再问"; on_ui(ai_status); capture("AiRecording-en", "Stop recording");
+    /* the AI's view decides from the panel's key, not from the English it shows ("Stop recording before asking" has no "Recording") */
+    CHECK(strstr(context, "audio.record_stop") != NULL, "the AI may stop the recording from the English panel too");
     on_ui(ai_answer); capture("AiAnswer-en", "From this page"); on_ui(ai_close);
     const ink_ai_error_t errors[] = {INK_AI_ERROR_OFFLINE, INK_AI_ERROR_TIMEOUT, INK_AI_ERROR_BUDGET, INK_AI_ERROR_LOST};
     const char *const names[] = {"AiOffline-en", "AiTimeout-en", "AiBudget-en", "AiLost-en"};
