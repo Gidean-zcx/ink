@@ -363,6 +363,13 @@ bool ink_ui_page_current(void) {
     return current;
 }
 
+bool ink_ui_action_current(void) {
+    if (!UI.noverlays || UI.overlays[UI.noverlays - 1]->level < 0) return ink_ui_page_current();
+    ink_member_identity_t identity;
+    ink_member_identity(&identity);
+    return snapshot_owner_matches(&UI.overlay_owner[UI.noverlays - 1], &identity);
+}
+
 static int checked_snapshot(char *buf, size_t cap, const char **activity_name, bool context) {
     ink_member_identity_t identity, after;
     ink_member_identity(&identity);

@@ -610,6 +610,15 @@ target_link_libraries(sim-ui-regressions PRIVATE ink_apps ink_system ink_port_si
 target_compile_options(sim-ui-regressions PRIVATE ${INK_WARN} -Wno-format-truncation)
 ink_sim_executable(sim-ui-semantics tests/ui_semantics.c)
 target_link_libraries(sim-ui-semantics PRIVATE ink_apps ink_system)
+ink_sim_executable(sim-semantics-shell tests/semantics_shell/main.c tests/semantics_shell/confirm.c
+  tests/semantics_shell/interrupt.c tests/semantics_shell/power.c tests/semantics_shell/member.c
+  tests/semantics_shell/lock.c tests/semantics_shell/off.c)
+target_link_libraries(sim-semantics-shell PRIVATE ink_apps ink_system)
+foreach(scene confirm interrupt power member lock off)
+  add_test(NAME semantics-shell-${scene} COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/semantics_shell/run.py
+    --build ${CMAKE_BINARY_DIR} --scene ${scene})
+  set_tests_properties(semantics-shell-${scene} PROPERTIES TIMEOUT 120 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")
+endforeach()
 ink_sim_executable(sim-jot tests/jot/app.c examples/jot/jot.c)
 target_link_libraries(sim-jot PRIVATE ink_apps ink_system)
 add_test(NAME app-framework-example COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/jot/run.py --build ${CMAKE_BINARY_DIR})

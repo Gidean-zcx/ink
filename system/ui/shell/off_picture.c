@@ -12,6 +12,7 @@
 #include "ink/sys/exec.h"
 #include "ink/sys/members.h"
 #include "ink/sys/power.h"
+#include "ink/sys/ui_semantics.h"
 #include "shell_card.h"
 
 #define PANEL_WAIT_US 6000000ull
@@ -25,12 +26,13 @@ static struct {
     uint32_t commit;
 } O;
 
-static int snapshot(char *buf, size_t cap) {
-    int n = snprintf(buf, cap, "已关机。%s", O.body);
-    return n < 0 ? 0 : (size_t)n < cap ? n : (int)cap - 1;
+static int semantic_snapshot(char *buf, size_t cap) {
+    ink_ui_field_spec_t field = {.id = "body", .role = "text", .label = "说明", .value = O.body};
+    ink_ui_page_spec_t model = {.id = "off", .title = "已关机", .object = {"off", ink_ui_generation()}, .fields = &field, .field_count = 1};
+    return ink_ui_semantics_snapshot(&model, buf, cap);
 }
 
-static const ink_ui_overlay_t OVERLAY = {.name = "off", .level = 5, .snapshot = snapshot};
+static const ink_ui_overlay_t OVERLAY = {.name = "off", .level = 5, .snapshot = semantic_snapshot};
 
 static void add_bookmark(void) { /* the first card that is one */
     for (int i = 0; i < ink_app_count(); i++) {

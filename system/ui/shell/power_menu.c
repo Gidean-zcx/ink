@@ -7,22 +7,36 @@
 #include "ink/sys/input.h"
 #include "ink/sys/interrupt.h"
 #include "ink/sys/state.h"
+#include "ink/sys/ui_semantics.h"
 #include "shell_card.h"
 #include "ink/ui_shell.h"
 
 static struct {
     shell_card_t card;
     ink_exec_job_t open_job, close_job;
+    uint32_t version;
 } M;
 
-static int snapshot(char *buf, size_t cap) {
-    int n = snprintf(buf, cap, "电源菜单：关机、重启、锁屏、取消。动作：system.shutdown、system.reboot、shell.lock。");
-    return n < 0 ? 0 : (size_t)n < cap ? n : (int)cap - 1;
-}
+static const ink_ui_action_spec_t ACTIONS[] = {
+    {.id = "system.shutdown", .label = "关机", .capability = "system.shutdown", .enabled = true},
+    {.id = "system.reboot", .label = "重启", .capability = "system.reboot", .enabled = true},
+    {.id = "shell.lock", .label = "锁屏", .capability = "shell.lock", .enabled = true}
+};
+static const ink_ui_field_spec_t FIELDS[] = {
+    {.id = "shutdown", .role = "button", .label = "关机", .value = "关机"},
+    {.id = "reboot", .role = "button", .label = "重启", .value = "重启"},
+    {.id = "lock", .role = "button", .label = "锁屏", .value = "锁屏"},
+    {.id = "cancel", .role = "button", .label = "取消", .value = "取消"}
+};
+static const ink_ui_page_spec_t MODEL = {.id = "power_menu", .title = "电源菜单", .object = {"power_menu", 0},
+    .fields = FIELDS, .field_count = sizeof FIELDS / sizeof *FIELDS, .actions = ACTIONS, .action_count = sizeof ACTIONS / sizeof *ACTIONS};
+static ink_ui_page_spec_t model(void) { ink_ui_page_spec_t page = MODEL; page.object.revision = ink_ui_generation(); return page; }
+static int semantic_snapshot(char *buf, size_t cap) { ink_ui_page_spec_t page = model(); return ink_ui_semantics_snapshot(&page, buf, cap); }
 
 static bool on_key(ink_key_t key, bool long_press);
+static void pressed(lv_event_t *e) { (void)e; M.version = ink_ui_content_version(); }
 
-static const ink_ui_overlay_t OVERLAY = {.name = "power_menu", .level = 2, .on_key = on_key, .snapshot = snapshot};
+static const ink_ui_overlay_t OVERLAY = {.name = "power_menu", .level = 2, .on_key = on_key, .snapshot = semantic_snapshot};
 
 static void close_menu(void) { /* UI task */
     if (!M.card.root) return;
@@ -39,11 +53,16 @@ static bool on_key(ink_key_t key, bool long_press) {
 }
 
 static void on_button(lv_event_t *e) {
+    lv_event_stop_processing(e);
     const char *cap = lv_event_get_user_data(e);
+    if (M.version != ink_ui_content_version()) return;
+    if (cap) {
+        ink_ui_page_spec_t page = model();
+        ink_ui_action_target_t target = {M.version, page.object};
+        ink_receipt_t rc;
+        ink_ui_semantics_action(&page, cap, &target, INK_SRC_TOUCH, &rc);
+    }
     close_menu();
-    if (!cap) return;
-    ink_call_opts_t o = {.src = INK_SRC_TOUCH, .reply_exec = INK_EXEC_DIRECT};
-    ink_cap_call(cap, NULL, &o);
 }
 
 static void power_tile(const char *label, const char *icon, int col, const char *action, bool primary) {
@@ -51,6 +70,7 @@ static void power_tile(const char *label, const char *icon, int col, const char 
     lv_obj_t *b = ink_ui_pill(M.card.panel, "", INK_MARGIN + col * cell, INK_MARGIN, cell,
                               INK_CIRCLE_APP + INK_GAP_M + ink_ui_line_height(INK_FONT_LIST), false, on_button, (void *)action);
     lv_obj_set_style_border_width(b, 0, 0);
+    lv_obj_add_event_cb(b, pressed, LV_EVENT_PRESSED, NULL);
     ink_ui_circle(b, icon, (cell - INK_CIRCLE_APP) / 2 - INK_GAP_XS, 0, INK_CIRCLE_APP, INK_ICON_APP,
                   primary ? INK_SURFACE_BLACK : INK_SURFACE_WHITE, NULL, NULL);
     lv_obj_t *l = ink_ui_label(b, label, INK_FONT_LIST, INK_WEIGHT_MEDIUM, 0, INK_CIRCLE_APP + INK_GAP_M, cell - 2 * INK_GAP_XS);
@@ -70,13 +90,16 @@ static void open_job(void *arg) { /* UI task */
     power_tile("重启", "update", 1, "system.reboot", false);
     int cell = (INK_CANVAS_W - 2 * INK_MARGIN) / 3;
     lv_obj_t *lock = ink_ui_circle(M.card.panel, "lock", INK_MARGIN + 2 * cell + (cell - INK_CIRCLE_APP) / 2, INK_MARGIN,
-                                   INK_CIRCLE_APP, INK_ICON_APP, INK_SURFACE_WHITE, NULL, NULL);
+                                   INK_CIRCLE_APP, INK_ICON_APP, INK_SURFACE_WHITE, on_button, "shell.lock");
+    lv_obj_add_event_cb(lock, pressed, LV_EVENT_PRESSED, NULL);
     ink_shell_bind(lock, "shell.lock", NULL);
     lv_obj_t *word = ink_ui_label(M.card.panel, "锁屏", INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_MARGIN + 2 * cell,
                                   INK_MARGIN + INK_CIRCLE_APP + INK_GAP_M, cell);
     lv_obj_set_style_text_align(word, LV_TEXT_ALIGN_CENTER, 0);
-    ink_ui_pill(M.card.panel, "取消", INK_MARGIN, h - INK_PRIMARY - INK_MARGIN,
+    lv_obj_t *cancel = ink_ui_pill(M.card.panel, "取消", INK_MARGIN, h - INK_PRIMARY - INK_MARGIN,
                  INK_CANVAS_W - 2 * INK_MARGIN, INK_PRIMARY, false, on_button, NULL);
+    lv_obj_add_event_cb(cancel, pressed, LV_EVENT_PRESSED, NULL);
+    M.version = ink_ui_content_version();
 }
 
 static void on_long(void) { /* the timer task. A call or an alarm does not answer to it */
