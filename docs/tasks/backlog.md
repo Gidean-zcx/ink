@@ -242,6 +242,8 @@ Codex 额度用完，任务改由 Claude 子代理（思考等级 medium）在�
 - 【端口】摄像头、蓝牙、4G 模组（电话短信）、唤醒词、TLS/WebSocket（中枢）还是桩；浅睡要用户在场再上机（port-sleep-vendor-2 已按原厂对齐，未合）。
 - 【用户定】AI 键按下不震（试用版这样做：按住说话会录进马达声）；首次设置第一页的“先用起来”。
 - 【合并】audit14-fix、emergency-call、mobile-network、port-sleep-vendor-2 已做完未合（和今晚的合并有冲突）；kids-phone-research、obook-research 的报告待读。
+- 【性能】屏幕刷新期间，存储任务每次碰闪存（连查文件大小也算）都要等在途波形做完（`storage_service.c` 申请显示互斥，`display_service.c`）；添加成员第一次打开 `member.retired` 要查三个文件，撞上三次整屏刷新就多 2.6 秒（cell-features-merge 报告）。查大小、读小文件能否不等波形，值得看。
+- 【测试】中枢端到端脚本在固定时刻点按（`tests/hub/e2e.script` 的 `@3s tap`），夹具晚一点就点错页面；应改成等就绪再点。`ink_power_state()` 不是纯读取，能力闸门里省掉这次读取就改变了调度（audit14-merge-fix）；移动网络里到底哪一行改了时序还没缩到单行。
 - 【测试】CI 上 `integration-races` 的 `/user` 闪存工作比本机多（擦除 66 对 57 次，卡住 5.2 对 4.3 秒）；准备步骤已放宽到 6 秒，为什么 CI 上写得更多还没查。`boot-flow` 的“从中枢恢复”场景在 macOS CI 上（交付版提交）和本机合入 audit14-fix 后都会失败：恢复后活动卡片反复读 `job.list`，界面停不下来，audit14-merge-fix 在查。
 
 ## 这一阶段的完成界限（2026-11-10 晚上定，用户要求“明确完成界限，不要无休止的执行”）
