@@ -278,7 +278,7 @@ void ink_text_voice_finish(void) {
     if (VS.capturing && !VS.capture_ended_asked) {
         VS.capture_ended_asked = true;
         ink_audio_capture_end();
-    }
+    } else if (!VS.capturing) send_end_if_ready(); /* the capture ended first (an alarm stops it before its note comes) */
 }
 
 /* The microphone is someone else's at once. What was said so far still goes to the hub, and what comes back goes into the field. */

@@ -88,10 +88,18 @@ static bool there(const char *label) {
     on_ui(do_find);
     return g_found;
 }
+/* A tap the touch controller never reported is tapped again, as a person would: the finger is down 80 ms, and one that falls
+ * whole into a flash erase (about 100 ms, the touch driver cannot run) is gone before anything reads it, on the device too.
+ * Whether it was seen is the driver's count of what it delivered. */
 static bool press(const char *label) {
     if (!there(label)) return false;
-    tap(g_found_x, g_found_y);
-    return true;
+    for (int i = 0; i < 3; i++) {
+        double delivered = sim_metric_value("input.touch_delivery_ms");
+        tap(g_found_x, g_found_y);
+        if (WAIT_FOR(sim_metric_value("input.touch_delivery_ms") > delivered, 1000)) return true;
+        ink_probe_count("test.taps_unseen");
+    }
+    return false;
 }
 /* A label on the keyboard that says this, somewhere. */
 static const char *g_saying;
@@ -576,6 +584,24 @@ static void ended_by(void) {
     on_ui(do_start);
     look();
     CHECK(g_start_r != 0 && strstr(g_notice, "不能用"), "and does not start under one (%s)", g_notice);
+    ink_audio_focus_release(alert);
+    delay_ms(300);
+
+    /* the capture is over before the alarm's note reaches dictation: the audio task stops it at once, and the note can come
+     * after its end (the one taking the focus is held up on its way). What was said still goes to the hub, and it is over
+     * when the hub answers, not when dictation gives up on it */
+    start_talking("先停下的。");
+    CHECK(WAIT_FOR((look(), g_heard[0] != 0), 3000), "heard");
+    ink_audio_capture_end();
+    CHECK(WAIT_FOR(!ink_audio_capture_busy(), 500), "the microphone stops first");
+    look(); /* the end of the capture has reached dictation by now */
+    CHECK(g_state == INK_VOICE_LISTENING, "still listening (%d)", g_state);
+    double turns = sim_metric_value("hub.asr_turn_end");
+    alert = ink_audio_focus_acquire(INK_AUDIO_PRIO_ALERT, NULL, NULL, INK_EXEC_DIRECT);
+    CHECK(alert > 0 && WAIT_FOR(state_is(INK_VOICE_IDLE), 3000), "then the alarm: over (%d)", g_state);
+    CHECK(sim_metric_value("hub.asr_turn_end") == turns + 1, "the hub was told it was the end");
+    look();
+    CHECK(strstr(g_value, "先停下的。") && strstr(g_notice, "接着说"), "what was said goes in (%s, %s)", g_value, g_notice);
     ink_audio_focus_release(alert);
     delay_ms(300);
 

@@ -60,6 +60,8 @@ enum {
                                      leaves P16 masked */
     HAL_WAKE_MODEM = 1u << 4,     /* SMS / call / data from the 4G modem (needs its rail kept up); Plus:
                                      its SRDY line (GPIO3), ASSUMPTION until checked on the module */
+    HAL_WAKE_MOTION = 1u << 5,    /* the accelerometer felt a movement (it stays in its low-power motion
+                                     mode while asleep); Plus: SC7A20H INT1 -> shared GPIO2 */
 };
 
 typedef struct {

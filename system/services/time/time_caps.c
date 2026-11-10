@@ -113,6 +113,8 @@ static void cap_lunar(ink_call_t *c) {
 static bool parse_at(const char *s, ink_alarm_t *a) { /* "2026-11-05 15:00" */
     int y, mo, d, h, mi;
     if (sscanf(s, "%d-%d-%d %d:%d", &y, &mo, &d, &h, &mi) != 5 || h < 0 || h > 23 || mi < 0 || mi > 59) return false;
+    ink_lunar_t date;
+    if (!ink_lunar_from_solar(y, mo, d, &date)) return false;
     a->year = (int16_t)y;
     a->month = (uint8_t)mo;
     a->day = (uint8_t)d;
@@ -158,14 +160,23 @@ static void cap_alarm_set(ink_call_t *c) {
 
 static void cap_reminder_add(ink_call_t *c) {
     ink_alarm_t a = {.kind = INK_REMINDER, .src = (uint8_t)c->src};
+    int64_t id = 0;
+    bool update = !strcmp(c->cap->id, "reminder.update");
+    ink_args_get_int(&c->args, "id", &id);
+    if (update) {
+        int cursor = 0;
+        while (ink_time_alarm_next_for(&cursor, INK_REMINDER, &a, ink_cap_call_member(c)) == 1 && a.id != (uint32_t)id) {}
+        if (a.id != (uint32_t)id) { fail(c, INK_RC_STALE, "no such reminder"); return; }
+    }
     char at[32] = "", repeat[16] = "";
     ink_args_get_str(&c->args, "at", at, sizeof at);
     ink_args_get_str(&c->args, "title", a.title, sizeof a.title);
     ink_args_get_str(&c->args, "repeat", repeat, sizeof repeat);
-    if (!parse_at(at, &a)) {
+    if (!a.title[0] || !parse_at(at, &a)) {
         fail(c, INK_RC_INVALID, "at: YYYY-MM-DD HH:MM");
         return;
     }
+    a.repeat = INK_REPEAT_NONE; a.weekdays = 0; a.at_utc = 0; a.enabled = true; a.src = (uint8_t)c->src;
     if (!strcmp(repeat, "monthly")) a.repeat = INK_REPEAT_MONTHLY;
     else if (!strcmp(repeat, "yearly")) a.repeat = INK_REPEAT_YEARLY;
     else if (!strcmp(repeat, "lunar_yearly")) {
@@ -185,8 +196,13 @@ static void cap_reminder_add(ink_call_t *c) {
     } else if (!strcmp(repeat, "daily")) {
         a.repeat = INK_REPEAT_WEEKDAYS;
         a.weekdays = 0x7F;
+    } else if (!strcmp(repeat, "workdays")) {
+        a.repeat = INK_REPEAT_WEEKDAYS;
+        a.weekdays = 0x3E;
     }
-    answer_add(c, &a, "reminder.cancel");
+    if (!update) answer_add(c, &a, "reminder.cancel");
+    else if (ink_time_alarm_update_for(&a, ink_cap_call_member(c))) fail(c, INK_RC_INVALID, "reminder update failed");
+    else snprintf(c->rc.object, sizeof c->rc.object, "reminder:%u", (unsigned)a.id);
 }
 
 static void cap_alarm_update(ink_call_t *c) {
@@ -279,6 +295,7 @@ static void cap_snooze(ink_call_t *c) {
 }
 
 #define ID_ARG "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1}},\"required\":[\"id\"]}"
+#define REMINDER_FIELDS "\"at\":{\"type\":\"string\",\"maxLength\":20},\"title\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":15},\"repeat\":{\"type\":\"string\",\"enum\":[\"none\",\"daily\",\"weekly\",\"workdays\",\"monthly\",\"yearly\",\"lunar_yearly\"]}"
 
 static const ink_cap_t TIME_CAPS[] = {
     {.id = "time.now", .title = "现在几点（含时区和农历）", .output = "{\"type\":\"object\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_now},
@@ -328,13 +345,14 @@ static const ink_cap_t TIME_CAPS[] = {
      .exec = INK_EXEC_DIRECT,
      .run = cap_snooze},
     {.id = "reminder.add",
-     .title = "加提醒（at 本地时间 YYYY-MM-DD HH:MM；repeat: daily weekly monthly yearly lunar_yearly）",
-     .input = "{\"type\":\"object\",\"properties\":{\"at\":{\"type\":\"string\",\"maxLength\":20},\"title\":{\"type\":\"string\",\"maxLength\":15},"
-              "\"repeat\":{\"type\":\"string\",\"enum\":[\"daily\",\"weekly\",\"monthly\",\"yearly\",\"lunar_yearly\"]}},\"required\":[\"at\",\"title\"]}",
+     .title = "加提醒（at 本地时间 YYYY-MM-DD HH:MM；repeat: none daily weekly workdays monthly yearly lunar_yearly）",
+     .input = "{\"type\":\"object\",\"properties\":{" REMINDER_FIELDS "},\"required\":[\"at\",\"title\"]}",
      .effect = INK_FX_LOCAL_WRITE,
      .child_ok = true,
      .exec = INK_EXEC_DIRECT,
      .run = cap_reminder_add},
+    {.id = "reminder.update", .title = "修改我的提醒（内容、时间和重复）", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_reminder_add,
+     .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}," REMINDER_FIELDS "},\"required\":[\"id\",\"at\",\"title\",\"repeat\"]}"},
     {.id = "reminder.list", .title = "我的提醒", .output = "{\"type\":\"array\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_reminder_list},
     {.id = "reminder.cancel", .title = "删提醒", .input = ID_ARG, .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_cancel},
     {.id = "alarm.fired", .title = "闹钟响了", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},

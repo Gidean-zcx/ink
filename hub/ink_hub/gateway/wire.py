@@ -6,7 +6,9 @@ import struct
 MAX_TOKENS = 128
 PAGE_TOKENS = 110
 MAX_TEXT = 511
-ANSWER_BYTES = 1800
+ANSWER_CUT = "\n回答太长，只显示了前面部分。"  # the device's INK_AI_ANSWER_CUT
+ANSWER_BYTES = 32768 - len(ANSWER_CUT.encode("utf-8")) - 1  # what the device keeps of a turn (INK_AI_ANSWER_MAX) before it cuts
+SPEECH_BYTES = 1800  # what is read out of a turn
 HEADER = struct.Struct("<BBHIBB")
 
 
@@ -54,6 +56,13 @@ def chunks(text, limit=MAX_TEXT, total=None):
             break
         yield part
         raw = raw[len(part.encode("utf-8")):]
+
+
+def answer(text):
+    """The turn's text as the device can keep it: an over-long answer ends with the device's own note."""
+    if len(text.encode("utf-8")) <= ANSWER_BYTES:
+        return text
+    return "".join(chunks(text, total=ANSWER_BYTES - len(ANSWER_CUT.encode("utf-8")))) + ANSWER_CUT
 
 
 def page(entries, rid, cursor=None, rev=1):

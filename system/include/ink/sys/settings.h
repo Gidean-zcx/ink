@@ -38,6 +38,7 @@ typedef struct {
     bool child_may_change;
     bool system;                   /* system-level: adults only */
     bool ask_by_hand;              /* permissions and child rules need a person's confirmation */
+    const char *via;               /* BOOL only: changed through this capability ({"enabled":v}); settings.set passes it on */
     void (*apply)(void *ctx, int64_t v); /* the owning service puts the value into effect: on every set,
                                           * also of the same value, so it must not harm when nothing changed */
     void *ctx;

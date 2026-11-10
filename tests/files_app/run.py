@@ -12,7 +12,8 @@ ROOT = Path(__file__).resolve().parents[2]
 p = argparse.ArgumentParser()
 p.add_argument("--build", type=Path, required=True)
 p.add_argument("--visual", action="store_true")
-p.add_argument("--mutant", choices=("child", "browse", "thumb", "rename", "paging", "preview", "ai-panel", "up", "long-snapshot", "notice"))
+p.add_argument("--trace", action="store_true")
+p.add_argument("--mutant", choices=("child", "browse", "thumb", "rename", "paging", "preview", "ai-panel", "up", "long-snapshot", "notice", "index-redraw", "memo-cache"))
 a = p.parse_args()
 build = a.build.resolve()
 work = Path(tempfile.mkdtemp(prefix="files-app-", dir=build))
@@ -35,6 +36,8 @@ if a.mutant:
             ('strcmp(F.names[at], item->name) ? "文件夹（名称已截断）" : "文件夹"', '"文件夹"'),
         ],
         "notice": [("notice_y = INK_CANVAS_H - INK_MARGIN - 2 * INK_PRIMARY - INK_GAP - 2 * ink_ui_line_height(INK_FONT_NOTE) - INK_GAP_L;", "(void)notice_y;")],
+        "index-redraw": [('    if (F.mode == HOME && !strcmp(kind, "indexed")) return; /* Roots do not depend on the index; keep queued taps valid. */\n', '')],
+        "memo-cache": [],
     }[a.mutant]
     for old, new in changes:
         assert source.count(old) == 1, old
@@ -55,13 +58,23 @@ if a.mutant:
     subprocess.run([link[0], *flags["C_DEFINES"], *flags["C_INCLUDES"], *flags["C_FLAGS"],
                     "-c", str(work / "files-test.c"), "-o", str(obj)], cwd=build, check=True)
     link = [str(obj) if s.endswith("tests/files_app/files_app.c.o") else s for s in link]
+    if a.mutant == "memo-cache":
+        memo = (ROOT / "system/apps/memo/memo.c").read_text()
+        for call in ("ink_db_open_member(&MEMOS, ink_cap_call_member(c))", "ink_db_open_member(&MEMOS, who)"):
+            assert memo.count(call) == 1, call
+            memo = memo.replace(call, call.replace("ink_db_open_member", "ink_db_open_cached_member"))
+        (work / "memo-product.c").write_text(memo)
+        memo_obj = work / "memo-product.o"
+        subprocess.run([link[0], *flags["C_DEFINES"], *flags["C_INCLUDES"], *flags["C_FLAGS"],
+                        "-c", str(work / "memo-product.c"), "-o", str(memo_obj)], cwd=build, check=True)
+        link.insert(1, str(memo_obj))
     binary = work / "sim-files-app"
     link[link.index("-o") + 1] = str(binary)
     subprocess.run(link, cwd=build, check=True)
 
-runs = [("write", ""), ("verify", ""), ("review", "")]
+runs = [("write", ""), ("verify", ""), ("review", ""), ("cold-save", "")]
 if a.mutant:
-    runs = [("review" if a.mutant in ("up", "long-snapshot", "notice") else "write", "")]
+    runs = [("cold-save" if a.mutant == "memo-cache" else "review" if a.mutant in ("up", "long-snapshot", "notice") else "write", "")]
 if a.visual:
     runs += [("write", name) for name in ("Files", "FileList", "FileActions", "FileMove")]
     runs += [("review", name) for name in ("FileActionsPreview", "FileListLong", "FileMoveLong")]
@@ -71,12 +84,12 @@ summary = []
 for phase, scene in runs:
     name = phase + ("-" + scene if scene else "")
     out = work / name
-    scope = scene or ("review" if phase == "review" else "persistence")
+    scope = scene or (phase if phase in ("review", "cold-save") else "persistence")
     result = subprocess.run([str(binary), "--profile", str(ROOT / "simulator/profiles/metalio-plus.json"),
         "--script", str(ROOT / "tests/files_app/files_app.script"), "--budget", str(ROOT / "tests/ui_scene.budget.json"),
         "--assets", str(build / "assets"), "--content", str(build / "test-content"),
         "--flash-image", str(work / (scope + ".img")), "--sd-dir", str(work / (scope + "-sd")),
-        "--out", str(out), "--quiet", "--no-random-outages"],
+        "--out", str(out), "--quiet", "--no-random-outages", *(["--trace"] if a.trace else [])],
         env={**os.environ, "INK_FILES_PHASE": phase, "INK_FILES_SCENE": scene}, capture_output=True, text=True, timeout=180)
     (work / f"{name}.log").write_text(result.stdout + result.stderr)
     data = json.loads((out / "metrics.json").read_text()) if (out / "metrics.json").exists() else {}

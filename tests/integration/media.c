@@ -260,6 +260,12 @@ static void playing(void) {
     fin = g_finished;
     ink_hub_demand();
     CHECK(WAIT_FOR(ink_hub_online(), 30000), "online");
+    /* What waited for the network while it was theirs goes out first, rightly as theirs: count from after that
+     * (no new event for half a second), or it reads as told after the switch. */
+    int quiet_seen = -1;
+    uint64_t quiet_since = 0;
+    CHECK(WAIT_FOR((sim_hub_events_seen() != quiet_seen ? (quiet_seen = sim_hub_events_seen(), quiet_since = osal_now_us()) : 0,
+                    osal_now_us() - quiet_since > 500000), 10000), "what waited has gone out");
     int events = sim_hub_events_seen();
     CHECK(ink_member_switch("kid") == 0, "someone else");
     CHECK(WAIT_FOR(g_finished == fin + 1, 1000) && !strcmp(state_of("media.state"), "idle"), "the listening ends with the listener");

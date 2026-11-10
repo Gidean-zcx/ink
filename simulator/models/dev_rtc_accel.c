@@ -187,6 +187,16 @@ static uint8_t accel_reg(uint8_t r) {
     return A.reg[r & 0x3F];
 }
 
+/* Supply current by CTRL1 (ODR, LPen), ESTIMATES from the LIS3DH-class table the SC7A20H follows (its register
+ * map is the same; SC7A20H datasheet figures unconfirmed): power-down 0.5 uA; 1 Hz 2 uA; 10 Hz 3 uA low-power,
+ * 4 uA normal; 25 Hz 4 / 6; 50 Hz 6 / 11; 100 Hz 10 / 20; 200 Hz 18 / 38; 400 Hz 36 / 73. */
+static void accel_supply(void) {
+    static const double LP[8] = {0.5, 2, 3, 4, 6, 10, 18, 36}, NORMAL[8] = {0.5, 2, 4, 6, 11, 20, 38, 73};
+    uint8_t c1 = A.reg[0x20];
+    int odr = c1 >> 4 > 7 ? 7 : c1 >> 4;
+    sim_power_consumer("accel", true, ((c1 & 0x08) ? LP : NORMAL)[odr] / 1000.0);
+}
+
 static int accel_xfer(void *state, const uint8_t *w, size_t wlen, uint8_t *r, size_t rlen) {
     (void)state;
     bool inc = true;
@@ -195,6 +205,7 @@ static int accel_xfer(void *state, const uint8_t *w, size_t wlen, uint8_t *r, si
         inc = (w[0] & 0x80) || wlen > 2;
     }
     for (size_t i = 1; i < wlen; i++, A.ptr = (uint8_t)((A.ptr + 1) & 0x3F)) A.reg[A.ptr & 0x3F] = w[i];
+    if (wlen > 1) accel_supply();
     if (wlen > 1) {
         vtk_lock();
         accel_int();
@@ -216,6 +227,7 @@ void sim_accel_orient(const char *name) { /* ISR (script, window) */
     static const struct { const char *n; int g[3]; } O[] = {
         {"portrait", {0, 1000, 0}},        {"upside_down", {0, -1000, 0}}, {"landscape_left", {1000, 0, 0}},
         {"landscape_right", {-1000, 0, 0}}, {"face_up", {0, 0, 1000}},     {"face_down", {0, 0, -1000}},
+        {"reading", {0, 707, 707}}, /* held to read: tilted 45 degrees back from face up */
     };
     for (unsigned i = 0; i < sizeof O / sizeof O[0]; i++)
         if (!strcmp(name, O[i].n)) {

@@ -11,12 +11,13 @@
 #include "ai_pages.h"
 #include "ink/ui_shell.h"
 
+#define PAGES_MAX 4096 /* a 32 KB answer of text is a few hundred pages; more (nearly all line breaks) is "cannot be shown in full" */
 #define PANEL_HEIGHT (INK_GAP_L + INK_CONTROL + INK_GAP_S + 3 * ink_ui_line_height(INK_FONT_BODY) + INK_GAP_S + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_S + INK_CONTROL + INK_GAP_L)
 static struct {
-    lv_obj_t *root, *status, *question, *answer, *source, *actions, *prev, *next, *counter, *stop;
+    lv_obj_t *root, *status, *question, *answer, *source, *actions, *prev, *next, *counter, *stop, *rec;
     char words[INK_AI_ANSWER_MAX], text[4096];
     char caption[128];
-    uint16_t starts[INK_AI_ANSWER_MAX + 1];
+    uint16_t starts[PAGES_MAX + 1];
     int page, pages;
     bool hidden, speaking, expanded;
     const ink_ui_overlay_t *overlay;
@@ -69,7 +70,7 @@ static void paginate(int from) {
             if (size.y > h) break;
             end = next;
         }
-        if (end == at && at < len) { A.pages = 0; break; }
+        if ((end == at && at < len) || A.pages >= PAGES_MAX) { A.pages = 0; break; }
         at = end; A.starts[++A.pages] = (uint16_t)at;
     } while (at < len);
     if (A.page >= A.pages) A.page = A.pages ? A.pages - 1 : 0;
@@ -131,7 +132,7 @@ void ink_shell_ai_closed(void) {
     if (!A.root) return;
     ink_ui_hint_obj(A.root, INK_REFRESH_FLASH_UI);
     ink_ui_overlay_remove(A.overlay);
-    A.root = A.status = A.question = A.answer = A.source = A.actions = A.prev = A.next = A.counter = A.stop = NULL;
+    A.root = A.status = A.question = A.answer = A.source = A.actions = A.prev = A.next = A.counter = A.stop = A.rec = NULL;
     memset(A.words, 0, sizeof A.words); memset(A.text, 0, sizeof A.text);
     A.page = A.pages = 0; A.hidden = A.expanded = false;
 }
@@ -144,6 +145,7 @@ static void audio_changed(void *ctx, int handle, const char *id) {
     A.speaking = A.words[0] && !strstr(A.caption, "声音没能播放") && !strcmp(playing, "voice");
     lv_label_set_text(A.status, A.speaking ? "正在读给你听" : A.caption);
     if (A.speaking) lv_obj_remove_flag(A.stop, LV_OBJ_FLAG_HIDDEN); else lv_obj_add_flag(A.stop, LV_OBJ_FLAG_HIDDEN);
+    if (strstr(A.caption, "正在录音")) lv_obj_remove_flag(A.rec, LV_OBJ_FLAG_HIDDEN); else lv_obj_add_flag(A.rec, LV_OBJ_FLAG_HIDDEN); /* one tap gives the microphone back */
     if (A.speaking || !A.words[0]) { lv_obj_add_flag(A.actions, LV_OBJ_FLAG_HIDDEN); lv_obj_add_flag(A.source, LV_OBJ_FLAG_HIDDEN); }
     else { lv_obj_remove_flag(A.actions, LV_OBJ_FLAG_HIDDEN); lv_obj_remove_flag(A.source, LV_OBJ_FLAG_HIDDEN); }
 }
@@ -219,6 +221,9 @@ void ink_shell_ai_open(lv_obj_t **root, lv_obj_t **status, lv_obj_t **question, 
         2 * INK_CONTROL, INK_CONTROL, false, NULL, NULL);
     ink_shell_bind(A.stop, "shell.ai_stop", NULL);
     lv_obj_add_flag(A.stop, LV_OBJ_FLAG_HIDDEN);
+    A.rec = ink_ui_pill(A.root, "停止录音", INK_MARGIN, PANEL_HEIGHT - INK_GAP_L - INK_CONTROL, 3 * INK_CONTROL, INK_CONTROL, true, NULL, NULL);
+    ink_shell_bind(A.rec, "audio.record_stop", NULL);
+    lv_obj_add_flag(A.rec, LV_OBJ_FLAG_HIDDEN);
     lv_obj_add_flag(A.source, LV_OBJ_FLAG_HIDDEN);
     lv_obj_add_flag(A.actions, LV_OBJ_FLAG_HIDDEN);
     A.hidden = A.expanded = false; A.page = 0; A.pages = 1; A.words[0] = 0; A.starts[0] = A.starts[1] = 0;

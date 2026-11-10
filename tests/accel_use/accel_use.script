@@ -1,0 +1,4 @@
+# Synthetic member; the microphone hears speech (recording); no external services.
+@0       net   wifi
+@1s      mic   speech
+@2400s   end

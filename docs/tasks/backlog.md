@@ -191,7 +191,11 @@
 
 Codex 额度用完，任务改由 Claude 子代理（思考等级 medium）在各自检出里做，主会话复核合并，每批合完由一个子代理独立审一轮。通用规矩在 `ink-codex/briefs/subagent-rules.md`（仓库外），任务书仍放本目录。依据：[phone-gap-2](phone-gap-2/REPORT.md) 和用户 11-10 的回答（D-112～D-126，R-069～R-071）。
 
-**在做（batch12）：** `reader-continue`（继续读）、`airplane-mode`（飞行模式、省电保留）、`calculator`（计算器，顺带“全部”页 16 个应用的上限）、`ai-icon`（重画 AI 图标）、`ai-answer-long`（AI 长回答不丢字）。
+**batch12 已合入：** `ai-answer-long`（一轮回答最多 32 KB，按页显示，超出明确截断）、`reader-continue`（每位家人记住上次读的书，“继续读”卡片和 AI 共用 `reader.continue`）、`ai-icon`（编织立方体，用户四轮选定，D-109）、`calculator`（十进制定点计算器，“全部”页不再限 16 个应用、应用表 40）、`airplane-mode`（飞行模式和省电保留）；合并时修了状态栏 4G 图标（`net.type` 是 `lte` 不是 `mobile`）。batch12 的独立审计在跑（`docs/audits/batch12/TASK.md`）。
+
+**batch13 已合入：** `port-hal-1`（S31 的 I2C、UART、GPIO 中断、板级接线，只编译）、`memo-record`（录音备忘，Opus，D-112）、`i18n-1`（中英两种语言的机制，语言选项在“关于和更新”）。**在做：** `sms-multipart`、`weather`、`audit12-fix`、`dictation-flake`（CI 上听写测试失败）、`accel-use`。D-124 改为先用厂家现成的屏幕输出层，排队里加一项 `port-display-1`（把现成的输出层接到 `hal_display` 后面，只编译）。
+
+**batch12 留下的后续：** `ai-speech-long`（长回答整篇朗读：中枢 `ANSWER_BYTES = 1800`、朗读 450 帧上限、一轮 45 秒，要改中枢和协议）；“继续读”卡片的百分比、停在今日屏时插拔卡不刷新、卡片标题“在读”和规范的“继续读”；时钟、相机、相册在“全部”页没有自己的图标；计算器在 120% 字号下算式区可能挤；拨号页提示文字压住键盘；点“关闭飞行模式”后面板不自动收起；飞行模式的 `CFUN=4`、Wi-Fi 和蓝牙真正断电、开机窗口期要上机核实；`device-protocol.md` 里“中枢一轮 ≤ 1.8 KB”等 ai-speech-long 一起改。
 
 **排队（大致按这个顺序，互相改同一批文件的先后做）：**
 
@@ -218,6 +222,28 @@ Codex 额度用完，任务改由 Claude 子代理（思考等级 medium）在�
 | `ui-deps-refresh` | ui-dependencies.md 的过时状态 | phone-gap-2 A12 |
 
 不做或先不做（用户 11-10 定）：蓝牙音箱和翻页器、无障碍、热点。
+
+## 这一阶段的完成界限（2026-11-10 晚上定，用户要求“明确完成界限，不要无休止的执行”）
+
+**目标**：模拟器里的系统层达到 R-068（相当于一台没装应用的手机）。下面的任务做完就停，向用户汇报，等新的指示；不再往里加新任务，除非用户要求。
+
+**完成条件（全部满足）**：
+1. 下表任务全部合入 `claude/system-layer`；
+2. 每批合完都审过一轮，查出的高、中问题都修完；
+3. main 上 CI 全绿；
+4. 最后一次缺口检查（phone-gap-3）对照 R-068，凡是模拟器里能验证的都是“有”，剩下的只属于下面“不在这一阶段”的三类。
+
+**任务表（共 27 项）**：
+
+| 状态 | 任务 |
+| --- | --- |
+| 在做（8） | `sms-multipart`、`boot-db-stall`、`time-settings`、`lock-camera`、`kid-apps`、`files-ops`、`reminder-edit`、`port-hal-2` |
+| 接着做（19） | `emergency-call`、`mobile-network`（都等 sms-multipart 合入）、`clock-extras`（等 time-settings）、`qr-scan`、`notify-manage`、`settings-small`（没连上的已存 Wi-Fi、文字重做）、`ai-speech-long`、`i18n-2`、`i18n-3`、`i18n-4`（其余页面的英文全覆盖）、`semantics-shell-1`、`semantics-shell-2`、`small-gaps-1`（说话能打断回答、设备详情和开源许可、通话分钟数、电量页换家人）、`small-gaps-2`（“继续读”卡片的百分比和插拔卡刷新、“全部”页时钟相机相册的图标、拨号页提示压住键盘、飞行模式面板自动收起）、`port-display-1`（屏幕输出层接厂家现成代码，只编译）、`open-app-latency`、`ui-deps-refresh`、`phone-gap-3`（最后的缺口检查）、最后一轮整批审查 |
+
+**不在这一阶段（到这里就停下问用户）**：
+- 上真机：烧录、驱动调试、真机性能实测（每次写设备都要先整片备份、征得同意）。
+- 真实家庭中枢：真模型、听写朗读、账号、备份同步、浏览器节点、固件源（要服务器和密钥，可能花钱）。
+- 真打电话、发短信（花钱）。
 
 ## 性能
 

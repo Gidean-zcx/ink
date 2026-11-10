@@ -112,6 +112,7 @@ int ink_ai_chat_panel_snapshot(const char *status, const char *question, const c
         {.id = "next", .label = "下一页", .capability = "ai.panel.next", .enabled = !speaking && page + 1 < pages},
         {.id = "prev", .label = "上一页", .capability = "ai.panel.prev", .enabled = !speaking && page > 0},
         {.id = "stop", .label = "停下", .capability = "shell.ai_stop", .enabled = speaking},
+        {.id = "record_stop", .label = "停止录音", .capability = "audio.record_stop", .enabled = strstr(status, "正在录音") != NULL},
         {.id = "home", .label = "对话记录", .capability = "shell.ai_home", .enabled = !speaking && answer[0]}
     };
     ink_ui_page_spec_t model = {.id = ink_ui_page_name(), .title = "AI 面板", .object = {"ai:panel", 1},

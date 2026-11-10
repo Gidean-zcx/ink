@@ -26,6 +26,7 @@
 #include "ink/probe.h"
 #include "ink/sys/cap.h"
 #include "ink/sys/exec.h"
+#include "ink/sys/i18n.h"
 #include "ink/sys/rt.h"
 #include "ink/sys/settings.h"
 #include "ink/sys/media.h"
@@ -548,6 +549,8 @@ static int request(const char *method, bool voice) {
     char gen[48];
     snprintf(gen, sizeof gen, ",\"page_gen\":%u", n < 0 ? 0 : (unsigned)ink_ui_content_version());
     ink_jw_raw(&w, gen);
+    ink_jw_raw(&w, ",\"lang\":"); /* the answer comes in the interface's language */
+    ink_jw_str(&w, ink_lang_code());
     ink_jw_raw(&w, ",\"page\":{\"app\":");
     ink_jw_str(&w, app);
     ink_jw_raw(&w, ",\"text\":");
@@ -661,7 +664,15 @@ void ink_ai_key(bool pressed, uint64_t t_us) {
             for (int i = 0; i < 40 && ink_audio_capture_busy(); i++) osal_task_delay_us(5000);
         }
         AI.t_press = t_us;
-        if (!ink_audio_recording()) turn_focus_begin(); /* a recording is not ended by asking: it says so below */
+        if (ink_audio_recording()) { /* a recording is not ended by asking: the sheet says so and offers to stop it */
+            sheet_open();
+            set_status("正在录音，先停了再问");
+            ink_audio_tone(INK_TONE_ERROR, 0, NULL);
+            ink_probe_count("ai.mic_unavailable");
+            AI.turn_over = true;
+            return;
+        }
+        turn_focus_begin();
         /* a new turn: frames and the speech end of the previous one no longer apply */
         close_session(); /* the previous turn's, if the hub has not answered it yet */
         int sid = voice_ok() ? ink_rt_open("voice.chat", NULL, &AI_RT) : -1; /* a typed question is answered in the reply */

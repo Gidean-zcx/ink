@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "ink/osal.h"
+#include "ink/sys/i18n.h"
 #include "ink/sys/json.h"
 #include "ink/sys/members.h"
 #include "ink/sys/settings.h"
@@ -31,6 +32,8 @@ static const row_t ABOUT_ROWS[] = {
     {"device", "这台设备", NULL, NULL, NULL, NULL, NULL, NULL},
     {"update.version", "系统版本", NULL, NULL, NULL, NULL, NULL, NULL},
     {"update.check", "系统更新", NULL, NULL, "shell.update", "update", NULL, NULL},
+    {"system.language", TR_NOOP("语言"), NULL, NULL, "settings.set", "globe", NULL, NULL},
+    {"time", TR_NOOP("日期和时间"), "", NULL, "shell.time", "clock", NULL, NULL},
     {"privacy", "隐私", "查看", NULL, "shell.privacy", "shield", NULL, NULL},
     {"device.details", "设备详情", "暂不能查看", NULL, NULL, "display", "", NULL},
     {"licenses", "开源许可", "许可页面还没接入", NULL, NULL, "list", NULL, NULL},
@@ -48,12 +51,18 @@ static const struct { const char *name, *title, *cap; const row_t *rows; size_t 
     {"SetStorage", "存储和备份", "shell.storage", STORAGE_ROWS, sizeof STORAGE_ROWS / sizeof *STORAGE_ROWS},
     {"SetAbout", "关于和更新", "shell.about", ABOUT_ROWS, sizeof ABOUT_ROWS / sizeof *ABOUT_ROWS},
     {"SetPrivacy", "隐私", "shell.privacy", PRIVACY_ROWS, sizeof PRIVACY_ROWS / sizeof *PRIVACY_ROWS}};
+/* Every page's rows fit the per-row buffers below: a ninth About row once wrote past them. */
+#define ROWS_MAX 12
+_Static_assert(sizeof VOICE_ROWS / sizeof *VOICE_ROWS <= ROWS_MAX, "SetVoice has more rows than ROWS_MAX");
+_Static_assert(sizeof STORAGE_ROWS / sizeof *STORAGE_ROWS <= ROWS_MAX, "SetStorage has more rows than ROWS_MAX");
+_Static_assert(sizeof ABOUT_ROWS / sizeof *ABOUT_ROWS <= ROWS_MAX, "SetAbout has more rows than ROWS_MAX");
+_Static_assert(sizeof PRIVACY_ROWS / sizeof *PRIVACY_ROWS <= ROWS_MAX, "SetPrivacy has more rows than ROWS_MAX");
 static struct {
     int page;
     unsigned capacity;
     int y;
     uint32_t generation;
-    char member[16], values[8][384], args[8][128], backup[96];
+    char member[16], values[ROWS_MAX][384], args[ROWS_MAX][128], backup[96];
     lv_obj_t *body;
     ink_ui_list_t *list;
     ink_ui_list_position_t position;
@@ -81,7 +90,11 @@ static void value(size_t i) {
         snprintf(S.args[i], sizeof S.args[i], "{\"id\":\"%s\",\"value\":%lld}", r->setting,
             (long long)(!strcmp(r->setting, "voice.handsfree") ? (v + 1) % 3 : !v));
     } else if (r->value) snprintf(out, cap, "%s", r->value);
-    else if (!strcmp(r->id, "backup")) snprintf(out, cap, "%s", S.backup);
+    else if (!strcmp(r->id, "system.language")) { /* a tap moves to the next language */
+        int lang = (int)ink_setting_get(r->id);
+        snprintf(out, cap, "%s", ink_lang_name(lang) ? ink_lang_name(lang) : "");
+        snprintf(S.args[i], sizeof S.args[i], "{\"id\":\"%s\",\"value\":%d}", r->id, ink_lang_name(lang + 1) ? lang + 1 : 0);
+    } else if (!strcmp(r->id, "backup")) snprintf(out, cap, "%s", S.backup);
     else if (S.page == STORAGE && i > 1) storage_value(i, out, cap);
     else if (!strcmp(r->id, "device")) snprintf(out, cap, "%s的设备", ink_member_current()->name);
     else if (!strcmp(r->id, "storage.free")) {
@@ -119,7 +132,7 @@ static int row_body(size_t i) {
     if (S.page == ABOUT && i == 1) return ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_L;
     if (footer(i)) return INK_CONTROL + INK_GAP_XS + ink_ui_line_height(INK_FONT_NOTE);
     if (r->setting) return INK_CONTROL;
-    return !r->icon || ink_ui_text_width(r->title, INK_FONT_LIST, INK_WEIGHT_MEDIUM) +
+    return !r->icon || ink_ui_text_width(TR(r->title), INK_FONT_LIST, INK_WEIGHT_MEDIUM) +
         ink_ui_text_width(S.values[i], INK_FONT_NOTE, INK_WEIGHT_REGULAR) + INK_GAP > w - INK_CIRCLE_SMALL - INK_GAP_XL - INK_GAP
         ? ink_ui_row_double() : INK_CONTROL;
 }
@@ -132,10 +145,10 @@ static void bind_row(lv_obj_t *slot, size_t i, ink_ui_field_spec_t *field, ink_u
     (void)ctx;
     const row_t *r = &PAGES[S.page].rows[i];
     value(i);
-    *field = (ink_ui_field_spec_t){.id = r->id, .role = r->setting ? "setting" : "text", .label = r->title,
+    *field = (ink_ui_field_spec_t){.id = r->id, .role = r->setting ? "setting" : "text", .label = TR(r->title),
         .value = S.values[i], .object = {r->id, 0}};
-    *action = (ink_ui_action_spec_t){.id = r->id, .label = r->title, .capability = r->setting ? "settings.set" : r->cap,
-        .args_json = r->setting ? S.args[i] : NULL, .object = field->object, .enabled = r->setting || r->cap};
+    *action = (ink_ui_action_spec_t){.id = r->id, .label = TR(r->title), .capability = r->setting ? "settings.set" : r->cap,
+        .args_json = r->setting || !strcmp(r->id, "system.language") ? S.args[i] : NULL, .object = field->object, .enabled = r->setting || r->cap};
     if (!strcmp(r->id, "privacy.child")) action->args_json = "{\"children\":true}";
     if (S.page == STORAGE) storage_action(i, action);
     int w = INK_CANVAS_W - 2 * INK_MARGIN, head = heading(i), body = row_body(i), h = row_height(i);
@@ -174,7 +187,7 @@ static void bind_row(lv_obj_t *slot, size_t i, ink_ui_field_spec_t *field, ink_u
     }
     int left = r->icon ? INK_CIRCLE_SMALL + INK_GAP_XL : paragraph(i) || S.page == VOICE || S.page == ABOUT ? 0 : INK_GAP_XL;
     int y = head + (body - ink_ui_line_height(INK_FONT_LIST) - ink_ui_line_height(INK_FONT_NOTE) - INK_GAP_XS) / 2;
-    lv_label_set_text(title, r->title); lv_label_set_text(text, S.values[i]);
+    lv_label_set_text(title, TR(r->title)); lv_label_set_text(text, S.values[i]);
     lv_obj_set_style_text_align(title, LV_TEXT_ALIGN_LEFT, 0); lv_obj_set_style_text_align(text, LV_TEXT_ALIGN_LEFT, 0);
     lv_obj_set_style_text_font(title, ink_ui_font_px(paragraph(i) ? INK_FONT_SUBTITLE : INK_FONT_LIST, INK_WEIGHT_MEDIUM), 0);
     lv_obj_set_style_text_font(text, ink_ui_font_px(paragraph(i) ? INK_FONT_BODY : INK_FONT_NOTE, INK_WEIGHT_REGULAR), 0);
@@ -182,7 +195,7 @@ static void bind_row(lv_obj_t *slot, size_t i, ink_ui_field_spec_t *field, ink_u
     lv_obj_set_pos(text, ink_ui_px(left), ink_ui_px(paragraph(i) ? head + ink_ui_line_height(INK_FONT_SUBTITLE) + INK_GAP_XS : y + ink_ui_line_height(INK_FONT_LIST) + INK_GAP_XS));
     lv_obj_set_width(text, ink_ui_px(w - left - (r->icon ? INK_GAP : 0)));
     if (r->icon && body == INK_CONTROL) {
-        const char *caption = r->title;
+        const char *caption = TR(r->title);
         int title_w = ink_ui_text_width(caption, INK_FONT_LIST, INK_WEIGHT_MEDIUM);
         lv_obj_set_width(title, ink_ui_px(title_w));
         lv_obj_set_y(title, ink_ui_px(head + (body - ink_ui_line_height(INK_FONT_LIST)) / 2));
@@ -194,7 +207,7 @@ static void bind_row(lv_obj_t *slot, size_t i, ink_ui_field_spec_t *field, ink_u
     if (r->note) ink_ui_label(slot, r->note, INK_FONT_NOTE, INK_WEIGHT_REGULAR, 0, head + body + INK_GAP_XS, w);
     if (r->setting && strcmp(r->setting, "voice.handsfree")) {
         lv_obj_add_flag(title, LV_OBJ_FLAG_HIDDEN); lv_obj_add_flag(text, LV_OBJ_FLAG_HIDDEN);
-        ink_ui_toggle(slot, r->title, ink_setting_get(r->setting) != 0, 0, head, w, NULL, NULL);
+        ink_ui_toggle(slot, TR(r->title), ink_setting_get(r->setting) != 0, 0, head, w, NULL, NULL);
     } else if (r->setting) {
         const char *const choices[] = {"使用时", "一直", "关"};
         lv_obj_set_y(title, 0); lv_obj_add_flag(text, LV_OBJ_FLAG_HIDDEN);

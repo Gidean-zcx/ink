@@ -10,6 +10,7 @@ int ink_kid_pages_init(void);
 void ink_shell_kid_limit(const char *app);
 void ink_shell_kid_close(void);
 int ink_settings_pages_init(void);
+int ink_time_settings_init(void);
 int ink_bluetooth_page_init(void);
 void ink_bluetooth_page_open(void);
 void ink_settings_page_open(const char *name);
@@ -36,6 +37,8 @@ void ink_shell_topbar(lv_obj_t *parent, const char *title);
 void ink_shell_bind(lv_obj_t *obj, const char *cap, const char *json);
 /** A call or message refused because airplane mode is on: the panel with "关闭飞行模式". True if it was that. */
 bool ink_shell_airplane_card(const ink_receipt_t *rc);
+/** That, or a button the policy gate refused: the panel says why. True if shown. UI task. */
+bool ink_shell_refused(const ink_receipt_t *rc);
 const char *ink_shell_bound_cap(lv_obj_t *obj);
 void ink_shell_open_page(const char *name);
 const char *ink_shell_board(void);

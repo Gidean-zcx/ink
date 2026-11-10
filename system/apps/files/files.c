@@ -293,6 +293,7 @@ static void changed(void *ctx, const char *id, const ink_args_t *args) {
     (void)ctx; (void)id;
     if (!ink_ui_page_current() || F.epoch != ink_member_epoch() || strcmp(ink_ui_page_name(), PAGES[F.mode].name)) return;
     char path[INK_FS_PATH_MAX], kind[16]; ink_args_get_str(args, "path", path, sizeof path); ink_args_get_str(args, "kind", kind, sizeof kind);
+    if (F.mode == HOME && !strcmp(kind, "indexed")) return; /* Roots do not depend on the index; keep queued taps valid. */
     if ((F.mode == MOVE && !strcmp(kind, F.copy ? "copied" : "moved")) || (F.mode == ACTIONS && !strcmp(kind, "removed") && !strcmp(path, F.selected.path))) ink_ui_pop(); else ink_ui_redraw();
 }
 #define PAGE(name_) {.name = name_, .app = "files", .create = create, .destroy = destroy, .snapshot = snapshot, .on_key = page_key}

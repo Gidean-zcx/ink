@@ -4,6 +4,7 @@
 #include <string.h>
 #include "ink/osal.h"
 #include "ink/sys/file_picker.h"
+#include "ink/sys/i18n.h"
 #include "ink/sys/json.h"
 #include "ink/sys/members.h"
 #include "ink/sys/settings.h"
@@ -14,6 +15,8 @@
 enum { MEMBERS, KID, WALLPAPER, RECORDS, MEMORY, RUNTIME };
 static const char *const NAMES[] = {"SetMembers", "SetKid", "Wallpaper", "Records", "AiMemory", "RuntimeRecords"};
 static const char *const TITLES[] = {"家人", "孩子的设置", "锁屏和壁纸", "记录", "AI 记得的事", "运行记录"};
+#define FAMILY_ROWS_MAX 24
+_Static_assert(INK_MEMBERS_MAX + 3 <= FAMILY_ROWS_MAX, "members and family controls fit");
 static struct {
     int page, count;
     uint32_t generation;
@@ -21,7 +24,7 @@ static struct {
     bool adult;
     ink_ui_list_t *list;
     ink_ui_list_position_t pos;
-    char target[16], titles[24][96], values[24][160], ids[24][48], caps[24][48], args[24][192];
+    char target[16], titles[FAMILY_ROWS_MAX][96], values[FAMILY_ROWS_MAX][160], ids[FAMILY_ROWS_MAX][48], caps[FAMILY_ROWS_MAX][48], args[FAMILY_ROWS_MAX][192];
     ink_ui_field_spec_t input[2];
     ink_ui_action_spec_t form[5];
     ink_ui_page_spec_t model;
@@ -40,6 +43,7 @@ static void setting(const char *id, const char *title, int64_t next) {
     if (!strcmp(id, "display.lock_style")) snprintf(value, sizeof value, "%s", v == 2 ? "壁纸" : v == 1 ? "时钟和待办" : "这一页");
     if (!strcmp(id, "power.lock_after_s")) snprintf(value, sizeof value, "%lld 分钟", (long long)v / 60);
     if (!strcmp(id, "display.wallpaper_file")) snprintf(value, sizeof value, "%s", v ? "已选择" : "还没有选壁纸");
+    if (!strcmp(id, "power.lift_wake")) snprintf(value, sizeof value, "%s", v ? "开，平放不动 3 分钟先锁屏" : "关");
     row(id, title, value, "settings.set", args);
 }
 static void time_reply(void *ctx, const ink_receipt_t *rc) {
@@ -195,6 +199,7 @@ static void create(lv_obj_t *screen, void *arg) {
         }
         row("add", "加一位家人", "", "family.edit", NULL);
         row("pin", "我的密码", "设置或更改", "shell.pin_set", NULL);
+        row("return", TR("离开多久要重新验证"), TR("选择免密码时长"), "shell.return", NULL);
     } else if (S.page == KID) {
         const ink_member_t *kid = NULL;
         for (int i = 0; ink_member_at(i); i++) if (ink_member_at(i)->role == INK_ROLE_CHILD) { kid = ink_member_at(i); break; }
@@ -218,6 +223,7 @@ static void create(lv_obj_t *screen, void *arg) {
         setting("power.lock_after_s", "自动锁屏", ink_setting_get("power.lock_after_s") == 600 ? 300 : 600);
         row("choose", "从相册选", ink_wallpaper_ready() ? "已选锁屏壁纸" : ink_setting_get("display.wallpaper_file") ? "壁纸暂时读不出来" : "还没有选壁纸", "wallpaper.choose", NULL);
         setting("display.wallpaper_file", "移除壁纸", 0);
+        setting("power.lift_wake", "拿起亮屏", !ink_setting_get("power.lift_wake"));
     } else row("unavailable", "暂时看不到 AI 记得的事", "暂时无法查看和删除记忆", NULL, NULL);
     ink_ui_list_refresh(S.list, S.count);
     if (S.page == MEMBERS) {

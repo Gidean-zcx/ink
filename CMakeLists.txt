@@ -31,6 +31,9 @@ if(INK_SANITIZE)
   add_compile_options(-fsanitize=address,undefined -fno-omit-frame-pointer)
   add_link_options(-fsanitize=address,undefined)
 endif()
+add_executable(test-s31-hal-map tests/esp32s31/hal_map.c)
+target_include_directories(test-s31-hal-map PRIVATE tests/esp32s31/stub platform/include)
+target_compile_options(test-s31-hal-map PRIVATE ${INK_WARN} -UNDEBUG)
 # Bind symbols at load (macOS does already): lazily, the dynamic linker would run on the stack of
 # whichever simulated task first calls a libc function, with a CPU-dependent size (XSAVE area).
 if(CMAKE_SYSTEM_NAME STREQUAL "Linux")
@@ -195,6 +198,7 @@ add_library(ink_system STATIC
   system/services/file/transfer.c
   system/services/time/lunar.c
   system/services/time/time_service.c
+  system/ui/shell/time_settings.c
   system/services/update/update_service.c
   system/ui/shell/update_card.c
   system/ui/shell/power_menu.c
@@ -235,6 +239,7 @@ add_library(ink_system STATIC
   system/util/ink_json.c
   system/util/layout.c
   system/text/ink_font.c
+  system/text/i18n.c
   system/text/linebreak.c
   system/text/layout.c
   system/ui/lock_mark.c
@@ -274,6 +279,7 @@ set(INK_CJK_FONT "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc" CACHE 
 set(INK_CJK_FACE 2 CACHE STRING "Face index in the collection (Noto Sans CJK .ttc: 2 = Simplified Chinese)")
 set(INK_ASSETS_DIR ${CMAKE_BINARY_DIR}/assets)
 find_package(Python3 COMPONENTS Interpreter)
+file(GLOB INK_I18N_TABLES CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/assets/i18n/*.tsv) # interface languages
 set(INK_HAVE_FONTS OFF)
 if(EXISTS ${INK_CJK_FONT} AND Python3_FOUND)
   set(INK_FONT_FILES)
@@ -315,12 +321,12 @@ if(EXISTS ${INK_CJK_FONT} AND Python3_FOUND)
       message(FATAL_ERROR "Missing required CJK ${weight} face: ${INK_CJK_${upper}_FONT}")
     endif()
   endforeach()
-  file(GLOB_RECURSE INK_UI_TEXT CONFIGURE_DEPENDS system/ui/*.c apps/*.c system/services/*.c system/policy/*.c)
+  file(GLOB_RECURSE INK_UI_TEXT CONFIGURE_DEPENDS system/ui/*.c system/apps/*.c apps/*.c system/services/*.c system/policy/*.c)
   add_custom_command(OUTPUT ${INK_ASSETS_DIR}/fonts/ui-fonts.stamp
     COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/fontgen/ui_fonts.py
       --regular ${INK_CJK_FONT} --face ${INK_CJK_FACE} --medium ${INK_CJK_MEDIUM_FONT} --bold ${INK_CJK_BOLD_FONT}
       --out ${INK_ASSETS_DIR}/fonts
-    DEPENDS ${INK_FONT_FILES} ${INK_UI_TEXT} tools/fontgen/fontgen.py tools/fontgen/ui_fonts.py system/ui/ink/ui_theme.h third_party/fonts/Outfit.ttf
+    DEPENDS ${INK_FONT_FILES} ${INK_UI_TEXT} ${INK_I18N_TABLES} tools/fontgen/fontgen.py tools/fontgen/ui_fonts.py system/ui/ink/ui_theme.h third_party/fonts/Outfit.ttf
     COMMENT "fontgen: contract UI sizes, CJK weights and Outfit digits")
   add_custom_target(ink_ui_fonts ALL DEPENDS ${INK_ASSETS_DIR}/fonts/ui-fonts.stamp)
   set(INK_HAVE_FONTS ON)
@@ -368,6 +374,18 @@ add_custom_target(ink_ui_resource_check ALL
   BYPRODUCTS ${CMAKE_BINARY_DIR}/generated/ink/ui_icon_names.h
   COMMENT "Check required design icon geometry")
 add_dependencies(ink_system ink_ui_resource_check)
+# Interface languages: assets/i18n/<code>.tsv, checked and turned into a const lookup table.
+set(INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/system/ui/shell/boot_flow.c ${CMAKE_SOURCE_DIR}/system/ui/shell/navigation.c
+  ${CMAKE_SOURCE_DIR}/system/ui/shell/settings_pages.c ${CMAKE_SOURCE_DIR}/system/ui/shell/time_settings.c
+  ${CMAKE_SOURCE_DIR}/system/ui/shell/settings_family.c ${CMAKE_SOURCE_DIR}/system/services/time/time_service.c
+  ${CMAKE_SOURCE_DIR}/system/apps/calendar/calendar.c)
+add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/i18n/i18n_gen.py ${INK_I18N_TABLES}
+          --header ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h --sources ${INK_I18N_SOURCES}
+  DEPENDS tools/i18n/i18n_gen.py ${INK_I18N_TABLES} ${INK_I18N_SOURCES}
+  COMMENT "i18n: check the translation tables")
+add_custom_target(ink_i18n_table DEPENDS ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h)
+add_dependencies(ink_system ink_i18n_table)
 target_include_directories(ink_system PUBLIC ${CMAKE_BINARY_DIR}/generated)
 
 # Scenario content: the committed sample books + a generated long book (pagination stress).
@@ -486,6 +504,7 @@ endif()
 # ---------------------------------------------------------------- tests
 enable_testing()
 add_test(NAME unit-s31-osal-ticks COMMAND test-s31-osal-ticks)
+add_test(NAME unit-s31-hal-map COMMAND test-s31-hal-map)
 set(INK_IME_CASES ${CMAKE_BINARY_DIR}/generated/ime_cases.h)
 add_custom_command(OUTPUT ${INK_IME_CASES}
   COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/ime_lexicon/fixtures.py ${INK_IME_CASES}
@@ -624,6 +643,15 @@ target_link_libraries(sim-configured PRIVATE ink_apps ink_system)
 target_link_libraries(sim-boot-flow PRIVATE ink_apps ink_system)
 add_test(NAME boot-flow COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/boot_flow_check.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(boot-flow PROPERTIES TIMEOUT 200)
+ink_sim_executable(sim-i18n-lang tests/i18n_lang.c)
+ink_sim_executable(sim-time-settings tests/time_settings.c)
+target_link_libraries(sim-time-settings PRIVATE ink_apps ink_system)
+add_test(NAME time-settings COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/time_settings.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(time-settings PROPERTIES TIMEOUT 200)
+target_link_libraries(sim-i18n-lang PRIVATE ink_apps ink_system)
+add_test(NAME i18n-lang COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/i18n_check.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(i18n-lang PROPERTIES TIMEOUT 300)
+add_test(NAME i18n-tables COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/i18n_tables.py)
 add_test(NAME boot-flow-reboot COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/boot_flow_reboot.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(boot-flow-reboot PROPERTIES TIMEOUT 200)
 target_link_libraries(sim-ui-cards PRIVATE ink_apps ink_system)
@@ -680,6 +708,7 @@ if(INK_HAVE_FONTS)
   add_dependencies(sim-capability-inventory ink_fonts ink_test_content)
 endif()
 add_test(NAME hw-bench-report COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/hw_bench/report_test.py)
+add_test(NAME hw-selftest-run COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/hw_selftest/run_test.py)
 add_test(NAME capability-table-doc COMMAND ${Python3_EXECUTABLE}
   ${CMAKE_SOURCE_DIR}/tools/capabilities.py --check)
 add_test(NAME capability-table-regressions COMMAND ${Python3_EXECUTABLE}
@@ -1364,6 +1393,10 @@ target_sources(ink_system PRIVATE system/apps/memo/memo.c)
 ink_sim_executable(sim-memo tests/memo/memo.c)
 target_link_libraries(sim-memo PRIVATE ink_apps ink_system)
 add_test(NAME memo COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/memo/run.py --build ${CMAKE_BINARY_DIR})
+# Voice memos: recording, cancelling, the AI key, a call, the hub's words, members, a power cut (tests/memo_record).
+ink_sim_executable(sim-memo-record tests/memo_record/memo_record.c)
+target_link_libraries(sim-memo-record PRIVATE ink_apps ink_system)
+add_test(NAME memo-record COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/memo_record/run.py --build ${CMAKE_BINARY_DIR})
 
 target_sources(ink_system PRIVATE system/ui/shell/settings_family.c system/ui/shell/wallpaper.c)
 ink_sim_executable(sim-settings-b tests/settings_b.c)
@@ -1393,6 +1426,17 @@ ink_sim_executable(sim-airplane-mode tests/airplane_mode.c)
 target_link_libraries(sim-airplane-mode PRIVATE ink_apps ink_system)
 add_test(NAME airplane-mode COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/airplane_mode.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(airplane-mode PROPERTIES TIMEOUT 600)
+ink_sim_executable(sim-audit12-fix tests/audit12_fix/device.c)
+target_link_libraries(sim-audit12-fix PRIVATE ink_apps ink_system)
+add_dependencies(sim-audit12-fix ink_fonts ink_test_content)
+foreach(case m1 m2 m3 l7)
+  add_test(NAME audit12-${case} COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/audit12_fix/run.py --build ${CMAKE_BINARY_DIR} --case ${case})
+  set_tests_properties(audit12-${case} PROPERTIES TIMEOUT 300)
+endforeach()
+ink_sim_executable(sim-accel-use tests/accel_use/accel_use.c)
+target_link_libraries(sim-accel-use PRIVATE ink_apps ink_system)
+add_test(NAME accel-use COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/accel_use/run.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(accel-use PROPERTIES TIMEOUT 900)
 foreach(case bt-ai ime-layout)
   string(REPLACE "-" "_" source ${case})
   ink_sim_executable(sim-audit9-${case} tests/audit9/${source}.c)
@@ -1418,11 +1462,19 @@ target_sources(ink_system PRIVATE system/apps/calendar/calendar.c)
 ink_sim_executable(sim-calendar tests/calendar/calendar.c)
 target_link_libraries(sim-calendar PRIVATE ink_apps ink_system)
 add_test(NAME calendar COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/calendar/run.py --build ${CMAKE_BINARY_DIR})
+ink_sim_executable(sim-reminder-edit tests/reminder_edit/reminder_edit.c)
+target_link_libraries(sim-reminder-edit PRIVATE ink_apps ink_system)
+add_test(NAME reminder-edit COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/reminder_edit/run.py --build ${CMAKE_BINARY_DIR})
 
 target_sources(ink_system PRIVATE system/apps/calculator/calculator.c)
 ink_sim_executable(sim-calculator tests/calculator/calculator.c)
 target_link_libraries(sim-calculator PRIVATE ink_apps ink_system)
 add_test(NAME calculator COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/calculator/run.py --build ${CMAKE_BINARY_DIR})
+
+target_sources(ink_system PRIVATE system/apps/weather/weather.c)
+ink_sim_executable(sim-weather tests/weather/weather.c)
+target_link_libraries(sim-weather PRIVATE ink_apps ink_system)
+add_test(NAME weather COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/weather/run.py --build ${CMAKE_BINARY_DIR})
 
 ink_sim_executable(sim-confirm-pages tests/confirm_pages/pages.c tests/confirm_pages/boundary.c)
 target_link_libraries(sim-confirm-pages PRIVATE ink_apps ink_system)

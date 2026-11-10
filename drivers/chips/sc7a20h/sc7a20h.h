@@ -20,5 +20,8 @@ hal_i2c_status_t sc7a20h_read_mg(hal_i2c_dev_t *dev, int *x, int *y, int *z);
 hal_i2c_status_t sc7a20h_motion(hal_i2c_dev_t *dev, bool *moved);
 /** Quiet mode before sleep (upstream: interrupts off, 1 Hz, axes off). */
 hal_i2c_status_t sc7a20h_sleep(hal_i2c_dev_t *dev);
+/** Motion watch while the chip sleeps: 10 Hz low-power, AOI1 above ~128 mg for one sample (100 ms) -> INT1
+ *  latched. A tap is shorter than a sample; lifting the device lasts several. Calibrate on the device. */
+hal_i2c_status_t sc7a20h_motion_watch(hal_i2c_dev_t *dev);
 
 #endif

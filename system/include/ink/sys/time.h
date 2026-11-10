@@ -37,6 +37,12 @@ void ink_time_set(int64_t utc_s, bool from_hub);
 int ink_time_set_if_revision(int64_t utc_s, bool from_hub, uint32_t expected, uint32_t *written);
 /** The time zone's name, e.g. "Asia/Shanghai". */
 const char *ink_time_zone(void);
+/** Stable setting indices; NULL outside the compact modern-zone table. Cities are Chinese i18n keys. */
+int ink_time_zone_count(void);
+const char *ink_time_zone_name(int index);
+const char *ink_time_zone_city(int index);
+/** World clocks can convert without changing the device's zone. Invalid index uses Shanghai. */
+void ink_time_to_zone(int index, int64_t utc_s, ink_tm_t *out);
 
 /* ---- the lunar calendar, 1901 to 2100 ---- */
 typedef struct {

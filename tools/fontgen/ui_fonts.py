@@ -30,11 +30,13 @@ def main():
     spec = importlib.util.spec_from_file_location('fontgen', ROOT / 'tools/fontgen/fontgen.py')
     fontgen = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(fontgen)
-    for group in ['system/ui', 'apps', 'system/services', 'system/policy']:
+    for group in ['system/ui', 'system/apps', 'apps', 'system/services', 'system/policy']:
         for source in (ROOT / group).rglob('*.c'):
             # Read only characters actually in the selected CJK face, not comments'
             # private-use markers or unsupported typographic symbols.
             chars.update(c for c in source.read_text() if '\u3400' <= c <= '\u9fff')
+    for table in (ROOT / 'assets/i18n').glob('*.tsv'):  # every character a translation shows
+        chars.update(c for c in table.read_text(encoding='utf-8') if c >= ' ')
     missing = sorted(ord(c) for c in chars if ord(c) not in set(fontgen.charset('ascii,punct,pinyin,gb2312')))
     if missing:
         raise SystemExit('UI text outside the reading font, add it there: ' + ''.join(map(chr, missing)))

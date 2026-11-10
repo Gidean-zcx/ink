@@ -12,3 +12,9 @@ set_source_files_properties(${root}/system/services/media/image_codec.c ${root}/
     PROPERTIES COMPILE_OPTIONS -w)
 execute_process(COMMAND ${PYTHON} ${root}/tools/icongen/check.py --header ${CMAKE_BINARY_DIR}/generated/ink/ui_icon_names.h
     WORKING_DIRECTORY ${root} COMMAND_ERROR_IS_FATAL ANY)
+file(GLOB i18n_tables ${root}/assets/i18n/*.tsv)
+execute_process(COMMAND ${PYTHON} ${root}/tools/i18n/i18n_gen.py ${i18n_tables} --header ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h
+    --sources ${root}/system/ui/shell/boot_flow.c ${root}/system/ui/shell/navigation.c ${root}/system/ui/shell/settings_pages.c
+    ${root}/system/ui/shell/time_settings.c ${root}/system/ui/shell/settings_family.c ${root}/system/services/time/time_service.c
+    WORKING_DIRECTORY ${root} COMMAND_ERROR_IS_FATAL ANY)
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${i18n_tables})

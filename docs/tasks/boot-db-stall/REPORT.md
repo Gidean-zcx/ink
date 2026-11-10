@@ -1,0 +1,90 @@
+# boot-db-stall 执行报告
+
+基线：`ec78378e05f2694b9fa410780ab2bcf9d8de1c99`。状态：完成本地验收。修复提交：`cc0d2ecc`。
+
+## 验收表
+
+| 编号 | 结论 | 证据 | 命令 |
+| --- | --- | --- | --- |
+| 1 开机后台首次打开、文件列表 | 通过【实测】 | 原有 write／verify／review 场景通过；联网时两次备忘调用均完成，空集合返回 INVALID；文件首页点按到驱动后能进入并读完 FileList | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/files_app/run.py --build build --trace` |
+| 1 AI 从未打开备忘时保存 | 通过【实测】 | 新增 cold-save：调用前缓存中没有 memo.notes；AI 保存成功，正文、来源与耐久版本正确，文件列表也读完 | 同上 |
+| 1 反向对照 | 通过【实测】 | 只撤销首页修复，write 恢复失败：实际停在 Files、busy=0；只恢复备忘的缓存限制，cold-save 的保存与记录断言失败。两个命令均预期退出 1 | 上述命令分别加 `--mutant index-redraw`、`--mutant memo-cache` |
+| 2 原有测试、全量 | 通过【实测】 | 原话 `100% tests passed out of 317`，216.09 秒；314 通过、中枢三项缺依赖跳过后全部补验通过（补验原话 `100% tests passed out of 4`，18.82 秒，含前置检查）；files-app、memo、memo-record、索引系列及确定性都通过 | `taskpolicy -c utility cmake --build build -j4`；`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j3`；补验见下 |
+| 2 内存检查 | 通过【实测】 | build-asan 开启 ASan 与 UBSan，完整运行 317 项，原话 `100% tests passed out of 317`，675.12 秒；同三项跳过后补验 `100% tests passed out of 4`，19.88 秒。所有登记用例均已覆盖，无 sanitizer 错误 | 同配置加 `-DINK_SANITIZE=ON`，保留 WERROR；构建目录和 ctest 目录改为 build-asan，仍用 `-j4`／`-j3` |
+| 2 S31 | 通过【实测】 | 脚本退出 0，编译、链接、尺寸与栈报告均生成；Total image size: 1339074 bytes。仅离线编译 | `INK_DEPS="$INK_DEPS" taskpolicy -c utility bash ports/esp32s31/build.sh` |
+| 2 gcccheck | 产品两项通过，测试有既有问题【实测】 | 产品单独检查 `gcccheck: 2 compiled, 0 with findings`，退出 0；连测试检查 `gcccheck: 3 compiled, 1 with findings`，退出 1；基线对照同样报 sscanf 一处、两个参数类型告警，修改行无告警 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" ../../tools/gcccheck.py build system/apps/files/files.c system/apps/memo/memo.c tests/files_app/files_app.c`；去掉测试路径检查产品 |
+| 3 时间线、根因、修法、撤销限制 | 完成【实测／实现】 | 见下；根因与任务书原先假设不同 | 带 `--trace` 的正反对照；临时增加平台 probe 定位后已全部撤销 |
+
+中枢补验只读复用主检出已有虚拟环境，四个依赖版本均与锁文件一致，未安装或升级依赖；设置 PYTHONPATH 保证导入当前检出的中枢代码。先对两个构建目录执行 `taskpolicy -c utility cmake -S . -B <目录> -DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"`，再分别执行：
+
+```sh
+PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$PWD/hub" taskpolicy -c utility \
+  "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j3 \
+  -R '^(hub-contract|hub-json-crosscheck|hub-simulator-e2e)$'
+```
+
+另一轮目录为 build-asan。全量、补验与构建日志均在 `work/boot-db-stall/`，含原始完整 LastTest.log 副本；S31 报告在 `build-s31/{size,size-components,stack}.txt`，未提交构建产物。
+
+收尾【实测】：产品代码新增 5 行、删除 5 行，合计改动 10 行（预算 150）；`git diff <基线>..HEAD --stat` 只有本报告、两个应用与对应测试，共五个文件；`git diff --check` 通过。按任务书第 6 节对提交差异做隐私扫描，无匹配（grep 退出 1），证据 `work/boot-db-stall/privacy.log` 为空。没有写设备、推送或创建 PR。
+
+## 时间线、根因与修法
+
+**结论：复现的是索引完成时重建文件首页、丢掉排队点按；没有观察到数据集合或写盘队列永久等待。** 原测试只检查期望的页面名，不能区分“没进入列表”和“列表没读完”。本次补上实际页面和 busy，未放宽条件。
+
+以下为同一模拟器、确定性启动的虚拟时刻。取恢复同步打开、尚未加首页修复的对照；追踪探针不改变虚拟时序。
+
+| 时刻（秒） | 事件及证据 |
+| --- | --- |
+| 2.806167 | net.online 观察者在 exec.bg 调 memo.play，首次打开 memo.notes。 |
+| 3.175817 | 存储任务取得显示 Flash 守卫后查询备忘快照；文件不存在。 |
+| 4.075827 | 存储任务查询第 0 代备忘日志；文件不存在。 |
+| 4.076594～4.078943 | 存储任务正常追加 boot.progress 日志，并调用 append_done。 |
+| 4.079019～4.079672 | 第 1 代备忘日志查询完成，集合打开返回；耗时约 1.274 秒，未卡死。 |
+| 4.304290～4.367680 | 文件索引日志第一批写盘完成。 |
+| 5.630143～5.691153 | 文件索引日志后续写盘完成。 |
+| 5.701012 | 测试按下“我的”；5.721185 起驱动读到触摸。 |
+| 5.715984／5.878124 | 两位成员的 indexed 事件都令 Files 重建，界面代数先为 7、再为 8。 |
+| 5.716461～5.719942 | 索引完成标记 file.index_ready 写盘完成。 |
+| 6.606172 | 界面处理排队的按下事件，事件代数 7、当前 8，计入 ui.stale_input_dropped；没有调用 files.browse。 |
+| 36.660 | 原检查失败；实际 Files、busy=0。随后显式调用 files.browse，file.list／file.index 都正常完成。 |
+
+【实现】`ink_storage_run` 用既有 read_lock／read_done 把查询交给存储任务；数据库加载时不持 DB.lock 等 Flash，写盘完成回调与读请求在同一存储任务处理。约 1.27 秒主要来自读操作等显示守卫；后台索引写盘照常完成。此场景 **没有触发 data.compactions**，不能把它归因于压缩死锁。
+
+【实现】`files.c:changed` 原来对所有 file.changed 都重建页面；`ui_task.c:show_top` 增加 generation 并清空指针状态，`handle_input` 丢弃旧代数的按下事件。因此没有一个“迟早读完”的列表作业：那次打开列表根本没发起。
+
+修复只在文件应用事件入口加一行：HOME 收到 indexed 时保留页面，因为首页只列成员与家庭入口，内容不依赖文件索引。列表、文件操作和移动页仍处理索引变化。备忘 mutate、play 恢复 `ink_db_open_member`；删除“请先打开备忘”提示，真实加载失败仍返回失败。数据存储和调度机制没有改动。
+
+影响范围【实现】：任何让索引完成通知与文件首页点按重叠的后台慢操作都可能触发，备忘只是本次触发源；各成员的 indexed 通知共用这一处修复。读代码还核对了短信、联系人、通话记录、通知、播放进度、备份、搜索及 data.* 的成员集合打开路径；它们共用同一读盘接口，可能等显示守卫，本次没有它们会永久等待的证据，未逐个打补丁。
+
+【实测】修复版联网调用 2.806 秒发起，两个回执在 4.080 秒返回；cold-save 在 4.850 秒从空缓存开始保存，6.630 秒完成，记录已经落盘。证据：`build/files-app-yv7u8q74/`；反例：`build/files-app-fzrh__re/`、`build/files-app-uy5yv5fa/`；初始存储追踪：`work/boot-db-stall/trace-unfixed/`。这些构建产物不提交。
+
+## 没做到的
+
+- 未操作设备，未在原生 Linux 上执行测试；S31 编译不能代表上机验证。
+- 未证明任务书假设的通用数据库死锁，未添加防死锁机制。这里证据支持的是点按失效。
+- 备忘的自动录音补漏仍只使用已加载集合（memo-record 引入，非 audit13 的两处能力限制）；其首次开机自动加载不在本任务验收范围。
+
+## 和设计不一致的
+
+暂无新增不一致。按钮和 AI 仍走原能力；数据隔离和存储 HAL 边界不变。首页跳过无内容变化的 indexed 重建，符合墨水屏减少无效刷新的约束。
+
+## 改过的已有测试
+
+- `tests/files_app/files_app.c`：保留原场景和断言；失败消息补实际页面／busy；点按增加驱动投递断言，不重试、不延长按住时间；联网调用增加回执检查（原先没有检查，原限制返回 FAILED，现在空集合应返回 INVALID）。新增冷集合 AI 保存检查及虚拟时刻探针，草稿是公开文本服务创建的合成夹具，整个过程不打开备忘页面。
+- `tests/files_app/run.py`：正常运行增加独立 cold-save 闪存／卡夹具；增加两个手动变体与可选 trace，不依赖 Git 历史；未改既有期望和预算。
+
+## 要用户定的
+
+暂无。
+
+## 顺手发现
+
+- gcccheck 的 RISC-V 编译指出原 files-app 的 sscanf 用 `%u` 读 uint32_t 指针；该工具上 uint32_t 为 unsigned long。基线第 219 行与修复版第 227 行相同的两个指针都报错，退出 1。本次三个 C 文件中产品代码两项无告警，测试只见这一处既有问题；未改该代码。
+
+## 新增的机制
+
+无新增任务、线程、状态机、文件格式、重试、队列、缓存或配置项。
+
+## 要改的文档
+
+合并时可修正 memo-record／audit13-fix 后续说明、backlog 和 codex-rules 第 8 节中对本现象的判断；当前实测是首页重建丢点按，不能由此推出禁止所有后台同步打开集合。共享文档及历史报告本次未改。

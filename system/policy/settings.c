@@ -294,6 +294,10 @@ int ink_settings_json(char *out, size_t cap) {
         }
         if (d->system) ink_jw_raw(&w, ",\"system\":true");
         if (d->ask_by_hand) ink_jw_raw(&w, ",\"ask_by_hand\":true");
+        if (d->via) {
+            ink_jw_raw(&w, ",\"via\":");
+            ink_jw_str(&w, d->via);
+        }
         ink_jw_raw(&w, "}");
     }
     osal_mutex_unlock(SE.lock);
@@ -323,6 +327,13 @@ static void cap_get(ink_call_t *c) {
     snprintf(c->rc.say, sizeof c->rc.say, "%s：%s", d->title, vt);
 }
 
+static void via_done(void *ctx, const ink_receipt_t *rc) { /* the setting's own capability answered */
+    ink_call_t *c = ctx;
+    c->rc = *rc;
+    c->rc.result = NULL;
+    ink_cap_done(c);
+}
+
 static void cap_set(ink_call_t *c) {
     char id[40], s[32];
     ink_args_get_str(&c->args, "id", id, sizeof id);
@@ -349,6 +360,30 @@ static void cap_set(ink_call_t *c) {
     }
     int64_t before = 0, revision = 0;
     bool check_revision = ink_args_get_int(&c->args, "expected_revision", &revision);
+    osal_mutex_lock(SE.lock, OSAL_WAIT_FOREVER);
+    int i = find(id);
+    const char *via = i >= 0 && (v == 0 || v == 1) ? SE.it[i].def->via : NULL;
+    bool stale = via && check_revision && SE.it[i].revision != (uint32_t)revision;
+    osal_mutex_unlock(SE.lock);
+    if (stale) {
+        refuse(&c->rc, INK_RC_STALE, "the setting changed since this operation");
+        return;
+    }
+    /* Its own capability decides: past its gate, with its order and words; not undone by system.undo (the
+     * capability table says so): airplane mode by the AI is set only after the receipt, and it cuts the AI off. */
+    if (via && c->src != INK_SRC_SYSTEM) {
+        ink_args_t a;
+        ink_args_init(&a);
+        ink_args_bool(&a, "enabled", v != 0);
+        ink_call_opts_t o = {.src = c->src, .page_gen = c->page_gen, .member = ink_cap_call_member(c),
+                             .reply_exec = INK_EXEC_DIRECT, .done = via_done, .ctx = c};
+        ink_cap_defer(c);
+        if (ink_cap_call(via, &a, &o) != 0) {
+            refuse(&c->rc, INK_RC_FAILED, "cannot be changed now");
+            ink_cap_done(c);
+        }
+        return;
+    }
     if (setting_set(id, v, c->src, check_revision, (uint32_t)revision, &before, &c->rc) == INK_RC_DONE && before != v && !check_revision) {
         ink_args_t undo;
         ink_args_init(&undo);
