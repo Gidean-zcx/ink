@@ -375,7 +375,7 @@ add_custom_target(ink_ui_resource_check ALL
 add_dependencies(ink_system ink_ui_resource_check)
 # Interface languages: assets/i18n/<code>.tsv, checked and turned into a const lookup table.
 set(INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/system/ui/shell/boot_flow.c ${CMAKE_SOURCE_DIR}/system/ui/shell/navigation.c
-  ${CMAKE_SOURCE_DIR}/system/ui/shell/settings_pages.c)
+  ${CMAKE_SOURCE_DIR}/system/ui/shell/settings_pages.c ${CMAKE_SOURCE_DIR}/system/apps/files/files.c ${CMAKE_SOURCE_DIR}/system/services/file/file_caps.c)
 add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h
   COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/i18n/i18n_gen.py ${INK_I18N_TABLES}
           --header ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h --sources ${INK_I18N_SOURCES}
@@ -1468,6 +1468,9 @@ target_link_libraries(sim-files-app PRIVATE ink_apps ink_system)
 add_dependencies(sim-files-app sim-image)
 target_include_directories(sim-files-app PRIVATE ${CMAKE_BINARY_DIR}/generated)
 add_test(NAME files-app COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/files_app/run.py --build ${CMAKE_BINARY_DIR})
+ink_sim_executable(sim-files-ops tests/files_ops/files_ops.c)
+target_link_libraries(sim-files-ops PRIVATE ink_apps ink_system)
+add_test(NAME files-ops COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/files_ops/run.py --build ${CMAKE_BINARY_DIR})
 
 target_sources(ink_system PRIVATE system/apps/camera/camera.c system/apps/gallery/gallery.c)
 add_library(ink_camera_png STATIC system/apps/camera/png.c)

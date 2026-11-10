@@ -21,6 +21,7 @@ int fs_dir_open_for(const file_context_t *c, const char *path, ink_fs_dir_t **ou
 int fs_mkdir_for(const file_context_t *c, const char *path);
 int fs_remove_for(const file_context_t *c, const char *path, uint32_t revision);
 int fs_move_for(const file_context_t *c, const char *from, const char *to, uint32_t revision, uint32_t *written);
+int fs_write_atomic_for(const file_context_t *c, const char *path, const void *data, size_t n);
 int fs_job_begin_for(const file_context_t *c, int op, const char *from, const char *to);
 int fs_index_for(const file_context_t *c, const char *path, ink_fs_type_t type, uint32_t *cursor, ink_fs_entry_t *out);
 /* MEDIA only. Owned thumbnail copy; release with ink_image_free. */
