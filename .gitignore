@@ -37,3 +37,4 @@ __pycache__/
 /tools/hw-bench/partitions.csv
 /tools/hw-bench/managed_components/
 /tools/hw-bench/dependencies.lock
+/tools/hw-selftest/build/
