@@ -7,10 +7,10 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 部分完成 | 【实测】S31 构建退出 0，0 条 warning/error；端口普通版 3/3 通过，ASan 待执行 | 见下方复现命令；`work/port-sleep-s31-final.log` |
+| 1 | 通过 | 【实测】S31 构建退出 0，0 条 warning/error；端口普通、ASan/UBSan 各 `100% tests passed out of 3` | 见下方复现命令；`work/port-sleep-s31-final.log`、`work/port-sleep-build-s31-host{,-asan}-tests.log` |
 | 2 | 通过 | 【实测】13/13 反向对照拒绝，原实现两项通过；要求的四项均编译 0、断言退出 −6 | `taskpolicy -c utility python3 ports/esp32s31/tests/negative.py build-s31-host` |
 | 3 | 通过 | 【实现】下方逐项对照，含缺失端口和保留差异 | 文件/行号见下表 |
-| 4 | 待执行 | 模拟器全量、内存检查、gcccheck、隐私扫描 | 待补 |
+| 4 | 部分完成 | 【实测】gcccheck 8 个 C 编译单元，0 findings；模拟器全量与隐私最终扫描待完成 | `taskpolicy -c utility python3 ../../tools/gcccheck.py build-s31-host …` |
 | 5 | 通过 | 【实现】下方八项上机清单；未把编译写成真机通过 | 本报告“上机先核对清单” |
 
 ## 原厂对照
@@ -65,6 +65,8 @@ taskpolicy -c utility python3 ports/esp32s31/tests/sdk_check.py "$IDF_PATH" buil
 
 端口 ASan/UBSan：目录换 `build-s31-host-asan`，配置仅加 `-DINK_SANITIZE=ON`。SDK 反向检查【实测】：正确 SDK 退出 0，改版本和删锚点各退出 1，明确显示版本/PMU 源码变化原因。测试只改临时副本。
 
+【实测】端口最终普通/ASan+UBSan 各 3/3，通过用时分别 1.57/1.53 秒。gcccheck：`8 compiled, 0 with findings`，覆盖电源 HAL、三个端口测试、板级 IO/PMIC、TCA/TPS 驱动，没有跳过；日志 `work/port-sleep-gcccheck.log`。端口内存检查的 8 个 C 编译单元全部带 `-fsanitize=address,undefined`。
+
 【实测】S31 最终构建退出 0，日志没有编译 warning/error；SDK 自身仍有 Kconfig 的十六进制写法弃用 NOTE，未关闭检查。`build-s31/compile_commands.json` 中兼容 PMU 副本 1 项、原始应用 PMU 0 项、vendor 源 1 项；最终 ELF 的 `nm` 输出含三个 `__wrap_*`、`ink_s31_sleep_init` 与 `ink_s31_light_sleep`，确认不是只复制而未接入。
 
 反向对照【实测】：要求的 `usb-revive`、`vendor-sleep`、`dynamic-frequency`、`gpio61-wake` 都编译退出 0、断言退出 −6；其余既有九项同样拒绝；两个未修改对照退出 0。证据：`work/port-sleep-{unit-tests,negative,sdk-negative}.log`。
@@ -112,3 +114,9 @@ taskpolicy -c utility python3 ports/esp32s31/tests/sdk_check.py "$IDF_PATH" buil
 ## 要改的文档
 
 - 主会话合并时更新 backlog、`docs/system/ui-dependencies.md` 与旧 port-hal-2 状态：浅睡已走补丁、USB 恢复、固定切频、GPIO61 不唤醒；能力表无需改变。
+
+## 规模与架构审视
+
+自有产品代码（含构建配置和 vendor 文件的两处适配）**+101/−42，按增删合计 143 行**，小于 250 行预算；测试、文档和原厂复制主体不计。为什么不能更小：需同时接入 C++ 原厂补丁与 C HAL、显式构建失败检查、USB 恢复和固定切频；已保留正确的 PMIC、正常方向和电源轨实现，只补验证。看过的更小方案：仅调用 IDF 不含硬件补丁；固定频率下继续用旧 IDF boost 锁不能从 160 升到 320；仅在 arm 前检查 INT 会遗漏恢复 RTC 输入时出现的有效低电平。
+
+【实现】R-061：变更留在端口、板级和构建，系统与应用继续经同一电源 HAL、服务和能力路径；没有新用户动作或页面，无需新增 AI 快照或能力。SDK 和 USB 寄存器属于平台内部机制，未向上层泄漏 IDF 或模拟器依赖。
