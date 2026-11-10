@@ -482,7 +482,7 @@ static void storage_task(void *arg) {
         bool waiting = false;
         for (int i = 0; i < PREFETCH_MAX && !waiting; i++) waiting = ST.prefetch[i] != NULL;
         osal_mutex_unlock(ST.lock);
-        osal_sem_take(ST.kick, waiting ? IDLE_POLL_US * 4 : OSAL_WAIT_FOREVER);
+        osal_sem_take(ST.kick, waiting ? IDLE_POLL_US * 4 : 30000000);
         for (;;) {
             serve_read();
             ink_log_poll(ink_display_busy() <= 0 && osal_now_us() >= ink_power_last_activity() + BG_QUIET_US);

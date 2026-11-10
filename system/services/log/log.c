@@ -13,7 +13,6 @@
 #define EVENTS 50
 static struct {
     osal_mutex_t *lock;
-    osal_timer_t *timer;
     hal_log_tail_t *tail;
     uint8_t *sector;
     uint32_t seq, page, pending, dropped, issue, events;
@@ -230,10 +229,8 @@ static const ink_cap_t CAPS[] = {
      .input = "{\"type\":\"object\",\"properties\":{\"description\":{\"type\":\"string\",\"maxLength\":120}},\"additionalProperties\":false}", .run = report},
     {.id = "system.export_logs", .title = "导出日志", .effect = INK_FX_LOCAL_WRITE, .exec = INK_EXEC_BG, .expose = INK_EXPOSE_OWNER, .run = export_logs}
 };
-static void tick(void *ctx) { (void)ctx; ink_storage_log_ready(); }
 int ink_log_start(void) {
     if (!L.lock || !L.tail || !L.sector) return -1;
     ink_log_health();
-    L.timer = osal_timer_create("log", tick, NULL);
-    return !L.timer || osal_timer_start(L.timer, 30000000, 30000000) || ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_cap_subscribe("", event, NULL, INK_EXEC_DIRECT);
+    return ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_cap_subscribe("", event, NULL, INK_EXEC_DIRECT);
 }

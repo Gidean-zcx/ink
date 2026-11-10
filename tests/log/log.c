@@ -16,9 +16,6 @@ static uint64_t now;
 static bool held;
 static const char *reason = "poweron";
 struct osal_mutex { bool held; };
-struct osal_timer { bool used; };
-osal_timer_t *osal_timer_create(const char *name, osal_timer_fn fn, void *arg) { (void)name; (void)fn; (void)arg; static osal_timer_t timer; return &timer; }
-osal_err_t osal_timer_start(osal_timer_t *t, uint64_t delay, uint64_t period) { (void)t; (void)delay; (void)period; return OSAL_OK; }
 struct hal_file { FILE *fp; };
 static char root[1024];
 void vtk_host_call(void (*fn)(void *), void *arg) { fn(arg); }
