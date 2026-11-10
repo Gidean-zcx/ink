@@ -81,6 +81,12 @@ void ink_s31_board_init(void) { /* boot, task context */
     s31_input_init(g_touch);
     hal_battery_t b;
     hal_power_battery(&b);
+    uint8_t reg = 0x02, t[7] = {0};
+    hal_i2c_status_t rs = g_rtc ? hal_i2c_write_read(g_rtc, &reg, 1, t, sizeof t) : HAL_I2C_ERR;
+    char rtc[160];
+    snprintf(rtc, sizeof rtc, "board: rtc i2c=%d raw=%02x %02x %02x %02x %02x %02x %02x (sec min hour day wday month year, VL=bit7 of sec)",
+             rs, t[0], t[1], t[2], t[3], t[4], t[5], t[6]);
+    hal_log_write(rtc);
     char line[128];
     snprintf(line, sizeof line, "board: accel=%d light=%d touch=%d fw=0x%02x battery=%d%% %dmV charging=%d power=%d", g_accel != NULL, g_light,
              g_touch != NULL, fw, b.percent, b.millivolts, b.charging, b.external_power);

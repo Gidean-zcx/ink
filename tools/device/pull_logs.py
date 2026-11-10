@@ -84,9 +84,16 @@ def main(argv=None):
         core = dest / "coredump.bin"
         if not core.exists():
             parser.error("--elf 需要同时提供核心转储")
+        raw = core.read_bytes()
+        length = struct.unpack_from("<I", raw)[0] if len(raw) >= 4 else 0
         with (dest / "coredump.txt").open("w", encoding="utf-8") as report:
-            subprocess.run([sys.executable, "-m", "esp_coredump", "info_corefile", "-t", "raw",
-                            "-c", str(core), str(args.elf)], stdout=report, stderr=subprocess.STDOUT, check=True)
+            if length in (0, 0xFFFFFFFF) or length > len(raw):
+                report.write("没有核心转储（分区头为空）\n")  # IDF writes the dump's length first; erased = no crash saved
+            else:
+                done = subprocess.run([sys.executable, "-m", "esp_coredump", "info_corefile", "-t", "raw",
+                                       "-c", str(core), str(args.elf)], stdout=report, stderr=subprocess.STDOUT)
+                if done.returncode:
+                    report.write(f"\n解析失败（退出码 {done.returncode}）：核心转储原样保留在 coredump.bin\n")
     print(f"有效记录 {len(records(data))}；输出：{dest}")
 
 

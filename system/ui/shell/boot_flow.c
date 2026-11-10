@@ -156,8 +156,9 @@ static void create(lv_obj_t *screen, void *arg) {
         text(TR("用手机设置这台设备"), INK_FONT_LIST, INK_PRIMARY + INK_LINE_HEADING);
         request("pairing.hotspot_start", NULL, HOTSPOT_REPLY, INK_SRC_SYSTEM);
         text(TR("连接网络，选择谁来用"), INK_FONT_NOTE, INK_CANVAS_H / 2 + INK_PRIMARY);
-        button(TR("在设备上设置"), "shell.launch", "boot.wifi", INK_MARGIN,
-            INK_CANVAS_H - INK_BLOCK - INK_CONTROL, w, false);
+        /* "先用起来" as on the no-hub page: without a network or a family server the device is still usable (trial, 2026-11-11) */
+        bottom(TR("先用起来"), "shell.launch", "boot.hello", false);
+        bottom(TR("在设备上设置"), "shell.launch", "boot.wifi", true);
     } else if (B.page == WIFI) {
         if (!B.count) text(TR("还没找到网络，可以再找一次"), INK_FONT_NOTE, 2 * INK_PRIMARY);
         for (int i = B.wifi_page * 3; i < B.count && i < (B.wifi_page + 1) * 3; i++) {
