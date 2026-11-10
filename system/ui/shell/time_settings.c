@@ -24,7 +24,7 @@ _Static_assert(sizeof GRACE / sizeof *GRACE <= TIME_FIELDS_MAX, "return choices 
 _Static_assert(sizeof GRACE_NAMES / sizeof *GRACE_NAMES == sizeof GRACE / sizeof *GRACE, "return labels fit");
 static struct {
     int page, part[TIME_FIELDS_MAX], fields, actions;
-    lv_obj_t *screen;
+    lv_obj_t *screen, *local;
     ink_ui_list_t *list;
     ink_ui_list_position_t pos;
     ink_ui_field_spec_t field[TIME_FIELDS_MAX];
@@ -34,6 +34,11 @@ static struct {
 } P INK_PSRAM_BSS;
 static const ink_activity_t PAGES[];
 static bool current(void) { return P.screen && ink_ui_page_current() && !strcmp(ink_ui_page_name(), NAMES[P.page]); }
+static void local_text(char *out, size_t cap) {
+    ink_tm_t t; ink_time_to_local(ink_time_now_s(), &t);
+    snprintf(out, cap, "%04d-%02d-%02d %02d:%02d", t.year, t.month, t.day, t.hour, t.min);
+    if (!ink_time_valid()) snprintf(out, cap, "%s", TR("时间尚未设置"));
+}
 static void field(int i, const char *id, const char *label, const char *value) {
     snprintf(P.values[i], sizeof P.values[i], "%s", value);
     P.field[i] = (ink_ui_field_spec_t){.id = id, .role = "setting", .label = label, .value = P.values[i]};
@@ -53,22 +58,23 @@ static void button(const char *label, const char *cap, const char *args, bool en
 static void bind_zone(lv_obj_t *slot, size_t i, ink_ui_field_spec_t *f, ink_ui_action_spec_t *a, void *ctx) {
     (void)ctx; unsigned k = (unsigned)(i % 4);
     const char *name = ink_time_zone_name((int)i), *city = TR(ink_time_zone_city((int)i));
+    snprintf(P.values[k], sizeof P.values[k], "%s%s%s", name, !strcmp(name, ink_time_zone()) ? " · " : "", !strcmp(name, ink_time_zone()) ? TR("已选择") : "");
     snprintf(P.args[k], sizeof P.args[k], "{\"id\":\"time.zone\",\"value\":%u}", (unsigned)i);
-    *f = (ink_ui_field_spec_t){.id = name, .role = "option", .label = city, .value = name, .object = {name, 0}};
+    *f = (ink_ui_field_spec_t){.id = name, .role = "option", .label = city, .value = P.values[k], .object = {name, 0}};
     *a = (ink_ui_action_spec_t){.id = name, .label = city, .capability = "settings.set", .args_json = P.args[k], .enabled = !ink_setting_get("time.zone_auto"), .object = f->object};
     lv_obj_clean(slot);
     ink_ui_line(slot, city, INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_GAP, INK_GAP_M, INK_CANVAS_W - 2 * INK_MARGIN - 2 * INK_GAP);
-    ink_ui_line(slot, name, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_GAP, INK_GAP_M + ink_ui_line_height(INK_FONT_LIST), INK_CANVAS_W - 2 * INK_MARGIN - 2 * INK_GAP);
+    ink_ui_line(slot, P.values[k], INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_GAP, INK_GAP_M + ink_ui_line_height(INK_FONT_LIST), INK_CANVAS_W - 2 * INK_MARGIN - 2 * INK_GAP);
 }
 static void create(lv_obj_t *screen, void *arg) {
-    P.page = (int)(intptr_t)arg; P.screen = screen; P.fields = P.actions = 0; P.list = NULL;
+    P.page = (int)(intptr_t)arg; P.screen = screen; P.local = NULL; P.fields = P.actions = 0; P.list = NULL;
     P.model = (ink_ui_page_spec_t){.id = NAMES[P.page], .title = TR(TITLES[P.page]), .fields = P.field, .actions = P.action};
     ink_shell_statusbar(screen, true); ink_shell_topbar(screen, TR(TITLES[P.page]));
     int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP, w = INK_CANVAS_W - 2 * INK_MARGIN;
     char text[128], args[96];
     if (P.page == ZONES) {
-        static const ink_ui_action_spec_t paging[] = {
-            {.id = "prev", .label = "上一页", .capability = "shell.time_prev"}, {.id = "next", .label = "下一页", .capability = "shell.time_next"}};
+        const ink_ui_action_spec_t paging[] = {
+            {.id = "prev", .label = TR("上一页"), .capability = "shell.time_prev"}, {.id = "next", .label = TR("下一页"), .capability = "shell.time_next"}};
         ink_ui_page_spec_t page = {.id = "SetTimeZone", .title = TR("时区"), .actions = paging, .action_count = 2};
         lv_obj_t *body = ink_ui_box(screen, 0, y, INK_CANVAS_W, INK_CANVAS_H - y, 0, INK_SURFACE_WHITE, false);
         P.list = ink_ui_list_create(body, &page, &P.pos, 4, 1, ink_ui_row_double(), "", bind_zone, NULL);
@@ -76,17 +82,18 @@ static void create(lv_obj_t *screen, void *arg) {
     }
     if (P.page == TIME) {
         const char *const labels[] = {TR("自动设置日期和时间"), TR("手动设置"), TR("自动设置时区"), TR("选择城市或地区")};
+        _Static_assert(sizeof labels / sizeof *labels <= TIME_FIELDS_MAX, "time setting rows fit");
         for (int i = 0; i < 4; i++) {
             const char *setting = i < 2 ? "time.auto" : "time.zone_auto";
             bool automatic = ink_setting_get(setting) != 0;
             if (!(i % 2)) snprintf(text, sizeof text, "%s", automatic ? TR("自动") : TR("手动"));
-            else if (i == 1) {
-                ink_tm_t t; ink_time_to_local(ink_time_now_s(), &t);
-                snprintf(text, sizeof text, "%04d-%02d-%02d %02d:%02d", t.year, t.month, t.day, t.hour, t.min);
-                if (!ink_time_valid()) snprintf(text, sizeof text, "%s", TR("时间尚未设置"));
-            } else snprintf(text, sizeof text, "%s", ink_time_zone());
+            else if (i == 1) local_text(text, sizeof text);
+            else for (int z = 0; z < ink_time_zone_count(); z++) if (!strcmp(ink_time_zone_name(z), ink_time_zone())) {
+                snprintf(text, sizeof text, "%s", TR(ink_time_zone_city(z))); break;
+            }
             field(i, i == 1 ? "local" : i == 3 ? "zone" : setting, labels[i], text);
-            ink_ui_line(screen, text, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y, w);
+            lv_obj_t *value = ink_ui_line(screen, text, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y, w);
+            if (i == 1) P.local = value;
             snprintf(args, sizeof args, "{\"id\":\"%s\",\"value\":%d}", setting, !automatic);
             button(labels[i], i % 2 ? (i == 1 ? "shell.time_edit" : "shell.time_zones") : "settings.set", i % 2 ? NULL : args,
                 !(i % 2) || !automatic, INK_MARGIN, y + ink_ui_line_height(INK_FONT_NOTE), w, false);
@@ -117,7 +124,7 @@ static void create(lv_obj_t *screen, void *arg) {
     }
     P.model.field_count = (size_t)P.fields; P.model.action_count = (size_t)P.actions;
 }
-static void destroy(void) { P.screen = NULL; P.list = NULL; }
+static void destroy(void) { P.screen = P.local = NULL; P.list = NULL; }
 static int snapshot(char *out, size_t cap) { return P.list ? ink_ui_list_snapshot(P.list, out, cap) : ink_ui_semantics_snapshot(&P.model, out, cap); }
 static bool key(ink_key_t k, bool lng) { return P.list && ink_ui_list_key(P.list, k, lng); }
 #define PAGE(n) {.name = n, .create = create, .destroy = destroy, .snapshot = snapshot, .on_key = key}
@@ -144,7 +151,18 @@ static void navigate(ink_call_t *c) {
     }
     memset(&P.pos, 0, sizeof P.pos); ink_ui_push(&PAGES[page], (void *)(intptr_t)page);
 }
-static void changed(void *ctx, int h, const char *id) { (void)ctx; (void)h; (void)id; if (current()) ink_ui_redraw(); }
+static void changed(void *ctx, int h, const char *id) {
+    (void)ctx; (void)h;
+    if (!current()) return;
+    if (!strcmp(id, "time.minute")) {
+        if (P.local) {
+            local_text(P.values[1], sizeof P.values[1]); lv_label_set_text(P.local, P.values[1]);
+            ink_ui_content_changed(); ink_ui_hint_obj(P.local, INK_REFRESH_FAST);
+        }
+        return;
+    }
+    ink_ui_redraw();
+}
 int ink_time_settings_init(void) {
     static const ink_cap_t caps[] = {
         {.id = "shell.time", .title = "打开日期和时间", .effect = INK_FX_NAVIGATE, .run = navigate},

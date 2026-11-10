@@ -140,9 +140,9 @@ static bool dst_on(int z, int64_t utc_s) {
     int64_t std_s = utc_s + ZONES[z].offset_min * 60;
     civil_from_days(std_s >= 0 ? std_s / 86400 : -((-std_s + 86399) / 86400), &y, &m, &d);
     int64_t start, end;
-    if (rule == DST_US) { /* second Sunday of March 02:00 standard; first Sunday of November 02:00 daylight */
-        start = sunday_of(y, 3, 2) * 86400 + 2 * 3600 - ZONES[z].offset_min * 60;
-        end = sunday_of(y, 11, 1) * 86400 + 1 * 3600 - ZONES[z].offset_min * 60;
+    if (rule == DST_US) { /* Since 1987; the picker starts in 2002. US rules changed in 2007. */
+        start = sunday_of(y, y < 2007 ? 4 : 3, y < 2007 ? 1 : 2) * 86400 + 2 * 3600 - ZONES[z].offset_min * 60;
+        end = sunday_of(y, y < 2007 ? 10 : 11, y < 2007 ? 0 : 1) * 86400 + 1 * 3600 - ZONES[z].offset_min * 60;
     } else { /* last Sundays of March and October, 01:00 UTC */
         start = sunday_of(y, 3, 0) * 86400 + 3600;
         end = sunday_of(y, 10, 0) * 86400 + 3600;

@@ -10,6 +10,14 @@
 static char snapshot[8192], wanted_cap[96];
 static bool by_label;
 static int ordinal, seen, x, y;
+static bool clock_controls_deleted;
+static void control_deleted(lv_event_t *e) { (void)e; clock_controls_deleted = true; }
+static void watch_clock_controls(lv_obj_t *o) {
+    const char *cap = ink_shell_bound_cap(o);
+    if (cap && !strcmp(cap, "shell.time_edit")) lv_obj_add_event_cb(o, control_deleted, LV_EVENT_DELETE, NULL);
+    for (uint32_t i = 0; i < lv_obj_get_child_count(o); i++) watch_clock_controls(lv_obj_get_child(o, (int32_t)i));
+}
+static void observe_controls(void) { clock_controls_deleted = false; watch_clock_controls(lv_screen_active()); }
 static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
 static void quiet(void) { CHECK(WAIT_FOR(settled(), 10000), "display settles"); }
 static void read_page(void) {
@@ -74,7 +82,9 @@ static void manual(void) {
     evidence("time-zh");
     setting("system.language", 1); quiet();
     CHECK(page_has("Date & Time") && page_has("Automatic Time Zone"), "new page is translated"); evidence("time-en");
-    setting("system.language", 0); press("shell.time_edit", 0);
+    setting("system.language", 0); quiet(); on_ui(observe_controls); delay_ms(65000);
+    CHECK(page_has("10:59") && !clock_controls_deleted, "minute tick updates only the clock label");
+    set_clock(local(2026, 11, 10, 10, 58, 0)); quiet(); press("shell.time_edit", 0);
     CHECK(page_has("time.set") && page_has("shell.time_step"), "editor exposes save and draft actions");
     press("shell.time_step", 5); /* day + */
     CHECK(page_has("日 11"), "touch step changes the day draft");
@@ -112,6 +122,7 @@ static void zones(void) {
     CHECK(page_has("中国 · 上海") && page_has("日本 · 东京"), "city list exports Chinese names and IANA names");
     press_label("日本 · 东京");
     CHECK(ink_setting_get("time.zone") == 2 && !strcmp(ink_time_zone(), "Asia/Tokyo"), "touch selects Tokyo");
+    CHECK(page_has("Asia/Tokyo · 已选择"), "city selection has visible and AI-readable feedback");
     ink_alarm_t alarm = find_alarm(id);
     CHECK(alarm.next_s == old + 15 * 3600, "alarm is rescheduled to 02:00 in the new zone");
     CHECK(AI("time.now", NULL) && strstr(g_result, "09:59"), "AI and status time use Tokyo");
@@ -139,6 +150,10 @@ static void zones(void) {
 }
 static void dst(void) {
     setting("time.zone", 7);
+    ink_tm_t old; ink_time_to_local(local(2006, 3, 12, 2, 30, 0), &old);
+    CHECK(old.hour == 2 && !old.dst, "2006 uses April transition rather than the post-2007 March rule");
+    ink_time_to_local(local(2006, 4, 2, 2, 30, 0), &old);
+    CHECK(old.hour == 3 && old.dst, "manual historical date uses the 2006 US transition");
     int64_t gap = local(2027, 3, 14, 2, 30, 0), fold = local(2027, 11, 7, 1, 30, 0);
     ink_tm_t t; ink_time_to_local(gap, &t);
     CHECK(t.hour == 3 && t.min == 30 && t.dst, "US missing hour moves forward");
@@ -187,6 +202,11 @@ static void grace(void) {
     CHECK(ink_confirm_list(&card, 1) == 1 && !strcmp(card.cap, "settings.set"), "return grace preserves existing identity confirmation");
     CHECK(ink_confirm_decide(card.token, true, INK_SRC_TOUCH) == 0, "person confirms grace change");
     CHECK(WAIT_FOR(ink_setting_get("member.idle_return_s") == 300, 5000), "touch selects five minutes");
+    CHECK(AI("settings.set", "{\"id\":\"member.idle_return_s\",\"value\":60}") && g_rc.status == INK_RC_PENDING_CONFIRMATION, "adult AI uses the same identity-setting confirmation");
+    CHECK(ink_setting_get("member.idle_return_s") == 300 && ink_confirm_list(&card, 1) == 1, "AI cannot silently change verification grace");
+    char confirm[64]; snprintf(confirm, sizeof confirm, "{\"token\":%u}", (unsigned)card.token);
+    CHECK(AI("confirm.accept", confirm) && g_rc.status == INK_RC_INVALID, "AI cannot confirm a verification change");
+    CHECK(ink_confirm_decide(card.token, false, INK_SRC_TOUCH) == 0, "person keeps the five-minute selection");
     CHECK(ink_member_set_pin("owner", NULL, "1111", pin_told, NULL) == 0 && WAIT_FOR(pin_done > 0, 5000) && pin_result == INK_PIN_OK, "set synthetic PIN");
     CHECK(AI("system.home", NULL), "home is the return target"); quiet(); on_ui(save_screen);
     for (int seconds = 299; seconds <= 301; seconds += 2) {
