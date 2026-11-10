@@ -54,7 +54,7 @@ osal_mutex_t *osal_mutex_create(void) { return &mutex; }
 osal_err_t osal_mutex_lock(osal_mutex_t *m, int64_t timeout) { (void)m; (void)timeout; assert(lock_depth++ == 0); return OSAL_OK; }
 void osal_mutex_unlock(osal_mutex_t *m) { (void)m; assert(lock_depth-- == 1); }
 void *heap_caps_calloc(size_t n, size_t size, unsigned caps) { assert(caps & MALLOC_CAP_INTERNAL); return calloc(n, size); }
-void *heap_caps_aligned_alloc(size_t a, size_t n, unsigned caps) { (void)a; assert(caps & MALLOC_CAP_INTERNAL); return malloc(n); }
+void *heap_caps_aligned_alloc(size_t a, size_t n, unsigned caps) { assert(a == 128 && (caps & MALLOC_CAP_INTERNAL)); return malloc(n); }
 void heap_caps_free(void *p) { free(p); }
 const esp_partition_t *esp_partition_find_first(int t, int s, const char *name) {
     assert(t == ESP_PARTITION_TYPE_DATA && s == ESP_PARTITION_SUBTYPE_ANY);
@@ -75,6 +75,7 @@ int esp_partition_erase_range(const esp_partition_t *p, size_t off, size_t n) {
     assert(p == &user && off % 4096 == 0 && n == 4096 && off + n <= sizeof flash);
     memset(flash + off, 255, n); erases++; return 0;
 }
+int esp_cache_get_alignment(unsigned caps, size_t *n) { (void)caps; *n = 128; return 0; }
 bool esp_ptr_internal(const void *p) { return p != NULL; }
 bool sdmmc_host_check_buffer_alignment(int s, const void *p, size_t n) { (void)s; (void)n; return p != NULL; }
 int sdmmc_host_do_transaction(int s, sdmmc_command_t *cmd) { (void)s; (void)cmd; transactions++; return 0; }

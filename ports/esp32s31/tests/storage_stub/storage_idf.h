@@ -40,6 +40,7 @@ int esp_partition_mmap(const esp_partition_t *, size_t, size_t, int, const void 
 void *heap_caps_calloc(size_t, size_t, unsigned);
 void *heap_caps_aligned_alloc(size_t, size_t, unsigned);
 void heap_caps_free(void *);
+int esp_cache_get_alignment(unsigned, size_t *);
 bool esp_ptr_internal(const void *);
 bool sdmmc_host_check_buffer_alignment(int, const void *, size_t);
 int sdmmc_host_do_transaction(int, sdmmc_command_t *);

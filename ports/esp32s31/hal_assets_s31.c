@@ -23,7 +23,10 @@ static const void *find(const uint8_t *p, size_t cap, const char *name, size_t *
         const uint8_t *e = p + 12 + i * 104;
         uint32_t off = word(e + 96), len = word(e + 100);
         if (!memchr(e, 0, 96) || off < 12 + count * 104 || off > bytes || len > bytes - off) return NULL;
-        if (!strcmp((const char *)e, name)) { if (size) *size = len; return p + off; }
+        if (!strcmp((const char *)e, name)) {
+            if (size) *size = len;
+            return p + off;
+        }
     }
     return NULL;
 }

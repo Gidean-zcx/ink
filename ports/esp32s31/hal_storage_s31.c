@@ -11,6 +11,7 @@
 #include "esp_event.h"
 #include "esp_heap_caps.h"
 #include "esp_memory_utils.h"
+#include "esp_private/esp_cache_private.h"
 #include "esp_partition.h"
 #include "esp_random.h"
 #include "esp_timer.h"
@@ -31,9 +32,8 @@ static sdmmc_card_t *g_card;
 static unsigned g_handles;
 static bool g_mounted, g_present;
 static void (*g_callback)(void *);
-static void *g_context;
-static uint8_t g_read[256], g_prog[256], g_lookahead[16];
-static void *g_dma;
+static void *g_context, *g_dma;
+static uint8_t g_read[512], g_prog[512], g_lookahead[128];
 #define LOCK() osal_mutex_lock(g_lock, OSAL_WAIT_FOREVER)
 #define DONE(value) do { __auto_type result_ = (value); osal_mutex_unlock(g_lock); return result_; } while (0)
 static int bd_read(const struct lfs_config *c, lfs_block_t b, lfs_off_t o, void *p, lfs_size_t n) {
@@ -47,9 +47,8 @@ static int bd_erase(const struct lfs_config *c, lfs_block_t b) {
 }
 static int bd_sync(const struct lfs_config *c) { (void)c; return 0; }
 static const struct lfs_config g_cfg = {.read = bd_read, .prog = bd_prog, .erase = bd_erase, .sync = bd_sync,
-    .read_size = 16, .prog_size = 16, .block_size = 4096, .block_count = 100, .block_cycles = 500,
-    .cache_size = 256, .lookahead_size = 16, .read_buffer = g_read, .prog_buffer = g_prog, .lookahead_buffer = g_lookahead};
-/* Upstream SdCardManager.cc: 4-bit Slot0, no CD pin, internal 4 KiB DMA bounce. */
+    .read_size = 128, .prog_size = 128, .block_size = 4096, .block_count = 100, .block_cycles = 512,
+    .cache_size = 512, .lookahead_size = 128, .read_buffer = g_read, .prog_buffer = g_prog, .lookahead_buffer = g_lookahead};
 static bool dma_ok(int slot, const void *p, size_t n) {
     return esp_ptr_internal(p) && sdmmc_host_check_buffer_alignment(slot, p, n);
 }
@@ -100,7 +99,9 @@ void ink_s31_storage_init(void) {
         if (r == LFS_ERR_CORRUPT && !lfs_format(&g_lfs, &g_cfg)) r = lfs_mount(&g_lfs, &g_cfg);
         g_mounted = r == 0;
     }
-    g_dma = heap_caps_aligned_alloc(64, 4096, MALLOC_CAP_INTERNAL | MALLOC_CAP_DMA);
+    size_t alignment = 0;
+    if (esp_cache_get_alignment(MALLOC_CAP_INTERNAL | MALLOC_CAP_DMA, &alignment) == ESP_OK)
+        g_dma = heap_caps_aligned_alloc(alignment < 4 ? 4 : alignment, 4096, MALLOC_CAP_INTERNAL | MALLOC_CAP_DMA);
     esp_err_t e = esp_event_loop_create_default();
     if (e != ESP_OK && e != ESP_ERR_INVALID_STATE) return;
     if (esp_event_handler_register(INK_SD_EVENT, 0, card_event, NULL) != ESP_OK) return;
@@ -120,7 +121,7 @@ static int route(const char *path, char out[512]) {
                        (!strncmp(path, "/cache", 6) && (!path[6] || path[6] == '/')))) return -1;
     return snprintf(out, 512, "/sd%s", path) < 512 ? 1 : -1;
 }
-struct hal_file { int vol, fd; lfs_file_t file; struct lfs_file_config cfg; uint8_t cache[256]; };
+struct hal_file { int vol, fd; lfs_file_t file; struct lfs_file_config cfg; uint8_t cache[512]; };
 struct hal_dir { int vol; lfs_dir_t dir; DIR *fat; char path[512]; };
 hal_file_t *hal_fs_open(const char *path, int flags) {
     LOCK();
@@ -179,7 +180,7 @@ static int info(const char *path, int64_t *size, int64_t *mtime) {
     if (v < 0) return -1;
     int r = v ? stat(p, &st) : lfs_stat(&g_lfs, p, &li);
     if (r < 0) return (v ? errno == ENOENT : r == LFS_ERR_NOENT) ? 0 : -1;
-    *size = v ? st.st_size : li.size; *mtime = v ? (int64_t)st.st_mtime * 1000000000 : -1;
+    *size = v ? (int64_t)st.st_size : (int64_t)li.size; *mtime = v ? (int64_t)st.st_mtime * 1000000000 : -1;
     return 1;
 }
 int hal_fs_exists(const char *path) { LOCK(); int64_t n, t; DONE(info(path, &n, &t)); }
