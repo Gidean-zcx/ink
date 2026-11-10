@@ -6,7 +6,7 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 新建文件夹、文本编辑、多选、AI、隔离 | 【实测】核心场景通过，补充检查随全量运行 | 两进程 123 + 176 个检查通过，`build/files-ops-v2bvggj5/summary.json` | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/files_ops/run.py --build build` |
+| 1 新建文件夹、文本编辑、多选、AI、隔离 | 【实测】通过 | 两进程 123 + 225 个检查通过，`build/files-ops-x6jlc1pc/summary.json`；含实际点按的部分失败提示 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/files_ops/run.py --build build` |
 | 2 回归、全量、内存、S31 | 全量进行中；内存与 S31 待运行 | GCC：5 compiled, 0 with findings | 见验证记录 |
 | 3 截图 | 【实测】已生成并检查 | 下列截图路径；最终版本随全量测试重录 | 同验收 1 |
 
@@ -51,13 +51,14 @@
 
 ## 截图
 
-- 新建文件夹：`build/files-ops-v2bvggj5/write/snap-NewFolder.png`。
-- 写文件：`build/files-ops-v2bvggj5/write/snap-WriteText.png`。
-- 多选：`build/files-ops-v2bvggj5/recover/snap-MultiSelect.png`。
-- 恢复草稿：`build/files-ops-v2bvggj5/recover/snap-RecoveredDraft.png`。
+- 新建文件夹：`build/files-ops-x6jlc1pc/write/snap-NewFolder.png`。
+- 写文件：`build/files-ops-x6jlc1pc/write/snap-WriteText.png`。
+- 多选：`build/files-ops-x6jlc1pc/recover/snap-MultiSelect.png`。
+- 恢复草稿：`build/files-ops-x6jlc1pc/recover/snap-RecoveredDraft.png`。
+- 部分失败：`build/files-ops-x6jlc1pc/recover/snap-PartialFailure.png`，已看图，失败文件名完整、按钮不遮挡结果。
 
 ## 为什么不能更小
 
 需同时补三组页面行为、长文本草稿引用、显式替换写入和批量能力。只在界面直接读写会绕过能力与成员权限；把正文塞进普通参数表会受 416 字节上限影响。采用现有编辑页和草稿引用、现有原子写入、既有文件作业回调，没有另写编辑器或后台调度器。
 
-产品改动行数和最终全量、内存、S31、反向对照、隐私扫描结果在收尾时补齐。
+产品代码 C/C 头文件新增 238 行、删除 25 行；连同 CMake 和翻译表，严格按新增加删除计 295 行（新增 269、删除 26），在 300 行预算内。最终全量、内存、S31、反向对照、隐私扫描结果在收尾时补齐。
