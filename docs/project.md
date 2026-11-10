@@ -46,6 +46,15 @@
 
 用户可直接说“ink 项目：我有个想法……”或“把某项确定为需求……”，无需先准备完整需求文档。新会话若没有项目上下文，附本仓库链接即可从这里恢复；仓库中的最新记录是接续依据。
 
+## 2026-11-10 接续记录（下午：Codex 额度用完，改由 Claude 子代理）
+
+- **做法变了**：10 点左右 Codex 额度用完，用户要求“后续你自己并行做，子任务思考等级 medium”。现在每个任务一个后台子代理（各自的检出在 `ink-codex/<任务>/repo`，分支 `claude/sub-<任务>`），主会话复核、合并、跑全套检查、推送；每批合完由一个子代理独立审一轮。通用规矩在 `ink-codex/briefs/subagent-rules.md`（仓库外）。子代理不能写报告文件，报告由主会话按回报保存进 `docs/tasks/<任务>/REPORT.md`。每天 7:07 的定时任务也改成这个做法。
+- **用户今天定的**：D-109（AI 图标：四轮后选编织立方体）、D-112～D-126、R-069～R-071，详见[决策记录](decisions/README.md)。要点：录音用 Opus；“继续读”修；省电保留；飞行模式、计算器、紧急呼叫、锁屏相机、拿起亮屏和静止省电、秒表和世界时钟、日期时间和时区、手机网络设置、扫码、天气、孩子的应用名单和禁用时段都要做；语言中英两种、做好多语言准备；蓝牙音箱和翻页器不做，无障碍和热点先不做；没画板的页面助手设计、改比布局；屏幕最底层先用厂家现成的输出层（D-124 改回）。
+- **合入（下午）**：audit11-fix；batch12 五个（ai-answer-long、reader-continue、ai-icon、calculator、airplane-mode）；batch13 三个（port-hal-1、memo-record、i18n-1）。本机全量 311 项通过。main 在 27fd3740（之后的推送等 CI）。
+- **CI 卡在一项**：61f55c19 起 Linux 上 `integration-dictation` 失败（闹钟打断听写那一步），macOS 本机通过；换随机种子本机也能复现另一处失败，像是测试对时序敏感、被这批改动带出来。子代理 `dictation-flake` 在查；修好之前 main 不前移。
+- **在跑**：dictation-flake、audit12-fix（batch12 审计的 4 中 3 低，`docs/audits/batch12/report.md`）、sms-multipart、weather（在收最后一轮：卡片图标、城市输入框接键盘、城市设置挪进天气应用、第一次设城市自动上今日屏、字库扫 system/apps）、accel-use。
+- **排队**见 [backlog](tasks/backlog.md#2026-11-10-起claude-子代理接手batch12-起) 的表：emergency-call（等 sms-multipart 合入）、time-settings、clock-extras、lock-camera、mobile-network、kid-apps、qr-scan、ai-speech-long、i18n-2 起、port 后续批次（hal_input、NT26 帧层、屏幕输出层接现成代码）、没画板的设置页一批、semantics-shell、open-app-latency 等。
+
 ## 2026-11-10 接续记录（系统层推进，续）
 
 - **合入并推送**：batch5 全部六个（记录汇总和隐私页、孩子的三页、后台建索引、恢复出厂两页、写应用的说明和示例、S31 端口骨架），batch4 审计修复 `audit4-fix`，batch6 三个（内存、时延、脚本候选在 S31 上的体积）。分支 `claude/system-layer` 在 `0ab0cec7`，main 跟到 CI 全绿的 `441d16b7`。合并时主会话改的见 [backlog 文末](tasks/backlog.md#合并时记下的2026-11-10)，其中 file-index-3 有一处测试时间改动（hub 端到端第一下点按 3 秒→7 秒），原因和怎么改回去写在那里。

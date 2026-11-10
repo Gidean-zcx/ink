@@ -193,7 +193,7 @@ Codex 额度用完，任务改由 Claude 子代理（思考等级 medium）在�
 
 **batch12 已合入：** `ai-answer-long`（一轮回答最多 32 KB，按页显示，超出明确截断）、`reader-continue`（每位家人记住上次读的书，“继续读”卡片和 AI 共用 `reader.continue`）、`ai-icon`（编织立方体，用户四轮选定，D-109）、`calculator`（十进制定点计算器，“全部”页不再限 16 个应用、应用表 40）、`airplane-mode`（飞行模式和省电保留）；合并时修了状态栏 4G 图标（`net.type` 是 `lte` 不是 `mobile`）。batch12 的独立审计在跑（`docs/audits/batch12/TASK.md`）。
 
-**在做（batch13）：** `memo-record`（录音备忘，先量编码再定）、`i18n-1`（多语言机制和语言设置）、`port-hal-1`（S31 第一批 HAL，只编译）、`sms-multipart`、`weather`。
+**batch13 已合入：** `port-hal-1`（S31 的 I2C、UART、GPIO 中断、板级接线，只编译）、`memo-record`（录音备忘，Opus，D-112）、`i18n-1`（中英两种语言的机制，语言选项在“关于和更新”）。**在做：** `sms-multipart`、`weather`、`audit12-fix`、`dictation-flake`（CI 上听写测试失败）、`accel-use`。D-124 改为先用厂家现成的屏幕输出层，排队里加一项 `port-display-1`（把现成的输出层接到 `hal_display` 后面，只编译）。
 
 **batch12 留下的后续：** `ai-speech-long`（长回答整篇朗读：中枢 `ANSWER_BYTES = 1800`、朗读 450 帧上限、一轮 45 秒，要改中枢和协议）；“继续读”卡片的百分比、停在今日屏时插拔卡不刷新、卡片标题“在读”和规范的“继续读”；时钟、相机、相册在“全部”页没有自己的图标；计算器在 120% 字号下算式区可能挤；拨号页提示文字压住键盘；点“关闭飞行模式”后面板不自动收起；飞行模式的 `CFUN=4`、Wi-Fi 和蓝牙真正断电、开机窗口期要上机核实；`device-protocol.md` 里“中枢一轮 ≤ 1.8 KB”等 ai-speech-long 一起改。
 
