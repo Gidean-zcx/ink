@@ -1,6 +1,6 @@
 # mobile-network-2 执行报告
 
-基线：`951bdfc15f0997a77cd9ad960b056eee10fb3ef8`；恢复来源：只读分支 `origin/archive/mobile-network`（`9132e6ef`）。状态：最终验证中。只在本地编译和跑宿主机测试，未操作设备、推送或开 PR。
+基线：`951bdfc15f0997a77cd9ad960b056eee10fb3ef8`；恢复来源：只读分支 `origin/archive/mobile-network`（`9132e6ef`）。本地执行与检查结束；全量测试及严格全流程零警告仍有下述既有阻塞。只在本地编译和跑宿主机测试，未操作设备、推送或开 PR。
 
 ## 验收表
 
@@ -10,18 +10,19 @@
 | 1 无模组 | 【实测】通过 | 中英文说明、禁用修改、拒绝编辑捷径、不伪造流量、仍能返回；同时保留了已有接入点数据 | 同上；六张截图见下 |
 | 1 反向 | 【实测】7 组通过 | 接入点命令、密码来源、漫游策略、字节累计、每日检查点、无模组说明、原 64 槽容量均命中预期失败 | `python -B tests/mobile_network/reverse.py --build build` |
 | 1 普通全量 | 【实测】345/346，未全绿 | 原话 `99% tests passed, 1 tests failed out of 346`，376.97 秒；仅基线已有的中枢端到端失败，全部用例已运行 | 下列普通全量命令 |
-| 1 内存全量 | 待最终记录 | ASan + UBSan 全量待运行 | 下列内存全量命令 |
+| 1 内存全量 | 【实测】345/346，未全绿 | 原话 `99% tests passed, 1 tests failed out of 346`，664.25 秒；唯一相同的中枢失败，无 ASan/UBSan 错误命中 | 下列内存全量命令 |
 | 2 能力清单 | 【实测】通过 | 已重新生成，`PASS: 525 definitions, docs/system/capabilities.md`；运行时清单和服务表检查也通过 | `python -B tools/capabilities.py --check` |
-| 2 S31 | 待记录 | 只编译，不接设备 | `taskpolicy -c utility bash ports/esp32s31/build.sh` |
+| 2 S31 | 【实测】编过，严格零警告未达 | 退出 0，编译警告 0；配置有 5 条 SDK CMake 警告；移动网络页编入镜像，未接设备 | `taskpolicy -c utility bash ports/esp32s31/build.sh` |
 | 2 GCC | 【实测】通过 | `gcccheck: 11 compiled, 0 with findings`；本机交叉 GCC 检查，不冒充 Linux CI | 下列 gcccheck 命令 |
-| 2 隐私 | 【实测】阶段扫描无命中 | 总规则 §6 的原扫描命令，grep 退出 1；最终提交后再核对 | `git diff <基线>..HEAD` 后接总规则原扫描 |
+| 2 隐私 | 【实测】无命中 | 总规则 §6 的原扫描命令，grep 退出 1；diff 文件范围和空白检查通过 | `git diff <基线>..HEAD` 后接总规则原扫描 |
 | 3 差别 | 【实现】已逐项记录 | 下节；没有改接入点、漫游、统计、凭据、确认和儿童权限的业务语义 | `git diff origin/archive/mobile-network -- <相关文件>` |
 
 ## 没做到的
 
-- 普通全量未全绿；内存全量及 S31 结果待回填。
+- 普通和内存全量均未全绿，均为 345/346；唯一失败见下一条。
 - 【实测】中枢端到端 `hub-simulator-e2e` 在指定基线也失败：`tool_calls=0`，成员夹具约 5.06 秒就绪，晚于原脚本的 3 秒点按。没有调整等待、放宽断言或改中枢产品代码。基线对照见“顺手发现”。
 - 沿用原报告边界：按分钟观察字节，未采样的月界字节归下次观察月份；每日检查点后的当天流量掉电可能丢失。公共清零确认卡仍为中文。
+- 严格全流程“0 警告”未达到：S31 配置阶段有 5 条 ESP-IDF 私有 include/组件依赖警告（`esp_wifi`、`wpa_supplicant`）。[port-wifi-1 报告](../port-wifi-1/REPORT.md)第 19 行已记录同样问题。未修改只读 SDK、升级依赖或屏蔽校验。
 - S31 蜂窝驱动和真实字节来源未接通，不能当成真机流量验证。没有做任何上机操作。
 - 未运行 Linux CI；本次证据是 macOS 的 `-Werror` 构建、交叉 GCC 和 S31 编译。
 
@@ -87,7 +88,7 @@ taskpolicy -c utility bash ports/esp32s31/build.sh
 taskpolicy -c utility python3 -B "$INK_DEPS/../ink-codex/tools/gcccheck.py" build $(git diff --name-only 951bdfc1..HEAD -- '*.c' ':(exclude)ports/esp32s31/**')
 ```
 
-- 工作证据目录：`work/mobile-network-2/`；普通最终全量 `full-tests-final.log`，内存 `asan-tests.log`，S31 `build-s31.log`，GCC `gcccheck-final.log`，反向 `reverse.log`，隐私 `privacy-scan.log`。七组反向摘要在 `build/mobile-network-reverse/summary.json`。
+- 工作证据目录：`work/mobile-network-2/`；普通最终全量 `full-tests-final.log`，内存 `asan-tests.log`（同时扫描完整 `LastTest.log`、子用例日志和真实桩 ASan 日志，`sanitizer-scan.log` 无命中），S31 `build-s31.log`，GCC `gcccheck-final.log`，反向 `reverse.log`，隐私 `privacy-scan.log`。七组反向摘要在 `build/mobile-network-reverse/summary.json`。
 - 中英文截图已目视检查，未提交图片：`build/test-out/mobile-network/main/snap-mobile-{zh,en}.png`、`snap-apn-{zh,en}.png`；无模组在 `build/test-out/mobile-network/no-modem/snap-mobile-no-modem-{zh,en}.png`。
 
 ## 原厂依据与上机先核对
@@ -100,4 +101,5 @@ taskpolicy -c utility python3 -B "$INK_DEPS/../ink-codex/tools/gcccheck.py" buil
 
 - 产品 C/H 增加 292、删除 13 行；词表 11 行，产品构建 2 行，产品新增 **305 行**、净增 292 行。四行 CTest 注册计入测试。
 - 为什么不能更小：恢复原任务约 300 行实现，另用 5 行覆盖新验收和主线容量适配。只接页面会缺真实计数、持久化和权限；页面直接发 AT 会绕过 HAL 和串行能力，均未采用；没有另建移动网络服务。
-- 最终 diff、文件范围、隐私和提交状态待核对。
+- 【实测】S31 镜像 3,200,720 字节；SDK 静态 Flash 3,084,500、DIRAM 145,666、外部 BSS 657,768 字节。尺寸/栈报告为 `build-s31/size.txt`、`stack.txt`，不代表运行时堆和实际栈水位。
+- 【实测】`git diff --check` 通过，变更仅为本任务的实现、测试、必要文档适配及报告；无构建产物、设计稿、禁改共享文档。基线至 HEAD 的隐私扫描无命中，grep 退出 1；所有变更已本地提交，未推送。
