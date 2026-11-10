@@ -223,6 +223,10 @@ static int64_t at_local(int y, int m, int d, int hour, int min) {
 
 /* The first time after `now` by its rule; 0 if there is none. */
 static int64_t rule_next(const ink_alarm_t *a, int64_t now) {
+    if (a->kind == INK_REMINDER && a->year && a->repeat != INK_REPEAT_NONE) {
+        int64_t start = at_local(a->year, a->month, a->day, a->hour, a->min);
+        if (now < start) now = start - 1;
+    }
     ink_tm_t t;
     ink_time_to_local(now, &t);
     int64_t today = time_days_from_civil(t.year, t.month, t.day);
@@ -632,13 +636,13 @@ int ink_time_alarm_update_for(ink_alarm_t *a, const char *member) {
     bool live = ink_member_io_begin(member);
     ink_svc_lock();
     int i = find_alarm(a->id);
-    bool mine = live && i >= 0 && T.a[i].kind == INK_ALARM && !strcmp(T.a[i].owner, member);
+    bool mine = live && i >= 0 && T.a[i].kind == a->kind && !strcmp(T.a[i].owner, member);
     ink_svc_unlock();
     int r = -1;
     if (mine && alarm_valid(a)) {
         int64_t now = ink_time_now_s(); a->snooze_until = 0; a->next_s = a->enabled && now ? next_of(a, now) : 0;
         ink_db_write_t w = {.id = a->id, .sort = a->next_s, .data = a, .len = sizeof *a, .src = a->src};
-        if (ink_db_put(T.db, &w, NULL) == INK_DB_OK) {
+        if ((a->kind != INK_REMINDER || !a->enabled || !now || a->next_s) && ink_db_put(T.db, &w, NULL) == INK_DB_OK) {
             ink_svc_lock(); i = find_alarm(a->id); T.a[i] = *a; alarm_changed(i); ink_svc_unlock(); r = 0;
         }
     }

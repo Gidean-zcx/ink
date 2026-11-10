@@ -44,6 +44,8 @@ static const struct {
     {"usb.mount", NULL}, {"usb.unmount", NULL}, {"time.now", NULL}, {"time.set", "utc_s"}, {"time.lunar", ""}, {"alarm.set", "hour,minute"},
     {"alarm.list", NULL}, {"alarm.cancel", "id"}, {"alarm.dismiss", ""}, {"alarm.snooze", ""}, {"reminder.add", "at,title"}, {"reminder.list", NULL},
     {"reminder.cancel", "id"}, {"notify.post", "title"}, {"notify.list", ""}, {"notify.read", ""}, {"notify.dismiss", "id"}, {"notify.clear", NULL},
+    {"reminder.update", "id,at,title,repeat"}, {"reminder.new", NULL}, {"reminder.open", "id"},
+    {"reminder.time", NULL}, {"reminder.focus", NULL}, {"reminder.draft", ""}, {"reminder.save", NULL},
     {"notify.channels", NULL}, {"notify.set_channel", "id,enabled"}, {"interrupt.list", NULL}, {"interrupt.ack", NULL}, {"confirm.list", NULL},
     {"confirm.withdraw", "token"}, {"confirm.status", ""}, {"app.list", NULL}, {"app.open", "id"}, {"app.close", "id"}, {"app.cards", NULL}, {"text.state", NULL},
     {"text.insert", "text"}, {"text.select", "start"}, {"text.undo", ""}, {"text.redo", ""}, {"text.submit", ""}, {"clipboard.read", NULL}, {"clipboard.write", "text"}, {"media.play", "path"},

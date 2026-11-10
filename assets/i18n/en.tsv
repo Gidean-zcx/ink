@@ -118,3 +118,27 @@
 美国 · 洛杉矶	USA · Los Angeles
 上一页	Previous
 下一页	Next
+
+# reminder editor (calendar.c)
+%s：%d	%s: %d
+不重复	Once
+保存提醒	Save reminder
+内容	Content
+农历每年	Every lunar year
+减少	Decrease
+删除提醒	Delete reminder
+加一件	Add an event
+增加	Increase
+工作日	Weekdays
+提示	Message
+提醒	Reminder
+提醒内容	Reminder content
+查看	View
+每周	Every week
+每天	Every day
+每年	Every year
+每月	Every month
+请填写内容（最多15个字）并选择将来的时间	Enter up to 15 characters and choose a future time
+输入内容	Enter content
+选好了	Done
+重复	Repeat
