@@ -10,6 +10,7 @@
 #include "ink/hal_assets.h"
 #include "ink/osal.h"
 #include "ink/sys/font.h"
+#include "ink/sys/i18n.h"
 #include "ink/sys/members.h"
 #include "ink/sys/settings.h"
 #include "ink/ui_theme.h"
@@ -25,6 +26,24 @@ static lv_font_t fitted[4][3][9] INK_PSRAM_BSS; /* text size, weight, token */
 static font_face_t faces[4][3][9] INK_PSRAM_BSS;
 static ink_font_t *fallback;
 static lv_obj_t *captures[24];
+
+void ink_ui_datetime_picker(lv_obj_t *parent, const int parts[INK_UI_DATETIME_PARTS],
+                            void (*bind)(lv_obj_t *button, int part, int delta)) {
+    static const char *const labels[] = {"年", "月", "日", "时", "分"};
+    _Static_assert(sizeof labels / sizeof *labels <= INK_UI_DATETIME_PARTS, "date rows fit");
+    int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP, w = INK_CANVAS_W - 2 * INK_MARGIN;
+    for (int i = 0; i < INK_UI_DATETIME_PARTS; i++, y += INK_CONTROL + INK_GAP_M) {
+        char text[64]; snprintf(text, sizeof text, "%s %02d", TR(labels[i]), parts[i]);
+        ink_ui_line(parent, text, INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_MARGIN + INK_PRIMARY + INK_GAP_M,
+                    y + INK_GAP_L, w - 2 * (INK_PRIMARY + INK_GAP_M));
+        for (int plus = 0; plus < 2; plus++) {
+            lv_obj_t *button = ink_ui_pill(parent, "", plus ? INK_CANVAS_W - INK_MARGIN - INK_PRIMARY : INK_MARGIN,
+                                           y, INK_PRIMARY, INK_CONTROL, false, NULL, NULL);
+            lv_obj_center(ink_ui_icon(button, plus ? "plus" : "minus", INK_ICON_MEDIUM, INK_ICON_LINE, 0, 0, false));
+            bind(button, i, plus ? 1 : -1);
+        }
+    }
+}
 
 static bool glyph_desc(const lv_font_t *font, lv_font_glyph_dsc_t *dsc, uint32_t cp, uint32_t next) {
     (void)next;

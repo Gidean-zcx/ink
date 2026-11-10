@@ -23,6 +23,7 @@
 #include "ink/sys/layout.h"
 #include "ink/sys/members.h"
 #include "ink/sys/storage.h"
+#include "ink/sys/state.h"
 #include "ink/sys/text.h"
 #include "ink/sys/ui.h"
 
@@ -76,6 +77,7 @@ static struct {
     char member[16];
     char book[96];
     int page;
+    unsigned offset;
 } LAST;
 
 /* A flash read must not hold up drawing home: the file is prefetched into the read cache and read a little
@@ -92,6 +94,8 @@ static void last_read(lv_timer_t *t) {
     memset(&LAST, 0, sizeof LAST);
     snprintf(LAST.member, sizeof LAST.member, "%s", member);
     if (sscanf(data, "page=%d\nbook=%95[^\n]", &LAST.page, LAST.book) != 2) LAST.book[0] = 0;
+    const char *offset = strstr(data, "\noffset=");
+    if (offset) sscanf(offset, "\noffset=%u", &LAST.offset);
     ink_app_card_changed("reader");
 }
 
@@ -105,7 +109,8 @@ static void last_load(const char *member) {
 
 static void last_save(const char *member, const char *book, int page) {
     char path[200], data[160];
-    int n = snprintf(data, sizeof data, "page=%d\nbook=%.95s\n", page, book);
+    unsigned offset = RD.starts[RD.page];
+    int n = snprintf(data, sizeof data, "page=%d\nbook=%.95s\noffset=%u\n", page, book, offset);
     if (ink_layout_member(path, sizeof path, member, "reader.last") < 0 || n <= 0 || (size_t)n >= sizeof data) return;
     if (!strcmp(LAST.member, member) && !strcmp(LAST.book, book) && LAST.page == page) return; /* as it is on the card */
     ink_probe_count("reader.last_saved");
@@ -113,6 +118,7 @@ static void last_save(const char *member, const char *book, int page) {
     snprintf(LAST.member, sizeof LAST.member, "%s", member);
     snprintf(LAST.book, sizeof LAST.book, "%s", book);
     LAST.page = page;
+    LAST.offset = offset;
     ink_app_card_changed("reader");
 }
 
@@ -196,7 +202,7 @@ static void act_list(ink_call_t *c) {
     snprintf(rc->object, sizeof rc->object, "shelf:books");
 }
 
-static bool last_book(char *book, size_t cap, int *page);
+static bool last_book(char *book, size_t cap, int *page, int *percent);
 
 /* Straight back to the book read last, at its saved page (the card on home and the AI). */
 static void act_continue(ink_call_t *c) {
@@ -204,7 +210,7 @@ static void act_continue(ink_call_t *c) {
     char book[96];
     int page;
     scan_library();
-    bool have = last_book(book, sizeof book, &page);
+    bool have = last_book(book, sizeof book, &page, NULL);
     for (int i = 0; have && i < LIB.nbooks; i++)
         if (!strcmp(LIB.books[i].name, book)) {
             ink_ui_push(&ink_app_book, (void *)(intptr_t)i);
@@ -595,31 +601,34 @@ const ink_activity_t ink_app_book = {.name = "book",
                                      .settle = book_settle};
 
 /* The current member's book to continue: the open one, else the saved one if it is still on the card. */
-static bool last_book(char *book, size_t cap, int *page) {
+static bool last_book(char *book, size_t cap, int *page, int *percent) {
     const char *member = ink_member_current()->id;
     if (RD.text && !strcmp(RD.member, member)) {
         snprintf(book, cap, "%s", LIB.books[LIB.open].name);
         *page = RD.page + 1;
+        if (percent) *percent = (int)(RD.starts[RD.page] * 100ull / RD.len);
         return true;
     }
     last_load(member);
     char path[160];
     if (strcmp(LAST.member, member)) return false; /* still being read */
     snprintf(path, sizeof path, "/content/books/%.95s.txt", LAST.book);
-    if (!LAST.book[0] || ink_file_size(path) <= 0) return false; /* deleted, or the card is out */
+    int64_t bytes = LAST.book[0] ? ink_file_size(path) : 0;
+    if (bytes <= 0) return false; /* deleted, or the card is out */
     snprintf(book, cap, "%s", LAST.book);
     *page = LAST.page;
+    if (percent) *percent = (int)((LAST.offset < (uint64_t)bytes ? LAST.offset : (uint64_t)bytes) * 100ull / (uint64_t)bytes);
     return true;
 }
 
 /* What is being read: the card on home, and for the AI. */
 static int reader_card(int index, ink_card_t *out) {
     char book[96];
-    int page;
-    if (index != 0 || !last_book(book, sizeof book, &page)) return 0;
+    int page, percent;
+    if (index != 0 || !last_book(book, sizeof book, &page, &percent)) return 0;
     snprintf(out->id, sizeof out->id, "reading");
-    snprintf(out->title, sizeof out->title, "在读");
-    snprintf(out->text, sizeof out->text, "《%.60s》第 %d 页", book, page);
+    snprintf(out->title, sizeof out->title, "继续读");
+    snprintf(out->text, sizeof out->text, "《%.60s》第 %d 页 · %d%%", book, page, percent);
     snprintf(out->action, sizeof out->action, "reader.continue");
     snprintf(out->member, sizeof out->member, "%s", ink_member_current()->id);
     out->value = page;
@@ -630,7 +639,11 @@ static int reader_card(int index, ink_card_t *out) {
 
 const ink_app_def_t ink_appdef_reader = {.id = "reader", .title = "阅读", .entry = &ink_app_reader, .system_app = true, .child_ok = true, .card = reader_card};
 
+static void card_changed(void *ctx, int h, const char *id) {
+    (void)ctx; (void)h; (void)id; ink_app_card_changed("reader");
+}
 int ink_reader_actions_init(void) {
     int r = ink_cap_register(SHELF_ACTIONS, (int)(sizeof SHELF_ACTIONS / sizeof SHELF_ACTIONS[0]));
-    return r ? r : ink_cap_register(BOOK_ACTIONS, (int)(sizeof BOOK_ACTIONS / sizeof BOOK_ACTIONS[0]));
+    return r ? r : ink_cap_register(BOOK_ACTIONS, (int)(sizeof BOOK_ACTIONS / sizeof BOOK_ACTIONS[0])) ||
+        ink_state_watch("storage.card", card_changed, NULL, INK_EXEC_UI);
 }

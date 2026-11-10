@@ -519,4 +519,4 @@ static void changed(void *ctx, int h, const char *id) {
 int ink_clock_init(void) {
     return ink_db_register(&WORLD) || ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_cap_subscribe("time.changed", extra_time_changed, NULL, INK_EXEC_UI) || ink_state_watch("time.", extra_changed, NULL, INK_EXEC_UI) || ink_state_watch("alarm.revision", changed, NULL, INK_EXEC_UI) ? -1 : 0;
 }
-const ink_app_def_t ink_appdef_clock = {.id = "clock", .title = "时钟", .entry = &CLOCK, .system_app = true, .child_ok = true};
+const ink_app_def_t ink_appdef_clock = {.id = "clock", .title = "时钟", .icon = INK_UI_ICON(clock), .entry = &CLOCK, .system_app = true, .child_ok = true};

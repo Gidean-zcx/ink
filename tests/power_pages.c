@@ -30,7 +30,7 @@ static void inspect_heading(lv_obj_t *root) {
         lv_obj_t *child = lv_obj_get_child(root, (int32_t)i);
         if (lv_obj_check_type(child, &lv_label_class) &&
             lv_obj_get_style_text_font(child, 0) == ink_ui_font_px(INK_FONT_HEADING, INK_WEIGHT_BOLD) &&
-            !strcmp(lv_label_get_text(child), !strcmp(scene, "PowerOffNoBookmark") ? "已关机" : "《星星邮差》第 1 页")) {
+            !strcmp(lv_label_get_text(child), !strcmp(scene, "PowerOffNoBookmark") ? "已关机" : "《星星邮差》第 1 页 · 0%")) {
             bookmark_heading = true;
             lv_obj_get_coords(child, &heading_area);
         }
