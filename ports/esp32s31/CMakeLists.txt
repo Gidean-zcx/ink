@@ -1,5 +1,9 @@
 cmake_minimum_required(VERSION 3.22)
-set(PROJECT_VER "skeleton")
+execute_process(COMMAND git rev-parse --short=8 HEAD WORKING_DIRECTORY ${CMAKE_CURRENT_LIST_DIR}
+    OUTPUT_VARIABLE ink_revision OUTPUT_STRIP_TRAILING_WHITESPACE COMMAND_ERROR_IS_FATAL ANY)
+string(TIMESTAMP ink_build_time "%y%m%d%H%M%S" UTC)
+set(PROJECT_VER "g${ink_revision}-${ink_build_time}")
+option(INK_S31_LIGHT_SLEEP "Enable unverified S31 light sleep" OFF)
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 idf_build_set_property(MINIMAL_BUILD ON)
 project(ink-s31)

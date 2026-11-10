@@ -15,7 +15,7 @@ def main():
     resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
     tests = Path(__file__).resolve().parent
     port, root = tests.parent, tests.parents[2]
-    common = ["cc", "-std=c11", "-Wall", "-Wextra", "-Werror", "-UNDEBUG"]
+    common = ["cc", "-std=c11", "-Wall", "-Wextra", "-Werror", "-UNDEBUG", "-DINK_S31_LIGHT_SLEEP=1"]
     includes = [port, root / "platform/include", root / "drivers/chips", root / "boards", tests / "stub"]
     for path in includes:
         common += ["-I", str(path)]

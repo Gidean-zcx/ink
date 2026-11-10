@@ -14,6 +14,7 @@
 #include "s31_board.h"
 #include "s31_input_logic.h"
 #include "s31_io.h"
+#include "s31_safety.h"
 #include "hal/usb_serial_jtag_ll.h"
 
 struct hal_cpu_boost { bool held; };
@@ -58,8 +59,11 @@ void hal_power_set_state(hal_power_state_t s) {
 }
 void s31_power_init(void) {
     g_cpu_lock = osal_mutex_create();
-    if (!g_cpu_lock || !ink_cpu_apply(CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ) || ink_s31_sleep_init() != ESP_OK)
+    if (!g_cpu_lock || !ink_cpu_apply(CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ))
         osal_panic("power HAL: CPU clock setup failed");
+#if INK_S31_LIGHT_SLEEP
+    if (ink_s31_sleep_init() != ESP_OK) osal_panic("power HAL: sleep setup failed");
+#endif
 }
 
 void hal_power_request(hal_power_res_t res, bool on) {
@@ -70,6 +74,7 @@ void hal_power_request(hal_power_res_t res, bool on) {
     } while (!__atomic_compare_exchange_n(&g_refs[res], &old, next, false, __ATOMIC_ACQ_REL, __ATOMIC_ACQUIRE));
 }
 
+#if INK_S31_LIGHT_SLEEP
 static bool busy(void) { /* no locks: also used immediately before sleep with scheduling stopped */
     return hal_display_pending() > 0 || s31_haptic_busy() ||
            __atomic_load_n(&g_refs[HAL_PWR_AUDIO_IN], __ATOMIC_ACQUIRE) > 0 ||
@@ -181,8 +186,12 @@ out:
     s31_input_resume(cause, woke_at, keys_back);
     return cause;
 }
+#else
+uint32_t hal_power_sleep(const hal_sleep_cfg_t *cfg) { (void)cfg; return 0; }
+#endif
 
 void hal_power_shutdown(void) {
+    ink_s31_display_shutdown();
     hal_light_set(0, 0);
     if (metalio_board_ready()) metalio_power_off();
     hal_log_write("power HAL: power-off pulse train returned");

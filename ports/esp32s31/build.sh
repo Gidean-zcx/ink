@@ -34,7 +34,8 @@ if [[ -z ${INK_LVGL_SOURCE_DIR:-} ]]; then
 fi
 cd "$ROOT/ports/esp32s31"
 cp sdkconfig.defaults "$BUILD/sdkconfig"
-idf_limited --preview -B "$BUILD" -DIDF_TARGET=esp32s31 -DSDKCONFIG="$BUILD/sdkconfig" reconfigure
+idf_limited --preview -B "$BUILD" -DIDF_TARGET=esp32s31 -DSDKCONFIG="$BUILD/sdkconfig" \
+    -DINK_S31_LIGHT_SLEEP="${INK_S31_LIGHT_SLEEP:-OFF}" reconfigure
 export CMAKE_BUILD_PARALLEL_LEVEL=2 IDF_PY_BUILD_JOBS=2 MAKEFLAGS=-j2
 idf_limited --preview -B "$BUILD" build
 idf_limited --preview -B "$BUILD" size | tee "$BUILD/size.txt"

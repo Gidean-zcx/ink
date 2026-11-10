@@ -23,6 +23,7 @@
 #include "ink/hal_transfer.h"
 #include "ink/hal_usb.h"
 #include "ink/probe.h"
+#include "ink/osal.h"
 
 /* TODO: ESP-SR AFE/WakeNet (S31 support unverified). */
 bool hal_afe_available(void) { return false; }
@@ -72,7 +73,7 @@ int hal_cell_answer(void) { return -1; }
 int hal_cell_hangup(void) { return -1; }
 int hal_cell_mute(bool on, bool *muted) { return -1; }
 int hal_cell_dtmf(char key) { return -1; }
-int hal_cell_wait_event(hal_cell_event_t *ev, uint32_t timeout_ms) { return -1; }
+int hal_cell_wait_event(hal_cell_event_t *ev, uint32_t timeout_ms) { osal_task_delay_us((uint64_t)timeout_ms * 1000); return 0; }
 
 /* TODO: Upstream libopus (not linked in this skeleton). */
 hal_opus_dec_t *hal_opus_dec_new(void) { return NULL; }
@@ -83,12 +84,12 @@ int hal_opus_decode(hal_opus_dec_t *d, const uint8_t *pkt, int len, int16_t *pcm
 void hal_opus_dec_free(hal_opus_dec_t *d) {  }
 
 /* Device info, log, random; RTC and accelerometer: s31_board.c. */
-const char *hal_device_reset_reason(void) { return "skeleton"; }
-void hal_device_get_info(hal_device_info_t *out) { *out = (hal_device_info_t){.profile_id = "esp32s31-skeleton", .display_name = "ESP32-S31 skeleton", .device_class = HAL_CLASS_MCU, .cpu_cores = configNUMBER_OF_CORES, .cpu_mhz = CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ}; }
 void hal_log_write(const char *line) { esp_log_write(ESP_LOG_INFO, "ink", "%s\n", line); }
 void hal_random_fill(void *out, size_t n) { esp_fill_random(out, n); }
 
 #ifndef INK_S31_DISPLAY
+void ink_s31_display_shutdown(void) { }
+void ink_s31_display_panic(void) { }
 /* Offline fallback: no panel transport linked. */
 void hal_display_get_info(hal_panel_info_t *out) { *out = (hal_panel_info_t){0}; }
 float hal_display_level_luminance(unsigned level) { return 1.0f; }
@@ -126,7 +127,6 @@ int hal_ws_flush(hal_ws_t *ws, int64_t timeout_us) { return -1; }
 void hal_ws_free(hal_ws_t *ws) {  }
 
 /* TODO: ESP-IDF OTA/partition APIs + verified signature backend. */
-void hal_ota_info(hal_ota_info_t *out) { *out = (hal_ota_info_t){0}; }
 int hal_ota_begin(size_t size) { return -1; }
 int hal_ota_write(const void *data, size_t n) { return -1; }
 int hal_ota_end(void) { return -1; }
