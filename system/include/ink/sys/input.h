@@ -48,6 +48,10 @@ typedef struct {
 typedef void (*ink_input_handler_t)(const ink_input_event_t *e, void *ctx);
 
 int ink_input_init(ink_input_handler_t handler, void *ctx);
+/* The UI publishes clipped, front-to-back hit regions; input never calls LVGL. */
+#define INK_INPUT_HAPTIC_ZONES 96
+typedef struct { int16_t x1, y1, x2, y2; bool enabled; } ink_input_zone_t;
+void ink_input_set_zones(const ink_input_zone_t *zones, int count);
 /** The power key's short press may be for something on screen first (an interruption): true = used. */
 void ink_input_set_power_key_hook(bool (*fn)(void));
 /** The power key held down long enough (the timer task, keep it short): the power menu, unless something on screen cannot be
