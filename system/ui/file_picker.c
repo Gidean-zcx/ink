@@ -1,3 +1,4 @@
+#include "ink/sys/i18n.h"
 #include "ink/sys/file_picker.h"
 #include "ink/sys/ui_list.h"
 #include "ink/sys/members.h"
@@ -30,13 +31,9 @@ typedef struct {
 static picker_t *P;
 static const ink_ui_overlay_t OVERLAY;
 static void caller_deleted(lv_event_t *e);
-static const ink_ui_action_spec_t ACTIONS[] = {
-    {.id = "prev", .label = "上一页", .capability = "file_picker.prev"},
-    {.id = "next", .label = "下一页", .capability = "file_picker.next"},
-    {.id = "cancel", .label = "取消", .capability = "file_picker.cancel", .enabled = true}
-};
+
 static const char *status(picker_t *p) {
-    return p->working ? "正在读取文件" : p->error ? "暂时读不了文件，请返回后重试" : "";
+    return p->working ? TR("正在读取文件") : p->error ? TR("暂时读不了文件，请返回后重试") : "";
 }
 static void close_picker(uint32_t id) {
     picker_t *p = P;
@@ -60,7 +57,7 @@ static void bind_item(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, 
     picker_t *p = ctx;
     unsigned at = index % 4;
     picker_item_t *item = &p->items[index];
-    const char *ready = p->type == INK_FS_TEXT ? "可以读" : "可以选择";
+    const char *ready = p->type == INK_FS_TEXT ? TR("可以读") : TR("可以选择");
     if (!lv_obj_get_child_count(slot)) {
         ink_ui_icon(slot, p->type == INK_FS_IMAGE ? "camera" : "book", INK_ICON_LIST, INK_ICON_LINE, INK_GAP, INK_GAP_L, false);
         ink_ui_line(slot, "", INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_CIRCLE, INK_GAP_S, INK_CANVAS_W - 2 * INK_MARGIN - INK_CIRCLE - INK_GAP);
@@ -154,7 +151,12 @@ int ink_file_picker_open(ink_fs_type_t type, ink_file_picker_done_fn done, void 
     picker_t *p = osal_calloc(1, sizeof *p, OSAL_MEM_EXTERNAL);
     if (!p) return -1;
     p->type = type; p->epoch = ink_member_epoch(); p->done = done; p->ctx = ctx; p->working = true;
-    const char *title = type == INK_FS_IMAGE ? "选一张图片" : type == INK_FS_TEXT ? "选一本书" : type == INK_FS_AUDIO ? "选一段音频" : "选一个文件";
+    const char *title = type == INK_FS_IMAGE ? TR("选一张图片") : type == INK_FS_TEXT ? TR("选一本书") : type == INK_FS_AUDIO ? TR("选一段音频") : TR("选一个文件");
+    const ink_ui_action_spec_t ACTIONS[] = {
+        {.id = "prev", .label = TR("上一页"), .capability = "file_picker.prev"},
+        {.id = "next", .label = TR("下一页"), .capability = "file_picker.next"},
+        {.id = "cancel", .label = TR("取消"), .capability = "file_picker.cancel", .enabled = true}
+    };
     ink_ui_page_spec_t page = {.id = "FilePicker", .title = title, .object = {"FilePicker", p->epoch}, .actions = ACTIONS, .action_count = 3};
     p->root = ink_ui_box(lv_layer_sys(), 0, 0, INK_CANVAS_W, INK_CANVAS_H, 0, INK_SURFACE_WHITE, true);
     ink_shell_statusbar(p->root, true);
@@ -164,7 +166,7 @@ int ink_file_picker_open(ink_fs_type_t type, ink_file_picker_done_fn done, void 
     int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP_XS;
     lv_obj_t *body = ink_ui_box(p->root, 0, y, INK_CANVAS_W, INK_CANVAS_H - y, 0, INK_SURFACE_WHITE, false);
     p->notice = ink_ui_notice(p->root, status(p), INK_CANVAS_H - INK_PRIMARY);
-    p->list = ink_ui_list_create(body, &page, &p->position, 4, 1, INK_ROW_DOUBLE, "这里还没有可选的文件", bind_item, p);
+    p->list = ink_ui_list_create(body, &page, &p->position, 4, 1, INK_ROW_DOUBLE, TR("这里还没有可选的文件"), bind_item, p);
     if (!p->list || ink_exec_post(INK_EXEC_BG, &p->job, read_files, p)) { lv_obj_delete(p->root); osal_free(p); return -1; }
     p->caller = lv_screen_active(); lv_obj_add_event_cb(p->caller, caller_deleted, LV_EVENT_DELETE, p);
     P = p; ink_ui_overlay_add(&OVERLAY, p->root); ink_ui_list_refresh(p->list, 0);

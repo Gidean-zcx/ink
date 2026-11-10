@@ -3,6 +3,7 @@
  * nearly empty battery). It covers the page, also of a locked device. The real look comes with the system UI (D-64);
  * nothing about the mechanism is here.
  */
+#include "ink/sys/i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -30,13 +31,13 @@ static ink_ui_page_spec_t model(void) {
     static const char *const ids[] = {"0", "1", "2"};
     _Static_assert(sizeof ids / sizeof *ids == ACTION_COUNT, "interrupt action ids");
     static char time[144];
-    snprintf(time, sizeof time, "时间=%s；日期=%s；", C.clock, C.date_text);
-    fields[0] = (ink_ui_field_spec_t){.id = "title", .role = "text", .label = "标题", .value = C.now.title};
-    fields[1] = (ink_ui_field_spec_t){.id = "body", .role = "text", .label = "内容", .value = C.now.body};
-    fields[2] = (ink_ui_field_spec_t){.id = "time", .role = "text", .label = "时间和日期", .value = time};
+    snprintf(time, sizeof time, TR("时间=%s；日期=%s；"), C.clock, C.date_text);
+    fields[0] = (ink_ui_field_spec_t){.id = "title", .role = "text", .label = TR("标题"), .value = C.now.title};
+    fields[1] = (ink_ui_field_spec_t){.id = "body", .role = "text", .label = TR("内容"), .value = C.now.body};
+    fields[2] = (ink_ui_field_spec_t){.id = "time", .role = "text", .label = TR("时间和日期"), .value = time};
     size_t count = C.now.kind == INK_INT_ALARM ? FIELD_COUNT : FIELD_COUNT - 1;
     for (int i = 0; i < C.now.nactions; i++) {
-        fields[count++] = (ink_ui_field_spec_t){.id = ids[i], .role = "button", .label = "按钮", .value = C.now.actions[i].label};
+        fields[count++] = (ink_ui_field_spec_t){.id = ids[i], .role = "button", .label = TR("按钮"), .value = C.now.actions[i].label};
         actions[i] = (ink_ui_action_spec_t){.id = ids[i], .label = C.now.actions[i].label,
             .capability = C.now.actions[i].cap, .args_json = C.now.actions[i].args, .enabled = C.now.actions[i].cap != NULL};
     }
@@ -59,8 +60,8 @@ static void on_button(lv_event_t *e) {
 
 static int semantic_snapshot(char *buf, size_t cap) {
     ink_ui_page_spec_t page = model();
-    ink_ui_field_spec_t locked = {.id = "status", .role = "text", .label = "系统打断", .value = "有系统打断；大人验证前 AI 无权读取个人内容。"};
-    if (!ink_member_space_open()) { page.title = "系统打断"; page.fields = &locked; page.field_count = 1; page.action_count = 0; }
+    ink_ui_field_spec_t locked = {.id = "status", .role = "text", .label = TR("系统打断"), .value = TR("有系统打断；大人验证前 AI 无权读取个人内容。")};
+    if (!ink_member_space_open()) { page.title = TR("系统打断"); page.fields = &locked; page.field_count = 1; page.action_count = 0; }
     return ink_ui_semantics_snapshot(&page, buf, cap);
 }
 
@@ -102,7 +103,7 @@ static void show(const ink_interrupt_t *top) { /* UI task */
         int y = INK_STATUS_BAR + INK_BLOCK_L + INK_CIRCLE_LARGE + INK_MARGIN + ink_ui_line_height(INK_FONT_TITLE) + ink_ui_line_height(INK_FONT_NUMBER) + INK_GAP_L;
         C.date = ink_ui_label(C.card.panel, C.date_text, INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_MARGIN, y, INK_CANVAS_W - 2 * INK_MARGIN);
         lv_obj_set_style_text_align(C.date, LV_TEXT_ALIGN_CENTER, 0);
-        C.notice = ink_ui_notice(C.card.panel, "按电源键再睡 10 分钟", INK_CANVAS_H - INK_MARGIN - ink_ui_line_height(INK_FONT_NOTE));
+        C.notice = ink_ui_notice(C.card.panel, TR("按电源键再睡 10 分钟"), INK_CANVAS_H - INK_MARGIN - ink_ui_line_height(INK_FONT_NOTE));
     }
     if (C.icon) lv_obj_delete(C.icon);
     C.icon = ink_ui_circle(C.card.panel, call ? "person" : alarm ? "clock" : "battery",
@@ -129,7 +130,7 @@ static void show(const ink_interrupt_t *top) { /* UI task */
             int cell = (INK_CANVAS_W - 2 * INK_MARGIN - INK_GAP) / 2;
             ink_ui_circle(button, i ? "callEnd" : "phone", (cell - INK_CIRCLE_LARGE) / 2 - INK_GAP, 0,
                            INK_CIRCLE_LARGE, INK_ICON_APP, i ? INK_SURFACE_WHITE : INK_SURFACE_BLACK, NULL, NULL);
-            const char *label = i && C.now.actions[i].cap && !strcmp(C.now.actions[i].cap, "call.hangup") ? "拒接" : C.now.actions[i].label;
+            const char *label = i && C.now.actions[i].cap && !strcmp(C.now.actions[i].cap, "call.hangup") ? TR("拒接") : C.now.actions[i].label;
             lv_obj_t *caption = ink_ui_label(button, label, INK_FONT_LIST, INK_WEIGHT_MEDIUM,
                                              0, INK_CIRCLE_LARGE + INK_GAP_M, cell - 2 * INK_GAP);
             lv_obj_set_style_text_align(caption, LV_TEXT_ALIGN_CENTER, 0);

@@ -1,6 +1,7 @@
 /* Airplane mode stopped a call or a message: the opaque panel says so and offers the way out (the same capability as
  * the switch in the control centre); a child is told to ask a parent. A button the policy gate refused says why on
  * the same panel. */
+#include "ink/sys/i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -17,8 +18,8 @@ static struct {
 } A;
 
 static int snapshot(char *buf, size_t cap) {
-    int n = A.why ? snprintf(buf, cap, "%s；%s。%s。按钮：知道了。", A.overlay->name, A.say, A.why)
-                  : snprintf(buf, cap, "AirplaneOn；飞行模式已打开：%s。按钮：关闭飞行模式（net.set_airplane enabled=false）、取消。", A.say);
+    int n = A.why ? snprintf(buf, cap, TR("%s；%s。%s。按钮：知道了。"), A.overlay->name, A.say, A.why)
+                  : snprintf(buf, cap, TR("AirplaneOn；飞行模式已打开：%s。按钮：关闭飞行模式（net.set_airplane enabled=false）、取消。"), A.say);
     return n < 0 ? 0 : (size_t)n < cap ? n : (int)cap - 1;
 }
 
@@ -54,8 +55,8 @@ static void show(const ink_ui_overlay_t *overlay, const char *title, const char 
     A.overlay = overlay;
     shell_card_open(&A.card);
     ink_ui_overlay_add(overlay, A.card.root);
-    if (!A.why) shell_card_button(&A.card, "关闭飞行模式", on_button, (void *)1);
-    shell_card_button(&A.card, A.why ? "知道了" : "取消", on_button, NULL);
+    if (!A.why) shell_card_button(&A.card, TR("关闭飞行模式"), on_button, (void *)1);
+    shell_card_button(&A.card, A.why ? TR("知道了") : TR("取消"), on_button, NULL);
     shell_card_text(&A.card, title, body);
 }
 
@@ -63,23 +64,23 @@ bool ink_shell_airplane_card(const ink_receipt_t *rc) {
     if (rc->status != INK_RC_REJECTED || strcmp(rc->detail, "airplane mode is on")) return false;
     static const char said[] = "飞行模式已打开，"; /* the title says it already */
     snprintf(A.say, sizeof A.say, "%s", strncmp(rc->say, said, sizeof said - 1) ? rc->say : rc->say + sizeof said - 1);
-    A.why = ink_member_current()->role == INK_ROLE_CHILD ? "请家长关闭飞行模式" : NULL; /* the switch is not a child's */
-    show(&OVERLAYS[0], "飞行模式已打开", A.why ? A.why : A.say);
+    A.why = ink_member_current()->role == INK_ROLE_CHILD ? TR("请家长关闭飞行模式") : NULL; /* the switch is not a child's */
+    show(&OVERLAYS[0], TR("飞行模式已打开"), A.why ? A.why : A.say);
     return true;
 }
 
 bool ink_shell_refused(const ink_receipt_t *rc) {
-    static const char *const WHY[][2] = {{"children cannot run system actions", "请家长来操作"},
-                                         {"not on this child's whitelist", "请家长来操作"},
-                                         {"children cannot change this setting", "请家长来操作"},
-                                         {"today's time is up", "今天的时间用完了"},
-                                         {"this member's space is locked", "请先解锁"}};
+    static const char *const WHY[][2] = {{"children cannot run system actions", TR_NOOP("请家长来操作")},
+                                         {"not on this child's whitelist", TR_NOOP("请家长来操作")},
+                                         {"children cannot change this setting", TR_NOOP("请家长来操作")},
+                                         {"today's time is up", TR_NOOP("今天的时间用完了")},
+                                         {"this member's space is locked", TR_NOOP("请先解锁")}};
     if (ink_shell_airplane_card(rc)) return true;
     for (unsigned i = 0; rc->status == INK_RC_REJECTED && i < sizeof WHY / sizeof *WHY; i++)
         if (!strcmp(rc->detail, WHY[i][0])) {
-            snprintf(A.say, sizeof A.say, "没有做");
-            A.why = WHY[i][1];
-            show(&OVERLAYS[1], "没有做", A.why);
+            snprintf(A.say, sizeof A.say, TR("没有做"));
+            A.why = TR(WHY[i][1]);
+            show(&OVERLAYS[1], TR("没有做"), A.why);
             return true;
         }
     return false;

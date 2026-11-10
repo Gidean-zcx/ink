@@ -389,6 +389,21 @@ set(INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/system/ui/shell/boot_flow.c ${CMAKE_SOU
   ${CMAKE_SOURCE_DIR}/system/apps/camera/camera.c ${CMAKE_SOURCE_DIR}/system/apps/camera/scan.c
   ${CMAKE_SOURCE_DIR}/system/policy/cap.c ${CMAKE_SOURCE_DIR}/system/policy/members.c
   ${CMAKE_SOURCE_DIR}/system/ui/app_registry.c ${CMAKE_SOURCE_DIR}/system/ui/lock_mark.c)
+list(APPEND INK_I18N_SOURCES
+  ${CMAKE_SOURCE_DIR}/system/ui/shell/airplane_card.c
+  ${CMAKE_SOURCE_DIR}/system/ui/shell/interrupt_card.c
+  ${CMAKE_SOURCE_DIR}/system/ui/shell/kid_pages.c
+  ${CMAKE_SOURCE_DIR}/system/ui/shell/member_gate.c
+  ${CMAKE_SOURCE_DIR}/system/ui/shell/off_picture.c
+  ${CMAKE_SOURCE_DIR}/system/ui/shell/pinpad.c
+  ${CMAKE_SOURCE_DIR}/system/ui/file_picker.c
+  ${CMAKE_SOURCE_DIR}/system/ui/textfield.c
+  ${CMAKE_SOURCE_DIR}/system/ui/ui_list.c
+  ${CMAKE_SOURCE_DIR}/system/ui/ui_semantics.c
+  ${CMAKE_SOURCE_DIR}/system/ui/shell/factory_pages.c
+  ${CMAKE_SOURCE_DIR}/system/ui/shell/power_menu.c
+  ${CMAKE_SOURCE_DIR}/system/ui/shell/power_pages.c
+)
 add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h
   COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/i18n/i18n_gen.py ${INK_I18N_TABLES}
           --header ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h --sources ${INK_I18N_SOURCES}
@@ -689,6 +704,10 @@ set_tests_properties(time-settings PROPERTIES TIMEOUT 200)
 target_link_libraries(sim-i18n-lang PRIVATE ink_apps ink_system)
 add_test(NAME i18n-lang COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/i18n_check.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(i18n-lang PROPERTIES TIMEOUT 300)
+ink_sim_executable(sim-i18n-shell tests/i18n_shell.c)
+target_link_libraries(sim-i18n-shell PRIVATE ink_apps ink_system)
+add_test(NAME i18n-shell COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/i18n_shell.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(i18n-shell PROPERTIES TIMEOUT 240)
 add_test(NAME i18n-tables COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/i18n_tables.py)
 add_test(NAME boot-flow-reboot COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/boot_flow_reboot.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(boot-flow-reboot PROPERTIES TIMEOUT 200)

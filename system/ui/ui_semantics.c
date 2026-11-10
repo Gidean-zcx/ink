@@ -1,3 +1,4 @@
+#include "ink/sys/i18n.h"
 #include "ink/sys/ui_semantics.h"
 #include "ink/sys/json.h"
 #include "ink/ui_shell.h"
@@ -35,7 +36,7 @@ int ink_ui_semantics_snapshot(const ink_ui_page_spec_t *page, char *out, size_t 
         ink_jw_raw(&w, ",\"role\":"); ink_jw_str(&w, f->role);
         ink_jw_raw(&w, ",\"label\":"); ink_jw_str(&w, f->label);
         ink_jw_raw(&w, ",\"value\":");
-        ink_jw_str(&w, f->secret ? (f->value && f->value[0] ? "有值" : "无值") : (f->value ? f->value : ""));
+        ink_jw_str(&w, f->secret ? (f->value && f->value[0] ? TR("有值") : TR("无值")) : (f->value ? f->value : ""));
         ink_jw_raw(&w, f->secret ? ",\"secret\":true" : ",\"secret\":false");
         if (!f->secret && f->object.id) {
             ink_jw_raw(&w, ",\"object\":"); object_json(&w, &f->object);

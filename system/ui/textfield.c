@@ -1,5 +1,6 @@
 /* A text field for pages (see ink/sys/textfield.h). The session is the text service's; this shows it. */
 /* ui-scale-runtime: dimension home.x,home.y,position.y,keyboard.y1,lv_obj_get_content_height Saved coordinates and measured viewport relative to the theme keyboard safe area. */
+#include "ink/sys/i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -333,12 +334,12 @@ static void field_event(lv_event_t *e) {
         if (f->session && f->cfg.type != INK_TEXT_PASSWORD) {
             menu_button(f, "◀", on_left);
             menu_button(f, "▶", on_right);
-            menu_button(f, "撤销", on_undo);
+            menu_button(f, TR("撤销"), on_undo);
         }
-        if (f->cfg.type != INK_TEXT_PASSWORD) menu_button(f, "复制", on_copy);
-        menu_button(f, "粘贴", on_paste);
-        if (f->cfg.type != INK_TEXT_PASSWORD && !f->cfg.ai_hidden) menu_button(f, "问 AI", on_ask);
-        if (f->cfg.type != INK_TEXT_PASSWORD && !f->cfg.ai_hidden) menu_button(f, "加单词", on_word);
+        if (f->cfg.type != INK_TEXT_PASSWORD) menu_button(f, TR("复制"), on_copy);
+        menu_button(f, TR("粘贴"), on_paste);
+        if (f->cfg.type != INK_TEXT_PASSWORD && !f->cfg.ai_hidden) menu_button(f, TR("问 AI"), on_ask);
+        if (f->cfg.type != INK_TEXT_PASSWORD && !f->cfg.ai_hidden) menu_button(f, TR("加单词"), on_word);
         ink_ui_hint_obj(f->menu, INK_REFRESH_FAST);
     } else if (code == LV_EVENT_DELETE) {
         close_menu(f);
@@ -418,7 +419,7 @@ lv_obj_t *ink_textfield_long_create(lv_obj_t *parent, const ink_text_cfg_t *cfg)
     lv_obj_set_size(obj, ink_ui_px(INK_CANVAS_W - 2 * INK_MARGIN), height);
     lv_obj_update_layout(obj);
     lv_obj_set_height(f->label, lv_obj_get_content_height(obj) - ink_ui_px(INK_CONTROL + INK_GAP_L));
-    f->save_label = ink_ui_label(obj, "正在保存", INK_FONT_NOTE, INK_WEIGHT_REGULAR, 0, 0, INK_PRIMARY + INK_CONTROL);
+    f->save_label = ink_ui_label(obj, TR("正在保存"), INK_FONT_NOTE, INK_WEIGHT_REGULAR, 0, 0, INK_PRIMARY + INK_CONTROL);
     lv_obj_align(f->save_label, LV_ALIGN_BOTTOM_LEFT, 0, 0);
     f->pages_label = ink_ui_label(obj, "1 / 1", INK_FONT_NOTE, INK_WEIGHT_MEDIUM, 0, 0, INK_CIRCLE_SMALL);
     lv_obj_align(f->pages_label, LV_ALIGN_BOTTOM_RIGHT, ink_ui_px(0 - INK_CONTROL - INK_GAP_S), ink_ui_px(0 - INK_GAP_L));
@@ -434,7 +435,7 @@ lv_obj_t *ink_textfield_long_create(lv_obj_t *parent, const ink_text_cfg_t *cfg)
 void ink_textfield_long_refresh(lv_obj_t *field) {
     field_t *f = lv_obj_get_user_data(field);
     if (!f || !f->session || !f->save_label) return;
-    const char *status = ink_text_draft_saved() < 0 ? "字还在，没能存下" : ink_text_draft_saved() ? "已存在这台设备" : "正在保存";
+    const char *status = ink_text_draft_saved() < 0 ? TR("字还在，没能存下") : ink_text_draft_saved() ? TR("已存在这台设备") : TR("正在保存");
     if (strcmp(lv_label_get_text(f->save_label), status)) lv_label_set_text(f->save_label, status);
     if (f->saved_timer && ink_text_draft_saved() != 0) lv_timer_pause(f->saved_timer);
 }

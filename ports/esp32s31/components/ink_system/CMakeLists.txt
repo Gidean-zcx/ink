@@ -20,6 +20,20 @@ execute_process(COMMAND ${PYTHON} ${root}/tools/i18n/i18n_gen.py ${i18n_tables} 
     --sources ${root}/system/ui/shell/boot_flow.c ${root}/system/ui/shell/navigation.c ${root}/system/ui/shell/keyboard.c ${root}/system/ui/shell/settings_pages.c
     ${root}/system/ui/shell/time_settings.c ${root}/system/ui/shell/settings_family.c ${root}/system/services/time/time_service.c
     ${root}/system/apps/clock/clock.c
+    ${root}/system/ui/shell/airplane_card.c
+    ${root}/system/ui/shell/interrupt_card.c
+    ${root}/system/ui/shell/kid_pages.c
+    ${root}/system/ui/shell/member_gate.c
+    ${root}/system/ui/shell/off_picture.c
+    ${root}/system/ui/shell/pinpad.c
+    ${root}/system/ui/file_picker.c
+    ${root}/system/ui/lock_mark.c
+    ${root}/system/ui/textfield.c
+    ${root}/system/ui/ui_list.c
+    ${root}/system/ui/ui_semantics.c
+    ${root}/system/ui/shell/factory_pages.c
+    ${root}/system/ui/shell/power_menu.c
+    ${root}/system/ui/shell/power_pages.c
     WORKING_DIRECTORY ${root} COMMAND_ERROR_IS_FATAL ANY)
 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${i18n_tables})
 execute_process(COMMAND ${PYTHON} ${root}/tools/licenses.py ${CMAKE_BINARY_DIR}/generated/ink/licenses.h
