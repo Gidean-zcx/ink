@@ -131,6 +131,7 @@ esp_err_t i2s_del_channel(i2s_chan_handle_t c) { assert(!c->enabled); event(c->t
 esp_err_t i2s_channel_init_std_mode(i2s_chan_handle_t c, const i2s_std_config_t *s) {
     (void)c;
     assert(s->clk_cfg.sample_rate_hz == 16000 && s->slot_cfg.data_bit_width == 32 && s->slot_cfg.slot_mode == 2);
+    assert(s->clk_cfg.clk_src == I2S_CLK_SRC_DEFAULT && s->clk_cfg.mclk_multiple == 256 && !s->clk_cfg.bclk_div);
     assert(s->gpio_cfg.mclk == -1 && s->gpio_cfg.bclk == 42 && s->gpio_cfg.ws == 43 && s->gpio_cfg.dout == 44 && s->gpio_cfg.din == 45);
     return fail() ? ESP_FAIL : ESP_OK;
 }

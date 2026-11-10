@@ -15,11 +15,7 @@ def main():
     args = parser.parse_args()
     build = args.build.resolve()
     port = Path(__file__).resolve().parents[1]
-    source = port / "hal_audio_s31.c"
-    original = source.read_text()
     commands = json.loads((build / "compile_commands.json").read_text())
-    entry = next(e for e in commands if Path(e["file"]).resolve() == source)
-    compile_args = shlex.split(entry["command"])
     resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
     changes = [
         ("baseline", "", ""),
@@ -32,11 +28,21 @@ def main():
         ("stale-mode-after-wake", "if (A.epoch != epoch)", "if (A.epoch == UINT_MAX)"),
         ("drop-reference-channel", "A.ref[i] = ink_sample(A.in[i * 2 + 1]);", "A.ref[i] = 0;"),
         ("ignore-capture-overflow", "__atomic_add_fetch(&A.lost, ev->size / 8, __ATOMIC_RELAXED);", "(void)ev;"),
+        ("master-clock-default", ".clk_cfg = {.sample_rate_hz = HAL_AUDIO_RATE, .clk_src = I2S_CLK_SRC_DEFAULT,\n                    .mclk_multiple = I2S_MCLK_MULTIPLE_256}", ".clk_cfg = I2S_STD_CLK_DEFAULT_CONFIG(HAL_AUDIO_RATE)"),
+        ("opus-baseline", "", ""),
+        ("opus-no-dtx", "OPUS_SET_DTX(1)", "OPUS_SET_DTX(0)"),
+        ("opus-wrong-application", "OPUS_APPLICATION_VOIP", "OPUS_APPLICATION_AUDIO"),
+        ("opus-short-frame", "HAL_OPUS_FRAME_SAMPLES, out, cap", "HAL_OPUS_FRAME_SAMPLES / 3, out, cap"),
+        ("opus-no-plc", "(!pkt && len)", "!pkt"),
     ]
     with tempfile.TemporaryDirectory(prefix="audio-negative-", dir=build) as temp:
         work = Path(temp)
         for name, old, new in changes:
-            text = original
+            codec = name.startswith("opus-")
+            source = port / ("hal_opus_s31.c" if codec else "hal_audio_s31.c")
+            entry = next(e for e in commands if Path(e["file"]).resolve() == source)
+            compile_args = shlex.split(entry["command"])
+            text = source.read_text()
             if name == "remove-implementation":
                 # Link the actual baseline-shaped audio stubs instead of the port.
                 text = '#include "ink/hal_audio.h"\n' + "\n".join([
@@ -60,14 +66,15 @@ def main():
             command[command.index("-o") + 1] = str(obj)
             command[command.index(str(source))] = str(altered)
             subprocess.run(command, cwd=build, check=True, capture_output=True, text=True)
-            link = shlex.split((build / "CMakeFiles/test-s31-audio.dir/link.txt").read_text())
+            target = "test-s31-opus" if codec else "test-s31-audio"
+            link = shlex.split((build / f"CMakeFiles/{target}.dir/link.txt").read_text())
             for i, arg in enumerate(link):
-                if arg.endswith("hal_audio_s31.c.o"):
+                if arg.endswith(source.name + ".o"):
                     link[i] = str(obj)
             link[link.index("-o") + 1] = str(work / "test")
             subprocess.run(link, cwd=build, check=True, capture_output=True, text=True)
             run = subprocess.run([str(work / "test")], cwd=work, capture_output=True, text=True, timeout=10)
-            assert (run.returncode == 0) == (name == "baseline"), (name, run.stdout, run.stderr)
+            assert (run.returncode == 0) == (name in ("baseline", "opus-baseline")), (name, run.stdout, run.stderr)
             evidence = run.stderr.strip().splitlines()
             print(f"{name}: compile=0, test={run.returncode}" + (f"; {evidence[-1]}" if evidence else ""))
 

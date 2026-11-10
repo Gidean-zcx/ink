@@ -56,7 +56,8 @@ static bool ink_audio_ready(void) { /* lifecycle lock held; never reset the shar
     if (A.epoch != epoch) {
         if (!ink_amp(false)) return false;
         uint64_t ready = metalio_board_shared_power_since_us() + BH1098G_BOOT_US;
-        if (osal_now_us() < ready) osal_task_delay_us(ready - osal_now_us());
+        uint64_t now = osal_now_us();
+        if (now < ready) osal_task_delay_us(ready - now);
         hal_uart_t *u = hal_uart_open(BH1098G_UART_PORT, BH1098G_BAUD);
         if (!u || bh1098g_set_mode(u, 1)) return false;
         char line[128];
@@ -82,7 +83,8 @@ static bool ink_audio_ready(void) { /* lifecycle lock held; never reset the shar
     c.dma_frame_num = INK_AUDIO_CHUNK;
     c.auto_clear_after_cb = true;
     i2s_std_config_t s = {
-        .clk_cfg = I2S_STD_CLK_DEFAULT_CONFIG(HAL_AUDIO_RATE),
+        .clk_cfg = {.sample_rate_hz = HAL_AUDIO_RATE, .clk_src = I2S_CLK_SRC_DEFAULT,
+                    .mclk_multiple = I2S_MCLK_MULTIPLE_256},
         .slot_cfg = I2S_STD_PHILIPS_SLOT_DEFAULT_CONFIG(I2S_DATA_BIT_WIDTH_32BIT, I2S_SLOT_MODE_STEREO),
         .gpio_cfg = {.mclk = I2S_GPIO_UNUSED, .bclk = 42, .ws = 43, .dout = 44, .din = 45},
     };
