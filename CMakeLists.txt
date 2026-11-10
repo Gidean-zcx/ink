@@ -1360,6 +1360,10 @@ target_sources(ink_system PRIVATE system/apps/memo/memo.c)
 ink_sim_executable(sim-memo tests/memo/memo.c)
 target_link_libraries(sim-memo PRIVATE ink_apps ink_system)
 add_test(NAME memo COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/memo/run.py --build ${CMAKE_BINARY_DIR})
+# Voice memos: recording, cancelling, the AI key, a call, the hub's words, members, a power cut (tests/memo_record).
+ink_sim_executable(sim-memo-record tests/memo_record/memo_record.c)
+target_link_libraries(sim-memo-record PRIVATE ink_apps ink_system)
+add_test(NAME memo-record COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/memo_record/run.py --build ${CMAKE_BINARY_DIR})
 
 target_sources(ink_system PRIVATE system/ui/shell/settings_family.c system/ui/shell/wallpaper.c)
 ink_sim_executable(sim-settings-b tests/settings_b.c)

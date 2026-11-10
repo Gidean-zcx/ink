@@ -88,6 +88,7 @@ static const struct {
     {"sms.text", NULL}, {"sms.long", NULL}, {"sms.prev", NULL}, {"sms.next", NULL},
     {"memo.save", "id,draft,page"}, {"memo.delete", "id"}, {"memo.undo", "id"}, {"memo.convert", "id"}, {"memo.check", "id,index"},
     {"memo.open", "id"}, {"memo.edit", ""}, {"memo.next", NULL}, {"memo.prev", NULL}, {"memo.retry", NULL},
+    {"memo.record", NULL}, {"memo.play", "id"}, {"audio.record_cancel", NULL}, {"audio.transcribe", "path"},
     {"shell.family", NULL}, {"shell.kid_settings", NULL}, {"shell.wallpaper", NULL}, {"shell.records", ""}, {"shell.ai_memory", NULL},
     {"family.edit", ""}, {"family.focus", NULL}, {"family.save", NULL}, {"family.role", NULL},
     {"family.prev", NULL}, {"family.next", NULL}, {"wallpaper.choose", NULL}, {"member.rename", "id,name"},
@@ -126,6 +127,7 @@ static const struct {
     {"system.upgrade", "a person installs: it may fetch and tell, the device is gone for minutes (design §12.7)", NULL},
     {"system.upgrade_from_card", "a person installs: it may fetch and tell, the device is gone for minutes (design §12.7)", ""},
     {"shell.pin_submit", "only the person submits the local PIN buffer", NULL},
+    {"memo.voice", "the memo app's own step: a finished recording or the hub's words, never typed in by the model", ""},
     {NULL, NULL, NULL},
 };
 
