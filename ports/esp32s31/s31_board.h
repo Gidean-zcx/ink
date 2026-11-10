@@ -18,6 +18,8 @@
 /* Interrupt lines, active low, falling edge (upstream config.h, metalio_touch.c). */
 #define S31_GPIO_EXP_INT 2   /* TCA9555 INT wired with the SC7A20H INT1 */
 #define S31_GPIO_TOUCH_INT 5 /* FT6336U INT */
+#define S31_GPIO_AI_KEY 61   /* BOOT key, simulator/profiles/metalio-plus.json */
+#define S31_GPIO_MODEM_SRDY 3 /* NT26 SRDY; wake polarity remains an on-device check */
 
 /* hal_uart ports: 1 = BH1098G (UART1, TX39 RX38, 115200), 2 = NT26 (UART2, TX58 RX59). */
 #define S31_UART1_TX 39
