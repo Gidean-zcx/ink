@@ -21,7 +21,7 @@ if a.negative:
     path = 'system/services/comm/comm_service.c' if a.negative == 'radio' else 'tests/emergency_call/emergency_call.c'
     entry = next(e for e in db if e['file'] == str(ROOT / path))
     source = (ROOT / ('system/services/comm/comm_service.c' if a.negative == 'radio' else 'system/apps/phone/phone.c')).read_text()
-    old, new = ('if (temporary) r = hal_cell_radio(true, 0) < 0 ? -1 : 0;', 'if (temporary) r = -1;') if a.negative == 'radio' else (
+    old, new = ('if (temporary) r = hal_cell_radio(true, 0) < 0 ? -1 : 0;', '') if a.negative == 'radio' else (
         'if (emergency_changed(id, a)) return;', '(void)emergency_changed;')
     assert source.count(old) == 1
     mutant = work / 'mutant.c'
