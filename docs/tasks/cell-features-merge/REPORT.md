@@ -6,8 +6,8 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 功能合并 | 进行中 | 已核对两个归档报告与基线 | `git show origin/archive/{mobile-network-2,emergency-call-2}` |
-| 1 开机延迟 | 待验证 | 先记录基线，再对照合并结果 | 待补 |
+| 1 功能合并 | 进行中 | 移动网络已合入并编过；保留主线 80 个订阅槽和短信参数契约 | `taskpolicy -c utility cmake --build build -j2` |
+| 1 开机延迟 | 【实测】已复现，定位中 | 基线成员就绪 2417.653 ms，合移动网络后 5056.334 ms；初始化均约 2107 ms；前者中枢通过、后者 `tool_calls=0` | `tests/hub/e2e.py`，证据在 `work/cell-features-merge/{baseline,mobile}-e2e.log` |
 | 1 普通全量与原分支测试 | 待验证 | 待补 | 待补 |
 | 1 ASan/UBSan 全量 | 待验证 | 待补 | 待补 |
 | 2 S31、GCC、隐私 | 待验证 | 待补 | 待补 |
@@ -23,7 +23,7 @@
 
 ## 改过的已有测试
 
-- 待记录。
+- `ai_surface.c` 迁入移动网络项，`sms.send` 必填参数保留主线的 `to`，未迁入归档的 `to,text` 变更。
 
 ## 要用户定的
 

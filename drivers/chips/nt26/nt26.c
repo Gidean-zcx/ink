@@ -34,7 +34,8 @@ nt26_result_t nt26_sim_slot(nt26_slot_t *slot) {
     return NT26_OK;
 }
 
-nt26_result_t nt26_registered(bool *registered) {
+nt26_result_t nt26_registered(bool *registered) { return nt26_registration(registered, NULL); }
+nt26_result_t nt26_registration(bool *registered, bool *roaming) {
     char resp[64];
     nt26_result_t r = at("AT+CEREG?", resp, sizeof resp, NT26_QUERY_TIMEOUT_MS);
     if (r != NT26_OK) return r;
@@ -42,7 +43,28 @@ nt26_result_t nt26_registered(bool *registered) {
     const char *p = strstr(resp, "+CEREG:");
     if (!p || sscanf(p, "+CEREG: %d,%d", &n, &stat) != 2) return NT26_AT_FAILED;
     *registered = stat == 1 || stat == 5;
+    if (roaming) *roaming = stat == 5;
     return NT26_OK;
+}
+
+/* TS 27.007 §10.1.1 +CGDCONT, §10.1.31 +CGAUTH (PAP), §10.1.10 +CGACT. */
+nt26_result_t nt26_apn(const char *name, const char *user, const char *password) {
+    const char *parts[] = {name, user, password};
+    for (unsigned i = 0; i < sizeof parts / sizeof *parts; i++)
+        for (const unsigned char *p = (const unsigned char *)parts[i]; *p; p++)
+            if (*p < 32 || *p > 126 || *p == '"' || *p == '\\') return NT26_AT_FAILED;
+    char cmd[180], resp[64];
+    nt26_result_t r = at("AT+CGACT=0,1", resp, sizeof resp, NT26_QUERY_TIMEOUT_MS);
+    if (r != NT26_OK) return r;
+    snprintf(cmd, sizeof cmd, "AT+CGDCONT=1,\"IP\",\"%.100s\"", name);
+    r = at(cmd, resp, sizeof resp, NT26_QUERY_TIMEOUT_MS);
+    if (r == NT26_OK) {
+        snprintf(cmd, sizeof cmd, "AT+CGAUTH=1,%d,\"%.64s\",\"%.64s\"", user[0] || password[0] ? 1 : 0, user, password);
+        r = at(cmd, resp, sizeof resp, NT26_QUERY_TIMEOUT_MS);
+    }
+    memset(cmd, 0, sizeof cmd);
+    nt26_result_t resumed = at("AT+CGACT=1,1", resp, sizeof resp, NT26_CFUN1_TIMEOUT_MS);
+    return r == NT26_OK ? resumed : r;
 }
 
 nt26_result_t nt26_select_sim(nt26_slot_t slot, uint32_t reg_timeout_ms) {
