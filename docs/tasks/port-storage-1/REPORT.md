@@ -7,7 +7,7 @@
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
 | 1 | 【实测】通过 | S31 构建退出 0，警告 0；端口普通版与 ASan 均 13/13；反向对照 8/8 检出，另有 GCC 符号转换反向对照 | `bash ports/esp32s31/build.sh`；`ctest --test-dir build-s31-host -j2`；`ctest --test-dir build-s31-host-asan -j2`；`python3 ports/esp32s31/tests/storage_negative.py build-s31-host` |
-| 2 | 普通版与 GCC 已验证；全量内存检查进行中 | 普通版原话 `100% tests passed out of 339`，3 项依赖跳过已补跑；GCC 为 `3 compiled, 0 with findings`；隐私待最后提交核对 | `ctest --test-dir build --output-on-failure -j2`；中枢补跑 4/4（含 fixture）；`gcccheck.py build-s31-host` |
+| 2 | 【实测】通过 | 普通版全量 339（初次 3 跳过，随后补齐）；ASan/UBSan 全量 339/339，无跳过；GCC 3 文件 0 finding；隐私 0 命中 | `ctest --test-dir build --output-on-failure -j2`；中枢补跑 4/4；`ctest --test-dir build-asan --output-on-failure -j2`；`gcccheck.py build-s31-host`；任务规定的基线扫描 |
 | 3 | 【实测／实现】通过宿主机核对，未上机 | 外部包 4,718,142 B；内嵌包 549,358 B；空卷可用 401,408 B；原厂与脚本说明见下 | `python3 tools/ui_assets_check.py build/assets`；`build-s31-host/test-s31-storage-rw` |
 
 ## 没做到的
@@ -18,11 +18,12 @@
 
 - 卡端直接使用 IDF/FAT 的 `rename`：已有同名目标时返回失败，不能提供 POSIX 的原子覆盖；没有采用先删目标的有损替代。这是卡端 HAL 合同尚未满足的一项，需复核者明确处理。
 - 首挂只在 LittleFS 返回 `LFS_ERR_CORRUPT` 时格式化（覆盖出厂空分区）；底层 IO 错误保留分区，不将读故障变成擦除。
-- 原厂没有插卡检测脚，挂载按需触发；为满足本任务的插拔通知，增加每秒一次状态检测，由默认平台事件任务执行。插拔通知有检测延迟；没有添加专用存储任务。
+- 原厂没有插卡检测脚，挂载按需触发；为满足本任务的插拔通知，启用 IDF 访问状态检查，并增加每秒一次检测，由默认平台事件任务执行。插拔通知有检测延迟；没有添加专用存储任务。
 
 ## 改过的已有测试
 
-- 暂无。
+- `tools/ui_assets_check.py`：将字体+图标合计不超过 6 MiB，改为实际分包后分别不超过 4.5 MiB、1.5 MiB，包含包头/目录开销；任务第 1 项明确要求，总预算未增加。
+- 其余既有断言、预算、跳过条件均未改。另新增端口测试和根工程两个打包/刷写计划测试注册。
 
 ## 要用户定的
 
@@ -31,6 +32,7 @@
 ## 顺手发现
 
 - 工作区起始干净，HEAD 与指定基线一致。
+- 模拟器的既有链接方式仍产生重复静态库提示；S31 最终编译 warning 为 0，上游 Kconfig 仍有 NOTE。没有扩大到链接结构或上游 SDK 修复。
 
 ## 新增的机制
 
@@ -51,7 +53,9 @@
 - 普通端口与 ASan 的原话均为 `100% tests passed out of 13`。8 项反向对照分别撤掉几何约束、只读打开保护、SD 写命令保护、通知、两个包的查找、包预算和备份哈希核对，全部失败；两个未改动的读写模式基线成功。
 - 模拟器普通版全量退出 0：原话 `100% tests passed out of 339`，818.33 秒；其中中枢 3 项因所选 Python 缺依赖跳过。切换到只读的现成 `$INK_DEPS/hub/.venv`，并显式指定本检出的 `hub/src` 后，3 项和 fixture 补跑 `100% tests passed out of 4`，63.91 秒；没有删改跳过条件或安装/升级依赖。
 - 最终端口普通版/ASan 均重新验证 13/13；资源和存储 HAL 的宿主 GCC 核查 3 文件 0 finding。另用实际 S31 编译命令加只读宏，编译退出 0；撤掉有符号大小转换后 GCC 恢复 `changes signedness` 错误，反向编译退出 1。
-- 全量 ASan/UBSan 构建、测试进行中，最终结果待补。
+- 全量 ASan/UBSan 构建退出 0；原话 `100% tests passed out of 339`，915.35 秒，没有跳过。`build-asan/Testing/Temporary/LastTest.log` 中 sanitizer 错误、警告和 UBSan runtime error 均为 0。
+- 实际两个包逐条回读：889 个资源、5,175,020 B 原始内容与 `build/assets` 逐字节一致。
+- 基线至本地提交的任务规定隐私扫描为 0 命中；`git diff --check` 通过，差异仅任务文件。未推送，未创 PR，未执行设备脚本输出的命令。
 
 ## 容量与依据
 
@@ -93,3 +97,9 @@ bash tools/device/restore_factory.sh > build-s31/restore-factory.commands.sh
 - 实际 16 MiB Flash／16 MiB PSRAM 与资源整体映射，界面字体/图标是否完整。
 - 使用只读卡编译先检查真实 FAT 的读、容量、拔插通知与 SDMMC 时序；再由复核者决定写卡验证。
 - 真实 Flash 擦写/掉电、音频播放期间的守卫，以及电源任务接入后的 SD 停放与恢复。以上均未在本任务中执行。
+
+## 复核入口
+
+所有构建最多 `-j2`、ctest 最多 `-j2`，本机命令均以 `taskpolicy -c utility` 调度。上表 `ctest` 指 `$INK_DEPS/build-deps/pyenv/bin/ctest`。普通版和全量内存版均按总规则配置字体和 LVGL；内存版增加 `INK_SANITIZE=ON`。两边的 `INK_HUB_PYTHON` 使用 `$INK_DEPS/hub/.venv/bin/python`，测试前设置 `PYTHONPATH="$PWD/hub/src"`，确保测试本检出的中枢源码。
+
+本地证据在 `work/port-storage-1/`：`s31-final.log`、`host-test.log`、`host-asan-test.log`、`full-test.log`、`hub-retest.log`、`asan-test.log`、`negative.log`、`gcccheck.log`、`compiler-controls.log`、`real-packs.log`、`privacy.log`；构建产物和日志均未提交。S31 报告另在 `build-s31/size.txt`、`size-components.txt`、`stack.txt`。反向对照使用临时源码副本，不依赖 Git 历史。
