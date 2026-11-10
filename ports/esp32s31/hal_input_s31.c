@@ -1,4 +1,5 @@
 /* GPIO handlers only notify; this task samples I2C, debounces and delivers the HAL edges. */
+#include <stdio.h>
 #include "driver/gpio.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
@@ -24,8 +25,23 @@ static uint32_t g_wake;
 static uint64_t g_wake_at, g_motor_until;
 static bool g_motor_on, g_motor_requested;
 
+/* Every key edge and every touch down and up, for the device log (moves are too many). */
+static void log_event(const hal_input_event_t *e) {
+    static const char *const names[HAL_KEY_COUNT] = {"none", "ai", "power", "vol+", "vol-", "home", "prev", "next", "back"};
+    char line[64];
+    if (e->type == HAL_IN_KEY)
+        snprintf(line, sizeof line, "input: key %s %s", (unsigned)e->key.key < HAL_KEY_COUNT ? names[e->key.key] : "?",
+                 e->key.pressed ? "down" : "up");
+    else if (e->type == HAL_IN_TOUCH && e->touch.phase != HAL_TOUCH_MOVE)
+        snprintf(line, sizeof line, "input: touch %s %d,%d", e->touch.phase == HAL_TOUCH_DOWN ? "down" : "up", e->touch.x, e->touch.y);
+    else
+        return;
+    hal_log_write(line);
+}
+
 static void emit(const hal_input_event_t *e, void *ctx) {
     (void)ctx;
+    log_event(e);
     portENTER_CRITICAL(&g_mux);
     hal_input_sink_fn sink = g_sink;
     void *sink_ctx = g_ctx;

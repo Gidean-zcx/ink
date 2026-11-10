@@ -1,3 +1,4 @@
+#include <stdio.h>
 /*
  * The Plus's I2C chips on the S31 through the portable drivers, in the simulator's boot order
  * (sim_board_init: expander, then sim_power_chips_init, sim_sensors_init; touch in sim_input_init),
@@ -77,6 +78,12 @@ void ink_s31_board_init(void) { /* boot, task context */
     }
     s31_power_init();
     s31_input_init(g_touch);
+    hal_battery_t b;
+    hal_power_battery(&b);
+    char line[128];
+    snprintf(line, sizeof line, "board: accel=%d light=%d touch=%d fw=0x%02x battery=%d%% %dmV charging=%d power=%d", g_accel != NULL, g_light,
+             g_touch != NULL, fw, b.percent, b.millivolts, b.charging, b.external_power);
+    hal_log_write(line);
 }
 
 void hal_power_battery(hal_battery_t *out) {
@@ -90,8 +97,12 @@ void hal_power_battery(hal_battery_t *out) {
     }
     out->percent = g.soc;
     out->millivolts = g.mv;
-    out->charging = chg == CX25601N_CC || chg == CX25601N_CV || chg == CX25601N_TOPOFF;
-    out->external_power = vbus != 0;
+    /* As upstream decides it (common/power/bq27220_gauge.h:39-40): charging when the gauge sees more than +5 mA
+     * going in and the cell is not full. The charger's input code reads 0 even on USB while charging in CV
+     * (docs/hardware/2026-11-10-selftest.md, round 5), so external power also counts a charge phase or a
+     * gauge current that is not a discharge. */
+    out->charging = (g.ma > 5 && g.soc < 100) || chg == CX25601N_CC || chg == CX25601N_CV || chg == CX25601N_TOPOFF;
+    out->external_power = vbus != 0 || out->charging || g.ma >= -5;
 }
 
 bool hal_rtc_get(int64_t *unix_s) {
