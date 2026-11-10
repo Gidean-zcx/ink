@@ -402,6 +402,8 @@ static void create(lv_obj_t *screen, void *arg) {
         lv_obj_add_event_cb(P.field, edited, LV_EVENT_VALUE_CHANGED, NULL);
         static const char *const keys[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "*", "0", "#"};
         int cell = (INK_CANVAS_W - 2 * INK_MARGIN) / 3, y = INK_CANVAS_H - INK_MARGIN - INK_DIGIT - 4 * (INK_DIGIT + INK_GAP_S);
+        lv_obj_set_pos(P.notice, ink_ui_px(INK_MARGIN), ink_ui_px(INK_CANVAS_H - INK_MARGIN - INK_DIGIT + INK_GAP_S));
+        lv_obj_set_width(P.notice, ink_ui_px((INK_CANVAS_W - INK_DIGIT) / 2 - INK_MARGIN - INK_GAP));
         for (int i = 0; i < 12; i++) {
             lv_obj_t *b = ink_ui_pill(screen, keys[i], INK_MARGIN + (i % 3) * cell + (cell - INK_DIGIT) / 2, y + (i / 3) * (INK_DIGIT + INK_GAP_S), INK_DIGIT, INK_DIGIT, false, digit, (void *)keys[i]);
             ink_ui_pill_text(b, INK_FONT_HEADING, INK_WEIGHT_MEDIUM);

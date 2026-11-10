@@ -7,8 +7,8 @@
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
 | 1.1 继续读 | 【实测】定向测试通过 | 标题、按正文当前页起点字节比例显示百分比；停在今日屏插拔卡自动刷新；跨重启、成员隔离保留。`work/small-gaps-2/reader-after.log` | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/reader_continue.py --build build` |
-| 1.2 全部页图标 | 【实测】通过 | 给三份注册声明补 `.icon`；复用现有 SVG、许可与构建检查。改前 3 个图标断言失败，改后 16 条检查通过；截图 `work/small-gaps-2/before/ui/icons/`、`build/test-out/small-gaps-2/icons/` | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/small_gaps_2/run.py --build build --case icons` |
-| 1.3 拨号页 | 待实现、验证 | — | — |
+| 1.2 全部页图标 | 【实测】通过 | 给三份注册声明补 `.icon`；复用现有 SVG、许可与构建检查。改后 19 条检查通过；截图 `work/small-gaps-2/before/ui/icons/`、`build/test-out/small-gaps-2/icons/`；最终反向对照待补 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/small_gaps_2/run.py --build build --case icons` |
+| 1.3 拨号页 | 【实测】通过 | 提示移到拨号按钮左侧，100%/120% 下均与 12 个原尺寸数字键不重叠；改前失败 6 条，改后 88 条通过 | 同上，`--case phone`；`work/small-gaps-2/phone-after.log` |
 | 1.4 飞行模式 | 待实现、验证 | — | — |
 | 1.5 日期时间选择 | 待实现、验证 | — | — |
 | 1.6 计算器 120% | 待检查、验证 | — | — |
