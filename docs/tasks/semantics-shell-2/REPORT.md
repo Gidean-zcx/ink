@@ -13,7 +13,8 @@
 | A1-5 电量页 | 专项通过【实测／实现】 | BatteryLow／BatterySaving／Charging／off；只导出真实动作，旧目标拒绝，无关成员事件不重画 | 同上，测试名换 `semantics-shell2-battery` |
 | A1-6 主页 | 专项通过【实测／实现】 | Main／Apps／Today 共用现有声明与语义导出；旧主页点按和应用图标拒绝 | 同上，测试名换 `semantics-shell2-home` |
 | A2-1 原测试、hub、普通版全量 | 通过【实测】 | `100% tests passed out of 353`；无跳过，400.93 秒，退出 0；已有测试和期望未改 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2` |
-| A2-2 内存／S31 | 待最终验证 | 正在执行 | 完整结果待补 |
+| A2-2 ASan／UBSan 全量 | 通过【实测】 | `100% tests passed out of 353`；无跳过，758.70 秒，退出 0 | `INK_KEEP_EVIDENCE=1 UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2` |
+| A2-4 S31 | 待最终验证 | 正在执行 | 完整结果待补 |
 | A2-3 gcccheck | 通过【实测】 | `gcccheck: 15 compiled, 0 with findings`，无跳过，退出 0 | `taskpolicy -c utility python3 "$INK_DEPS/../ink-codex/tools/gcccheck.py" build <8 个产品 C 文件和 7 个新增测试 C 文件>` |
 | A3 行数与预算 | 通过【实现】 | 产品代码净增 156 行；连 CMake 注册保守计 165 行，低于 250 行 | `git diff --numstat <基线> -- system apps` |
 
@@ -36,7 +37,7 @@
 
 ## 没做到的
 
-- ASan／UBSan、S31 编译尚在执行。
+- S31 编译尚在执行。
 - 没有连接设备，也没有运行 Linux CI；不把本机检查写成实机或 Linux 全量结果。
 
 ## 和设计不一致的
@@ -60,7 +61,7 @@
 ## 新增的机制
 
 - 私有 F1 文本导出函数：任务第 3、5 项要求保持旧文本和键盘组合契约，因此在已有语义导出器旁增加一处兼容格式化；没有新线程、状态机、持久格式、缓存、后台重试或配置项。
-- 既有控件绑定器记录按下时的版本与浮层代数，AI 面板记录回答对象版本；任务第 2 项要求拒绝过期点按。
+- 既有控件绑定器记录按下时的版本与浮层代数，AI 面板记录回答对象版本，候选展开使用独立布局对象版本；任务第 2 项要求拒绝过期点按。复用原输入服务的修订号，只补充公开声明，没有增加缓存。
 - 新测试驱动任务只存在于测试程序，用于验收第 1 项。
 
 ## 要改的文档
@@ -78,3 +79,4 @@
 - 数字键保留原可信本地输入路径（成员 epoch、忙碌、等待保护和运行时触摸代数）；表单动作核对按下版本。将底页版本套到每个数字会吞掉真实输入，数字不是对 AI 开放的语义动作。候选展开使用独立布局对象版本，复用既有 F1 的动作对象引用。
 - 六组反向对照：`reverse-final.log`。键盘、家人、孩子、电量、主页替换为指定基线源文件，仅在构建目录编译和链接；各测试程序退出 1，分别 13、10、3、7、8 个断言失败。AI 面板基线已使用 F1，因此该组只撤掉新增的过期点按保护，退出 1，2 个断言失败。六个验证脚本均退出 0；ctest 默认模式不依赖 Git 历史。
 - 最终普通版：`ctest-final.log`，全部 353 项通过，400.93 秒，退出 0，没有跳过项；包括原 hub 契约、原控件／场景、确定性与资源预算检查、新增六项。最终 GCC 复核见 `gcccheck-final.log`。
+- 内存版：与普通版相同配置，仅换目录 `build-asan`、增加 `-DINK_SANITIZE=ON`；保留 `-DINK_WERROR=ON`、字体、依赖和 hub Python。配置、完整构建均退出 0，实际编译参数含 `-fsanitize=address,undefined`。`ctest-asan.log` 原文 `100% tests passed out of 353`、`Total Test time (real) = 758.70 sec`，退出 0，无跳过；执行所有原测试和六项新增回归。
