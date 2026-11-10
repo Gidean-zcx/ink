@@ -30,7 +30,8 @@ static void via(void) {
     CHECK(AI("settings.set", "{\"id\":\"net.airplane\",\"value\":1}") && g_rc.status == INK_RC_DONE && strstr(g_rc.say, "已打开飞行模式"),
         "the AI's settings.set answers with net.set_airplane's words: %.120s", g_rc.say);
     CHECK(!ink_setting_get("net.airplane") && ink_setting_get("wifi.enabled") == 1, "the link stays until the receipt is out");
-    CHECK(WAIT_FOR(ink_setting_get("net.airplane") == 1, 4000) && !ink_setting_get("wifi.enabled"), "then airplane mode is on");
+    /* Wi-Fi goes off in the airplane setting's apply, a background job right after the setting itself */
+    CHECK(WAIT_FOR(ink_setting_get("net.airplane") == 1 && !ink_setting_get("wifi.enabled"), 4000), "then airplane mode is on");
     CHECK(AI("settings.set", "{\"id\":\"net.airplane\",\"value\":2}") && g_rc.status == INK_RC_INVALID, "a value out of range is still refused");
     CHECK(AI("settings.list", NULL) && strstr(g_result, "\"via\":\"net.set_airplane\"") && strstr(g_result, "\"via\":\"wifi.set_enabled\""),
         "settings.list names the capability: %.150s", g_result);

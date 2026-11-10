@@ -11,6 +11,21 @@ static const char *wanted;
 static lv_obj_t *found;
 static uint32_t ids[3];
 static void options(void *ctx) { (void)ctx; snprintf(phase, sizeof phase, "%s", getenv("INK_FILES_OPS_PHASE")); }
+static volatile bool pin_done;
+static int pin_result;
+static void pin_reply(void *ctx, int result, uint32_t wait) { (void)ctx; (void)wait; pin_result = result; pin_done = true; }
+static void quiet(void);
+/* kid-apps: Files is off for a child until a parent turns it on (with the parent's PIN). */
+static void parent_allows_files(void) {
+    pin_done = false;
+    CHECK(ink_member_set_pin("owner", "", "24681357", pin_reply, NULL) == 0 && WAIT_FOR(pin_done, 6000) && pin_result == INK_PIN_OK, "set a synthetic parent PIN");
+    CHECK(AI("kid.app_set", "{\"id\":\"kid\",\"app\":\"files\",\"mode\":1}") && g_rc.status == INK_RC_PENDING_CONFIRMATION, "turning Files on for the child asks the parent");
+    unsigned token = 0;
+    CHECK(sscanf(g_rc.object, "confirm:%u", &token) == 1, "the change waits on a real confirmation");
+    pin_done = false;
+    CHECK(ink_confirm_accept_with_pin(token, "24681357", pin_reply, NULL) == 0 && WAIT_FOR(pin_done, 6000) && pin_result == INK_PIN_OK, "the parent confirms with the PIN");
+    quiet();
+}
 static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
 static void quiet(void) { CHECK(WAIT_FOR(settled(), 15000), "display settles"); }
 static void command(const char *cap, const char *args) { CHECK(AI(cap, args) && g_rc.status == INK_RC_DONE, "%s: %d %.90s", cap, g_rc.status, g_rc.detail); }
@@ -115,6 +130,7 @@ static void batch_ops(void) {
     CHECK(n == 1 && !strcmp(views[0].cap, "file.delete_many") && exists("/me/SYNTH_MOVE/SYNTH_0.txt"), "batch deletion waits for existing human confirmation");
     if (n) { CHECK(ink_confirm_decide(views[0].token, true, INK_SRC_AI) != 0, "AI cannot accept deletion"); CHECK(!ink_confirm_decide(views[0].token, true, INK_SRC_TOUCH), "person confirms"); }
     CHECK(WAIT_FOR(!exists("/me/SYNTH_MOVE/SYNTH_0.txt") && !exists("/me/SYNTH_MOVE/SYNTH_1.txt") && !exists("/me/SYNTH_MOVE/SYNTH_2.txt"), 15000), "three deletes finish");
+    parent_allows_files();
     CHECK(ink_member_switch("kid") == 0, "switch child"); roots(); browse("/me");
     CHECK(!exists("/me/SYNTH_OPS/SYNTH_NOTE.txt"), "member files isolated");
     CHECK(AI("file.write", "{\"path\":\"/family/SYNTH_FORBIDDEN.txt\",\"text\":\"SYNTH\",\"replace\":true}") && g_rc.status == INK_RC_REJECTED, "child cannot edit family data");
