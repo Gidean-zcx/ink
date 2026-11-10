@@ -31,12 +31,6 @@ int hal_afe_set_commands(const char *const *phrases, int n) { return -1; }
 void hal_afe_stop(void) {  }
 void hal_afe_feed(const int16_t *mic, const int16_t *ref, int samples, uint64_t t_us, hal_afe_result_t *out) { *out = (hal_afe_result_t){.command = -1}; }
 
-/* TODO: Read-only resource partition via esp_partition_mmap. */
-const void *hal_asset_map(const char *name, size_t *size) { if (size) *size = 0;
-    return NULL; }
-void hal_asset_unmap(const void *data) {  }
-void hal_asset_access(const void *p, size_t len) {  }
-
 /* TODO: ESP-IDF I2S + upstream codec and board amplifier control. */
 int hal_audio_route_set(hal_audio_route_t route) { return -1; }
 void hal_audio_get_info(hal_audio_info_t *out) { *out = (hal_audio_info_t){0}; }
@@ -141,28 +135,6 @@ bool hal_crypto_verify_fw(const uint8_t hash[32], const uint8_t *sig, size_t sig
 int hal_provision_start(const char *ssid, const char *password, hal_provision_fn fn, void *ctx) { return -1; }
 void hal_provision_stop(void) {  }
 void hal_provision_reply(uint32_t request, int status) {  }
-
-/* TODO: LittleFS internal buffers + ESP-IDF SDMMC/FatFS. */
-hal_dir_t *hal_fs_opendir(const char *path) { return NULL; }
-hal_file_t *hal_fs_open(const char *path, int flags) { return NULL; }
-ssize_t hal_fs_read(hal_file_t *f, void *buf, size_t len) { return -1; }
-ssize_t hal_fs_write(hal_file_t *f, const void *buf, size_t len) { return -1; }
-int hal_fs_seek(hal_file_t *f, int64_t off, int whence) { return -1; }
-int64_t hal_fs_tell(hal_file_t *f) { return -1; }
-int hal_fs_sync(hal_file_t *f) { return -1; }
-int hal_fs_close(hal_file_t *f) { return -1; }
-int hal_fs_remove(const char *path) { return -1; }
-int hal_fs_rename(const char *from, const char *to) { return -1; }
-int hal_fs_mkdir(const char *path) { return -1; }
-int64_t hal_fs_size(const char *path) { return -1; }
-int hal_fs_exists(const char *path) { return -1; }
-int64_t hal_fs_mtime(const char *path) { return -1; }
-int hal_fs_readdir(hal_dir_t *d, hal_dirent_t *out) { return -1; }
-void hal_fs_closedir(hal_dir_t *d) {  }
-int hal_fs_volume_info(const char *volume , hal_fs_volume_info_t *out) { return -1; }
-bool hal_fs_card_present(void) { return false; }
-void hal_fs_set_card_callback(void (*cb)(void *ctx), void *ctx) {  }
-void hal_fs_new_card_id(uint8_t out[16]) { esp_fill_random(out, 16); }
 
 /* TODO: ESP-IDF lwIP local TCP listener. */
 int hal_transfer_listen(uint16_t *port) { return -1; }

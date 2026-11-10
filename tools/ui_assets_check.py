@@ -8,7 +8,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent / 'fontgen'))
 from ui_fonts import ACCENT_FACES, SIZES, TOKENS
 
 
-PARTITION = 6144 * 1024  # assets_partition_kib of the device profiles
+from asset_pack import EMBEDDED_LIMIT, FONT_LIMIT, split
 
 
 def unpacked(data):
@@ -46,8 +46,9 @@ def main():
             assert len(unpacked(data)) == px * px, p
     fonts = sum(p.stat().st_size for p in (a.assets / 'fonts').glob('*.inkf'))
     icons = sum(p.stat().st_size for p in (a.assets / 'icons').glob('*.inki'))
-    assert fonts + icons <= PARTITION, f'{fonts + icons} bytes do not fit the {PARTITION} byte assets partition'
-    print(f'assets OK: fonts {fonts} + icons {icons} bytes of {PARTITION}; SP-05 font target {4 * 1024 * 1024}')
+    first, second = split(a.assets)
+    print(f'assets OK: fonts {fonts} + icons {icons}; font_data {len(first)}/{FONT_LIMIT}; embedded {len(second)}/{EMBEDDED_LIMIT}')
+
 
 
 if __name__ == '__main__': main()

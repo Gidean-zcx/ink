@@ -1,0 +1,5 @@
+menu "Ink storage"
+config INK_SD_READONLY
+    bool "Reject all SD card writes for hardware trials"
+    default n
+endmenu
