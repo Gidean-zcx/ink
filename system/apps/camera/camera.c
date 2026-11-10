@@ -49,6 +49,7 @@ static void captured(void *arg) {
     ink_image_free(&p->im); osal_free(p); __atomic_store_n(&taking, 0, __ATOMIC_RELEASE);
 }
 static void take(ink_call_t *c) {
+    bool limited = ink_camera_restricted();
     capture_t *p = osal_calloc(1, sizeof *p, OSAL_MEM_EXTERNAL);
     if (!p) { c->rc.status = INK_RC_FAILED; return; }
     __atomic_store_n(&taking, 1, __ATOMIC_RELEASE);
@@ -70,7 +71,7 @@ static void take(ink_call_t *c) {
     if (rgb && p->saved) {
         int bytes = 0; uint8_t *png = ink_camera_png(rgb, w, h, &bytes);
         const char *member = ink_cap_call_member(c); char path[INK_FS_PATH_MAX]; ink_fs_file_t *f = NULL;
-        bool limited = ink_camera_restricted(); const char *folder = limited ? LOCK_PHOTOS : "/me/照片";
+        const char *folder = limited ? LOCK_PHOTOS : "/me/照片";
         if (limited) for (int i = 0; ink_member_at(i); i++)
             if (ink_member_at(i)->role == INK_ROLE_ADULT) { member = ink_member_at(i)->id; break; }
         int r = png ? ink_fs_mkdir_for(member, folder) : INK_FS_ERR_IO;

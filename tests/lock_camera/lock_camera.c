@@ -14,11 +14,16 @@ static bool found;
 static bool frame_ready;
 static uint32_t old_id;
 static volatile int pin_done, pin_result;
+static volatile int photo_done;
+static ink_rc_t photo_status;
 static const char *shot_name;
 static bool settled(void) { return !ink_ui_busy() && !ink_display_busy() && !__atomic_load_n(&taking, __ATOMIC_ACQUIRE); }
 static void quiet(void) { CHECK(WAIT_FOR(settled(), 10000), "UI and capture settle"); }
 static void told(void *ctx, int result, uint32_t wait_s) {
     (void)ctx; (void)wait_s; pin_result = result; pin_done++;
+}
+static void saved(void *ctx, const ink_receipt_t *rc) {
+    (void)ctx; photo_status = rc->status; __atomic_store_n(&photo_done, 1, __ATOMIC_RELEASE);
 }
 static void ok(const char *cap, const char *args) {
     CHECK(BY_HAND(cap, args) && g_rc.status == INK_RC_DONE, "%s succeeds: %s %.120s", cap, ink_rc_name(g_rc.status), g_rc.detail);
@@ -147,6 +152,18 @@ static void run(void *arg) {
     ok("app.open", "{\"id\":\"gallery\"}");
     CHECK(WAIT_FOR((on_ui(read_screen), strstr(g_snap, kid ? "\"total\":3" : "\"total\":4")), 10000), "unlocked Gallery contains the public captures: %.150s", g_snap);
     if (kid) CHECK(!strstr(g_snap, "1111"), "child gallery has no adult credential");
+    if (kid) {
+        ink_power_lock(); CHECK(WAIT_FOR(ink_power_state() == INK_PWR_LOCKED, 3000), "lock before interrupted child capture"); quiet();
+        press("app.open"); ok("camera.preview", NULL);
+        CHECK(WAIT_FOR(ink_db_idle() && !ink_storage_pending(), 10000), "background index writes settle before interrupted capture");
+        ink_call_opts_t o = {.src = INK_SRC_TOUCH, .reply_exec = INK_EXEC_DIRECT, .done = saved};
+        photo_done = 0;
+        CHECK(ink_cap_call("camera.photo", NULL, &o) == 0 && WAIT_FOR(__atomic_load_n(&taking, __ATOMIC_ACQUIRE), 1000), "shutter is actively capturing before HOME");
+        CHECK(BY_HAND("system.home", NULL) && g_rc.status == INK_RC_DONE, "person's HOME capability closes an in-flight capture");
+        CHECK(WAIT_FOR(__atomic_load_n(&photo_done, __ATOMIC_ACQUIRE), 10000) && photo_status == INK_RC_DONE, "accepted capture finishes after HOME"); quiet();
+        CHECK(count(LOCK_PHOTOS) == 4 && count("/me") == 0, "in-flight locked capture stays in public storage after HOME");
+        CHECK(!ink_camera_restricted() && ink_power_state() == INK_PWR_LOCKED, "capture completion cannot reopen or unlock the camera: restricted=%d power=%s", ink_camera_restricted(), power_state());
+    }
     CHECK(ink_cap_find("camera.review") != NULL, "session review is registered in the atomic capability table");
     ink_db_flush_all(); CHECK(WAIT_FOR(ink_db_idle() && !ink_storage_pending(), 10000), "index and member data are persisted");
     ink_probe_count("test.finished");

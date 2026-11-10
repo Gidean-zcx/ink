@@ -6,7 +6,7 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 【实测】通过（模拟器） | lock 110、gate 138、kid 112 条断言；卡上三张公共照片含前一次拍的照片，私有旧照仍独立；本次只回看新拍两张 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/lock_camera/run.py --build build` |
+| 1 | 【实测】通过（模拟器） | lock 110、gate 138、kid 126 条断言；卡上三张公共照片含前一次拍的照片；孩子场景再加一张采集中 HOME 的照片，仍无儿童归属；本次只回看新拍两张 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/lock_camera/run.py --build build` |
 | 2 | 【实测】定向、S31、GCC 通过；全量和内存检查待结束 | 原有锁屏、成员门、相机相册回归未修改；见下文 | 见下文命令 |
 | 3 | 【实测】通过，逐张看过 | 下表三张为最终布局；另有成员门、密码页截图 | 同第 1 条 |
 
@@ -14,12 +14,12 @@
 
 | 画面 | 路径 |
 | --- | --- |
-| 默认锁屏入口 | `build/lock-camera-cphxgnfk/lock/snap-lock-entry.png` |
-| 受限取景 | `build/lock-camera-cphxgnfk/lock/snap-restricted.png` |
-| 本次第二张的拍摄确认 | `build/lock-camera-cphxgnfk/lock/snap-confirmation.png` |
-| 成员门、密码页入口 | `build/lock-camera-cphxgnfk/gate/snap-member-entry.png`、`build/lock-camera-cphxgnfk/gate/snap-pin-entry.png` |
+| 默认锁屏入口 | `build/lock-camera-lj7062pt/lock/snap-lock-entry.png` |
+| 受限取景 | `build/lock-camera-lj7062pt/lock/snap-restricted.png` |
+| 本次第二张的拍摄确认 | `build/lock-camera-lj7062pt/lock/snap-confirmation.png` |
+| 成员门、密码页入口 | `build/lock-camera-lj7062pt/gate/snap-member-entry.png`、`build/lock-camera-lj7062pt/gate/snap-pin-entry.png` |
 
-【实测】最终反向对照：`run.py --build build --negative` 仅撤掉公共存放选择，变异程序退出 1，109 通过、3 失败、finished=1；包装脚本确认归属断言失败后退出 0。原程序与工作树未变，证据 `build/lock-camera-oihug9hs/`，日志 `build/lock-negative.log`。
+【实测】最终反向对照：`run.py --build build --negative` 仅撤掉公共存放选择，变异程序退出 1，122 通过、4 失败、finished=1；包装脚本确认归属断言失败后退出 0。原程序与工作树未变，证据 `build/lock-camera-d9zu4d2m/`，日志 `build/lock-negative.log`。
 
 【实测】`taskpolicy -c utility python "$INK_DEPS/../ink-codex/tools/gcccheck.py" build <本次 11 个产品 C 文件及新测试 C 文件>`：`gcccheck: 12 compiled, 0 with findings`，退出 0，日志 `build/lock-gcccheck.log`。
 
@@ -53,7 +53,7 @@
 
 无新任务、线程、队列、文件格式、配置项；唤醒引用、图片解码和执行器均复用原设施。
 
-产品代码 136 行增加、32 行删除，共 168 行（含头文件；连同 CMake 3 行和翻译 7 行为 178 行，未超 200 行）。超过 100 行的原因：入口要跨锁屏、成员门与密码页；策略、触摸与返回必须共用现有关口；还要保存、回看和解锁相册。看过只加按钮、直接打开普通相机、存给当前成员三种小方案，分别缺触摸路由、泄露旧相册、把照片存给孩子，不能满足任务。
+产品代码 137 行增加、32 行删除，共 169 行（含头文件；连同 CMake 3 行和翻译 7 行为 179 行，未超 200 行）。超过 100 行的原因：入口要跨锁屏、成员门与密码页；策略、触摸与返回必须共用现有关口；还要保存、回看和解锁相册。看过只加按钮、直接打开普通相机、存给当前成员三种小方案，分别缺触摸路由、泄露旧相册、把照片存给孩子，不能满足任务。
 
 【实测】初版锁屏用了整屏透明根对象，改变了浅睡与唤醒时序。仅恢复基线 `lock_mark.c` 的隔离对照使成员唤醒、拿起亮屏恢复通过；最终把默认入口放进原有提示条，其他区域用现有 `skip_touch` 丢弃。原有成员唤醒、待机预算、拿起亮屏、camera-gallery，加新 lock-camera 共 5 项均原样通过，`100% tests passed out of 5`，23.39 秒，退出 0。未修改原测试。日志 `build/lock-layout-regressions.log`。
 
@@ -66,3 +66,5 @@
 合并会话需重新生成 `docs/system/capabilities.md`：新增 `camera.review`，`app.open` 与相机能力的锁定标志改变。独立生成 `build/lock-capabilities.md`，461 项定义校验通过。
 
 合并会话需同步界面规范 §3.5、`docs/system/ui-dependencies.md` 的 D-121 状态；本次不修改禁止的共享文档。
+
+【实测】拍摄中退出：固定在采集开始前选择公共归属；恢复到 RGB 采集后才读模式的 `--late-mode` 对照，变异程序 125 通过、1 失败、finished=1，包装脚本退出 0，证据 `build/lock-camera-f18nhp3d/`。正常锁屏与密码页、孩子场景共 374 条断言通过。拍完两张后的 HOME 用真实按键；采集中的退出用同一 `system.home` 能力，避免把未送达的短按当成相机行为。

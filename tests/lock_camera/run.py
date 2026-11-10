@@ -13,16 +13,18 @@ ROOT = Path(__file__).resolve().parents[2]
 p = argparse.ArgumentParser()
 p.add_argument('--build', required=True, type=Path)
 p.add_argument('--negative', action='store_true')
+p.add_argument('--late-mode', action='store_true')
 a = p.parse_args()
 build = a.build.resolve()
 work = Path(tempfile.mkdtemp(prefix='lock-camera-', dir=build))
 binary = build / 'sim-lock-camera'
-if a.negative:
+if a.negative or a.late_mode:
     source = (ROOT / 'system/apps/camera/camera.c').read_text()
     old = 'bool limited = ink_camera_restricted();'
     assert source.count(old) == 1
     mutant = work / 'camera.c'
-    mutant.write_text(source.replace(old, 'bool limited = false;').replace('"../gallery/photo.h"', '"' + str(ROOT / 'system/apps/gallery/photo.h') + '"'))
+    changed = source.replace('    ' + old + '\n', '').replace('    if (rgb && p->saved) {', '    if (rgb && p->saved) {\n        ' + old) if a.late_mode else source.replace(old, 'bool limited = false;')
+    mutant.write_text(changed.replace('"../gallery/photo.h"', '"' + str(ROOT / 'system/apps/gallery/photo.h') + '"'))
     driver = (ROOT / 'tests/lock_camera/lock_camera.c').read_text()
     for include, target in (
         ('../../system/apps/camera/camera.c', mutant),
@@ -48,7 +50,7 @@ if a.negative:
     link[link.index('-o') + 1] = str(binary)
     subprocess.run(link, cwd=build, check=True, capture_output=True)
 
-for phase in (['kid'] if a.negative else ['lock', 'gate', 'kid']):
+for phase in (['kid'] if a.negative or a.late_mode else ['lock', 'gate', 'kid']):
     out = work / phase
     sd = work / (phase + '-sd')
     sd.mkdir()
@@ -63,17 +65,18 @@ for phase in (['kid'] if a.negative else ['lock', 'gate', 'kid']):
     counts = metrics.get('metrics', {})
     passed = result.returncode == 0 and counts.get('test.finished') == 1 and not counts.get('test.fail', 0)
     print(phase, 'PASS' if passed else 'FAIL', 'exit', result.returncode, 'assertions', counts.get('test.pass'), 'failures', counts.get('test.fail', 0), flush=True)
-    if a.negative:
+    if a.negative or a.late_mode:
         evidence = result.stdout + result.stderr + json.dumps(metrics.get('warnings', []))
-        assert not passed and counts.get('test.finished') == 1 and 'locked captures are stored outside every member' in evidence, evidence[-5000:]
-        print('PASS: removing the public destination fails the unchanged ownership regression', flush=True)
+        expected = 'in-flight locked capture stays in public storage after HOME' if a.late_mode else 'locked captures are stored outside every member'
+        assert not passed and counts.get('test.finished') == 1 and expected in evidence, evidence[-5000:]
+        print('PASS: removing the fix fails the unchanged regression:', expected, flush=True)
         continue
     if not passed:
         print('Evidence:', work.relative_to(ROOT), flush=True)
         raise SystemExit(json.dumps(metrics.get('warnings', []), ensure_ascii=False) + result.stderr[-3000:])
     shared = list((sd / 'content/锁屏拍的照片').glob('*.png'))
     private = list((sd / 'content/.m/owner/照片').glob('*.png'))
-    assert len(shared) == 3 and len(private) == 1, 'locked photos escaped their public destination'
+    assert len(shared) == (4 if phase == 'kid' else 3) and len(private) == 1, 'locked photos escaped their public destination'
     assert not list((sd / 'content/.m/kid').rglob('*.png')), 'locked photos belong to a child'
     for photo in shared + private:
         with Image.open(photo) as im:
