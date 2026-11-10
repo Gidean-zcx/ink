@@ -13,5 +13,7 @@ bool s31_accel_take_motion(void);
 bool s31_accel_sleep(bool watch);
 void s31_accel_resume(void);
 void s31_power_init(void);
+int ink_s31_sleep_init(void);
+int ink_s31_light_sleep(void);
 
 #endif

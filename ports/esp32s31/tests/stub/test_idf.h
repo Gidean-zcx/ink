@@ -17,6 +17,14 @@ typedef struct { int max_freq_mhz, min_freq_mhz; bool light_sleep_enable; } esp_
 #define ESP_EXT1_WAKEUP_ANY_LOW 0
 #define ESP_EXT1_WAKEUP_ANY_HIGH 1
 #define GPIO_INTR_LOW_LEVEL 4
+#define GPIO_MODE_INPUT 1
+esp_err_t gpio_set_direction(int pin, int mode);
+esp_err_t gpio_pullup_en(int pin);
+esp_err_t gpio_pulldown_dis(int pin);
+void usb_serial_jtag_ll_enable_bus_clock(bool on);
+void usb_serial_jtag_ll_phy_enable_pad(bool on);
+void usb_serial_jtag_ll_phy_set_defaults(void);
+bool usb_serial_jtag_is_connected(void);
 esp_err_t esp_pm_configure(const void *cfg);
 esp_err_t esp_pm_lock_create(int type, int arg, const char *name, esp_pm_lock_handle_t *out);
 esp_err_t esp_pm_lock_acquire(esp_pm_lock_handle_t lock);

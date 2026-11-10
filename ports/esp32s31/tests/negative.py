@@ -31,6 +31,10 @@ def main():
         ("stale-wake", "power", "if (wake_pins & (1ull << S31_GPIO_EXP_INT))", "if (esp_sleep_get_ext1_wakeup_status() & (1ull << S31_GPIO_EXP_INT))"),
         ("restore-order", "power", "    if (masked) {", "    if (cut) restore(restore_rails);\n    cut = false;\n    if (masked) {"),
         ("input-pause-order", "power", "    epd_power_sleep(&panel);\n    s31_input_pause();", "    s31_input_pause();\n    epd_power_sleep(&panel);"),
+        ("usb-revive", "power", "if (woke_at && cause != HAL_WAKE_TIMER) ink_usb_revive();", "if (false && woke_at && cause != HAL_WAKE_TIMER) ink_usb_revive();"),
+        ("vendor-sleep", "power", "sleep_rc = ink_s31_light_sleep();", "sleep_rc = esp_light_sleep_start();"),
+        ("dynamic-frequency", "power", ".min_freq_mhz = mhz", ".min_freq_mhz = S31_IDLE_MHZ"),
+        ("gpio61-wake", "power", "    return us || (armed & ~HAL_WAKE_TIMER);", "    gpio_wakeup_enable(S31_GPIO_AI_KEY, GPIO_INTR_LOW_LEVEL);\n    esp_sleep_enable_gpio_wakeup();\n    return us || (armed & ~HAL_WAKE_TIMER);"),
     ]
     with tempfile.TemporaryDirectory(prefix="s31-negative-", dir=args.build.resolve()) as temp:
         work = Path(temp)
@@ -39,6 +43,7 @@ def main():
             if old:
                 assert text.count(old) == 1, name
                 text = text.replace(old, new)
+            (work / "s31_input_logic.h").write_text(header)
             target = work / ("s31_input_logic.h" if kind == "logic" else "hal_power_s31.c")
             target.write_text(text)
             sources = [tests / "logic.c", root / "boards/metalio_plus/metalio_touch.c"] if kind == "logic" else [tests / "power.c", target]
@@ -51,8 +56,9 @@ def main():
                 raise RuntimeError(f"{name}: mutation unexpectedly passed")
             if result.returncode != 0 and not old:
                 raise RuntimeError(f"{name}: baseline failed\n{result.stderr}")
-            print(f"{name}: compile=0, test={result.returncode}")
-    print("reverse controls: 9/9 rejected; both baselines passed")
+            evidence = result.stderr.strip().splitlines()
+            print(f"{name}: compile=0, test={result.returncode}" + (f"; {evidence[-1]}" if evidence else ""))
+    print(f"reverse controls: {len(mutations)}/{len(mutations)} rejected; both baselines passed")
 
 
 if __name__ == "__main__":
