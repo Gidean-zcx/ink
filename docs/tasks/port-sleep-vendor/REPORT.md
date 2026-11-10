@@ -10,7 +10,7 @@
 | 1 | 通过 | 【实测】S31 构建退出 0，0 条 warning/error；端口普通、ASan/UBSan 各 `100% tests passed out of 3` | 见下方复现命令；`work/port-sleep-s31-final.log`、`work/port-sleep-build-s31-host{,-asan}-tests.log` |
 | 2 | 通过 | 【实测】13/13 反向对照拒绝，原实现两项通过；要求的四项均编译 0、断言退出 −6 | `taskpolicy -c utility python3 ports/esp32s31/tests/negative.py build-s31-host` |
 | 3 | 通过 | 【实现】下方逐项对照，含缺失端口和保留差异 | 文件/行号见下表 |
-| 4 | 部分完成 | 【实测】gcccheck 8 个 C 编译单元，0 findings；模拟器全量与隐私最终扫描待完成 | `taskpolicy -c utility python3 ../../tools/gcccheck.py build-s31-host …` |
+| 4 | 部分完成 | 【实测】模拟器普通版 `100% tests passed out of 320`，502.20 秒；gcccheck 8 个 C 编译单元，0 findings；内存版全量与隐私最终扫描待完成 | 下方模拟器与 gcccheck 命令 |
 | 5 | 通过 | 【实现】下方八项上机清单；未把编译写成真机通过 | 本报告“上机先核对清单” |
 
 ## 原厂对照
@@ -41,7 +41,7 @@
 | P15 输出 0、醒后输入，R:133 | M:62、M:108 | 一致 |
 | P16 mask 输出 0、不唤醒，R:134 | M:62、M:79 | mask 一致；任务要求保留 RTC 唤醒，arm 阶段预装高、读基线、再设输入；RTC 已低或共享 INT 不高就取消 |
 | P17 mask 输出 1→输入；先锁存再恢复方向，R:135 | M:62、M:75，P:166 | 一致；短按已松开仍保留电源键语义 |
-| 唤醒链 P17→TCA INT→GPIO2 EXT1 ANY_LOW，R:139，H:105 | P:89、P:147 | 一致；保留任务要求的 RTC、运动，以及既有保电模组 GPIO3 唤醒 |
+| 唤醒链 P17→TCA INT→GPIO2 EXT1 ANY_LOW，R:139，H:105 | P:89、P:147 | 一致；保留任务要求的 RTC、运动，以及 D-37 可接听待机所需的既有保电模组 GPIO3 唤醒，后者极性仍须上机核对 |
 | GPIO61 不作浅睡唤醒，R:104、:139 | P:123 | 一致，删除 GPIO 唤醒配置和原因映射；IDF `soc_caps.h:259` 的 LP 引脚数为 8 |
 | 退出 1：恢复方向前锁存电源键，R:147，H:457 | P:166 | 一致；运动原因同样在恢复前读取 |
 | 退出 2：关唤醒配置、恢复按键、等待稳定，R:148，H:463 | P:171，M:104，P:174 | 一致；输入任务最后恢复，保留已有 20 ms 去抖 |
@@ -65,11 +65,34 @@ taskpolicy -c utility python3 ports/esp32s31/tests/sdk_check.py "$IDF_PATH" buil
 
 端口 ASan/UBSan：目录换 `build-s31-host-asan`，配置仅加 `-DINK_SANITIZE=ON`。SDK 反向检查【实测】：正确 SDK 退出 0，改版本和删锚点各退出 1，明确显示版本/PMU 源码变化原因。测试只改临时副本。
 
-【实测】端口最终普通/ASan+UBSan 各 3/3，通过用时分别 1.57/1.53 秒。gcccheck：`8 compiled, 0 with findings`，覆盖电源 HAL、三个端口测试、板级 IO/PMIC、TCA/TPS 驱动，没有跳过；日志 `work/port-sleep-gcccheck.log`。端口内存检查的 8 个 C 编译单元全部带 `-fsanitize=address,undefined`。
+【实测】端口最终普通/ASan+UBSan 各 3/3，通过用时分别 1.57/1.53 秒。gcccheck：`8 compiled, 0 with findings`，覆盖电源 HAL、三个端口测试、板级 IO/PMIC、TCA/TPS 驱动，没有跳过；日志 `work/port-sleep-gcccheck.log`。端口内存检查的 9 个 C 编译单元全部带 `-fsanitize=address,undefined`（另一个是未改的触摸区域代码）。
 
 【实测】S31 最终构建退出 0，日志没有编译 warning/error；SDK 自身仍有 Kconfig 的十六进制写法弃用 NOTE，未关闭检查。`build-s31/compile_commands.json` 中兼容 PMU 副本 1 项、原始应用 PMU 0 项、vendor 源 1 项；最终 ELF 的 `nm` 输出含三个 `__wrap_*`、`ink_s31_sleep_init` 与 `ink_s31_light_sleep`，确认不是只复制而未接入。
 
 反向对照【实测】：要求的 `usb-revive`、`vendor-sleep`、`dynamic-frequency`、`gpio61-wake` 都编译退出 0、断言退出 −6；其余既有九项同样拒绝；两个未修改对照退出 0。证据：`work/port-sleep-{unit-tests,negative,sdk-negative}.log`。
+
+模拟器普通版的完整复现参数如下；内存检查只把构建目录换为 `build-asan`、加 `-DINK_SANITIZE=ON`。没有改断言、预算或测试集合。
+
+【实测】普通版全量原话：`100% tests passed out of 320`，`Total Test time (real) = 502.20 sec`；日志 `work/port-sleep-build-tests.log`，没有跳过。
+
+```bash
+export PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$PWD/hub"
+taskpolicy -c utility cmake -S . -B build -DINK_WERROR=ON -DCMAKE_EXPORT_COMPILE_COMMANDS=ON \
+  -DINK_CJK_FONT="$INK_DEPS/build-deps/fonts/NotoSansCJK-Regular.ttc" -DINK_CJK_FACE=2 \
+  -DINK_CJK_MEDIUM_FONT="$INK_DEPS/build-deps/fonts/NotoSansCJKsc-Medium.otf" \
+  -DINK_CJK_BOLD_FONT="$INK_DEPS/build-deps/fonts/NotoSansCJKsc-Bold.otf" \
+  -DPython3_EXECUTABLE="$INK_DEPS/build-deps/pyenv/bin/python" \
+  -DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python" \
+  -DFETCHCONTENT_SOURCE_DIR_LVGL="$INK_DEPS/build/_deps/lvgl-src" \
+  -DFETCHCONTENT_SOURCE_DIR_SDL2="$INK_DEPS/build/_deps/sdl2-src" \
+  -DFETCHCONTENT_SOURCE_DIR_IMGUI="$INK_DEPS/build/_deps/imgui-src"
+taskpolicy -c utility cmake --build build -j2
+UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
+taskpolicy -c utility python3 ../../tools/gcccheck.py build-s31-host \
+  ports/esp32s31/hal_power_s31.c ports/esp32s31/tests/logic.c ports/esp32s31/tests/power.c \
+  ports/esp32s31/tests/board.c boards/metalio_plus/metalio_board.c \
+  boards/metalio_plus/metalio_epd_power.c drivers/chips/tca9555/tca9555.c drivers/chips/tps65185/tps65185.c
+```
 
 ## 上机先核对清单
 
@@ -104,6 +127,7 @@ taskpolicy -c utility python3 ports/esp32s31/tests/sdk_check.py "$IDF_PATH" buil
 
 - 原厂文件适配后首次链接发现当前最小 IDF 构建未引入 USB 连接监测函数；已显式声明 `esp_driver_usb_serial_jtag` 组件依赖并使用其正式头文件，未伪造连接状态。
 - 现有 SDK 默认配置同时启用 UART0 主控制台及 USB 副控制台，和任务背景“控制台只走 USB”的说法不同；本任务不修改控制台配置，上机前主会话须复核 UART0 默认引脚与模组复用。
+- 宿主机构建有 SDL2 的 macOS API 弃用警告及 `libink_port_sim.a` 重复链接提示；S31 构建 0 警告。这些第三方/链接提示未在本任务扩大处理。
 
 ## 新增的机制
 
