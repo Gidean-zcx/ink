@@ -27,6 +27,7 @@ cases = (
     ('member', 'static stopwatch_t *my_watch(void) {', 'static stopwatch_t *my_watch(void) { return &watches[0];', 'child gets an independent stopwatch'),
     ('world-member', '.title = TR_NOOP("世界时钟"), .scope = INK_DB_MEMBER', '.title = TR_NOOP("世界时钟"), .scope = INK_DB_DEVICE', 'child does not see adult cities'),
     ('world-zone', 'ink_time_to_zone(z, utc, &there)', 'ink_time_to_zone(z * 0, utc, &there)', 'before DST:'),
+    ('clock-change', '(void)a; extra_changed(ctx, 0, id);', '(void)a; (void)ctx; (void)id;', 'same device minute still refreshes the changed date'),
     ('minute-deadline', '    minute_cb(NULL);\n    ink_cap_emit("time.changed", NULL);', '    if (!T.minute_at.armed) minute_cb(NULL);\n    ink_cap_emit("time.changed", NULL);', 'after DST:'),
 )
 summary = []

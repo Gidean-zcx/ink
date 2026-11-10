@@ -151,6 +151,8 @@ static void world(void) {
     transition(utc(2027, 11, 7, 6, 0, 0), "America/New_York", "01:59 · -4 小时", "01:00 · -5 小时");
     transition(utc(2027, 3, 28, 1, 0, 0), "Europe/London", "00:59 · +0 小时", "02:00 · +1 小时");
     transition(utc(2027, 10, 31, 1, 0, 0), "Europe/London", "01:59 · +1 小时", "01:00 · +0 小时");
+    set_utc(utc(2027, 3, 13, 7, 0, 0)); CHECK(field_has("America/New_York", "02:00 · -5 小时"), "same-minute date setup uses standard time");
+    set_utc(utc(2027, 3, 15, 7, 0, 0)); CHECK(field_has("America/New_York", "03:00 · -4 小时"), "same device minute still refreshes the changed date");
     int64_t jan1 = utc(2027, 1, 1, 1, 0, 0), late = utc(2027, 1, 1, 23, 30, 0);
     setting("time.zone", 0); set_utc(jan1);
     CHECK(field_has("America/New_York", "20:00 · -13 小时 · 前一天"), "previous day handles year boundary relative to device");
