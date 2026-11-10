@@ -348,7 +348,7 @@ static const ink_setting_def_t TEST_SETTINGS[] = {
 };
 
 static void settings_checks(void) {
-    static char buf[2048]; /* the whole settings table, which grows with the settings */
+    static char buf[4096]; /* the whole settings table, which grows with the settings */
     ink_receipt_t rc;
     CHECK(ink_settings_define(TEST_SETTINGS, 3) == 0 && ink_setting_get("test.vol") == 3, "settings start at their defaults");
     CHECK(ink_settings_watch("test.", on_setting, NULL, INK_EXEC_DIRECT) == 0, "a settings watcher subscribes");
@@ -510,8 +510,12 @@ static void service_checks(void) {
     CHECK(ink_setting_set("power.lock_after_s", 30, INK_SRC_TOUCH, &rc) == INK_RC_INVALID, "auto-lock below a minute is refused");
     CHECK(ink_setting_set("display.light", 40, INK_SRC_TOUCH, &rc) == INK_RC_DONE, "the front light is a setting");
     /* internal mechanisms are not offered (architecture §4.1) */
-    CHECK(ink_cap_manifest_json(buf, sizeof buf) > 0 && !strstr(buf, "modem") && !strstr(buf, "AT+") && !strstr(buf, "rail") && !strstr(buf, "refresh_sched"),
-          "no AT commands, rails or refresh scheduling among the capabilities");
+    int next = 0;
+    do {
+        int start = next;
+        CHECK(ink_cap_manifest_page(start, NULL, buf, sizeof buf, &next) > 0 && !strstr(buf, "modem") && !strstr(buf, "AT+") && !strstr(buf, "rail") && !strstr(buf, "refresh_sched"),
+              "no AT commands, rails or refresh scheduling among the capabilities");
+    } while (next >= 0);
     CHECK(ink_state_json(buf, sizeof buf, 0) > 0 && !strstr(buf, "rail") && !strstr(buf, "modem"), "nor in the state");
 
     /* camera */

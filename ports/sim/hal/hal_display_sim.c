@@ -539,6 +539,7 @@ static void power_down_locked(void) {
 }
 
 static bool power_up(void) {
+    sim_power_lease(true); /* Serialize every display start with sleep preparation. */
     osal_mutex_lock(g_pwr_lock, OSAL_WAIT_FOREVER);
     if (D.rails_on && supply_suspect()) { /* held up, but touched or seen dropping since: start again */
         sim_metric_add("display.power_recycled", 1);
@@ -546,6 +547,7 @@ static bool power_up(void) {
     }
     bool ok = power_up_locked();
     osal_mutex_unlock(g_pwr_lock);
+    sim_power_lease(false);
     return ok;
 }
 
@@ -720,13 +722,13 @@ static void record_finished(void *p) {
     sim_metric_sample("display.queue_wait_ms", (f->t_pick - r->queued_ns) / 1e6);
     double ghost = sim_display_ghost_level();
     sim_metric_max("display.ghost_level_max", ghost);
-    snprintf(args, sizeof args, "{\"id\":%u,\"x\":%d,\"y\":%d,\"w\":%d,\"h\":%d,\"ghost\":%.2f}", r->id, r->area.x,
+    snprintf(args, sizeof args, "{\"id\":%u,\"x\":%d,\"y\":%d,\"w\":%d,\"h\":%d,\"ghost\":%.2f}", (unsigned)r->id, r->area.x,
              r->area.y, r->area.w, r->area.h, ghost);
     if (f->t_pick > r->queued_ns) sim_trace_span("display", "queued", r->queued_ns, f->t_pick, NULL);
     sim_trace_span("display", WFN[f->wf], f->started, f->done, args);
     if (g_sim.frames && g_sim.out_dir) {
         char path[512];
-        snprintf(path, sizeof path, "%s/frames/%05u_%08.1fms_%s.png", g_sim.out_dir, r->id, f->done / 1e6, WFN[f->wf]);
+        snprintf(path, sizeof path, "%s/frames/%05u_%08.1fms_%s.png", g_sim.out_dir, (unsigned)r->id, f->done / 1e6, WFN[f->wf]);
         write_png(path);
     }
 }
@@ -1150,12 +1152,12 @@ static void pq_record_finished(void *p) {
     sim_metric_add(key, 1);
     snprintf(key, sizeof key, "display.update_ms.%s", WFN[u->r.wf]);
     sim_metric_sample(key, (f->done_ns - u->r.queued_ns) / 1e6);
-    snprintf(args, sizeof args, "{\"id\":%u,\"x\":%d,\"y\":%d,\"w\":%d,\"h\":%d}", u->r.id, u->r.area.x, u->r.area.y,
+    snprintf(args, sizeof args, "{\"id\":%u,\"x\":%d,\"y\":%d,\"w\":%d,\"h\":%d}", (unsigned)u->r.id, u->r.area.x, u->r.area.y,
              u->r.area.w, u->r.area.h);
     sim_trace_span("display", WFN[u->r.wf], u->started_ns ? u->started_ns : f->done_ns, f->done_ns, args);
     if (g_sim.frames && g_sim.out_dir) {
         char path[512];
-        snprintf(path, sizeof path, "%s/frames/%05u_%08.1fms_%s.png", g_sim.out_dir, u->r.id, f->done_ns / 1e6,
+        snprintf(path, sizeof path, "%s/frames/%05u_%08.1fms_%s.png", g_sim.out_dir, (unsigned)u->r.id, f->done_ns / 1e6,
                  WFN[u->r.wf]);
         write_png(path);
     }

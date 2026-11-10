@@ -20,8 +20,9 @@
 #include "shell_card.h"
 #include "ink/ui_shell.h"
 
-enum { GATE_FIELDS = 5, GATE_ACTIONS = 4 };
+enum { GATE_FIELDS = 5, GATE_ACTIONS = 5 };
 _Static_assert(1 + 4 <= GATE_FIELDS, "member page capacity");
+_Static_assert(2 + 1 + 2 <= GATE_ACTIONS, "member action capacity");
 static struct {
     shell_card_t card;
     char picked[16];
@@ -122,6 +123,7 @@ static void sync_gate(void *arg) { /* UI task */
     ink_ui_overlay_add(&OVERLAY, G.card.root);
     G.fields[0] = (ink_ui_field_spec_t){.id = "status", .role = "text", .label = "选择家人", .value = "设备锁着：请选择家人，或输入密码。"};
     G.model = (ink_ui_page_spec_t){"member_gate", G.requested ? "谁在用？" : "选择家人", {"member_gate", ink_ui_generation()}, G.fields, 1, G.actions, 0};
+    G.actions[G.model.action_count++] = (ink_ui_action_spec_t){.id = "emergency", .label = "打开紧急呼叫页面", .capability = "phone.emergency_open", .enabled = true};
     G.actions[G.model.action_count++] = (ink_ui_action_spec_t){.id = "camera", .label = "拍照", .capability = "app.open", .args_json = "{\"id\":\"camera\"}", .enabled = ink_cap_find("camera.capture") != NULL};
     ink_shell_statusbar(G.card.panel, true);
     if (ink_cap_find("camera.capture")) {
@@ -172,6 +174,7 @@ static void sync_gate(void *arg) { /* UI task */
         lv_obj_add_event_cb(lv_obj_get_child(pager, 2), pressed, LV_EVENT_PRESSED, NULL);
     }
     /* the one whose space it is first */
+    ink_shell_emergency_button(G.card.panel, false);
     snprintf(G.picked, sizeof G.picked, "%s", ink_member_current()->id);
     G.pad = NULL;
     G.version = ink_ui_content_version();

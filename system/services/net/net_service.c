@@ -85,7 +85,11 @@ static void use_job(void *arg) { /* exec.bg: the platform may take a moment */
 }
 
 static bool wifi_on(void) { return ink_setting_get("wifi.enabled") != 0; }
-static bool lte_on(void) { return !ink_setting_get("net.airplane"); }
+static bool lte_on(void) {
+    int64_t roaming = 0; ink_state_get_int(ink_state_find("cell.roaming"), &roaming);
+    return !ink_setting_get("net.airplane") && (!roaming || ink_setting_get("net.roaming"));
+}
+static void roaming_changed(void *ctx, int h, const char *id) { (void)ctx; (void)h; (void)id; decide_soon(); }
 
 static hal_link_type_t auto_choice(const hal_link_status_t *st, uint64_t now, bool *later) {
     bool wifi = wifi_on() && hal_net_available(HAL_LINK_WIFI), lte = lte_on() && hal_net_available(HAL_LINK_LTE);
@@ -200,6 +204,7 @@ static const ink_cap_t NET_CAPS[] = {
 
 static const char *const PREFER[] = {"auto", "wifi", "lte", NULL};
 static const ink_setting_def_t NET_SETTINGS[] = {
+    {.id = "net.roaming", .title = "数据漫游", .type = INK_SET_BOOL, .via = "net.roaming_set", .apply = apply_prefer, .apply_exec = INK_EXEC_DIRECT},
     {.id = "net.prefer", .title = "上网方式", .type = INK_SET_ENUM, .def = 0, .choices = PREFER, .child_may_change = false, .apply = apply_prefer,
      .apply_exec = INK_EXEC_DIRECT},
     {.id = "wifi.enabled", .title = "Wi-Fi", .type = INK_SET_BOOL, .def = 1, .via = "wifi.set_enabled", .apply = apply_prefer,
@@ -215,7 +220,8 @@ int ink_net_init(void) {
     h_online = ink_state_define(&ST_ONLINE);
     h_type = ink_state_define(&ST_TYPE);
     h_signal = ink_state_define(&ST_SIGNAL);
-    ink_settings_define(NET_SETTINGS, 3);
+    ink_settings_define(NET_SETTINGS, sizeof NET_SETTINGS / sizeof *NET_SETTINGS);
+    if (ink_state_watch("cell.roaming", roaming_changed, NULL, INK_EXEC_DIRECT)) return -1;
     NS.airplane = ink_setting_get("net.airplane") != 0;
     if (ink_storage_read(AIRPLANE_PATH, NS.before, sizeof NS.before) != (int)sizeof NS.before) memcpy(NS.before, "11", 2);
     if (ink_cap_register(NET_CAPS, 2) != 0) return -1;

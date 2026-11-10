@@ -18,6 +18,7 @@ typedef enum { HAL_CELL_SLOT_EXTERNAL = 0, HAL_CELL_SLOT_INTERNAL = 1 } hal_cell
 
 typedef struct {
     bool registered;      /* on the network with the card in use */
+    bool roaming;         /* +CEREG stat 5 */
     hal_cell_slot_t slot; /* the card in use */
 } hal_cell_status_t;
 
@@ -26,6 +27,7 @@ typedef enum {
     HAL_CELL_EV_RING,       /* an incoming call rings (repeats while it rings): `number` */
     HAL_CELL_EV_CALL_ENDED, /* the call ended or the caller gave up */
     HAL_CELL_EV_CALL_ACTIVE, /* the outgoing call was answered */
+    HAL_CELL_EV_REG,        /* registration changed: query status */
 } hal_cell_ev_type_t;
 
 typedef struct {
@@ -36,6 +38,8 @@ typedef struct {
 
 /** False when there is no modem, or it does not answer. Task context. */
 bool hal_cell_status(hal_cell_status_t *out);
+typedef struct { char name[101], user[65], password[65]; } hal_cell_apn_t; /* empty name: subscription default */
+int hal_cell_apn(const hal_cell_apn_t *apn); /* reconnect only the data context; task context */
 /** Use another card, without restarting the modem. 0, 1 (switched but not registered in time), < 0 failed. */
 int hal_cell_select_sim(hal_cell_slot_t slot, uint32_t reg_timeout_ms);
 /** Airplane mode: the radio off (no service, no calls, no messages) or on again, waiting up to reg_timeout_ms for the

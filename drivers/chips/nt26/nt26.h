@@ -29,6 +29,8 @@ typedef enum {
 nt26_result_t nt26_sim_slot(nt26_slot_t *slot);
 /** Registered on the network with the card in use (AT+CEREG? stat 1 home or 5 roaming). */
 nt26_result_t nt26_registered(bool *registered);
+nt26_result_t nt26_registration(bool *registered, bool *roaming);
+nt26_result_t nt26_apn(const char *name, const char *user, const char *password);
 /** Switch to the card in `slot` and wait up to reg_timeout_ms for it to register. The device keeps
  *  running; LTE is down for the few seconds of the switch. */
 nt26_result_t nt26_select_sim(nt26_slot_t slot, uint32_t reg_timeout_ms);

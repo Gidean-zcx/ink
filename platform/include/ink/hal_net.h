@@ -43,6 +43,7 @@ void hal_net_use(hal_link_type_t type);
 /** That network is around, whether in use or not: a known Wi-Fi network in range, a registered card
  *  under coverage. What the system chooses from. Task context, does not wait. */
 bool hal_net_available(hal_link_type_t type);
+bool hal_net_lte_bytes(uint64_t *rx, uint64_t *tx); /* cumulative interface octets since boot; false if unavailable */
 
 /* ---- Wi-Fi management ---- */
 typedef struct {

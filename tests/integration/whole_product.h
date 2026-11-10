@@ -122,11 +122,13 @@ static const char *power_state(void) {
 #define WAIT_FOR(cond, max_ms)                                               \
     ({                                                                       \
         int _w = 0;                                                          \
-        while (!(cond) && _w < (max_ms)) {                                   \
+        bool _ready = (bool)(cond);                                           \
+        while (!_ready && _w < (max_ms)) {                                    \
             delay_ms(20);                                                    \
             _w += 20;                                                        \
+            _ready = (bool)(cond);                                            \
         }                                                                    \
-        (bool)(cond);                                                        \
+        _ready;                                                              \
     })
 
 /* Run on the UI task and wait. */

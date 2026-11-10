@@ -26,6 +26,7 @@
 #include <string.h>
 
 #include "ink/hal_cellular.h"
+#include "ink/hal_net.h"
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/audio.h"
@@ -34,12 +35,14 @@
 #include "ink/sys/confirm.h"
 #include "ink/sys/data.h"
 #include "ink/sys/json.h"
+#include "ink/sys/i18n.h"
 #include "ink/sys/members.h"
 #include "ink/sys/settings.h"
 #include "ink/sys/sha256.h"
 #include "ink/sys/state.h"
 #include "ink/sys/svc.h"
 #include "ink/sys/textinput.h"
+#include "ink/sys/time.h"
 
 #define COMM_STACK 8192 /* PSRAM: never touches the flash; AT replies and SMS text are parsed on it */
 #define COMM_PRIO 3
@@ -60,6 +63,7 @@ static const ink_db_def_t MESSAGES = {.name = "sms.messages", .title = "短信�
     .schema = 1, .json = true, .ai_read = true, .max_records = 512};
 static const ink_db_def_t PARTS = {.name = "sms.parts", .title = "未收齐的长短信", .scope = INK_DB_DEVICE, .schema = 1,
     .json = true, .max_records = 64};
+static const ink_db_def_t MOBILE = {.name = "net.mobile", .title = "移动网络私有设置", .scope = INK_DB_DEVICE, .schema = 1, .max_records = 2};
 
 typedef struct { char peer[24]; int64_t ref, total; } sms_key_t; /* one long message: sender, reference, parts */
 
@@ -67,16 +71,19 @@ static struct {
     osal_mutex_t *lock;
     osal_mutex_t *at; /* the modem takes one AT command at a time, and some requests are several: the comm task
                        * and exec.bg both talk to it. Held while a request runs, up to the seconds it takes */
-    bool ringing;
+    bool ringing, emergency; /* emergency: protected by at, keeps RF on until the call ends */
     char call_member[16], call_peer[24]; /* protected by at; member and tones also by lock */
     uint32_t call_generation;
     char tones[65]; /* local display only, protected by lock */
-    int h_registered, h_sim;
+    int h_registered, h_sim, h_roaming, h_mobile, mobile_rev;
+    hal_cell_apn_t apn;
+    struct { uint64_t current, previous; int month, day; } usage;
+    uint64_t sampled_bytes;
     ink_exec_job_t sim_job, reg_job;
     ink_svc_deadline_t reg_at;
     uint64_t sim_retry_at, sim_retry_us; /* comm task's next look at the card, 0 = none due */
     int sim_tries;
-    ink_exec_job_t radio_job;
+    ink_exec_job_t radio_job, apn_job;
     /* comm task: too large for its stack, and internal RAM has no room for them */
     hal_cell_sms_t rx;
     ink_args_t rx_args, ev_args;
@@ -161,6 +168,7 @@ static bool refresh_status(hal_cell_status_t *st) {
         return false;
     }
     ink_state_set_bool(CM.h_registered, st->registered);
+    ink_state_set_bool(CM.h_roaming, st->roaming);
     ink_state_set_str(CM.h_sim, st->slot == HAL_CELL_SLOT_INTERNAL ? "internal" : "external");
     return true;
 }
@@ -339,8 +347,8 @@ static void reg_due(void *arg) { ink_exec_post(INK_EXEC_BG, &CM.reg_job, reg_loo
 
 static void radio(void *arg) { /* exec.bg: airplane mode changed, or the modem came up with it on */
     (void)arg;
-    bool on = !ink_setting_get("net.airplane");
     osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
+    bool on = !ink_setting_get("net.airplane") || CM.emergency;
     int r = hal_cell_radio(on, 0); /* only the command: registering is not waited for with the modem held */
     osal_mutex_unlock(CM.at);
     if (r < 0) ink_probe_count("comm.radio_failed");
@@ -385,6 +393,7 @@ static void comm_task(void *arg) {
             ink_args_t *a = &CM.ev_args;
             ink_args_init(a);
             if (ev.type == HAL_CELL_EV_SMS) on_sms(ev.sms_index);
+            else if (ev.type == HAL_CELL_EV_REG) { hal_cell_status_t st; refresh_status(&st); }
             else if (ev.type == HAL_CELL_EV_RING && !CM.ringing) { /* once per call: it rings again every few seconds */
                 CM.ringing = true;
                 osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
@@ -401,6 +410,8 @@ static void comm_task(void *arg) {
                 osal_mutex_lock(CM.lock, OSAL_WAIT_FOREVER);
                 CM.call_member[0] = CM.call_peer[0] = CM.tones[0] = 0;
                 osal_mutex_unlock(CM.lock);
+                if (CM.emergency && ink_setting_get("net.airplane") && hal_cell_radio(false, 0)) ink_probe_count("comm.radio_failed");
+                CM.emergency = false;
                 osal_mutex_unlock(CM.at);
                 ink_confirm_expire("call.dtmf");
                 ink_cap_emit("call.ended", a);
@@ -547,13 +558,29 @@ static void call_result(ink_call_t *c, int r, const char *ok, const char *fail) 
 static void cap_dial(ink_call_t *c) {
     char number[24];
     ink_args_get_str(&c->args, "number", number, sizeof number);
-    if (airplane(c, "打电话")) return; /* no exception for emergency numbers yet: not decided */
+    bool emergency = !strcmp(number, "110") || !strcmp(number, "120") || !strcmp(number, "119") || !strcmp(number, "112");
+    if (!strcmp(c->cap->id, "phone.emergency") && !emergency) {
+        c->rc.status = INK_RC_REJECTED;
+        snprintf(c->rc.say, sizeof c->rc.say, "%s", TR("锁屏时只能拨紧急电话"));
+        return;
+    }
+    if (emergency && c->src != INK_SRC_TOUCH && c->src != INK_SRC_KEY) {
+        c->rc.status = INK_RC_REJECTED;
+        snprintf(c->rc.say, sizeof c->rc.say, "%s", TR("请在紧急呼叫页面亲自拨号"));
+        return;
+    }
+    if (!emergency && airplane(c, "打电话")) return;
     osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
-    int r = hal_cell_dial(number);
-    if (!r) call_begin(ink_cap_call_member(c), number);
+    int r = CM.call_member[0] ? -1 : 0;
+    bool temporary = !r && emergency && ink_setting_get("net.airplane");
+    if (temporary) r = hal_cell_radio(true, 0) < 0 ? -1 : 0; /* 1 means RF on, not registered */
+    if (!r) r = hal_cell_dial(number); /* no SIM or registration precondition for emergencies */
+    if (!r) { call_begin(ink_cap_call_member(c), number); CM.emergency = emergency; }
+    else if (temporary && hal_cell_radio(false, 0)) ink_probe_count("comm.radio_failed");
     osal_mutex_unlock(CM.at);
     if (r == 0) call_focus(true);
-    call_result(c, r, "正在拨号", "the call could not be placed");
+    call_result(c, r, TR("正在拨号"), "the call could not be placed");
+    if (r == 0) ink_args_bool(&c->args, "emergency", emergency);
     if (r == 0) ink_cap_emit_for("call.dialed", &c->args, ink_cap_call_member(c));
 }
 
@@ -569,6 +596,9 @@ static void cap_answer(ink_call_t *c) {
 static void cap_hangup(ink_call_t *c) {
     CM.ringing = false;
     osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
+    if (!strcmp(c->cap->id, "phone.emergency_hangup") && (!CM.emergency || strcmp(CM.call_member, ink_cap_call_member(c)))) {
+        osal_mutex_unlock(CM.at); c->rc.status = INK_RC_REJECTED; return;
+    }
     int r = hal_cell_hangup();
     osal_mutex_unlock(CM.at);
     call_result(c, r, "挂断了", "no call to end");
@@ -615,10 +645,15 @@ static void cap_control(ink_call_t *c) { /* exec.bg */
 #define BOOL_ARG(name) "{\"type\":\"object\",\"properties\":{\"" name "\":{\"type\":\"boolean\"}},\"required\":[\"" name "\"]}"
 
 static const ink_cap_t COMM_CAPS[] = {
-    {.id = "call.mute", .app = "phone", .title = "通话麦克风静音", .input = BOOL_ARG("on"), .effect = INK_FX_NAVIGATE, .child_ok = true, .permission = "call", .timeout_ms = 15000, .exec = INK_EXEC_BG, .run = cap_control},
-    {.id = "call.dtmf", .app = "phone", .title = "发送一个通话按键", .ask = "向 {_peer} 的本次通话发送按键 {key}", .input = "{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":1}},\"required\":[\"key\"]}", .effect = INK_FX_EXTERNAL, .child_ok = true, .permission = "call", .timeout_ms = 10000, .exec = INK_EXEC_BG, .prepare_confirm = ink_comm_bind_dtmf, .run = cap_control},
-    {.id = "call.route", .app = "phone", .title = "切换通话耳机或喇叭", .input = BOOL_ARG("headset"), .effect = INK_FX_NAVIGATE, .child_ok = true, .permission = "call", .exec = INK_EXEC_BG, .run = cap_control},
-    {.id = "call.record", .app = "phone", .title = "查看通话录音不可用的原因", .effect = INK_FX_READ, .child_ok = true, .permission = "call", .exec = INK_EXEC_BG, .run = cap_control},
+    {.id = "phone.emergency_hangup", .app = NULL, .title = "挂断紧急电话", .effect = INK_FX_NAVIGATE, .child_ok = true, .while_locked = true,
+     .expose = INK_EXPOSE_OWNER, .permission = "call", .timeout_ms = 25000, .exec = INK_EXEC_BG, .run = cap_hangup},
+    /* D-119 / D-105: the person's explicit emergency action; AI may only open its page. */
+    {.id = "phone.emergency", .app = NULL, .title = "拨紧急电话", .input = "{\"type\":\"object\",\"properties\":{\"number\":{\"type\":\"string\",\"maxLength\":20}},\"required\":[\"number\"]}", .effect = INK_FX_EXTERNAL,
+     .child_ok = true, .while_locked = true, .expose = INK_EXPOSE_OWNER, .permission = "call", .timeout_ms = 25000, .exec = INK_EXEC_BG, .run = cap_dial},
+    {.id = "call.mute", .app = "phone", .locked_owner_only = true, .title = "通话麦克风静音", .input = BOOL_ARG("on"), .effect = INK_FX_NAVIGATE, .child_ok = true, .permission = "call", .timeout_ms = 15000, .exec = INK_EXEC_BG, .run = cap_control},
+    {.id = "call.dtmf", .app = "phone", .locked_owner_only = true, .title = "发送一个通话按键", .ask = "向 {_peer} 的本次通话发送按键 {key}", .input = "{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":1}},\"required\":[\"key\"]}", .effect = INK_FX_EXTERNAL, .child_ok = true, .permission = "call", .timeout_ms = 10000, .exec = INK_EXEC_BG, .prepare_confirm = ink_comm_bind_dtmf, .run = cap_control},
+    {.id = "call.route", .app = "phone", .locked_owner_only = true, .title = "切换通话耳机或喇叭", .input = BOOL_ARG("headset"), .effect = INK_FX_NAVIGATE, .child_ok = true, .permission = "call", .exec = INK_EXEC_BG, .run = cap_control},
+    {.id = "call.record", .app = "phone", .locked_owner_only = true, .title = "查看通话录音不可用的原因", .effect = INK_FX_READ, .child_ok = true, .permission = "call", .exec = INK_EXEC_BG, .run = cap_control},
     {.id = "call.controls", .app = "phone", .title = "通话控制已获模组确认", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true, .permission = "call"},
     {.id = "message.send", .app = "message",
      .title = "发短信",
@@ -635,7 +670,7 @@ static const ink_cap_t COMM_CAPS[] = {
      .run = cap_send},
     {.id = "message.list", .app = "message", .title = "最近的短信", .effect = INK_FX_READ, .child_ok = true, .permission = "message", .exec = INK_EXEC_BG, .run = cap_list},
     {.id = "sms.send", .app = "message", .title = "保存并发送短信", .ask = "发短信给 {to}：{text}", .prepare_confirm = bind_send, .input = "{\"type\":\"object\",\"properties\":{\"to\":{\"type\":\"string\",\"maxLength\":20},\"text\":{\"type\":\"string\",\"maxLength\":765}},\"required\":[\"to\"]}", .effect = INK_FX_EXTERNAL, .child_ok = true, .permission = "message", .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .timeout_ms = 30000, .run = cap_send},
-    {.id = "call.dial", .app = "phone",
+    {.id = "call.dial", .app = "phone", .locked_owner_only = true,
      .title = "打电话",
      .ask = "打电话给 {number}",
      .input = "{\"type\":\"object\",\"properties\":{\"number\":{\"type\":\"string\",\"maxLength\":20}},\"required\":[\"number\"]}",
@@ -647,8 +682,8 @@ static const ink_cap_t COMM_CAPS[] = {
      .exec = INK_EXEC_BG,
      .run = cap_dial},
     /* the modem may be busy with a message for up to 20 s; a call rings longer than that */
-    {.id = "call.answer", .app = "phone", .title = "接电话", .effect = INK_FX_EXTERNAL, .child_ok = true, .while_locked = true, .permission = "call", .timeout_ms = 25000, .exec = INK_EXEC_BG, .run = cap_answer},
-    {.id = "call.hangup", .app = "phone", .title = "挂电话", .effect = INK_FX_NAVIGATE, .child_ok = true, .while_locked = true, .permission = "call", .timeout_ms = 25000, .exec = INK_EXEC_BG, .run = cap_hangup},
+    {.id = "call.answer", .app = "phone", .locked_owner_only = true, .title = "接电话", .effect = INK_FX_EXTERNAL, .child_ok = true, .while_locked = true, .permission = "call", .timeout_ms = 25000, .exec = INK_EXEC_BG, .run = cap_answer},
+    {.id = "call.hangup", .app = "phone", .locked_owner_only = true, .title = "挂电话", .effect = INK_FX_NAVIGATE, .child_ok = true, .while_locked = true, .permission = "call", .timeout_ms = 25000, .exec = INK_EXEC_BG, .run = cap_hangup},
     {.id = "message.received", .app = "message", .title = "收到短信", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true, .permission = "message"},
     {.id = "call.incoming", .app = "phone", .title = "来电", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true, .permission = "call"},
     {.id = "call.answered", .app = "phone", .title = "电话接通了", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true, .permission = "call"},
@@ -674,13 +709,99 @@ static const ink_setting_def_t COMM_SETTINGS[] = {
     {.id = "cell.sim_slot", .title = "SIM 卡", .type = INK_SET_ENUM, .def = 0, .choices = SLOTS, .apply = apply_slot, .apply_exec = INK_EXEC_BG},
 };
 
+static bool mobile_save(uint32_t id, const void *data, size_t len) { /* exec.bg; private records never exported */
+    ink_db_t *db = ink_db_open(&MOBILE, NULL); uint32_t ver = 0;
+    ink_db_write_t w = {.id = id, .data = data, .len = len, .written_ver = &ver};
+    bool ok = db && !ink_db_put(db, &w, NULL) && !ink_db_wait(db, ver, 3000000);
+    ink_db_close(db); return ok;
+}
+static void mobile_apply(void *arg) {
+    (void)arg; osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
+    if (hal_cell_apn(&CM.apn)) ink_probe_count("net.apn_not_applied");
+    osal_mutex_unlock(CM.at);
+}
+static void mobile_sample(void *ctx, int h, const char *id) { /* existing minute event; one checkpoint per local day */
+    (void)ctx; (void)h; (void)id;
+    uint64_t rx = 0, tx = 0; ink_tm_t t;
+    if (!ink_time_valid() || !hal_net_lte_bytes(&rx, &tx)) return;
+    ink_time_to_local(ink_time_now_s(), &t);
+    int month = t.year * 12 + t.month, day = t.year * 10000 + t.month * 100 + t.day;
+    bool changed = CM.usage.month != month || rx + tx != CM.sampled_bytes;
+    if (CM.usage.month != month) {
+        CM.usage.previous = CM.usage.month == month - 1 ? CM.usage.current : 0;
+        CM.usage.current = 0; CM.usage.month = month;
+    }
+    CM.usage.current += rx + tx - CM.sampled_bytes; CM.sampled_bytes = rx + tx;
+    if (CM.usage.day != day && (CM.usage.current || CM.usage.previous)) {
+        int before = CM.usage.day; CM.usage.day = day;
+        if (!mobile_save(2, &CM.usage, sizeof CM.usage)) { CM.usage.day = before; ink_probe_count("net.usage_not_saved"); }
+    }
+    if (changed) ink_state_set_int(CM.h_mobile, ++CM.mobile_rev);
+}
+static void mobile_cap(ink_call_t *c) { /* exec.bg */
+    const char *id = c->cap->id;
+    if (!strcmp(id, "net.apn_set")) {
+        hal_cell_apn_t a = CM.apn; bool automatic = true;
+        ink_args_get_bool(&c->args, "automatic", &automatic);
+        bool password = ink_args_find(&c->args, "password") != NULL;
+        if (password && c->src != INK_SRC_TOUCH && c->src != INK_SRC_KEY) { c->rc.status = INK_RC_REJECTED; return; }
+        if (automatic) memset(&a, 0, sizeof a);
+        else {
+            ink_args_get_str(&c->args, "name", a.name, sizeof a.name); ink_args_get_str(&c->args, "user", a.user, sizeof a.user);
+            if (password) ink_args_get_str(&c->args, "password", a.password, sizeof a.password);
+            if (!a.name[0]) { c->rc.status = INK_RC_INVALID; return; }
+        }
+        osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER); int r = hal_cell_apn(&a); osal_mutex_unlock(CM.at);
+        if (r || !mobile_save(1, &a, sizeof a)) c->rc.status = INK_RC_FAILED;
+        else CM.apn = a;
+        memset(&a, 0, sizeof a);
+    } else if (!strcmp(id, "net.roaming_set")) {
+        bool on = false; ink_args_get_bool(&c->args, "enabled", &on); ink_setting_set("net.roaming", on, c->src, &c->rc);
+    } else {
+        mobile_sample(NULL, 0, NULL);
+        if (!strcmp(id, "net.usage_reset")) {
+            CM.usage.current = CM.usage.previous = 0;
+            if (!mobile_save(2, &CM.usage, sizeof CM.usage)) c->rc.status = INK_RC_FAILED;
+        } else {
+            char out[512]; ink_jw_t w; ink_jw_init(&w, out, sizeof out);
+            uint64_t rx, tx;
+            bool available = hal_net_lte_bytes(&rx, &tx);
+            ink_jw_raw(&w, available ? "{\"interface\":true" : "{\"interface\":false");
+            ink_jw_raw(&w, available && ink_time_valid() ? ",\"available\":true,\"current\":" : ",\"available\":false,\"current\":"); ink_jw_int(&w, (int64_t)CM.usage.current);
+            ink_jw_raw(&w, ",\"previous\":"); ink_jw_int(&w, (int64_t)CM.usage.previous);
+            ink_jw_raw(&w, ",\"name\":"); ink_jw_str(&w, CM.apn.name); ink_jw_raw(&w, ",\"user\":"); ink_jw_str(&w, CM.apn.user);
+            ink_jw_raw(&w, CM.apn.password[0] ? ",\"password\":true}" : ",\"password\":false}"); ink_cap_result(c, out);
+        }
+    }
+    if (strcmp(id, "net.usage") && c->rc.status == INK_RC_DONE) ink_state_set_int(CM.h_mobile, ++CM.mobile_rev);
+}
+#define MOBILE_STR "{\"type\":\"string\",\"maxLength\":64}"
+static const ink_cap_t MOBILE_CAPS[] = {
+    {.id = "net.apn_set", .app = NULL, .title = "设置接入点并重连移动数据", .effect = INK_FX_SYSTEM, .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .run = mobile_cap,
+     .input = "{\"type\":\"object\",\"properties\":{\"automatic\":{\"type\":\"boolean\"},\"name\":{\"type\":\"string\",\"maxLength\":100},\"user\":" MOBILE_STR ",\"password\":" MOBILE_STR "},\"required\":[\"automatic\"]}"},
+    {.id = "net.roaming_set", .app = NULL, .title = "开关数据漫游", .effect = INK_FX_SYSTEM, .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .run = mobile_cap,
+     .input = "{\"type\":\"object\",\"properties\":{\"enabled\":{\"type\":\"boolean\"}},\"required\":[\"enabled\"]}"},
+    {.id = "net.usage", .app = NULL, .title = "移动流量和接入点（不含密码）", .effect = INK_FX_READ, .child_ok = true, .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .run = mobile_cap},
+    {.id = "net.usage_reset", .app = NULL, .title = "清零流量统计", .effect = INK_FX_SYSTEM, .ask_by_hand = true, .ask = "清零本月和上个月的流量统计，不能撤销", .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .run = mobile_cap}};
+
 int ink_comm_init(void) {
+    static const ink_state_def_t mobile = {.id = "net.mobile_rev", .type = INK_ST_INT, .title = "移动网络设置变化"};
+    CM.h_mobile = ink_state_define(&mobile); ink_state_set_int(CM.h_mobile, 0);
+    if (ink_db_register(&MOBILE)) return -1;
+    ink_db_t *db = ink_db_open(&MOBILE, NULL);
+    bool saved = db && !ink_db_get(db, 1, NULL, &CM.apn, sizeof CM.apn);
+    if (db) ink_db_get(db, 2, NULL, &CM.usage, sizeof CM.usage);
+    ink_db_close(db);
+    if (ink_cap_register(MOBILE_CAPS, sizeof MOBILE_CAPS / sizeof *MOBILE_CAPS) || ink_state_watch("time.minute", mobile_sample, NULL, INK_EXEC_BG)) return -1;
     if (ink_db_register(&MESSAGES) || ink_db_register(&PARTS) || ink_cap_subscribe("message.received", received, NULL, INK_EXEC_BG) ||
         ink_cap_subscribe("comm.sms_part", part_arrived, NULL, INK_EXEC_BG)) return -1;
     CM.lock = osal_mutex_create();
     CM.at = osal_mutex_create();
     if (!CM.lock || !CM.at) return -1;
+    if (saved) ink_exec_post(INK_EXEC_BG, &CM.apn_job, mobile_apply, NULL);
     CM.h_registered = ink_state_define(&ST_REGISTERED);
+    static const ink_state_def_t roaming = {.id = "cell.roaming", .type = INK_ST_BOOL, .title = "漫游注册"};
+    CM.h_roaming = ink_state_define(&roaming);
     CM.h_sim = ink_state_define(&ST_SIM);
     ink_settings_define(COMM_SETTINGS, 1);
     if (ink_settings_watch("net.airplane", airplane_changed, NULL, INK_EXEC_BG) != 0) return -1;

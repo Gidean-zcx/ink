@@ -39,6 +39,7 @@ static const struct {
     {"system.set_volume", "percent"}, {"system.switch_member", "id"}, {"system.shutdown", NULL}, {"system.factory_reset", ""},
     {"system.reboot", NULL}, {"state.list", NULL}, {"settings.list", NULL}, {"settings.get", "id"}, {"settings.set", "id,value"},
     {"power.set_saving", "enabled"}, {"net.set_airplane", "enabled"}, {"wifi.set_enabled", "enabled"},
+    {"net.apn_set", "automatic"}, {"net.roaming_set", "enabled"}, {"net.usage", NULL}, {"net.usage_reset", NULL}, {"shell.mobile", NULL},
     {"data.collections", NULL}, {"data.list", "collection"}, {"data.get", "collection,id"}, {"data.put", "collection,value"},
     {"data.delete", "collection,id"}, {"data.status", "collection"}, {"job.list", NULL}, {"job.cancel", "id"}, {"file.list", "path"}, {"file.stat", "path"}, {"file.read", "path"}, {"file.write", "path,text"},
     {"file.mkdir", "path"}, {"file.copy", "from,to"}, {"file.move", "from,to"}, {"file.delete", "path"}, {"file.free", NULL}, {"usb.status", NULL},
@@ -61,6 +62,7 @@ static const struct {
     {"wifi.scan", NULL}, {"wifi.list", NULL}, {"wifi.connect", "ssid"}, {"wifi.forget", "ssid"}, {"member.list", NULL},
     {"member.add", "id"}, {"member.remove", "id"}, {"camera.capture", NULL}, {"message.send", "to"}, {"message.list", NULL},
     {"call.dial", "number"}, {"call.answer", NULL}, {"call.hangup", NULL}, {"remote.open", ""}, {"reader.list_books", NULL},
+    {"phone.emergency_open", NULL},
     {"call.mute", "on"}, {"call.dtmf", "key"}, {"call.route", "headset"}, {"call.record", NULL}, {"phone.keypad", NULL},
     {"reader.open_book", "title"}, {"reader.next_page", NULL}, {"reader.prev_page", NULL}, {"reader.goto_page", "page"}, {"reader.read_page", NULL}, {"reader.continue", NULL},
     {"activity.list", ""}, {"activity.clear", "member"}, {"update.status", NULL}, {"update.check", NULL}, {"update.download", NULL},
@@ -134,6 +136,12 @@ static const struct {
 } NOT_FOR_AI[] = {
     {"system.export_logs", "raw core dumps stay on the device owner's storage card", NULL},
     {"wifi.restore", "credentials are restored only through system.undo", "revision"},
+    {"shell.mobile_edit", "only a person edits the local credential draft; AI uses net.apn_set", NULL},
+    {"shell.mobile_save", "only a person submits the local credential draft", NULL},
+    {"phone.emergency", "D-119: only a person dials; the AI may open the page", "number"},
+    {"phone.emergency_key", "only a person enters emergency dialler keys", "key"},
+    {"phone.emergency_close", "only a person leaves the emergency dialler", NULL},
+    {"phone.emergency_hangup", "only a person ends an emergency call", NULL},
     {"shell.members_page", "member selection stays on the device before adult authentication", "delta"},
     {"pairing.accept", "only a person confirms joining a household", "txid"},
     {"confirm.accept", "only a person on the device can say yes", "token"},
@@ -149,6 +157,7 @@ static const struct {
 };
 
 static const char *const STATES[] = {
+    "cell.roaming", "net.mobile_rev",
     "power.saving",
     "pairing.state",
     "file.index_state",
