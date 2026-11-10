@@ -30,6 +30,7 @@
     "close",
     "cloud",
     "cloudoff",
+    "cloudsun",
     "contacts",
     "copy",
     "del",
@@ -71,6 +72,7 @@
     "plus",
     "plusminus",
     "power",
+    "rain",
     "recents",
     "remote",
     "scan",
@@ -81,6 +83,7 @@
     "shift",
     "signal",
     "sim",
+    "snow",
     "stop",
     "storage",
     "sun",
@@ -353,6 +356,15 @@
     "equals-solid.svg": "bee3e7b90140a42ca0de625a1fbf875e5f9f921371fd92f000985b59b7c546f8",
     "plusminus-line.svg": "efd0a3683cf0a54014c98744f2b73158fbfa5e6a550f96ebc4ff2d1d1a3fd77e",
     "plusminus-duo.svg": "5b08f34c1b624ee80c7d38544c9702316d6d406c0e4f2598b3eb4e5ebf12833c",
-    "plusminus-solid.svg": "97625a3910e30cc25a996e3bc63324e81b2cd90c44873680968e675e3df28a9e"
+    "plusminus-solid.svg": "97625a3910e30cc25a996e3bc63324e81b2cd90c44873680968e675e3df28a9e",
+    "cloudsun-line.svg": "116041c7f365f463a5133cffd802bcd97a76deed023892ba9d0dfdf9e6f5231f",
+    "cloudsun-duo.svg": "4fb05de9a5d82150adbc6e2db2abfbdfacc0d2a38df535b6d7d0c5ac091aa483",
+    "cloudsun-solid.svg": "6506ddcabf680fcf588b0fcf24bebd5fcb3ea1f60a1de10b114da18e000afa8c",
+    "rain-line.svg": "b5b3ef19d2819ee5471ccd5acabb6d6afc77994e68bf5d0a0709dd82578c1b7a",
+    "rain-duo.svg": "f492d5144ac2bd4a3831cd51a6bed1c746197c8ad690b5950afa1899d9a65d81",
+    "rain-solid.svg": "a544d5fc3b7d45d516bccb500830e76e5ad80872362d6d038c57e470b91e26f3",
+    "snow-line.svg": "12b15e45e0bf101a55db10fb410e88672aabf31d2e4c1c9b3b7f03e8d0c7da4e",
+    "snow-duo.svg": "3984868de55073601a1ccc1d6d6ba46b6b38da65c90eceddd63c69caa86abdca",
+    "snow-solid.svg": "94e5db9e5f62f58890bcce2965f0b577de487a770280a0cc2057c36c6c95fa6c"
   }
 }

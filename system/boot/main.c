@@ -114,6 +114,8 @@ void ink_main(void) {
     if (ink_calendar_init() != 0) osal_panic("calendar failed to start");
     extern int ink_calculator_init(void);
     if (ink_calculator_init() != 0) osal_panic("calculator failed to start");
+    extern int ink_weather_init(void);
+    if (ink_weather_init() != 0) osal_panic("weather failed to start");
     extern int ink_files_init(void);
     if (ink_files_init() != 0) osal_panic("files failed to start");
     extern int ink_camera_app_init(void), ink_gallery_init(void);

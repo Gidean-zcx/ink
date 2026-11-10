@@ -38,7 +38,7 @@ typedef struct {
 
 /* A service card: what an app shows outside itself (home, the AI). */
 typedef struct {
-    char id[16], title[32], text[96], action[40]; /* action: the capability behind it */
+    char id[16], title[32], text[96], action[40], icon[16]; /* action: the capability behind it; icon: empty = the app's */
     int64_t value;
     bool has_value;
     bool bookmark; /* where someone was: worth leaving on the panel when the device goes off */

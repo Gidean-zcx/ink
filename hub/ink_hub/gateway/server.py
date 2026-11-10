@@ -9,6 +9,7 @@ from aiohttp import WSMsgType, web
 
 from ink_hub.agent.tools import DeviceTools
 from ink_hub.bus.registry import Capability, Registry, object_schema
+from ink_hub.content.weather import Weather
 from ink_hub.console.setup import Setup
 from ink_hub.data.scope import Authority
 from ink_hub.jobs.queue import JobQueue
@@ -157,6 +158,18 @@ class Connection:
             except ConnectionError:
                 pass
 
+    async def weather(self, rid, method, params, scope, epoch):
+        guard = lambda: self.valid_output(scope, epoch)
+        try:
+            handler = self.hub.weather.find if method == "weather/find" else self.hub.weather.get
+            reply = response(rid, await handler(params))
+        except ProtocolError as exc:
+            reply = {"jsonrpc": "2.0", "id": rid, "error": {"code": exc.code, "message": str(exc)}}
+        try:
+            await self.send(reply, guard=guard)
+        except ConnectionError:
+            pass
+
     async def cancel_work(self):
         tasks = list(self.turns.values()) + list(self.calls.values())
         self.turns.clear()
@@ -251,6 +264,12 @@ class Connection:
                 if len(self.calls) + len(self.turns) >= 4:
                     raise ProtocolError("正在处理的请求已满", -32022)
                 task = asyncio.create_task(self.call_tool(rid, params, self.scope, self.epoch))
+                self.calls[rid] = task
+                task.add_done_callback(lambda t, key=rid: self.calls.pop(key, None) if self.calls.get(key) is t else None)
+            elif method in ("weather/find", "weather/get"):
+                if rid is None or rid in self.calls or len(self.calls) + len(self.turns) >= 4:
+                    raise ProtocolError("正在处理的请求已满", -32022)
+                task = asyncio.create_task(self.weather(rid, method, params, self.scope, self.epoch))
                 self.calls[rid] = task
                 task.add_done_callback(lambda t, key=rid: self.calls.pop(key, None) if self.calls.get(key) is t else None)
             elif method == "rt.open":
@@ -377,12 +396,13 @@ class Connection:
 
 
 class Hub:
-    def __init__(self, directory, *, dev_allow_proto1=False, model=None, asr=None, tts=None, request_timeout=3, record_wire=False):
+    def __init__(self, directory, *, dev_allow_proto1=False, model=None, asr=None, tts=None, request_timeout=3, record_wire=False, weather_source=None):
         self.directory = Path(directory)
         self.directory.mkdir(parents=True, exist_ok=True)
         self.dev_allow_proto1 = dev_allow_proto1
         self.model, self.asr, self.tts = model or FakeModel(), asr or FakeASR(), tts or FakeTTS()
         self.request_timeout = request_timeout
+        self.weather = Weather(weather_source)
         self.authority = Authority()
         self.authority.add("demo", "demo-adult")
         self.authority.add("demo", "demo-other")

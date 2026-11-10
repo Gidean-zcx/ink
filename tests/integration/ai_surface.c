@@ -93,6 +93,7 @@ static const struct {
     {"family.prev", NULL}, {"family.next", NULL}, {"wallpaper.choose", NULL}, {"member.rename", "id,name"},
     {"calendar.open", NULL}, {"calendar.prev", NULL}, {"calendar.next", NULL}, {"calendar.month_prev", NULL},
     {"calendar.month_next", NULL}, {"calendar.select", "day"},
+    {"weather.get", NULL}, {"weather.open", NULL}, {"weather.city", NULL}, {"weather.focus", NULL}, {"weather.find", "name"}, {"weather.set_city", "id"},
     {"shell.member_choose", NULL}, {"shell.pin_set", NULL},
     {"shell.pin_forgot", NULL}, {"shell.pin_parent", NULL}, {"shell.pin_cancel", NULL},
     {"shell.update", NULL}, {"shell.update_close", NULL},
