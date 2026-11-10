@@ -18,6 +18,10 @@
 #undef ink_main
 
 #include "whole_product.h"
+/* Setting up a race: the background executor must first be made busy. It can be held up meanwhile by
+ * /user flash work; in CI (2026-11-11) that work stalled the cores for 5.2 s over the run, with single
+ * erases up to 238 ms, and 2 s was not always enough for the executor to take the holding job. */
+#define BG_SETUP_US 6000000
 
 extern void races_notify_member(char *out, size_t cap);
 extern int races_interrupt_top(void);
@@ -229,7 +233,7 @@ static void yes_then_someone_else(void) {
     unsigned token = 0;
     sscanf(g_rc.object, "confirm:%u", &token);
     static ink_exec_job_t held;
-    CHECK(ink_exec_post(INK_EXEC_BG, &held, hold_bg, NULL) == 0 && osal_sem_take(g_bg_in, 2000000) == OSAL_OK, "the background is busy");
+    CHECK(ink_exec_post(INK_EXEC_BG, &held, hold_bg, NULL) == 0 && osal_sem_take(g_bg_in, BG_SETUP_US) == OSAL_OK, "the background is busy");
     int results = g_confirm_results;
     CHECK(ink_confirm_decide(token, true, INK_SRC_TOUCH) == 0, "the owner says yes");
     CHECK(ink_member_switch("kid") == 0, "and the child takes the device before it starts");
@@ -260,7 +264,7 @@ static void someone_else_while_the_background_is_busy(void) {
     CHECK(ink_notify_post(&n, &id) == 0 && id, "the owner has a notification");
     delay_ms(300);
     /* the inbox has not changed hands yet */
-    CHECK(ink_exec_post(INK_EXEC_BG, &held, hold_bg, NULL) == 0 && osal_sem_take(g_bg_in, 2000000) == OSAL_OK, "the background is busy");
+    CHECK(ink_exec_post(INK_EXEC_BG, &held, hold_bg, NULL) == 0 && osal_sem_take(g_bg_in, BG_SETUP_US) == OSAL_OK, "the background is busy");
     CHECK(ink_member_switch("kid") == 0, "someone else");
     CHECK(AI("notify.list", NULL) && g_rc.status == INK_RC_DONE && !strstr(g_result, "主人留的"), "the next one does not see it (%s)", g_result);
     char args[40];
@@ -277,7 +281,7 @@ static void someone_else_while_the_background_is_busy(void) {
     /* a call that was waiting its turn */
     hal_fs_remove("/content/.m/owner/queued-for-race.txt");
     hal_fs_remove("/content/.m/kid/queued-for-race.txt");
-    CHECK(ink_exec_post(INK_EXEC_BG, &held, hold_bg, NULL) == 0 && osal_sem_take(g_bg_in, 2000000) == OSAL_OK, "the background is busy");
+    CHECK(ink_exec_post(INK_EXEC_BG, &held, hold_bg, NULL) == 0 && osal_sem_take(g_bg_in, BG_SETUP_US) == OSAL_OK, "the background is busy");
     ink_call_opts_t o = {.src = INK_SRC_AI, .args_json = "{\"path\":\"/me/queued-for-race.txt\",\"text\":\"x\"}", .reply_exec = INK_EXEC_DIRECT, .done = queued_done};
     int done = g_queued_done;
     CHECK(ink_cap_call("file.write", NULL, &o) == 0, "the owner's AI asks to write");
@@ -288,7 +292,7 @@ static void someone_else_while_the_background_is_busy(void) {
     ink_member_test_reset();
     delay_ms(500);
     /* an event that was waiting for whoever takes it up */
-    CHECK(ink_exec_post(INK_EXEC_BG, &held, hold_bg, NULL) == 0 && osal_sem_take(g_bg_in, 2000000) == OSAL_OK, "the background is busy");
+    CHECK(ink_exec_post(INK_EXEC_BG, &held, hold_bg, NULL) == 0 && osal_sem_take(g_bg_in, BG_SETUP_US) == OSAL_OK, "the background is busy");
     ink_args_t *a = osal_malloc(sizeof *a, OSAL_MEM_EXTERNAL);
     ink_args_init(a);
     ink_args_str(a, "from", "王老师");
