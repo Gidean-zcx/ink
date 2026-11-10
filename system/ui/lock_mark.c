@@ -34,7 +34,8 @@ static void show(void) {
     if (g_mark) return;
     bool clock = ink_setting_get("display.lock_style") == 1;
     bool image = ink_setting_get("display.lock_style") == 2 && ink_wallpaper_ready();
-    int strip_h = LV_MAX(INK_CONTROL, 2 * ink_ui_line_height(INK_FONT_NOTE));
+    int text_h = 2 * ink_ui_line_height(INK_FONT_NOTE);
+    int strip_h = text_h > INK_CONTROL ? text_h : INK_CONTROL;
     g_mark = clock || image ? lv_obj_create(lv_layer_sys()) : ink_ui_box(lv_layer_sys(), INK_MARGIN,
              INK_CANVAS_H - strip_h - INK_GAP_S, INK_CANVAS_W - 2 * INK_MARGIN, strip_h, 0, INK_SURFACE_WHITE, false);
     if (clock || image) {
