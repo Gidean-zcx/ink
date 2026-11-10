@@ -7,8 +7,23 @@
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
 | 1 | 【实测】通过（模拟器） | lock 110、gate 138、kid 112 条断言；卡上三张公共照片含前一次拍的照片，私有旧照仍独立；本次只回看新拍两张 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/lock_camera/run.py --build build` |
-| 2 | 待验证 | 原有测试、全量、内存检查、S31、gcccheck | 待补 |
-| 3 | 【实测】已生成，待最终复查 | `build/lock-camera-c9edapvr/{lock,gate,kid}/snap-{lock-entry,restricted,confirmation}.png`；另有 gate 的成员门、密码页截图 | 同上 |
+| 2 | 【实测】定向、S31、GCC 通过；全量和内存检查待结束 | 原有锁屏、成员门、相机相册回归未修改；见下文 | 见下文命令 |
+| 3 | 【实测】通过，逐张看过 | 下表三张为最终布局；另有成员门、密码页截图 | 同第 1 条 |
+
+截图路径相对仓库根目录，未提交构建产物：
+
+| 画面 | 路径 |
+| --- | --- |
+| 默认锁屏入口 | `build/lock-camera-cphxgnfk/lock/snap-lock-entry.png` |
+| 受限取景 | `build/lock-camera-cphxgnfk/lock/snap-restricted.png` |
+| 本次第二张的拍摄确认 | `build/lock-camera-cphxgnfk/lock/snap-confirmation.png` |
+| 成员门、密码页入口 | `build/lock-camera-cphxgnfk/gate/snap-member-entry.png`、`build/lock-camera-cphxgnfk/gate/snap-pin-entry.png` |
+
+【实测】最终反向对照：`run.py --build build --negative` 仅撤掉公共存放选择，变异程序退出 1，109 通过、3 失败、finished=1；包装脚本确认归属断言失败后退出 0。原程序与工作树未变，证据 `build/lock-camera-oihug9hs/`，日志 `build/lock-negative.log`。
+
+【实测】`taskpolicy -c utility python "$INK_DEPS/../ink-codex/tools/gcccheck.py" build <本次 11 个产品 C 文件及新测试 C 文件>`：`gcccheck: 12 compiled, 0 with findings`，退出 0，日志 `build/lock-gcccheck.log`。
+
+【实测】`INK_DEPS="$INK_DEPS" taskpolicy -c utility bash ports/esp32s31/build.sh`：完整 S31 编译、链接、镜像生成、size、stack 报告均退出 0。镜像 1,342,416 字节，DIRAM 88,180 字节、PSRAM 静态 BSS 552,728 字节；日志 `build/lock-s31.log`，产物 `build-s31/ink-s31.bin`。仅编译，未烧录或运行设备。
 
 ## 没做到的
 
