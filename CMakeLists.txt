@@ -6,6 +6,9 @@
 #   cmake -S . -B build && cmake --build build -j && ctest --test-dir build --output-on-failure
 cmake_minimum_required(VERSION 3.16)
 project(ink C)
+# Tests that recompile one source with its real flags for a reverse control (emergency-call, among others)
+# read the compile database; CI configures without asking for it (2026-11-11), so it is always written.
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 execute_process(COMMAND git rev-parse --short=12 HEAD WORKING_DIRECTORY ${CMAKE_SOURCE_DIR} OUTPUT_VARIABLE INK_BUILD_COMMIT OUTPUT_STRIP_TRAILING_WHITESPACE)
 add_compile_definitions(INK_BUILD_COMMIT="${INK_BUILD_COMMIT}")
 add_executable(test-s31-osal-ticks tests/esp32s31/osal_ticks.c)
