@@ -37,6 +37,12 @@ static void via(void) {
     CHECK(BY_HAND("settings.set", "{\"id\":\"net.airplane\",\"value\":false}") && g_rc.status == INK_RC_DONE && strstr(g_rc.say, "已关闭飞行模式"),
         "by hand it is at once, with the same words");
     CHECK(WAIT_FOR(!ink_setting_get("net.airplane") && ink_setting_get("wifi.enabled") == 1, 3000), "airplane mode off, Wi-Fi back");
+    /* audit13 low 7: an expected_revision is checked before the setting's own capability; no undo is offered */
+    CHECK(AI("settings.set", "{\"id\":\"wifi.enabled\",\"value\":0,\"expected_revision\":4000000000}") && g_rc.status == INK_RC_STALE &&
+        ink_setting_get("wifi.enabled") == 1, "a stale expected_revision is refused, Wi-Fi stays (%s)", ink_rc_name(g_rc.status));
+    CHECK(BY_HAND("settings.set", "{\"id\":\"wifi.enabled\",\"value\":0}") && g_rc.status == INK_RC_DONE && !g_rc.undo_ms && !ink_setting_get("wifi.enabled"),
+        "Wi-Fi off through wifi.set_enabled offers no system.undo, as the capability table says");
+    CHECK(BY_HAND("settings.set", "{\"id\":\"wifi.enabled\",\"value\":1}") && ink_setting_get("wifi.enabled") == 1, "and back on");
 }
 
 /* ------------------------------------------------------------ M2 */

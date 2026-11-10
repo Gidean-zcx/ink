@@ -9,13 +9,13 @@ import subprocess
 ROOT = Path(__file__).resolve().parents[2]
 parser = argparse.ArgumentParser()
 parser.add_argument("--build", type=Path, required=True)
-parser.add_argument("--phase", choices=("main", "cut", "cost"))
+parser.add_argument("--phase", choices=("main", "cut", "cost", "retry"))
 args = parser.parse_args()
 build = args.build.resolve()
 out_root = build / "test-out" / "memo-record"
 shutil.rmtree(out_root, ignore_errors=True)
 out_root.mkdir(parents=True)
-runs = [args.phase] if args.phase else ["main", "cut"]
+runs = [args.phase] if args.phase else ["main", "cut", "retry"]
 ok = True
 for run in runs:
     phases = ["cut", "after"] if run == "cut" else [run]

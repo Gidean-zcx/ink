@@ -22,7 +22,7 @@ static struct {
     int nwait, nfound;
     struct { int64_t id; char name[32], area[48], args[96]; } found[5];
     ink_exec_job_t got_job, found_job;
-    char texts[6][96], updated[48], ranges[4][24];
+    char texts[7][96], updated[48], ranges[4][24];
     ink_ui_field_spec_t fields[8];
     ink_ui_action_spec_t actions[8];
     ink_ui_page_spec_t page;
@@ -219,8 +219,8 @@ static void weather_create(lv_obj_t *screen, void *arg) {
             field(n++, IDS[i], W.texts[2 + i], i ? d->w : range);
         }
         y += (W.ndays + 1) * INK_CONTROL + INK_GAP_S;
-        snprintf(W.texts[5], sizeof W.texts[5], "%s%s\n数据来自 Open-Meteo.com", W.offline ? "没联网，" : "", W.updated);
-        ink_ui_notice(screen, W.texts[5], y); field(n++, "updated", "更新", W.texts[5]);
+        snprintf(W.texts[6], sizeof W.texts[6], "%s%s\n数据来自 Open-Meteo.com", W.offline ? "没联网，" : "", W.updated); /* 2..5: the rows */
+        ink_ui_notice(screen, W.texts[6], y); field(n++, "updated", "更新", W.texts[6]);
     }
     int half = (w - INK_GAP) / 2, bottom = INK_CANVAS_H - INK_MARGIN - INK_PRIMARY;
     ink_shell_bind(ink_ui_pill(screen, W.id ? "换城市" : "选城市", INK_MARGIN, bottom, W.id ? half : w, INK_PRIMARY, !W.id, NULL, NULL), "weather.city", "{}");

@@ -957,7 +957,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `display.wallpaper_file` | 壁纸图片编号 | `INK_SET_INT` | `settings.get` / `settings.set` | 仅成人 | 中 / 无需 | [system/ui/shell/wallpaper.c](../../system/ui/shell/wallpaper.c) |
 | `display.warmth` | 暖光（越大越暖） | `INK_SET_INT` | `settings.get` / `settings.set` | 成人、儿童（无需白名单） | 中 / 无需 | [system/services/display/light.c](../../system/services/display/light.c) |
 | `member.idle_return_s` | 大人锁屏多久后要重新输密码（秒） | `INK_SET_INT` | `settings.get` / `settings.set` | 仅成人 | 高 / 人、AI 均需确认 | [system/policy/members.c](../../system/policy/members.c) |
-| `net.airplane` | 飞行模式 | `INK_SET_BOOL` | `settings.get` / `settings.set`（转给 `net.set_airplane`） | 仅成人 | 中 / 无需 | [system/services/net/net_service.c](../../system/services/net/net_service.c) |
+| `net.airplane` | 飞行模式 | `INK_SET_BOOL` | `settings.get` / `settings.set`（转给 `net.set_airplane`，不能用 `system.undo` 撤销） | 仅成人 | 中 / 无需 | [system/services/net/net_service.c](../../system/services/net/net_service.c) |
 | `net.prefer` | 上网方式 | `INK_SET_ENUM` | `settings.get` / `settings.set` | 仅成人 | 中 / 无需 | [system/services/net/net_service.c](../../system/services/net/net_service.c) |
 | `notify.dnd` | 勿扰 | `INK_SET_BOOL` | `settings.get` / `settings.set` | 成人、儿童（无需白名单） | 中 / 无需 | [system/services/notify/notify_service.c](../../system/services/notify/notify_service.c) |
 | `power.lift_wake` | 拿起亮屏（平放不动 3 分钟先锁屏） | `INK_SET_BOOL` | `settings.get` / `settings.set` | 仅成人 | 中 / 无需 | [system/services/power/power_service.c](../../system/services/power/power_service.c) |
@@ -968,7 +968,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `time.zone` | 时区 | `INK_SET_ENUM` | `settings.get` / `settings.set` | 仅成人 | 中 / 无需 | [system/services/time/time_service.c](../../system/services/time/time_service.c) |
 | `update.auto_download` | 自动下载新版本（流量要钱，默认关） | `INK_SET_BOOL` | `settings.get` / `settings.set` | 仅成人 | 中 / 无需 | [system/services/update/update_service.c](../../system/services/update/update_service.c) |
 | `voice.handsfree` | 叫名字（什么时候在等） | `INK_SET_ENUM` | `settings.get` / `settings.set` | 仅成人 | 中 / 无需 | [system/services/audio/audio_service.c](../../system/services/audio/audio_service.c) |
-| `wifi.enabled` | Wi-Fi | `INK_SET_BOOL` | `settings.get` / `settings.set`（转给 `wifi.set_enabled`） | 仅成人 | 中 / 无需 | [system/services/net/net_service.c](../../system/services/net/net_service.c) |
+| `wifi.enabled` | Wi-Fi | `INK_SET_BOOL` | `settings.get` / `settings.set`（转给 `wifi.set_enabled`，不能用 `system.undo` 撤销） | 仅成人 | 中 / 无需 | [system/services/net/net_service.c](../../system/services/net/net_service.c) |
 
 ## 状态
 

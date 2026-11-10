@@ -4,11 +4,11 @@
 
 #include "../../ports/esp32s31/s31_hal_map.h"
 
-static int feed(s31_line_t *l, const char *s, int *last) { /* lines completed; *last = length of the last one */
+static int feed(s31_line_t *l, const char *s, int *last) { /* lines completed; *last = length of the last one (-2: too long) */
     int lines = 0;
     for (; *s; s++) {
         int n = s31_line_feed(l, *s);
-        if (n >= 0) {
+        if (n >= 0 || n == -2) {
             lines++;
             *last = n;
         }
@@ -34,7 +34,12 @@ int main(void) {
     memset(longline, 'x', sizeof longline - 2);
     longline[sizeof longline - 2] = '\n';
     longline[sizeof longline - 1] = 0;
-    assert(feed(&l, longline, &last) == 1 && last == S31_LINE_CAP - 1 && strlen(l.buf) == S31_LINE_CAP - 1);
+    assert(feed(&l, longline, &last) == 1 && last == -2 && l.overlong == 1 && !l.buf[0]); /* not passed on cut: an error, counted */
     assert(feed(&l, "next\n", &last) == 1 && !strcmp(l.buf, "next")); /* the overflow did not leak into it */
+    char sms[280 + 2]; /* a whole 70-character SMS in UCS2 hex (NT26 text mode) */
+    memset(sms, 'A', 280);
+    sms[280] = '\n';
+    sms[281] = 0;
+    assert(feed(&l, sms, &last) == 1 && last == 280 && strlen(l.buf) == 280 && l.overlong == 1);
     return 0;
 }

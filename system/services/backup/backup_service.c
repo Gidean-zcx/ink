@@ -1051,13 +1051,13 @@ static void schedule(void) {
 
 static void mark_failed(const char *reason) {
     free_capture();
-    B.j.phase = PH_FAILED;
-    snprintf(B.j.reason, sizeof B.j.reason, "%s", reason);
-    save_journal();
-    if ((*task_id())) {
+    if ((*task_id())) { /* the list first: whoever sees the phase sees the job over (as update-flake) */
         ink_task_end((*task_id()), INK_TASK_FAILED, reason, NULL);
         (*task_id()) = 0;
     }
+    B.j.phase = PH_FAILED;
+    snprintf(B.j.reason, sizeof B.j.reason, "%s", reason);
+    save_journal();
     event("backup.failed");
 }
 
@@ -1114,11 +1114,11 @@ static int upload_step(ink_json_t *j) {
         B.j.phase = PH_UPLOAD;
         return -1;
     }
-    acknowledge_manifest();
-    if ((*task_id())) {
+    if ((*task_id())) { /* as soon as the journal says saved (a journal not written goes on uploading) */
         ink_task_end((*task_id()), INK_TASK_DONE, "已备份", NULL);
         (*task_id()) = 0;
     }
+    acknowledge_manifest();
     event("backup.changed");
     ink_probe_count("backup.saved");
     return 0;

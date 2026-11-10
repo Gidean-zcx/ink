@@ -514,11 +514,21 @@ bool ink_audio_recording(void) {
     return on;
 }
 
-static void rec_finish(const char *why) { /* executor */
+static void rec_why(const char *why) { /* any task: why it stopped; "不要了" is not overwritten by what comes after it */
+    ink_svc_lock();
+    if (strcmp(REC.why, "cancelled")) snprintf(REC.why, sizeof REC.why, "%s", why);
+    ink_svc_unlock();
+}
+
+static void rec_finish(void) { /* executor */
+    char why[sizeof REC.why];
+    ink_svc_lock();
+    snprintf(why, sizeof why, "%s", REC.why);
+    ink_svc_unlock();
     uint32_t ms = ogg_written_ms(REC.w);
     int r = ogg_finish(REC.w);
     REC.w = NULL;
-    if (!strcmp(REC.why, "cancelled")) ink_fs_remove_for(REC.member, REC.path); /* nothing of it stays */
+    if (!strcmp(why, "cancelled")) ink_fs_remove_for(REC.member, REC.path); /* nothing of it stays */
     if (REC.focus) ink_audio_focus_release(REC.focus);
     REC.focus = 0;
     ink_svc_lock();
@@ -532,7 +542,7 @@ static void rec_finish(const char *why) { /* executor */
         ink_args_str(a, "path", REC.path);
         ink_args_str(a, "member", REC.member);
         ink_args_int(a, "ms", ms);
-        ink_args_str(a, "why", r && !REC.why[0] ? "write_failed" : why);
+        ink_args_str(a, "why", r && !why[0] ? "write_failed" : why[0] ? why : "stopped");
         ink_cap_emit_for("audio.record_done", a, REC.member);
         osal_free(a);
     }
@@ -552,13 +562,13 @@ static void rec_write(void *arg) { /* executor: what the microphone gave, to the
         bool ending = REC.ending;
         ink_svc_unlock();
         if (!any) {
-            if (ending) rec_finish(REC.why[0] ? REC.why : "stopped");
+            if (ending) rec_finish();
             return;
         }
         int e = ogg_write_packet(REC.w, f.data, f.len, OGG_FRAME_MS);
         osal_free(f.data);
         if (e) { /* full, or the card went */
-            snprintf(REC.why, sizeof REC.why, "%s", e == INK_FS_ERR_NO_SPACE || e == INK_FS_ERR_IO ? "no_space" : "write_failed"); /* a card that is there and takes no more */
+            rec_why(e == INK_FS_ERR_NO_SPACE || e == INK_FS_ERR_IO ? "no_space" : "write_failed"); /* a card that is there and takes no more */
             ink_audio_capture_end();
             continue;
         }
@@ -567,8 +577,11 @@ static void rec_write(void *arg) { /* executor: what the microphone gave, to the
             REC.last_sync_ms = ms;
             ogg_sync(REC.w);
         }
-        if (REC.max_ms && ms >= REC.max_ms && !REC.why[0]) {
-            snprintf(REC.why, sizeof REC.why, "max_length");
+        ink_svc_lock();
+        bool over = REC.max_ms && ms >= REC.max_ms && !REC.why[0];
+        if (over) snprintf(REC.why, sizeof REC.why, "max_length");
+        ink_svc_unlock();
+        if (over) {
             ink_audio_capture_end();
         }
     }
@@ -579,7 +592,7 @@ static void rec_frame(void *ctx, const uint8_t *data, size_t len, uint32_t seq) 
     (void)seq;
     if (!len) { /* the end: after what is queued. It takes no room there, a full queue must not lose it */
         ink_svc_lock();
-        if (!ink_member_exists(REC.member) || strcmp(ink_member_current()->id, REC.member)) snprintf(REC.why, sizeof REC.why, "member_changed");
+        if ((!ink_member_exists(REC.member) || strcmp(ink_member_current()->id, REC.member)) && strcmp(REC.why, "cancelled")) snprintf(REC.why, sizeof REC.why, "member_changed");
         REC.ending = true;
         ink_svc_unlock();
         ink_exec_post(INK_EXEC_MEDIA, &REC.write_job, rec_write, NULL);
@@ -605,7 +618,7 @@ static void rec_frame(void *ctx, const uint8_t *data, size_t len, uint32_t seq) 
 
 static void rec_member_changed(void) { /* executor */
     if (!ink_audio_recording() || (ink_member_exists(REC.member) && !strcmp(ink_member_current()->id, REC.member))) return;
-    snprintf(REC.why, sizeof REC.why, "member_changed");
+    rec_why("member_changed");
     ink_audio_capture_end();
 }
 
@@ -614,7 +627,7 @@ static void rec_on_focus(void *ctx, ink_focus_event_t ev, ink_audio_prio_t by) {
     (void)by;
     if (ev != INK_FOCUS_LOST || !ink_audio_recording()) return;
     REC.focus = 0;
-    snprintf(REC.why, sizeof REC.why, "interrupted");
+    rec_why("interrupted");
     ink_audio_capture_end();
 }
 
@@ -730,7 +743,9 @@ static void cap_record(ink_call_t *c) { /* executor */
     snprintf(REC.path, sizeof REC.path, "%s", path);
     snprintf(REC.member, sizeof REC.member, "%s", member);
     
+    ink_svc_lock();
     REC.why[0] = 0;
+    ink_svc_unlock();
     REC.last_sync_ms = 0;
     REC.max_ms = max_s > 0 && max_s < REC_MAX_S ? (uint32_t)max_s * 1000u : REC_MAX_S * 1000u;
     ink_svc_lock();
@@ -764,7 +779,11 @@ static void cap_record_stop(ink_call_t *c) {
         fail(c, INK_RC_FAILED, "not recording");
         return;
     }
-    if (!strcmp(c->cap->id, "audio.record_cancel")) snprintf(REC.why, sizeof REC.why, "cancelled");
+    if (!strcmp(c->cap->id, "audio.record_cancel")) {
+        ink_svc_lock();
+        snprintf(REC.why, sizeof REC.why, "cancelled");
+        ink_svc_unlock();
+    }
     ink_audio_capture_end();
 }
 
@@ -812,8 +831,8 @@ static void tx_pump(void *arg) { /* executor: a few packets at a time, the hub q
     ink_svc_unlock();
     bool ready = ink_rt_ready(TX.sid);
     TX.waited = ready ? 0 : TX.waited + 1;
-    if (state || !ink_rt_is_open(TX.sid) || TX.waited > 300) { /* about 30 s without the hub */
-        tx_end(state == 1 ? NULL : state == 2 ? "the hub could not make words of it" : "offline");
+    if (state || !ink_rt_is_open(TX.sid) || TX.waited > 300 || !ink_cap_time_left_ms(TX.c)) { /* about 30 s without the hub; a hub that never says done: its deadline */
+        tx_end(state == 1 ? NULL : state == 2 ? "the hub could not make words of it" : TX.waited > 300 || !ink_rt_is_open(TX.sid) ? "offline" : "timed out");
         return;
     }
     for (int i = 0; i < 16 && ready && !TX.ended; i++) {

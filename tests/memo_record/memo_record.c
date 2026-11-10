@@ -1,6 +1,12 @@
 /* Voice memos on the whole product: the real memo app, media service, AI sheet and the hub's stand-in dictation.
- * INK_MR_PHASE: main, cut (a power cut while recording), after (the boot after it), cost (one minute, for D-112). */
+ * INK_MR_PHASE: main, cut (a power cut while recording), after (the boot after it), cost (one minute, for D-112),
+ * retry (audit13: words that do not go in, nothing heard, a hub that never answers, a memo waiting for its words). */
+#include "ink/sys/data.h"
+static bool refuse_write; /* the retry phase: the memo store takes nothing, as a full one */
+static int test_put(ink_db_t *db, const ink_db_write_t *w, uint32_t *id) { return refuse_write ? INK_DB_ERR_FULL : ink_db_put(db, w, id); }
+#define ink_db_put test_put
 #include "../../system/apps/memo/memo.c"
+#undef ink_db_put
 #define ink_main product_main
 #include "../../system/boot/main.c"
 #undef ink_main
@@ -150,6 +156,58 @@ static void after_phase(void) {
     CHECK(note.audio && ms >= 7000 && ms <= 13000, "what was on the card before the cut plays as a good Ogg file (%u ms)", (unsigned)ms);
     CHECK(BY_HAND("memo.play", "{\"id\":1}") && g_rc.status == INK_RC_DONE, "and plays");
 }
+static double opened(void) { return sim_metric_value("hub.asr_opened"); }
+static bool written(uint32_t id, const char *body) { /* as if typed by hand before this firmware: a pending memo with words */
+    if (!voice_note(id)) return false;
+    char raw[1024]; ink_jw_t w; ink_jw_init(&w, raw, sizeof raw);
+    ink_jw_raw(&w, "{\"body\":"); ink_jw_str(&w, body); ink_jw_raw(&w, ",\"checklist\":false,\"deleted\":false,\"checked\":0,\"draft\":0,\"page\":\"\",\"path\":");
+    ink_jw_str(&w, note.path); ink_jw_raw(&w, ",\"audio\":"); ink_jw_int(&w, note.audio); ink_jw_raw(&w, ",\"ms\":"); ink_jw_int(&w, note.ms); ink_jw_raw(&w, ",\"pending\":true}");
+    ink_db_t *db = ink_db_open_member(&MEMOS, ink_member_current()->id); uint32_t ver = 0;
+    ink_db_write_t wr = {.id = id, .data = raw, .len = w.len, .src = INK_SRC_SYSTEM, .written_ver = &ver};
+    bool ok = db && !w.overflow && ink_db_put(db, &wr, NULL) == 0 && ink_db_wait(db, ver, 5000000) == 0;
+    ink_db_close(db); return ok;
+}
+static void reopen(void) { key(HAL_KEY_HOME); quiet(); open_list(); } /* the list made again: it looks for memos waiting for words */
+static void retry_phase(void) {
+    sim_hub_asr_script("转写的字", NULL, 0);
+    set_net("none"); CHECK(WAIT_FOR(!ink_hub_online(), 30000), "offline first"); open_list();
+    for (int i = 1; i <= 2; i++) {
+        CHECK(start_recording(), "recording %d", i); delay_ms(3000);
+        CHECK(BY_HAND("audio.record_stop", NULL) && WAIT_FOR(voice_count() == i, 10000), "recording %d is a memo", i);
+        open_list();
+    }
+    /* low 8: a path without a folder is refused, not a crash */
+    CHECK(call_as("memo.voice", "{\"path\":\"no-folder.opus\"}", INK_SRC_SYSTEM) && g_rc.status == INK_RC_INVALID, "memo.voice without a folder (%s)", ink_rc_name(g_rc.status));
+    /* middle 2: a memo waiting for its words opens its waiting page, not the editor */
+    CHECK(AI("memo.edit", "{\"id\":1}") && g_rc.status == INK_RC_DONE && WAIT_FOR(on_page("MemoPending"), 5000), "memo.edit of a waiting memo shows MemoPending (%s)", ink_ui_page_name());
+    CHECK(written(1, "手写的字"), "memo 1 has words typed before its own came");
+    open_list();
+    /* middle 3: the words do not go in (a full store): each is tried once, then waits; not sent again and again */
+    refuse_write = true; double before = opened();
+    set_net("wifi"); CHECK(WAIT_FOR(ink_hub_online(), 30000), "online");
+    CHECK(WAIT_FOR(opened() >= before + 2, 30000), "both were sent to the hub (%.0f)", opened() - before);
+    delay_ms(20000); reopen(); delay_ms(5000);
+    CHECK(opened() == before + 2, "each was sent once, not again and again (%.0f)", opened() - before);
+    CHECK(voice_note(1) && note.pending && !strcmp(note.body, "手写的字") && voice_note(2) && note.pending, "both still wait, the typed words kept");
+    /* middle 3: nothing heard is done all the same, with a note; middle 2: the typed words stay, the new ones follow them */
+    refuse_write = false; sim_hub_asr_script("", NULL, 0);
+    delay_ms(61000); reopen();
+    CHECK(WAIT_FOR(voice_note(1) && !note.pending && voice_note(2) && !note.pending, 30000), "a minute later both are tried again and done");
+    voice_note(1); CHECK(!strcmp(note.body, "手写的字\n这段录音里没听到说话"), "memo 1 keeps the typed words first (%.100s)", note.body);
+    voice_note(2); CHECK(!strcmp(note.body, "这段录音里没听到说话"), "memo 2 says nothing was heard (%.100s)", note.body);
+    /* low 5: a hub that never says done; after audio.transcribe's deadline the next recording still gets its words */
+    sim_hub_asr_script("x", "silent", 0); before = opened(); double turns = sim_metric_value("hub.asr_turn_end");
+    CHECK(start_recording(), "recording 3"); delay_ms(3000);
+    CHECK(BY_HAND("audio.record_stop", NULL) && WAIT_FOR(voice_count() == 3, 10000), "recording 3 is a memo");
+    uint32_t third = 0; for (uint32_t id = 1; id < 10; id++) if (voice_note(id) && note.path[0] && note.pending) third = id;
+    CHECK(WAIT_FOR(opened() == before + 1 && sim_metric_value("hub.asr_turn_end") == turns + 1, 30000), "and is sent whole to a hub that does not answer");
+    delay_ms(5000); CHECK(voice_note(third) && note.pending, "no words came");
+    sim_hub_asr_script("终于好了", NULL, 0);
+    for (int i = 0; i < 700; i += 10) { delay_ms(10000); ink_power_activity(osal_now_us()); } /* awake, as someone using it */
+    reopen();
+    CHECK(third && WAIT_FOR(voice_note(third) && !note.pending, 30000), "after the deadline and a minute it is sent again and done (%u %d)", (unsigned)third, note.pending);
+    CHECK(strstr(note.body, "终于好了") != NULL, "with its words (%.100s)", note.body);
+}
 static void cost_phase(void) { /* D-112: a minute of recording, what it costs the processor, the memory and the card */
     open_list(); sim_metric_add("test.cost_start_ms", (double)(osal_now_us() / 1000));
     CHECK(start_recording(), "a minute of recording"); delay_ms(60000);
@@ -162,7 +220,7 @@ static void run(void *arg) {
     (void)arg; vtk_host_call(host_phase, NULL);
     CHECK(WAIT_FOR(ink_member_space_open(), 10000), "member space opens"); test_start_home(); quiet();
     if (!strcmp(phase, "cut")) { cut_phase(); return; }
-    if (!strcmp(phase, "after")) after_phase(); else if (!strcmp(phase, "cost")) cost_phase(); else main_phase();
+    if (!strcmp(phase, "after")) after_phase(); else if (!strcmp(phase, "cost")) cost_phase(); else if (!strcmp(phase, "retry")) retry_phase(); else main_phase();
     CHECK(WAIT_FOR(ink_db_idle(), 15000), "writes finish"); ink_probe_count("test.finished");
 }
 void ink_main(void) {

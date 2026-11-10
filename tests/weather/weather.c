@@ -16,6 +16,10 @@ static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
 static void quiet(void) { CHECK(WAIT_FOR(settled(), 10000), "the real page settles"); }
 static void read_snapshot(void) { CHECK(ink_ui_snapshot(snapshot, sizeof snapshot, NULL) > 0, "the page has an AI snapshot"); }
 static void expect(const char *text) { on_ui(read_snapshot); CHECK(strstr(snapshot, text), "snapshot contains %s: %.200s", text, snapshot); }
+static void expect_day3(void) { /* the third day's row is named by its weekday, not by the update line after it */
+    on_ui(read_snapshot); const char *d = strstr(snapshot, "{\"id\":\"day3\""), *l = d ? strstr(d, ",\"label\":\"") : NULL;
+    CHECK(l && !strncmp(l + 10, "周", strlen("周")), "day3 is labelled with its weekday: %.200s", d ? d : snapshot);
+}
 static void find_in(lv_obj_t *o) {
     if (found || lv_obj_has_flag(o, LV_OBJ_FLAG_HIDDEN)) return;
     if (lv_obj_check_type(o, &lv_label_class) && strstr(lv_label_get_text(o), wanted_text)) { found = o; return; }
@@ -128,7 +132,7 @@ static void run(void *arg) {
     /* The page, the Today card (put there by the first city) and the AI read the same fake forecast. */
     CHECK(WAIT_FOR(find("小雨 · 最高 15° 最低 3°") != NULL, 5000), "the page fills in");
     quiet(); shows("12°"); shows("明天 · 多云"); shows("16° / 5°"); shows("今天降水概率"); shows("80%");
-    shows("数据来自 Open-Meteo.com"); expect("后天 · 晴"); expect("更新"); capture("WeatherPage");
+    shows("数据来自 Open-Meteo.com"); expect("后天 · 晴"); expect_day3(); expect("更新"); capture("WeatherPage");
     CHECK(!find("没联网"), "online: no offline note");
     shows("换城市");
     today();
