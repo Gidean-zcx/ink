@@ -99,9 +99,7 @@ void hal_display_set_temperature(int celsius) {  }
 
 /* I2C: hal_i2c_s31.c. */
 
-/* TODO: Portable FT6336U + TCA9555 board keys. */
-void hal_input_set_sink(hal_input_sink_fn fn, void *ctx) {  }
-void hal_input_get_info(hal_input_info_t *out) { *out = (hal_input_info_t){0}; }
+/* Input: hal_input_s31.c. */
 
 /* TODO: ESP-IDF S31 JPEG decoder. */
 int hal_jpeg_decode_gray(const uint8_t *src, size_t n, uint8_t *dst, int w, int h) { return -1; }
@@ -134,17 +132,7 @@ int hal_ota_mark_valid(void) { return -1; }
 int hal_ota_write_resource(int kind, size_t offset, const void *data, size_t n) { return -1; }
 bool hal_crypto_verify_fw(const uint8_t hash[32], const uint8_t *sig, size_t sig_len, uint32_t key_id) { return false; }
 
-/* TODO: Upstream TPS65185/PMIC sequencing + ESP-IDF PM/light sleep. Battery and front light: s31_board.c. */
-hal_cpu_boost_t *hal_cpu_boost_create(const char *name) { return NULL; }
-void hal_power_request(hal_power_res_t res, bool on) {  }
-void hal_power_set_state(hal_power_state_t s) {  }
-void hal_cpu_boost_acquire(hal_cpu_boost_t *b) {  }
-void hal_cpu_boost_release(hal_cpu_boost_t *b) {  }
-uint32_t hal_power_sleep(const hal_sleep_cfg_t *cfg) { return 0; }
-void hal_power_shutdown(void) { hal_log_write("没有关机驱动"); }
-void hal_power_reboot(void) { hal_log_write("没有重启驱动"); }
-bool hal_haptic_available(void) { return false; }
-void hal_haptic_pulse(int ms) {  }
+/* Power: hal_power_s31.c; battery/light: s31_board.c; motor: hal_input_s31.c. */
 
 /* TODO: ESP-IDF SoftAP + HTTP server. */
 int hal_provision_start(const char *ssid, const char *password, hal_provision_fn fn, void *ctx) { return -1; }
