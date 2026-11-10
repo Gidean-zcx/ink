@@ -1,4 +1,4 @@
-/* Locked page or minute clock; touches remain disabled by the input service. */
+/* Locked page or minute clock, with a capture-only camera entry. */
 #include <stdio.h>
 
 #include "ink/sys/exec.h"
@@ -19,7 +19,7 @@ static ink_exec_job_t g_job;
 static int snapshot(char *buf, size_t cap) { return snprintf(buf, cap, "%s", TR("设备已锁定；可拍照：app.open(id=camera)。电源键或 AI 键唤醒。")); }
 static const ink_ui_overlay_t OVERLAY = {.name = "LockPage", .level = 2, .snapshot = snapshot};
 static const char *mark_text(void) {
-    return ink_setting_get("display.lock_style") == 0 && ink_activity_listening() ? "正在听，按电源键或 AI 键唤醒" : "已锁定，按电源键或 AI 键唤醒";
+    return ink_setting_get("display.lock_style") == 0 && ink_activity_listening() ? TR("正在听，按电源键唤醒") : TR("已锁定，按电源键唤醒");
 }
 
 static void update_clock(void) {
