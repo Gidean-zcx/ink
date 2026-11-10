@@ -379,7 +379,10 @@ set(INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/system/ui/shell/boot_flow.c ${CMAKE_SOU
   ${CMAKE_SOURCE_DIR}/system/ui/shell/settings_pages.c ${CMAKE_SOURCE_DIR}/system/ui/shell/time_settings.c
   ${CMAKE_SOURCE_DIR}/system/ui/shell/settings_family.c ${CMAKE_SOURCE_DIR}/system/services/time/time_service.c
   ${CMAKE_SOURCE_DIR}/system/apps/calendar/calendar.c ${CMAKE_SOURCE_DIR}/system/apps/files/files.c
-  ${CMAKE_SOURCE_DIR}/system/services/file/file_caps.c ${CMAKE_SOURCE_DIR}/system/apps/clock/clock.c)
+  ${CMAKE_SOURCE_DIR}/system/services/file/file_caps.c ${CMAKE_SOURCE_DIR}/system/apps/clock/clock.c
+  ${CMAKE_SOURCE_DIR}/system/apps/camera/camera.c ${CMAKE_SOURCE_DIR}/system/apps/camera/scan.c
+  ${CMAKE_SOURCE_DIR}/system/policy/cap.c ${CMAKE_SOURCE_DIR}/system/policy/members.c
+  ${CMAKE_SOURCE_DIR}/system/ui/app_registry.c ${CMAKE_SOURCE_DIR}/system/ui/lock_mark.c)
 add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h
   COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/i18n/i18n_gen.py ${INK_I18N_TABLES}
           --header ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h --sources ${INK_I18N_SOURCES}
@@ -1502,6 +1505,12 @@ target_include_directories(ink_camera_png PRIVATE third_party/stb platform/inclu
 target_compile_options(ink_camera_png PRIVATE -w) # upstream stb implementation
 target_link_libraries(ink_camera_png PRIVATE ink_platform)
 target_link_libraries(ink_system PRIVATE ink_camera_png)
+add_library(ink_quirc STATIC third_party/quirc/quirc.c third_party/quirc/identify.c third_party/quirc/decode.c third_party/quirc/version_db.c)
+target_include_directories(ink_quirc PUBLIC third_party/quirc)
+target_link_libraries(ink_quirc PRIVATE ink_platform)
+target_compile_options(ink_quirc PRIVATE -include ${CMAKE_SOURCE_DIR}/system/apps/camera/quirc_alloc.h -w)
+target_sources(ink_system PRIVATE system/apps/camera/scan.c)
+target_link_libraries(ink_system PRIVATE ink_quirc)
 ink_sim_executable(sim-camera-gallery tests/camera_gallery/camera_gallery.c ${INK_IMAGE_FIXTURES})
 target_include_directories(sim-camera-gallery PRIVATE ${CMAKE_BINARY_DIR}/generated)
 target_link_libraries(sim-camera-gallery PRIVATE ink_apps ink_system)
@@ -1640,3 +1649,7 @@ ink_sim_executable(sim-kid-apps tests/kid_apps.c)
 target_link_libraries(sim-kid-apps PRIVATE ink_apps ink_system)
 add_test(NAME kid-apps COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/kid_apps.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(kid-apps PROPERTIES TIMEOUT 300)
+ink_sim_executable(sim-qr-scan tests/qr_scan/device.c)
+target_include_directories(sim-qr-scan PRIVATE third_party/quirc)
+target_link_libraries(sim-qr-scan PRIVATE ink_apps ink_system)
+add_test(NAME qr-scan COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/qr_scan/run.py --build ${CMAKE_BINARY_DIR})

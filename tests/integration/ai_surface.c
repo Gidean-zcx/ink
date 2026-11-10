@@ -112,6 +112,7 @@ static const struct {
     {"files.browse", "path"}, {"files.select", "id"}, {"files.move", ""}, {"files.name", NULL},
     {"files.preview", "id"}, {"files.next", NULL}, {"files.prev", NULL}, {"files.up", NULL},
     {"camera.preview", NULL}, {"camera.photo", NULL}, {"camera.review", NULL}, {"gallery.prev", NULL}, {"gallery.next", NULL}, {"photo.open", "id"},
+    {"camera.scan", NULL}, {"camera.scan_apply", NULL},
     {"shell.ai_log", ""}, {"shell.ai_receipts", ""}, {"ai.pages.close", NULL}, {"ai.pages.retry", NULL},
     {"ai.pages.next", NULL}, {"ai.pages.prev", NULL},
     {"remote.address", NULL}, {"remote.focus", NULL}, {"remote.submit", NULL}, {"remote.retry", NULL},

@@ -13,6 +13,7 @@
 #include <string.h>
 
 uint8_t *ink_camera_png(const uint8_t *rgb, int w, int h, int *bytes);
+int ink_camera_scan_init(void);
 static lv_obj_t *view, *notice;
 static lv_timer_t *timer;
 static int taking;
@@ -25,12 +26,13 @@ static const char LOCK_PHOTOS[] = "/family/锁屏拍的照片";
 static const ink_ui_action_spec_t CAMERA_ACTIONS[] = {
     {.id = "shoot", .label = "拍照", .capability = "camera.photo", .enabled = true},
     {.id = "preview", .label = "更新取景", .capability = "camera.preview", .enabled = true},
+    {.id = "scan", .label = "扫码", .capability = "camera.scan", .enabled = true},
     {.id = "gallery", .label = "相册", .capability = "app.open", .args_json = "{\"id\":\"gallery\"}", .enabled = true},
     {.id = "close", .label = "关闭", .capability = "shell.back", .enabled = true}
 };
 static const ink_ui_field_spec_t CAMERA_FIELDS[] = {{.id = "status", .role = "status", .label = "取景和保存", .value = camera_status}};
 static const ink_ui_page_spec_t CAMERA_PAGE = {.id = "Camera", .title = "相机", .object = {"camera:view", 1},
-    .fields = CAMERA_FIELDS, .field_count = 1, .actions = CAMERA_ACTIONS, .action_count = 4};
+    .fields = CAMERA_FIELDS, .field_count = 1, .actions = CAMERA_ACTIONS, .action_count = 5};
 typedef struct { ink_exec_job_t job; ink_image_t im; uint32_t epoch, generation, id; unsigned at; bool ok, saved, reviewed; } capture_t;
 static void captured(void *arg) {
     capture_t *p = arg;
@@ -119,6 +121,10 @@ static void camera_create(lv_obj_t *root, void *arg) {
     if (ink_camera_restricted()) ink_shell_bind(view, "camera.preview", NULL);
     snprintf(camera_status, sizeof camera_status, "正在取景");
     notice = ink_ui_notice(root, camera_status, INK_CANVAS_H - INK_CIRCLE_LARGE - INK_BLOCK);
+    if (!ink_camera_restricted()) { /* the lock-screen camera only takes photos (D-121) */
+        lv_obj_t *scan_button = ink_ui_pill(root, TR("扫码"), INK_MARGIN, INK_STATUS_BAR + INK_GAP, INK_PRIMARY * 2, INK_PRIMARY, false, NULL, NULL);
+        ink_shell_bind(scan_button, "camera.scan", NULL);
+    }
     lv_obj_t *b = ink_ui_circle(root, "gallery", INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_CIRCLE_APP, INK_CIRCLE_APP, INK_ICON_LIST, INK_SURFACE_WHITE, NULL, NULL);
     if (ink_camera_restricted()) ink_shell_bind(b, "camera.review", NULL);
     else ink_shell_bind(b, "app.open", "{\"id\":\"gallery\"}");
@@ -175,5 +181,5 @@ static const ink_cap_t CAMERA_APP_CAPS[] = {
 int ink_camera_app_init(void) {
     static const char *const needs[] = {"camera.capture", NULL};
     static const ink_app_def_t app = {.id = "camera", .title = "相机", .entry = &CAMERA, .system_app = true, .child_ok = true, .needs = needs};
-    return ink_cap_register(CAMERA_APP_CAPS, 3) || ink_app_register(&app) ? -1 : 0;
+    return ink_camera_scan_init() || ink_cap_register(CAMERA_APP_CAPS, 3) || ink_app_register(&app) ? -1 : 0;
 }

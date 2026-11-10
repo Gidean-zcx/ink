@@ -173,7 +173,6 @@ AI	AI
 取消多选	Cancel selection
 多选	Select
 全选	Select all
-删除	Delete
 拷贝	Copy
 移动	Move
 处理选中的文件	Process selected files
@@ -211,9 +210,7 @@ AI	AI
 星期五	Friday
 星期六	Saturday
 阅读	Reading
-电话	Phone
 时钟	Clock
-短信	Messages
 备忘	Notes
 计算器	Calculator
 天气	Weather
@@ -224,7 +221,6 @@ AI	AI
 开	On
 关	Off
 接下来	Upcoming
-闹钟	Alarms
 计时	Timer
 秒表	Stopwatch
 世界时钟	World Clock
@@ -247,3 +243,18 @@ AI	AI
 最多计次99条	Up to 99 laps
 加城市	Add City
 最多选6个城市	Choose up to 6 cities
+扫码	Scan QR code
+正在识别二维码	Reading QR code
+没有识别到可用的二维码，请对准后重试	No usable QR code found. Aim at a code and try again.
+是否执行下面的操作？	Perform the action below?
+设备没有浏览器，可以复制网址	This device has no browser. You can copy the URL.
+可以复制文字	You can copy the text.
+再扫一次	Scan again
+已识别，请查看扫码结果	QR code read. Check the result.
+保存联系人	Save contact
+执行扫码结果中的操作	Use QR code result
+执行扫码操作：{content}	Use QR code result: {content}
+类型	Type
+复制	Copy
+连接 Wi-Fi	Connect to Wi-Fi
+拨打电话	Call
