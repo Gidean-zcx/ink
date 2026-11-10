@@ -375,7 +375,7 @@ add_custom_target(ink_ui_resource_check ALL
   COMMENT "Check required design icon geometry")
 add_dependencies(ink_system ink_ui_resource_check)
 # Interface languages: assets/i18n/<code>.tsv, checked and turned into a const lookup table.
-set(INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/system/ui/shell/boot_flow.c ${CMAKE_SOURCE_DIR}/system/ui/shell/navigation.c
+set(INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/system/ui/shell/boot_flow.c ${CMAKE_SOURCE_DIR}/system/ui/shell/navigation.c ${CMAKE_SOURCE_DIR}/system/ui/shell/keyboard.c
   ${CMAKE_SOURCE_DIR}/system/ui/shell/settings_pages.c ${CMAKE_SOURCE_DIR}/system/ui/shell/time_settings.c
   ${CMAKE_SOURCE_DIR}/system/ui/shell/settings_family.c ${CMAKE_SOURCE_DIR}/system/services/time/time_service.c
   ${CMAKE_SOURCE_DIR}/system/apps/calendar/calendar.c ${CMAKE_SOURCE_DIR}/system/apps/files/files.c
@@ -1403,6 +1403,10 @@ set_tests_properties(settings-b PROPERTIES TIMEOUT 360)
 ink_sim_executable(sim-settings-gaps tests/settings_gaps.c)
 target_link_libraries(sim-settings-gaps PRIVATE ink_apps ink_system)
 add_test(NAME settings-gaps COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/settings_gaps.py --build ${CMAKE_BINARY_DIR})
+ink_sim_executable(sim-settings-small tests/settings_small.c)
+target_link_libraries(sim-settings-small PRIVATE ink_apps ink_system)
+add_test(NAME settings-small COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/settings_small.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(settings-small PROPERTIES TIMEOUT 300)
 foreach(case b10-01 b10-02)
   if(case STREQUAL "b10-01")
     set(audit10_source sms_arrival)

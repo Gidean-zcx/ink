@@ -1,5 +1,17 @@
 # English. One entry per line: Chinese (the key in the code) <TAB> English. See tools/i18n/i18n_gen.py.
 @name	English
+已存的网络	Saved networks
+正在读取网络	Loading networks
+网络列表暂时读不出来	Cannot read saved networks
+还没有已存的网络	No saved networks
+已存	Saved
+连接	Connect
+忘掉	Forget
+复制	Copy
+剪切	Cut
+粘贴	Paste
+撤销	Undo
+重做	Redo
 # first boot (boot_flow.c)
 你好	Hello
 选一个 Wi-Fi	Choose Wi-Fi

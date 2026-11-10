@@ -14,6 +14,7 @@
 #include "ink/sys/ui.h"
 #include "ink/ui_shell.h"
 #include "ink/sys/cap.h"
+#include "ink/sys/i18n.h"
 
 #define KEY_BACKSPACE '\b'
 #define KEY_ENTER '\n'
@@ -139,6 +140,8 @@ static int snapshot(char *buf, size_t cap) {
     else if (n >= 0 && (size_t)n < cap)
         n += snprintf(buf + n, cap - (size_t)n, "更多候选=%d；动作：text.insert、text.select、text.submit、keyboard.key、keyboard.pick、keyboard.candidates、keyboard.edit%s。",
                       K.more && lv_obj_is_visible(K.more), K.mic && lv_obj_is_visible(K.mic) ? "、text.voice_start" : "");
+    if (n >= 0 && (size_t)n < cap)
+        n += snprintf(buf + n, cap - (size_t)n, "撤销=%d；重做=%d；动作：text.undo、text.redo。", ink_text_can_undo(), ink_text_can_redo());
     return n < 0 ? 0 : (size_t)n < cap ? n : (int)cap - 1;
 }
 static bool overlay_key(ink_key_t k, bool lng) {
@@ -227,11 +230,13 @@ static void build(int kind) {
     lv_obj_set_style_text_font(K.composing, font(), 0);
     lv_label_set_text(K.composing, "");
     K.edit = new_row();
-    static const char *const EDIT[] = {"◀", "▶", "复制", "剪切", "粘贴", "撤销"};
-    for (int i = 0; i < 6; i++) {
-        lv_obj_t *b = ink_ui_pill(K.edit, EDIT[i], 0, 0, 0, INK_CONTROL, false, edit_action, (void *)(intptr_t)i);
+    static const char *const EDIT[] = {"◀", "▶", TR_NOOP("复制"), TR_NOOP("剪切"), TR_NOOP("粘贴"), TR_NOOP("撤销"), TR_NOOP("重做")};
+    for (unsigned i = 0; i < sizeof EDIT / sizeof *EDIT; i++) {
+        lv_obj_t *b = ink_ui_pill(K.edit, TR(EDIT[i]), 0, 0, 0, INK_CONTROL, false, i < 5 ? edit_action : NULL, (void *)(intptr_t)i);
+        if (i >= 5) ink_shell_bind(b, i == 5 ? "text.undo" : "text.redo", NULL);
         ink_ui_pill_text(b, INK_FONT_NOTE, INK_WEIGHT_MEDIUM);
-        lv_obj_set_flex_grow(b, 1);
+        lv_obj_set_style_min_width(b, ink_ui_px(ink_ui_text_width(TR(EDIT[i]), INK_FONT_NOTE, INK_WEIGHT_MEDIUM) + 2 * (INK_GAP_XS + INK_STROKE)), 0);
+        lv_obj_set_flex_grow(b, i < 2 ? 0 : 1);
     }
     lv_obj_add_flag(K.edit, LV_OBJ_FLAG_HIDDEN);
     K.cands = new_row();
@@ -415,7 +420,15 @@ static void sync(void) { /* UI task */
     K.shown = n;
     size_t start, end;
     ink_text_selection(&start, &end);
-    bool editing = start != end && type != INK_TEXT_PASSWORD;
+    bool editing = type != INK_TEXT_PASSWORD && (start != end ||
+        (!ink_text_composing()[0] && (ink_text_can_undo() || ink_text_can_redo())));
+    lv_obj_t *undo = lv_obj_get_child(K.edit, 5), *redo = lv_obj_get_child(K.edit, 6);
+    if (ink_text_can_undo()) lv_obj_remove_state(undo, LV_STATE_DISABLED);
+    else lv_obj_add_state(undo, LV_STATE_DISABLED);
+    if (ink_text_can_redo()) lv_obj_remove_state(redo, LV_STATE_DISABLED);
+    else lv_obj_add_state(redo, LV_STATE_DISABLED);
+    lv_obj_set_style_text_decor(lv_obj_get_child(undo, 0), ink_text_can_undo() ? LV_TEXT_DECOR_NONE : LV_TEXT_DECOR_STRIKETHROUGH, 0);
+    lv_obj_set_style_text_decor(lv_obj_get_child(redo, 0), ink_text_can_redo() ? LV_TEXT_DECOR_NONE : LV_TEXT_DECOR_STRIKETHROUGH, 0);
     if (editing) { lv_obj_remove_flag(K.edit, LV_OBJ_FLAG_HIDDEN); lv_obj_add_flag(K.cands, LV_OBJ_FLAG_HIDDEN); }
     else { lv_obj_add_flag(K.edit, LV_OBJ_FLAG_HIDDEN); lv_obj_remove_flag(K.cands, LV_OBJ_FLAG_HIDDEN); }
     for (uint32_t i = 0; i < lv_obj_get_child_count(K.keys); i++) {

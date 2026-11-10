@@ -30,6 +30,8 @@ static const ink_db_def_t KNOWN = {.name = "net.wifi", .title = "已知的 Wi-Fi
 
 static struct {
     int h_state, h_ssid;
+    struct { hal_wifi_known_t credentials; uint32_t revision; } forgotten[MAX_KNOWN];
+    unsigned forgotten_next;
 } W INK_PSRAM_BSS;
 
 static void fail(ink_call_t *c, ink_rc_t st, const char *why) {
@@ -198,25 +200,58 @@ static void cap_connect(ink_call_t *c) { /* exec.bg */
     osal_free(k);
 }
 
+static void cap_restore(ink_call_t *c) { /* Only the existing undo registry may restore credentials. */
+    int64_t revision = 0; ink_args_get_int(&c->args, "revision", &revision);
+    if (c->src != INK_SRC_CONFIRMED) { fail(c, INK_RC_REJECTED, "use system.undo"); return; }
+    for (int i = 0; i < MAX_KNOWN; i++) if (revision && W.forgotten[i].revision == (uint32_t)revision) {
+        ink_db_t *db = ink_db_open(&KNOWN, NULL);
+        hal_wifi_known_t *k = &W.forgotten[i].credentials;
+        ink_db_write_t rec = {.id = ssid_id(k->ssid), .data = k, .len = sizeof *k, .src = c->src};
+        int r = db && ink_db_get(db, rec.id, NULL, NULL, 0) == INK_DB_ERR_NOT_FOUND ? ink_db_put(db, &rec, NULL) : INK_DB_ERR_ARG;
+        ink_db_close(db);
+        if (r != INK_DB_OK) { fail(c, INK_RC_FAILED, "network changed or store full"); return; }
+        publish_known(); told("restored", k->ssid);
+        memset(&W.forgotten[i], 0, sizeof W.forgotten[i]);
+        return;
+    }
+    fail(c, INK_RC_STALE, "nothing to restore");
+}
+
 static void cap_forget(ink_call_t *c) { /* exec.bg */
     char ssid[33];
     ink_args_get_str(&c->args, "ssid", ssid, sizeof ssid);
     ink_db_t *db = ink_db_open(&KNOWN, NULL);
     int64_t revision = 0;
     ink_args_get_int(&c->args, "if_revision", &revision);
+    hal_wifi_known_t saved = {0};
+    bool remembered = !revision && db && ink_db_get(db, ssid_id(ssid), NULL, &saved, sizeof saved) == INK_DB_OK;
     int r = db ? ink_db_del_if_ver(db, ssid_id(ssid), (uint8_t)c->src, (uint32_t)revision) : INK_DB_ERR_ARG;
+    if (r == INK_DB_OK) c->rc.revision = ink_db_last_ver(db);
     ink_db_close(db);
     if (r != INK_DB_OK) {
+        memset(&saved, 0, sizeof saved);
         fail(c, revision ? INK_RC_STALE : INK_RC_FAILED, "network changed or absent");
         return;
     }
+    snprintf(c->rc.object, sizeof c->rc.object, "wifi:%.32s", ssid);
+    if (remembered) {
+        unsigned i = W.forgotten_next++ % MAX_KNOWN;
+        W.forgotten[i].credentials = saved; W.forgotten[i].revision = c->rc.revision;
+        ink_args_t *undo = osal_malloc(sizeof *undo, OSAL_MEM_EXTERNAL);
+        if (undo) {
+            ink_args_init(undo); ink_args_int(undo, "revision", c->rc.revision);
+            ink_cap_undoable(c, "wifi.restore", undo, 10000); osal_free(undo);
+        }
+    }
+    memset(&saved, 0, sizeof saved);
     publish_known();
-    ink_state_set_str(W.h_ssid, "");
-    ink_state_set_str(W.h_state, "idle");
+    char connected[33]; ink_state_get_str(W.h_ssid, connected, sizeof connected);
+    if (!strcmp(connected, ssid)) { ink_state_set_str(W.h_ssid, ""); ink_state_set_str(W.h_state, "idle"); }
     told("forgotten", ssid);
 }
 
 static const ink_cap_t WIFI_CAPS[] = {
+    {.id = "wifi.restore", .title = "撤销忘掉网络", .input = "{\"type\":\"object\",\"properties\":{\"revision\":{\"type\":\"integer\"}},\"required\":[\"revision\"]}", .effect = INK_FX_LOCAL_WRITE, .expose = INK_EXPOSE_OWNER, .exec = INK_EXEC_BG, .run = cap_restore},
     {.id = "wifi.scan", .title = "找附近的 Wi-Fi（要几秒）", .output = "{\"type\":\"array\"}", .effect = INK_FX_READ, .child_ok = true, .timeout_ms = 10000, .exec = INK_EXEC_BG, .run = cap_scan},
     {.id = "wifi.list", .title = "这台设备记得的 Wi-Fi（只有名字）", .output = "{\"type\":\"array\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_BG, .run = cap_list},
     {.id = "wifi.connect", .title = "连接一个 Wi-Fi 并记住它", .ask = "连接 Wi-Fi：{ssid}",
