@@ -27,7 +27,7 @@
 | `ai.ask` | 设备 → 中枢 | 请求，45 秒超时 | `{"question","page_gen","page":{…}}` | **回答里的文字被忽略**，文字只能走 `ai.delta` |
 | `ai.listen.end` | 设备 → 中枢 | 通知 | `{"stream","frames"}` | — |
 | `ai.stt` | 中枢 → 设备 | 通知 | `{"id","text"}`，`id` 是 `ai.listen` 的请求号；**替换显示**，多条只留最后一条 | — |
-| `ai.delta` | 中枢 → 设备 | 通知 | `{"id","text","seq"?}`；追加，一轮总共 2048 字节，超了被忽略 | — |
+| `ai.delta` | 中枢 → 设备 | 通知 | `{"id","text","seq"?}`；追加，设备一轮最多留 32 KB（`INK_AI_ANSWER_MAX`），超出的在整字处截断，末尾显示“回答太长，只显示了前面部分。” | — |
 | `ai.tts.end` | 中枢 → 设备 | 通知 | `{"id","stream","frames"}` | — |
 | `device/event` | 设备 → 中枢 | 通知（系统服务分支） | `{"event","at_s","args"}`；断网时留最近 8 条 | — |
 

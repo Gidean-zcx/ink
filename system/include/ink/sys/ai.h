@@ -13,6 +13,11 @@
 extern "C" {
 #endif
 
+/* Bytes of one answer the device keeps and shows (PSRAM; ~10,000 Chinese characters, far beyond a spoken
+ * answer). Longer answers are cut at a whole character and end with INK_AI_ANSWER_CUT. */
+#define INK_AI_ANSWER_MAX 32768
+#define INK_AI_ANSWER_CUT "\n回答太长，只显示了前面部分。"
+
 typedef enum {
     INK_AI_ERROR_NONE, INK_AI_ERROR_OFFLINE, INK_AI_ERROR_LOST,
     INK_AI_ERROR_TIMEOUT, INK_AI_ERROR_BUDGET

@@ -104,7 +104,7 @@
 | --- | --- | --- |
 | 中枢发给设备的**每条 JSON 不超过 128 个词法单元**，超了整条丢弃 | `INK_JSON_MAX_TOKENS` | `system/include/ink/sys/json.h:17` |
 | 目录最多 32 项；一条 `caps/list` 回答，每项 `name`、`title`、`form` 三个字段时**恰好**放得下 17 项，多一个字段就超（Codex 用生产解析器实测）。设备现在只读第一页 | `DIR_MAX` | `system/policy/cap.c:159`、`:853` |
-| `ai.delta`、`ai.stt` 每条不超过 511 字节；**一轮回答总共 2048 字节**；`ai.stt` 是替换不是追加，拆成多条只留最后一条 | `char text[512]`、`ANSWER_CAP` | `system/services/ai/ai_service.c:276`、`:40` |
+| `ai.delta`、`ai.stt` 每条不超过 511 字节；**一轮回答总共 32 KB**（2026-11-10 起，原来 2048 字节），超出的在整字处截断并提示；`ai.stt` 是替换不是追加，拆成多条只留最后一条 | `char text[512]`、`ANSWER_CAP`（`INK_AI_ANSWER_MAX`） | `system/services/ai/ai_service.c:276`、`:40` |
 | **一轮语音 45 秒**，从设备创建请求算起，没联网、连接中都在计时；回答必须在朗读帧和 `ai.tts.end` 之后，一到设备就关这一轮的会话 | `ASK_TIMEOUT_US` | `ai_service.c:41`、`hub_link.c:397`、详细设计 §6.5 |
 | 下行缓冲总共 512 帧（30.72 秒，是总量不是空闲量），满了新帧被丢弃，调用方不看返回值；预缓冲 3 帧（180 ms）；`finish` 让已收到的继续放完，`abort` 才清队列；朗读帧是 Opus 16 kHz、60 ms 一帧，10 字节帧头 | `JB_MAX`、`JB_PREBUFFER`、`INK_RT_HDR` | `system/services/audio/audio_service.c:56`、`:57`、`:754`、`ai_service.c:319`、`rt.h` |
 | `ai.ask` 回答里的文字被忽略，文字只能走 `ai.delta` | | `ai_service.c:324` |
