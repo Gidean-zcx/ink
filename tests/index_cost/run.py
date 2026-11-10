@@ -11,11 +11,12 @@ import subprocess
 ROOT = Path(__file__).resolve().parents[2]
 p = argparse.ArgumentParser(description=__doc__)
 p.add_argument('--build', type=Path, required=True)
+p.add_argument('--baseline', help='manual comparison of the file service from a Git commit')
 p.add_argument('--cases', nargs='+', choices=['cold', 'prepare', 'warm', 'probe', 'control', 'typ', 'max'],
                default=['cold', 'prepare', 'warm', 'probe', 'control', 'typ', 'max'])
 a = p.parse_args()
 build = a.build.resolve()
-area = build / 'test-out/index-cost'
+area = build / 'test-out' / ('index-cost-baseline' if a.baseline else 'index-cost')
 area.mkdir(parents=True, exist_ok=True)
 flags = {}
 for line in (build / 'CMakeFiles/sim-storage-order.dir/flags.make').read_text().splitlines():
@@ -41,6 +42,15 @@ for old, new in [('tests/storage_order/device.c', 'device.c'),
                     '-c', str(ROOT / 'tests/index_cost' / new), '-o', str(obj)], cwd=build, check=True)
     assert sum(x.endswith(old + '.o') for x in link) == 1
     link = [str(obj) if x.endswith(old + '.o') else x for x in link]
+if a.baseline:
+    baseline = area / 'file_service.c'
+    baseline.write_bytes(subprocess.check_output(['git', 'show', a.baseline + ':system/services/file/file_service.c'], cwd=ROOT))
+    obj = area / 'file_boundary.o'
+    subprocess.run([link[0], *flags['C_DEFINES'], *flags['C_INCLUDES'], *flags['C_FLAGS'],
+                    '-I' + str(ROOT / 'system/services/file'), '-DINK_INDEX_SOURCE=' + json.dumps(str(baseline)),
+                    '-c', str(ROOT / 'tests/file_index_3/boundary.c'), '-o', str(obj)], cwd=build, check=True)
+    assert sum(x.endswith('/tests/file_index_3/boundary.c.o') for x in link) == 1
+    link = [str(obj) if x.endswith('/tests/file_index_3/boundary.c.o') else x for x in link]
 binary = area / 'sim-index-cost'
 link[link.index('-o') + 1] = str(binary)
 # Expose existing NOR counters from a build-directory copy; no timing change.

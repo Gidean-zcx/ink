@@ -107,10 +107,13 @@ static void run(void *arg) {
             ink_fs_entry_t e;
             unsigned expected = (unsigned)strtoul(getenv("INK_DURABLE_OLD_ID"), NULL, 10);
             CHECK(id == expected && !ink_fs_lookup(id, &e), "v1 migration retains the original id");
+            uint32_t cursor = 0;
+            CHECK(ink_fs_index("/family", INK_FS_ANY, &cursor, &e) == 1 && e.id == expected,
+                "the next ordinary scan upgrades the legacy record without changing its id");
             ink_db_t *db = ink_db_open(ink_db_find_def("file.index"), NULL);
             ink_rec_t rec;
-            CHECK(db && !ink_db_get(db, id, &rec, NULL, 0) && rec.schema == 2 && rec.len == 216,
-                "v1 record becomes v2 with size and modification time");
+            CHECK(db && !ink_db_get(db, id, &rec, NULL, 0) && rec.schema == 3 && rec.len == 32 + strlen("/content/SYNTHETIC_OLD.txt") + 1,
+                "v1 record becomes v3 with metadata and an exact-length path");
             ink_db_close(db);
             CHECK(hal_fs_size("/content/.file-index-dirty") < 0, "completed migration has no dirty marker");
         }

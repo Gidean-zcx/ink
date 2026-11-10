@@ -26,13 +26,14 @@
 #include "ink/sys/textinput.h"
 #include "ink/sys/json.h"
 #include "ink/sys/members.h"
+#include "ink/sys/power.h"
 #include "ink/sys/svc.h"
 
 #define UI_STACK 10240
 #define UI_PRIO 5
 #define UI_QUEUE_LEN 24
 #define INPUT_BATCH_MAX UI_QUEUE_LEN /* queued input handled before the next frame is drawn */
-#define STRIP_ROWS 96
+#define STRIP_ROWS 128
 #define MAX_HINTS 8
 #define MAX_DIRTY 24
 #define MAX_ACTIVITIES 6
@@ -635,6 +636,7 @@ void ink_ui_kick(void) {
  * a rendered frame reaches the display service (ink_display_busy) before render_pending drops.
  * A job taken from the list runs inside a round, whose message is counted until that same point. */
 bool ink_ui_busy(void) {
+    if (ink_power_transition_pending()) return true;
     if (ink_exec_waiting(INK_EXEC_UI)) return true;
     if (__atomic_load_n(&UI.posts, __ATOMIC_SEQ_CST) > 0) return true;
     return __atomic_load_n(&UI.render_pending, __ATOMIC_SEQ_CST);

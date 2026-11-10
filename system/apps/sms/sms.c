@@ -203,5 +203,5 @@ static const ink_cap_t CAPS[] = {
     {.id = "sms.next", .title = "短信下一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate}
 };
 int ink_sms_init(void) {
-    return ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_app_register(&APP) || ink_cap_subscribe("message.received", received, NULL, INK_EXEC_BG) ? -1 : 0;
+    return ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_app_register(&APP) || ink_cap_subscribe("message.received", received, NULL, INK_EXEC_DIRECT) ? -1 : 0;
 }

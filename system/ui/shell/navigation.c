@@ -1687,6 +1687,7 @@ static void refresh(void *unused) {
 }
 static void changed(void *ctx, int h, const char *id) {
     (void) h;
+    if (ctx && !strcmp(id, "power.state")) return; /* No status-bar field changes. */
     if (ctx && !strcmp(id, "app.cards_rev")) {
         ink_ui_kick();
         return;
@@ -1699,7 +1700,7 @@ static void changed(void *ctx, int h, const char *id) {
         __atomic_add_fetch(&N.session, 1, __ATOMIC_ACQ_REL);
         return;
     }
-    if (ctx && strncmp(id, "time.", 5) && strcmp(id, "power.state") && strcmp(id, "notify.unread") &&
+    if (ctx && strncmp(id, "time.", 5) && strcmp(id, "notify.unread") &&
         strcmp(id, "audio.mic") && strcmp(id, "net.type") && strncmp(id, "wifi.", 5) && strcmp(id, "bt.connected"))
         return;
     if (!ctx || !strcmp(id, "notify.unread") || !strncmp(id, "wifi.", 5) || !strcmp(id, "bt.connected"))

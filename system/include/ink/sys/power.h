@@ -40,6 +40,8 @@ typedef enum {
 
 int ink_power_init(void);
 ink_power_state_t ink_power_state(void);
+/** A requested state change has not yet reached its listeners. */
+bool ink_power_transition_pending(void);
 
 /** User input happened at t_us (any task). Keeps the device active. */
 void ink_power_activity(uint64_t t_us);

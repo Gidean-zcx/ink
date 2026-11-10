@@ -79,9 +79,9 @@ unsigned ink_test_index_comparisons(void) { return comparisons; }
 unsigned ink_test_index_reads(void) { return directory_reads; }
 unsigned ink_test_index_path_id(const char *path) {
     ink_db_t *db = ink_db_open(&INDEX_DEF, NULL);
-    index_rec_t e; ink_rec_t rec; ink_db_cursor_t cur = {0}; unsigned id = 0;
-    while (db && ink_db_next(db, &cur, &rec, &e, sizeof e) == 1)
-        if (!memcmp(e.card, FS.index_card, 16) && !strcmp(e.path, path)) { id = rec.id; break; }
+    uint8_t raw[216]; ink_rec_t rec; ink_db_cursor_t cur = {0}; unsigned id = 0;
+    while (db && ink_db_next(db, &cur, &rec, raw, sizeof raw) == 1)
+        if (!memcmp(raw, FS.index_card, 16) && !strcmp((const char *)raw + (rec.schema == 3 ? 32 : 16), path)) { id = rec.id; break; }
     ink_db_close(db); return id;
 }
 bool ink_test_index_locked(void) { return edit_owner == osal_task_self(); }
