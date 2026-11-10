@@ -14,11 +14,11 @@
 #define PANEL_HEIGHT (INK_GAP_L + INK_CONTROL + INK_GAP_S + 3 * ink_ui_line_height(INK_FONT_BODY) + INK_GAP_S + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_S + INK_CONTROL + INK_GAP_L)
 static struct {
     lv_obj_t *root, *status, *question, *answer, *source, *actions, *prev, *next, *counter, *stop;
-    char words[4096], text[4096];
+    char words[INK_AI_ANSWER_MAX], text[4096];
     char caption[128];
-    uint16_t starts[4097];
+    uint16_t starts[INK_AI_ANSWER_MAX + 1];
     int page, pages;
-    bool hidden, speaking;
+    bool hidden, speaking, expanded;
     const ink_ui_overlay_t *overlay;
     ink_exec_job_t refine;
 } A INK_PSRAM_BSS;
@@ -48,19 +48,21 @@ static void refine(void *arg) {
     lv_obj_invalidate(A.root);
 }
 
-static void paginate(void) {
+/* Pages from page `from` on: the pages before it end where they did (a streamed answer only grows). */
+static void paginate(int from) {
     lv_obj_update_layout(A.root);
     int w = lv_obj_get_width(A.answer), h = lv_obj_get_height(A.answer);
     const lv_font_t *font = lv_obj_get_style_text_font(A.answer, LV_PART_MAIN);
     int letter = lv_obj_get_style_text_letter_space(A.answer, LV_PART_MAIN);
     int line = lv_obj_get_style_text_line_space(A.answer, LV_PART_MAIN);
-    size_t at = 0, len = strlen(A.words);
-    A.pages = 0; A.starts[0] = 0;
+    size_t at = A.starts[from], len = strlen(A.words);
+    A.pages = from;
     do {
         size_t end = at;
         while (end < len) {
             size_t next = end + 1;
             while (next < len && (A.words[next] & 0xc0) == 0x80) next++;
+            if (next - at >= sizeof A.text) break;
             memcpy(A.text, A.words + at, next - at); A.text[next - at] = 0;
             lv_point_t size;
             lv_text_get_size(&size, A.text, font, letter, line, w, LV_TEXT_FLAG_NONE);
@@ -86,6 +88,7 @@ static void draw_words(void) {
     ink_ui_hint_obj(A.actions, INK_REFRESH_UI);
 }
 static void layout(bool expanded) {
+    A.expanded = expanded;
     int extra = expanded ? 2 * ink_ui_line_height(INK_FONT_BODY) + INK_GAP_M : 0;
     int height = PANEL_HEIGHT + extra;
     lv_obj_set_y(A.root, ink_ui_px(INK_CANVAS_H - height));
@@ -97,10 +100,15 @@ static void layout(bool expanded) {
 }
 void ink_shell_ai_words(const char *text) {
     if (!A.root) return;
+    size_t had = strlen(A.words);
+    bool grows = A.expanded && A.pages > 1 && !strncmp(text, A.words, had); /* more of the same answer */
     snprintf(A.words, sizeof A.words, "%s", text);
     if (text[0]) { lv_obj_add_flag(A.question, LV_OBJ_FLAG_HIDDEN); lv_obj_remove_flag(A.answer, LV_OBJ_FLAG_HIDDEN); }
-    layout(false); paginate();
-    if (A.pages > 1) { layout(true); paginate(); }
+    if (grows) paginate(A.pages - 1);
+    else {
+        layout(false); paginate(0);
+        if (A.pages > 1) { layout(true); paginate(0); }
+    }
     draw_words();
     audio_changed(NULL, 0, NULL);
 }
@@ -125,7 +133,7 @@ void ink_shell_ai_closed(void) {
     ink_ui_overlay_remove(A.overlay);
     A.root = A.status = A.question = A.answer = A.source = A.actions = A.prev = A.next = A.counter = A.stop = NULL;
     memset(A.words, 0, sizeof A.words); memset(A.text, 0, sizeof A.text);
-    A.page = A.pages = 0; A.hidden = false;
+    A.page = A.pages = 0; A.hidden = A.expanded = false;
 }
 
 static void audio_changed(void *ctx, int handle, const char *id) {
@@ -213,7 +221,7 @@ void ink_shell_ai_open(lv_obj_t **root, lv_obj_t **status, lv_obj_t **question, 
     lv_obj_add_flag(A.stop, LV_OBJ_FLAG_HIDDEN);
     lv_obj_add_flag(A.source, LV_OBJ_FLAG_HIDDEN);
     lv_obj_add_flag(A.actions, LV_OBJ_FLAG_HIDDEN);
-    A.hidden = false; A.page = 0; A.pages = 1; A.words[0] = 0; A.starts[0] = A.starts[1] = 0;
+    A.hidden = A.expanded = false; A.page = 0; A.pages = 1; A.words[0] = 0; A.starts[0] = A.starts[1] = 0;
     A.caption[0] = 0; A.speaking = false;
     draw_words();
     A.overlay = &OVERLAY; ink_ui_overlay_add(A.overlay, A.root);

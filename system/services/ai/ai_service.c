@@ -42,7 +42,7 @@
 #include "ink/sys/json.h"
 #include "ink/sys/ui.h"
 
-#define ANSWER_CAP 2048
+#define ANSWER_CAP INK_AI_ANSWER_MAX
 #define SNAPSHOT_CAP 3072
 #define STATE_CAP 2048 /* the system's state, with every question: what the AI knows without asking */
 #define ASK_TIMEOUT_US (45ull * 1000000ull)
@@ -67,6 +67,7 @@ static struct {
     bool first_text_seen;
     char *answer_text; /* PSRAM */
     size_t answer_len;
+    bool answer_cut; /* the answer reached ANSWER_CAP: it ends with INK_AI_ANSWER_CUT, the rest is dropped */
     /* voice uplink (touched by the audio task and the UI task) */
     osal_mutex_t *lock;
     uint8_t stream;     /* the turn's id: its realtime session's, also after that was closed */
@@ -185,6 +186,7 @@ bool ink_ai_dismiss(void) {
     AI.sheet = AI.status = AI.question = AI.answer = NULL;
     AI.answer_text[0] = 0;
     AI.answer_len = 0;
+    AI.answer_cut = false;
     AI.open = false;
     AI.asking = false;
     AI.req_id = 0;
@@ -235,8 +237,15 @@ static void ui_apply(void *arg) { /* UI task */
         ink_ui_hint_obj(AI.question, INK_REFRESH_FAST);
         ink_ui_cause(AI.t_release, "ai.release_to_question_visible_ms");
     } else if (p->kind == 0) {
-        size_t n = strlen(p->text);
-        if (AI.answer_len + n < ANSWER_CAP) {
+        size_t n = strlen(p->text), room = ANSWER_CAP - sizeof INK_AI_ANSWER_CUT - AI.answer_len;
+        if (!AI.answer_cut && n > room) { /* cut at a whole character and say so */
+            while (room && ((unsigned char)p->text[room] & 0xC0) == 0x80) room--;
+            memcpy(AI.answer_text + AI.answer_len, p->text, room);
+            memcpy(AI.answer_text + AI.answer_len + room, INK_AI_ANSWER_CUT, sizeof INK_AI_ANSWER_CUT);
+            AI.answer_len += room + sizeof INK_AI_ANSWER_CUT - 1;
+            AI.answer_cut = true;
+            ink_probe_count("ai.answer_cut");
+        } else if (!AI.answer_cut) {
             memcpy(AI.answer_text + AI.answer_len, p->text, n + 1);
             AI.answer_len += n;
         }
@@ -487,6 +496,7 @@ static char g_typed[384] INK_PSRAM_BSS; /* a question in words (ink_ai_ask_text)
 static int request(const char *method, bool voice) {
     AI.answer_len = 0;
     AI.answer_text[0] = 0;
+    AI.answer_cut = false;
     AI.first_text_seen = false;
     AI.asking = true;
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
@@ -669,6 +679,7 @@ void ink_ai_key(bool pressed, uint64_t t_us) {
         AI.asking = false;
         AI.answer_text[0] = 0;
         AI.answer_len = 0;
+        AI.answer_cut = false;
         if (AI.open) {
             ink_shell_ai_words("");
             lv_label_set_text(AI.question, "");

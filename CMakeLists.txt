@@ -1328,6 +1328,13 @@ add_test(NAME ai-chat COMMAND sim-ai-chat --profile ${CMAKE_SOURCE_DIR}/simulato
 add_test(NAME ai-chat-snapshots COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/ai_chat_snapshots.py
   ${CMAKE_BINARY_DIR}/test-out/ai-chat ${CMAKE_BINARY_DIR}/ai-chat-compare)
 set_tests_properties(ai-chat-snapshots PROPERTIES DEPENDS ai-chat)
+# Long AI answers: paged word for word, cut with a note over the limit, spoken to the end.
+ink_sim_executable(sim-ai-answer-long tests/ai_answer_long/ai_answer_long.c)
+target_link_libraries(sim-ai-answer-long PRIVATE ink_apps ink_system)
+add_test(NAME ai-answer-long COMMAND sim-ai-answer-long --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+  --script ${CMAKE_SOURCE_DIR}/tests/ai_answer_long/ai_answer_long.script --hub ${CMAKE_SOURCE_DIR}/tests/ai_answer_long/hub.json
+  --budget ${CMAKE_SOURCE_DIR}/tests/ai_answer_long/budget.json
+  --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT} --out ${CMAKE_BINARY_DIR}/test-out/ai-answer-long --quiet --no-random-outages)
 target_sources(ink_system PRIVATE system/apps/phone/phone.c)
 ink_sim_executable(sim-phone-calls tests/phone_calls/phone_calls.c)
 target_link_libraries(sim-phone-calls PRIVATE ink_apps ink_system)
