@@ -1,0 +1,4 @@
+# Voice memos: the microphone hears speech; the test takes the network away and gives it back.
+@0 net wifi
+@0 mic speech
+@600s end

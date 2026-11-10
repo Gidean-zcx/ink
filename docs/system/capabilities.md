@@ -7,7 +7,7 @@ python3 tools/capabilities.py
 python3 tools/capabilities.py --check
 ```
 
-当前共 368 项：可调用能力 334、事件 34；设置 22 项、状态 48 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
+当前共 373 项：可调用能力 339、事件 34；设置 22 项、状态 48 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
 
 风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。
 
@@ -44,7 +44,9 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `app.list` | 这台设备上有哪些应用，各自的状态 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s33](#s33) | [system/ui/app_registry.c](../../system/ui/app_registry.c) |
 | `app.open` | 打开一个应用 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s33](#s33) | [system/ui/app_registry.c](../../system/ui/app_registry.c) |
 | `audio.record` | 开始录音，存成文件 | 人、AI | 高 / external | 人无需；AI 仅 asked=true 时无需 | 成人、儿童（无需白名单） | [s17](#s17) | [system/services/audio/media_service.c](../../system/services/audio/media_service.c) |
+| `audio.record_cancel` | 不要这段录音（录了的也删掉） | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s17](#s17) | [system/services/audio/media_service.c](../../system/services/audio/media_service.c) |
 | `audio.record_stop` | 停止录音 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s17](#s17) | [system/services/audio/media_service.c](../../system/services/audio/media_service.c) |
+| `audio.transcribe` | 把一个录音交给中枢整理成文字 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s17](#s17) | [system/services/audio/media_service.c](../../system/services/audio/media_service.c) |
 | `backup.manifest` | 查看备份清单、覆盖项目和未恢复项目 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s18](#s18) | [system/services/backup/backup_service.c](../../system/services/backup/backup_service.c) |
 | `backup.now` | 备份这位成员的资料 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s18](#s18) | [system/services/backup/backup_service.c](../../system/services/backup/backup_service.c) |
 | `backup.open` | 打开备份 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s40](#s40) | [system/ui/shell/backup_pages.c](../../system/ui/shell/backup_pages.c) |
@@ -179,10 +181,13 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `memo.edit` | 写一条或编辑备忘 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
 | `memo.next` | 备忘下一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
 | `memo.open` | 查看备忘 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
+| `memo.play` | 播放语音备忘的录音 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
 | `memo.prev` | 备忘上一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
+| `memo.record` | 说一句：录一条语音备忘（联网后整理成文字） | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
 | `memo.retry` | 重试记下备忘 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
 | `memo.save` | 记下当前成员的长文草稿 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
 | `memo.undo` | 撤销删除备忘 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
+| `memo.voice` | 把录好的音存成语音备忘，或填上中枢整理的文字 | 仅人（设备） | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s08](#s08) | [system/apps/memo/memo.c](../../system/apps/memo/memo.c) |
 | `message.list` | 最近的短信 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s21](#s21) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
 | `message.send` | 发短信 | 人、AI | 高 / external | 人无需；AI 仅 asked=true 时无需 | 成人、儿童（无需白名单） | [s21](#s21) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
 | `notify.channels` | 哪些通知渠道开着 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s27](#s27) | [system/services/notify/notify_caps.c](../../system/services/notify/notify_caps.c) |
@@ -436,9 +441,9 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 设置：—。
 
-状态：—。
+状态：`net.online`。
 
-事件：—。
+事件：`audio.record_done`。
 
 <a id="s09"></a>
 

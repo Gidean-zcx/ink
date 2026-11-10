@@ -3,17 +3,23 @@
 #include <string.h>
 #include "ink/sys/app.h"
 #include "ink/sys/appreg.h"
+#include "ink/sys/file.h"
 #include "ink/sys/json.h"
+#include "ink/sys/media.h"
 #include "ink/sys/members.h"
+#include "ink/sys/state.h"
+#include "ink/sys/time.h"
 #include "ink/sys/textfield.h"
 #include "ink/sys/ui_list.h"
 #include "ink/ui_shell.h"
 
 static const ink_db_def_t MEMOS = {.name = "memo.notes", .title = "备忘", .scope = INK_DB_MEMBER,
     .schema = 1, .json = true, .ai_read = true, .max_records = 200};
-typedef struct { char body[4096], page[24]; uint32_t checked, draft; bool checklist, deleted; } memo_t;
-static const ink_activity_t PAGES[6];
-enum { LIST, DETAIL, EDIT, CHECKLIST, UNDO, FAIL };
+typedef struct { char body[4096], page[24], path[INK_FS_PATH_MAX]; uint32_t checked, draft, audio, ms; bool checklist, deleted, pending; } memo_t;
+static const ink_activity_t PAGES[8];
+enum { LIST, DETAIL, EDIT, CHECKLIST, UNDO, FAIL, RECORD, PENDING };
+#define VOICE_DIR "/me/memos" /* a voice memo's recording: Ogg Opus, in the member's own folder */
+static struct { bool busy; uint32_t id; char member[16], text[1024]; ink_exec_job_t sweep; } T INK_PSRAM_BSS; /* the one being made into words: BG */
 static struct {
     ink_db_t *db;
     ink_ui_list_t *list;
@@ -21,8 +27,10 @@ static struct {
     lv_obj_t *field, *notice, *retry_button, *delete_button;
     memo_t note;
     char member[16], sent[4096], ids[4][32], args[4][96], labels[4][128], object[32], target[64], save_args[160];
-    uint32_t id;
+    uint32_t id, started;
     int mode;
+    lv_timer_t *timer;
+    ink_exec_job_t recorded;
     bool saving, retry;
     ink_ui_action_spec_t actions[4];
     ink_ui_page_spec_t model;
@@ -42,6 +50,10 @@ static bool read_note(ink_db_t *db, uint32_t id, memo_t *note) {
         ink_json_int(j, ink_json_find(j, 0, "checked"), &value); note->checked = (uint32_t)value;
         value = 0; ink_json_int(j, ink_json_find(j, 0, "draft"), &value); note->draft = (uint32_t)value;
         ink_json_str(j, ink_json_find(j, 0, "page"), note->page, sizeof note->page);
+        ink_json_str(j, ink_json_find(j, 0, "path"), note->path, sizeof note->path);
+        value = 0; ink_json_int(j, ink_json_find(j, 0, "audio"), &value); note->audio = (uint32_t)value;
+        value = 0; ink_json_int(j, ink_json_find(j, 0, "ms"), &value); note->ms = (uint32_t)value;
+        note->pending = ink_json_eq(j, ink_json_find(j, 0, "pending"), "true");
     }
     ink_app_free(j); ink_app_free(raw); return ok;
 }
@@ -69,15 +81,73 @@ static void refresh(void *arg) {
     if (M.id && M.mode != LIST && M.mode != UNDO && read_note(M.db, M.id, &M.note) && M.note.deleted) ink_ui_push(&PAGES[UNDO], NULL);
     else if (M.field) return;
     else if (M.mode == DETAIL && M.note.checklist) ink_ui_push(&PAGES[CHECKLIST], (void *)(uintptr_t)M.id);
+    else if (M.mode == PENDING && !M.note.pending) { ink_ui_pop(); ink_ui_push(&PAGES[DETAIL], (void *)(uintptr_t)M.id); }
     else ink_ui_redraw();
+}
+static uint32_t find_audio(ink_db_t *db, uint32_t audio, memo_t *n) { /* the memo holding this recording, or 0 */
+    ink_db_cursor_t cur = {0}; ink_rec_t rec;
+    while (audio && ink_db_next(db, &cur, &rec, NULL, 0) == 1) if (read_note(db, rec.id, n) && n->audio == audio) return rec.id;
+    return 0;
+}
+static void sweep(void *arg);
+static void voiced(void *ctx, const ink_receipt_t *rc) { (void)ctx; (void)rc; T.busy = false; sweep(NULL); } /* BG: then the next one */
+static void transcribed(void *ctx, const ink_receipt_t *rc) { /* BG: the words go in through memo.voice, the next one starts */
+    (void)ctx; ink_json_t *j = ink_app_alloc(sizeof *j, true); int64_t ms = 0;
+    bool ok = rc->status == INK_RC_DONE && rc->result && j && ink_json_parse(j, rc->result, strlen(rc->result)) == 0 &&
+        ink_json_str(j, ink_json_find(j, 0, "text"), T.text, sizeof T.text) >= 0 && T.text[0];
+    if (j && ok) ink_json_int(j, ink_json_find(j, 0, "ms"), &ms);
+    ink_app_free(j);
+    ink_args_t a; ink_args_init(&a); ink_args_int(&a, "id", T.id); ink_args_int(&a, "ms", ms);
+    ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .member = T.member, .reply_exec = INK_EXEC_BG, .done = voiced};
+    T.busy = ok && ink_cap_call("memo.voice", &a, &o) == 0; /* busy until the words are in */
+}
+static void sweep(void *arg) { /* BG: a recording a power loss cut off becomes a memo; the next one waiting gets its words */
+    (void)arg; const char *member = ink_member_current()->id; uint32_t cursor = 0; ink_fs_entry_t e; ink_rec_t rec; ink_db_cursor_t cur = {0}; ink_fs_stat_t st;
+    if (ink_fs_stat(VOICE_DIR, &st) != 0) cursor = UINT32_MAX; /* no voice memo yet: the index is not asked */
+    ink_db_t *db = T.busy || !ink_member_space_open() ? NULL : ink_db_open_cached_member(&MEMOS, member); /* loaded by the app: no wait here */ memo_t *n = ink_app_alloc(sizeof *n, true);
+    while (db && n && cursor != UINT32_MAX && !ink_audio_recording() && ink_fs_index(VOICE_DIR, INK_FS_AUDIO, &cursor, &e) == 1) if (!find_audio(db, e.id, n)) {
+        ink_args_t a; ink_args_init(&a); ink_args_str(&a, "path", e.path);
+        ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .member = member, .reply_exec = INK_EXEC_BG}; ink_cap_call("memo.voice", &a, &o);
+    }
+    while (db && n && ink_db_next(db, &cur, &rec, NULL, 0) == 1) if (read_note(db, rec.id, n) && n->pending && !n->deleted) {
+        ink_args_t a; ink_args_init(&a); ink_args_str(&a, "path", n->path);
+        ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .member = member, .reply_exec = INK_EXEC_BG, .done = transcribed};
+        T.id = rec.id; snprintf(T.member, sizeof T.member, "%s", member); T.busy = ink_cap_call("audio.transcribe", &a, &o) == 0; break;
+    }
+    ink_app_free(n); ink_db_close(db);
+}
+static void after_record(void *arg) { /* UI: the recording page gives way to what became of it */
+    if (strcmp(ink_ui_page_name(), "MemoRecord") || !ink_ui_page_current()) return;
+    ink_ui_pop(); if (arg) ink_ui_push(&PAGES[PENDING], arg);
+}
+static void kick(void *ctx, int h, const char *id) { (void)ctx; int64_t on = 0; if (!id || (ink_state_get_int(h, &on) && on)) ink_exec_post(INK_EXEC_BG, &T.sweep, sweep, NULL); }
+static void recorded(void *ctx, const char *ev, const ink_args_t *p) { /* BG: a memo's recording ended; kept, it becomes a memo */
+    (void)ctx; (void)ev; char path[INK_FS_PATH_MAX] = "", member[16] = "", why[24] = ""; int64_t ms = 0;
+    ink_args_get_str(p, "path", path, sizeof path); ink_args_get_str(p, "member", member, sizeof member); ink_args_get_str(p, "why", why, sizeof why); ink_args_get_int(p, "ms", &ms);
+    if (strncmp(path, VOICE_DIR "/", sizeof VOICE_DIR)) return;
+    if (!strcmp(why, "cancelled")) { ink_exec_post(INK_EXEC_UI, &M.recorded, after_record, NULL); return; }
+    ink_args_t a; ink_args_init(&a); ink_args_str(&a, "path", path); ink_args_int(&a, "ms", ms);
+    ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .member = member, .reply_exec = INK_EXEC_BG}; ink_cap_call("memo.voice", &a, &o);
+}
+static void voice(ink_call_t *c, ink_db_t *db, uint32_t id, memo_t *n) { /* a recording becomes a memo; its words come from the hub */
+    int64_t ms = 0; uint32_t cursor = 0; ink_fs_entry_t e; memo_t *other = ink_app_alloc(sizeof *other, true);
+    if (ink_args_get_str(&c->args, "path", n->path, sizeof n->path) > 0) {
+        while (ink_fs_index(VOICE_DIR, INK_FS_AUDIO, &cursor, &e) == 1) if (!strcmp(strrchr(e.path, '/'), strrchr(n->path, '/'))) n->audio = e.id;
+        n->pending = true;
+        if (!n->audio || !other || find_audio(db, n->audio, other)) c->rc.status = INK_RC_INVALID; /* not on the card, or a memo already */
+    } else if (n->deleted || !n->path[0] || T.id != id || strcmp(T.member, ink_cap_call_member(c))) c->rc.status = INK_RC_INVALID;
+    else { snprintf(n->body, sizeof n->body, "%s", T.text); n->pending = false; }
+    if (ink_args_get_int(&c->args, "ms", &ms) && ms > 0) n->ms = (uint32_t)ms;
+    ink_app_free(other);
 }
 static void mutate(ink_call_t *c) {
     int64_t id = 0, index = 0, draft = 0; ink_args_get_int(&c->args, "id", &id);
     ink_db_t *db = ink_db_open_member(&MEMOS, ink_cap_call_member(c));
     memo_t *n = ink_app_alloc(sizeof *n, true); char *raw = ink_app_alloc(INK_DB_RECORD_MAX + 1, true);
-    bool save = !strcmp(c->cap->id, "memo.save");
+    bool save = !strcmp(c->cap->id, "memo.save"), is_voice = !strcmp(c->cap->id, "memo.voice"), fresh = is_voice && !id;
     if (!db || !n || !raw) c->rc.status = INK_RC_FAILED;
-    else if (!read_note(db, (uint32_t)id, n) && !save) c->rc.status = INK_RC_INVALID;
+    else if (fresh) id = ink_db_new_id(db);
+    if (c->rc.status == INK_RC_DONE && !read_note(db, (uint32_t)id, n) && !save && !fresh) c->rc.status = INK_RC_INVALID;
     if (c->rc.status == INK_RC_DONE) {
         if (save) {
             memcpy(raw, n->body, sizeof n->body);
@@ -85,7 +155,8 @@ static void mutate(ink_call_t *c) {
             if (n->deleted || ink_text_draft_read(ink_cap_call_member(c), n->page, (uint32_t)draft, n->body, sizeof n->body) < 0) c->rc.status = INK_RC_INVALID;
             if (n->checklist) n->checked = remap_checks(raw, n->body, n->checked);
             n->draft = (uint32_t)draft;
-        } else if (!strcmp(c->cap->id, "memo.undo")) n->deleted = false;
+        } else if (is_voice) voice(c, db, (uint32_t)id, n);
+        else if (!strcmp(c->cap->id, "memo.undo")) n->deleted = false;
         else if (n->deleted) c->rc.status = INK_RC_INVALID;
         else if (!strcmp(c->cap->id, "memo.delete")) n->deleted = true;
         else if (!strcmp(c->cap->id, "memo.convert")) n->checklist = true;
@@ -100,7 +171,10 @@ static void mutate(ink_call_t *c) {
             ink_jw_raw(&w, "{\"body\":"); ink_jw_str(&w, n->body);
             ink_jw_raw(&w, ",\"checklist\":"); ink_jw_raw(&w, n->checklist ? "true" : "false"); ink_jw_raw(&w, ",\"deleted\":"); ink_jw_raw(&w, n->deleted ? "true" : "false");
             ink_jw_raw(&w, ",\"checked\":"); ink_jw_int(&w, n->checked); ink_jw_raw(&w, ",\"draft\":"); ink_jw_int(&w, n->draft);
-            ink_jw_raw(&w, ",\"page\":"); ink_jw_str(&w, n->page); ink_jw_raw(&w, "}");
+            ink_jw_raw(&w, ",\"page\":"); ink_jw_str(&w, n->page);
+            if (n->path[0]) { ink_jw_raw(&w, ",\"path\":"); ink_jw_str(&w, n->path); ink_jw_raw(&w, ",\"audio\":"); ink_jw_int(&w, n->audio);
+                ink_jw_raw(&w, ",\"ms\":"); ink_jw_int(&w, n->ms); ink_jw_raw(&w, n->pending ? ",\"pending\":true" : ",\"pending\":false"); }
+            ink_jw_raw(&w, "}");
             ink_db_write_t wr = {.id = (uint32_t)id, .data = raw, .len = w.len, .src = c->src, .written_ver = &c->rc.revision};
             if (w.overflow || ink_db_put(db, &wr, NULL) != 0 || ink_db_wait(db, c->rc.revision, (int64_t)ink_cap_time_left_ms(c) * 1000) != 0) c->rc.status = INK_RC_FAILED;
         }
@@ -108,6 +182,7 @@ static void mutate(ink_call_t *c) {
     snprintf(c->rc.object, sizeof c->rc.object, "memo:%u", (unsigned)id);
     snprintf(c->rc.say, sizeof c->rc.say, "%s", c->rc.status == INK_RC_DONE ? "已记下" : "这条没存上，字还在这里。请腾出空间后重试");
     if (c->rc.status == INK_RC_DONE) ink_exec_post(INK_EXEC_UI, &M.refresh, refresh, NULL);
+    if (c->rc.status == INK_RC_DONE && fresh) { ink_exec_post(INK_EXEC_UI, &M.recorded, after_record, (void *)(uintptr_t)id); sweep(NULL); }
     ink_app_free(raw); ink_app_free(n); ink_db_close(db);
 }
 static void save_failed(bool failed) {
@@ -140,9 +215,76 @@ static void navigate(ink_call_t *c) {
         int mode = !strcmp(cap, "memo.edit") ? EDIT : DETAIL;
         memo_t *n = ink_app_alloc(sizeof *n, true);
         if (id && (!M.db || !n || !read_note(M.db, (uint32_t)id, n) || n->deleted)) c->rc.status = INK_RC_INVALID;
-        else { if (mode == DETAIL && n && n->checklist) mode = CHECKLIST; memset(&M.position, 0, sizeof M.position); ink_ui_push(&PAGES[mode], (void *)(uintptr_t)id); }
+        else { if (mode == DETAIL && n && n->checklist) mode = CHECKLIST; else if (mode == DETAIL && n && n->pending) mode = PENDING; memset(&M.position, 0, sizeof M.position); ink_ui_push(&PAGES[mode], (void *)(uintptr_t)id); }
         ink_app_free(n);
     }
+}
+static void record_reply(void *ctx, const ink_receipt_t *rc) { /* UI: the microphone is on, or why not */
+    ink_call_t *c = ctx; c->rc = *rc; c->rc.result = NULL;
+    if (rc->status == INK_RC_DONE && ink_ui_page_current()) ink_ui_push(&PAGES[RECORD], NULL);
+    else if (M.notice && rc->status != INK_RC_PENDING_CONFIRMATION) lv_label_set_text(M.notice, rc->say[0] ? rc->say : "现在录不了，请稍后再试");
+    ink_cap_done(c);
+}
+static void record(ink_call_t *c) { /* UI: a recording in the member's memo folder, asked for by whoever asked for this */
+    ink_tm_t t; ink_time_to_local(ink_time_now_s(), &t); char path[64]; ink_args_t a; ink_args_init(&a);
+    snprintf(path, sizeof path, VOICE_DIR "/%04d%02d%02d-%02d%02d%02d.opus", t.year, t.month, t.day, t.hour, t.min, t.sec); ink_args_str(&a, "path", path);
+    ink_call_opts_t o = {.src = c->src, .member = ink_cap_call_member(c), .reply_exec = INK_EXEC_UI, .done = record_reply, .ctx = c};
+    ink_cap_defer(c);
+    if (ink_cap_call("audio.record", &a, &o) != 0) { c->rc.status = INK_RC_FAILED; ink_cap_done(c); }
+}
+static void play_reply(void *ctx, const ink_receipt_t *rc) { ink_call_t *c = ctx; c->rc = *rc; c->rc.result = NULL; ink_cap_done(c); }
+static void play(ink_call_t *c) { /* BG: by the file's number, which a rename or a move keeps */
+    int64_t id = 0; ink_args_get_int(&c->args, "id", &id); ink_fs_entry_t e = {0}; const char *who = ink_cap_call_member(c);
+    ink_db_t *db = ink_db_open_member(&MEMOS, who); memo_t *n = ink_app_alloc(sizeof *n, true);
+    if (!db || !n || !read_note(db, (uint32_t)id, n) || n->deleted || !n->path[0]) c->rc.status = INK_RC_INVALID;
+    else {
+        ink_args_t a; ink_args_init(&a); ink_args_str(&a, "path", ink_fs_lookup(n->audio, &e) == 0 ? e.path : n->path); ink_args_int(&a, "start_ms", 0);
+        ink_call_opts_t o = {.src = c->src, .member = ink_cap_call_member(c), .reply_exec = INK_EXEC_BG, .done = play_reply, .ctx = c};
+        ink_cap_defer(c);
+        if (ink_cap_call("media.play", &a, &o) != 0) { c->rc.status = INK_RC_FAILED; ink_cap_done(c); }
+    }
+    ink_app_free(n); ink_db_close(db);
+}
+static void minutes(lv_timer_t *t) { /* UI: how long, a minute at a time: the panel is not redrawn every second */
+    (void)t; char text[64]; uint32_t m = lv_tick_elaps(M.started) / 60000;
+    if (m) snprintf(text, sizeof text, "%u 分钟 · 没网也能记", (unsigned)m); else snprintf(text, sizeof text, "不到 1 分钟 · 没网也能记");
+    if (M.notice && strcmp(text, lv_label_get_text(M.notice))) lv_label_set_text(M.notice, text);
+}
+static lv_obj_t *centered(lv_obj_t *screen, const char *text, int px, ink_ui_weight_t weight, int y) {
+    lv_obj_t *l = ink_ui_label(screen, text, px, weight, INK_MARGIN, y, INK_CANVAS_W - 2 * INK_MARGIN);
+    lv_obj_set_style_text_align(l, LV_TEXT_ALIGN_CENTER, 0); return l;
+}
+static void voice_pages(lv_obj_t *screen, int mode) { /* MemoRecord, and the player of a memo with a recording */
+    int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP_S, mid = INK_CANVAS_H / 2 - INK_BLOCK;
+    if (mode == RECORD) {
+        int ring = INK_CIRCLE_LARGE + 2 * INK_GAP;
+        ink_ui_box(screen, (INK_CANVAS_W - ring) / 2, mid - ring / 2, ring, ring, ring / 2, INK_SURFACE_WHITE, true);
+        ink_ui_circle(screen, "wave", (INK_CANVAS_W - INK_CIRCLE_LARGE) / 2, mid - INK_CIRCLE_LARGE / 2, INK_CIRCLE_LARGE, INK_ICON_STATE, INK_SURFACE_BLACK, NULL, NULL);
+        centered(screen, "正在记", INK_FONT_TITLE, INK_WEIGHT_BOLD, mid + ring / 2 + INK_GAP_XL);
+        lv_obj_set_y(M.notice, ink_ui_px(mid + ring / 2 + INK_GAP_XL + INK_LINE_TITLE + INK_GAP_XS)); lv_obj_set_style_text_align(M.notice, LV_TEXT_ALIGN_CENTER, 0);
+        M.started = lv_tick_get(); minutes(NULL); M.timer = lv_timer_create(minutes, 5000, NULL);
+        int w = (INK_CANVAS_W - 2 * INK_MARGIN - INK_GAP) * 3 / 7, top = INK_CANVAS_H - INK_PRIMARY - INK_MARGIN;
+        ink_shell_bind(ink_ui_pill(screen, "不要了", INK_MARGIN, top, w, INK_PRIMARY, false, NULL, NULL), "audio.record_cancel", NULL);
+        ink_shell_bind(ink_ui_pill(screen, "记好了", INK_MARGIN + w + INK_GAP, top, INK_CANVAS_W - 2 * INK_MARGIN - INK_GAP - w, INK_PRIMARY, true, NULL, NULL), "audio.record_stop", NULL);
+        M.actions[0] = (ink_ui_action_spec_t){.id = "cancel", .label = "不要了", .capability = "audio.record_cancel", .enabled = true};
+        M.actions[1] = (ink_ui_action_spec_t){.id = "stop", .label = "记好了", .capability = "audio.record_stop", .enabled = true};
+        M.model.action_count = 2; return;
+    }
+    char text[16]; snprintf(text, sizeof text, M.note.ms ? "%u:%02u" : "--:--", (unsigned)(M.note.ms / 60000), (unsigned)(M.note.ms / 1000 % 60));
+    lv_obj_t *bar = ink_ui_box(screen, INK_MARGIN, y, INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL + 2 * INK_GAP_S, (INK_CONTROL + 2 * INK_GAP_S) / 2, INK_SURFACE_STATIC, false);
+    ink_shell_bind(ink_ui_circle(bar, "play", INK_GAP_S, INK_GAP_S, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_BLACK, NULL, NULL), "memo.play", M.target);
+    int track = INK_CANVAS_W - 2 * INK_MARGIN - INK_CONTROL - 2 * INK_GAP - INK_BLOCK_L;
+    ink_ui_box(bar, INK_CONTROL + INK_GAP, (INK_CONTROL + 2 * INK_GAP_S - INK_GAP_M) / 2, track, INK_GAP_M, INK_GAP_M / 2, INK_SURFACE_WHITE, true);
+    ink_ui_line(bar, text, INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_CONTROL + 2 * INK_GAP + track, (INK_CONTROL + 2 * INK_GAP_S - INK_LINE_LIST) / 2, INK_BLOCK_L - INK_GAP);
+    M.actions[3] = (ink_ui_action_spec_t){.id = "play", .label = "播放录音", .capability = "memo.play", .args_json = M.target, .enabled = true};
+    if (mode != PENDING) return;
+    ink_shell_bind(ink_ui_circle(screen, "trash", INK_CANVAS_W - INK_MARGIN - INK_CONTROL, INK_STATUS_BAR + INK_GAP_S, INK_CONTROL, INK_ICON_LIST, INK_SURFACE_STATIC, NULL, NULL), "memo.delete", M.target);
+    ink_ui_circle(screen, "mic", (INK_CANVAS_W - INK_CIRCLE_LARGE) / 2, mid - INK_CIRCLE_LARGE / 2, INK_CIRCLE_LARGE, INK_ICON_STATE, INK_SURFACE_STATIC, NULL, NULL);
+    centered(screen, "录音已保存", INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, mid + INK_CIRCLE_LARGE / 2 + INK_GAP_XL);
+    lv_obj_set_y(M.notice, ink_ui_px(mid + INK_CIRCLE_LARGE / 2 + INK_GAP_XL + INK_LINE_SUBTITLE + INK_GAP_S)); lv_obj_set_style_text_align(M.notice, LV_TEXT_ALIGN_CENTER, 0);
+    lv_label_set_text(M.notice, "连上网后整理成文字。\n不用等，先去做别的。");
+    M.actions[1].enabled = true; M.actions[0].enabled = M.actions[2].enabled = false;
+    ink_exec_post(INK_EXEC_BG, &T.sweep, sweep, NULL);
 }
 static void save_current(void) {
     ink_args_t a; ink_args_init(&a); ink_args_int(&a, "id", M.id); ink_args_int(&a, "draft", M.note.draft); ink_args_str(&a, "page", M.note.page);
@@ -172,7 +314,7 @@ static void bind_item(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, 
     if (!n) return;
     bool list = M.mode == LIST || M.mode == UNDO;
     if (list && !nth(index, &id, n)) { ink_app_free(n); return; }
-    const char *text = list ? n->body : M.note.body;
+    const char *text = list ? (n->pending ? "随口记 · 录音已保存，联网后整理成文字" : n->body) : M.note.body;
     if (!list && M.mode == CHECKLIST) for (size_t i = 0; i < index && *text; i++) { const char *p = strchr(text, '\n'); text = p ? p + 1 : text + strlen(text); }
     else if (!list) text += ink_text_byte_offset(text, index * 24);
     size_t len = ink_text_byte_offset(text, 24);
@@ -196,12 +338,14 @@ static void bind_item(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, 
     ink_app_free(n);
 }
 static void create(lv_obj_t *screen, void *arg) {
-    int mode = 0; while (mode < 6 && strcmp(PAGES[mode].name, ink_ui_page_name())) mode++;
+    int mode = 0; while (mode < 8 && strcmp(PAGES[mode].name, ink_ui_page_name())) mode++;
     M.mode = mode; M.id = (uint32_t)(uintptr_t)arg; M.saving = M.retry = false;
     M.model = (ink_ui_page_spec_t){.id = ink_ui_page_name(), .title = "备忘"};
     if (strcmp(M.member, ink_member_current()->id)) { memset(&M.position, 0, sizeof M.position); memset(&M.note, 0, sizeof M.note); snprintf(M.member, sizeof M.member, "%s", ink_member_current()->id); }
-    ink_shell_statusbar(screen, true); ink_shell_topbar(screen, "备忘");
+    ink_shell_statusbar(screen, true);
+    if (mode != RECORD) ink_shell_topbar(screen, "备忘");
     M.notice = ink_ui_notice(screen, mode == FAIL ? "这条没存上。字还在这里。请腾出空间后重试" : "", INK_CANVAS_H - INK_PRIMARY - INK_CONTROL - INK_GAP_L);
+    if (mode == RECORD) { M.model.actions = M.actions; voice_pages(screen, mode); return; }
     M.db = ink_db_open_cached_member(&MEMOS, M.member);
     if (!M.db) {
         lv_label_set_text(M.notice, "正在读取备忘"); ink_args_t a; ink_args_init(&a); ink_args_str(&a, "collection", MEMOS.name); request("data.list", &a); return;
@@ -218,6 +362,8 @@ static void create(lv_obj_t *screen, void *arg) {
     M.actions[1] = (ink_ui_action_spec_t){.id = "delete", .label = "删除备忘", .capability = "memo.delete", .args_json = M.target, .enabled = !list};
     M.actions[2] = (ink_ui_action_spec_t){.id = "convert", .label = "转成清单", .capability = "memo.convert", .args_json = M.target, .enabled = !list && !M.note.checklist};
     M.model.action_count = 3;
+    if (M.note.path[0] && (mode == DETAIL || mode == PENDING)) { voice_pages(screen, mode); M.model.action_count = 4; }
+    if (mode == PENDING) return;
     if (mode == EDIT || mode == FAIL) {
         ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .max = 4095, .initial = M.note.body, .draft_page = ink_ui_page_name(), .draft_id = !strcmp(M.note.page, ink_ui_page_name()) ? M.note.draft : 0};
         M.field = ink_textfield_long_create(screen, &cfg); snprintf(M.sent, sizeof M.sent, "%s", mode == FAIL ? M.note.body : "\1");
@@ -238,11 +384,15 @@ static void create(lv_obj_t *screen, void *arg) {
     } else total = mode == CHECKLIST ? lines(M.note.body) : (ink_text_char_offset(M.note.body, strlen(M.note.body)) + 23) / 24;
     if (mode == CHECKLIST && clipped(M.note.body)) lv_label_set_text(M.notice, "长项已省略，编辑备忘可看全文");
     ink_ui_page_spec_t model = {.id = ink_ui_page_name(), .title = "备忘", .object = {"memo.notes", ink_db_last_ver(M.db)}, .actions = PAGING, .action_count = 3};
-    lv_obj_t *body = ink_ui_box(screen, 0, INK_STATUS_BAR + INK_PRIMARY + INK_GAP_L, INK_CANVAS_W, 4 * (INK_ROW_DOUBLE + INK_GAP_M) + INK_PRIMARY, 0, INK_SURFACE_WHITE, false);
-    M.list = ink_ui_list_create(body, &model, &M.position, 4, 1, INK_ROW_DOUBLE, "还没有备忘，写一条吧", bind_item, NULL);
+    int rows = M.note.path[0] && !list ? 3 : 4, top = rows < 4 ? INK_CONTROL + 2 * INK_GAP_S + INK_GAP_M : 0;
+    lv_obj_t *body = ink_ui_box(screen, 0, INK_STATUS_BAR + INK_PRIMARY + INK_GAP_L + top, INK_CANVAS_W, rows * (INK_ROW_DOUBLE + INK_GAP_M) + INK_PRIMARY, 0, INK_SURFACE_WHITE, false);
+    M.list = ink_ui_list_create(body, &model, &M.position, rows, 1, INK_ROW_DOUBLE, "还没有备忘，写一条吧", bind_item, NULL);
     if (M.list) ink_ui_list_refresh(M.list, total);
     if (list) {
-        ink_shell_bind(ink_ui_pill(screen, "写一条", INK_MARGIN, INK_CANVAS_H - INK_PRIMARY - INK_MARGIN, INK_CANVAS_W - 2 * INK_MARGIN, INK_PRIMARY, false, NULL, NULL), "memo.edit", "{}");
+        int w = INK_CANVAS_W - 2 * INK_MARGIN - INK_GAP - 2 * INK_CONTROL;
+        ink_shell_bind(ink_ui_pill(screen, "说一句", INK_MARGIN, INK_CANVAS_H - INK_PRIMARY - INK_MARGIN, w, INK_PRIMARY, true, NULL, NULL), "memo.record", NULL);
+        ink_shell_bind(ink_ui_pill(screen, "写一条", INK_MARGIN + w + INK_GAP, INK_CANVAS_H - INK_PRIMARY - INK_MARGIN, 2 * INK_CONTROL, INK_PRIMARY, false, NULL, NULL), "memo.edit", "{}");
+        ink_exec_post(INK_EXEC_BG, &T.sweep, sweep, NULL);
         M.model.action_count = 0;
         if (undo) {
             snprintf(M.target, sizeof M.target, "{\"id\":%u}", (unsigned)undo);
@@ -253,7 +403,8 @@ static void create(lv_obj_t *screen, void *arg) {
 }
 static void destroy(void) {
     if (M.field && M.mode != FAIL && ink_ui_page_current() && !strcmp(M.member, ink_member_current()->id) && strcmp(ink_textfield_text(M.field), M.sent)) save_current();
-    ink_db_close(M.db); M.db = NULL; M.list = NULL; M.field = M.notice = M.retry_button = M.delete_button = NULL;
+    if (M.timer) lv_timer_delete(M.timer);
+    M.timer = NULL; ink_db_close(M.db); M.db = NULL; M.list = NULL; M.field = M.notice = M.retry_button = M.delete_button = NULL;
 }
 static int snapshot(char *out, size_t cap) {
     char *body = ink_app_alloc(cap, true), *actions = ink_app_alloc(cap, true); int result = -1;
@@ -262,7 +413,12 @@ static int snapshot(char *out, size_t cap) {
         M.actions[3] = M.mode == FAIL ? (ink_ui_action_spec_t){.id = "retry", .label = "重试", .capability = "memo.retry", .enabled = true} : (ink_ui_action_spec_t){.id = "save", .label = "记下当前草稿", .capability = "memo.save", .args_json = M.save_args, .enabled = true};
         M.model.actions = M.mode == FAIL ? M.actions + 3 : M.actions; M.model.action_count = M.mode == FAIL ? 1 : 4;
     }
-    if (body && actions && ink_ui_semantics_snapshot(&M.model, actions, cap) > 0) {
+    ink_ui_page_spec_t model = M.model; ink_ui_action_spec_t listed[2] = {M.actions[0]}; /* the list also offers 说一句 */
+    if (M.list && (M.mode == LIST || M.mode == UNDO) && M.model.action_count < 2) {
+        listed[M.model.action_count] = (ink_ui_action_spec_t){.id = "record", .label = "说一句", .capability = "memo.record", .enabled = true};
+        model.actions = listed; model.action_count++;
+    }
+    if (body && actions && ink_ui_semantics_snapshot(&model, actions, cap) > 0) {
         int n = M.field ? ink_textfield_long_snapshot(M.field, body, cap) : M.list ? ink_ui_list_snapshot(M.list, body, cap) : 0;
         if (!n) snprintf(body, cap, "{}");
         if (n >= 0) {
@@ -278,7 +434,7 @@ static int snapshot(char *out, size_t cap) {
 }
 static bool page_key(ink_key_t key, bool lng) { return M.list && ink_ui_list_key(M.list, key, lng); }
 #define PAGE(name_) {.name = name_, .app = "memo", .create = create, .destroy = destroy, .snapshot = snapshot, .settle = settle, .on_key = page_key}
-static const ink_activity_t PAGES[] = {PAGE("Memo"), PAGE("MemoDetail"), PAGE("MemoEdit"), PAGE("MemoChecklist"), PAGE("MemoUndo"), PAGE("MemoSaveFail")};
+static const ink_activity_t PAGES[] = {PAGE("Memo"), PAGE("MemoDetail"), PAGE("MemoEdit"), PAGE("MemoChecklist"), PAGE("MemoUndo"), PAGE("MemoSaveFail"), PAGE("MemoRecord"), PAGE("MemoPending")};
 static const ink_app_def_t APP = {.id = "memo", .title = "备忘", .icon = INK_UI_ICON(memo), .entry = &PAGES[LIST], .system_app = true, .child_ok = true};
 #define ID "\"id\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}"
 #define RECORD "{\"type\":\"object\",\"properties\":{" ID "},\"required\":[\"id\"]}"
@@ -292,8 +448,13 @@ static const ink_cap_t CAPS[] = {
     {.id = "memo.edit", .title = "写一条或编辑备忘", .input = "{\"type\":\"object\",\"properties\":{" ID "}}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "memo.next", .title = "备忘下一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "memo.prev", .title = "备忘上一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "memo.retry", .title = "重试记下备忘", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate}
+    {.id = "memo.retry", .title = "重试记下备忘", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "memo.record", .title = "说一句：录一条语音备忘（联网后整理成文字）", .output = "{\"type\":\"object\"}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = record},
+    {.id = "memo.play", .title = "播放语音备忘的录音", .input = RECORD, .effect = INK_FX_NAVIGATE, .child_ok = true, .exec = INK_EXEC_BG, .run = play},
+    {.id = "memo.voice", .title = "把录好的音存成语音备忘，或填上中枢整理的文字", .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":0},\"path\":{\"type\":\"string\",\"maxLength\":127},\"ms\":{\"type\":\"integer\",\"minimum\":0}}}",
+     .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .expose = INK_EXPOSE_APP, .exec = INK_EXEC_BG, .run = mutate}
 };
 int ink_memo_init(void) {
-    return ink_db_register(&MEMOS) || ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_app_register(&APP) ? -1 : 0;
+    return ink_db_register(&MEMOS) || ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_app_register(&APP) ||
+        ink_cap_subscribe("audio.record_done", recorded, NULL, INK_EXEC_BG) || ink_state_watch("net.online", kick, NULL, INK_EXEC_BG) ? -1 : 0;
 }

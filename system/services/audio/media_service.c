@@ -14,11 +14,13 @@
 #include "ink/sys/cap.h"
 #include "ink/sys/crc.h"
 #include "ink/sys/data.h"
+#include "ink/sys/hub.h"
 #include "ink/sys/file.h"
 #include "ink/sys/json.h"
 #include "ink/sys/layout.h"
 #include "ink/sys/media.h"
 #include "ink/sys/members.h"
+#include "ink/sys/rt.h"
 #include "ink/sys/state.h"
 #include "ink/sys/svc.h"
 #include "ink/sys/time.h"
@@ -516,6 +518,7 @@ static void rec_finish(const char *why) { /* executor */
     uint32_t ms = ogg_written_ms(REC.w);
     int r = ogg_finish(REC.w);
     REC.w = NULL;
+    if (!strcmp(REC.why, "cancelled")) ink_fs_remove_for(REC.member, REC.path); /* nothing of it stays */
     if (REC.focus) ink_audio_focus_release(REC.focus);
     REC.focus = 0;
     ink_svc_lock();
@@ -702,6 +705,7 @@ static void cap_record(ink_call_t *c) { /* executor */
     }
     if (ink_audio_focus_top() >= INK_AUDIO_PRIO_VOICE) { /* the AI's turn or a call is not ended by a recording starting */
         fail(c, INK_RC_FAILED, "busy: the AI is answering, or a call or an alarm comes first");
+        snprintf(c->rc.say, sizeof c->rc.say, "AI 正在听或在说，或者正在通话，等它结束再录");
         return;
     }
     if (!path[0]) {
@@ -744,6 +748,7 @@ static void cap_record(ink_call_t *c) { /* executor */
         ink_audio_focus_release(REC.focus);
         REC.focus = 0;
         fail(c, INK_RC_FAILED, "the microphone is in use");
+        snprintf(c->rc.say, sizeof c->rc.say, "麦克风正在用，等 AI 听完再录");
         return;
     }
     ink_state_set_bool(REC.h_recording, true);
@@ -759,7 +764,113 @@ static void cap_record_stop(ink_call_t *c) {
         fail(c, INK_RC_FAILED, "not recording");
         return;
     }
+    if (!strcmp(c->cap->id, "audio.record_cancel")) snprintf(REC.why, sizeof REC.why, "cancelled");
     ink_audio_capture_end();
+}
+
+/* ---- a recording to words: its packets go to the hub's dictation as they were recorded (asr.stream) ---- */
+
+static struct {
+    ink_call_t *c;      /* the executor's; the rest under the service lock */
+    ogg_reader_t *r;
+    int sid, state;     /* 0 going, 1 done, 2 failed */
+    bool ended;
+    uint8_t pkt[320];
+    size_t len;
+    uint32_t waited;
+    char text[1024], out[1200];
+    ink_svc_deadline_t at;
+    ink_exec_job_t job;
+} TX INK_PSRAM_BSS;
+
+static void tx_end(const char *why) { /* executor */
+    ink_call_t *c = TX.c;
+    TX.c = NULL;
+    ink_svc_cancel(&TX.at);
+    ink_rt_close(TX.sid);
+    ink_jw_t w;
+    ink_jw_init(&w, TX.out, sizeof TX.out);
+    ink_jw_raw(&w, "{\"text\":");
+    ink_svc_lock();
+    ink_jw_str(&w, TX.text);
+    ink_svc_unlock();
+    ink_jw_raw(&w, ",\"ms\":");
+    ink_jw_int(&w, ogg_duration_ms(TX.r));
+    ink_jw_raw(&w, "}");
+    ogg_close(TX.r);
+    if (why) fail(c, INK_RC_FAILED, why);
+    else if (!w.overflow) ink_cap_result(c, TX.out);
+    ink_cap_done(c);
+}
+
+static void tx_tick(void *ctx);
+static void tx_pump(void *arg) { /* executor: a few packets at a time, the hub queue keeps the rest */
+    (void)arg;
+    if (!TX.c) return;
+    ink_svc_lock();
+    int state = TX.state;
+    ink_svc_unlock();
+    bool ready = ink_rt_ready(TX.sid);
+    TX.waited = ready ? 0 : TX.waited + 1;
+    if (state || !ink_rt_is_open(TX.sid) || TX.waited > 300) { /* about 30 s without the hub */
+        tx_end(state == 1 ? NULL : state == 2 ? "the hub could not make words of it" : "offline");
+        return;
+    }
+    for (int i = 0; i < 16 && ready && !TX.ended; i++) {
+        const uint8_t *d;
+        if (!TX.len && ogg_next_packet(TX.r, &d, &TX.len) == 1) memcpy(TX.pkt, d, TX.len = TX.len < sizeof TX.pkt ? TX.len : 0);
+        else if (!TX.len) TX.ended = ink_rt_control(TX.sid, "rt.turn", "{\"op\":\"end\"}") == 0;
+        if (TX.len && ink_rt_send(TX.sid, INK_RT_VOICE_UP, TX.pkt, TX.len, 0) != 0) break;
+        TX.len = 0;
+    }
+    ink_svc_at(&TX.at, osal_now_us() + 100000, tx_tick, NULL);
+}
+static void tx_tick(void *ctx) {
+    (void)ctx;
+    ink_exec_post(INK_EXEC_BG, &TX.job, tx_pump, NULL);
+}
+
+static void tx_control(void *ctx, int sid, const char *method, const ink_json_t *j, int params) { /* hub task */
+    (void)ctx;
+    (void)sid;
+    char part[256];
+    int final_t = ink_json_find(j, params, "final");
+    ink_svc_lock();
+    if (!strcmp(method, "rt.asr") && final_t >= 0 && j->text[j->tok[final_t].start] == 't' && ink_json_str(j, ink_json_find(j, params, "text"), part, sizeof part) >= 0 &&
+        strlen(TX.text) + strlen(part) < sizeof TX.text)
+        strcat(TX.text, part);
+    else if (!strcmp(method, "rt.asr.done")) TX.state = 1;
+    else if (!strcmp(method, "rt.asr.error")) TX.state = 2;
+    ink_svc_unlock();
+    tx_tick(NULL);
+}
+static void tx_closed(void *ctx, int sid, int reason) {
+    (void)sid;
+    (void)reason;
+    tx_tick(ctx);
+}
+static const ink_rt_handler_t TX_RT = {.on_control = tx_control, .on_closed = tx_closed};
+
+static void cap_transcribe(ink_call_t *c) { /* executor */
+    char path[INK_FS_PATH_MAX] = "";
+    int fs_err = 0;
+    ink_args_get_str(&c->args, "path", path, sizeof path);
+    if (TX.c) fail(c, INK_RC_FAILED, "busy with another recording");
+    else if (ogg_open_for(ink_cap_call_member(c), path, &TX.r, &fs_err) != OGG_OK) fail(c, INK_RC_FAILED, fs_err ? ink_fs_err_name(fs_err) : "not an Ogg Opus file");
+    else if (ink_hub_demand(), (TX.sid = ink_rt_open("asr.stream", "{\"format\":\"opus\",\"rate\":16000,\"frame_ms\":60,\"kind\":\"text\"}", &TX_RT)) <= 0) {
+        ogg_close(TX.r);
+        fail(c, INK_RC_FAILED, "no session");
+    } else {
+        ink_svc_lock();
+        TX.state = 0;
+        TX.text[0] = 0;
+        ink_svc_unlock();
+        TX.c = c;
+        TX.len = TX.waited = 0;
+        TX.ended = false;
+        ink_cap_defer(c);
+        tx_pump(NULL);
+    }
 }
 
 #define MEDIA_CAP(id_, title_, run_) {.id = id_, .title = title_, .effect = INK_FX_NAVIGATE, .child_ok = true, .exec = INK_EXEC_MEDIA, .run = run_}
@@ -780,6 +891,9 @@ static const ink_cap_t MEDIA_CAPS[] = {
      .input = "{\"type\":\"object\",\"properties\":{\"path\":{\"type\":\"string\",\"maxLength\":127},\"max_seconds\":{\"type\":\"integer\",\"minimum\":1}}}",
      .output = "{\"type\":\"object\"}", .effect = INK_FX_EXTERNAL, .child_ok = true, .permission = "record", .exec = INK_EXEC_MEDIA, .run = cap_record},
     {.id = "audio.record_stop", .title = "停止录音", .effect = INK_FX_NAVIGATE, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_record_stop},
+    {.id = "audio.record_cancel", .title = "不要这段录音（录了的也删掉）", .effect = INK_FX_NAVIGATE, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_record_stop},
+    {.id = "audio.transcribe", .title = "把一个录音交给中枢整理成文字", .input = "{\"type\":\"object\",\"properties\":{\"path\":{\"type\":\"string\",\"maxLength\":127}},\"required\":[\"path\"]}",
+     .output = "{\"type\":\"object\"}", .effect = INK_FX_READ, .child_ok = true, .timeout_ms = 600000, .exec = INK_EXEC_BG, .run = cap_transcribe},
     {.id = "audio.record_done", .title = "录音结束了（存好的文件、时长、为什么停）", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},
 };
 
