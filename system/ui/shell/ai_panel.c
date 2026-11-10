@@ -1,4 +1,5 @@
 /* The AI panel presents the service's words; closing does not cancel its work. */
+/* ui-scale-runtime: dimension chat_w The chat button includes measured text, padding and borders. */
 #include "ink/sys/i18n.h"
 #include <stdio.h>
 #include <string.h>
@@ -207,7 +208,8 @@ void ink_shell_ai_open(lv_obj_t **root, lv_obj_t **status, lv_obj_t **question, 
                             PANEL_HEIGHT - INK_GAP_L - INK_CONTROL - INK_GAP_S - ink_ui_line_height(INK_FONT_NOTE), INK_CANVAS_W - 2 * INK_MARGIN);
     A.actions = ink_ui_box(A.root, INK_MARGIN, PANEL_HEIGHT - INK_GAP_L - INK_CONTROL,
                             INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, 0, INK_SURFACE_WHITE, false);
-    int chat_w = LV_MAX(2 * INK_CONTROL, ink_ui_text_width(TR("对话记录"), INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * (INK_GAP_XS + INK_STROKE));
+    int chat_w = ink_ui_text_width(TR("对话记录"), INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * (INK_GAP_XS + INK_STROKE);
+    if (chat_w < 2 * INK_CONTROL) chat_w = 2 * INK_CONTROL;
     lv_obj_t *next = ink_ui_pill(A.actions, TR("对话记录"), 0, 0, chat_w, INK_CONTROL, false, NULL, NULL);
     ink_shell_bind(next, "shell.ai_home", NULL);
     int x = chat_w + INK_GAP;

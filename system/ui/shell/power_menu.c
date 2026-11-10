@@ -1,4 +1,5 @@
 /* The power menu (placeholder look, D-64): the power key held down. What its buttons do are the capabilities the AI has too. */
+/* ui-scale-runtime: dimension text_h,h Tile labels determine the panel height at the current font size. */
 #include "ink/sys/i18n.h"
 #include <stdio.h>
 #include <string.h>
@@ -112,7 +113,7 @@ static void open_job(void *arg) { /* UI task */
     shell_card_open(&M.card);
     ink_ui_overlay_add(&OVERLAY, M.card.root);
     int cell = (INK_CANVAS_W - 2 * INK_MARGIN) / 3;
-    int text_h = LV_MAX(ink_ui_line_height(INK_FONT_LIST), ink_ui_text_height(TR("锁屏"), INK_FONT_LIST, INK_WEIGHT_MEDIUM, cell));
+    int text_h = ink_ui_text_height(TR("锁屏"), INK_FONT_LIST, INK_WEIGHT_MEDIUM, cell);
     int h = 2 * INK_MARGIN + INK_CIRCLE_APP + INK_GAP_M + text_h + INK_MARGIN + 4 * INK_PRIMARY;
     lv_obj_clean(M.card.panel);
     lv_obj_set_y(M.card.panel, ink_ui_px(INK_CANVAS_H - h));

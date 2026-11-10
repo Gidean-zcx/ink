@@ -1,4 +1,5 @@
 /* Locked page or minute clock, with a capture-only camera entry. */
+/* ui-scale-runtime: dimension date_y Keep the date below the emergency control using theme spacing. */
 #include <stdio.h>
 #include <string.h>
 
@@ -100,7 +101,7 @@ static void show(void) {
         lv_obj_set_style_bg_opa(g_mark, LV_OPA_COVER, 0);
         ink_shell_statusbar(g_mark, false);
         char time[24], date[96]; ink_shell_time_strings(time, sizeof time, date, sizeof date);
-        int date_y = LV_MAX(INK_STATUS_BAR + INK_BLOCK, INK_STATUS_BAR + INK_GAP + INK_CONTROL + INK_GAP_M);
+        int date_y = INK_STATUS_BAR + INK_GAP + INK_CONTROL + INK_GAP_M;
         lv_obj_t *date_label = ink_ui_label(g_mark, date, INK_FONT_LIST, INK_WEIGHT_MEDIUM,
                                            INK_MARGIN, date_y, INK_CANVAS_W - 2 * INK_MARGIN);
         lv_obj_set_style_text_align(date_label, LV_TEXT_ALIGN_CENTER, 0);

@@ -7,11 +7,15 @@
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
 | 1 | 未通过，保留失败 | 【实测】补充测试 469 条、33 帧通过，缺词 0；原截图测试第三轮剩 3 项失败，按总规则停止继续修该测试 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility python3 tests/i18n_shell.py --build build --binary build/sim-i18n-shell-remaining --out build/test-out/i18n-shell-remaining` |
-| 2 | 进行中 | 【实测】普通构建通过；gcccheck 首轮 18 文件、0 处；全量测试正在运行，ASan、S31、隐私检查待记录 | 见末尾命令 |
+| 2a 普通全量 | 未通过 | 【实测】原话：`98% tests passed, 6 tests failed out of 349`，657.16 秒；3 项 hub 测试跳过。失败清单见下文；其中 `ui-scale`、`emergency-call`、`mobile-network` 修正后定向复验通过 | 见末尾全量命令 |
+| 2b ASan | 待运行 | 配置通过，待构建、全量内存检查 | 见末尾命令 |
+| 2c S31 | 待运行 | 待仅编译 | 见末尾命令 |
+| 2d gcccheck / 隐私 | 进行中 | 首轮 18 文件、0 处；提交差异隐私扫描无匹配，最终复核待记录 | 见末尾命令 |
 | 3 | 已列出；截图覆盖不完整 | 【实现】逐文件迁移数见下表；【实测】新增 33 帧和归档驱动 35 帧，未覆盖全部状态 | 见截图清单 |
 
 ## 没做到的
 
+- `small-gaps-1` 的英文定位已修正，但英文标签被产品省略号截断，仍有两条按钮可见性断言失败。没有改断言或把省略号当作正确文案；问题与原截图测试的低电量页失败相同，依停止规则保留。
 - 原 `i18n-shell` 第三轮仍有 3 项失败：`KidBlocked-en` 的输入密码按钮截断；`BatteryLow-en` 的省电控件重叠及截断；`FactoryReset-zh` 一次截图时显示仍忙。遵守总规则第 7 节，停止继续修该测试，不能报告验收通过。
 - 新补测试覆盖 11 个文件的主要入口、AI 状态和全部更新页面，但备份恢复各阶段、传输成功/失败、成员密码等待等全部变体尚未逐页截图。服务提供的 ask 模板、动态业务正文按 i18n-2 的边界保留，待 i18n-4。
 
@@ -23,6 +27,8 @@
 ## 改过的已有测试
 
 - `small-gaps-1`：仅英文按钮定位词改为 `Battery Saver: lock after 1 min`；中文定位词和两条权限断言不变。
+- `emergency-call`：英文阶段的动作标签匹配 `Open the emergency dialler`，中文仍匹配原文；动作 ID、权限及快照隔离断言不变。
+- `mobile-network`：英文 APN 页的密码存在标记改为 `Filled`；仍断言只显示存在性。以上两处由本次全量复现旧中文期望失败后修改，编译数据库问题没有复现。
 - 归档自带的 `i18n-shell`：点击发送 `PRESSED` / `CLICKED`，等待卡片关闭；键盘名称使用真实的 `Keyboard`；关闭电源菜单后再切成员；检查顶层实际显示的浮层，避免把下层被遮住的文字算作重叠。排版、期望文字、缺词和显示稳定断言保留。
 
 ## 要用户定的
@@ -40,7 +46,8 @@
 
 ## 要改的文档
 
-- 暂无。
+- 合并时由主会话运行 `python3 tools/capabilities.py` 更新共享能力表。`search.c` 现在明确引用墙纸设置，生成表的 s39 设置引用从空变为 `display.wallpaper_file`；本任务按总规则第 7 节不改 `docs/system/capabilities.md`，因此 `capability-table-doc` 会报告一行过期。
+- 任务总表应记为“迁移完成主要入口，验收未通过”，保留原截图测试和未覆盖的状态清单。
 
 ## 过程记录
 
@@ -109,3 +116,7 @@ INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest"
 INK_UPSTREAM="$INK_DEPS/../ink-hw/upstream/Metalio-E-INK4-Plus" taskpolicy -c utility bash ports/esp32s31/build.sh
 taskpolicy -c utility python3 ../../tools/gcccheck.py build <本次与导入的变更 C 文件>
 ```
+
+## 普通全量结果
+
+【实测】首次全量失败为 `ui-scale`、`small-gaps-1`、`i18n-shell`、`capability-table-doc`、`emergency-call`、`mobile-network`。前三类排版和文档差异见前文；紧急呼叫和手机网络均已找到编译数据库，实际失败来自英文阶段仍匹配旧中文标签。首次完整输出在 `build/verification/ctest-first.log`，后续 `ui-scale`、`emergency-call`、`mobile-network`、`i18n-shell-remaining` 四项复验原话：`100% tests passed out of 4`，8.97 秒，记录在 `build/verification/focused.log`。

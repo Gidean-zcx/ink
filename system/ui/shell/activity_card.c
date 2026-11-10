@@ -161,6 +161,8 @@ static const ink_ui_action_spec_t PAGE_ACTIONS[] = {
     {.id = "prev", .label = TR_NOOP("上一页"), .capability = "tasks.prev"},
     {.id = "next", .label = TR_NOOP("下一页"), .capability = "tasks.next"}
 };
+enum { TASK_ACTIONS_MAX = 2 };
+_Static_assert(sizeof PAGE_ACTIONS / sizeof *PAGE_ACTIONS <= TASK_ACTIONS_MAX, "task actions exceed their buffer");
 static const ink_ui_page_spec_t MODEL = {.id = "Tasks", .title = TR_NOOP("正在做的事"), .object = {"job.list", 1}, .actions = PAGE_ACTIONS, .action_count = 2};
 static void create(lv_obj_t *screen, void *arg) {
     (void)arg;
@@ -170,7 +172,7 @@ static void create(lv_obj_t *screen, void *arg) {
     ink_shell_statusbar(screen, true); ink_shell_topbar(screen, TR("正在做的事"));
     int y = INK_STATUS_BAR + INK_CONTROL + INK_GAP_L;
     lv_obj_t *body = ink_ui_box(screen, 0, y, INK_CANVAS_W, INK_CANVAS_H - y, 0, INK_SURFACE_WHITE, false);
-    ink_ui_action_spec_t actions[2] = {PAGE_ACTIONS[0], PAGE_ACTIONS[1]};
+    ink_ui_action_spec_t actions[TASK_ACTIONS_MAX] = {PAGE_ACTIONS[0], PAGE_ACTIONS[1]};
     actions[0].label = TR(actions[0].label); actions[1].label = TR(actions[1].label);
     ink_ui_page_spec_t model = MODEL; model.title = TR(model.title); model.actions = actions;
     A.list = ink_ui_list_create(body, &model, &A.position, 5, 1, ink_ui_row_double(), A.jobs_ok ? TR("还没有正在做的事") : TR("没能读取正在做的事"), bind_job, NULL);

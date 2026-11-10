@@ -66,7 +66,7 @@ static void open_entry(void) {
 }
 static void entry_semantics(void) {
     CHECK(ink_ui_context_snapshot(g_snap, sizeof g_snap, NULL) > 0 && strstr(g_snap, "\"id\":\"emergency\"") &&
-          strstr(g_snap, "phone.emergency_open") && strstr(g_snap, "打开紧急呼叫页面"),
+          strstr(g_snap, "phone.emergency_open") && strstr(g_snap, english ? "Open the emergency dialler" : "打开紧急呼叫页面"),
           "lock and member gate export the public emergency action: %.150s", g_snap);
 }
 static void finish_call(bool airplane, bool remote, const char *number) {
