@@ -17,6 +17,8 @@ static uint64_t now;
 static unsigned calls, scans, off_count, abort_count, notify_count, isr_gives;
 static int xoe;
 static bool drop_frame, supply_good = true;
+static bool wake_during_off;
+static int expected_pending;
 static pthread_t caller, callback_thread;
 static hal_display_result_t completed;
 static _Thread_local int loops;
@@ -51,7 +53,14 @@ hal_i2c_dev_t *hal_i2c_device(int bus, uint8_t addr, const char *name) {
     return (hal_i2c_dev_t *)&D;
 }
 epd_power_result_t epd_power_on(epd_power_t *p) { p->gate_output(p->ctx, true); now += 140000; return EPD_POWER_OK; }
-void epd_power_off(epd_power_t *p) { p->gate_output(p->ctx, false); off_count++; }
+void epd_power_off(epd_power_t *p) {
+    p->gate_output(p->ctx, false);
+    off_count++;
+    if (wake_during_off) {
+        wake_during_off = false;
+        hal_display_wake(500);
+    }
+}
 bool epd_power_kept(epd_power_t *p) { (void)p; return supply_good; }
 void gpio_reset_pin(int pin) { (void)pin; }
 void gpio_set_direction(int pin, int mode) { (void)pin; assert(mode == GPIO_MODE_OUTPUT); }
@@ -124,7 +133,7 @@ void lq_reset(LineQueue_t *q) { atomic_store(&q->current, 0); atomic_store(&q->l
 static void finished(void *ctx, const hal_display_result_t *r) {
     assert(ctx == &calls);
     assert(!pthread_equal(caller, pthread_self()));
-    assert(scans > 0 && hal_display_pending() == 0 && xoe == 0);
+    assert(scans > 0 && hal_display_pending() == expected_pending && xoe == 0);
     assert(r->queued_us <= r->started_us && r->started_us <= r->done_us);
     callback_thread = pthread_self();
     completed = *r;
@@ -181,6 +190,20 @@ static void guard_only(void) {
     assert(ATOMIC(D.stop) && !ATOMIC(D.powered) && !ATOMIC(D.armed));
     assert(xoe == 0 && off_count == 1 && abort_count == 1);
 }
+static void wake_overlap(void) {
+    hal_rect_t a = {0, 0, 1, 1};
+    uint8_t pixel = 0;
+    assert(hal_display_update(&a, &pixel, 1, HAL_WF_GL16, 0, finished, &calls));
+    wake_during_off = true; /* Input arrives while the PMIC power-down yields. */
+    expected_pending = 1;
+    run(run_display);
+    assert(calls == 1 && completed.ok && hal_display_pending() == 1 && !ATOMIC(D.powered));
+    run(run_display);
+    assert(ATOMIC(D.powered) && hal_display_pending() == 1);
+    now += 500000;
+    run(run_display);
+    assert(!ATOMIC(D.powered) && hal_display_pending() == 0);
+}
 static void lines(void) {
     uint8_t line[LINE_BYTES];
     atomic_store(&D.row, H);
@@ -200,6 +223,7 @@ int main(int argc, char **argv) {
     hal_panel_info_t info;
     hal_display_get_info(&info);
     assert(info.width == W && info.height == H && info.rotation_deg == S31_PANEL_ROTATION && !info.async_updates);
+    assert(info.waveforms == ((1u << HAL_WF_GC16) | (1u << HAL_WF_GL16)));
     assert(hal_display_level_luminance(0) == PANEL_LEVEL[0] && hal_display_level_luminance(16) == 1.0f);
     assert(!hal_display_update(NULL, NULL, 0, HAL_WF_GL16, 0, NULL, NULL));
     const char *which = argc > 1 ? argv[1] : "regions";
@@ -207,6 +231,7 @@ int main(int argc, char **argv) {
     else if (!strcmp(which, "timeout")) timeout();
     else if (!strcmp(which, "guard")) guard_only();
     else if (!strcmp(which, "lines")) lines();
+    else if (!strcmp(which, "wake-overlap")) wake_overlap();
     else abort();
     assert(pthread_mutex_destroy(&D.lock->lock) == 0);
     for (unsigned i = 0; i < allocation_count; i++) free(allocations[i]);

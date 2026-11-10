@@ -23,6 +23,7 @@ def main():
         ("scan-timeout", "timeout", "    epd_power_off(&D.power);", "    (void)D.power;"),
         ("independent-guard", "guard", ">= pdMS_TO_TICKS(GUARD_MS)) trip();", ">= pdMS_TO_TICKS(GUARD_MS)) { }"),
         ("late-line-discard", "lines", "while (D.owed[id] && lq_read(&D.q[id], line) == 0) --D.owed[id];", "(void)id;"),
+        ("wake-pending", "wake-overlap", "D.result.id || ATOMIC(D.powered) || (D.wake_until && (int32_t)(D.wake_until - xTaskGetTickCount()) > 0)", "D.result.id || ATOMIC(D.powered) || wake"),
     ]
     common = ["cc", "-std=c11", "-Wall", "-Wextra", "-Werror", "-UNDEBUG", "-pthread"]
     for p in [tests / "display_stub", port, root / "platform/include", root / "drivers/chips", root / "drivers/display/pqbn", root / "boards"]:
@@ -45,7 +46,7 @@ def main():
             if (result.returncode == 0) == bool(old):
                 raise RuntimeError(f"{name}: unexpected test status {result.returncode}\n{result.stderr}")
             print(f"{name}: compile=0, test={result.returncode}")
-    print("display reverse controls: 6/6 rejected; baseline passed")
+    print("display reverse controls: 7/7 rejected; baseline passed")
 
 
 if __name__ == "__main__":

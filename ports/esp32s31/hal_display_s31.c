@@ -200,7 +200,7 @@ static void display_task(void *ctx) {
         if (r.id) r.done_us = osal_now_us();
         xSemaphoreTake(D.lock, portMAX_DELAY);
         if (r.id) D.result.id = 0;
-        atomic_store(&D.pending, D.result.id || ATOMIC(D.powered) || wake);
+        atomic_store(&D.pending, D.result.id || ATOMIC(D.powered) || (D.wake_until && (int32_t)(D.wake_until - xTaskGetTickCount()) > 0));
         xSemaphoreGive(D.lock);
         if (r.id && done) done(arg, &r);
     }
@@ -254,7 +254,7 @@ static void init(void) {
 void hal_display_get_info(hal_panel_info_t *out) {
     init();
     *out = (hal_panel_info_t){.width = D.ready ? W : 0, .height = D.ready ? H : 0, .dpi = 300, .gray_levels = 16,
-        .tech = HAL_PANEL_EPD, .waveforms = (1u << HAL_WF_COUNT) - 1, .rotation_deg = S31_PANEL_ROTATION, .full_frame_scan = true};
+        .tech = HAL_PANEL_EPD, .waveforms = (1u << HAL_WF_GC16) | (1u << HAL_WF_GL16), .rotation_deg = S31_PANEL_ROTATION, .full_frame_scan = true};
 }
 float hal_display_level_luminance(unsigned level) { return PANEL_LEVEL[level < 16 ? level : 15]; }
 uint32_t hal_display_update(const hal_rect_t *a, const uint8_t *pixels, int stride, hal_waveform_t wf,
