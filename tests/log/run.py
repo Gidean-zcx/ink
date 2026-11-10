@@ -57,15 +57,20 @@ def run(binary):
                 assert command[-4] == "read-flash"
                 address, size = command[-3:-1]
                 assert (address, size) in (("0xf64000", "0x80000"), ("0xfe4000", "0x10000"))
-                Path(command[-1]).write_bytes(data if address == "0xf64000" else b"\xff" * 65536)
+                core = b"\xff" * 65536 if erased else struct.pack("<I", 256) + bytes(65532)  # IDF: the dump's length first
+                Path(command[-1]).write_bytes(data if address == "0xf64000" else core)
             else:
                 assert command[1:4] == ["-m", "esp_coredump", "info_corefile"]
                 assert command[-1] == "FAKE_FIRMWARE.elf"
                 kwargs["stdout"].write("FAKE backtrace\n")
             return subprocess.CompletedProcess(command, 0)
-        with patch.object(pull.subprocess, "run", side_effect=fake_read):
-            pull.main(["--port", "FAKE_PORT", "--elf", "FAKE_FIRMWARE.elf", "--output", str(Path(d) / "fake-pull")])
-        assert len(commands) == 3
+        for erased, want in ((False, 3), (True, 2)):  # a saved dump is decoded; an erased partition is only reported
+            commands.clear()
+            with patch.object(pull.subprocess, "run", side_effect=fake_read):
+                pull.main(["--port", "FAKE_PORT", "--elf", "FAKE_FIRMWARE.elf", "--output", str(Path(d) / f"fake-pull-{erased}")])
+            assert len(commands) == want, (erased, commands)
+            report = next((Path(d) / f"fake-pull-{erased}").glob("*/coredump.txt")).read_text(encoding="utf-8")
+            assert ("没有核心转储" in report) == erased, report
         print("PASS: independent CRC decode, UTF-8 boundaries, CLI round-trip, raw SD export")
 
 
