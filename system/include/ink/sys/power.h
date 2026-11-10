@@ -6,8 +6,9 @@
  *           CPU at full speed.
  *   IDLE    the page just sits there (reading): CPU at its idle clock, the
  *           touch controller in monitor mode, background polling slowed.
- *   LOCKED  power key, or long without input: the screen keeps its image
- *           with a small lock mark; only the power key and the AI key wake
+ *   LOCKED  power key, or long without input (lying flat and still: sooner):
+ *           the screen keeps its image with a small lock mark; only the power
+ *           key, the AI key and lifting it from flat (power.lift_wake) wake
  *           it. While nothing needs the chip (no audio, no transfer, nothing
  *           queued for the panel or the flash) it light-sleeps in slices;
  *           otherwise (e.g. an audiobook keeps playing) it stays awake,

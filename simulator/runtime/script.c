@@ -19,7 +19,7 @@
  *   +0       cell  on|off [rsrp]        # cellular coverage, e.g. cell on -105
  *   +0       outage 5s                 # link drops for a while (dead connection noticed later)
  *   +0       sim   external|internal none|data|sms|voice  # card in a SIM slot (what its plan allows)
- *   +0       orient portrait|upside_down|landscape_left|landscape_right|face_up|face_down
+ *   +0       orient portrait|upside_down|landscape_left|landscape_right|face_up|face_down|reading
  *   +0       shake                    # a movement the accelerometer notices
  *   +0       rtc lost                 # the RTC's backup supply failed: its time is invalid
  *   +0       rtc line low             # the RTC's interrupt line reads low all the time (as in the factory log)

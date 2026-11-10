@@ -47,3 +47,10 @@ hal_i2c_status_t sc7a20h_sleep(hal_i2c_dev_t *dev) {
     if (s == HAL_I2C_OK) s = wr(dev, CTRL6, 0x00);
     return s;
 }
+
+hal_i2c_status_t sc7a20h_motion_watch(hal_i2c_dev_t *dev) { /* 10 Hz + LPen + X/Y/Z; HR off (not with LPen) */
+    static const uint8_t seq[][2] = {{CTRL1, 0x2F}, {CTRL4, 0x80}, {AOI1_THS, 0x08}, {AOI1_DUR, 0x01}};
+    hal_i2c_status_t s = HAL_I2C_OK;
+    for (unsigned i = 0; i < sizeof seq / sizeof seq[0] && s == HAL_I2C_OK; i++) s = wr(dev, seq[i][0], seq[i][1]);
+    return s;
+}

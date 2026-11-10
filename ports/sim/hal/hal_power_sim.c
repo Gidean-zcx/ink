@@ -350,10 +350,11 @@ static void refused(const char *metric, const char *why) {
  * through our drivers: the models see every step. *applied tells the exit what to undo. */
 enum { APPLIED_KEYS = 1, APPLIED_RAILS = 2 };
 
-static const char *board_enter(const hal_sleep_cfg_t *cfg, bool power_key, bool rtc, int *applied) {
+static const char *board_enter(const hal_sleep_cfg_t *cfg, bool power_key, bool rtc, bool *motion, int *applied) {
     sim_display_park();                           /* TPS65185 to SLEEP (upstream tps_enter_sleep) */
     osal_task_delay_us(g_profile.sleep_enter_us); /* SD park and the display bus held low: not modelled */
-    sim_sensors_sleep();                          /* the accelerometer lets go of GPIO2 */
+    if (*motion) *motion = sim_sensors_sleep_watch(); /* lets go of GPIO2, keeps watching for movement */
+    else sim_sensors_sleep();                     /* the accelerometer lets go of GPIO2 */
     sim_input_sleep_begin();                      /* no key reads from here: the pins are driven next */
     *applied |= APPLIED_KEYS;
     if (metalio_board_mask_for_sleep(rtc) != HAL_I2C_OK) return "expander";
@@ -404,11 +405,12 @@ static void board_exit(int applied, hal_key_t woke_by) {
  * first). The RTC's INT stays low until its flag is cleared; a POWER press may already be over, and
  * with the RTC quiet nothing else can pull the line, so that is POWER (upstream: a released short
  * press keeps its POWER-wake meaning). With POWER masked only P16 can pull the line: RTC. */
-static uint32_t classify_gpio2(bool power_key, bool rtc) {
+static uint32_t classify_gpio2(bool power_key, bool rtc, bool motion) {
     uint8_t p1 = 0xFF;
     bool ok = metalio_board_read(1, &p1) == HAL_I2C_OK;
     uint32_t why = 0;
     if (rtc && ok && !(p1 & MB_P1_RTC_INT)) why |= HAL_WAKE_RTC;
+    if (motion && sim_sensors_take_motion()) why |= HAL_WAKE_MOTION; /* INT1 latched: the accelerometer */
     if (power_key && (!ok || !(p1 & MB_P1_POWER_KEY) || !why)) why |= HAL_WAKE_POWER_KEY;
     if (!why) {
         PW.wakes_unexplained++;
@@ -469,15 +471,17 @@ static uint32_t sleep_admitted(const hal_sleep_cfg_t *cfg) {
     uint32_t lines = cfg->wake_mask | (cfg->max_us ? HAL_WAKE_TIMER : 0);
     if (!cfg->keep_modem) lines &= ~(uint32_t)HAL_WAKE_MODEM;
     bool power_key = board && (lines & HAL_WAKE_POWER_KEY), rtc = board && (lines & HAL_WAKE_RTC);
-    if (board) lines = (lines & ~(uint32_t)(HAL_WAKE_POWER_KEY | HAL_WAKE_RTC)) | (power_key || rtc ? WAKE_GPIO2 : 0);
+    bool motion = board && (lines & HAL_WAKE_MOTION); /* INT1 shares GPIO2; no accelerometer without the board */
+    lines &= ~(uint32_t)HAL_WAKE_MOTION;
+    if (board) lines = (lines & ~(uint32_t)(HAL_WAKE_POWER_KEY | HAL_WAKE_RTC)) | (power_key || rtc || motion ? WAKE_GPIO2 : 0);
     if (rtc && !rtc_line_idle()) { /* a line that is already low cannot signal: the timer bounds the wait */
         rtc = false;
         sim_metric_add("power.rtc_wake_unavailable", 1);
-        if (!power_key) lines &= ~(uint32_t)WAKE_GPIO2;
+        if (!power_key && !motion) lines &= ~(uint32_t)WAKE_GPIO2;
     }
     int applied = 0;
     const char *why_not = NULL;
-    if (board) why_not = board_enter(cfg, power_key, rtc, &applied);
+    if (board) why_not = board_enter(cfg, power_key, rtc, &motion, &applied);
     else osal_task_delay_us(g_profile.sleep_enter_us); /* PMIC to sleep, SD parked, rails cut */
     /* other tasks ran during the entry: anything they started must finish awake (the real port
      * checks again with the scheduler suspended, right before esp_light_sleep_start) */
@@ -524,7 +528,7 @@ static uint32_t sleep_admitted(const hal_sleep_cfg_t *cfg) {
     PW.wake_mask = 0;
     vtk_set_sleeper_locked(NULL);
     vtk_unlock();
-    if (cause == WAKE_GPIO2) cause = classify_gpio2(power_key, rtc); /* the scheduler runs again (upstream too) */
+    if (cause == WAKE_GPIO2) cause = classify_gpio2(power_key, rtc, motion); /* the scheduler runs again (upstream too) */
     sim_power_consumer("cpu.sleep", false, 0);
     sim_power_consumer("modem.standby", false, 0);
     for (int i = 0; i < PW.n; i++)
@@ -640,8 +644,8 @@ void sim_power_report(void) {
     if (PW.state_ns[HAL_PWR_STATE_LOCKED] > 0)
         sim_metric_set("power.locked_sleep_share", (double)slept / (double)PW.state_ns[HAL_PWR_STATE_LOCKED]);
     sim_metric_set("power.sleeps", (double)PW.sleeps);
-    static const char *WN[5] = {"timer", "power_key", "ai_key", "rtc", "modem"};
-    for (int i = 0; i < 5; i++)
+    static const char *WN[6] = {"timer", "power_key", "ai_key", "rtc", "modem", "motion"};
+    for (int i = 0; i < 6; i++)
         if (PW.wakes_by[i]) {
             snprintf(key, sizeof key, "power.wakes.%s", WN[i]);
             sim_metric_set(key, (double)PW.wakes_by[i]);

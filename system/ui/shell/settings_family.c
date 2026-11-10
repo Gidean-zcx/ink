@@ -40,6 +40,7 @@ static void setting(const char *id, const char *title, int64_t next) {
     if (!strcmp(id, "display.lock_style")) snprintf(value, sizeof value, "%s", v == 2 ? "壁纸" : v == 1 ? "时钟和待办" : "这一页");
     if (!strcmp(id, "power.lock_after_s")) snprintf(value, sizeof value, "%lld 分钟", (long long)v / 60);
     if (!strcmp(id, "display.wallpaper_file")) snprintf(value, sizeof value, "%s", v ? "已选择" : "还没有选壁纸");
+    if (!strcmp(id, "power.lift_wake")) snprintf(value, sizeof value, "%s", v ? "开，平放不动 3 分钟先锁屏" : "关");
     row(id, title, value, "settings.set", args);
 }
 static void time_reply(void *ctx, const ink_receipt_t *rc) {
@@ -218,6 +219,7 @@ static void create(lv_obj_t *screen, void *arg) {
         setting("power.lock_after_s", "自动锁屏", ink_setting_get("power.lock_after_s") == 600 ? 300 : 600);
         row("choose", "从相册选", ink_wallpaper_ready() ? "已选锁屏壁纸" : ink_setting_get("display.wallpaper_file") ? "壁纸暂时读不出来" : "还没有选壁纸", "wallpaper.choose", NULL);
         setting("display.wallpaper_file", "移除壁纸", 0);
+        setting("power.lift_wake", "拿起亮屏", !ink_setting_get("power.lift_wake"));
     } else row("unavailable", "暂时看不到 AI 记得的事", "暂时无法查看和删除记忆", NULL, NULL);
     ink_ui_list_refresh(S.list, S.count);
     if (S.page == MEMBERS) {

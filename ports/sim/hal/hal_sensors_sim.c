@@ -36,6 +36,22 @@ void sim_sensors_sleep(void) {
         sim_metric_add("accel.sleep_errors", 1);
 }
 
+/* HAL_WAKE_MOTION armed: the latch is read (INT1 let go) and the chip keeps watching at its low-power rate,
+ * INT1 still on GPIO2. False: no accelerometer, or it did not take the setup (quiet as above then). */
+bool sim_sensors_sleep_watch(void) {
+    bool moved = false;
+    if (g_accel && sc7a20h_motion(g_accel, &moved) == HAL_I2C_OK && sc7a20h_motion_watch(g_accel) == HAL_I2C_OK) return true;
+    sim_sensors_sleep();
+    return false;
+}
+
+bool sim_sensors_take_motion(void) { /* after a GPIO2 wake: was it the accelerometer? Reading releases INT1 */
+    bool moved = false;
+    if (!g_accel || !sim_accel_int_low() || sc7a20h_motion(g_accel, &moved) != HAL_I2C_OK || !moved) return false;
+    g_motions++;
+    return true;
+}
+
 void sim_sensors_resume(void) {
     if (g_accel && sc7a20h_init(g_accel) != HAL_I2C_OK) sim_metric_add("accel.resume_errors", 1);
 }

@@ -13,6 +13,11 @@
  * sources. A key wake is confirmed by the input service unlocking; if no
  * unlock follows within a second, the chip goes back to sleep.
  *
+ * Lift to wake (D-122, setting power.lift_wake): lying flat when the chip goes to sleep, it also wakes on the
+ * accelerometer's motion interrupt; if within a second the device is held at a reading angle, that is the
+ * power key's unlock. A bump leaves it flat, a bag rarely holds it at that angle; after three motion wakes
+ * that were not a lift the next slice goes without. Lying flat and still while idle, it locks after 3 min.
+ *
  * Policy defaults (provisional, see the docs): idle after 5 s, lock after
  * 10 min without input (upstream: 180 s default; reading a page can take
  * minutes), modem kept registered while locked when the device has one
@@ -22,6 +27,7 @@
 #include <string.h>
 
 #include "ink/hal_device.h"
+#include "ink/hal_display.h"
 #include "ink/hal_power.h"
 #include "ink/osal.h"
 #include "ink/probe.h"
@@ -49,6 +55,15 @@
 #define BATTERY_VERY_LOW 5
 #define BATTERY_OFF 2
 #define BATTERY_OFF_WAIT_US 5000000ull /* what waits to be written gets this long */
+/* Postures by the gravity on z (out of the screen, mg): flat up to ~20 degrees of tilt; held to read
+ * 35..84 degrees, screen up (at least 15 degrees apart). Axes and values: calibrate on the device. */
+#define FLAT_Z_MG 940
+#define VIEW_Z_MIN_MG 100
+#define VIEW_Z_MAX_MG 819
+#define LIFT_LOOKS 4 /* looks at the posture after a motion wake, 250 ms apart: lifting takes up to a second */
+#define LIFT_LOOK_US 250000
+#define LIFT_MISSES 3
+#define STILL_LOCK_US 180000000ull
 
 static struct {
     osal_mutex_t *lock;
@@ -77,7 +92,11 @@ static struct {
     int battery_level;      /* what has been told: 0 fine, 1 low, 2 very low, 3 powering off */
     bool powering_off;
     uint64_t off_at;
-    int h_state, h_level, h_charging, h_low, h_saving;
+    int h_state, h_level, h_charging, h_low, h_saving, h_lifted;
+    bool lift;              /* the setting power.lift_wake */
+    int lift_misses;        /* motion wakes in a row that were not a lift */
+    uint64_t still_since;   /* idle from then on, with this many movements seen */
+    uint32_t still_moves;
 } PS;
 
 static uint64_t lock_after(void) {
@@ -165,6 +184,7 @@ static void publish_battery(void) {
 static void notify(ink_power_state_t from, ink_power_state_t to, uint64_t cause) {
     hal_power_set_state(hal_state(to));
     ink_state_set_str(PS.h_state, STATE_NAME[to]);
+    if (to == INK_PWR_LOCKED) ink_state_set_bool(PS.h_lifted, false);
     publish_battery();
     char key[40];
     strcpy(key, "power.to_");
@@ -179,6 +199,43 @@ static bool quiet(void) {
     for (int i = 0; i < PS.nchecks; i++)
         if (PS.checks[i]()) return false;
     return ink_display_busy() == 0 && ink_storage_pending() == 0;
+}
+
+static int accel_z(void) {
+    int x, y, z;
+    return hal_accel_read(&x, &y, &z) ? z : -10000;
+}
+
+/* A motion wake while locked: held at a reading angle within a second is a lift, unlocked like the power key. */
+static void lifted(void) {
+    for (int i = 0; i < LIFT_LOOKS && ink_power_state() == INK_PWR_LOCKED; i++) {
+        int z = accel_z();
+        if (z >= VIEW_Z_MIN_MG && z <= VIEW_Z_MAX_MG) {
+            PS.lift_misses = 0;
+            ink_probe_count("power.lift_wake");
+            hal_display_wake(1000);
+            if (ink_power_unlock(osal_now_us())) ink_state_set_bool(PS.h_lifted, true);
+            return;
+        }
+        osal_sem_take(PS.kick, LIFT_LOOK_US);
+    }
+    if (ink_power_state() != INK_PWR_LOCKED) return; /* a key came first */
+    PS.lift_misses++;
+    ink_probe_count("power.lift_ignored");
+}
+
+/* Idle, flat and still since still_since, nothing playing, recording, in a call or downloading: lock early. */
+static void still_check(uint64_t now) {
+    uint32_t moves = hal_accel_motion_count();
+    bool flat = accel_z() >= FLAT_Z_MG, quiet_audio = audio_finished() && ink_audio_focus_top() == 0; /* a call holds focus */
+    lock();
+    bool still = flat && quiet_audio && moves == PS.still_moves && PS.state == INK_PWR_IDLE && !PS.holds[INK_NEED_NET] &&
+                 !PS.holds[INK_NEED_AWAKE] && !PS.holds[INK_NEED_NO_LOCK];
+    if (still) PS.lock_req = true;
+    PS.still_since = now;
+    PS.still_moves = moves;
+    unlock();
+    if (still) ink_probe_count("power.still_lock");
 }
 
 /* Sleep while locked, as long as nothing needs the chip. Returns when the state may have changed. */
@@ -208,6 +265,8 @@ static void locked_step(void) {
                            .wake_mask = HAL_WAKE_POWER_KEY | HAL_WAKE_AI_KEY | HAL_WAKE_RTC | HAL_WAKE_MODEM,
                            .keep_modem = PS.keep_modem,
                            .cancel = cancel_sleep};
+    if (__atomic_load_n(&PS.lift, __ATOMIC_RELAXED) && PS.lift_misses < LIFT_MISSES && accel_z() >= FLAT_Z_MG)
+        cfg.wake_mask |= HAL_WAKE_MOTION;
     lock();
     bool first = PS.locked_at != 0;
     uint64_t locked_at = PS.locked_at;
@@ -233,6 +292,8 @@ static void locked_step(void) {
     }
     ink_probe_count(why & HAL_WAKE_TIMER ? "power.wake.timer" : why & (HAL_WAKE_POWER_KEY | HAL_WAKE_AI_KEY) ? "power.wake.key" : "power.wake.other");
     if (why & HAL_WAKE_RTC) hal_rtc_clear_alarm(); /* its interrupt stays low until cleared, and it shares a line with the keys */
+    if (why & HAL_WAKE_TIMER) PS.lift_misses = 0;
+    if (why & HAL_WAKE_MOTION) lifted();
     publish_battery();
     if (why & (HAL_WAKE_POWER_KEY | HAL_WAKE_AI_KEY)) osal_sem_take(PS.kick, WAKE_CONFIRM_US); /* the unlock follows */
 }
@@ -257,13 +318,22 @@ static void power_task(void *arg) {
         } else if (s == INK_PWR_IDLE && !PS.holds[INK_NEED_NO_LOCK] && now - PS.last_activity >= lock_after()) {
             s = INK_PWR_LOCKED;
         }
-        if (s == INK_PWR_LOCKED && PS.state != INK_PWR_LOCKED) PS.locked_at = now;
+        if (s == INK_PWR_LOCKED && PS.state != INK_PWR_LOCKED) {
+            PS.locked_at = now;
+            PS.lift_misses = 0;
+        }
+        if (s == INK_PWR_IDLE && PS.state != INK_PWR_IDLE) {
+            PS.still_since = now;
+            PS.still_moves = hal_accel_motion_count();
+        }
         set_state(s);
         ink_power_state_t from = PS.notified;
         uint64_t cause = PS.cause_us;
         uint64_t deadline = s == INK_PWR_ACTIVE ? (PS.holds[INK_NEED_NET] ? 0 : PS.last_activity + IDLE_AFTER_US)
                             : s == INK_PWR_IDLE && !PS.holds[INK_NEED_NO_LOCK] ? PS.last_activity + lock_after()
                                                                                 : 0;
+        uint64_t still_at = s == INK_PWR_IDLE && __atomic_load_n(&PS.lift, __ATOMIC_RELAXED) && STILL_LOCK_US < lock_after()
+                                ? PS.still_since + STILL_LOCK_US : 0;
         unlock();
         if (from != s) notify(from, s, cause);
         PS.notified = s;
@@ -273,6 +343,11 @@ static void power_task(void *arg) {
             continue;
         }
         now = osal_now_us();
+        if (still_at && now >= still_at) {
+            still_check(now);
+            continue;
+        }
+        if (still_at && (!deadline || still_at < deadline)) deadline = still_at;
         if (now >= PS.next_battery_us) {
             publish_battery();
             PS.next_battery_us = now + BATTERY_POLL_US;
@@ -288,6 +363,7 @@ static const ink_state_def_t ST_LEVEL = {.id = "battery.level", .type = INK_ST_I
 static const ink_state_def_t ST_CHARGING = {.id = "battery.charging", .type = INK_ST_BOOL, .title = "在充电"};
 static const ink_state_def_t ST_LOW = {.id = "battery.low", .type = INK_ST_BOOL, .title = "电量低"};
 static const ink_state_def_t ST_SAVING = {.id = "power.saving", .type = INK_ST_BOOL, .title = "省电：最多 1 分钟锁屏，不改原设置"};
+static const ink_state_def_t ST_LIFTED = {.id = "power.lifted", .type = INK_ST_BOOL, .title = "刚被拿起亮屏（到下次锁屏）"};
 
 static void cap_saving(ink_call_t *c) { /* kept like any setting: it survives a restart */
     bool enabled;
@@ -309,10 +385,18 @@ static void apply_lock_after(void *ctx, int64_t s) {
     osal_sem_give(PS.kick); /* the power task re-plans its deadline */
 }
 
+static void apply_lift(void *ctx, int64_t on) {
+    (void)ctx;
+    __atomic_store_n(&PS.lift, on != 0, __ATOMIC_RELAXED);
+    osal_sem_give(PS.kick);
+}
+
 static const ink_setting_def_t POWER_SETTINGS[] = {
     {.id = "power.lock_after_s", .title = "自动锁屏（秒）", .type = INK_SET_INT, .min = 60, .max = 3600, .def = (int64_t)(LOCK_AFTER_US / 1000000ull),
      .apply = apply_lock_after, .apply_exec = INK_EXEC_DIRECT},
     {.id = "power.saving", .title = "省电", .type = INK_SET_BOOL, .def = 0, .apply = apply_saving, .apply_exec = INK_EXEC_DIRECT},
+    {.id = "power.lift_wake", .title = "拿起亮屏（平放不动 3 分钟先锁屏）", .type = INK_SET_BOOL, .def = 1, .apply = apply_lift,
+     .apply_exec = INK_EXEC_DIRECT},
 };
 
 static void cap_shutdown(ink_call_t *c) { /* exec.bg */
@@ -346,7 +430,9 @@ int ink_power_init(void) {
     PS.h_charging = ink_state_define(&ST_CHARGING);
     PS.h_low = ink_state_define(&ST_LOW);
     PS.h_saving = ink_state_define(&ST_SAVING);
-    if (ink_settings_define(POWER_SETTINGS, 2) == 0) PS.lock_after_us = (uint64_t)ink_setting_get("power.lock_after_s") * 1000000ull;
+    PS.h_lifted = ink_state_define(&ST_LIFTED);
+    if (ink_settings_define(POWER_SETTINGS, 3) == 0) PS.lock_after_us = (uint64_t)ink_setting_get("power.lock_after_s") * 1000000ull;
+    PS.lift = ink_setting_get("power.lift_wake") != 0;
     PS.saving = ink_setting_get("power.saving") != 0;
     ink_state_set_bool(PS.h_saving, PS.saving);
     ink_cap_register(POWER_CAPS, (int)(sizeof POWER_CAPS / sizeof POWER_CAPS[0]));
