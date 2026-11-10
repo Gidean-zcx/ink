@@ -25,6 +25,7 @@
 #include "ink/sys/cap.h"
 #include "ink/sys/data.h"
 #include "ink/sys/hub.h"
+#include "ink/sys/i18n.h"
 #include "ink/sys/members.h"
 #include "ink/sys/power.h"
 #include "ink/sys/settings.h"
@@ -59,6 +60,7 @@ static struct {
     int h_synced, h_zone, h_minute, h_ringing, h_alarms_rev;
     int64_t alarms_rev; /* bumped on every reschedule; whoever shows the next alarm re-reads it */
     bool valid, synced;
+    int network_zone;
     ink_svc_deadline_t due_at, minute_at, ring_at;
     ink_exec_job_t rtc_job;
     int64_t rtc_next_s;
@@ -70,26 +72,31 @@ static struct {
 typedef enum { DST_NONE = 0, DST_US, DST_EU } dst_rule_t;
 
 static const struct {
-    const char *name;
+    const char *name, *city;
     int16_t offset_min;
     uint8_t rule;
 } ZONES[] = {
-    {"Asia/Shanghai", 480, DST_NONE},    {"UTC", 0, DST_NONE},
-    {"Asia/Tokyo", 540, DST_NONE},       {"Asia/Hong_Kong", 480, DST_NONE},
-    {"Asia/Singapore", 480, DST_NONE},   {"Europe/London", 0, DST_EU},
-    {"Europe/Paris", 60, DST_EU},        {"America/New_York", -300, DST_US},
-    {"America/Los_Angeles", -480, DST_US},
+    {"Asia/Shanghai", TR_NOOP("中国 · 上海"), 480, DST_NONE}, {"UTC", TR_NOOP("协调世界时"), 0, DST_NONE},
+    {"Asia/Tokyo", TR_NOOP("日本 · 东京"), 540, DST_NONE}, {"Asia/Hong_Kong", TR_NOOP("中国 · 香港"), 480, DST_NONE},
+    {"Asia/Singapore", TR_NOOP("新加坡"), 480, DST_NONE}, {"Europe/London", TR_NOOP("英国 · 伦敦"), 0, DST_EU},
+    {"Europe/Paris", TR_NOOP("法国 · 巴黎"), 60, DST_EU}, {"America/New_York", TR_NOOP("美国 · 纽约"), -300, DST_US},
+    {"America/Los_Angeles", TR_NOOP("美国 · 洛杉矶"), -480, DST_US},
 };
 #define NZONES ((int)(sizeof ZONES / sizeof ZONES[0]))
 static const char *const ZONE_NAMES[NZONES + 1] = {"Asia/Shanghai", "UTC", "Asia/Tokyo", "Asia/Hong_Kong", "Asia/Singapore", "Europe/London",
                                                    "Europe/Paris", "America/New_York", "America/Los_Angeles", NULL};
 
 static int zone_index(void) {
+    int network = __atomic_load_n(&T.network_zone, __ATOMIC_ACQUIRE);
+    if (ink_setting_get("time.zone_auto") && network >= 0) return network;
     int z = (int)ink_setting_get("time.zone");
     return z >= 0 && z < NZONES ? z : 0;
 }
 
 const char *ink_time_zone(void) { return ZONES[zone_index()].name; }
+int ink_time_zone_count(void) { return NZONES; }
+const char *ink_time_zone_name(int i) { return i >= 0 && i < NZONES ? ZONES[i].name : NULL; }
+const char *ink_time_zone_city(int i) { return i >= 0 && i < NZONES ? ZONES[i].city : NULL; }
 
 int64_t time_days_from_civil(int y, int m, int d) {
     y -= m <= 2;
@@ -133,9 +140,9 @@ static bool dst_on(int z, int64_t utc_s) {
     int64_t std_s = utc_s + ZONES[z].offset_min * 60;
     civil_from_days(std_s >= 0 ? std_s / 86400 : -((-std_s + 86399) / 86400), &y, &m, &d);
     int64_t start, end;
-    if (rule == DST_US) { /* second Sunday of March 02:00 standard; first Sunday of November 02:00 daylight */
-        start = sunday_of(y, 3, 2) * 86400 + 2 * 3600 - ZONES[z].offset_min * 60;
-        end = sunday_of(y, 11, 1) * 86400 + 1 * 3600 - ZONES[z].offset_min * 60;
+    if (rule == DST_US) { /* Since 1987; the picker starts in 2002. US rules changed in 2007. */
+        start = sunday_of(y, y < 2007 ? 4 : 3, y < 2007 ? 1 : 2) * 86400 + 2 * 3600 - ZONES[z].offset_min * 60;
+        end = sunday_of(y, y < 2007 ? 10 : 11, y < 2007 ? 0 : 1) * 86400 + 1 * 3600 - ZONES[z].offset_min * 60;
     } else { /* last Sundays of March and October, 01:00 UTC */
         start = sunday_of(y, 3, 0) * 86400 + 3600;
         end = sunday_of(y, 10, 0) * 86400 + 3600;
@@ -143,8 +150,8 @@ static bool dst_on(int z, int64_t utc_s) {
     return utc_s >= start && utc_s < end;
 }
 
-void ink_time_to_local(int64_t utc_s, ink_tm_t *out) {
-    int z = zone_index();
+void ink_time_to_zone(int z, int64_t utc_s, ink_tm_t *out) {
+    if (z < 0 || z >= NZONES) z = 0;
     bool dst = dst_on(z, utc_s);
     int off = ZONES[z].offset_min + (dst ? 60 : 0);
     int64_t s = utc_s + off * 60;
@@ -157,6 +164,7 @@ void ink_time_to_local(int64_t utc_s, ink_tm_t *out) {
     out->offset_min = off;
     out->dst = dst;
 }
+void ink_time_to_local(int64_t utc_s, ink_tm_t *out) { ink_time_to_zone(zone_index(), utc_s, out); }
 
 int64_t ink_time_from_local(const ink_tm_t *tm) {
     int z = zone_index();
@@ -487,10 +495,8 @@ static void time_set_unlocked(int64_t utc_s, bool from_hub) {
     osal_set_wall_us(utc_s * 1000000);
     __atomic_store_n(&T.valid, true, __ATOMIC_RELEASE);
     if (!hal_rtc_set(utc_s)) ink_probe_count("time.rtc_write_failed");
-    if (from_hub) {
-        T.synced = true;
-        ink_state_set_bool(T.h_synced, true);
-    }
+    T.synced = from_hub;
+    ink_state_set_bool(T.h_synced, from_hub);
     ink_probe_count("time.clock_moved");
     clock_moved();
     if (!T.minute_at.armed) minute_cb(NULL);
@@ -507,8 +513,16 @@ int ink_time_set_if_revision(int64_t utc_s, bool from_hub, uint32_t expected, ui
 void ink_time_set(int64_t utc_s, bool from_hub) { ink_time_set_if_revision(utc_s, from_hub, 0, NULL); }
 
 /* The hub told its time at hello. Hub task. */
+static void apply_zone(void *ctx, int64_t v);
 static void on_online(void *ctx) {
     (void)ctx;
+    char zone[40];
+    if (ink_hub_server_zone(zone, sizeof zone)) for (int i = 0; i < NZONES; i++) if (!strcmp(zone, ZONES[i].name)) {
+        __atomic_store_n(&T.network_zone, i, __ATOMIC_RELEASE);
+        if (ink_setting_get("time.zone_auto")) apply_zone(NULL, 0);
+        break;
+    }
+    if (!ink_setting_get("time.auto") && ink_time_valid()) return;
     int64_t server_ms;
     uint32_t rtt_ms;
     if (!ink_hub_server_time(&server_ms, &rtt_ms)) return;
@@ -764,11 +778,16 @@ static void apply_zone(void *ctx, int64_t v) {
     (void)v;
     ink_state_set_str(T.h_zone, ink_time_zone());
     clock_moved();
+    ink_cap_emit("time.changed", NULL);
+}
+static void apply_auto(void *ctx, int64_t v) {
+    if (v) { on_online(ctx); ink_hub_demand(); }
 }
 
 static const ink_setting_def_t TIME_SETTINGS[] = {
     {.id = "time.zone", .title = "时区", .type = INK_SET_ENUM, .def = 0, .choices = ZONE_NAMES, .apply = apply_zone, .apply_exec = INK_EXEC_DIRECT},
-    {.id = "time.auto", .title = "自动校时（听家庭服务器的）", .type = INK_SET_BOOL, .def = 1},
+    {.id = "time.auto", .title = "自动校时（听家庭服务器的）", .type = INK_SET_BOOL, .def = 1, .apply = apply_auto, .apply_exec = INK_EXEC_BG},
+    {.id = "time.zone_auto", .title = "自动设置时区", .type = INK_SET_BOOL, .def = 0, .apply = apply_zone, .apply_exec = INK_EXEC_DIRECT},
 };
 
 static const ink_state_def_t ST_SYNCED = {.id = "time.synced", .type = INK_ST_BOOL, .title = "时间和家庭服务器对过"};
@@ -797,10 +816,11 @@ static void load_alarms(void) {
 }
 
 int ink_time_init(void) {
+    T.network_zone = -1;
     T.edits = osal_mutex_create();
     T.clock_lock = osal_mutex_create();
     if (!T.edits || !T.clock_lock) return -1;
-    if (ink_settings_define(TIME_SETTINGS, 2) != 0) return -1;
+    if (ink_settings_define(TIME_SETTINGS, 3) != 0) return -1;
     T.h_synced = ink_state_define(&ST_SYNCED);
     T.h_zone = ink_state_define(&ST_ZONE);
     T.h_minute = ink_state_define(&ST_MINUTE);

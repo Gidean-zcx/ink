@@ -198,6 +198,7 @@ add_library(ink_system STATIC
   system/services/file/transfer.c
   system/services/time/lunar.c
   system/services/time/time_service.c
+  system/ui/shell/time_settings.c
   system/services/update/update_service.c
   system/ui/shell/update_card.c
   system/ui/shell/power_menu.c
@@ -375,7 +376,8 @@ add_custom_target(ink_ui_resource_check ALL
 add_dependencies(ink_system ink_ui_resource_check)
 # Interface languages: assets/i18n/<code>.tsv, checked and turned into a const lookup table.
 set(INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/system/ui/shell/boot_flow.c ${CMAKE_SOURCE_DIR}/system/ui/shell/navigation.c
-  ${CMAKE_SOURCE_DIR}/system/ui/shell/settings_pages.c)
+  ${CMAKE_SOURCE_DIR}/system/ui/shell/settings_pages.c ${CMAKE_SOURCE_DIR}/system/ui/shell/time_settings.c
+  ${CMAKE_SOURCE_DIR}/system/ui/shell/settings_family.c ${CMAKE_SOURCE_DIR}/system/services/time/time_service.c)
 add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h
   COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/i18n/i18n_gen.py ${INK_I18N_TABLES}
           --header ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h --sources ${INK_I18N_SOURCES}
@@ -641,6 +643,10 @@ target_link_libraries(sim-boot-flow PRIVATE ink_apps ink_system)
 add_test(NAME boot-flow COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/boot_flow_check.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(boot-flow PROPERTIES TIMEOUT 200)
 ink_sim_executable(sim-i18n-lang tests/i18n_lang.c)
+ink_sim_executable(sim-time-settings tests/time_settings.c)
+target_link_libraries(sim-time-settings PRIVATE ink_apps ink_system)
+add_test(NAME time-settings COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/time_settings.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(time-settings PROPERTIES TIMEOUT 200)
 target_link_libraries(sim-i18n-lang PRIVATE ink_apps ink_system)
 add_test(NAME i18n-lang COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/i18n_check.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(i18n-lang PROPERTIES TIMEOUT 300)

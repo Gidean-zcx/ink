@@ -4,6 +4,7 @@
 #include <string.h>
 #include "ink/osal.h"
 #include "ink/sys/file_picker.h"
+#include "ink/sys/i18n.h"
 #include "ink/sys/json.h"
 #include "ink/sys/members.h"
 #include "ink/sys/settings.h"
@@ -14,6 +15,8 @@
 enum { MEMBERS, KID, WALLPAPER, RECORDS, MEMORY, RUNTIME };
 static const char *const NAMES[] = {"SetMembers", "SetKid", "Wallpaper", "Records", "AiMemory", "RuntimeRecords"};
 static const char *const TITLES[] = {"家人", "孩子的设置", "锁屏和壁纸", "记录", "AI 记得的事", "运行记录"};
+#define FAMILY_ROWS_MAX 24
+_Static_assert(INK_MEMBERS_MAX + 3 <= FAMILY_ROWS_MAX, "members and family controls fit");
 static struct {
     int page, count;
     uint32_t generation;
@@ -21,7 +24,7 @@ static struct {
     bool adult;
     ink_ui_list_t *list;
     ink_ui_list_position_t pos;
-    char target[16], titles[24][96], values[24][160], ids[24][48], caps[24][48], args[24][192];
+    char target[16], titles[FAMILY_ROWS_MAX][96], values[FAMILY_ROWS_MAX][160], ids[FAMILY_ROWS_MAX][48], caps[FAMILY_ROWS_MAX][48], args[FAMILY_ROWS_MAX][192];
     ink_ui_field_spec_t input[2];
     ink_ui_action_spec_t form[5];
     ink_ui_page_spec_t model;
@@ -196,6 +199,7 @@ static void create(lv_obj_t *screen, void *arg) {
         }
         row("add", "加一位家人", "", "family.edit", NULL);
         row("pin", "我的密码", "设置或更改", "shell.pin_set", NULL);
+        row("return", TR("离开多久要重新验证"), TR("选择免密码时长"), "shell.return", NULL);
     } else if (S.page == KID) {
         const ink_member_t *kid = NULL;
         for (int i = 0; ink_member_at(i); i++) if (ink_member_at(i)->role == INK_ROLE_CHILD) { kid = ink_member_at(i); break; }

@@ -112,6 +112,7 @@ static struct {
     bool pair_begin;
     uint64_t hello_sent_us;
     int64_t server_ms;     /* the hub's clock when this connection came up, 0 = it did not say */
+    char server_zone[40];
     uint32_t hello_rtt_ms;
     uint64_t last_activity, backoff_until, backoff_us, connect_started; /* hub task */
     uint64_t demand_until; /* under tx_lock: 64 bits are not one access on RV32 */
@@ -388,6 +389,10 @@ static void on_text(const char *txt, size_t len) {
                 int64_t ms;
                 H.server_ms = ink_json_int(j, ink_json_find(j, res_t, "now_ms"), &ms) ? ms : 0;
                 H.hello_rtt_ms = (uint32_t)((osal_now_us() - H.hello_sent_us) / 1000u);
+                osal_mutex_lock(H.id_lock, OSAL_WAIT_FOREVER);
+                H.server_zone[0] = 0;
+                ink_json_str(j, ink_json_find(j, res_t, "time_zone"), H.server_zone, sizeof H.server_zone);
+                osal_mutex_unlock(H.id_lock);
                 if (!sync_member()) return;
                 set_state(HS_ONLINE);
                 H.backoff_us = 0;
@@ -788,9 +793,15 @@ void ink_hub_events_acked(void) {
 
 bool ink_hub_server_time(int64_t *unix_ms, uint32_t *round_trip_ms) {
     if (!H.server_ms) return false;
-    *unix_ms = H.server_ms;
+    *unix_ms = H.server_ms + (int64_t)((osal_now_us() - H.hello_sent_us) / 1000u) - H.hello_rtt_ms;
     *round_trip_ms = H.hello_rtt_ms;
     return true;
+}
+bool ink_hub_server_zone(char *out, size_t cap) {
+    osal_mutex_lock(H.id_lock, OSAL_WAIT_FOREVER);
+    snprintf(out, cap, "%s", H.server_zone);
+    osal_mutex_unlock(H.id_lock);
+    return out[0] != 0;
 }
 
 int ink_hub_on_online(void (*fn)(void *ctx), void *ctx) {
