@@ -4,7 +4,11 @@
 void ink_main(void);
 void ink_s31_osal_selftest(void);
 void ink_s31_board_init(void);
+void ink_s31_assets_init(void);
+void ink_s31_storage_init(void);
 void app_main(void) {
+    ink_s31_assets_init();
+    ink_s31_storage_init();
     ink_s31_osal_selftest();
     ink_s31_board_init();
     hal_panel_info_t panel;

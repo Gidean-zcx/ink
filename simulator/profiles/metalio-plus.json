@@ -134,7 +134,7 @@
     "_notes_keys": "Key sources (upstream config.h): AI = BOOT key on GPIO61 (direct); POWER/VOL+/VOL- on the TCA9555 IO expander (INT on GPIO2 shared with the accelerometer, then I2C reads on the shared bus); HOME/PREV/NEXT are cover keys read by the touch controller (finger at Y~1600, outside the panel): touch INT after touch_detect_us, I2C read, polling until release, paused like touch while the PMIC powers up."
   },
   "flash": {
-    "user_partition_kib": 1408,
+    "user_partition_kib": 400,
     "sector_bytes": 4096,
     "page_bytes": 256,
     "erase_sector_us": {

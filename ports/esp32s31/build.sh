@@ -34,9 +34,11 @@ if [[ -z ${INK_LVGL_SOURCE_DIR:-} ]]; then
 fi
 cd "$ROOT/ports/esp32s31"
 cp sdkconfig.defaults "$BUILD/sdkconfig"
+if [[ ${INK_SD_READONLY:-0} == 1 ]]; then echo CONFIG_INK_SD_READONLY=y >> "$BUILD/sdkconfig"; fi
 idf_limited --preview -B "$BUILD" -DIDF_TARGET=esp32s31 -DSDKCONFIG="$BUILD/sdkconfig" reconfigure
 export CMAKE_BUILD_PARALLEL_LEVEL=2 IDF_PY_BUILD_JOBS=2 MAKEFLAGS=-j2
 idf_limited --preview -B "$BUILD" build
+python "$ROOT/tools/asset_pack.py" "$ROOT/build/assets" --out "$BUILD" --firmware "$BUILD/ink-s31.bin"
 idf_limited --preview -B "$BUILD" size | tee "$BUILD/size.txt"
 idf_limited --preview -B "$BUILD" size-components > "$BUILD/size-components.txt"
 python "$ROOT/tests/esp32s31/stack_report.py" "$BUILD" > "$BUILD/stack.txt"

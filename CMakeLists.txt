@@ -556,6 +556,8 @@ add_test(NAME ui-compare-regressions COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SO
 add_test(NAME ui-icons COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/icongen/check.py)
 add_test(NAME ui-icons-regressions COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/ui_icon_check_test.py)
 add_test(NAME ui-assets COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/ui_assets_check.py ${INK_ASSETS_DIR})
+add_test(NAME unit-asset-pack COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/ports/esp32s31/tests/asset_pack_test.py)
+add_test(NAME unit-flash-plan COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/ports/esp32s31/tests/flash_plan_test.py)
 add_executable(sim-ui-scenes simulator/runtime/sim_main.c tests/ui_shell_scenes.c)
 target_link_libraries(sim-ui-scenes PRIVATE ink_apps ink_system ink_port_sim)
 target_compile_options(sim-ui-scenes PRIVATE ${INK_WARN} -Wno-format-truncation)
