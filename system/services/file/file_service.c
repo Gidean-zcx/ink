@@ -120,10 +120,11 @@ static void index_refresh_cb(void *arg) { ink_exec_post(INK_EXEC_BG, &FS.index_j
 static void thumb_clear(void *ctx, const char *id, const ink_args_t *args) {
     osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
     ink_thumb_cache_destroy(FS.thumbs); FS.thumbs = NULL;
-    if (!storage_index_ready()) ink_svc_at(&FS.index_at, osal_now_us() + 50000ull, index_refresh_cb, NULL);
+    /* Switching members only clears images; roster changes may resume indexing. */
+    if (!ctx && !storage_index_ready()) ink_svc_at(&FS.index_at, osal_now_us() + 50000ull, index_refresh_cb, NULL);
     osal_mutex_unlock(FS.edits);
 }
-static void thumb_member(void *ctx, int handle, const char *id) { (void)handle; thumb_clear(ctx, id, NULL); }
+static void thumb_member(void *ctx, int handle, const char *id) { (void)ctx; (void)handle; thumb_clear(&FS, id, NULL); }
 static const ink_db_def_t INDEX_DEF = {.name = "file.index", .title = "文件编号", .scope = INK_DB_DEVICE, .schema = 3,
     .max_records = INK_FS_INDEX_MAX, .max_bytes = INK_FS_INDEX_MAX * 216u};
 static const ink_db_def_t INDEX_DONE_DEF = {.name = "file.index_ready", .title = "索引完成记录", .scope = INK_DB_DEVICE, .schema = 2,
