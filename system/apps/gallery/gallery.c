@@ -183,7 +183,8 @@ static void photo_found(void *ctx, const ink_receipt_t *rc) {
 }
 static void gallery_action(ink_call_t *c) {
     if (!strcmp(c->cap->id, "photo.open")) {
-        ink_call_opts_t o = {.src = c->src, .member = ink_cap_call_member(c), .reply_exec = INK_EXEC_UI, .done = photo_found, .ctx = c};
+        /* photo.open already passed the app policy; the service still checks file ownership. */
+        ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .member = ink_cap_call_member(c), .reply_exec = INK_EXEC_UI, .done = photo_found, .ctx = c};
         ink_cap_defer(c);
         if (ink_cap_call("file.lookup", &c->args, &o)) { c->rc.status = INK_RC_FAILED; ink_cap_done(c); }
         return;
@@ -193,7 +194,7 @@ static void gallery_action(ink_call_t *c) {
 static const ink_cap_t GALLERY_CAPS[] = {
     {.id = "gallery.prev", .app = "gallery", .title = "相册上一页", .activity = "Gallery", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = gallery_action},
     {.id = "gallery.next", .app = "gallery", .title = "相册下一页", .activity = "Gallery", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = gallery_action},
-    {.id = "photo.open", .app = "gallery", .title = "查看有权访问的图片文件", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = gallery_action,
+    {.id = "photo.open", .locked_owner_only = true, .app = "gallery", .title = "查看有权访问的图片文件", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = gallery_action,
      .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}},\"required\":[\"id\"]}"}
 };
 static void photos_changed(void *ctx, const char *id, const ink_args_t *args) {

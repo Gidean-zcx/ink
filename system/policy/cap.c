@@ -54,6 +54,7 @@ const ink_cap_t *ink_cap_find(const char *id) {
 }
 
 static bool on_its_page(const ink_cap_t *c) { return !c->activity || ((ink_ui_page_current() || ink_ui_locked_allows(c->id)) && !strcmp(ink_ui_action_page(), c->activity)); }
+bool ink_cap_locked_page(void) { return ink_ui_locked_activity() != NULL; }
 
 static bool in_directory(const char *id); /* the hub's directory, below */
 
@@ -99,7 +100,7 @@ static ink_rc_t reject(ink_receipt_t *rc, ink_rc_t st, const char *why) {
 static ink_rc_t gate(const ink_cap_t *c, ink_source_t src, uint32_t page_gen, bool asked, ink_receipt_t *rc) {
     if (!c) return reject(rc, INK_RC_INVALID, "unknown action");
     const ink_member_t *m = ink_member_current();
-    if (m->role == INK_ROLE_CHILD && !ink_member_allows(c->id, true)) return reject(rc, INK_RC_REJECTED, TR("家长没有打开这个应用"));
+    if (m->role == INK_ROLE_CHILD && src != INK_SRC_SYSTEM && !ink_member_allows(c->id, true)) return reject(rc, INK_RC_REJECTED, TR("家长没有打开这个应用"));
     /* the card the member just answered is still over the page it was asked about */
     if (src == INK_SRC_CONFIRMED ? c->activity && (!ink_ui_page_current() || strcmp(ink_ui_page_name(), c->activity)) : !on_its_page(c)) return reject(rc, INK_RC_INVALID, "not available on this page");
     if (c->form == INK_FORM_EVENT || !c->run) return reject(rc, INK_RC_INVALID, "an event: subscribe to it");
@@ -110,13 +111,15 @@ static ink_rc_t gate(const ink_cap_t *c, ink_source_t src, uint32_t page_gen, bo
             ink_probe_count("policy.rejected");
             return reject(rc, INK_RC_REJECTED, "children cannot run system actions");
         }
-        if (!ink_member_allows(c->id, c->child_ok)) {
+        if (!c->child_ok && !ink_member_allows(c->id, false)) {
             ink_probe_count("policy.rejected");
             return reject(rc, INK_RC_REJECTED, "not on this child's whitelist");
         }
     }
     bool restricted = ink_ui_locked_activity() != NULL;
-    if ((!ink_member_space_open() || ink_power_state() == INK_PWR_LOCKED || restricted) && src != INK_SRC_SYSTEM) {
+    bool locked_caller = c->locked_owner_only && ink_power_state() == INK_PWR_LOCKED &&
+        (src == INK_SRC_AI || src == INK_SRC_REMOTE || src == INK_SRC_APP);
+    if ((!ink_member_space_open() || locked_caller || restricted) && src != INK_SRC_SYSTEM) {
         bool allowed = restricted ? ink_ui_locked_allows(c->id) : c->while_locked;
         if (src == INK_SRC_AI || src == INK_SRC_REMOTE || src == INK_SRC_APP || !allowed) {
             ink_probe_count("policy.rejected");

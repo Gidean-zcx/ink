@@ -540,7 +540,7 @@ static void cap_cards(ink_call_t *c) { /* UI task: apps have no other */
 
 static const ink_cap_t APP_CAPS[] = {
     {.id = "app.list", .title = "这台设备上有哪些应用，各自的状态", .output = "{\"type\":\"array\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_list},
-    {.id = "app.open", .title = "打开一个应用", .input = ID_ARG, .effect = INK_FX_NAVIGATE, .child_ok = true, .while_locked = true, .run = cap_open},
+    {.id = "app.open", .locked_owner_only = true, .title = "打开一个应用", .input = ID_ARG, .effect = INK_FX_NAVIGATE, .child_ok = true, .while_locked = true, .run = cap_open},
     {.id = "app.close", .title = "关掉一个应用（它会保存状态）", .input = ID_ARG, .effect = INK_FX_NAVIGATE, .child_ok = true, .run = cap_close},
     {.id = "app.cards", .title = "各应用的服务卡片（和主页看到的一样）", .output = "{\"type\":\"array\"}", .effect = INK_FX_READ, .child_ok = true, .run = cap_cards},
     {.id = "app.state", .title = "一个应用的状态变了（foreground、background、frozen、stopped）", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},

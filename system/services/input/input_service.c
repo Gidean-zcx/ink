@@ -10,7 +10,7 @@
 #include "ink/osal.h"
 #include "ink/rotation.h"
 #include "ink/sys/input.h"
-#include "ink/sys/ui.h"
+#include "ink/sys/cap.h"
 #include "ink/sys/audio.h"
 #include "ink/sys/power.h"
 #include "ink/sys/svc.h"
@@ -186,7 +186,7 @@ static bool power_filter(const hal_input_event_t *h) {
         return true;
     }
     if (ink_power_state() == INK_PWR_LOCKED) {
-        if (!is_key || (ink_ui_locked_activity() && (h->key.key == HAL_KEY_HOME || h->key.key == HAL_KEY_BACK))) return false;
+        if (!is_key || (ink_cap_locked_page() && (h->key.key == HAL_KEY_HOME || h->key.key == HAL_KEY_BACK))) return false;
         if (is_key && h->key.pressed && (h->key.key == HAL_KEY_POWER || h->key.key == HAL_KEY_AI)) {
             hal_display_wake(WAKE_HOLD_MS); /* the lock mark comes off right away */
             IS.swallow_release = h->key.key;

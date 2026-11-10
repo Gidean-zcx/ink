@@ -176,9 +176,9 @@ void ink_shell_camera_button(lv_obj_t *root, bool strip) {
 }
 static const ink_activity_t CAMERA = {.name = "Camera", .app = "camera", .create = camera_create, .destroy = camera_destroy, .snapshot = camera_snapshot};
 static const ink_cap_t CAMERA_APP_CAPS[] = {
-    {.id = "camera.preview", .app = "camera", .title = "更新相机取景", .activity = "Camera", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_MEDIA, .timeout_ms = 15000, .run = take},
-    {.id = "camera.photo", .app = "camera", .title = "拍照并保存到存储卡和相册", .activity = "Camera", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_MEDIA, .timeout_ms = 15000, .run = take},
-    {.id = "camera.review", .app = "camera", .title = "查看本次锁屏拍的下一张照片", .activity = "Camera", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_MEDIA, .timeout_ms = 15000, .run = take}
+    {.id = "camera.preview", .locked_owner_only = true, .app = "camera", .title = "更新相机取景", .activity = "Camera", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_MEDIA, .timeout_ms = 15000, .run = take},
+    {.id = "camera.photo", .locked_owner_only = true, .app = "camera", .title = "拍照并保存到存储卡和相册", .activity = "Camera", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_MEDIA, .timeout_ms = 15000, .run = take},
+    {.id = "camera.review", .locked_owner_only = true, .app = "camera", .title = "查看本次锁屏拍的下一张照片", .activity = "Camera", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_MEDIA, .timeout_ms = 15000, .run = take}
 };
 int ink_camera_app_init(void) {
     static const char *const needs[] = {"camera.capture", NULL};

@@ -103,6 +103,7 @@ struct ink_cap {
     const char *activity;   /* only meaningful while this activity is on top; NULL = anywhere */
     ink_exec_t exec;        /* where the handler runs (UI task by default) */
     bool while_locked;      /* can be used while an adult's space is locked: stopping an alarm, answering a call */
+    bool locked_owner_only; /* while the display is locked, AI/remote/app callers must wait for unlock */
     bool parent_pin;        /* whoever asks, an adult's PIN (if one is set) goes with the yes: removing a member, factory reset */
     bool ask_by_hand;       /* a person is asked too: a tap on a notification should not take the device away for minutes */
     const char *ask;        /* what the confirmation card says, with {argument}s: "发短信给 {to}：{text}"; NULL = title and arguments */
@@ -121,6 +122,8 @@ const ink_cap_t *ink_cap_find(const char *id);
 const ink_cap_t *ink_cap_at(int i);
 /** Registered and usable now (a page-bound capability only while its page is on top). */
 bool ink_cap_available(const char *id);
+/** A restricted lock-screen capability context is active (any task; no UI types). */
+bool ink_cap_locked_page(void);
 /** Local capability is callable in the current member's AI directory; NULL is false. */
 bool ink_cap_ai_callable(const ink_cap_t *cap);
 

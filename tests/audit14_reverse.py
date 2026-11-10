@@ -22,13 +22,19 @@ cases = [
     ('page-home', 'system/policy/system_actions.c', 'sim-audit14-locked', 'tests/time_settings.py', [], 'declared page closes via capability and physical HOME'),
     ('ownership', 'system/policy/members.c', 'sim-kid-apps', 'tests/kid_apps.py', ['--phase', 'ownership'], 'list denies audit14.alias'),
     ('batch', 'system/services/file/file_caps.c', 'sim-files-ops', 'tests/files_ops/run.py', [], 'AI partial collision summarizes failed files'),
-    ('redraw', 'system/ui/shell/time_settings.c', 'sim-time-settings', 'tests/time_settings.py', [], 'alarm changes keep the time page controls alive'),
+    ('redraw', 'system/ui/shell/time_settings.c', 'sim-time-settings', 'tests/time_settings.py', [], 'network synchronization state keeps the time page controls alive'),
 ]
 summary = []
 for name, file, target, runner, extra, expected in cases:
     path = ROOT / file
     digest = hashlib.sha256(path.read_bytes()).hexdigest()
     baseline = subprocess.run(['git', 'show', f'{a.baseline}:{file}'], cwd=ROOT, capture_output=True, text=True, check=True).stdout
+    if name == 'page-gate':
+        # Keep current link interfaces while reverting only the page policy.
+        variant = path.read_text()
+        for pattern in (r'static bool on_its_page[^\n]*', r'static ink_rc_t gate\([^\n]*\) \{[\s\S]*?\n\}'):
+            variant = variant.replace(re.search(pattern, variant)[0], re.search(pattern, baseline)[0], 1)
+        baseline = '#include "ink/sys/camera.h"\n' + variant
     mutant = area / f'{name}.c'
     mutant.write_text(baseline)
     flags = {}
@@ -41,7 +47,8 @@ for name, file, target, runner, extra, expected in cases:
     subprocess.run([link[0], *flags['C_DEFINES'], *flags['C_INCLUDES'], *flags['C_FLAGS'], '-iquote', str(path.parent), '-c', str(mutant), '-o', str(obj)], cwd=build, check=True, capture_output=True, text=True)
     link[link.index('-o') + 1] = str(binary)
     link.insert(next(i for i, item in enumerate(link) if item.endswith('libink_system.a')), str(obj))
-    subprocess.run(link, cwd=build, check=True, capture_output=True, text=True)
+    linked = subprocess.run(link, cwd=build, capture_output=True, text=True)
+    assert linked.returncode == 0, linked.stderr
     result = subprocess.run([os.sys.executable, str(ROOT / runner), '--build', str(build), '--binary', str(binary), *extra], cwd=ROOT,
         capture_output=True, text=True, timeout=350, env={**os.environ, 'INK_KEEP_EVIDENCE': '1'})
     output = result.stdout + result.stderr

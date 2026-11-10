@@ -123,6 +123,7 @@ static void thumb_clear(void *ctx, const char *id, const ink_args_t *args) {
     if (!storage_index_ready()) ink_svc_at(&FS.index_at, osal_now_us() + 50000ull, index_refresh_cb, NULL);
     osal_mutex_unlock(FS.edits);
 }
+static void thumb_member(void *ctx, int handle, const char *id) { (void)handle; thumb_clear(ctx, id, NULL); }
 static const ink_db_def_t INDEX_DEF = {.name = "file.index", .title = "文件编号", .scope = INK_DB_DEVICE, .schema = 3,
     .max_records = INK_FS_INDEX_MAX, .max_bytes = INK_FS_INDEX_MAX * 216u};
 static const ink_db_def_t INDEX_DONE_DEF = {.name = "file.index_ready", .title = "索引完成记录", .scope = INK_DB_DEVICE, .schema = 2,
@@ -1271,7 +1272,8 @@ int ink_file_service_init(void) {
     if (ink_db_register(&INDEX_DONE_DEF)) return -1;
     ink_db_close(ink_db_open(&INDEX_DEF, NULL));
     ink_db_close(ink_db_open(&INDEX_DONE_DEF, NULL));
-    if (ink_cap_subscribe("member.changed", thumb_clear, NULL, INK_EXEC_BG)) return -1;
+    if (ink_cap_subscribe("member.changed", thumb_clear, NULL, INK_EXEC_BG) ||
+        ink_state_watch("member.current", thumb_member, NULL, INK_EXEC_BG)) return -1;
     ink_state_set_str(FS.h_index, "unavailable");
     ink_state_set_str(FS.h_mode, "normal");
     ink_state_set_bool(FS.h_card, hal_fs_card_present());
@@ -2068,14 +2070,14 @@ static void storage_cleanup(ink_call_t *call) {
     ink_cap_result(call, out);
 }
 static const ink_cap_t STORAGE_CAPS[] = {
-    {.id = "file.usage", .app = "files", .title = "读取当前成员和整台设备的书、音频、照片和其他文件字节数", .effect = INK_FX_READ,
+    {.id = "file.usage", .locked_owner_only = true, .app = "files", .title = "读取当前成员和整台设备的书、音频、照片和其他文件字节数", .effect = INK_FX_READ,
      .output = "{\"type\":\"object\"}", .exec = INK_EXEC_BG, .qos = INK_QOS_BACKGROUND, .run = storage_usage},
-    {.id = "file.cleanup_preview", .app = "files", .title = "列出临时文件、缓存和未传完文件可清理的字节数", .effect = INK_FX_READ,
+    {.id = "file.cleanup_preview", .locked_owner_only = true, .app = "files", .title = "列出临时文件、缓存和未传完文件可清理的字节数", .effect = INK_FX_READ,
      .output = "{\"type\":\"object\"}", .exec = INK_EXEC_BG, .qos = INK_QOS_BACKGROUND, .run = storage_cleanup},
-    {.id = "file.cache_clear", .app = "files", .title = "清理可重新生成的缓存", .effect = INK_FX_LOCAL_WRITE,
+    {.id = "file.cache_clear", .locked_owner_only = true, .app = "files", .title = "清理可重新生成的缓存", .effect = INK_FX_LOCAL_WRITE,
      .input = "{\"type\":\"object\",\"properties\":{\"revision\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}},\"required\":[\"revision\"]}",
      .exec = INK_EXEC_BG, .qos = INK_QOS_BACKGROUND, .run = storage_cleanup},
-    {.id = "file.cleanup", .app = "files", .title = "清理临时文件", .effect = INK_FX_LOCAL_DESTRUCTIVE, .ask_by_hand = true,
+    {.id = "file.cleanup", .locked_owner_only = true, .app = "files", .title = "清理临时文件", .effect = INK_FX_LOCAL_DESTRUCTIVE, .ask_by_hand = true,
      .ask = "清理临时文件和未传完的文件，删了找不回来；缓存可以重新生成",
      .input = "{\"type\":\"object\",\"properties\":{\"revision\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}},\"required\":[\"revision\"]}",
      .exec = INK_EXEC_BG, .qos = INK_QOS_BACKGROUND, .run = storage_cleanup}};

@@ -90,6 +90,11 @@ static void manual(void) {
     char cancel_unrelated[48]; snprintf(cancel_unrelated, sizeof cancel_unrelated, "{\"id\":%u}", unrelated);
     CHECK(AI("alarm.cancel", cancel_unrelated) && g_rc.status == INK_RC_DONE, "remove the unrelated alarm"); quiet();
     CHECK(!clock_controls_deleted, "alarm cancellation keeps the time page controls alive");
+    int synced = ink_state_find("time.synced");
+    ink_state_set_bool(synced, true); quiet();
+    CHECK(!clock_controls_deleted, "network synchronization state keeps the time page controls alive");
+    ink_state_set_bool(synced, false); quiet();
+    CHECK(!clock_controls_deleted, "loss of synchronization keeps the time page controls alive");
     CHECK(WAIT_FOR(({ int64_t minute = 0; ink_state_get_int(ink_state_find("time.minute"), &minute) && minute == 659; }), 70000), "minute service reaches the next minute");
     CHECK(page_has("10:59") && !clock_controls_deleted, "minute tick updates only the clock label");
     set_clock(local(2026, 11, 10, 10, 58, 0)); quiet(); press("shell.time_edit", 0);
