@@ -59,28 +59,31 @@ int ink_shell_off_picture_init(void);
 int ink_contacts_init(void);
 int ink_phone_init(void);
 
+/* Which step failed, by name: the device log is all there is to go on (log-1). */
+#define MUST(call, what) do { if ((call) != 0) osal_panic(what ": " #call); } while (0)
+
 void ink_main(void) {
     hal_log_write("ink: starting system services");
     if (ink_display_init() != 0) osal_panic("display service failed to start");
     if (ink_storage_init() != 0) osal_panic("storage service failed to start");
     ink_factory_reset_resume();
-    if (ink_cap_init() != 0 || ink_exec_init() != 0 || ink_res_init() != 0 || ink_storage_reclaimable() != 0)
-        osal_panic("capability bus or resource manager failed to start");
-    if (ink_state_init() != 0 || ink_settings_init() != 0 || ink_i18n_init() != 0) osal_panic("state and settings tables failed to start");
-    if (ink_svc_init() != 0 || ink_confirm_init() != 0 || ink_data_init() != 0) osal_panic("data store failed to start");
+    MUST(ink_cap_init(), "capability bus failed to start"); MUST(ink_exec_init(), "executors failed to start");
+    MUST(ink_res_init(), "resource manager failed to start"); MUST(ink_storage_reclaimable(), "storage reclaim failed to start");
+    MUST(ink_state_init(), "state and settings tables failed to start"); MUST(ink_settings_init(), "state and settings tables failed to start"); MUST(ink_i18n_init(), "state and settings tables failed to start");
+    MUST(ink_svc_init(), "data store failed to start"); MUST(ink_confirm_init(), "data store failed to start"); MUST(ink_data_init(), "data store failed to start");
     if (ink_task_init() != 0) osal_panic("task list failed to start");
-    if (ink_power_init() != 0 || ink_file_service_init() != 0) osal_panic("power or file service failed to start");
+    MUST(ink_power_init(), "power or file service failed to start"); MUST(ink_file_service_init(), "power or file service failed to start");
     ink_members_init();
     if (ink_members_start() != 0) osal_panic("members failed to start");
-    if (ink_net_init() != 0 || ink_wifi_init() != 0 || ink_light_init() != 0) osal_panic("network or light settings failed to start");
+    MUST(ink_net_init(), "network or light settings failed to start"); MUST(ink_wifi_init(), "network or light settings failed to start"); MUST(ink_light_init(), "network or light settings failed to start");
     if (ink_pairing_init() != 0) osal_panic("pairing failed to start");
-    if (ink_hub_init("wss://hub.local/v1/device") != 0 || ink_rt_init() != 0) osal_panic("hub link failed to start");
+    MUST(ink_hub_init("wss://hub.local/v1/device"), "hub link failed to start"); MUST(ink_rt_init(), "hub link failed to start");
     if (ink_audio_init() != 0) osal_panic("audio service failed to start");
     /* before time: an alarm that is due now goes off as soon as the time service is up */
     if (ink_notify_init() != 0) osal_panic("notification service failed to start");
     if (ink_time_init() != 0) osal_panic("time service failed to start");
     if (ink_text_service_init() != 0) osal_panic("text input failed to start");
-    if (ink_media_init() != 0 || ink_bt_service_init() != 0) osal_panic("media or Bluetooth failed to start");
+    MUST(ink_media_init(), "media or Bluetooth failed to start"); MUST(ink_bt_service_init(), "media or Bluetooth failed to start");
     if (ink_backup_init() != 0) osal_panic("backup service failed to start");
     if (ink_update_init() != 0) osal_panic("system upgrades failed to start");
     hal_device_info_t di;
@@ -89,10 +92,10 @@ void ink_main(void) {
     if (ink_ai_init() != 0) osal_panic("ai service failed to start");
     if (ink_tools_init() != 0 || ink_system_actions_init() != 0 || ink_reader_actions_init() != 0 || ink_remote_init() != 0)
         osal_panic("action registry failed to start");
-    if (ink_apps_init() != 0 || ink_app_register(&ink_appdef_home) != 0 || ink_app_register(&ink_appdef_reader) != 0) osal_panic("app directory failed to start");
+    MUST(ink_apps_init(), "app directory failed to start"); MUST(ink_app_register(&ink_appdef_home), "app directory failed to start"); MUST(ink_app_register(&ink_appdef_reader), "app directory failed to start");
     if (ink_contacts_init() != 0) osal_panic("contacts failed to start");
     if (ink_phone_init() != 0) osal_panic("phone failed to start");
-    if (ink_ui_start(&ink_app_home) != 0 || ink_ui_lock_mark_init() != 0 || ink_shell_interrupt_card_init() != 0 || ink_shell_confirm_card_init() != 0 || ink_shell_keyboard_init() != 0 || ink_shell_member_gate_init() != 0 || ink_shell_update_card_init() != 0 || ink_shell_power_menu_init() != 0 || ink_shell_off_picture_init() != 0) osal_panic("ui failed to start");
+    MUST(ink_ui_start(&ink_app_home), "ui failed to start"); MUST(ink_ui_lock_mark_init(), "ui failed to start"); MUST(ink_shell_interrupt_card_init(), "ui failed to start"); MUST(ink_shell_confirm_card_init(), "ui failed to start"); MUST(ink_shell_keyboard_init(), "ui failed to start"); MUST(ink_shell_member_gate_init(), "ui failed to start"); MUST(ink_shell_update_card_init(), "ui failed to start"); MUST(ink_shell_power_menu_init(), "ui failed to start"); MUST(ink_shell_off_picture_init(), "ui failed to start");
     if (ink_file_picker_init() != 0) osal_panic("file picker failed to start");
     ink_fs_refresh_state(); /* blocks on the card: here, not in anyone's way */
     ink_pairing_start();
@@ -102,13 +105,13 @@ void ink_main(void) {
     ink_probe_mark("system-started");
     extern const ink_app_def_t ink_appdef_clock;
     int ink_clock_init(void);
-    if (ink_clock_init() != 0 || ink_app_register(&ink_appdef_clock) != 0) osal_panic("clock app failed to start");
+    MUST(ink_clock_init(), "clock app failed to start"); MUST(ink_app_register(&ink_appdef_clock), "clock app failed to start");
     extern int ink_sms_init(void);
     if (ink_sms_init() != 0) osal_panic("SMS failed to start");
     extern int ink_memo_init(void);
     if (ink_memo_init() != 0) osal_panic("memo failed to start");
     extern int ink_settings_family_init(void), ink_wallpaper_init(void);
-    if (ink_settings_family_init() || ink_wallpaper_init()) osal_panic("family settings failed to start");
+    MUST(ink_settings_family_init(), "family settings failed to start"); MUST(ink_wallpaper_init(), "family settings failed to start");
     extern int ink_member_pages_init(void);
     if (ink_member_pages_init() != 0) osal_panic("member pages failed to start");
     extern int ink_calendar_init(void);
@@ -120,7 +123,7 @@ void ink_main(void) {
     extern int ink_files_init(void);
     if (ink_files_init() != 0) osal_panic("files failed to start");
     extern int ink_camera_app_init(void), ink_gallery_init(void);
-    if (ink_camera_app_init() != 0 || ink_gallery_init() != 0) osal_panic("camera/gallery failed to start");
+    MUST(ink_camera_app_init(), "camera/gallery failed to start"); MUST(ink_gallery_init(), "camera/gallery failed to start");
     extern int ink_backup_pages_init(void), ink_factory_pages_init(void);
     if (ink_backup_pages_init() != 0) osal_panic("backup pages failed to start");
     if (ink_factory_pages_init() != 0) osal_panic("factory pages failed to start");

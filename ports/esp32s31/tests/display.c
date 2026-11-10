@@ -218,13 +218,8 @@ static void wake_overlap(void) {
     assert(!ATOMIC(D.powered) && hal_display_pending() == 0);
 }
 /* The guard proves itself before the first drive; a guard that never trips keeps the panel off for good. */
-static void selftest(bool alive) {
-    D.tested = false;
-    selftest_mode = true;
-    guard_alive = alive;
-    run(run_display);
-    selftest_mode = false;
-    assert(D.tested && !ATOMIC(D.powered) && !ATOMIC(D.armed) && !ATOMIC(D.testing) && !pmic_awake && off_count == 1);
+static void selftest(bool alive) { /* init ran it, before any task could fail with the rails up */
+    assert(!ATOMIC(D.powered) && !ATOMIC(D.armed) && !ATOMIC(D.testing) && !pmic_awake && off_count == 1);
     assert(strstr(last_log, alive ? "tripped=1" : "stays off"));
     assert(ATOMIC(D.stop) == !alive && abort_count == 0);
     hal_rect_t a = {0, 0, 1, 1};
@@ -247,14 +242,17 @@ static void lines(void) {
 }
 int main(int argc, char **argv) {
     caller = pthread_self();
+    const char *which = argc > 1 ? argv[1] : "regions";
     hal_panel_info_t info;
+    selftest_mode = true; /* init proves the guard; the guard task runs alongside */
+    guard_alive = strcmp(which, "selftest-dead") != 0;
     hal_display_get_info(&info);
+    selftest_mode = false;
     assert(info.width == W && info.height == H && info.rotation_deg == S31_PANEL_ROTATION && !info.async_updates);
     assert(info.waveforms == ((1u << HAL_WF_GC16) | (1u << HAL_WF_GL16)));
     assert(hal_display_level_luminance(0) == PANEL_LEVEL[0] && hal_display_level_luminance(16) == 1.0f);
     assert(!hal_display_update(NULL, NULL, 0, HAL_WF_GL16, 0, NULL, NULL));
-    const char *which = argc > 1 ? argv[1] : "regions";
-    D.tested = strcmp(which, "selftest") && strcmp(which, "selftest-dead"); /* the other cases start after it */
+    if (strcmp(which, "selftest") && strcmp(which, "selftest-dead")) off_count = 0; /* the other cases start after it */
     if (!strcmp(which, "regions")) regions();
     else if (!strcmp(which, "timeout")) timeout();
     else if (!strcmp(which, "guard")) guard_only();

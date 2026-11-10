@@ -23,8 +23,8 @@ def main():
         ("scan-timeout", "timeout", "    epd_power_off(&D.power);", "    (void)D.power;"),
         ("independent-guard", "guard", "if (!ATOMIC(D.testing)) { trip(); return; }", "if (!ATOMIC(D.testing)) return;"),
         ("guard-proves-power-off", "selftest", "    power_off();\n    atomic_store(&D.tripped, true);", "    atomic_store(&D.tripped, true);"),
-        ("unproven-guard-blocks", "selftest-dead", "            atomic_store(&D.stop, true);\n", ""),
-        ("selftest-before-drive", "selftest", "    if (!D.tested) {", "    if (0) {"),
+        ("unproven-guard-blocks", "selftest-dead", "        atomic_store(&D.stop, true);\n        hal_log_write(\"display: the guard", "        hal_log_write(\"display: the guard"),
+        ("selftest-in-init", "selftest", "    if (!guard_self_test()) {", "    if (0 && !guard_self_test()) {"),
         ("late-line-discard", "lines", "while (D.owed[id] && lq_read(&D.q[id], line) == 0) --D.owed[id];", "(void)id;"),
         ("wake-pending", "wake-overlap", "D.result.id || ATOMIC(D.powered) || (D.wake_until && (int32_t)(D.wake_until - xTaskGetTickCount()) > 0)", "D.result.id || ATOMIC(D.powered) || wake"),
     ]

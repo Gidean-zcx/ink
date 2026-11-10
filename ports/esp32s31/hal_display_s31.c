@@ -39,7 +39,7 @@ static struct {
     atomic_uint beat, pending;
     atomic_int row, missed;
     int owed[2];
-    bool empty, first, ready, tested;
+    bool empty, first, ready;
     uint32_t phase, next_id, hold_ms, wake_until;
     uint64_t last_drive;
     hal_rect_t area;
@@ -191,13 +191,6 @@ static bool drive(void) {
 }
 static void display_task(void *ctx) {
     (void)ctx;
-    if (!D.tested) {
-        D.tested = true;
-        if (!guard_self_test()) {
-            atomic_store(&D.stop, true);
-            hal_log_write("display: the guard did not prove itself, the panel stays off");
-        }
-    }
     for (;;) {
         ulTaskNotifyTake(pdTRUE, pdMS_TO_TICKS(20));
         xSemaphoreTake(D.lock, portMAX_DELAY);
@@ -293,6 +286,12 @@ static void init(void) {
         configASSERT(xTaskCreatePinnedToCore(scanner, "epd_scan", 4096, (void *)(intptr_t)i, configMAX_PRIORITIES - 2, &D.scanners[i], i) == pdPASS);
     }
     configASSERT(xTaskCreatePinnedToCore(guard, "epd_guard", 4096, NULL, configMAX_PRIORITIES - 1, NULL, 1) == pdPASS);
+    /* Before anything else runs: a system that fails right after would leave the rails up until the next boot's
+     * board init (the expander keeps its outputs through a CPU reset; trial smoke run 1, 2026-11-10). */
+    if (!guard_self_test()) {
+        atomic_store(&D.stop, true);
+        hal_log_write("display: the guard did not prove itself, the panel stays off");
+    }
     D.first = D.ready = true;
     configASSERT(xTaskCreatePinnedToCore(display_task, "epd", 4096, NULL, 5, &D.task, 0) == pdPASS);
 }
