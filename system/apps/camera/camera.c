@@ -182,6 +182,6 @@ static const ink_cap_t CAMERA_APP_CAPS[] = {
 };
 int ink_camera_app_init(void) {
     static const char *const needs[] = {"camera.capture", NULL};
-    static const ink_app_def_t app = {.id = "camera", .title = "相机", .entry = &CAMERA, .system_app = true, .child_ok = true, .needs = needs};
+    static const ink_app_def_t app = {.id = "camera", .title = "相机", .icon = INK_UI_ICON(camera), .entry = &CAMERA, .system_app = true, .child_ok = true, .needs = needs};
     return ink_camera_scan_init() || ink_cap_register(CAMERA_APP_CAPS, 3) || ink_app_register(&app) ? -1 : 0;
 }

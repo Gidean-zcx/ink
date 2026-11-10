@@ -207,6 +207,6 @@ static void photos_changed(void *ctx, const char *id, const ink_args_t *args) {
     }
 }
 int ink_gallery_init(void) {
-    static const ink_app_def_t app = {.id = "gallery", .title = "相册", .entry = &GALLERY, .system_app = true, .child_ok = true};
+    static const ink_app_def_t app = {.id = "gallery", .title = "相册", .icon = INK_UI_ICON(gallery), .entry = &GALLERY, .system_app = true, .child_ok = true};
     return ink_cap_register(GALLERY_CAPS, 3) || ink_app_register(&app) || ink_cap_subscribe("file.changed", photos_changed, NULL, INK_EXEC_UI) ? -1 : 0;
 }
