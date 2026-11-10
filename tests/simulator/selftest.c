@@ -912,19 +912,19 @@ static void sleep_checks(void) {
     hal_audio_capture_stop();
     osal_task_delay_us(4000000); /* the modem boots and registers again */
 
-    /* P16 held low by something else (the factory log reads it so on the board in hand): it cannot
-     * signal, so the sleep does not arm it and the timer ends the slice instead of an endless wake */
+    /* P16 held at its active level by something else: it cannot signal, so the sleep does not arm it and
+     * the timer ends the slice instead of an endless wake */
     vtk_lock();
-    sim_tca_input(1, MB_P1_RTC_INT, 0);
+    sim_tca_input(1, MB_P1_RTC_INT, (MB_RTC_INT_ACTIVE_HIGH ? MB_P1_RTC_INT : 0));
     vtk_event_after(SIM_MS(600), sample_asleep, NULL);
     vtk_event_after(SIM_MS(700), vol_up_release, NULL);
     vtk_unlock();
     SLP.sampled = false;
     cause = hal_power_sleep(&sc);
     CHECK(cause == HAL_WAKE_TIMER && SLP.sampled && SLP.cfg1 == MB_P1_POWER_KEY,
-          "with P16 low the RTC is not armed and the slice timer ends the sleep (cause %u, cfg %02x)", (unsigned)cause, SLP.cfg1);
+          "with P16 held active the RTC is not armed and the slice timer ends the sleep (cause %u, cfg %02x)", (unsigned)cause, SLP.cfg1);
     vtk_lock();
-    sim_tca_input(1, MB_P1_RTC_INT, MB_P1_RTC_INT);
+    sim_tca_input(1, MB_P1_RTC_INT, (MB_RTC_INT_ACTIVE_HIGH ? 0 : MB_P1_RTC_INT));
     vtk_unlock();
     hal_input_set_sink(NULL, NULL);
 }
@@ -1114,7 +1114,7 @@ static void board_task(void *arg) {
     osal_task_delay_us(80000);
     CHECK(!sim_board_motor_on(), "and off again after the pulse");
 
-    /* RTC (PCF8563): the boot time, setting it, an alarm that pulls P16 low and wakes the chip */
+    /* RTC (PCF8563): the boot time, setting it, an alarm that drives P16 to its active level and wakes the chip */
     int64_t now_s = 0;
     CHECK(hal_rtc_get(&now_s) && now_s >= g_sim.wall_start_us / 1000000 && now_s < g_sim.wall_start_us / 1000000 + 60,
           "the RTC keeps the simulated wall time (%lld)", (long long)now_s);
@@ -1124,9 +1124,9 @@ static void board_task(void *arg) {
     hal_sleep_cfg_t sc = {.max_us = 10000000, .wake_mask = HAL_WAKE_RTC, .keep_modem = true};
     uint32_t cause = hal_power_sleep(&sc);
     CHECK(cause == HAL_WAKE_RTC && sim_rtc_alarms() == 1, "the RTC alarm wakes the chip from light sleep (cause %u)", (unsigned)cause);
-    CHECK(metalio_board_read(1, &p1) == HAL_I2C_OK && !(p1 & MB_P1_RTC_INT), "the alarm holds TCA9555 P16 low");
+    CHECK(metalio_board_read(1, &p1) == HAL_I2C_OK && MB_RTC_PENDING(p1), "the alarm holds TCA9555 P16 at its active level (0x%02x)", p1);
     hal_rtc_clear_alarm();
-    CHECK(metalio_board_read(1, &p1) == HAL_I2C_OK && (p1 & MB_P1_RTC_INT), "clearing the alarm releases P16");
+    CHECK(metalio_board_read(1, &p1) == HAL_I2C_OK && !MB_RTC_PENDING(p1), "clearing the alarm releases P16 (0x%02x)", p1);
 
     /* accelerometer (SC7A20H): gravity in portrait, a turn, the movement interrupt on GPIO2 */
     int ax = 0, ay = 0, az = 0;

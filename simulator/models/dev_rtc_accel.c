@@ -4,9 +4,10 @@
  * PCF8563 (NXP datasheet): time in BCD at 0x02..0x08, kept from the simulated wall clock (boot time
  * --> g_sim.wall_start_us) plus what software sets; VL (time lost) stays clear unless a scenario
  * says the backup supply failed. Alarm registers 0x09..0x0C (bit 7 = field ignored), AIE/AF in
- * Control_status_2 (0x01). When the alarm matches, AF is set and, with AIE, INT goes low until AF is
- * cleared: on the Plus V1.4 it reaches TCA9555 P16, hence the expander's INT, GPIO2 and the wake
- * logic (config.h @690a023).
+ * Control_status_2 (0x01). When the alarm matches, AF is set and, with AIE, INT is asserted until AF is
+ * cleared; it reaches TCA9555 P16, hence the expander's INT, GPIO2 and the wake logic (config.h
+ * @690a023). On our unit P16 is high while INT is asserted and low at rest (MB_RTC_INT_ACTIVE_HIGH, measured
+ * in self-test round 6, docs/hardware/2026-11-10-selftest.md); the vendor's V1.4 notes describe it active low.
  *
  * SC7A20H: WHO_AM_I 0x11, CTRL1..6 0x20..0x25, OUT_X_L..OUT_Z_H 0x28..0x2D (auto-increment with
  * bit 7 of the register address), AOI1_CFG/SRC/THS/DUR 0x30..0x33. Output is gravity in the
@@ -41,11 +42,12 @@ static int64_t rtc_now_s(void) { return g_sim.wall_start_us / 1000000 + (int64_t
 static uint8_t bcd(int v) { return (uint8_t)(((v / 10) << 4) | (v % 10)); }
 static int dec(uint8_t v) { return (v >> 4) * 10 + (v & 0x0F); }
 
-static bool g_line_stuck_low; /* the factory log reads P16 low all the time (N2-1): a board variant, unexplained */
+static bool g_line_stuck; /* script "rtc line stuck": P16 held at its active level, so it cannot signal */
 
-static void rtc_int(void) { /* INT low while AF and AIE: TCA9555 P16 */
-    bool low = g_line_stuck_low || ((R.reg[0x01] & 0x08) && (R.reg[0x01] & 0x02));
-    if (sim_board_present()) sim_tca_input(1, MB_P1_RTC_INT, low ? 0 : MB_P1_RTC_INT);
+static void rtc_int(void) { /* INT asserted while AF and AIE: TCA9555 P16 at its active level */
+    bool active = (R.reg[0x01] & 0x08) && (R.reg[0x01] & 0x02);
+    bool high = (g_line_stuck || active) == (MB_RTC_INT_ACTIVE_HIGH != 0);
+    if (sim_board_present()) sim_tca_input(1, MB_P1_RTC_INT, high ? MB_P1_RTC_INT : 0);
 }
 
 static bool alarm_matches(int64_t t) {
@@ -132,8 +134,8 @@ static int rtc_xfer(void *state, const uint8_t *w, size_t wlen, uint8_t *r, size
 }
 
 void sim_rtc_lose_time(void) { R.vl = true; } /* ISR (script): the backup supply failed */
-void sim_rtc_line_stuck_low(void) { /* ISR (script) */
-    g_line_stuck_low = true;
+void sim_rtc_line_stuck(void) { /* ISR (script) */
+    g_line_stuck = true;
     rtc_int();
 }
 int64_t sim_rtc_now_s(void) { return rtc_now_s(); }
@@ -253,6 +255,7 @@ void sim_rtc_accel_init(void) { /* task context (boot) */
     for (int i = 0; i < 4; i++) R.reg[0x09 + i] = 0x80; /* alarm fields off */
     sim_i2c_attach(0, PCF8563_ADDR, &rtc, NULL);
     sim_i2c_attach(0, SC7A20H_ADDR, &acc, NULL);
+    rtc_int(); /* P16 at rest from power-on (the expander's pins come up high) */
 }
 
 void sim_rtc_accel_report(void) {

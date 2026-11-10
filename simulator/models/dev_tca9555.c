@@ -35,10 +35,11 @@ static struct {
     unsigned pulses;     /* P13 rising edges with power-off spacing */
     uint64_t last_pulse;
     unsigned motor_starts, shared_rst_warn, shared_pwr_warn;
-} X = {.out = {0xFF, 0xFF}, .cfg = {0xFF, 0xFF}, .ext = {0x00, 0xF7}, .seen1 = 0xF7}; /* P1 idle levels: the
-    factory boot log reads 0xB7, with P16 low at every boot while the PCF8563 reports no interrupt enabled
-    or pending (CTRL2 0x00 or 0x40); the V1.4 wiring in config.h (the RTC's INT on P16, idle high) does
-    not explain that (an older board revision? open). Here P16 follows the RTC's INT, as config.h says. */
+#define P1_IDLE ((uint8_t)(0xF7 & ~(MB_RTC_INT_ACTIVE_HIGH ? MB_P1_RTC_INT : 0)))
+} X = {.out = {0xFF, 0xFF}, .cfg = {0xFF, 0xFF}, .ext = {0x00, P1_IDLE}, .seen1 = P1_IDLE}; /* P1 idle levels, as
+    the factory boot log reads them (0xB7): P16 is low at rest because on our unit the RTC's INT reaches it
+    active high (self-test round 6, docs/hardware/2026-11-10-selftest.md), while the vendor's V1.4 notes in
+    config.h describe it active low. P16 follows the RTC's INT with that polarity (dev_rtc_accel.c). */
 
 static uint8_t levels(int port) {
     uint8_t ext = X.ext[port];

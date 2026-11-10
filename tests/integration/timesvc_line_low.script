@@ -1,3 +1,3 @@
-# The RTC's interrupt line reads low all the time, as in the factory log.
-@0       rtc line low
+# The RTC's interrupt line is stuck at its active level, so it cannot signal: alarms still come from the timer.
+@0       rtc line stuck
 @300s    end

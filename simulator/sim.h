@@ -252,7 +252,7 @@ bool sim_sensors_sleep_watch(void);       /* light sleep with HAL_WAKE_MOTION: l
 bool sim_sensors_take_motion(void);       /* after a GPIO2 wake: the accelerometer's latch (read and cleared) */
 void sim_sensors_resume(void);            /* after the wake: set up again; task context */
 void sim_rtc_lose_time(void);             /* ISR (script) */
-void sim_rtc_line_stuck_low(void);        /* ISR (script): P16 reads low all the time */
+void sim_rtc_line_stuck(void);            /* ISR (script): P16 held at its active level all the time */
 int64_t sim_rtc_now_s(void);
 unsigned sim_rtc_alarms(void);
 bool sim_accel_int_low(void);

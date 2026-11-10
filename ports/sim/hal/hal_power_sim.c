@@ -402,14 +402,15 @@ static void board_exit(int applied, hal_key_t woke_by) {
 }
 
 /* GPIO2 woke the chip: read the wake inputs before their directions change (upstream latches P17
- * first). The RTC's INT stays low until its flag is cleared; a POWER press may already be over, and
+ * first). The RTC's INT stays asserted until its flag is cleared (P16 at its active level, MB_RTC_PENDING); a POWER
+ * press may already be over, and
  * with the RTC quiet nothing else can pull the line, so that is POWER (upstream: a released short
  * press keeps its POWER-wake meaning). With POWER masked only P16 can pull the line: RTC. */
 static uint32_t classify_gpio2(bool power_key, bool rtc, bool motion) {
     uint8_t p1 = 0xFF;
     bool ok = metalio_board_read(1, &p1) == HAL_I2C_OK;
     uint32_t why = 0;
-    if (rtc && ok && !(p1 & MB_P1_RTC_INT)) why |= HAL_WAKE_RTC;
+    if (rtc && ok && MB_RTC_PENDING(p1)) why |= HAL_WAKE_RTC;
     if (motion && sim_sensors_take_motion()) why |= HAL_WAKE_MOTION; /* INT1 latched: the accelerometer */
     if (power_key && (!ok || !(p1 & MB_P1_POWER_KEY) || !why)) why |= HAL_WAKE_POWER_KEY;
     if (!why) {
@@ -433,7 +434,7 @@ static bool stops_asleep(const char *name, bool board) {
  * in hand the factory log reads it low with the RTC idle (see dev_tca9555.c), so check. */
 static bool rtc_line_idle(void) {
     uint8_t p1 = 0;
-    return metalio_board_read(1, &p1) == HAL_I2C_OK && (p1 & MB_P1_RTC_INT);
+    return metalio_board_read(1, &p1) == HAL_I2C_OK && !MB_RTC_PENDING(p1);
 }
 
 /* Sleep admission (audit AUD3-004): a sleep transition and the start of peripheral work exclude
@@ -474,7 +475,7 @@ static uint32_t sleep_admitted(const hal_sleep_cfg_t *cfg) {
     bool motion = board && (lines & HAL_WAKE_MOTION); /* INT1 shares GPIO2; no accelerometer without the board */
     lines &= ~(uint32_t)HAL_WAKE_MOTION;
     if (board) lines = (lines & ~(uint32_t)(HAL_WAKE_POWER_KEY | HAL_WAKE_RTC)) | (power_key || rtc || motion ? WAKE_GPIO2 : 0);
-    if (rtc && !rtc_line_idle()) { /* a line that is already low cannot signal: the timer bounds the wait */
+    if (rtc && !rtc_line_idle()) { /* a line already at its active level cannot signal: the timer bounds the wait */
         rtc = false;
         sim_metric_add("power.rtc_wake_unavailable", 1);
         if (!power_key && !motion) lines &= ~(uint32_t)WAKE_GPIO2;

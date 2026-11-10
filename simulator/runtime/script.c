@@ -22,7 +22,7 @@
  *   +0       orient portrait|upside_down|landscape_left|landscape_right|face_up|face_down|reading
  *   +0       shake                    # a movement the accelerometer notices
  *   +0       rtc lost                 # the RTC's backup supply failed: its time is invalid
- *   +0       rtc line low             # the RTC's interrupt line reads low all the time (as in the factory log)
+ *   +0       rtc line stuck           # the RTC's interrupt line held at its active level, so it cannot signal
  *   +0       hub-clock -3600          # the hub's clock is this many seconds from the true time
  *   +0       sms-in 10086 text...     # a text message arrives (needs a card with SMS)
  *   +0       call-in 13800000000      # an incoming call (needs a card with voice)
@@ -260,7 +260,7 @@ int sim_script_load(const char *path, char *err, size_t errlen) {
         } else if (!strcmp(cmd, "shake")) {
             push(t, A_SHAKE);
         } else if (!strcmp(cmd, "rtc")) {
-            ok = n >= 3 && (!strcmp(tok[2], "lost") || (!strcmp(tok[2], "line") && n >= 4 && !strcmp(tok[3], "low")));
+            ok = n >= 3 && (!strcmp(tok[2], "lost") || (!strcmp(tok[2], "line") && n >= 4 && !strcmp(tok[3], "stuck")));
             if (ok) push(t, !strcmp(tok[2], "lost") ? A_RTC_LOST : A_RTC_LINE);
         } else if (!strcmp(cmd, "hub-clock")) {
             ok = n >= 3;
@@ -373,7 +373,7 @@ static void run_action(void *arg) { /* ISR context */
     case A_ORIENT: sim_accel_orient(a->text); break;
     case A_SHAKE: sim_accel_shake(); break;
     case A_RTC_LOST: sim_rtc_lose_time(); break;
-    case A_RTC_LINE: sim_rtc_line_stuck_low(); break;
+    case A_RTC_LINE: sim_rtc_line_stuck(); break;
     case A_HUB_CLOCK: sim_hub_clock_offset(a->c); break;
     case A_AP:
         if (a->a) sim_wifi_ap_add(a->num, a->b, a->text);
