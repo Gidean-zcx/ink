@@ -1,8 +1,18 @@
 set(root ${CMAKE_CURRENT_LIST_DIR}/../../../..)
 file(GLOB_RECURSE sources ${root}/drivers/*.c ${root}/boards/metalio_plus/*.c)
+include(${CMAKE_CURRENT_LIST_DIR}/../../display_upstream.cmake)
 idf_component_register(SRCS ${sources} ../../s31_board.c ../../hal_input_s31.c ../../hal_power_s31.c ../../s31_sleep_bridge.cc
+    ${ink_display_sources}
     INCLUDE_DIRS ${root}/drivers/chips ${root}/drivers/display/pqbn ${root}/boards PRIV_INCLUDE_DIRS ../..
-    REQUIRES ink_platform PRIV_REQUIRES esp_driver_ledc esp_driver_gpio esp_pm esp_hal_usb esp_driver_usb_serial_jtag)
+    ${ink_display_includes}
+    REQUIRES ink_platform PRIV_REQUIRES esp_driver_ledc esp_driver_gpio esp_pm esp_hal_usb esp_driver_usb_serial_jtag
+    esp_lcd esp_driver_rmt esp_hal_rmt esp_hal_i2s esp_mm)
+if(ink_display_sources)
+    idf_component_get_property(platform ink_platform COMPONENT_LIB)
+    target_compile_definitions(${platform} PRIVATE INK_S31_DISPLAY=1)
+    set_source_files_properties(${root}/drivers/display/pqbn/pqbn_v4.c PROPERTIES
+        COMPILE_DEFINITIONS "PQBN_HOT=__attribute__((section(\".iram1.pqbn\")))")
+endif()
 target_compile_options(${COMPONENT_LIB} PRIVATE -fstack-usage -Wextra -Wno-unused-parameter)
 include(${CMAKE_CURRENT_LIST_DIR}/../../s31_sleep_sdk_check.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/../../vendor/s31_sleep/s31_sleep_sdk.cmake)

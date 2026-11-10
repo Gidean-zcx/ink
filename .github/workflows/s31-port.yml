@@ -40,6 +40,12 @@ jobs:
     timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
+      - name: Test the port HALs on the host
+        run: |
+          cmake -S ports/esp32s31/tests -B build-s31-host
+          cmake --build build-s31-host -j2
+          ctest --test-dir build-s31-host --output-on-failure -j2
+          python3 ports/esp32s31/tests/display_negative.py build-s31-host
       - name: Cache ESP-IDF source and tools
         id: idf-cache
         uses: actions/cache@v4
@@ -57,6 +63,8 @@ jobs:
           "$IDF_PATH/install.sh" esp32s31
       - name: Compile the ink ESP32-S31 port
         run: bash ports/esp32s31/build.sh
+      - name: Require the factory screen transport
+        run: test -f build-s31/esp-idf/ink_drivers/CMakeFiles/__idf_ink_drivers.dir/__/__/hal_display_s31.c.obj
       - name: Upload port build reports
         if: always()
         uses: actions/upload-artifact@v4
