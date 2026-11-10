@@ -431,7 +431,9 @@ static void unlock_retire(pending_t *p) {
 /* Under the lock: `rc` is the call's final receipt. Becoming final and being found by a retry are one
  * step: there is no moment in which a retry would run it again. */
 static void settle(pending_t *p, const ink_receipt_t *rc) {
-    ink_log(rc->status == INK_RC_FAILED ? INK_LOG_ERROR : INK_LOG_INFO, "cap", "%.47s src=%d result=%d us=%llu", p->call.cap ? p->call.cap->id : "remote-or-unknown", p->o.src, rc->status, (unsigned long long)(osal_now_us() - p->log_started));
+    /* A capability that answers "failed" is an outcome, not a fault in the system: WARN keeps it in the log without
+     * forcing a flash write right away (ERROR does; integration-races in CI met such a flush at its worst moment). */
+    ink_log(rc->status == INK_RC_FAILED ? INK_LOG_WARN : INK_LOG_INFO, "cap", "%.47s src=%d result=%d us=%llu", p->call.cap ? p->call.cap->id : "remote-or-unknown", p->o.src, rc->status, (unsigned long long)(osal_now_us() - p->log_started));
     p->replied = true;
     p->out = *rc;
     p->out.page_gen = ink_ui_content_version();
