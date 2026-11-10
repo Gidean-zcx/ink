@@ -27,6 +27,8 @@ static const char *scene;
 static char page_json[16384], ui_labels[16384];
 static lv_area_t text_boxes[256];
 static unsigned box_count;
+static bool page_layer;
+static lv_area_t keyboard_rect;
 static double missing_before;
 static bool test_registered(void) { int64_t value = 0; return ink_state_get_int(ink_state_find("cell.registered"), &value) && value; }
 static bool test_settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
@@ -41,6 +43,11 @@ static void test_open(const char *app) {
 }
 static void test_walk(lv_obj_t *o) {
     if (!lv_obj_is_visible(o) || lv_obj_has_flag(o, LV_OBJ_FLAG_HIDDEN)) return;
+    if (page_layer && ink_text_focused()) {
+        lv_area_t a; lv_obj_get_coords(o, &a);
+        /* The opaque keyboard covers page notices; compare only drawn text. */
+        if (a.x1 >= keyboard_rect.x1 && a.x2 <= keyboard_rect.x2 && a.y1 >= keyboard_rect.y1 && a.y2 <= keyboard_rect.y2) return;
+    }
     if (lv_obj_check_type(o, &lv_label_class) && lv_label_get_text(o)[0]) {
         const char *t = lv_label_get_text(o);
         const lv_font_t *font = lv_obj_get_style_text_font(o, LV_PART_MAIN);
@@ -63,7 +70,7 @@ static void test_walk(lv_obj_t *o) {
         CHECK(a.x1 >= 0 && a.y1 >= 0 && a.x2 < ink_ui_width() && a.y2 < ink_ui_height(), "%s: on screen: %.100s", scene, t);
         for (unsigned i = 0; i < box_count; i++) {
             lv_area_t b = text_boxes[i];
-            CHECK(a.x1 > b.x2 || b.x1 > a.x2 || a.y1 > b.y2 || b.y1 > a.y2, "%s: no overlapping text: %.100s", scene, t);
+            CHECK(a.x1 > b.x2 || b.x1 > a.x2 || a.y1 > b.y2 || b.y1 > a.y2, "%s: overlap with #%u: %.60s (%d,%d-%d,%d / %d,%d-%d,%d)", scene, i, t, (int)a.x1, (int)a.y1, (int)a.x2, (int)a.y2, (int)b.x1, (int)b.y1, (int)b.x2, (int)b.y2);
         }
         CHECK(box_count < sizeof text_boxes / sizeof *text_boxes, "label geometry buffer is large enough");
         if (box_count < sizeof text_boxes / sizeof *text_boxes) text_boxes[box_count++] = a;
@@ -88,8 +95,9 @@ static void test_read(void) {
     box_count = 0; ui_labels[0] = 0;
     CHECK((overlay_mode ? ink_ui_context_snapshot(page_json, sizeof page_json, NULL) : ink_ui_snapshot(page_json, sizeof page_json, NULL)) > 0, "%s exports its snapshot", scene);
     lv_obj_update_layout(lv_screen_active()); lv_obj_update_layout(lv_layer_sys());
+    page_layer = false; ink_shell_keyboard_area(&keyboard_rect);
     if (overlay_mode) test_walk(lv_obj_get_child(lv_layer_sys(), -1));
-    else { test_walk(lv_screen_active()); test_walk(lv_layer_sys()); }
+    else { page_layer = true; test_walk(lv_screen_active()); page_layer = false; test_walk(lv_layer_sys()); }
     vtk_host_call(test_save, NULL);
 }
 static void test_frame(void *arg) {
@@ -226,10 +234,25 @@ static void run_test(void *arg) {
     missing_before = sim_metric_value("i18n.missing"); ink_power_hold(INK_NEED_AWAKE);
 #ifdef INK_I18N_MEMO
     test_memos();
+    test_ok("settings.set", "{\"id\":\"system.language\",\"value\":0}"); english = false;
+    test_capture("MemoPending-back-zh", "录音已保存", "Recording saved");
+    test_open("memo"); test_capture("Memo-back-zh", "说一句", "Voice note");
+    test_ok("memo.open", "{\"id\":1}"); test_capture("MemoChecklist-back-zh", "未完成", "Not done");
+    test_ok("memo.edit", "{\"id\":1}"); test_capture("MemoEdit-back-zh", "备忘", "Notes");
 #else
     test_apps();
     test_open("calculator"); test_ok("settings.set", "{\"id\":\"system.language\",\"value\":0}");
     english = false; test_capture("Calculator-back-zh", "不能除以 0", "Can't divide by 0");
+    test_open("clock"); test_capture("Clock-back-zh", "时钟", "Clock");
+    test_ok("clock.timer", NULL); test_capture("ClockTimer-back-zh", "设定时长", "Set duration");
+    test_ok("clock.world", NULL); test_capture("ClockWorld-back-zh", "世界时钟", "World Clock");
+    test_open("phone"); test_ok("phone.contacts", NULL); test_capture("PhoneContacts-back-zh", "联系人", "Contacts");
+    test_open("phone"); test_capture("Phone-back-zh", "拨号", "Dial");
+    test_open("message"); test_capture("Sms-back-zh", "短信", "Messages");
+    test_open("camera"); test_ok("camera.preview", NULL); test_capture("Camera-back-zh", "低频取景", "Still preview");
+    test_open("gallery"); test_capture("Gallery-back-zh", "相册", "Photos");
+    test_open("weather"); test_capture("Weather-back-zh", "最高", "H 15");
+    test_ok("remote.open", NULL); test_capture("RemoteAddress-back-zh", "输入网址", "Enter address"); test_ok("remote.close", NULL);
 #endif
     ink_probe_count("test.finished");
 }
