@@ -27,6 +27,7 @@ static void close_page(void) {
 }
 void ink_shell_kid_close(void) { close_page(); }
 static bool on_key(ink_key_t key, bool lng) {
+    if (K.up && !lng && (key == INK_KEY_HOME || key == INK_KEY_BACK) && ink_member_app_time_allows("home")) { close_page(); ink_ui_home(); return true; }
     if (!K.up && !lng && (key == INK_KEY_HOME || key == INK_KEY_BACK)) close_page();
     return true;
 }
@@ -61,7 +62,7 @@ static void changed(void *ctx, int h, const char *id) {
     if (ink_power_state() == INK_PWR_LOCKED) { close_page(); return; }
     char app[32] = ""; ink_state_get_str(ink_state_find("app.foreground"), app, sizeof app);
     bool expired = ink_member_time_up();
-    bool up = expired && (!app[0] || (strcmp(app, "phone") && strcmp(app, "message") && strcmp(app, "contacts")));
+    bool up = expired && !ink_member_app_time_allows(app);
     if (up && (!K.card.root || !K.up)) show(true);
     else if (!expired && K.card.root && K.up) close_page();
 }
@@ -74,6 +75,7 @@ static void action(ink_call_t *c) {
     if (!strcmp(c->cap->id, "shell.kid_allow")) {
         if (c->src != INK_SRC_CONFIRMED || !ink_member_any_pin() || ink_member_time_up()) { c->rc.status = INK_RC_REJECTED; return; }
         char id[32]; ink_args_get_str(&c->args, "id", id, sizeof id);
+        if (!ink_member_app_mode(NULL, id)) { c->rc.status = INK_RC_REJECTED; return; }
         for (int i = 0; i < ink_app_count(); i++) if (!strcmp(ink_app_at(i)->id, id) && ink_app_at(i)->entry) {
             close_page();
             if (ink_ui_full()) ink_ui_home();
@@ -102,5 +104,6 @@ int ink_kid_pages_init(void) {
         {.id = "shell.kid_cancel", .title = "算了，回到刚才的地方", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action}
     };
     return ink_cap_register(caps, sizeof caps / sizeof *caps) || ink_state_watch("member.", changed, NULL, INK_EXEC_UI) ||
+        ink_state_watch("app.cards_rev", changed, NULL, INK_EXEC_UI) ||
         ink_state_watch("app.foreground", changed, NULL, INK_EXEC_UI) || ink_state_watch("power.state", changed, NULL, INK_EXEC_UI) ? -1 : 0;
 }

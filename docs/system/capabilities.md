@@ -7,7 +7,7 @@ python3 tools/capabilities.py
 python3 tools/capabilities.py --check
 ```
 
-当前共 407 项：可调用能力 372、事件 35；设置 28 项、状态 49 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
+当前共 413 项：可调用能力 378、事件 35；设置 28 项、状态 49 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
 
 风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。
 
@@ -119,6 +119,9 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `factory.open` | 查看清空这台设备的范围 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s46](#s46) | [system/ui/shell/factory_pages.c](../../system/ui/shell/factory_pages.c) |
 | `family.edit` | 编辑家人的称呼或添加家人 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单；页面 SetMembers | [s52](#s52) | [system/ui/shell/settings_family.c](../../system/ui/shell/settings_family.c) |
 | `family.focus` | 输入家人的称呼 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单；页面 SetMembers | [s52](#s52) | [system/ui/shell/settings_family.c](../../system/ui/shell/settings_family.c) |
+| `family.kid_apps` | 打开孩子的应用名单 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s52](#s52) | [system/ui/shell/settings_family.c](../../system/ui/shell/settings_family.c) |
+| `family.kid_member` | 选择下一个孩子的设置 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s52](#s52) | [system/ui/shell/settings_family.c](../../system/ui/shell/settings_family.c) |
+| `family.kid_periods` | 打开孩子的禁用时段 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s52](#s52) | [system/ui/shell/settings_family.c](../../system/ui/shell/settings_family.c) |
 | `family.next` | 家人设置下一页 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s52](#s52) | [system/ui/shell/settings_family.c](../../system/ui/shell/settings_family.c) |
 | `family.prev` | 家人设置上一页 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s52](#s52) | [system/ui/shell/settings_family.c](../../system/ui/shell/settings_family.c) |
 | `family.role` | 选择添加大人或孩子 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单；页面 SetMembers | [s52](#s52) | [system/ui/shell/settings_family.c](../../system/ui/shell/settings_family.c) |
@@ -170,6 +173,9 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `keyboard.edit` | 编辑选中内容：0 左、1 右、2 复制、3 剪切、4 粘贴、5 撤销 | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s47](#s47) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
 | `keyboard.key` | 按输入法的键（1 符号、2 大写、8 删除、10 回车，其余是 ASCII） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s47](#s47) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
 | `keyboard.pick` | 选输入法候选（从 0 开始） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s47](#s47) | [system/ui/shell/keyboard.c](../../system/ui/shell/keyboard.c) |
+| `kid.app_set` | 设置孩子能用的应用 | 人、AI | 中 / local_write | 人、AI 均确认；已设成人 PIN 时还需 PIN | 成人；儿童须白名单 | [s16](#s16) | [system/policy/members.c](../../system/policy/members.c) |
+| `kid.period_set` | 设置孩子的禁用时段 | 人、AI | 中 / local_write | 人、AI 均确认；已设成人 PIN 时还需 PIN | 成人；儿童须白名单 | [s16](#s16) | [system/policy/members.c](../../system/policy/members.c) |
+| `kid.policy_get` | 查看孩子的应用名单和禁用时段 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s16](#s16) | [system/policy/members.c](../../system/policy/members.c) |
 | `media.pause` | 暂停 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s19](#s19) | [system/services/audio/media_service.c](../../system/services/audio/media_service.c) |
 | `media.play` | 放一个音频文件（Ogg Opus），不给位置就从上次听到的地方 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s19](#s19) | [system/services/audio/media_service.c](../../system/services/audio/media_service.c) |
 | `media.resume` | 接着放 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s19](#s19) | [system/services/audio/media_service.c](../../system/services/audio/media_service.c) |
@@ -874,7 +880,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 设置：—。
 
-状态：`app.foreground`、`power.state`。
+状态：`app.cards_rev`、`app.foreground`、`power.state`。
 
 事件：—。
 

@@ -11,6 +11,7 @@
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/appreg.h"
+#include "ink/sys/i18n.h"
 #include "ink/sys/cap.h"
 #include "ink/sys/camera.h"
 #include "ink/sys/exec.h"
@@ -311,8 +312,7 @@ int ink_app_count(void) { return AP.n; }
 const ink_app_def_t *ink_app_at(int i) { return i >= 0 && i < AP.n ? AP.a[i].def : NULL; }
 
 bool ink_app_visible(const ink_app_def_t *def) {
-    if (ink_member_current()->role == INK_ROLE_CHILD && (!def->child_ok ||
-        (ink_member_time_up() && strcmp(def->id, "phone") && strcmp(def->id, "message")))) return false;
+    if (ink_member_current()->role == INK_ROLE_CHILD && (!def->child_ok || !ink_member_app_mode(NULL, def->id) || !ink_member_app_time_allows(def->id))) return false;
     for (const char *const *n = def->needs; n && *n; n++)
         if (!ink_cap_find(*n)) return false;
     return true;
@@ -329,6 +329,7 @@ ink_app_state_t ink_app_state_of(const char *id) {
 int ink_app_open(const char *id, void *from, void *arg) {
     app_t *a = find(id);
     if (!a || !a->def->entry) return -1;
+    if (ink_member_current()->role == INK_ROLE_CHILD && a->def->child_ok && !ink_member_app_mode(NULL, id)) return -3;
     if (!ink_app_visible(a->def)) { ink_shell_kid_limit(id); return -2; }
     ink_shell_kid_close();
     if (ink_ui_bring_up(id)) return 0;
@@ -470,7 +471,8 @@ static void cap_open(ink_call_t *c) { /* UI task */
     bool locked = ink_power_state() == INK_PWR_LOCKED || !ink_member_space_open() || ink_camera_restricted();
     if (locked && strcmp(id, "camera")) { fail(c, INK_RC_REJECTED, "only the camera is available while locked"); return; }
     int r = locked ? ink_camera_open_locked() : ink_app_open(id, NULL, NULL);
-    if (r == -1) fail(c, INK_RC_INVALID, "no such app");
+    if (r == -3) fail(c, INK_RC_REJECTED, TR("家长没有打开这个应用"));
+    else if (r == -1) fail(c, INK_RC_INVALID, "no such app");
     else if (r == -2) fail(c, INK_RC_REJECTED, "not available to this member or on this device");
     else {
         snprintf(c->rc.object, sizeof c->rc.object, "app:%s", id);

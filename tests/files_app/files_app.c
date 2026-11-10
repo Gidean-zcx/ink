@@ -21,6 +21,7 @@ static void host_options(void *unused) {
 }
 static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
 static void quiet(void) { CHECK(WAIT_FOR(settled(), 15000), "file display settles"); }
+#include "../child_app_fixture.h"
 static void command(const char *cap, const char *args) {
     CHECK(AI(cap, args) && g_rc.status == INK_RC_DONE, "%s completes (%d: %s)", cap, g_rc.status, g_rc.detail);
 }
@@ -262,6 +263,7 @@ static void exercise(void) {
     wait_page("FileList");
     char ids[64]; int n = snprintf(ids, sizeof ids, "%u %u", (unsigned)kept, (unsigned)removed);
     CHECK(n > 0 && ink_fs_write_atomic("/me/SYNTH_IDS.txt", ids, (size_t)n) == 0, "persist only synthetic expectations for the next process");
+    permit_child_files();
     CHECK(ink_member_switch("kid") == 0, "switch to the real child"); roots(); on_ui(child_roots);
     CHECK(AI("files.browse", "{\"path\":\"/members/owner/SYNTH_FILES\"}") && g_rc.status == INK_RC_REJECTED, "forged adult directory is rejected");
     CHECK(ink_fs_lookup(kept, &e) == INK_FS_ERR_DENIED, "service also rejects the adult's stable id");

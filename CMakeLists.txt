@@ -1627,3 +1627,8 @@ ink_sim_executable(sim-lock-camera tests/lock_camera/lock_camera.c)
 target_link_libraries(sim-lock-camera PRIVATE ink_apps ink_system)
 add_test(NAME lock-camera COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/lock_camera/run.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(perf-latency PROPERTIES TIMEOUT 180)
+
+ink_sim_executable(sim-kid-apps tests/kid_apps.c)
+target_link_libraries(sim-kid-apps PRIVATE ink_apps ink_system)
+add_test(NAME kid-apps COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/kid_apps.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(kid-apps PROPERTIES TIMEOUT 300)
