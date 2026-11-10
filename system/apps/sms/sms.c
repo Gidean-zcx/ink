@@ -192,7 +192,14 @@ static void create(lv_obj_t *screen, void *arg) {
     __atomic_store_n(&S.shown_ver, S.db ? ink_db_last_ver(S.db) : 0, __ATOMIC_RELEASE);
     S.contacts = compose ? ink_db_open_cached_member(ink_db_find_def("phone.contacts"), S.member) : NULL;
     if (!S.db || (compose && !S.contacts)) {
-        ink_args_t *a = ink_app_alloc(sizeof *a, true); if (a) { ink_args_init(a); ink_args_str(a, "collection", !S.db ? "sms.messages" : "phone.contacts"); ink_args_int(a, "limit", 1); request("data.list", a); ink_app_free(a); } return;
+        ink_args_t *a = ink_app_alloc(sizeof *a, true);
+        if (a) {
+            ink_args_init(a); ink_args_str(a, "collection", !S.db ? "sms.messages" : "phone.contacts");
+            ink_args_int(a, "limit", 1); request("data.list", a); ink_app_free(a);
+            /* Coalesce a quick cold inbox read with the first screen refresh. */
+            if (!compose && !thread) lv_timer_reset(lv_display_get_refr_timer(lv_obj_get_display(screen)));
+        }
+        return;
     }
     int top = INK_STATUS_BAR + INK_PRIMARY + INK_GAP_L; S.body_h = thread ? INK_CANVAS_H - top - 2 * INK_PRIMARY - INK_CONTROL - INK_MARGIN : INK_ROW_DOUBLE; build_rows(compose, thread);
     lv_obj_t *body = ink_ui_box(screen, 0, top, INK_CANVAS_W, INK_CANVAS_H - top - INK_PRIMARY - INK_MARGIN, 0, INK_SURFACE_WHITE, false);
