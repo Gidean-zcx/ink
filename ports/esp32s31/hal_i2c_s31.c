@@ -59,7 +59,13 @@ hal_i2c_dev_t *hal_i2c_device(int bus, uint8_t addr7, const char *name) {
 }
 
 hal_i2c_status_t hal_i2c_write(hal_i2c_dev_t *dev, const uint8_t *data, size_t len) {
-    if (!dev || !len) return HAL_I2C_ERR;
+    if (!dev) return HAL_I2C_ERR;
+    /* No data: an address-only probe, as the simulator's bus does (tps65185_probe); i2c_master_transmit refuses
+     * 0 bytes, so on the device the panel PMIC was never found (trial smoke 3, 2026-11-10). NACK is NOT_FOUND. */
+    if (!len) {
+        esp_err_t e = i2c_master_probe(g_bus, dev->addr, S31_I2C_TIMEOUT_MS);
+        return e == ESP_ERR_NOT_FOUND ? HAL_I2C_NACK : s31_i2c_status(e);
+    }
     return s31_i2c_status(i2c_master_transmit(dev->h, data, len, S31_I2C_TIMEOUT_MS));
 }
 

@@ -2,7 +2,7 @@
 # Compile only; all generated state stays in this checkout.
 set -euo pipefail
 ROOT=$(cd "$(dirname "$0")/../.." && pwd)
-BUILD="$ROOT/build-s31"
+BUILD="${INK_S31_BUILD:-$ROOT/build-s31}"
 mkdir -p "$BUILD/tmp" "$BUILD/cache"
 export TMPDIR="$BUILD/tmp" XDG_CACHE_HOME="$BUILD/cache"
 export PYTHONDONTWRITEBYTECODE=1 IDF_COMPONENT_CACHE_PATH="$BUILD/cache/components"

@@ -84,7 +84,9 @@ static void guard(void *ctx) {
  * firmware's did (tools/hw-bench/main/panel_lab.c, guard_self_test): rails on, nobody scanning, and the guard
  * alone must take them off. A PMIC in SLEEP stops answering; PWR_GOOD floats high then and proves nothing. */
 static bool guard_self_test(void) {
-    bool up = epd_power_on(&D.power) == EPD_POWER_OK && epd_power_good(&D.power);
+    epd_power_result_t r = epd_power_on(&D.power);
+    uint8_t p0 = 0;
+    bool read0 = metalio_board_read(0, &p0) == HAL_I2C_OK, good = r == EPD_POWER_OK && epd_power_good(&D.power), up = good;
     atomic_store(&D.powered, true);
     atomic_store(&D.tripped, false);
     atomic_store(&D.testing, true);
@@ -103,8 +105,9 @@ static bool guard_self_test(void) {
         asleep = tps65185_read(D.power.pmic, TPS_REG_PG, &pg) != HAL_I2C_OK;
         if (!asleep) vTaskDelay(pdMS_TO_TICKS(20));
     }
-    char line[112];
-    snprintf(line, sizeof line, "display: guard self-test rails_up=%d tripped=%d after_ms=%u asleep=%d", up, tripped, ms, asleep);
+    char line[200];
+    snprintf(line, sizeof line, "display: guard self-test rails_up=%d tripped=%d after_ms=%u asleep=%d power_on=%s p0=%s0x%02x revid=0x%02x attempts=%u",
+             up, tripped, ms, asleep, epd_power_result_name(r), read0 ? "" : "unread:", p0, D.power.revid, D.power.attempts);
     hal_log_write(line);
     return up && tripped && asleep;
 }

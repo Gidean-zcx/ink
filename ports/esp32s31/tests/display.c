@@ -44,6 +44,8 @@ void osal_panic(const char *fmt, ...) {
 }
 uint64_t osal_now_us(void) { return now; }
 bool metalio_board_ready(void) { return true; }
+hal_i2c_status_t metalio_board_read(int port, uint8_t *levels) { assert(port == 0); *levels = 0xA0; return HAL_I2C_OK; }
+const char *epd_power_result_name(epd_power_result_t r) { return r == EPD_POWER_OK ? "ok" : "failed"; }
 tca9555_t *metalio_ioexp(void) { return NULL; }
 void metalio_board_lock(void) { }
 void metalio_board_unlock(void) { }
