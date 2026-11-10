@@ -358,11 +358,20 @@ static void cap_set(ink_call_t *c) {
         refuse(&c->rc, INK_RC_INVALID, "value required");
         return;
     }
+    int64_t before = 0, revision = 0;
+    bool check_revision = ink_args_get_int(&c->args, "expected_revision", &revision);
     osal_mutex_lock(SE.lock, OSAL_WAIT_FOREVER);
     int i = find(id);
     const char *via = i >= 0 && (v == 0 || v == 1) ? SE.it[i].def->via : NULL;
+    bool stale = via && check_revision && SE.it[i].revision != (uint32_t)revision;
     osal_mutex_unlock(SE.lock);
-    if (via && c->src != INK_SRC_SYSTEM) { /* its own capability decides: past its gate, with its order and words */
+    if (stale) {
+        refuse(&c->rc, INK_RC_STALE, "the setting changed since this operation");
+        return;
+    }
+    /* Its own capability decides: past its gate, with its order and words; not undone by system.undo (the
+     * capability table says so): airplane mode by the AI is set only after the receipt, and it cuts the AI off. */
+    if (via && c->src != INK_SRC_SYSTEM) {
         ink_args_t a;
         ink_args_init(&a);
         ink_args_bool(&a, "enabled", v != 0);
@@ -375,8 +384,6 @@ static void cap_set(ink_call_t *c) {
         }
         return;
     }
-    int64_t before = 0, revision = 0;
-    bool check_revision = ink_args_get_int(&c->args, "expected_revision", &revision);
     if (setting_set(id, v, c->src, check_revision, (uint32_t)revision, &before, &c->rc) == INK_RC_DONE && before != v && !check_revision) {
         ink_args_t undo;
         ink_args_init(&undo);

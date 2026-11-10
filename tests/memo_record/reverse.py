@@ -7,12 +7,12 @@ import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 MUTANTS = {
-    "cancel": ("system/services/audio/media_service.c", 'if (!strcmp(REC.why, "cancelled")) ink_fs_remove_for', 'if (false) ink_fs_remove_for', "main"),
+    "cancel": ("system/services/audio/media_service.c", 'if (!strcmp(why, "cancelled")) ink_fs_remove_for', 'if (false) ink_fs_remove_for', "main"),
     "ai-key": ("system/services/ai/ai_service.c", "if (ink_audio_recording()) { /* a recording is not ended by asking", "if (false) { /* a recording is not ended by asking", "main"),
     "busy-say": ("system/services/audio/media_service.c", 'snprintf(c->rc.say, sizeof c->rc.say, "AI 正在听或在说', 'if (0) snprintf(c->rc.say, sizeof c->rc.say, "AI 正在听或在说', "main"),
     "words": ("system/services/audio/media_service.c", "        strcat(TX.text, part);", "        (void)part;", "main"),
     "member": ("system/apps/memo/memo.c", "const char *who = ink_cap_call_member(c);", 'const char *who = "owner";', "main"),
-    "power-cut": ("system/apps/memo/memo.c", "while (db && n && cursor != UINT32_MAX && !ink_audio_recording() && ink_fs_index", "while (false && ink_fs_index", "cut"),
+    "power-cut": ("system/apps/memo/memo.c", "while (db && audio && cursor != UINT32_MAX && !ink_audio_recording() && ink_fs_index", "while (false && ink_fs_index", "cut"),
 }
 parser = argparse.ArgumentParser()
 parser.add_argument("--build", type=Path, required=True)

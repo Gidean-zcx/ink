@@ -8,6 +8,7 @@
 #include "esp_timer.h"
 #include "freertos/FreeRTOS.h"
 #include "ink/hal_uart.h"
+#include "ink/probe.h"
 #include "s31_board.h"
 #include "s31_hal_map.h"
 
@@ -52,6 +53,10 @@ int hal_uart_read_line(hal_uart_t *u, char *buf, size_t cap, uint32_t timeout_ms
         char c;
         if (uart_read_bytes(u->port, &c, 1, ticks) != 1) return -1;
         int n = s31_line_feed(&u->line, c);
+        if (n == -2) {
+            ink_probe_count("uart.overlong_lines");
+            return -2;
+        }
         if (n >= 0) {
             snprintf(buf, cap, "%s", u->line.buf);
             return n < (int)cap ? n : (int)cap - 1;

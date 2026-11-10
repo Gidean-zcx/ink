@@ -270,8 +270,17 @@ static void exercise(void) {
     expected_total = 8;
     command("settings.set", "{\"id\":\"display.font_size\",\"value\":3}"); quiet(); browse(); on_ui(first_page); check_list_thumb();
 }
+/* audit13 middle 4: memo.play and a memo change run on the executor just when going online kicks the memo sweep. Opening
+ * the memo collection there and then, synchronously, kept the file list below from ever finishing reading. */
+static void online_memo(void *ctx, int h, const char *id) {
+    (void)ctx; int64_t on = 0;
+    if (id && (!ink_state_get_int(h, &on) || !on)) return;
+    ink_args_t a; ink_args_init(&a); ink_args_int(&a, "id", 1);
+    ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .member = ink_member_current()->id, .reply_exec = INK_EXEC_BG};
+    ink_cap_call("memo.play", &a, &o); ink_cap_call("memo.delete", &a, &o);
+}
 static void run(void *unused) {
-    (void)unused; vtk_host_call(host_options, NULL);
+    (void)unused; vtk_host_call(host_options, NULL); ink_state_watch("net.online", online_memo, NULL, INK_EXEC_BG);
     CHECK(WAIT_FOR(ink_member_space_open(), 10000), "member space opens"); test_start_home(); quiet();
     if (!strcmp(phase, "verify")) verify_restart(); else if (!strcmp(phase, "review")) review_regressions(); else exercise();
     CHECK(WAIT_FOR(ink_db_idle(), 10000), "file index is durable before stopping"); quiet(); ink_probe_count("test.finished");

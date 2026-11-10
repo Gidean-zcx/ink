@@ -4,6 +4,7 @@
 #include "ink/sys/app.h"
 #include "ink/sys/appreg.h"
 #include "ink/sys/file.h"
+#include "ink/sys/hub.h"
 #include "ink/sys/json.h"
 #include "ink/sys/media.h"
 #include "ink/sys/members.h"
@@ -19,7 +20,12 @@ typedef struct { char body[4096], page[24], path[INK_FS_PATH_MAX]; uint32_t chec
 static const ink_activity_t PAGES[8];
 enum { LIST, DETAIL, EDIT, CHECKLIST, UNDO, FAIL, RECORD, PENDING };
 #define VOICE_DIR "/me/memos" /* a voice memo's recording: Ogg Opus, in the member's own folder */
-static struct { bool busy; uint32_t id; char member[16], text[1024]; ink_exec_job_t sweep; } T INK_PSRAM_BSS; /* the one being made into words: BG */
+#define HELD_MAX 8
+static struct {
+    bool busy; uint32_t id; char member[16], text[1024]; ink_exec_job_t sweep;
+    struct { char member[16]; uint32_t id, fails; uint64_t until; } held[HELD_MAX]; /* failed this boot: not sent again before `until` */
+} T INK_PSRAM_BSS; /* the one being made into words: BG */
+static const char NOT_LOADED[] = "备忘还没读出来，请先打开备忘再试";
 static struct {
     ink_db_t *db;
     ink_ui_list_t *list;
@@ -89,60 +95,91 @@ static uint32_t find_audio(ink_db_t *db, uint32_t audio, memo_t *n) { /* the mem
     while (audio && ink_db_next(db, &cur, &rec, NULL, 0) == 1) if (read_note(db, rec.id, n) && n->audio == audio) return rec.id;
     return 0;
 }
+static int held_at(const char *member, uint32_t id) {
+    for (int i = 0; i < HELD_MAX; i++) if (T.held[i].id == id && !strcmp(T.held[i].member, member)) return i;
+    return -1;
+}
+static void hold(const char *member, uint32_t id) { /* BG: its words did not go in; again after 1, 2, 4 … 32, then every 60 minutes */
+    int at = held_at(member, id);
+    if (at < 0) { at = 0; for (int i = 1; i < HELD_MAX; i++) if (T.held[i].until < T.held[at].until) at = i; T.held[at].fails = 0; }
+    uint32_t fails = ++T.held[at].fails, minutes = fails > 6 ? 60 : UINT32_C(1) << (fails - 1);
+    snprintf(T.held[at].member, sizeof T.held[at].member, "%s", member); T.held[at].id = id;
+    T.held[at].until = ink_now_us() + (uint64_t)minutes * 60000000u;
+}
 static void sweep(void *arg);
-static void voiced(void *ctx, const ink_receipt_t *rc) { (void)ctx; (void)rc; T.busy = false; sweep(NULL); } /* BG: then the next one */
+static void voiced(void *ctx, const ink_receipt_t *rc) { /* BG: then the next one */
+    (void)ctx; if (rc->status != INK_RC_DONE) hold(T.member, T.id);
+    T.busy = false; sweep(NULL);
+}
 static void transcribed(void *ctx, const ink_receipt_t *rc) { /* BG: the words go in through memo.voice, the next one starts */
     (void)ctx; ink_json_t *j = ink_app_alloc(sizeof *j, true); int64_t ms = 0;
     bool ok = rc->status == INK_RC_DONE && rc->result && j && ink_json_parse(j, rc->result, strlen(rc->result)) == 0 &&
-        ink_json_str(j, ink_json_find(j, 0, "text"), T.text, sizeof T.text) >= 0 && T.text[0];
+        ink_json_str(j, ink_json_find(j, 0, "text"), T.text, sizeof T.text) >= 0;
     if (j && ok) ink_json_int(j, ink_json_find(j, 0, "ms"), &ms);
+    if (ok && !T.text[0]) snprintf(T.text, sizeof T.text, "%s", "这段录音里没听到说话"); /* done all the same: not sent again and again */
     ink_app_free(j);
     ink_args_t a; ink_args_init(&a); ink_args_int(&a, "id", T.id); ink_args_int(&a, "ms", ms);
     ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .member = T.member, .reply_exec = INK_EXEC_BG, .done = voiced};
-    T.busy = ok && ink_cap_call("memo.voice", &a, &o) == 0; /* busy until the words are in */
+    if (ok && ink_cap_call("memo.voice", &a, &o) == 0) return; /* busy until the words are in: voiced, perhaps already */
+    T.busy = false;
+    if (ink_hub_online()) hold(T.member, T.id); /* offline: the next time online asks again */
 }
 static void sweep(void *arg) { /* BG: a recording a power loss cut off becomes a memo; the next one waiting gets its words */
-    (void)arg; const char *member = ink_member_current()->id; uint32_t cursor = 0; ink_fs_entry_t e; ink_rec_t rec; ink_db_cursor_t cur = {0}; ink_fs_stat_t st;
+    (void)arg; const char *member = ink_member_current()->id; uint32_t cursor = 0, count = 0, next = 0; ink_fs_entry_t e; ink_rec_t rec; ink_db_cursor_t cur = {0}; ink_fs_stat_t st;
+    char path[INK_FS_PATH_MAX] = "";
     if (ink_fs_stat(VOICE_DIR, &st) != 0) cursor = UINT32_MAX; /* no voice memo yet: the index is not asked */
     ink_db_t *db = T.busy || !ink_member_space_open() ? NULL : ink_db_open_cached_member(&MEMOS, member); /* loaded by the app: no wait here */ memo_t *n = ink_app_alloc(sizeof *n, true);
-    while (db && n && cursor != UINT32_MAX && !ink_audio_recording() && ink_fs_index(VOICE_DIR, INK_FS_AUDIO, &cursor, &e) == 1) if (!find_audio(db, e.id, n)) {
+    uint32_t *audio = ink_app_alloc(MEMOS.max_records * sizeof *audio, true); /* the recordings memos already hold: read once */
+    while (db && n && audio && count < MEMOS.max_records && ink_db_next(db, &cur, &rec, NULL, 0) == 1) if (read_note(db, rec.id, n)) {
+        int h = held_at(member, rec.id);
+        if (n->audio) audio[count++] = n->audio;
+        if (!next && n->pending && !n->deleted && (h < 0 || ink_now_us() >= T.held[h].until)) { next = rec.id; snprintf(path, sizeof path, "%s", n->path); }
+    }
+    while (db && audio && cursor != UINT32_MAX && !ink_audio_recording() && ink_fs_index(VOICE_DIR, INK_FS_AUDIO, &cursor, &e) == 1) {
+        uint32_t i = 0; while (i < count && audio[i] != e.id) i++;
+        if (i < count) continue;
         ink_args_t a; ink_args_init(&a); ink_args_str(&a, "path", e.path);
         ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .member = member, .reply_exec = INK_EXEC_BG}; ink_cap_call("memo.voice", &a, &o);
     }
-    while (db && n && ink_db_next(db, &cur, &rec, NULL, 0) == 1) if (read_note(db, rec.id, n) && n->pending && !n->deleted) {
-        ink_args_t a; ink_args_init(&a); ink_args_str(&a, "path", n->path);
+    if (next) {
+        ink_args_t a; ink_args_init(&a); ink_args_str(&a, "path", path);
         ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .member = member, .reply_exec = INK_EXEC_BG, .done = transcribed};
-        T.id = rec.id; snprintf(T.member, sizeof T.member, "%s", member); T.busy = ink_cap_call("audio.transcribe", &a, &o) == 0; break;
+        T.id = next; snprintf(T.member, sizeof T.member, "%s", member); T.busy = true; /* before: the answer may come inside the call */
+        if (ink_cap_call("audio.transcribe", &a, &o) != 0) T.busy = false;
     }
-    ink_app_free(n); ink_db_close(db);
+    ink_app_free(audio); ink_app_free(n); ink_db_close(db);
 }
 static void after_record(void *arg) { /* UI: the recording page gives way to what became of it */
     if (strcmp(ink_ui_page_name(), "MemoRecord") || !ink_ui_page_current()) return;
     ink_ui_pop(); if (arg) ink_ui_push(&PAGES[PENDING], arg);
 }
 static void kick(void *ctx, int h, const char *id) { (void)ctx; int64_t on = 0; if (!id || (ink_state_get_int(h, &on) && on)) ink_exec_post(INK_EXEC_BG, &T.sweep, sweep, NULL); }
+static void kept(void *ctx, const ink_receipt_t *rc) { /* BG: not a memo yet (memos not read): the page goes, the sweep takes it later */
+    (void)ctx; if (rc->status != INK_RC_DONE) ink_exec_post(INK_EXEC_UI, &M.recorded, after_record, NULL);
+}
 static void recorded(void *ctx, const char *ev, const ink_args_t *p) { /* BG: a memo's recording ended; kept, it becomes a memo */
     (void)ctx; (void)ev; char path[INK_FS_PATH_MAX] = "", member[16] = "", why[24] = ""; int64_t ms = 0;
     ink_args_get_str(p, "path", path, sizeof path); ink_args_get_str(p, "member", member, sizeof member); ink_args_get_str(p, "why", why, sizeof why); ink_args_get_int(p, "ms", &ms);
     if (strncmp(path, VOICE_DIR "/", sizeof VOICE_DIR)) return;
     if (!strcmp(why, "cancelled")) { ink_exec_post(INK_EXEC_UI, &M.recorded, after_record, NULL); return; }
     ink_args_t a; ink_args_init(&a); ink_args_str(&a, "path", path); ink_args_int(&a, "ms", ms);
-    ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .member = member, .reply_exec = INK_EXEC_BG}; ink_cap_call("memo.voice", &a, &o);
+    ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .member = member, .reply_exec = INK_EXEC_BG, .done = kept}; ink_cap_call("memo.voice", &a, &o);
 }
 static void voice(ink_call_t *c, ink_db_t *db, uint32_t id, memo_t *n) { /* a recording becomes a memo; its words come from the hub */
-    int64_t ms = 0; uint32_t cursor = 0; ink_fs_entry_t e; memo_t *other = ink_app_alloc(sizeof *other, true);
+    int64_t ms = 0; uint32_t cursor = 0; ink_fs_entry_t e; memo_t *other = ink_app_alloc(sizeof *other, true); const char *name;
     if (ink_args_get_str(&c->args, "path", n->path, sizeof n->path) > 0) {
-        while (ink_fs_index(VOICE_DIR, INK_FS_AUDIO, &cursor, &e) == 1) if (!strcmp(strrchr(e.path, '/'), strrchr(n->path, '/'))) n->audio = e.id;
+        while ((name = strrchr(n->path, '/')) && ink_fs_index(VOICE_DIR, INK_FS_AUDIO, &cursor, &e) == 1) if (strrchr(e.path, '/') && !strcmp(strrchr(e.path, '/'), name)) n->audio = e.id;
         n->pending = true;
         if (!n->audio || !other || find_audio(db, n->audio, other)) c->rc.status = INK_RC_INVALID; /* not on the card, or a memo already */
     } else if (n->deleted || !n->path[0] || T.id != id || strcmp(T.member, ink_cap_call_member(c))) c->rc.status = INK_RC_INVALID;
-    else { snprintf(n->body, sizeof n->body, "%s", T.text); n->pending = false; }
+    else if (n->body[0] && strlen(n->body) + 1 + strlen(T.text) >= sizeof n->body) c->rc.status = INK_RC_INVALID; /* what is written stays */
+    else { size_t len = strlen(n->body); snprintf(n->body + len, sizeof n->body - len, "%s%s", len ? "\n" : "", T.text); n->pending = false; }
     if (ink_args_get_int(&c->args, "ms", &ms) && ms > 0) n->ms = (uint32_t)ms;
     ink_app_free(other);
 }
 static void mutate(ink_call_t *c) {
     int64_t id = 0, index = 0, draft = 0; ink_args_get_int(&c->args, "id", &id);
-    ink_db_t *db = ink_db_open_member(&MEMOS, ink_cap_call_member(c));
+    ink_db_t *db = ink_db_open_cached_member(&MEMOS, ink_cap_call_member(c)); /* no wait on BG: the app's pages read it in */
     memo_t *n = ink_app_alloc(sizeof *n, true); char *raw = ink_app_alloc(INK_DB_RECORD_MAX + 1, true);
     bool save = !strcmp(c->cap->id, "memo.save"), is_voice = !strcmp(c->cap->id, "memo.voice"), fresh = is_voice && !id;
     if (!db || !n || !raw) c->rc.status = INK_RC_FAILED;
@@ -180,7 +217,7 @@ static void mutate(ink_call_t *c) {
         }
     }
     snprintf(c->rc.object, sizeof c->rc.object, "memo:%u", (unsigned)id);
-    snprintf(c->rc.say, sizeof c->rc.say, "%s", c->rc.status == INK_RC_DONE ? "已记下" : "这条没存上，字还在这里。请腾出空间后重试");
+    snprintf(c->rc.say, sizeof c->rc.say, "%s", c->rc.status == INK_RC_DONE ? "已记下" : !db ? NOT_LOADED : "这条没存上，字还在这里。请腾出空间后重试");
     if (c->rc.status == INK_RC_DONE) ink_exec_post(INK_EXEC_UI, &M.refresh, refresh, NULL);
     if (c->rc.status == INK_RC_DONE && fresh) { ink_exec_post(INK_EXEC_UI, &M.recorded, after_record, (void *)(uintptr_t)id); sweep(NULL); }
     ink_app_free(raw); ink_app_free(n); ink_db_close(db);
@@ -215,7 +252,7 @@ static void navigate(ink_call_t *c) {
         int mode = !strcmp(cap, "memo.edit") ? EDIT : DETAIL;
         memo_t *n = ink_app_alloc(sizeof *n, true);
         if (id && (!M.db || !n || !read_note(M.db, (uint32_t)id, n) || n->deleted)) c->rc.status = INK_RC_INVALID;
-        else { if (mode == DETAIL && n && n->checklist) mode = CHECKLIST; else if (mode == DETAIL && n && n->pending) mode = PENDING; memset(&M.position, 0, sizeof M.position); ink_ui_push(&PAGES[mode], (void *)(uintptr_t)id); }
+        else { if (mode == DETAIL && n && n->checklist) mode = CHECKLIST; else if (id && n && n->pending) mode = PENDING; /* its words would cover what is typed */ memset(&M.position, 0, sizeof M.position); ink_ui_push(&PAGES[mode], (void *)(uintptr_t)id); }
         ink_app_free(n);
     }
 }
@@ -235,8 +272,9 @@ static void record(ink_call_t *c) { /* UI: a recording in the member's memo fold
 static void play_reply(void *ctx, const ink_receipt_t *rc) { ink_call_t *c = ctx; c->rc = *rc; c->rc.result = NULL; ink_cap_done(c); }
 static void play(ink_call_t *c) { /* BG: by the file's number, which a rename or a move keeps */
     int64_t id = 0; ink_args_get_int(&c->args, "id", &id); ink_fs_entry_t e = {0}; const char *who = ink_cap_call_member(c);
-    ink_db_t *db = ink_db_open_member(&MEMOS, who); memo_t *n = ink_app_alloc(sizeof *n, true);
-    if (!db || !n || !read_note(db, (uint32_t)id, n) || n->deleted || !n->path[0]) c->rc.status = INK_RC_INVALID;
+    ink_db_t *db = ink_db_open_cached_member(&MEMOS, who); memo_t *n = ink_app_alloc(sizeof *n, true); /* no wait on BG */
+    if (!db) { c->rc.status = INK_RC_FAILED; snprintf(c->rc.say, sizeof c->rc.say, "%s", NOT_LOADED); }
+    else if (!n || !read_note(db, (uint32_t)id, n) || n->deleted || !n->path[0]) c->rc.status = INK_RC_INVALID;
     else {
         ink_args_t a; ink_args_init(&a); ink_args_str(&a, "path", ink_fs_lookup(n->audio, &e) == 0 ? e.path : n->path); ink_args_int(&a, "start_ms", 0);
         ink_call_opts_t o = {.src = c->src, .member = ink_cap_call_member(c), .reply_exec = INK_EXEC_BG, .done = play_reply, .ctx = c};
@@ -437,20 +475,20 @@ static bool page_key(ink_key_t key, bool lng) { return M.list && ink_ui_list_key
 static const ink_activity_t PAGES[] = {PAGE("Memo"), PAGE("MemoDetail"), PAGE("MemoEdit"), PAGE("MemoChecklist"), PAGE("MemoUndo"), PAGE("MemoSaveFail"), PAGE("MemoRecord"), PAGE("MemoPending")};
 static const ink_app_def_t APP = {.id = "memo", .title = "备忘", .icon = INK_UI_ICON(memo), .entry = &PAGES[LIST], .system_app = true, .child_ok = true};
 #define ID "\"id\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}"
-#define RECORD "{\"type\":\"object\",\"properties\":{" ID "},\"required\":[\"id\"]}"
+#define ID_ARGS "{\"type\":\"object\",\"properties\":{" ID "},\"required\":[\"id\"]}"
 static const ink_cap_t CAPS[] = {
     {.id = "memo.save", .title = "记下当前成员的长文草稿", .input = "{\"type\":\"object\",\"properties\":{" ID ",\"draft\":{\"type\":\"integer\",\"minimum\":1},\"page\":{\"type\":\"string\",\"enum\":[\"MemoEdit\",\"MemoSaveFail\"]}},\"required\":[\"id\",\"draft\",\"page\"]}", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_BG, .run = mutate},
-    {.id = "memo.delete", .title = "删除备忘（可撤销）", .input = RECORD, .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_BG, .run = mutate},
-    {.id = "memo.undo", .title = "撤销删除备忘", .input = RECORD, .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_BG, .run = mutate},
-    {.id = "memo.convert", .title = "逐行转成清单（最多 32 项）", .input = RECORD, .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_BG, .run = mutate},
+    {.id = "memo.delete", .title = "删除备忘（可撤销）", .input = ID_ARGS, .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_BG, .run = mutate},
+    {.id = "memo.undo", .title = "撤销删除备忘", .input = ID_ARGS, .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_BG, .run = mutate},
+    {.id = "memo.convert", .title = "逐行转成清单（最多 32 项）", .input = ID_ARGS, .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_BG, .run = mutate},
     {.id = "memo.check", .title = "勾选或取消清单项", .input = "{\"type\":\"object\",\"properties\":{" ID ",\"index\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":31}},\"required\":[\"id\",\"index\"]}", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_BG, .run = mutate},
-    {.id = "memo.open", .title = "查看备忘", .input = RECORD, .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "memo.open", .title = "查看备忘", .input = ID_ARGS, .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "memo.edit", .title = "写一条或编辑备忘", .input = "{\"type\":\"object\",\"properties\":{" ID "}}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "memo.next", .title = "备忘下一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "memo.prev", .title = "备忘上一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "memo.retry", .title = "重试记下备忘", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "memo.record", .title = "说一句：录一条语音备忘（联网后整理成文字）", .output = "{\"type\":\"object\"}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = record},
-    {.id = "memo.play", .title = "播放语音备忘的录音", .input = RECORD, .effect = INK_FX_NAVIGATE, .child_ok = true, .exec = INK_EXEC_BG, .run = play},
+    {.id = "memo.play", .title = "播放语音备忘的录音", .input = ID_ARGS, .effect = INK_FX_NAVIGATE, .child_ok = true, .exec = INK_EXEC_BG, .run = play},
     {.id = "memo.voice", .title = "把录好的音存成语音备忘，或填上中枢整理的文字", .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":0},\"path\":{\"type\":\"string\",\"maxLength\":127},\"ms\":{\"type\":\"integer\",\"minimum\":0}}}",
      .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .expose = INK_EXPOSE_APP, .exec = INK_EXEC_BG, .run = mutate}
 };
