@@ -112,13 +112,32 @@ void hal_power_battery(hal_battery_t *out) {
     out->external_power = vbus != 0 || out->charging || g.ma >= -5;
 }
 
+/* The RTC keeps LOCAL time, as the factory firmware writes it (common/sensor/pcf8563.cc: localtime_r, then SetTime);
+ * trial run 11 read 2026-11-11 00:07 at 00:06 Beijing time. Local here is the system's default zone, China +8 h; a
+ * zone changed in settings does not reach this yet (backlog). Both firmwares then read the same clock. */
+#define RTC_LOCAL_OFFSET_S (8 * 3600)
+#define RTC_SANE_FROM 1735689600LL /* 2025-01-01: the factory firmware's own window is 2025..2099 (metalio_rtc.cc:71) */
+#define RTC_SANE_UNTIL 4102444800LL /* 2100-01-01 */
+
 bool hal_rtc_get(int64_t *unix_s) {
     bool valid = false;
-    return g_rtc && pcf8563_get(g_rtc, unix_s, &valid) == HAL_I2C_OK && valid;
+    int64_t local = 0;
+    if (!g_rtc || pcf8563_get(g_rtc, &local, &valid) != HAL_I2C_OK) return false;
+    if (!valid) {
+        /* VL: the oscillator may have stopped once. The factory firmware then waits for the network; a date inside its
+         * window is used here unverified (this unit's clock was right with VL set) and the next network time rewrites
+         * it, which clears VL. */
+        if (local < RTC_SANE_FROM || local >= RTC_SANE_UNTIL) return false;
+        static bool said;
+        if (!said) hal_log_write("board: RTC low-voltage flag set; using its time unverified until the network sets it");
+        said = true;
+    }
+    *unix_s = local - RTC_LOCAL_OFFSET_S;
+    return true;
 }
 
-bool hal_rtc_set(int64_t unix_s) { return g_rtc && pcf8563_set(g_rtc, unix_s) == HAL_I2C_OK; }
-bool hal_rtc_set_alarm(int64_t unix_s) { return g_rtc && pcf8563_set_alarm(g_rtc, unix_s) == HAL_I2C_OK; }
+bool hal_rtc_set(int64_t unix_s) { return g_rtc && pcf8563_set(g_rtc, unix_s + RTC_LOCAL_OFFSET_S) == HAL_I2C_OK; }
+bool hal_rtc_set_alarm(int64_t unix_s) { return g_rtc && pcf8563_set_alarm(g_rtc, unix_s + RTC_LOCAL_OFFSET_S) == HAL_I2C_OK; }
 void hal_rtc_clear_alarm(void) {
     if (g_rtc) pcf8563_clear_alarm(g_rtc);
 }
