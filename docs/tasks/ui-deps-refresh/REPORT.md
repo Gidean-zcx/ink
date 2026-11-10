@@ -13,7 +13,6 @@
 
 ## 没做到的
 
-- ASan/UBSan 全量正在准备，尚未作为完成证据。
 - 没有验证真实硬件、运营商、在线天气或真实中枢；此任务仅核对本地基线实现与已有报告，不修改缺失功能。
 
 ## 和设计不一致的
@@ -50,14 +49,25 @@
 
 - 【实测】开工时 HEAD 等于指定基线，工作区干净；在现有任务分支继续。
 - 【实测】§4.2、§4.3 以外原文逐字未变，产品代码 0 行，现有测试 0 行，没有新增任务、配置项、文件格式、状态机或框架。
+- 【实现】R-061：依赖列区分页面、原子能力、服务和平台边界；快照有无、语义迁移、秘密输入、人工确认和锁屏操作限制逐项保留，没有据页面存在就宣称 AI 能执行全部动作。本次不调整模块或能力注册。
 - 【实测】文档反向对照：对指定基线执行相同出处检查，23 行中 21 行没有代码／任务报告链接；更新后 77／77 有出处。用源码的 `.name` 和 `PAGE`／`OVERLAY` 登记检查 138 个名称，当前无遗漏；六种远程画面状态另在对应行列出。没有撤改产品代码或测试来做对照。
-- 【实测】普通配置、构建、全量均退出 0；原话 `100% tests passed out of 347`，381.11 秒。日志 `work/ui-deps-refresh/{configure,build,ctest}.log`；未启动窗口。
+- 【实测】普通配置、构建、全量均退出 0；原话 `100% tests passed out of 347`，381.11 秒，347 通过、0 失败、0 跳过。日志 `work/ui-deps-refresh/{configure,build,ctest}.log`；未启动窗口。
+- 【实测】ASan/UBSan 配置、构建、相同的全部 347 项测试均退出 0；原话 `100% tests passed out of 347`，982.76 秒，347 通过、0 失败、0 跳过。包含全部页面专项、成员／锁定边界、中枢契约、确定性及断电恢复，不是只跑定向用例。日志 `work/ui-deps-refresh/{configure-asan,build-asan,ctest-asan}.log`。实际 UI 编译参数含 `-Werror -fsanitize=address,undefined`；两套 CTest 和 LastTest 完整日志的 sanitizer 错误诊断均为 0。
 - S31：本次未编（只改文档）。`ink-codex/tools/gcccheck.py`：已读使用说明，本次无 C 文件变更，未运行，不能写成 GCC 通过。未运行 Linux CI。
-- ASan/UBSan、最终差异／隐私复核：待完成。
+- 【实测】结束检查：报告内附的文档检查原样执行通过；两份文档全部 168 处本地链接有效，77 行表格列数一致，文件均小于 5 MB。`git diff --check` 通过；基线差异仅两个指定 Markdown 文件。总规则 §6 原隐私正则无命中，grep 退出 1；本机路径、设备标识、设计稿和产物均未提交。仅本地提交，未推送。
 
-复现配置沿用总规则第 5 节字体、Python、LVGL 参数；两套额外均指定现有 `INK_HUB_PYTHON` 和只读 SDL2／ImGui 源码。内存目录仅改为 `build-asan` 并增加 `INK_SANITIZE=ON`，两套都为 `INK_WERROR=ON`。构建和全量测试依次执行，utility 优先级，最多 `-j2`。
+复现配置如下；内存目录仅改为 `build-asan` 并增加 `INK_SANITIZE=ON`，内存测试还设 `ASAN_OPTIONS=halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1`。构建和全量测试依次执行，utility 优先级，最多 `-j2`。
 
 ```sh
+taskpolicy -c utility cmake -S . -B build -DINK_WERROR=ON \
+  -DINK_CJK_FONT="$INK_DEPS/build-deps/fonts/NotoSansCJK-Regular.ttc" -DINK_CJK_FACE=2 \
+  -DINK_CJK_MEDIUM_FONT="$INK_DEPS/build-deps/fonts/NotoSansCJKsc-Medium.otf" \
+  -DINK_CJK_BOLD_FONT="$INK_DEPS/build-deps/fonts/NotoSansCJKsc-Bold.otf" \
+  -DPython3_EXECUTABLE="$INK_DEPS/build-deps/pyenv/bin/python" \
+  -DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python" \
+  -DFETCHCONTENT_SOURCE_DIR_LVGL="$INK_DEPS/build/_deps/lvgl-src" \
+  -DFETCHCONTENT_SOURCE_DIR_IMGUI="$INK_DEPS/build/_deps/imgui-src" \
+  -DFETCHCONTENT_SOURCE_DIR_SDL2="$INK_DEPS/build/_deps/sdl2-src"
 taskpolicy -c utility cmake --build build -j2
 PYTHONPATH="$PWD/hub" SDL_VIDEODRIVER=dummy taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
 ```

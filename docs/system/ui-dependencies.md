@@ -117,8 +117,8 @@
 | 主页三屏和 Dock（`home`，成人／儿童） | 应用注册、卡片、手势、时间、儿童策略 | 有 | 今日、主屏、全部应用及 Dock 可用；全部应用可分页，按成员过滤。听、报纸、单词仍有空内容入口，不能算应用已实现 | [主页实现](../../system/ui/shell/navigation.c#L496)、[主页入口](../../apps/home/home.c#L21) |
 | 今日屏编辑、长按图标（`TodayEdit`、`IconMenu`） | `app.cards`、成员数据、应用动作 | 有 | 选择／排序今日卡片、长按继续动作已接；只能展示应用实际提供的卡片 | [编辑页与菜单](../../system/ui/shell/navigation.c#L1935) |
 | 全局搜索、空结果、文件资料（`Search`、`SearchEmpty`、`SearchFile`） | `search.*`、应用／设置目录、成员数据、文件索引 | 有 | 五类本地结果分页并按对象版本打开；没有适配应用的文件只显示资料，不冒充已经打开内容 | [搜索页面](../../system/ui/search.c#L228)、[查询实现](../../system/ui/search.c#L58) |
-| 锁屏（`LockPage`） | 时间、通知、成员、壁纸 | 有 | 保留当前页、时钟和待办、壁纸三种样式；通知显示数量，正文须唤醒后查看；有相机和紧急呼叫入口 | [锁屏](../../system/ui/lock_mark.c#L60) |
-| 控制中心（`Control`、`KidControl`） | 状态、设置、通知、儿童策略 | 有 | Wi-Fi、蓝牙、勿扰、飞行模式、省电、音量、前光、色温及通知入口已接；孩子只显示受限控制项。蓝牙实机能力另验 | [控制中心](../../system/ui/shell/navigation.c#L890) |
+| 锁屏（`LockPage`） | 时间、通知、成员、壁纸 | 有 | 保留当前页、时钟、壁纸三种样式；时钟页显示下个闹钟和通知数量，正文须唤醒后查看；有相机和紧急呼叫入口 | [锁屏](../../system/ui/lock_mark.c#L60) |
+| 控制中心（`Control`、`KidControl`） | 状态、设置、通知、儿童策略 | 部分 | 网络入口、勿扰、叫名字、飞行模式、音量、前光、暖光及通知摘要已有；孩子只显示受限控制项。蓝牙和省电没有直接控制项，相关设置在其他页面 | [控制中心](../../system/ui/shell/navigation.c#L948) |
 | 通知列表（`Notifications`） | `notify.list/read/dismiss/clear` | 有 | 按成员分页，逐条已读、删除及清空；不再只是控制中心的两条摘要 | [通知列表](../../system/ui/shell/navigation.c#L1453)、[通知管理报告](../tasks/notify-manage/REPORT.md) |
 | 通知渠道（`SetNotifications`） | `notify.set_channel`、持久偏好 | 有 | 渠道开关、翻页及快照已接；关闭后不收新通知，已有通知保留，来电和闹钟照常；默认孩子不能修改 | [渠道页](../../system/ui/shell/navigation.c#L1169)、[报告](../tasks/notify-manage/REPORT.md) |
 | 设置首页（`Settings`） | 设置表、成员、各设置子页 | 有 | 已连接网络、蓝牙、显示、声音、语音、家人、锁屏、存储与关于页；不能再写“缺后端”概括全部 | [设置导航](../../system/ui/shell/navigation.c#L1134) |
@@ -147,7 +147,7 @@
 | 确认、过期及高优先级打断（`confirm`、`ConfirmExpired`、`interrupt`） | 确认事务、通知打断、成员及版本 | 有 | 人确认／取消、过期、来电和闹钟打断已有，快照由语义导出；AI 不能代人批准 | [确认卡](../../system/ui/shell/confirm_card.c#L190)、[打断卡](../../system/ui/shell/interrupt_card.c#L67)、[confirm-pages 报告](../tasks/confirm-pages/REPORT.md) |
 | 飞行模式拒绝及普通拒绝（`AirplaneOn`、`Refused`） | 设置、策略回执、返回 | 有 | 告知真实拒绝原因，成人可关闭飞行模式后重试；孩子不能绕过开关 | [拒绝浮层](../../system/ui/shell/airplane_card.c#L26) |
 | 键盘、文字编辑菜单（`Keyboard`） | 文本输入、剪贴板、听写、撤销／重做 | 部分 | 拼音候选、听写、选区动作及重做按钮已有；密码只能人输入，快照仍手写，不能称所有壳页已迁移语义合同 | [键盘快照及浮层](../../system/ui/shell/keyboard.c#L126)、[重做报告](../tasks/settings-small/REPORT.md) |
-| 电话、记录、通话、按键（`Phone`、`PhoneRecents`、`PhoneCall`、`PhoneKeypad`） | `call.*`、通话数据、打断、铃声 | 部分 | 拨号、来电、通话记录、静音／免提、分钟计时和失败状态已有；**通话声音、VoLTE 及真实模组仍待测**（RK-07、RK-18） | [电话页面](../../system/apps/phone/phone.c#L428)、[phone-calls 报告](../tasks/phone-calls/REPORT.md) |
+| 电话、记录、通话、按键（`Phone`、`PhoneRecents`、`PhoneCall`、`PhoneKeypad`） | `call.*`、通话数据、打断、铃声 | 部分 | 拨号、来电、记录、静音／耳机路由、分钟计时和失败状态已有；通话录音仍不可用；**通话声音、VoLTE 及真实模组仍待测**（RK-07、RK-18） | [电话页面](../../system/apps/phone/phone.c#L428)、[通话控制及录音缺口](../../system/services/comm/comm_service.c#L613) |
 | 联系人、编辑联系人（`PhoneContacts`、`ContactEdit`） | 成员数据、联系人能力、输入 | 有 | 持久联系人、分页、编辑、拨号／短信入口与快照已有 | [联系人页面](../../system/apps/contacts/contacts.c#L236)、[phone-2 报告](../tasks/phone-2/REPORT.md) |
 | 紧急呼叫（`PhoneEmergency`） | 锁定入口许可、`system.emergency_*`、临时射频 | 部分 | 锁屏、成员门及飞行模式下可进入受限拨号；AI 只开公开页，拨号／按键／挂断限本人；无 SIM 和真实呼叫均未上机验证 | [紧急浮层](../../system/apps/phone/phone.c#L63)、[合并验证报告](../tasks/cell-features-merge/REPORT.md) |
 | 短信、会话、撰写、长编辑（`Sms`、`SmsThread`、`SmsCompose`、`ImeLong`） | `sms.*`、`message.*`、成员数据、通知、草稿 | 部分 | 持久会话、发送结果、草稿、通知及长短信收发拼接已有；接口文本上限已是 765，不能再写 118 字或内存 16 条；真实模组与运营商分段待测 | [短信页面](../../system/apps/sms/sms.c#L219)、[发送合同](../../system/services/comm/comm_service.c#L658)、[长短信报告](../tasks/sms-multipart/REPORT.md) |
