@@ -69,6 +69,11 @@ bool ink_member_any_pin(void);
 /** Daily child allowance and the shared capability gate. */
 bool ink_member_time_up(void);
 bool ink_member_time_allows(const char *action_id);
+#define INK_KID_PERIODS 4
+typedef struct __attribute__((packed)) { uint16_t start, end; uint8_t days; } ink_kid_period_t;
+int ink_member_app_mode(const char *member, const char *app);
+bool ink_member_app_time_allows(const char *app);
+void ink_member_period(const char *member, int index, ink_kid_period_t *out);
 
 /* What a PIN does, on the background executor. Told how it went: */
 enum { INK_PIN_OK = 0, INK_PIN_WRONG = -1, INK_PIN_WAIT = -2, INK_PIN_NO_MEMBER = -3, INK_PIN_BAD_FORM = -4 };

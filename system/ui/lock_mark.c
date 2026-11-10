@@ -1,7 +1,8 @@
-/* Locked page or minute clock; touches remain disabled by the input service. */
+/* Locked page or minute clock, with a capture-only camera entry. */
 #include <stdio.h>
 
 #include "ink/sys/exec.h"
+#include "ink/sys/i18n.h"
 #include "ink/sys/notify.h"
 #include "ink/sys/power.h"
 #include "ink/sys/settings.h"
@@ -10,15 +11,15 @@
 #include "ink/ui_shell.h"
 #include "shell/activity_card.h"
 
-static lv_obj_t *g_mark, *g_clock;
+static lv_obj_t *g_mark, *g_clock, *g_label;
 static uint64_t g_unlock_cause;
 static int g_locked;
 static ink_exec_job_t g_job;
 
-static int snapshot(char *buf, size_t cap) { return snprintf(buf, cap, "设备已锁定，AI 无权读取。只能用电源键或 AI 键唤醒。"); }
+static int snapshot(char *buf, size_t cap) { return snprintf(buf, cap, "%s", TR("设备已锁定；可拍照：app.open(id=camera)。电源键或 AI 键唤醒。")); }
 static const ink_ui_overlay_t OVERLAY = {.name = "LockPage", .level = 2, .snapshot = snapshot};
 static const char *mark_text(void) {
-    return ink_setting_get("display.lock_style") == 0 && ink_activity_listening() ? "正在听，按电源键或 AI 键唤醒" : "已锁定，按电源键或 AI 键唤醒";
+    return ink_setting_get("display.lock_style") == 0 && ink_activity_listening() ? TR("正在听，按电源键或 AI 键唤醒") : TR("已锁定，按电源键或 AI 键唤醒");
 }
 
 static void update_clock(void) {
@@ -33,15 +34,19 @@ static void show(void) {
     if (g_mark) return;
     bool clock = ink_setting_get("display.lock_style") == 1;
     bool image = ink_setting_get("display.lock_style") == 2 && ink_wallpaper_ready();
+    int text_h = 2 * ink_ui_line_height(INK_FONT_NOTE);
+    int strip_h = text_h > INK_CONTROL ? text_h : INK_CONTROL;
     g_mark = clock || image ? lv_obj_create(lv_layer_sys()) : ink_ui_box(lv_layer_sys(), INK_MARGIN,
-             INK_CANVAS_H - INK_CONTROL - INK_GAP_S, INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, 0, INK_SURFACE_WHITE, false);
+             INK_CANVAS_H - strip_h - INK_GAP_S, INK_CANVAS_W - 2 * INK_MARGIN, strip_h, 0, INK_SURFACE_WHITE, false);
     if (clock || image) {
         lv_obj_remove_style_all(g_mark);
         lv_obj_set_size(g_mark, LV_PCT(100), LV_PCT(100));
     }
-    lv_obj_remove_flag(g_mark, LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_remove_flag(g_mark, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_add_flag(g_mark, LV_OBJ_FLAG_CLICKABLE);
     if (image) {
         ink_wallpaper_draw(g_mark);
+        ink_shell_camera_button(g_mark, false);
         ink_ui_overlay_add(&OVERLAY, g_mark); ink_ui_hint_obj(g_mark, INK_REFRESH_FLASH_UI);
         return;
     }
@@ -70,11 +75,14 @@ static void show(void) {
         ink_ui_line(notice, count, INK_FONT_LIST, INK_WEIGHT_BOLD, INK_ROW_DOUBLE, text_y, INK_CANVAS_W - 2 * INK_ROW_DOUBLE);
         ink_ui_line(notice, "唤醒后查看", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_ROW_DOUBLE, text_y + ink_ui_line_height(INK_FONT_LIST), INK_CANVAS_W - 2 * INK_ROW_DOUBLE);
     }
-    lv_obj_t *strip = clock ? ink_ui_box(g_mark, INK_MARGIN, INK_CANVAS_H - INK_CONTROL - INK_GAP_S,
-                                  INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, 0, INK_SURFACE_WHITE, false) : g_mark;
+    ink_shell_camera_button(g_mark, !clock);
+    lv_obj_t *strip = clock ? ink_ui_box(g_mark, INK_MARGIN, INK_CANVAS_H - strip_h - INK_GAP_S,
+                                  INK_CANVAS_W - 2 * INK_MARGIN, strip_h, 0, INK_SURFACE_WHITE, false) : g_mark;
     lv_obj_t *l = ink_ui_label(strip, mark_text(), INK_FONT_NOTE, INK_WEIGHT_REGULAR, 0,
-                               (INK_CONTROL - ink_ui_line_height(INK_FONT_NOTE)) / 2, INK_CANVAS_W - 2 * INK_MARGIN);
+                               (strip_h - ink_ui_line_height(INK_FONT_NOTE)) / 2, INK_CANVAS_W - 2 * INK_MARGIN - (clock ? 0 : INK_CIRCLE + INK_GAP));
+    lv_obj_align(l, LV_ALIGN_LEFT_MID, 0, 0);
     lv_obj_set_style_text_align(l, LV_TEXT_ALIGN_CENTER, 0);
+    g_label = l;
     ink_ui_overlay_add(&OVERLAY, g_mark);
     ink_ui_hint_obj(clock ? g_mark : strip, clock ? INK_REFRESH_UI : INK_REFRESH_FAST);
 }
@@ -83,7 +91,7 @@ static void hide(void) {
     ink_ui_hint_obj(g_mark, INK_REFRESH_TEXT);
     ink_ui_cause(g_unlock_cause, "power.unlock_to_visible_ms");
     ink_ui_overlay_remove(&OVERLAY);
-    lv_obj_delete(g_mark); g_mark = g_clock = NULL;
+    lv_obj_delete(g_mark); g_mark = g_clock = g_label = NULL;
 }
 static void sync_mark(void *arg) { (void)arg; if (__atomic_load_n(&g_locked, __ATOMIC_ACQUIRE)) show(); else hide(); }
 static void on_power(void *ctx, ink_power_state_t from, ink_power_state_t to, uint64_t cause_us) {
@@ -96,8 +104,8 @@ static void on_power(void *ctx, ink_power_state_t from, ink_power_state_t to, ui
 static void on_minute(void *ctx, int h, const char *id) { (void)ctx; (void)h; (void)id; update_clock(); }
 static void on_audio(void *ctx, int h, const char *id) {
     (void)ctx; (void)h; (void)id;
-    if (!g_mark || g_clock || ink_setting_get("display.lock_style") != 0) return;
-    lv_label_set_text(lv_obj_get_child(g_mark, 0), mark_text());
+    if (!g_label || g_clock || ink_setting_get("display.lock_style") != 0) return;
+    lv_label_set_text(g_label, mark_text());
     ink_ui_hint_obj(g_mark, INK_REFRESH_FAST);
 }
 int ink_ui_lock_mark_init(void) {

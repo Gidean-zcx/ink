@@ -194,7 +194,10 @@ static void run(void *arg) {
         CHECK(WAIT_FOR(!ink_member_exists(added), 10000), "confirmed removal completes");
         CHECK(AI("shell.kid_settings", NULL), "open child controls"); quiet();
         on_ui(read_snapshot);
-        CHECK(strstr(snapshot, "阅读、AI、主页") && strstr(snapshot, "电话和短信不限制"), "child page lists the allow policy and that phone and SMS are not limited (D-25)");
+        CHECK(strstr(snapshot, "应用名单") && strstr(snapshot, "family.kid_apps"), "child settings expose the real application-list page");
+        CHECK(AI("family.kid_apps", NULL) && g_rc.status == INK_RC_DONE, "read the actual application list"); quiet(); on_ui(read_snapshot);
+        CHECK(strstr(snapshot, "阅读") && strstr(snapshot, "电话") && strstr(snapshot, "禁用时段也能用"), "application list preserves required phone access (D-25)");
+        CHECK(AI("shell.back", NULL) && g_rc.status == INK_RC_DONE, "return to child settings"); quiet();
         press("孩子的音量上限"); confirm(); CHECK(WAIT_FOR(ink_setting_get("audio.child_max") == 70, 10000), "touch uses the existing child setting");
         CHECK(AI("settings.set", "{\"id\":\"audio.child_max\",\"value\":90}") && g_rc.status == INK_RC_PENDING_CONFIRMATION, "AI uses the same settings policy");
         confirm(); CHECK(WAIT_FOR(ink_setting_get("audio.child_max") == 90, 10000), "AI change reaches backend");

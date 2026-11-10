@@ -183,9 +183,11 @@ static const ink_cap_t NOTIFY_CAPS[] = {
      .title = "开关一个通知渠道",
      .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":15},\"enabled\":{\"type\":\"boolean\"}},\"required\":[\"id\",\"enabled\"]}",
      .effect = INK_FX_LOCAL_WRITE,
-     .child_ok = true,
+     .child_ok = false,
      .exec = INK_EXEC_BG,
      .run = cap_set_channel},
+    {.id = "notify.changed", .title = "通知列表有变化", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},
+    {.id = "notify.channels_changed", .title = "通知渠道有变化", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},
     {.id = "notify.posted", .title = "有新通知", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},
     {.id = "battery.low", .title = "电量低了（level 1 低，2 很低，3 马上关机，0 充上电了）", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},
 };

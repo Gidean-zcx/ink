@@ -71,7 +71,7 @@ bool ink_app_visible(const ink_app_def_t *def);
 ink_app_state_t ink_app_state_of(const char *id);
 const char *ink_app_state_name(ink_app_state_t s);
 /** UI task. Its page comes to the top, opened with `arg` if it was not open. `from` (an lv_obj_t, may be NULL): the control
- *  tapped, which shows it at once. 0, -1 no such app, -2 not for this member or device. */
+ *  tapped, which shows it at once. 0, -1 no such app, -2 not for this member/device, -3 disabled by a parent. */
 int ink_app_open(const char *id, void *from, void *arg);
 /** UI task. Save, stop, off the screen. 0, or -1 (no such app, or one that is kept). */
 int ink_app_close(const char *id);

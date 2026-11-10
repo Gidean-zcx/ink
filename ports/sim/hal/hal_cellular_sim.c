@@ -31,14 +31,19 @@ int hal_cell_radio(bool on, uint32_t reg_timeout_ms) {
     return r == NT26_OK ? 0 : r == NT26_NOT_REGISTERED ? 1 : -1;
 }
 
-int hal_cell_sms_send(const char *number, const char *utf8, uint32_t timeout_ms) {
-    return nt26_sms_send(number, utf8, timeout_ms) == NT26_OK ? 0 : -1;
+int hal_cell_sms_parts(const char *utf8) { return nt26_sms_split(utf8, NULL, 0, NULL); }
+
+int hal_cell_sms_send(const char *number, const char *utf8, uint32_t timeout_ms, int *sent) {
+    nt26_result_t r = nt26_sms_send_parts(number, utf8, timeout_ms, sent);
+    return r == NT26_OK ? 0 : r == NT26_NOT_SENT ? 1 : -1;
 }
 
-int hal_cell_sms_take(int index, char *number, int number_cap, char *utf8, int text_cap) {
-    if (nt26_sms_read(index, number, number_cap, utf8, text_cap) != NT26_OK) return -1;
+int hal_cell_sms_take(int index, hal_cell_sms_t *m) {
+    int concat[3];
+    if (nt26_sms_read_part(index, m->number, sizeof m->number, m->text, sizeof m->text, concat) != NT26_OK) return -1;
+    m->ref = concat[0], m->total = concat[1], m->seq = concat[2];
     nt26_sms_delete(index);
-    return (int)strlen(utf8);
+    return (int)strlen(m->text);
 }
 
 int hal_cell_dial(const char *number) { return nt26_dial(number) == NT26_OK ? 0 : -1; }

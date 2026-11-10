@@ -11,6 +11,8 @@
 #include "ink/probe.h"
 #include "ink/sys/appreg.h"
 #include "ink/sys/cap.h"
+#include "ink/sys/camera.h"
+#include "ink/sys/power.h"
 #include "ink/sys/confirm.h"
 #include "ink/sys/data.h"
 #include "ink/sys/svc.h"
@@ -18,6 +20,7 @@
 #include "ink/sys/json.h"
 #include "ink/sys/layout.h"
 #include "ink/sys/members.h"
+#include "ink/sys/i18n.h"
 #include "ink/sys/ui.h"
 #include "ink/ui_shell.h"
 #include "ink/sys/sha256.h"
@@ -51,7 +54,7 @@ const ink_cap_t *ink_cap_find(const char *id) {
     return NULL;
 }
 
-static bool on_its_page(const ink_cap_t *c) { return !c->activity || (ink_ui_page_current() && !strcmp(ink_ui_action_page(), c->activity)); }
+static bool on_its_page(const ink_cap_t *c) { return !c->activity || ((ink_ui_page_current() || ink_camera_restricted()) && !strcmp(ink_ui_action_page(), c->activity)); }
 
 static bool in_directory(const char *id); /* the hub's directory, below */
 
@@ -102,6 +105,7 @@ static ink_rc_t gate(const ink_cap_t *c, ink_source_t src, uint32_t page_gen, bo
     if (!exposed(c, src)) return reject(rc, INK_RC_INVALID, "not offered to this caller");
     const ink_member_t *m = ink_member_current();
     if (m->role == INK_ROLE_CHILD) {
+        if (!ink_member_allows(c->id, true)) return reject(rc, INK_RC_REJECTED, TR("家长没有打开这个应用"));
         if (!ink_member_time_allows(c->id)) return reject(rc, INK_RC_REJECTED, "today\'s time is up");
         if (c->effect == INK_FX_SYSTEM && !(c->child_ok && (src == INK_SRC_TOUCH || src == INK_SRC_KEY))) { /* turning it off is anyone's who holds it */
             ink_probe_count("policy.rejected");
@@ -112,8 +116,12 @@ static ink_rc_t gate(const ink_cap_t *c, ink_source_t src, uint32_t page_gen, bo
             return reject(rc, INK_RC_REJECTED, "not on this child's whitelist");
         }
     }
-    if (!ink_member_space_open() && src != INK_SRC_SYSTEM) { /* an adult's space, closed: what comes through is what cannot wait, and from a person */
-        if (src == INK_SRC_AI || src == INK_SRC_REMOTE || src == INK_SRC_APP || !c->while_locked) {
+    bool camera_locked = ink_camera_restricted() || (ink_power_state() == INK_PWR_LOCKED &&
+        (src == INK_SRC_AI || src == INK_SRC_REMOTE || src == INK_SRC_APP) &&
+        (!strncmp(c->id, "camera.", 7) || !strncmp(c->id, "photo.", 6) || !strncmp(c->id, "file.", 5) || !strcmp(c->id, "app.open")));
+    if ((!ink_member_space_open() || camera_locked) && src != INK_SRC_SYSTEM) {
+        bool camera_exit = ink_camera_restricted() && (!strcmp(c->id, "shell.back") || !strcmp(c->id, "system.home"));
+        if (src == INK_SRC_AI || src == INK_SRC_REMOTE || src == INK_SRC_APP || (!c->while_locked && !camera_exit)) {
             ink_probe_count("policy.rejected");
             return reject(rc, INK_RC_REJECTED, "this member's space is locked");
         }

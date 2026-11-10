@@ -278,7 +278,7 @@ int ink_args_from_json(ink_args_t *a, const char *json, size_t len, const char *
             } else put = ink_args_int(a, key, x);
         } else put = add_text(a, key, INK_ARG_JSON, raw, rawn);
         if (put) {
-            snprintf(why, why_cap, "arguments too long");
+            snprintf(why, why_cap, "arguments exceed the %d-byte text table; nothing executed", INK_ARGS_TEXT);
             goto out;
         }
         i = skip(j, vt);

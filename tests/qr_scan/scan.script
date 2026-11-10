@@ -1,0 +1,4 @@
+@0 net wifi
+@0 ap add qr-test -40 FAKE-qr-secret
+@0 ap add qr;test -45 FAKE;secret
+@120s end

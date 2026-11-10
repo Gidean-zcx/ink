@@ -1,5 +1,28 @@
 # English. One entry per line: Chinese (the key in the code) <TAB> English. See tools/i18n/i18n_gen.py.
 @name	English
+# notification management
+删除	Delete
+全部已读	Mark all read
+全部清除	Clear all
+还没有通知	No notifications yet
+关闭后不再收进新通知，已有通知保留。电话和闹钟照常。	New notifications will not be added when off. Existing ones stay. Calls and alarms work as usual.
+系统	System
+短信	Messages
+电话	Calls
+闹钟	Alarms
+下载	Downloads
+AI	AI
+已存的网络	Saved networks
+正在读取网络	Loading networks
+网络列表暂时读不出来	Cannot read saved networks
+还没有已存的网络	No saved networks
+已存	Saved
+连接	Connect
+忘掉	Forget
+剪切	Cut
+粘贴	Paste
+撤销	Undo
+重做	Redo
 # first boot (boot_flow.c)
 你好	Hello
 选一个 Wi-Fi	Choose Wi-Fi
@@ -83,3 +106,166 @@
 关于和更新	About & Updates
 语言	Language
 飞行模式	Airplane mode
+日期和时间	Date & Time
+手动设置	Set Manually
+时区	Time Zone
+离开多久要重新验证	Verify After Leaving
+选择免密码时长	Choose how long to stay verified
+年	Year
+月	Month
+日	Day
+时	Hour
+分	Minute
+1 分钟	1 min
+2 分钟	2 min
+5 分钟	5 min
+15 分钟	15 min
+已选择	Selected
+自动设置日期和时间	Automatic Date & Time
+自动设置时区	Automatic Time Zone
+选择城市或地区	Choose City or Region
+自动	Automatic
+手动	Manual
+时间尚未设置	Time is not set
+等待网络提供时区	Waiting for network time zone
+使用 24 小时制；夏令时自动调整	24-hour time; daylight saving adjusts automatically
+保存日期和时间	Save Date & Time
+中国 · 上海	China · Shanghai
+协调世界时	Coordinated Universal Time
+日本 · 东京	Japan · Tokyo
+中国 · 香港	China · Hong Kong
+新加坡	Singapore
+英国 · 伦敦	UK · London
+法国 · 巴黎	France · Paris
+美国 · 纽约	USA · New York
+美国 · 洛杉矶	USA · Los Angeles
+上一页	Previous
+下一页	Next
+
+# reminder editor (calendar.c)
+%s：%d	%s: %d
+不重复	Once
+保存提醒	Save reminder
+内容	Content
+农历每年	Every lunar year
+减少	Decrease
+删除提醒	Delete reminder
+加一件	Add an event
+增加	Increase
+工作日	Weekdays
+提示	Message
+提醒	Reminder
+提醒内容	Reminder content
+查看	View
+每周	Every week
+每天	Every day
+每年	Every year
+每月	Every month
+请填写内容（最多15个字）并选择将来的时间	Enter up to 15 characters and choose a future time
+输入内容	Enter content
+选好了	Done
+重复	Repeat
+完成 %zu/%zu，失败 %zu	Completed %zu/%zu, failed %zu
+这个名字已存在，请换一个	This name exists. Choose another.
+正在处理选中的文件	Processing selected files
+请输入名称，不能以点开头或含 /	Enter a name without a leading dot or /
+文本文件名必须以 .txt 结尾	Text file names must end in .txt
+草稿引用未能保存	Could not save the draft reference
+保存	Save
+暂时打不开文本编辑器	Cannot open the text editor
+文本超过 4095 字节，无法编辑	Text exceeds 4095 bytes and cannot be edited
+选择文件	Select file
+未选择	Not selected
+编辑文本	Edit text
+新建文本.txt	New text.txt
+名称	Name
+新建文本	New text
+新建文件夹	New folder
+取消多选	Cancel selection
+多选	Select
+全选	Select all
+拷贝	Copy
+移动	Move
+处理选中的文件	Process selected files
+未完成：%s\n	Failed: %s\n
+已处理 %lld/%lld	Processed %lld/%lld
+全部完成	All completed
+正在听，按电源键或 AI 键唤醒	Playing. Wake with power or AI
+已锁定，按电源键或 AI 键唤醒	Locked. Wake with power or AI
+设备已锁定；可拍照：app.open(id=camera)。电源键或 AI 键唤醒。	Device locked; camera: app.open(id=camera). Wake with the power or AI key.
+本次已拍 %u 张	%u photos this session
+本次 %u 张，正在看第 %u 张	%u photos this session, viewing %u
+查看本次锁屏拍的下一张照片	View the next photo from this lock session
+锁屏相机；取景；本次已拍 %u 张；动作：camera.preview、camera.photo、camera.review、shell.back。	Lock camera; viewfinder; %u photos this session; actions: camera.preview, camera.photo, camera.review, shell.back.
+
+# Child application and time policy
+家长没有打开这个应用	Your parent has not enabled this app
+只有大人能改孩子的设置	Only adults can change child settings
+应用名单	Allowed Apps
+禁用时段	Restricted Hours
+禁用时段也能用	Available during restricted hours
+可用	Available
+不开放	Disabled
+选择能用的应用	Choose allowed apps
+选择时间和星期	Choose times and weekdays
+时段 %d，共 %d 段	Period %d of %d
+选择时段	Choose period
+开始时间	Start time
+结束时间	End time
+启用时段	Enable period
+星期日	Sunday
+星期一	Monday
+星期二	Tuesday
+星期三	Wednesday
+星期四	Thursday
+星期五	Friday
+星期六	Saturday
+阅读	Reading
+时钟	Clock
+备忘	Notes
+计算器	Calculator
+天气	Weather
+文件	Files
+相机	Camera
+相册	Photos
+对话记录	Conversations
+开	On
+关	Off
+接下来	Upcoming
+计时	Timer
+秒表	Stopwatch
+世界时钟	World Clock
+正在计时	Running
+已暂停	Paused
+未开始	Not started
+暂停	Pause
+继续	Resume
+开始	Start
+计次	Lap
+清零	Reset
+%02d:%02d · %+d 小时 · %s	%02d:%02d · %+d hours · %s
+第二天	Next day
+前一天	Previous day
+同一天	Same day
+没能读取城市，请返回重试	Could not read cities. Go back and try again.
+第 %u 次	Lap %u
+重新启动后秒表会清零	Restarting clears the stopwatch
+还没有城市，点下面加一个	No cities yet. Add one below.
+最多计次99条	Up to 99 laps
+加城市	Add City
+最多选6个城市	Choose up to 6 cities
+扫码	Scan QR code
+正在识别二维码	Reading QR code
+没有识别到可用的二维码，请对准后重试	No usable QR code found. Aim at a code and try again.
+是否执行下面的操作？	Perform the action below?
+设备没有浏览器，可以复制网址	This device has no browser. You can copy the URL.
+可以复制文字	You can copy the text.
+再扫一次	Scan again
+已识别，请查看扫码结果	QR code read. Check the result.
+保存联系人	Save contact
+执行扫码结果中的操作	Use QR code result
+执行扫码操作：{content}	Use QR code result: {content}
+类型	Type
+复制	Copy
+连接 Wi-Fi	Connect to Wi-Fi
+拨打电话	Call

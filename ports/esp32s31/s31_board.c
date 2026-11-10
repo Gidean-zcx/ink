@@ -1,9 +1,7 @@
 /*
  * The Plus's I2C chips on the S31 through the portable drivers, in the simulator's boot order
  * (sim_board_init: expander, then sim_power_chips_init, sim_sensors_init; touch in sim_input_init),
- * plus the front light on LEDC and the GPIO2 service. Key and touch events are not dispatched yet
- * (hal_input is still a stub): GPIO2 only counts accelerometer motion and reads the expander so
- * its INT lets go.
+ * plus the front light on LEDC. The input task owns GPIO2/5 and calls the sensor latch reader.
  */
 #include "bq27220/bq27220.h"
 #include "cx25601n/cx25601n.h"
@@ -14,21 +12,32 @@
 #include "metalio_plus/metalio_board.h"
 #include "pcf8563/pcf8563.h"
 #include "s31_board.h"
+#include "s31_io.h"
 #include "sc7a20h/sc7a20h.h"
 
 #define LIGHT_BITS LEDC_TIMER_10_BIT
 #define LIGHT_MAX ((1u << 10) - 1)
 
 static hal_i2c_dev_t *g_gauge, *g_charger, *g_rtc, *g_accel, *g_touch;
-static volatile uint32_t g_motions;
+static uint32_t g_motions;
 static bool g_light;
 
-static void gpio2_service(void *ctx) { /* irq task: expander INT and accelerometer INT1 share GPIO2 */
-    (void)ctx;
+bool s31_accel_take_motion(void) {
     bool moved = false;
-    if (g_accel && sc7a20h_motion(g_accel, &moved) == HAL_I2C_OK && moved) g_motions = g_motions + 1;
-    uint8_t levels;
-    if (metalio_board_ready() && metalio_board_read(1, &levels) == HAL_I2C_OK) metalio_board_read(0, &levels);
+    if (!g_accel || sc7a20h_motion(g_accel, &moved) != HAL_I2C_OK || !moved) return false;
+    __atomic_add_fetch(&g_motions, 1, __ATOMIC_ACQ_REL);
+    return true;
+}
+
+bool s31_accel_sleep(bool watch) {
+    bool moved;
+    if (!g_accel) return !watch;
+    if (watch) return sc7a20h_motion(g_accel, &moved) == HAL_I2C_OK && sc7a20h_motion_watch(g_accel) == HAL_I2C_OK;
+    return sc7a20h_sleep(g_accel) == HAL_I2C_OK && sc7a20h_motion(g_accel, &moved) == HAL_I2C_OK;
+}
+
+void s31_accel_resume(void) {
+    if (g_accel && sc7a20h_init(g_accel) != HAL_I2C_OK) hal_log_write("board: accelerometer restore failed");
 }
 
 static bool light_init(void) {
@@ -66,7 +75,8 @@ void ink_s31_board_init(void) { /* boot, task context */
         hal_log_write("board: FT6336U did not answer as expected");
         g_touch = NULL;
     }
-    if (s31_irq_watch(S31_GPIO_EXP_INT, gpio2_service, NULL)) hal_log_write("board: GPIO2 interrupt setup failed");
+    s31_power_init();
+    s31_input_init(g_touch);
 }
 
 void hal_power_battery(hal_battery_t *out) {
@@ -96,7 +106,7 @@ void hal_rtc_clear_alarm(void) {
 }
 
 bool hal_accel_read(int *x_mg, int *y_mg, int *z_mg) { return g_accel && sc7a20h_read_mg(g_accel, x_mg, y_mg, z_mg) == HAL_I2C_OK; }
-uint32_t hal_accel_motion_count(void) { return g_motions; }
+uint32_t hal_accel_motion_count(void) { return __atomic_load_n(&g_motions, __ATOMIC_ACQUIRE); }
 
 static uint32_t duty(int permille) {
     if (permille < 0) permille = 0;

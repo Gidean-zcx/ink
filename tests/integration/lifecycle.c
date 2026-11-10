@@ -422,7 +422,7 @@ static void sms_checks(void) {
     int n = sim_net_sent_sms(0, number, sizeof number, sent, sizeof sent);
     CHECK(n == 1 && !strcmp(sent, text), "the modem has all of it (%d messages, %d bytes)", n, (int)strlen(sent));
 
-    for (int i = 0; i < 118; i++) memcpy(text + i * 3, "中", 3); /* the limit in the schema */
+    for (int i = 0; i < 118; i++) memcpy(text + i * 3, "中", 3); /* the old limit */
     text[118 * 3] = 0;
     ink_args_init(&a);
     CHECK(ink_args_str(&a, "to", "10086000000000000000") == 0 && ink_args_str(&a, "text", text) == 0, "what the schema allows fits the arguments, with the longest number");
@@ -432,12 +432,12 @@ static void sms_checks(void) {
     n = sim_net_sent_sms(1, number, sizeof number, sent, sizeof sent);
     CHECK(g_last.status == INK_RC_DONE && n == 2 && !strcmp(sent, text), "and arrives whole (%s, %d bytes)", ink_rc_name(g_last.status), (int)strlen(sent));
 
-    memcpy(text + 118 * 3, "中", 4); /* one character more */
-    ink_args_init(&a);
-    ink_args_str(&a, "to", "10086");
-    CHECK(ink_args_str(&a, "text", text) == 0, "one character more still fits the table");
+    static char longest[1100], arguments[1200]; /* direct text stays bounded by the argument table */
+    for (int i = 0; i < 5 * 67 + 1; i++) memcpy(longest + i * 3, "中", 4);
+    snprintf(arguments, sizeof arguments, "{\"to\":\"10086\",\"text\":\"%s\"}", longest);
+    o.args_json = arguments;
     replies = g_replies;
-    CHECK(ink_cap_call("message.send", &a, &o) == 0, "the schema decides");
+    CHECK(ink_cap_call("message.send", NULL, &o) == 0, "the argument boundary decides");
     for (int w = 0; w < 300 && g_replies == replies; w++) osal_task_delay_us(10000);
     CHECK(g_last.status == INK_RC_INVALID && sim_net_sent_sms(2, number, sizeof number, sent, sizeof sent) == 2, "it is refused, nothing goes out (%s)", g_last.detail);
 }

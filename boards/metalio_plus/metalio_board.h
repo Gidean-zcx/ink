@@ -28,6 +28,11 @@
 #define MB_P1_PWR_PULSE 0x08  /* power-off pulse to the power chip */
 #define MB_P1_SHARED_PWR 0x10 /* 4G + Bluetooth audio + amplifier supply, high = on */
 #define MB_P1_RTC_INT 0x40
+/* P16's level while the clock chip's interrupt is pending. Measured on our unit (docs/hardware/2026-11-10-selftest.md,
+ * round 6): 0 when idle, 1 while the timer flag is set. The vendor's board 1.4 code reads it active low
+ * (periph/metalio_rtc.cc:33-38; config.h:86 says 1.4 no longer goes through a MOSFET), so this unit likely does. */
+#define MB_RTC_INT_ACTIVE_HIGH 1
+#define MB_RTC_PENDING(p1) ((((p1) & MB_P1_RTC_INT) != 0) == (MB_RTC_INT_ACTIVE_HIGH != 0))
 #define MB_P1_POWER_KEY 0x80
 #define MB_P1_KEYS (MB_P1_VOL_UP | MB_P1_VOL_DOWN | MB_P1_POWER_KEY)
 
@@ -50,14 +55,14 @@ hal_i2c_status_t metalio_board_read(int port, uint8_t *levels);
 /* Light sleep, in upstream's order (power_hw_light_sleep_once and the board functions it calls,
  * @690a023): mask -> (GPIO2 idle high) -> arm_wake -> cut_rails -> sleep -> restore_keys -> (20 ms)
  * -> restore_rails. */
-/** Safe output levels first (the PMIC pins, P06, P07, P13, P15 low; the keys P10, P11, P17 high, their
- *  idle level; P16 high when it will be a wake input, else low; motor, amplifier, P05, P12 and P14 as
+/** Safe output levels first (the PMIC pins, P06, P07, P13, P15, P16 low; the keys P10, P11, P17 high,
+ *  their idle level; motor, amplifier, P05, P12 and P14 as
  *  they are), then every pin an output, then both ports read, so nothing on the expander holds INT
  *  (upstream ioexp_mask_for_sleep). Stop reading the keys before. */
 hal_i2c_status_t metalio_board_mask_for_sleep(bool rtc_wake);
 /** The wake inputs back as inputs, with INT idle: POWER P17 (upstream enable_power_wake_pin) and,
- *  when asked, RTC INT P16 (upstream leaves it masked and wakes by timer only). An input that is
- *  already active (a key held, an alarm pending) raises INT at once, so the sleep ends at once. */
+ *  when asked, RTC INT P16 (upstream leaves it masked and wakes by timer only). RTC's baseline is
+ *  read before POWER is enabled; an active RTC is rejected. The caller also checks shared INT. */
 hal_i2c_status_t metalio_board_arm_wake(bool power_key, bool rtc);
 /** The shared rails off in the official order: P05 (camera/screen) first, then P14 (4G, Bluetooth
  *  audio, amplifier) unless keep_shared_power. What hangs on them must be idle. */

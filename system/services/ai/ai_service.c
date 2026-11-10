@@ -47,6 +47,8 @@
 #define SNAPSHOT_CAP 3072
 #define STATE_CAP 2048 /* the system's state, with every question: what the AI knows without asking */
 #define ASK_TIMEOUT_US (45ull * 1000000ull)
+#define SPEECH_GAP_US (10ull * 1000000ull)
+#define TURN_LIMIT_US (600ull * 1000000ull)
 #define CAPTURE_LIMIT_US (30ull * 1000000ull)
 #define MAX_BUFFERED_FRAMES 512 /* ~30 s of speech captured before the link is online */
 
@@ -92,6 +94,7 @@ static struct {
     int tts_opened;   /* the last audio stream opened for the current turn (0 none): a failure told later */
 } AI;
 static bool g_turn_revoked INK_PSRAM_BSS; /* under AI.lock */
+static uint64_t g_turn_deadline INK_PSRAM_BSS; /* under AI.lock */
 static char g_turn_member[INK_MEMBER_ID_MAX] INK_PSRAM_BSS;
 static uint32_t g_turn_epoch INK_PSRAM_BSS;
 static ink_exec_job_t g_owner_job INK_PSRAM_BSS;
@@ -344,7 +347,13 @@ static void on_rt_frame(void *ctx, int sid, uint8_t kind, const uint8_t *opus, s
     uint8_t st = (uint8_t)sid;
     /* under the lock, so a press (new turn) cannot slip between the check and opening a stream */
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
-    if (turn_allowed() && st == AI.stream && AI.tts_done_for != st) { /* the current turn, its speech not ended yet */
+    if (turn_allowed() && st == AI.stream) {
+        uint64_t deadline = osal_now_us() + SPEECH_GAP_US;
+        ink_hub_renew(AI.req_id, deadline < g_turn_deadline ? deadline : g_turn_deadline);
+        if (AI.tts_done_for == st) { /* locally stopped: transport can still finish the turn */
+            osal_mutex_unlock(AI.lock);
+            return;
+        }
         if (AI.tts_stream <= 0 || AI.tts_for != st) {
             AI.tts_stream = ink_audio_stream_open(INK_AUDIO_PRIO_VOICE, AI.t_release, "ai.release_to_first_audio_heard_ms");
             AI.tts_for = st;
@@ -376,21 +385,24 @@ static void on_reply(void *ctx, int status, const ink_json_t *j, int result) { /
     int id = (int)(intptr_t)ctx;
     bool budget = status == INK_HUB_ERR_REMOTE && j && (ink_json_eq(j, ink_json_find(j, result, "message"), "budget") ||
         ink_json_eq(j, ink_json_find(j, result, "data.code"), "budget"));
-    post(id, status == INK_HUB_OK ? 1 : 2, status, budget ? "budget" : NULL);
-    ink_power_release(INK_NEED_NET); /* the turn is over (answer, error or timeout) */
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
     int sid = 0;
     if (AI.session && id == AI.session_seq) { /* the current turn: nothing more will come for it */
         free_buffered();
         AI.end_pending = AI.up_open = false;
         AI.drop_frames = true;
-        if (AI.tts_stream > 0) ink_audio_stream_finish(AI.tts_stream); /* an answer without an end of speech */
+        if (AI.tts_stream > 0) {
+            if (status == INK_HUB_OK) ink_audio_stream_finish(AI.tts_stream);
+            else ink_audio_stream_abort(AI.tts_stream);
+        }
         AI.tts_stream = 0;
         AI.tts_done_for = AI.stream;
         sid = take_session();
     }
+    post(id, status == INK_HUB_OK ? 1 : 2, status, budget ? "budget" : NULL);
     osal_mutex_unlock(AI.lock);
     if (sid) ink_rt_close(sid);
+    ink_power_release(INK_NEED_NET);
 }
 
 /* --------------------------------------------------------- voice uplink */
@@ -568,6 +580,9 @@ static int request(const char *method, bool voice) {
     }
     ink_jw_raw(&w, "}");
     ink_power_hold(INK_NEED_NET); /* no sleep while the answer is on its way */
+    osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
+    g_turn_deadline = osal_now_us() + TURN_LIMIT_US;
+    osal_mutex_unlock(AI.lock);
     int id = w.overflow ? -1 : ink_hub_call_for(method, params, ASK_TIMEOUT_US, on_reply, (void *)(intptr_t)AI.seq, member, epoch);
     if (id < 0) { /* no reply will come: the turn ends here */
         ink_power_release(INK_NEED_NET);

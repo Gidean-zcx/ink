@@ -40,6 +40,8 @@ int ink_hub_call(const char *method, const char *params_json, int64_t timeout_us
 /** A request built for a saved member boundary; never rebound after preparing its private payload. */
 int ink_hub_call_for(const char *method, const char *params_json, int64_t timeout_us, ink_hub_reply_fn cb, void *ctx,
                      const char *member, uint32_t epoch);
+/** Hub task only: move an in-flight request's deadline after receiving stream progress. */
+void ink_hub_renew(int id, uint64_t deadline_us);
 /** Receive notifications whose method starts with `prefix` (e.g. "ai."). Up to 8 subscribers. */
 int ink_hub_subscribe(const char *prefix, ink_hub_notify_fn fn, void *ctx);
 /** User activity: open the connection now if needed and keep it up for a while (pre-connect on key press). */
@@ -51,8 +53,11 @@ uint32_t ink_hub_connection(void);
 bool ink_hub_member_matches(const char *member, uint32_t epoch, uint32_t connection);
 void ink_hub_events_acked(void); /* validated event ACK: transport no longer holds private events */
 void ink_hub_on_member(void (*fn)(void)); /* realtime transport boundary; runs without socket work */
-/** What the hub said the time was when this connection came up, and how long that took to hear. False if it did not say. */
+/** The hub's clock now, carried forward from what it said at hello (add half the round trip for the one-way delay),
+ *  and how long that hello took. False if it did not say. */
 bool ink_hub_server_time(int64_t *unix_ms, uint32_t *round_trip_ms);
+/** Optional hello.time_zone (IANA name); absent data is never inferred from UTC. */
+bool ink_hub_server_zone(char *out, size_t cap);
 /** fn(ctx) in the hub task each time the connection is (re)established. Up to 4. */
 int ink_hub_on_online(void (*fn)(void *ctx), void *ctx);
 /** fn() in the hub task, whenever it is awake and online: what waits to go out goes now. One. */

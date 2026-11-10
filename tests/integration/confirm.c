@@ -35,7 +35,8 @@ static void page_run(ink_call_t *c) {
 }
 static int64_t g_hook_context, g_hook_bound;
 static int g_hook_prepares, g_hook_runs;
-static ink_rc_t ink_test_confirm_prepare(ink_args_t *args, ink_receipt_t *rc) {
+static ink_rc_t ink_test_confirm_prepare(ink_args_t *args, ink_receipt_t *rc, ink_source_t src) {
+    (void)src;
     g_hook_prepares++;
     if (!g_hook_context) {
         snprintf(rc->detail, sizeof rc->detail, "synthetic context is gone");

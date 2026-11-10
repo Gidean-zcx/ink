@@ -46,10 +46,10 @@ static uint32_t hold(const char *cap) {
 }
 static bool state(uint32_t token, const char *expected) {
     char args[64], match[64];
-    snprintf(args, sizeof args, "{\"token\":%u}", token);
+    snprintf(args, sizeof args, "{\"token\":%u}", (unsigned)token);
     snprintf(match, sizeof match, "\"state\":\"%s\"", expected);
     bool ok = AI("confirm.status", args) && g_rc.status == INK_RC_DONE && strstr(g_result, match);
-    CHECK(ok, "token %u expected %s, got %s", token, expected, g_result);
+    CHECK(ok, "token %u expected %s, got %.150s", (unsigned)token, expected, g_result);
     return ok;
 }
 static void changed_page(void) { ink_ui_content_changed(); }
@@ -63,16 +63,16 @@ static void automatic(void) {
     ink_hub_demand();
     CHECK(WAIT_FOR(ink_hub_online() && ink_hub_member_matches("owner", ink_hub_member_epoch(), ink_hub_connection()), 30000), "automatic gateway connected");
     char json[400];
-    snprintf(json, sizeof json, "{\"name\":\"test.auto\",\"arguments\":{},\"_meta\":{\"member\":\"owner\",\"epoch\":%u,\"request_id\":\"SYNTHETIC-AUTO\",\"asked\":true}}", ink_hub_member_epoch());
+    snprintf(json, sizeof json, "{\"name\":\"test.auto\",\"arguments\":{},\"_meta\":{\"member\":\"owner\",\"epoch\":%u,\"request_id\":\"SYNTHETIC-AUTO\",\"asked\":true}}", (unsigned)ink_hub_member_epoch());
     gateway(json, true);
 }
 static void test_send_tool(const char *name, const char *args, const char *rid) {
     char json[1024];
-    snprintf(json, sizeof json, "{\"name\":\"%s\",\"arguments\":%s,\"_meta\":{\"member\":\"owner\",\"epoch\":%u,\"request_id\":\"%s\",\"asked\":true}}", name, args ? args : "{}", ink_hub_member_epoch(), rid);
+    snprintf(json, sizeof json, "{\"name\":\"%s\",\"arguments\":%s,\"_meta\":{\"member\":\"owner\",\"epoch\":%u,\"request_id\":\"%s\",\"asked\":true}}", name, args ? args : "{}", (unsigned)ink_hub_member_epoch(), rid);
     gateway(json, true);
 }
 static bool query_done(uint32_t token) {
-    char args[64]; snprintf(args, sizeof args, "{\"token\":%u}", token);
+    char args[64]; snprintf(args, sizeof args, "{\"token\":%u}", (unsigned)token);
     return AI("confirm.status", args) && g_rc.status == INK_RC_DONE && strstr(g_result, "\"state\":\"done\"");
 }
 static void accept_and_switch(void *arg) { /* Same executor turn: acceptance is queued before the switch. */
@@ -92,7 +92,7 @@ static void result_cases(const char *phase) {
         CHECK(strstr(g_result, "\"status\":\"undone\""), "original undo receipt retained");
         CHECK(AI("notify.list", NULL) && !strstr(g_result, "SYNTHETIC-UNDO"), "notification actually removed");
         char json[600];
-        snprintf(json, sizeof json, "{\"title\":\"合成中枢确认\",\"body\":\"example.com 合成表单\",\"member\":\"owner\",\"parent\":false,\"expires_ms\":10000,\"digest\":\"%064d\",\"_meta\":{\"member\":\"owner\",\"epoch\":%u}}", 0, ink_hub_member_epoch());
+        snprintf(json, sizeof json, "{\"title\":\"合成中枢确认\",\"body\":\"example.com 合成表单\",\"member\":\"owner\",\"parent\":false,\"expires_ms\":10000,\"digest\":\"%064d\",\"_meta\":{\"member\":\"owner\",\"epoch\":%u}}", 0, (unsigned)ink_hub_member_epoch());
         gateway(json, false); ink_confirm_view_t card;
         CHECK(ink_confirm_list(&card, 1) == 1, "short hub card exists");
         CHECK(ink_confirm_decide(card.token, true, INK_SRC_TOUCH) == 0, "person accepts short hub card");
@@ -101,6 +101,7 @@ static void result_cases(const char *phase) {
         return;
     }
     if (!strcmp(phase, "capacity")) {
+        ink_power_hold(INK_NEED_NO_LOCK); /* This measures result retention, not idle sleep between 1200 writes. */
         uint32_t unacked = hold("test.confirm"), first = test_last_token() + 1, last = 0;
         CHECK(ink_confirm_decide(unacked, false, INK_SRC_TOUCH) == 0, "unacknowledged confirmation result");
         durable();
@@ -139,6 +140,7 @@ static void result_cases(const char *phase) {
         }
         durable(); state(pending, "rejected");
         CHECK(test_result_count() >= 30, "unacknowledged old results survive later ACKs (%u)", test_result_count());
+        ink_power_release(INK_NEED_NO_LOCK);
     } else {
         CHECK(test_result_count() >= 30 && test_result_count() < 50, "retained results survive restart (%u)", test_result_count());
         uint32_t token = test_last_token() + 1;
@@ -221,15 +223,15 @@ static void run(void *arg) {
         ink_hub_demand();
         CHECK(WAIT_FOR(ink_hub_online() && ink_hub_member_matches("owner", ink_hub_member_epoch(), ink_hub_connection()), 30000), "hub connected");
         char json[600];
-        snprintf(json, sizeof json, "{\"title\":\"合成中枢确认\",\"body\":\"example.com 合成表单\",\"member\":\"owner\",\"parent\":false,\"expires_ms\":60000,\"digest\":\"%064d\",\"_meta\":{\"member\":\"owner\",\"epoch\":%u}}", 0, ink_hub_member_epoch());
+        snprintf(json, sizeof json, "{\"title\":\"合成中枢确认\",\"body\":\"example.com 合成表单\",\"member\":\"owner\",\"parent\":false,\"expires_ms\":60000,\"digest\":\"%064d\",\"_meta\":{\"member\":\"owner\",\"epoch\":%u}}", 0, (unsigned)ink_hub_member_epoch());
         gateway(json, false); ink_confirm_view_t card;
         CHECK(ink_confirm_list(&card, 1) == 1 && !strcmp(card.title, "合成中枢确认"), "dedicated request creates card");
         CHECK(ink_confirm_decide(card.token, true, INK_SRC_TOUCH) == 0, "hub card accepted by person");
         delay_ms(500); durable(); state(card.token, "accepted"); CHECK(runs == 1, "hub capability never executes on device");
         CHECK(strlen(returned_digest) == 64 && strspn(returned_digest, "0") == 64, "hub result echoes the bound digest");
-        snprintf(json, sizeof json, "{\"title\":\"合成中枢确认\",\"body\":\"example.com 合成表单\",\"member\":\"kid\",\"parent\":false,\"expires_ms\":60000,\"digest\":\"%064d\",\"_meta\":{\"member\":\"kid\",\"epoch\":%u}}", 0, ink_hub_member_epoch());
+        snprintf(json, sizeof json, "{\"title\":\"合成中枢确认\",\"body\":\"example.com 合成表单\",\"member\":\"kid\",\"parent\":false,\"expires_ms\":60000,\"digest\":\"%064d\",\"_meta\":{\"member\":\"kid\",\"epoch\":%u}}", 0, (unsigned)ink_hub_member_epoch());
         gateway(json, false); CHECK(ink_confirm_list(&card, 1) == 0, "stale target rejected by dedicated request");
-        snprintf(json, sizeof json, "{\"title\":\"合成中枢确认\",\"body\":\"example.com 合成表单\",\"member\":\"owner\",\"parent\":false,\"expires_ms\":60000,\"digest\":\"%064d\",\"_meta\":{\"member\":\"owner\",\"epoch\":%u}}", 1, ink_hub_member_epoch());
+        snprintf(json, sizeof json, "{\"title\":\"合成中枢确认\",\"body\":\"example.com 合成表单\",\"member\":\"owner\",\"parent\":false,\"expires_ms\":60000,\"digest\":\"%064d\",\"_meta\":{\"member\":\"owner\",\"epoch\":%u}}", 1, (unsigned)ink_hub_member_epoch());
         uint32_t accepted = card.token;
         gateway(json, false);
         CHECK(ink_confirm_list(&card, 1) == 1, "second hub card queued");

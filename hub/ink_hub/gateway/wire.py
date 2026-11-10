@@ -8,7 +8,6 @@ PAGE_TOKENS = 110
 MAX_TEXT = 511
 ANSWER_CUT = "\n回答太长，只显示了前面部分。"  # the device's INK_AI_ANSWER_CUT
 ANSWER_BYTES = 32768 - len(ANSWER_CUT.encode("utf-8")) - 1  # what the device keeps of a turn (INK_AI_ANSWER_MAX) before it cuts
-SPEECH_BYTES = 1800  # what is read out of a turn
 HEADER = struct.Struct("<BBHIBB")
 
 

@@ -1,0 +1,6 @@
+set(CMAKE_SYSTEM_NAME Generic)
+set(CMAKE_TRY_COMPILE_TARGET_TYPE STATIC_LIBRARY)
+set(CMAKE_C_COMPILER "$ENV{HOME}/esp/.espressif/tools/riscv32-esp-elf/esp-15.2.0_20251204/riscv32-esp-elf/bin/riscv32-esp-elf-gcc")
+set(CMAKE_CXX_COMPILER "$ENV{HOME}/esp/.espressif/tools/riscv32-esp-elf/esp-15.2.0_20251204/riscv32-esp-elf/bin/riscv32-esp-elf-g++")
+set(CMAKE_C_FLAGS "-mabi=ilp32f -march=rv32imafc_zicsr_zifencei_zaamo_zalrsc_xesploop_xespv -mtune=esp-base -ffunction-sections -fdata-sections")
+set(CMAKE_CXX_FLAGS "${CMAKE_C_FLAGS} -ftls-model=local-exec")

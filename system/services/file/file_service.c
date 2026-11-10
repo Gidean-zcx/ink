@@ -1380,13 +1380,16 @@ int ink_fs_move_if_revision(const char *from, const char *to, uint32_t revision,
 }
 int ink_fs_move(const char *from, const char *to) { return ink_fs_move_if_revision(from, to, 0, NULL); }
 
-int ink_fs_write_atomic(const char *path, const void *data, size_t n) {
-    file_context_t c = current_context();
+int fs_write_atomic_for(const file_context_t *c, const char *path, const void *data, size_t n) {
     osal_mutex_lock(FS.edits, OSAL_WAIT_FOREVER);
     __atomic_add_fetch(&FS.revision, 1, __ATOMIC_RELAXED);
-    int r = fs_write_atomic_unlocked(&c, path, data, n);
+    int r = fs_write_atomic_unlocked(c, path, data, n);
     osal_mutex_unlock(FS.edits);
     return r;
+}
+int ink_fs_write_atomic(const char *path, const void *data, size_t n) {
+    file_context_t c = current_context();
+    return fs_write_atomic_for(&c, path, data, n);
 }
 
 static int restore_file(const char *member, unsigned stage, const char *path, const uint8_t expected_sha256[32], uint32_t revision) {

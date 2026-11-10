@@ -198,6 +198,7 @@ add_library(ink_system STATIC
   system/services/file/transfer.c
   system/services/time/lunar.c
   system/services/time/time_service.c
+  system/ui/shell/time_settings.c
   system/services/update/update_service.c
   system/ui/shell/update_card.c
   system/ui/shell/power_menu.c
@@ -374,8 +375,14 @@ add_custom_target(ink_ui_resource_check ALL
   COMMENT "Check required design icon geometry")
 add_dependencies(ink_system ink_ui_resource_check)
 # Interface languages: assets/i18n/<code>.tsv, checked and turned into a const lookup table.
-set(INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/system/ui/shell/boot_flow.c ${CMAKE_SOURCE_DIR}/system/ui/shell/navigation.c
-  ${CMAKE_SOURCE_DIR}/system/ui/shell/settings_pages.c)
+set(INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/system/ui/shell/boot_flow.c ${CMAKE_SOURCE_DIR}/system/ui/shell/navigation.c ${CMAKE_SOURCE_DIR}/system/ui/shell/keyboard.c
+  ${CMAKE_SOURCE_DIR}/system/ui/shell/settings_pages.c ${CMAKE_SOURCE_DIR}/system/ui/shell/time_settings.c
+  ${CMAKE_SOURCE_DIR}/system/ui/shell/settings_family.c ${CMAKE_SOURCE_DIR}/system/services/time/time_service.c
+  ${CMAKE_SOURCE_DIR}/system/apps/calendar/calendar.c ${CMAKE_SOURCE_DIR}/system/apps/files/files.c
+  ${CMAKE_SOURCE_DIR}/system/services/file/file_caps.c ${CMAKE_SOURCE_DIR}/system/apps/clock/clock.c
+  ${CMAKE_SOURCE_DIR}/system/apps/camera/camera.c ${CMAKE_SOURCE_DIR}/system/apps/camera/scan.c
+  ${CMAKE_SOURCE_DIR}/system/policy/cap.c ${CMAKE_SOURCE_DIR}/system/policy/members.c
+  ${CMAKE_SOURCE_DIR}/system/ui/app_registry.c ${CMAKE_SOURCE_DIR}/system/ui/lock_mark.c)
 add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h
   COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/i18n/i18n_gen.py ${INK_I18N_TABLES}
           --header ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h --sources ${INK_I18N_SOURCES}
@@ -641,6 +648,10 @@ target_link_libraries(sim-boot-flow PRIVATE ink_apps ink_system)
 add_test(NAME boot-flow COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/boot_flow_check.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(boot-flow PROPERTIES TIMEOUT 200)
 ink_sim_executable(sim-i18n-lang tests/i18n_lang.c)
+ink_sim_executable(sim-time-settings tests/time_settings.c)
+target_link_libraries(sim-time-settings PRIVATE ink_apps ink_system)
+add_test(NAME time-settings COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/time_settings.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(time-settings PROPERTIES TIMEOUT 200)
 target_link_libraries(sim-i18n-lang PRIVATE ink_apps ink_system)
 add_test(NAME i18n-lang COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/i18n_check.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(i18n-lang PROPERTIES TIMEOUT 300)
@@ -1332,6 +1343,10 @@ target_link_libraries(sim-contacts PRIVATE ink_apps ink_system)
 add_test(NAME contacts COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/contacts/run.py
   $<TARGET_FILE:sim-contacts> ${CMAKE_SOURCE_DIR} ${INK_ASSETS_DIR} ${INK_TEST_CONTENT} ${CMAKE_BINARY_DIR}/test-out/contacts)
 ink_sim_executable(sim-clock-alarm tests/clock_alarm.c)
+ink_sim_executable(sim-clock-extras tests/clock_extras.c)
+target_link_libraries(sim-clock-extras PRIVATE ink_apps ink_system)
+add_test(NAME clock-extras COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/clock_extras.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(clock-extras PROPERTIES TIMEOUT 240)
 target_link_libraries(sim-clock-alarm PRIVATE ink_apps ink_system)
 add_test(NAME clock-alarm COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/clock_alarm.py --build ${CMAKE_BINARY_DIR})
 ink_sim_executable(sim-sound-clock tests/sound_clock.c)
@@ -1358,6 +1373,10 @@ add_test(NAME ai-answer-long COMMAND sim-ai-answer-long --profile ${CMAKE_SOURCE
   --script ${CMAKE_SOURCE_DIR}/tests/ai_answer_long/ai_answer_long.script --hub ${CMAKE_SOURCE_DIR}/tests/ai_answer_long/hub.json
   --budget ${CMAKE_SOURCE_DIR}/tests/ai_answer_long/budget.json
   --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT} --out ${CMAKE_BINARY_DIR}/test-out/ai-answer-long --quiet --no-random-outages)
+ink_sim_executable(sim-ai-speech-long tests/ai_speech_long/ai_speech_long.c)
+target_link_libraries(sim-ai-speech-long PRIVATE ink_apps ink_system)
+add_test(NAME ai-speech-long COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/ai_speech_long/run.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(ai-speech-long PROPERTIES TIMEOUT 180)
 target_sources(ink_system PRIVATE system/apps/phone/phone.c)
 ink_sim_executable(sim-phone-calls tests/phone_calls/phone_calls.c)
 target_link_libraries(sim-phone-calls PRIVATE ink_apps ink_system)
@@ -1374,6 +1393,14 @@ ink_sim_executable(sim-sms tests/sms/sms.c)
 target_link_libraries(sim-sms PRIVATE ink_apps ink_system)
 add_test(NAME sms COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/sms/run.py
   $<TARGET_FILE:sim-sms> ${CMAKE_SOURCE_DIR} ${INK_ASSETS_DIR} ${INK_TEST_CONTENT} ${CMAKE_BINARY_DIR}/test-out/sms)
+add_executable(nt26-pdu-test tests/sms_multipart/pdu_test.c drivers/chips/nt26/nt26.c)
+target_include_directories(nt26-pdu-test PRIVATE platform/include drivers/chips)
+target_compile_options(nt26-pdu-test PRIVATE ${INK_WARN})
+add_test(NAME unit-nt26-pdu COMMAND nt26-pdu-test)
+ink_sim_executable(sim-sms-multipart tests/sms_multipart/sms_multipart.c)
+target_link_libraries(sim-sms-multipart PRIVATE ink_apps ink_system)
+add_test(NAME sms-multipart COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/sms_multipart/run.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(sms-multipart PROPERTIES TIMEOUT 600)
 target_sources(ink_system PRIVATE system/apps/memo/memo.c)
 ink_sim_executable(sim-memo tests/memo/memo.c)
 target_link_libraries(sim-memo PRIVATE ink_apps ink_system)
@@ -1391,6 +1418,14 @@ set_tests_properties(settings-b PROPERTIES TIMEOUT 360)
 ink_sim_executable(sim-settings-gaps tests/settings_gaps.c)
 target_link_libraries(sim-settings-gaps PRIVATE ink_apps ink_system)
 add_test(NAME settings-gaps COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/settings_gaps.py --build ${CMAKE_BINARY_DIR})
+ink_sim_executable(sim-notify-manage tests/notify_manage.c)
+target_link_libraries(sim-notify-manage PRIVATE ink_apps ink_system)
+add_test(NAME notify-manage COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/notify_manage.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(notify-manage PROPERTIES TIMEOUT 400)
+ink_sim_executable(sim-settings-small tests/settings_small.c)
+target_link_libraries(sim-settings-small PRIVATE ink_apps ink_system)
+add_test(NAME settings-small COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/settings_small.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(settings-small PROPERTIES TIMEOUT 300)
 foreach(case b10-01 b10-02)
   if(case STREQUAL "b10-01")
     set(audit10_source sms_arrival)
@@ -1447,6 +1482,9 @@ target_sources(ink_system PRIVATE system/apps/calendar/calendar.c)
 ink_sim_executable(sim-calendar tests/calendar/calendar.c)
 target_link_libraries(sim-calendar PRIVATE ink_apps ink_system)
 add_test(NAME calendar COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/calendar/run.py --build ${CMAKE_BINARY_DIR})
+ink_sim_executable(sim-reminder-edit tests/reminder_edit/reminder_edit.c)
+target_link_libraries(sim-reminder-edit PRIVATE ink_apps ink_system)
+add_test(NAME reminder-edit COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/reminder_edit/run.py --build ${CMAKE_BINARY_DIR})
 
 target_sources(ink_system PRIVATE system/apps/calculator/calculator.c)
 ink_sim_executable(sim-calculator tests/calculator/calculator.c)
@@ -1469,6 +1507,9 @@ target_link_libraries(sim-files-app PRIVATE ink_apps ink_system)
 add_dependencies(sim-files-app sim-image)
 target_include_directories(sim-files-app PRIVATE ${CMAKE_BINARY_DIR}/generated)
 add_test(NAME files-app COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/files_app/run.py --build ${CMAKE_BINARY_DIR})
+ink_sim_executable(sim-files-ops tests/files_ops/files_ops.c)
+target_link_libraries(sim-files-ops PRIVATE ink_apps ink_system)
+add_test(NAME files-ops COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/files_ops/run.py --build ${CMAKE_BINARY_DIR})
 
 target_sources(ink_system PRIVATE system/apps/camera/camera.c system/apps/gallery/gallery.c)
 add_library(ink_camera_png STATIC system/apps/camera/png.c)
@@ -1476,6 +1517,12 @@ target_include_directories(ink_camera_png PRIVATE third_party/stb platform/inclu
 target_compile_options(ink_camera_png PRIVATE -w) # upstream stb implementation
 target_link_libraries(ink_camera_png PRIVATE ink_platform)
 target_link_libraries(ink_system PRIVATE ink_camera_png)
+add_library(ink_quirc STATIC third_party/quirc/quirc.c third_party/quirc/identify.c third_party/quirc/decode.c third_party/quirc/version_db.c)
+target_include_directories(ink_quirc PUBLIC third_party/quirc)
+target_link_libraries(ink_quirc PRIVATE ink_platform)
+target_compile_options(ink_quirc PRIVATE -include ${CMAKE_SOURCE_DIR}/system/apps/camera/quirc_alloc.h -w)
+target_sources(ink_system PRIVATE system/apps/camera/scan.c)
+target_link_libraries(ink_system PRIVATE ink_quirc)
 ink_sim_executable(sim-camera-gallery tests/camera_gallery/camera_gallery.c ${INK_IMAGE_FIXTURES})
 target_include_directories(sim-camera-gallery PRIVATE ${CMAKE_BINARY_DIR}/generated)
 target_link_libraries(sim-camera-gallery PRIVATE ink_apps ink_system)
@@ -1605,4 +1652,16 @@ ink_sim_executable(sim-perf-latency tests/perf_latency/device.c tests/perf_laten
 target_include_directories(sim-perf-latency PRIVATE ${CMAKE_BINARY_DIR}/generated)
 target_link_libraries(sim-perf-latency PRIVATE ink_apps ink_system)
 add_test(NAME perf-latency COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/perf_latency/run.py --build ${CMAKE_BINARY_DIR} --regression)
+ink_sim_executable(sim-lock-camera tests/lock_camera/lock_camera.c)
+target_link_libraries(sim-lock-camera PRIVATE ink_apps ink_system)
+add_test(NAME lock-camera COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/lock_camera/run.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(perf-latency PROPERTIES TIMEOUT 180)
+
+ink_sim_executable(sim-kid-apps tests/kid_apps.c)
+target_link_libraries(sim-kid-apps PRIVATE ink_apps ink_system)
+add_test(NAME kid-apps COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/kid_apps.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(kid-apps PROPERTIES TIMEOUT 300)
+ink_sim_executable(sim-qr-scan tests/qr_scan/device.c)
+target_include_directories(sim-qr-scan PRIVATE third_party/quirc)
+target_link_libraries(sim-qr-scan PRIVATE ink_apps ink_system)
+add_test(NAME qr-scan COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/qr_scan/run.py --build ${CMAKE_BINARY_DIR})

@@ -13,6 +13,7 @@
 #include "ink/sys/ai.h"
 #include "ink/sys/appreg.h"
 #include "ink/sys/cap.h"
+#include "ink/sys/camera.h"
 #include "ink/sys/i18n.h"
 #include "ink/sys/members.h"
 #include "ink/sys/json.h"
@@ -30,9 +31,10 @@
 
 typedef struct {
     char cap[48], args[192];
-    uint32_t epoch;
+    uint32_t epoch, member_epoch;
 } binding_t;
-typedef enum { PAGE_SETTINGS, PAGE_DISPLAY, PAGE_SOUND, PAGE_NETWORK, PAGE_NOTIFICATIONS } page_t;
+typedef enum { PAGE_SETTINGS, PAGE_DISPLAY, PAGE_SOUND, PAGE_NETWORK, PAGE_NOTIFICATIONS, PAGE_CHANNELS, PAGE_KNOWN } page_t;
+static const char *const CHANNEL_NOTE = TR_NOOP("关闭后不再收进新通知，已有通知保留。电话和闹钟照常。");
 static void create_page(lv_obj_t *screen, void *arg);
 static void destroy_page(void);
 static int page_snapshot(char *buf, size_t cap);
@@ -54,7 +56,11 @@ static const ink_activity_t PAGES[] = {
      .create = create_page,
      .destroy = destroy_page,
      .snapshot = page_snapshot,
-     .on_key = page_key}};
+     .on_key = page_key},
+    {.name = "SetNotifications", .create = create_page, .destroy = destroy_page, .snapshot = page_snapshot, .on_key = page_key},
+    {.name = "KnownNetworks", .create = create_page, .destroy = destroy_page, .snapshot = page_snapshot, .on_key = page_key}};
+
+#define KNOWN_NETWORKS_MAX 8
 
 static struct {
     lv_obj_t *home, *content, *dots, *clock, *date, *message;
@@ -69,9 +75,13 @@ static struct {
     char result[160], search[80];
     char wifi_ssid[6][40], picked_ssid[40];
     int wifi_count;
+    char known_ssid[KNOWN_NETWORKS_MAX][33];
+    int known_count;
+    uint32_t known_epoch;
     bool scan_busy;
     ink_notify_view_t control_items[2], notify_items[6];
-    int control_count;
+    int control_count, notify_capacity;
+    int channel_first, channel_end;
     ink_ui_list_t *notify_list;
     ink_ui_list_position_t notify_position;
     char notify_ids[6][32], notify_args[6][64];
@@ -101,6 +111,28 @@ static bool icon_close(void);
 static int today_init(void);
 static void kid_today_model(void);
 static void kid_volume_mark(lv_obj_t *slider, int top);
+static bool current_session(uint32_t epoch);
+
+static void known_reply(void *ctx, const ink_receipt_t *rc) {
+    if ((uint32_t)(uintptr_t)ctx != N.known_epoch || !current_session(N.epoch) || !N.page_body || N.page_id != PAGE_KNOWN) return;
+    N.known_count = -2;
+    ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
+    if (j && rc->status == INK_RC_DONE && rc->result && !ink_json_parse(j, rc->result, strlen(rc->result))) {
+        N.known_count = 0;
+        for (int i = 1; i < j->ntok && N.known_count < KNOWN_NETWORKS_MAX; i++)
+            if (ink_json_str(j, i, N.known_ssid[N.known_count], sizeof N.known_ssid[0]) >= 0) N.known_count++;
+    }
+    osal_free(j);
+    ink_ui_content_changed();
+    draw_page_body();
+}
+static void known_load(void *ctx, const char *id, const ink_args_t *args) {
+    (void)ctx; (void)id; (void)args;
+    if (!N.page_body || N.page_id != PAGE_KNOWN) return;
+    ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .reply_exec = INK_EXEC_UI, .done = known_reply,
+        .ctx = (void *)(uintptr_t)N.known_epoch};
+    if (ink_cap_call("wifi.list", NULL, &o)) { N.known_count = -2; draw_page_body(); }
+}
 
 static bool current_session(uint32_t epoch) {
     return epoch == __atomic_load_n(&N.session, __ATOMIC_ACQUIRE) && !strcmp(N.member, ink_member_current()->id) &&
@@ -140,8 +172,7 @@ static bool child(void) {
     return ink_member_current()->role == INK_ROLE_CHILD;
 }
 static bool kid_app_visible(const char *id) {
-    if (!strcmp(id, "settings") || !strcmp(id, "files") || !strcmp(id, "remote")) return false;
-    if (ink_member_time_up()) return !strcmp(id, "phone") || !strcmp(id, "message");
+    if (!strcmp(id, "settings")) return false;
     for (int i = 0; i < ink_app_count(); i++) {
         const ink_app_def_t *app = ink_app_at(i);
         if (strcmp(app->id, id)) continue;
@@ -194,7 +225,9 @@ static void binding_event(lv_event_t *e) {
         osal_free(b);
         return;
     }
-    if (!current_session(b->epoch)) return;
+    const ink_cap_t *cap = ink_cap_find(b->cap);
+    bool locked_action = (cap && cap->while_locked) || (ink_camera_restricted() && !strcmp(b->cap, "shell.back"));
+    if (!current_session(b->epoch) && (b->member_epoch != ink_member_epoch() || !locked_action)) return;
     ink_call_opts_t o = {.src = INK_SRC_TOUCH,
                          .args_json = b->args[0] ? b->args : NULL,
                          .reply_exec = INK_EXEC_UI,
@@ -216,6 +249,7 @@ void ink_shell_bind(lv_obj_t *obj, const char *cap, const char *json) {
     snprintf(b->cap, sizeof b->cap, "%s", cap);
     snprintf(b->args, sizeof b->args, "%s", json ? json : "");
     b->epoch = N.epoch;
+    b->member_epoch = ink_member_epoch();
     lv_obj_add_flag(obj, LV_OBJ_FLAG_CLICKABLE);
     if (lv_obj_get_style_radius(obj, 0) == LV_RADIUS_CIRCLE &&
         lv_obj_get_style_width(obj, 0) == lv_obj_get_style_height(obj, 0) &&
@@ -1131,6 +1165,25 @@ static void body_blocks(void) {
             group_row(g, "storage", TR("存储和备份"), "", 1, "shell.storage");
             group_row(g, "info", TR("关于和更新"), "", 2, "shell.about");
         }
+    } else if (N.page_id == PAGE_CHANNELS) {
+        const char *note = TR(CHANNEL_NOTE);
+        int h = notice_h(note);
+        if (block(h)) ink_ui_notice(N.page_body, note, F.y);
+        F.y += h + INK_GAP_L;
+        if (F.draw) N.channel_first = N.channel_end = -1;
+        const ink_notify_channel_t *ch;
+        for (int i = 0; (ch = ink_notify_channel_at(i)); i++) {
+            if (block(INK_CONTROL)) {
+                bool on = ink_notify_channel_on(ch->id);
+                char args[96];
+                snprintf(args, sizeof args, "{\"id\":\"%s\",\"enabled\":%s}", ch->id, on ? "false" : "true");
+                ink_shell_bind(ink_ui_toggle(N.page_body, TR(ch->title), on, INK_MARGIN, F.y, width(), NULL, NULL),
+                    "notify.set_channel", args);
+                if (N.channel_first < 0) N.channel_first = i;
+                N.channel_end = i + 1;
+            }
+            F.y += INK_CONTROL + INK_GAP_M;
+        }
     } else if (N.page_id == PAGE_DISPLAY) {
         if (block(INK_SLIDER))
             ink_ui_slider(N.page_body, "亮度", (int) ink_setting_get("display.light") / 10, INK_MARGIN, F.y, width(),
@@ -1237,7 +1290,33 @@ static void body_blocks(void) {
             }
             F.y -= heading_h();
         }
-        F.y += h;
+        F.y += h + INK_GAP_L;
+        if (block(INK_CONTROL)) group_row(group(1), "bell", TR("通知"), "", 0, "shell.notify_settings");
+        F.y += INK_CONTROL;
+    } else if (N.page_id == PAGE_KNOWN) {
+        char connected[33], state[24];
+        state_text("wifi.ssid", connected, sizeof connected);
+        state_text("wifi.state", state, sizeof state);
+        if (N.known_count <= 0) {
+            const char *text = TR(N.known_count == -1 ? TR_NOOP("正在读取网络") : N.known_count == -2 ? TR_NOOP("网络列表暂时读不出来") : TR_NOOP("还没有已存的网络"));
+            if (block(notice_h(text))) ink_ui_notice(N.page_body, text, F.y);
+        }
+        for (int i = 0; i < N.known_count; i++) {
+            int row = ink_ui_row_double(), h = row + INK_CONTROL;
+            if (block(h)) {
+                bool same = !strcmp(connected, N.known_ssid[i]);
+                const char *status = same && !strcmp(state, "connected") ? TR("已连接") : same && !strcmp(state, "joining") ? TR("正在连接网络") : TR("已存");
+                ink_ui_list_row(N.page_body, "wifi", N.known_ssid[i], status, INK_MARGIN, F.y, width(), false, NULL, NULL);
+                char args[224]; ink_jw_t w; ink_jw_init(&w, args, sizeof args);
+                ink_jw_raw(&w, "{\"ssid\":"); ink_jw_str(&w, N.known_ssid[i]); ink_jw_raw(&w, "}");
+                lv_obj_t *join = ink_ui_pill(N.page_body, TR("连接"), INK_MARGIN, F.y + row, (width() - INK_GAP) / 2, INK_CONTROL, false, NULL, NULL);
+                ink_shell_bind(join, "wifi.connect", args);
+                if (!ink_setting_get("wifi.enabled") || (same && (!strcmp(state, "connected") || !strcmp(state, "joining")))) lv_obj_add_state(join, LV_STATE_DISABLED);
+                ink_shell_bind(ink_ui_pill(N.page_body, TR("忘掉"), INK_MARGIN + (width() + INK_GAP) / 2, F.y + row,
+                    (width() - INK_GAP) / 2, INK_CONTROL, false, NULL, NULL), "wifi.forget", args);
+            }
+            F.y += h + INK_GAP_L;
+        }
     } else if (N.page_id == PAGE_NETWORK) {
         if (block(2 * INK_CONTROL)) {
             lv_obj_t *g = group(2);
@@ -1302,6 +1381,8 @@ static void body_blocks(void) {
                 (width() - INK_GAP) / 2, INK_CONTROL, false, NULL, NULL), "shell.launch", "{\"id\":\"boot\"}");
         }
         F.y += INK_CONTROL + INK_GAP_M;
+        if (block(INK_CONTROL)) group_row(group(1), "wifi", TR("已存的网络"), "", 0, "shell.known_networks");
+        F.y += INK_CONTROL + INK_GAP_M;
         for (int i = N.wifi_page * 2; i < N.wifi_count && i < (N.wifi_page + 1) * 2; i++) {
             if (block(INK_CONTROL))
                 ink_ui_pill(N.page_body, N.wifi_ssid[i], INK_MARGIN, F.y, width(), INK_CONTROL, false, wifi_picked,
@@ -1347,6 +1428,7 @@ static void body_page_clicked(lv_event_t *e) {
 static void notify_bind(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field,
                         ink_ui_action_spec_t *action, void *ctx) {
     (void)ctx;
+    if (!(index % (size_t)N.notify_capacity)) memset(N.notify_ids, 0, sizeof N.notify_ids);
     unsigned at = index % 6;
     ink_db_cursor_t cursor = {0};
     for (size_t i = 0; i <= index; i++) if (ink_notify_next(&cursor, &N.notify_items[at]) != 1) return;
@@ -1358,39 +1440,47 @@ static void notify_bind(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field
     *action = (ink_ui_action_spec_t){.id = N.notify_ids[at], .label = "打开通知", .capability = "shell.notify_open",
         .args_json = N.notify_args[at], .object = field->object, .enabled = true};
     int h = ink_ui_row_double(), text_y = (h - ink_ui_line_height(INK_FONT_LIST) - ink_ui_line_height(INK_FONT_NOTE)) / 2;
+    int delete_w = ink_ui_text_width(TR("删除"), INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * INK_GAP;
+    if (delete_w < INK_PRIMARY) delete_w = INK_PRIMARY;
+    int text_w = width() - INK_ROW_DOUBLE - delete_w - 2 * INK_GAP_L;
     if (!lv_obj_get_child_count(slot)) {
-        ink_ui_line(slot, "", INK_FONT_LIST, INK_WEIGHT_BOLD, INK_ROW_DOUBLE, text_y, width() - INK_ROW_DOUBLE - INK_MARGIN);
+        ink_ui_line(slot, "", INK_FONT_LIST, INK_WEIGHT_BOLD, INK_ROW_DOUBLE, text_y, text_w);
         ink_ui_line(slot, "", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_ROW_DOUBLE,
-            text_y + ink_ui_line_height(INK_FONT_LIST), width() - INK_ROW_DOUBLE - INK_MARGIN);
+            text_y + ink_ui_line_height(INK_FONT_LIST), text_w);
     }
     lv_label_set_text(lv_obj_get_child(slot, 0), n->title); lv_label_set_text(lv_obj_get_child(slot, 1), n->body);
-    if (lv_obj_get_child_count(slot) > 2) lv_obj_delete(lv_obj_get_child(slot, 2));
+    while (lv_obj_get_child_count(slot) > 2) lv_obj_delete(lv_obj_get_child(slot, 2));
     ink_ui_circle(slot, !strcmp(n->channel, "message") ? "message" : "bell", INK_GAP, (h - INK_CIRCLE) / 2,
         INK_CIRCLE, INK_ICON_LIST, INK_SURFACE_STATIC, NULL, NULL);
+    ink_shell_bind(ink_ui_pill(slot, TR("删除"), width() - delete_w - INK_GAP_M, (h - INK_CONTROL) / 2,
+        delete_w, INK_CONTROL, false, NULL, NULL), "notify.dismiss", N.notify_args[at]);
 }
 static void draw_page_body(void) {
     if (N.page_id == PAGE_NOTIFICATIONS) {
-        static const ink_ui_action_spec_t actions[] = {
-            {.id = "prev", .label = "上一页", .capability = "shell.notify_prev"},
-            {.id = "next", .label = "下一页", .capability = "shell.notify_next"},
-            {.id = "read_all", .label = "全部已读", .capability = "notify.read", .args_json = "{\"id\":0}", .enabled = true}};
-        static const ink_ui_page_spec_t page = {.id = "Notifications", .title = "通知", .object = {"notify:inbox", 0},
+        const ink_ui_action_spec_t actions[] = {
+            {.id = "prev", .label = TR("上一页"), .capability = "shell.notify_prev"},
+            {.id = "next", .label = TR("下一页"), .capability = "shell.notify_next"},
+            {.id = "read_all", .label = TR("全部已读"), .capability = "notify.read", .args_json = "{\"id\":0}", .enabled = true}};
+        const ink_ui_page_spec_t page = {.id = "Notifications", .title = TR("通知"), .object = {"notify:inbox", 0},
             .actions = actions, .action_count = 3};
         if (!N.notify_list) {
             int fits = (INK_CANVAS_H - INK_STATUS_BAR - INK_PRIMARY - INK_GAP_XS - INK_GAP_M - 2 * (INK_CONTROL + INK_GAP)) /
                 (ink_ui_row_double() + INK_GAP_M);
-            N.notify_list = ink_ui_list_create(N.page_body, &page, &N.notify_position, fits < 6 ? fits : 6, 1,
-                ink_ui_row_double(), "还没有通知", notify_bind, NULL);
-            lv_obj_t *read = ink_ui_pill(N.page_body, "全部已读", INK_MARGIN,
+            N.notify_capacity = fits < 4 ? fits : 4; /* Keep the actions inside the production AI snapshot. */
+            N.notify_list = ink_ui_list_create(N.page_body, &page, &N.notify_position, N.notify_capacity, 1,
+                ink_ui_row_double(), TR("还没有通知"), notify_bind, NULL);
+            lv_obj_t *read = ink_ui_pill(N.page_body, TR("全部已读"), INK_MARGIN,
                 INK_CANVAS_H - INK_STATUS_BAR - INK_PRIMARY - INK_GAP_XS - INK_CONTROL - INK_GAP_M,
                 (width() - INK_GAP) / 2, INK_CONTROL, false, NULL, NULL);
             ink_shell_bind(read, "notify.read", "{\"id\":0}");
-            ink_shell_bind(ink_ui_pill(N.page_body, "全部清除", INK_MARGIN + (width() + INK_GAP) / 2,
+            ink_shell_bind(ink_ui_pill(N.page_body, TR("全部清除"), INK_MARGIN + (width() + INK_GAP) / 2,
                 INK_CANVAS_H - INK_STATUS_BAR - INK_PRIMARY - INK_GAP_XS - INK_CONTROL - INK_GAP_M,
                 (width() - INK_GAP) / 2, INK_CONTROL, false, NULL, NULL), "notify.clear", NULL);
         }
         ink_db_cursor_t cursor = {0}; ink_notify_view_t n; size_t total = 0;
         while (ink_notify_next(&cursor, &n) == 1) total++;
+        /* the rows' ids are filled again as rows are bound; an empty list binds none, so clear them here */
+        memset(N.notify_ids, 0, sizeof N.notify_ids);
         if (N.notify_list) ink_ui_list_refresh(N.notify_list, total);
         return;
     }
@@ -1424,14 +1514,18 @@ static void create_page(lv_obj_t *screen, void *arg) {
     N.page = screen;
     N.page_id = (page_t) (intptr_t) arg;
     N.body_page = 0;
-    static const char *const titles[] = {TR_NOOP("设置"), TR_NOOP("显示和亮度"), TR_NOOP("声音"), TR_NOOP("网络和 SIM 卡"), TR_NOOP("通知")};
+    static const char *const titles[] = {TR_NOOP("设置"), TR_NOOP("显示和亮度"), TR_NOOP("声音"), TR_NOOP("网络和 SIM 卡"), TR_NOOP("通知"), TR_NOOP("通知"), TR_NOOP("已存的网络")};
+    _Static_assert(sizeof titles / sizeof *titles == sizeof PAGES / sizeof *PAGES, "page titles");
     ink_shell_statusbar(screen, true);
     ink_shell_topbar(screen, TR(titles[N.page_id]));
     N.page_body = ink_ui_box(screen, 0, INK_STATUS_BAR + INK_PRIMARY + INK_GAP_XS, INK_CANVAS_W,
                              INK_CANVAS_H - INK_STATUS_BAR - INK_PRIMARY - INK_GAP_XS, 0, INK_SURFACE_WHITE, false);
+    if (N.page_id == PAGE_KNOWN) { N.known_count = -1; N.known_epoch++; }
     draw_page_body();
+    if (N.page_id == PAGE_KNOWN) known_load(NULL, NULL, NULL);
 }
 static void destroy_page(void) {
+    if (N.page_id == PAGE_KNOWN) N.known_epoch++;
     if (N.page_id == PAGE_NETWORK) {
         N.picked_ssid[0] = 0;
         ink_text_blur(0);
@@ -1458,12 +1552,48 @@ static int page_snapshot(char *buf, size_t cap) {
     if (N.notify_list) {
         int n = ink_ui_list_snapshot(N.notify_list, buf, cap);
         if (n <= 0) return n;
-        int more = snprintf(buf + n - 1, cap - (size_t)n + 1,
-            ",\"clear_action\":{\"label\":\"全部清除\",\"capability\":\"notify.clear\",\"args_json\":\"{}\"}}");
-        return more < 0 || (size_t)more >= cap - (size_t)n + 1 ? -1 : n - 1 + more;
+        ink_jw_t w = {.buf = buf, .cap = cap, .len = (size_t)n - 1};
+        ink_jw_raw(&w, ",\"clear_action\":{\"label\":"); ink_jw_str(&w, TR("全部清除"));
+        ink_jw_raw(&w, ",\"capability\":\"notify.clear\",\"args_json\":\"{}\"},\"dismiss_actions\":[");
+        bool comma = false;
+        for (unsigned i = 0; i < sizeof N.notify_ids / sizeof *N.notify_ids; i++) if (N.notify_ids[i][0]) {
+            ink_jw_raw(&w, comma ? ",{\"object\":" : "{\"object\":");
+            ink_jw_str(&w, N.notify_ids[i]);
+            ink_jw_raw(&w, ",\"label\":"); ink_jw_str(&w, TR("删除"));
+            ink_jw_raw(&w, ",\"capability\":\"notify.dismiss\",\"args_json\":"); ink_jw_str(&w, N.notify_args[i]);
+            ink_jw_raw(&w, "}"); comma = true;
+        }
+        ink_jw_raw(&w, "]}");
+        return w.overflow ? -1 : (int)w.len;
+    }
+    if (N.page_id == PAGE_CHANNELS) {
+        ink_jw_t w; ink_jw_init(&w, buf, cap);
+        ink_jw_raw(&w, "{\"page\":\"SetNotifications\",\"page_number\":"); ink_jw_int(&w, N.body_page + 1);
+        ink_jw_raw(&w, ",\"pages\":"); ink_jw_int(&w, N.body_pages);
+        ink_jw_raw(&w, ",\"note\":"); ink_jw_str(&w, TR(CHANNEL_NOTE));
+        ink_jw_raw(&w, ",\"navigation\":[\"shell.page_prev\",\"shell.page_next\",\"shell.back\"],\"channels\":[");
+        for (int i = N.channel_first; i >= 0 && i < N.channel_end; i++) {
+            const ink_notify_channel_t *ch = ink_notify_channel_at(i);
+            bool on = ink_notify_channel_on(ch->id);
+            char args[96]; snprintf(args, sizeof args, "{\"id\":\"%s\",\"enabled\":%s}", ch->id, on ? "false" : "true");
+            ink_jw_raw(&w, i == N.channel_first ? "{\"id\":" : ",{\"id\":"); ink_jw_str(&w, ch->id);
+            ink_jw_raw(&w, ",\"label\":"); ink_jw_str(&w, TR(ch->title));
+            ink_jw_raw(&w, on ? ",\"enabled\":true" : ",\"enabled\":false");
+            ink_jw_raw(&w, ",\"capability\":\"notify.set_channel\",\"args_json\":"); ink_jw_str(&w, args);
+            ink_jw_raw(&w, "}");
+        }
+        ink_jw_raw(&w, "]}"); return w.overflow ? -1 : (int)w.len;
+    }
+    if (N.page_id == PAGE_KNOWN) {
+        char ssid[33], state[24]; state_text("wifi.ssid", ssid, sizeof ssid); state_text("wifi.state", state, sizeof state);
+        int n = snprintf(buf, cap, "KnownNetworks；已存=%d；第 %d 页，共 %d 页；", N.known_count, N.body_page + 1, N.body_pages);
+        for (int i = 0; i < N.known_count && n >= 0 && (size_t)n < cap; i++)
+            n += snprintf(buf + n, cap - (size_t)n, "%s=%s；", N.known_ssid[i], !strcmp(ssid, N.known_ssid[i]) ? state : "saved");
+        if (n >= 0 && (size_t)n < cap) n += snprintf(buf + n, cap - (size_t)n, "动作：wifi.connect(ssid)、wifi.forget(ssid)、system.undo(object,revision)、shell.page_next、shell.page_prev、shell.back。");
+        return n < 0 ? 0 : (size_t)n < cap ? n : (int)cap - 1;
     }
     if (N.page_id == PAGE_SOUND)
-        return snprintf(buf, cap, "SetSound；音量=%lld；勿扰=%lld；按键提示音(audio.key_tone)=%lld；振动(audio.vibration)=%lld；来电铃声(audio.call_ring)=%lld；闹钟铃声(audio.alarm_ring)=%lld；铃声：0清音、1双音、2柔音；settings.set(id,value)更改并试听；shell.page_next、shell.page_prev、shell.back。", (long long)ink_setting_get("audio.volume"), (long long)ink_setting_get("notify.dnd"), (long long)ink_setting_get("audio.key_tone"), (long long)ink_setting_get("audio.vibration"), (long long)ink_setting_get("audio.call_ring"), (long long)ink_setting_get("audio.alarm_ring"));
+        return snprintf(buf, cap, "SetSound；音量=%lld；勿扰=%lld；按键提示音(audio.key_tone)=%lld；振动(audio.vibration)=%lld；来电铃声(audio.call_ring)=%lld；闹钟铃声(audio.alarm_ring)=%lld；铃声：0清音、1双音、2柔音；settings.set(id,value)更改并试听；通知：shell.notify_settings；shell.page_next、shell.page_prev、shell.back。", (long long)ink_setting_get("audio.volume"), (long long)ink_setting_get("notify.dnd"), (long long)ink_setting_get("audio.key_tone"), (long long)ink_setting_get("audio.vibration"), (long long)ink_setting_get("audio.call_ring"), (long long)ink_setting_get("audio.alarm_ring"));
     int n = snprintf(buf, cap, "%s；当前=%s；亮度=%lld；暖光=%lld；音量=%lld；网络偏好=%lld；通知=%d。",
                      PAGES[N.page_id].name, ink_member_current()->name, (long long) ink_setting_get("display.light"),
                      (long long) ink_setting_get("display.warmth"), (long long) ink_setting_get("audio.volume"),
@@ -1494,7 +1624,7 @@ static int page_snapshot(char *buf, size_t cap) {
         }
     }
     const char *actions =
-        N.page_id == PAGE_NETWORK ? "动作：net.set_airplane、settings.set、wifi.scan、wifi.list、shell.back、shell.control、shell.wifi_"
+        N.page_id == PAGE_NETWORK ? "动作：shell.known_networks、net.set_airplane、settings.set、wifi.scan、wifi.list、shell.back、shell.control、shell.wifi_"
                                       "next、shell.wifi_prev、shell.wifi_pick；设置设备：shell.launch(id=boot)。"
                                     : N.page_id == PAGE_DISPLAY
                                         ? "动作：settings.set、shell.today_edit、shell.back、shell.control。"
@@ -1534,7 +1664,7 @@ static void cap_nav(ink_call_t *c) {
     } else if (!strcmp(c->cap->id, "shell.close"))
         ink_shell_close();
     else if (!strcmp(c->cap->id, "shell.back")) {
-        if (!ink_shell_close()) ink_ui_pop();
+        if (!ink_camera_close_locked() && !ink_shell_close()) ink_ui_pop();
     } else if (!strcmp(c->cap->id, "shell.members"))
         ink_shell_members_open(false);
     else if (!strcmp(c->cap->id, "shell.more")) {
@@ -1561,8 +1691,12 @@ static void cap_nav(ink_call_t *c) {
         ink_shell_open_page("SetSound");
     else if (!strcmp(c->cap->id, "shell.network"))
         ink_shell_open_page("SetNetwork");
+    else if (!strcmp(c->cap->id, "shell.known_networks"))
+        ink_shell_open_page("KnownNetworks");
     else if (!strcmp(c->cap->id, "shell.notifications"))
         ink_shell_open_page("Notifications");
+    else if (!strcmp(c->cap->id, "shell.notify_settings"))
+        ink_shell_open_page("SetNotifications");
     else if (!strcmp(c->cap->id, "shell.page_next"))
         turn_body(1);
     else if (!strcmp(c->cap->id, "shell.page_prev"))
@@ -1607,6 +1741,7 @@ static void cap_launch(ink_call_t *c) {
         ink_cap_invoke("shell.ai_home", NULL, c->src, 0, &c->rc);
         return;
     }
+    if (child() && !ink_member_app_mode(NULL, id)) { c->rc.status = INK_RC_REJECTED; snprintf(c->rc.detail, sizeof c->rc.detail, "%s", TR("家长没有打开这个应用")); return; }
     if (c->src == INK_SRC_TOUCH) ink_probe_count("home.taps");
     for (int i = 0; i < ink_app_count(); i++)
         if (!strcmp(ink_app_at(i)->id, id) && ink_app_at(i)->entry) {
@@ -1645,7 +1780,9 @@ static const ink_cap_t CAPS[] = {
     NAV("shell.display", "显示和亮度", false),
     NAV("shell.sound", "声音", false),
     NAV("shell.network", "网络和 SIM 卡", false),
+    NAV("shell.known_networks", "已存的网络", false),
     NAV("shell.notifications", "查看通知", true),
+    NAV("shell.notify_settings", "通知渠道设置", false),
     NAV("shell.page_next", "设置页的下一页", true),
     NAV("shell.page_prev", "设置页的上一页", true),
     NAV("shell.notify_next", "通知下一页", true),
@@ -1750,19 +1887,29 @@ static const ink_setting_def_t SETTINGS[] = {
      .child_may_change = true}};
 
 int ink_shell_ai_init(void);
+static void notify_changed(void *ctx, const char *id, const ink_args_t *args) {
+    (void)ctx; (void)args;
+    if (current_session(N.epoch) && N.page_body &&
+        ((N.page_id == PAGE_NOTIFICATIONS && !strcmp(id, "notify.changed")) ||
+         (N.page_id == PAGE_CHANNELS && !strcmp(id, "notify.channels_changed"))))
+        draw_page_body();
+}
 
 int ink_shell_init(void) {
+    if (ink_cap_subscribe("wifi.changed", known_load, NULL, INK_EXEC_UI)) return -1;
     if (ink_activity_card_init() != 0) return -1;
     if (today_init() != 0) return -1;
     static const ink_cap_t notify = {.id = "shell.notify_open", .title = "打开通知并标为已读", .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1}},\"required\":[\"id\"]}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = notify_open};
     if (ink_search_init() != 0 || ink_cap_register(&notify, 1) != 0) return -1;
-    if (ink_settings_pages_init() != 0 || ink_bluetooth_page_init() != 0) return -1;
+    if (ink_settings_pages_init() != 0 || ink_bluetooth_page_init() != 0 || ink_time_settings_init() != 0) return -1;
     if (ink_boot_flow_init() != 0) return -1;
     if (ink_shell_ai_init() != 0 || ink_kid_pages_init() != 0) return -1;
     if (ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) ||
         ink_settings_define(SETTINGS, sizeof SETTINGS / sizeof *SETTINGS))
         return -1;
     if (ink_settings_watch("", changed, NULL, INK_EXEC_UI)) return -1;
+    if (ink_cap_subscribe("notify.changed", notify_changed, NULL, INK_EXEC_UI)) return -1;
+    if (ink_cap_subscribe("notify.channels_changed", notify_changed, NULL, INK_EXEC_UI)) return -1;
     return ink_state_watch("", changed, (void *) 1, INK_EXEC_DIRECT);
 }
 

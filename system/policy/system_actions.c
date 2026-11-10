@@ -11,6 +11,7 @@
 #include "ink/probe.h"
 #include "ink/sys/ai.h"
 #include "ink/sys/cap.h"
+#include "ink/sys/camera.h"
 #include "ink/sys/data.h"
 #include "ink/sys/file.h"
 #include "ink/sys/input.h"
@@ -25,6 +26,7 @@
 #include "ink/sys/ui.h"
 
 static void go_home(ink_call_t *c) {
+    if (ink_camera_close_locked()) return;
     ink_receipt_t *rc = &c->rc;
     ink_ui_home();
     snprintf(rc->object, sizeof rc->object, "screen:home");
@@ -201,7 +203,8 @@ static void restart_job(void *arg) { /* exec.bg, after the answer */
     hal_power_reboot();
 }
 
-static ink_rc_t ink_factory_reset_prepare(ink_args_t *args, ink_receipt_t *rc) {
+static ink_rc_t ink_factory_reset_prepare(ink_args_t *args, ink_receipt_t *rc, ink_source_t src) {
+    (void)src;
     bool media = false;
     ink_args_get_bool(args, "clear_media", &media);
     ink_args_init(args);

@@ -27,6 +27,8 @@
 #include "ink/sys/svc.h"
 #include "ink/sys/time.h"
 #include "ink/sys/task.h"
+#include "ink/sys/appreg.h"
+#include "ink/sys/i18n.h"
 
 #define PIN_ITERATIONS 3000      /* about 100 ms on the S31 by the block cost; to be set on the device (D-69) */
 #define PIN_MIN 4
@@ -39,6 +41,12 @@
 #define REMOVING 0x80u /* Kept in the stored role byte without changing the record format. */
 
 typedef struct __attribute__((packed)) { uint32_t minutes, extra, day; uint64_t used_us; } kid_time_t;
+#define KID_APPS 40
+typedef struct __attribute__((packed)) {
+    struct { char id[32]; uint8_t mode; } apps[KID_APPS];
+    ink_kid_period_t periods[INK_KID_PERIODS];
+} kid_policy_t;
+static kid_policy_t KP[INK_MEMBERS_MAX] INK_PSRAM_BSS;
 
 typedef struct {
     bool used;
@@ -61,6 +69,7 @@ typedef struct __attribute__((packed)) {
     int64_t not_before_s;
     uint8_t identity[16];
     kid_time_t time;
+    kid_policy_t policy;
 } stored_t;
 
 /* Hashes and salts: no AI, no hub, no app reads this. */
@@ -208,15 +217,22 @@ static uint32_t record_id(const char *id) {
 
 /* What is in memory, written: from the first change on the table is what there is. */
 static int save_slot(ink_db_t *db, const slot_t *s) {
-    stored_t r = {.role = (uint8_t)s->m.role | (s->removing ? REMOVING : 0), .has_pin = s->has_pin, .fails = s->fails, .not_before_s = s->not_before_s};
-    snprintf(r.id, sizeof r.id, "%s", s->m.id);
-    snprintf(r.name, sizeof r.name, "%s", s->m.name);
-    memcpy(r.salt, s->salt, sizeof r.salt);
-    memcpy(r.hash, s->hash, sizeof r.hash);
-    memcpy(r.identity, s->identity, sizeof r.identity);
-    r.time = s->time;
-    ink_db_write_t w = {.id = record_id(s->m.id), .data = &r, .len = sizeof r, .src = INK_SRC_SYSTEM};
-    return ink_db_put(db, &w, NULL);
+    stored_t *r = osal_calloc(1, sizeof *r, OSAL_MEM_EXTERNAL);
+    if (!r) return -1;
+    *r = (stored_t){.role = (uint8_t)s->m.role | (s->removing ? REMOVING : 0), .has_pin = s->has_pin, .fails = s->fails, .not_before_s = s->not_before_s};
+    snprintf(r->id, sizeof r->id, "%s", s->m.id);
+    snprintf(r->name, sizeof r->name, "%s", s->m.name);
+    memcpy(r->salt, s->salt, sizeof r->salt);
+    memcpy(r->hash, s->hash, sizeof r->hash);
+    memcpy(r->identity, s->identity, sizeof r->identity);
+    r->time = s->time; r->policy = KP[s - M.s];
+    size_t len = offsetof(stored_t, policy);
+    for (int i = 0; i < KID_APPS; i++) if (r->policy.apps[i].id[0]) len = sizeof *r;
+    for (int i = 0; i < INK_KID_PERIODS; i++) if (r->policy.periods[i].days || r->policy.periods[i].start || r->policy.periods[i].end) len = sizeof *r;
+    ink_db_write_t w = {.id = record_id(s->m.id), .data = r, .len = len, .src = INK_SRC_SYSTEM};
+    int result = ink_db_put(db, &w, NULL);
+    memset(r, 0, sizeof *r); osal_free(r);
+    return result;
 }
 
 static void save_all(void) {
@@ -265,10 +281,11 @@ static int read_table(slot_t *fresh) {
     if (!db) return -1;
     ink_db_cursor_t c = {0};
     ink_rec_t r;
-    stored_t st = {0};
+    static stored_t st INK_PSRAM_BSS;
+    memset(&st, 0, sizeof st);
     int n = 0;
     while (n < INK_MEMBERS_MAX && ink_db_next(db, &c, &r, &st, sizeof st) == 1) {
-        if (r.len != sizeof st && r.len != offsetof(stored_t, time) && r.len != offsetof(stored_t, identity)) continue;
+        if (r.len != sizeof st && r.len != offsetof(stored_t, policy) && r.len != offsetof(stored_t, time) && r.len != offsetof(stored_t, identity)) continue;
         slot_t *s = &fresh[n++];
         s->used = true;
         snprintf(s->m.id, sizeof s->m.id, "%.15s", st.id);
@@ -281,7 +298,8 @@ static int read_table(slot_t *fresh) {
         s->fails = st.fails;
         s->not_before_s = st.not_before_s;
         if (r.len >= offsetof(stored_t, time)) memcpy(s->identity, st.identity, sizeof s->identity);
-        if (r.len == sizeof st) s->time = st.time;
+        if (r.len >= offsetof(stored_t, policy)) s->time = st.time;
+        KP[n - 1] = r.len == sizeof st ? st.policy : (kid_policy_t){0};
         set_allow(s);
     }
     memset(&st, 0, sizeof st);
@@ -363,9 +381,45 @@ void ink_member_test_reset(void) {
     publish();
 }
 
+static const char *action_app(const char *id) {
+    if (!strcmp(id, "shell.ai_stop")) return NULL;
+    if (!strncmp(id, "shell.ai_", 9)) return "ai";
+    if (!strncmp(id, "calc.", 5)) return "calculator";
+    if (!strncmp(id, "calendar.", 9)) return "upcoming";
+    if (!strncmp(id, "alarm.", 6) || !strncmp(id, "reminder.", 9)) return "clock";
+    for (int i = 0; i < ink_app_count(); i++) {
+        const char *app = ink_app_at(i)->id; size_t n = strlen(app);
+        if (!strncmp(id, app, n) && id[n] == '.') return app;
+    }
+    return NULL;
+}
+int ink_member_app_mode(const char *member, const char *app) {
+    slot_t *s = member ? find(member) : cur();
+    if (!s || !app) return 1;
+    if (!strcmp(app, "phone") || !strcmp(app, "message") || !strcmp(app, "contacts") || !strcmp(app, "settings") || !strcmp(app, "home")) return 2;
+    ink_svc_lock();
+    int mode = !strcmp(app, "files") || !strcmp(app, "remote") ? 0 : 1;
+    for (int i = 0; i < KID_APPS; i++) if (!strcmp(KP[s - M.s].apps[i].id, app)) { mode = KP[s - M.s].apps[i].mode; break; }
+    ink_svc_unlock(); return mode;
+}
+void ink_member_period(const char *member, int index, ink_kid_period_t *out) {
+    slot_t *s = member ? find(member) : cur();
+    ink_svc_lock(); *out = s && index >= 0 && index < INK_KID_PERIODS ? KP[s - M.s].periods[index] : (ink_kid_period_t){0}; ink_svc_unlock();
+}
+static bool restricted(void) {
+    if (cur()->m.role != INK_ROLE_CHILD || !ink_time_valid()) return false;
+    ink_tm_t t; ink_time_to_local(ink_time_now_s(), &t); int now = t.hour * 60 + t.min;
+    for (int i = 0; i < INK_KID_PERIODS; i++) {
+        ink_kid_period_t p; ink_member_period(NULL, i, &p);
+        int day = p.start > p.end && now < p.end ? (t.wday + 6) % 7 : t.wday;
+        if ((p.days & (1u << day)) && (p.start < p.end ? now >= p.start && now < p.end : now >= p.start || now < p.end)) return true;
+    }
+    return false;
+}
 bool ink_member_allows(const char *action_id, bool child_ok) {
     const ink_member_t *m = ink_member_current();
     if (m->role == INK_ROLE_ADULT) return true;
+    if (!ink_member_app_mode(NULL, action_app(action_id))) return false;
     if (child_ok) return true;
     for (int i = 0; i < 8 && m->allow[i]; i++)
         if (!strncmp(action_id, m->allow[i], strlen(m->allow[i]))) return true;
@@ -679,7 +733,7 @@ static void cap_add(ink_call_t *c) { /* exec.bg */
         return;
     }
     ink_svc_lock();
-    memset(s, 0, sizeof *s);
+    memset(s, 0, sizeof *s); memset(&KP[s - M.s], 0, sizeof *KP);
     snprintf(s->m.id, sizeof s->m.id, "%.15s", id);
     snprintf(s->m.name, sizeof s->m.name, "%.31s", name[0] ? name : id);
     s->m.role = !strcmp(role, "adult") ? INK_ROLE_ADULT : INK_ROLE_CHILD;
@@ -850,7 +904,7 @@ static void time_account(void) {
     ink_svc_unlock();
 }
 
-bool ink_member_time_up(void) {
+static bool daily_up(void) {
     time_account();
     ink_svc_lock();
     kid_time_t t = cur()->time;
@@ -859,14 +913,22 @@ bool ink_member_time_up(void) {
     return up;
 }
 
+bool ink_member_time_up(void) { return daily_up() || restricted(); }
+bool ink_member_app_time_allows(const char *app) {
+    if (cur()->m.role != INK_ROLE_CHILD) return true;
+    if (app && (!strcmp(app, "phone") || !strcmp(app, "message") || !strcmp(app, "contacts") || !strcmp(app, "settings"))) return true;
+    return !daily_up() && (!restricted() || (app && (!strcmp(app, "home") || ink_member_app_mode(NULL, app) == 2)));
+}
 bool ink_member_time_allows(const char *id) {
+    const char *owner = action_app(id);
+    if (owner && ink_member_app_time_allows(owner)) return true;
     if (!ink_member_time_up()) return true;
     if (!strncmp(id, "text.", 5) || !strncmp(id, "keyboard.", 9)) {
         char app[32] = ""; ink_state_get_str(ink_state_find("app.foreground"), app, sizeof app);
         return !strcmp(app, "phone") || !strcmp(app, "message");
     }
     static const char *const allowed[] = {"phone.", "sms.", "call.", "message.", "contacts.", "data.list", "data.get", "confirm.",
-        "member.time_", "shell.pin_", "shell.kid_", "app.open", "shell.launch", "shell.back", "shell.close", "shell.lock", "system.home", "system.set_volume", "interrupt.",
+        "member.time_", "kid.policy_get", "shell.pin_", "shell.kid_", "app.open", "shell.launch", "shell.back", "shell.close", "shell.lock", "system.home", "system.set_volume", "interrupt.",
         "media.pause", "media.stop", "shell.ai_stop"};
     for (size_t i = 0; i < sizeof allowed / sizeof *allowed; i++)
         if (!strncmp(id, allowed[i], strlen(allowed[i]))) return true;
@@ -875,6 +937,7 @@ bool ink_member_time_allows(const char *id) {
 
 static void time_job(void *arg) {
     (void)arg; time_account();
+    static bool daily; bool previous_daily = daily; daily = daily_up();
     bool up = ink_member_time_up();
     if (up) {
         ink_call_opts_t opts = {.src = INK_SRC_SYSTEM, .reply_exec = INK_EXEC_UI};
@@ -885,10 +948,17 @@ static void time_job(void *arg) {
     if (M.time_dirty) { save_all(); M.time_dirty = false; }
     if (!M.timed) return;
     if (!M.counting) return;
+    if (previous_daily != daily) ink_app_card_changed("home");
     uint64_t delay = 60000000, used = cur()->time.used_us;
     uint64_t limit = (uint64_t)(cur()->time.minutes + cur()->time.extra) * 60000000;
     if (cur()->time.minutes && limit > used && limit - used < delay) delay = limit - used;
     ink_tm_t tm; ink_time_to_local(ink_time_now_s(), &tm);
+    for (int i = 0; i < INK_KID_PERIODS; i++)
+        if (KP[cur() - M.s].periods[i].days) {
+            uint64_t minute = (uint64_t)(60 - tm.sec) * 1000000;
+            if (minute < delay) delay = minute;
+            break;
+        }
     uint64_t midnight = (uint64_t)(86400 - tm.hour * 3600 - tm.min * 60 - tm.sec) * 1000000;
     if (midnight < delay) delay = midnight;
     ink_svc_at(&M.time_at, osal_now_us() + delay, time_queue, NULL);
@@ -916,6 +986,42 @@ static void cap_time(ink_call_t *c) {
         s->m.id, (unsigned)t.minutes, (unsigned)t.extra, (unsigned long long)(t.used_us / 1000000), (unsigned)t.day);
     ink_cap_result(c, out);
 }
+static void cap_kid(ink_call_t *c) {
+    char id[16] = "", app[32] = ""; int64_t mode = 0, index = 0, start = 0, end = 0, days = 0;
+    ink_args_get_str(&c->args, "id", id, sizeof id); ink_args_get_str(&c->args, "app", app, sizeof app);
+    slot_t *s = id[0] ? find(id) : cur(); bool read = !strcmp(c->cap->id, "kid.policy_get");
+    if (!s || s->removing || s->m.role != INK_ROLE_CHILD || (cur()->m.role == INK_ROLE_CHILD && (!read || s != cur()))) { fail(c, INK_RC_REJECTED, TR("只有大人能改孩子的设置")); return; }
+    if (!read && (c->src != INK_SRC_CONFIRMED || !ink_member_any_pin())) { fail(c, INK_RC_REJECTED, "parent PIN required"); return; }
+    kid_policy_t *p = &KP[s - M.s];
+    if (!read && !strcmp(c->cap->id, "kid.app_set")) {
+        ink_args_get_int(&c->args, "mode", &mode); int at = -1;
+        for (int i = 0; i < KID_APPS; i++) if (!strcmp(p->apps[i].id, app)) { at = i; break; }
+        for (int i = 0; at < 0 && i < KID_APPS; i++) if (!p->apps[i].id[0]) { at = i; break; }
+        bool exists = false;
+        for (int i = 0; i < ink_app_count(); i++) if (!strcmp(ink_app_at(i)->id, app) && ink_app_at(i)->child_ok) exists = true;
+        if (at < 0 || !exists || !strcmp(app, "phone") || !strcmp(app, "message") || !strcmp(app, "home") || !strcmp(app, "settings")) { fail(c, INK_RC_INVALID, "app is required or unavailable"); return; }
+        ink_svc_lock(); snprintf(p->apps[at].id, sizeof p->apps[at].id, "%s", app); p->apps[at].mode = (uint8_t)mode; ink_svc_unlock();
+    } else if (!read) {
+        ink_args_get_int(&c->args, "index", &index); ink_args_get_int(&c->args, "start", &start); ink_args_get_int(&c->args, "end", &end); ink_args_get_int(&c->args, "days", &days);
+        if (start == end && days) { fail(c, INK_RC_INVALID, "start must differ from end"); return; }
+        ink_svc_lock(); p->periods[index] = (ink_kid_period_t){(uint16_t)start, (uint16_t)end, (uint8_t)days}; ink_svc_unlock();
+    }
+    if (!read) { save_all(); time_queue(NULL); }
+    char *out = osal_malloc(8192, OSAL_MEM_EXTERNAL);
+    if (!out) { fail(c, INK_RC_FAILED, "out of memory"); return; }
+    ink_jw_t w; ink_jw_init(&w, out, 8192); ink_jw_raw(&w, "{\"apps\":[");
+    for (int i = 0; i < ink_app_count(); i++) {
+        const ink_app_def_t *a = ink_app_at(i);
+        ink_jw_raw(&w, i ? ",{\"id\":" : "{\"id\":"); ink_jw_str(&w, a->id); ink_jw_raw(&w, ",\"mode\":"); ink_jw_int(&w, ink_member_app_mode(s->m.id, a->id)); ink_jw_raw(&w, "}");
+    }
+    ink_jw_raw(&w, "],\"periods\":[");
+    for (int i = 0; i < INK_KID_PERIODS; i++) {
+        ink_kid_period_t t; ink_member_period(s->m.id, i, &t);
+        char row[96]; snprintf(row, sizeof row, "%s{\"index\":%d,\"start\":%u,\"end\":%u,\"days\":%u}", i ? "," : "", i, t.start, t.end, t.days); ink_jw_raw(&w, row);
+    }
+    ink_jw_raw(&w, "]}"); ink_cap_result(c, out); osal_free(out);
+}
+#define KID_ID "\"id\":{\"type\":\"string\",\"maxLength\":15}"
 #define TIME_INPUT "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":15},\"minutes\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":1440}},\"required\":[\"minutes\"]}"
 static void cap_rename(ink_call_t *c) {
     char id[16], name[32];
@@ -927,6 +1033,9 @@ static void cap_rename(ink_call_t *c) {
     save_all(); ink_cap_emit("member.changed", NULL);
 }
 static const ink_cap_t MEMBER_CAPS[] = {
+    {.id = "kid.policy_get", .title = "查看孩子的应用名单和禁用时段", .input = "{\"type\":\"object\",\"properties\":{" KID_ID "}}", .output = "{\"type\":\"object\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_BG, .run = cap_kid},
+    {.id = "kid.app_set", .title = "设置孩子能用的应用", .ask = "修改孩子 {id} 的应用 {app}", .input = "{\"type\":\"object\",\"properties\":{" KID_ID ",\"app\":{\"type\":\"string\",\"maxLength\":31},\"mode\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":2,\"description\":\"0 禁用，1 可用，2 禁用时段也能用\"}},\"required\":[\"id\",\"app\",\"mode\"]}", .effect = INK_FX_LOCAL_WRITE, .ask_by_hand = true, .parent_pin = true, .exec = INK_EXEC_BG, .run = cap_kid},
+    {.id = "kid.period_set", .title = "设置孩子的禁用时段", .ask = "修改孩子 {id} 的禁用时段", .input = "{\"type\":\"object\",\"properties\":{" KID_ID ",\"index\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":3},\"start\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":1439},\"end\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":1439},\"days\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":127,\"description\":\"按位选择开始日期，位 0 是星期日；0 关闭\"}},\"required\":[\"id\",\"index\",\"start\",\"end\",\"days\"]}", .effect = INK_FX_LOCAL_WRITE, .ask_by_hand = true, .parent_pin = true, .exec = INK_EXEC_BG, .run = cap_kid},
     {.id = "member.rename", .title = "修改家人的称呼", .effect = INK_FX_LOCAL_WRITE, .exec = INK_EXEC_BG,
         .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":15},\"name\":{\"type\":\"string\",\"description\":\"称呼最多31个UTF-8字节\",\"minLength\":1,\"maxLength\":31}},\"required\":[\"id\",\"name\"]}", .run = cap_rename},
     {.id = "member.time_get", .title = "查看孩子今天的用时和每天的时长", .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":15}}}", .output = "{\"type\":\"object\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_BG, .run = cap_time},

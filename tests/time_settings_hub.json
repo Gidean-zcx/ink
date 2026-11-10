@@ -1,0 +1,1 @@
+{"rules":[{"method":"hello","think_ms":40,"result":{"session":"SYNTH_TIME","time_zone":"Asia/Tokyo"}},{"method":"*","think_ms":20,"result":{}}]}

@@ -145,7 +145,7 @@
     "stt_ms": 300,
     "transcript": "合成长语音问题",
     "tts_first_ms": 300,
-    "tts_chars_per_s": 60,
+    "tts_chars_per_s": 4.5,
     "tts_speed": 1
    },
    "stream": {

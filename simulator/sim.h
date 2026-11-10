@@ -334,7 +334,11 @@ void sim_net_modem_power(bool on);         /* board P14 (shared 4G + BT audio + 
 bool sim_net_modem_registered(void);
 /* The outside world for SMS and calls (window, scripts; ISR context) */
 bool sim_net_deliver_sms(const char *number, const char *utf8); /* false: no SMS service or store full */
-int sim_net_sms_sent(void); /* messages the device has sent so far (tests) */
+int sim_net_sms_sent(void); /* PDUs (messages and parts of long ones) the network took from the device so far (tests) */
+/* One part of a long message (3GPP TS 23.040 §9.2.3.24.1): any order, again, or never; ref16 uses the 16-bit reference. */
+bool sim_net_deliver_sms_part(const char *number, const char *utf8, int ref, int total, int seq, bool ref16);
+void sim_net_sms_fail_part(int nth);                  /* the nth PDU the device sends from now is refused (+CMS ERROR 500) */
+int sim_net_sent_pdu(int i, char *hex, size_t cap);   /* PDU i the device sent (hex, SMSC address first); returns how many */
 void sim_wifi_ap_add(const char *ssid, int rssi, const char *password); /* ISR (script): a network appears */
 void sim_wifi_ap_del(const char *ssid);
 bool sim_net_incoming_call(const char *number);                 /* false: busy or no voice service */

@@ -13,6 +13,7 @@ static lv_obj_t *found;
 static bool ready;
 static uint32_t kept, removed, picture_id;
 static unsigned expected_total = 10;
+static unsigned memo_replies;
 static void host_options(void *unused) {
     (void)unused;
     snprintf(phase, sizeof phase, "%s", getenv("INK_FILES_PHASE"));
@@ -20,6 +21,7 @@ static void host_options(void *unused) {
 }
 static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
 static void quiet(void) { CHECK(WAIT_FOR(settled(), 15000), "file display settles"); }
+#include "../child_app_fixture.h"
 static void command(const char *cap, const char *args) {
     CHECK(AI(cap, args) && g_rc.status == INK_RC_DONE, "%s completes (%d: %s)", cap, g_rc.status, g_rc.detail);
 }
@@ -27,7 +29,7 @@ static void poll(void) { ready = !F.busy && !strcmp(ink_ui_page_name(), expected
 static void wait_page(const char *name) {
     expected_page = name; ready = false;
     for (unsigned i = 0; i < 750 && !ready; i++) { on_ui(poll); if (!ready) delay_ms(20); }
-    CHECK(ready, "page %s has finished reading", name); quiet();
+    CHECK(ready, "page %s has finished reading (actual %s, busy %d)", name, ink_ui_page_name(), F.busy); quiet();
 }
 static void locate(lv_obj_t *obj) {
     if (lv_obj_has_flag(obj, LV_OBJ_FLAG_HIDDEN)) return;
@@ -39,7 +41,14 @@ static void target(void) {
     CHECK(found != NULL, "visible control: %s", wanted);
     if (found) { lv_area_t a; lv_obj_get_coords(found, &a); g_btn_x[0] = (a.x1 + a.x2) / 2; g_btn_y[0] = (a.y1 + a.y2) / 2; }
 }
-static void touch(const char *label) { wanted = label; on_ui(target); if (found) tap(g_btn_x[0], g_btn_y[0]); }
+static void touch(const char *label) {
+    wanted = label; on_ui(target);
+    if (found) {
+        double before = sim_metric_value("input.touch_delivery_ms");
+        tap(g_btn_x[0], g_btn_y[0]);
+        CHECK(WAIT_FOR(sim_metric_value("input.touch_delivery_ms") > before, 1000), "driver received tap on %s", label);
+    }
+}
 static void host_snapshot(void *unused) {
     (void)unused; char path[768];
     int n = snprintf(path, sizeof path, "%s/snapshots.ndjson", g_sim.out_dir);
@@ -254,6 +263,7 @@ static void exercise(void) {
     wait_page("FileList");
     char ids[64]; int n = snprintf(ids, sizeof ids, "%u %u", (unsigned)kept, (unsigned)removed);
     CHECK(n > 0 && ink_fs_write_atomic("/me/SYNTH_IDS.txt", ids, (size_t)n) == 0, "persist only synthetic expectations for the next process");
+    permit_child_files();
     CHECK(ink_member_switch("kid") == 0, "switch to the real child"); roots(); on_ui(child_roots);
     CHECK(AI("files.browse", "{\"path\":\"/members/owner/SYNTH_FILES\"}") && g_rc.status == INK_RC_REJECTED, "forged adult directory is rejected");
     CHECK(ink_fs_lookup(kept, &e) == INK_FS_ERR_DENIED, "service also rejects the adult's stable id");
@@ -270,19 +280,58 @@ static void exercise(void) {
     expected_total = 8;
     command("settings.set", "{\"id\":\"display.font_size\",\"value\":3}"); quiet(); browse(); on_ui(first_page); check_list_thumb();
 }
-/* audit13 middle 4: memo.play and a memo change run on the executor just when going online kicks the memo sweep. Opening
- * the memo collection there and then, synchronously, kept the file list below from ever finishing reading. */
+/* Cold member opens overlap boot indexing. The root page must keep its queued tap valid. */
+static void memo_reply(void *ctx, const ink_receipt_t *rc) {
+    (void)ctx;
+    CHECK(rc->status == INK_RC_INVALID, "cold memo call opens the empty collection (%s)", ink_rc_name(rc->status));
+    ink_probe_value("test.boot.memo_reply_ms", (double)osal_now_us() / 1000);
+    memo_replies++;
+}
 static void online_memo(void *ctx, int h, const char *id) {
     (void)ctx; int64_t on = 0;
     if (id && (!ink_state_get_int(h, &on) || !on)) return;
+    ink_probe_value("test.boot.memo_call_ms", (double)osal_now_us() / 1000);
     ink_args_t a; ink_args_init(&a); ink_args_int(&a, "id", 1);
-    ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .member = ink_member_current()->id, .reply_exec = INK_EXEC_BG};
+    ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .member = ink_member_current()->id, .reply_exec = INK_EXEC_BG, .done = memo_reply};
     ink_cap_call("memo.play", &a, &o); ink_cap_call("memo.delete", &a, &o);
 }
+static uint32_t draft;
+static void prepare_draft(void) {
+    static const ink_text_client_t client = {0};
+    ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .max = 4095, .draft_page = "MemoEdit"};
+    CHECK(ink_text_focus(&cfg, &client, NULL) > 0, "prepare a synthetic draft without opening memo");
+    ink_text_commit_utf8("SYNTH_COLD_AI_MEMO"); draft = ink_text_draft_id();
+}
+static void close_draft(void) { ink_text_blur(0); }
+static void cold_save(void) {
+    on_ui(prepare_draft);
+    CHECK(draft && WAIT_FOR(ink_text_draft_saved() == 1, 10000), "synthetic draft is durable");
+    on_ui(close_draft);
+    const ink_db_def_t *def = ink_db_find_def("memo.notes");
+    ink_db_t *db = ink_db_open_cached_member(def, ink_member_current()->id);
+    CHECK(!db, "memo collection has never been loaded"); ink_db_close(db);
+    char args[128]; snprintf(args, sizeof args, "{\"id\":1,\"draft\":%u,\"page\":\"MemoEdit\"}", (unsigned)draft);
+    ink_probe_value("test.boot.memo_save_start_ms", (double)osal_now_us() / 1000);
+    CHECK(AI("memo.save", args) && g_rc.status == INK_RC_DONE, "AI saves without opening memo (%s)", ink_rc_name(g_rc.status));
+    ink_probe_value("test.boot.memo_save_done_ms", (double)osal_now_us() / 1000);
+    db = ink_db_open_cached_member(def, ink_member_current()->id);
+    ink_rec_t rec; static char raw[INK_DB_RECORD_MAX + 1];
+    CHECK(db && !ink_db_get(db, 1, &rec, raw, sizeof raw - 1), "cold memo write created a record");
+    if (db && !ink_db_get(db, 1, &rec, raw, sizeof raw - 1)) {
+        raw[rec.len] = 0;
+        CHECK(strstr(raw, "SYNTH_COLD_AI_MEMO") && rec.src == INK_SRC_AI && ink_db_durable_ver(db) >= rec.ver,
+              "AI content, source and durable version are preserved");
+    }
+    ink_db_close(db);
+    roots(); command("files.browse", "{\"path\":\"/me\"}"); wait_page("FileList");
+}
 static void run(void *unused) {
-    (void)unused; vtk_host_call(host_options, NULL); ink_state_watch("net.online", online_memo, NULL, INK_EXEC_BG);
+    (void)unused; vtk_host_call(host_options, NULL);
+    if (strcmp(phase, "cold-save")) ink_state_watch("net.online", online_memo, NULL, INK_EXEC_BG);
     CHECK(WAIT_FOR(ink_member_space_open(), 10000), "member space opens"); test_start_home(); quiet();
-    if (!strcmp(phase, "verify")) verify_restart(); else if (!strcmp(phase, "review")) review_regressions(); else exercise();
+    if (!strcmp(phase, "cold-save")) cold_save();
+    else if (!strcmp(phase, "verify")) verify_restart(); else if (!strcmp(phase, "review")) review_regressions(); else exercise();
+    if (strcmp(phase, "cold-save")) CHECK(memo_replies == 2, "both boot-time memo calls completed");
     CHECK(WAIT_FOR(ink_db_idle(), 10000), "file index is durable before stopping"); quiet(); ink_probe_count("test.finished");
 }
 void ink_main(void) {
