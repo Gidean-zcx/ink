@@ -1,6 +1,6 @@
 # OBOOK 5 学习与阅读功能调研（R-074）
 
-日期：2026-11-10。状态：资料与对照完成，回归和收尾核查中。
+日期：2026-11-10。状态：完成；资料缺口和环境跳过如实保留。
 
 基线：`f0431179a9bfa280f00ee24afe07dc8cd957a004`。本任务只写本报告；产品代码改动 0 行。公开资料描述不等于本项目实测，建议不等于用户需求。
 
@@ -8,10 +8,10 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 调研完成 | OBOOK 5、BOOX Note Air4 C、Kindle Paperwhite 第 12 代；逐项来源见下表，查不到的明确保留 | 公开网页检索、`curl -L`、PDF 原页查看 |
+| 1 | 完成 | OBOOK 5、BOOX Note Air4 C、Kindle Paperwhite 第 12 代；逐项来源见下表，查不到的明确保留 | 公开网页检索、`curl -L`、PDF 原页查看 |
 | 2 | 完成 | 六主题共 29 项；设计覆盖与当前实现分列，本地依据定位到文件/行 | `rg -n`、`nl -ba`；只读核对 |
 | 3 | 完成 | 建议 P1～P9 按推荐顺序；Q1～Q6 待用户选择；硬件依赖单列 | 人工交叉检查 |
-| 4 | 已满足，最终提交再核对 | 当前基线差异仅本报告，产品代码 0 行；未改需求、决策或已有研究资料 | `git diff --stat f0431179..HEAD`；`git status --short` |
+| 4 | 完成 | 基线差异仅本报告，产品代码 0 行；未改需求、决策或已有研究资料 | `git diff --stat f0431179..HEAD`；`git status --short` |
 
 ## 资料与证据边界
 
@@ -51,7 +51,7 @@
 | 5 高亮、批注、导出 | 手册 p5 下划线/文字批注、p9 导出笔记；不叫彩色高亮或手写。[O3][o3] | BOOX 可批注/做笔记；Kindle 支持选段高亮和文字笔记。[B6][b6]、[K2][k2] | **设计部分／实现部分**：SR-RD-02 有选文笔记，未细定高亮和导出；备忘/文字选择底座已有，阅读页是位图，尚未接正文选区和批注对象。[SRS][srs]、[文字能力:231][text-code]、[阅读页:539][reader-layout] |
 | 6 进度、续读与跨端同步 | 手册 p4 有页数/百分比；跨端进度同步未证实，云盘传书不能证明同步。[O3][o3]、[O4][o4] | Kindle 的归档个人文档有同步条件；USB 本地文件不能一概视为云端已备份。[K1，个人文档][k1] | **设计已有／实现部分**：各家人本地续读已有；跨设备位置冲突/同步没有读书专项。备份恢复不是实时同步。继续读卡片百分比、插拔卡刷新仍有记录缺口。[UI §9][ui]、[reader-continue 报告][continue]、[备份报告][backup] |
 | 7 翻页触感与误触 | O2 标音量键兼翻页，O3 有点按、滑动；长评的手感属个人观察。[O2][o2]、[O3][o3]、[O6][o6] | Kindle 用触摸翻页。[K2][k2] | **设计已有／实现已有（功能）**：盖板上一页/下一页、滑动、点按均走阅读原子能力；音量键仍调音量。盖板触摸键不是 OBOOK 的机械侧键，不能据此承诺戴手套手感。[代码:435][reader-actions]；触觉反馈另属 R-072，不在本任务改。 |
-| 8 刷新模式与残影 | 快速指南说闪屏用于清残影，未取得可复核的模式/周期清单。[O2][o2] | BOOX 允许模式、全刷频率；Kindle 可选每次翻页刷新。[B5][b5]、[K1，屏幕显示][k1] | **设计已有／实现已有（算法/接口）**：D-110 已定，不建议借调研重开算法。末组优化仅模型验证，不能写成实机无残影；D-124 是输出层选择，和刷新算法分开。[D-110/D-124][decisions] |
+| 8 刷新模式与残影 | 快速指南说闪屏清残影，并提速读模式及下一页预载可减少闪屏；未给设置入口和周期参数。[O2][o2] | BOOX 允许模式、全刷频率；Kindle 可选每次翻页刷新。[B5][b5]、[K1，屏幕显示][k1] | **设计已有／实现已有（算法/接口）**：D-110 已定，不建议借调研重开算法。末组优化仅模型验证，不能写成实机无残影；D-124 是输出层选择，和刷新算法分开。[D-110/D-124][decisions] |
 
 ### 2. 学习
 
@@ -173,11 +173,20 @@ R-061 审视：上述建议应复用文字选择、存储、音频、成员策�
 
 - 【实测】已按任务规则 §5 的全部参数配置、构建普通版本：退出 0；`INK_WERROR=ON`，字体/Python/LVGL 使用 `$INK_DEPS`；构建 `taskpolicy -c utility cmake --build build -j2`。没有启动窗口模拟器。日志在 `work/obook-research/{configure,build}.log`。
 - 【实测】普通全量 `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2` 退出 0。原话：`100% tests passed out of 330`，`Total Test time (real) = 907.24 sec`。**实际 327 通过、3 跳过**：`hub-contract` 缺当前所选 Python 的锁定依赖；`hub-json-crosscheck` 缺前者生成的消息；`hub-simulator-e2e` 缺锁定 Python 环境。跳过由原有测试返回 77，不计为通过，没有改测试或安装依赖。日志 `work/obook-research/ctest.log` 与 `build/Testing/Temporary/LastTest.log`。
-- 【实测】ASan/UBSan 已全量构建成功：按相同配置换 `build-asan`，仅增加 `-DINK_SANITIZE=ON`，仍用 `taskpolicy -c utility` 和 `-j2`。阅读/文字/AI/音频/备忘/备份等筛选（`-R 'reader|text|ai|voice|audio|scenario|integration-member|selftest|determinism|memo|backup'`）原话 `100% tests passed out of 76`、`Total Test time (real) = 304.19 sec`，退出 0，无 sanitizer 错误。其余用例正以同一个正则的 `-E` 互补执行，完成后核对是否覆盖全部 330 项；不把专项通过冒称全量通过。
+- 【实测】ASan/UBSan 全量构建成功：按相同配置换 `build-asan`，仅增加 `-DINK_SANITIZE=ON`，仍用 `taskpolicy -c utility` 和 `-j2`。下列两个互补命令均退出 0；原话分别为 `100% tests passed out of 76`（304.19 秒）和 `100% tests passed out of 255`（799.48 秒）。按测试名与两套 `CTestTestfile.cmake` 的清单核对，**覆盖全部 330 项：327 通过、同样 3 项中枢环境跳过、0 失败**；`fixture-aged-user-image` 在两轮各执行一次，因此运行数之和为 331。两轮详细日志均未发现 AddressSanitizer、UBSan 或 LeakSanitizer 错误。日志 `work/obook-research/asan-{ctest,remaining,selected-detail,remaining-detail}.log`；覆盖证据 `work/obook-research/verification-summary.json`。
 - 【实测】报告 49 个引用定义、208 次引用均能解析；23 个本地文件/代码行目标存在，六主题 29 项齐全。外部网址逐一注明可读/失败边界，没有把 curl 的 200 验证页当正文；PDF 原页和官网规格图已查看。静态检查记录 `work/obook-research/report-check.json`。
 - S31：本次未编译；gcccheck：本次未运行，因为只有报告、没有 C 文件改动。两者不写成通过。Linux CI 未运行；本任务禁止推送。
 - 没有修复产品问题或新增测试，因此不适用“撤修复后失败”的反向对照，也没有改已有测试期望。
-- 【实测】基线到当前工作区的范围检查仅本报告；调用 `grep -nE` 按总规则 §6 的同一正则检查，0 匹配、退出 1。最终提交后还会再核对。里程碑本地提交：`911c41a4`（建立报告）、`71c5ab09`（完成资料对照）、`dd90e561`（记录普通回归）；未推送。
+- 【实测】`git diff --check` 通过；基线至提交和工作区的范围检查仅本报告，产品代码新增/删除均为 0。调用 `grep -nE` 按总规则 §6 的同一正则检查，0 匹配、退出 1，未发现被禁的绝对路径或 MAC。记录 `work/obook-research/scope-check.json`。没有设计稿、构建产物或下载原件进入提交。
+- 只在 `claude/codex-obook-research` 本地分支提交，未推送。里程碑：`911c41a4`（建立报告）、`71c5ab09`（资料对照）、`dd90e561`（普通回归）、`5b62d054`（阶段性内存结果）；最终提交见本分支 `git log`。
+
+内存检查的互补命令（先后执行，同一时间没有另一轮构建或全量测试）：
+
+```sh
+SAN_FILTER='reader|text|ai|voice|audio|scenario|integration-member|selftest|determinism|memo|backup'
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2 -R "$SAN_FILTER"
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2 -E "$SAN_FILTER"
+```
 
 ## 引用定位
 
