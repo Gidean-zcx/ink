@@ -4,6 +4,7 @@ import json
 import os
 from pathlib import Path
 import shlex
+import shutil
 import subprocess
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -53,4 +54,8 @@ result = subprocess.run([str(binary), '--profile', str(ROOT / 'simulator/profile
 data = json.loads((out / 'metrics.json').read_text())
 failed = data.get('metrics', {}).get('test.fail', 0)
 assert result.returncode != 0 and failed >= 3, f'reverse check did not expose the regression: exit={result.returncode}, failures={failed}'
+for expected in ('physical send loads the full draft', "no part before the person's yes", 'after the yes the composer sends'):
+    assert any(expected in warning for warning in data.get('warnings', [])), f'missing regression evidence: {expected}'
 print(f'reverse check: PASS (mutant exit={result.returncode}, failed checks={failed}; product sources unchanged)')
+if not os.environ.get('INK_KEEP_EVIDENCE'):
+    shutil.rmtree(area)
