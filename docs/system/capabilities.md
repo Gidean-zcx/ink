@@ -240,7 +240,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `phone.emergency_close` | 返回锁屏 | 仅人（设备） | 低 / navigate | 无需 | 成人、儿童（无需白名单）；锁定时仅人工入口 | [s10](#s10) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
 | `phone.emergency_hangup` | 挂断紧急电话 | 仅人（设备） | 低 / navigate | 无需 | 成人、儿童（无需白名单）；锁定时仅人工入口 | [s23](#s23) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
 | `phone.emergency_key` | 按紧急拨号键 | 仅人（设备） | 低 / navigate | 无需 | 成人、儿童（无需白名单）；锁定时仅人工入口 | [s10](#s10) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
-| `phone.emergency_open` | 打开紧急呼叫页面 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；锁定时仅人工入口 | [s10](#s10) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
+| `phone.emergency_open` | 打开紧急呼叫页面 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；锁定时可打开公开页面（不含成员数据） | [s10](#s10) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
 | `phone.key` | 按拨号键或删除一位 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Phone | [s10](#s10) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
 | `phone.keypad` | 打开或收起通话键盘 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s10](#s10) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
 | `phone.next` | 通话记录下一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 PhoneRecents | [s10](#s10) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |

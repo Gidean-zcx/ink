@@ -97,7 +97,6 @@ static ink_rc_t reject(ink_receipt_t *rc, ink_rc_t st, const char *why) {
     snprintf(rc->detail, sizeof rc->detail, "%s", why);
     return st;
 }
-
 static bool opens_emergency(const ink_cap_t *c) { return c && c->locked_entry; }
 /* The policy gate (detailed design §2.4), before anything runs. INK_RC_DONE = may run. */
 static ink_rc_t gate(const ink_cap_t *c, ink_source_t src, uint32_t page_gen, bool asked, ink_receipt_t *rc) {
