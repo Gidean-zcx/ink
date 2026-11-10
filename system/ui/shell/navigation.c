@@ -461,9 +461,10 @@ static const char *const GROUP_ICONS[][4] = {
 typedef struct {
     const char *id, *title, *icon;
 } tool_t;
-static int tools(tool_t out[24]) {
+enum { TOOLS_MAX = 48 }; /* every registered app and the built-in entries: the Apps page turns pages, no cut-off */
+static int tools(tool_t out[TOOLS_MAX]) {
     int count = 0;
-    for (int i = 0; i < ink_app_count() && count < 16; i++) {
+    for (int i = 0; i < ink_app_count() && count < TOOLS_MAX - 7; i++) {
         const ink_app_def_t *a = ink_app_at(i);
         if (!a->entry || !ink_app_visible(a) || !strcmp(a->id, "home") || !strcmp(a->id, "reader")) continue;
         if (!strcmp(a->id, "phone")) continue; /* Already in the contact group. */
@@ -480,7 +481,7 @@ static int tools(tool_t out[24]) {
         if (child() && (i == 3 || i == 4 || i == 6)) continue;
         bool present = false;
         for (int k = 0; k < count; k++) present |= !strcmp(out[k].id, MORE[i].id);
-        if (!present) out[count++] = MORE[i];
+        if (!present && count < TOOLS_MAX) out[count++] = MORE[i];
     }
     for (int i = 0; i < count; i++) if (!strcmp(out[i].id, "message")) {
         memmove(&out[i], &out[i + 1], (size_t)(count - i - 1) * sizeof out[0]);
@@ -508,7 +509,7 @@ typedef struct {
  * tiles of the page being shown and lists them for the AI. Returns the pages. */
 static int apps_walk(bool draw, tile_list_t *list) {
     static const char *const groups[] = {"读和听", "记和联系", "工具"};
-    tool_t items[24], shown[24];
+    tool_t items[TOOLS_MAX], shown[TOOLS_MAX];
     int count = tools(items), top = below_heading() + INK_CONTROL + INK_GAP_L, y = top, page = 0;
     int name_h = ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_S;
     int row_h = INK_CIRCLE + INK_GAP_S + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_L;
