@@ -33,7 +33,7 @@ typedef struct {
     char cap[48], args[192];
     uint32_t epoch, member_epoch;
 } binding_t;
-typedef enum { PAGE_SETTINGS, PAGE_DISPLAY, PAGE_SOUND, PAGE_NETWORK, PAGE_NOTIFICATIONS, PAGE_CHANNELS } page_t;
+typedef enum { PAGE_SETTINGS, PAGE_DISPLAY, PAGE_SOUND, PAGE_NETWORK, PAGE_NOTIFICATIONS, PAGE_CHANNELS, PAGE_KNOWN } page_t;
 static const char *const CHANNEL_NOTE = TR_NOOP("关闭后不再收进新通知，已有通知保留。电话和闹钟照常。");
 static void create_page(lv_obj_t *screen, void *arg);
 static void destroy_page(void);
@@ -57,7 +57,10 @@ static const ink_activity_t PAGES[] = {
      .destroy = destroy_page,
      .snapshot = page_snapshot,
      .on_key = page_key},
-    {.name = "SetNotifications", .create = create_page, .destroy = destroy_page, .snapshot = page_snapshot, .on_key = page_key}};
+    {.name = "SetNotifications", .create = create_page, .destroy = destroy_page, .snapshot = page_snapshot, .on_key = page_key},
+    {.name = "KnownNetworks", .create = create_page, .destroy = destroy_page, .snapshot = page_snapshot, .on_key = page_key}};
+
+#define KNOWN_NETWORKS_MAX 8
 
 static struct {
     lv_obj_t *home, *content, *dots, *clock, *date, *message;
@@ -72,6 +75,9 @@ static struct {
     char result[160], search[80];
     char wifi_ssid[6][40], picked_ssid[40];
     int wifi_count;
+    char known_ssid[KNOWN_NETWORKS_MAX][33];
+    int known_count;
+    uint32_t known_epoch;
     bool scan_busy;
     ink_notify_view_t control_items[2], notify_items[6];
     int control_count, notify_capacity;
@@ -105,6 +111,28 @@ static bool icon_close(void);
 static int today_init(void);
 static void kid_today_model(void);
 static void kid_volume_mark(lv_obj_t *slider, int top);
+static bool current_session(uint32_t epoch);
+
+static void known_reply(void *ctx, const ink_receipt_t *rc) {
+    if ((uint32_t)(uintptr_t)ctx != N.known_epoch || !current_session(N.epoch) || !N.page_body || N.page_id != PAGE_KNOWN) return;
+    N.known_count = -2;
+    ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
+    if (j && rc->status == INK_RC_DONE && rc->result && !ink_json_parse(j, rc->result, strlen(rc->result))) {
+        N.known_count = 0;
+        for (int i = 1; i < j->ntok && N.known_count < KNOWN_NETWORKS_MAX; i++)
+            if (ink_json_str(j, i, N.known_ssid[N.known_count], sizeof N.known_ssid[0]) >= 0) N.known_count++;
+    }
+    osal_free(j);
+    ink_ui_content_changed();
+    draw_page_body();
+}
+static void known_load(void *ctx, const char *id, const ink_args_t *args) {
+    (void)ctx; (void)id; (void)args;
+    if (!N.page_body || N.page_id != PAGE_KNOWN) return;
+    ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .reply_exec = INK_EXEC_UI, .done = known_reply,
+        .ctx = (void *)(uintptr_t)N.known_epoch};
+    if (ink_cap_call("wifi.list", NULL, &o)) { N.known_count = -2; draw_page_body(); }
+}
 
 static bool current_session(uint32_t epoch) {
     return epoch == __atomic_load_n(&N.session, __ATOMIC_ACQUIRE) && !strcmp(N.member, ink_member_current()->id) &&
@@ -1265,6 +1293,30 @@ static void body_blocks(void) {
         F.y += h + INK_GAP_L;
         if (block(INK_CONTROL)) group_row(group(1), "bell", TR("通知"), "", 0, "shell.notify_settings");
         F.y += INK_CONTROL;
+    } else if (N.page_id == PAGE_KNOWN) {
+        char connected[33], state[24];
+        state_text("wifi.ssid", connected, sizeof connected);
+        state_text("wifi.state", state, sizeof state);
+        if (N.known_count <= 0) {
+            const char *text = TR(N.known_count == -1 ? TR_NOOP("正在读取网络") : N.known_count == -2 ? TR_NOOP("网络列表暂时读不出来") : TR_NOOP("还没有已存的网络"));
+            if (block(notice_h(text))) ink_ui_notice(N.page_body, text, F.y);
+        }
+        for (int i = 0; i < N.known_count; i++) {
+            int row = ink_ui_row_double(), h = row + INK_CONTROL;
+            if (block(h)) {
+                bool same = !strcmp(connected, N.known_ssid[i]);
+                const char *status = same && !strcmp(state, "connected") ? TR("已连接") : same && !strcmp(state, "joining") ? TR("正在连接网络") : TR("已存");
+                ink_ui_list_row(N.page_body, "wifi", N.known_ssid[i], status, INK_MARGIN, F.y, width(), false, NULL, NULL);
+                char args[224]; ink_jw_t w; ink_jw_init(&w, args, sizeof args);
+                ink_jw_raw(&w, "{\"ssid\":"); ink_jw_str(&w, N.known_ssid[i]); ink_jw_raw(&w, "}");
+                lv_obj_t *join = ink_ui_pill(N.page_body, TR("连接"), INK_MARGIN, F.y + row, (width() - INK_GAP) / 2, INK_CONTROL, false, NULL, NULL);
+                ink_shell_bind(join, "wifi.connect", args);
+                if (!ink_setting_get("wifi.enabled") || (same && (!strcmp(state, "connected") || !strcmp(state, "joining")))) lv_obj_add_state(join, LV_STATE_DISABLED);
+                ink_shell_bind(ink_ui_pill(N.page_body, TR("忘掉"), INK_MARGIN + (width() + INK_GAP) / 2, F.y + row,
+                    (width() - INK_GAP) / 2, INK_CONTROL, false, NULL, NULL), "wifi.forget", args);
+            }
+            F.y += h + INK_GAP_L;
+        }
     } else if (N.page_id == PAGE_NETWORK) {
         if (block(2 * INK_CONTROL)) {
             lv_obj_t *g = group(2);
@@ -1328,6 +1380,8 @@ static void body_blocks(void) {
             ink_shell_bind(ink_ui_pill(N.page_body, "设置设备", INK_MARGIN + (width() + INK_GAP) / 2, F.y,
                 (width() - INK_GAP) / 2, INK_CONTROL, false, NULL, NULL), "shell.launch", "{\"id\":\"boot\"}");
         }
+        F.y += INK_CONTROL + INK_GAP_M;
+        if (block(INK_CONTROL)) group_row(group(1), "wifi", TR("已存的网络"), "", 0, "shell.known_networks");
         F.y += INK_CONTROL + INK_GAP_M;
         for (int i = N.wifi_page * 2; i < N.wifi_count && i < (N.wifi_page + 1) * 2; i++) {
             if (block(INK_CONTROL))
@@ -1460,14 +1514,18 @@ static void create_page(lv_obj_t *screen, void *arg) {
     N.page = screen;
     N.page_id = (page_t) (intptr_t) arg;
     N.body_page = 0;
-    static const char *const titles[] = {TR_NOOP("设置"), TR_NOOP("显示和亮度"), TR_NOOP("声音"), TR_NOOP("网络和 SIM 卡"), TR_NOOP("通知"), TR_NOOP("通知")};
+    static const char *const titles[] = {TR_NOOP("设置"), TR_NOOP("显示和亮度"), TR_NOOP("声音"), TR_NOOP("网络和 SIM 卡"), TR_NOOP("通知"), TR_NOOP("通知"), TR_NOOP("已存的网络")};
+    _Static_assert(sizeof titles / sizeof *titles == sizeof PAGES / sizeof *PAGES, "page titles");
     ink_shell_statusbar(screen, true);
     ink_shell_topbar(screen, TR(titles[N.page_id]));
     N.page_body = ink_ui_box(screen, 0, INK_STATUS_BAR + INK_PRIMARY + INK_GAP_XS, INK_CANVAS_W,
                              INK_CANVAS_H - INK_STATUS_BAR - INK_PRIMARY - INK_GAP_XS, 0, INK_SURFACE_WHITE, false);
+    if (N.page_id == PAGE_KNOWN) { N.known_count = -1; N.known_epoch++; }
     draw_page_body();
+    if (N.page_id == PAGE_KNOWN) known_load(NULL, NULL, NULL);
 }
 static void destroy_page(void) {
+    if (N.page_id == PAGE_KNOWN) N.known_epoch++;
     if (N.page_id == PAGE_NETWORK) {
         N.picked_ssid[0] = 0;
         ink_text_blur(0);
@@ -1526,6 +1584,14 @@ static int page_snapshot(char *buf, size_t cap) {
         }
         ink_jw_raw(&w, "]}"); return w.overflow ? -1 : (int)w.len;
     }
+    if (N.page_id == PAGE_KNOWN) {
+        char ssid[33], state[24]; state_text("wifi.ssid", ssid, sizeof ssid); state_text("wifi.state", state, sizeof state);
+        int n = snprintf(buf, cap, "KnownNetworks；已存=%d；第 %d 页，共 %d 页；", N.known_count, N.body_page + 1, N.body_pages);
+        for (int i = 0; i < N.known_count && n >= 0 && (size_t)n < cap; i++)
+            n += snprintf(buf + n, cap - (size_t)n, "%s=%s；", N.known_ssid[i], !strcmp(ssid, N.known_ssid[i]) ? state : "saved");
+        if (n >= 0 && (size_t)n < cap) n += snprintf(buf + n, cap - (size_t)n, "动作：wifi.connect(ssid)、wifi.forget(ssid)、system.undo(object,revision)、shell.page_next、shell.page_prev、shell.back。");
+        return n < 0 ? 0 : (size_t)n < cap ? n : (int)cap - 1;
+    }
     if (N.page_id == PAGE_SOUND)
         return snprintf(buf, cap, "SetSound；音量=%lld；勿扰=%lld；按键提示音(audio.key_tone)=%lld；振动(audio.vibration)=%lld；来电铃声(audio.call_ring)=%lld；闹钟铃声(audio.alarm_ring)=%lld；铃声：0清音、1双音、2柔音；settings.set(id,value)更改并试听；通知：shell.notify_settings；shell.page_next、shell.page_prev、shell.back。", (long long)ink_setting_get("audio.volume"), (long long)ink_setting_get("notify.dnd"), (long long)ink_setting_get("audio.key_tone"), (long long)ink_setting_get("audio.vibration"), (long long)ink_setting_get("audio.call_ring"), (long long)ink_setting_get("audio.alarm_ring"));
     int n = snprintf(buf, cap, "%s；当前=%s；亮度=%lld；暖光=%lld；音量=%lld；网络偏好=%lld；通知=%d。",
@@ -1558,7 +1624,7 @@ static int page_snapshot(char *buf, size_t cap) {
         }
     }
     const char *actions =
-        N.page_id == PAGE_NETWORK ? "动作：net.set_airplane、settings.set、wifi.scan、wifi.list、shell.back、shell.control、shell.wifi_"
+        N.page_id == PAGE_NETWORK ? "动作：shell.known_networks、net.set_airplane、settings.set、wifi.scan、wifi.list、shell.back、shell.control、shell.wifi_"
                                       "next、shell.wifi_prev、shell.wifi_pick；设置设备：shell.launch(id=boot)。"
                                     : N.page_id == PAGE_DISPLAY
                                         ? "动作：settings.set、shell.today_edit、shell.back、shell.control。"
@@ -1625,6 +1691,8 @@ static void cap_nav(ink_call_t *c) {
         ink_shell_open_page("SetSound");
     else if (!strcmp(c->cap->id, "shell.network"))
         ink_shell_open_page("SetNetwork");
+    else if (!strcmp(c->cap->id, "shell.known_networks"))
+        ink_shell_open_page("KnownNetworks");
     else if (!strcmp(c->cap->id, "shell.notifications"))
         ink_shell_open_page("Notifications");
     else if (!strcmp(c->cap->id, "shell.notify_settings"))
@@ -1712,6 +1780,7 @@ static const ink_cap_t CAPS[] = {
     NAV("shell.display", "显示和亮度", false),
     NAV("shell.sound", "声音", false),
     NAV("shell.network", "网络和 SIM 卡", false),
+    NAV("shell.known_networks", "已存的网络", false),
     NAV("shell.notifications", "查看通知", true),
     NAV("shell.notify_settings", "通知渠道设置", false),
     NAV("shell.page_next", "设置页的下一页", true),
@@ -1827,6 +1896,7 @@ static void notify_changed(void *ctx, const char *id, const ink_args_t *args) {
 }
 
 int ink_shell_init(void) {
+    if (ink_cap_subscribe("wifi.changed", known_load, NULL, INK_EXEC_UI)) return -1;
     if (ink_activity_card_init() != 0) return -1;
     if (today_init() != 0) return -1;
     static const ink_cap_t notify = {.id = "shell.notify_open", .title = "打开通知并标为已读", .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1}},\"required\":[\"id\"]}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = notify_open};

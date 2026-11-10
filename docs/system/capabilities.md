@@ -7,7 +7,7 @@ python3 tools/capabilities.py
 python3 tools/capabilities.py --check
 ```
 
-当前共 429 项：可调用能力 392、事件 37；设置 28 项、状态 49 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
+当前共 431 项：可调用能力 394、事件 37；设置 28 项、状态 49 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
 
 风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。
 
@@ -308,6 +308,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `shell.kid_phone` | 时间到后打电话 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s48](#s48) | [system/ui/shell/kid_pages.c](../../system/ui/shell/kid_pages.c) |
 | `shell.kid_settings` | 打开孩子的设置 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s52](#s52) | [system/ui/shell/settings_family.c](../../system/ui/shell/settings_family.c) |
 | `shell.kid_sms` | 时间到后看短信 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s48](#s48) | [system/ui/shell/kid_pages.c](../../system/ui/shell/kid_pages.c) |
+| `shell.known_networks` | 已存的网络 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s51](#s51) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
 | `shell.launch` | 打开主页上的应用 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s51](#s51) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
 | `shell.lock` | 锁屏 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s51](#s51) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
 | `shell.member_choose` | 选择下一位家人 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s50](#s50) | [system/ui/shell/member_pages.c](../../system/ui/shell/member_pages.c) |
@@ -413,6 +414,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `wifi.connect` | 连接一个 Wi-Fi 并记住它 | 人、AI | 高 / system | 无需 | 仅成人 | [s28](#s28) | [system/services/net/wifi.c](../../system/services/net/wifi.c) |
 | `wifi.forget` | 忘掉一个 Wi-Fi | 人、AI | 高 / local_destructive | 人、AI 均在设备确认 | 成人；儿童须白名单 | [s28](#s28) | [system/services/net/wifi.c](../../system/services/net/wifi.c) |
 | `wifi.list` | 这台设备记得的 Wi-Fi（只有名字） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s28](#s28) | [system/services/net/wifi.c](../../system/services/net/wifi.c) |
+| `wifi.restore` | 撤销忘掉网络 | 仅人（设备） | 中 / local_write | 无需 | 成人；儿童须白名单 | [s28](#s28) | [system/services/net/wifi.c](../../system/services/net/wifi.c) |
 | `wifi.scan` | 找附近的 Wi-Fi（要几秒） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s28](#s28) | [system/services/net/wifi.c](../../system/services/net/wifi.c) |
 | `wifi.set_enabled` | 开关 Wi-Fi | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单 | [s28](#s28) | [system/services/net/net_service.c](../../system/services/net/net_service.c) |
 
@@ -924,9 +926,9 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 设置：`audio.alarm_ring`、`audio.call_ring`、`audio.child_max`、`audio.key_tone`、`audio.vibration`、`audio.volume`、`cell.sim_slot`、`display.font_size`、`display.light`、`display.lock_style`、`display.warmth`、`net.airplane`、`net.prefer`、`notify.dnd`、`power.lift_wake`、`power.lock_after_s`、`system.language`、`voice.handsfree`、`wifi.enabled`。
 
-状态：`app.cards_rev`、`audio.mic`、`audio.route`、`battery.level`、`bt.connected`、`cell.registered`、`member.authed`、`member.current`、`net.type`、`notify.unread`、`power.state`、`wifi.ssid`。
+状态：`app.cards_rev`、`audio.mic`、`audio.route`、`battery.level`、`bt.connected`、`cell.registered`、`member.authed`、`member.current`、`net.type`、`notify.unread`、`power.state`、`wifi.ssid`、`wifi.state`。
 
-事件：`notify.changed`、`notify.channels_changed`。
+事件：`notify.changed`、`notify.channels_changed`、`wifi.changed`。
 
 <a id="s52"></a>
 

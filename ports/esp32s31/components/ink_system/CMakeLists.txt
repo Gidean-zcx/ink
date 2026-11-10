@@ -17,7 +17,7 @@ execute_process(COMMAND ${PYTHON} ${root}/tools/icongen/check.py --header ${CMAK
     WORKING_DIRECTORY ${root} COMMAND_ERROR_IS_FATAL ANY)
 file(GLOB i18n_tables ${root}/assets/i18n/*.tsv)
 execute_process(COMMAND ${PYTHON} ${root}/tools/i18n/i18n_gen.py ${i18n_tables} --header ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h
-    --sources ${root}/system/ui/shell/boot_flow.c ${root}/system/ui/shell/navigation.c ${root}/system/ui/shell/settings_pages.c
+    --sources ${root}/system/ui/shell/boot_flow.c ${root}/system/ui/shell/navigation.c ${root}/system/ui/shell/keyboard.c ${root}/system/ui/shell/settings_pages.c
     ${root}/system/ui/shell/time_settings.c ${root}/system/ui/shell/settings_family.c ${root}/system/services/time/time_service.c
     ${root}/system/apps/clock/clock.c
     WORKING_DIRECTORY ${root} COMMAND_ERROR_IS_FATAL ANY)
