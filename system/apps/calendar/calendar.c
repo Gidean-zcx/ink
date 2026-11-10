@@ -13,7 +13,7 @@
 #include <stdio.h>
 #include <string.h>
 
-enum { VISIBLE_ROWS = 4, EDIT_FIELDS = 4, PICKER_PARTS = 5, REPEAT_PRESETS = 4, EDIT_ACTIONS = 12 };
+enum { VISIBLE_ROWS = 4, EDIT_FIELDS = 4, PICKER_PARTS = INK_UI_DATETIME_PARTS, REPEAT_PRESETS = 4, EDIT_ACTIONS = 12 };
 static const ink_activity_t UPCOMING, CALENDAR, REMINDER_EDIT, REMINDER_TIME;
 static void reminder_action(ink_call_t *call);
 static struct {
@@ -207,6 +207,15 @@ static void editor_name(lv_event_t *event) {
 static void editor_at(void) {
     snprintf(E.at, sizeof E.at, "%04d-%02d-%02d %02d:%02d", E.date.year, E.date.month, E.date.day, E.date.hour, E.date.min);
 }
+static void editor_date_bind(lv_obj_t *b, int part, int delta) {
+    const int values[PICKER_PARTS] = {E.date.year, E.date.month, E.date.day, E.date.hour, E.date.min};
+    const int lo[PICKER_PARTS] = {1901, 1, 1, 0, 0}, hi[PICKER_PARTS] = {2100, 12, month_days(E.date.year, E.date.month), 23, 59};
+    int value = values[part] + delta;
+    if (value < lo[part]) value = hi[part];
+    if (value > hi[part]) value = lo[part];
+    char args[48]; snprintf(args, sizeof args, "{\"%s\":%d}", PARTS[part], value);
+    editor_bind(b, delta > 0 ? TR("增加") : TR("减少"), "reminder.draft", args);
+}
 /* ui-scale-runtime: dimension y,w,x Theme-derived editor and picker geometry. */
 static void editor_create(lv_obj_t *screen, void *arg) {
     (void)arg; bool picker = !strcmp(ink_ui_page_name(), "ReminderTime");
@@ -221,21 +230,8 @@ static void editor_create(lv_obj_t *screen, void *arg) {
     ink_shell_statusbar(screen, true); ink_shell_topbar(screen, E.page.title);
     int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP, w = INK_CANVAS_W - 2 * INK_MARGIN;
     if (picker) {
-        const char *labels[PICKER_PARTS] = {TR("年"), TR("月"), TR("日"), TR("时"), TR("分")};
         int values[PICKER_PARTS] = {E.date.year, E.date.month, E.date.day, E.date.hour, E.date.min};
-        int lo[PICKER_PARTS] = {1901, 1, 1, 0, 0}, hi[PICKER_PARTS] = {2100, 12, month_days(E.date.year, E.date.month), 23, 59};
-        for (size_t i = 0; i < sizeof PARTS / sizeof *PARTS; i++, y += INK_CONTROL + INK_GAP_M) {
-            char text[64]; snprintf(text, sizeof text, TR("%s：%d"), labels[i], values[i]);
-            ink_ui_line(screen, text, INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_MARGIN + INK_CONTROL + INK_GAP_M, y + INK_GAP_L, w - 2 * (INK_CONTROL + INK_GAP_M));
-            for (int plus = 0; plus < 2; plus++) {
-                int value = values[i] + (plus ? 1 : -1);
-                if (value < lo[i]) value = hi[i];
-                if (value > hi[i]) value = lo[i];
-                char args[48]; snprintf(args, sizeof args, "{\"%s\":%d}", PARTS[i], value);
-                int x = plus ? INK_CANVAS_W - INK_MARGIN - INK_CONTROL : INK_MARGIN;
-                editor_bind(ink_ui_circle(screen, plus ? "next" : "back", x, y, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_WHITE, NULL, NULL), plus ? TR("增加") : TR("减少"), "reminder.draft", args);
-            }
-        }
+        ink_ui_datetime_picker(screen, values, editor_date_bind);
         editor_bind(ink_ui_pill(screen, TR("选好了"), INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_CONTROL, w, INK_CONTROL, true, NULL, NULL), TR("选好了"), "shell.back", "{}");
     } else {
         editor_bind(NULL, TR("输入内容"), "reminder.focus", "{}");

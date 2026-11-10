@@ -78,14 +78,15 @@ static void phone(void) {
     }
 }
 
-static lv_area_t time_rows[5], time_buttons[10];
+enum { PICKER_ROWS = INK_UI_DATETIME_PARTS, PICKER_BUTTONS = 2 * PICKER_ROWS };
+static lv_area_t time_rows[PICKER_ROWS], time_buttons[PICKER_BUTTONS];
 static bool compare;
 static int buttons;
 static void inspect_buttons(lv_obj_t *obj) {
     const char *cap = ink_shell_bound_cap(obj);
     if (cap && !strcmp(cap, compare ? "reminder.draft" : "shell.time_step")) {
-        CHECK(buttons < 10, "picker has ten step buttons");
-        if (buttons < 10) {
+        CHECK(buttons < PICKER_BUTTONS, "picker has ten step buttons");
+        if (buttons < PICKER_BUTTONS) {
             lv_area_t a; lv_obj_get_coords(obj, &a);
             if (!compare) time_buttons[buttons] = a;
             else CHECK(!memcmp(&a, &time_buttons[buttons], sizeof a), "both pickers share button geometry #%d", buttons);
@@ -96,6 +97,7 @@ static void inspect_buttons(lv_obj_t *obj) {
 }
 static void inspect_picker(void) {
     static const char *const rows[] = {"年 2028", "月 02", "日 28", "时 10", "分 20"};
+    _Static_assert(sizeof rows / sizeof *rows <= PICKER_ROWS, "date evidence rows fit");
     for (unsigned i = 0; i < sizeof rows / sizeof *rows; i++) {
         wanted = rows[i]; find_label(); CHECK(found, "shared date row is visible: %s", rows[i]);
         if (!found) continue;
@@ -103,7 +105,7 @@ static void inspect_picker(void) {
         if (!compare) time_rows[i] = a;
         else CHECK(!memcmp(&a, &time_rows[i], sizeof a), "both pickers share date row geometry #%u", i);
     }
-    buttons = 0; inspect_buttons(lv_screen_active()); CHECK(buttons == 10, "all date and time controls are present");
+    buttons = 0; inspect_buttons(lv_screen_active()); CHECK(buttons == PICKER_BUTTONS, "all date and time controls are present");
 }
 static void picker(void) {
     call("settings.set", "{\"id\":\"time.auto\",\"value\":0}");

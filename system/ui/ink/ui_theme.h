@@ -69,6 +69,9 @@ void ink_ui_group_divider(lv_obj_t *parent, int y, int w);
 lv_obj_t *ink_ui_panel(lv_obj_t *parent, int height, bool modal);
 lv_obj_t *ink_ui_pagebar(lv_obj_t *parent, int page, int total, int y, lv_event_cb_t cb);
 lv_obj_t *ink_ui_notice(lv_obj_t *parent, const char *text, int y);
+enum { INK_UI_DATETIME_PARTS = 5 };
+void ink_ui_datetime_picker(lv_obj_t *parent, const int parts[INK_UI_DATETIME_PARTS],
+                            void (*bind)(lv_obj_t *button, int part, int delta));
 void ink_ui_busy_control(lv_obj_t *obj, bool busy);
 
 /* A control owns its whole gesture, including a press in an edge band. */

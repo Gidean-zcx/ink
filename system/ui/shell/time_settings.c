@@ -12,7 +12,7 @@
 #include "ink/ui_shell.h"
 
 enum { TIME, EDIT, ZONES, RETURN };
-#define TIME_FIELDS_MAX 5
+#define TIME_FIELDS_MAX INK_UI_DATETIME_PARTS
 #define TIME_ACTIONS_MAX 12
 static const char *const NAMES[] = {"SetTime", "SetDateTime", "SetTimeZone", "SetReturn"};
 static const char *const TITLES[] = {TR_NOOP("日期和时间"), TR_NOOP("手动设置"), TR_NOOP("时区"), TR_NOOP("离开多久要重新验证")};
@@ -54,6 +54,13 @@ static void button(const char *label, const char *cap, const char *args, bool en
         ink_ui_pill(P.screen, label, x, y, w, INK_CONTROL, primary, NULL, NULL);
     if (enabled) ink_shell_bind(b, cap, P.args[i]);
     else lv_obj_add_state(b, LV_STATE_DISABLED);
+}
+static void date_bind(lv_obj_t *b, int part, int delta) {
+    int i = P.actions++;
+    snprintf(P.ids[i], sizeof P.ids[i], "action:%d", i);
+    snprintf(P.args[i], sizeof P.args[i], "{\"field\":%d,\"delta\":%d}", part, delta);
+    P.action[i] = (ink_ui_action_spec_t){.id = P.ids[i], .label = delta > 0 ? "+" : "−", .capability = "shell.time_step", .args_json = P.args[i], .enabled = true};
+    ink_shell_bind(b, "shell.time_step", P.args[i]);
 }
 static void bind_zone(lv_obj_t *slot, size_t i, ink_ui_field_spec_t *f, ink_ui_action_spec_t *a, void *ctx) {
     (void)ctx; unsigned k = (unsigned)(i % 4);
@@ -104,13 +111,8 @@ static void create(lv_obj_t *screen, void *arg) {
     } else if (P.page == EDIT) {
         for (int i = 0; i < TIME_FIELDS_MAX; i++) {
             snprintf(text, sizeof text, "%s %02d", TR(PARTS[i]), P.part[i]); field(i, PARTS[i], TR(PARTS[i]), text);
-            ink_ui_line(screen, text, INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_MARGIN + INK_PRIMARY + INK_GAP_M, y + INK_GAP_L, w - 2 * (INK_PRIMARY + INK_GAP_M));
-            for (int j = 0; j < 2; j++) {
-                snprintf(args, sizeof args, "{\"field\":%d,\"delta\":%d}", i, j ? 1 : -1);
-                button(j ? "+" : "−", "shell.time_step", args, true, j ? INK_CANVAS_W - INK_MARGIN - INK_PRIMARY : INK_MARGIN, y, INK_PRIMARY, false);
-            }
-            y += INK_CONTROL + INK_GAP_M;
         }
+        ink_ui_datetime_picker(screen, P.part, date_bind);
         ink_tm_t t = {.year = P.part[0], .month = P.part[1], .day = P.part[2], .hour = P.part[3], .min = P.part[4]};
         snprintf(args, sizeof args, "{\"utc_s\":%lld}", (long long)ink_time_from_local(&t));
         button(TR("保存日期和时间"), "time.set", args, !ink_setting_get("time.auto"), INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_CONTROL, w, true);

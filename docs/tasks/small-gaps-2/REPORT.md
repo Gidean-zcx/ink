@@ -10,7 +10,7 @@
 | 1.2 全部页图标 | 【实测】通过 | 给三份注册声明补 `.icon`；复用现有 SVG、许可与构建检查。改后 19 条检查通过；截图 `work/small-gaps-2/before/ui/icons/`、`build/test-out/small-gaps-2/icons/`；最终反向对照待补 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/small_gaps_2/run.py --build build --case icons` |
 | 1.3 拨号页 | 【实测】通过 | 提示移到拨号按钮左侧，100%/120% 下均与 12 个原尺寸数字键不重叠；改前失败 6 条，改后 94 条通过 | 同上，`--case phone`；`work/small-gaps-2/phone-after.log` |
 | 1.4 飞行模式 | 【实测】通过 | 控制面板关闭飞行模式后收起；AI 的“关闭飞行模式”错误面板也收起；仅操作成功时关闭，失败走原拒绝提示。原测试与新增测试 2/2 通过 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^(airplane-mode|small-gaps-2-airplane)$' --output-on-failure -j2` |
-| 1.5 日期时间选择 | 待实现、验证 | — | — |
+| 1.5 日期时间选择 | 【实测】通过 | 两页复用 `ink_ui_datetime_picker`；5 行文字和 10 个按钮逐一比坐标；原 `time-settings`、`reminder-edit` 未改，3/3 通过，见 `work/small-gaps-2/picker-after.log` | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^(small-gaps-2-picker|time-settings|reminder-edit)$' --output-on-failure -j2` |
 | 1.6 计算器 120% | 待检查、验证 | — | — |
 | 2 全量、内存、S31、gcccheck | 待验证 | — | — |
 | 3 改前改后截图 | 待生成 | — | — |
@@ -21,7 +21,7 @@
 
 ## 和设计不一致的
 
-- 待核对。
+- 暂无。保留 `SetDateTime` 的五行“− / +”选择样式：它直接表达增减，原有时间设置的字段、按钮顺序和能力合同可保留；提醒页改用同一组件。两页各自保留原能力的参数适配及日期校验，未改能力名、权限、保存动作或提醒年份范围。
 
 ## 改过的已有测试
 
@@ -40,6 +40,7 @@
 
 - 任务 1：复用原 `reader.last`，增加可选 `offset` 字段以保留百分比；旧记录仍能读取。没有新文件、新定时器或任务。
 - 任务 1：阅读卡片提供者订阅现有 `storage.card` 状态，复用原卡片版本事件和刷新节流。
+- 任务 5 明确要求统一选择器：从原 `SetDateTime` 提取一个无状态 UI 组件；没有新增任务、线程、队列、缓存、配置项或状态机。
 
 ## 要改的文档
 
