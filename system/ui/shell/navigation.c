@@ -219,6 +219,15 @@ static const char *wifi_line(char *ssid, size_t cap) { /* the Wi-Fi network in u
 
 static void refused(void *ctx, const ink_receipt_t *rc) { (void)ctx; ink_shell_refused(rc); } /* never silent */
 
+static void airplane_done(void *ctx, const ink_receipt_t *rc) {
+    if (!current_session((uint32_t)(uintptr_t)ctx)) return;
+    if (rc->status == INK_RC_DONE && !ink_setting_get("net.airplane")) {
+        if (!strcmp(ink_ui_top_name(), "AiOffline")) ink_ai_dismiss();
+        ink_shell_close();
+    }
+    ink_shell_refused(rc);
+}
+
 static void binding_event(lv_event_t *e) {
     binding_t *b = lv_event_get_user_data(e);
     if (lv_event_get_code(e) == LV_EVENT_DELETE) {
@@ -240,6 +249,7 @@ static void binding_event(lv_event_t *e) {
         ink_ui_busy_control(lv_event_get_target_obj(e), true);
     }
     if (!strcmp(b->cap, "text.voice_start")) ink_ui_cause(osal_now_us(), "text.voice_tap_to_panel_ms");
+    if (!strcmp(b->cap, "net.set_airplane")) { o.done = airplane_done; o.ctx = (void *)(uintptr_t)b->epoch; }
     ink_cap_call(b->cap, NULL, &o);
 }
 

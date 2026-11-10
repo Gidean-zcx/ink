@@ -122,6 +122,7 @@ static void write_phase(void) {
     frame("ai");
     press("关闭飞行模式");
     CHECK(WAIT_FOR(ink_setting_get("net.airplane") == 0, 3000), "the panel's button turns airplane mode off");
+    CHECK(strcmp(top(), "AiOffline"), "the airplane error panel closes after the successful switch");
     CHECK(ink_setting_get("wifi.enabled") == 1 && ink_setting_get("bt.enabled") == 0, "Wi-Fi and Bluetooth as before airplane mode");
     CHECK(WAIT_FOR(radio_on(), 15000), "the radio is on and the card registered again");
     CHECK(WAIT_FOR(on_link("wifi"), 10000), "Wi-Fi in use again");
