@@ -21,10 +21,10 @@
  * (10-byte header, ink/sys/rt.h) are counted; the "ai.listen.end" notification makes
  * the hub answer like the real one: "ai.stt" (transcript) after stt_ms, the
  * text chunks ("ai.delta") after think_ms, TTS audio as binary frames
- * [2][stream][seq] (stand-in Opus, sent tts_speed x faster than real time,
+ * [2][stream][seq] (stand-in Opus, sent at real time by default,
  * the first tts_first_ms after the thinking), "ai.tts.end", then the result:
  *   {"method": "ai.listen", "listen": {"stt_ms": 300, "transcript": "...",
- *    "tts_first_ms": 500, "tts_chars_per_s": 4.5, "tts_speed": 2},
+ *    "tts_first_ms": 500, "tts_chars_per_s": 4.5, "tts_speed": 1},
  *    "think_ms": 1400, "stream": {...}, "result": {...}}
  * A voice rule may list "tools": [{"name": "reader.next_page", "arguments": {},
  * "page_gen_offset": 0, "request_id": "r1", "repeat": 2}] — after the transcript the hub calls them one by one
@@ -56,7 +56,7 @@ static const char *DEFAULT_SCRIPT =
     "\"chunks_en\":[\"This page is about Xiaoman delivering a message for someone for the first time.\"]},"
     "\"result\":{\"done\":true,\"source\":\"page\"}},"
     "{\"method\":\"ai.listen\",\"think_ms\":1400,\"listen\":{\"stt_ms\":300,\"transcript\":\"这一页讲了什么？\","
-    "\"tts_first_ms\":500,\"tts_chars_per_s\":4.5,\"tts_speed\":2},"
+    "\"tts_first_ms\":500,\"tts_chars_per_s\":4.5,\"tts_speed\":1},"
     "\"stream\":{\"notify\":\"ai.delta\",\"interval_ms\":450,\"chunks\":["
     "\"这一页讲的是小满第一次替别人送信。\",\"陈阿姨二十年前和好朋友吵了架，一直没机会说对不起，\","
     "\"小满就在晚上八点对着天狼星，替她把这句话说了出来。\",\"第二天，陈阿姨收到了老朋友的回信：“我也是。”\"],"
@@ -172,11 +172,45 @@ static const cJSON *chunks_for(const cJSON *stream, const char *lang) {
     return chunks ? chunks : cJSON_GetObjectItemCaseSensitive(stream, "chunks");
 }
 
-static size_t utf8_chars(const char *s) {
-    size_t n = 0;
-    for (; *s; s++)
-        if (((unsigned char)*s & 0xC0) != 0x80) n++;
-    return n;
+/* Same text limit and sentence boundaries as the hub; all allocation is host-side. */
+static cJSON *speech_sentences(const cJSON *chunks) {
+    const char *cut = "\n回答太长，只显示了前面部分。";
+    size_t limit = 32768 - strlen(cut) - 1, used = 0;
+    char *text = sim_host_malloc(32768);
+    const cJSON *c;
+    bool clipped = false;
+    cJSON_ArrayForEach(c, chunks) {
+        const char *s = cJSON_GetStringValue(c);
+        size_t n = s ? strlen(s) : 0;
+        if (used + n > limit) { n = limit - used; clipped = true; }
+        memcpy(text + used, s ? s : "", n);
+        used += n;
+        if (clipped) break;
+    }
+    if (clipped) {
+        used = limit - strlen(cut);
+        while (used && ((unsigned char)text[used] & 0xC0) == 0x80) used--;
+        memcpy(text + used, cut, strlen(cut));
+        used += strlen(cut);
+    }
+    text[used] = 0;
+    cJSON *out = cJSON_CreateArray();
+    for (size_t start = 0, at = 0; at < used;) {
+        unsigned char ch = (unsigned char)text[at];
+        size_t width = ch < 0x80 ? 1 : ch < 0xE0 ? 2 : ch < 0xF0 ? 3 : 4;
+        bool end = strchr(".!?;\n", ch) || !strncmp(text + at, "。", 3) || !strncmp(text + at, "！", 3) ||
+                   !strncmp(text + at, "？", 3) || !strncmp(text + at, "；", 3);
+        at += width;
+        if (end || at == used || at - start + 4 > 511) {
+            char saved = text[at];
+            text[at] = 0;
+            cJSON_AddItemToArray(out, cJSON_CreateString(text + start));
+            text[at] = saved;
+            start = at;
+        }
+    }
+    sim_host_free(text);
+    return out;
 }
 
 static double num_or(const cJSON *o, const char *k, double def) {
@@ -194,7 +228,7 @@ static void finish_listen(int i, uint64_t at) {
     double iv = num_or(stream, "interval_ms", 400);
     const char *nm = cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(stream, "notify"));
     uint64_t text_at = at, tts_at = at + SIM_MS(num_or(ls, "tts_first_ms", 500));
-    double cps = num_or(ls, "tts_chars_per_s", 4.5), speed = num_or(ls, "tts_speed", 2);
+    double cps = num_or(ls, "tts_chars_per_s", 4.5), speed = num_or(ls, "tts_speed", 1);
     uint32_t seq = 0;
     cJSON *say_chunks = NULL;
     if (cJSON_IsTrue(cJSON_GetObjectItemCaseSensitive(rule, "say_from_receipt")) && LS[i].say[0]) {
@@ -202,12 +236,14 @@ static void finish_listen(int i, uint64_t at) {
         cJSON_AddItemToArray(say_chunks, cJSON_CreateString(LS[i].say));
         chunks = say_chunks;
     }
-    cJSON_ArrayForEach(c, chunks) {
+    cJSON *sentences = speech_sentences(chunks);
+    cJSON_ArrayForEach(c, sentences) {
         const char *txt = cJSON_GetStringValue(c) ? cJSON_GetStringValue(c) : "";
         notify(ws, text_at, nm ? nm : "ai.delta", id, txt);
         text_at += SIM_MS(iv);
-        /* this chunk's speech: chars / cps seconds of 60 ms frames, sent `speed` x real time */
-        int frames = (int)(utf8_chars(txt) / cps / 0.06) + 1;
+        size_t chars = 0;
+        for (const char *s = txt; *s; s++) chars += ((unsigned char)*s & 0xC0) != 0x80;
+        int frames = (int)(chars / cps / 0.06) + 1;
         for (int f = 0; f < frames; f++) {
             uint8_t pkt[10 + 200]; /* realtime frame header (ink/sys/rt.h): kind, session, seq, time, flags */
             uint32_t t_ms = (uint32_t)(tts_at / 1000000u);
@@ -227,6 +263,7 @@ static void finish_listen(int i, uint64_t at) {
             seq++;
         }
     }
+    cJSON_Delete(sentences);
     cJSON_Delete(say_chunks);
     uint64_t end = text_at > tts_at ? text_at : tts_at;
     { /* names its turn: an end arriving after the user started a new question changes nothing there */

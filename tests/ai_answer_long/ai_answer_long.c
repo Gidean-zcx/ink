@@ -184,13 +184,13 @@ static void run(void *arg) {
     CHECK(strstr(visible, "回答无法完整显示"), "32 KB of line breaks: the panel says it cannot show it in full (%.60s, %d pages)", visible, pages);
 
     /* 3. voice: the speech of the 6 KB answer (more frames than the jitter buffer holds, sent in real time as the
-     * hub does) plays to the end. It is fast speech so that the turn stays within its 45 s budget (budget_ms). */
+     * hub does) plays to the end at normal speed, well beyond the initial 45 s wait. */
     double heard = sim_audio_played_ms();
     CHECK(AI("ai.panel.listen", NULL) && g_rc.status == INK_RC_DONE, "tap to ask by voice");
     delay_ms(1500);
     CHECK(AI("ai.panel.listen", NULL) && g_rc.status == INK_RC_DONE, "second tap ends the question");
     CHECK(WAIT_FOR(speaking(), 20000), "speech starts");
-    CHECK(WAIT_FOR(sim_metric_value("ai.answers") >= 3 && !speaking(), 200000), "speech ends by itself");
+    CHECK(WAIT_FOR(sim_metric_value("ai.answers") >= 3 && !speaking(), 600000), "speech ends by itself");
     double played = sim_audio_played_ms() - heard, want = speech_frames * 60.0;
     CHECK(speech_frames > 512 && played >= 0.97 * want, "whole speech heard: %.0f of %.0f ms (%d frames)", played, want, speech_frames);
     CHECK(sim_metric_value("ai.downlink_overflow") == 0 && sim_metric_value("audio.jitter_overflow") == 0 &&
