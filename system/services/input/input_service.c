@@ -51,6 +51,9 @@ static struct {
     ink_svc_deadline_t power_at;
 } IS;
 
+static ink_input_zone_t g_zones[INK_INPUT_HAPTIC_ZONES] INK_PSRAM_BSS;
+static int g_nzones;
+
 static int mm(int v) { return v * IS.px_per_mm10 / 10; }
 
 static void emit(ink_input_event_t *e) {
@@ -59,6 +62,19 @@ static void emit(ink_input_event_t *e) {
 
 static void lock(void) { osal_mutex_lock(IS.lock, OSAL_WAIT_FOREVER); }
 static void unlock(void) { osal_mutex_unlock(IS.lock); }
+
+void ink_input_set_zones(const ink_input_zone_t *zones, int count) {
+    if (!count) {
+        __atomic_store_n(&g_nzones, 0, __ATOMIC_RELEASE);
+        return;
+    }
+    if (!IS.lock) return;
+    lock();
+    int n = count <= INK_INPUT_HAPTIC_ZONES ? count : 0;
+    if (n) memcpy(g_zones, zones, (size_t)n * sizeof *zones);
+    __atomic_store_n(&g_nzones, n, __ATOMIC_RELEASE);
+    unlock();
+}
 
 /* A timer callback can be on its way while a new press re-arms the timer: it only acts if the
  * CURRENT press has really been held long enough. */
@@ -88,9 +104,17 @@ static void on_touch(const hal_input_event_t *h) {
     ink_input_event_t e = {.kind = INK_EV_POINTER, .x = (int16_t)lx, .y = (int16_t)ly, .t_us = h->t_us};
     ink_input_event_t s = {0};
     bool swipe = false;
+    bool pulse = false;
     lock();
     switch (h->touch.phase) {
     case HAL_TOUCH_DOWN:
+        for (int i = 0; !IS.down && i < __atomic_load_n(&g_nzones, __ATOMIC_ACQUIRE); i++) {
+            const ink_input_zone_t *z = &g_zones[i];
+            if (lx >= z->x1 && lx <= z->x2 && ly >= z->y1 && ly <= z->y2) {
+                pulse = z->enabled;
+                break;
+            }
+        }
         IS.down = true;
         IS.moved = IS.long_fired = false;
         IS.x0 = IS.x = lx;
@@ -126,6 +150,7 @@ static void on_touch(const hal_input_event_t *h) {
     }
     }
     unlock();
+    if (pulse) ink_audio_haptic();
     emit(&e);
     if (swipe) emit(&s);
 }
@@ -210,7 +235,10 @@ static void hal_sink(const hal_input_event_t *h, void *ctx) {
         if (h->type == HAL_IN_TOUCH) on_touch(h);
         else if (h->type == HAL_IN_KEY) on_key(h);
     }
-    if (h->type == HAL_IN_KEY && h->key.pressed) ink_audio_key_tone();
+    if (h->type == HAL_IN_KEY && h->key.pressed) {
+        ink_audio_key_tone();
+        ink_audio_haptic();
+    }
 }
 
 void ink_input_set_power_key_hook(bool (*fn)(void)) { IS.power_key_hook = fn; }

@@ -1261,30 +1261,38 @@ static void body_blocks(void) {
             bind_toggle(toggle, "notify.dnd");
         }
         F.y += INK_CONTROL + INK_GAP_L;
+        h = heading_h() + 3 * INK_CONTROL;
         if (block(h)) {
-            heading("提示");
+            heading(TR("提示"));
             F.y += heading_h();
-            lv_obj_t *g = group(2);
-            const char *ids[] = {"audio.key_tone", "audio.vibration"}, *labels[] = {"按键提示音", "振动"};
+            lv_obj_t *g = group(3);
+            const char *ids[] = {"audio.key_tone", "audio.vibration"}, *labels[] = {TR_NOOP("按键提示音"), TR_NOOP("振动")};
             for (int i = 0; i < 2; i++) {
                 ink_ui_icon(g, i ? "wave" : "bell", INK_ICON_LIST, INK_ICON_LINE, INK_GAP_L, i * INK_CONTROL + (INK_CONTROL - INK_ICON_LIST) / 2, false);
-                lv_obj_t *toggle = ink_ui_toggle(g, labels[i], ink_setting_get(ids[i]), INK_ROW_DOUBLE, i * INK_CONTROL, width() - INK_ROW_DOUBLE - INK_GAP_L, NULL, NULL);
+                lv_obj_t *toggle = ink_ui_toggle(g, TR(labels[i]), ink_setting_get(ids[i]), INK_ROW_DOUBLE, i * INK_CONTROL, width() - INK_ROW_DOUBLE - INK_GAP_L, NULL, NULL);
                 lv_obj_set_style_bg_opa(toggle, LV_OPA_TRANSP, 0);
                 bind_toggle(toggle, ids[i]);
             }
+            const char *levels[] = {TR("弱"), TR("中"), TR("强")};
+            int level = (int)ink_setting_get("audio.vibration_level");
+            char args[80];
+            snprintf(args, sizeof args, "{\"id\":\"audio.vibration_level\",\"value\":%d}", (level + 1) % 3);
+            lv_obj_t *row = ink_ui_list_row(g, "wave", TR("振动强度"), levels[level], 0, 2 * INK_CONTROL, width(), false, NULL, NULL);
+            ink_shell_bind(row, "settings.set", args);
             F.y -= heading_h();
         }
         F.y += h + INK_GAP_L;
+        h = heading_h() + 2 * INK_CONTROL;
         if (block(h)) {
-            heading("铃声");
+            heading(TR("铃声"));
             F.y += heading_h();
             lv_obj_t *g = group(2);
-            const char *ids[] = {"audio.call_ring", "audio.alarm_ring"}, *labels[] = {"来电", "闹钟"};
-            const char *names[] = {"清音", "双音", "柔音"};
+            const char *ids[] = {"audio.call_ring", "audio.alarm_ring"}, *labels[] = {TR_NOOP("来电"), TR_NOOP("闹钟")};
+            const char *names[] = {TR_NOOP("清音"), TR_NOOP("双音"), TR_NOOP("柔音")};
             for (int i = 0; i < 2; i++) {
                 int v = (int)ink_setting_get(ids[i]); char value[64], args[96];
-                snprintf(value, sizeof value, "%s · 点按换音试听", names[v]);
-                lv_obj_t *row = ink_ui_list_row(g, i ? "clock" : "phone", labels[i], value, 0, i * INK_CONTROL, width(), false, NULL, NULL);
+                snprintf(value, sizeof value, TR("%s · 点按换音试听"), TR(names[v]));
+                lv_obj_t *row = ink_ui_list_row(g, i ? "clock" : "phone", TR(labels[i]), value, 0, i * INK_CONTROL, width(), false, NULL, NULL);
                 snprintf(args, sizeof args, "{\"id\":\"%s\",\"value\":%d}", ids[i], (v + 1) % 3);
                 ink_shell_bind(row, "settings.set", args);
             }
@@ -1593,7 +1601,7 @@ static int page_snapshot(char *buf, size_t cap) {
         return n < 0 ? 0 : (size_t)n < cap ? n : (int)cap - 1;
     }
     if (N.page_id == PAGE_SOUND)
-        return snprintf(buf, cap, "SetSound；音量=%lld；勿扰=%lld；按键提示音(audio.key_tone)=%lld；振动(audio.vibration)=%lld；来电铃声(audio.call_ring)=%lld；闹钟铃声(audio.alarm_ring)=%lld；铃声：0清音、1双音、2柔音；settings.set(id,value)更改并试听；通知：shell.notify_settings；shell.page_next、shell.page_prev、shell.back。", (long long)ink_setting_get("audio.volume"), (long long)ink_setting_get("notify.dnd"), (long long)ink_setting_get("audio.key_tone"), (long long)ink_setting_get("audio.vibration"), (long long)ink_setting_get("audio.call_ring"), (long long)ink_setting_get("audio.alarm_ring"));
+        return snprintf(buf, cap, TR("SetSound；音量=%lld；勿扰=%lld；按键提示音(audio.key_tone)=%lld；振动(audio.vibration)=%lld；振动强度(audio.vibration_level)=%lld（0弱35ms、1中50ms、2强70ms）；来电铃声(audio.call_ring)=%lld；闹钟铃声(audio.alarm_ring)=%lld；铃声：0清音、1双音、2柔音；settings.get(id)、settings.set(id,value)；通知：shell.notify_settings；shell.page_next、shell.page_prev、shell.back。"), (long long)ink_setting_get("audio.volume"), (long long)ink_setting_get("notify.dnd"), (long long)ink_setting_get("audio.key_tone"), (long long)ink_setting_get("audio.vibration"), (long long)ink_setting_get("audio.vibration_level"), (long long)ink_setting_get("audio.call_ring"), (long long)ink_setting_get("audio.alarm_ring"));
     int n = snprintf(buf, cap, "%s；当前=%s；亮度=%lld；暖光=%lld；音量=%lld；网络偏好=%lld；通知=%d。",
                      PAGES[N.page_id].name, ink_member_current()->name, (long long) ink_setting_get("display.light"),
                      (long long) ink_setting_get("display.warmth"), (long long) ink_setting_get("audio.volume"),
