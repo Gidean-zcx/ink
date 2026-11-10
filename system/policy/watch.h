@@ -13,7 +13,7 @@
 #include "ink/osal.h"
 #include "ink/sys/exec.h"
 
-#define WATCH_MAX 64 /* system services, shell and system apps share the table (in PSRAM); 32 filled up on 2026-11-09 */
+#define WATCH_MAX 68 /* PSRAM; mobile network adds three subscriptions to the system and app table. */
 
 typedef void (*watch_fn)(void *ctx, int idx, const char *id);
 

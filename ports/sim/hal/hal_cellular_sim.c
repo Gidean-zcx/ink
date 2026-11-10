@@ -15,11 +15,12 @@
 bool hal_cell_status(hal_cell_status_t *out) {
     nt26_slot_t slot;
     bool reg = false;
-    if (nt26_sim_slot(&slot) != NT26_OK || nt26_registered(&reg) != NT26_OK) return false;
+    if (nt26_sim_slot(&slot) != NT26_OK || nt26_registration(&reg, &out->roaming) != NT26_OK) return false;
     out->slot = slot == NT26_INTERNAL_CARD ? HAL_CELL_SLOT_INTERNAL : HAL_CELL_SLOT_EXTERNAL;
     out->registered = reg;
     return true;
 }
+int hal_cell_apn(const hal_cell_apn_t *a) { return nt26_apn(a->name, a->user, a->password) == NT26_OK ? 0 : -1; }
 
 int hal_cell_select_sim(hal_cell_slot_t slot, uint32_t reg_timeout_ms) {
     nt26_result_t r = nt26_select_sim(slot == HAL_CELL_SLOT_INTERNAL ? NT26_INTERNAL_CARD : NT26_EXTERNAL_SLOT, reg_timeout_ms);
@@ -56,6 +57,7 @@ int hal_cell_wait_event(hal_cell_event_t *ev, uint32_t timeout_ms) {
     char line[160];
     if (hal_modem_urc(line, sizeof line, timeout_ms) < 0) return 0;
     memset(ev, 0, sizeof *ev);
+    if (!strncmp(line, "+CEREG:", 7)) { ev->type = HAL_CELL_EV_REG; return 1; }
     if (!strncmp(line, "+CMTI:", 6)) { /* +CMTI: "SM",<index> */
         const char *comma = strchr(line, ',');
         if (!comma) return 0;
