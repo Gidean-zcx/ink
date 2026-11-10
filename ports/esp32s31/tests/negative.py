@@ -36,7 +36,7 @@ def main():
         ("vendor-sleep", "power", "sleep_rc = ink_s31_light_sleep();", "sleep_rc = esp_light_sleep_start();"),
         ("dynamic-frequency", "power", ".min_freq_mhz = mhz", ".min_freq_mhz = S31_IDLE_MHZ"),
         ("gpio61-wake", "power", "    return us || (armed & ~HAL_WAKE_TIMER);", "    gpio_wakeup_enable(S31_GPIO_AI_KEY, GPIO_INTR_LOW_LEVEL);\n    esp_sleep_enable_gpio_wakeup();\n    return us || (armed & ~HAL_WAKE_TIMER);"),
-        ("rtc-arm-idle", "board", "    if (s == HAL_I2C_OK && rtc && !(levels & MB_P1_RTC_INT)) s = HAL_I2C_ERR;", ""),
+        ("rtc-arm-idle", "board", "        if (s == HAL_I2C_OK && !(levels & MB_P1_RTC_INT)) s = HAL_I2C_ERR;", ""),
     ]
     with tempfile.TemporaryDirectory(prefix="s31-negative-", dir=args.build.resolve()) as temp:
         work = Path(temp)

@@ -56,8 +56,8 @@ hal_i2c_status_t metalio_board_read(int port, uint8_t *levels);
  *  (upstream ioexp_mask_for_sleep). Stop reading the keys before. */
 hal_i2c_status_t metalio_board_mask_for_sleep(bool rtc_wake);
 /** The wake inputs back as inputs, with INT idle: POWER P17 (upstream enable_power_wake_pin) and,
- *  when asked, RTC INT P16 (upstream leaves it masked and wakes by timer only). An input that is
- *  already active raises INT at once; the caller must check INT again and cancel sleep. */
+ *  when asked, RTC INT P16 (upstream leaves it masked and wakes by timer only). RTC's baseline is
+ *  read before POWER is enabled; an active RTC is rejected. The caller also checks shared INT. */
 hal_i2c_status_t metalio_board_arm_wake(bool power_key, bool rtc);
 /** The shared rails off in the official order: P05 (camera/screen) first, then P14 (4G, Bluetooth
  *  audio, amplifier) unless keep_shared_power. What hangs on them must be idle. */

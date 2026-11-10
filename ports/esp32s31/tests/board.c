@@ -81,14 +81,14 @@ int main(void) {
     expect(5, true, 1, 0x97);
     reset_trace();
     assert(metalio_board_arm_wake(true, true) == HAL_I2C_OK);
-    expect(0, false, 3, 0xD7);
+    expect(0, false, 7, 0x40);
     expect(1, true, 1, 0xD7);
     expect(2, false, 7, 0xC0);
-    assert(count == 3 && regs[6] == 0);
+    assert(count == 3 && regs[6] == 0 && !(regs[3] & MB_P1_RTC_INT));
     reset_trace();
     assert(metalio_board_cut_rails(false) == HAL_I2C_OK);
     expect(0, false, 2, 0);
-    expect(1, false, 3, 0xC7);
+    expect(1, false, 3, 0x87);
     assert(count == 2);
     /* The HAL latches P17 before this function; normal directions precede rail restore. */
     reset_trace();
@@ -115,7 +115,7 @@ int main(void) {
     rtc_low = true; /* An alarm became active during masking, before the wake input is enabled. */
     reset_trace();
     assert(metalio_board_arm_wake(true, true) == HAL_I2C_ERR);
-    assert(count == 2 && regs[7] == 0); /* Do not enable wake inputs over an already-active RTC. */
+    assert(count == 2 && regs[7] == 0x40); /* POWER remains masked; the HAL restores normal inputs. */
     puts("s31 board: PMIC delays, safe latches, wake directions and rail order passed");
     return 0;
 }
