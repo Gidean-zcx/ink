@@ -1,89 +1,91 @@
 # emergency-call-2 执行报告
 
-基线：`951bdfc15f0997a77cd9ad960b056eee10fb3ef8`。仅本地编译与宿主机测试，不接触设备、不推送。
+基线：`951bdfc15f0997a77cd9ad960b056eee10fb3ef8`。归档来源：`origin/archive/emergency-call`（`b7f04ba9`）。仅本地提交、编译和宿主机测试，没有连接设备或推送。
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 功能、原测试、新检查与反向对照 | 【实测】专项通过 | 六个原场景及禁用电话变体，共 826 条断言；新增等待宏的最小回归 | `tests/emergency_call/run.py --build build`；分别加 `--negative radio/page/ownership/entry/prefix/wait` |
-| 1 普通全量测试 | 首轮 341/346，最终轮待跑 | 首轮原话 `99% tests passed, 5 tests failed out of 346`；相机与文档问题已修正，中枢复测通过，另两项基线对象对照仍失败 | `work/emergency-call-2/full.log`、`verified.log`、`hub-recheck.log`、`baseline-check.log` |
-| 1 ASan 全量测试 | 首轮 344/346，修正测试同步后待复跑 | 原话 `99% tests passed, 2 tests failed out of 346`，695.58 秒；无消毒器诊断。失败为两处测试同步问题 | `work/emergency-call-2/asan-full.log` |
-| 2 能力清单 | 【实测】通过 | 520 项定义；公开入口的锁屏描述按新标记生成 | `python3 tools/capabilities.py`、`--check` |
-| 2 S31 | 【实测】通过 | 构建、尺寸与静态栈报告退出 0；0 编译警告；镜像 3,201,200 字节 | `taskpolicy -c utility bash ports/esp32s31/build.sh`；`work/emergency-call-2/s31.log` |
-| 2 gcccheck | 【实测】通过 | `gcccheck: 11 compiled, 0 with findings`；无跳过 | `work/emergency-call-2/gcccheck.log` |
-| 2 隐私 | 待最终扫描 | 待记录 | 待记录 |
-| 3 与原实现的差别 | 【实现】完成 | 见下文 | `git diff 951bdfc1..HEAD` |
+| 1a 迁入原功能与测试 | 【实测】通过 | 六个原场景及禁用电话策略变体，7 场景、826 条检查；锁屏拨号、普通号码拒绝、手动／远端挂断、射频恢复、无 SIM 模型、中英文与快照隔离均通过 | C1；`work/emergency-call-2/emergency-final.log` |
+| 1b 新闸门、语义与应用隔离 | 【实测】通过 | 两个浮层快照导出紧急动作；无 phone 名称的合成入口按标记可用，带 phone 名称但无标记的入口拒绝；五个紧急能力均为系统归属。禁用变体中普通拨号和挂断被拒，紧急呼叫照常 | C1；`tests/emergency_call/policy.py` |
+| 1c 反向对照 | 【实测】通过 | 六个专项模式均命中指定失败；另撤销显示互斥、恢复旧测试检查顺序／等待宏，也分别使原相机、框架和历史索引断言失败，均到达 `test.finished` | C2；`negative-*.log` |
+| 1d 普通全量 | 【实测】通过 | 原话 `100% tests passed out of 346`；321.32 秒，0 跳过 | C3；`work/emergency-call-2/full-clean.log` |
+| 1e ASan/UBSan 全量 | 最终复跑中 | 两套构建通过；首轮无消毒器诊断，修正测试同步后正在完整复跑 | C4；`work/emergency-call-2/asan-final.log` |
+| 2a 能力清单 | 【实测】通过 | `PASS: 520 definitions, docs/system/capabilities.md`；生成及 `--check` 均通过 | C5 |
+| 2b S31 | 【实测】通过 | 完整构建、链接、镜像、尺寸和静态栈报告退出 0；0 编译警告；镜像 3,201,200 字节 | C6；`work/emergency-call-2/s31.log`、`build-s31/size.txt`、`stack.txt` |
+| 2c gcccheck | 【实测】通过 | `gcccheck: 12 compiled, 0 with findings`，无跳过 | C7；`work/emergency-call-2/gcccheck.log` |
+| 2d 范围与隐私 | 【实测】通过，结束前再核对 | 24 个相关文件，均小于 5 MiB；diff 检查无错误；总规则隐私扫描 grep 退出 1、0 匹配 | C8；`work/emergency-call-2/privacy.log` |
+| 3 原实现差别 | 【实现】完成 | 见下文；不迁入旧的名称特判 | `git diff 951bdfc1..HEAD` |
 
 ## 没做到的
 
-- 尚在执行。
+- 最终内存全量尚在运行。没有运行 Linux 原生全量；本次为 macOS 宿主测试及 RISC-V GCC 检查。
+- 未进行实机验证。当前 S31 蜂窝 HAL 仍是桩（`ports/esp32s31/hal_stubs.c:53`、`:57`）；模型通过不代表真机能拨号。
 
 ## 和设计不一致的
 
-- 沿用归档的模型假设，NT26 紧急拨号、无 SIM 和临时射频还没有实机证据；没有修改规范迁就实现。
+- 未通过修改设计合同迁就实现。继承原实现的证据边界：NT26 紧急命令、无 SIM、受限服务及临时射频行为仍是模型假设，待按下文核对。
 
 ## 改过的已有测试
 
-- `integration/ai_surface.c`：保留当前主线所有条目，登记紧急入口及四项只限本人操作的能力。
-- 同文件 `sms.send` 的必填参数预期从 `to` 改为 `to,text`：指定基线的通信服务已要求两项，旧检查首轮稳定失败；保留“全部必填且无额外必填”的断言，没有放宽。
-- `kid_apps.c`：原有“所有 phone.* 都有应用归属”检查对明确列出的五个紧急能力改为断言“系统归属、孩子可用”；其他能力仍执行原断言。这是任务第 4 项要求的归属变化。
-- 归档紧急呼叫测试六场景和原断言保留，增加入口语义、AI 从锁屏／未认证成员门打开、标记与名称无关、禁用电话策略变体。
-- 紧急测试驱动在场景期间持有 `INK_NEED_AWAKE`，仅使宿主驱动能在挂断后继续执行；不持有 `INK_NEED_NO_LOCK`，仍验证电源锁屏、成员认证过期和关闭后仍锁屏。首轮未持有时驱动随整机休眠，`test.finished` 未发生；未加 sleep 或延长时限。
-- `whole_product.h`：等待条件成功后返回该次观测，修正原宏在循环退出后又查询一次、可能自行使等待失败的问题；等待上限和 20 ms 间隔不改。最小非单调条件用例及原索引历史对照均做恢复旧宏的反向验证。
-- `fw_gaps/app.c`：原两条 DIRECT 订阅检查移到既有队列屏障之后，先让已退订的 UI 回调收尾，再跨执行器复用槽。断言内容、100 次页面循环和容量检查不改；恢复旧位置后同一断言失败。
-- `index_durable/device.c` 最终保持原样；尝试加强局部等待没有解决问题，已撤回，统一修复等待宏。
+- `ai_surface.c` 保留主线已有条目，登记紧急入口及四项仅限本人操作的能力。既有 `sms.send` 必填预期由 `to` 改成 `to,text`：指定基线的服务已要求这两项，保留完整参数集合断言。
+- `kid_apps.c` 对明确列出的五个紧急能力断言系统归属且孩子可用；其他 phone/call 能力仍按原应用归属规则检查，没有按前缀跳过。
+- `whole_product.h` 的等待宏返回成功的那次观测，消除退出循环后再次查询导致的假失败；上限和 20 ms 间隔不改。新增首次真、再次假条件的最小回归；恢复旧宏后该回归及原索引断言均失败。
+- `fw_gaps/app.c` 将原两条 DIRECT 订阅检查移到已有队列屏障之后，等已退订的 UI 回调收尾再跨执行器复用槽。断言、100 次页面循环和容量检查不改；恢复旧位置后原断言失败。
+- 归档紧急测试的六个场景和原断言保留，补入口语义、标记与名称无关、禁用电话及等待宏回归。测试驱动持有 `INK_NEED_AWAKE`，使其能在挂断后继续操作；不持有 `INK_NEED_NO_LOCK`，仍验证锁屏和认证过期。未加 sleep、改资源预算或延长超时。
+- `index_durable/device.c` 最终保持原样；局部加强等待未解决问题，已撤回，统一修复等待宏。
 
 ## 要用户定的
 
-- 无新增产品决定。本任务已明确只有人能拨号，AI 只打开页面；不增加普通 AI 通话的免确认例外。本人点按紧急拨号是 D-119／D-105 的明确直接操作，因此不弹确认卡。
+- 无新增产品决定。任务已明确只有人能拨号、AI 只打开页面。本人点按紧急拨号是 D-119／D-105 的明确直接操作，不弹确认卡；不扩大普通 AI 通话的免确认例外。
 
 ## 顺手发现
 
-- 【实现】当前电话是必备应用：设置接口拒绝保存 mode=0，读取也强制 mode=2。专项测试仅在构建目录副本中移除这两处电话豁免，经原有家长 PIN 确认保存 mode=0；普通电话确实被拒、紧急呼叫仍可用。未改变产品的必备应用规则。
-- 【实测／实现】布局变化触发 `lock-camera` 孩子场景的 TPS65185 告警；显示上电可插入休眠准备并重新打开 XOE。统一上电入口复用已有 `sim_power_lease`，新增两行调用，未改参数；原相机测试通过，临时撤掉两行后同一告警恢复。证据：`verified.log`、`negative-display.log`。原厂 `main/boards/common/power_policy/README.md:69` 明确冻结后续 UI 并等物理刷新完成；本次只补模拟器已有互斥的覆盖缺口。
-- 【实测】将八个产品 C 文件换成指定基线的临时对象，原框架和竞态断言也曾同样失败；复测 races 通过。框架问题最终只调整测试检查顺序，产品订阅机制未改。
-- 【实测】索引失败在历史索引对照阶段；当前索引单独 ASan 检查通过。全新 ASan 目录否定了初次“旧测试数据导致”的判断；最终定位为等待宏重复查询。修复后原索引专项通过，恢复旧宏后原断言再次失败。
-- 【实测】首轮中枢端到端 `tool_calls=0`，最终源码单项复测通过（17.66 秒）；最终全量仍需核对。
-- 【实测】GCC 初查发现显示端口原有四处 `uint32_t` 配 `%u` 的类型诊断；补 `(unsigned)` 后 11 文件零问题。日志 `gcccheck-first.log` 保留未修状态的编译失败。
+- 【实现／实测】电话在主线是必备应用，设置接口拒绝 mode=0，读取也强制 mode=2。专项只在构建目录副本中移除这两处电话豁免，经原家长 PIN 确认保存 mode=0；验证普通电话确实拒绝、紧急能力仍可用。产品的必备应用规则未改。
+- 【实测】新布局触发原相机测试的 TPS65185 告警。统一上电入口复用已有 `sim_power_lease`，新增两行调用，避免显示上电插入休眠准备；未改硬件参数。撤销两行后原告警恢复。原厂依据：`main/boards/common/power_policy/README.md:69` 要求冻结后续 UI 并等物理刷新完成。
+- 【实测】首次普通全量 341/346，首轮 ASan 344/346；最终补齐源码链接、参数契约及测试同步后重新跑全量。索引失败起初误判为旧输出残留，全新 ASan 对照排除了该判断，实际是等待宏二次取样；当前索引单项原已通过，失败在历史索引对照阶段。
+- 【实测】GCC 初查发现显示端口原有四处 `uint32_t` 配 `%u`，补 `(unsigned)` 后零问题；未修版本的失败保留在 `gcccheck-first.log`。主机链接器的重复库提示未改；S31 无编译警告。
 
 ## 新增的机制
 
-- `ink_cap_t.locked_entry`：任务第 2 项允许的标记；表示不读取成员资料的公开页面入口。锁屏策略、AI 清单和成功回执均按标记判断。
-- 紧急浮层与临时呼叫／射频标记：迁入原任务第 1、2 项，复用现有任务、HAL 和事件。
-- `phone.emergency_hangup`：任务第 4 项要求紧急能力独立于电话应用名单；复用既有挂断处理，仅接受本成员的紧急通话。普通 `call.hangup` 继续属于电话应用。
-- 显示上电复用已有的休眠互斥，未新增机制；为保证任务要求的原相机回归通过而补齐覆盖。
-- 无新任务、线程、状态机、持久格式、队列、缓存、重试或配置项。
+- `ink_cap_t.locked_entry`：任务第 2 项允许的标记，表示不含成员资料的公开页面入口；策略、AI 清单和成功回执都按标记判断。
+- 紧急浮层及短暂呼叫／射频标记：迁入原任务第 1、2 项，复用现有 UI、通信任务、HAL 和事件。
+- `phone.emergency_hangup`：任务第 4 项要求紧急能力独立于电话应用名单；复用原挂断处理，仅接受本成员的紧急通话。普通挂断仍归电话应用。
+- 未额外新增任务、线程、状态机、持久格式、队列、缓存、重试或配置项；显示互斥与测试同步均复用已有机制。
 
 ## 和 emergency-call 原实现的差别
 
-- 不迁入 `camera.*`／`phone.*`／`call.*` 锁屏前缀特判；紧急浮层声明 `locked_caps`，普通电话能力使用既有 `locked_owner_only`，公开入口使用新增标记。
-- 保留 audit14-fix 的 `.app` 映射和当前主线电话功能；五个紧急能力明确 `.app = NULL`。
-- 保留 semantics-shell-1 的版本、对象及动作描述，在锁屏和成员门补紧急动作；成员门动作容量从 4 调到 5 并加静态断言。
-- 紧急页面的挂断从 `call.hangup` 改为系统能力，避免禁用电话时无法结束紧急通话。
-- 保留主线已有翻译、能力契约和分钟通话时长，只补紧急功能所需内容。
-- 生成器识别公开入口标记，避免将 AI 可用的紧急入口错写成“锁定时仅人工”。
+- 不迁入 camera/phone/call 名称前缀特判；`opens_emergency()` 按标记判断。紧急浮层声明 `locked_caps`，普通电话使用已有 `locked_owner_only`。
+- 保留 audit14-fix 的 `.app` 映射，五个紧急能力明确 `.app = NULL`；紧急页挂断改用独立系统能力，避免禁用电话时挂不了紧急通话。
+- 保留 semantics-shell-1 的对象、版本和动作描述，在锁屏与成员门增加紧急动作；成员门动作容量 4 改 5，并加静态断言。
+- 保留主线翻译、能力契约和分钟通话时长；生成器识别公开入口标记，避免把 AI 可用的入口写成“锁定时仅人工”。
 
-## 要改的文档
-
-- 已按任务明确要求重新生成能力清单；`app-framework.md` 仅校正两处已失效的源码行号链接，正文合同未改。其余共享文档不改。
-
-## 里程碑
-
-- 已核对工作区干净、当前 HEAD 与指定基线一致；在独立任务分支执行。
-- 已迁入归档功能和六个原场景，完成当前闸门与语义模型的适配。
-- 里程碑 1：【实测】普通构建退出 0；紧急专项七场景 825 条检查通过；四组功能反向对照均到达 `test.finished` 并命中预期失败，第五组验证重新加入前缀判断会使静态检查失败。证据在 `work/emergency-call-2/emergency-final.log`、`negative-*.log`。
-- 里程碑 2：【实测】普通及 ASan 构建通过，原相机回归与反向对照完成；GCC 11 文件零问题。`integration-ai-surface`、`audit14-ownership`、`audit14-locked`、六项 `semantics-shell-*`、原电话、飞行模式、成员唤醒检查通过。S31 编译中。
-- 里程碑 3：【实测】S31 完整构建、尺寸和栈报告通过，0 编译警告；普通与 ASan/UBSan 最终全量串行执行中。
-- 里程碑 4：【实测】修正两处测试同步后，紧急呼叫、框架和历史索引三项回归全部通过；三项相关反向对照均失败在原断言。普通与 ASan 构建重建中，随后完整复跑。
+架构审视：页面只建界面并调用能力，通信与射频归通信服务，权限统一由能力总线执行。按钮与 AI 共用同一入口；拨号、按键、关闭和挂断依任务限制为本人操作。两个公开入口有语义动作，紧急页有隔离快照。
 
 ## 为什么不能更小
 
-- 产品 C／头文件新增 184 行、删除 41 行，增删合计 225；连同 CMake、英文词条和生成器保守计新增 207、删除 43，合计 250，未超过原功能预算。需要专用不透明拨号浮层、号码校验、临时射频、能力和双语；复用普通电话页会暴露联系人／记录。
-- 新主线适配复用已有页面白名单和应用归属机制；仅增加一个公开入口标记和复用现有处理的紧急挂断能力，没有另建权限表或调用路径。
+- 产品 C／头文件新增 184 行、删除 41 行，增删合计 225；含 CMake、英文词条和生成器保守计新增 207、删除 43，合计 250，未超过原功能预算。
+- 必须有不透明拨号浮层、号码校验、临时射频、权限与双语。看过复用普通电话页的更小方案，但它包含联系人和记录；现复用已有浮层、页面白名单、应用归属及通信处理，没有另建权限框架。
+
+## 要改的文档
+
+- 已按任务要求重新生成能力清单。`app-framework.md` 仅修正两处源码行号链接，正文合同不改。需求、想法、决策、backlog、ui-dependencies 及既有研究／审计资料未改。
 
 ## 上机先核对清单
 
-- 查阅日期 2026-11-11。只读原厂 `upstream/Metalio-E-INK4-Plus/main/boards/common/board/uart_eth_modem.cc:1596–1611`：初始化先 `CFUN=1`，无 SIM 保留 AT 通道；对应板型及公共模组未搜到 `ATD`、`CFUN=4` 或紧急呼叫实现。
-- 【估算】沿用本项目 `ATD<number>;` 和 `CFUN=4 → 1 → 4`，需核对 NT26 命令、无 SIM／受限服务拨号及结束回执。模型通过不能当实机通过。
-- 本次只编译和宿主机测试。上机绝不拨真实紧急号码；只读查询，或经用户明确同意用指定普通号码替代。
+- 查阅日期 2026-11-11。只读原厂 `upstream/Metalio-E-INK4-Plus/main/boards/common/board/uart_eth_modem.cc:1596–1611`：先 `CFUN=1`，无 SIM 保留 AT 通道；对应板型及公共模组未找到紧急拨号实现。
+- 【估算】沿用本项目 `ATD<number>;`、`CFUN=4 → 1 → 4`；需核对 NT26 命令、无 SIM／未注册／受限服务、射频回执和通话结束上报。
+- 本次不碰设备。上机绝不拨真实紧急号码；只读查询，或经用户明确同意用指定普通号码替代。
+
+## 验证命令与证据
+
+构建均为 `taskpolicy -c utility cmake --build <目录> -j2`；普通配置沿用总规则，另指定依赖目录里的 SDL2、ImGui、中枢 Python 和编译数据库。ASan 配置只换构建目录并加 `-DINK_SANITIZE=ON`，保留 WERROR。依赖只读，没有安装或升级。全量复跑前清理生成的 test-out 并重新配置恢复输入脚本，原指标另存 `work/emergency-call-2/`。
+
+- C1：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" -B tests/emergency_call/run.py --build build`。
+- C2：C1 分别追加 `--negative radio`、`--negative page`、`--negative ownership`、`--negative entry`、`--negative prefix`、`--negative wait`。额外显示和测试同步反向对照在临时源码副本中撤销修复，按编译数据库与现有 link.txt 编译链接；脚本及完整日志位于 `work/emergency-call-2/`，产品文件未动。
+- C3：`PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$PWD/hub" UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`。
+- C4：C3 改为 `--test-dir build-asan`，另加 `ASAN_OPTIONS=halt_on_error=1`；没有缩减测试项目。
+- C5：`taskpolicy -c utility python3 tools/capabilities.py`，随后同命令加 `--check`。
+- C6：预设 `INK_DEPS` 后执行 `taskpolicy -c utility bash ports/esp32s31/build.sh`。
+- C7：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" -B "$INK_DEPS/../ink-codex/tools/gcccheck.py" build $(git diff --name-only 951bdfc15f0997a77cd9ad960b056eee10fb3ef8 -- '*.c')`；12 文件列表另存 `gcccheck-files.txt`。
+- C8：`git diff 951bdfc1..HEAD --check`、`git diff --stat 951bdfc1..HEAD`，以及[总规则第 6 节](../codex-rules.md)的隐私扫描命令。
