@@ -34,8 +34,9 @@ static void show(void) {
     if (g_mark) return;
     bool clock = ink_setting_get("display.lock_style") == 1;
     bool image = ink_setting_get("display.lock_style") == 2 && ink_wallpaper_ready();
-    g_mark = lv_obj_create(lv_layer_sys());
-    {
+    g_mark = clock || image ? lv_obj_create(lv_layer_sys()) : ink_ui_box(lv_layer_sys(), INK_MARGIN,
+             INK_CANVAS_H - INK_CONTROL - INK_GAP_S, INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, 0, INK_SURFACE_WHITE, false);
+    if (clock || image) {
         lv_obj_remove_style_all(g_mark);
         lv_obj_set_size(g_mark, LV_PCT(100), LV_PCT(100));
     }
@@ -43,7 +44,7 @@ static void show(void) {
     lv_obj_add_flag(g_mark, LV_OBJ_FLAG_CLICKABLE);
     if (image) {
         ink_wallpaper_draw(g_mark);
-        ink_shell_camera_button(g_mark);
+        ink_shell_camera_button(g_mark, false);
         ink_ui_overlay_add(&OVERLAY, g_mark); ink_ui_hint_obj(g_mark, INK_REFRESH_FLASH_UI);
         return;
     }
@@ -72,11 +73,12 @@ static void show(void) {
         ink_ui_line(notice, count, INK_FONT_LIST, INK_WEIGHT_BOLD, INK_ROW_DOUBLE, text_y, INK_CANVAS_W - 2 * INK_ROW_DOUBLE);
         ink_ui_line(notice, "唤醒后查看", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_ROW_DOUBLE, text_y + ink_ui_line_height(INK_FONT_LIST), INK_CANVAS_W - 2 * INK_ROW_DOUBLE);
     }
-    ink_shell_camera_button(g_mark);
-    lv_obj_t *strip = ink_ui_box(g_mark, INK_MARGIN, INK_CANVAS_H - INK_CONTROL - INK_GAP_S,
-                                  INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, 0, INK_SURFACE_WHITE, false);
+    ink_shell_camera_button(g_mark, !clock);
+    lv_obj_t *strip = clock ? ink_ui_box(g_mark, INK_MARGIN, INK_CANVAS_H - INK_CONTROL - INK_GAP_S,
+                                  INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, 0, INK_SURFACE_WHITE, false) : g_mark;
     lv_obj_t *l = ink_ui_label(strip, mark_text(), INK_FONT_NOTE, INK_WEIGHT_REGULAR, 0,
-                               (INK_CONTROL - ink_ui_line_height(INK_FONT_NOTE)) / 2, INK_CANVAS_W - 2 * INK_MARGIN);
+                               (INK_CONTROL - ink_ui_line_height(INK_FONT_NOTE)) / 2, INK_CANVAS_W - 2 * INK_MARGIN - (clock ? 0 : INK_CIRCLE + INK_GAP));
+    lv_obj_align(l, LV_ALIGN_LEFT_MID, 0, 0);
     lv_obj_set_style_text_align(l, LV_TEXT_ALIGN_CENTER, 0);
     g_label = l;
     ink_ui_overlay_add(&OVERLAY, g_mark);

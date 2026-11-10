@@ -157,9 +157,9 @@ bool ink_camera_close_locked(void) {
     ink_power_lock(); ink_ui_hint_frame(INK_REFRESH_FLASH_UI);
     return true;
 }
-void ink_shell_camera_button(lv_obj_t *root) {
+void ink_shell_camera_button(lv_obj_t *root, bool strip) {
     if (!ink_cap_find("camera.capture")) return;
-    lv_obj_t *b = ink_ui_circle(root, "camera", INK_CANVAS_W - INK_MARGIN - INK_CIRCLE, INK_STATUS_BAR + INK_GAP,
+    lv_obj_t *b = ink_ui_circle(root, "camera", INK_CANVAS_W - (strip ? 2 : 1) * INK_MARGIN - INK_CIRCLE, strip ? 0 : INK_STATUS_BAR + INK_GAP,
         INK_CIRCLE, INK_ICON_MEDIUM, INK_SURFACE_WHITE, NULL, NULL);
     ink_shell_bind(b, "app.open", "{\"id\":\"camera\"}");
 }

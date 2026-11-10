@@ -114,7 +114,10 @@ static ink_rc_t gate(const ink_cap_t *c, ink_source_t src, uint32_t page_gen, bo
             return reject(rc, INK_RC_REJECTED, "not on this child's whitelist");
         }
     }
-    if ((!ink_member_space_open() || ink_power_state() == INK_PWR_LOCKED || ink_camera_restricted()) && src != INK_SRC_SYSTEM) {
+    bool camera_locked = ink_camera_restricted() || (ink_power_state() == INK_PWR_LOCKED &&
+        (src == INK_SRC_AI || src == INK_SRC_REMOTE || src == INK_SRC_APP) &&
+        (!strncmp(c->id, "camera.", 7) || !strncmp(c->id, "photo.", 6) || !strncmp(c->id, "file.", 5) || !strcmp(c->id, "app.open")));
+    if ((!ink_member_space_open() || camera_locked) && src != INK_SRC_SYSTEM) {
         bool camera_exit = ink_camera_restricted() && (!strcmp(c->id, "shell.back") || !strcmp(c->id, "system.home"));
         if (src == INK_SRC_AI || src == INK_SRC_REMOTE || src == INK_SRC_APP || (!c->while_locked && !camera_exit)) {
             ink_probe_count("policy.rejected");
