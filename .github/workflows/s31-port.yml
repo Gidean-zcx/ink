@@ -57,6 +57,8 @@ jobs:
           "$IDF_PATH/install.sh" esp32s31
       - name: Compile the ink ESP32-S31 port
         run: bash ports/esp32s31/build.sh
+      - name: Require the factory screen transport
+        run: test -f build-s31/esp-idf/ink_drivers/CMakeFiles/__idf_ink_drivers.dir/__/__/hal_display_s31.c.obj
       - name: Upload port build reports
         if: always()
         uses: actions/upload-artifact@v4

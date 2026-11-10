@@ -87,7 +87,8 @@ void hal_device_get_info(hal_device_info_t *out) { *out = (hal_device_info_t){.p
 void hal_log_write(const char *line) { esp_log_write(ESP_LOG_INFO, "ink", "%s\n", line); }
 void hal_random_fill(void *out, size_t n) { esp_fill_random(out, n); }
 
-/* TODO: Upstream modified EPDiy + TPS65185 board power; no panel attached. */
+#ifndef INK_S31_DISPLAY
+/* Offline fallback: no panel transport linked. */
 void hal_display_get_info(hal_panel_info_t *out) { *out = (hal_panel_info_t){0}; }
 float hal_display_level_luminance(unsigned level) { return 1.0f; }
 uint32_t hal_display_update(const hal_rect_t *area, const uint8_t *gray8, int stride, hal_waveform_t wf, uint32_t flags, hal_display_done_fn done, void *ctx) { return 0; }
@@ -96,6 +97,7 @@ void hal_display_hold_power(uint32_t ms) {  }
 void hal_display_wake(uint32_t ms) {  }
 void hal_display_pause(bool pause) {  }
 void hal_display_set_temperature(int celsius) {  }
+#endif
 
 /* I2C: hal_i2c_s31.c. */
 
