@@ -112,7 +112,7 @@ static void camera_create(lv_obj_t *root, void *arg) {
     snprintf(camera_status, sizeof camera_status, TR("正在取景"));
     notice = ink_ui_notice(root, camera_status, INK_CANVAS_H - INK_CIRCLE_LARGE - INK_BLOCK);
     if (!ink_camera_restricted()) { /* the lock-screen camera only takes photos (D-121) */
-        lv_obj_t *scan_button = ink_ui_pill(root, TR("扫码"), INK_MARGIN, INK_STATUS_BAR + INK_GAP, INK_PRIMARY * 2, INK_PRIMARY, false, NULL, NULL);
+        lv_obj_t *scan_button = ink_ui_pill(root, TR("扫码"), INK_MARGIN, INK_STATUS_BAR + INK_GAP, INK_PRIMARY * (!strcmp(ink_lang_code(), "zh") ? 2 : 3), INK_PRIMARY, false, NULL, NULL);
         ink_shell_bind(scan_button, "camera.scan", NULL);
     }
     lv_obj_t *b = ink_ui_circle(root, "gallery", INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_CIRCLE_APP, INK_CIRCLE_APP, INK_ICON_LIST, INK_SURFACE_WHITE, NULL, NULL);

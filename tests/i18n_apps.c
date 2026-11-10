@@ -54,7 +54,7 @@ static void test_walk(lv_obj_t *o) {
         CHECK(!(lv_label_get_long_mode(o) == LV_LABEL_LONG_MODE_DOTS && len >= 3 && !strcmp(t + len - 3, "...")),
               "%s: no ellipsis: %.100s", scene, t);
         CHECK(single ? one.x <= lv_area_get_width(&a) + 1 : wrapped.y <= lv_area_get_height(&a) + 1,
-              "%s: text fits (%d/%d, %d/%d): %.100s", scene, one.x, lv_area_get_width(&a), wrapped.y, lv_area_get_height(&a), t);
+              "%s: text fits (%d/%d, %d/%d): %.100s", scene, (int)one.x, (int)lv_area_get_width(&a), (int)wrapped.y, (int)lv_area_get_height(&a), t);
         int32_t width = LV_MIN(single ? one.x : wrapped.x, lv_area_get_width(&a));
         lv_text_align_t align = lv_obj_get_style_text_align(o, LV_PART_MAIN);
         if (align == LV_TEXT_ALIGN_RIGHT) a.x1 = a.x2 - width + 1;
@@ -121,7 +121,7 @@ static void test_memos(void) {
     test_ok("memo.edit", NULL); test_capture("MemoEdit", "备忘", "Notes");
     test_ok("text.insert", "{\"text\":\"用户原文 晴\\nmilk\"}");
     CHECK(WAIT_FOR(!M.saving && ink_db_idle(), 15000), "memo saved");
-    uint32_t id = M.id; char args[64]; snprintf(args, sizeof args, "{\"id\":%u}", id);
+    uint32_t id = M.id; char args[64]; snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)id);
     test_ok("text.submit", NULL); test_ok("memo.open", args);
     test_capture("MemoDetail", "编辑备忘", "Edit"); CHECK(strstr(page_json, "用户原文 晴"), "memo data remains Chinese");
     test_ok("memo.convert", args); test_ok("memo.open", args); test_capture("MemoChecklist", "未完成", "Not done");
@@ -200,7 +200,7 @@ static void test_apps(void) {
     test_open("camera"); test_ok("camera.photo", NULL);
     ink_fs_entry_t photo; uint32_t cursor = 0;
     CHECK(ink_fs_index("/me", INK_FS_IMAGE, &cursor, &photo) == 1, "synthetic photo saved");
-    test_open("gallery"); test_capture("Gallery", "相册", "Photos"); char args[64]; snprintf(args, sizeof args, "{\"id\":%u}", photo.id);
+    test_open("gallery"); test_capture("Gallery", "相册", "Photos"); char args[64]; snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)photo.id);
     test_ok("photo.open", args); test_capture("Photo", "问这张图", "Ask about photo");
     test_open("weather"); test_capture("Weather-empty", "还没有设天气城市", "No weather city set");
     test_ok("weather.city", NULL); test_capture("WeatherCity", "输入城市名", "Enter city name");

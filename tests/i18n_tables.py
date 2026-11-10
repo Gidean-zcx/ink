@@ -1,4 +1,6 @@
 """i18n-1: the build-time table check passes the committed tables and stops on every kind of mistake."""
+import ast
+import re
 from pathlib import Path
 import subprocess
 import sys
@@ -22,7 +24,8 @@ assert good.returncode == 0, good.stderr
 header = (tmp / 'i18n_table.h').read_text(encoding='utf-8')
 assert 'static const ink_i18n_pair_t I18N_EN[]' in header and '"English"' in header, header[:300]
 table = header.split('I18N_EN[] = {')[1].split('};')[0]
-keys = [line.split('"')[1] for line in table.splitlines() if line.startswith('    {"')]
+keys = [ast.literal_eval(re.match(r'    \{("(?:[^"\\]|\\.)*")', line)[1])
+        for line in table.splitlines() if line.startswith('    {"')]
 assert len(keys) > 50, len(keys)
 assert keys == sorted(keys, key=lambda k: k.encode()), 'keys are in strcmp order for the binary search'
 
