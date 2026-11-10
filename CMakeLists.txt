@@ -388,7 +388,12 @@ set(INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/system/ui/shell/boot_flow.c ${CMAKE_SOU
   ${CMAKE_SOURCE_DIR}/system/services/file/file_caps.c ${CMAKE_SOURCE_DIR}/system/apps/clock/clock.c
   ${CMAKE_SOURCE_DIR}/system/apps/camera/camera.c ${CMAKE_SOURCE_DIR}/system/apps/camera/scan.c
   ${CMAKE_SOURCE_DIR}/system/policy/cap.c ${CMAKE_SOURCE_DIR}/system/policy/members.c
-  ${CMAKE_SOURCE_DIR}/system/ui/app_registry.c ${CMAKE_SOURCE_DIR}/system/ui/lock_mark.c)
+  ${CMAKE_SOURCE_DIR}/system/ui/app_registry.c ${CMAKE_SOURCE_DIR}/system/ui/lock_mark.c
+  ${CMAKE_SOURCE_DIR}/system/apps/calculator/calculator.c ${CMAKE_SOURCE_DIR}/system/apps/contacts/contacts.c
+  ${CMAKE_SOURCE_DIR}/system/apps/gallery/gallery.c
+  ${CMAKE_SOURCE_DIR}/system/apps/memo/memo.c ${CMAKE_SOURCE_DIR}/system/apps/phone/phone.c
+  ${CMAKE_SOURCE_DIR}/system/apps/remote/remote.c ${CMAKE_SOURCE_DIR}/system/apps/sms/sms.c
+  ${CMAKE_SOURCE_DIR}/system/apps/weather/weather.c)
 add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h
   COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/i18n/i18n_gen.py ${INK_I18N_TABLES}
           --header ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h --sources ${INK_I18N_SOURCES}
@@ -689,6 +694,14 @@ set_tests_properties(time-settings PROPERTIES TIMEOUT 200)
 target_link_libraries(sim-i18n-lang PRIVATE ink_apps ink_system)
 add_test(NAME i18n-lang COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/i18n_check.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(i18n-lang PROPERTIES TIMEOUT 300)
+ink_sim_executable(sim-i18n-apps tests/i18n_apps.c)
+ink_sim_executable(sim-i18n-memo tests/i18n_apps.c)
+target_compile_definitions(sim-i18n-memo PRIVATE INK_I18N_MEMO=1)
+target_link_libraries(sim-i18n-apps PRIVATE ink_apps ink_system)
+target_link_libraries(sim-i18n-memo PRIVATE ink_apps ink_system)
+add_test(NAME i18n-apps COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/i18n_apps.py --build ${CMAKE_BINARY_DIR} --case apps)
+add_test(NAME i18n-memo COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/i18n_apps.py --build ${CMAKE_BINARY_DIR} --case memo)
+set_tests_properties(i18n-apps i18n-memo PROPERTIES TIMEOUT 660)
 add_test(NAME i18n-tables COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/i18n_tables.py)
 add_test(NAME boot-flow-reboot COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/boot_flow_reboot.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(boot-flow-reboot PROPERTIES TIMEOUT 200)

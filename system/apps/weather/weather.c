@@ -2,6 +2,7 @@
 /* ui-scale-runtime: dimension y,w Theme-derived page geometry. */
 #include "ink/osal.h"
 #include "ink/sys/appreg.h"
+#include "ink/sys/i18n.h"
 #include "ink/sys/hub.h"
 #include "ink/sys/state.h"
 #include "ink/sys/textfield.h"
@@ -29,7 +30,6 @@ static struct {
     lv_obj_t *field;
 } W INK_PSRAM_BSS;
 static const ink_activity_t WEATHER, CITY;
-static const ink_ui_action_spec_t FOCUS = {.id = "name", .label = "输入城市名", .capability = "weather.focus", .enabled = true};
 
 static bool online(void) { int64_t v = 0; return ink_state_get_int(ink_state_find("net.online"), &v) && v; }
 static bool on_top(void) { return ink_ui_page_current() && (!strcmp(ink_ui_page_name(), "Weather") || !strcmp(ink_ui_page_name(), "WeatherCity")); }
@@ -66,33 +66,34 @@ static void save(uint32_t id, const char *json) {
     ink_db_close(db);
 }
 static void day_name(int i, char *out, size_t cap) {
-    static const char *const NAMES[] = {"今天", "明天", "后天"}, *const WEEK[] = {"日", "一", "二", "三", "四", "五", "六"};
+    const char *const NAMES[] = {TR("今天"), TR("明天"), TR("后天")}, *const WEEK[] = {TR("周日"), TR("周一"), TR("周二"), TR("周三"), TR("周四"), TR("周五"), TR("周六")};
     ink_tm_t tm; ink_time_to_local(W.at + i * 86400, &tm);
     if (i < 3) snprintf(out, cap, "%s", NAMES[i]);
-    else snprintf(out, cap, "周%s", WEEK[tm.wday]);
+    else snprintf(out, cap, "%s", WEEK[tm.wday]);
 }
 static void describe(void) {
     ink_tm_t tm; ink_time_to_local(W.at, &tm);
-    snprintf(W.updated, sizeof W.updated, "%d月%d日 %02d:%02d 更新", tm.month, tm.day, tm.hour, tm.min);
+    snprintf(W.updated, sizeof W.updated, TR("%d月%d日 %02d:%02d 更新"), tm.month, tm.day, tm.hour, tm.min);
 }
 static void answer(ink_call_t *c) {
-    if (!W.id) { c->rc.status = INK_RC_INVALID; snprintf(c->rc.say, sizeof c->rc.say, "还没有设天气城市，请在设置里选城市"); return; }
-    if (!W.have) { c->rc.status = INK_RC_FAILED; snprintf(c->rc.say, sizeof c->rc.say, "还没取到%s的天气，请联网后再试", W.city); return; }
+    if (!W.id) { c->rc.status = INK_RC_INVALID; snprintf(c->rc.say, sizeof c->rc.say, TR("还没有设天气城市，请在设置里选城市")); return; }
+    if (W.have) describe();
+    if (!W.have) { c->rc.status = INK_RC_FAILED; snprintf(c->rc.say, sizeof c->rc.say, TR("还没取到%s的天气，请联网后再试"), W.city); return; }
     char json[768], name[16]; ink_jw_t w; ink_jw_init(&w, json, sizeof json);
     ink_jw_raw(&w, "{\"city\":"); ink_jw_str(&w, W.city); ink_jw_raw(&w, ",\"updated\":"); ink_jw_str(&w, W.updated);
     ink_jw_raw(&w, W.offline ? ",\"fresh\":false,\"now\":{\"t\":" : ",\"fresh\":true,\"now\":{\"t\":"); ink_jw_int(&w, W.t);
-    ink_jw_raw(&w, ",\"w\":"); ink_jw_str(&w, W.now.w); ink_jw_raw(&w, "},\"days\":[");
+    ink_jw_raw(&w, ",\"w\":"); ink_jw_str(&w, TR(W.now.w)); ink_jw_raw(&w, "},\"days\":[");
     for (int i = 0; i <= W.ndays; i++) {
         const day_t *d = i ? &W.days[i - 1] : &W.now;
         day_name(i, name, sizeof name);
-        ink_jw_raw(&w, i ? ",{\"day\":" : "{\"day\":"); ink_jw_str(&w, name); ink_jw_raw(&w, ",\"w\":"); ink_jw_str(&w, d->w);
+        ink_jw_raw(&w, i ? ",{\"day\":" : "{\"day\":"); ink_jw_str(&w, name); ink_jw_raw(&w, ",\"w\":"); ink_jw_str(&w, TR(d->w));
         ink_jw_raw(&w, ",\"hi\":"); ink_jw_int(&w, d->hi); ink_jw_raw(&w, ",\"lo\":"); ink_jw_int(&w, d->lo);
         ink_jw_raw(&w, ",\"rain\":"); ink_jw_int(&w, d->p); ink_jw_raw(&w, "}");
     }
     ink_jw_raw(&w, "]}");
     if (!w.overflow) ink_cap_result(c, json);
-    snprintf(c->rc.say, sizeof c->rc.say, "%s现在%d°，%s，最高%d°，最低%d°%s", W.city, W.t, W.now.w, W.now.hi, W.now.lo,
-             W.offline ? "（没联网，这是上次的天气）" : "");
+    snprintf(c->rc.say, sizeof c->rc.say, W.offline ? TR("%s现在%d°，%s，最高%d°，最低%d°（没联网，这是上次的天气）") : TR("%s现在%d°，%s，最高%d°，最低%d°"),
+             W.city, W.t, TR(W.now.w), W.now.hi, W.now.lo);
 }
 static void got(void *arg) { /* UI task */
     (void)arg; W.asking = false;
@@ -141,7 +142,7 @@ static void found(void *arg) { /* UI task */
         if (c) c->rc.status = INK_RC_FAILED;
     }
     osal_free(j);
-    if (c) { snprintf(c->rc.say, sizeof c->rc.say, "%s", W.status); ink_cap_done(c); }
+    if (c) { snprintf(c->rc.say, sizeof c->rc.say, "%s", TR(W.status)); ink_cap_done(c); }
     if (on_top()) ink_ui_redraw();
 }
 static void hub_found(void *ctx, int st, const ink_json_t *j, int t) {
@@ -171,18 +172,18 @@ static void run(ink_call_t *c) {
     int64_t pick = 0; int at = -1; /* weather.set_city: one of the cities just found */
     ink_args_get_int(&c->args, "id", &pick);
     for (int i = 0; i < W.nfound; i++) if (W.found[i].id == pick) at = i;
-    if (at < 0) { c->rc.status = INK_RC_INVALID; snprintf(c->rc.say, sizeof c->rc.say, "请先找城市，再从结果里选"); return; }
+    if (at < 0) { c->rc.status = INK_RC_INVALID; snprintf(c->rc.say, sizeof c->rc.say, TR("请先找城市，再从结果里选")); return; }
     bool first = !W.id; /* the first city also puts the card on Today, if there is room; later ones leave Today alone */
     W.id = pick; W.have = W.offline = false; W.at = W.asked_s = 0;
     snprintf(W.city, sizeof W.city, "%s", W.found[at].name);
     char json[96]; ink_jw_t w; ink_jw_init(&w, json, sizeof json);
     ink_jw_raw(&w, "{\"id\":"); ink_jw_int(&w, W.id); ink_jw_raw(&w, ",\"name\":"); ink_jw_str(&w, W.city); ink_jw_raw(&w, "}");
-    save(1, json); save(2, "{}"); snprintf(c->rc.say, sizeof c->rc.say, "天气城市改成%s了", W.city);
+    save(1, json); save(2, "{}"); snprintf(c->rc.say, sizeof c->rc.say, TR("天气城市改成%s了"), W.city);
     ink_receipt_t today; if (first) ink_cap_invoke_json("shell.today_card", "{\"card\":\"weather:now\"}", INK_SRC_SYSTEM, 0, &today);
     if (ink_ui_page_current() && !strcmp(ink_ui_page_name(), "WeatherCity")) ink_ui_pop(); /* back where the person came from */
     fetch(NULL);
 }
-const char *ink_weather_city(void) { return W.id ? W.city : "还没有设"; }
+const char *ink_weather_city(void) { return W.id ? W.city : TR("还没有设"); }
 static void field(int i, const char *id, const char *label, const char *value) {
     W.fields[i] = (ink_ui_field_spec_t){.id = id, .role = "text", .label = label, .value = value};
 }
@@ -192,40 +193,47 @@ static void action(int i, const char *id, const char *label, const char *cap, co
 static void weather_create(lv_obj_t *screen, void *arg) {
     (void)arg; int w = INK_CANVAS_W - 2 * INK_MARGIN, y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP_XS, n = 0;
     ink_shell_statusbar(screen, true);
-    ink_shell_topbar(screen, W.id ? W.city : "天气");
-    action(0, "refresh", "刷新", "weather.get", "{}"); action(1, "city", "换城市", "weather.city", "{}"); action(2, "back", "返回", "shell.back", "{}");
+    if (W.have) describe();
+    ink_shell_topbar(screen, W.id ? W.city : TR("天气"));
+    action(0, "refresh", TR("刷新"), "weather.get", "{}"); action(1, "city", TR("换城市"), "weather.city", "{}"); action(2, "back", TR("返回"), "shell.back", "{}");
     if (!W.have) {
-        const char *empty = !W.id ? "还没有设天气城市" : W.offline ? "没联网，还没取到天气" : "正在取天气…";
-        ink_ui_notice(screen, empty, y); field(n++, "empty", "天气", empty);
+        const char *empty = !W.id ? TR("还没有设天气城市") : W.offline ? TR("没联网，还没取到天气") : TR("正在取天气…");
+        ink_ui_notice(screen, empty, y); field(n++, "empty", TR("天气"), empty);
     } else {
         lv_obj_t *card = ink_ui_card(screen, INK_MARGIN, y, w, 2 * INK_GAP_L + INK_LINE_NUMBER + INK_LINE_LIST, INK_SURFACE_WHITE);
         snprintf(W.texts[0], sizeof W.texts[0], "%d°", W.t);
         ink_ui_line(card, W.texts[0], INK_FONT_NUMBER, INK_WEIGHT_REGULAR, INK_GAP_L, INK_GAP_L, w / 2);
         ink_ui_icon(card, W.now.i, INK_ICON_STATE, INK_ICON_LINE, w - INK_GAP_L - INK_ICON_STATE, INK_GAP_L, false);
-        snprintf(W.texts[1], sizeof W.texts[1], "%s · 最高 %d° 最低 %d°", W.now.w, W.now.hi, W.now.lo);
+        snprintf(W.texts[1], sizeof W.texts[1], TR("%s · 最高 %d° 最低 %d°"), TR(W.now.w), W.now.hi, W.now.lo);
         ink_ui_line(card, W.texts[1], INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_GAP_L, INK_GAP_L + INK_LINE_NUMBER, w - 2 * INK_GAP_L);
-        field(n++, "now", "现在", W.texts[0]); field(n++, "today", "今天", W.texts[1]);
+        field(n++, "now", TR("现在"), W.texts[0]); field(n++, "today", TR("今天"), W.texts[1]);
         y += 2 * INK_GAP_L + INK_LINE_NUMBER + INK_LINE_LIST + INK_GAP;
-        lv_obj_t *group = ink_ui_card(screen, INK_MARGIN, y, w, (W.ndays + 1) * INK_CONTROL, INK_SURFACE_STATIC);
+        int row_h = strcmp(ink_lang_code(), "zh") ? 2 * ink_ui_line_height(INK_FONT_LIST) : INK_CONTROL;
+        lv_obj_t *group = ink_ui_card(screen, INK_MARGIN, y, w, (W.ndays + 1) * row_h, INK_SURFACE_STATIC);
         static const char *const IDS[] = {"rain", "day1", "day2", "day3"};
         for (int i = 0; i <= W.ndays; i++) {
             const day_t *d = i ? &W.days[i - 1] : &W.now;
             char name[16], what[24]; day_name(i, name, sizeof name); memcpy(what, d->w, sizeof what); /* gcc: not from W into W */
-            snprintf(W.texts[2 + i], sizeof W.texts[2 + i], i ? "%s · %s" : "%s降水概率", name, what);
+            snprintf(W.texts[2 + i], sizeof W.texts[2 + i], i ? TR("%s · %s") : TR("%s降水概率"), name, TR(what));
             char *range = W.ranges[i]; /* the page's snapshot reads it later */
-            snprintf(range, sizeof W.ranges[i], "不知道");
+            snprintf(range, sizeof W.ranges[i], TR("不知道"));
             if (i) snprintf(range, sizeof W.ranges[i], "%d° / %d°", d->hi, d->lo); else if (d->p >= 0) snprintf(range, sizeof W.ranges[i], "%d%%", d->p);
-            ink_ui_list_row(group, i ? d->i : "rain", W.texts[2 + i], range, 0, i * INK_CONTROL, w, false, NULL, NULL);
-            field(n++, IDS[i], W.texts[2 + i], i ? d->w : range);
+            lv_obj_t *row = ink_ui_list_row(group, i ? d->i : "rain", W.texts[2 + i], range, 0, i * row_h, w, false, NULL, NULL);
+            lv_obj_set_height(row, ink_ui_px(row_h));
+            if (i && strcmp(ink_lang_code(), "zh")) {
+                lv_obj_t *title = lv_obj_get_child(row, -2); lv_label_set_long_mode(title, LV_LABEL_LONG_MODE_WRAP);
+                lv_obj_set_height(title, LV_SIZE_CONTENT); lv_obj_set_y(title, 0);
+            }
+            field(n++, IDS[i], W.texts[2 + i], i ? TR(d->w) : range);
         }
-        y += (W.ndays + 1) * INK_CONTROL + INK_GAP_S;
-        snprintf(W.texts[6], sizeof W.texts[6], "%s%s\n数据来自 Open-Meteo.com", W.offline ? "没联网，" : "", W.updated); /* 2..5: the rows */
-        ink_ui_notice(screen, W.texts[6], y); field(n++, "updated", "更新", W.texts[6]);
+        y += (W.ndays + 1) * row_h + INK_GAP_S;
+        snprintf(W.texts[6], sizeof W.texts[6], W.offline ? TR("没联网，%s\n数据来自 Open-Meteo.com") : TR("%s\n数据来自 Open-Meteo.com"), W.updated); /* 2..5: the rows */
+        ink_ui_notice(screen, W.texts[6], y); field(n++, "updated", TR("更新"), W.texts[6]);
     }
     int half = (w - INK_GAP) / 2, bottom = INK_CANVAS_H - INK_MARGIN - INK_PRIMARY;
-    ink_shell_bind(ink_ui_pill(screen, W.id ? "换城市" : "选城市", INK_MARGIN, bottom, W.id ? half : w, INK_PRIMARY, !W.id, NULL, NULL), "weather.city", "{}");
-    if (W.id) ink_shell_bind(ink_ui_pill(screen, "刷新", INK_MARGIN + half + INK_GAP, bottom, half, INK_PRIMARY, true, NULL, NULL), "weather.get", "{}");
-    W.page = (ink_ui_page_spec_t){.id = "Weather", .title = "天气", .object = {"weather.city", (uint32_t)W.at}, .fields = W.fields,
+    ink_shell_bind(ink_ui_pill(screen, W.id ? TR("换城市") : TR("选城市"), INK_MARGIN, bottom, W.id ? half : w, INK_PRIMARY, !W.id, NULL, NULL), "weather.city", "{}");
+    if (W.id) ink_shell_bind(ink_ui_pill(screen, TR("刷新"), INK_MARGIN + half + INK_GAP, bottom, half, INK_PRIMARY, true, NULL, NULL), "weather.get", "{}");
+    W.page = (ink_ui_page_spec_t){.id = "Weather", .title = TR("天气"), .object = {"weather.city", (uint32_t)W.at}, .fields = W.fields,
         .field_count = (size_t)n, .actions = W.actions, .action_count = 3};
     if (stale()) fetch(NULL);
 }
@@ -238,16 +246,17 @@ static void entered(void *ctx, const char *value) {
 static void city_create(lv_obj_t *screen, void *arg) {
     (void)arg; int w = INK_CANVAS_W - 2 * INK_MARGIN, y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP_XS;
     ink_shell_statusbar(screen, true);
-    ink_shell_topbar(screen, "天气城市");
-    ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .enter = INK_ENTER_SEARCH, .max = 60, .hint = "输入城市名", .initial = W.query};
+    ink_shell_topbar(screen, TR("天气城市"));
+    ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .enter = INK_ENTER_SEARCH, .max = 60, .hint = TR("输入城市名"), .initial = W.query};
     W.field = ink_textfield_create(screen, &cfg, entered, NULL, false);
     lv_obj_set_pos(W.field, ink_ui_px(INK_MARGIN), ink_ui_px(y)); lv_obj_set_size(W.field, ink_ui_px(w), ink_ui_px(INK_CONTROL));
     y += INK_CONTROL + INK_GAP;
-    snprintf(W.texts[0], sizeof W.texts[0], "现在：%s", ink_weather_city());
-    ink_ui_notice(screen, W.status[0] ? W.status : W.texts[0], y);
-    field(0, "city", "天气城市", W.texts[0]); field(1, "status", "查找", W.status);
-    W.fields[2] = (ink_ui_field_spec_t){.id = "name", .role = "searchbox", .label = "城市名，按搜索找（weather.find）"};
-    ink_textfield_bind_short(W.field, &W.page, &W.fields[2], &FOCUS);
+    snprintf(W.texts[0], sizeof W.texts[0], TR("现在：%s"), ink_weather_city());
+    ink_ui_notice(screen, W.status[0] ? TR(W.status) : W.texts[0], y);
+    field(0, "city", TR("天气城市"), W.texts[0]); field(1, "status", TR("查找"), W.status[0] ? TR(W.status) : "");
+    W.fields[2] = (ink_ui_field_spec_t){.id = "name", .role = "searchbox", .label = TR("城市名，按搜索找（weather.find）")};
+    W.actions[W.nfound] = (ink_ui_action_spec_t){.id = "name", .label = TR("输入城市名"), .capability = "weather.focus", .enabled = true};
+    ink_textfield_bind_short(W.field, &W.page, &W.fields[2], &W.actions[W.nfound]);
     y += INK_LINE_NOTE + INK_GAP;
     if (W.nfound) {
         lv_obj_t *group = ink_ui_card(screen, INK_MARGIN, y, w, W.nfound * ink_ui_row_double(), INK_SURFACE_STATIC);
@@ -257,8 +266,8 @@ static void city_create(lv_obj_t *screen, void *arg) {
             W.actions[i] = (ink_ui_action_spec_t){.id = W.found[i].args, .label = W.found[i].name, .capability = "weather.set_city", .args_json = W.found[i].args, .enabled = true};
         }
     }
-    W.actions[W.nfound] = FOCUS; action(W.nfound + 1, "back", "返回", "shell.back", "{}");
-    W.page = (ink_ui_page_spec_t){.id = "WeatherCity", .title = "天气城市", .object = {"weather.city", (uint32_t)W.id}, .fields = W.fields,
+    action(W.nfound + 1, "back", TR("返回"), "shell.back", "{}");
+    W.page = (ink_ui_page_spec_t){.id = "WeatherCity", .title = TR("天气城市"), .object = {"weather.city", (uint32_t)W.id}, .fields = W.fields,
         .field_count = 3, .actions = W.actions, .action_count = (size_t)W.nfound + 2};
 }
 static int snapshot(char *out, size_t cap) {
@@ -272,8 +281,8 @@ static int card(int index, ink_card_t *out) {
     if (index || !W.id) return 0; /* offered for Today once there is a city */
     memset(out, 0, sizeof *out);
     snprintf(out->id, sizeof out->id, "now"); snprintf(out->title, sizeof out->title, "%s", W.city); snprintf(out->action, sizeof out->action, "weather.open");
-    if (!W.have) snprintf(out->text, sizeof out->text, "还没取到天气");
-    else { snprintf(out->text, sizeof out->text, "%d° %s %d°/%d°", W.t, W.now.w, W.now.hi, W.now.lo); snprintf(out->icon, sizeof out->icon, "%s", W.now.i); }
+    if (!W.have) snprintf(out->text, sizeof out->text, TR("还没取到天气"));
+    else { snprintf(out->text, sizeof out->text, "%d° %s %d°/%d°", W.t, TR(W.now.w), W.now.hi, W.now.lo); snprintf(out->icon, sizeof out->icon, "%s", W.now.i); }
     out->rev = (uint32_t)W.at;
     if (stale()) fetch(NULL);
     return 1;

@@ -3,6 +3,7 @@
 #include <string.h>
 #include "ink/osal.h"
 #include "ink/sys/appreg.h"
+#include "ink/sys/i18n.h"
 #include "ink/sys/json.h"
 #include "ink/sys/members.h"
 #include "ink/sys/ui_semantics.h"
@@ -12,7 +13,7 @@ enum { PLACES = 8, INT_DIGITS = 10, EXPR_MAX = 64, RESULT_MAX = 48 };
 #define SCALE 100000000LL           /* 10^PLACES */
 #define LIMIT 1000000000000000000LL /* |value| < 10^INT_DIGITS, in units of 10^-PLACES */
 typedef enum { CALC_OK, CALC_SYNTAX, CALC_ZERO, CALC_RANGE } calc_err_t;
-static const char *const MESSAGE[] = {"", "算式不完整", "不能除以 0", "超出范围，整数最多 10 位"};
+static const char *const MESSAGE[] = {"", TR_NOOP("算式不完整"), TR_NOOP("不能除以 0"), TR_NOOP("超出范围，整数最多 10 位")};
 typedef struct { const char *p; calc_err_t err; } parser_t;
 
 static int64_t fail(parser_t *ps, calc_err_t e) { if (!ps->err) ps->err = e; return 0; }
@@ -112,7 +113,6 @@ static struct {
     bool done, error; /* done: what = gave is showing (a result, or why not) */
     lv_obj_t *expr_label, *result_label;
     ink_ui_field_spec_t fields[2];
-    ink_ui_page_spec_t model;
 } K INK_PSRAM_BSS;
 static const int TOP = INK_STATUS_BAR + INK_PRIMARY + INK_GAP, KEY_H = INK_PRIMARY, KEY_GAP = INK_GAP_M;
 static int keys_top(void) { return INK_CANVAS_H - INK_MARGIN - 5 * KEY_H - 4 * KEY_GAP; }
@@ -224,13 +224,13 @@ static void show(void) {
     lv_label_set_text(K.expr_label, K.shown);
     static const int RESULT_PX[] = {INK_FONT_NUMBER, INK_FONT_HEADING, INK_FONT_TITLE, INK_FONT_SUBTITLE};
     px = INK_FONT_SUBTITLE;
-    for (unsigned i = K.error ? 2 : 0; i < 4; i++) if (ink_ui_text_width(K.result, RESULT_PX[i], INK_WEIGHT_REGULAR) <= w) { px = RESULT_PX[i]; break; }
+    for (unsigned i = K.error ? 2 : 0; i < 4; i++) if (ink_ui_text_width(K.error ? TR(K.result) : K.result, RESULT_PX[i], INK_WEIGHT_REGULAR) <= w) { px = RESULT_PX[i]; break; }
     lv_obj_set_style_text_font(K.result_label, ink_ui_font_px(px, INK_WEIGHT_REGULAR), 0);
     lv_obj_set_y(K.result_label, ink_ui_px(result_top() + INK_LINE_NUMBER - ink_ui_line_height(px)));
     lv_obj_set_height(K.result_label, ink_ui_px(ink_ui_line_height(px)));
-    lv_label_set_text(K.result_label, K.result);
-    K.fields[0] = (ink_ui_field_spec_t){.id = "expression", .role = "status", .label = "算式", .value = K.plain};
-    K.fields[1] = (ink_ui_field_spec_t){.id = "result", .role = "status", .label = K.error ? "算不出" : "结果", .value = K.result};
+    lv_label_set_text(K.result_label, K.error ? TR(K.result) : K.result);
+    K.fields[0] = (ink_ui_field_spec_t){.id = "expression", .role = "status", .label = TR("算式"), .value = K.plain};
+    K.fields[1] = (ink_ui_field_spec_t){.id = "result", .role = "status", .label = K.error ? TR("算不出") : TR("结果"), .value = K.error ? TR(K.result) : K.result};
     ink_ui_content_changed();
 }
 static void key_cap(ink_call_t *c) {
@@ -239,7 +239,7 @@ static void key_cap(ink_call_t *c) {
     press(k);
     show();
     snprintf(c->rc.object, sizeof c->rc.object, "calculator");
-    snprintf(c->rc.say, sizeof c->rc.say, "%.47s", K.result);
+    snprintf(c->rc.say, sizeof c->rc.say, "%.47s", K.error ? TR(K.result) : K.result);
 }
 static void eval_cap(ink_call_t *c) {
     char text[4 * EXPR_MAX + 1] = "", ascii[EXPR_MAX + 1], out[RESULT_MAX];
@@ -248,14 +248,14 @@ static void eval_cap(ink_call_t *c) {
     snprintf(c->rc.object, sizeof c->rc.object, "calculator");
     if (e) {
         c->rc.status = INK_RC_INVALID;
-        snprintf(c->rc.detail, sizeof c->rc.detail, "%s", MESSAGE[e]);
-        snprintf(c->rc.say, sizeof c->rc.say, "%s", MESSAGE[e]);
+        snprintf(c->rc.detail, sizeof c->rc.detail, "%s", TR(MESSAGE[e]));
+        snprintf(c->rc.say, sizeof c->rc.say, "%s", TR(MESSAGE[e]));
     } else {
         char json[2 * EXPR_MAX + RESULT_MAX + 32];
         ink_jw_t jw; ink_jw_init(&jw, json, sizeof json);
         ink_jw_raw(&jw, "{\"expr\":"); ink_jw_str(&jw, ascii); ink_jw_raw(&jw, ",\"result\":"); ink_jw_str(&jw, out); ink_jw_raw(&jw, "}");
         ink_cap_result(c, json);
-        snprintf(c->rc.say, sizeof c->rc.say, "等于 %s", out);
+        snprintf(c->rc.say, sizeof c->rc.say, TR("等于 %s"), out);
     }
     if (K.result_label && !strcmp(ink_ui_page_name(), "Calculator")) { /* the page shows what was asked */
         snprintf(K.expr, sizeof K.expr, "%s", ascii);
@@ -272,11 +272,6 @@ static const char *const KEYS[20][3] = {
     {"4", NULL, "4"}, {"5", NULL, "5"}, {"6", NULL, "6"}, {NULL, "minus", "-"},
     {"1", NULL, "1"}, {"2", NULL, "2"}, {"3", NULL, "3"}, {NULL, "plus", "+"},
     {NULL, "plusminus", "neg"}, {"0", NULL, "0"}, {".", NULL, "."}, {NULL, "equals", "="}};
-static const ink_ui_action_spec_t ACTIONS[] = {
-    {.id = "eval", .label = "给一个算式求值", .capability = "calc.eval", .enabled = true},
-    {.id = "equals", .label = "等于", .capability = "calc.key", .args_json = "{\"key\":\"=\"}", .enabled = true},
-    {.id = "back", .label = "删除一位", .capability = "calc.key", .args_json = "{\"key\":\"back\"}", .enabled = true},
-    {.id = "clear", .label = "清除", .capability = "calc.key", .args_json = "{\"key\":\"clear\"}", .enabled = true}};
 static void create(lv_obj_t *screen, void *arg) {
     (void)arg;
     if (strcmp(K.member, ink_member_current()->id)) { /* one member's sums are not the next one's */
@@ -284,7 +279,7 @@ static void create(lv_obj_t *screen, void *arg) {
         snprintf(K.member, sizeof K.member, "%s", ink_member_current()->id);
     }
     if (!K.result[0]) snprintf(K.result, sizeof K.result, "0");
-    ink_shell_statusbar(screen, true); ink_shell_topbar(screen, "计算器");
+    ink_shell_statusbar(screen, true); ink_shell_topbar(screen, TR("计算器"));
     int w = INK_CANVAS_W - 2 * INK_MARGIN, cell = (w + KEY_GAP) / 4;
     K.expr_label = ink_ui_label(screen, "", INK_FONT_SUBTITLE, INK_WEIGHT_REGULAR, INK_MARGIN, TOP, w);
     K.result_label = ink_ui_line(screen, "", INK_FONT_NUMBER, INK_WEIGHT_REGULAR, INK_MARGIN, result_top(), w);
@@ -299,12 +294,19 @@ static void create(lv_obj_t *screen, void *arg) {
         if (KEYS[i][1]) lv_obj_center(ink_ui_icon(b, KEYS[i][1], INK_ICON_APP, i == 1 ? INK_ICON_LINE : INK_ICON_SOLID, 0, 0, i == 19));
         ink_shell_bind(b, "calc.key", json);
     }
-    K.model = (ink_ui_page_spec_t){.id = "Calculator", .title = "计算器", .object = {"calculator", 1}, .fields = K.fields,
-        .field_count = 2, .actions = ACTIONS, .action_count = sizeof ACTIONS / sizeof *ACTIONS};
     show();
 }
 static void destroy(void) { K.expr_label = K.result_label = NULL; }
-static int snapshot(char *out, size_t cap) { return ink_ui_semantics_snapshot(&K.model, out, cap); }
+static int snapshot(char *out, size_t cap) {
+    const ink_ui_action_spec_t ACTIONS[] = {
+        {.id = "eval", .label = TR("给一个算式求值"), .capability = "calc.eval", .enabled = true},
+        {.id = "equals", .label = TR("等于"), .capability = "calc.key", .args_json = "{\"key\":\"=\"}", .enabled = true},
+        {.id = "back", .label = TR("删除一位"), .capability = "calc.key", .args_json = "{\"key\":\"back\"}", .enabled = true},
+        {.id = "clear", .label = TR("清除"), .capability = "calc.key", .args_json = "{\"key\":\"clear\"}", .enabled = true}};
+    const ink_ui_page_spec_t page = {.id = "Calculator", .title = TR("计算器"), .object = {"calculator", 1}, .fields = K.fields,
+        .field_count = 2, .actions = ACTIONS, .action_count = sizeof ACTIONS / sizeof *ACTIONS};
+    return ink_ui_semantics_snapshot(&page, out, cap);
+}
 static const ink_activity_t PAGE = {.name = "Calculator", .app = "calculator", .create = create, .destroy = destroy, .snapshot = snapshot};
 static const ink_app_def_t APP = {.id = "calculator", .title = "计算器", .icon = INK_UI_ICON(calc), .entry = &PAGE, .system_app = true, .child_ok = true};
 static const ink_cap_t CAPS[] = {

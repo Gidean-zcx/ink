@@ -23,22 +23,12 @@ static int restricted;
 static struct { uint32_t ids[INK_FS_INDEX_MAX]; unsigned count, at; bool reviewing; } shots INK_PSRAM_BSS;
 bool ink_camera_restricted(void) { return __atomic_load_n(&restricted, __ATOMIC_ACQUIRE); }
 static const char LOCK_PHOTOS[] = "/family/锁屏拍的照片";
-static const ink_ui_action_spec_t CAMERA_ACTIONS[] = {
-    {.id = "shoot", .label = "拍照", .capability = "camera.photo", .enabled = true},
-    {.id = "preview", .label = "更新取景", .capability = "camera.preview", .enabled = true},
-    {.id = "scan", .label = "扫码", .capability = "camera.scan", .enabled = true},
-    {.id = "gallery", .label = "相册", .capability = "app.open", .args_json = "{\"id\":\"gallery\"}", .enabled = true},
-    {.id = "close", .label = "关闭", .capability = "shell.back", .enabled = true}
-};
-static const ink_ui_field_spec_t CAMERA_FIELDS[] = {{.id = "status", .role = "status", .label = "取景和保存", .value = camera_status}};
-static const ink_ui_page_spec_t CAMERA_PAGE = {.id = "Camera", .title = "相机", .object = {"camera:view", 1},
-    .fields = CAMERA_FIELDS, .field_count = 1, .actions = CAMERA_ACTIONS, .action_count = 5};
 typedef struct { ink_exec_job_t job; ink_image_t im; uint32_t epoch, generation, id; unsigned at; bool ok, saved, reviewed; } capture_t;
 static void captured(void *arg) {
     capture_t *p = arg;
     if (p->epoch == ink_member_epoch() && p->generation == ink_ui_generation() && view && (ink_ui_page_current() || ink_camera_restricted())) {
         if (p->im.pixels) { lv_obj_clean(view); ink_photo_image(view, &p->im); }
-        snprintf(camera_status, sizeof camera_status, "%s", p->ok ? (p->saved ? "已保存到存储卡" : "低频取景，点下方拍照") : "没能完成，请检查存储卡或重试");
+        snprintf(camera_status, sizeof camera_status, "%s", p->ok ? (p->saved ? TR("已保存到存储卡") : TR("低频取景，点下方拍照")) : TR("没能完成，请检查存储卡或重试"));
         if (ink_camera_restricted() && p->ok) {
             if (p->saved && shots.count < INK_FS_INDEX_MAX) shots.ids[shots.count++] = p->id;
             shots.reviewing = p->saved || p->reviewed;
@@ -105,7 +95,7 @@ static void take(ink_call_t *c) {
         for (size_t i = 0; i < (size_t)w * h; i++) rgb[i] = (77u * rgb[3*i] + 150u * rgb[3*i+1] + 29u * rgb[3*i+2] + 128u) >> 8;
         p->im = (ink_image_t){(unsigned)w, (unsigned)h, rgb}; ink_image_dither(&p->im);
     }
-    snprintf(c->rc.say, sizeof c->rc.say, "%s", p->ok ? (p->saved ? "已保存到存储卡" : "取景已更新") : "没能完成，请重试");
+    snprintf(c->rc.say, sizeof c->rc.say, "%s", p->ok ? (p->saved ? TR("已保存到存储卡") : TR("取景已更新")) : TR("没能完成，请重试"));
     if (ink_exec_post(INK_EXEC_UI, &p->job, captured, p)) { ink_image_free(&p->im); osal_free(p); ink_power_release(INK_NEED_AWAKE); __atomic_store_n(&taking, 0, __ATOMIC_RELEASE); }
 }
 static void preview(lv_timer_t *t) {
@@ -119,7 +109,7 @@ static void camera_create(lv_obj_t *root, void *arg) {
     int w = INK_CANVAS_W - 2 * INK_MARGIN, y = INK_STATUS_BAR;
     view = ink_ui_card(root, INK_MARGIN, y, w, INK_CANVAS_H - y - INK_CIRCLE_LARGE - 2 * INK_BLOCK, INK_SURFACE_WHITE);
     if (ink_camera_restricted()) ink_shell_bind(view, "camera.preview", NULL);
-    snprintf(camera_status, sizeof camera_status, "正在取景");
+    snprintf(camera_status, sizeof camera_status, TR("正在取景"));
     notice = ink_ui_notice(root, camera_status, INK_CANVAS_H - INK_CIRCLE_LARGE - INK_BLOCK);
     if (!ink_camera_restricted()) { /* the lock-screen camera only takes photos (D-121) */
         lv_obj_t *scan_button = ink_ui_pill(root, TR("扫码"), INK_MARGIN, INK_STATUS_BAR + INK_GAP, INK_PRIMARY * 2, INK_PRIMARY, false, NULL, NULL);
@@ -136,6 +126,16 @@ static void camera_create(lv_obj_t *root, void *arg) {
 }
 static void camera_destroy(void) { if (timer) { lv_timer_delete(timer); } timer = NULL; view = notice = NULL; }
 static int camera_snapshot(char *out, size_t cap) {
+    const ink_ui_action_spec_t CAMERA_ACTIONS[] = {
+        {.id = "shoot", .label = TR("拍照"), .capability = "camera.photo", .enabled = true},
+        {.id = "preview", .label = TR("更新取景"), .capability = "camera.preview", .enabled = true},
+        {.id = "scan", .label = TR("扫码"), .capability = "camera.scan", .enabled = true},
+        {.id = "gallery", .label = TR("相册"), .capability = "app.open", .args_json = "{\"id\":\"gallery\"}", .enabled = true},
+        {.id = "close", .label = TR("关闭"), .capability = "shell.back", .enabled = true}
+    };
+    const ink_ui_field_spec_t CAMERA_FIELDS[] = {{.id = "status", .role = "status", .label = TR("取景和保存"), .value = camera_status}};
+    const ink_ui_page_spec_t CAMERA_PAGE = {.id = "Camera", .title = TR("相机"), .object = {"camera:view", 1},
+        .fields = CAMERA_FIELDS, .field_count = 1, .actions = CAMERA_ACTIONS, .action_count = 5};
     if (ink_camera_restricted()) return snprintf(out, cap, TR("锁屏相机；取景；本次已拍 %u 张；动作：camera.preview、camera.photo、camera.review、shell.back。"), shots.count);
     return ink_ui_semantics_snapshot(&CAMERA_PAGE, out, cap);
 }

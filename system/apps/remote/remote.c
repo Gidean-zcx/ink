@@ -35,6 +35,7 @@
 #include "ink/probe.h"
 #include "ink/sys/cap.h"
 #include "ink/sys/appreg.h"
+#include "ink/sys/i18n.h"
 #include "ink/sys/members.h"
 #include "ink/sys/textfield.h"
 #include "ink/ui_shell.h"
@@ -149,7 +150,7 @@ static void credit_check(lv_timer_t *t) {
 static void note_set(const char *zh, const char *en) {
     if (!RS.note) return;
     if (zh) {
-        lv_label_set_text(RS.note, ink_font_for_pt(8, RS.dpi) ? zh : en);
+        lv_label_set_text(RS.note, ink_font_for_pt(8, RS.dpi) ? TR(zh) : en);
         lv_obj_remove_flag(RS.note, LV_OBJ_FLAG_HIDDEN);
     } else lv_obj_add_flag(RS.note, LV_OBJ_FLAG_HIDDEN);
     ink_ui_hint_obj(RS.note, INK_REFRESH_UI);
@@ -367,7 +368,7 @@ static void session_closed(void *arg) { /* UI task: the hub refused or ended it:
     if (!RS.img) return;
     RS.ended = true;
     page_show(OFFLINE);
-    note_set("网页结束了，按返回键退出", "The remote screen ended - press back");
+    note_set(TR_NOOP("网页结束了，按返回键退出"), "The remote screen ended - press back");
     ink_probe_count("remote.closed_by_hub");
 }
 
@@ -430,7 +431,7 @@ static void link_check(lv_timer_t *t) {
         RS.down_shown = true;
         ink_probe_count("remote.offline_shown");
         if (RS.page != TYPE) page_show(OFFLINE);
-        note_set("连接断了，正在重连…", "Connection lost, reconnecting...");
+        note_set(TR_NOOP("连接断了，正在重连…"), "Connection lost, reconnecting...");
     } else if (!down && RS.down_shown) {
         RS.down_shown = false;
         note_set(NULL, NULL);
@@ -666,16 +667,16 @@ static void cap_open(ink_call_t *c) { /* UI task */
         else page_show(ADDRESS);
     } else ink_ui_push(&ink_app_remote, g_url);
     snprintf(c->rc.object, sizeof c->rc.object, "screen:remote");
-    snprintf(c->rc.say, sizeof c->rc.say, "打开网页");
+    snprintf(c->rc.say, sizeof c->rc.say, TR("打开网页"));
 }
 
 static const char *const BOARDS[] = {"Remote", "RemoteLoading", "RemoteOffline", "RemoteAddress", "RemoteType", "RemoteBlocked"};
 static const char *page_message(void) {
-    if (RS.page == LOADING) return "正在打开";
-    if (RS.page == OFFLINE) return RS.ended ? "网页已关闭，请重新打开" : "网页断开了";
-    if (RS.page == BLOCKED) return "这个网页打不开";
-    if (RS.page == TYPE) return "打完字点“完成”，字才发给网页。";
-    return "家庭服务器渲染，内容由家庭服务器提供给 AI";
+    if (RS.page == LOADING) return TR("正在打开");
+    if (RS.page == OFFLINE) return RS.ended ? TR("网页已关闭，请重新打开") : TR("网页断开了");
+    if (RS.page == BLOCKED) return TR("这个网页打不开");
+    if (RS.page == TYPE) return TR("打完字点“完成”，字才发给网页。");
+    return TR("家庭服务器渲染，内容由家庭服务器提供给 AI");
 }
 static void address_open(const char *url) {
     char value[sizeof RS.url];
@@ -699,7 +700,7 @@ static void entered(void *ctx, const char *value) {
     ink_cap_invoke("remote.submit", NULL, INK_SRC_TOUCH, ink_ui_content_version(), &rc);
 }
 static void action(size_t i, const char *id, const char *label, const char *cap) {
-    RS.actions[i] = (ink_ui_action_spec_t){.id=id, .label=label, .capability=cap, .args_json="{}", .enabled=true};
+    RS.actions[i] = (ink_ui_action_spec_t){.id=id, .label=TR(label), .capability=cap, .args_json="{}", .enabled=true};
 }
 static void focus_input(void *ctx) { (void)ctx; if (RS.field) ink_textfield_short_focus(RS.field); }
 static void page_show(remote_page_t page) {
@@ -712,9 +713,9 @@ static void page_show(remote_page_t page) {
     RS.chrome = ink_ui_box(lv_obj_get_parent(RS.img), 0, page == REMOTE ? INK_CANVAS_H - INK_PRIMARY - INK_GAP : 0,
         INK_CANVAS_W, page == REMOTE ? INK_PRIMARY + INK_GAP : INK_CANVAS_H, 0, INK_SURFACE_WHITE, false);
     memset(RS.actions, 0, sizeof RS.actions);
-    RS.fields[0] = (ink_ui_field_spec_t){.id="board", .role="text", .label="页面", .value=BOARDS[page]};
-    RS.fields[1] = (ink_ui_field_spec_t){.id="status", .role="text", .label="状态", .value=page_message()};
-    RS.semantics = (ink_ui_page_spec_t){.id="remote", .title="网页", .object={"remote", RS.gen},
+    RS.fields[0] = (ink_ui_field_spec_t){.id="board", .role="text", .label=TR("页面"), .value=BOARDS[page]};
+    RS.fields[1] = (ink_ui_field_spec_t){.id="status", .role="text", .label=TR("状态"), .value=page_message()};
+    RS.semantics = (ink_ui_page_spec_t){.id="remote", .title=TR("网页"), .object={"remote", RS.gen},
         .fields=RS.fields, .field_count=2, .actions=RS.actions, .action_count=(page == REMOTE || page == ADDRESS || page == TYPE) ? 4 : page == LOADING ? 2 : 3};
     action(0, "close", "关闭", "remote.close");
     action(1, "address", "换一个地址", "remote.address");
@@ -722,15 +723,15 @@ static void page_show(remote_page_t page) {
         action(2, "prev", "上一页", "remote.prev"); action(3, "next", "下一页", "remote.next");
         ink_shell_bind(ink_ui_circle(RS.chrome, "back", INK_MARGIN, INK_GAP_S, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_WHITE, NULL, NULL), "remote.prev", "{}");
         ink_shell_bind(ink_ui_circle(RS.chrome, "next", INK_MARGIN + INK_CONTROL + INK_GAP_M, INK_GAP_S, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_WHITE, NULL, NULL), "remote.next", "{}");
-        ink_shell_bind(ink_ui_pill(RS.chrome, "网址", INK_CANVAS_W / 2, INK_GAP_S, w / 2, INK_CONTROL, false, NULL, NULL), "remote.address", "{}");
+        ink_shell_bind(ink_ui_pill(RS.chrome, TR("网址"), INK_CANVAS_W / 2, INK_GAP_S, w / 2, INK_CONTROL, false, NULL, NULL), "remote.address", "{}");
     } else {
         ink_shell_statusbar(RS.chrome, true);
         ink_shell_bind(ink_ui_circle(RS.chrome, "close", INK_MARGIN, INK_STATUS_BAR + INK_GAP_S, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_STATIC, NULL, NULL), "remote.close", "{}");
-        ink_shell_bind(ink_ui_pill(RS.chrome, RS.url[0] ? RS.url : "打开网页", INK_MARGIN + INK_CONTROL + INK_GAP_M, INK_STATUS_BAR + INK_GAP_S,
+        ink_shell_bind(ink_ui_pill(RS.chrome, RS.url[0] ? RS.url : TR("打开网页"), INK_MARGIN + INK_CONTROL + INK_GAP_M, INK_STATUS_BAR + INK_GAP_S,
             w - INK_CONTROL - INK_GAP_M, INK_CONTROL, false, NULL, NULL), "remote.address", "{}");
         if (page == ADDRESS || page == TYPE) {
             ink_text_cfg_t cfg = {.type=page == ADDRESS ? INK_TEXT_URL : RS.secret ? INK_TEXT_PASSWORD : INK_TEXT_PLAIN,
-                .initial=page == ADDRESS ? RS.url : "", .hint=page == ADDRESS ? "输入网址" : "输入文字", .max=page == ADDRESS ? sizeof RS.url - 1 : 255, .ai_hidden=page == TYPE && RS.secret};
+                .initial=page == ADDRESS ? RS.url : "", .hint=page == ADDRESS ? TR("输入网址") : TR("输入文字"), .max=page == ADDRESS ? sizeof RS.url - 1 : 255, .ai_hidden=page == TYPE && RS.secret};
             action(2, "focus", "输入", "remote.focus"); action(3, "submit", page == ADDRESS ? "打开" : "完成", "remote.submit");
             RS.actions[3].enabled = page == ADDRESS || !RS.secret;
             RS.field = ink_textfield_create(RS.chrome, &cfg, entered, NULL, false);
@@ -741,7 +742,7 @@ static void page_show(remote_page_t page) {
             ink_textfield_bind_short(RS.field, &RS.semantics, &RS.fields[2], &RS.actions[2]);
             ink_exec_post(INK_EXEC_UI, &RS.focus_job, focus_input, NULL);
             if (page == TYPE) ink_ui_label(RS.chrome, page_message(), INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y + INK_CONTROL + INK_GAP, w);
-            if (page == ADDRESS) ink_ui_notice(RS.chrome, "输入网址后点“完成”打开", y + INK_CONTROL + INK_GAP);
+            if (page == ADDRESS) ink_ui_notice(RS.chrome, TR("输入网址后点“完成”打开"), y + INK_CONTROL + INK_GAP);
             /* The common text service masks credentials in every input snapshot. */
         } else {
             const char *icon = page == BLOCKED ? "warn" : page == OFFLINE ? "wifioff" : "globe";
@@ -749,7 +750,7 @@ static void page_show(remote_page_t page) {
             lv_obj_t *label = ink_ui_label(RS.chrome, page_message(), INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, INK_MARGIN, INK_CANVAS_H / 2 + INK_GAP, w);
             lv_obj_set_style_text_align(label, LV_TEXT_ALIGN_CENTER, 0);
             if (page != LOADING) {
-                const char *detail = page == BLOCKED ? "家庭服务器不允许打开这个网站。" : RS.ended ? "请重新打开，刚才的网页可能无法恢复。" : "5 分钟内连回来，还在刚才那一页。";
+                const char *detail = page == BLOCKED ? TR("家庭服务器不允许打开这个网站。") : RS.ended ? TR("请重新打开，刚才的网页可能无法恢复。") : TR("5 分钟内连回来，还在刚才那一页。");
                 label = ink_ui_label(RS.chrome, detail, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, INK_CANVAS_H / 2 + INK_LINE_SUBTITLE + INK_GAP_L, w);
                 lv_obj_set_style_text_align(label, LV_TEXT_ALIGN_CENTER, 0);
                 action(2, "retry", page == BLOCKED ? "换一个地址" : "重新连接", page == BLOCKED ? "remote.address" : "remote.retry");

@@ -131,7 +131,7 @@ AI	AI
 使用 24 小时制；夏令时自动调整	24-hour time; daylight saving adjusts automatically
 保存日期和时间	Save Date & Time
 中国 · 上海	China · Shanghai
-协调世界时	Coordinated Universal Time
+协调世界时	UTC
 日本 · 东京	Japan · Tokyo
 中国 · 香港	China · Hong Kong
 新加坡	Singapore
@@ -254,7 +254,7 @@ AI	AI
 最多计次99条	Up to 99 laps
 加城市	Add City
 最多选6个城市	Choose up to 6 cities
-扫码	Scan QR code
+扫码	Scan
 正在识别二维码	Reading QR code
 没有识别到可用的二维码，请对准后重试	No usable QR code found. Aim at a code and try again.
 是否执行下面的操作？	Perform the action below?
@@ -333,3 +333,260 @@ SetSound；音量=%lld；勿扰=%lld；按键提示音(audio.key_tone)=%lld；�
 返回锁屏	Return to lock screen
 按紧急拨号键	Press an emergency dialler key
 挂断紧急电话	Hang up emergency call
+
+# i18n-3: system applications
+%d月%d日 %02d:%02d 更新	Updated %d/%d %02d:%02d
+%llu 分钟	%llu min
+%s · %lld 分钟  %02d:%02d	%s · %lld min  %02d:%02d
+%s · 最高 %d° 最低 %d°	%s · H %d° L %d°
+%s降水概率	%s rain chance
+%u 分钟 · 没网也能记	%u min · Works offline
++ 加闹钟	+ Add alarm
+30 分钟	30 min
+5 分钟内连回来，还在刚才那一页。	Reconnect within 5 minutes to resume.
+下一个闹钟：%s	Next alarm: %s
+不到 1 分钟 · 没网也能记	Under 1 min · Works offline
+不知道	Unknown
+不能除以 0	Can't divide by 0
+不要了	Discard
+今天	Today
+低频取景，点下方拍照	Still preview. Tap to take a photo.
+保存闹钟	Save alarm
+关闭	Off
+内存不足，请返回后重试	Low memory. Go back and try again.
+写一条	New note
+写短信	New message
+写长短信	Long message
+分-	Min -
+分＋	Min +
+删除一位	Delete digit
+删除备忘	Delete
+删除照片	Delete photo
+删除联系人	Delete contact
+删除联系人 {name}（{number}），不能撤销	Delete {name} ({number})? This can't be undone.
+删除闹钟	Delete alarm
+刷新	Refresh
+剩余时间	Time left
+加闹钟	Add alarm
+勾选或取消	Check or uncheck
+发送	Send
+发送短信，%s	Send message: %s
+发送短信%s	Send message%s
+取景和保存	Camera status
+取景已更新	Preview updated
+只响一次	Once
+名称最多15个字，请缩短后保存	Use a name of 15 characters or less.
+后天	In 2 days
+周一	Mon
+周三	Wed
+周二	Tue
+周五	Fri
+周六	Sat
+周四	Thu
+周日	Sun
+和%s通话	Call with %s
+回复短信	Reply
+城市名，按搜索找（weather.find）	City name (weather.find)
+声音去向	Audio output
+声音走喇叭	Speaker
+声音走耳机	Headset
+天气城市	Weather city
+天气城市改成%s了	Weather city set to %s
+太长了，最多分 %d 条发送	Too long. Maximum %d parts.
+姓名	Name
+完成	Done
+家庭服务器不允许打开这个网站。	This site is blocked by the family server.
+家庭服务器渲染，内容由家庭服务器提供给 AI	Rendered by the family server, which also shares the page with AI.
+将按 %d 条发送	Sends as %d parts
+已保存到存储卡	Saved to storage card
+已保存联系人	Contact saved
+已删除一条备忘 · 撤销	Note deleted · Undo
+已删除联系人	Contact deleted
+已发送的按键	Keys sent
+已发送的按键位数	Keys sent count
+已完成	Done
+已记下	Saved
+已选择这个号码	Number selected
+已静音	Muted
+开关	Enabled
+开启	On
+录音	Record
+录音已保存	Recording saved
+打完字点“完成”，字才发给网页。	Tap Done to send your text to the page.
+打开	Open
+打开会话	Open conversation
+打开网页	Open webpage
+找不到这个联系人	Contact not found
+找不到这条备忘	Note not found
+拍照	Take photo
+按分钟显示剩余时间，到点响铃	Minutes remaining. Rings when time is up.
+换一个地址	Change address
+换城市	Change city
+撤销删除	Undo delete
+播放录音	Play recording
+收起键盘	Hide keypad
+时-	Hr -
+时间	Time
+时＋	Hr +
+明天	Tomorrow
+暂时打不开	Can't open right now
+暂时打不开联系人，请返回重试	Can't open contacts. Go back and try again.
+暂时读不了备忘，请稍后再试	Can't load notes. Try again later.
+暂时读不了照片，请返回后重试	Can't load photos. Go back and try again.
+暂时读不了照片，请重试	Can't load photos. Try again.
+更新	Updated
+更新取景	Update preview
+最近	Recents
+最近通话	Recent calls
+未完成	Not done
+未静音	Unmuted
+查找	Search
+查看备忘	View note
+查看照片	View photo
+查看联系人	View contact
+查看闹钟	View alarm
+正在取天气…	Getting weather...
+正在取景	Loading preview
+正在打开	Opening...
+正在找…	Searching...
+正在记	Recording
+正在读取备忘	Loading notes
+正在读取照片	Loading photos
+正在读取联系人	Loading contacts
+正在读取通话记录	Loading recent calls
+没有完成，请检查姓名和号码后重试	Check the name and number, then try again.
+没有已开启的闹钟	No active alarms
+没有找到这个城市	City not found
+没有通话	No call
+没联网，找不到城市	Offline. Can't search for cities.
+没联网，还没取到天气	Offline. No weather saved yet.
+没能保存，请重试	Couldn't save. Try again.
+没能完成，请检查存储卡或重试	Check the storage card or try again.
+没能完成，请重试	Couldn't finish. Try again.
+添加联系人	Add contact
+清除	Clear
+照片	Photo
+照片文件	Photo file
+状态	Status
+现在	Now
+现在录不了，请稍后再试	Can't record right now. Try again later.
+现在：%s	Current: %s
+用这个号码拨号	Call this number
+短信内容	Message text
+短信草稿没能保存，未发送	Draft wasn't saved. Message not sent.
+等于	Equals
+等于 %s	Equals %s
+算不出	Error
+算式	Expression
+算式不完整	Incomplete expression
+结果	Result
+给一个算式求值	Calculate expression
+编辑备忘	Edit
+编辑联系人	Edit contact
+网址	Address
+网页	Web
+网页已关闭，请重新打开	Page closed. Open it again.
+网页断开了	Page disconnected
+网页结束了，按返回键退出	Page ended. Press Back to exit.
+耳机	Headset
+耳机未连	Offline
+联系人	Contacts
+联系人已被修改，请返回列表重新打开后重试	Contact changed. Open it again from the list.
+联系人：%s	Contacts: %s
+计时结束	Time's up
+记下当前草稿	Save current draft
+记好了	Save
+设定时长	Set duration
+设定的时间到了	Your timer has finished.
+说一句	Voice note
+请先在联系人里添加号码	Add a number to Contacts first.
+请先找城市，再从结果里选	Search for a city, then select a result.
+请重新打开，刚才的网页可能无法恢复。	Open the page again. Your place may be lost.
+超出范围，整数最多 10 位	Too large (10-digit limit)
+转成清单	Checklist
+输入	Type
+输入号码	Enter number
+输入名称	Enter name
+输入城市名	Enter city name
+输入姓名	Enter name
+输入文字	Enter text
+输入短信	Enter message
+输入网址	Enter address
+输入网址后点“完成”打开	Enter an address, then tap Done.
+还没取到%s的天气，请联网后再试	No weather for %s. Connect and try again.
+还没取到天气	No weather yet
+还没有备忘，写一条吧	No notes yet. Write one.
+还没有照片，点右上角拍一张	No photos yet. Tap the camera above.
+还没有短信	No messages yet
+还没有联系人	No contacts yet
+还没有设	Not set
+还没有设天气城市	No weather city set
+还没有设天气城市，请在设置里选城市	No weather city. Choose one in settings.
+还没有通话记录	No recent calls
+还没有闹钟	No alarms yet
+还没有闹钟，点下面加一个	No alarms yet. Add one below.
+这个网页打不开	Can't open this page
+这条没存上。字还在这里。请腾出空间后重试	Not saved. Your text is here. Free up space and try again.
+这条没存上，字还在这里。请腾出空间后重试	Not saved. Your text is here. Free up space and try again.
+这条没存上，字还在这里。请重试	Not saved. Your text is here. Try again.
+这段录音里没听到说话	No speech found in this recording.
+连上网后整理成文字。\n不用等，先去做别的。	It will be transcribed when online.\nYou can leave this page.
+连接断了，正在重连…	Disconnected. Reconnecting...
+选一个城市	Choose a city
+选城市	Choose city
+选择这个号码	Select number
+通话	Call
+通话状态	Call status
+通话记录	Call history
+通话音频接线未核实，暂不能录音	Call recording is not available yet.
+重新启动	Restart
+重新启动会取消计时	Restarting cancels the timer
+重新启动后，之前的计时已取消	The timer was canceled on restart
+重新连接	Reconnect
+重试	Retry
+键盘	Keypad
+长项已省略，编辑备忘可看全文	Long items shortened. Edit to see the full text.
+问这张图	Ask about photo
+闹钟名称	Alarm name
+随口记 · 录音已保存，联网后整理成文字	Voice note · Saved; transcribed when online
+静音	Mute
+页面	Page
+麦克风	Microphone
+收到	Received
+已发送	Sent
+草稿	Draft
+发送中	Sending
+发送失败	Failed to send
+通话已结束	Call ended
+打来	Incoming
+未接	Missed
+打出	Outgoing
+晴	Clear
+晴间多云	Mostly clear
+多云	Cloudy
+阴	Overcast
+雾	Fog
+毛毛雨	Drizzle
+冻雨	Freezing rain
+小雨	Light rain
+中雨	Rain
+大雨	Heavy rain
+小雪	Light snow
+中雪	Snow
+大雪	Heavy snow
+雪粒	Snow grains
+阵雨	Showers
+强阵雨	Heavy showers
+阵雪	Snow showers
+雷阵雨	Thunderstorms
+未知	Unknown
+%s现在%d°，%s，最高%d°，最低%d°	%s: %d° now, %s. High %d°, low %d°.
+%s现在%d°，%s，最高%d°，最低%d°（没联网，这是上次的天气）	%s: %d° now, %s. High %d°, low %d°. Offline; last saved weather.
+%s\n数据来自 Open-Meteo.com	%s\nSource: Open-Meteo.com
+没联网，%s\n数据来自 Open-Meteo.com	Offline. %s\nSource: Open-Meteo.com
+已发出	Sent
+发送失败，未发出	Failed. Not sent.
+结果未知，请先核实	Result unknown. Check before trying again.
+◀	◀
+▶	▶
+%s · %s	%s\n%s
