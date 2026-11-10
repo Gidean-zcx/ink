@@ -1,7 +1,26 @@
 /* End-to-end synthetic VGA frames through the real camera HAL and soft bus. */
 #include <stdlib.h>
+#include <time.h>
+#include "quirc.h"
+#include "sim.h"
 #include "ink/sys/textinput.h"
+static struct timespec decode_started;
+static void start_clock(void *arg) { (void)arg; if (clock_gettime(CLOCK_MONOTONIC, &decode_started)) abort(); }
+static void end_clock(void *arg) {
+    (void)arg; struct timespec now;
+    if (clock_gettime(CLOCK_MONOTONIC, &now)) abort();
+    double us = (now.tv_sec - decode_started.tv_sec) * 1000000.0 + (now.tv_nsec - decode_started.tv_nsec) / 1000.0;
+    sim_metric_add("test.qr_decode_us", us); sim_metric_add("test.qr_decode_frames", 1);
+}
+static void measured_end(struct quirc *q) { vtk_host_call(start_clock, NULL); quirc_end(q); }
+static quirc_decode_error_t measured_decode(const struct quirc_code *c, struct quirc_data *d) {
+    quirc_decode_error_t r = quirc_decode(c, d); vtk_host_call(end_clock, NULL); return r;
+}
+#define quirc_end measured_end
+#define quirc_decode measured_decode
 #include "../../system/apps/camera/scan.c"
+#undef quirc_end
+#undef quirc_decode
 #define ink_main product_main
 #include "../../system/boot/main.c"
 #undef ink_main
@@ -54,10 +73,12 @@ static void scan_image(const char *name, const char *type, const char *content) 
     quiet(); on_ui(snap);
     CHECK(!strcmp(ink_ui_page_name(), "Scan"), "scan opens its result page");
 }
-static void screenshot(void *ctx) { sim_display_snapshot(ctx); }
+static int shot_done;
+static void screenshot(void *ctx) { sim_display_snapshot(ctx); __atomic_store_n(&shot_done, 1, __ATOMIC_RELEASE); }
 static ink_exec_job_t shot;
 static void capture(const char *name) {
-    quiet(); ink_exec_post(INK_EXEC_UI, &shot, screenshot, (void *)name); delay_ms(30);
+    quiet(); shot_done = 0; ink_exec_post(INK_EXEC_UI, &shot, screenshot, (void *)name);
+    CHECK(WAIT_FOR(__atomic_load_n(&shot_done, __ATOMIC_ACQUIRE), 3000), "screenshot is captured");
 }
 static void decision(bool yes) {
     ink_confirm_view_t card;
@@ -67,7 +88,7 @@ static void decision(bool yes) {
     CHECK(ink_confirm_decide(card.token, yes, INK_SRC_TOUCH) == 0, "human answers scan action");
 }
 static void run(void *ctx) {
-    (void)ctx; delay_ms(1800); test_start_home(); quiet();
+    (void)ctx; CHECK(WAIT_FOR(ink_cap_find("camera.scan") && ink_ui_page_current(), 15000), "system and camera are ready"); test_start_home(); quiet();
     CHECK(ink_cap_find("camera.scan") && ink_cap_find("camera.scan")->child_ok, "scan inherits camera child access");
     snprintf(fixture, sizeof fixture, "url");
     CHECK(BY_HAND("app.open", "{\"id\":\"camera\"}") && g_rc.status == INK_RC_DONE, "open existing camera"); quiet();
@@ -97,6 +118,9 @@ static void run(void *ctx) {
     CHECK(BY_HAND("settings.set", "{\"id\":\"system.language\",\"value\":1}") && g_rc.status == INK_RC_DONE, "switch to English");
     scan_image("url", "url", "example.com"); capture("url-en"); on_ui(snap); CHECK(strstr(g_snap, "Scan QR code"), "English AI snapshot");
     scan_image("wifi", "wifi", "qr-test"); capture("wifi-en");
+    CHECK(ink_member_switch("kid") == 0, "enter child's space with adult scan still open"); quiet();
+    CHECK(!result, "member switch discards adult credentials");
+    scan_image("text", "text", "Hello QR!");
     CHECK(BY_HAND("system.home", NULL) && g_rc.status == INK_RC_DONE, "leave scan");
     CHECK(AI("camera.scan_apply", NULL) && g_rc.status != INK_RC_DONE && !result, "leaving page clears private result");
     ink_probe_count("test.finished");

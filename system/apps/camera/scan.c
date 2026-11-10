@@ -82,7 +82,10 @@ static bool parse(scan_t *p, const char *text) {
 static void create(lv_obj_t *root, void *arg) {
     (void)arg; scan_root = root; ink_shell_statusbar(root, true); ink_shell_topbar(root, TR("扫码"));
     const char *message = result ? (result->ok ? result->content : TR("没有识别到可用的二维码，请对准后重试")) : TR("正在识别二维码");
-    ink_ui_label(root, message, INK_FONT_BODY, INK_WEIGHT_REGULAR, INK_MARGIN, INK_STATUS_BAR + 2 * INK_PRIMARY, INK_CANVAS_W - 2 * INK_MARGIN);
+    int top = INK_STATUS_BAR + 2 * INK_PRIMARY, width = INK_CANVAS_W - 2 * INK_MARGIN;
+    lv_obj_t *body = ink_ui_box(root, INK_MARGIN, top, width, INK_CANVAS_H - top - 4 * INK_PRIMARY - INK_GAP, 0, INK_SURFACE_WHITE, false);
+    lv_obj_add_flag(body, LV_OBJ_FLAG_SCROLLABLE); lv_obj_set_scroll_dir(body, LV_DIR_VER);
+    ink_ui_label(body, message, INK_FONT_BODY, INK_WEIGHT_REGULAR, 0, 0, width);
     if (result && result->ok) {
         const char *hint = result->target ? TR("是否执行下面的操作？") : !strcmp(result->type, "url") ? TR("设备没有浏览器，可以复制网址") : TR("可以复制文字");
         ink_ui_label(root, hint, INK_FONT_BODY, INK_WEIGHT_REGULAR, INK_MARGIN, INK_CANVAS_H - 4 * INK_PRIMARY, INK_CANVAS_W - 2 * INK_MARGIN);
@@ -139,7 +142,7 @@ static void decode(void *arg) {
     if (q) quirc_destroy(q);
     if (decoded) { memset(decoded, 0, sizeof *decoded); osal_free(decoded); }
     if (ink_exec_post(INK_EXEC_UI, &p->job, finish, p)) {
-        p->call->rc.status = INK_RC_FAILED; ink_cap_done(p->call); discard(p); __atomic_store_n(&scanning, 0, __ATOMIC_RELEASE);
+        ink_call_t *c = p->call; c->rc.status = INK_RC_FAILED; discard(p); __atomic_store_n(&scanning, 0, __ATOMIC_RELEASE); ink_cap_done(c);
     }
 }
 static void scan(ink_call_t *c) {
