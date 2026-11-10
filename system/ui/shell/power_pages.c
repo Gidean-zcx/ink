@@ -116,7 +116,7 @@ static void changed(void *ctx, int h, const char *id) {
     ink_state_get_int(ink_state_find("battery.charging"), &charging);
     int mode = B.blocked ? 0 : B.interrupt ? (percent <= 2 ? 2 : 1) : charging && ink_power_state() == INK_PWR_LOCKED ? 3 : 0;
     if (mode == 3 && B.mode == 3 && percent / 10 == B.percent / 10) return;
-    if (mode == B.mode && percent == B.percent && strcmp(id, "power.lock_after_s") && strcmp(id, "power.saving")) return;
+    if (mode == B.mode && percent == B.percent && strncmp(id, "member.", 7) && strcmp(id, "power.lock_after_s") && strcmp(id, "power.saving")) return;
     B.percent = (int)percent;
     render(mode);
 }
@@ -169,5 +169,6 @@ int ink_power_pages_init(void (*normal_off)(const char *why)) {
     static const ink_int_presenter_t presenter = {.show = present, .exec = INK_EXEC_UI};
     ink_interrupt_set_presenter(&presenter); ink_power_set_off_picture(off_picture);
     return ink_state_watch("battery.", changed, NULL, INK_EXEC_UI) || ink_state_watch("power.", changed, NULL, INK_EXEC_UI) ||
+           ink_state_watch("member.", changed, NULL, INK_EXEC_UI) ||
            ink_settings_watch("power.lock_after_s", changed, NULL, INK_EXEC_UI) ? -1 : 0;
 }

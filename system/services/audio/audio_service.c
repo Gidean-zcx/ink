@@ -240,7 +240,7 @@ static void afe_step(const int16_t *frame) {
     }
     if (r.speech && !AU.afe_speech) {
         lock();
-        bool answer = AU.stream && AU.prio == INK_AUDIO_PRIO_VOICE; /* an answer is playing: speech interrupts it */
+        bool answer = AU.stream && AU.prio == INK_AUDIO_PRIO_VOICE && ink_setting_get("voice.interrupt");
         if (answer) {
             free_jb();
             AU.stream = 0;
@@ -799,6 +799,7 @@ static const ink_setting_def_t AUDIO_SETTINGS[] = {
     {.id = "audio.volume", .title = "音量", .type = INK_SET_INT, .min = 0, .max = 100, .def = 70, .child_may_change = true,
      .apply = volume_apply, .apply_exec = INK_EXEC_DIRECT},
     {.id = "voice.handsfree", .title = "叫名字（什么时候在等）", .type = INK_SET_ENUM, .def = 0, .choices = HANDSFREE},
+    {.id = "voice.interrupt", .title = "说话能打断回答", .type = INK_SET_BOOL, .def = 1},
     {.id = "audio.child_max", .title = "孩子的音量上限", .type = INK_SET_INT, .min = 10, .max = 100, .def = 60, .ask_by_hand = true, .apply = child_max_apply, .apply_exec = INK_EXEC_DIRECT},
 };
 

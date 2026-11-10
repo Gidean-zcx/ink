@@ -674,6 +674,11 @@ static void turn_focus_begin(void) { /* UI task */
 
 void ink_ai_key(bool pressed, uint64_t t_us) {
     if (pressed) {
+        osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
+        bool speaking = AI.tts_opened > 0 && ink_audio_stream_progress(AI.tts_opened, NULL, NULL) == 0;
+        osal_mutex_unlock(AI.lock);
+        if (speaking && !ink_setting_get("voice.interrupt")) return;
+        if (speaking) ink_probe_count("ai.barge_ins");
         if (ink_text_voice_state() != INK_VOICE_IDLE) { /* the key still means the AI: what was said so far goes into the field, the microphone comes free */
             ink_text_voice_interrupt();
             for (int i = 0; i < 40 && ink_audio_capture_busy(); i++) osal_task_delay_us(5000);

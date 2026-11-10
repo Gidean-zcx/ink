@@ -212,3 +212,26 @@
 开	On
 关	Off
 接下来	Upcoming
+
+# small-gaps-1
+说话能打断回答	Interrupt spoken answers
+设备详情	Device Details
+开源许可	Open Source Licenses
+型号	Model
+系统版本	System version
+存储卡总量	Memory card capacity
+存储卡剩余	Memory card free space
+电量	Battery
+许可全文	Full license text
+暂时读不出来	Unavailable
+还能放 %lld.%lld %s	%lld.%lld %s free
+存储卡正借给电脑	Memory card is in use by the computer
+没有可用的存储卡	No memory card available
+通话时长	Call duration
+什么时候能叫名字	Listen for the wake word
+用什么名字叫它	Wake word
+暂不能更改	Unavailable
+没锁屏时才听，不影响待机。	Listens while unlocked; standby is unchanged.
+使用时	While in use
+一直	Always
+这里还没有内容	Nothing here yet
