@@ -103,14 +103,15 @@ static ink_rc_t gate(const ink_cap_t *c, ink_source_t src, uint32_t page_gen, bo
     if (!exposed(c, src)) return reject(rc, INK_RC_INVALID, "not offered to this caller");
     const ink_member_t *m = ink_member_current();
     if (m->role == INK_ROLE_CHILD) {
-        if (!ink_member_allows(c->id, c->child_ok)) {
-            ink_probe_count("policy.rejected");
-            return reject(rc, INK_RC_REJECTED, TR("家长没有打开这个应用"));
-        }
+        if (!ink_member_allows(c->id, true)) return reject(rc, INK_RC_REJECTED, TR("家长没有打开这个应用"));
         if (!ink_member_time_allows(c->id)) return reject(rc, INK_RC_REJECTED, "today\'s time is up");
         if (c->effect == INK_FX_SYSTEM && !(c->child_ok && (src == INK_SRC_TOUCH || src == INK_SRC_KEY))) { /* turning it off is anyone's who holds it */
             ink_probe_count("policy.rejected");
             return reject(rc, INK_RC_REJECTED, "children cannot run system actions");
+        }
+        if (!ink_member_allows(c->id, c->child_ok)) {
+            ink_probe_count("policy.rejected");
+            return reject(rc, INK_RC_REJECTED, "not on this child's whitelist");
         }
     }
     if (!ink_member_space_open() && src != INK_SRC_SYSTEM) { /* an adult's space, closed: what comes through is what cannot wait, and from a person */

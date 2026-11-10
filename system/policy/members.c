@@ -226,7 +226,10 @@ static int save_slot(ink_db_t *db, const slot_t *s) {
     memcpy(r->hash, s->hash, sizeof r->hash);
     memcpy(r->identity, s->identity, sizeof r->identity);
     r->time = s->time; r->policy = KP[s - M.s];
-    ink_db_write_t w = {.id = record_id(s->m.id), .data = r, .len = sizeof *r, .src = INK_SRC_SYSTEM};
+    size_t len = offsetof(stored_t, policy);
+    for (int i = 0; i < KID_APPS; i++) if (r->policy.apps[i].id[0]) len = sizeof *r;
+    for (int i = 0; i < INK_KID_PERIODS; i++) if (r->policy.periods[i].days || r->policy.periods[i].start || r->policy.periods[i].end) len = sizeof *r;
+    ink_db_write_t w = {.id = record_id(s->m.id), .data = r, .len = len, .src = INK_SRC_SYSTEM};
     int result = ink_db_put(db, &w, NULL);
     memset(r, 0, sizeof *r); osal_free(r);
     return result;

@@ -87,6 +87,7 @@ static void policy(void) {
     denied("app.open", "{\"id\":\"clock\"}", false);
     denied("shell.launch", "{\"id\":\"clock\"}", true);
     denied("memo.edit", NULL, false);
+    denied("app.open", "{\"id\":\"files\"}", false);
     CHECK(!ink_cap_ai_callable(ink_cap_find("memo.edit")), "AI capability discovery obeys the list");
     CHECK(AI("kid.app_set", "{\"id\":\"kid\",\"app\":\"clock\",\"mode\":1}") && g_rc.status == INK_RC_REJECTED, "child AI cannot change the list");
     CHECK(call_as("kid.period_set", "{\"id\":\"kid\",\"index\":0,\"start\":1260,\"end\":420,\"days\":127}", INK_SRC_TOUCH) && g_rc.status == INK_RC_REJECTED, "child buttons cannot change restricted hours");

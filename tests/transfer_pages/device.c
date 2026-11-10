@@ -18,6 +18,7 @@ static void options(void *arg) {
 }
 static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
 static void quiet(void) { CHECK(WAIT_FOR(settled(), 15000), "display settles"); }
+#include "../child_app_fixture.h"
 static void read_page(void) { read_screen(); snprintf(g_top, sizeof g_top, "%s", ink_ui_page_name()); }
 static bool at(const char *name) { on_ui(read_page); return !strcmp(g_top, name); }
 static bool ready(const char *name) {
@@ -219,6 +220,7 @@ static void run(void *arg) {
     CHECK(card_writes == before_writes, "bad card causes zero SD write bytes and no formatting");
     CHECK(!ink_usb_disk_active() && ink_fs_stat("/me/收件箱/SYNTH_UPLOAD.txt", &st) == INK_FS_ERR_NO_CARD, "bad card fails honestly");
     press("知道了"); ready("Files");
+    permit_child_files();
     CHECK(ink_member_switch("kid") == 0, "switch to child"); roots();
     CHECK(!strstr(g_snap, "transfer.open") && !strstr(g_snap, "transfer.usb"), "child sees neither entry");
     wanted = "从手机或电脑传入"; on_ui(target); CHECK(touch_x < 0, "child has no wireless touch entry");
