@@ -55,7 +55,7 @@
  * one that is still missing after this is waiting for the network's next try, often much later (ESTIMATE). */
 #define SMS_PART_WAIT_US 600000000ull
 #define SMS_GROUPS 8 /* messages being put together at once; a ninth shows the oldest as it is */
-#define SMS_INCOMPLETE "【短信不完整】"
+#define SMS_INCOMPLETE TR("【短信不完整】")
 #define REG_LOOK_US 2000000ull /* after the radio came on, how often registering is looked at, and how many times */
 #define REG_LOOKS 15
 
@@ -119,7 +119,7 @@ static ink_rc_t ink_comm_bind_dtmf(ink_args_t *args, ink_receipt_t *rc, ink_sour
         if (bound) return INK_RC_DONE;
     }
     snprintf(rc->detail, sizeof rc->detail, "the call is no longer available");
-    snprintf(rc->say, sizeof rc->say, "当前没有可用的通话，请重新操作。");
+    snprintf(rc->say, sizeof rc->say, TR("当前没有可用的通话，请重新操作。"));
     return INK_RC_STALE;
 }
 
@@ -364,7 +364,7 @@ static bool airplane(ink_call_t *c, const char *what) {
     if (!ink_setting_get("net.airplane")) return false;
     c->rc.status = INK_RC_REJECTED;
     snprintf(c->rc.detail, sizeof c->rc.detail, "airplane mode is on");
-    snprintf(c->rc.say, sizeof c->rc.say, "飞行模式已打开，关闭飞行模式才能%s", what);
+    snprintf(c->rc.say, sizeof c->rc.say, "%s", !strcmp(what, "发短信") ? TR("飞行模式已打开，关闭飞行模式才能发短信") : TR("飞行模式已打开，关闭飞行模式才能打电话"));
     return true;
 }
 
@@ -433,14 +433,13 @@ static void comm_task(void *arg) {
 
 /* What a message's record and receipt say: of a long one, which parts went and which did not. */
 static void send_status(char *s, size_t cap, int r, int parts, int sent) {
-    if (r == 0) { snprintf(s, cap, "已发出"); return; }
-    if (parts == 1 || (!sent && r > 0)) { snprintf(s, cap, "%s", r > 0 ? "发送失败，未发出" : "结果未知，请先核实"); return; }
+    if (r == 0) { snprintf(s, cap, TR("已发出")); return; }
+    if (parts == 1 || (!sent && r > 0)) { snprintf(s, cap, "%s", r > 0 ? TR("发送失败，未发出") : TR("结果未知，请先核实")); return; }
     int rest = parts - sent - (r < 0);
-    char done[48] = "", unknown[64] = "", left[32] = "";
-    if (sent) snprintf(done, sizeof done, "前 %d 条已发出，", sent);
-    if (r < 0) snprintf(unknown, sizeof unknown, "第 %d 条结果未知，请先核实%s", sent + 1, rest ? "，" : "");
-    if (rest) snprintf(left, sizeof left, "后 %d 条未发出", rest);
-    snprintf(s, cap, "共 %d 条：%s%s%s", parts, done, unknown, left);
+    if (r > 0) snprintf(s, cap, TR("共 %d 条：前 %d 条已发出，后 %d 条未发出"), parts, sent, rest);
+    else if (sent && rest) snprintf(s, cap, TR("共 %d 条：前 %d 条已发出，第 %d 条结果未知，请先核实，后 %d 条未发出"), parts, sent, sent + 1, rest);
+    else if (sent) snprintf(s, cap, TR("共 %d 条：前 %d 条已发出，第 %d 条结果未知，请先核实"), parts, sent, sent + 1);
+    else snprintf(s, cap, TR("共 %d 条：第 %d 条结果未知，请先核实，后 %d 条未发出"), parts, sent + 1, rest);
 }
 
 /* Both callers use the same validation; the AI can supply text, never a local draft reference. */
@@ -449,16 +448,16 @@ static int send_text(const ink_args_t *args, const char *member, ink_source_t sr
     int to_len = ink_args_get_str(args, "to", to, 24), bytes;
     if (ink_args_find(args, "draft")) {
         if (ink_args_find(args, "text") || src == INK_SRC_AI || src == INK_SRC_REMOTE) {
-            snprintf(rc->say, sizeof rc->say, "请直接提供短信正文，不能同时提供正文和草稿；AI 不能发送草稿引用"); return -1;
+            snprintf(rc->say, sizeof rc->say, TR("请直接提供短信正文，不能同时提供正文和草稿；AI 不能发送草稿引用")); return -1;
         }
         bytes = ink_args_get_int(args, "draft", &draft) && draft > 0 && draft <= UINT32_MAX &&
             ink_args_get_str(args, "page", page, sizeof page) > 0 ? ink_text_draft_read(member, page, (uint32_t)draft, CM.text, sizeof CM.text) : -1;
-        if (bytes < 0) { snprintf(rc->say, sizeof rc->say, "短信草稿不可用，未发送，请重新打开后再试"); return -1; }
+        if (bytes < 0) { snprintf(rc->say, sizeof rc->say, TR("短信草稿不可用，未发送，请重新打开后再试")); return -1; }
     } else bytes = ink_args_get_str(args, "text", CM.text, sizeof CM.text);
     bool valid = to_len > 0 && to_len < 24 && bytes > 0 && bytes < (int)sizeof CM.text;
     for (size_t i = 0; to[i]; i++) if ((to[i] < '0' || to[i] > '9') && !(i == 0 && to[i] == '+' && to[1])) valid = false;
     int parts = valid ? hal_cell_sms_parts(CM.text) : -1;
-    if (parts > INK_SMS_PARTS_MAX) snprintf(rc->say, sizeof rc->say, "短信太长，最多分 %d 条发送，请删短一些", INK_SMS_PARTS_MAX);
+    if (parts > INK_SMS_PARTS_MAX) snprintf(rc->say, sizeof rc->say, TR("短信太长，最多分 %d 条发送，请删短一些"), INK_SMS_PARTS_MAX);
     return parts > 0 && parts <= INK_SMS_PARTS_MAX ? bytes : -1;
 }
 static void text_digest(char out[65]) {
@@ -475,7 +474,7 @@ static void cap_send(ink_call_t *c) { /* exec.bg */
     if (draft && c->src == INK_SRC_CONFIRMED) {
         char expected[65], actual[65]; text_digest(actual);
         if (ink_args_get_str(&c->args, "_digest", expected, sizeof expected) != 64 || strcmp(expected, actual)) {
-            c->rc.status = INK_RC_STALE; snprintf(c->rc.say, sizeof c->rc.say, "短信草稿已改变，未发送，请重新确认"); return;
+            c->rc.status = INK_RC_STALE; snprintf(c->rc.say, sizeof c->rc.say, TR("短信草稿已改变，未发送，请重新确认")); return;
         }
     }
     /* Preserve existing direct sends; a draft exceeding the old call capacity gets a billed-parts card. */
@@ -484,8 +483,8 @@ static void cap_send(ink_call_t *c) { /* exec.bg */
     }
     int parts = hal_cell_sms_parts(text);
     ink_db_t *db = ink_db_open_member(&MESSAGES, ink_cap_call_member(c)); uint32_t id = 0;
-    if (!db || !save_message(db, &id, to, text, "结果未知，请先核实", c->src)) {
-        ink_db_close(db); c->rc.status = INK_RC_FAILED; snprintf(c->rc.say, sizeof c->rc.say, "短信没能存下，未发送"); return;
+    if (!db || !save_message(db, &id, to, text, TR("结果未知，请先核实"), c->src)) {
+        ink_db_close(db); c->rc.status = INK_RC_FAILED; snprintf(c->rc.say, sizeof c->rc.say, TR("短信没能存下，未发送")); return;
     }
     osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
     hal_cell_status_t st; bool known = hal_cell_status(&st);
@@ -499,7 +498,7 @@ static void cap_send(ink_call_t *c) { /* exec.bg */
     } else ink_probe_count("comm.sms_sent");
     snprintf(c->rc.object, sizeof c->rc.object, "message:to:%s", to);
     snprintf(c->rc.say, sizeof c->rc.say, "%s", status);
-    if (!save_message(db, &id, to, text, status, c->src)) { c->rc.status = INK_RC_FAILED; snprintf(c->rc.say, sizeof c->rc.say, "发送结果没能存下，请先核实"); }
+    if (!save_message(db, &id, to, text, status, c->src)) { c->rc.status = INK_RC_FAILED; snprintf(c->rc.say, sizeof c->rc.say, TR("发送结果没能存下，请先核实")); }
     ink_db_close(db);
 }
 
@@ -513,8 +512,8 @@ static ink_rc_t bind_send(ink_args_t *args, ink_receipt_t *rc, ink_source_t src)
         ink_args_get_str(args, "page", page, sizeof page); text_digest(digest); ink_args_init(args);
         if (ink_args_str(args, "to", to) || ink_args_str(args, "page", page) || ink_args_int(args, "draft", draft) || ink_args_str(args, "_digest", digest)) return INK_RC_FAILED;
     }
-    if (parts > 1) snprintf(note, sizeof note, "（共 %u 字，将按 %d 条发送）", (unsigned)chars, parts);
-    snprintf(rc->say, sizeof rc->say, "发短信给 %s：%.60s%s%s", to, preview, strlen(CM.text) > strlen(preview) ? "…" : "", note);
+    if (parts > 1) snprintf(note, sizeof note, TR("（共 %u 字，将按 %d 条发送）"), (unsigned)chars, parts);
+    snprintf(rc->say, sizeof rc->say, TR("发短信给 %s：%.60s%s%s"), to, preview, strlen(CM.text) > strlen(preview) ? "…" : "", note);
     return INK_RC_DONE;
 }
 
@@ -539,8 +538,8 @@ static void cap_list(ink_call_t *c) {
         if (!n++) { ink_json_str(j, ink_json_find(j, 0, "peer"), peer, sizeof peer); ink_json_str(j, ink_json_find(j, 0, "text"), text, sizeof text); }
     }
     if (!n)
-        snprintf(c->rc.say, sizeof c->rc.say, "没有新短信");
-    else if (snprintf(c->rc.say, sizeof c->rc.say, "%d 条短信，最近一条来自 %s：%s", n, peer, text) >= (int)sizeof c->rc.say)
+        snprintf(c->rc.say, sizeof c->rc.say, TR("没有新短信"));
+    else if (snprintf(c->rc.say, sizeof c->rc.say, TR("%d 条短信，最近一条来自 %s：%s"), n, peer, text) >= (int)sizeof c->rc.say)
         whole_characters(c->rc.say); /* a long message is cut to what can be said */
     ink_db_close(db);
     utf8_clip(c->rc.say);
@@ -589,7 +588,7 @@ static void cap_answer(ink_call_t *c) {
     osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
     int r = hal_cell_answer();
     osal_mutex_unlock(CM.at);
-    call_result(c, r, "接通了", "nothing to answer");
+    call_result(c, r, TR("接通了"), "nothing to answer");
     if (r == 0) ink_cap_emit("call.answered", NULL);
 }
 
@@ -601,7 +600,7 @@ static void cap_hangup(ink_call_t *c) {
     }
     int r = hal_cell_hangup();
     osal_mutex_unlock(CM.at);
-    call_result(c, r, "挂断了", "no call to end");
+    call_result(c, r, TR("挂断了"), "no call to end");
 }
 
 static void cap_control(ink_call_t *c) { /* exec.bg */
@@ -630,11 +629,11 @@ static void cap_control(ink_call_t *c) { /* exec.bg */
         ink_state_get_int(ink_state_find("bt.connected"), &connected);
         if (ink_args_get_bool(&c->args, "headset", &headset) && (!headset || connected)) {
             ink_audio_set_route(headset ? INK_ROUTE_HEADSET : INK_ROUTE_SPEAKER); r = 0;
-        } else snprintf(c->rc.say, sizeof c->rc.say, "没有连接蓝牙耳机，请先连接耳机");
-    } else snprintf(c->rc.say, sizeof c->rc.say, "通话音频接线未核实，暂不能录音");
+        } else snprintf(c->rc.say, sizeof c->rc.say, TR("没有连接蓝牙耳机，请先连接耳机"));
+    } else snprintf(c->rc.say, sizeof c->rc.say, TR("通话音频接线未核实，暂不能录音"));
     osal_mutex_unlock(CM.at);
     if (r && c->rc.status == INK_RC_DONE) c->rc.status = INK_RC_FAILED;
-    if (r && !c->rc.say[0]) snprintf(c->rc.say, sizeof c->rc.say, "模组没有确认，请重试");
+    if (r && !c->rc.say[0]) snprintf(c->rc.say, sizeof c->rc.say, TR("模组没有确认，请重试"));
     if (!r) {
         ink_args_init(&c->args);
         if (!strcmp(id, "call.mute")) ink_args_bool(&c->args, "muted", muted);
@@ -651,13 +650,13 @@ static const ink_cap_t COMM_CAPS[] = {
     {.id = "phone.emergency", .app = NULL, .title = "拨紧急电话", .input = "{\"type\":\"object\",\"properties\":{\"number\":{\"type\":\"string\",\"maxLength\":20}},\"required\":[\"number\"]}", .effect = INK_FX_EXTERNAL,
      .child_ok = true, .while_locked = true, .expose = INK_EXPOSE_OWNER, .permission = "call", .timeout_ms = 25000, .exec = INK_EXEC_BG, .run = cap_dial},
     {.id = "call.mute", .app = "phone", .locked_owner_only = true, .title = "通话麦克风静音", .input = BOOL_ARG("on"), .effect = INK_FX_NAVIGATE, .child_ok = true, .permission = "call", .timeout_ms = 15000, .exec = INK_EXEC_BG, .run = cap_control},
-    {.id = "call.dtmf", .app = "phone", .locked_owner_only = true, .title = "发送一个通话按键", .ask = "向 {_peer} 的本次通话发送按键 {key}", .input = "{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":1}},\"required\":[\"key\"]}", .effect = INK_FX_EXTERNAL, .child_ok = true, .permission = "call", .timeout_ms = 10000, .exec = INK_EXEC_BG, .prepare_confirm = ink_comm_bind_dtmf, .run = cap_control},
+    {.id = "call.dtmf", .app = "phone", .locked_owner_only = true, .title = "发送一个通话按键", .ask = TR_NOOP("向 {_peer} 的本次通话发送按键 {key}"), .input = "{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":1}},\"required\":[\"key\"]}", .effect = INK_FX_EXTERNAL, .child_ok = true, .permission = "call", .timeout_ms = 10000, .exec = INK_EXEC_BG, .prepare_confirm = ink_comm_bind_dtmf, .run = cap_control},
     {.id = "call.route", .app = "phone", .locked_owner_only = true, .title = "切换通话耳机或喇叭", .input = BOOL_ARG("headset"), .effect = INK_FX_NAVIGATE, .child_ok = true, .permission = "call", .exec = INK_EXEC_BG, .run = cap_control},
     {.id = "call.record", .app = "phone", .locked_owner_only = true, .title = "查看通话录音不可用的原因", .effect = INK_FX_READ, .child_ok = true, .permission = "call", .exec = INK_EXEC_BG, .run = cap_control},
     {.id = "call.controls", .app = "phone", .title = "通话控制已获模组确认", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true, .permission = "call"},
     {.id = "message.send", .app = "message",
      .title = "发短信",
-     .ask = "发短信给 {to}：{text}",
+     .ask = TR_NOOP("发短信给 {to}：{text}"),
      .prepare_confirm = bind_send,
      .input = "{\"type\":\"object\",\"properties\":{\"to\":{\"type\":\"string\",\"maxLength\":20},\"text\":{\"type\":\"string\",\"maxLength\":765}},"
               "\"required\":[\"to\"]}",
@@ -669,10 +668,10 @@ static const ink_cap_t COMM_CAPS[] = {
      .exec = INK_EXEC_BG,
      .run = cap_send},
     {.id = "message.list", .app = "message", .title = "最近的短信", .effect = INK_FX_READ, .child_ok = true, .permission = "message", .exec = INK_EXEC_BG, .run = cap_list},
-    {.id = "sms.send", .app = "message", .title = "保存并发送短信", .ask = "发短信给 {to}：{text}", .prepare_confirm = bind_send, .input = "{\"type\":\"object\",\"properties\":{\"to\":{\"type\":\"string\",\"maxLength\":20},\"text\":{\"type\":\"string\",\"maxLength\":765}},\"required\":[\"to\"]}", .effect = INK_FX_EXTERNAL, .child_ok = true, .permission = "message", .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .timeout_ms = 30000, .run = cap_send},
+    {.id = "sms.send", .app = "message", .title = "保存并发送短信", .ask = TR_NOOP("发短信给 {to}：{text}"), .prepare_confirm = bind_send, .input = "{\"type\":\"object\",\"properties\":{\"to\":{\"type\":\"string\",\"maxLength\":20},\"text\":{\"type\":\"string\",\"maxLength\":765}},\"required\":[\"to\"]}", .effect = INK_FX_EXTERNAL, .child_ok = true, .permission = "message", .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .timeout_ms = 30000, .run = cap_send},
     {.id = "call.dial", .app = "phone", .locked_owner_only = true,
      .title = "打电话",
-     .ask = "打电话给 {number}",
+     .ask = TR_NOOP("打电话给 {number}"),
      .input = "{\"type\":\"object\",\"properties\":{\"number\":{\"type\":\"string\",\"maxLength\":20}},\"required\":[\"number\"]}",
      .effect = INK_FX_EXTERNAL,
      .child_ok = true,
@@ -706,7 +705,7 @@ static void apply_slot(void *ctx, int64_t v) { /* exec.bg */
 
 static const char *const SLOTS[] = {"external", "internal", NULL};
 static const ink_setting_def_t COMM_SETTINGS[] = {
-    {.id = "cell.sim_slot", .title = "SIM 卡", .type = INK_SET_ENUM, .def = 0, .choices = SLOTS, .apply = apply_slot, .apply_exec = INK_EXEC_BG},
+    {.id = "cell.sim_slot", .title = TR_NOOP("SIM 卡"), .type = INK_SET_ENUM, .def = 0, .choices = SLOTS, .apply = apply_slot, .apply_exec = INK_EXEC_BG},
 };
 
 static bool mobile_save(uint32_t id, const void *data, size_t len) { /* exec.bg; private records never exported */
@@ -782,7 +781,7 @@ static const ink_cap_t MOBILE_CAPS[] = {
     {.id = "net.roaming_set", .app = NULL, .title = "开关数据漫游", .effect = INK_FX_SYSTEM, .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .run = mobile_cap,
      .input = "{\"type\":\"object\",\"properties\":{\"enabled\":{\"type\":\"boolean\"}},\"required\":[\"enabled\"]}"},
     {.id = "net.usage", .app = NULL, .title = "移动流量和接入点（不含密码）", .effect = INK_FX_READ, .child_ok = true, .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .run = mobile_cap},
-    {.id = "net.usage_reset", .app = NULL, .title = "清零流量统计", .effect = INK_FX_SYSTEM, .ask_by_hand = true, .ask = "清零本月和上个月的流量统计，不能撤销", .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .run = mobile_cap}};
+    {.id = "net.usage_reset", .app = NULL, .title = "清零流量统计", .effect = INK_FX_SYSTEM, .ask_by_hand = true, .ask = TR_NOOP("清零本月和上个月的流量统计，不能撤销"), .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .run = mobile_cap}};
 
 int ink_comm_init(void) {
     static const ink_state_def_t mobile = {.id = "net.mobile_rev", .type = INK_ST_INT, .title = "移动网络设置变化"};

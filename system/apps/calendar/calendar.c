@@ -41,6 +41,7 @@ static void lunar_text(int day, bool short_name, char *out, size_t cap) {
     ink_lunar_t lunar; out[0] = 0;
     if (!ink_lunar_from_solar(C.date.year, C.date.month, day, &lunar)) return;
     ink_lunar_name(&lunar, out, cap);
+    if (short_name && strcmp(ink_lang_code(), "zh")) { snprintf(out, cap, lunar.day == 1 ? TR("农历%d月") : "%d", lunar.day == 1 ? lunar.month : lunar.day); return; }
     char *p = strstr(out, "月");
     if (short_name && p) { p += strlen("月"); if (lunar.day == 1) *p = 0; else memmove(out, p, strlen(p) + 1); }
 }

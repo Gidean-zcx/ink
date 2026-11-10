@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "ink/sys/i18n.h"
 #include "ink/hal_net.h"
 #include "ink/osal.h"
 #include "ink/probe.h"
@@ -189,9 +190,9 @@ static void cap_switch(ink_call_t *c) { /* exec.bg: net.set_airplane and wifi.se
         snprintf(c->rc.object, sizeof c->rc.object, "setting:%s", id);
         ink_svc_at(&NS.later, osal_now_us() + RECEIPT_FIRST_US, airplane_due, NULL);
     } else if (ink_setting_set(id, on, c->src, &c->rc) != INK_RC_DONE) return;
-    snprintf(c->rc.say, sizeof c->rc.say, "%s", !plane ? (on ? "已打开 Wi-Fi" : "已关闭 Wi-Fi")
-                                                : on ? "已打开飞行模式：4G、Wi-Fi 和蓝牙都关了，AI 要等关掉才能用；闹钟照常"
-                                                     : "已关闭飞行模式，Wi-Fi 和蓝牙回到原来的样子");
+    snprintf(c->rc.say, sizeof c->rc.say, "%s", !plane ? (on ? TR("已打开 Wi-Fi") : TR("已关闭 Wi-Fi"))
+                                                : on ? TR("已打开飞行模式：4G、Wi-Fi 和蓝牙都关了，AI 要等关掉才能用；闹钟照常")
+                                                     : TR("已关闭飞行模式，Wi-Fi 和蓝牙回到原来的样子"));
     if (plane && on && c->src == INK_SRC_AI) ink_ai_note(c->rc.say); /* shown here: the hub's answer will not come */
 }
 
@@ -204,12 +205,12 @@ static const ink_cap_t NET_CAPS[] = {
 
 static const char *const PREFER[] = {"auto", "wifi", "lte", NULL};
 static const ink_setting_def_t NET_SETTINGS[] = {
-    {.id = "net.roaming", .title = "数据漫游", .type = INK_SET_BOOL, .via = "net.roaming_set", .apply = apply_prefer, .apply_exec = INK_EXEC_DIRECT},
-    {.id = "net.prefer", .title = "上网方式", .type = INK_SET_ENUM, .def = 0, .choices = PREFER, .child_may_change = false, .apply = apply_prefer,
+    {.id = "net.roaming", .title = TR_NOOP("数据漫游"), .type = INK_SET_BOOL, .via = "net.roaming_set", .apply = apply_prefer, .apply_exec = INK_EXEC_DIRECT},
+    {.id = "net.prefer", .title = TR_NOOP("上网方式"), .type = INK_SET_ENUM, .def = 0, .choices = PREFER, .child_may_change = false, .apply = apply_prefer,
      .apply_exec = INK_EXEC_DIRECT},
     {.id = "wifi.enabled", .title = "Wi-Fi", .type = INK_SET_BOOL, .def = 1, .via = "wifi.set_enabled", .apply = apply_prefer,
      .apply_exec = INK_EXEC_DIRECT},
-    {.id = "net.airplane", .title = "飞行模式", .type = INK_SET_BOOL, .def = 0, .via = "net.set_airplane", .apply = apply_airplane,
+    {.id = "net.airplane", .title = TR_NOOP("飞行模式"), .type = INK_SET_BOOL, .def = 0, .via = "net.set_airplane", .apply = apply_airplane,
      .apply_exec = INK_EXEC_BG},
 };
 

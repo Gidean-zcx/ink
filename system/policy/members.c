@@ -694,7 +694,7 @@ static void retire_id(const char *id) {
 static bool read_name(ink_call_t *c, char *name, size_t cap) {
     if (ink_args_get_str(&c->args, "name", name, cap) < (int)cap) return true;
     fail(c, INK_RC_INVALID, "member name exceeds byte capacity");
-    snprintf(c->rc.say, sizeof c->rc.say, "称呼太长");
+    snprintf(c->rc.say, sizeof c->rc.say, TR("称呼太长"));
     return false;
 }
 static void cap_add(ink_call_t *c) { /* exec.bg */
@@ -820,7 +820,7 @@ static void cap_remove(ink_call_t *c) { /* exec.bg */
     if (db) ink_db_close(db);
     if (!cleared) {
         fail(c, INK_RC_FAILED, "member cleanup incomplete; retry removal with the card inserted");
-        snprintf(c->rc.say, sizeof c->rc.say, "还没删完，请插好存储卡后重试；这位家人的编号暂时不能使用");
+        snprintf(c->rc.say, sizeof c->rc.say, TR("还没删完，请插好存储卡后重试；这位家人的编号暂时不能使用"));
         ink_cap_emit("member.changed", NULL);
         return;
     }
@@ -829,7 +829,7 @@ static void cap_remove(ink_call_t *c) { /* exec.bg */
     s->used = false;
     ink_svc_unlock();
     ink_cap_emit("member.changed", NULL);
-    snprintf(c->rc.say, sizeof c->rc.say, "删掉了");
+    snprintf(c->rc.say, sizeof c->rc.say, TR("删掉了"));
 }
 
 /* What only happens on the device: the answer is told when the slow part is over. */
@@ -1024,18 +1024,18 @@ static void cap_rename(ink_call_t *c) {
 }
 static const ink_cap_t MEMBER_CAPS[] = {
     {.id = "kid.policy_get", .title = "查看孩子的应用名单和禁用时段", .input = "{\"type\":\"object\",\"properties\":{" KID_ID "}}", .output = "{\"type\":\"object\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_BG, .run = cap_kid},
-    {.id = "kid.app_set", .title = "设置孩子能用的应用", .ask = "修改孩子 {id} 的应用 {app}", .input = "{\"type\":\"object\",\"properties\":{" KID_ID ",\"app\":{\"type\":\"string\",\"maxLength\":31},\"mode\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":2,\"description\":\"0 禁用，1 可用，2 禁用时段也能用\"}},\"required\":[\"id\",\"app\",\"mode\"]}", .effect = INK_FX_LOCAL_WRITE, .ask_by_hand = true, .parent_pin = true, .exec = INK_EXEC_BG, .run = cap_kid},
-    {.id = "kid.period_set", .title = "设置孩子的禁用时段", .ask = "修改孩子 {id} 的禁用时段", .input = "{\"type\":\"object\",\"properties\":{" KID_ID ",\"index\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":3},\"start\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":1439},\"end\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":1439},\"days\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":127,\"description\":\"按位选择开始日期，位 0 是星期日；0 关闭\"}},\"required\":[\"id\",\"index\",\"start\",\"end\",\"days\"]}", .effect = INK_FX_LOCAL_WRITE, .ask_by_hand = true, .parent_pin = true, .exec = INK_EXEC_BG, .run = cap_kid},
+    {.id = "kid.app_set", .title = "设置孩子能用的应用", .ask = TR_NOOP("修改孩子 {id} 的应用 {app}"), .input = "{\"type\":\"object\",\"properties\":{" KID_ID ",\"app\":{\"type\":\"string\",\"maxLength\":31},\"mode\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":2,\"description\":\"0 禁用，1 可用，2 禁用时段也能用\"}},\"required\":[\"id\",\"app\",\"mode\"]}", .effect = INK_FX_LOCAL_WRITE, .ask_by_hand = true, .parent_pin = true, .exec = INK_EXEC_BG, .run = cap_kid},
+    {.id = "kid.period_set", .title = "设置孩子的禁用时段", .ask = TR_NOOP("修改孩子 {id} 的禁用时段"), .input = "{\"type\":\"object\",\"properties\":{" KID_ID ",\"index\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":3},\"start\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":1439},\"end\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":1439},\"days\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":127,\"description\":\"按位选择开始日期，位 0 是星期日；0 关闭\"}},\"required\":[\"id\",\"index\",\"start\",\"end\",\"days\"]}", .effect = INK_FX_LOCAL_WRITE, .ask_by_hand = true, .parent_pin = true, .exec = INK_EXEC_BG, .run = cap_kid},
     {.id = "member.rename", .title = "修改家人的称呼", .effect = INK_FX_LOCAL_WRITE, .exec = INK_EXEC_BG,
         .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":15},\"name\":{\"type\":\"string\",\"description\":\"称呼最多31个UTF-8字节\",\"minLength\":1,\"maxLength\":31}},\"required\":[\"id\",\"name\"]}", .run = cap_rename},
     {.id = "member.time_get", .title = "查看孩子今天的用时和每天的时长", .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":15}}}", .output = "{\"type\":\"object\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_BG, .run = cap_time},
-    {.id = "member.time_set", .title = "改孩子每天能用多久", .ask = "每天能用 {minutes} 分钟（0 表示不限）", .input = TIME_INPUT, .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .ask_by_hand = true, .parent_pin = true, .exec = INK_EXEC_BG, .run = cap_time},
-    {.id = "member.time_add", .title = "给孩子今天加时间", .ask = "今天加 {minutes} 分钟", .input = TIME_INPUT, .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .ask_by_hand = true, .parent_pin = true, .exec = INK_EXEC_BG, .run = cap_time},
+    {.id = "member.time_set", .title = "改孩子每天能用多久", .ask = TR_NOOP("每天能用 {minutes} 分钟（0 表示不限）"), .input = TIME_INPUT, .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .ask_by_hand = true, .parent_pin = true, .exec = INK_EXEC_BG, .run = cap_time},
+    {.id = "member.time_add", .title = "给孩子今天加时间", .ask = TR_NOOP("今天加 {minutes} 分钟"), .input = TIME_INPUT, .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .ask_by_hand = true, .parent_pin = true, .exec = INK_EXEC_BG, .run = cap_time},
     {.id = "member.list", .title = "家里有哪些人", .output = "{\"type\":\"array\"}", .effect = INK_FX_READ, .child_ok = true, .while_locked = true, .exec = INK_EXEC_DIRECT, .run = cap_list},
-    {.id = "member.add", .title = "加一位家人", .ask = "加一位家人：{name}（{role}）",
+    {.id = "member.add", .title = "加一位家人", .ask = TR_NOOP("加一位家人：{name}（{role}）"),
      .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":15},\"name\":{\"type\":\"string\",\"description\":\"称呼最多31个UTF-8字节\",\"maxLength\":31},\"role\":{\"type\":\"string\",\"enum\":[\"adult\",\"child\"]}},\"required\":[\"id\"]}",
      .effect = INK_FX_SYSTEM, .ask_by_hand = true, .parent_pin = true, .exec = INK_EXEC_BG, .run = cap_add},
-    {.id = "member.remove", .title = "删除一位家人和他们的全部数据（不能撤销）", .ask = "删除家人 {id} 和他们的全部数据，不能撤销",
+    {.id = "member.remove", .title = "删除一位家人和他们的全部数据（不能撤销）", .ask = TR_NOOP("删除家人 {id} 和他们的全部数据，不能撤销"),
      .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":15}},\"required\":[\"id\"]}",
      .effect = INK_FX_SYSTEM, .ask_by_hand = true, .parent_pin = true, .exec = INK_EXEC_BG, .run = cap_remove},
     /* a PIN goes through no one's hands but the person's */
@@ -1049,7 +1049,7 @@ static const ink_cap_t MEMBER_CAPS[] = {
 };
 
 static const ink_setting_def_t MEMBER_SETTINGS[] = {
-    {.id = "member.idle_return_s", .title = "大人锁屏多久后要重新输密码（秒）", .type = INK_SET_INT, .min = 30, .max = 3600, .def = IDLE_RETURN_S, .ask_by_hand = true,
+    {.id = "member.idle_return_s", .title = TR_NOOP("大人锁屏多久后要重新输密码（秒）"), .type = INK_SET_INT, .min = 30, .max = 3600, .def = IDLE_RETURN_S, .ask_by_hand = true,
      .apply = apply_return_after, .apply_exec = INK_EXEC_DIRECT},
 };
 

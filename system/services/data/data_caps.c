@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "ink/sys/i18n.h"
 #include "ink/osal.h"
 #include "ink/sys/cap.h"
 #include "ink/sys/data.h"
@@ -314,7 +315,7 @@ static const ink_cap_t DATA_CAPS[] = {
      .run = cap_put},
     {.id = "data.delete",
      .title = "删除一条数据",
-     .ask = "从 {collection} 删除第 {id} 条",
+     .ask = TR_NOOP("从 {collection} 删除第 {id} 条"),
      .input = "{\"type\":\"object\",\"properties\":{" COLL ",\"id\":{\"type\":\"integer\",\"minimum\":1}},\"required\":[\"collection\",\"id\"]}",
      .effect = INK_FX_LOCAL_DESTRUCTIVE, .ask_by_hand = true,
      .child_ok = true,

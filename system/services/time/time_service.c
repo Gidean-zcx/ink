@@ -811,9 +811,9 @@ static void apply_auto(void *ctx, int64_t v) {
 }
 
 static const ink_setting_def_t TIME_SETTINGS[] = {
-    {.id = "time.zone", .title = "时区", .type = INK_SET_ENUM, .def = 0, .choices = ZONE_NAMES, .apply = apply_zone, .apply_exec = INK_EXEC_DIRECT},
-    {.id = "time.auto", .title = "自动校时（听家庭服务器的）", .type = INK_SET_BOOL, .def = 1, .apply = apply_auto, .apply_exec = INK_EXEC_BG},
-    {.id = "time.zone_auto", .title = "自动设置时区", .type = INK_SET_BOOL, .def = 0, .apply = apply_zone, .apply_exec = INK_EXEC_DIRECT},
+    {.id = "time.zone", .title = TR_NOOP("时区"), .type = INK_SET_ENUM, .def = 0, .choices = ZONE_NAMES, .apply = apply_zone, .apply_exec = INK_EXEC_DIRECT},
+    {.id = "time.auto", .title = TR_NOOP("自动校时（听家庭服务器的）"), .type = INK_SET_BOOL, .def = 1, .apply = apply_auto, .apply_exec = INK_EXEC_BG},
+    {.id = "time.zone_auto", .title = TR_NOOP("自动设置时区"), .type = INK_SET_BOOL, .def = 0, .apply = apply_zone, .apply_exec = INK_EXEC_DIRECT},
 };
 
 static const ink_state_def_t ST_SYNCED = {.id = "time.synced", .type = INK_ST_BOOL, .title = "时间和家庭服务器对过"};

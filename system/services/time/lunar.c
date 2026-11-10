@@ -16,6 +16,7 @@
 #include <string.h>
 
 #include "ink/sys/time.h"
+#include "ink/sys/i18n.h"
 
 #define FIRST_YEAR 1901
 #define LAST_YEAR 2100
@@ -131,6 +132,10 @@ int ink_lunar_name(const ink_lunar_t *l, char *out, size_t cap) {
     static const char *const DIGIT[] = {"一", "二", "三", "四", "五", "六", "七", "八", "九", "十"};
     static const char *const TENS[] = {"初", "十", "廿", "三"};
     if (l->month < 1 || l->month > 12 || l->day < 1 || l->day > 30) return -1;
+    if (strcmp(ink_lang_code(), "zh")) {
+        int n = snprintf(out, cap, TR("农历 %s%d月%d日"), l->leap ? TR("闰") : "", l->month, l->day);
+        return n > 0 && (size_t)n < cap ? n : -1;
+    }
     char day[16];
     if (l->day == 10) snprintf(day, sizeof day, "初十");
     else if (l->day == 20) snprintf(day, sizeof day, "二十");
@@ -141,13 +146,13 @@ int ink_lunar_name(const ink_lunar_t *l, char *out, size_t cap) {
 }
 
 const char *ink_lunar_zodiac(int year) {
-    static const char *const Z[] = {"鼠", "牛", "虎", "兔", "龙", "蛇", "马", "羊", "猴", "鸡", "狗", "猪"};
-    return Z[(((year - 4) % 12) + 12) % 12];
+    static const char *const Z[] = {TR_NOOP("鼠"), TR_NOOP("牛"), TR_NOOP("虎"), TR_NOOP("兔"), TR_NOOP("龙"), TR_NOOP("蛇"), TR_NOOP("马"), TR_NOOP("羊"), TR_NOOP("猴"), TR_NOOP("鸡"), TR_NOOP("狗"), TR_NOOP("猪")};
+    return TR(Z[(((year - 4) % 12) + 12) % 12]);
 }
 
 int ink_lunar_ganzhi(int year, char *out, size_t cap) {
-    static const char *const GAN[] = {"甲", "乙", "丙", "丁", "戊", "己", "庚", "辛", "壬", "癸"};
-    static const char *const ZHI[] = {"子", "丑", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥"};
-    int n = snprintf(out, cap, "%s%s", GAN[(((year - 4) % 10) + 10) % 10], ZHI[(((year - 4) % 12) + 12) % 12]);
+    static const char *const GAN[] = {TR_NOOP("甲"), TR_NOOP("乙"), TR_NOOP("丙"), TR_NOOP("丁"), TR_NOOP("戊"), TR_NOOP("己"), TR_NOOP("庚"), TR_NOOP("辛"), TR_NOOP("壬"), TR_NOOP("癸")};
+    static const char *const ZHI[] = {TR_NOOP("子"), TR_NOOP("丑"), TR_NOOP("寅"), TR_NOOP("卯"), TR_NOOP("辰"), TR_NOOP("巳"), TR_NOOP("午"), TR_NOOP("未"), TR_NOOP("申"), TR_NOOP("酉"), TR_NOOP("戌"), TR_NOOP("亥")};
+    int n = snprintf(out, cap, "%s%s", TR(GAN[(((year - 4) % 10) + 10) % 10]), TR(ZHI[(((year - 4) % 12) + 12) % 12]));
     return n > 0 && (size_t)n < cap ? n : -1;
 }

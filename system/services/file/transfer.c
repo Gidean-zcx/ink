@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
+#include "ink/sys/i18n.h"
 #include "ink/hal_device.h"
 #include "ink/hal_net.h"
 #include "ink/hal_transfer.h"
@@ -52,21 +53,15 @@ static void finish(const char *result) {
 }
 
 static void reply(int status, const char *text, bool html) {
+    const char *shown = TR(text);
     char header[180];
     int n = snprintf(header, sizeof header, "HTTP/1.0 %d Result\r\nContent-Type: %s; charset=utf-8\r\nContent-Length: %zu\r\n\r\n",
-                     status, html ? "text/html" : "text/plain", strlen(text));
-    if (hal_transfer_write(header, (size_t)n) == 0) hal_transfer_write(text, strlen(text));
+                     status, html ? "text/html" : "text/plain", strlen(shown));
+    if (hal_transfer_write(header, (size_t)n) == 0) hal_transfer_write(text, strlen(shown));
     T.response = text;
 }
 
-static const char PAGE[] =
-    "<!doctype html><meta charset=utf-8><title>无线传文件</title><form>"
-    "<label>授权码<input id=c inputmode=numeric pattern='[0-9]{6}' required></label>"
-    "<input id=f type=file required><button>上传</button></form><p id=r></p><script>"
-    "document.querySelector('form').onsubmit=async e=>{e.preventDefault();try{"
-    "let x=await fetch('/upload',{method:'POST',headers:{'X-Ink-Code':c.value,"
-    "'X-Ink-Name':encodeURIComponent(f.files[0].name)},body:f.files[0]});r.textContent=await x.text()"
-    "}catch(e){r.textContent='连接已断开，请重新授权'}};</script>";
+static const char PAGE[] = TR_NOOP("<!doctype html><meta charset=utf-8><title>无线传文件</title><form><label>授权码<input id=c inputmode=numeric pattern='[0-9]{6}' required></label><input id=f type=file required><button>上传</button></form><p id=r></p><script>document.querySelector('form').onsubmit=async e=>{e.preventDefault();try{let x=await fetch('/upload',{method:'POST',headers:{'X-Ink-Code':c.value,'X-Ink-Name':encodeURIComponent(f.files[0].name)},body:f.files[0]});r.textContent=await x.text()}catch(e){r.textContent='连接已断开，请重新授权'}};</script>");
 
 static bool decode_name(char *name, const char *encoded) {
     size_t n = 0;
@@ -191,7 +186,7 @@ static void status(ink_call_t *c) {
     char out[384], host[64] = "";
     if (hal_transfer_host(host, sizeof host)) host[0] = 0;
     snprintf(out, sizeof out, "{\"active\":%s,\"host\":\"%.63s\",\"port\":%u,\"code\":\"%06u\",\"directory\":\"" INBOX "\",\"result\":\"%s\",\"received\":%lld}",
-             T.active ? "true" : "false", host, T.port, (unsigned)T.code, T.result ? T.result : "尚未开启", (long long)received);
+             T.active ? "true" : "false", host, T.port, (unsigned)T.code, TR(T.result ? T.result : TR_NOOP("尚未开启")), (long long)received);
     ink_cap_result(c, out);
 }
 static void start(ink_call_t *c) {
@@ -212,7 +207,7 @@ static void start(ink_call_t *c) {
             }
         }
     }
-    if (r) { c->rc.status = INK_RC_FAILED; snprintf(c->rc.detail, sizeof c->rc.detail, "%s", r == INK_FS_ERR_BUSY ? "传输已开启、空间未解锁或无线网络不可用" : reason(r)); }
+    if (r) { c->rc.status = INK_RC_FAILED; snprintf(c->rc.detail, sizeof c->rc.detail, "%s", TR(r == INK_FS_ERR_BUSY ? TR_NOOP("传输已开启、空间未解锁或无线网络不可用") : reason(r))); }
     else status(c);
 }
 static void stop(ink_call_t *c) { finish("传输已关闭"); status(c); }

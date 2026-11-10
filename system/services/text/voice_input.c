@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "ink/sys/i18n.h"
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/audio.h"
@@ -38,7 +39,7 @@
 #define WORDS_MAX 4095
 #define RESULT_MAX 480        /* the hub's limit for one result */
 #define SHOWN_MAX 240         /* the panel's fixed area */
-#define GO_ON "接着说"         /* after an interruption: what was said is in the field, the key is there */
+#define GO_ON TR("接着说")         /* after an interruption: what was said is in the field, the key is there */
 
 typedef struct frame {
     struct frame *next;
@@ -307,7 +308,7 @@ static void ready_job(void *arg) {
 }
 
 static void lost_job(void *arg) {
-    if ((int)(intptr_t)arg == VS.sid) fail_with("现在连不上，用键盘吧");
+    if ((int)(intptr_t)arg == VS.sid) fail_with(TR("现在连不上，用键盘吧"));
 }
 
 static void rt_ready(void *ctx, int sid) { /* hub task. Again means a new connection: dictation does not go on across one */
@@ -341,7 +342,7 @@ static void done_job(void *arg) {
     if (VS.nwords) {
         commit_words();
         ink_probe_count("text.voice_committed");
-    } else if (!VS.interrupted) set_notice("没听清");
+    } else if (!VS.interrupted) set_notice(TR("没听清"));
     if (VS.interrupted) set_notice(GO_ON);
     voice_end(VS.interrupted ? "interrupted" : "done");
 }
@@ -349,11 +350,11 @@ static void done_job(void *arg) {
 static void error_job(void *arg) {
     if ((int)(intptr_t)arg != VS.sid) return;
     const char *c = VS.error_code;
-    fail_with(!strcmp(c, "budget") ? "今天的额度用完了，用键盘吧" : !strcmp(c, "not_allowed") ? "这位家人不能用语音输入" : !strcmp(c, "too_long") ? "一次说得太长了，先到这里" : "语音输入暂时用不了");
+    fail_with(!strcmp(c, "budget") ? TR("今天的额度用完了，用键盘吧") : !strcmp(c, "not_allowed") ? TR("这位家人不能用语音输入") : !strcmp(c, "too_long") ? TR("一次说得太长了，先到这里") : TR("语音输入暂时用不了"));
 }
 
 static void closed_job(void *arg) {
-    if ((int)(intptr_t)arg == VS.sid) fail_with("语音输入暂时用不了");
+    if ((int)(intptr_t)arg == VS.sid) fail_with(TR("语音输入暂时用不了"));
 }
 
 static void rt_closed(void *ctx, int sid, int reason) { /* hub task: refused or ended by the hub */
@@ -407,13 +408,13 @@ static void tick_job(void *arg) {
     case INK_VOICE_CONNECTING:
         ink_hub_demand();
         if (in_state_ms >= CONNECT_MS) {
-            fail_with("现在连不上，用键盘吧");
+            fail_with(TR("现在连不上，用键盘吧"));
             return;
         }
         break;
     case INK_VOICE_LISTENING: {
         if (!ink_hub_online()) { /* a new connection would announce the session again: dictation does not go on across one */
-            fail_with("现在连不上，用键盘吧");
+            fail_with(TR("现在连不上，用键盘吧"));
             return;
         }
         bool heard = __atomic_load_n(&VS.heard, __ATOMIC_ACQUIRE);
@@ -426,11 +427,11 @@ static void tick_job(void *arg) {
     }
     case INK_VOICE_FINISHING:
         if (!ink_hub_online()) {
-            fail_with("现在连不上，用键盘吧");
+            fail_with(TR("现在连不上，用键盘吧"));
             return;
         }
         if (in_state_ms >= FINISH_MS) {
-            fail_with("语音输入暂时用不了");
+            fail_with(TR("语音输入暂时用不了"));
             return;
         }
         break;
@@ -456,18 +457,18 @@ int ink_text_voice_start(void) {
     if (!ink_text_focused() || ink_text_type() == INK_TEXT_PASSWORD || !ink_audio_has_mic() || VS.state != INK_VOICE_IDLE) return -1;
     text_voice_clear_notice();
     if (ink_audio_recording()) {
-        set_notice("正在录音，先停了再说");
+        set_notice(TR("正在录音，先停了再说"));
         text_presenter_kick();
         return -1;
     }
     if (VS.capturing || ink_audio_capture_busy()) { /* the AI is listening, or the last capture has not ended yet */
-        set_notice("麦克风正忙，请稍后再试");
+        set_notice(TR("麦克风正忙，请稍后再试"));
         text_presenter_kick();
         return -1;
     }
     int focus = ink_audio_focus_acquire(INK_AUDIO_PRIO_VOICE, on_focus, (void *)(intptr_t)++VS.focus_gen, INK_EXEC_UI);
     if (focus <= 0) {
-        set_notice("现在不能用语音输入");
+        set_notice(TR("现在不能用语音输入"));
         text_presenter_kick();
         return -1;
     }
@@ -483,7 +484,7 @@ int ink_text_voice_start(void) {
     int sid = ink_rt_open(ASR_CAP, params, &RT_HANDLER);
     if (sid <= 0 || !ink_rt_is_open(sid)) {
         ink_audio_focus_release(focus);
-        set_notice("现在连不上，用键盘吧");
+        set_notice(TR("现在连不上，用键盘吧"));
         text_presenter_kick();
         return -1;
     }
@@ -498,7 +499,7 @@ int ink_text_voice_start(void) {
         VS.sid = 0;
         ink_audio_focus_release(focus);
         VS.focus = 0;
-        set_notice("麦克风没能打开，请稍后再试");
+        set_notice(TR("麦克风没能打开，请稍后再试"));
         text_presenter_kick();
         return -1;
     }

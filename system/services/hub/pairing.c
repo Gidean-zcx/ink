@@ -1,6 +1,7 @@
 /* Enrollment, independent of Wi-Fi. All flash work runs on exec.bg. */
 #include <stdio.h>
 #include <string.h>
+#include "ink/sys/i18n.h"
 #include "ink/hal_device.h"
 #include "ink/hal_net.h"
 #include "ink/hal_power.h"
@@ -203,7 +204,7 @@ static void fail(ink_call_t *c, const char *why) {
 static bool by_person(ink_call_t *c) {
     if (c->src == INK_SRC_TOUCH || c->src == INK_SRC_KEY) return true;
     c->rc.status = INK_RC_REJECTED;
-    snprintf(c->rc.say, sizeof c->rc.say, "请在设备上操作");
+    snprintf(c->rc.say, sizeof c->rc.say, TR("请在设备上操作"));
     return false;
 }
 
@@ -747,13 +748,13 @@ static void cap_configure(ink_call_t *c) {
     int n = ink_args_to_json(&c->args, text, sizeof text);
     bool ok = j && n > 0 && ink_json_parse(j, text, (size_t) n) == 0 && configure(j, 0, NULL);
     osal_free(j);
-    if (!ok) fail(c, "家庭服务器设置没能保存，请检查地址、公钥和存储");
+    if (!ok) fail(c, TR("家庭服务器设置没能保存，请检查地址、公钥和存储"));
 }
 static void cap_accept(ink_call_t *c) {
     if (!by_person(c)) return;
     pair_identity_t *s = osal_malloc(sizeof *s, OSAL_MEM_EXTERNAL);
     if (!s) {
-        fail(c, "内存不够，请重试");
+        fail(c, TR("内存不够，请重试"));
         return;
     }
     snapshot(s, NULL);
@@ -763,11 +764,11 @@ static void cap_accept(ink_call_t *c) {
     bool valid = P.code[0] && osal_now_us() < P.expires;
     unlock();
     if (s->state != INK_PAIR_PAIRING || !s->txid[0] || strcmp(txid, s->txid) || !valid)
-        fail(c, "加入请求已变化，请重新查看");
+        fail(c, TR("加入请求已变化，请重新查看"));
     else {
         s->state = INK_PAIR_COMMITTING;
         if (!store_identity(s))
-            fail(c, "没能保存，请重试");
+            fail(c, TR("没能保存，请重试"));
         else
             submit_accept(s);
     }
@@ -777,14 +778,14 @@ static void cap_accept(ink_call_t *c) {
 static void cap_reject(ink_call_t *c) {
     pair_identity_t *s = osal_malloc(sizeof *s, OSAL_MEM_EXTERNAL);
     if (!s) {
-        fail(c, "内存不够，请重试");
+        fail(c, TR("内存不够，请重试"));
         return;
     }
     snapshot(s, NULL);
     char txid[40];
     ink_args_get_str(&c->args, "txid", txid, sizeof txid);
     if (s->state != INK_PAIR_PAIRING || strcmp(txid, s->txid))
-        fail(c, "加入请求已变化");
+        fail(c, TR("加入请求已变化"));
     else {
         char params[256];
         tx_params(s->txid, params, sizeof params);
@@ -792,7 +793,7 @@ static void cap_reject(ink_call_t *c) {
         if (store_identity(s))
             ink_hub_pair_call("pair/reject", params);
         else
-            fail(c, "没能保存，请重试");
+            fail(c, TR("没能保存，请重试"));
     }
     memset(s, 0, sizeof *s);
     osal_free(s);
@@ -800,12 +801,12 @@ static void cap_reject(ink_call_t *c) {
 static void cap_restart(ink_call_t *c) {
     pair_identity_t *s = osal_malloc(sizeof *s, OSAL_MEM_EXTERNAL);
     if (!s) {
-        fail(c, "内存不够，请重试");
+        fail(c, TR("内存不够，请重试"));
         return;
     }
     snapshot(s, NULL);
     if (s->state == INK_PAIR_BOUND || s->state == INK_PAIR_COMMITTING || s->wipe)
-        fail(c, "请先完成加入或清空这台设备");
+        fail(c, TR("请先完成加入或清空这台设备"));
     else {
         fresh(s);
         if (store_identity(s)) {
@@ -818,7 +819,7 @@ static void cap_restart(ink_call_t *c) {
             __atomic_store_n(&P.blocked, false, __ATOMIC_RELEASE);
             ink_hub_reconnect();
         } else
-            fail(c, "没能保存，请重试");
+            fail(c, TR("没能保存，请重试"));
     }
     memset(s, 0, sizeof *s);
     osal_free(s);
@@ -831,7 +832,7 @@ static void cap_hotspot(ink_call_t *c) {
         hal_random_fill(bytes, sizeof bytes);
         for (unsigned i = 0; i < sizeof bytes; i++) snprintf(password + i * 2, 3, "%02x", bytes[i]);
         if (hal_provision_start("ink-setup", password, provision, NULL) != 0) {
-            fail(c, "没能开启设备热点");
+            fail(c, TR("没能开启设备热点"));
             return;
         }
         /* The Wi-Fi QR payload is handed to the owner's UI only. */
@@ -851,7 +852,7 @@ static void cap_hotspot(ink_call_t *c) {
 static void cap_import(ink_call_t *c) {
     if (c->src != INK_SRC_SYSTEM && c->src != INK_SRC_CONFIRMED && !by_person(c)) return;
     if (ink_fs_card_hold() != INK_FS_OK) {
-        fail(c, "请插入存储卡并退出 U 盘模式");
+        fail(c, TR("请插入存储卡并退出 U 盘模式"));
         return;
     }
     char *text = osal_calloc(1, MESSAGE_MAX + 1, OSAL_MEM_EXTERNAL);
@@ -880,9 +881,9 @@ static void cap_import(ink_call_t *c) {
     if (ok && !wifi) ok = hal_fs_remove(CARD_FILE) == 0;
     if (ok && wifi) {
         c->rc.status = INK_RC_QUEUED;
-        snprintf(c->rc.say, sizeof c->rc.say, "配对信息已保存，正在连接 Wi-Fi");
+        snprintf(c->rc.say, sizeof c->rc.say, TR("配对信息已保存，正在连接 Wi-Fi"));
     }
-    if (!ok) fail(c, "没能导入配对文件，请检查文件和存储卡");
+    if (!ok) fail(c, TR("没能导入配对文件，请检查文件和存储卡"));
     memset(preauth, 0, sizeof preauth);
     if (text) memset(text, 0, MESSAGE_MAX + 1);
     osal_free(text);
@@ -892,7 +893,7 @@ static void cap_import(ink_call_t *c) {
 static void cap_status(ink_call_t *c) {
     char *out = osal_malloc(1024, OSAL_MEM_EXTERNAL);
     if (!out) {
-        fail(c, "内存不够，请重试");
+        fail(c, TR("内存不够，请重试"));
         return;
     }
     static const char B64[] = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_";
@@ -936,7 +937,7 @@ static void cap_status(ink_call_t *c) {
     if (!w.overflow)
         ink_cap_result(c, out);
     else
-        fail(c, "状态太长");
+        fail(c, TR("状态太长"));
     osal_free(out);
 }
 #define OWNER .expose = INK_EXPOSE_OWNER, .exec = INK_EXEC_BG, .effect = INK_FX_SYSTEM
@@ -972,7 +973,7 @@ static const ink_cap_t CAPS[] = {
      .title = "从存储卡导入配对文件",
      CONTROL,
      .ask_by_hand = true,
-     .ask = "从存储卡加入文件中的家庭？",
+     .ask = TR_NOOP("从存储卡加入文件中的家庭？"),
      .run = cap_import},
     {.id = "pairing.hotspot_start", .title = "开启设备设置热点", CONTROL, .run = cap_hotspot},
     {.id = "pairing.hotspot_stop", .title = "关闭设备设置热点", CONTROL, .run = cap_hotspot},
