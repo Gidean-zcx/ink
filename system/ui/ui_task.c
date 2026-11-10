@@ -198,15 +198,28 @@ static void flush_cb(lv_display_t *d, const lv_area_t *area, uint8_t *px) {
     int fs = ink_display_stride();
     osal_cost_units("lvgl.px", (uint64_t)w * (uint64_t)h);       /* rendering, amortized per pixel */
     osal_cost_units("ui.rotate_px", (uint64_t)w * (uint64_t)h);  /* transpose into the native framebuffer */
-    for (int y = 0; y < h; y++) {
-        const uint8_t *row = px + (size_t)y * stride;
-        int ly = area->y1 + y;
-        for (int x = 0; x < w; x++) {
-            int nx, ny;
-            ink_logical_to_native(UI.nw, UI.nh, UI.rot, area->x1 + x, ly, &nx, &ny);
-            fb[(size_t)ny * fs + nx] = row[x];
+    if (UI.rot == 90) {
+        /* Keep writes contiguous on the Plus while reading a small band of the draw buffer. */
+        for (int y = 0; y < h; y += 32) {
+            int rows = h - y < 32 ? h - y : 32;
+            for (int x = 0; x < w; x++) {
+                uint8_t *dst = fb + (size_t)(UI.nh - 1 - area->x1 - x) * fs + area->y1 + y;
+                const uint8_t *src = px + (size_t)y * stride + x;
+                for (int i = 0; i < rows; i++) dst[i] = src[(size_t)i * stride];
+            }
+            if (rows == 32) osal_preempt_point();
         }
-        if ((y & 31) == 31) osal_preempt_point();
+    } else {
+        for (int y = 0; y < h; y++) {
+            const uint8_t *row = px + (size_t)y * stride;
+            int ly = area->y1 + y;
+            for (int x = 0; x < w; x++) {
+                int nx, ny;
+                ink_logical_to_native(UI.nw, UI.nh, UI.rot, area->x1 + x, ly, &nx, &ny);
+                fb[(size_t)ny * fs + nx] = row[x];
+            }
+            if ((y & 31) == 31) osal_preempt_point();
+        }
     }
     add_dirty(native_rect(area), intent_for(area));
     lv_display_flush_ready(d);

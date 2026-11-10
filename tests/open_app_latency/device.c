@@ -62,6 +62,15 @@ static bool navigate(const char *cap, const char *args) {
     return BY_HAND(cap, args) && g_rc.status == INK_RC_DONE && WAIT_FOR(idle(), 12000);
 }
 
+static void frame_hash(void *out) {
+    int w, h;
+    ink_display_native_size(&w, &h);
+    const uint8_t *fb = ink_display_fb();
+    uint32_t hash = UINT32_C(2166136261);
+    for (size_t i = 0; i < (size_t)w * h; i++) hash = (hash ^ fb[i]) * UINT32_C(16777619);
+    *(uint32_t *)out = hash;
+}
+
 static void run(void *unused) {
     (void)unused;
     CHECK(WAIT_FOR(ink_member_space_open(), 10000), "member opens");
@@ -87,6 +96,11 @@ static void run(void *unused) {
         CHECK(WAIT_FOR(ready(), 12000), "%s content rendered and display completed", e->page);
         CHECK(ink_display_failures() == failures, "%s refresh succeeds", e->page);
         ink_probe_value("open.phases", sim_display_phase_seq() - phases);
+        uint32_t hash;
+        ink_display_lock();
+        vtk_host_call(frame_hash, &hash);
+        ink_display_unlock();
+        ink_probe_value("open.frame_hash", hash);
         ink_probe_mark("open.end");
         __atomic_store_n(&entry, NULL, __ATOMIC_RELEASE);
     }

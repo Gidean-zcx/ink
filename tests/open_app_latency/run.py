@@ -10,8 +10,10 @@ import subprocess
 
 ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
+BASE = "5cc0a6ebefceb8f28d7b0e49b7d99e63cef014d3"
 APPS = ("settings", "files", "sms", "gallery", "ai")
 UI = "system/ui/ui_task.c"
+SMS = "system/apps/sms/sms.c"
 
 
 def mark(name):
@@ -52,7 +54,7 @@ PROBES = {
         before("    int n = ink_storage_read(path, buf, INK_APP_STATE_MAX);", "restore.begin"),
         after("/* sees what is still queued for it */", "restore.end"),
     ),
-    "system/apps/sms/sms.c": (
+    SMS: (
         before('    S.db = ink_db_open_cached_member(ink_db_find_def("sms.messages"), S.member);', "sms_db.begin"),
         before("    __atomic_store_n(&S.shown_ver, S.db ?", "sms_db.end"),
         ("; build_rows(compose, thread);", ";\n" + mark("sms_rows.begin") + "    build_rows(compose, thread);\n" + mark("sms_rows.end").rstrip()),
@@ -71,7 +73,7 @@ PROBES = {
 }
 
 
-def link(build, out, ui_from):
+def link(build, out, revert):
     db = json.loads((build / "compile_commands.json").read_text())
 
     def compile_(name, edits=(), driver=False):
@@ -81,8 +83,8 @@ def link(build, out, ui_from):
         original = Path(entry["file"]).resolve()
         source = HERE / "device.c"
         if not driver:
-            code = (subprocess.check_output(["git", "show", f"{ui_from}:{name}"], cwd=ROOT, text=True)
-                    if ui_from and name == UI else original.read_text())
+            code = (subprocess.check_output(["git", "show", f"{BASE}:{name}"], cwd=ROOT, text=True)
+                    if name in revert else original.read_text())
             for old, new in edits:
                 if code.count(old) != 1:
                     raise ValueError(f"expected one probe anchor in {name}: {old}")
@@ -93,8 +95,12 @@ def link(build, out, ui_from):
         obj = out / (source.stem + ".o")
         args[args.index("-o") + 1] = str(obj)
         args[args.index("-c") + 1] = str(source)
-        subprocess.run([*args, "-iquote", str(original.parent), "-I", str(ROOT / "platform/include")],
-                       cwd=entry["directory"], check=True)
+        args += ["-iquote", str(original.parent), "-I", str(ROOT / "platform/include")]
+        subprocess.run(args, cwd=entry["directory"], check=True)
+        if driver:
+            (out / "compile_commands.json").write_text(json.dumps([
+                {"file": str(source), "directory": entry["directory"], "command": shlex.join(args)}
+            ]))
         return str(obj)
 
     command = shlex.split((build / "CMakeFiles/sim-configured.dir/link.txt").read_text())
@@ -120,6 +126,7 @@ def measure(trace):
         sample = [e for e in events if e["ts"] >= start]
         stop = next(e["ts"] for e in sample if e["name"] == "open.end")
         sample = [e for e in sample if e["ts"] <= stop]
+        assert not any(e["name"] == "underrun-recovery" for e in sample), app
         down, up = (only(name, sample)["ts"] for name in ("finger-down", "finger-up"))
         ready = only("open.readable_frame", sample)["ts"]
         commit = max(e["ts"] for e in sample if e["name"] == "open.commit" and e["ts"] <= ready)
@@ -162,13 +169,38 @@ def measure(trace):
 
         draw = max(e["ts"] for e in sample if e["name"] == "open.draw" and e["ts"] <= commit)
         rows[app] = {**{k: round(v, 3) for k, v in costs.items()}, "total": round((end - up) / 1000, 3),
-                     "held": round((up - down) / 1000, 3), "draw": round((commit - draw) / 1000, 3),
+                     "from_down": round((end - down) / 1000, 3), "draw": round((commit - draw) / 1000, 3),
                      "rotate": round(elapsed(spans("rotate")), 3), "power_up": round(elapsed(track_spans("display", "power-up")), 3),
                      "diff": round(elapsed(track_spans("display", "diff")), 3), "flash_read": round(elapsed(track_spans("flash", "read")), 3),
+                     "sd_read": round(elapsed(track_spans("sd", "read")), 3), "sd_write": round(elapsed(track_spans("sd", "write")), 3),
                      "data_raw": round(elapsed(data), 3), "waves": len(refresh), "waveform": first["name"],
                      "phases": int(only("open.phases", sample)["args"]["value"]),
+                     "frame_hash": f'{int(only("open.frame_hash", sample)["args"]["value"]):08x}',
                      "rect": [first["args"][k] for k in ("x", "y", "w", "h")]}
     return rows
+
+
+def percentiles(values):
+    values = sorted(values)
+    return [values[math.ceil(len(values) * p) - 1] for p in (0.50, 0.95)]
+
+
+def compare(samples, base):
+    errors = []
+    for app in APPS:
+        if {r[app]["frame_hash"] for r in samples} != {r[app]["frame_hash"] for r in base}:
+            errors.append(f"{app}: final native framebuffer differs")
+    for app in ("files", "ai"):
+        old = percentiles(r[app]["rotate"] for r in base)[0]
+        new = percentiles(r[app]["rotate"] for r in samples)[0]
+        if new > 0.9 * old:
+            errors.append(f"{app}: rotation p50 {old:.3f} -> {new:.3f} ms (want at least 10% lower)")
+    counts = [r["sms"]["phases"] for r in samples]
+    if any(r["sms"]["waves"] != 1 or r["sms"]["phases"] != 48 for r in samples):
+        errors.append(f"cold SMS must show its first readable frame in one GC16 scan: {counts}")
+    if errors:
+        raise SystemExit("\n".join(errors))
+    print("Comparison passed: same five framebuffers, less rotation work, one cold SMS scan.", flush=True)
 
 
 def main():
@@ -176,12 +208,14 @@ def main():
     parser.add_argument("--build", type=Path, default=Path("build"))
     parser.add_argument("--out", type=Path, required=True)
     parser.add_argument("--runs", type=int, default=20)
-    parser.add_argument("--ui-from", help="substitute ui_task.c from this commit for a manual reverse control")
+    parser.add_argument("--reverse", choices=("rotate", "sms", "all"), help="link selected product source from the baseline")
+    parser.add_argument("--compare", type=Path, help="check against baseline samples from this machine")
     parser.add_argument("--seed", type=Path, help="reuse a configured seed image from a previous run")
     args = parser.parse_args()
     build, out = args.build.resolve(), args.out.resolve()
     out.mkdir(parents=True, exist_ok=True)
-    binary = link(build, out, args.ui_from)
+    revert = {"rotate": (UI,), "sms": (SMS,), "all": (UI, SMS)}.get(args.reverse, ())
+    binary = link(build, out, revert)
     script = out / "run.script"
     script.write_text("@0 net wifi\n@120s end\n")
     common = [str(binary), "--profile", str(ROOT / "simulator/profiles/metalio-plus.json"),
@@ -210,12 +244,11 @@ def main():
         print(f"{case.name}: {m['test.pass']} checks, no failures", flush=True)
     summary = {}
     for app in APPS:
-        summary[app] = {}
-        for k, v in samples[0][app].items():
-            if isinstance(v, (int, float)):
-                values = sorted(row[app][k] for row in samples)
-                summary[app][k] = [values[math.ceil(len(values) * p) - 1] for p in (0.50, 0.95)]
+        summary[app] = {k: percentiles(row[app][k] for row in samples)
+                        for k, v in samples[0][app].items() if isinstance(v, (int, float))}
     (out / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n")
+    if args.compare:
+        compare(samples, json.loads(args.compare.read_text()))
 
 
 if __name__ == "__main__":
