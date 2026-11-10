@@ -70,16 +70,20 @@ static void call_begin(const char *member, const char *peer) { /* at held */
     osal_mutex_unlock(CM.lock);
 }
 
-bool ink_comm_bind_dtmf(ink_args_t *args) {
-    if (!CM.at) return false;
-    char key[4] = "";
-    ink_args_get_str(args, "key", key, sizeof key);
-    ink_args_init(args);
-    osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
-    bool bound = CM.call_member[0] && !strcmp(CM.call_member, ink_member_current()->id) &&
-        !ink_args_str(args, "key", key) && !ink_args_int(args, "_call", CM.call_generation) && !ink_args_str(args, "_peer", CM.call_peer);
-    osal_mutex_unlock(CM.at);
-    return bound;
+static ink_rc_t ink_comm_bind_dtmf(ink_args_t *args, ink_receipt_t *rc) {
+    if (CM.at) {
+        char key[4] = "";
+        ink_args_get_str(args, "key", key, sizeof key);
+        ink_args_init(args);
+        osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
+        bool bound = CM.call_member[0] && !strcmp(CM.call_member, ink_member_current()->id) &&
+            !ink_args_str(args, "key", key) && !ink_args_int(args, "_call", CM.call_generation) && !ink_args_str(args, "_peer", CM.call_peer);
+        osal_mutex_unlock(CM.at);
+        if (bound) return INK_RC_DONE;
+    }
+    snprintf(rc->detail, sizeof rc->detail, "the call is no longer available");
+    snprintf(rc->say, sizeof rc->say, "当前没有可用的通话，请重新操作。");
+    return INK_RC_STALE;
 }
 
 void ink_comm_call_tones(char *out, size_t cap) {
@@ -380,7 +384,7 @@ static void cap_control(ink_call_t *c) { /* exec.bg */
 
 static const ink_cap_t COMM_CAPS[] = {
     {.id = "call.mute", .title = "通话麦克风静音", .input = BOOL_ARG("on"), .effect = INK_FX_NAVIGATE, .child_ok = true, .permission = "call", .timeout_ms = 15000, .exec = INK_EXEC_BG, .run = cap_control},
-    {.id = "call.dtmf", .title = "发送一个通话按键", .ask = "向 {_peer} 的本次通话发送按键 {key}", .input = "{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":1}},\"required\":[\"key\"]}", .effect = INK_FX_EXTERNAL, .child_ok = true, .permission = "call", .timeout_ms = 10000, .exec = INK_EXEC_BG, .run = cap_control},
+    {.id = "call.dtmf", .title = "发送一个通话按键", .ask = "向 {_peer} 的本次通话发送按键 {key}", .input = "{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":1}},\"required\":[\"key\"]}", .effect = INK_FX_EXTERNAL, .child_ok = true, .permission = "call", .timeout_ms = 10000, .exec = INK_EXEC_BG, .prepare_confirm = ink_comm_bind_dtmf, .run = cap_control},
     {.id = "call.route", .title = "切换通话耳机或喇叭", .input = BOOL_ARG("headset"), .effect = INK_FX_NAVIGATE, .child_ok = true, .permission = "call", .exec = INK_EXEC_BG, .run = cap_control},
     {.id = "call.record", .title = "查看通话录音不可用的原因", .effect = INK_FX_READ, .child_ok = true, .permission = "call", .exec = INK_EXEC_BG, .run = cap_control},
     {.id = "call.controls", .title = "通话控制已获模组确认", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true, .permission = "call"},

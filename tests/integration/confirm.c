@@ -33,6 +33,27 @@ static void page_run(ink_call_t *c) {
     (void)c;
     g_page_runs++;
 }
+static int64_t g_hook_context, g_hook_bound;
+static int g_hook_prepares, g_hook_runs;
+static ink_rc_t ink_test_confirm_prepare(ink_args_t *args, ink_receipt_t *rc) {
+    g_hook_prepares++;
+    if (!g_hook_context) {
+        snprintf(rc->detail, sizeof rc->detail, "synthetic context is gone");
+        snprintf(rc->say, sizeof rc->say, "合成上下文已失效");
+        return INK_RC_STALE;
+    }
+    ink_args_init(args);
+    if (ink_args_int(args, "_context", g_hook_context) || ink_args_str(args, "_note", "合成上下文说明")) {
+        snprintf(rc->detail, sizeof rc->detail, "synthetic arguments are full");
+        return INK_RC_FAILED;
+    }
+    return INK_RC_DONE;
+}
+static void ink_test_confirm_run(ink_call_t *c) {
+    g_hook_runs++;
+    if (!ink_args_get_int(&c->args, "_context", &g_hook_bound) || g_hook_bound != g_hook_context)
+        c->rc.status = INK_RC_STALE;
+}
 static const ink_cap_t TEST_CAPS[] = {
     {.id = "test.external", .title = "对外发东西", .ask = "发给 {to}：{text}（{count} 份）",
      .input = "{\"type\":\"object\",\"properties\":{\"to\":{\"type\":\"string\"},\"text\":{\"type\":\"string\"},\"count\":{\"type\":\"integer\"}},\"required\":[\"to\"]}",
@@ -41,6 +62,9 @@ static const ink_cap_t TEST_CAPS[] = {
      .effect = INK_FX_SYSTEM, .ask_by_hand = true, .exec = INK_EXEC_DIRECT, .run = external_run},
     {.id = "test.child_no", .title = "孩子不能做的", .effect = INK_FX_EXTERNAL, .exec = INK_EXEC_DIRECT, .run = external_run},
     {.id = "test.page_del", .title = "删这一页的东西", .activity = "testpage", .effect = INK_FX_LOCAL_DESTRUCTIVE, .exec = INK_EXEC_DIRECT, .run = page_run},
+    {.id = "test.confirm_hook", .title = "确认钩子合成测试", .ask = "上下文 {_context}：{_note}",
+     .effect = INK_FX_EXTERNAL, .child_ok = true, .exec = INK_EXEC_DIRECT,
+     .prepare_confirm = ink_test_confirm_prepare, .run = ink_test_confirm_run},
 };
 
 /* How it ended, as the asker hears it. */
@@ -386,6 +410,27 @@ static void a_real_message(void) {
     delay_ms(1200);
 }
 
+static void confirmation_hooks(void) {
+    g_hook_context = 41;
+    int results = g_results;
+    CHECK(AI("test.confirm_hook", "{\"_context\":0,\"_note\":\"伪造说明\"}") && g_rc.status == INK_RC_PENDING_CONFIRMATION,
+          "the hook binds before waiting");
+    CHECK(g_hook_prepares == 1 && !g_hook_runs && pending_state() == 1, "preparing never executes the action");
+    CHECK(AI("confirm.list", NULL) && strstr(g_result, "上下文 41：合成上下文说明") && !strstr(g_result, "伪造说明"),
+          "the card uses the hook's context and explanation");
+    accept_visible_card();
+    CHECK(WAIT_FOR(g_results == results + 1, 1000) && !strcmp(g_status, "done") &&
+          g_hook_runs == 1 && g_hook_bound == 41 && g_hook_prepares == 1,
+          "execution checks the original binding without preparing it again");
+    g_hook_context = 0;
+    CHECK(AI("test.confirm_hook", NULL) && g_rc.status == INK_RC_STALE &&
+          !strcmp(g_rc.detail, "synthetic context is gone") && !strcmp(g_rc.say, "合成上下文已失效"),
+          "a failed hook returns its own status and reason");
+    ink_confirm_view_t view;
+    CHECK(g_hook_prepares == 2 && g_hook_runs == 1 && !pending_state() && !ink_confirm_list(&view, 1) &&
+          g_results == results + 1, "a failed hook neither waits nor runs nor emits a confirmation result");
+}
+
 static void test_task(void *arg) {
     (void)arg;
     delay_ms(1500);
@@ -402,6 +447,7 @@ static void test_task(void *arg) {
     what_the_card_says();
     settings_system();
     a_real_message();
+    confirmation_hooks();
     ink_probe_count("test.finished");
 }
 
