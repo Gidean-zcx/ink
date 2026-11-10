@@ -12,14 +12,31 @@
 | A1-4 孩子页 | 专项通过【实测／实现】 | KidLimit／KidTimeUp；家长密码继续走本人表单；旧取消点按拒绝 | 同上，测试名换 `semantics-shell2-kid` |
 | A1-5 电量页 | 专项通过【实测／实现】 | BatteryLow／BatterySaving／Charging／off；只导出真实动作，旧目标拒绝，无关成员事件不重画 | 同上，测试名换 `semantics-shell2-battery` |
 | A1-6 主页 | 专项通过【实测／实现】 | Main／Apps／Today 共用现有声明与语义导出；旧主页点按和应用图标拒绝 | 同上，测试名换 `semantics-shell2-home` |
-| A2 原测试／hub／全量／内存／S31／gcccheck | 待最终验证 | 首轮相关 13 项全部通过；已有测试和期望未改 | 完整结果待补 |
+| A2-1 原测试、hub、普通版全量 | 通过【实测】 | `100% tests passed out of 353`；无跳过，400.93 秒，退出 0；已有测试和期望未改 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2` |
+| A2-2 内存／S31 | 待最终验证 | 正在执行 | 完整结果待补 |
+| A2-3 gcccheck | 通过【实测】 | `gcccheck: 15 compiled, 0 with findings`，无跳过，退出 0 | `taskpolicy -c utility python3 "$INK_DEPS/../ink-codex/tools/gcccheck.py" build <8 个产品 C 文件和 7 个新增测试 C 文件>` |
 | A3 行数与预算 | 通过【实现】 | 产品代码净增 156 行；连 CMake 注册保守计 165 行，低于 250 行 | `git diff --numstat <基线> -- system apps` |
 
 主机构建／测试均使用 `taskpolicy -c utility`，并行最多 `-j2`。日志保存在忽略目录 `work/semantics-shell-2/`，临时证据保存在 `build/test-out/semantics-shell2-*`。
 
+| 文件 | 迁移前 | 迁移后 | 净增 |
+| --- | ---: | ---: | ---: |
+| `system/ui/shell/keyboard.c` | 478 | 528 | 50 |
+| `system/ui/shell/ai_panel.c` | 241 | 260 | 19 |
+| `system/ui/shell/member_pages.c` | 258 | 277 | 19 |
+| `system/ui/shell/kid_pages.c` | 109 | 121 | 12 |
+| `system/ui/shell/power_pages.c` | 174 | 182 | 8 |
+| `apps/home/home.c` | 27 | 27 | 0 |
+| `system/ui/shell/navigation.c`（实际主页） | 2233 | 2254 | 21 |
+| `system/ui/shell/ai_chat.c` | 121 | 121 | 0 |
+| `system/ui/shell/ai_chat.h` | 10 | 10 | 0 |
+| `system/ui/ui_semantics.c` | 87 | 110 | 23 |
+| `system/ui/ink/ui_shell.h` | 65 | 68 | 3 |
+| `system/include/ink/sys/textinput.h` | 140 | 141 | 1 |
+
 ## 没做到的
 
-- 最终全量、ASan／UBSan、S31 编译、gcccheck 和反向对照尚在执行。
+- ASan／UBSan、S31 编译尚在执行。
 - 没有连接设备，也没有运行 Linux CI；不把本机检查写成实机或 Linux 全量结果。
 
 ## 和设计不一致的
@@ -60,3 +77,4 @@
 - 修复后专项：`focused-input.log`，新增六项及大字号候选、完整家人流程共 8／8，6.05 秒，退出 0。`focused-compat.log` 中原 hub 契约、组合快照、活动卡、扫码也已通过。
 - 数字键保留原可信本地输入路径（成员 epoch、忙碌、等待保护和运行时触摸代数）；表单动作核对按下版本。将底页版本套到每个数字会吞掉真实输入，数字不是对 AI 开放的语义动作。候选展开使用独立布局对象版本，复用既有 F1 的动作对象引用。
 - 六组反向对照：`reverse-final.log`。键盘、家人、孩子、电量、主页替换为指定基线源文件，仅在构建目录编译和链接；各测试程序退出 1，分别 13、10、3、7、8 个断言失败。AI 面板基线已使用 F1，因此该组只撤掉新增的过期点按保护，退出 1，2 个断言失败。六个验证脚本均退出 0；ctest 默认模式不依赖 Git 历史。
+- 最终普通版：`ctest-final.log`，全部 353 项通过，400.93 秒，退出 0，没有跳过项；包括原 hub 契约、原控件／场景、确定性与资源预算检查、新增六项。最终 GCC 复核见 `gcccheck-final.log`。
