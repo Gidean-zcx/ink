@@ -90,36 +90,94 @@
 
 ### 4.2 界面框架
 
-| 能力 | 谁要用 | 状态 | 说明 |
+本节和 §4.3 于 **2026-11-11 按 `d6dbdce0` 核对**，均为【实现】结论；链接的任务报告是已有验证记录，本次执行结果见 [ui-deps-refresh 报告](../tasks/ui-deps-refresh/REPORT.md)。状态沿用本节开头的定义，“有”指模拟器实现，不代表真机验收、画板一致或全量语义迁移完成。§4.1 及其他节保留原有核查范围。
+
+| 能力 | 谁要用 | 状态 | 说明与出处 |
 | --- | --- | --- | --- |
-| 主题和组件库 | 所有界面 | 无 | 卡片、胶囊、圆形按钮、开关、滑杆、圆环、分页器、列表 |
-| 字体 | 所有界面 | 有 | 常规字重用读书的字库，中等和粗体各一个尺寸，其余尺寸画的时候缩放，见[字号说明](../product/legibility.md)。缩放的耗时要在真机上量 |
-| 图标管线 | 所有界面 | 无 | 矢量转成各尺寸的位图，类似现有的 `tools/fontgen` |
-| 系统手势 | 控制中心、回主屏、返回、翻屏 | 部分 | 原始事件有起点和位移，但给前台的只有方向；要加系统仲裁和边缘判断，定好键盘、滑杆、浮层的输入归属和实体键优先级（[界面规范 §3.3、§3.4](../product/system-ui-spec.md)） |
-| 系统浮层 | AI、确认卡、键盘、电源菜单、选文件、来电 | 部分 | AI 面板和锁屏标记各自画在顶层，没有统一的层级、底图恢复、打断和取消规则 |
-| 两段式刷新 | 翻屏、打开页面 | 部分 | 反馈优先已有；“先黑白、再补灰阶”是待实现的机制 |
-| 页面对 AI 可见 | 所有页面（G-002） | 部分（含键盘组合快照；[能力总表](capabilities.md)已自动生成，成员/确认语义经真实调用核对，操作缺口见[报告](../tasks/capability-table/REPORT.md)） | 现在是纯文本快照和可用动作列表。没有快照回调的页面就是空的，不会自动遍历控件；新组件要带语义、成员和敏感字段，照片和远程内容要有对象引用和版本。2026-11-09 有了控件语义合同（框架 F1，[ui-semantics](../tasks/ui-semantics/REPORT.md)）：页面声明字段和动作，快照照着导出，秘密字段只给有值、无值，动作核对页面和对象版本；短输入框接上了它（F2，[ui-input-host](../tasks/ui-input-host/REPORT.md)）。已有页面还没迁移 |
-| 服务卡片 | 今日屏、长按图标 | 部分 | 应用提供一两个关键信息，界面和 AI 读同一份；要有更新节流。2026-11-09 今日屏有了（框架 F5，[ui-cards](../tasks/ui-cards/REPORT.md)）：读同一份 `app.cards`，按成员过滤，页面看得见才更新、每秒最多一次；长按图标还没接 |
-| 全局搜索 | 全部屏 | 无 | 应用、设置、联系人；要按成员查询、分页，结果有类型和返回位置 |
+| 主题和组件库 | 所有界面 | 部分 | 卡片、胶囊、圆形按钮、开关、滑杆、分段、分页器和列表已有共用实现；尚未见共用圆环组件。见[主题接口](../../system/ui/ink/ui_theme.h#L69)、[组件实现](../../system/ui/theme.c#L190) |
+| 字体 | 所有界面 | 有 | 常规、中等、粗体与数字字体按主题字号生成，并覆盖文字大小档位；运行时仍有尺寸适配和常规字库回退，不再是“中等和粗体各一个尺寸”。见[字库生成](../../tools/fontgen/ui_fonts.py)、[字体选择与缩放](../../system/ui/theme.c#L148)；真机耗时另验 |
+| 图标管线 | 所有界面 | 有 | SVG 清单、哈希及五档 INKI 位图构建已有；运行时按需解压到 PSRAM。见[管线说明](../../tools/icongen/README.md)、[运行时加载](../../system/ui/icons.c) |
+| 系统手势 | 控制中心、回主屏、返回、翻屏 | 有 | 按起点的 6 mm 边缘区域仲裁；控件捕获整次触摸，浮层先处理返回、主页及实体键。见[输入路由](../../system/ui/ui_task.c#L735)、[控件捕获](../../system/ui/theme.c#L385) |
+| 系统浮层 | AI、确认卡、键盘、电源菜单、选文件、来电 | 有 | 已按层级登记、恢复底页、绑定成员与页面版本，并拦截落到底页的触摸；具体浮层仍各自提供取消和按键处理。见[浮层管理](../../system/ui/ui_task.c#L613)、[公共卡片](../../system/ui/shell/card.c) |
+| 两段式刷新 | 翻屏、打开页面 | 部分 | 反馈优先及显式两段提交已有；普通非异步墨水屏可先黑白再补灰阶，但 `ink_ui_stage_next` 目前仅测试调用，不能写成所有页面已接。PQ-BN 的渐清走驱动自身算法。见[显示服务](../../system/services/display/display_service.c#L100)、[两段测试](../../tests/ui_shell_test.c#L128)、[PQ-BN](../../drivers/display/pqbn/pqbn_v4.c#L280) |
+| 页面对 AI 可见 | 所有页面（G-002） | 部分 | 语义合同导出字段、动作、对象版本及秘密“有／无”；组合输入快照和成员校验已有。确认卡、打断、锁标记、电源菜单、成员门、关机图已迁移；键盘、AI 面板、成员页、孩子页、电量页及主页部分快照仍手写，照片像素和网页正文也不能仅靠控件快照读取。见[快照入口](../../system/ui/ui_task.c#L360)、[语义实现](../../system/ui/ui_semantics.c#L21)、[第一批迁移报告](../tasks/semantics-shell-1/REPORT.md)、[仍手写的键盘](../../system/ui/shell/keyboard.c#L126) |
+| 短输入宿主 | 搜索、设置、编辑表单 | 有 | 输入框、键盘与语义字段同源，处理焦点、提交、取消及秘密字段。见[输入控件](../../system/ui/textfield.c)、[F2 报告](../tasks/ui-input-host/REPORT.md)；长文本另走草稿与分页 |
+| 列表分页 | 文件、联系人、通知、设置等 | 有 | 固定可见槽位，提供位置恢复、按键翻页和同源快照。见[列表实现](../../system/ui/ui_list.c#L52) |
+| 系统文件选择器 | 壁纸、导入及选文件 | 有 | 浮层浏览、类型过滤、选择与取消，按成员检查；不是只留接口。见[选择器](../../system/ui/file_picker.c#L90)、[报告](../tasks/ui-file-picker/REPORT.md) |
+| 服务卡片 | 今日屏、长按图标 | 有（已有应用提供的卡片） | 同读 `app.cards`，按成员过滤、仅可见时更新且最多每秒一次；`TodayEdit` 可选卡片，`IconMenu` 已接长按及继续动作。见[卡片报告](../tasks/ui-cards/REPORT.md)、[今日屏和长按实现](../../system/ui/shell/navigation.c#L1935)。未实现的应用不会自动获得内容 |
+| 全局搜索 | 全部屏 | 有（五类本地结果） | 应用、设置、联系人、备忘、文件按成员查找，每页三项，带类型、对象及版本，可打开结果；文件无适配应用时显示资料页。见[查询与分页](../../system/ui/search.c#L58)、[搜索及文件资料页](../../system/ui/search.c#L228) |
+| 语言切换 | 首次开机、设置及系统应用 | 部分 | 中文／English 设置、查表回退和 AI 请求语言已有，尚未全页翻译；不等于完整地区格式设置。见[语言实现](../../system/text/i18n.c)、[设置入口](../../system/ui/shell/settings_pages.c#L33)、[i18n-1 报告](../tasks/i18n-1/REPORT.md) |
 
 ### 4.3 系统壳和系统应用
 
-| 界面 | 依赖 | 现在缺的 |
-| --- | --- | --- |
-| 主页三屏和 Dock | 应用注册、服务卡片、手势、时间 | 全部 |
-| 锁屏 | 时间、通知、成员和 PIN | 身份验证，时钟、通知、壁纸三种画面（锁标记和唤醒已有） |
-| 控制中心 | 状态和设置（Wi-Fi、音量、前光、色温、免按键已有） | 蓝牙、勿扰、飞行、通知 |
-| 设置 | 设置表已有 | Wi-Fi、蓝牙、成员、存储的后端 |
-| AI 面板 | 已有 | 按新设计重画；确认卡、建议操作 |
-| 电话 | `call.*` 已有（只到 AT 命令层） | 联系人、通话记录、来电打断、铃声、失败和结果未知的状态；**通话声音和 VoLTE 待测**（RK-07、RK-18） |
-| 短信 | `message.*` 已有，118 字是现在动作的上限，不等于运营商一条短信 | 会话存储（现在只在内存留 16 条）、通知、长短信、失败和结果未知的状态 |
-| 备忘与清单 | 数据存储、录音 | 全部 |
-| 日历、时钟 | 时间服务、打断通道、铃声 | 全部 |
-| 相机、相册 | `camera.capture` 已有，只留一张 RGB565，“拍好了”不等于存好了 | 存卡、预览、媒体库、缩略图、扫码结果、资源准入 |
-| 文件与传输 | 文件服务 | 全部，包括无线传输的授权和成员范围、U 盘的成人确认和安全退出（D-72）；上游有 U 盘模式和无线传输，可以参考 |
-| 听 | 媒体播放、焦点、后台 | 全部 |
-| 壁纸 | 文件服务、图片解码和抖动 | 全部 |
-| 远程画面 | 部分：区域解码、双画布、重连已有 | 输入只有点坐标，没有地址编辑、网页文字、分页和历史；快照只有一行占位。要和中枢一起定 |
+同一组的页面、浮层或画面状态并列列出；“部分”会说明页面已有而后端或设计仍缺的内容。外观差异以各任务报告为准，不把已有页面等同于画板验收通过。
+
+| 界面（页面或画面名） | 依赖 | 状态 | 已有与剩余边界 | 出处 |
+| --- | --- | --- | --- | --- |
+| 主页三屏和 Dock（`home`，成人／儿童） | 应用注册、卡片、手势、时间、儿童策略 | 有 | 今日、主屏、全部应用及 Dock 可用；全部应用可分页，按成员过滤。听、报纸、单词仍有空内容入口，不能算应用已实现 | [主页实现](../../system/ui/shell/navigation.c#L496)、[主页入口](../../apps/home/home.c#L21) |
+| 今日屏编辑、长按图标（`TodayEdit`、`IconMenu`） | `app.cards`、成员数据、应用动作 | 有 | 选择／排序今日卡片、长按继续动作已接；只能展示应用实际提供的卡片 | [编辑页与菜单](../../system/ui/shell/navigation.c#L1935) |
+| 全局搜索、空结果、文件资料（`Search`、`SearchEmpty`、`SearchFile`） | `search.*`、应用／设置目录、成员数据、文件索引 | 有 | 五类本地结果分页并按对象版本打开；没有适配应用的文件只显示资料，不冒充已经打开内容 | [搜索页面](../../system/ui/search.c#L228)、[查询实现](../../system/ui/search.c#L58) |
+| 锁屏（`LockPage`） | 时间、通知、成员、壁纸 | 有 | 保留当前页、时钟、壁纸三种样式；时钟页显示下个闹钟和通知数量，正文须唤醒后查看；有相机和紧急呼叫入口 | [锁屏](../../system/ui/lock_mark.c#L60) |
+| 控制中心（`Control`、`KidControl`） | 状态、设置、通知、儿童策略 | 部分 | 网络入口、勿扰、叫名字、飞行模式、音量、前光、暖光及通知摘要已有；孩子只显示受限控制项。蓝牙和省电没有直接控制项，相关设置在其他页面 | [控制中心](../../system/ui/shell/navigation.c#L948) |
+| 通知列表（`Notifications`） | `notify.list/read/dismiss/clear` | 有 | 按成员分页，逐条已读、删除及清空；不再只是控制中心的两条摘要 | [通知列表](../../system/ui/shell/navigation.c#L1453)、[通知管理报告](../tasks/notify-manage/REPORT.md) |
+| 通知渠道（`SetNotifications`） | `notify.set_channel`、持久偏好 | 有 | 渠道开关、翻页及快照已接；关闭后不收新通知，已有通知保留，来电和闹钟照常；默认孩子不能修改 | [渠道页](../../system/ui/shell/navigation.c#L1169)、[报告](../tasks/notify-manage/REPORT.md) |
+| 设置首页（`Settings`） | 设置表、成员、各设置子页 | 有 | 已连接网络、蓝牙、显示、声音、语音、家人、锁屏、存储与关于页；不能再写“缺后端”概括全部 | [设置导航](../../system/ui/shell/navigation.c#L1134) |
+| 显示、声音（`SetDisplay`、`SetSound`） | 显示／音频设置、提示音 | 有 | 前光、暖光、字号、音量、铃声选择和试听、耳机入口已有；真实耳机与通话声音待测 | [显示与声音页](../../system/ui/shell/navigation.c#L1188)、[提示音报告](../tasks/sound-clock/REPORT.md) |
+| 网络和 SIM 卡（`SetNetwork`） | Wi-Fi、网络选择、切卡、飞行模式 | 有 | 扫描、密码连接、网络选择和在线切卡已有；密码不交给 AI；真实运营商通路待测 | [网络页](../../system/ui/shell/navigation.c#L1336)、[Wi-Fi 回归](../../tests/audit10_fix/wifi_pages.c) |
+| 已存 Wi-Fi（`KnownNetworks`） | `wifi.list/connect/forget`、撤销 | 有 | 未连接的已存网络也可连接、忘掉及撤销；列表翻页，凭据不进快照 | [已存网络页](../../system/ui/shell/navigation.c#L1307)、[settings-small 报告](../tasks/settings-small/REPORT.md) |
+| 蓝牙耳机（`SetBluetooth`） | `bt.*`、音频路由 | 部分 | 扫描、配对、连接、断开、忘记及不可用状态已有模拟器页面；真机协议和耳机通路未验证 | [蓝牙页](../../system/ui/shell/bluetooth_page.c#L169)、[settings-a 报告](../tasks/settings-a/REPORT.md) |
+| 移动网络、接入点编辑（`SetMobile`） | `net.apn*`、`net.usage*`、漫游设置 | 部分 | 接入点名称／用户名／密码、漫游、本月／上月流量及清零已有；秘密只给有无。S31 蜂窝 HAL 仍为桩，实际设置和流量来源待测 | [移动网络页](../../system/ui/shell/mobile_network.c#L49)、[合并验证报告](../tasks/cell-features-merge/REPORT.md) |
+| 日期时间、手动设置、时区（`SetTime`、`SetDateTime`、`SetTimeZone`） | `time.set`、自动对时／时区设置 | 部分 | 可改整组日期时间、选城市时区，已有夏令时计算；自动时区的真实服务器来源未接，不能把合成来源测试当上线 | [时间设置](../../system/ui/shell/time_settings.c#L17)、[time-settings 报告](../tasks/time-settings/REPORT.md) |
+| 离开后重新验证（`SetReturn`） | 成员返回规则、`member.idle_return_s` | 有 | 1／2／5／15 分钟选项；儿童不能改，唤醒按现有成员验证规则返回 | [返回时长页](../../system/ui/shell/time_settings.c#L17)、[报告](../tasks/time-settings/REPORT.md) |
+| 语音和 AI（`SetVoice`） | 免按键、插话、活动记录 | 部分 | 免按键和插话开关可用；叫它的名字、打字接话仍明确不可设置 | [语音设置行表](../../system/ui/shell/settings_pages.c#L19) |
+| 存储和备份（`SetStorage`） | 存储统计、清理、备份 | 有 | 显示空间及分类占用、清理临时文件、打开备份；备份缺口见对应行 | [存储行表](../../system/ui/shell/settings_pages.c#L26)、[统计接线](../../system/ui/shell/settings_pages.c#L454) |
+| 关于和更新、语言切换（`SetAbout`） | 版本、语言设置、更新及重置入口 | 有 | 中文／English 切换、日期时间、隐私、设备详情、许可、自动下载和清空入口已接；未单独提供完整地区设置页 | [关于页](../../system/ui/shell/settings_pages.c#L33)、[语言报告](../tasks/i18n-1/REPORT.md) |
+| 设备详情（`DeviceDetails`） | `hal_device_get_info`、版本、存储、电量 | 有 | 型号、系统版本、存储总量／剩余和电量；没有导出 MAC／IMEI 等识别字段 | [详情行表](../../system/ui/shell/settings_pages.c#L51)、[数据读取](../../system/ui/shell/settings_pages.c#L107) |
+| 开源许可（`Licenses`、`LicenseText`） | 构建生成的许可目录与全文 | 有 | 列表及全文分页可读，快照与当前页同源 | [许可页](../../system/ui/shell/settings_pages.c#L377)、[许可生成器](../../tools/licenses.py) |
+| 隐私、记录、记忆、运行记录（`SetPrivacy`、`Records`、`AiMemory`、`RuntimeRecords`） | 成员、`activity.list/delete`、AI 数据 | 部分 | 活动记录计数、本人／孩子记录与确认后删除已接；对话次数、AI 记忆和运行记录读取／删除仍未接，页面明确提示不可用 | [隐私行表](../../system/ui/shell/settings_pages.c#L44)、[记录和占位内容](../../system/ui/shell/settings_family.c#L87) |
+| 成员切换、成员门及密码（`MemberSwitch`、`member_gate`、`PinSet`、`PinForgot`、`PinWait`） | 成员、PIN、限速、家长验证 | 部分 | 切换、输入／修改密码、错误等待和家长验证已接；忘记密码只有说明与家长验证，真正重置未接。AI 不能代填或提交密码 | [成员页](../../system/ui/shell/member_pages.c#L37)、[重置缺口](../../system/ui/shell/member_pages.c#L175) |
+| 管理家人（`SetMembers`） | `member.add/rename/remove`、PIN | 有 | 添加、改称呼、选择成人／孩子、删除及密码入口已有；高风险动作经现有确认规则 | [家人表单和能力](../../system/ui/shell/settings_family.c#L270) |
+| 孩子设置、限制提示（`SetKid`、`KidTimeUp`、`KidLimit`） | 成员时长、音量、应用策略、家长确认 | 有 | 孩子选择、每日时长、音量限制与加时已有；时段限制仍复用“明天接着来”的提示，未细分解除时间 | [孩子设置](../../system/ui/shell/settings_family.c#L197)、[限制浮层](../../system/ui/shell/kid_pages.c#L15)、[kid-apps 报告](../tasks/kid-apps/REPORT.md) |
+| 孩子的应用名单（`SetKidApps`） | 成员策略、`kid.app_set`、应用目录 | 有 | 不开放／可用／禁用时段也能用三种模式；主页、触摸和 AI 都受策略约束，按孩子保存 | [应用名单页](../../system/ui/shell/settings_family.c#L180)、[报告](../tasks/kid-apps/REPORT.md) |
+| 孩子的禁用时段（`SetKidPeriods`） | 成员策略、`kid.period_set`、本地时间 | 有 | 每个孩子四段、星期选择、跨午夜；页面时刻按半小时步进，能力可指定分钟 | [时段页](../../system/ui/shell/settings_family.c#L197)、[报告](../tasks/kid-apps/REPORT.md) |
+| 锁屏和壁纸（`Wallpaper`） | 文件选择、图片解码、显示／电源设置 | 有 | 选相册图片、移除壁纸、锁屏样式、自动锁屏及拿起亮屏设置已有；硬件动作另验 | [设置页](../../system/ui/shell/settings_family.c#L250)、[壁纸加载](../../system/ui/shell/wallpaper.c) |
+| AI 面板、打字问、对话记录（`Ai`、`AiAsk`、`AiHome`） | AI 会话、输入宿主、回答分页 | 部分 | 语音、打字、回答分页与收起／恢复已有；`AiHome` 明确是空记录页，历史对话未接；面板快照仍手写 | [AI 面板](../../system/ui/shell/ai_panel.c#L28)、[打字及空记录页](../../system/ui/shell/ai_chat.c#L35) |
+| AI 离线、超时、额度用完（`AiOffline`、`AiTimeout`、`AiBudget`） | AI 错误状态、重试 | 有 | 原因、返回、重试或关闭飞行模式动作已有，按错误种类显示；不代表真实额度服务已验证 | [错误浮层](../../system/ui/shell/ai_pages.c#L16) |
+| AI 动作记录和结果（`AiLog`、`AiReceipts`） | 活动记录、确认事务结果、成员 | 有 | 记录及执行回执可分页查询，和对话历史分开；不虚构未同步的资料 | [记录页](../../system/ui/shell/ai_pages.c#L224)、[ai-pages-2 报告](../tasks/ai-pages-2/REPORT.md) |
+| 确认、过期及高优先级打断（`confirm`、`ConfirmExpired`、`interrupt`） | 确认事务、通知打断、成员及版本 | 有 | 人确认／取消、过期、来电和闹钟打断已有，快照由语义导出；AI 不能代人批准 | [确认卡](../../system/ui/shell/confirm_card.c#L190)、[打断卡](../../system/ui/shell/interrupt_card.c#L67)、[confirm-pages 报告](../tasks/confirm-pages/REPORT.md) |
+| 飞行模式拒绝及普通拒绝（`AirplaneOn`、`Refused`） | 设置、策略回执、返回 | 有 | 告知真实拒绝原因，成人可关闭飞行模式后重试；孩子不能绕过开关 | [拒绝浮层](../../system/ui/shell/airplane_card.c#L26) |
+| 键盘、文字编辑菜单（`Keyboard`） | 文本输入、剪贴板、听写、撤销／重做 | 部分 | 拼音候选、听写、选区动作及重做按钮已有；密码只能人输入，快照仍手写，不能称所有壳页已迁移语义合同 | [键盘快照及浮层](../../system/ui/shell/keyboard.c#L126)、[重做报告](../tasks/settings-small/REPORT.md) |
+| 电话、记录、通话、按键（`Phone`、`PhoneRecents`、`PhoneCall`、`PhoneKeypad`） | `call.*`、通话数据、打断、铃声 | 部分 | 拨号、来电、记录、静音／耳机路由、分钟计时和失败状态已有；通话录音仍不可用；**通话声音、VoLTE 及真实模组仍待测**（RK-07、RK-18） | [电话页面](../../system/apps/phone/phone.c#L428)、[通话控制及录音缺口](../../system/services/comm/comm_service.c#L613) |
+| 联系人、编辑联系人（`PhoneContacts`、`ContactEdit`） | 成员数据、联系人能力、输入 | 有 | 持久联系人、分页、编辑、拨号／短信入口与快照已有 | [联系人页面](../../system/apps/contacts/contacts.c#L236)、[phone-2 报告](../tasks/phone-2/REPORT.md) |
+| 紧急呼叫（`PhoneEmergency`） | 锁定入口许可、`system.emergency_*`、临时射频 | 部分 | 锁屏、成员门及飞行模式下可进入受限拨号；AI 只开公开页，拨号／按键／挂断限本人；无 SIM 和真实呼叫均未上机验证 | [紧急浮层](../../system/apps/phone/phone.c#L63)、[合并验证报告](../tasks/cell-features-merge/REPORT.md) |
+| 短信、会话、撰写、长编辑（`Sms`、`SmsThread`、`SmsCompose`、`ImeLong`） | `sms.*`、`message.*`、成员数据、通知、草稿 | 部分 | 持久会话、发送结果、草稿、通知及长短信收发拼接已有；接口文本上限已是 765，不能再写 118 字或内存 16 条；真实模组与运营商分段待测 | [短信页面](../../system/apps/sms/sms.c#L219)、[发送合同](../../system/services/comm/comm_service.c#L658)、[长短信报告](../tasks/sms-multipart/REPORT.md) |
+| 备忘与清单（`Memo`、`MemoDetail`、`MemoEdit`、`MemoChecklist`、`MemoUndo`、`MemoSaveFail`） | 成员数据、草稿、保存回执、撤销 | 有 | 列表、长文编辑、清单勾选、删除撤销、保存失败与重试已有；本地落盘不等于中枢备份 | [备忘页面](../../system/apps/memo/memo.c#L377) |
+| 录音备忘和待整理（`MemoRecord`、`MemoPending`） | 录成文件、音频焦点、转写、成员 | 有 | Ogg Opus 录音、取消、播放、文件关联、断电恢复及联网后转写已有；转写依赖中枢，现有报告使用合成转写 | [录音与转写](../../system/apps/memo/memo.c#L92)、[memo-record 报告](../tasks/memo-record/REPORT.md) |
+| 接下来、月历（`Upcoming`、`Calendar`） | 时间、闹钟／提醒、通知 | 有 | 按日事项、月翻页、选日、提醒入口及快照已有 | [日历页面](../../system/apps/calendar/calendar.c#L157) |
+| 提醒编辑、选时间（`ReminderEdit`、`ReminderTime`） | `reminder.*`、文本输入、时间 | 有 | 新建、修改、重复、删除与成员隔离已有；日期时间选择仍是本页自己的控件 | [提醒编辑页和动作](../../system/apps/calendar/calendar.c#L233)、[报告](../tasks/reminder-edit/REPORT.md) |
+| 闹钟列表与编辑（`Clock`、`ClockAlarm`） | 时间、闹钟、铃声与打断 | 有 | 新建／修改、开关、重复、删除及响铃打断已有；RTC 从真待机唤醒另验 | [闹钟页面](../../system/apps/clock/clock.c#L199)、[clock-alarm 报告](../tasks/clock-alarm/REPORT.md) |
+| 倒计时（`ClockTimer`） | 时间任务、提示音、成员 | 有 | 开始、暂停、继续、重设、到期提示已有；切页仍继续 | [计时页](../../system/apps/clock/clock.c#L304)、[sound-clock 报告](../tasks/sound-clock/REPORT.md) |
+| 秒表（`ClockStopwatch`） | 单调时间、成员、局部更新 | 有 | 开始／暂停／继续、计次及复位；每秒改文字，离页、锁屏继续，重启清零 | [秒表页面](../../system/apps/clock/clock.c#L310)、[clock-extras 报告](../tasks/clock-extras/REPORT.md) |
+| 世界时钟（`ClockWorld`） | 时区、成员数据、分钟更新 | 有 | 选城市、增删最多六个、夏令时及跨日显示、重启保留已有 | [世界时钟页面](../../system/apps/clock/clock.c#L310)、[报告](../tasks/clock-extras/REPORT.md) |
+| 相机（`Camera`） | 相机服务、文件、媒体索引、资源准入 | 有 | 取景、拍照确认及 `camera.photo` 保存彩色 PNG、入索引；`camera.capture` 仍是内存采集，不能混称保存。真机出帧另验 | [相机页面](../../system/apps/camera/camera.c#L177)、[camera-gallery 报告](../tasks/camera-gallery/REPORT.md) |
+| 锁屏相机（受限 `Camera` 浮层） | 锁定白名单、当前成员、拍照保存 | 有 | 锁屏、成员门和密码页可拍；只回看本次照片，不得进旧相册／文件；解锁后正常归档，浅睡边界见原报告 | [受限相机](../../system/apps/camera/camera.c#L147)、[lock-camera 报告](../tasks/lock-camera/REPORT.md) |
+| 相册、看图（`Gallery`、`Photo`） | 文件索引、解码、缩略图、成员 | 有 | 九宫格分页、原比例灰阶看图、确认删除及成员隔离已有；“问这张图”只接上下文，未提供图像上传和视觉识别 | [相册与图片页](../../system/apps/gallery/gallery.c#L170)、[报告](../tasks/camera-gallery/REPORT.md) |
+| 扫码结果（`Scan`） | 相机、quirc、剪贴板、联系人、Wi-Fi、电话 | 有 | 文字／网址复制、电话／名片／Wi-Fi 经人工确认执行；密码不进快照。不等于自动打开网址或实机识别率验收 | [扫码页](../../system/apps/camera/scan.c#L108)、[qr-scan 报告](../tasks/qr-scan/REPORT.md) |
+| 文件、列表、操作、目标选择（`Files`、`FileList`、`FileActions`、`FileMove`） | 文件服务、索引、作业、成员 | 有 | 浏览、预览、重命名、单选／多选拷贝移动删除及失败回执已有；多选针对文件，批量操作没有组合撤销 | [文件应用](../../system/apps/files/files.c#L266)、[files-app-1 报告](../tasks/files-app-1/REPORT.md)、[files-ops 报告](../tasks/files-ops/REPORT.md) |
+| 文件命名、文本编辑（`FileName`、`FileEdit`） | `file.mkdir/write`、草稿、文本输入 | 有 | 新建文件夹／文本、保存重开、断电草稿恢复已有；编辑上限 4095 UTF-8 字节，超长拒绝编辑 | [命名和编辑页](../../system/apps/files/files.c#L310)、[files-ops 报告](../tasks/files-ops/REPORT.md) |
+| 选文件（`FilePicker`） | 文件服务、成员、类型过滤 | 有 | 系统浮层提供选择、返回、取消和快照，业务页面复用 | [选择器](../../system/ui/file_picker.c#L90)、[报告](../tasks/ui-file-picker/REPORT.md) |
+| 无线传输（`Transfer`、`TransferLive`） | 无线传输服务、一次性授权、成员 | 有 | 开启、数字授权、地址、状态和关闭已有；仅开放授权目录，离页断开，真网络传输另验 | [传输页](../../system/ui/shell/transfer_pages.c#L71)、[transfer-pages 报告](../tasks/transfer-pages/REPORT.md) |
+| U 盘传输（`TransferUsbBusy`、`TransferUsbOn`、`TransferUsbFail`） | USB 挂载互斥、成人确认、安全退出 | 部分 | 忙碌／开启／失败页及安全退出动作已接；不能列出占用应用，真 FAT／USB 未验 | [USB 页面](../../system/ui/shell/transfer_pages.c#L99)、[报告](../tasks/transfer-pages/REPORT.md) |
+| 活动卡、任务列表（`ActivityCard`、`Tasks`） | 媒体、通话、`job.list/cancel` | 有 | 正在播放／通话的活动卡、运行中与完成的作业、取消及快照已有；没有进度的业务不会凭空生成进度 | [活动卡与任务](../../system/ui/shell/activity_card.c) |
+| 听（独立应用） | 媒体播放、焦点、后台、内容目录 | 无（独立页面） | `media.play/pause/resume/seek` 和续播已实现，但未见“听”的应用注册与可打开页面；主页仍有该入口和空卡片，不能据服务实现改成“应用已做” | [媒体能力](../../system/services/audio/media_service.c#L898)、[主页入口与打开失败](../../system/ui/shell/navigation.c#L1745) |
+| 远程画面（`remote`：`Remote`、`RemoteLoading`、`RemoteOffline`、`RemoteAddress`、`RemoteType`、`RemoteBlocked`） | 远程会话、解码、输入、中枢浏览器 | 部分 | 地址、整段输入提交、翻页、点按／长按、重连及六种状态已有；无历史网址。设备快照是状态和输入，网页正文依赖中枢；真实 Chromium 节点未验证 | [远程页面及动作](../../system/apps/remote/remote.c#L645)、[remote-app 报告](../tasks/remote-app/REPORT.md) |
+| 计算器（`Calculator`） | 本地计算、成员页面、能力总线 | 有 | 四则、括号、百分数、错误状态及 AI 快照已有，不依赖联网 | [计算器页面](../../system/apps/calculator/calculator.c#L308)、[报告](../tasks/calculator/REPORT.md) |
+| 天气、城市搜索（`Weather`、`WeatherCity`） | 中枢天气能力、本地上次数据、今日卡片 | 部分 | 设城市、当前天气、预报、断网显示上次结果及今日卡片已有；真实数据源未联网跑过，不能当在线天气验收 | [天气页面](../../system/apps/weather/weather.c#L269)、[weather 报告](../tasks/weather/REPORT.md) |
+| 首次开机和绑定（`FirstBoot`、`BootWifi`、`BootWifiPass`、`BootJoining`、`BootJoinFail`、`BootClaim`、`BootNoHub`、`BootConfirm`、`BootRestore`、`BootHello`、`BootRevoked`） | 配网、配对、成员、恢复、进度持久化 | 部分 | 配网、绑定、失败、吊销、恢复及继续入口已有；离线示例正文未做，真实家庭服务器流程另验 | [开机页面](../../system/ui/shell/boot_flow.c#L55)、[boot-flow 报告](../tasks/boot-flow/REPORT.md) |
+| 备份与恢复（`Backup`、`BackupFail`、`Restore`、`RestoreRun`、`RestoreDone`、`RestoreFail`） | `backup.now`、`restore.preview/apply`、覆盖确认 | 部分 | 当前成员手动备份、预览、恢复进度／结果和失败重试已有；自动备份不能设置，设备级资料和增量对账未完成 | [备份／恢复页](../../system/ui/shell/backup_pages.c#L33)、[backup-pages 报告](../tasks/backup-pages/REPORT.md) |
+| 更新及恢复启动（`Update`、`UpdateReady`、`UpdateBlocked`、`UpdateFail`、`UpdateInstall`、`UpdateDone`、`BootRecovery`） | 更新服务、作业、文件选择、回滚 | 部分 | 检查／下载、卡上安装、阻止／失败、完成与回滚结果已有；更新说明不可查，真实固件源和引导程序回滚另验 | [更新页面](../../system/ui/shell/update_pages.c#L16)、[update-pages 报告](../tasks/update-pages/REPORT.md) |
+| 电源菜单、低电量、充电和关机（`power_menu`、`BatteryLow`、`BatterySaving`、`Charging`、`off`） | 电源状态、关机图回执、成员、保存 | 有 | 关机／重启、省电、充电和关机画面已有；成员门等基础浮层已迁移语义，电量页仍有手写快照，真实功耗另验 | [电源菜单](../../system/ui/shell/power_menu.c#L47)、[电量页面](../../system/ui/shell/power_pages.c#L36)、[关机图](../../system/ui/shell/off_picture.c#L35) |
+| 清空设备、完成（`FactoryReset`、`FactoryDone`） | 成员／家长验证、确认事务、工厂重置 | 有 | 真实验证与确认后清空、进度与完成页已有；AI 不可代填密码或自行确认 | [重置页面](../../system/ui/shell/factory_pages.c#L24)、[factory-pages 报告](../tasks/factory-pages/REPORT.md) |
 
 ## 5. 建议的开发顺序
 
