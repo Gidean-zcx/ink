@@ -375,7 +375,7 @@ add_custom_target(ink_ui_resource_check ALL
 add_dependencies(ink_system ink_ui_resource_check)
 # Interface languages: assets/i18n/<code>.tsv, checked and turned into a const lookup table.
 set(INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/system/ui/shell/boot_flow.c ${CMAKE_SOURCE_DIR}/system/ui/shell/navigation.c
-  ${CMAKE_SOURCE_DIR}/system/ui/shell/settings_pages.c)
+  ${CMAKE_SOURCE_DIR}/system/ui/shell/settings_pages.c ${CMAKE_SOURCE_DIR}/system/apps/calendar/calendar.c)
 add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h
   COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/i18n/i18n_gen.py ${INK_I18N_TABLES}
           --header ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h --sources ${INK_I18N_SOURCES}
@@ -1446,6 +1446,9 @@ target_sources(ink_system PRIVATE system/apps/calendar/calendar.c)
 ink_sim_executable(sim-calendar tests/calendar/calendar.c)
 target_link_libraries(sim-calendar PRIVATE ink_apps ink_system)
 add_test(NAME calendar COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/calendar/run.py --build ${CMAKE_BINARY_DIR})
+ink_sim_executable(sim-reminder-edit tests/reminder_edit/reminder_edit.c)
+target_link_libraries(sim-reminder-edit PRIVATE ink_apps ink_system)
+add_test(NAME reminder-edit COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/reminder_edit/run.py --build ${CMAKE_BINARY_DIR})
 
 target_sources(ink_system PRIVATE system/apps/calculator/calculator.c)
 ink_sim_executable(sim-calculator tests/calculator/calculator.c)
