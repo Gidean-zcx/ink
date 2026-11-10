@@ -1,14 +1,17 @@
 # open-app-latency 任务报告
 
-基线：`5cc0a6ebefceb8f28d7b0e49b7d99e63cef014d3`。状态：前后采样和反向对照已完成，全量验证进行中。
+基线：`5cc0a6ebefceb8f28d7b0e49b7d99e63cef014d3`。改动提交：`942f3266`。状态：测量、优化与验证完成；两轮全量唯一未过项可在原基线复现。
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
 | 1a 五个入口 | 【实测，模拟器】通过 | 前后各 100 次有效点按；短信从两次刷新减为一次，五页的最终帧缓冲哈希均一致 | A、B |
-| 1b 确定性 | 待验证 | 原有 `determinism`、`determinism-reader` | C |
-| 2 全量、内存、S31、gcccheck | 待验证 | 不改已有测试和预算 | C、D、E |
+| 1b 确定性 | 【实测】通过 | 原有 `determinism`、`determinism-reader` 在普通版和 ASan/UBSan 版都通过 | C、D |
+| 2a 普通全量 | 【实测】未全绿，基线同样失败 | 362/363 通过；`integration-dictation` 的 7 条断言在基线和优化版完全相同 | C、基线复核 |
+| 2b 内存检查 | 【实测】无 sanitizer 错误；用例未全绿 | ASan/UBSan 全量 362/363，仅同一听写用例失败；测量驱动额外跑完五个入口 | D |
+| 2c S31 | 【实测】通过 | 完整编译、链接、资源打包和尺寸／栈报告退出 0 | E |
+| 2d gcccheck | 【实测】通过 | 2 个产品 C 文件和 1 个测量驱动 C 文件，0 findings，无跳过 | E |
 
 ## 前后对比
 
@@ -53,13 +56,14 @@
 
 ## 验证与复现
 
-在仓库根目录设置 `INK_DEPS`。构建配置按总规则第 5 节，另外只读复用 SDL2、ImGui 源码与已锁定的中枢虚拟环境；构建和全量测试不重叠，均为 utility 优先级、并行数 2。采样单进程串行，无本会话的其它构建或测试并行；沙箱不允许列出整机进程。
+在仓库根目录设置 `INK_DEPS`。构建配置按总规则第 5 节，使用 CMake 默认的 Unix Makefiles，另外只读复用 SDL2、ImGui 源码与已锁定的中枢虚拟环境；构建和全量测试不重叠，均为 utility 优先级、并行数 2。采样单进程串行，无本会话的其它构建或测试并行；沙箱不允许列出整机进程。
 
 ```sh
 py="$INK_DEPS/build-deps/pyenv/bin/python"
 export PYTHONDONTWRITEBYTECODE=1
 export PYTHONPATH="$PWD/hub:$INK_DEPS/hub/.venv/lib/python3.11/site-packages"
-# C：普通构建和全量测试；D：将 build 换为 build-asan，配置时加 -DINK_SANITIZE=ON。
+# C：普通构建和全量测试；D：将 build 换为 build-asan，配置时加 -DINK_SANITIZE=ON，
+# 运行 CTest 时设置 ASAN_OPTIONS=halt_on_error=1 和 UBSAN_OPTIONS=halt_on_error=1。
 taskpolicy -c utility cmake -S . -B build -DINK_WERROR=ON \
   -DINK_CJK_FONT="$INK_DEPS/build-deps/fonts/NotoSansCJK-Regular.ttc" -DINK_CJK_FACE=2 \
   -DINK_CJK_MEDIUM_FONT="$INK_DEPS/build-deps/fonts/NotoSansCJKsc-Medium.otf" \
@@ -90,6 +94,16 @@ taskpolicy -c utility "$py" "$gcccheck" "$o/after" tests/open_app_latency/device
 ```
 
 【实测】B 两个反向对照均按预期退出 1，驱动检查和最终帧缓冲哈希均通过。仅恢复原旋转：文件、AI 的旋转 p50 为 74.05、38.48 ms，均未达到基线下降 10% 的断言；仅恢复原短信代码：20/20 次恢复到两次刷新（96 相）。正向比较退出 0。日志及 trace 位于 `work/open-app-latency/`，不提交。
+
+【实测】C 构建退出 0，CTest 退出 8，原话 `99% tests passed, 1 tests failed out of 363`，333.16 s，无跳过。基线复核：用两个原始 C 文件按同一编译表重链接 `sim-dictation`，执行原 `integration-dictation` 命令；当前版也原样单跑。两版均退出 1、220 条通过、7 条失败，`metrics` 逐项相同；第一条失败为点“说完了”后状态未回到空闲（`over (2)`）。在基线检出按 C 配置可用 `ctest --test-dir build -R '^integration-dictation$' --output-on-failure` 单跑；本次的重链接命令和原始日志在 `work/open-app-latency/dictation-control*`。按任务范围未改听写代码或断言。
+
+【实测】D 构建退出 0，ASan/UBSan 全量 CTest 退出 8，原话 `99% tests passed, 1 tests failed out of 363`，546.12 s，无跳过。仍是同一听写用例的 7 条断言，完整 CTest 日志未发现 sanitizer 错误。另用 A 的优化版命令换 `--build build-asan --runs 1` 并去掉 `--compare`，五个入口共 30 条驱动检查全部通过，退出 0。
+
+【实测】E 的 GCC 原话：`gcccheck: 2 compiled, 0 with findings` 和 `gcccheck: 1 compiled, 0 with findings`；两次退出 0，无跳过。测试驱动实际使用 B 的 `reverse-rotate` 输出目录里的编译表，编译的是当前驱动源码。
+
+【实测】E 的 S31 使用本地 ESP-IDF v6.1（`fff9895c`）和 GCC 15.2.0；两个产品 C 文件都重新编译，`Total image size: 3267634 bytes (.bin may be padded larger)`。`build-s31/` 生成镜像、尺寸和静态栈报告；有 5 条 SDK 私有头目录配置警告、1 条 Bash 补全警告，无产品 C 编译告警。没有连接设备。
+
+【实测】收尾：200 条样本、90 个分位数单元格重算一致，每次七段与总时长相差不超过 0.002 ms。报告链接、Python 语法、`git diff --check` 均通过。对照基线只有报告、样本、两个测量文件和两个产品文件；按总规则扫描提交差异，绝对路径及 MAC 模式均 0 命中。
 
 ## 没做到的
 
