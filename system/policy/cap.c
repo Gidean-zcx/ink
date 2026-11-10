@@ -119,7 +119,7 @@ static ink_rc_t gate(const ink_cap_t *c, ink_source_t src, uint32_t page_gen, bo
         }
     }
     bool restricted = ink_ui_locked_activity() != NULL;
-    bool locked_caller = c->locked_owner_only && ink_power_state() == INK_PWR_LOCKED &&
+    bool locked_caller = ink_power_state() == INK_PWR_LOCKED && c->locked_owner_only &&
         (src == INK_SRC_AI || src == INK_SRC_REMOTE || src == INK_SRC_APP);
     if ((!ink_member_space_open() || locked_caller || restricted) && src != INK_SRC_SYSTEM) {
         bool allowed = restricted ? ink_ui_locked_allows(c->id) : c->while_locked;
