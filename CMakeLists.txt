@@ -1391,6 +1391,10 @@ add_test(NAME sound-clock COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/test
 set_tests_properties(sound-clock PROPERTIES TIMEOUT 300)
 add_test(NAME sound-clock-input COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/sound_clock_input.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(sound-clock-input PROPERTIES TIMEOUT 90)
+ink_sim_executable(sim-vendor-haptic tests/vendor_haptic.c tests/vendor_haptic_hal.c)
+target_link_libraries(sim-vendor-haptic PRIVATE ink_apps ink_system)
+add_test(NAME vendor-haptic COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/vendor_haptic.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(vendor-haptic PROPERTIES TIMEOUT 360)
 # AI chat pages use the existing service and input hosts.
 target_sources(ink_system PRIVATE system/ui/shell/ai_chat.c)
 ink_sim_executable(sim-ai-chat tests/ai_chat.c)

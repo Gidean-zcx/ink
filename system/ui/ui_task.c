@@ -218,6 +218,41 @@ static uint32_t count_objs(lv_obj_t *o) {
     return n;
 }
 
+static ink_input_zone_t g_zones[INK_INPUT_HAPTIC_ZONES] INK_PSRAM_BSS;
+static int g_nzones;
+
+static bool zone_clip(lv_area_t *area, const lv_area_t *clip) {
+    if (area->x1 < clip->x1) area->x1 = clip->x1;
+    if (area->y1 < clip->y1) area->y1 = clip->y1;
+    if (area->x2 > clip->x2) area->x2 = clip->x2;
+    if (area->y2 > clip->y2) area->y2 = clip->y2;
+    return area->x1 <= area->x2 && area->y1 <= area->y2;
+}
+
+static void collect_zones(lv_obj_t *obj, lv_area_t clip, bool disabled) {
+    if (lv_obj_has_flag(obj, LV_OBJ_FLAG_HIDDEN)) return;
+    lv_area_t area;
+    lv_obj_get_coords(obj, &area);
+    if (!zone_clip(&area, &clip)) return;
+    disabled |= lv_obj_has_state(obj, LV_STATE_DISABLED);
+    lv_area_t child_clip = lv_obj_has_flag(obj, LV_OBJ_FLAG_OVERFLOW_VISIBLE) ? clip : area;
+    for (int i = (int)lv_obj_get_child_count(obj) - 1; i >= 0; i--)
+        collect_zones(lv_obj_get_child(obj, i), child_clip, disabled);
+    if (!lv_obj_has_flag(obj, LV_OBJ_FLAG_CLICKABLE) || !lv_obj_get_parent(obj)) return;
+    if (g_nzones == INK_INPUT_HAPTIC_ZONES) return;
+    lv_obj_get_click_area(obj, &area);
+    if (!zone_clip(&area, &clip)) return;
+    g_zones[g_nzones++] = (ink_input_zone_t){area.x1, area.y1, area.x2, area.y2,
+                                          !disabled && lv_obj_get_event_count(obj) > 0};
+}
+
+static void publish_zones(void) {
+    g_nzones = 0;
+    lv_area_t clip = {0, 0, UI.lw - 1, UI.lh - 1};
+    collect_zones(UI.noverlays ? UI.overlay_root[UI.noverlays - 1] : UI.screen, clip, false);
+    ink_input_set_zones(g_zones, g_nzones);
+}
+
 static void refr_event_cb(lv_event_t *e) {
     lv_event_code_t code = lv_event_get_code(e);
     if (code == LV_EVENT_REFR_START) {
@@ -230,6 +265,7 @@ static void refr_event_cb(lv_event_t *e) {
         if (objs > prev_objs) osal_cost_units("lvgl.obj_create", objs - prev_objs);
         prev_objs = objs;
     } else if (code == LV_EVENT_REFR_READY) {
+        publish_zones();
         if (UI.ndirty) {
             if (UI.staged) ink_display_commit_staged(UI.dirty, UI.ndirty, UI.cause_us, UI.cause_tag);
             else ink_display_commit_tagged(UI.dirty, UI.ndirty, UI.cause_us, UI.cause_tag);
@@ -467,6 +503,7 @@ const lv_font_t *ink_ui_font(int role) {
 /* ----------------------------------------------------------- activities */
 
 static void show_top(void) {
+    ink_input_set_zones(NULL, 0);
     frame_t *f = &UI.stack[UI.depth - 1];
     ink_member_identity_t owner;
     ink_member_identity(&owner);
@@ -561,6 +598,7 @@ void ink_ui_drop_app(const char *app) {
  * spot where "hang up" appears). The content version stays: the page under it has not changed, and what is prepared
  * for it is still right when the overlay goes (while it is up, the gate refuses what belongs to the page). */
 static void overlays_changed(void) {
+    ink_input_set_zones(NULL, 0);
     UI.generation++;
     UI.touch_invalid_before = osal_now_us();
     lv_indev_reset(UI.indev, NULL);

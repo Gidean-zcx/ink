@@ -133,19 +133,15 @@ void hal_light_set(int cold_permille, int warm_permille) {
 bool hal_haptic_available(void) { return g_profile.info.has_haptics; }
 static void battery_model(hal_battery_t *out);
 
-/* The motor hangs on TCA9555 P03: a small task switches it on, waits, and off (upstream uses an
- * esp_timer callback for the same I2C writes). */
-static osal_queue_t *g_haptic_q;
+/* TCA9555 P03, on the shared timer task as in vendor metalio_vibe.cc:100. */
+static osal_timer_t *g_haptic_timer;
 
-static void haptic_task(void *arg) {
+static void haptic_step(void *arg) {
     (void)arg;
-    for (;;) {
-        int ms;
-        if (osal_queue_recv(g_haptic_q, &ms, OSAL_WAIT_FOREVER) != OSAL_OK) continue;
-        metalio_board_set(0, MB_P0_MOTOR, MB_P0_MOTOR);
-        osal_task_delay_us((uint64_t)ms * 1000u);
-        metalio_board_set(0, MB_P0_MOTOR, 0);
-    }
+    bool on = vtk_now() < PW.haptic_until;
+    metalio_board_set(0, MB_P0_MOTOR, on ? MB_P0_MOTOR : 0);
+    uint64_t now = vtk_now();
+    if (on) osal_timer_start(g_haptic_timer, PW.haptic_until > now ? (PW.haptic_until - now + 999) / 1000 : 1, 0);
 }
 
 void hal_haptic_pulse(int ms) {
@@ -156,14 +152,13 @@ void hal_haptic_pulse(int ms) {
     uint64_t until = vtk_now() + SIM_MS(ms);
     if (until > PW.haptic_until) PW.haptic_until = until;
     if (!metalio_board_ready()) return;
-    if (!g_haptic_q) {
+    if (!g_haptic_timer) {
         const char *prev = osal_mem_tag("haptics");
-        g_haptic_q = osal_queue_create(sizeof(int), 4);
-        osal_task_cfg_t c = {.name = "haptic", .fn = haptic_task, .stack_bytes = 2048, .priority = 5, .core = -1};
-        if (!g_haptic_q || osal_task_create(&c, NULL) != OSAL_OK) osal_panic("haptics: cannot start the motor task");
+        g_haptic_timer = osal_timer_create("haptic", haptic_step, NULL);
+        if (!g_haptic_timer) osal_panic("haptics: cannot create the motor timer");
         osal_mem_tag(prev);
     }
-    osal_queue_send(g_haptic_q, &ms, 0);
+    osal_timer_start(g_haptic_timer, 1, 0);
 }
 
 static const char *g_off_reason;

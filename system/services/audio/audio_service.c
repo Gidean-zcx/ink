@@ -789,11 +789,13 @@ static void on_capture_owner(void *ctx, int h, const char *id) { /* direct: the 
  * on and unlocked). Takes effect with the voice front end (detailed design §7). */
 static const char *const HANDSFREE[] = {"screen_on", "always", "off", NULL};
 static const char *const RINGTONES[] = {"清音", "双音", "柔音", NULL};
+static const char *const VIBRATION_LEVELS[] = {"弱", "中", "强", NULL};
 static void preview_ring(void *ctx, int64_t v) { (void)ctx; ink_audio_tone((ink_tone_t)v, osal_now_us(), "audio.preview"); }
 
 static const ink_setting_def_t AUDIO_SETTINGS[] = {
     {.id = "audio.key_tone", .title = "按键提示音", .type = INK_SET_BOOL, .child_may_change = true},
     {.id = "audio.vibration", .title = "振动", .type = INK_SET_BOOL, .def = 1, .child_may_change = true},
+    {.id = "audio.vibration_level", .title = "振动强度", .type = INK_SET_ENUM, .choices = VIBRATION_LEVELS, .child_may_change = true},
     {.id = "audio.call_ring", .title = "来电铃声", .type = INK_SET_ENUM, .choices = RINGTONES, .child_may_change = true, .apply = preview_ring, .apply_exec = INK_EXEC_DIRECT},
     {.id = "audio.alarm_ring", .title = "闹钟铃声", .type = INK_SET_ENUM, .choices = RINGTONES, .child_may_change = true, .apply = preview_ring, .apply_exec = INK_EXEC_DIRECT},
     {.id = "audio.volume", .title = "音量", .type = INK_SET_INT, .min = 0, .max = 100, .def = 70, .child_may_change = true,
@@ -1224,7 +1226,9 @@ void ink_audio_key_tone(void) {
     if (ink_setting_get("audio.key_tone")) ink_audio_tone(INK_TONE_KEY, osal_now_us(), "audio.key");
 }
 void ink_audio_haptic(void) {
-    if (ink_setting_get("audio.vibration")) hal_haptic_pulse(0);
+    /* Vendor haptic_feedback.cc:23-25 (690a023): weak / medium / strong. */
+    int level = (int)ink_setting_get("audio.vibration_level");
+    if (ink_setting_get("audio.vibration")) hal_haptic_pulse(level == 2 ? 70 : level == 1 ? 50 : 35);
 }
 void ink_audio_ring(bool on) {
     if (!AU.info.has_speaker || !AU.task) return;
