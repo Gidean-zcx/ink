@@ -8,8 +8,8 @@
 | --- | --- | --- | --- |
 | B10-01 | 未完成，按任务书停止 | 【实测】基线新测试失败；改回后台订阅后新测试通过，但原 `sms` 在 17.955 秒报 `capture is settled`；候选已撤回 | 下方专项命令 |
 | B10-02 | 专项通过 | 【实测】`audit10-b10-02` 修前退出 1、修后退出 0；第二页快照与真实按钮一致，返回第一页动作恢复且实际点击进入 `wifi.forget` 的人工确认 | 下方专项命令 |
-| 全量测试 | 未通过；仅 B10-01 行为失败 | 【实测】300 项已执行：首次 296 通过、1 失败、3 环境跳过；补齐中枢 Python 后 3 项及其依赖全部通过。原 `sms`、B10-02 均通过 | 下方全量及补跑命令 |
-| 内存检查 | 未运行 | 待补充 | 待补充 |
+| 全量测试 | 未通过；仅 B10-01 行为失败 | 【实测】300 项中，首次 296 通过、1 失败、3 环境跳过；补齐中枢 Python 后 3 项及其依赖全部通过，合计 299/300。原 `sms`、B10-02 均通过 | 下方全量及补跑命令 |
+| 内存检查 | 未通过；仅 B10-01 行为失败 | 【实测】ASan/UBSan 构建成功，299/300 通过、无跳过，未检出内存诊断；原 `sms`、B10-02 均通过 | 下方 ASan 命令 |
 | S31 编译 | 未运行 | 待补充 | 待补充 |
 | 差异与隐私 | 阶段检查通过，收尾再查 | 【实测】指定基线至当前提交隐私扫描 0 命中，`git diff --check` 通过；短信产品源码无差异 | 任务规则指定扫描、`git diff --check` |
 
@@ -28,11 +28,13 @@
 - 【实测】普通配置按任务规则，`taskpolicy -c utility cmake --build build -j2` 退出 0；日志 `work/audit10-fix/build-final.log`。
 - 【实测】`INK_KEEP_EVIDENCE=1 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$PWD/hub" taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2` 退出 8，215.20 秒，唯一失败 `audit10-b10-01`；日志 `work/audit10-fix/ctest.log`。
 - 【实测】首次默认 Python 缺少中枢依赖，已有 3 项测试返回 77。使用现成只读依赖环境，`taskpolicy -c utility cmake -S . -B build -DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"` 后，以上测试命令增加 `-R '^(hub-contract|hub-json-crosscheck|hub-simulator-e2e)$'`，4/4（含导出前置项）通过、无跳过，退出 0、18.78 秒；日志 `work/audit10-fix/ctest-hub.log`。未安装或升级依赖；后续 ASan 使用同一配置。
+- 【实测】ASan 配置沿用普通版，仅换为 `build-asan` 并加 `-DINK_SANITIZE=ON`，保留 `INK_WERROR=ON` 和同一中枢 Python；`taskpolicy -c utility cmake --build build-asan -j2` 退出 0。日志 `work/audit10-fix/{configure-asan,build-asan}.log`。
+- 【实测】全量命令换为 `--test-dir build-asan`，加 `UBSAN_OPTIONS=halt_on_error=1`，退出 8，299/300、394.70 秒，无跳过，唯一失败 `audit10-b10-01`。日志 `work/audit10-fix/ctest-asan.log` 中未检出 AddressSanitizer / UBSan 运行时错误；不能将这一整轮写成通过。
 
 ## 没做到的
 
 - B10-01 未交付可验收修复，原因和数据见上；不通过改旧测试、加等待或再加机制绕过冲突。
-- 全量测试因 B10-01 未通过；内存检查和 S31 编译待完成。未接触设备或实网业务。
+- 普通和内存检查全量均因 B10-01 未通过；S31 编译待完成。未接触设备或实网业务。
 
 ## 和设计不一致的
 
@@ -44,7 +46,9 @@
 
 ## 新增的机制
 
-- 无。
+- 产品无新增任务、状态机、文件格式、配置项、队列或缓存。
+- 测试任务 `sms-arrival-test`：仅回归程序使用，由 B10-01 的持续打开页面验收要求。
+- 测试任务 `wifi-pages-test`：仅回归程序使用，由 B10-02 的最大字号分页验收要求。
 
 ## 要用户定的
 
