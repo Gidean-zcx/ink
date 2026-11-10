@@ -10,7 +10,6 @@
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/cap.h"
-#include "ink/sys/comm.h"
 #include "ink/sys/confirm.h"
 #include "ink/sys/data.h"
 #include "ink/sys/hub.h"
@@ -174,10 +173,6 @@ static bool describe(const ink_cap_t *c, const ink_args_t *a, char *out, size_t 
                 p = end;
             }
         }
-        if (!strcmp(c->id, "system.factory_reset")) {
-            bool media = false; ink_args_get_bool(a, "clear_media", &media);
-            complete &= put_text(out, cap, &n, media ? "；同时清空存储卡上的书和音频" : "；存储卡上的书和音频保留");
-        }
         out[n] = 0;
         return complete;
     }
@@ -323,8 +318,9 @@ ink_rc_t ink_confirm_hold(const ink_cap_t *c, const ink_args_t *args, ink_source
     h->parent = c->parent_pin && ink_member_any_pin();
     h->cap = c;
     h->args = *args;
-    if (!strcmp(c->id, "call.dtmf") && !ink_comm_bind_dtmf(&h->args)) {
-        osal_free(h); rc->status = INK_RC_STALE; return rc->status;
+    if (c->prepare_confirm) {
+        ink_rc_t prepared = c->prepare_confirm(&h->args, rc);
+        if (prepared != INK_RC_DONE) { osal_free(h); rc->status = prepared; return rc->status; }
     }
     h->src = src;
     h->page_gen = page_gen ? page_gen : (c->activity ? ink_ui_content_version() : 0);
@@ -338,7 +334,7 @@ ink_rc_t ink_confirm_hold(const ink_cap_t *c, const ink_args_t *args, ink_source
         h->connection = ink_hub_connection();
     }
     snprintf(h->member, sizeof h->member, "%s", ink_member_current()->id);
-    if (!describe(c, !strcmp(c->id, "call.dtmf") ? &h->args : args, h->detail, sizeof h->detail)) {
+    if (!describe(c, c->prepare_confirm ? &h->args : args, h->detail, sizeof h->detail)) {
         osal_free(h);
         rc->status = INK_RC_REJECTED;
         snprintf(rc->detail, sizeof rc->detail, "confirmation detail is too long");

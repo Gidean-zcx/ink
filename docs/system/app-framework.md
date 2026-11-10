@@ -68,6 +68,8 @@ static const ink_cap_t INK_JOT_CAPS[] = {
 
 确认由策略层决定，页面不自造“确认通过”的来源。实际规则见 [cap.c:80](../../system/policy/cap.c#L80)：`parent_pin` 且已设置密码时要求家长验证；`ask_by_hand` 要本人确认；普通触摸／按键／系统来源直接执行；AI 的本地破坏操作、没有本人意图标记的对外操作要求确认。`INK_FX_SYSTEM` 这个等级本身不会对所有大人操作自动弹卡，头文件枚举注释不能代替这些判断。示例的本地写无需确认；也没有声明撤销，不把保存称为可撤销。
 
+能力可选填 [cap.h 的 `prepare_confirm`](../../system/include/ink/sys/cap.h)：签名为 `ink_rc_t (*prepare_confirm)(ink_args_t *args, ink_receipt_t *rc)`。策略决定需要确认后，在进入等待之前、当前策略关口所在执行器上调用一次；无需确认时不调用。钩子修改待确认参数的副本，绑定当时的业务上下文，也可增加供 `ask` 占位符显示的说明字段；私有字段须覆盖或丢弃调用方传入的同名值。成功返回 `INK_RC_DONE`；失败返回相应终态并填写 `rc->detail`／`rc->say`，请求不会进入等待。说明和确认摘要使用处理后的参数，确认后交给 `run` 的也是这些参数；执行时仍由能力核对绑定是否有效，钩子不改变确认、成员或家长密码规则。
+
 ## 4. F1：快照和控件语义
 
 出处：[ui_semantics.h:16，字段与动作](../../system/include/ink/sys/ui_semantics.h#L16)、[ui_semantics.h:42，生命周期约定](../../system/include/ink/sys/ui_semantics.h#L42)、[ui_semantics.h:50，快照与动作桥](../../system/include/ink/sys/ui_semantics.h#L50)、[ui.h:121，运行时快照](../../system/include/ink/sys/ui.h#L121)。

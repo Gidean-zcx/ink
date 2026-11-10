@@ -201,6 +201,18 @@ static void restart_job(void *arg) { /* exec.bg, after the answer */
     hal_power_reboot();
 }
 
+static ink_rc_t ink_factory_reset_prepare(ink_args_t *args, ink_receipt_t *rc) {
+    bool media = false;
+    ink_args_get_bool(args, "clear_media", &media);
+    ink_args_init(args);
+    if (ink_args_bool(args, "clear_media", media) ||
+        ink_args_str(args, "_media", media ? "；同时清空存储卡上的书和音频" : "；存储卡上的书和音频保留")) {
+        snprintf(rc->detail, sizeof rc->detail, "confirmation arguments are full");
+        return INK_RC_FAILED;
+    }
+    return INK_RC_DONE;
+}
+
 static void factory_reset(ink_call_t *c) { /* exec.bg */
     if (ink_usb_disk_active()) { /* nothing can be done about the card from here, and it is the person's to take back */
         c->rc.status = INK_RC_FAILED;
@@ -277,7 +289,7 @@ static const ink_cap_t SYSTEM_ACTIONS[] = {
      .run = switch_member},
     {.id = "state.list", .title = "系统现在的状态（电量、网络、前台应用……）", .output = "{\"type\":\"object\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = state_list},
     {.id = "settings.list", .title = "所有设置，各自的类型、取值范围和现在的值", .output = "{\"type\":\"array\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = settings_list},
-    {.id = "system.factory_reset", .title = "清空这台设备（清掉所有家人的数据，不能撤销）", .input = "{\"type\":\"object\",\"properties\":{\"clear_media\":{\"type\":\"boolean\"}}}", .ask = "清空这台设备：清掉所有家人的数据，不能撤销", .effect = INK_FX_SYSTEM, .ask_by_hand = true, .parent_pin = true, .child_ok = false, .exec = INK_EXEC_BG, .run = factory_reset},
+    {.id = "system.factory_reset", .title = "清空这台设备（清掉所有家人的数据，不能撤销）", .input = "{\"type\":\"object\",\"properties\":{\"clear_media\":{\"type\":\"boolean\"}}}", .ask = "清空这台设备：清掉所有家人的数据，不能撤销{_media}", .effect = INK_FX_SYSTEM, .ask_by_hand = true, .parent_pin = true, .child_ok = false, .exec = INK_EXEC_BG, .prepare_confirm = ink_factory_reset_prepare, .run = factory_reset},
     {.id = "system.reboot", .title = "重启", .effect = INK_FX_SYSTEM, .child_ok = true, .while_locked = true, .exec = INK_EXEC_BG, .run = cap_reboot},
 };
 
