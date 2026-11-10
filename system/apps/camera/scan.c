@@ -155,8 +155,8 @@ static void scan(ink_call_t *c) {
     __atomic_store_n(&scanning, 1, __ATOMIC_RELEASE); ink_cap_defer(c);
     if (ink_exec_post(INK_EXEC_MEDIA, &p->job, decode, p)) { __atomic_store_n(&scanning, 0, __ATOMIC_RELEASE); c->rc.status = INK_RC_FAILED; discard(p); ink_cap_done(c); }
 }
-static ink_rc_t prepare(ink_args_t *args, ink_receipt_t *rc) {
-    (void)rc;
+static ink_rc_t prepare(ink_args_t *args, ink_receipt_t *rc, ink_source_t src) {
+    (void)rc; (void)src;
     if (!result || !result->ok || !result->target) return INK_RC_INVALID;
     ink_args_init(args); ink_args_str(args, "content", result->content); return INK_RC_DONE;
 }

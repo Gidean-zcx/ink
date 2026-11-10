@@ -106,8 +106,9 @@ struct ink_cap {
     bool ask_by_hand;       /* a person is asked too: a tap on a notification should not take the device away for minutes */
     const char *ask;        /* what the confirmation card says, with {argument}s: "发短信给 {to}：{text}"; NULL = title and arguments */
     /* Before waiting, on the policy gate's executor: bind args and {ask} fields. DONE, or a failure with rc's reason.
-     * Replace caller-supplied private fields; run must recheck bindings. Not called for actions needing no confirmation. */
-    ink_rc_t (*prepare_confirm)(ink_args_t *args, ink_receipt_t *rc);
+     * Replace caller-supplied private fields; run must recheck bindings. A successful hook may put the card's
+     * bounded summary in rc->say. Not called for actions needing no confirmation. */
+    ink_rc_t (*prepare_confirm)(ink_args_t *args, ink_receipt_t *rc, ink_source_t src);
     void (*run)(ink_call_t *call);
 };
 

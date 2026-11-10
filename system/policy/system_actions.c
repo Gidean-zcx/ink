@@ -203,7 +203,8 @@ static void restart_job(void *arg) { /* exec.bg, after the answer */
     hal_power_reboot();
 }
 
-static ink_rc_t ink_factory_reset_prepare(ink_args_t *args, ink_receipt_t *rc) {
+static ink_rc_t ink_factory_reset_prepare(ink_args_t *args, ink_receipt_t *rc, ink_source_t src) {
+    (void)src;
     bool media = false;
     ink_args_get_bool(args, "clear_media", &media);
     ink_args_init(args);
