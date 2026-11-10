@@ -13,7 +13,7 @@
 #include "ink/sys/i18n.h"
 #include "ink/ui_shell.h"
 
-enum { HOME, LIST, ACTIONS, MOVE, NAME, EDIT, PAGE_COUNT };
+enum { HOME, LIST, ACTIONS, MOVE, NAME, EDIT, PAGE_COUNT, ACTION_MAX = 8 };
 typedef struct { char path[INK_FS_PATH_MAX], name[INK_FS_NAME_MAX]; uint32_t id; int64_t size; bool dir; ink_fs_type_t type; } item_t;
 static const ink_activity_t PAGES[PAGE_COUNT];
 static const ink_db_def_t DRAFT_REFS = {.name = "files.drafts", .title = "文本文件草稿引用", .scope = INK_DB_MEMBER, .schema = 1, .json = true, .ai_read = true, .max_records = INK_FS_INDEX_MAX};
@@ -22,7 +22,7 @@ static struct {
     ink_ui_list_t *list;
     ink_ui_list_position_t position;
     ink_ui_page_spec_t model;
-    ink_ui_action_spec_t actions[8];
+    ink_ui_action_spec_t actions[ACTION_MAX];
     ink_ui_field_spec_t fields[3];
     lv_obj_t *screen, *notice, *field, *preview, *images[4];
     lv_image_dsc_t thumbs[4];
@@ -35,10 +35,11 @@ static struct {
     bool multi, new_text, all_marked;
     uint32_t marked[INK_FS_INDEX_MAX], draft, ref;
     size_t marked_count;
-    char edit_path[INK_FS_PATH_MAX], body[4096], batch[1024], selection[INK_ARGS_TEXT], result[4096];
+    char edit_path[INK_FS_PATH_MAX], body[4096], chunk[2049], batch[1024], selection[INK_ARGS_TEXT], result[4096];
     int mode;
     bool busy, indexing, copy;
 } F INK_PSRAM_BSS;
+_Static_assert(7 <= ACTION_MAX, "file toolbar action count");
 
 static const char *directory(void) { return F.mode == MOVE ? F.dest : F.path; }
 static bool writable(const char *path) { return ink_member_current()->role == INK_ROLE_ADULT || (!strncmp(path, "/me", 3) && (!path[3] || path[3] == '/')); }
@@ -100,15 +101,15 @@ static void editor_open(void) {
         F.draft = ink_text_draft_id(); ink_jw_t w; ink_jw_init(&w, json, sizeof json); ink_jw_raw(&w, "{\"path\":"); ink_jw_str(&w, F.edit_path); ink_jw_raw(&w, ",\"draft\":"); ink_jw_int(&w, F.draft); ink_jw_raw(&w, "}");
         ink_db_write_t put = {.id = F.ref, .data = json, .len = w.len}; if (ink_db_put(db, &put, &F.ref)) status(TR("草稿引用未能保存")); ink_db_flush(db);
         pair_json(F.target, sizeof F.target, "path", F.edit_path, "page", "FileEdit"); size_t n = strlen(F.target);
-        snprintf(F.target + n - 1, sizeof F.target - n + 1, ",\"draft\":%u,\"replace\":true}", (unsigned)F.draft);
+        snprintf(F.target + n - 1, sizeof F.target - n + 1, ",\"draft\":%u,\"text\":\"\",\"replace\":true}", (unsigned)F.draft);
         button(0, F.screen, TR("保存"), "file.write", F.target, INK_CANVAS_W - INK_MARGIN - INK_PRIMARY, INK_STATUS_BAR, INK_PRIMARY, true); F.model.action_count = 1;
     } else status(TR("暂时打不开文本编辑器"));
     ink_app_free(j); ink_db_close(db); F.busy = false;
 }
 static void edit_read(void *ctx, const ink_receipt_t *rc) {
     if (!current(ctx)) return;
-    ink_json_t *j = ink_app_alloc(sizeof *j, true); size_t n = strlen(F.body); char chunk[2049];
-    if (!j || rc->status != INK_RC_DONE || !rc->result || ink_json_parse(j, rc->result, strlen(rc->result)) || ink_json_str(j, ink_json_find(j, 0, "text"), chunk, sizeof chunk) < 0) { ink_app_free(j); operation_done(ctx, rc); return; }
+    ink_json_t *j = ink_app_alloc(sizeof *j, true); size_t n = strlen(F.body); char *chunk = F.chunk;
+    if (!j || rc->status != INK_RC_DONE || !rc->result || ink_json_parse(j, rc->result, strlen(rc->result)) || ink_json_str(j, ink_json_find(j, 0, "text"), chunk, sizeof F.chunk) < 0) { ink_app_free(j); operation_done(ctx, rc); return; }
     if (n + strlen(chunk) >= sizeof F.body) { ink_app_free(j); F.busy = false; status(TR("文本超过 4095 字节，无法编辑")); return; }
     memcpy(F.body + n, chunk, strlen(chunk) + 1); bool end = ink_json_eq(j, ink_json_find(j, 0, "end"), "true"); ink_app_free(j);
     if (end) editor_open(); else { ink_args_t a; ink_args_init(&a); ink_args_str(&a, "path", F.edit_path); ink_args_int(&a, "offset", strlen(F.body)); request("file.read", &a, edit_read, 0); }
@@ -121,7 +122,7 @@ static void selection_args(void) {
 }
 static void batch_args(bool destination) {
     ink_jw_t w; ink_jw_init(&w, F.batch, sizeof F.batch); ink_jw_raw(&w, "{");
-    if (F.all_marked) { ink_jw_raw(&w, "\"all_path\":"); ink_jw_str(&w, F.path); }
+    if (F.all_marked && !F.selection[0]) { ink_jw_raw(&w, "\"all_path\":"); ink_jw_str(&w, F.path); }
     else { ink_jw_raw(&w, "\"ids\":"); ink_jw_raw(&w, F.selection[0] ? F.selection : "[]"); }
     if (destination) { ink_jw_raw(&w, ",\"op\":"); ink_jw_str(&w, F.copy ? "copy" : "move"); ink_jw_raw(&w, ",\"to\":"); ink_jw_str(&w, F.dest); } ink_jw_raw(&w, "}");
 }
@@ -271,7 +272,7 @@ static void navigate(ink_call_t *c) {
     if (!strcmp(id, "files.edit")) { const char *ext = strrchr(F.selected.path, '.'); if (F.mode != ACTIONS || !ext || strcmp(ext, ".txt") || !writable(F.selected.path)) { c->rc.status = INK_RC_REJECTED; return; } memcpy(F.edit_path, F.selected.path, sizeof F.edit_path); ink_ui_push(&PAGES[EDIT], NULL); return; }
     if (!strcmp(id, "files.multi") || !strcmp(id, "files.mark") || !strcmp(id, "files.all")) {
         if (F.mode != LIST) { c->rc.status = INK_RC_INVALID; return; }
-        if (!strcmp(id, "files.multi")) { F.multi = !F.multi; F.marked_count = 0; }
+        if (!strcmp(id, "files.multi")) { F.multi = !F.multi; F.marked_count = 0; F.result[0] = 0; }
         else if (!F.multi) { c->rc.status = INK_RC_INVALID; return; }
         else if (!strcmp(id, "files.all")) { F.marked_count = 0; for (size_t i = 0; i < F.count; i++) if (!F.items[i].dir) F.marked[F.marked_count++] = F.items[i].id; }
         else { int64_t value = 0; ink_args_get_int(&c->args, "id", &value); size_t i = 0; while (i < F.marked_count && F.marked[i] != (uint32_t)value) i++;
@@ -284,7 +285,7 @@ static void navigate(ink_call_t *c) {
         char path[INK_FS_PATH_MAX]; ink_args_get_str(&c->args, "path", path, sizeof path);
         bool allowed = (!strncmp(path, "/me", 3) && (!path[3] || path[3] == '/')) || (!strncmp(path, "/family", 7) && (!path[7] || path[7] == '/')) || (!strncmp(path, "/members/", 9) && ink_member_current()->role == INK_ROLE_ADULT);
         if (!allowed || (F.mode == MOVE && !writable(path))) { c->rc.status = INK_RC_REJECTED; return; }
-        if (F.mode == LIST) { F.marked_count = 0; F.all_marked = false; }
+        F.result[0] = 0; if (F.mode == LIST) { F.marked_count = 0; F.all_marked = false; }
         snprintf(F.mode == MOVE ? F.dest : F.path, sizeof F.path, "%s", path); memset(&F.position, 0, sizeof F.position);
         if (F.mode == HOME) ink_ui_push(&PAGES[LIST], NULL); else ink_ui_redraw();
     } else if (!strcmp(id, "files.select")) {
@@ -357,6 +358,7 @@ static void create(lv_obj_t *screen, void *arg) {
             F.actions[4].enabled = F.marked_count && writable(F.path); F.model.action_count = 7;
         } else F.model.action_count = 3;
     }
+    if (F.multi && strchr(F.result, '\n')) { F.busy = false; lv_obj_set_y(F.notice, ink_ui_px(INK_STATUS_BAR + 2 * INK_PRIMARY)); status(F.result); return; }
     lv_obj_t *body = ink_ui_box(screen, 0, INK_STATUS_BAR + INK_PRIMARY + INK_GAP_L + (F.mode == MOVE ? INK_LINE_NOTE + INK_GAP_L : 0), INK_CANVAS_W, 4 * (INK_ROW_DOUBLE + INK_GAP_M) + INK_PRIMARY, 0, INK_SURFACE_WHITE, false);
     ink_ui_page_spec_t list_model = F.model; if (F.mode == LIST) list_model.action_count = 2;
     F.list = ink_ui_list_create(body, &list_model, &F.position, 4, 1, INK_ROW_DOUBLE, "这里还没有文件", bind_item, NULL);
@@ -383,7 +385,8 @@ static int snapshot(char *out, size_t cap) {
     ink_jw_t w = {.buf = out, .cap = cap, .len = (size_t)n - 1}; ink_jw_raw(&w, ",\"status\":"); ink_jw_str(&w, F.notice ? lv_label_get_text(F.notice) : "");
     ink_jw_raw(&w, ",\"directory\":"); ink_jw_str(&w, directory()); ink_jw_raw(&w, ",\"back\":\"files.up\"");
     ink_jw_raw(&w, ",\"selected_count\":"); ink_jw_int(&w, F.marked_count);
-    if (F.mode == LIST) { ink_ui_page_spec_t toolbar = F.model; toolbar.actions += 2; toolbar.action_count -= 2; ink_jw_raw(&w, ",\"toolbar\":"); int more = ink_ui_semantics_snapshot(&toolbar, out + w.len, cap - w.len); if (more < 0) return -1; w.len += (size_t)more; }
+    if (F.mode == LIST) { bool first = true; ink_jw_raw(&w, ",\"toolbar\":[");
+        for (size_t i = 2; i < F.model.action_count; i++) { const ink_ui_action_spec_t *a = &F.actions[i]; if (!a->enabled || !a->capability) continue; if (!first) ink_jw_raw(&w, ","); first = false; ink_jw_raw(&w, "{\"capability\":"); ink_jw_str(&w, a->capability); ink_jw_raw(&w, ",\"label\":"); ink_jw_str(&w, a->label); ink_jw_raw(&w, ",\"args_json\":"); ink_jw_str(&w, a->args_json ? a->args_json : "{}"); ink_jw_raw(&w, "}"); } ink_jw_raw(&w, "]"); }
     if (F.mode == EDIT && F.field) { ink_jw_raw(&w, ",\"save\":{\"capability\":\"file.write\",\"args\":"); ink_jw_raw(&w, F.target); ink_jw_raw(&w, "}"); }
     if (F.mode == MOVE) ink_jw_raw(&w, ",\"cancel\":\"shell.back\"");
     if (F.mode == HOME && ink_member_current()->role == INK_ROLE_ADULT) ink_jw_raw(&w, ",\"transfer_actions\":[{\"capability\":\"transfer.open\",\"label\":\"从手机或电脑传入\"},{\"capability\":\"transfer.usb\",\"label\":\"连电脑\"}]");
@@ -396,7 +399,8 @@ static void batch_progress(void *ctx, const char *id, const ink_args_t *args) {
     (void)ctx; (void)id; if (F.epoch != ink_member_epoch() || !F.multi || !ink_ui_page_current() || strcmp(ink_ui_page_name(), PAGES[F.mode].name)) return;
     bool ok = false; char path[INK_FS_PATH_MAX], progress[96]; int64_t done = 0, total = 0;
     ink_args_get_bool(args, "ok", &ok); ink_args_get_str(args, "path", path, sizeof path); ink_args_get_int(args, "done", &done); ink_args_get_int(args, "total", &total);
-    if (!ok) { size_t n = strlen(F.result); if (n + strlen(path) + 32 < sizeof F.result) snprintf(F.result + n, sizeof F.result - n, TR("未完成：%s\n"), path); }
+    if (!done) { F.result[0] = 0; F.busy = true; status(TR("正在处理选中的文件")); return; }
+    if (!ok) { size_t n = strlen(F.result); const char *name = strrchr(path, '/'); if (n + strlen(path) + 32 < sizeof F.result) snprintf(F.result + n, sizeof F.result - n, TR("未完成：%s\n"), name ? name + 1 : path); }
     snprintf(progress, sizeof progress, TR("已处理 %lld/%lld"), (long long)done, (long long)total); status(F.result[0] ? F.result : progress);
     if (done == total) { if (!F.result[0]) snprintf(F.result, sizeof F.result, "%s", TR("全部完成")); F.busy = false; ink_ui_redraw(); }
 }
@@ -409,6 +413,7 @@ static void changed(void *ctx, const char *id, const ink_args_t *args) {
 }
 #define PAGE(name_) {.name = name_, .app = "files", .create = create, .destroy = destroy, .snapshot = snapshot, .on_key = page_key}
 static const ink_activity_t PAGES[] = {PAGE("Files"), PAGE("FileList"), PAGE("FileActions"), PAGE("FileMove"), PAGE("FileName"), PAGE("FileEdit")};
+_Static_assert(sizeof PAGES / sizeof *PAGES <= PAGE_COUNT, "file page count");
 static const char *const PERMISSIONS[] = {"file", "media", NULL};
 static const ink_app_def_t APP = {.id = "files", .title = "文件", .icon = INK_UI_ICON(folder), .entry = &PAGES[HOME], .system_app = true, .child_ok = true, .permissions = PERMISSIONS};
 #define ID_INPUT "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}},\"required\":[\"id\"]}"

@@ -20,7 +20,8 @@
 
 ## 改过的已有测试
 
-无。
+- `tests/integration/ai_surface.c`：增加 7 个新增能力的输入契约，原有能力断言不放宽；`file.write` 仍要求 `path,text`，编辑器另传草稿引用。
+- `tests/index_durable/run.py`：历史代码与当前能力适配层混合链接时补入当前的成员原子写入包装函数，旧索引实现、样本数、时延断言和反向断言不变。第二轮全量中的 `index-durable` 已通过。
 
 ## 要用户定的
 
@@ -38,7 +39,7 @@
 
 ## 要改的文档
 
-按总规则 §7 不修改共享的 `docs/system/capabilities.md`。已用 `python3 tools/capabilities.py --output work/files-ops/capabilities.md` 生成 468 项定义，主会话合并时重新生成正式表；因此原来的 `capability-table-doc` 报告过期。运行时目录核对已通过。
+按总规则 §7 不修改共享的 `docs/system/capabilities.md`。已用 `python3 tools/capabilities.py --output work/files-ops/capabilities.md` 生成 468 项定义，主会话合并时重新生成正式表；因此原来的 `capability-table-doc` 报告过期。运行时目录核对已通过。`docs/system/system-services-design.md` §1.3 还需登记 `file.batch`、`file.delete_many` 和进度事件，不修改合同来迁就实现；对应的文档核对留给合并时同步。
 
 ## 验证记录
 

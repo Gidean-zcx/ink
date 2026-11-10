@@ -90,7 +90,10 @@ static void batch_ops(void) {
     for (int i = 0; i < 3; i++) { snprintf(args_json, sizeof args_json, "{\"id\":%u}", (unsigned)ids[i]); command("files.mark", args_json); wait_page("FileList"); }
     touch("移动"); wait_page("FileMove"); command("files.browse", "{\"path\":\"/me/SYNTH_MOVE\"}"); wait_page("FileMove"); touch("放到这里"); CHECK(WAIT_FOR(!exists("/me/SYNTH_BATCH/SYNTH_2.txt") && exists("/me/SYNTH_MOVE/SYNTH_2.txt"), 15000), "touch moves three"); wait_page("FileMove");
     batch_args_test("copy", "/me/SYNTH_COPY"); CHECK(AI("file.batch", args_json) && g_rc.status == INK_RC_PARTIAL && strstr(g_result, "SYNTH_0.txt") && strstr(g_result, "exists"), "AI partial collision names failed files: %.150s", g_result);
-    CHECK(!ink_fs_mkdir("/me/SYNTH_PARTIAL") && !ink_fs_write_atomic("/me/SYNTH_PARTIAL/SYNTH_1.txt", "OLD", 3), "partial fixture"); batch_args_test("copy", "/me/SYNTH_PARTIAL"); CHECK(AI("file.batch", args_json) && g_rc.status == INK_RC_PARTIAL && strstr(g_result, "SYNTH_1.txt"), "one failure with two successes");
+    CHECK(!ink_fs_mkdir("/me/SYNTH_PARTIAL") && !ink_fs_write_atomic("/me/SYNTH_PARTIAL/SYNTH_1.txt", "OLD", 3), "partial fixture");
+    roots(); browse("/me/SYNTH_MOVE"); touch("多选"); wait_page("FileList"); touch("全选"); wait_page("FileList"); touch("拷贝"); wait_page("FileMove");
+    command("files.browse", "{\"path\":\"/me/SYNTH_PARTIAL\"}"); wait_page("FileMove"); touch("拷贝到这里");
+    CHECK(WAIT_FOR(!F.busy && F.notice && strstr(lv_label_get_text(F.notice), "SYNTH_1.txt"), 15000), "partial touch operation finishes with a named failure");
     CHECK(exists("/me/SYNTH_PARTIAL/SYNTH_0.txt") && exists("/me/SYNTH_PARTIAL/SYNTH_2.txt"), "partial successes are real");
     quiet(); on_ui(check_partial); capture("PartialFailure");
     command("file.write", "{\"path\":\"/me/SYNTH_AI_TXT.txt\",\"text\":\"SYNTH_AI_NEW\"}"); command("file.write", "{\"path\":\"/me/SYNTH_AI_TXT.txt\",\"text\":\"SYNTH_AI_EDIT\",\"replace\":true}");

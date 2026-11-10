@@ -274,7 +274,7 @@ static void cap_batch(ink_call_t *c) {
     size_t cap = b->count * (INK_FS_PATH_MAX * 6 + 96) + 32; b->out = osal_malloc(cap, OSAL_MEM_EXTERNAL);
     if (!b->out) { osal_free(b); refuse(c, INK_FS_ERR_IO); return; }
     b->task = ink_task_begin_for(c->cap->id, TR("处理选中的文件"), b->context.member, NULL, NULL);
-    ink_jw_init(&b->w, b->out, cap); ink_jw_raw(&b->w, "{\"results\":["); ink_cap_defer(c); batch_next(b);
+    ink_jw_init(&b->w, b->out, cap); ink_jw_raw(&b->w, "{\"results\":["); ink_cap_defer(c); batch_publish(b, true); batch_next(b);
 }
 
 static void cap_mkdir(ink_call_t *c) {
@@ -476,7 +476,7 @@ static const ink_cap_t FILE_CAPS[] = {
      .effect = INK_FX_READ, .child_ok = true, .permission = "file", .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_read},
     {.id = "file.write",
      .title = "写文本文件（新建、追加，或明确替换 txt）",
-     .input = "{\"type\":\"object\",\"properties\":{" PATH_ARG("path") ",\"text\":{\"type\":\"string\"},\"append\":{\"type\":\"boolean\"},\"replace\":{\"type\":\"boolean\"},\"draft\":{\"type\":\"integer\",\"minimum\":1},\"page\":{\"type\":\"string\",\"enum\":[\"FileEdit\"]}},\"required\":[\"path\"]}",
+     .input = "{\"type\":\"object\",\"properties\":{" PATH_ARG("path") ",\"text\":{\"type\":\"string\"},\"append\":{\"type\":\"boolean\"},\"replace\":{\"type\":\"boolean\"},\"draft\":{\"type\":\"integer\",\"minimum\":1},\"page\":{\"type\":\"string\",\"enum\":[\"FileEdit\"]}},\"required\":[\"path\",\"text\"]}",
      .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .permission = "file", .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_write},
     {.id = "file.mkdir", .title = "新建目录", .input = PATH_OBJ("path"),
      .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .permission = "file", .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_mkdir},

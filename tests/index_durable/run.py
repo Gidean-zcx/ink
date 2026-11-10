@@ -27,7 +27,13 @@ for line in (build / 'CMakeFiles/sim-index-durable.dir/flags.make').read_text().
 
 def compile_baseline(commit, name):
     source = area / (name + '.c')
-    source.write_bytes(subprocess.check_output(['git', 'show', commit + ':system/services/file/file_service.c'], cwd=ROOT))
+    old_source = subprocess.check_output(['git', 'show', commit + ':system/services/file/file_service.c'], cwd=ROOT).decode()
+    # Link today's capability adapter to the old index without replacing its implementation.
+    if 'int fs_write_atomic_for(' not in old_source:
+        current = (ROOT / 'system/services/file/file_service.c').read_text()
+        wrapper = 'int fs_write_atomic_for(' + current.split('int fs_write_atomic_for(', 1)[1].split('\nint ink_fs_write_atomic(', 1)[0]
+        old_source += '\n' + wrapper
+    source.write_text(old_source)
     link = shlex.split((build / 'CMakeFiles/sim-index-durable.dir/link.txt').read_text())
     obj = area / (name + '.o')
     subprocess.run([link[0], *flags['C_DEFINES'], *flags['C_INCLUDES'], *flags['C_FLAGS'],
