@@ -60,7 +60,7 @@ static struct {
     lv_obj_t *control, *page, *page_body;
     lv_obj_t *status[3];
     bool status_time[3];
-    int home_page, apps_page, apps_pages, wifi_page, body_page, body_pages;
+    int home_page, apps_page, apps_pages, wifi_page, body_page, body_pages, wifi_forget_page;
     page_t page_id;
     bool more, initialized, need_body;
     char member[16];
@@ -1250,6 +1250,7 @@ static void body_blocks(void) {
                 ink_shell_bind(ink_ui_pill(N.page_body, "忘掉这个网络", INK_MARGIN, F.y, width(), INK_CONTROL,
                     false, NULL, NULL), "wifi.forget", args);
             }
+            N.wifi_forget_page = F.page;
             F.y += INK_CONTROL + INK_GAP_M;
         }
         if (N.picked_ssid[0]) {
@@ -1456,7 +1457,7 @@ static int page_snapshot(char *buf, size_t cap) {
                       (long long) integer("cell.registered"));
         for (int i = N.wifi_page * 2; i < N.wifi_count && i < (N.wifi_page + 1) * 2 && n >= 0 && (size_t) n < cap; i++)
             n += snprintf(buf + n, cap - (size_t) n, "网络[%d]=%s；", i, N.wifi_ssid[i]);
-        if (ssid[0] && n >= 0 && (size_t)n < cap) {
+        if (ssid[0] && N.body_page == N.wifi_forget_page && n >= 0 && (size_t)n < cap) {
             char args[256]; ink_jw_t w; ink_jw_init(&w, args, sizeof args);
             ink_jw_raw(&w, "{\"ssid\":"); ink_jw_str(&w, ssid); ink_jw_raw(&w, "}");
             n += snprintf(buf + n, cap - (size_t)n, "忘掉这个网络：wifi.forget(%s)；", args);

@@ -14,6 +14,7 @@
 static const ink_activity_t LIST, THREAD, COMPOSE, LONG;
 static struct {
     ink_db_t *db, *contacts;
+    uint32_t shown_ver; /* sms.messages as the open page last read it; 0 when closed (atomic: read on BG) */
     ink_ui_list_t *list;
     ink_ui_list_position_t position;
     lv_obj_t *field, *notice, *send;
@@ -39,8 +40,20 @@ static void refresh(void *arg) {
     if (ink_ui_page_current() && !strcmp(S.member, ink_member_current()->id) &&
         (!strcmp(ink_ui_page_name(), LIST.name) || !strcmp(ink_ui_page_name(), THREAD.name))) ink_ui_redraw();
 }
+/* BG, after the communication service's own subscriber has stored the message (it subscribed first). An open
+ * page that already shows this version gets no UI work at all: even a no-op job would keep the UI busy. */
 static void received(void *ctx, const char *event, const ink_args_t *a) {
-    (void)ctx; (void)event; (void)a; ink_exec_post(INK_EXEC_UI, &S.refresh, refresh, NULL);
+    (void)ctx; (void)event;
+    uint32_t shown = __atomic_load_n(&S.shown_ver, __ATOMIC_ACQUIRE);
+    if (shown) {
+        char member[16] = "";
+        ink_args_get_str(a, "member", member, sizeof member);
+        ink_db_t *db = member[0] ? ink_db_open_cached_member(ink_db_find_def("sms.messages"), member) : NULL;
+        uint32_t stored = db ? ink_db_last_ver(db) : 0;
+        ink_db_close(db);
+        if (stored == shown) return;
+    }
+    ink_exec_post(INK_EXEC_UI, &S.refresh, refresh, NULL);
 }
 static void reply(void *ctx, const ink_receipt_t *rc) {
     if ((uint32_t)(uintptr_t)ctx != ink_ui_generation() || strcmp(S.member, ink_member_current()->id)) return;
@@ -160,6 +173,7 @@ static void create(lv_obj_t *screen, void *arg) {
         S.send = ink_ui_pill(screen, "发送", INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_PRIMARY, INK_CANVAS_W - 2 * INK_MARGIN, INK_PRIMARY, true, send_clicked, NULL); return;
     }
     S.db = ink_db_open_cached_member(ink_db_find_def("sms.messages"), S.member);
+    __atomic_store_n(&S.shown_ver, S.db ? ink_db_last_ver(S.db) : 0, __ATOMIC_RELEASE);
     S.contacts = compose ? ink_db_open_cached_member(ink_db_find_def("phone.contacts"), S.member) : NULL;
     if (!S.db || (compose && !S.contacts)) {
         ink_args_t *a = ink_app_alloc(sizeof *a, true); if (a) { ink_args_init(a); ink_args_str(a, "collection", !S.db ? "sms.messages" : "phone.contacts"); ink_args_int(a, "limit", 1); request("data.list", a); ink_app_free(a); } return;
@@ -171,6 +185,7 @@ static void create(lv_obj_t *screen, void *arg) {
 }
 static void destroy(void) {
     if (S.field) snprintf(S.draft, sizeof S.draft, "%s", ink_textfield_text(S.field));
+    __atomic_store_n(&S.shown_ver, 0, __ATOMIC_RELEASE);
     ink_db_close(S.db); ink_db_close(S.contacts); S.db = S.contacts = NULL; S.list = NULL; S.field = S.notice = S.send = NULL;
 }
 static int snapshot(char *out, size_t cap) {
@@ -203,5 +218,5 @@ static const ink_cap_t CAPS[] = {
     {.id = "sms.next", .title = "短信下一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate}
 };
 int ink_sms_init(void) {
-    return ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_app_register(&APP) || ink_cap_subscribe("message.received", received, NULL, INK_EXEC_DIRECT) ? -1 : 0;
+    return ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_app_register(&APP) || ink_cap_subscribe("message.received", received, NULL, INK_EXEC_BG) ? -1 : 0;
 }
