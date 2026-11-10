@@ -346,9 +346,12 @@ def prepare(r):
 
     r.step("2. copy otadata and ota_1 out of the backup")
     p = {k: os.path.join(a.out, v) for k, v in (("factory", "otadata_factory.bin"), ("ota1", "otadata_ota1.bin"),
-                                               ("orig", "ota_1_original.bin"), ("part", "ota_1_restore.bin"))}
+                                               ("orig", "ota_1_original.bin"), ("part", "ota_1_restore.bin"),
+                                               ("tail", "ota_1_tail.bin"))}
     span = (len(image) + SECTOR - 1) // SECTOR * SECTOR
-    for key, data in (("factory", factory), ("orig", ota1), ("part", ota1[:span]), ("ota1", select_ota1(factory))):
+    # The light-sleep build keeps its progress mark in ota_1's last sector (selftest.c, mark_*): put it back too.
+    for key, data in (("factory", factory), ("orig", ota1), ("part", ota1[:span]), ("ota1", select_ota1(factory)),
+                      ("tail", ota1[-SECTOR:])):
         with open(p[key], "wb") as f:
             f.write(data)
     seq = max(s for s, _st, ok in ota_entries(select_ota1(factory)) if ok)
@@ -386,7 +389,8 @@ def restore(r, p):
             port = None
         if port is not None:
             r.a.port_now = port
-            rc = r.esptool("no-reset", "write-flash", [(OTADATA[0], p["factory"]), (OTA_1[0], p["part"])])
+            rc = r.esptool("no-reset", "write-flash", [(OTADATA[0], p["factory"]), (OTA_1[0], p["part"]),
+                                                       (OTA_1[0] + OTA_1[1] - SECTOR, p["tail"])])
             if rc == 0:
                 rc = r.esptool("no-reset", "verify-flash", [(OTADATA[0], p["factory"]), (OTA_1[0], p["orig"])])
                 if rc != 0:  # something else in ota_1 changed: put all of it back

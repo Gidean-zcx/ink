@@ -2,7 +2,7 @@
 # Builds the self-test image into tools/hw-selftest/build. Compiles only: it does not touch the device.
 set -euo pipefail
 HERE=$(cd "$(dirname "$0")" && pwd)
-B="$HERE/build"
+B="$HERE/build${HWTEST_SLEEP:+-sleep}" # HWTEST_SLEEP=1: the light-sleep build, in build-sleep
 mkdir -p "$B/tmp"
 export TMPDIR="$B/tmp" PYTHONDONTWRITEBYTECODE=1 IDF_COMPONENT_MANAGER=0 CCACHE_DISABLE=1
 : "${IDF_PATH:=$HOME/esp/esp-idf}"

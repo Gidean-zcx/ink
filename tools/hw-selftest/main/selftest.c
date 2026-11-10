@@ -732,6 +732,127 @@ static void t_current(slot_t *s) {
          tf(s->ok), ma[1] - ma[0], ma[2] - ma[0], e);
 }
 
+/* The clock chip's countdown timer for 2 s with its interrupt on: does P16 (PCF8563 INT, active low, through the
+ * expander) follow, and GPIO2? The vendor reads P16 low as an event to clear (periph/metalio_rtc.cc:33-38); every
+ * self-test round so far read it 0 with no flag set. CTRL2, timer control and timer value are read first and
+ * written back; the flags are cleared. */
+#define RTC_CTRL2 0x01
+#define RTC_TCTRL 0x0E
+#define RTC_TVAL 0x0F
+static int p16_level(hal_i2c_dev_t *x) {
+    uint8_t in1 = 0;
+    return rd(x, 0x01, &in1, 1) == HAL_I2C_OK ? (in1 >> 6) & 1 : -1;
+}
+static void t_rtc_int(slot_t *s) {
+    hal_i2c_dev_t *r = dev(PCF8563_ADDR, "rtc"), *x = dev(TCA9555_ADDR_BASE, "expander");
+    uint8_t c2 = 0, tc = 0, tv = 0;
+    hal_i2c_status_t st = rd(r, RTC_CTRL2, &c2, 1);
+    if (st == HAL_I2C_OK) st = rd(r, RTC_TCTRL, &tc, 1);
+    if (st == HAL_I2C_OK) st = rd(r, RTC_TVAL, &tv, 1);
+    if (st != HAL_I2C_OK) {
+        emit(s, "\"ok\":false,\"step\":\"read\",\"error\":\"%s\"", hal_i2c_status_name(st));
+        return;
+    }
+    int p16_idle = p16_level(x), g2_idle = gpio_get_level(S31_GPIO_EXP_INT);
+    uint8_t set_val[2] = {RTC_TVAL, 2}, set_ctl[2] = {RTC_TCTRL, 0x82}, set_c2[2] = {RTC_CTRL2, 0x01}; /* 2 ticks of 1 Hz, TIE */
+    hal_i2c_status_t w = hal_i2c_write(r, set_val, 2);
+    if (w == HAL_I2C_OK) w = hal_i2c_write(r, set_ctl, 2);
+    if (w == HAL_I2C_OK) w = hal_i2c_write(r, set_c2, 2);
+    int fired_ms = -1, p16_fired = -1, g2_fired = -1;
+    for (int ms = 0; w == HAL_I2C_OK && ms < 3500; ms += 100) {
+        uint8_t now = 0;
+        if (rd(r, RTC_CTRL2, &now, 1) == HAL_I2C_OK && (now & 0x04)) {
+            fired_ms = ms;
+            p16_fired = p16_level(x);
+            g2_fired = gpio_get_level(S31_GPIO_EXP_INT);
+            break;
+        }
+        vTaskDelay(pdMS_TO_TICKS(100));
+    }
+    uint8_t back_c2[2] = {RTC_CTRL2, (uint8_t)(c2 & ~0x0Cu)}, back_ctl[2] = {RTC_TCTRL, tc}, back_val[2] = {RTC_TVAL, tv};
+    hal_i2c_status_t b = HAL_I2C_ERR;
+    for (int i = 0; i < 3 && b != HAL_I2C_OK; i++) {
+        b = hal_i2c_write(r, back_c2, 2);
+        if (b == HAL_I2C_OK) b = hal_i2c_write(r, back_ctl, 2);
+        if (b == HAL_I2C_OK) b = hal_i2c_write(r, back_val, 2);
+    }
+    vTaskDelay(pdMS_TO_TICKS(50));
+    uint8_t c2_after = 0xFF, tc_after = 0xFF;
+    if (rd(r, RTC_CTRL2, &c2_after, 1) != HAL_I2C_OK || rd(r, RTC_TCTRL, &tc_after, 1) != HAL_I2C_OK) b = HAL_I2C_ERR;
+    int p16_after = p16_level(x), g2_after = gpio_get_level(S31_GPIO_EXP_INT);
+    bool restored = b == HAL_I2C_OK && tc_after == tc && (c2_after & 0x0F) == (c2 & 0x03);
+    s->ok = w == HAL_I2C_OK && fired_ms >= 0 && restored;
+    emit(s, "\"ok\":%s,\"ctrl2_was\":\"%02x\",\"tctrl_was\":\"%02x\",\"fired_ms\":%d,\"p16_idle\":%d,\"p16_fired\":%d,"
+            "\"p16_after\":%d,\"gpio2_idle\":%d,\"gpio2_fired\":%d,\"gpio2_after\":%d,\"restored\":%s,\"ctrl2_after\":\"%02x\"",
+         tf(s->ok), c2, tc, fired_ms, p16_idle, p16_fired, p16_after, g2_idle, g2_fired, g2_after, tf(restored), c2_after);
+}
+
+/* The accelerometer's motion interrupt through to GPIO2, set off by the chip's own self-test so no one has to move
+ * the device: AOI1 set up as the vendor does (common/sensor/sc7a20h.cc:22-31), self-test 0 on for up to 300 ms, then
+ * off and the latch read away. All nine registers are read first and written back. AOI1_SRC's IA bit tells the
+ * accelerometer from the expander, which shares GPIO2. */
+static const uint8_t kAccRegs[] = {0x20, 0x21, 0x22, 0x23, 0x24, 0x25, 0x30, 0x32, 0x33};
+static const uint8_t kAccVendor[] = {0x57, 0x01, 0x40, 0x88, 0x08, 0x03, 0x2A, 0x10, 0x00};
+static void t_accel_int(slot_t *s) {
+    uint8_t addr = SC7A20H_ADDR, who = 0;
+    hal_i2c_dev_t *d = dev(addr, "accel");
+    if (rd(d, 0x0F, &who, 1) != HAL_I2C_OK) {
+        addr = SC7A20H_ADDR_ALT;
+        d = dev(addr, "accel-alt");
+    }
+    uint8_t saved[sizeof kAccRegs];
+    for (size_t i = 0; i < sizeof kAccRegs; i++)
+        if (rd(d, kAccRegs[i], &saved[i], 1) != HAL_I2C_OK) {
+            emit(s, "\"ok\":false,\"step\":\"save\"");
+            return;
+        }
+    hal_i2c_status_t w = HAL_I2C_OK;
+    for (size_t i = 0; i < sizeof kAccRegs && w == HAL_I2C_OK; i++) {
+        uint8_t b2[2] = {kAccRegs[i], kAccVendor[i]};
+        w = hal_i2c_write(d, b2, 2);
+    }
+    uint8_t src = 0, src_on = 0;
+    vTaskDelay(pdMS_TO_TICKS(100));
+    (void)rd(d, ACC_AOI1_SRC, &src, 1);
+    vTaskDelay(pdMS_TO_TICKS(30));
+    int g2_quiet = gpio_get_level(S31_GPIO_EXP_INT);
+    uint8_t st_on[2] = {ACC_CTRL4, 0x88 | 0x02};
+    if (w == HAL_I2C_OK) w = hal_i2c_write(d, st_on, 2);
+    int low_ms = -1;
+    for (int ms = 0; w == HAL_I2C_OK && ms <= 300; ms += 10) {
+        if (gpio_get_level(S31_GPIO_EXP_INT) == 0) {
+            low_ms = ms;
+            break;
+        }
+        vTaskDelay(pdMS_TO_TICKS(10));
+    }
+    (void)rd(d, ACC_AOI1_SRC, &src_on, 1); /* after looking at the line: reading clears the latch */
+    uint8_t st_off[2] = {ACC_CTRL4, 0x88};
+    (void)hal_i2c_write(d, st_off, 2);
+    vTaskDelay(pdMS_TO_TICKS(150));
+    (void)rd(d, ACC_AOI1_SRC, &src, 1);
+    vTaskDelay(pdMS_TO_TICKS(30));
+    int g2_cleared = gpio_get_level(S31_GPIO_EXP_INT);
+    hal_i2c_status_t b = HAL_I2C_OK;
+    for (size_t i = 0; i < sizeof kAccRegs; i++) {
+        uint8_t b2[2] = {kAccRegs[i], saved[i]};
+        hal_i2c_status_t e = hal_i2c_write(d, b2, 2);
+        if (e != HAL_I2C_OK) b = e;
+    }
+    (void)rd(d, ACC_AOI1_SRC, &src, 1);
+    bool restored = b == HAL_I2C_OK;
+    for (size_t i = 0; i < sizeof kAccRegs && restored; i++) {
+        uint8_t v = 0;
+        restored = rd(d, kAccRegs[i], &v, 1) == HAL_I2C_OK && v == saved[i];
+    }
+    vTaskDelay(pdMS_TO_TICKS(30));
+    int g2_end = gpio_get_level(S31_GPIO_EXP_INT);
+    s->ok = w == HAL_I2C_OK && restored;
+    emit(s, "\"ok\":%s,\"gpio2_quiet\":%d,\"gpio2_low_after_ms\":%d,\"aoi1_src_on\":\"%02x\",\"ia\":%s,\"gpio2_after_clear\":%d,"
+            "\"gpio2_end\":%d,\"restored\":%s",
+         tf(s->ok), g2_quiet, low_ms, src_on, tf((src_on & 0x40) != 0), g2_cleared, g2_end, tf(restored));
+}
+
 /* 1 MiB of ota_0 (the factory firmware) read through the flash driver; nothing written. */
 static void t_flash_read(slot_t *s) {
     const esp_partition_t *p = esp_partition_find_first(ESP_PARTITION_TYPE_APP, ESP_PARTITION_SUBTYPE_APP_OTA_0, NULL);
@@ -756,17 +877,137 @@ static void t_flash_read(slot_t *s) {
          (double)len / (double)(us ? us : 1), tf(first == 0xE9));
 }
 
+#if HWTEST_SLEEP
+/* ------------------------------------------------------------------ light sleep with the vendor patch (sleep build)
+ * Built with HWTEST_SLEEP=1 (tools/hw-selftest/build.sh): only safety, sys and this test run. The vendor's S31
+ * light-sleep patch (ports/esp32s31/vendor/s31_sleep, MIT) wraps the sleep; USB Serial/JTAG is brought back the way
+ * the vendor does after a key wake (main/boards/common/power_policy/power_hw.cc, ReviveUsjAfterSdRestore). Nothing
+ * outside the chip is configured and the panel stays off.
+ *
+ * A fuse so that no one has to come: the RTC watchdog with an RTC reset, the same full reset esptool's watchdog reset
+ * makes, which brought USB back in 0.1 s on this unit (docs/hardware/2026-11-10-selftest.md). It is armed before the
+ * sleep; IDF leaves a watchdog the program armed alone (esp_hw_support/sleep_modes.c, "If WDT was enabled in the user
+ * code, then do not change it here"). Progress goes into ota_1's last sector, which the runner writes back from the
+ * backup: ARMED before the sleep, WOKE after it. A boot that finds ARMED or WOKE reports it after a full reset (USB
+ * alive), or after a CPU-only reset (a panic: run 3 showed that does not bring USB back) marks RECOVER and makes the
+ * full reset itself. */
+#include "hal/wdt_hal.h"
+#include "hal/usb_serial_jtag_ll.h"
+#include "soc/rtc.h"
+int ink_s31_sleep_init(void);
+int ink_s31_light_sleep(void);
+bool usb_serial_jtag_is_connected(void); /* esp_driver_usb_serial_jtag; declared like the vendor does */
+#define MARK_MAGIC 0x534C5032u           /* "SLP2" */
+enum { MARK_ARMED = 1, MARK_WOKE = 2, MARK_RECOVER = 3 };
+typedef struct {
+    uint32_t magic, state, detail, slept_ms, causes, crc;
+} mark_t;
+static mark_t g_prev;
+static bool g_have_prev;
+static const esp_partition_t *mark_part(void) {
+    return esp_partition_find_first(ESP_PARTITION_TYPE_APP, ESP_PARTITION_SUBTYPE_APP_OTA_1, NULL);
+}
+static uint32_t mark_crc(const mark_t *m) { return esp_rom_crc32_le(0, (const uint8_t *)m, (uint32_t)offsetof(mark_t, crc)); }
+static bool mark_read(mark_t *m) {
+    const esp_partition_t *p = mark_part();
+    return p && esp_partition_read(p, p->size - 4096, m, sizeof *m) == ESP_OK && m->magic == MARK_MAGIC && m->crc == mark_crc(m);
+}
+static void mark_write(uint32_t state, uint32_t detail, uint32_t slept_ms, uint32_t causes) {
+    const esp_partition_t *p = mark_part();
+    mark_t m = {.magic = MARK_MAGIC, .state = state, .detail = detail, .slept_ms = slept_ms, .causes = causes};
+    m.crc = mark_crc(&m);
+    if (p && esp_partition_erase_range(p, p->size - 4096, 4096) == ESP_OK) (void)esp_partition_write(p, p->size - 4096, &m, sizeof m);
+}
+static void mark_clear(void) {
+    const esp_partition_t *p = mark_part();
+    if (p) (void)esp_partition_erase_range(p, p->size - 4096, 4096);
+}
+static void fuse_arm(uint32_t ms) {
+    wdt_hal_context_t c = RWDT_HAL_CONTEXT_DEFAULT();
+    wdt_hal_init(&c, WDT_RWDT, 0, false);
+    wdt_hal_write_protect_disable(&c);
+    wdt_hal_config_stage(&c, WDT_STAGE0, (uint32_t)((uint64_t)ms * rtc_clk_slow_freq_get_hz() / 1000u), WDT_STAGE_ACTION_RESET_RTC);
+    wdt_hal_enable(&c);
+    wdt_hal_write_protect_enable(&c);
+}
+static void fuse_off(void) {
+    wdt_hal_context_t c = RWDT_HAL_CONTEXT_DEFAULT();
+    wdt_hal_write_protect_disable(&c);
+    wdt_hal_disable(&c);
+    wdt_hal_write_protect_enable(&c);
+}
+/* First thing in app_main, before the console is used. */
+static void sleep_boot_check(void) {
+    mark_t m;
+    if (!mark_read(&m)) return;
+    esp_reset_reason_t why = esp_reset_reason();
+    if ((m.state == MARK_ARMED || m.state == MARK_WOKE) && why != ESP_RST_POWERON) {
+        mark_write(MARK_RECOVER, m.state | ((uint32_t)why << 8), m.slept_ms, m.causes);
+        fuse_arm(200); /* a full reset brings USB back; a CPU reset did not (run 3) */
+        for (;;) vTaskDelay(pdMS_TO_TICKS(10));
+    }
+    g_prev = m;
+    g_have_prev = true;
+}
+static void t_light_sleep(slot_t *s) {
+    if (g_have_prev) {
+        static const char *const kState[] = {"?", "armed: reset during the sleep, never woke", "woke: USB did not come back",
+                                             "recover: a CPU reset after waking"};
+        mark_clear();
+        emit(s, "\"ok\":false,\"previous\":\"%s\",\"detail\":%lu,\"slept_ms\":%lu,\"causes\":\"%lx\",\"reset_reason_now\":%d",
+             g_prev.state < 4 ? kState[g_prev.state] : "?", (unsigned long)g_prev.detail, (unsigned long)g_prev.slept_ms,
+             (unsigned long)g_prev.causes, (int)esp_reset_reason());
+        return;
+    }
+    int init = ink_s31_sleep_init();
+    mark_write(MARK_ARMED, 0, 0, 0);
+    fuse_arm(20000);
+    esp_sleep_enable_timer_wakeup(2000000);
+    printf("HWTEST_SLEEPING 2 s\n");
+    fflush(stdout);
+    vTaskDelay(pdMS_TO_TICKS(300)); /* the console drains */
+    int64_t t0 = esp_timer_get_time();
+    int rc = ink_s31_light_sleep();
+    int64_t slept = (esp_timer_get_time() - t0) / 1000;
+    uint32_t causes = esp_sleep_get_wakeup_causes();
+    fuse_arm(20000); /* a fresh 20 s for what follows the wake */
+    mark_write(MARK_WOKE, (uint32_t)rc, (uint32_t)slept, causes);
+    usb_serial_jtag_ll_enable_bus_clock(true);
+    usb_serial_jtag_ll_phy_enable_pad(false);
+    vTaskDelay(pdMS_TO_TICKS(150));
+    usb_serial_jtag_ll_phy_set_defaults();
+    usb_serial_jtag_ll_phy_enable_pad(true);
+    int waited = 0;
+    while (waited < 3000 && !usb_serial_jtag_is_connected()) {
+        vTaskDelay(pdMS_TO_TICKS(20));
+        waited += 20;
+    }
+    vTaskDelay(pdMS_TO_TICKS(2000)); /* the computer opens the port again */
+    bool by_timer = (causes & BIT(ESP_SLEEP_WAKEUP_TIMER)) != 0, back = usb_serial_jtag_is_connected();
+    s->ok = init == ESP_OK && rc == ESP_OK && by_timer && back;
+    emit(s, "\"ok\":%s,\"init\":%d,\"rc\":%d,\"slept_ms\":%lld,\"causes\":\"%lx\",\"by_timer\":%s,\"usb_back_after_ms\":%d,"
+            "\"usb_connected\":%s",
+         tf(s->ok), init, rc, (long long)slept, (unsigned long)causes, tf(by_timer), waited, tf(back));
+    fuse_off();
+    mark_clear();
+}
+#endif
+
 /* ------------------------------------------------------------------ the runner */
 
 static const test_t kSafety = {"safety", t_safety, 3000};
+#if HWTEST_SLEEP
+static const test_t kTests[] = {{"sys", t_sys, 2000}, {"light_sleep", t_light_sleep, 30000}};
+#else
 static const test_t kTests[] = {
     {"sys", t_sys, 2000},         {"heap", t_heap, 2000},     {"psram", t_psram, 3000},      {"flash", t_flash, 2000},
     {"timing", t_timing, 3000},   {"gpio", t_gpio, 2000},     {"i2c_scan", t_i2c_scan, 5000}, {"expander", t_expander, 2000},
     {"touch", t_touch, 2000},     {"gauge", t_gauge, 2000},   {"charger", t_charger, 2000},  {"rtc", t_rtc, 2000},
     {"accel", t_accel, 2000},     {"pmic", t_pmic, 2000},     {"card", t_card, 4000},        {"modem", t_modem, 10000},
-    {"wifi", t_wifi, 15000},      {"accel_axes", t_accel_axes, 3000},
+    {"wifi", t_wifi, 15000},      {"accel_axes", t_accel_axes, 3000}, {"rtc_int", t_rtc_int, 6000}, {"accel_int", t_accel_int, 3000},
     {"flash_read", t_flash_read, 5000}, {"current", t_current, 40000},
 };
+#endif
 #define N_TESTS (sizeof kTests / sizeof kTests[0])
 _Static_assert(N_TESTS <= 24, "slot table");
 static slot_t g_slots[N_TESTS + 1]; /* never reused: a test given up on may still write into its own */
@@ -824,6 +1065,9 @@ static bool run(slot_t *s, const test_t *t, int64_t deadline) {
 void app_main(void) {
     esp_log_level_set("*", ESP_LOG_WARN);
     g_said = heap_caps_malloc(SAID_CAP, MALLOC_CAP_SPIRAM);
+#if HWTEST_SLEEP
+    sleep_boot_check();
+#endif
     printf("HWTEST_START\n");
     int64_t start = now_ms();
     bool safe = run(&g_slots[N_TESTS], &kSafety, start + TOTAL_MS) && g_safe;

@@ -1,0 +1,19 @@
+Checking "python3" ...
+Checking "python3.11" ...
+Python 3.11.15
+"python3.11" has been detected
+Activating ESP-IDF 6.1
+Setting IDF_PATH to '/Users/bytedance/esp/esp-idf'.
+* Checking python version ... 3.11.15
+* Checking python dependencies ... OK
+* Deactivating the current ESP-IDF environment (if any) ... OK
+* Establishing a new ESP-IDF environment ... OK
+* Identifying shell ... bash
+* Detecting outdated tools in system ... OK - no outdated tools found
+* Shell completion ... Autocompletion code generated
+WARNING: Failed to load shell autocompletion for bash version: 3.2.57(1)-release!
+
+Done! You can now compile ESP-IDF projects.
+Go to the project directory and run:
+
+  idf.py build

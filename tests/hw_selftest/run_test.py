@@ -167,7 +167,8 @@ class DryRun(unittest.TestCase):
         backup(self.backup)
         rc, text = self.dry()
         self.assertEqual(rc, 0, text[-600:])
-        self.assertEqual(set(re.findall(r"0x[0-9a-fA-F]+", text)), {"0xd000", "0x580000"}, text[-600:])
+        # otadata, ota_1, and ota_1's last sector (the light-sleep build's mark), all inside the two writable partitions
+        self.assertEqual(set(re.findall(r"0x[0-9a-fA-F]+", text)), {"0xd000", "0x580000", "0xa7f000"}, text[-600:])
         cmds = [ln for ln in text.splitlines() if ln.startswith("run: ")]
         self.assertEqual(len(cmds), 4, text[-600:])  # write + verify, restore write + verify
         for c in cmds:

@@ -1,0 +1,11 @@
+echo Warning: ROM ELF is not supported yet for "esp32s31".\n
+
+
+
+# Load bootloader symbols
+set confirm off
+    add-symbol-file /Users/bytedance/Documents/Workspace/ink-codex/hw-selftest/repo/tools/hw-selftest/build-sleep/bootloader/bootloader.elf
+set confirm on
+
+# Load application symbols
+file /Users/bytedance/Documents/Workspace/ink-codex/hw-selftest/repo/tools/hw-selftest/build-sleep/ink-hw-selftest.elf

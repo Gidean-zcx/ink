@@ -1,0 +1,28 @@
+
+export IDF_PATH="/Users/bytedance/esp/esp-idf"
+export ESP_IDF_VERSION="6.1"
+export IDF_PYTHON_ENV_PATH="/Users/bytedance/esp/.espressif/python_env/idf6.1_py3.11_env"
+export OPENOCD_SCRIPTS="/Users/bytedance/esp/.espressif/tools/openocd-esp32/v0.12.0-esp32-20260703/openocd-esp32/share/openocd/scripts"
+export ESP_ROM_ELF_DIR="/Users/bytedance/esp/.espressif/tools/esp-rom-elfs/20241011/"
+export PATH="/Users/bytedance/esp/esp-idf/components/espcoredump:/Users/bytedance/esp/esp-idf/components/partition_table:/Users/bytedance/esp/esp-idf/components/app_update:/Users/bytedance/esp/.espressif/tools/riscv32-esp-elf-gdb/17.1_20260402/riscv32-esp-elf-gdb/bin:/Users/bytedance/esp/.espressif/tools/riscv32-esp-elf/esp-15.2.0_20251204/riscv32-esp-elf/bin:/Users/bytedance/esp/.espressif/tools/openocd-esp32/v0.12.0-esp32-20260703/openocd-esp32/bin:/Users/bytedance/esp/.espressif/tools/esp-clangd/esp-21.1.3_20260408/esp-clangd/bin:/Users/bytedance/esp/.espressif/python_env/idf6.1_py3.11_env/bin:/Users/bytedance/esp/esp-idf/tools:$PATH"
+export IDF_DEACTIVATE_FILE_PATH="/Users/bytedance/Documents/Workspace/ink-codex/hw-selftest/repo/tools/hw-selftest/build-sleep/tmp/tmpqb0zjhreidf_61743"
+export IDF_TOOLS_INSTALL_CMD="/Users/bytedance/esp/esp-idf/install.sh"
+export IDF_TOOLS_EXPORT_CMD="/Users/bytedance/esp/esp-idf/export.sh"
+
+WARNING_MSG="WARNING: Failed to load shell autocompletion for bash version: $BASH_VERSION!"
+if test ${BASH_VERSINFO[0]} -lt 4
+then
+    echo "$WARNING_MSG"
+else
+    if ! eval "$(env LANG=en _IDF.PY_COMPLETE=bash_source idf.py)"
+    then
+        echo "$WARNING_MSG"
+    fi
+    export IDF_PY_COMP_WORDBREAKS="$COMP_WORDBREAKS"
+fi
+
+echo "
+Done! You can now compile ESP-IDF projects.
+Go to the project directory and run:
+
+  idf.py build"
