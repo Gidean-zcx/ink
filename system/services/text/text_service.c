@@ -622,7 +622,7 @@ int ink_text_service_init(void) {
 }
 
 int ink_text_draft_read(const char *member, const char *page, uint32_t id, char *out, size_t cap) {
-    ink_db_t *db = ink_db_open_member(&DRAFTS, member);
+    ink_db_t *db = ink_db_open_cached_member(&DRAFTS, member);
     draft_t *d = osal_calloc(1, sizeof *d, OSAL_MEM_EXTERNAL);
     ink_rec_t r; int result = -1;
     if (db && d && page && out && ink_db_get(db, id, &r, d, sizeof *d) == 0 && r.len == sizeof *d &&

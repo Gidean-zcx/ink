@@ -13,6 +13,9 @@
 #include "ink/sys/file.h"
 #include "ink/sys/json.h"
 #include "ink/sys/state.h"
+#include "ink/sys/textinput.h"
+#include "ink/sys/i18n.h"
+#include "ink/sys/task.h"
 #include "file_internal.h"
 
 #define RESULT_CAP 4096
@@ -168,6 +171,19 @@ static void cap_write(ink_call_t *c) {
     if (!fs_context_for_call(&context, c)) return;
     char path[INK_FS_PATH_MAX], text[INK_ARGS_TEXT];
     if (!arg_path(c, "path", path, sizeof path)) return;
+    bool replace = false; int64_t draft = 0; char page[48];
+    ink_args_get_bool(&c->args, "replace", &replace); ink_args_get_int(&c->args, "draft", &draft);
+    if (!draft && !ink_args_find(&c->args, "text")) { refuse(c, INK_FS_ERR_PATH); return; }
+    if (replace || draft) {
+        char *body = osal_malloc(4096, OSAL_MEM_EXTERNAL); ink_fs_stat_t st;
+        bool txt = strlen(path) > 4 && !strcmp(path + strlen(path) - 4, ".txt");
+        int r = !body || !txt || (draft && (ink_args_get_str(&c->args, "page", page, sizeof page) < 0 ||
+            ink_text_draft_read(context.member, page, (uint32_t)draft, body, 4096) < 0)) ? INK_FS_ERR_PATH : 0;
+        if (!draft && body) ink_args_get_str(&c->args, "text", body, 4096);
+        if (!r && !replace && !fs_stat_for(&context, path, &st)) r = INK_FS_ERR_EXISTS;
+        if (!r) r = fs_write_atomic_for(&context, path, body, strlen(body));
+        osal_free(body); if (r) refuse(c, r); return;
+    }
     ink_args_get_str(&c->args, "text", text, sizeof text);
     bool append = false;
     ink_args_get_bool(&c->args, "append", &append);
@@ -196,12 +212,78 @@ static void cap_write(ink_call_t *c) {
     }
 }
 
+/* One invocation, continued by the existing file job; no worker or retry queue. */
+typedef struct {
+    ink_call_t *call; file_context_t context; uint32_t ids[INK_FS_INDEX_MAX];
+    size_t count, at, failed; int op, task; bool last_ok; char to[INK_FS_PATH_MAX], path[INK_FS_PATH_MAX], *out; ink_jw_t w;
+} batch_t;
+static void batch_next(batch_t *b);
+static void batch_publish(batch_t *b, bool ok) {
+    ink_args_t a; ink_args_init(&a); ink_args_str(&a, "path", b->path); ink_args_bool(&a, "ok", ok); ink_args_int(&a, "done", b->at); ink_args_int(&a, "total", b->count); ink_cap_emit_for("file.batch_progress", &a, b->context.member);
+}
+static void batch_result(batch_t *b, int err) {
+    if (b->at) ink_jw_raw(&b->w, ",");
+    ink_jw_raw(&b->w, "{\"path\":"); ink_jw_str(&b->w, b->path);
+    ink_jw_raw(&b->w, ",\"error\":"); ink_jw_str(&b->w, err ? ink_fs_err_name(err) : ""); ink_jw_raw(&b->w, "}");
+    b->failed += err != 0; b->last_ok = !err; b->at++;
+    ink_task_progress(b->task, (int)(b->at * 100 / b->count), NULL);
+    if (b->at < b->count) batch_publish(b, !err);
+}
+static void batch_ended(void *ctx, const ink_fs_job_status_t *st) {
+    batch_t *b = ctx; batch_result(b, st->state == INK_FS_JOB_DONE ? 0 : st->err ? st->err : INK_FS_ERR_IO); batch_next(b);
+}
+static void batch_next(batch_t *b) {
+    while (b->at < b->count) {
+        ink_fs_entry_t e; uint32_t id = b->ids[b->at]; char to[INK_FS_PATH_MAX];
+        int r = fs_index_for(&b->context, NULL, INK_FS_ANY, &id, &e);
+        snprintf(b->path, sizeof b->path, "#%u", (unsigned)id);
+        if (r == 1) {
+            memcpy(b->path, e.path, sizeof b->path); const char *name = strrchr(e.path, '/');
+            r = b->op != 1 && snprintf(to, sizeof to, "%s/%s", b->to, name + 1) >= (int)sizeof to ? INK_FS_ERR_PATH : 0;
+            if (!r) r = b->op == 2 ? fs_move_for(&b->context, e.path, to, 0, NULL) : fs_job_begin_for(&b->context, b->op, e.path, b->op ? NULL : to);
+            if (b->op != 2 && r >= 0) { ink_fs_job_on_end(r, batch_ended, b); return; }
+        } else r = r < 0 ? r : INK_FS_ERR_NOT_FOUND;
+        batch_result(b, r);
+    }
+    ink_jw_raw(&b->w, "]}");
+    b->call->rc.status = b->failed ? INK_RC_PARTIAL : INK_RC_DONE;
+    snprintf(b->call->rc.say, sizeof b->call->rc.say, TR("完成 %zu/%zu，失败 %zu"), b->count - b->failed, b->count, b->failed);
+    ink_task_end(b->task, b->failed ? INK_TASK_FAILED : INK_TASK_DONE, b->call->rc.say, NULL);
+    batch_publish(b, b->last_ok);
+    ink_cap_result(b->call, b->out); ink_cap_done(b->call); osal_free(b->out); osal_free(b);
+}
+static void cap_batch(ink_call_t *c) {
+    batch_t *b = osal_calloc(1, sizeof *b, OSAL_MEM_EXTERNAL); ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
+    if (!b || !j) { osal_free(b); osal_free(j); refuse(c, INK_FS_ERR_IO); return; }
+    char ids[INK_ARGS_TEXT], op[8], path[INK_FS_PATH_MAX]; b->call = c;
+    bool ok = fs_context_for_call(&b->context, c);
+    b->op = !strcmp(c->cap->id, "file.delete_many") ? 1 : ink_args_get_str(&c->args, "op", op, sizeof op) > 0 && !strcmp(op, "move") ? 2 : 0;
+    if (b->op != 1) ok = ok && arg_path(c, "to", b->to, sizeof b->to);
+    if (ink_args_get_str(&c->args, "ids", ids, sizeof ids) > 0 && !ink_json_parse(j, ids, strlen(ids)) && j->tok[0].type == 2) {
+        for (int t = 1; t < j->ntok && b->count < INK_FS_INDEX_MAX; t++) {
+            int64_t id = 0; if (!ink_json_int(j, t, &id) || id < 1 || id > UINT32_MAX) { ok = false; break; } b->ids[b->count++] = (uint32_t)id;
+        }
+    } else if (ink_args_get_str(&c->args, "all_path", path, sizeof path) > 0 && offered(path)) {
+        uint32_t cursor = 0; ink_fs_entry_t e; int r;
+        while ((r = fs_index_for(&b->context, path, INK_FS_ANY, &cursor, &e)) == 1 && b->count < INK_FS_INDEX_MAX)
+            if ((size_t)(strrchr(e.path, '/') - e.path) == strlen(path)) b->ids[b->count++] = e.id;
+        ok = ok && r >= 0;
+    }
+    osal_free(j);
+    if (!ok || !b->count) { osal_free(b); if (c->rc.status == INK_RC_DONE) refuse(c, INK_FS_ERR_PATH); return; }
+    size_t cap = b->count * (INK_FS_PATH_MAX * 6 + 96) + 32; b->out = osal_malloc(cap, OSAL_MEM_EXTERNAL);
+    if (!b->out) { osal_free(b); refuse(c, INK_FS_ERR_IO); return; }
+    b->task = ink_task_begin_for(c->cap->id, TR("处理选中的文件"), b->context.member, NULL, NULL);
+    ink_jw_init(&b->w, b->out, cap); ink_jw_raw(&b->w, "{\"results\":["); ink_cap_defer(c); batch_publish(b, true); batch_next(b);
+}
+
 static void cap_mkdir(ink_call_t *c) {
     file_context_t context;
     if (!fs_context_for_call(&context, c)) return;
     char path[INK_FS_PATH_MAX];
     if (!arg_path(c, "path", path, sizeof path)) return;
-    int r = fs_mkdir_for(&context, path);
+    ink_fs_stat_t st; int r = fs_stat_for(&context, path, &st);
+    r = !r ? INK_FS_ERR_EXISTS : r == INK_FS_ERR_NOT_FOUND ? fs_mkdir_for(&context, path) : r;
     if (r) refuse(c, r);
     else snprintf(c->rc.object, sizeof c->rc.object, "file:%.40s", path);
 }
@@ -393,11 +475,16 @@ static const ink_cap_t FILE_CAPS[] = {
      .output = "{\"type\":\"object\",\"properties\":{\"text\":{\"type\":\"string\"},\"next_offset\":{\"type\":\"integer\"},\"end\":{\"type\":\"boolean\"}}}",
      .effect = INK_FX_READ, .child_ok = true, .permission = "file", .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_read},
     {.id = "file.write",
-     .title = "写文本文件（新文件，或追加）",
-     .input = "{\"type\":\"object\",\"properties\":{" PATH_ARG("path") ",\"text\":{\"type\":\"string\"},\"append\":{\"type\":\"boolean\"}},\"required\":[\"path\",\"text\"]}",
+     .title = "写文本文件（新建、追加，或明确替换 txt）",
+     .input = "{\"type\":\"object\",\"properties\":{" PATH_ARG("path") ",\"text\":{\"type\":\"string\"},\"append\":{\"type\":\"boolean\"},\"replace\":{\"type\":\"boolean\"},\"draft\":{\"type\":\"integer\",\"minimum\":1},\"page\":{\"type\":\"string\",\"enum\":[\"FileEdit\"]}},\"required\":[\"path\",\"text\"]}",
      .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .permission = "file", .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_write},
     {.id = "file.mkdir", .title = "新建目录", .input = PATH_OBJ("path"),
      .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .permission = "file", .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_mkdir},
+    {.id = "file.batch", .title = "按文件编号列表移动或拷贝，可选 all_path 的直属文件", .input = "{\"type\":\"object\",\"properties\":{\"op\":{\"type\":\"string\",\"enum\":[\"copy\",\"move\"]},\"ids\":{\"type\":\"array\"}," PATH_ARG("all_path") "," PATH_ARG("to") "},\"required\":[\"op\",\"to\"]}",
+     .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .permission = "file", .exec = INK_EXEC_BG, .qos = INK_QOS_BACKGROUND, .timeout_ms = 300000, .run = cap_batch},
+    {.id = "file.delete_many", .title = "删除选中的文件（不能撤销）", .ask = "删除这些文件 {ids}{all_path}，不能撤销", .input = "{\"type\":\"object\",\"properties\":{\"ids\":{\"type\":\"array\"}," PATH_ARG("all_path") "}}",
+     .effect = INK_FX_LOCAL_DESTRUCTIVE, .ask_by_hand = true, .child_ok = true, .permission = "file", .exec = INK_EXEC_BG, .qos = INK_QOS_BACKGROUND, .timeout_ms = 300000, .run = cap_batch},
+    {.id = "file.batch_progress", .title = "批量文件操作逐项进度", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true, .permission = "file"},
     {.id = "file.copy",
      .title = "拷贝文件或目录（大的在后台做）",
      .input = "{\"type\":\"object\",\"properties\":{" PATH_ARG("from") "," PATH_ARG("to") "},\"required\":[\"from\",\"to\"]}",

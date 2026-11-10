@@ -142,3 +142,29 @@
 输入内容	Enter content
 选好了	Done
 重复	Repeat
+完成 %zu/%zu，失败 %zu	Completed %zu/%zu, failed %zu
+这个名字已存在，请换一个	This name exists. Choose another.
+正在处理选中的文件	Processing selected files
+请输入名称，不能以点开头或含 /	Enter a name without a leading dot or /
+文本文件名必须以 .txt 结尾	Text file names must end in .txt
+草稿引用未能保存	Could not save the draft reference
+保存	Save
+暂时打不开文本编辑器	Cannot open the text editor
+文本超过 4095 字节，无法编辑	Text exceeds 4095 bytes and cannot be edited
+选择文件	Select file
+未选择	Not selected
+编辑文本	Edit text
+新建文本.txt	New text.txt
+名称	Name
+新建文本	New text
+新建文件夹	New folder
+取消多选	Cancel selection
+多选	Select
+全选	Select all
+删除	Delete
+拷贝	Copy
+移动	Move
+处理选中的文件	Process selected files
+未完成：%s\n	Failed: %s\n
+已处理 %lld/%lld	Processed %lld/%lld
+全部完成	All completed
