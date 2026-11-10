@@ -107,6 +107,8 @@ static void read_photos(void *arg) {
         uint32_t cursor = 0; int r;
         while ((r = ink_fs_index("/me", INK_FS_IMAGE, &cursor, &e)) == 1 && p->count < INK_FS_INDEX_MAX && p->epoch == ink_member_epoch()) p->ids[p->count++] = e.id;
         if (r < 0 && r != INK_FS_ERR_NOT_FOUND) p->err = r;
+        cursor = 0;
+        while (p->count < INK_FS_INDEX_MAX && p->epoch == ink_member_epoch() && ink_fs_index("/family/锁屏拍的照片", INK_FS_IMAGE, &cursor, &e) == 1) p->ids[p->count++] = e.id;
     } else {
         p->err = ink_fs_lookup(p->id, &e);
         ink_fs_file_t *f = NULL;

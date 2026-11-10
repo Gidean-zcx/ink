@@ -168,3 +168,10 @@
 未完成：%s\n	Failed: %s\n
 已处理 %lld/%lld	Processed %lld/%lld
 全部完成	All completed
+正在听，按电源键或 AI 键唤醒	Playing. Wake with power or AI
+已锁定，按电源键或 AI 键唤醒	Locked. Wake with power or AI
+设备已锁定；可拍照：app.open(id=camera)。电源键或 AI 键唤醒。	Device locked; camera: app.open(id=camera). Wake with the power or AI key.
+本次已拍 %u 张	%u photos this session
+本次 %u 张，正在看第 %u 张	%u photos this session, viewing %u
+查看本次锁屏拍的下一张照片	View the next photo from this lock session
+锁屏相机；取景；本次已拍 %u 张；动作：camera.preview、camera.photo、camera.review、shell.back。	Lock camera; viewfinder; %u photos this session; actions: camera.preview, camera.photo, camera.review, shell.back.
