@@ -50,12 +50,18 @@ static const struct { const char *name, *title, *cap; const row_t *rows; size_t 
     {"SetStorage", "存储和备份", "shell.storage", STORAGE_ROWS, sizeof STORAGE_ROWS / sizeof *STORAGE_ROWS},
     {"SetAbout", "关于和更新", "shell.about", ABOUT_ROWS, sizeof ABOUT_ROWS / sizeof *ABOUT_ROWS},
     {"SetPrivacy", "隐私", "shell.privacy", PRIVACY_ROWS, sizeof PRIVACY_ROWS / sizeof *PRIVACY_ROWS}};
+/* Every page's rows fit the per-row buffers below: a ninth About row once wrote past them. */
+#define ROWS_MAX 12
+_Static_assert(sizeof VOICE_ROWS / sizeof *VOICE_ROWS <= ROWS_MAX, "SetVoice has more rows than ROWS_MAX");
+_Static_assert(sizeof STORAGE_ROWS / sizeof *STORAGE_ROWS <= ROWS_MAX, "SetStorage has more rows than ROWS_MAX");
+_Static_assert(sizeof ABOUT_ROWS / sizeof *ABOUT_ROWS <= ROWS_MAX, "SetAbout has more rows than ROWS_MAX");
+_Static_assert(sizeof PRIVACY_ROWS / sizeof *PRIVACY_ROWS <= ROWS_MAX, "SetPrivacy has more rows than ROWS_MAX");
 static struct {
     int page;
     unsigned capacity;
     int y;
     uint32_t generation;
-    char member[16], values[8][384], args[8][128], backup[96];
+    char member[16], values[ROWS_MAX][384], args[ROWS_MAX][128], backup[96];
     lv_obj_t *body;
     ink_ui_list_t *list;
     ink_ui_list_position_t position;
