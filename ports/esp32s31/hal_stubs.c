@@ -13,7 +13,6 @@
 #include "ink/hal_codec.h"
 #include "ink/hal_device.h"
 #include "ink/hal_display.h"
-#include "ink/hal_i2c.h"
 #include "ink/hal_input.h"
 #include "ink/hal_jpeg.h"
 #include "ink/hal_net.h"
@@ -22,7 +21,6 @@
 #include "ink/hal_provision.h"
 #include "ink/hal_storage.h"
 #include "ink/hal_transfer.h"
-#include "ink/hal_uart.h"
 #include "ink/hal_usb.h"
 #include "ink/probe.h"
 
@@ -83,15 +81,9 @@ void hal_opus_enc_free(hal_opus_enc_t *e) {  }
 int hal_opus_decode(hal_opus_dec_t *d, const uint8_t *pkt, int len, int16_t *pcm) { return -1; }
 void hal_opus_dec_free(hal_opus_dec_t *d) {  }
 
-/* TODO: PCF8563 RTC and SC7A20H via the portable drivers. */
+/* Device info, log, random; RTC and accelerometer: s31_board.c. */
 const char *hal_device_reset_reason(void) { return "skeleton"; }
 void hal_device_get_info(hal_device_info_t *out) { *out = (hal_device_info_t){.profile_id = "esp32s31-skeleton", .display_name = "ESP32-S31 skeleton", .device_class = HAL_CLASS_MCU, .cpu_cores = configNUMBER_OF_CORES, .cpu_mhz = CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ}; }
-bool hal_rtc_get(int64_t *unix_s) { return false; }
-bool hal_rtc_set(int64_t unix_s) { return false; }
-bool hal_rtc_set_alarm(int64_t unix_s) { return false; }
-void hal_rtc_clear_alarm(void) {  }
-bool hal_accel_read(int *x_mg, int *y_mg, int *z_mg) { return false; }
-uint32_t hal_accel_motion_count(void) { return 0; }
 void hal_log_write(const char *line) { esp_log_write(ESP_LOG_INFO, "ink", "%s\n", line); }
 void hal_random_fill(void *out, size_t n) { esp_fill_random(out, n); }
 
@@ -105,11 +97,7 @@ void hal_display_wake(uint32_t ms) {  }
 void hal_display_pause(bool pause) {  }
 void hal_display_set_temperature(int celsius) {  }
 
-/* TODO: ESP-IDF I2C master + bus mutex; portable TPS65185 and chip drivers. */
-const char *hal_i2c_status_name(hal_i2c_status_t s) { return "unavailable"; }
-hal_i2c_dev_t *hal_i2c_device(int bus, uint8_t addr7, const char *name) { return NULL; }
-hal_i2c_status_t hal_i2c_write(hal_i2c_dev_t *dev, const uint8_t *data, size_t len) { return HAL_I2C_ERR; }
-hal_i2c_status_t hal_i2c_write_read(hal_i2c_dev_t *dev, const uint8_t *wdata, size_t wlen, uint8_t *rdata, size_t rlen) { return HAL_I2C_ERR; }
+/* I2C: hal_i2c_s31.c. */
 
 /* TODO: Portable FT6336U + TCA9555 board keys. */
 void hal_input_set_sink(hal_input_sink_fn fn, void *ctx) {  }
@@ -146,9 +134,8 @@ int hal_ota_mark_valid(void) { return -1; }
 int hal_ota_write_resource(int kind, size_t offset, const void *data, size_t n) { return -1; }
 bool hal_crypto_verify_fw(const uint8_t hash[32], const uint8_t *sig, size_t sig_len, uint32_t key_id) { return false; }
 
-/* TODO: Upstream TPS65185/PMIC sequencing + ESP-IDF PM/light sleep. */
+/* TODO: Upstream TPS65185/PMIC sequencing + ESP-IDF PM/light sleep. Battery and front light: s31_board.c. */
 hal_cpu_boost_t *hal_cpu_boost_create(const char *name) { return NULL; }
-void hal_power_battery(hal_battery_t *out) { *out = (hal_battery_t){.percent = -1}; }
 void hal_power_request(hal_power_res_t res, bool on) {  }
 void hal_power_set_state(hal_power_state_t s) {  }
 void hal_cpu_boost_acquire(hal_cpu_boost_t *b) {  }
@@ -156,7 +143,6 @@ void hal_cpu_boost_release(hal_cpu_boost_t *b) {  }
 uint32_t hal_power_sleep(const hal_sleep_cfg_t *cfg) { return 0; }
 void hal_power_shutdown(void) { hal_log_write("没有关机驱动"); }
 void hal_power_reboot(void) { hal_log_write("没有重启驱动"); }
-void hal_light_set(int cold_permille, int warm_permille) {  }
 bool hal_haptic_available(void) { return false; }
 void hal_haptic_pulse(int ms) {  }
 
@@ -195,10 +181,7 @@ int hal_transfer_read(void *data, size_t cap) { return -1; }
 int hal_transfer_write(const void *data, size_t len) { return -1; }
 void hal_transfer_close(int listener) {  }
 
-/* TODO: ESP-IDF UART driver. */
-hal_uart_t *hal_uart_open(int port, int baud) { return NULL; }
-int hal_uart_write(hal_uart_t *u, const void *data, size_t len) { return -1; }
-int hal_uart_read_line(hal_uart_t *u, char *buf, size_t cap, uint32_t timeout_ms) { return -1; }
+/* UART: hal_uart_s31.c. */
 
 /* TODO: ESP-IDF TinyUSB MSC + SDMMC unmount/remount. */
 bool hal_usb_host_connected(void) { return false; }
