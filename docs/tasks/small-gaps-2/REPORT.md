@@ -1,6 +1,6 @@
 # small-gaps-2 执行报告
 
-基线：`e65bfc261b68e9fb063fc60da507122119ae4fc6`。仅在任务分支本地提交，不推送；未接触设备。执行中，下面的待验证不表示完成。
+基线：`e65bfc261b68e9fb063fc60da507122119ae4fc6`。六项实现与核查已完成，仅在任务分支本地提交，未推送、未接触设备。完整验收因共享能力清单同步项未全绿，限制见下。
 
 ## 验收表
 
@@ -12,15 +12,15 @@
 | 1.4 飞行模式 | 【实测】通过 | 控制面板关闭飞行模式后收起；AI 的“关闭飞行模式”错误面板也收起；仅操作成功时关闭，失败走原拒绝提示。原测试与新增测试 2/2 通过 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^(airplane-mode|small-gaps-2-airplane)$' --output-on-failure -j2` |
 | 1.5 日期时间选择 | 【实测】通过 | 两页复用 `ink_ui_datetime_picker`；5 行文字和 10 个按钮逐一比坐标，并检查加减均使用实际打包图标；原 `time-settings`、`reminder-edit` 未改，3/3 通过，见 `work/small-gaps-2/picker-icons-test.log` | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^(small-gaps-2-picker|time-settings|reminder-edit)$' --output-on-failure -j2` |
 | 1.6 计算器 120% | 【实测】无需改产品代码 | 63 字符算式完整分两行，文字高度不超容器，标题、算式、结果和按键不重叠；已查看 `work/small-gaps-2/before/calculator/snap-calculator-120.png`，补 100%/120% 回归截图 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/small_gaps_2/run.py --build build --case calculator` |
-| 2.1 普通全量 | 最终图标修正后待复测 | 上轮 `99% tests passed, 1 tests failed out of 352`，467.67 秒、退出 8；仅能力清单失败 | 见下方命令；`work/small-gaps-2/ctest-final.log` |
-| 2.2 内存检查 | 最终图标修正后待复测 | 上轮完整 ASan/UBSan 原话：`99% tests passed, 1 tests failed out of 352`，654.38 秒；仅能力清单失败，无 sanitizer 错误 | 见下方命令；`work/small-gaps-2/ctest-asan.log` |
-| 2.3 S31 | 【实测】通过 | 编译、链接、资源包、尺寸和栈报告退出 0；镜像 3,210,144 字节。无 C/C++ 编译告警；5 条 SDK 私有 include 配置警告，未改 SDK、未屏蔽 | 见下方命令；`work/small-gaps-2/s31.log`、`build-s31/size.txt`、`build-s31/stack.txt` |
-| 2.4 GCC | 【实测】通过 | 原话 `gcccheck: 13 compiled, 0 with findings`，无跳过 | 见下方命令；`work/small-gaps-2/gcccheck.log` |
-| 3 改前改后截图 | 待生成 | — | — |
+| 2.1 普通全量 | 【实测】351/352，未全通过 | 最终版本原话 `99% tests passed, 1 tests failed out of 352`，451.63 秒、退出 8；仅能力清单失败，无跳过 | 见下方命令；`work/small-gaps-2/ctest-icons-final.log` |
+| 2.2 内存检查 | 【实测】351/352，未全通过 | 最终完整 ASan/UBSan 原话 `99% tests passed, 1 tests failed out of 352`，793.87 秒、退出 8；仅能力清单失败，无跳过、无 sanitizer 错误 | 见下方命令；`work/small-gaps-2/ctest-icons-asan.log` |
+| 2.3 S31 | 【实测】通过 | 最终编译、链接、资源包、尺寸和栈报告退出 0；镜像 3,210,208 字节。无 C/C++ 编译告警；5 条 SDK 私有 include 配置警告，未改 SDK、未屏蔽 | 见下方命令；`work/small-gaps-2/s31-final.log`、`build-s31/size.txt`、`build-s31/stack.txt` |
+| 2.4 GCC | 【实测】通过 | 最终原话 `gcccheck: 13 compiled, 0 with findings`，无跳过 | 见下方命令；`work/small-gaps-2/gcccheck-final.log` |
+| 3 改前改后截图 | 【实测】已生成 | 改后 15 张 PNG 已留存，具体对照见下表；已查看卡片、拨号、三图标、选择器、计算器实图 | 同定向测试命令，加 `INK_KEEP_EVIDENCE=1` |
 
 ## 截图对照
 
-改前用基线或单独撤掉对应修复生成，改后由最终定向复测保留。均是模拟器实际输出的 PNG，不编辑截图，不提交生成文件；改后文件待本轮全量结束后统一留存。
+改前用基线或单独撤掉对应修复生成，改后由最终普通全量保留。均是模拟器实际输出的 PNG，不编辑截图，不提交生成文件。
 
 | 内容 | 改前 | 改后 |
 | --- | --- | --- |
@@ -33,6 +33,7 @@
 | 关闭飞行模式后 | `work/small-gaps-2/reverse/airplane-out/snap-airplane-control-off.png` | `work/small-gaps-2/after/airplane/snap-airplane-control-off.png` |
 | 提醒日期时间选择器 | `work/small-gaps-2/reverse/picker-out/snap-reminder-picker.png` | `work/small-gaps-2/after/picker/snap-reminder-picker.png` |
 | 时间设置选择器 | `work/small-gaps-2/reverse/picker-out/snap-time-picker.png` | `work/small-gaps-2/after/picker/snap-time-picker.png` |
+| 选择器减号缺字 | `work/small-gaps-2/reverse/picker-icons-out/snap-time-picker.png` | `work/small-gaps-2/after/picker/snap-time-picker.png` |
 | 计算器，120%（产品代码未改） | `work/small-gaps-2/before/calculator/snap-calculator-120.png` | `work/small-gaps-2/after/calculator/snap-calculator-120.png` |
 
 ## 没做到的
@@ -53,17 +54,19 @@
 
 ## 要用户定的
 
-- 暂无。
+- 旧阅读记录的百分比迁移是否单独安排。当前不新增迁移机制；旧页码保留，翻页保存后补全百分比。
 
 ## 顺手发现
 
 - 图标的 SVG 和 manifest 在基线已经完整；根因是三份应用注册漏填 `.icon`，因此不新增重复资源。
+- 模拟器从主屏通过查找进入全部页的首张快照仍有残影；基线截图 `work/small-gaps-2/reverse/icons-out/snap-apps-1.png` 也有。未扩展到刷新策略的修复。
 
 ## 新增的机制
 
 - 任务 1：复用原 `reader.last`，增加可选 `offset` 字段以保留百分比；旧记录仍能读取。没有新文件、新定时器或任务。
 - 任务 1：阅读卡片提供者订阅现有 `storage.card` 状态，复用原卡片版本事件和刷新节流。
 - 任务 5 明确要求统一选择器：从原 `SetDateTime` 提取一个无状态 UI 组件；没有新增任务、线程、队列、缓存、配置项或状态机。
+- 验收要求：`test.small-gaps-2` 是模拟器测试驱动任务，只编进测试程序，不进入产品。
 
 ## 要改的文档
 
@@ -90,8 +93,10 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" "$INK_DEPS/../ink-
 
 反向对照只编译忽略目录内的临时对象并重新链接，不改工作区产品文件；这是手动模式，依赖指定基线提交，没有注册进 CTest。原时间设置、提醒编辑测试保持原样。
 
-【实测】手动反向对照命令退出 0，七组均检出原问题，且驱动均执行结束：基线阅读器 7 条失败；仅撤掉存储卡订阅 1 条；图标 3 条；拨号页 6 条；控制面板 1 条；AI 飞行模式面板 1 条；旧提醒选择器 17 条。证据 `work/small-gaps-2/reverse/summary.json`、`work/small-gaps-2/reverse.log`；基线程序本身的非零退出是预期结果。
+【实测】最终手动反向对照命令退出 0，八组均检出原问题，且驱动均执行结束：基线阅读器 7 条失败；仅撤掉存储卡订阅 1 条；图标 3 条；拨号页 6 条；控制面板 1 条；AI 飞行模式面板 1 条；旧提醒选择器 25 条；撤掉选择器图标 20 条。证据 `work/small-gaps-2/reverse/summary.json`、`work/small-gaps-2/reverse-final.log`；反向程序本身的非零退出是预期结果。
 
 【实现】架构审视：共用选择器只负责画控件，日期草稿与校验仍归各页面；阅读进度按原成员目录保存，卡片通过原版本事件刷新。按钮和 AI 继续调用同一批原子能力，卡片百分比和两处选择结果仍在既有 AI 快照中；没有新服务或模拟器头文件依赖。
 
 【实现】产品代码新增／替换 80 行、删除 35 行，增删合计 115 行，均低于 250 行预算。若按增删相加超过 100 行计：主要开销是共同绘制、公开声明和两侧能力参数适配。看过的更小方案是只对齐两页尺寸（仍保留重复选择器），或让提醒直接用时间设置页（会改变设备时钟及原能力合同），均不能满足任务 5，故保留无状态组件和原能力适配。
+
+【实测】提交检查：对照基线共 18 个相关文件，未改禁止共享的文档；`git diff --check` 通过。按总规则的隐私表达式扫描差异，0 命中；报告中的 24 处截图引用均存在。没有提交构建产物、日志、设计稿、绝对路径或真实识别号。检查记录 `work/small-gaps-2/final-checks.json`。
