@@ -96,7 +96,7 @@ bool ink_ai_chat_tapped(void) { return tapped; }
 int ink_ai_chat_init(void) { return ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_app_register(&APP); }
 
 int ink_ai_chat_panel_snapshot(const char *status, const char *question, const char *answer,
-                               int page, int pages, bool speaking, char *out, size_t cap) {
+                               int page, int pages, bool speaking, uint32_t revision, char *out, size_t cap) {
     char count[64]; snprintf(count, sizeof count, "页码=%d/%d", page + 1, pages);
     const char *board = speaking ? "AiSpeak" : strstr(status, "正在听") ? "AiListenTap" : pages > 1 ? "AiLong" : "AiAsk";
     ink_ui_field_spec_t fields[] = {
@@ -115,7 +115,7 @@ int ink_ai_chat_panel_snapshot(const char *status, const char *question, const c
         {.id = "record_stop", .label = "停止录音", .capability = "audio.record_stop", .enabled = strstr(status, "正在录音") != NULL},
         {.id = "home", .label = "对话记录", .capability = "shell.ai_home", .enabled = !speaking && answer[0]}
     };
-    ink_ui_page_spec_t model = {.id = ink_ui_page_name(), .title = "AI 面板", .object = {"ai:panel", 1},
+    ink_ui_page_spec_t model = {.id = ink_ui_page_name(), .title = "AI 面板", .object = {"ai:panel", revision},
         .fields = fields, .field_count = sizeof fields / sizeof *fields, .actions = available, .action_count = sizeof available / sizeof *available};
     return ink_ui_semantics_snapshot(&model, out, cap);
 }

@@ -10,6 +10,7 @@
 #include "ink/sys/members.h"
 #include "ink/sys/power.h"
 #include "ink/sys/state.h"
+#include "ink/sys/ui_semantics.h"
 #include "ink/ui_shell.h"
 #include "shell_card.h"
 #include "member_pages.h"
@@ -22,7 +23,7 @@ static struct {
     char id[16], name[32], pin[9], old[9], status[160];
     int mode, result;
     uint32_t wait_s;
-    uint32_t epoch, parent_token;
+    uint32_t epoch, parent_token, version;
     uint64_t retry_us;
     bool busy;
     lv_timer_t *wait_timer;
@@ -34,13 +35,24 @@ static uint32_t remaining(void) {
     uint64_t now = osal_now_us();
     return P.retry_us > now ? (uint32_t)((P.retry_us - now + 999999) / 1000000) : 0;
 }
-static int snapshot(char *out, size_t cap) {
-    const char *actions = !ink_member_space_open() ? "请本人在设备上操作。" :
-        P.mode == SWITCH ? "动作：shell.pin_cancel、shell.member_choose。" :
-        P.mode == UNLOCK ? "动作：shell.pin_cancel、shell.pin_forgot。" :
-        P.mode == FORGOT ? "动作：shell.pin_cancel、shell.pin_parent。" : "动作：shell.pin_cancel。";
-    return snprintf(out, cap, "%s；家人：%s；%s；还需等待 %u 秒；密码内容不可见。%s",
-        P.overlay->name, P.name, P.status, (unsigned)remaining(), actions);
+static int semantic_snapshot(char *out, size_t cap) {
+    char wait[64]; snprintf(wait, sizeof wait, "还需等待 %u 秒", (unsigned)remaining());
+    ink_ui_field_spec_t fields[] = {
+        {.id = "member", .role = "text", .label = "家人", .value = P.name},
+        {.id = "status", .role = "status", .label = "状态", .value = P.status},
+        {.id = "wait", .role = "status", .label = "等待", .value = wait},
+        {.id = "pin", .role = "textbox", .label = "密码内容不可见", .value = P.pin, .secret = true}
+    };
+    bool open = ink_member_space_open() && !P.busy;
+    ink_ui_action_spec_t actions[] = {
+        {.id = "shell.pin_cancel", .label = "取消", .capability = "shell.pin_cancel", .enabled = open},
+        {.id = "shell.member_choose", .label = "换人", .capability = "shell.member_choose", .enabled = open && P.mode == SWITCH},
+        {.id = "shell.pin_forgot", .label = "忘记密码", .capability = "shell.pin_forgot", .enabled = open && P.mode == UNLOCK},
+        {.id = "shell.pin_parent", .label = "家长验证", .capability = "shell.pin_parent", .enabled = open && P.mode == FORGOT}
+    };
+    ink_ui_page_spec_t page = {.id = P.overlay->name, .title = P.overlay->name, .object = {"member:form", ink_ui_generation()},
+        .fields = fields, .field_count = sizeof fields / sizeof *fields, .actions = actions, .action_count = sizeof actions / sizeof *actions};
+    return ink_ui_semantics_snapshot(&page, out, cap);
 }
 static void close_page(void) {
     if (P.wait_timer) { lv_timer_delete(P.wait_timer); P.wait_timer = NULL; }
@@ -67,22 +79,26 @@ static bool key(ink_key_t k, bool lng) {
     return true;
 }
 static const ink_ui_overlay_t VIEWS[] = {
-    {.name = "MemberSwitch", .level = 2, .snapshot = snapshot, .on_key = key},
-    {.name = "member_gate", .level = 2, .snapshot = snapshot, .on_key = key},
-    {.name = "PinSet", .level = 2, .snapshot = snapshot, .on_key = key},
-    {.name = "PinForgot", .level = 2, .snapshot = snapshot, .on_key = key},
-    {.name = "PinWait", .level = 2, .snapshot = snapshot, .on_key = key}
+    {.name = "MemberSwitch", .level = 2, .snapshot = semantic_snapshot, .on_key = key},
+    {.name = "member_gate", .level = 2, .snapshot = semantic_snapshot, .on_key = key},
+    {.name = "PinSet", .level = 2, .snapshot = semantic_snapshot, .on_key = key},
+    {.name = "PinForgot", .level = 2, .snapshot = semantic_snapshot, .on_key = key},
+    {.name = "PinWait", .level = 2, .snapshot = semantic_snapshot, .on_key = key}
 };
 static void center(const char *text, int font, int y, bool bold) {
     lv_obj_t *l = ink_ui_label(P.card.panel, text, font, bold ? INK_WEIGHT_BOLD : INK_WEIGHT_REGULAR,
         INK_MARGIN, y, INK_CANVAS_W - 2 * INK_MARGIN);
     lv_obj_set_style_text_align(l, LV_TEXT_ALIGN_CENTER, 0);
 }
+static void pressed(lv_event_t *e) { (void)e; P.version = ink_ui_content_version(); }
 static void clicked(lv_event_t *e) {
-    ink_receipt_t rc; ink_cap_invoke(lv_event_get_user_data(e), NULL, INK_SRC_TOUCH, 0, &rc);
+    uint32_t version = P.version; P.version = 0;
+    if (version && version != ink_ui_content_version()) return;
+    ink_receipt_t rc; ink_cap_invoke(lv_event_get_user_data(e), NULL, INK_SRC_TOUCH, ink_ui_content_version(), &rc);
 }
 static void button(const char *text, const char *cap, int x, int y, int w, bool primary) {
-    ink_ui_pill(P.card.panel, text, x, y, w, INK_CONTROL, primary, clicked, (void *)cap);
+    lv_obj_t *b = ink_ui_pill(P.card.panel, text, x, y, w, INK_CONTROL, primary, clicked, (void *)cap);
+    lv_obj_add_event_cb(b, pressed, LV_EVENT_PRESSED, NULL);
 }
 static void dots(void) {
     char text[32] = "";
@@ -121,7 +137,8 @@ static void draw(void) {
     if (P.mode == UNLOCK) ink_shell_camera_button(P.card.panel, false);
     if (P.mode == UNLOCK) ink_shell_emergency_button(P.card.panel, false);
     if (P.mode == FORGOT) {
-        ink_ui_circle(P.card.panel, "back", INK_MARGIN, INK_STATUS_BAR, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_STATIC, clicked, "shell.pin_cancel");
+        lv_obj_t *back = ink_ui_circle(P.card.panel, "back", INK_MARGIN, INK_STATUS_BAR, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_STATIC, clicked, "shell.pin_cancel");
+        lv_obj_add_event_cb(back, pressed, LV_EVENT_PRESSED, NULL);
         ink_ui_label(P.card.panel, ink_member_any_pin() ? "忘记密码" : "还没有密码", INK_FONT_TITLE, INK_WEIGHT_BOLD, INK_MARGIN + INK_CONTROL + INK_GAP, INK_STATUS_BAR + INK_GAP, w - INK_CONTROL - INK_GAP);
         ink_ui_circle(P.card.panel, "lock", (INK_CANVAS_W - INK_CIRCLE_LARGE) / 2, INK_CANVAS_H / 2 - INK_CIRCLE_LARGE,
             INK_CIRCLE_LARGE, INK_ICON_STATE, INK_SURFACE_STATIC, NULL, NULL);
@@ -160,9 +177,11 @@ static void draw(void) {
         lv_obj_t *b = ink_ui_pill(P.card.panel, row == 3 && col != 1 ? (col ? "删除" : "取消") : label,
             x0 + col * (INK_DIGIT + INK_GAP), y0 + row * (INK_DIGIT + INK_GAP), INK_DIGIT, INK_DIGIT, false,
             row == 3 && col == 0 ? clicked : digit, row == 3 && col == 0 ? (void *)"shell.pin_cancel" : (void *)(intptr_t)d);
+        if (row == 3 && col == 0) lv_obj_add_event_cb(b, pressed, LV_EVENT_PRESSED, NULL);
         ink_ui_pill_text(b, row == 3 && col != 1 ? INK_FONT_LIST : INK_FONT_HEADING, INK_WEIGHT_REGULAR);
     }
     ink_ui_capture_touch(P.card.panel);
+    P.version = 0;
     uint64_t now = osal_now_us();
     if (P.retry_us > now) {
         P.wait_timer = lv_timer_create(wait_done, (uint32_t)((P.retry_us - now + 999) / 1000) + 1, NULL);

@@ -18,6 +18,29 @@ static bool current_page(const ink_ui_page_spec_t *page) {
     return page && page->id && ink_ui_is_current() && ink_ui_action_current() && !strcmp(page->id, ink_ui_action_page());
 }
 
+int ink_ui_semantics_summary(const ink_ui_page_spec_t *page, char *out, size_t cap) {
+    if (!out || !cap) return -1;
+    out[0] = 0;
+    if (!current_page(page)) return -1;
+    int n = snprintf(out, cap, "%s；page_version=%u；object=%s；revision=%u；", page->title, (unsigned)ink_ui_content_version(),
+                     page->object.id ? page->object.id : "", (unsigned)page->object.revision);
+    for (size_t i = 0; i < page->field_count && n >= 0 && (size_t)n < cap; i++) {
+        const ink_ui_field_spec_t *f = &page->fields[i];
+        const char *value = f->secret ? (f->value && f->value[0] ? "有值" : "无值") : f->value ? f->value : "";
+        bool labeled = !strncmp(value, f->label, strlen(f->label)) && value[strlen(f->label)] == '=';
+        bool group = !f->secret && !strcmp(f->role, "group");
+        n += snprintf(out + n, cap - (size_t)n, "%s%s%s%s", group || labeled ? "" : f->label, group || labeled ? "" : "=", value, group ? "" : "；");
+    }
+    if (n >= 0 && (size_t)n < cap) n += snprintf(out + n, cap - (size_t)n, " 动作：");
+    for (size_t i = 0; i < page->action_count && n >= 0 && (size_t)n < cap; i++) {
+        const ink_ui_action_spec_t *a = &page->actions[i];
+        if (a->enabled && ink_cap_ai_callable(ink_cap_find(a->capability)))
+            n += snprintf(out + n, cap - (size_t)n, "%s；", a->capability);
+    }
+    if (n < 0 || (size_t)n >= cap) { out[0] = 0; return -1; }
+    return n;
+}
+
 int ink_ui_semantics_snapshot(const ink_ui_page_spec_t *page, char *out, size_t cap) {
     if (!out || !cap) return -1;
     out[0] = 0;

@@ -4,6 +4,7 @@
 #include "ink/ui_theme.h"
 #include "ink/sys/ai.h"
 #include "ink/sys/cap.h"
+#include "ink/sys/ui_semantics.h"
 
 int ink_shell_init(void);
 int ink_kid_pages_init(void);
@@ -23,6 +24,8 @@ bool ink_boot_flow_launch(ink_call_t *call);
 void ink_ui_stage_next(void);
 const char *ink_ui_action_page(void);
 bool ink_ui_action_current(void);
+/* Legacy home and compound keyboard text, from the same F1 declarations. */
+int ink_ui_semantics_summary(const ink_ui_page_spec_t *page, char *out, size_t cap);
 void ink_shell_keyboard_area(lv_area_t *area);
 int ink_ui_context_snapshot(char *buf, size_t cap, const char **name);
 void ink_shell_home_create(lv_obj_t *screen);

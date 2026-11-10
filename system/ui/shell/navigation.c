@@ -31,7 +31,8 @@
 
 typedef struct {
     char cap[48], args[192];
-    uint32_t epoch, member_epoch;
+    uint32_t epoch, member_epoch, version, generation;
+    bool versioned;
 } binding_t;
 typedef enum { PAGE_SETTINGS, PAGE_DISPLAY, PAGE_SOUND, PAGE_NETWORK, PAGE_NOTIFICATIONS, PAGE_CHANNELS, PAGE_KNOWN } page_t;
 static const char *const CHANNEL_NOTE = TR_NOOP("关闭后不再收进新通知，已有通知保留。电话和闹钟照常。");
@@ -71,7 +72,7 @@ static struct {
     page_t page_id;
     bool more, initialized, need_body;
     char member[16];
-    uint32_t session, epoch;
+    uint32_t session, epoch, icon_version, icon_generation;
     char result[160], search[80];
     char wifi_ssid[6][40], picked_ssid[40];
     int wifi_count;
@@ -225,10 +226,15 @@ static void binding_event(lv_event_t *e) {
         osal_free(b);
         return;
     }
+    if (lv_event_get_code(e) == LV_EVENT_PRESSED) {
+        b->version = ink_ui_content_version(); b->generation = ink_ui_generation();
+        return;
+    }
+    if (b->versioned && b->version && (b->version != ink_ui_content_version() || b->generation != ink_ui_generation())) return;
     const ink_cap_t *cap = ink_cap_find(b->cap);
     bool locked_action = ink_ui_locked_activity() ? ink_ui_locked_allows(b->cap) : cap && cap->while_locked;
     if (!current_session(b->epoch) && (b->member_epoch != ink_member_epoch() || !locked_action)) return;
-    ink_call_opts_t o = {.src = INK_SRC_TOUCH,
+    ink_call_opts_t o = {.src = INK_SRC_TOUCH, .page_gen = b->versioned ? ink_ui_content_version() : 0,
                          .args_json = b->args[0] ? b->args : NULL,
                          .reply_exec = INK_EXEC_UI,
                          .member = ink_member_current()->id, .done = refused};
@@ -250,12 +256,16 @@ void ink_shell_bind(lv_obj_t *obj, const char *cap, const char *json) {
     snprintf(b->args, sizeof b->args, "%s", json ? json : "");
     b->epoch = N.epoch;
     b->member_epoch = ink_member_epoch();
+    const char *page = ink_ui_top_name();
+    b->versioned = !strcmp(page, "home") || !strcmp(page, "Ai") || !strcmp(page, "BatteryLow") ||
+                   !strcmp(page, "KidLimit") || !strcmp(page, "KidTimeUp") || !strncmp(cap, "text.", 5);
     lv_obj_add_flag(obj, LV_OBJ_FLAG_CLICKABLE);
     if (lv_obj_get_style_radius(obj, 0) == LV_RADIUS_CIRCLE &&
         lv_obj_get_style_width(obj, 0) == lv_obj_get_style_height(obj, 0) &&
         lv_color_eq(lv_obj_get_style_bg_color(obj, 0), ink_ui_paper()))
         lv_obj_set_style_border_width(obj, ink_ui_px(INK_STROKE), 0);
     lv_obj_add_event_cb(obj, binding_event, LV_EVENT_CLICKED, b);
+    lv_obj_add_event_cb(obj, binding_event, LV_EVENT_PRESSED, b);
     lv_obj_add_event_cb(obj, binding_event, LV_EVENT_DELETE, b);
 }
 
@@ -814,7 +824,7 @@ bool ink_shell_home_key(ink_key_t key, bool long_press) {
 }
 
 int ink_shell_home_snapshot(char *buf, size_t cap) {
-    if (!current_session(N.epoch)) return snprintf(buf, cap, "空间锁定或正在切换；AI 无权读取。");
+    if (!current_session(N.epoch)) { if (cap) buf[0] = 0; return -1; }
     if (N.home_page == 0) {
         if (cap) buf[0] = 0;
         if (child()) {
@@ -832,30 +842,38 @@ int ink_shell_home_snapshot(char *buf, size_t cap) {
     }
     ink_card_t card;
     bool has = bookmark(&card);
-    if (N.home_page == 2) {
-        int n = snprintf(buf, cap, "%s；当前=%s；查找=%s；工具页=%d/%d；", ink_shell_board(), ink_member_current()->name, N.search,
-                         N.apps_page + 1, N.apps_pages);
-        tile_list_t list = {buf, cap, n};
-        apps_walk(false, &list);
-        n = list.n;
-        if (n >= 0 && (size_t) n < cap)
-            n += snprintf(buf + n, cap - (size_t) n,
-                          "动作：shell.launch、shell.icon_menu、shell.search、home.next、home.prev、shell.control。");
-        return n < 0 ? 0 : (size_t) n < cap ? n : (int) cap - 1;
-    }
-    char activity[512]; ink_activity_card_snapshot(activity, sizeof activity);
-    char clock[16], date[96], upcoming[96] = "还没有接下来的事";
+    char activity[512], clock[16], date[96], upcoming[96] = "还没有接下来的事";
+    ink_activity_card_snapshot(activity, sizeof activity);
     ink_shell_time_strings(clock, sizeof clock, date, sizeof date);
-    int cursor = 0;
-    ink_alarm_t alarm;
+    int cursor = 0; ink_alarm_t alarm;
     if (ink_alarm_next(&cursor, INK_ALARM, &alarm) == 1)
         snprintf(upcoming, sizeof upcoming, "%s %d:%02d", alarm.title, alarm.hour, alarm.min);
-    return snprintf(
-        buf, cap,
-        "页面=%s；当前=%s；日期=%s；时间=%s；继续读=%s；继续听=还没有在听的内容；今日报纸=今天的还没到；单词="
-        "还没有记下的词；接下来=%s；%s。%s 动作：shell.launch、shell.resume、home.next、home.prev、shell.control、shell.tasks。",
-        ink_shell_board(), ink_member_current()->name, date, clock, has ? card.text : "没有阅读进度",
-        upcoming, child() ? N.kid_time : N.result, activity);
+    char page_no[64], page_name[64];
+    snprintf(page_no, sizeof page_no, "工具页=%d/%d", N.apps_page + 1, N.apps_pages);
+    snprintf(page_name, sizeof page_name, "页面=%s", ink_shell_board());
+    static char apps[2048] INK_PSRAM_BSS;
+    tile_list_t list = {apps, sizeof apps, 0}; apps[0] = 0;
+    if (N.home_page == 2) apps_walk(false, &list);
+    ink_ui_field_spec_t fields[] = {
+        {.id = "board", .role = "status", .label = "页面", .value = page_name},
+        {.id = "member", .role = "text", .label = "当前", .value = ink_member_current()->name},
+        {.id = N.home_page == 2 ? "search" : "date", .role = "text", .label = N.home_page == 2 ? "查找" : "日期", .value = N.home_page == 2 ? N.search : date},
+        {.id = N.home_page == 2 ? "tools_page" : "clock", .role = "status", .label = N.home_page == 2 ? "工具页" : "时间", .value = N.home_page == 2 ? page_no : clock},
+        {.id = N.home_page == 2 ? "tools" : "resume", .role = "text", .label = N.home_page == 2 ? "应用" : "继续读", .value = N.home_page == 2 ? apps : has ? card.text : "没有阅读进度"},
+        {.id = "upcoming", .role = "text", .label = "接下来", .value = upcoming},
+        {.id = "status", .role = "status", .label = "状态", .value = child() ? N.kid_time : N.result},
+        {.id = "listen", .role = "text", .label = "继续听", .value = "还没有在听的内容"},
+        {.id = "news", .role = "text", .label = "今日报纸", .value = "今天的还没到"},
+        {.id = "words", .role = "text", .label = "单词", .value = "还没有记下的词"},
+        {.id = "activity", .role = "group", .label = "正在做的事", .value = activity}
+    };
+    static const char *const CAPS[] = {"shell.launch", "shell.resume", "home.next", "home.prev", "shell.control", "shell.tasks", "shell.icon_menu", "shell.search"};
+    ink_ui_action_spec_t actions[sizeof CAPS / sizeof *CAPS];
+    for (size_t i = 0; i < sizeof CAPS / sizeof *CAPS; i++)
+        actions[i] = (ink_ui_action_spec_t){.id = CAPS[i], .label = CAPS[i], .capability = CAPS[i], .enabled = N.home_page == 2 ? i != 1 && i != 5 : i < 6};
+    ink_ui_page_spec_t page = {.id = "home", .title = ink_shell_board(), .object = {"home", ink_ui_generation()},
+        .fields = fields, .field_count = N.home_page == 2 ? 5 : sizeof fields / sizeof *fields, .actions = actions, .action_count = sizeof actions / sizeof *actions};
+    return ink_ui_semantics_summary(&page, buf, cap);
 }
 
 static int kid_control_snapshot(char *buf, size_t cap);
@@ -2184,12 +2202,15 @@ static void today_call(ink_call_t *c) {
 }
 static void icon_event(lv_event_t *e) {
     if (!current_session(N.epoch)) return;
+    if (lv_event_get_code(e) == LV_EVENT_PRESSED) { N.icon_version = ink_ui_content_version(); N.icon_generation = ink_ui_generation(); return; }
+    if (N.icon_version && (N.icon_version != ink_ui_content_version() || N.icon_generation != ink_ui_generation())) return;
     char args[96]; snprintf(args, sizeof args, "{\"id\":\"%s\"}", (const char *)lv_event_get_user_data(e));
-    ink_call_opts_t opts = {.src = INK_SRC_TOUCH, .args_json = args, .reply_exec = INK_EXEC_UI};
+    ink_call_opts_t opts = {.src = INK_SRC_TOUCH, .page_gen = ink_ui_content_version(), .args_json = args, .reply_exec = INK_EXEC_UI};
     ink_cap_call(lv_event_get_code(e) == LV_EVENT_SHORT_CLICKED ? "shell.launch" : "shell.icon_menu", NULL, &opts);
 }
 static void icon_bind(lv_obj_t *obj, const char *id) {
     lv_obj_add_flag(obj, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_add_event_cb(obj, icon_event, LV_EVENT_PRESSED, (void *)id);
     lv_obj_add_event_cb(obj, icon_event, LV_EVENT_SHORT_CLICKED, (void *)id);
     lv_obj_add_event_cb(obj, icon_event, LV_EVENT_LONG_PRESSED, (void *)id);
 }

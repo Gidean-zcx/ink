@@ -73,6 +73,7 @@ void ink_text_commit_utf8(const char *s);
 /* The cursor and the selection, counted in characters as a label and the AI count them. Keys, candidates and backspace all work
  * there. Nobody drags on electronic paper: a tap puts the cursor, a long press selects a word, the arrows adjust (system UI spec). */
 size_t ink_text_cursor(void);
+uint32_t ink_text_edit_revision(void); /* UI task: revision of the current input. */
 /** start == end: nothing is selected. */
 void ink_text_selection(size_t *start, size_t *end);
 void ink_text_set_cursor(size_t at);

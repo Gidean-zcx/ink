@@ -13,6 +13,7 @@
 #include "ink/sys/power.h"
 #include "ink/sys/settings.h"
 #include "ink/sys/state.h"
+#include "ink/sys/ui_semantics.h"
 #include "ink/ui_shell.h"
 #include "shell_card.h"
 
@@ -33,21 +34,29 @@ static bool saving(void) {
     ink_state_get_int(ink_state_find("power.saving"), &enabled);
     return enabled != 0;
 }
-static int snapshot(char *buf, size_t cap) {
-    if (B.off && !ink_member_space_open()) return snprintf(buf, cap, "PowerOffEmpty：已关机。没电了，%s", !strcmp(B.why, "battery_unsaved") ? "有些内容没保存。充上电再开机" : "东西都存好了。充上电再开机");
-    if (B.off) return snprintf(buf, cap, "PowerOffEmpty：已关机。%s%s%s", B.body,
-        ink_member_space_open() ? "；" : "", ink_member_space_open() ? B.title : "");
-    if (B.mode == 3) return snprintf(buf, cap, "Charging：正在充电，%d%%。已锁定，按电源键或 AI 键唤醒。", B.percent);
-    if (B.mode == 2) return snprintf(buf, cap, "BatterySaving：电量用完了，正在存东西。存好就关机。");
-    char control[256] = "";
-    if (ink_member_space_open() && ink_member_current()->role != INK_ROLE_CHILD)
-        snprintf(control, sizeof control, "省电：1 分钟锁屏=%s；原设锁屏=%lld 秒；power.set_saving（enabled：true/false）；", saving() ? "开" : "关", (long long)ink_setting_get("power.lock_after_s"));
-    return snprintf(buf, cap, "BatteryLow：电量只剩 %d%%。到 2%% 时先保存再关机。%s知道了：interrupt.ack。", B.percent, control);
+static int semantic_snapshot(char *buf, size_t cap) {
+    bool controls = !B.off && B.mode == 1 && ink_member_space_open() && ink_member_current()->role != INK_ROLE_CHILD;
+    char percent[64], control[160];
+    snprintf(percent, sizeof percent, "电量只剩 %d%%", B.percent);
+    snprintf(control, sizeof control, "省电：1 分钟锁屏=%s；原设锁屏=%lld 秒", saving() ? "开" : "关", (long long)ink_setting_get("power.lock_after_s"));
+    ink_ui_field_spec_t fields[] = {
+        {.id = "status", .role = "status", .label = "状态", .value = B.off ? (!ink_member_space_open() ? "已关机。没电了，充上电再开机" : B.title) : B.mode == 3 ? "正在充电。已锁定，按电源键或 AI 键唤醒。" : B.mode == 2 ? "电量用完了，正在存东西。存好就关机。" : "到 2% 时先保存再关机。"},
+        {.id = "body", .role = "text", .label = "说明", .value = B.off ? B.body : percent},
+        {.id = "saving", .role = "switch", .label = "省电", .value = control}
+    };
+    ink_ui_action_spec_t actions[] = {
+        {.id = "interrupt.ack", .label = "知道了", .capability = "interrupt.ack", .enabled = !B.off && B.mode == 1},
+        {.id = "power.set_saving", .label = "省电：1 分钟锁屏", .capability = "power.set_saving", .args_json = saving() ? "{\"enabled\":false}" : "{\"enabled\":true}", .enabled = controls}
+    };
+    const char *name = B.off ? "off" : B.mode == 3 ? "Charging" : B.mode == 2 ? "BatterySaving" : "BatteryLow";
+    ink_ui_page_spec_t page = {.id = name, .title = B.off ? "PowerOffEmpty" : name, .object = {"battery", ink_ui_generation()},
+        .fields = fields, .field_count = controls ? 3 : 2, .actions = actions, .action_count = sizeof actions / sizeof *actions};
+    return ink_ui_semantics_snapshot(&page, buf, cap);
 }
-static const ink_ui_overlay_t LOW = {.name = "BatteryLow", .level = 3, .snapshot = snapshot};
-static const ink_ui_overlay_t SAVING = {.name = "BatterySaving", .level = 3, .snapshot = snapshot};
-static const ink_ui_overlay_t CHARGING = {.name = "Charging", .level = 3, .snapshot = snapshot};
-static const ink_ui_overlay_t OFF = {.name = "off", .level = 5, .snapshot = snapshot};
+static const ink_ui_overlay_t LOW = {.name = "BatteryLow", .level = 3, .snapshot = semantic_snapshot};
+static const ink_ui_overlay_t SAVING = {.name = "BatterySaving", .level = 3, .snapshot = semantic_snapshot};
+static const ink_ui_overlay_t CHARGING = {.name = "Charging", .level = 3, .snapshot = semantic_snapshot};
+static const ink_ui_overlay_t OFF = {.name = "off", .level = 5, .snapshot = semantic_snapshot};
 static const ink_ui_overlay_t *overlay(void) { return B.off ? &OFF : B.mode == 3 ? &CHARGING : B.mode == 2 ? &SAVING : &LOW; }
 static void close_page(void) {
     if (!B.card.root) return;
@@ -58,7 +67,6 @@ static void center(const char *text, int font, int y, ink_ui_weight_t weight) {
     lv_obj_t *l = ink_ui_label(B.card.panel, text, font, weight, INK_MARGIN, y, INK_CANVAS_W - 2 * INK_MARGIN);
     lv_obj_set_style_text_align(l, LV_TEXT_ALIGN_CENTER, 0);
 }
-static void acknowledge(lv_event_t *e) { (void)e; ink_interrupt_action(B.interrupt, 0, INK_SRC_TOUCH); }
 static void render(int mode) {
     close_page(); B.mode = mode;
     if (!mode) return;
@@ -82,7 +90,7 @@ static void render(int mode) {
                             INK_MARGIN, bottom - INK_CONTROL - INK_GAP_L, INK_CANVAS_W - 2 * INK_MARGIN, NULL, NULL);
         ink_shell_bind(toggle, "power.set_saving", saving() ? "{\"enabled\":false}" : "{\"enabled\":true}");
         }
-        ink_ui_pill(B.card.panel, "知道了", INK_MARGIN, bottom, INK_CANVAS_W - 2 * INK_MARGIN, INK_PRIMARY, true, acknowledge, NULL);
+        ink_shell_bind(ink_ui_pill(B.card.panel, "知道了", INK_MARGIN, bottom, INK_CANVAS_W - 2 * INK_MARGIN, INK_PRIMARY, true, NULL, NULL), "interrupt.ack", NULL);
     } else if (mode == 2) {
         for (int i = 0; i < 3; i++)
             ink_ui_box(B.card.panel, INK_CANVAS_W / 2 - INK_GAP_L / 2 + (i - 1) * (INK_GAP_L + INK_GAP_L),
@@ -110,7 +118,7 @@ static void render(int mode) {
 }
 static void changed(void *ctx, int h, const char *id) {
     (void)ctx; (void)h; (void)id;
-    if (B.off) return;
+    if (B.off || (!strncmp(id, "member.", 7) && strcmp(id, "member.current") && strcmp(id, "member.authed"))) return;
     int64_t percent = 0, charging = 0;
     ink_state_get_int(ink_state_find("battery.level"), &percent);
     ink_state_get_int(ink_state_find("battery.charging"), &charging);
