@@ -88,6 +88,7 @@ static void publish_unread(void) {
     int n = NS.unread;
     ink_svc_unlock();
     ink_state_set_int(NS.h_unread, n);
+    ink_cap_emit("notify.changed", NULL);
 }
 
 static void recount(void) {
@@ -513,6 +514,7 @@ int ink_notify_channel_set(const char *id, bool on) {
     else NS.off |= 1u << i;
     ink_svc_unlock();
     save_prefs();
+    ink_cap_emit("notify.changed", NULL);
     return 0;
 }
 

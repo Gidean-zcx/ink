@@ -1,5 +1,17 @@
 # English. One entry per line: Chinese (the key in the code) <TAB> English. See tools/i18n/i18n_gen.py.
 @name	English
+# notification management
+删除	Delete
+全部已读	Mark all read
+全部清除	Clear all
+还没有通知	No notifications yet
+关闭后不再收进新通知，已有通知保留。电话和闹钟照常。	New notifications will not be added when off. Existing ones stay. Calls and alarms work as usual.
+系统	System
+短信	Messages
+电话	Calls
+闹钟	Alarms
+下载	Downloads
+AI	AI
 # first boot (boot_flow.c)
 你好	Hello
 选一个 Wi-Fi	Choose Wi-Fi

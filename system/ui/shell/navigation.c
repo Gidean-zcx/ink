@@ -32,7 +32,7 @@ typedef struct {
     char cap[48], args[192];
     uint32_t epoch;
 } binding_t;
-typedef enum { PAGE_SETTINGS, PAGE_DISPLAY, PAGE_SOUND, PAGE_NETWORK, PAGE_NOTIFICATIONS } page_t;
+typedef enum { PAGE_SETTINGS, PAGE_DISPLAY, PAGE_SOUND, PAGE_NETWORK, PAGE_NOTIFICATIONS, PAGE_CHANNELS } page_t;
 static void create_page(lv_obj_t *screen, void *arg);
 static void destroy_page(void);
 static int page_snapshot(char *buf, size_t cap);
@@ -54,7 +54,8 @@ static const ink_activity_t PAGES[] = {
      .create = create_page,
      .destroy = destroy_page,
      .snapshot = page_snapshot,
-     .on_key = page_key}};
+     .on_key = page_key},
+    {.name = "SetNotifications", .create = create_page, .destroy = destroy_page, .snapshot = page_snapshot, .on_key = page_key}};
 
 static struct {
     lv_obj_t *home, *content, *dots, *clock, *date, *message;
@@ -72,6 +73,7 @@ static struct {
     bool scan_busy;
     ink_notify_view_t control_items[2], notify_items[6];
     int control_count;
+    int channel_first, channel_end;
     ink_ui_list_t *notify_list;
     ink_ui_list_position_t notify_position;
     char notify_ids[6][32], notify_args[6][64];
@@ -1109,11 +1111,11 @@ static void body_blocks(void) {
             group_row(g, "bluetooth", TR("蓝牙"), integer("bt.connected") ? TR("已连接") : TR("没有连接"), 1, "shell.bluetooth");
         }
         F.y += 2 * INK_CONTROL + INK_GAP;
-        if (block(3 * INK_CONTROL)) {
+        if (block(4 * INK_CONTROL)) {
             char light[32], volume[32];
             snprintf(light, sizeof light, TR("亮度 %lld"), (long long) ink_setting_get("display.light") / 10);
             snprintf(volume, sizeof volume, TR("音量 %lld"), (long long) ink_setting_get("audio.volume") / 10);
-            lv_obj_t *g = group(3);
+            lv_obj_t *g = group(4);
             group_row(g, "sun", TR("显示和亮度"), light, 0, "shell.display");
             group_row(g, "volume", TR("声音"), volume, 1, "shell.sound");
             int wake = (int) ink_setting_get("voice.handsfree");
@@ -1122,14 +1124,34 @@ static void body_blocks(void) {
                       : wake == 1 ? TR("一直能叫名字")
                                   : TR("使用时能叫名字"),
                       2, "shell.voice");
+            group_row(g, "bell", TR("通知"), "", 3, "shell.notify_settings");
         }
-        F.y += 3 * INK_CONTROL + INK_GAP;
+        F.y += 4 * INK_CONTROL + INK_GAP;
         if (block(3 * INK_CONTROL)) {
             lv_obj_t *g = group(3);
             char lock_after[32]; snprintf(lock_after, sizeof lock_after, TR("%lld 分钟"), (long long)ink_setting_get("power.lock_after_s") / 60);
             group_row(g, "lock", TR("锁屏和壁纸"), lock_after, 0, "shell.wallpaper");
             group_row(g, "storage", TR("存储和备份"), "", 1, "shell.storage");
             group_row(g, "info", TR("关于和更新"), "", 2, "shell.about");
+        }
+    } else if (N.page_id == PAGE_CHANNELS) {
+        const char *note = TR("关闭后不再收进新通知，已有通知保留。电话和闹钟照常。");
+        int h = notice_h(note);
+        if (block(h)) ink_ui_notice(N.page_body, note, F.y);
+        F.y += h + INK_GAP_L;
+        if (F.draw) N.channel_first = N.channel_end = -1;
+        const ink_notify_channel_t *ch;
+        for (int i = 0; (ch = ink_notify_channel_at(i)); i++) {
+            if (block(INK_CONTROL)) {
+                bool on = ink_notify_channel_on(ch->id);
+                char args[96];
+                snprintf(args, sizeof args, "{\"id\":\"%s\",\"enabled\":%s}", ch->id, on ? "false" : "true");
+                ink_shell_bind(ink_ui_toggle(N.page_body, TR(ch->title), on, INK_MARGIN, F.y, width(), NULL, NULL),
+                    "notify.set_channel", args);
+                if (N.channel_first < 0) N.channel_first = i;
+                N.channel_end = i + 1;
+            }
+            F.y += INK_CONTROL + INK_GAP_M;
         }
     } else if (N.page_id == PAGE_DISPLAY) {
         if (block(INK_SLIDER))
@@ -1358,15 +1380,20 @@ static void notify_bind(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field
     *action = (ink_ui_action_spec_t){.id = N.notify_ids[at], .label = "打开通知", .capability = "shell.notify_open",
         .args_json = N.notify_args[at], .object = field->object, .enabled = true};
     int h = ink_ui_row_double(), text_y = (h - ink_ui_line_height(INK_FONT_LIST) - ink_ui_line_height(INK_FONT_NOTE)) / 2;
+    int delete_w = ink_ui_text_width(TR("删除"), INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * INK_GAP;
+    if (delete_w < INK_PRIMARY) delete_w = INK_PRIMARY;
+    int text_w = width() - INK_ROW_DOUBLE - delete_w - 2 * INK_GAP_L;
     if (!lv_obj_get_child_count(slot)) {
-        ink_ui_line(slot, "", INK_FONT_LIST, INK_WEIGHT_BOLD, INK_ROW_DOUBLE, text_y, width() - INK_ROW_DOUBLE - INK_MARGIN);
+        ink_ui_line(slot, "", INK_FONT_LIST, INK_WEIGHT_BOLD, INK_ROW_DOUBLE, text_y, text_w);
         ink_ui_line(slot, "", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_ROW_DOUBLE,
-            text_y + ink_ui_line_height(INK_FONT_LIST), width() - INK_ROW_DOUBLE - INK_MARGIN);
+            text_y + ink_ui_line_height(INK_FONT_LIST), text_w);
     }
     lv_label_set_text(lv_obj_get_child(slot, 0), n->title); lv_label_set_text(lv_obj_get_child(slot, 1), n->body);
-    if (lv_obj_get_child_count(slot) > 2) lv_obj_delete(lv_obj_get_child(slot, 2));
+    while (lv_obj_get_child_count(slot) > 2) lv_obj_delete(lv_obj_get_child(slot, 2));
     ink_ui_circle(slot, !strcmp(n->channel, "message") ? "message" : "bell", INK_GAP, (h - INK_CIRCLE) / 2,
         INK_CIRCLE, INK_ICON_LIST, INK_SURFACE_STATIC, NULL, NULL);
+    ink_shell_bind(ink_ui_pill(slot, TR("删除"), width() - delete_w - INK_GAP_M, (h - INK_CONTROL) / 2,
+        delete_w, INK_CONTROL, false, NULL, NULL), "notify.dismiss", N.notify_args[at]);
 }
 static void draw_page_body(void) {
     if (N.page_id == PAGE_NOTIFICATIONS) {
@@ -1380,17 +1407,18 @@ static void draw_page_body(void) {
             int fits = (INK_CANVAS_H - INK_STATUS_BAR - INK_PRIMARY - INK_GAP_XS - INK_GAP_M - 2 * (INK_CONTROL + INK_GAP)) /
                 (ink_ui_row_double() + INK_GAP_M);
             N.notify_list = ink_ui_list_create(N.page_body, &page, &N.notify_position, fits < 6 ? fits : 6, 1,
-                ink_ui_row_double(), "还没有通知", notify_bind, NULL);
-            lv_obj_t *read = ink_ui_pill(N.page_body, "全部已读", INK_MARGIN,
+                ink_ui_row_double(), TR("还没有通知"), notify_bind, NULL);
+            lv_obj_t *read = ink_ui_pill(N.page_body, TR("全部已读"), INK_MARGIN,
                 INK_CANVAS_H - INK_STATUS_BAR - INK_PRIMARY - INK_GAP_XS - INK_CONTROL - INK_GAP_M,
                 (width() - INK_GAP) / 2, INK_CONTROL, false, NULL, NULL);
             ink_shell_bind(read, "notify.read", "{\"id\":0}");
-            ink_shell_bind(ink_ui_pill(N.page_body, "全部清除", INK_MARGIN + (width() + INK_GAP) / 2,
+            ink_shell_bind(ink_ui_pill(N.page_body, TR("全部清除"), INK_MARGIN + (width() + INK_GAP) / 2,
                 INK_CANVAS_H - INK_STATUS_BAR - INK_PRIMARY - INK_GAP_XS - INK_CONTROL - INK_GAP_M,
                 (width() - INK_GAP) / 2, INK_CONTROL, false, NULL, NULL), "notify.clear", NULL);
         }
         ink_db_cursor_t cursor = {0}; ink_notify_view_t n; size_t total = 0;
         while (ink_notify_next(&cursor, &n) == 1) total++;
+        memset(N.notify_ids, 0, sizeof N.notify_ids);
         if (N.notify_list) ink_ui_list_refresh(N.notify_list, total);
         return;
     }
@@ -1424,7 +1452,7 @@ static void create_page(lv_obj_t *screen, void *arg) {
     N.page = screen;
     N.page_id = (page_t) (intptr_t) arg;
     N.body_page = 0;
-    static const char *const titles[] = {TR_NOOP("设置"), TR_NOOP("显示和亮度"), TR_NOOP("声音"), TR_NOOP("网络和 SIM 卡"), TR_NOOP("通知")};
+    static const char *const titles[] = {TR_NOOP("设置"), TR_NOOP("显示和亮度"), TR_NOOP("声音"), TR_NOOP("网络和 SIM 卡"), TR_NOOP("通知"), TR_NOOP("通知")};
     ink_shell_statusbar(screen, true);
     ink_shell_topbar(screen, TR(titles[N.page_id]));
     N.page_body = ink_ui_box(screen, 0, INK_STATUS_BAR + INK_PRIMARY + INK_GAP_XS, INK_CANVAS_W,
@@ -1458,9 +1486,35 @@ static int page_snapshot(char *buf, size_t cap) {
     if (N.notify_list) {
         int n = ink_ui_list_snapshot(N.notify_list, buf, cap);
         if (n <= 0) return n;
-        int more = snprintf(buf + n - 1, cap - (size_t)n + 1,
-            ",\"clear_action\":{\"label\":\"全部清除\",\"capability\":\"notify.clear\",\"args_json\":\"{}\"}}");
-        return more < 0 || (size_t)more >= cap - (size_t)n + 1 ? -1 : n - 1 + more;
+        ink_jw_t w = {.buf = buf, .cap = cap, .len = (size_t)n - 1};
+        ink_jw_raw(&w, ",\"clear_action\":{\"label\":\"全部清除\",\"capability\":\"notify.clear\",\"args_json\":\"{}\"},\"dismiss_actions\":[");
+        bool comma = false;
+        for (unsigned i = 0; i < sizeof N.notify_ids / sizeof *N.notify_ids; i++) if (N.notify_ids[i][0]) {
+            ink_jw_raw(&w, comma ? ",{\"object\":" : "{\"object\":");
+            ink_jw_str(&w, N.notify_ids[i]);
+            ink_jw_raw(&w, ",\"label\":"); ink_jw_str(&w, TR("删除"));
+            ink_jw_raw(&w, ",\"capability\":\"notify.dismiss\",\"args_json\":"); ink_jw_str(&w, N.notify_args[i]);
+            ink_jw_raw(&w, "}"); comma = true;
+        }
+        ink_jw_raw(&w, "]}");
+        return w.overflow ? -1 : (int)w.len;
+    }
+    if (N.page_id == PAGE_CHANNELS) {
+        ink_jw_t w; ink_jw_init(&w, buf, cap);
+        ink_jw_raw(&w, "{\"page\":\"SetNotifications\",\"page_number\":"); ink_jw_int(&w, N.body_page + 1);
+        ink_jw_raw(&w, ",\"pages\":"); ink_jw_int(&w, N.body_pages);
+        ink_jw_raw(&w, ",\"navigation\":[\"shell.page_prev\",\"shell.page_next\",\"shell.back\"],\"channels\":[");
+        for (int i = N.channel_first; i >= 0 && i < N.channel_end; i++) {
+            const ink_notify_channel_t *ch = ink_notify_channel_at(i);
+            bool on = ink_notify_channel_on(ch->id);
+            char args[96]; snprintf(args, sizeof args, "{\"id\":\"%s\",\"enabled\":%s}", ch->id, on ? "false" : "true");
+            ink_jw_raw(&w, i == N.channel_first ? "{\"id\":" : ",{\"id\":"); ink_jw_str(&w, ch->id);
+            ink_jw_raw(&w, ",\"label\":"); ink_jw_str(&w, TR(ch->title));
+            ink_jw_raw(&w, on ? ",\"enabled\":true" : ",\"enabled\":false");
+            ink_jw_raw(&w, ",\"capability\":\"notify.set_channel\",\"args_json\":"); ink_jw_str(&w, args);
+            ink_jw_raw(&w, "}");
+        }
+        ink_jw_raw(&w, "]}"); return w.overflow ? -1 : (int)w.len;
     }
     if (N.page_id == PAGE_SOUND)
         return snprintf(buf, cap, "SetSound；音量=%lld；勿扰=%lld；按键提示音(audio.key_tone)=%lld；振动(audio.vibration)=%lld；来电铃声(audio.call_ring)=%lld；闹钟铃声(audio.alarm_ring)=%lld；铃声：0清音、1双音、2柔音；settings.set(id,value)更改并试听；shell.page_next、shell.page_prev、shell.back。", (long long)ink_setting_get("audio.volume"), (long long)ink_setting_get("notify.dnd"), (long long)ink_setting_get("audio.key_tone"), (long long)ink_setting_get("audio.vibration"), (long long)ink_setting_get("audio.call_ring"), (long long)ink_setting_get("audio.alarm_ring"));
@@ -1475,6 +1529,8 @@ static int page_snapshot(char *buf, size_t cap) {
                       (long long) ink_setting_get("power.lock_after_s"), (long long) ink_setting_get("power.lift_wake"),
                       (long long) ink_setting_get("notify.dnd"),
                       (long long) ink_setting_get("voice.handsfree"), ink_lang_code());
+    if (N.page_id == PAGE_SETTINGS && n >= 0 && (size_t)n < cap)
+        n += snprintf(buf + n, cap - (size_t)n, "通知设置：shell.notify_settings；");
     if (N.body_pages > 1 && N.page_id != PAGE_NOTIFICATIONS && n >= 0 && (size_t) n < cap)
         n += snprintf(buf + n, cap - (size_t) n, "这一组第 %d 页，共 %d 页；动作：shell.page_next、shell.page_prev；",
                       N.body_page + 1, N.body_pages);
@@ -1563,6 +1619,8 @@ static void cap_nav(ink_call_t *c) {
         ink_shell_open_page("SetNetwork");
     else if (!strcmp(c->cap->id, "shell.notifications"))
         ink_shell_open_page("Notifications");
+    else if (!strcmp(c->cap->id, "shell.notify_settings"))
+        ink_shell_open_page("SetNotifications");
     else if (!strcmp(c->cap->id, "shell.page_next"))
         turn_body(1);
     else if (!strcmp(c->cap->id, "shell.page_prev"))
@@ -1646,6 +1704,7 @@ static const ink_cap_t CAPS[] = {
     NAV("shell.sound", "声音", false),
     NAV("shell.network", "网络和 SIM 卡", false),
     NAV("shell.notifications", "查看通知", true),
+    NAV("shell.notify_settings", "通知渠道设置", false),
     NAV("shell.page_next", "设置页的下一页", true),
     NAV("shell.page_prev", "设置页的上一页", true),
     NAV("shell.notify_next", "通知下一页", true),
@@ -1750,6 +1809,11 @@ static const ink_setting_def_t SETTINGS[] = {
      .child_may_change = true}};
 
 int ink_shell_ai_init(void);
+static void notify_changed(void *ctx, const char *id, const ink_args_t *args) {
+    (void)ctx; (void)id; (void)args;
+    if (current_session(N.epoch) && N.page_body && (N.page_id == PAGE_NOTIFICATIONS || N.page_id == PAGE_CHANNELS))
+        draw_page_body();
+}
 
 int ink_shell_init(void) {
     if (ink_activity_card_init() != 0) return -1;
@@ -1763,6 +1827,7 @@ int ink_shell_init(void) {
         ink_settings_define(SETTINGS, sizeof SETTINGS / sizeof *SETTINGS))
         return -1;
     if (ink_settings_watch("", changed, NULL, INK_EXEC_UI)) return -1;
+    if (ink_cap_subscribe("notify.changed", notify_changed, NULL, INK_EXEC_UI)) return -1;
     return ink_state_watch("", changed, (void *) 1, INK_EXEC_DIRECT);
 }
 
