@@ -1,9 +1,15 @@
 import asyncio
+import re
 import secrets
 
 from ink_hub.bus.policy import authorize
 from ink_hub.bus.schema import validate
-from ink_hub.gateway.wire import SPEECH_BYTES, ProtocolError, answer as clip, chunks, frame, response
+from ink_hub.gateway.wire import ProtocolError, answer as clip, chunks, frame, response
+
+
+def sentences(text):
+    for match in re.finditer(r"[^。！？.!?；;\n]*[。！？.!?；;\n]|[^。！？.!?；;\n]+$", text):
+        yield from chunks(match.group())
 
 
 async def run_turn(self, rid, method, params):
@@ -18,8 +24,10 @@ async def run_turn(self, rid, method, params):
         budget = params.get("budget_ms", 30000)
         if type(budget) is not int or budget < 0:
             raise ProtocolError("剩余时间无效")
-        deadline = asyncio.get_running_loop().time() + max(0, min(budget, 45000) - 3000) / 1000
-        async with asyncio.timeout_at(deadline):
+        loop = asyncio.get_running_loop()
+        deadline = loop.time() + max(0, min(budget, 45000) - 3000) / 1000
+        total_deadline = loop.time() + 597  # device's ten-minute limit, less transport margin
+        async with asyncio.timeout_at(deadline) as turn_timeout:
             snapshot = params.get("page", {})
             if not isinstance(snapshot, dict) or not isinstance(snapshot.get("actions", []), list):
                 raise ProtocolError("页面快照无效")
@@ -66,26 +74,28 @@ async def run_turn(self, rid, method, params):
                 text = receipt.get("say") or ("操作未完成。" if receipt["status"] != "done" else text)
                 if receipt.get("page_gen", params.get("page_gen")) != params.get("page_gen"):
                     await self.tools.current([], guard=guard)
-            for seq, part in enumerate(chunks(clip(text))):
+            text = clip(text)
+            for seq, part in enumerate(chunks(text)):
                 await self.notify("ai.delta", {"id": rid, "text": part, "seq": seq}, guard)
             if session:
-                audio = await self.hub.tts.synthesize("".join(chunks(text, total=SPEECH_BYTES)))
-                if len(audio) > 450:
-                    raise ProtocolError("朗读超过一轮预算")
-                start = asyncio.get_running_loop().time()
-                for seq, packet in enumerate(audio):
-                    # Five-frame prefill, then real-time pacing via the loop timer.
-                    target = start + max(0, seq - 4) * 0.06
-                    delay = target - asyncio.get_running_loop().time()
-                    if delay > 0:
-                        future = asyncio.get_running_loop().create_future()
-                        timer = asyncio.get_running_loop().call_later(delay, lambda: future.set_result(None) if not future.done() else None)
-                        try:
-                            await future
-                        finally:
-                            timer.cancel()
-                    await self.send(frame(2, sid, seq, packet), guard=guard)
-                    count += 1
+                target = loop.time() - 0.24  # five-frame prefill; never catch up in a large burst
+                for sentence in sentences(text):
+                    audio = await self.hub.tts.synthesize(sentence)
+                    for packet in audio:
+                        target = max(target, loop.time() - 0.24)
+                        delay = target - loop.time()
+                        if delay > 0:
+                            future = loop.create_future()
+                            timer = loop.call_later(delay, lambda: future.set_result(None) if not future.done() else None)
+                            try:
+                                await future
+                            finally:
+                                timer.cancel()
+                        await self.send(frame(2, sid, count, packet), guard=guard)
+                        count += 1
+                        now = loop.time()
+                        turn_timeout.reschedule(min(total_deadline, now + 10))
+                        target += 0.06
     except asyncio.CancelledError:
         return
     except (TimeoutError, ProtocolError, PermissionError, ConnectionError, RuntimeError):

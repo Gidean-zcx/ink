@@ -40,6 +40,8 @@ int ink_hub_call(const char *method, const char *params_json, int64_t timeout_us
 /** A request built for a saved member boundary; never rebound after preparing its private payload. */
 int ink_hub_call_for(const char *method, const char *params_json, int64_t timeout_us, ink_hub_reply_fn cb, void *ctx,
                      const char *member, uint32_t epoch);
+/** Hub task only: move an in-flight request's deadline after receiving stream progress. */
+void ink_hub_renew(int id, uint64_t deadline_us);
 /** Receive notifications whose method starts with `prefix` (e.g. "ai."). Up to 8 subscribers. */
 int ink_hub_subscribe(const char *prefix, ink_hub_notify_fn fn, void *ctx);
 /** User activity: open the connection now if needed and keep it up for a while (pre-connect on key press). */

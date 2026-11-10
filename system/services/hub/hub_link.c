@@ -215,6 +215,16 @@ static void finish(pending_t *p, int status, const ink_json_t *msg, int tok) {
     osal_free(params);
 }
 
+void ink_hub_renew(int id, uint64_t deadline_us) {
+    for (int i = 0; i < MAX_PENDING; i++) {
+        pending_t *p = &H.pend[i];
+        if (p->used && p->sent && p->id == (uint32_t)id) {
+            p->deadline = deadline_us;
+            return;
+        }
+    }
+}
+
 static int send_request(pending_t *p) {
     uint64_t now = osal_now_us();
     if (now >= p->deadline && p->used) return -1;

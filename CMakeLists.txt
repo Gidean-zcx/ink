@@ -1366,6 +1366,10 @@ add_test(NAME ai-answer-long COMMAND sim-ai-answer-long --profile ${CMAKE_SOURCE
   --script ${CMAKE_SOURCE_DIR}/tests/ai_answer_long/ai_answer_long.script --hub ${CMAKE_SOURCE_DIR}/tests/ai_answer_long/hub.json
   --budget ${CMAKE_SOURCE_DIR}/tests/ai_answer_long/budget.json
   --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT} --out ${CMAKE_BINARY_DIR}/test-out/ai-answer-long --quiet --no-random-outages)
+ink_sim_executable(sim-ai-speech-long tests/ai_speech_long/ai_speech_long.c)
+target_link_libraries(sim-ai-speech-long PRIVATE ink_apps ink_system)
+add_test(NAME ai-speech-long COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/ai_speech_long/run.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(ai-speech-long PROPERTIES TIMEOUT 180)
 target_sources(ink_system PRIVATE system/apps/phone/phone.c)
 ink_sim_executable(sim-phone-calls tests/phone_calls/phone_calls.c)
 target_link_libraries(sim-phone-calls PRIVATE ink_apps ink_system)
