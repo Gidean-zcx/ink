@@ -260,10 +260,13 @@ Codex 额度用完，任务改由 Claude 子代理（思考等级 medium）在�
 
 | 状态 | 任务 |
 | --- | --- |
-| 已合入（5） | `boot-db-stall`、`time-settings`、`reminder-edit`、`port-hal-2`（只编译；对照原厂代码查出的问题由 `port-sleep-vendor` 修，见下）、`files-ops` |
-| 在做（7） | `lock-camera`、`kid-apps`、`ai-speech-long`、`clock-extras`、`qr-scan`、`notify-manage`；`sms-multipart` 返工为 `sms-multipart-2`（第一版放大参数表和确认卡，撞了栈预算和确认卡的规矩，没合并；收短信那一半保留；等空位） |
-| 审查修复 | `port-sleep-vendor`（在做）：port-hal-2 的浅睡、调频、唤醒、扩展芯片睡眠配置照原厂代码对齐（2026-11-10 晚上用户要求硬件先查原厂代码）；属于完成条件第 2 条，不算新任务 |
-| 接着做（15） | `emergency-call`、`mobile-network`（都等 sms-multipart-2 合入）、`settings-small`（没连上的已存 Wi-Fi、文字重做）、`i18n-2`、`i18n-3`、`i18n-4`（其余页面的英文全覆盖）、`semantics-shell-1`、`semantics-shell-2`、`small-gaps-1`（说话能打断回答、设备详情和开源许可、通话分钟数、电量页换家人）、`small-gaps-2`（“继续读”卡片的百分比和插拔卡刷新、“全部”页时钟相机相册的图标、拨号页提示压住键盘、飞行模式面板自动收起）、`port-display-1`（屏幕输出层接厂家现成代码，只编译）、`open-app-latency`、`ui-deps-refresh`、`phone-gap-3`（最后的缺口检查）、最后一轮整批审查 |
+2026-11-11 早上的状态：
+
+| 状态 | 任务 |
+| --- | --- |
+| 已合入（25） | `boot-db-stall`、`time-settings`、`reminder-edit`、`port-hal-2`、`files-ops`、`lock-camera`、`kid-apps`、`ai-speech-long`、`clock-extras`、`qr-scan`、`notify-manage`、`sms-multipart-2`、`emergency-call`、`mobile-network`（这两项以 `cell-features-merge` 合入）、`settings-small`、`i18n-2`（以 `i18n-2b` 合入）、`i18n-3`、`i18n-4`、`semantics-shell-1`、`semantics-shell-2`、`small-gaps-1`、`small-gaps-2`、`port-display-1`、`open-app-latency`、`ui-deps-refresh` |
+| 审查修复 | `port-sleep-vendor`、`port-sleep-vendor-2`、`audit14-fix`、`audit14-merge-fix` 已合入；最后一轮整批审查已做完（[batch15 报告](../audits/batch15/report.md)），中等问题 3 项已修，“英文覆盖不完整”1 项等 phone-gap-3 量化后请用户定 |
+| 在做（1） | `phone-gap-3`（最后的缺口检查，2026-11-11 07:46 派出） |
 
 **不在这一阶段（到这里就停下问用户）**：
 - 上真机：烧录、驱动调试、真机性能实测（每次写设备都要先整片备份、征得同意）。
