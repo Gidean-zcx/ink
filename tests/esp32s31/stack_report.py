@@ -46,7 +46,7 @@ tasks = {'storage': ('storage_service.c:storage_task', 4096),
          'display': ('display_service.c:service_task', 3072),
          'audio': ('audio_service.c:audio_task', 26624),
          'comm': ('comm_service.c:comm_task', 8192),
-         'power': ('power_service.c:power_task', 3072),
+         'power': ('power_service.c:power_task', 4096),
          'exec.media': ('exec.c:exec_task', 8192),
          'exec.bg': ('exec.c:exec_task', 8192)}
 host = {}

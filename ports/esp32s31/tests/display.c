@@ -26,6 +26,14 @@ static _Thread_local int loops;
 static void (*lcd_done)(void *);
 static void *lcd_ctx;
 static uint8_t queue_line[LINE_BYTES];
+static bool lcd_stopped;
+void lcd_ll_stop(void *hw) { assert(hw == NULL && ATOMIC(D.stop) && !lcd_done); lcd_stopped = true; }
+void ink_s31_panel_panic(int oe, int mode, uint8_t p0) {
+    assert(oe == EPD_PIN_XOE && mode == EPD_PIN_MODE && p0 == 0);
+    assert(ATOMIC(D.stop) && lcd_stopped && !lcd_done);
+    xoe = 0;
+    off_count++;
+}
 
 static void *record_alloc(size_t n) {
     assert(allocation_count < ALLOCATION_LIMIT);
@@ -262,6 +270,15 @@ int main(int argc, char **argv) {
     else if (!strcmp(which, "wake-overlap")) wake_overlap();
     else if (!strcmp(which, "selftest")) selftest(true);
     else if (!strcmp(which, "selftest-dead")) selftest(false);
+    else if (!strcmp(which, "shutdown")) {
+        atomic_store(&D.powered, true);
+        ink_s31_display_shutdown();
+        assert(ATOMIC(D.stop) && !ATOMIC(D.powered) && !ATOMIC(D.armed));
+        assert(off_count == 1 && abort_count == 1 && xoe == 0);
+    } else if (!strcmp(which, "panic")) {
+        ink_s31_display_panic();
+        assert(ATOMIC(D.stop) && lcd_stopped && off_count == 1 && xoe == 0);
+    }
     else abort();
     assert(pthread_mutex_destroy(&D.lock->lock) == 0);
     for (unsigned i = 0; i < allocation_count; i++) free(allocations[i]);

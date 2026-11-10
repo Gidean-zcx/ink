@@ -5,6 +5,7 @@
 #include "config.h"
 #include "esp_attr.h"
 #include "esp_rom_sys.h"
+#include "hal/lcd_ll.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
 #include "freertos/task.h"
@@ -18,6 +19,7 @@
 #include "panel_e0470a14.h"
 #include "s31_board.h"
 #include "tps65185/tps65185.h"
+#include "s31_safety.h"
 
 enum { W = 1216, H = 684 };
 #define LINE_BYTES (W / 4)
@@ -72,6 +74,16 @@ static void guard_check(void) {
     atomic_store(&D.armed, false); /* The self-test: nothing has started the LCD, so only the power goes. */
     power_off();
     atomic_store(&D.tripped, true);
+}
+void ink_s31_display_shutdown(void) { if (D.ready) trip(); }
+void IRAM_ATTR ink_s31_display_panic(void) {
+    atomic_store(&D.stop, true);
+    if (D.ready) {
+        epd_lcd_line_source_cb(NULL, NULL);
+        epd_lcd_frame_done_cb(NULL, NULL);
+        lcd_ll_stop(LCD_LL_GET_HW(0));
+    }
+    ink_s31_panel_panic(EPD_PIN_XOE, EPD_PIN_MODE, D.power.ioexp ? D.power.ioexp->out[0] : 0);
 }
 static void guard(void *ctx) {
     (void)ctx;

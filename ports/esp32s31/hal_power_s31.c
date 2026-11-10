@@ -14,6 +14,7 @@
 #include "s31_board.h"
 #include "s31_input_logic.h"
 #include "s31_io.h"
+#include "s31_safety.h"
 #include "hal/usb_serial_jtag_ll.h"
 
 struct hal_cpu_boost { bool held; };
@@ -58,8 +59,11 @@ void hal_power_set_state(hal_power_state_t s) {
 }
 void s31_power_init(void) {
     g_cpu_lock = osal_mutex_create();
-    if (!g_cpu_lock || !ink_cpu_apply(CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ) || ink_s31_sleep_init() != ESP_OK)
+    if (!g_cpu_lock || !ink_cpu_apply(CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ))
         osal_panic("power HAL: CPU clock setup failed");
+#if INK_S31_LIGHT_SLEEP
+    if (ink_s31_sleep_init() != ESP_OK) osal_panic("power HAL: sleep setup failed");
+#endif
 }
 
 void hal_power_request(hal_power_res_t res, bool on) {
@@ -70,6 +74,7 @@ void hal_power_request(hal_power_res_t res, bool on) {
     } while (!__atomic_compare_exchange_n(&g_refs[res], &old, next, false, __ATOMIC_ACQ_REL, __ATOMIC_ACQUIRE));
 }
 
+#if INK_S31_LIGHT_SLEEP
 static bool busy(void) { /* no locks: also used immediately before sleep with scheduling stopped */
     return hal_display_pending() > 0 || s31_haptic_busy() ||
            __atomic_load_n(&g_refs[HAL_PWR_AUDIO_IN], __ATOMIC_ACQUIRE) > 0 ||
@@ -116,14 +121,7 @@ static bool restore(bool (*step)(void)) {
 static bool restore_keys(void) { return metalio_board_restore_keys(NULL, NULL) == HAL_I2C_OK; }
 static bool restore_rails(void) { return metalio_board_restore_rails() == HAL_I2C_OK; }
 
-/* Off in the trial build (2026-11-10): light sleep has not woken properly on the device yet (selftest rounds 3
- * and 7, docs/hardware/2026-11-10-selftest.md) and the user tests it only when present. Refused, USB stays up. */
-#ifndef INK_S31_LIGHT_SLEEP
-#define INK_S31_LIGHT_SLEEP 0
-#endif
-
 uint32_t hal_power_sleep(const hal_sleep_cfg_t *cfg) {
-    if (!INK_S31_LIGHT_SLEEP) return 0;
     if (!cfg || !metalio_board_ready() || busy()) return 0;
     uint8_t p0, p1 = 0xFF;
     if (metalio_board_read(0, &p0) != HAL_I2C_OK || (p0 & (MB_P0_AMP | MB_P0_MOTOR))) return 0;
@@ -188,8 +186,12 @@ out:
     s31_input_resume(cause, woke_at, keys_back);
     return cause;
 }
+#else
+uint32_t hal_power_sleep(const hal_sleep_cfg_t *cfg) { (void)cfg; return 0; }
+#endif
 
 void hal_power_shutdown(void) {
+    ink_s31_display_shutdown();
     hal_light_set(0, 0);
     if (metalio_board_ready()) metalio_power_off();
     hal_log_write("power HAL: power-off pulse train returned");

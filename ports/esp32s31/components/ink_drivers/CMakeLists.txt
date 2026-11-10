@@ -6,7 +6,8 @@ idf_component_register(SRCS ${sources} ../../s31_board.c ../../hal_input_s31.c .
     INCLUDE_DIRS ${root}/drivers/chips ${root}/drivers/display/pqbn ${root}/boards PRIV_INCLUDE_DIRS ../..
     ${ink_display_includes}
     REQUIRES ink_platform PRIV_REQUIRES esp_driver_ledc esp_driver_gpio esp_pm esp_hal_usb esp_driver_usb_serial_jtag
-    esp_lcd esp_driver_rmt esp_hal_rmt esp_hal_i2s esp_mm)
+    esp_lcd esp_hal_lcd esp_driver_rmt esp_hal_rmt esp_hal_i2s esp_mm)
+target_compile_definitions(${COMPONENT_LIB} PRIVATE INK_S31_LIGHT_SLEEP=$<BOOL:${INK_S31_LIGHT_SLEEP}>)
 if(ink_display_sources)
     idf_component_get_property(platform ink_platform COMPONENT_LIB)
     target_compile_definitions(${platform} PRIVATE INK_S31_DISPLAY=1)

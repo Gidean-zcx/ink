@@ -26,6 +26,8 @@ static bool low_after_arm, low_after_cut, wake_armed, rails_cut, usb_connected;
 static int mask_fail, cut_fail, keys_fail, rails_fail, sleep_rc, restarts, offs, mhz;
 static uint64_t usb_off_at;
 static int pending, resume_calls;
+static int stopped;
+void ink_s31_display_shutdown(void) { stopped++; }
 #define ALLOC_CAP 8
 static void *allocs[ALLOC_CAP];
 static unsigned alloc_n;
@@ -215,14 +217,13 @@ int main(void) {
     assert(mhz == 320);
 
     hal_sleep_cfg_t cfg = {.max_us = 60000000, .wake_mask = HAL_WAKE_POWER_KEY | HAL_WAKE_RTC | HAL_WAKE_MOTION};
-#if !INK_S31_LIGHT_SLEEP
-    /* The trial build refuses light sleep before touching anything: no board traffic, no sleep, USB stays. */
-    reset();
-    sources = 1u << ESP_SLEEP_WAKEUP_TIMER;
-    assert(hal_power_sleep(&cfg) == 0 && !slept && trace_n == 0);
-    puts("power: light sleep refused in the trial build");
-    return 0;
-#endif
+    if (!INK_S31_LIGHT_SLEEP) {
+        hal_power_set_state(HAL_PWR_STATE_LOCKED);
+        reset();
+        assert(hal_power_sleep(&cfg) == 0 && !slept && !paused && !suspended && trace_n == 0);
+        assert(mhz == 160 && usb_connected && resume_calls == 0);
+        assert(hal_power_sleep(NULL) == 0);
+    } else {
     reset();
     sources = 1u << ESP_SLEEP_WAKEUP_EXT1;
     wake_pins = 1ull << S31_GPIO_EXP_INT;
@@ -315,10 +316,11 @@ int main(void) {
     cfg.wake_mask = HAL_WAKE_AI_KEY;
     cfg.max_us = 0;
     assert(hal_power_sleep(&cfg) == 0 && trace_n == 0);
+    }
     reset();
     hal_power_shutdown();
     hal_power_reboot();
-    assert(offs == 1 && restarts == 1);
+    assert(offs == 1 && restarts == 1 && stopped == 1);
     for (unsigned i = 0; i < alloc_n; i++) free(allocs[i]);
     puts("s31 power: fixed clocks, vendor sleep, USB revive, wake causes and unwind passed");
     return 0;
