@@ -1,4 +1,5 @@
 /* Synthetic inputs exercise the real input, UI, settings and motor services. */
+#include <stdlib.h>
 #include "ink/ui_shell.h"
 #include "ink/sys/i18n.h"
 #define ink_main product_main
@@ -12,7 +13,13 @@ static int clicks;
 static lv_point_t target;
 static const char *wanted;
 static bool found, captured;
+static bool restarting;
 static char page[3072];
+static void read_phase(void *arg) {
+    (void)arg;
+    const char *phase = getenv("INK_VENDOR_HAPTIC_RESTART");
+    restarting = phase && !strcmp(phase, "1");
+}
 static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
 static void quiet(void) { CHECK(WAIT_FOR(settled(), 12000), "frame settles"); }
 static void call_ok(const char *id, const char *args) {
@@ -74,6 +81,7 @@ static void pulse_touch(int expected_ms) {
     CHECK(ink_test_pulses == before + 1 && ink_test_pulse_ms == expected_ms,
           "one pulse of %d ms (actual %d)", expected_ms, ink_test_pulse_ms);
     CHECK(clicks == clicked_before, "haptic does not wait for a click");
+    CHECK(WAIT_FOR(sim_board_motor_on(), 1000), "real simulated P03 output turns on");
     hw(HW_RELEASE, target.x, target.y); quiet();
     CHECK(ink_test_pulses == before + 1, "release adds no pulse");
     CHECK(WAIT_FOR(!sim_board_motor_on(), 2000), "real simulated P03 output turns off");
@@ -116,6 +124,10 @@ static void input_checks(void) {
         before = ink_test_pulses; key(keys[i]); quiet();
         CHECK(ink_test_pulses == before + 1, "physical key %d pulses once under DND", keys[i]);
     }
+    before = ink_test_pulses; hw(HW_KEY_DOWN, HAL_KEY_NEXT, 0);
+    CHECK(WAIT_FOR(ink_test_pulses == before + 1, 2000), "held cover key reaches the driver");
+    delay_ms(1100); hw(HW_KEY_UP, HAL_KEY_NEXT, 0); quiet();
+    CHECK(ink_test_pulses == before + 1, "held physical key does not repeat");
     before = ink_test_pulses; hw(HW_KEY_DOWN, HAL_KEY_POWER, 0);
     CHECK(WAIT_FOR(ink_test_pulses == before + 1, 2000), "power down pulses before power policy");
     hw(HW_KEY_UP, HAL_KEY_POWER, 0);
@@ -154,14 +166,15 @@ static void ui_checks(void) {
 }
 static void run(void *arg) {
     (void)arg; CHECK(WAIT_FOR(ink_member_space_open(), 10000), "member space opens"); test_start_home(); quiet();
-    if (ink_setting_get("audio.vibration_level") == 2) {
-        CHECK(ink_setting_get("audio.vibration") == 1, "vibration preferences persist after restart");
+    if (restarting) {
+        CHECK(ink_setting_get("audio.vibration") == 1 && ink_setting_get("audio.vibration_level") == 2, "vibration preferences persist after restart");
         on_ui(open_fixture); quiet(); pulse_touch(70);
     } else { input_checks(); ui_checks(); }
     CHECK(WAIT_FOR(sim_metric_value("settings.saved") > 0 || ink_setting_get("system.language") == 1, 10000), "preferences reached storage");
     ink_probe_count("test.finished");
 }
 void ink_main(void) {
+    vtk_host_call(read_phase, NULL);
     product_main();
     osal_task_cfg_t cfg = {.name = "haptic-test", .fn = run, .stack_bytes = 16384, .priority = OSAL_PRIO_NORMAL, .core = -1, .flags = OSAL_TASK_STACK_EXTERNAL};
     CHECK(osal_task_create(&cfg, NULL) == OSAL_OK, "start haptic test");

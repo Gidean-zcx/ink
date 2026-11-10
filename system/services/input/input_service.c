@@ -64,10 +64,15 @@ static void lock(void) { osal_mutex_lock(IS.lock, OSAL_WAIT_FOREVER); }
 static void unlock(void) { osal_mutex_unlock(IS.lock); }
 
 void ink_input_set_zones(const ink_input_zone_t *zones, int count) {
+    if (!count) {
+        __atomic_store_n(&g_nzones, 0, __ATOMIC_RELEASE);
+        return;
+    }
     if (!IS.lock) return;
     lock();
-    g_nzones = count <= INK_INPUT_HAPTIC_ZONES ? count : 0;
-    if (g_nzones) memcpy(g_zones, zones, (size_t)g_nzones * sizeof *zones);
+    int n = count <= INK_INPUT_HAPTIC_ZONES ? count : 0;
+    if (n) memcpy(g_zones, zones, (size_t)n * sizeof *zones);
+    __atomic_store_n(&g_nzones, n, __ATOMIC_RELEASE);
     unlock();
 }
 
@@ -103,7 +108,7 @@ static void on_touch(const hal_input_event_t *h) {
     lock();
     switch (h->touch.phase) {
     case HAL_TOUCH_DOWN:
-        for (int i = 0; !IS.down && i < g_nzones; i++) {
+        for (int i = 0; !IS.down && i < __atomic_load_n(&g_nzones, __ATOMIC_ACQUIRE); i++) {
             const ink_input_zone_t *z = &g_zones[i];
             if (lx >= z->x1 && lx <= z->x2 && ly >= z->y1 && ly <= z->y2) {
                 pulse = z->enabled;
@@ -224,14 +229,16 @@ static bool power_filter(const hal_input_event_t *h) {
 
 static void hal_sink(const hal_input_event_t *h, void *ctx) {
     (void)ctx;
-    if (h->type == HAL_IN_KEY && h->key.pressed) ink_audio_haptic();
     if (!power_filter(h)) {
         if ((h->type == HAL_IN_TOUCH && h->touch.phase != HAL_TOUCH_MOVE) || h->type == HAL_IN_KEY)
             hal_display_wake(WAKE_HOLD_MS);
         if (h->type == HAL_IN_TOUCH) on_touch(h);
         else if (h->type == HAL_IN_KEY) on_key(h);
     }
-    if (h->type == HAL_IN_KEY && h->key.pressed) ink_audio_key_tone();
+    if (h->type == HAL_IN_KEY && h->key.pressed) {
+        ink_audio_key_tone();
+        ink_audio_haptic();
+    }
 }
 
 void ink_input_set_power_key_hook(bool (*fn)(void)) { IS.power_key_hook = fn; }

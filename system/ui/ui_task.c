@@ -264,6 +264,7 @@ static void refr_event_cb(lv_event_t *e) {
         if (objs > prev_objs) osal_cost_units("lvgl.obj_create", objs - prev_objs);
         prev_objs = objs;
     } else if (code == LV_EVENT_REFR_READY) {
+        publish_zones();
         if (UI.ndirty) {
             if (UI.staged) ink_display_commit_staged(UI.dirty, UI.ndirty, UI.cause_us, UI.cause_tag);
             else ink_display_commit_tagged(UI.dirty, UI.ndirty, UI.cause_us, UI.cause_tag);
@@ -895,7 +896,6 @@ static void ui_task(void *arg) {
 
     for (;;) {
         uint32_t wait_ms = lv_timer_handler();
-        publish_zones();
         note_render_pending(); /* a frame just rendered is already queued at the display service */
         int64_t timeout = wait_ms == LV_NO_TIMER_READY ? OSAL_WAIT_FOREVER : (int64_t)wait_ms * 1000;
         if (UI.interactive) {

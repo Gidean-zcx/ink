@@ -31,7 +31,7 @@ def run(binary, name, restart=False, expected=None):
             '--out', str(out / phase), '--flash-image', str(state / 'user.img'), '--sd-dir', str(state / 'sd'),
             '--quiet', '--no-random-outages', '--budget', str(ROOT / 'tests/ui_scene.budget.json')],
             cwd=ROOT, capture_output=True, text=True, timeout=180,
-            env={**os.environ, 'UBSAN_OPTIONS': 'halt_on_error=1'})
+            env={**os.environ, 'UBSAN_OPTIONS': 'halt_on_error=1', 'INK_VENDOR_HAPTIC_RESTART': str(int(phase == 'restart'))})
         log = result.stdout + result.stderr
         data = json.loads((out / phase / 'metrics.json').read_text())
         log += '\n'.join(data.get('warnings', []))
@@ -55,7 +55,7 @@ else:
     db = json.loads((build / 'compile_commands.json').read_text())
     cases = (
         ('touch', 'system/services/input/input_service.c', 'if (pulse) ink_audio_haptic();', '(void)pulse;', 'finger down pulses before release'),
-        ('keys', 'system/services/input/input_service.c', 'if (h->type == HAL_IN_KEY && h->key.pressed) ink_audio_haptic();', '', 'physical key'),
+        ('keys', 'system/services/input/input_service.c', '        ink_audio_haptic();', '', 'physical key'),
         ('switch', 'system/services/audio/audio_service.c', 'if (ink_setting_get("audio.vibration")) hal_haptic_pulse', 'hal_haptic_pulse', 'switch off suppresses touch and key output'),
         ('strength', 'system/services/audio/audio_service.c', 'level == 2 ? 70', 'level == 2 ? 50', 'one pulse of 70 ms'),
     )
