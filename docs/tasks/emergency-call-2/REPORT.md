@@ -10,16 +10,16 @@
 | 1b 新闸门、语义与应用隔离 | 【实测】通过 | 两个浮层快照导出紧急动作；无 phone 名称的合成入口按标记可用，带 phone 名称但无标记的入口拒绝；五个紧急能力均为系统归属。禁用变体中普通拨号和挂断被拒，紧急呼叫照常 | C1；`tests/emergency_call/policy.py` |
 | 1c 反向对照 | 【实测】通过 | 六个专项模式均命中指定失败；另撤销显示互斥、恢复旧测试检查顺序／等待宏，也分别使原相机、框架和历史索引断言失败，均到达 `test.finished` | C2；`negative-*.log` |
 | 1d 普通全量 | 【实测】通过 | 原话 `100% tests passed out of 346`；321.32 秒，0 跳过 | C3；`work/emergency-call-2/full-clean.log` |
-| 1e ASan/UBSan 全量 | 最终复跑中 | 两套构建通过；首轮无消毒器诊断，修正测试同步后正在完整复跑 | C4；`work/emergency-call-2/asan-final.log` |
+| 1e ASan/UBSan 全量 | 【实测】通过 | 原话 `100% tests passed out of 346`；566.95 秒，0 跳过，无消毒器诊断；紧急七场景同为 826 条检查 | C4；`work/emergency-call-2/asan-final.log`、`build-asan/Testing/Temporary/LastTest.log` |
 | 2a 能力清单 | 【实测】通过 | `PASS: 520 definitions, docs/system/capabilities.md`；生成及 `--check` 均通过 | C5 |
 | 2b S31 | 【实测】通过 | 完整构建、链接、镜像、尺寸和静态栈报告退出 0；0 编译警告；镜像 3,201,200 字节 | C6；`work/emergency-call-2/s31.log`、`build-s31/size.txt`、`stack.txt` |
 | 2c gcccheck | 【实测】通过 | `gcccheck: 12 compiled, 0 with findings`，无跳过 | C7；`work/emergency-call-2/gcccheck.log` |
-| 2d 范围与隐私 | 【实测】通过，结束前再核对 | 24 个相关文件，均小于 5 MiB；diff 检查无错误；总规则隐私扫描 grep 退出 1、0 匹配 | C8；`work/emergency-call-2/privacy.log` |
+| 2d 范围与隐私 | 【实测】通过 | 24 个相关文件，均小于 5 MiB；diff 检查无错误；总规则隐私扫描 grep 退出 1、0 匹配 | C8；`work/emergency-call-2/privacy.log` |
 | 3 原实现差别 | 【实现】完成 | 见下文；不迁入旧的名称特判 | `git diff 951bdfc1..HEAD` |
 
 ## 没做到的
 
-- 最终内存全量尚在运行。没有运行 Linux 原生全量；本次为 macOS 宿主测试及 RISC-V GCC 检查。
+- 没有运行 Linux 原生全量；本次为 macOS 宿主全量、ASan/UBSan 全量及 RISC-V GCC 检查。
 - 未进行实机验证。当前 S31 蜂窝 HAL 仍是桩（`ports/esp32s31/hal_stubs.c:53`、`:57`）；模型通过不代表真机能拨号。
 
 ## 和设计不一致的
