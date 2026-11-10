@@ -35,7 +35,7 @@
 
 ## 顺手发现
 
-暂无。
+根 CMake 中既有 `unit-s31-osal-ticks` 先于 sanitizer 选项定义，ASan 配置下仍不带检查标志；未扩大本任务范围修改。已核对三个产品变更文件和新专项测试均带 `-fsanitize=address,undefined`。
 
 ## 新增的机制
 
@@ -50,8 +50,8 @@
 ## 过程与验证记录
 
 - 【实测】工作区初始干净，HEAD 等于指定基线，已在独立任务分支。已读取任务书及总规则；构建和测试最多 `-j2`，使用 `taskpolicy -c utility`。
-- 产品代码预算：最多 250 行，待最终统计；当前含构建配置和译表的改动少于 140 行。
-- 【实测】第一次构建退出 0；专项最终输出 `main: exit=0, pass=203, fail=0, finished=1`、`restart: exit=0, pass=11, fail=0, finished=1`，日志 `work/notify-targeted.log`。
+- 产品代码含构建配置、译表合计 **+114/−22，改动 136 行，净增 92 行**；其中 `.c/.h` 为 +98/−22。低于 250 行预算，测试和报告未计入。
+- 【实测】最终专项 `main: exit=0, pass=263, fail=0, finished=1`、`restart: exit=0, pass=11, fail=0, finished=1`；最终 6 项相关回归见 `work/notify-final-focused.log`，检查计数见对应 `metrics.json`。八张截图和 JSON 均存在，最大通知快照 2782 B，小于生产缓冲 3072 B。
 - 【实测】`ui-scale: 50 files, 0 violations`；`gcccheck: 4 compiled, 0 with findings`，无跳过，日志 `work/notify-ui-scale.log`、`work/notify-gcccheck.log`。
 - 【实现】删除放在每行右侧独立描边按钮，与打开区域留出间距，整颗按钮满足最小触控尺寸。按钮宽度随译文测量，避免英文挤压；不增加回收站或确认步骤，沿用现有单条删除能力的语义。
 - 【实现】渠道入口为“设置 → 声音 → 通知”，与提示行为相关；放在已有声音选项之后，主目录和既有控件位置保留，勿扰不重复。按实际登记表枚举系统、短信、电话、闹钟、提醒、下载、AI 七个渠道；更新发现／结果走系统，下载完成走下载（`update_service.c:507`、`:792`、`:939`），没有独立更新渠道。
@@ -66,7 +66,7 @@
 - 【实测】五组反向对照逐一撤掉接线／权限／刷新／分页清理，均命中指定失败；不改工作区产品代码。`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" -B tests/notify_manage_reverse.py --build build`，日志 `work/notify-reverse-final.log`。CTest 正常模式不依赖仓库历史。
 - 【实现】通知一页最多四条，确保长正文加全部动作装进既有 3072 字节 AI 缓冲；继续复用翻页，不增大缓冲或放宽预算。
 - 为什么不能更小：任务涉及列表删除、成人渠道设置、共享变化通知和中英文快照，合计超过 100 行。看过仅补触摸回调的方案，不能覆盖 AI 修改及已读通知删除；新建详情页会多一套导航和生命周期。最终复用列表、设置分页、服务渠道表和总线，两处界面使用既有原子能力。
-- 【实测】最终 GCC 和 S31 均退出 0，日志 `work/notify-gcccheck-final.log`、`work/notify-s31.log`；S31 未出现 `warning:`／`error:`。界面尺寸复核仍为 `ui-scale: 50 files, 0 violations`（`work/notify-ui-scale-final.log`）。
+- 【实测】最终 GCC 和 S31 均退出 0，日志 `work/notify-gcccheck-final.log`、`work/notify-s31-final.log`；S31 未出现 `warning:`／`error:`，镜像仍为 1,386,144 B。界面尺寸复核仍为 `ui-scale: 50 files, 0 violations`（`work/notify-ui-scale-final.log`）。
 - 【实测】普通全量原话：`99% tests passed, 1 tests failed out of 321`，`Total Test time (real) = 689.01 sec`；唯一失败 `136 - capability-table-doc (Failed)`，日志 `work/notify-ctest-final.log`。完成后仅新增空列表快照断言，产品代码未再改动；最终相关 6 项再次全过（`work/notify-final-focused.log`，20.15 秒），五组反向对照也再次命中。
 
 全量命令：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`。配置按总规则，另加 `CMAKE_EXPORT_COMPILE_COMMANDS=ON`，`INK_HUB_PYTHON` 指向 `$INK_DEPS/hub/.venv/bin/python` 复用锁定的中枢测试依赖；不调整预算。
