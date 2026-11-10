@@ -13,6 +13,7 @@
 #include "ink/sys/ai.h"
 #include "ink/sys/appreg.h"
 #include "ink/sys/cap.h"
+#include "ink/sys/camera.h"
 #include "ink/sys/i18n.h"
 #include "ink/sys/members.h"
 #include "ink/sys/json.h"
@@ -30,7 +31,7 @@
 
 typedef struct {
     char cap[48], args[192];
-    uint32_t epoch;
+    uint32_t epoch, member_epoch;
 } binding_t;
 typedef enum { PAGE_SETTINGS, PAGE_DISPLAY, PAGE_SOUND, PAGE_NETWORK, PAGE_NOTIFICATIONS } page_t;
 static void create_page(lv_obj_t *screen, void *arg);
@@ -194,7 +195,9 @@ static void binding_event(lv_event_t *e) {
         osal_free(b);
         return;
     }
-    if (!current_session(b->epoch)) return;
+    const ink_cap_t *cap = ink_cap_find(b->cap);
+    bool locked_action = (cap && cap->while_locked) || (ink_camera_restricted() && !strcmp(b->cap, "shell.back"));
+    if (!current_session(b->epoch) && (b->member_epoch != ink_member_epoch() || !locked_action)) return;
     ink_call_opts_t o = {.src = INK_SRC_TOUCH,
                          .args_json = b->args[0] ? b->args : NULL,
                          .reply_exec = INK_EXEC_UI,
@@ -216,6 +219,7 @@ void ink_shell_bind(lv_obj_t *obj, const char *cap, const char *json) {
     snprintf(b->cap, sizeof b->cap, "%s", cap);
     snprintf(b->args, sizeof b->args, "%s", json ? json : "");
     b->epoch = N.epoch;
+    b->member_epoch = ink_member_epoch();
     lv_obj_add_flag(obj, LV_OBJ_FLAG_CLICKABLE);
     if (lv_obj_get_style_radius(obj, 0) == LV_RADIUS_CIRCLE &&
         lv_obj_get_style_width(obj, 0) == lv_obj_get_style_height(obj, 0) &&
@@ -1534,7 +1538,7 @@ static void cap_nav(ink_call_t *c) {
     } else if (!strcmp(c->cap->id, "shell.close"))
         ink_shell_close();
     else if (!strcmp(c->cap->id, "shell.back")) {
-        if (!ink_shell_close()) ink_ui_pop();
+        if (!ink_camera_close_locked() && !ink_shell_close()) ink_ui_pop();
     } else if (!strcmp(c->cap->id, "shell.members"))
         ink_shell_members_open(false);
     else if (!strcmp(c->cap->id, "shell.more")) {

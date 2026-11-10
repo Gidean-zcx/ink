@@ -1604,4 +1604,7 @@ ink_sim_executable(sim-perf-latency tests/perf_latency/device.c tests/perf_laten
 target_include_directories(sim-perf-latency PRIVATE ${CMAKE_BINARY_DIR}/generated)
 target_link_libraries(sim-perf-latency PRIVATE ink_apps ink_system)
 add_test(NAME perf-latency COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/perf_latency/run.py --build ${CMAKE_BINARY_DIR} --regression)
+ink_sim_executable(sim-lock-camera tests/lock_camera/lock_camera.c)
+target_link_libraries(sim-lock-camera PRIVATE ink_apps ink_system)
+add_test(NAME lock-camera COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/lock_camera/run.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(perf-latency PROPERTIES TIMEOUT 180)

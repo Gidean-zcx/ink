@@ -56,5 +56,6 @@ void ink_settings_family_open(const char *name);
 int ink_wallpaper_init(void);
 bool ink_wallpaper_ready(void);
 void ink_wallpaper_draw(lv_obj_t *parent);
+void ink_shell_camera_button(lv_obj_t *root);
 
 #endif
