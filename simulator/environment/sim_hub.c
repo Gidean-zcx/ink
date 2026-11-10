@@ -62,6 +62,10 @@ static const char *DEFAULT_SCRIPT =
     "\"小满就在晚上八点对着天狼星，替她把这句话说了出来。\",\"第二天，陈阿姨收到了老朋友的回信：“我也是。”\"],"
     "\"chunks_en\":[\"This page is about Xiaoman delivering a message for someone for the first time.\"]},"
     "\"result\":{\"done\":true,\"source\":\"page\"}},"
+    "{\"method\":\"weather/find\",\"think_ms\":30,\"result\":{\"cities\":[{\"id\":101,\"name\":\"示例市\",\"area\":\"示例省 · 中国\"},"
+    "{\"id\":102,\"name\":\"示例市\",\"area\":\"另一省 · 中国\"}]}},"
+    "{\"method\":\"weather/get\",\"think_ms\":30,\"result\":{\"city\":\"示例市\",\"at\":0,\"t\":12,\"w\":\"小雨\",\"i\":\"rain\","
+    "\"hi\":15,\"lo\":3,\"p\":80,\"days\":[[\"多云\",\"cloudsun\",16,5,20],[\"晴\",\"sun\",18,7,0],[\"小雪\",\"snow\",3,-2,-1]]}},"
     "{\"method\":\"*\",\"think_ms\":30,\"error\":{\"code\":-32601,\"message\":\"method not in hub script\"}}"
     "]}";
 
@@ -952,6 +956,9 @@ void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t 
     const cJSON *result = cJSON_GetObjectItemCaseSensitive(rule, "result");
     if (err) cJSON_AddItemToObject(res, "error", cJSON_Duplicate(err, 1));
     else cJSON_AddItemToObject(res, "result", result ? cJSON_Duplicate(result, 1) : cJSON_CreateObject());
+    cJSON *fetched = cJSON_GetObjectItemCaseSensitive(cJSON_GetObjectItemCaseSensitive(res, "result"), "at");
+    if (!err && !strcmp(method, "weather/get") && cJSON_IsNumber(fetched) && fetched->valuedouble == 0) /* "at": 0 is now */
+        cJSON_SetNumberValue(fetched, (double)(g_sim.wall_start_us / 1000000 + (int64_t)(at / 1000000000ull) + g_hub_clock_offset_s));
     if (!err && !strcmp(method, "hello")) /* the hub's clock (time service): right unless a script moved it */
         cJSON_AddNumberToObject(cJSON_GetObjectItemCaseSensitive(res, "result"), "now_ms",
                                 (double)(g_sim.wall_start_us / 1000 + (int64_t)(at / 1000000ull) + g_hub_clock_offset_s * 1000));

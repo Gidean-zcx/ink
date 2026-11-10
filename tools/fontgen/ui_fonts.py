@@ -30,7 +30,7 @@ def main():
     spec = importlib.util.spec_from_file_location('fontgen', ROOT / 'tools/fontgen/fontgen.py')
     fontgen = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(fontgen)
-    for group in ['system/ui', 'apps', 'system/services', 'system/policy']:
+    for group in ['system/ui', 'system/apps', 'apps', 'system/services', 'system/policy']:
         for source in (ROOT / group).rglob('*.c'):
             # Read only characters actually in the selected CJK face, not comments'
             # private-use markers or unsupported typographic symbols.

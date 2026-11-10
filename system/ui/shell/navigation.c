@@ -359,6 +359,7 @@ static void cards_reply(void *ctx, const ink_receipt_t *rc) {
             ink_json_str(j, ink_json_find(j, 0, "title"), c->title, sizeof c->title);
             ink_json_str(j, ink_json_find(j, 0, "text"), c->text, sizeof c->text);
             ink_json_str(j, ink_json_find(j, 0, "action"), c->action, sizeof c->action);
+            ink_json_str(j, ink_json_find(j, 0, "icon"), c->icon, sizeof c->icon);
             int64_t rev = 0;
             ink_json_int(j, ink_json_find(j, 0, "rev"), &rev);
             c->rev = (uint32_t)rev;
@@ -1845,6 +1846,7 @@ static bool today_match(const ink_json_t *j, int slot) {
 static const char *today_icon(int slot) {
     if (child() && !T.saved && slot == 3) return INK_UI_ICON(clock);
     if (!T.saved) return APP_ICONS[slot];
+    if (N.cards[slot + 1].icon[0]) return N.cards[slot + 1].icon;
     for (int i = 0; i < ink_app_count(); i++) {
         const ink_app_def_t *a = ink_app_at(i);
         size_t n = strlen(a->id);

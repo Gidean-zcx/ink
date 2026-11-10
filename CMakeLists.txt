@@ -320,7 +320,7 @@ if(EXISTS ${INK_CJK_FONT} AND Python3_FOUND)
       message(FATAL_ERROR "Missing required CJK ${weight} face: ${INK_CJK_${upper}_FONT}")
     endif()
   endforeach()
-  file(GLOB_RECURSE INK_UI_TEXT CONFIGURE_DEPENDS system/ui/*.c apps/*.c system/services/*.c system/policy/*.c)
+  file(GLOB_RECURSE INK_UI_TEXT CONFIGURE_DEPENDS system/ui/*.c system/apps/*.c apps/*.c system/services/*.c system/policy/*.c)
   add_custom_command(OUTPUT ${INK_ASSETS_DIR}/fonts/ui-fonts.stamp
     COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/fontgen/ui_fonts.py
       --regular ${INK_CJK_FONT} --face ${INK_CJK_FACE} --medium ${INK_CJK_MEDIUM_FONT} --bold ${INK_CJK_BOLD_FONT}
@@ -1447,6 +1447,11 @@ target_sources(ink_system PRIVATE system/apps/calculator/calculator.c)
 ink_sim_executable(sim-calculator tests/calculator/calculator.c)
 target_link_libraries(sim-calculator PRIVATE ink_apps ink_system)
 add_test(NAME calculator COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/calculator/run.py --build ${CMAKE_BINARY_DIR})
+
+target_sources(ink_system PRIVATE system/apps/weather/weather.c)
+ink_sim_executable(sim-weather tests/weather/weather.c)
+target_link_libraries(sim-weather PRIVATE ink_apps ink_system)
+add_test(NAME weather COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/weather/run.py --build ${CMAKE_BINARY_DIR})
 
 ink_sim_executable(sim-confirm-pages tests/confirm_pages/pages.c tests/confirm_pages/boundary.c)
 target_link_libraries(sim-confirm-pages PRIVATE ink_apps ink_system)

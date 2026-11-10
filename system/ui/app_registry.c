@@ -511,6 +511,7 @@ static void cap_cards(ink_call_t *c) { /* UI task: apps have no other */
                 ink_jw_str(&w, card->text);
                 ink_jw_raw(&w, ",\"rev\":");
                 ink_jw_int(&w, card->rev);
+                if (card->icon[0]) { ink_jw_raw(&w, ",\"icon\":"); ink_jw_str(&w, card->icon); }
                 if (card->action[0]) {
                     ink_jw_raw(&w, ",\"action\":");
                     ink_jw_str(&w, card->action);
