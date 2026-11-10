@@ -46,12 +46,13 @@ static void captured(void *arg) {
         }
         lv_label_set_text(notice, camera_status); ink_ui_content_changed(); ink_ui_hint_obj(view, INK_REFRESH_UI);
     }
-    ink_image_free(&p->im); osal_free(p); __atomic_store_n(&taking, 0, __ATOMIC_RELEASE);
+    ink_image_free(&p->im); osal_free(p); ink_power_release(INK_NEED_AWAKE); __atomic_store_n(&taking, 0, __ATOMIC_RELEASE);
 }
 static void take(ink_call_t *c) {
     bool limited = ink_camera_restricted();
     capture_t *p = osal_calloc(1, sizeof *p, OSAL_MEM_EXTERNAL);
     if (!p) { c->rc.status = INK_RC_FAILED; return; }
+    ink_power_hold(INK_NEED_AWAKE);
     __atomic_store_n(&taking, 1, __ATOMIC_RELEASE);
     p->epoch = ink_member_epoch(); p->generation = ink_ui_generation(); p->saved = !strcmp(c->cap->id, "camera.photo");
     p->reviewed = !strcmp(c->cap->id, "camera.review");
@@ -103,7 +104,7 @@ static void take(ink_call_t *c) {
         p->im = (ink_image_t){(unsigned)w, (unsigned)h, rgb}; ink_image_dither(&p->im);
     }
     snprintf(c->rc.say, sizeof c->rc.say, "%s", p->ok ? (p->saved ? "已保存到存储卡" : "取景已更新") : "没能完成，请重试");
-    if (ink_exec_post(INK_EXEC_UI, &p->job, captured, p)) { ink_image_free(&p->im); osal_free(p); __atomic_store_n(&taking, 0, __ATOMIC_RELEASE); }
+    if (ink_exec_post(INK_EXEC_UI, &p->job, captured, p)) { ink_image_free(&p->im); osal_free(p); ink_power_release(INK_NEED_AWAKE); __atomic_store_n(&taking, 0, __ATOMIC_RELEASE); }
 }
 static void preview(lv_timer_t *t) {
     (void)t;
@@ -141,6 +142,7 @@ int ink_camera_open_locked(void) {
     if (locked_root) return 0;
     if (!ink_cap_find("camera.capture")) return -1;
     ink_ui_drop_app("camera");
+    ink_ui_drop_app("gallery");
     ink_power_hold(INK_NEED_AWAKE);
     memset(&shots, 0, sizeof shots); __atomic_store_n(&restricted, 1, __ATOMIC_RELEASE);
     locked_root = ink_ui_box(lv_layer_sys(), 0, 0, INK_CANVAS_W, INK_CANVAS_H, 0, INK_SURFACE_WHITE, false);

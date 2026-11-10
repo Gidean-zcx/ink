@@ -14,16 +14,26 @@ p = argparse.ArgumentParser()
 p.add_argument('--build', required=True, type=Path)
 p.add_argument('--negative', action='store_true')
 p.add_argument('--late-mode', action='store_true')
+p.add_argument('--retain-gallery', action='store_true')
+p.add_argument('--sleep-capture', action='store_true')
 a = p.parse_args()
 build = a.build.resolve()
 work = Path(tempfile.mkdtemp(prefix='lock-camera-', dir=build))
 binary = build / 'sim-lock-camera'
-if a.negative or a.late_mode:
+control = a.negative or a.late_mode or a.retain_gallery or a.sleep_capture
+if control:
     source = (ROOT / 'system/apps/camera/camera.c').read_text()
     old = 'bool limited = ink_camera_restricted();'
     assert source.count(old) == 1
     mutant = work / 'camera.c'
-    changed = source.replace('    ' + old + '\n', '').replace('    if (rgb && p->saved) {', '    if (rgb && p->saved) {\n        ' + old) if a.late_mode else source.replace(old, 'bool limited = false;')
+    if a.sleep_capture:
+        changed = source.replace('    ink_power_hold(INK_NEED_AWAKE);\n', '', 1).replace('ink_power_release(INK_NEED_AWAKE); ', '', 2)
+    elif a.retain_gallery:
+        changed = source.replace('    ink_ui_drop_app("gallery");\n', '')
+    elif a.late_mode:
+        changed = source.replace('    ' + old + '\n', '').replace('    if (rgb && p->saved) {', '    if (rgb && p->saved) {\n        ' + old)
+    else:
+        changed = source.replace(old, 'bool limited = false;')
     mutant.write_text(changed.replace('"../gallery/photo.h"', '"' + str(ROOT / 'system/apps/gallery/photo.h') + '"'))
     driver = (ROOT / 'tests/lock_camera/lock_camera.c').read_text()
     for include, target in (
@@ -50,7 +60,7 @@ if a.negative or a.late_mode:
     link[link.index('-o') + 1] = str(binary)
     subprocess.run(link, cwd=build, check=True, capture_output=True)
 
-for phase in (['kid'] if a.negative or a.late_mode else ['lock', 'gate', 'kid']):
+for phase in (['kid'] if control else ['lock', 'gate', 'kid']):
     out = work / phase
     sd = work / (phase + '-sd')
     sd.mkdir()
@@ -65,11 +75,12 @@ for phase in (['kid'] if a.negative or a.late_mode else ['lock', 'gate', 'kid'])
     counts = metrics.get('metrics', {})
     passed = result.returncode == 0 and counts.get('test.finished') == 1 and not counts.get('test.fail', 0)
     print(phase, 'PASS' if passed else 'FAIL', 'exit', result.returncode, 'assertions', counts.get('test.pass'), 'failures', counts.get('test.fail', 0), flush=True)
-    if a.negative or a.late_mode:
+    if control:
         evidence = result.stdout + result.stderr + json.dumps(metrics.get('warnings', []))
-        expected = 'in-flight locked capture stays in public storage after HOME' if a.late_mode else 'locked captures are stored outside every member'
-        assert not passed and counts.get('test.finished') == 1 and expected in evidence, evidence[-5000:]
-        print('PASS: removing the fix fails the unchanged regression:', expected, flush=True)
+        expected = ('accepted capture finishes after HOME',) if a.sleep_capture else ('unlocked Gallery contains the public captures', 'touch shutter saves the first session photo') if a.retain_gallery else ('in-flight locked capture stays in public storage after HOME',) if a.late_mode else ('locked captures are stored outside every member',)
+        hit = next((message for message in expected if message in evidence), None)
+        assert not passed and counts.get('test.finished') == 1 and hit, evidence[-5000:]
+        print('PASS: removing the fix fails the unchanged regression:', hit, flush=True)
         continue
     if not passed:
         print('Evidence:', work.relative_to(ROOT), flush=True)

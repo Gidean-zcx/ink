@@ -115,6 +115,10 @@ static void run(void *arg) {
         CHECK(setting_by_hand("member.idle_return_s", 30), "use the existing minimum lock grace"); quiet();
     }
     if (kid) CHECK(ink_member_switch("kid") == 0, "child is the active user before locking");
+    if (kid) {
+        ok("app.open", "{\"id\":\"gallery\"}");
+        CHECK(WAIT_FOR((on_ui(read_screen), strstr(g_snap, "\"total\":1")), 10000), "old public album is open before locking");
+    }
     ink_power_lock(); CHECK(WAIT_FOR(ink_power_state() == INK_PWR_LOCKED, 3000), "test session locks"); quiet();
     if (gate) {
         CHECK(WAIT_FOR(!ink_member_space_open(), 35000), "adult grace expires without unlocking");
