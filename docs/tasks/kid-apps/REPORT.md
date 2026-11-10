@@ -57,10 +57,10 @@
 
 ## 截图路径
 
-- `build/kid-apps-kug3638c/policy/snap-SetKidApps.png`
-- `build/kid-apps-kug3638c/policy/snap-SetKidPeriods.png`
-- `build/kid-apps-kug3638c/locale/snap-SetKidAppsEnglish.png`
-- `build/kid-apps-kug3638c/locale/snap-SetKidPeriodsEnglish.png`
+- `build/kid-apps-nnju1ozj/policy/snap-SetKidApps.png`
+- `build/kid-apps-nnju1ozj/policy/snap-SetKidPeriods.png`
+- `build/kid-apps-nnju1ozj/locale/snap-SetKidAppsEnglish.png`
+- `build/kid-apps-nnju1ozj/locale/snap-SetKidPeriodsEnglish.png`
 
 ## 验证记录
 
