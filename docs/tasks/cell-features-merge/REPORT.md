@@ -8,7 +8,7 @@
 | --- | --- | --- | --- |
 | 1 功能合并 | 【实测】专项通过 | 两个归档已合入；移动网络、紧急呼叫、AI 契约 3/3 通过 | `ctest --test-dir build -R '^(mobile-network|emergency-call|integration-ai-surface)$' --output-on-failure -j2` |
 | 1 开机延迟 | 【实测】已复现，定位中 | 基线成员就绪 2417.653 ms，合移动网络后 5056.334 ms；初始化均约 2107 ms；前者中枢通过、后者 `tool_calls=0` | `tests/hub/e2e.py`，证据在 `work/cell-features-merge/{baseline,mobile}-e2e.log` |
-| 1 普通全量与原分支测试 | 待验证 | 待补 | 待补 |
+| 1 普通全量与原分支测试 | 【实测】通过 | 原话 `100% tests passed out of 347`，318.33 秒、0 跳过；移动网络四阶段 204/42/24/49，紧急七场景 826 条检查 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2` |
 | 1 ASan/UBSan 全量 | 待验证 | 待补 | 待补 |
 | 2 S31、GCC、隐私 | 待验证 | 待补 | 待补 |
 | 3 能力清单与差异 | 待验证 | 待补 | 待补 |
@@ -24,6 +24,8 @@
 ## 改过的已有测试
 
 - `ai_surface.c` 迁入移动网络项，`sms.send` 必填参数保留主线的 `to`，未迁入归档的 `to,text` 变更。
+- 保留两个归档已有的目录分页、设置输出缓冲、能力分页导出、等待宏取成功观测、UI 队列屏障及儿童应用归属检查；未另改已有断言、超时或预算。
+- 新增手动反向脚本 `tests/cell_features/boot.py`：临时编译副本只撤销显示上电互斥，运行未修改的真实中枢端到端脚本；不依赖 Git 历史、不写产品源文件、不注册重复的 CTest。
 
 ## 要用户定的
 
