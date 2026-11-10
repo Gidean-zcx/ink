@@ -11,6 +11,7 @@
 #include "ink/probe.h"
 #include "ink/sys/cap.h"
 #include "ink/sys/confirm.h"
+#include "ink/sys/i18n.h"
 #include "ink/sys/data.h"
 #include "ink/sys/hub.h"
 #include "ink/sys/json.h"
@@ -157,7 +158,7 @@ static bool describe(const ink_cap_t *c, const ink_args_t *a, char *out, size_t 
     bool complete = true;
     out[0] = 0;
     if (c->ask) {
-        for (const char *p = c->ask; *p;) {
+        for (const char *p = TR(c->ask); *p;) {
             const char *open = *p == '{' ? strchr(p, '}') : NULL;
             if (open && open - p < 32) {
                 char key[32];

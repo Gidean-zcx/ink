@@ -4,6 +4,7 @@
 #include "ink/probe.h"
 #include "ink/sys/app.h"
 #include "ink/sys/appreg.h"
+#include "ink/sys/i18n.h"
 #include "ink/sys/comm.h"
 #include "ink/sys/json.h"
 #include "ink/sys/members.h"
@@ -39,8 +40,8 @@ static bool read_message(ink_db_t *db, uint32_t id, char *peer, char *text, char
 /* Each part is billed: under the text (above the keyboard), how many it goes as, when more than one. */
 static void parts_note(lv_event_t *e) {
     (void)e; int n = S.field && S.parts ? ink_comm_sms_parts(ink_textfield_text(S.field)) : 0; char note[64] = "";
-    if (n > INK_SMS_PARTS_MAX) snprintf(note, sizeof note, "太长了，最多分 %d 条发送", INK_SMS_PARTS_MAX);
-    else if (n > 1) snprintf(note, sizeof note, "将按 %d 条发送", n);
+    if (n > INK_SMS_PARTS_MAX) snprintf(note, sizeof note, TR("太长了，最多分 %d 条发送"), INK_SMS_PARTS_MAX);
+    else if (n > 1) snprintf(note, sizeof note, TR("将按 %d 条发送"), n);
     if (S.parts) lv_label_set_text(S.parts, note);
 }
 static void refresh(void *arg) {
@@ -66,13 +67,13 @@ static void received(void *ctx, const char *event, const ink_args_t *a) {
 static void reply(void *ctx, const ink_receipt_t *rc) {
     if ((uint32_t)(uintptr_t)ctx != ink_ui_generation() || strcmp(S.member, ink_member_current()->id)) return;
     if (S.send) lv_obj_remove_state(S.send, LV_STATE_DISABLED);
-    snprintf(S.result, sizeof S.result, "%s", rc->say[0] ? rc->say : rc->status == INK_RC_DONE ? "" : "没有完成，请重试");
+    snprintf(S.result, sizeof S.result, "%s", rc->say[0] ? rc->say : rc->status == INK_RC_DONE ? "" : TR("没有完成，请重试"));
     if (rc->status == INK_RC_DONE) ink_ui_redraw(); else if (S.notice) lv_label_set_text(S.notice, S.result);
     ink_shell_airplane_card(rc);
 }
 static void request(const char *cap, const ink_args_t *args) {
     ink_call_opts_t o = {.src = INK_SRC_TOUCH, .member = S.member, .reply_exec = INK_EXEC_UI, .done = reply, .ctx = (void *)(uintptr_t)ink_ui_generation()};
-    if (ink_cap_call(cap, args, &o) != 0) { if (S.send) lv_obj_remove_state(S.send, LV_STATE_DISABLED); if (S.notice) lv_label_set_text(S.notice, "没有完成，请重试"); }
+    if (ink_cap_call(cap, args, &o) != 0) { if (S.send) lv_obj_remove_state(S.send, LV_STATE_DISABLED); if (S.notice) lv_label_set_text(S.notice, TR("没有完成，请重试")); }
 }
 static void selected(void *ctx, const ink_receipt_t *rc) {
     ink_call_t *c = ctx; c->rc.status = rc->status;
@@ -110,7 +111,7 @@ static void send_clicked(lv_event_t *e) {
     int session = ink_text_focus(&cfg, NULL, NULL);
     uint32_t draft = session > 0 ? ink_text_draft_id() : 0;
     if (session > 0) ink_text_blur(session);
-    if (!draft) { ink_app_free(a); lv_label_set_text(S.notice, "短信草稿没能保存，未发送"); return; }
+    if (!draft) { ink_app_free(a); lv_label_set_text(S.notice, TR("短信草稿没能保存，未发送")); return; }
     lv_obj_add_state(S.send, LV_STATE_DISABLED); ink_ui_busy_control(S.send, true);
     ink_args_init(a); ink_args_str(a, "to", S.to); ink_args_str(a, "page", COMPOSE.name); ink_args_int(a, "draft", draft); request("message.send", a); ink_app_free(a);
 }
@@ -133,17 +134,17 @@ static void bind_item(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, 
         if (j && ink_json_parse(j, raw, strlen(raw)) == 0) { ink_json_str(j, ink_json_find(j, 0, "name"), S.labels[at], sizeof S.labels[at]); ink_json_str(j, ink_json_find(j, 0, "number"), S.texts[at], sizeof S.texts[at]); }
         ink_app_free(j); snprintf(S.args[at], sizeof S.args[at], "{\"id\":%u}", (unsigned)S.rows[index]);
     } else {
-        read_message(S.db, S.rows[index], peer, S.texts[at], status); snprintf(S.labels[at], sizeof S.labels[at], "%s", thread ? status : peer);
+        read_message(S.db, S.rows[index], peer, S.texts[at], status); snprintf(S.labels[at], sizeof S.labels[at], "%s", thread ? TR(status) : peer);
         snprintf(S.args[at], sizeof S.args[at], "{\"peer\":\"%s\"}", peer);
         if (thread) { size_t start = 0; while (part--) start = text_end(S.texts[at], start); size_t end = text_end(S.texts[at], start); S.texts[at][end] = 0; memmove(S.texts[at], S.texts[at] + start, end - start + 1); }
     }
     snprintf(S.ids[at], sizeof S.ids[at], "sms:%u", (unsigned)S.rows[index]);
     if (!lv_obj_get_child_count(slot)) { ink_ui_line(slot, "", INK_FONT_NOTE, INK_WEIGHT_MEDIUM, INK_GAP, INK_GAP_S, INK_CANVAS_W - 2 * INK_MARGIN - 2 * INK_GAP); ink_ui_label(slot, "", INK_FONT_LIST, INK_WEIGHT_REGULAR, INK_GAP, INK_LINE_NOTE + INK_GAP_M, INK_CANVAS_W - 2 * INK_MARGIN - 2 * INK_GAP); }
-    lv_obj_set_style_bg_color(slot, thread && strcmp(S.labels[at], "收到") ? ink_ui_ink() : ink_ui_gray(), 0);
-    for (int i = 0; i < 2; i++) lv_obj_set_style_text_color(lv_obj_get_child(slot, i), thread && strcmp(S.labels[at], "收到") ? ink_ui_paper() : ink_ui_ink(), 0);
+    lv_obj_set_style_bg_color(slot, thread && strcmp(status, "收到") ? ink_ui_ink() : ink_ui_gray(), 0);
+    for (int i = 0; i < 2; i++) lv_obj_set_style_text_color(lv_obj_get_child(slot, i), thread && strcmp(status, "收到") ? ink_ui_paper() : ink_ui_ink(), 0);
     lv_label_set_text(lv_obj_get_child(slot, 0), S.labels[at]); lv_label_set_text(lv_obj_get_child(slot, 1), S.texts[at]);
     *field = (ink_ui_field_spec_t){.id = S.ids[at], .role = "listitem", .label = S.labels[at], .value = S.texts[at], .object = {S.ids[at], ink_db_last_ver(picking ? S.contacts : S.db)}};
-    *action = (ink_ui_action_spec_t){.id = S.ids[at], .label = picking ? "选择这个号码" : "打开会话", .capability = picking ? "sms.recipient" : "sms.thread", .args_json = S.args[at], .object = field->object, .enabled = !thread};
+    *action = (ink_ui_action_spec_t){.id = S.ids[at], .label = picking ? TR("选择这个号码") : TR("打开会话"), .capability = picking ? "sms.recipient" : "sms.thread", .args_json = S.args[at], .object = field->object, .enabled = !thread};
 }
 static void build_rows(bool picking, bool thread) {
     S.count = 0; S.pages[0] = 0; ink_db_cursor_t cur = {.desc = true}; ink_rec_t r; char peer[24], *text = S.row, status[96];
@@ -163,29 +164,29 @@ static void create(lv_obj_t *screen, void *arg) {
     (void)arg;
     member_ready();
     bool compose = !strcmp(ink_ui_page_name(), COMPOSE.name), lng = !strcmp(ink_ui_page_name(), LONG.name), thread = !strcmp(ink_ui_page_name(), THREAD.name);
-    ink_shell_statusbar(screen, true); ink_shell_topbar(screen, compose || lng ? "写短信" : thread ? S.peer : "短信");
+    ink_shell_statusbar(screen, true); ink_shell_topbar(screen, compose || lng ? TR("写短信") : thread ? S.peer : TR("短信"));
     S.notice = ink_ui_notice(screen, S.result, INK_CANVAS_H - INK_MARGIN - INK_PRIMARY - INK_CONTROL - 2 * INK_GAP_L - INK_LINE_NOTE);
-    S.form = (ink_ui_page_spec_t){.id = ink_ui_page_name(), .title = compose || lng ? "写短信" : "短信", .object = {"sms.messages", 1}, .actions = S.actions, .action_count = 3};
-    S.actions[0] = (ink_ui_action_spec_t){.id = "prev", .label = "上一页", .capability = "sms.prev"};
-    S.actions[1] = (ink_ui_action_spec_t){.id = "next", .label = "下一页", .capability = "sms.next"};
-    S.actions[2] = (ink_ui_action_spec_t){.id = "compose", .label = "写短信", .capability = "sms.compose", .enabled = true};
+    S.form = (ink_ui_page_spec_t){.id = ink_ui_page_name(), .title = compose || lng ? TR("写短信") : TR("短信"), .object = {"sms.messages", 1}, .actions = S.actions, .action_count = 3};
+    S.actions[0] = (ink_ui_action_spec_t){.id = "prev", .label = TR("上一页"), .capability = "sms.prev"};
+    S.actions[1] = (ink_ui_action_spec_t){.id = "next", .label = TR("下一页"), .capability = "sms.next"};
+    S.actions[2] = (ink_ui_action_spec_t){.id = "compose", .label = TR("写短信"), .capability = "sms.compose", .enabled = true};
     if (lng) {
         ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .max = INK_SMS_TEXT_MAX - 1, .initial = S.draft, .draft_page = LONG.name, .draft_id = !strcmp(S.to, S.draft_ref.to) ? S.draft_ref.id : 0}; S.field = ink_textfield_long_create(screen, &cfg);
         if (S.field) { S.draft_ref.id = ink_text_draft_id(); snprintf(S.draft_ref.to, sizeof S.draft_ref.to, "%s", S.to); ink_app_save_state("message"); }
-        lv_obj_t *done = ink_ui_pill(screen, "返回", INK_CANVAS_W - INK_MARGIN - INK_PRIMARY, INK_STATUS_BAR, INK_PRIMARY, INK_CONTROL, false, NULL, NULL); ink_shell_bind(done, "shell.back", "{}"); return;
+        lv_obj_t *done = ink_ui_pill(screen, TR("返回"), INK_CANVAS_W - INK_MARGIN - INK_PRIMARY, INK_STATUS_BAR, INK_PRIMARY, INK_CONTROL, false, NULL, NULL); ink_shell_bind(done, "shell.back", "{}"); return;
     }
     if (compose && S.to[0]) {
         ink_ui_line(screen, S.to, INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_MARGIN, INK_STATUS_BAR + INK_PRIMARY + INK_GAP_L, INK_CANVAS_W - 2 * INK_MARGIN);
-        S.actions[0] = (ink_ui_action_spec_t){.id = "text", .label = "输入短信", .capability = "sms.text", .enabled = true};
-        S.actions[1] = (ink_ui_action_spec_t){.id = "long", .label = "写长短信", .capability = "sms.long", .enabled = true}; S.form.action_count = 2;
-        S.field_spec = (ink_ui_field_spec_t){.id = "text", .role = "textbox", .label = "短信内容"}; S.form.fields = &S.field_spec; S.form.field_count = 1;
-        ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .enter = INK_ENTER_DONE, .max = INK_SMS_TEXT_MAX - 1, .initial = S.draft, .hint = "写短信"};
+        S.actions[0] = (ink_ui_action_spec_t){.id = "text", .label = TR("输入短信"), .capability = "sms.text", .enabled = true};
+        S.actions[1] = (ink_ui_action_spec_t){.id = "long", .label = TR("写长短信"), .capability = "sms.long", .enabled = true}; S.form.action_count = 2;
+        S.field_spec = (ink_ui_field_spec_t){.id = "text", .role = "textbox", .label = TR("短信内容")}; S.form.fields = &S.field_spec; S.form.field_count = 1;
+        ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .enter = INK_ENTER_DONE, .max = INK_SMS_TEXT_MAX - 1, .initial = S.draft, .hint = TR("写短信")};
         S.field = ink_textfield_create(screen, &cfg, entered, NULL, false); lv_obj_set_pos(S.field, ink_ui_px(INK_MARGIN), ink_ui_px(INK_STATUS_BAR + INK_PRIMARY + INK_CONTROL));
         lv_obj_set_width(S.field, ink_ui_px(INK_CANVAS_W - 2 * INK_MARGIN));
         S.parts = ink_ui_line(screen, "", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, INK_STATUS_BAR + INK_PRIMARY + 2 * INK_CONTROL + INK_GAP, INK_CANVAS_W - 2 * INK_MARGIN);
         ink_textfield_bind_short(S.field, &S.form, &S.field_spec, &S.actions[0]); lv_obj_add_event_cb(S.field, parts_note, LV_EVENT_VALUE_CHANGED, NULL);
-        lv_obj_t *long_button = ink_ui_pill(screen, "写长短信", INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_PRIMARY - INK_CONTROL - INK_GAP_L, INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, false, NULL, NULL); ink_shell_bind(long_button, "sms.long", "{}");
-        S.send = ink_ui_pill(screen, "发送", INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_PRIMARY, INK_CANVAS_W - 2 * INK_MARGIN, INK_PRIMARY, true, send_clicked, NULL); parts_note(NULL); return;
+        lv_obj_t *long_button = ink_ui_pill(screen, TR("写长短信"), INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_PRIMARY - INK_CONTROL - INK_GAP_L, INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, false, NULL, NULL); ink_shell_bind(long_button, "sms.long", "{}");
+        S.send = ink_ui_pill(screen, TR("发送"), INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_PRIMARY, INK_CANVAS_W - 2 * INK_MARGIN, INK_PRIMARY, true, send_clicked, NULL); parts_note(NULL); return;
     }
     S.db = ink_db_open_cached_member(ink_db_find_def("sms.messages"), S.member);
     __atomic_store_n(&S.shown_ver, S.db ? ink_db_last_ver(S.db) : 0, __ATOMIC_RELEASE);
@@ -195,8 +196,8 @@ static void create(lv_obj_t *screen, void *arg) {
     }
     int top = INK_STATUS_BAR + INK_PRIMARY + INK_GAP_L; S.body_h = thread ? INK_CANVAS_H - top - 2 * INK_PRIMARY - INK_CONTROL - INK_MARGIN : INK_ROW_DOUBLE; build_rows(compose, thread);
     lv_obj_t *body = ink_ui_box(screen, 0, top, INK_CANVAS_W, INK_CANVAS_H - top - INK_PRIMARY - INK_MARGIN, 0, INK_SURFACE_WHITE, false);
-    S.list = ink_ui_list_create(body, &S.form, &S.position, thread ? 1 : 4, 1, S.body_h, compose ? "请先在联系人里添加号码" : "还没有短信", bind_item, NULL); if (S.list) ink_ui_list_refresh(S.list, thread ? S.pages[S.count] : S.count);
-    if (!compose) { lv_obj_t *b = ink_ui_pill(screen, thread ? "回复短信" : "写短信", INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_PRIMARY, INK_CANVAS_W - 2 * INK_MARGIN, INK_PRIMARY, false, NULL, NULL); ink_shell_bind(b, "sms.compose", "{}"); }
+    S.list = ink_ui_list_create(body, &S.form, &S.position, thread ? 1 : 4, 1, S.body_h, compose ? TR("请先在联系人里添加号码") : TR("还没有短信"), bind_item, NULL); if (S.list) ink_ui_list_refresh(S.list, thread ? S.pages[S.count] : S.count);
+    if (!compose) { lv_obj_t *b = ink_ui_pill(screen, thread ? TR("回复短信") : TR("写短信"), INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_PRIMARY, INK_CANVAS_W - 2 * INK_MARGIN, INK_PRIMARY, false, NULL, NULL); ink_shell_bind(b, "sms.compose", "{}"); }
 }
 static void destroy(void) {
     if (S.field) snprintf(S.draft, sizeof S.draft, "%s", ink_textfield_text(S.field));
@@ -209,7 +210,7 @@ static int snapshot(char *out, size_t cap) {
     if (S.field && !strcmp(ink_ui_page_name(), LONG.name)) return ink_textfield_long_snapshot(S.field, out, cap);
     if (S.field) {
         char *args = S.send_args; ink_jw_t w; ink_jw_init(&w, args, sizeof S.send_args); ink_jw_raw(&w, "{\"to\":"); ink_jw_str(&w, S.to); ink_jw_raw(&w, ",\"text\":"); ink_jw_str(&w, ink_textfield_text(S.field)); ink_jw_raw(&w, "}");
-        const char *note = S.parts ? lv_label_get_text(S.parts) : ""; snprintf(S.send_label, sizeof S.send_label, "发送短信%s%s", note[0] ? "，" : "", note); /* the AI sees the parts too */
+        const char *note = S.parts ? lv_label_get_text(S.parts) : ""; snprintf(S.send_label, sizeof S.send_label, note[0] ? TR("发送短信，%s") : TR("发送短信%s"), note); /* the AI sees the parts too */
         S.actions[2] = (ink_ui_action_spec_t){.id = "send", .label = S.send_label, .capability = "message.send", .args_json = args, .enabled = !w.overflow}; S.form.action_count = 3;
         return ink_textfield_short_snapshot(S.field, out, cap);
     }

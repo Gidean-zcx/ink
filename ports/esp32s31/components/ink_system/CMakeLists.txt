@@ -20,6 +20,11 @@ execute_process(COMMAND ${PYTHON} ${root}/tools/i18n/i18n_gen.py ${i18n_tables} 
     --sources ${root}/system/ui/shell/boot_flow.c ${root}/system/ui/shell/navigation.c ${root}/system/ui/shell/keyboard.c ${root}/system/ui/shell/settings_pages.c
     ${root}/system/ui/shell/time_settings.c ${root}/system/ui/shell/settings_family.c ${root}/system/services/time/time_service.c
     ${root}/system/apps/clock/clock.c
+    ${root}/system/apps/calculator/calculator.c ${root}/system/apps/camera/camera.c
+    ${root}/system/apps/contacts/contacts.c ${root}/system/apps/gallery/gallery.c
+    ${root}/system/apps/memo/memo.c ${root}/system/apps/phone/phone.c
+    ${root}/system/apps/remote/remote.c ${root}/system/apps/sms/sms.c
+    ${root}/system/apps/weather/weather.c ${root}/system/apps/camera/scan.c
     WORKING_DIRECTORY ${root} COMMAND_ERROR_IS_FATAL ANY)
 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${i18n_tables})
 execute_process(COMMAND ${PYTHON} ${root}/tools/licenses.py ${CMAKE_BINARY_DIR}/generated/ink/licenses.h
