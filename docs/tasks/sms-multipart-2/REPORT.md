@@ -28,6 +28,7 @@
 - `tests/integration/lifecycle.c`：第一版“336 字可放入参数表、由服务拒绝”改为经 JSON 调用后由 416 字节边界拒绝；仍断言无短信发出。118 字边界的成功断言不变。
 - `tests/integration/ai_surface.c`：两个发送别名的必填项从 `to,text` 改为 `to`，因为正文与本机草稿二选一；服务验证缺正文、两者并给、AI 草稿均不可发送。
 - `tests/sms_multipart/sms_multipart.c`：长正文发送改走真实文本草稿；AI 确认改为 100 字/2 段，150 字直接正文改为拒绝；页面 150 字增加确认前零发送、确认后 3 段与完整持久化断言。接收、重启、PDU、部分失败、5 段上限的原期望不变。
+- `tests/confirm_durable/regression.c`：全量检查暴露容量场景在临近结束时自动锁屏、进入浅睡，2000 秒模拟时限到时仍未完成。仅该场景持有已有的 `INK_NEED_NO_LOCK`，结束释放；不改断言、期望或时限。原始全量为 `99% tests passed, 1 tests failed out of 323`；修正后容量场景 3760 条检查及重启 9 条检查通过。
 
 ## 要用户定的
 
@@ -37,6 +38,8 @@
 
 - 【实测】第一版对照：`integration-confirm` 10 条失败；`memo-record` 的 `exec.bg` 栈估算 main/retry 8496、after 8752 字节，超过 8192。日志：`work/sms-multipart-2/first-tests.log`。
 - 构建依赖的字体 Python 不包含中枢测试依赖；全量测试使用只读依赖目录已有的中枢虚拟环境，不安装或升级依赖。
+- 【实测】手动反向检查 `taskpolicy -c utility python3 tests/sms_multipart/rework_negative.py --build build`：只在构建目录的临时副本撤掉页面草稿交接，退出 1、3 条检查失败；脚本自身退出 0 表示反向对照有效，产品源文件不变。保留证据在 `build/test-out/sms-rework-negative/`。
+- 【实测】`gcccheck` 初检：13 个文件编译，0 个问题；S31 桩和运行时临时编译的容量测试不在宿主机构建数据库中，另行验证。
 
 ## 新增的机制
 

@@ -101,6 +101,7 @@ static void result_cases(const char *phase) {
         return;
     }
     if (!strcmp(phase, "capacity")) {
+        ink_power_hold(INK_NEED_NO_LOCK); /* This measures result retention, not idle sleep between 1200 writes. */
         uint32_t unacked = hold("test.confirm"), first = test_last_token() + 1, last = 0;
         CHECK(ink_confirm_decide(unacked, false, INK_SRC_TOUCH) == 0, "unacknowledged confirmation result");
         durable();
@@ -139,6 +140,7 @@ static void result_cases(const char *phase) {
         }
         durable(); state(pending, "rejected");
         CHECK(test_result_count() >= 30, "unacknowledged old results survive later ACKs (%u)", test_result_count());
+        ink_power_release(INK_NEED_NO_LOCK);
     } else {
         CHECK(test_result_count() >= 30 && test_result_count() < 50, "retained results survive restart (%u)", test_result_count());
         uint32_t token = test_last_token() + 1;
