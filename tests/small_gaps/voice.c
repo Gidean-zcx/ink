@@ -14,7 +14,8 @@ static bool test_speaking(void) {
 static void test_mic_event(void *ctx) { sim_audio_mic_source(ctx); }
 static void test_mic(const char *value) { vtk_event_at(vtk_now() + SIM_MS(1), test_mic_event, (void *)value); delay_ms(10); }
 static void test_ready(void) {
-    CHECK(WAIT_FOR(!ink_ui_busy() && !ink_display_busy() && ink_storage_pending() == 0, 10000), "setting writes and the preceding answer frame settle");
+    /* the setting takes effect in memory at once; its flash write waits while the answer plays (D-36), so do not wait for it */
+    CHECK(WAIT_FOR(!ink_ui_busy() && !ink_display_busy(), 10000), "the preceding answer frame settles");
 }
 static void test_ask(void) {
     double requests = sim_metric_value("hub.requests.ai.listen");
