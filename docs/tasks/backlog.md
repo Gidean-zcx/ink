@@ -2,7 +2,7 @@
 
 用户要求：先夯实系统层的能力缺口和质量，再补齐系统级别的应用与应用框架，**暂不开发具体应用**（阅读、听、报纸、单词都不做），都做完再做底层性能优化。总规则见 [codex-rules.md](codex-rules.md)。
 
-**状态（2026-11-09）：** 已合入 `services-mid`、`member-wake`、`capability-table`、`device-events`、`pairing`、`backup-restore`、`confirm-durable`、`file-index`（拆成 `file-index-1`、`file-index-2`）、`wireless-transfer`，应用框架的 F1、F2、F5（`ui-semantics`、`ui-input-host`、`ui-cards`），以及只写报告的 `phone-gap`（对照完成标准 R-068 查缺口）和 `speech-cache`（DE-R6 早已修好）。下午又合入：框架 F4、F9（`ui-list-paging`、`ui-file-picker`）、`text-long`、`thumb-wiring`，系统应用 `boot-flow`、`contacts`、`clock-alarm`、`ai-chat`、`phone-calls`、`sms`、`memo`、`settings-a`、`power-pages`。`member-quiesce` 做完但不合入，原因见该节。应用框架的选择已定（D-111）。晚上又合入：`kid-1`、`update-pages`、`calendar`、`confirm-pages`、`search`（F7）、`files-app-1`、`camera-gallery`、`backup-pages`、`ai-pages-2`、`settings-b`；从 batch3 起每个任务由主会话复查、合并后整批交 astra 审一轮（1 小时以内）。batch4 已合入：`activity-card`（F6）、`remote-app`、`fw-f8`、`kid-2`、`storage-usage`、`transfer-pages`，以及 batch3 审计的九条修复 `audit3-fix`；batch4 审计的三条修复 `audit4-fix` 已合入。**2026-11-10：** batch5（`privacy-records`、`kid-3`、`file-index-3`、`factory-pages`、`fw-f13`、`port-skeleton`）和 batch6（`perf-memory`、`perf-latency`、`script-s31`）都已合入，两批合在一起的 astra 审计（batch5，高 1、中 2）的修复 `audit5-fix`（B5-01、B5-03、S31 等待换算）和 `index-durable`（B5-02）已合入。batch7（`storage-order`、`fw-gaps`、`sound-clock`、`phone-2`、`ui-fidelity`）全部合入，它的 astra 审计在跑。batch7 审计（高 2、中 2）的修复 `audit7-fix` 在跑。batch9（`ime-lexicon` 正式词库、`set-bluetooth` 蓝牙设置页、`index-cost` 索引代价报告）已合入，它的 astra 审计在跑。在跑（batch10）：`index-compact`（索引记录按实际长度存，index-cost 推荐的方案 B）、`ime-quality`（简拼排序、记住每位家人选过的词）、`settings-gaps`（有能力没按钮的设置和操作），任务书在本目录。合并时记下的后续事项见文末“合并时记下的”。
+**状态（2026-11-09）：** 已合入 `services-mid`、`member-wake`、`capability-table`、`device-events`、`pairing`、`backup-restore`、`confirm-durable`、`file-index`（拆成 `file-index-1`、`file-index-2`）、`wireless-transfer`，应用框架的 F1、F2、F5（`ui-semantics`、`ui-input-host`、`ui-cards`），以及只写报告的 `phone-gap`（对照完成标准 R-068 查缺口）和 `speech-cache`（DE-R6 早已修好）。下午又合入：框架 F4、F9（`ui-list-paging`、`ui-file-picker`）、`text-long`、`thumb-wiring`，系统应用 `boot-flow`、`contacts`、`clock-alarm`、`ai-chat`、`phone-calls`、`sms`、`memo`、`settings-a`、`power-pages`。`member-quiesce` 做完但不合入，原因见该节。应用框架的选择已定（D-111）。晚上又合入：`kid-1`、`update-pages`、`calendar`、`confirm-pages`、`search`（F7）、`files-app-1`、`camera-gallery`、`backup-pages`、`ai-pages-2`、`settings-b`；从 batch3 起每个任务由主会话复查、合并后整批交 astra 审一轮（1 小时以内）。batch4 已合入：`activity-card`（F6）、`remote-app`、`fw-f8`、`kid-2`、`storage-usage`、`transfer-pages`，以及 batch3 审计的九条修复 `audit3-fix`；batch4 审计的三条修复 `audit4-fix` 已合入。**2026-11-10：** batch5（`privacy-records`、`kid-3`、`file-index-3`、`factory-pages`、`fw-f13`、`port-skeleton`）和 batch6（`perf-memory`、`perf-latency`、`script-s31`）都已合入，两批合在一起的 astra 审计（batch5，高 1、中 2）的修复 `audit5-fix`（B5-01、B5-03、S31 等待换算）和 `index-durable`（B5-02）已合入。batch7（`storage-order`、`fw-gaps`、`sound-clock`、`phone-2`、`ui-fidelity`）全部合入，它的 astra 审计在跑。batch7 审计（高 2、中 2）的修复 `audit7-fix` 在跑。batch9（`ime-lexicon` 正式词库、`set-bluetooth` 蓝牙设置页、`index-cost` 索引代价报告）已合入，它的 astra 审计在跑。batch10（`index-compact` 索引记录按实际长度存、`ime-quality` 简拼和学词、`settings-gaps` 补设置入口）和 batch9 审计的修复 `audit9-fix` 已合入，它们的 astra 审计（batch10）在跑。在跑（batch11）：`confirm-hooks`（确认前的绑定和说明由能力自己提供）、`index-prune`（清掉索引里已不存在的文件的旧记录），任务书在本目录。合并时记下的后续事项见文末“合并时记下的”。
 
 **只做你被分配的那一节。** 每节按一小时左右规划，最多两小时；做不完的写进报告的“没做到的”，不要半成品冒充完成。报告写到 `docs/tasks/<节名>/REPORT.md`。
 
@@ -175,6 +175,17 @@
 - 【真机要看】输入任务最高优先级、固定在 0 号核，刷新时有输入屏幕会不会出瑕疵，0 号核上的 Wi-Fi 受不受影响；后台写盘静默期 500 ms 和上限 10 秒要按真机校准；NT26 的 `AT+CMUT`、`AT+VTS` 要核对；S31 端口实现目录读取时要填 `mtime`。
 - 【后续，架构】通用确认策略 `system/policy/confirm.c` 里按能力名特判了 `call.dtmf`（audit7-fix，还引用了通信服务的头文件）和 `system.factory_reset`（audit5-fix 的清卡说明）。应在能力定义里加钩子，让能力自己在确认前绑定上下文、补说明，策略层只调钩子（confirm-hooks）。
 - 【已知】`ink_ui_list_row` 按父容器是否灰底决定画不画分隔线；`ink_shell_bind` 把可点的白圆补上描边。都是样式推断，换主题时要一起看。
+
+## 合并时记下的（2026-11-10，batch9、batch10 和两轮审计修复）
+
+- 【已做】`ime-lexicon`、`ime-quality`、`audit9-fix`：输入法有了正式词库（968,735 字节，23,783 项全部能用随包字体显示），90 条测试首选 83、全拼首选 71/73、简拼首选 12/16；每位家人的选词会被记住（512 条，密码框不学，AI 读不到）；候选栏不会再把“更多”挤出屏幕。词库在构建时下载并按 SHA-256 核对，CI 要能联网。
+- 【已做】`set-bluetooth`：蓝牙设置页（开关、连接、忘记、搜索配对）；`audit9-fix` 修了 AI 重开蓝牙后的状态提示。
+- 【已做】`settings-gaps`：接上“忘掉这个网络”“清除通知”“拷贝文件”；清单在 docs/tasks/settings-gaps/INVENTORY.md。
+- 【已做】`index-cost`（报告）、`index-compact`：索引记录按路径实际长度存，首次建索引写盘 252 KB→92 KB，有人在等的写盘排在压缩后面多等的时间 4.4 秒→1.66 秒（模拟器）。界面绘制分条 96→128 行（多用 21,888 字节 PSRAM）。
+- 【已做】`audit7-fix`：拨号音确认绑定到那一通电话；通话键盘按键是秘密字段、事件不带按键值；借卡前写“索引不全”标记；改目录名不再逐个读卡。
+- 【要用户定】settings-gaps 清单里没有画板或数据设计的：日期时间和时区选择页、通知渠道、逐条删通知、新建文件夹、写文件、提醒的编辑和删除、文字重做、没连上的已存 Wi-Fi 管理、离开多久要重新验证（D-95）、语音备忘录音和备忘怎么关联。
+- 【后续】确认策略按能力名特判（batch11 confirm-hooks 在做）；索引旧记录占上限（batch11 index-prune 在做）。
+- 【做法】Linux CI 的 gcc 会报 clang 不报的截断和有无符号混用，S31 不编测试文件也抓不到：合并时用 ink-codex/tools/gcccheck.py（本机的 RISC-V gcc 按 compile_commands.json 编改动的 C 文件）。CI 只检出一个提交，注册进 ctest 的脚本不能用 git 历史。
 
 ## 性能
 
