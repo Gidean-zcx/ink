@@ -132,8 +132,7 @@ int hal_ota_mark_valid(void) { return -1; }
 int hal_ota_write_resource(int kind, size_t offset, const void *data, size_t n) { return -1; }
 bool hal_crypto_verify_fw(const uint8_t hash[32], const uint8_t *sig, size_t sig_len, uint32_t key_id) { return false; }
 
-/* TODO: Upstream TPS65185/PMIC sequencing + ESP-IDF PM/light sleep. Battery and front light: s31_board.c. */
-/* Power and CPU locks: hal_power_s31.c; motor: hal_input_s31.c. */
+/* Power: hal_power_s31.c; battery/light: s31_board.c; motor: hal_input_s31.c. */
 
 /* TODO: ESP-IDF SoftAP + HTTP server. */
 int hal_provision_start(const char *ssid, const char *password, hal_provision_fn fn, void *ctx) { return -1; }

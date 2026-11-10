@@ -30,6 +30,7 @@ def main():
         ("final-busy", "power", "if (!busy() &&", "if (true &&"),
         ("stale-wake", "power", "if (wake_pins & (1ull << S31_GPIO_EXP_INT))", "if (esp_sleep_get_ext1_wakeup_status() & (1ull << S31_GPIO_EXP_INT))"),
         ("restore-order", "power", "    if (masked) {", "    if (cut) restore(restore_rails);\n    cut = false;\n    if (masked) {"),
+        ("input-pause-order", "power", "    epd_power_sleep(&panel);\n    s31_input_pause();", "    s31_input_pause();\n    epd_power_sleep(&panel);"),
     ]
     with tempfile.TemporaryDirectory(prefix="s31-negative-", dir=args.build.resolve()) as temp:
         work = Path(temp)
@@ -51,7 +52,7 @@ def main():
             if result.returncode != 0 and not old:
                 raise RuntimeError(f"{name}: baseline failed\n{result.stderr}")
             print(f"{name}: compile=0, test={result.returncode}")
-    print("reverse controls: 8/8 rejected; both baselines passed")
+    print("reverse controls: 9/9 rejected; both baselines passed")
 
 
 if __name__ == "__main__":

@@ -101,13 +101,14 @@ uint32_t hal_power_sleep(const hal_sleep_cfg_t *cfg) {
         hal_log_write("power HAL: RTC wake line is not idle");
     }
     if (!armed && !cfg->max_us) return 0;
-    s31_input_pause(); /* nobody may clear GPIO2's latches during entry or wake classification */
     bool masked = false, cut = false, keys_back = true;
     uint32_t cause = 0;
     uint64_t wake_pins = 0;
     uint64_t woke_at = 0;
     epd_power_t panel = {.ioexp = metalio_ioexp(), .io_lock = metalio_board_lock, .io_unlock = metalio_board_unlock};
+    /* SDMMC and panel-bus park/restore are not connected yet. */
     epd_power_sleep(&panel);
+    s31_input_pause(); /* nobody may clear GPIO2's latches after the sensor's sleep setup */
     if (!s31_accel_sleep((armed & HAL_WAKE_MOTION) != 0)) goto out;
     masked = true; /* a failed write may already have changed the directions */
     if (metalio_board_mask_for_sleep((armed & HAL_WAKE_RTC) != 0) != HAL_I2C_OK) goto out;

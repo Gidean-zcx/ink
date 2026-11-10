@@ -76,10 +76,13 @@ bool metalio_board_ready(void) { return true; }
 void metalio_board_lock(void) { }
 void metalio_board_unlock(void) { }
 tca9555_t *metalio_ioexp(void) { return NULL; }
-void epd_power_sleep(epd_power_t *p) { (void)p; assert(paused); mark('d'); }
+void epd_power_sleep(epd_power_t *p) { (void)p; assert(!paused); mark('d'); }
 hal_i2c_status_t metalio_board_read(int port, uint8_t *levels) {
     *levels = port ? (slept ? wake_p1 : pre_p1) : port0;
-    if (port && slept) { assert(paused); mark('c'); }
+    if (port && slept) {
+        assert(paused);
+        mark('c');
+    }
     return HAL_I2C_OK;
 }
 hal_i2c_status_t metalio_board_mask_for_sleep(bool rtc) {
@@ -131,7 +134,10 @@ esp_err_t esp_light_sleep_start(void) {
     saved_high = armed_high;
     saved_timer = timer_us;
     mark('s');
-    if (sleep_rc == ESP_OK) { slept = true; now += 1000000; }
+    if (sleep_rc == ESP_OK) {
+        slept = true;
+        now += 1000000;
+    }
     return sleep_rc;
 }
 uint32_t esp_sleep_get_wakeup_causes(void) { return sources; }
@@ -169,7 +175,8 @@ int main(void) {
     motion = true;
     assert(hal_power_sleep(&cfg) == cfg.wake_mask && resumed_cause == cfg.wake_mask && watch && !keep);
     assert(saved_low == (1ull << S31_GPIO_EXP_INT) && saved_timer == cfg.max_us);
-    assert(pos('d') < pos('m') && pos('m') < pos('w') && pos('w') < pos('x') && pos('x') < pos('s'));
+    assert(pos('d') < pos('p') && pos('p') < pos('a') && pos('a') < pos('m') && pos('m') < pos('w'));
+    assert(pos('w') < pos('x') && pos('x') < pos('s'));
     assert(pos('c') < pos('k') && pos('v') < pos('k') && pos('k') < pos('r') && pos('r') < pos('i'));
     assert(!paused && !suspended && resume_calls == 1 && !armed_low && !armed_high && !timer_us);
 
