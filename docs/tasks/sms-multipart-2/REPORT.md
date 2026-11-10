@@ -1,14 +1,14 @@
 # 长短信返工报告
 
-基线：`1245e4c2c4ade794d2f29ce4050daf799804bcce`。本报告随里程碑更新；仅本地提交，不推送、不操作设备。
+基线：`1245e4c2c4ade794d2f29ce4050daf799804bcce`。2026-11-10 完成；仅本地提交，不推送、不操作设备。
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
 | 1 | 【实测】专项通过 | `integration-confirm`、`memo-record`、`sms`、`sms-multipart`、PDU 单测通过；150 字页面发送 3 段、100 字 AI 发送 2 段、超长 AI 拒绝 | `ctest --test-dir build -R '^(sms|sms-multipart|unit-nt26-pdu|integration-confirm|memo-record)$' --output-on-failure -j2` |
-| 2 | 【实测】内存全量、S31、gcccheck 通过；普通全量复跑中 | ASan/UBSan：`100% tests passed out of 323`，1419.18 秒，0 跳过；S31 已链接 ELF 和镜像 | 见“验证命令与证据” |
-| 3 | 【实测指标】专项无栈告警；【估算】见下表 | `memo-record` 的 `exec.bg` 最高从 8752 降为 7280 字节，预算仍为 8192；全量末次扫描待记录 | `ctest --test-dir build -R '^(integration-member-wake|memo-record)$' --output-on-failure -j2` |
+| 2 | 【实测】通过 | 普通全量及 ASan/UBSan 均为 `100% tests passed out of 323`，0 跳过；S31 编译成功；gcccheck 13 个文件、0 个问题，容量夹具补编退出 0 | 见“验证命令与证据” |
+| 3 | 【实测指标】无新增告警任务；保留既有自检告警，见下文 | 两指定场景无栈告警；`memo-record` 的 `exec.bg` 最高从 8752 降为 7280 字节，预算仍为 8192；【估算】最高五个任务见下表 | `ctest --test-dir build -R '^(integration-member-wake|memo-record)$' --output-on-failure -j2`；扫描全部指标 |
 | 4 | 【实现】已核查并列清单；未上机 | 原厂没有短信实现，本次无设备操作、无写模组配置命令 | 只读核查原厂 `uart_eth_modem.cc`，见“上机要核对的” |
 
 ## 栈估算对照
@@ -30,9 +30,11 @@
 
 每个参数表恢复后少 736 字节，该峰值下降 1472 字节。原始指标：`build/test-out/member-wake/metrics.json`、`build/test-out/memo-record/*/metrics.json`；第一版提取值在 `work/sms-multipart-2/first-*.json`。
 
+【实测】扫描普通构建的 949 份 `metrics.json`，只有既有的 `selftest-sim-slots` 报 `cell` 8000/4096 字节。为区分新旧，临时取基线的 NT26 驱动、头文件和模组模型重新编译同一自检，复现原有 6528/4096 告警；不是故意注入的告警。第一版改为 PDU 后该估算升高，本次返工未改此自检及其驱动/模拟器依赖，未增加告警任务。没有提高该预算或隐藏告警。对照证据：`work/sms-multipart-2/baseline-cell/run/metrics.json`；扫描：`work/sms-multipart-2/stack-scan-final.json`。
+
 ## 没做到的
 
-- 普通全量最终复跑及容量夹具的格式适配复验尚在执行。
+- 既有 `cell` 自检栈告警未修复；它包含模组模型在测试任务上的开销。按本任务边界保留第一版驱动与拼接机制，另记后续处理；实际系统 `comm` 场景估算为 4488/8192 字节。
 - 未连接设备、未在 Linux 主机运行全量测试；GCC 检查是在本机用已安装的 RISC-V GCC 编译到汇编。
 
 ## 和设计不一致的
@@ -60,8 +62,9 @@
 - 【实测】第一版对照：`integration-confirm` 10 条失败；`memo-record` 的 `exec.bg` 栈估算 main/retry 8496、after 8752 字节，超过 8192。日志：`work/sms-multipart-2/first-tests.log`。
 - 构建依赖的字体 Python 不包含中枢测试依赖；全量测试使用只读依赖目录已有的中枢虚拟环境，不安装或升级依赖。
 - 【实测】手动反向检查 `taskpolicy -c utility python3 tests/sms_multipart/rework_negative.py --build build`：只在构建目录的临时副本撤掉页面草稿交接，退出 1、3 条检查失败；脚本自身退出 0 表示反向对照有效，产品源文件不变。保留证据在 `build/test-out/sms-rework-negative/`。
-- 【实测】`gcccheck` 初检：13 个文件编译，0 个问题；S31 桩和运行时临时编译的容量测试不在宿主机构建数据库中，另行验证。
-- 【实测】运行时编译的容量夹具不在宿主构建数据库中，额外套用相同参数补编，发现并适配 9 处打印类型不匹配（该 RISC-V 工具链的 `uint32_t` 为 `unsigned long`）。仅改已触及的这个夹具文件，复验结果待记录。初检证据：`work/sms-multipart-2/gcc-fixture.log`。
+- 【实测】`gcccheck` 最终结果：`13 compiled, 0 with findings`。两文件不在宿主构建数据库中：S31 桩随固件 GCC 编译通过；运行时容量夹具套用 `sim-media` 的编译参数补编，退出 0。证据：`work/sms-multipart-2/gcccheck-final.log`、`gcc-fixture-final.log`。
+- 容量夹具补编曾发现 9 处打印类型不匹配（该 RISC-V 工具链的 `uint32_t` 为 `unsigned long`）；适配后普通全量通过，ASan/UBSan 的 `confirm-durable` 又复验为 `100% tests passed out of 1`，26.91 秒。初检及复验日志均保留。
+- 【实现】顺手核对发现 `tests/esp32s31/stack_report.py:49` 的电源任务预算仍写 3072，实际服务已改为 4096；本任务不改该报告工具。上表按普通构建实际指标，未使用这项旧元数据。
 
 ## 新增的机制
 
@@ -89,14 +92,16 @@
 export INK_KEEP_EVIDENCE=1 PYTHONDONTWRITEBYTECODE=1 PYTHONPATH="$PWD/hub"
 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan -R '^confirm-durable$' --output-on-failure -j2
 taskpolicy -c utility bash ports/esp32s31/build.sh
 taskpolicy -c utility python3 tests/sms_multipart/rework_negative.py --build build
+taskpolicy -c utility python3 "$INK_DEPS/../ink-codex/tools/gcccheck.py" build $(git diff --name-only 1245e4c2c4ade794d2f29ce4050daf799804bcce -- '*.c')
 ```
 
 - 内存检查日志：`work/sms-multipart-2/asan-tests.log`，覆盖全部 323 项（包括短信、确认卡、备忘录、重启、确定性、中枢与界面场景）。无 ASan/UBSan 报错。
-- 普通全量首次日志：`work/sms-multipart-2/full-tests.log`（容量测试未完成）；最终日志：`work/sms-multipart-2/full-tests-final.log`。
-- S31 日志：`work/sms-multipart-2/build-s31.log`；GCC：`work/sms-multipart-2/gcccheck.log`；反向：`work/sms-multipart-2/rework-negative-final.log`。
+- 普通全量首次日志：`work/sms-multipart-2/full-tests.log`（容量测试未完成）；最终日志：`work/sms-multipart-2/full-tests-final.log`，原话 `100% tests passed out of 323`，724.36 秒。ASan/UBSan 全量 1419.18 秒，格式适配后的补测见 `asan-confirm-final.log`。
+- S31 日志：`work/sms-multipart-2/build-s31.log`；GCC 最终日志：`gcccheck-final.log`、`gcc-fixture-final.log`（同一工作目录）；反向：`work/sms-multipart-2/rework-negative-final.log`。
 - 【实测】S31 编译成功，产出 `build-s31/ink-s31.elf`、镜像及 `size.txt`、`stack.txt`。静态 Flash 1323886、DIRAM 98346、外部 RAM BSS 585376 字节；不含运行时堆和任务栈。栈报告只包含已知直接调用，缺少回调等路径，不作为实机安全水位。
 - 截图已检查：`build/test-out/sms-multipart/compose/snap-compose-parts.png`、`build/test-out/sms-multipart/rx/snap-incomplete.png`。
 - 产品代码相对第一版合并提交 `8fe03ebc`：增加 93、删除 51、净增 **42 行**，低于净增 120 行预算。计数包含 system/drivers/platform/ports/simulator，不含测试、文档。
-- 范围、隐私与最终提交检查待最后记录。
+- 【实测】`git diff --check` 和基线至 HEAD 的差异范围检查通过；按总规则原命令扫描隐私，无命中（grep 退出 1）。没有构建产物、设计稿、禁改共享文档入库；没有改 remote、推送或创建 PR。
