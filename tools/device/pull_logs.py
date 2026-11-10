@@ -69,7 +69,7 @@ def main(argv=None):
     dest.mkdir()
     if args.port:
         for name, address, size in (("logs", "0xf64000", "0x80000"), ("coredump", "0xfe4000", "0x10000")):
-            subprocess.run([sys.executable, "-m", "esptool", "--port", args.port,
+            subprocess.run([sys.executable, "-m", "esptool", "--no-stub", "--port", args.port,
                             "--before", "no-reset", "--after", "no-reset", "read-flash",
                             address, size, str(dest / f"{name}.bin")], check=True)
     else:

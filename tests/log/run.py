@@ -51,6 +51,7 @@ def run(binary):
         def fake_read(command, **kwargs):
             commands.append(command)
             if "esptool" in command:
+                assert "--no-stub" in command
                 assert command[command.index("--before") + 1] == "no-reset"
                 assert command[command.index("--after") + 1] == "no-reset"
                 assert command[-4] == "read-flash"
