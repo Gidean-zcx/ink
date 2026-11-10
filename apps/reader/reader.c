@@ -70,6 +70,50 @@ static void pos_path(char *out, size_t cap, const char *member, const char *book
     if (ink_layout_member(out, cap, member, name) < 0 && cap) out[0] = 0;
 }
 
+/* The book each member read last and where (the "continue reading" card), so it outlives the open book:
+ * reader.last in the member's data area, mirrored here for the current member (cards are read often). */
+static struct {
+    char member[16];
+    char book[96];
+    int page;
+} LAST;
+
+/* A flash read must not hold up drawing home: the file is prefetched into the read cache and read a little
+ * later, when it is there; the card shows once it is in. */
+static lv_timer_t *last_timer;
+
+static void last_read(lv_timer_t *t) {
+    (void)t;
+    last_timer = NULL;
+    char path[200], data[160] = {0};
+    const char *member = ink_member_current()->id;
+    if (ink_layout_member(path, sizeof path, member, "reader.last") < 0) return;
+    ink_storage_read(path, data, sizeof data - 1);
+    memset(&LAST, 0, sizeof LAST);
+    snprintf(LAST.member, sizeof LAST.member, "%s", member);
+    if (sscanf(data, "page=%d\nbook=%95[^\n]", &LAST.page, LAST.book) != 2) LAST.book[0] = 0;
+    ink_app_card_changed("reader");
+}
+
+static void last_load(const char *member) {
+    char path[200];
+    if (!strcmp(LAST.member, member) || last_timer || ink_layout_member(path, sizeof path, member, "reader.last") < 0) return;
+    ink_storage_prefetch(path);
+    last_timer = lv_timer_create(last_read, 300, NULL);
+    lv_timer_set_repeat_count(last_timer, 1);
+}
+
+static void last_save(const char *member, const char *book, int page) {
+    char path[200], data[160];
+    int n = snprintf(data, sizeof data, "page=%d\nbook=%.95s\n", page, book);
+    if (ink_layout_member(path, sizeof path, member, "reader.last") < 0 || n <= 0 || (size_t)n >= sizeof data) return;
+    if (ink_storage_write_member_atomic(path, data, (size_t)n) != 0) return;
+    snprintf(LAST.member, sizeof LAST.member, "%s", member);
+    snprintf(LAST.book, sizeof LAST.book, "%s", book);
+    LAST.page = page;
+    ink_app_card_changed("reader");
+}
+
 /* ------------------------------------------------------------- library */
 
 static void scan_library(void) {
@@ -150,6 +194,26 @@ static void act_list(ink_call_t *c) {
     snprintf(rc->object, sizeof rc->object, "shelf:books");
 }
 
+static bool last_book(char *book, size_t cap, int *page);
+
+/* Straight back to the book read last, at its saved page (the card on home and the AI). */
+static void act_continue(ink_call_t *c) {
+    ink_receipt_t *rc = &c->rc;
+    char book[96];
+    int page;
+    scan_library();
+    bool have = last_book(book, sizeof book, &page);
+    for (int i = 0; have && i < LIB.nbooks; i++)
+        if (!strcmp(LIB.books[i].name, book)) {
+            ink_ui_push(&ink_app_book, (void *)(intptr_t)i);
+            snprintf(rc->object, sizeof rc->object, "book:%s", LIB.books[i].name);
+            snprintf(rc->say, sizeof rc->say, "接着读《%s》", LIB.books[i].name);
+            return;
+        }
+    rc->status = INK_RC_FAILED;
+    snprintf(rc->detail, sizeof rc->detail, "no book to continue on the shelf");
+}
+
 static void act_open(ink_call_t *c) {
     ink_receipt_t *rc = &c->rc;
     char title[96];
@@ -174,6 +238,7 @@ static const ink_cap_t SHELF_ACTIONS[] = {
      .effect = INK_FX_NAVIGATE,
      .child_ok = true,
      .run = act_open},
+    {.id = "reader.continue", .title = "接着读上次的书", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = act_continue},
 };
 
 
@@ -250,6 +315,7 @@ static void ahead_cb(lv_timer_t *t) {
 static void save_cb(lv_timer_t *t) {
     (void)t;
     if (!RD.dirty_pos || !ink_member_exists(RD.member)) return;
+    last_save(RD.member, LIB.books[LIB.open].name, RD.page + 1);
     char path[200], data[64];
     pos_path(path, sizeof path, RD.member, LIB.books[LIB.open].name);
     int n = snprintf(data, sizeof data, "offset=%u\n", (unsigned)RD.starts[RD.page]);
@@ -459,6 +525,7 @@ static void book_create(lv_obj_t *scr, void *arg) {
     if (path[0] && ink_storage_read(path, data, sizeof data - 1) > 0) sscanf(data, "offset=%u", &saved);
     while (saved && find_page_start(RD.page + 1) >= 0 && RD.starts[RD.page + 1] <= saved) RD.page++;
     ink_probe_value("reader.restored_page", (double)RD.page);
+    last_save(RD.member, LIB.books[LIB.open].name, RD.page + 1); /* this book is now the one to continue */
 
     RD.title = lv_label_create(scr);
     lv_obj_set_style_text_font(RD.title, ink_ui_font(2), 0);
@@ -525,14 +592,35 @@ const ink_activity_t ink_app_book = {.name = "book",
                                      .snapshot = book_snapshot,
                                      .settle = book_settle};
 
+/* The current member's book to continue: the open one, else the saved one if it is still on the card. */
+static bool last_book(char *book, size_t cap, int *page) {
+    const char *member = ink_member_current()->id;
+    if (RD.text && !strcmp(RD.member, member)) {
+        snprintf(book, cap, "%s", LIB.books[LIB.open].name);
+        *page = RD.page + 1;
+        return true;
+    }
+    last_load(member);
+    char path[160];
+    if (strcmp(LAST.member, member)) return false; /* still being read */
+    snprintf(path, sizeof path, "/content/books/%.95s.txt", LAST.book);
+    if (!LAST.book[0] || ink_file_size(path) <= 0) return false; /* deleted, or the card is out */
+    snprintf(book, cap, "%s", LAST.book);
+    *page = LAST.page;
+    return true;
+}
+
 /* What is being read: the card on home, and for the AI. */
 static int reader_card(int index, ink_card_t *out) {
-    if (index != 0 || !RD.text) return 0;
+    char book[96];
+    int page;
+    if (index != 0 || !last_book(book, sizeof book, &page)) return 0;
     snprintf(out->id, sizeof out->id, "reading");
     snprintf(out->title, sizeof out->title, "在读");
-    snprintf(out->text, sizeof out->text, "《%.60s》第 %d 页", LIB.books[LIB.open].name, RD.page + 1);
-    snprintf(out->action, sizeof out->action, "reader.open_book");
-    out->value = RD.page + 1;
+    snprintf(out->text, sizeof out->text, "《%.60s》第 %d 页", book, page);
+    snprintf(out->action, sizeof out->action, "reader.continue");
+    snprintf(out->member, sizeof out->member, "%s", ink_member_current()->id);
+    out->value = page;
     out->has_value = true;
     out->bookmark = true;
     return 1;
