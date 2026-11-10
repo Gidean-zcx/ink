@@ -37,15 +37,7 @@ const void *hal_asset_map(const char *name, size_t *size) { if (size) *size = 0;
 void hal_asset_unmap(const void *data) {  }
 void hal_asset_access(const void *p, size_t len) {  }
 
-/* TODO: ESP-IDF I2S + upstream codec and board amplifier control. */
-int hal_audio_route_set(hal_audio_route_t route) { return -1; }
-void hal_audio_get_info(hal_audio_info_t *out) { *out = (hal_audio_info_t){0}; }
-int hal_audio_capture_start(hal_audio_capture_cb cb, void *ctx) { return -1; }
-void hal_audio_capture_stop(void) {  }
-int hal_audio_play_start(void) { return -1; }
-int hal_audio_play_write(const int16_t *pcm, int n, int64_t timeout_us) { return -1; }
-int64_t hal_audio_play_delay_us(void) { return -1; }
-void hal_audio_play_stop(bool drain) {  }
+/* Audio and Opus: hal_audio_s31.c and hal_opus_s31.c. */
 
 /* TODO: Portable BH1098G driver + ESP-IDF UART. */
 bool hal_bt_available(void) { return false; }
@@ -74,13 +66,6 @@ int hal_cell_mute(bool on, bool *muted) { return -1; }
 int hal_cell_dtmf(char key) { return -1; }
 int hal_cell_wait_event(hal_cell_event_t *ev, uint32_t timeout_ms) { return -1; }
 
-/* TODO: Upstream libopus (not linked in this skeleton). */
-hal_opus_dec_t *hal_opus_dec_new(void) { return NULL; }
-hal_opus_enc_t *hal_opus_enc_new(int bitrate, int complexity) { return NULL; }
-int hal_opus_encode(hal_opus_enc_t *e, const int16_t *pcm, uint8_t *out, int cap) { return -1; }
-void hal_opus_enc_free(hal_opus_enc_t *e) {  }
-int hal_opus_decode(hal_opus_dec_t *d, const uint8_t *pkt, int len, int16_t *pcm) { return -1; }
-void hal_opus_dec_free(hal_opus_dec_t *d) {  }
 
 /* Device info, log, random; RTC and accelerometer: s31_board.c. */
 const char *hal_device_reset_reason(void) { return "skeleton"; }

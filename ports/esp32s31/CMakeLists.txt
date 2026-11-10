@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 3.22)
 set(PROJECT_VER "skeleton")
+include(${CMAKE_CURRENT_LIST_DIR}/opus.cmake)
+list(APPEND EXTRA_COMPONENT_DIRS ${ink_opus_source})
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 idf_build_set_property(MINIMAL_BUILD ON)
 project(ink-s31)

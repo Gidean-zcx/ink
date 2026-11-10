@@ -1,0 +1,76 @@
+#!/usr/bin/env python3
+"""Reverse audio controls in temporary source copies; no Git history needed."""
+import argparse
+import json
+from pathlib import Path
+import resource
+import shlex
+import subprocess
+import tempfile
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("build", type=Path)
+    args = parser.parse_args()
+    build = args.build.resolve()
+    port = Path(__file__).resolve().parents[1]
+    source = port / "hal_audio_s31.c"
+    original = source.read_text()
+    commands = json.loads((build / "compile_commands.json").read_text())
+    entry = next(e for e in commands if Path(e["file"]).resolve() == source)
+    compile_args = shlex.split(entry["command"])
+    resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
+    changes = [
+        ("baseline", "", ""),
+        ("remove-implementation", "    ink_s31_audio_init();", "    ink_s31_audio_init();"),
+        ("enable-pa-at-start", "A.playing = true; A.tail = 0;", "A.playing = true; ink_amp(true); A.tail = 0;"),
+        ("omit-pa-off", "        ink_amp(false);", "        (void)0;"),
+        ("omit-drain", "if (drain && left > 0)", "if (drain && left < 0)"),
+        ("omit-dma-clear", "    for (int i = 0; i < INK_AUDIO_DMA; i++) {", "    for (int i = 0; i < 0; i++) {"),
+        ("accept-no-mode-ack", "if (!ack) return false;", "(void)ack;"),
+        ("stale-mode-after-wake", "if (A.epoch != epoch)", "if (A.epoch == UINT_MAX)"),
+        ("drop-reference-channel", "A.ref[i] = ink_sample(A.in[i * 2 + 1]);", "A.ref[i] = 0;"),
+        ("ignore-capture-overflow", "__atomic_add_fetch(&A.lost, ev->size / 8, __ATOMIC_RELAXED);", "(void)ev;"),
+    ]
+    with tempfile.TemporaryDirectory(prefix="audio-negative-", dir=build) as temp:
+        work = Path(temp)
+        for name, old, new in changes:
+            text = original
+            if name == "remove-implementation":
+                # Link the actual baseline-shaped audio stubs instead of the port.
+                text = '#include "ink/hal_audio.h"\n' + "\n".join([
+                    "void ink_s31_audio_init(void) {}",
+                    "int hal_audio_route_set(hal_audio_route_t r) { (void)r; return -1; }",
+                    "void hal_audio_get_info(hal_audio_info_t *i) { *i = (hal_audio_info_t){0}; }",
+                    "int hal_audio_play_start(void) { return -1; }",
+                    "int hal_audio_play_write(const int16_t *p, int n, int64_t t) { (void)p; (void)n; (void)t; return -1; }",
+                    "int64_t hal_audio_play_delay_us(void) { return -1; }",
+                    "void hal_audio_play_stop(bool d) { (void)d; }",
+                    "int hal_audio_capture_start(hal_audio_capture_cb cb, void *c) { (void)cb; (void)c; return -1; }",
+                    "void hal_audio_capture_stop(void) {}",
+                ])
+            elif old:
+                assert text.count(old) == 1, name
+                text = text.replace(old, new)
+            altered = work / "audio.c"
+            altered.write_text(text)
+            obj = work / "audio.o"
+            command = compile_args.copy()
+            command[command.index("-o") + 1] = str(obj)
+            command[command.index(str(source))] = str(altered)
+            subprocess.run(command, cwd=build, check=True, capture_output=True, text=True)
+            link = shlex.split((build / "CMakeFiles/test-s31-audio.dir/link.txt").read_text())
+            for i, arg in enumerate(link):
+                if arg.endswith("hal_audio_s31.c.o"):
+                    link[i] = str(obj)
+            link[link.index("-o") + 1] = str(work / "test")
+            subprocess.run(link, cwd=build, check=True, capture_output=True, text=True)
+            run = subprocess.run([str(work / "test")], cwd=work, capture_output=True, text=True, timeout=10)
+            assert (run.returncode == 0) == (name == "baseline"), (name, run.stdout, run.stderr)
+            evidence = run.stderr.strip().splitlines()
+            print(f"{name}: compile=0, test={run.returncode}" + (f"; {evidence[-1]}" if evidence else ""))
+
+
+if __name__ == "__main__":
+    main()
