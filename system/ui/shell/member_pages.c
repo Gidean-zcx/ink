@@ -119,6 +119,7 @@ static void draw(void) {
     }
     lv_obj_remove_flag(ink_shell_statusbar(P.card.panel, true), LV_OBJ_FLAG_CLICKABLE);
     if (P.mode == UNLOCK) ink_shell_camera_button(P.card.panel, false);
+    if (P.mode == UNLOCK) ink_shell_emergency_button(P.card.panel, false);
     if (P.mode == FORGOT) {
         ink_ui_circle(P.card.panel, "back", INK_MARGIN, INK_STATUS_BAR, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_STATIC, clicked, "shell.pin_cancel");
         ink_ui_label(P.card.panel, ink_member_any_pin() ? "忘记密码" : "还没有密码", INK_FONT_TITLE, INK_WEIGHT_BOLD, INK_MARGIN + INK_CONTROL + INK_GAP, INK_STATUS_BAR + INK_GAP, w - INK_CONTROL - INK_GAP);

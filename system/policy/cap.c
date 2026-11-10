@@ -57,6 +57,7 @@ const ink_cap_t *ink_cap_find(const char *id) {
 static bool on_its_page(const ink_cap_t *c) { return !c->activity || ((ink_ui_page_current() || ink_camera_restricted()) && !strcmp(ink_ui_action_page(), c->activity)); }
 
 static bool in_directory(const char *id); /* the hub's directory, below */
+static bool opens_emergency(const ink_cap_t *c) { return c && !strcmp(c->id, "phone.emergency_open"); }
 
 /* Local first; otherwise what the hub offers, while it is reachable (architecture §4.6: the
  * device's capability set is its own plus the hub's, as of now). */
@@ -119,9 +120,9 @@ static ink_rc_t gate(const ink_cap_t *c, ink_source_t src, uint32_t page_gen, bo
     bool camera_locked = ink_camera_restricted() || (ink_power_state() == INK_PWR_LOCKED &&
         (src == INK_SRC_AI || src == INK_SRC_REMOTE || src == INK_SRC_APP) &&
         (!strncmp(c->id, "camera.", 7) || !strncmp(c->id, "photo.", 6) || !strncmp(c->id, "file.", 5) || !strcmp(c->id, "app.open")));
-    if ((!ink_member_space_open() || camera_locked) && src != INK_SRC_SYSTEM) {
+    if ((!ink_member_space_open() || camera_locked || ink_power_state() == INK_PWR_LOCKED) && src != INK_SRC_SYSTEM) {
         bool camera_exit = ink_camera_restricted() && (!strcmp(c->id, "shell.back") || !strcmp(c->id, "system.home"));
-        if (src == INK_SRC_AI || src == INK_SRC_REMOTE || src == INK_SRC_APP || (!c->while_locked && !camera_exit)) {
+        if (!opens_emergency(c) && (src == INK_SRC_AI || src == INK_SRC_REMOTE || src == INK_SRC_APP || (!c->while_locked && !camera_exit))) {
             ink_probe_count("policy.rejected");
             return reject(rc, INK_RC_REJECTED, "this member's space is locked");
         }
@@ -457,7 +458,7 @@ static void answer_job(void *arg) {
     ink_cap_done_fn done = p->o.done; /* NULL once a waiting ink_cap_invoke gave up on it */
     osal_mutex_unlock(CB.lock);
     bool handoff = p->call.cap && !strcmp(p->call.cap->id, "system.switch_member") && p->out.status == INK_RC_DONE && !p->out.result;
-    bool hand_locked = p->call.cap && p->call.cap->while_locked && (p->o.src == INK_SRC_TOUCH || p->o.src == INK_SRC_KEY);
+    bool hand_locked = opens_emergency(p->call.cap) || (p->call.cap && p->call.cap->while_locked && (p->o.src == INK_SRC_TOUCH || p->o.src == INK_SRC_KEY));
     if (!handoff && p->member[0] && (!ink_member_exists(p->member) ||
         strcmp(p->member, ink_member_current()->id) || (!ink_member_space_open() && !hand_locked && p->o.src != INK_SRC_SYSTEM && p->out.status == INK_RC_DONE))) {
         memset(&p->out, 0, sizeof p->out); p->out.status = INK_RC_STALE;
@@ -1050,7 +1051,7 @@ void ink_cap_emit(const char *id, const ink_args_t *payload) {
 
 /* What the current member may use now, as the AI sees it. */
 static bool listed(const ink_cap_t *c) {
-    if (!ink_member_space_open() || !on_its_page(c) || !exposed(c, INK_SRC_AI)) return false;
+    if ((!ink_member_space_open() && !opens_emergency(c)) || !on_its_page(c) || !exposed(c, INK_SRC_AI)) return false;
     const ink_member_t *m = ink_member_current();
     return m->role != INK_ROLE_CHILD || (c->effect != INK_FX_SYSTEM && ink_member_allows(c->id, c->child_ok) && ink_member_time_allows(c->id));
 }

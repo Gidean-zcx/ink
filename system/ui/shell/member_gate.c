@@ -106,6 +106,7 @@ static void sync_gate(void *arg) { /* UI task */
     ink_ui_overlay_add(&OVERLAY, G.card.root);
     ink_shell_statusbar(G.card.panel, true);
     ink_shell_camera_button(G.card.panel, false);
+    ink_shell_emergency_button(G.card.panel, false);
     shell_card_text(&G.card, G.requested ? "谁在用？" : "", "");
     shell_card_clear_buttons(&G.card);
     lv_obj_add_flag(G.card.row, LV_OBJ_FLAG_HIDDEN);

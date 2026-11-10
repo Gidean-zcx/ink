@@ -16,7 +16,7 @@ static uint64_t g_unlock_cause;
 static int g_locked;
 static ink_exec_job_t g_job;
 
-static int snapshot(char *buf, size_t cap) { return snprintf(buf, cap, "%s", TR("设备已锁定；可拍照：app.open(id=camera)。电源键或 AI 键唤醒。")); }
+static int snapshot(char *buf, size_t cap) { return snprintf(buf, cap, "%s phone.emergency_open", TR("设备已锁定；可拍照：app.open(id=camera)。电源键或 AI 键唤醒。")); }
 static const ink_ui_overlay_t OVERLAY = {.name = "LockPage", .level = 2, .snapshot = snapshot};
 static const char *mark_text(void) {
     return ink_setting_get("display.lock_style") == 0 && ink_activity_listening() ? TR("正在听，按电源键或 AI 键唤醒") : TR("已锁定，按电源键或 AI 键唤醒");
@@ -47,6 +47,7 @@ static void show(void) {
     if (image) {
         ink_wallpaper_draw(g_mark);
         ink_shell_camera_button(g_mark, false);
+        ink_shell_emergency_button(g_mark, false);
         ink_ui_overlay_add(&OVERLAY, g_mark); ink_ui_hint_obj(g_mark, INK_REFRESH_FLASH_UI);
         return;
     }
@@ -76,11 +77,12 @@ static void show(void) {
         ink_ui_line(notice, "唤醒后查看", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_ROW_DOUBLE, text_y + ink_ui_line_height(INK_FONT_LIST), INK_CANVAS_W - 2 * INK_ROW_DOUBLE);
     }
     ink_shell_camera_button(g_mark, !clock);
+    ink_shell_emergency_button(g_mark, !clock);
     lv_obj_t *strip = clock ? ink_ui_box(g_mark, INK_MARGIN, INK_CANVAS_H - strip_h - INK_GAP_S,
                                   INK_CANVAS_W - 2 * INK_MARGIN, strip_h, 0, INK_SURFACE_WHITE, false) : g_mark;
     lv_obj_t *l = ink_ui_label(strip, mark_text(), INK_FONT_NOTE, INK_WEIGHT_REGULAR, 0,
-                               (strip_h - ink_ui_line_height(INK_FONT_NOTE)) / 2, INK_CANVAS_W - 2 * INK_MARGIN - (clock ? 0 : INK_CIRCLE + INK_GAP));
-    lv_obj_align(l, LV_ALIGN_LEFT_MID, 0, 0);
+                               (strip_h - ink_ui_line_height(INK_FONT_NOTE)) / 2, INK_CANVAS_W - 2 * INK_MARGIN - (clock ? 0 : INK_CIRCLE + 2 * INK_CONTROL + 4 * INK_GAP));
+    lv_obj_align(l, LV_ALIGN_LEFT_MID, clock ? 0 : ink_ui_px(2 * INK_CONTROL + 3 * INK_GAP), 0);
     lv_obj_set_style_text_align(l, LV_TEXT_ALIGN_CENTER, 0);
     g_label = l;
     ink_ui_overlay_add(&OVERLAY, g_mark);

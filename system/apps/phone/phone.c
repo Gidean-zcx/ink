@@ -5,7 +5,9 @@
 #include "ink/sys/comm.h"
 #include "ink/sys/data.h"
 #include "ink/sys/json.h"
+#include "ink/sys/i18n.h"
 #include "ink/sys/members.h"
+#include "ink/sys/power.h"
 #include "ink/sys/state.h"
 #include "ink/sys/textfield.h"
 #include "ink/sys/time.h"
@@ -37,6 +39,98 @@ static struct {
     ink_ui_action_spec_t actions[14];
     ink_ui_page_spec_t model;
 } P INK_PSRAM_BSS; /* UI executor only. */
+
+static struct { lv_obj_t *root, *number_label, *notice; char number[24]; bool active; } E;
+static const ink_ui_overlay_t EMERGENCY;
+static void emergency_draw(void);
+static void emergency_close(void) {
+    if (!E.root || E.active) return;
+    ink_ui_overlay_remove(&EMERGENCY); lv_obj_delete(E.root); memset(&E, 0, sizeof E);
+    ink_power_release(INK_NEED_AWAKE); ink_power_lock(); ink_ui_hint_frame(INK_REFRESH_FLASH_UI);
+}
+static bool emergency_key(ink_key_t key, bool lng) {
+    if (!lng && (key == INK_KEY_HOME || key == INK_KEY_BACK)) emergency_close();
+    return true;
+}
+static int emergency_snapshot(char *out, size_t cap) {
+    return snprintf(out, cap, "%s；%s：%.20s；%s；110、120、119、112；%s",
+        TR("紧急呼叫"), TR("号码"), E.number, lv_label_get_text(E.notice), TR("请在紧急呼叫页面亲自拨号"));
+}
+static const ink_ui_overlay_t EMERGENCY = {.name = "PhoneEmergency", .level = 3, .snapshot = emergency_snapshot, .on_key = emergency_key};
+static void emergency_open(void) {
+    if (E.root) return;
+    if (!E.root) {
+        ink_power_hold(INK_NEED_AWAKE);
+        E.number[0] = 0;
+        E.root = ink_ui_box(lv_layer_sys(), 0, 0, INK_CANVAS_W, INK_CANVAS_H, 0, INK_SURFACE_WHITE, false);
+        lv_obj_add_flag(E.root, LV_OBJ_FLAG_CLICKABLE);
+        ink_ui_overlay_add(&EMERGENCY, E.root);
+    }
+    emergency_draw();
+}
+static void emergency_reply(void *ctx, const ink_receipt_t *rc) {
+    (void)ctx;
+    if (E.root && rc->status != INK_RC_DONE) { lv_label_set_text(E.notice, rc->say[0] ? rc->say : TR("没有完成，请重试")); ink_ui_hint_obj(E.notice, INK_REFRESH_UI); }
+}
+static void emergency_dial(lv_event_t *e) {
+    const char *number = lv_event_get_user_data(e);
+    char args[64]; snprintf(args, sizeof args, "{\"number\":\"%.20s\"}", number ? number : E.number);
+    ink_call_opts_t o = {.src = INK_SRC_TOUCH, .args_json = args, .reply_exec = INK_EXEC_UI, .done = emergency_reply};
+    ink_cap_call("phone.emergency", NULL, &o);
+}
+static void emergency_draw(void) {
+    lv_obj_clean(E.root);
+    ink_ui_line(E.root, TR("紧急呼叫"), INK_FONT_TITLE, INK_WEIGHT_BOLD, INK_MARGIN, INK_STATUS_BAR, INK_CANVAS_W - 2 * INK_MARGIN);
+    E.number_label = ink_ui_line(E.root, E.number, INK_FONT_TITLE, INK_WEIGHT_MEDIUM, INK_MARGIN, 140, INK_CANVAS_W - 2 * INK_MARGIN);
+    E.notice = ink_ui_notice(E.root, E.active ? TR("正在拨号") : TR("仅限紧急号码"), 218);
+    if (E.active) {
+        ink_shell_bind(ink_ui_pill(E.root, TR("挂断"), INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_PRIMARY,
+            INK_CANVAS_W - 2 * INK_MARGIN, INK_PRIMARY, true, NULL, NULL), "call.hangup", NULL);
+    } else {
+        static const char *const keys[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "*", "0", "#"};
+        int cell = (INK_CANVAS_W - 2 * INK_MARGIN) / 3;
+        for (unsigned i = 0; i < sizeof keys / sizeof *keys; i++) {
+            char args[24]; snprintf(args, sizeof args, "{\"key\":\"%s\"}", keys[i]);
+            lv_obj_t *b = ink_ui_pill(E.root, keys[i], INK_MARGIN + (i % 3) * cell + (cell - INK_DIGIT) / 2, 270 + (i / 3) * (INK_DIGIT + INK_GAP_S),
+                INK_DIGIT, INK_DIGIT, false, NULL, NULL);
+            ink_ui_pill_text(b, INK_FONT_HEADING, INK_WEIGHT_MEDIUM); ink_shell_bind(b, "phone.emergency_key", args);
+        }
+        ink_ui_pill(E.root, TR("拨号"), INK_MARGIN, 964, cell - INK_GAP, INK_CONTROL, true, emergency_dial, NULL);
+        ink_shell_bind(ink_ui_pill(E.root, TR("删除"), INK_MARGIN + cell, 964, cell - INK_GAP, INK_CONTROL, false, NULL, NULL), "phone.emergency_key", "{\"key\":\"delete\"}");
+        ink_shell_bind(ink_ui_pill(E.root, TR("返回"), INK_MARGIN + 2 * cell, 964, cell - INK_GAP, INK_CONTROL, false, NULL, NULL), "phone.emergency_close", NULL);
+        static const char *const numbers[] = {"110", "120", "119", "112"};
+        int w = (INK_CANVAS_W - 2 * INK_MARGIN - 3 * INK_GAP_S) / 4;
+        for (unsigned i = 0; i < sizeof numbers / sizeof *numbers; i++)
+            ink_ui_pill(E.root, numbers[i], INK_MARGIN + i * (w + INK_GAP_S), INK_CANVAS_H - INK_MARGIN - INK_CONTROL, w, INK_CONTROL, false, emergency_dial, (void *)numbers[i]);
+    }
+    ink_ui_hint_frame(INK_REFRESH_FLASH_UI);
+}
+static void emergency_action(ink_call_t *c) {
+    if (!strcmp(c->cap->id, "phone.emergency_open")) { emergency_open(); return; }
+    if (!E.root || strcmp(ink_ui_top_name(), "PhoneEmergency") || E.active) { c->rc.status = INK_RC_REJECTED; return; }
+    if (!strcmp(c->cap->id, "phone.emergency_close")) { emergency_close(); return; }
+    char key[8] = ""; ink_args_get_str(&c->args, "key", key, sizeof key);
+    size_t n = strlen(E.number);
+    if (!strcmp(key, "delete")) { if (n) E.number[n - 1] = 0; }
+    else if (strlen(key) == 1 && strchr("0123456789*#", key[0]) && n < 20) { E.number[n] = key[0]; E.number[n + 1] = 0; }
+    else { c->rc.status = INK_RC_INVALID; return; }
+    lv_label_set_text(E.number_label, E.number); ink_ui_content_changed(); ink_ui_hint_obj(E.number_label, INK_REFRESH_TEXT);
+}
+static bool emergency_changed(const char *id, const ink_args_t *a) {
+    bool emergency = false; ink_args_get_bool(a, "emergency", &emergency);
+    if (!strcmp(id, "call.dialed") && emergency) {
+        emergency_open(); ink_args_get_str(a, "number", E.number, sizeof E.number); E.active = true; emergency_draw(); return true;
+    }
+    if (!E.active) return false;
+    if (!strcmp(id, "call.connected")) { lv_label_set_text(E.notice, TR("通话中")); ink_ui_content_changed(); ink_ui_hint_obj(E.notice, INK_REFRESH_TEXT); }
+    if (!strcmp(id, "call.ended")) { E.active = false; emergency_close(); }
+    return true;
+}
+void ink_shell_emergency_button(lv_obj_t *root, bool strip) {
+    lv_obj_t *b = ink_ui_pill(root, TR("紧急呼叫"), strip ? 0 : INK_MARGIN,
+        strip ? 0 : INK_STATUS_BAR + INK_GAP, 2 * INK_CONTROL + 2 * INK_GAP, INK_CONTROL, false, NULL, NULL);
+    ink_ui_pill_text(b, INK_FONT_NOTE, INK_WEIGHT_MEDIUM); ink_shell_bind(b, "phone.emergency_open", NULL);
+}
 
 static void show(const ink_activity_t *page) {
     ink_ui_drop_app("phone");
@@ -76,6 +170,7 @@ static void on_call(void *ctx, const char *id, const ink_args_t *a) {
 }
 static void changed(void *ctx, const char *id, const ink_args_t *a) {
     (void)ctx;
+    if (emergency_changed(id, a)) return;
     char member[16] = ""; ink_args_get_str(a, "member", member, sizeof member);
     if (!strcmp(id, "call.controls")) {
         if (!P.active || strcmp(member, P.call_member)) return;
@@ -315,6 +410,9 @@ static const ink_activity_t RECENTS = {.name = "PhoneRecents", .app = "phone", .
 static const ink_activity_t CALL = {.name = "PhoneCall", .app = "phone", .create = create, .destroy = destroy, .snapshot = snapshot};
 static const ink_activity_t KEYPAD = {.name = "PhoneKeypad", .app = "phone", .create = create, .destroy = destroy, .snapshot = snapshot};
 static const ink_cap_t CAPS[] = {
+    {.id = "phone.emergency_open", .title = "打开紧急呼叫页面", .effect = INK_FX_NAVIGATE, .child_ok = true, .while_locked = true, .run = emergency_action},
+    {.id = "phone.emergency_close", .title = "返回锁屏", .effect = INK_FX_NAVIGATE, .child_ok = true, .while_locked = true, .expose = INK_EXPOSE_OWNER, .run = emergency_action},
+    {.id = "phone.emergency_key", .title = "按紧急拨号键", .input = "{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"string\",\"maxLength\":6}},\"required\":[\"key\"]}", .effect = INK_FX_NAVIGATE, .child_ok = true, .while_locked = true, .expose = INK_EXPOSE_OWNER, .run = emergency_action},
     {.id = "phone.keypad", .title = "打开或收起通话键盘", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "phone.return", .title = "回到通话", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "phone.open", .title = "打开拨号盘，可填入号码", .input = "{\"type\":\"object\",\"properties\":{\"number\":{\"type\":\"string\",\"maxLength\":20}}}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
