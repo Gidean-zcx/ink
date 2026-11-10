@@ -3,6 +3,7 @@
  * else. It shows the members; one with a PIN asks for it; the keys do nothing. The rules are the members' and the policy's.
  */
 /* ui-scale-runtime: dimension x,y,diameter member_tile arguments use theme margins, rows and avatar sizes. */
+#include "ink/sys/i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -85,7 +86,7 @@ static void clicked(lv_event_t *e) {
 
 static void member_tile(const ink_member_t *m, int x, int y, int diameter, bool primary) {
     size_t at = G.model.field_count++;
-    G.fields[at] = (ink_ui_field_spec_t){.id = m->id, .role = "button", .label = m->name, .value = ink_member_has_pin(m->id) ? "有密码" : "无密码"};
+    G.fields[at] = (ink_ui_field_spec_t){.id = m->id, .role = "button", .label = m->name, .value = ink_member_has_pin(m->id) ? TR("有密码") : TR("无密码")};
     lv_obj_t *b = ink_ui_pill(G.card.panel, "", x, y, diameter, diameter, primary, on_member, (void *)m);
     lv_obj_add_event_cb(b, pressed, LV_EVENT_PRESSED, NULL);
     lv_obj_set_style_border_width(b, 0, 0);
@@ -121,10 +122,10 @@ static void sync_gate(void *arg) { /* UI task */
     shell_card_open(&G.card);
     shell_card_full(&G.card);
     ink_ui_overlay_add(&OVERLAY, G.card.root);
-    G.fields[0] = (ink_ui_field_spec_t){.id = "status", .role = "text", .label = "选择家人", .value = "设备锁着：请选择家人，或输入密码。"};
-    G.model = (ink_ui_page_spec_t){"member_gate", G.requested ? "谁在用？" : "选择家人", {"member_gate", ink_ui_generation()}, G.fields, 1, G.actions, 0};
-    G.actions[G.model.action_count++] = (ink_ui_action_spec_t){.id = "emergency", .label = "打开紧急呼叫页面", .capability = "phone.emergency_open", .enabled = true};
-    G.actions[G.model.action_count++] = (ink_ui_action_spec_t){.id = "camera", .label = "拍照", .capability = "app.open", .args_json = "{\"id\":\"camera\"}", .enabled = ink_cap_find("camera.capture") != NULL};
+    G.fields[0] = (ink_ui_field_spec_t){.id = "status", .role = "text", .label = TR("选择家人"), .value = TR("设备锁着：请选择家人，或输入密码。")};
+    G.model = (ink_ui_page_spec_t){"member_gate", G.requested ? TR("谁在用？") : TR("选择家人"), {"member_gate", ink_ui_generation()}, G.fields, 1, G.actions, 0};
+    G.actions[G.model.action_count++] = (ink_ui_action_spec_t){.id = "emergency", .label = TR("打开紧急呼叫页面"), .capability = "phone.emergency_open", .enabled = true};
+    G.actions[G.model.action_count++] = (ink_ui_action_spec_t){.id = "camera", .label = TR("拍照"), .capability = "app.open", .args_json = "{\"id\":\"camera\"}", .enabled = ink_cap_find("camera.capture") != NULL};
     ink_shell_statusbar(G.card.panel, true);
     if (ink_cap_find("camera.capture")) {
         lv_obj_t *camera = ink_ui_circle(G.card.panel, "camera", INK_CANVAS_W - INK_MARGIN - INK_CIRCLE, INK_STATUS_BAR + INK_GAP,
@@ -133,7 +134,7 @@ static void sync_gate(void *arg) { /* UI task */
         ink_shell_bind(camera, "app.open", "{\"id\":\"camera\"}");
         lv_obj_add_event_cb(camera, pressed, LV_EVENT_PRESSED, NULL);
     }
-    shell_card_text(&G.card, G.requested ? "谁在用？" : "", "");
+    shell_card_text(&G.card, G.requested ? TR("谁在用？") : "", "");
     shell_card_clear_buttons(&G.card);
     lv_obj_add_flag(G.card.row, LV_OBJ_FLAG_HIDDEN);
     const ink_member_t *m, *current = ink_member_current();
@@ -144,8 +145,8 @@ static void sync_gate(void *arg) { /* UI task */
     if (!G.requested) {
         member_tile(current, (INK_CANVAS_W - INK_CIRCLE_LARGE) / 2, INK_STATUS_BAR + 2 * INK_BLOCK,
                     INK_CIRCLE_LARGE, true);
-        ink_ui_notice(G.card.panel, "输密码，回到刚才的地方", INK_STATUS_BAR + 2 * INK_BLOCK + INK_CIRCLE_LARGE + INK_GAP + ink_ui_line_height(INK_FONT_BODY) + INK_GAP_M);
-        ink_ui_notice(G.card.panel, "换一位家人", INK_CANVAS_H - INK_BLOCK_L - INK_CIRCLE_APP - 2 * ink_ui_line_height(INK_FONT_BODY) - INK_CONTROL);
+        ink_ui_notice(G.card.panel, TR("输密码，回到刚才的地方"), INK_STATUS_BAR + 2 * INK_BLOCK + INK_CIRCLE_LARGE + INK_GAP + ink_ui_line_height(INK_FONT_BODY) + INK_GAP_M);
+        ink_ui_notice(G.card.panel, TR("换一位家人"), INK_CANVAS_H - INK_BLOCK_L - INK_CIRCLE_APP - 2 * ink_ui_line_height(INK_FONT_BODY) - INK_CONTROL);
     }
     for (int i = 0; (m = ink_member_at(i)) != NULL; i++) {
         if (!G.requested && !strcmp(m->id, current->id)) continue;
@@ -160,14 +161,14 @@ static void sync_gate(void *arg) { /* UI task */
         member_tile(m, x, y, diameter, i == 0);
     }
     if (G.requested && ink_member_space_open() && current->role == INK_ROLE_ADULT) {
-        lv_obj_t *b = ink_ui_pill(G.card.panel, "设置或修改密码", INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_CONTROL,
+        lv_obj_t *b = ink_ui_pill(G.card.panel, TR("设置或修改密码"), INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_CONTROL,
                                   INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, false, clicked, "pin_set");
         lv_obj_add_event_cb(b, pressed, LV_EVENT_PRESSED, NULL);
         ink_shell_bind(b, "shell.pin_set", NULL);
-        G.actions[G.model.action_count++] = (ink_ui_action_spec_t){.id = "pin_set", .label = "设置或修改密码", .capability = "shell.pin_set", .enabled = true};
+        G.actions[G.model.action_count++] = (ink_ui_action_spec_t){.id = "pin_set", .label = TR("设置或修改密码"), .capability = "shell.pin_set", .enabled = true};
     }
-    G.actions[G.model.action_count++] = (ink_ui_action_spec_t){.id = "prev", .label = "上一页", .capability = "shell.members_page", .args_json = "{\"delta\":-1}", .enabled = G.page > 0};
-    G.actions[G.model.action_count++] = (ink_ui_action_spec_t){.id = "next", .label = "下一页", .capability = "shell.members_page", .args_json = "{\"delta\":1}", .enabled = G.page + 1 < pages};
+    G.actions[G.model.action_count++] = (ink_ui_action_spec_t){.id = "prev", .label = TR("上一页"), .capability = "shell.members_page", .args_json = "{\"delta\":-1}", .enabled = G.page > 0};
+    G.actions[G.model.action_count++] = (ink_ui_action_spec_t){.id = "next", .label = TR("下一页"), .capability = "shell.members_page", .args_json = "{\"delta\":1}", .enabled = G.page + 1 < pages};
     if (pages > 1) {
         lv_obj_t *pager = ink_ui_pagebar(G.card.panel, G.page + 1, pages, INK_CANVAS_H - INK_MARGIN - 2 * INK_CONTROL - INK_GAP, page_clicked);
         lv_obj_add_event_cb(lv_obj_get_child(pager, 0), pressed, LV_EVENT_PRESSED, NULL);

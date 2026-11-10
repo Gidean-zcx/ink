@@ -2,6 +2,7 @@
  * What stays on the panel once the power has gone (placeholder look, D-64; system UI spec §7.12). Electronic paper keeps it, so it
  * has to say the device is off; and it leaves where the reading was, like a bookmark, unless that is behind a closed space.
  */
+#include "ink/sys/i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -27,8 +28,8 @@ static struct {
 } O;
 
 static int semantic_snapshot(char *buf, size_t cap) {
-    ink_ui_field_spec_t field = {.id = "body", .role = "text", .label = "说明", .value = O.body};
-    ink_ui_page_spec_t model = {.id = "off", .title = "已关机", .object = {"off", ink_ui_generation()}, .fields = &field, .field_count = 1};
+    ink_ui_field_spec_t field = {.id = "body", .role = "text", .label = TR("说明"), .value = O.body};
+    ink_ui_page_spec_t model = {.id = "off", .title = TR("已关机"), .object = {"off", ink_ui_generation()}, .fields = &field, .field_count = 1};
     return ink_ui_semantics_snapshot(&model, buf, cap);
 }
 
@@ -50,13 +51,13 @@ static void add_bookmark(void) { /* the first card that is one */
 
 static void draw(void *arg) { /* UI task */
     (void)arg;
-    snprintf(O.body, sizeof O.body, "%s", !strcmp(O.why, "battery_unsaved") ? "没电了，有些内容没保存。充上电再开机" : !strcmp(O.why, "battery") ? "没电了，东西都存好了。充上电再开机" : "按电源键开机");
+    snprintf(O.body, sizeof O.body, "%s", !strcmp(O.why, "battery_unsaved") ? TR("没电了，有些内容没保存。充上电再开机") : !strcmp(O.why, "battery") ? TR("没电了，东西都存好了。充上电再开机") : TR("按电源键开机"));
     if (ink_member_space_open()) add_bookmark();
     if (O.card.root) { ink_ui_overlay_remove(&OVERLAY); shell_card_close(&O.card); }
     shell_card_open(&O.card);
     shell_card_full(&O.card);
     ink_ui_overlay_add(&OVERLAY, O.card.root);
-    shell_card_text(&O.card, "已关机", O.body);
+    shell_card_text(&O.card, TR("已关机"), O.body);
     lv_refr_now(NULL);
     O.commit = ink_display_commits();
     __atomic_store_n(&O.drawn, true, __ATOMIC_RELEASE);

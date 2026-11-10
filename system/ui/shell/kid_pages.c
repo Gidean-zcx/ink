@@ -1,5 +1,6 @@
 /* Child policy surfaces; credentials use the existing local member form. */
 /* ui-scale-runtime: dimension x,y,w Layout positions derive from theme tokens. */
+#include "ink/sys/i18n.h"
 #include <stdio.h>
 #include <string.h>
 #include "ink/sys/appreg.h"
@@ -13,8 +14,8 @@
 static struct { shell_card_t card; char app[32]; uint32_t epoch; bool up; } K;
 static void action(ink_call_t *c);
 static int snapshot(char *out, size_t cap) {
-    return snprintf(out, cap, "%s；当前=%s；%s；动作：%s。", K.up ? "KidTimeUp" : "KidLimit", ink_member_current()->name,
-        K.up ? "今天的时间到了；读到哪儿都记好了；电话和短信不限制" : "要爸爸妈妈来；请他们输密码；只放行这一次",
+    return snprintf(out, cap, TR("%s；当前=%s；%s；动作：%s。"), K.up ? "KidTimeUp" : "KidLimit", ink_member_current()->name,
+        K.up ? TR("今天的时间到了；读到哪儿都记好了；电话和短信不限制") : TR("要爸爸妈妈来；请他们输密码；只放行这一次"),
         K.up ? "shell.kid_phone、shell.kid_sms、shell.kid_add、member.time_get" : "shell.kid_cancel、shell.kid_parent");
 }
 static bool on_key(ink_key_t key, bool lng);
@@ -42,15 +43,15 @@ static void show(bool up) {
     ink_ui_circle(K.card.panel, up ? "clock" : "family", (INK_CANVAS_W - INK_CIRCLE_LARGE) / 2, y,
         INK_CIRCLE_LARGE, INK_ICON_STATE, up ? INK_SURFACE_BLACK : INK_SURFACE_STATIC, NULL, NULL);
     y += INK_CIRCLE_LARGE + INK_GAP_L;
-    lv_obj_t *title = ink_ui_label(K.card.panel, up ? "今天的时间到了" : "要爸爸妈妈来", INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, INK_MARGIN, y, w);
+    lv_obj_t *title = ink_ui_label(K.card.panel, up ? TR("今天的时间到了") : TR("要爸爸妈妈来"), INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, INK_MARGIN, y, w);
     lv_obj_set_style_text_align(title, LV_TEXT_ALIGN_CENTER, 0); y += ink_ui_line_height(INK_FONT_SUBTITLE) + INK_GAP_M;
-    lv_obj_t *body = ink_ui_label(K.card.panel, up ? "读到哪儿都记好了，明天接着来。" : "请他们输密码，只放行这一次。", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y, w);
+    lv_obj_t *body = ink_ui_label(K.card.panel, up ? TR("读到哪儿都记好了，明天接着来。") : TR("请他们输密码，只放行这一次。"), INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y, w);
     lv_obj_set_style_text_align(body, LV_TEXT_ALIGN_CENTER, 0);
     y = INK_CANVAS_H - INK_MARGIN - INK_PRIMARY;
-    if (up) ink_ui_pill(K.card.panel, "短信", (INK_CANVAS_W - INK_CIRCLE_APP) / 2, y - INK_CONTROL - INK_GAP_M, INK_CIRCLE_APP, INK_CONTROL, false, clicked, "shell.kid_sms");
+    if (up) ink_ui_pill(K.card.panel, TR("短信"), (INK_CANVAS_W - INK_CIRCLE_APP) / 2, y - INK_CONTROL - INK_GAP_M, INK_CIRCLE_APP, INK_CONTROL, false, clicked, "shell.kid_sms");
     int left = up ? (w - INK_GAP_M) * 2 / 5 : (w - INK_GAP_M) / 2;
-    ink_ui_pill(K.card.panel, up ? "打电话" : "算了", INK_MARGIN, y, left, INK_PRIMARY, false, clicked, up ? "shell.kid_phone" : "shell.kid_cancel");
-    ink_ui_pill(K.card.panel, up ? "爸爸妈妈加时间" : "请他们输密码", INK_MARGIN + left + INK_GAP_M, y, w - left - INK_GAP_M, INK_PRIMARY, true, clicked, up ? "shell.kid_add" : "shell.kid_parent");
+    ink_ui_pill(K.card.panel, up ? TR("打电话") : TR("算了"), INK_MARGIN, y, left, INK_PRIMARY, false, clicked, up ? "shell.kid_phone" : "shell.kid_cancel");
+    ink_ui_pill(K.card.panel, up ? TR("爸爸妈妈加时间") : TR("请他们输密码"), INK_MARGIN + left + INK_GAP_M, y, w - left - INK_GAP_M, INK_PRIMARY, true, clicked, up ? "shell.kid_add" : "shell.kid_parent");
 }
 void ink_shell_kid_limit(const char *app) {
     if (ink_member_current()->role != INK_ROLE_CHILD) return;
@@ -69,7 +70,7 @@ static void changed(void *ctx, int h, const char *id) {
 static void held(void *ctx, const ink_receipt_t *rc) {
     if ((uint32_t)(uintptr_t)ctx != ink_member_epoch()) return;
     unsigned token = 0;
-    if (rc->status == INK_RC_PENDING_CONFIRMATION && sscanf(rc->object, "confirm:%u", &token) == 1) ink_shell_member_parent_open(token, K.up ? "今天加 15 分钟，请家长本人输入" : "这次打开这个应用，请家长本人输入");
+    if (rc->status == INK_RC_PENDING_CONFIRMATION && sscanf(rc->object, "confirm:%u", &token) == 1) ink_shell_member_parent_open(token, K.up ? TR("今天加 15 分钟，请家长本人输入") : TR("这次打开这个应用，请家长本人输入"));
 }
 static void action(ink_call_t *c) {
     if (!strcmp(c->cap->id, "shell.kid_allow")) {

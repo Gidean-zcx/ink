@@ -125,23 +125,23 @@ static void edit_action(lv_event_t *e) {
 
 static int snapshot(char *buf, size_t cap) {
     bool secret = ink_text_type() == INK_TEXT_PASSWORD || ink_text_ai_hidden();
-    if (secret) return snprintf(buf, cap, "密码输入；内容=******。只能由人在设备上填写，没有 AI 写入、提交或话筒动作。");
+    if (secret) return snprintf(buf, cap, TR("密码输入；内容=******。只能由人在设备上填写，没有 AI 写入、提交或话筒动作。"));
     if (K.root) lv_obj_update_layout(K.root);
     size_t start, end;
     ink_text_selection(&start, &end);
-    int n = snprintf(buf, cap, "键盘；类型=普通文字；内容=%s；组合=%s；光标=%zu；选区=%zu..%zu；展开=%d；候选起点=%d；",
+    int n = snprintf(buf, cap, TR("键盘；类型=普通文字；内容=%s；组合=%s；光标=%zu；选区=%zu..%zu；展开=%d；候选起点=%d；"),
                      ink_text_draft_id() ? "" : ink_text_value(), ink_text_composing(), ink_text_cursor(), start, end, K.expanded, K.first);
     if (K.cands && lv_obj_is_visible(K.cands)) {
         for (int i = 0; i < INK_TEXT_PAGE && n >= 0 && (size_t)n < cap; i++) if (lv_obj_is_visible(K.cand_btn[i]))
-            n += snprintf(buf + n, cap - (size_t)n, "候选[%d]=%s；", K.first + i, lv_label_get_text(K.cand_label[i]));
+            n += snprintf(buf + n, cap - (size_t)n, TR("候选[%d]=%s；"), K.first + i, lv_label_get_text(K.cand_label[i]));
     }
     if (K.panel && !lv_obj_has_flag(K.panel, LV_OBJ_FLAG_HIDDEN) && n >= 0 && (size_t)n < cap)
-        n += snprintf(buf + n, cap - (size_t)n, "听写=%s；听到=%s；动作：text.voice_finish、text.voice_cancel。", lv_label_get_text(K.status), lv_label_get_text(K.heard));
+        n += snprintf(buf + n, cap - (size_t)n, TR("听写=%s；听到=%s；动作：text.voice_finish、text.voice_cancel。"), lv_label_get_text(K.status), lv_label_get_text(K.heard));
     else if (n >= 0 && (size_t)n < cap)
-        n += snprintf(buf + n, cap - (size_t)n, "更多候选=%d；动作：text.insert、text.select、text.submit、keyboard.key、keyboard.pick、keyboard.candidates、keyboard.edit%s。",
+        n += snprintf(buf + n, cap - (size_t)n, TR("更多候选=%d；动作：text.insert、text.select、text.submit、keyboard.key、keyboard.pick、keyboard.candidates、keyboard.edit%s。"),
                       K.more && lv_obj_is_visible(K.more), K.mic && lv_obj_is_visible(K.mic) ? "、text.voice_start" : "");
     if (n >= 0 && (size_t)n < cap)
-        n += snprintf(buf + n, cap - (size_t)n, "撤销=%d；重做=%d；动作：text.undo、text.redo。", ink_text_can_undo(), ink_text_can_redo());
+        n += snprintf(buf + n, cap - (size_t)n, TR("撤销=%d；重做=%d；动作：text.undo、text.redo。"), ink_text_can_undo(), ink_text_can_redo());
     return n < 0 ? 0 : (size_t)n < cap ? n : (int)cap - 1;
 }
 static bool overlay_key(ink_key_t k, bool lng) {
@@ -196,8 +196,8 @@ static void char_row(const char *keys) {
 }
 
 static const char *enter_label(void) {
-    static const char *const N[] = {"完成", "发送", "搜索", "下一个"};
-    return N[ink_text_enter_kind()];
+    static const char *const N[] = {TR_NOOP("完成"), TR_NOOP("发送"), TR_NOOP("搜索"), TR_NOOP("下一个")};
+    return TR(N[ink_text_enter_kind()]);
 }
 
 static void build(int kind) {
@@ -232,7 +232,7 @@ static void build(int kind) {
     K.edit = new_row();
     static const char *const EDIT[] = {"◀", "▶", TR_NOOP("复制"), TR_NOOP("剪切"), TR_NOOP("粘贴"), TR_NOOP("撤销"), TR_NOOP("重做")};
     for (unsigned i = 0; i < sizeof EDIT / sizeof *EDIT; i++) {
-        lv_obj_t *b = ink_ui_pill(K.edit, TR(EDIT[i]), 0, 0, 0, INK_CONTROL, false, i < 5 ? edit_action : NULL, (void *)(intptr_t)i);
+        lv_obj_t *b = ink_ui_pill(K.edit, i < 2 ? EDIT[i] : TR(EDIT[i]), 0, 0, 0, INK_CONTROL, false, i < 5 ? edit_action : NULL, (void *)(intptr_t)i);
         if (i >= 5) ink_shell_bind(b, i == 5 ? "text.undo" : "text.redo", NULL);
         ink_ui_pill_text(b, INK_FONT_NOTE, INK_WEIGHT_MEDIUM);
         lv_obj_set_style_min_width(b, ink_ui_px(ink_ui_text_width(TR(EDIT[i]), INK_FONT_NOTE, INK_WEIGHT_MEDIUM) + 2 * (INK_GAP_XS + INK_STROKE)), 0);
@@ -261,10 +261,10 @@ static void build(int kind) {
     lv_obj_add_event_cb(K.more, on_more, LV_EVENT_CLICKED, NULL);
     lv_obj_t *ml = lv_label_create(K.more);
     lv_obj_set_style_text_font(ml, ink_ui_font_px(INK_FONT_NOTE, INK_WEIGHT_REGULAR), 0);
-    lv_label_set_text(ml, "更多");
+    lv_label_set_text(ml, TR("更多"));
     lv_obj_center(ml);
     lv_obj_add_flag(K.more, LV_OBJ_FLAG_HIDDEN);
-    K.fold = ink_ui_pill(K.cands, "键盘", 0, 0, INK_PRIMARY, INK_CONTROL, false, on_fold, NULL);
+    K.fold = ink_ui_pill(K.cands, TR("键盘"), 0, 0, INK_PRIMARY, INK_CONTROL, false, on_fold, NULL);
     lv_obj_add_flag(K.fold, LV_OBJ_FLAG_HIDDEN);
     /* the microphone: black, at the end of the candidates (the system UI's own look comes later) */
     K.mic = lv_button_create(K.cands);
@@ -290,19 +290,19 @@ static void build(int kind) {
         lv_obj_t *r = new_row();
         key(r, ink_text_type() == INK_TEXT_PHONE ? "+" : ".", ink_text_type() == INK_TEXT_PHONE ? '+' : '.', 1);
         key(r, "0", '0', 1);
-        key(r, "删除", KEY_BACKSPACE, 1);
+        key(r, TR("删除"), KEY_BACKSPACE, 1);
         key(r, enter_label(), KEY_ENTER, 1);
     } else {
         if (kind == 1) {
             char_row("qwertyuiop");
             char_row("asdfghjkl");
             lv_obj_t *r = new_row();
-            key(r, "大写", KEY_SHIFT, 2);
+            key(r, TR("大写"), KEY_SHIFT, 2);
             for (const char *p = "zxcvbnm"; *p; p++) {
                 char s[2] = {*p, 0};
                 key(r, s, *p, 1);
             }
-            key(r, "删除", KEY_BACKSPACE, 2);
+            key(r, TR("删除"), KEY_BACKSPACE, 2);
         } else {
             char_row("1234567890");
             char_row("-/:;()@&\"'");
@@ -311,11 +311,11 @@ static void build(int kind) {
                 char s[2] = {*p, 0};
                 key(r, s, *p, 1);
             }
-            key(r, "删除", KEY_BACKSPACE, 2);
+            key(r, TR("删除"), KEY_BACKSPACE, 2);
         }
         lv_obj_t *bottom = new_row();
-        key(bottom, K.symbols ? "字母" : "符号", KEY_SWITCH, 2);
-        key(bottom, "空格", ' ', 5);
+        key(bottom, K.symbols ? TR("字母") : TR("符号"), KEY_SWITCH, 2);
+        key(bottom, TR("空格"), ' ', 5);
         key(bottom, enter_label(), KEY_ENTER, 2);
     }
     K.panel = lv_obj_create(K.root);
@@ -344,7 +344,7 @@ static void build(int kind) {
         lv_obj_add_event_cb(b, i ? on_use_keys : on_said, LV_EVENT_CLICKED, NULL);
         lv_obj_t *l = lv_label_create(b);
         lv_obj_set_style_text_font(l, font(), 0);
-        lv_label_set_text(l, i ? "用键盘" : "说完了");
+        lv_label_set_text(l, i ? TR("用键盘") : TR("说完了"));
         lv_obj_center(l);
     }
     lv_obj_add_flag(K.panel, LV_OBJ_FLAG_HIDDEN);
@@ -369,7 +369,7 @@ static void sync_voice(ink_voice_state_t vs) {
         ink_ui_hint_obj(K.root, INK_REFRESH_FAST);
     }
     if (!on) return;
-    lv_label_set_text(K.status, vs == INK_VOICE_CONNECTING ? "正在连接，可以说了" : vs == INK_VOICE_LISTENING ? "请说，停一下就结束" : "正在整理成文字");
+    lv_label_set_text(K.status, vs == INK_VOICE_CONNECTING ? TR("正在连接，可以说了") : vs == INK_VOICE_LISTENING ? TR("请说，停一下就结束") : TR("正在整理成文字"));
     lv_label_set_text(K.heard, ink_text_voice_heard());
     ink_ui_hint_obj(K.status, INK_REFRESH_FAST);
     ink_ui_hint_obj(K.heard, INK_REFRESH_FAST);

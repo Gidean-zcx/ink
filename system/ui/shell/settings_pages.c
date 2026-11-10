@@ -17,50 +17,50 @@ enum { VOICE, STORAGE, ABOUT, PRIVACY, DEVICE, LICENSES };
 typedef struct { const char *id, *title, *value, *setting, *cap, *icon, *section, *note; } row_t;
 #include "ink/licenses.h"
 static const row_t VOICE_ROWS[] = {
-    {"voice.handsfree", "什么时候能叫名字", NULL, "voice.handsfree", NULL, NULL, NULL, "没锁屏时才听，不影响待机。"},
-    {"voice.name", "用什么名字叫它", "暂不能更改", NULL, NULL, "wave", NULL, NULL},
-    {"voice.interrupt", "说话能打断回答", NULL, "voice.interrupt", NULL, "mic", NULL, NULL},
-    {"ai.records", "AI 替你做过的事", NULL, NULL, "shell.ai_log", "list", "AI", NULL},
-    {"ai.memory", "AI 记得的事", "查看", NULL, "shell.ai_memory", "ai", NULL, "你说的事 AI 会直接做。花钱、填密码、删了找不回来的，才会问你。"},
-    {"text.assist", "打字时帮你接话", "暂不能设置", NULL, NULL, "edit", "打字", NULL}};
+    {"voice.handsfree", TR_NOOP("什么时候能叫名字"), NULL, "voice.handsfree", NULL, NULL, NULL, TR_NOOP("没锁屏时才听，不影响待机。")},
+    {"voice.name", TR_NOOP("用什么名字叫它"), TR_NOOP("暂不能更改"), NULL, NULL, "wave", NULL, NULL},
+    {"voice.interrupt", TR_NOOP("说话能打断回答"), NULL, "voice.interrupt", NULL, "mic", NULL, NULL},
+    {"ai.records", TR_NOOP("AI 替你做过的事"), NULL, NULL, "shell.ai_log", "list", "AI", NULL},
+    {"ai.memory", TR_NOOP("AI 记得的事"), TR_NOOP("查看"), NULL, "shell.ai_memory", "ai", NULL, TR_NOOP("你说的事 AI 会直接做。花钱、填密码、删了找不回来的，才会问你。")},
+    {"text.assist", TR_NOOP("打字时帮你接话"), TR_NOOP("暂不能设置"), NULL, NULL, "edit", TR_NOOP("打字"), NULL}};
 static const row_t STORAGE_ROWS[] = {
-    {"backup", "备份", NULL, NULL, "backup.open", "cloud", NULL, NULL},
-    {"storage.free", "空间", NULL, NULL, NULL, NULL, "空间", NULL},
-    {"storage.books", "书", NULL, NULL, NULL, "book", NULL, NULL},
-    {"storage.audio", "音频", NULL, NULL, NULL, "headphones", NULL, NULL},
-    {"storage.photos", "照片和其他", NULL, NULL, NULL, "gallery", NULL, NULL},
-    {"storage.clean", "清理临时文件", NULL, NULL, "file.cleanup", "trash", "", "仅清理临时文件、缓存和未传完的文件。"}};
+    {"backup", TR_NOOP("备份"), NULL, NULL, "backup.open", "cloud", NULL, NULL},
+    {"storage.free", TR_NOOP("空间"), NULL, NULL, NULL, NULL, TR_NOOP("空间"), NULL},
+    {"storage.books", TR_NOOP("书"), NULL, NULL, NULL, "book", NULL, NULL},
+    {"storage.audio", TR_NOOP("音频"), NULL, NULL, NULL, "headphones", NULL, NULL},
+    {"storage.photos", TR_NOOP("照片和其他"), NULL, NULL, NULL, "gallery", NULL, NULL},
+    {"storage.clean", TR_NOOP("清理临时文件"), NULL, NULL, "file.cleanup", "trash", "", TR_NOOP("仅清理临时文件、缓存和未传完的文件。")}};
 static const row_t ABOUT_ROWS[] = {
-    {"device", "这台设备", NULL, NULL, NULL, NULL, NULL, NULL},
-    {"update.version", "系统版本", NULL, NULL, NULL, NULL, NULL, NULL},
-    {"update.check", "系统更新", NULL, NULL, "shell.update", "update", NULL, NULL},
+    {"device", TR_NOOP("这台设备"), NULL, NULL, NULL, NULL, NULL, NULL},
+    {"update.version", TR_NOOP("系统版本"), NULL, NULL, NULL, NULL, NULL, NULL},
+    {"update.check", TR_NOOP("系统更新"), NULL, NULL, "shell.update", "update", NULL, NULL},
     {"system.language", TR_NOOP("语言"), NULL, NULL, "settings.set", "globe", NULL, NULL},
     {"time", TR_NOOP("日期和时间"), "", NULL, "shell.time", "clock", NULL, NULL},
-    {"privacy", "隐私", "查看", NULL, "shell.privacy", "shield", NULL, NULL},
-    {"device.details", "设备详情", "", NULL, "shell.device", "display", "", NULL},
-    {"licenses", "开源许可", "", NULL, "shell.licenses", "list", NULL, NULL},
-    {"update.auto_download", "自动下载新版本", NULL, "update.auto_download", NULL, NULL, "", NULL},
-    {"reset", "清空这台设备", "清掉所有家人的数据，找不回来", NULL, "factory.open", NULL, NULL, NULL}};
+    {"privacy", TR_NOOP("隐私"), TR_NOOP("查看"), NULL, "shell.privacy", "shield", NULL, NULL},
+    {"device.details", TR_NOOP("设备详情"), "", NULL, "shell.device", "display", "", NULL},
+    {"licenses", TR_NOOP("开源许可"), "", NULL, "shell.licenses", "list", NULL, NULL},
+    {"update.auto_download", TR_NOOP("自动下载新版本"), NULL, "update.auto_download", NULL, NULL, "", NULL},
+    {"reset", TR_NOOP("清空这台设备"), TR_NOOP("清掉所有家人的数据，找不回来"), NULL, "factory.open", NULL, NULL, NULL}};
 static const row_t PRIVACY_ROWS[] = {
-    {"privacy.storage", "你的东西放在哪", "设置和备忘在设备里，书和录音在存储卡上；备份在家庭服务器上。", NULL, NULL, NULL, NULL, NULL},
-    {"privacy.ai", "AI 能看到什么", "提问时能看到当前页。密码框里的字看不到；语音和页面会交给家庭选择的模型服务商。", NULL, NULL, NULL, NULL, NULL},
-    {"privacy.retention", "留多久", "活动记录：大人 1 年，孩子 180 天。对话、记忆和运行记录的期限暂时查不到。", NULL, NULL, NULL, NULL, NULL},
-    {"privacy.child", "孩子的记录", "爸爸妈妈可以查看孩子的活动记录，确认后删除；其他记录暂不能删除。", NULL, "shell.records", NULL, NULL, NULL},
-    {"ai.read_clipboard", "AI 可以读剪贴板", NULL, "ai.read_clipboard", NULL, NULL, NULL, NULL},
-    {"privacy.records", "查看和删除记录", "", NULL, "shell.records", NULL, NULL, NULL}};
+    {"privacy.storage", TR_NOOP("你的东西放在哪"), TR_NOOP("设置和备忘在设备里，书和录音在存储卡上；备份在家庭服务器上。"), NULL, NULL, NULL, NULL, NULL},
+    {"privacy.ai", TR_NOOP("AI 能看到什么"), TR_NOOP("提问时能看到当前页。密码框里的字看不到；语音和页面会交给家庭选择的模型服务商。"), NULL, NULL, NULL, NULL, NULL},
+    {"privacy.retention", TR_NOOP("留多久"), TR_NOOP("活动记录：大人 1 年，孩子 180 天。对话、记忆和运行记录的期限暂时查不到。"), NULL, NULL, NULL, NULL, NULL},
+    {"privacy.child", TR_NOOP("孩子的记录"), TR_NOOP("爸爸妈妈可以查看孩子的活动记录，确认后删除；其他记录暂不能删除。"), NULL, "shell.records", NULL, NULL, NULL},
+    {"ai.read_clipboard", TR_NOOP("AI 可以读剪贴板"), NULL, "ai.read_clipboard", NULL, NULL, NULL, NULL},
+    {"privacy.records", TR_NOOP("查看和删除记录"), "", NULL, "shell.records", NULL, NULL, NULL}};
 static const row_t DEVICE_ROWS[] = {
-    {"device.model", "型号", NULL, NULL, NULL, NULL, NULL, NULL},
-    {"update.version", "系统版本", NULL, NULL, NULL, NULL, NULL, NULL},
-    {"storage.total", "存储卡总量", NULL, NULL, NULL, NULL, NULL, NULL},
-    {"storage.free", "存储卡剩余", NULL, NULL, NULL, NULL, NULL, NULL},
-    {"battery.level", "电量", NULL, NULL, NULL, NULL, NULL, NULL}};
+    {"device.model", TR_NOOP("型号"), NULL, NULL, NULL, NULL, NULL, NULL},
+    {"update.version", TR_NOOP("系统版本"), NULL, NULL, NULL, NULL, NULL, NULL},
+    {"storage.total", TR_NOOP("存储卡总量"), NULL, NULL, NULL, NULL, NULL, NULL},
+    {"storage.free", TR_NOOP("存储卡剩余"), NULL, NULL, NULL, NULL, NULL, NULL},
+    {"battery.level", TR_NOOP("电量"), NULL, NULL, NULL, NULL, NULL, NULL}};
 static const struct { const char *name, *title, *cap; const row_t *rows; size_t count; } PAGES[] = {
-    {"SetVoice", "语音和 AI", "shell.voice", VOICE_ROWS, sizeof VOICE_ROWS / sizeof *VOICE_ROWS},
-    {"SetStorage", "存储和备份", "shell.storage", STORAGE_ROWS, sizeof STORAGE_ROWS / sizeof *STORAGE_ROWS},
-    {"SetAbout", "关于和更新", "shell.about", ABOUT_ROWS, sizeof ABOUT_ROWS / sizeof *ABOUT_ROWS},
-    {"SetPrivacy", "隐私", "shell.privacy", PRIVACY_ROWS, sizeof PRIVACY_ROWS / sizeof *PRIVACY_ROWS},
-    {"DeviceDetails", "设备详情", "shell.device", DEVICE_ROWS, sizeof DEVICE_ROWS / sizeof *DEVICE_ROWS},
-    {"Licenses", "开源许可", "shell.licenses", LICENSE_ROWS, sizeof LICENSE_ROWS / sizeof *LICENSE_ROWS}};
+    {"SetVoice", TR_NOOP("语音和 AI"), "shell.voice", VOICE_ROWS, sizeof VOICE_ROWS / sizeof *VOICE_ROWS},
+    {"SetStorage", TR_NOOP("存储和备份"), "shell.storage", STORAGE_ROWS, sizeof STORAGE_ROWS / sizeof *STORAGE_ROWS},
+    {"SetAbout", TR_NOOP("关于和更新"), "shell.about", ABOUT_ROWS, sizeof ABOUT_ROWS / sizeof *ABOUT_ROWS},
+    {"SetPrivacy", TR_NOOP("隐私"), "shell.privacy", PRIVACY_ROWS, sizeof PRIVACY_ROWS / sizeof *PRIVACY_ROWS},
+    {"DeviceDetails", TR_NOOP("设备详情"), "shell.device", DEVICE_ROWS, sizeof DEVICE_ROWS / sizeof *DEVICE_ROWS},
+    {"Licenses", TR_NOOP("开源许可"), "shell.licenses", LICENSE_ROWS, sizeof LICENSE_ROWS / sizeof *LICENSE_ROWS}};
 /* Every page's rows fit the per-row buffers below: a ninth About row once wrote past them. */
 #define ROWS_MAX 16
 _Static_assert(sizeof VOICE_ROWS / sizeof *VOICE_ROWS <= ROWS_MAX, "SetVoice has more rows than ROWS_MAX");
@@ -90,7 +90,7 @@ static bool current(void) {
 }
 static bool state_number(const char *id, int64_t *v) { return ink_state_get_int(ink_state_find(id), v); }
 static void state_text(const char *id, char *out, size_t cap) {
-    if (ink_state_get_str(ink_state_find(id), out, cap) < 0) snprintf(out, cap, "暂时读不出来");
+    if (ink_state_get_str(ink_state_find(id), out, cap) < 0) snprintf(out, cap, TR("暂时读不出来"));
 }
 static void value(size_t i) {
     const row_t *r = &PAGES[S.page].rows[i];
@@ -98,12 +98,12 @@ static void value(size_t i) {
     int64_t v = 0;
     if (r->setting) {
         v = ink_setting_get(r->setting);
-        const char *text = v ? "开" : "关";
-        if (!strcmp(r->setting, "voice.handsfree")) text = v == 2 ? "关" : v == 1 ? "一直" : "使用时";
-        snprintf(out, cap, "%s", TR(text));
+        const char *text = v ? TR("开") : TR("关");
+        if (!strcmp(r->setting, "voice.handsfree")) text = v == 2 ? TR("关") : v == 1 ? TR("一直") : TR("使用时");
+        snprintf(out, cap, "%s", text);
         snprintf(S.args[i], sizeof S.args[i], "{\"id\":\"%s\",\"value\":%lld}", r->setting,
             (long long)(!strcmp(r->setting, "voice.handsfree") ? (v + 1) % 3 : !v));
-    } else if (r->value) snprintf(out, cap, "%s", r->value);
+    } else if (r->value) snprintf(out, cap, "%s", r->value[0] && S.page != LICENSES ? TR(r->value) : r->value);
     else if (!strcmp(r->id, "device.model")) {
         hal_device_info_t info; hal_device_get_info(&info); snprintf(out, cap, "%s", info.display_name ? info.display_name : "");
     } else if (!strcmp(r->id, "storage.total")) {
@@ -117,23 +117,23 @@ static void value(size_t i) {
         snprintf(S.args[i], sizeof S.args[i], "{\"id\":\"%s\",\"value\":%d}", r->id, ink_lang_name(lang + 1) ? lang + 1 : 0);
     } else if (!strcmp(r->id, "backup")) snprintf(out, cap, "%s", S.backup);
     else if (S.page == STORAGE && i > 1) storage_value(i, out, cap);
-    else if (!strcmp(r->id, "device")) snprintf(out, cap, "%s的设备", ink_member_current()->name);
+    else if (!strcmp(r->id, "device")) snprintf(out, cap, TR("%s的设备"), ink_member_current()->name);
     else if (!strcmp(r->id, "storage.free")) {
         int64_t present = 0; char mode[32] = "";
         state_number("storage.card", &present);
         ink_state_get_str(ink_state_find("storage.mode"), mode, sizeof mode);
         if (!present || !strcmp(mode, "usb"))
-            snprintf(out, cap, "%s", TR(!strcmp(mode, "usb") ? "存储卡正借给电脑" : "没有可用的存储卡"));
+            snprintf(out, cap, "%s", !strcmp(mode, "usb") ? TR("存储卡正借给电脑") : TR("没有可用的存储卡"));
         else if (state_number(r->id, &v) && v >= 0) {
             int64_t unit = v >= 1024LL * 1024 * 1024 ? 1024LL * 1024 * 1024 : v >= 1024 * 1024 ? 1024 * 1024 : 1024;
             snprintf(out, cap, TR("还能放 %lld.%lld %s"), (long long)(v / unit), (long long)(v % unit * 10 / unit),
                 unit > 1024 * 1024 ? "GB" : unit > 1024 ? "MB" : "KB");
         }
-        else snprintf(out, cap, "暂时读不出来");
+        else snprintf(out, cap, TR("暂时读不出来"));
     } else if (!strcmp(r->id, "update.check")) {
         char state[32]; state_text("update.state", state, sizeof state);
-        const char *text = !strcmp(state, "idle") ? "检查新版本" : !strcmp(state, "available") ? "有新版本" :
-            !strcmp(state, "failed") ? "检查或更新失败，可以再试" : !strcmp(state, "ready") ? "已下载" : "正在更新";
+        const char *text = !strcmp(state, "idle") ? TR("检查新版本") : !strcmp(state, "available") ? TR("有新版本") :
+            !strcmp(state, "failed") ? TR("检查或更新失败，可以再试") : !strcmp(state, "ready") ? TR("已下载") : TR("正在更新");
         snprintf(out, cap, "%s", text);
     } else state_text(r->id, out, cap);
 }
@@ -146,6 +146,7 @@ static int heading(size_t i) {
 static int row_body(size_t i) {
     const row_t *r = &PAGES[S.page].rows[i];
     int w = INK_CANVAS_W - 2 * INK_MARGIN;
+    if (S.page == LICENSES) return ink_ui_text_height(PAGES[S.page].rows[i].title, INK_FONT_LIST, INK_WEIGHT_MEDIUM, w - 2 * INK_GAP_XL) + INK_GAP_XS + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_L;
     if (S.page == DEVICE) return ink_ui_line_height(INK_FONT_LIST) + INK_GAP_XS +
         ink_ui_text_height(S.values[i], INK_FONT_NOTE, INK_WEIGHT_REGULAR, w) + INK_GAP_L;
     if (paragraph(i)) return ink_ui_line_height(INK_FONT_SUBTITLE) + INK_GAP_XS +
@@ -163,15 +164,16 @@ static int row_body(size_t i) {
 static int row_height(size_t i) {
     const char *note = PAGES[S.page].rows[i].note;
     return heading(i) + row_body(i) + (note ? INK_GAP_XS +
-        ink_ui_text_height(note, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_CANVAS_W - 2 * INK_MARGIN) : 0);
+        ink_ui_text_height(TR(note), INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_CANVAS_W - 2 * INK_MARGIN) : 0);
 }
 static void bind_row(lv_obj_t *slot, size_t i, ink_ui_field_spec_t *field, ink_ui_action_spec_t *action, void *ctx) {
     (void)ctx;
     const row_t *r = &PAGES[S.page].rows[i];
     value(i);
-    *field = (ink_ui_field_spec_t){.id = r->id, .role = r->setting ? "setting" : "text", .label = TR(r->title),
+    const char *caption = S.page == LICENSES ? r->title : TR(r->title);
+    *field = (ink_ui_field_spec_t){.id = r->id, .role = r->setting ? "setting" : "text", .label = caption,
         .value = S.values[i], .object = {r->id, 0}};
-    *action = (ink_ui_action_spec_t){.id = r->id, .label = TR(r->title), .capability = r->setting ? "settings.set" : r->cap,
+    *action = (ink_ui_action_spec_t){.id = r->id, .label = caption, .capability = r->setting ? "settings.set" : r->cap,
         .args_json = r->setting || !strcmp(r->id, "system.language") ? S.args[i] : NULL, .object = field->object, .enabled = r->setting || r->cap};
     if (!strcmp(r->id, "privacy.child")) action->args_json = "{\"children\":true}";
     if (S.page == LICENSES) { snprintf(S.args[i], sizeof S.args[i], "{\"index\":%zu}", i); action->args_json = S.args[i]; }
@@ -212,16 +214,16 @@ static void bind_row(lv_obj_t *slot, size_t i, ink_ui_field_spec_t *field, ink_u
     }
     int left = r->icon ? INK_CIRCLE_SMALL + INK_GAP_XL : paragraph(i) || S.page == VOICE || S.page == ABOUT ? 0 : INK_GAP_XL;
     int y = head + (body - ink_ui_line_height(INK_FONT_LIST) - ink_ui_line_height(INK_FONT_NOTE) - INK_GAP_XS) / 2;
-    if (S.page == DEVICE) y = head;
-    lv_label_set_text(title, TR(r->title)); lv_label_set_text(text, S.values[i]);
+    if (S.page == DEVICE || S.page == LICENSES) y = head;
+    lv_label_set_text(title, caption); lv_label_set_text(text, S.values[i]);
     lv_obj_set_style_text_align(title, LV_TEXT_ALIGN_LEFT, 0); lv_obj_set_style_text_align(text, LV_TEXT_ALIGN_LEFT, 0);
     lv_obj_set_style_text_font(title, ink_ui_font_px(paragraph(i) ? INK_FONT_SUBTITLE : INK_FONT_LIST, INK_WEIGHT_MEDIUM), 0);
     lv_obj_set_style_text_font(text, ink_ui_font_px(paragraph(i) ? INK_FONT_BODY : INK_FONT_NOTE, INK_WEIGHT_REGULAR), 0);
     lv_obj_set_pos(title, ink_ui_px(left), ink_ui_px(paragraph(i) ? head : y)); lv_obj_set_width(title, ink_ui_px(w - left - (r->icon ? INK_GAP : 0)));
     lv_obj_set_pos(text, ink_ui_px(left), ink_ui_px(paragraph(i) ? head + ink_ui_line_height(INK_FONT_SUBTITLE) + INK_GAP_XS : y + ink_ui_line_height(INK_FONT_LIST) + INK_GAP_XS));
     lv_obj_set_width(text, ink_ui_px(w - left - (r->icon ? INK_GAP : 0)));
+    if (S.page == LICENSES) lv_obj_set_y(text, ink_ui_px(y + ink_ui_text_height(caption, INK_FONT_LIST, INK_WEIGHT_MEDIUM, w - 2 * INK_GAP_XL) + INK_GAP_XS));
     if (r->icon && body == INK_CONTROL) {
-        const char *caption = TR(r->title);
         int title_w = ink_ui_text_width(caption, INK_FONT_LIST, INK_WEIGHT_MEDIUM);
         lv_obj_set_width(title, ink_ui_px(title_w));
         lv_obj_set_y(title, ink_ui_px(head + (body - ink_ui_line_height(INK_FONT_LIST)) / 2));
@@ -229,19 +231,19 @@ static void bind_row(lv_obj_t *slot, size_t i, ink_ui_field_spec_t *field, ink_u
         lv_obj_set_width(text, ink_ui_px(w - left - title_w - 2 * INK_GAP));
         lv_obj_set_style_text_align(text, LV_TEXT_ALIGN_RIGHT, 0);
     }
-    if (r->section && r->section[0]) ink_ui_label(slot, r->section, INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, 0, INK_GAP_L, w);
-    if (r->note) ink_ui_label(slot, r->note, INK_FONT_NOTE, INK_WEIGHT_REGULAR, 0, head + body + INK_GAP_XS, w);
+    if (r->section && r->section[0]) ink_ui_label(slot, TR(r->section), INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, 0, INK_GAP_L, w);
+    if (r->note) ink_ui_label(slot, TR(r->note), INK_FONT_NOTE, INK_WEIGHT_REGULAR, 0, head + body + INK_GAP_XS, w);
     if (r->setting && strcmp(r->setting, "voice.handsfree")) {
         if (!r->icon) lv_obj_add_flag(title, LV_OBJ_FLAG_HIDDEN);
         lv_obj_add_flag(text, LV_OBJ_FLAG_HIDDEN);
-        ink_ui_toggle(slot, r->icon ? "" : TR(r->title), ink_setting_get(r->setting) != 0, left, head + (body - INK_CONTROL) / 2, w - left, NULL, NULL);
+        ink_ui_toggle(slot, r->icon ? "" : caption, ink_setting_get(r->setting) != 0, left, head + (body - INK_CONTROL) / 2, w - left, NULL, NULL);
         if (r->icon) {
             lv_obj_set_width(title, ink_ui_px(w - left - INK_PRIMARY - INK_GAP));
             y = head + (body - ink_ui_text_height(lv_label_get_text(title), INK_FONT_LIST, INK_WEIGHT_MEDIUM, w - left - INK_PRIMARY - INK_GAP)) / 2;
             lv_obj_set_y(title, ink_ui_px(y));
         }
     } else if (r->setting) {
-        const char *const choices[] = {"使用时", "一直", "关"};
+        const char *const choices[] = {TR("使用时"), TR("一直"), TR("关")};
         lv_obj_set_y(title, 0); lv_obj_add_flag(text, LV_OBJ_FLAG_HIDDEN);
         lv_obj_t *segments = ink_ui_segments(slot, choices, 3, (int)ink_setting_get(r->setting), 0,
             ink_ui_line_height(INK_FONT_LIST) + INK_GAP_XS, w, NULL, NULL);
@@ -277,15 +279,15 @@ static void changed(void *ctx, int h, const char *id) {
 }
 static void backup_reply(void *ctx, const ink_receipt_t *rc) {
     if ((uint32_t)(uintptr_t)ctx != S.generation || !current() || S.page != STORAGE) return;
-    const char *text = "备份记录暂时读不出来";
+    const char *text = TR("备份记录暂时读不出来");
     ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
     char phase[32] = ""; bool durable = false;
     if (j && rc->status == INK_RC_DONE && rc->result && !ink_json_parse(j, rc->result, strlen(rc->result))) {
         ink_json_str(j, ink_json_find(j, 0, "phase"), phase, sizeof phase);
         durable = ink_json_eq(j, ink_json_find(j, 0, "durable"), "true");
-        text = !strcmp(phase, "none") ? "还没有备份" : !strcmp(phase, "saved") ?
-            (durable ? "已备份" : "等待服务器保存回执") : !strcmp(phase, "done") ? "已恢复" :
-            !strcmp(phase, "failed") ? "备份或恢复失败" : "备份或恢复正在进行";
+        text = !strcmp(phase, "none") ? TR("还没有备份") : !strcmp(phase, "saved") ?
+            (durable ? TR("已备份") : TR("等待服务器保存回执")) : !strcmp(phase, "done") ? TR("已恢复") :
+            !strcmp(phase, "failed") ? TR("备份或恢复失败") : TR("备份或恢复正在进行");
     }
     osal_free(j); snprintf(S.backup, sizeof S.backup, "%s", text); refresh();
 }
@@ -295,7 +297,7 @@ static void backup_changed(void *ctx, const char *id, const ink_args_t *args) {
         ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .member = S.member, .reply_exec = INK_EXEC_UI,
             .done = backup_reply, .ctx = (void *)(uintptr_t)S.generation};
         if (ink_cap_call("backup.status", NULL, &o)) {
-            snprintf(S.backup, sizeof S.backup, "备份记录暂时读不出来"); refresh();
+            snprintf(S.backup, sizeof S.backup, TR("备份记录暂时读不出来")); refresh();
         }
     }
 }
@@ -310,13 +312,13 @@ static void create(lv_obj_t *screen, void *arg) {
     S.page = (int)(intptr_t)arg; S.generation++;
     snprintf(S.member, sizeof S.member, "%s", ink_member_current()->id);
     memset(&S.position, 0, sizeof S.position);
-    snprintf(S.backup, sizeof S.backup, "正在读取备份记录");
+    snprintf(S.backup, sizeof S.backup, TR("正在读取备份记录"));
     ink_shell_statusbar(screen, true); ink_shell_topbar(screen, TR(PAGES[S.page].title));
     S.body = ink_ui_box(screen, 0, INK_STATUS_BAR + INK_PRIMARY + INK_GAP_XS, INK_CANVAS_W,
         INK_CANVAS_H - INK_STATUS_BAR - INK_PRIMARY - INK_GAP_XS, 0, INK_SURFACE_WHITE, false);
-    static const ink_ui_action_spec_t actions[] = {
-        {.id = "prev", .label = "上一页", .capability = "shell.settings_prev"},
-        {.id = "next", .label = "下一页", .capability = "shell.settings_next"}};
+    const ink_ui_action_spec_t actions[] = {
+        {.id = "prev", .label = TR("上一页"), .capability = "shell.settings_prev"},
+        {.id = "next", .label = TR("下一页"), .capability = "shell.settings_next"}};
     ink_ui_page_spec_t page = {.id = PAGES[S.page].name, .title = TR(PAGES[S.page].title),
         .object = {PAGES[S.page].name, 0}, .actions = actions, .action_count = 2};
     int room = INK_CANVAS_H - INK_STATUS_BAR - INK_PRIMARY - INK_GAP_XS - INK_CONTROL - 2 * INK_GAP;
@@ -332,7 +334,7 @@ static void create(lv_obj_t *screen, void *arg) {
         if (fits) break;
     }
     int cell_h = room / (int)S.capacity - INK_GAP_M;
-    S.list = ink_ui_list_create(S.body, &page, &S.position, S.capacity, 1, cell_h, "这里还没有内容", bind_row, NULL);
+    S.list = ink_ui_list_create(S.body, &page, &S.position, S.capacity, 1, cell_h, TR("这里还没有内容"), bind_row, NULL);
     S.total = -1;
     refresh(); backup_changed(NULL, NULL, NULL); storage_request(NULL, NULL, NULL);
     if (S.page == DEVICE) {
@@ -352,7 +354,7 @@ static int snapshot(char *out, size_t cap) {
         const row_t *r = &PAGES[S.page].rows[i]; const char *texts[] = {r->section, r->note};
         for (size_t k = 0; k < 2; k++) if (texts[k] && texts[k][0]) {
             if (comma) ink_jw_raw(&w, ",");
-            ink_jw_str(&w, texts[k]); comma = true;
+            ink_jw_str(&w, TR(texts[k])); comma = true;
         }
     }
     ink_jw_raw(&w, "]}");
@@ -399,9 +401,9 @@ static void license_create(lv_obj_t *screen, void *arg) {
     int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP_XS;
     L.height = INK_CANVAS_H - y - INK_CONTROL - 3 * INK_GAP;
     lv_obj_t *body = ink_ui_box(screen, 0, y, INK_CANVAS_W, INK_CANVAS_H - y, 0, INK_SURFACE_WHITE, false);
-    static const ink_ui_action_spec_t actions[] = {
-        {.id = "prev", .label = "上一页", .capability = "shell.settings_prev"},
-        {.id = "next", .label = "下一页", .capability = "shell.settings_next"}};
+    const ink_ui_action_spec_t actions[] = {
+        {.id = "prev", .label = TR("上一页"), .capability = "shell.settings_prev"},
+        {.id = "next", .label = TR("下一页"), .capability = "shell.settings_next"}};
     ink_ui_page_spec_t page = {.id = "LicenseText", .title = LICENSE_ROWS[L.index].title, .object = {LICENSE_ROWS[L.index].id, 0}, .actions = actions, .action_count = 2};
     L.list = ink_ui_list_create(body, &page, &L.position, 1, 1, L.height, "", license_bind, NULL);
     size_t count = 0, start = 0, n;
@@ -452,16 +454,16 @@ static void storage_size(int64_t n, char *out, size_t cap) {
 }
 static void storage_value(size_t i, char *out, size_t cap) {
     int state = U.generation == S.generation ? U.state[i == 5] : 0;
-    if (state != 1) { snprintf(out, cap, "%s", state ? "暂时读不出来" : "正在整理"); return; }
+    if (state != 1) { snprintf(out, cap, "%s", state ? TR("暂时读不出来") : TR("正在整理")); return; }
     char a[32], b[32];
     if (i == 5) {
         storage_size(U.clean[0] + U.clean[1] + U.clean[2], a, sizeof a);
-        snprintf(out, cap, "能腾出 %s", a);
+        snprintf(out, cap, TR("能腾出 %s"), a);
     } else {
         int k = (int)i - 2;
         storage_size(U.bytes[0][k] + (k == 2 ? U.bytes[0][3] : 0), a, sizeof a);
         storage_size(U.bytes[1][k] + (k == 2 ? U.bytes[1][3] : 0), b, sizeof b);
-        snprintf(out, cap, "我 %s / 全机 %s", a, b);
+        snprintf(out, cap, TR("我 %s / 全机 %s"), a, b);
     }
 }
 static void storage_action(size_t i, ink_ui_action_spec_t *action) {
