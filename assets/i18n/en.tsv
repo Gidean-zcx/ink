@@ -142,3 +142,18 @@
 输入内容	Enter content
 选好了	Done
 重复	Repeat
+扫码	Scan QR code
+正在识别二维码	Reading QR code
+没有识别到可用的二维码，请对准后重试	No usable QR code found. Aim at a code and try again.
+是否执行下面的操作？	Perform the action below?
+设备没有浏览器，可以复制网址	This device has no browser. You can copy the URL.
+可以复制文字	You can copy the text.
+再扫一次	Scan again
+已识别，请查看扫码结果	QR code read. Check the result.
+保存联系人	Save contact
+执行扫码结果中的操作	Use QR code result
+执行扫码操作：{content}	Use QR code result: {content}
+类型	Type
+复制	Copy
+连接 Wi-Fi	Connect to Wi-Fi
+拨打电话	Call

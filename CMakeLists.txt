@@ -1486,6 +1486,12 @@ target_include_directories(ink_camera_png PRIVATE third_party/stb platform/inclu
 target_compile_options(ink_camera_png PRIVATE -w) # upstream stb implementation
 target_link_libraries(ink_camera_png PRIVATE ink_platform)
 target_link_libraries(ink_system PRIVATE ink_camera_png)
+add_library(ink_quirc STATIC third_party/quirc/quirc.c third_party/quirc/identify.c third_party/quirc/decode.c third_party/quirc/version_db.c)
+target_include_directories(ink_quirc PUBLIC third_party/quirc)
+target_link_libraries(ink_quirc PRIVATE ink_platform)
+target_compile_options(ink_quirc PRIVATE -include ${CMAKE_SOURCE_DIR}/system/apps/camera/quirc_alloc.h -w)
+target_sources(ink_system PRIVATE system/apps/camera/scan.c)
+target_link_libraries(ink_system PRIVATE ink_quirc)
 ink_sim_executable(sim-camera-gallery tests/camera_gallery/camera_gallery.c ${INK_IMAGE_FIXTURES})
 target_include_directories(sim-camera-gallery PRIVATE ${CMAKE_BINARY_DIR}/generated)
 target_link_libraries(sim-camera-gallery PRIVATE ink_apps ink_system)
@@ -1616,3 +1622,8 @@ target_include_directories(sim-perf-latency PRIVATE ${CMAKE_BINARY_DIR}/generate
 target_link_libraries(sim-perf-latency PRIVATE ink_apps ink_system)
 add_test(NAME perf-latency COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/perf_latency/run.py --build ${CMAKE_BINARY_DIR} --regression)
 set_tests_properties(perf-latency PROPERTIES TIMEOUT 180)
+
+ink_sim_executable(sim-qr-scan tests/qr_scan/device.c)
+target_include_directories(sim-qr-scan PRIVATE third_party/quirc)
+target_link_libraries(sim-qr-scan PRIVATE ink_apps ink_system)
+add_test(NAME qr-scan COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/qr_scan/run.py --build ${CMAKE_BINARY_DIR})
