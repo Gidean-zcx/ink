@@ -6,8 +6,8 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 【实测】通过 | S31 退出 0，编译警告/错误 0；端口普通/ASan 各 14/14；新反向对照 9/9 拒绝撤回变体 | 下列“复现命令”中的 S31、端口测试和 `boot_negative.py` |
-| 2 | 【实测】测试与 gcccheck 通过；待最终隐私扫描 | 普通 334 通过、3 跳过；补跑 4/4（含前置）；ASan 全量 337/337；gcccheck 5 个宿主文件、7 个 S31 文件均 0 发现 | 下列模拟器、gcccheck、隐私命令 |
+| 1 | 【实测】通过 | S31 退出 0，全部警告/错误 0；端口普通/ASan 各 14/14；新反向对照 9/9 拒绝撤回变体；原厂分区逐项与正反尺寸检查通过 | 下列“复现命令”中的 S31、端口测试、`boot_negative.py` 和 `partitions.py` |
+| 2 | 【实测】通过 | 普通 334 通过、3 跳过；补跑 4/4（含前置），无剩余未执行项；ASan 全量 337/337；gcccheck 5 个宿主文件、7 个 S31 文件均 0 发现；隐私 0 匹配 | 下列模拟器、gcccheck、隐私命令 |
 | 3 | 【实现】静态核对完成；实机边界见清单 | 下表覆盖系统、端口及 IDF 任务；看门狗配置逐项与原厂相等；RTC 和 panic 函数链接区已核对 | `python3 tests/esp32s31/stack_report.py build-s31`、工具链 `objdump -t build-s31/ink-s31.elf` |
 
 ## 没做到的
@@ -37,7 +37,7 @@
 
 - 【实现】真实板信息使通信任务启动，而旧桩 `hal_cell_wait_event()` 返回 `-1`，违反接口的 1=事件/0=超时约定，被调用方当成事件并忙循环。为保证完整启动，只改此桩：按给定超时等待后返回 0；没有接触模组。新增宿主测试和撤回对照。
 - 【实现】原厂任务看门狗未启用 panic，单纯饿死 idle 的情况只告警；自动回退统计的是实际发生的异常/看门狗复位，不能据此承诺所有死锁都会自行恢复。
-- 【实测】首轮 S31 C/C++ 编译无警告，但 SDK 另报两次应用分区仅剩 1%（骨架单应用仅 1500 KiB）。原厂 `partitions.csv:3–12` 与已确认闪存用途均为两个 5 MiB 应用槽；本任务增加同值的编译描述并切换既有 SDK 分区选项，未改变任何真实分区，也不写设备。最终 S31 编译与正反尺寸检查待补。
+- 【实测】首轮 S31 C/C++ 编译无警告，但 SDK 另报两次应用分区仅剩 1%（骨架单应用仅 1500 KiB）。原厂 `partitions.csv:3–12` 与已确认闪存用途均为两个 5 MiB 应用槽；本任务增加同值的编译描述并切换既有 SDK 分区选项，未改变任何真实分区，也不写设备。最终全日志 0 警告；正反尺寸检查通过，旧构建描述确实产生警告。
 - 原厂副本为稀疏/按需检出；读取未下载的音频/UI 对象时 Git 试图补取，被只读沙箱拒绝，副本未写入。后续只用已提供的板级源码和配置，未补全依赖。音频 26 KiB 沿用本项目既有值，未把注释当作本次原厂核查证据。
 
 ## 新增的机制
@@ -109,15 +109,17 @@
 - 【实现】新增 RTC 校验、60 秒一次性定时器、第三次异常复位后选择原厂 `ota_0`；没有写出厂应用或其他受保护分区的代码。
 - 【实现】浅睡编译开关默认关，关时不执行睡眠准备、切共享电源或 USB 重置；CPU 降频原逻辑保留。
 - 【实现】shutdown 走既有 `trip()`；panic 用 IDF 链接包装、LCD LL 和 GPIO I2C，避免在异常中获取板锁/等待任务。原厂没有 panic 关电钩子；这是满足任务书第 4 条的端口实现，待验证电气效果。
-- 【实测】模拟器构建完成（退出 0），普通全量测试进行中；Apple 链接器报告既有重复库警告，不能记为 S31 编译警告。
+- 【实测】普通和 ASan 模拟器构建均退出 0；Apple 链接器报告既有重复库警告，不属于 S31 构建。
 - 【实测】端口普通单测 14/14 通过（9.88 s）；`boot_negative.py` 的 4 个原实现全部通过、9 个撤回变体全部触发断言（编译退出 0，测试退出 -6）。覆盖阈值、RTC 校验、60 秒清零、上电清零、浅睡开关、shutdown、panic 栅极/电源以及无事件桩。
-- 【实测】普通模拟器全量原话：`100% tests passed out of 337`、`Total Test time (real) = 850.04 sec`；其中 3 项中枢测试跳过，已找到可用的锁定依赖环境，待补跑。
-- 当前产品改动 +222/-14，净增 208 行（含 CMake、配置和构建脚本，不含测试/文档），预算 250 行内。超过 100 行的原因：RTC 保护 50 行、无调度 panic 关电 67 行、真实设备/版本 43 行及必要接线。考虑过直接在 panic 调用 `trip()`，但它依赖锁与调度，会在异常中卡住；只拉低 XOE 又不能关 PMIC，因此采用固定、有限的 GPIO 写序列，没有通用 I2C 框架。
-- 【实测】S31 以 `OFF` 编译成功，C/C++ 编译警告和错误均为 0；`ink-s31.bin` 1527344 B（不含并行任务资源包）。IDF size：DIRAM 静态 101024 B/503744 B，静态剩余 402720 B，不等于运行时空闲堆。版本为 `g5b36019b-261110140518`（产品提交 `5b36019b`，UTC 构建时刻）。
+- 【实测】普通模拟器全量原话：`100% tests passed out of 337`、`Total Test time (real) = 850.04 sec`；其中 3 项中枢测试跳过。换用锁定依赖环境后，原 3 项及前置补跑原话：`100% tests passed out of 4`、`Total Test time (real) = 60.33 sec`，无剩余未执行项。
+- 当前产品改动 +237/-15，净增 222 行（含 CMake、配置、CSV 和构建脚本，不含测试/文档），预算 250 行内。超过 100 行的原因：RTC 保护 50 行、无调度 panic 关电 67 行、真实设备/版本 43 行、原厂分区描述 13 行及必要接线。考虑过直接在 panic 调用 `trip()`，但它依赖锁与调度，会在异常中卡住；只拉低 XOE 又不能关 PMIC，因此采用固定、有限的 GPIO 写序列，没有通用 I2C 框架。
+- 【实测】最终 S31 以 `OFF` 编译成功，全日志警告和错误均为 0；`ink-s31.bin` 1527344 B（不含并行任务资源包），SDK 应用槽 0x500000 B、余量 71%。IDF size：DIRAM 静态 101024 B/503744 B，静态剩余 402720 B，不等于运行时空闲堆。版本为 `g703945bf-261110144143`（产品提交 `703945bf`，UTC 构建时刻）。
 - 【实测】`objdump -t`：`ink_boot` 是 `.rtc_noinit` 中 16 B；`__wrap_esp_panic_handler`、`ink_s31_display_panic`、`ink_s31_panel_panic` 和两个 LCD 回调设置函数均在 `.iram0.text`。链接 map 确认 IDF panic 入口引用了包装函数。
 - 【实测】端口 ASan+UBSan 14/14 通过（8.94 s，`UBSAN_OPTIONS=halt_on_error=1`）。既有输入/电源/板级反向对照 14/14、显示反向对照 7/7 全部拒绝变体，原实现均通过；未放宽断言和预算。
 - 【实测】`ink-codex/tools/gcccheck.py`：宿主 `5 compiled, 0 with findings`；S31 `7 compiled, 0 with findings`；没有跳过文件。
 - 【实测】模拟器 ASan+UBSan 全量原话：`100% tests passed out of 337`、`Total Test time (real) = 968.68 sec`；无跳过、无 sanitizer 报告。
+- 【实测】分区对照输出：`all 9 entries identical; SDK size check passed without warnings`；恢复骨架 1500 KiB 表时零警告尺寸断言失败。仅读取 CSV、镜像，在内存中编码表，没有写任何设备。
+- 【实测】对基线到提交及工作区的完整差异运行总规则 §6 隐私扫描，grep 退出 1（无匹配），输出均为 0 行；没有提交构建产物、设计稿或本机路径。`git diff --check` 通过。
 - 【实现】架构审视：变更局限端口启动/异常机制；不新增用户动作或页面，不绕过既有能力总线，不新增 AI 私有通道。
 
 ## 复现命令
@@ -125,7 +127,9 @@
 模拟器配置使用总规则 §5 的字体、Python、LVGL 参数，并设 `-DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"`。ASan 配置同一组参数，构建目录换 `build-asan`、加 `-DINK_SANITIZE=ON`。SDL2/ImGui 使用 `$INK_DEPS/build/_deps/{sdl2,imgui}-src` 的固定只读源码，不装依赖、不升级。
 
 ```bash
-INK_UPSTREAM="$INK_DEPS/../ink-hw/upstream/Metalio-E-INK4-Plus" INK_S31_LIGHT_SLEEP=OFF taskpolicy -c utility bash ports/esp32s31/build.sh
+export IDF_PATH="${IDF_PATH:-$HOME/esp/esp-idf}"
+export INK_UPSTREAM="$INK_DEPS/../ink-hw/upstream/Metalio-E-INK4-Plus"
+INK_S31_LIGHT_SLEEP=OFF taskpolicy -c utility bash ports/esp32s31/build.sh
 taskpolicy -c utility cmake -S ports/esp32s31/tests -B build-s31-host -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
 taskpolicy -c utility cmake --build build-s31-host -j2
 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-s31-host --output-on-failure -j2
@@ -133,6 +137,7 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-s3
 taskpolicy -c utility python3 ports/esp32s31/tests/boot_negative.py build-s31-host
 taskpolicy -c utility python3 ports/esp32s31/tests/negative.py build-s31-host
 taskpolicy -c utility python3 ports/esp32s31/tests/display_negative.py build-s31-host
+taskpolicy -c utility python3 ports/esp32s31/tests/partitions.py "$IDF_PATH" "$INK_UPSTREAM/partitions.csv" build-s31
 taskpolicy -c utility cmake --build build -j2
 INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
 taskpolicy -c utility cmake --build build-asan -j2

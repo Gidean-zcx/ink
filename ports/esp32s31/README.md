@@ -46,9 +46,10 @@ taskpolicy -c utility cmake --build build-s31-host -j2
 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-s31-host --output-on-failure -j2
 taskpolicy -c utility python3 ports/esp32s31/tests/negative.py build-s31-host
 taskpolicy -c utility python3 ports/esp32s31/tests/boot_negative.py build-s31-host
+taskpolicy -c utility python3 ports/esp32s31/tests/partitions.py "$IDF_PATH" "$INK_UPSTREAM/partitions.csv" build-s31
 # 内存检查：目录换 build-s31-host-asan，配置加 -DINK_SANITIZE=ON。
 ```
 
-测试运行实际的纯逻辑头文件和电源 HAL；IDF 与板级硬件在电源测试中由记录调用顺序的假实现替代。反向对照在构建目录的临时副本上撤掉修复，不依赖 Git 历史。状态、出处与上机清单见 [port-hal-2 报告](../../docs/tasks/port-hal-2/REPORT.md)。
+测试运行实际的纯逻辑头文件和电源 HAL；IDF 与板级硬件在电源测试中由记录调用顺序的假实现替代。反向对照在构建目录的临时副本上撤掉修复，不依赖 Git 历史。分区测试读取两份 CSV 和已编译镜像，核对原厂全部条目，并使用 SDK 尺寸检查器验证恢复骨架布局后会出现警告。状态、出处与上机清单见 [port-hal-2 报告](../../docs/tasks/port-hal-2/REPORT.md)。
 
 启动、安全停屏的验收、任务栈和上机边界见 [port-boot-1 报告](../../docs/tasks/port-boot-1/REPORT.md)。
