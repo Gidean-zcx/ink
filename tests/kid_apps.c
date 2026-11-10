@@ -200,6 +200,10 @@ static void ownership(void) {
     unsigned total = 0, denied_count = 0;
     for (int i = 0; ink_cap_at(i); i++) {
         const ink_cap_t *c = ink_cap_at(i);
+        static const char *const emergency[] = {"phone.emergency", "phone.emergency_open", "phone.emergency_key", "phone.emergency_close", "phone.emergency_hangup"};
+        bool public_call = false;
+        for (size_t k = 0; k < sizeof emergency / sizeof *emergency; k++) if (!strcmp(c->id, emergency[k])) public_call = true;
+        if (public_call) { CHECK(!c->app && c->child_ok, "emergency capability belongs to the system: %s", c->id); continue; }
         /* Coverage guards for application tables, including the previously missed aliases. */
         static const char *const domains[] = {"reader.", "ai.", "calc.", "camera.", "clock.", "files.", "file.", "gallery.", "photo.", "memo.", "message.", "sms.", "phone.", "call.", "contacts.", "calendar.", "reminder.", "alarm.", "remote.", "weather.", "home."};
         for (size_t k = 0; k < sizeof domains / sizeof *domains; k++)

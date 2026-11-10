@@ -34,6 +34,7 @@
 #include "ink/sys/confirm.h"
 #include "ink/sys/data.h"
 #include "ink/sys/json.h"
+#include "ink/sys/i18n.h"
 #include "ink/sys/members.h"
 #include "ink/sys/settings.h"
 #include "ink/sys/sha256.h"
@@ -67,7 +68,7 @@ static struct {
     osal_mutex_t *lock;
     osal_mutex_t *at; /* the modem takes one AT command at a time, and some requests are several: the comm task
                        * and exec.bg both talk to it. Held while a request runs, up to the seconds it takes */
-    bool ringing;
+    bool ringing, emergency; /* emergency: protected by at, keeps RF on until the call ends */
     char call_member[16], call_peer[24]; /* protected by at; member and tones also by lock */
     uint32_t call_generation;
     char tones[65]; /* local display only, protected by lock */
@@ -339,8 +340,8 @@ static void reg_due(void *arg) { ink_exec_post(INK_EXEC_BG, &CM.reg_job, reg_loo
 
 static void radio(void *arg) { /* exec.bg: airplane mode changed, or the modem came up with it on */
     (void)arg;
-    bool on = !ink_setting_get("net.airplane");
     osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
+    bool on = !ink_setting_get("net.airplane") || CM.emergency;
     int r = hal_cell_radio(on, 0); /* only the command: registering is not waited for with the modem held */
     osal_mutex_unlock(CM.at);
     if (r < 0) ink_probe_count("comm.radio_failed");
@@ -401,6 +402,8 @@ static void comm_task(void *arg) {
                 osal_mutex_lock(CM.lock, OSAL_WAIT_FOREVER);
                 CM.call_member[0] = CM.call_peer[0] = CM.tones[0] = 0;
                 osal_mutex_unlock(CM.lock);
+                if (CM.emergency && ink_setting_get("net.airplane") && hal_cell_radio(false, 0)) ink_probe_count("comm.radio_failed");
+                CM.emergency = false;
                 osal_mutex_unlock(CM.at);
                 ink_confirm_expire("call.dtmf");
                 ink_cap_emit("call.ended", a);
@@ -547,13 +550,29 @@ static void call_result(ink_call_t *c, int r, const char *ok, const char *fail) 
 static void cap_dial(ink_call_t *c) {
     char number[24];
     ink_args_get_str(&c->args, "number", number, sizeof number);
-    if (airplane(c, "打电话")) return; /* no exception for emergency numbers yet: not decided */
+    bool emergency = !strcmp(number, "110") || !strcmp(number, "120") || !strcmp(number, "119") || !strcmp(number, "112");
+    if (!strcmp(c->cap->id, "phone.emergency") && !emergency) {
+        c->rc.status = INK_RC_REJECTED;
+        snprintf(c->rc.say, sizeof c->rc.say, "%s", TR("锁屏时只能拨紧急电话"));
+        return;
+    }
+    if (emergency && c->src != INK_SRC_TOUCH && c->src != INK_SRC_KEY) {
+        c->rc.status = INK_RC_REJECTED;
+        snprintf(c->rc.say, sizeof c->rc.say, "%s", TR("请在紧急呼叫页面亲自拨号"));
+        return;
+    }
+    if (!emergency && airplane(c, "打电话")) return;
     osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
-    int r = hal_cell_dial(number);
-    if (!r) call_begin(ink_cap_call_member(c), number);
+    int r = CM.call_member[0] ? -1 : 0;
+    bool temporary = !r && emergency && ink_setting_get("net.airplane");
+    if (temporary) r = hal_cell_radio(true, 0) < 0 ? -1 : 0; /* 1 means RF on, not registered */
+    if (!r) r = hal_cell_dial(number); /* no SIM or registration precondition for emergencies */
+    if (!r) { call_begin(ink_cap_call_member(c), number); CM.emergency = emergency; }
+    else if (temporary && hal_cell_radio(false, 0)) ink_probe_count("comm.radio_failed");
     osal_mutex_unlock(CM.at);
     if (r == 0) call_focus(true);
-    call_result(c, r, "正在拨号", "the call could not be placed");
+    call_result(c, r, TR("正在拨号"), "the call could not be placed");
+    if (r == 0) ink_args_bool(&c->args, "emergency", emergency);
     if (r == 0) ink_cap_emit_for("call.dialed", &c->args, ink_cap_call_member(c));
 }
 
@@ -569,6 +588,9 @@ static void cap_answer(ink_call_t *c) {
 static void cap_hangup(ink_call_t *c) {
     CM.ringing = false;
     osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
+    if (!strcmp(c->cap->id, "phone.emergency_hangup") && (!CM.emergency || strcmp(CM.call_member, ink_cap_call_member(c)))) {
+        osal_mutex_unlock(CM.at); c->rc.status = INK_RC_REJECTED; return;
+    }
     int r = hal_cell_hangup();
     osal_mutex_unlock(CM.at);
     call_result(c, r, "挂断了", "no call to end");
@@ -615,10 +637,15 @@ static void cap_control(ink_call_t *c) { /* exec.bg */
 #define BOOL_ARG(name) "{\"type\":\"object\",\"properties\":{\"" name "\":{\"type\":\"boolean\"}},\"required\":[\"" name "\"]}"
 
 static const ink_cap_t COMM_CAPS[] = {
-    {.id = "call.mute", .app = "phone", .title = "通话麦克风静音", .input = BOOL_ARG("on"), .effect = INK_FX_NAVIGATE, .child_ok = true, .permission = "call", .timeout_ms = 15000, .exec = INK_EXEC_BG, .run = cap_control},
-    {.id = "call.dtmf", .app = "phone", .title = "发送一个通话按键", .ask = "向 {_peer} 的本次通话发送按键 {key}", .input = "{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":1}},\"required\":[\"key\"]}", .effect = INK_FX_EXTERNAL, .child_ok = true, .permission = "call", .timeout_ms = 10000, .exec = INK_EXEC_BG, .prepare_confirm = ink_comm_bind_dtmf, .run = cap_control},
-    {.id = "call.route", .app = "phone", .title = "切换通话耳机或喇叭", .input = BOOL_ARG("headset"), .effect = INK_FX_NAVIGATE, .child_ok = true, .permission = "call", .exec = INK_EXEC_BG, .run = cap_control},
-    {.id = "call.record", .app = "phone", .title = "查看通话录音不可用的原因", .effect = INK_FX_READ, .child_ok = true, .permission = "call", .exec = INK_EXEC_BG, .run = cap_control},
+    {.id = "phone.emergency_hangup", .app = NULL, .title = "挂断紧急电话", .effect = INK_FX_NAVIGATE, .child_ok = true, .while_locked = true,
+     .expose = INK_EXPOSE_OWNER, .permission = "call", .timeout_ms = 25000, .exec = INK_EXEC_BG, .run = cap_hangup},
+    /* D-119 / D-105: the person's explicit emergency action; AI may only open its page. */
+    {.id = "phone.emergency", .app = NULL, .title = "拨紧急电话", .input = "{\"type\":\"object\",\"properties\":{\"number\":{\"type\":\"string\",\"maxLength\":20}},\"required\":[\"number\"]}", .effect = INK_FX_EXTERNAL,
+     .child_ok = true, .while_locked = true, .expose = INK_EXPOSE_OWNER, .permission = "call", .timeout_ms = 25000, .exec = INK_EXEC_BG, .run = cap_dial},
+    {.id = "call.mute", .app = "phone", .locked_owner_only = true, .title = "通话麦克风静音", .input = BOOL_ARG("on"), .effect = INK_FX_NAVIGATE, .child_ok = true, .permission = "call", .timeout_ms = 15000, .exec = INK_EXEC_BG, .run = cap_control},
+    {.id = "call.dtmf", .app = "phone", .locked_owner_only = true, .title = "发送一个通话按键", .ask = "向 {_peer} 的本次通话发送按键 {key}", .input = "{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":1}},\"required\":[\"key\"]}", .effect = INK_FX_EXTERNAL, .child_ok = true, .permission = "call", .timeout_ms = 10000, .exec = INK_EXEC_BG, .prepare_confirm = ink_comm_bind_dtmf, .run = cap_control},
+    {.id = "call.route", .app = "phone", .locked_owner_only = true, .title = "切换通话耳机或喇叭", .input = BOOL_ARG("headset"), .effect = INK_FX_NAVIGATE, .child_ok = true, .permission = "call", .exec = INK_EXEC_BG, .run = cap_control},
+    {.id = "call.record", .app = "phone", .locked_owner_only = true, .title = "查看通话录音不可用的原因", .effect = INK_FX_READ, .child_ok = true, .permission = "call", .exec = INK_EXEC_BG, .run = cap_control},
     {.id = "call.controls", .app = "phone", .title = "通话控制已获模组确认", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true, .permission = "call"},
     {.id = "message.send", .app = "message",
      .title = "发短信",
@@ -635,7 +662,7 @@ static const ink_cap_t COMM_CAPS[] = {
      .run = cap_send},
     {.id = "message.list", .app = "message", .title = "最近的短信", .effect = INK_FX_READ, .child_ok = true, .permission = "message", .exec = INK_EXEC_BG, .run = cap_list},
     {.id = "sms.send", .app = "message", .title = "保存并发送短信", .ask = "发短信给 {to}：{text}", .prepare_confirm = bind_send, .input = "{\"type\":\"object\",\"properties\":{\"to\":{\"type\":\"string\",\"maxLength\":20},\"text\":{\"type\":\"string\",\"maxLength\":118}},\"required\":[\"to\",\"text\"]}", .effect = INK_FX_EXTERNAL, .child_ok = true, .permission = "message", .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .timeout_ms = 30000, .run = cap_send},
-    {.id = "call.dial", .app = "phone",
+    {.id = "call.dial", .app = "phone", .locked_owner_only = true,
      .title = "打电话",
      .ask = "打电话给 {number}",
      .input = "{\"type\":\"object\",\"properties\":{\"number\":{\"type\":\"string\",\"maxLength\":20}},\"required\":[\"number\"]}",
@@ -647,8 +674,8 @@ static const ink_cap_t COMM_CAPS[] = {
      .exec = INK_EXEC_BG,
      .run = cap_dial},
     /* the modem may be busy with a message for up to 20 s; a call rings longer than that */
-    {.id = "call.answer", .app = "phone", .title = "接电话", .effect = INK_FX_EXTERNAL, .child_ok = true, .while_locked = true, .permission = "call", .timeout_ms = 25000, .exec = INK_EXEC_BG, .run = cap_answer},
-    {.id = "call.hangup", .app = "phone", .title = "挂电话", .effect = INK_FX_NAVIGATE, .child_ok = true, .while_locked = true, .permission = "call", .timeout_ms = 25000, .exec = INK_EXEC_BG, .run = cap_hangup},
+    {.id = "call.answer", .app = "phone", .locked_owner_only = true, .title = "接电话", .effect = INK_FX_EXTERNAL, .child_ok = true, .while_locked = true, .permission = "call", .timeout_ms = 25000, .exec = INK_EXEC_BG, .run = cap_answer},
+    {.id = "call.hangup", .app = "phone", .locked_owner_only = true, .title = "挂电话", .effect = INK_FX_NAVIGATE, .child_ok = true, .while_locked = true, .permission = "call", .timeout_ms = 25000, .exec = INK_EXEC_BG, .run = cap_hangup},
     {.id = "message.received", .app = "message", .title = "收到短信", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true, .permission = "message"},
     {.id = "call.incoming", .app = "phone", .title = "来电", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true, .permission = "call"},
     {.id = "call.answered", .app = "phone", .title = "电话接通了", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true, .permission = "call"},

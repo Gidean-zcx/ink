@@ -59,5 +59,6 @@ int ink_wallpaper_init(void);
 bool ink_wallpaper_ready(void);
 void ink_wallpaper_draw(lv_obj_t *parent);
 void ink_shell_camera_button(lv_obj_t *root, bool strip);
+void ink_shell_emergency_button(lv_obj_t *root, bool strip);
 
 #endif

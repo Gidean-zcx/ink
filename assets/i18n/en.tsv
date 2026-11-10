@@ -307,3 +307,18 @@ AI	AI
 柔音	Soft
 %s · 点按换音试听	%s · Tap to preview
 SetSound；音量=%lld；勿扰=%lld；按键提示音(audio.key_tone)=%lld；振动(audio.vibration)=%lld；振动强度(audio.vibration_level)=%lld（0弱35ms、1中50ms、2强70ms）；来电铃声(audio.call_ring)=%lld；闹钟铃声(audio.alarm_ring)=%lld；铃声：0清音、1双音、2柔音；settings.get(id)、settings.set(id,value)；通知：shell.notify_settings；shell.page_next、shell.page_prev、shell.back。	SetSound; volume=%lld; DND=%lld; key sound(audio.key_tone)=%lld; vibration(audio.vibration)=%lld; strength(audio.vibration_level)=%lld (0 weak 35ms, 1 medium 50ms, 2 strong 70ms); call ringtone(audio.call_ring)=%lld; alarm ringtone(audio.alarm_ring)=%lld; ringtones: 0 clear, 1 double, 2 soft; settings.get(id), settings.set(id,value); notifications: shell.notify_settings; shell.page_next, shell.page_prev, shell.back.
+紧急呼叫	Emergency call
+仅限紧急号码	Emergency numbers only
+锁屏时只能拨紧急电话	Only emergency calls while locked
+请在紧急呼叫页面亲自拨号	Dial personally on the emergency call page
+号码	Number
+通话中	In call
+挂断	Hang up
+拨号	Dial
+正在拨号	Dialling
+没有完成，请重试	Could not complete. Please try again
+拨紧急电话	Call an emergency number
+打开紧急呼叫页面	Open the emergency dialler
+返回锁屏	Return to lock screen
+按紧急拨号键	Press an emergency dialler key
+挂断紧急电话	Hang up emergency call
