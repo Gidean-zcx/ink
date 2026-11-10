@@ -223,6 +223,28 @@ Codex 额度用完，任务改由 Claude 子代理（思考等级 medium）在�
 
 不做或先不做（用户 11-10 定）：蓝牙音箱和翻页器、无障碍、热点。
 
+## 这一阶段的完成界限（2026-11-10 晚上定，用户要求“明确完成界限，不要无休止的执行”）
+
+**目标**：模拟器里的系统层达到 R-068（相当于一台没装应用的手机）。下面的任务做完就停，向用户汇报，等新的指示；不再往里加新任务，除非用户要求。
+
+**完成条件（全部满足）**：
+1. 下表任务全部合入 `claude/system-layer`；
+2. 每批合完都审过一轮，查出的高、中问题都修完；
+3. main 上 CI 全绿；
+4. 最后一次缺口检查（phone-gap-3）对照 R-068，凡是模拟器里能验证的都是“有”，剩下的只属于下面“不在这一阶段”的三类。
+
+**任务表（共 27 项）**：
+
+| 状态 | 任务 |
+| --- | --- |
+| 在做（8） | `sms-multipart`、`boot-db-stall`、`time-settings`、`lock-camera`、`kid-apps`、`files-ops`、`reminder-edit`、`port-hal-2` |
+| 接着做（19） | `emergency-call`、`mobile-network`（都等 sms-multipart 合入）、`clock-extras`（等 time-settings）、`qr-scan`、`notify-manage`、`settings-small`（没连上的已存 Wi-Fi、文字重做）、`ai-speech-long`、`i18n-2`、`i18n-3`、`i18n-4`（其余页面的英文全覆盖）、`semantics-shell-1`、`semantics-shell-2`、`small-gaps-1`（说话能打断回答、设备详情和开源许可、通话分钟数、电量页换家人）、`small-gaps-2`（“继续读”卡片的百分比和插拔卡刷新、“全部”页时钟相机相册的图标、拨号页提示压住键盘、飞行模式面板自动收起）、`port-display-1`（屏幕输出层接厂家现成代码，只编译）、`open-app-latency`、`ui-deps-refresh`、`phone-gap-3`（最后的缺口检查）、最后一轮整批审查 |
+
+**不在这一阶段（到这里就停下问用户）**：
+- 上真机：烧录、驱动调试、真机性能实测（每次写设备都要先整片备份、征得同意）。
+- 真实家庭中枢：真模型、听写朗读、账号、备份同步、浏览器节点、固件源（要服务器和密钥，可能花钱）。
+- 真打电话、发短信（花钱）。
+
 ## 性能
 
 ## perf-memory
