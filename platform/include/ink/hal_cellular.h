@@ -41,10 +41,22 @@ int hal_cell_select_sim(hal_cell_slot_t slot, uint32_t reg_timeout_ms);
 /** Airplane mode: the radio off (no service, no calls, no messages) or on again, waiting up to reg_timeout_ms for the
  *  card to register. 0, 1 (on but not registered in time), < 0 failed. Task context, seconds. */
 int hal_cell_radio(bool on, uint32_t reg_timeout_ms);
-/** Send a text message (UTF-8). 0, or < 0 (no service, refused, timed out). Task context, seconds. */
-int hal_cell_sms_send(const char *number, const char *utf8, uint32_t timeout_ms);
-/** Read a waiting message and remove it from the modem's store. Text length, or < 0. */
-int hal_cell_sms_take(int index, char *number, int number_cap, char *utf8, int text_cap);
+/** A text message as it came: a whole one (total 1), or part `seq` (1-based) of `total` with reference `ref` (concatenated
+ *  messages, 3GPP TS 23.040 §9.2.3.24.1). One part holds up to 160 characters. */
+typedef struct {
+    char number[24];
+    char text[340];
+    int ref, total, seq;
+} hal_cell_sms_t;
+
+/** The parts (each billed) a text goes as, < 0 if it is not UTF-8. */
+int hal_cell_sms_parts(const char *utf8);
+/** Send a text message (UTF-8), in parts when long. 0: all sent. Otherwise *sent parts went, and the next one failed
+ *  with the result unknown (< 0: refused, timed out, no modem) or was not tried (1: no time left); none after it
+ *  was tried. Task context, seconds per part. */
+int hal_cell_sms_send(const char *number, const char *utf8, uint32_t timeout_ms, int *sent);
+/** Read a waiting message or part and remove it from the modem's store. Text length, or < 0. */
+int hal_cell_sms_take(int index, hal_cell_sms_t *out);
 int hal_cell_dial(const char *number);
 int hal_cell_answer(void);
 int hal_cell_hangup(void);

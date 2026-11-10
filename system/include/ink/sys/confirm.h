@@ -20,9 +20,11 @@
 extern "C" {
 #endif
 
+#define INK_CONFIRM_DETAIL 1152 /* what the card says in full: the longest text message (INK_SMS_TEXT_MAX) with its recipient */
+
 typedef struct {
     uint32_t token;
-    char cap[48], title[48], detail[160];
+    char cap[48], title[48], detail[INK_CONFIRM_DETAIL];
     uint8_t src;         /* who asked (ink_source_t) */
     uint64_t expires_us;
     bool parent;         /* an adult's PIN is needed too (system services design §11.3) */
