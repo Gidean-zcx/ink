@@ -4,6 +4,8 @@ execute_process(COMMAND git rev-parse --short=8 HEAD WORKING_DIRECTORY ${CMAKE_C
 string(TIMESTAMP ink_build_time "%y%m%d%H%M%S" UTC)
 set(PROJECT_VER "g${ink_revision}-${ink_build_time}")
 option(INK_S31_LIGHT_SLEEP "Enable unverified S31 light sleep" OFF)
+include(${CMAKE_CURRENT_LIST_DIR}/opus.cmake)
+list(APPEND EXTRA_COMPONENT_DIRS ${ink_opus_source})
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 idf_build_set_property(MINIMAL_BUILD ON)
 project(ink-s31)

@@ -77,6 +77,7 @@ void ink_s31_board_init(void) { /* boot, task context */
         g_touch = NULL;
     }
     s31_power_init();
+    ink_s31_audio_init();
     s31_input_init(g_touch);
     hal_battery_t b;
     hal_power_battery(&b);
