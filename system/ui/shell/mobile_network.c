@@ -54,7 +54,7 @@ static void create(lv_obj_t *screen, void *arg) {
         ink_text_cfg_t cfg = {.type = i == 2 ? INK_TEXT_PASSWORD : INK_TEXT_PLAIN, .initial = values[i], .hint = labels[i], .max = i ? 64 : 100, .ai_hidden = i == 2};
         lv_obj_t *f = ink_textfield_create(screen, &cfg, entered, (void *)(intptr_t)i, false);
         lv_obj_set_pos(f, ink_ui_px(INK_MARGIN), ink_ui_px(y + ink_ui_line_height(INK_FONT_NOTE)));
-        P.fields[i] = (ink_ui_field_spec_t){.id = i == 0 ? "name" : i == 1 ? "user" : "password", .role = "textbox", .label = labels[i], .value = values[i], .secret = i == 2};
+        P.fields[i] = (ink_ui_field_spec_t){.id = i == 0 ? "name" : i == 1 ? "user" : "password", .role = "textbox", .label = labels[i], .value = i == 2 && P.has_password && !P.password[0] ? "有" : values[i], .secret = i == 2};
         y += INK_CONTROL + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP;
     }
     else {

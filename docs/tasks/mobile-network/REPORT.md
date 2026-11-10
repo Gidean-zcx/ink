@@ -10,7 +10,7 @@
 | 1 漫游 | 【实测】专项通过 | CEREG 漫游停数据，允许后恢复，关闭后停用，回归归属网恢复；保持短信/通话注册 | 同上 |
 | 1 流量 | 【实测】专项通过，有采样边界 | 收发 1000 B；跨月归上月，本月另计 100 B；重启恢复日检查点，允许丢当天后加的 50 B；确认清零并再次重启为零 | 同上 |
 | 1 儿童权限 | 【实测】专项通过 | 三项修改的触摸/AI 均拒绝，设置别名也拒绝 | 同上 |
-| 2 回归 | 待验证 | 网络、通信、飞行模式、全量、内存、S31、GCC | 待补 |
+| 2 回归 | 【实测】普通全量 328/330 通过，2 项文档检查失败；内存待完成 | 运行测试全部通过；S31 编译通过；GCC 10 文件零问题。失败为禁止本任务修改的生成能力文档过期 | `ctest --test-dir build --output-on-failure -j2`；`bash ports/esp32s31/build.sh`；`gcccheck.py build ...` |
 | 3 上机边界 | 【实现】不操作设备 | 本次只改工作分支与模拟器；上机清单待补 | 无硬件命令 |
 | 4 中英文截图 | 【实测】已生成，最终版待复核 | `build/test-out/mobile-network/main/snap-{mobile,apn}-{zh,en}.png` | 同上，设置 `INK_KEEP_EVIDENCE=1` |
 
@@ -18,6 +18,7 @@
 
 - 真机驱动接通、设备验证和运营商计费口径没有做；本次不操作设备。
 - 月界处分钟采样之间的字节尚不能精确逐帧分月，见验证记录。
+- 全量未全绿：`capability-table-doc` 与 `services-mid-capability-doc` 均因共享的生成能力文档过期失败；按总规则不修改该文件，合并会话需重新生成。
 
 ## 和设计不一致的
 
@@ -54,6 +55,8 @@
 - 【实测】大字来电场景：旧产品源码对照通过；仅取消空统计检查点通过；仅取消启动读取仍失败。证据：`work/mobile-network/baseline-phone.log`、`phone-probes.log`。最终只在非零统计时保存每日检查点，避免零流量写盘拖延已有拒接处理；没有改来电测试或等待上限。
 - 【实测】修正后的五项针对性回归原话 `100% tests passed out of 5`，11.47 秒；`work/mobile-network/regression-final.log`。五种反向撤销（接入点命令、密码来源、漫游策略、字节累计、每日落盘）均使相应断言失败，脚本退出 0 表示反向对照成立：`taskpolicy -c utility python3 tests/mobile_network/reverse.py --build build`，证据 `work/mobile-network/reverse-final.log`、`build/mobile-network-reverse/summary.json`。只编译构建目录副本，产品源文件未被撤销。
 - 【实测】GCC 检查阶段结果 `10 compiled, 0 with findings`；S31 桩不属于宿主编译数据库，将由 S31 构建验证。日志 `work/mobile-network/gcccheck-final.log`。
+- 【实测】最终普通全量原话 `99% tests passed, 2 tests failed out of 330`，805.72 秒；`work/mobile-network/full-tests-final.log`。除上述两个文档检查，全部运行测试通过，包含原网络、通信、短信、飞行模式与确定性场景。
+- 【实测】`taskpolicy -c utility bash ports/esp32s31/build.sh` 退出 0，固件、size、stack 报告均生成；`work/mobile-network/build-s31.log`、`build-s31/size.txt`、`build-s31/stack.txt`。Flash 1,378,498、DIRAM 98,378、外部 BSS 623,664 字节；不含运行时堆和任务栈。确认 S31 的移动网络 UI 对象比最终源文件新。没有执行构建输出建议的烧录命令。
 
 ## 规模与实现取舍
 
