@@ -185,6 +185,8 @@ static const char *wifi_line(char *ssid, size_t cap) { /* the Wi-Fi network in u
     return !ink_setting_get("wifi.enabled") ? "Wi-Fi 已关闭" : ssid[0] ? ssid : "还没有连接 Wi-Fi";
 }
 
+static void refused(void *ctx, const ink_receipt_t *rc) { (void)ctx; ink_shell_refused(rc); } /* never silent */
+
 static void binding_event(lv_event_t *e) {
     binding_t *b = lv_event_get_user_data(e);
     if (lv_event_get_code(e) == LV_EVENT_DELETE) {
@@ -195,7 +197,7 @@ static void binding_event(lv_event_t *e) {
     ink_call_opts_t o = {.src = INK_SRC_TOUCH,
                          .args_json = b->args[0] ? b->args : NULL,
                          .reply_exec = INK_EXEC_UI,
-                         .member = ink_member_current()->id};
+                         .member = ink_member_current()->id, .done = refused};
     if (!strcmp(b->cap, "wifi.scan")) {
         if (N.scan_busy) return;
         N.scan_busy = true;
@@ -517,7 +519,7 @@ typedef struct {
  * tiles of the page being shown and lists them for the AI. Returns the pages. */
 static int apps_walk(bool draw, tile_list_t *list) {
     static const char *const groups[] = {"读和听", "记和联系", "工具"};
-    tool_t items[TOOLS_MAX], shown[TOOLS_MAX];
+    static tool_t items[TOOLS_MAX], shown[TOOLS_MAX]; /* UI task only, never re-entered: off its small stack */
     int count = tools(items), top = below_heading() + INK_CONTROL + INK_GAP_L, y = top, page = 0;
     int name_h = ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_S;
     int row_h = INK_CIRCLE + INK_GAP_S + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_L;

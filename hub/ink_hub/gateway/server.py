@@ -18,7 +18,7 @@ from ink_hub.remote.input import handle_input
 from ink_hub.ops.metrics import Metrics
 from ink_hub.speech.fake import FakeASR, FakeTTS
 from ink_hub.voice.flow import run_turn, run_dictation
-from .wire import (ANSWER_BYTES, ProtocolError, chunks, dumps, encode, frame,
+from .wire import (ProtocolError, chunks, dumps, encode, frame,
                    notification, page, parse_frame, response)
 
 

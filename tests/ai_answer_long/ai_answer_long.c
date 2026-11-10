@@ -116,6 +116,10 @@ static int read_all_pages(void) {
     return read;
 }
 
+/* An answer of nothing but line breaks, as long as the device keeps: more pages than the panel counts. */
+static char lines[INK_AI_ANSWER_MAX];
+static void only_lines(void) { memset(lines, '\n', sizeof lines - 1); ink_shell_ai_words(""); ink_shell_ai_words(lines); }
+
 /* The same words laid out at once, not as they streamed in. */
 static void lay_out_again(void) { ink_shell_ai_words(""); ink_shell_ai_words(expect_long); }
 
@@ -176,6 +180,8 @@ static void run(void *arg) {
     CHECK(sim_metric_value("ai.answer_cut") == 1, "the cut is counted once");
     capture("AiLongCut");
     CHECK(strstr(snapshot, "回答太长，只显示了前面部分"), "the AI snapshot shows the note");
+    on_ui(only_lines); on_ui(read_answer);
+    CHECK(strstr(visible, "回答无法完整显示"), "32 KB of line breaks: the panel says it cannot show it in full (%.60s, %d pages)", visible, pages);
 
     /* 3. voice: the speech of the 6 KB answer (more frames than the jitter buffer holds, sent in real time as the
      * hub does) plays to the end. It is fast speech so that the turn stays within its 45 s budget (budget_ms). */

@@ -107,6 +107,8 @@ static void last_save(const char *member, const char *book, int page) {
     char path[200], data[160];
     int n = snprintf(data, sizeof data, "page=%d\nbook=%.95s\n", page, book);
     if (ink_layout_member(path, sizeof path, member, "reader.last") < 0 || n <= 0 || (size_t)n >= sizeof data) return;
+    if (!strcmp(LAST.member, member) && !strcmp(LAST.book, book) && LAST.page == page) return; /* as it is on the card */
+    ink_probe_count("reader.last_saved");
     if (ink_storage_write_member_atomic(path, data, (size_t)n) != 0) return;
     snprintf(LAST.member, sizeof LAST.member, "%s", member);
     snprintf(LAST.book, sizeof LAST.book, "%s", book);
@@ -314,8 +316,9 @@ static void ahead_cb(lv_timer_t *t) {
 
 static void save_cb(lv_timer_t *t) {
     (void)t;
-    if (!RD.dirty_pos || !ink_member_exists(RD.member)) return;
-    last_save(RD.member, LIB.books[LIB.open].name, RD.page + 1);
+    if (!ink_member_exists(RD.member)) return;
+    last_save(RD.member, LIB.books[LIB.open].name, RD.page + 1); /* also the book just opened */
+    if (!RD.dirty_pos) return;
     char path[200], data[64];
     pos_path(path, sizeof path, RD.member, LIB.books[LIB.open].name);
     int n = snprintf(data, sizeof data, "offset=%u\n", (unsigned)RD.starts[RD.page]);
@@ -525,7 +528,6 @@ static void book_create(lv_obj_t *scr, void *arg) {
     if (path[0] && ink_storage_read(path, data, sizeof data - 1) > 0) sscanf(data, "offset=%u", &saved);
     while (saved && find_page_start(RD.page + 1) >= 0 && RD.starts[RD.page + 1] <= saved) RD.page++;
     ink_probe_value("reader.restored_page", (double)RD.page);
-    last_save(RD.member, LIB.books[LIB.open].name, RD.page + 1); /* this book is now the one to continue */
 
     RD.title = lv_label_create(scr);
     lv_obj_set_style_text_font(RD.title, ink_ui_font(2), 0);
@@ -555,12 +557,12 @@ static void book_create(lv_obj_t *scr, void *arg) {
     RD.save_timer = lv_timer_create(save_cb, SAVE_AFTER_IDLE_MS, NULL);
     lv_timer_set_repeat_count(RD.save_timer, 1);
     lv_timer_set_auto_delete(RD.save_timer, false);
-    lv_timer_pause(RD.save_timer);
+    arm_once(RD.save_timer); /* this book is now the one to continue: written after a pause, not here */
     ink_probe_value("reader.open_ms", (double)(ink_now_us() - t0) / 1000.0);
 }
 
 static void book_destroy(void) {
-    if (RD.dirty_pos) save_cb(NULL); /* queued; written when the panel is idle */
+    if (RD.save_timer) save_cb(NULL); /* queued; written when the panel is idle */
     if (RD.ahead_timer) lv_timer_delete(RD.ahead_timer);
     if (RD.save_timer) lv_timer_delete(RD.save_timer);
     ink_app_free(RD.buf[0]);

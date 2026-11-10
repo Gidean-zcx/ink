@@ -11,12 +11,13 @@
 #include "ai_pages.h"
 #include "ink/ui_shell.h"
 
+#define PAGES_MAX 4096 /* a 32 KB answer of text is a few hundred pages; more (nearly all line breaks) is "cannot be shown in full" */
 #define PANEL_HEIGHT (INK_GAP_L + INK_CONTROL + INK_GAP_S + 3 * ink_ui_line_height(INK_FONT_BODY) + INK_GAP_S + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_S + INK_CONTROL + INK_GAP_L)
 static struct {
     lv_obj_t *root, *status, *question, *answer, *source, *actions, *prev, *next, *counter, *stop;
     char words[INK_AI_ANSWER_MAX], text[4096];
     char caption[128];
-    uint16_t starts[INK_AI_ANSWER_MAX + 1];
+    uint16_t starts[PAGES_MAX + 1];
     int page, pages;
     bool hidden, speaking, expanded;
     const ink_ui_overlay_t *overlay;
@@ -69,7 +70,7 @@ static void paginate(int from) {
             if (size.y > h) break;
             end = next;
         }
-        if (end == at && at < len) { A.pages = 0; break; }
+        if ((end == at && at < len) || A.pages >= PAGES_MAX) { A.pages = 0; break; }
         at = end; A.starts[++A.pages] = (uint16_t)at;
     } while (at < len);
     if (A.page >= A.pages) A.page = A.pages ? A.pages - 1 : 0;
