@@ -37,8 +37,9 @@ void ink_ui_datetime_picker(lv_obj_t *parent, const int parts[INK_UI_DATETIME_PA
         ink_ui_line(parent, text, INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_MARGIN + INK_PRIMARY + INK_GAP_M,
                     y + INK_GAP_L, w - 2 * (INK_PRIMARY + INK_GAP_M));
         for (int plus = 0; plus < 2; plus++) {
-            lv_obj_t *button = ink_ui_pill(parent, plus ? "+" : "−", plus ? INK_CANVAS_W - INK_MARGIN - INK_PRIMARY : INK_MARGIN,
+            lv_obj_t *button = ink_ui_pill(parent, "", plus ? INK_CANVAS_W - INK_MARGIN - INK_PRIMARY : INK_MARGIN,
                                            y, INK_PRIMARY, INK_CONTROL, false, NULL, NULL);
+            lv_obj_center(ink_ui_icon(button, plus ? "plus" : "minus", INK_ICON_MEDIUM, INK_ICON_LINE, 0, 0, false));
             bind(button, i, plus ? 1 : -1);
         }
     }

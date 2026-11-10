@@ -90,6 +90,14 @@ static void inspect_buttons(lv_obj_t *obj) {
             lv_area_t a; lv_obj_get_coords(obj, &a);
             if (!compare) time_buttons[buttons] = a;
             else CHECK(!memcmp(&a, &time_buttons[buttons], sizeof a), "both pickers share button geometry #%d", buttons);
+            const void *src = NULL;
+            for (uint32_t i = 0; i < lv_obj_get_child_count(obj); i++) {
+                lv_obj_t *child = lv_obj_get_child(obj, (int32_t)i);
+                if (lv_obj_check_type(child, &lv_image_class)) src = lv_image_get_src(child);
+            }
+            lv_obj_t *icon = ink_ui_icon(lv_screen_active(), buttons % 2 ? "plus" : "minus", INK_ICON_MEDIUM, INK_ICON_LINE, 0, 0, false);
+            CHECK(src && src == lv_image_get_src(icon), "picker step uses the packed plus/minus icon #%d", buttons);
+            lv_obj_delete(icon);
         }
         buttons++;
     }
@@ -115,7 +123,8 @@ static void picker(void) {
     call("system.home", NULL); call("reminder.new", NULL);
     call("reminder.draft", "{\"year\":2028,\"month\":2,\"day\":28,\"hour\":10,\"minute\":20}");
     call("reminder.time", NULL); compare = true; on_ui(inspect_picker); frame("reminder-picker");
-    touch("+"); on_ui(read_page); CHECK(strstr(snapshot, "2029-02-28"), "shared year button still uses reminder.draft");
+    lv_area_t a = time_buttons[1]; tap((a.x1 + a.x2) / 2, (a.y1 + a.y2) / 2); quiet();
+    on_ui(read_page); CHECK(strstr(snapshot, "2029-02-28"), "shared year button still uses reminder.draft");
 }
 
 static lv_obj_t *expression, *result;
