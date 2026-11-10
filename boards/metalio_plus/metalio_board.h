@@ -28,6 +28,11 @@
 #define MB_P1_PWR_PULSE 0x08  /* power-off pulse to the power chip */
 #define MB_P1_SHARED_PWR 0x10 /* 4G + Bluetooth audio + amplifier supply, high = on */
 #define MB_P1_RTC_INT 0x40
+/* P16's level while the clock chip's interrupt is pending. Measured on our unit (docs/hardware/2026-11-10-selftest.md,
+ * round 6): 0 when idle, 1 while the timer flag is set. The vendor's board 1.4 code reads it active low
+ * (periph/metalio_rtc.cc:33-38; config.h:86 says 1.4 no longer goes through a MOSFET), so this unit likely does. */
+#define MB_RTC_INT_ACTIVE_HIGH 1
+#define MB_RTC_PENDING(p1) ((((p1) & MB_P1_RTC_INT) != 0) == (MB_RTC_INT_ACTIVE_HIGH != 0))
 #define MB_P1_POWER_KEY 0x80
 #define MB_P1_KEYS (MB_P1_VOL_UP | MB_P1_VOL_DOWN | MB_P1_POWER_KEY)
 

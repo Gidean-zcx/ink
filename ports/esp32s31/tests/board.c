@@ -11,7 +11,7 @@ struct hal_i2c_dev { int unused; };
 static struct osal_mutex lock;
 static struct hal_i2c_dev dev;
 static uint8_t regs[8];
-static uint8_t rtc_low;
+static uint8_t rtc_pending; /* the clock chip's interrupt is pending: P16 at its active level */
 static uint64_t now;
 typedef struct { bool read; uint8_t reg, value; uint64_t at; } transfer_t;
 enum { TRANSFER_CAP = 64 };
@@ -50,7 +50,7 @@ hal_i2c_status_t hal_i2c_write_read(hal_i2c_dev_t *d, const uint8_t *w, size_t w
     assert(d == &dev && wn == 1 && rn == 1 && *w < sizeof regs);
     /* No external input is active: input pins high, output pins follow their latch. */
     *r = *w < 2 ? (uint8_t)(regs[2 + *w] | regs[6 + *w]) : regs[*w];
-    if (*w == 1 && rtc_low) *r &= (uint8_t)~MB_P1_RTC_INT;
+    if (*w == 1) *r = (rtc_pending != 0) == (MB_RTC_INT_ACTIVE_HIGH != 0) ? (uint8_t)(*r | MB_P1_RTC_INT) : (uint8_t)(*r & ~MB_P1_RTC_INT);
     record(true, *w, *r);
     return HAL_I2C_OK;
 }
@@ -82,7 +82,7 @@ int main(void) {
     reset_trace();
     assert(metalio_board_arm_wake(true, true) == HAL_I2C_OK);
     expect(0, false, 7, 0x40);
-    expect(1, true, 1, 0xD7);
+    expect(1, true, 1, MB_RTC_INT_ACTIVE_HIGH ? 0x97 : 0xD7); /* P16 idle */
     expect(2, false, 7, 0xC0);
     assert(count == 3 && regs[6] == 0 && !(regs[3] & MB_P1_RTC_INT));
     reset_trace();
@@ -97,7 +97,7 @@ int main(void) {
     expect(1, false, 6, 0xC0);
     expect(2, false, 7, 0xE3);
     expect(3, true, 0, 0xC0);
-    expect(4, true, 1, 0xE7);
+    expect(4, true, 1, MB_RTC_INT_ACTIVE_HIGH ? 0xA7 : 0xE7); /* P16 idle */
     assert(count == 5);
     reset_trace();
     assert(metalio_board_restore_rails() == HAL_I2C_OK);
@@ -112,7 +112,7 @@ int main(void) {
     assert(metalio_board_cut_rails(true) == HAL_I2C_OK);
     assert(count == 1 && (regs[3] & MB_P1_SHARED_PWR));
     assert(metalio_board_mask_for_sleep(true) == HAL_I2C_OK);
-    rtc_low = true; /* An alarm became active during masking, before the wake input is enabled. */
+    rtc_pending = true; /* An alarm became active during masking, before the wake input is enabled. */
     reset_trace();
     assert(metalio_board_arm_wake(true, true) == HAL_I2C_ERR);
     assert(count == 2 && regs[7] == 0x40); /* POWER remains masked; the HAL restores normal inputs. */

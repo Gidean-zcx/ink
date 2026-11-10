@@ -80,7 +80,7 @@ hal_i2c_status_t metalio_board_arm_wake(bool power_key, bool rtc) {
     if (rtc) {
         s = tca9555_set_dir(&g_tca, 1, MB_P1_RTC_INT);
         if (s == HAL_I2C_OK) s = tca9555_read(&g_tca, 1, &levels);
-        if (s == HAL_I2C_OK && !(levels & MB_P1_RTC_INT)) s = HAL_I2C_ERR;
+        if (s == HAL_I2C_OK && MB_RTC_PENDING(levels)) s = HAL_I2C_ERR;
     }
     if (s == HAL_I2C_OK) s = tca9555_set_dir(&g_tca, 1, dir);
     metalio_board_unlock();

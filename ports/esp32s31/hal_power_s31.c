@@ -122,7 +122,7 @@ uint32_t hal_power_sleep(const hal_sleep_cfg_t *cfg) {
     if (metalio_board_read(0, &p0) != HAL_I2C_OK || (p0 & (MB_P0_AMP | MB_P0_MOTOR))) return 0;
     uint32_t armed = cfg->wake_mask & (HAL_WAKE_POWER_KEY | HAL_WAKE_RTC | HAL_WAKE_MODEM | HAL_WAKE_MOTION);
     if (!cfg->keep_modem) armed &= ~(uint32_t)HAL_WAKE_MODEM;
-    if ((armed & HAL_WAKE_RTC) && (metalio_board_read(1, &p1) != HAL_I2C_OK || !(p1 & MB_P1_RTC_INT))) {
+    if ((armed & HAL_WAKE_RTC) && (metalio_board_read(1, &p1) != HAL_I2C_OK || MB_RTC_PENDING(p1))) {
         hal_log_write("power HAL: RTC wake line is not idle");
         return 0;
     }

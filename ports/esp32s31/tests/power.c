@@ -17,6 +17,9 @@ static char trace[256];
 static unsigned trace_n;
 static uint64_t now, wake_pins, armed_low, armed_high, timer_us, saved_low, saved_high, saved_timer;
 static uint32_t sources, resumed_cause;
+/* P16 at rest and with the clock chip's interrupt pending, whichever polarity the board has (metalio_board.h). */
+#define RTC_IDLE_P1 ((uint8_t)(MB_RTC_INT_ACTIVE_HIGH ? (uint8_t)~MB_P1_RTC_INT : 0xFF))
+#define RTC_PENDING_P1 ((uint8_t)(MB_RTC_INT_ACTIVE_HIGH ? 0xFF : (uint8_t)~MB_P1_RTC_INT))
 static uint8_t pre_p1, wake_p1, port0;
 static bool paused, suspended, slept, motion, haptic, low, watch, keep, cancel_sleep, late_busy, resumed_keys;
 static bool low_after_arm, low_after_cut, wake_armed, rails_cut, usb_connected;
@@ -34,7 +37,7 @@ static void reset(void) {
     trace[0] = 0;
     now = wake_pins = armed_low = armed_high = timer_us = saved_low = saved_high = saved_timer = 0;
     sources = resumed_cause = 0;
-    pre_p1 = wake_p1 = 0xFF;
+    pre_p1 = wake_p1 = RTC_IDLE_P1;
     port0 = 0;
     paused = suspended = slept = motion = haptic = low = watch = keep = cancel_sleep = late_busy = resumed_keys = false;
     mask_fail = cut_fail = keys_fail = rails_fail = sleep_rc = pending = resume_calls = 0;
@@ -215,7 +218,7 @@ int main(void) {
     reset();
     sources = 1u << ESP_SLEEP_WAKEUP_EXT1;
     wake_pins = 1ull << S31_GPIO_EXP_INT;
-    wake_p1 = (uint8_t)~(MB_P1_RTC_INT | MB_P1_POWER_KEY);
+    wake_p1 = (uint8_t)(RTC_PENDING_P1 & ~MB_P1_POWER_KEY);
     motion = true;
     assert(hal_power_sleep(&cfg) == cfg.wake_mask && resumed_cause == cfg.wake_mask && watch && !keep);
     assert(saved_low == (1ull << S31_GPIO_EXP_INT) && saved_timer == cfg.max_us);
@@ -239,7 +242,7 @@ int main(void) {
     wake_pins = 1ull << S31_GPIO_EXP_INT;
     assert(hal_power_sleep(&cfg) == HAL_WAKE_POWER_KEY); /* released wake press is still delivered */
     reset();
-    pre_p1 = (uint8_t)~MB_P1_RTC_INT;
+    pre_p1 = RTC_PENDING_P1;
     sources = 1u << ESP_SLEEP_WAKEUP_TIMER;
     assert(hal_power_sleep(&cfg) == 0 && !slept && trace_n == 0);
 

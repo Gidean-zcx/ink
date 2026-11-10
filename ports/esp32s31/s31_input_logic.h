@@ -96,7 +96,7 @@ static inline void s31_touch_frame(s31_contact_t *rp, const ft6336u_point_t *pts
 
 static inline uint32_t s31_wake_gpio2(uint32_t armed, bool read_ok, uint8_t p1, bool moved) {
     uint32_t why = 0;
-    if ((armed & HAL_WAKE_RTC) && read_ok && !(p1 & MB_P1_RTC_INT)) why |= HAL_WAKE_RTC;
+    if ((armed & HAL_WAKE_RTC) && read_ok && MB_RTC_PENDING(p1)) why |= HAL_WAKE_RTC;
     if ((armed & HAL_WAKE_MOTION) && moved) why |= HAL_WAKE_MOTION;
     if ((armed & HAL_WAKE_POWER_KEY) && (!read_ok || !(p1 & MB_P1_POWER_KEY) || !why)) why |= HAL_WAKE_POWER_KEY;
     return why;

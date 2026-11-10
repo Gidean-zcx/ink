@@ -80,15 +80,18 @@ static void touch(void) {
     assert(count == 4 && events[3].key.key == HAL_KEY_NEXT && !events[3].key.pressed);
 }
 
+/* P16 at rest and with the clock chip's interrupt pending, whichever polarity the board has (metalio_board.h). */
+#define RTC_IDLE_P1 ((uint8_t)(MB_RTC_INT_ACTIVE_HIGH ? (uint8_t)~MB_P1_RTC_INT : 0xFF))
+#define RTC_PENDING_P1 ((uint8_t)(MB_RTC_INT_ACTIVE_HIGH ? 0xFF : (uint8_t)~MB_P1_RTC_INT))
 static void wake(void) {
     uint32_t all = HAL_WAKE_POWER_KEY | HAL_WAKE_RTC | HAL_WAKE_MOTION;
-    assert(s31_wake_gpio2(all, true, 0xFF, false) == HAL_WAKE_POWER_KEY); /* short press already released */
-    assert(s31_wake_gpio2(all, true, (uint8_t)~MB_P1_RTC_INT, false) == HAL_WAKE_RTC);
-    assert(s31_wake_gpio2(all, true, 0xFF, true) == HAL_WAKE_MOTION);
-    assert(s31_wake_gpio2(all, true, (uint8_t)~(MB_P1_RTC_INT | MB_P1_POWER_KEY), true) == all);
-    assert(s31_wake_gpio2(all, false, 0xFF, false) == HAL_WAKE_POWER_KEY);
-    assert(s31_wake_gpio2(HAL_WAKE_MOTION, true, 0xFF, true) == HAL_WAKE_MOTION);
-    assert(s31_wake_gpio2(HAL_WAKE_RTC, true, 0xFF, false) == 0); /* no fabricated RTC cause */
+    assert(s31_wake_gpio2(all, true, RTC_IDLE_P1, false) == HAL_WAKE_POWER_KEY); /* short press already released */
+    assert(s31_wake_gpio2(all, true, RTC_PENDING_P1, false) == HAL_WAKE_RTC);
+    assert(s31_wake_gpio2(all, true, RTC_IDLE_P1, true) == HAL_WAKE_MOTION);
+    assert(s31_wake_gpio2(all, true, (uint8_t)(RTC_PENDING_P1 & ~MB_P1_POWER_KEY), true) == all);
+    assert(s31_wake_gpio2(all, false, RTC_IDLE_P1, false) == HAL_WAKE_POWER_KEY);
+    assert(s31_wake_gpio2(HAL_WAKE_MOTION, true, RTC_IDLE_P1, true) == HAL_WAKE_MOTION);
+    assert(s31_wake_gpio2(HAL_WAKE_RTC, true, RTC_IDLE_P1, false) == 0); /* no fabricated RTC cause */
     assert(s31_wake_gpio2(0, true, 0, true) == 0);
 }
 
