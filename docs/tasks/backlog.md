@@ -2,7 +2,7 @@
 
 用户要求：先夯实系统层的能力缺口和质量，再补齐系统级别的应用与应用框架，**暂不开发具体应用**（阅读、听、报纸、单词都不做），都做完再做底层性能优化。总规则见 [codex-rules.md](codex-rules.md)。
 
-**状态（2026-11-09）：** 已合入 `services-mid`、`member-wake`、`capability-table`、`device-events`、`pairing`、`backup-restore`、`confirm-durable`、`file-index`（拆成 `file-index-1`、`file-index-2`）、`wireless-transfer`，应用框架的 F1、F2、F5（`ui-semantics`、`ui-input-host`、`ui-cards`），以及只写报告的 `phone-gap`（对照完成标准 R-068 查缺口）和 `speech-cache`（DE-R6 早已修好）。下午又合入：框架 F4、F9（`ui-list-paging`、`ui-file-picker`）、`text-long`、`thumb-wiring`，系统应用 `boot-flow`、`contacts`、`clock-alarm`、`ai-chat`、`phone-calls`、`sms`、`memo`、`settings-a`、`power-pages`。`member-quiesce` 做完但不合入，原因见该节。应用框架的选择已定（D-111）。晚上又合入：`kid-1`、`update-pages`、`calendar`、`confirm-pages`、`search`（F7）、`files-app-1`、`camera-gallery`、`backup-pages`、`ai-pages-2`、`settings-b`；从 batch3 起每个任务由主会话复查、合并后整批交 astra 审一轮（1 小时以内）。batch4 已合入：`activity-card`（F6）、`remote-app`、`fw-f8`、`kid-2`、`storage-usage`、`transfer-pages`，以及 batch3 审计的九条修复 `audit3-fix`；batch4 审计的三条修复 `audit4-fix` 已合入。**2026-11-10：** batch5（`privacy-records`、`kid-3`、`file-index-3`、`factory-pages`、`fw-f13`、`port-skeleton`）和 batch6（`perf-memory`、`perf-latency`、`script-s31`）都已合入，两批合在一起的 astra 审计（batch5，高 1、中 2）的修复 `audit5-fix`（B5-01、B5-03、S31 等待换算）和 `index-durable`（B5-02）已合入。batch7（`storage-order`、`fw-gaps`、`sound-clock`、`phone-2`、`ui-fidelity`）全部合入，它的 astra 审计在跑。batch7 审计（高 2、中 2）的修复 `audit7-fix` 在跑。batch9（`ime-lexicon` 正式词库、`set-bluetooth` 蓝牙设置页、`index-cost` 索引代价报告）已合入，它的 astra 审计在跑。batch10（`index-compact` 索引记录按实际长度存、`ime-quality` 简拼和学词、`settings-gaps` 补设置入口）和 batch9 审计的修复 `audit9-fix` 已合入，它们的 astra 审计（batch10）在跑。在跑（batch11）：`confirm-hooks`（确认前的绑定和说明由能力自己提供）、`index-prune`（清掉索引里已不存在的文件的旧记录），任务书在本目录。合并时记下的后续事项见文末“合并时记下的”。
+**状态（2026-11-09）：** 已合入 `services-mid`、`member-wake`、`capability-table`、`device-events`、`pairing`、`backup-restore`、`confirm-durable`、`file-index`（拆成 `file-index-1`、`file-index-2`）、`wireless-transfer`，应用框架的 F1、F2、F5（`ui-semantics`、`ui-input-host`、`ui-cards`），以及只写报告的 `phone-gap`（对照完成标准 R-068 查缺口）和 `speech-cache`（DE-R6 早已修好）。下午又合入：框架 F4、F9（`ui-list-paging`、`ui-file-picker`）、`text-long`、`thumb-wiring`，系统应用 `boot-flow`、`contacts`、`clock-alarm`、`ai-chat`、`phone-calls`、`sms`、`memo`、`settings-a`、`power-pages`。`member-quiesce` 做完但不合入，原因见该节。应用框架的选择已定（D-111）。晚上又合入：`kid-1`、`update-pages`、`calendar`、`confirm-pages`、`search`（F7）、`files-app-1`、`camera-gallery`、`backup-pages`、`ai-pages-2`、`settings-b`；从 batch3 起每个任务由主会话复查、合并后整批交 astra 审一轮（1 小时以内）。batch4 已合入：`activity-card`（F6）、`remote-app`、`fw-f8`、`kid-2`、`storage-usage`、`transfer-pages`，以及 batch3 审计的九条修复 `audit3-fix`；batch4 审计的三条修复 `audit4-fix` 已合入。**2026-11-10：** batch5（`privacy-records`、`kid-3`、`file-index-3`、`factory-pages`、`fw-f13`、`port-skeleton`）和 batch6（`perf-memory`、`perf-latency`、`script-s31`）都已合入，两批合在一起的 astra 审计（batch5，高 1、中 2）的修复 `audit5-fix`（B5-01、B5-03、S31 等待换算）和 `index-durable`（B5-02）已合入。batch7（`storage-order`、`fw-gaps`、`sound-clock`、`phone-2`、`ui-fidelity`）全部合入，它的 astra 审计在跑。batch7 审计（高 2、中 2）的修复 `audit7-fix` 在跑。batch9（`ime-lexicon` 正式词库、`set-bluetooth` 蓝牙设置页、`index-cost` 索引代价报告）已合入，它的 astra 审计在跑。batch10（`index-compact` 索引记录按实际长度存、`ime-quality` 简拼和学词、`settings-gaps` 补设置入口）和 batch9 审计的修复 `audit9-fix` 已合入，它们的 astra 审计（batch10）在跑。batch11（`confirm-hooks`、`index-prune`）、batch10 审计修复 `audit10-fix`、batch11 审计（中 2）的修复 `audit11-fix` 都已合入。之后的安排见“2026-11-10 起：Claude 子代理接手”。合并时记下的后续事项见文末“合并时记下的”。
 
 **只做你被分配的那一节。** 每节按一小时左右规划，最多两小时；做不完的写进报告的“没做到的”，不要半成品冒充完成。报告写到 `docs/tasks/<节名>/REPORT.md`。
 
@@ -186,6 +186,38 @@
 - 【要用户定】settings-gaps 清单里没有画板或数据设计的：日期时间和时区选择页、通知渠道、逐条删通知、新建文件夹、写文件、提醒的编辑和删除、文字重做、没连上的已存 Wi-Fi 管理、离开多久要重新验证（D-95）、语音备忘录音和备忘怎么关联。
 - 【后续】确认策略按能力名特判（batch11 confirm-hooks 在做）；索引旧记录占上限（batch11 index-prune 在做）。
 - 【做法】Linux CI 的 gcc 会报 clang 不报的截断和有无符号混用，S31 不编测试文件也抓不到：合并时用 ink-codex/tools/gcccheck.py（本机的 RISC-V gcc 按 compile_commands.json 编改动的 C 文件）。CI 只检出一个提交，注册进 ctest 的脚本不能用 git 历史。
+
+## 2026-11-10 起：Claude 子代理接手（batch12 起）
+
+Codex 额度用完，任务改由 Claude 子代理（思考等级 medium）在各自检出里做，主会话复核合并，每批合完由一个子代理独立审一轮。通用规矩在 `ink-codex/briefs/subagent-rules.md`（仓库外），任务书仍放本目录。依据：[phone-gap-2](phone-gap-2/REPORT.md) 和用户 11-10 的回答（D-112～D-126，R-069～R-071）。
+
+**在做（batch12）：** `reader-continue`（继续读）、`airplane-mode`（飞行模式、省电保留）、`calculator`（计算器，顺带“全部”页 16 个应用的上限）、`ai-icon`（重画 AI 图标）、`ai-answer-long`（AI 长回答不丢字）。
+
+**排队（大致按这个顺序，互相改同一批文件的先后做）：**
+
+| 任务 | 内容 | 依据 |
+| --- | --- | --- |
+| `sms-multipart` | 收到的分段长短信拼成一条，超过 70 字的发送分段 | phone-gap-2 A2；等 airplane-mode 合入（都改通信服务和 NT26 模型） |
+| `memo-record` | 先量 Opus 和 ADPCM 的体积、内存、处理器占用、文件大小，按数字定编码（D-112）；录音成文件，MemoRecord、MemoPending | D-112 |
+| `i18n-1` | 多语言机制：字符串表、语言设置、运行中切换，中文原文作键、缺译回退中文；先迁一小块页面 | R-069、D-116 |
+| `i18n-2` 起 | 其余页面迁移和英文译文，英文下的排版 | 等页面类任务少的时候成批做 |
+| `port-hal-1` 起 | S31 端口的 HAL：I2C、GPIO 中断、UART、板级芯片接线，只编译不上机；屏幕输出层自己写（D-124），先评估工作量 | phone-gap-2 C；只改 `ports/esp32s31/` |
+| `weather` | 家庭中枢取免费天气数据（测试用假数据，不联网），设备只给城市；今日屏卡片、天气页、能力 | D-125 |
+| `time-settings` | 日期时间、时区设置页（含时区数据），离开多久要重新验证（D-95）的控件 | D-117、INVENTORY |
+| `clock-extras` | 秒表、世界时钟（用 time-settings 的时区数据） | D-125 |
+| `emergency-call` | 锁屏不解锁、飞行模式下都能拨紧急电话 | D-119；等 airplane-mode |
+| `lock-camera` | 锁屏相机入口，只能拍、看不了以前的照片 | D-121 |
+| `accel-use` | 拿起亮屏、静止省电 | D-122 |
+| `mobile-network` | 接入点设置、流量统计、漫游开关 | D-125；等 sms-multipart |
+| `kid-apps` | 孩子的应用名单和禁用时段 | D-126 |
+| `qr-scan` | 先评估识别库（识别率、内存、固件增量），再接进相机 | D-125 |
+| `notify-manage`、`files-ops`、`reminder-edit`、`wifi-saved`、`text-redo` | 通知渠道和逐条删除；新建文件夹、写文件、多选；提醒的添加修改删除；没连上的已存 Wi-Fi；文字重做 | D-117、INVENTORY |
+| `semantics-shell-1`、`semantics-shell-2` | 剩下手写快照的壳页面迁到控件语义 | phone-gap-2 A3、A4 |
+| `voice-interrupt-setting`、`about-details-licenses`、`call-minutes`、`power-pages-member` | 设置里“暂不能”的两项、设备详情和开源许可、通话分钟数、电量页换家人 | phone-gap-2 A6～A9 |
+| `open-app-latency` | 打开应用约 1 秒的时间去处，只留有实测收益的改动 | phone-gap-2 A10，最后单独做 |
+| `ui-deps-refresh` | ui-dependencies.md 的过时状态 | phone-gap-2 A12 |
+
+不做或先不做（用户 11-10 定）：蓝牙音箱和翻页器、无障碍、热点。
 
 ## 性能
 
