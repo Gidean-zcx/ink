@@ -8,12 +8,12 @@
 | --- | --- | --- | --- |
 | A1-1 键盘 | 专项通过【实测／实现】 | 同一 F1 声明导出候选、拼音、模式；密码与隐藏通话输入只有有无；旧点按、旧 AI 页版本拒绝；实际 3072 字节组合快照核查 | `ctest --test-dir build -R '^semantics-shell2-keyboard$' --output-on-failure` |
 | A1-2 AI 面板 | 专项通过【实测／实现】 | 保留原 F1 字段／动作，更新对象版本；回答变化后旧收起点按拒绝 | 同上，测试名换 `semantics-shell2-ai` |
-| A1-3 家人表单 | 专项通过【实测／实现】 | MemberSwitch、member_gate、PinSet、PinForgot（含家长输入）、PinWait；PIN 一位／三位快照相同，提交没有开放给 AI，旧数字键拒绝 | 同上，测试名换 `semantics-shell2-member` |
+| A1-3 家人表单 | 专项通过【实测／实现】 | MemberSwitch、member_gate、PinSet、PinForgot（含家长输入）、PinWait；PIN 一位／三位快照相同，提交没有开放给 AI，旧表单按钮拒绝 | 同上，测试名换 `semantics-shell2-member` |
 | A1-4 孩子页 | 专项通过【实测／实现】 | KidLimit／KidTimeUp；家长密码继续走本人表单；旧取消点按拒绝 | 同上，测试名换 `semantics-shell2-kid` |
 | A1-5 电量页 | 专项通过【实测／实现】 | BatteryLow／BatterySaving／Charging／off；只导出真实动作，旧目标拒绝，无关成员事件不重画 | 同上，测试名换 `semantics-shell2-battery` |
 | A1-6 主页 | 专项通过【实测／实现】 | Main／Apps／Today 共用现有声明与语义导出；旧主页点按和应用图标拒绝 | 同上，测试名换 `semantics-shell2-home` |
 | A2 原测试／hub／全量／内存／S31／gcccheck | 待最终验证 | 首轮相关 13 项全部通过；已有测试和期望未改 | 完整结果待补 |
-| A3 行数与预算 | 通过【实现】 | 产品代码净增约 130 行，低于 250 行；最终行数待复核 | `git diff --numstat <基线> -- system apps` |
+| A3 行数与预算 | 通过【实现】 | 产品代码净增 156 行；连 CMake 注册保守计 165 行，低于 250 行 | `git diff --numstat <基线> -- system apps` |
 
 主机构建／测试均使用 `taskpolicy -c utility`，并行最多 `-j2`。日志保存在忽略目录 `work/semantics-shell-2/`，临时证据保存在 `build/test-out/semantics-shell2-*`。
 
@@ -55,3 +55,8 @@
 - 开工：工作区干净，位于指定基线的独立任务分支；前置 semantics-shell-1 已合入。
 - 第一轮相关回归：`focused-5.log`，原文 `100% tests passed out of 13`，耗时 15.96 秒，退出 0。
 - 超过 100 行的原因：同时覆盖六组页面、秘密字段、原有动作及真实按下事件，且必须兼容原快照格式。更小的只替换文本方案不会拒绝旧点按；全部改成嵌套 F1 JSON 的方案已由旧回归证实会破坏组合快照和 Apps 前缀。
+- 首轮全量：`ctest-full.log`，353 项中 9 项失败，483.19 秒，退出 8；依次定位旧文案、活动卡分隔符、共享绑定器误扩展到相机页、键盘借用浮层版本、数字输入误用底页版本，以及候选展开被无关入口变化打断。均已修正，未修改原测试。
+- 两项遗留失败的对照：`existing-baseline.log`，同一构建中换回基线键盘、家人表单，原大字号候选与完整家人流程均退出 0。临时探针 `control-trace.log` 分别测到一个过期候选对象／页版本和一个过期 PIN 数字事件；探针只存在于忽略目录。
+- 修复后专项：`focused-input.log`，新增六项及大字号候选、完整家人流程共 8／8，6.05 秒，退出 0。`focused-compat.log` 中原 hub 契约、组合快照、活动卡、扫码也已通过。
+- 数字键保留原可信本地输入路径（成员 epoch、忙碌、等待保护和运行时触摸代数）；表单动作核对按下版本。将底页版本套到每个数字会吞掉真实输入，数字不是对 AI 开放的语义动作。候选展开使用独立布局对象版本，复用既有 F1 的动作对象引用。
+- 六组反向对照：`reverse-final.log`。键盘、家人、孩子、电量、主页替换为指定基线源文件，仅在构建目录编译和链接；各测试程序退出 1，分别 13、10、3、7、8 个断言失败。AI 面板基线已使用 F1，因此该组只撤掉新增的过期点按保护，退出 1，2 个断言失败。六个验证脚本均退出 0；ctest 默认模式不依赖 Git 历史。

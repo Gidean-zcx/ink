@@ -30,7 +30,7 @@ static void view(const char *name) {
           sscanf(v, "\"page_version\":%u", &pv) == 1 && pv == ink_ui_content_version() &&
           sscanf(r, "\"revision\":%u", &rev) == 1 &&
           sscanf(o, "\"object\":{\"id\":\"%63[^\"]", object_id) == 1,
-          "%s uses the semantic JSON contract: %.100s", name, test_semantic);
+          "%s uses the semantic JSON contract", name);
     test_page_version = pv; test_object_revision = rev;
     osal_free(j);
     CHECK(!strstr(test_snapshot, "FAKE_SHELL2_SECRET"), "%s exports no secret text", name);
