@@ -6,7 +6,7 @@
  */
 #include <stdio.h>
 #include <string.h>
-
+#include "ink/sys/i18n.h"
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/json.h"
@@ -181,8 +181,8 @@ static void apply_job(void *arg) { /* on the setting's apply executor */
 }
 
 static void value_text(const ink_setting_def_t *d, int64_t v, char *out, size_t cap) {
-    if (d->type == INK_SET_ENUM && v >= 0 && v < nchoices(d)) snprintf(out, cap, "%s", d->choices[v]);
-    else if (d->type == INK_SET_BOOL) snprintf(out, cap, "%s", v ? "开" : "关");
+    if (d->type == INK_SET_ENUM && v >= 0 && v < nchoices(d)) snprintf(out, cap, "%s", !strcmp(d->id, "system.language") || (unsigned char)d->choices[v][0] < 128 ? d->choices[v] : TR(d->choices[v]));
+    else if (d->type == INK_SET_BOOL) snprintf(out, cap, "%s", v ? TR("开") : TR("关"));
     else snprintf(out, cap, "%lld", (long long)v);
 }
 
@@ -231,7 +231,7 @@ static ink_rc_t setting_set(const char *id, int64_t v, ink_source_t src, bool ch
     snprintf(rc->object, sizeof rc->object, "setting:%s", id);
     char vt[32];
     value_text(d, v, vt, sizeof vt);
-    snprintf(rc->say, sizeof rc->say, "%s：%s", d->title, vt);
+    snprintf(rc->say, sizeof rc->say, TR("%s：%s"), TR(d->title), vt);
     /* also the same value again: its owner looks once more at what the hardware does (the job reads the newest value) */
     if (d->apply) ink_exec_post(d->apply_exec, &SE.it[i].apply, apply_job, &SE.it[i]);
     if (changed) {
@@ -324,7 +324,7 @@ static void cap_get(ink_call_t *c) {
     value_text(d, v, vt, sizeof vt);
     snprintf(c->rc.object, sizeof c->rc.object, "setting:%s", id);
     c->rc.revision = revision;
-    snprintf(c->rc.say, sizeof c->rc.say, "%s：%s", d->title, vt);
+    snprintf(c->rc.say, sizeof c->rc.say, TR("%s：%s"), TR(d->title), vt);
 }
 
 static void via_done(void *ctx, const ink_receipt_t *rc) { /* the setting's own capability answered */
@@ -403,7 +403,7 @@ static const ink_cap_t SETTINGS_CAPS[] = {
      .run = cap_get},
     {.id = "settings.set",
      .title = "改一项设置",
-     .ask = "把设置 {id} 改成 {value}",
+     .ask = TR_NOOP("把设置 {id} 改成 {value}"),
      .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":39},"
               "\"value\":{\"type\":[\"integer\",\"boolean\",\"string\"]},\"expected_revision\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":4294967295}},\"required\":[\"id\",\"value\"]}",
      .effect = INK_FX_LOCAL_WRITE,

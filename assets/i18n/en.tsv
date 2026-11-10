@@ -590,3 +590,315 @@ SetSound；音量=%lld；勿扰=%lld；按键提示音(audio.key_tone)=%lld；�
 ◀	◀
 ▶	▶
 %s · %s	%s\n%s
+%d 条短信，最近一条来自 %s：%s	%d messages. Latest from %s: %s
+%s 下载好了，可以安装	%s downloaded. Ready to install
+%s 没装成，还是原来的系统	%s wasn't installed. Previous system kept
+%s：%s	%s: %s
+AI 可以读剪贴板	Let AI read clipboard
+AI 正在听或在说，或者正在通话，等它结束再录	Finish AI or the call before recording
+SIM 卡	SIM
+U 盘模式已开启	USB storage is on
+Wi-Fi 已关闭，先打开 Wi-Fi	Turn on Wi-Fi first
+【短信不完整】	[Incomplete message]
+一次说得太长了，先到这里	Message too long. Stopped here
+上网方式	Connection
+下载好了，可以安装	Downloaded. Ready to install
+下载系统更新 %.20s	Download update %.20s
+不支持此传输方式	Transfer method not supported
+亮度	Brightness
+今天加 {minutes} 分钟	Add {minutes} minutes today
+今天的额度用完了	Today's limit reached
+今天的额度用完了，用键盘吧	Today's limit reached. Use the keyboard
+从 {collection} 删除第 {id} 条	Delete item {id} from {collection}
+从存储卡加入文件中的家庭？	Join the family in the SD card file?
+从存储卡安装新系统，装完重启	Install from SD card and restart
+从第 %u 秒开始放	Playing from %u seconds
+传输中断	Transfer interrupted
+传输已关闭	Transfer closed
+传输已开启、空间未解锁或无线网络不可用	Transfer busy, space locked, or Wi-Fi unavailable
+你问：%s	You asked: %s
+修改孩子 {id} 的应用 {app}	Change app {app} for child {id}
+修改孩子 {id} 的禁用时段	Change quiet hours for child {id}
+停下了	Stopped
+停下了，下次接着下载	Stopped. Resume next time
+关机画面没显示成功，请重试	Shutdown screen failed. Try again
+内存不够	Not enough memory
+内存不够，请重试	Not enough memory. Try again
+内部存储可能满了，系统会再试	Storage may be full. We'll try again
+再睡 10 分钟	Snooze 10 min
+出了点问题，请再试一次	Something went wrong. Try again
+删好了	Deleted
+删掉了	Deleted
+删除 {member} 的全部活动记录，找不回来。对话、记忆和运行记录暂不能删除。	Delete all activity for {member}. Cannot undo. Chats, memories and logs stay
+删除 {path}，不能撤销	Delete {path}. Cannot undo
+删除家人 {id} 和他们的全部数据，不能撤销	Delete {id} and all their data. Cannot undo
+删除这些文件 {ids}{all_path}，不能撤销	Delete these files {ids}{all_path}. Cannot undo
+加一位家人：{name}（{role}）	Add {name} ({role}) to the family
+加入请求已变化	Join request changed
+加入请求已变化，请重新查看	Join request changed. Review it again
+勿扰	Do Not Disturb
+单词没能存下	Couldn't save the word
+发现系统更新	Update available
+发短信	Send message
+发短信给 %s：%.60s%s%s	Text %s: %.60s%s%s
+发短信给 {to}：{text}	Text {to}: {text}
+发送结果没能存下，请先核实	Couldn't save result. Check before resending
+取好了，没有存到相册	Captured. Not saved to Photos
+叫名字（什么时候在等）	Wake word
+可以升级到 %s	%s is available
+可以把存储卡当 U 盘用	Use the SD card as USB storage
+向 {_peer} 的本次通话发送按键 {key}	Send key {key} during the call with {_peer}
+否	No
+回到主页了	Home
+回答中	Answering
+回答完成 · 声音没能播放 · 按 AI 键继续问	No audio. Press AI to ask more
+回答完成 · 按 AI 键继续问，按 HOME 关闭	Press AI to ask more, HOME to close
+声音没能播放，文字回答在上面	No audio. Read the answer above
+备份记录暂时写不进去，请稍后再试	Can't save backup status. Try again later
+备份记录暂时读不出来，请稍后再试	Can't read backup status. Try again later
+备份资料	Back up data
+备份资料校验或写入失败，原件仍保留	Backup check or write failed. Originals kept
+大人锁屏多久后要重新输密码（秒）	Require password after lock (seconds)
+好的，%.16s	OK, %.16s
+字库和资源没写好。把升级包放在存储卡上，重启时再试	Resources not saved. Put update on SD card and restart
+存储卡上的个人文件清掉了	Personal files removed from SD card
+存储卡借给电脑了，先收回再清空	Disconnect USB storage before erasing
+存储卡回来了	SD card available again
+存储卡已经给电脑了，用完请先在电脑上弹出	USB storage on. Eject on your computer when done
+存储卡满了	SD card full
+存储空间不足	Storage full
+存储空间不足或写入失败	Storage full or write failed
+孩子的音量上限	Child volume limit
+安装新系统，装完重启	Install update and restart
+家庭服务器没有回应，请再试一次	Family server didn't respond. Try again
+家庭服务器设置没能保存，请检查地址、公钥和存储	Couldn't save server settings. Check address, key and storage
+尚未开启	Not started
+屏幕刷新一下	Screen refreshed
+已保存，正在关机	Saved. Shutting down
+已关闭 Wi-Fi	Wi-Fi off
+已关闭省电，按原设置锁屏	Power saving off. Lock settings restored
+已关闭飞行模式，Wi-Fi 和蓝牙回到原来的样子	Airplane mode off. Wi-Fi and Bluetooth restored
+已听够 30 秒，正在想…	30 seconds recorded. Thinking...
+已备份	Backed up
+已恢复，请重新开机	Restored. Please restart
+已打开 Wi-Fi	Wi-Fi on
+已打开省电，1 分钟锁屏，原设置保留	Power saving on. Lock after 1 min. Settings kept
+已打开飞行模式：4G、Wi-Fi 和蓝牙都关了，AI 要等关掉才能用；闹钟照常	Airplane mode on. 4G, Wi-Fi, Bluetooth and AI off. Alarms still work
+已记录问题 #%u	Problem #%u recorded
+开始下载，下好了告诉你	Downloading. We'll notify you when ready
+开始录音	Start recording
+当前没有可用的通话，请重新操作。	No active call. Try again
+忘掉 Wi-Fi：{ssid}	Forget Wi-Fi {ssid}
+恢复资料	Restore data
+恢复预览中的备份，将替换这位成员的现有资料。请先核对备份清单。	Restore this backup and replace this person's data. Check the list first
+成员已变化	User changed
+打开语音输入（声音会发给家庭服务器）	Start dictation. Audio goes to the family server
+打电话	Call
+打电话给 {number}	Call {number}
+把系统时间改成 {utc_s}（UTC 秒）	Set time to {utc_s} (UTC seconds)
+把设置 {id} 改成 {value}	Set {id} to {value}
+拷贝好了	Copied
+拿起亮屏（平放不动 3 分钟先锁屏）	Raise to Wake
+挂断了	Call ended
+授权或接收已超时	Authorization or upload timed out
+授权码不正确或已失效	Code incorrect or expired
+授权码错误次数过多，已关闭	Too many wrong codes. Closed
+接听	Answer
+接着说	Keep speaking
+接通了	Connected
+撤销了	Undone
+文件保存失败	Couldn't save file
+文件名不合法	Invalid filename
+文件名或长度不合法	Invalid filename or length
+文件已存在	File already exists
+文件已收到	File received
+文件操作失败	File operation failed
+文件长度不符	File length mismatch
+无线连接已断开	Wi-Fi disconnected
+日志已导出到存储卡 ink-logs	Logs exported to ink-logs on SD card
+日志未导出，请检查存储卡或稍后重试	Export failed. Check SD card or try later
+旧备份没有成员身份记录，请重新备份	Old backup has no user identity. Back up again
+时间改好了	Time set
+是	Yes
+暖光（越大越暖）	Warmth
+有内容还没保存好	Some changes aren't saved
+未接来电	Missed call
+未插存储卡	Insert an SD card
+来电铃声	Ringtone
+模组没有确认，请重试	Modem didn't confirm. Try again
+正在停下	Stopping
+正在听…松开 AI 键结束	Listening... Release AI to finish
+正在录音，先停了再说	Stop recording before dictating
+正在录音，先停了再问	Stop recording before asking
+正在想…	Thinking...
+正在放声音或录音，结束后再试	Finish playback or recording, then try again
+每天能用 {minutes} 分钟（0 表示不限）	Allow {minutes} minutes a day (0 for unlimited)
+没下载成	Download failed
+没做成	Failed
+没听到，请再按 AI 键说一遍	Didn't hear you. Press AI and try again
+没听到：没能开始听，请稍后再按 AI 键	Couldn't listen. Press AI again later
+没听清	Didn't catch that
+没有新短信	No new messages
+没有连接蓝牙耳机，请先连接耳机	Connect Bluetooth headphones first
+没有长文在编辑	No long text is open for editing
+没能导入配对文件，请检查文件和存储卡	Couldn't import setup. Check file and SD card
+没能开启设备热点	Couldn't start device hotspot
+清理临时文件和未传完的文件，删了找不回来；缓存可以重新生成	Delete temporary and unfinished files. Cannot undo. Cache can be rebuilt
+清空这台设备时没来得及清的，现在清了	Files left by the device reset are now removed
+清空这台设备，马上重启	Erasing this device. Restarting
+清空这台设备，马上重启。存储卡不在，下次插上时再清卡上的	Erasing this device. Restarting. SD card will be erased when inserted
+清空这台设备：清掉所有家人的数据，不能撤销{_media}	Erase this device and all family data. Cannot undo{_media}
+清零本月和上个月的流量统计，不能撤销	Reset data usage for this and last month. Cannot undo
+状态太长	Status too long
+现在不能用语音输入	Dictation unavailable now
+现在是 %.16s	It is %.16s
+现在是 %s	Now running %s
+现在是%s的空间	Switched to %s's space
+现在没有网络，稍后再问我	Offline. Ask again later
+现在连不上，用键盘吧	Can't connect. Use the keyboard
+电量低	Low battery
+电量很低	Very low battery
+省电	Power Saving
+短信太长，最多分 %d 条发送，请删短一些	Message too long. Shorten it to at most %d parts
+短信没能存下，未发送	Couldn't save message. Not sent
+短信草稿不可用，未发送，请重新打开后再试	Draft unavailable. Not sent. Reopen and try again
+短信草稿已改变，未发送，请重新确认	Draft changed. Not sent. Review again
+示例问题（这台设备没有麦克风）：%s	Sample (no microphone): %s
+称呼太长	Name too long
+等待上传	Waiting for upload
+系统升级失败	Update failed
+系统升级好了	Update installed
+系统更新	System update
+系统更新还差一点	Update incomplete
+继续备份或恢复资料	Resume backup or restore
+网络断了，回答没收全，请再试一次	Disconnected. Answer incomplete. Try again
+耳机连上了	Headphones connected
+自动下载新版本（流量要钱，默认关）	Auto-download updates (uses data)
+自动校时（听家庭服务器的）	Set time automatically
+自动锁屏（秒）	Auto-Lock (seconds)
+语音输入暂时用不了	Dictation unavailable
+语音通道没能打开，请稍后再按 AI 键	Voice unavailable. Press AI again later
+说明太长，不能完整显示，请分成几次操作。	Details too long. Split into smaller actions
+请先完成加入或清空这台设备	Finish joining or erase this device first
+请在设备上操作	Do this on the device
+请插入存储卡后备份	Insert an SD card to back up
+请插入存储卡并退出 U 盘模式	Insert an SD card and exit USB storage
+请求不合法	Invalid request
+请求过长	Request too long
+请直接提供短信正文，不能同时提供正文和草稿；AI 不能发送草稿引用	Provide message text or a draft. AI must provide text
+请说	Speak now
+请选择一小段文字	Select a short passage
+输入已换人，请重新读取	Input user changed. Read again
+还剩 %d%%，请充电	%d%%. Charge now
+还有内容没保存，请稍后重试关机	Unsaved changes. Try shutting down later
+还没删完，请插好存储卡后重试；这位家人的编号暂时不能使用	Deletion incomplete. Insert SD card and retry. User ID unavailable
+这一页讲了什么？	What is this page about?
+这件事要你在设备上确认一下。	Please confirm on this device
+这位家人不能用语音输入	Dictation isn't allowed for this person
+这台设备的存储写不进去，没能清空	Storage write failed. Device not erased
+这次不再响	Dismiss
+连上了 %.60s	Connected to %.60s
+连接 Wi-Fi：{ssid}	Connect to Wi-Fi {ssid}
+连接了电脑	Computer connected
+连接失败	Connection failed
+配对信息已保存，正在连接 Wi-Fi	Setup saved. Connecting to Wi-Fi
+重启	Restart
+错过的提醒	Missed reminder
+错过的闹钟	Missed alarm
+问题 #%u 尚未保存，请稍后重试	Problem #%u not saved. Try again later
+闹钟铃声	Alarm sound
+音量	Volume
+音量调到 %d	Volume set to %d
+预览后资料有改动，请重新预览	Data changed. Preview again
+飞行模式已打开，关闭飞行模式才能%s	Turn off Airplane Mode to %s
+马上关机	Shutting down soon
+麦克风正在用，等 AI 听完再录	Microphone in use. Wait for AI to finish
+麦克风正忙，请稍后再试	Microphone busy. Try again later
+麦克风没能打开，请稍后再按 AI 键	Microphone unavailable. Press AI again later
+麦克风没能打开，请稍后再试	Microphone unavailable. Try again later
+（共 %u 字，将按 %d 条发送）	 (%u characters, %d parts)
+，还有 %zu 个	, plus %zu more
+；同时清空存储卡上的书和音频	; also erase books and audio on SD card
+；存储卡上的书和音频保留	; keep books and audio on SD card
+设备设置、家人身份和密码：请重新设置	Device settings, people and passwords: set up again
+网络和家庭凭据：请重新加入	Network and family credentials: join again
+系统、字体和缓存：由系统提供	System, fonts and cache: provided by the system
+家庭共享内容：按需重新下载	Shared family content: download again as needed
+已发送的短信、已执行的操作和过期提醒：不重放；保留本机 AI 操作记录	Sent messages, completed actions and expired reminders won't replay. Local AI activity kept
+保留备份清单以外的本地文件	Keep local files outside the backup
+<!doctype html><meta charset=utf-8><title>无线传文件</title><form><label>授权码<input id=c inputmode=numeric pattern='[0-9]{6}' required></label><input id=f type=file required><button>上传</button></form><p id=r></p><script>document.querySelector('form').onsubmit=async e=>{e.preventDefault();try{let x=await fetch('/upload',{method:'POST',headers:{'X-Ink-Code':c.value,'X-Ink-Name':encodeURIComponent(f.files[0].name)},body:f.files[0]});r.textContent=await x.text()}catch(e){r.textContent='连接已断开，请重新授权'}};</script>	<!doctype html><meta charset=utf-8><title>Wi-Fi Transfer</title><form><label>Code<input id=c inputmode=numeric pattern='[0-9]{6}' required></label><input id=f type=file required><button>Upload</button></form><p id=r></p><script>document.querySelector('form').onsubmit=async e=>{e.preventDefault();try{let x=await fetch('/upload',{method:'POST',headers:{'X-Ink-Code':c.value,'X-Ink-Name':encodeURIComponent(f.files[0].name)},body:f.files[0]});r.textContent=await x.text()}catch(e){r.textContent='Disconnected. Get a new code'}};</script>
+
+共 %d 条：前 %d 条已发出，后 %d 条未发出	%d parts: first %d sent, last %d not sent
+共 %d 条：前 %d 条已发出，第 %d 条结果未知，请先核实，后 %d 条未发出	%d parts: first %d sent, part %d unknown (check first), last %d not sent
+共 %d 条：前 %d 条已发出，第 %d 条结果未知，请先核实	%d parts: first %d sent, part %d unknown (check first)
+共 %d 条：第 %d 条结果未知，请先核实，后 %d 条未发出	%d parts: part %d unknown (check first), last %d not sent
+清空通知	Clear notifications
+忘掉一个 Wi-Fi	Forget Wi-Fi
+安装下载好的新系统（安装时不能用设备，会重启）	Install system update
+安装存储卡上的新系统（update 文件夹里，会重启）	Install update from SD card
+删除选中的文件（不能撤销）	Delete selected files
+删除文件或目录（不能撤销）	Delete file or folder
+把存储卡借给电脑当 U 盘	Use as USB storage
+发送一个通话按键	Send call keypad tone
+保存并发送短信	Send message
+接电话	Answer call
+开始录音，存成文件	Record audio
+问 AI 选中的文字	Ask AI about selection
+打开语音输入：说的话变成文字进文本框	Start dictation
+按预览覆盖这位成员的资料	Restore backup
+删除一条数据	Delete item
+从存储卡导入配对文件	Import setup from SD card
+清空这台设备（清掉所有家人的数据，不能撤销）	Erase this device
+删除全部活动记录	Delete all activity
+设置孩子能用的应用	Allowed apps
+设置孩子的禁用时段	Quiet hours
+改孩子每天能用多久	Daily time limit
+给孩子今天加时间	Add time today
+加一位家人	Add family member
+删除一位家人和他们的全部数据（不能撤销）	Delete family member
+清理临时文件	Clean up temporary files
+改一项设置	Change setting
+连接一个 Wi-Fi	Connect to Wi-Fi
+飞行模式已打开，关闭飞行模式才能发短信	Turn off Airplane Mode to send messages
+飞行模式已打开，关闭飞行模式才能打电话	Turn off Airplane Mode to make calls
+农历 %s%d月%d日	Lunar %s%d/%d
+农历%d月	L%d
+闰	Leap-
+鼠	Rat
+牛	Ox
+虎	Tiger
+兔	Rabbit
+龙	Dragon
+蛇	Snake
+马	Horse
+羊	Goat
+猴	Monkey
+鸡	Rooster
+狗	Dog
+猪	Pig
+甲	Jia
+乙	Yi
+丙	Bing
+丁	Ding
+戊	Wu
+己	Ji
+庚	Geng
+辛	Xin
+壬	Ren
+癸	Gui
+子	Zi
+丑	Chou
+寅	Yin
+卯	Mao
+辰	Chen
+巳	Si
+午	Wu
+未	Wei
+申	Shen
+酉	You
+戌	Xu
+亥	Hai
+连接一个 Wi-Fi 并记住它	Connect and remember Wi-Fi
+改系统时间	Set system time
+{body}	{body}
+Wi-Fi	Wi-Fi

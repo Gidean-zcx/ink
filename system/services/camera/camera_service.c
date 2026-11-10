@@ -8,6 +8,7 @@
  */
 #include <stdio.h>
 
+#include "ink/sys/i18n.h"
 #include "ink/hal_camera.h"
 #include "ink/osal.h"
 #include "ink/probe.h"
@@ -55,7 +56,7 @@ static void cap_capture(ink_call_t *c) { /* exec.media */
     } else {
         snprintf(c->rc.object, sizeof c->rc.object, "photo:%u", (unsigned)CAM.seq);
         c->rc.revision = CAM.seq;
-        snprintf(c->rc.say, sizeof c->rc.say, "取好了，没有存到相册");
+        snprintf(c->rc.say, sizeof c->rc.say, TR("取好了，没有存到相册"));
     }
     __atomic_store_n(&CAM.busy, 0, __ATOMIC_RELEASE);
     osal_mutex_unlock(CAM.lock);

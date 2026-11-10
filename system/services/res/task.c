@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "ink/sys/i18n.h"
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/cap.h"
@@ -260,7 +261,7 @@ static void cap_cancel(ink_call_t *c) {
         return;
     }
     cancel(ctx);
-    snprintf(c->rc.say, sizeof c->rc.say, "正在停下");
+    snprintf(c->rc.say, sizeof c->rc.say, TR("正在停下"));
 }
 
 static const ink_cap_t TASK_CAPS[] = {

@@ -1232,7 +1232,7 @@ static void undo_done(void *ctx, const ink_receipt_t *rc) {
     ink_call_t *c = ctx;
     if (rc->status == INK_RC_DONE) {
         c->rc.status = INK_RC_UNDONE;
-        snprintf(c->rc.say, sizeof c->rc.say, "撤销了");
+        snprintf(c->rc.say, sizeof c->rc.say, TR("撤销了"));
     } else {
         c->rc.status = rc->status;
         snprintf(c->rc.object, sizeof c->rc.object, "%s", rc->object);
@@ -1432,7 +1432,7 @@ static void cap_activity_list(ink_call_t *c) { /* exec.bg */
 }
 
 static const ink_cap_t BUS_CAPS[] = {
-    {.id = "activity.clear", .title = "删除全部活动记录", .ask = "删除 {member} 的全部活动记录，找不回来。对话、记忆和运行记录暂不能删除。",
+    {.id = "activity.clear", .title = "删除全部活动记录", .ask = TR_NOOP("删除 {member} 的全部活动记录，找不回来。对话、记忆和运行记录暂不能删除。"),
      .effect = INK_FX_LOCAL_DESTRUCTIVE, .ask_by_hand = true, .exec = INK_EXEC_BG,
      .input = "{\"type\":\"object\",\"properties\":{\"member\":{\"type\":\"string\",\"maxLength\":15}},\"required\":[\"member\"]}", .run = cap_activity_clear},
     {.id = "activity.list", .title = "查看 AI 做过的事", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_BG,

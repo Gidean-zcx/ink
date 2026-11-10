@@ -397,6 +397,8 @@ set(INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/system/ui/shell/boot_flow.c ${CMAKE_SOU
   ${CMAKE_SOURCE_DIR}/system/apps/memo/memo.c ${CMAKE_SOURCE_DIR}/system/apps/phone/phone.c
   ${CMAKE_SOURCE_DIR}/system/apps/remote/remote.c ${CMAKE_SOURCE_DIR}/system/apps/sms/sms.c
   ${CMAKE_SOURCE_DIR}/system/apps/weather/weather.c)
+file(GLOB_RECURSE INK_I18N_SERVICES CONFIGURE_DEPENDS system/services/*.c system/policy/*.c)
+list(APPEND INK_I18N_SOURCES ${INK_I18N_SERVICES})
 add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h
   COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/i18n/i18n_gen.py ${INK_I18N_TABLES}
           --header ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h --sources ${INK_I18N_SOURCES}
@@ -705,6 +707,13 @@ target_link_libraries(sim-boot-flow PRIVATE ink_apps ink_system)
 add_test(NAME boot-flow COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/boot_flow_check.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(boot-flow PROPERTIES TIMEOUT 200)
 ink_sim_executable(sim-i18n-lang tests/i18n_lang.c)
+ink_sim_executable(sim-i18n-services tests/i18n_services.c)
+target_link_libraries(sim-i18n-services PRIVATE ink_apps ink_system)
+add_test(NAME i18n-services COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/i18n_services.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(i18n-services PROPERTIES TIMEOUT 180)
+add_executable(sim-i18n-services-negative EXCLUDE_FROM_ALL simulator/runtime/sim_main.c tests/i18n_services.c)
+target_link_libraries(sim-i18n-services-negative PRIVATE ink_apps ink_system ink_port_sim)
+target_compile_definitions(sim-i18n-services-negative PRIVATE INK_I18N_REVERSE=1)
 ink_sim_executable(sim-time-settings tests/time_settings.c)
 target_link_libraries(sim-time-settings PRIVATE ink_apps ink_system)
 add_test(NAME time-settings COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/time_settings.py --build ${CMAKE_BINARY_DIR})

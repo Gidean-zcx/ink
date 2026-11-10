@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "ink/sys/i18n.h"
 #include "ink/hal_device.h"
 #include "ink/hal_storage.h"
 #include "ink/osal.h"
@@ -232,7 +233,7 @@ static bool load_journal(const char *member) {
         memset(&B.j, 0, sizeof B.j);
         snprintf(B.j.member, sizeof B.j.member, "%s", member);
         B.j.phase = PH_FAILED;
-        snprintf(B.j.reason, sizeof B.j.reason, "旧备份没有成员身份记录，请重新备份");
+        snprintf(B.j.reason, sizeof B.j.reason, TR("旧备份没有成员身份记录，请重新备份"));
         remember(member, false);
         return ink_member_durable_id(member, B.j.identity) == 0;
     }
@@ -1115,7 +1116,7 @@ static int upload_step(ink_json_t *j) {
         return -1;
     }
     if ((*task_id())) { /* as soon as the journal says saved (a journal not written goes on uploading) */
-        ink_task_end((*task_id()), INK_TASK_DONE, "已备份", NULL);
+        ink_task_end((*task_id()), INK_TASK_DONE, TR("已备份"), NULL);
         (*task_id()) = 0;
     }
     acknowledge_manifest();
@@ -1188,7 +1189,7 @@ static int restore_step(ink_json_t *j) {
             return -1;
         }
         if ((*task_id())) {
-            ink_task_end((*task_id()), INK_TASK_DONE, "已恢复，请重新开机", NULL);
+            ink_task_end((*task_id()), INK_TASK_DONE, TR("已恢复，请重新开机"), NULL);
             (*task_id()) = 0;
         }
         event("backup.changed");
@@ -1292,7 +1293,7 @@ static void step(void *arg) {
     }
     if (!*task_id())
         *task_id() = ink_task_begin_for(B.j.phase == PH_CAPTURE || B.j.phase == PH_UPLOAD ? "backup" : "restore",
-                                        "继续备份或恢复资料", B.j.member, NULL, NULL);
+                                        TR("继续备份或恢复资料"), B.j.member, NULL, NULL);
     if (!ink_member_io_begin(B.j.member)) return;
     if (ink_fs_card_hold() != INK_FS_OK) {
         schedule();
@@ -1310,9 +1311,9 @@ static void step(void *arg) {
     if (rc < 0) net_reset();
     if (rc == 1 && active() && B.j.phase != PH_CAPTURE) save_journal();
     if (rc == -2)
-        mark_failed("备份资料校验或写入失败，原件仍保留");
+        mark_failed(TR("备份资料校验或写入失败，原件仍保留"));
     else if (rc == -3)
-        mark_failed("预览后资料有改动，请重新预览");
+        mark_failed(TR("预览后资料有改动，请重新预览"));
     if (rc < 0 && active()) ink_probe_count("backup.retries");
     if (B.j.phase != PH_CAPTURE) free_capture();
     osal_free(j);
@@ -1334,14 +1335,14 @@ static bool for_call(ink_call_t *c) {
     }
     if (!load_journal(member)) {
         c->rc.status = INK_RC_FAILED;
-        snprintf(c->rc.say, sizeof c->rc.say, "备份记录暂时读不出来，请稍后再试");
+        snprintf(c->rc.say, sizeof c->rc.say, TR("备份记录暂时读不出来，请稍后再试"));
         return false;
     }
     if (!B.j.member[0]) {
         snprintf(B.j.member, sizeof B.j.member, "%s", member);
         if (ink_member_durable_id(member, B.j.identity)) {
             c->rc.status = INK_RC_FAILED;
-            snprintf(c->rc.say, sizeof c->rc.say, "备份记录暂时写不进去，请稍后再试");
+            snprintf(c->rc.say, sizeof c->rc.say, TR("备份记录暂时写不进去，请稍后再试"));
             return false;
         }
     }
@@ -1451,10 +1452,14 @@ static void result(ink_call_t *c, bool include_items) {
         }
         ink_jw_raw(&w, "]");
     }
-    ink_jw_raw(&w, ",\"not_restored\":[\"设备设置、家人身份和密码：请重新设置\",\"网络和家庭凭据：请重新加入\","
-                   "\"系统、字体和缓存：由系统提供\",\"家庭共享内容：按需重新下载\","
-                   "\"已发送的短信、已执行的操作和过期提醒：不重放；保留本机 AI "
-                   "操作记录\"],\"extra_local_files\":\"保留备份清单以外的本地文件\"}");
+    const char *const excluded[] = {TR_NOOP("设备设置、家人身份和密码：请重新设置"), TR_NOOP("网络和家庭凭据：请重新加入"),
+        TR_NOOP("系统、字体和缓存：由系统提供"), TR_NOOP("家庭共享内容：按需重新下载"), TR_NOOP("已发送的短信、已执行的操作和过期提醒：不重放；保留本机 AI 操作记录")};
+    ink_jw_raw(&w, ",\"not_restored\":[");
+    for (size_t i = 0; i < sizeof excluded / sizeof *excluded; i++) {
+        if (i) ink_jw_raw(&w, ",");
+        ink_jw_str(&w, TR(excluded[i]));
+    }
+    ink_jw_raw(&w, "],\"extra_local_files\":"); ink_jw_str(&w, TR("保留备份清单以外的本地文件")); ink_jw_raw(&w, "}");
     if (!w.overflow)
         ink_cap_result(c, out);
     else
@@ -1497,7 +1502,7 @@ static bool
 held_back(ink_call_t *c) { /* sound holds the flash back; saving the journal now would stop the shared executor */
     if (!ink_storage_writes_held()) return false;
     c->rc.status = INK_RC_REJECTED;
-    snprintf(c->rc.say, sizeof c->rc.say, "正在放声音或录音，结束后再试");
+    snprintf(c->rc.say, sizeof c->rc.say, TR("正在放声音或录音，结束后再试"));
     return true;
 }
 
@@ -1512,7 +1517,7 @@ static void cap_backup(ink_call_t *c) {
     }
     if (ink_fs_card_hold() != INK_FS_OK) {
         c->rc.status = INK_RC_FAILED;
-        snprintf(c->rc.say, sizeof c->rc.say, "请插入存储卡后备份");
+        snprintf(c->rc.say, sizeof c->rc.say, TR("请插入存储卡后备份"));
         goto failed;
     }
     ink_fs_card_release();
@@ -1526,10 +1531,10 @@ static void cap_backup(ink_call_t *c) {
     /* Persist intent before doing any capture or replacing staging content. */
     if (save_journal()) {
         c->rc.status = INK_RC_FAILED;
-        snprintf(c->rc.say, sizeof c->rc.say, "备份记录暂时写不进去，请稍后再试");
+        snprintf(c->rc.say, sizeof c->rc.say, TR("备份记录暂时写不进去，请稍后再试"));
         goto failed;
     }
-    (*task_id()) = ink_task_begin_for("backup", "备份资料", B.j.member, NULL, NULL);
+    (*task_id()) = ink_task_begin_for("backup", TR("备份资料"), B.j.member, NULL, NULL);
     event("backup.changed");
     c->rc.status = INK_RC_QUEUED;
     result(c, false);
@@ -1601,7 +1606,7 @@ static void cap_apply(ink_call_t *c) {
     if (!ok) {
         c->rc.status = INK_RC_STALE;
         B.j.phase = PH_FAILED;
-        snprintf(B.j.reason, sizeof B.j.reason, "预览后资料有改动，请重新预览");
+        snprintf(B.j.reason, sizeof B.j.reason, TR("预览后资料有改动，请重新预览"));
         save_journal();
     } else {
         B.j.phase = PH_CHECK;
@@ -1610,7 +1615,7 @@ static void cap_apply(ink_call_t *c) {
         if (save_journal())
             c->rc.status = INK_RC_FAILED;
         else {
-            (*task_id()) = ink_task_begin_for("restore", "恢复资料", B.j.member, NULL, NULL);
+            (*task_id()) = ink_task_begin_for("restore", TR("恢复资料"), B.j.member, NULL, NULL);
             c->rc.status = INK_RC_QUEUED;
             result(c, true);
             schedule();
@@ -1659,7 +1664,7 @@ static const ink_cap_t CAPS[] = {
      .child_ok = true,
      .ask_by_hand = true,
      .parent_pin = true,
-     .ask = "恢复预览中的备份，将替换这位成员的现有资料。请先核对备份清单。",
+     .ask = TR_NOOP("恢复预览中的备份，将替换这位成员的现有资料。请先核对备份清单。"),
      .input = "{\"type\":\"object\",\"properties\":{\"preview\":{\"type\":\"string\",\"maxLength\":32}},\"required\":["
               "\"preview\"]}",
      .exec = INK_EXEC_BG,

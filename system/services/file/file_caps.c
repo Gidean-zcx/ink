@@ -258,7 +258,7 @@ static void batch_next(batch_t *b) {
     snprintf(b->call->rc.say, sizeof b->call->rc.say, TR("完成 %zu/%zu，失败 %zu"), b->count - b->failed, b->count, b->failed);
     if (b->failed > BATCH_FAILURE_MAX) {
         size_t n = strlen(b->call->rc.say);
-        snprintf(b->call->rc.say + n, sizeof b->call->rc.say - n, "，还有 %zu 个", b->failed - BATCH_FAILURE_MAX);
+        snprintf(b->call->rc.say + n, sizeof b->call->rc.say - n, TR("，还有 %zu 个"), b->failed - BATCH_FAILURE_MAX);
     }
     ink_task_end(b->task, b->failed ? INK_TASK_FAILED : INK_TASK_DONE, b->call->rc.say, NULL);
     batch_publish(b, b->last_ok);
@@ -399,13 +399,13 @@ static void cap_usb_status(ink_call_t *c) {
 static void cap_usb_mount(ink_call_t *c) {
     int r = ink_usb_disk_start();
     if (r) refuse(c, r);
-    else snprintf(c->rc.say, sizeof c->rc.say, "存储卡已经给电脑了，用完请先在电脑上弹出");
+    else snprintf(c->rc.say, sizeof c->rc.say, TR("存储卡已经给电脑了，用完请先在电脑上弹出"));
 }
 
 static void cap_usb_unmount(ink_call_t *c) {
     int r = ink_usb_disk_stop();
     if (r) refuse(c, r);
-    else snprintf(c->rc.say, sizeof c->rc.say, "存储卡回来了");
+    else snprintf(c->rc.say, sizeof c->rc.say, TR("存储卡回来了"));
 }
 
 #define PATH_ARG(name) "\"" name "\":{\"type\":\"string\",\"maxLength\":127}"
@@ -494,7 +494,7 @@ static const ink_cap_t FILE_CAPS[] = {
      .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .permission = "file", .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_mkdir},
     {.id = "file.batch", .locked_owner_only = true, .app = "files", .title = "按文件编号列表移动或拷贝，可选 all_path 的直属文件", .input = "{\"type\":\"object\",\"properties\":{\"op\":{\"type\":\"string\",\"enum\":[\"copy\",\"move\"]},\"ids\":{\"type\":\"array\"}," PATH_ARG("all_path") "," PATH_ARG("to") "},\"required\":[\"op\",\"to\"]}",
      .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .permission = "file", .exec = INK_EXEC_BG, .qos = INK_QOS_BACKGROUND, .timeout_ms = 300000, .run = cap_batch},
-    {.id = "file.delete_many", .locked_owner_only = true, .app = "files", .title = "删除选中的文件（不能撤销）", .ask = "删除这些文件 {ids}{all_path}，不能撤销", .input = "{\"type\":\"object\",\"properties\":{\"ids\":{\"type\":\"array\"}," PATH_ARG("all_path") "}}",
+    {.id = "file.delete_many", .locked_owner_only = true, .app = "files", .title = "删除选中的文件（不能撤销）", .ask = TR_NOOP("删除这些文件 {ids}{all_path}，不能撤销"), .input = "{\"type\":\"object\",\"properties\":{\"ids\":{\"type\":\"array\"}," PATH_ARG("all_path") "}}",
      .effect = INK_FX_LOCAL_DESTRUCTIVE, .ask_by_hand = true, .child_ok = true, .permission = "file", .exec = INK_EXEC_BG, .qos = INK_QOS_BACKGROUND, .timeout_ms = 300000, .run = cap_batch},
     {.id = "file.batch_progress", .locked_owner_only = true, .app = "files", .title = "批量文件操作逐项进度", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true, .permission = "file"},
     {.id = "file.copy", .locked_owner_only = true, .app = "files",
@@ -505,7 +505,7 @@ static const ink_cap_t FILE_CAPS[] = {
      .title = "移动或改名（可撤销）",
      .input = "{\"type\":\"object\",\"properties\":{" PATH_ARG("from") "," PATH_ARG("to") "},\"required\":[\"from\",\"to\"]}",
      .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .permission = "file", .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_move},
-    {.id = "file.delete", .locked_owner_only = true, .app = "files", .title = "删除文件或目录（不能撤销）", .ask = "删除 {path}，不能撤销", .input = PATH_OBJ("path"),
+    {.id = "file.delete", .locked_owner_only = true, .app = "files", .title = "删除文件或目录（不能撤销）", .ask = TR_NOOP("删除 {path}，不能撤销"), .input = PATH_OBJ("path"),
      .effect = INK_FX_LOCAL_DESTRUCTIVE, .ask_by_hand = true, .child_ok = true, .permission = "file", .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_delete},
     {.id = "file.free", .locked_owner_only = true, .app = "files", .title = "存储卡还剩多少空间", .output = "{\"type\":\"object\"}",
      .effect = INK_FX_READ, .child_ok = true, .permission = "file", .qos = INK_QOS_BACKGROUND, .exec = INK_EXEC_BG, .run = cap_free},

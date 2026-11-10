@@ -17,6 +17,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "ink/sys/i18n.h"
 #include "ink/hal_power.h"
 #include "ink/osal.h"
 #include "ink/probe.h"
@@ -41,8 +42,8 @@ static const ink_db_def_t INBOX = {.name = "notify.inbox", .title = "通知", .s
 static const ink_db_def_t PREFS = {.name = "notify.prefs", .title = "通知渠道开关", .scope = INK_DB_MEMBER, .schema = 1, .json = true, .ai_read = true};
 
 static const ink_notify_channel_t BUILTIN[] = {
-    {"system", "系统", INK_NOTIFY_NORMAL}, {"message", "短信", INK_NOTIFY_NORMAL}, {"call", "电话", INK_NOTIFY_HIGH},   {"alarm", "闹钟", INK_NOTIFY_HIGH},
-    {"reminder", "提醒", INK_NOTIFY_HIGH}, {"download", "下载", INK_NOTIFY_LOW},   {"ai", "AI", INK_NOTIFY_NORMAL},
+    {"system", TR_NOOP("系统"), INK_NOTIFY_NORMAL}, {"message", TR_NOOP("短信"), INK_NOTIFY_NORMAL}, {"call", TR_NOOP("电话"), INK_NOTIFY_HIGH},   {"alarm", TR_NOOP("闹钟"), INK_NOTIFY_HIGH},
+    {"reminder", TR_NOOP("提醒"), INK_NOTIFY_HIGH}, {"download", TR_NOOP("下载"), INK_NOTIFY_LOW},   {"ai", "AI", INK_NOTIFY_NORMAL},
 };
 
 static struct {
@@ -564,10 +565,10 @@ static void on_call(void *ctx, const char *id, const ink_args_t *p) { /* the mod
     (void)ctx;
     if (!strcmp(id, "call.incoming")) {
         ink_interrupt_t it = {.kind = INK_INT_CALL, .ringing = !ink_setting_get("notify.dnd"), .nactions = 2};
-        snprintf(it.title, sizeof it.title, "来电");
+        snprintf(it.title, sizeof it.title, TR("来电"));
         ink_args_get_str(p, "from", it.body, sizeof it.body);
-        action(&it.actions[0], "接听", "call.answer", NULL);
-        action(&it.actions[1], "挂断", "call.hangup", NULL);
+        action(&it.actions[0], TR("接听"), "call.answer", NULL);
+        action(&it.actions[1], TR("挂断"), "call.hangup", NULL);
         ink_svc_lock();
         NS.call_answered = false;
         snprintf(NS.call_from, sizeof NS.call_from, "%.23s", it.body); /* a number: it fits */
@@ -576,11 +577,11 @@ static void on_call(void *ctx, const char *id, const ink_args_t *p) { /* the mod
     } else if (!strcmp(id, "call.answered")) {
         int h = notify_interrupt_find(INK_INT_CALL, 0);
         ink_int_action_t hang;
-        action(&hang, "挂断", "call.hangup", NULL);
+        action(&hang, TR("挂断"), "call.hangup", NULL);
         ink_svc_lock();
         NS.call_answered = true;
         ink_svc_unlock();
-        if (h) ink_interrupt_update(h, "通话中", &hang, 1, false);
+        if (h) ink_interrupt_update(h, TR("通话中"), &hang, 1, false);
     } else if (!strcmp(id, "call.ended")) {
         int h = notify_interrupt_find(INK_INT_CALL, 0);
         ink_svc_lock();
@@ -590,7 +591,7 @@ static void on_call(void *ctx, const char *id, const ink_args_t *p) { /* the mod
         ink_svc_unlock();
         if (h) ink_interrupt_end(h);
         if (h && missed) {
-            ink_notify_t n = {.channel = "call", .title = "未接来电", .body = from, .group = "missed-calls", .prio = INK_NOTIFY_NORMAL, .src = INK_SRC_SYSTEM};
+            ink_notify_t n = {.channel = "call", .title = TR("未接来电"), .body = from, .group = "missed-calls", .prio = INK_NOTIFY_NORMAL, .src = INK_SRC_SYSTEM};
             ink_notify_post(&n, NULL);
         }
     }
@@ -613,11 +614,11 @@ static void on_alarm(void *ctx, const char *id, const ink_args_t *p) { /* the ti
     it->ref = (uint32_t)ref;
     it->ringing = true; /* do not disturb does not silence an alarm */
     it->nactions = 2;
-    snprintf(it->title, sizeof it->title, "闹钟");
+    snprintf(it->title, sizeof it->title, TR("闹钟"));
     ink_args_get_str(p, "title", it->body, sizeof it->body);
-    action(&it->actions[0], "这次不再响", "alarm.dismiss", args);
+    action(&it->actions[0], TR("这次不再响"), "alarm.dismiss", args);
     snprintf(args, sizeof args, "{\"id\":%u,\"minutes\":10}", (unsigned)ref);
-    action(&it->actions[1], "再睡 10 分钟", "alarm.snooze", args);
+    action(&it->actions[1], TR("再睡 10 分钟"), "alarm.snooze", args);
     ink_interrupt_raise(it);
 }
 
@@ -627,7 +628,7 @@ static void on_missed(void *ctx, const char *id, const ink_args_t *p) { /* exec.
     ink_args_get_str(p, "title", title, sizeof title);
     ink_args_get_str(p, "owner", owner, sizeof owner);
     bool alarm = !strncmp(id, "alarm.", 6), missed = alarm || !strcmp(id, "reminder.missed");
-    ink_notify_t n = {.channel = alarm ? "alarm" : "reminder", .title = alarm ? "错过的闹钟" : missed ? "错过的提醒" : "提醒", .body = title,
+    ink_notify_t n = {.channel = alarm ? "alarm" : "reminder", .title = alarm ? TR("错过的闹钟") : missed ? TR("错过的提醒") : TR("提醒"), .body = title,
                       .prio = missed ? INK_NOTIFY_NORMAL : INK_NOTIFY_HIGH, .member = owner[0] ? owner : NULL, .src = INK_SRC_SYSTEM};
     if (owner[0]) ink_notify_post_for(&n, NULL, owner);
     else ink_notify_post(&n, NULL);
@@ -657,15 +658,15 @@ static void on_battery(void *ctx, const char *id, const ink_args_t *p) { /* exec
         return;
     }
     char body[48];
-    snprintf(body, sizeof body, "还剩 %d%%，请充电", (int)percent);
+    snprintf(body, sizeof body, TR("还剩 %d%%，请充电"), (int)percent);
     if (level == 1) {
-        ink_notify_t n = {.channel = "system", .title = "电量低", .body = body, .tag = "battery", .prio = INK_NOTIFY_NORMAL, .src = INK_SRC_SYSTEM};
+        ink_notify_t n = {.channel = "system", .title = TR("电量低"), .body = body, .tag = "battery", .prio = INK_NOTIFY_NORMAL, .src = INK_SRC_SYSTEM};
         ink_notify_post(&n, NULL);
     } else if (!up) {
         ink_interrupt_t it = {.kind = INK_INT_LOW_BATTERY, .nactions = 1};
-        snprintf(it.title, sizeof it.title, level >= 3 ? "马上关机" : "电量很低");
+        snprintf(it.title, sizeof it.title, level >= 3 ? TR("马上关机") : TR("电量很低"));
         snprintf(it.body, sizeof it.body, "%s", body);
-        action(&it.actions[0], "知道了", "interrupt.ack", NULL);
+        action(&it.actions[0], TR("知道了"), "interrupt.ack", NULL);
         ink_interrupt_raise(&it);
         ink_audio_tone(INK_TONE_ERROR, 0, NULL);
     }
@@ -675,7 +676,7 @@ static void on_data_failed(void *ctx, const char *id, const ink_args_t *p) { /* 
     (void)ctx;
     (void)id;
     (void)p;
-    ink_notify_t n = {.channel = "system", .title = "有内容还没保存好", .body = "内部存储可能满了，系统会再试", .tag = "storage", .prio = INK_NOTIFY_HIGH, .src = INK_SRC_SYSTEM};
+    ink_notify_t n = {.channel = "system", .title = TR("有内容还没保存好"), .body = TR("内部存储可能满了，系统会再试"), .tag = "storage", .prio = INK_NOTIFY_HIGH, .src = INK_SRC_SYSTEM};
     ink_notify_post(&n, NULL);
 }
 
@@ -686,7 +687,7 @@ static void on_usb(void *ctx, const char *id, const ink_args_t *p) { /* exec.bg 
     ink_args_get_bool(p, "connected", &connected);
     ink_args_get_bool(p, "lent", &lent);
     if (connected && !lent) {
-        ink_notify_t n = {.channel = "system", .title = "连接了电脑", .body = "可以把存储卡当 U 盘用", .tag = "usb", .action = "usb.mount", .prio = INK_NOTIFY_NORMAL, .src = INK_SRC_SYSTEM};
+        ink_notify_t n = {.channel = "system", .title = TR("连接了电脑"), .body = TR("可以把存储卡当 U 盘用"), .tag = "usb", .action = "usb.mount", .prio = INK_NOTIFY_NORMAL, .src = INK_SRC_SYSTEM};
         ink_notify_post(&n, NULL);
     } else ink_notify_cancel_tag("usb");
 }
@@ -695,7 +696,7 @@ static void on_usb(void *ctx, const char *id, const ink_args_t *p) { /* exec.bg 
 
 static const ink_state_def_t ST_UNREAD = {.id = "notify.unread", .type = INK_ST_INT, .title = "没看的通知数"};
 static const ink_setting_def_t NOTIFY_SETTINGS[] = {
-    {.id = "notify.dnd", .title = "勿扰", .type = INK_SET_BOOL, .def = 0, .child_may_change = true},
+    {.id = "notify.dnd", .title = TR_NOOP("勿扰"), .type = INK_SET_BOOL, .def = 0, .child_may_change = true},
 };
 
 int ink_notify_init(void) {

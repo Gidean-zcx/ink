@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "ink/sys/i18n.h"
 #include "ink/hal_power.h"
 #include "ink/hal_storage.h"
 #include "ink/osal.h"
@@ -32,21 +33,21 @@ static void go_home(ink_call_t *c) {
     ink_receipt_t *rc = &c->rc;
     ink_ui_home();
     snprintf(rc->object, sizeof rc->object, "screen:home");
-    snprintf(rc->say, sizeof rc->say, "回到主页了");
+    snprintf(rc->say, sizeof rc->say, TR("回到主页了"));
 }
 
 static void full_refresh(ink_call_t *c) {
     ink_receipt_t *rc = &c->rc;
     ink_ui_hint_frame(INK_REFRESH_FULL);
     lv_obj_invalidate(lv_screen_active());
-    snprintf(rc->say, sizeof rc->say, "屏幕刷新一下");
+    snprintf(rc->say, sizeof rc->say, TR("屏幕刷新一下"));
 }
 
 static void set_volume(ink_call_t *c) {
     int64_t v = 0;
     ink_args_get_int(&c->args, "percent", &v); /* the schema checked it: 0..100 */
     if (ink_setting_set("audio.volume", v, c->src, &c->rc) == INK_RC_DONE)
-        snprintf(c->rc.say, sizeof c->rc.say, "音量调到 %d", (int)v);
+        snprintf(c->rc.say, sizeof c->rc.say, TR("音量调到 %d"), (int)v);
 }
 
 /* The keys are the same thing as the AI's capability. Locked only while something plays (system UI spec §3.5, LockPlaying): there is nothing else to hear. */
@@ -93,7 +94,7 @@ static void switch_member(ink_call_t *c) {
     }
     ink_ui_home(); /* a member's space starts at their home screen */
     snprintf(rc->object, sizeof rc->object, "member:%s", id);
-    snprintf(rc->say, sizeof rc->say, "现在是%s的空间", ink_member_current()->name);
+    snprintf(rc->say, sizeof rc->say, TR("现在是%s的空间"), ink_member_current()->name);
 }
 
 /*
@@ -164,7 +165,7 @@ bool ink_factory_reset_completed(void) { bool done = g_reset_done; g_reset_done 
 
 static void tell_card_cleared(void) {
     ink_probe_count("system.factory_reset_card_done");
-    ink_notify_t n = {.channel = "system", .title = "存储卡上的个人文件清掉了", .body = "清空这台设备时没来得及清的，现在清了", .tag = "system.reset_card", .prio = INK_NOTIFY_NORMAL, .src = INK_SRC_SYSTEM};
+    ink_notify_t n = {.channel = "system", .title = TR("存储卡上的个人文件清掉了"), .body = TR("清空这台设备时没来得及清的，现在清了"), .tag = "system.reset_card", .prio = INK_NOTIFY_NORMAL, .src = INK_SRC_SYSTEM};
     ink_notify_post(&n, NULL);
 }
 
@@ -211,7 +212,7 @@ static ink_rc_t ink_factory_reset_prepare(ink_args_t *args, ink_receipt_t *rc, i
     ink_args_get_bool(args, "clear_media", &media);
     ink_args_init(args);
     if (ink_args_bool(args, "clear_media", media) ||
-        ink_args_str(args, "_media", media ? "；同时清空存储卡上的书和音频" : "；存储卡上的书和音频保留")) {
+        ink_args_str(args, "_media", media ? TR("；同时清空存储卡上的书和音频") : TR("；存储卡上的书和音频保留"))) {
         snprintf(rc->detail, sizeof rc->detail, "confirmation arguments are full");
         return INK_RC_FAILED;
     }
@@ -222,7 +223,7 @@ static void factory_reset(ink_call_t *c) { /* exec.bg */
     if (ink_usb_disk_active()) { /* nothing can be done about the card from here, and it is the person's to take back */
         c->rc.status = INK_RC_FAILED;
         snprintf(c->rc.detail, sizeof c->rc.detail, "the card is lent to a computer: take it back first");
-        snprintf(c->rc.say, sizeof c->rc.say, "存储卡借给电脑了，先收回再清空");
+        snprintf(c->rc.say, sizeof c->rc.say, TR("存储卡借给电脑了，先收回再清空"));
         return;
     }
     reset_request_t r = {0};
@@ -231,11 +232,11 @@ static void factory_reset(ink_call_t *c) { /* exec.bg */
     if (!r.marked) {
         c->rc.status = INK_RC_FAILED;
         snprintf(c->rc.detail, sizeof c->rc.detail, "cannot write to the flash");
-        snprintf(c->rc.say, sizeof c->rc.say, "这台设备的存储写不进去，没能清空");
+        snprintf(c->rc.say, sizeof c->rc.say, TR("这台设备的存储写不进去，没能清空"));
         return;
     }
     ink_probe_count("system.factory_resets");
-    snprintf(c->rc.say, sizeof c->rc.say, "%s", hal_fs_card_present() ? "清空这台设备，马上重启" : "清空这台设备，马上重启。存储卡不在，下次插上时再清卡上的");
+    snprintf(c->rc.say, sizeof c->rc.say, "%s", hal_fs_card_present() ? TR("清空这台设备，马上重启") : TR("清空这台设备，马上重启。存储卡不在，下次插上时再清卡上的"));
     ink_exec_post(INK_EXEC_BG, &g_reset_job, restart_job, NULL);
 }
 
@@ -249,7 +250,7 @@ int ink_factory_reset_from_hub(void) { /* exec.bg */
 }
 
 static void cap_reboot(ink_call_t *c) { /* exec.bg */
-    snprintf(c->rc.say, sizeof c->rc.say, "重启");
+    snprintf(c->rc.say, sizeof c->rc.say, TR("重启"));
     ink_db_flush_all();
     for (int i = 0; i < 100 && (!ink_db_idle() || ink_storage_pending()); i++) osal_task_delay_us(50000);
     if (!ink_log_flush()) { c->rc.status = INK_RC_FAILED; return; }
@@ -295,7 +296,7 @@ static const ink_cap_t SYSTEM_ACTIONS[] = {
      .run = switch_member},
     {.id = "state.list", .title = "系统现在的状态（电量、网络、前台应用……）", .output = "{\"type\":\"object\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = state_list},
     {.id = "settings.list", .title = "所有设置，各自的类型、取值范围和现在的值", .output = "{\"type\":\"array\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = settings_list},
-    {.id = "system.factory_reset", .title = "清空这台设备（清掉所有家人的数据，不能撤销）", .input = "{\"type\":\"object\",\"properties\":{\"clear_media\":{\"type\":\"boolean\"}}}", .ask = "清空这台设备：清掉所有家人的数据，不能撤销{_media}", .effect = INK_FX_SYSTEM, .ask_by_hand = true, .parent_pin = true, .child_ok = false, .exec = INK_EXEC_BG, .prepare_confirm = ink_factory_reset_prepare, .run = factory_reset},
+    {.id = "system.factory_reset", .title = "清空这台设备（清掉所有家人的数据，不能撤销）", .input = "{\"type\":\"object\",\"properties\":{\"clear_media\":{\"type\":\"boolean\"}}}", .ask = TR_NOOP("清空这台设备：清掉所有家人的数据，不能撤销{_media}"), .effect = INK_FX_SYSTEM, .ask_by_hand = true, .parent_pin = true, .child_ok = false, .exec = INK_EXEC_BG, .prepare_confirm = ink_factory_reset_prepare, .run = factory_reset},
     {.id = "system.reboot", .title = "重启", .effect = INK_FX_SYSTEM, .child_ok = true, .while_locked = true, .exec = INK_EXEC_BG, .run = cap_reboot},
 };
 

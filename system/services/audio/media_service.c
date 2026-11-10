@@ -8,6 +8,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "ink/sys/i18n.h"
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/audio.h"
@@ -651,7 +652,7 @@ static void cap_play(ink_call_t *c) { /* executor */
         snprintf(c->rc.object, sizeof c->rc.object, "media:%.40s", path);
         ink_media_status_t st;
         ink_media_status(&st);
-        snprintf(c->rc.say, sizeof c->rc.say, "从第 %u 秒开始放", (unsigned)(st.position_ms / 1000));
+        snprintf(c->rc.say, sizeof c->rc.say, TR("从第 %u 秒开始放"), (unsigned)(st.position_ms / 1000));
     }
 }
 
@@ -718,7 +719,7 @@ static void cap_record(ink_call_t *c) { /* executor */
     }
     if (ink_audio_focus_top() >= INK_AUDIO_PRIO_VOICE) { /* the AI's turn or a call is not ended by a recording starting */
         fail(c, INK_RC_FAILED, "busy: the AI is answering, or a call or an alarm comes first");
-        snprintf(c->rc.say, sizeof c->rc.say, "AI 正在听或在说，或者正在通话，等它结束再录");
+        snprintf(c->rc.say, sizeof c->rc.say, TR("AI 正在听或在说，或者正在通话，等它结束再录"));
         return;
     }
     if (!path[0]) {
@@ -763,7 +764,7 @@ static void cap_record(ink_call_t *c) { /* executor */
         ink_audio_focus_release(REC.focus);
         REC.focus = 0;
         fail(c, INK_RC_FAILED, "the microphone is in use");
-        snprintf(c->rc.say, sizeof c->rc.say, "麦克风正在用，等 AI 听完再录");
+        snprintf(c->rc.say, sizeof c->rc.say, TR("麦克风正在用，等 AI 听完再录"));
         return;
     }
     ink_state_set_bool(REC.h_recording, true);
@@ -906,7 +907,7 @@ static const ink_cap_t MEDIA_CAPS[] = {
     {.id = "media.status", .title = "现在放的是什么，到哪儿了", .output = "{\"type\":\"object\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_status},
     {.id = "media.finished", .title = "播放结束了（放完、停止、读不了）", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},
     /* a microphone turned on by someone else is for the person to agree to */
-    {.id = "audio.record", .title = "开始录音，存成文件", .ask = "开始录音",
+    {.id = "audio.record", .title = "开始录音，存成文件", .ask = TR_NOOP("开始录音"),
      .input = "{\"type\":\"object\",\"properties\":{\"path\":{\"type\":\"string\",\"maxLength\":127},\"max_seconds\":{\"type\":\"integer\",\"minimum\":1}}}",
      .output = "{\"type\":\"object\"}", .effect = INK_FX_EXTERNAL, .child_ok = true, .permission = "record", .exec = INK_EXEC_MEDIA, .run = cap_record},
     {.id = "audio.record_stop", .title = "停止录音", .effect = INK_FX_NAVIGATE, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_record_stop},

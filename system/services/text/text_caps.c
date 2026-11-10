@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "ink/sys/i18n.h"
 #include "ink/osal.h"
 #include "ink/sys/cap.h"
 #include "ink/sys/json.h"
@@ -19,7 +20,7 @@ static void fail(ink_call_t *c, ink_rc_t st, const char *why) {
 
 static bool target_ok(ink_call_t *c) {
     if (!ink_text_session_current()) {
-        fail(c, INK_RC_STALE, "输入已换人，请重新读取");
+        fail(c, INK_RC_STALE, TR("输入已换人，请重新读取"));
         return false;
     }
     if (!ink_text_focused()) {
@@ -150,7 +151,7 @@ static void cap_voice_start(ink_call_t *c) { /* UI task */
     }
     if (!target_ok(c)) return;
     if (ink_text_voice_start() != 0) fail(c, INK_RC_FAILED, ink_text_voice_notice()[0] ? ink_text_voice_notice() : "not now");
-    else snprintf(c->rc.say, sizeof c->rc.say, "请说");
+    else snprintf(c->rc.say, sizeof c->rc.say, TR("请说"));
 }
 
 static void cap_voice_finish(ink_call_t *c) { /* UI task */
@@ -226,19 +227,19 @@ static void cap_redo(ink_call_t *c) { /* UI task */
 static const ink_db_def_t WORDS = {.name = "text.words", .title = "选区加入的单词", .scope = INK_DB_MEMBER, .schema = 1};
 static void cap_page(ink_call_t *c) {
     int64_t direction = 1; ink_args_get_int(&c->args, "direction", &direction);
-    if (editable(c) && ink_text_turn_page((int)direction) != 0) fail(c, INK_RC_FAILED, "没有长文在编辑");
+    if (editable(c) && ink_text_turn_page((int)direction) != 0) fail(c, INK_RC_FAILED, TR("没有长文在编辑"));
 }
 static void selection_action(ink_call_t *c, bool ask) {
     if (!editable(c)) return;
     char *text = osal_malloc(INK_CLIP_MAX + 1, OSAL_MEM_EXTERNAL);
-    if (!text) { fail(c, INK_RC_FAILED, "内存不够"); return; }
+    if (!text) { fail(c, INK_RC_FAILED, TR("内存不够")); return; }
     int n = ink_text_selected(text, INK_CLIP_MAX + 1);
-    if (n <= 0 || (ask && n >= 384)) fail(c, INK_RC_FAILED, "请选择一小段文字");
+    if (n <= 0 || (ask && n >= 384)) fail(c, INK_RC_FAILED, TR("请选择一小段文字"));
     else if (ask) ink_ai_ask_text(text);
     else {
         ink_db_t *db = ink_db_open_member(&WORDS, ink_member_current()->id); uint32_t id = 0;
         ink_db_write_t w = {.data = text, .len = (size_t)n + 1, .src = (uint8_t)c->src};
-        if (!db || ink_db_put(db, &w, &id) != 0) fail(c, INK_RC_FAILED, "单词没能存下");
+        if (!db || ink_db_put(db, &w, &id) != 0) fail(c, INK_RC_FAILED, TR("单词没能存下"));
         else { ink_db_flush(db); snprintf(c->rc.object, sizeof c->rc.object, "text.words:%u", (unsigned)id); }
         ink_db_close(db);
     }
@@ -275,7 +276,7 @@ static const ink_cap_t TEXT_CAPS[] = {
     {.id = "text.undo", .input = TARGET_SCHEMA, .title = "撤销文本框里刚才的修改", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = cap_undo},
     {.id = "text.redo", .input = TARGET_SCHEMA, .title = "把撤销的改回来", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = cap_redo},
     {.id = "text.submit", .input = TARGET_SCHEMA, .title = "按回车（完成、发送、搜索）", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = cap_submit},
-    {.id = "text.voice_start", .input = TARGET_SCHEMA, .title = "打开语音输入：说的话变成文字进文本框", .ask = "打开语音输入（声音会发给家庭服务器）", .effect = INK_FX_EXTERNAL, .child_ok = true, .run = cap_voice_start},
+    {.id = "text.voice_start", .input = TARGET_SCHEMA, .title = "打开语音输入：说的话变成文字进文本框", .ask = TR_NOOP("打开语音输入（声音会发给家庭服务器）"), .effect = INK_FX_EXTERNAL, .child_ok = true, .run = cap_voice_start},
     {.id = "text.voice_finish", .input = TARGET_SCHEMA, .title = "说完了，结束语音输入", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = cap_voice_finish},
     {.id = "text.voice_cancel", .input = TARGET_SCHEMA, .title = "取消语音输入，什么都不写进去", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = cap_voice_cancel},
     {.id = "text.voice_ended", .title = "语音输入结束了", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},

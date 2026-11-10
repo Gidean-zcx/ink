@@ -10,6 +10,7 @@
 #define INK_LOG_SOURCE "../../system/services/log/log.c"
 #endif
 #include INK_LOG_SOURCE
+const char *ink_tr(const char *text) { return text; }
 
 sim_options_t g_sim;
 static uint64_t now;

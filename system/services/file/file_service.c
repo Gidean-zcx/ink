@@ -13,6 +13,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "ink/sys/i18n.h"
 #include "ink/hal_storage.h"
 #include "ink/hal_device.h"
 #include "ink/hal_usb.h"
@@ -966,7 +967,7 @@ static void job_finish(void *ctx, ink_job_step_t how, bool cancelled) {
     void (*on_end)(void *, const ink_fs_job_status_t *) = j->on_end;
     ink_svc_unlock();
     char say[64], object[48];
-    snprintf(say, sizeof say, "%s", ok ? (j->op == 0 ? "拷贝好了" : "删好了") : err == INK_FS_ERR_NO_SPACE ? "存储卡满了" : err ? "没做成" : "停下了");
+    snprintf(say, sizeof say, "%s", ok ? (j->op == 0 ? TR("拷贝好了") : TR("删好了")) : err == INK_FS_ERR_NO_SPACE ? TR("存储卡满了") : err ? TR("没做成") : TR("停下了"));
     if (snprintf(object, sizeof object, "file:%s", j->vto) >= (int)sizeof object) object[0] = 0;
     ink_task_end(j->task, ok ? INK_TASK_DONE : end.state == INK_FS_JOB_CANCELLED ? INK_TASK_CANCELLED : INK_TASK_FAILED, say, ok && j->op == 0 ? object : NULL);
     void *on_end_ctx = j->on_end_ctx;
@@ -1051,7 +1052,7 @@ static int job_begin_unlocked(const file_context_t *c, int op, const char *from,
     }
     char title[64];
     const char *base = strrchr(from, '/');
-    snprintf(title, sizeof title, "%s %.48s", op == 0 ? "拷贝" : "删除", base ? base + 1 : from);
+    snprintf(title, sizeof title, "%s %.48s", op == 0 ? TR("拷贝") : TR("删除"), base ? base + 1 : from);
     j->task = ink_task_begin_for(op == 0 ? "file.copy" : "file.delete", title, j->who, job_cancel_cb, (void *)(intptr_t)id);
     ink_job_t job = {.name = "file", .step = job_step, .finish = job_finish, .ctx = j, .step_budget_ms = 500};
     if (r || ink_job_submit(&job) < 0) {
@@ -1059,7 +1060,7 @@ static int job_begin_unlocked(const file_context_t *c, int op, const char *from,
         ink_svc_lock();
         FS.job_active = false;
         ink_svc_unlock();
-        ink_task_end(j->task, INK_TASK_FAILED, "没做成", NULL);
+        ink_task_end(j->task, INK_TASK_FAILED, TR("没做成"), NULL);
         return r ? r : INK_FS_ERR_BUSY;
     }
     return id;
@@ -2079,7 +2080,7 @@ static const ink_cap_t STORAGE_CAPS[] = {
      .input = "{\"type\":\"object\",\"properties\":{\"revision\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}},\"required\":[\"revision\"]}",
      .exec = INK_EXEC_BG, .qos = INK_QOS_BACKGROUND, .run = storage_cleanup},
     {.id = "file.cleanup", .locked_owner_only = true, .app = "files", .title = "清理临时文件", .effect = INK_FX_LOCAL_DESTRUCTIVE, .ask_by_hand = true,
-     .ask = "清理临时文件和未传完的文件，删了找不回来；缓存可以重新生成",
+     .ask = TR_NOOP("清理临时文件和未传完的文件，删了找不回来；缓存可以重新生成"),
      .input = "{\"type\":\"object\",\"properties\":{\"revision\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}},\"required\":[\"revision\"]}",
      .exec = INK_EXEC_BG, .qos = INK_QOS_BACKGROUND, .run = storage_cleanup}};
 int ink_storage_usage_caps_init(void) { return ink_cap_register(STORAGE_CAPS, sizeof STORAGE_CAPS / sizeof *STORAGE_CAPS); }

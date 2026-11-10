@@ -37,6 +37,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "ink/sys/i18n.h"
 #include "ink/hal_audio.h"
 #include "ink/hal_codec.h"
 #include "ink/hal_power.h"
@@ -788,21 +789,21 @@ static void on_capture_owner(void *ctx, int h, const char *id) { /* direct: the 
 /* When the device listens for its wake word (D-52: a setting, by default only while the screen is
  * on and unlocked). Takes effect with the voice front end (detailed design §7). */
 static const char *const HANDSFREE[] = {"screen_on", "always", "off", NULL};
-static const char *const RINGTONES[] = {"清音", "双音", "柔音", NULL};
-static const char *const VIBRATION_LEVELS[] = {"弱", "中", "强", NULL};
+static const char *const RINGTONES[] = {TR_NOOP("清音"), TR_NOOP("双音"), TR_NOOP("柔音"), NULL};
+static const char *const VIBRATION_LEVELS[] = {TR_NOOP("弱"), TR_NOOP("中"), TR_NOOP("强"), NULL};
 static void preview_ring(void *ctx, int64_t v) { (void)ctx; ink_audio_tone((ink_tone_t)v, osal_now_us(), "audio.preview"); }
 
 static const ink_setting_def_t AUDIO_SETTINGS[] = {
-    {.id = "audio.key_tone", .title = "按键提示音", .type = INK_SET_BOOL, .child_may_change = true},
-    {.id = "audio.vibration", .title = "振动", .type = INK_SET_BOOL, .def = 1, .child_may_change = true},
-    {.id = "audio.vibration_level", .title = "振动强度", .type = INK_SET_ENUM, .choices = VIBRATION_LEVELS, .child_may_change = true},
-    {.id = "audio.call_ring", .title = "来电铃声", .type = INK_SET_ENUM, .choices = RINGTONES, .child_may_change = true, .apply = preview_ring, .apply_exec = INK_EXEC_DIRECT},
-    {.id = "audio.alarm_ring", .title = "闹钟铃声", .type = INK_SET_ENUM, .choices = RINGTONES, .child_may_change = true, .apply = preview_ring, .apply_exec = INK_EXEC_DIRECT},
-    {.id = "audio.volume", .title = "音量", .type = INK_SET_INT, .min = 0, .max = 100, .def = 70, .child_may_change = true,
+    {.id = "audio.key_tone", .title = TR_NOOP("按键提示音"), .type = INK_SET_BOOL, .child_may_change = true},
+    {.id = "audio.vibration", .title = TR_NOOP("振动"), .type = INK_SET_BOOL, .def = 1, .child_may_change = true},
+    {.id = "audio.vibration_level", .title = TR_NOOP("振动强度"), .type = INK_SET_ENUM, .choices = VIBRATION_LEVELS, .child_may_change = true},
+    {.id = "audio.call_ring", .title = TR_NOOP("来电铃声"), .type = INK_SET_ENUM, .choices = RINGTONES, .child_may_change = true, .apply = preview_ring, .apply_exec = INK_EXEC_DIRECT},
+    {.id = "audio.alarm_ring", .title = TR_NOOP("闹钟铃声"), .type = INK_SET_ENUM, .choices = RINGTONES, .child_may_change = true, .apply = preview_ring, .apply_exec = INK_EXEC_DIRECT},
+    {.id = "audio.volume", .title = TR_NOOP("音量"), .type = INK_SET_INT, .min = 0, .max = 100, .def = 70, .child_may_change = true,
      .apply = volume_apply, .apply_exec = INK_EXEC_DIRECT},
-    {.id = "voice.handsfree", .title = "叫名字（什么时候在等）", .type = INK_SET_ENUM, .def = 0, .choices = HANDSFREE},
-    {.id = "voice.interrupt", .title = "说话能打断回答", .type = INK_SET_BOOL, .def = 1},
-    {.id = "audio.child_max", .title = "孩子的音量上限", .type = INK_SET_INT, .min = 10, .max = 100, .def = 60, .ask_by_hand = true, .apply = child_max_apply, .apply_exec = INK_EXEC_DIRECT},
+    {.id = "voice.handsfree", .title = TR_NOOP("叫名字（什么时候在等）"), .type = INK_SET_ENUM, .def = 0, .choices = HANDSFREE},
+    {.id = "voice.interrupt", .title = TR_NOOP("说话能打断回答"), .type = INK_SET_BOOL, .def = 1},
+    {.id = "audio.child_max", .title = TR_NOOP("孩子的音量上限"), .type = INK_SET_INT, .min = 10, .max = 100, .def = 60, .ask_by_hand = true, .apply = child_max_apply, .apply_exec = INK_EXEC_DIRECT},
 };
 
 int ink_audio_init(void) {

@@ -26,6 +26,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "ink/sys/i18n.h"
 #include "ink/hal_device.h"
 #include "ink/hal_display.h"
 #include "ink/hal_power.h"
@@ -374,7 +375,7 @@ static void cap_saving(ink_call_t *c) { /* kept like any setting: it survives a 
     bool enabled;
     if (!ink_args_get_bool(&c->args, "enabled", &enabled)) { c->rc.status = INK_RC_INVALID; return; }
     if (ink_setting_set("power.saving", enabled, c->src, &c->rc) != INK_RC_DONE) return;
-    snprintf(c->rc.say, sizeof c->rc.say, "%s", enabled ? "已打开省电，1 分钟锁屏，原设置保留" : "已关闭省电，按原设置锁屏");
+    snprintf(c->rc.say, sizeof c->rc.say, "%s", enabled ? TR("已打开省电，1 分钟锁屏，原设置保留") : TR("已关闭省电，按原设置锁屏"));
 }
 
 static void apply_saving(void *ctx, int64_t on) {
@@ -397,10 +398,10 @@ static void apply_lift(void *ctx, int64_t on) {
 }
 
 static const ink_setting_def_t POWER_SETTINGS[] = {
-    {.id = "power.lock_after_s", .title = "自动锁屏（秒）", .type = INK_SET_INT, .min = 60, .max = 3600, .def = (int64_t)(LOCK_AFTER_US / 1000000ull),
+    {.id = "power.lock_after_s", .title = TR_NOOP("自动锁屏（秒）"), .type = INK_SET_INT, .min = 60, .max = 3600, .def = (int64_t)(LOCK_AFTER_US / 1000000ull),
      .apply = apply_lock_after, .apply_exec = INK_EXEC_DIRECT},
-    {.id = "power.saving", .title = "省电", .type = INK_SET_BOOL, .def = 0, .apply = apply_saving, .apply_exec = INK_EXEC_DIRECT},
-    {.id = "power.lift_wake", .title = "拿起亮屏（平放不动 3 分钟先锁屏）", .type = INK_SET_BOOL, .def = 1, .apply = apply_lift,
+    {.id = "power.saving", .title = TR_NOOP("省电"), .type = INK_SET_BOOL, .def = 0, .apply = apply_saving, .apply_exec = INK_EXEC_DIRECT},
+    {.id = "power.lift_wake", .title = TR_NOOP("拿起亮屏（平放不动 3 分钟先锁屏）"), .type = INK_SET_BOOL, .def = 1, .apply = apply_lift,
      .apply_exec = INK_EXEC_DIRECT},
 };
 
@@ -411,13 +412,13 @@ static void cap_shutdown(ink_call_t *c) { /* exec.bg */
     for (int i = 0; i < 100 && (!audio_finished() || !ink_db_idle() || ink_storage_pending()); i++) osal_task_delay_us(50000);
     if (!audio_finished() || !ink_db_idle() || ink_storage_pending() || ink_storage_failed() != failed) {
         c->rc.status = INK_RC_FAILED;
-        snprintf(c->rc.say, sizeof c->rc.say, "还有内容没保存，请稍后重试关机");
+        snprintf(c->rc.say, sizeof c->rc.say, TR("还有内容没保存，请稍后重试关机"));
         return;
     }
-    snprintf(c->rc.say, sizeof c->rc.say, "已保存，正在关机");
+    snprintf(c->rc.say, sizeof c->rc.say, TR("已保存，正在关机"));
     PS.off_picture_ok = false;
     if (PS.off_picture) PS.off_picture("shutdown");
-    if (!PS.off_picture_ok) { c->rc.status = INK_RC_FAILED; snprintf(c->rc.say, sizeof c->rc.say, "关机画面没显示成功，请重试"); return; }
+    if (!PS.off_picture_ok) { c->rc.status = INK_RC_FAILED; snprintf(c->rc.say, sizeof c->rc.say, TR("关机画面没显示成功，请重试")); return; }
     if (!ink_log_flush()) { c->rc.status = INK_RC_FAILED; return; }
     hal_power_shutdown();
 }

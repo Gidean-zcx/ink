@@ -11,6 +11,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "ink/sys/i18n.h"
 #include "ink/hal_device.h"
 #include "ink/hal_ota.h"
 #include "ink/hal_power.h"
@@ -503,8 +504,8 @@ static bool newest_in(const char *dir, char *best, size_t cap, pkg_t *out) {
 
 static void offer_notification(const char *version, const char *action) {
     char body[64];
-    snprintf(body, sizeof body, "可以升级到 %s", version);
-    ink_notify_t n = {.channel = "system", .title = "发现系统更新", .body = body, .tag = "update", .action = action, .prio = INK_NOTIFY_NORMAL, .src = INK_SRC_SYSTEM};
+    snprintf(body, sizeof body, TR("可以升级到 %s"), version);
+    ink_notify_t n = {.channel = "system", .title = TR("发现系统更新"), .body = body, .tag = "update", .action = action, .prio = INK_NOTIFY_NORMAL, .src = INK_SRC_SYSTEM};
     ink_notify_post(&n, NULL);
 }
 
@@ -779,17 +780,17 @@ static void dl_finish(void *ctx, ink_job_step_t how, bool cancelled) { /* exec.b
     piece_release(piece);
     U.job = 0;
     if (how != INK_JOB_DONE || cancelled) { /* the list first, as below: whoever sees the state sees the job over */
-        ink_task_end(U.task, cancelled ? INK_TASK_CANCELLED : INK_TASK_FAILED, cancelled ? "停下了，下次接着下载" : "没下载成", NULL);
+        ink_task_end(U.task, cancelled ? INK_TASK_CANCELLED : INK_TASK_FAILED, cancelled ? TR("停下了，下次接着下载") : TR("没下载成"), NULL);
         set_state(cancelled ? "available" : "failed");
         ink_probe_count("update.download_failed");
         return;
     }
-    ink_task_end(U.task, INK_TASK_DONE, "下载好了，可以安装", NULL);
+    ink_task_end(U.task, INK_TASK_DONE, TR("下载好了，可以安装"), NULL);
     set_state("ready");
     ink_probe_count("update.downloaded");
     char body[64];
-    snprintf(body, sizeof body, "%s 下载好了，可以安装", U.dl_version);
-    ink_notify_t n = {.channel = "download", .title = "系统更新", .body = body, .tag = "update", .action = "system.upgrade", .prio = INK_NOTIFY_NORMAL, .src = INK_SRC_SYSTEM};
+    snprintf(body, sizeof body, TR("%s 下载好了，可以安装"), U.dl_version);
+    ink_notify_t n = {.channel = "download", .title = TR("系统更新"), .body = body, .tag = "update", .action = "system.upgrade", .prio = INK_NOTIFY_NORMAL, .src = INK_SRC_SYSTEM};
     ink_notify_post(&n, NULL);
 }
 
@@ -858,7 +859,7 @@ static const char *start_download(void) {
     ink_probe_count("update.download_started");
     set_state("downloading");
     char title[64];
-    snprintf(title, sizeof title, "下载系统更新 %.20s", U.dl_version);
+    snprintf(title, sizeof title, TR("下载系统更新 %.20s"), U.dl_version);
     U.task = ink_task_begin("update.download", title, true, dl_cancel, NULL);
     ink_task_progress(U.task, (int)((uint64_t)U.dl_off * 100 / (U.dl_size ? U.dl_size : 1)), NULL);
     return NULL;
@@ -871,7 +872,7 @@ static void cap_download(ink_call_t *c) { /* exec.bg */
     }
     const char *why = start_download();
     if (why) fail(c, INK_RC_FAILED, why);
-    else snprintf(c->rc.say, sizeof c->rc.say, "开始下载，下好了告诉你");
+    else snprintf(c->rc.say, sizeof c->rc.say, TR("开始下载，下好了告诉你"));
 }
 
 static void cap_status(ink_call_t *c) {
@@ -935,8 +936,8 @@ static void told_result(bool ok, const char *version, const char *why) {
         osal_free(a);
     }
     char body[80];
-    snprintf(body, sizeof body, ok ? "现在是 %s" : "%s 没装成，还是原来的系统", version);
-    ink_notify_t n = {.channel = "system", .title = ok ? "系统升级好了" : "系统升级失败", .body = body, .tag = "update.result", .prio = ok ? INK_NOTIFY_NORMAL : INK_NOTIFY_HIGH, .src = INK_SRC_SYSTEM};
+    snprintf(body, sizeof body, ok ? TR("现在是 %s") : TR("%s 没装成，还是原来的系统"), version);
+    ink_notify_t n = {.channel = "system", .title = ok ? TR("系统升级好了") : TR("系统升级失败"), .body = body, .tag = "update.result", .prio = ok ? INK_NOTIFY_NORMAL : INK_NOTIFY_HIGH, .src = INK_SRC_SYSTEM};
     ink_notify_post(&n, NULL);
 }
 
@@ -995,7 +996,7 @@ static void rest_job(void *arg) { /* exec.bg */
     ink_fs_card_release();
     if (!ok) { /* it stays to be done: the next boot tries again, from what is on the card */
         ink_probe_count("update.resources_failed");
-        ink_notify_t n = {.channel = "system", .title = "系统更新还差一点", .body = "字库和资源没写好。把升级包放在存储卡上，重启时再试", .tag = "update.result", .prio = INK_NOTIFY_NORMAL, .src = INK_SRC_SYSTEM};
+        ink_notify_t n = {.channel = "system", .title = TR("系统更新还差一点"), .body = TR("字库和资源没写好。把升级包放在存储卡上，重启时再试"), .tag = "update.result", .prio = INK_NOTIFY_NORMAL, .src = INK_SRC_SYSTEM};
         ink_notify_post(&n, NULL);
         return;
     }
@@ -1107,8 +1108,8 @@ static const ink_cap_t UPDATE_CAPS[] = {
     {.id = "update.check", .title = "问家庭服务器有没有新版本", .output = "{\"type\":\"object\"}", .effect = INK_FX_READ, .child_ok = true, .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .run = cap_check},
     {.id = "update.download", .title = "把新版本下载到存储卡（不安装）", .effect = INK_FX_LOCAL_WRITE, .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .run = cap_download},
     /* a person installs: not even listed for the AI (foundation §6.2; the policy gate has the same rule by name) */
-    {.id = "system.upgrade", .title = "安装下载好的新系统（安装时不能用设备，会重启）", .ask = "安装新系统，装完重启", .ask_by_hand = true, .effect = INK_FX_SYSTEM, .expose = INK_EXPOSE_OWNER, .timeout_ms = 600000, .exec = INK_EXEC_BG, .run = cap_upgrade},
-    {.id = "system.upgrade_from_card", .title = "安装存储卡上的新系统（update 文件夹里，会重启）", .ask = "从存储卡安装新系统，装完重启", .ask_by_hand = true,
+    {.id = "system.upgrade", .title = "安装下载好的新系统（安装时不能用设备，会重启）", .ask = TR_NOOP("安装新系统，装完重启"), .ask_by_hand = true, .effect = INK_FX_SYSTEM, .expose = INK_EXPOSE_OWNER, .timeout_ms = 600000, .exec = INK_EXEC_BG, .run = cap_upgrade},
+    {.id = "system.upgrade_from_card", .title = "安装存储卡上的新系统（update 文件夹里，会重启）", .ask = TR_NOOP("从存储卡安装新系统，装完重启"), .ask_by_hand = true,
      .input = "{\"type\":\"object\",\"properties\":{\"file\":{\"type\":\"string\",\"maxLength\":63},\"retry_failed\":{\"type\":\"boolean\"}}}", .effect = INK_FX_SYSTEM, .expose = INK_EXPOSE_OWNER, .timeout_ms = 600000, .exec = INK_EXEC_BG, .run = cap_upgrade_card},
     {.id = "update.available", .title = "发现了新版本", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},
     {.id = "update.result", .title = "升级的结果", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},
@@ -1118,7 +1119,7 @@ static const ink_state_def_t ST_STATE = {.id = "update.state", .type = INK_ST_ST
 static const ink_state_def_t ST_VERSION = {.id = "update.version", .type = INK_ST_STR, .title = "系统版本"};
 static const ink_state_def_t ST_PROGRESS = {.id = "update.progress", .type = INK_ST_INT, .title = "升级进度（%）"};
 static const ink_setting_def_t UPDATE_SETTINGS[] = {
-    {.id = "update.auto_download", .title = "自动下载新版本（流量要钱，默认关）", .type = INK_SET_BOOL, .def = 0},
+    {.id = "update.auto_download", .title = TR_NOOP("自动下载新版本（流量要钱，默认关）"), .type = INK_SET_BOOL, .def = 0},
 };
 
 int ink_update_init(void) {

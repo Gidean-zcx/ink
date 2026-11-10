@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "ink/sys/i18n.h"
 #include "ink/hal_net.h"
 #include "ink/osal.h"
 #include "ink/probe.h"
@@ -42,7 +43,7 @@ static void fail(ink_call_t *c, ink_rc_t st, const char *why) {
 static bool wifi_off(ink_call_t *c) { /* the switch (wifi.enabled), also turned off by airplane mode */
     if (ink_setting_get("wifi.enabled")) return false;
     fail(c, INK_RC_REJECTED, "Wi-Fi is off");
-    snprintf(c->rc.say, sizeof c->rc.say, "Wi-Fi 已关闭，先打开 Wi-Fi");
+    snprintf(c->rc.say, sizeof c->rc.say, TR("Wi-Fi 已关闭，先打开 Wi-Fi"));
     return true;
 }
 
@@ -179,7 +180,7 @@ static void cap_connect(ink_call_t *c) { /* exec.bg */
         publish_known();
         ink_state_set_str(W.h_state, "connected");
         told("connected", k->ssid);
-        snprintf(c->rc.say, sizeof c->rc.say, "连上了 %.60s", k->ssid);
+        snprintf(c->rc.say, sizeof c->rc.say, TR("连上了 %.60s"), k->ssid);
         snprintf(c->rc.object, sizeof c->rc.object, "wifi:%.32s", k->ssid);
         if (can_undo && saved == INK_DB_OK && c->rc.revision) {
             ink_args_t *undo = osal_malloc(sizeof *undo, OSAL_MEM_EXTERNAL);
@@ -254,10 +255,10 @@ static const ink_cap_t WIFI_CAPS[] = {
     {.id = "wifi.restore", .title = "撤销忘掉网络", .input = "{\"type\":\"object\",\"properties\":{\"revision\":{\"type\":\"integer\"}},\"required\":[\"revision\"]}", .effect = INK_FX_LOCAL_WRITE, .expose = INK_EXPOSE_OWNER, .exec = INK_EXEC_BG, .run = cap_restore},
     {.id = "wifi.scan", .title = "找附近的 Wi-Fi（要几秒）", .output = "{\"type\":\"array\"}", .effect = INK_FX_READ, .child_ok = true, .timeout_ms = 10000, .exec = INK_EXEC_BG, .run = cap_scan},
     {.id = "wifi.list", .title = "这台设备记得的 Wi-Fi（只有名字）", .output = "{\"type\":\"array\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_BG, .run = cap_list},
-    {.id = "wifi.connect", .title = "连接一个 Wi-Fi 并记住它", .ask = "连接 Wi-Fi：{ssid}",
+    {.id = "wifi.connect", .title = "连接一个 Wi-Fi 并记住它", .ask = TR_NOOP("连接 Wi-Fi：{ssid}"),
      .input = "{\"type\":\"object\",\"properties\":{\"ssid\":{\"type\":\"string\",\"maxLength\":32},\"password\":{\"type\":\"string\",\"maxLength\":64}},\"required\":[\"ssid\"]}",
      .effect = INK_FX_SYSTEM, .timeout_ms = 20000, .exec = INK_EXEC_BG, .run = cap_connect},
-    {.id = "wifi.forget", .title = "忘掉一个 Wi-Fi", .ask = "忘掉 Wi-Fi：{ssid}", .input = "{\"type\":\"object\",\"properties\":{\"ssid\":{\"type\":\"string\",\"maxLength\":32}},\"required\":[\"ssid\"]}",
+    {.id = "wifi.forget", .title = "忘掉一个 Wi-Fi", .ask = TR_NOOP("忘掉 Wi-Fi：{ssid}"), .input = "{\"type\":\"object\",\"properties\":{\"ssid\":{\"type\":\"string\",\"maxLength\":32}},\"required\":[\"ssid\"]}",
      .effect = INK_FX_LOCAL_DESTRUCTIVE, .ask_by_hand = true, .exec = INK_EXEC_BG, .run = cap_forget},
     {.id = "wifi.changed", .title = "Wi-Fi 的情况变了（连上了、忘掉了）", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true},
 };

@@ -7,6 +7,8 @@
 #include <string.h>
 
 #include "ink/sys/time.h"
+const char *ink_tr(const char *text) { return text; }
+const char *ink_lang_code(void) { return "zh"; }
 
 static int fails;
 #define CHECK(c, ...)                 \

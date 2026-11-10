@@ -1,4 +1,5 @@
 #include <string.h>
+#include "ink/sys/i18n.h"
 #include "ink/hal_log.h"
 #include "ink/hal_device.h"
 #include "ink/hal_power.h"
@@ -201,7 +202,7 @@ static void report(ink_call_t *c) {
     ink_log_health();
     bool ok = ink_log_flush();
     c->rc.status = ok ? INK_RC_DONE : INK_RC_FAILED;
-    format(c->rc.say, sizeof c->rc.say, ok ? "已记录问题 #%u" : "问题 #%u 尚未保存，请稍后重试", n);
+    format(c->rc.say, sizeof c->rc.say, ok ? TR("已记录问题 #%u") : TR("问题 #%u 尚未保存，请稍后重试"), n);
     format(c->rc.object, sizeof c->rc.object, "problem:%u", n);
 }
 static void export_raw(void *arg) {
@@ -228,7 +229,7 @@ static void export_logs(ink_call_t *c) {
     bool ok = ink_log_flush();
     if (ok) ink_storage_run(export_raw, &ok, true);
     c->rc.status = ok ? INK_RC_DONE : INK_RC_FAILED;
-    format(c->rc.say, sizeof c->rc.say, "%s", ok ? "日志已导出到存储卡 ink-logs" : "日志未导出，请检查存储卡或稍后重试");
+    format(c->rc.say, sizeof c->rc.say, "%s", ok ? TR("日志已导出到存储卡 ink-logs") : TR("日志未导出，请检查存储卡或稍后重试"));
 }
 static const ink_cap_t CAPS[] = {
     {.id = "system.report_problem", .title = "记录问题", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_BG,

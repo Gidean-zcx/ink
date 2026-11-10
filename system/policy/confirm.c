@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "ink/sys/i18n.h"
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/cap.h"
@@ -145,7 +146,7 @@ static bool put_value(char *out, size_t cap, size_t *n, const ink_args_t *a, con
     char num[24];
     if (!v) return true;
     if (hidden_key(key)) return put_text(out, cap, n, "***");
-    else if (v->type == INK_ARG_BOOL) return put_text(out, cap, n, v->i ? "是" : "否");
+    else if (v->type == INK_ARG_BOOL) return put_text(out, cap, n, v->i ? TR("是") : TR("否"));
     else if (v->type == INK_ARG_INT) {
         snprintf(num, sizeof num, "%lld", (long long)v->i);
         return put_text(out, cap, n, num);
@@ -341,7 +342,7 @@ ink_rc_t ink_confirm_hold(const ink_cap_t *c, const ink_args_t *args, ink_source
         osal_free(h);
         rc->status = INK_RC_REJECTED;
         snprintf(rc->detail, sizeof rc->detail, "confirmation detail is too long");
-        snprintf(rc->say, sizeof rc->say, "说明太长，不能完整显示，请分成几次操作。");
+        snprintf(rc->say, sizeof rc->say, TR("说明太长，不能完整显示，请分成几次操作。"));
         return rc->status;
     }
     h->token = new_token();
@@ -364,7 +365,7 @@ ink_rc_t ink_confirm_hold(const ink_cap_t *c, const ink_args_t *args, ink_source
         return rc->status;
     }
     snprintf(rc->object, sizeof rc->object, "confirm:%u", (unsigned)token);
-    snprintf(rc->say, sizeof rc->say, "这件事要你在设备上确认一下。");
+    snprintf(rc->say, sizeof rc->say, TR("这件事要你在设备上确认一下。"));
     changed();
     return rc->status;
 }
@@ -387,7 +388,7 @@ int ink_confirm_list(ink_confirm_view_t *out, int max) {
         memset(v, 0, sizeof *v);
         v->token = first->token;
         snprintf(v->cap, sizeof v->cap, "%s", first->cap->id);
-        snprintf(v->title, sizeof v->title, "%s", first->cap->title);
+        snprintf(v->title, sizeof v->title, "%s", first->cap == HUB_CARD || first->cap == HUB_CARD + 1 ? first->cap->title : TR(first->cap->title));
         if (first->cap == HUB_CARD || first->cap == HUB_CARD + 1) ink_args_get_str(&first->args, "title", v->title, sizeof v->title);
         snprintf(v->detail, sizeof v->detail, "%s", first->detail);
         v->src = (uint8_t)first->src;
@@ -748,7 +749,7 @@ static const ink_cap_t CONFIRM_CAPS[] = {
 static const ink_state_def_t ST_PENDING = {.id = "confirm.pending", .type = INK_ST_INT, .title = "等人确认的请求数"};
 
 int ink_confirm_init(void) {
-    HUB_CARD[0] = (ink_cap_t){.id = "hub.confirm", .title = "中枢请求确认", .ask = "{body}"};
+    HUB_CARD[0] = (ink_cap_t){.id = "hub.confirm", .title = "中枢请求确认", .ask = TR_NOOP("{body}")};
     HUB_CARD[1] = HUB_CARD[0];
     HUB_CARD[1].parent_pin = true;
     if (ink_data_init() || ink_db_register(&RESULTS) || !(CF.db = ink_db_open(&RESULTS, NULL))) return -1;

@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "ink/sys/i18n.h"
 #include "ink/osal.h"
 #include "ink/sys/cap.h"
 #include "ink/sys/json.h"
@@ -47,7 +48,7 @@ static void cap_now(ink_call_t *c) {
     snprintf(out, sizeof out, "{\"utc_s\":%lld,\"local\":\"%s\",\"weekday\":%d,\"zone\":\"%s\",\"offset_min\":%d,\"lunar\":\"%s\",\"ganzhi\":\"%s\",\"synced\":%s}",
              (long long)now, text, t.wday, ink_time_zone(), t.offset_min, lunar, gz, synced ? "true" : "false");
     ink_cap_result(c, out);
-    snprintf(c->rc.say, sizeof c->rc.say, "现在是 %.16s", text);
+    snprintf(c->rc.say, sizeof c->rc.say, TR("现在是 %.16s"), text);
 }
 
 static void cap_set(ink_call_t *c) {
@@ -69,7 +70,7 @@ static void cap_set(ink_call_t *c) {
             osal_free(undo);
         }
     }
-    snprintf(c->rc.say, sizeof c->rc.say, "时间改好了");
+    snprintf(c->rc.say, sizeof c->rc.say, TR("时间改好了"));
 }
 
 static void cap_lunar(ink_call_t *c) {
@@ -134,7 +135,7 @@ static void answer_add(ink_call_t *c, ink_alarm_t *a, const char *undo_cap) {
     char next[24];
     if (a->next_s) {
         local_text(a->next_s, next, sizeof next);
-        snprintf(c->rc.say, sizeof c->rc.say, "好的，%.16s", next);
+        snprintf(c->rc.say, sizeof c->rc.say, TR("好的，%.16s"), next);
     }
     ink_args_t undo;
     ink_args_init(&undo);
@@ -301,7 +302,7 @@ static const ink_cap_t TIME_CAPS[] = {
     {.id = "time.now", .title = "现在几点（含时区和农历）", .output = "{\"type\":\"object\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_now},
     {.id = "time.set",
      .title = "改系统时间",
-     .ask = "把系统时间改成 {utc_s}（UTC 秒）",
+     .ask = TR_NOOP("把系统时间改成 {utc_s}（UTC 秒）"),
      .input = "{\"type\":\"object\",\"properties\":{\"utc_s\":{\"type\":\"integer\",\"minimum\":1000000000}},\"required\":[\"utc_s\"]}",
      .effect = INK_FX_SYSTEM, /* children cannot: it would get around time limits (foundation §7.1) */
      .exec = INK_EXEC_BG,

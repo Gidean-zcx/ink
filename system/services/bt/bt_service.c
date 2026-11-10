@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "ink/sys/i18n.h"
 #include "ink/hal_bt.h"
 #include "ink/osal.h"
 #include "ink/probe.h"
@@ -189,7 +190,7 @@ static void cap_connect(ink_call_t *c) { /* exec.bg */
         return;
     }
     set_connected(addr);
-    snprintf(c->rc.say, sizeof c->rc.say, "耳机连上了");
+    snprintf(c->rc.say, sizeof c->rc.say, TR("耳机连上了"));
 }
 
 static void cap_disconnect(ink_call_t *c) { /* exec.bg */
@@ -223,7 +224,7 @@ static void enabled(void *ctx, int64_t on) {
         set_connected(NULL);
     }
 }
-static const ink_setting_def_t ENABLED = {.id = "bt.enabled", .title = "蓝牙", .type = INK_SET_BOOL,
+static const ink_setting_def_t ENABLED = {.id = "bt.enabled", .title = TR_NOOP("蓝牙"), .type = INK_SET_BOOL,
     .def = 1, .child_may_change = true, .apply = enabled, .apply_exec = INK_EXEC_BG};
 
 #define ADDR_ARG "{\"type\":\"object\",\"properties\":{\"addr\":{\"type\":\"string\",\"maxLength\":17}},\"required\":[\"addr\"]}"
