@@ -1820,6 +1820,7 @@ static void index_background(void *arg) {
     if (!r && index_walk && !index_walk->depth && index_walk->revision == __atomic_load_n(&FS.revision, __ATOMIC_RELAXED))
         index_done(&index_walk->context, index_walk->root, false);
     bool scanned = !r && storage_index_scanned();
+    bool finished = scanned;
     if (scanned && !complete) {
         storage.saving = true;
         int n = inverse_ready(__atomic_load_n(&FS.revision, __ATOMIC_RELAXED)) ? index_prune(db, card) : 1;
@@ -1828,7 +1829,7 @@ static void index_background(void *arg) {
             if (storage.pruned) index_invalidate(); /* Retry paths deferred while the index was full. */
             else r = INK_FS_ERR_INDEX_FULL;
         }
-        scanned = !r && !n;
+        finished = !r && !n;
     }
     osal_mutex_unlock(FS.edits);
     if (scanned) ink_db_flush_background(db);
@@ -1836,7 +1837,7 @@ static void index_background(void *arg) {
     if (index_walk && (r || !index_walk->depth)) {
         index_walk_close(index_walk); osal_free(index_walk); index_walk = NULL;
     }
-    if (!r && scanned && storage_index_scanned() && ink_db_durable_ver(db) == ink_db_last_ver(db)) index_done(NULL, "", true);
+    if (!r && finished && storage_index_scanned() && ink_db_durable_ver(db) == ink_db_last_ver(db)) index_done(NULL, "", true);
     if (!r && storage_index_ready() && done && !complete) {
         ink_db_write_t put = {.id = done_id, .data = &expected, .len = sizeof expected, .schema = INDEX_DONE_DEF.schema};
         if (ink_db_put(done, &put, NULL)) r = INK_FS_ERR_IO;

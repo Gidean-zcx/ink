@@ -1,6 +1,6 @@
 # index-prune 执行报告
 
-基线：`32cff5a9ee114315fd7cbd13a1453c7a4cbd8ff8`。状态：定向与反向验证通过，全量检查进行中。
+基线：`32cff5a9ee114315fd7cbd13a1453c7a4cbd8ff8`。状态：定向、反向及写盘回归修复的 4 项验证通过，最终全量与 S31 检查进行中。
 
 ## 验收表
 
@@ -12,7 +12,7 @@
 
 ## 没做到的
 
-- 全量、内存检查和 S31 编译尚在验证。
+- 最终全量、内存检查和 S31 编译尚在验证；首轮唯一失败的写盘回归已通过定向复测。
 
 ## 和设计不一致的
 
@@ -44,8 +44,10 @@
 - 【实测】开工时工作区干净，HEAD 与指定基线相同，分支为 `claude/codex-index-prune`。
 - 产品代码预算：增删合计不超过 100 行，仅修改 `system/services/file/file_service.c`。
 - 后续命令使用 utility 优先级；构建与测试并行度最多 2。
-- 【实现】产品代码仅改文件服务，38 行增加、3 行删除，共 41 行，低于 100 行预算；不改上限、记录格式和存储服务。
+- 【实现】产品代码仅改文件服务，39 行增加、3 行删除，共 42 行，低于 100 行预算；不改上限、记录格式和存储服务。
 - 【实测】最终批次最大编辑锁持有：正常清理 39.630 ms、拔卡恢复 40.863 ms、换卡恢复 40.834 ms、满索引恢复 96.034 ms，均低于沿用的 250 ms 检查线。
 - 【实测】初版功能断言通过，但交错查路径与提交删除导致多次 Flash 写入，锁内累计 314.644 ms。Trace 核实后改成先查一批路径，再集中提交这一批删除；没有改预算、断言、存储接口或增加 sleep。测试预置缩略图的解码在锁外完成，耗时统计从初始建索引结束后开始，仅统计本轮重扫及验证。
 - 【实测】反向对照只在忽略的构建目录取基线文件服务并重新编译链接，其余测试及产品文件相同。四种场景分别出现 22、22、21、35 个预期失败，失败限于缺失记录、缩略图和满索引恢复；拔卡不删除、换卡隔离及改名保号仍通过。命令：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/index_prune/run.py --build build --baseline 32cff5a9ee114315fd7cbd13a1453c7a4cbd8ff8`。ctest 的正常入口不依赖 Git 历史。
 - 定向证据：`work/index-prune/targeted.log`、`negative.log`；结构化结果与重启镜像在 `build/test-out/index-prune/`、`index-prune-baseline/`。
+- 【实测】首轮普通及 ASan/UBSan 全量均 298/299，退出 8，耗时 261.93 / 402.45 s。唯一失败：`file-index-3` 的 busy 场景，第 95～96 行要求 5 秒内提交写盘并让其他 BG 工作执行。【实现】清理完成前一并推迟了原有异步提交；现将“可提交写盘”和“清理已完成”分开判断，所有根目录扫完即照常提交，ready 仍等清理及落盘完成。不改已有测试、等待或断言。
+- 【实测】修正后 `file-index-3`、`index-prune`、`index-durable`、`index-compact` 共 4/4 通过，退出 0，11.82 s。该时序修正的反向证据就是前述两套未修版本的原断言失败；只增加一个局部判断后原测试通过。命令：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^(file-index-3|index-prune|index-durable|index-compact)$' --output-on-failure -j2`；日志 `work/index-prune/focused-final.log`。
