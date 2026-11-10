@@ -257,32 +257,32 @@ static void ui_apply(void *arg) { /* UI task */
         ink_ui_hint_obj(AI.answer, INK_REFRESH_UI);
         if (!AI.first_text_seen) {
             AI.first_text_seen = true;
-            set_status(AI.speech_failed ? TR("声音没能播放，文字回答在上面") : TR("回答中"));
+            set_status(AI.speech_failed ? TR_NOOP("声音没能播放，文字回答在上面") : TR_NOOP("回答中"));
             ink_ui_cause(AI.t_release, "ai.release_to_first_text_visible_ms");
         }
         if (p->kind == 5) {
             turn_over();
-            set_status(TR("回答完成 · 按 AI 键继续问，按 HOME 关闭"));
+            set_status(TR_NOOP("回答完成 · 按 AI 键继续问，按 HOME 关闭"));
         }
     } else if (p->kind == 4) { /* this turn's speech failed; the text remains available */
         AI.speech_failed = true;
-        set_status(AI.asking ? TR("声音没能播放，文字回答在上面") : TR("回答完成 · 声音没能播放 · 按 AI 键继续问"));
+        set_status(AI.asking ? TR_NOOP("声音没能播放，文字回答在上面") : TR_NOOP("回答完成 · 声音没能播放 · 按 AI 键继续问"));
         ink_probe_count("ai.speech_failed");
     } else if (p->kind == 1) {
         turn_over();
-        set_status(AI.speech_failed ? TR("回答完成 · 声音没能播放 · 按 AI 键继续问") : TR("回答完成 · 按 AI 键继续问，按 HOME 关闭"));
+        set_status(AI.speech_failed ? TR_NOOP("回答完成 · 声音没能播放 · 按 AI 键继续问") : TR_NOOP("回答完成 · 按 AI 键继续问，按 HOME 关闭"));
         ink_ui_cause(AI.t_release, "ai.release_to_done_visible_ms");
         ink_probe_count("ai.answers");
     } else {
         turn_over();
-        const char *msg = p->status == INK_HUB_ERR_OFFLINE ? TR("现在没有网络，稍后再问我")
-                          : p->status == INK_HUB_ERR_TIMEOUT ? TR("家庭服务器没有回应，请再试一次")
-                          : p->status == INK_HUB_ERR_LOST    ? TR("网络断了，回答没收全，请再试一次")
-                                                             : TR("出了点问题，请再试一次");
+        const char *msg = p->status == INK_HUB_ERR_OFFLINE ? TR_NOOP("现在没有网络，稍后再问我")
+                          : p->status == INK_HUB_ERR_TIMEOUT ? TR_NOOP("家庭服务器没有回应，请再试一次")
+                          : p->status == INK_HUB_ERR_LOST    ? TR_NOOP("网络断了，回答没收全，请再试一次")
+                                                             : TR_NOOP("出了点问题，请再试一次");
         ink_ai_error_t error = !strcmp(p->text, "budget") ? INK_AI_ERROR_BUDGET :
             p->status == INK_HUB_ERR_OFFLINE ? INK_AI_ERROR_OFFLINE : p->status == INK_HUB_ERR_LOST ? INK_AI_ERROR_LOST :
             p->status == INK_HUB_ERR_TIMEOUT ? INK_AI_ERROR_TIMEOUT : INK_AI_ERROR_NONE;
-        ink_shell_ai_status(error == INK_AI_ERROR_BUDGET ? TR("今天的额度用完了") : msg, error);
+        ink_shell_ai_status(error == INK_AI_ERROR_BUDGET ? TR_NOOP("今天的额度用完了") : msg, error);
         ink_ui_cause(AI.t_release, "ai.release_to_error_visible_ms");
         ink_probe_count("ai.failures");
         ink_audio_tone(INK_TONE_ERROR, 0, NULL);
@@ -498,7 +498,7 @@ static void flush_timer_cb(lv_timer_t *t) { /* UI task: the link may come up aft
     if (AI.capturing && osal_now_us() - AI.t_press >= CAPTURE_LIMIT_US) {
         end_capture(false);
         ink_probe_count("ai.capture_limit");
-        if (AI.open) set_status(TR("已听够 30 秒，正在想…"));
+        if (AI.open) set_status(TR_NOOP("已听够 30 秒，正在想…"));
     }
     flush_uplink();
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
@@ -686,7 +686,7 @@ void ink_ai_key(bool pressed, uint64_t t_us) {
         AI.t_press = t_us;
         if (ink_audio_recording()) { /* a recording is not ended by asking: the sheet says so and offers to stop it */
             sheet_open();
-            set_status(TR("正在录音，先停了再问"));
+            set_status(TR_NOOP("正在录音，先停了再问"));
             ink_audio_tone(INK_TONE_ERROR, 0, NULL);
             ink_probe_count("ai.mic_unavailable");
             AI.turn_over = true;
@@ -728,7 +728,7 @@ void ink_ai_key(bool pressed, uint64_t t_us) {
             lv_label_set_text(AI.question, "");
         }
         sheet_open();
-        set_status(TR("正在听…松开 AI 键结束"));
+        set_status(TR_NOOP("正在听…松开 AI 键结束"));
         /* the sheet appears or is cleared for a new question: drive it with the fast binary waveform
          * (black on white); later updates use GL16 and clean up the anti-aliased text */
         ink_ui_hint_obj(AI.sheet, INK_REFRESH_FAST);
@@ -761,7 +761,7 @@ void ink_ai_key(bool pressed, uint64_t t_us) {
                 AI.up_open = false;
                 osal_mutex_unlock(AI.lock);
                 close_session();
-                set_status(ink_audio_recording() ? TR("正在录音，先停了再问") : sid > 0 ? TR("麦克风没能打开，请稍后再按 AI 键") : TR("语音通道没能打开，请稍后再按 AI 键"));
+                set_status(ink_audio_recording() ? TR_NOOP("正在录音，先停了再问") : sid > 0 ? TR_NOOP("麦克风没能打开，请稍后再按 AI 键") : TR_NOOP("语音通道没能打开，请稍后再按 AI 键"));
                 ink_audio_tone(INK_TONE_ERROR, 0, NULL);
             }
         }
@@ -775,16 +775,16 @@ void ink_ai_key(bool pressed, uint64_t t_us) {
     osal_mutex_unlock(AI.lock);
     if (AI.turn_over) return; /* it ended while the key was held */
     if (AI.mic_failed) { /* the microphone did not start: the user's words were not heard */
-        set_status(TR("没听到：没能开始听，请稍后再按 AI 键"));
+        set_status(TR_NOOP("没听到：没能开始听，请稍后再按 AI 键"));
         return;
     }
     if (was_capturing || (voice_ok() && AI.asking)) {
         lv_label_set_text(AI.question, "…");
-        set_status(TR("正在想…"));
+        set_status(TR_NOOP("正在想…"));
         return;
     }
     if (voice_ok()) { /* a microphone that did not record this turn: there is nothing to ask */
-        set_status(TR("没听到，请再按 AI 键说一遍"));
+        set_status(TR_NOOP("没听到，请再按 AI 键说一遍"));
         return;
     }
     /* a device without a microphone: a sample question stands in, and says so */
@@ -792,7 +792,7 @@ void ink_ai_key(bool pressed, uint64_t t_us) {
     snprintf(q, sizeof q, TR("示例问题（这台设备没有麦克风）：%s"), TR(SIM_TRANSCRIPT));
     lv_label_set_text(AI.question, q);
     ink_ui_hint_obj(AI.question, INK_REFRESH_FAST);
-    set_status(TR("正在想…"));
+    set_status(TR_NOOP("正在想…"));
     AI.req_id = request("ai.ask", false);
 }
 
@@ -819,7 +819,7 @@ void ink_ai_ask_text(const char *text) {
     ink_shell_ai_words("");
     lv_label_set_text(AI.question, g_typed);
     ink_ui_hint_obj(AI.sheet, INK_REFRESH_FAST);
-    set_status(TR("正在想…"));
+    set_status(TR_NOOP("正在想…"));
     AI.req_id = request("ai.ask", false);
     g_typed[0] = 0;
 }

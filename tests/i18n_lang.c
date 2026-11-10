@@ -86,6 +86,16 @@ static void walk(lv_obj_t *o) {
     }
     for (uint32_t i = 0; i < lv_obj_get_child_count(o); i++) walk(lv_obj_get_child(o, (int32_t)i));
 }
+/* A visible label with exactly this text on the system layer, where the AI panel is. */
+static const char *seek_text;
+static bool seek_seen;
+static void seek_in(lv_obj_t *o) {
+    if (seek_seen || !lv_obj_is_visible(o) || lv_obj_has_flag(o, LV_OBJ_FLAG_HIDDEN)) return;
+    if (lv_obj_check_type(o, &lv_label_class) && !strcmp(lv_label_get_text(o), seek_text)) { seek_seen = true; return; }
+    for (uint32_t i = 0; i < lv_obj_get_child_count(o); i++) seek_in(lv_obj_get_child(o, (int32_t)i));
+}
+static void seek_sys(void) { seek_seen = false; lv_obj_update_layout(lv_layer_sys()); seek_in(lv_layer_sys()); }
+static bool on_panel(const char *text) { seek_text = text; on_ui(seek_sys); return seek_seen; }
 static void read_labels(void) {
     labels[0] = 0; nboxes = crowded = 0; crowded_what[0] = 0;
     lv_obj_update_layout(lv_screen_active()); walk(lv_screen_active());
@@ -191,6 +201,11 @@ static void first_run(void) {
     CHECK(asked && strstr(asked, "\"lang\":\"en\""), "the AI request says the interface language (%.150s)", asked ? asked : "");
     CHECK(WAIT_FOR(at("home") && strstr(g_snap, "This page is about Xiaoman"), 5000), "the answer comes in English (%.150s)", g_snap);
     capture("home", "AiAnswer-en");
+    /* The panel reads the service's status by its Chinese key and translates it to show it. Given the shown English text
+     * it never knew the answer was done (nor a tap-to-talk turn, a recording, failed audio): the finished answer kept
+     * the hint in its status line, which the Chinese panel clears (batch audit, 2026-11-11). */
+    CHECK(on_panel("From this page") && !on_panel("Press AI to ask more, HOME to close"),
+          "the finished answer looks as in Chinese: its source, and nothing left in the status line");
     CHECK(BY_HAND("ai.panel.hide", NULL) && g_rc.status == INK_RC_DONE, "close the answer");
 
     settings_home(EN_ROWS, ZH_ROWS, "Settings-en");
