@@ -4,6 +4,7 @@
 #include <string.h>
 #include "ink/osal.h"
 #include "ink/sys/file_picker.h"
+#include "ink/sys/i18n.h"
 #include "ink/sys/json.h"
 #include "ink/sys/members.h"
 #include "ink/sys/settings.h"
@@ -196,6 +197,7 @@ static void create(lv_obj_t *screen, void *arg) {
         }
         row("add", "加一位家人", "", "family.edit", NULL);
         row("pin", "我的密码", "设置或更改", "shell.pin_set", NULL);
+        row("return", TR("离开多久要重新验证"), TR("选择免密码时长"), "shell.return", NULL);
     } else if (S.page == KID) {
         const ink_member_t *kid = NULL;
         for (int i = 0; ink_member_at(i); i++) if (ink_member_at(i)->role == INK_ROLE_CHILD) { kid = ink_member_at(i); break; }

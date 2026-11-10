@@ -39,7 +39,7 @@ for phase in ('write', 'restart'):
         expected = {
             'SetVoice': ['voice.handsfree', 'voice.name', 'voice.interrupt', 'ai.records', 'ai.memory', 'text.assist'],
             'SetStorage': ['backup', 'storage.free', 'storage.books', 'storage.audio', 'storage.photos', 'storage.clean'],
-            'SetAbout': ['device', 'update.version', 'update.check', 'system.language', 'privacy', 'device.details', 'licenses', 'update.auto_download', 'reset'],
+            'SetAbout': ['device', 'update.version', 'update.check', 'system.language', 'time', 'privacy', 'device.details', 'licenses', 'update.auto_download', 'reset'],
             'SetPrivacy': ['privacy.storage', 'privacy.ai', 'privacy.retention', 'privacy.child', 'ai.read_clipboard', 'privacy.records'],
         }
         seen = {page: set() for page in expected}

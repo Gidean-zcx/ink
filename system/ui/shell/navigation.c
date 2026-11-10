@@ -1756,7 +1756,7 @@ int ink_shell_init(void) {
     if (today_init() != 0) return -1;
     static const ink_cap_t notify = {.id = "shell.notify_open", .title = "打开通知并标为已读", .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1}},\"required\":[\"id\"]}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = notify_open};
     if (ink_search_init() != 0 || ink_cap_register(&notify, 1) != 0) return -1;
-    if (ink_settings_pages_init() != 0 || ink_bluetooth_page_init() != 0) return -1;
+    if (ink_settings_pages_init() != 0 || ink_bluetooth_page_init() != 0 || ink_time_settings_init() != 0) return -1;
     if (ink_boot_flow_init() != 0) return -1;
     if (ink_shell_ai_init() != 0 || ink_kid_pages_init() != 0) return -1;
     if (ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) ||

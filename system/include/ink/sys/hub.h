@@ -53,6 +53,8 @@ void ink_hub_events_acked(void); /* validated event ACK: transport no longer hol
 void ink_hub_on_member(void (*fn)(void)); /* realtime transport boundary; runs without socket work */
 /** What the hub said the time was when this connection came up, and how long that took to hear. False if it did not say. */
 bool ink_hub_server_time(int64_t *unix_ms, uint32_t *round_trip_ms);
+/** Optional hello.time_zone (IANA name); absent data is never inferred from UTC. */
+bool ink_hub_server_zone(char *out, size_t cap);
 /** fn(ctx) in the hub task each time the connection is (re)established. Up to 4. */
 int ink_hub_on_online(void (*fn)(void *ctx), void *ctx);
 /** fn() in the hub task, whenever it is awake and online: what waits to go out goes now. One. */

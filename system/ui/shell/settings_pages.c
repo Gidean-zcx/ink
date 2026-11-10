@@ -33,6 +33,7 @@ static const row_t ABOUT_ROWS[] = {
     {"update.version", "系统版本", NULL, NULL, NULL, NULL, NULL, NULL},
     {"update.check", "系统更新", NULL, NULL, "shell.update", "update", NULL, NULL},
     {"system.language", TR_NOOP("语言"), NULL, NULL, "settings.set", "globe", NULL, NULL},
+    {"time", TR_NOOP("日期和时间"), "", NULL, "shell.time", "clock", NULL, NULL},
     {"privacy", "隐私", "查看", NULL, "shell.privacy", "shield", NULL, NULL},
     {"device.details", "设备详情", "暂不能查看", NULL, NULL, "display", "", NULL},
     {"licenses", "开源许可", "许可页面还没接入", NULL, NULL, "list", NULL, NULL},
