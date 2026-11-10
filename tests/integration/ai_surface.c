@@ -60,6 +60,7 @@ static const struct {
     {"wifi.scan", NULL}, {"wifi.list", NULL}, {"wifi.connect", "ssid"}, {"wifi.forget", "ssid"}, {"member.list", NULL},
     {"member.add", "id"}, {"member.remove", "id"}, {"camera.capture", NULL}, {"message.send", "to"}, {"message.list", NULL},
     {"call.dial", "number"}, {"call.answer", NULL}, {"call.hangup", NULL}, {"remote.open", ""}, {"reader.list_books", NULL},
+    {"phone.emergency_open", NULL},
     {"call.mute", "on"}, {"call.dtmf", "key"}, {"call.route", "headset"}, {"call.record", NULL}, {"phone.keypad", NULL},
     {"reader.open_book", "title"}, {"reader.next_page", NULL}, {"reader.prev_page", NULL}, {"reader.goto_page", "page"}, {"reader.read_page", NULL}, {"reader.continue", NULL},
     {"activity.list", ""}, {"activity.clear", "member"}, {"update.status", NULL}, {"update.check", NULL}, {"update.download", NULL},
@@ -130,6 +131,9 @@ static const struct {
 static const struct {
     const char *id, *why, *args;
 } NOT_FOR_AI[] = {
+    {"phone.emergency", "D-119: only a person dials; the AI may open the page", "number"},
+    {"phone.emergency_key", "only a person enters emergency dialler keys", "key"},
+    {"phone.emergency_close", "only a person leaves the emergency dialler", NULL},
     {"shell.members_page", "member selection stays on the device before adult authentication", "delta"},
     {"pairing.accept", "only a person confirms joining a household", "txid"},
     {"confirm.accept", "only a person on the device can say yes", "token"},

@@ -34,7 +34,8 @@ static void show(void) {
     if (g_mark) return;
     bool clock = ink_setting_get("display.lock_style") == 1;
     bool image = ink_setting_get("display.lock_style") == 2 && ink_wallpaper_ready();
-    int text_h = 2 * ink_ui_line_height(INK_FONT_NOTE);
+    int text_w = INK_CANVAS_W - 2 * INK_MARGIN - (clock ? 0 : INK_CIRCLE + 2 * INK_CONTROL + 4 * INK_GAP);
+    int text_h = ink_ui_text_height(mark_text(), INK_FONT_NOTE, INK_WEIGHT_REGULAR, text_w) + INK_GAP_S;
     int strip_h = text_h > INK_CONTROL ? text_h : INK_CONTROL;
     g_mark = clock || image ? lv_obj_create(lv_layer_sys()) : ink_ui_box(lv_layer_sys(), INK_MARGIN,
              INK_CANVAS_H - strip_h - INK_GAP_S, INK_CANVAS_W - 2 * INK_MARGIN, strip_h, 0, INK_SURFACE_WHITE, false);
@@ -81,7 +82,7 @@ static void show(void) {
     lv_obj_t *strip = clock ? ink_ui_box(g_mark, INK_MARGIN, INK_CANVAS_H - strip_h - INK_GAP_S,
                                   INK_CANVAS_W - 2 * INK_MARGIN, strip_h, 0, INK_SURFACE_WHITE, false) : g_mark;
     lv_obj_t *l = ink_ui_label(strip, mark_text(), INK_FONT_NOTE, INK_WEIGHT_REGULAR, 0,
-                               (strip_h - ink_ui_line_height(INK_FONT_NOTE)) / 2, INK_CANVAS_W - 2 * INK_MARGIN - (clock ? 0 : INK_CIRCLE + 2 * INK_CONTROL + 4 * INK_GAP));
+                               (strip_h - ink_ui_line_height(INK_FONT_NOTE)) / 2, text_w);
     lv_obj_align(l, LV_ALIGN_LEFT_MID, clock ? 0 : ink_ui_px(2 * INK_CONTROL + 3 * INK_GAP), 0);
     lv_obj_set_style_text_align(l, LV_TEXT_ALIGN_CENTER, 0);
     g_label = l;

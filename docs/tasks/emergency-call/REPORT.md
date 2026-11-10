@@ -11,12 +11,16 @@
 | 1c 飞行模式临时开射频并恢复 | 【实测】通过（模型） | 呼叫前关、通话中开、结束后 `CFUN=4`；设置全程不变；无 SIM 也提交拨号 | V1 |
 | 1d 孩子锁屏拨号 | 【实测】通过 | 孩子实际点按号码、接通、挂断，仍在锁屏 | V1 |
 | 1e 快照无家庭数据 | 【实测】通过 | 全屏不透明浮层；快照无底层号码、身份、联系人、记录、密码 | V1 |
-| 2 原有测试、全量、内存、S31、GCC | 待验证 | — | — |
-| 3 原厂依据和上机核对清单 | 待补充 | — | — |
+| 2a 原有电话、锁屏、飞行模式 | 【实测】通过 | 原有专项原样通过；修正后 16 项回归全过 | `work/emergency-call/focused.log`、`regressions.log` |
+| 2b 普通全量 | 最终轮进行中 | 首轮原话：`95% tests passed, 15 tests failed out of 330`；14 项功能／契约失败已修正复验，共享能力文档按规则未改 | `work/emergency-call/full.log`、`full-final.log` |
+| 2c ASan/UBSan 全量 | 待验证 | — | — |
+| 2d S31 编译 | 待验证 | 只编译，不操作设备 | — |
+| 2e GCC | 待验证 | — | — |
+| 3 原厂依据和上机核对清单 | 【实现】完成 | 原厂文件、行号、假设及只读／替代验证限制见下文 | 只读搜索原厂对应板型和公共模组实现 |
 
 ## 没做到的
 
-- 全量、内存、S31 和 GCC 最终验证尚在执行；模拟器结果不代表 NT26 实机验证。
+- 全量、内存、S31 和 GCC 最终验证尚在执行；模拟器结果不代表 NT26 实机验证。现有 `ports/esp32s31/hal_stubs.c:62–72` 的蜂窝 HAL 仍是桩，本任务未扩展实机端口。
 
 ## 和设计不一致的
 
@@ -24,7 +28,7 @@
 
 ## 改过的已有测试
 
-- 无；新增专项测试，不改原有测试的期望或预算。
+- `tests/integration/ai_surface.c`：仅在既有能力契约表中登记四个新增能力，`phone.emergency_open` 给 AI，其余三项列为本人操作并注明理由和必填参数；不改断言、旧条目或预算。
 
 ## 要用户定的
 
@@ -43,11 +47,13 @@
 ## 要改的文档
 
 - 合并时更新生成的能力表，登记 `phone.emergency` 及 AI 限制。
+- `capability-table-doc` 会因这四项新增能力和源码行号变化而失败；不能在任务分支改共享生成文档。临时目录已生成并校验 `build/emergency-call-capabilities.md`（510 项定义），原有文档与相关断言均保留。
 
 ## 执行记录
 
 - 开工：已读取总规则和任务书；本报告用于记录各里程碑与可复现证据。
 - 里程碑 1：【实测】六个场景通过；原有 `phone-calls`、`airplane-mode`、`lock-camera`、`integration-member-wake` 原样通过。首轮飞行场景失败暴露 HAL 返回 1 表示尚未注册，已按 HAL 契约修复；英文入口截断已调整并复验。未扩大时限或预算。
+- 里程碑 2：【实测】修正后回归 `100% tests passed out of 16`（31.63 秒）。首轮发现大字号锁屏条容纳不足、按钮顺序影响既有选人操作、锁屏策略范围过宽及能力契约缺登记，已分别修正。保留普通能力的既有锁屏宽限语义，仅收紧电话能力；原有测试未放宽。源码链接检查通过移动新增辅助函数保留原锚点，未改设计文档。
 
 ## 为什么不能更小
 
@@ -66,3 +72,4 @@
 
 - V1：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^emergency-call$' --output-on-failure -j2`。
 - 专项日志：`work/emergency-call/emergency-3.log`；截图和指标：`build/emergency-call-371qm5q5/{lock,gate,kid,airplane,nosim,en}/`。已查看中英文拨号页，布局无重叠。
+- 反向对照：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/emergency_call/run.py --build build --negative radio` 和 `--negative page`；对应 `negative-radio-final.log`、`negative-page-final.log`。只编译构建目录中的临时副本；撤掉射频开启、撤掉紧急通话 UI 事件处理，都使同一测试失败。脚本退出 0 表示反向对照成立；未改产品文件。

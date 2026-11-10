@@ -62,8 +62,9 @@ static void open_entry(void) {
     press(english ? "Emergency call" : "紧急呼叫");
     CHECK(E.root && !E.active, "physical emergency entry opens restricted keypad"); on_ui(privacy);
 }
-static void finish_call(bool airplane, bool remote) {
+static void finish_call(bool airplane, bool remote, const char *number) {
     CHECK(WAIT_FOR(world(true, 1), 10000), "emergency AT call connects with RF on");
+    CHECK(!strcmp(modem_number, number), "modem dialled the requested emergency number: %.20s", modem_number);
     CHECK(E.active, "emergency page tracks the active call");
     CHECK(ink_power_state() == INK_PWR_LOCKED || !ink_member_space_open(), "call did not authenticate or unlock");
     CHECK(ink_setting_get("net.airplane") == airplane, "airplane setting is unchanged during call");
@@ -112,11 +113,11 @@ static void run(void *arg) {
     for (int i = 0; i < 3; i++) press(english ? "Delete" : "删除");
     if (airplane) press(no_sim ? "112" : "110");
     else { press("1"); press("2"); press("0"); press(english ? "Dial" : "拨号"); }
-    finish_call(airplane, gate || no_sim);
+    finish_call(airplane, gate || no_sim, airplane ? no_sim ? "112" : "110" : "120");
     CHECK(!gate || !ink_member_space_open(), "expired adult remains unauthenticated");
     if (!strcmp(phase, "lock")) {
         const char *numbers[] = {"110", "119", "112"};
-        for (unsigned i = 0; i < sizeof numbers / sizeof *numbers; i++) { open_entry(); press(numbers[i]); finish_call(false, false); }
+        for (unsigned i = 0; i < sizeof numbers / sizeof *numbers; i++) { open_entry(); press(numbers[i]); finish_call(false, false, numbers[i]); }
     }
     frame("returned"); ink_probe_count("test.finished");
 }

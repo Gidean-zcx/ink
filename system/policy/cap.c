@@ -57,7 +57,6 @@ const ink_cap_t *ink_cap_find(const char *id) {
 static bool on_its_page(const ink_cap_t *c) { return !c->activity || ((ink_ui_page_current() || ink_camera_restricted()) && !strcmp(ink_ui_action_page(), c->activity)); }
 
 static bool in_directory(const char *id); /* the hub's directory, below */
-static bool opens_emergency(const ink_cap_t *c) { return c && !strcmp(c->id, "phone.emergency_open"); }
 
 /* Local first; otherwise what the hub offers, while it is reachable (architecture §4.6: the
  * device's capability set is its own plus the hub's, as of now). */
@@ -96,7 +95,7 @@ static ink_rc_t reject(ink_receipt_t *rc, ink_rc_t st, const char *why) {
     snprintf(rc->detail, sizeof rc->detail, "%s", why);
     return st;
 }
-
+static bool opens_emergency(const ink_cap_t *c) { return c && !strcmp(c->id, "phone.emergency_open"); }
 /* The policy gate (detailed design §2.4), before anything runs. INK_RC_DONE = may run. */
 static ink_rc_t gate(const ink_cap_t *c, ink_source_t src, uint32_t page_gen, bool asked, ink_receipt_t *rc) {
     if (!c) return reject(rc, INK_RC_INVALID, "unknown action");
@@ -120,7 +119,8 @@ static ink_rc_t gate(const ink_cap_t *c, ink_source_t src, uint32_t page_gen, bo
     bool camera_locked = ink_camera_restricted() || (ink_power_state() == INK_PWR_LOCKED &&
         (src == INK_SRC_AI || src == INK_SRC_REMOTE || src == INK_SRC_APP) &&
         (!strncmp(c->id, "camera.", 7) || !strncmp(c->id, "photo.", 6) || !strncmp(c->id, "file.", 5) || !strcmp(c->id, "app.open")));
-    if ((!ink_member_space_open() || camera_locked || ink_power_state() == INK_PWR_LOCKED) && src != INK_SRC_SYSTEM) {
+    bool phone_locked = ink_power_state() == INK_PWR_LOCKED && (!strncmp(c->id, "phone.", 6) || !strncmp(c->id, "call.", 5));
+    if ((!ink_member_space_open() || camera_locked || phone_locked) && src != INK_SRC_SYSTEM) {
         bool camera_exit = ink_camera_restricted() && (!strcmp(c->id, "shell.back") || !strcmp(c->id, "system.home"));
         if (!opens_emergency(c) && (src == INK_SRC_AI || src == INK_SRC_REMOTE || src == INK_SRC_APP || (!c->while_locked && !camera_exit))) {
             ink_probe_count("policy.rejected");
