@@ -116,7 +116,14 @@ static bool restore(bool (*step)(void)) {
 static bool restore_keys(void) { return metalio_board_restore_keys(NULL, NULL) == HAL_I2C_OK; }
 static bool restore_rails(void) { return metalio_board_restore_rails() == HAL_I2C_OK; }
 
+/* Off in the trial build (2026-11-10): light sleep has not woken properly on the device yet (selftest rounds 3
+ * and 7, docs/hardware/2026-11-10-selftest.md) and the user tests it only when present. Refused, USB stays up. */
+#ifndef INK_S31_LIGHT_SLEEP
+#define INK_S31_LIGHT_SLEEP 0
+#endif
+
 uint32_t hal_power_sleep(const hal_sleep_cfg_t *cfg) {
+    if (!INK_S31_LIGHT_SLEEP) return 0;
     if (!cfg || !metalio_board_ready() || busy()) return 0;
     uint8_t p0, p1 = 0xFF;
     if (metalio_board_read(0, &p0) != HAL_I2C_OK || (p0 & (MB_P0_AMP | MB_P0_MOTOR))) return 0;

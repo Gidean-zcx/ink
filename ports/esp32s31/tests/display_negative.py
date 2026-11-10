@@ -21,7 +21,10 @@ def main():
         ("gray-conversion", "regions", "(pixels[(size_t)y * stride + x] * 15 + 127) / 255", "0"),
         ("inline-callback", "regions", "    xTaskNotifyGive(D.task);\n    return id;", "    if (done) done(ctx, &D.result);\n    xTaskNotifyGive(D.task);\n    return id;"),
         ("scan-timeout", "timeout", "    epd_power_off(&D.power);", "    (void)D.power;"),
-        ("independent-guard", "guard", ">= pdMS_TO_TICKS(GUARD_MS)) trip();", ">= pdMS_TO_TICKS(GUARD_MS)) { }"),
+        ("independent-guard", "guard", "if (!ATOMIC(D.testing)) { trip(); return; }", "if (!ATOMIC(D.testing)) return;"),
+        ("guard-proves-power-off", "selftest", "    power_off();\n    atomic_store(&D.tripped, true);", "    atomic_store(&D.tripped, true);"),
+        ("unproven-guard-blocks", "selftest-dead", "            atomic_store(&D.stop, true);\n", ""),
+        ("selftest-before-drive", "selftest", "    if (!D.tested) {", "    if (0) {"),
         ("late-line-discard", "lines", "while (D.owed[id] && lq_read(&D.q[id], line) == 0) --D.owed[id];", "(void)id;"),
         ("wake-pending", "wake-overlap", "D.result.id || ATOMIC(D.powered) || (D.wake_until && (int32_t)(D.wake_until - xTaskGetTickCount()) > 0)", "D.result.id || ATOMIC(D.powered) || wake"),
     ]
@@ -46,7 +49,7 @@ def main():
             if (result.returncode == 0) == bool(old):
                 raise RuntimeError(f"{name}: unexpected test status {result.returncode}\n{result.stderr}")
             print(f"{name}: compile=0, test={result.returncode}")
-    print("display reverse controls: 7/7 rejected; baseline passed")
+    print(f"display reverse controls: {len(mutations)}/{len(mutations)} rejected; baseline passed")
 
 
 if __name__ == "__main__":

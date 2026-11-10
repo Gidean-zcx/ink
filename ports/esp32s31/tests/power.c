@@ -215,6 +215,14 @@ int main(void) {
     assert(mhz == 320);
 
     hal_sleep_cfg_t cfg = {.max_us = 60000000, .wake_mask = HAL_WAKE_POWER_KEY | HAL_WAKE_RTC | HAL_WAKE_MOTION};
+#if !INK_S31_LIGHT_SLEEP
+    /* The trial build refuses light sleep before touching anything: no board traffic, no sleep, USB stays. */
+    reset();
+    sources = 1u << ESP_SLEEP_WAKEUP_TIMER;
+    assert(hal_power_sleep(&cfg) == 0 && !slept && trace_n == 0);
+    puts("power: light sleep refused in the trial build");
+    return 0;
+#endif
     reset();
     sources = 1u << ESP_SLEEP_WAKEUP_EXT1;
     wake_pins = 1ull << S31_GPIO_EXP_INT;

@@ -17,7 +17,8 @@ static uint64_t now;
 static unsigned calls, scans, off_count, abort_count, notify_count, isr_gives;
 static int xoe;
 static bool drop_frame, supply_good = true;
-static bool wake_during_off;
+static bool wake_during_off, selftest_mode, guard_alive, pmic_awake;
+static char last_log[160];
 static int expected_pending;
 static pthread_t caller, callback_thread;
 static hal_display_result_t completed;
@@ -52,9 +53,16 @@ hal_i2c_dev_t *hal_i2c_device(int bus, uint8_t addr, const char *name) {
     assert(bus == 0 && addr == 0x68);
     return (hal_i2c_dev_t *)&D;
 }
-epd_power_result_t epd_power_on(epd_power_t *p) { p->gate_output(p->ctx, true); now += 140000; return EPD_POWER_OK; }
+epd_power_result_t epd_power_on(epd_power_t *p) { p->gate_output(p->ctx, true); now += 140000; pmic_awake = true; return EPD_POWER_OK; }
+bool epd_power_good(epd_power_t *p) { (void)p; return supply_good; }
+hal_i2c_status_t tps65185_read(hal_i2c_dev_t *dev, uint8_t reg, uint8_t *value) {
+    (void)dev; assert(reg == TPS_REG_PG); *value = 0xFA;
+    return pmic_awake ? HAL_I2C_OK : HAL_I2C_ERR; /* in SLEEP the PMIC does not answer */
+}
+void hal_log_write(const char *line) { snprintf(last_log, sizeof last_log, "%s", line); }
 void epd_power_off(epd_power_t *p) {
     p->gate_output(p->ctx, false);
+    pmic_awake = false;
     off_count++;
     if (wake_during_off) {
         wake_during_off = false;
@@ -105,6 +113,11 @@ unsigned ulTaskNotifyTake(int clear, uint32_t ticks) {
     return 1;
 }
 void vTaskDelay(uint32_t ticks) {
+    if (selftest_mode) { /* the guard task runs alongside: one check per wait */
+        now += (uint64_t)ticks * 10000;
+        if (guard_alive) guard_check();
+        return;
+    }
     if (loops++) pthread_exit(NULL);
     now += (uint64_t)ticks * 10000;
 }
@@ -204,6 +217,20 @@ static void wake_overlap(void) {
     run(run_display);
     assert(!ATOMIC(D.powered) && hal_display_pending() == 0);
 }
+/* The guard proves itself before the first drive; a guard that never trips keeps the panel off for good. */
+static void selftest(bool alive) {
+    D.tested = false;
+    selftest_mode = true;
+    guard_alive = alive;
+    run(run_display);
+    selftest_mode = false;
+    assert(D.tested && !ATOMIC(D.powered) && !ATOMIC(D.armed) && !ATOMIC(D.testing) && !pmic_awake && off_count == 1);
+    assert(strstr(last_log, alive ? "tripped=1" : "stays off"));
+    assert(ATOMIC(D.stop) == !alive && abort_count == 0);
+    hal_rect_t a = {0, 0, 1, 1};
+    uint8_t p = 0;
+    assert(!hal_display_update(&a, &p, 1, HAL_WF_GL16, 0, NULL, NULL) == !alive);
+}
 static void lines(void) {
     uint8_t line[LINE_BYTES];
     atomic_store(&D.row, H);
@@ -227,11 +254,14 @@ int main(int argc, char **argv) {
     assert(hal_display_level_luminance(0) == PANEL_LEVEL[0] && hal_display_level_luminance(16) == 1.0f);
     assert(!hal_display_update(NULL, NULL, 0, HAL_WF_GL16, 0, NULL, NULL));
     const char *which = argc > 1 ? argv[1] : "regions";
+    D.tested = strcmp(which, "selftest") && strcmp(which, "selftest-dead"); /* the other cases start after it */
     if (!strcmp(which, "regions")) regions();
     else if (!strcmp(which, "timeout")) timeout();
     else if (!strcmp(which, "guard")) guard_only();
     else if (!strcmp(which, "lines")) lines();
     else if (!strcmp(which, "wake-overlap")) wake_overlap();
+    else if (!strcmp(which, "selftest")) selftest(true);
+    else if (!strcmp(which, "selftest-dead")) selftest(false);
     else abort();
     assert(pthread_mutex_destroy(&D.lock->lock) == 0);
     for (unsigned i = 0; i < allocation_count; i++) free(allocations[i]);

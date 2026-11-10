@@ -1,5 +1,6 @@
 /* Factory LCD transport with ink's PQ-BN kernel and shared board power. Compile-only port. */
 #include <stdatomic.h>
+#include <stdio.h>
 #include <string.h>
 #include "config.h"
 #include "esp_attr.h"
@@ -7,6 +8,7 @@
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
 #include "freertos/task.h"
+#include "ink/hal_device.h"
 #include "ink/hal_display.h"
 #include "ink/osal.h"
 #include "lcd_driver.h"
@@ -15,6 +17,7 @@
 #include "metalio_plus/metalio_epd_power.h"
 #include "panel_e0470a14.h"
 #include "s31_board.h"
+#include "tps65185/tps65185.h"
 
 enum { W = 1216, H = 684 };
 #define LINE_BYTES (W / 4)
@@ -32,11 +35,11 @@ static struct {
     LineQueue_t q[2];
     TaskHandle_t scanners[2], task;
     SemaphoreHandle_t scan_done[2], frame_done, lock;
-    atomic_bool stop, armed, powered;
+    atomic_bool stop, armed, powered, testing, tripped;
     atomic_uint beat, pending;
     atomic_int row, missed;
     int owed[2];
-    bool empty, first, ready;
+    bool empty, first, ready, tested;
     uint32_t phase, next_id, hold_ms, wake_until;
     uint64_t last_drive;
     hal_rect_t area;
@@ -63,12 +66,47 @@ static void trip(void) {
     power_off();
     atomic_store(&D.armed, false);
 }
+static void guard_check(void) {
+    if (!ATOMIC(D.armed) || (uint32_t)(xTaskGetTickCount() - ATOMIC(D.beat)) < pdMS_TO_TICKS(GUARD_MS)) return;
+    if (!ATOMIC(D.testing)) { trip(); return; }
+    atomic_store(&D.armed, false); /* The self-test: nothing has started the LCD, so only the power goes. */
+    power_off();
+    atomic_store(&D.tripped, true);
+}
 static void guard(void *ctx) {
     (void)ctx;
     for (;;) {
         vTaskDelay(pdMS_TO_TICKS(50));
-        if (ATOMIC(D.armed) && (uint32_t)(xTaskGetTickCount() - ATOMIC(D.beat)) >= pdMS_TO_TICKS(GUARD_MS)) trip();
+        guard_check();
     }
+}
+/* Rule 5 of docs/hardware/README.md: the protection proves itself before the panel is driven, as the bench
+ * firmware's did (tools/hw-bench/main/panel_lab.c, guard_self_test): rails on, nobody scanning, and the guard
+ * alone must take them off. A PMIC in SLEEP stops answering; PWR_GOOD floats high then and proves nothing. */
+static bool guard_self_test(void) {
+    bool up = epd_power_on(&D.power) == EPD_POWER_OK && epd_power_good(&D.power);
+    atomic_store(&D.powered, true);
+    atomic_store(&D.tripped, false);
+    atomic_store(&D.testing, true);
+    uint64_t t0 = osal_now_us();
+    atomic_store(&D.beat, xTaskGetTickCount());
+    atomic_store(&D.armed, true);
+    while (!ATOMIC(D.tripped) && osal_now_us() - t0 < (uint64_t)(GUARD_MS + 1000) * 1000) vTaskDelay(pdMS_TO_TICKS(20));
+    bool tripped = ATOMIC(D.tripped);
+    unsigned ms = (unsigned)((osal_now_us() - t0) / 1000);
+    atomic_store(&D.armed, false);
+    atomic_store(&D.testing, false);
+    if (!tripped) power_off();
+    bool asleep = false;
+    for (int i = 0; i < 100 && !asleep; i++) {
+        uint8_t pg;
+        asleep = tps65185_read(D.power.pmic, TPS_REG_PG, &pg) != HAL_I2C_OK;
+        if (!asleep) vTaskDelay(pdMS_TO_TICKS(20));
+    }
+    char line[112];
+    snprintf(line, sizeof line, "display: guard self-test rails_up=%d tripped=%d after_ms=%u asleep=%d", up, tripped, ms, asleep);
+    hal_log_write(line);
+    return up && tripped && asleep;
 }
 static bool IRAM_ATTR line_source(void *ctx, uint8_t *line) {
     (void)ctx;
@@ -153,6 +191,13 @@ static bool drive(void) {
 }
 static void display_task(void *ctx) {
     (void)ctx;
+    if (!D.tested) {
+        D.tested = true;
+        if (!guard_self_test()) {
+            atomic_store(&D.stop, true);
+            hal_log_write("display: the guard did not prove itself, the panel stays off");
+        }
+    }
     for (;;) {
         ulTaskNotifyTake(pdTRUE, pdMS_TO_TICKS(20));
         xSemaphoreTake(D.lock, portMAX_DELAY);
