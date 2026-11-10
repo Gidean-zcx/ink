@@ -36,8 +36,10 @@
 #include "ink/sys/json.h"
 #include "ink/sys/members.h"
 #include "ink/sys/settings.h"
+#include "ink/sys/sha256.h"
 #include "ink/sys/state.h"
 #include "ink/sys/svc.h"
+#include "ink/sys/textinput.h"
 
 #define COMM_STACK 8192 /* PSRAM: never touches the flash; AT replies and SMS text are parsed on it */
 #define COMM_PRIO 3
@@ -97,7 +99,8 @@ static void call_begin(const char *member, const char *peer) { /* at held */
     osal_mutex_unlock(CM.lock);
 }
 
-static ink_rc_t ink_comm_bind_dtmf(ink_args_t *args, ink_receipt_t *rc) {
+static ink_rc_t ink_comm_bind_dtmf(ink_args_t *args, ink_receipt_t *rc, ink_source_t src) {
+    (void)src;
     if (CM.at) {
         char key[4] = "";
         ink_args_get_str(args, "key", key, sizeof key);
@@ -128,6 +131,7 @@ static bool save_message(ink_db_t *db, uint32_t *id, const char *peer, const cha
     return !w.overflow && ink_db_put(db, &wr, NULL) == INK_DB_OK && ink_db_wait(db, ver, 3000000) == 0;
 }
 static void received(void *ctx, const char *event, const ink_args_t *a) {
+    if (ink_args_find(a, "id")) return; /* assembled text was stored before its bounded event */
     (void)ctx; (void)event; char member[16], peer[24], *text = CM.text;
     ink_args_get_str(a, "member", member, sizeof member); ink_args_get_str(a, "from", peer, sizeof peer); ink_args_get_str(a, "text", text, sizeof CM.text);
     ink_db_t *db = ink_db_open_member(&MESSAGES, member); uint32_t id = 0;
@@ -222,9 +226,16 @@ static void settle(ink_db_t *db, sms_key_t k, bool force) {
         if (id) ink_db_del(db, id, INK_SRC_SYSTEM);
     }
     utf8_clip(CM.text); /* longer than any message sent from here: what fits */
+    ink_db_t *messages = ink_db_open_member(&MESSAGES, ink_member_current()->id); uint32_t id = 0;
+    bool saved = messages && save_message(messages, &id, k.peer, CM.text, "收到", INK_SRC_SYSTEM);
+    ink_db_close(messages);
+    if (!saved) ink_probe_count("sms.save_failed");
+    size_t preview = strlen(CM.text); if (preview > 354) preview = 354;
+    memcpy(CM.raw, CM.text, preview); CM.raw[preview] = 0; utf8_clip(CM.raw);
     ink_args_init(&CM.bg_args);
     ink_args_str(&CM.bg_args, "from", k.peer);
-    ink_args_str(&CM.bg_args, "text", CM.text);
+    ink_args_str(&CM.bg_args, "text", CM.raw);
+    ink_args_int(&CM.bg_args, "id", id);
     ink_cap_emit("message.received", &CM.bg_args);
     int open = 0;
     for (int i = 0; i < SMS_GROUPS; i++) {
@@ -421,19 +432,46 @@ static void send_status(char *s, size_t cap, int r, int parts, int sent) {
     snprintf(s, cap, "共 %d 条：%s%s%s", parts, done, unknown, left);
 }
 
-static void cap_send(ink_call_t *c) { /* exec.bg */
-    char to[24], *text = CM.text, status[160]; /* up to INK_SMS_PARTS_MAX parts: reject rather than truncate a longer one */
-    ink_args_get_str(&c->args, "to", to, sizeof to);
-    int bytes = ink_args_get_str(&c->args, "text", text, sizeof CM.text);
-    bool valid = to[0] && bytes > 0;
+/* Both callers use the same validation; the AI can supply text, never a local draft reference. */
+static int send_text(const ink_args_t *args, const char *member, ink_source_t src, ink_receipt_t *rc, char *to) {
+    char page[48]; int64_t draft = 0;
+    int to_len = ink_args_get_str(args, "to", to, 24), bytes;
+    if (ink_args_find(args, "draft")) {
+        if (ink_args_find(args, "text") || src == INK_SRC_AI || src == INK_SRC_REMOTE) {
+            snprintf(rc->say, sizeof rc->say, "请直接提供短信正文，不能同时提供正文和草稿；AI 不能发送草稿引用"); return -1;
+        }
+        bytes = ink_args_get_int(args, "draft", &draft) && draft > 0 && draft <= UINT32_MAX &&
+            ink_args_get_str(args, "page", page, sizeof page) > 0 ? ink_text_draft_read(member, page, (uint32_t)draft, CM.text, sizeof CM.text) : -1;
+        if (bytes < 0) { snprintf(rc->say, sizeof rc->say, "短信草稿不可用，未发送，请重新打开后再试"); return -1; }
+    } else bytes = ink_args_get_str(args, "text", CM.text, sizeof CM.text);
+    bool valid = to_len > 0 && to_len < 24 && bytes > 0 && bytes < (int)sizeof CM.text;
     for (size_t i = 0; to[i]; i++) if ((to[i] < '0' || to[i] > '9') && !(i == 0 && to[i] == '+' && to[1])) valid = false;
-    if (airplane(c, "发短信")) return; /* first: what is written does not matter without a radio */
-    int parts = valid && bytes < (int)sizeof CM.text ? hal_cell_sms_parts(text) : valid ? INK_SMS_PARTS_MAX + 1 : -1;
-    if (parts < 1 || parts > INK_SMS_PARTS_MAX) {
-        c->rc.status = INK_RC_INVALID;
-        if (parts > 0) snprintf(c->rc.say, sizeof c->rc.say, "短信太长，最多分 %d 条发送，请删短一些", INK_SMS_PARTS_MAX);
-        return;
+    int parts = valid ? hal_cell_sms_parts(CM.text) : -1;
+    if (parts > INK_SMS_PARTS_MAX) snprintf(rc->say, sizeof rc->say, "短信太长，最多分 %d 条发送，请删短一些", INK_SMS_PARTS_MAX);
+    return parts > 0 && parts <= INK_SMS_PARTS_MAX ? bytes : -1;
+}
+static void text_digest(char out[65]) {
+    uint8_t digest[32]; ink_sha256(CM.text, strlen(CM.text), digest);
+    for (int i = 0; i < 32; i++) snprintf(out + 2 * i, 3, "%02x", digest[i]);
+}
+static ink_rc_t bind_send(ink_args_t *args, ink_receipt_t *rc, ink_source_t src);
+static void cap_send(ink_call_t *c) { /* exec.bg */
+    char to[24] = "", *text = CM.text, status[160];
+    if (airplane(c, "发短信")) return;
+    int bytes = send_text(&c->args, ink_cap_call_member(c), c->src, &c->rc, to);
+    if (bytes < 0) { c->rc.status = INK_RC_INVALID; return; }
+    bool draft = ink_args_find(&c->args, "draft") != NULL;
+    if (draft && c->src == INK_SRC_CONFIRMED) {
+        char expected[65], actual[65]; text_digest(actual);
+        if (ink_args_get_str(&c->args, "_digest", expected, sizeof expected) != 64 || strcmp(expected, actual)) {
+            c->rc.status = INK_RC_STALE; snprintf(c->rc.say, sizeof c->rc.say, "短信草稿已改变，未发送，请重新确认"); return;
+        }
     }
+    /* Preserve existing direct sends; a draft exceeding the old call capacity gets a billed-parts card. */
+    if (draft && c->src != INK_SRC_CONFIRMED && (size_t)bytes + strlen(to) + 10 > INK_ARGS_TEXT) {
+        ink_confirm_hold(c->cap, &c->args, c->src, c->page_gen, &c->rc); return;
+    }
+    int parts = hal_cell_sms_parts(text);
     ink_db_t *db = ink_db_open_member(&MESSAGES, ink_cap_call_member(c)); uint32_t id = 0;
     if (!db || !save_message(db, &id, to, text, "结果未知，请先核实", c->src)) {
         ink_db_close(db); c->rc.status = INK_RC_FAILED; snprintf(c->rc.say, sizeof c->rc.say, "短信没能存下，未发送"); return;
@@ -455,19 +493,17 @@ static void cap_send(ink_call_t *c) { /* exec.bg */
 }
 
 /* Before an AI's message waits for a yes: the card says how many billed parts it goes as, like the composer. */
-static ink_rc_t bind_send(ink_args_t *args, ink_receipt_t *rc) {
-    char to[24], *text = osal_malloc(INK_SMS_TEXT_MAX, OSAL_MEM_EXTERNAL), note[64] = "";
-    int to_len = ink_args_get_str(args, "to", to, sizeof to), len = text ? ink_args_get_str(args, "text", text, INK_SMS_TEXT_MAX) : -1;
-    int parts = to_len >= 0 && to_len < (int)sizeof to && len >= 0 && len < INK_SMS_TEXT_MAX ? hal_cell_sms_parts(text) : INK_SMS_PARTS_MAX + 1;
-    ink_args_init(args); /* the private field is ours, never the caller's */
-    bool full = parts <= INK_SMS_PARTS_MAX && (ink_args_str(args, "to", to) || ink_args_str(args, "text", text));
-    osal_free(text);
-    if (parts > INK_SMS_PARTS_MAX || parts < 1) {
-        snprintf(rc->say, sizeof rc->say, "短信太长，最多分 %d 条发送，请删短一些", INK_SMS_PARTS_MAX);
-        return INK_RC_INVALID;
+static ink_rc_t bind_send(ink_args_t *args, ink_receipt_t *rc, ink_source_t src) {
+    char to[24] = "", page[48], digest[65], preview[61], note[48] = ""; int64_t draft = 0;
+    if (send_text(args, ink_member_current()->id, src, rc, to) < 0) return INK_RC_INVALID;
+    int parts = hal_cell_sms_parts(CM.text); size_t chars = ink_text_char_offset(CM.text, strlen(CM.text)), end = ink_text_byte_offset(CM.text, 20);
+    snprintf(preview, sizeof preview, "%.*s", (int)end, CM.text); utf8_clip(preview);
+    if (ink_args_get_int(args, "draft", &draft)) {
+        ink_args_get_str(args, "page", page, sizeof page); text_digest(digest); ink_args_init(args);
+        if (ink_args_str(args, "to", to) || ink_args_str(args, "page", page) || ink_args_int(args, "draft", draft) || ink_args_str(args, "_digest", digest)) return INK_RC_FAILED;
     }
-    if (parts > 1) snprintf(note, sizeof note, "（将按 %d 条发送，每条都计费）", parts);
-    if (full || ink_args_str(args, "_parts", note)) { snprintf(rc->detail, sizeof rc->detail, "confirmation arguments are full"); return INK_RC_FAILED; }
+    if (parts > 1) snprintf(note, sizeof note, "（共 %u 字，将按 %d 条发送）", (unsigned)chars, parts);
+    snprintf(rc->say, sizeof rc->say, "发短信给 %s：%.60s%s%s", to, preview, strlen(CM.text) > strlen(preview) ? "…" : "", note);
     return INK_RC_DONE;
 }
 
@@ -586,10 +622,10 @@ static const ink_cap_t COMM_CAPS[] = {
     {.id = "call.controls", .title = "通话控制已获模组确认", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true, .permission = "call"},
     {.id = "message.send",
      .title = "发短信",
-     .ask = "发短信给 {to}：{text}{_parts}",
+     .ask = "发短信给 {to}：{text}",
      .prepare_confirm = bind_send,
      .input = "{\"type\":\"object\",\"properties\":{\"to\":{\"type\":\"string\",\"maxLength\":20},\"text\":{\"type\":\"string\",\"maxLength\":765}},"
-              "\"required\":[\"to\",\"text\"]}",
+              "\"required\":[\"to\"]}",
      .effect = INK_FX_EXTERNAL,
      .child_ok = true, /* children like adults (D-25); the AI still waits for confirmation */
      .permission = "message",
@@ -598,7 +634,7 @@ static const ink_cap_t COMM_CAPS[] = {
      .exec = INK_EXEC_BG,
      .run = cap_send},
     {.id = "message.list", .title = "最近的短信", .effect = INK_FX_READ, .child_ok = true, .permission = "message", .exec = INK_EXEC_BG, .run = cap_list},
-    {.id = "sms.send", .title = "保存并发送短信", .ask = "发短信给 {to}：{text}{_parts}", .prepare_confirm = bind_send, .input = "{\"type\":\"object\",\"properties\":{\"to\":{\"type\":\"string\",\"maxLength\":20},\"text\":{\"type\":\"string\",\"maxLength\":765}},\"required\":[\"to\",\"text\"]}", .effect = INK_FX_EXTERNAL, .child_ok = true, .permission = "message", .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .timeout_ms = 30000, .run = cap_send},
+    {.id = "sms.send", .title = "保存并发送短信", .ask = "发短信给 {to}：{text}", .prepare_confirm = bind_send, .input = "{\"type\":\"object\",\"properties\":{\"to\":{\"type\":\"string\",\"maxLength\":20},\"text\":{\"type\":\"string\",\"maxLength\":765}},\"required\":[\"to\"]}", .effect = INK_FX_EXTERNAL, .child_ok = true, .permission = "message", .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .timeout_ms = 30000, .run = cap_send},
     {.id = "call.dial",
      .title = "打电话",
      .ask = "打电话给 {number}",

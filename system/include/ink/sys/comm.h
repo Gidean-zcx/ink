@@ -10,7 +10,7 @@
 extern "C" {
 #endif
 
-/* The longest text message: each part is billed and the whole text travels in one argument table (INK_ARGS_TEXT). */
+/* Each part is billed; long outgoing text is read from an owned text-service draft. */
 #define INK_SMS_PARTS_MAX 5
 #define INK_SMS_TEXT_MAX 1024 /* bytes with the NUL: 5 parts of 67 Chinese characters fit */
 

@@ -106,8 +106,13 @@ static void navigate(ink_call_t *c) {
 static void entered(void *ctx, const char *value) { (void)ctx; S.draft_ref.id = 0; snprintf(S.draft, sizeof S.draft, "%s", value); }
 static void send_clicked(lv_event_t *e) {
     (void)e; ink_args_t *a = ink_app_alloc(sizeof *a, true); if (!a) return;
+    ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .max = INK_SMS_TEXT_MAX - 1, .initial = ink_textfield_text(S.field), .draft_page = COMPOSE.name};
+    int session = ink_text_focus(&cfg, NULL, NULL);
+    uint32_t draft = session > 0 ? ink_text_draft_id() : 0;
+    if (session > 0) ink_text_blur(session);
+    if (!draft) { ink_app_free(a); lv_label_set_text(S.notice, "短信草稿没能保存，未发送"); return; }
     lv_obj_add_state(S.send, LV_STATE_DISABLED); ink_ui_busy_control(S.send, true);
-    ink_args_init(a); ink_args_str(a, "to", S.to); ink_args_str(a, "text", ink_textfield_text(S.field)); request("message.send", a); ink_app_free(a);
+    ink_args_init(a); ink_args_str(a, "to", S.to); ink_args_str(a, "page", COMPOSE.name); ink_args_int(a, "draft", draft); request("message.send", a); ink_app_free(a);
 }
 static size_t text_end(const char *text, size_t start) {
     size_t end = start, len = strlen(text); char *scratch = S.scratch;

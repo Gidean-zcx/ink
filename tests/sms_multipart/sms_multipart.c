@@ -81,12 +81,39 @@ static void receive(void) {
     quiet(); vtk_event_at(vtk_now() + SIM_MS(1), capture_incomplete, NULL); delay_ms(5);
 }
 
-static bool send(const char *to, const char *t) {
-    ink_jw_t w; ink_jw_init(&w, arguments, sizeof arguments);
-    ink_jw_raw(&w, "{\"to\":"); ink_jw_str(&w, to); ink_jw_raw(&w, ",\"text\":"); ink_jw_str(&w, t); ink_jw_raw(&w, "}");
-    return BY_HAND("message.send", arguments);
+static uint32_t draft_id;
+static void make_draft(void) {
+    ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .max = INK_SMS_TEXT_MAX - 1, .initial = text, .draft_page = "SmsCompose"};
+    int session = ink_text_focus(&cfg, NULL, NULL);
+    draft_id = session > 0 ? ink_text_draft_id() : 0;
+    if (session > 0) ink_text_blur(session);
+}
+static volatile bool final_ready;
+static ink_receipt_t final_rc;
+static void final_result(void *ctx, const char *event, const ink_args_t *a) {
+    (void)ctx; (void)event; char status[24];
+    if (ink_args_get_str(a, "status", status, sizeof status) < 0) return;
+    memset(&final_rc, 0, sizeof final_rc);
+    final_rc.status = !strcmp(status, "done") ? INK_RC_DONE : !strcmp(status, "partial") ? INK_RC_PARTIAL : INK_RC_FAILED;
+    ink_args_get_str(a, "say", final_rc.say, sizeof final_rc.say);
+    final_ready = true;
 }
 static ink_confirm_view_t card;
+static bool send(const char *to, const char *t) {
+    ink_jw_t w; ink_jw_init(&w, arguments, sizeof arguments);
+    ink_jw_raw(&w, "{\"to\":"); ink_jw_str(&w, to);
+    if (strlen(t) + strlen(to) + 10 > INK_ARGS_TEXT) {
+        CHECK(t == text, "long send uses the draft fixture"); on_ui(make_draft);
+        ink_jw_raw(&w, ",\"page\":\"SmsCompose\",\"draft\":"); ink_jw_int(&w, draft_id);
+    } else { ink_jw_raw(&w, ",\"text\":"); ink_jw_str(&w, t); }
+    ink_jw_raw(&w, "}");
+    if (!BY_HAND("message.send", arguments)) return false;
+    if (g_rc.status != INK_RC_PENDING_CONFIRMATION) return true;
+    final_ready = false;
+    if (ink_confirm_list(&card, 1) != 1 || ink_confirm_decide(card.token, true, INK_SRC_TOUCH)) return false;
+    if (!WAIT_FOR(final_ready, 15000)) return false;
+    g_rc = final_rc; return true;
+}
 static void card_snapshot(void) { if (ink_ui_snapshot(g_result, sizeof g_result, NULL) <= 0) g_result[0] = 0; }
 /* The AI asks; the card a person says yes to tells how many billed parts, as the composer does. */
 static bool ai_send(const char *t) {
@@ -96,20 +123,27 @@ static bool ai_send(const char *t) {
 }
 static void ai_confirm(void) {
     int before = sim_net_sms_sent();
-    han(text, 150, "汉");
-    CHECK(ai_send(text) && strstr(card.detail, text) && strstr(card.detail, "（将按 3 条发送，每条都计费）"), "the AI's 150 characters: the card says 3 parts (%d bytes)", (int)strlen(card.detail));
-    CHECK(WAIT_FOR(({ on_ui(card_snapshot); strstr(g_result, "将按 3 条发送") != NULL; }), 5000), "and so does the card's snapshot (%d bytes)", (int)strlen(g_result));
+    han(text, 100, "汉");
+    CHECK(ai_send(text) && strstr(card.detail, "汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉汉…") && strstr(card.detail, "共 100 字，将按 2 条发送") && strlen(card.detail) < 160,
+          "the AI's 100 characters: bounded card says 2 parts (%d bytes)", (int)strlen(card.detail));
+    CHECK(WAIT_FOR(({ on_ui(card_snapshot); strstr(g_result, "将按 2 条发送") != NULL; }), 5000), "and so does the card's snapshot (%d bytes)", (int)strlen(g_result));
     CHECK(sim_net_sms_sent() == before && ink_confirm_decide(card.token, true, INK_SRC_TOUCH) == 0, "nothing goes before the yes");
-    CHECK(WAIT_FOR(sim_net_sms_sent() == before + 3, 10000), "after the yes, 3 parts go (%d)", sim_net_sms_sent() - before);
+    CHECK(WAIT_FOR(sim_net_sms_sent() == before + 2, 10000), "after the yes, 2 parts go (%d)", sim_net_sms_sent() - before);
     quiet();
-    CHECK(ai_send("短的") && !strstr(card.detail, "将按") && !strcmp(card.detail, "发短信给 10010：短的"), "one part: no count on the card (%s)", card.detail);
+    CHECK(ai_send("短的") && !strstr(card.detail, "将按") && !strcmp(card.detail, "发短信给 10010：短的"), "one part: no count on the card (%.150s)", card.detail);
     CHECK(ink_confirm_decide(card.token, false, INK_SRC_TOUCH) == 0, "declined");
-    han(text, 5 * 67 + 1, "汉");
+    han(text, 150, "汉");
     ink_jw_t w; ink_jw_init(&w, arguments, sizeof arguments);
     ink_jw_raw(&w, "{\"to\":\"10010\",\"text\":"); ink_jw_str(&w, text); ink_jw_raw(&w, "}");
-    CHECK(AI("message.send", arguments) && g_rc.status == INK_RC_INVALID && ink_confirm_list(&card, 1) == 0, "too long: refused before any card (%d)", g_rc.status);
+    before = sim_net_sms_sent();
+    CHECK(AI("message.send", arguments) && g_rc.status == INK_RC_INVALID && strstr(g_rc.detail, "416-byte") && ink_confirm_list(&card, 1) == 0 && sim_net_sms_sent() == before,
+          "AI text beyond the table: explicit refusal, no card or send (%d, %s)", g_rc.status, g_rc.detail);
+    on_ui(make_draft); snprintf(arguments, sizeof arguments, "{\"to\":\"10010\",\"page\":\"SmsCompose\",\"draft\":%u}", (unsigned)draft_id);
+    CHECK(AI("message.send", arguments) && g_rc.status == INK_RC_INVALID && strstr(g_rc.say, "AI 不能") && ink_confirm_list(&card, 1) == 0 && sim_net_sms_sent() == before,
+          "AI cannot bypass the text limit with a draft (%d)", g_rc.status);
 }
 static void transmit(void) {
+    CHECK(ink_cap_subscribe("confirm.result", final_result, NULL, INK_EXEC_DIRECT) == 0, "observe final send receipts");
     char status[96], first[3] = "", ref[3] = "", pnum[32];
     han(text, 150, "汉");
     CHECK(send("10086", text) && g_rc.status == INK_RC_DONE && !strcmp(g_rc.say, "已发出"), "150 Chinese characters go (%s)", g_rc.say);
@@ -146,6 +180,11 @@ static void transmit(void) {
 }
 
 static void type_text(void) { ink_text_commit_utf8(text); }
+static void finish_text(void) { ink_text_enter(); }
+static void locate_send(void) {
+    lv_area_t area; lv_obj_update_layout(S.send); lv_obj_get_coords(S.send, &area);
+    g_btn_x[0] = (area.x1 + area.x2) / 2; g_btn_y[0] = (area.y1 + area.y2) / 2;
+}
 static void snap_compose(void) { if (ink_ui_snapshot(g_result, sizeof g_result, NULL) <= 0) g_result[0] = 0; }
 static void compose(void) {
     CHECK(AI("contacts.put", "{\"name\":\"合成收件人\",\"number\":\"00000000001\"}") && g_rc.status == INK_RC_DONE, "a synthetic contact");
@@ -161,6 +200,14 @@ static void compose(void) {
     CHECK(!strcmp(lv_label_get_text(S.parts), "将按 3 条发送"), "150 characters: 3 parts (%s)", lv_label_get_text(S.parts));
     on_ui(snap_compose); CHECK(strstr(g_result, "发送短信，将按 3 条发送") != NULL, "the AI's snapshot says it too (%d bytes)", (int)strlen(g_result));
     vtk_event_at(vtk_now() + SIM_MS(1), capture_parts, NULL); delay_ms(5);
+    on_ui(finish_text); quiet(); on_ui(locate_send); int before = sim_net_sms_sent();
+    tap(g_btn_x[0], g_btn_y[0]);
+    CHECK(WAIT_FOR(ink_confirm_list(&card, 1) == 1, 10000) && strstr(card.detail, "共 150 字，将按 3 条发送") && strlen(card.detail) < 160,
+          "physical send loads the full draft and asks about 3 billed parts (%.150s)", card.detail);
+    CHECK(sim_net_sms_sent() == before && ink_confirm_decide(card.token, true, INK_SRC_TOUCH) == 0, "no part before the person's yes");
+    CHECK(WAIT_FOR(sim_net_sms_sent() == before + 3 && messages("00000000001", NULL) == 1, 10000) && strlen(got) == 450,
+          "after the yes the composer sends and stores all 150 characters"); quiet();
+    CHECK(AI("sms.text", NULL) && g_rc.status == INK_RC_DONE, "focus the remaining draft");
     han(text, 190, "短"); on_ui(type_text); quiet();
     CHECK(!strcmp(lv_label_get_text(S.parts), "太长了，最多分 5 条发送"), "340 characters: too long (%s)", lv_label_get_text(S.parts));
 }

@@ -24,7 +24,7 @@
 
 #define MAX_HELD 4
 #define EXPIRE_US 60000000ull
-#define LIST_CAP (1200 + MAX_HELD * INK_CONFIRM_DETAIL)
+#define LIST_CAP 1200
 
 typedef struct {
     bool used;
@@ -34,7 +34,7 @@ typedef struct {
     ink_source_t src;
     uint32_t page_gen;
     char member[INK_MEMBER_ID_MAX];
-    char detail[INK_CONFIRM_DETAIL];
+    char detail[160];
     uint64_t expires_us;
     bool parent;
     uint32_t epoch, connection;
@@ -319,8 +319,10 @@ ink_rc_t ink_confirm_hold(const ink_cap_t *c, const ink_args_t *args, ink_source
     h->cap = c;
     h->args = *args;
     if (c->prepare_confirm) {
-        ink_rc_t prepared = c->prepare_confirm(&h->args, rc);
+        rc->say[0] = 0;
+        ink_rc_t prepared = c->prepare_confirm(&h->args, rc, src);
         if (prepared != INK_RC_DONE) { osal_free(h); rc->status = prepared; return rc->status; }
+        snprintf(h->detail, sizeof h->detail, "%s", rc->say);
     }
     h->src = src;
     h->page_gen = page_gen ? page_gen : (c->activity ? ink_ui_content_version() : 0);
@@ -334,7 +336,7 @@ ink_rc_t ink_confirm_hold(const ink_cap_t *c, const ink_args_t *args, ink_source
         h->connection = ink_hub_connection();
     }
     snprintf(h->member, sizeof h->member, "%s", ink_member_current()->id);
-    if (!describe(c, c->prepare_confirm ? &h->args : args, h->detail, sizeof h->detail)) {
+    if (!h->detail[0] && !describe(c, c->prepare_confirm ? &h->args : args, h->detail, sizeof h->detail)) {
         osal_free(h);
         rc->status = INK_RC_REJECTED;
         snprintf(rc->detail, sizeof rc->detail, "confirmation detail is too long");

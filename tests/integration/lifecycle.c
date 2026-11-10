@@ -432,13 +432,12 @@ static void sms_checks(void) {
     n = sim_net_sent_sms(1, number, sizeof number, sent, sizeof sent);
     CHECK(g_last.status == INK_RC_DONE && n == 2 && !strcmp(sent, text), "and arrives whole (%s, %d bytes)", ink_rc_name(g_last.status), (int)strlen(sent));
 
-    static char longest[1100]; /* sms-multipart: no longer 118, but 5 parts of 67; one character more is refused */
+    static char longest[1100], arguments[1200]; /* direct text stays bounded by the argument table */
     for (int i = 0; i < 5 * 67 + 1; i++) memcpy(longest + i * 3, "中", 4);
-    ink_args_init(&a);
-    ink_args_str(&a, "to", "10086");
-    CHECK(ink_args_str(&a, "text", longest) == 0, "one character more still fits the table");
+    snprintf(arguments, sizeof arguments, "{\"to\":\"10086\",\"text\":\"%s\"}", longest);
+    o.args_json = arguments;
     replies = g_replies;
-    CHECK(ink_cap_call("message.send", &a, &o) == 0, "the service decides");
+    CHECK(ink_cap_call("message.send", NULL, &o) == 0, "the argument boundary decides");
     for (int w = 0; w < 300 && g_replies == replies; w++) osal_task_delay_us(10000);
     CHECK(g_last.status == INK_RC_INVALID && sim_net_sent_sms(2, number, sizeof number, sent, sizeof sent) == 2, "it is refused, nothing goes out (%s)", g_last.detail);
 }
