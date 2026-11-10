@@ -6,9 +6,9 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 待验证：S31 编译、端口普通/ASan、回退和浅睡开关反向对照 | 实施中 | 待补 |
-| 2 | 待验证：模拟器全量、gcccheck、隐私 | 实施中 | 待补 |
-| 3 | 待核查：任务栈、核、内存与原厂对照 | 实施中 | 待补 |
+| 1 | 【实测】通过 | S31 退出 0，编译警告/错误 0；端口普通/ASan 各 14/14；新反向对照 9/9 拒绝撤回变体 | 下列“复现命令”中的 S31、端口测试和 `boot_negative.py` |
+| 2 | 【实测】普通覆盖完成；ASan 全量进行中 | 普通 334 通过、3 跳过；补跑 4/4（含前置）；gcccheck 5 个宿主文件、7 个 S31 文件均 0 发现；首轮隐私无匹配 | 下列模拟器、gcccheck、隐私命令 |
+| 3 | 【实现】静态核对完成；实机边界见清单 | 下表覆盖系统、端口及 IDF 任务；看门狗配置逐项与原厂相等；RTC 和 panic 函数链接区已核对 | `python3 tests/esp32s31/stack_report.py build-s31`、工具链 `objdump -t build-s31/ink-s31.elf` |
 
 ## 没做到的
 
@@ -36,6 +36,7 @@
 
 - 【实现】真实板信息使通信任务启动，而旧桩 `hal_cell_wait_event()` 返回 `-1`，违反接口的 1=事件/0=超时约定，被调用方当成事件并忙循环。为保证完整启动，只改此桩：按给定超时等待后返回 0；没有接触模组。新增宿主测试和撤回对照。
 - 【实现】原厂任务看门狗未启用 panic，单纯饿死 idle 的情况只告警；自动回退统计的是实际发生的异常/看门狗复位，不能据此承诺所有死锁都会自行恢复。
+- 原厂副本为稀疏/按需检出；读取未下载的音频/UI 对象时 Git 试图补取，被只读沙箱拒绝，副本未写入。后续只用已提供的板级源码和配置，未补全依赖。音频 26 KiB 沿用本项目既有值，未把注释当作本次原厂核查证据。
 
 ## 新增的机制
 
@@ -70,6 +71,11 @@
 | epd_scan ×2 | 各 4096 | 23 | 各 0/1 | 内部 | 行生成，无闪存写 |
 | epd_guard | 4096 | 24 | 1 | 内部 | 2 秒看护、异常停屏 |
 | epd | 4096 | 5，扫描时 24 | 0 | 内部 | 波形、电源和扫描等待 |
+| esp_timer（IDF） | 3584 | 22 | 0 | 内部 | 本任务的健康定时器复用此任务 |
+| ipc0 / ipc1（IDF） | 各 1024 | 24 | 各 0/1 | 内部 | SDK 跨核调用，含闪存操作 |
+| IDLE0 / IDLE1（IDF） | 各 1536 | 0 | 各 0/1 | 内部 | 两核均由 TWDT 检查 |
+| Tmr Svc（FreeRTOS） | 2048 | 1 | 任意 | 内部 | SDK 软件定时器服务 |
+| prvTaskDeleteWithCapsTask（短任务，IDF） | 1536 | 继承被删任务 | 当前核 | 内部 | OSAL 自检任务自删除时 SDK 临时清理，随后退出 |
 
 【实现】系统任务来源：`system/services/{storage,power,display,hub,audio,comm}` 各服务的 `osal_task_cfg_t`，`system/services/res/exec.c:14–34,72–74`、`system/ui/ui_task.c:901–903`；端口来源：`hal_display_s31.c`、`hal_input_s31.c:102`、`s31_irq.c:16–17,55`。未发现上述 PSRAM 任务直接写内部闪存：`/user` 在内部栈 storage 上执行，OTA 的 `slot_begin/write/finish/valid` 与资源写入也经它执行（`update_service.c:312–340,369,402,426,965,1036`）。读内部闪存也受栈限制，资源端口需使用映射，不能在 PSRAM 任务调用裸分区读。
 
@@ -78,10 +84,12 @@
 原厂对照（2026-11-10 查阅，只读源码 `CloudZao/Metalio-E-INK4-Plus @690a023`）：
 
 - `sdkconfig:2431–2439`：main 16384 B、核 0；本端口一致。
+- IDF 默认任务：生成的 `build-s31/sdkconfig` 中 esp_timer 3584 B/核 0、IPC 1024 B、idle 1536 B、Tmr Svc 2048 B/优先级 1/不绑核，与原厂 `sdkconfig:2479,2498–2506,2969,2983–2993` 一致。优先级来源为 IDF `esp_system/include/esp_task.h`；自删除清理来源为 IDF `freertos/esp_additions/idf_additions.c:166–190`。网络/音频端口新增的 SDK 任务需在合入后补核查。
 - `sdkconfig:2443–2458`：IWDT 800 ms、检查两核；TWDT 20 s、检查两核 idle、panic 关闭；本端口显式一致。
 - `main/boards/common/power_policy/power_policy_standby_lp.cc:556–558`：standby_lp 4096 B、优先级 3、核 0、内部；本系统 power 4096 B、优先级 4、不绑核，按系统服务职责保留。
 - `main/boards/metalio-e-ink4-plus/display/render.c:54,420–429`：两条 epd_prep 各 4096 B、优先级 24、各绑一核、PSRAM；本端口扫描栈同大小、内部、优先级 23，为已有独立 guard 留最高级。输入/扫描/看护的实机调度余量待测，没有把编译当作实时性能证据。
-- `main/boards/metalio-e-ink4-plus/bus/metalio_i2c1.c:55–83`：GPIO0/1 总线恢复和 5 us 脉冲；`display/epd_board_metalio_eink4_plus.c` 的关电顺序以及共享 `metalio_epd_power.c:130–140`：XOE 低至少 12 us → VCOM_CTRL/PWRUP 低 → WAKEUP 低。panic 使用相同引脚和顺序，10 ms 延时来自既有 `trip()`。
+- `main/boards/metalio-e-ink4-plus/display/metalio_touch.c:35–36,298`、`input/metalio_keys.cc:211`：原厂触摸栈 4096 B、按键栈 3072 B，优先级均 5；本端口输入合并为 4096 B/24，并另有 irq 4096 B/10，沿用已有移植实现。其优先级高于扫描任务，是否造成行队列欠载必须上机验证，未擅自改调度。
+- `main/boards/metalio-e-ink4-plus/bus/metalio_i2c1.c:55–83`：GPIO0/1 总线恢复和 5 us 脉冲；`display/epd_board_metalio_eink4_plus.c:929–949` 的关电顺序以及共享 `metalio_epd_power.c:130–140`：XOE 低至少 12 us → VCOM_CTRL/PWRUP 低 → WAKEUP 低。panic 使用相同引脚和顺序，10 ms 延时与原厂 `vTaskDelay(1)`（100 Hz）和既有 `trip()` 一致。
 
 ## 上机先核对清单
 
@@ -102,3 +110,32 @@
 - 【实测】端口普通单测 14/14 通过（9.88 s）；`boot_negative.py` 的 4 个原实现全部通过、9 个撤回变体全部触发断言（编译退出 0，测试退出 -6）。覆盖阈值、RTC 校验、60 秒清零、上电清零、浅睡开关、shutdown、panic 栅极/电源以及无事件桩。
 - 【实测】普通模拟器全量原话：`100% tests passed out of 337`、`Total Test time (real) = 850.04 sec`；其中 3 项中枢测试跳过，已找到可用的锁定依赖环境，待补跑。
 - 当前产品改动 +222/-14，净增 208 行（含 CMake、配置和构建脚本，不含测试/文档），预算 250 行内。超过 100 行的原因：RTC 保护 50 行、无调度 panic 关电 67 行、真实设备/版本 43 行及必要接线。考虑过直接在 panic 调用 `trip()`，但它依赖锁与调度，会在异常中卡住；只拉低 XOE 又不能关 PMIC，因此采用固定、有限的 GPIO 写序列，没有通用 I2C 框架。
+- 【实测】S31 以 `OFF` 编译成功，C/C++ 编译警告和错误均为 0；`ink-s31.bin` 1527344 B（不含并行任务资源包）。IDF size：DIRAM 静态 101024 B/503744 B，静态剩余 402720 B，不等于运行时空闲堆。版本为 `g5b36019b-261110140518`（产品提交 `5b36019b`，UTC 构建时刻）。
+- 【实测】`objdump -t`：`ink_boot` 是 `.rtc_noinit` 中 16 B；`__wrap_esp_panic_handler`、`ink_s31_display_panic`、`ink_s31_panel_panic` 和两个 LCD 回调设置函数均在 `.iram0.text`。链接 map 确认 IDF panic 入口引用了包装函数。
+- 【实测】端口 ASan+UBSan 14/14 通过（8.94 s，`UBSAN_OPTIONS=halt_on_error=1`）。既有输入/电源/板级反向对照 14/14、显示反向对照 7/7 全部拒绝变体，原实现均通过；未放宽断言和预算。
+- 【实测】`ink-codex/tools/gcccheck.py`：宿主 `5 compiled, 0 with findings`；S31 `7 compiled, 0 with findings`；没有跳过文件。
+- 【实现】架构审视：变更局限端口启动/异常机制；不新增用户动作或页面，不绕过既有能力总线，不新增 AI 私有通道。
+
+## 复现命令
+
+模拟器配置使用总规则 §5 的字体、Python、LVGL 参数，并设 `-DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"`。ASan 配置同一组参数，构建目录换 `build-asan`、加 `-DINK_SANITIZE=ON`。SDL2/ImGui 使用 `$INK_DEPS/build/_deps/{sdl2,imgui}-src` 的固定只读源码，不装依赖、不升级。
+
+```bash
+INK_UPSTREAM="$INK_DEPS/../ink-hw/upstream/Metalio-E-INK4-Plus" INK_S31_LIGHT_SLEEP=OFF taskpolicy -c utility bash ports/esp32s31/build.sh
+taskpolicy -c utility cmake -S ports/esp32s31/tests -B build-s31-host -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+taskpolicy -c utility cmake --build build-s31-host -j2
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-s31-host --output-on-failure -j2
+# 端口内存检查：目录换 build-s31-host-asan，配置增加 -DINK_SANITIZE=ON。
+taskpolicy -c utility python3 ports/esp32s31/tests/boot_negative.py build-s31-host
+taskpolicy -c utility python3 ports/esp32s31/tests/negative.py build-s31-host
+taskpolicy -c utility python3 ports/esp32s31/tests/display_negative.py build-s31-host
+taskpolicy -c utility cmake --build build -j2
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
+taskpolicy -c utility cmake --build build-asan -j2
+INK_KEEP_EVIDENCE=1 UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
+taskpolicy -c utility python3 "$INK_DEPS/../ink-codex/tools/gcccheck.py" build-s31-host ports/esp32s31/tests/{boot,panic,power,display,stubs}.c
+taskpolicy -c utility python3 "$INK_DEPS/../ink-codex/tools/gcccheck.py" build-s31 ports/esp32s31/{s31_boot,s31_panic,hal_device_s31,hal_display_s31,hal_power_s31,hal_stubs}.c ports/esp32s31/main/main.c
+# 隐私扫描：使用 codex-rules.md 第 6 节原命令，基线同本报告。
+```
+
+日志保存在忽略目录 `work/port-boot-1/`；S31 的尺寸、栈报告和链接 map 在 `build-s31/`，均未提交。
