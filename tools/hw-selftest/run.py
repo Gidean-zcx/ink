@@ -11,7 +11,9 @@ erase, never any other address. Writing needs a checked full backup and the user
  3. An otadata that selects ota_1 is made from the factory one (its highest sequence number plus one, in
     the other sector; ESP-IDF format). After the panel is idle: write the image to ota_1 and that
     otadata, then verify both against the device.
- 4. Reset into the self-test and log its console until HWTEST_DONE (after a full replay) or --seconds.
+ 4. Reset into the self-test and log its console until HWTEST_DONE (after a full replay) or --seconds;
+    the port may drop and come back (light sleep, then the self-test restarts itself once): it is
+    reopened and logging goes on until the last boot's replay ends with HWTEST_DONE.
  5. Restore: the factory otadata and the part of ota_1 the image covered, from the backup; verify
     otadata and the whole of ota_1 against the backup (if ota_1 differs, all of it is written back).
  6. Reset and log the boot until the factory firmware is loaded from ota_0 again.
@@ -46,7 +48,7 @@ WRITABLE = (OTADATA, OTA_1)
 SECTOR = 0x1000
 OTA_VALID = 2  # ESP_OTA_IMG_VALID
 OTA_DEAD = (3, 4)  # INVALID, ABORTED: the bootloader skips such an entry
-DONE, REPLAY, SAFETY_FAIL = "HWTEST_DONE", "HWTEST_REPLAY", "SAFETY_FAIL"
+START, DONE, REPLAY, SAFETY_FAIL = "HWTEST_START", "HWTEST_DONE", "HWTEST_REPLAY", "SAFETY_FAIL"
 BOOT_LINE = "Loaded app from partition at offset 0x%x" % OTA_0[0]
 RESTORE_TRIES = 30
 
@@ -213,15 +215,33 @@ def wait_port_idle(r, name):
     return path
 
 
-def capture(r, name, seconds, until, armed_by=None, reset=False):
+def capture(r, name, seconds, until, armed_by=None, reset=False, disarm_by=None, quiet=30.0):
     """Log the console into DIR/<name>_console.txt until a line holds `until` (after one holding
-    `armed_by`, if given) or `seconds` pass. Reopens the port when it drops. True if `until` was seen."""
+    `armed_by`, if given) or `seconds` pass. True if `until` was seen.
+
+    The port may vanish and come back (a reset, the self-test's light sleep and the esp_restart after
+    it): it is reopened and the log goes on; that is not a failure and triggers nothing. A port that
+    stays open but says nothing for `quiet` seconds is reopened too (after the device re-enumerates
+    the old handle can go silent instead of failing). A line cut by a drop is dropped; `until` counts
+    only after a fresh `armed_by` line, and a `disarm_by` line (a new boot) starts over, so only the
+    last boot's whole replay ends the log."""
     serial_log, _ = serial_helpers()
     out = os.path.join(r.a.out, f"{name}_console.txt")
     t0 = time.monotonic()
-    armed, seen, did_reset = armed_by is None, False, not reset
+    armed, seen, did_reset, lost, drops, reopens = armed_by is None, False, not reset, False, 0, 0
     with open(out, "a", buffering=1, encoding="utf-8") as f:
-        s, buf = None, b""
+        s, buf, heard = None, b"", time.monotonic()
+
+        def drop(why):
+            nonlocal s, buf, lost, armed
+            f.write(f"# {why} {datetime.datetime.now():%H:%M:%S.%f}\n")
+            try:
+                s.close()
+            except OSError:
+                pass
+            s, buf, lost = None, b"", True
+            armed = armed_by is None
+
         while time.monotonic() - t0 < seconds and not seen:
             if s is None:
                 path = serial_log.find_port(r.a.port)
@@ -232,27 +252,45 @@ def capture(r, name, seconds, until, armed_by=None, reset=False):
                 if s is None:
                     time.sleep(0.1)
                     continue
+                heard = time.monotonic()
+                if lost:
+                    f.write(f"# port back {datetime.datetime.now():%H:%M:%S.%f}\n")
+                    lost = False
                 if not did_reset:
                     serial_log.reset(s)  # RTS pulse: a normal boot
                     did_reset = True
                     f.write("# reset\n")
             try:
-                buf += s.read(4096)
-            except OSError:
-                s = None
+                chunk = s.read(4096)
+            except OSError as e:  # serial.SerialException is an OSError
+                drop(f"port lost: {e}")
+                drops += 1
+                continue
+            if chunk:
+                buf += chunk
+                heard = time.monotonic()
+            elif time.monotonic() - heard > quiet:
+                drop(f"port silent for {quiet:.0f} s: reopening")
+                reopens += 1
                 continue
             while b"\n" in buf:
                 line, buf = buf.split(b"\n", 1)
                 text = line.rstrip(b"\r").decode("utf-8", "replace")
                 f.write(f"[{datetime.datetime.now():%H:%M:%S.%f}] {text}\n")
+                if disarm_by and disarm_by in text:
+                    armed = armed_by is None
                 if armed_by and armed_by in text:
                     armed = True
                 if until in text and armed:
                     seen = True
                     break
         if s is not None:
-            s.close()
-    r.say(f"console log {out}: {'saw ' + until if seen else 'NOT seen: ' + until}")
+            try:
+                s.close()
+            except OSError:
+                pass
+    r.say(f"console log {out}: {'saw ' + until if seen else 'NOT seen: ' + until}; "
+          f"the port dropped {drops} times and was reopened after silence {reopens} times")
     return seen
 
 
@@ -335,7 +373,7 @@ def install_and_test(r, p):
     if r.a.dry_run:
         r.say(f"would log the console until {DONE} after {REPLAY}")
         return True
-    return capture(r, "selftest", r.a.seconds, DONE, armed_by=REPLAY)
+    return capture(r, "selftest", r.a.seconds, DONE, armed_by=REPLAY, disarm_by=START)
 
 
 def restore(r, p):
@@ -372,13 +410,30 @@ def boot_check(r):
     return capture(r, "boot", 60.0, BOOT_LINE, reset=True)
 
 
+def park(r):
+    """Keep the link: once the factory firmware has booted and the panel is idle, reset into download mode and stay
+    there. The factory firmware sleeps after 180 s idle and USB goes; download mode does not sleep. Read only."""
+    r.step("7. park in download mode")
+    if r.a.dry_run:
+        r.say("would wait for an idle panel and park the chip in download mode")
+        return True
+    time.sleep(12)  # past the bootloader's watchdog window and the start of the boot refresh
+    path = wait_port_idle(r, "park")
+    if not path:
+        return False
+    cmd = r.a.esptool + ["--chip", "esp32s31", "--port", path, "--before", "default-reset", "--after", "no-reset", "chip-id"]
+    rc = subprocess.call(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    r.say("parked in download mode" if rc == 0 else f"could not park (exit {rc})")
+    return rc == 0
+
+
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--port", required=True, help="serial port path or glob, e.g. '/dev/cu.usbmodem*'")
     ap.add_argument("--backup", required=True, help="verified full 16 MiB flash backup of this device")
     ap.add_argument("--image", required=True, help="tools/hw-selftest/build/ink-hw-selftest.bin")
     ap.add_argument("--out", required=True, help="output directory (outside the repository)")
-    ap.add_argument("--seconds", type=float, default=120.0, help="how long to wait for HWTEST_DONE")
+    ap.add_argument("--seconds", type=float, default=300.0, help="how long to wait for HWTEST_DONE")
     ap.add_argument("--baud", type=int, default=460800)
     ap.add_argument("--python", default=sys.executable, help="the Python that has esptool")
     ap.add_argument("--dry-run", action="store_true", help="files only; print the device commands")
@@ -422,6 +477,7 @@ def steps(r):
         r.say("RESTORE NOT VERIFIED: stop and look; the backup has otadata and ota_1")
         return 1
     booted = boot_check(r)
+    parked = booted and park(r)
     if a.dry_run:
         r.say("DRY RUN done: the device was not touched")
         return 0
@@ -429,7 +485,7 @@ def steps(r):
     if unsafe:
         r.say(f"the self-test said {SAFETY_FAIL}: it ran nothing after the safety step")
     r.say(f"done: test {'finished' if tested else 'NOT finished'}, results {'all ok' if passed else 'see results.jsonl'}, "
-          f"restore verified, factory boot {'seen' if booted else 'NOT seen'}")
+          f"restore verified, factory boot {'seen' if booted else 'NOT seen'}, {'parked in download mode' if parked else 'NOT parked'}")
     return 0 if tested and booted else 3
 
 

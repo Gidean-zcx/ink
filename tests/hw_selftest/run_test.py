@@ -204,5 +204,137 @@ class DryRun(unittest.TestCase):
         self.assertEqual(rc, 2, text[-300:])
 
 
+class FakePort:
+    """Gives its chunks, then raises as a vanished USB device would."""
+    def __init__(self, chunks, vanish):
+        self.chunks, self.vanish = list(chunks), vanish
+
+    def read(self, _n):
+        if self.chunks:
+            return self.chunks.pop(0)
+        if self.vanish:
+            raise OSError("device disconnected")
+        return b""
+
+    def close(self):
+        pass
+
+
+class FakeSerialLog:
+    """First connection: a replay cut off by the drop; then the port is gone twice; then it is back."""
+    def __init__(self):
+        self.opens, self.finds = 0, 0
+        self.sessions = [
+            ([b"HWTEST_START\n{\"test\":\"sys\",\"ok\":true}\n", b"HWTEST_REPLAY\n{\"test\":\"sys\",\"ok\":true}\n{\"te"], True),
+            ([b"st\":\"cut\"}\nHWTEST_DONE\n", b"HWTEST_REPLAY\n{\"test\":\"sys\",\"ok\":true}\n"
+              b"{\"test\":\"light_sleep\",\"ok\":true}\n{\"test\":\"summary\",\"ok\":true}\nHWTEST_DONE\n"], False)]
+
+    def find_port(self, _pattern):
+        self.finds += 1
+        return None if self.opens == 1 and self.finds in (2, 3) else "/dev/cu.fake"
+
+    def open_port(self, _path, _baud):
+        chunks, vanish = self.sessions[min(self.opens, len(self.sessions) - 1)]
+        self.opens += 1
+        return FakePort(chunks, vanish)
+
+    def reset(self, _s):
+        pass
+
+
+class PortDrops(unittest.TestCase):
+    def test_capture_reopens_and_needs_a_whole_replay(self):
+        with tempfile.TemporaryDirectory() as d:
+            a = type("A", (), {"out": d, "port": "/dev/cu.fake", "dry_run": False})()
+            r = type("R", (), {"a": a, "said": [], "say": lambda self, t: self.said.append(t)})()
+            fake = FakeSerialLog()
+            saved = run.serial_helpers
+            run.serial_helpers = lambda: (fake, None)
+            try:
+                with redirect_stdout(io.StringIO()):
+                    seen = run.capture(r, "selftest", 10.0, run.DONE, armed_by=run.REPLAY)
+                    passed, unsafe = run.collect_results(r)
+            finally:
+                run.serial_helpers = saved
+            self.assertTrue(seen)
+            self.assertEqual(fake.opens, 2)
+            log = read(os.path.join(d, "selftest_console.txt")).decode()
+            self.assertIn("# port lost", log)
+            self.assertIn("# port back", log)
+            self.assertNotIn('{"test":"cut"}', log, "the line cut by the drop is not glued to the next one")
+            results = read(os.path.join(d, "results.jsonl")).decode().splitlines()
+            self.assertIn('{"test":"light_sleep","ok":true}', results, "the DONE after the cut replay did not end it")
+            self.assertTrue(passed)
+            self.assertFalse(unsafe)
+
+
+class SilentThenBack:
+    """Boot 1 sleeps and goes quiet on a handle that never fails (stale after re-enumeration); boot 2,
+    after the restart, runs to the end. A stray DONE right after boot 2's START (no replay yet) must not
+    end the log."""
+    def __init__(self):
+        self.opens = 0
+        self.sessions = [
+            [b"HWTEST_START\n{\"test\":\"safety\",\"ok\":true}\nHWTEST_REPLAY\n{\"test\":\"light_sleep\",\"note\":\"sleeping\"}\n"],
+            [b"HWTEST_START\nHWTEST_DONE\n{\"test\":\"light_sleep_prev\",\"ok\":true,\"phase\":\"woke\"}\n",
+             b"HWTEST_REPLAY\n{\"test\":\"light_sleep_prev\",\"ok\":true,\"phase\":\"woke\"}\n"
+             b"{\"test\":\"summary\",\"ok\":true}\nHWTEST_DONE\n"]]
+
+    def find_port(self, _pattern):
+        return "/dev/cu.fake"
+
+    def open_port(self, _path, _baud):
+        chunks = self.sessions[min(self.opens, len(self.sessions) - 1)]
+        self.opens += 1
+        return FakePort(chunks, False)
+
+    def reset(self, _s):
+        pass
+
+
+class RestartAfterSleep(unittest.TestCase):
+    def test_silent_port_is_reopened_and_the_last_boot_counts(self):
+        with tempfile.TemporaryDirectory() as d:
+            a = type("A", (), {"out": d, "port": "/dev/cu.fake", "dry_run": False})()
+            r = type("R", (), {"a": a, "said": [], "say": lambda self, t: self.said.append(t)})()
+            fake = SilentThenBack()
+            saved = run.serial_helpers
+            run.serial_helpers = lambda: (fake, None)
+            try:
+                with redirect_stdout(io.StringIO()):
+                    seen = run.capture(r, "selftest", 10.0, run.DONE, armed_by=run.REPLAY, disarm_by=run.START, quiet=0.3)
+                    passed, _unsafe = run.collect_results(r)
+            finally:
+                run.serial_helpers = saved
+            self.assertTrue(seen)
+            self.assertEqual(fake.opens, 2, "reopened once after the silence")
+            log = read(os.path.join(d, "selftest_console.txt")).decode()
+            self.assertIn("# port silent", log)
+            results = read(os.path.join(d, "results.jsonl")).decode()
+            self.assertIn("light_sleep_prev", results)
+            self.assertIn('"test":"summary","ok":true', results, "the stray DONE after START did not end it")
+            self.assertTrue(passed)
+
+    def test_restart_on_the_same_handle_starts_over(self):
+        """esp_restart is a CPU reset here: the USB link may stay up, so the new boot shows up on the
+        same handle; an armed state from the old boot must not let a stray DONE end the log."""
+        fake = SilentThenBack()
+        fake.sessions = [[b"HWTEST_START\nHWTEST_REPLAY\n{\"test\":\"old\",\"ok\":true}\nHWTEST_START\nHWTEST_DONE\n",
+                          b"HWTEST_REPLAY\n{\"test\":\"summary\",\"ok\":true}\nHWTEST_DONE\n"]]
+        with tempfile.TemporaryDirectory() as d:
+            a = type("A", (), {"out": d, "port": "/dev/cu.fake", "dry_run": False})()
+            r = type("R", (), {"a": a, "said": [], "say": lambda self, t: self.said.append(t)})()
+            saved = run.serial_helpers
+            run.serial_helpers = lambda: (fake, None)
+            try:
+                with redirect_stdout(io.StringIO()):
+                    self.assertTrue(run.capture(r, "selftest", 10.0, run.DONE, armed_by=run.REPLAY, disarm_by=run.START))
+                    passed, _unsafe = run.collect_results(r)
+            finally:
+                run.serial_helpers = saved
+            self.assertEqual(fake.opens, 1)
+            self.assertTrue(passed, "ended at the new boot's replay, not at the stray DONE")
+
+
 if __name__ == "__main__":
     unittest.main()
