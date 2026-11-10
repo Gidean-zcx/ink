@@ -71,6 +71,7 @@ static const struct {
     {"shell.today_prev", NULL}, {"shell.today_next", NULL},
     {"shell.voice", NULL}, {"shell.storage", NULL}, {"shell.about", NULL}, {"shell.privacy", NULL},
     {"shell.settings_prev", NULL}, {"shell.settings_next", NULL},
+    {"shell.device", NULL}, {"shell.licenses", NULL}, {"shell.license", "index"},
     {"shell.time", NULL}, {"shell.time_edit", NULL}, {"shell.time_zones", NULL}, {"shell.return", NULL},
     {"shell.time_step", "field,delta"}, {"shell.time_prev", NULL}, {"shell.time_next", NULL},
     {"shell.launch", "id"}, {"shell.resume", NULL}, {"ai.panel.hide", NULL}, {"ai.panel.listen", NULL},

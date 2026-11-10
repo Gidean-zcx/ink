@@ -390,6 +390,12 @@ add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h
   COMMENT "i18n: check the translation tables")
 add_custom_target(ink_i18n_table DEPENDS ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h)
 add_dependencies(ink_system ink_i18n_table)
+file(GLOB INK_LICENSE_FILES CONFIGURE_DEPENDS third_party/licenses/* third_party/*/LICENSE* third_party/stb/*.h tools/imedict/licenses/* tools/appfw-spike/licenses/*.txt)
+add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/generated/ink/licenses.h
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/licenses.py ${CMAKE_BINARY_DIR}/generated/ink/licenses.h
+  DEPENDS tools/licenses.py ${INK_LICENSE_FILES} third_party/tlsf/tlsf.h third_party/fonts/Outfit-OFL.txt)
+add_custom_target(ink_licenses DEPENDS ${CMAKE_BINARY_DIR}/generated/ink/licenses.h)
+add_dependencies(ink_system ink_licenses)
 target_include_directories(ink_system PUBLIC ${CMAKE_BINARY_DIR}/generated)
 
 # Scenario content: the committed sample books + a generated long book (pagination stress).
@@ -622,6 +628,13 @@ ink_sim_executable(sim-settings-a tests/settings_a.c)
 target_link_libraries(sim-settings-a PRIVATE ink_apps ink_system)
 add_test(NAME settings-a COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/settings_a.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(settings-a PROPERTIES TIMEOUT 180)
+foreach(case pages phone voice)
+  ink_sim_executable(sim-small-gaps-${case} tests/small_gaps/${case}.c)
+  target_link_libraries(sim-small-gaps-${case} PRIVATE ink_apps ink_system)
+  add_dependencies(sim-small-gaps-${case} ink_licenses)
+endforeach()
+add_test(NAME small-gaps-1 COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/small_gaps/run.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(small-gaps-1 PROPERTIES TIMEOUT 600)
 target_link_libraries(sim-ui-list-paging PRIVATE ink_apps ink_system)
 ink_sim_executable(sim-search tests/search/search.c)
 target_link_libraries(sim-search PRIVATE ink_apps ink_system)

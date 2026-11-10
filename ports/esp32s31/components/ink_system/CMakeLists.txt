@@ -22,3 +22,5 @@ execute_process(COMMAND ${PYTHON} ${root}/tools/i18n/i18n_gen.py ${i18n_tables} 
     ${root}/system/apps/clock/clock.c
     WORKING_DIRECTORY ${root} COMMAND_ERROR_IS_FATAL ANY)
 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${i18n_tables})
+execute_process(COMMAND ${PYTHON} ${root}/tools/licenses.py ${CMAKE_BINARY_DIR}/generated/ink/licenses.h
+    WORKING_DIRECTORY ${root} COMMAND_ERROR_IS_FATAL ANY)

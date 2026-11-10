@@ -1,0 +1,143 @@
+[
+  {
+    "id": "lvgl",
+    "name": "LVGL",
+    "version": "9.5.0",
+    "license": "MIT",
+    "file": "tools/appfw-spike/licenses/LVGL-9.5.0.txt",
+    "source": "https://github.com/lvgl/lvgl/tree/v9.5.0",
+    "sha256": "27a80bd36832ab42d35ad60c08b2b230a807a9bc0d58e94ec1531543dc49cbe8"
+  },
+  {
+    "id": "jsmn",
+    "name": "jsmn",
+    "version": "25647e692c79",
+    "license": "MIT",
+    "file": "third_party/jsmn/LICENSE",
+    "source": "https://github.com/zserge/jsmn/commit/25647e692c7906b96ffd2b05ca54c097948e879c",
+    "sha256": "4675b94a50d2afe811c52785463c854f1156056632cce17cc7133939eac8ed55"
+  },
+  {
+    "id": "stb_image",
+    "name": "stb_image",
+    "version": "2.30",
+    "license": "MIT",
+    "file": "third_party/stb/stb_image.h",
+    "source": "third_party/stb/README.md",
+    "sha256": "97d51a9fb2bd50f9a7f3ecdabb9c3603d6c7ff972c4bc5aa556fac8178b99580",
+    "begin": "ALTERNATIVE A - MIT License\n",
+    "end": "------------------------------------------------------------------------------\nALTERNATIVE B"
+  },
+  {
+    "id": "stb_image_write",
+    "name": "stb_image_write",
+    "version": "1.16",
+    "license": "MIT",
+    "file": "third_party/stb/stb_image_write.h",
+    "source": "third_party/stb/README.md",
+    "sha256": "cbd5f0ad7a9cf4468affb36354a1d2338034f2c12473cf1a8e32053cb6914a05",
+    "begin": "ALTERNATIVE A - MIT License\n",
+    "end": "------------------------------------------------------------------------------\nALTERNATIVE B"
+  },
+  {
+    "id": "noto",
+    "name": "Noto Sans CJK",
+    "version": "Sans2.004",
+    "license": "SIL OFL 1.1",
+    "file": "tools/appfw-spike/licenses/NotoSansCJK-OFL.txt",
+    "source": "third_party/fonts/README.md",
+    "sha256": "6a73f9541c2de74158c0e7cf6b0a58ef774f5a780bf191f2d7ec9cc53efe2bf2"
+  },
+  {
+    "id": "outfit",
+    "name": "Outfit",
+    "version": "fc7287273e66",
+    "license": "SIL OFL 1.1",
+    "file": "third_party/fonts/Outfit-OFL.txt",
+    "source": "third_party/fonts/README.md",
+    "sha256": "c676351bf8576b9aba743cd5eaa8c0e7ee0d51f805d720447b4df4ddb6a2e416"
+  },
+  {
+    "id": "jieba",
+    "name": "jieba dictionary",
+    "version": "0.42.1",
+    "license": "MIT",
+    "file": "tools/imedict/licenses/jieba-MIT.txt",
+    "source": "tools/imedict/sources.lock.json",
+    "sha256": "18ba0984839f85853b29fadaf992f7dba8fd0ca0fbeae34de2b8735222dc7a37"
+  },
+  {
+    "id": "pypinyin",
+    "name": "pypinyin dictionary",
+    "version": "0.55.0",
+    "license": "MIT",
+    "file": "tools/imedict/licenses/pypinyin-MIT.txt",
+    "source": "tools/imedict/sources.lock.json",
+    "sha256": "1e6c90014b4912815c296ee64bb6f6280af47e6d4c5d80e86232dfc5defe764c"
+  },
+  {
+    "id": "pinyin_data",
+    "name": "pinyin-data",
+    "version": "fa9761fff402",
+    "license": "MIT",
+    "file": "tools/imedict/licenses/pinyin-data-MIT.txt",
+    "source": "tools/imedict/sources.lock.json",
+    "sha256": "9c048697be2502a16e8bcb282d5d465a07295b2def0ffb05a269c5d39dbe1586"
+  },
+  {
+    "id": "phrase_data",
+    "name": "phrase-pinyin-data",
+    "version": "cee0ed6e6e48",
+    "license": "MIT",
+    "file": "tools/imedict/licenses/phrase-pinyin-data-MIT.txt",
+    "source": "tools/imedict/sources.lock.json",
+    "sha256": "89ac55df747e4776088c3e77531ef61b973a1a59dd8e6a4548a58996da9a4f70"
+  },
+  {
+    "id": "tlsf",
+    "name": "TLSF (simulator)",
+    "version": "3.1",
+    "license": "BSD-3-Clause",
+    "file": "third_party/tlsf/tlsf.h",
+    "source": "third_party/tlsf/README.md",
+    "sha256": "f7f73c48810ba60203095667c226e5a600a6ea0f69afba48efff6efbaa628d4f",
+    "begin": "/*",
+    "end": "*/"
+  },
+  {
+    "id": "littlefs",
+    "name": "LittleFS (simulator)",
+    "version": "2.11.3",
+    "license": "BSD-3-Clause",
+    "file": "third_party/littlefs/LICENSE.md",
+    "source": "third_party/littlefs/UPSTREAM_TAG",
+    "sha256": "0cb4ff1daf5fdc1359c6a6ee3116092f08fc100c9d58b1b77ab17bfd801f856d"
+  },
+  {
+    "id": "cjson",
+    "name": "cJSON (simulator)",
+    "version": "1.7.19",
+    "license": "MIT",
+    "file": "third_party/cjson/LICENSE",
+    "source": "third_party/cjson/UPSTREAM_TAG",
+    "sha256": "a36dda207c36db5818729c54e7ad4e8b0c6fba847491ba64f372c1a2037b6d5c"
+  },
+  {
+    "id": "sdl2",
+    "name": "SDL2 (desktop simulator)",
+    "version": "2.32.10",
+    "license": "zlib",
+    "file": "third_party/licenses/SDL2.txt",
+    "source": "https://github.com/libsdl-org/SDL/tree/release-2.32.10",
+    "sha256": "97f35b302b361680ec1e891e95d2d52097bb95abff361434916d99dc1305f127"
+  },
+  {
+    "id": "imgui",
+    "name": "Dear ImGui (desktop simulator)",
+    "version": "1.91.9b",
+    "license": "MIT",
+    "file": "third_party/licenses/ImGui.txt",
+    "source": "https://github.com/ocornut/imgui/tree/v1.91.9b",
+    "sha256": "c80c5789748d955c4a650562baa0d750494e2c7128c2ca66aaebe2e3c4e198bf"
+  }
+]

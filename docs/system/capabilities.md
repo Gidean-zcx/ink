@@ -7,7 +7,7 @@ python3 tools/capabilities.py
 python3 tools/capabilities.py --check
 ```
 
-当前共 431 项：可调用能力 394、事件 37；设置 28 项、状态 49 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
+当前共 434 项：可调用能力 397、事件 37；设置 29 项、状态 49 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
 
 风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。
 
@@ -298,6 +298,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `shell.bluetooth_prev` | 耳机上一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s44](#s44) | [system/ui/shell/bluetooth_page.c](../../system/ui/shell/bluetooth_page.c) |
 | `shell.close` | 收起面板 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s51](#s51) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
 | `shell.control` | 打开控制中心 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s51](#s51) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
+| `shell.device` | 查看设备详情 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s53](#s53) | [system/ui/shell/settings_pages.c](../../system/ui/shell/settings_pages.c) |
 | `shell.display` | 显示和亮度 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s51](#s51) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
 | `shell.family` | 管理家人 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s52](#s52) | [system/ui/shell/settings_family.c](../../system/ui/shell/settings_family.c) |
 | `shell.icon_menu` | 应用快捷动作 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s51](#s51) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
@@ -310,6 +311,8 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `shell.kid_sms` | 时间到后看短信 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s48](#s48) | [system/ui/shell/kid_pages.c](../../system/ui/shell/kid_pages.c) |
 | `shell.known_networks` | 已存的网络 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s51](#s51) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
 | `shell.launch` | 打开主页上的应用 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s51](#s51) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
+| `shell.license` | 阅读一项开源许可 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s53](#s53) | [system/ui/shell/settings_pages.c](../../system/ui/shell/settings_pages.c) |
+| `shell.licenses` | 查看开源许可 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s53](#s53) | [system/ui/shell/settings_pages.c](../../system/ui/shell/settings_pages.c) |
 | `shell.lock` | 锁屏 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s51](#s51) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
 | `shell.member_choose` | 选择下一位家人 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s50](#s50) | [system/ui/shell/member_pages.c](../../system/ui/shell/member_pages.c) |
 | `shell.members` | 选择家人 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s51](#s51) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
@@ -516,7 +519,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 设置：—。
 
-状态：`audio.route`、`bt.connected`。
+状态：`audio.route`、`bt.connected`、`time.minute`。
 
 事件：`call.answered`、`call.connected`、`call.controls`、`call.dialed`、`call.ended`、`call.incoming`、`contacts.selected`。
 
@@ -584,7 +587,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 ### s17 — `system/policy/settings`
 
-设置：`ai.read_clipboard`、`audio.alarm_ring`、`audio.call_ring`、`audio.child_max`、`audio.key_tone`、`audio.vibration`、`audio.volume`、`bt.enabled`、`cell.sim_slot`、`display.font_size`、`display.light`、`display.lock_style`、`display.wallpaper_file`、`display.warmth`、`member.idle_return_s`、`net.airplane`、`net.prefer`、`notify.dnd`、`power.lift_wake`、`power.lock_after_s`、`power.saving`、`system.language`、`time.auto`、`time.zone`、`time.zone_auto`、`update.auto_download`、`voice.handsfree`、`wifi.enabled`。
+设置：`ai.read_clipboard`、`audio.alarm_ring`、`audio.call_ring`、`audio.child_max`、`audio.key_tone`、`audio.vibration`、`audio.volume`、`bt.enabled`、`cell.sim_slot`、`display.font_size`、`display.light`、`display.lock_style`、`display.wallpaper_file`、`display.warmth`、`member.idle_return_s`、`net.airplane`、`net.prefer`、`notify.dnd`、`power.lift_wake`、`power.lock_after_s`、`power.saving`、`system.language`、`time.auto`、`time.zone`、`time.zone_auto`、`update.auto_download`、`voice.handsfree`、`voice.interrupt`、`wifi.enabled`。
 
 状态：—。
 
@@ -594,7 +597,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 ### s18 — `system/policy/system_actions`
 
-设置：`ai.read_clipboard`、`audio.alarm_ring`、`audio.call_ring`、`audio.child_max`、`audio.key_tone`、`audio.vibration`、`audio.volume`、`bt.enabled`、`cell.sim_slot`、`display.font_size`、`display.light`、`display.lock_style`、`display.wallpaper_file`、`display.warmth`、`member.idle_return_s`、`net.airplane`、`net.prefer`、`notify.dnd`、`power.lift_wake`、`power.lock_after_s`、`power.saving`、`system.language`、`time.auto`、`time.zone`、`time.zone_auto`、`update.auto_download`、`voice.handsfree`、`wifi.enabled`。
+设置：`ai.read_clipboard`、`audio.alarm_ring`、`audio.call_ring`、`audio.child_max`、`audio.key_tone`、`audio.vibration`、`audio.volume`、`bt.enabled`、`cell.sim_slot`、`display.font_size`、`display.light`、`display.lock_style`、`display.wallpaper_file`、`display.warmth`、`member.idle_return_s`、`net.airplane`、`net.prefer`、`notify.dnd`、`power.lift_wake`、`power.lock_after_s`、`power.saving`、`system.language`、`time.auto`、`time.zone`、`time.zone_auto`、`update.auto_download`、`voice.handsfree`、`voice.interrupt`、`wifi.enabled`。
 
 状态：`alarm.revision`、`alarm.ringing`、`app.cards_rev`、`app.foreground`、`audio.listening`、`audio.mic`、`audio.now_playing`、`audio.recording`、`audio.route`、`battery.charging`、`battery.level`、`battery.low`、`bt.available`、`bt.connected`、`bt.device`、`cell.registered`、`cell.sim`、`confirm.pending`、`file.index_state`、`interrupt.active`、`job.revision`、`job.running`、`media.state`、`member.authed`、`member.current`、`member.time_up`、`net.online`、`net.signal`、`net.type`、`notify.unread`、`pairing.state`、`power.lifted`、`power.saving`、`power.state`、`storage.card`、`storage.free`、`storage.mode`、`storage.user_free`、`text.focused`、`text.voice`、`time.minute`、`time.synced`、`time.zone`、`update.progress`、`update.state`、`update.version`、`usb.connected`、`wifi.ssid`、`wifi.state`。
 
@@ -604,7 +607,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 ### s19 — `system/services/audio`
 
-设置：`audio.alarm_ring`、`audio.call_ring`、`audio.child_max`、`audio.key_tone`、`audio.vibration`、`audio.volume`、`voice.handsfree`。
+设置：`audio.alarm_ring`、`audio.call_ring`、`audio.child_max`、`audio.key_tone`、`audio.vibration`、`audio.volume`、`voice.handsfree`、`voice.interrupt`。
 
 状态：`audio.listening`、`audio.mic`、`audio.now_playing`、`audio.recording`、`audio.route`、`interrupt.active`、`media.state`、`member.authed`、`member.current`。
 
@@ -944,9 +947,9 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 ### s53 — `system/ui/shell/settings_pages`
 
-设置：`ai.read_clipboard`、`system.language`、`update.auto_download`、`voice.handsfree`。
+设置：`ai.read_clipboard`、`system.language`、`update.auto_download`、`voice.handsfree`、`voice.interrupt`。
 
-状态：`storage.card`、`storage.free`、`storage.mode`、`update.state`、`update.version`。
+状态：`battery.level`、`storage.card`、`storage.free`、`storage.mode`、`update.state`、`update.version`。
 
 事件：`backup.changed`、`file.changed`。
 
@@ -1023,6 +1026,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `time.zone_auto` | 自动设置时区 | `INK_SET_BOOL` | `settings.get` / `settings.set` | 仅成人 | 中 / 无需 | [system/services/time/time_service.c](../../system/services/time/time_service.c) |
 | `update.auto_download` | 自动下载新版本（流量要钱，默认关） | `INK_SET_BOOL` | `settings.get` / `settings.set` | 仅成人 | 中 / 无需 | [system/services/update/update_service.c](../../system/services/update/update_service.c) |
 | `voice.handsfree` | 叫名字（什么时候在等） | `INK_SET_ENUM` | `settings.get` / `settings.set` | 仅成人 | 中 / 无需 | [system/services/audio/audio_service.c](../../system/services/audio/audio_service.c) |
+| `voice.interrupt` | 说话能打断回答 | `INK_SET_BOOL` | `settings.get` / `settings.set` | 仅成人 | 中 / 无需 | [system/services/audio/audio_service.c](../../system/services/audio/audio_service.c) |
 | `wifi.enabled` | Wi-Fi | `INK_SET_BOOL` | `settings.get` / `settings.set`（转给 `wifi.set_enabled`，不能用 `system.undo` 撤销） | 仅成人 | 中 / 无需 | [system/services/net/net_service.c](../../system/services/net/net_service.c) |
 
 ## 状态
