@@ -12,7 +12,11 @@ endif()
 include_directories(${port} ${root}/platform/include ${root}/drivers/chips ${root}/boards)
 add_executable(test-s31-input logic.c ${root}/boards/metalio_plus/metalio_touch.c)
 add_executable(test-s31-power power.c ${port}/hal_power_s31.c)
+add_executable(test-s31-board board.c ${root}/boards/metalio_plus/metalio_board.c
+  ${root}/boards/metalio_plus/metalio_epd_power.c ${root}/drivers/chips/tca9555/tca9555.c
+  ${root}/drivers/chips/tps65185/tps65185.c)
 target_include_directories(test-s31-power PRIVATE stub)
 enable_testing()
 add_test(NAME unit-s31-input COMMAND test-s31-input)
 add_test(NAME unit-s31-power COMMAND test-s31-power)
+add_test(NAME unit-s31-board COMMAND test-s31-board)

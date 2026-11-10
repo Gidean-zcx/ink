@@ -19,7 +19,9 @@ static uint64_t now, wake_pins, armed_low, armed_high, timer_us, saved_low, save
 static uint32_t sources, resumed_cause;
 static uint8_t pre_p1, wake_p1, port0;
 static bool paused, suspended, slept, motion, haptic, low, watch, keep, cancel_sleep, late_busy, resumed_keys;
-static int mask_fail, cut_fail, keys_fail, rails_fail, sleep_rc, locks, restarts, offs;
+static bool low_after_arm, low_after_cut, wake_armed, rails_cut, usb_connected;
+static int mask_fail, cut_fail, keys_fail, rails_fail, sleep_rc, restarts, offs, mhz;
+static uint64_t usb_off_at;
 static int pending, resume_calls;
 #define ALLOC_CAP 8
 static void *allocs[ALLOC_CAP];
@@ -36,8 +38,19 @@ static void reset(void) {
     port0 = 0;
     paused = suspended = slept = motion = haptic = low = watch = keep = cancel_sleep = late_busy = resumed_keys = false;
     mask_fail = cut_fail = keys_fail = rails_fail = sleep_rc = pending = resume_calls = 0;
+    low_after_arm = low_after_cut = wake_armed = rails_cut = false;
+    usb_connected = true;
 }
 
+struct osal_mutex { bool held; };
+static struct osal_mutex cpu_lock;
+osal_mutex_t *osal_mutex_create(void) { return &cpu_lock; }
+osal_err_t osal_mutex_lock(osal_mutex_t *m, int64_t us) {
+    assert(m == &cpu_lock && !m->held && us == OSAL_WAIT_FOREVER);
+    m->held = true;
+    return OSAL_OK;
+}
+void osal_mutex_unlock(osal_mutex_t *m) { assert(m->held); m->held = false; }
 void *osal_calloc(size_t n, size_t size, uint32_t caps) {
     (void)caps;
     assert(alloc_n < ALLOC_CAP);
@@ -91,9 +104,15 @@ hal_i2c_status_t metalio_board_mask_for_sleep(bool rtc) {
     mark('m');
     return mask_fail ? HAL_I2C_ERR : HAL_I2C_OK;
 }
-hal_i2c_status_t metalio_board_arm_wake(bool power, bool rtc) { (void)power; (void)rtc; mark('w'); return HAL_I2C_OK; }
+hal_i2c_status_t metalio_board_arm_wake(bool power, bool rtc) {
+    (void)power; (void)rtc;
+    wake_armed = true;
+    mark('w');
+    return HAL_I2C_OK;
+}
 hal_i2c_status_t metalio_board_cut_rails(bool k) {
     keep = k;
+    rails_cut = true;
     mark('x');
     if (late_busy) pending = 1;
     return cut_fail ? HAL_I2C_ERR : HAL_I2C_OK;
@@ -108,17 +127,18 @@ void metalio_power_off(void) { offs++; }
 void hal_light_set(int cold, int warm) { assert(cold == 0 && warm == 0); mark('f'); }
 esp_err_t esp_pm_configure(const void *arg) {
     const esp_pm_config_t *cfg = arg;
-    assert(cfg->max_freq_mhz == 320 && cfg->min_freq_mhz == 160 && !cfg->light_sleep_enable);
+    assert(cfg->max_freq_mhz == cfg->min_freq_mhz && !cfg->light_sleep_enable);
+    assert(cfg->max_freq_mhz == 160 || cfg->max_freq_mhz == 320);
+    mhz = cfg->max_freq_mhz;
     return ESP_OK;
 }
 esp_err_t esp_pm_lock_create(int type, int arg, const char *name, esp_pm_lock_handle_t *out) {
-    (void)arg;
-    assert(type == ESP_PM_CPU_FREQ_MAX && name);
-    *out = (void *)1;
+    (void)type; (void)arg; (void)name; (void)out;
+    assert(!"dynamic frequency locks must not be used");
     return ESP_OK;
 }
-esp_err_t esp_pm_lock_acquire(esp_pm_lock_handle_t lock) { assert(lock); locks++; return ESP_OK; }
-esp_err_t esp_pm_lock_release(esp_pm_lock_handle_t lock) { assert(lock); locks--; return ESP_OK; }
+esp_err_t esp_pm_lock_acquire(esp_pm_lock_handle_t lock) { (void)lock; assert(false); return ESP_FAIL; }
+esp_err_t esp_pm_lock_release(esp_pm_lock_handle_t lock) { (void)lock; assert(false); return ESP_FAIL; }
 esp_err_t esp_sleep_disable_wakeup_source(int source) { assert(source == ESP_SLEEP_WAKEUP_ALL); timer_us = 0; return ESP_OK; }
 esp_err_t esp_sleep_disable_ext1_wakeup_io(uint64_t pins) { assert(!pins); armed_low = armed_high = 0; return ESP_OK; }
 esp_err_t esp_sleep_enable_timer_wakeup(uint64_t us) { timer_us = us; return ESP_OK; }
@@ -127,7 +147,9 @@ esp_err_t esp_sleep_enable_ext1_wakeup_io(uint64_t pins, int level) {
     else armed_high |= pins;
     return ESP_OK;
 }
-esp_err_t esp_sleep_enable_gpio_wakeup(void) { return ESP_OK; }
+esp_err_t esp_sleep_enable_gpio_wakeup(void) { assert(!"GPIO61 must not wake sleep"); return ESP_FAIL; }
+int ink_s31_sleep_init(void) { return ESP_OK; }
+int ink_s31_light_sleep(void) { mark('h'); return esp_light_sleep_start(); }
 esp_err_t esp_light_sleep_start(void) {
     assert(suspended && paused);
     saved_low = armed_low;
@@ -142,10 +164,25 @@ esp_err_t esp_light_sleep_start(void) {
 }
 uint32_t esp_sleep_get_wakeup_causes(void) { return sources; }
 uint64_t esp_sleep_get_ext1_wakeup_status(void) { return wake_pins; }
-esp_err_t gpio_wakeup_enable(int pin, int level) { assert(pin == S31_GPIO_AI_KEY && level == GPIO_INTR_LOW_LEVEL); return ESP_OK; }
-esp_err_t gpio_wakeup_disable(int pin) { assert(pin == S31_GPIO_AI_KEY); return ESP_OK; }
+esp_err_t gpio_wakeup_enable(int pin, int level) { (void)pin; (void)level; assert(!"GPIO61 must not wake sleep"); return ESP_FAIL; }
+esp_err_t gpio_wakeup_disable(int pin) { (void)pin; assert(false); return ESP_FAIL; }
 esp_err_t rtc_gpio_deinit(int pin) { assert(pin == S31_GPIO_EXP_INT || pin == S31_GPIO_MODEM_SRDY); return ESP_OK; }
-int gpio_get_level(int pin) { assert(pin == S31_GPIO_EXP_INT); return !low; }
+esp_err_t gpio_set_direction(int pin, int mode) { assert(pin == S31_GPIO_EXP_INT && mode == GPIO_MODE_INPUT); mark('g'); return ESP_OK; }
+esp_err_t gpio_pullup_en(int pin) { assert(pin == S31_GPIO_EXP_INT); mark('U'); return ESP_OK; }
+esp_err_t gpio_pulldown_dis(int pin) { assert(pin == S31_GPIO_EXP_INT); mark('N'); return ESP_OK; }
+int gpio_get_level(int pin) {
+    assert(pin == S31_GPIO_EXP_INT);
+    return !(low || (wake_armed && low_after_arm) || (rails_cut && low_after_cut));
+}
+void usb_serial_jtag_ll_enable_bus_clock(bool on) { assert(on && !suspended); mark('b'); }
+void usb_serial_jtag_ll_phy_enable_pad(bool on) {
+    assert(!suspended);
+    if (!on) usb_off_at = now;
+    else assert(now - usb_off_at == 150000);
+    mark(on ? '+' : '-');
+}
+void usb_serial_jtag_ll_phy_set_defaults(void) { assert(now - usb_off_at == 150000); mark('D'); }
+bool usb_serial_jtag_is_connected(void) { return usb_connected; }
 void esp_restart(void) { restarts++; }
 void vTaskSuspendAll(void) { assert(!suspended); suspended = true; }
 int xTaskResumeAll(void) { assert(suspended); suspended = false; return 0; }
@@ -153,19 +190,26 @@ static bool cancel(void *ctx) { assert(ctx == &cancel_sleep && suspended); retur
 
 int main(void) {
     s31_power_init();
-    assert(locks == 1);
+    assert(mhz == 320);
     hal_power_set_state(HAL_PWR_STATE_IDLE);
     hal_power_set_state(HAL_PWR_STATE_LOCKED);
-    assert(locks == 0);
+    assert(mhz == 160);
     hal_cpu_boost_t *boost = hal_cpu_boost_create("test");
+    hal_cpu_boost_t *boost2 = hal_cpu_boost_create("other");
     hal_cpu_boost_acquire(boost);
     hal_cpu_boost_acquire(boost);
-    assert(locks == 1);
+    assert(mhz == 320);
+    hal_cpu_boost_acquire(boost2);
+    hal_power_set_state(HAL_PWR_STATE_IDLE);
     hal_cpu_boost_release(boost);
     hal_cpu_boost_release(boost);
-    assert(locks == 0);
+    assert(mhz == 320);
+    hal_cpu_boost_release(boost2);
+    assert(mhz == 160);
+    hal_cpu_boost_acquire(boost);
     hal_power_set_state(HAL_PWR_STATE_ACTIVE);
-    assert(locks == 1);
+    hal_cpu_boost_release(boost);
+    assert(mhz == 320);
 
     hal_sleep_cfg_t cfg = {.max_us = 60000000, .wake_mask = HAL_WAKE_POWER_KEY | HAL_WAKE_RTC | HAL_WAKE_MOTION};
     reset();
@@ -176,9 +220,19 @@ int main(void) {
     assert(hal_power_sleep(&cfg) == cfg.wake_mask && resumed_cause == cfg.wake_mask && watch && !keep);
     assert(saved_low == (1ull << S31_GPIO_EXP_INT) && saved_timer == cfg.max_us);
     assert(pos('d') < pos('p') && pos('p') < pos('a') && pos('a') < pos('m') && pos('m') < pos('w'));
-    assert(pos('w') < pos('x') && pos('x') < pos('s'));
+    assert(pos('m') < pos('g') && pos('g') < pos('U') && pos('U') < pos('N') && pos('N') < pos('w'));
+    assert(pos('w') < pos('x') && pos('x') < pos('h') && pos('h') < pos('s'));
     assert(pos('c') < pos('k') && pos('v') < pos('k') && pos('k') < pos('r') && pos('r') < pos('i'));
     assert(!paused && !suspended && resume_calls == 1 && !armed_low && !armed_high && !timer_us);
+    assert(pos('r') < pos('b') && pos('b') < pos('-') && pos('-') < pos('D') && pos('D') < pos('+') && pos('+') < pos('i'));
+
+    reset();
+    sources = 1u << ESP_SLEEP_WAKEUP_TIMER;
+    assert(hal_power_sleep(&cfg) == HAL_WAKE_TIMER && !strchr(trace, 'b'));
+    reset();
+    usb_connected = false;
+    wake_pins = 1ull << S31_GPIO_EXP_INT;
+    assert(hal_power_sleep(&cfg) == HAL_WAKE_POWER_KEY && now == 1970000);
 
     reset();
     sources = 1u << ESP_SLEEP_WAKEUP_EXT1;
@@ -187,7 +241,7 @@ int main(void) {
     reset();
     pre_p1 = (uint8_t)~MB_P1_RTC_INT;
     sources = 1u << ESP_SLEEP_WAKEUP_TIMER;
-    assert(hal_power_sleep(&cfg) == HAL_WAKE_TIMER && saved_low != 0);
+    assert(hal_power_sleep(&cfg) == 0 && !slept && trace_n == 0);
 
     reset();
     cancel_sleep = true;
@@ -219,6 +273,12 @@ int main(void) {
     low = true;
     assert(hal_power_sleep(&cfg) == 0 && now == 620000 && !strchr(trace, 's') && strchr(trace, 'k'));
     reset();
+    low_after_arm = true;
+    assert(hal_power_sleep(&cfg) == 0 && !slept && strchr(trace, 'k') && !strchr(trace, 'x'));
+    reset();
+    low_after_cut = true;
+    assert(hal_power_sleep(&cfg) == 0 && !slept && pos('k') < pos('r'));
+    reset();
     mask_fail = 1;
     assert(hal_power_sleep(&cfg) == 0 && strchr(trace, 'k') && !strchr(trace, 'x'));
     reset();
@@ -226,7 +286,7 @@ int main(void) {
     assert(hal_power_sleep(&cfg) == 0 && pos('k') < pos('r') && !strchr(trace, 's'));
     reset();
     sleep_rc = ESP_FAIL;
-    assert(hal_power_sleep(&cfg) == 0 && !slept && pos('k') < pos('r'));
+    assert(hal_power_sleep(&cfg) == 0 && !slept && pos('k') < pos('r') && !strchr(trace, 'b'));
 
     reset();
     keys_fail = 3;
@@ -238,13 +298,17 @@ int main(void) {
     cfg.wake_mask = HAL_WAKE_AI_KEY | HAL_WAKE_MODEM;
     sources = 1u << ESP_SLEEP_WAKEUP_GPIO;
     wake_pins = 1ull << S31_GPIO_MODEM_SRDY;
-    assert(hal_power_sleep(&cfg) == (HAL_WAKE_AI_KEY | HAL_WAKE_MODEM) && keep);
+    assert(hal_power_sleep(&cfg) == HAL_WAKE_MODEM && keep);
     assert(saved_high == (1ull << S31_GPIO_MODEM_SRDY) && !saved_low);
+    reset();
+    cfg.wake_mask = HAL_WAKE_AI_KEY;
+    cfg.max_us = 0;
+    assert(hal_power_sleep(&cfg) == 0 && trace_n == 0);
     reset();
     hal_power_shutdown();
     hal_power_reboot();
     assert(offs == 1 && restarts == 1);
     for (unsigned i = 0; i < alloc_n; i++) free(allocs[i]);
-    puts("s31 power: clock locks, wake causes, sleep order, cancellation and unwind passed");
+    puts("s31 power: fixed clocks, vendor sleep, USB revive, wake causes and unwind passed");
     return 0;
 }

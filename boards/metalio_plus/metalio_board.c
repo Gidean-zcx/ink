@@ -54,13 +54,12 @@ hal_i2c_status_t metalio_board_read(int port, uint8_t *levels) {
 
 /* Light sleep, in upstream's steps (epd_board_metalio_eink4_plus.c and power_hw.cc @690a023). */
 hal_i2c_status_t metalio_board_mask_for_sleep(bool rtc_wake) {
+    (void)rtc_wake; /* P16 stays output-low until armed. */
     metalio_board_lock();
     /* port 0: the PMIC pins, P06 and P07 low; motor, amplifier and P05 as they are */
     uint8_t p0 = (uint8_t)(g_tca.out[0] & (MB_P0_MOTOR | MB_P0_AMP | MB_P0_CAM_SCR));
-    /* port 1: P12 and P14 as they are; the keys, and P16 when it will wake, at their idle level (high),
-     * so that turning them back into inputs makes no edge unless they are active; P13, P15 and
-     * otherwise P16 low */
-    uint8_t p1 = (uint8_t)((g_tca.out[1] & (MB_P1_SHARED_RST | MB_P1_SHARED_PWR)) | MB_P1_KEYS | (rtc_wake ? MB_P1_RTC_INT : 0));
+    /* Preserve P12/P14; keys idle high; P13/P15/P16 low, as upstream. */
+    uint8_t p1 = (uint8_t)((g_tca.out[1] & (MB_P1_SHARED_RST | MB_P1_SHARED_PWR)) | MB_P1_KEYS);
     hal_i2c_status_t s = tca9555_set(&g_tca, 0, 0xFF, p0);
     if (s == HAL_I2C_OK) s = tca9555_set_dir(&g_tca, 0, 0x00);
     if (s == HAL_I2C_OK) s = tca9555_set(&g_tca, 1, 0xFF, p1);
@@ -75,7 +74,15 @@ hal_i2c_status_t metalio_board_mask_for_sleep(bool rtc_wake) {
 hal_i2c_status_t metalio_board_arm_wake(bool power_key, bool rtc) {
     uint8_t dir = (uint8_t)((power_key ? MB_P1_POWER_KEY : 0) | (rtc ? MB_P1_RTC_INT : 0));
     metalio_board_lock();
-    hal_i2c_status_t s = tca9555_set_dir(&g_tca, 1, dir);
+    /* Establish the RTC baseline before enabling POWER, so its pending edge is not consumed. */
+    uint8_t levels;
+    hal_i2c_status_t s = HAL_I2C_OK;
+    if (rtc) {
+        s = tca9555_set_dir(&g_tca, 1, MB_P1_RTC_INT);
+        if (s == HAL_I2C_OK) s = tca9555_read(&g_tca, 1, &levels);
+        if (s == HAL_I2C_OK && !(levels & MB_P1_RTC_INT)) s = HAL_I2C_ERR;
+    }
+    if (s == HAL_I2C_OK) s = tca9555_set_dir(&g_tca, 1, dir);
     metalio_board_unlock();
     return s;
 }
