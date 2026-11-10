@@ -91,8 +91,14 @@ static void center(const char *text, int font, int y, bool bold) {
     lv_obj_set_style_text_align(l, LV_TEXT_ALIGN_CENTER, 0);
 }
 static void pressed(lv_event_t *e) { (void)e; P.version = ink_ui_content_version(); }
+static void clicked(lv_event_t *e) {
+    uint32_t version = P.version; P.version = 0;
+    if (version && version != ink_ui_content_version()) return;
+    ink_receipt_t rc; ink_cap_invoke(lv_event_get_user_data(e), NULL, INK_SRC_TOUCH, ink_ui_content_version(), &rc);
+}
 static void button(const char *text, const char *cap, int x, int y, int w, bool primary) {
-    ink_shell_bind(ink_ui_pill(P.card.panel, text, x, y, w, INK_CONTROL, primary, NULL, NULL), cap, NULL);
+    lv_obj_t *b = ink_ui_pill(P.card.panel, text, x, y, w, INK_CONTROL, primary, clicked, (void *)cap);
+    lv_obj_add_event_cb(b, pressed, LV_EVENT_PRESSED, NULL);
 }
 static void dots(void) {
     char text[32] = "";
@@ -101,7 +107,7 @@ static void dots(void) {
     ink_ui_hint_obj(P.dots, INK_REFRESH_FAST);
 }
 static void digit(lv_event_t *e) {
-    if (!current() || P.busy || remaining() || P.version != ink_ui_content_version()) return;
+    if (!current() || P.busy || remaining()) return;
     int d = (int)(intptr_t)lv_event_get_user_data(e);
     size_t n = strlen(P.pin);
     if (d == 10) { if (n) P.pin[n - 1] = 0; }
@@ -131,7 +137,8 @@ static void draw(void) {
     if (P.mode == UNLOCK) ink_shell_camera_button(P.card.panel, false);
     if (P.mode == UNLOCK) ink_shell_emergency_button(P.card.panel, false);
     if (P.mode == FORGOT) {
-        ink_shell_bind(ink_ui_circle(P.card.panel, "back", INK_MARGIN, INK_STATUS_BAR, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_STATIC, NULL, NULL), "shell.pin_cancel", NULL);
+        lv_obj_t *back = ink_ui_circle(P.card.panel, "back", INK_MARGIN, INK_STATUS_BAR, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_STATIC, clicked, "shell.pin_cancel");
+        lv_obj_add_event_cb(back, pressed, LV_EVENT_PRESSED, NULL);
         ink_ui_label(P.card.panel, ink_member_any_pin() ? "忘记密码" : "还没有密码", INK_FONT_TITLE, INK_WEIGHT_BOLD, INK_MARGIN + INK_CONTROL + INK_GAP, INK_STATUS_BAR + INK_GAP, w - INK_CONTROL - INK_GAP);
         ink_ui_circle(P.card.panel, "lock", (INK_CANVAS_W - INK_CIRCLE_LARGE) / 2, INK_CANVAS_H / 2 - INK_CIRCLE_LARGE,
             INK_CIRCLE_LARGE, INK_ICON_STATE, INK_SURFACE_STATIC, NULL, NULL);
@@ -169,13 +176,12 @@ static void draw(void) {
         char label[12]; snprintf(label, sizeof label, "%d", d);
         lv_obj_t *b = ink_ui_pill(P.card.panel, row == 3 && col != 1 ? (col ? "删除" : "取消") : label,
             x0 + col * (INK_DIGIT + INK_GAP), y0 + row * (INK_DIGIT + INK_GAP), INK_DIGIT, INK_DIGIT, false,
-            row == 3 && col == 0 ? NULL : digit, (void *)(intptr_t)d);
-        lv_obj_add_event_cb(b, pressed, LV_EVENT_PRESSED, NULL);
-        if (row == 3 && col == 0) ink_shell_bind(b, "shell.pin_cancel", NULL);
+            row == 3 && col == 0 ? clicked : digit, row == 3 && col == 0 ? (void *)"shell.pin_cancel" : (void *)(intptr_t)d);
+        if (row == 3 && col == 0) lv_obj_add_event_cb(b, pressed, LV_EVENT_PRESSED, NULL);
         ink_ui_pill_text(b, row == 3 && col != 1 ? INK_FONT_LIST : INK_FONT_HEADING, INK_WEIGHT_REGULAR);
     }
     ink_ui_capture_touch(P.card.panel);
-    P.version = ink_ui_content_version();
+    P.version = 0;
     uint64_t now = osal_now_us();
     if (P.retry_us > now) {
         P.wait_timer = lv_timer_create(wait_done, (uint32_t)((P.retry_us - now + 999) / 1000) + 1, NULL);

@@ -13,8 +13,9 @@ void ink_test_shell2_member(void) {
     static char one[sizeof test_semantic]; snprintf(one, sizeof one, "%s", test_semantic);
     event(d, LV_EVENT_PRESSED); event(d, LV_EVENT_CLICKED); event(d, LV_EVENT_PRESSED); event(d, LV_EVENT_CLICKED); view("member_gate");
     CHECK(!strcmp(one, test_semantic) && strstr(test_semantic, "有值") && !strstr(test_semantic, "shell.pin_submit"), "PIN exports presence only and no AI submit");
-    event(d, LV_EVENT_PRESSED); stale("member_gate", "shell.pin_cancel"); event(d, LV_EVENT_CLICKED);
-    CHECK(strlen(P.pin) == 3, "stale PIN key cannot append a digit");
+    lv_obj_t *forgot = find_button(P.card.panel, "忘记密码"); event(forgot, LV_EVENT_PRESSED);
+    stale("member_gate", "shell.pin_forgot"); event(forgot, LV_EVENT_CLICKED);
+    CHECK(P.mode == UNLOCK && strlen(P.pin) == 3, "stale form action cannot navigate or change the PIN");
     close_page();
     P.mode = NEW; snprintf(P.name, sizeof P.name, "合成家人"); draw(); view("PinSet"); stale("PinSet", "shell.pin_cancel"); close_page();
     P.mode = FORGOT; draw(); view("PinForgot"); stale("PinForgot", "shell.pin_parent"); close_page();

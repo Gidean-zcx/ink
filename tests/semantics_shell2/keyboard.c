@@ -20,10 +20,15 @@ void ink_test_shell2_keyboard(void) {
     event(b, LV_EVENT_CLICKED);
     CHECK(!strcmp(ink_text_composing(), "xian"), "stale physical key does not edit the input");
     ink_receipt_t receipt;
-    CHECK(ink_cap_invoke_json("keyboard.key", "{\"code\":8}", INK_SRC_AI, version, &receipt) == INK_RC_STALE,
+    CHECK(ink_cap_invoke_json("keyboard.key", "{\"code\":8}", INK_SRC_AI, test_page_version, &receipt) == INK_RC_STALE,
           "the actual keyboard capability rejects an old AI page version");
     event(b, LV_EVENT_PRESSED); event(b, LV_EVENT_CLICKED);
     CHECK(!strcmp(ink_text_composing(), "xia"), "fresh physical key still works");
+    event(K.more, LV_EVENT_PRESSED);
+    CHECK(ink_cap_invoke_json("keyboard.candidates", "{}", INK_SRC_TOUCH, 0, &receipt) == INK_RC_DONE, "expand candidates through the bus");
+    event(K.more, LV_EVENT_CLICKED);
+    CHECK(K.expanded && K.first == 0, "stale candidate layout target cannot turn the expanded list");
+    CHECK(ink_cap_invoke_json("keyboard.candidates", "{\"fold\":true}", INK_SRC_TOUCH, 0, &receipt) == INK_RC_DONE, "restore the keyboard layout");
     ink_text_blur(0);
     cfg.type = INK_TEXT_PASSWORD; cfg.initial = "";
     CHECK(ink_text_focus(&cfg, NULL, NULL) > 0, "focus a real secret input");

@@ -23,7 +23,7 @@ binary = build / "sim-semantics-shell2"
 if args.baseline:
     original = subprocess.check_output(["git", "show", f"{args.baseline}:{SOURCES[args.scene]}"], cwd=ROOT, text=True)
     if args.scene == "ai":
-        original = (ROOT / SOURCES[args.scene]).read_text().replace("if (A.pressed && A.pressed_revision != A.revision) lv_event_stop_processing(e);", "(void)e;")
+        original = (ROOT / SOURCES[args.scene]).read_text().replace("if (A.pressed && (A.pressed_revision != A.revision || A.pressed_version != ink_ui_content_version())) lv_event_stop_processing(e);", "(void)e;")
     replacement = area / "original.c"
     replacement.write_text(original)
     unit = ROOT / f"tests/semantics_shell2/{args.scene}.c"

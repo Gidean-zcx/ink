@@ -5,7 +5,7 @@
 #include "../integration/whole_product.h"
 extern bool ink_test_shell2_native_output;
 static char test_snapshot[16384], test_semantic[12288], object_id[64];
-static uint32_t version, revision;
+static uint32_t test_page_version, test_object_revision;
 static void view(const char *name) {
     const char *top = NULL;
     CHECK(ink_ui_snapshot(test_snapshot, sizeof test_snapshot, &top) > 0 && top && !strcmp(top, name), "real %s test_snapshot exports", name);
@@ -31,7 +31,7 @@ static void view(const char *name) {
           sscanf(r, "\"revision\":%u", &rev) == 1 &&
           sscanf(o, "\"object\":{\"id\":\"%63[^\"]", object_id) == 1,
           "%s uses the semantic JSON contract: %.100s", name, test_semantic);
-    version = pv; revision = rev;
+    test_page_version = pv; test_object_revision = rev;
     osal_free(j);
     CHECK(!strstr(test_snapshot, "FAKE_SHELL2_SECRET"), "%s exports no secret text", name);
 }
@@ -42,8 +42,8 @@ static int inspect_compact_model(const ink_ui_page_spec_t *page, char *out, size
 }
 static void stale(const char *page, const char *cap) {
     ink_ui_action_spec_t action = {.id = cap, .label = "合成动作", .capability = cap, .enabled = true};
-    ink_ui_page_spec_t model = {.id = page, .object = {object_id, revision}, .actions = &action, .action_count = 1};
-    ink_ui_action_target_t target = {version, model.object};
+    ink_ui_page_spec_t model = {.id = page, .object = {object_id, test_object_revision}, .actions = &action, .action_count = 1};
+    ink_ui_action_target_t target = {test_page_version, model.object};
     ink_ui_content_changed();
     ink_receipt_t rc;
     CHECK(ink_ui_semantics_action(&model, cap, &target, INK_SRC_AI, &rc) == INK_RC_STALE &&

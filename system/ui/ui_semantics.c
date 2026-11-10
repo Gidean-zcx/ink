@@ -28,8 +28,10 @@ int ink_ui_semantics_summary(const ink_ui_page_spec_t *page, char *out, size_t c
         const ink_ui_field_spec_t *f = &page->fields[i];
         const char *value = f->secret ? (f->value && f->value[0] ? "有值" : "无值") : f->value ? f->value : "";
         bool labeled = !strncmp(value, f->label, strlen(f->label)) && value[strlen(f->label)] == '=';
-        n += snprintf(out + n, cap - (size_t)n, "%s%s%s；", labeled ? "" : f->label, labeled ? "" : "=", value);
+        bool group = !f->secret && !strcmp(f->role, "group");
+        n += snprintf(out + n, cap - (size_t)n, "%s%s%s%s", group || labeled ? "" : f->label, group || labeled ? "" : "=", value, group ? "" : "；");
     }
+    if (n >= 0 && (size_t)n < cap) n += snprintf(out + n, cap - (size_t)n, " 动作：");
     for (size_t i = 0; i < page->action_count && n >= 0 && (size_t)n < cap; i++) {
         const ink_ui_action_spec_t *a = &page->actions[i];
         if (a->enabled && ink_cap_ai_callable(ink_cap_find(a->capability)))

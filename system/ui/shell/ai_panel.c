@@ -19,7 +19,7 @@ static struct {
     char caption[128];
     uint16_t starts[PAGES_MAX + 1];
     int page, pages;
-    uint32_t revision, pressed_revision;
+    uint32_t revision, pressed_revision, pressed_version;
     bool pressed;
     bool hidden, speaking, expanded;
     const ink_ui_overlay_t *overlay;
@@ -198,9 +198,9 @@ static const ink_cap_t CAPS[] = {
 };
 
 static void panel_event(lv_event_t *e) {
-    if (lv_event_get_code(e) == LV_EVENT_PRESSED) { A.pressed = true; A.pressed_revision = A.revision; }
+    if (lv_event_get_code(e) == LV_EVENT_PRESSED) { A.pressed = true; A.pressed_revision = A.revision; A.pressed_version = ink_ui_content_version(); }
     if (lv_event_get_code(e) == LV_EVENT_CLICKED) {
-        if (A.pressed && A.pressed_revision != A.revision) lv_event_stop_processing(e);
+        if (A.pressed && (A.pressed_revision != A.revision || A.pressed_version != ink_ui_content_version())) lv_event_stop_processing(e);
         A.pressed = false;
     }
 }

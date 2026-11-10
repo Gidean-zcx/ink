@@ -29,8 +29,8 @@ static struct {
     lv_obj_t *panel, *status, *heard; /* the voice panel: where the keys were, the same size */
     int first;
     int shown;
-    bool symbols, shift, expanded;
-    uint32_t version, generation;
+    bool symbols, shift, expanded, secret_present;
+    uint32_t version, generation, revision, edit_revision, layout_revision, pressed_layout;
     int built_for; /* 1 letters, 2 symbols, 3 digits */
 } K;
 
@@ -66,7 +66,7 @@ static void press_key(ink_call_t *call) {
         ink_ui_content_changed();
         sync();
         return;
-    case KEY_SHIFT: K.shift = !K.shift; ink_ui_content_changed(); return;
+    case KEY_SHIFT: K.shift = !K.shift; K.revision++; ink_ui_content_changed(); return;
     default:
         if (K.shift && c >= 'a' && c <= 'z') c = (char)(c - 'a' + 'A');
         K.shift = false;
@@ -90,6 +90,8 @@ static void candidates(ink_call_t *call) {
     bool fold = false; ink_args_get_bool(&call->args, "fold", &fold);
     if (!may_edit(call)) return;
     ink_ui_content_changed();
+    K.revision++;
+    K.layout_revision++;
     if (fold) { K.expanded = false; K.first = 0; }
     else if (K.expanded) K.first += INK_TEXT_PAGE;
     else K.expanded = true;
@@ -111,11 +113,16 @@ static void edit(ink_call_t *call) {
     osal_free(text);
 }
 
-static void pressed(lv_event_t *e) { (void)e; K.version = ink_ui_content_version(); K.generation = ink_ui_generation(); }
+static void pressed(lv_event_t *e) { (void)e; K.version = ink_ui_content_version(); K.generation = K.revision; K.pressed_layout = K.layout_revision; }
 static void invoke(const char *id, const char *json) {
     ink_ui_action_spec_t action = {.id = id, .label = id, .capability = id, .args_json = json, .enabled = true};
-    ink_ui_page_spec_t page = {.id = ink_ui_action_page(), .object = {"keyboard", ink_ui_generation()}, .actions = &action, .action_count = 1};
-    ink_ui_action_target_t target = {K.version ? K.version : ink_ui_content_version(), {"keyboard", K.version ? K.generation : ink_ui_generation()}};
+    ink_ui_page_spec_t page = {.id = ink_ui_action_page(), .object = {"keyboard", K.revision}, .actions = &action, .action_count = 1};
+    ink_ui_action_target_t target = {K.version ? K.version : ink_ui_content_version(), {"keyboard", K.version ? K.generation : K.revision}};
+    if (!strcmp(id, "keyboard.candidates")) {
+        /* Voice availability changes do not change this control's meaning. */
+        page.object = (ink_ui_object_ref_t){"keyboard:layout", K.layout_revision};
+        target = (ink_ui_action_target_t){ink_ui_content_version(), {"keyboard:layout", K.version ? K.pressed_layout : K.layout_revision}};
+    }
     K.version = 0;
     ink_receipt_t rc; ink_ui_semantics_action(&page, id, &target, INK_SRC_TOUCH, &rc);
 }
@@ -166,9 +173,11 @@ static int semantic_snapshot(char *buf, size_t cap) {
     static const char *const CAPS[] = {"text.insert", "text.select", "text.submit", "keyboard.key", "keyboard.pick", "keyboard.candidates", "keyboard.edit", "text.voice_start", "text.voice_finish", "text.voice_cancel", "text.undo", "text.redo"};
     ink_ui_action_spec_t actions[sizeof CAPS / sizeof *CAPS];
     bool voice = ink_text_voice_state() != INK_VOICE_IDLE;
-    for (size_t i = 0; i < sizeof CAPS / sizeof *CAPS; i++)
+    for (size_t i = 0; i < sizeof CAPS / sizeof *CAPS; i++) {
         actions[i] = (ink_ui_action_spec_t){.id = CAPS[i], .label = CAPS[i], .capability = CAPS[i], .enabled = !secret && (i >= 10 || (voice ? i == 8 || i == 9 : i < 7 || (i == 7 && K.mic && lv_obj_is_visible(K.mic))))};
-    ink_ui_page_spec_t page = {.id = ink_ui_action_page(), .title = "键盘", .object = {"keyboard", ink_ui_generation()},
+        if (!strcmp(CAPS[i], "keyboard.candidates")) actions[i].object = (ink_ui_object_ref_t){"keyboard:layout", K.layout_revision};
+    }
+    ink_ui_page_spec_t page = {.id = ink_ui_action_page(), .title = "键盘", .object = {"keyboard", K.revision},
         .fields = fields, .field_count = count, .actions = actions, .action_count = sizeof actions / sizeof *actions};
     return ink_ui_semantics_summary(&page, buf, cap);
 }
@@ -228,6 +237,8 @@ static const char *enter_label(void) {
 }
 
 static void build(int kind) {
+    K.revision++;
+    K.layout_revision++;
     if (K.root) { ink_ui_overlay_remove(&OVERLAY); lv_obj_delete(K.root); }
     K.root = lv_obj_create(lv_layer_sys());
     lv_obj_remove_style_all(K.root);
@@ -424,7 +435,12 @@ static void sync(void) { /* UI task */
         return;
     }
     ink_text_type_t type = ink_text_type();
-    if (type != INK_TEXT_PASSWORD && !ink_text_ai_hidden()) ink_ui_content_changed();
+    bool secret = type == INK_TEXT_PASSWORD || ink_text_ai_hidden(), present = ink_text_value()[0] != 0;
+    if (!secret && K.edit_revision != ink_text_edit_revision()) {
+        K.edit_revision = ink_text_edit_revision(); K.revision++; ink_ui_content_changed();
+    }
+    if (secret && present != K.secret_present) K.revision++;
+    K.secret_present = present;
     int kind = type == INK_TEXT_NUMBER || type == INK_TEXT_PHONE ? 3 : K.symbols ? 2 : 1;
     if (!K.root || K.built_for != kind) build(kind);
     ink_voice_state_t vs = ink_text_voice_state();
@@ -450,6 +466,7 @@ static void sync(void) { /* UI task */
     else lv_obj_add_flag(K.more, LV_OBJ_FLAG_HIDDEN);
     if (ink_text_voice_possible()) lv_obj_remove_flag(K.mic, LV_OBJ_FLAG_HIDDEN);
     else lv_obj_add_flag(K.mic, LV_OBJ_FLAG_HIDDEN);
+    if (K.shown != n) { K.revision++; ink_ui_content_changed(); }
     K.shown = n;
     size_t start, end;
     ink_text_selection(&start, &end);

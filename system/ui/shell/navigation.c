@@ -32,6 +32,7 @@
 typedef struct {
     char cap[48], args[192];
     uint32_t epoch, member_epoch, version, generation;
+    bool versioned;
 } binding_t;
 typedef enum { PAGE_SETTINGS, PAGE_DISPLAY, PAGE_SOUND, PAGE_NETWORK, PAGE_NOTIFICATIONS, PAGE_CHANNELS, PAGE_KNOWN } page_t;
 static const char *const CHANNEL_NOTE = TR_NOOP("关闭后不再收进新通知，已有通知保留。电话和闹钟照常。");
@@ -229,11 +230,11 @@ static void binding_event(lv_event_t *e) {
         b->version = ink_ui_content_version(); b->generation = ink_ui_generation();
         return;
     }
-    if (b->version && (b->version != ink_ui_content_version() || b->generation != ink_ui_generation())) return;
+    if (b->versioned && b->version && (b->version != ink_ui_content_version() || b->generation != ink_ui_generation())) return;
     const ink_cap_t *cap = ink_cap_find(b->cap);
     bool locked_action = ink_ui_locked_activity() ? ink_ui_locked_allows(b->cap) : cap && cap->while_locked;
     if (!current_session(b->epoch) && (b->member_epoch != ink_member_epoch() || !locked_action)) return;
-    ink_call_opts_t o = {.src = INK_SRC_TOUCH, .page_gen = ink_ui_content_version(),
+    ink_call_opts_t o = {.src = INK_SRC_TOUCH, .page_gen = b->versioned ? ink_ui_content_version() : 0,
                          .args_json = b->args[0] ? b->args : NULL,
                          .reply_exec = INK_EXEC_UI,
                          .member = ink_member_current()->id, .done = refused};
@@ -255,6 +256,9 @@ void ink_shell_bind(lv_obj_t *obj, const char *cap, const char *json) {
     snprintf(b->args, sizeof b->args, "%s", json ? json : "");
     b->epoch = N.epoch;
     b->member_epoch = ink_member_epoch();
+    const char *page = ink_ui_top_name();
+    b->versioned = !strcmp(page, "home") || !strcmp(page, "Ai") || !strcmp(page, "BatteryLow") ||
+                   !strcmp(page, "KidLimit") || !strcmp(page, "KidTimeUp") || !strncmp(cap, "text.", 5);
     lv_obj_add_flag(obj, LV_OBJ_FLAG_CLICKABLE);
     if (lv_obj_get_style_radius(obj, 0) == LV_RADIUS_CIRCLE &&
         lv_obj_get_style_width(obj, 0) == lv_obj_get_style_height(obj, 0) &&
@@ -858,10 +862,10 @@ int ink_shell_home_snapshot(char *buf, size_t cap) {
         {.id = N.home_page == 2 ? "tools" : "resume", .role = "text", .label = N.home_page == 2 ? "应用" : "继续读", .value = N.home_page == 2 ? apps : has ? card.text : "没有阅读进度"},
         {.id = "upcoming", .role = "text", .label = "接下来", .value = upcoming},
         {.id = "status", .role = "status", .label = "状态", .value = child() ? N.kid_time : N.result},
-        {.id = "activity", .role = "status", .label = "正在做的事", .value = activity},
         {.id = "listen", .role = "text", .label = "继续听", .value = "还没有在听的内容"},
         {.id = "news", .role = "text", .label = "今日报纸", .value = "今天的还没到"},
-        {.id = "words", .role = "text", .label = "单词", .value = "还没有记下的词"}
+        {.id = "words", .role = "text", .label = "单词", .value = "还没有记下的词"},
+        {.id = "activity", .role = "group", .label = "正在做的事", .value = activity}
     };
     static const char *const CAPS[] = {"shell.launch", "shell.resume", "home.next", "home.prev", "shell.control", "shell.tasks", "shell.icon_menu", "shell.search"};
     ink_ui_action_spec_t actions[sizeof CAPS / sizeof *CAPS];
