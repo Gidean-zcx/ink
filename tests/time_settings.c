@@ -82,7 +82,8 @@ static void manual(void) {
     evidence("time-zh");
     setting("system.language", 1); quiet();
     CHECK(page_has("Date & Time") && page_has("Automatic Time Zone"), "new page is translated"); evidence("time-en");
-    setting("system.language", 0); quiet(); on_ui(observe_controls); delay_ms(65000);
+    setting("system.language", 0); quiet(); on_ui(observe_controls);
+    CHECK(WAIT_FOR(({ int64_t minute = 0; ink_state_get_int(ink_state_find("time.minute"), &minute) && minute == 659; }), 70000), "minute service reaches the next minute");
     CHECK(page_has("10:59") && !clock_controls_deleted, "minute tick updates only the clock label");
     set_clock(local(2026, 11, 10, 10, 58, 0)); quiet(); press("shell.time_edit", 0);
     CHECK(page_has("time.set") && page_has("shell.time_step"), "editor exposes save and draft actions");

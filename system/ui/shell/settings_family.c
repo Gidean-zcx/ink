@@ -15,6 +15,8 @@
 enum { MEMBERS, KID, WALLPAPER, RECORDS, MEMORY, RUNTIME };
 static const char *const NAMES[] = {"SetMembers", "SetKid", "Wallpaper", "Records", "AiMemory", "RuntimeRecords"};
 static const char *const TITLES[] = {"家人", "孩子的设置", "锁屏和壁纸", "记录", "AI 记得的事", "运行记录"};
+#define FAMILY_ROWS_MAX 24
+_Static_assert(INK_MEMBERS_MAX + 3 <= FAMILY_ROWS_MAX, "members and family controls fit");
 static struct {
     int page, count;
     uint32_t generation;
@@ -22,7 +24,7 @@ static struct {
     bool adult;
     ink_ui_list_t *list;
     ink_ui_list_position_t pos;
-    char target[16], titles[24][96], values[24][160], ids[24][48], caps[24][48], args[24][192];
+    char target[16], titles[FAMILY_ROWS_MAX][96], values[FAMILY_ROWS_MAX][160], ids[FAMILY_ROWS_MAX][48], caps[FAMILY_ROWS_MAX][48], args[FAMILY_ROWS_MAX][192];
     ink_ui_field_spec_t input[2];
     ink_ui_action_spec_t form[5];
     ink_ui_page_spec_t model;
