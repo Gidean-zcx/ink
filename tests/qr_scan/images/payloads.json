@@ -1,0 +1,12 @@
+{
+  "url": "https://example.com/qr",
+  "tel": "tel:10000000000",
+  "mecard": "MECARD:N:测试联系人;TEL:10000000000;;",
+  "vcard": "BEGIN:VCARD\nVERSION:3.0\nFN:测试联系人\nTEL:10000000000\nEND:VCARD",
+  "wifi": "WIFI:S:qr-test;T:WPA;P:FAKE-qr-secret;;",
+  "text": "你好，二维码。Hello QR!",
+  "tilted": "https://example.com/qr",
+  "blurred": "https://example.com/qr",
+  "small": "https://example.com/qr",
+  "escaped": "WIFI:S:qr\\;test;T:WPA;P:FAKE\\;secret;;"
+}
