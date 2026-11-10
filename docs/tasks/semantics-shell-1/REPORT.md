@@ -1,6 +1,6 @@
 # semantics-shell-1 执行报告
 
-基线：`4c64ae16d383ca833084d8f3683478becb9754d8`。状态：实现和专项验证完成，全量复核进行中。
+基线：`4c64ae16d383ca833084d8f3683478becb9754d8`。状态：普通版全量通过，内存检查及 S31 编译进行中。
 
 ## 验收表
 
@@ -12,8 +12,8 @@
 | A01-4 家人门禁 | 通过【实测／实现】，本地选人边界见下文 | F1 导出可见家人和密码有无；旧目标／头像点按拒绝；无变化不重画 | 同上，测试名换 `semantics-shell-member` |
 | A01-5 锁屏标记 | 通过【实测／实现】 | F1 导出实际文字、时钟及相机入口；旧目标／相机点按拒绝；无变化的音频事件不刷新 | 同上，测试名换 `semantics-shell-lock` |
 | A01-6 关机画面 | 通过【实测／实现】 | F1 导出实际说明；没有虚构可操作按钮；旧目标被语义桥拒绝 | 同上，测试名换 `semantics-shell-off` |
-| A02-1 原测试和契约 | 专项通过【实测】，全量待记录 | 修复后相关 20 项全部通过；hub 契约另已通过；已有测试未修改 | `contracts.log`、`focused-2.log`，命令见下文 |
-| A02-2 全量／内存 | 待验证 | 普通版复跑、ASan／UBSan 全量待记录 | 见下文 |
+| A02-1 原测试和契约 | 通过【实测】 | 原测试、hub 契约及新增测试均在普通版全量通过；已有测试未修改 | `ctest-final.log`，命令见下文 |
+| A02-2 全量／内存 | 普通版通过【实测】，内存版待记录 | 普通版 330／330，无跳过，376.15 秒，退出 0 | 见下文 |
 | A02-3 S31 | 待验证 | 只编译，不连接设备 | `taskpolicy -c utility bash ports/esp32s31/build.sh` |
 | A02-4 gcccheck | 通过【实测】 | `gcccheck: 15 compiled, 0 with findings`，退出 0，无跳过 | `taskpolicy -c utility python "$INK_DEPS/../ink-codex/tools/gcccheck.py" build <8 个产品 C 文件和 7 个新增测试 C 文件>` |
 | A03 行数及预算 | 通过【实测】 | 下表；产品 C／头文件净增 194 行，连同 CMake 测试注册保守计 203 行，低于 250 行 | `wc -l <六个文件>`；`git diff --numstat <基线> -- system CMakeLists.txt` |
@@ -41,7 +41,7 @@
 
 ## 和设计不一致的
 
-- 【实现】F1 原内部判断只允许已验证的底页，锁屏／关闭空间的系统浮层会导出失败。按任务第 5 项的最小绕过，增加私有 `ink_ui_action_current()`：底页仍走原验证，浮层核对其所属家人；`ui_semantics.h` 公共接口没有变化。涉及范围外的私有头、运行时和导出器共 9 行净增。
+- 【实现】F1 原内部判断只允许已验证的底页，锁屏／关闭空间的系统浮层会导出失败。按任务第 5 项的最小绕过，增加私有 `ink_ui_action_current()`：底页仍走原验证，浮层核对其所属家人；`ui_semantics.h` 公共接口没有变化。涉及范围外的私有头、运行时和导出器共 8 行净增。
 - 【实测／实现】框架文档对普通页面要求调用 `ink_ui_content_changed()`。浮层不能照搬，否则原 `integration-confirm` 的“确认卡不改变底页版本”契约失败；本次沿用 F1 已有的对象 `revision` 表示浮层内容变化，底页 `page_version` 保留。新按下捕获当时版本，已按下后版本变化的点击被拒绝。
 
 ## 改过的已有测试
@@ -72,4 +72,5 @@
 - 专项：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2 -R 'semantics-shell-|ui-scene(-big)?-Lock|capability-table-doc|integration-ai-surface|integration-notify$|sound-clock$|phone-calls$|activity-card$|lock-camera$|integration-confirm$|confirm-pages$|ui-semantics$'`，`100% tests passed out of 20`，16.71 秒，退出 0。
 - hub：使用依赖检出的 `hub/.venv/bin/python` 作为 `INK_HUB_PYTHON`；默认字体 Python 缺少 hub 测试依赖时会明确跳过，已纠正为真实执行。`focused-2.log` 的 13 项含 hub 契约全部通过，退出 0。
 - 反向对照：依次运行 `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" -B tests/semantics_shell/run.py --build build --scene <confirm|interrupt|power|member|lock|off> --baseline <基线>`；仅在构建目录中编译对应基线文件替换对象，不修改产品源码。六个基线运行均退出 1，分别 12、10、6、4、7、3 个断言失败，全部命中旧快照不符合 F1 的断言；对照脚本均退出 0。
-- 日志均在忽略目录 `work/semantics-shell-1/`；专项和反向证据在 `build/test-out/semantics-shell-*`。首轮全量为 319／330，通过回归查明并修复兼容问题；最终全量结果待补。
+- 普通版最终全量：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`；原文 `100% tests passed out of 330`、`Total Test time (real) = 376.15 sec`；退出 0，无跳过。
+- 日志均在忽略目录 `work/semantics-shell-1/`；专项和反向证据在 `build/test-out/semantics-shell-*`。首轮全量为 319／330，通过回归查明并修复兼容问题；最终普通版为 330／330。
