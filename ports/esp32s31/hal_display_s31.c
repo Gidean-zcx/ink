@@ -238,7 +238,14 @@ static void display_task(void *ctx) {
         if (ATOMIC(D.powered) && !wake && (!hold || osal_now_us() - D.last_drive >= (uint64_t)hold * 1000)) power_off();
         if (!ATOMIC(D.powered)) atomic_store(&D.armed, false);
         else atomic_store(&D.beat, xTaskGetTickCount());
-        if (r.id) r.done_us = osal_now_us();
+        if (r.id) {
+            r.done_us = osal_now_us();
+            char line[144];
+            snprintf(line, sizeof line, "display: refresh %u area=%d,%d %dx%d wf=%s ok=%d ms=%u missed=%d", (unsigned)r.id, D.area.x, D.area.y,
+                     D.area.w, D.area.h, r.waveform == HAL_WF_GC16 ? "GC16" : "GL16", r.ok, (unsigned)((r.done_us - r.started_us) / 1000),
+                     ATOMIC(D.missed));
+            hal_log_write(line);
+        }
         xSemaphoreTake(D.lock, portMAX_DELAY);
         if (r.id) D.result.id = 0;
         atomic_store(&D.pending, D.result.id || ATOMIC(D.powered) || (D.wake_until && (int32_t)(D.wake_until - xTaskGetTickCount()) > 0));
