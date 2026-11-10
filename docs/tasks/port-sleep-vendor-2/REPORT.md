@@ -3,14 +3,16 @@
 基线：`2a31195a489bf08e3b7ae850b64b04ab522310a1`。执行日期：2026-11-10。
 范围：S31 浅睡执行环境、切片与唤醒路径；只编译、跑宿主机测试，不连接设备。
 
-【实现】最小修复为电源服务任务配置增加 5 行：仅 S31 构建固定到 0 号核、优先级 idle+3；沿用已有 4096 字节内部栈。模拟器仍为不固定核、优先级 4。没有新增睡眠任务。
+【实现】最小修复为电源服务任务配置增加 5 行：仅 S31 构建固定到 0 号核、优先级 idle+3；沿用已有 4096 字节内部栈。模拟器仍为不固定核、优先级 4。没有新增睡眠任务。产品代码+5/−0，净增5行，低于150行预算。
+
+已完成执行环境修复及编译、宿主机验收。整板浅睡的实机结果仍待核对，已知外围缺口与策略差异见对照表。
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
 | 1 | 通过 | 【实测】S31构建退出0、0条编译warning/error；端口普通与ASan/UBSan均 `100% tests passed out of 4`；新增6项反向对照全部编译0、断言退出−6，原有14项也全部拒绝 | 下方复现命令；`work/s31-build.log`、`work/port{,-asan}-tests.log`、`work/task-negative.log`、`work/port-negative.log` |
-| 2 | 进行中 | 【实测】模拟器普通版 `100% tests passed out of 330`，684.77秒；gcccheck共9个编译单元，0 findings；待内存版全量与最终隐私扫描 | 下方命令；`work/sim-tests.log`、`work/gcc-{service,port}.log` |
+| 2 | 通过 | 【实测】模拟器普通/ASan+UBSan全量均 `100% tests passed out of 330`，分别684.77/1164.60秒；gcccheck共9个编译单元，0 findings；隐私扫描0命中 | 下方命令、总规则§6隐私命令；`work/sim{,-asan}-tests.log`、`work/gcc-{service,port}.log` |
 | 3 | 通过 | 【实现】下方对照表覆盖任务/核/栈/优先级、切片、硬件顺序和等待；7项上机核对步骤含按键唤醒与断电后自动恢复 | 文件与行号见下表 |
 
 ## 复现命令与证据
@@ -55,6 +57,8 @@ taskpolicy -c utility python3 ../../tools/gcccheck.py build-s31-host \
 
 【实测】普通版全量结果原话：`100% tests passed out of 330`，`Total Test time (real) = 684.77 sec`，没有跳过。gcccheck原话分别为`1 compiled, 0 with findings`、`8 compiled, 0 with findings`，无跳过文件。S31实际编译命令包含`ESP_PLATFORM`，确认本次条件分支已参与目标构建。
 
+【实测】内存版全量结果原话：`100% tests passed out of 330`，`Total Test time (real) = 1164.60 sec`，没有跳过、没有ASan/UBSan报错。内存检查包括端口独立4项和模拟器全量330项；端口的真实HAL、板级、输入逻辑与新增隔离配置检查均已运行，低层SDK寄存器操作不在宿主机执行范围内。
+
 ## 原厂一步 → 我们一步
 
 【实现】核查日期 2026-11-10；原厂 [CloudZao/Metalio-E-INK4-Plus，690a023](https://github.com/CloudZao/Metalio-E-INK4-Plus/tree/690a023c66862af103a3187464373ee7c5efcd14)。表中原厂路径：`L` = `main/boards/common/power_policy/power_policy_standby_lp.cc`，`H` = 同目录 `power_hw.cc`，`R` = 同目录 `README.md`，`V` = 同目录 `s31_sleep/`，`B` = `main/boards/metalio-e-ink4-plus/display/epd_board_metalio_eink4_plus.c`，`K` = 同板 `input/metalio_keys.cc`。
@@ -80,6 +84,7 @@ taskpolicy -c utility python3 ../../tools/gcccheck.py build-s31-host \
 | P17输入→GPIO2 EXT1 ANY_LOW，H:419、H:424 | M:74、P:89、P:147 | 链路一致；GPIO61不作为浅睡唤醒 |
 | 原厂不把P16作为唤醒源，R:134 | M:79 先建RTC基线，再启POWER；P:126、`s31_input_logic.h:99` | 按任务保留；`MB_RTC_PENDING`使用已实测的高有效，未改成原厂低有效 |
 | 原厂禁用运动唤醒，H:407 | P:138、`s31_input_logic.h:100` | 按任务保留运动唤醒和独立原因分类 |
+| 原厂浅睡不保留SRDY GPIO3唤醒，R:139 | P:91的GPIO3 ANY_HIGH，仅keep_modem分支启用 | 既有D-37可接听待机分支保留；极性未上机核对，信息不足，不作为本次已验证能力 |
 | 按切片配置定时器，H:429 | P:87，时长来自S:267、S:285 | 时长一致；本项目先配timer再配EXT1，均在断电与入睡之前 |
 | 前光0，停modem/音频→P05→P14，H:438、B:292 | P:149→M:92 | 轨顺序一致；既有keep_modem保电；真实modem/音频收尾尚缺 |
 | 总线hold，H:446 | P:135 | 缺总线端口，未实现 |
@@ -102,7 +107,7 @@ taskpolicy -c utility python3 ../../tools/gcccheck.py build-s31-host \
 2. **清醒状态检查**：确认运行任务是power、核0、优先级3、栈4096且在内部RAM；显示/存储/音频收尾完成。确认GPIO2空闲高；P16空闲0、告警1、清除回0（`docs/hardware/2026-11-10-selftest.md:98`的第六轮）。保持P16高有效，运动锁存读后GPIO2应释放。
 3. **先测电源键可唤醒**：第一片就用原厂60秒定时+GPIO2 EXT1，不另猜更短硬件参数。在入睡后由用户短按POWER，检查浅睡调用返回、原因含POWER、方向先恢复、电源轨P14→P05、USB恢复，PSRAM既有校验和不变、没有重启。短按松手与仍按住各测一次，确认没有假音量键和二次进待机。
 4. **再测定时切片**：通过已有诊断或延后读取的记录核对至少3片：每片60000000 µs，timer醒后保持锁屏、不重枚举USB，重查状态后再睡；最后短按POWER读取证据。USB静默不能判断CPU没醒；不以USB消失作为成功证据。
-5. **再测RTC、运动和提前到期**：设置已支持的近闹钟，确认其期限缩短切片且事件处理后重新评估；分别触发P16告警和加速度计运动，检查唤醒原因不误报POWER、P16清告警回0。运动按已有拿起亮屏规则判断，平放轻碰不能直接解锁。GPIO61只检查清醒按键功能，不能期待它唤醒浅睡。
+5. **再测RTC、运动和提前到期**：设置已支持的近闹钟，确认其期限缩短切片且事件处理后重新评估；分别触发P16告警和加速度计运动，检查唤醒原因不误报POWER、P16清告警回0。运动按已有拿起亮屏规则判断，平放轻碰不能直接解锁。保电模组GPIO3的极性与短信/来电唤醒另核对；GPIO61只检查清醒按键功能，不能期待它唤醒浅睡。
 6. **核对每一步等待与外围边界**：查看TPS 50/120 ms、GPIO2最多600 ms、键20 ms、USB150+最多800 ms，以及P05/P14顺序。SD和屏总线端口补齐以后，还必须单独核对SD停放/恢复→USB→屏总线和长期循环，才能验收整板；本任务没有完成这些端口。
 7. **卡住立即结束本轮并恢复**：先短按POWER；USB不回来不能反复启动刷写进程抢端口。按第七轮已有救援记录，由用户拔线、按住电源15秒、插线开机；15秒仅是该轮操作记录，硬件强制断电阈值仍未知。恢复程序见USB重新出现后自动写回并校验，确认出厂固件回到原状、停在下载模式。睡眠会暂停RTC看门狗，不能靠上轮“保险丝”兜底（实机记录第七轮）。
 
@@ -124,12 +129,12 @@ taskpolicy -c utility python3 ../../tools/gcccheck.py build-s31-host \
 
 ## 要用户定的
 
-- 暂无；按任务约束继续可逆工作。
+- 若要连原厂待机累计关机、入睡拒绝后的20 ms等待也完全一致，需另开放电源服务策略的修改范围；本任务“只改任务配置”的范围内保留既有行为，不新增设置或关机策略。
 
 ## 顺手发现
 
 - 基线与用户指定一致，工作树干净，沿当前任务分支继续。
-- 普通宿主机构建有既有SDL的macOS API弃用及重复库链接提示，未放宽警告；S31编译warning/error均为0。
+- 普通宿主机构建有既有SDL的macOS API弃用、数组扩展及重复库链接提示，未放宽警告；S31编译warning/error均为0。
 - 根工程的`unit-s31-osal-ticks`在sanitizer选项之前定义，已有单项不受插桩；本次端口内存版9个C编译单元全部带ASan/UBSan，新增配置隔离程序也带插桩。
 
 ## 新增的机制
@@ -139,3 +144,9 @@ taskpolicy -c utility python3 ../../tools/gcccheck.py build-s31-host \
 ## 要改的文档
 
 - 主会话合并时同步端口状态：power任务已改核0、idle+3、4096内部栈；整板浅睡与SD/屏总线仍待后续端口和有人在场的实机验证。无需新增能力或AI快照；R-061边界仍为平台内部机制。
+
+## 收尾核查
+
+- 【实测】相对基线只有报告、端口测试CMake/电源测试/新增配置测试、电源服务任务配置这5个文件；`git diff --stat`无夹带，产品代码净增5行。
+- 【实测】总规则§6要求的基线到HEAD隐私扫描0命中；`git diff --check`通过，报告6个本地链接目标全部存在。证据：`work/privacy-scan.log`、本报告复现命令及各测试日志。
+- 改动已本地提交；未推送、未连接设备。共享需求、决策、审计与调研文件未修改。
