@@ -237,7 +237,9 @@ static void hal_sink(const hal_input_event_t *h, void *ctx) {
     }
     if (h->type == HAL_IN_KEY && h->key.pressed) {
         ink_audio_key_tone();
-        ink_audio_haptic();
+        /* Not the AI key: it starts push-to-talk, and the motor's buzz would go into the recording (and it
+         * delays the barge-in that stops a long answer, tests/ai_speech_long). */
+        if (h->key.key != HAL_KEY_AI) ink_audio_haptic();
     }
 }
 

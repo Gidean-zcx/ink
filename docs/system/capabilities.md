@@ -7,7 +7,7 @@ python3 tools/capabilities.py
 python3 tools/capabilities.py --check
 ```
 
-当前共 434 项：可调用能力 397、事件 37；设置 29 项、状态 49 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
+当前共 434 项：可调用能力 397、事件 37；设置 30 项、状态 49 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
 
 风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。
 
@@ -587,7 +587,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 ### s17 — `system/policy/settings`
 
-设置：`ai.read_clipboard`、`audio.alarm_ring`、`audio.call_ring`、`audio.child_max`、`audio.key_tone`、`audio.vibration`、`audio.volume`、`bt.enabled`、`cell.sim_slot`、`display.font_size`、`display.light`、`display.lock_style`、`display.wallpaper_file`、`display.warmth`、`member.idle_return_s`、`net.airplane`、`net.prefer`、`notify.dnd`、`power.lift_wake`、`power.lock_after_s`、`power.saving`、`system.language`、`time.auto`、`time.zone`、`time.zone_auto`、`update.auto_download`、`voice.handsfree`、`voice.interrupt`、`wifi.enabled`。
+设置：`ai.read_clipboard`、`audio.alarm_ring`、`audio.call_ring`、`audio.child_max`、`audio.key_tone`、`audio.vibration`、`audio.vibration_level`、`audio.volume`、`bt.enabled`、`cell.sim_slot`、`display.font_size`、`display.light`、`display.lock_style`、`display.wallpaper_file`、`display.warmth`、`member.idle_return_s`、`net.airplane`、`net.prefer`、`notify.dnd`、`power.lift_wake`、`power.lock_after_s`、`power.saving`、`system.language`、`time.auto`、`time.zone`、`time.zone_auto`、`update.auto_download`、`voice.handsfree`、`voice.interrupt`、`wifi.enabled`。
 
 状态：—。
 
@@ -597,7 +597,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 ### s18 — `system/policy/system_actions`
 
-设置：`ai.read_clipboard`、`audio.alarm_ring`、`audio.call_ring`、`audio.child_max`、`audio.key_tone`、`audio.vibration`、`audio.volume`、`bt.enabled`、`cell.sim_slot`、`display.font_size`、`display.light`、`display.lock_style`、`display.wallpaper_file`、`display.warmth`、`member.idle_return_s`、`net.airplane`、`net.prefer`、`notify.dnd`、`power.lift_wake`、`power.lock_after_s`、`power.saving`、`system.language`、`time.auto`、`time.zone`、`time.zone_auto`、`update.auto_download`、`voice.handsfree`、`voice.interrupt`、`wifi.enabled`。
+设置：`ai.read_clipboard`、`audio.alarm_ring`、`audio.call_ring`、`audio.child_max`、`audio.key_tone`、`audio.vibration`、`audio.vibration_level`、`audio.volume`、`bt.enabled`、`cell.sim_slot`、`display.font_size`、`display.light`、`display.lock_style`、`display.wallpaper_file`、`display.warmth`、`member.idle_return_s`、`net.airplane`、`net.prefer`、`notify.dnd`、`power.lift_wake`、`power.lock_after_s`、`power.saving`、`system.language`、`time.auto`、`time.zone`、`time.zone_auto`、`update.auto_download`、`voice.handsfree`、`voice.interrupt`、`wifi.enabled`。
 
 状态：`alarm.revision`、`alarm.ringing`、`app.cards_rev`、`app.foreground`、`audio.listening`、`audio.mic`、`audio.now_playing`、`audio.recording`、`audio.route`、`battery.charging`、`battery.level`、`battery.low`、`bt.available`、`bt.connected`、`bt.device`、`cell.registered`、`cell.sim`、`confirm.pending`、`file.index_state`、`interrupt.active`、`job.revision`、`job.running`、`media.state`、`member.authed`、`member.current`、`member.time_up`、`net.online`、`net.signal`、`net.type`、`notify.unread`、`pairing.state`、`power.lifted`、`power.saving`、`power.state`、`storage.card`、`storage.free`、`storage.mode`、`storage.user_free`、`text.focused`、`text.voice`、`time.minute`、`time.synced`、`time.zone`、`update.progress`、`update.state`、`update.version`、`usb.connected`、`wifi.ssid`、`wifi.state`。
 
@@ -607,7 +607,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 ### s19 — `system/services/audio`
 
-设置：`audio.alarm_ring`、`audio.call_ring`、`audio.child_max`、`audio.key_tone`、`audio.vibration`、`audio.volume`、`voice.handsfree`、`voice.interrupt`。
+设置：`audio.alarm_ring`、`audio.call_ring`、`audio.child_max`、`audio.key_tone`、`audio.vibration`、`audio.vibration_level`、`audio.volume`、`voice.handsfree`、`voice.interrupt`。
 
 状态：`audio.listening`、`audio.mic`、`audio.now_playing`、`audio.recording`、`audio.route`、`interrupt.active`、`media.state`、`member.authed`、`member.current`。
 
@@ -927,7 +927,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 ### s51 — `system/ui/shell/navigation`
 
-设置：`audio.alarm_ring`、`audio.call_ring`、`audio.child_max`、`audio.key_tone`、`audio.vibration`、`audio.volume`、`cell.sim_slot`、`display.font_size`、`display.light`、`display.lock_style`、`display.warmth`、`net.airplane`、`net.prefer`、`notify.dnd`、`power.lift_wake`、`power.lock_after_s`、`system.language`、`voice.handsfree`、`wifi.enabled`。
+设置：`audio.alarm_ring`、`audio.call_ring`、`audio.child_max`、`audio.key_tone`、`audio.vibration`、`audio.vibration_level`、`audio.volume`、`cell.sim_slot`、`display.font_size`、`display.light`、`display.lock_style`、`display.warmth`、`net.airplane`、`net.prefer`、`notify.dnd`、`power.lift_wake`、`power.lock_after_s`、`system.language`、`voice.handsfree`、`wifi.enabled`。
 
 状态：`app.cards_rev`、`audio.mic`、`audio.route`、`battery.level`、`bt.connected`、`cell.registered`、`member.authed`、`member.current`、`net.type`、`notify.unread`、`power.state`、`wifi.ssid`、`wifi.state`。
 
@@ -1005,6 +1005,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `audio.child_max` | 孩子的音量上限 | `INK_SET_INT` | `settings.get` / `settings.set` | 仅成人 | 高 / 人、AI 均需确认 | [system/services/audio/audio_service.c](../../system/services/audio/audio_service.c) |
 | `audio.key_tone` | 按键提示音 | `INK_SET_BOOL` | `settings.get` / `settings.set` | 成人、儿童（无需白名单） | 中 / 无需 | [system/services/audio/audio_service.c](../../system/services/audio/audio_service.c) |
 | `audio.vibration` | 振动 | `INK_SET_BOOL` | `settings.get` / `settings.set` | 成人、儿童（无需白名单） | 中 / 无需 | [system/services/audio/audio_service.c](../../system/services/audio/audio_service.c) |
+| `audio.vibration_level` | 振动强度 | `INK_SET_ENUM` | `settings.get` / `settings.set` | 成人、儿童（无需白名单） | 中 / 无需 | [system/services/audio/audio_service.c](../../system/services/audio/audio_service.c) |
 | `audio.volume` | 音量 | `INK_SET_INT` | `settings.get` / `settings.set` | 成人、儿童（无需白名单） | 中 / 无需 | [system/services/audio/audio_service.c](../../system/services/audio/audio_service.c) |
 | `bt.enabled` | 蓝牙 | `INK_SET_BOOL` | `settings.get` / `settings.set` | 成人、儿童（无需白名单） | 中 / 无需 | [system/services/bt/bt_service.c](../../system/services/bt/bt_service.c) |
 | `cell.sim_slot` | SIM 卡 | `INK_SET_ENUM` | `settings.get` / `settings.set` | 仅成人 | 中 / 无需 | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |

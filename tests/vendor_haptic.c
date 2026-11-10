@@ -122,7 +122,9 @@ static void input_checks(void) {
     const hal_key_t keys[] = {HAL_KEY_VOL_UP, HAL_KEY_VOL_DOWN, HAL_KEY_AI, HAL_KEY_HOME, HAL_KEY_PREV, HAL_KEY_NEXT};
     for (unsigned i = 0; i < sizeof keys / sizeof *keys; i++) {
         before = ink_test_pulses; key(keys[i]); quiet();
-        CHECK(ink_test_pulses == before + 1, "physical key %d pulses once under DND", keys[i]);
+        /* the AI key starts push-to-talk: no buzz into the recording (input_service.c) */
+        unsigned want = keys[i] == HAL_KEY_AI ? 0 : 1;
+        CHECK(ink_test_pulses == before + want, "physical key %d pulses %u times under DND", keys[i], want);
     }
     before = ink_test_pulses; hw(HW_KEY_DOWN, HAL_KEY_NEXT, 0);
     CHECK(WAIT_FOR(ink_test_pulses == before + 1, 2000), "held cover key reaches the driver");
