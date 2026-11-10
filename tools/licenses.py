@@ -18,7 +18,7 @@ for e in entries:
     quote = lambda s: json.dumps(s, ensure_ascii=False)
     rows.append('    {' + ', '.join(quote(s) for s in [e['id'], e['name'], e['version'] + ' · ' + e['license']]) +
                 ', NULL, "shell.license", "list", NULL, NULL},')
-    texts.append(quote('Source: ' + e['source'] + '\n\n' + text.strip() + '\n'))
+    texts.append(quote(e['name'] + '\n' + e['version'] + ' · ' + e['license'] + '\nSource: ' + e['source'] + '\n\n' + text.strip() + '\n'))
 out = Path(sys.argv[1])
 out.parent.mkdir(parents=True, exist_ok=True)
 out.write_text('/* Generated from third_party/licenses/catalog.json. */\nstatic const row_t LICENSE_ROWS[] = {\n' +

@@ -113,7 +113,7 @@ static void run(void *ctx) {
     CHECK(!strcmp(ink_ui_page_name(), "DeviceDetails"), "about entry opens device details by touch");
     CHECK(WAIT_FOR(S.total > 0, 3000), "asynchronous file.free reply arrives"); test_quiet(); on_ui(test_details); test_capture("device");
     CHECK(AI("shell.back", NULL), "back returns to About"); test_quiet();
-    test_click(test_lang ? "Open Source Licenses" : "开源许可");
+    test_click(test_lang ? "Licenses" : "开源许可");
     CHECK(!strcmp(ink_ui_page_name(), "Licenses"), "about entry opens licenses by touch"); test_capture("licenses");
     CHECK(strstr(test_snap, "LVGL") && strstr(test_snap, "9.5.0") && strstr(test_snap, "MIT"), "list has a registered component, version and license");
     test_click("LVGL"); CHECK(!strcmp(ink_ui_page_name(), "LicenseText"), "component row opens full text"); test_capture("license-text");

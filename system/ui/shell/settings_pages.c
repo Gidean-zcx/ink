@@ -237,7 +237,8 @@ static void bind_row(lv_obj_t *slot, size_t i, ink_ui_field_spec_t *field, ink_u
         ink_ui_toggle(slot, r->icon ? "" : TR(r->title), ink_setting_get(r->setting) != 0, left, head + (body - INK_CONTROL) / 2, w - left, NULL, NULL);
         if (r->icon) {
             lv_obj_set_width(title, ink_ui_px(w - left - INK_PRIMARY - INK_GAP));
-            lv_obj_set_y(title, ink_ui_px(head + (body - ink_ui_text_height(TR(r->title), INK_FONT_LIST, INK_WEIGHT_MEDIUM, w - left - INK_PRIMARY - INK_GAP)) / 2));
+            y = head + (body - ink_ui_text_height(lv_label_get_text(title), INK_FONT_LIST, INK_WEIGHT_MEDIUM, w - left - INK_PRIMARY - INK_GAP)) / 2;
+            lv_obj_set_y(title, ink_ui_px(y));
         }
     } else if (r->setting) {
         const char *const choices[] = {"使用时", "一直", "关"};
@@ -394,7 +395,7 @@ static void license_bind(lv_obj_t *slot, size_t i, ink_ui_field_spec_t *field, i
 }
 static void license_create(lv_obj_t *screen, void *arg) {
     L.index = (int)(intptr_t)arg; memset(&L.position, 0, sizeof L.position);
-    ink_shell_statusbar(screen, true); ink_shell_topbar(screen, LICENSE_ROWS[L.index].title);
+    ink_shell_statusbar(screen, true); ink_shell_topbar(screen, TR("许可全文"));
     int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP_XS;
     L.height = INK_CANVAS_H - y - INK_CONTROL - 3 * INK_GAP;
     lv_obj_t *body = ink_ui_box(screen, 0, y, INK_CANVAS_W, INK_CANVAS_H - y, 0, INK_SURFACE_WHITE, false);
