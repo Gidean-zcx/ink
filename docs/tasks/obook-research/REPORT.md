@@ -11,7 +11,7 @@
 | 1 | 调研完成 | OBOOK 5、BOOX Note Air4 C、Kindle Paperwhite 第 12 代；逐项来源见下表，查不到的明确保留 | 公开网页检索、`curl -L`、PDF 原页查看 |
 | 2 | 完成 | 六主题共 29 项；设计覆盖与当前实现分列，本地依据定位到文件/行 | `rg -n`、`nl -ba`；只读核对 |
 | 3 | 完成 | 建议 P1～P9 按推荐顺序；Q1～Q6 待用户选择；硬件依赖单列 | 人工交叉检查 |
-| 4 | 已满足，收尾再核对 | 开工工作区干净，HEAD 与基线一致 | `git status --short --branch`；`git rev-parse HEAD` |
+| 4 | 已满足，最终提交再核对 | 当前基线差异仅本报告，产品代码 0 行；未改需求、决策或已有研究资料 | `git diff --stat f0431179..HEAD`；`git status --short` |
 
 ## 资料与证据边界
 
@@ -169,8 +169,13 @@ R-061 审视：上述建议应复用文字选择、存储、音频、成员策�
 
 ## 验证与提交
 
-- 已按任务规则配置、构建普通版本：退出 0；`INK_WERROR=ON`，字体/Python/LVGL 使用 `$INK_DEPS`；构建 `taskpolicy -c utility cmake --build build -j2`。没有启动窗口模拟器。
-- 普通全量 `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2` 进行中；ASan/UBSan、文件链接和最终隐私核查待完成。
+- 【实测】已按任务规则 §5 的全部参数配置、构建普通版本：退出 0；`INK_WERROR=ON`，字体/Python/LVGL 使用 `$INK_DEPS`；构建 `taskpolicy -c utility cmake --build build -j2`。没有启动窗口模拟器。日志在 `work/obook-research/{configure,build}.log`。
+- 【实测】普通全量 `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2` 退出 0。原话：`100% tests passed out of 330`，`Total Test time (real) = 907.24 sec`。**实际 327 通过、3 跳过**：`hub-contract` 缺当前所选 Python 的锁定依赖；`hub-json-crosscheck` 缺前者生成的消息；`hub-simulator-e2e` 缺锁定 Python 环境。跳过由原有测试返回 77，不计为通过，没有改测试或安装依赖。日志 `work/obook-research/ctest.log` 与 `build/Testing/Temporary/LastTest.log`。
+- ASan/UBSan：按相同配置换 `build-asan`，仅增加 `-DINK_SANITIZE=ON`，仍用 `taskpolicy -c utility` 和 `-j2`；构建中，结果待补。
+- 【实测】报告 49 个引用定义、206 次引用均能解析；23 个本地文件/代码行目标存在，六主题 29 项齐全。外部网址逐一注明可读/失败边界，没有把 curl 的 200 验证页当正文；PDF 原页和官网规格图已查看。静态检查记录 `work/obook-research/report-check.json`。
+- S31：本次未编译；gcccheck：本次未运行，因为只有报告、没有 C 文件改动。两者不写成通过。Linux CI 未运行；本任务禁止推送。
+- 没有修复产品问题或新增测试，因此不适用“撤修复后失败”的反向对照，也没有改已有测试期望。
+- 隐私扫描、最终范围和提交核对待完成。里程碑本地提交：`911c41a4`（建立报告）、`71c5ab09`（完成资料对照）；未推送。
 
 ## 引用定位
 
