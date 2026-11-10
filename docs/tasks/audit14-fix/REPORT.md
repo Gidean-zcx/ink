@@ -1,20 +1,20 @@
 # audit14-fix 执行报告
 
-基线：`41d7f251b5d4b2cd4e81764ee3e866a6186663cf`。分支：`claude/codex-audit14-fix`。状态：专项和反向通过，最终全量、内存检查和 S31 验收中；仅本地提交，不推送、不接设备。以下实测均为宿主机或模拟器证据。
+基线：`41d7f251b5d4b2cd4e81764ee3e866a6186663cf`。分支：`claude/codex-audit14-fix`。状态：修复和验证结束，验收 3 未全过（共享能力文档校验）；仅本地提交，不推送、不接设备。以下实测均为宿主机或模拟器证据。
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 页面声明锁屏权限 | 【实测】正反通过 | lock-camera 不改；合成页面覆盖名单、普通锁屏、未认证空间、AI 拒绝、真实 HOME 和 HOME/BACK 能力；撤回策略、输入、主页处理均失败 | C1、C2；`work/audit14-fix/verified.log`、`reverse.log` |
-| 2 能力声明应用归属 | 【实测】正反通过 | 191 项静态声明，跨 14 个应用；ownership 阶段遍历归属，禁用能力逐项核对 AI/触摸拒绝，电话短信保留；恢复旧 action_app 后失败 | C1、C2 |
+| 1 页面声明锁屏权限 | 【实测】正反通过 | lock-camera 不改；合成页面覆盖名单、普通锁屏、未认证空间、AI 拒绝、模拟 HOME 按键路径和 HOME/BACK 能力；撤回策略、输入、主页处理均失败 | C1、C2；`work/audit14-fix/verified.log`、`reverse.log` |
+| 2 能力声明应用归属 | 【实测】正反通过 | 191 项静态声明，跨 14 个应用；实测遍历 192 项（含合成别名），147 条禁用能力各经 AI/触摸拒绝，电话短信保留；恢复旧 action_app 后失败 | C1、C2；`build-asan/kid-apps-p7eao_tu/ownership.log` |
 | 3 批量文件简要回执 | 【实测】正反通过 | 26 项、25 失败、20 文件名和剩余 5 项，另测全成功；固定缓冲 7868 B，原最坏 884768 B；恢复旧回执后失败 | C1、C2 |
 | 4 时间页相关事件刷新 | 【实测】正反通过 | 闹钟添加/取消、time.synced 变化不销毁控件；原分钟更新检查保留；撤回过滤后同步状态检查失败 | C1、C2 |
 | 5 中枢时间字段加锁 | 【实测】正反通过 | 6 行共享字段访问均在 id_lock 内；模拟中枢核对时间和 RTT；分别撤回读、发送 hello、接收 hello 的锁均失败 | C1、C2 |
-| 全量及内存检查 | 【实测】普通部分通过；内存验收中 | 普通原话 `99% tests passed, 2 tests failed out of 330`；910.78 秒，无跳过。末次限定修改后 device-events、thumb-wiring 补测 2/2 通过，仍有共享文档校验未过 | C3、C4；`work/audit14-fix/ctest.log`、`events.log` |
-| S31 | 待运行 | — | C5 |
+| 全量及内存检查 | 【实测】未全绿；剩共享文档校验 | 普通原话 `99% tests passed, 2 tests failed out of 330`（910.78 秒），末次修正后 device-events、thumb-wiring 补测 2/2 通过。最终 ASan/UBSan 原话 `99% tests passed, 1 tests failed out of 330`（1168.93 秒）；329 通过、1 文档失败，无跳过、无内存诊断 | C3、C4；`work/audit14-fix/ctest.log`、`events.log`、`ctest-asan.log` |
+| S31 | 【实测】通过 | 编译、链接、镜像、size、stack 脚本退出 0；镜像 1445968 B，无 warning/error | C5；`work/audit14-fix/s31.log`、`build-s31/size.txt`、`build-s31/stack.txt` |
 | gcccheck | 【实测】通过 | 原话 `gcccheck: 36 compiled, 0 with findings`，末次文件补查 `1 compiled, 0 with findings`，退出均为 0；动态编译的 thumb_wiring.c 不在编译命令表，工具明确列出未编译 | C6；`work/audit14-fix/gcccheck.log`、`gcccheck-final.log` |
-| 隐私及提交范围 | 待最终扫描 | — | 总规则第 6 节 |
+| 隐私及提交范围 | 【实测】通过 | 隐私模式 0 匹配，变更文件无超过 5 MiB；diff --check 无错误，范围只有本任务代码、测试和报告 | 总规则第 6 节；`work/audit14-fix/privacy.log` |
 
 原有 lock-camera、kid-apps、files-ops、time-settings 均通过；最终专项含 9 项，原话 `100% tests passed out of 9`（`work/audit14-fix/verified.log`）。反向 9 组均命中指定失败，包装脚本退出 0；功能对照都到达 test.finished，不以崩溃当成功。锁的 3 组对照是源码约束检查。
 
@@ -33,7 +33,7 @@
 
 ## 没做到的
 
-共享能力表校验未通过：任务明令不修改该共享文件。普通全量中事件回放失败已修正并补测通过，未再次重跑普通 330 项；内存检查和 S31 尚待完成。本机为 macOS，未运行 Linux 原生全量或实机测试。
+共享能力表校验未通过：任务明令不修改该共享文件。普通全量中事件回放失败已修正并补测通过，未再次重跑普通 330 项；最后源码另跑了完整 ASan/UBSan 330 项。本机为 macOS，未运行 Linux 原生全量或实机测试。
 
 ## 和设计不一致的
 
@@ -58,13 +58,14 @@
 
 ## 新增的机制
 
-- `ink_activity_t.locked_caps`（ui.h:39）、`ink_ui_overlay_t.activity`（ui.h:59）：任务第 1 项要求的页面许可和覆盖层关联。
+- `ink_activity_t.locked_caps`（ui.h:39）：任务第 1 项要求的页面许可。
+- `ink_ui_overlay_t.activity`（ui.h:59）：将现有相机覆盖层关联到 activity 声明。
 - `ink_cap_t.locked_owner_only`（cap.h:106）：29 项静态标记替代普通锁屏下的名称匹配，保留原非人工调用限制；受限页面仍以 activity 名单为准。
 - `ink_cap_t.app`（cap.h:89）：任务第 2 项要求；191 项静态归属声明。比域注册更小，无新注册表或运行时前缀解析。
 - 调用槽保留本次已获人工锁屏许可，避免动作关闭页面后成功回执被改为 stale；沿用现有调用生命周期。
 - 无新任务、线程、状态机、持久格式、队列、缓存、重试或产品配置项。
 
-产品代码增加 276 行、删除 235 行，净增 41 行（预算净增 250 行）。超过 100 行主要是给既有应用能力补静态元数据。看过更小方案：保留前缀违反任务；域注册另需表和查询；一律收紧普通锁屏破坏既有行为。没有改名、搬文件或批量格式化。
+产品代码增加 277 行、删除 236 行，净增 41 行（预算净增 250 行）。超过 100 行主要是给既有应用能力补静态元数据。看过更小方案：保留前缀违反任务；域注册另需表和查询；一律收紧普通锁屏破坏既有行为。没有改名、搬文件或批量格式化。
 
 ## 要改的文档
 
