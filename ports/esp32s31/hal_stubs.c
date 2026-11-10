@@ -87,16 +87,9 @@ void hal_display_set_temperature(int celsius) {  }
 /* TODO: ESP-IDF S31 JPEG decoder. */
 int hal_jpeg_decode_gray(const uint8_t *src, size_t n, uint8_t *dst, int w, int h) { return -1; }
 
-/* TODO: ESP-IDF Wi-Fi/lwIP/TLS/WebSocket + NT26 modem. */
+/* Wi-Fi/link/SNTP: hal_wifi_s31.c; TODO: TLS/WebSocket + NT26 modem. */
 hal_ws_t *hal_ws_open_pinned(const char *url, const uint8_t *sha256, hal_ws_cb cb, void *ctx) { return NULL; }
 hal_ws_t *hal_ws_open(const char *url, hal_ws_cb cb, void *ctx) { return NULL; }
-void hal_net_link_status(hal_link_status_t *out) { *out = (hal_link_status_t){0}; }
-void hal_net_use(hal_link_type_t type) {  }
-bool hal_net_available(hal_link_type_t type) { return false; }
-int hal_wifi_scan(hal_wifi_ap_t *out, int max, uint32_t timeout_ms) { return -1; }
-int hal_wifi_connect(const char *ssid, const char *password, uint32_t timeout_ms) { return -1; }
-void hal_wifi_set_known(const hal_wifi_known_t *list, int n) {  }
-void hal_net_set_link_callback(hal_link_cb cb, void *ctx) {  }
 hal_at_result_t hal_modem_at(const char *cmd, char *resp, size_t resp_cap, uint32_t timeout_ms) { return HAL_AT_NO_MODEM; }
 hal_at_result_t hal_modem_at_payload(const char *cmd, const char *payload, char *resp, size_t resp_cap, uint32_t timeout_ms) { return HAL_AT_NO_MODEM; }
 int hal_modem_urc(char *buf, size_t cap, uint32_t timeout_ms) { return -1; }

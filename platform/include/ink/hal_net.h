@@ -67,6 +67,8 @@ typedef void (*hal_link_cb)(void *ctx, const hal_link_status_t *st);
  *  appears or goes away. Up to four listeners, each added once (on the device: esp_event handlers);
  *  they run in the platform's event task. */
 void hal_net_set_link_callback(hal_link_cb cb, void *ctx);
+/** Network UTC seconds; short callback in the network task. NULL disables delivery. */
+void hal_net_set_time_callback(void (*cb)(void *ctx, int64_t utc_s), void *ctx);
 
 /* ---- cellular modem AT channel ----
  * The modem's AT command port (the Plus: NT26 over the UART-Ethernet link, multiplexed with the

@@ -20,6 +20,7 @@
 #include <string.h>
 
 #include "ink/hal_device.h"
+#include "ink/hal_net.h"
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/cap.h"
@@ -62,7 +63,8 @@ static struct {
     bool valid, synced;
     int network_zone;
     ink_svc_deadline_t due_at, minute_at, ring_at;
-    ink_exec_job_t rtc_job;
+    ink_exec_job_t rtc_job, network_job;
+    int64_t network_base_us;
     int64_t rtc_next_s;
     ink_args_t ev; /* the timer task's event arguments: too large for its stack */
 } T INK_PSRAM_BSS;
@@ -498,7 +500,10 @@ static void time_set_unlocked(int64_t utc_s, bool from_hub) {
     T.clock_revision++;
     osal_set_wall_us(utc_s * 1000000);
     __atomic_store_n(&T.valid, true, __ATOMIC_RELEASE);
-    if (!hal_rtc_set(utc_s)) ink_probe_count("time.rtc_write_failed");
+    if (!hal_rtc_set(utc_s)) {
+        ink_probe_count("time.rtc_write_failed");
+        hal_log_write("time: RTC write failed");
+    } else hal_log_write("time: RTC updated");
     T.synced = from_hub;
     ink_state_set_bool(T.h_synced, from_hub);
     ink_probe_count("time.clock_moved");
@@ -516,6 +521,32 @@ int ink_time_set_if_revision(int64_t utc_s, bool from_hub, uint32_t expected, ui
 }
 void ink_time_set(int64_t utc_s, bool from_hub) { ink_time_set_if_revision(utc_s, from_hub, 0, NULL); }
 
+static void apply_network_time(int64_t server_s) {
+    if (!ink_setting_get("time.auto") && ink_time_valid()) return;
+    int64_t now = ink_time_now_s();
+    int64_t off = ink_time_valid() ? (server_s > now ? server_s - now : now - server_s) : INT32_MAX;
+    if (off > STEP_S && (ink_setting_get("time.auto") || !ink_time_valid())) ink_time_set(server_s, true);
+    else if (!T.synced) {
+        T.synced = true;
+        ink_state_set_bool(T.h_synced, true);
+    }
+}
+
+static void network_time_job(void *ctx) {
+    (void)ctx;
+    ink_svc_lock();
+    int64_t utc_s = (T.network_base_us + (int64_t)osal_now_us()) / 1000000;
+    ink_svc_unlock();
+    apply_network_time(utc_s);
+}
+static void on_network_time(void *ctx, int64_t utc_s) {
+    (void)ctx;
+    ink_svc_lock();
+    T.network_base_us = utc_s * 1000000 - (int64_t)osal_now_us();
+    ink_svc_unlock();
+    ink_exec_post(INK_EXEC_BG, &T.network_job, network_time_job, NULL);
+}
+
 /* The hub told its time at hello. Hub task. */
 static void apply_zone(void *ctx, int64_t v);
 static void on_online(void *ctx) {
@@ -526,18 +557,9 @@ static void on_online(void *ctx) {
         if (ink_setting_get("time.zone_auto")) apply_zone(NULL, 0);
         break;
     }
-    if (!ink_setting_get("time.auto") && ink_time_valid()) return;
     int64_t server_ms;
     uint32_t rtt_ms;
-    if (!ink_hub_server_time(&server_ms, &rtt_ms)) return;
-    int64_t server_s = (server_ms + rtt_ms / 2) / 1000;
-    int64_t now = ink_time_now_s();
-    int64_t off = ink_time_valid() ? (server_s > now ? server_s - now : now - server_s) : INT32_MAX;
-    if (off > STEP_S && (ink_setting_get("time.auto") || !ink_time_valid())) ink_time_set(server_s, true);
-    else if (!T.synced) {
-        T.synced = true;
-        ink_state_set_bool(T.h_synced, true);
-    }
+    if (ink_hub_server_time(&server_ms, &rtt_ms)) apply_network_time((server_ms + rtt_ms / 2) / 1000);
 }
 
 /* ------------------------------------------------------------ the API */
@@ -854,7 +876,9 @@ int ink_time_init(void) {
         minute_cb(NULL);
         reschedule();
     }
-    return ink_time_caps_init();
+    int r = ink_time_caps_init();
+    if (!r) hal_net_set_time_callback(on_network_time, NULL);
+    return r;
 }
 
 int64_t ink_alarm_occurrence(const ink_alarm_t *alarm, int64_t from_s) {
