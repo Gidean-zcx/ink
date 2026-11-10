@@ -1,6 +1,7 @@
 /* Battery surfaces share the interruption channel and the existing auto-lock setting. */
 /* ui-scale-runtime: dimension y Centered text receives theme-derived positions. */
 /* ui-scale-runtime: font font Centered text receives only the theme font tokens. */
+#include "ink/sys/i18n.h"
 #include <stdio.h>
 #include <string.h>
 #include "ink/osal.h"
@@ -38,7 +39,7 @@ static int semantic_snapshot(char *buf, size_t cap) {
     bool controls = !B.off && B.mode == 1 && ink_member_space_open() && ink_member_current()->role != INK_ROLE_CHILD;
     char percent[64], control[160];
     snprintf(percent, sizeof percent, "电量只剩 %d%%", B.percent);
-    snprintf(control, sizeof control, "省电：1 分钟锁屏=%s；原设锁屏=%lld 秒", saving() ? "开" : "关", (long long)ink_setting_get("power.lock_after_s"));
+    snprintf(control, sizeof control, "省电：1 分钟锁屏=%s；原设锁屏=%lld 秒", saving() ? TR("开") : TR("关"), (long long)ink_setting_get("power.lock_after_s"));
     ink_ui_field_spec_t fields[] = {
         {.id = "status", .role = "status", .label = "状态", .value = B.off ? (!ink_member_space_open() ? "已关机。没电了，充上电再开机" : B.title) : B.mode == 3 ? "正在充电。已锁定，按电源键或 AI 键唤醒。" : B.mode == 2 ? "电量用完了，正在存东西。存好就关机。" : "到 2% 时先保存再关机。"},
         {.id = "body", .role = "text", .label = "说明", .value = B.off ? B.body : percent},
@@ -78,25 +79,25 @@ static void render(int mode) {
     if (mode == 1) {
         ink_ui_circle(B.card.panel, "battery", (INK_CANVAS_W - INK_CIRCLE_LARGE) / 2, y,
                       INK_CIRCLE_LARGE, INK_ICON_STATE, INK_SURFACE_STATIC, NULL, NULL);
-        char title[64]; snprintf(title, sizeof title, "电量只剩 %d%%", B.percent);
+        char title[64]; snprintf(title, sizeof title, TR("电量只剩 %d%%"), B.percent);
         center(title, INK_FONT_SUBTITLE, y + INK_CIRCLE_LARGE + INK_MARGIN, INK_WEIGHT_BOLD);
-        center("插上电吧。到 2% 时会先存好东西再关机。", INK_FONT_NOTE,
+        center(TR("插上电吧。到 2% 时会先存好东西再关机。"), INK_FONT_NOTE,
                y + INK_CIRCLE_LARGE + INK_MARGIN + ink_ui_line_height(INK_FONT_SUBTITLE) + INK_GAP_M, INK_WEIGHT_REGULAR);
         int bottom = INK_CANVAS_H - INK_MARGIN - INK_PRIMARY;
         if (ink_member_space_open() && ink_member_current()->role != INK_ROLE_CHILD) {
-        char preference[64]; snprintf(preference, sizeof preference, "原来设为 %lld 秒，关掉省电后照旧", (long long)ink_setting_get("power.lock_after_s"));
+        char preference[64]; snprintf(preference, sizeof preference, TR("原来设为 %lld 秒，关掉省电后照旧"), (long long)ink_setting_get("power.lock_after_s"));
         center(preference, INK_FONT_NOTE, bottom - INK_CONTROL - INK_GAP_L - INK_LINE_NOTE - INK_GAP_M, INK_WEIGHT_REGULAR);
-        lv_obj_t *toggle = ink_ui_toggle(B.card.panel, "省电：1 分钟锁屏", saving(),
+        lv_obj_t *toggle = ink_ui_toggle(B.card.panel, TR("省电：1 分钟锁屏"), saving(),
                             INK_MARGIN, bottom - INK_CONTROL - INK_GAP_L, INK_CANVAS_W - 2 * INK_MARGIN, NULL, NULL);
         ink_shell_bind(toggle, "power.set_saving", saving() ? "{\"enabled\":false}" : "{\"enabled\":true}");
         }
-        ink_shell_bind(ink_ui_pill(B.card.panel, "知道了", INK_MARGIN, bottom, INK_CANVAS_W - 2 * INK_MARGIN, INK_PRIMARY, true, NULL, NULL), "interrupt.ack", NULL);
+        ink_shell_bind(ink_ui_pill(B.card.panel, TR("知道了"), INK_MARGIN, bottom, INK_CANVAS_W - 2 * INK_MARGIN, INK_PRIMARY, true, NULL, NULL), "interrupt.ack", NULL);
     } else if (mode == 2) {
         for (int i = 0; i < 3; i++)
             ink_ui_box(B.card.panel, INK_CANVAS_W / 2 - INK_GAP_L / 2 + (i - 1) * (INK_GAP_L + INK_GAP_L),
                        INK_CANVAS_H / 2 - INK_GAP_XXL, INK_GAP_L, INK_GAP_L, -1, i < 2 ? INK_SURFACE_BLACK : INK_SURFACE_WHITE, true);
-        center("电量用完了，正在存东西", INK_FONT_SUBTITLE, INK_CANVAS_H / 2 + INK_GAP_XL, INK_WEIGHT_BOLD);
-        center("存好就关机。", INK_FONT_NOTE, INK_CANVAS_H / 2 + INK_GAP_XL + ink_ui_line_height(INK_FONT_SUBTITLE) + INK_GAP_M, INK_WEIGHT_REGULAR);
+        center(TR("电量用完了，正在存东西"), INK_FONT_SUBTITLE, INK_CANVAS_H / 2 + INK_GAP_XL, INK_WEIGHT_BOLD);
+        center(TR("存好就关机。"), INK_FONT_NOTE, INK_CANVAS_H / 2 + INK_GAP_XL + ink_ui_line_height(INK_FONT_SUBTITLE) + INK_GAP_M, INK_WEIGHT_REGULAR);
     } else {
         int diameter = 2 * (INK_CIRCLE_APP + INK_MARGIN), top = INK_CANVAS_H / 2 - INK_BLOCK - diameter / 2;
         lv_obj_t *arc = lv_arc_create(B.card.panel);
@@ -111,8 +112,8 @@ static void render(int mode) {
         lv_arc_set_bg_angles(arc, 0, 360); lv_arc_set_rotation(arc, 270); lv_arc_set_value(arc, B.percent);
         char percent[16]; snprintf(percent, sizeof percent, "%d%%", B.percent);
         center(percent, INK_FONT_NUMBER, top + (diameter - ink_ui_line_height(INK_FONT_NUMBER)) / 2, INK_WEIGHT_REGULAR);
-        center("正在充电", INK_FONT_SUBTITLE, top + diameter + INK_MARGIN, INK_WEIGHT_BOLD);
-        center("已锁定，按电源键或 AI 键唤醒", INK_FONT_NOTE,
+        center(TR("正在充电"), INK_FONT_SUBTITLE, top + diameter + INK_MARGIN, INK_WEIGHT_BOLD);
+        center(TR("已锁定，按电源键或 AI 键唤醒"), INK_FONT_NOTE,
                INK_CANVAS_H - INK_MARGIN - ink_ui_line_height(INK_FONT_NOTE), INK_WEIGHT_REGULAR);
     }
 }
@@ -137,8 +138,8 @@ static void present(const ink_interrupt_t *top) {
 }
 static void draw_off(void *arg) {
     (void)arg; close_page(); B.off = true;
-    snprintf(B.title, sizeof B.title, "已关机");
-    snprintf(B.body, sizeof B.body, "%s", !strcmp(B.why, "battery_unsaved") ? "没电了，有些内容没保存。充上电再开机" : "没电了，东西都存好了。充上电就回到这里");
+    snprintf(B.title, sizeof B.title, TR("已关机"));
+    snprintf(B.body, sizeof B.body, "%s", !strcmp(B.why, "battery_unsaved") ? TR("没电了，有些内容没保存。充上电再开机") : TR("没电了，东西都存好了。充上电就回到这里"));
     for (int i = 0; ink_member_space_open() && i < ink_app_count(); i++) {
         const ink_app_def_t *d = ink_app_at(i); ink_card_t card = {0};
         if (!ink_app_visible(d)) continue;
@@ -156,7 +157,7 @@ static void draw_off(void *arg) {
     lv_obj_t *body = ink_ui_label(B.card.panel, B.body, INK_FONT_LIST, INK_WEIGHT_REGULAR, INK_BLOCK,
                  INK_CANVAS_H / 2 + INK_GAP_L, INK_CANVAS_W - 2 * INK_BLOCK);
     lv_obj_align_to(body, title, LV_ALIGN_OUT_BOTTOM_LEFT, 0, ink_ui_px(INK_GAP_L));
-    ink_ui_notice(B.card.panel, "已关机，没电了，充上电再开机", INK_CANVAS_H - INK_MARGIN - INK_LINE_NOTE);
+    ink_ui_notice(B.card.panel, TR("已关机，没电了，充上电再开机"), INK_CANVAS_H - INK_MARGIN - INK_LINE_NOTE);
     lv_refr_now(NULL); B.commit = ink_display_commits();
     __atomic_store_n(&B.drawn, true, __ATOMIC_RELEASE);
 }

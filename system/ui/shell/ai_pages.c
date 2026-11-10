@@ -1,4 +1,5 @@
 /* AI failures and the current member's capability receipts. */
+#include "ink/sys/i18n.h"
 #include <stdio.h>
 #include <string.h>
 #include "ink/osal.h"
@@ -13,12 +14,12 @@
 #include "ink/ui_shell.h"
 #include "ai_pages.h"
 
-static const char *const TITLES[] = {"暂时问不了 AI，书还能继续读", "等得太久，先停了", "今天的额度用完了"};
+static const char *const TITLES[] = {TR_NOOP("暂时问不了 AI，书还能继续读"), TR_NOOP("等得太久，先停了"), TR_NOOP("今天的额度用完了")};
 static struct { lv_obj_t *root; int kind; ink_ui_page_spec_t page; } E;
 static ink_ui_field_spec_t error_fields[2];
 static ink_ui_action_spec_t error_actions[] = {
-    {.id = "close", .label = "继续读", .capability = "ai.pages.close", .enabled = true},
-    {.id = "retry", .label = "再说一次", .capability = "ai.pages.retry", .enabled = true}
+    {.id = "close", .label = TR_NOOP("继续读"), .capability = "ai.pages.close", .enabled = true},
+    {.id = "retry", .label = TR_NOOP("再说一次"), .capability = "ai.pages.retry", .enabled = true}
 };
 static int error_snapshot(char *out, size_t cap) { return ink_ui_semantics_snapshot(&E.page, out, cap); }
 static bool error_key(ink_key_t key, bool lng) {
@@ -37,12 +38,12 @@ const ink_ui_overlay_t *ink_ai_pages_status(ink_ai_error_t error, lv_obj_t *pare
     int kind = error == INK_AI_ERROR_OFFLINE || lost ? 0 :
         error == INK_AI_ERROR_TIMEOUT ? 1 : error == INK_AI_ERROR_BUDGET ? 2 : -1;
     if (kind < 0) return NULL;
-    E.kind = kind;
+    E.kind = kind; error_actions[0].label = TR("继续读");
     bool plane = kind == 0 && ink_setting_get("net.airplane"); /* the way out is the switch, not trying again */
     bool kid = ink_member_current()->role == INK_ROLE_CHILD, one = kind == 2 || (plane && kid); /* the switch is not a child's */
-    const char *title = plane ? "飞行模式已打开" : TITLES[kind];
-    const char *detail = plane ? (kid ? "请家长关闭飞行模式。书还能继续读。" : "关闭飞行模式后再问。书还能继续读。") : kind == 0 ? (lost ? "网络断了，回答没收全，不会自动重试。" : "连不上家庭服务器。") : kind == 1 ? "没有收到结果，不会自动重试。" :
-        kid ? "可以问爸爸妈妈。书还能继续读。" : "明天恢复，也可以在手机上加。书还能继续读。";
+    const char *title = plane ? TR("飞行模式已打开") : TR(TITLES[kind]);
+    const char *detail = plane ? (kid ? TR("请家长关闭飞行模式。书还能继续读。") : TR("关闭飞行模式后再问。书还能继续读。")) : kind == 0 ? (lost ? TR("网络断了，回答没收全，不会自动重试。") : TR("连不上家庭服务器。")) : kind == 1 ? TR("没有收到结果，不会自动重试。") :
+        kid ? TR("可以问爸爸妈妈。书还能继续读。") : TR("明天恢复，也可以在手机上加。书还能继续读。");
     int w = INK_CANVAS_W - 2 * INK_MARGIN, y = INK_GAP_L + INK_CONTROL + INK_GAP_XXL;
     int title_h = ink_ui_text_height(title, INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, w);
     int detail_h = ink_ui_text_height(detail, INK_FONT_NOTE, INK_WEIGHT_REGULAR, w);
@@ -61,16 +62,16 @@ const ink_ui_overlay_t *ink_ai_pages_status(ink_ai_error_t error, lv_obj_t *pare
     int primary_x = INK_MARGIN, primary_w = w;
     if (!one) {
         primary_w = (w - INK_GAP) / 2; primary_x += primary_w + INK_GAP;
-        error_actions[1].label = plane ? "关闭飞行模式" : kind ? "再说一次" : "再试一次";
+        error_actions[1].label = plane ? TR("关闭飞行模式") : kind ? TR("再说一次") : TR("再试一次");
         error_actions[1].capability = plane ? "net.set_airplane" : "ai.pages.retry";
         error_actions[1].args_json = plane ? "{\"enabled\":false}" : NULL;
         b = ink_ui_pill(E.root, error_actions[1].label, INK_MARGIN, h - INK_MARGIN - INK_PRIMARY, primary_w, INK_PRIMARY, false, NULL, NULL);
         ink_shell_bind(b, error_actions[1].capability, error_actions[1].args_json);
     }
-    b = ink_ui_pill(E.root, "继续读", primary_x, h - INK_MARGIN - INK_PRIMARY, primary_w, INK_PRIMARY, true, NULL, NULL);
+    b = ink_ui_pill(E.root, TR("继续读"), primary_x, h - INK_MARGIN - INK_PRIMARY, primary_w, INK_PRIMARY, true, NULL, NULL);
     ink_shell_bind(b, "ai.pages.close", NULL);
-    error_fields[0] = (ink_ui_field_spec_t){.id = "status", .role = "status", .label = "状态", .value = title};
-    error_fields[1] = (ink_ui_field_spec_t){.id = "detail", .role = "text", .label = "说明", .value = detail};
+    error_fields[0] = (ink_ui_field_spec_t){.id = "status", .role = "status", .label = TR("状态"), .value = title};
+    error_fields[1] = (ink_ui_field_spec_t){.id = "detail", .role = "text", .label = TR("说明"), .value = detail};
     E.page = (ink_ui_page_spec_t){.id = ERROR_OVERLAYS[kind].name, .title = title, .object = {"ai:error", 1},
         .fields = error_fields, .field_count = 2, .actions = error_actions, .action_count = one ? 1 : 2};
     ink_ui_content_changed(); ink_ui_hint_obj(parent, INK_REFRESH_FLASH_UI);
@@ -87,9 +88,9 @@ static struct {
 } L INK_PSRAM_BSS;
 static const char *receipt_text(const char *status) {
     static const char *const names[] = {"done", "partial", "queued", "pending_confirmation", "rejected", "stale", "invalid", "failed", "cancelled", "undone"};
-    static const char *const words[] = {"做好了", "做好了一部分", "还没做，等联网", "等你确认", "不能做", "页面或家人已变，操作已停止", "操作无效", "结果不确定，不会自动重试", "已取消", "已撤销"};
-    for (unsigned i = 0; i < sizeof names / sizeof *names; i++) if (!strcmp(status, names[i])) return words[i];
-    return "结果不确定，不会自动重试";
+    static const char *const words[] = {TR_NOOP("做好了"), TR_NOOP("做好了一部分"), TR_NOOP("还没做，等联网"), TR_NOOP("等你确认"), TR_NOOP("不能做"), TR_NOOP("页面或家人已变，操作已停止"), TR_NOOP("操作无效"), TR_NOOP("结果不确定，不会自动重试"), TR_NOOP("已取消"), TR_NOOP("已撤销")};
+    for (unsigned i = 0; i < sizeof names / sizeof *names; i++) if (!strcmp(status, names[i])) return TR(words[i]);
+    return TR("结果不确定，不会自动重试");
 }
 static int next_record(ink_db_cursor_t *cursor, ink_rec_t *rec, char *row, size_t cap) {
     int got; int64_t now = osal_wall_us() / 1000000;
@@ -134,12 +135,12 @@ static void bind_row(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, i
         ink_jw_raw(&w, ",\"revision\":"); ink_jw_int(&w, revision); ink_jw_raw(&w, "}");
     }
     snprintf(L.titles[i], sizeof L.titles[i], "%s", L.receipts ? receipt_text(status) : definition ? definition->title : cap);
-    char when[32] = "时间未记录";
+    char when[32]; snprintf(when, sizeof when, "%s", TR("时间未记录"));
     if (rec.sort > 0) { ink_tm_t tm; ink_time_to_local(rec.sort, &tm); snprintf(when, sizeof when, "%02d-%02d %02d:%02d", tm.month, tm.day, tm.hour, tm.min); }
     snprintf(L.values[i], sizeof L.values[i], "%s · %s%s%s", when,
         L.receipts ? (definition ? definition->title : cap) : receipt_text(status), L.receipts && object[0] ? "\n" : "", L.receipts ? object : "");
     *field = (ink_ui_field_spec_t){.id = L.ids[i], .role = "listitem", .label = L.titles[i], .value = L.values[i], .object = {L.ids[i], rec.ver}};
-    *action = (ink_ui_action_spec_t){.id = L.ids[i], .label = L.receipts ? "撤销" : "查看回执", .capability = L.receipts ? "system.undo" : "shell.ai_receipts", .args_json = L.args[i], .enabled = !L.receipts || undo, .object = {L.ids[i], rec.ver}};
+    *action = (ink_ui_action_spec_t){.id = L.ids[i], .label = L.receipts ? TR("撤销") : TR("查看回执"), .capability = L.receipts ? "system.undo" : "shell.ai_receipts", .args_json = L.args[i], .enabled = !L.receipts || undo, .object = {L.ids[i], rec.ver}};
     int w = INK_CANVAS_W - 4 * INK_MARGIN;
     if (!lv_obj_get_child_count(slot)) {
         (L.receipts ? ink_ui_label : ink_ui_line)(slot, "", INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_MARGIN, INK_GAP_M, w);
@@ -150,34 +151,35 @@ static void bind_row(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, i
         lv_obj_set_y(lv_obj_get_child(slot, 1), ink_ui_px(INK_GAP_M + ink_ui_text_height(L.titles[i], INK_FONT_LIST, INK_WEIGHT_MEDIUM, w)));
         if (lv_obj_get_child_count(slot) > 2) lv_obj_delete(lv_obj_get_child(slot, 2));
         if (undo) {
-            lv_obj_t *b = ink_ui_pill(slot, "撤销", INK_MARGIN, 2 * ink_ui_line_height(INK_FONT_LIST) + 4 * ink_ui_line_height(INK_FONT_NOTE) + 2 * INK_GAP_M, INK_PRIMARY, INK_CONTROL, false, NULL, NULL);
+            lv_obj_t *b = ink_ui_pill(slot, TR("撤销"), INK_MARGIN, 2 * ink_ui_line_height(INK_FONT_LIST) + 4 * ink_ui_line_height(INK_FONT_NOTE) + 2 * INK_GAP_M, INK_PRIMARY, INK_CONTROL, false, NULL, NULL);
             ink_shell_bind(b, "system.undo", L.args[i]);
         }
     }
 }
 static ink_ui_action_spec_t list_actions[] = {
-    {.id = "prev", .label = "上一页", .capability = "ai.pages.prev", .enabled = true},
-    {.id = "next", .label = "下一页", .capability = "ai.pages.next", .enabled = true},
-    {.id = "back", .label = "返回", .capability = "shell.back", .enabled = true}
+    {.id = "prev", .label = TR_NOOP("上一页"), .capability = "ai.pages.prev", .enabled = true},
+    {.id = "next", .label = TR_NOOP("下一页"), .capability = "ai.pages.next", .enabled = true},
+    {.id = "back", .label = TR_NOOP("返回"), .capability = "shell.back", .enabled = true}
 };
 static void list_loaded(void *ctx, const ink_receipt_t *rc) {
     if (!L.list || (uintptr_t)ctx != L.generation || !ink_ui_page_current()) return;
     if (rc->status == INK_RC_DONE) L.db = ink_db_open_cached_member(ink_db_find_def("activity.log"), L.member);
     if (rc->status == INK_RC_DONE && L.db) { ink_ui_redraw(); return; }
-    L.status = "记录暂时读不了，请返回后重试";
+    L.status = TR("记录暂时读不了，请返回后重试");
     lv_label_set_text(L.notice, L.status); ink_ui_content_changed(); ink_ui_hint_obj(L.notice, INK_REFRESH_UI);
 }
 static void list_create(lv_obj_t *screen, void *arg) {
     L.receipts = !strcmp(ink_ui_page_name(), "AiReceipts");
+    list_actions[0].label = TR("上一页"); list_actions[1].label = TR("下一页"); list_actions[2].label = TR("返回");
     if (L.epoch != ink_member_epoch()) { memset(L.position, 0, sizeof L.position); L.epoch = ink_member_epoch(); snprintf(L.member, sizeof L.member, "%s", ink_member_current()->id); }
     L.keep_s = 365ll * 86400;
     for (int i = 0; ink_member_at(i); i++) if (!strcmp(ink_member_at(i)->id, L.member) && ink_member_at(i)->role == INK_ROLE_CHILD) L.keep_s = 180ll * 86400;
     L.db = ink_db_open_cached_member(ink_db_find_def("activity.log"), L.member);
     L.version = L.db ? ink_db_last_ver(L.db) : 0;
-    L.generation = ink_ui_generation(); L.status = L.db ? "" : "正在读取记录"; L.notice = NULL;
+    L.generation = ink_ui_generation(); L.status = L.db ? "" : TR("正在读取记录"); L.notice = NULL;
     ink_shell_statusbar(screen, true);
     bool self = !strcmp(L.member, ink_member_current()->id);
-    const char *title = L.receipts ? (self ? "AI 做事的结果" : "孩子的 AI 做事结果") : (self ? "AI 替你做过的事" : "孩子的 AI 活动记录");
+    const char *title = L.receipts ? (self ? TR("AI 做事的结果") : TR("孩子的 AI 做事结果")) : (self ? TR("AI 替你做过的事") : TR("孩子的 AI 活动记录"));
     ink_shell_topbar(screen, title);
     int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP;
     int row_h = L.receipts ? 2 * ink_ui_line_height(INK_FONT_LIST) + 4 * ink_ui_line_height(INK_FONT_NOTE) + INK_CONTROL + 3 * INK_GAP_M : ink_ui_row_double();
@@ -193,7 +195,7 @@ static void list_create(lv_obj_t *screen, void *arg) {
         L.position[L.receipts].page = index / L.capacity; L.selected = 0;
     }
     L.list = ink_ui_list_create(body, &page, &L.position[L.receipts], L.capacity, 1, row_h,
-        L.db ? "还没有 AI 做过的事" : "", bind_row, NULL);
+        L.db ? TR("还没有 AI 做过的事") : "", bind_row, NULL);
     if (L.list) ink_ui_list_refresh(L.list, list_count());
     if (!L.db && L.list) {
         L.notice = ink_ui_notice(body, L.status, INK_GAP_L);
@@ -207,8 +209,8 @@ static void list_destroy(void) { if (L.db) ink_db_close(L.db); L.db = NULL; L.li
 static int list_snapshot(char *out, size_t cap) {
     if (!L.list) return -1;
     if (L.db) return ink_ui_list_snapshot(L.list, out, cap);
-    ink_ui_field_spec_t field = {.id = "status", .role = "status", .label = "状态", .value = L.status};
-    ink_ui_page_spec_t page = {.id = ink_ui_page_name(), .title = "AI 做过的事", .fields = &field, .field_count = 1, .actions = list_actions + 2, .action_count = 1};
+    ink_ui_field_spec_t field = {.id = "status", .role = "status", .label = TR("状态"), .value = L.status};
+    ink_ui_page_spec_t page = {.id = ink_ui_page_name(), .title = TR("AI 做过的事"), .fields = &field, .field_count = 1, .actions = list_actions + 2, .action_count = 1};
     return ink_ui_semantics_snapshot(&page, out, cap);
 }
 static bool list_key(ink_key_t k, bool lng) { return L.list && ink_ui_list_key(L.list, k, lng); }

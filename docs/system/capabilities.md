@@ -821,7 +821,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 ### s39 — `system/ui/search`
 
-设置：—。
+设置：`display.wallpaper_file`。
 
 状态：—。
 

@@ -26,6 +26,32 @@ execute_process(COMMAND ${PYTHON} ${root}/tools/i18n/i18n_gen.py ${i18n_tables} 
     ${root}/system/apps/memo/memo.c ${root}/system/apps/phone/phone.c
     ${root}/system/apps/remote/remote.c ${root}/system/apps/sms/sms.c
     ${root}/system/apps/weather/weather.c ${root}/system/apps/camera/scan.c
+  ${root}/system/ui/shell/activity_card.c
+  ${root}/system/ui/shell/ai_chat.c
+  ${root}/system/ui/shell/ai_pages.c
+  ${root}/system/ui/shell/ai_panel.c
+  ${root}/system/ui/shell/backup_pages.c
+  ${root}/system/ui/shell/bluetooth_page.c
+  ${root}/system/ui/shell/confirm_card.c
+  ${root}/system/ui/shell/member_pages.c
+  ${root}/system/ui/shell/transfer_pages.c
+  ${root}/system/ui/shell/update_pages.c
+  ${root}/system/ui/shell/wallpaper.c
+  ${root}/system/ui/search.c
+    ${root}/system/ui/shell/airplane_card.c
+    ${root}/system/ui/shell/interrupt_card.c
+    ${root}/system/ui/shell/kid_pages.c
+    ${root}/system/ui/shell/member_gate.c
+    ${root}/system/ui/shell/off_picture.c
+    ${root}/system/ui/shell/pinpad.c
+    ${root}/system/ui/file_picker.c
+    ${root}/system/ui/lock_mark.c
+    ${root}/system/ui/textfield.c
+    ${root}/system/ui/ui_list.c
+    ${root}/system/ui/ui_semantics.c
+    ${root}/system/ui/shell/factory_pages.c
+    ${root}/system/ui/shell/power_menu.c
+    ${root}/system/ui/shell/power_pages.c
     WORKING_DIRECTORY ${root} COMMAND_ERROR_IS_FATAL ANY)
 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${i18n_tables})
 execute_process(COMMAND ${PYTHON} ${root}/tools/licenses.py ${CMAKE_BINARY_DIR}/generated/ink/licenses.h

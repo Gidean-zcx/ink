@@ -118,7 +118,7 @@ static void apn(void) {
     set("system.language", 1); quiet();
     CHECK(page_has("Mobile Network") && page_has("Data Roaming") && page_has("This Month"), "mobile overview is English"); frame("mobile-en");
     press("Manual", 0); CHECK(page_has("APN Name") && page_has("Username") && page_has("Password"), "APN editor is English"); frame("apn-en");
-    CHECK(page_has("\"value\":\"有值\""), "saved password is represented only by its presence");
+    CHECK(page_has("\"value\":\"Filled\""), "saved password is represented only by its presence");
     CHECK(AI("shell.mobile_save", NULL) && g_rc.status == INK_RC_INVALID, "AI cannot submit local password draft");
     CHECK(AI("shell.mobile", NULL) && g_rc.status == INK_RC_DONE, "return to overview");
     CHECK(AI("net.apn_set", "{\"automatic\":true}") && g_rc.status == INK_RC_DONE, "AI restores automatic APN without a confirmation");

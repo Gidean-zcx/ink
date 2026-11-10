@@ -2,6 +2,7 @@
 /* ui-scale-runtime: dimension y Text positions are derived from the theme. */
 /* ui-scale-runtime: font font Centered labels use theme font tokens. */
 /* ui-scale-runtime: dimension x,y,w Buttons receive theme-derived positions and widths. */
+#include "ink/sys/i18n.h"
 #include <stdio.h>
 #include <string.h>
 #include "ink/osal.h"
@@ -71,7 +72,7 @@ static void wait_done(lv_timer_t *timer) {
     (void)timer; P.wait_timer = NULL;
     if (!current()) return;
     P.retry_us = 0;
-    snprintf(P.status, sizeof P.status, "%s", P.mode == OLD || P.mode == NEW ? "四到八位数字" : P.mode == PARENT ? "请家长本人输入" : "输入密码");
+    snprintf(P.status, sizeof P.status, "%s", P.mode == OLD || P.mode == NEW ? TR("四到八位数字") : P.mode == PARENT ? TR("请家长本人输入") : TR("输入密码"));
     draw();
 }
 static bool key(ink_key_t k, bool lng) {
@@ -125,12 +126,12 @@ static void draw(void) {
     ink_ui_overlay_add(P.overlay, P.card.root);
     int w = INK_CANVAS_W - 2 * INK_MARGIN, half = (w - INK_GAP) / 2;
     if (P.mode == SWITCH) {
-        ink_ui_label(P.card.panel, "换人之前，先看看", INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, INK_MARGIN, INK_MARGIN, w);
-        ink_ui_label(P.card.panel, "换人后显示对方的内容。\n正在播放的声音会停下。\n你的页面和 AI 对话不会给别人看。", INK_FONT_LIST, INK_WEIGHT_REGULAR,
+        ink_ui_label(P.card.panel, TR("换人之前，先看看"), INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, INK_MARGIN, INK_MARGIN, w);
+        ink_ui_label(P.card.panel, TR("换人后显示对方的内容。\n正在播放的声音会停下。\n你的页面和 AI 对话不会给别人看。"), INK_FONT_LIST, INK_WEIGHT_REGULAR,
             INK_MARGIN, INK_MARGIN + INK_CONTROL + INK_GAP, w);
         int y = ink_ui_height() - lv_obj_get_y(P.card.panel) / ink_ui_px(1) - INK_MARGIN - INK_CONTROL;
-        button("取消", "shell.pin_cancel", INK_MARGIN, y, half, false);
-        button("换人", "shell.member_choose", INK_MARGIN + half + INK_GAP, y, half, true);
+        button(TR("取消"), "shell.pin_cancel", INK_MARGIN, y, half, false);
+        button(TR("换人"), "shell.member_choose", INK_MARGIN + half + INK_GAP, y, half, true);
         return;
     }
     lv_obj_remove_flag(ink_shell_statusbar(P.card.panel, true), LV_OBJ_FLAG_CLICKABLE);
@@ -139,13 +140,13 @@ static void draw(void) {
     if (P.mode == FORGOT) {
         lv_obj_t *back = ink_ui_circle(P.card.panel, "back", INK_MARGIN, INK_STATUS_BAR, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_STATIC, clicked, "shell.pin_cancel");
         lv_obj_add_event_cb(back, pressed, LV_EVENT_PRESSED, NULL);
-        ink_ui_label(P.card.panel, ink_member_any_pin() ? "忘记密码" : "还没有密码", INK_FONT_TITLE, INK_WEIGHT_BOLD, INK_MARGIN + INK_CONTROL + INK_GAP, INK_STATUS_BAR + INK_GAP, w - INK_CONTROL - INK_GAP);
+        ink_ui_label(P.card.panel, ink_member_any_pin() ? TR("忘记密码") : TR("还没有密码"), INK_FONT_TITLE, INK_WEIGHT_BOLD, INK_MARGIN + INK_CONTROL + INK_GAP, INK_STATUS_BAR + INK_GAP, w - INK_CONTROL - INK_GAP);
         ink_ui_circle(P.card.panel, "lock", (INK_CANVAS_W - INK_CIRCLE_LARGE) / 2, INK_CANVAS_H / 2 - INK_CIRCLE_LARGE,
             INK_CIRCLE_LARGE, INK_ICON_STATE, INK_SURFACE_STATIC, NULL, NULL);
-        center("请家长验证", INK_FONT_SUBTITLE, INK_CANVAS_H / 2 + INK_GAP_L, true);
+        center(TR("请家长验证"), INK_FONT_SUBTITLE, INK_CANVAS_H / 2 + INK_GAP_L, true);
         center(P.status, INK_FONT_NOTE, INK_CANVAS_H / 2 + INK_CONTROL, false);
-        button("返回", "shell.pin_cancel", INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_CONTROL, half, false);
-        button("家长验证", "shell.pin_parent", INK_MARGIN + half + INK_GAP, INK_CANVAS_H - INK_MARGIN - INK_CONTROL, half, true);
+        button(TR("返回"), "shell.pin_cancel", INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_CONTROL, half, false);
+        button(TR("家长验证"), "shell.pin_parent", INK_MARGIN + half + INK_GAP, INK_CANVAS_H - INK_MARGIN - INK_CONTROL, half, true);
         return;
     }
     int diameter = ink_ui_line_height(INK_FONT_SUBTITLE) > INK_LINE_SUBTITLE ? INK_CIRCLE : INK_CIRCLE_APP;
@@ -153,28 +154,28 @@ static void draw(void) {
         diameter, diameter, true, NULL, NULL);
     char first[8] = ""; size_t len = 1;
     while (len < sizeof first - 1 && (P.name[len] & 0xc0) == 0x80) len++;
-    memcpy(first, P.name, len); lv_label_set_text(lv_obj_get_child(avatar, 0), P.mode == PARENT ? "家长" : first);
-    char title[96]; snprintf(title, sizeof title, "%s%s", P.mode == PARENT ? "请家长输入密码" : P.name,
-        P.mode == OLD ? "，输入原密码" : P.mode == NEW ? "，设一个密码" : "");
+    memcpy(first, P.name, len); lv_label_set_text(lv_obj_get_child(avatar, 0), P.mode == PARENT ? TR("家长") : first);
+    char title[160]; snprintf(title, sizeof title, P.mode == OLD ? TR("%s，输入原密码") : P.mode == NEW ? TR("%s，设一个密码") : "%s",
+        P.mode == PARENT ? TR("请家长输入密码") : P.name);
     int y = INK_STATUS_BAR + diameter + INK_GAP_XS;
     center(title, INK_FONT_SUBTITLE, y, true); y += ink_ui_line_height(INK_FONT_SUBTITLE) + INK_GAP_XS;
     P.dots = ink_ui_label(P.card.panel, "", INK_FONT_LIST, INK_WEIGHT_REGULAR, INK_MARGIN, y, w);
     lv_obj_set_style_text_align(P.dots, LV_TEXT_ALIGN_CENTER, 0); dots();
     y += ink_ui_line_height(INK_FONT_LIST) + INK_GAP_XS;
     char message[192];
-    if (remaining()) snprintf(message, sizeof message, "错太多次了，还要等 %u 秒", (unsigned)remaining());
+    if (remaining()) snprintf(message, sizeof message, TR("错太多次了，还要等 %u 秒"), (unsigned)remaining());
     else snprintf(message, sizeof message, "%s", P.status);
     P.message = ink_ui_label(P.card.panel, message, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y, w);
     lv_obj_set_style_text_align(P.message, LV_TEXT_ALIGN_CENTER, 0);
     int y0 = INK_CANVAS_H - INK_MARGIN - 4 * INK_DIGIT - 3 * INK_GAP;
-    button(P.mode == UNLOCK ? "忘记密码" : "取消", P.mode == UNLOCK ? "shell.pin_forgot" : "shell.pin_cancel",
+    button(P.mode == UNLOCK ? TR("忘记密码") : TR("取消"), P.mode == UNLOCK ? "shell.pin_forgot" : "shell.pin_cancel",
         INK_MARGIN, y0 - INK_CONTROL - INK_GAP_XS, half, false);
-    button("确定", "shell.pin_submit", INK_MARGIN + half + INK_GAP, y0 - INK_CONTROL - INK_GAP_XS, half, false);
+    button(TR("确定"), "shell.pin_submit", INK_MARGIN + half + INK_GAP, y0 - INK_CONTROL - INK_GAP_XS, half, false);
     int x0 = (INK_CANVAS_W - 3 * INK_DIGIT - 2 * INK_GAP) / 2;
     for (int row = 0; row < 4; row++) for (int col = 0; col < 3; col++) {
         int d = row < 3 ? row * 3 + col + 1 : col == 1 ? 0 : 10;
         char label[12]; snprintf(label, sizeof label, "%d", d);
-        lv_obj_t *b = ink_ui_pill(P.card.panel, row == 3 && col != 1 ? (col ? "删除" : "取消") : label,
+        lv_obj_t *b = ink_ui_pill(P.card.panel, row == 3 && col != 1 ? (col ? TR("删除") : TR("取消")) : label,
             x0 + col * (INK_DIGIT + INK_GAP), y0 + row * (INK_DIGIT + INK_GAP), INK_DIGIT, INK_DIGIT, false,
             row == 3 && col == 0 ? clicked : digit, row == 3 && col == 0 ? (void *)"shell.pin_cancel" : (void *)(intptr_t)d);
         if (row == 3 && col == 0) lv_obj_add_event_cb(b, pressed, LV_EVENT_PRESSED, NULL);
@@ -196,10 +197,10 @@ static void completed_ui(void *arg) {
     P.retry_us = P.wait_s ? osal_now_us() + (uint64_t)P.wait_s * 1000000 : 0;
     if (P.result == INK_PIN_OK) {
         P.mode = FORGOT;
-        snprintf(P.status, sizeof P.status, "家长已验证。本机还不能重置密码，请在家庭服务器处理。");
+        snprintf(P.status, sizeof P.status, TR("家长已验证。本机还不能重置密码，请在家庭服务器处理。"));
     } else {
         if (P.mode == NEW) P.mode = OLD;
-        snprintf(P.status, sizeof P.status, "%s", P.result == INK_PIN_WAIT ? "请稍后再试" : P.result == INK_PIN_BAD_FORM ? "请输入四到八位数字" : "密码不对");
+        snprintf(P.status, sizeof P.status, "%s", P.result == INK_PIN_WAIT ? TR("请稍后再试") : P.result == INK_PIN_BAD_FORM ? TR("请输入四到八位数字") : TR("密码不对"));
     }
     draw();
 }
@@ -212,14 +213,14 @@ static void submit(ink_call_t *c) {
     if (remaining()) { erase(P.pin, sizeof P.pin); draw(); return; }
     if (P.mode == OLD) {
         snprintf(P.old, sizeof P.old, "%s", P.pin); erase(P.pin, sizeof P.pin);
-        P.mode = NEW; snprintf(P.status, sizeof P.status, "四到八位数字"); draw(); return;
+        P.mode = NEW; snprintf(P.status, sizeof P.status, TR("四到八位数字")); draw(); return;
     }
-    if (strlen(P.pin) < 4) { snprintf(P.status, sizeof P.status, "请输入四到八位数字"); draw(); return; }
+    if (strlen(P.pin) < 4) { snprintf(P.status, sizeof P.status, TR("请输入四到八位数字")); draw(); return; }
     int r = P.parent_token ? ink_confirm_accept_with_pin(P.parent_token, P.pin, completed, NULL) : P.mode == PARENT ? ink_member_check_parent(P.pin, completed, NULL) :
         P.mode == NEW ? ink_member_set_pin(P.id, P.old, P.pin, completed, NULL) : ink_member_unlock(P.id, P.pin, completed, NULL);
     erase(P.pin, sizeof P.pin); erase(P.old, sizeof P.old);
     P.busy = r == 0;
-    snprintf(P.status, sizeof P.status, "%s", P.busy ? "正在核对…" : "暂时没能核对，请重试");
+    snprintf(P.status, sizeof P.status, "%s", P.busy ? TR("正在核对…") : TR("暂时没能核对，请重试"));
     if (r) c->rc.status = INK_RC_FAILED;
     draw();
 }
@@ -230,17 +231,17 @@ static void action(ink_call_t *c) {
         if (!ink_member_space_open()) { c->rc.status = INK_RC_REJECTED; return; }
         close_page(); P.mode = ink_member_has_pin(ink_member_current()->id) ? OLD : NEW;
         snprintf(P.id, sizeof P.id, "%s", ink_member_current()->id); snprintf(P.name, sizeof P.name, "%s", ink_member_current()->name);
-        P.retry_us = 0; snprintf(P.status, sizeof P.status, "四到八位数字"); draw(); return;
+        P.retry_us = 0; snprintf(P.status, sizeof P.status, TR("四到八位数字")); draw(); return;
     }
     if (!current()) { c->rc.status = INK_RC_STALE; return; }
     if (!strcmp(id, "shell.pin_cancel")) close_page();
     else if (!strcmp(id, "shell.member_choose") && P.mode == SWITCH) { close_page(); ink_shell_members_open(true); }
     else if (!strcmp(id, "shell.pin_forgot") && P.mode == UNLOCK) {
         erase(P.pin, sizeof P.pin); P.mode = FORGOT; P.retry_us = 0;
-        snprintf(P.status, sizeof P.status, "先请家长输入密码。忘记密码后的重置还未接通。"); draw();
+        snprintf(P.status, sizeof P.status, TR("先请家长输入密码。忘记密码后的重置还未接通。")); draw();
     } else if (!strcmp(id, "shell.pin_parent") && P.mode == FORGOT) {
-        if (!ink_member_any_pin()) { snprintf(P.status, sizeof P.status, INK_PARENT_PIN_MISSING); draw(); return; }
-        P.mode = PARENT; snprintf(P.status, sizeof P.status, "请家长本人输入"); draw();
+        if (!ink_member_any_pin()) { snprintf(P.status, sizeof P.status, TR(INK_PARENT_PIN_MISSING)); draw(); return; }
+        P.mode = PARENT; snprintf(P.status, sizeof P.status, TR("请家长本人输入")); draw();
     } else c->rc.status = INK_RC_REJECTED;
 }
 void ink_shell_member_switch_open(void) {
@@ -253,7 +254,7 @@ void ink_shell_member_pin_open(const char *id) {
     close_page(); P.mode = UNLOCK; P.retry_us = 0;
     snprintf(P.id, sizeof P.id, "%s", id);
     for (int i = 0; ink_member_at(i); i++) if (!strcmp(ink_member_at(i)->id, id)) snprintf(P.name, sizeof P.name, "%s", ink_member_at(i)->name);
-    snprintf(P.status, sizeof P.status, "输入密码"); draw();
+    snprintf(P.status, sizeof P.status, TR("输入密码")); draw();
 }
 int ink_member_pages_init(void) {
     static const ink_cap_t caps[] = {
@@ -273,5 +274,5 @@ int ink_member_pages_init(void) {
 void ink_shell_member_parent_open(uint32_t token, const char *why) {
     if (P.busy) return;
     close_page(); P.mode = ink_member_any_pin() ? PARENT : FORGOT; P.parent_token = token; P.retry_us = 0;
-    snprintf(P.name, sizeof P.name, "家长"); snprintf(P.status, sizeof P.status, "%s", ink_member_any_pin() ? why : INK_PARENT_PIN_MISSING); draw();
+    snprintf(P.name, sizeof P.name, TR("家长")); snprintf(P.status, sizeof P.status, "%s", ink_member_any_pin() ? why : TR(INK_PARENT_PIN_MISSING)); draw();
 }

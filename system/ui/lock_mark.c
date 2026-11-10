@@ -1,4 +1,5 @@
 /* Locked page or minute clock, with a capture-only camera entry. */
+/* ui-scale-runtime: dimension date_y Keep the date below the emergency control using theme spacing. */
 #include <stdio.h>
 #include <string.h>
 
@@ -19,10 +20,10 @@ static uint64_t g_unlock_cause;
 static int g_locked;
 static ink_exec_job_t g_job;
 static const ink_ui_action_spec_t ACTIONS[] = {
-    {.id = "emergency", .label = "打开紧急呼叫页面", .capability = "phone.emergency_open", .enabled = true},
-    {.id = "camera", .label = "拍照", .capability = "app.open", .args_json = "{\"id\":\"camera\"}", .enabled = true}
+    {.id = "emergency", .label = TR_NOOP("打开紧急呼叫页面"), .capability = "phone.emergency_open", .enabled = true},
+    {.id = "camera", .label = TR_NOOP("拍照"), .capability = "app.open", .args_json = "{\"id\":\"camera\"}", .enabled = true}
 };
-static const ink_ui_page_spec_t MODEL = {.id = "LockPage", .title = "设备已锁定", .object = {"LockPage", 0}, .actions = ACTIONS, .action_count = 2};
+static const ink_ui_page_spec_t MODEL = {.id = "LockPage", .title = TR_NOOP("设备已锁定"), .object = {"LockPage", 0}, .actions = ACTIONS, .action_count = 2};
 static void changed(void) { g_revision++; g_version = ink_ui_content_version(); }
 static void pressed(lv_event_t *e) { (void)e; g_version = ink_ui_content_version(); }
 static void camera_clicked(lv_event_t *e) {
@@ -43,13 +44,16 @@ static void camera_button(bool strip) {
 
 static int semantic_snapshot(char *buf, size_t cap) {
     ink_ui_field_spec_t fields[] = {
-        {.id = "status", .role = "text", .label = "锁屏", .value = g_label ? lv_label_get_text(g_label) : TR("设备已锁定；可拍照：app.open(id=camera)。电源键或 AI 键唤醒。")},
-        {.id = "time", .role = "text", .label = "时间", .value = g_clock ? lv_label_get_text(g_clock) : ""},
-        {.id = "date", .role = "text", .label = "日期", .value = g_date ? lv_label_get_text(g_date) : ""},
-        {.id = "alarm", .role = "text", .label = "闹钟", .value = g_alarm ? lv_label_get_text(g_alarm) : ""},
-        {.id = "notifications", .role = "text", .label = "通知", .value = g_notice ? lv_label_get_text(g_notice) : ""}
+        {.id = "status", .role = "text", .label = TR("锁屏"), .value = g_label ? lv_label_get_text(g_label) : TR("设备已锁定；可拍照：app.open(id=camera)。电源键或 AI 键唤醒。")},
+        {.id = "time", .role = "text", .label = TR("时间"), .value = g_clock ? lv_label_get_text(g_clock) : ""},
+        {.id = "date", .role = "text", .label = TR("日期"), .value = g_date ? lv_label_get_text(g_date) : ""},
+        {.id = "alarm", .role = "text", .label = TR("闹钟"), .value = g_alarm ? lv_label_get_text(g_alarm) : ""},
+        {.id = "notifications", .role = "text", .label = TR("通知"), .value = g_notice ? lv_label_get_text(g_notice) : ""}
     };
-    ink_ui_page_spec_t model = MODEL;
+    ink_ui_page_spec_t model = MODEL; model.title = TR(MODEL.title);
+    ink_ui_action_spec_t actions[2]; memcpy(actions, ACTIONS, sizeof actions);
+    for (size_t i = 0; i < 2; i++) actions[i].label = TR(ACTIONS[i].label);
+    model.actions = actions;
     model.object.revision = g_revision;
     model.fields = fields; model.field_count = g_clock ? sizeof fields / sizeof *fields : 1;
     model.action_count = ink_cap_find("camera.capture") ? 2 : 1;
@@ -97,26 +101,27 @@ static void show(void) {
         lv_obj_set_style_bg_opa(g_mark, LV_OPA_COVER, 0);
         ink_shell_statusbar(g_mark, false);
         char time[24], date[96]; ink_shell_time_strings(time, sizeof time, date, sizeof date);
+        int date_y = INK_STATUS_BAR + INK_GAP + INK_CONTROL + INK_GAP_M;
         lv_obj_t *date_label = ink_ui_label(g_mark, date, INK_FONT_LIST, INK_WEIGHT_MEDIUM,
-                                           INK_MARGIN, INK_STATUS_BAR + INK_BLOCK, INK_CANVAS_W - 2 * INK_MARGIN);
+                                           INK_MARGIN, date_y, INK_CANVAS_W - 2 * INK_MARGIN);
         lv_obj_set_style_text_align(date_label, LV_TEXT_ALIGN_CENTER, 0);
         g_date = date_label;
         g_clock = ink_ui_label(g_mark, "", INK_FONT_CLOCK, INK_WEIGHT_REGULAR, INK_MARGIN,
-                               INK_STATUS_BAR + INK_BLOCK + ink_ui_line_height(INK_FONT_LIST), INK_CANVAS_W - 2 * INK_MARGIN);
+                               date_y + ink_ui_line_height(INK_FONT_LIST), INK_CANVAS_W - 2 * INK_MARGIN);
         lv_obj_set_style_text_align(g_clock, LV_TEXT_ALIGN_CENTER, 0);
         update_clock();
         int cursor = 0; ink_alarm_t alarm;
         if (ink_alarm_next(&cursor, INK_ALARM, &alarm) == 1) {
-            char next[64]; snprintf(next, sizeof next, "闹钟 %d:%02d", alarm.hour, alarm.min);
-            g_alarm = ink_ui_notice(g_mark, next, INK_STATUS_BAR + INK_BLOCK + ink_ui_line_height(INK_FONT_LIST) + ink_ui_line_height(INK_FONT_CLOCK) + INK_GAP_M);
+            char next[64]; snprintf(next, sizeof next, TR("闹钟 %d:%02d"), alarm.hour, alarm.min);
+            g_alarm = ink_ui_notice(g_mark, next, date_y + ink_ui_line_height(INK_FONT_LIST) + ink_ui_line_height(INK_FONT_CLOCK) + INK_GAP_M);
         }
         int h = ink_ui_row_double(), text_y = (h - ink_ui_line_height(INK_FONT_LIST) - ink_ui_line_height(INK_FONT_NOTE)) / 2;
         lv_obj_t *notice = ink_ui_card(g_mark, INK_MARGIN, INK_CANVAS_H - INK_CONTROL - INK_GAP_L - INK_MARGIN - h,
                                        INK_CANVAS_W - 2 * INK_MARGIN, h, INK_SURFACE_WHITE);
         ink_ui_circle(notice, "bell", INK_GAP, (h - INK_CIRCLE) / 2, INK_CIRCLE, INK_ICON_LIST, INK_SURFACE_STATIC, NULL, NULL);
-        char count[64]; snprintf(count, sizeof count, "%d 条通知", ink_notify_unread());
+        char count[64]; snprintf(count, sizeof count, TR("%d 条通知"), ink_notify_unread());
         g_notice = ink_ui_line(notice, count, INK_FONT_LIST, INK_WEIGHT_BOLD, INK_ROW_DOUBLE, text_y, INK_CANVAS_W - 2 * INK_ROW_DOUBLE);
-        ink_ui_line(notice, "唤醒后查看", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_ROW_DOUBLE, text_y + ink_ui_line_height(INK_FONT_LIST), INK_CANVAS_W - 2 * INK_ROW_DOUBLE);
+        ink_ui_line(notice, TR("唤醒后查看"), INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_ROW_DOUBLE, text_y + ink_ui_line_height(INK_FONT_LIST), INK_CANVAS_W - 2 * INK_ROW_DOUBLE);
     }
     camera_button(!clock);
     ink_shell_emergency_button(g_mark, !clock);

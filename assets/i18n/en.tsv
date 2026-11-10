@@ -52,7 +52,7 @@ AI	AI
 下一组	Next
 输入网络密码	Enter network password
 输入网络名称	Enter network name
-输入密码	Enter password
+输入密码	Password
 返回选网	Back to networks
 用电脑加入	Use a computer
 %s邀请你加入“%s”。请在设备上核对。	%s invited you to join "%s". Check it on this device.
@@ -289,7 +289,7 @@ AI	AI
 用什么名字叫它	Wake word
 暂不能更改	Unavailable
 没锁屏时才听，不影响待机。	Listens while unlocked; standby is unchanged.
-使用时	While in use
+使用时	In use
 一直	Always
 这里还没有内容	Nothing here yet
 
@@ -902,3 +902,411 @@ Wi-Fi 已关闭，先打开 Wi-Fi	Turn on Wi-Fi first
 改系统时间	Set system time
 {body}	{body}
 Wi-Fi	Wi-Fi
+# i18n-2: shell pages and shared controls
+%d 条通知	%d notifications
+%s的设备	%s's device
+%s；%s。%s。按钮：知道了。	%s; %s. %s. Button: OK.
+%s；当前=%s；%s；动作：%s。	%s; current=%s; %s; actions: %s.
+AI 替你做过的事	AI Activity
+AI 能看到什么	What AI can see
+AI 记得的事	AI Memory
+AirplaneOn；飞行模式已打开：%s。按钮：关闭飞行模式（net.set_airplane enabled=false）、取消。	AirplaneOn; Airplane mode is on: %s. Buttons: Turn off (net.set_airplane enabled=false), Cancel.
+书	Books
+仅含当前页，其他项请翻页读取	Current page only. Turn pages to read more.
+仅清理临时文件、缓存和未传完的文件。	Only removes temporary, cached and incomplete files.
+今天加 15 分钟，请家长本人输入	Add 15 minutes today. A parent must enter the password.
+今天的时间到了	Time's up for today
+今天的时间到了；读到哪儿都记好了；电话和短信不限制	Time's up today; reading progress saved; calls and messages remain available
+今天的时间用完了	Time's up for today
+你的东西放在哪	Where your data is
+你说的事 AI 会直接做。花钱、填密码、删了找不回来的，才会问你。	AI acts on your requests. It asks before spending money, entering passwords or deleting data permanently.
+关闭飞行模式	Turn off
+加单词	Add word
+可以读	Ready to read
+可以选择	Ready to select
+唤醒后查看	Wake to view
+备份	Backup
+备份或恢复失败	Backup or restore failed
+备份或恢复正在进行	Backup or restore in progress
+备份记录暂时读不出来	Backup history unavailable
+字还在，没能存下	Text kept, not saved
+孩子的记录	Child's activity
+已下载	Downloaded
+已关机	Powered off
+已存在这台设备	Saved on this device
+已恢复	Restored
+我 %s / 全机 %s	Mine %s / Device %s
+打字	Typing
+打字时帮你接话	Typing suggestions
+拒接	Decline
+按电源键再睡 10 分钟	Press power to snooze for 10 min
+按电源键开机	Press power to turn on
+按钮	Button
+换一位家人	Switch person
+提问时能看到当前页。密码框里的字看不到；语音和页面会交给家庭选择的模型服务商。	AI sees the current page when you ask, but never password fields. Voice and pages go to the model provider your family chose.
+无值	Empty
+无密码	No password
+日期	Date
+时间=%s；日期=%s；	Time=%s; date=%s;
+时间和日期	Time and date
+暂不能设置	Unavailable
+暂时读不了文件，请返回后重试	Can't read files. Go back and try again.
+有值	Filled
+有密码	Password set
+有新版本	Update available
+有系统打断；大人验证前 AI 无权读取个人内容。	System alert; AI cannot read personal content until an adult verifies.
+查看和删除记录	Manage activity
+标题	Title
+检查或更新失败，可以再试	Update failed. Try again.
+检查新版本	Check for updates
+正在保存	Saving
+正在整理	Preparing
+正在更新	Updating
+正在读取备份记录	Loading backup history
+正在读取文件	Loading files
+没有做	Action not taken
+没电了，东西都存好了。充上电再开机	Battery empty. Everything is saved. Charge before turning on.
+没电了，有些内容没保存。充上电再开机	Battery empty. Some changes weren't saved. Charge before turning on.
+活动记录：大人 1 年，孩子 180 天。对话、记忆和运行记录的期限暂时查不到。	Activity: 1 year for adults, 180 days for children. Retention for chats, memory and system logs is unavailable.
+清掉所有家人的数据，找不回来	Permanently deletes everyone's data
+清空这台设备	Erase this device
+照片和其他	Photos & Other
+爸爸妈妈加时间	Ask for more time
+爸爸妈妈可以查看孩子的活动记录，确认后删除；其他记录暂不能删除。	Parents can view and confirm deletion of a child's activity. Other records can't be deleted yet.
+留多久	How long data is kept
+确定	OK
+空间	Storage
+等待服务器保存回执	Waiting for server receipt
+算了	Cancel
+系统打断	System alert
+能腾出 %s	Free up %s
+自动下载新版本	Auto-download updates
+要爸爸妈妈来	Ask a parent
+要爸爸妈妈来；请他们输密码；只放行这一次	Ask a parent; they must enter their password; allow this time only
+设备已锁定	Device locked
+设备锁着：请选择家人，或输入密码。	Device locked. Choose a person or enter a password.
+设置和备忘在设备里，书和录音在存储卡上；备份在家庭服务器上。	Settings and notes stay on the device. Books and recordings are on the memory card. Backups are on the family server.
+设置或修改密码	Set or change password
+请他们输密码	Password
+请他们输密码，只放行这一次。	A parent must enter their password to allow this time only.
+请先解锁	Unlock first
+请家长关闭飞行模式	Ask a parent to turn off Airplane mode
+请家长来操作	Ask a parent
+读到哪儿都记好了，明天接着来。	Your place is saved. Continue tomorrow.
+谁在用？	Who's using this?
+输密码，回到刚才的地方	Enter your password to resume
+还没有备份	No backup yet
+这台设备	This device
+这次打开这个应用，请家长本人输入	Open this app once. A parent must enter the password.
+这里还没有可选的文件	No files to choose from
+选一个文件	Choose a file
+选一张图片	Choose a picture
+选一本书	Choose a book
+选一段音频	Choose audio
+选择家人	Choose a person
+锁屏	Lock Screen
+问 AI	Ask AI
+闹钟 %d:%02d	Alarm %d:%02d
+隐私	Privacy
+音频	Audio
+飞行模式已打开	Airplane mode is on
+BatteryLow：电量只剩 %d%%。到 2%% 时先保存再关机。%s知道了：interrupt.ack。	BatteryLow: %d%% left. Saves and shuts down at 2%%. %sOK: interrupt.ack.
+BatterySaving：电量用完了，正在存东西。存好就关机。	BatterySaving: Battery empty. Saving before shutdown.
+Charging：正在充电，%d%%。已锁定，按电源键或 AI 键唤醒。	Charging: %d%%. Locked. Wake with power or AI.
+PowerOffEmpty：已关机。%s%s%s	PowerOffEmpty: Powered off. %s%s%s
+PowerOffEmpty：已关机。没电了，%s	PowerOffEmpty: Powered off. Battery empty. %s
+一起清空存储卡上的书和音频	Also erase books and audio on the memory card
+上次备份：%d月%d日 %02d:%02d。%s	Last backup: %d/%d %02d:%02d. %s
+不会动	Will keep
+东西都存好了。充上电再开机	Everything is saved. Charge before turning on.
+之后有东西还没备份。	Some later changes aren't backed up.
+之后没有未备份的东西。	All later changes are backed up.
+之后的改动暂不能核实。先备份再继续。 	Later changes can't be checked. Back up before continuing.
+也可以一起清空	Can also erase
+会清除	Will erase
+先备份	Back up first
+关机	Power off
+原来设为 %lld 秒，关掉省电后照旧	Back to %lld s when Saver is off
+备份状态暂时读不出来，请稍后再试	Backup status unavailable. Try again later.
+存储卡上的书和音频	Card books & audio
+存储卡上的书和音频也一起清空	Also erase memory card books and audio
+存好就关机。	Will shut down when saved.
+家人	Person
+家人、设置和 Wi-Fi	People, settings and Wi-Fi
+家人、设置和 Wi-Fi；这里的备忘、录音和照片	People, settings and Wi-Fi; notes, recordings and photos on this device
+家庭服务器上的备份	Backups on the family server
+家庭服务器上的备份仍保留。本机已清空；服务器是否已移除这台设备，请在手机上核对。	Family server backups are kept. This device is erased. Check on your phone whether the server removed it.
+导出日志	Export logs
+已关机，没电了，充上电再开机	Powered off. Battery empty. Charge before turning on.
+已清空	Erased
+插上电吧。到 2% 时会先存好东西再关机。	Please charge. At 2%, your data is saved before shutdown.
+暂时无法记录，请稍后重试	Can't record the issue. Try again later.
+有些内容没保存。充上电再开机	Some changes weren't saved. Charge before turning on.
+正在充电	Charging
+没电了，东西都存好了。充上电就回到这里	Battery empty. Everything is saved. Charge to resume here.
+电源菜单	Power menu
+电量只剩 %d%%	%d%% battery left
+电量用完了，正在存东西	Battery empty. Saving your data
+省电：1 分钟锁屏	Saver: 1-min lock
+省电：1 分钟锁屏=%s；原设锁屏=%lld 秒；power.set_saving（enabled：true/false）；	Battery Saver: lock after 1 min=%s; normal timeout=%lld sec; power.set_saving (enabled: true/false);
+记录结果	Result
+记录问题	Report issue
+这位家人的备份	This person's backup
+这位家人还没有备份。清空前请先备份。	No backup for this person. Back up before erasing.
+这台设备已经清空了	This device is erased
+这里的备忘、录音和照片	Notes, audio and photos
+下一个	Next
+候选[%d]=%s；	Candidate[%d]=%s;
+听写=%s；听到=%s；动作：text.voice_finish、text.voice_cancel。	Dictation=%s; heard=%s; actions: text.voice_finish, text.voice_cancel.
+大写	Shift
+字母	ABC
+密码输入；内容=******。只能由人在设备上填写，没有 AI 写入、提交或话筒动作。	Password input; content=******. Only a person on this device can enter or submit it. No AI write, submit or microphone actions.
+搜索	Search
+撤销=%d；重做=%d；动作：text.undo、text.redo。	Undo=%d; redo=%d; actions: text.undo, text.redo.
+更多	More
+更多候选=%d；动作：text.insert、text.select、text.submit、keyboard.key、keyboard.pick、keyboard.candidates、keyboard.edit%s。	More candidates=%d; actions: text.insert, text.select, text.submit, keyboard.key, keyboard.pick, keyboard.candidates, keyboard.edit%s.
+正在整理成文字	Transcribing
+正在连接，可以说了	Connecting. You can speak now
+用键盘	Keyboard
+空格	Space
+符号	Symbols
+说完了	Done
+请说，停一下就结束	Speak. Pause to finish
+键盘；类型=普通文字；内容=%s；组合=%s；光标=%zu；选区=%zu..%zu；展开=%d；候选起点=%d；	Keyboard; type=plain text; content=%s; composing=%s; cursor=%zu; selection=%zu..%zu; expanded=%d; first candidate=%d;
+
+# i18n-2b: remaining shell pages
+%d月%d日 %02d:%02d已收到	Received %d/%d %02d:%02d
+%d月%d日 %02d:%02d的备份	Backup: %d/%d %02d:%02d
+%s 下载好了	%s downloaded
+%s、取消	%s, Cancel
+%s暂时搜不了	%s unavailable
+%s，设一个密码	%s, set a password
+%s，输入原密码	%s, enter old password
+%s；家人：%s；%s；还需等待 %u 秒；密码内容不可见。%s	%s; Member: %s; %s; Wait %u sec; Password hidden. %s
+1 分钟内有效。不确认就不会改。	Valid for 1 minute. Confirm to change.
+AI 做事的结果	AI Results
+AI 做过的事	AI Activity
+AI 面板	AI Panel
+一次性数字	One-time code
+上次恢复已完成	Last restore completed
+下载备份	Download backup
+下载完再问你要不要安装。	You will be asked before installing.
+不会自动格式化。\n请到电脑上修复，再插回来。	No automatic formatting.\nRepair on a computer, then reinsert.
+不恢复的内容	Not restored
+不确认就不会打。	Confirm to place this call.
+不确认就不会继续。	Confirm to continue.
+不能做	Not allowed
+不要关机。中途失败时，有些资料可能已经放回。	Keep power on. A failure may leave some data restored.
+从手机或电脑传入	Receive Files
+以下内容没有放回	Not restored
+以后再装	Later
+你的东西都在。之后可以再试一次。	Your data is safe. Try again later.
+修改这项设置？	Change this setting?
+做好了	Done
+做好了一部分	Partly done
+停下	Stop
+停下，开始	Stop & Start
+停止录音	Stop recording
+先不开	Not now
+先不恢复	Not now
+先不管	Later
+先请家长输入密码。忘记密码后的重置还未接通。	Ask a parent to enter their password. Password reset is unavailable.
+共 %d 项	%d items
+关键词	Keywords
+关闭飞行模式后再问。书还能继续读。	Turn off Airplane Mode to ask again. You can keep reading.
+再说一次	Ask again
+再输这个数字	Then enter this code
+准备连电脑	Connect to Computer
+出自这一页	From this page
+动作：shell.pin_cancel、shell.member_choose。	Actions: shell.pin_cancel, shell.member_choose.
+动作：shell.pin_cancel、shell.pin_forgot。	Actions: shell.pin_cancel, shell.pin_forgot.
+动作：shell.pin_cancel、shell.pin_parent。	Actions: shell.pin_cancel, shell.pin_parent.
+动作：shell.pin_cancel。	Actions: shell.pin_cancel.
+占用的应用暂不能查看。请先停下读书、播放或下载，再开始。	Active apps cannot be listed. Stop reading, playback or downloads first.
+发现新版本 %s	New version: %s
+发现新版本，可以下载。	A new version is ready to download.
+只备份这位家人的资料；自动备份暂不能设置。	Backs up this member only. Automatic backup is unavailable.
+只有你确认后才会继续。	Confirm to continue.
+只能放到‘传进来的’。关掉这页就断开。	Saves to Received. Closing this page disconnects.
+可以向家庭服务器检查新版本。	Check the home server for updates.
+可以重新下载。原来的系统仍然保留。	Download again. Your current system is kept.
+可以重新检查。原来的系统仍然保留。	Check again. Your current system is kept.
+可以问爸爸妈妈。书还能继续读。	Ask a parent. You can keep reading.
+和电脑传文件	USB File Transfer
+四到八位数字	4 to 8 digits
+回到通话	Return to call
+回答	Answer
+回答完成 · 声音没能播放	Answer ready. Audio unavailable
+回答无法完整显示，请重新打开面板。	Cannot show the full answer. Reopen the panel.
+壁纸图片编号	Wallpaper image ID
+声音没能播放	Audio unavailable
+备份摘要	Backup summary
+备份时间暂不能查看	Backup time unavailable
+如果新系统不能正常启动，会自动退回原来的系统。	If startup fails, the previous system is restored automatically.
+存储卡已经连到电脑	SD card connected
+存储卡正借给电脑，退出 U 盘模式后再试。	Disconnect USB storage, then try again.
+存储卡空间不够，腾出空间后再试。	Free up space on the SD card, then try again.
+孩子的 AI 做事结果	Child's AI Results
+孩子的 AI 活动记录	Child's AI Activity
+安装	Install
+安装没有完成，可以再试一次。	Installation failed. Try again.
+安装要几分钟，这期间不能用。	Installation takes a few minutes. The device will be unavailable.
+完成后请重启	Restart when finished
+家长	Parent
+家长已验证。本机还不能重置密码，请在家庭服务器处理。	Parent verified. Reset the password on the home server.
+家长验证	Verify parent
+密码不对	Incorrect password
+已取消	Cancelled
+已备份到家庭服务器	Backed up to home server
+已撤销	Undone
+已收到 %d 个，%lld 字节	Received %d files, %lld bytes
+已经是 %s 了	Updated to %s
+已经过期，没有执行。请重新发起。	Expired. Nothing was done. Start again.
+已经过期，请重新发起	Expired. Start again
+应用	App
+开始前请先停下使用存储卡的应用。占用的应用暂不能查看。	Stop apps using the SD card first. Active apps cannot be listed.
+开始用	Get started
+当前版本	Current version
+忘记密码	Forgot password
+恢复到这台设备	Restore here
+恢复备份	Restore Backup
+换人	Switch
+换人之前，先看看	Before switching
+换人后显示对方的内容。\n正在播放的声音会停下。\n你的页面和 AI 对话不会给别人看。	The next member's content will appear.\nAudio will stop.\nYour pages and AI chats stay private.
+接收进度	Transfer progress
+接着放	Resume
+搜索完成	Search complete
+搜索耳机	Find Headphones
+撤回	Withdraw
+操作无效	Invalid action
+操作超时，请重试	Timed out. Try again
+收起	Hide
+放到这台设备上	Restore to device
+放回来了	Restored
+文件信息	File Details
+断开	Disconnect
+新版本没装好，退回了 %s	Update failed. Restored %s
+时间未记录	Time not recorded
+明天恢复，也可以在手机上加。书还能继续读。	Resets tomorrow. Add more on your phone. You can keep reading.
+暂时搜不了，请稍后再试	Search unavailable. Try again later
+暂时没能核对，请重试	Could not verify. Try again
+暂时读不出来，请检查网络和存储卡后再试。	Check the network and SD card, then try again.
+暂时问不了 AI，书还能继续读	AI unavailable. Keep reading
+更新已完成。更新说明暂不能查看。	Update complete. Release notes unavailable.
+更新说明暂不能查看	Release notes unavailable
+有应用在用存储卡	SD card is in use
+本人操作	Local controls
+查看回执	View results
+检查是否完整	Check integrity
+检查是否正常	Check startup
+检查更新	Check Updates
+检查更新包	Check update package
+正在下载 %s，可以继续读	Downloading %s. Keep reading
+正在做的事	Activity
+正在听	Listening
+正在听 · 停一下自动结束	Listening. Pause to finish
+正在听 · 松开结束	Listening. Release to finish
+正在处理	Working
+正在备份	Backing up
+正在安装，不要关机	Installing. Keep power on
+正在录音	Recording
+正在接收文件	Receiving files
+正在搜索	Searching
+正在搜索耳机	Finding headphones
+正在放回来	Restoring
+正在查找这位家人的备份	Finding this member's backup
+正在核对…	Checking…
+正在检查并放回资料	Checking and restoring data
+正在看这一页	Reading this page
+正在读取记录	Loading activity
+正在读给你听	Reading aloud
+正在进行=%s；%s；动作=%s（%s）。	In progress=%s; %s; Action=%s (%s).
+正在配对并连接	Pairing and connecting
+没做好	Failed
+没有恢复成功	Restore failed
+没有找到相关内容	No results found
+没有搜到耳机，请确认已开机	No headphones found. Check they are on
+没有收到结果，不会自动重试。	No result received. No automatic retry.
+没有正在进行的事。	No activity in progress.
+没能完成这次更新，可以再试一次。	Update failed. Try again.
+没能读取正在做的事	Activity unavailable
+点按配对并连接	Tap to pair and connect
+现在备份一次	Back Up Now
+现在安装	Install Now
+现在装不了	Cannot install now
+用手机扫，或在电脑上打开	Scan or open on a computer
+用话筒问	Ask by voice
+电脑地址	Web address
+电量不足，要充到 30% 后再安装。	Charge to 30% before installing.
+确认	Confirm
+确认修改	Confirm change
+确认发送	Confirm send
+确认支付	Confirm payment
+确认编号	Confirmation ID
+等你确认	Awaiting confirmation
+等待传入	Waiting for files
+等得太久，先停了	Request timed out
+系统版本 %s	System version %s
+结束	Done
+结果不确定，不会自动重试	Result unknown. No automatic retry
+继续读	Keep reading
+继续问	Ask more
+网络断了，回答没收全，不会自动重试。	Connection lost. Answer incomplete. No automatic retry.
+耳机列表暂时读不出来	Headphone list unavailable
+自动备份暂不能设置	Automatic backup unavailable
+蓝牙已关闭	Bluetooth is off
+蓝牙耳机	Headphones
+记录暂时读不了，请返回后重试	Activity unavailable. Go back and try again
+设置、家人身份和密码需重新设置；网络和家庭需重新加入。共享内容按需下载。已发短信、已执行的操作和过期提醒不重放。本机 AI 操作记录和清单外文件保留。	Set up settings, members and passwords again. Rejoin networks and home. Download shared content as needed. Sent messages, past actions and expired reminders are not repeated. Local AI logs and unlisted files are kept.
+说明无法完整显示，请取消。	Cannot show all details. Please cancel.
+请先连上电脑	Connect to a computer first
+请家长关闭飞行模式。书还能继续读。	Ask a parent to turn off Airplane Mode. You can keep reading.
+请家长本人输入	A parent must enter their password
+请家长输入密码	Enter parent's password
+请家长验证	Ask a parent to verify
+请放入存储卡后再试。	Insert an SD card and try again.
+请本人在设备上操作。	Use the controls on this device.
+请检查无线网络、数据线和存储卡后再试。	Check Wi-Fi, USB cable and SD card, then try again.
+请稍后再试	Try again later
+请等 %u 秒再试	Try again in %u sec
+请翻完说明，再决定是否继续。	Read all details before deciding.
+请输入四到八位数字	Enter 4 to 8 digits
+请重启设备，让放回的资料生效。	Restart to use the restored data.
+读不了这张存储卡	Cannot read SD card
+输入关键词	Enter keywords
+还不能开始传文件	Cannot start transfer
+还没做，等联网	Waiting for connection
+还没备份好	Backup incomplete
+还没有 AI 做过的事	No AI activity yet
+还没有做好的事	Nothing completed yet
+还没有密码	No password set
+还没有对话记录	No conversations yet
+还没有正在做的事	No activity yet
+还没有耳机	No headphones yet
+还没连上 Wi-Fi	Wi-Fi not connected
+这个电话不是你要打的	You did not request this call
+这件事没有做	Nothing was done
+这位家人现在的资料会被替换。	This member's current data will be replaced.
+这期间书和音频打不开。用完在电脑上弹出，或者点‘结束’。	Books and audio are unavailable. Eject on the computer or tap Done.
+这次更新没完成	Update incomplete
+进度	Progress
+连不上家庭服务器。	Cannot reach the home server.
+连不上家庭服务器。资料先留在这台设备上，联网后可以继续。	Cannot reach home server. Data stays here. Reconnect to continue.
+配对失败，请确认耳机已开机	Pairing failed. Check headphones are on
+重新下载	Download Again
+重新检查	Check Again
+错太多次了，还要等 %u 秒	Too many attempts. Wait %u sec
+长按已配对的耳机可忘记	Hold paired headphones to forget
+长按已配对耳机可忘记；AI 使用 bt.forget(addr)	Hold paired headphones to forget; AI: bt.forget(addr)
+问点什么…	Ask something…
+问题	Question
+阅读=%d/%d；排队=%lld；可确认=%d	Read=%d/%d; Queued=%lld; Ready=%d
+需要大人在设备上输入密码；密码内容不可见	A parent must enter a password here; password hidden
+需要大人的密码确认。	A parent's password is required.
+页码	Page
+页码=%d/%d	Page=%d/%d
+页面=%s；家人=%s；确认编号=%u	Page=%s; Member=%s; Confirmation=%u
+页面或家人已变，操作已停止	Page or member changed. Action stopped
+家里还没有大人设密码，请大人先在设置里设一个	No parent password set. Ask an adult to set one in Settings.
+时钟和待办	Clock and to-dos
+锁屏画面	Lock screen

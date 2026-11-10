@@ -232,8 +232,8 @@ static void char_row(const char *keys) {
 }
 
 static const char *enter_label(void) {
-    static const char *const N[] = {"完成", "发送", "搜索", "下一个"};
-    return N[ink_text_enter_kind()];
+    static const char *const N[] = {TR_NOOP("完成"), TR_NOOP("发送"), TR_NOOP("搜索"), TR_NOOP("下一个")};
+    return TR(N[ink_text_enter_kind()]);
 }
 
 static void build(int kind) {
@@ -274,7 +274,7 @@ static void build(int kind) {
         lv_obj_add_event_cb(b, pressed, LV_EVENT_PRESSED, NULL);
         if (i >= 5) ink_shell_bind(b, i == 5 ? "text.undo" : "text.redo", NULL);
         ink_ui_pill_text(b, INK_FONT_NOTE, INK_WEIGHT_MEDIUM);
-        lv_obj_set_style_min_width(b, ink_ui_px(ink_ui_text_width(TR(EDIT[i]), INK_FONT_NOTE, INK_WEIGHT_MEDIUM) + 2 * (INK_GAP_XS + INK_STROKE)), 0);
+        lv_obj_set_style_min_width(b, ink_ui_px(ink_ui_text_width(i < 2 ? EDIT[i] : TR(EDIT[i]), INK_FONT_NOTE, INK_WEIGHT_MEDIUM) + 2 * (INK_GAP_XS + INK_STROKE)), 0);
         lv_obj_set_flex_grow(b, i < 2 ? 0 : 1);
     }
     lv_obj_add_flag(K.edit, LV_OBJ_FLAG_HIDDEN);
@@ -302,10 +302,10 @@ static void build(int kind) {
     lv_obj_add_event_cb(K.more, pressed, LV_EVENT_PRESSED, NULL);
     lv_obj_t *ml = lv_label_create(K.more);
     lv_obj_set_style_text_font(ml, ink_ui_font_px(INK_FONT_NOTE, INK_WEIGHT_REGULAR), 0);
-    lv_label_set_text(ml, "更多");
+    lv_label_set_text(ml, TR("更多"));
     lv_obj_center(ml);
     lv_obj_add_flag(K.more, LV_OBJ_FLAG_HIDDEN);
-    K.fold = ink_ui_pill(K.cands, "键盘", 0, 0, INK_PRIMARY, INK_CONTROL, false, on_fold, NULL);
+    K.fold = ink_ui_pill(K.cands, TR("键盘"), 0, 0, INK_PRIMARY, INK_CONTROL, false, on_fold, NULL);
     lv_obj_add_event_cb(K.fold, pressed, LV_EVENT_PRESSED, NULL);
     lv_obj_add_flag(K.fold, LV_OBJ_FLAG_HIDDEN);
     /* the microphone: black, at the end of the candidates (the system UI's own look comes later) */
@@ -332,19 +332,19 @@ static void build(int kind) {
         lv_obj_t *r = new_row();
         key(r, ink_text_type() == INK_TEXT_PHONE ? "+" : ".", ink_text_type() == INK_TEXT_PHONE ? '+' : '.', 1);
         key(r, "0", '0', 1);
-        key(r, "删除", KEY_BACKSPACE, 1);
+        key(r, TR("删除"), KEY_BACKSPACE, 1);
         key(r, enter_label(), KEY_ENTER, 1);
     } else {
         if (kind == 1) {
             char_row("qwertyuiop");
             char_row("asdfghjkl");
             lv_obj_t *r = new_row();
-            key(r, "大写", KEY_SHIFT, 2);
+            key(r, TR("大写"), KEY_SHIFT, 2);
             for (const char *p = "zxcvbnm"; *p; p++) {
                 char s[2] = {*p, 0};
                 key(r, s, *p, 1);
             }
-            key(r, "删除", KEY_BACKSPACE, 2);
+            key(r, TR("删除"), KEY_BACKSPACE, 2);
         } else {
             char_row("1234567890");
             char_row("-/:;()@&\"'");
@@ -353,11 +353,11 @@ static void build(int kind) {
                 char s[2] = {*p, 0};
                 key(r, s, *p, 1);
             }
-            key(r, "删除", KEY_BACKSPACE, 2);
+            key(r, TR("删除"), KEY_BACKSPACE, 2);
         }
         lv_obj_t *bottom = new_row();
-        key(bottom, K.symbols ? "字母" : "符号", KEY_SWITCH, 2);
-        key(bottom, "空格", ' ', 5);
+        key(bottom, K.symbols ? TR("字母") : TR("符号"), KEY_SWITCH, 2);
+        key(bottom, TR("空格"), ' ', 5);
         key(bottom, enter_label(), KEY_ENTER, 2);
     }
     K.panel = lv_obj_create(K.root);
@@ -387,7 +387,7 @@ static void build(int kind) {
         lv_obj_add_event_cb(b, pressed, LV_EVENT_PRESSED, NULL);
         lv_obj_t *l = lv_label_create(b);
         lv_obj_set_style_text_font(l, font(), 0);
-        lv_label_set_text(l, i ? "用键盘" : "说完了");
+        lv_label_set_text(l, i ? TR("用键盘") : TR("说完了"));
         lv_obj_center(l);
     }
     lv_obj_add_flag(K.panel, LV_OBJ_FLAG_HIDDEN);
@@ -412,7 +412,7 @@ static void sync_voice(ink_voice_state_t vs) {
         ink_ui_hint_obj(K.root, INK_REFRESH_FAST);
     }
     if (!on) return;
-    lv_label_set_text(K.status, vs == INK_VOICE_CONNECTING ? "正在连接，可以说了" : vs == INK_VOICE_LISTENING ? "请说，停一下就结束" : "正在整理成文字");
+    lv_label_set_text(K.status, vs == INK_VOICE_CONNECTING ? TR("正在连接，可以说了") : vs == INK_VOICE_LISTENING ? TR("请说，停一下就结束") : TR("正在整理成文字"));
     lv_label_set_text(K.heard, ink_text_voice_heard());
     ink_ui_hint_obj(K.status, INK_REFRESH_FAST);
     ink_ui_hint_obj(K.heard, INK_REFRESH_FAST);

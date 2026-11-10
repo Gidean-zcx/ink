@@ -95,7 +95,7 @@ static void test_all_license_chunks(void) {
 }
 static void test_env(void *ctx) { (void)ctx; test_lang = getenv("INK_GAPS_EN") != NULL; }
 static void test_battery_control(void) {
-    test_label = "省电：1 分钟锁屏"; on_ui(test_locate);
+    test_label = test_lang ? "Saver: 1-min lock" : "省电：1 分钟锁屏"; on_ui(test_locate);
     CHECK((test_found != NULL) == (ink_member_current()->role != INK_ROLE_CHILD), "battery controls match the current member");
     on_ui(read_screen);
     CHECK((strstr(g_snap, "power.set_saving") != NULL) == (ink_member_current()->role != INK_ROLE_CHILD), "battery snapshot matches its controls");

@@ -1,4 +1,5 @@
 /* ui-scale-runtime: dimension cell_h,columns,capacity,w,x,y Theme-sized cells and bounded layout counts from callers. */
+#include "ink/sys/i18n.h"
 #include "ink/sys/ui_list.h"
 #include "ink/sys/json.h"
 #include "ink/osal.h"
@@ -116,8 +117,8 @@ int ink_ui_list_snapshot(ink_ui_list_t *l, char *out, size_t cap) {
     size_t offset = l->position->page * l->capacity;
     int more = snprintf(out + n - 1, cap - (size_t)n + 1,
         ",\"pagination\":{\"page\":%zu,\"pages\":%zu,\"total\":%zu,\"offset\":%zu,\"visible\":%zu,\"truncated\":%s,"
-        "\"note\":\"仅含当前页，其他项请翻页读取\",\"selected\":", l->position->page + 1, l->pages, l->total, offset,
-        l->visible, l->visible < l->total ? "true" : "false");
+        "\"note\":\"%s\",\"selected\":", l->position->page + 1, l->pages, l->total, offset,
+        l->visible, l->visible < l->total ? "true" : "false", TR("仅含当前页，其他项请翻页读取"));
     if (more < 0 || (size_t)more >= cap - (size_t)n + 1) { out[0] = 0; return -1; }
     ink_jw_t w = {.buf = out, .cap = cap, .len = (size_t)(n - 1 + more)};
     ink_jw_str(&w, l->position->selected); ink_jw_raw(&w, "}}");

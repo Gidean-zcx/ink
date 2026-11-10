@@ -1,5 +1,6 @@
 /* F7: read-only member search; three visible results, no resident worker. */
 /* ui-scale-runtime: dimension x,y,w,h Theme-derived fixed search and result rectangles. */
+#include "ink/sys/i18n.h"
 #include <stdio.h>
 #include <string.h>
 #include "ink/osal.h"
@@ -14,7 +15,7 @@
 #include "ink/ui_shell.h"
 
 typedef struct { char id[64], title[128], value[128]; unsigned kind; uint32_t revision; } result_t;
-static const char *const TYPES[] = {"应用", "设置", "联系人", "备忘", "文件"};
+static const char *const TYPES[] = {TR_NOOP("应用"), TR_NOOP("设置"), TR_NOOP("联系人"), TR_NOOP("备忘"), TR_NOOP("文件")};
 static const char *const ICONS[] = {"grid", "gear", "phone", "memo", "folder"};
 static const ink_activity_t SEARCH, EMPTY, FILE_INFO;
 static struct {
@@ -29,7 +30,7 @@ static struct {
     ink_ui_page_spec_t model;
     bool pending;
 } S INK_PSRAM_BSS;
-static const char *status(void) { return S.pending ? "正在搜索" : S.error[0] ? S.error : S.total ? "" : "没有找到相关内容"; }
+static const char *status(void) { return S.pending ? TR("正在搜索") : S.error[0] ? S.error : S.total ? "" : TR("没有找到相关内容"); }
 typedef struct { char query[193], member[16], raw[INK_DB_RECORD_MAX + 1], text[4096];
     ink_json_t json; ink_jw_t writer; size_t total, cursor; unsigned shown, unavailable; } query_t;
 static bool visible(void) {
@@ -45,7 +46,7 @@ static void match(query_t *q, unsigned kind, const char *id, const char *title, 
     ink_jw_raw(w, ",\"title\":"); ink_jw_strn(w, title, ink_text_byte_offset(title, 40));
     ink_jw_raw(w, ",\"value\":"); ink_jw_str(w, value);
     ink_jw_raw(w, ",\"kind\":"); ink_jw_int(w, kind);
-    ink_jw_raw(w, ",\"type\":"); ink_jw_str(w, TYPES[kind]);
+    ink_jw_raw(w, ",\"type\":"); ink_jw_str(w, TR(TYPES[kind]));
     ink_jw_raw(w, ",\"revision\":"); ink_jw_int(w, revision); ink_jw_raw(w, "}");
 }
 static void query(ink_call_t *c) {
@@ -61,14 +62,14 @@ static void query(ink_call_t *c) {
     ink_jw_raw(&q->writer, ",\"version\":"); ink_jw_int(&q->writer, version); ink_jw_raw(&q->writer, ",\"results\":[");
     for (int i = 0; i < ink_app_count(); i++) {
         const ink_app_def_t *a = ink_app_at(i);
-        if (ink_app_visible(a) && strcmp(a->id, "home")) match(q, 0, a->id, a->title, "应用", 1);
+        if (ink_app_visible(a) && strcmp(a->id, "home")) match(q, 0, a->id, a->title, TR("应用"), 1);
     }
     if (ink_member_current()->role != INK_ROLE_CHILD) {
-        match(q, 0, "settings", "设置", "应用", 1);
+        match(q, 0, "settings", TR("设置"), TR("应用"), 1);
         for (int i = 0; ink_setting_at(i); i++) {
             const ink_setting_def_t *d = ink_setting_at(i);
             char id[64]; snprintf(id, sizeof id, "setting:%s", d->id);
-            match(q, 1, id, d->title, "设置", 1);
+            match(q, 1, id, !strcmp(d->id, "display.wallpaper_file") ? TR(d->title) : d->title, TR("设置"), 1);
         }
     }
     const char *const collections[] = {"phone.contacts", "memo.notes"};
@@ -106,7 +107,7 @@ static void query(ink_call_t *c) {
     bool comma = false;
     for (unsigned i = 2; i < 5; i++) if (q->unavailable & (1u << i)) {
         if (comma) ink_jw_raw(&q->writer, ",");
-        ink_jw_str(&q->writer, TYPES[i]); comma = true;
+        ink_jw_str(&q->writer, TR(TYPES[i])); comma = true;
     }
     ink_jw_raw(&q->writer, "]}");
     if (q->writer.overflow) c->rc.status = INK_RC_FAILED;
@@ -114,10 +115,10 @@ static void query(ink_call_t *c) {
 done:
     osal_free(out); osal_free(q);
 }
-static const ink_ui_action_spec_t ACTIONS[] = {
-    {.id = "prev", .label = "上一页", .capability = "search.prev"},
-    {.id = "next", .label = "下一页", .capability = "search.next"},
-    {.id = "query", .label = "输入关键词", .capability = "search.focus", .enabled = true}
+static ink_ui_action_spec_t ACTIONS[] = {
+    {.id = "prev", .label = TR_NOOP("上一页"), .capability = "search.prev"},
+    {.id = "next", .label = TR_NOOP("下一页"), .capability = "search.next"},
+    {.id = "query", .label = TR_NOOP("输入关键词"), .capability = "search.focus", .enabled = true}
 };
 static void bind_item(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, ink_ui_action_spec_t *action, void *ctx) {
     unsigned at = index % 3; result_t *r = &S.items[at];
@@ -128,11 +129,11 @@ static void bind_item(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, 
         ink_ui_line(slot, "", INK_FONT_NOTE, INK_WEIGHT_REGULAR, x, INK_LINE_LIST + INK_GAP_S, w);
     }
     lv_label_set_text(lv_obj_get_child(slot, 1), r->title);
-    lv_label_set_text(lv_obj_get_child(slot, 2), TYPES[r->kind]);
+    lv_label_set_text(lv_obj_get_child(slot, 2), TR(TYPES[r->kind]));
     char id[64]; memcpy(id, r->id, sizeof id);
     snprintf(S.args[at], sizeof S.args[at], "{\"id\":\"%s\",\"version\":%u}", id, (unsigned)S.version);
-    *field = (ink_ui_field_spec_t){.id = r->id, .label = r->title, .value = TYPES[r->kind], .role = "listitem", .object = {r->id, r->revision}};
-    *action = (ink_ui_action_spec_t){.id = r->id, .label = "打开", .capability = "search.open", .args_json = S.args[at], .object = field->object, .enabled = !S.pending};
+    *field = (ink_ui_field_spec_t){.id = r->id, .label = r->title, .value = TR(TYPES[r->kind]), .role = "listitem", .object = {r->id, r->revision}};
+    *action = (ink_ui_action_spec_t){.id = r->id, .label = TR("打开"), .capability = "search.open", .args_json = S.args[at], .object = field->object, .enabled = !S.pending};
 }
 static void loaded(void *ctx, const ink_receipt_t *rc) {
     if ((uint32_t)(uintptr_t)ctx != S.version || !visible()) return;
@@ -145,7 +146,7 @@ static void loaded(void *ctx, const ink_receipt_t *rc) {
             char category[16]; ink_json_str(j, t, category, sizeof category);
             size_t n = strlen(S.error); snprintf(S.error + n, sizeof S.error - n, "%s%s", n ? "、" : "", category);
         }
-        if (S.error[0]) { size_t n = strlen(S.error); snprintf(S.error + n, sizeof S.error - n, "暂时搜不了"); }
+        if (S.error[0]) { char categories[sizeof S.error]; memcpy(categories, S.error, sizeof categories); snprintf(S.error, sizeof S.error, TR("%s暂时搜不了"), categories); }
         int array = ink_json_find(j, 0, "results"), at = 0;
         memset(S.items, 0, sizeof S.items);
         for (int t = array + 1; array >= 0 && t < j->ntok && j->tok[t].end < j->tok[array].end && at < 3; t++) {
@@ -157,7 +158,7 @@ static void loaded(void *ctx, const ink_receipt_t *rc) {
             ink_json_int(j, ink_json_find(j, t, "kind"), &n); r->kind = (unsigned)n;
             ink_json_int(j, ink_json_find(j, t, "revision"), &n); r->revision = (uint32_t)n;
         }
-    } else snprintf(S.error, sizeof S.error, "暂时搜不了，请稍后再试");
+    } else snprintf(S.error, sizeof S.error, TR("暂时搜不了，请稍后再试"));
     osal_free(j);
     const ink_activity_t *page = !S.total && !S.error[0] ? &EMPTY : &SEARCH;
     if (strcmp(ink_ui_page_name(), page->name)) { ink_ui_pop(); ink_ui_push(page, NULL); }
@@ -170,7 +171,7 @@ static void request(void) {
         ink_args_init(a); ink_args_str(a, "query", S.query);
         ink_args_int(a, "cursor", S.position.page * 3); ink_args_int(a, "version", S.version);
         ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .member = S.member, .reply_exec = INK_EXEC_UI, .done = loaded, .ctx = (void *)(uintptr_t)S.version};
-        if (ink_cap_call("search.query", a, &o) != 0) { S.pending = false; snprintf(S.error, sizeof S.error, "暂时搜不了，请稍后再试"); }
+        if (ink_cap_call("search.query", a, &o) != 0) { S.pending = false; snprintf(S.error, sizeof S.error, TR("暂时搜不了，请稍后再试")); }
         osal_free(a);
     } else S.pending = false;
 }
@@ -189,14 +190,15 @@ static void entered(void *ctx, const char *value) {
     ink_args_init(a); ink_args_str(a, "query", value); ink_cap_invoke("search.show", a, INK_SRC_TOUCH, 0, &rc); osal_free(a);
 }
 static void create(lv_obj_t *screen, void *arg) {
+    ACTIONS[0].label = TR("上一页"); ACTIONS[1].label = TR("下一页"); ACTIONS[2].label = TR("输入关键词");
     ink_shell_statusbar(screen, true);
     ink_shell_bind(ink_ui_circle(screen, "back", INK_MARGIN, INK_STATUS_BAR, INK_CONTROL, INK_ICON_LIST, INK_SURFACE_STATIC, NULL, NULL), "shell.back", NULL);
     int x = INK_MARGIN + INK_CONTROL + INK_GAP_M, y = INK_STATUS_BAR + INK_CONTROL + INK_GAP_M;
-    S.model = (ink_ui_page_spec_t){.id = ink_ui_page_name(), .title = "搜索", .object = {"search", S.version}, .fields = &S.spec, .field_count = 1, .actions = ACTIONS + 2, .action_count = 1};
-    ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .enter = INK_ENTER_SEARCH, .max = 192, .initial = S.query, .hint = "搜索"};
+    S.model = (ink_ui_page_spec_t){.id = ink_ui_page_name(), .title = TR("搜索"), .object = {"search", S.version}, .fields = &S.spec, .field_count = 1, .actions = ACTIONS + 2, .action_count = 1};
+    ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .enter = INK_ENTER_SEARCH, .max = 192, .initial = S.query, .hint = TR("搜索")};
     S.field = ink_textfield_create(screen, &cfg, entered, NULL, false);
     lv_obj_set_pos(S.field, ink_ui_px(x), ink_ui_px(INK_STATUS_BAR)); lv_obj_set_width(S.field, ink_ui_px(INK_CANVAS_W - INK_MARGIN - x));
-    S.spec = (ink_ui_field_spec_t){.id = "query", .label = "关键词", .role = "searchbox"};
+    S.spec = (ink_ui_field_spec_t){.id = "query", .label = TR("关键词"), .role = "searchbox"};
     ink_textfield_bind_short(S.field, &S.model, &S.spec, ACTIONS + 2);
     if (!S.total) {
         int middle = (INK_CANVAS_H - INK_CIRCLE_LARGE) / 2;
@@ -228,13 +230,13 @@ static bool page_key(ink_key_t k, bool lng) { return S.list && ink_ui_list_key(S
 static const ink_activity_t SEARCH = {.name = "Search", .create = create, .destroy = destroy, .snapshot = snapshot, .on_key = page_key};
 static const ink_activity_t EMPTY = {.name = "SearchEmpty", .create = create, .destroy = destroy, .snapshot = snapshot, .on_key = page_key};
 static void file_create(lv_obj_t *screen, void *arg) {
-    ink_shell_statusbar(screen, true); ink_shell_topbar(screen, "文件信息");
+    ink_shell_statusbar(screen, true); ink_shell_topbar(screen, TR("文件信息"));
     ink_ui_label(screen, S.file.title, INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, INK_MARGIN, INK_STATUS_BAR + INK_PRIMARY + INK_GAP_L, INK_CANVAS_W - 2 * INK_MARGIN);
     ink_ui_label(screen, S.file.value, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, INK_STATUS_BAR + INK_PRIMARY + INK_ROW_DOUBLE, INK_CANVAS_W - 2 * INK_MARGIN);
 }
 static int file_snapshot(char *out, size_t cap) {
     ink_ui_field_spec_t field = {.id = "file", .role = "file", .label = S.file.title, .value = S.file.value, .object = {S.file.id, S.file.revision}};
-    ink_ui_page_spec_t model = {.id = "SearchFile", .title = "文件信息", .fields = &field, .field_count = 1};
+    ink_ui_page_spec_t model = {.id = "SearchFile", .title = TR("文件信息"), .fields = &field, .field_count = 1};
     return ink_ui_semantics_snapshot(&model, out, cap);
 }
 static const ink_activity_t FILE_INFO = {.name = "SearchFile", .create = file_create, .snapshot = file_snapshot};

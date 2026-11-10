@@ -1,4 +1,5 @@
 /* Decode on the media executor; keep only dithered pixels in PSRAM. */
+#include "ink/sys/i18n.h"
 #include <limits.h>
 #include "ink/osal.h"
 #include "ink/sys/file_picker.h"
@@ -58,7 +59,7 @@ static void choose(ink_call_t *c) {
     if (ink_file_picker_open(INK_FS_IMAGE, selected, (void *)(uintptr_t)c->src)) c->rc.status = INK_RC_FAILED;
 }
 int ink_wallpaper_init(void) {
-    static const ink_setting_def_t setting = {.id = "display.wallpaper_file", .title = "壁纸图片编号", .type = INK_SET_INT, .max = UINT32_MAX};
+    static const ink_setting_def_t setting = {.id = "display.wallpaper_file", .title = TR_NOOP("壁纸图片编号"), .type = INK_SET_INT, .max = UINT32_MAX};
     static const ink_cap_t cap = {.id = "wallpaper.choose", .title = "选择锁屏壁纸", .effect = INK_FX_NAVIGATE, .run = choose};
     if (ink_settings_define(&setting, 1) || ink_cap_register(&cap, 1) ||
         ink_settings_watch("display.wallpaper_file", changed, NULL, INK_EXEC_UI) || ink_state_watch("member.", changed, NULL, INK_EXEC_UI)) return -1;

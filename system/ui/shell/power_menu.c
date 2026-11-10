@@ -1,4 +1,6 @@
 /* The power menu (placeholder look, D-64): the power key held down. What its buttons do are the capabilities the AI has too. */
+/* ui-scale-runtime: dimension text_h,h Tile labels determine the panel height at the current font size. */
+#include "ink/sys/i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -20,24 +22,31 @@ static struct {
 } M;
 
 static const ink_ui_action_spec_t ACTIONS[] = {
-    {.id = "system.shutdown", .label = "关机", .capability = "system.shutdown", .enabled = true},
-    {.id = "system.reboot", .label = "重启", .capability = "system.reboot", .enabled = true},
-    {.id = "shell.lock", .label = "锁屏", .capability = "shell.lock", .enabled = true},
-    {.id = "system.report_problem", .label = "记录问题", .capability = "system.report_problem", .enabled = true},
-    {.id = "system.export_logs", .label = "导出日志", .capability = "system.export_logs", .enabled = true}
+    {.id = "system.shutdown", .label = TR_NOOP("关机"), .capability = "system.shutdown", .enabled = true},
+    {.id = "system.reboot", .label = TR_NOOP("重启"), .capability = "system.reboot", .enabled = true},
+    {.id = "shell.lock", .label = TR_NOOP("锁屏"), .capability = "shell.lock", .enabled = true},
+    {.id = "system.report_problem", .label = TR_NOOP("记录问题"), .capability = "system.report_problem", .enabled = true},
+    {.id = "system.export_logs", .label = TR_NOOP("导出日志"), .capability = "system.export_logs", .enabled = true}
 };
 static const ink_ui_field_spec_t FIELDS[] = {
-    {.id = "cancel", .role = "button", .label = "取消", .value = "取消"}
+    {.id = "cancel", .role = "button", .label = TR_NOOP("取消"), .value = TR_NOOP("取消")}
 };
-static const ink_ui_page_spec_t MODEL = {.id = "power_menu", .title = "电源菜单", .object = {"power_menu", 0},
+static const ink_ui_page_spec_t MODEL = {.id = "power_menu", .title = TR_NOOP("电源菜单"), .object = {"power_menu", 0},
     .fields = FIELDS, .field_count = sizeof FIELDS / sizeof *FIELDS, .actions = ACTIONS, .action_count = sizeof ACTIONS / sizeof *ACTIONS};
-static ink_ui_page_spec_t model(void) { ink_ui_page_spec_t page = MODEL; page.object.revision = ink_ui_generation(); return page; }
+static ink_ui_page_spec_t model(void) {
+    ink_ui_page_spec_t page = MODEL; page.title = TR(MODEL.title);
+    page.object.revision = ink_ui_generation(); return page;
+}
 static int semantic_snapshot(char *buf, size_t cap) {
     ink_ui_page_spec_t page = model();
     ink_ui_field_spec_t fields[sizeof FIELDS / sizeof *FIELDS + 1];
     memcpy(fields, FIELDS, sizeof FIELDS);
-    fields[page.field_count++] = (ink_ui_field_spec_t){.id = "result", .role = "status", .label = "记录结果", .value = M.say};
-    page.fields = fields;
+    fields[0].label = fields[0].value = TR(FIELDS[0].label);
+    fields[page.field_count++] = (ink_ui_field_spec_t){.id = "result", .role = "status", .label = TR("记录结果"), .value = M.say};
+    ink_ui_action_spec_t actions[sizeof ACTIONS / sizeof *ACTIONS];
+    memcpy(actions, ACTIONS, sizeof actions);
+    for (size_t i = 0; i < sizeof ACTIONS / sizeof *ACTIONS; i++) actions[i].label = TR(ACTIONS[i].label);
+    page.actions = actions; page.fields = fields;
     return ink_ui_semantics_snapshot(&page, buf, cap);
 }
 
@@ -74,7 +83,7 @@ static void on_button(lv_event_t *e) {
     if (M.version != ink_ui_content_version()) return;
     if (cap && (!strcmp(cap, "system.report_problem") || !strcmp(cap, "system.export_logs"))) {
         ink_call_opts_t opts = {.src = INK_SRC_TOUCH, .page_gen = M.version, .reply_exec = INK_EXEC_UI, .done = logged};
-        if (ink_cap_call(cap, NULL, &opts)) { snprintf(M.say, sizeof M.say, "暂时无法记录，请稍后重试"); lv_label_set_text(M.result, M.say); }
+        if (ink_cap_call(cap, NULL, &opts)) { snprintf(M.say, sizeof M.say, TR("暂时无法记录，请稍后重试")); lv_label_set_text(M.result, M.say); }
         return;
     }
     if (cap) {
@@ -89,7 +98,7 @@ static void on_button(lv_event_t *e) {
 static void power_tile(const char *label, const char *icon, int col, const char *action, bool primary) {
     int cell = (INK_CANVAS_W - 2 * INK_MARGIN) / 3;
     lv_obj_t *b = ink_ui_pill(M.card.panel, "", INK_MARGIN + col * cell, INK_MARGIN, cell,
-                              INK_CIRCLE_APP + INK_GAP_M + ink_ui_line_height(INK_FONT_LIST), false, on_button, (void *)action);
+                              INK_CIRCLE_APP + INK_GAP_M + ink_ui_text_height(label, INK_FONT_LIST, INK_WEIGHT_MEDIUM, cell - 2 * INK_GAP_XS), false, on_button, (void *)action);
     lv_obj_set_style_border_width(b, 0, 0);
     lv_obj_add_event_cb(b, pressed, LV_EVENT_PRESSED, NULL);
     ink_ui_circle(b, icon, (cell - INK_CIRCLE_APP) / 2 - INK_GAP_XS, 0, INK_CIRCLE_APP, INK_ICON_APP,
@@ -103,21 +112,22 @@ static void open_job(void *arg) { /* UI task */
     if (M.card.root || ink_interrupt_active()) return;
     shell_card_open(&M.card);
     ink_ui_overlay_add(&OVERLAY, M.card.root);
-    int h = 2 * INK_MARGIN + INK_CIRCLE_APP + INK_GAP_M + ink_ui_line_height(INK_FONT_LIST) + INK_MARGIN + 4 * INK_PRIMARY;
+    int cell = (INK_CANVAS_W - 2 * INK_MARGIN) / 3;
+    int text_h = ink_ui_text_height(TR("锁屏"), INK_FONT_LIST, INK_WEIGHT_MEDIUM, cell);
+    int h = 2 * INK_MARGIN + INK_CIRCLE_APP + INK_GAP_M + text_h + INK_MARGIN + 4 * INK_PRIMARY;
     lv_obj_clean(M.card.panel);
     lv_obj_set_y(M.card.panel, ink_ui_px(INK_CANVAS_H - h));
     lv_obj_set_height(M.card.panel, ink_ui_px(h + INK_RADIUS_PANEL));
-    power_tile("关机", "power", 0, "system.shutdown", true);
-    power_tile("重启", "update", 1, "system.reboot", false);
-    int cell = (INK_CANVAS_W - 2 * INK_MARGIN) / 3;
+    power_tile(TR("关机"), "power", 0, "system.shutdown", true);
+    power_tile(TR("重启"), "update", 1, "system.reboot", false);
     lv_obj_t *lock = ink_ui_circle(M.card.panel, "lock", INK_MARGIN + 2 * cell + (cell - INK_CIRCLE_APP) / 2, INK_MARGIN,
                                    INK_CIRCLE_APP, INK_ICON_APP, INK_SURFACE_WHITE, on_button, "shell.lock");
     lv_obj_add_event_cb(lock, pressed, LV_EVENT_PRESSED, NULL);
     ink_shell_bind(lock, "shell.lock", NULL);
-    lv_obj_t *word = ink_ui_label(M.card.panel, "锁屏", INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_MARGIN + 2 * cell,
+    lv_obj_t *word = ink_ui_label(M.card.panel, TR("锁屏"), INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_MARGIN + 2 * cell,
                                   INK_MARGIN + INK_CIRCLE_APP + INK_GAP_M, cell);
     lv_obj_set_style_text_align(word, LV_TEXT_ALIGN_CENTER, 0);
-    const char *labels[] = {"记录问题", "导出日志"};
+    const char *labels[] = {TR("记录问题"), TR("导出日志")};
     const char *caps[] = {"system.report_problem", "system.export_logs"};
     for (int i = 0; i < 2; i++) {
         lv_obj_t *b = ink_ui_pill(M.card.panel, labels[i], INK_MARGIN, h - (4 - i) * INK_PRIMARY - INK_MARGIN,
@@ -126,7 +136,7 @@ static void open_job(void *arg) { /* UI task */
     }
     M.say[0] = 0;
     M.result = ink_ui_label(M.card.panel, "", INK_FONT_BODY, INK_WEIGHT_REGULAR, INK_MARGIN, h - 2 * INK_PRIMARY - INK_MARGIN, INK_CANVAS_W - 2 * INK_MARGIN);
-    lv_obj_t *cancel = ink_ui_pill(M.card.panel, "取消", INK_MARGIN, h - INK_PRIMARY - INK_MARGIN,
+    lv_obj_t *cancel = ink_ui_pill(M.card.panel, TR("取消"), INK_MARGIN, h - INK_PRIMARY - INK_MARGIN,
                  INK_CANVAS_W - 2 * INK_MARGIN, INK_PRIMARY, false, on_button, NULL);
     lv_obj_add_event_cb(cancel, pressed, LV_EVENT_PRESSED, NULL);
     M.version = ink_ui_content_version();
