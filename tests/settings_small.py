@@ -28,8 +28,8 @@ def run(binary, name, expected=None):
         '--quiet', '--no-random-outages', '--budget', str(ROOT / 'tests/ui_scene.budget.json')],
         cwd=ROOT, capture_output=True, text=True, timeout=240,
         env={**os.environ, 'UBSAN_OPTIONS': 'halt_on_error=1'})
-    (out / 'run.log').write_text(result.stdout + result.stderr)
     data = json.loads((out / 'metrics.json').read_text())
+    (out / 'run.log').write_text(result.stdout + result.stderr + '\n'.join(data.get('warnings', [])))
     metrics = data['metrics']
     passed = result.returncode == 0 and metrics.get('test.finished') == 1 and not metrics.get('test.fail', 0) and not data.get('warnings')
     print(f'{name}: exit={result.returncode}, pass={metrics.get("test.pass", 0)}, '
@@ -63,10 +63,10 @@ else:
         subprocess.run(command + ['-iquote', str((ROOT / path).parent), '-x', 'c', '-c', '-'], input=source.stdout,
                        cwd=build, text=True, check=True)
         link = shlex.split((build / 'CMakeFiles/sim-settings-small.dir/link.txt').read_text())
-        binary = area / ('baseline-' + Path(unit).name)
+        binary = area / ('baseline-' + Path(unit).name + '-sim')
         link[link.index('-o') + 1] = str(binary)
         link.insert(next(i for i, part in enumerate(link) if part.endswith('libink_system.a')), str(obj))
         subprocess.run(link, cwd=build, check=True)
-        run(binary, binary.name, expected)
+        run(binary, binary.name + '-run', expected)
 if not os.environ.get('INK_KEEP_EVIDENCE'):
     shutil.rmtree(area)
