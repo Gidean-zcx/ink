@@ -1466,10 +1466,11 @@ static int page_snapshot(char *buf, size_t cap) {
                      (long long) ink_setting_get("display.warmth"), (long long) ink_setting_get("audio.volume"),
                      (long long) ink_setting_get("net.prefer"), ink_notify_unread());
     if (N.page_id != PAGE_NOTIFICATIONS && n >= 0 && (size_t) n < cap)
-        n += snprintf(buf + n, cap - (size_t) n, "字号=%lld；锁屏画面=%lld；自动锁屏秒=%lld；勿扰=%lld；叫名字=%lld；语言=%s；",
+        n += snprintf(buf + n, cap - (size_t) n, "字号=%lld；锁屏画面=%lld；自动锁屏秒=%lld；拿起亮屏(power.lift_wake)=%lld；勿扰=%lld；叫名字=%lld；语言=%s；",
                       (long long) ink_setting_get("display.font_size"),
                       (long long) ink_setting_get("display.lock_style"),
-                      (long long) ink_setting_get("power.lock_after_s"), (long long) ink_setting_get("notify.dnd"),
+                      (long long) ink_setting_get("power.lock_after_s"), (long long) ink_setting_get("power.lift_wake"),
+                      (long long) ink_setting_get("notify.dnd"),
                       (long long) ink_setting_get("voice.handsfree"), ink_lang_code());
     if (N.body_pages > 1 && N.page_id != PAGE_NOTIFICATIONS && n >= 0 && (size_t) n < cap)
         n += snprintf(buf + n, cap - (size_t) n, "这一组第 %d 页，共 %d 页；动作：shell.page_next、shell.page_prev；",

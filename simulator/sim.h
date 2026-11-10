@@ -248,6 +248,8 @@ void sim_rtc_accel_report(void);
 void sim_sensors_init(void);              /* task context (boot) */
 void sim_sensors_service_gpio2(void);     /* task context: read the accelerometer's latch on GPIO2 */
 void sim_sensors_sleep(void);             /* light sleep: accelerometer quiet, INT1 released; task context */
+bool sim_sensors_sleep_watch(void);       /* light sleep with HAL_WAKE_MOTION: low-power motion watch on INT1 */
+bool sim_sensors_take_motion(void);       /* after a GPIO2 wake: the accelerometer's latch (read and cleared) */
 void sim_sensors_resume(void);            /* after the wake: set up again; task context */
 void sim_rtc_lose_time(void);             /* ISR (script) */
 void sim_rtc_line_stuck_low(void);        /* ISR (script): P16 reads low all the time */
@@ -255,7 +257,7 @@ int64_t sim_rtc_now_s(void);
 unsigned sim_rtc_alarms(void);
 bool sim_accel_int_low(void);
 unsigned sim_accel_motions(void);
-void sim_accel_orient(const char *name);  /* ISR (script, window): portrait, upside_down, landscape_left/right, face_up/down */
+void sim_accel_orient(const char *name);  /* ISR (script, window): portrait, upside_down, landscape_left/right, face_up/down, reading */
 void sim_accel_shake(void);               /* ISR (script, window) */
 void sim_accel_orientation(int g[3]);
 
