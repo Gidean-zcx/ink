@@ -56,6 +56,12 @@ static void check_snapshot(void) {
 }
 static void check_recovered(void) { CHECK(!strcmp(ink_text_value(), "SYNTH_SAVED_AND_UNSAVED草稿"), "power cut restores edited draft"); }
 static void check_partial(void) { CHECK(F.notice && strstr(lv_label_get_text(F.notice), "SYNTH_1.txt"), "partial result names the failed file in the UI"); }
+static bool row_marked;
+static void check_row(void) {
+    target();
+    if (found) { lv_obj_t *row = lv_obj_get_parent(found); CHECK(lv_obj_get_style_border_width(row, 0) == (row_marked ? ink_ui_px(INK_STROKE) : 0) && lv_obj_get_style_outline_width(row, 0) == 0, "row selection is visible and cancellation removes its outline"); }
+    CHECK(ink_ui_snapshot(g_snap, sizeof g_snap, NULL) > 0 && strstr(g_snap, row_marked ? "\"selected_count\":1" : "\"selected_count\":0"), "touch toggles the public selected count");
+}
 static void read_file(const char *path) {
     ink_fs_file_t *f = NULL; memset(saved, 0, sizeof saved);
     CHECK(!ink_fs_open(path, INK_FS_READ, &f), "read %.100s", path);
@@ -82,7 +88,10 @@ static void batch_fixture(const char *directory_path) {
 }
 static void batch_args_test(const char *op, const char *to) { snprintf(args_json, sizeof args_json, "{\"ids\":[%u,%u,%u],\"op\":\"%s\",\"to\":\"%s\"}", (unsigned)ids[0], (unsigned)ids[1], (unsigned)ids[2], op, to); }
 static void batch_ops(void) {
-    roots(); batch_fixture("/me/SYNTH_BATCH"); CHECK(!ink_fs_mkdir("/me/SYNTH_COPY") && !ink_fs_mkdir("/me/SYNTH_MOVE"), "destinations"); browse("/me/SYNTH_BATCH"); touch("多选"); wait_page("FileList"); touch("全选"); wait_page("FileList"); on_ui(check_snapshot); capture("MultiSelect");
+    roots(); batch_fixture("/me/SYNTH_BATCH"); CHECK(!ink_fs_mkdir("/me/SYNTH_COPY") && !ink_fs_mkdir("/me/SYNTH_MOVE"), "destinations"); browse("/me/SYNTH_BATCH"); touch("多选"); wait_page("FileList");
+    row_marked = true; touch("SYNTH_1.txt"); wait_page("FileList"); on_ui(check_row);
+    row_marked = false; touch("SYNTH_1.txt"); wait_page("FileList"); on_ui(check_row);
+    touch("全选"); wait_page("FileList"); on_ui(check_snapshot); capture("MultiSelect");
     touch("拷贝"); wait_page("FileMove"); command("files.browse", "{\"path\":\"/me/SYNTH_COPY\"}"); wait_page("FileMove"); touch("拷贝到这里");
     CHECK(WAIT_FOR(exists("/me/SYNTH_COPY/SYNTH_2.txt"), 15000), "touch copies all three"); wait_page("FileMove");
     for (int i = 0; i < 3; i++) { char path[128]; snprintf(path, sizeof path, "/me/SYNTH_COPY/SYNTH_%d.txt", i); CHECK(exists(path), "copy %.90s", path); }

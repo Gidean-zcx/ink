@@ -11,16 +11,17 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[2]
 p = argparse.ArgumentParser()
 p.add_argument('--build', type=Path, required=True)
-p.add_argument('--reverse', action='store_true')
+p.add_argument('--reverse', nargs='?', const='draft', choices=('draft', 'selection'))
 a = p.parse_args()
 build = a.build.resolve()
 work = Path(tempfile.mkdtemp(prefix='files-ops-', dir=build))
 binary = build / 'sim-files-ops'
 if a.reverse:
     source = (ROOT / 'system/apps/files/files.c').read_text()
-    old = 'F.ref = rec.id; F.draft = (uint32_t)draft; break;'
+    old, replacement = ('F.ref = rec.id; F.draft = (uint32_t)draft; break;', 'F.ref = rec.id; F.draft = 0; break;') if a.reverse == 'draft' else (
+        'if (i < F.marked_count) F.marked[i] = F.marked[--F.marked_count];', 'if (i < F.marked_count) (void)i;')
     assert source.count(old) == 1
-    (work / 'files.c').write_text(source.replace(old, 'F.ref = rec.id; F.draft = 0; break;'))
+    (work / 'files.c').write_text(source.replace(old, replacement))
     driver = (ROOT / 'tests/files_ops/files_ops.c').read_text().replace(
         '#include "../../system/apps/files/files.c"', '#include "files.c"').replace(
         '#include "../../system/boot/main.c"', f'#include "{ROOT}/system/boot/main.c"').replace(

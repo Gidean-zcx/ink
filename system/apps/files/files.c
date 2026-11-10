@@ -386,7 +386,9 @@ static int snapshot(char *out, size_t cap) {
     ink_jw_raw(&w, ",\"directory\":"); ink_jw_str(&w, directory()); ink_jw_raw(&w, ",\"back\":\"files.up\"");
     ink_jw_raw(&w, ",\"selected_count\":"); ink_jw_int(&w, F.marked_count);
     if (F.mode == LIST) { bool first = true; ink_jw_raw(&w, ",\"toolbar\":[");
-        for (size_t i = 2; i < F.model.action_count; i++) { const ink_ui_action_spec_t *a = &F.actions[i]; if (!a->enabled || !a->capability) continue; if (!first) ink_jw_raw(&w, ","); first = false; ink_jw_raw(&w, "{\"capability\":"); ink_jw_str(&w, a->capability); ink_jw_raw(&w, ",\"label\":"); ink_jw_str(&w, a->label); ink_jw_raw(&w, ",\"args_json\":"); ink_jw_str(&w, a->args_json ? a->args_json : "{}"); ink_jw_raw(&w, "}"); } ink_jw_raw(&w, "]"); }
+        for (size_t i = 2; i < F.model.action_count; i++) { const ink_ui_action_spec_t *a = &F.actions[i]; if (!a->enabled || !a->capability) continue;
+            if (!first) ink_jw_raw(&w, ",");
+            first = false; ink_jw_raw(&w, "{\"capability\":"); ink_jw_str(&w, a->capability); ink_jw_raw(&w, ",\"label\":"); ink_jw_str(&w, a->label); ink_jw_raw(&w, ",\"args_json\":"); ink_jw_str(&w, a->args_json ? a->args_json : "{}"); ink_jw_raw(&w, "}"); } ink_jw_raw(&w, "]"); }
     if (F.mode == EDIT && F.field) { ink_jw_raw(&w, ",\"save\":{\"capability\":\"file.write\",\"args\":"); ink_jw_raw(&w, F.target); ink_jw_raw(&w, "}"); }
     if (F.mode == MOVE) ink_jw_raw(&w, ",\"cancel\":\"shell.back\"");
     if (F.mode == HOME && ink_member_current()->role == INK_ROLE_ADULT) ink_jw_raw(&w, ",\"transfer_actions\":[{\"capability\":\"transfer.open\",\"label\":\"从手机或电脑传入\"},{\"capability\":\"transfer.usb\",\"label\":\"连电脑\"}]");
