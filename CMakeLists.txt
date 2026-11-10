@@ -393,6 +393,18 @@ set(INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/system/ui/shell/boot_flow.c ${CMAKE_SOU
   ${CMAKE_SOURCE_DIR}/system/policy/cap.c ${CMAKE_SOURCE_DIR}/system/policy/members.c
   ${CMAKE_SOURCE_DIR}/system/ui/app_registry.c ${CMAKE_SOURCE_DIR}/system/ui/lock_mark.c)
 list(APPEND INK_I18N_SOURCES
+  ${CMAKE_SOURCE_DIR}/system/ui/shell/activity_card.c
+  ${CMAKE_SOURCE_DIR}/system/ui/shell/ai_chat.c
+  ${CMAKE_SOURCE_DIR}/system/ui/shell/ai_pages.c
+  ${CMAKE_SOURCE_DIR}/system/ui/shell/ai_panel.c
+  ${CMAKE_SOURCE_DIR}/system/ui/shell/backup_pages.c
+  ${CMAKE_SOURCE_DIR}/system/ui/shell/bluetooth_page.c
+  ${CMAKE_SOURCE_DIR}/system/ui/shell/confirm_card.c
+  ${CMAKE_SOURCE_DIR}/system/ui/shell/member_pages.c
+  ${CMAKE_SOURCE_DIR}/system/ui/shell/transfer_pages.c
+  ${CMAKE_SOURCE_DIR}/system/ui/shell/update_pages.c
+  ${CMAKE_SOURCE_DIR}/system/ui/shell/wallpaper.c
+  ${CMAKE_SOURCE_DIR}/system/ui/search.c
   ${CMAKE_SOURCE_DIR}/system/ui/shell/airplane_card.c
   ${CMAKE_SOURCE_DIR}/system/ui/shell/interrupt_card.c
   ${CMAKE_SOURCE_DIR}/system/ui/shell/kid_pages.c
@@ -711,6 +723,11 @@ ink_sim_executable(sim-i18n-shell tests/i18n_shell.c)
 target_link_libraries(sim-i18n-shell PRIVATE ink_apps ink_system)
 add_test(NAME i18n-shell COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/i18n_shell.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(i18n-shell PROPERTIES TIMEOUT 240)
+ink_sim_executable(sim-i18n-shell-remaining tests/i18n_shell_remaining.c)
+target_link_libraries(sim-i18n-shell-remaining PRIVATE ink_apps ink_system)
+add_test(NAME i18n-shell-remaining COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/i18n_shell.py
+  --build ${CMAKE_BINARY_DIR} --binary $<TARGET_FILE:sim-i18n-shell-remaining> --out ${CMAKE_BINARY_DIR}/test-out/i18n-shell-remaining)
+set_tests_properties(i18n-shell-remaining PROPERTIES TIMEOUT 240)
 add_test(NAME i18n-tables COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/i18n_tables.py)
 add_test(NAME boot-flow-reboot COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/boot_flow_reboot.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(boot-flow-reboot PROPERTIES TIMEOUT 200)

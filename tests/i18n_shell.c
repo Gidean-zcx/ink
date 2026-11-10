@@ -55,7 +55,14 @@ static void walk(lv_obj_t *o) {
 static void inspect(void) {
     labels[0] = issue[0] = 0; nboxes = crowded = 0;
     lv_obj_update_layout(lv_screen_active()); lv_obj_update_layout(lv_layer_sys());
-    walk(strcmp(ink_ui_top_name(), ink_ui_page_name()) ? lv_layer_sys() : lv_screen_active());
+    lv_obj_t *surface = lv_screen_active();
+    if (strcmp(ink_ui_top_name(), ink_ui_page_name())) {
+        for (int32_t i = (int32_t)lv_obj_get_child_count(lv_layer_sys()) - 1; i >= 0; i--) {
+            lv_obj_t *o = lv_obj_get_child(lv_layer_sys(), i);
+            if (lv_obj_is_visible(o)) { surface = o; break; }
+        }
+    }
+    walk(surface);
     CHECK(ink_ui_snapshot(context, sizeof context, NULL) > 0, "snapshot available for %s", picture);
 }
 static void save(void *arg) {
@@ -97,12 +104,14 @@ static bool clicked;
 static void click_label(lv_obj_t *o) {
     if (!lv_obj_is_visible(o)) return;
     if (lv_obj_check_type(o, &lv_label_class) && !strcmp(lv_label_get_text(o), click_text)) {
-        lv_obj_send_event(lv_obj_get_parent(o), LV_EVENT_SHORT_CLICKED, NULL); clicked = true; return;
+        lv_obj_t *button = lv_obj_get_parent(o); clicked = true;
+        lv_obj_send_event(button, LV_EVENT_PRESSED, NULL);
+        lv_obj_send_event(button, LV_EVENT_CLICKED, NULL); return;
     }
     for (uint32_t i = 0; !clicked && i < lv_obj_get_child_count(o); i++) click_label(lv_obj_get_child(o, (int32_t)i));
 }
 static void activate_label(void) { clicked = false; click_label(lv_layer_sys()); CHECK(clicked, "activate visible control: %s", click_text); }
-static void dismiss(const char *text) { click_text = text; on_ui(activate_label); CHECK(WAIT_FOR(settled(), 10000), "dismissed card settles"); }
+static void dismiss(const char *text) { click_text = text; on_ui(activate_label); CHECK(WAIT_FOR(!at("Refused") && !at("AirplaneOn") && settled(), 10000), "dismissed card closes and settles"); }
 static void erased(void) { ink_factory_done_open(); }
 static void members(void) { ink_shell_members_open(true); }
 static int control_snapshot(char *out, size_t cap) {
@@ -178,12 +187,14 @@ static void run(void *arg) {
     CHECK(BY_HAND("system.home", NULL), "close standalone pad");
     on_ui(plane); capture("AirplaneOn-en", "Airplane mode is on"); dismiss("Cancel");
     on_ui(refused); capture("Refused-en", "Action not taken"); dismiss("OK");
-    on_ui(edit); CHECK(WAIT_FOR(at("test.editor"), 5000), "editor page committed"); on_ui(focus_editor); CHECK(WAIT_FOR(at("keyboard"), 5000), "keyboard visible"); capture("keyboard-en", "Space");
+    on_ui(edit); CHECK(WAIT_FOR(at("test.editor"), 5000), "editor page committed"); on_ui(focus_editor); CHECK(WAIT_FOR(at("Keyboard"), 5000), "keyboard visible"); capture("keyboard-en", "Space");
     on_ui(edit_menu); capture("textfield-menu-en", "Paste");
     CHECK(BY_HAND("system.home", NULL), "close editor");
     hw(HW_KEY_DOWN, HAL_KEY_POWER, 0); delay_ms(1700); hw(HW_KEY_UP, HAL_KEY_POWER, 0);
-    CHECK(WAIT_FOR(at("power_menu"), 5000), "power menu"); capture("power_menu-en", "Power off"); key(HAL_KEY_BACK);
+    CHECK(WAIT_FOR(at("power_menu"), 5000), "power menu"); capture("power_menu-en", "Power off"); dismiss("Cancel");
+    CHECK(WAIT_FOR(!at("power_menu") && settled(), 5000), "power menu closed before switching member");
     CHECK(ink_member_switch("kid") == 0, "synthetic child space");
+    CHECK(WAIT_FOR(ink_member_space_open() && ink_power_state() != INK_PWR_LOCKED && settled(), 10000), "child space settles");
     on_ui(child_limit); capture("KidBlocked-en", "Ask a parent"); on_ui(ink_shell_kid_close);
     CHECK(ink_member_switch("owner") == 0, "return to synthetic owner");
     CHECK(WAIT_FOR(settled(), 10000), "owner settles");

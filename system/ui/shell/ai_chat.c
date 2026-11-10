@@ -1,4 +1,5 @@
 /* Conversation entry and typed questions; turns remain owned by the AI service. */
+#include "ink/sys/i18n.h"
 #include <stdio.h>
 #include <string.h>
 #include "ink/osal.h"
@@ -10,17 +11,17 @@
 static lv_obj_t *field;
 static bool tapped;
 static ink_exec_job_t focus_job;
-static ink_ui_field_spec_t input = {.id = "question", .role = "textbox", .label = "问题"};
+static ink_ui_field_spec_t input = {.id = "question", .role = "textbox", .label = TR_NOOP("问题")};
 static ink_ui_action_spec_t actions[] = {
-    {.id = "ask", .label = "问点什么…", .capability = "shell.ai_ask", .enabled = true},
-    {.id = "voice", .label = "用话筒问", .capability = "ai.panel.listen", .enabled = true},
-    {.id = "back", .label = "返回", .capability = "shell.back", .enabled = true},
-    {.id = "send", .label = "发送", .capability = "shell.ai_send", .enabled = true}
+    {.id = "ask", .label = TR_NOOP("问点什么…"), .capability = "shell.ai_ask", .enabled = true},
+    {.id = "voice", .label = TR_NOOP("用话筒问"), .capability = "ai.panel.listen", .enabled = true},
+    {.id = "back", .label = TR_NOOP("返回"), .capability = "shell.back", .enabled = true},
+    {.id = "send", .label = TR_NOOP("发送"), .capability = "shell.ai_send", .enabled = true}
 };
-static const ink_ui_page_spec_t ASK_MODEL = {.id = "AiAsk", .title = "问 AI", .object = {"ai:question", 1},
+static ink_ui_page_spec_t ASK_MODEL = {.id = "AiAsk", .title = TR_NOOP("问 AI"), .object = {"ai:question", 1},
     .fields = &input, .field_count = 1, .actions = actions, .action_count = 4};
-static const ink_ui_field_spec_t empty = {.id = "history", .role = "status", .label = "对话记录", .value = "还没有对话记录"};
-static const ink_ui_page_spec_t HOME_MODEL = {.id = "AiHome", .title = "对话记录", .object = {"ai:home", 1},
+static ink_ui_field_spec_t empty = {.id = "history", .role = "status", .label = TR_NOOP("对话记录"), .value = TR_NOOP("还没有对话记录")};
+static ink_ui_page_spec_t HOME_MODEL = {.id = "AiHome", .title = TR_NOOP("对话记录"), .object = {"ai:home", 1},
     .fields = &empty, .field_count = 1, .actions = actions, .action_count = 3};
 static int home_snapshot(char *out, size_t cap) { return ink_ui_semantics_snapshot(&HOME_MODEL, out, cap); }
 static int ask_snapshot(char *out, size_t cap) {
@@ -33,11 +34,18 @@ static void entered(void *ctx, const char *value) {
     ink_cap_invoke("shell.ai_send", NULL, INK_SRC_TOUCH, 0, &rc);
 }
 static void focus_input(void *ctx) { (void)ctx; if (field) ink_textfield_short_focus(field); }
+static void translate(void) {
+    input.label = TR("问题");
+    actions[0].label = TR("问点什么…"); actions[1].label = TR("用话筒问");
+    actions[2].label = TR("返回"); actions[3].label = TR("发送");
+    ASK_MODEL.title = TR("问 AI"); HOME_MODEL.title = TR("对话记录");
+    empty.label = TR("对话记录"); empty.value = TR("还没有对话记录");
+}
 static void ask_create(lv_obj_t *screen, void *arg) {
-    (void)arg;
+    (void)arg; translate();
     ink_shell_statusbar(screen, true);
     ink_shell_topbar(screen, ASK_MODEL.title);
-    ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .enter = INK_ENTER_SEND, .max = 383, .hint = "问点什么…"};
+    ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .enter = INK_ENTER_SEND, .max = 383, .hint = TR("问点什么…")};
     field = ink_textfield_create(screen, &cfg, entered, NULL, false);
     if (!field) return;
     lv_obj_set_pos(field, ink_ui_px(INK_MARGIN), ink_ui_px(INK_STATUS_BAR + INK_PRIMARY + INK_GAP));
@@ -47,7 +55,7 @@ static void ask_create(lv_obj_t *screen, void *arg) {
 }
 static void ask_destroy(void) { field = NULL; }
 static void home_create(lv_obj_t *screen, void *arg) {
-    (void)arg;
+    (void)arg; translate();
     ink_shell_statusbar(screen, true);
     ink_shell_topbar(screen, HOME_MODEL.title);
     ink_ui_notice(screen, empty.value, INK_STATUS_BAR + INK_PRIMARY + INK_BLOCK);
@@ -60,7 +68,7 @@ static void home_create(lv_obj_t *screen, void *arg) {
 }
 static const ink_activity_t ASK = {.name = "AiAsk", .app = "ai", .create = ask_create, .destroy = ask_destroy, .snapshot = ask_snapshot};
 static const ink_activity_t HOME = {.name = "AiHome", .app = "ai", .create = home_create, .snapshot = home_snapshot};
-static const ink_app_def_t APP = {.id = "ai", .title = "对话记录", .icon = "ai", .entry = &HOME, .system_app = true, .child_ok = true};
+static const ink_app_def_t APP = {.id = "ai", .title = TR_NOOP("对话记录"), .icon = "ai", .entry = &HOME, .system_app = true, .child_ok = true};
 static void action(ink_call_t *c) {
     const char *id = c->cap->id;
     if (!strcmp(id, "shell.ai_home")) { ink_shell_ai_hide(); ink_ui_drop_app("ai"); if (ink_app_open("ai", NULL, NULL)) c->rc.status = INK_RC_FAILED; }
@@ -97,25 +105,25 @@ int ink_ai_chat_init(void) { return ink_cap_register(CAPS, sizeof CAPS / sizeof 
 
 int ink_ai_chat_panel_snapshot(const char *status, const char *question, const char *answer,
                                int page, int pages, bool speaking, char *out, size_t cap) {
-    char count[64]; snprintf(count, sizeof count, "页码=%d/%d", page + 1, pages);
-    const char *board = speaking ? "AiSpeak" : strstr(status, "正在听") ? "AiListenTap" : pages > 1 ? "AiLong" : "AiAsk";
+    char count[64]; snprintf(count, sizeof count, TR("页码=%d/%d"), page + 1, pages);
+    const char *board = speaking ? "AiSpeak" : strstr(status, TR("正在听")) ? "AiListenTap" : pages > 1 ? "AiLong" : "AiAsk";
     ink_ui_field_spec_t fields[] = {
-        {.id = "board", .role = "status", .label = "页面", .value = board},
-        {.id = "status", .role = "status", .label = "状态", .value = status},
-        {.id = "question", .role = "text", .label = "问题", .value = question},
-        {.id = "answer", .role = "text", .label = "回答", .value = answer},
-        {.id = "page", .role = "status", .label = "页码", .value = count}
+        {.id = "board", .role = "status", .label = TR("页面"), .value = board},
+        {.id = "status", .role = "status", .label = TR("状态"), .value = status},
+        {.id = "question", .role = "text", .label = TR("问题"), .value = question},
+        {.id = "answer", .role = "text", .label = TR("回答"), .value = answer},
+        {.id = "page", .role = "status", .label = TR("页码"), .value = count}
     };
     ink_ui_action_spec_t available[] = {
-        {.id = "hide", .label = "收起", .capability = "ai.panel.hide", .enabled = true},
-        {.id = "listen", .label = "继续问", .capability = "ai.panel.listen", .enabled = true},
-        {.id = "next", .label = "下一页", .capability = "ai.panel.next", .enabled = !speaking && page + 1 < pages},
-        {.id = "prev", .label = "上一页", .capability = "ai.panel.prev", .enabled = !speaking && page > 0},
-        {.id = "stop", .label = "停下", .capability = "shell.ai_stop", .enabled = speaking},
-        {.id = "record_stop", .label = "停止录音", .capability = "audio.record_stop", .enabled = strstr(status, "正在录音") != NULL},
-        {.id = "home", .label = "对话记录", .capability = "shell.ai_home", .enabled = !speaking && answer[0]}
+        {.id = "hide", .label = TR("收起"), .capability = "ai.panel.hide", .enabled = true},
+        {.id = "listen", .label = TR("继续问"), .capability = "ai.panel.listen", .enabled = true},
+        {.id = "next", .label = TR("下一页"), .capability = "ai.panel.next", .enabled = !speaking && page + 1 < pages},
+        {.id = "prev", .label = TR("上一页"), .capability = "ai.panel.prev", .enabled = !speaking && page > 0},
+        {.id = "stop", .label = TR("停下"), .capability = "shell.ai_stop", .enabled = speaking},
+        {.id = "record_stop", .label = TR("停止录音"), .capability = "audio.record_stop", .enabled = strstr(status, TR("正在录音")) != NULL},
+        {.id = "home", .label = TR("对话记录"), .capability = "shell.ai_home", .enabled = !speaking && answer[0]}
     };
-    ink_ui_page_spec_t model = {.id = ink_ui_page_name(), .title = "AI 面板", .object = {"ai:panel", 1},
+    ink_ui_page_spec_t model = {.id = ink_ui_page_name(), .title = TR("AI 面板"), .object = {"ai:panel", 1},
         .fields = fields, .field_count = sizeof fields / sizeof *fields, .actions = available, .action_count = sizeof available / sizeof *available};
     return ink_ui_semantics_snapshot(&model, out, cap);
 }

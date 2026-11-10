@@ -20,6 +20,18 @@ execute_process(COMMAND ${PYTHON} ${root}/tools/i18n/i18n_gen.py ${i18n_tables} 
     --sources ${root}/system/ui/shell/boot_flow.c ${root}/system/ui/shell/navigation.c ${root}/system/ui/shell/keyboard.c ${root}/system/ui/shell/settings_pages.c
     ${root}/system/ui/shell/time_settings.c ${root}/system/ui/shell/settings_family.c ${root}/system/services/time/time_service.c
     ${root}/system/apps/clock/clock.c
+  ${root}/system/ui/shell/activity_card.c
+  ${root}/system/ui/shell/ai_chat.c
+  ${root}/system/ui/shell/ai_pages.c
+  ${root}/system/ui/shell/ai_panel.c
+  ${root}/system/ui/shell/backup_pages.c
+  ${root}/system/ui/shell/bluetooth_page.c
+  ${root}/system/ui/shell/confirm_card.c
+  ${root}/system/ui/shell/member_pages.c
+  ${root}/system/ui/shell/transfer_pages.c
+  ${root}/system/ui/shell/update_pages.c
+  ${root}/system/ui/shell/wallpaper.c
+  ${root}/system/ui/search.c
     ${root}/system/ui/shell/airplane_card.c
     ${root}/system/ui/shell/interrupt_card.c
     ${root}/system/ui/shell/kid_pages.c

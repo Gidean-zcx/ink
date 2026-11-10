@@ -1,6 +1,7 @@
 /* Only a person's answer after reading the whole transaction can accept it. */
 /* ui-scale-runtime: dimension C.head_h,C.preview_h,notice_y,pager_y Card geometry: theme sizes and text measured at the current size. */
 /* ui-scale-runtime: dimension C.expired_h,C.expired_body_y Expired card geometry follows measured text at the current size. */
+#include "ink/sys/i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -57,28 +58,28 @@ static const char *page_name(void) {
 
 static const char *answer_label(void) {
     const ink_cap_t *cap = ink_cap_find(C.now.cap);
-    if (C.now.parent) return "输入密码";
-    if (!strcmp(C.now.cap, "call.dial")) return "打电话";
-    if (!strcmp(C.now.cap, "settings.set")) return "确认修改";
-    if (!strcmp(C.now.cap, "sms.send") || !strcmp(C.now.cap, "sms.compose")) return "确认发送";
-    if (!strcmp(C.now.cap, "hub.confirm") && (strstr(C.now.title, "花钱") || strstr(C.now.title, "支付"))) return "确认支付";
-    return cap && cap->effect == INK_FX_LOCAL_DESTRUCTIVE ? "删除" : "确认";
+    if (C.now.parent) return TR("输入密码");
+    if (!strcmp(C.now.cap, "call.dial")) return TR("打电话");
+    if (!strcmp(C.now.cap, "settings.set")) return TR("确认修改");
+    if (!strcmp(C.now.cap, "sms.send") || !strcmp(C.now.cap, "sms.compose")) return TR("确认发送");
+    if (!strcmp(C.now.cap, "hub.confirm") && (strstr(C.now.title, "花钱") || strstr(C.now.title, "支付"))) return TR("确认支付");
+    return cap && cap->effect == INK_FX_LOCAL_DESTRUCTIVE ? TR("删除") : TR("确认");
 }
 
 static const char *title_text(void) {
-    if (!strcmp(C.now.cap, "call.dial")) return "这个电话不是你要打的";
-    if (!strcmp(C.now.cap, "settings.set")) return "修改这项设置？";
+    if (!strcmp(C.now.cap, "call.dial")) return TR("这个电话不是你要打的");
+    if (!strcmp(C.now.cap, "settings.set")) return TR("修改这项设置？");
     return C.now.title;
 }
 
 static const char *notice_text(void) {
-    if (!strncmp(C.now.cap, "member.time_", 12) && !ink_member_any_pin()) return INK_PARENT_PIN_MISSING;
-    if (C.page + 1 != C.pages) return "请翻完说明，再决定是否继续。";
-    if (C.now.parent) return "需要大人的密码确认。";
-    if (!strcmp(C.now.cap, "call.dial")) return "不确认就不会打。";
-    if (!strcmp(C.now.cap, "settings.set")) return "1 分钟内有效。不确认就不会改。";
-    if (!strcmp(C.now.cap, "hub.confirm")) return "不确认就不会继续。";
-    return "只有你确认后才会继续。";
+    if (!strncmp(C.now.cap, "member.time_", 12) && !ink_member_any_pin()) return TR(INK_PARENT_PIN_MISSING);
+    if (C.page + 1 != C.pages) return TR("请翻完说明，再决定是否继续。");
+    if (C.now.parent) return TR("需要大人的密码确认。");
+    if (!strcmp(C.now.cap, "call.dial")) return TR("不确认就不会打。");
+    if (!strcmp(C.now.cap, "settings.set")) return TR("1 分钟内有效。不确认就不会改。");
+    if (!strcmp(C.now.cap, "hub.confirm")) return TR("不确认就不会继续。");
+    return TR("只有你确认后才会继续。");
 }
 
 static void pin_told(void *ctx, int result, uint32_t wait_s) { /* exec.bg */
@@ -93,8 +94,8 @@ static void told_job(void *arg) { /* UI task */
     int r = __atomic_load_n(&C.pin_result, __ATOMIC_ACQUIRE);
     if (r == INK_PIN_OK || !C.pad) return; /* the card goes by itself */
     char s[48];
-    if (C.pin_wait) snprintf(s, sizeof s, "请等 %u 秒再试", (unsigned)C.pin_wait);
-    else snprintf(s, sizeof s, "密码不对");
+    if (C.pin_wait) snprintf(s, sizeof s, TR("请等 %u 秒再试"), (unsigned)C.pin_wait);
+    else snprintf(s, sizeof s, TR("密码不对"));
     shell_pinpad_clear();
     shell_pinpad_say(s);
     C.pin_present = false; changed();
@@ -103,7 +104,7 @@ static void told_job(void *arg) { /* UI task */
 static void pin_entered(const char *pin) {
     ink_confirm_accept_with_pin(C.now.token, pin, pin_told, NULL);
     shell_pinpad_clear();
-    shell_pinpad_say("正在核对…");
+    shell_pinpad_say(TR("正在核对…"));
     C.pin_present = false; changed();
 }
 
@@ -129,7 +130,7 @@ static void parent_page(void) {
     lv_obj_move_background(panel);
     ink_ui_label(panel, C.now.title, INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, INK_MARGIN, INK_MARGIN, w);
     ink_ui_label(panel, C.now.detail, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, INK_MARGIN + title_h + INK_GAP, w);
-    lv_obj_t *cancel = ink_ui_pill(C.pad, "取消", INK_MARGIN, y0 - ink_ui_line_height(INK_FONT_LIST) - 2 * INK_GAP - INK_CONTROL,
+    lv_obj_t *cancel = ink_ui_pill(C.pad, TR("取消"), INK_MARGIN, y0 - ink_ui_line_height(INK_FONT_LIST) - 2 * INK_GAP - INK_CONTROL,
                 w, INK_CONTROL, false, on_answer, NULL);
     lv_obj_add_event_cb(cancel, pressed, LV_EVENT_PRESSED, NULL);
     ink_ui_hint_obj(C.card.root, INK_REFRESH_FLASH_UI);
@@ -157,24 +158,24 @@ static ink_ui_page_spec_t model(void) {
     static ink_ui_action_spec_t actions[ACTION_COUNT] INK_PSRAM_BSS;
     int64_t pending = 0;
     ink_state_get_int(ink_state_find("confirm.pending"), &pending);
-    snprintf(identity, sizeof identity, "页面=%s；家人=%s；确认编号=%u", page_name(), C.owner.member, (unsigned)C.now.token);
+    snprintf(identity, sizeof identity, TR("页面=%s；家人=%s；确认编号=%u"), page_name(), C.owner.member, (unsigned)C.now.token);
     bool ready = !C.expired && !C.pad && C.read && C.page + 1 == C.pages;
-    snprintf(reading, sizeof reading, "阅读=%d/%d；排队=%lld；可确认=%d", C.page + 1, C.pages, (long long)pending, ready);
-    snprintf(choices, sizeof choices, "%s、取消", answer_label());
-    fields[0] = (ink_ui_field_spec_t){.id = "transaction", .role = "status", .label = "确认编号", .value = identity};
-    fields[1] = (ink_ui_field_spec_t){.id = "title", .role = "text", .label = "标题", .value = C.expired ? "这件事没有做" : title_text()};
-    fields[2] = (ink_ui_field_spec_t){.id = "detail", .role = "text", .label = "说明", .value = C.expired ? lv_label_get_text(C.card.body) : C.now.detail};
-    fields[3] = (ink_ui_field_spec_t){.id = "notice", .role = "status", .label = "提示", .value = C.pad ? "需要大人在设备上输入密码；密码内容不可见" : C.expired ? "已经过期，请重新发起" : notice_text()};
-    fields[4] = (ink_ui_field_spec_t){.id = "reading", .role = "status", .label = "阅读", .value = reading};
-    fields[5] = (ink_ui_field_spec_t){.id = "buttons", .role = "button", .label = "本人操作", .value = C.expired ? "关闭" : C.pad ? "取消" : choices};
-    fields[6] = (ink_ui_field_spec_t){.id = "pin", .role = "textbox", .label = "密码", .value = C.pin_present ? "1" : "", .secret = true};
+    snprintf(reading, sizeof reading, TR("阅读=%d/%d；排队=%lld；可确认=%d"), C.page + 1, C.pages, (long long)pending, ready);
+    snprintf(choices, sizeof choices, TR("%s、取消"), answer_label());
+    fields[0] = (ink_ui_field_spec_t){.id = "transaction", .role = "status", .label = TR("确认编号"), .value = identity};
+    fields[1] = (ink_ui_field_spec_t){.id = "title", .role = "text", .label = TR("标题"), .value = C.expired ? TR("这件事没有做") : title_text()};
+    fields[2] = (ink_ui_field_spec_t){.id = "detail", .role = "text", .label = TR("说明"), .value = C.expired ? lv_label_get_text(C.card.body) : C.now.detail};
+    fields[3] = (ink_ui_field_spec_t){.id = "notice", .role = "status", .label = TR("提示"), .value = C.pad ? TR("需要大人在设备上输入密码；密码内容不可见") : C.expired ? TR("已经过期，请重新发起") : notice_text()};
+    fields[4] = (ink_ui_field_spec_t){.id = "reading", .role = "status", .label = TR("阅读"), .value = reading};
+    fields[5] = (ink_ui_field_spec_t){.id = "buttons", .role = "button", .label = TR("本人操作"), .value = C.expired ? TR("关闭") : C.pad ? TR("取消") : choices};
+    fields[6] = (ink_ui_field_spec_t){.id = "pin", .role = "textbox", .label = TR("密码"), .value = C.pin_present ? "1" : "", .secret = true};
     for (int i = 0; i < DELTA_COUNT; i++) snprintf(args[i], sizeof args[i], "{\"token\":%u,\"delta\":%d}", (unsigned)C.now.token, i - 1);
     actions[0] = (ink_ui_action_spec_t){.id = "accept", .label = answer_label(), .capability = "confirm.accept", .args_json = args[1], .enabled = ready && !C.now.parent};
-    actions[1] = (ink_ui_action_spec_t){.id = "reject", .label = "取消", .capability = "confirm.reject", .args_json = args[1], .enabled = !C.expired};
-    actions[2] = (ink_ui_action_spec_t){.id = "withdraw", .label = "撤回", .capability = "confirm.withdraw", .args_json = args[1], .enabled = !C.expired};
-    actions[3] = (ink_ui_action_spec_t){.id = "prev", .label = "上一页", .capability = "confirm.page", .args_json = args[0], .enabled = !C.expired && !C.pad && C.read && C.page > 0};
-    actions[4] = (ink_ui_action_spec_t){.id = "next", .label = "下一页", .capability = "confirm.page", .args_json = args[2], .enabled = !C.expired && !C.pad && C.read && C.page + 1 < C.pages};
-    actions[5] = (ink_ui_action_spec_t){.id = "close", .label = "关闭", .capability = "confirm.page", .args_json = args[1], .enabled = C.expired};
+    actions[1] = (ink_ui_action_spec_t){.id = "reject", .label = TR("取消"), .capability = "confirm.reject", .args_json = args[1], .enabled = !C.expired};
+    actions[2] = (ink_ui_action_spec_t){.id = "withdraw", .label = TR("撤回"), .capability = "confirm.withdraw", .args_json = args[1], .enabled = !C.expired};
+    actions[3] = (ink_ui_action_spec_t){.id = "prev", .label = TR("上一页"), .capability = "confirm.page", .args_json = args[0], .enabled = !C.expired && !C.pad && C.read && C.page > 0};
+    actions[4] = (ink_ui_action_spec_t){.id = "next", .label = TR("下一页"), .capability = "confirm.page", .args_json = args[2], .enabled = !C.expired && !C.pad && C.read && C.page + 1 < C.pages};
+    actions[5] = (ink_ui_action_spec_t){.id = "close", .label = TR("关闭"), .capability = "confirm.page", .args_json = args[1], .enabled = C.expired};
     return (ink_ui_page_spec_t){C.expired ? "ConfirmExpired" : "confirm", page_name(), {"confirm", C.revision}, fields, C.pad ? FIELD_COUNT : FIELD_COUNT - 1, actions, ACTION_COUNT};
 }
 static int semantic_snapshot(char *buf, size_t cap) { ink_ui_page_spec_t page = model(); return ink_ui_semantics_snapshot(&page, buf, cap); }
@@ -301,7 +302,7 @@ static void draw_page(void) {
     lv_obj_set_y(C.notice, ink_ui_px(notice_y()));
     char text[sizeof C.now.detail];
     if (C.pages) snprintf(text, sizeof text, "%.*s", C.starts[C.page + 1] - C.starts[C.page], C.now.detail + C.starts[C.page]);
-    else snprintf(text, sizeof text, "说明无法完整显示，请取消。");
+    else snprintf(text, sizeof text, TR("说明无法完整显示，请取消。"));
     C.drawn = C.read = false;
     lv_label_set_text(C.card.body, text);
     lv_obj_add_state(C.accept, LV_STATE_DISABLED);
@@ -358,7 +359,7 @@ static void show(const ink_confirm_view_t *top) { /* UI task */
     shell_card_button(&C.card, answer_label(), on_answer, (void *)1);
     C.accept = lv_obj_get_child(C.card.row, 0);
     lv_obj_add_event_cb(C.accept, read_pressed, LV_EVENT_PRESSED, NULL);
-    shell_card_button(&C.card, "取消", on_answer, NULL);
+    shell_card_button(&C.card, TR("取消"), on_answer, NULL);
     lv_obj_add_event_cb(lv_obj_get_child(C.card.row, 1), pressed, LV_EVENT_PRESSED, NULL);
     lv_obj_set_flex_flow(C.card.row, LV_FLEX_FLOW_ROW_REVERSE);
     paginate();
@@ -386,8 +387,8 @@ static void result(void *ctx, const char *id, const ink_args_t *args) {
     shell_card_open(&C.card);
     ink_ui_overlay_add(&EXPIRED, C.card.root);
     int w = INK_CANVAS_W - 2 * INK_MARGIN;
-    const char *text = "已经过期，没有执行。请重新发起。";
-    int title_h = ink_ui_text_height("这件事没有做", INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, w);
+    const char *text = TR("已经过期，没有执行。请重新发起。");
+    int title_h = ink_ui_text_height(TR("这件事没有做"), INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, w);
     int body_h = ink_ui_text_height(text, INK_FONT_NOTE, INK_WEIGHT_REGULAR, w);
     C.expired_body_y = INK_MARGIN + title_h + INK_GAP_L;
     C.expired_h = C.expired_body_y + body_h + INK_GAP_L + INK_PRIMARY + INK_MARGIN;
@@ -396,8 +397,8 @@ static void result(void *ctx, const char *id, const ink_args_t *args) {
     lv_obj_set_y(C.card.body, ink_ui_px(C.expired_body_y)); lv_obj_set_height(C.card.body, ink_ui_px(body_h));
     lv_obj_set_style_text_font(C.card.body, ink_ui_font_px(INK_FONT_NOTE, INK_WEIGHT_REGULAR), 0);
     lv_obj_set_y(C.card.row, ink_ui_px(C.expired_h - INK_PRIMARY - INK_MARGIN));
-    shell_card_text(&C.card, "这件事没有做", text);
-    shell_card_button(&C.card, "关闭", expired_close, NULL);
+    shell_card_text(&C.card, TR("这件事没有做"), text);
+    shell_card_button(&C.card, TR("关闭"), expired_close, NULL);
     lv_obj_add_event_cb(lv_obj_get_child(C.card.row, 0), pressed, LV_EVENT_PRESSED, NULL);
     changed();
 }

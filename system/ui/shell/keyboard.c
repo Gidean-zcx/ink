@@ -235,7 +235,7 @@ static void build(int kind) {
         lv_obj_t *b = ink_ui_pill(K.edit, i < 2 ? EDIT[i] : TR(EDIT[i]), 0, 0, 0, INK_CONTROL, false, i < 5 ? edit_action : NULL, (void *)(intptr_t)i);
         if (i >= 5) ink_shell_bind(b, i == 5 ? "text.undo" : "text.redo", NULL);
         ink_ui_pill_text(b, INK_FONT_NOTE, INK_WEIGHT_MEDIUM);
-        lv_obj_set_style_min_width(b, ink_ui_px(ink_ui_text_width(TR(EDIT[i]), INK_FONT_NOTE, INK_WEIGHT_MEDIUM) + 2 * (INK_GAP_XS + INK_STROKE)), 0);
+        lv_obj_set_style_min_width(b, ink_ui_px(ink_ui_text_width(i < 2 ? EDIT[i] : TR(EDIT[i]), INK_FONT_NOTE, INK_WEIGHT_MEDIUM) + 2 * (INK_GAP_XS + INK_STROKE)), 0);
         lv_obj_set_flex_grow(b, i < 2 ? 0 : 1);
     }
     lv_obj_add_flag(K.edit, LV_OBJ_FLAG_HIDDEN);

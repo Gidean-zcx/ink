@@ -1,6 +1,7 @@
 /* Update surfaces read the service; controls use the capability bus. */
 /* ui-scale-runtime: dimension x,y,w,h,P.progress Theme-derived layout and percentage progress width. */
 /* ui-scale-runtime: font font Only subtitle and note theme tokens reach text(). */
+#include "ink/sys/i18n.h"
 #include <stdio.h>
 #include <string.h>
 #include "ink/osal.h"
@@ -49,11 +50,11 @@ static void read_state(void) {
 static const char *blocked(void) {
     uint32_t bytes = 0; int task;
     ink_update_page_info(P.version, sizeof P.version, &bytes, &task);
-    if (integer("battery.level") < 30 && !integer("battery.charging")) return "电量不足，要充到 30% 后再安装。";
+    if (integer("battery.level") < 30 && !integer("battery.charging")) return TR("电量不足，要充到 30% 后再安装。");
     char mode[16] = ""; ink_state_get_str(ink_state_find("storage.mode"), mode, sizeof mode);
-    if (!strcmp(mode, "usb")) return "存储卡正借给电脑，退出 U 盘模式后再试。";
-    if (!integer("storage.card")) return "请放入存储卡后再试。";
-    if (!is_state("ready") && bytes && integer("storage.free") < bytes) return "存储卡空间不够，腾出空间后再试。";
+    if (!strcmp(mode, "usb")) return TR("存储卡正借给电脑，退出 U 盘模式后再试。");
+    if (!integer("storage.card")) return TR("请放入存储卡后再试。");
+    if (!is_state("ready") && bytes && integer("storage.free") < bytes) return TR("存储卡空间不够，腾出空间后再试。");
     return NULL;
 }
 static void text(const char *value, int font, int y, bool bold) {
@@ -64,7 +65,7 @@ static void text(const char *value, int font, int y, bool bold) {
 static void reply(void *ctx, const ink_receipt_t *rc) {
     if ((uint32_t)(uintptr_t)ctx != ink_member_epoch() || !P.card.root) return;
     if (rc->status == INK_RC_FAILED || rc->status == INK_RC_REJECTED || rc->status == INK_RC_INVALID) {
-        snprintf(P.error, sizeof P.error, "没能完成这次更新，可以再试一次。"); render();
+        snprintf(P.error, sizeof P.error, TR("没能完成这次更新，可以再试一次。")); render();
     } else if (rc->status == INK_RC_DONE) render();
 }
 static void clicked(lv_event_t *e) {
@@ -95,21 +96,21 @@ static void render(void) {
     if (page < INSTALL) {
         lv_obj_t *back = ink_ui_circle(P.card.panel, "back", INK_MARGIN, INK_STATUS_BAR + INK_GAP_S, INK_CIRCLE, INK_ICON_LIST, INK_SURFACE_STATIC, NULL, NULL);
         ink_shell_bind(back, "shell.update_close", NULL);
-        ink_ui_label(P.card.panel, "系统更新", INK_FONT_TITLE, INK_WEIGHT_BOLD, INK_MARGIN + INK_CIRCLE + INK_GAP,
+        ink_ui_label(P.card.panel, TR("系统更新"), INK_FONT_TITLE, INK_WEIGHT_BOLD, INK_MARGIN + INK_CIRCLE + INK_GAP,
             INK_STATUS_BAR + INK_GAP_S, INK_CANVAS_W - 2 * INK_MARGIN - INK_CIRCLE - INK_GAP);
     }
-    P.model = (ink_ui_page_spec_t){NAMES[page], "系统更新", {"system:update", ink_ui_content_version()}, P.fields, 4, P.actions, 0};
+    P.model = (ink_ui_page_spec_t){NAMES[page], TR("系统更新"), {"system:update", ink_ui_content_version()}, P.fields, 4, P.actions, 0};
     snprintf(P.percent, sizeof P.percent, "%d%%", P.progress);
-    snprintf(P.title, sizeof P.title, "%s", page == BLOCKED ? "现在装不了" : page == FAIL ? "这次更新没完成" : page == INSTALL ? "正在安装，不要关机" : "系统更新");
-    snprintf(P.body, sizeof P.body, "%s", page == BLOCKED ? why : page == FAIL ? (download ? "可以重新下载。原来的系统仍然保留。" : "可以重新检查。原来的系统仍然保留。") :
-        page == READY ? "安装要几分钟，这期间不能用。" : page == INSTALL ? "如果新系统不能正常启动，会自动退回原来的系统。" :
-        page == DONE ? "更新已完成。更新说明暂不能查看。" : page == RECOVERY ? "你的东西都在。之后可以再试一次。" :
-        is_state("downloading") ? "下载完再问你要不要安装。" : is_state("available") ? "发现新版本，可以下载。" : "可以向家庭服务器检查新版本。");
-    if (page == READY) snprintf(P.title, sizeof P.title, "%s 下载好了", P.version);
-    if (page == DONE) snprintf(P.title, sizeof P.title, "已经是 %s 了", P.current);
-    if (page == RECOVERY) snprintf(P.title, sizeof P.title, "新版本没装好，退回了 %s", P.current);
-    if (page == UPDATE) snprintf(P.title, sizeof P.title, is_state("downloading") ? "正在下载 %s，可以继续读" : "系统版本 %s", is_state("downloading") ? P.version : P.current);
-    if (page == UPDATE && is_state("available")) snprintf(P.title, sizeof P.title, "发现新版本 %s", P.version);
+    snprintf(P.title, sizeof P.title, "%s", page == BLOCKED ? TR("现在装不了") : page == FAIL ? TR("这次更新没完成") : page == INSTALL ? TR("正在安装，不要关机") : TR("系统更新"));
+    snprintf(P.body, sizeof P.body, "%s", page == BLOCKED ? why : page == FAIL ? (download ? TR("可以重新下载。原来的系统仍然保留。") : TR("可以重新检查。原来的系统仍然保留。")) :
+        page == READY ? TR("安装要几分钟，这期间不能用。") : page == INSTALL ? TR("如果新系统不能正常启动，会自动退回原来的系统。") :
+        page == DONE ? TR("更新已完成。更新说明暂不能查看。") : page == RECOVERY ? TR("你的东西都在。之后可以再试一次。") :
+        is_state("downloading") ? TR("下载完再问你要不要安装。") : is_state("available") ? TR("发现新版本，可以下载。") : TR("可以向家庭服务器检查新版本。"));
+    if (page == READY) snprintf(P.title, sizeof P.title, TR("%s 下载好了"), P.version);
+    if (page == DONE) snprintf(P.title, sizeof P.title, TR("已经是 %s 了"), P.current);
+    if (page == RECOVERY) snprintf(P.title, sizeof P.title, TR("新版本没装好，退回了 %s"), P.current);
+    if (page == UPDATE) snprintf(P.title, sizeof P.title, is_state("downloading") ? TR("正在下载 %s，可以继续读") : TR("系统版本 %s"), is_state("downloading") ? P.version : P.current);
+    if (page == UPDATE && is_state("available")) snprintf(P.title, sizeof P.title, TR("发现新版本 %s"), P.version);
     int w = INK_CANVAS_W - 2 * INK_MARGIN, half = (w - INK_GAP) / 2;
     if (page == UPDATE) {
         int y = INK_STATUS_BAR + INK_PRIMARY + INK_MARGIN;
@@ -122,10 +123,10 @@ static void render(void) {
         }
         ink_ui_label(P.card.panel, P.body, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y + INK_GAP_XL, w);
         ink_ui_card(P.card.panel, INK_MARGIN, y + INK_BLOCK_L, w, INK_ROW_DOUBLE, INK_SURFACE_STATIC);
-        ink_ui_label(P.card.panel, "更新说明暂不能查看", INK_FONT_LIST, INK_WEIGHT_REGULAR, 2 * INK_MARGIN, y + INK_BLOCK_L + INK_MARGIN, w - 2 * INK_MARGIN);
+        ink_ui_label(P.card.panel, TR("更新说明暂不能查看"), INK_FONT_LIST, INK_WEIGHT_REGULAR, 2 * INK_MARGIN, y + INK_BLOCK_L + INK_MARGIN, w - 2 * INK_MARGIN);
     } else if (page == INSTALL) {
         text(P.title, INK_FONT_SUBTITLE, INK_STATUS_BAR + INK_BLOCK_L, true);
-        const char *steps[] = {"检查更新包", "安装", "重启", "检查是否正常"};
+        const char *steps[] = {TR("检查更新包"), TR("安装"), TR("重启"), TR("检查是否正常")};
         int stage = is_state("verifying") ? 0 : is_state("installing") ? 1 : 2;
         for (int i = 0; i < 4; i++) {
             int y = INK_STATUS_BAR + 2 * INK_BLOCK_L + i * INK_BLOCK_L;
@@ -147,21 +148,21 @@ static void render(void) {
         text(P.title, INK_FONT_SUBTITLE, y, true);
         text(P.body, INK_FONT_NOTE, y + ink_ui_text_height(P.title, INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, w) + INK_GAP_M, false);
     }
-    P.fields[0] = (ink_ui_field_spec_t){.id = "status", .role = "text", .label = "状态", .value = P.title};
-    P.fields[1] = (ink_ui_field_spec_t){.id = "detail", .role = "text", .label = "说明", .value = P.body};
-    P.fields[2] = (ink_ui_field_spec_t){.id = "version", .role = "text", .label = "当前版本", .value = P.current};
-    P.fields[3] = (ink_ui_field_spec_t){.id = "progress", .role = "text", .label = "进度", .value = P.percent};
+    P.fields[0] = (ink_ui_field_spec_t){.id = "status", .role = "text", .label = TR("状态"), .value = P.title};
+    P.fields[1] = (ink_ui_field_spec_t){.id = "detail", .role = "text", .label = TR("说明"), .value = P.body};
+    P.fields[2] = (ink_ui_field_spec_t){.id = "version", .role = "text", .label = TR("当前版本"), .value = P.current};
+    P.fields[3] = (ink_ui_field_spec_t){.id = "progress", .role = "text", .label = TR("进度"), .value = P.percent};
     if (page == INSTALL) return;
     bool pair = page == READY || page == FAIL || page == UPDATE;
     bool downloading = page == UPDATE && is_state("downloading");
-    button(page == READY ? "以后再装" : page == FAIL ? "先不管" : pair ? "返回" : "知道了", "shell.update_close", "{}",
+    button(page == READY ? TR("以后再装") : page == FAIL ? TR("先不管") : pair ? TR("返回") : TR("知道了"), "shell.update_close", "{}",
         downloading ? INK_MARGIN + half + INK_GAP : INK_MARGIN, pair ? half : w, !pair || downloading);
-    if (page == READY) button("现在安装", "system.upgrade", "{}", INK_MARGIN + half + INK_GAP, half, true);
-    else if (page == FAIL || (page == UPDATE && !downloading)) button(page == FAIL ? (download ? "重新下载" : "重新检查") : download ? "下载" : "检查更新",
+    if (page == READY) button(TR("现在安装"), "system.upgrade", "{}", INK_MARGIN + half + INK_GAP, half, true);
+    else if (page == FAIL || (page == UPDATE && !downloading)) button(page == FAIL ? (download ? TR("重新下载") : TR("重新检查")) : download ? TR("下载") : TR("检查更新"),
         download ? "update.download" : "update.check", "{}", INK_MARGIN + half + INK_GAP, half, true);
     else if (downloading) {
         snprintf(P.cancel, sizeof P.cancel, "{\"id\":%d}", P.task);
-        button("暂停", "job.cancel", P.cancel, INK_MARGIN, half, false);
+        button(TR("暂停"), "job.cancel", P.cancel, INK_MARGIN, half, false);
     }
 }
 static void navigate(ink_call_t *c) {
@@ -187,7 +188,7 @@ static void event(void *ctx, const char *id, const ink_args_t *a) {
         char cap[48] = "", status[24] = "";
         ink_args_get_str(a, "cap", cap, sizeof cap); ink_args_get_str(a, "status", status, sizeof status);
         if (!strncmp(cap, "system.upgrade", 14) && !strcmp(status, "failed") && P.card.root) {
-            snprintf(P.error, sizeof P.error, "安装没有完成，可以再试一次。"); render();
+            snprintf(P.error, sizeof P.error, TR("安装没有完成，可以再试一次。")); render();
         }
     }
 }

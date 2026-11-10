@@ -97,7 +97,7 @@ static void on_button(lv_event_t *e) {
 static void power_tile(const char *label, const char *icon, int col, const char *action, bool primary) {
     int cell = (INK_CANVAS_W - 2 * INK_MARGIN) / 3;
     lv_obj_t *b = ink_ui_pill(M.card.panel, "", INK_MARGIN + col * cell, INK_MARGIN, cell,
-                              INK_CIRCLE_APP + INK_GAP_M + ink_ui_line_height(INK_FONT_LIST), false, on_button, (void *)action);
+                              INK_CIRCLE_APP + INK_GAP_M + ink_ui_text_height(label, INK_FONT_LIST, INK_WEIGHT_MEDIUM, cell - 2 * INK_GAP_XS), false, on_button, (void *)action);
     lv_obj_set_style_border_width(b, 0, 0);
     lv_obj_add_event_cb(b, pressed, LV_EVENT_PRESSED, NULL);
     ink_ui_circle(b, icon, (cell - INK_CIRCLE_APP) / 2 - INK_GAP_XS, 0, INK_CIRCLE_APP, INK_ICON_APP,
@@ -111,13 +111,14 @@ static void open_job(void *arg) { /* UI task */
     if (M.card.root || ink_interrupt_active()) return;
     shell_card_open(&M.card);
     ink_ui_overlay_add(&OVERLAY, M.card.root);
-    int h = 2 * INK_MARGIN + INK_CIRCLE_APP + INK_GAP_M + ink_ui_line_height(INK_FONT_LIST) + INK_MARGIN + 4 * INK_PRIMARY;
+    int cell = (INK_CANVAS_W - 2 * INK_MARGIN) / 3;
+    int text_h = LV_MAX(ink_ui_line_height(INK_FONT_LIST), ink_ui_text_height(TR("锁屏"), INK_FONT_LIST, INK_WEIGHT_MEDIUM, cell));
+    int h = 2 * INK_MARGIN + INK_CIRCLE_APP + INK_GAP_M + text_h + INK_MARGIN + 4 * INK_PRIMARY;
     lv_obj_clean(M.card.panel);
     lv_obj_set_y(M.card.panel, ink_ui_px(INK_CANVAS_H - h));
     lv_obj_set_height(M.card.panel, ink_ui_px(h + INK_RADIUS_PANEL));
     power_tile(TR("关机"), "power", 0, "system.shutdown", true);
     power_tile(TR("重启"), "update", 1, "system.reboot", false);
-    int cell = (INK_CANVAS_W - 2 * INK_MARGIN) / 3;
     lv_obj_t *lock = ink_ui_circle(M.card.panel, "lock", INK_MARGIN + 2 * cell + (cell - INK_CIRCLE_APP) / 2, INK_MARGIN,
                                    INK_CIRCLE_APP, INK_ICON_APP, INK_SURFACE_WHITE, on_button, "shell.lock");
     lv_obj_add_event_cb(lock, pressed, LV_EVENT_PRESSED, NULL);

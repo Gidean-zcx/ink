@@ -1,5 +1,6 @@
 /* F6: one presentation of media, calls and real member jobs. */
 /* ui-scale-runtime: dimension y,h,w,text_y Theme-sized activity and list rows. */
+#include "ink/sys/i18n.h"
 #include <stdio.h>
 #include <string.h>
 #include "activity_card.h"
@@ -46,7 +47,7 @@ static void jobs_reply(void *ctx, const ink_receipt_t *rc) {
         if (!A.jobs_ok) break;
         bool running = ink_json_eq(j, ink_json_find(j, 0, "state"), "running");
         if (!running && !ended) {
-            A.rows[A.count++] = (job_row_t){.title = "做好了", .id = "finished", .heading = true};
+            A.rows[A.count++] = (job_row_t){.title = TR_NOOP("做好了"), .id = "finished", .heading = true};
             ended = true;
         }
         job_row_t *r = &A.rows[A.count++];
@@ -57,15 +58,15 @@ static void jobs_reply(void *ctx, const ink_receipt_t *rc) {
         snprintf(r->args, sizeof r->args, "{\"id\":%lld}", (long long)id);
         ink_json_str(j, ink_json_find(j, 0, "title"), r->title, sizeof r->title);
         ink_json_str(j, ink_json_find(j, 0, running ? "stage" : "result"), r->detail, sizeof r->detail);
-        if (ink_json_eq(j, ink_json_find(j, 0, "state"), "cancelled")) snprintf(r->detail, sizeof r->detail, "已取消");
-        else if (ink_json_eq(j, ink_json_find(j, 0, "state"), "failed")) snprintf(r->detail, sizeof r->detail, "没做好");
+        if (ink_json_eq(j, ink_json_find(j, 0, "state"), "cancelled")) snprintf(r->detail, sizeof r->detail, TR("已取消"));
+        else if (ink_json_eq(j, ink_json_find(j, 0, "state"), "failed")) snprintf(r->detail, sizeof r->detail, TR("没做好"));
         r->cancel = running && ink_json_eq(j, ink_json_find(j, 0, "can_cancel"), "true");
         p = end + 1;
         if (*p == ',') p++;
     }
     if (!A.jobs_ok) A.count = 0;
-    else if (!A.count) A.rows[A.count++] = (job_row_t){.title = "还没有正在做的事", .id = "empty", .heading = true};
-    else if (!ended) A.rows[A.count++] = (job_row_t){.title = "做好了", .detail = "还没有做好的事", .id = "finished", .heading = true};
+    else if (!A.count) A.rows[A.count++] = (job_row_t){.title = TR_NOOP("还没有正在做的事"), .id = "empty", .heading = true};
+    else if (!ended) A.rows[A.count++] = (job_row_t){.title = TR_NOOP("做好了"), .detail = TR_NOOP("还没有做好的事"), .id = "finished", .heading = true};
     osal_free(j);
 }
 static void read_activity(void) {
@@ -77,8 +78,8 @@ static void read_activity(void) {
     ink_cap_call("job.list", NULL, &opts);
     A.icon = "phone";
     if (ink_phone_activity(A.title, sizeof A.title)) {
-        snprintf(A.detail, sizeof A.detail, "通话中");
-        A.action = "回到通话"; A.cap = "phone.return";
+        snprintf(A.detail, sizeof A.detail, TR("通话中"));
+        A.action = TR("回到通话"); A.cap = "phone.return";
         return;
     }
     ink_media_status_t st;
@@ -88,15 +89,15 @@ static void read_activity(void) {
         snprintf(A.title, sizeof A.title, "%s", base ? base + 1 : st.path);
         char *ext = strrchr(A.title, '.');
         if (ext && ext != A.title) *ext = 0;
-        snprintf(A.detail, sizeof A.detail, "%s", st.state == INK_MEDIA_PLAYING ? "正在听" : "已暂停");
-        A.action = st.state == INK_MEDIA_PLAYING ? "暂停" : "接着放";
+        snprintf(A.detail, sizeof A.detail, "%s", st.state == INK_MEDIA_PLAYING ? TR("正在听") : TR("已暂停"));
+        A.action = st.state == INK_MEDIA_PLAYING ? TR("暂停") : TR("接着放");
         A.cap = st.state == INK_MEDIA_PLAYING ? "media.pause" : "media.resume";
         A.icon = "headphones";
     } else if (A.count && A.rows[0].running) {
         job_row_t row = A.rows[0];
         snprintf(A.title, sizeof A.title, "%s", row.title);
         snprintf(A.detail, sizeof A.detail, "%s", row.detail);
-        A.action = "查看"; A.cap = "shell.tasks"; A.icon = "download";
+        A.action = TR("查看"); A.cap = "shell.tasks"; A.icon = "download";
     }
 }
 bool ink_activity_listening(void) {
@@ -126,7 +127,7 @@ int ink_activity_card_draw(lv_obj_t *parent, int y) {
     return draw_activity(parent, y);
 }
 int ink_activity_card_snapshot(char *out, size_t cap) {
-    return A.cap ? snprintf(out, cap, "正在进行=%s；%s；动作=%s（%s）。", A.title, A.detail, A.action, A.cap) : snprintf(out, cap, "没有正在进行的事。");
+    return A.cap ? snprintf(out, cap, TR("正在进行=%s；%s；动作=%s（%s）。"), A.title, A.detail, A.action, A.cap) : snprintf(out, cap, TR("没有正在进行的事。"));
 }
 static void bind_job(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *f, ink_ui_action_spec_t *action, void *ctx) {
     (void)ctx;
@@ -143,33 +144,36 @@ static void bind_job(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *f, ink_u
     }
     int x = r->heading ? 0 : INK_CIRCLE + 2 * INK_GAP;
     int y = (h - ink_ui_line_height(INK_FONT_LIST) - ink_ui_line_height(INK_FONT_NOTE)) / 2;
-    ink_ui_line(slot, r->title, INK_FONT_LIST, INK_WEIGHT_BOLD, x, y, w - x - (r->cancel ? INK_CIRCLE + INK_GAP_L : INK_GAP));
-    ink_ui_line(slot, r->detail, INK_FONT_NOTE, INK_WEIGHT_REGULAR, x, y + ink_ui_line_height(INK_FONT_LIST), w - x - (r->cancel ? INK_CIRCLE + INK_GAP_L : INK_GAP));
+    ink_ui_line(slot, r->heading ? TR(r->title) : r->title, INK_FONT_LIST, INK_WEIGHT_BOLD, x, y, w - x - (r->cancel ? INK_CIRCLE + INK_GAP_L : INK_GAP));
+    ink_ui_line(slot, r->heading && r->detail[0] ? TR(r->detail) : r->detail, INK_FONT_NOTE, INK_WEIGHT_REGULAR, x, y + ink_ui_line_height(INK_FONT_LIST), w - x - (r->cancel ? INK_CIRCLE + INK_GAP_L : INK_GAP));
     if (r->cancel) {
-        lv_obj_t *button = ink_ui_pill(slot, "取消", w - INK_CIRCLE - INK_GAP, (h - INK_CONTROL) / 2, INK_CIRCLE, INK_CONTROL, false, NULL, NULL);
+        lv_obj_t *button = ink_ui_pill(slot, TR("取消"), w - INK_CIRCLE - INK_GAP, (h - INK_CONTROL) / 2, INK_CIRCLE, INK_CONTROL, false, NULL, NULL);
         ink_shell_bind(button, "job.cancel", r->args);
     }
-    *f = (ink_ui_field_spec_t){r->id, r->heading ? "heading" : "listitem", r->title, r->detail, {r->id, 1}, false};
-    *action = (ink_ui_action_spec_t){r->id, "取消", "job.cancel", r->args, {r->id, 1}, r->cancel};
+    *f = (ink_ui_field_spec_t){r->id, r->heading ? "heading" : "listitem", r->heading ? TR(r->title) : r->title, r->heading && r->detail[0] ? TR(r->detail) : r->detail, {r->id, 1}, false};
+    *action = (ink_ui_action_spec_t){r->id, TR("取消"), "job.cancel", r->args, {r->id, 1}, r->cancel};
 }
 static void tasks_nav(ink_call_t *c) {
     if (!strcmp(c->cap->id, "shell.tasks")) { ink_shell_close(); ink_ui_push(&TASKS, NULL); }
     else if (A.list) ink_ui_list_turn(A.list, !strcmp(c->cap->id, "tasks.next") ? 1 : -1);
 }
 static const ink_ui_action_spec_t PAGE_ACTIONS[] = {
-    {.id = "prev", .label = "上一页", .capability = "tasks.prev"},
-    {.id = "next", .label = "下一页", .capability = "tasks.next"}
+    {.id = "prev", .label = TR_NOOP("上一页"), .capability = "tasks.prev"},
+    {.id = "next", .label = TR_NOOP("下一页"), .capability = "tasks.next"}
 };
-static const ink_ui_page_spec_t MODEL = {.id = "Tasks", .title = "正在做的事", .object = {"job.list", 1}, .actions = PAGE_ACTIONS, .action_count = 2};
+static const ink_ui_page_spec_t MODEL = {.id = "Tasks", .title = TR_NOOP("正在做的事"), .object = {"job.list", 1}, .actions = PAGE_ACTIONS, .action_count = 2};
 static void create(lv_obj_t *screen, void *arg) {
     (void)arg;
     if (strcmp(A.member, ink_member_current()->id)) memset(&A.position, 0, sizeof A.position);
     snprintf(A.member, sizeof A.member, "%s", ink_member_current()->id);
     read_activity();
-    ink_shell_statusbar(screen, true); ink_shell_topbar(screen, "正在做的事");
+    ink_shell_statusbar(screen, true); ink_shell_topbar(screen, TR("正在做的事"));
     int y = INK_STATUS_BAR + INK_CONTROL + INK_GAP_L;
     lv_obj_t *body = ink_ui_box(screen, 0, y, INK_CANVAS_W, INK_CANVAS_H - y, 0, INK_SURFACE_WHITE, false);
-    A.list = ink_ui_list_create(body, &MODEL, &A.position, 5, 1, ink_ui_row_double(), A.jobs_ok ? "还没有正在做的事" : "没能读取正在做的事", bind_job, NULL);
+    ink_ui_action_spec_t actions[2] = {PAGE_ACTIONS[0], PAGE_ACTIONS[1]};
+    actions[0].label = TR(actions[0].label); actions[1].label = TR(actions[1].label);
+    ink_ui_page_spec_t model = MODEL; model.title = TR(model.title); model.actions = actions;
+    A.list = ink_ui_list_create(body, &model, &A.position, 5, 1, ink_ui_row_double(), A.jobs_ok ? TR("还没有正在做的事") : TR("没能读取正在做的事"), bind_job, NULL);
     if (A.list) ink_ui_list_refresh(A.list, A.count);
 }
 static void destroy(void) { A.list = NULL; }
@@ -220,7 +224,7 @@ bool ink_activity_home_draw(lv_obj_t *parent, int y) {
     ink_ui_icon(banner, "phone", INK_ICON_SMALL, INK_ICON_SOLID, INK_GAP_L, (INK_CONTROL - INK_ICON_SMALL) / 2, true);
     ink_ui_line(banner, A.title, INK_FONT_NOTE, INK_WEIGHT_BOLD, INK_GAP_L + INK_ICON_LIST,
         (INK_CONTROL - ink_ui_line_height(INK_FONT_NOTE)) / 2, w - INK_ICON_LIST - INK_CIRCLE_LARGE - 2 * INK_GAP_L);
-    lv_obj_t *button = ink_ui_pill(banner, "回到通话", w - INK_CIRCLE_LARGE - INK_GAP, 0, INK_CIRCLE_LARGE, INK_CONTROL, true, NULL, NULL);
+    lv_obj_t *button = ink_ui_pill(banner, TR("回到通话"), w - INK_CIRCLE_LARGE - INK_GAP, 0, INK_CIRCLE_LARGE, INK_CONTROL, true, NULL, NULL);
     ink_ui_pill_text(button, INK_FONT_NOTE, INK_WEIGHT_BOLD);
     ink_shell_bind(button, "phone.return", "{}");
     return false;

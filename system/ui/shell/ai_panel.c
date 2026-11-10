@@ -1,4 +1,5 @@
 /* The AI panel presents the service's words; closing does not cancel its work. */
+#include "ink/sys/i18n.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -79,7 +80,7 @@ static void draw_words(void) {
     if (A.pages) {
         size_t len = A.starts[A.page + 1] - A.starts[A.page];
         memcpy(A.text, A.words + A.starts[A.page], len); A.text[len] = 0;
-    } else snprintf(A.text, sizeof A.text, "回答无法完整显示，请重新打开面板。");
+    } else snprintf(A.text, sizeof A.text, TR("回答无法完整显示，请重新打开面板。"));
     lv_label_set_text(A.answer, A.text);
     char count[32]; snprintf(count, sizeof count, "%d / %d", A.page + 1, A.pages);
     lv_label_set_text(A.counter, count);
@@ -143,7 +144,7 @@ static void audio_changed(void *ctx, int handle, const char *id) {
     char playing[16] = "";
     ink_state_get_str(ink_state_find("audio.now_playing"), playing, sizeof playing);
     A.speaking = A.words[0] && !strstr(A.caption, "声音没能播放") && !strcmp(playing, "voice");
-    lv_label_set_text(A.status, A.speaking ? "正在读给你听" : A.caption);
+    lv_label_set_text(A.status, A.speaking ? TR("正在读给你听") : A.caption[0] ? TR(A.caption) : "");
     if (A.speaking) lv_obj_remove_flag(A.stop, LV_OBJ_FLAG_HIDDEN); else lv_obj_add_flag(A.stop, LV_OBJ_FLAG_HIDDEN);
     if (strstr(A.caption, "正在录音")) lv_obj_remove_flag(A.rec, LV_OBJ_FLAG_HIDDEN); else lv_obj_add_flag(A.rec, LV_OBJ_FLAG_HIDDEN); /* one tap gives the microphone back */
     if (A.speaking || !A.words[0]) { lv_obj_add_flag(A.actions, LV_OBJ_FLAG_HIDDEN); lv_obj_add_flag(A.source, LV_OBJ_FLAG_HIDDEN); }
@@ -153,7 +154,7 @@ static void audio_changed(void *ctx, int handle, const char *id) {
 void ink_shell_ai_status(const char *s, ink_ai_error_t error) {
     if (!A.root) return;
     bool done = strstr(s, "回答完成") || !strcmp(s, "回答中");
-    const char *caption = strstr(s, "声音没能播放") ? (done ? "回答完成 · 声音没能播放" : "声音没能播放") : done ? "" : strstr(s, "正在听") ? (ink_ai_chat_tapped() ? "正在听 · 停一下自动结束" : "正在听 · 松开结束") : strstr(s, "正在想") ? "正在看这一页" : s;
+    const char *caption = strstr(s, "声音没能播放") ? (done ? TR_NOOP("回答完成 · 声音没能播放") : TR_NOOP("声音没能播放")) : done ? "" : strstr(s, "正在听") ? (ink_ai_chat_tapped() ? TR_NOOP("正在听 · 停一下自动结束") : TR_NOOP("正在听 · 松开结束")) : strstr(s, "正在想") ? TR_NOOP("正在看这一页") : strstr(s, "正在录音") ? TR_NOOP("正在录音，先停了再问") : s;
     snprintf(A.caption, sizeof A.caption, "%s", caption);
     if (done) {
         lv_obj_add_flag(A.question, LV_OBJ_FLAG_HIDDEN);
@@ -202,13 +203,14 @@ void ink_shell_ai_open(lv_obj_t **root, lv_obj_t **status, lv_obj_t **question, 
     A.answer = ink_ui_label(A.root, "", INK_FONT_BODY, INK_WEIGHT_REGULAR, INK_MARGIN, INK_GAP_L + INK_CONTROL + INK_GAP_S, INK_CANVAS_W - 2 * INK_MARGIN);
     lv_obj_set_height(A.answer, ink_ui_px(3 * ink_ui_line_height(INK_FONT_BODY)));
     A.question = ink_ui_label(A.root, "", INK_FONT_BODY, INK_WEIGHT_REGULAR, INK_MARGIN, INK_GAP_L + INK_CONTROL + INK_GAP_S, INK_CANVAS_W - 2 * INK_MARGIN);
-    A.source = ink_ui_label(A.root, "出自这一页", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN,
+    A.source = ink_ui_label(A.root, TR("出自这一页"), INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN,
                             PANEL_HEIGHT - INK_GAP_L - INK_CONTROL - INK_GAP_S - ink_ui_line_height(INK_FONT_NOTE), INK_CANVAS_W - 2 * INK_MARGIN);
     A.actions = ink_ui_box(A.root, INK_MARGIN, PANEL_HEIGHT - INK_GAP_L - INK_CONTROL,
                             INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, 0, INK_SURFACE_WHITE, false);
-    lv_obj_t *next = ink_ui_pill(A.actions, "对话记录", 0, 0, 2 * INK_CONTROL, INK_CONTROL, false, NULL, NULL);
+    int chat_w = LV_MAX(2 * INK_CONTROL, ink_ui_text_width(TR("对话记录"), INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * (INK_GAP_XS + INK_STROKE));
+    lv_obj_t *next = ink_ui_pill(A.actions, TR("对话记录"), 0, 0, chat_w, INK_CONTROL, false, NULL, NULL);
     ink_shell_bind(next, "shell.ai_home", NULL);
-    int x = 2 * INK_CONTROL + INK_GAP;
+    int x = chat_w + INK_GAP;
     A.prev = ink_ui_circle(A.actions, "back", x, 0, INK_CONTROL, INK_ICON_SMALL, INK_SURFACE_WHITE, NULL, NULL);
     ink_shell_bind(A.prev, "ai.panel.prev", NULL);
     int last = INK_CANVAS_W - 2 * INK_MARGIN - INK_CONTROL;
@@ -217,11 +219,11 @@ void ink_shell_ai_open(lv_obj_t **root, lv_obj_t **status, lv_obj_t **question, 
     lv_obj_set_style_text_align(A.counter, LV_TEXT_ALIGN_CENTER, 0);
     A.next = ink_ui_circle(A.actions, "next", last, 0, INK_CONTROL, INK_ICON_SMALL, INK_SURFACE_WHITE, NULL, NULL);
     ink_shell_bind(A.next, "ai.panel.next", NULL);
-    A.stop = ink_ui_pill(A.root, "停下", INK_MARGIN, PANEL_HEIGHT - INK_GAP_L - INK_CONTROL,
+    A.stop = ink_ui_pill(A.root, TR("停下"), INK_MARGIN, PANEL_HEIGHT - INK_GAP_L - INK_CONTROL,
         2 * INK_CONTROL, INK_CONTROL, false, NULL, NULL);
     ink_shell_bind(A.stop, "shell.ai_stop", NULL);
     lv_obj_add_flag(A.stop, LV_OBJ_FLAG_HIDDEN);
-    A.rec = ink_ui_pill(A.root, "停止录音", INK_MARGIN, PANEL_HEIGHT - INK_GAP_L - INK_CONTROL, 3 * INK_CONTROL, INK_CONTROL, true, NULL, NULL);
+    A.rec = ink_ui_pill(A.root, TR("停止录音"), INK_MARGIN, PANEL_HEIGHT - INK_GAP_L - INK_CONTROL, 3 * INK_CONTROL, INK_CONTROL, true, NULL, NULL);
     ink_shell_bind(A.rec, "audio.record_stop", NULL);
     lv_obj_add_flag(A.rec, LV_OBJ_FLAG_HIDDEN);
     lv_obj_add_flag(A.source, LV_OBJ_FLAG_HIDDEN);

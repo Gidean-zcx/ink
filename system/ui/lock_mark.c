@@ -100,18 +100,19 @@ static void show(void) {
         lv_obj_set_style_bg_opa(g_mark, LV_OPA_COVER, 0);
         ink_shell_statusbar(g_mark, false);
         char time[24], date[96]; ink_shell_time_strings(time, sizeof time, date, sizeof date);
+        int date_y = LV_MAX(INK_STATUS_BAR + INK_BLOCK, INK_STATUS_BAR + INK_GAP + INK_CONTROL + INK_GAP_M);
         lv_obj_t *date_label = ink_ui_label(g_mark, date, INK_FONT_LIST, INK_WEIGHT_MEDIUM,
-                                           INK_MARGIN, INK_STATUS_BAR + INK_BLOCK, INK_CANVAS_W - 2 * INK_MARGIN);
+                                           INK_MARGIN, date_y, INK_CANVAS_W - 2 * INK_MARGIN);
         lv_obj_set_style_text_align(date_label, LV_TEXT_ALIGN_CENTER, 0);
         g_date = date_label;
         g_clock = ink_ui_label(g_mark, "", INK_FONT_CLOCK, INK_WEIGHT_REGULAR, INK_MARGIN,
-                               INK_STATUS_BAR + INK_BLOCK + ink_ui_line_height(INK_FONT_LIST), INK_CANVAS_W - 2 * INK_MARGIN);
+                               date_y + ink_ui_line_height(INK_FONT_LIST), INK_CANVAS_W - 2 * INK_MARGIN);
         lv_obj_set_style_text_align(g_clock, LV_TEXT_ALIGN_CENTER, 0);
         update_clock();
         int cursor = 0; ink_alarm_t alarm;
         if (ink_alarm_next(&cursor, INK_ALARM, &alarm) == 1) {
             char next[64]; snprintf(next, sizeof next, TR("闹钟 %d:%02d"), alarm.hour, alarm.min);
-            g_alarm = ink_ui_notice(g_mark, next, INK_STATUS_BAR + INK_BLOCK + ink_ui_line_height(INK_FONT_LIST) + ink_ui_line_height(INK_FONT_CLOCK) + INK_GAP_M);
+            g_alarm = ink_ui_notice(g_mark, next, date_y + ink_ui_line_height(INK_FONT_LIST) + ink_ui_line_height(INK_FONT_CLOCK) + INK_GAP_M);
         }
         int h = ink_ui_row_double(), text_y = (h - ink_ui_line_height(INK_FONT_LIST) - ink_ui_line_height(INK_FONT_NOTE)) / 2;
         lv_obj_t *notice = ink_ui_card(g_mark, INK_MARGIN, INK_CANVAS_H - INK_CONTROL - INK_GAP_L - INK_MARGIN - h,
