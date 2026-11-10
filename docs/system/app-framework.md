@@ -47,7 +47,7 @@ static const ink_activity_t INK_JOT_EDIT = {
 
 ## 3. 能力、效果、孩子权限与确认
 
-出处：[cap.h:29，效果等级](../../system/include/ink/sys/cap.h#L29)、[cap.h:87，能力声明](../../system/include/ink/sys/cap.h#L87)、[cap.h:130，同步调用](../../system/include/ink/sys/cap.h#L130)、[cap.h:141，软总线调用](../../system/include/ink/sys/cap.h#L141)。
+出处：[cap.h:29，效果等级](../../system/include/ink/sys/cap.h#L29)、[cap.h:87，能力声明](../../system/include/ink/sys/cap.h#L87)、[cap.h:138，同步调用](../../system/include/ink/sys/cap.h#L138)、[cap.h:170，软总线调用](../../system/include/ink/sys/cap.h#L170)。
 
 每个用户动作注册一个有意义的 `id`，不要把 LVGL 事件当成 AI 接口。`input`／`output` 是现有 JSON Schema 声明；`run` 填结构化回执。`effect` 分读、导航、本地写、本地破坏、对外和系统操作。`activity` 将操作限定到对应页面；`expose` 限定来源；`exec` 选择已有执行器，默认在界面任务执行。
 
@@ -64,9 +64,9 @@ static const ink_cap_t INK_JOT_CAPS[] = {
 
 按钮通过 F1 动作绑定调用能力；AI 按快照的能力 id 和参数调用同一软总线，携带 `page_version`，不能直接调用 `run`。`ink_cap_invoke_json()` 适合界面中的同步能力；异步或跨执行器用 `ink_cap_call()` 的 `done` 收回执，`INK_RC_QUEUED` 不表示动作完成。`result` 只在完成回调期间有效，调用方需拷贝需要保留的数据。
 
-孩子权限有两层：应用 `child_ok` 决定目录和打开可见性，能力 `child_ok` 参与执行策略。**当前实现中**，能力 `child_ok=true` 直接允许孩子；为 false 时，孩子的 `allow` 前缀仍可放行；时限、锁定和系统动作限制另外检查。不能把 false 当成绝对禁用，也不能把应用可见当成每个能力都获准。依据：[members.h:24](../../system/include/ink/sys/members.h#L24)、[members.h:64](../../system/include/ink/sys/members.h#L64)、[members.c:366](../../system/policy/members.c#L366)、[cap.c:100](../../system/policy/cap.c#L100)。头文件对“白名单还能收窄”的注释与实现不同，本文按实现说明，未修改框架。
+孩子权限有两层：应用 `child_ok` 决定目录和打开可见性，能力 `child_ok` 参与执行策略。**当前实现中**，能力 `child_ok=true` 直接允许孩子；为 false 时，孩子的 `allow` 前缀仍可放行；时限、锁定和系统动作限制另外检查。不能把 false 当成绝对禁用，也不能把应用可见当成每个能力都获准。依据：[members.h:24](../../system/include/ink/sys/members.h#L24)、[members.h:64](../../system/include/ink/sys/members.h#L64)、[members.c:366](../../system/policy/members.c#L366)、[cap.c:101](../../system/policy/cap.c#L101)。头文件对“白名单还能收窄”的注释与实现不同，本文按实现说明，未修改框架。
 
-确认由策略层决定，页面不自造“确认通过”的来源。实际规则见 [cap.c:83](../../system/policy/cap.c#L83)：`parent_pin` 且已设置密码时要求家长验证；`ask_by_hand` 要本人确认；普通触摸／按键／系统来源直接执行；AI 的本地破坏操作、没有本人意图标记的对外操作要求确认。`INK_FX_SYSTEM` 这个等级本身不会对所有大人操作自动弹卡，头文件枚举注释不能代替这些判断。示例的本地写无需确认；也没有声明撤销，不把保存称为可撤销。
+确认由策略层决定，页面不自造“确认通过”的来源。实际规则见 [cap.c:84](../../system/policy/cap.c#L84)：`parent_pin` 且已设置密码时要求家长验证；`ask_by_hand` 要本人确认；普通触摸／按键／系统来源直接执行；AI 的本地破坏操作、没有本人意图标记的对外操作要求确认。`INK_FX_SYSTEM` 这个等级本身不会对所有大人操作自动弹卡，头文件枚举注释不能代替这些判断。示例的本地写无需确认；也没有声明撤销，不把保存称为可撤销。
 
 能力可选填 [cap.h 的 `prepare_confirm`](../../system/include/ink/sys/cap.h)：签名为 `ink_rc_t (*prepare_confirm)(ink_args_t *args, ink_receipt_t *rc)`。策略决定需要确认后，在进入等待之前、当前策略关口所在执行器上调用一次；无需确认时不调用。钩子修改待确认参数的副本，绑定当时的业务上下文，也可增加供 `ask` 占位符显示的说明字段；私有字段须覆盖或丢弃调用方传入的同名值。成功返回 `INK_RC_DONE`；失败返回相应终态并填写 `rc->detail`／`rc->say`，请求不会进入等待。说明和确认摘要使用处理后的参数，确认后交给 `run` 的也是这些参数；执行时仍由能力核对绑定是否有效，钩子不改变确认、成员或家长密码规则。
 
@@ -193,7 +193,7 @@ static int ink_jot_card(int index, ink_card_t *out) {
 
 界面订阅选择 `INK_EXEC_UI`，后台服务选择合适的已有执行器；回调短小，不能在输入或中枢回调里阻塞。不要用一份应用私有变量代替系统状态。设置写入接受后会异步保存，`apply` 可能尚未运行；设置的 `system`、`child_may_change`、`ask_by_hand` 控制实际权限和确认，见 [settings.c:195](../../system/policy/settings.c#L195)。
 
-页面用 `ink_state_watch_handle`／`ink_settings_watch_handle` 取得正整数句柄，失败为 -1；分别配对 `ink_state_unwatch`／`ink_settings_unwatch`。能力事件对应 `ink_cap_subscribe_handle`／`ink_cap_unsubscribe`，见 [cap.h:185，事件退订](../../system/include/ink/sys/cap.h#L185)。原来的三个订阅接口仍返回 0／-1，已有调用方不用改。
+页面用 `ink_state_watch_handle`／`ink_settings_watch_handle` 取得正整数句柄，失败为 -1；分别配对 `ink_state_unwatch`／`ink_settings_unwatch`。能力事件对应 `ink_cap_subscribe_handle`／`ink_cap_unsubscribe`，见 [cap.h:197，事件退订](../../system/include/ink/sys/cap.h#L197)。原来的三个订阅接口仍返回 0／-1，已有调用方不用改。
 
 可退订的订阅选择 UI、MEDIA 或 BG；退订必须在订阅的同一个串行执行器上调用，返回 0 才能释放上下文，错误执行器、失效句柄返回 -1。该执行器先结束正在运行的回调，再执行退订；排队中的旧回调会被丢弃。回调内部退订会阻止后续调用，当前调用继续到返回，所以不要在它仍使用上下文时释放上下文。名称前缀也须保留到退订。DIRECT 没有串行执行器，可退订接口拒绝它；原有 DIRECT 常驻订阅继续可用。
 

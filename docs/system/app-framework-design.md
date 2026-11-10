@@ -32,7 +32,7 @@
 | 文本字段 | 焦点、组合串、候选、选区、撤销，密码掩码；大缓冲在外部内存 | 字段外观仍占位、横向取光标附近文字，未实现长文分页；无日期等字段语义 | [字段](../../system/ui/textfield.c#L24)、[创建](../../system/ui/textfield.c#L216)、[输入配置](../../system/include/ink/sys/textinput.h#L19) |
 | 键盘和听写 | 系统键盘、数字／电话模式、普通文字候选、听写面板 | 基线键盘直接盖底部，页面不自动适配；没有全套设计稿外观 | [键盘建页](../../system/ui/shell/keyboard.c#L124)、[类型选择](../../system/ui/shell/keyboard.c#L289) |
 | AI 编辑 | `text.state/insert/submit/select/undo/redo`，密码拒绝代填；成员剪贴板 | 焦点式调用仍需补字段身份和会话版本；AI 看不见没有快照回调的页 | [文本能力](../../system/services/text/text_caps.c#L17)、[拒绝秘密字段](../../system/services/text/text_caps.c#L62) |
-| 能力策略 | 统一调用、成员、应用权限、页面版本、结构化回执 | `confirm_for` 仍按外部／系统副作用默认确认，与 D-105 有差异；本任务不修 | [策略](../../system/policy/cap.c#L78)、[检查](../../system/policy/cap.c#L100) |
+| 能力策略 | 统一调用、成员、应用权限、页面版本、结构化回执 | `confirm_for` 仍按外部／系统副作用默认确认，与 D-105 有差异；本任务不修 | [策略](../../system/policy/cap.c#L79)、[检查](../../system/policy/cap.c#L101) |
 | 现有应用 | 主页示例、原生阅读、远程画面 | 远程快照还是摘要，不能读出网页字段；不具备 A2UI 通用渲染器 | [主页](../../apps/home/home.c#L1)、[阅读快照](../../apps/reader/reader.c#L506)、[网页快照](../../system/apps/remote/remote.c#L569) |
 | UI 副本进展 | 主题、字号字重、图标、卡片、胶囊、圆按钮、开关、滑杆、分段、列表行、面板、分页；键盘已接能力与快照 | 组件仍接 LVGL 事件回调，不自动生成通用语义树；不得在这里另造同名组件 | 只读副本 `system/ui/theme.c:138–267`、`system/ui/ink/ui_theme.h:42–64`、`system/ui/shell/keyboard.c:117–127` |
 

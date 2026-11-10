@@ -46,7 +46,7 @@ bool ink_state_get_int(int h, int64_t *out);
 /** String value: its length (copied, truncated to cap), -1 without a value. */
 int ink_state_get_str(int h, char *out, size_t cap);
 
-/** fn(ctx, h, id) on executor `exec` when an item whose id starts with `prefix` changes. Up to 64. */
+/** fn(ctx, h, id) on executor `exec` when an item whose id starts with `prefix` changes. Up to 80 (WATCH_MAX). */
 typedef void (*ink_state_fn)(void *ctx, int h, const char *id);
 int ink_state_watch(const char *prefix, ink_state_fn fn, void *ctx, ink_exec_t exec);
 /** Removable watch: positive handle, -1 on failure. UI/MEDIA/BG only; prefix lives until unwatch.
