@@ -1425,6 +1425,8 @@ static void draw_page_body(void) {
         }
         ink_db_cursor_t cursor = {0}; ink_notify_view_t n; size_t total = 0;
         while (ink_notify_next(&cursor, &n) == 1) total++;
+        /* the rows' ids are filled again as rows are bound; an empty list binds none, so clear them here */
+        memset(N.notify_ids, 0, sizeof N.notify_ids);
         if (N.notify_list) ink_ui_list_refresh(N.notify_list, total);
         return;
     }

@@ -168,7 +168,8 @@ static void child_rules(void) {
     CHECK(!page_has("SYNTH_KEEP"), "adult inbox not exposed to child");
     press("SYNTH_KID", "notify.dismiss"); CHECK(!find_notice("SYNTH_KID"), "child may dismiss own notification by touch");
     kid_id = post("SYNTH_KID_AI"); dismiss_ai(kid_id); CHECK(count() == 0, "child may dismiss own notification by AI");
-    CHECK(page_has("\"total\":0") && !page_has("notify.dismiss"), "last deletion removes all snapshot dismiss actions");
+    /* the page redraws from the notify.unread change, after the AI's dismissal returns */
+    CHECK(WAIT_FOR(page_has("\"total\":0") && !page_has("notify.dismiss"), 3000), "last deletion removes all snapshot dismiss actions");
     ink_member_test_reset();
     CHECK(WAIT_FOR(!strcmp(ink_member_current()->id, "owner") && !ink_notify_channel_on("message"), 5000), "adult preferences stay isolated");
     CHECK(count() == 1 && find_notice("SYNTH_KEEP"), "adult notification survives child operations");
