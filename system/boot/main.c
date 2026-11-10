@@ -37,6 +37,7 @@
 #include "ink/sys/ui.h"
 #include "ink/sys/file_picker.h"
 #include "ink/sys/update.h"
+#include "ink/sys/log.h"
 
 extern const ink_activity_t ink_app_home;
 extern const ink_app_def_t ink_appdef_home, ink_appdef_reader;
@@ -63,7 +64,6 @@ int ink_phone_init(void);
 #define MUST(call, what) do { if ((call) != 0) osal_panic(what ": " #call); } while (0)
 
 void ink_main(void) {
-    hal_log_write("ink: starting system services");
     if (ink_display_init() != 0) osal_panic("display service failed to start");
     if (ink_storage_init() != 0) osal_panic("storage service failed to start");
     ink_factory_reset_resume();
@@ -71,6 +71,8 @@ void ink_main(void) {
     MUST(ink_res_init(), "resource manager failed to start"); MUST(ink_storage_reclaimable(), "storage reclaim failed to start");
     MUST(ink_state_init(), "state and settings tables failed to start"); MUST(ink_settings_init(), "state and settings tables failed to start"); MUST(ink_i18n_init(), "state and settings tables failed to start");
     MUST(ink_svc_init(), "data store failed to start"); MUST(ink_confirm_init(), "data store failed to start"); MUST(ink_data_init(), "data store failed to start");
+    ink_log_init(); /* Logging must not prevent recovery when its partition is unavailable. */
+    ink_log(INK_LOG_INFO, "boot", "starting system services");
     if (ink_task_init() != 0) osal_panic("task list failed to start");
     MUST(ink_power_init(), "power or file service failed to start"); MUST(ink_file_service_init(), "power or file service failed to start");
     ink_members_init();
@@ -131,5 +133,6 @@ void ink_main(void) {
     if (ink_ai_pages_init() != 0) osal_panic("AI pages failed to start");
     extern int ink_remote_app_init(void);
     if (ink_remote_app_init() != 0) osal_panic("remote app failed to start");
+    if (ink_log_start()) osal_panic("logging capabilities failed to start");
     ink_backup_start(); /* Replay only after all collection definitions are registered. */
 }

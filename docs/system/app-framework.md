@@ -64,9 +64,9 @@ static const ink_cap_t INK_JOT_CAPS[] = {
 
 按钮通过 F1 动作绑定调用能力；AI 按快照的能力 id 和参数调用同一软总线，携带 `page_version`，不能直接调用 `run`。`ink_cap_invoke_json()` 适合界面中的同步能力；异步或跨执行器用 `ink_cap_call()` 的 `done` 收回执，`INK_RC_QUEUED` 不表示动作完成。`result` 只在完成回调期间有效，调用方需拷贝需要保留的数据。
 
-孩子权限有两层：应用 `child_ok` 决定目录和打开可见性，能力 `child_ok` 参与执行策略。**当前实现中**，能力 `child_ok=true` 直接允许孩子；为 false 时，孩子的 `allow` 前缀仍可放行；时限、锁定和系统动作限制另外检查。不能把 false 当成绝对禁用，也不能把应用可见当成每个能力都获准。依据：[members.h:24](../../system/include/ink/sys/members.h#L24)、[members.h:64](../../system/include/ink/sys/members.h#L64)、[members.c:366](../../system/policy/members.c#L366)、[cap.c:99](../../system/policy/cap.c#L99)。头文件对“白名单还能收窄”的注释与实现不同，本文按实现说明，未修改框架。
+孩子权限有两层：应用 `child_ok` 决定目录和打开可见性，能力 `child_ok` 参与执行策略。**当前实现中**，能力 `child_ok=true` 直接允许孩子；为 false 时，孩子的 `allow` 前缀仍可放行；时限、锁定和系统动作限制另外检查。不能把 false 当成绝对禁用，也不能把应用可见当成每个能力都获准。依据：[members.h:24](../../system/include/ink/sys/members.h#L24)、[members.h:64](../../system/include/ink/sys/members.h#L64)、[members.c:366](../../system/policy/members.c#L366)、[cap.c:100](../../system/policy/cap.c#L100)。头文件对“白名单还能收窄”的注释与实现不同，本文按实现说明，未修改框架。
 
-确认由策略层决定，页面不自造“确认通过”的来源。实际规则见 [cap.c:82](../../system/policy/cap.c#L82)：`parent_pin` 且已设置密码时要求家长验证；`ask_by_hand` 要本人确认；普通触摸／按键／系统来源直接执行；AI 的本地破坏操作、没有本人意图标记的对外操作要求确认。`INK_FX_SYSTEM` 这个等级本身不会对所有大人操作自动弹卡，头文件枚举注释不能代替这些判断。示例的本地写无需确认；也没有声明撤销，不把保存称为可撤销。
+确认由策略层决定，页面不自造“确认通过”的来源。实际规则见 [cap.c:83](../../system/policy/cap.c#L83)：`parent_pin` 且已设置密码时要求家长验证；`ask_by_hand` 要本人确认；普通触摸／按键／系统来源直接执行；AI 的本地破坏操作、没有本人意图标记的对外操作要求确认。`INK_FX_SYSTEM` 这个等级本身不会对所有大人操作自动弹卡，头文件枚举注释不能代替这些判断。示例的本地写无需确认；也没有声明撤销，不把保存称为可撤销。
 
 能力可选填 [cap.h 的 `prepare_confirm`](../../system/include/ink/sys/cap.h)：签名为 `ink_rc_t (*prepare_confirm)(ink_args_t *args, ink_receipt_t *rc)`。策略决定需要确认后，在进入等待之前、当前策略关口所在执行器上调用一次；无需确认时不调用。钩子修改待确认参数的副本，绑定当时的业务上下文，也可增加供 `ask` 占位符显示的说明字段；私有字段须覆盖或丢弃调用方传入的同名值。成功返回 `INK_RC_DONE`；失败返回相应终态并填写 `rc->detail`／`rc->say`，请求不会进入等待。说明和确认摘要使用处理后的参数，确认后交给 `run` 的也是这些参数；执行时仍由能力核对绑定是否有效，钩子不改变确认、成员或家长密码规则。
 

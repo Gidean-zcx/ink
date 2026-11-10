@@ -6,6 +6,8 @@
 #   cmake -S . -B build && cmake --build build -j && ctest --test-dir build --output-on-failure
 cmake_minimum_required(VERSION 3.16)
 project(ink C)
+execute_process(COMMAND git rev-parse --short=12 HEAD WORKING_DIRECTORY ${CMAKE_SOURCE_DIR} OUTPUT_VARIABLE INK_BUILD_COMMIT OUTPUT_STRIP_TRAILING_WHITESPACE)
+add_compile_definitions(INK_BUILD_COMMIT="${INK_BUILD_COMMIT}")
 add_executable(test-s31-osal-ticks tests/esp32s31/osal_ticks.c)
 target_compile_options(test-s31-osal-ticks PRIVATE -UNDEBUG)
 if(APPLE)
@@ -112,6 +114,7 @@ add_library(ink_port_sim STATIC
   ports/sim/hal/hal_display_sim.c
   ports/sim/hal/hal_input_sim.c
   ports/sim/hal/hal_storage_sim.c
+  ports/sim/hal/hal_log_sim.c
   ports/sim/hal/hal_usb_sim.c
   ports/sim/hal/hal_bt_sim.c
   ports/sim/hal/hal_ota_sim.c
@@ -180,6 +183,7 @@ add_library(ink_system STATIC
   system/services/display/refresh_policy.c
   system/services/input/input_service.c
   system/services/storage/storage_service.c
+  system/services/log/log.c
   system/services/power/power_service.c
   system/services/hub/hub_link.c
   system/services/hub/pairing.c
@@ -513,6 +517,10 @@ endif()
 
 # ---------------------------------------------------------------- tests
 enable_testing()
+add_executable(test-log tests/log/log.c ports/sim/hal/hal_log_sim.c)
+target_include_directories(test-log PRIVATE platform/include system/include simulator simulator/kernel/vtk simulator/memory simulator/runtime)
+target_compile_options(test-log PRIVATE ${INK_WARN} -UNDEBUG)
+add_test(NAME unit-log COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/log/run.py $<TARGET_FILE:test-log>)
 add_test(NAME unit-s31-osal-ticks COMMAND test-s31-osal-ticks)
 add_test(NAME unit-s31-hal-map COMMAND test-s31-hal-map)
 set(INK_IME_CASES ${CMAKE_BINARY_DIR}/generated/ime_cases.h)

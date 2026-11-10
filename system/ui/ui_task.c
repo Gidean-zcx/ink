@@ -24,6 +24,7 @@
 #include "ink/ui_theme.h"
 #include "ink/ui_shell.h"
 #include "ink/sys/textinput.h"
+#include "ink/sys/log.h"
 #include "ink/sys/json.h"
 #include "ink/sys/members.h"
 #include "ink/sys/power.h"
@@ -130,7 +131,7 @@ static void log_cb(lv_log_level_t level, const char *buf) {
     snprintf(line, sizeof line, "lvgl: %s", buf);
     size_t n = strlen(line);
     if (n && line[n - 1] == '\n') line[n - 1] = 0;
-    hal_log_write(line);
+    ink_log(level == LV_LOG_LEVEL_ERROR ? INK_LOG_ERROR : INK_LOG_WARN, "lvgl", "%s", line);
 }
 
 static hal_rect_t native_rect(const lv_area_t *a) {
@@ -481,6 +482,7 @@ static void show_top(void) {
      * drive part of the NEW screen with a binary waveform first (seen in the simulator). */
     UI.nhints = 0;
     UI.frame_intent = INK_REFRESH_FLASH_UI;
+    ink_log_page(f->a->app, f->a->name);
     if (UI.top_hook) UI.top_hook(f->a->app);
     f->a->create(UI.screen, f->arg);
     lv_screen_load(UI.screen);
@@ -659,6 +661,7 @@ static void note_render_pending(void) { /* UI task */
 /* ---------------------------------------------------------------- input */
 
 static void input_handler(const ink_input_event_t *e, void *ctx) {
+    ink_log_input();
     (void)ctx;
     umsg_t m = {.type = UM_INPUT, .generation = UI.generation, .ev = *e};
     /* moves may be dropped under load; presses, releases and keys never */

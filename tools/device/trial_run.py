@@ -150,7 +150,7 @@ def main(argv=None):
         if a.restore_only:
             r.touched = True
         elif a.install:
-            a.until = a.until or "ink: starting system services"
+            a.until = a.until or "starting system services"
             started = None
             try:
                 started = install_and_run(r, p)

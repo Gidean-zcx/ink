@@ -11,6 +11,7 @@
 #include "ink/probe.h"
 #include "ink/sys/ai.h"
 #include "ink/sys/cap.h"
+#include "ink/sys/log.h"
 #include "ink/sys/camera.h"
 #include "ink/sys/data.h"
 #include "ink/sys/file.h"
@@ -250,6 +251,7 @@ static void cap_reboot(ink_call_t *c) { /* exec.bg */
     snprintf(c->rc.say, sizeof c->rc.say, "重启");
     ink_db_flush_all();
     for (int i = 0; i < 100 && (!ink_db_idle() || ink_storage_pending()); i++) osal_task_delay_us(50000);
+    if (!ink_log_flush()) { c->rc.status = INK_RC_FAILED; return; }
     hal_power_reboot();
 }
 

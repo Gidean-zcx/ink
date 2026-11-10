@@ -39,6 +39,7 @@
 #include "ink/sys/storage.h"
 #include "ink/sys/members.h"
 #include "ink/sys/sha256.h"
+#include "ink/sys/log.h"
 
 #define MAX_JOBS 8
 #define ST_STACK 4096 /* 3584 was exceeded by the Linux host estimate (3624, settings-b); confirm with -fstack-usage on S31 */
@@ -471,6 +472,7 @@ static bool writes_held(void) {
     osal_mutex_unlock(ST.lock);
     return h;
 }
+void ink_storage_log_ready(void) { if (ST.kick) osal_sem_give(ST.kick); }
 
 static void storage_task(void *arg) {
     (void)arg;
@@ -480,9 +482,15 @@ static void storage_task(void *arg) {
         bool waiting = false;
         for (int i = 0; i < PREFETCH_MAX && !waiting; i++) waiting = ST.prefetch[i] != NULL;
         osal_mutex_unlock(ST.lock);
-        osal_sem_take(ST.kick, waiting ? IDLE_POLL_US * 4 : OSAL_WAIT_FOREVER);
+        osal_sem_take(ST.kick, waiting ? IDLE_POLL_US * 4 : 30000000);
         for (;;) {
             serve_read();
+            /* the log is background work: user writes waiting in the queue go first (index-durable: a log that kept
+             * growing while it was written took the task again and again and held a file's indexing up) */
+            osal_mutex_lock(ST.lock, OSAL_WAIT_FOREVER);
+            bool jobs = ST.pending > 0;
+            osal_mutex_unlock(ST.lock);
+            if (!jobs) ink_log_poll(ink_display_busy() <= 0 && osal_now_us() >= ink_power_last_activity() + BG_QUIET_US);
             prefetch_one();
             job_t job;
             /* wait for a quiet panel and no write hold (reads are still served meanwhile) */

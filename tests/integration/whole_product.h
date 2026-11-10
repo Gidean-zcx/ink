@@ -195,11 +195,14 @@ static void key(hal_key_t k) {
 /* What the screen shows, as the UI task sees it. */
 /* Match the production AI request's SNAPSHOT_CAP, including the input context. */
 static char g_top[32], g_snap[3072];
-static int g_btn_x[3], g_btn_y[3], g_btn_n;
+#ifndef INK_TEST_BUTTONS
+#define INK_TEST_BUTTONS 3
+#endif
+static int g_btn_x[INK_TEST_BUTTONS], g_btn_y[INK_TEST_BUTTONS], g_btn_n;
 static void find_buttons(lv_obj_t *o) {
     for (uint32_t i = 0; i < lv_obj_get_child_count(o); i++) {
         lv_obj_t *c = lv_obj_get_child(o, (int32_t)i);
-        if (lv_obj_check_type(c, &lv_button_class) && g_btn_n < 3) {
+        if (lv_obj_check_type(c, &lv_button_class) && g_btn_n < INK_TEST_BUTTONS) {
             lv_area_t a;
             lv_obj_update_layout(c);
             lv_obj_get_coords(c, &a);

@@ -14,6 +14,7 @@
 #include "../../system/boot/main.c"
 #undef ink_main
 
+#define INK_TEST_BUTTONS 5
 #include "whole_product.h"
 
 static void hold_power(void) {
@@ -25,6 +26,10 @@ static void release_power(void) { hw(HW_KEY_UP, HAL_KEY_POWER, 0); }
 static bool menu_up(void) {
     on_ui(read_screen);
     return !strcmp(g_top, "power_menu");
+}
+static bool problem_recorded(void) {
+    on_ui(read_screen);
+    return strstr(g_snap, "已记录问题 #") != NULL;
 }
 
 /* The lock mark says what wakes it (D-38). */
@@ -57,12 +62,14 @@ static void test_main(void) {
     /* held down: the menu; letting go does nothing more */
     hold_power();
     delay_ms(600);
-    CHECK(menu_up() && g_btn_n == 3, "held down: the menu (%s, %d)", g_top, g_btn_n);
+    CHECK(menu_up() && g_btn_n == 5, "held down: the menu (%s, %d)", g_top, g_btn_n);
     CHECK(strstr(g_snap, "关机") && strstr(g_snap, "重启"), "the AI sees what it says (%s)", g_snap);
     release_power();
     delay_ms(300);
     CHECK(menu_up() && strcmp(power_state(), "locked"), "let go: it stays, nothing locks (%s)", power_state());
     tap(g_btn_x[2], g_btn_y[2]);
+    CHECK(WAIT_FOR(problem_recorded(), 5000), "the menu shows the durable problem number: %.150s", g_snap);
+    tap(g_btn_x[4], g_btn_y[4]);
     delay_ms(600);
     CHECK(!menu_up() && strcmp(power_state(), "locked"), "cancel: it goes, nothing else happens (%s)", g_top);
 
@@ -129,7 +136,7 @@ static void test_main(void) {
     release_power();
     delay_ms(600);
     CHECK(menu_up(), "the menu for the child too");
-    tap(g_btn_x[2], g_btn_y[2]);
+    tap(g_btn_x[4], g_btn_y[4]);
     delay_ms(600);
     CHECK(AI("system.shutdown", NULL) && g_rc.status == INK_RC_REJECTED, "the AI does not do it for a child (%s)", ink_rc_name(g_rc.status));
     ink_member_test_reset();

@@ -63,7 +63,8 @@ int hal_cell_wait_event(hal_cell_event_t *ev, uint32_t timeout_ms) { osal_task_d
 
 
 /* Device info, log, random; RTC and accelerometer: s31_board.c. */
-void hal_log_write(const char *line) { esp_log_write(ESP_LOG_INFO, "ink", "%s\n", line); }
+__attribute__((weak)) bool ink_log_from_hal(const char *line) { (void)line; return false; }
+void hal_log_write(const char *line) { if (!ink_log_from_hal(line)) esp_log_write(ESP_LOG_INFO, "ink", "%s\n", line); }
 void hal_random_fill(void *out, size_t n) { esp_fill_random(out, n); }
 
 #ifndef INK_S31_DISPLAY
