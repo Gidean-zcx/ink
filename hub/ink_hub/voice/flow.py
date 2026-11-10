@@ -40,7 +40,12 @@ async def run_turn(self, rid, method, params):
                 question = params.get("question", "")
             if not isinstance(question, str):
                 raise ProtocolError("问题无效")
-            answer = await self.hub.model.answer(question, list(available)) if question else None
+            lang = params.get("lang", "zh")
+            if not isinstance(lang, str) or not lang.isalpha() or len(lang) > 8:
+                raise ProtocolError("语言无效")
+            # Chinese is the default; another language is passed so the model answers in it.
+            extra = {"lang": lang} if lang != "zh" else {}
+            answer = await self.hub.model.answer(question, list(available), **extra) if question else None
             if not guard():
                 return
             text = answer.text if answer else ""

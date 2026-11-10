@@ -1,0 +1,85 @@
+# English. One entry per line: Chinese (the key in the code) <TAB> English. See tools/i18n/i18n_gen.py.
+@name	English
+# first boot (boot_flow.c)
+你好	Hello
+选一个 Wi-Fi	Choose Wi-Fi
+网络密码	Network password
+正在连接网络	Connecting
+没能连接网络	Couldn't connect
+用手机扫一下，加入家庭	Scan with your phone to join your family
+找不到家庭服务器	Can't find the family server
+加入这个家庭？	Join this family?
+备份和恢复	Backup & Restore
+不懂就问	Just ask
+这台设备不在家庭里了	This device left the family
+设置进度还没保存，请稍后再试。	Setup progress wasn't saved. Try again later.
+说明	Message
+网络	Network
+附近网络	Nearby network
+网络名称	Network name
+加入链接	Join link
+确认码	Check code
+返回	Back
+其他网络	Other network
+用手机设置这台设备	Set up this device with your phone
+连接网络，选择谁来用	Connect to a network and choose who uses it
+在设备上设置	Set up on this device
+还没找到网络，可以再找一次	No networks found yet. You can search again.
+再找一次	Search again
+下一组	Next
+输入网络密码	Enter network password
+输入网络名称	Enter network name
+输入密码	Enter password
+返回选网	Back to networks
+用电脑加入	Use a computer
+%s邀请你加入“%s”。请在设备上核对。	%s invited you to join "%s". Check it on this device.
+不是我们家	Not my family
+加入	Join
+当新设备用	Set up as new
+放回来	Restore
+再查一次	Check again
+还没有打开阅读内容。把书传进来，再按住 AI 键问这一页。	Nothing to read yet. Add a book, then hold the AI key to ask about a page.
+跳过	Skip
+打开书架	Bookshelf
+换个网络	Other network
+重新输入	Try again
+连不上家庭服务器。先用起来也行，连上后才有 AI 和备份。可用手机或存储卡设置服务器。	Can't reach the family server. You can start now; AI and backup work once it connects. Set up the server with your phone or a memory card.
+先用起来	Start now
+再试一次	Try again
+可能是家人在手机上移除了这台设备。本地资料是否保留，以服务器的处理结果为准。	Someone in your family may have removed this device on their phone. Whether data on it is kept depends on the server.
+知道了	OK
+重新加入	Join again
+取消	Cancel
+正在连接 %s	Connecting to %s
+正在寻找家庭服务器	Looking for the family server
+密码不对，再输一次，注意大小写。	Wrong password. Try again; it's case-sensitive.
+没能连上网络，可以重试或换个网络。	Couldn't connect. Try again or choose another network.
+还没有可恢复的备份，可以当新设备用。	No backup to restore. You can set this up as a new device.
+找到了这位家人的备份。恢复前会请你确认覆盖。设备设置和密码需要重新设置。	Found a backup for this person. You'll confirm before it replaces anything. Device settings and passwords need to be set again.
+正在查找或恢复这位家人的备份。	Finding or restoring this person's backup.
+%d月%d日 %02d:%02d，%s的备份，共%d项。会覆盖现有资料；设置和密码需重设。	%d/%d %02d:%02d backup of %s, %d items. It replaces what's here; set settings and passwords again.
+正在查找这位家人的备份。	Looking for this person's backup.
+电脑打开 %.*s，输入加入码 %.8s，核对确认码 %s，再回到设备点加入。	On a computer, open %.*s, enter join code %.8s and check code %s, then tap Join here.
+# settings home (navigation.c) and the language row (settings_pages.c)
+设置	Settings
+通知	Notifications
+家里 %d 个人	%d in the family
+网络和 SIM 卡	Network & SIM
+还没有连接	Offline
+蓝牙	Bluetooth
+已连接	Connected
+没有连接	Not connected
+亮度 %lld	Brightness %lld
+音量 %lld	Volume %lld
+显示和亮度	Display
+声音	Sound
+语音和 AI	Voice & AI
+叫名字已关闭	Wake word off
+一直能叫名字	Always on
+使用时能叫名字	While in use
+%lld 分钟	%lld min
+锁屏和壁纸	Lock Screen
+存储和备份	Storage & Backup
+关于和更新	About & Updates
+语言	Language
+飞行模式	Airplane mode

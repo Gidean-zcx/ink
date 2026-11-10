@@ -13,7 +13,8 @@
  *      "result": {"done": true}},
  *     {"method": "*", "think_ms": 30, "error": {"code": -32601, "message": "method not found"}}
  *   ]}
- * A rule may set "drop": true (no answer: tests timeouts).
+ * A rule may set "drop": true (no answer: tests timeouts). A stream may add "chunks_<lang>" (e.g.
+ * "chunks_en"): the answer when the request's "lang" is that language, like a model told to reply in it.
  *
  * Voice turns ("ai.listen"): the request opens a turn in the device's realtime
  * session ("rt.open", answered here); binary microphone frames [1][sid][seq]...
@@ -51,13 +52,15 @@ static const char *DEFAULT_SCRIPT =
     "{\"method\":\"ping\",\"think_ms\":5,\"result\":{}},"
     "{\"method\":\"ai.ask\",\"think_ms\":1400,\"stream\":{\"notify\":\"ai.delta\",\"interval_ms\":450,\"chunks\":["
     "\"这一页讲的是小满第一次替别人送信。\",\"陈阿姨二十年前和好朋友吵了架，一直没机会说对不起，\","
-    "\"小满就在晚上八点对着天狼星，替她把这句话说了出来。\",\"第二天，陈阿姨收到了老朋友的回信：“我也是。”\"]},"
+    "\"小满就在晚上八点对着天狼星，替她把这句话说了出来。\",\"第二天，陈阿姨收到了老朋友的回信：“我也是。”\"],"
+    "\"chunks_en\":[\"This page is about Xiaoman delivering a message for someone for the first time.\"]},"
     "\"result\":{\"done\":true,\"source\":\"page\"}},"
     "{\"method\":\"ai.listen\",\"think_ms\":1400,\"listen\":{\"stt_ms\":300,\"transcript\":\"这一页讲了什么？\","
     "\"tts_first_ms\":500,\"tts_chars_per_s\":4.5,\"tts_speed\":2},"
     "\"stream\":{\"notify\":\"ai.delta\",\"interval_ms\":450,\"chunks\":["
     "\"这一页讲的是小满第一次替别人送信。\",\"陈阿姨二十年前和好朋友吵了架，一直没机会说对不起，\","
-    "\"小满就在晚上八点对着天狼星，替她把这句话说了出来。\",\"第二天，陈阿姨收到了老朋友的回信：“我也是。”\"]},"
+    "\"小满就在晚上八点对着天狼星，替她把这句话说了出来。\",\"第二天，陈阿姨收到了老朋友的回信：“我也是。”\"],"
+    "\"chunks_en\":[\"This page is about Xiaoman delivering a message for someone for the first time.\"]},"
     "\"result\":{\"done\":true,\"source\":\"page\"}},"
     "{\"method\":\"*\",\"think_ms\":30,\"error\":{\"code\":-32601,\"message\":\"method not in hub script\"}}"
     "]}";
@@ -141,6 +144,7 @@ static struct {
     char say[256];      /* last receipt's "say" */
     char member[16];
     uint32_t epoch;
+    char lang[8];       /* the request's "lang" */
 } LS[MAX_LISTEN];
 
 static int64_t g_tool_rpc = 9000;
@@ -154,6 +158,14 @@ static void notify(struct hal_ws *ws, uint64_t t, const char *method, cJSON *id,
     if (text) cJSON_AddStringToObject(params, "text", text);
     send_json(ws, t, n);
     cJSON_Delete(n);
+}
+
+/* The answer in the request's language: the stream's "chunks_<lang>" when it has them. */
+static const cJSON *chunks_for(const cJSON *stream, const char *lang) {
+    char key[24];
+    snprintf(key, sizeof key, "chunks_%.8s", lang ? lang : "");
+    const cJSON *chunks = lang && lang[0] ? cJSON_GetObjectItemCaseSensitive(stream, key) : NULL;
+    return chunks ? chunks : cJSON_GetObjectItemCaseSensitive(stream, "chunks");
 }
 
 static size_t utf8_chars(const char *s) {
@@ -174,7 +186,7 @@ static void finish_listen(int i, uint64_t at) {
     struct hal_ws *ws = LS[i].ws;
     cJSON *id = LS[i].id;
     const cJSON *stream = cJSON_GetObjectItemCaseSensitive(rule, "stream");
-    const cJSON *chunks = cJSON_GetObjectItemCaseSensitive(stream, "chunks"), *c;
+    const cJSON *chunks = chunks_for(stream, LS[i].lang), *c;
     double iv = num_or(stream, "interval_ms", 400);
     const char *nm = cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(stream, "notify"));
     uint64_t text_at = at, tts_at = at + SIM_MS(num_or(ls, "tts_first_ms", 500));
@@ -903,6 +915,8 @@ void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t 
                 int m = member_slot(ws);
                 snprintf(LS[i].member, sizeof LS[i].member, "%s", MC[m].member);
                 LS[i].epoch = MC[m].epoch;
+                snprintf(LS[i].lang, sizeof LS[i].lang, "%.7s", cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(pr, "lang")) ?
+                         cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(pr, "lang")) : "");
                 break;
             }
         cJSON_Delete(req);
@@ -914,7 +928,8 @@ void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t 
     if (stream) {
         const char *notify = cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(stream, "notify"));
         const cJSON *iv = cJSON_GetObjectItemCaseSensitive(stream, "interval_ms");
-        const cJSON *chunks = cJSON_GetObjectItemCaseSensitive(stream, "chunks"), *c;
+        const cJSON *chunks = chunks_for(stream, cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(
+            cJSON_GetObjectItemCaseSensitive(req, "params"), "lang"))), *c;
         int k = 0;
         cJSON_ArrayForEach(c, chunks) {
             cJSON *n = cJSON_CreateObject();

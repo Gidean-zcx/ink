@@ -26,6 +26,7 @@
 #include "ink/probe.h"
 #include "ink/sys/cap.h"
 #include "ink/sys/exec.h"
+#include "ink/sys/i18n.h"
 #include "ink/sys/rt.h"
 #include "ink/sys/settings.h"
 #include "ink/sys/media.h"
@@ -548,6 +549,8 @@ static int request(const char *method, bool voice) {
     char gen[48];
     snprintf(gen, sizeof gen, ",\"page_gen\":%u", n < 0 ? 0 : (unsigned)ink_ui_content_version());
     ink_jw_raw(&w, gen);
+    ink_jw_raw(&w, ",\"lang\":"); /* the answer comes in the interface's language */
+    ink_jw_str(&w, ink_lang_code());
     ink_jw_raw(&w, ",\"page\":{\"app\":");
     ink_jw_str(&w, app);
     ink_jw_raw(&w, ",\"text\":");

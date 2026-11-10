@@ -17,6 +17,7 @@
 #include "ink/sys/display.h"
 #include "ink/sys/exec.h"
 #include "ink/sys/file.h"
+#include "ink/sys/i18n.h"
 #include "ink/sys/power.h"
 #include "ink/sys/res.h"
 #include "ink/sys/rt.h"
@@ -65,7 +66,7 @@ void ink_main(void) {
     ink_factory_reset_resume();
     if (ink_cap_init() != 0 || ink_exec_init() != 0 || ink_res_init() != 0 || ink_storage_reclaimable() != 0)
         osal_panic("capability bus or resource manager failed to start");
-    if (ink_state_init() != 0 || ink_settings_init() != 0) osal_panic("state and settings tables failed to start");
+    if (ink_state_init() != 0 || ink_settings_init() != 0 || ink_i18n_init() != 0) osal_panic("state and settings tables failed to start");
     if (ink_svc_init() != 0 || ink_confirm_init() != 0 || ink_data_init() != 0) osal_panic("data store failed to start");
     if (ink_task_init() != 0) osal_panic("task list failed to start");
     if (ink_power_init() != 0 || ink_file_service_init() != 0) osal_panic("power or file service failed to start");

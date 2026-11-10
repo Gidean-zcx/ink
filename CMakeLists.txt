@@ -238,6 +238,7 @@ add_library(ink_system STATIC
   system/util/ink_json.c
   system/util/layout.c
   system/text/ink_font.c
+  system/text/i18n.c
   system/text/linebreak.c
   system/text/layout.c
   system/ui/lock_mark.c
@@ -277,6 +278,7 @@ set(INK_CJK_FONT "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc" CACHE 
 set(INK_CJK_FACE 2 CACHE STRING "Face index in the collection (Noto Sans CJK .ttc: 2 = Simplified Chinese)")
 set(INK_ASSETS_DIR ${CMAKE_BINARY_DIR}/assets)
 find_package(Python3 COMPONENTS Interpreter)
+file(GLOB INK_I18N_TABLES CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/assets/i18n/*.tsv) # interface languages
 set(INK_HAVE_FONTS OFF)
 if(EXISTS ${INK_CJK_FONT} AND Python3_FOUND)
   set(INK_FONT_FILES)
@@ -323,7 +325,7 @@ if(EXISTS ${INK_CJK_FONT} AND Python3_FOUND)
     COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/fontgen/ui_fonts.py
       --regular ${INK_CJK_FONT} --face ${INK_CJK_FACE} --medium ${INK_CJK_MEDIUM_FONT} --bold ${INK_CJK_BOLD_FONT}
       --out ${INK_ASSETS_DIR}/fonts
-    DEPENDS ${INK_FONT_FILES} ${INK_UI_TEXT} tools/fontgen/fontgen.py tools/fontgen/ui_fonts.py system/ui/ink/ui_theme.h third_party/fonts/Outfit.ttf
+    DEPENDS ${INK_FONT_FILES} ${INK_UI_TEXT} ${INK_I18N_TABLES} tools/fontgen/fontgen.py tools/fontgen/ui_fonts.py system/ui/ink/ui_theme.h third_party/fonts/Outfit.ttf
     COMMENT "fontgen: contract UI sizes, CJK weights and Outfit digits")
   add_custom_target(ink_ui_fonts ALL DEPENDS ${INK_ASSETS_DIR}/fonts/ui-fonts.stamp)
   set(INK_HAVE_FONTS ON)
@@ -371,6 +373,16 @@ add_custom_target(ink_ui_resource_check ALL
   BYPRODUCTS ${CMAKE_BINARY_DIR}/generated/ink/ui_icon_names.h
   COMMENT "Check required design icon geometry")
 add_dependencies(ink_system ink_ui_resource_check)
+# Interface languages: assets/i18n/<code>.tsv, checked and turned into a const lookup table.
+set(INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/system/ui/shell/boot_flow.c ${CMAKE_SOURCE_DIR}/system/ui/shell/navigation.c
+  ${CMAKE_SOURCE_DIR}/system/ui/shell/settings_pages.c)
+add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h
+  COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/i18n/i18n_gen.py ${INK_I18N_TABLES}
+          --header ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h --sources ${INK_I18N_SOURCES}
+  DEPENDS tools/i18n/i18n_gen.py ${INK_I18N_TABLES} ${INK_I18N_SOURCES}
+  COMMENT "i18n: check the translation tables")
+add_custom_target(ink_i18n_table DEPENDS ${CMAKE_BINARY_DIR}/generated/ink/i18n_table.h)
+add_dependencies(ink_system ink_i18n_table)
 target_include_directories(ink_system PUBLIC ${CMAKE_BINARY_DIR}/generated)
 
 # Scenario content: the committed sample books + a generated long book (pagination stress).
@@ -628,6 +640,11 @@ target_link_libraries(sim-configured PRIVATE ink_apps ink_system)
 target_link_libraries(sim-boot-flow PRIVATE ink_apps ink_system)
 add_test(NAME boot-flow COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/boot_flow_check.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(boot-flow PROPERTIES TIMEOUT 200)
+ink_sim_executable(sim-i18n-lang tests/i18n_lang.c)
+target_link_libraries(sim-i18n-lang PRIVATE ink_apps ink_system)
+add_test(NAME i18n-lang COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/i18n_check.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(i18n-lang PROPERTIES TIMEOUT 300)
+add_test(NAME i18n-tables COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/i18n_tables.py)
 add_test(NAME boot-flow-reboot COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/boot_flow_reboot.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(boot-flow-reboot PROPERTIES TIMEOUT 200)
 target_link_libraries(sim-ui-cards PRIVATE ink_apps ink_system)

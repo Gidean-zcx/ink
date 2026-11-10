@@ -13,6 +13,7 @@
 #include "ink/sys/ai.h"
 #include "ink/sys/appreg.h"
 #include "ink/sys/cap.h"
+#include "ink/sys/i18n.h"
 #include "ink/sys/members.h"
 #include "ink/sys/json.h"
 #include "ink/sys/notify.h"
@@ -1049,7 +1050,7 @@ static void draw_who(int y) {
     lv_obj_remove_flag(avatar, LV_OBJ_FLAG_CLICKABLE);
     int people = 0, x = INK_GAP_L + INK_CIRCLE + INK_GAP;
     while (ink_member_at(people)) people++;
-    snprintf(family, sizeof family, "家里 %d 个人", people);
+    snprintf(family, sizeof family, TR("家里 %d 个人"), people);
     int text_y = (h - ink_ui_line_height(INK_FONT_LIST) - ink_ui_line_height(INK_FONT_NOTE)) / 2;
     lv_obj_t *l =
         ink_ui_line(who, me->name, INK_FONT_LIST, INK_WEIGHT_BOLD, x, text_y, width() - x - INK_READING_MARGIN);
@@ -1101,31 +1102,31 @@ static void body_blocks(void) {
             char ssid[64];
             state_text("wifi.ssid", ssid, sizeof ssid);
             lv_obj_t *g = group(2);
-            group_row(g, "wifi", "网络和 SIM 卡", ink_setting_get("net.airplane") ? "飞行模式" : ssid[0] ? ssid : "还没有连接", 0, "shell.network");
-            group_row(g, "bluetooth", "蓝牙", integer("bt.connected") ? "已连接" : "没有连接", 1, "shell.bluetooth");
+            group_row(g, "wifi", TR("网络和 SIM 卡"), ink_setting_get("net.airplane") ? TR("飞行模式") : ssid[0] ? ssid : TR("还没有连接"), 0, "shell.network");
+            group_row(g, "bluetooth", TR("蓝牙"), integer("bt.connected") ? TR("已连接") : TR("没有连接"), 1, "shell.bluetooth");
         }
         F.y += 2 * INK_CONTROL + INK_GAP;
         if (block(3 * INK_CONTROL)) {
             char light[32], volume[32];
-            snprintf(light, sizeof light, "亮度 %lld", (long long) ink_setting_get("display.light") / 10);
-            snprintf(volume, sizeof volume, "音量 %lld", (long long) ink_setting_get("audio.volume") / 10);
+            snprintf(light, sizeof light, TR("亮度 %lld"), (long long) ink_setting_get("display.light") / 10);
+            snprintf(volume, sizeof volume, TR("音量 %lld"), (long long) ink_setting_get("audio.volume") / 10);
             lv_obj_t *g = group(3);
-            group_row(g, "sun", "显示和亮度", light, 0, "shell.display");
-            group_row(g, "volume", "声音", volume, 1, "shell.sound");
+            group_row(g, "sun", TR("显示和亮度"), light, 0, "shell.display");
+            group_row(g, "volume", TR("声音"), volume, 1, "shell.sound");
             int wake = (int) ink_setting_get("voice.handsfree");
-            group_row(g, "wave", "语音和 AI",
-                      wake == 2   ? "叫名字已关闭"
-                      : wake == 1 ? "一直能叫名字"
-                                  : "使用时能叫名字",
+            group_row(g, "wave", TR("语音和 AI"),
+                      wake == 2   ? TR("叫名字已关闭")
+                      : wake == 1 ? TR("一直能叫名字")
+                                  : TR("使用时能叫名字"),
                       2, "shell.voice");
         }
         F.y += 3 * INK_CONTROL + INK_GAP;
         if (block(3 * INK_CONTROL)) {
             lv_obj_t *g = group(3);
-            char lock_after[32]; snprintf(lock_after, sizeof lock_after, "%lld 分钟", (long long)ink_setting_get("power.lock_after_s") / 60);
-            group_row(g, "lock", "锁屏和壁纸", lock_after, 0, "shell.wallpaper");
-            group_row(g, "storage", "存储和备份", "", 1, "shell.storage");
-            group_row(g, "info", "关于和更新", "", 2, "shell.about");
+            char lock_after[32]; snprintf(lock_after, sizeof lock_after, TR("%lld 分钟"), (long long)ink_setting_get("power.lock_after_s") / 60);
+            group_row(g, "lock", TR("锁屏和壁纸"), lock_after, 0, "shell.wallpaper");
+            group_row(g, "storage", TR("存储和备份"), "", 1, "shell.storage");
+            group_row(g, "info", TR("关于和更新"), "", 2, "shell.about");
         }
     } else if (N.page_id == PAGE_DISPLAY) {
         if (block(INK_SLIDER))
@@ -1420,9 +1421,9 @@ static void create_page(lv_obj_t *screen, void *arg) {
     N.page = screen;
     N.page_id = (page_t) (intptr_t) arg;
     N.body_page = 0;
-    static const char *const titles[] = {"设置", "显示和亮度", "声音", "网络和 SIM 卡", "通知"};
+    static const char *const titles[] = {TR_NOOP("设置"), TR_NOOP("显示和亮度"), TR_NOOP("声音"), TR_NOOP("网络和 SIM 卡"), TR_NOOP("通知")};
     ink_shell_statusbar(screen, true);
-    ink_shell_topbar(screen, titles[N.page_id]);
+    ink_shell_topbar(screen, TR(titles[N.page_id]));
     N.page_body = ink_ui_box(screen, 0, INK_STATUS_BAR + INK_PRIMARY + INK_GAP_XS, INK_CANVAS_W,
                              INK_CANVAS_H - INK_STATUS_BAR - INK_PRIMARY - INK_GAP_XS, 0, INK_SURFACE_WHITE, false);
     draw_page_body();
@@ -1465,11 +1466,11 @@ static int page_snapshot(char *buf, size_t cap) {
                      (long long) ink_setting_get("display.warmth"), (long long) ink_setting_get("audio.volume"),
                      (long long) ink_setting_get("net.prefer"), ink_notify_unread());
     if (N.page_id != PAGE_NOTIFICATIONS && n >= 0 && (size_t) n < cap)
-        n += snprintf(buf + n, cap - (size_t) n, "字号=%lld；锁屏画面=%lld；自动锁屏秒=%lld；勿扰=%lld；叫名字=%lld；",
+        n += snprintf(buf + n, cap - (size_t) n, "字号=%lld；锁屏画面=%lld；自动锁屏秒=%lld；勿扰=%lld；叫名字=%lld；语言=%s；",
                       (long long) ink_setting_get("display.font_size"),
                       (long long) ink_setting_get("display.lock_style"),
                       (long long) ink_setting_get("power.lock_after_s"), (long long) ink_setting_get("notify.dnd"),
-                      (long long) ink_setting_get("voice.handsfree"));
+                      (long long) ink_setting_get("voice.handsfree"), ink_lang_code());
     if (N.body_pages > 1 && N.page_id != PAGE_NOTIFICATIONS && n >= 0 && (size_t) n < cap)
         n += snprintf(buf + n, cap - (size_t) n, "这一组第 %d 页，共 %d 页；动作：shell.page_next、shell.page_prev；",
                       N.body_page + 1, N.body_pages);
@@ -1718,7 +1719,7 @@ static void changed(void *ctx, int h, const char *id) {
         ink_ui_kick();
         return;
     }
-    if (!ctx && !strcmp(id, "display.font_size")) {
+    if (!ctx && (!strcmp(id, "display.font_size") || !strcmp(id, "system.language"))) {
         ink_ui_redraw();
         return;
     }
