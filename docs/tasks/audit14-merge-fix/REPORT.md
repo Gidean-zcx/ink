@@ -2,14 +2,14 @@
 
 - 基线：`bebb20b98de31214ffa8bbd0742ad8071899db46`。
 - 范围：只修 `boot-flow` 和 `hub-simulator-e2e` 的合并回归；仅宿主机测试与 S31 编译，不接触设备。
-- 状态：一行修复、专项、反向对照、普通及 ASan/UBSan 全量、gcccheck 完成；正在编译 S31。产品代码只替换 1 行（+1/-1）。
+- 状态：修复和验证结束；验收 2 的严格全流程零警告未达到，原因见下。仅本地提交，不推送、不接设备。产品代码只替换 1 行（+1/-1）。
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
 | 1 | 【实测】通过 | 普通及 ASan/UBSan 原话均为 `100% tests passed out of 345`，分别 452.52、529.12 秒，退出均为 0，无跳过；专项 6/6；撤回一行后二者均重现原失败；测试未改 | C1–C3；`focused.log`、`ctest.log`、`ctest-asan.log`、`reverse-boot.log`、`reverse-hub.log` |
-| 2 | gcccheck 通过，S31 进行中 | gcccheck 原话 `gcccheck: 1 compiled, 0 with findings`，退出 0，无跳过；S31 编译中，最终隐私扫描待执行 | C4–C6；`gcccheck.log`、`s31.log` |
+| 2 | 【实测】部分通过 | S31 构建、镜像、size、stack 退出 0，镜像 3191312 B，产品编译/链接 0 警告；仍有 5 条 SDK 配置警告和 1 条 shell 补全警告。gcccheck 原话 `gcccheck: 1 compiled, 0 with findings`，退出 0、无跳过。隐私扫描 0 匹配，diff 检查通过 | C4–C6；`gcccheck.log`、`s31.log`、`s31-summary.json`、`privacy.log`；`build-s31/export.log` |
 | 3 | 【实现】【实测】原因已定位 | `cap.c:122` 的短路求值跳过原来的电源锁读取；只恢复读取顺序，两项均通过 | 下节及 C1 |
 
 ## 原因和修法
@@ -25,6 +25,8 @@
 本节未加目录前缀的诊断文件均在 `work/audit14-merge-fix/`；它们被 Git 忽略，不提交构建产物或本机路径。
 
 内存检查覆盖全部 345 项（包括本机中枢环境），编译命令已核对包含 `-fsanitize=address,undefined` 和 `-Werror`，运行设置 `UBSAN_OPTIONS=halt_on_error=1`。两轮 CTest 和 `LastTest.log` 中均无 ASan/UBSan 错误诊断。
+
+S31 编译命令表已核对：用实际 RISC-V GCC 编译当前检出的 `system/policy/cap.c`，不是复用旧产品对象。提交范围仅该文件和本报告；无超过 5 MiB 的变更文件，无构建产物或共享文档。
 
 ## 复现命令
 
@@ -52,7 +54,8 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" ../../tools/gccche
 
 ## 没做到的
 
-- S31 和最终隐私扫描尚待完成，见验收表。没有进行实机验证。
+- 【实测】没有达到严格的 S31 全流程 0 警告。固定 SDK 提交 `fff9895c82d744c7237be8847347bdd1b07c6643` 的 `tools/cmake/component_validation.cmake:106` 产生 5 条警告：`wpa_supplicant` 使用 Wi-Fi 的三个私有目录，`esp_wifi` 使用 supplicant 的两个私有目录。这与 `docs/tasks/port-wifi-1/REPORT.md:40` 已记录的问题相同。另有系统 Bash 3.2.57 不能载入 SDK 补全的 1 条警告。SDK 位于本任务可写范围外；遵照总规则不修改或升级依赖，也没有关闭校验、过滤日志或压制警告。
+- 没有进行实机验证；本任务仅编译与宿主机测试。
 
 ## 和设计不一致的
 
