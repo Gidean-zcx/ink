@@ -399,10 +399,10 @@ static void on_reply(void *ctx, int status, const ink_json_t *j, int result) { /
         AI.tts_done_for = AI.stream;
         sid = take_session();
     }
+    post(id, status == INK_HUB_OK ? 1 : 2, status, budget ? "budget" : NULL);
     osal_mutex_unlock(AI.lock);
     if (sid) ink_rt_close(sid);
     ink_power_release(INK_NEED_NET);
-    post(id, status == INK_HUB_OK ? 1 : 2, status, budget ? "budget" : NULL);
 }
 
 /* --------------------------------------------------------- voice uplink */

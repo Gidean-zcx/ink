@@ -34,7 +34,8 @@ async def test_speech_exceeds_450_frames_and_initial_response_budget(make_hub):
     assert end["params"] == {"id": rid, "stream": 7, "frames": 751}
 
 
-@pytest.mark.parametrize("text", ["中文🙂" * 4000, "第一句。第二句！Third?\n" + "汉🙂字" * 900])
+@pytest.mark.parametrize("text", ["中文🙂" * 4000, "第一句。第二句！Third?\n" + "汉🙂字" * 900],
+                         ids=["over-limit", "long-sentences"])
 async def test_speech_and_display_keep_identical_utf8_text(make_hub, text):
     tts = RecordingTTS()
     _, client, url = await make_hub(model=FakeModel(text=text), tts=tts)
