@@ -7,7 +7,7 @@
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
 | 1 正向 | 【实测】专项通过 | 四阶段共 340 条检查；原有主流程、重启和清零检查保留，新增无模组页面、归属和持久日志检查 | 全量中的 `mobile-network`；`work/mobile-network-2/full-tests.log` |
-| 1 反向 | 待验证 | 原五组反向检查保留，增加无模组说明和订阅容量对照 | 待记录 |
+| 1 反向 | 【实测】7 组通过 | 原五组反向检查保留，无模组说明和订阅容量对照均命中指定失败 | `python -B tests/mobile_network/reverse.py --build build`；`work/mobile-network-2/reverse.log` |
 | 2 | 待验证 | 全量、ASan、能力清单、S31、gcccheck、隐私扫描 | 待记录 |
 | 3 | 待核对 | 与原 mobile-network 实现的差别 | 待记录 |
 
@@ -43,10 +43,13 @@
 
 - 已确认任务分支从指定基线开始，工作区干净；归档分支只读。
 - 已恢复归档分支的产品改动及全部原测试，解决五处冲突；保留主线键盘翻译、已知网络页面、日志权限和真实 Wi-Fi 端口。
-- 已补七个能力的 `app=settings`；沿用 `ink_cap_call` 统一日志，未另设日志通道。
+- 七个设置能力按 audit14-fix 的系统能力约定显式填 `app=NULL`；沿用 `ink_cap_call` 统一日志，未另设日志通道。初版误填 `settings`，已由 `audit14-ownership` 查出并纠正。
 - 无模组时由既有字节接口返回不可用，经 `net.usage` 返回 `interface=false`；页面给出中英文说明并禁用修改，测试与反向对照已加入，待运行。
 - 【实测】普通构建成功；专项四阶段通过。初始 64 槽订阅表在新增订阅后导致 `member pages failed to start`，扩为 68 槽后正常；测试资源预算不变。
 - 【实测】首轮 GCC 检查：`gcccheck: 10 compiled, 0 with findings`。全量正在运行。
+- 【实测】首轮全量原话：`97% tests passed, 9 tests failed out of 346`，316.49 秒。已修正可复现的集成阻塞：能力导出分页、设置测试缓冲、正文参数契约、系统能力归属和文档清单/行链接；正在复验。
+- 【实测】另将本任务涉及的九个产品编译单元替换为基线源码（包括原 64 槽订阅表），独立运行中枢端到端测试，仍为 `tool_calls=0`，夹具约 5.06 秒才就绪。基线对照日志：`work/mobile-network-2/baseline-e2e.log`；不扩展到中枢时序修复。
+- 【实测】受影响的 10 项回归全部通过，原话 `100% tests passed out of 10`；7 组反向对照通过；最终 GCC 为 `gcccheck: 11 compiled, 0 with findings`。六张截图已目视复核，待两轮最终全量与 S31 验证。
 
 ## 与原实现的差别
 

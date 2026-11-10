@@ -348,7 +348,7 @@ static const ink_setting_def_t TEST_SETTINGS[] = {
 };
 
 static void settings_checks(void) {
-    static char buf[2048]; /* the whole settings table, which grows with the settings */
+    static char buf[4096]; /* the whole settings table, which grows with the settings */
     ink_receipt_t rc;
     CHECK(ink_settings_define(TEST_SETTINGS, 3) == 0 && ink_setting_get("test.vol") == 3, "settings start at their defaults");
     CHECK(ink_settings_watch("test.", on_setting, NULL, INK_EXEC_DIRECT) == 0, "a settings watcher subscribes");

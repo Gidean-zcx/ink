@@ -202,7 +202,7 @@ static void run(void *arg) {
     const char *caps[] = {"net.apn_set", "net.roaming_set", "net.usage", "net.usage_reset", "shell.mobile", "shell.mobile_edit", "shell.mobile_save"};
     for (unsigned i = 0; i < sizeof caps / sizeof *caps; i++) {
         const ink_cap_t *cap = ink_cap_find(caps[i]);
-        CHECK(cap && cap->app && !strcmp(cap->app, "settings"), "mobile capability belongs to settings: %s", caps[i]);
+        CHECK(cap && !cap->app, "mobile capability belongs to the system: %s", caps[i]);
     }
     set("net.prefer", 2); set("time.auto", 0); set("time.zone_auto", 0); set("time.zone", 1);
     if (strcmp(phase, "no-modem")) CHECK(WAIT_FOR(state("cell.registered") && link(HAL_LINK_LTE), 10000), "LTE registered before scenario");

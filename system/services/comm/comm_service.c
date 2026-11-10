@@ -750,12 +750,12 @@ static void mobile_cap(ink_call_t *c) { /* exec.bg */
 }
 #define MOBILE_STR "{\"type\":\"string\",\"maxLength\":64}"
 static const ink_cap_t MOBILE_CAPS[] = {
-    {.id = "net.apn_set", .app = "settings", .title = "设置接入点并重连移动数据", .effect = INK_FX_SYSTEM, .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .run = mobile_cap,
+    {.id = "net.apn_set", .app = NULL, .title = "设置接入点并重连移动数据", .effect = INK_FX_SYSTEM, .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .run = mobile_cap,
      .input = "{\"type\":\"object\",\"properties\":{\"automatic\":{\"type\":\"boolean\"},\"name\":{\"type\":\"string\",\"maxLength\":100},\"user\":" MOBILE_STR ",\"password\":" MOBILE_STR "},\"required\":[\"automatic\"]}"},
-    {.id = "net.roaming_set", .app = "settings", .title = "开关数据漫游", .effect = INK_FX_SYSTEM, .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .run = mobile_cap,
+    {.id = "net.roaming_set", .app = NULL, .title = "开关数据漫游", .effect = INK_FX_SYSTEM, .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .run = mobile_cap,
      .input = "{\"type\":\"object\",\"properties\":{\"enabled\":{\"type\":\"boolean\"}},\"required\":[\"enabled\"]}"},
-    {.id = "net.usage", .app = "settings", .title = "移动流量和接入点（不含密码）", .effect = INK_FX_READ, .child_ok = true, .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .run = mobile_cap},
-    {.id = "net.usage_reset", .app = "settings", .title = "清零流量统计", .effect = INK_FX_SYSTEM, .ask_by_hand = true, .ask = "清零本月和上个月的流量统计，不能撤销", .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .run = mobile_cap}};
+    {.id = "net.usage", .app = NULL, .title = "移动流量和接入点（不含密码）", .effect = INK_FX_READ, .child_ok = true, .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .run = mobile_cap},
+    {.id = "net.usage_reset", .app = NULL, .title = "清零流量统计", .effect = INK_FX_SYSTEM, .ask_by_hand = true, .ask = "清零本月和上个月的流量统计，不能撤销", .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .run = mobile_cap}};
 
 int ink_comm_init(void) {
     static const ink_state_def_t mobile = {.id = "net.mobile_rev", .type = INK_ST_INT, .title = "移动网络设置变化"};

@@ -99,8 +99,8 @@ static void navigate(ink_call_t *c) {
 }
 int ink_mobile_network_init(void) {
     static const ink_cap_t caps[] = {
-        {.id = "shell.mobile", .app = "settings", .title = "移动网络", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-        {.id = "shell.mobile_edit", .app = "settings", .title = "手动接入点", .activity = "SetMobile", .effect = INK_FX_NAVIGATE, .expose = INK_EXPOSE_OWNER, .run = navigate},
-        {.id = "shell.mobile_save", .app = "settings", .title = "保存接入点", .activity = "SetMobile", .effect = INK_FX_NAVIGATE, .expose = INK_EXPOSE_OWNER, .run = navigate}};
+        {.id = "shell.mobile", .app = NULL, .title = "移动网络", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+        {.id = "shell.mobile_edit", .app = NULL, .title = "手动接入点", .activity = "SetMobile", .effect = INK_FX_NAVIGATE, .expose = INK_EXPOSE_OWNER, .run = navigate},
+        {.id = "shell.mobile_save", .app = NULL, .title = "保存接入点", .activity = "SetMobile", .effect = INK_FX_NAVIGATE, .expose = INK_EXPOSE_OWNER, .run = navigate}};
     return ink_cap_register(caps, sizeof caps / sizeof *caps) || ink_state_watch("net.mobile_rev", reload, NULL, INK_EXEC_UI);
 }
