@@ -55,6 +55,8 @@ static struct {
     char before[2];    /* exec.bg: wifi.enabled and bt.enabled before airplane mode, '0' or '1' */
     ink_svc_deadline_t later;
     ink_exec_job_t later_job;
+    const char *later_id; /* exec.bg: the switch set once the receipt is out, and to what */
+    bool later_v;
 } NS;
 
 static int h_online = -1, h_type = -1, h_signal = -1;
@@ -162,41 +164,48 @@ static void apply_airplane(void *ctx, int64_t on) { /* exec.bg: on every set, al
 static void airplane_later(void *arg) { /* exec.bg */
     (void)arg;
     ink_receipt_t rc;
-    ink_setting_set("net.airplane", 1, INK_SRC_SYSTEM, &rc);
+    ink_setting_set(NS.later_id, NS.later_v, INK_SRC_SYSTEM, &rc);
 }
 static void airplane_due(void *arg) { /* timer task: no waiting here */
     (void)arg;
     ink_exec_post(INK_EXEC_BG, &NS.later_job, airplane_later, NULL);
 }
 
-static void cap_airplane(ink_call_t *c) { /* exec.bg */
-    bool on;
+static void cap_switch(ink_call_t *c) { /* exec.bg: net.set_airplane and wifi.set_enabled */
+    bool on, plane = !strcmp(c->cap->id, "net.set_airplane");
+    const char *id = plane ? "net.airplane" : "wifi.enabled";
     if (!ink_args_get_bool(&c->args, "enabled", &on)) {
         c->rc.status = INK_RC_INVALID;
         return;
     }
     ink_svc_cancel(&NS.later);
-    if (on && (c->src == INK_SRC_AI || c->src == INK_SRC_REMOTE)) { /* the receipt first, then the link goes */
-        snprintf(c->rc.object, sizeof c->rc.object, "setting:net.airplane");
+    if (on == plane && (c->src == INK_SRC_AI || c->src == INK_SRC_REMOTE)) { /* the receipt first, then the link goes */
+        NS.later_id = id;
+        NS.later_v = on;
+        snprintf(c->rc.object, sizeof c->rc.object, "setting:%s", id);
         ink_svc_at(&NS.later, osal_now_us() + RECEIPT_FIRST_US, airplane_due, NULL);
-    } else if (ink_setting_set("net.airplane", on, c->src, &c->rc) != INK_RC_DONE) return;
-    snprintf(c->rc.say, sizeof c->rc.say, "%s", on ? "已打开飞行模式：4G、Wi-Fi 和蓝牙都关了，AI 要等关掉才能用；闹钟照常"
-                                                   : "已关闭飞行模式，Wi-Fi 和蓝牙回到原来的样子");
-    if (on && c->src == INK_SRC_AI) ink_ai_note(c->rc.say); /* shown here: the hub's answer will not come */
+    } else if (ink_setting_set(id, on, c->src, &c->rc) != INK_RC_DONE) return;
+    snprintf(c->rc.say, sizeof c->rc.say, "%s", !plane ? (on ? "已打开 Wi-Fi" : "已关闭 Wi-Fi")
+                                                : on ? "已打开飞行模式：4G、Wi-Fi 和蓝牙都关了，AI 要等关掉才能用；闹钟照常"
+                                                     : "已关闭飞行模式，Wi-Fi 和蓝牙回到原来的样子");
+    if (plane && on && c->src == INK_SRC_AI) ink_ai_note(c->rc.say); /* shown here: the hub's answer will not come */
 }
 
+#define SWITCH_ARGS "{\"type\":\"object\",\"properties\":{\"enabled\":{\"type\":\"boolean\"}},\"required\":[\"enabled\"]}"
 static const ink_cap_t NET_CAPS[] = {
     {.id = "net.set_airplane", .title = "开关飞行模式（关掉 4G、Wi-Fi 和蓝牙，之后可以单独再开 Wi-Fi 和蓝牙）",
-     .input = "{\"type\":\"object\",\"properties\":{\"enabled\":{\"type\":\"boolean\"}},\"required\":[\"enabled\"]}",
-     .effect = INK_FX_SYSTEM, .exec = INK_EXEC_BG, .run = cap_airplane},
+     .input = SWITCH_ARGS, .effect = INK_FX_SYSTEM, .exec = INK_EXEC_BG, .run = cap_switch},
+    {.id = "wifi.set_enabled", .title = "开关 Wi-Fi", .input = SWITCH_ARGS, .effect = INK_FX_LOCAL_WRITE, .exec = INK_EXEC_BG, .run = cap_switch},
 };
 
 static const char *const PREFER[] = {"auto", "wifi", "lte", NULL};
 static const ink_setting_def_t NET_SETTINGS[] = {
     {.id = "net.prefer", .title = "上网方式", .type = INK_SET_ENUM, .def = 0, .choices = PREFER, .child_may_change = false, .apply = apply_prefer,
      .apply_exec = INK_EXEC_DIRECT},
-    {.id = "wifi.enabled", .title = "Wi-Fi", .type = INK_SET_BOOL, .def = 1, .apply = apply_prefer, .apply_exec = INK_EXEC_DIRECT},
-    {.id = "net.airplane", .title = "飞行模式", .type = INK_SET_BOOL, .def = 0, .apply = apply_airplane, .apply_exec = INK_EXEC_BG},
+    {.id = "wifi.enabled", .title = "Wi-Fi", .type = INK_SET_BOOL, .def = 1, .via = "wifi.set_enabled", .apply = apply_prefer,
+     .apply_exec = INK_EXEC_DIRECT},
+    {.id = "net.airplane", .title = "飞行模式", .type = INK_SET_BOOL, .def = 0, .via = "net.set_airplane", .apply = apply_airplane,
+     .apply_exec = INK_EXEC_BG},
 };
 
 int ink_net_init(void) {
@@ -209,7 +218,7 @@ int ink_net_init(void) {
     ink_settings_define(NET_SETTINGS, 3);
     NS.airplane = ink_setting_get("net.airplane") != 0;
     if (ink_storage_read(AIRPLANE_PATH, NS.before, sizeof NS.before) != (int)sizeof NS.before) memcpy(NS.before, "11", 2);
-    if (ink_cap_register(NET_CAPS, 1) != 0) return -1;
+    if (ink_cap_register(NET_CAPS, 2) != 0) return -1;
     hal_link_status_t st;
     hal_net_link_status(&st);
     publish(&st);

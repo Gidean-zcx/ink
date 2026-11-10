@@ -3,7 +3,7 @@ import secrets
 
 from ink_hub.bus.policy import authorize
 from ink_hub.bus.schema import validate
-from ink_hub.gateway.wire import ANSWER_BYTES, ProtocolError, chunks, frame, response
+from ink_hub.gateway.wire import SPEECH_BYTES, ProtocolError, answer as clip, chunks, frame, response
 
 
 async def run_turn(self, rid, method, params):
@@ -66,10 +66,10 @@ async def run_turn(self, rid, method, params):
                 text = receipt.get("say") or ("操作未完成。" if receipt["status"] != "done" else text)
                 if receipt.get("page_gen", params.get("page_gen")) != params.get("page_gen"):
                     await self.tools.current([], guard=guard)
-            for seq, part in enumerate(chunks(text, total=ANSWER_BYTES)):
+            for seq, part in enumerate(chunks(clip(text))):
                 await self.notify("ai.delta", {"id": rid, "text": part, "seq": seq}, guard)
             if session:
-                audio = await self.hub.tts.synthesize("".join(chunks(text, total=ANSWER_BYTES)))
+                audio = await self.hub.tts.synthesize("".join(chunks(text, total=SPEECH_BYTES)))
                 if len(audio) > 450:
                     raise ProtocolError("朗读超过一轮预算")
                 start = asyncio.get_running_loop().time()

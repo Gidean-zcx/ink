@@ -35,7 +35,7 @@ static const struct {
     {"caps.domains", NULL}, {"caps.find", "query"}, {"system.undo", "object"}, {"system.home", NULL}, {"system.full_refresh", NULL},
     {"system.set_volume", "percent"}, {"system.switch_member", "id"}, {"system.shutdown", NULL}, {"system.factory_reset", ""},
     {"system.reboot", NULL}, {"state.list", NULL}, {"settings.list", NULL}, {"settings.get", "id"}, {"settings.set", "id,value"},
-    {"power.set_saving", "enabled"}, {"net.set_airplane", "enabled"},
+    {"power.set_saving", "enabled"}, {"net.set_airplane", "enabled"}, {"wifi.set_enabled", "enabled"},
     {"data.collections", NULL}, {"data.list", "collection"}, {"data.get", "collection,id"}, {"data.put", "collection,value"},
     {"data.delete", "collection,id"}, {"data.status", "collection"}, {"job.list", NULL}, {"job.cancel", "id"}, {"file.list", "path"}, {"file.stat", "path"}, {"file.read", "path"}, {"file.write", "path,text"},
     {"file.mkdir", "path"}, {"file.copy", "from,to"}, {"file.move", "from,to"}, {"file.delete", "path"}, {"file.free", NULL}, {"usb.status", NULL},

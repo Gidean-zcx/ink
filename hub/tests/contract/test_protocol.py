@@ -5,7 +5,7 @@ import pytest
 from aiohttp import WSMsgType
 
 from ink_hub.bus.registry import Capability
-from ink_hub.gateway.wire import ProtocolError, chunks, encode, frame, page, response, tokens
+from ink_hub.gateway.wire import ANSWER_BYTES, ANSWER_CUT, ProtocolError, chunks, encode, frame, page, response, tokens
 from ink_hub.models.fake import FakeModel
 from ink_hub.speech.fake import FakeASR
 from tests.fake_device import FakeDevice, lexical_tokens
@@ -125,8 +125,21 @@ async def test_text_answer_uses_delta_and_caps_bytes(make_hub):
     await device.connect()
     await device.call("ai.ask", {"question": "示例", "page": {"actions": []}})
     pieces = [m["params"]["text"] for m in device.messages if isinstance(m, dict) and m.get("method") == "ai.delta"]
-    assert len("".join(pieces).encode()) <= 1800
+    assert "".join(pieces) == "中文🙂" * 800  # 8 KB: within the device's 32 KB, nothing dropped
     assert len(pieces) > 1
+
+
+async def test_over_long_answer_ends_with_the_device_note(make_hub):
+    text = "中文🙂" * 4000  # 40 KB
+    _, client, url = await make_hub(model=FakeModel(text=text))
+    device = FakeDevice(client, url)
+    await device.connect()
+    await device.call("ai.ask", {"question": "示例", "page": {"actions": []}})
+    sent = "".join(m["params"]["text"] for m in device.messages if isinstance(m, dict) and m.get("method") == "ai.delta")
+    assert sent.endswith(ANSWER_CUT) and text.startswith(sent[:-len(ANSWER_CUT)])
+    # the device keeps it whole: its own cut leaves room for its note and the terminator (INK_AI_ANSWER_MAX)
+    assert len(sent.encode()) <= ANSWER_BYTES == 32768 - len(ANSWER_CUT.encode()) - 1
+    assert len(sent.encode()) > 32000
 
 
 @pytest.mark.parametrize("receipt", [{"status": "stale", "page_gen": 13}, {"status": "rejected"}, {"status": "failed"}, {"bad": 1}])

@@ -111,7 +111,9 @@ static void write_phase(void) {
     press("取消");
 
     /* an AI question that needs the network */
-    CHECK(AI("settings.set", "{\"id\":\"wifi.enabled\",\"value\":0}") && g_rc.status == INK_RC_DONE, "Wi-Fi off again");
+    CHECK(AI("settings.set", "{\"id\":\"wifi.enabled\",\"value\":0}") && g_rc.status == INK_RC_DONE && strstr(g_rc.say, "已关闭 Wi-Fi"),
+          "Wi-Fi off again, through wifi.set_enabled: %.120s", g_rc.say);
+    CHECK(WAIT_FOR(!ink_setting_get("wifi.enabled"), 4000), "off once the receipt is out");
     CHECK(WAIT_FOR(!state("net.online"), 5000), "offline");
     CHECK(AI("system.home", NULL), "home before asking"); quiet();
     on_ui(ask);

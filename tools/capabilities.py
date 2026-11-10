@@ -318,7 +318,8 @@ def render(entries, sources):
         risk = "高" if entry.flag("system") or entry.flag("ask_by_hand") else "中"
         ask = "人、AI 均需确认" if entry.flag("ask_by_hand") else "无需"
         lines.append(row(code(entry.id), entry.string("title"), code(entry.value("type")),
-                         "`settings.get` / `settings.set`", "成人、儿童（无需白名单）" if children else "仅成人",
+                         "`settings.get` / `settings.set`" + (f"（转给 `{entry.string('via')}`）" if entry.string("via") else ""),
+                         "成人、儿童（无需白名单）" if children else "仅成人",
                          risk + " / " + ask, f"[{entry.path}](../../{entry.path})"))
     lines += ["", "## 状态", "", row("状态 id", "描述", "类型", "AI 可读", "定义"), row(*(["---"] * 5))]
     for entry in states:

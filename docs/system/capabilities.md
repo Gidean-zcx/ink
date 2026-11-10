@@ -7,7 +7,7 @@ python3 tools/capabilities.py
 python3 tools/capabilities.py --check
 ```
 
-当前共 377 项：可调用能力 343、事件 34；设置 26 项、状态 48 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
+当前共 378 项：可调用能力 344、事件 34；设置 26 项、状态 48 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
 
 风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。
 
@@ -366,6 +366,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `wifi.forget` | 忘掉一个 Wi-Fi | 人、AI | 高 / local_destructive | 人、AI 均在设备确认 | 成人；儿童须白名单 | [s27](#s27) | [system/services/net/wifi.c](../../system/services/net/wifi.c) |
 | `wifi.list` | 这台设备记得的 Wi-Fi（只有名字） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s27](#s27) | [system/services/net/wifi.c](../../system/services/net/wifi.c) |
 | `wifi.scan` | 找附近的 Wi-Fi（要几秒） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s27](#s27) | [system/services/net/wifi.c](../../system/services/net/wifi.c) |
+| `wifi.set_enabled` | 开关 Wi-Fi | 人、AI | 中 / local_write | 无需 | 成人；儿童须白名单 | [s27](#s27) | [system/services/net/net_service.c](../../system/services/net/net_service.c) |
 
 ## 关联的设置、状态和事件
 
@@ -940,7 +941,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `display.wallpaper_file` | 壁纸图片编号 | `INK_SET_INT` | `settings.get` / `settings.set` | 仅成人 | 中 / 无需 | [system/ui/shell/wallpaper.c](../../system/ui/shell/wallpaper.c) |
 | `display.warmth` | 暖光（越大越暖） | `INK_SET_INT` | `settings.get` / `settings.set` | 成人、儿童（无需白名单） | 中 / 无需 | [system/services/display/light.c](../../system/services/display/light.c) |
 | `member.idle_return_s` | 大人锁屏多久后要重新输密码（秒） | `INK_SET_INT` | `settings.get` / `settings.set` | 仅成人 | 高 / 人、AI 均需确认 | [system/policy/members.c](../../system/policy/members.c) |
-| `net.airplane` | 飞行模式 | `INK_SET_BOOL` | `settings.get` / `settings.set` | 仅成人 | 中 / 无需 | [system/services/net/net_service.c](../../system/services/net/net_service.c) |
+| `net.airplane` | 飞行模式 | `INK_SET_BOOL` | `settings.get` / `settings.set`（转给 `net.set_airplane`） | 仅成人 | 中 / 无需 | [system/services/net/net_service.c](../../system/services/net/net_service.c) |
 | `net.prefer` | 上网方式 | `INK_SET_ENUM` | `settings.get` / `settings.set` | 仅成人 | 中 / 无需 | [system/services/net/net_service.c](../../system/services/net/net_service.c) |
 | `notify.dnd` | 勿扰 | `INK_SET_BOOL` | `settings.get` / `settings.set` | 成人、儿童（无需白名单） | 中 / 无需 | [system/services/notify/notify_service.c](../../system/services/notify/notify_service.c) |
 | `power.lock_after_s` | 自动锁屏（秒） | `INK_SET_INT` | `settings.get` / `settings.set` | 仅成人 | 中 / 无需 | [system/services/power/power_service.c](../../system/services/power/power_service.c) |
@@ -950,7 +951,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `time.zone` | 时区 | `INK_SET_ENUM` | `settings.get` / `settings.set` | 仅成人 | 中 / 无需 | [system/services/time/time_service.c](../../system/services/time/time_service.c) |
 | `update.auto_download` | 自动下载新版本（流量要钱，默认关） | `INK_SET_BOOL` | `settings.get` / `settings.set` | 仅成人 | 中 / 无需 | [system/services/update/update_service.c](../../system/services/update/update_service.c) |
 | `voice.handsfree` | 叫名字（什么时候在等） | `INK_SET_ENUM` | `settings.get` / `settings.set` | 仅成人 | 中 / 无需 | [system/services/audio/audio_service.c](../../system/services/audio/audio_service.c) |
-| `wifi.enabled` | Wi-Fi | `INK_SET_BOOL` | `settings.get` / `settings.set` | 仅成人 | 中 / 无需 | [system/services/net/net_service.c](../../system/services/net/net_service.c) |
+| `wifi.enabled` | Wi-Fi | `INK_SET_BOOL` | `settings.get` / `settings.set`（转给 `wifi.set_enabled`） | 仅成人 | 中 / 无需 | [system/services/net/net_service.c](../../system/services/net/net_service.c) |
 
 ## 状态
 

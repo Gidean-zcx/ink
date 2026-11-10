@@ -31,6 +31,7 @@
 #include "ink/sys/members.h"
 #include "ink/sys/settings.h"
 #include "ink/sys/state.h"
+#include "ink/sys/svc.h"
 
 #define COMM_STACK 8192 /* PSRAM: never touches the flash; AT replies and SMS text are parsed on it */
 #define COMM_PRIO 3
@@ -39,6 +40,8 @@
 #define SIM_RETRY_MAX_US 300000000ull
 #define SIM_RETRIES 6
 #define SMS_MIN_LEFT_MS 3000 /* with less time before its deadline a message is not started */
+#define REG_LOOK_US 2000000ull /* after the radio came on, how often registering is looked at, and how many times */
+#define REG_LOOKS 15
 
 typedef struct {
     char from[24];
@@ -57,7 +60,8 @@ static struct {
     uint32_t call_generation;
     char tones[65]; /* local display only, protected by lock */
     int h_registered, h_sim;
-    ink_exec_job_t sim_job;
+    ink_exec_job_t sim_job, reg_job;
+    ink_svc_deadline_t reg_at;
     uint64_t sim_retry_at, sim_retry_us; /* comm task's next look at the card, 0 = none due */
     int sim_tries;
     ink_exec_job_t radio_job;
@@ -186,30 +190,40 @@ static void sim_retry(bool again) {
     osal_mutex_unlock(CM.lock);
 }
 
-static void sim_switch(void *arg) { /* exec.bg: the switch takes seconds */
-    (void)arg;
+static void sim_switch(void *arg) { /* exec.bg: the switch takes seconds; from radio() (arg) no waiting to register */
     hal_cell_slot_t want = wanted_slot();
     hal_cell_status_t st;
     osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
     int r = hal_cell_status(&st) ? 0 : -1;
     bool switched = r == 0 && st.slot != want && !ink_setting_get("net.airplane"); /* the switch turns the radio on */
-    if (switched) r = hal_cell_select_sim(want, 60000);
+    if (switched) r = hal_cell_select_sim(want, arg ? 0 : 60000);
     osal_mutex_unlock(CM.at);
     if (switched) ink_probe_count(r == 0 ? "comm.sim_switched" : r == 1 ? "comm.sim_switched_unregistered" : "comm.sim_switch_failed");
     refresh_status(&st);
     sim_retry(r != 0); /* 1: on the new card, not registered yet: cell.registered is looked at again too */
 }
 
+/* After the radio came on: has the card registered? Looked at now and then for REG_LOOKS, the modem free in between. */
+static void reg_due(void *arg);
+static void reg_look(void *arg) { /* exec.bg */
+    hal_cell_status_t st;
+    uintptr_t n = (uintptr_t)arg;
+    if (!ink_setting_get("net.airplane") && refresh_status(&st) && !st.registered && n < REG_LOOKS)
+        ink_svc_at(&CM.reg_at, osal_now_us() + REG_LOOK_US, reg_due, (void *)(n + 1));
+}
+static void reg_due(void *arg) { ink_exec_post(INK_EXEC_BG, &CM.reg_job, reg_look, arg); } /* timer task */
+
 static void radio(void *arg) { /* exec.bg: airplane mode changed, or the modem came up with it on */
     (void)arg;
     bool on = !ink_setting_get("net.airplane");
     osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
-    int r = hal_cell_radio(on, 30000);
+    int r = hal_cell_radio(on, 0); /* only the command: registering is not waited for with the modem held */
     osal_mutex_unlock(CM.at);
     if (r < 0) ink_probe_count("comm.radio_failed");
     hal_cell_status_t st;
     if (!on) refresh_status(&st);
-    else sim_switch(NULL); /* a card chosen meanwhile; it also says what the modem does now */
+    else sim_switch((void *)1); /* a card chosen meanwhile; it also says what the modem does now */
+    if (on) ink_svc_at(&CM.reg_at, osal_now_us() + REG_LOOK_US, reg_due, (void *)1);
 }
 static void airplane_changed(void *ctx, int h, const char *id) { (void)ctx; (void)h; (void)id; radio(NULL); }
 
