@@ -31,7 +31,7 @@ for name, path, needle, replacement, target, expected in cases:
     before = hashlib.sha256(source.read_bytes()).hexdigest()
     assert original.count(needle) == 1, name
     positive = build / 'test-out' / (target.removeprefix('sim-') if target.startswith('sim-i18n-shell') else 'small-gaps-product/pages-en') / 'metrics.json'
-    assert expected not in '\n'.join(json.loads(positive.read_text()).get('warnings', [])), name + ': positive already fails the specific assertion'
+    positive_ok = expected not in '\n'.join(json.loads(positive.read_text()).get('warnings', []))
     entry = db[source.resolve()]
     obj, binary, changed = area / (name + '.o'), area / name, area / (name + '.c')
     changed.write_text(original.replace(needle, replacement))
@@ -59,9 +59,11 @@ for name, path, needle, replacement, target, expected in cases:
     result = subprocess.run(command, cwd=ROOT, env={**os.environ, 'INK_KEEP_EVIDENCE': '1'}, capture_output=True, text=True, timeout=240)
     log = result.stdout + result.stderr
     (area / (name + '.log')).write_text(log)
-    assert result.returncode and expected in log, (name, log[-8000:])
+    proven = positive_ok and bool(result.returncode) and expected in log
     assert hashlib.sha256(source.read_bytes()).hexdigest() == before
-    summary.append({'case': name, 'compile': compiled.returncode, 'link': linked.returncode, 'test': result.returncode, 'failure': expected})
+    summary.append({'case': name, 'compile': compiled.returncode, 'link': linked.returncode, 'test': result.returncode, 'failure': expected, 'positive_ok': positive_ok, 'proven': proven})
     (area / 'summary.json').write_text(json.dumps(summary, indent=2) + '\n')
-    print(name, 'EXPECTED FAIL', flush=True)
+    print(name, 'EXPECTED FAIL' if proven else 'NOT PROVEN', flush=True)
 (area / 'summary.json').write_text(json.dumps(summary, indent=2) + '\n')
+if not all(row['proven'] for row in summary):
+    raise SystemExit('Some controls are not proven; see summary.json')
