@@ -1399,6 +1399,11 @@ ink_sim_executable(sim-calendar tests/calendar/calendar.c)
 target_link_libraries(sim-calendar PRIVATE ink_apps ink_system)
 add_test(NAME calendar COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/calendar/run.py --build ${CMAKE_BINARY_DIR})
 
+target_sources(ink_system PRIVATE system/apps/calculator/calculator.c)
+ink_sim_executable(sim-calculator tests/calculator/calculator.c)
+target_link_libraries(sim-calculator PRIVATE ink_apps ink_system)
+add_test(NAME calculator COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/calculator/run.py --build ${CMAKE_BINARY_DIR})
+
 ink_sim_executable(sim-confirm-pages tests/confirm_pages/pages.c tests/confirm_pages/boundary.c)
 target_link_libraries(sim-confirm-pages PRIVATE ink_apps ink_system)
 add_test(NAME confirm-pages COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/confirm_pages/run.py --build ${CMAKE_BINARY_DIR})

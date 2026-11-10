@@ -61,7 +61,7 @@ typedef struct {
     int (*card)(int index, ink_card_t *out); /* cheap, whether the app is open or not: 1, 0 past the last */
 } ink_app_def_t;
 
-/** At boot, before the UI starts; static definitions. Up to 16. 0, or -1 (full, or the id is taken or not usable as a file name). */
+/** At boot, before the UI starts; static definitions. Up to 40. 0, or -1 (full, or the id is taken or not usable as a file name). */
 int ink_app_register(const ink_app_def_t *def);
 int ink_apps_init(void);
 int ink_app_count(void);

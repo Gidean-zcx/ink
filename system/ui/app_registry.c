@@ -24,7 +24,7 @@
 #include "ink/sys/ui.h"
 #include "ink/ui_shell.h"
 
-#define MAX_APPS 32 /* 15 system apps by now, room for installed ones */
+#define MAX_APPS 40 /* 16 system apps by now, room for installed ones */
 #define FREEZE_AFTER_US 10000000ull
 #define LIST_CAP 8192 /* app.list: about 200 bytes an app, all MAX_APPS fit */
 #define CARDS_CAP 2048 /* app.cards: what Today can read; a bigger source fails */
