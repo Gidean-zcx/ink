@@ -83,7 +83,6 @@ int hal_opus_decode(hal_opus_dec_t *d, const uint8_t *pkt, int len, int16_t *pcm
 void hal_opus_dec_free(hal_opus_dec_t *d) {  }
 
 /* Device info, log, random; RTC and accelerometer: s31_board.c. */
-const char *hal_device_reset_reason(void) { return "skeleton"; }
 void hal_device_get_info(hal_device_info_t *out) { *out = (hal_device_info_t){.profile_id = "esp32s31-skeleton", .display_name = "ESP32-S31 skeleton", .device_class = HAL_CLASS_MCU, .cpu_cores = configNUMBER_OF_CORES, .cpu_mhz = CONFIG_ESP_DEFAULT_CPU_FREQ_MHZ}; }
 void hal_log_write(const char *line) { esp_log_write(ESP_LOG_INFO, "ink", "%s\n", line); }
 void hal_random_fill(void *out, size_t n) { esp_fill_random(out, n); }

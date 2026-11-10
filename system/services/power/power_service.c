@@ -40,6 +40,7 @@
 #include "ink/sys/settings.h"
 #include "ink/sys/state.h"
 #include "ink/sys/storage.h"
+#include "ink/sys/log.h"
 
 /* Internal RAM: the light-sleep entry runs on this stack. 4096 like the vendor's light-sleep task
  * (Metalio-E-INK4-Plus power_policy_standby_lp.cc, "standby_lp", internal RAM); 3072 overflowed the
@@ -179,6 +180,7 @@ static void publish_battery(void) {
             if (!saved) ink_probe_count("power.shutdown_unsaved");
             ink_probe_count("power.low_battery_off");
             if (PS.off_picture) PS.off_picture(saved ? "battery" : "battery_unsaved");
+            ink_log_flush();
             hal_power_shutdown();
         }
     }
@@ -416,6 +418,7 @@ static void cap_shutdown(ink_call_t *c) { /* exec.bg */
     PS.off_picture_ok = false;
     if (PS.off_picture) PS.off_picture("shutdown");
     if (!PS.off_picture_ok) { c->rc.status = INK_RC_FAILED; snprintf(c->rc.say, sizeof c->rc.say, "关机画面没显示成功，请重试"); return; }
+    if (!ink_log_flush()) { c->rc.status = INK_RC_FAILED; return; }
     hal_power_shutdown();
 }
 

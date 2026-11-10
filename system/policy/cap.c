@@ -11,6 +11,7 @@
 #include "ink/probe.h"
 #include "ink/sys/appreg.h"
 #include "ink/sys/cap.h"
+#include "ink/sys/log.h"
 #include "ink/sys/camera.h"
 #include "ink/sys/power.h"
 #include "ink/sys/confirm.h"
@@ -196,6 +197,7 @@ typedef struct {
     char *json; /* JSON arguments until the gate passed */
     char *result; /* what the handler found (rc.result points here until the slot goes) */
     uint64_t deadline_us;
+    uint64_t log_started;
     ink_exec_job_t start_job, answer_job;
     uint8_t refs;
     bool used;
@@ -429,6 +431,7 @@ static void unlock_retire(pending_t *p) {
 /* Under the lock: `rc` is the call's final receipt. Becoming final and being found by a retry are one
  * step: there is no moment in which a retry would run it again. */
 static void settle(pending_t *p, const ink_receipt_t *rc) {
+    ink_log(rc->status == INK_RC_FAILED ? INK_LOG_ERROR : INK_LOG_INFO, "cap", "%.47s src=%d result=%d us=%llu", p->call.cap ? p->call.cap->id : "remote-or-unknown", p->o.src, rc->status, (unsigned long long)(osal_now_us() - p->log_started));
     p->replied = true;
     p->out = *rc;
     p->out.page_gen = ink_ui_content_version();
@@ -656,6 +659,8 @@ static pending_t *prepare(const char *id, const ink_cap_t *c, const ink_args_t *
     }
     p->call.cap = c;
     p->origin_epoch = origin_epoch;
+    p->log_started = osal_now_us();
+    ink_log(INK_LOG_INFO, "cap", "call %.47s src=%d", c ? c->id : "remote-or-unknown", o->src);
     snprintf(p->id, sizeof p->id, "%s", id);
     if (args) p->call.args = *args;
     else ink_args_init(&p->call.args);

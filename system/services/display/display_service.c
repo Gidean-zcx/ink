@@ -9,6 +9,7 @@
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/display.h"
+#include "ink/sys/log.h"
 #include "refresh_policy.h"
 
 #define DS_QUEUE_LEN 24
@@ -116,6 +117,7 @@ static void dispatch_one(rp_dispatch_t d, bool refine) {
                                      done_cb, NULL);
     osal_mutex_unlock(DS.lock);
     if (!id) {
+        ink_log(INK_LOG_ERROR, "display", "refresh rejected");
         __atomic_add_fetch(&DS.failures, 1, __ATOMIC_RELEASE);
         rp_done(&DS.rp, &d, false);
         return;
@@ -145,6 +147,7 @@ static bool cause_seen(uint64_t cause, const char *tag) {
 }
 
 static void on_done(const hal_display_result_t *r) {
+    ink_log_display(r->done_us - r->started_us, r->ok);
     int k = 0;
     while (k < DS.nflight && DS.flight[k].id != r->id) k++;
     if (k == DS.nflight) return; /* not ours (cannot happen) */

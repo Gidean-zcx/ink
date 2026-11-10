@@ -25,6 +25,7 @@ extern "C" {
 #endif
 
 int ink_storage_init(void);
+void ink_storage_log_ready(void); /* Wake the existing storage task for urgent log data. */
 /** Offer the read cache to the resource manager (after ink_res_init). */
 int ink_storage_reclaimable(void);
 /** Queue an atomic replace of `path` (/user/...) with a copy of data. Coalesces repeated writes of one path. */
