@@ -15,6 +15,12 @@
  * Airplane mode (the setting net.airplane): the modem's radio is off, also
  * after a restart (the modem does not keep it); calls and messages are refused
  * with the reason, and a card switch waits until the radio is on again.
+ *
+ * Long messages come in parts (3GPP TS 23.040 §9.2.3.24.1). Each part is kept
+ * in sms.parts (on the flash: a restart loses none) until all have come; then
+ * they are one message.received, in order. A part still missing after
+ * SMS_PART_WAIT_US: what came is shown, marked incomplete, so a code or an
+ * address is not held back for good. Parts kept before a restart wait again.
  */
 #include <stdio.h>
 #include <string.h>
@@ -39,14 +45,18 @@
 #define SIM_RETRY_MAX_US 300000000ull
 #define SIM_RETRIES 6
 #define SMS_MIN_LEFT_MS 3000 /* with less time before its deadline a message is not started */
-
-typedef struct {
-    char from[24];
-    char text[355];
-} msg_t;
+/* The parts of one message are sent one after another and the network hands them on together, within seconds;
+ * one that is still missing after this is waiting for the network's next try, often much later (ESTIMATE). */
+#define SMS_PART_WAIT_US 600000000ull
+#define SMS_GROUPS 8 /* messages being put together at once; a ninth shows the oldest as it is */
+#define SMS_INCOMPLETE "【短信不完整】"
 
 static const ink_db_def_t MESSAGES = {.name = "sms.messages", .title = "短信会话", .scope = INK_DB_MEMBER,
     .schema = 1, .json = true, .ai_read = true, .max_records = 512};
+static const ink_db_def_t PARTS = {.name = "sms.parts", .title = "未收齐的长短信", .scope = INK_DB_DEVICE, .schema = 1,
+    .json = true, .max_records = 64};
+
+typedef struct { char peer[24]; int64_t ref, total; } sms_key_t; /* one long message: sender, reference, parts */
 
 static struct {
     osal_mutex_t *lock;
@@ -62,8 +72,16 @@ static struct {
     int sim_tries;
     ink_exec_job_t radio_job;
     /* comm task: too large for its stack, and internal RAM has no room for them */
-    msg_t rx;
+    hal_cell_sms_t rx;
     ink_args_t rx_args, ev_args;
+    /* exec.bg only (one task, one job at a time): too large for its stack */
+    char text[INK_SMS_TEXT_MAX], part[sizeof ((hal_cell_sms_t *)0)->text], raw[3 * INK_SMS_TEXT_MAX];
+    ink_json_t json;
+    ink_args_t bg_args;
+    struct { sms_key_t key; uint64_t since; } groups[SMS_GROUPS]; /* since: 0 = free */
+    bool parts_loaded;
+    int groups_open; /* atomic: the comm task looks again while messages wait for parts */
+    ink_exec_job_t sweep_job;
 } CM INK_PSRAM_BSS;
 
 static void call_begin(const char *member, const char *peer) { /* at held */
@@ -97,8 +115,8 @@ void ink_comm_call_tones(char *out, size_t cap) {
     osal_mutex_unlock(CM.lock);
 }
 
-static bool save_message(ink_db_t *db, uint32_t *id, const char *peer, const char *text, const char *status, uint8_t src) {
-    char raw[1024]; ink_jw_t w; ink_jw_init(&w, raw, sizeof raw);
+static bool save_message(ink_db_t *db, uint32_t *id, const char *peer, const char *text, const char *status, uint8_t src) { /* exec.bg */
+    char *raw = CM.raw; ink_jw_t w; ink_jw_init(&w, raw, sizeof CM.raw);
     ink_jw_raw(&w, "{\"peer\":"); ink_jw_str(&w, peer); ink_jw_raw(&w, ",\"text\":"); ink_jw_str(&w, text);
     ink_jw_raw(&w, ",\"status\":"); ink_jw_str(&w, status); ink_jw_raw(&w, "}");
     if (!*id) *id = ink_db_new_id(db);
@@ -106,8 +124,8 @@ static bool save_message(ink_db_t *db, uint32_t *id, const char *peer, const cha
     return !w.overflow && ink_db_put(db, &wr, NULL) == INK_DB_OK && ink_db_wait(db, ver, 3000000) == 0;
 }
 static void received(void *ctx, const char *event, const ink_args_t *a) {
-    (void)ctx; (void)event; char member[16], peer[24], text[355];
-    ink_args_get_str(a, "member", member, sizeof member); ink_args_get_str(a, "from", peer, sizeof peer); ink_args_get_str(a, "text", text, sizeof text);
+    (void)ctx; (void)event; char member[16], peer[24], *text = CM.text;
+    ink_args_get_str(a, "member", member, sizeof member); ink_args_get_str(a, "from", peer, sizeof peer); ink_args_get_str(a, "text", text, sizeof CM.text);
     ink_db_t *db = ink_db_open_member(&MESSAGES, member); uint32_t id = 0;
     if (!db || !save_message(db, &id, peer, text, "收到", INK_SRC_SYSTEM)) ink_probe_count("sms.save_failed");
     ink_db_close(db);
@@ -148,11 +166,11 @@ static void call_focus(bool on) {
     } else if (!on) ink_audio_focus_release(__atomic_exchange_n(&token, 0, __ATOMIC_ACQ_REL));
 }
 
-static void on_sms(int index) { /* comm task */
-    msg_t *m = &CM.rx;
+static void on_sms(int index) { /* comm task: like a whole message, a part is stored on exec.bg */
+    hal_cell_sms_t *m = &CM.rx;
     ink_args_t *a = &CM.rx_args;
     osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
-    int got = hal_cell_sms_take(index, m->from, sizeof m->from, m->text, sizeof m->text);
+    int got = hal_cell_sms_take(index, m);
     osal_mutex_unlock(CM.at);
     if (got < 0) {
         ink_probe_count("comm.sms_read_failed");
@@ -160,10 +178,105 @@ static void on_sms(int index) { /* comm task */
     }
     utf8_clip(m->text);
     ink_args_init(a);
-    ink_args_str(a, "from", m->from);
+    ink_args_str(a, "from", m->number);
     ink_args_str(a, "text", m->text);
-    ink_cap_emit("message.received", a);
+    if (m->total > 1) { ink_args_int(a, "ref", m->ref); ink_args_int(a, "total", m->total); ink_args_int(a, "seq", m->seq); }
+    ink_cap_emit(m->total > 1 ? "comm.sms_part" : "message.received", a);
 }
+
+/* ------------------------------------------------------------ long messages: parts (exec.bg) */
+
+/* With seq 0: the next kept part after the cursor, whichever message it belongs to (*k filled in). Else part seq of
+ * message *k, its text into CM.part. Its record id, 0 if none. */
+static uint32_t part_next(ink_db_t *db, ink_db_cursor_t *cur, sms_key_t *k, int64_t seq) {
+    ink_rec_t rec; sms_key_t f; int64_t q = 0; ink_json_t *j = &CM.json;
+    while (ink_db_next(db, cur, &rec, CM.raw, sizeof CM.raw - 1) == 1) {
+        CM.raw[rec.len < sizeof CM.raw ? rec.len : sizeof CM.raw - 1] = 0;
+        if (ink_json_parse(j, CM.raw, strlen(CM.raw)) || ink_json_str(j, ink_json_find(j, 0, "peer"), f.peer, sizeof f.peer) < 0 ||
+            !ink_json_int(j, ink_json_find(j, 0, "ref"), &f.ref) || !ink_json_int(j, ink_json_find(j, 0, "total"), &f.total) ||
+            !ink_json_int(j, ink_json_find(j, 0, "seq"), &q)) continue;
+        if (!seq) { *k = f; return rec.id; }
+        if (strcmp(f.peer, k->peer) || f.ref != k->ref || f.total != k->total || q != seq) continue;
+        ink_json_str(j, ink_json_find(j, 0, "text"), CM.part, sizeof CM.part);
+        return rec.id;
+    }
+    return 0;
+}
+static uint32_t part_find(ink_db_t *db, sms_key_t k, int64_t seq) { ink_db_cursor_t cur = {0}; return part_next(db, &cur, &k, seq); }
+static bool same(const sms_key_t *a, const sms_key_t *b) { return !strcmp(a->peer, b->peer) && a->ref == b->ref && a->total == b->total; }
+
+/* All parts here: one message, in order. force (waited long enough, or no room): what came, "……" for what did not. */
+static void settle(ink_db_t *db, sms_key_t k, bool force) {
+    int64_t have = 0;
+    for (int64_t s = 1; s <= k.total; s++) have += part_find(db, k, s) != 0;
+    if (have < k.total && !force) return;
+    size_t n = (size_t)snprintf(CM.text, sizeof CM.text, "%s", have < k.total ? SMS_INCOMPLETE : "");
+    for (int64_t s = 1; s <= k.total; s++) {
+        uint32_t id = part_find(db, k, s);
+        const char *piece = id ? CM.part : n >= 6 && !strcmp(CM.text + n - 6, "……") ? "" : "……"; /* one mark per gap */
+        n += (size_t)snprintf(CM.text + n, sizeof CM.text - n, "%.*s", (int)(sizeof CM.text - 1 - n), piece);
+        if (id) ink_db_del(db, id, INK_SRC_SYSTEM);
+    }
+    utf8_clip(CM.text); /* longer than any message sent from here: what fits */
+    ink_args_init(&CM.bg_args);
+    ink_args_str(&CM.bg_args, "from", k.peer);
+    ink_args_str(&CM.bg_args, "text", CM.text);
+    ink_cap_emit("message.received", &CM.bg_args);
+    int open = 0;
+    for (int i = 0; i < SMS_GROUPS; i++) {
+        if (CM.groups[i].since && same(&CM.groups[i].key, &k)) CM.groups[i].since = 0;
+        open += CM.groups[i].since != 0;
+    }
+    __atomic_store_n(&CM.groups_open, open, __ATOMIC_RELEASE);
+}
+
+/* A message waiting for parts, from now on (the wait starts again after a restart). No room: the oldest is shown. */
+static void group_note(ink_db_t *db, const sms_key_t *k) {
+    int at = -1, oldest = 0;
+    for (int i = 0; i < SMS_GROUPS; i++) {
+        if (CM.groups[i].since && same(&CM.groups[i].key, k)) return;
+        if (!CM.groups[i].since && at < 0) at = i;
+        if (CM.groups[i].since < CM.groups[oldest].since) oldest = i;
+    }
+    if (at < 0) settle(db, CM.groups[at = oldest].key, true);
+    CM.groups[at].key = *k;
+    CM.groups[at].since = osal_now_us() | 1;
+    __atomic_add_fetch(&CM.groups_open, 1, __ATOMIC_ACQ_REL);
+}
+
+static void sweep(void *arg) { /* exec.bg: parts kept before a restart; messages that waited long enough */
+    (void)arg;
+    ink_db_t *db = ink_db_open(&PARTS, NULL);
+    if (!db) return;
+    sms_key_t k; ink_db_cursor_t cur = {0};
+    while (!CM.parts_loaded && part_next(db, &cur, &k, 0)) group_note(db, &k);
+    CM.parts_loaded = true;
+    for (int i = 0; i < SMS_GROUPS; i++)
+        if (CM.groups[i].since && osal_now_us() - CM.groups[i].since >= SMS_PART_WAIT_US) settle(db, CM.groups[i].key, true);
+    ink_db_close(db);
+}
+
+static void part_arrived(void *ctx, const char *event, const ink_args_t *a) {
+    (void)ctx; (void)event; sms_key_t k = {0}; int64_t seq = 0;
+    ink_args_get_str(a, "from", k.peer, sizeof k.peer);
+    ink_args_get_int(a, "ref", &k.ref); ink_args_get_int(a, "total", &k.total); ink_args_get_int(a, "seq", &seq);
+    ink_db_t *db = ink_db_open(&PARTS, NULL);
+    if (!db) { ink_probe_count("sms.save_failed"); return; }
+    sweep(NULL); /* after a restart, what was kept comes first */
+    if (!part_find(db, k, seq)) { /* a part sent again is kept once */
+        ink_args_get_str(a, "text", CM.part, sizeof CM.part);
+        ink_jw_t w; ink_jw_init(&w, CM.raw, sizeof CM.raw); uint32_t ver = 0;
+        ink_jw_raw(&w, "{\"peer\":"); ink_jw_str(&w, k.peer); ink_jw_raw(&w, ",\"ref\":"); ink_jw_int(&w, k.ref); ink_jw_raw(&w, ",\"total\":");
+        ink_jw_int(&w, k.total); ink_jw_raw(&w, ",\"seq\":"); ink_jw_int(&w, seq); ink_jw_raw(&w, ",\"text\":"); ink_jw_str(&w, CM.part); ink_jw_raw(&w, "}");
+        ink_db_write_t wr = {.id = ink_db_new_id(db), .sort = seq, .data = CM.raw, .len = w.len, .src = INK_SRC_SYSTEM, .written_ver = &ver};
+        if (w.overflow || ink_db_put(db, &wr, NULL) != INK_DB_OK || ink_db_wait(db, ver, 3000000) != 0) ink_probe_count("sms.save_failed");
+    }
+    group_note(db, &k);
+    settle(db, k, false);
+    ink_db_close(db);
+}
+
+int ink_comm_sms_parts(const char *text) { return hal_cell_sms_parts(text); }
 
 /* ------------------------------------------------------------ the card in use */
 
@@ -235,12 +348,15 @@ static void sim_check(void) {
 static void comm_task(void *arg) {
     (void)arg;
     uint64_t status_at = osal_now_us() + (ink_setting_get("net.airplane") ? 0 : STATUS_DELAY_US); /* the radio goes off at once */
+    uint64_t sweep_at = osal_now_us() + 60000000ull; /* parts kept before a restart: once start-up is over (a new part looks too) */
+    bool loaded = false;
     for (;;) {
         osal_mutex_lock(CM.lock, OSAL_WAIT_FOREVER);
         uint64_t retry_at = CM.sim_retry_at;
         osal_mutex_unlock(CM.lock);
         hal_cell_event_t ev;
-        if (hal_cell_wait_event(&ev, status_at || retry_at ? 1000 : 60000)) { /* a long wait when nothing is due */
+        bool waiting = !loaded || __atomic_load_n(&CM.groups_open, __ATOMIC_ACQUIRE) > 0;
+        if (hal_cell_wait_event(&ev, status_at || retry_at ? 1000 : waiting ? 10000 : 60000)) { /* a long wait when nothing is due */
             ink_args_t *a = &CM.ev_args;
             ink_args_init(a);
             if (ev.type == HAL_CELL_EV_SMS) on_sms(ev.sms_index);
@@ -266,6 +382,7 @@ static void comm_task(void *arg) {
             }
         }
         uint64_t now = osal_now_us();
+        if (waiting && now >= sweep_at && ink_exec_post(INK_EXEC_BG, &CM.sweep_job, sweep, NULL) == 0) sweep_at = now + 10000000ull, loaded = true;
         if ((status_at && now >= status_at) || (retry_at && now >= retry_at)) {
             status_at = 0;
             osal_mutex_lock(CM.lock, OSAL_WAIT_FOREVER);
@@ -278,14 +395,31 @@ static void comm_task(void *arg) {
 
 /* ------------------------------------------------------------ capabilities */
 
+/* What a message's record and receipt say: of a long one, which parts went and which did not. */
+static void send_status(char *s, size_t cap, int r, int parts, int sent) {
+    if (r == 0) { snprintf(s, cap, "已发出"); return; }
+    if (parts == 1 || (!sent && r > 0)) { snprintf(s, cap, "%s", r > 0 ? "发送失败，未发出" : "结果未知，请先核实"); return; }
+    int rest = parts - sent - (r < 0);
+    char done[48] = "", unknown[64] = "", left[32] = "";
+    if (sent) snprintf(done, sizeof done, "前 %d 条已发出，", sent);
+    if (r < 0) snprintf(unknown, sizeof unknown, "第 %d 条结果未知，请先核实%s", sent + 1, rest ? "，" : "");
+    if (rest) snprintf(left, sizeof left, "后 %d 条未发出", rest);
+    snprintf(s, cap, "共 %d 条：%s%s%s", parts, done, unknown, left);
+}
+
 static void cap_send(ink_call_t *c) { /* exec.bg */
-    char to[24], text[355]; /* 118 Han characters; reject rather than truncate longer byte strings. */
+    char to[24], *text = CM.text, status[160]; /* up to INK_SMS_PARTS_MAX parts: reject rather than truncate a longer one */
     ink_args_get_str(&c->args, "to", to, sizeof to);
-    int bytes = ink_args_get_str(&c->args, "text", text, sizeof text);
-    bool valid = to[0] && bytes > 0 && bytes < (int)sizeof text;
+    int bytes = ink_args_get_str(&c->args, "text", text, sizeof CM.text);
+    bool valid = to[0] && bytes > 0;
     for (size_t i = 0; to[i]; i++) if ((to[i] < '0' || to[i] > '9') && !(i == 0 && to[i] == '+' && to[1])) valid = false;
     if (airplane(c, "发短信")) return; /* first: what is written does not matter without a radio */
-    if (!valid) { c->rc.status = INK_RC_INVALID; return; }
+    int parts = valid && bytes < (int)sizeof CM.text ? hal_cell_sms_parts(text) : valid ? INK_SMS_PARTS_MAX + 1 : -1;
+    if (parts < 1 || parts > INK_SMS_PARTS_MAX) {
+        c->rc.status = INK_RC_INVALID;
+        if (parts > 0) snprintf(c->rc.say, sizeof c->rc.say, "短信太长，最多分 %d 条发送，请删短一些", INK_SMS_PARTS_MAX);
+        return;
+    }
     ink_db_t *db = ink_db_open_member(&MESSAGES, ink_cap_call_member(c)); uint32_t id = 0;
     if (!db || !save_message(db, &id, to, text, "结果未知，请先核实", c->src)) {
         ink_db_close(db); c->rc.status = INK_RC_FAILED; snprintf(c->rc.say, sizeof c->rc.say, "短信没能存下，未发送"); return;
@@ -293,15 +427,34 @@ static void cap_send(ink_call_t *c) { /* exec.bg */
     osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
     hal_cell_status_t st; bool known = hal_cell_status(&st);
     uint32_t left = ink_cap_time_left_ms(c); /* the time it waited for this executor and the modem counts */
-    int r = (known && !st.registered) || left < SMS_MIN_LEFT_MS ? 1 : hal_cell_sms_send(to, text, left < 20000 ? left : 20000);
+    int sent = 0, r = (known && !st.registered) || left < SMS_MIN_LEFT_MS ? 1 : hal_cell_sms_send(to, text, left, &sent);
     osal_mutex_unlock(CM.at);
-    const char *status = r == 0 ? "已发出" : r > 0 ? "发送失败，未发出" : "结果未知，请先核实";
-    if (r != 0) { c->rc.status = INK_RC_FAILED; snprintf(c->rc.detail, sizeof c->rc.detail, "%s", r > 0 ? "not sent: offline or no time left" : "send result unknown"); }
-    else ink_probe_count("comm.sms_sent");
+    send_status(status, sizeof status, r, parts, sent);
+    if (r != 0) {
+        c->rc.status = sent ? INK_RC_PARTIAL : INK_RC_FAILED;
+        snprintf(c->rc.detail, sizeof c->rc.detail, "%s", r > 0 ? "not sent: offline or no time left" : "send result unknown");
+    } else ink_probe_count("comm.sms_sent");
     snprintf(c->rc.object, sizeof c->rc.object, "message:to:%s", to);
     snprintf(c->rc.say, sizeof c->rc.say, "%s", status);
     if (!save_message(db, &id, to, text, status, c->src)) { c->rc.status = INK_RC_FAILED; snprintf(c->rc.say, sizeof c->rc.say, "发送结果没能存下，请先核实"); }
     ink_db_close(db);
+}
+
+/* Before an AI's message waits for a yes: the card says how many billed parts it goes as, like the composer. */
+static ink_rc_t bind_send(ink_args_t *args, ink_receipt_t *rc) {
+    char to[24], *text = osal_malloc(INK_SMS_TEXT_MAX, OSAL_MEM_EXTERNAL), note[64] = "";
+    int to_len = ink_args_get_str(args, "to", to, sizeof to), len = text ? ink_args_get_str(args, "text", text, INK_SMS_TEXT_MAX) : -1;
+    int parts = to_len >= 0 && to_len < (int)sizeof to && len >= 0 && len < INK_SMS_TEXT_MAX ? hal_cell_sms_parts(text) : INK_SMS_PARTS_MAX + 1;
+    ink_args_init(args); /* the private field is ours, never the caller's */
+    bool full = parts <= INK_SMS_PARTS_MAX && (ink_args_str(args, "to", to) || ink_args_str(args, "text", text));
+    osal_free(text);
+    if (parts > INK_SMS_PARTS_MAX || parts < 1) {
+        snprintf(rc->say, sizeof rc->say, "短信太长，最多分 %d 条发送，请删短一些", INK_SMS_PARTS_MAX);
+        return INK_RC_INVALID;
+    }
+    if (parts > 1) snprintf(note, sizeof note, "（将按 %d 条发送，每条都计费）", parts);
+    if (full || ink_args_str(args, "_parts", note)) { snprintf(rc->detail, sizeof rc->detail, "confirmation arguments are full"); return INK_RC_FAILED; }
+    return INK_RC_DONE;
 }
 
 /* What snprintf cut short ends on a whole character: a half character would be read out as noise. */
@@ -317,11 +470,10 @@ static void whole_characters(char *s) {
 static void cap_list(ink_call_t *c) {
     ink_db_t *db = ink_db_open_member(&MESSAGES, ink_cap_call_member(c));
     if (!db) { c->rc.status = INK_RC_FAILED; return; }
-    ink_db_cursor_t cur = {.desc = true}; ink_rec_t rec; char raw[1024] = {0}, peer[24], text[355];
-    ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL); int n = 0;
-    if (!j) { ink_db_close(db); c->rc.status = INK_RC_FAILED; return; }
-    while (ink_db_next(db, &cur, &rec, raw, sizeof raw - 1) == 1) {
-        raw[rec.len] = 0;
+    ink_db_cursor_t cur = {.desc = true}; ink_rec_t rec; char *raw = CM.raw, peer[24], text[355];
+    ink_json_t *j = &CM.json; int n = 0;
+    while (ink_db_next(db, &cur, &rec, raw, sizeof CM.raw - 1) == 1) {
+        raw[rec.len < sizeof CM.raw ? rec.len : sizeof CM.raw - 1] = 0;
         if (ink_json_parse(j, raw, rec.len) || !ink_json_eq(j, ink_json_find(j, 0, "status"), "收到")) continue;
         if (!n++) { ink_json_str(j, ink_json_find(j, 0, "peer"), peer, sizeof peer); ink_json_str(j, ink_json_find(j, 0, "text"), text, sizeof text); }
     }
@@ -329,7 +481,7 @@ static void cap_list(ink_call_t *c) {
         snprintf(c->rc.say, sizeof c->rc.say, "没有新短信");
     else if (snprintf(c->rc.say, sizeof c->rc.say, "%d 条短信，最近一条来自 %s：%s", n, peer, text) >= (int)sizeof c->rc.say)
         whole_characters(c->rc.say); /* a long message is cut to what can be said */
-    osal_free(j); ink_db_close(db);
+    ink_db_close(db);
     utf8_clip(c->rc.say);
     snprintf(c->rc.object, sizeof c->rc.object, "messages");
     c->rc.revision = (uint32_t)n;
@@ -420,8 +572,9 @@ static const ink_cap_t COMM_CAPS[] = {
     {.id = "call.controls", .title = "通话控制已获模组确认", .form = INK_FORM_EVENT, .effect = INK_FX_READ, .child_ok = true, .permission = "call"},
     {.id = "message.send",
      .title = "发短信",
-     .ask = "发短信给 {to}：{text}",
-     .input = "{\"type\":\"object\",\"properties\":{\"to\":{\"type\":\"string\",\"maxLength\":20},\"text\":{\"type\":\"string\",\"maxLength\":118}},"
+     .ask = "发短信给 {to}：{text}{_parts}",
+     .prepare_confirm = bind_send,
+     .input = "{\"type\":\"object\",\"properties\":{\"to\":{\"type\":\"string\",\"maxLength\":20},\"text\":{\"type\":\"string\",\"maxLength\":765}},"
               "\"required\":[\"to\",\"text\"]}",
      .effect = INK_FX_EXTERNAL,
      .child_ok = true, /* children like adults (D-25); the AI still waits for confirmation */
@@ -431,7 +584,7 @@ static const ink_cap_t COMM_CAPS[] = {
      .exec = INK_EXEC_BG,
      .run = cap_send},
     {.id = "message.list", .title = "最近的短信", .effect = INK_FX_READ, .child_ok = true, .permission = "message", .exec = INK_EXEC_BG, .run = cap_list},
-    {.id = "sms.send", .title = "保存并发送短信", .ask = "发短信给 {to}：{text}", .input = "{\"type\":\"object\",\"properties\":{\"to\":{\"type\":\"string\",\"maxLength\":20},\"text\":{\"type\":\"string\",\"maxLength\":118}},\"required\":[\"to\",\"text\"]}", .effect = INK_FX_EXTERNAL, .child_ok = true, .permission = "message", .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .timeout_ms = 30000, .run = cap_send},
+    {.id = "sms.send", .title = "保存并发送短信", .ask = "发短信给 {to}：{text}{_parts}", .prepare_confirm = bind_send, .input = "{\"type\":\"object\",\"properties\":{\"to\":{\"type\":\"string\",\"maxLength\":20},\"text\":{\"type\":\"string\",\"maxLength\":765}},\"required\":[\"to\",\"text\"]}", .effect = INK_FX_EXTERNAL, .child_ok = true, .permission = "message", .qos = INK_QOS_NETWORK, .exec = INK_EXEC_BG, .timeout_ms = 30000, .run = cap_send},
     {.id = "call.dial",
      .title = "打电话",
      .ask = "打电话给 {number}",
@@ -472,7 +625,8 @@ static const ink_setting_def_t COMM_SETTINGS[] = {
 };
 
 int ink_comm_init(void) {
-    if (ink_db_register(&MESSAGES) || ink_cap_subscribe("message.received", received, NULL, INK_EXEC_BG)) return -1;
+    if (ink_db_register(&MESSAGES) || ink_db_register(&PARTS) || ink_cap_subscribe("message.received", received, NULL, INK_EXEC_BG) ||
+        ink_cap_subscribe("comm.sms_part", part_arrived, NULL, INK_EXEC_BG)) return -1;
     CM.lock = osal_mutex_create();
     CM.at = osal_mutex_create();
     if (!CM.lock || !CM.at) return -1;

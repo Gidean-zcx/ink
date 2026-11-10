@@ -22,7 +22,7 @@ extern "C" {
 #endif
 
 #define INK_ARGS_MAX 8     /* values per call (the largest capability has 2 today) */
-#define INK_ARGS_TEXT 416  /* keys, a 354-byte SMS, sender and event member */
+#define INK_ARGS_TEXT 1152 /* keys, the longest SMS (INK_SMS_TEXT_MAX), sender and event member or its card's parts note */
 
 typedef enum { INK_ARG_NONE = 0, INK_ARG_BOOL, INK_ARG_INT, INK_ARG_STR, INK_ARG_JSON, INK_ARG_BLOB } ink_arg_type_t;
 

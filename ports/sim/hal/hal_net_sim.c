@@ -517,17 +517,22 @@ void sim_net_modem_hold_reset(bool held) { modem_board_pin(&CELL.held, held); }
 void sim_net_modem_power(bool on) { modem_board_pin(&CELL.unpowered, !on); }
 bool sim_net_modem_registered(void) { return g_profile.lte.present && cell_ok(); }
 
-/* ---- SMS, calls and unsolicited lines (3GPP TS 27.005 / 27.007 text mode) ----
+/* ---- SMS, calls and unsolicited lines (3GPP TS 27.005 / 27.007) ----
  * Messages wait in the modem's store and are announced with +CMTI; AT+CMGR/AT+CMGD read and delete
- * them, in UCS2 hex after AT+CSCS="UCS2" (else as plain text). AT+CMGS takes the text after its
- * "> " prompt and answers +CMGS after SMS_SEND_MS (ESTIMATE). Calls: ATD<n>; ATA, ATH / AT+CHUP,
+ * them. PDU mode (AT+CMGF=0, the default, TS 27.005 §3.2.3): +CMGR gives an SMS-DELIVER (TS 23.040
+ * §9.2.2.1), AT+CMGS=<octets> takes an SMS-SUBMIT (§9.2.2.2) after its "> " prompt. Text mode
+ * (AT+CMGF=1): UCS2 hex after AT+CSCS="UCS2" (else plain text). +CMGS comes after SMS_SEND_MS
+ * (ESTIMATE). The network side: a long message to the device comes as concatenated parts
+ * (§9.2.3.24.1, 153 GSM 7-bit or 67 UCS2 characters each, as phones split them); tests can send
+ * parts one by one (any order, again, or never) and make a part from the device fail. What the
+ * device sent is kept as the far phone puts it together. Calls: ATD<n>; ATA, ATH / AT+CHUP,
  * AT+CLCC; state changes are reported as +CLCC lines (stat 0 active, 2 dialling, 3 alerting,
  * 4 incoming), an incoming call rings (RING, +CLIP) every 3 s, the end is NO CARRIER. Which
  * unsolicited lines the EC718PM firmware really sends is an ASSUMPTION until its AT manual is
  * checked. SMS needs a card with SMS, calls one with voice (VoLTE), and both a registration.
  * Call audio injection below assumes a path through BH1098G; the board wiring is unverified. */
 #define SMS_SEND_MS 2000
-#define SMS_SLOTS 16
+#define SMS_SLOTS 32
 #define URC_SLOTS 16
 #define CALL_RING_MS 3000
 #define CALL_ANSWER_MS 4000  /* the far end picks up an outgoing call (auto-answer) */
@@ -535,9 +540,13 @@ bool sim_net_modem_registered(void) { return g_profile.lte.present && cell_ok();
 
 static struct {
     bool text_mode, ucs2;
-    struct { bool used, read; char number[24], text[400]; } sms[SMS_SLOTS];
-    struct { char number[24], text[400]; } sent[8];
+    struct { bool used, read, ref16; char number[24], text[400]; int ref, total, seq; } sms[SMS_SLOTS];
+    struct { char number[24], text[1200]; } sent[8];
     int sent_n;
+    char sent_pdu[16][360]; /* what the device sent, PDU by PDU (hex, the SMSC address included) */
+    struct { bool used; char number[24], text[400]; int ref, total, seq; } out_parts[16]; /* waiting for the rest */
+    unsigned fail_pdu;   /* the PDU (by sms_out + 1) the network refuses, 0 none */
+    unsigned char ref8;  /* the next reference a long message to the device gets */
     char urc[URC_SLOTS][120];
     int urc_h, urc_n;
     vtk_waitq_t urc_wq;
@@ -633,6 +642,174 @@ static void decode(const char *in, char *utf8, size_t cap) {
     utf8[n] = 0;
 }
 
+/* PDU mode, as the network and the far phone see it (3GPP TS 23.040, TS 23.038) */
+static const uint16_t GSM7_ALPHABET[128] = { /* TS 23.038 §6.2.1: septet -> code point; 0x1B (the escape) is 0 */
+    '@', 0xA3, '$', 0xA5, 0xE8, 0xE9, 0xF9, 0xEC, 0xF2, 0xC7, '\n', 0xD8, 0xF8, '\r', 0xC5, 0xE5,
+    0x394, '_', 0x3A6, 0x393, 0x39B, 0x3A9, 0x3A0, 0x3A8, 0x3A3, 0x398, 0x39E, 0, 0xC6, 0xE6, 0xDF, 0xC9,
+    ' ', '!', '"', '#', 0xA4, '%', '&', '\'', '(', ')', '*', '+', ',', '-', '.', '/',
+    '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', ':', ';', '<', '=', '>', '?',
+    0xA1, 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O',
+    'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 0xC4, 0xD6, 0xD1, 0xDC, 0xA7,
+    0xBF, 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o',
+    'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 0xE4, 0xF6, 0xF1, 0xFC, 0xE0};
+
+static int model_septet(unsigned cp) {
+    for (int i = 0; cp && i < 128; i++) if (GSM7_ALPHABET[i] == cp) return i;
+    return -1;
+}
+
+static unsigned next_cp(const char **s) { /* the text is the simulator's own: well-formed UTF-8 */
+    const unsigned char *p = (const unsigned char *)*s;
+    int n = p[0] < 0x80 ? 1 : p[0] < 0xE0 ? 2 : p[0] < 0xF0 ? 3 : 4;
+    unsigned cp = n == 1 ? p[0] : p[0] & (0x7F >> n);
+    for (int i = 1; i < n && p[i]; i++) cp = cp << 6 | (p[i] & 0x3F);
+    *s += n;
+    return cp;
+}
+
+static void put_utf8(char *out, size_t cap, size_t *n, unsigned cp) {
+    char b[4];
+    size_t m = cp < 0x80 ? 1 : cp < 0x800 ? 2 : cp < 0x10000 ? 3 : 4;
+    if (m == 1) b[0] = (char)cp;
+    else if (m == 2) b[0] = (char)(0xC0 | cp >> 6), b[1] = (char)(0x80 | (cp & 0x3F));
+    else if (m == 3) b[0] = (char)(0xE0 | cp >> 12), b[1] = (char)(0x80 | (cp >> 6 & 0x3F)), b[2] = (char)(0x80 | (cp & 0x3F));
+    else b[0] = (char)(0xF0 | cp >> 18), b[1] = (char)(0x80 | (cp >> 12 & 0x3F)), b[2] = (char)(0x80 | (cp >> 6 & 0x3F)), b[3] = (char)(0x80 | (cp & 0x3F));
+    if (*n + m < cap) memcpy(out + *n, b, m), *n += m;
+    out[*n] = 0;
+}
+
+static bool all_gsm7(const char *text, size_t len, int *units) { /* and the units it takes as UCS2 */
+    bool g = true;
+    *units = 0;
+    for (const char *p = text; p < text + len;) {
+        unsigned cp = next_cp(&p);
+        g = g && model_septet(cp) >= 0;
+        *units += cp >= 0x10000 ? 2 : 1;
+    }
+    return g;
+}
+
+/* Store slot i as an SMS-DELIVER: SMSC address, then the TPDU (§9.2.2.1). Returns the TPDU's octets. */
+static int deliver_pdu(int i, char *hex, size_t cap) {
+    uint8_t b[200] = {0};
+    const char *num = MS.sms[i].number, *d = num + (num[0] == '+'), *text = MS.sms[i].text;
+    int n = 0, digits = (int)strlen(d), units, hdr = MS.sms[i].total > 1 ? (MS.sms[i].ref16 ? 7 : 6) : 0, ref = MS.sms[i].ref;
+    bool g = all_gsm7(text, strlen(text), &units);
+    b[n++] = hdr ? 0x44 : 0x04; /* SMS-DELIVER, no more messages to send, TP-UDHI */
+    b[n++] = (uint8_t)digits;
+    b[n++] = num[0] == '+' ? 0x91 : 0x81;
+    for (int k = 0; k < digits; k += 2) b[n++] = (uint8_t)((d[k] - '0') | (k + 1 < digits ? d[k + 1] - '0' : 0xF) << 4);
+    b[n++] = 0;
+    b[n++] = g ? 0x00 : 0x08;
+    memcpy(b + n, (const uint8_t[]){0x62, 0x11, 0x02, 0x01, 0x00, 0x00, 0x23}, 7); /* 26-11-20 10:00:00 +08:00 */
+    n += 7;
+    uint8_t *udl = &b[n++], *ud = &b[n];
+    if (hdr == 6) memcpy(ud, (const uint8_t[]){5, 0x00, 3, (uint8_t)ref, (uint8_t)MS.sms[i].total, (uint8_t)MS.sms[i].seq}, 6);
+    if (hdr == 7) memcpy(ud, (const uint8_t[]){6, 0x08, 4, (uint8_t)(ref >> 8), (uint8_t)ref, (uint8_t)MS.sms[i].total, (uint8_t)MS.sms[i].seq}, 7);
+    int k = g ? (hdr * 8 + 6) / 7 : hdr;
+    for (const char *p = text; *p;) {
+        unsigned cp = next_cp(&p);
+        if (g) {
+            unsigned s = (unsigned)model_septet(cp), bit = 7u * (unsigned)k++;
+            ud[bit / 8] |= (uint8_t)(s << bit % 8);
+            if (bit % 8 > 1) ud[bit / 8 + 1] |= (uint8_t)(s >> (8 - bit % 8));
+        } else if (cp >= 0x10000) {
+            unsigned hi = 0xD800 | ((cp - 0x10000) >> 10), lo = 0xDC00 | ((cp - 0x10000) & 0x3FF);
+            ud[k++] = (uint8_t)(hi >> 8), ud[k++] = (uint8_t)hi, ud[k++] = (uint8_t)(lo >> 8), ud[k++] = (uint8_t)lo;
+        } else ud[k++] = (uint8_t)(cp >> 8), ud[k++] = (uint8_t)cp;
+    }
+    *udl = (uint8_t)k;
+    n += g ? (k * 7 + 7) / 8 : k;
+    size_t h = (size_t)snprintf(hex, cap, "0891683108000000F0"); /* a synthetic SMSC, +8613800000000 */
+    for (int j = 0; j < n && h + 3 <= cap; j++) h += (size_t)snprintf(hex + h, cap - h, "%02X", b[j]);
+    return n;
+}
+
+static void sent_add(const char *number, const char *text) {
+    int i = MS.sent_n % 8;
+    snprintf(MS.sent[i].number, sizeof MS.sent[i].number, "%s", number);
+    snprintf(MS.sent[i].text, sizeof MS.sent[i].text, "%s", text);
+    MS.sent_n++;
+}
+
+/* An SMS-SUBMIT from the device (§9.2.2.2): 0 taken, else a +CMS ERROR code (TS 27.005 §3.2.5). The far phone puts
+ * concatenated parts together. */
+static int submit_take(const char *hex, int tpdu_len) {
+    uint8_t b[200];
+    int n = 0, len = (int)strlen(hex);
+    for (; 2 * n + 1 < len && n < (int)sizeof b; n++) {
+        unsigned v;
+        if (sscanf(hex + 2 * n, "%2x", &v) != 1) return 304;
+        b[n] = (uint8_t)v;
+    }
+    if (len % 2 || 2 * n != len || n < 1) return 304;
+    int i = 1 + b[0];
+    if (n - i != tpdu_len || n - i < 7) return 304; /* <length> is the TPDU's octets (TS 27.005 §3.5.1) */
+    int fo = b[i], vpf = fo >> 3 & 3, digits = b[i + 2], toa = b[i + 3];
+    if ((fo & 3) != 1) return 304;
+    char number[24];
+    size_t nn = 0;
+    if ((toa & 0x70) == 0x10) number[nn++] = '+';
+    for (int k = 0; k < digits && nn + 1 < sizeof number; k++) number[nn++] = (char)('0' + (b[i + 4 + k / 2] >> (k % 2 * 4) & 0xF));
+    number[nn] = 0;
+    i += 4 + (digits + 1) / 2;
+    int dcs = b[i + 1];
+    i += 2 + (vpf == 2 ? 1 : vpf ? 7 : 0);
+    if (i >= n) return 304;
+    int udl = b[i], hdr = 0, ref = 0, total = 1, seq = 1;
+    const uint8_t *ud = b + i + 1;
+    if (fo & 0x40) {
+        hdr = ud[0] + 1;
+        for (int k = 1; k + 1 < hdr; k += 2 + ud[k + 1]) {
+            if (ud[k] == 0x00) ref = ud[k + 2], total = ud[k + 3], seq = ud[k + 4];
+            if (ud[k] == 0x08) ref = ud[k + 2] << 8 | ud[k + 3], total = ud[k + 4], seq = ud[k + 5];
+        }
+    }
+    char text[400];
+    size_t tn = 0;
+    text[0] = 0;
+    if (dcs == 0x00) {
+        if ((udl * 7 + 7) / 8 > n - i - 1) return 304;
+        for (int k = (hdr * 8 + 6) / 7; k < udl; k++) {
+            int bit = 7 * k;
+            unsigned s = (unsigned)(ud[bit / 8] >> (bit % 8) | (bit % 8 > 1 ? ud[bit / 8 + 1] << (8 - bit % 8) : 0)) & 0x7F;
+            put_utf8(text, sizeof text, &tn, GSM7_ALPHABET[s]);
+        }
+    } else if (dcs == 0x08) {
+        if (udl > n - i - 1) return 304;
+        for (int k = hdr; k + 1 < udl; k += 2) {
+            unsigned u = (unsigned)ud[k] << 8 | ud[k + 1];
+            if (u >= 0xD800 && u < 0xDC00 && k + 3 < udl) u = 0x10000 + ((u - 0xD800) << 10) + (((unsigned)ud[k + 2] << 8 | ud[k + 3]) - 0xDC00), k += 2;
+            put_utf8(text, sizeof text, &tn, u);
+        }
+    } else return 303; /* not a text the far phone shows */
+    snprintf(MS.sent_pdu[MS.sms_out % 16], sizeof MS.sent_pdu[0], "%s", hex);
+    if (total <= 1) {
+        sent_add(number, text);
+        return 0;
+    }
+    int free_at = -1, have = 0;
+    for (int k = 0; k < 16; k++) {
+        if (!MS.out_parts[k].used) { if (free_at < 0) free_at = k; continue; }
+        if (!strcmp(MS.out_parts[k].number, number) && MS.out_parts[k].ref == ref && MS.out_parts[k].total == total) have++;
+    }
+    if (free_at < 0) return 322; /* the far phone's memory is full */
+    MS.out_parts[free_at].used = true;
+    snprintf(MS.out_parts[free_at].number, sizeof MS.out_parts[0].number, "%s", number);
+    snprintf(MS.out_parts[free_at].text, sizeof MS.out_parts[0].text, "%s", text);
+    MS.out_parts[free_at].ref = ref, MS.out_parts[free_at].total = total, MS.out_parts[free_at].seq = seq;
+    if (++have < total) return 0;
+    char whole[1200] = "";
+    for (int q = 1; q <= total; q++)
+        for (int k = 0; k < 16; k++)
+            if (MS.out_parts[k].used && !strcmp(MS.out_parts[k].number, number) && MS.out_parts[k].ref == ref && MS.out_parts[k].seq == q) {
+                strncat(whole, MS.out_parts[k].text, sizeof whole - strlen(whole) - 1);
+                MS.out_parts[k].used = false;
+            }
+    sent_add(number, whole);
+    return 0;
+}
+
 static void call_report(void) { /* ISR or locked */
     char l[80];
     if (!MS.call) {
@@ -716,6 +893,7 @@ static hal_at_result_t at_run(const char *cmd, const char *payload, char *resp, 
     else if (!strncmp(cmd, "AT+CSCS=", 8)) k = K_CSCS;
     else if (!strncmp(cmd, "AT+CNMI=", 8)) k = K_CNMI;
     else if (sscanf(cmd, "AT+CMGS=\"%99[^\"]\"", arg) == 1) k = K_CMGS, lat_ms = SMS_SEND_MS;
+    else if (sscanf(cmd, "AT+CMGS=%d", &idx) == 1) k = K_CMGS, lat_ms = SMS_SEND_MS; /* PDU mode: the TPDU's octets */
     else if (sscanf(cmd, "AT+CMGR=%d", &idx) == 1) k = K_CMGR;
     else if (sscanf(cmd, "AT+CMGD=%d", &idx) == 1) k = K_CMGD;
     else if (sscanf(cmd, "ATD%23[^;];", arg) == 1) k = K_ATD;
@@ -776,10 +954,16 @@ static hal_at_result_t at_run(const char *cmd, const char *payload, char *resp, 
     case K_CMGF: MS.text_mode = cmd[8] == '1'; break;
     case K_CSCS: MS.ucs2 = strstr(cmd, "UCS2") != NULL; break;
     case K_CNMI: break;
-    case K_CMGS:
-        if (!payload || !MS.text_mode || !can_sms()) {
-            snprintf(info, sizeof info, "+CMS ERROR: %d", !cell_ok() ? 331 : 500);
+    case K_CMGS: {
+        int err = !payload || MS.text_mode != (arg[0] != 0) || !can_sms() ? (!cell_ok() ? 331 : 500) : 0;
+        if (!err && MS.fail_pdu && MS.sms_out + 1 == MS.fail_pdu) err = 500, MS.fail_pdu = 0; /* the test's refused part */
+        if (!err && !MS.text_mode) err = submit_take(payload, idx);
+        if (err) {
+            snprintf(info, sizeof info, "+CMS ERROR: %d", err);
             r = HAL_AT_ERROR;
+        } else if (!MS.text_mode) {
+            MS.sms_out++;
+            snprintf(info, sizeof info, "+CMGS: %d", MS.sms_out & 0xFF);
         } else {
             int i = MS.sent_n % 8;
             decode(arg, MS.sent[i].number, sizeof MS.sent[i].number);
@@ -789,9 +973,15 @@ static hal_at_result_t at_run(const char *cmd, const char *payload, char *resp, 
             snprintf(info, sizeof info, "+CMGS: %d", MS.sms_out & 0xFF);
         }
         break;
+    }
     case K_CMGR:
-        if (idx < 0 || idx >= SMS_SLOTS || !MS.sms[idx].used || !MS.text_mode) {
+        if (idx < 0 || idx >= SMS_SLOTS || !MS.sms[idx].used) {
             r = HAL_AT_ERROR;
+        } else if (!MS.text_mode) {
+            char pdu[400];
+            int octets = deliver_pdu(idx, pdu, sizeof pdu);
+            snprintf(info, sizeof info, "+CMGR: %d,,%d\n%s", MS.sms[idx].read ? 1 : 0, octets, pdu);
+            MS.sms[idx].read = true;
         } else {
             char num[100], text[900];
             encode(MS.sms[idx].number, num, sizeof num);
@@ -853,14 +1043,14 @@ static hal_at_result_t at_run(const char *cmd, const char *payload, char *resp, 
 /* The outside world (window, scripts; ISR context) */
 int sim_net_sms_sent(void) { return (int)MS.sms_out; }
 
-bool sim_net_deliver_sms(const char *number, const char *utf8) {
-    if (!can_sms()) return false;
+static bool deliver_part(const char *number, const char *utf8, size_t len, int ref, int total, int seq, bool ref16) {
     for (int i = 0; i < SMS_SLOTS; i++)
         if (!MS.sms[i].used) {
             MS.sms[i].used = true;
             MS.sms[i].read = false;
             snprintf(MS.sms[i].number, sizeof MS.sms[i].number, "%s", number);
-            snprintf(MS.sms[i].text, sizeof MS.sms[i].text, "%s", utf8);
+            snprintf(MS.sms[i].text, sizeof MS.sms[i].text, "%.*s", (int)len, utf8);
+            MS.sms[i].ref = ref, MS.sms[i].total = total, MS.sms[i].seq = seq, MS.sms[i].ref16 = ref16;
             MS.sms_in++;
             char l[40];
             snprintf(l, sizeof l, "+CMTI: \"SM\",%d", i);
@@ -868,6 +1058,42 @@ bool sim_net_deliver_sms(const char *number, const char *utf8) {
             return true;
         }
     return false; /* store full */
+}
+
+bool sim_net_deliver_sms(const char *number, const char *utf8) { /* split as the sending phone does */
+    if (!can_sms()) return false;
+    int units, used = 0, parts = 1, in_part = 0;
+    size_t len = strlen(utf8);
+    bool g = all_gsm7(utf8, len, &units);
+    if (units <= (g ? 160 : 70)) return deliver_part(number, utf8, len, 0, 1, 1, false);
+    for (const char *p = utf8; *p;) {
+        unsigned cp = next_cp(&p), u = g || cp < 0x10000 ? 1 : 2;
+        if (in_part + (int)u > (g ? 153 : 67)) parts++, in_part = 0;
+        in_part += (int)u;
+    }
+    for (int i = 0; i < SMS_SLOTS; i++) used += MS.sms[i].used;
+    if (SMS_SLOTS - used < parts) return false;
+    int ref = ++MS.ref8, seq = 1;
+    const char *start = utf8;
+    in_part = 0;
+    for (const char *p = utf8; *p;) {
+        const char *at = p;
+        unsigned cp = next_cp(&p), u = g || cp < 0x10000 ? 1 : 2;
+        if (in_part + (int)u > (g ? 153 : 67)) deliver_part(number, start, (size_t)(at - start), ref, parts, seq++, false), start = at, in_part = 0;
+        in_part += (int)u;
+    }
+    return deliver_part(number, start, strlen(start), ref, parts, seq, false);
+}
+
+bool sim_net_deliver_sms_part(const char *number, const char *utf8, int ref, int total, int seq, bool ref16) {
+    return can_sms() && deliver_part(number, utf8, strlen(utf8), ref, total, seq, ref16);
+}
+
+void sim_net_sms_fail_part(int nth) { MS.fail_pdu = nth > 0 ? MS.sms_out + (unsigned)nth : 0; }
+
+int sim_net_sent_pdu(int i, char *hex, size_t cap) {
+    if (i >= 0 && i < (int)MS.sms_out && i >= (int)MS.sms_out - 16) snprintf(hex, cap, "%s", MS.sent_pdu[i % 16]);
+    return (int)MS.sms_out;
 }
 
 bool sim_net_incoming_call(const char *number) {

@@ -79,6 +79,7 @@ const char *nt26_result_name(nt26_result_t r) {
     case NT26_NOT_REGISTERED: return "not registered";
     case NT26_AT_FAILED: return "AT failed";
     case NT26_NO_MODEM: return "no modem";
+    case NT26_NOT_SENT: return "not sent";
     }
     return "?";
 }
@@ -149,6 +150,20 @@ static int hex16(const char *h, unsigned *v) {
     return 0;
 }
 
+/* One code point as UTF-8 at out[*n], room left for the NUL. -1 when it does not fit. */
+static int utf8_put(char *out, int cap, int *n, unsigned cp) {
+    int m = cp < 0x80 ? 1 : cp < 0x800 ? 2 : cp < 0x10000 ? 3 : 4;
+    if (*n + m + 1 > cap) return -1;
+    char *b = out + *n;
+    if (m == 1) b[0] = (char)cp;
+    else {
+        b[0] = (char)((0xF00 >> m) | (cp >> (6 * (m - 1))));
+        for (int k = 1; k < m; k++) b[k] = (char)(0x80 | (cp >> (6 * (m - 1 - k)) & 0x3F));
+    }
+    *n += m;
+    return 0;
+}
+
 /* The reverse: hex of UTF-16BE units to UTF-8. -1 if the length is not a multiple of 4, a digit
  * is not hex, a surrogate is unpaired, or the buffer is full. */
 int nt26_ucs2_hex_to_utf8(const char *hex, char *out, int cap) {
@@ -167,70 +182,195 @@ int nt26_ucs2_hex_to_utf8(const char *hex, char *out, int cap) {
         } else {
             cp = u;
         }
-        char b[4];
-        int m;
-        if (cp < 0x80) {
-            b[0] = (char)cp;
-            m = 1;
-        } else if (cp < 0x800) {
-            b[0] = (char)(0xC0 | cp >> 6);
-            b[1] = (char)(0x80 | (cp & 0x3F));
-            m = 2;
-        } else if (cp < 0x10000) {
-            b[0] = (char)(0xE0 | cp >> 12);
-            b[1] = (char)(0x80 | (cp >> 6 & 0x3F));
-            b[2] = (char)(0x80 | (cp & 0x3F));
-            m = 3;
-        } else {
-            b[0] = (char)(0xF0 | cp >> 18);
-            b[1] = (char)(0x80 | (cp >> 12 & 0x3F));
-            b[2] = (char)(0x80 | (cp >> 6 & 0x3F));
-            b[3] = (char)(0x80 | (cp & 0x3F));
-            m = 4;
-        }
-        if (n + m + 1 > cap) return -1;
-        memcpy(out + n, b, (size_t)m);
-        n += m;
+        if (utf8_put(out, cap, &n, cp)) return -1;
     }
     if (n >= cap) return -1;
     out[n] = 0;
     return n;
 }
 
-static nt26_result_t text_mode_ucs2(void) {
-    char resp[64];
-    nt26_result_t r = at("AT+CMGF=1", resp, sizeof resp, NT26_QUERY_TIMEOUT_MS);
-    if (r == NT26_OK) r = at("AT+CSCS=\"UCS2\"", resp, sizeof resp, NT26_QUERY_TIMEOUT_MS);
-    return r;
+/* ---- PDU mode: 3GPP TS 23.040 §9.2 (TPDUs), TS 23.038 §5, §6.2.1 (alphabets), TS 27.005 §3.4.3 +CMGR, §3.5.1 +CMGS */
+
+/* The GSM 7-bit default alphabet: the code point of each septet (0x1B escapes to the extension table, never matched). */
+static unsigned gsm7_cp(unsigned s) {
+    static const uint16_t LOW[32] = {0x40, 0xA3, 0x24, 0xA5, 0xE8, 0xE9, 0xF9, 0xEC, 0xF2, 0xC7, 0x0A, 0xD8, 0xF8, 0x0D, 0xC5, 0xE5,
+        0x394, 0x5F, 0x3A6, 0x393, 0x39B, 0x3A9, 0x3A0, 0x3A8, 0x3A3, 0x398, 0x39E, 0xFFFF, 0xC6, 0xE6, 0xDF, 0xC9};
+    static const char HIGH[] = "\x24\x40\x5B\x5C\x5D\x5E\x5F\x60\x7B\x7C\x7D\x7E\x7F";
+    static const uint16_t HIGH_CP[] = {0xA4, 0xA1, 0xC4, 0xD6, 0xD1, 0xDC, 0xA7, 0xBF, 0xE4, 0xF6, 0xF1, 0xFC, 0xE0};
+    const char *p = s >= 32 ? strchr(HIGH, (int)s) : NULL;
+    return s < 32 ? LOW[s] : p ? HIGH_CP[p - HIGH] : s;
+}
+static int gsm7_septet(unsigned cp) {
+    for (unsigned s = 0; s < 128; s++) if (gsm7_cp(s) == cp) return (int)s;
+    return -1;
+}
+/* Septet k of packed user data, least significant bit first (TS 23.038 §6.1.2.1.1). */
+static unsigned get_septet(const uint8_t *ud, int k) {
+    int bit = 7 * k;
+    unsigned v = ud[bit / 8] >> (bit % 8);
+    if (bit % 8 > 1) v |= (unsigned)ud[bit / 8 + 1] << (8 - bit % 8);
+    return v & 0x7F;
+}
+static void put_septet(uint8_t *ud, int k, unsigned v) {
+    int bit = 7 * k;
+    ud[bit / 8] |= (uint8_t)(v << (bit % 8));
+    if (bit % 8 > 1) ud[bit / 8 + 1] |= (uint8_t)(v >> (8 - bit % 8));
+}
+/* Septets [from, to) as UTF-8; the escape takes the next one from the extension table (TS 23.038 §6.2.1.1). */
+static int gsm7_to_utf8(const uint8_t *ud, int from, int to, char *out, int cap) {
+    static const char EXT[] = "\x0A\x14\x28\x29\x2F\x3C\x3D\x3E\x40\x65";
+    static const uint16_t EXT_CP[] = {0x0C, '^', '{', '}', '\\', '[', '~', ']', '|', 0x20AC};
+    int n = 0;
+    for (int k = from; k < to; k++) {
+        unsigned s = get_septet(ud, k), cp = gsm7_cp(s);
+        if (s == 0x1B && k + 1 < to) {
+            const char *e = strchr(EXT, (int)(s = get_septet(ud, ++k)));
+            cp = e && s ? EXT_CP[e - EXT] : gsm7_cp(s);
+        }
+        if (cp != 0xFFFF && utf8_put(out, cap, &n, cp)) return -1; /* an escape at the end: nothing */
+    }
+    out[n] = 0;
+    return n;
 }
 
-nt26_result_t nt26_sms_send(const char *number, const char *utf8, uint32_t timeout_ms) {
-    char num_hex[100], text_hex[1024], cmd[128], resp[64]; /* numbers up to 24 characters, 4 hex digits each */
-    nt26_result_t r = text_mode_ucs2();
+int nt26_sms_split(const char *utf8, int *ends, int max, bool *gsm7) {
+    const unsigned char *p = (const unsigned char *)utf8;
+    unsigned cp;
+    int used, total = 0, parts = 0, in_part = 0;
+    bool g = true;
+    for (const unsigned char *q = p; (used = utf8_next(q, &cp)) != 0; q += used) {
+        if (used < 0) return -1;
+        g = g && gsm7_septet(cp) >= 0;
+        total += cp >= 0x10000 ? 2 : 1; /* a surrogate pair */
+    }
+    int limit = g ? 160 : 70, per_part = g ? 153 : 67; /* a concatenated part gives 6 octets to its header */
+    for (const unsigned char *q = p; total > limit && (used = utf8_next(q, &cp)) != 0; q += used) {
+        int units = g || cp < 0x10000 ? 1 : 2; /* a pair is never split */
+        if (in_part + units > per_part) {
+            if (parts < max) ends[parts] = (int)(q - p);
+            parts++;
+            in_part = 0;
+        }
+        in_part += units;
+    }
+    if (parts < max) ends[parts] = (int)strlen(utf8);
+    if (gsm7) *gsm7 = g;
+    return parts + 1;
+}
+
+/* One SMS-SUBMIT (TS 23.040 §9.2.2.2), no validity period, the modem numbers it (TP-MR 0); a part of several carries
+ * the concatenation header with an 8-bit reference (§9.2.3.24.1). TPDU octets into b. */
+static int submit_pdu(uint8_t *b, const char *number, const char *text, int len, bool g, int ref, int total, int seq) {
+    const char *d = number + (number[0] == '+');
+    int n = 0, digits = (int)strlen(d), hdr = total > 1 ? 6 : 0;
+    b[n++] = total > 1 ? 0x41 : 0x01; /* SMS-SUBMIT, TP-UDHI */
+    b[n++] = 0;
+    b[n++] = (uint8_t)digits;
+    b[n++] = number[0] == '+' ? 0x91 : 0x81; /* international or unknown, ISDN numbering (§9.1.2.5) */
+    for (int i = 0; i < digits; i += 2) b[n++] = (uint8_t)((d[i] - '0') | (i + 1 < digits ? d[i + 1] - '0' : 0xF) << 4);
+    b[n++] = 0;                   /* TP-PID */
+    b[n++] = g ? 0x00 : 0x08;     /* TP-DCS: GSM 7-bit or UCS2 (TS 23.038 §4) */
+    uint8_t *udl = &b[n++], *ud = &b[n];
+    memset(ud, 0, 140);
+    if (hdr) memcpy(ud, (uint8_t[]){5, 0, 3, (uint8_t)ref, (uint8_t)total, (uint8_t)seq}, 6);
+    int k = g ? (hdr * 8 + 6) / 7 : hdr; /* septets (after the header and its fill bits) or octets */
+    unsigned cp;
+    for (int i = 0, used; i < len; i += used) {
+        used = utf8_next((const unsigned char *)text + i, &cp);
+        if (g) put_septet(ud, k++, (unsigned)gsm7_septet(cp));
+        else {
+            unsigned u[2] = {cp, 0}, m = cp >= 0x10000 ? 2 : 1; /* UTF-16BE, as UCS2 above U+FFFF has no units */
+            if (m == 2) u[0] = 0xD800 | ((cp - 0x10000) >> 10), u[1] = 0xDC00 | ((cp - 0x10000) & 0x3FF);
+            for (unsigned j = 0; j < m; j++) ud[k++] = (uint8_t)(u[j] >> 8), ud[k++] = (uint8_t)u[j];
+        }
+    }
+    *udl = (uint8_t)k;
+    return n + (g ? (k * 7 + 7) / 8 : k);
+}
+
+nt26_result_t nt26_sms_send_parts(const char *number, const char *utf8, uint32_t timeout_ms, int *sent) {
+    int ends[NT26_SMS_PARTS_MAX], start = 0, done = 0;
+    bool g;
+    int parts = nt26_sms_split(utf8, ends, NT26_SMS_PARTS_MAX, &g);
+    if (sent) *sent = 0;
+    if (parts < 1 || parts > NT26_SMS_PARTS_MAX || strlen(number) > 21) return NT26_AT_FAILED;
+    char resp[64], cmd[24];
+    nt26_result_t r = at("AT+CMGF=0", resp, sizeof resp, NT26_QUERY_TIMEOUT_MS);
     if (r != NT26_OK) return r;
-    if (nt26_utf8_to_ucs2_hex(number, num_hex, sizeof num_hex) < 0 || nt26_utf8_to_ucs2_hex(utf8, text_hex, sizeof text_hex) < 0)
-        return NT26_AT_FAILED;
-    snprintf(cmd, sizeof cmd, "AT+CMGS=\"%s\"", num_hex);
-    hal_at_result_t a = hal_modem_at_payload(cmd, text_hex, resp, sizeof resp, timeout_ms);
-    return a == HAL_AT_OK ? NT26_OK : a == HAL_AT_NO_MODEM ? NT26_NO_MODEM : NT26_AT_FAILED;
+    static uint8_t ref; /* one per message, so the receiver can tell them apart; the first after a restart from the clock */
+    ref = ref ? (uint8_t)(ref + 1) : (uint8_t)(osal_now_us() | 1);
+    uint64_t deadline = osal_now_us() + (uint64_t)timeout_ms * 1000u;
+    for (; done < parts; start = ends[done++]) {
+        uint8_t b[176];
+        char hex[2 * sizeof b + 3] = "00"; /* the SMSC address from the card */
+        int len = submit_pdu(b, number, utf8 + start, ends[done] - start, g, ref, parts, done + 1);
+        for (int i = 0; i < len; i++) snprintf(hex + 2 + 2 * i, 3, "%02X", b[i]);
+        uint64_t now = osal_now_us();
+        if (now + NT26_SMS_MIN_MS * 1000ull > deadline) return NT26_NOT_SENT;
+        uint64_t left_ms = (deadline - now) / 1000u;
+        snprintf(cmd, sizeof cmd, "AT+CMGS=%d", len); /* TPDU octets, the SMSC address not counted */
+        hal_at_result_t a = hal_modem_at_payload(cmd, hex, resp, sizeof resp, left_ms < NT26_SMS_PART_MS ? (uint32_t)left_ms : NT26_SMS_PART_MS);
+        if (a != HAL_AT_OK) return a == HAL_AT_NO_MODEM ? NT26_NO_MODEM : NT26_AT_FAILED;
+        if (sent) *sent = done + 1;
+    }
+    return NT26_OK;
+}
+
+nt26_result_t nt26_sms_send(const char *number, const char *utf8, uint32_t timeout_ms) { return nt26_sms_send_parts(number, utf8, timeout_ms, NULL); }
+
+/* An SMS-DELIVER (TS 23.040 §9.2.2.1) from AT+CMGR in PDU mode: "+CMGR: <stat>,[<alpha>],<length>\n<pdu>". */
+nt26_result_t nt26_sms_read_part(int index, char *number, int number_cap, char *utf8, int text_cap, int concat[3]) {
+    char cmd[24], resp[420];
+    uint8_t b[180];
+    nt26_result_t r = at("AT+CMGF=0", resp, sizeof resp, NT26_QUERY_TIMEOUT_MS);
+    snprintf(cmd, sizeof cmd, "AT+CMGR=%d", index);
+    if (r != NT26_OK || (r = at(cmd, resp, sizeof resp, NT26_QUERY_TIMEOUT_MS)) != NT26_OK) return r;
+    const char *hex = strchr(resp, '\n');
+    int n = 0, i, dn = 0;
+    for (hex = hex ? hex + 1 : ""; hexval(hex[2 * n]) >= 0 && hexval(hex[2 * n + 1]) >= 0 && n < (int)sizeof b; n++)
+        b[n] = (uint8_t)(hexval(hex[2 * n]) << 4 | hexval(hex[2 * n + 1]));
+    if (n < 1 || (i = 1 + b[0]) + 3 > n || (b[i] & 3) != 0) return NT26_AT_FAILED; /* SMS-DELIVER only */
+    bool udhi = b[i] & 0x40;
+    int digits = b[i + 1], toa = b[i + 2];
+    i += 3;
+    if (i + (digits + 1) / 2 + 10 > n || number_cap < 2) return NT26_AT_FAILED;
+    if ((toa & 0x70) == 0x50) { /* alphanumeric: GSM 7-bit (§9.1.2.5) */
+        if (gsm7_to_utf8(b + i, 0, digits * 4 / 7, number, number_cap) < 0) return NT26_AT_FAILED;
+    } else {
+        if ((toa & 0x70) == 0x10) number[dn++] = '+';
+        for (int k = 0; k < digits && dn + 1 < number_cap; k++) {
+            int v = b[i + k / 2] >> (k % 2 * 4) & 0xF;
+            number[dn++] = v < 10 ? (char)('0' + v) : "*#abc?"[v - 10];
+        }
+        number[dn] = 0;
+    }
+    i += (digits + 1) / 2;
+    int dcs = b[i + 1], udl = b[i + 9], hdr = 0;
+    const uint8_t *ud = b + i + 10;
+    int ud_bytes = n - i - 10, group = dcs >> 4;
+    int alphabet = group == 0xF ? (dcs >> 2 & 1) : group == 0xE ? 2 : group >= 0xC ? 0 : (dcs >> 2 & 3); /* TS 23.038 §4 */
+    concat[0] = 0, concat[1] = 1, concat[2] = 1;
+    if (udhi && ud_bytes > 0 && (hdr = ud[0] + 1) <= ud_bytes) {
+        for (int k = 1; k + 1 < hdr && k + 2 + ud[k + 1] <= hdr; k += 2 + ud[k + 1]) { /* IEI 0x00, 0x08 (§9.2.3.24.1, .8) */
+            const uint8_t *e = ud + k + 2;
+            if (ud[k] == 0x00 && ud[k + 1] == 3) concat[0] = e[0], concat[1] = e[1], concat[2] = e[2];
+            if (ud[k] == 0x08 && ud[k + 1] == 4) concat[0] = e[0] << 8 | e[1], concat[1] = e[2], concat[2] = e[3];
+        }
+        if (concat[2] < 1 || concat[2] > concat[1]) concat[1] = concat[2] = 1; /* ignored, as the standard says */
+    }
+    if (alphabet == 0) {
+        if ((udl * 7 + 7) / 8 > ud_bytes || gsm7_to_utf8(ud, (hdr * 8 + 6) / 7, udl, utf8, text_cap) < 0) return NT26_AT_FAILED;
+    } else if (alphabet == 2 && udl <= ud_bytes && hdr <= udl) {
+        char units[2 * 140 + 1];
+        snprintf(units, sizeof units, "%.*s", 2 * (udl - hdr), hex + 2 * (ud - b + hdr));
+        if (nt26_ucs2_hex_to_utf8(units, utf8, text_cap) < 0) return NT26_AT_FAILED;
+    } else return NT26_AT_FAILED; /* 8-bit data is not a text */
+    return NT26_OK;
 }
 
 nt26_result_t nt26_sms_read(int index, char *number, int number_cap, char *utf8, int text_cap) {
-    char cmd[24], resp[1200];
-    nt26_result_t r = text_mode_ucs2();
-    if (r != NT26_OK) return r;
-    snprintf(cmd, sizeof cmd, "AT+CMGR=%d", index);
-    r = at(cmd, resp, sizeof resp, NT26_QUERY_TIMEOUT_MS);
-    if (r != NT26_OK) return r;
-    /* +CMGR: "REC UNREAD","<number hex>",,"<time>"\n<text hex> */
-    const char *q1 = strchr(resp, ','), *nl = strchr(resp, '\n');
-    if (!q1 || !nl || q1[1] != '"') return NT26_AT_FAILED;
-    const char *q2 = strchr(q1 + 2, '"');
-    if (!q2) return NT26_AT_FAILED;
-    char num_hex[64];
-    snprintf(num_hex, sizeof num_hex, "%.*s", (int)(q2 - q1 - 2), q1 + 2);
-    if (nt26_ucs2_hex_to_utf8(num_hex, number, number_cap) < 0 || nt26_ucs2_hex_to_utf8(nl + 1, utf8, text_cap) < 0) return NT26_AT_FAILED;
-    return NT26_OK;
+    int concat[3];
+    return nt26_sms_read_part(index, number, number_cap, utf8, text_cap, concat);
 }
 
 nt26_result_t nt26_sms_delete(int index) {

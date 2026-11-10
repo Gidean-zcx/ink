@@ -20,7 +20,8 @@ static struct {
     lv_obj_t *pad, *pager, *accept, *notice, *preview;
     int head_h, preview_h, expired_h, expired_body_y;
     lv_timer_t *read_timer;
-    uint16_t starts[161]; /* At most one page per detail byte, plus the end. */
+    uint16_t starts[INK_CONFIRM_DETAIL + 1]; /* At most one page per detail byte, plus the end. */
+    char text[INK_CONFIRM_DETAIL]; /* a page of it (UI task) */
     int page, pages;
     bool drawn, read, watching;
     bool expired;
@@ -232,8 +233,8 @@ static void paginate(void) {
         while (end < len) {
             size_t next = end + 1;
             while (next < len && (C.now.detail[next] & 0xc0) == 0x80) next++;
-            char text[sizeof C.now.detail];
-            snprintf(text, sizeof text, "%.*s", (int)(next - at), C.now.detail + at);
+            char *text = C.text;
+            snprintf(text, sizeof C.text, "%.*s", (int)(next - at), C.now.detail + at);
             lv_point_t size;
             lv_text_get_size(&size, text, font, letter, line, w, LV_TEXT_FLAG_NONE);
             if (size.y > h) break;
@@ -254,9 +255,9 @@ static void draw_page(void) {
     lv_obj_set_height(C.card.panel, ink_ui_px(height + INK_RADIUS_PANEL));
     lv_obj_set_y(C.card.row, ink_ui_px(height - INK_PRIMARY - INK_GAP_L));
     lv_obj_set_y(C.notice, ink_ui_px(notice_y()));
-    char text[sizeof C.now.detail];
-    if (C.pages) snprintf(text, sizeof text, "%.*s", C.starts[C.page + 1] - C.starts[C.page], C.now.detail + C.starts[C.page]);
-    else snprintf(text, sizeof text, "说明无法完整显示，请取消。");
+    char *text = C.text;
+    if (C.pages) snprintf(text, sizeof C.text, "%.*s", C.starts[C.page + 1] - C.starts[C.page], C.now.detail + C.starts[C.page]);
+    else snprintf(text, sizeof C.text, "说明无法完整显示，请取消。");
     C.drawn = C.read = false;
     lv_label_set_text(C.card.body, text);
     lv_obj_add_state(C.accept, LV_STATE_DISABLED);
@@ -328,7 +329,7 @@ static void expired_close(lv_event_t *e) {
 static void result(void *ctx, const char *id, const ink_args_t *args) {
     (void)ctx; (void)id;
     int64_t token = 0;
-    ink_confirm_view_t waiting;
+    static ink_confirm_view_t waiting INK_PSRAM_BSS;
     char decision[24], member[sizeof C.owner.member];
     ink_args_get_int(args, "token", &token);
     ink_args_get_str(args, "decision", decision, sizeof decision);

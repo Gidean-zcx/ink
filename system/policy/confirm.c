@@ -24,7 +24,7 @@
 
 #define MAX_HELD 4
 #define EXPIRE_US 60000000ull
-#define LIST_CAP 1200
+#define LIST_CAP (1200 + MAX_HELD * INK_CONFIRM_DETAIL)
 
 typedef struct {
     bool used;
@@ -34,7 +34,7 @@ typedef struct {
     ink_source_t src;
     uint32_t page_gen;
     char member[INK_MEMBER_ID_MAX];
-    char detail[160];
+    char detail[INK_CONFIRM_DETAIL];
     uint64_t expires_us;
     bool parent;
     uint32_t epoch, connection;

@@ -66,8 +66,9 @@ int hal_camera_capture(uint8_t *buf, size_t cap, uint32_t timeout_ms) { return -
 bool hal_cell_status(hal_cell_status_t *out) { *out = (hal_cell_status_t){0}; return false; }
 int hal_cell_select_sim(hal_cell_slot_t slot, uint32_t reg_timeout_ms) { return -1; }
 int hal_cell_radio(bool on, uint32_t reg_timeout_ms) { return -1; }
-int hal_cell_sms_send(const char *number, const char *utf8, uint32_t timeout_ms) { return -1; }
-int hal_cell_sms_take(int index, char *number, int number_cap, char *utf8, int text_cap) { return -1; }
+int hal_cell_sms_parts(const char *utf8) { return -1; }
+int hal_cell_sms_send(const char *number, const char *utf8, uint32_t timeout_ms, int *sent) { *sent = 0; return -1; }
+int hal_cell_sms_take(int index, hal_cell_sms_t *out) { return -1; }
 int hal_cell_dial(const char *number) { return -1; }
 int hal_cell_answer(void) { return -1; }
 int hal_cell_hangup(void) { return -1; }

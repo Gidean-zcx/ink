@@ -956,7 +956,7 @@ static void keep_event(const char *id, const ink_args_t *payload, const char *wh
     if (ink_hub_online()) ink_hub_wake();
 }
 
-#define EVENT_JSON_CAP 1024
+#define EVENT_JSON_CAP (INK_ARGS_TEXT * 2 + 256) /* the longest text message, escaped */
 
 static void send_events(void) { /* hub task */
     for (;;) {
