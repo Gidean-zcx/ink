@@ -64,7 +64,7 @@ static const struct {
     {"text.voice_start", ""}, {"text.voice_finish", ""}, {"text.voice_cancel", ""},
     {"shell.control", NULL}, {"shell.close", NULL}, {"shell.back", NULL}, {"shell.members", NULL}, {"shell.lock", NULL},
     {"shell.more", NULL}, {"shell.settings", NULL}, {"shell.display", NULL}, {"shell.sound", NULL},
-    {"shell.network", NULL}, {"shell.notifications", NULL}, {"home.next", NULL}, {"home.prev", NULL},
+    {"shell.network", NULL}, {"shell.known_networks", NULL}, {"shell.notifications", NULL}, {"home.next", NULL}, {"home.prev", NULL},
     {"shell.today_edit", NULL}, {"shell.icon_menu", "id"}, {"shell.today_card", "card"},
     {"shell.today_prev", NULL}, {"shell.today_next", NULL},
     {"shell.voice", NULL}, {"shell.storage", NULL}, {"shell.about", NULL}, {"shell.privacy", NULL},
@@ -124,6 +124,7 @@ static const struct {
 static const struct {
     const char *id, *why, *args;
 } NOT_FOR_AI[] = {
+    {"wifi.restore", "credentials are restored only through system.undo", "revision"},
     {"shell.members_page", "member selection stays on the device before adult authentication", "delta"},
     {"pairing.accept", "only a person confirms joining a household", "txid"},
     {"confirm.accept", "only a person on the device can say yes", "token"},

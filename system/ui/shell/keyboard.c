@@ -420,8 +420,8 @@ static void sync(void) { /* UI task */
     K.shown = n;
     size_t start, end;
     ink_text_selection(&start, &end);
-    bool editing = type != INK_TEXT_PASSWORD && (start != end ||
-        (!ink_text_composing()[0] && (ink_text_can_undo() || ink_text_can_redo())));
+    bool editing = type != INK_TEXT_PASSWORD && (start != end || (!ink_text_composing()[0] &&
+        (ink_text_can_redo() || (!lv_obj_has_flag(K.edit, LV_OBJ_FLAG_HIDDEN) && ink_text_can_undo()))));
     lv_obj_t *undo = lv_obj_get_child(K.edit, 5), *redo = lv_obj_get_child(K.edit, 6);
     if (ink_text_can_undo()) lv_obj_remove_state(undo, LV_STATE_DISABLED);
     else lv_obj_add_state(undo, LV_STATE_DISABLED);

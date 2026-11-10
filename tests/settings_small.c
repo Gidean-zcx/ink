@@ -95,7 +95,9 @@ static void more_networks(void) {
 static void focus(void) {
     ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .initial = "A"};
     CHECK(ink_text_focus(&cfg, NULL, NULL) > 0, "focus synthetic text");
-    ink_text_commit_utf8("B"); ink_text_select(0, 1);
+    ink_text_commit_utf8("B");
+    CHECK(!label(lv_layer_sys(), "Redo") && !label(lv_layer_sys(), "重做"), "ordinary input keeps the candidate and microphone row");
+    ink_text_select(0, 1);
 }
 static void text_is_a(void) { CHECK(!strcmp(ink_text_value(), "A"), "touch undo restores A"); }
 static void text_is_ab(void) { CHECK(!strcmp(ink_text_value(), "AB"), "redo restores AB"); }
