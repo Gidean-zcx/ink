@@ -443,7 +443,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 设置：—。
 
-状态：—。
+状态：`storage.card`。
 
 事件：—。
 
