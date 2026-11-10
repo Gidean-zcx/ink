@@ -10,8 +10,8 @@
 | 1b 短信渠道关闭及恢复 | 【实测】专项通过 | 真实模拟短信事件；关闭后仅短信收件，打开后恢复通知；偏好重启保留 | 同上 |
 | 1c AI 删除及渠道设置 | 【实测】专项通过 | AI 和触摸均使用既有 `notify.dismiss`、`notify.set_channel`，页面随结果更新 | 同上 |
 | 1d 孩子限制 | 【实测】专项通过 | 孩子不可打开渠道设置或调用渠道修改；可删除自己的通知，看不到成人收件箱 | 同上 |
-| 2a 原有通知、短信、电话、日历回归 | 待最终验证 | 首轮相关测试通过；原测试未改 | 全量命令见下 |
-| 2b 全量 | 待最终验证 | 共享能力表待主会话生成 | 全量命令见下 |
+| 2a 原有通知、短信、电话、日历回归 | 【实测】通过 | 最终普通版相关测试通过，原测试未改 | 全量命令见下 |
+| 2b 全量 | 【实测】320/321，未全绿 | 唯一失败为受保护的共享能力表过期；原话见下 | 全量命令见下 |
 | 2c 内存检查 | 待验证 | — | — |
 | 2d S31 | 【实测】编译通过 | 退出 0，镜像 1,386,144 B，编译警告／错误均为 0；未上机 | `INK_DEPS="$INK_DEPS" taskpolicy -c utility bash ports/esp32s31/build.sh` |
 | 2e GCC | 【实测】通过 | `gcccheck: 5 compiled, 0 with findings`，无跳过 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" -B ../../tools/gcccheck.py build system/ui/shell/navigation.c system/services/notify/notify_caps.c system/services/notify/notify_service.c tests/notify_manage.c tests/integration/ai_surface.c` |
@@ -19,7 +19,7 @@
 
 ## 没做到的
 
-最终全量和内存检查尚待完成。未上机。
+共享生成能力表按任务书留给主会话，导致 `capability-table-doc` 失败；不能声称全量全绿。内存检查仍在进行。未上机。
 
 ## 和设计不一致的
 
@@ -44,7 +44,7 @@
 
 ## 要改的文档
 
-- 合并时生成 `docs/system/capabilities.md`：新增 `shell.notify_settings` 导航、`notify.changed`／`notify.channels_changed` 事件，`notify.set_channel.child_ok` 改为 false。任务书禁止本分支改生成能力表，因此全量中该文档检查会报告过期；将另生成临时目录版本对照运行时。
+- 合并时生成 `docs/system/capabilities.md`：新增 `shell.notify_settings` 导航、`notify.changed`／`notify.channels_changed` 事件，`notify.set_channel.child_ok` 改为 false。任务书禁止本分支改生成能力表；临时生成的 `work/notify-capabilities.md` 已通过运行时对照：`Runtime matches: 401 capabilities, 28 settings`、`PASS: 478 definitions`。命令：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" -B tools/capabilities.py --output work/notify-capabilities.md --runtime build/test-out/capability-table/capability-inventory.json`。
 - 设置缺口清单中的两项可在主会话更新为已接通；共享任务清单和 UI 依赖状态由主会话统一维护。
 
 ## 过程与验证记录
@@ -54,7 +54,7 @@
 - 【实测】第一次构建退出 0；专项最终输出 `main: exit=0, pass=203, fail=0, finished=1`、`restart: exit=0, pass=11, fail=0, finished=1`，日志 `work/notify-targeted.log`。
 - 【实测】`ui-scale: 50 files, 0 violations`；`gcccheck: 4 compiled, 0 with findings`，无跳过，日志 `work/notify-ui-scale.log`、`work/notify-gcccheck.log`。
 - 【实现】删除放在每行右侧独立描边按钮，与打开区域留出间距，整颗按钮满足最小触控尺寸。按钮宽度随译文测量，避免英文挤压；不增加回收站或确认步骤，沿用现有单条删除能力的语义。
-- 【实现】渠道入口为“设置 → 声音 → 通知”，与提示行为相关；放在已有声音选项之后，主目录和既有控件位置保留，勿扰不重复。按实际登记表枚举系统、短信、电话、闹钟、提醒、下载、AI 七个渠道；更新归现有系统渠道。
+- 【实现】渠道入口为“设置 → 声音 → 通知”，与提示行为相关；放在已有声音选项之后，主目录和既有控件位置保留，勿扰不重复。按实际登记表枚举系统、短信、电话、闹钟、提醒、下载、AI 七个渠道；更新发现／结果走系统，下载完成走下载（`update_service.c:507`、`:792`、`:939`），没有独立更新渠道。
 - 【实现】成人设置均不向孩子开放，渠道修改能力也收紧为相同规则；孩子自己的通知仍可读和删，数据和偏好按成员隔离。
 
 截图前缀：`build/notify-manage-evidence/sim-notify-manage/main/`。
@@ -67,3 +67,6 @@
 - 【实现】通知一页最多四条，确保长正文加全部动作装进既有 3072 字节 AI 缓冲；继续复用翻页，不增大缓冲或放宽预算。
 - 为什么不能更小：任务涉及列表删除、成人渠道设置、共享变化通知和中英文快照，合计超过 100 行。看过仅补触摸回调的方案，不能覆盖 AI 修改及已读通知删除；新建详情页会多一套导航和生命周期。最终复用列表、设置分页、服务渠道表和总线，两处界面使用既有原子能力。
 - 【实测】最终 GCC 和 S31 均退出 0，日志 `work/notify-gcccheck-final.log`、`work/notify-s31.log`；S31 未出现 `warning:`／`error:`。界面尺寸复核仍为 `ui-scale: 50 files, 0 violations`（`work/notify-ui-scale-final.log`）。
+- 【实测】普通全量原话：`99% tests passed, 1 tests failed out of 321`，`Total Test time (real) = 689.01 sec`；唯一失败 `136 - capability-table-doc (Failed)`，日志 `work/notify-ctest-final.log`。完成后仅新增空列表快照断言，产品代码未再改动；最终相关 6 项再次全过（`work/notify-final-focused.log`，20.15 秒），五组反向对照也再次命中。
+
+全量命令：`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`。配置按总规则，另加 `CMAKE_EXPORT_COMPILE_COMMANDS=ON`，`INK_HUB_PYTHON` 指向 `$INK_DEPS/hub/.venv/bin/python` 复用锁定的中枢测试依赖；不调整预算。
