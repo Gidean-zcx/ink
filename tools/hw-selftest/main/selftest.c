@@ -7,13 +7,18 @@
  * back; if that cannot be proven, SAFETY_FAIL and nothing else runs. Otherwise everything only reads:
  * the panel is not driven, the card is only detected, NVS, flash and eFuses are not written, Wi-Fi only
  * scans and reports a count, Bluetooth and the front light are not touched, the charger, gauge, clock,
- * accelerometer and touch chips are only read. The modem gets the read-only questions in kAsk and
+ * accelerometer and touch chips are only read, except that the accelerometer's CTRL1 is switched on
+ * for a moment (the vendor driver's value, CTRL1 = 0x57) and written back to what it was (read back to prove
+ * it). No light sleep and nothing else that drops USB (run 3 lost USB that way). The modem gets the read-only questions in kAsk and
  * nothing else; its raw answer is logged as hex with long digit runs masked. No MAC, serial number,
  * IMEI, ICCID or network name is printed. Each test has its own time limit and the run has one too.
  */
 #include <stdarg.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <math.h>
+#include <stddef.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "driver/gpio.h"
@@ -28,7 +33,10 @@
 #include "esp_log.h"
 #include "esp_netif.h"
 #include "esp_ota_ops.h"
+#include "esp_partition.h"
 #include "esp_psram.h"
+#include "esp_rom_crc.h"
+#include "esp_sleep.h"
 #include "esp_system.h"
 #include "esp_timer.h"
 #include "esp_wifi.h"
@@ -51,7 +59,7 @@
 #define SLOT_CAP 1536      /* one test's lines */
 #define LINE_CAP 384       /* one line */
 #define SAID_CAP (24 * 1024)
-#define TOTAL_MS 90000     /* the whole run; the computer waits 120 s */
+#define TOTAL_MS 170000    /* the whole run; the computer waits 240 s */
 #define WORKER_STACK 8192
 #define PMIC_PINS (EPD_PWR_VCOM_CTRL | EPD_PWR_PWRUP | EPD_PWR_WAKEUP)
 enum { TCA_IN0 = 0, TCA_IN1 = 1, TCA_OUT0 = 2, TCA_OUT1 = 3, TCA_POL0 = 4, TCA_POL1 = 5, TCA_CFG0 = 6, TCA_CFG1 = 7 };
@@ -373,9 +381,17 @@ static void t_charger(slot_t *s) {
     if (st == HAL_I2C_OK) st = rd(d, 0x02, &lo, 1); /* ICHG[1:0] in bits 7:6 (cx25601n.c) */
     if (st == HAL_I2C_OK) st = rd(d, 0x03, &hi, 1); /* ICHG[5:2] in bits 3:0 */
     int code = ((hi & 0x0F) << 2) | (lo >> 6);
+    /* Input current limit, as the vendor driver reads it (cx25601n.cc: REG_IINDPM_LO 0x06 bits 7:4, HI 0x07
+     * bits 3:0, 20 mA steps), and STATUS1 (0x1E) raw; read only. */
+    uint8_t ilo = 0, ihi = 0, st1 = 0;
+    if (st == HAL_I2C_OK) st = rd(d, 0x06, &ilo, 1);
+    if (st == HAL_I2C_OK) st = rd(d, 0x07, &ihi, 1);
+    if (st == HAL_I2C_OK) st = rd(d, 0x1E, &st1, 1);
+    int iindpm = (((ihi & 0x0F) << 4) | (ilo >> 4)) * 20;
     s->ok = st == HAL_I2C_OK;
-    emit(s, "\"ok\":%s,\"status\":\"%s\",\"part\":\"%02x\",\"charge_state\":%d,\"vbus_state\":%d,\"charge_current_mA\":%d",
-         tf(s->ok), hal_i2c_status_name(st), part, (int)chg, vbus, code * CX25601N_ICHG_STEP_MA);
+    emit(s, "\"ok\":%s,\"status\":\"%s\",\"part\":\"%02x\",\"charge_state\":%d,\"vbus_state\":%d,\"charge_current_mA\":%d,"
+            "\"iindpm_mA\":%d,\"reg06\":\"%02x\",\"reg07\":\"%02x\",\"status1\":\"%02x\"",
+         tf(s->ok), hal_i2c_status_name(st), part, (int)chg, vbus, code * CX25601N_ICHG_STEP_MA, iindpm, ilo, ihi, st1);
 }
 
 static void t_rtc(slot_t *s) {
@@ -536,29 +552,208 @@ static void t_modem(slot_t *s) {
     emit(s, "\"ok\":%s,\"answered_at\":%d", tf(s->ok), baud);
 }
 
-/* Scan only and say how many: no connection, no names, no addresses, nothing kept in NVS. */
-static void t_wifi(slot_t *s) {
+/* Wi-Fi up for a scan: RAM only, nothing kept in NVS; never connects. */
+static bool g_net_ready;
+static esp_err_t wifi_up(void) {
     esp_log_level_set("wifi", ESP_LOG_ERROR);
     esp_log_level_set("phy", ESP_LOG_ERROR);
-    esp_netif_init();
-    esp_event_loop_create_default();
-    esp_netif_create_default_wifi_sta();
+    if (!g_net_ready) { /* once: a second default STA netif would not be made */
+        esp_netif_init();
+        esp_event_loop_create_default();
+        esp_netif_create_default_wifi_sta();
+        g_net_ready = true;
+    }
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
     cfg.nvs_enable = 0;
     esp_err_t e = esp_wifi_init(&cfg);
     if (e == ESP_OK) e = esp_wifi_set_storage(WIFI_STORAGE_RAM);
     if (e == ESP_OK) e = esp_wifi_set_mode(WIFI_MODE_STA);
     if (e == ESP_OK) e = esp_wifi_start();
+    return e;
+}
+
+static void wifi_down(void) {
+    esp_wifi_clear_ap_list();
+    esp_wifi_stop();
+    esp_wifi_deinit();
+}
+
+/* Scan only and say how many: no connection, no names, no addresses. */
+static void t_wifi(slot_t *s) {
+    esp_err_t e = wifi_up();
     uint16_t found = 0;
     int64_t t = now_ms();
     if (e == ESP_OK) e = esp_wifi_scan_start(NULL, true);
     if (e == ESP_OK) e = esp_wifi_scan_get_ap_num(&found);
     int64_t ms = now_ms() - t;
-    esp_wifi_clear_ap_list();
-    esp_wifi_stop();
-    esp_wifi_deinit();
+    wifi_down();
     s->ok = e == ESP_OK;
     emit(s, "\"ok\":%s,\"err\":%d,\"scan_ms\":%lld,\"networks\":%u", tf(s->ok), e, (long long)ms, (unsigned)found);
+}
+
+/* ------------------------------------------------------------------ round 2: each leaves nothing changed */
+
+/* Accelerometer on for a moment: CTRL1 to 100 Hz, normal mode, X/Y/Z (sc7a20h_init's value), a few
+ * samples, then CTRL1 back as it was and read back. Nothing else is written. If our change latched a
+ * motion interrupt that pulls GPIO2 low, AOI1_SRC is read once to release it (a read). */
+#define ACC_CTRL1 0x20
+#define ACC_CTRL4 0x23
+#define ACC_AOI1_SRC 0x31
+#define ACC_ON 0x57
+static void t_accel_axes(slot_t *s) {
+    uint8_t addr = SC7A20H_ADDR, who = 0;
+    hal_i2c_dev_t *d = dev(addr, "accel");
+    if (rd(d, 0x0F, &who, 1) != HAL_I2C_OK) {
+        addr = SC7A20H_ADDR_ALT;
+        d = dev(addr, "accel-alt");
+    }
+    uint8_t was = 0, ctrl4 = 0, back = 0xFF;
+    hal_i2c_status_t st = rd(d, ACC_CTRL1, &was, 1);
+    if (st == HAL_I2C_OK) st = rd(d, ACC_CTRL4, &ctrl4, 1);
+    if (st != HAL_I2C_OK) {
+        emit(s, "\"ok\":false,\"step\":\"read\",\"error\":\"%s\"", hal_i2c_status_name(st));
+        return;
+    }
+    int line_before = gpio_get_level(S31_GPIO_EXP_INT);
+    uint8_t on[2] = {ACC_CTRL1, ACC_ON};
+    hal_i2c_status_t w = hal_i2c_write(d, on, 2);
+    long sx = 0, sy = 0, sz = 0;
+    int n = 0;
+    if (w == HAL_I2C_OK) {
+        vTaskDelay(pdMS_TO_TICKS(60)); /* a few 10 ms output periods */
+        for (int i = 0; i < 8; i++) {
+            int x, y, z;
+            if (sc7a20h_read_mg(d, &x, &y, &z) == HAL_I2C_OK) {
+                sx += x;
+                sy += y;
+                sz += z;
+                n++;
+            }
+            vTaskDelay(pdMS_TO_TICKS(20));
+        }
+    }
+    /* back as it was, whatever happened above (a failed write may have landed) */
+    uint8_t off[2] = {ACC_CTRL1, was};
+    hal_i2c_status_t r = HAL_I2C_ERR;
+    for (int i = 0; i < 3 && r != HAL_I2C_OK; i++) r = hal_i2c_write(d, off, 2);
+    if (r == HAL_I2C_OK) r = rd(d, ACC_CTRL1, &back, 1);
+    bool restored = r == HAL_I2C_OK && back == was;
+    vTaskDelay(pdMS_TO_TICKS(20));
+    int line_after = gpio_get_level(S31_GPIO_EXP_INT);
+    bool released = false;
+    if (line_before == 1 && line_after == 0) {
+        uint8_t src = 0;
+        released = rd(d, ACC_AOI1_SRC, &src, 1) == HAL_I2C_OK;
+        line_after = gpio_get_level(S31_GPIO_EXP_INT);
+    }
+    static const int kMgPerDigit[4] = {1, 2, 4, 12}; /* 12-bit counts, by CTRL4 FS: 2, 4, 8, 16 g */
+    int scale = kMgPerDigit[(ctrl4 >> 4) & 3];
+    int x = n ? (int)(sx / n) * scale : 0, y = n ? (int)(sy / n) * scale : 0, z = n ? (int)(sz / n) * scale : 0;
+    int g = (int)sqrt((double)x * x + (double)y * y + (double)z * z);
+    int ax = abs(x), ay = abs(y), az = abs(z);
+    char axis = az >= ax && az >= ay ? 'z' : (ay >= ax ? 'y' : 'x');
+    int v = axis == 'z' ? z : (axis == 'y' ? y : x);
+    s->ok = w == HAL_I2C_OK && n > 0 && restored && g > 700 && g < 1300;
+    emit(s,
+         "\"ok\":%s,\"addr\":\"%02x\",\"ctrl1_was\":\"%02x\",\"ctrl1_back\":\"%02x\",\"restored\":%s,\"ctrl4\":\"%02x\","
+         "\"samples\":%d,\"x_mg\":%d,\"y_mg\":%d,\"z_mg\":%d,\"g_mg\":%d,\"down\":\"%c%c\",\"gpio2_before\":%d,"
+         "\"gpio2_after\":%d,\"latch_released\":%s",
+         tf(s->ok), addr, was, back, tf(restored), ctrl4, n, x, y, z, g, v < 0 ? '-' : '+', axis, line_before, line_after,
+         tf(released));
+}
+
+/* Battery current by the gauge (+ = into the battery). With USB plugged in the charger adds its own
+ * share, so the differences between the phases are what counts. */
+static volatile bool g_spin, g_scanning;
+static volatile int g_scanners;
+
+static void spin(void *arg) {
+    (void)arg;
+    uint32_t v = 1;
+    while (g_spin) v = v * 1664525u + 1013904223u;
+    g_sink = v;
+    vTaskDelete(NULL);
+}
+
+static void scanner(void *arg) {
+    (void)arg;
+    while (g_scanning) {
+        esp_wifi_scan_start(NULL, true);
+        esp_wifi_clear_ap_list();
+    }
+    g_scanners--;
+    vTaskDelete(NULL);
+}
+
+/* 1 s to settle (the gauge updates about once a second), then 5 s of samples every 250 ms. */
+static int sample_ma(hal_i2c_dev_t *d, int *n, int *avg_reg) {
+    vTaskDelay(pdMS_TO_TICKS(1000));
+    long sum = 0;
+    *n = 0;
+    int64_t end = now_ms() + 5000;
+    while (now_ms() < end) {
+        int v;
+        if (bq27220_read(d, BQ27220_CURRENT, &v) == HAL_I2C_OK) {
+            sum += v;
+            (*n)++;
+        }
+        vTaskDelay(pdMS_TO_TICKS(250));
+    }
+    if (bq27220_read(d, BQ27220_AVERAGE_CURRENT, avg_reg) != HAL_I2C_OK) *avg_reg = 0;
+    return *n ? (int)(sum / *n) : 0;
+}
+
+static void t_current(slot_t *s) {
+    hal_i2c_dev_t *d = dev(BQ27220_ADDR, "fuel-gauge");
+    int n[3], avg[3], ma[3];
+    ma[0] = sample_ma(d, &n[0], &avg[0]); /* idle: this task sleeps between samples, the cores wait */
+    g_spin = true;
+    bool spun = xTaskCreatePinnedToCore(spin, "spin0", 2048, NULL, 2, NULL, 0) == pdPASS;
+    spun = xTaskCreatePinnedToCore(spin, "spin1", 2048, NULL, 2, NULL, 1) == pdPASS && spun;
+    ma[1] = sample_ma(d, &n[1], &avg[1]);
+    g_spin = false;
+    esp_err_t e = wifi_up();
+    if (e == ESP_OK) {
+        g_scanning = true;
+        g_scanners = 1;
+        if (xTaskCreate(scanner, "scan", 4096, NULL, 4, NULL) != pdPASS) g_scanners = 0;
+    }
+    ma[2] = sample_ma(d, &n[2], &avg[2]);
+    g_scanning = false;
+    for (int i = 0; i < 400 && g_scanners > 0; i++) vTaskDelay(pdMS_TO_TICKS(10)); /* the last scan ends */
+    wifi_down();
+    static const char *const kPhase[3] = {"idle", "two_cores_busy", "wifi_scanning"};
+    for (int i = 0; i < 3; i++)
+        emit(s, "\"ok\":%s,\"phase\":\"%s\",\"mA\":%d,\"samples\":%d,\"avg_current_reg_mA\":%d", tf(n[i] > 0), kPhase[i], ma[i],
+             n[i], avg[i]);
+    s->ok = n[0] > 0 && n[1] > 0 && n[2] > 0 && spun && e == ESP_OK;
+    emit(s, "\"ok\":%s,\"busy_minus_idle_mA\":%d,\"wifi_minus_idle_mA\":%d,\"wifi_err\":%d,\"note\":\"+ is into the battery; "
+            "USB charging adds to every phase\"",
+         tf(s->ok), ma[1] - ma[0], ma[2] - ma[0], e);
+}
+
+/* 1 MiB of ota_0 (the factory firmware) read through the flash driver; nothing written. */
+static void t_flash_read(slot_t *s) {
+    const esp_partition_t *p = esp_partition_find_first(ESP_PARTITION_TYPE_APP, ESP_PARTITION_SUBTYPE_APP_OTA_0, NULL);
+    const size_t chunk = 64 * 1024, len = 1024 * 1024;
+    uint8_t *buf = heap_caps_malloc(chunk, MALLOC_CAP_INTERNAL | MALLOC_CAP_DMA);
+    if (!p || !buf) {
+        heap_caps_free(buf);
+        emit(s, "\"ok\":false,\"error\":\"%s\"", p ? "no buffer" : "no ota_0");
+        return;
+    }
+    esp_err_t e = ESP_OK;
+    uint8_t first = 0;
+    int64_t t = esp_timer_get_time();
+    for (size_t off = 0; off < len && e == ESP_OK; off += chunk) {
+        e = esp_partition_read(p, off, buf, chunk);
+        if (!off) first = buf[0];
+    }
+    int64_t us = esp_timer_get_time() - t;
+    heap_caps_free(buf);
+    s->ok = e == ESP_OK && first == 0xE9;
+    emit(s, "\"ok\":%s,\"err\":%d,\"bytes\":%u,\"MBps\":%.1f,\"app_magic\":%s", tf(s->ok), e, (unsigned)len,
+         (double)len / (double)(us ? us : 1), tf(first == 0xE9));
 }
 
 /* ------------------------------------------------------------------ the runner */
@@ -569,7 +764,8 @@ static const test_t kTests[] = {
     {"timing", t_timing, 3000},   {"gpio", t_gpio, 2000},     {"i2c_scan", t_i2c_scan, 5000}, {"expander", t_expander, 2000},
     {"touch", t_touch, 2000},     {"gauge", t_gauge, 2000},   {"charger", t_charger, 2000},  {"rtc", t_rtc, 2000},
     {"accel", t_accel, 2000},     {"pmic", t_pmic, 2000},     {"card", t_card, 4000},        {"modem", t_modem, 10000},
-    {"wifi", t_wifi, 15000},
+    {"wifi", t_wifi, 15000},      {"accel_axes", t_accel_axes, 3000},
+    {"flash_read", t_flash_read, 5000}, {"current", t_current, 40000},
 };
 #define N_TESTS (sizeof kTests / sizeof kTests[0])
 _Static_assert(N_TESTS <= 24, "slot table");

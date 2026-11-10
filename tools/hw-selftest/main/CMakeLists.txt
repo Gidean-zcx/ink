@@ -8,5 +8,5 @@ idf_component_register(
     INCLUDE_DIRS . ${repo}/platform/include ${repo}/ports/esp32s31 ${repo}/boards/metalio_plus ${chips}
                  ${chips}/tca9555 ${chips}/tps65185
     PRIV_REQUIRES esp_driver_i2c esp_driver_uart esp_driver_gpio esp_driver_sdmmc sdmmc esp_wifi esp_netif esp_event
-                  esp_timer esp_psram spi_flash app_update esp_hw_support)
+                  esp_timer esp_psram spi_flash esp_partition app_update esp_hw_support)
 target_compile_options(${COMPONENT_LIB} PRIVATE -Wall -Wextra -Werror)
