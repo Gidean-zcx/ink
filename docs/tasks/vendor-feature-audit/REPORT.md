@@ -1,6 +1,6 @@
 # 原厂功能与触感反馈审计
 
-基线：`e802ae57a1d20f3ab1f2770e766b3d03274133a3`。查阅日期：2026-11-10。状态：触感反馈和盘点已实现；全量、内存和 S31 检查进行中，已有一项未解决回归。
+基线：`e802ae57a1d20f3ab1f2770e766b3d03274133a3`。查阅日期：2026-11-10。状态：实现与盘点已完成本轮执行，**未达全部验收**；未通过项和覆盖边界见下文。
 
 证据标记：【实测】本次命令结果；【实现】源码核查；【估算】尚未实机验证的判断。原厂仅查阅允许的 `ink-hw/upstream/Metalio-E-INK4-Plus`，不接触设备。
 
@@ -8,12 +8,12 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1a 热区、实体键、长按/拖动、开关、三档、勿扰/孩子/锁屏 | 专项通过 | 【实测】首次进程 177 项、重启 16 项检查；真实模拟 P03 开/关及 HAL 参数；最终以全量结果为准 | C1 |
-| 1b 原有测试与全量 | 未通过，最终全量仍在跑 | 【实测】长语音按 AI 键打断的即时播放状态断言失败；共享能力文档也过期，见下文 | C2 |
-| 1c 内存检查 | 进行中 | 待全量 ASan/UBSan | C3 |
-| 1d S31 编译 | 进行中 | 待构建，不接设备 | C4 |
+| 1a 热区、实体键、长按/拖动、开关、三档、勿扰/孩子/锁屏 | 专项通过 | 【实测】首次进程 177 项、重启 16 项检查；真实模拟 P03 开/关及 HAL 参数；普通及 ASan/UBSan 专项均通过 | C1 |
+| 1b 原有测试与全量 | 未通过 | 【实测】`99% tests passed, 3 tests failed out of 332`，702.47 秒，0 跳过；三项失败见验证结果 | C2、C7 |
+| 1c 内存检查 | 没有内存诊断，但整套用例未全绿 | 【实测】`99% tests passed, 2 tests failed out of 332`，644.11 秒，0 跳过；无 ASan/UBSan 错误 | C3 |
+| 1d S31 编译 | 通过 | 【实测】构建退出 0，0 条编译 warning/error；本次系统 C 单元均已交叉编译；未烧录 | C4 |
 | 1e gcccheck | 通过 | 【实测】`7 compiled, 0 with findings`，没有跳过 | C5 |
-| 2 原厂功能盘点 | 完成 | 【实现】覆盖任务书全部项；列出原厂与本项目位置、缺口及独立建议；72 个显式源码位置已检查存在且行号有效 | C6 |
+| 2 原厂功能盘点 | 完成 | 【实现】覆盖任务书全部项；列原厂与本项目位置、缺口及独立建议；显式源码位置均已检查存在且行号有效 | C6 |
 | 3 中英文截图 | 完成 | 【实测】振动开关和强度均在声音第二页，英文 Strength/Medium 完整可见；路径见下文 | C1 |
 
 ## 没做到的
@@ -21,6 +21,7 @@
 - 尚未做实机验证；任务禁止接触设备。
 - 【实测】`ai-speech-long` 的 barge 子用例：捕获已开始，但 `audio.now_playing` 尚为 voice，`tests/ai_speech_long/ai_speech_long.c:80` 的即时打断断言失败。用本任务五个 C 单元的基线对象重链后通过；关闭新增输入触感的临时对象也通过。因此是本次接入引出的回归，不能归为基线已知失败。按三次规则停止这一项：换共享定时器后仍失败；调整实体键反馈顺序后仍失败；尝试在编码前发布播放状态仍失败，已撤回无效的音频状态改动。没有修改断言、加等待或放宽预算。
 - 热区表上限为 96，满表后不做 LVGL 晚到补震；不保证超出表容量的页面仍有全部控件触感。矩形热区不等于圆角逐像素命中，这是与原厂早震区域相同的证据边界。
+- 【实现】当前只为最上层页面/浮层发布热区，没有合并非模态浮层外仍可点的下层控件；例如键盘（`system/ui/shell/keyboard.c:152`，level=-2）外的下层控件。专项覆盖了键和普通控件，没有把此情形报为通过。
 
 ## 触感规则与来源
 
@@ -39,6 +40,7 @@
 ## 和设计不一致的
 
 - 【实现】没有照搬原厂按控件挂回调和晚到 `PRESSED` 的补震：统一在输入服务判定，避免 UI 重复反馈。原厂盖板短按在松手时震（`main/display/lv_adapter_epdiy_touch.cc:74`），本次按任务书明确要求提前到按下时震；锁屏语义按上表选择，不能声称复现了出厂固件的全部运行行为。
+- 【实现】原厂开启振动时，设置页还会补一次确认震（`D/screen/settings_screen/settings_haptic_tab.cc:108`）。本次没有这次界面补震：输入反馈只发生在 DOWN，开关关闭时不震；人和 AI 改设置使用同一个 `settings.set`，不额外模拟一次按压。普通电源/音量的原厂 DOWN 路径未找到直接触感调用（`B/input/metalio_keys.cc`、`D/lv_adapter_epdiy.cc:527`），本次所有逻辑键按下统一反馈依据任务书。
 - 【实现】强度作用于已有 `ink_audio_haptic()` 的所有调用，包括通知、闹钟；默认脉冲由原来的 HAL 默认 50 ms 改为任务要求的弱档 35 ms。
 
 ## 原厂功能与硬件盘点
@@ -53,11 +55,11 @@
 | 马达软 PWM/连续输出 | 部分 | `B/input/metalio_vibe.cc:16`、`:64`、`:81`、`:136` | `hal_haptic_pulse` 仅有时长，无占空比和连续输出接口；不等同于原厂底层 70%/90%/100% 占空比 | 本任务只要求 35/50/70 ms；PWM 另排 0.5～1 天，需用户决定是否做 |
 | 冷暖前光混光 | 已有 | `B/periph/frontlight.cc:187`、`:198` | `system/services/display/light.c:13` 将亮度与暖度分配到两路；`ports/esp32s31/s31_board.c:117` 输出 LEDC | 已有路径，亮度和混光曲线待真机验收 |
 | 前光亮度渐变 | 没有 | `B/periph/frontlight.cc:24`、`:169`、`:233`（每 5 ms 步进） | `system/services/display/light.c:17`、`ports/esp32s31/s31_board.c:117` 直接改占空比，没有过渡 | 建议沿用已有共享定时器补渐变，约 0.5～1 天；需用户选变化速度，不能擅定参数 |
-| BH1098 通话/本机音频模式 1 | 部分 | `B/periph/metalio_audio.cc:94`、`:110`、`:120` 明确等模式应答 | `drivers/chips/bh1098g/bh1098g.c:18`；`ports/sim/hal/hal_audio_sim.c:325`；S31 `hal_stubs.c:41` 音频仍不可用 | 属于现有音频端口补齐，约 3～5 天；上机前还需核对 ACK、共享供电和 I2S 时序 |
+| BH1098 模式 1（原厂百问通话/本机 AI 音频） | 部分 | `B/periph/metalio_audio.cc:94`、`:110`、`:120` 明确等模式应答 | `drivers/chips/bh1098g/bh1098g.c:18`；`ports/sim/hal/hal_audio_sim.c:325`；S31 `hal_stubs.c:41` 音频仍不可用 | 属于现有音频端口补齐，约 3～5 天；上机前还需核对 ACK、共享供电和 I2S 时序 |
 | 蓝牙耳机模式 2、通话路由 | 部分 | `D/screen/bluetooth_screen/bluetooth_uart.cc:253`、`:313` | `system/services/bt/bt_service.c:176`、`audio_service.c` 路由及 `bh1098g.c:41` 已有；S31 `hal_stubs.c:51` 仍返回不可用 | 建议随音频端口补，约 2～4 天；不扩展到已被用户否决的蓝牙音箱/翻页器 |
 | 耳机扫描、连接/断开检测 | 部分 | `D/screen/bluetooth_screen/bluetooth_uart.cc:154`、`:185`、`:191`、`:197` | `system/services/bt/bt_service.c:80` 与模拟耳机事件；实际 UART 回报接到 S31 事件尚缺 | 建议随上一项补，约 1～2 天；这是蓝牙连接检测，未找到独立有线耳机检测引脚的依据 |
 | 模式 3：设备接收蓝牙音乐、当音箱 | 部分 | `D/screen/bluetooth_screen/bluetooth_uart.cc:261`；原厂 `README_zn.md:570` | `bh1098g.c:20` 有模式 3 命令，但没有可用系统入口、接收音频路径或 S31 实现 | 不在本任务实现；D-120 已排除蓝牙音箱/翻页器，但是否也排除“设备当音箱”未明确；需用户定，约 2～4 天 |
-| TF 卡挂载和按文件访问 | 部分 | `B/periph/metalio_sd.cc:73`；原厂板初始化 `B/metalio_e_ink4_plus_board.cc:80` | `system/services/file/file_service.c`、`ports/sim/hal/hal_storage_sim.c`；S31 存储仍为桩 | 建议按既有端口计划补 SDMMC，约 2～4 天，避免上层“有文件系统”被当成真卡已可用 |
+| TF 卡挂载和按文件访问 | 部分 | `B/periph/metalio_sd.cc:73`；原厂板初始化 `B/metalio_e_ink4_plus_board.cc:80` | `system/services/file/file_service.c`、`ports/sim/hal/hal_storage_sim.c`；S31 存储仍为桩（`ports/esp32s31/hal_stubs.c`） | 建议按既有端口计划补 SDMMC，约 2～4 天，避免上层“有文件系统”被当成真卡已可用 |
 | TF 卡借给电脑当 U 盘（MSC） | 部分 | `C/storage/usb_virtual_disk.cc:469`、`:837` 的 MSC 存储、挂载切换；接线见原厂 `README_zn.md:232` | `system/services/file/file_service.c:1172`、`file_caps.c:505`、模拟 USB；S31 `hal_stubs.c:179` 返回失败 | 已有成人确认和借出互斥；补实际 USB/SD 所有权切换约 3～5 天，涉及整卡暴露的范围须保持 D-72 规则 |
 | DVP 摄像头 GC2145 | 部分 | `C/camera/dvp_camera.cc:92`、`:125`、`:238`；`B/config.h:73` | `simulator/models/dev_camera.c:122` 模拟 DVP 帧和 SCCB，`system/services/camera/camera_service.c:37` 与相机应用已有；S31 `hal_stubs.c:60` 未实现 | 建议优先补板载 DVP，约 3～5 天；先核对实际摄像头装配与共享 RST，不把电脑摄像头测试当作板载验证 |
 | 外接 USB UVC 摄像头 | 没有 | `C/camera/usb_uvc_still.cc:23`、`:52`，以及 `uvc_still_camera.cc` | 现有相机 HAL 不提供 UVC 主机/热插拔选路；S31 相机为桩；宿主机取图不是 UVC 端口 | 如需外接相机再做，约 3～5 天；需要用户决定，采购/插接不在本任务内 |
@@ -100,7 +102,7 @@
 | PCF8563 硬件倒计时 | 没有。[NXP 官方说明](https://www.nxp.com/products/PCF8563)确认 timer；原厂 `C/sensor/pcf8563.cc:190` 仅清 TF/AF，没有设置倒计时寄存器 | `drivers/chips/pcf8563/pcf8563.c` 仅日历/分钟闹钟；系统倒计时运行在主控，不等于用了 RTC timer | 需要短周期低功耗唤醒时再评估，约 1～2 天；需用户定，并先核 RTC_INT/EXT1 共享线的实际状态 |
 | PCF8563 CLKOUT 时钟输出 | 芯片有可编程输出（同上 NXP 说明）；双方驱动未配置 CLKOUT。**板上是否引出/接到可用目标信息不足** | 两边 RTC 头文件均无 CLKOUT 接口，原厂 `B/config.h:86` 只标 INT 接线 | 暂不实现；核原理图/接线约半天，若需改硬件必须用户明确选择，不能当成现成可用 GPIO |
 
-本表没有把充电芯片 OTG 列为“双方没用”：原厂 `C/power/cx25601n.cc:458` 已实现 OTG 使能。本项目未接入，属于原厂有实现、本项目没有接入的软件能力；若要对外供电还须核板级电源选路，由用户决定，约 1～3 天。
+充电芯片 OTG（本项目：没有接入）不列为“双方均没有实现”：原厂 `C/power/cx25601n.cc:458` 已实现 OTG 使能。本项目未接入，属于原厂有实现、本项目没有接入的软件能力；若要对外供电还须核板级电源选路，由用户决定，约 1～3 天。
 
 ### 架构与 AI 开放性（R-061）
 
@@ -119,15 +121,16 @@
 
 ## 改过的已有测试
 
-- 暂无。
+- 无。只新增 `vendor-haptic` 用例和手动反向模式；原有断言、预算、超时和测试期望未改。
 
 ## 要用户定的
 
-- 暂无；仅执行任务书范围内的可逆修改。
+- 后续范围按盘点表选择：前光渐变、自动旋转、关机选图/独立图库、字体转换、WorkBuddy/原厂云兼容、日志上传、设备当音箱。建议先补现有端口和充电机制，再考虑这些扩展；本轮均未实现或自行否定。
+- 字体建议先选电脑预处理，另一个方案是设备端转换；日志建议先选本地脱敏导出，另一个方案是确认范围后上传自建中枢。电池参数和可能涉及新增外设/改线的事项须先明确核对，未擅自写参数或采购。
 
 ## 顺手发现
 
-- 暂无。
+- 原厂 `C/sensor/pcf8563.h:45` 仍描述 INT 经 MOSFET 到 GPIO4，而当前板型 `B/config.h:86` 明确为 P16；本次按当前板型和实际电源路径核对，没有照旧注释猜接线。
 
 ## 新增的机制
 
@@ -149,6 +152,17 @@
 
 【实测】启动恢复页回归由热区失效入口额外获得输入锁引出；改成原子清空、仅在真实刷新后发布表后，原有 `boot-flow` 两模式 173/181 项及全部截图核查通过。保留失败前日志和基线对象对照，不修改原测试。
 
+### 最终验证结果
+
+- 普通全量原话：`99% tests passed, 3 tests failed out of 332`；失败为 `capability-table-doc`、`hub-simulator-e2e`、`ai-speech-long`。日志：`work/host-tests-final.log`。中枢项是 `tests/hub/e2e.py:53` 的播放至少 300 ms 断言；相同命令单独复测原话 `100% tests passed out of 1`，17.70 秒（`work/hub-recheck.log`）。不能用这次复测把完整一轮记成全通过，也未确认波动根因。
+- ASan/UBSan 全量原话：`99% tests passed, 2 tests failed out of 332`；失败仅为上述文档和长语音项，中枢项本轮通过。日志：`work/asan-tests.log`。两个全量均无跳过；没有 `ERROR: AddressSanitizer`、`UndefinedBehaviorSanitizer:` 或 `runtime error:` 诊断。
+- 本次五个产品 C 单元及两个测试 C 单元的 ASan 编译命令均有 `-fsanitize=address,undefined`；运行时使用 `ASAN_OPTIONS=halt_on_error=1`、`UBSAN_OPTIONS=halt_on_error=1`。原有 `unit-s31-osal-ticks` 在根 CMake 设置 sanitizer 前定义，未插桩；未越界修改它，不将其单独称为已做内存插桩检查。
+- S31 构建退出 0；`work/s31-build.log` 无编译 `warning:`/`error:`。SDK 仍输出 Kconfig 十六进制写法弃用 NOTE，没有关闭检查。系统编译命令确认 `INK_PSRAM_BSS=EXT_RAM_BSS_ATTR` 生效。只编译、链接和生成体积/栈报告，没有连接设备。
+- gcccheck 原话：`gcccheck: 7 compiled, 0 with findings`，无跳过，日志 `work/gcccheck.log`。
+- 设置目录在 `work/capabilities.md` 临时生成并校验通过：`PASS: 513 definitions`（434 能力/事件、30 设置、49 状态），含 `audio.vibration_level`。正式共享文件保持不变，故文档同步验收仍失败；不是通过临时副本规避原有断言。
+- 长语音和启动恢复的基线对象对照：`work/check-baseline.py`、`work/baseline-tests.log`。仅将本任务五个 C 实现单元换成指定基线的对象后重链同一组测试，并非宣称完整基线构建全绿；两个相关用例均通过。手动模式依赖本地基线历史，未注册进 CTest。
+- 反向对照最终日志：`work/haptic-reverse-final.log`；专项截图和指标：`build/test-out/vendor-haptic/fixed/`。私有马达任务移除后，原语音场景最小内部空闲由 30688 提升到 33128 字节，原 32768 字节预算不变。
+
 ## 截图路径
 
 构建产物、日志与截图不提交。保留证据时使用 `INK_KEEP_EVIDENCE=1`。
@@ -166,7 +180,7 @@ INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python
 INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/vendor_haptic.py --build build --reverse
 # C2 / C3：两套完整测试，包含原有预算和确定性检查
 PYTHONPATH="$PWD/hub" PYTHONDONTWRITEBYTECODE=1 INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
-PYTHONPATH="$PWD/hub" PYTHONDONTWRITEBYTECODE=1 INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
+PYTHONPATH="$PWD/hub" PYTHONDONTWRITEBYTECODE=1 ASAN_OPTIONS=halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
 # C4：仅编译
 taskpolicy -c utility bash ports/esp32s31/build.sh
 # C5：真实 GCC 编译检查
@@ -175,12 +189,20 @@ taskpolicy -c utility python3 ../../tools/gcccheck.py build system/services/inpu
 INK_VENDOR="$INK_DEPS/../ink-hw/upstream/Metalio-E-INK4-Plus"
 rg -n 'Haptic|PulseMs|kPulseMs' "$INK_VENDOR/main/haptic_feedback.cc"
 git -C "$INK_VENDOR" ls-tree HEAD main/display
+# C7：中枢端到端复测与共享文档临时副本检查，不修改正式共享文档
+PYTHONPATH="$PWD/hub" PYTHONDONTWRITEBYTECODE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j1 -R '^hub-simulator-e2e$'
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/capabilities.py --output work/capabilities.md
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tools/capabilities.py --output work/capabilities.md --check
 ```
 
 公开下载的 17 个源码文件与固定提交 Git tree 的 blob SHA-1 全部相符（按 Git blob 头计算，未仅比较模型自报的版本）。日志与临时源码在 `work/vendor-source/`。交互式决策板本次通过工具不可访问；没有推测用户选择，也没有修改任务禁止的决策文件。
 
+## 提交检查
+
+【实测】对照基线共 12 个相关文件；产品代码 137 行，翻译 15 行。两个截图本地链接和 80 处显式源码行号检查通过，记录在 `work/final-checks.log`；`git diff --check` 通过。按总规则第 6 节隐私表达式扫描全部差异，0 命中；没有提交绝对路径、真实识别号、构建产物、日志或设计稿。共享需求、决策、能力目录及既有调研/审计文件未改。只做本地提交，未 push、未开 PR。
+
 ## 里程碑
 
 - 已核对工作树干净、当前分支独立，HEAD 与指定基线一致。
-- 【实测】新增专项首轮修正了设备档案中不存在的返回键测试；修正后首次进程 168 项检查通过、重启 15 项通过。截图视觉检查后缩短英文强度标题，最终结果以全量检查为准。
-- 产品实现和专项测试已完成；全量、内存、S31、gcccheck 与盘点仍待收尾。
+- 【实测】新增专项首轮修正了设备档案中不存在的返回键测试；修正后首次进程 168 项检查通过、重启 15 项通过。截图视觉检查后缩短英文强度标题，最终新增覆盖下首次进程 177 项、重启 16 项通过。
+- 普通、ASan/UBSan、S31 与 gcccheck 均已跑完；保留未通过结论，未推送。
