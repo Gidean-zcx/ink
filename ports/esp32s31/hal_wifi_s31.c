@@ -105,7 +105,7 @@ static void ink_event(void *arg, esp_event_base_t base, int32_t id, void *data) 
             }
         }
         esp_wifi_clear_ap_list();
-        ink_wifi.result = ((wifi_event_sta_scan_done_t *)data)->status ? HAL_WIFI_ERR_TIMEOUT : ink_wifi.count;
+        if (((wifi_event_sta_scan_done_t *)data)->status) ink_wifi.count = HAL_WIFI_ERR_TIMEOUT;
         xEventGroupSetBits(ink_wifi.events, INK_SCAN_BIT);
         if (ink_wifi.mode == INK_AUTO) ink_rejoin();
         ESP_LOGI("ink_wifi", "scan done count=%d", ink_wifi.count);
@@ -204,7 +204,7 @@ int hal_wifi_scan(hal_wifi_ap_t *out, int max, uint32_t timeout_ms) {
     bool done = r == ESP_OK && (xEventGroupWaitBits(ink_wifi.events, INK_SCAN_BIT, pdTRUE, pdFALSE, pdMS_TO_TICKS(timeout_ms)) & INK_SCAN_BIT);
     INK_LOCK(); ink_wifi.out = NULL;
     if (!done) { esp_wifi_scan_stop(); esp_wifi_clear_ap_list(); }
-    int result = done ? ink_wifi.result : HAL_WIFI_ERR_TIMEOUT;
+    int result = done ? ink_wifi.count : HAL_WIFI_ERR_TIMEOUT;
     ink_wifi.mode = INK_AUTO; ink_rejoin(); INK_UNLOCK();
     return result;
 }

@@ -25,6 +25,7 @@ mutations = [
     ("reconnect", "if (ink_wifi.mode == INK_AUTO) ink_rejoin();\n        ESP_LOGI(\"ink_wifi\", \"link down", "if (false && ink_wifi.mode == INK_AUTO) ink_rejoin();\n        ESP_LOGI(\"ink_wifi\", \"link down"),
     ("sntp-delivery", "if (cb && utc > 0) cb(ctx, utc);", "if (false && cb && utc > 0) cb(ctx, utc);"),
     ("scan-bound", "bool full = ink_wifi.count == ink_wifi.max;", "bool full = false;"),
+    ("scan-result", "int result = done ? ink_wifi.count : HAL_WIFI_ERR_TIMEOUT;", "int result = done ? ink_wifi.result : HAL_WIFI_ERR_TIMEOUT;"),
 ]
 
 
@@ -48,7 +49,12 @@ with tempfile.TemporaryDirectory(prefix="wifi-negative-", dir=args.build.resolve
         if old:
             assert source.count(old) == 1, name
         target = work / "hal_wifi_s31.c"
-        target.write_text(source.replace(old, new) if old else source)
+        text = source.replace(old, new) if old else source
+        if name == "scan-result":
+            anchor = "if (((wifi_event_sta_scan_done_t *)data)->status) ink_wifi.count = HAL_WIFI_ERR_TIMEOUT;"
+            assert text.count(anchor) == 1
+            text = text.replace(anchor, "ink_wifi.result = ((wifi_event_sta_scan_done_t *)data)->status ? HAL_WIFI_ERR_TIMEOUT : ink_wifi.count;")
+        target.write_text(text)
         binary = work / name
         command = ["cc", "-std=gnu11", "-Wall", "-Wextra", "-Werror", "-UNDEBUG",
                    "-I", str(tests / "wifi_stub"), "-I", str(root / "platform/include"),

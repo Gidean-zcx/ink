@@ -17,7 +17,7 @@ static struct { esp_event_base_t base; int id; esp_event_handler_t cb; void *ctx
 static struct { esp_event_base_t base; int id; union { wifi_event_sta_disconnected_t down; wifi_event_sta_scan_done_t scan; esp_netif_sntp_time_sync_t sync; } data; } pending[INK_TEST_EVENTS];
 static unsigned nhandlers, head, tail, connect_calls, sntp_starts, scan_stops, clears;
 static int response, scan_status;
-static bool scan_timeout, radio_busy;
+static bool scan_timeout, radio_busy, scan_drop;
 static wifi_config_t config;
 static wifi_ap_record_t aps[] = {{{"FAKE-AP-TWO"}, -65, 0}, {{"FAKE-NEIGHBOR"}, -30, 1}, {{"FAKE-AP-ONE"}, -42, 1}};
 static unsigned ap_next;
@@ -56,7 +56,7 @@ EventBits_t xEventGroupSetBits(EventGroupHandle_t group, EventBits_t bits) { ret
 EventBits_t xEventGroupClearBits(EventGroupHandle_t group, EventBits_t bits) { unsigned old = group->bits; group->bits &= ~bits; return old; }
 EventBits_t xEventGroupWaitBits(EventGroupHandle_t group, EventBits_t bits, int clear, int all, unsigned ticks) {
     assert(!all && ticks <= 1000 && !mutex.held);
-    while (!(group->bits & bits) && head < tail) pump_one();
+    while (head < tail) pump_one(); /* the higher-priority IDF task drains its ready events first */
     unsigned got = group->bits;
     if (clear) group->bits &= ~bits;
     return got;
@@ -97,7 +97,13 @@ esp_err_t esp_wifi_scan_start(const void *cfg, bool block) {
     ap_next = 0;
     if (scan_timeout) return ESP_OK;
     wifi_event_sta_scan_done_t ev = {.status = scan_status};
-    return esp_event_post(WIFI_EVENT, WIFI_EVENT_SCAN_DONE, &ev, sizeof ev, 0);
+    esp_event_post(WIFI_EVENT, WIFI_EVENT_SCAN_DONE, &ev, sizeof ev, 0);
+    if (scan_drop) {
+        scan_drop = false; radio_busy = false;
+        wifi_event_sta_disconnected_t down = {.reason = 8};
+        esp_event_post(WIFI_EVENT, WIFI_EVENT_STA_DISCONNECTED, &down, sizeof down, 0);
+    }
+    return ESP_OK;
 }
 esp_err_t esp_wifi_scan_stop(void) { scan_stops++; return ESP_OK; }
 static int changes[4];
@@ -150,6 +156,9 @@ int main(void) {
     assert(sntp_starts == 4);
     hal_wifi_ap_t seen[2];
     assert(hal_wifi_scan(seen, 2, 100) == 2 && !strcmp(seen[0].ssid, "FAKE-NEIGHBOR") && seen[0].rssi > seen[1].rssi && seen[1].secured);
+    scan_drop = true; response = 1;
+    assert(hal_wifi_scan(seen, 2, 100) == 2); /* disconnect must not replace the scan's result */
+    pump_all(); link_is(HAL_LINK_WIFI, true);
     scan_timeout = true;
     assert(hal_wifi_scan(seen, 2, 100) == HAL_WIFI_ERR_TIMEOUT && scan_stops == 1 && clears > 0);
     scan_timeout = false;
@@ -168,7 +177,7 @@ int main(void) {
     response = 1;
     assert(hal_wifi_connect("FAKE-AP-TWO", "", 100) == HAL_WIFI_OK);
     link_is(HAL_LINK_WIFI, true);
-    assert(sntp_starts == 5);
+    assert(sntp_starts == 6);
     hal_net_set_time_callback(NULL, NULL);
     sync.tv.tv_sec++;
     esp_event_post(NETIF_SNTP_EVENT, NETIF_SNTP_TIME_SYNC, &sync, sizeof sync, 0); pump_all();

@@ -7,15 +7,15 @@
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
 | 1a | 条件通过，默认分区仍挡构建 | 【实测】S31 编译、链接无警告；忽略目录改用原厂 5 MiB 分区表后完整构建通过，镜像 2,226,176 B；默认 1.5 MiB 分区尺寸检查失败 | `bash ports/esp32s31/build.sh`；临时分区复核见下文 |
-| 1b | 通过 | 【实测】端口普通/ASan 各 9/9；时间服务回调单测通过；7 个 Wi-Fi、3 个时间服务反向对照均在编译成功后失败 | 下文端口测试及 `wifi_negative.py` |
-| 2a | 进行中 | 模拟器全量普通/ASan 回归 | 下文全量测试命令 |
+| 1b | 通过 | 【实测】端口普通/ASan 各 9/9；时间服务回调单测通过；8 个 Wi-Fi、3 个时间服务反向对照均在编译成功后失败 | 下文端口测试及 `wifi_negative.py` |
+| 2a | 普通通过，ASan 进行中 | 【实测】普通全量 338/338；内存检查正在构建 | 下文全量测试命令 |
 | 2b | 通过 | 【实测】gcccheck 共 6 个编译单元，0 发现、0 跳过 | 下文 gcccheck 命令 |
 | 2c | 待最终核对 | 基线以来的完整提交差异隐私扫描 | 总规则第 6 节命令 |
 | 3 | 说明已写，未上机执行 | 【实现】扫描、DHCP、SNTP 接收及 RTC 写入各有日志入口 | 上机先核对清单 |
 
 ## 没做到的
 
-- 正在完成模拟器全量普通/ASan 回归。
+- 正在完成模拟器全量 ASan/UBSan 回归。
 - 仓库默认 `SINGLE_APP_LARGE` 仍是 1.5 MiB 的 `factory` 分区，完整构建退出 2，错误为 `app partition is too small`。本任务没有接管并行 `port-boot-1` 的分区配置；仅在忽略目录用原厂表复核，不能把默认构建写成通过。
 - 未上机。不能据宿主机替身或编译结果声称 S31 已成功起 Wi-Fi、连网或写 RTC。
 
@@ -23,6 +23,7 @@
 
 - 原厂公开副本没有 `esp-wifi-connect` 组件源码，无法完整核实它定制后的初始化和国家码、省电参数。没有猜国家或发射功率，保留 IDF 世界安全国家码，省电使用 IDF 默认 `WIFI_PS_MIN_MODEM`；需上机核对原厂默认。原厂配置启用 NVS，本任务按闪存合同关闭。
 - 闪存合同要求原厂分区表，当前已提交骨架仍是单个 `factory` 分区；本任务没有改表、刷写或改变原厂偏移。临时编译只验证代码和尺寸，试用刷机包还需合入 `port-boot-1`。
+- 现有 `time.auto`、`time.synced` 的标题仍写家庭服务器；本次 SNTP 也沿用自动校时开关和该状态，未扩展界面词条。
 
 ## 改过的已有测试
 
@@ -46,6 +47,7 @@
 ## 要改的文档
 
 - 主会话合并时更新端口 README：Wi-Fi 已移出桩，增加 Wi-Fi 单测和反向对照入口；分区配置说明与 `port-boot-1` 一起更新。
+- 系统服务设计的时间来源说明和相关词条需补上 SNTP，保留与家庭服务器校时共用的两秒阈值和 RTC 路径。
 
 ## 实现规模
 
@@ -84,6 +86,8 @@ taskpolicy -c utility bash ports/esp32s31/build.sh
 
 【实测】IDF 为 v6.1，提交 `fff9895c82d744c7237be8847347bdd1b07c6643`。SDK 生成配置确认 Wi-Fi NVS、PHY 校准存储均未开启。默认分区的失败镜像为 `0x21f860` B，超出 `0x177000` B 分区；最终增量镜像为 `0x21f800` B，原厂 `0x500000` B 应用分区剩余 `0x2e0800` B。
 
+【实测】最终 ELF 的符号表中 `nvs_flash_init`、`nvs_flash_erase`、`esp_phy_store_cal_data_to_nvs` 均无匹配；这是静态证据，不能代替上机确认驱动启动。
+
 临时分区复核只改忽略目录：复制 `$INK_UPSTREAM/partitions.csv` 为 `build-s31/partitions-trial.csv`；在生成的 `build-s31/sdkconfig` 关闭 `SINGLE_APP_LARGE`、开启 `PARTITION_TABLE_CUSTOM`，文件名设为 `../../build-s31/partitions-trial.csv`。沿用 `build.sh` 的 IDF 环境，然后执行：
 
 ```sh
@@ -100,7 +104,9 @@ taskpolicy -c utility python3 "$INK_DEPS/../ink-codex/tools/gcccheck.py" build-s
 taskpolicy -c utility python3 "$INK_DEPS/../ink-codex/tools/gcccheck.py" build system/services/time/time_service.c ports/sim/hal/hal_net_sim.c tests/esp32s31/net_time.c
 ```
 
-【实测】端口普通原话 `100% tests passed out of 9`，`Total Test time (real) = 0.60 sec`；端口 ASan/UBSan 原话同为 `9/9`，`Total Test time (real) = 1.39 sec`。覆盖扫描无序结果排序/截断/超时、DHCP、IP 丢失、错误密码/找不到/超时、已知列表复制与轮换、手动失败后恢复、忘掉连接中网络、重复监听者和选择、蜂窝不可用、SNTP 交付。时间服务测试验证后台执行器、RTC 写入、自动校时开关、两秒阈值、无效时钟补时。反向对照两组原实现退出 0；七个 Wi-Fi 变体退出 -6，三个时间服务变体退出 1，全部先编译成功，不依赖 Git 历史。
+【实测】端口普通原话 `100% tests passed out of 9`，`Total Test time (real) = 0.45 sec`；端口 ASan/UBSan 原话同为 `9/9`，`Total Test time (real) = 1.51 sec`。覆盖扫描无序结果排序/截断/超时、扫描完成后紧随断线时返回值不被覆盖、DHCP、IP 丢失、错误密码/找不到/超时、已知列表复制与轮换、手动失败后恢复、忘掉连接中网络、重复监听者和选择、蜂窝不可用、SNTP 交付。时间服务测试验证后台执行器、RTC 写入、自动校时开关、两秒阈值、无效时钟补时。反向对照两组原实现退出 0；八个 Wi-Fi 变体退出 -6，三个时间服务变体退出 1，全部先编译成功，不依赖 Git 历史。
+
+【实测】普通全量原话：`100% tests passed out of 338`，`Total Test time (real) = 690.41 sec`，没有失败或跳过。
 
 全量配置沿用总规则第 5 节，增加编译命令导出和现成的中枢 Python 环境；普通与内存检查目录分别为 `build`、`build-asan`，后者仅增加 `-DINK_SANITIZE=ON`：
 

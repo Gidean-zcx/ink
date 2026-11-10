@@ -107,7 +107,7 @@ void hal_display_set_temperature(int celsius) {  }
 /* TODO: ESP-IDF S31 JPEG decoder. */
 int hal_jpeg_decode_gray(const uint8_t *src, size_t n, uint8_t *dst, int w, int h) { return -1; }
 
-/* TODO: ESP-IDF Wi-Fi/lwIP/TLS/WebSocket + NT26 modem. */
+/* Wi-Fi/link/SNTP: hal_wifi_s31.c; TODO: TLS/WebSocket + NT26 modem. */
 hal_ws_t *hal_ws_open_pinned(const char *url, const uint8_t *sha256, hal_ws_cb cb, void *ctx) { return NULL; }
 hal_ws_t *hal_ws_open(const char *url, hal_ws_cb cb, void *ctx) { return NULL; }
 hal_at_result_t hal_modem_at(const char *cmd, char *resp, size_t resp_cap, uint32_t timeout_ms) { return HAL_AT_NO_MODEM; }
