@@ -16,7 +16,7 @@ build = a.build.resolve()
 binary = a.binary.resolve() if a.binary else build / "sim-kid-apps"
 work = Path(tempfile.mkdtemp(prefix="kid-apps-", dir=build))
 ok = True
-for phase in ("policy", "restart"):
+for phase in ("policy", "restart", "locale"):
     out = work / phase
     result = subprocess.run([str(binary), "--profile", str(ROOT / "simulator/profiles/metalio-plus.json"),
         "--script", str(ROOT / "tests/kid_2_settings.script"), "--assets", str(build / "assets"),

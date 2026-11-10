@@ -148,10 +148,27 @@ static void restart(void) {
     CHECK(ink_member_time_up() && ink_member_app_time_allows("clock"), "the rebooted policy is enforced");
     ok("app.open", "{\"id\":\"clock\"}"); CHECK(page("Clock"), "the rebooted exception opens");
 }
+static void locale(void) {
+    parent(); ok("settings.set", "{\"id\":\"system.language\",\"value\":1}");
+    ok("shell.kid_settings", NULL); ok("family.kid_apps", NULL);
+    wanted = "Allowed Apps"; on_ui(find_label); CHECK(found, "the application page has its English heading");
+    wanted = "Reading"; on_ui(find_label); CHECK(found, "the application names are translated");
+    double missing = sim_metric_value("i18n.missing");
+    capture("SetKidAppsEnglish");
+    for (int i = 0; i < 3; i++) ok("family.next", NULL);
+    CHECK(sim_metric_value("i18n.missing") == missing, "every application row has an English translation");
+    ok("family.kid_periods", NULL);
+    wanted = "Restricted Hours"; on_ui(find_label); CHECK(found, "the period page has its English heading");
+    wanted = "Start time"; on_ui(find_label); CHECK(found, "time labels are translated");
+    capture("SetKidPeriodsEnglish");
+    for (int i = 0; i < 3; i++) ok("family.next", NULL);
+    CHECK(sim_metric_value("i18n.missing") == missing, "all period and weekday rows have English translations");
+}
 static void run(void *arg) {
     (void)arg; ink_power_hold(INK_NEED_AWAKE); ink_power_hold(INK_NEED_NO_LOCK); quiet();
     if (!strcmp(phase, "policy")) policy();
-    else restart();
+    else if (!strcmp(phase, "restart")) restart();
+    else locale();
     ink_probe_count("test.finished");
 }
 void ink_main(void) {
