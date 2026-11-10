@@ -1192,6 +1192,8 @@ void hal_net_set_link_callback(hal_link_cb cb, void *ctx) {
     N.link_cb[N.nlink++] = cb;
 }
 
+void hal_net_set_time_callback(void (*cb)(void *, int64_t), void *ctx) { (void)cb; (void)ctx; }
+
 /* System event loop task (esp_event "sys_evt" on the device): delivers link changes. */
 static void sys_evt_task(void *arg) {
     (void)arg;

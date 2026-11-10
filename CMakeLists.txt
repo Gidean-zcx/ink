@@ -942,6 +942,10 @@ add_test(NAME integration-wireless-transfer COMMAND ${Python3_EXECUTABLE}
   ${CMAKE_SOURCE_DIR}/tests/wireless_transfer/client.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(integration-wireless-transfer PROPERTIES TIMEOUT 65)
 add_executable(sim-time simulator/runtime/sim_main.c tests/integration/timesvc.c)
+ink_sim_executable(sim-s31-net-time tests/esp32s31/net_time.c)
+target_link_libraries(sim-s31-net-time PRIVATE ink_system)
+add_test(NAME unit-s31-net-time COMMAND sim-s31-net-time --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+  --budget ${CMAKE_SOURCE_DIR}/tests/ui_scene.budget.json --out ${CMAKE_BINARY_DIR}/test-out/s31-net-time --end 8s --quiet --no-random-outages)
 target_link_libraries(sim-time PRIVATE ink_system ink_port_sim)
 target_compile_options(sim-time PRIVATE ${INK_WARN} -Wno-format-truncation) # a message cut short does no harm
 foreach(v main rtc_lost line_low)
