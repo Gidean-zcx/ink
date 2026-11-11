@@ -1,0 +1,1 @@
+{"title":"米换算成厘米","nodes":[{"id":"expression","type":"input","label":"输入米数乘以一百，例如 2*100","value":"2*100"},{"id":"convert","type":"button","label":"换算","capability":"calc.eval","args":{"expr":"$expression"}},{"id":"result","type":"text","label":"厘米","value":"等待换算","from":"result"}]}

@@ -302,14 +302,38 @@ static void on_member(void *ctx, int h, const char *id) {
 /* ---- the directory ---- */
 
 int ink_app_register(const ink_app_def_t *def) {
-    if (!def || !def->id || AP.n >= MAX_APPS || find(def->id) || !ink_layout_name_ok(def->id)) return -1;
-    AP.a[AP.n++] = (app_t){.def = def}; /* at boot: nothing else looks yet */
-    return 0;
+    if (!def || !def->id || !ink_layout_name_ok(def->id)) return -1;
+    if (AP.ready) ink_svc_lock();
+    int r = AP.n >= MAX_APPS || find(def->id) ? -1 : 0;
+    if (!r) AP.a[AP.n++] = (app_t){.def = def};
+    if (AP.ready) ink_svc_unlock();
+    return r;
 }
 
 int ink_app_count(void) { return AP.n; }
 
+int ink_app_unregister(const char *id) {
+    app_t *a = find(id);
+    if (!a || a->def->system_app || a->def->keep || ink_app_close(id)) return -1;
+    int at = (int)(a - AP.a);
+    ink_svc_lock();
+    memmove(a, a + 1, (size_t)(AP.n - at - 1) * sizeof *a);
+    AP.n--;
+    if (AP.fg > at) AP.fg--;
+    ink_svc_unlock();
+    return 0;
+}
+
 const ink_app_def_t *ink_app_at(int i) { return i >= 0 && i < AP.n ? AP.a[i].def : NULL; }
+
+bool ink_app_identity_at(int i, char *id, size_t cap, bool *child_ok) {
+    ink_svc_lock();
+    const ink_app_def_t *def = ink_app_at(i);
+    bool ok = def && id && cap > strlen(def->id);
+    if (ok) { memcpy(id, def->id, strlen(def->id) + 1); if (child_ok) *child_ok = def->child_ok; }
+    ink_svc_unlock();
+    return ok;
+}
 
 bool ink_app_visible(const ink_app_def_t *def) {
     if (ink_member_current()->role == INK_ROLE_CHILD && (!def->child_ok || !ink_member_app_mode(NULL, def->id) || !ink_member_app_time_allows(def->id))) return false;
@@ -539,7 +563,7 @@ static void cap_cards(ink_call_t *c) { /* UI task: apps have no other */
 #define ID_ARG "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":31}},\"required\":[\"id\"]}"
 
 static const ink_cap_t APP_CAPS[] = {
-    {.id = "app.list", .title = "这台设备上有哪些应用，各自的状态", .output = "{\"type\":\"array\"}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_DIRECT, .run = cap_list},
+    {.id = "app.list", .title = "这台设备上有哪些应用，各自的状态", .output = "{\"type\":\"array\"}", .effect = INK_FX_READ, .child_ok = true, .run = cap_list},
     {.id = "app.open", .locked_owner_only = true, .title = "打开一个应用", .input = ID_ARG, .effect = INK_FX_NAVIGATE, .child_ok = true, .while_locked = true, .run = cap_open},
     {.id = "app.close", .title = "关掉一个应用（它会保存状态）", .input = ID_ARG, .effect = INK_FX_NAVIGATE, .child_ok = true, .run = cap_close},
     {.id = "app.cards", .title = "各应用的服务卡片（和主页看到的一样）", .output = "{\"type\":\"array\"}", .effect = INK_FX_READ, .child_ok = true, .run = cap_cards},

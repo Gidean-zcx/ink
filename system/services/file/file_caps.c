@@ -25,7 +25,7 @@
 #define BATCH_FAILURE_MAX 20
 #define BATCH_RESULT_CAP (BATCH_FAILURE_MAX * (INK_FS_NAME_MAX * 6 + 3) + 128)
 
-static bool offered(const char *path) { return path && strncmp(path, "/app", 4) && strncmp(path, "/cache", 6); }
+static bool offered(const char *path) { return path && strcmp(path, "/app") && strncmp(path, "/app/", 5) && strncmp(path, "/cache", 6); }
 
 static void refuse(ink_call_t *c, int err) {
     c->rc.status = err == INK_FS_ERR_DENIED ? INK_RC_REJECTED : err == INK_FS_ERR_PATH ? INK_RC_INVALID : INK_RC_FAILED;

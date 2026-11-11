@@ -63,9 +63,14 @@ typedef struct {
 
 /** At boot, before the UI starts; static definitions. Up to 40. 0, or -1 (full, or the id is taken or not usable as a file name). */
 int ink_app_register(const ink_app_def_t *def);
+/* UI task: remove an installed definition after closing its pages. */
+int ink_app_unregister(const char *id);
+int ink_app_packages_init(void);
 int ink_apps_init(void);
 int ink_app_count(void);
 const ink_app_def_t *ink_app_at(int i);
+/* Any task: copy identity while an installed definition may be removed on UI. */
+bool ink_app_identity_at(int i, char *id, size_t cap, bool *child_ok);
 /** May the current member see it, does this device have what it needs? */
 bool ink_app_visible(const ink_app_def_t *def);
 ink_app_state_t ink_app_state_of(const char *id);

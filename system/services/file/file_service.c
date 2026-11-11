@@ -245,6 +245,9 @@ static int resolve_for(const file_context_t *c, const char *path, bool write, ch
         r = snprintf(phys, cap, "/content/.m/%s%s", id, rest ? rest : "");
     } else if (!strcmp(path, "/members")) {
         return c->adult ? INK_FS_ERR_IS_DIR : INK_FS_ERR_DENIED; /* the list of members is not a directory */
+    } else if (!strncmp(path, "/apps", 5) && (!path[5] || path[5] == '/')) {
+        if (write && !c->adult) return INK_FS_ERR_DENIED;
+        r = snprintf(phys, cap, "/content%s", path);
     } else if (!strncmp(path, "/app/", 5)) {
         const char *rest = strchr(path + 5, '/');
         if (!rest) return INK_FS_ERR_PATH;

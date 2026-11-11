@@ -236,6 +236,7 @@ add_library(ink_system STATIC
   system/ui/textfield.c
   system/ui/shell/keyboard.c
   system/ui/app_registry.c
+  system/ui/app_packages.c
   system/ui/shell/card.c
   system/ui/shell/interrupt_card.c
   system/ui/shell/confirm_card.c
@@ -1851,3 +1852,6 @@ foreach(scene backup sample notes empty-notes)
     ${CMAKE_SOURCE_DIR}/tests/small_gaps_3/run.py --build ${CMAKE_BINARY_DIR} --case ${scene})
   set_tests_properties(small-gaps-3-${scene} PROPERTIES TIMEOUT 200)
 endforeach()
+ink_sim_executable(sim-app-runtime tests/app_runtime/app.c)
+target_link_libraries(sim-app-runtime PRIVATE ink_apps ink_system)
+add_test(NAME app-runtime COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/app_runtime/run.py --build ${CMAKE_BINARY_DIR})
