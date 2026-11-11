@@ -33,7 +33,7 @@ static struct {
     ink_db_t *db; ink_ui_list_t *list; ink_ui_list_position_t position; uint32_t epoch;
     char ids[HISTORY_ROWS][32], args[HISTORY_ROWS][48], labels[HISTORY_ROWS][128], info[HISTORY_ROWS][192];
 } H INK_PSRAM_BSS;
-static int home_snapshot(char *out, size_t cap) { return H.list ? ink_ui_list_snapshot(H.list, out, cap) : ink_ui_semantics_snapshot(&HOME_MODEL, out, cap); }
+static int home_snapshot(char *out, size_t cap) { return H.list && ink_db_count(H.db) ? ink_ui_list_snapshot(H.list, out, cap) : ink_ui_semantics_snapshot(&HOME_MODEL, out, cap); }
 static void history_ready(void *ctx, const ink_receipt_t *rc) {
     if ((uint32_t)(uintptr_t)ctx == ink_member_epoch() && !strcmp(ink_ui_page_name(), "AiHome") && rc->status == INK_RC_DONE) ink_ui_redraw();
 }

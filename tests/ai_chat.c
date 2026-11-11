@@ -190,7 +190,7 @@ static void run(void *arg) {
     CHECK(WAIT_FOR(sim_metric_value("ai.answers") > answered, 20000), "the accepted current-version send reaches the AI service");
     CHECK(AI("shell.ai_home", NULL) && g_rc.status == INK_RC_DONE, "return from the question page to conversation records");
     quiet(); on_ui(read_snapshot);
-    CHECK(!strcmp(ink_ui_page_name(), "AiHome") && !ink_text_focused() && strstr(snapshot, "还没有对话记录"), "records action reaches its entry page rather than resuming the question field");
+    CHECK(!strcmp(ink_ui_page_name(), "AiHome") && !ink_text_focused() && strstr(snapshot, "合成当前版本问题"), "records action reaches its entry page with the completed child question");
     ink_probe_count("test.finished");
 }
 void ink_main(void) {

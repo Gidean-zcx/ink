@@ -10,7 +10,6 @@
 #include "ink/sys/layout.h"
 #include "ink/sys/members.h"
 #include "ink/sys/time.h"
-#include "ink/sys/ui.h"
 
 static const ink_db_def_t HISTORY = {.name = "ai.history", .title = "对话记录", .schema = 1,
     .scope = INK_DB_MEMBER, .json = true, .ai_read = true, .max_records = 50,
@@ -23,6 +22,7 @@ static void save(void *arg) {
         int64_t sort = ink_db_next(db, &cur, &rec, NULL, 0) == 1 ? rec.sort + 1 : 1;
         ink_db_write_t w = {.sort = sort, .data = s->value, .len = strlen(s->value), .src = INK_SRC_SYSTEM};
         if (ink_db_put(db, &w, NULL)) ink_probe_count("ai.history.failed");
+        else ink_cap_emit_for("ai.history.changed", NULL, s->member);
         ink_db_close(db);
     }
     osal_free(s);

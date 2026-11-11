@@ -165,7 +165,7 @@ static void inspect_photo(void) {
     const lv_image_dsc_t *d = G.box && lv_obj_get_child_count(G.box) ? lv_image_get_src(lv_obj_get_child(G.box, 0)) : NULL;
     CHECK(d && d->header.w == 640 && d->header.h == 480, "Photo displays the original VGA dimensions");
     if (d) { ink_image_t im = {d->header.w, d->header.h, (uint8_t *)d->data}; gray_pixels(&im); }
-    read_snapshot(); CHECK(strstr(snapshot, saved_path) && strstr(snapshot, "file.delete") && strstr(snapshot, "shell.ai_key"), "Photo snapshot exposes the displayed file and the same buttons");
+    read_snapshot(); CHECK(strstr(snapshot, saved_path) && strstr(snapshot, "file.delete") && strstr(snapshot, "photo.ask"), "Photo snapshot exposes the displayed file and the same buttons");
 }
 static void first_slot(void) {
     lv_obj_t *slot = G.slots[0]; lv_area_t a; lv_obj_get_coords(slot, &a); point = (lv_point_t){(a.x1 + a.x2) / 2, (a.y1 + a.y2) / 2};
