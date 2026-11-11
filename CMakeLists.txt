@@ -277,6 +277,7 @@ add_library(ink_system STATIC
   system/text/linebreak.c
   system/text/layout.c
   system/ui/lock_mark.c
+  system/ui/lock_faces/faces.c
   system/ui/ui_task.c
   system/ui/ui_semantics.c
   system/ui/ui_list.c
@@ -664,6 +665,10 @@ add_test(NAME backup-restore-recovery COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOUR
 set_tests_properties(backup-restore-recovery PROPERTIES TIMEOUT 240 ENVIRONMENT "UBSAN_OPTIONS=halt_on_error=1")
 target_compile_options(sim-backup-restore PRIVATE -Wno-format-truncation) # a test path cut short fails the test anyway
 add_test(NAME ui-scale COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/ui_scale_check.py)
+ink_sim_executable(sim-lock-faces tests/lock_faces.c)
+target_link_libraries(sim-lock-faces PRIVATE ink_apps ink_system)
+add_test(NAME lock-faces COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/lock_faces.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(lock-faces PROPERTIES TIMEOUT 240)
 add_test(NAME ui-scale-regressions COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/ui_scale_check_test.py)
 add_test(NAME ui-compare-regressions COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/ui_compare_test.py)
 add_test(NAME ui-icons COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tools/icongen/check.py)

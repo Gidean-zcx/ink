@@ -13,11 +13,13 @@
 #include "ink/sys/ui_semantics.h"
 #include "ink/ui_shell.h"
 #include "shell/activity_card.h"
+#include "lock_faces/faces.h"
 
 static lv_obj_t *g_mark, *g_clock, *g_label, *g_date, *g_alarm, *g_notice;
 static uint32_t g_version, g_revision;
 static uint64_t g_unlock_cause;
 static int g_locked;
+enum { LOCK_FIELDS = 6 + INK_LOCK_FACE_FIELDS };
 static ink_exec_job_t g_job;
 static const ink_ui_action_spec_t ACTIONS[] = {
     {.id = "emergency", .label = TR_NOOP("打开紧急呼叫页面"), .capability = "phone.emergency_open", .enabled = true},
@@ -43,19 +45,21 @@ static void camera_button(bool strip) {
 }
 
 static int semantic_snapshot(char *buf, size_t cap) {
-    ink_ui_field_spec_t fields[] = {
+    ink_ui_field_spec_t fields[LOCK_FIELDS] = {
         {.id = "status", .role = "text", .label = TR("锁屏"), .value = g_label ? lv_label_get_text(g_label) : TR("设备已锁定；可拍照：app.open(id=camera)。电源键或 AI 键唤醒。")},
         {.id = "time", .role = "text", .label = TR("时间"), .value = g_clock ? lv_label_get_text(g_clock) : ""},
         {.id = "date", .role = "text", .label = TR("日期"), .value = g_date ? lv_label_get_text(g_date) : ""},
         {.id = "alarm", .role = "text", .label = TR("闹钟"), .value = g_alarm ? lv_label_get_text(g_alarm) : ""},
-        {.id = "notifications", .role = "text", .label = TR("通知"), .value = g_notice ? lv_label_get_text(g_notice) : ""}
+        {.id = "notifications", .role = "text", .label = TR("通知"), .value = g_notice ? lv_label_get_text(g_notice) : ""},
+        {.id = "face", .role = "text", .label = "表盘", .value = ink_lock_face_choices[ink_setting_get("display.lock_style")]}
     };
     ink_ui_page_spec_t model = MODEL; model.title = TR(MODEL.title);
     ink_ui_action_spec_t actions[2]; memcpy(actions, ACTIONS, sizeof actions);
     for (size_t i = 0; i < 2; i++) actions[i].label = TR(ACTIONS[i].label);
     model.actions = actions;
     model.object.revision = g_revision;
-    model.fields = fields; model.field_count = g_clock ? sizeof fields / sizeof *fields : 1;
+    size_t extra = ink_lock_face_fields(fields + 6);
+    model.fields = extra ? fields + 5 : fields; model.field_count = extra ? 1 + extra : 6;
     model.action_count = ink_cap_find("camera.capture") ? 2 : 1;
     return ink_ui_semantics_snapshot(&model, buf, cap);
 }
@@ -68,6 +72,9 @@ static void update_clock(void) {
     if (!g_clock) return;
     char s[24], date[96];
     ink_shell_time_strings(s, sizeof s, date, sizeof date);
+    if (g_date && strcmp(lv_label_get_text(g_date), date)) {
+        lv_label_set_text(g_date, date); changed(); ink_ui_hint_obj(g_date, INK_REFRESH_TEXT);
+    }
     if (!strcmp(lv_label_get_text(g_clock), s)) return;
     lv_label_set_text(g_clock, s);
     changed();
@@ -78,17 +85,26 @@ static void show(void) {
     if (g_mark) return;
     bool clock = ink_setting_get("display.lock_style") == 1;
     bool image = ink_setting_get("display.lock_style") == 2 && ink_wallpaper_ready();
+    bool face = ink_setting_get("display.lock_style") >= INK_LOCK_SIMPLE;
     int text_w = INK_CANVAS_W - 2 * INK_MARGIN - (clock ? 0 : INK_CIRCLE + 2 * INK_CONTROL + 4 * INK_GAP);
     int text_h = ink_ui_text_height(mark_text(), INK_FONT_NOTE, INK_WEIGHT_REGULAR, text_w) + INK_GAP_S;
     int strip_h = text_h > INK_CONTROL ? text_h : INK_CONTROL;
-    g_mark = clock || image ? lv_obj_create(lv_layer_sys()) : ink_ui_box(lv_layer_sys(), INK_MARGIN,
+    g_mark = clock || image || face ? lv_obj_create(lv_layer_sys()) : ink_ui_box(lv_layer_sys(), INK_MARGIN,
              INK_CANVAS_H - strip_h - INK_GAP_S, INK_CANVAS_W - 2 * INK_MARGIN, strip_h, 0, INK_SURFACE_WHITE, false);
-    if (clock || image) {
+    if (clock || image || face) {
         lv_obj_remove_style_all(g_mark);
         lv_obj_set_size(g_mark, LV_PCT(100), LV_PCT(100));
     }
     lv_obj_remove_flag(g_mark, LV_OBJ_FLAG_SCROLLABLE);
     lv_obj_add_flag(g_mark, LV_OBJ_FLAG_CLICKABLE);
+    if (face) {
+        lv_obj_set_style_bg_color(g_mark, ink_ui_paper(), 0); lv_obj_set_style_bg_opa(g_mark, LV_OPA_COVER, 0);
+        if (ink_setting_get("display.lock_background")) ink_wallpaper_draw(g_mark);
+        ink_lock_face_draw(g_mark, (int)ink_setting_get("display.lock_style"));
+        ink_shell_statusbar(g_mark, false); camera_button(false); ink_shell_emergency_button(g_mark, false);
+        g_label = ink_ui_notice(g_mark, mark_text(), INK_CANVAS_H - INK_MARGIN - ink_ui_line_height(INK_FONT_NOTE));
+        ink_ui_overlay_add(&OVERLAY, g_mark); changed(); ink_ui_hint_obj(g_mark, INK_REFRESH_UI); return;
+    }
     if (image) {
         ink_wallpaper_draw(g_mark);
         camera_button(false);
@@ -118,7 +134,7 @@ static void show(void) {
         int h = ink_ui_row_double(), text_y = (h - ink_ui_line_height(INK_FONT_LIST) - ink_ui_line_height(INK_FONT_NOTE)) / 2;
         lv_obj_t *notice = ink_ui_card(g_mark, INK_MARGIN, INK_CANVAS_H - INK_CONTROL - INK_GAP_L - INK_MARGIN - h,
                                        INK_CANVAS_W - 2 * INK_MARGIN, h, INK_SURFACE_WHITE);
-        ink_ui_circle(notice, "bell", INK_GAP, (h - INK_CIRCLE) / 2, INK_CIRCLE, INK_ICON_LIST, INK_SURFACE_STATIC, NULL, NULL);
+        ink_ui_icon(notice, "bell", INK_ICON_LIST, INK_ICON_LINE, INK_GAP, (h - INK_ICON_LIST) / 2, false);
         char count[64]; snprintf(count, sizeof count, TR("%d 条通知"), ink_notify_unread());
         g_notice = ink_ui_line(notice, count, INK_FONT_LIST, INK_WEIGHT_BOLD, INK_ROW_DOUBLE, text_y, INK_CANVAS_W - 2 * INK_ROW_DOUBLE);
         ink_ui_line(notice, TR("唤醒后查看"), INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_ROW_DOUBLE, text_y + ink_ui_line_height(INK_FONT_LIST), INK_CANVAS_W - 2 * INK_ROW_DOUBLE);
@@ -141,9 +157,10 @@ static void hide(void) {
     ink_ui_hint_obj(g_mark, INK_REFRESH_TEXT);
     ink_ui_cause(g_unlock_cause, "power.unlock_to_visible_ms");
     ink_ui_overlay_remove(&OVERLAY);
+    ink_lock_face_clear();
     lv_obj_delete(g_mark); g_mark = g_clock = g_label = g_date = g_alarm = g_notice = NULL;
 }
-static void sync_mark(void *arg) { (void)arg; if (__atomic_load_n(&g_locked, __ATOMIC_ACQUIRE)) show(); else hide(); }
+static void sync_mark(void *arg) { (void)arg; if (__atomic_load_n(&g_locked, __ATOMIC_ACQUIRE)) show(); else { hide(); ink_lock_face_resume(); } }
 static void on_power(void *ctx, ink_power_state_t from, ink_power_state_t to, uint64_t cause_us) {
     (void)ctx;
     if (to == INK_PWR_LOCKED) __atomic_store_n(&g_locked, 1, __ATOMIC_RELEASE);
@@ -151,7 +168,9 @@ static void on_power(void *ctx, ink_power_state_t from, ink_power_state_t to, ui
     else return;
     ink_exec_post(INK_EXEC_UI, &g_job, sync_mark, NULL);
 }
-static void on_minute(void *ctx, int h, const char *id) { (void)ctx; (void)h; (void)id; update_clock(); }
+static void on_minute(void *ctx, int h, const char *id) { (void)ctx; (void)h; (void)id; update_clock(); if (ink_lock_face_update()) changed(); }
+static void on_member(void *ctx, int h, const char *id) { (void)ctx; (void)h; (void)id; if (g_mark) { hide(); show(); } ink_lock_face_resume(); }
+static void on_style(void *ctx, int h, const char *id) { (void)ctx; (void)h; (void)id; if (g_mark) { hide(); show(); } }
 static void on_audio(void *ctx, int h, const char *id) {
     (void)ctx; (void)h; (void)id;
     if (!g_label || g_clock || ink_setting_get("display.lock_style") != 0) return;
@@ -161,6 +180,7 @@ static void on_audio(void *ctx, int h, const char *id) {
     ink_ui_hint_obj(g_mark, INK_REFRESH_FAST);
 }
 int ink_ui_lock_mark_init(void) {
+    if (ink_state_watch("member.", on_member, NULL, INK_EXEC_UI) || ink_settings_watch("display.lock_", on_style, NULL, INK_EXEC_UI)) return -1;
     if (ink_state_watch("media.state", on_audio, NULL, INK_EXEC_UI) || ink_state_watch("audio.now_playing", on_audio, NULL, INK_EXEC_UI)) return -1;
     if (ink_power_add_busy_check(ink_ui_busy) != 0 || ink_state_watch("time.minute", on_minute, NULL, INK_EXEC_UI) != 0) return -1;
     return ink_power_subscribe(on_power, NULL);

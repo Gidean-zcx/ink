@@ -1,6 +1,7 @@
 /* Decode on the media executor; keep only dithered pixels in PSRAM. */
 #include "ink/sys/i18n.h"
 #include <limits.h>
+#include <stdio.h>
 #include "ink/osal.h"
 #include "ink/sys/file_picker.h"
 #include "ink/sys/image.h"
@@ -8,6 +9,30 @@
 #include "ink/sys/settings.h"
 #include "ink/sys/state.h"
 #include "ink/ui_shell.h"
+#include "../lock_faces/faces.h"
+
+/* Called by the Wallpaper page once its owner wires the face selector. */
+void ink_lock_face_settings(lv_obj_t *parent) {
+    int w = (INK_CANVAS_W - 2 * INK_MARGIN - 2 * INK_GAP) / 3;
+    for (int i = 0; i < INK_LOCK_FACE_COUNT; i++) {
+        int x = INK_MARGIN + i % 3 * (w + INK_GAP), y = i / 3 * (INK_ROW_DOUBLE + INK_GAP);
+        lv_obj_t *p = ink_ui_card(parent, x, y, w, INK_ROW_DOUBLE, INK_SURFACE_WHITE);
+        ink_ui_line(p, i == INK_LOCK_CALENDAR ? "日 一 二 三" : i == INK_LOCK_SIMPLE ? "08 / 30" : i == 2 ? "图片" : "08:30",
+                    INK_FONT_NOTE, INK_WEIGHT_MEDIUM, INK_GAP_S, INK_GAP_S, w - 2 * INK_GAP_S);
+        ink_ui_line(p, ink_lock_face_choices[i], INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_GAP_S,
+                    ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_M, w - 2 * INK_GAP_S);
+        char args[96]; snprintf(args, sizeof args, "{\"id\":\"display.lock_style\",\"value\":%d}", i);
+        ink_shell_bind(p, "settings.set", args);
+    }
+    static const char *const ids[] = {"display.lock_todo", "display.lock_reading", "display.lock_background"};
+    static const char *const titles[] = {"锁屏显示待办", "锁屏继续读", "表盘叠在壁纸上"};
+    _Static_assert(sizeof ids / sizeof *ids == sizeof titles / sizeof *titles, "widget settings match");
+    for (size_t i = 0; i < sizeof ids / sizeof *ids; i++) {
+        char args[96]; snprintf(args, sizeof args, "{\"id\":\"%s\",\"value\":%d}", ids[i], !ink_setting_get(ids[i]));
+        ink_shell_bind(ink_ui_toggle(parent, titles[i], ink_setting_get(ids[i]), INK_MARGIN,
+            2 * (INK_ROW_DOUBLE + INK_GAP) + (int)i * INK_CONTROL, INK_CANVAS_W - 2 * INK_MARGIN, NULL, NULL), "settings.set", args);
+    }
+}
 
 typedef struct { ink_exec_job_t job; ink_image_t image; uint32_t epoch; int64_t id; } loaded_t;
 static struct { ink_image_t image; lv_image_dsc_t dsc; ink_exec_job_t load; uint32_t epoch; } W INK_PSRAM_BSS;
@@ -59,6 +84,11 @@ static void choose(ink_call_t *c) {
     if (ink_file_picker_open(INK_FS_IMAGE, selected, (void *)(uintptr_t)c->src)) c->rc.status = INK_RC_FAILED;
 }
 int ink_wallpaper_init(void) {
+    static const ink_setting_def_t widgets[] = {
+        {.id = "display.lock_todo", .title = "锁屏显示待办", .type = INK_SET_BOOL, .per_member = true, .child_may_change = true},
+        {.id = "display.lock_reading", .title = "锁屏继续读", .type = INK_SET_BOOL, .per_member = true, .child_may_change = true},
+        {.id = "display.lock_background", .title = "表盘叠在壁纸上", .type = INK_SET_BOOL, .per_member = true, .child_may_change = true}};
+    if (ink_settings_define(widgets, sizeof widgets / sizeof *widgets)) return -1;
     static const ink_setting_def_t setting = {.id = "display.wallpaper_file", .title = TR_NOOP("壁纸图片编号"), .type = INK_SET_INT, .max = UINT32_MAX};
     static const ink_cap_t cap = {.id = "wallpaper.choose", .title = "选择锁屏壁纸", .effect = INK_FX_NAVIGATE, .run = choose};
     if (ink_settings_define(&setting, 1) || ink_cap_register(&cap, 1) ||
