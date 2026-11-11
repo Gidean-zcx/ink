@@ -36,9 +36,22 @@ if(INK_SANITIZE)
   add_compile_options(-fsanitize=address,undefined -fno-omit-frame-pointer)
   add_link_options(-fsanitize=address,undefined)
 endif()
-add_executable(test-s31-cell ports/esp32s31/tests/cell.c ports/esp32s31/s31_cell_rx.c ports/esp32s31/hal_cellular_s31.c drivers/chips/nt26/nt26.c)
-target_include_directories(test-s31-cell PRIVATE ports/esp32s31 ports/esp32s31/tests/cell_stub platform/include drivers/chips boards)
-target_compile_options(test-s31-cell PRIVATE ${INK_WARN} -UNDEBUG)
+# The S31 4G stack is the vendor's C++ modem (port-cell-3): built here as in ports/esp32s31/tests/CMakeLists.txt,
+# so the reverse controls (cell_negative.py, uhci_negative.py) find its real flags in this build's compile database.
+enable_language(CXX)
+add_executable(test-s31-cell ports/esp32s31/tests/cell.c ports/esp32s31/tests/cell_host.cc ports/esp32s31/s31_modem.c
+  ports/esp32s31/s31_uhci.cc ports/esp32s31/s31_cell_rx.c ports/esp32s31/hal_cellular_s31.c drivers/chips/nt26/nt26.c
+  vendor/uart-eth-modem/uart_eth_modem.cc vendor/uart-eth-modem/nt26_lifecycle.cc
+  vendor/iot_eth/iot_eth.c vendor/iot_eth/iot_eth_netif_glue.c)
+target_include_directories(test-s31-cell PRIVATE ports/esp32s31/tests/cell_stub ports/esp32s31 platform/include drivers/chips boards
+  vendor/uart-eth-modem vendor/iot_eth/include vendor/iot_eth/interface)
+target_compile_definitions(test-s31-cell PRIVATE IOT_ETH_VER_MAJOR=0 IOT_ETH_VER_MINOR=1 IOT_ETH_VER_PATCH=0)
+set_source_files_properties(vendor/iot_eth/iot_eth.c vendor/iot_eth/iot_eth_netif_glue.c
+  PROPERTIES COMPILE_OPTIONS "-std=gnu2x;-Wno-old-style-declaration;-Wno-unknown-warning-option")
+set_target_properties(test-s31-cell PROPERTIES CXX_STANDARD 20 CXX_STANDARD_REQUIRED ON)
+target_compile_options(test-s31-cell PRIVATE -Wall -Wextra -Wno-unused-parameter -Wno-unused-variable -UNDEBUG
+  $<$<BOOL:${INK_WERROR}>:-Werror>)
+target_link_libraries(test-s31-cell PRIVATE Threads::Threads)
 add_executable(test-s31-camera ports/esp32s31/tests/camera.c boards/metalio_plus/metalio_board.c drivers/chips/tca9555/tca9555.c)
 target_include_directories(test-s31-camera PRIVATE ports/esp32s31 ports/esp32s31/tests/camera_stub platform/include drivers/chips boards)
 target_compile_options(test-s31-camera PRIVATE ${INK_WARN} -UNDEBUG)
@@ -591,6 +604,11 @@ target_compile_options(test-log PRIVATE ${INK_WARN} -UNDEBUG)
 add_test(NAME unit-log COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/log/run.py $<TARGET_FILE:test-log>)
 add_test(NAME unit-s31-osal-ticks COMMAND test-s31-osal-ticks)
 add_test(NAME unit-s31-cell COMMAND test-s31-cell)
+foreach(case nat baud started silent dhcp throttle detect privacy)
+  add_test(NAME unit-s31-cell-${case} COMMAND test-s31-cell ${case})
+endforeach()
+set_tests_properties(unit-s31-cell unit-s31-cell-nat unit-s31-cell-baud unit-s31-cell-started
+  unit-s31-cell-silent unit-s31-cell-dhcp unit-s31-cell-throttle unit-s31-cell-detect unit-s31-cell-privacy PROPERTIES TIMEOUT 120)
 add_test(NAME unit-s31-bt COMMAND test-s31-bt)
 set_tests_properties(unit-s31-bt PROPERTIES TIMEOUT 10)
 add_test(NAME unit-s31-bt-negative COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/ports/esp32s31/tests/bt_negative.py ${CMAKE_BINARY_DIR})
