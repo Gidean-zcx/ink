@@ -445,9 +445,10 @@ static void vendor_case(const char *name) {
     } else {
         assert(!strcmp(name, "C19"));
         chip_mode = 2; /* MCU restart, BH remains powered in its previous mode. */
+        drop_acks = 1;
         reply("CONNECT SUCCESS\r\nSET MODE 2\r\n");
         assert(!hal_audio_play_start() && chip_mode == 1 && uart_discards == 1);
-        assert(!ink_s31_bh_headset() && mode_commands == 1);
+        assert(!ink_s31_bh_headset() && mode_commands == 2);
         hal_audio_play_stop(false);
     }
     idle();

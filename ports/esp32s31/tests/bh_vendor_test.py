@@ -37,18 +37,27 @@ def main():
     executable = Path(sys.argv[1]).resolve()
     for name in [None, "B02-write", "B02-ack", "B02-limit", "B04", "B05", "C19"]:
         subprocess.run([str(executable)] + ([name] if name else []), check=True)
-    for index, (name, path, before, after) in enumerate(CONTROLS, 1):
+    controls = CONTROLS
+    if len(sys.argv) == 3:  # Manual historical comparison; ctest never takes this path.
+        controls = [(name, None, sys.argv[2], None)
+                    for name in ["B02-write", "B02-ack", "B02-limit", "B04", "B05", "C19"]]
+    for index, (name, path, before, after) in enumerate(controls, 1):
         with tempfile.TemporaryDirectory(prefix="bh-reverse-", dir=executable.parent) as folder:
             scratch = Path(folder)
             for source in SOURCES:
                 target = scratch / source
                 target.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copyfile(ROOT / source, target)
+                if path is None:
+                    target.write_bytes(subprocess.check_output(
+                        ["git", "show", f"{before}:{source}"], cwd=ROOT))
+                else:
+                    shutil.copyfile(ROOT / source, target)
             shutil.copytree(ROOT / "vendor/metalio_bh1098", scratch / "vendor/metalio_bh1098")
-            target = scratch / path
-            contents = target.read_text()
-            assert before in contents, (path, before)
-            target.write_text(contents.replace(before, after, 1))
+            if path is not None:
+                target = scratch / path
+                contents = target.read_text()
+                assert before in contents, (path, before)
+                target.write_text(contents.replace(before, after, 1))
             command = [os.environ.get("CC", "cc"), "-std=gnu11", "-O2", "-Wall", "-Wextra",
                        "-Werror", "-UNDEBUG", "-pthread"]
             for include in [PORT / "tests/audio_stub", PORT, "platform/include", "drivers/chips", "boards"]:
@@ -64,7 +73,7 @@ def main():
             assert "Assertion" in result.stderr or "Assertion" in result.stdout, result.stderr
             print(f"reverse {index}: {name or 'audio/SCO'} exit={result.returncode}; "
                   f"{result.stderr.strip().splitlines()[0]}")
-    print(f"bh vendor: {len(CONTROLS)} reverse controls failed as expected; checkout unchanged")
+    print(f"bh vendor: {len(controls)} reverse controls failed as expected; checkout unchanged")
 
 
 if __name__ == "__main__":
