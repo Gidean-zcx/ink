@@ -1,0 +1,302 @@
+[
+  {
+    "label": "baseline",
+    "firmware": 4868672,
+    "font_data": 4718277,
+    "embedded": 1590329,
+    "sha256": "15cd3433037c58c69a5f3b9bf68b1b329dea92902a1de305c5ccb68056e3f6e2",
+    "libink_platform.a": {
+      "total": 1700496,
+      "flash": 1678681
+    },
+    "libink_system.a": {
+      "total": 1552902,
+      "flash": 848439
+    },
+    "libesp_stdio.a": {
+      "total": 344123,
+      "flash": 344083
+    },
+    "libink_lvgl.a": {
+      "total": 319300,
+      "flash": 318724
+    },
+    "libink_reader_vendor.a": {
+      "total": 145310,
+      "flash": 145074
+    },
+    "libink_apps.a": {
+      "total": 32170,
+      "flash": 27314
+    },
+    "libmesh.a": {
+      "total": 64,
+      "flash": 60
+    }
+  },
+  {
+    "label": "icons",
+    "firmware": 4689200,
+    "font_data": 4717866,
+    "embedded": 1410852,
+    "sha256": "cf0ff757e51d5408d0a6522620a6c3e014c47b673e0f2ea5c5c7b418c155b9b6",
+    "libink_system.a": {
+      "total": 1552902,
+      "flash": 848439
+    },
+    "libink_platform.a": {
+      "total": 1521019,
+      "flash": 1499204
+    },
+    "libesp_stdio.a": {
+      "total": 344123,
+      "flash": 344083
+    },
+    "libink_lvgl.a": {
+      "total": 319300,
+      "flash": 318724
+    },
+    "libink_reader_vendor.a": {
+      "total": 145310,
+      "flash": 145074
+    },
+    "libink_apps.a": {
+      "total": 32170,
+      "flash": 27314
+    },
+    "libmesh.a": {
+      "total": 64,
+      "flash": 60
+    }
+  },
+  {
+    "label": "lvgl-unused",
+    "firmware": 4642976,
+    "font_data": 4717866,
+    "embedded": 1410852,
+    "sha256": "7cf46c73f529f101dcca8b71812f985a2791c42cabb3744fb752febec7b8cc4b",
+    "libink_system.a": {
+      "total": 1551114,
+      "flash": 846651
+    },
+    "libink_platform.a": {
+      "total": 1521019,
+      "flash": 1499204
+    },
+    "libesp_stdio.a": {
+      "total": 342055,
+      "flash": 342015
+    },
+    "libink_lvgl.a": {
+      "total": 277004,
+      "flash": 276432
+    },
+    "libink_reader_vendor.a": {
+      "total": 145310,
+      "flash": 145074
+    },
+    "libink_apps.a": {
+      "total": 32170,
+      "flash": 27314
+    },
+    "libmesh.a": {
+      "total": 64,
+      "flash": 60
+    }
+  },
+  {
+    "label": "shared-inflate",
+    "firmware": 4625088,
+    "font_data": 4717866,
+    "embedded": 1410852,
+    "sha256": "84336c2ee94ca0cb2b844689b17863358286e545f0ace5193c049149979e4906",
+    "libink_system.a": {
+      "total": 1550938,
+      "flash": 846475
+    },
+    "libink_platform.a": {
+      "total": 1503671,
+      "flash": 1481856
+    },
+    "libesp_stdio.a": {
+      "total": 341559,
+      "flash": 341519
+    },
+    "libink_lvgl.a": {
+      "total": 277004,
+      "flash": 276432
+    },
+    "libink_reader_vendor.a": {
+      "total": 136029,
+      "flash": 135793
+    },
+    "libink_apps.a": {
+      "total": 32170,
+      "flash": 27314
+    },
+    "libink_miniz.a": {
+      "total": 9427,
+      "flash": 9427
+    },
+    "libmesh.a": {
+      "total": 64,
+      "flash": 60
+    }
+  },
+  {
+    "label": "os-lvgl",
+    "firmware": 4578672,
+    "font_data": 4717866,
+    "embedded": 1410852,
+    "sha256": "1ac975d9759add3ab082783d4b0d2c490efe5c1423f60a96d6d6179eb57a91eb",
+    "libink_system.a": {
+      "total": 1549902,
+      "flash": 845439
+    },
+    "libink_platform.a": {
+      "total": 1503671,
+      "flash": 1481856
+    },
+    "libesp_stdio.a": {
+      "total": 341687,
+      "flash": 341647
+    },
+    "libink_lvgl.a": {
+      "total": 231523,
+      "flash": 230951
+    },
+    "libink_reader_vendor.a": {
+      "total": 136029,
+      "flash": 135793
+    },
+    "libink_apps.a": {
+      "total": 32126,
+      "flash": 27270
+    },
+    "libink_miniz.a": {
+      "total": 9427,
+      "flash": 9427
+    },
+    "libmesh.a": {
+      "total": 64,
+      "flash": 60
+    }
+  },
+  {
+    "label": "os-apps",
+    "firmware": 4572928,
+    "font_data": 4717866,
+    "embedded": 1410852,
+    "sha256": "f0c3f7b2487334c9378cf7fb44649e197c66cff5010151cc97ce8af5d5a72424",
+    "libink_system.a": {
+      "total": 1549902,
+      "flash": 845439
+    },
+    "libink_platform.a": {
+      "total": 1503671,
+      "flash": 1481856
+    },
+    "libesp_stdio.a": {
+      "total": 341711,
+      "flash": 341671
+    },
+    "libink_lvgl.a": {
+      "total": 231523,
+      "flash": 230951
+    },
+    "libink_reader_vendor.a": {
+      "total": 135931,
+      "flash": 135695
+    },
+    "libink_apps.a": {
+      "total": 26486,
+      "flash": 21630
+    },
+    "libink_miniz.a": {
+      "total": 9427,
+      "flash": 9427
+    },
+    "libmesh.a": {
+      "total": 64,
+      "flash": 60
+    }
+  },
+  {
+    "label": "os-ui",
+    "firmware": 4514976,
+    "font_data": 4717866,
+    "embedded": 1410852,
+    "sha256": "f2b70b6105ce68942170e9c9b94df9cc1b49305ab71f4e1d6359f467284eb77c",
+    "libink_platform.a": {
+      "total": 1503671,
+      "flash": 1481856
+    },
+    "libink_system.a": {
+      "total": 1491980,
+      "flash": 787517
+    },
+    "libesp_stdio.a": {
+      "total": 341739,
+      "flash": 341699
+    },
+    "libink_lvgl.a": {
+      "total": 231523,
+      "flash": 230951
+    },
+    "libink_reader_vendor.a": {
+      "total": 135931,
+      "flash": 135695
+    },
+    "libink_apps.a": {
+      "total": 26442,
+      "flash": 21586
+    },
+    "libink_miniz.a": {
+      "total": 9427,
+      "flash": 9427
+    },
+    "libmesh.a": {
+      "total": 64,
+      "flash": 60
+    }
+  },
+  {
+    "label": "final",
+    "firmware": 4514976,
+    "font_data": 4717866,
+    "embedded": 1410852,
+    "sha256": "f2b70b6105ce68942170e9c9b94df9cc1b49305ab71f4e1d6359f467284eb77c",
+    "libink_platform.a": {
+      "total": 1503671,
+      "flash": 1481856
+    },
+    "libink_system.a": {
+      "total": 1491980,
+      "flash": 787517
+    },
+    "libesp_stdio.a": {
+      "total": 341739,
+      "flash": 341699
+    },
+    "libink_lvgl.a": {
+      "total": 231523,
+      "flash": 230951
+    },
+    "libink_reader_vendor.a": {
+      "total": 135931,
+      "flash": 135695
+    },
+    "libink_apps.a": {
+      "total": 26442,
+      "flash": 21586
+    },
+    "libink_miniz.a": {
+      "total": 9427,
+      "flash": 9427
+    },
+    "libmesh.a": {
+      "total": 64,
+      "flash": 60
+    }
+  }
+]

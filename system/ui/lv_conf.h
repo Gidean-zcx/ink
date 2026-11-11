@@ -48,10 +48,10 @@
 #define LV_USE_FLOAT 0
 #define LV_USE_MATRIX 0
 
-#define LV_FONT_MONTSERRAT_14 1
-#define LV_FONT_MONTSERRAT_20 1
+#define LV_FONT_MONTSERRAT_14 0
+#define LV_FONT_MONTSERRAT_20 0
 #define LV_FONT_MONTSERRAT_28 1
-#define LV_FONT_MONTSERRAT_40 1
+#define LV_FONT_MONTSERRAT_40 0
 #define LV_FONT_DEFAULT &lv_font_montserrat_28
 
 #define LV_USE_THEME_DEFAULT 0
@@ -65,6 +65,33 @@
 #define LV_USE_QRCODE 1
 #define LV_USE_KEYBOARD 1
 #define LV_USE_IME_PINYIN 0
+/* The shell draws these controls itself; canvas is required by QR codes. */
+#define LV_USE_ANIMIMG 0
+#define LV_USE_ARCLABEL 0
+#define LV_USE_BAR 0
+#define LV_USE_CALENDAR 0
+#define LV_USE_CHART 0
+#define LV_USE_CHECKBOX 0
+#define LV_USE_DROPDOWN 0
+#define LV_USE_IMAGEBUTTON 0
+#define LV_USE_LED 0
+#define LV_USE_LINE 0
+#define LV_USE_LIST 0
+#define LV_USE_MENU 0
+#define LV_USE_MSGBOX 0
+#define LV_USE_ROLLER 0
+#define LV_USE_SCALE 0
+#define LV_USE_SLIDER 0
+#define LV_USE_SPAN 0
+#define LV_USE_SPINBOX 0
+#define LV_USE_SPINNER 0
+#define LV_USE_SWITCH 0
+#define LV_USE_TABLE 0
+#define LV_USE_TABVIEW 0
+#define LV_USE_TILEVIEW 0
+#define LV_USE_WIN 0
+#define LV_USE_GRID 0
+#define LV_USE_OBSERVER 0
 #define LV_USE_SYSMON 0
 #define LV_USE_PROFILER 0
 

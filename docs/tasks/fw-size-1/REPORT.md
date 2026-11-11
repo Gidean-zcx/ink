@@ -1,0 +1,129 @@
+# fw-size-1 执行报告
+
+基线：`90cbb6d0f8814d720c3089b98ba897b4741729c9`。状态：完成，本地提交；未接设备、未推送。
+
+## 验收表
+
+| 编号 | 结论 | 证据 | 命令 |
+| --- | --- | --- | --- |
+| 1 | 【实测】通过 | 4,868,672 → 4,514,976 字节，减少 353,696 字节（345.4 KiB）；应用分区余 727,904 字节 | `ports/esp32s31/build.sh`；`python3 docs/tasks/fw-size-1/measure.py build-s31 <步骤>` |
+| 2 | 【实测】通过 | 普通全量 414 项（首次 3 项环境跳过，已补测）；S31 宿主机 75/75；ASan/UBSan 相关路径 6+4 项；S31 编译成功、无新增警告 | `ctest --test-dir build --output-on-failure -j2`；独立 S31、内存与补测命令见下 |
+| 3 | 清单已列 | 真机回归由主会话执行，本任务不接设备 | 见上机核对清单 |
+
+## 每项大小与核查
+
+【实现】先核对已存在的尺寸报告，再在本分支复建确认：
+
+- `stdio_vfs.c.obj` 的 `esp_stdio_register.str1.4` 输入只有 81 字节；本次基线链接后为 `0x53c35`（343,093 字节），是合并字符串被归到首个输入段；旧 map 为 339,829 字节。不能把它当成控制台可删代码。保留控制台、日志和断言。
+- ESP-IDF v6.1（`fff9895c`）的 `components/esp_wifi/CMakeLists.txt:106` 无条件链接 mesh；Kconfig 没有单独禁用 mesh 的开关。已存在的 `size-components.txt` 显示实际保留 64 字节，其中 `mesh_sta_auth_expire_time` 为 60 字节，另有 4 字节状态；其余段已被链接回收。此处不打桩、不改 Wi-Fi 参数。
+- 原厂 `874538e` 的 `main/display/screen/cloud_screen/ap/ap_transfer.cc:622–650` 是连续 zlib 上传流，`fileman.html:824–828,935` 使用浏览器 `CompressionStream("deflate")`；预压缩网页与上传解压是两件事。
+- `system/ui/ink/ui_theme.h:19–20` 定义五种图标尺寸；106 像素的所有调用已读，包括天气五个合法名字和远程页面的三个状态名字。保守保留这 22 个名字的两种外观，其余尺寸全部保留。完整变体数据待基线复建后记录。
+
+【实测】主工程基线构建成功；改动前的六项相关测试全部通过（`100% tests passed out of 6`，26.90 秒）。`check_assets.py` 在未裁剪的打包器上失败：2 项测试中 1 项失败，原因是未用的 106 像素变体仍被打包。
+
+【实测】S31 基线编译成功，无编译器警告。镜像 **4,868,672 字节**，比任务书旧测值大 30,336 字节，后续以本次复建值为准；复建前主检出构建目录已是另一份 4,867,936 字节的镜像，不作为对照。按任务书旧值计算，本次最终镜像也减少 323,360 字节。完整数字与镜像哈希在 [sizes.json](sizes.json)。
+
+【实测】资源清单见 [assets-baseline.csv](assets-baseline.csv)：9 份字体（含目录项 4,607,122 字节），880 份图标（包括填入首包的 137 份），输入法 5 项（973,577 字节），示例 1 项（1,184 字节）。嵌入包 1,590,329 字节，首包 4,718,277 字节。15 组资源的内容哈希重复，冗余载荷共 10,369 字节；本任务只按已核实的尺寸裁剪，不另加资源去重机制。
+
+【实测】复用 miniz 的宿主机反向编译暴露了 `zalloc` 参数类型差异：原 zlib 用 `unsigned int`，miniz 用 `size_t`；`transfer-miniz` 在原来的直接函数指针赋值处编译失败。只在这一接线处适配，保持原分配器接口与上传流程。
+
+| 步骤 | 改前镜像（字节） | 改后镜像（字节） | 本项减少 |
+| --- | ---: | ---: | ---: |
+| 裁掉未用的 106 像素图标变体 | 4,868,672 | 4,689,200 | 179,472 |
+| 关闭未用 LVGL 控件、布局与字体 | 4,689,200 | 4,642,976 | 46,224 |
+| 上传和阅读器共享 miniz | 4,642,976 | 4,625,088 | 17,888 |
+| LVGL 单组件 `-Os` | 4,625,088 | 4,578,672 | 46,416 |
+| 应用单组件 `-Os` | 4,578,672 | 4,572,928 | 5,744 |
+| 系统界面与系统应用 `-Os`，安装页保留 `-O2` | 4,572,928 | 4,514,976 | 57,952 |
+| 合计 | 4,868,672 | 4,514,976 | **353,696** |
+
+【实测】各组件实际保留的 Flash 内容（包括代码和只读数据；最终镜像另有对齐及链接松弛）如下：
+
+| 组件 | 本项改前 | 本项改后 | 减少（字节） |
+| --- | ---: | ---: | ---: |
+| LVGL | 276,432 | 230,951 | 45,481 |
+| 应用 | 27,270 | 21,630 | 5,640 |
+| 系统（只改界面与系统应用的优化） | 845,439 | 787,517 | 57,922 |
+
+【实测】图标仅移除 132 份未用变体，其他尺寸、22 个状态图标的两种外观、字体、输入法及示例均保留。新嵌入包 1,410,852 字节；首包 4,717,866 字节。新增资源契约测试 2/2、原有打包测试 4/4 通过；S31 编译成功，无新增警告。
+
+【实现】LVGL 的 24 种未调用控件、未用的 grid/observer 和三种未引用的 Montserrat 字体关闭；保留 arc、button、buttonmatrix、canvas、image、keyboard、label、textarea、flex、QR、日志和断言。`lv_keyboard.c:19–20` 明确依赖 buttonmatrix，`lv_qrcode.c` 基于 canvas。全部应用的 S31 编译和宿主机回归通过。
+
+【实测】共享 miniz 后 S31 编译通过，无新增警告。`check_build.py` 核对编译数据库：miniz 只编译一次，传书 zlib 为零，56 个驱动、平台和主入口编译项的优化参数与基线一致。筛选路径不一致的首次接法被检查器抓住（两次编译，失败），改为按源文件后缀筛选后通过。
+
+【实测】原 zlib 和 miniz 各跑原有上传路由断言，以及空流、高压缩率、多于 32 KiB 的字典、未压缩块、同步刷新、1/997/16384 字节输入分块、坏校验和与截断对照，`100% tests passed out of 4`。测试不放宽原断言。
+
+【实测】S31 宿主机首轮 `99% tests passed, 1 tests failed out of 75`（123.04 秒）：未改动的 `unit-s31-cell` 在 ACK 超时后失败，单项重跑 `100% tests passed out of 1`（13.13 秒）。不改测试、超时或驱动；第二轮完整执行为 `100% tests passed out of 75`（148.83 秒，无跳过）。
+
+【实测】LVGL 的 464 个编译项最终优化参数均为 `-Os`，该步固件减少 46,416 字节，无新增编译警告；应用和系统界面的收益分别计量。
+
+【实测】最终 464 个 LVGL、3 个应用、58 个系统界面/系统应用编译项使用 `-Os`。56 个驱动、平台和主入口项及安装页共 57 项优化参数与基线完全一致，系统服务、阅读器引擎和 miniz 保留原优化。资源最终清单见 [assets-final.csv](assets-final.csv)：保留的 763 项载荷哈希全部与基线一致，仅移除 132 个未用尺寸变体。
+
+【实现/实测】现有顺序溢出打包规则使 44 个保留图标从嵌入包进入首包。上机需使用同次构建的 `ink-s31.bin` 和 `ink-fonts.bin`；`tools/device/flash_plan.py:30` 已成对安排两包，`trial_run.py` 支持 `--fonts`。没有修改分区、映射范围或安装工具，也没有实施整包搬迁方案。
+
+【实现/实测】搬到 `font_data` 的评估见 [RESOURCE-PLAN.md](RESOURCE-PLAN.md)：裁剪后日志环之前只余 726 字节；合并两个资源包仍超 1,410,114 字节。当前布局不能直接搬迁；若另行解决容量，预计可再从应用搬出约 1.35 MiB。本任务未实施。
+
+## 没做到的
+
+- 尚未接设备或运行 Linux；本机为 macOS，S31 使用原有 RISC-V GCC 工具链。
+- 安装页 `app_packages.c` 保留 `-O2`：首次 `-Os` 编译在第 124、145 行报 `-Werror=format-truncation`，不改范围外的产品逻辑或关闭警告。
+- mesh 未整体移除：没有独立开关，保留 64 字节公共关联逻辑，其余已被链接回收。
+
+## 和设计不一致的
+
+原厂上传的 zlib 后端改为项目已有 miniz，属于任务书第 3 项明确允许的替换；HAL、协议和授权策略沿用。没有新增用户动作或 AI 入口，能力与软总线边界不变。实机性能等价仍待主会话核对。
+
+## 改过的已有测试
+
+无。只新增本任务的资源、编译参数和解压对照测试；原有断言、超时和预算均未修改。
+
+## 要用户定的
+
+是否另开资源搬迁任务；建议本轮保留现有布局。压缩字库或重新分配分区都需要单独评估，不能占日志环或删字形。
+
+## 顺手发现
+
+安装页两条 GCC 截断诊断见上；是否能被实际合法输入触发需另核查。本任务保留原优化，不修此文件。S31 模组宿主机测试出现一次 ACK 超时，已单独重跑通过，原始失败不隐去。
+
+## 新增的机制
+
+仅新增静态构建目标 `ink_miniz`，由任务书第 3 项要求共用解压实现；复用已有源码、接口、分配器和许可证，不新增运行时机制、任务、状态机、文件格式或配置项。
+
+## 要改的文档
+
+合并时由主会话更新 `docs/tasks/backlog.md` 的 fw-size-1 状态；未改共享文档。
+
+## 上机核对清单
+
+- 同一设备、同一内容对比瘦身前后开机和显示刷新耗时。
+- 核对 4G 注册、短信与通话、声音播放录音。
+- 成套安装本次固件和资源首包，核对状态图标、两种语言的传书网页、普通与压缩上传/下载；用大于 32 KiB 的 EPUB 核对内容哈希、打开和连续翻页。
+
+## 验证与隐私检查
+
+【实测】产品构建、配置与打包改动合计新增 57 行、删除 10 行（共 67 行），其中 vendor 运行时代码只改分配器接线 1 行；不改测试断言、预算上限或警告开关。
+
+【实测】`python3 ../../tools/gcccheck.py build system/ui/icons.c system/ui/theme.c system/ui/shell/keyboard.c` 输出 `gcccheck: 3 compiled, 0 with findings`。S31 基线和最终构建均为 0 条编译器警告、6 条逐条核对相同的既有 IDF CMake 组件私有头目录警告。
+
+【实测】主工程普通全量输出 `100% tests passed out of 414`（967.76 秒），但原配置自动跳过 `hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e`：通用字体工具 Python 不含中枢测试依赖。按 `hub/README.md` 设置 `INK_HUB_PYTHON`，并显式设置 `PYTHONPATH="$PWD/hub"`，验证可编辑环境加载本工作树代码后补测，含能力导出前置共 `100% tests passed out of 4`（57.11 秒，无跳过）；不改测试或依赖版本。
+
+【实测】ASan+UBSan：主工程完整编译后，选择阅读器分块、主页、阅读器、界面卡片及两项确定性测试，`100% tests passed out of 6`（14.24 秒）；上传原协议和分块解压的 zlib/miniz 对照，`100% tests passed out of 4`（2.00 秒）。这是 10 项相关路径的内存检查，不是全量 ASan CTest。
+
+复现：沿总规则第 5 节配置字体与依赖，主工程另加 `-DCMAKE_PROJECT_INCLUDE="$PWD/docs/tasks/fw-size-1/host-os.cmake"`，使宿主机采用与 S31 一致的优化范围；中枢解释器用 `-DINK_HUB_PYTHON="$INK_DEPS/hub/.venv/bin/python"`。所有构建与测试命令均使用 `taskpolicy -c utility`，构建 `-j2`，测试最多 `-j2`。
+
+```sh
+# 普通全量；本次默认环境跳过的三项，按此 Python 环境补跑。
+PYTHONPATH="$PWD/hub" taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
+taskpolicy -c utility cmake -S ports/esp32s31/tests -B build-s31-host -DPython3_EXECUTABLE="$INK_DEPS/build-deps/pyenv/bin/python"
+taskpolicy -c utility cmake --build build-s31-host -j2
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-s31-host --output-on-failure -j1
+taskpolicy -c utility python3 docs/tasks/fw-size-1/check_assets.py
+taskpolicy -c utility python3 docs/tasks/fw-size-1/check_build.py build-s31 --expect-os
+taskpolicy -c utility cmake -S docs/tasks/fw-size-1/transfer -B build-size-transfer
+taskpolicy -c utility cmake --build build-size-transfer -j2
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-size-transfer --output-on-failure -j2
+```
+
+内存检查：主工程目录换 `build-asan` 并加 `-DINK_SANITIZE=ON`，完整编译后 CTest 使用 `-R '^(reader-epub-segments|determinism|determinism-reader|scenario-reader_basic-metalio-plus|ui-cards|scenario-home_basic-metalio-plus)$'`；解压对照目录换 `build-size-transfer-asan`、配置加 `-DINK_SANITIZE=ON`，运行全部 4 项。手动反向资源对照使用基线版 `asset_pack.py` 配合 `check_assets.py --packer <基线脚本>`，退出 1；不依赖 CI Git 历史。
+
+【实测】报告链接、差异空白检查通过。按总规则第 6 节的隐私正则扫描基线至 HEAD 的提交差异，无匹配（grep 退出 1）；未提交构建产物、设计稿、绝对路径或设备标识。
