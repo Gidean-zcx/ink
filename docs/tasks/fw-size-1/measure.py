@@ -48,12 +48,13 @@ def main():
     previous = json.loads(records.read_text()) if records.exists() else []
     assert not any(row['label'] == args.label for row in previous), 'duplicate measurement'
     records.write_text(json.dumps(previous + [result], ensure_ascii=False, indent=2) + '\n')
-    with (folder / f'assets-{args.label}.csv').open('w') as out:
-        writer = csv.writer(out)
-        writer.writerow(('pack', 'name', 'payload_bytes', 'sha256'))
-        for pack in ('fonts', 'embedded'):
-            for name, size, digest in entries(args.build / f'ink-{pack}.bin'):
-                writer.writerow((pack, name, size, digest))
+    if args.label in ('baseline', 'final'):
+        with (folder / f'assets-{args.label}.csv').open('w') as out:
+            writer = csv.writer(out)
+            writer.writerow(('pack', 'name', 'payload_bytes', 'sha256'))
+            for pack in ('fonts', 'embedded'):
+                for name, size, digest in entries(args.build / f'ink-{pack}.bin'):
+                    writer.writerow((pack, name, size, digest))
     print(json.dumps(result, ensure_ascii=False))
 
 

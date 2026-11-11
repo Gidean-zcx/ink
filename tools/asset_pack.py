@@ -29,6 +29,11 @@ def pack(items):
 def split(assets, font_limit=FONT_LIMIT, embedded_limit=EMBEDDED_LIMIT):
     files = sorted([*assets.glob('fonts/*.inkf'), *assets.glob('icons/*.inki'), *assets.glob('ime/*'),
                     *assets.glob('sample/*.txt')])  # ime/: the pinyin word list and its licences
+    # Only these names use INK_ICON_STATE (106 px); keep both looks and all other sizes.
+    state_icons = set('battery check clock cloud cloudoff cloudsun download family globe lock mic '
+                      'person rain sd search snow sun undo usb warn wave wifioff'.split())
+    files = [p for p in files if p.parent.name != 'icons' or not p.name.endswith('-106.inki')
+             or p.name.rsplit('-', 2)[0] in state_icons]
     if not files:
         raise ValueError('no generated fonts/icons; build host assets first')
     groups, used, second = [[], []], HEADER.size, False

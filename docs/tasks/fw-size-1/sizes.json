@@ -33,5 +33,40 @@
       "total": 64,
       "flash": 60
     }
+  },
+  {
+    "label": "icons",
+    "firmware": 4689200,
+    "font_data": 4717866,
+    "embedded": 1410852,
+    "sha256": "cf0ff757e51d5408d0a6522620a6c3e014c47b673e0f2ea5c5c7b418c155b9b6",
+    "libink_system.a": {
+      "total": 1552902,
+      "flash": 848439
+    },
+    "libink_platform.a": {
+      "total": 1521019,
+      "flash": 1499204
+    },
+    "libesp_stdio.a": {
+      "total": 344123,
+      "flash": 344083
+    },
+    "libink_lvgl.a": {
+      "total": 319300,
+      "flash": 318724
+    },
+    "libink_reader_vendor.a": {
+      "total": 145310,
+      "flash": 145074
+    },
+    "libink_apps.a": {
+      "total": 32170,
+      "flash": 27314
+    },
+    "libmesh.a": {
+      "total": 64,
+      "flash": 60
+    }
   }
 ]
