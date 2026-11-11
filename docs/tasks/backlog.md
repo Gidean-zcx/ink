@@ -266,7 +266,9 @@ Codex 额度用完，任务改由 Claude 子代理（思考等级 medium）在�
 | --- | --- |
 | 已合入（25） | `boot-db-stall`、`time-settings`、`reminder-edit`、`port-hal-2`、`files-ops`、`lock-camera`、`kid-apps`、`ai-speech-long`、`clock-extras`、`qr-scan`、`notify-manage`、`sms-multipart-2`、`emergency-call`、`mobile-network`（这两项以 `cell-features-merge` 合入）、`settings-small`、`i18n-2`（以 `i18n-2b` 合入）、`i18n-3`、`i18n-4`、`semantics-shell-1`、`semantics-shell-2`、`small-gaps-1`、`small-gaps-2`、`port-display-1`、`open-app-latency`、`ui-deps-refresh` |
 | 审查修复 | `port-sleep-vendor`、`port-sleep-vendor-2`、`audit14-fix`、`audit14-merge-fix` 已合入；最后一轮整批审查已做完（[batch15 报告](../audits/batch15/report.md)），中等问题 3 项已修，“英文覆盖不完整”1 项等 phone-gap-3 量化后请用户定 |
-| 在做（1） | `phone-gap-3`（最后的缺口检查，2026-11-11 07:46 派出） |
+| 已做完 | `phone-gap-3`（[报告](phone-gap-3/REPORT.md)）：14 个领域 6 A、8 B。完成条件 1～3 满足；**第 4 条没满足**，还有模拟器能验的缺口 G1～G11。G1（高：导出的诊断文件孩子能经文件能力读到）已修（`3b55256b`）；G2～G11 是功能缺口或要先定规则，按完成界限停下，等用户定 |
+
+**phone-gap-3 留下、等用户定的缺口**（严重度照报告）：G2 中，AI 对话记录回看和当前回答重播；G3a 中，改叫法；G3b 中，打字接话；G4 中，把当前照片交给 AI；G5 低，成员门头像选择走原子能力；G6 中，模拟响应没达到 SRS 建议值（录音提示、首句、翻页、可见反馈、解锁、远程点按）；G7 中，英文剩余文案（控制中心飞行模式、设置→家人等）；G8 中，日历独立日程；G9 低，本地自动备份选项和更新说明；G10 低，首启示例内容；G11 中，可动态加载的应用形态（R-008，按 D-08、D-111 分期）。
 
 **不在这一阶段（到这里就停下问用户）**：
 - 上真机：烧录、驱动调试、真机性能实测（每次写设备都要先整片备份、征得同意）。
