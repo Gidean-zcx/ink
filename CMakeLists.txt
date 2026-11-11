@@ -1757,6 +1757,13 @@ ink_sim_executable(sim-factory-pages tests/factory_pages.c)
 target_link_libraries(sim-factory-pages PRIVATE ink_apps ink_system)
 add_test(NAME factory-pages COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/factory_pages.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(factory-pages PROPERTIES TIMEOUT 420)
+foreach(ui_fix_a_case backup confirm transfer factory)
+  ink_sim_executable(sim-ui-fix-a-${ui_fix_a_case} tests/ui_fix_a/${ui_fix_a_case}.c)
+  target_link_libraries(sim-ui-fix-a-${ui_fix_a_case} PRIVATE ink_apps ink_system)
+  add_test(NAME ui-fix-a-${ui_fix_a_case} COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/ui_fix_a/run.py
+    --build ${CMAKE_BINARY_DIR} --case ${ui_fix_a_case})
+  set_tests_properties(ui-fix-a-${ui_fix_a_case} PROPERTIES TIMEOUT 180)
+endforeach()
 
 target_sources(ink_system PRIVATE system/ui/shell/ai_pages.c)
 ink_sim_executable(sim-ai-pages tests/ai_pages.c)
