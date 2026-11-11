@@ -103,6 +103,8 @@ static void touch_move(void) {
     ink_probe_value("test.move_refresh_max_px", max_area);
     CHECK(AI("games.move", "{\"row\":7,\"col\":7}") && g_rc.status == INK_RC_INVALID, "occupied move rejected through bus");
     state(1);
+    measured = 0; measuring = true; state(1); measuring = false;
+    CHECK(measured == 0, "state reads do not request a refresh");
     same_page(); capture("GomokuGame");
 }
 static volatile bool pin_done;

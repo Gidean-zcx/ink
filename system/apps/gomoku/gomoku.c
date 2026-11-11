@@ -39,16 +39,17 @@ static void describe(void) {
 static int cursor(void) { return G.s.count ? G.s.history[G.s.count - 1] : G.s.size * (G.s.size / 2) + G.s.size / 2; }
 static void show(void) {
     describe();
+    int next = cursor();
     if (G.label && strcmp(lv_label_get_text(G.label), G.status)) lv_label_set_text(G.label, G.status);
     if (G.resume) {
         if (G.saved) lv_obj_remove_state(G.resume, LV_STATE_DISABLED);
         else lv_obj_add_state(G.resume, LV_STATE_DISABLED);
     }
     for (int i = 0; i < G.s.size * G.s.size; i++) {
-        if (G.cells[i] && (G.drawn[i] != G.s.cells[i] || i == cursor() || i == G.cursor)) lv_obj_invalidate(G.cells[i]);
+        if (G.cells[i] && (G.drawn[i] != G.s.cells[i] || (next != G.cursor && (i == next || i == G.cursor)))) lv_obj_invalidate(G.cells[i]);
         G.drawn[i] = G.s.cells[i];
     }
-    G.cursor = cursor();
+    G.cursor = next;
 }
 static void answer(ink_call_t *c) { describe(); ink_cap_result(c, G.json); snprintf(c->rc.say, sizeof c->rc.say, "%s", G.status); }
 static void fail(ink_call_t *c, ink_rc_t code, const char *why) { c->rc.status = code; snprintf(c->rc.say, sizeof c->rc.say, "%s", why); }

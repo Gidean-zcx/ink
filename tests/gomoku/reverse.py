@@ -16,6 +16,7 @@ area = build / 'gomoku-reverse'
 area.mkdir(exist_ok=True)
 db = json.loads((build / 'compile_commands.json').read_text())
 cases = [
+    ('state-refresh', 'gomoku.c', '(next != G.cursor && (i == next || i == G.cursor))', '(i == next || i == G.cursor)', 'state reads do not request a refresh'),
     ('win', 'vendor/crossmux/GomokuBoard.cpp', 'if (detectWin(r, c, color))', 'if (false && detectWin(r, c, color))', 'five in a row wins'),
     ('move', 'gomoku.c', 'ai_turn() || ink_gomoku_play(&G.s, 1, (int)r, (int)col)', 'true', 'games.move: invalid'),
     ('member', 'gomoku.c', '!G.db || G.epoch != ink_member_epoch()', '!G.db', 'move count 0'),
