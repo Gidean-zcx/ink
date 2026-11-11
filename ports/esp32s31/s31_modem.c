@@ -53,7 +53,9 @@ static bool ink_allowed(const char *cmd) {
         "AT+ECSIMCFG?", "AT+ECNETCFG?", "AT+ECNETDEVCTL?", "AT+CMGF?", "AT+CMGF=?",
         "AT+CSMS=?", "AT+CNMI?", "AT+CIREG?", "AT+CIREG=?", "AT+CLCC", "AT+CMUT?",
         "AT+CFUN?", "AT+CFUN=1", "AT+CFUN=4", "AT+ECNETDEVCTL=2,1,1", "AT+CMGF=0",
-        "ATA", "AT+CHUP", "AT+CMUT=0", "AT+CMUT=1"
+        "ATA", "AT+CHUP", "AT+CMUT=0", "AT+CMUT=1",
+        /* the card the person picks in Settings (D-128, user 2026-11-11 "手选切换卡吧"): the vendor's switch, nothing else */
+        "AT+CFUN=0", "AT+ECSIMCFG=SimSlot,0", "AT+ECSIMCFG=SimSlot,1"
     };
     if (!cmd) return false;
     for (unsigned i = 0; i < sizeof exact / sizeof *exact; i++) if (!strcmp(cmd, exact[i])) return true;

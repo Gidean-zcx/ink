@@ -34,7 +34,7 @@ static uint32_t baud = 2000000, modem_baud = 2000000; /* this side's UART rate; 
 static int drop_probes; /* first device run: a just-woken modem missed frames */
 static unsigned writes, bad_headers, handshakes, receives, acks, changed, data_tx, radio_commands;
 static bool net_started, drop_rx, silent_greeting; /* silent: a modem whose data device is up ignores a handshake */
-static int csq = 23;
+static int csq = 23, fake_slot; /* the modem keeps the slot the switch set */
 static esp_netif_t netif;
 static esp_netif_driver_ifconfig_t net_driver;
 static void (*srdy_isr)(void *);
@@ -127,7 +127,8 @@ bool ink_s31_uhci_transmit(const uint8_t *data, size_t n) {
     memcpy(cmd, p + 4, n - 5); cmd[n - 5] = 0;
     if (drop_probes > 0 && !strcmp(cmd, "AT")) { drop_probes--; return true; }
     if (!strcmp(cmd, "AT+CMGS=1")) { prompt = true; reply("\r\n> "); }
-    else if (!strcmp(cmd, "AT+ECSIMCFG?")) reply("\r\n+ECSIMCFG: \"SimSlot\",0\r\nOK\r\n");
+    else if (!strcmp(cmd, "AT+ECSIMCFG?")) { char text[64]; snprintf(text, sizeof text, "\r\n+ECSIMCFG: \"SimSlot\",%d\r\nOK\r\n", fake_slot); reply(text); }
+    else if (!strncmp(cmd, "AT+ECSIMCFG=SimSlot,", 20)) { fake_slot = cmd[20] - '0'; reply("\r\nOK\r\n"); }
     else if (!strcmp(cmd, "AT+CEREG?")) reply(unregistered ? "\r\n+CEREG: 0,2\r\nOK\r\n" : "\r\n+CEREG: 2,1,\"1A2B\",\"0C3D4E5F\",7\r\nOK\r\n"); /* n=2: where the cell is */
     else if (!strcmp(cmd, "AT+CPIN?")) reply(missing ? "\r\n+CME ERROR: 10\r\n" : "\r\n+CPIN: READY\r\nOK\r\n");
     else if (!strcmp(cmd, "AT+CSQ")) { char text[64]; snprintf(text, sizeof text, "\r\n+CSQ: %d,99\r\nOK\r\n", csq); reply(text); }
@@ -248,11 +249,11 @@ int main(void) {
     assert(receiving && mrdy == 1);
     tick(); assert(receiving && mrdy == 1);
     split = 256;
-    const char *forbidden[] = {"AT+ECSIMCFG=SimSlot,1", "AT+CGDCONT=1,\"IP\",\"example.com\"", "AT+CGAUTH=1,0", "AT+CMGD=7", "AT&W", "AT+ECRST", "AT+ECNETCFG=1", "AT+XJCFG=netPortBaudRate,1", "AT+IMS=1", "AT+CFUN=1;&W", "AT\r&W", "ATD1;&W", "AT+VTS=\"1\";&W"};
+    const char *forbidden[] = {"AT+ECSIMCFG=SimSlot,2", "AT+ECSIMCFG=SimPowerSave,0", "AT+ECSIMCFG=SimSlot,1;&W", "AT+CFUN=0;&W", "AT+CGDCONT=1,\"IP\",\"example.com\"", "AT+CGAUTH=1,0", "AT+CMGD=7", "AT&W", "AT+ECRST", "AT+ECNETCFG=1", "AT+XJCFG=netPortBaudRate,1", "AT+IMS=1", "AT+CFUN=1;&W", "AT\r&W", "ATD1;&W", "AT+VTS=\"1\";&W"};
     unsigned before = writes;
     for (unsigned i = 0; i < sizeof forbidden / sizeof *forbidden; i++) assert(hal_modem_at(forbidden[i], response, sizeof response, 1000) == HAL_AT_ERROR);
     hal_cell_apn_t apn = {.name = "example.com"};
-    assert(hal_cell_apn(&apn) < 0 && hal_cell_select_sim(HAL_CELL_SLOT_INTERNAL, 0) < 0);
+    assert(hal_cell_apn(&apn) < 0);
     assert(hal_modem_at_payload("AT+CMGS=1", "00\032AT&W", response, sizeof response, 1000) == HAL_AT_ERROR);
     assert(writes == before);
     assert(hal_cell_dial("00000000000") == 0 && ink_bh_call);
@@ -328,6 +329,12 @@ int main(void) {
     assert(hal_modem_at("AT", response, sizeof response, 200) == HAL_AT_NO_MODEM);
     now += 30000001; assert(hal_modem_at("AT", response, sizeof response, 1000) == HAL_AT_OK && !ink_cell.desynced);
     net_started = false; assert(hal_cell_status(&st) && handshakes == 6);
+    /* the card the person picks (D-128): the vendor's three commands, then it registers on the new card */
+    unsigned radio_before = radio_commands;
+    assert(hal_cell_select_sim(HAL_CELL_SLOT_INTERNAL, 5000) == 0 && fake_slot == 1 && radio_commands == radio_before + 2);
+    assert(hal_cell_status(&st) && st.slot == HAL_CELL_SLOT_INTERNAL && st.registered);
+    assert(hal_cell_select_sim(HAL_CELL_SLOT_EXTERNAL, 5000) == 0 && fake_slot == 0 && hal_cell_status(&st) && st.slot == HAL_CELL_SLOT_EXTERNAL);
+    radio_commands = 0;
     unregistered = missing = true; csq = 99;
     assert(hal_cell_status(&st) && !st.registered && st.sim_missing && st.signal_dbm == 0 && !ink_s31_cell_available());
     assert(!ink_cell.ip && !ink_cell.handshake);

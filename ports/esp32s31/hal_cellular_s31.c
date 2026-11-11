@@ -68,7 +68,12 @@ bool hal_cell_status(hal_cell_status_t *out) {
     return true;
 }
 int hal_cell_apn(const hal_cell_apn_t *a) { (void)a; return -1; }
-int hal_cell_select_sim(hal_cell_slot_t slot, uint32_t ms) { (void)slot; (void)ms; return -1; }
+/* The vendor's switch (settings_test_cell.cc ApplySimSlot: CFUN=0, SimSlot, CFUN=1), only for the card the person picks
+ * (D-128); the modem keeps the slot across restarts. Same as the simulator's port. */
+int hal_cell_select_sim(hal_cell_slot_t slot, uint32_t reg_timeout_ms) {
+    nt26_result_t r = nt26_select_sim(slot == HAL_CELL_SLOT_INTERNAL ? NT26_INTERNAL_CARD : NT26_EXTERNAL_SLOT, reg_timeout_ms);
+    return r == NT26_OK ? 0 : r == NT26_NOT_REGISTERED ? 1 : -1;
+}
 
 int hal_cell_radio(bool on, uint32_t reg_timeout_ms) {
     nt26_result_t r = nt26_radio(on, reg_timeout_ms);
