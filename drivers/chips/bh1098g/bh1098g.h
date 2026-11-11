@@ -23,5 +23,6 @@ int bh1098g_set_mode(hal_uart_t *u, int mode); /* 1, 2 or 3; 0 ok */
 /** "V1.03" style version into buf; 0 ok, -1 no answer within 5 s (upstream's wait). */
 int bh1098g_version(hal_uart_t *u, char *buf, int cap);
 int bh1098g_headset_call(hal_uart_t *u);
+int bh1098g_headset_music(hal_uart_t *u);
 
 #endif

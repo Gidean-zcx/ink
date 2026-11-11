@@ -48,6 +48,7 @@ static i2s_isr_callback_t lost_cb;
 static char uart_rx[2048];
 static size_t uart_at;
 static bool connect_ack = true, connect_timeout, scan_ack = true, sco_ack = true;
+static int drop_writes, drop_acks, mode_commands;
 static int chip_mode, link_events, lost_events, uart_discards, receiver_wakes;
 static uint64_t mode_sent_at, pp_sent_at, sco_sent_at;
 static void reply(const char *s) {
@@ -150,14 +151,17 @@ int hal_uart_write(hal_uart_t *u, const void *data, size_t n) {
     if (uart_fail) { mode_calls++; return -1; }
     if (n == 9 && (!memcmp(data, "AT+RX=2\r\n", n) || !memcmp(data, "AT+TX=1\r\n", n))) {
         mode_calls++;
+        if (drop_writes > 0) { drop_writes--; return -1; }
         mode_sent_at = osal_now_us();
         event(!memcmp(data, "AT+RX", 5) ? 'b' : 't');
     } else if (n == 11 && !memcmp(data, "AT+MODE=", 8)) {
         assert(osal_now_us() - mode_sent_at >= 700000);
         chip_mode = ((const char *)data)[8] - '0';
         assert(chip_mode == 1 || chip_mode == 2);
+        mode_commands++;
         event(chip_mode == 1 ? 'm' : 'M');
-        if (ack) reply(chip_mode == 1 ? "SET MODE 1\r\n" : "SET MODE 2\r\n");
+        if (drop_acks > 0) drop_acks--;
+        else if (ack) reply(chip_mode == 1 ? "SET MODE 1\r\n" : "SET MODE 2\r\n");
     } else if (n == 14 && !memcmp(data, "AT+INQUIRING\r\n", n)) {
         assert(chip_mode == 2);
         if (scan_ack) reply("INQUIRING START\r\nAT+BT:bad\r\nAT+BT:001122334455测试耳机\r\n"
@@ -216,6 +220,10 @@ esp_err_t i2s_channel_init_std_mode(i2s_chan_handle_t c, const i2s_std_config_t 
     (void)c;
     assert(s->clk_cfg.sample_rate_hz == 16000 && s->slot_cfg.data_bit_width == 32 && s->slot_cfg.slot_mode == 2);
     assert(s->clk_cfg.clk_src == I2S_CLK_SRC_DEFAULT && s->clk_cfg.mclk_multiple == 256 && !s->clk_cfg.bclk_div);
+    assert(!s->clk_cfg.ext_clk_freq_hz && s->slot_cfg.slot_bit_width == I2S_SLOT_BIT_WIDTH_AUTO);
+    assert(s->slot_cfg.slot_mask == I2S_STD_SLOT_BOTH && s->slot_cfg.ws_width == 32);
+    assert(!s->slot_cfg.ws_pol && s->slot_cfg.bit_shift && s->slot_cfg.left_align);
+    assert(!s->slot_cfg.big_endian && !s->slot_cfg.bit_order_lsb);
     assert(s->gpio_cfg.mclk == -1 && s->gpio_cfg.bclk == 42 && s->gpio_cfg.ws == 43 && s->gpio_cfg.dout == 44 && s->gpio_cfg.din == 45);
     return fail() ? ESP_FAIL : ESP_OK;
 }
@@ -344,19 +352,24 @@ static void bluetooth(void) {
     assert(hal_bt_connect(devices[0].addr) == -1 && !ink_s31_bh_headset());
     ack = true;
     assert(!hal_bt_connect(devices[0].addr));
-    sco_ack = false;
+    uart_fail = true;
     assert(ink_s31_bh_capture(true) == -1);
+    uart_fail = false;
+    assert(!ink_s31_bh_capture(false));
+    sco_ack = false;
+    uint64_t sco_start = osal_now_us();
+    assert(!ink_s31_bh_capture(true) && osal_now_us() - sco_start == 200000);
     sco_ack = true;
     assert(!ink_s31_bh_capture(false) && osal_now_us() - sco_sent_at >= 200000);
     /* Only a documented mode report is simulated: no invented headset-loss token. */
     reply("SET MODE 1\r\n");
     ink_s31_bh_poll();
-    assert(lost_events == 1 && !ink_s31_bh_headset());
+    assert(lost_events == 2 && !ink_s31_bh_headset());
     chip_mode = 1;
     assert(!hal_bt_connect(devices[0].addr));
     int discards = uart_discards;
     ink_s31_bh_suspend();
-    assert(lost_events == 2 && !ink_s31_bh_headset());
+    assert(lost_events == 3 && !ink_s31_bh_headset());
     powered = false;
     assert(!ink_s31_bh_ready());
     powered = true;
@@ -385,8 +398,65 @@ static void bluetooth(void) {
     hal_bt_disconnect();
     puts("bt: documented scan/connect/pair-via-connect, modes, SCO, timeouts, mode-loss/P14 and UART ownership passed");
 }
-int main(void) {
+static void vendor_case(const char *name) {
+    hal_bt_on_event(link_event, &bh_mutex);
+    if (!strcmp(name, "B02-write") || !strcmp(name, "B02-ack")) {
+        if (!strcmp(name, "B02-write")) drop_writes = 1;
+        else drop_acks = 1;
+        assert(!hal_audio_play_start() && mode_calls == 2 && chip_mode == 1);
+        assert(osal_now_us() >= 2400000);
+        hal_audio_play_stop(false);
+    } else if (!strcmp(name, "B02-limit")) {
+        ack = false;
+        assert(hal_audio_play_start() == -1 && mode_calls == 4 && mode_commands == 4);
+        int attempts = mode_calls;
+        assert(hal_audio_play_start() == -1 && mode_calls == attempts);
+        assert(osal_now_us() == 10500000);
+    } else if (!strcmp(name, "B04")) {
+        assert(!hal_bt_connect("00:11:22:33:44:55"));
+        reply("SET MODE 1\r\n");
+        ink_s31_bh_poll();
+        assert(!ink_s31_bh_headset() && lost_events == 1);
+        reply("SET MODE 2\r\nRECONNECT DEVICE NAME\r\n");
+        ink_s31_bh_poll();
+        assert(!ink_s31_bh_headset() && link_events == 1);
+        reply("CONNECT SUCCESS\r\nSETUP SCO\r\n");
+        ink_s31_bh_poll();
+        assert(ink_s31_bh_headset() && link_events == 2);
+        assert(!hal_audio_route_set(HAL_ROUTE_BT_HEADSET));
+        reply("DISC SCO\r\nDISCONNECTED\r\n");
+        ink_s31_bh_poll();
+        assert(ink_s31_bh_headset() && lost_events == 1);
+        reply("SET MODE 1\r\n");
+        ink_s31_bh_poll();
+        assert(!ink_s31_bh_headset() && lost_events == 2);
+    } else if (!strcmp(name, "B05")) {
+        assert(!hal_bt_connect("00:11:22:33:44:55"));
+        ack = false;
+        hal_bt_disconnect();
+        assert(ink_s31_bh_headset() && !lost_events);
+        assert(!hal_audio_route_set(HAL_ROUTE_BT_HEADSET));
+        hal_bt_forget("00:11:22:33:44:55");
+        assert(ink_s31_bh_headset() && !lost_events);
+        ack = true;
+        hal_bt_forget("00:11:22:33:44:55");
+        assert(!ink_s31_bh_headset() && lost_events == 1 && chip_mode == 1);
+        assert(!hal_audio_route_set(HAL_ROUTE_SPEAKER));
+    } else {
+        assert(!strcmp(name, "C19"));
+        chip_mode = 2; /* MCU restart, BH remains powered in its previous mode. */
+        drop_acks = 1;
+        reply("CONNECT SUCCESS\r\nSET MODE 2\r\n");
+        assert(!hal_audio_play_start() && chip_mode == 1 && uart_discards == 1);
+        assert(!ink_s31_bh_headset() && mode_commands == 2);
+        hal_audio_play_stop(false);
+    }
+    idle();
+    printf("%s: passed\n", name);
+}
+int main(int argc, char **argv) {
     ink_s31_audio_init();
+    if (argc == 2) { vendor_case(argv[1]); return 0; }
     hal_audio_info_t info;
     hal_audio_get_info(&info);
     assert(info.has_speaker && info.has_mic && info.mic_reference && info.chunk_samples == 240 && info.runway_ms == 60);
@@ -405,6 +475,7 @@ int main(void) {
     assert(hal_audio_play_start() == -1);
     idle();
     ack = true;
+    epoch++; /* Factory initialization is exhausted until the next power epoch. */
     trace_n = 0;
     assert(hal_audio_play_start() == 0 && !amp && holds[HAL_PWR_AUDIO_OUT] == 1);
     assert(strstr(trace, "bwmN") && hal_audio_play_start() == -1);
@@ -452,7 +523,8 @@ int main(void) {
     uart_fail = true;
     assert(hal_audio_play_start() == -1);
     uart_fail = false;
-    assert(hal_audio_play_start() == 0 && mode_calls == old_modes + 2);
+    epoch++;
+    assert(hal_audio_play_start() == 0 && mode_calls == old_modes + 5);
     hal_audio_play_stop(false);
     stop_capture();
     idle();

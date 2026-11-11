@@ -1,6 +1,6 @@
-/* BH1098G / NS4150, factory @690a023: metalio_audio.cc and bt_audio_codec.cc.
+/* BH1098G / NS4150, factory @874538e: vendor/metalio_bh1098/SOURCE.md.
  * Copyright (c) 2025 Shenzhen Xinzhi Future Technology Co., Ltd.
- * Copyright (c) 2025 Project Contributors. MIT: vendor/s31_sleep/LICENSE. */
+ * Copyright (c) 2025 Project Contributors. MIT: vendor/metalio_bh1098/LICENSE. */
 #include <limits.h>
 #include <string.h>
 #include "driver/i2s_std.h"
@@ -51,6 +51,7 @@ static bool ink_rx_lost(i2s_chan_handle_t chan, i2s_event_data_t *ev, void *ctx)
     __atomic_add_fetch(&A.lost, ev->size / 8, __ATOMIC_RELAXED);
     return false;
 }
+#include "../../vendor/metalio_bh1098/codec.inc"
 static bool ink_audio_ready(void) { /* lifecycle lock held; never reset the shared modem rail */
     if (!ink_s31_bh_ready()) return false;
     if (A.tx) return true;
@@ -59,19 +60,7 @@ static bool ink_audio_ready(void) { /* lifecycle lock held; never reset the shar
     A.mic = osal_malloc(INK_AUDIO_CHUNK * 4, OSAL_MEM_EXTERNAL);
     if (!A.out || !A.in || !A.mic) goto fail;
     A.ref = A.mic + INK_AUDIO_CHUNK;
-    i2s_chan_config_t c = I2S_CHANNEL_DEFAULT_CONFIG(I2S_NUM_0, I2S_ROLE_SLAVE);
-    c.dma_desc_num = INK_AUDIO_DMA;
-    c.dma_frame_num = INK_AUDIO_CHUNK;
-    c.auto_clear_after_cb = true;
-    i2s_std_config_t s = {
-        .clk_cfg = {.sample_rate_hz = HAL_AUDIO_RATE, .clk_src = I2S_CLK_SRC_DEFAULT,
-                    .mclk_multiple = I2S_MCLK_MULTIPLE_256},
-        .slot_cfg = I2S_STD_PHILIPS_SLOT_DEFAULT_CONFIG(I2S_DATA_BIT_WIDTH_32BIT, I2S_SLOT_MODE_STEREO),
-        .gpio_cfg = {.mclk = I2S_GPIO_UNUSED, .bclk = 42, .ws = 43, .dout = 44, .din = 45},
-    };
-    i2s_event_callbacks_t cb = {.on_recv_q_ovf = ink_rx_lost};
-    if (i2s_new_channel(&c, &A.tx, &A.rx) != ESP_OK || i2s_channel_init_std_mode(A.tx, &s) != ESP_OK ||
-        i2s_channel_init_std_mode(A.rx, &s) != ESP_OK || i2s_channel_register_event_callback(A.rx, &cb, NULL) != ESP_OK) goto fail;
+    if (!ink_vendor_codec_start()) goto fail;
     return true;
 fail:
     ink_audio_idle();
@@ -111,14 +100,12 @@ int hal_audio_play_write(const int16_t *pcm, int n, int64_t timeout_us) {
     if (!A.playing || !ink_amp(true)) count = -1;
     while (count >= 0 && count < n) {
         int chunk = n - count < INK_AUDIO_CHUNK ? n - count : INK_AUDIO_CHUNK;
-        for (int i = 0; i < chunk; i++) A.out[i * 2] = A.out[i * 2 + 1] = (int32_t)pcm[count + i] * 65536;
         int64_t left = deadline - (int64_t)osal_now_us();
-        size_t bytes = 0;
-        esp_err_t rc = i2s_channel_write(A.tx, A.out, (size_t)chunk * 8, &bytes,
-                                       timeout_us < 0 ? UINT32_MAX : left > 0 ? (uint32_t)(left / 1000) : 0);
-        count += (int)(bytes / 8);
-        if (bytes) A.tail = (int64_t)osal_now_us() + INK_AUDIO_RUNWAY_US;
-        if (rc != ESP_OK || bytes < (size_t)chunk * 8) break;
+        int written = ink_vendor_codec_write(pcm + count, chunk,
+            timeout_us < 0 ? UINT32_MAX : left > 0 ? (uint32_t)(left / 1000) : 0);
+        count += written;
+        if (written) A.tail = (int64_t)osal_now_us() + INK_AUDIO_RUNWAY_US;
+        if (written < chunk) break;
     }
     if (count == 0 && A.tail <= (int64_t)osal_now_us()) ink_amp(false);
     osal_mutex_unlock(A.lock);
@@ -145,19 +132,11 @@ void hal_audio_play_stop(bool drain) {
     }
     osal_mutex_unlock(A.lock);
 }
-static int16_t ink_sample(int32_t word) {
-    int32_t v = word >> 12;
-    return v > INT16_MAX ? INT16_MAX : v < -INT16_MAX ? -INT16_MAX : (int16_t)v;
-}
 static void ink_capture(void *arg) {
     (void)arg;
     while (__atomic_load_n(&A.capturing, __ATOMIC_ACQUIRE)) {
-        size_t bytes = 0;
-        esp_err_t rc = i2s_channel_read(A.rx, A.in, INK_AUDIO_CHUNK * 8, &bytes, 250);
-        int n = (int)(bytes / 8);
-        if (rc != ESP_OK && !n) continue;
+        int n = ink_vendor_codec_read();
         if (!n || !__atomic_load_n(&A.capturing, __ATOMIC_ACQUIRE)) continue;
-        for (int i = 0; i < n; i++) { A.mic[i] = ink_sample(A.in[i * 2]); A.ref[i] = ink_sample(A.in[i * 2 + 1]); }
         uint64_t now = osal_now_us(), span = (uint64_t)n * 1000000 / HAL_AUDIO_RATE;
         A.cb(A.ctx, A.mic, ink_s31_bh_headset() ? NULL : A.ref, n,
              (int)__atomic_exchange_n(&A.lost, 0, __ATOMIC_RELAXED), now > span ? now - span : 0);
