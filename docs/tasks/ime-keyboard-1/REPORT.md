@@ -14,8 +14,8 @@
 | 1.6 模式保持与默认值 | 【实测】通过 | 换普通框及经过特殊框后保持英文；每次新进程默认中文 | C1 |
 | 1.7 AI 切换与快照 | 【实测】通过 | `keyboard.key(code=3)` 返回完成，快照同步显示 `输入=中文/英文` | C1 |
 | 1.8 反向对照 | 【实测】通过 | 三处独立单点变异均触发指定失败，每次模拟器退出 1，对照脚本退出 0 | C2 |
-| 2.1 普通版全量 | 【实测】部分通过 | 原话 `99% tests passed, 3 tests failed out of 375`，1013.41 秒；3 项跳过。标点旧期望更新后文字输入三项重跑全部通过，余下两项基线失败见下文 | C3、C4 |
-| 2.2 ASan + UBSan 全量 | 待验证 | 独立 `build-asan` 已配置，正在构建 | C3，目录改为 `build-asan` |
+| 2.1 普通版全量 | 【实测】部分通过 | 原话 `99% tests passed, 3 tests failed out of 375`，1013.41 秒；3 项跳过。更新旧期望和夹具后，最终文字输入重跑原话 `100% tests passed, 0 tests failed out of 3`，7.03 秒；余下两项基线失败见下文 | C3、C4；`work/ime-keyboard-1/ctest.log`、`text-tests-final.log` |
+| 2.2 ASan + UBSan 全量 | 【实测】内存检查未见错误，全量部分通过 | 完整构建退出 0；原话 `99% tests passed, 2 tests failed out of 375`，1182.57 秒，退出 8；失败仍为清单文档和备份，3 项依赖跳过。本任务 531 次检查全部通过；完整 CTest 日志未出现 ASan/UBSan 错误标记 | C3，目录改为 `build-asan`；`work/ime-keyboard-1/asan-ctest.log`、`sanitizer-findings.log`、`build-asan/Testing/Temporary/LastTest.log` |
 | 2.3 S31 | 【实测】通过 | 完整构建、资源打包、size/stack 报告退出 0；两份修改的产品 C 均编入；镜像 3302304 B；产品 C 代码 0 警告，另有 5 条 SDK CMake 配置警告及 1 条 shell 补全警告 | C5；`work/ime-keyboard-1/s31.log`、`build-s31/export.log` |
 | 2.4 gcccheck | 【实测】通过 | `gcccheck: 4 compiled, 0 with findings`，无跳过 | C6 |
 | 2.5 ui-scale | 【实测】通过 | `ui-scale: 51 files, 0 violations` | C7 |
@@ -26,11 +26,11 @@
 
 ## 没做到的
 
-ASan 尚在执行，普通版全量没有全部通过：
+普通版与 ASan 全量没有全部通过，剩余问题均已核查并记录：
 
-- `capability-table-doc`：基线文档仍为 448 项能力/事件、31 项设置，代码已有 452、34。本次生成清单与基线逐字相同；规则禁止修改这份共享文档。
+- `capability-table-doc`：基线文档仍为 448 项能力/事件、31 项设置，代码已有 452、34。本次生成清单与基线逐字相同（两份生成结果 SHA-256 均为 `27d55cdd74fbdba3712fbe9f3d936eda91f37a7c00aad73aa827cc0419b3b6f7`）；规则禁止修改这份共享文档。复核：`taskpolicy -c utility "$PY" -B work/ime-keyboard-1/baseline_catalogue.py`；证据 `work/ime-keyboard-1/capability-baseline.txt`。
 - `small-gaps-3-backup`：在 `tests/small_gaps_3/main.c:57` 首先失败，共 16 个失败。用基线的 `keyboard.c`、`text_service.c` 重新编译并链接原测试后，同样 16 个失败、首个失败及其虚拟时刻一致；不修改任务外备份代码。命令和证据：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" -B work/ime-keyboard-1/baseline_backup.py`、`work/ime-keyboard-1/baseline-backup.log`。
-- `hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e` 因给定 Python 环境缺中枢测试依赖按原脚本跳过，未算作通过。
+- `hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e` 因给定 Python 环境缺中枢测试依赖按原脚本跳过，未算作通过。未连接设备，未做实机或泄漏检查；内存检查指任务书规定的 ASan + UBSan 全量。
 
 ## 和设计不一致的
 
@@ -78,6 +78,7 @@ ASan 尚在执行，普通版全量没有全部通过：
 - 六张截图：`snap-ImePinyin-zh.png`、`snap-ImeEnglish-zh.png`、`snap-ImeSymbols-zh.png`、`snap-ImePinyin-en.png`、`snap-ImeEnglish-en.png`、`snap-ImeSymbols-en.png`。中文/英文输入均使用同一模式键和标点入口；图标按 `INK_ICON_MEDIUM` 与主题间距缩放，并保留读屏文字和语义标签。
 - 架构审视：【实现】模式与标点归文字服务，界面只显示和调能力；按钮和 AI 均走 `keyboard.key`；模式、图标文字和切换键值在快照可读；密码内容继续遮蔽且 AI 不能操作。
 - 规模：【实测】产品代码新增 52、删除 12，净增 40 行；另有 5 行 CMake 注册，不超过 200 行预算。
+- 收尾：【实测】`git diff --check` 通过；相对基线的 diff 仅 8 个相关文件，未夹带产物、设计稿或共享文档修改；按总规则 §6 正则查隐私，0 匹配。全部修改仅本地提交，未推送。
 
 ## 复核命令
 
@@ -88,8 +89,9 @@ ASan 尚在执行，普通版全量没有全部通过：
 INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$CTEST" --test-dir build --output-on-failure -j2 -R 'ime-keyboard1|semantics-shell2-keyboard'
 # C2：三处反向对照，只在构建目录生成副本，不依赖 Git 历史
 taskpolicy -c utility "$PY" -B tests/ime_keyboard1.py --build build --reverse
-# C3：全量，ASan 对应 build-asan
+# C3：全量，ASan 对应 build-asan，ASan 运行时未设置 INK_KEEP_EVIDENCE
 INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$CTEST" --test-dir build --output-on-failure -j2
+taskpolicy -c utility "$CTEST" --test-dir build-asan --output-on-failure -j2
 # C4：中文标点旧期望更新后的既有回归
 taskpolicy -c utility "$CTEST" --test-dir build --output-on-failure -j2 -R '^integration-text-(main|nocard|baddict)$'
 # C5：只编译
