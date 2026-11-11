@@ -23,6 +23,25 @@
 static hal_i2c_dev_t *g_gauge, *g_charger, *g_rtc, *g_accel, *g_touch;
 static uint32_t g_motions;
 static bool g_light;
+static bool g_uv_done;
+static uint8_t g_kick_step;
+
+static void charger_log(const char *phase) {
+    int mv = -1, iterm = -1, battery_mv = -1;
+    bool term = false;
+    hal_i2c_status_t c = g_charger ? cx25601n_charge_config(g_charger, &mv, &iterm, &term) : HAL_I2C_ERR;
+    hal_i2c_status_t b = g_gauge ? bq27220_read(g_gauge, BQ27220_VOLTAGE, &battery_mv) : HAL_I2C_ERR;
+    char line[160];
+    snprintf(line, sizeof line, "charger %s: i2c=%d VREG=%dmV ITERM=%dmA EN_TERM=%d gauge_i2c=%d VBAT=%dmV",
+             phase, c, mv, iterm, c == HAL_I2C_OK ? (int)term : -1, b, battery_mv);
+    hal_log_write(line);
+}
+
+uint32_t hal_power_charger_poll(void) {
+    bq27220_reading_t g;
+    if (!g_charger || !g_gauge || bq27220_reading(g_gauge, &g) != HAL_I2C_OK) return 10000;
+    return cx25601n_poll(g_charger, g.mv, g.ma, &g_uv_done, &g_kick_step);
+}
 
 bool s31_accel_take_motion(void) {
     bool moved = false;
@@ -59,10 +78,10 @@ void ink_s31_board_init(void) { /* boot, task context */
     if (metalio_board_init() != HAL_I2C_OK) hal_log_write("board: TCA9555 init failed");
     g_gauge = hal_i2c_device(0, BQ27220_ADDR, "fuel-gauge");
     g_charger = hal_i2c_device(0, CX25601N_ADDR, "charger");
-    int applied = 0; /* upstream metalio_power.cc: 1 A, charging on */
-    if (!g_charger || cx25601n_set_charge_current(g_charger, 1000, &applied) != HAL_I2C_OK ||
-        cx25601n_enable_charging(g_charger, true) != HAL_I2C_OK)
+    charger_log("before"); /* Vendor common/power/cx25601n.cc:314-341; log before any charger write. */
+    if (!g_charger || cx25601n_init_defaults(g_charger) != HAL_I2C_OK)
         hal_log_write("board: CX25601N setup failed");
+    charger_log("after");
     g_rtc = hal_i2c_device(0, PCF8563_ADDR, "rtc");
     g_accel = hal_i2c_device(0, SC7A20H_ADDR, "accel");
     if (!g_accel || sc7a20h_init(g_accel) != HAL_I2C_OK) {

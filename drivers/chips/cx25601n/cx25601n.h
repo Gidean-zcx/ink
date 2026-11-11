@@ -1,7 +1,7 @@
 /*
  * CX25601N charger (I2C 0x6B). Register layout as the official driver uses it
  * (cx25601n.cc @690a023); no datasheet in hand. ICHG in 80 mA steps (0x02[7:6] low bits,
- * 0x03[3:0] high bits), charge enable CHG_CTRL0 0x14 bit 2, STATUS1 0x1E: [4:3] charge state,
+ * 0x03[3:0] high bits), charge enable CHG_CTRL1 0x16 bit 5, EN_TERM 0x14 bit 2, STATUS1 0x1E: [4:3] charge state,
  * [2:0] input (VBUS) type, CHG_CTRL3 0x18 = 0x01 turns the battery FET off (ship mode).
  */
 #ifndef INK_CX25601N_H
@@ -26,5 +26,10 @@ hal_i2c_status_t cx25601n_enable_charging(hal_i2c_dev_t *dev, bool on);
 hal_i2c_status_t cx25601n_status(hal_i2c_dev_t *dev, cx25601n_chg_t *chg, int *vbus);
 /** Ship mode: the battery is disconnected (the device turns off unless USB powers it). */
 hal_i2c_status_t cx25601n_ship_mode(hal_i2c_dev_t *dev);
+/* v2.0.77 common/power/cx25601n.cc:314-341, except ICHG stays at 1 A. */
+hal_i2c_status_t cx25601n_init_defaults(hal_i2c_dev_t *dev);
+hal_i2c_status_t cx25601n_charge_config(hal_i2c_dev_t *dev, int *vreg_mv, int *iterm_ma, bool *en_term);
+/* Serial background calls; *kick_step starts at zero. Returns next step/interval (ms), never waits. */
+uint32_t cx25601n_poll(hal_i2c_dev_t *dev, int mv, int ma, bool *uv_done, uint8_t *kick_step);
 
 #endif

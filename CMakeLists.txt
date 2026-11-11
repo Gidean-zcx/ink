@@ -595,6 +595,20 @@ add_test(NAME unit-s31-bt COMMAND test-s31-bt)
 set_tests_properties(unit-s31-bt PROPERTIES TIMEOUT 10)
 add_test(NAME unit-s31-bt-negative COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/ports/esp32s31/tests/bt_negative.py ${CMAKE_BINARY_DIR})
 add_test(NAME unit-s31-hal-map COMMAND test-s31-hal-map)
+add_executable(test-board-vendor-charger tests/board_vendor/charger.c)
+target_link_libraries(test-board-vendor-charger PRIVATE ink_drivers)
+target_compile_options(test-board-vendor-charger PRIVATE ${INK_WARN} -UNDEBUG)
+add_test(NAME board-vendor-charger COMMAND test-board-vendor-charger)
+add_executable(test-board-vendor-light tests/board_vendor/light.c system/services/display/light.c system/services/res/svc.c)
+target_include_directories(test-board-vendor-light PRIVATE platform/include system/include)
+target_compile_options(test-board-vendor-light PRIVATE ${INK_WARN} -UNDEBUG)
+add_test(NAME board-vendor-light COMMAND test-board-vendor-light)
+ink_sim_executable(sim-board-vendor-power tests/board_vendor/power.c)
+target_link_libraries(sim-board-vendor-power PRIVATE ink_system)
+add_test(NAME board-vendor-power COMMAND sim-board-vendor-power
+  --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+  --budget ${CMAKE_SOURCE_DIR}/tests/ui_scene.budget.json
+  --out ${CMAKE_BINARY_DIR}/test-out/board-vendor-power --end 75s --quiet --no-random-outages)
 set(INK_IME_CASES ${CMAKE_BINARY_DIR}/generated/ime_cases.h)
 add_custom_command(OUTPUT ${INK_IME_CASES}
   COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/ime_lexicon/fixtures.py ${INK_IME_CASES}
