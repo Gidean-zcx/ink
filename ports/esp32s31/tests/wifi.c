@@ -15,6 +15,7 @@ const char ink_test_wifi_base[] = "wifi", ink_test_ip_base[] = "ip", ink_test_sn
 #define INK_TEST_HANDLERS 8
 static struct { esp_event_base_t base; int id; esp_event_handler_t cb; void *ctx; } handlers[INK_TEST_HANDLERS];
 static struct { esp_event_base_t base; int id; union { wifi_event_sta_disconnected_t down; wifi_event_sta_scan_done_t scan; esp_netif_sntp_time_sync_t sync; } data; } pending[INK_TEST_EVENTS];
+static bool cell_available, cell_up, cell_selected;
 static unsigned nhandlers, head, tail, connect_calls, sntp_starts, scan_stops, clears;
 static int response, scan_status;
 static bool scan_timeout, radio_busy, scan_drop;
@@ -162,7 +163,7 @@ int main(void) {
     scan_timeout = true;
     assert(hal_wifi_scan(seen, 2, 100) == HAL_WIFI_ERR_TIMEOUT && scan_stops == 1 && clears > 0);
     scan_timeout = false;
-    hal_net_use(HAL_LINK_LTE); pump_all(); link_is(HAL_LINK_NONE, false);
+    hal_net_use(HAL_LINK_LTE); pump_all(); link_is(HAL_LINK_LTE, false);
     int notices = changes[0];
     hal_net_use(HAL_LINK_LTE); pump_all();
     assert(changes[0] == notices); /* unavailable selection must not feed a link-event loop */
@@ -191,6 +192,19 @@ int main(void) {
     calls = connect_calls;
     hal_wifi_set_known(NULL, 0); pump_all();
     assert(connect_calls == calls && !radio_busy); /* forgetting also cancels an in-flight automatic join */
+    cell_available = cell_up = true;
+    assert(hal_net_available(HAL_LINK_LTE));
+    hal_net_use(HAL_LINK_LTE); pump_all(); link_is(HAL_LINK_LTE, true); assert(cell_selected);
+    hal_link_status_t cellular; hal_net_link_status(&cellular); assert(cellular.signal_dbm == -83);
+    hal_net_use(HAL_LINK_NONE); pump_all(); link_is(HAL_LINK_NONE, false); assert(!cell_selected);
     puts("wifi: init/RAM, scan, DHCP, failures, known-list reconnect, callbacks and SNTP passed");
     return 0;
 }
+
+/* The cellular transport is independently exercised by cell.c. */
+void ink_s31_cell_netif_init(void) { }
+void ink_s31_cell_sync(void) { }
+void ink_s31_cell_use(bool on) { cell_selected = on; }
+bool ink_s31_cell_link(hal_link_status_t *out) { *out = (hal_link_status_t){.type = HAL_LINK_LTE, .up = cell_up && cell_selected, .signal_dbm = -83}; return true; }
+bool ink_s31_cell_available(void) { return cell_available; }
+esp_err_t esp_netif_set_default_netif(esp_netif_t *n) { (void)n; return ESP_OK; }

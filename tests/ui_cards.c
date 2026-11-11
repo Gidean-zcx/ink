@@ -188,10 +188,15 @@ static void inspect_failed(void) {
 }
 static void take_snapshot(void *name) { sim_display_snapshot(name); }
 static void capture(const char *name) { quiet(); vtk_event_at(vtk_now() + SIM_MS(1), take_snapshot, (void *)name); delay_ms(5); }
+static bool modem_status_ready(void) {
+    int64_t registered = 0, dbm = 0;
+    return ink_state_get_int(ink_state_find("cell.registered"), &registered) && registered &&
+        ink_state_get_int(ink_state_find("cell.signal"), &dbm) && dbm;
+}
 static void run(void *arg) {
     (void)arg;
     ink_power_hold(INK_NEED_NET); /* Keep idle status-bar redraws outside the card render measurements. */
-    delay_ms(1800); quiet();
+    CHECK(WAIT_FOR(modem_status_ready(), 10000), "initial modem status arrives before render measurements"); quiet();
     on_ui(watch_renders);
     unsigned drawn = render_count(), committed = ink_display_commits();
     double before = sim_metric_value("home.cards_updates");

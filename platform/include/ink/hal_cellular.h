@@ -17,6 +17,9 @@ extern "C" {
 typedef enum { HAL_CELL_SLOT_EXTERNAL = 0, HAL_CELL_SLOT_INTERNAL = 1 } hal_cell_slot_t;
 
 typedef struct {
+    int signal_dbm;       /* CSQ RSSI, 0 when unknown */
+    bool sim_missing;     /* modem explicitly reports no SIM */
+    bool config_readonly; /* SIM selection and APN writes are unavailable */
     bool registered;      /* on the network with the card in use */
     bool roaming;         /* +CEREG stat 5 */
     hal_cell_slot_t slot; /* the card in use */

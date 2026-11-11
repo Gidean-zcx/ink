@@ -13,11 +13,16 @@
 #include "nt26/nt26.h"
 
 bool hal_cell_status(hal_cell_status_t *out) {
+    *out = (hal_cell_status_t){0};
     nt26_slot_t slot;
     bool reg = false;
     if (nt26_sim_slot(&slot) != NT26_OK || nt26_registration(&reg, &out->roaming) != NT26_OK) return false;
     out->slot = slot == NT26_INTERNAL_CARD ? HAL_CELL_SLOT_INTERNAL : HAL_CELL_SLOT_EXTERNAL;
     out->registered = reg;
+    char response[64]; int csq = 99;
+    if (hal_modem_at("AT+CSQ", response, sizeof response, 500) == HAL_AT_OK) sscanf(response, "+CSQ: %d", &csq);
+    out->signal_dbm = csq >= 0 && csq <= 31 ? -113 + 2 * csq : 0;
+    out->sim_missing = hal_modem_at("AT+CPIN?", response, sizeof response, 1000) == HAL_AT_ERROR;
     return true;
 }
 int hal_cell_apn(const hal_cell_apn_t *a) { return nt26_apn(a->name, a->user, a->password) == NT26_OK ? 0 : -1; }

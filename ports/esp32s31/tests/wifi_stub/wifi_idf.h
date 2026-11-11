@@ -6,6 +6,8 @@
 #include <stdint.h>
 #include <sys/time.h>
 typedef int esp_err_t;
+typedef void esp_netif_t;
+esp_err_t esp_netif_set_default_netif(esp_netif_t *);
 typedef const char *esp_event_base_t;
 typedef void (*esp_event_handler_t)(void *, esp_event_base_t, int32_t, void *);
 typedef unsigned EventBits_t;

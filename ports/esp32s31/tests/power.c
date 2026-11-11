@@ -336,3 +336,6 @@ int main(void) {
     puts("s31 power: fixed clocks, vendor sleep, USB revive, wake causes and unwind passed");
     return 0;
 }
+
+bool ink_s31_cell_suspend(void) { return true; }
+void ink_s31_cell_resume(void) { }

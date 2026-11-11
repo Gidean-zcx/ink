@@ -1,0 +1,17 @@
+NT26 framed UART protocol C adaptation
+
+Source: CloudZao/Metalio-E-INK4-Plus, revision 690a023 (read 2026-11-11).
+main/boards/common/board/uart_eth_modem.cc and uart_eth_modem.h
+Copyright 2025 Terrence; SPDX-License-Identifier: Apache-2.0.
+The repository also carries the MIT notice:
+Copyright (c) 2025 Shenzhen Xinzhi Future Technology Co., Ltd.
+Copyright (c) 2025 Project Contributors.
+Both notices and license texts are retained alongside this file.
+
+Source SHA-256 (local read-only reference):
+cc: 5e9157aa89136be4c4ff3d634fd7d4066b1ea200373b9a60266f603d72c11c26
+h:  00ffb790a900a072e6daeefd0192c361b93d7df13b08669ad4389d2cef47b78d
+
+Modified for ink: C/OSAL, ESP-IDF UART driver rather than UHCI, one I/O
+worker, esp_netif Ethernet driver directly rather than iot_eth glue.
+Persistent configuration writes and identifier queries are excluded.

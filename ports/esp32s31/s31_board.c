@@ -13,6 +13,7 @@
 #include "metalio_plus/metalio_board.h"
 #include "pcf8563/pcf8563.h"
 #include "s31_board.h"
+#include "s31_cell.h"
 #include "s31_io.h"
 #include "sc7a20h/sc7a20h.h"
 
@@ -79,6 +80,7 @@ void ink_s31_board_init(void) { /* boot, task context */
     s31_power_init();
     ink_s31_audio_init();
     s31_input_init(g_touch);
+    ink_s31_cell_init();
     hal_battery_t b;
     hal_power_battery(&b);
     uint8_t reg = 0x02, t[7] = {0};

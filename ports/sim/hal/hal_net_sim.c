@@ -886,7 +886,7 @@ hal_at_result_t hal_modem_at_payload(const char *cmd, const char *payload, char 
 static hal_at_result_t at_run(const char *cmd, const char *payload, char *resp, size_t resp_cap, uint32_t timeout_ms) {
     if (resp && resp_cap) resp[0] = 0;
     if (!g_profile.lte.present) return HAL_AT_NO_MODEM;
-    enum { K_AT, K_CFUN_Q, K_CFUN0, K_CFUN1, K_SLOT_Q, K_SLOT_SET, K_CPIN, K_CEREG, K_RST, K_CMGF, K_CSCS, K_CNMI, K_CMGS, K_CMGR,
+    enum { K_AT, K_CFUN_Q, K_CFUN0, K_CFUN1, K_SLOT_Q, K_SLOT_SET, K_CPIN, K_CEREG, K_CSQ, K_RST, K_CMGF, K_CSCS, K_CNMI, K_CMGS, K_CMGR,
            K_CMGD, K_ATD, K_ATA, K_CHUP, K_CLCC, K_CMUT, K_CMUT_Q, K_VTS, K_CFUN4, K_CTX, K_AUTH, K_CTX_Q, K_AUTH_Q, K_ACT, K_BAD } k = K_BAD;
     unsigned lat_ms = CELL_AT_MS;
     int slot = -1, idx = -1;
@@ -901,6 +901,7 @@ static hal_at_result_t at_run(const char *cmd, const char *payload, char *resp, 
         k = K_SLOT_SET, lat_ms = CELL_SLOT_MS;
     else if (!strcmp(cmd, "AT+CPIN?")) k = K_CPIN;
     else if (!strcmp(cmd, "AT+CEREG?")) k = K_CEREG;
+    else if (!strcmp(cmd, "AT+CSQ")) k = K_CSQ;
     else if (!strcmp(cmd, "AT+CGDCONT?")) k = K_CTX_Q;
     else if (!strcmp(cmd, "AT+CGAUTH?")) k = K_AUTH_Q;
     else if (!strncmp(cmd, "AT+CGDCONT=1,\"IP\",\"", 19)) k = K_CTX;
@@ -972,6 +973,12 @@ static hal_at_result_t at_run(const char *cmd, const char *payload, char *resp, 
         if ((CELL.radio || CELL.airplane) && CELL.present[CELL.active]) snprintf(info, sizeof info, "+CPIN: READY");
         else r = HAL_AT_ERROR;
         break;
+    case K_CSQ: {
+        int csq = E.cell ? (E.cell_rsrp + 113) / 2 : 99;
+        if (csq != 99) csq = csq < 0 ? 0 : csq > 31 ? 31 : csq;
+        snprintf(info, sizeof info, "+CSQ: %d,99", csq);
+        break;
+    }
     case K_CEREG: {
         int stat = cell_ok() ? (CELL.roaming ? 5 : 1) : CELL.radio && CELL.present[CELL.active] && CELL.reg_ev ? 2 : 0;
         snprintf(info, sizeof info, "+CEREG: 0,%d", stat);

@@ -48,6 +48,7 @@ static void create(lv_obj_t *screen, void *arg) {
     (void)arg; P.screen = screen;
     ink_shell_statusbar(screen, true); ink_shell_topbar(screen, TR("移动网络"));
     int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP, w = INK_CANVAS_W - 2 * INK_MARGIN;
+    int64_t readonly = 0; ink_state_get_int(ink_state_find("cell.config_readonly"), &readonly);
     const char *labels[] = {TR("接入点名称"), TR("用户名"), TR("密码")}, *values[] = {P.name, P.user, P.password};
     _Static_assert(sizeof labels / sizeof *labels <= sizeof P.fields / sizeof *P.fields, "APN rows fit");
     if (P.edit) for (int i = 0; i < 3; i++) {
@@ -61,7 +62,7 @@ static void create(lv_obj_t *screen, void *arg) {
     else {
         if (P.unavailable) { snprintf(P.current, sizeof P.current, "%s", TR("未接入移动网络模组")); memcpy(P.previous, P.current, sizeof P.previous); }
         const char *titles[] = {TR("接入点"), TR("数据漫游"), TR("本月流量"), TR("上个月流量")};
-        const char *text[] = {P.name[0] ? P.name : TR("自动"), ink_setting_get("net.roaming") ? TR("开") : TR("关"), P.current, P.previous};
+        const char *text[] = {readonly ? TR("暂不能更改") : P.name[0] ? P.name : TR("自动"), ink_setting_get("net.roaming") ? TR("开") : TR("关"), P.current, P.previous};
         _Static_assert(sizeof titles / sizeof *titles <= sizeof P.fields / sizeof *P.fields, "mobile rows fit");
         for (int i = 0; i < 4; i++) {
             ink_ui_line(screen, titles[i], INK_FONT_SUBTITLE, INK_WEIGHT_MEDIUM, INK_MARGIN, y, w);
@@ -75,7 +76,7 @@ static void create(lv_obj_t *screen, void *arg) {
     _Static_assert(sizeof caps / sizeof *caps <= MOBILE_ACTIONS_MAX && sizeof buttons / sizeof *buttons == sizeof caps / sizeof *caps && sizeof args / sizeof *args == sizeof caps / sizeof *caps, "mobile actions fit");
     for (int i = 0; i < (P.edit ? 1 : 4); i++) {
         const char *cap = P.edit ? "shell.mobile_save" : caps[i], *label = P.edit ? TR("保存接入点") : buttons[i];
-        P.actions[i] = (ink_ui_action_spec_t){.id = cap, .label = label, .capability = cap, .args_json = P.edit ? "{}" : args[i], .enabled = !P.unavailable && ink_member_current()->role != INK_ROLE_CHILD};
+        P.actions[i] = (ink_ui_action_spec_t){.id = cap, .label = label, .capability = cap, .args_json = P.edit ? "{}" : args[i], .enabled = !P.unavailable && !(readonly && (P.edit || i < 2)) && ink_member_current()->role != INK_ROLE_CHILD};
         lv_obj_t *b = ink_ui_pill(screen, label, INK_MARGIN + (i % 2) * ((w + INK_GAP) / 2), y + (i / 2) * (INK_CONTROL + INK_GAP), (w - INK_GAP) / 2, INK_CONTROL, false, NULL, NULL);
         if (P.actions[i].enabled) ink_shell_bind(b, cap, P.actions[i].args_json);
         else lv_obj_add_state(b, LV_STATE_DISABLED);
@@ -88,6 +89,8 @@ static const ink_activity_t PAGE = {.name = "SetMobile", .create = create, .dest
 static void navigate(ink_call_t *c) {
     if (!strcmp(c->cap->id, "shell.mobile")) { P.edit = false; P.unavailable = true; ink_ui_push(&PAGE, NULL); reload(NULL, 0, NULL); return; }
     if (!current() || P.unavailable || ink_member_current()->role == INK_ROLE_CHILD) { c->rc.status = INK_RC_REJECTED; return; }
+    int64_t readonly = 0; ink_state_get_int(ink_state_find("cell.config_readonly"), &readonly);
+    if (readonly) { c->rc.status = INK_RC_REJECTED; snprintf(c->rc.say, sizeof c->rc.say, "%s", TR("暂不能更改")); return; }
     if (!strcmp(c->cap->id, "shell.mobile_edit")) { P.edit = true; ink_ui_redraw(); return; }
     ink_args_t *a = osal_malloc(sizeof *a, OSAL_MEM_EXTERNAL);
     if (!a) { c->rc.status = INK_RC_FAILED; return; }

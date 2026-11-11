@@ -1,0 +1,99 @@
+/*
+ * Cellular HAL on the S31 NT26 (see ink/hal_cellular.h): the project's
+ * own driver (drivers/chips/nt26) over the modem's AT channel; events are the
+ * modem's unsolicited result codes (+CMTI, +CLIP, NO CARRIER). The framed UART channel enforces the device command allowlist.
+ */
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#include "ink/hal_cellular.h"
+#include "ink/hal_net.h"
+#include "nt26/nt26.h"
+#include "ink/osal.h"
+#include "s31_cell.h"
+
+bool hal_cell_status(hal_cell_status_t *out) {
+    *out = (hal_cell_status_t){.config_readonly = true};
+    nt26_slot_t slot;
+    if (nt26_sim_slot(&slot) != NT26_OK || nt26_registration(&out->registered, &out->roaming) != NT26_OK) return false;
+    out->slot = slot == NT26_INTERNAL_CARD ? HAL_CELL_SLOT_INTERNAL : HAL_CELL_SLOT_EXTERNAL;
+    char response[96];
+    hal_at_result_t r = hal_modem_at("AT+CPIN?", response, sizeof response, 1000);
+    out->sim_missing = r == HAL_AT_ERROR && strstr(response, "+CME ERROR: 10") != NULL;
+    int csq = 99;
+    if (hal_modem_at("AT+CSQ", response, sizeof response, 500) == HAL_AT_OK) {
+        const char *p = strstr(response, "+CSQ:");
+        if (p) sscanf(p, "+CSQ: %d", &csq);
+    }
+    out->signal_dbm = csq >= 0 && csq <= 31 ? -113 + 2 * csq : 0;
+    ink_s31_cell_update(out->registered, out->signal_dbm);
+    ink_s31_cell_start_data();
+    return true;
+}
+int hal_cell_apn(const hal_cell_apn_t *a) { (void)a; return -1; }
+int hal_cell_select_sim(hal_cell_slot_t slot, uint32_t ms) { (void)slot; (void)ms; return -1; }
+
+int hal_cell_radio(bool on, uint32_t reg_timeout_ms) {
+    nt26_result_t r = nt26_radio(on, reg_timeout_ms);
+    return r == NT26_OK ? 0 : r == NT26_NOT_REGISTERED ? 1 : -1;
+}
+
+int hal_cell_sms_parts(const char *utf8) { return nt26_sms_split(utf8, NULL, 0, NULL); }
+
+int hal_cell_sms_send(const char *number, const char *utf8, uint32_t timeout_ms, int *sent) {
+    nt26_result_t r = nt26_sms_send_parts(number, utf8, timeout_ms, sent);
+    return r == NT26_OK ? 0 : r == NT26_NOT_SENT ? 1 : -1;
+}
+
+int hal_cell_sms_take(int index, hal_cell_sms_t *m) {
+    int concat[3];
+    if (nt26_sms_read_part(index, m->number, sizeof m->number, m->text, sizeof m->text, concat) != NT26_OK) return -1;
+    m->ref = concat[0], m->total = concat[1], m->seq = concat[2];
+    /* Device storage is read-only: leave the modem copy in place. */
+    return (int)strlen(m->text);
+}
+
+int hal_cell_dial(const char *number) { return nt26_dial(number) == NT26_OK ? 0 : -1; }
+int hal_cell_answer(void) { return nt26_answer() == NT26_OK ? 0 : -1; }
+int hal_cell_hangup(void) { return nt26_hangup() == NT26_OK ? 0 : -1; }
+int hal_cell_mute(bool on, bool *muted) { return nt26_mute(on, muted) == NT26_OK ? 0 : -1; }
+int hal_cell_dtmf(char key) { return nt26_dtmf(key) == NT26_OK ? 0 : -1; }
+
+int hal_cell_wait_event(hal_cell_event_t *ev, uint32_t timeout_ms) {
+    static uint64_t next_status;
+    uint64_t now = osal_now_us();
+    if (now >= next_status) {
+        next_status = now + 30000000;
+        *ev = (hal_cell_event_t){.type = HAL_CELL_EV_REG};
+        return 1; /* existing comm task refreshes registration and signal */
+    }
+    char line[160];
+    uint32_t left = (uint32_t)((next_status - now + 999) / 1000);
+    if (hal_modem_urc(line, sizeof line, timeout_ms < left ? timeout_ms : left) < 0) return 0;
+    memset(ev, 0, sizeof *ev);
+    if (!strncmp(line, "+CEREG:", 7)) { ev->type = HAL_CELL_EV_REG; return 1; }
+    if (!strncmp(line, "+CMTI:", 6)) { /* +CMTI: "SM",<index> */
+        const char *comma = strchr(line, ',');
+        if (!comma) return 0;
+        ev->type = HAL_CELL_EV_SMS;
+        ev->sms_index = atoi(comma + 1);
+        return 1;
+    }
+    if (!strncmp(line, "+CLIP:", 6)) { /* +CLIP: "<number>",129 (follows each RING) */
+        const char *q = strchr(line, '"'), *e = q ? strchr(q + 1, '"') : NULL;
+        ev->type = HAL_CELL_EV_RING;
+        if (q && e) snprintf(ev->number, sizeof ev->number, "%.*s", (int)(e - q - 1), q + 1);
+        return 1;
+    }
+    if (!strcmp(line, "NO CARRIER")) {
+        ev->type = HAL_CELL_EV_CALL_ENDED;
+        return 1;
+    }
+    int index, direction, status;
+    if (sscanf(line, "+CLCC: %d,%d,%d", &index, &direction, &status) == 3 && direction == 0 && status == 0) {
+        ev->type = HAL_CELL_EV_CALL_ACTIVE;
+        return 1;
+    }
+    return 0; /* RING itself (the +CLIP that follows carries the number), registration, others */
+}
