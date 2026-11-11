@@ -1,6 +1,6 @@
 # perf-latency-2 任务报告
 
-基线：`6fbe0c4051843810a3252769ab34d150ac4c6097`。分支：`claude/codex-perf-latency-2`。状态：测量及两处优化完成，完整验证进行中。主检出与本分支开工时均为指定基线，已包含其它补缺任务。没有远端写入或接触设备。
+基线：`6fbe0c4051843810a3252769ab34d150ac4c6097`。分支：`claude/codex-perf-latency-2`。状态：测量及两处优化完成，普通与内存全量通过，S31/GCC 验证进行中。主检出与本分支开工时均为指定基线，已包含其它补缺任务。没有远端写入或接触设备。
 
 ## 验收表
 
@@ -8,9 +8,9 @@
 | --- | --- | --- | --- |
 | 1a 分段及前后对比 | 【实测，模拟器】完成，保留两处有收益的修改 | 下表、[汇总](measurements.json)、[逐样本数据](samples.ndjson) | A |
 | 1b 反向对照 | 【实测，模拟器】通过，两处分别撤回均触发新断言 | 远程更新恢复 GC16；录音期间恢复额外 GC16，均退出 1 | B |
-| 1c 确定性 | 【实测】普通版通过，ASan 待验证 | 原有两项确定性测试未改 | C、D |
+| 1c 确定性 | 【实测】普通与 ASan 均通过 | 原有两项确定性测试未改 | C、D |
 | 2a 普通全量 | 【实测】通过 | 391/391，无跳过，665.27 s | C |
-| 2b 内存检查 | 待完整验证 | 待补 | D |
+| 2b 内存检查 | 【实测】通过 | ASan/UBSan 391/391，无跳过，945.92 s | D |
 | 2c S31 编译 | 待完整验证 | 只编译 ELF | E |
 | 2d gcccheck | 待完整验证 | 两个产品 C 文件 | F |
 | 2e 范围、隐私 | 待最终扫描 | 产品 C 新增 9、删除 12，净减 3 行；CMake 新增 3 行，合计净增 0 | G |
@@ -63,6 +63,8 @@
 - **AI 提示层细化。**【实现】删除打开后立即投递的整层清刷，初始 FAST 反馈与后续真实文字更新保留。【实测】PQ-BN 提示更早完成；ai_ask 的刷新请求 36→34，EPDiy 总数 32→32、GC16 9→6；remote_browse 总数 18→16、GC16 7→3。EPDiy 录音提示没有收益，这处修改保留的依据是 PQ-BN 收益和减少清刷。
 - **可见反馈、翻页、解锁。**未修改。分段没有证明一个同等小、无需新机制或硬件参数调整的改动可缩短这些路径。没有保留无收益的产品改动，没有调刷新相数、频率、预算或建议值。
 
+【实测，模拟器】补充比对每组首轮的 24 张 `clean-*.png`：21 张逐像素一致；PQ-BN 的三张 AI 图分别有 142、229、316 个灰度像素不同，均小于全图 0.04%，最大差值 102/255。抽看首张前后图，布局与文字一致；`clean` 仍取自模型的实际光学状态，只移除了残影叠加，不能据此声称光学效果一致。明细在汇总 JSON 的 `image_comparison_run_0`，本地原图在前后采样目录，真实残影须上机确认。
+
 ## 复现与验证记录
 
 复现时选择新的输出目录。先按任务书普通构建命令配置，ASan 仅换 `build-asan` 并加 `-DINK_SANITIZE=ON`。命令均使用 `taskpolicy -c utility`，构建和 CTest 最多 `-j2`，采样串行。本任务未启动其它构建或测试来与采样并跑。
@@ -82,6 +84,20 @@ taskpolicy -c utility "$py" "$bench" --build build --runs 1 --regression --rever
 # C、D：普通和 ASan/UBSan 全量。
 INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
 INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
+# E：在 bash 中准备同一 SDK 环境，只编译 ELF。
+b="$PWD/build-s31"
+mkdir -p "$b/tmp" "$b/cache" "$b/verification"
+export TMPDIR="$b/tmp" XDG_CACHE_HOME="$b/cache" IDF_COMPONENT_CACHE_PATH="$b/cache/components"
+export IDF_PATH="$HOME/esp/esp-idf" IDF_TOOLS_PATH="$HOME/esp/.espressif"
+export IDF_COMPONENT_MANAGER=0 CCACHE_DISABLE=1
+export INK_LVGL_SOURCE_DIR="$INK_DEPS/build/_deps/lvgl-src"
+export INK_UPSTREAM="$INK_DEPS/../ink-hw/upstream/Metalio-E-INK4-Plus"
+unset IDF_DEACTIVATE_FILE_PATH
+. "$IDF_PATH/export.sh"
+cp ports/esp32s31/sdkconfig.defaults "$b/sdkconfig"
+cp "$INK_DEPS/build-s31/esp-opus-1.0.5.zip" "$b/esp-opus-1.0.5.zip"
+(cd ports/esp32s31 && taskpolicy -c utility idf.py --preview -B "$b" -DIDF_TARGET=esp32s31 -DSDKCONFIG="$b/sdkconfig" -DINK_S31_LIGHT_SLEEP=OFF reconfigure)
+taskpolicy -c utility cmake --build "$b" --target ink-s31.elf -j2
 # F：使用实际普通构建编译表。
 taskpolicy -c utility "$py" "$INK_DEPS/../ink-codex/tools/gcccheck.py" build system/apps/remote/remote.c system/ui/shell/ai_panel.c
 # G：完成所有提交后再扫描提交差异；0 命中时 rg 退出 1。
@@ -95,7 +111,9 @@ git diff 6fbe0c4051843810a3252769ab34d150ac4c6097..HEAD | rg -n "${private_paths
 
 【实测】C 普通构建退出 0；全量 CTest 退出 0，原话 `100% tests passed out of 391`，665.27 s，无跳过。`determinism`、`determinism-reader` 和新回归均通过。日志：`work/perf-latency-2/{build-final,ctest}.log`。
 
-D、E、F、G 结果待补。
+【实测】D ASan/UBSan 构建退出 0；全量 CTest 退出 0，原话 `100% tests passed out of 391`，945.92 s，无跳过。包含两项确定性、既有资源／内存预算、新回归；临时探针使用本构建的 `-fsanitize=address,undefined` 参数。`build-asan/Testing/Temporary/LastTest.log` 中 ASan、UBSan 和 `runtime error:` 诊断扫描为 0 命中。日志：`work/perf-latency-2/{build-asan,ctest-asan}.log`。
+
+E、F、G 结果待补。
 
 ## 没做到的
 

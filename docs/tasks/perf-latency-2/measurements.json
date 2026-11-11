@@ -1633,5 +1633,210 @@
         "p99": 11.042915000021457
       }
     }
-  }
+  },
+  "image_comparison_run_0": [
+    {
+      "scenario": "ai_ask-metalio-plus-00",
+      "capture": "clean-ai-after-outage.png",
+      "pixels": 831744,
+      "changed": 0,
+      "max_delta": 0,
+      "deltas": {}
+    },
+    {
+      "scenario": "ai_ask-metalio-plus-00",
+      "capture": "clean-ai-answer-2.png",
+      "pixels": 831744,
+      "changed": 0,
+      "max_delta": 0,
+      "deltas": {}
+    },
+    {
+      "scenario": "ai_ask-metalio-plus-00",
+      "capture": "clean-ai-answer.png",
+      "pixels": 831744,
+      "changed": 0,
+      "max_delta": 0,
+      "deltas": {}
+    },
+    {
+      "scenario": "ai_ask-metalio-plus-pqbn-00",
+      "capture": "clean-ai-after-outage.png",
+      "pixels": 831744,
+      "changed": 316,
+      "max_delta": 34,
+      "deltas": {
+        "17": 281,
+        "34": 35
+      }
+    },
+    {
+      "scenario": "ai_ask-metalio-plus-pqbn-00",
+      "capture": "clean-ai-answer-2.png",
+      "pixels": 831744,
+      "changed": 229,
+      "max_delta": 102,
+      "deltas": {
+        "34": 72,
+        "17": 117,
+        "102": 40
+      }
+    },
+    {
+      "scenario": "ai_ask-metalio-plus-pqbn-00",
+      "capture": "clean-ai-answer.png",
+      "pixels": 831744,
+      "changed": 142,
+      "max_delta": 102,
+      "deltas": {
+        "17": 106,
+        "102": 16,
+        "34": 20
+      }
+    },
+    {
+      "scenario": "reader_basic-metalio-plus-00",
+      "capture": "clean-home.png",
+      "pixels": 831744,
+      "changed": 0,
+      "max_delta": 0,
+      "deltas": {}
+    },
+    {
+      "scenario": "reader_basic-metalio-plus-00",
+      "capture": "clean-library.png",
+      "pixels": 831744,
+      "changed": 0,
+      "max_delta": 0,
+      "deltas": {}
+    },
+    {
+      "scenario": "reader_basic-metalio-plus-00",
+      "capture": "clean-page1.png",
+      "pixels": 831744,
+      "changed": 0,
+      "max_delta": 0,
+      "deltas": {}
+    },
+    {
+      "scenario": "reader_basic-metalio-plus-00",
+      "capture": "clean-page13.png",
+      "pixels": 831744,
+      "changed": 0,
+      "max_delta": 0,
+      "deltas": {}
+    },
+    {
+      "scenario": "reader_basic-metalio-plus-00",
+      "capture": "clean-page4.png",
+      "pixels": 831744,
+      "changed": 0,
+      "max_delta": 0,
+      "deltas": {}
+    },
+    {
+      "scenario": "reader_basic-metalio-plus-pqbn-00",
+      "capture": "clean-home.png",
+      "pixels": 831744,
+      "changed": 0,
+      "max_delta": 0,
+      "deltas": {}
+    },
+    {
+      "scenario": "reader_basic-metalio-plus-pqbn-00",
+      "capture": "clean-library.png",
+      "pixels": 831744,
+      "changed": 0,
+      "max_delta": 0,
+      "deltas": {}
+    },
+    {
+      "scenario": "reader_basic-metalio-plus-pqbn-00",
+      "capture": "clean-page1.png",
+      "pixels": 831744,
+      "changed": 0,
+      "max_delta": 0,
+      "deltas": {}
+    },
+    {
+      "scenario": "reader_basic-metalio-plus-pqbn-00",
+      "capture": "clean-page13.png",
+      "pixels": 831744,
+      "changed": 0,
+      "max_delta": 0,
+      "deltas": {}
+    },
+    {
+      "scenario": "reader_basic-metalio-plus-pqbn-00",
+      "capture": "clean-page4.png",
+      "pixels": 831744,
+      "changed": 0,
+      "max_delta": 0,
+      "deltas": {}
+    },
+    {
+      "scenario": "remote_browse-metalio-plus-00",
+      "capture": "clean-remote-first.png",
+      "pixels": 831744,
+      "changed": 0,
+      "max_delta": 0,
+      "deltas": {}
+    },
+    {
+      "scenario": "remote_browse-metalio-plus-00",
+      "capture": "clean-remote-next.png",
+      "pixels": 831744,
+      "changed": 0,
+      "max_delta": 0,
+      "deltas": {}
+    },
+    {
+      "scenario": "standby-metalio-plus-00",
+      "capture": "clean-auto-locked.png",
+      "pixels": 831744,
+      "changed": 0,
+      "max_delta": 0,
+      "deltas": {}
+    },
+    {
+      "scenario": "standby-metalio-plus-00",
+      "capture": "clean-idle-page.png",
+      "pixels": 831744,
+      "changed": 0,
+      "max_delta": 0,
+      "deltas": {}
+    },
+    {
+      "scenario": "standby-metalio-plus-00",
+      "capture": "clean-locked.png",
+      "pixels": 831744,
+      "changed": 0,
+      "max_delta": 0,
+      "deltas": {}
+    },
+    {
+      "scenario": "standby-metalio-plus-00",
+      "capture": "clean-quick-unlock.png",
+      "pixels": 831744,
+      "changed": 0,
+      "max_delta": 0,
+      "deltas": {}
+    },
+    {
+      "scenario": "standby-metalio-plus-00",
+      "capture": "clean-unlocked-ai.png",
+      "pixels": 831744,
+      "changed": 0,
+      "max_delta": 0,
+      "deltas": {}
+    },
+    {
+      "scenario": "standby-metalio-plus-00",
+      "capture": "clean-unlocked.png",
+      "pixels": 831744,
+      "changed": 0,
+      "max_delta": 0,
+      "deltas": {}
+    }
+  ]
 }
