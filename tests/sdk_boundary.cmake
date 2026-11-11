@@ -2,7 +2,12 @@
 # header, no HAL or OSAL call. Run: cmake -DSRC=<source dir> -P tests/sdk_boundary.cmake
 set(ALLOWED app appreg ai cap clipboard crc data file font layout media members notify settings state storage text textfield textinput time ui ui_semantics ui_list)
 list(APPEND ALLOWED file_picker i18n)
+# The JSON writer only builds strings (no HAL, no OSAL): apps return structured capability results with it.
+list(APPEND ALLOWED json)
 file(GLOB_RECURSE SOURCES "${SRC}/apps/*.c" "${SRC}/apps/*.h")
+# Verbatim upstream code an app embeds (apps/<app>/vendor/, with SOURCE.md) includes its own headers; the rule is
+# for our app code, which reaches the vendored code only through the app's own C interface.
+list(FILTER SOURCES EXCLUDE REGEX "/apps/[^/]+/vendor/")
 set(bad 0)
 foreach(f ${SOURCES})
   file(STRINGS "${f}" lines)

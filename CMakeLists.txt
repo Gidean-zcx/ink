@@ -5,7 +5,10 @@
 #
 #   cmake -S . -B build && cmake --build build -j && ctest --test-dir build --output-on-failure
 cmake_minimum_required(VERSION 3.16)
-project(ink C)
+project(ink C CXX)
+set(CMAKE_CXX_LINKER_PREFERENCE_PROPAGATES OFF) # C fixtures reuse the executable's compiler driver.
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 # Tests that recompile one source with its real flags for a reverse control (emergency-call, among others)
 # read the compile database; CI configures without asking for it (2026-11-11), so it is always written.
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -304,6 +307,12 @@ target_compile_options(ink_system PRIVATE ${INK_WARN})
 add_library(ink_apps STATIC apps/home/home.c apps/reader/reader.c)
 target_link_libraries(ink_apps PUBLIC ink_system)
 target_compile_options(ink_apps PRIVATE ${INK_WARN})
+include(apps/reader/reader_build.cmake)
+ink_reader_build(ink_apps ink_system ink_lvgl)
+add_executable(sim-reader-epub simulator/runtime/sim_main.c tests/reader_epub/device.c)
+target_include_directories(sim-reader-epub PRIVATE tests apps/reader)
+target_link_libraries(sim-reader-epub PRIVATE ink_apps ink_system ink_port_sim)
+target_compile_options(sim-reader-epub PRIVATE ${INK_WARN})
 
 # The product: ink_main() starts the services and the apps (the composition root).
 add_library(ink_boot STATIC system/boot/main.c)
@@ -319,7 +328,12 @@ add_custom_target(ink_sample ALL
   COMMAND ${CMAKE_COMMAND} -E make_directory ${INK_ASSETS_DIR}/sample
   COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/assets/sample/welcome.txt ${INK_ASSETS_DIR}/sample/welcome.txt)
 find_package(Python3 COMPONENTS Interpreter)
+add_test(NAME reader-epub COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/reader_epub/run.py --build ${CMAKE_BINARY_DIR})
+add_test(NAME reader-epub-reverse COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/reader_epub/reverse.py --build ${CMAKE_BINARY_DIR})
+add_test(NAME reader-epub-segments COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/reader_epub/reverse.py --build ${CMAKE_BINARY_DIR} --segments)
+add_test(NAME reader-epub-toc-save-reverse COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/reader_epub/reverse.py --build ${CMAKE_BINARY_DIR} --unsaved-toc)
 file(GLOB INK_I18N_TABLES CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/assets/i18n/*.tsv) # interface languages
+ink_reader_translations(INK_I18N_TABLES)
 set(INK_HAVE_FONTS OFF)
 if(EXISTS ${INK_CJK_FONT} AND Python3_FOUND)
   set(INK_FONT_FILES)
@@ -852,7 +866,7 @@ add_test(NAME i18n-extras COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/t
   --out ${CMAKE_BINARY_DIR}/test-out/i18n-extras --min-frames 10)
 set_tests_properties(i18n-extras PROPERTIES ENVIRONMENT "INK_I18N_EXTRAS=1" TIMEOUT 240)
 add_test(NAME i18n-tables COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/i18n_tables.py)
-add_test(NAME i18n-literals COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/i18n_literals.py)
+add_test(NAME i18n-literals COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/i18n_literals.py --root ${CMAKE_BINARY_DIR}/reader-i18n-check)
 add_test(NAME boot-flow-reboot COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/boot_flow_reboot.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(boot-flow-reboot PROPERTIES TIMEOUT 200)
 target_link_libraries(sim-ui-cards PRIVATE ink_apps ink_system)
