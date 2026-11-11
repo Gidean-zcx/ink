@@ -30,6 +30,8 @@ def main():
         # trial report 2026-11-11: a refresh crossing into idle ran at the idle clock, missed lines, and one failure stopped the panel for good
         ("refresh-at-full-clock", "regions", "            hal_cpu_boost_acquire(D.boost);\n", ""),
         ("failed-refresh-recovers", "recover", "            if (!r.ok) fail();", "            (void)fail;\n            if (!r.ok) trip();"),
+        # trial report 2026-11-11: every page change cleared to black, then white, then drew (~2 s, dark first), against D-110
+        ("gc16-is-one-pass", "regions", "            if (D.first) {", "            if (D.first || r.waveform == HAL_WF_GC16) {"),
     ]
     common = ["cc", "-std=c11", "-Wall", "-Wextra", "-Werror", "-UNDEBUG", "-pthread"]
     for p in [tests / "display_stub", port, root / "platform/include", root / "drivers/chips", root / "drivers/display/pqbn", root / "boards"]:

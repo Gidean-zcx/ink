@@ -256,7 +256,11 @@ static void display_task(void *ctx) {
             r.started_us = osal_now_us();
             hal_rect_t a = D.first ? (hal_rect_t){0, 0, W, H} : D.area;
             bool ok = true;
-            if (D.first || r.waveform == HAL_WF_GC16) {
+            /* Only the first refresh after boot or after a failure clears to black and white first: what the panel
+             * shows is not known then. Every other one, a new page too, goes through the algorithm in one pass: its
+             * new-page rule moves every pixel (D-110: no dark flash first, about 0.52 s a page on the real panel), so
+             * a GC16 asks nothing more of it. Clearing on every GC16 made each page take ~2 s and go dark first. */
+            if (D.first) {
                 target(&a, 0);
                 ok = drive();
                 if (ok) { target(&a, 15); ok = drive(); }

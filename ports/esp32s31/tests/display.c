@@ -100,10 +100,14 @@ SemaphoreHandle_t xSemaphoreCreateMutex(void) {
     return s;
 }
 SemaphoreHandle_t xSemaphoreCreateBinary(void) { return record_alloc(sizeof(struct test_sem)); }
+static unsigned nibble(const uint8_t *fb, int x, int y);
+static bool watching; /* the levels one pixel goes through, frame by frame */
+static unsigned watched_levels;
 int xSemaphoreTake(SemaphoreHandle_t s, uint32_t timeout) {
     if (s->mutex) { assert(pthread_mutex_lock(&s->lock) == 0); return pdTRUE; }
     if (s == D.frame_done) {
         assert(boost.held); /* every frame at the full clock, whatever the power state says meanwhile */
+        if (watching) watched_levels |= 1u << nibble(D.c.fb4, 4, 3);
         scans++;
         now += (uint64_t)(drop_frame ? timeout : 2) * 10000;
         if (!drop_frame && lcd_done) lcd_done(lcd_ctx);
@@ -200,8 +204,12 @@ static void regions(void) {
     a = (hal_rect_t){3, 3, 2, 1};
     uint8_t next[] = {68, 85};
     assert(hal_display_update(&a, next, 2, HAL_WF_GC16, 0, finished, &calls));
+    watching = true;
     run(run_display);
+    watching = false;
     assert(calls == 2 && completed.ok && completed.waveform == HAL_WF_GC16);
+    /* after the first refresh a GC16 is one pass of the algorithm: the pixel goes to its level, never black and white first (D-110) */
+    assert(watched_levels == 1u << 5);
     assert(nibble(D.c.fb4, 1, 3) == 0 && nibble(D.c.fb4, 3, 3) == 4 && nibble(D.c.fb4, 4, 3) == 5);
 }
 /* A refresh that loses its frame: rails off at once; the driver takes the next one (the whole panel again), and only
