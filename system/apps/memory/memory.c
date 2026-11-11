@@ -85,7 +85,7 @@ static void run(ink_call_t *c) {
     if (!strcmp(c->cap->id, "games.memory.state")) { describe(); ink_cap_result(c, M.json); return; }
     if (strcmp(c->cap->id, "games.memory.flip")) {
         uint32_t seed; hal_random_fill(&seed, sizeof seed); ink_memory_start(&M.s, seed);
-        M.started = true; M.elapsed = M.hide_at = 0; M.since = osal_now_us(); ink_app_open("memory", NULL, NULL);
+        M.started = true; M.elapsed = M.hide_at = 0; M.since = osal_now_us();
     } else {
         int64_t card = -1; ink_args_get_int(&c->args, "card", &card);
         if (!M.started || ink_memory_flip(&M.s, (int)card)) { fail(c, INK_RC_INVALID); return; }
@@ -100,7 +100,7 @@ static void run(ink_call_t *c) {
             }
         }
     }
-    changed(); describe(); ink_cap_result(c, M.json);
+    ink_app_open("memory", NULL, NULL); changed(); describe(); ink_cap_result(c, M.json);
 }
 static void tick(lv_timer_t *t) {
     (void)t;

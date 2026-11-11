@@ -37,6 +37,10 @@ static void read_board(void) {
     CHECK(!ink_json_parse(&parsed, g_result, strlen(g_result)) && ink_json_str(&parsed, ink_json_find(&parsed, 0, "board"), board, sizeof board) > 0, "visible board JSON");
 }
 static void state(const char *game) { ok(!strcmp(game, "memory") ? "games.memory.state" : "games.snake.state", NULL); read_board(); }
+static void ready(const char *game) {
+    const char *id = !strcmp(game, "memory") ? "games.memory.state" : "games.snake.state";
+    CHECK(WAIT_FOR(AI(id, NULL) && g_rc.status == INK_RC_DONE, 6000), "member game store loaded"); read_board();
+}
 static void same_page(const char *name) { on_ui(read_screen); CHECK(!strcmp(g_top, name) && strstr(g_snap, board), "capability and page agree: %.150s", g_snap); }
 static void capture_event(void *arg) { CHECK(settled(), "capture after presentation"); sim_display_snapshot(arg); }
 static void capture(const char *name) { quiet(); vtk_event_at(vtk_now() + SIM_MS(1), capture_event, (void *)name); delay_ms(5); }
@@ -79,7 +83,7 @@ static void find_touch(void) {
 }
 static void touch(const char *cap) { touch_cap = cap; on_ui(find_touch); CHECK(found, "bound touch control exists"); if (found) tap((target.x1 + target.x2) / 2, (target.y1 + target.y2) / 2); }
 static void memory_game(void) {
-    ok("app.open", "{\"id\":\"memory\"}"); state("memory"); capture("MemoryStart");
+    ok("app.open", "{\"id\":\"memory\"}"); ready("memory"); capture("MemoryStart");
     ok("games.memory.start", NULL); quiet(); state("memory"); CHECK(!strcmp(board, "????????????????"), "AI sees no hidden pattern");
     max_area = measured = 0; measuring = true; touch("games.memory.flip"); quiet(); measuring = false;
     state("memory"); CHECK(board[0] != '?' && number("moves") == 0, "touch and AI use same flip");
@@ -102,6 +106,8 @@ static void memory_game(void) {
     CHECK(number("moves") >= 8 && number("seconds") >= 1 && number("best_moves") == number("moves"), "best moves and elapsed seconds stored");
     parent_moves = number("best_moves"); parent_seconds = number("best_seconds"); same_page("MemoryGame"); capture("MemoryEnd");
     ok("games.memory.reset", NULL); state("memory"); CHECK(number("moves") == 0 && number("best_moves") == parent_moves, "reset retains best score");
+    ok("system.home", NULL); flip(0); same_page("MemoryGame");
+    CHECK(board[0] != '?', "AI flip reopens page so mismatch timer remains available");
 }
 static void turn(int dir) { char args[32]; snprintf(args, sizeof args, "{\"direction\":%d}", dir); ok("games.snake.turn", args); }
 static bool moved(int head) { state("snake"); return !board[head] || board[head] != '@' || flag("over"); }
@@ -109,6 +115,7 @@ static bool ended(void) { state("snake"); return flag("over"); }
 static void eat(void) {
     state("snake");
     for (int step = 0; step < 48 && number("score") < 1 && !flag("over"); step++) {
+        if (number("next") != number("direction")) { int head = (int)(strchr(board, '@') - board); CHECK(WAIT_FOR(moved(head), 1500), "pending touch turn reaches its tick"); continue; }
         int head = (int)(strchr(board, '@') - board), food = (int)(strchr(board, '*') - board), dir = number("direction");
         const int dx[] = {0, 1, 0, -1}, dy[] = {-1, 0, 1, 0}; int best = -1, distance = 1000;
         for (int d = 0; d < 4; d++) {
@@ -123,7 +130,7 @@ static void eat(void) {
     CHECK(number("score") >= 1 && number("length") >= 4 && number("best") >= 1, "AI-guided eating updates length and member high score");
 }
 static void snake_game(void) {
-    ok("app.open", "{\"id\":\"snake\"}"); state("snake"); capture("SnakeStart");
+    ok("app.open", "{\"id\":\"snake\"}"); ready("snake"); capture("SnakeStart");
     ok("games.snake.start", NULL); state("snake"); int head = (int)(strchr(board, '@') - board);
     max_area = measured = a2 = 0; measuring = true;
     CHECK(WAIT_FOR(moved(head), 1500), "snake advances without input"); ok("games.snake.pause", NULL); quiet(); measuring = false;
@@ -133,6 +140,9 @@ static void snake_game(void) {
     ok("games.snake.resume", NULL); state("snake"); int dir = number("direction"); key(HAL_KEY_PREV); state("snake");
     CHECK(number("next") == (dir + 3) % 4 || number("direction") == (dir + 3) % 4, "previous key turns counterclockwise through capability");
     CHECK(WAIT_FOR(moved(head + 1), 1500), "key turn reaches next tick");
+    state("snake"); head = (int)(strchr(board, '@') - board); dir = number("direction"); key(HAL_KEY_NEXT); state("snake");
+    CHECK(number("next") == (dir + 1) % 4 || number("direction") == (dir + 1) % 4, "next key turns clockwise through capability");
+    CHECK(WAIT_FOR(moved(head), 1500), "next key turn reaches next tick");
     ok("games.snake.reset", NULL); touch("games.snake.turn"); state("snake");
     CHECK(number("next") == 0 || number("direction") == 0, "screen direction control shares AI action");
     eat(); ok("games.snake.pause", NULL); state("snake"); parent_score = number("best"); same_page("SnakeGame"); capture("SnakePlaying");

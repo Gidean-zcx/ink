@@ -10,6 +10,7 @@ import subprocess
 ROOT = Path(__file__).resolve().parents[2]
 p = argparse.ArgumentParser(description=__doc__)
 p.add_argument('--build', type=Path, required=True)
+p.add_argument('--case', help='Run only this mutation; the default runs all cases')
 a = p.parse_args()
 build = a.build.resolve()
 area = build / 'games2-reverse'
@@ -27,9 +28,12 @@ cases = [
     ('snake-leave', 'snake/snake.c', 'if (S.timer) lv_timer_delete(S.timer);\n    S.timer = NULL; S.s.paused = true;', 'S.timer = NULL;', 'leaving page stops snake'),
     ('memory-best', 'memory/memory.c', 'else M.best = best;', 'else M.best = (best_t){0};', 'best moves and elapsed seconds stored'),
     ('snake-best', 'snake/snake.c', 'S.best = best;', 'S.best = 0;', 'AI-guided eating updates length and member high score'),
+    ('memory-background', 'memory/memory.c', 'ink_app_open("memory", NULL, NULL); changed();', 'changed();', 'capability and page agree'),
 ]
 summary = []
 for name, relative, old, new, expected in cases:
+    if a.case and a.case != name:
+        continue
     source = ROOT / 'system/apps' / relative
     original = source.read_text()
     digest = hashlib.sha256(source.read_bytes()).hexdigest()
@@ -61,4 +65,5 @@ for name, relative, old, new, expected in cases:
     assert hashlib.sha256(source.read_bytes()).hexdigest() == digest
     summary.append({'case': name, 'exit': result.returncode, 'expected_failure': expected})
     print(f'{name}: expected failure, exit={result.returncode}', flush=True)
-(area / 'summary.json').write_text(json.dumps(summary, ensure_ascii=False, indent=2) + '\n')
+assert summary, 'unknown case'
+(area / (f'summary-{a.case}.json' if a.case else 'summary.json')).write_text(json.dumps(summary, ensure_ascii=False, indent=2) + '\n')
