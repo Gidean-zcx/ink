@@ -30,6 +30,8 @@ static unsigned dma_head, dma_tail, dma_queued, dma_held, loans, returns, starts
 static bool receiving, overflow, recovered;
 static int mrdy = 1, srdy = 1;
 static bool pumping, no_wake, no_ack, no_response, prompt, missing, unregistered, corrupt_rx;
+static uint32_t baud = 2000000, modem_baud = 2000000; /* this side's UART rate; the rate the modem listens at */
+static int drop_probes; /* first device run: a just-woken modem missed frames */
 static unsigned writes, bad_headers, handshakes, receives, acks, changed, data_tx, radio_commands;
 static bool net_started, drop_rx;
 static int csq = 23;
@@ -91,6 +93,7 @@ esp_err_t gpio_pullup_en(int pin) { assert(pin == S31_UART2_RX); return ESP_OK; 
 esp_err_t uart_driver_install(int p, int rb, int tb, int q, void *queue, int flags) {
     (void)p; (void)rb; (void)tb; (void)q; (void)queue; (void)flags; assert(!"UART driver must not be installed"); return ESP_FAIL;
 }
+esp_err_t uart_set_baudrate(int p, uint32_t rate) { assert(p == 2 && (rate == 2000000 || rate == 3000000)); baud = rate; return ESP_OK; }
 esp_err_t uart_param_config(int p, const uart_config_t *c) { assert(p == 2 && c->baud_rate == 2000000 && c->data_bits == 8); return ESP_OK; }
 esp_err_t uart_set_pin(int p, int tx, int r, int cts, int rts) { assert(p == 2 && tx == 58 && r == 59 && cts == -1 && rts == -1); return ESP_OK; }
 static void inject(unsigned type, const void *data, size_t n) {
@@ -109,7 +112,7 @@ bool ink_s31_uhci_transmit(const uint8_t *data, size_t n) {
     unsigned sum = p[0] + p[1] + p[2];
     if (p[3] != (uint8_t)((sum >> 8) ^ sum ^ 3) || 4 + p[0] + ((p[1] & 15u) << 8) != n) { bad_headers++; return true; }
     if (!no_ack) { srdy = 1; srdy_isr(NULL); srdy = 0; }
-    if (no_response) return true;
+    if (no_response || baud != modem_baud) return true; /* at the wrong rate the modem hears noise */
     if (((p[2] >> 2) & 3) == 0) {
         static const uint8_t handshake[] = {0x53, 0x50, 0x49, 0x43, 2, 4, 12, 0, 0, 0, 0, 0};
         if (n == 16 && !memcmp(p + 4, handshake, sizeof handshake)) {
@@ -121,6 +124,7 @@ bool ink_s31_uhci_transmit(const uint8_t *data, size_t n) {
     if (prompt) { assert(p[n - 1] == 26); prompt = false; reply("\r\n+CMGS: 1\r\nOK\r\n"); return true; }
     char cmd[130]; assert(n - 4 < sizeof cmd && p[n - 1] == '\r');
     memcpy(cmd, p + 4, n - 5); cmd[n - 5] = 0;
+    if (drop_probes > 0 && !strcmp(cmd, "AT")) { drop_probes--; return true; }
     if (!strcmp(cmd, "AT+CMGS=1")) { prompt = true; reply("\r\n> "); }
     else if (!strcmp(cmd, "AT+ECSIMCFG?")) reply("\r\n+ECSIMCFG: \"SimSlot\",0\r\nOK\r\n");
     else if (!strcmp(cmd, "AT+CEREG?")) reply(unregistered ? "\r\n+CEREG: 0,2\r\nOK\r\n" : "\r\n+CEREG: 0,1\r\nOK\r\n");
@@ -205,7 +209,9 @@ int main(void) {
     ink_s31_cell_init(); ink_s31_cell_netif_init(); assert(ink_cell.ready);
     char response[256];
     split = 1;
+    drop_probes = 2; unsigned first = writes;
     assert(hal_modem_at("ATI", response, sizeof response, 1000) == HAL_AT_OK && !strcmp(response, "FAKE-NT26"));
+    assert(!drop_probes && writes == first + 4 && ink_cell.synced && baud == 2000000 && strstr(logged, "answers AT at 2000000"));
     assert(hal_modem_urc(response, sizeof response, 0) > 0 && !strcmp(response, "+CMTI: \"SM\",7"));
     unsigned two_buffer_loans = loans;
     split = 5; /* The six-byte OK payload and its header span exactly two buffers. */
@@ -298,6 +304,13 @@ int main(void) {
     ink_s31_cell_resume();
     assert(!receiving && ink_cell.ready_after == now + 1000000);
     now = ink_cell.ready_after;
+    assert(!ink_cell.synced); modem_baud = 3000000; before = writes;
+    assert(hal_modem_at("AT", response, sizeof response, 1000) == HAL_AT_OK && baud == 3000000 && writes == before + 10); /* 8 at 2, 1 at 3, then the command */
+    assert(strstr(logged, "answers AT at 3000000") && !strstr(logged, "XJCFG"));
+    /* a sent command never answered desyncs; past 30 s with no late reply a probe brings the channel back */
+    no_response = true; assert(hal_modem_at("ATI", response, sizeof response, 200) == HAL_AT_TIMEOUT && ink_cell.desynced); no_response = false;
+    assert(hal_modem_at("AT", response, sizeof response, 200) == HAL_AT_NO_MODEM);
+    now += 30000001; assert(hal_modem_at("AT", response, sizeof response, 1000) == HAL_AT_OK && !ink_cell.desynced);
     net_started = false; assert(hal_cell_status(&st) && handshakes == 3);
     unregistered = missing = true; csq = 99;
     assert(hal_cell_status(&st) && !st.registered && st.sim_missing && st.signal_dbm == 0 && !ink_s31_cell_available());

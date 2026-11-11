@@ -31,9 +31,10 @@ static struct {
     osal_queue_t *tx, *urc;
     esp_netif_t *netif;
     bool ready, suspended, waiting, at_sent, prompt, desynced, handshake, ip, registered, selected, starting, net_connected;
+    bool synced, detecting; /* AT answered since this side started (vendor AtDetect); a probe under way */
     unsigned epoch, seq;
     int signal_dbm;
-    uint64_t activity, rx_bytes, tx_bytes, deadline, ready_after;
+    uint64_t activity, rx_bytes, tx_bytes, deadline, ready_after, desynced_at, detect_after;
     unsigned rx_raw, frames, bad_headers, forced, at_logged; /* first device runs: what the link did */
     hal_at_result_t result;
     size_t frame_n, expected, line_n, response_n;
@@ -191,6 +192,7 @@ static void ink_rx_lost(void) {
     ink_cell.frame_n = ink_cell.expected = ink_cell.line_n = 0;
     if (ink_cell.waiting) {
         ink_cell.desynced = ink_cell.at_sent;
+        if (ink_cell.desynced) ink_cell.desynced_at = osal_now_us();
         ink_cell.result = HAL_AT_ERROR;
         ink_cell.waiting = false;
         osal_sem_give(ink_cell.done);
@@ -302,9 +304,8 @@ void ink_s31_cell_init(void) { /* board boot, once; nt26_board.cc:130 settles P1
     osal_task_cfg_t cfg = {.name = "nt26-uart", .fn = ink_io, .stack_bytes = 4096, .priority = 5, .core = -1, .flags = OSAL_TASK_STACK_EXTERNAL};
     if (osal_task_create(&cfg, NULL) != OSAL_OK) { ink_cell.ready = false; hal_log_write("cell: UART task failed"); }
 }
-static hal_at_result_t ink_at(const char *cmd, const char *payload, char *out, size_t cap, uint32_t ms) {
-    if (out && cap) *out = 0;
-    if (!ink_allowed(cmd)) return HAL_AT_ERROR;
+static hal_at_result_t ink_at_once(const char *cmd, const char *payload, char *out, size_t cap, uint32_t ms) {
+    if (out && cap) *out = 0; /* callers: ink_at, past the allowlist, and ink_detect's plain AT */
     if (payload) {
         if (strncmp(cmd, "AT+CMGS=", 8) || strlen(payload) > 1024) return HAL_AT_ERROR;
         for (const char *p = payload; *p; p++) if (!strchr("0123456789ABCDEFabcdef", *p)) return HAL_AT_ERROR;
@@ -349,6 +350,7 @@ static hal_at_result_t ink_at(const char *cmd, const char *payload, char *out, s
     hal_at_result_t result = queued ? ink_cell.result : HAL_AT_ERROR;
     if (ink_cell.waiting) {
         ink_cell.desynced = ink_cell.at_sent; ink_cell.waiting = false;
+        if (ink_cell.desynced) ink_cell.desynced_at = osal_now_us();
         if (ink_cell.desynced) ink_link_down();
     }
     if (out && cap) {
@@ -369,6 +371,54 @@ static hal_at_result_t ink_at(const char *cmd, const char *payload, char *out, s
         hal_log_write(line);
     }
     return result;
+}
+/* Upstream AtDetect (uart_eth_modem.cc:1523-1543): "AT" up to 4 times, 500 ms each, at the configured 2 Mbit/s, then
+ * at 2 and 3 Mbit/s. A freshly woken modem can miss its first frames, and before this the first command (sent once)
+ * desynced the channel for good (first device run, 2026-11-11). This side follows the modem's rate and never sends
+ * AT+XJCFG to change it (no modem configuration, CLAUDE.md). A probe's unanswered "AT" does not desync. */
+static bool ink_detect(void) {
+    static const int RATES[] = {2000000, 2000000, 3000000};
+    for (unsigned r = 0; r < sizeof RATES / sizeof *RATES; r++) {
+        if (uart_set_baudrate(INK_UART, (uint32_t)RATES[r]) != ESP_OK) continue;
+        for (int i = 0; i < 4; i++) {
+            char resp[64];
+            hal_at_result_t res = ink_at_once("AT", NULL, resp, sizeof resp, 500);
+            CELL_LOCK(); ink_cell.desynced = false; CELL_UNLOCK();
+            if (res == HAL_AT_OK) {
+                char line[64];
+                snprintf(line, sizeof line, "cell: modem answers AT at %d bit/s", RATES[r]);
+                hal_log_write(line);
+                return true;
+            }
+        }
+    }
+    uart_set_baudrate(INK_UART, 2000000);
+    hal_log_write("cell: modem did not answer AT at 2 or 3 Mbit/s");
+    return false;
+}
+/* Commands go out once the modem has answered a probe. A command sent and unanswered desyncs the channel until its
+ * late reply or the modem's reset notice (so no reply is taken for the wrong command); after 30 s without either,
+ * a probe brings it back rather than leaving 4G off until a restart. */
+static hal_at_result_t ink_at(const char *cmd, const char *payload, char *out, size_t cap, uint32_t ms) {
+    if (out && cap) *out = 0;
+    if (!ink_allowed(cmd)) return HAL_AT_ERROR;
+    if (!ink_cell.ready) return HAL_AT_NO_MODEM;
+    uint64_t now = osal_now_us();
+    CELL_LOCK();
+    bool stale = ink_cell.desynced && now - ink_cell.desynced_at >= 30000000ull;
+    bool need = !ink_cell.synced || stale, busy = ink_cell.detecting, due = now >= ink_cell.detect_after;
+    if (need && !busy && due) ink_cell.detecting = true;
+    CELL_UNLOCK();
+    if (need) {
+        if (busy || !due) return HAL_AT_NO_MODEM;
+        bool ok = ink_detect();
+        CELL_LOCK();
+        ink_cell.detecting = false; ink_cell.synced = ok;
+        if (!ok) ink_cell.detect_after = osal_now_us() + 30000000ull;
+        CELL_UNLOCK();
+        if (!ok) return HAL_AT_NO_MODEM;
+    }
+    return ink_at_once(cmd, payload, out, cap, ms);
 }
 hal_at_result_t hal_modem_at(const char *cmd, char *resp, size_t cap, uint32_t ms) { return ink_at(cmd, NULL, resp, cap, ms); }
 hal_at_result_t hal_modem_at_payload(const char *cmd, const char *payload, char *resp, size_t cap, uint32_t ms) {
@@ -471,7 +521,7 @@ void ink_s31_cell_resume(void) {
     if (!ink_cell.ready) return;
     osal_mutex_lock(ink_cell.io, OSAL_WAIT_FOREVER);
     ink_s31_uhci_flush();
-    CELL_LOCK(); ink_cell.suspended = false;
+    CELL_LOCK(); ink_cell.suspended = false; ink_cell.synced = false; /* the modem restarted with P14: probe again */
     ink_cell.ready_after = osal_now_us() + 1000000;
     CELL_UNLOCK();
     osal_mutex_unlock(ink_cell.io);
