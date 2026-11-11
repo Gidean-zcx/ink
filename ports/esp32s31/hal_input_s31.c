@@ -156,7 +156,7 @@ void hal_input_get_info(hal_input_info_t *out) {
 void s31_input_pause(void) { xSemaphoreTake(g_sample, portMAX_DELAY); ink_vendor_vibe_Set(false); }
 void s31_input_resume(uint32_t wake, uint64_t t, bool keys_back) {
     g_keys_back = keys_back;
-    if (keys_back) ink_vendor_keys_begin(false);
+    if (keys_back) g_keys_back = ink_vendor_keys_begin(false);
     g_resuming = true;
     g_wake = wake;
     g_wake_at = t;

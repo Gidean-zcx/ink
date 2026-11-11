@@ -63,16 +63,17 @@ static void sample_all() {
     }
 }
 
-static void ink_vendor_keys_begin(bool boot) {
+static bool ink_vendor_keys_begin(bool boot) {
     refresh_p1();
     vTaskDelay(pdMS_TO_TICKS(20));
-    refresh_p1();
+    if (!refresh_p1()) return false;
     for (int i = 0; i < kCount; ++i) {
         KeySlot *k = &ink_vendor_keys[i];
         if (boot) k->idle_high = (k->io < 0) ? level_high(k) : true;
         k->prev_down = is_down(k);
         k->last_change_us = esp_timer_get_time();
     }
+    return true;
 }
 static uint32_t ink_vendor_key_mask(void) {
     static const hal_key_t keys[] = {HAL_KEY_AI, HAL_KEY_VOL_UP, HAL_KEY_VOL_DOWN, HAL_KEY_POWER};

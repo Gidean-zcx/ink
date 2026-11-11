@@ -30,6 +30,7 @@
 | `main/boards/common/sensor/sc7a20h.h` | `d399cc0479abb91ed06e530ed3a76f001deae2fbf5894811509991db093653c8` |
 | `main/boards/common/power_policy/power_hw.cc` | `16824b1c9f735aa332036d716092a84502b728dd864a4c8a684f8f5c2d2cee0f` |
 | `main/boards/metalio-e-ink4-plus/display/ft6336u_upgrade_protocol.h` | `8887c567da42ea0ba0ab85dd7906e56b1db1bf5f167a0307b2e302f2413ae363` |
+| `main/boards/metalio-e-ink4-plus/periph/metalio_sd.cc` | `077938e881658c9207efb069f8e3986e1f6a09a0c4558faa13854e27cbf7c40d` |
 
 ## 编译入口与适配行
 
@@ -44,7 +45,7 @@ C++ 类改为 C 的单实例私有状态、普通函数及回调；方法内硬�
 | [boot_binding.inc](boot_binding.inc) | 2, 3, 4, 5, 6, 12, 13, 15, 16, 17, 19, 20 | `3dd16b8d747fae5f431d7f05805940d3192ef890d38116620ef249aa06c5abab` |
 | [bus.inc](bus.inc) | 2, 3 | `bf9f23c356f9ee5c763e08b185667a7e71a74feddc1eaf58da10a456b231f670` |
 | [input_binding.inc](input_binding.inc) | 2, 3, 4, 5, 6, 7, 9, 10, 12, 14, 15, 18, 19, 20, 21, 22, 23 | `828c6dc673784b3ba193fb16a6beb8a09ccfd8a7d2a1be45cd2dedbf2b0fe42f` |
-| [keys.inc](keys.inc) | 3, 4, 5, 12, 14, 21, 22, 25, 28, 29, 32, 33, 36, 43, 44, 47, 50, 51, 53, 57, 60, 61, 66, 70, 71, 72, 73, 74, 77, 78, 79, 80, 81, 82, 83, 85 | `483bad3e116042a0c4529a96d104069562f847042b72e1f94241200222c60a7f` |
+| [keys.inc](keys.inc) | 3, 4, 5, 12, 14, 21, 22, 25, 28, 29, 32, 33, 36, 43, 44, 47, 50, 51, 53, 57, 60, 61, 66, 69, 70, 71, 72, 73, 74, 78, 79, 80, 81, 82, 83, 84, 86 | `cf86647bcf84d484ca4dec77fddb60850cbf9f0ec7275f42657ecdb67c44fb93` |
 | [light.inc](light.inc) | 2, 3, 5, 14, 15, 20, 29, 43, 52, 62, 63, 67, 68, 69, 71, 73, 74, 83, 84, 87 | `2c35e83eb4427a604b4d113ab3c8b5a988dc6e6413342713347602945d4590ac` |
 | [reset.inc](reset.inc) | 2, 60 | `02700754f9670a2869fffc4dd6a70760551e9292b9f45912c64271f82525b585` |
 | [reset_binding.inc](reset_binding.inc) | 2, 3, 4, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 26, 34, 35, 36, 37, 40, 43, 44, 45, 46, 48, 49, 50, 51, 52, 53, 54, 57, 58, 59, 61, 63, 64, 65, 66, 67 | `b08d907b572bd7ad566fe32cf2fa308f906270280ac304902b0aca53b7b00183` |
@@ -55,13 +56,13 @@ C++ 类改为 C 的单实例私有状态、普通函数及回调；方法内硬�
 | 适配文件 | 原文函数／段 | 必要改动及边界 |
 | --- | --- | --- |
 | `bus.inc` | `bus/metalio_i2c1.c/.h`、`common/power/power_i2c.c/.h` 整文件 | C 源通过 include 编入；原文没有任何改行。HAL 0 映射 I2C1；TCA 使用原厂共同持锁 STOP 读；电源／传感器寄存器读接原厂 repeated START→STOP 回退。 |
-| `boot.inc`／`boot_binding.inc` | `epd_board_metalio_eink4_plus.c:483–520` | 整函数拷贝；去掉显示层私有的 `s_lcd_bus_held=false`，显示层自己初始化。SD hold 用同一原厂引脚表在 C 中逐项释放；GPIO/UHCI 清理原文保留。最早现有调用点是 boot guard 调 `hal_device_reset_reason`，只执行一次。 |
+| `boot.inc`／`boot_binding.inc` | `epd_board_metalio_eink4_plus.c:483–520` | 整函数拷贝；去掉显示层私有的 `s_lcd_bus_held=false`，显示层自己初始化。SD hold 对应 `periph/metalio_sd.cc:26–28,67–71` 的 `MetalioSd_ReleaseHold`，同一原厂引脚表在 C 中逐项释放；GPIO/UHCI 清理原文保留。最早现有调用点是 boot guard 调 `hal_device_reset_reason`，只执行一次。 |
 | `reset.inc`／`reset_binding.inc` | 板级 `.c:263–318,615–632`；`power_hw.cc:242–265` | 整复位函数、整触摸复位函数拷贝；复用现有 board mutex、TCA 状态和 GPIO 定义。P14 恢复写经现有 `metalio_board_set` 更新 epoch／时间戳；短暂释放再取得同一 board mutex，仅用于消费者启动前的开机复位。蜂窝和 BH1098 掉电／恢复通知调用现有接口。失败保留错误，启动停止。 |
 | `light.inc` | `frontlight.cc:17–23`、整 `SetupHardware`／`ApplyOutput` | 类签名改为 C 函数；CCT 为现有 HAL 双通道模式，选 PWM；`std::min` 用局部宏。HAL 冷暖千分数还原总亮度／暖度后调用原厂 10% 与 2×混色公式。没有 NVS、原厂前光渐变定时器。 |
 | `touch_map.inc` | `metalio_touch.c:85–106` 整 `map_to_logical` | 函数体不改；映射每个触点，盖板键先保留原始坐标，最终走现有旋转与 HAL 双点事件。空闲 20 ms／按住 10 ms 补采接现有 input task。 |
 | `touch_ready.inc` | `ft6336u_upgrade_protocol.h:44–64` 的 `Attempt` 应用就绪阶段 | 保留 5 次／200 ms 读 ID、版本等待；改为 HAL 读与 OSAL 延时；不引入 ID2（现有芯片合同没有它），不执行校验固件、bootloader、擦除或写固件的其余步骤。初始化仍保留本项目严格芯片 ID 检查。 |
 | `accel.inc` | `common/sensor/sc7a20h.cc:8–35,53–81,93–100,170–180` | 配置／静默／读数整方法拷贝；`constexpr` 仅在本 include 内映射为 `static const`，C 指针／强制转换替换 C++ 引用／cast，读写接现有 HAL。静默原文忽略的布尔结果显式转 void，避免 GCC 的 unused-value 警告，执行顺序不变。保留本项目未知 ID／配置错误不 ready；板级先 0x19 后 0x18，失败时 probe 并调用原厂静默序列，含 AOI1_SRC 读清。 |
-| `keys.inc` | `metalio_keys.cc:24,37–51,62–90,100–135,187–200,226–245` | KeySlot 与采样／消抖方法转 C 指针，保持每键 30 ms。删除原厂 3 s 关机、短按策略、队列和任务；稳定状态汇入原有 HAL 事件，保留系统 1.5 s 菜单、锁屏、音量。恢复沿用 20 ms 等待与重新采样，BOOT 使用上电空闲极性。 |
+| `keys.inc` | `metalio_keys.cc:24,37–51,62–90,100–135,187–200,226–245` | KeySlot 与采样／消抖方法转 C 指针，保持每键 30 ms。删除原厂 3 s 关机、短按策略、队列和任务；稳定状态汇入原有 HAL 事件，保留系统 1.5 s 菜单、锁屏、音量。恢复沿用 20 ms 等待与重新采样，读口失败时保持不可采样，BOOT 使用上电空闲极性。 |
 | `vibe.inc` | `metalio_vibe.cc` 整 VibeEngine（除单例访问器、对外 C 包装） | 字段转本文件静态单实例，方法转 C 函数，两个 lambda 转普通回调。原厂 20 ms PWM、14/18/20 ms 三档与 pulse timer 保留；HAL 35/50/70 ms 映射三档。没有新任务，复用 SDK esp_timer task；开机 P14 放电发生在普通马达引擎创建之前，直接置马达 500 ms。 |
 
 ## 未接入的范围
@@ -72,4 +73,4 @@ C++ 类改为 C 的单实例私有状态、普通函数及回调；方法内硬�
 
 ## 复核
 
-`python3 ports/esp32s31/tests/vendor_sources.py` 校验 22 个原文文件的 SHA-256；可选 `--baseline <提交>` 手动统计适配新增行，普通 ctest 不依赖 Git 历史。测试、反向对照与上机核对边界见 [任务报告](../../../../docs/tasks/port-board-2/REPORT.md)。
+`python3 ports/esp32s31/tests/vendor_sources.py` 校验 23 个原文文件的 SHA-256；可选 `--baseline <提交>` 手动统计适配新增行，普通 ctest 不依赖 Git 历史。测试、反向对照与上机核对边界见 [任务报告](../../../../docs/tasks/port-board-2/REPORT.md)。

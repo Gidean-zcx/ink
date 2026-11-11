@@ -25,7 +25,7 @@ static unsigned nmutex;
 static uint8_t regs[128][256];
 static uint64_t clock_us;
 static bool present[128], accel_fail;
-static unsigned touch_fails, touch_ids;
+static unsigned touch_fails, touch_ids, key_read_fails;
 enum { TRACE_CAP = 256, TIMER_CAP = 2, EVENT_CAP = 32 };
 static struct { uint8_t addr, reg, value; uint64_t at; } trace[TRACE_CAP];
 static size_t ntrace;
@@ -119,6 +119,7 @@ hal_i2c_status_t hal_i2c_write_read(hal_i2c_dev_t *d, const uint8_t *w, size_t w
     if (d->addr == 0x38 && *w == 0xa3) { touch_ids++; if (touch_fails) { touch_fails--; return HAL_I2C_TIMEOUT; } }
     uint8_t reg = *w;
     if (d->addr == 0x18 || d->addr == 0x19) reg &= 0x7f;
+    if (d->addr == 0x20 && reg == 1 && key_read_fails) { key_read_fails--; return HAL_I2C_TIMEOUT; }
     if (d->addr == 0x20 && reg < 2) {
         assert(rn == 1); *r = (regs[0x20][2 + reg] & (uint8_t)~regs[0x20][6 + reg]) | (regs[0x20][reg] & regs[0x20][6 + reg]);
     } else memcpy(r, regs[d->addr] + reg, rn);
@@ -196,6 +197,8 @@ static void keys(void) {
     s31_input_pause(); regs[0x20][1] |= MB_P1_VOL_UP;
     s31_input_resume(HAL_WAKE_POWER_KEY, clock_us, true); tick_input();
     assert(nevent >= 5 && !g_resuming);
+    s31_input_pause(); key_read_fails = 2;
+    s31_input_resume(0, clock_us, true); assert(!g_keys_back);
 }
 static void vibe(void) {
     assert(hal_haptic_available());

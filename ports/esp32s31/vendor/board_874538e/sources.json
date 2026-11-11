@@ -86,5 +86,9 @@
   {
     "path": "main/boards/metalio-e-ink4-plus/display/ft6336u_upgrade_protocol.h",
     "sha256": "8887c567da42ea0ba0ab85dd7906e56b1db1bf5f167a0307b2e302f2413ae363"
+  },
+  {
+    "path": "main/boards/metalio-e-ink4-plus/periph/metalio_sd.cc",
+    "sha256": "077938e881658c9207efb069f8e3986e1f6a09a0c4558faa13854e27cbf7c40d"
   }
 ]

@@ -32,6 +32,7 @@ CASES = [
     ('touch', 'board', PORT / 'hal_input_s31.c', 'g_touch ? pdMS_TO_TICKS(20) :', 'g_touch ? portMAX_DELAY :'),
     ('retry', 'board', VENDOR / 'touch_ready.inc', 'i < 5;', 'i < 1;'),
     ('keys', 'board', VENDOR / 'keys.inc', 'kDebounceUs = 30000;', 'kDebounceUs = 20000;'),
+    ('keys', 'board', VENDOR / 'keys.inc', 'if (!refresh_p1()) return false;', 'refresh_p1();'),
     ('accel-alt', 'board', PORT / 's31_board.c', '{SC7A20H_ADDR, 0x18}', '{SC7A20H_ADDR, 0x19}'),
     ('accel-fail', 'board', PORT / 's31_board.c', 'sc7a20h_silence(dev);', '(void)dev;'),
     ('irq', 'irq', PORT / 's31_irq.c', 'gpio == S31_GPIO_AI_KEY ? GPIO_INTR_ANYEDGE : GPIO_INTR_NEGEDGE', 'GPIO_INTR_NEGEDGE'),
