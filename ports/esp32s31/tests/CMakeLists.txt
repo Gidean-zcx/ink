@@ -101,3 +101,21 @@ if(INK_SANITIZE)
 endif()
 add_test(NAME unit-s31-task-config COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/task_config.py
   ${CMAKE_CURRENT_BINARY_DIR} --cc ${CMAKE_C_COMPILER} ${task_config_args})
+
+add_executable(test-s31-vendor-i2c vendor_i2c.c ${root}/drivers/chips/tca9555/tca9555.c)
+target_include_directories(test-s31-vendor-i2c PRIVATE vendor_stub ${CMAKE_CURRENT_LIST_DIR})
+target_compile_definitions(test-s31-vendor-i2c PRIVATE ESP_PLATFORM=1)
+foreach(case recovery stretch stop fallback flash limits)
+  add_test(NAME unit-s31-vendor-i2c-${case} COMMAND test-s31-vendor-i2c ${case})
+endforeach()
+add_executable(test-s31-vendor-board vendor_board.c
+  ${root}/boards/metalio_plus/metalio_board.c ${root}/boards/metalio_plus/metalio_touch.c
+  ${root}/drivers/chips/tca9555/tca9555.c ${root}/drivers/chips/ft6336u/ft6336u.c
+  ${root}/drivers/chips/sc7a20h/sc7a20h.c ${root}/drivers/chips/bq27220/bq27220.c
+  ${root}/drivers/chips/cx25601n/cx25601n.c ${root}/drivers/chips/pcf8563/pcf8563.c)
+target_include_directories(test-s31-vendor-board PRIVATE vendor_stub ${CMAKE_CURRENT_LIST_DIR})
+target_compile_definitions(test-s31-vendor-board PRIVATE ESP_PLATFORM=1)
+foreach(case boot reset light touch retry keys accel-alt accel-fail vibe)
+  add_test(NAME unit-s31-vendor-board-${case} COMMAND test-s31-vendor-board ${case})
+endforeach()
+add_test(NAME unit-s31-vendor-source COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/vendor_sources.py)

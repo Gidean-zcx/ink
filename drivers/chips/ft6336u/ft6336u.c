@@ -1,4 +1,5 @@
 #include "ft6336u/ft6336u.h"
+#include "ink/osal.h"
 
 enum { REG_TD_STATUS = 0x02, REG_INT_MODE = 0xA4, REG_FW_VER = 0xA6, REG_CHIP_ID = 0xA3 };
 
@@ -6,14 +7,10 @@ static hal_i2c_status_t read_regs(hal_i2c_dev_t *dev, uint8_t reg, uint8_t *buf,
     return hal_i2c_write_read(dev, &reg, 1, buf, n);
 }
 
+#include "../../../ports/esp32s31/vendor/board_874538e/touch_ready.inc"
+
 hal_i2c_status_t ft6336u_init(hal_i2c_dev_t *dev, uint8_t *fw_version) {
-    uint8_t id = 0, fw = 0;
-    hal_i2c_status_t s = read_regs(dev, REG_CHIP_ID, &id, 1);
-    if (s != HAL_I2C_OK) return s;
-    if (id != FT6336U_CHIP_ID) return HAL_I2C_ERR;
-    s = read_regs(dev, REG_FW_VER, &fw, 1);
-    if (s != HAL_I2C_OK) return s;
-    if (fw_version) *fw_version = fw;
+    if (!ink_vendor_touch_ready(dev, fw_version)) return HAL_I2C_ERR;
     uint8_t mode[2] = {REG_INT_MODE, 0x00};
     return hal_i2c_write(dev, mode, sizeof mode);
 }

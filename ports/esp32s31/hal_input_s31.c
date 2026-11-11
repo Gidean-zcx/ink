@@ -10,6 +10,7 @@
 #include "s31_input_logic.h"
 #include "s31_io.h"
 #include "s31_bh1098.h"
+#include "vendor/board_874538e/input_binding.inc"
 
 enum { INPUT_EXP = 1, INPUT_TOUCH = 2, INPUT_AI = 4, INPUT_RESUME = 8, INPUT_MOTOR = 16 };
 static TaskHandle_t g_task;
@@ -23,8 +24,9 @@ static s31_keys_t g_keys;
 static s31_contact_t g_contacts[FT6336U_MAX_POINTS];
 static bool g_touch_poll, g_keys_back = true, g_resuming;
 static uint32_t g_wake;
-static uint64_t g_wake_at, g_motor_until;
-static bool g_motor_on, g_motor_requested;
+static uint64_t g_wake_at;
+static int g_motor_ms;
+static bool g_motor_requested;
 
 /* Every key edge and every touch down and up, for the device log (moves are too many). */
 static void log_event(const hal_input_event_t *e) {
@@ -54,14 +56,16 @@ static void irq(void *ctx) { xTaskNotify(g_task, (uint32_t)(uintptr_t)ctx, eSetB
 void ink_s31_bh_wake(void) { if (g_task) xTaskNotify(g_task, 0, eSetBits); }
 
 static void motor_poll(uint64_t now) { /* sampling lock held; I2C never runs in the caller */
+    (void)now;
     portENTER_CRITICAL(&g_mux);
-    bool on = __atomic_load_n(&g_motor_requested, __ATOMIC_ACQUIRE) && now < g_motor_until;
+    int ms = g_motor_ms;
+    g_motor_ms = 0;
     portEXIT_CRITICAL(&g_mux);
-    if (on != g_motor_on && metalio_board_set(0, MB_P0_MOTOR, on ? MB_P0_MOTOR : 0) == HAL_I2C_OK)
-        g_motor_on = on;
-    portENTER_CRITICAL(&g_mux);
-    if (!g_motor_on && now >= g_motor_until) __atomic_store_n(&g_motor_requested, false, __ATOMIC_RELEASE);
-    portEXIT_CRITICAL(&g_mux);
+    if (ms > 0) {
+        ink_vendor_vibe_SetIntensity(ms >= 70 ? 3 : ms >= 50 ? 2 : 1);
+        ink_vendor_vibe_Pulse(ms);
+    }
+    __atomic_store_n(&g_motor_requested, pulse_active_ || continuous_, __ATOMIC_RELEASE);
 }
 
 static void sample_keys(uint64_t now) {
@@ -81,7 +85,10 @@ static void sample_keys(uint64_t now) {
         s31_keys_report(&g_keys, mask, now, emit, NULL);
         g_keys.candidate = mask;
         g_keys.pending = g_resuming = false;
-    } else s31_keys_sample(&g_keys, mask, now, emit, NULL);
+    } else {
+        sample_all();
+        s31_keys_report(&g_keys, ink_vendor_key_mask(), now, emit, NULL);
+    }
 }
 
 static void input_task(void *arg) {
@@ -98,25 +105,31 @@ static void input_task(void *arg) {
             uint8_t p0;
             metalio_board_read(0, &p0); /* release PWR_GOOD's interrupt too */
         }
-        if (metalio_board_ready() && ((bits & (INPUT_EXP | INPUT_AI | INPUT_RESUME)) || g_keys.pending ||
-                                     (g_keys.stable & (1u << HAL_KEY_AI)))) sample_keys(now);
-        if (g_touch && (g_touch_poll || (bits & (INPUT_TOUCH | INPUT_RESUME)))) {
+        if (metalio_board_ready()) sample_keys(now);
+        if (g_touch) {
             ft6336u_point_t pts[FT6336U_MAX_POINTS];
             int n = 0;
             if (ft6336u_read(g_touch, pts, FT6336U_MAX_POINTS, &n) == HAL_I2C_OK) {
+                for (int i = 0; i < n; ++i)
+                    if (!metalio_touch_cover_key(pts[i].x, pts[i].y))
+                        map_to_logical(pts[i].x, pts[i].y, &pts[i].x, &pts[i].y);
                 s31_touch_frame(g_contacts, pts, n, osal_now_us(), emit, NULL);
                 g_touch_poll = n > 0;
             } else g_touch_poll = true;
         }
         if (metalio_board_ready()) motor_poll(osal_now_us());
         wait = g_touch_poll || s31_haptic_busy() || ink_s31_bh_headset() ? pdMS_TO_TICKS(S31_TOUCH_POLL_MS) :
-               g_keys.pending || (g_keys.stable & (1u << HAL_KEY_AI)) ? pdMS_TO_TICKS(S31_KEY_DEBOUNCE_US / 1000) : portMAX_DELAY;
+               g_touch ? pdMS_TO_TICKS(20) : pdMS_TO_TICKS(50);
         xSemaphoreGive(g_sample);
     }
 }
 
 void s31_input_init(hal_i2c_dev_t *touch) {
     g_touch = touch;
+    ink_vendor_boot_gpio();
+    ink_vendor_keys_begin(true);
+    ink_vendor_vibe_create();
+    ink_vendor_vibe_Init();
     g_sample = xSemaphoreCreateMutexStatic(&g_sample_store);
     if (!g_sample || xTaskCreatePinnedToCore(input_task, "input-hal", 4096, NULL, OSAL_PRIO_MAX, &g_task, 0) != pdPASS)
         osal_panic("input HAL: task setup failed");
@@ -140,9 +153,10 @@ void hal_input_get_info(hal_input_info_t *out) {
     if (g_touch) out->keys |= (1u << HAL_KEY_HOME) | (1u << HAL_KEY_PREV) | (1u << HAL_KEY_NEXT);
 }
 
-void s31_input_pause(void) { xSemaphoreTake(g_sample, portMAX_DELAY); }
+void s31_input_pause(void) { xSemaphoreTake(g_sample, portMAX_DELAY); ink_vendor_vibe_Set(false); }
 void s31_input_resume(uint32_t wake, uint64_t t, bool keys_back) {
     g_keys_back = keys_back;
+    if (keys_back) ink_vendor_keys_begin(false);
     g_resuming = true;
     g_wake = wake;
     g_wake_at = t;
@@ -154,9 +168,9 @@ bool hal_haptic_available(void) { return g_task && metalio_board_ready(); }
 bool s31_haptic_busy(void) { return __atomic_load_n(&g_motor_requested, __ATOMIC_ACQUIRE); }
 void hal_haptic_pulse(int ms) {
     if (!hal_haptic_available()) return;
-    uint64_t until = osal_now_us() + (uint64_t)(ms > 0 ? ms : MB_MOTOR_PULSE_MS) * 1000u;
     portENTER_CRITICAL(&g_mux);
-    if (until > g_motor_until) g_motor_until = until;
+    int duration = ms > 0 ? ms : MB_MOTOR_PULSE_MS;
+    if (duration > g_motor_ms) g_motor_ms = duration;
     __atomic_store_n(&g_motor_requested, true, __ATOMIC_RELEASE);
     portEXIT_CRITICAL(&g_mux);
     xTaskNotify(g_task, INPUT_MOTOR, eSetBits);

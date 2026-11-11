@@ -15,6 +15,8 @@
 #define SC7A20H_ADDR_ALT 0x18
 
 hal_i2c_status_t sc7a20h_init(hal_i2c_dev_t *dev);
+/* Release shared INT after a partially failed initialization. */
+void sc7a20h_silence(hal_i2c_dev_t *dev);
 hal_i2c_status_t sc7a20h_read_mg(hal_i2c_dev_t *dev, int *x, int *y, int *z);
 /** Read and clear the motion latch (INT1_SRC.IA); releases INT1. */
 hal_i2c_status_t sc7a20h_motion(hal_i2c_dev_t *dev, bool *moved);

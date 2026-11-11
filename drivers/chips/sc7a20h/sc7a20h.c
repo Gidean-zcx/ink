@@ -11,25 +11,18 @@ static hal_i2c_status_t wr(hal_i2c_dev_t *dev, uint8_t reg, uint8_t v) {
     return hal_i2c_write(dev, b, 2);
 }
 
+#include "../../../ports/esp32s31/vendor/board_874538e/accel.inc"
+
 hal_i2c_status_t sc7a20h_init(hal_i2c_dev_t *dev) {
     uint8_t reg = WHO_AM_I, who = 0;
     hal_i2c_status_t s = hal_i2c_write_read(dev, &reg, 1, &who, 1);
     if (s != HAL_I2C_OK) return s;
     if (who != 0x11 && who != 0x33 && who != 0x32 && who != 0x44) return HAL_I2C_ERR; /* upstream's accepted IDs */
-    static const uint8_t seq[][2] = {{CTRL1, 0x57}, {CTRL2, 0x01}, {CTRL3, 0x40}, {CTRL4, 0x88}, {CTRL5, 0x08},
-                                     {CTRL6, 0x03}, {AOI1_THS, 0x10}, {AOI1_DUR, 0x00}, {AOI1_CFG, 0x2A}};
-    for (unsigned i = 0; i < sizeof seq / sizeof seq[0] && s == HAL_I2C_OK; i++) s = wr(dev, seq[i][0], seq[i][1]);
-    return s;
+    return ink_vendor_accel_configure(dev) ? HAL_I2C_OK : HAL_I2C_ERR;
 }
 
 hal_i2c_status_t sc7a20h_read_mg(hal_i2c_dev_t *dev, int *x, int *y, int *z) {
-    uint8_t reg = OUT_X_L | AUTO_INC, b[6];
-    hal_i2c_status_t s = hal_i2c_write_read(dev, &reg, 1, b, sizeof b);
-    if (s != HAL_I2C_OK) return s;
-    *x = (int16_t)(b[1] << 8 | b[0]) >> 4;
-    *y = (int16_t)(b[3] << 8 | b[2]) >> 4;
-    *z = (int16_t)(b[5] << 8 | b[4]) >> 4;
-    return HAL_I2C_OK;
+    return ink_vendor_accel_read(dev, x, y, z) ? HAL_I2C_OK : HAL_I2C_ERR;
 }
 
 hal_i2c_status_t sc7a20h_motion(hal_i2c_dev_t *dev, bool *moved) {
@@ -54,3 +47,5 @@ hal_i2c_status_t sc7a20h_motion_watch(hal_i2c_dev_t *dev) { /* 10 Hz + LPen + X/
     for (unsigned i = 0; i < sizeof seq / sizeof seq[0] && s == HAL_I2C_OK; i++) s = wr(dev, seq[i][0], seq[i][1]);
     return s;
 }
+
+void sc7a20h_silence(hal_i2c_dev_t *dev) { ink_vendor_accel_silence(dev); }
