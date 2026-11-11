@@ -153,7 +153,7 @@ static void inspect(void) {
             text.x = text.y = ink_ui_px(INK_ICON_MEDIUM * key_height(false) / INK_KB_KEY);
         CHECK(text.x <= width && text.y <= lv_area_get_height(&a), "label fits native key: %s / %.23s", picture, K.legends[i]);
     }
-    CHECK(lv_obj_get_height(K.board) == ink_ui_px((K.built_for == 3 ? 3 : 4) * key_height(K.built_for == 3 || K.built_for == 4) + (K.built_for == 3 ? 2 : 3) * INK_KB_GAP), "height comes from keyboard tokens and font scale");
+    CHECK(lv_obj_get_height(K.board) == ink_ui_px((K.footer ? 3 : 4) * key_height(K.footer != NULL) + (K.footer ? 2 : 3) * INK_KB_GAP), "height comes from keyboard tokens and font scale");
     CHECK(lv_obj_get_width(K.mic) == ink_ui_px(INK_KB_FUNCTION_WIDTH) && lv_obj_get_height(K.mic) == ink_ui_px(key_height(false)), "voice uses function-key dimensions");
 
 }

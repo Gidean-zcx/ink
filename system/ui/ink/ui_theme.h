@@ -83,7 +83,7 @@ void ink_ui_capture_forget(lv_obj_t *root);
 
 /* Keyboard: shared key units and dimensions, scaled with the text line height. */
 enum {
-    INK_KB_KEY = 96, INK_KB_DIGIT = 163, INK_KB_GAP = 5, INK_KB_PAD_Y = 10,
+    INK_KB_KEY = 96, INK_KB_DIGIT = 163, INK_KB_CAND = 101, INK_KB_GAP = 5, INK_KB_PAD_Y = 10,
     INK_KB_UNIT = 2, INK_KB_HALF = 1, INK_KB_FUNCTION = 3, INK_KB_SPACE = 5,
     INK_KB_FUNCTION_WIDTH = 91
 };
