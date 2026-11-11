@@ -7,7 +7,7 @@ python3 tools/capabilities.py
 python3 tools/capabilities.py --check
 ```
 
-当前共 485 项：可调用能力 446、事件 39；设置 40 项、状态 55 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
+当前共 487 项：可调用能力 448、事件 39；设置 40 项、状态 55 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
 
 风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。
 
@@ -88,6 +88,8 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `camera.review` | 查看本次锁屏拍的下一张照片 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单）；页面 Camera | [s04](#s04) | [system/apps/camera/camera.c](../../system/apps/camera/camera.c) |
 | `camera.scan` | 打开扫码，返回类型和内容（不含 Wi-Fi 密码） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s04](#s04) | [system/apps/camera/scan.c](../../system/apps/camera/scan.c) |
 | `camera.scan_apply` | 执行扫码结果中的操作 | 人、AI | 高 / external | 人、AI 均在设备确认 | 成人、儿童（无需白名单）；页面 Scan | [s04](#s04) | [system/apps/camera/scan.c](../../system/apps/camera/scan.c) |
+| `camera.scan_next` | 扫码结果下一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Scan | [s04](#s04) | [system/apps/camera/scan.c](../../system/apps/camera/scan.c) |
+| `camera.scan_prev` | 扫码结果上一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Scan | [s04](#s04) | [system/apps/camera/scan.c](../../system/apps/camera/scan.c) |
 | `caps.domains` | 有哪些类能力（每类多少个） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s15](#s15) | [system/policy/cap.c](../../system/policy/cap.c) |
 | `caps.find` | 按关键词查能力（带完整描述） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s15](#s15) | [system/policy/cap.c](../../system/policy/cap.c) |
 | `clipboard.read` | 读剪贴板（用户在设置里打开才行） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s35](#s35) | [system/services/text/text_caps.c](../../system/services/text/text_caps.c) |

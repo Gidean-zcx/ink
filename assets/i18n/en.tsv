@@ -41,6 +41,13 @@ Wi-Fi 已关闭，请到网络设置打开后重试。	Wi-Fi is off. Enable it i
 开始—结束（24 小时）	Start–end (24-hour time)
 保存时段	Save period
 请按 21:00-07:00 填写	Use the format 21:00-07:00
+# ui-fix-g
+帮助排查	Diagnostics
+网络名称如上，密码不会显示	Network shown above; the password stays hidden
+操作对象如上，点按后执行	Review the details above, then choose the action
+通过家庭服务器打开网页	Open the page through the family server
+当前无法打开此网址，可以复制后在其他设备打开	This address cannot open here. Copy it to another device.
+结束后回到刚才的页面	Returns to the previous page
 # notification management
 删除	Delete
 全部已读	Mark all read
@@ -1694,4 +1701,3 @@ Wi-Fi 已关闭	Wi-Fi is off
 响铃	Ring
 修改	Edit
 网址 · %s	Address · %s
-

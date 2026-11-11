@@ -1,0 +1,70 @@
+{
+  "product_commit": "dd2de640974d378b39653161253f8b1546306dca",
+  "normal_full_before_final_fixes": {
+    "summary": "99% tests passed, 5 tests failed out of 413",
+    "seconds": 1211.89,
+    "failed": [
+      "i18n-services",
+      "capability-table-doc",
+      "integration-power-menu",
+      "integration-ai-surface",
+      "unit-s31-uhci-negative"
+    ],
+    "skipped": [
+      "hub-contract",
+      "hub-json-crosscheck",
+      "hub-simulator-e2e"
+    ]
+  },
+  "normal_focused_recheck": {
+    "summary": "100% tests passed out of 3",
+    "seconds": 36.26,
+    "failed": [],
+    "skipped": []
+  },
+  "sanitizer_full": {
+    "summary": "99% tests passed, 2 tests failed out of 413",
+    "seconds": 1545.41,
+    "failed": [
+      "capability-table-doc",
+      "integration-ai-surface"
+    ],
+    "skipped": [
+      "hub-contract",
+      "hub-json-crosscheck",
+      "hub-simulator-e2e"
+    ]
+  },
+  "hub_supplement": [
+    {
+      "build": "build",
+      "case": "hub-contract",
+      "exit": 0
+    },
+    {
+      "build": "build",
+      "case": "hub-json-crosscheck",
+      "exit": 0
+    },
+    {
+      "build": "build",
+      "case": "hub-simulator-e2e",
+      "exit": 0
+    },
+    {
+      "build": "build-asan",
+      "case": "hub-contract",
+      "exit": 0
+    },
+    {
+      "build": "build-asan",
+      "case": "hub-json-crosscheck",
+      "exit": 0
+    },
+    {
+      "build": "build-asan",
+      "case": "hub-simulator-e2e",
+      "exit": 0
+    }
+  ]
+}

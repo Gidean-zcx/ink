@@ -14,6 +14,7 @@
 #include "ink/sys/members.h"
 #include "ink/sys/power.h"
 #include "ink/sys/ui_semantics.h"
+#include "ink/ui_theme.h"
 #include "shell_card.h"
 
 #define PANEL_WAIT_US 6000000ull
@@ -58,6 +59,8 @@ static void draw(void *arg) { /* UI task */
     shell_card_full(&O.card);
     ink_ui_overlay_add(&OVERLAY, O.card.root);
     shell_card_text(&O.card, TR("已关机"), O.body);
+    lv_obj_set_height(O.card.body, LV_SIZE_CONTENT);
+    lv_obj_align_to(O.card.body, O.card.title, LV_ALIGN_OUT_BOTTOM_LEFT, 0, ink_ui_px(INK_MARGIN));
     lv_refr_now(NULL);
     O.commit = ink_display_commits();
     __atomic_store_n(&O.drawn, true, __ATOMIC_RELEASE);

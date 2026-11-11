@@ -65,7 +65,9 @@ bool ink_shell_airplane_card(const ink_receipt_t *rc) {
     static const char said[] = "飞行模式已打开，"; /* the title says it already */
     snprintf(A.say, sizeof A.say, "%s", strncmp(rc->say, said, sizeof said - 1) ? rc->say : rc->say + sizeof said - 1);
     A.why = ink_member_current()->role == INK_ROLE_CHILD ? TR("请家长关闭飞行模式") : NULL; /* the switch is not a child's */
-    show(&OVERLAYS[0], TR("飞行模式已打开"), A.why ? A.why : A.say);
+    char body[sizeof A.say + 96];
+    snprintf(body, sizeof body, "%s%s%s", A.say, A.why ? "\n" : "", A.why ? A.why : "");
+    show(&OVERLAYS[0], TR("飞行模式已打开"), body);
     return true;
 }
 
