@@ -7,7 +7,7 @@
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
 | 1 | 【实测】部分，协议缺口未伪造 | 已通过扫描/去重、CONNECT 建链、连接前模式 2、退回模式 1、模式/连接/扫描/SCO 超时、SCO 共用、并发音频、P14 恢复、已知模式丢失通知；独立配对、芯片端忘记、耳机自行断开仍缺协议 | `build/test-s31-bt`；`python3 ports/esp32s31/tests/bt_negative.py build` |
-| 2 | 验证中 | 普通全量进行中；ASan、S31、gcccheck、能力清单、隐私检查待最终记录 | 见复现命令 |
+| 2 | 【实测】本机验证通过，跳过项单列 | 普通与 ASan/UBSan 全量各 386 项，均为 383 通过、3 项中枢环境跳过；端口两版各 30/30；S31 编过、产品编译 0 警告；gcccheck 5+6 文件无发现；能力清单 552；隐私扫描无真实地址或绝对路径 | 见复现命令和下方原话 |
 | 3 | 【实现】已列出 | 原厂差异、只读上机核对、全部实际发送的 BH 命令在下方 | 代码及原厂行号见下方 |
 
 ## 没做到的
@@ -16,6 +16,7 @@
 - **芯片端忘记未完成**：文档没有删除配对命令。`hal_bt_forget` 对当前耳机退回模式 1，既有服务删除主控数据库；BH 自己的连接记录无法保证清除，可能保留回连记录。
 - **独立配对未完成**：没有单独配对命令或配对成功报告。`hal_bt_pair` 用一次真实 `CONNECT SUCCESS` 验证可连接，再退回模式 1；不宣称独立绑定、PIN 输入或芯片持久配对已经验证。模式 1 恢复本机音频，也不能冒称已验证无线链路物理断开。
 - 真机验证交主会话：版本适配、实际耳机播放/拾音、NT26 通话音频接线和来源、音质、参考声道、耳机关机/离开距离、共享电源恢复均未测。没有猜测麦克风选择或槽位命令，没有实现模式 3/5 或 ESP BLE 翻页器。
+- 本机为 macOS，未运行 Linux 整轮 CI；gcccheck 不能替代 Linux 全量。内存检查为 ASan+UBSan，没有执行 LeakSanitizer 或真机内存测量。
 
 ## 和设计不一致的
 
@@ -41,6 +42,7 @@
 
 - 既有 `hal_bt_disconnect` / `hal_bt_forget` 返回 `void`，系统服务无法收到切模式失败结果；本任务未扩大 HAL 契约。
 - 配对记录可能由 BH 自动回连（协议 `59-61`），原厂也仅显示 `RECONNECT` 文本，未给可靠地址映射；本任务未猜测自动回连身份。
+- 宿主机构建仍有既有的 macOS 重复库链接提示；不是本次产品 C 编译警告，未改链接方案。
 
 ## 新增的机制
 
@@ -55,14 +57,17 @@
 
 ## 过程与证据
 
-- 【实测】工作区干净，当前分支 `claude/codex-port-bt-1`，HEAD 等于指定基线；基线已合入 `port-cell-2`。
+- 【实测】开工时工作区干净，分支 `claude/codex-port-bt-1`，当时 HEAD 等于指定基线；基线已合入 `port-cell-2`。
 - 【实测】定向音频/电源 3/3、音频/蜂窝 2/2 通过。三项反向对照均编译退出 0、测试退出 -6（断言）：`connect-without-mode2`、`disconnect-without-mode1`、`second-uart-owner`。没有改断言让突变通过。
 - 【实测】首轮普通全量原话：`99% tests passed, 1 tests failed out of 386`，520.33 秒，退出 8；失败为 `unit-s31-uhci-negative` 的旧通知块文本定位（新增 BH 通知后找不到原块）。更新该定位后相关测试 `100% tests passed out of 5`，9.58 秒，退出 0。首轮另有 3 项中枢环境跳过。
+- 【实测】最终普通全量原话：`100% tests passed out of 386`，293.21 秒，退出 0；383 项执行通过，`hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e` 3 项因缺少中枢锁定 Python 环境及生成样本，按既有门槛跳过。完整日志：`work/port-bt-1/ctest-final.log`。
+- 【实测】ASan+UBSan 最终全量原话：`100% tests passed out of 386`，613.46 秒，退出 0，同样 383 通过、上述 3 项环境跳过。使用 `UBSAN_OPTIONS=halt_on_error=1`，未出现 ASan 错误或 UBSan 运行时诊断。完整日志：`work/port-bt-1/asan-ctest.log`。
+- 【实测】内存检查覆盖整个模拟器、真实 S31 BH/音频/蜂窝 C 实现的假硬件测试和三个 BT 反向突变；端口独立 ASan 套件另覆盖真实电源 HAL 与 P14 通知顺序。ESP-IDF 的 UART/I2S/中断驱动仅交叉编译，未冒称已在宿主机或真机运行。
 - 【实测】gcccheck 宿主机编译数据库：`5 compiled, 0 with findings`（BH 管理点、音频、蜂窝、音频假芯片测试、蜂窝假模组测试）；能力清单：`PASS: 552 definitions, docs/system/capabilities.md`。
 - 【实测】最终 S31（浅睡 ON）完整编译退出 0，产品编译警告/错误 0，镜像 4,365,600 字节；输出层仍核验原锁定 `690a023`，没有升级依赖或操作设备。S31 编译数据库补跑 gcccheck：`6 compiled, 0 with findings`（BH、音频、蜂窝、输入、电源、UART）。最终宿主机 gcccheck 仍为 `5 compiled, 0 with findings`。
 - 【实测】端口独立套件普通版 `100% tests passed out of 30`，11.65 秒；ASan+UBSan 版 `100% tests passed out of 30`，10.00 秒。原音频/Opus 反向测试的两个基准通过、14 个突变全部编过且断言退出 -6。日志在忽略的 `work/port-bt-1/`。
 - 【实测】产品 C/H：增加 348、删除 50，净增 298 行；全部 CMake 改动也计入为 306 行，低于 600 行预算。测试、文档不计。
-- 【实测】基线至 HEAD 按总规则正则扫描：绝对路径 0，MAC 形状 2 处，均为总规则允许的同一合成地址；去掉这两处后 0 匹配。没有真实蓝牙地址。最终结束前再核对。
+- 【实测】最终基线至 HEAD 按总规则正则扫描：绝对路径 0，MAC 形状 2 处（原始 grep 退出 0），均为总规则允许的同一合成地址；去掉这两处后 0 匹配。没有真实蓝牙地址。`git diff --stat` 仅有本任务的端口/接口/测试/构建配置及本报告，工作区已提交并核对。
 - 【实现】架构审视：服务/界面仍通过原来的 `bt.*`、`call.*`、`audio.route` 原子能力，按钮与 AI 共用同一路径；端口只处理 UART/I2S/电源，未让界面直接改驱动状态。事件沿既有 LOST → 后台处理 → `bt.changed` 路径；没有新页面或缺少 AI 快照的新操作。
 - 【实现】为什么不能更小：任务要求同一串口的扫描/连接、音频/SCO、异步通知与 P14 恢复，超过 100 行不可避免。看过分别在音频和蓝牙加命令的方案，会形成两个串口所有者；照搬原厂页面与多个任务则超范围。当前只移走原有模式初始化，复用现有驱动、输入任务和电源流程。
 
@@ -91,7 +96,7 @@
 
 ## 复现命令
 
-配置采用总规则 §5（`INK_WERROR=ON`），依赖均从 `$INK_DEPS` 只读复用，所有构建/测试使用 `taskpolicy -c utility`；普通/ASan 仅目录与 `INK_SANITIZE=ON` 不同。
+配置采用总规则 §5（`INK_WERROR=ON`），所有构建/测试使用 `taskpolicy -c utility`；内存检查版保持相同编译选项，只换目录并加 `INK_SANITIZE=ON`。其 SDL2/ImGui 也从 `$INK_DEPS/build/_deps/` 只读复用，已核对与普通版来源提交相同。
 
 ```bash
 taskpolicy -c utility cmake --build build -j2
@@ -103,4 +108,9 @@ taskpolicy -c utility python3 ports/esp32s31/tests/bt_negative.py build
 taskpolicy -c utility python3 tools/capabilities.py --check
 taskpolicy -c utility python3 ../../tools/gcccheck.py build ports/esp32s31/hal_bt_s31.c ports/esp32s31/hal_audio_s31.c ports/esp32s31/hal_cellular_s31.c ports/esp32s31/tests/audio.c ports/esp32s31/tests/cell.c
 taskpolicy -c utility python3 ../../tools/gcccheck.py build-s31 ports/esp32s31/hal_bt_s31.c ports/esp32s31/hal_audio_s31.c ports/esp32s31/hal_cellular_s31.c ports/esp32s31/hal_input_s31.c ports/esp32s31/hal_power_s31.c ports/esp32s31/hal_uart_s31.c
+taskpolicy -c utility cmake -S ports/esp32s31/tests -B build-s31-host -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+taskpolicy -c utility cmake --build build-s31-host -j2
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-s31-host --output-on-failure -j2
+taskpolicy -c utility python3 ports/esp32s31/tests/audio_negative.py build-s31-host
+# 端口内存版：上述目录换 build-s31-host-asan，配置加 -DINK_SANITIZE=ON。
 ```
