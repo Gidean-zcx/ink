@@ -71,7 +71,9 @@
 | U10 TransferUsbOn | 【实现·码】`system/ui/shell/transfer_pages.c:105–116` | 无页头的U盘占用状态用“结束”，不如“安全断开”明确，R05/R16 | 中 | C11“存储卡正借给电脑”，C01“结束传输”，说明先在电脑弹出；不新增USB机制 |
 | U11 TransferUsbFail | 【实现·码】`system/ui/shell/transfer_pages.c:105–126` | 页标题退化为“文件”，读卡错、没卡、数据线问题混述，R01 | 中 | C10“传文件失败”，C11按真实错误给插卡／换线／重试，不自动格式化 |
 | U12 Import 入口 | 【实现·码】`system/apps/files/files.c:375–382`、`apps/reader/reader.c:166–196`；全树查无独立Import注册页 | “选书／AI找书／传入”没有规范 §7.8的统一入口，R05 | 高 | 先用现有选文件/传输能力组织清楚入口；新页面和原子导航能力需主会话另定，不冒称已有 |
-| U13 ImportFind／ImportJob／ImportFail | 【实现·码】本次 `rg -n 'ImportFind|ImportJob|ImportFail' system/ui system/apps apps` 无匹配 | 三个设计状态未见独立实现；传文件成功不等于“可以读了”，R05/R09 | 高 | 对现有任务结果展示真实阶段和失败原因；不要捏造找书结果或为这次外观修复新增导入服务。三状态均为功能缺口 |
+| U13 ImportFind 找书 | 【实现·码】本次 `rg -n 'ImportFind|ImportJob|ImportFail' system/ui system/apps apps` 无匹配 | 未见独立找书状态，R05；不能拿通用AI答案代替找到可用的书 | 高 | 显示真实来源与可获得性；没有结果就直说，不能捏造找书成功。新导入能力另定 |
+| U14 ImportJob 进度 | 【实现·码】同一全树查询无匹配；现有任务卡 `system/ui/shell/activity_card.c:102–184` | 未见规范四阶段导入页；传文件成功不等于可读，R05/R09 | 高 | 如实合成已有任务阶段，不新增服务或假进度；暂不能关联时标明未能打开 |
+| U15 ImportFail 失败 | 【实现·码】同一全树查询无匹配；现有打开错误 `apps/reader/reader.c:520–524` | 只有打开失败，没有设计中的准备/导入错误指引，R01/R05 | 高 | C11按真实原因给重新选择或返回，保留原文件；不自动重试或转换 |
 
 ## 更新与回退
 
@@ -105,3 +107,7 @@
 | Z07 来电／闹钟打断卡 | 【实现·码】`system/ui/shell/interrupt_card.c:65–145` | 全屏打断的恢复去向需明确，R12/R10 | 中 | 原位恢复前显示哪个活动被暂停；不新增恢复队列，按原服务回执呈现 |
 
 `ImportFind`、`ImportJob`、`ImportFail` 分别已给出“无实现”结论；它们不是被省略或默认不做。`StateKit/Stress*` 是规范中的跨页状态样例，本报告以具体空、等、错、大字号、长文、长确认行覆盖；不把没有活动注册的示意画板当可操作页面。
+
+| 编号／页面状态 | 现状与证据 | 差距及参照 | 严重度 | 建议改法 |
+| --- | --- | --- | --- | --- |
+| Z08 书架AI页面快照 | 【实现·码】`apps/reader/reader.c:196`未设snapshot；`system/ui/ui_task.c:388–392`在无快照且非输入时返回空 | G-002/R-061要求每页可读；已有列书能力不等于当前书架页快照 | 高 | 为现有书架补当前书目/分页/可点动作的语义快照，沿用原能力，不另造AI适配层；详见[架构审视](ARCHITECTURE.md) |

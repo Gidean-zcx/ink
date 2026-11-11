@@ -18,7 +18,7 @@
 | S10 通知空态 | 【实现·码】`system/ui/shell/navigation.c:1531–1615`：列表分页和页脚动作 | 空列表仍应避免“全部清除”等可用外观，R01 | 低 | C11“还没有通知”，无可操作记录时隐藏／禁用批量动作，保留返回 |
 | S11 锁屏保留页 LockPage | 【实现·图】`ui-scene-LockPage_clean-scene.png`：正文底部遮条，紧急呼叫与相机外观可点 | 规范锁定时触摸无效；R01 可点外观与实际响应矛盾 | 中 | 保留电源／AI键唤醒规则；先写清“按键唤醒后可拍照／紧急呼叫”，未唤醒热区不画按钮外观；C11 |
 | S12 时钟锁屏 Lock | 【实现·图】`ui-scene-Lock_clean-scene.png`：日期时钟、0条通知胶囊 | 0条仍像可点通知；R06 空态不应伪装可操作对象 | 低 | 0条用普通文字；唤醒后的紧急入口保留，C02/C11 |
-| S13 壁纸锁屏 LockImage | 【实现·码】`system/ui/shell/wallpaper.c:1–67`、`settings_family.c:195–215` | 图像可能削弱锁定／唤醒提示的对比，不能凭无图说已合格，R01 | 中 | 固定白底状态条，字31、边3，C11；补深浅壁纸截图核对，仍不让锁定时直接操作 |
+| S13 壁纸锁屏 LockImage | 【实现·码】`system/ui/lock_mark.c:77–97`、`system/ui/shell/wallpaper.c:1–67` | 图像模式只画壁纸和相机/紧急按钮，没有普通锁屏的唤醒说明；不能凭无图说对比已合格，R01 | 中 | 固定白底状态条，字31、边3，C11；补深浅壁纸截图核对，仍不让锁定时直接操作 |
 | S14 正在播放 MainPlaying | 【实现·图】`activity-card_clean-MainPlaying.png`：书名和暂停替代继续读 | R07 媒体卡应直接暂停和回内容；本图成立 | 低 | 保持原位，标题长时C02截断；暂停热区C01，不新增面板 |
 | S15 播放中的控制中心 | 【实现·图】`activity-card_clean-ControlPlaying.png` | 媒体主动作可辨；下方按钮较密，R01 | 低 | 维持共用活动卡，和其余行留14；C02/C09 |
 | S16 播放锁屏 LockPlaying | 【实现·图】`activity-card_clean-LockPlaying.png`：画着暂停、Dock仍露出 | 需唤醒才能暂停，暂停外观容易误导；与 S11 同一根因 | 中 | 锁定阶段用状态图标代替可按外观；唤醒后复用原活动卡；C11 |
@@ -29,15 +29,15 @@
 | S21 密码 Pin | 【实现·图】`ui-scene-Pin_clean-scene.png`；【实现·码】`member_pages.c:152–176` | “确定”在键盘上方；四空圈与4～8位规则不匹配，R02 数量和输入应一致 | 中 | C06显示4～8位提示，C12稳定数字网格；确认与取消同一底栏，禁止AI代输 |
 | S22 密码错误 PinWrong | 【实现·图】`ui-scene-PinWrong_clean-scene.png`：原位错误、忘记密码 | 反馈明确；仍受 S21 布局影响，R02 | 低 | 保留就地错误及原键位；错误说明31/43，不让表单跳位 |
 | S23 等待 PinWait | 【实现·码】`system/ui/shell/member_pages.c:35–40,71–76,164–181` | 等待说明存在，但键盘和继续操作须明确不可用，R02 | 中 | C06写“还需等待×秒”，不可用键不绑动作；无需整屏倒数刷新，重试时才恢复键盘 |
-| S24 设置／修改密码 PinSet | 【实现·码】`system/ui/shell/member_pages.c:158–181,190–245` | 原密码、新密码与再次输入需清楚区分；R02 持续字段标签 | 中 | C06依次写明原因和阶段，保留固定数字键位；不展示给AI |
-| S25 忘记密码 PinForgot | 【实现·码】`system/ui/shell/member_pages.c:140–150`：请家长验证 | 规范说手机上重置，实现是本机家长验证；大人本人无另一个家长时恢复路径需核对 | 高 | 如实写当前可用方法与所需角色；无可用验证者时提供已有家庭服务器重置说明；不自定新认证机制 |
+| S24 设置／修改密码 PinSet | 【实现·码】`system/ui/shell/member_pages.c:158–181,192–220` | 原密码/新密码只靠文案切换，未见再次核对新密码；R02 持续字段标签 | 中 | C06依次写明原因和阶段，保留固定数字键位；不展示给AI |
+| S25 忘记密码 PinForgot | 【实现·码】`system/ui/shell/member_pages.c:140–150,192–200`：请家长验证 | 验证后仍显示本机不能重置、需在家庭服务器处理；没有本机完成的重置路径 | 高 | 如实写当前可用方法与所需角色；无可用验证者时提供已有家庭服务器重置说明；不自定新认证机制 |
 | S26 换人 MemberSwitch | 【实现·码】`system/ui/shell/member_pages.c:128–135`：通用换人说明 | 规范只在有进行中任务时说明“收好了什么”；当前文案不列实际对象 | 中 | 使用现有任务结果填真实“暂停了××／草稿已保存”；无需任务时直接换人，遵守D-105 |
 | S27 电源菜单 PowerMenu | 【实现·图】`ui-scene-PowerMenu_clean-scene.png`：关机重启锁屏＋两个日志动作 | 日志按钮边框相贴，诊断和日常电源混为一组；R01 空间和主次不清 | 中 | 电源三项保留，诊断另组留29，按钮间19；日志导出显示目的地和结果，C01/C09 |
 | S28 关机 PowerOff | 【实现·图】`ui-scene-PowerOff_clean-scene.png`：已关机、开机提示、阅读位置 | 语义正确；长书名大字号会换行，R05 位置需可读 | 低 | C11保留白底“已关机”，书名允许两行并预留高度 |
-| S29 空电关机 PowerOffEmpty | 【实现·码】`system/ui/shell/power_pages.c:90–137` | 普通关机和需先充电要有区别，R01 状态需对应下一步 | 中 | C11主说明“请先充电”，保留不会自动恢复播放／对话的事实，不加可点外观 |
+| S29 空电关机 PowerOffEmpty | 【实现·码】`system/ui/shell/power_pages.c:139–160` | 已区分是否存好；“充上电就回到这里”与底部“充上电再开机”语义不一致，R01 | 中 | C11统一“请先充电，再开机”，保存失败如实保留；不加可点外观 |
 | S30 低电 BatteryLow | 【实现·码】`system/ui/shell/power_pages.c:62–89` | 打断需告知剩余电量和继续方式，R01 | 低 | 保留百分比与“继续用”，C01；不把低电提示加成常驻机制 |
 | S31 保存关机 BatterySaving | 【实现·码】`system/ui/shell/power_pages.c:90–137` | 关键是“正在保存”与“已关机”不能混写，R01 | 中 | C11使用真实阶段，保存结束才显示关机；不承诺未验证的剩余时间 |
-| S32 充电 Charging | 【实现·码】`system/ui/shell/power_pages.c:138–166` | 状态可保持安静，不能把非触控关机画面画成可操作页 | 低 | 普通文字电量＋充电图标；沿用既有更新节奏，不增加频繁刷新 |
+| S32 充电 Charging | 【实现·码】`system/ui/shell/power_pages.c:101–117` | 环形电量和唤醒说明清楚；需维持非触控状态语义，R01 | 低 | 普通文字电量＋静态进度；沿用既有更新节奏，不增加频繁刷新 |
 
 ## 设置的每一页及选择状态
 
@@ -59,7 +59,7 @@
 | T14 SetBluetooth 空／扫描 | 【实现·图】`ui-borders_19_clean-settings-shell.bluetooth.png` | “搜索耳机”可理解，但发现／已配对／连接中需分组而非只留空白；R04 | 中 | C02两组列表、C11扫描进度；没有设备给一次手动重扫 |
 | T15 SetBluetooth 已配对／忘记 | 【实现·码】`system/ui/shell/bluetooth_page.c:84–157` | 忘记功能只靠页尾提示长按发现，R01 隐藏常用操作难找 | 中 | C02尾侧详情入口含“忘记”；不重复增加确认卡，权限仍按现有策略 |
 | T16 SetVoice 唤醒／打断 | 【实现·图】`ui-scene-SetVoice_clean-scene.png`：不支持叫名字，顶部仍列使用时／一直／关 | R04 不可用功能仍呈可切换外观；容易误以为设置成功 | 高 | 不支持时保留原因文字并禁用对应控件；支持时C07和C08；无硬件参数建议 |
-| T17 SetVoice 其余页 | 【实现·码】`system/ui/shell/settings_pages.c:12–27,248–267`：语音选项、速度等 | 可选声音用点按循环，R04 | 中 | C13明确候选项；试读和音量走既有能力，不新增音频机制 |
+| T17 SetVoice 其余页 | 【实现·码】`system/ui/shell/settings_pages.c:20–26,100–105`：叫名字选项、AI记录和打字接话 | 可用唤醒名用点按循环，AI记录与输入辅助分布在后页，R04 | 中 | C13明确唤醒名候选；AI记录和打字接话分别分组，保留现有能力 |
 | T18 SetStorage | 【实现·图】`ui-borders_21_clean-settings-shell.storage.png` | 多项“正在整理”可误认为同一无期限后台任务，清理动作也像读数；R01 | 中 | C02读数分别显示读取／失败；清理写清对象与可回收量，完成原位替换，不删个人文件 |
 | T19 Backup状态入口 | 【实现·码】`system/ui/shell/settings_pages.c:292–314` | 已区分等服务器回执和真正已备份，符合R09的状态可追溯 | 低 | 保留真实状态，失败点入对应页；不要将“等待回执”改成成功 |
 | T20 SetAbout 首屏 | 【实现·图】`ui-borders_22_clean-settings-shell.about.png` | 语言点整行立即换下一种，用户无法先看可选项，R04 | 中 | C02语言选择单页，两种语言并列名；原设置只显示当前值 |
@@ -68,7 +68,7 @@
 | T23 Licenses | 【实现·图】`ui-borders_25_clean-settings-shell.licenses.png` | 多页列表合理，哈希串比用户需要的版本更显眼，R04 | 低 | C02名称＋版本／许可证，哈希留详情；全文仍可读 |
 | T24 LicenseText | 【实现·码】`system/ui/shell/settings_pages.c:391–428` | 长英文按片段分页，需保证明确页码和回列表，R02文本视图 | 低 | 保留C09分页，不连续滚动；前后文按完整行断开 |
 | T25 SetPrivacy 第一／后页 | 【实现·图】`ui-scene-SetPrivacy_clean-scene.png`、`ui-scene-big-SetPrivacy_clean-scene.png` | 已诚实披露未知保存期限；孩子记录删除入口在后页，不宜隐藏行动项，R09 | 中 | C02先列可操作“查看记录”，下面分组短文；不能虚构期限或已开放的删除能力 |
-| T26 SetTime | 【实现·图】`ui-borders_27_clean-settings-shell.time.png` | 自动时间开启仍露可执行手动设置，自动时区与手动状态混排，R04 | 中 | C08自动项下显示来源/结果；手动入口禁用并说明，或本人进入时明确切为手动 |
+| T26 SetTime | 【实现·图】`ui-borders_27_clean-settings-shell.time.png`；【实现·码】`system/ui/shell/time_settings.c:90–110`：自动开启时手动按钮已禁用 | 黑白下禁用外观和普通按钮接近，未说明为何不能按；并非自动开着还能手动改的功能错误，R04 | 中 | C08自动项下显示来源/结果，手动入口旁写“先关闭自动设置”；维持已有禁用判断 |
 | T27 SetTimeEdit | 【实现·图】`ui-borders_28_clean-settings-shell.time_edit.png` | 年月日时分都只能±，设远日期点击很多，R10日期选择 | 高 | C13点字段直接输入／明确选择；保留±微调，选好后一底部主动作，输入组件沿用已有接口 |
 | T28 SetTimeZones | 【实现·图】`ui-borders_29_clean-settings-shell.time_zones.png` | 城市跨3页，无搜索且UTC占一个城市行，R10 | 中 | C02城市＋UTC偏移＋勾；有限列表先分地区，不先引入搜索服务；支持现有查询时才用C05 |
 | T29 SetReturn | 【实现·图】`ui-borders_30_clean-settings-shell.return.png` | 标题很长、“已选择”孤立在按钮下方，R04 单选列表 | 中 | 页头“重新验证”，正文写原因；C02单选勾，1/2/5/15分钟同一列表 |
@@ -78,10 +78,10 @@
 | T33 RuntimeRecords | 【实现·图】`ui-borders_37_clean-settings-shell.runtime_records.png` | 页面明确不能查看或删除，却从列表像正常能力进入；R09不可用需在入口说明 | 中 | C11诚实说明当前不可用和返回；上级标状态，不虚画列表；后端能力缺口另列 |
 | T34 AiMemory | 【实现·图】`ui-borders_38_clean-settings-shell.ai_memory.png` | 无法查看和忘掉，和规范 §7.11有差距，R09 | 高 | 入口标不可用；后续接真实记忆能力才提供C02记录和删除，不把空态当完成 |
 | T35 家人 SetMembers | 【实现·图】`ui-borders_31_clean-settings-shell.family.png` | 选人、加人和改密码同样卡片；R04 Accounts 按对象及管理分组 | 中 | 家人C02列表，管理另组；切换和编辑分清动词，C10/C09 |
-| T36 加家人表单 | 【实现·码】`system/ui/shell/settings_family.c:239–278` | 名称和角色要持续可辨，不能让角色整行循环，R02/R04 | 中 | C03姓名＋C07大人/孩子，C09添加；权限改变照本人验证，输入归已有任务 |
+| T36 加家人表单 | 【实现·码】`system/ui/shell/settings_family.c:318–348` | 名称和角色要持续可辨，不能让角色整行循环，R02/R04 | 中 | C03姓名＋C07大人/孩子，C09添加；权限改变照本人验证，输入归已有任务 |
 | T37 SetKid 选择孩子／概要 | 【实现·图】`ui-borders_32_clean-settings-shell.kid_settings.png` | 时长和音量上限点击就改、只给数字60，R04 | 高 | C02显示孩子名、每日时长、音量百分比；点入C13选择，不靠循环预设 |
 | T38 SetKidApps | 【实现·图】`ui-borders_33_clean-settings-family.kid_apps.png` | 能用/禁用是文字行；电话例外没有显式锁定语义，R04 | 中 | C08开关；电话“始终可用”只读；禁止项不在孩子应用页出现 |
-| T39 SetKidPeriods | 【实现·图】`ui-borders_34_clean-settings-family.kid_periods.png`；【实现·码】`settings_family.c:165–191` | 一个时段的开始/结束/启用分多页，编辑还需点按轮换，R10 | 高 | 一页C03/C13开始结束＋C08启用；列出“21:00—次日07:00”避免跨日误解，保存仍走现有能力 |
+| T39 SetKidPeriods | 【实现·图】`ui-borders_34_clean-settings-family.kid_periods.png`；【实现·码】`system/ui/shell/settings_family.c:195–215` | 一个时段的时间、启用和星期分多页，时间点击每次加30分钟，R10 | 高 | 一页C03/C13开始结束＋C08启用；列出“21:00—次日07:00”避免跨日误解，保存仍走现有能力 |
 
 ## 键盘和所有输入状态
 
@@ -129,4 +129,4 @@
 | M17 ContactEdit 新建 | 【实现·图】`i18n-apps_apps_zh_clean-ContactEdit-new.png` | 新建也写“编辑联系人”，只有姓名和号码、无备注；号码用普通文本输入，R14 | 高 | 标题新建／编辑分清，C03姓名、电话类型号码、备注C04；下一项顺序明确 |
 | M18 ContactEdit 已有 | 【实现·图】`i18n-apps_apps_zh_clean-ContactEdit.png` | “选择这个号码／删除／保存”三条大按钮，详情和编辑混合，R14 | 中 | 详情与编辑分离；编辑页C09保存，删除置低优先组；有格式号码由现有通信规整处处理 |
 
-其余应用、确认卡、首次开机、备份传输和 AI 记录继续补录。这里的严重度是基线问题，不预判其他分支正在做的修复已成功。
+其余页面见 [应用](PAGES-APPS.md) 与 [AI和系统流程](PAGES-SYSTEM.md)，表单覆盖见 [FORMS](FORMS.md)。这里的严重度是基线问题，不预判其他分支正在做的修复已成功。
