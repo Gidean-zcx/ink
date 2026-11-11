@@ -216,6 +216,9 @@ static void english(void) {
     CHECK(has("Simple Clock") && strstr(snapshot, "Show to-dos"), "picker translates faces and widgets"); frame("picker-en");
 }
 static void privacy_and_reading(void) {
+    /* Page five was saved at the first text size; at another size the reader keeps the same first sentence on top
+     * and numbers the page by the new pagination, so resume at the size it was read in. */
+    setting("display.font_size", 1);
     setting("display.lock_style", INK_LOCK_STANDBY); on_ui(render); quiet();
     CHECK(WAIT_FOR(has("第 5 页"), 5000), "adult reading widget is ready");
     CHECK(ink_member_switch("kid") == 0, "switch to child while locked"); quiet();

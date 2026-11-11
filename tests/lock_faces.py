@@ -14,7 +14,7 @@ a = p.parse_args()
 build = a.build.resolve()
 binary = a.binary.resolve() if a.binary else build / 'sim-lock-faces'
 selected = os.environ.get('INK_LOCK_FACES_CASE')
-for case in ([selected] if selected is not None else ['picker', 'tick', '']):
+for case in ([selected] if selected is not None else ['picker', 'tick', 'auto', '']):
     area = build / 'test-out' / ('lock-faces-' + binary.name + ('-' + case if case else ''))
     shutil.rmtree(area, ignore_errors=True)
     area.mkdir(parents=True)

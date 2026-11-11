@@ -194,9 +194,9 @@ static void publish_minute(void) {
     ink_state_set_int(T.h_minute, tm.hour * 60 + tm.min);
 }
 
-static void minute_cb(void *arg) { /* timer task; awake only: while locked nobody looks, and it would cut the sleep */
+static void minute_cb(void *arg) { /* timer task; also while locked: the lock faces show the time and redraw only what changed */
     (void)arg;
-    if (ink_power_state() == INK_PWR_LOCKED || !ink_time_valid()) return;
+    if (!ink_time_valid()) return;
     publish_minute();
     int64_t wall = osal_wall_us();
     ink_svc_at(&T.minute_at, osal_now_us() + (uint64_t)(60000000 - wall % 60000000), minute_cb, NULL);
@@ -205,8 +205,8 @@ static void minute_cb(void *arg) { /* timer task; awake only: while locked nobod
 static void on_power(void *ctx, ink_power_state_t from, ink_power_state_t to, uint64_t cause_us) { /* power task */
     (void)ctx;
     (void)cause_us;
-    if (to == INK_PWR_LOCKED) ink_svc_cancel(&T.minute_at);
-    else if (from == INK_PWR_LOCKED) minute_cb(NULL);
+    (void)to;
+    if (from == INK_PWR_LOCKED) minute_cb(NULL); /* fresh at once after the unlock; arming again moves the deadline */
 }
 
 /* ------------------------------------------------------------ when it goes off next */
