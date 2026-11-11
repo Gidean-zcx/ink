@@ -1,5 +1,5 @@
 /* LVGL keyboard maps feed the existing text capabilities; the service owns all edits. */
-/* ui-scale-runtime: dimension area.y1,key_height,candidates_height,keyboard_height,make_board,height Theme-derived keyboard geometry scales with the current text line. */
+/* ui-scale-runtime: dimension area.y1,key_height,candidates_height,keyboard_height,keyboard_height_for,make_board,height Theme-derived keyboard geometry scales with the current text line. */
 #include <stdio.h>
 #include <string.h>
 

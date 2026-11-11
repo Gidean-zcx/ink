@@ -386,7 +386,8 @@ void ink_textfield_style(lv_obj_t *obj, ink_textfield_kind_t kind, const char *l
     lv_textarea_set_one_line(f->area, f->kind != INK_FIELD_BODY);
     int line = ink_ui_line_height(INK_FONT_FIELD);
     int height = ink_textfield_height(kind) - ink_ui_line_height(INK_FONT_FIELD_LABEL) - INK_FIELD_LABEL_GAP;
-    if (f->cfg.draft_page) height = body_height(obj, f->cfg.type);
+    ink_text_type_t type = f->cfg.type;
+    if (f->cfg.draft_page) height = body_height(obj, type);
     lv_obj_set_height(f->area, ink_ui_px(height));
     lv_obj_set_style_pad_ver(f->area, ink_ui_px(f->kind == INK_FIELD_BODY ? INK_FIELD_PAD : (height - line) / 2 - INK_FIELD_STROKE), 0);
     lv_obj_set_style_pad_right(f->area, ink_ui_px(f->cfg.draft_page || f->kind == INK_FIELD_PASSWORD ? INK_FIELD_PAD : INK_FIELD_CLEAR + INK_FIELD_PAD), 0);
