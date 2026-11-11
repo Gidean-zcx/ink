@@ -1,6 +1,6 @@
 # port-camera-1 执行报告
 
-基线：`aef4331de2f78e5cbfbc7b087d8b81ce1cacde2d`。查阅：2026-11-11。只编译、跑宿主机测试，未连接设备、未发布。
+基线：`aef4331de2f78e5cbfbc7b087d8b81ce1cacde2d`。查阅：2026-11-11。只编译、跑宿主机测试，未连接设备、未发布。产品实现提交：`42578edc`；后续提交只含测试和报告。
 
 ## 验收表
 
@@ -9,9 +9,9 @@
 | 1 | 【实测】相机定向测试通过 | 实际 C HAL、实际板级/TCA 驱动，假的 SCCB/DVP；成功、缺席、错误 PID、STOP 分读回退、丢 8 帧保留第 9 帧且不覆盖、超时 -4、掉电/复位 -5、短帧 -6、失败清理及共享线 | `ctest --test-dir build -R '^unit-s31-camera$' --output-on-failure` |
 | 1 反向 | 【实测】三种错误全部被抓住 | 不丢预热帧、复位后 P12 未恢复、刷屏中改 P05：各修改一处，都编译成功并因断言失败退出（-6） | `python3 ports/esp32s31/tests/camera_negative.py build` |
 | 2 普通版 | 【实测】未全绿：只有基线文档失败 | 原话：`99% tests passed, 1 tests failed out of 372`，896.11 秒；368 通过、3 跳过、1 失败。用依赖目录中锁文件相同的中枢环境补跑 3 项及其 fixture，4/4 通过（59.56 秒） | 下方构建命令与中枢补跑命令 |
-| 2 内存检查 | ASan/UBSan 进行中；普通 S31 宿主机已通过 | `100% tests passed out of 30`，8.86 秒，包含真实显示门、闪存持门、相机 busy | 下方独立端口命令 |
+| 2 内存检查 | 【实测】内存场景通过；全量仍有同一基线文档失败 | ASan/UBSan 原话：`99% tests passed, 1 tests failed out of 372`，1482.69 秒；371 通过、1 失败、无跳过。独立 S31 宿主机普通版 30/30（8.86 秒）、ASan/UBSan 30/30（14.49 秒），包含真实显示门、闪存持门、相机 busy | 下方内存检查及独立端口命令 |
 | 2 S31 | 【实测】编译成功 | ESP-IDF `fff9895c82d7`；编译器 warning/error 均 0；IDF image 3308768 字节，实际 `.bin` 3309168 字节，小于 5 MiB 槽。静态 DIRAM 147062 字节；动态 DMA/任务另计 | `INK_S31_LIGHT_SLEEP=OFF taskpolicy -c utility bash ports/esp32s31/build.sh` |
-| 2 gcccheck / UI / 隐私 | 【实测】前两项通过；最终隐私扫描待提交后运行 | `gcccheck: 4 compiled, 0 with findings`；`ui-scale` 通过 | 下方命令 |
+| 2 gcccheck / UI / 隐私 | 【实测】通过 | `gcccheck: 4 compiled, 0 with findings`；`ui-scale: 51 files, 0 violations`；隐私扫描 0 命中（grep 退出 1） | 下方命令及收尾检查 |
 | 3 | 【实测】中英文说明页通过 | 启动时模拟无相机，仍可打开 Camera；说明、关闭按钮和 AI 快照一致；实体点按关闭可返回；截图已目视检查无裁切、无遮挡 | `INK_KEEP_EVIDENCE=1 python3 tests/port_camera/run.py build` |
 | 4 | 【实现】已列真机首轮步骤 | 见“上机先核对清单”；未把宿主机结果写成真机验证 | 主会话操作 |
 
@@ -62,7 +62,9 @@ GPIO5 是触摸中断，GPIO2 是 TCA/加速度计共享中断，相机不重新
 ## 没做到的
 
 - 真机 SCCB、光学成像、触摸与刷屏恢复未测试，本任务禁止接设备。
-- 普通版全量未全绿：共享能力目录的基线失败不能在本任务里修改；内存检查结果仍在收集中。
+- 普通版及 ASan/UBSan 全量均因共享能力目录的同一基线问题未全绿；按任务规则没有修改该目录。
+- 调用者缓冲直接 DMA 未做：采用原厂对齐 PSRAM 帧，停止 DMA 后复制，原因见“和设计不一致的”。
+- 未在 Linux 上运行；本机 macOS 的编译和内存检查，加指定 GCC 检查，不等同于 Linux CI 运行结果。
 
 ## 改过的已有测试
 
@@ -116,7 +118,7 @@ taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/python tests/port_camera/ne
 taskpolicy -c utility python3 ../../tools/gcccheck.py build system/apps/camera/camera.c system/services/camera/camera_service.c ports/esp32s31/tests/camera.c tests/port_camera/absent.c
 ```
 
-截图留在忽略的 `build/port-camera-absent-*`，不提交构建产物；中英文各为 `snap-camera-absent-zh.png`、`snap-camera-absent-en.png`。
+截图留在忽略的构建目录，不提交构建产物。本次目视证据：[中文](../../../build/port-camera-evidence/snap-camera-absent-zh.png)、[英文](../../../build/port-camera-evidence/snap-camera-absent-en.png)。重跑时 `INK_KEEP_EVIDENCE=1` 会保留并打印 `build/port-camera-absent-*`。
 
 普通版初轮未指定中枢环境，3 项明确跳过；补跑使用：
 
@@ -130,4 +132,13 @@ export INK_UPSTREAM="$INK_DEPS/../ink-hw/upstream/Metalio-E-INK4-Plus"
 INK_S31_LIGHT_SLEEP=OFF taskpolicy -c utility bash ports/esp32s31/build.sh
 ```
 
+P12 的反向对照只在拍摄清理时留低，启动探测不变；因此失败落在拍照后的共享线断言。v2.0.77 本来不脉冲 P12，没有可删除的触摸重新初始化步骤。
+
 原厂寄存器表逆回两处 C 类型改写后，逐字节等于 V；SHA-256 为 NOTICE 中的 `ee2e88…37afd`。说明页反向恢复旧 `needs={camera.capture}` 后，编译成功、测试出现 10 个失败，确认会抓住“无相机时进不了说明页”。
+
+内存检查使用同样的宿主机配置参数，把目录改为 `build-asan` 并增加 `-DINK_SANITIZE=ON`，然后同样 `cmake --build … -j2`、`ctest … --output-on-failure -j2`。独立端口检查另把 `build-s31-host` 改为 `build-s31-host-asan`，也只增加 `-DINK_SANITIZE=ON`。所有构建和测试均用 utility 优先级，未同时跑两轮构建或全量测试。
+
+## 收尾检查
+
+- 【实测】`git diff --check`、报告文件链接检查、新增文件大小检查通过；没有设计稿、镜像或构建缓存进入提交。
+- 【实测】按[总规则第 6 节](../codex-rules.md)的隐私命令，用本报告基线扫描到 HEAD；0 命中，grep 退出 1 表示没有匹配。

@@ -17,7 +17,7 @@ resource.setrlimit(resource.RLIMIT_CORE, (0, 0))
 mutations = [
     ('keep-warmup', '== INK_CAM_WARMUP + 1', '== 1'),
     ('reset-without-touch-restore', 'gpio_reset_pin(INK_CAM_MCLK);',
-     'gpio_reset_pin(INK_CAM_MCLK); metalio_board_set(1, MB_P1_SHARED_RST, 0);'),
+     'gpio_reset_pin(INK_CAM_MCLK); if (S.frame) metalio_board_set(1, MB_P1_SHARED_RST, 0);'),
     ('p05-during-waveform', 'if (ink_s31_display_acquire(timeout_ms)) {',
      'metalio_board_set(0, MB_P0_CAM_SCR, 0);\n    if (ink_s31_display_acquire(timeout_ms)) {'),
 ]
