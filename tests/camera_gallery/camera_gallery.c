@@ -193,7 +193,7 @@ static void member_isolation(void) {
     CHECK(ink_member_switch("kid") == 0, "enter the synthetic child's space"); quiet();
     ok("app.open", "{\"id\":\"gallery\"}"); delay_ms(500); quiet(); on_ui(read_snapshot);
     CHECK(strstr(snapshot, "\"total\":0") && !strstr(snapshot, saved_path), "child gallery contains no adult media or names");
-    char args[48]; snprintf(args, sizeof args, "{\"id\":%u}", saved_id);
+    char args[48]; snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)saved_id);
     CHECK(AI("photo.open", args) && g_rc.status == INK_RC_REJECTED, "child cannot open an adult photo by known id");
     CHECK(!strcmp(ink_ui_page_name(), "Gallery"), "rejected cross-member photo never opens a viewer");
     CHECK(AI("file.thumb", args) && g_rc.status == INK_RC_REJECTED, "file.thumb also enforces child isolation");
@@ -239,7 +239,7 @@ static void run(void *arg) {
         last_gray = strstr(last.path, "/7.png") ? 255 : 0; on_ui(inspect_last_thumb);
         ok("gallery.prev", NULL); grid_ready(); on_ui(first_slot); tap(point.x, point.y); wait_photo(); on_ui(inspect_photo); capture("Photo");
         press_cap("shell.back"); grid_ready();
-        char args[48]; snprintf(args, sizeof args, "{\"id\":%u}", saved_id); ok("photo.open", args); wait_photo(); on_ui(inspect_photo);
+        char args[48]; snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)saved_id); ok("photo.open", args); wait_photo(); on_ui(inspect_photo);
         CHECK(AI("file.delete", G.delete_args) && g_rc.status == INK_RC_PENDING_CONFIRMATION, "AI deletion uses the existing irreversible-delete confirmation");
         unsigned token = 0; sscanf(g_rc.object, "confirm:%u", &token);
         CHECK(ink_confirm_decide(token, true, INK_SRC_AI) != 0, "AI cannot approve its own photo deletion");

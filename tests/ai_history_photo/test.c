@@ -135,6 +135,8 @@ static void photo(void) {
     CHECK(WAIT_FOR(!AI.asking && AI.answer_len, 20000), "photo question answered"); capture("AiPhotoAnswer");
     CHECK(sim_metric_value("hub.photo.invalid") == 0, "photo is within dimension byte and encoding limits");
     on_ui(oversized_photo); CHECK(WAIT_FOR(sim_metric_value("hub.photo.invalid") == 1 && !AI.asking, 12000), "simulated hub rejects an oversized attachment");
+    CHECK(ink_fs_write_atomic("/me/photos/synthetic.png", white_png, sizeof white_png) == 0, "replace the displayed photo");
+    CHECK(AI("photo.ask", NULL) && g_rc.status == INK_RC_STALE, "a changed displayed photo is rejected before thumbnail preparation");
     CHECK(ink_member_switch("kid") == 0, "child enters own space"); quiet();
     CHECK(AI("photo.open", args) && g_rc.status != INK_RC_DONE, "child cannot attach adult photo by opening its id");
 }

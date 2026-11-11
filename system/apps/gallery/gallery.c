@@ -33,12 +33,12 @@ static const ink_activity_t GALLERY, PHOTO;
 typedef struct { uint32_t epoch, generation, photo, revision; } photo_question_t;
 static struct {
     ink_ui_list_t *list; ink_ui_list_position_t position;
-    uint32_t ids[INK_FS_INDEX_MAX], epoch, photo;
+    uint32_t ids[INK_FS_INDEX_MAX], epoch, photo, revision;
     size_t count; lv_obj_t *slots[9], *box, *status, *trash;
     char objects[9][32], args[9][48], path[INK_FS_PATH_MAX], delete_args[2 * INK_FS_PATH_MAX + 32], message[96];
     ink_ui_action_spec_t photo_actions[3];
 } G INK_PSRAM_BSS;
-typedef struct { ink_exec_job_t job; uint32_t epoch, generation, id, ids[INK_FS_INDEX_MAX]; size_t count; int err; ink_image_t im; char path[INK_FS_PATH_MAX]; } load_t;
+typedef struct { ink_exec_job_t job; uint32_t epoch, generation, id, revision, ids[INK_FS_INDEX_MAX]; size_t count; int err; ink_image_t im; char path[INK_FS_PATH_MAX]; } load_t;
 typedef struct { uint32_t epoch, generation, id; unsigned slot; } thumb_t;
 static void thumb_ready(void *ctx, const ink_receipt_t *rc) {
     thumb_t *t = ctx;
@@ -82,6 +82,7 @@ static void loaded(void *arg) {
         if (!p->id && G.list) {
             G.count = p->count; memcpy(G.ids, p->ids, p->count * sizeof *p->ids); ink_ui_list_refresh(G.list, p->err ? 0 : p->count);
         } else if (p->id == G.photo && G.box && !p->err) {
+            G.revision = p->revision;
             snprintf(G.path, sizeof G.path, "%s", p->path); ink_photo_image(G.box, &p->im);
             ink_jw_t w; ink_jw_init(&w, G.delete_args, sizeof G.delete_args); ink_jw_raw(&w, "{\"path\":"); ink_jw_str(&w, p->path); ink_jw_raw(&w, "}");
             G.photo_actions[0].enabled = true; G.photo_actions[0].args_json = G.delete_args;
@@ -102,6 +103,7 @@ static void read_photos(void *arg) {
         cursor = 0;
         while (p->count < INK_FS_INDEX_MAX && p->epoch == ink_member_epoch() && ink_fs_index("/family/锁屏拍的照片", INK_FS_IMAGE, &cursor, &e) == 1) p->ids[p->count++] = e.id;
     } else {
+        p->revision = ink_fs_revision();
         p->err = ink_fs_lookup(p->id, &e);
         ink_fs_file_t *f = NULL;
         void *data = !p->err && e.size > 0 && e.size <= INK_IMAGE_MAX_INPUT ? osal_malloc((size_t)e.size, OSAL_MEM_EXTERNAL) : NULL;
@@ -196,7 +198,7 @@ static void photo_question_ready(void *ctx, const ink_receipt_t *rc) {
 static void gallery_action(ink_call_t *c) {
     if (!strcmp(c->cap->id, "photo.ask")) {
         photo_question_t *p = osal_malloc(sizeof *p, OSAL_MEM_EXTERNAL);
-        if (!p || !G.path[0]) { osal_free(p); c->rc.status = INK_RC_STALE; return; }
+        if (!p || !G.path[0] || !G.revision || G.revision != ink_fs_revision()) { osal_free(p); c->rc.status = INK_RC_STALE; return; }
         *p = (photo_question_t){ink_member_epoch(), ink_ui_generation(), G.photo, ink_fs_revision()};
         ink_args_t a; ink_args_init(&a); ink_args_int(&a, "id", G.photo);
         ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .member = ink_cap_call_member(c), .reply_exec = INK_EXEC_UI, .done = photo_question_ready, .ctx = p};

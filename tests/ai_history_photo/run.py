@@ -32,6 +32,7 @@ mutations = {
     "photo-member": ("gallery", "p->epoch == ink_member_epoch() && p->generation", "true && p->generation"),
     "photo-changed": ("gallery", "p->revision && p->revision == ink_fs_revision()", "true"),
     "photo-id": ("gallery", "p->photo == G.photo", "true"),
+    "photo-display": ("gallery", " || G.revision != ink_fs_revision()", ""),
 }
 if a.mutant:
     name, old, new = mutations[a.mutant]
@@ -73,7 +74,7 @@ ok = True
 for case in cases:
     folder = work / case
     result = subprocess.run([str(binary), "--profile", str(ROOT / "simulator/profiles/metalio-plus.json"),
-        "--script", str(script), "--hub", str(hub), "--assets", str(build / "assets"),
+        "--script", str(script), "--hub", str(hub), "--budget", str(ROOT / "tests/ui_scene.budget.json"), "--assets", str(build / "assets"),
         "--content", str(build / "test-content"), "--flash-image", str(work / ("history.img" if case in ("history", "restart") else case + ".img")),
         "--out", str(folder), "--quiet", "--no-random-outages"],
         env={**os.environ, "INK_HISTORY_CASE": case}, capture_output=True, text=True, timeout=150)
