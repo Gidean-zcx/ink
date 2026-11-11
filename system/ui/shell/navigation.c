@@ -4,6 +4,7 @@
 /* ui-scale-runtime: dimension y tile and notifications accept a theme-derived row position. */
 /* ui-scale-runtime: dimension ink_activity_card_draw,ink_activity_home_offset F6 returns theme-sized row heights and offsets. */
 /* ui-scale-runtime: dimension top Child volume marker uses the configured percentage. */
+/* ui-scale-runtime: dimension bb_x,bb_y The battery icon's position, passed from the theme-sized status bar. */
 /* ui-scale-runtime: dimension F.y,heading_h,notice_h,home_room,below_heading Page flow: theme sizes added up, plus text measured at the current size. */
 #include <stdio.h>
 #include <string.h>
@@ -313,12 +314,11 @@ static void status_deleted(lv_event_t *e) {
 /* The battery's bars, in quarters: the outline alone said nothing at a glance (trial report 2026-11-11). Placed in
  * pixels from the drawn icon, as the icon itself is, so they sit centred in its body: inside the stroke the body is
  * 5.4..38.6 x 15.4..32.6 of the icon's 48 units; two pixels clear all round and between the bars. */
-static void battery_bars(lv_obj_t *bar, int x, int y, int64_t level) {
+static void battery_bars(lv_obj_t *bar, int bb_x, int bb_y, int64_t level) {
     int bars = level >= 88 ? 4 : level >= 63 ? 3 : level >= 38 ? 2 : level >= 13 ? 1 : 0;
-    int s = ink_ui_px(INK_ICON_LIST), ix = ink_ui_px(x), iy = ink_ui_px(y), gap = 2;
-    int l = ix + (s * 54 + 240) / 480, r = ix + (s * 386 + 240) / 480, t = iy + (s * 154 + 240) / 480, b = iy + (s * 326 + 240) / 480;
-    int w = (r - l - 5 * gap) / 4, h = b - t - 2 * gap;
-    int x0 = l + (r - l - 4 * w - 3 * gap) / 2, y0 = t + (b - t - h) / 2;
+    /* All in 48ths of the drawn icon, around its body's centre (22, 24): no rounding drift to one side. */
+    int s = ink_ui_px(INK_ICON_LIST), w = s * 6 / 48, gap = s * 2 / 48, h = s * 14 / 48;
+    int x0 = ink_ui_px(bb_x) + s * 22 / 48 - (4 * w + 3 * gap) / 2, y0 = ink_ui_px(bb_y) + s * 24 / 48 - h / 2;
     for (int i = 0; i < bars; i++) {
         lv_obj_t *o = lv_obj_create(bar);
         lv_obj_remove_style_all(o);
