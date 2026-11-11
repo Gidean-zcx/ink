@@ -53,7 +53,7 @@ static bool put(const char *name, const char *number, uint32_t id) {
     return AI("contacts.put", call_args) && g_rc.status == INK_RC_DONE;
 }
 static void open_list(void) {
-    CHECK(BY_HAND("shell.launch", "{\"id\":\"phone\"}") && g_rc.status == INK_RC_DONE, "the existing phone launcher opens the phone");
+    CHECK(BY_HAND("shell.launch", "{\"id\":\"contacts\"}") && g_rc.status == INK_RC_DONE, "the independent contacts launcher opens contacts");
     CHECK(BY_HAND("contacts.open", NULL) && g_rc.status == INK_RC_DONE, "the contact entry opens contacts");
     CHECK(WAIT_FOR(P.list != NULL, 10000), "background loading produces the real list"); quiet();
 }
@@ -86,9 +86,10 @@ static void inspect_short_focus(void) {
     ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
     bool parsed = j && ink_ui_snapshot(snap, sizeof snap, NULL) > 0 &&
         ink_json_parse(j, snap, strlen(snap)) == 0 &&
-        ink_json_str(j, ink_json_find(j, 0, "page"), page_json, sizeof page_json) > 0 &&
-        ink_json_parse(j, page_json, strlen(page_json)) == 0;
-    int input = parsed ? ink_json_find(j, 0, "input") : -1;
+        ink_json_str(j, ink_json_find(j, 0, "page"), page_json, sizeof page_json) > 0;
+    const char *input_json = parsed ? strstr(page_json, "\"input\":") : NULL;
+    parsed = input_json && ink_json_parse(j, input_json + 8, strlen(input_json + 8) - 1) == 0;
+    int input = parsed ? 0 : -1;
     CHECK(parsed && ink_json_str(j, ink_json_find(j, input, "field"), field, sizeof field) > 0 &&
           !strcmp(field, field_at ? "number" : "name") && ink_json_eq(j, ink_json_find(j, input, "focused"), "true"),
           "AI snapshot identifies the actual focused short field");
@@ -140,7 +141,7 @@ static void isolation(void) {
 static void write_phase(void) {
     open_list(); page("empty");
     CHECK(strstr(snap, "\"total\":0"), "fresh contacts page is empty");
-    const char *invalid[] = {"", "+", "12+3", "123a", " 123", "1234567890123456789012345"};
+    const char *invalid[] = {"", "+", "12+3", "123a", " --() ", "1234567890123456789012345"};
     for (size_t i = 0; i < sizeof invalid / sizeof *invalid; i++) CHECK(!put("错误测试", invalid[i], 0), "reject basic invalid number %zu", i);
     CHECK(!put("", "00000000001", 0), "reject an empty name");
     CHECK(put("测试家人", "+00000000001", 0), "AI adds a contact"); first_id = result_id(); quiet();
@@ -187,7 +188,7 @@ static void verify_phase(void) {
     CHECK(strstr(snap, "\"total\":1") && strstr(snap, "孩子测试") && !strstr(snap, "测试家人"), "child's isolated contacts survive reboot too");
 }
 static uint32_t editor_revision, confirmation_token;
-static char saved_args[768], confirmed_status[24];
+static char saved_args[sizeof P.save_args], confirmed_status[24];
 static volatile bool confirmation_finished;
 static void confirmed(void *ctx, const char *id, const ink_args_t *args) {
     (void)ctx; (void)id;

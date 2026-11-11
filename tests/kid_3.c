@@ -173,10 +173,10 @@ static void expired_apps(void) {
     for (int i = 0; i < 2 && strcmp(ink_shell_board(), "KidApps"); i++) ink_shell_home_swipe(INK_SWIPE_LEFT);
     ink_shell_home_snapshot(view, sizeof view);
     CHECK(ink_member_time_up() && strstr(view, "KidApps"), "inspect KidApps under the existing time-up overlay");
-    CHECK(strstr(view, "电话（phone）") && strstr(view, "短信（message）"), "time-up directory retains phone and SMS");
+    CHECK(strstr(view, "电话（phone）") && strstr(view, "短信（message）") && strstr(view, "联系人（contacts）"), "time-up directory retains communication apps");
     int entries = 0;
     for (const char *at = view; (at = strstr(at, "（")); at += strlen("（")) entries++;
-    CHECK(entries == 2, "the complete time-up directory contains exactly two applications");
+    CHECK(entries == 3, "the time-up directory contains exactly the three communication applications");
     const char *absent[] = {"阅读（", "听（", "报纸（", "单词（", "备忘（", "接下来（", "时钟（", "相机（", "相册（", "对话记录（", "合成白名单"};
     for (unsigned i = 0; i < sizeof absent / sizeof *absent; i++) CHECK(!strstr(view, absent[i]), "time-up hides %s", absent[i]);
     wanted = "时钟"; find(); CHECK(!label, "time-up also removes actual noncommunication tiles");
@@ -238,6 +238,8 @@ static void run(void *arg) {
     on_ui(expired_apps); quiet();
     call_ok("shell.launch", "{\"id\":\"phone\"}"); CHECK(!strcmp(ink_ui_page_name(), "Phone"), "phone works after time is up");
     call_ok("shell.launch", "{\"id\":\"message\"}"); CHECK(!strcmp(ink_ui_page_name(), "Sms"), "SMS works after time is up");
+    call_ok("shell.launch", "{\"id\":\"contacts\"}"); call_ok("contacts.edit", NULL); call_ok("contacts.name", NULL);
+    call_ok("text.insert", "{\"text\":\"合成用时结束联系人\"}"); call_ok("text.submit", NULL);
     ink_probe_count("test.finished");
 }
 void ink_main(void) {

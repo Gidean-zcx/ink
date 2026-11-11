@@ -187,7 +187,7 @@ static void kid_rows(void) {
             if (!a->child_ok || !strcmp(a->id, "home")) continue;
             int mode = ink_member_app_mode(S.kid, a->id);
             snprintf(args, sizeof args, "{\"id\":\"%s\",\"app\":\"%s\",\"mode\":%d}", S.kid, a->id, (mode + 1) % 3);
-            bool required = !strcmp(a->id, "phone") || !strcmp(a->id, "message") || !strcmp(a->id, "settings");
+            bool required = !strcmp(a->id, "phone") || !strcmp(a->id, "message") || !strcmp(a->id, "contacts") || !strcmp(a->id, "settings");
             row(a->id, TR(a->title), mode == 2 ? TR("禁用时段也能用") : mode ? TR("可用") : TR("不开放"), required ? NULL : "kid.app_set", args);
         }
         return;

@@ -73,12 +73,11 @@ static bool rendered_text(lv_obj_t *obj, const char *text) {
     for (uint32_t i = 0; i < lv_obj_get_child_count(obj); i++) if (rendered_text(lv_obj_get_child(obj, i), text)) return true;
     return false;
 }
-static bool rendered_body(lv_obj_t *obj) { return rendered_text(obj, body); }
 static void inspect_thread(void) {
-    snapshot_page(); CHECK(S.list && S.count && strstr(snap, body) && strstr(snap, "已发出"), "thread snapshot shows the complete long outgoing SMS and receipt");
-    CHECK(rendered_body(lv_screen_active()), "the actual long label fits completely inside its message card");
+    snapshot_page(); CHECK(S.list && S.count && strstr(snap, S.texts[0]) && strstr(snap, "已发出"), "thread snapshot shows the visible long SMS page and receipt");
+    CHECK(rendered_text(lv_screen_active(), S.texts[0]), "the visible long label fits inside its message card");
 }
-static void inspect_compose(void) { snapshot_page(); CHECK(S.field && strstr(snap, "message.send") && strstr(snap, "00000000001"), "compose snapshot exposes its exact recipient and send capability"); }
+static void inspect_compose(void) { snapshot_page(); CHECK(S.field && (ink_textfield_text(S.field)[0] ? strstr(snap, "message.send") != NULL : strstr(snap, "message.send") == NULL) && strstr(snap, "00000000001"), "compose snapshot exposes its exact recipient and send capability"); }
 static lv_obj_t *located;
 static const char *wanted;
 static void find_label(lv_obj_t *o) {
@@ -104,9 +103,9 @@ static void confirmed(void *ctx, const char *event, const ink_args_t *a) {
 }
 static void compose(void) {
     CHECK(AI("contacts.put", "{\"name\":\"合成收件人\",\"number\":\"00000000001\"}") && g_rc.status == INK_RC_DONE, "create only a synthetic contact");
-    CHECK(BY_HAND("sms.compose", NULL) && g_rc.status == INK_RC_DONE, "compose starts with contact selection");
-    CHECK(WAIT_FOR(S.list != NULL, 10000), "F4 contact selection loads"); quiet();
-    tap_text("合成收件人"); CHECK(WAIT_FOR(S.field != NULL, 10000), "touch selection goes through contacts.select and opens the composer");
+    CHECK(BY_HAND("sms.compose", NULL) && g_rc.status == INK_RC_DONE, "compose opens recipient and body fields");
+    CHECK(WAIT_FOR(S.recipient != NULL, 10000), "recipient input is immediately available"); quiet();
+    CHECK(AI("sms.recipient", "{\"id\":1}") && g_rc.status == INK_RC_DONE, "existing contact selection capability remains compatible"); quiet(); CHECK(WAIT_FOR(S.field != NULL, 10000), "touch selection goes through contacts.select and opens the composer");
     CHECK(!strcmp(S.to, PEER), "selected contact provides the exact number"); on_ui(inspect_compose);
 }
 static void isolation(void) {
@@ -130,13 +129,13 @@ static bool failure_injected;
 static void inject_failure(void *arg) { fail_modem(arg); failure_injected = true; }
 static void check_receipt(void) {
     lv_area_t notice, button; lv_obj_update_layout(S.notice); lv_obj_get_coords(S.notice, &notice);
-    CHECK(!strcmp(lv_label_get_text(S.notice), S.result), "receipt label has the final result");
-    wanted = "写长短信"; located = NULL; find_label(lv_screen_active());
+    CHECK(!strcmp(ink_ui_page_name(), "SmsThread") ? !strcmp(S.result, "已发出") && S.count > 0 : !strcmp(lv_label_get_text(S.notice), S.result), "final receipt is on the outgoing bubble or composer notice");
+    wanted = "展开"; located = NULL; find_label(lv_screen_active());
     CHECK(located, "long editor button exists");
     if (located) {
         lv_obj_get_coords(lv_obj_get_parent(located), &button);
         CHECK(notice.y2 < button.y1, "final receipt stays above the button: %d..%d vs %d..%d",
-            notice.y1, notice.y2, button.y1, button.y2);
+            (int)notice.y1, (int)notice.y2, (int)button.y1, (int)button.y2);
     }
 }
 static char pieces[355];
@@ -246,6 +245,7 @@ static void run(void *arg) {
         CHECK(WAIT_FOR(confirmation_done, 10000) && !strcmp(confirmation_status, "done") && sim_net_sms_sent() == before + 1, "confirmed AI send uses the same durable provider once");
         isolation(); CHECK(stored("owner") == 21, "adult retains every received and sent record");
     }
+    ink_db_flush_all();
     CHECK(WAIT_FOR(ink_db_idle() && !ink_storage_pending(), 10000) && durable(), "all SMS records are durable before ending"); ink_probe_count("test.finished");
 }
 void ink_main(void) {

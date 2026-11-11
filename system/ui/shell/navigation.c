@@ -558,11 +558,11 @@ static bool matches(const char *title, const char *id) {
     return !N.search[0] || strstr(title, N.search) || strstr(id, N.search);
 }
 static void tile(lv_obj_t *parent, const char *id, const char *title, const char *icon, int col, int row, int y,
-                 bool compact) {
+                 bool compact, int columns) {
     title = TR(title);
     if (child() && !kid_app_visible(id)) return;
     if (N.home_page == 2 && !matches(title, id)) return;
-    int cell = width() / 4, d = compact ? INK_CIRCLE : INK_CIRCLE_APP;
+    int cell = width() / columns, d = compact ? INK_CIRCLE : INK_CIRCLE_APP;
     int x = INK_MARGIN + col * cell + (cell - d) / 2;
     int at = y + row * (d + INK_GAP_S + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_L);
     lv_obj_t *button =
@@ -596,6 +596,7 @@ static int tools(tool_t out[TOOLS_MAX]) {
     for (int i = 0; i < ink_app_count() && count < TOOLS_MAX - 7; i++) {
         const ink_app_def_t *a = ink_app_at(i);
         if (!a->entry || !ink_app_visible(a) || !strcmp(a->id, "home") || !strcmp(a->id, "reader")) continue;
+        if (!strcmp(a->id, "contacts")) continue; /* Already in the contact group. */
         if (!strcmp(a->id, "phone")) continue; /* Already in the contact group. */
         if (!strcmp(a->id, "memo")) continue; /* Already in the memo/contact group. */
         if (!strcmp(a->id, "upcoming")) continue; /* The calendar is 接下来 in the same group. */
@@ -644,12 +645,13 @@ static int apps_walk(bool draw, tile_list_t *list) {
     int row_h = INK_CIRCLE + INK_GAP_S + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_L;
     for (int g = 0; g < 3; g++) {
         int total = 0;
-        for (int k = 0; k < (g < 2 ? 4 : count); k++) {
-            tool_t t = g < 2 ? (tool_t){GROUP_IDS[g][k], GROUP_TITLES[g][k], GROUP_ICONS[g][k]} : items[k];
+        int columns = g == 1 ? 5 : 4;
+        for (int k = 0; k < (g < 2 ? columns : count); k++) {
+            tool_t t = g == 1 && k == 4 ? (tool_t){"contacts", TR_NOOP("联系人"), INK_UI_ICON(person)} : g < 2 ? (tool_t){GROUP_IDS[g][k], GROUP_TITLES[g][k], GROUP_ICONS[g][k]} : items[k];
             if (child() && !kid_app_visible(t.id)) continue;
             if (matches(TR(t.title), t.id)) shown[total++] = t;
         }
-        for (int i = 0; i < total; i += 4) {
+        for (int i = 0; i < total; i += columns) {
             int need = (i ? 0 : name_h) + row_h;
             if (y + need - INK_GAP_L > home_room()) {
                 page++;
@@ -658,8 +660,8 @@ static int apps_walk(bool draw, tile_list_t *list) {
             if (page == N.apps_page) {
                 if (draw && !i)
                     ink_ui_line(N.content, TR(groups[g]), INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y, width());
-                for (int k = i; k < i + 4 && k < total; k++) {
-                    if (draw) tile(N.content, shown[k].id, shown[k].title, shown[k].icon, k % 4, 0, y + (i ? 0 : name_h), true);
+                for (int k = i; k < i + columns && k < total; k++) {
+                    if (draw) tile(N.content, shown[k].id, shown[k].title, shown[k].icon, k % columns, 0, y + (i ? 0 : name_h), true, columns);
                     if (list && list->n >= 0 && (size_t) list->n < list->cap)
                         list->n += snprintf(list->buf + list->n, list->cap - (size_t) list->n, "%s（%s）；",
                                             shown[k].title, shown[k].id);
@@ -733,7 +735,7 @@ static void draw_home_content(void) {
         static const int kid_order[] = {0, 1, 2, 5, 6, 3, 4};
         for (int i = 0; i < (child() ? 7 : 8); i++) {
             int at = child() ? kid_order[i] : i;
-            tile(N.content, APP_IDS[at], APP_TITLES[at], APP_ICONS[at], i % 4, i / 4, grid, false);
+            tile(N.content, APP_IDS[at], APP_TITLES[at], APP_ICONS[at], i % 4, i / 4, grid, false, 4);
         }
     } else if (N.home_page == 0) {
         read_cards();

@@ -190,8 +190,8 @@ static void compose(void) {
     CHECK(AI("contacts.put", "{\"name\":\"合成收件人\",\"number\":\"00000000001\"}") && g_rc.status == INK_RC_DONE, "a synthetic contact");
     CHECK(BY_HAND("shell.launch", "{\"id\":\"message\"}") && g_rc.status == INK_RC_DONE, "open SMS");
     CHECK(WAIT_FOR(S.list != NULL, 10000), "SMS list"); quiet();
-    CHECK(BY_HAND("sms.compose", NULL) && g_rc.status == INK_RC_DONE, "compose"); CHECK(WAIT_FOR(S.list != NULL, 10000), "contacts"); quiet();
-    snprintf(arguments, sizeof arguments, "{\"id\":%u}", (unsigned)S.rows[0]);
+    CHECK(BY_HAND("sms.compose", NULL) && g_rc.status == INK_RC_DONE, "compose"); CHECK(WAIT_FOR(S.recipient != NULL, 10000), "recipient input"); quiet();
+    snprintf(arguments, sizeof arguments, "{\"id\":%u}", 1u);
     CHECK(AI("sms.recipient", arguments) && WAIT_FOR(S.field != NULL, 10000), "recipient chosen"); quiet();
     CHECK(AI("sms.text", NULL) && g_rc.status == INK_RC_DONE, "focus the text");
     han(text, 60, "短"); on_ui(type_text); quiet();

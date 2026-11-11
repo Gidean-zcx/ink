@@ -15,6 +15,7 @@
 #include "ink/ui_shell.h"
 
 extern void ink_contacts_open(void);
+extern int ink_contacts_match(const char *query, bool exact, char *name, char *number);
 const ink_activity_t ink_phone_page;
 static const ink_activity_t RECENTS, CALL, KEYPAD;
 static const ink_db_def_t HISTORY = {.name = "phone.calls", .title = "通话记录", .scope = INK_DB_MEMBER,
@@ -30,6 +31,7 @@ static struct {
     char ids[4][32], numbers[4][24], details[4][96], args[4][64];
     char tones[65], tone_count[12], route[80], tone_args[12][16];
     char duration_text[32];
+    char match_name[97], match_number[25], match_args[48];
     uint64_t started;
     int64_t minutes;
     bool selecting, active, muted;
@@ -37,7 +39,7 @@ static struct {
     ink_db_t *db;
     ink_ui_list_t *list;
     ink_ui_list_position_t position;
-    lv_obj_t *field, *notice, *duration;
+    lv_obj_t *field, *notice, *duration, *match;
     ink_ui_field_spec_t fields[7];
     ink_ui_action_spec_t actions[14];
     ink_ui_page_spec_t model;
@@ -214,7 +216,7 @@ static void reply(void *ctx, const ink_receipt_t *rc) {
     if ((uint32_t)(uintptr_t)ctx != ink_ui_generation() || !ink_ui_page_current()) return;
     if (P.notice && rc->status != INK_RC_DONE) lv_label_set_text(P.notice, rc->say[0] ? rc->say : TR("没有完成，请重试"));
     ink_shell_airplane_card(rc);
-    if (rc->status == INK_RC_DONE && !strcmp(ink_ui_page_name(), RECENTS.name)) ink_ui_redraw();
+    if (rc->status == INK_RC_DONE && (!strcmp(ink_ui_page_name(), RECENTS.name) || !strcmp(ink_ui_page_name(), ink_phone_page.name))) ink_ui_redraw();
 }
 static void request(const char *cap, const ink_args_t *a) {
     ink_call_opts_t o = {.src = INK_SRC_TOUCH, .member = P.member, .reply_exec = INK_EXEC_UI,
@@ -288,9 +290,9 @@ static void bind_item(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, 
     *field = (ink_ui_field_spec_t){.id = P.ids[at], .role = "listitem", .label = P.numbers[at], .value = P.details[at], .object = {P.ids[at], rec.ver}};
     *action = (ink_ui_action_spec_t){.id = P.ids[at], .label = TR("用这个号码拨号"), .capability = "phone.open", .args_json = P.args[at], .object = field->object, .enabled = true};
 }
-static void tabs(lv_obj_t *screen, bool recent) {
+void ink_phone_tabs(lv_obj_t *screen, int selected) {
     const char *const labels[] = {TR("拨号"), TR("最近"), TR("联系人")};
-    lv_obj_t *seg = ink_ui_segments(screen, labels, 3, recent ? 1 : 0, INK_MARGIN + INK_CONTROL + INK_GAP,
+    lv_obj_t *seg = ink_ui_segments(screen, labels, 3, selected, INK_MARGIN + INK_CONTROL + INK_GAP,
         INK_STATUS_BAR + INK_GAP_S, INK_CANVAS_W - 2 * INK_MARGIN - INK_CONTROL - INK_GAP, NULL, NULL);
     if (strcmp(ink_lang_code(), "zh")) {
         int x = INK_GAP_XS - INK_STROKE, used = 0;
@@ -301,7 +303,17 @@ static void tabs(lv_obj_t *screen, bool recent) {
     const char *caps[] = {"phone.open", "phone.recents", "phone.contacts"};
     for (int i = 0; i < 3; i++) ink_shell_bind(lv_obj_get_child(seg, i), caps[i], "{}");
 }
-static void entered(void *ctx, const char *value) { (void)ctx; snprintf(P.number, sizeof P.number, "%s", value); }
+static void entered(void *ctx, const char *value) {
+    (void)ctx; snprintf(P.number, sizeof P.number, "%s", value);
+    int id = ink_contacts_match(P.number, false, P.match_name, P.match_number);
+    if (P.match) {
+        if (id > 0) { snprintf(P.match_args, sizeof P.match_args, "{\"id\":%u}", (unsigned)id); lv_label_set_text(P.match, P.match_name); ink_shell_bind(P.match, "contacts.view", P.match_args); lv_obj_add_flag(P.match, LV_OBJ_FLAG_CLICKABLE); }
+        else { lv_label_set_text(P.match, ""); lv_obj_remove_flag(P.match, LV_OBJ_FLAG_CLICKABLE); }
+    }
+    P.actions[5] = (ink_ui_action_spec_t){.id = "match", .label = P.match_name, .capability = "contacts.view", .args_json = P.match_args, .enabled = id > 0};
+    P.fields[1] = (ink_ui_field_spec_t){.id = "match", .role = "text", .label = TR("匹配联系人"), .value = id > 0 ? P.match_name : ""};
+    ink_ui_content_changed();
+}
 static void edited(lv_event_t *e) { entered(NULL, ink_textfield_text(lv_event_get_target_obj(e))); }
 static void call_route_changed(void *ctx, int h, const char *id) {
     (void)ctx; (void)h; (void)id;
@@ -323,7 +335,7 @@ static void create(lv_obj_t *screen, void *arg) {
     bool keypad = !strcmp(ink_ui_page_name(), KEYPAD.name);
     bool recent = !strcmp(ink_ui_page_name(), RECENTS.name), call = keypad || !strcmp(ink_ui_page_name(), CALL.name);
     ink_shell_statusbar(screen, true);
-    if (!call) { ink_shell_topbar(screen, ""); tabs(screen, recent); }
+    if (!call) { ink_shell_topbar(screen, ""); ink_phone_tabs(screen, recent ? 1 : 0); }
     P.fields[0] = (ink_ui_field_spec_t){.id = "status", .role = "status", .label = TR("通话记录"), .value = TR("正在读取通话记录")};
     P.model = (ink_ui_page_spec_t){.id = ink_ui_page_name(), .title = call ? TR("通话") : recent ? TR("最近通话") : TR("拨号"), .object = {"phone", 1}, .fields = P.fields, .field_count = 1, .actions = P.actions};
     P.notice = ink_ui_notice(screen, "", INK_CANVAS_H - INK_PRIMARY - INK_CONTROL - INK_GAP_L);
@@ -405,6 +417,12 @@ static void create(lv_obj_t *screen, void *arg) {
         lv_obj_set_width(P.field, ink_ui_px(INK_CANVAS_W - 2 * INK_MARGIN));
         ink_textfield_bind_short(P.field, &P.model, P.fields, &P.actions[0]);
         lv_obj_add_event_cb(P.field, edited, LV_EVENT_VALUE_CHANGED, NULL);
+        P.match = P.notice; lv_obj_set_style_min_height(P.match, ink_ui_px(INK_CONTROL), 0);
+        char number[sizeof P.number]; snprintf(number, sizeof number, "%s", P.number); entered(NULL, number); P.model.field_count = 2;
+        if (ink_contacts_match("", false, P.match_name, P.match_number) < 0) {
+            ink_args_t *a = ink_app_alloc(sizeof *a, true);
+            if (a) { ink_args_init(a); ink_args_str(a, "collection", "phone.contacts"); ink_args_int(a, "limit", 1); request("data.list", a); ink_app_free(a); }
+        }
         static const char *const keys[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "*", "0", "#"};
         int cell = (INK_CANVAS_W - 2 * INK_MARGIN) / 3, y = INK_CANVAS_H - INK_MARGIN - INK_DIGIT - 4 * (INK_DIGIT + INK_GAP_S);
         lv_obj_set_pos(P.notice, ink_ui_px(INK_MARGIN), ink_ui_px(INK_CANVAS_H - INK_MARGIN - INK_DIGIT + INK_GAP_S));
@@ -418,7 +436,7 @@ static void create(lv_obj_t *screen, void *arg) {
         ink_ui_pill(screen, TR("删除"), INK_CANVAS_W - INK_MARGIN - remove_w, INK_CANVAS_H - INK_MARGIN - INK_DIGIT + INK_GAP_L, remove_w, INK_CONTROL, false, digit, "delete");
     }
 }
-static void destroy(void) { ink_db_close(P.db); P.db = NULL; P.list = NULL; P.field = P.notice = P.duration = NULL; }
+static void destroy(void) { ink_db_close(P.db); P.db = NULL; P.list = NULL; P.field = P.notice = P.duration = P.match = NULL; }
 static int snapshot(char *out, size_t cap) {
     if (P.list) return ink_ui_list_snapshot(P.list, out, cap);
     if (P.field) {
@@ -427,7 +445,7 @@ static int snapshot(char *out, size_t cap) {
         P.actions[1] = (ink_ui_action_spec_t){.id = "dial", .label = TR("拨号"), .capability = "call.dial", .args_json = P.dial_args, .enabled = !w.overflow && P.fields[0].value && P.fields[0].value[0]};
         P.actions[2] = (ink_ui_action_spec_t){.id = "recents", .label = TR("最近"), .capability = "phone.recents", .enabled = true};
         P.actions[3] = (ink_ui_action_spec_t){.id = "contacts", .label = TR("联系人"), .capability = "phone.contacts", .enabled = true};
-        P.actions[4] = (ink_ui_action_spec_t){.id = "delete", .label = TR("删除一位"), .capability = "phone.key", .args_json = "{\"key\":\"delete\"}", .enabled = true}; P.model.action_count = 5;
+        P.actions[4] = (ink_ui_action_spec_t){.id = "delete", .label = TR("删除一位"), .capability = "phone.key", .args_json = "{\"key\":\"delete\"}", .enabled = true}; P.model.action_count = 6;
         return ink_textfield_short_snapshot(P.field, out, cap);
     }
     return ink_ui_semantics_snapshot(&P.model, out, cap);
@@ -445,7 +463,6 @@ static const ink_cap_t CAPS[] = {
     {.id = "phone.return", .app = "phone", .locked_owner_only = true, .title = "回到通话", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "phone.open", .app = "phone", .locked_owner_only = true, .title = "打开拨号盘，可填入号码", .input = "{\"type\":\"object\",\"properties\":{\"number\":{\"type\":\"string\",\"maxLength\":20}}}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "phone.contacts", .app = "phone", .locked_owner_only = true, .title = "从联系人选择号码", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
-    {.id = "contacts.open", .app = "phone", .locked_owner_only = true, .title = "打开联系人", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "phone.recents", .app = "phone", .locked_owner_only = true, .title = "打开最近通话", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "phone.number", .app = "phone", .locked_owner_only = true, .title = "输入电话号码", .activity = "Phone", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "phone.key", .app = "phone", .locked_owner_only = true, .title = "按拨号键或删除一位", .input = "{\"type\":\"object\",\"properties\":{\"key\":{\"type\":\"string\",\"maxLength\":6}},\"required\":[\"key\"]}", .activity = "Phone", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = key_cap},
