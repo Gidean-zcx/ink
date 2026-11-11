@@ -11,6 +11,7 @@
 #include "freertos/task.h"
 #include "ink/hal_device.h"
 #include "ink/hal_display.h"
+#include "ink/hal_power.h"
 #include "ink/osal.h"
 #include "lcd_driver.h"
 #include "line_queue.h"
@@ -28,6 +29,7 @@ enum { W = 1216, H = 684 };
 #define GUARD_MS 2000
 #define PHASE_US 12000
 #define PREFILL 192
+#define FAILS_MAX 3 /* refreshes in a row that may fail before the panel stays off until the next boot */
 #define ATOMIC(v) atomic_load_explicit(&(v), memory_order_acquire)
 
 static struct {
@@ -40,8 +42,9 @@ static struct {
     atomic_bool stop, armed, powered, testing, tripped;
     atomic_uint beat, pending;
     atomic_int row, missed;
-    int owed[2];
-    bool empty, first, ready;
+    int owed[2], fails;
+    bool empty, first, ready, done_owed[2];
+    hal_cpu_boost_t *boost;
     uint32_t phase, next_id, hold_ms, wake_until;
     uint64_t last_drive;
     hal_rect_t area;
@@ -67,6 +70,23 @@ static void trip(void) {
     epd_lcd_abort_frame();
     power_off();
     atomic_store(&D.armed, false);
+}
+/* A refresh that could not finish (lines missed, the LCD frame lost): the rails go off at once, as for a trip. Unlike a
+ * guard trip the driver is alive, so the next refresh redraws the whole panel over what was left half driven; only
+ * FAILS_MAX failures in a row keep the panel off until the next boot. (Trial report 2026-11-11: one refresh that
+ * missed lines turned every later one away, and the screen stayed half drawn.) */
+static void fail(void) {
+    trip();
+    if (++D.fails >= FAILS_MAX) {
+        hal_log_write("display: refreshes keep failing, the panel stays off");
+        return;
+    }
+    for (int i = 0; i < 2; i++) /* a scanner that was still at work has seen stop by now: take its late reply */
+        if (D.done_owed[i]) D.done_owed[i] = xSemaphoreTake(D.scan_done[i], pdMS_TO_TICKS(SCAN_MS)) != pdTRUE;
+    if (D.done_owed[0] || D.done_owed[1]) return; /* it never came back: stay off */
+    for (int i = 0; i < 2; i++) lq_reset(&D.q[i]);
+    D.first = true;
+    atomic_store(&D.stop, false);
 }
 static void guard_check(void) {
     if (!ATOMIC(D.armed) || (uint32_t)(xTaskGetTickCount() - ATOMIC(D.beat)) < pdMS_TO_TICKS(GUARD_MS)) return;
@@ -173,7 +193,10 @@ static bool scan(bool empty) {
     xTaskNotifyGive(D.scanners[here]);
     bool ok = xSemaphoreTake(D.frame_done, pdMS_TO_TICKS(SCAN_MS)) == pdTRUE;
     for (int i = 0; i < 2; i++)
-        if (xSemaphoreTake(D.scan_done[i], pdMS_TO_TICKS(SCAN_MS)) != pdTRUE) ok = false;
+        if (xSemaphoreTake(D.scan_done[i], pdMS_TO_TICKS(SCAN_MS)) != pdTRUE) {
+            ok = false;
+            D.done_owed[i] = true; /* its reply comes once it sees stop */
+        }
     epd_lcd_line_source_cb(NULL, NULL);
     epd_lcd_frame_done_cb(NULL, NULL);
     if (!ok || ATOMIC(D.missed) || ATOMIC(D.stop)) { trip(); return false; }
@@ -226,6 +249,9 @@ static void display_task(void *ctx) {
             D.phase += rest;
             atomic_store(&D.beat, xTaskGetTickCount());
             atomic_store(&D.armed, true);
+            /* The whole refresh at the full clock: going idle drops the CPU to S31_IDLE_MHZ, where the two scanners
+             * cannot keep up with a full-width GC16 and lines go missing (trial report 2026-11-11, the Wi-Fi page) */
+            hal_cpu_boost_acquire(D.boost);
             vTaskPrioritySet(NULL, configMAX_PRIORITIES - 1);
             r.started_us = osal_now_us();
             hal_rect_t a = D.first ? (hal_rect_t){0, 0, W, H} : D.area;
@@ -237,10 +263,12 @@ static void display_task(void *ctx) {
             }
             if (ok) { target(&a, -1); ok = drive(); }
             r.ok = ok && epd_power_kept(&D.power);
-            if (!r.ok) trip();
             D.first = false;
+            if (!r.ok) fail();
+            else D.fails = 0;
             D.last_drive = osal_now_us();
             vTaskPrioritySet(NULL, 5);
+            hal_cpu_boost_release(D.boost);
         }
         xSemaphoreTake(D.lock, portMAX_DELAY);
         uint32_t hold = D.hold_ms;
@@ -315,6 +343,7 @@ static void init(void) {
         hal_log_write("display: the guard did not prove itself, the panel stays off");
     }
     D.first = D.ready = true;
+    D.boost = hal_cpu_boost_create("display");
     configASSERT(xTaskCreatePinnedToCore(display_task, "epd", 4096, NULL, 5, &D.task, 0) == pdPASS);
 }
 void hal_display_get_info(hal_panel_info_t *out) {

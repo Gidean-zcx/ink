@@ -27,6 +27,9 @@ def main():
         ("selftest-in-init", "selftest", "    if (!guard_self_test()) {", "    if (0 && !guard_self_test()) {"),
         ("late-line-discard", "lines", "while (D.owed[id] && lq_read(&D.q[id], line) == 0) --D.owed[id];", "(void)id;"),
         ("wake-pending", "wake-overlap", "D.result.id || ATOMIC(D.powered) || (D.wake_until && (int32_t)(D.wake_until - xTaskGetTickCount()) > 0)", "D.result.id || ATOMIC(D.powered) || wake"),
+        # trial report 2026-11-11: a refresh crossing into idle ran at the idle clock, missed lines, and one failure stopped the panel for good
+        ("refresh-at-full-clock", "regions", "            hal_cpu_boost_acquire(D.boost);\n", ""),
+        ("failed-refresh-recovers", "recover", "            if (!r.ok) fail();", "            (void)fail;\n            if (!r.ok) trip();"),
     ]
     common = ["cc", "-std=c11", "-Wall", "-Wextra", "-Werror", "-UNDEBUG", "-pthread"]
     for p in [tests / "display_stub", port, root / "platform/include", root / "drivers/chips", root / "drivers/display/pqbn", root / "boards"]:

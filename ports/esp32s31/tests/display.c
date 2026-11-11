@@ -69,7 +69,11 @@ hal_i2c_status_t tps65185_read(hal_i2c_dev_t *dev, uint8_t reg, uint8_t *value) 
     (void)dev; assert(reg == TPS_REG_PG); *value = 0xFA;
     return pmic_awake ? HAL_I2C_OK : HAL_I2C_ERR; /* in SLEEP the PMIC does not answer */
 }
-void hal_log_write(const char *line) { snprintf(last_log, sizeof last_log, "%s", line); }
+static bool logged_kept_failing;
+void hal_log_write(const char *line) {
+    snprintf(last_log, sizeof last_log, "%s", line);
+    if (strstr(line, "keep failing")) logged_kept_failing = true;
+}
 void epd_power_off(epd_power_t *p) {
     p->gate_output(p->ctx, false);
     pmic_awake = false;
@@ -80,6 +84,11 @@ void epd_power_off(epd_power_t *p) {
     }
 }
 bool epd_power_kept(epd_power_t *p) { (void)p; return supply_good; }
+struct hal_cpu_boost { bool held; };
+static struct hal_cpu_boost boost;
+hal_cpu_boost_t *hal_cpu_boost_create(const char *name) { assert(!strcmp(name, "display")); return &boost; }
+void hal_cpu_boost_acquire(hal_cpu_boost_t *b) { assert(b == &boost && !b->held); b->held = true; }
+void hal_cpu_boost_release(hal_cpu_boost_t *b) { assert(b == &boost && b->held); b->held = false; }
 void gpio_reset_pin(int pin) { (void)pin; }
 void gpio_set_direction(int pin, int mode) { (void)pin; assert(mode == GPIO_MODE_OUTPUT); }
 void gpio_set_level(int pin, int level) { if (pin == EPD_PIN_XOE) xoe = level; }
@@ -94,6 +103,7 @@ SemaphoreHandle_t xSemaphoreCreateBinary(void) { return record_alloc(sizeof(stru
 int xSemaphoreTake(SemaphoreHandle_t s, uint32_t timeout) {
     if (s->mutex) { assert(pthread_mutex_lock(&s->lock) == 0); return pdTRUE; }
     if (s == D.frame_done) {
+        assert(boost.held); /* every frame at the full clock, whatever the power state says meanwhile */
         scans++;
         now += (uint64_t)(drop_frame ? timeout : 2) * 10000;
         if (!drop_frame && lcd_done) lcd_done(lcd_ctx);
@@ -194,14 +204,39 @@ static void regions(void) {
     assert(calls == 2 && completed.ok && completed.waveform == HAL_WF_GC16);
     assert(nibble(D.c.fb4, 1, 3) == 0 && nibble(D.c.fb4, 3, 3) == 4 && nibble(D.c.fb4, 4, 3) == 5);
 }
+/* A refresh that loses its frame: rails off at once; the driver takes the next one (the whole panel again), and only
+ * FAILS_MAX in a row keep the panel off until the next boot. */
 static void timeout(void) {
     hal_rect_t a = {0, 0, 1, 1};
     uint8_t p = 0;
-    assert(hal_display_update(&a, &p, 1, HAL_WF_GL16, 0, finished, &calls));
     drop_frame = true;
-    run(run_display);
-    assert(calls == 1 && !completed.ok && off_count > 0 && abort_count > 0 && ATOMIC(D.stop));
+    for (int i = 1; i <= FAILS_MAX; i++) {
+        assert(hal_display_update(&a, &p, 1, HAL_WF_GL16, 0, finished, &calls));
+        run(run_display);
+        assert(calls == (unsigned)i && !completed.ok && off_count > 0 && abort_count > 0 && !ATOMIC(D.powered) && !boost.held);
+        if (i < FAILS_MAX) assert(!ATOMIC(D.stop) && D.first);
+    }
+    assert(ATOMIC(D.stop) && logged_kept_failing);
     assert(!hal_display_update(&a, &p, 1, HAL_WF_GL16, 0, NULL, NULL));
+}
+/* One lost frame, then a good one: drawn over the whole panel, and the count of failures starts again. */
+static void recover(void) {
+    hal_rect_t a = {0, 0, 1, 1};
+    uint8_t p = 0;
+    drop_frame = true;
+    assert(hal_display_update(&a, &p, 1, HAL_WF_GL16, 0, finished, &calls));
+    run(run_display);
+    assert(calls == 1 && !completed.ok && !ATOMIC(D.stop) && D.first && D.fails == 1);
+    drop_frame = false;
+    unsigned before = scans;
+    assert(hal_display_update(&a, &p, 1, HAL_WF_GL16, 0, finished, &calls));
+    run(run_display);
+    assert(calls == 2 && completed.ok && !ATOMIC(D.stop) && !D.first && D.fails == 0 && !boost.held);
+    unsigned redraw = scans - before; /* black, white and the picture: the GC16 path for a GL16 request */
+    before = scans;
+    assert(hal_display_update(&a, &p, 1, HAL_WF_GL16, 0, finished, &calls));
+    run(run_display);
+    assert(calls == 3 && completed.ok && redraw > scans - before);
 }
 static void guard_only(void) {
     atomic_store(&D.powered, true);
@@ -265,6 +300,7 @@ int main(int argc, char **argv) {
     if (strcmp(which, "selftest") && strcmp(which, "selftest-dead")) off_count = 0; /* the other cases start after it */
     if (!strcmp(which, "regions")) regions();
     else if (!strcmp(which, "timeout")) timeout();
+    else if (!strcmp(which, "recover")) recover();
     else if (!strcmp(which, "guard")) guard_only();
     else if (!strcmp(which, "lines")) lines();
     else if (!strcmp(which, "wake-overlap")) wake_overlap();
