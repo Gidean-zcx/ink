@@ -28,7 +28,7 @@ static ink_ui_page_spec_t ASK_MODEL = {.id = "AiAsk", .title = TR_NOOP("问 AI")
 static ink_ui_field_spec_t empty = {.id = "history", .role = "status", .label = TR_NOOP("对话记录"), .value = TR_NOOP("还没有对话记录")};
 static ink_ui_page_spec_t HOME_MODEL = {.id = "AiHome", .title = TR_NOOP("对话记录"), .object = {"ai:home", 1},
     .fields = &empty, .field_count = 1, .actions = actions, .action_count = 3};
-#define HISTORY_ROWS 4
+#define HISTORY_ROWS 3
 static struct {
     ink_db_t *db; ink_ui_list_t *list; ink_ui_list_position_t position; uint32_t epoch;
     char ids[HISTORY_ROWS][32], args[HISTORY_ROWS][48], labels[HISTORY_ROWS][128], info[HISTORY_ROWS][192];
@@ -53,13 +53,23 @@ static void history_bind(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *item
         ink_json_str(j, ink_json_find(j, 0, "question"), question, sizeof question);
         ink_json_str(j, ink_json_find(j, 0, "page"), page, sizeof page); ink_json_int(j, ink_json_find(j, 0, "at"), &time);
     }
-    snprintf(H.labels[at], sizeof H.labels[at], "%.*s", (int)ink_text_byte_offset(question, 18), question);
+    size_t bytes = ink_text_byte_offset(question, 30);
+    snprintf(H.labels[at], sizeof H.labels[at], "%.*s%s", (int)bytes, question, question[bytes] ? "…" : "");
+    const char *source = !strcmp(page, "home") ? TR("主页") : !page[0] ? TR("无页面上下文") : TR("其他页面");
+    if (!strncmp(page, "Read", 4)) source = TR("阅读器");
+    if (!strncmp(page, "Set", 3)) source = TR("设置");
+    if (!strncmp(page, "File", 4)) source = TR("文件");
+    for (int i = 0; i < ink_app_count(); i++) {
+        const ink_app_def_t *app = ink_app_at(i);
+        if (app->entry && !strcmp(app->entry->name, page)) { source = TR(app->title); break; }
+    }
     ink_tm_t tm; ink_time_to_local(time, &tm);
-    if (time) snprintf(H.info[at], sizeof H.info[at], "%02d/%02d %02d:%02d · %s", tm.month, tm.day, tm.hour, tm.min, page);
-    else snprintf(H.info[at], sizeof H.info[at], "%s · %s", TR("时间未知"), page);
+    if (time) snprintf(H.info[at], sizeof H.info[at], "%02d/%02d %02d:%02d · %s", tm.month, tm.day, tm.hour, tm.min, source);
+    else snprintf(H.info[at], sizeof H.info[at], "%s · %s", TR("时间未知"), source);
     snprintf(H.ids[at], sizeof H.ids[at], "history:%u", (unsigned)rec.id); snprintf(H.args[at], sizeof H.args[at], "{\"id\":%u}", (unsigned)rec.id);
-    lv_obj_clean(slot); ink_ui_line(slot, H.labels[at], INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_GAP, INK_GAP_S, INK_CANVAS_W - 2 * INK_MARGIN - INK_CONTROL - 2 * INK_GAP);
-    ink_ui_line(slot, H.info[at], INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_GAP, INK_GAP_S + INK_LINE_LIST, INK_CANVAS_W - 2 * INK_MARGIN - INK_CONTROL - 2 * INK_GAP);
+    lv_obj_clean(slot); lv_obj_t *question_label = ink_ui_label(slot, H.labels[at], INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_GAP, INK_GAP_S, INK_CANVAS_W - 2 * INK_MARGIN - INK_CONTROL - 2 * INK_GAP);
+    lv_obj_set_height(question_label, ink_ui_px(2 * ink_ui_line_height(INK_FONT_LIST))); lv_label_set_long_mode(question_label, LV_LABEL_LONG_DOT);
+    ink_ui_line(slot, H.info[at], INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_GAP, INK_GAP_S + 2 * ink_ui_line_height(INK_FONT_LIST), INK_CANVAS_W - 2 * INK_MARGIN - INK_CONTROL - 2 * INK_GAP);
     lv_obj_t *trash = ink_ui_circle(slot, "trash", INK_CANVAS_W - 2 * INK_MARGIN - INK_CONTROL - INK_GAP, INK_GAP_S, INK_CONTROL, INK_ICON_SMALL, INK_SURFACE_WHITE, NULL, NULL);
     ink_shell_bind(trash, "ai.history.delete", H.args[at]);
     *item_field = (ink_ui_field_spec_t){.id = H.ids[at], .label = H.labels[at], .value = H.info[at], .role = "listitem", .object = {H.ids[at], rec.ver}};
@@ -111,19 +121,21 @@ static void home_create(lv_obj_t *screen, void *arg) {
         const ink_ui_action_spec_t paging[] = {
             {.id = "prev", .label = TR("上一页"), .capability = "ai.history.prev"},
             {.id = "next", .label = TR("下一页"), .capability = "ai.history.next"},
-            {.id = "clear", .label = TR("清空记录"), .capability = "ai.history.clear", .enabled = true}};
+            {.id = "clear", .label = TR("清空记录"), .capability = "ai.history.clear", .enabled = ink_db_count(H.db) > 0}};
         ink_ui_page_spec_t model = {.id = "AiHome", .title = TR("对话记录"), .object = {"ai.history", ink_db_last_ver(H.db)}, .actions = paging, .action_count = sizeof paging / sizeof *paging};
-        lv_obj_t *body = ink_ui_box(screen, 0, INK_STATUS_BAR + INK_PRIMARY + INK_GAP, INK_CANVAS_W, HISTORY_ROWS * (INK_ROW_DOUBLE + INK_GAP_M) + INK_PRIMARY, 0, INK_SURFACE_WHITE, false);
-        H.list = ink_ui_list_create(body, &model, &H.position, HISTORY_ROWS, 1, INK_ROW_DOUBLE, empty.value, history_bind, NULL);
+        int row_height = ink_ui_row_double() + ink_ui_line_height(INK_FONT_LIST);
+        lv_obj_t *body = ink_ui_box(screen, 0, INK_STATUS_BAR + INK_PRIMARY + INK_GAP, INK_CANVAS_W, HISTORY_ROWS * (row_height + INK_GAP_M) + INK_PRIMARY, 0, INK_SURFACE_WHITE, false);
+        H.list = ink_ui_list_create(body, &model, &H.position, HISTORY_ROWS, 1, row_height, empty.value, history_bind, NULL);
         if (H.list) ink_ui_list_refresh(H.list, (size_t)ink_db_count(H.db));
     }
     lv_obj_t *clear = ink_ui_circle(screen, "trash", INK_CANVAS_W - INK_MARGIN - INK_CONTROL, INK_STATUS_BAR, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_WHITE, NULL, NULL);
-    ink_shell_bind(clear, "ai.history.clear", NULL);
+    if (H.db && ink_db_count(H.db)) ink_shell_bind(clear, "ai.history.clear", NULL);
+    else lv_obj_add_state(clear, LV_STATE_DISABLED);
     lv_obj_t *ask = ink_ui_pill(screen, actions[0].label, INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_PRIMARY,
-        INK_CANVAS_W - 2 * INK_MARGIN, INK_PRIMARY, false, NULL, NULL);
+        INK_CANVAS_W - 2 * INK_MARGIN - INK_CONTROL - INK_GAP, INK_CONTROL, false, NULL, NULL);
     ink_shell_bind(ask, actions[0].capability, NULL);
     lv_obj_t *mic = ink_ui_circle(screen, "mic", INK_CANVAS_W - INK_MARGIN - INK_CONTROL,
-        INK_CANVAS_H - INK_MARGIN - INK_PRIMARY, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_BLACK, NULL, NULL);
+        INK_CANVAS_H - INK_MARGIN - INK_PRIMARY, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_WHITE, NULL, NULL);
     ink_shell_bind(mic, actions[1].capability, NULL);
 }
 static const ink_activity_t ASK = {.name = "AiAsk", .app = "ai", .create = ask_create, .destroy = ask_destroy, .snapshot = ask_snapshot};

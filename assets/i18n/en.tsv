@@ -18,6 +18,29 @@ Wi-Fi 已关闭，请到网络设置打开后重试。	Wi-Fi is off. Enable it i
 草稿没存上，字还在，请重试	Draft failed; text kept. Retry.
 正在存草稿，备忘没存上	Saving draft; memo was not saved
 正在保存备忘	Saving memo
+# UX09, UX15, UX18
+草稿（写回才会更新文件）	Draft (write back to update the file)
+文件已更新	File updated
+文件没有更新，文字仍在这里	File not updated. Your text is still here
+更新文件	Update file
+已选 %zu 个文件	%zu files selected
+重新读取	Read again
+拷贝 %zu 个文件	Copy %zu files
+移动 %zu 个文件	Move %zu files
+拷贝：%s	Copy: %s
+移动：%s	Move: %s
+没有符合条件的文件	No matching files
+无页面上下文	No page context
+其他页面	Other page
+阅读器	Reader
+删除这位家人的活动记录	Delete All Activity for This Person
+始终可用	Always available
+时段 %d · %02u:%02u—%s%02u:%02u	Period %d · %02u:%02u–%s%02u:%02u
+次日	Next day
+电话、短信、联系人不限时	Calls, messages and contacts have no time limit
+开始—结束（24 小时）	Start–end (24-hour time)
+保存时段	Save period
+请按 21:00-07:00 填写	Use the format 21:00-07:00
 # notification management
 删除	Delete
 全部已读	Mark all read

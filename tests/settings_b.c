@@ -196,7 +196,7 @@ static void run(void *arg) {
         on_ui(read_snapshot);
         CHECK(strstr(snapshot, "应用名单") && strstr(snapshot, "family.kid_apps"), "child settings expose the real application-list page");
         CHECK(AI("family.kid_apps", NULL) && g_rc.status == INK_RC_DONE, "read the actual application list"); quiet(); on_ui(read_snapshot);
-        CHECK(strstr(snapshot, "阅读") && strstr(snapshot, "电话") && strstr(snapshot, "禁用时段也能用"), "application list preserves required phone access (D-25)");
+        CHECK(strstr(snapshot, "阅读") && strstr(snapshot, "电话") && strstr(snapshot, "始终可用"), "application list preserves required phone access (D-25)");
         CHECK(AI("shell.back", NULL) && g_rc.status == INK_RC_DONE, "return to child settings"); quiet();
         press("孩子的音量上限"); confirm(); CHECK(WAIT_FOR(ink_setting_get("audio.child_max") == 70, 10000), "touch uses the existing child setting");
         CHECK(AI("settings.set", "{\"id\":\"audio.child_max\",\"value\":90}") && g_rc.status == INK_RC_PENDING_CONFIRMATION, "AI uses the same settings policy");
@@ -210,7 +210,7 @@ static void run(void *arg) {
         bool picker_ready = false;
         for (int i = 0; i < 200; i++) { on_ui(read_snapshot); if (strstr(snapshot, "\"status\":\"\"")) { picker_ready = true; break; } delay_ms(20); }
         CHECK(picker_ready && strstr(snapshot, "SYNTH_WALL"), "F9 shows the real indexed image");
-        snprintf(args, sizeof args, "{\"id\":%u}", image);
+        snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)image);
         CHECK(AI("file_picker.select", args) && g_rc.status == INK_RC_DONE, "AI selects the same image as touch");
         CHECK(WAIT_FOR(ink_wallpaper_ready(), 20000), "image decode and dithering reach the UI"); quiet(); capture("WallpaperSelected");
         CHECK(ink_setting_get("display.lock_style") == 0, "selecting an image does not force the clock style");
@@ -232,7 +232,7 @@ static void run(void *arg) {
         CHECK(WAIT_FOR(!ink_wallpaper_ready(), 10000), "unavailable image is released"); quiet();
         CHECK(BY_HAND("shell.lock", NULL), "lock when the wallpaper is unavailable"); quiet(); on_ui(inspect_lock);
         CHECK(!clock_label && !lock_image && lock_strip, "unavailable wallpaper falls back to the current-page mark"); capture("LockFallback"); wake();
-        snprintf(args, sizeof args, "{\"id\":\"display.wallpaper_file\",\"value\":%u}", image);
+        snprintf(args, sizeof args, "{\"id\":\"display.wallpaper_file\",\"value\":%u}", (unsigned)image);
         CHECK(AI("settings.set", args) && g_rc.status == INK_RC_DONE, "restore the indexed source for restart");
         CHECK(WAIT_FOR(ink_wallpaper_ready(), 20000), "restored wallpaper loads"); quiet();
         test_records();

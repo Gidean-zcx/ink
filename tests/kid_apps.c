@@ -144,7 +144,8 @@ static void policy(void) {
     touch("确定"); CHECK(WAIT_FOR(ink_member_app_mode("kid", "memo") == 1, 6000), "the actual app-list button changes the policy after local PIN entry");
     ok("shell.back", NULL); ok("family.next", NULL); touch("禁用时段"); CHECK(page("SetKidPeriods"), "SetKid opens restricted hours");
     CHECK(strstr(g_snap, "kid.period_set") && strstr(g_snap, "21:00") && strstr(g_snap, "07:00"), "restricted hours expose actual stored times"); capture("SetKidPeriods");
-    ok("family.next", NULL); touch("星期二"); CHECK(page("confirm"), "weekday touch uses kid.period_set");
+    for (int i = 0; i < 5; i++) { wanted = "星期二"; on_ui(find_label); if (found) break; ok("family.next", NULL); }
+    touch("星期二"); CHECK(page("confirm"), "weekday touch uses kid.period_set");
     touch("输入密码");
     for (const char *p = "24681357"; *p; p++) { char digit[2] = {*p, 0}; touch(digit); }
     touch("确定"); quiet();
@@ -172,7 +173,7 @@ static void locale(void) {
     CHECK(sim_metric_value("i18n.missing") == missing, "every application row has an English translation");
     ok("family.kid_periods", NULL);
     wanted = "Restricted Hours"; on_ui(find_label); CHECK(found, "the period page has its English heading");
-    wanted = "Start time"; on_ui(find_label); CHECK(found, "time labels are translated");
+    wanted = "Start–end (24-hour time)"; on_ui(find_label); CHECK(found, "continuous time label is translated");
     capture("SetKidPeriodsEnglish");
     for (int i = 0; i < 3; i++) ok("family.next", NULL);
     CHECK(sim_metric_value("i18n.missing") == missing, "all period and weekday rows have English translations");
