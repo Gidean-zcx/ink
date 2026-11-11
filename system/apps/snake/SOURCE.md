@@ -2,7 +2,7 @@
 
 来源：[patorjk/JavaScript-Snake](https://github.com/patorjk/JavaScript-Snake)，固定提交 `3243086c0badb4b4c6bedfe6d95d5a52a7caaa88`，查阅日期 2026-11-12。使用任务指定的只读副本，没有下载其他版本。
 
-上游只有浏览器 JavaScript，本任务明确允许将规则移植为 C。未复制 DOM 界面、字体、CSS 或图片。许可证原文见 [LICENSE](LICENSE)。`engine.c` 保留原作者版权。
+上游只有浏览器 JavaScript，本任务明确允许将规则移植为 C。未复制 DOM 界面、字体、CSS 或图片。许可证原文见 [LICENSE](LICENSE)，仅将 CRLF 行尾转成 LF，文字未改。`engine.c` 保留原作者版权。
 
 | C 逻辑 | 对应上游 `src/js/snake.js` | 适配 |
 | --- | --- | --- |

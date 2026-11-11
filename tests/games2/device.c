@@ -41,7 +41,7 @@ static void ready(const char *game) {
     const char *id = !strcmp(game, "memory") ? "games.memory.state" : "games.snake.state";
     CHECK(WAIT_FOR(AI(id, NULL) && g_rc.status == INK_RC_DONE, 6000), "member game store loaded"); read_board();
 }
-static void same_page(const char *name) { on_ui(read_screen); CHECK(!strcmp(g_top, name) && strstr(g_snap, board), "capability and page agree: %.150s", g_snap); }
+static void same_page(const char *name) { on_ui(read_screen); CHECK(!strcmp(g_top, name) && strstr(g_snap, board), "capability and page agree (%s)", name); }
 static void capture_event(void *arg) { CHECK(settled(), "capture after presentation"); sim_display_snapshot(arg); }
 static void capture(const char *name) { quiet(); vtk_event_at(vtk_now() + SIM_MS(1), capture_event, (void *)name); delay_ms(5); }
 static void rules(void) {
