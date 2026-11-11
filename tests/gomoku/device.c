@@ -8,7 +8,7 @@
 #undef ink_main
 #include "../integration/whole_product.h"
 
-static char phase[16], saved_board[226];
+static char phase[16], saved_board[226], parent_board[226];
 static ink_json_t parsed;
 static ink_gomoku_t board;
 static bool measuring;
@@ -120,9 +120,14 @@ static void approve(void) {
     pin_done = false;
     CHECK(!ink_confirm_accept_with_pin(token, "24681357", pin_reply, NULL) && WAIT_FOR(pin_done, 6000) && pin_result == INK_PIN_OK, "parent approves synthetic policy change locally"); quiet();
 }
+static void child_first_snapshot(void) {
+    CHECK(!ink_app_open("gomoku", NULL, NULL), "open child menu before asynchronous load finishes");
+    read_screen();
+    CHECK(!strstr(g_snap, parent_board), "member loading snapshot never exposes the previous board");
+}
 static void isolation(void) {
-    state(1); read_board(); char parent_board[226]; snprintf(parent_board, sizeof parent_board, "%s", saved_board);
-    CHECK(!ink_member_switch("kid"), "switch to child"); quiet(); state(0);
+    state(1); read_board(); snprintf(parent_board, sizeof parent_board, "%s", saved_board);
+    CHECK(!ink_member_switch("kid"), "switch to child"); quiet(); on_ui(child_first_snapshot); quiet(); state(0);
     ok("games.start", "{\"mode\":\"two\",\"size\":9}"); move(1, 2); state(1);
     CHECK(!ink_member_switch("owner"), "return to parent"); quiet(); state(1); read_board();
     CHECK(!strcmp(saved_board, parent_board) && number("size") == 15, "member save is isolated");

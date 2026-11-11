@@ -16,7 +16,7 @@ static struct {
     ink_db_t *db;
     ink_call_t *call;
     ink_exec_job_t job;
-    uint32_t epoch;
+    uint32_t epoch, loading_epoch;
     char member[16], board[226], json[640], status[80];
     bool saved, thinking;
     int move, cursor;
@@ -77,13 +77,14 @@ static void ai_done(void *arg) {
 static void search(void *arg) { (void)arg; G.move = ink_gomoku_choose(&G.s); ink_exec_post(INK_EXEC_UI, &G.job, ai_done, NULL); }
 static void loaded(void *arg) {
     (void)arg; ink_call_t *c = G.call; G.call = NULL;
-    if (G.epoch != ink_member_epoch() || !ink_member_space_open()) {
+    if (G.loading_epoch != ink_member_epoch() || !ink_member_space_open()) {
         ink_db_close(G.db); G.db = NULL; fail(c, INK_RC_CANCELLED, TR("使用者已改变"));
     } else if (!G.db) fail(c, INK_RC_FAILED, TR("无法读取棋局"));
     else {
         ink_rec_t rec;
         G.saved = ink_db_get(G.db, 1, &rec, &G.s, sizeof G.s) == 0 && rec.len == sizeof G.s && !ink_gomoku_play(&G.s, 0, 0, 0);
         if (!G.saved) G.s = (ink_gomoku_t){.size = 15, .level = 1};
+        G.epoch = G.loading_epoch;
         run(c);
     }
     if (!G.call) ink_cap_done(c);
@@ -98,7 +99,7 @@ static void run(ink_call_t *c) {
     }
     if (!G.db || G.epoch != ink_member_epoch()) {
         if (ink_exec_ready(INK_EXEC_BG)) { fail(c, INK_RC_FAILED, TR("无法读取棋局")); return; }
-        ink_db_close(G.db); G.db = NULL; G.epoch = ink_member_epoch();
+        ink_db_close(G.db); G.db = NULL; G.loading_epoch = ink_member_epoch();
         snprintf(G.member, sizeof G.member, "%s", ink_cap_call_member(c));
         G.call = c; ink_cap_defer(c); ink_exec_post(INK_EXEC_BG, &G.job, load, NULL); return;
     }

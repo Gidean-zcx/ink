@@ -6,7 +6,7 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 棋局、能力、存档及反向对照 | 专项通过 | 【实测】main 293、reboot 18、big 83 条检查，0 失败；四组反向对照均 exit=1，含只读查询零刷新 | `taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/python tests/gomoku/run.py --build build`；同解释器运行 `tests/gomoku/reverse.py --build build` |
+| 1 棋局、能力、存档及反向对照 | 专项通过 | 【实测】main 296、reboot 18、big 83 条检查，0 失败；五组反向对照均 exit=1，含只读零刷新及成员切换首帧隔离 | `taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/python tests/gomoku/run.py --build build`；同解释器运行 `tests/gomoku/reverse.py --build build` |
 | 2 全量测试、内存检查、S31 | 普通全量未全过；其余待完成 | 【实测】原话：`97% tests passed, 12 tests failed out of 406`，`Total Test time (real) = 941.56 sec`；C++ 接入影响的五项回归修正后全部通过，UHCI 单独重跑通过 | `taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/ctest --test-dir build --output-on-failure -j2`；详见验证记录 |
 | 3 截图与上机清单 | 模拟器截图通过，真机未测 | 【实测】菜单/对局/胜负各 100% 和 120% 六张，22,800～35,169 字节，已逐张查看；普通/120% 落子最大区域分别 54,696 / 66,768 px | 专项测试自动截图；见下方链接 |
 
@@ -34,6 +34,7 @@
 
 - 普通模拟器首次运行因为只构建专项目标而缺界面字体、图标，补齐全部资源后继续。随后 ASan 定位到本次新增快照漏填 `role` 的空指针，已补齐字段；没有改公用快照接口。
 - 新写测试最初漏设父密码，导致策略变更在后台被拒绝；已照现有家长确认流程用合成密码完成设置并等待确切状态，没有放宽策略。新测试还改为拒绝落子后重读状态、终局只暴露可用动作；基线的已有测试未改。
+- 本次装载流程曾先发布新成员代际、后读取棋局，首帧快照能短暂带出旧盘面。现分别保留装载代际和已就绪代际，读完棋局才发布后者；新测试在实际打开菜单的同一 UI 回调读取快照，未人为阻塞线程。恢复提前发布的写法，反向对照确实失败。
 - 普通全量的 `unit-s31-uhci-negative` 出现假 GPIO 对端的 2 秒等待断言；随后 `ctest -j1 -R '^unit-s31-uhci-negative$'` 所在专项串行轮通过（28.85 秒）。未改 4G 源码、测试、等待时间或预算，不能据此声称其并行稳定性已解决。
 
 ## 新增的机制
@@ -55,15 +56,16 @@
 - 【实测】GCC 对原文 `GomokuAI.cpp:70` 的构造参数 `aiSide` 报 `-Wshadow`，Apple clang 不报。为保持原文，仅这个第三方文件关闭 `-Wshadow`；产品胶水仍保持完整 `INK_WERROR`。修改后重跑 GCC 检查。
 - 超过 100 行的原因：本任务是新应用移植，需要成员存档、异步搜索接缝、五个能力、菜单、棋盘和快照。更小方案“界面直接调用引擎”“在 UI 里搜索”“沿用全局存档”分别违反人/AI 共路、交互响应和成员隔离要求。
 - 【实测】最终检查页面、引擎胶水、两个原文 C++ 文件及测试驱动：`gcccheck: 5 compiled, 0 with findings`。
-- 产品新增按最保守口径计 **281 行**（把所有新增 CMake 行连同测试注册也算入；原文、测试和文档不计），低于 400 行。只读查询的局刷修正集中在 `show` 一处，原文未改。
+- 产品新增按最保守口径计 **282 行**（把所有新增 CMake 行连同测试注册也算入；原文、测试和文档不计），低于 400 行。只读查询的局刷修正集中在 `show` 一处，成员隔离修正在装载发布点，原文未改。
 - 能力归 `games.start/state/move/undo/reset`；状态为棋盘/回合/胜负；模式和难度也由 `games.start` 选择；变化走 `games.changed` 成员事件；底层规则/搜索归原文引擎，存储归既有成员数据库，绘制归 UI 执行器。人和 AI 走同一组能力，菜单、对局都提供快照，没有可绕过策略的 UI 私有落子入口。
 
 ## 验证记录
 
 - 普通全量原始日志：`work/ctest.log`（12 失败、3 跳过；跳过为三项中枢 Python 环境测试，未改跳过条件）。
 - C++ 链接驱动修正后，`ctest --test-dir build --output-on-failure -j1 -R '^(services-mid-regressions|file-index-regressions|confirm-durable|thumb-wiring|index-durable)$'` 原话：`100% tests passed out of 5`，51.16 秒；日志 `work/ctest-link-2.log`。
-- 专项测试：`work/gomoku-final.log`；反向对照：`work/gomoku-final-reverse.log`、`build/gomoku-reverse/summary.json`，分别恢复只读查询刷新、移除判胜、禁用能力落子、取消换成员重载，测试都确实失败，工作源码哈希未变。
-- 内存专项：`ctest --test-dir build-asan --output-on-failure -j1 -R '^gomoku$'` 通过，覆盖普通、重启、120% 三场景（293/18/83），日志 `work/asan-gomoku.log`、`work/asan-gomoku-detail.log`；完整 ASan/UBSan 全量轮仍在运行。
+- 最终专项：`work/gomoku-final2.log`；反向对照：`work/gomoku-final2-reverse.log`、`build/gomoku-reverse/summary.json`，分别提前发布新成员、恢复只读刷新、移除判胜、禁用能力落子、取消换成员重载，测试都确实失败，工作源码哈希未变。
+- ASan/UBSan 全量原话：`99% tests passed, 6 tests failed out of 406`，`Total Test time (real) = 1441.66 sec`；同上述六项共享同步失败，另有同样三项中枢环境跳过；日志 `work/asan-ctest.log`。
+- 成员装载修正后补跑最终内存专项（完整全量轮之后）：`tests/gomoku/run.py --build build-asan`，普通/重启/120% 三场景分别 296/18/83，0 失败，没有 sanitizer 诊断；日志 `work/asan-final2.log`。原有全部内存构建目标已构建，最后修改只补编五子棋目标并重跑其全部专项。
 - S31 基线和五子棋版均曾编译通过，暂测 bin 为 4,441,760→4,455,200 字节（+13,440）；两版均无编译器警告，均有相同六条 SDK 组件依赖 CMake 警告。局刷修正后的最终复编及增量待收尾更新；构建脚本始终 `-j2`、`taskpolicy -c utility`，未连接设备。
 - `ui-scale: 52 files, 0 violations`；四个原文文件逐字比较一致。日志和构建目录均在忽略范围，未提交产物。
 
