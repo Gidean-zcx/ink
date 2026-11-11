@@ -8,7 +8,11 @@ taskpolicy -c utility cmake --build build -j2
 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
 ```
 
-内存检查：配置命令把 `build` 换成 `build-asan`，追加 `-DINK_SANITIZE=ON`，然后分别运行 `cmake --build build-asan -j2` 和 `ctest --test-dir build-asan --output-on-failure -j2`，同样带 `taskpolicy -c utility`。
+内存检查：配置命令把 `build` 换成 `build-asan`，追加 `-DINK_SANITIZE=ON`，再运行 `taskpolicy -c utility cmake --build build-asan -j2`。本次全量命令为：
+
+```sh
+taskpolicy -c utility env UBSAN_OPTIONS=halt_on_error=1 "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
+```
 
 ```sh
 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/textfield_forms.py --build build --label before --baseline da3296b75fda740f680dc5639d835d4e06d9a33b
@@ -21,3 +25,26 @@ taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/textfield_re
 `--baseline` 只用于手动复核；注册到 ctest 的检查不读 Git 历史。反向对照只编译临时替换对象，不撤销工作区源码：分别移除旧尺寸覆盖拦截、移除随字号增高，要求真实 `ui-input-host` 断言失败。
 
 GCC 检查使用任务提供的 `ink-codex/tools/gcccheck.py`，对本任务修改的全部 C 文件执行；新增截图驱动也单独提供同一构建的编译参数。工具用 GCC 编译到汇编，不连接、不接设备，不能代替 S31 固件编译。
+
+```sh
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" - <<'PY'
+import json, os, subprocess, sys
+from pathlib import Path
+root = Path.cwd()
+area = root / 'work/gcccheck'
+area.mkdir(parents=True, exist_ok=True)
+db = json.loads((root / 'build/compile_commands.json').read_text())
+for target, template in [('tests/textfield_forms.c', '/tests/ui_input_host.c'),
+                         ('tests/services_finish/text_window.c', '/tests/integration/media.c')]:
+    entry = next(e for e in db if e['file'].endswith(template)).copy()
+    old = entry['file']
+    entry['file'] = str(root / target)
+    entry['command'] = entry['command'].replace(old, entry['file'])
+    db.append(entry)
+(area / 'compile_commands.json').write_text(json.dumps(db))
+files = subprocess.check_output(['git', 'diff', '--name-only',
+    'da3296b75fda740f680dc5639d835d4e06d9a33b..HEAD', '--', '*.c'], text=True).splitlines()
+checker = Path(os.environ['INK_DEPS']).parent / 'ink-codex/tools/gcccheck.py'
+sys.exit(subprocess.run([sys.executable, str(checker), str(area), *files]).returncode)
+PY
+```
