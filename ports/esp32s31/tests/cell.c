@@ -33,7 +33,7 @@ static bool pumping, no_wake, no_ack, no_response, prompt, missing, unregistered
 static uint32_t baud = 2000000, modem_baud = 2000000; /* this side's UART rate; the rate the modem listens at */
 static int drop_probes; /* first device run: a just-woken modem missed frames */
 static unsigned writes, bad_headers, handshakes, receives, acks, changed, data_tx, radio_commands;
-static bool net_started, drop_rx;
+static bool net_started, drop_rx, silent_greeting; /* silent: a modem whose data device is up ignores a handshake */
 static int csq = 23;
 static esp_netif_t netif;
 static esp_netif_driver_ifconfig_t net_driver;
@@ -117,7 +117,8 @@ bool ink_s31_uhci_transmit(const uint8_t *data, size_t n) {
         static const uint8_t handshake[] = {0x53, 0x50, 0x49, 0x43, 2, 4, 12, 0, 0, 0, 0, 0};
         if (n == 16 && !memcmp(p + 4, handshake, sizeof handshake)) {
             static const uint8_t ack[] = {0x53, 0x50, 0x49, 0x43, 1, 0x80};
-            handshakes++; inject(0, ack, sizeof ack);
+            handshakes++;
+            if (!silent_greeting) inject(0, ack, sizeof ack);
         } else { assert(n == sizeof ethernet + 4 && !memcmp(p + 4, ethernet, sizeof ethernet)); data_tx++; }
         return true;
     }
@@ -296,8 +297,20 @@ int main(void) {
     no_wake = false; srdy = 0;
     assert(hal_modem_at("AT", response, sizeof response, 1000) == HAL_AT_OK);
     reply("\r\nECRDY\r\n"); drain();
-    assert(!ink_cell.handshake && !ink_cell.ip && !ink_s31_cell_available()); net_started = false;
-    assert(hal_cell_status(&st) && ink_cell.handshake && handshakes == 2);
+    assert(!ink_cell.handshake && !ink_cell.ip && !ink_s31_cell_available());
+    /* the modem's data device outlived our restart (state 1): greeted as at a first start, no ECNETDEVCTL=2,1,1 */
+    net_started = true;
+    assert(hal_cell_status(&st) && ink_cell.handshake && handshakes == 2 && radio_commands == 0);
+    assert(strstr(logged, "data link was up before us; it answered our handshake"));
+    reply("\r\nECRDY\r\n"); drain();
+    /* it ignores the greeting: the radio goes off and on once, then the vendor's way (the address comes by DHCP) */
+    silent_greeting = true;
+    assert(hal_cell_status(&st) && !ink_cell.handshake && handshakes == 3 && radio_commands == 2);
+    assert(strstr(logged, "radio off and on once"));
+    assert(hal_cell_status(&st) && ink_cell.handshake && handshakes == 4 && radio_commands == 2); /* only once */
+    silent_greeting = false; radio_commands = 0;
+    reply("\r\nECRDY\r\n"); drain(); net_started = false;
+    assert(hal_cell_status(&st) && ink_cell.handshake && handshakes == 5);
     no_response = true; before = writes;
     assert(hal_modem_at("ATI", response, sizeof response, 200) == HAL_AT_TIMEOUT && writes == before + 1); no_response = false;
     assert(hal_modem_at("AT", response, sizeof response, 200) == HAL_AT_NO_MODEM);
@@ -314,7 +327,7 @@ int main(void) {
     no_response = true; assert(hal_modem_at("ATI", response, sizeof response, 200) == HAL_AT_TIMEOUT && ink_cell.desynced); no_response = false;
     assert(hal_modem_at("AT", response, sizeof response, 200) == HAL_AT_NO_MODEM);
     now += 30000001; assert(hal_modem_at("AT", response, sizeof response, 1000) == HAL_AT_OK && !ink_cell.desynced);
-    net_started = false; assert(hal_cell_status(&st) && handshakes == 3);
+    net_started = false; assert(hal_cell_status(&st) && handshakes == 6);
     unregistered = missing = true; csq = 99;
     assert(hal_cell_status(&st) && !st.registered && st.sim_missing && st.signal_dbm == 0 && !ink_s31_cell_available());
     assert(!ink_cell.ip && !ink_cell.handshake);

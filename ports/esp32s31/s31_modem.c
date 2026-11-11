@@ -552,6 +552,18 @@ void ink_s31_cell_update(bool registered, int signal_dbm) {
     CELL_UNLOCK();
     if (changed) ink_s31_net_changed();
 }
+/* The vendor's handshake request (.cc:1653-1658); the receive side sets handshake on its ACK. */
+static bool ink_greet(uint64_t wait_us) {
+    static const uint8_t request[] = {0x53, 0x50, 0x49, 0x43, 2, 4, 12, 0, 0, 0, 0, 0};
+    if (!ink_enqueue(request, sizeof request, 0)) return false;
+    uint64_t end = osal_now_us() + wait_us;
+    bool answered;
+    do {
+        osal_task_delay_us(1000);
+        CELL_LOCK(); answered = ink_cell.handshake; CELL_UNLOCK();
+    } while (!answered && osal_now_us() < end);
+    return answered;
+}
 void ink_s31_cell_start_data(void) { /* upstream RunNormalModeInitSequence .cc:1637-1676 */
     CELL_LOCK();
     bool started = ink_cell.handshake, registered = ink_cell.registered && ink_cell.selected;
@@ -566,22 +578,32 @@ void ink_s31_cell_start_data(void) { /* upstream RunNormalModeInitSequence .cc:1
     int state = 0;
     const char *p = strstr(response, "+ECNETDEVCTL:");
     if (p) sscanf(p, "+ECNETDEVCTL: %*d,%*d,%*d,%d", &state);
+    CELL_LOCK(); bool current = epoch == ink_cell.epoch && !ink_cell.suspended; CELL_UNLOCK();
+    if (!current) goto done;
     if (state == 1) {
-        CELL_LOCK();
-        if (epoch == ink_cell.epoch) ink_cell.handshake = true;
-        CELL_UNLOCK();
+        /* The modem's data device outlived our restart: P14 stays on at boot, as the vendor's board init leaves it. The
+         * vendor then only waits for DHCP (.cc:1640-1645); on the device no address came for minutes, until the modem
+         * restarted the device itself (trial installs 12 and 13, 2026-11-11). So greet it as at a first start; with no
+         * answer, turn the radio off and on once (allowed commands): the modem re-registers in about 2 s and brings its
+         * data device up afresh, which the device showed to work (+ECNETDEVCTL: 1, then DHCP). */
+        static bool restarted; /* once per boot */
+        bool answered = ink_greet(3000000);
+        hal_log_write(answered ? "cell: data link was up before us; it answered our handshake"
+                               : "cell: data link was up before us; no answer to our handshake");
+        if (!answered && !restarted) {
+            restarted = true;
+            hal_modem_at("AT+CFUN=4", response, sizeof response, 8000);
+            osal_task_delay_us(1000000);
+            hal_modem_at("AT+CFUN=1", response, sizeof response, 15000);
+            hal_log_write("cell: radio off and on once, so the modem starts its data link afresh");
+            goto done;
+        }
+        if (!answered) { CELL_LOCK(); if (epoch == ink_cell.epoch) ink_cell.handshake = true; CELL_UNLOCK(); }
         ink_s31_net_changed();
         goto done;
     }
-    CELL_LOCK(); bool current = epoch == ink_cell.epoch && !ink_cell.suspended; CELL_UNLOCK();
-    if (!current || hal_modem_at("AT+ECNETDEVCTL=2,1,1", response, sizeof response, 5000) != HAL_AT_OK) goto done;
-    static const uint8_t request[] = {0x53, 0x50, 0x49, 0x43, 2, 4, 12, 0, 0, 0, 0, 0};
-    if (!ink_enqueue(request, sizeof request, 0)) goto done;
-    uint64_t end = osal_now_us() + 5000000;
-    do {
-        osal_task_delay_us(1000);
-        CELL_LOCK(); started = ink_cell.handshake; CELL_UNLOCK();
-    } while (!started && osal_now_us() < end);
+    if (hal_modem_at("AT+ECNETDEVCTL=2,1,1", response, sizeof response, 5000) != HAL_AT_OK) goto done;
+    started = ink_greet(5000000);
     hal_log_write(started ? "cell: data link started (handshake answered)" : "cell: data link handshake not answered in 5 s");
 done:
     CELL_LOCK(); ink_cell.starting = false; CELL_UNLOCK();
