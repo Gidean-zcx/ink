@@ -1,6 +1,6 @@
 # lock-faces-2 执行报告
 
-基线：`42e3b1f051650827bacb7638101d14bbf6b4bdc4`。日期：2026-11-12。实现、针对性验证及普通全量检查完成，ASan 全量检查进行中。**锁屏自动走时仍受文件范围限制，不能作为完整功能验收通过。**
+基线：`42e3b1f051650827bacb7638101d14bbf6b4bdc4`。日期：2026-11-12。实现、全部检查及本地提交已完成。**锁屏自动走时仍受文件范围限制，完整功能验收未通过。**
 
 ## 验收表
 
@@ -12,7 +12,7 @@
 | 1d | 通过【实测】 | 跨日、相同分钟换日及闰二月正向过；跨日反向到达预期断言 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/lock_faces_reverse.py --build build --case day` |
 | 1e | 通过【实测】 | 换成员重建，孩子及关闭的成人空间无成人待办／阅读内容；本人验证后继续第 5 页 | 正向命令；反向 `--case member`、`--case reading` |
 | 1f | 通过【实测】 | 原 343 条覆盖保留并扩展为矩阵 487 条；7 组反向均触发预期断言 | 正向与完整反向命令 |
-| 2 | 普通全量通过【实测】 | 414 项，0 失败、3 跳过；ASan 专项 811 条过、全量进行中；GCC 9 个文件无发现；S31 留给合并主会话 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2` |
+| 2 | 通过【实测】 | 普通／ASan 全量各 414 项、0 失败；默认跳过的三个中枢测试均已补跑过；GCC 9 个文件无发现；S31 留给合并主会话 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`；内存检查换 `build-asan`；补跑见下文 |
 | 3 | 通过【实测】 | [20 张截图](SCREENSHOTS.md)，含选择页、六种表盘的 100%／120%、成员隔离及英文 | 正向命令；英文加 `INK_LOCK_FACES_CASE=english` |
 | 4 | 通过【实测／实现】 | 新增 1901～2100 年节气日期查询，完整 MIT 许可与来源哈希；2026 年 24 个日期独立对照过 | 正向命令中的 `solar_terms` 检查；反向 `--case solar` |
 
@@ -37,7 +37,7 @@
 
 ## 要用户定的
 
-允许合并主会话修改时间服务的锁屏分钟调度；本任务按原文件边界继续，不新增界面轮询。
+需将允许修改的文件范围扩展至 `time_service.c`，才能满足已明确的自动走时要求；建议合并主会话沿用原分钟调度补齐。本任务保持原文件边界。
 
 ## 顺手发现
 
@@ -52,7 +52,7 @@
 
 ## 要改的文档
 
-按任务书只重新生成能力文档，其他共享文档不改。合并主会话需将节气查询声明移到公共时间头文件（该文件不在本任务范围），并补齐锁屏分钟调度契约。
+按任务书只重新生成能力文档，其他共享文档不改。合并主会话需将节气查询声明移到公共时间头文件（该文件不在本任务范围），同步界面规范与依赖文档中的六种表盘及锁屏分钟调度契约。
 
 ## 针对性验证
 
@@ -74,9 +74,20 @@
 ## 检查结果
 
 - 【实测】普通工程按总规则第 5 节配置（Werror、给定字体／Python／LVGL），`taskpolicy -c utility cmake --build build -j2` 成功；最终普通全量原话：`100% tests passed out of 414`，`Total Test time (real) = 608.85 sec`。所要求的 `ui-scale`、各 i18n 检查、`capability-table-doc` 均过。
-- 【实测】三个中枢测试跳过：`hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e`；本检出缺锁定的中枢 Python 环境及其生成消息。未安装或升级依赖，未把跳过写成实际通过。
+- 【实测】ASan/UBSan 工程使用同一配置，仅换目录并加 `-DINK_SANITIZE=ON`，完整构建成功；`UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2` 原话：`100% tests passed out of 414`，`Total Test time (real) = 963.73 sec`。完整日志未检出 ASan、LSan 或 UBSan 诊断。
+- 【实测】默认配置的普通／ASan 全量各跳过三个中枢测试：`hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e`，因为配置的 Python 没有选中其依赖。随后核实 `$INK_DEPS/hub/.venv` 的 Python 3.11.15 和四个依赖版本与本分支锁文件一致，只读复用，显式加载本分支 `hub` 源码；普通／ASan 补跑各为 `100% tests passed out of 4`（含能力导出准备测试），分别 57.16／57.45 秒，无跳过。未安装或升级依赖。
 - 【实测】`ink-codex/tools/gcccheck.py` 检查 6 个修改的产品 C 文件和 3 个相关测试 C 文件，原话：`gcccheck: 9 compiled, 0 with findings`。未运行 Linux CI；S31 固件按本任务要求由合并主会话编译。
 - 【实测】指定隐私正则扫描基线至当前提交：0 命中，grep 返回 1；`git diff --check` 无输出；任务文档链接、文件范围及单文件大小检查过。
+
+中枢补跑命令（在仓库根目录执行；内存检查只换 `--test-dir build-asan`）：
+
+```sh
+PYTHONPATH="$PWD/hub:$INK_DEPS/hub/.venv/lib/python3.11/site-packages" \
+PYTHONDONTWRITEBYTECODE=1 UBSAN_OPTIONS=halt_on_error=1 \
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" \
+  --test-dir build --output-on-failure -j2 \
+  -R '^(hub-contract|hub-json-crosscheck|hub-simulator-e2e)$'
+```
 
 ## 上机核对清单
 
