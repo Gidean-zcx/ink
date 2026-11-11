@@ -42,6 +42,7 @@ EXACT = {
     ('system/apps/camera/camera.c', '照片-%u.png'): 'Existing filename sequence, also parsed with sscanf.',
     ('system/apps/camera/camera.c', '%s/照片-%u.png'): 'Generated user filename; preserve the stored naming convention.',
     ('system/apps/gallery/gallery.c', '/family/锁屏拍的照片'): 'Read the same persistent camera directory.',
+    ('system/ui/shell/keyboard.c', '中'): 'The input-method key for Chinese reads 中 in every interface language; the generic 中 in the table is the font size (Med).',
 }
 
 

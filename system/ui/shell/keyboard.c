@@ -376,7 +376,7 @@ static void build(int kind) {
         lv_obj_t *bottom = new_row();
         key(bottom, K.symbols ? TR("字母") : TR("符号"), KEY_SWITCH, 2);
         if (K.plain) {
-            key(bottom, K.english ? "英" : "中", INK_TEXT_KEY_LANGUAGE, 1);
+            key(bottom, K.english ? TR("英") : "中", INK_TEXT_KEY_LANGUAGE, 1); /* 中: the same in every interface language */
             key(bottom, ",", ',', 1);
         }
         key(bottom, TR("空格"), ' ', K.plain ? 3 : 5);
