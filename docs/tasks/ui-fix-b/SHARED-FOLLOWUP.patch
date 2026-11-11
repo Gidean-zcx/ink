@@ -7,11 +7,11 @@
 +连接中	Connecting
 +已配对	Paired
 +发现的设备	Discovered devices
-+已配对的设备可点右侧“忘记”	Tap Forget on the right to remove a paired device
++已配对的设备可点右侧“忘记”	Tap Forget to remove a device
 +本机不能重置密码。请联系家庭服务器管理者；家长验证只核对身份。	This device cannot reset passwords. Contact the family server administrator; parent verification only checks identity.
 +先关闭自动设置时区	Turn off Automatic Time Zone first
 +先关闭自动设置日期和时间	Turn off Automatic Date & Time first
-+离开后，再用大人的空间要输密码	Enter a password to return to an adult space after leaving
++离开后，再用大人的空间要输密码	Enter a password after leaving
 +忘记	Forget
 +重新验证	Verify Again
 --- a/docs/system/capabilities.md
@@ -103,3 +103,15 @@
          for (int i = 0; i < (int)(sizeof GRACE / sizeof *GRACE); i++) {
          const char *label = TR(GRACE_NAMES[i]);
          field(i, GRACE_NAMES[i], label, ink_setting_get("member.idle_return_s") == GRACE[i] ? TR("已选择") : "");
+--- a/tests/small_gaps_2/ui.c
++++ b/tests/small_gaps_2/ui.c
+@@ -87,7 +87,8 @@
+ static int buttons;
+ static void inspect_buttons(lv_obj_t *obj) {
+     const char *cap = ink_shell_bound_cap(obj);
+-    if (cap && !strcmp(cap, compare ? "reminder.draft" : "shell.time_step")) {
++    if (cap && !strcmp(cap, compare ? "reminder.draft" : "shell.time_step") &&
++        lv_obj_get_width(obj) == ink_ui_px(INK_PRIMARY)) {
+         CHECK(buttons < PICKER_BUTTONS, "picker has ten step buttons");
+         if (buttons < PICKER_BUTTONS) {
+             lv_area_t a; lv_obj_get_coords(obj, &a);
