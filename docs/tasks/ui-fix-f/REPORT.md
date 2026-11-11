@@ -11,10 +11,10 @@
 | UX22（D01～D06） | 针对性通过 | 【实测】两档各 98 条通过／基线各 10 条失败。开始结束具名、全天响铃可辨、错误和底栏在键盘上方 | C1 |
 | 普通／120% 前后截图及反向对照 | 通过 | 【实测】四个页面 × 两档字号 × 前后，共 16 轮均得出预期结论；截图见本目录 | C1 |
 | 全量 ctest（含 ui-scale） | 未全绿 | 【实测】原话：`99% tests passed, 4 tests failed out of 413`；406 通过、4 失败、3 跳过，退出 8，1255.17 秒。`ui-scale` 和本任务既有测试通过 | C2 |
-| 内存检查 | 构建／验证中 | ASan/UBSan 结果待补 | C3、C4 |
+| 内存检查 | 针对性通过，全量运行中 | 【实测】ASan/UBSan 构建完成；四项 × 两档字号共 8 轮均通过，各 127／154／98／52 条断言，无内存或未定义行为诊断 | C3、C4 |
 | S31 | 未编固件 | 【实测】普通全量中的 S31 宿主单元／负向编译检查已运行；未进行设备操作 | C2 |
 | gcccheck | 通过 | 【实测】`gcccheck: 8 compiled, 0 with findings`；没有跳过；只做 GCC 编译检查，不等于 Linux 运行测试 | C5 |
-| 范围、行数、隐私检查 | 未运行 | 仅允许文件；产品代码 ≤300 行 | 待记录 |
+| 范围、行数、隐私检查 | 通过，收尾时再核对 | 【实测】115 个变更文件均在允许范围；链接无缺失；基线差异的路径／MAC 正则扫描 0 命中；产品及英文保守合计 146 行 | C7 |
 
 ## 没做到的
 
@@ -60,5 +60,6 @@
 - C4：C1 换为 `--build build-asan`，不加 `--reverse`，不覆盖普通截图。
 - C5：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" "$INK_DEPS/../ink-codex/tools/gcccheck.py" work/ui-fix-f/gcc system/apps/{remote/remote,weather/weather,calculator/calculator,calendar/calendar}.c tests/{remote_app/remote_app,weather/weather,calendar/calendar,ui_fix_f_calculator}.c`。数据库从普通构建复制，并为专用计算器测试复用 `sim-calculator` 的编译参数；不修改公共 CMake。
 - C6：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" docs/tasks/ui-fix-f/check-baseline.py --build build --case surface`；另分别指定 `receipts`、`privacy`。本手动对照依赖历史，不注册为 ctest。
+- C7：`git diff a379ef4323b576dbda6543cf0874037f05ca1056..HEAD --stat`；按总规则第 6 节的原始正则执行差异隐私扫描，另核对允许路径、截图大小和 Markdown 链接。
 
-产品代码四个 C 文件共 **132 行**（新增 93、删除 39）；另加 14 行英文，保守合计 **146 行 < 300**。四项各修自己的呈现根因：只改文案无法保留计算器逐字修改，也无法让日历底栏避开键盘；未引入公共框架或改公共输入组件。截图共 100 张、2,283,903 字节，最大 36,102 字节，均小于 300 KB。
+产品代码四个 C 文件共 **132 行**（新增 93、删除 39）；另加 14 行英文，保守合计 **146 行 < 300**。四项各修自己的呈现根因：只改文案无法保留计算器逐字修改，也无法让日历底栏避开键盘；未引入公共框架或改公共输入组件。截图共 100 张、2,283,974 字节，最大 36,111 字节，均小于 300 KB。
