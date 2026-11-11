@@ -68,7 +68,7 @@ static void records(void) {
     CHECK(AI("shell.ai_home", NULL) && g_rc.status == INK_RC_DONE, "history app opens"); capture("AiHistory");
     CHECK(strstr(snapshot, "pagination") && strstr(snapshot, "合成问题50"), "history has a paginated AI snapshot");
     CHECK(AI("ai.history.next", NULL) && g_rc.status == INK_RC_DONE, "AI turns the visible history page"); on_ui(read_snapshot);
-    CHECK(strstr(snapshot, "合成问题46") && !strstr(snapshot, "合成问题50"), "visible second page matches the service");
+    CHECK(strstr(snapshot, "合成问题47") && !strstr(snapshot, "合成问题50"), "three-row history second page matches the service");
     newest(); char args[80]; snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)first);
     CHECK(AI("ai.history.open", args) && g_rc.status == INK_RC_DONE, "AI opens its own round"); capture("AiHistoryAnswer");
     CHECK(strstr(snapshot, "合成答案") && strstr(snapshot, "ai.panel.replay"), "stored answer opens in the actual AI panel");

@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parents[2]
 p = argparse.ArgumentParser()
 p.add_argument('--build', type=Path, required=True)
 p.add_argument('--binary', type=Path)
-p.add_argument('--reverse', nargs='?', const='draft', choices=('draft', 'selection'))
+p.add_argument('--reverse', nargs='?', const='draft', choices=('draft', 'selection', 'save-status'))
 a = p.parse_args()
 build = a.build.resolve()
 work = Path(tempfile.mkdtemp(prefix='files-ops-', dir=build))
@@ -21,6 +21,8 @@ if a.reverse:
     source = (ROOT / 'system/apps/files/files.c').read_text()
     old, replacement = ('F.ref = rec.id; F.draft = (uint32_t)draft; break;', 'F.ref = rec.id; F.draft = 0; break;') if a.reverse == 'draft' else (
         'if (i < F.marked_count) F.marked[i] = F.marked[--F.marked_count];', 'if (i < F.marked_count) (void)i;')
+    if a.reverse == 'save-status':
+        old, replacement = 'if (F.mode == EDIT && rc->status != INK_RC_DONE)', 'if (false && F.mode == EDIT && rc->status != INK_RC_DONE)'
     assert source.count(old) == 1
     (work / 'files.c').write_text(source.replace(old, replacement))
     driver = (ROOT / 'tests/files_ops/files_ops.c').read_text().replace(

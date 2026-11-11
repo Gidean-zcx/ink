@@ -7,10 +7,11 @@
 #include <stdlib.h>
 
 static char phase[16], scene[32], saved[4096], args_json[1024];
+static bool large;
 static const char *wanted;
 static lv_obj_t *found;
 static uint32_t ids[3];
-static void options(void *ctx) { (void)ctx; snprintf(phase, sizeof phase, "%s", getenv("INK_FILES_OPS_PHASE")); }
+static void options(void *ctx) { (void)ctx; snprintf(phase, sizeof phase, "%s", getenv("INK_FILES_OPS_PHASE")); large = getenv("INK_FILES_OPS_LARGE") != NULL; }
 static volatile bool pin_done;
 static int pin_result;
 static void pin_reply(void *ctx, int result, uint32_t wait) { (void)ctx; (void)wait; pin_result = result; pin_done = true; }
@@ -70,11 +71,17 @@ static void check_snapshot(void) {
     CHECK(ink_ui_snapshot(g_snap, sizeof g_snap, NULL) > 0 && strstr(g_snap, "\"selected_count\":3") && strstr(g_snap, "file.delete_many") && strstr(g_snap, "files.move"), "snapshot exposes selection count and batch actions");
 }
 static void check_recovered(void) { CHECK(!strcmp(ink_text_value(), "SYNTH_SAVED_AND_UNSAVED草稿"), "power cut restores edited draft"); }
+static void failed_write(void) {
+    operation_done((void *)((uintptr_t)F.serial << 3), &(ink_receipt_t){.status = INK_RC_FAILED});
+    CHECK(F.mode == EDIT && !strcmp(ink_text_value(), "SYNTH_SAVED") && strstr(lv_label_get_text(F.notice), "文件没有更新"), "failed file write retains text and identifies the unsaved file");
+    lv_area_t keyboard, notice; ink_shell_keyboard_area(&keyboard); lv_obj_update_layout(F.notice); lv_obj_get_coords(F.notice, &notice);
+    CHECK(notice.y2 < keyboard.y1 && lv_obj_get_style_bg_opa(F.notice, 0) == LV_OPA_COVER, "file failure is visible above the keyboard and replaces the draft-save hint");
+}
 static void check_partial(void) { CHECK(F.notice && strstr(lv_label_get_text(F.notice), "SYNTH_1.txt"), "partial result names the failed file in the UI"); }
 static bool row_marked;
 static void check_row(void) {
     target();
-    if (found) { lv_obj_t *row = lv_obj_get_parent(found); CHECK(lv_obj_get_style_border_width(row, 0) == ink_ui_px(INK_STROKE) && lv_obj_get_style_outline_width(row, 0) == 0 && lv_obj_get_style_text_decor(found, 0) == (row_marked ? LV_TEXT_DECOR_UNDERLINE : LV_TEXT_DECOR_NONE), "selection underlines the title while retaining one row frame"); }
+    if (found) { lv_obj_t *row = lv_obj_get_parent(found); CHECK(lv_obj_get_style_border_width(row, 0) == ink_ui_px(INK_STROKE) && lv_obj_get_style_outline_width(row, 0) == 0 && lv_obj_get_style_text_decor(found, 0) == LV_TEXT_DECOR_NONE && lv_obj_has_flag(lv_obj_get_child(row, 7), LV_OBJ_FLAG_HIDDEN) != row_marked, "selection shows a check while retaining one row frame"); }
     CHECK(ink_ui_snapshot(g_snap, sizeof g_snap, NULL) > 0 && strstr(g_snap, row_marked ? "\"selected_count\":1" : "\"selected_count\":0"), "touch toggles the public selected count");
 }
 static void read_file(const char *path) {
@@ -92,7 +99,7 @@ static void folder_and_editor(void) {
     CHECK(AI("file.mkdir", "{\"path\":\"/me/../bad\"}") && g_rc.status != INK_RC_DONE, "AI invalid path rejected");
     touch("新建文本"); wait_page("FileName"); name_text("SYNTH_NOTE.txt"); touch("新建文本"); wait_page("FileList"); select_file("/me/SYNTH_OPS/SYNTH_NOTE.txt");
     touch("编辑文本"); wait_page("FileEdit"); command("text.insert", "{\"text\":\"SYNTH_SAVED\"}");
-    CHECK(WAIT_FOR(ink_text_draft_saved() == 1 && ink_db_idle(), 10000), "draft durable before save"); capture("WriteText"); touch("保存"); wait_page("FileActions");
+    CHECK(WAIT_FOR(ink_text_draft_saved() == 1 && ink_db_idle(), 10000), "draft durable before save"); on_ui(failed_write); capture("FileWriteFailed"); touch("更新文件"); wait_page("FileActions");
     read_file("/me/SYNTH_OPS/SYNTH_NOTE.txt"); CHECK(!strcmp(saved, "SYNTH_SAVED"), "saved text on card");
     touch("编辑文本"); wait_page("FileEdit"); CHECK(!strcmp(ink_text_value(), "SYNTH_SAVED"), "reopened text matches");
     command("text.insert", "{\"text\":\"_AND_UNSAVED草稿\"}"); CHECK(WAIT_FOR(ink_text_draft_saved() == 1 && ink_db_idle() && !ink_storage_pending(), 15000), "reference and unfinished edit durable before power cut");
@@ -168,8 +175,9 @@ static void batch_ops(void) {
 }
 static void run(void *unused) {
     (void)unused; vtk_host_call(options, NULL); CHECK(WAIT_FOR(ink_member_space_open(), 10000), "member space opens"); test_start_home(); quiet();
+    if (large) { command("settings.set", "{\"id\":\"display.font_size\",\"value\":3}"); quiet(); }
     if (!strcmp(phase, "write")) { folder_and_editor(); ink_probe_count("test.finished"); hal_power_reboot(); return; }
-    roots(); browse("/me/SYNTH_OPS"); select_file("/me/SYNTH_OPS/SYNTH_NOTE.txt"); touch("编辑文本"); wait_page("FileEdit"); on_ui(check_recovered); capture("RecoveredDraft"); touch("保存"); wait_page("FileActions");
+    roots(); browse("/me/SYNTH_OPS"); select_file("/me/SYNTH_OPS/SYNTH_NOTE.txt"); touch("编辑文本"); wait_page("FileEdit"); on_ui(check_recovered); capture("RecoveredDraft"); touch("更新文件"); wait_page("FileActions");
     read_file("/me/SYNTH_OPS/SYNTH_NOTE.txt"); CHECK(!strcmp(saved, "SYNTH_SAVED_AND_UNSAVED草稿"), "recovered draft saved");
     batch_ops(); ink_probe_count("test.finished");
 }

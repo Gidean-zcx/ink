@@ -24,7 +24,7 @@ static struct {
     ink_ui_page_spec_t model;
     ink_ui_action_spec_t actions[ACTION_MAX];
     ink_ui_field_spec_t fields[3];
-    lv_obj_t *screen, *notice, *field, *preview, *images[4];
+    lv_obj_t *screen, *notice, *field, *preview, *list_body, *images[4];
     lv_image_dsc_t thumbs[4];
     uint8_t pixels[4][INK_ICON_LIST * INK_ICON_LIST];
     char member[16], path[INK_FS_PATH_MAX], dest[INK_FS_PATH_MAX], cursor[16], preview_text[129];
@@ -44,7 +44,11 @@ _Static_assert(7 <= ACTION_MAX, "file toolbar action count");
 static const char *directory(void) { return F.mode == MOVE ? F.dest : F.path; }
 static bool writable(const char *path) { return ink_member_current()->role == INK_ROLE_ADULT || (!strncmp(path, "/me", 3) && (!path[3] || path[3] == '/')); }
 static bool join(char *out, size_t cap, const char *dir, const char *name) { return snprintf(out, cap, "%s/%s", dir, name) < (int)cap; }
-static void status(const char *text) { if (F.notice) lv_label_set_text(F.notice, text); ink_ui_content_changed(); }
+static void status(const char *text) {
+    char count[64]; snprintf(count, sizeof count, TR("已选 %zu 个文件"), F.marked_count);
+    if (F.notice) lv_label_set_text(F.notice, !text[0] && F.multi ? count : text);
+    ink_ui_content_changed();
+}
 static bool current(void *ctx) { return (uint32_t)((uintptr_t)ctx >> 3) == F.serial && ink_ui_page_current() && F.epoch == ink_member_epoch(); }
 static void request(const char *cap, const ink_args_t *args, ink_cap_done_fn done, unsigned slot) {
     ink_call_opts_t opts = {.src = INK_SRC_APP, .member = F.member, .reply_exec = INK_EXEC_UI, .done = done, .ctx = (void *)(((uintptr_t)F.serial << 3) | slot)};
@@ -53,7 +57,13 @@ static void request(const char *cap, const ink_args_t *args, ink_cap_done_fn don
 static void operation_done(void *ctx, const ink_receipt_t *rc) {
     if (!current(ctx)) return;
     F.busy = F.multi && rc->status == INK_RC_PENDING_CONFIRMATION;
-    if (rc->status == INK_RC_DONE && (F.mode == NAME || F.mode == EDIT)) { if (F.mode == EDIT) { ink_db_t *db = ink_db_open_cached_member(&DRAFT_REFS, F.member); if (db) { ink_db_del(db, F.ref, INK_SRC_TOUCH); ink_db_flush(db); ink_db_close(db); } } ink_ui_pop(); return; }
+    if (rc->status == INK_RC_DONE && (F.mode == NAME || F.mode == EDIT)) { if (F.mode == EDIT) { ink_db_t *db = ink_db_open_cached_member(&DRAFT_REFS, F.member); if (db) { ink_db_del(db, F.ref, INK_SRC_TOUCH); ink_db_flush(db); ink_db_close(db); } snprintf(F.result, sizeof F.result, "%s", TR("文件已更新")); } ink_ui_pop(); return; }
+    if (F.mode == EDIT && rc->status != INK_RC_DONE) {
+        lv_area_t keyboard; ink_shell_keyboard_area(&keyboard); status(TR("文件没有更新，文字仍在这里"));
+        lv_obj_set_width(F.notice, ink_ui_px(INK_CANVAS_W - 2 * INK_MARGIN - 2 * INK_CONTROL - INK_CIRCLE_SMALL - 2 * INK_GAP_S));
+        lv_obj_set_y(F.notice, keyboard.y1 - ink_ui_px(2 * ink_ui_line_height(INK_FONT_NOTE) + INK_GAP));
+        lv_obj_set_style_bg_color(F.notice, ink_ui_paper(), 0); lv_obj_set_style_bg_opa(F.notice, LV_OPA_COVER, 0); lv_obj_move_foreground(F.notice); return;
+    }
     if (rc->status == INK_RC_PARTIAL) { status(F.result); return; }
     if (strstr(rc->detail, "exists")) { status(TR("这个名字已存在，请换一个")); return; }
     status(rc->say[0] ? rc->say : rc->status == INK_RC_DONE ? TR("已完成") : rc->status == INK_RC_PENDING_CONFIRMATION ? TR("请在设备上确认") : TR("没能完成，请检查文件后重试"));
@@ -98,12 +108,12 @@ static void editor_open(void) {
     ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .initial = F.body, .max = sizeof F.body - 1, .draft_page = "FileEdit", .draft_id = F.draft};
     F.field = db ? ink_textfield_long_create(F.screen, &cfg) : NULL;
     if (F.field) {
-        ink_textfield_style(F.field, INK_FIELD_BODY, TR("编辑文本"));
+        ink_textfield_style(F.field, INK_FIELD_BODY, TR("草稿（写回才会更新文件）"));
         F.draft = ink_text_draft_id(); ink_jw_t w; ink_jw_init(&w, json, sizeof json); ink_jw_raw(&w, "{\"path\":"); ink_jw_str(&w, F.edit_path); ink_jw_raw(&w, ",\"draft\":"); ink_jw_int(&w, F.draft); ink_jw_raw(&w, "}");
         ink_db_write_t put = {.id = F.ref, .data = json, .len = w.len}; if (ink_db_put(db, &put, &F.ref)) status(TR("草稿引用未能保存")); ink_db_flush(db);
         pair_json(F.target, sizeof F.target, "path", F.edit_path, "page", "FileEdit"); size_t n = strlen(F.target);
         snprintf(F.target + n - 1, sizeof F.target - n + 1, ",\"draft\":%u,\"text\":\"\",\"replace\":true}", (unsigned)F.draft);
-        button(0, F.screen, TR("保存"), "file.write", F.target, INK_CANVAS_W - INK_MARGIN - INK_PRIMARY, INK_STATUS_BAR, INK_PRIMARY, true); F.model.action_count = 1;
+        button(0, F.screen, TR("更新文件"), "file.write", F.target, INK_CANVAS_W - INK_MARGIN - 2 * INK_PRIMARY, INK_STATUS_BAR, 2 * INK_PRIMARY, true); F.model.action_count = 1;
     } else status(TR("暂时打不开文本编辑器"));
     ink_app_free(j); ink_db_close(db); F.busy = false;
 }
@@ -165,10 +175,12 @@ static void bind_item(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, 
         static const char *const icons[] = {"folder", "book", "headphones", "camera"};
         for (unsigned i = 0; i < 4; i++) ink_ui_icon(slot, icons[i], INK_ICON_LIST, INK_ICON_LINE, INK_GAP, INK_GAP_L, false);
         lv_obj_t *im = lv_image_create(slot); lv_obj_set_pos(im, ink_ui_px(INK_GAP), ink_ui_px(INK_GAP_L));
+        ink_ui_icon(slot, "check", INK_ICON_SMALL, INK_ICON_LINE, INK_CANVAS_W - 2 * INK_MARGIN - INK_ICON_SMALL - INK_GAP, INK_GAP_L, false);
     }
     unsigned icon = item->dir ? 0 : item->type == INK_FS_IMAGE ? 3 : item->type == INK_FS_AUDIO ? 2 : 1;
     for (unsigned i = 0; i < 4; i++) { lv_obj_t *obj = lv_obj_get_child(slot, (int)i + 2); if (i == icon) lv_obj_remove_flag(obj, LV_OBJ_FLAG_HIDDEN); else lv_obj_add_flag(obj, LV_OBJ_FLAG_HIDDEN); }
     F.images[at] = lv_obj_get_child(slot, 6); lv_obj_add_flag(F.images[at], LV_OBJ_FLAG_HIDDEN);
+    lv_obj_t *check = lv_obj_get_child(slot, 7); lv_obj_add_flag(check, LV_OBJ_FLAG_HIDDEN);
     ink_ui_surface_style(slot, INK_SURFACE_STATIC, false);
     lv_obj_set_style_text_decor(lv_obj_get_child(slot, 0), LV_TEXT_DECOR_NONE, 0);
     char name[sizeof item->name]; /* a copy: gcc refuses snprintf from F into F */
@@ -178,7 +190,10 @@ static void bind_item(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, 
     if (ink_ui_text_width(F.names[at], INK_FONT_LIST, INK_WEIGHT_MEDIUM) > INK_CANVAS_W - 2 * INK_MARGIN - INK_CIRCLE - INK_GAP)
         snprintf(F.names[at], sizeof F.names[at], "%.*s…%s", (int)ink_text_byte_offset(name, 7), name, ext && strlen(ext) < 12 ? ext : "");
     lv_label_set_text(lv_obj_get_child(slot, 0), F.names[at]);
-    if (item->dir) snprintf(F.values[at], sizeof F.values[at], "%s", strcmp(F.names[at], item->name) ? TR("文件夹（名称已截断）") : TR("文件夹")); else snprintf(F.values[at], sizeof F.values[at], TR("%lld 字节"), (long long)item->size);
+    if (item->dir) snprintf(F.values[at], sizeof F.values[at], "%s", strcmp(F.names[at], item->name) ? TR("文件夹（名称已截断）") : TR("文件夹"));
+    else if (item->size >= 1024 * 1024) snprintf(F.values[at], sizeof F.values[at], "%.1f MB", (double)item->size / (1024 * 1024));
+    else if (item->size >= 1024) snprintf(F.values[at], sizeof F.values[at], "%.1f KB", (double)item->size / 1024);
+    else snprintf(F.values[at], sizeof F.values[at], TR("%lld 字节"), (long long)item->size);
     lv_label_set_text(lv_obj_get_child(slot, 1), F.values[at]);
     if (item->id) snprintf(F.ids[at], sizeof F.ids[at], "file:%u", (unsigned)item->id); else snprintf(F.ids[at], sizeof F.ids[at], "dir:%zu", index);
     if (item->dir) pair_json(F.args[at], sizeof F.args[at], "path", item->path, NULL, NULL); else snprintf(F.args[at], sizeof F.args[at], "{\"id\":%u}", (unsigned)item->id);
@@ -187,7 +202,8 @@ static void bind_item(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, 
     if (F.multi && F.mode == LIST && !item->dir) {
         snprintf(F.args[at], sizeof F.args[at], "{\"id\":%u}", (unsigned)item->id); action->capability = "files.mark"; action->label = TR("选择文件");
         bool marked = false; for (size_t i = 0; i < F.marked_count; i++) marked |= F.marked[i] == item->id;
-        lv_obj_set_style_text_decor(lv_obj_get_child(slot, 0), marked ? LV_TEXT_DECOR_UNDERLINE : LV_TEXT_DECOR_NONE, 0);
+        lv_obj_set_width(lv_obj_get_child(slot, 0), ink_ui_px(INK_CANVAS_W - 2 * INK_MARGIN - INK_CIRCLE - INK_CONTROL - INK_GAP));
+        if (marked) lv_obj_remove_flag(check, LV_OBJ_FLAG_HIDDEN);
         field->value = marked ? TR("已选择") : TR("未选择");
     }
     if (item->type == INK_FS_IMAGE && item->id) thumbnail(at, item->id);
@@ -222,6 +238,11 @@ static void listed(void *ctx, const ink_receipt_t *rc) {
     if (ok && !F.indexing && F.mode != MOVE) { F.indexing = true; load(); return; }
     F.busy = false; if (!ok) F.count = 0;
     status(ok ? F.result : TR("暂时读不了这个文件夹，请返回后重试")); ink_ui_list_refresh(F.list, F.count);
+    if (!ok) {
+        lv_obj_add_flag(F.list_body, LV_OBJ_FLAG_HIDDEN); lv_obj_set_y(F.notice, ink_ui_px(INK_STATUS_BAR + INK_PRIMARY + INK_GAP_L));
+        pair_json(F.target, sizeof F.target, "path", directory(), NULL, NULL);
+        button(7, F.screen, TR("重新读取"), "files.browse", F.target, INK_MARGIN, INK_STATUS_BAR + 3 * INK_PRIMARY, INK_CANVAS_W - 2 * INK_MARGIN, true); F.model.action_count = ACTION_MAX;
+    }
 }
 static void load(void) {
     ink_args_t a; ink_args_init(&a); ink_args_str(&a, "path", directory()); ink_args_int(&a, "limit", 10);
@@ -257,7 +278,7 @@ static void selected(void *ctx, const ink_receipt_t *rc) {
     lv_obj_t *open = button(2, F.screen, TR("打开"), open_cap, !strcmp(type, "audio") ? F.source : F.args[0], INK_MARGIN, INK_CANVAS_H - INK_MARGIN - 2 * INK_PRIMARY - INK_GAP, width, false);
     F.actions[2].enabled = !strcmp(type, "text") || !strcmp(type, "audio") || !strcmp(type, "image");
     if (!strcmp(type, "image")) { F.images[0] = lv_image_create(F.screen); lv_obj_set_pos(F.images[0], ink_ui_px(INK_MARGIN), ink_ui_px(y + 2 * (INK_CONTROL + INK_GAP_L))); thumbnail(0, F.selected_id); }
-    if (!F.actions[2].enabled) { lv_obj_add_flag(open, LV_OBJ_FLAG_HIDDEN); status(TR("这种文件暂时打不开")); } else status("");
+    if (!F.actions[2].enabled) { lv_obj_add_flag(open, LV_OBJ_FLAG_HIDDEN); status(TR("这种文件暂时打不开")); } else status(F.result);
     int cell = writable(F.selected.path) ? (width - 2 * INK_GAP) / 3 : width;
     button(5, F.screen, TR("拷贝"), "files.move", "{\"copy\":true}", INK_MARGIN, INK_CANVAS_H - INK_PRIMARY - INK_MARGIN, cell, false); F.actions[5].id = "copy";
     if (writable(F.selected.path)) {
@@ -327,6 +348,7 @@ static void create(lv_obj_t *screen, void *arg) {
     int notice_y = INK_CANVAS_H - INK_PRIMARY - INK_CONTROL - INK_GAP_L;
     if (F.mode == ACTIONS) notice_y = INK_CANVAS_H - INK_MARGIN - 2 * INK_PRIMARY - INK_GAP - 2 * ink_ui_line_height(INK_FONT_NOTE) - INK_GAP_L;
     F.notice = ink_ui_notice(screen, "", notice_y);
+    if (F.mode == LIST && F.multi) lv_obj_set_y(F.notice, ink_ui_px(INK_STATUS_BAR + INK_PRIMARY + INK_GAP_S));
     if (F.mode == NAME) {
         F.busy = false; int width = INK_CANVAS_W - 2 * INK_MARGIN;
         ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .initial = F.new_text ? TR("新建文本.txt") : "", .max = INK_FS_NAME_MAX - 1};
@@ -343,7 +365,11 @@ static void create(lv_obj_t *screen, void *arg) {
     F.actions[0] = (ink_ui_action_spec_t){.id = "prev", .label = TR("上一页"), .capability = "files.prev"};
     F.actions[1] = (ink_ui_action_spec_t){.id = "next", .label = TR("下一页"), .capability = "files.next"}; F.model.action_count = 2;
     if (F.mode == MOVE) {
-        if (directory()[0]) ink_ui_line(screen, directory(), INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, INK_STATUS_BAR + INK_PRIMARY + INK_GAP_S, INK_CANVAS_W - 2 * INK_MARGIN);
+        char subject[192];
+        if (F.multi) snprintf(subject, sizeof subject, F.copy ? TR("拷贝 %zu 个文件") : TR("移动 %zu 个文件"), F.marked_count);
+        else snprintf(subject, sizeof subject, F.copy ? TR("拷贝：%s") : TR("移动：%s"), F.selected.name);
+        ink_ui_line(screen, subject, INK_FONT_NOTE, INK_WEIGHT_MEDIUM, INK_MARGIN, INK_STATUS_BAR + INK_PRIMARY + INK_GAP_S, INK_CANVAS_W - 2 * INK_MARGIN);
+        if (directory()[0]) status(strrchr(directory(), '/') + 1);
         char path[INK_FS_PATH_MAX]; bool place = F.selected.id && directory()[0] && join(path, sizeof path, directory(), F.selected.name) && writable(directory());
         pair_json(F.target, sizeof F.target, "from", F.selected.path, "to", place ? path : "");
         int width = (INK_CANVAS_W - 2 * INK_MARGIN - INK_GAP) / 2;
@@ -359,15 +385,18 @@ static void create(lv_obj_t *screen, void *arg) {
             button(3, screen, TR("全选"), "files.all", NULL, INK_MARGIN + cell + INK_GAP, y, cell, false);
             batch_args(false);
             if (writable(F.path)) button(4, screen, TR("删除"), "file.delete_many", F.batch, INK_MARGIN + 2 * (cell + INK_GAP), y, cell, false);
-            button(5, screen, TR("拷贝"), "files.move", "{\"copy\":true}", INK_MARGIN, y - INK_CONTROL - INK_GAP, cell, false);
-            if (writable(F.path)) button(6, screen, TR("移动"), "files.move", NULL, INK_MARGIN + cell + INK_GAP, y - INK_CONTROL - INK_GAP, cell, false);
+            lv_obj_t *copy = button(5, screen, TR("拷贝"), "files.move", "{\"copy\":true}", INK_MARGIN, y - INK_CONTROL - INK_GAP, cell, false);
+            if (writable(F.path)) { lv_obj_t *move = button(6, screen, TR("移动"), "files.move", NULL, INK_MARGIN + cell + INK_GAP, y - INK_CONTROL - INK_GAP, cell, false); F.actions[6].enabled = F.marked_count > 0; if (!F.marked_count) lv_obj_add_state(move, LV_STATE_DISABLED); }
+            F.actions[5].enabled = F.marked_count > 0; if (!F.marked_count) lv_obj_add_state(copy, LV_STATE_DISABLED);
             F.actions[4].enabled = F.marked_count && writable(F.path); F.model.action_count = 7;
         } else F.model.action_count = 3;
     }
     if (F.multi && strchr(F.result, '\n')) { F.busy = false; lv_obj_set_y(F.notice, ink_ui_px(INK_STATUS_BAR + 2 * INK_PRIMARY)); status(F.result); return; }
-    lv_obj_t *body = ink_ui_box(screen, 0, INK_STATUS_BAR + INK_PRIMARY + INK_GAP_L + (F.mode == MOVE ? INK_LINE_NOTE + INK_GAP_L : 0), INK_CANVAS_W, 4 * (INK_ROW_DOUBLE + INK_GAP_M) + INK_PRIMARY, 0, INK_SURFACE_WHITE, false);
+    int rows = F.multi || ink_ui_row_double() > INK_ROW_DOUBLE ? 3 : 4;
+    lv_obj_t *body = ink_ui_box(screen, 0, INK_STATUS_BAR + INK_PRIMARY + INK_GAP_L + (F.mode == MOVE || F.multi ? ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_L : 0), INK_CANVAS_W, rows * (ink_ui_row_double() + INK_GAP_M) + INK_PRIMARY, 0, INK_SURFACE_WHITE, false);
+    F.list_body = body;
     ink_ui_page_spec_t list_model = F.model; if (F.mode == LIST) list_model.action_count = 2;
-    F.list = ink_ui_list_create(body, &list_model, &F.position, 4, 1, INK_ROW_DOUBLE, TR("这里还没有文件"), bind_item, NULL);
+    F.list = ink_ui_list_create(body, &list_model, &F.position, (unsigned)rows, 1, ink_ui_row_double(), TR("这里还没有文件"), bind_item, NULL);
     if (!F.list) { F.busy = false; status(TR("暂时打不开文件列表")); return; }
     if (F.busy) { status(TR("正在读取文件夹")); ink_ui_list_refresh(F.list, 0); load(); return; }
     if (F.mode != MOVE || writable("/family")) {
