@@ -72,6 +72,7 @@ static struct {
     osal_mutex_t *at; /* the modem takes one AT command at a time, and some requests are several: the comm task
                        * and exec.bg both talk to it. Held while a request runs, up to the seconds it takes */
     bool ringing, emergency; /* emergency: protected by at, keeps RF on until the call ends */
+    bool radio_set; /* comm task: the first look set the radio as airplane mode says */
     char call_member[16], call_peer[24]; /* protected by at; member and tones also by lock */
     uint32_t call_generation;
     char tones[65]; /* local display only, protected by lock */
@@ -359,6 +360,7 @@ static void radio(void *arg) { /* exec.bg: airplane mode changed, or the modem c
     if (!on) refresh_status(&st);
     else sim_switch((void *)1); /* a card chosen meanwhile; it also says what the modem does now */
     if (on) ink_svc_at(&CM.reg_at, osal_now_us() + REG_LOOK_US, reg_due, (void *)1);
+    ink_probe_count("comm.radio_set"); /* the radio is as airplane mode says, and the card was looked at */
 }
 static void airplane_changed(void *ctx, int h, const char *id) { (void)ctx; (void)h; (void)id; radio(NULL); }
 
@@ -375,7 +377,13 @@ static bool airplane(ink_call_t *c, const char *what) {
 static void sim_check(void) {
     hal_cell_status_t st;
     bool up = refresh_status(&st);
-    if (up && ink_setting_get("net.airplane") && ink_exec_post(INK_EXEC_BG, &CM.radio_job, radio, NULL) == 0) sim_retry(false);
+    /* The vendor's start sends AT+CFUN=1 before it looks at the card (uart_eth_modem.cc:1593-1598): a modem left in
+     * minimum functionality has its SIM powered down and answers CME ERROR 13 (device, 2026-11-11, card inserted).
+     * So the first look sets the radio either way, as airplane mode says; it was only switched off before. */
+    if (up && !CM.radio_set && ink_exec_post(INK_EXEC_BG, &CM.radio_job, radio, NULL) == 0) {
+        CM.radio_set = true;
+        sim_retry(false);
+    }
     else if (up && st.slot == wanted_slot()) sim_retry(false);
     else if (!up) sim_retry(true); /* still starting, or no modem */
     else if (ink_exec_post(INK_EXEC_BG, &CM.sim_job, sim_switch, NULL) != 0) sim_retry(true);

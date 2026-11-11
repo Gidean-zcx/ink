@@ -56,6 +56,7 @@ static void icons(void) {
     CHECK(icons_seen == 7, "all three icons appear on Apps");
 }
 
+static void look_for_error(void) { wanted = "没有完成，请重试"; find_label(); }
 static void inspect_phone(void) {
     wanted = "没有完成，请重试"; find_label(); CHECK(found, "dial error is visible");
     if (!found) return;
@@ -74,7 +75,9 @@ static void phone(void) {
     for (int level = 1; level <= 3; level += 2) {
         font_size(level); call("phone.open", NULL);
         tap(INK_CANVAS_W / 2, INK_CANVAS_H - INK_MARGIN - INK_DIGIT / 2); quiet();
-        on_ui(inspect_phone); frame(level == 1 ? "phone-100" : "phone-120");
+        /* the dial waits its turn on the modem (the boot sets the radio first, as the vendor): wait for its result */
+        CHECK(WAIT_FOR((on_ui(look_for_error), found != NULL), 5000), "the dial result arrives");
+        quiet(); on_ui(inspect_phone); frame(level == 1 ? "phone-100" : "phone-120");
     }
 }
 

@@ -206,6 +206,9 @@ static void run(void *arg) {
     }
     set("net.prefer", 2); set("time.auto", 0); set("time.zone_auto", 0); set("time.zone", 1);
     if (strcmp(phase, "no-modem")) CHECK(WAIT_FOR(state("cell.registered") && link(HAL_LINK_LTE), 10000), "LTE registered before scenario");
+    /* the comm service sets the radio at its first look (AT+CFUN=1, as the vendor): this test talks to the modem model
+     * directly below, and the model takes one AT command at a time */
+    if (strcmp(phase, "no-modem")) CHECK(WAIT_FOR(sim_metric_value("comm.radio_set") >= 1, 15000), "the first look set the radio");
     if (!strcmp(phase, "no-modem")) no_modem();
     else if (!strcmp(phase, "main")) first();
     else if (!strcmp(phase, "restart")) restart();
