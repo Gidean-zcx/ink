@@ -6,8 +6,8 @@
 
 | 编号 | 结论 | 证据 | 命令／定位 |
 | --- | --- | --- | --- |
-| 1：路径、试验步骤、批准项 | 调研交付已完成，待文件检查；实机结论未验证 | 路径表、A～D 步骤、独立批准／恢复表；AI801 私有命令缺口明确保留 | 下文 S1～S7、V1～V5、P1～P4 |
-| 2：范围与隐私 | 进行中 | 开工工作区干净，HEAD 与任务基线一致；只新增本任务目录 | `git status --short --branch`；`git rev-parse HEAD` |
+| 1：路径、试验步骤、批准项 | 通过（调研交付）；实机结论未验证 | 路径表、A～D 步骤、独立批准／恢复表；AI801 私有命令缺口明确保留 | 下文 S1～S7、V1～V5、P1～P4；C4～C6 |
+| 2：范围与隐私 | 【实测】通过 | 相对基线仅新增本报告；本机路径／MAC 扫描零匹配；未写入设备或身份数据 | C1～C3；开工 `git rev-parse HEAD` 与基线相同 |
 
 ## 当前结论与证据边界
 
@@ -41,7 +41,7 @@
 | --- | --- | --- |
 | S1 | [利尔达 EC71X 产品介绍](https://opendocs.lierda.com/docs/CAT.1_Doc_Protal/zh_CN/)，§二、§三；[底包表](https://opendocs.lierda.com/docs/CAT.1_Doc_Protal/zh_CN/general/index.html)，F7B_A/F7D_A | EC718PM 有带 VoLTE 的 NT26 底包；PCM/I2S、模拟输出和 VoLTE 随子型号而异；本机准确料号和 AI801 不在表内确认 |
 | S2 | [系统资源开发介绍 Rev1.0](https://opendocs.lierda.com/docs/CAT.1_Doc_Protal/zh_CN/general/resource-information.html)，§2；[API 入口 Rev1.0](https://opendocs.lierda.com/docs/CAT.1_Doc_Protal/zh_CN/software/api-overview.html)，Audio／VoLTE | 芯片支持 I2S/PCM 主从和 USB Device；API 在模组内部执行，不是能直接链接进 ESP 的语音库 |
-| S3 | [合宙 Air780EP AT 手册入口](https://docs.openluat.com/air780ep/at/app/at_command/)；[产品说明](https://docs.openluat.com/air780ep/product/) §简介；[EC718P 旧系列说明](https://wiki.luatos.com/chips/air780ep/mcu.html) | 普通 EP 与语音变体的能力不同；旧系列页仅 EPV 标注 VoLTE。通用手册有音频章节不代表每个固件都支持，更不证明 AI801 支持 |
+| S3 | [合宙 Air780EP AT 手册入口](https://docs.openluat.com/air780ep/at/app/at_command/)；[产品说明](https://docs.openluat.com/air780ep/product/) §简介 | 普通 EP 的产品说明不支持 VoLTE。通用手册覆盖多种型号／固件，有音频章节不代表每个固件都支持，更不证明 AI801 支持 |
 | S4 | [合宙硬件手册 V1.4](https://docs.openluat.com/atmozu/product/file/Air700ECT%26Air780EPT%26EHT%26EVT%26EVT-1.8V%26EG2%26EGT%E7%A1%AC%E4%BB%B6%E6%89%8B%E5%86%8CV1.4.pdf)，§3.3／§3.6，PDF 第 9／12 页 | EVT 的 MIC± 为脚 3/4、SPK± 为脚 5/6；证明带 Codec 模组的模拟通路，不能移植其管脚号到本板。该文件含旧 V1.3 页眉，页脚 11/14 与 PDF 页序不同，故同时给章节和 PDF 页序 |
 | S5 | [合宙 AT 手册 V1.0.14](https://docs.openluat.com/atmozu/product/file/Air780EHT%26EGT%26EVT%26Air700ECT%26Air780EPT%26EG2%26EX2T_AT%E6%8C%87%E4%BB%A4%E6%89%8B%E5%86%8CV1.0.14.pdf)，2026-08-30；§6.1～6.4（PDF 第 95～98 页）、§17.1～17.5（第 261～266 页） | TTS、播放配置／Codec、音量和呼叫控制的参考语法；语音章节限定 EVT。`CTTS` 的 PCM 参数描述 TTS 输出，不是蜂窝通话 PCM 接口 |
 | S6 | [合宙语音指令说明](https://docs.openluat.com/atmozu/product/command/audio/)，§6.5、§6.6、§7.7 | `CLVL` 的平台差异、持久化和查询限制；`CRSL` 是本地播放音量。它补充的 `CLVL` 在 S5 中未检出，采用时需探测，不当作 AI801 保证 |
@@ -204,4 +204,21 @@ flowchart LR
 
 ## 交付检查
 
-文件／链接、差异范围和隐私检查进行中；按里程碑本地提交，不 push。未把下载的 PDF、渲染图、设计稿或设备数据纳入交付。
+以下为【实测·本机文档检查】，不是设备实测。按里程碑本地提交，不 push；本报告是唯一交付文件。
+
+| 检查 | 命令／做法 | 结果 |
+| --- | --- | --- |
+| C1 范围与规模 | `git diff --name-only "$BASE" HEAD`；`git diff --stat "$BASE"..HEAD`；`git status --short --branch` | 仅 `docs/tasks/call-research-1/REPORT.md`；产品代码 0 行，无测试、构建或共享文档改动，无夹带文件 |
+| C2 格式 | `git diff --check "$BASE"..HEAD`；Python 检查内部文件链接与遗留占位标记 | 退出 0；6 个内部文件链接均存在，无遗留调研占位项 |
+| C3 隐私 | 按总规则 §6 的原始 `git diff "$BASE"..HEAD` 管道扫描，再检查是否有目标／卡身份／位置／凭据等真实数据 | 扫描退出 1、0 匹配；无上述真实数据；没有把扫描表达式本身抄进报告造成假命中 |
+| C4 外部链接 | Python `urllib.request`，逐个交付 URL 发 GET，`Range: bytes=0-1023`、15 s 超时，读取少量响应体 | 最终交付的 19 个不同外链均返回 HTTP 206，响应体非空；初版另一个历史入口超时，已移除且不作结论依据 |
+| C5 上游出处 | 将 V1～V5 涉及的 9 个导出文件与 `git -C "$UPSTREAM" show 874538e:<文件>` 逐字节摘要比较；`git -C "$UPSTREAM" rev-parse HEAD` | 9/9 一致；原厂克隆 HEAD 仍为开工的 `690a023`，未移动或修改 |
+| C6 PDF 核对 | Python PyMuPDF 提取 S5；渲染 S4 的 PDF 第 9/12 页及 S5 第 96/265 页，人工核对图表和命令字段 | S4 17 页，S5 283 页；确认模拟管脚、TTS 查询缺字段、CLCC 状态和 `CLVL` 不在 S5；未提交 PDF／图像 |
+| 构建与测试 | 全量测试、ASan／内存检查、S31 编译、gcccheck | **均未运行**，遵照本调研任务明确豁免；不写“测试通过”，不做反向代码对照 |
+
+复核变量：`BASE=343ce09e9cc78002138d15b75a1982d114b8a1a3`；`UPSTREAM="$INK_DEPS/../ink-hw/upstream/Metalio-E-INK4-Plus"`。本次未使用设计稿。
+
+下载原件 SHA-256（仅留摘要，便于复核是否换版）：
+
+- S4：`6f3ddf535869aa14928f4c3ce34170f32c56711faed54fedb8b3fb38ca627b26`，4,329,697 字节。
+- S5：`85466923f4e4f58c3b26afbb6b17ef1e1536827ca82c557eb152f1eeb1a84d37`，3,101,800 字节。
