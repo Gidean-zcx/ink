@@ -310,6 +310,25 @@ static void status_deleted(lv_event_t *e) {
         if (N.status[i] == obj) N.status[i] = NULL;
 }
 
+/* The battery's bars, in quarters: the outline alone said nothing at a glance (trial report 2026-11-11). Placed in
+ * pixels from the drawn icon, as the icon itself is, so they sit centred in its body: inside the stroke the body is
+ * 5.4..38.6 x 15.4..32.6 of the icon's 48 units; two pixels clear all round and between the bars. */
+static void battery_bars(lv_obj_t *bar, int x, int y, int64_t level) {
+    int bars = level >= 88 ? 4 : level >= 63 ? 3 : level >= 38 ? 2 : level >= 13 ? 1 : 0;
+    int s = ink_ui_px(INK_ICON_LIST), ix = ink_ui_px(x), iy = ink_ui_px(y), gap = 2;
+    int l = ix + (s * 54 + 240) / 480, r = ix + (s * 386 + 240) / 480, t = iy + (s * 154 + 240) / 480, b = iy + (s * 326 + 240) / 480;
+    int w = (r - l - 5 * gap) / 4, h = b - t - 2 * gap;
+    int x0 = l + (r - l - 4 * w - 3 * gap) / 2, y0 = t + (b - t - h) / 2;
+    for (int i = 0; i < bars; i++) {
+        lv_obj_t *o = lv_obj_create(bar);
+        lv_obj_remove_style_all(o);
+        lv_obj_set_style_bg_color(o, ink_ui_ink(), 0);
+        lv_obj_set_style_bg_opa(o, LV_OPA_COVER, 0);
+        lv_obj_set_pos(o, x0 + i * (w + gap), y0);
+        lv_obj_set_size(o, w, h);
+    }
+}
+
 lv_obj_t *ink_shell_statusbar(lv_obj_t *parent, bool show_time) {
     lv_obj_t *bar = ink_ui_box(parent, 0, 0, INK_CANVAS_W, INK_STATUS_BAR, 0, INK_SURFACE_WHITE, false);
     ink_shell_bind(bar, "shell.control", NULL);
@@ -356,14 +375,7 @@ lv_obj_t *ink_shell_statusbar(lv_obj_t *parent, bool show_time) {
                 INK_CANVAS_W - INK_MARGIN - INK_ICON_LIST - INK_GAP_S - battery_w, text_y, battery_w);
     int battery_x = INK_CANVAS_W - INK_MARGIN - INK_ICON_LIST, battery_y = (bar_h - INK_ICON_LIST) / 2;
     ink_ui_icon(bar, "battery", INK_ICON_LIST, INK_ICON_LINE, battery_x, battery_y, false);
-    /* Its bars, in quarters: the outline alone said nothing at a glance (trial report 2026-11-11). The icon's body is
-     * 4..40 x 14..34 of 48 with a 2.8 stroke; the bars sit 1.6 inside it, 1.5 apart (all in 96ths of the icon). */
-    long long level = integer("battery.level");
-    int bars = level >= 88 ? 4 : level >= 63 ? 3 : level >= 38 ? 2 : level >= 13 ? 1 : 0, gap = INK_ICON_LIST * 3 / 96;
-    int bar_w = (INK_ICON_LIST * 60 / 96 - 3 * gap) / 4;
-    for (int i = 0; i < bars; i++)
-        ink_ui_box(bar, battery_x + INK_ICON_LIST * 14 / 96 + i * (bar_w + gap), battery_y + INK_ICON_LIST * 34 / 96, bar_w,
-                   INK_ICON_LIST * 28 / 96, 0, INK_SURFACE_BLACK, false);
+    battery_bars(bar, battery_x, battery_y, integer("battery.level"));
     for (unsigned i = 0; i < sizeof N.status / sizeof *N.status; i++)
         if (!N.status[i]) {
             N.status[i] = bar;
