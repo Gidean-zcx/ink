@@ -199,16 +199,20 @@ static void bind_row(lv_obj_t *slot, size_t i, ink_ui_field_spec_t *field, ink_u
     while (lv_obj_get_child_count(slot) > 3) lv_obj_delete(lv_obj_get_child(slot, 3));
     lv_obj_clean(bg); lv_obj_set_pos(bg, 0, ink_ui_px(head)); lv_obj_set_height(bg, ink_ui_px(body));
     lv_obj_set_style_clip_corner(bg, false, 0);
-    lv_obj_set_style_bg_color(bg, r->icon ? ink_ui_gray() : ink_ui_paper(), 0);
+    ink_ui_surface_style(bg, r->icon ? INK_SURFACE_STATIC : INK_SURFACE_WHITE,
+        !r->icon && (S.page == STORAGE || (footer(i) && S.page == PRIVACY)));
     lv_obj_set_style_radius(bg, footer(i) ? LV_RADIUS_CIRCLE : ink_ui_px(INK_RADIUS_CARD), 0);
-    lv_obj_set_style_border_width(bg, !r->icon && (S.page == STORAGE || (footer(i) && S.page == PRIVACY)) ? ink_ui_px(INK_STROKE) : 0, 0);
+    bool join_previous = r->icon && i % S.capacity && PAGES[S.page].rows[i - 1].icon && !r->section && !PAGES[S.page].rows[i - 1].note;
     if (r->icon) {
-        if (i % S.capacity && PAGES[S.page].rows[i - 1].icon && !r->section && !PAGES[S.page].rows[i - 1].note) {
-            ink_ui_box(bg, 0, 0, w, body / 2, 0, INK_SURFACE_STATIC, false);
-            ink_ui_group_divider(bg, 0, w);
+        lv_obj_set_style_border_post(bg, false, 0);
+        for (int end = 0; end < 2; end++) {
+            if (!(end ? join_next : join_previous)) continue;
+            lv_obj_t *half = ink_ui_box(bg, 0, end ? body / 2 : 0, w, end ? body - body / 2 : body / 2,
+                0, INK_SURFACE_WHITE, true);
+            lv_obj_set_style_border_side(half, LV_BORDER_SIDE_LEFT | LV_BORDER_SIDE_RIGHT, 0);
         }
-        if (join_next)
-            ink_ui_box(bg, 0, body / 2, w, body - body / 2, 0, INK_SURFACE_STATIC, false);
+        if (join_previous)
+            ink_ui_group_divider(bg, 0, w);
         ink_ui_circle(slot, r->icon, INK_GAP, head + (body - INK_CIRCLE_SMALL) / 2,
             INK_CIRCLE_SMALL, INK_ICON_MEDIUM, INK_SURFACE_WHITE, NULL, NULL);
     }

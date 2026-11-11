@@ -384,11 +384,10 @@ lv_obj_t *ink_textfield_create(lv_obj_t *parent, const ink_text_cfg_t *cfg, void
     f->label = lv_label_create(f->obj);
     lv_obj_set_style_text_font(f->label, font(), 0);
     if (cfg->type == INK_TEXT_PLAIN && cfg->enter == INK_ENTER_SEARCH) {
-        lv_obj_set_style_bg_color(f->obj, ink_ui_gray(), 0);
-        lv_obj_set_style_border_width(f->obj, 0, 0);
+        ink_ui_surface_style(f->obj, INK_SURFACE_STATIC, false);
         lv_obj_set_style_radius(f->obj, LV_RADIUS_CIRCLE, 0);
-        lv_obj_set_style_pad_left(f->obj, ink_ui_px(INK_MARGIN + INK_ICON_LIST + INK_GAP_M), 0);
-        lv_obj_set_style_pad_ver(f->obj, ink_ui_px((INK_CONTROL - ink_ui_line_height(INK_FONT_LIST)) / 2), 0);
+        lv_obj_set_style_pad_left(f->obj, ink_ui_px(INK_MARGIN + INK_ICON_LIST + INK_GAP_M) - ink_ui_px(INK_STROKE), 0);
+        lv_obj_set_style_pad_ver(f->obj, ink_ui_px((INK_CONTROL - ink_ui_line_height(INK_FONT_LIST)) / 2) - ink_ui_px(INK_STROKE), 0);
         lv_obj_set_style_text_font(f->label, ink_ui_font_px(INK_FONT_LIST, INK_WEIGHT_REGULAR), 0);
         ink_ui_icon(f->obj, "search", INK_ICON_LIST, INK_ICON_LINE, 0 - INK_ICON_LIST - INK_GAP_M, 0, false);
     }

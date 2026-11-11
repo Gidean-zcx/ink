@@ -67,7 +67,7 @@ static void bind_row(lv_obj_t *slot, size_t i, ink_ui_field_spec_t *f, ink_ui_ac
     (void)ctx;
     *f = (ink_ui_field_spec_t){.id = S.ids[i], .role = "text", .label = S.titles[i], .value = S.values[i], .object = {S.ids[i], 0}};
     *a = (ink_ui_action_spec_t){.id = S.ids[i], .label = S.titles[i], .capability = S.caps[i], .args_json = S.args[i], .object = f->object, .enabled = S.caps[i][0]};
-    lv_obj_clean(slot); lv_obj_set_style_bg_color(slot, ink_ui_gray(), 0); lv_obj_set_style_border_width(slot, 0, 0);
+    lv_obj_clean(slot); ink_ui_surface_style(slot, INK_SURFACE_STATIC, false);
     int w = INK_CANVAS_W - 2 * INK_MARGIN;
     ink_ui_line(slot, S.titles[i], INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_GAP_L, INK_GAP_M, w - 2 * INK_GAP_L);
     ink_ui_line(slot, S.values[i], INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_GAP_L, INK_GAP_M + ink_ui_line_height(INK_FONT_LIST), w - 2 * INK_GAP_L);

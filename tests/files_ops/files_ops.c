@@ -74,7 +74,7 @@ static void check_partial(void) { CHECK(F.notice && strstr(lv_label_get_text(F.n
 static bool row_marked;
 static void check_row(void) {
     target();
-    if (found) { lv_obj_t *row = lv_obj_get_parent(found); CHECK(lv_obj_get_style_border_width(row, 0) == (row_marked ? ink_ui_px(INK_STROKE) : 0) && lv_obj_get_style_outline_width(row, 0) == 0, "row selection is visible and cancellation removes its outline"); }
+    if (found) { lv_obj_t *row = lv_obj_get_parent(found); CHECK(lv_obj_get_style_border_width(row, 0) == ink_ui_px(INK_STROKE) && lv_obj_get_style_outline_width(row, 0) == 0 && lv_obj_get_style_text_decor(found, 0) == (row_marked ? LV_TEXT_DECOR_UNDERLINE : LV_TEXT_DECOR_NONE), "selection underlines the title while retaining one row frame"); }
     CHECK(ink_ui_snapshot(g_snap, sizeof g_snap, NULL) > 0 && strstr(g_snap, row_marked ? "\"selected_count\":1" : "\"selected_count\":0"), "touch toggles the public selected count");
 }
 static void read_file(const char *path) {

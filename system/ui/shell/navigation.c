@@ -273,7 +273,7 @@ void ink_shell_bind(lv_obj_t *obj, const char *cap, const char *json) {
     lv_obj_add_flag(obj, LV_OBJ_FLAG_CLICKABLE);
     if (lv_obj_get_style_radius(obj, 0) == LV_RADIUS_CIRCLE &&
         lv_obj_get_style_width(obj, 0) == lv_obj_get_style_height(obj, 0) &&
-        lv_color_eq(lv_obj_get_style_bg_color(obj, 0), ink_ui_paper()))
+        ink_ui_surface_kind(obj) == INK_SURFACE_WHITE)
         lv_obj_set_style_border_width(obj, ink_ui_px(INK_STROKE), 0);
     lv_obj_add_event_cb(obj, binding_event, LV_EVENT_CLICKED, b);
     lv_obj_add_event_cb(obj, binding_event, LV_EVENT_PRESSED, b);

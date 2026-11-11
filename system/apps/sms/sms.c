@@ -140,7 +140,7 @@ static void bind_item(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, 
     }
     snprintf(S.ids[at], sizeof S.ids[at], "sms:%u", (unsigned)S.rows[index]);
     if (!lv_obj_get_child_count(slot)) { ink_ui_line(slot, "", INK_FONT_NOTE, INK_WEIGHT_MEDIUM, INK_GAP, INK_GAP_S, INK_CANVAS_W - 2 * INK_MARGIN - 2 * INK_GAP); ink_ui_label(slot, "", INK_FONT_LIST, INK_WEIGHT_REGULAR, INK_GAP, INK_LINE_NOTE + INK_GAP_M, INK_CANVAS_W - 2 * INK_MARGIN - 2 * INK_GAP); }
-    lv_obj_set_style_bg_color(slot, thread && strcmp(status, "收到") ? ink_ui_ink() : ink_ui_gray(), 0);
+    ink_ui_surface_style(slot, thread && strcmp(status, "收到") ? INK_SURFACE_BLACK : INK_SURFACE_STATIC, true);
     for (int i = 0; i < 2; i++) lv_obj_set_style_text_color(lv_obj_get_child(slot, i), thread && strcmp(status, "收到") ? ink_ui_paper() : ink_ui_ink(), 0);
     lv_label_set_text(lv_obj_get_child(slot, 0), S.labels[at]); lv_label_set_text(lv_obj_get_child(slot, 1), S.texts[at]);
     *field = (ink_ui_field_spec_t){.id = S.ids[at], .role = "listitem", .label = S.labels[at], .value = S.texts[at], .object = {S.ids[at], ink_db_last_ver(picking ? S.contacts : S.db)}};

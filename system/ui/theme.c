@@ -131,9 +131,27 @@ static int offset_y(lv_obj_t *parent) {
 }
 lv_color_t ink_ui_paper(void) { return lv_color_white(); }
 lv_color_t ink_ui_ink(void) { return lv_color_black(); }
-/* Whole levels of the 16 the panel has. Seen on the panel: one level from white hardly shows. */
-lv_color_t ink_ui_gray(void) { return lv_color_hex(0x888888); } /* chosen on the real panel: lighter levels nearly vanish (D-108) */
 lv_color_t ink_ui_secondary(void) { return lv_color_hex(0x000000); } /* chosen on the real panel too: secondary text differs by size, not by gray */
+
+ink_ui_surface_t ink_ui_surface_kind(const lv_obj_t *obj) {
+    if (lv_obj_has_flag(obj, LV_OBJ_FLAG_USER_2)) return INK_SURFACE_STATIC;
+    return lv_obj_has_flag(obj, LV_OBJ_FLAG_USER_3) ? INK_SURFACE_BLACK : INK_SURFACE_WHITE;
+}
+
+void ink_ui_surface_style(lv_obj_t *obj, ink_ui_surface_t surface, bool border) {
+    lv_obj_remove_flag(obj, LV_OBJ_FLAG_USER_2 | LV_OBJ_FLAG_USER_3);
+    if (surface == INK_SURFACE_STATIC) lv_obj_add_flag(obj, LV_OBJ_FLAG_USER_2);
+    if (surface == INK_SURFACE_BLACK) lv_obj_add_flag(obj, LV_OBJ_FLAG_USER_3);
+    lv_obj_t *parent = lv_obj_get_parent(obj);
+    bool frame = surface == INK_SURFACE_STATIC && (!parent || ink_ui_surface_kind(parent) != INK_SURFACE_STATIC);
+    lv_obj_set_style_bg_color(obj, surface == INK_SURFACE_BLACK ? ink_ui_ink() : ink_ui_paper(), 0);
+    lv_obj_set_style_text_color(obj, surface == INK_SURFACE_BLACK ? ink_ui_paper() : ink_ui_ink(), 0);
+    lv_obj_set_style_border_color(obj, ink_ui_ink(), 0);
+    lv_obj_set_style_border_width(obj, border || frame ? ink_ui_px(INK_STROKE) : 0, 0);
+    lv_obj_set_style_border_post(obj, surface == INK_SURFACE_STATIC, 0);
+    /* A new frame must not move the old contents or be covered by its rows. */
+    if (surface == INK_SURFACE_STATIC) lv_obj_set_style_pad_all(obj, frame && !border ? 0 - ink_ui_px(INK_STROKE) : 0, 0);
+}
 
 /* 字号 moves all text by one factor; a child reads one step above the middle (docs/product/legibility.md).
  * Digit faces do not move, and what is already large does not grow. */
@@ -213,10 +231,7 @@ static void box_style(lv_obj_t *o, int x, int y, int w, int h, int radius, ink_u
     lv_obj_set_size(o, ink_ui_px(w), ink_ui_px(h));
     lv_obj_set_style_radius(o, radius < 0 ? LV_RADIUS_CIRCLE : ink_ui_px(radius), 0);
     lv_obj_set_style_bg_opa(o, LV_OPA_COVER, 0);
-    lv_obj_set_style_bg_color(o, surface == INK_SURFACE_BLACK ? ink_ui_ink() : surface == INK_SURFACE_STATIC ? ink_ui_gray() : ink_ui_paper(), 0);
-    lv_obj_set_style_text_color(o, surface == INK_SURFACE_BLACK ? ink_ui_paper() : ink_ui_ink(), 0);
-    lv_obj_set_style_border_color(o, ink_ui_ink(), 0);
-    lv_obj_set_style_border_width(o, border ? ink_ui_px(INK_STROKE) : 0, 0);
+    ink_ui_surface_style(o, surface, border);
     if (radius) lv_obj_set_style_clip_corner(o, true, 0);
     lv_obj_remove_flag(o, LV_OBJ_FLAG_SCROLLABLE | LV_OBJ_FLAG_CLICKABLE);
 }
@@ -348,7 +363,7 @@ static int value_width(const char *title, const char *value, int room) {
 
 void ink_ui_group_divider(lv_obj_t *parent, int y, int w) {
     int left = INK_CIRCLE_SMALL + INK_GAP_XL;
-    ink_ui_box(parent, left, y, w - left, INK_STROKE, 0, INK_SURFACE_WHITE, false);
+    ink_ui_box(parent, left, y, w - left, INK_STROKE, 0, INK_SURFACE_BLACK, false);
 }
 
 lv_obj_t *ink_ui_list_row(lv_obj_t *parent, const char *icon, const char *title, const char *value,
@@ -358,7 +373,7 @@ lv_obj_t *ink_ui_list_row(lv_obj_t *parent, const char *icon, const char *title,
     bind(r, cb, ctx);
     ink_ui_circle(r, icon, INK_GAP, (h - INK_CIRCLE_SMALL) / 2, INK_CIRCLE_SMALL, INK_ICON_MEDIUM,
                   INK_SURFACE_WHITE, NULL, NULL);
-    if (y && lv_color_eq(lv_obj_get_style_bg_color(parent, 0), ink_ui_gray())) ink_ui_group_divider(r, 0, w);
+    if (y && ink_ui_surface_kind(parent) == INK_SURFACE_STATIC) ink_ui_group_divider(r, 0, w);
     int left = INK_CIRCLE_SMALL + INK_GAP_XL, room = w - left - INK_BLOCK - INK_GAP, value_w = value_width(title, value, room);
     ink_ui_line(r, title, INK_FONT_LIST, INK_WEIGHT_REGULAR, left, (h - ink_ui_line_height(INK_FONT_LIST)) / 2, room - value_w);
     if (value_w) {

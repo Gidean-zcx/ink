@@ -48,7 +48,7 @@ static bool fully_visible(void) {
         lv_obj_get_coords(p, &clip);
         if (a.x1 < clip.x1 || a.x2 > clip.x2 || a.y1 < clip.y1 || a.y2 > clip.y2) {
             CHECK(false, "clipped %s: [%d,%d,%d,%d] outside [%d,%d,%d,%d]", wanted,
-                a.x1, a.y1, a.x2, a.y2, clip.x1, clip.y1, clip.x2, clip.y2);
+                (int)a.x1, (int)a.y1, (int)a.x2, (int)a.y2, (int)clip.x1, (int)clip.y1, (int)clip.x2, (int)clip.y2);
             return false;
         }
     }
@@ -67,7 +67,7 @@ static bool row_has_icon(lv_obj_t *slot) {
                 lv_obj_t *part = lv_obj_get_child(bg, (int32_t)k);
                 if (lv_obj_get_y(part)) continue;
                 if (lv_obj_get_width(part) == lv_obj_get_width(bg)) joined = true;
-                if (lv_color_eq(lv_obj_get_style_bg_color(part, 0), ink_ui_paper()) &&
+                if (lv_color_eq(lv_obj_get_style_bg_color(part, 0), ink_ui_ink()) &&
                     lv_obj_get_height(part) == ink_ui_px(INK_STROKE)) divided = true;
             }
             CHECK(joined == divided, "every joined settings row uses the shared divider, including later pages");
@@ -109,7 +109,9 @@ static void inspect_visible_page(void) {
                 "storage.books", "storage.audio", "storage.photos", "storage.clean", "update.check", "privacy", "device.details", "licenses"};
             for (size_t k = 0; k < sizeof GROUPED / sizeof *GROUPED; k++)
                 if (ink_json_eq(j, ink_json_find(j, 0, "id"), GROUPED[k]))
-                    CHECK(slot && row_has_icon(slot) && lv_color_eq(lv_obj_get_style_bg_color(lv_obj_get_child(slot, 0), 0), ink_ui_gray()),
+                    CHECK(slot && row_has_icon(slot) && ink_ui_surface_kind(lv_obj_get_child(slot, 0)) == INK_SURFACE_STATIC &&
+                        lv_color_eq(lv_obj_get_style_bg_color(lv_obj_get_child(slot, 0), 0), ink_ui_paper()) &&
+                        lv_obj_get_style_border_width(lv_obj_get_child(slot, 0), 0) == ink_ui_px(INK_STROKE),
                         "grouped row retains the design's icon and theme background: %s", GROUPED[k]);
         }
         if (!ink_json_eq(j, ink_json_find(j, 0, "role"), "setting")) {

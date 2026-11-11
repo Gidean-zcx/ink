@@ -168,7 +168,8 @@ static void bind_item(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, 
     unsigned icon = item->dir ? 0 : item->type == INK_FS_IMAGE ? 3 : item->type == INK_FS_AUDIO ? 2 : 1;
     for (unsigned i = 0; i < 4; i++) { lv_obj_t *obj = lv_obj_get_child(slot, (int)i + 2); if (i == icon) lv_obj_remove_flag(obj, LV_OBJ_FLAG_HIDDEN); else lv_obj_add_flag(obj, LV_OBJ_FLAG_HIDDEN); }
     F.images[at] = lv_obj_get_child(slot, 6); lv_obj_add_flag(F.images[at], LV_OBJ_FLAG_HIDDEN);
-    lv_obj_set_style_bg_color(slot, ink_ui_gray(), 0); lv_obj_set_style_border_width(slot, 0, 0);
+    ink_ui_surface_style(slot, INK_SURFACE_STATIC, false);
+    lv_obj_set_style_text_decor(lv_obj_get_child(slot, 0), LV_TEXT_DECOR_NONE, 0);
     char name[sizeof item->name]; /* a copy: gcc refuses snprintf from F into F */
     memcpy(name, item->name, sizeof name); name[sizeof name - 1] = 0;
     snprintf(F.names[at], sizeof F.names[at], "%s", name);
@@ -185,7 +186,8 @@ static void bind_item(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, 
     if (F.multi && F.mode == LIST && !item->dir) {
         snprintf(F.args[at], sizeof F.args[at], "{\"id\":%u}", (unsigned)item->id); action->capability = "files.mark"; action->label = TR("选择文件");
         bool marked = false; for (size_t i = 0; i < F.marked_count; i++) marked |= F.marked[i] == item->id;
-        lv_obj_set_style_border_width(slot, marked ? ink_ui_px(INK_STROKE) : 0, 0); field->value = marked ? TR("已选择") : TR("未选择");
+        lv_obj_set_style_text_decor(lv_obj_get_child(slot, 0), marked ? LV_TEXT_DECOR_UNDERLINE : LV_TEXT_DECOR_NONE, 0);
+        field->value = marked ? TR("已选择") : TR("未选择");
     }
     if (item->type == INK_FS_IMAGE && item->id) thumbnail(at, item->id);
 }

@@ -18,6 +18,7 @@
 #include "../system/boot/main.c"
 #undef ink_main
 #include "integration/whole_product.h"
+#include "ui_borders.h"
 
 static char scene[32];
 static lv_obj_t *field;
@@ -169,13 +170,13 @@ static void assert_settings_decoration(void) {
         bool base = false, divider = false;
         for (uint32_t j = 0; j < lv_obj_get_child_count(row); j++) {
             lv_obj_t *o = lv_obj_get_child(row, (int32_t)j);
-            if (lv_obj_get_style_bg_opa(o, 0) != LV_OPA_COVER || !lv_color_eq(lv_obj_get_style_bg_color(o, 0), ink_ui_paper())) continue;
+            if (lv_obj_get_style_bg_opa(o, 0) != LV_OPA_COVER) continue;
             int w = lv_obj_get_width(o), h = lv_obj_get_height(o);
-            if (w == h && lv_obj_get_style_radius(o, 0) >= w / 2)
+            if (w == h && lv_obj_get_style_radius(o, 0) >= w / 2 && lv_color_eq(lv_obj_get_style_bg_color(o, 0), ink_ui_paper()))
                 base = !lv_obj_get_style_border_width(o, 0) && !lv_obj_has_flag(o, LV_OBJ_FLAG_CLICKABLE);
-            if (w > lv_obj_get_width(row) / 2 && h <= ink_ui_px(INK_STROKE)) divider = true;
+            if (w > lv_obj_get_width(row) / 2 && h <= ink_ui_px(INK_STROKE) && lv_color_eq(lv_obj_get_style_bg_color(o, 0), ink_ui_ink())) divider = true;
         }
-        CHECK(base, "settings icon contrasts with the gray group without a button outline: %s", wanted);
+        CHECK(base, "settings group icon stays white without a button outline: %s", wanted);
         if (i != 0 && i != 2 && i != 5) CHECK(divider, "settings rows are visually separated: %s", wanted);
     }
 }
@@ -290,6 +291,7 @@ static void assert_text_fits(void) {
 }
 
 static void assert_view(void) {
+    check_border_surfaces(lv_screen_active()); check_border_surfaces(lv_layer_sys());
     assert_identity();
     assert_text_fits();
     char *snapshot = osal_malloc(4096, OSAL_MEM_EXTERNAL), *actions = osal_malloc(8192, OSAL_MEM_EXTERNAL);

@@ -70,8 +70,7 @@ static void check_group_row(lv_obj_t *row, bool separated) {
     lv_area_t bounds; lv_obj_get_coords(row, &bounds);
     for (uint32_t i = 0; i < lv_obj_get_child_count(row); i++) {
         lv_obj_t *o = lv_obj_get_child(row, (int32_t)i);
-        if (lv_obj_get_style_bg_opa(o, 0) != LV_OPA_COVER ||
-            !lv_color_eq(lv_obj_get_style_bg_color(o, 0), ink_ui_paper())) continue;
+        if (lv_obj_get_style_bg_opa(o, 0) != LV_OPA_COVER) continue;
         lv_area_t a; lv_obj_get_coords(o, &a);
         if (lv_obj_get_style_radius(o, 0) == LV_RADIUS_CIRCLE) {
             circles++;
@@ -81,8 +80,10 @@ static void check_group_row(lv_obj_t *row, bool separated) {
                   "shared list icon circle uses the scaled tokens and is centered in either row height");
             CHECK(!lv_obj_get_style_border_width(o, 0) && !lv_obj_has_flag(o, LV_OBJ_FLAG_CLICKABLE) && count_icons(o) == 1,
                   "shared list icon has a white circle, one icon and no button outline or hit target");
+            CHECK(lv_color_eq(lv_obj_get_style_bg_color(o, 0), ink_ui_paper()), "decorative icon stays white");
         } else if (lv_obj_get_height(o) <= ink_ui_px(INK_STROKE)) {
             dividers++;
+            CHECK(lv_color_eq(lv_obj_get_style_bg_color(o, 0), ink_ui_ink()), "a group divider is black on white");
             CHECK(a.x1 - bounds.x1 == ink_ui_px(INK_CIRCLE_SMALL + INK_GAP_XL) &&
                   a.y1 == bounds.y1 && a.x2 == bounds.x2 && lv_obj_get_height(o) == ink_ui_px(INK_STROKE),
                   "shared group divider starts after the icon and uses the scaled stroke");
@@ -102,6 +103,10 @@ static void check_theme(void) {
             lv_obj_t *first = ink_ui_list_row(group, "wifi", "合成网络", "未连接", 0, 0, w, lines, NULL, NULL);
             lv_obj_t *second = ink_ui_list_row(group, "volume", "合成声音", "60%", 0, h, w, lines, theme_clicked, &clicks);
             lv_obj_update_layout(root);
+            CHECK(ink_ui_surface_kind(group) == INK_SURFACE_STATIC &&
+                  lv_color_eq(lv_obj_get_style_bg_color(group, 0), ink_ui_paper()) &&
+                  lv_obj_get_style_border_width(group, 0) == ink_ui_px(INK_STROKE), "static groups have a white fill and one black frame");
+            CHECK(!lv_obj_get_style_border_width(first, 0) && !lv_obj_get_style_border_width(second, 0), "nested rows do not repeat the group frame");
             check_group_row(first, false); check_group_row(second, true);
             CHECK(!lv_obj_has_flag(first, LV_OBJ_FLAG_CLICKABLE) && lv_obj_has_flag(second, LV_OBJ_FLAG_CLICKABLE),
                   "row decoration preserves the existing row hit targets");
@@ -110,6 +115,19 @@ static void check_theme(void) {
         }
         lv_obj_t *single = ink_ui_list_row(root, "book", "合成单行", "", INK_MARGIN, INK_CONTROL, w, false, NULL, NULL);
         lv_obj_update_layout(root); check_group_row(single, false);
+        CHECK(lv_obj_get_style_border_width(single, 0) == ink_ui_px(INK_STROKE), "a standalone static row keeps its frame");
+        lv_obj_t *black = ink_ui_card(root, 0, 0, w, INK_CONTROL, INK_SURFACE_BLACK);
+        CHECK(ink_ui_surface_kind(black) == INK_SURFACE_BLACK &&
+              lv_color_eq(lv_obj_get_style_bg_color(black, 0), ink_ui_ink()) && !lv_obj_get_style_border_width(black, 0), "black surfaces retain their fill and border");
+        lv_obj_t *outlined = ink_ui_card(root, 0, 0, w, INK_CONTROL, INK_SURFACE_WHITE);
+        lv_obj_t *text = ink_ui_line(outlined, "合成短信", INK_FONT_LIST, INK_WEIGHT_REGULAR, INK_GAP, INK_GAP, w / 2);
+        lv_area_t before, after; lv_obj_update_layout(root); lv_obj_get_coords(text, &before);
+        ink_ui_surface_style(outlined, INK_SURFACE_STATIC, true);
+        lv_obj_update_layout(root); lv_obj_get_coords(text, &after);
+        CHECK(before.x1 == after.x1 && before.y1 == after.y1, "an existing frame keeps its content position when its gray fill becomes white");
+        ink_ui_surface_style(outlined, INK_SURFACE_BLACK, true);
+        lv_obj_update_layout(root); lv_obj_get_coords(text, &after);
+        CHECK(before.x1 == after.x1 && before.y1 == after.y1 && lv_color_eq(lv_obj_get_style_bg_color(outlined, 0), ink_ui_ink()), "reused black message cards retain their fill and content position");
         lv_obj_t *decor = ink_ui_circle(root, "info", 0, 0, INK_CIRCLE_SMALL, INK_ICON_SMALL, INK_SURFACE_WHITE, NULL, NULL);
         CHECK(!lv_obj_get_style_border_width(decor, 0) && !lv_obj_has_flag(decor, LV_OBJ_FLAG_CLICKABLE),
               "a shared decorative circle has no button outline");
