@@ -1808,6 +1808,7 @@ target_link_libraries(sim-qr-scan PRIVATE ink_apps ink_system)
 add_test(NAME qr-scan COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/qr_scan/run.py --build ${CMAKE_BINARY_DIR})
 
 ink_sim_executable(sim-cell-status tests/esp32s31/cell_status.c)
+target_include_directories(sim-cell-status PRIVATE drivers/chips)
 target_link_libraries(sim-cell-status PRIVATE ink_apps ink_system)
 add_test(NAME cell-status COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/esp32s31/cell_status.py ${CMAKE_BINARY_DIR})
 add_test(NAME unit-s31-cell-negative COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/ports/esp32s31/tests/cell_negative.py ${CMAKE_BINARY_DIR} --cc ${CMAKE_C_COMPILER})

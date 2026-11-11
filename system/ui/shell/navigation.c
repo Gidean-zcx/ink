@@ -1692,6 +1692,8 @@ static int page_snapshot(char *buf, size_t cap) {
                       (long long) ink_setting_get("net.airplane"), (long long) ink_setting_get("wifi.enabled"), ssid,
                       N.picked_ssid, N.wifi_page + 1, (long long) ink_setting_get("cell.sim_slot"),
                       (long long) integer("cell.registered"));
+        if (integer("cell.config_readonly") && n >= 0 && (size_t)n < cap)
+            n += snprintf(buf + n, cap - (size_t)n, "SIM 卡暂不能更改；");
         for (int i = N.wifi_page * 2; i < N.wifi_count && i < (N.wifi_page + 1) * 2 && n >= 0 && (size_t) n < cap; i++)
             n += snprintf(buf + n, cap - (size_t) n, "网络[%d]=%s；", i, N.wifi_ssid[i]);
         if (ssid[0] && N.body_page == N.wifi_forget_page && n >= 0 && (size_t)n < cap) {
@@ -1948,7 +1950,10 @@ static void changed(void *ctx, int h, const char *id) {
     }
     bool cell_status = !strcmp(id, "cell.registered") || !strcmp(id, "cell.sim_missing") ||
         (!strcmp(id, "cell.signal") && integer("cell.registered"));
-    if (ctx && strncmp(id, "time.", 5) && strcmp(id, "notify.unread") && !cell_status &&
+    bool cell_config = !strcmp(id, "cell.config_readonly") && integer("cell.config_readonly") &&
+        N.page_body && N.page_id == PAGE_NETWORK;
+    if (cell_config) __atomic_store_n(&N.need_body, true, __ATOMIC_RELEASE);
+    if (ctx && strncmp(id, "time.", 5) && strcmp(id, "notify.unread") && !cell_status && !cell_config &&
         strcmp(id, "audio.mic") && strcmp(id, "net.type") && strncmp(id, "wifi.", 5) && strcmp(id, "bt.connected"))
         return;
     if (!ctx || !strcmp(id, "notify.unread") || !strncmp(id, "wifi.", 5) || !strcmp(id, "bt.connected"))

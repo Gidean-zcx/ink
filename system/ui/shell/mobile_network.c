@@ -35,6 +35,12 @@ static void reload(void *ctx, int h, const char *id) {
     (void)ctx; (void)h; (void)id;
     if (current() && !P.edit) { ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .reply_exec = INK_EXEC_UI, .done = loaded, .ctx = (void *)(uintptr_t)P.generation}; ink_cap_call("net.usage", NULL, &o); }
 }
+static void readonly_changed(void *ctx, int h, const char *id) {
+    (void)ctx; (void)id; int64_t readonly = 0;
+    if (current() && ink_state_get_int(h, &readonly) && readonly) {
+        P.edit = false; memset(P.password, 0, sizeof P.password); ink_ui_redraw();
+    }
+}
 static void entered(void *ctx, const char *value) {
     int i = (int)(intptr_t)ctx; char *out = i == 0 ? P.name : i == 1 ? P.user : P.password;
     snprintf(out, i == 0 ? sizeof P.name : sizeof P.user, "%s", value);
@@ -105,5 +111,6 @@ int ink_mobile_network_init(void) {
         {.id = "shell.mobile", .app = NULL, .title = "移动网络", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
         {.id = "shell.mobile_edit", .app = NULL, .title = "手动接入点", .activity = "SetMobile", .effect = INK_FX_NAVIGATE, .expose = INK_EXPOSE_OWNER, .run = navigate},
         {.id = "shell.mobile_save", .app = NULL, .title = "保存接入点", .activity = "SetMobile", .effect = INK_FX_NAVIGATE, .expose = INK_EXPOSE_OWNER, .run = navigate}};
-    return ink_cap_register(caps, sizeof caps / sizeof *caps) || ink_state_watch("net.mobile_rev", reload, NULL, INK_EXEC_UI);
+    return ink_cap_register(caps, sizeof caps / sizeof *caps) || ink_state_watch("net.mobile_rev", reload, NULL, INK_EXEC_UI) ||
+        ink_state_watch("cell.config_readonly", readonly_changed, NULL, INK_EXEC_UI);
 }

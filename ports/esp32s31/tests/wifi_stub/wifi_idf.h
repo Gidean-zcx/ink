@@ -31,6 +31,7 @@ extern const char ink_test_wifi_base[], ink_test_ip_base[], ink_test_sntp_base[]
 #define WIFI_EVENT_SCAN_DONE 2
 #define IP_EVENT_STA_GOT_IP 3
 #define IP_EVENT_STA_LOST_IP 5
+#define IP_EVENT_ETH_GOT_IP 6
 #define NETIF_SNTP_TIME_SYNC 4
 #define WIFI_REASON_AUTH_FAIL 202
 #define WIFI_REASON_4WAY_HANDSHAKE_TIMEOUT 15

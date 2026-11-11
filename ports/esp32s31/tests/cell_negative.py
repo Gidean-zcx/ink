@@ -16,6 +16,7 @@ mutations = [
     ('no-wake-handshake', '        gpio_set_level(INK_MRDY, 0);\n        uint64_t until', '        uint64_t until'),
     ('bad-header-checksum', 'f->data[3] = (uint8_t)((sum >> 8) ^ sum ^ 3);', 'f->data[3] = (uint8_t)((sum >> 8) ^ sum ^ 4);'),
     ('allow-storage-writes', 'if (!ink_allowed(cmd)) return HAL_AT_ERROR;', 'if (false && !ink_allowed(cmd)) return HAL_AT_ERROR;'),
+    ('count-control-as-data', ' && f->len >= 18', ''),
 ]
 a.build.mkdir(parents=True, exist_ok=True)
 with tempfile.TemporaryDirectory(prefix='cell-negative-', dir=a.build.resolve()) as temp:
@@ -42,4 +43,4 @@ with tempfile.TemporaryDirectory(prefix='cell-negative-', dir=a.build.resolve())
         if (result.returncode == 0) != (not old):
             raise SystemExit(f'{name}: unexpected test={result.returncode}\n{result.stdout}\n{result.stderr}')
         print(f'{name}: compile=0 test={result.returncode}', flush=True)
-print('cell reverse controls: 3/3 rejected; baseline passed')
+print(f'cell reverse controls: {len(mutations)}/{len(mutations)} rejected; baseline passed')

@@ -196,6 +196,10 @@ int main(void) {
     assert(hal_net_available(HAL_LINK_LTE));
     hal_net_use(HAL_LINK_LTE); pump_all(); link_is(HAL_LINK_LTE, true); assert(cell_selected);
     hal_link_status_t cellular; hal_net_link_status(&cellular); assert(cellular.signal_dbm == -83);
+    unsigned before_time = sntp_starts;
+    hal_net_set_time_callback(on_time, &utc_seen); assert(sntp_starts == before_time + 1);
+    ink_s31_net_changed(); pump_all(); assert(sntp_starts == before_time + 1);
+    esp_event_post(IP_EVENT, IP_EVENT_ETH_GOT_IP, NULL, 0, 0); pump_all(); assert(sntp_starts == before_time + 2);
     hal_net_use(HAL_LINK_NONE); pump_all(); link_is(HAL_LINK_NONE, false); assert(!cell_selected);
     puts("wifi: init/RAM, scan, DHCP, failures, known-list reconnect, callbacks and SNTP passed");
     return 0;

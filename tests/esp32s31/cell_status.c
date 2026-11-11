@@ -3,6 +3,15 @@
 #include "ink/hal_net.h"
 #include "ink/sys/display.h"
 #include "ink/ui_shell.h"
+static bool readonly_fixture;
+#define hal_cell_status ink_test_base_cell_status
+#include "../../ports/sim/hal/hal_cellular_sim.c"
+#undef hal_cell_status
+bool hal_cell_status(hal_cell_status_t *out) {
+    bool ok = ink_test_base_cell_status(out);
+    out->config_readonly = __atomic_load_n(&readonly_fixture, __ATOMIC_ACQUIRE);
+    return ok;
+}
 #define ink_main product_main
 #include "../../system/boot/main.c"
 #undef ink_main
@@ -10,6 +19,8 @@
 static int cell_dbm;
 static bool card = true, coverage = true;
 static int expected_bars;
+static bool readonly_visible;
+static bool captured;
 static const char *expected_label;
 static lv_obj_t *find_label(lv_obj_t *root, const char *text) {
     if (lv_obj_check_type(root, &lv_label_class) && !strcmp(lv_label_get_text(root), text)) return root;
@@ -34,11 +45,13 @@ static void inspect(void) {
 }
 static bool state(const char *id) { int64_t v = 0; return ink_state_get_int(ink_state_find(id), &v) && v; }
 static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
-static void capture(void *arg) { sim_display_snapshot(arg); }
+static void capture(void *arg) { sim_display_snapshot(arg); captured = true; }
 static void frame(const char *name, const char *label, int bars) {
     expected_label = label; expected_bars = bars;
     CHECK(WAIT_FOR(settled(), 10000), "display settles"); on_ui(inspect);
-    vtk_event_at(vtk_now() + SIM_MS(1), capture, (void *)name); delay_ms(5);
+    captured = false;
+    vtk_event_at(vtk_now() + SIM_MS(1), capture, (void *)name);
+    CHECK(WAIT_FOR(captured, 1000), "status frame was captured");
 }
 static void world(void *arg) {
     (void)arg;
@@ -46,13 +59,19 @@ static void world(void *arg) {
     sim_net_env(1, coverage, cell_dbm);
     sim_net_roaming(false); /* ask the existing comm event path to query the new modem status */
 }
+static bool world_ready(void) {
+    int64_t dbm = 0;
+    return ink_state_get_int(ink_state_find("cell.signal"), &dbm) && dbm == cell_dbm &&
+        state("cell.sim_missing") == !card && state("cell.registered") == card;
+}
 static void change_world(bool present, bool covered, int dbm) {
     card = present; coverage = covered; cell_dbm = dbm;
-    vtk_event_at(vtk_now() + SIM_MS(1), world, NULL); delay_ms(800);
+    vtk_event_at(vtk_now() + SIM_MS(1), world, NULL);
+    CHECK(WAIT_FOR(world_ready(), 5000), "modem reports the requested card and signal state");
 }
 static void inspect_readonly(void) {
-    CHECK(ink_ui_snapshot(g_result, sizeof g_result, NULL) > 0 && strstr(g_result, "暂不能更改") &&
-        strstr(g_result, "\"enabled\":false"), "readonly mobile actions and explanation are exposed to AI");
+    readonly_visible = ink_ui_snapshot(g_result, sizeof g_result, NULL) > 0 && strstr(g_result, "暂不能更改") &&
+        !strstr(g_result, "net.apn_set") && !strstr(g_result, "shell.mobile_edit");
 }
 static bool set(const char *id, int value) {
     char args[96]; snprintf(args, sizeof args, "{\"id\":\"%s\",\"value\":%d}", id, value);
@@ -68,17 +87,21 @@ static void run(void *arg) {
     change_world(true, true, -69); frame("cell-wifi-4g-strong", "4G", 4);
     hal_link_status_t link; hal_net_link_status(&link); CHECK(link.type == HAL_LINK_WIFI && link.up, "Wi-Fi and cellular registration coexist");
     change_world(true, true, -99); frame("cell-wifi-4g-weak", "4G", 1);
-    CHECK(set("net.airplane", 1), "airplane mode"); delay_ms(1000);
-    CHECK(!state("cell.registered"), "airplane clears registration");
+    CHECK(set("net.airplane", 1), "airplane mode");
+    CHECK(WAIT_FOR(!state("cell.registered"), 5000), "airplane clears registration");
     CHECK(WAIT_FOR(settled(), 10000), "airplane display settles");
-    vtk_event_at(vtk_now() + SIM_MS(1), capture, "cell-airplane"); delay_ms(5);
-    CHECK(set("net.airplane", 0), "leave airplane"); delay_ms(1500);
+    captured = false; vtk_event_at(vtk_now() + SIM_MS(1), capture, "cell-airplane");
+    CHECK(WAIT_FOR(captured, 1000), "airplane frame was captured");
+    CHECK(set("net.airplane", 0), "leave airplane");
+    CHECK(WAIT_FOR(state("cell.registered"), 10000), "radio registers after leaving airplane mode");
     change_world(false, true, -99); CHECK(WAIT_FOR(state("cell.sim_missing"), 5000), "missing SIM is explicit");
     frame("cell-no-sim", "无卡", 0);
-    ink_state_set_bool(ink_state_find("cell.config_readonly"), true); /* S31 metadata fixture */
     CHECK(BY_HAND("shell.mobile", NULL) && g_rc.status == INK_RC_DONE, "open readonly mobile page");
-    CHECK(WAIT_FOR(settled(), 10000), "readonly mobile page settles"); on_ui(inspect_readonly);
-    CHECK(BY_HAND("shell.mobile_edit", NULL) && g_rc.status == INK_RC_REJECTED, "AI and buttons cannot enter readonly APN editing");
+    __atomic_store_n(&readonly_fixture, true, __ATOMIC_RELEASE);
+    ink_state_set_bool(ink_state_find("cell.config_readonly"), true); /* S31 metadata arrives while the page is open. */
+    CHECK(WAIT_FOR(({ on_ui(inspect_readonly); readonly_visible; }), 5000), "readonly=%d page=%.24s snapshot=%.150s", state("cell.config_readonly"), ink_ui_page_name(), g_result);
+    CHECK(BY_HAND("shell.mobile_edit", NULL) && g_rc.status == INK_RC_REJECTED && strstr(g_rc.say, "暂不能更改"), "local readonly edit is explicitly refused");
+    CHECK(AI("shell.mobile_edit", NULL) && g_rc.status == INK_RC_INVALID && strstr(g_rc.detail, "not offered"), "the page-private edit capability is not offered to AI");
     ink_probe_count("test.finished");
 }
 void ink_main(void) {

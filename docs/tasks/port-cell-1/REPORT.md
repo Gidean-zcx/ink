@@ -6,23 +6,28 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 【实测】通过（当前定向测试） | 假 UART、AT/payload、URC、收发帧、复位、存储命令拦截；反向对照 3/3 被拒 | `build/test-s31-cell`；`python3 ports/esp32s31/tests/cell_negative.py build` |
-| 2 | 验证中 | 宿主机全量首轮 367 项，9 项失败；已修复部分并定向通过，最终普通全量原话：`99% tests passed, 2 tests failed out of 367`，463.57 s；3 项环境跳过；独立 S31 宿主机 28/28 通过；ASan 待补；S31 已编过 | `ctest --test-dir build --output-on-failure -j2` |
+| 1 | 【实测】通过（当前定向测试） | 假 UART、AT/payload、URC、收发帧、复位、存储命令拦截；反向对照 4/4 被拒（含链路控制不计流量） | `build/test-s31-cell`；`python3 ports/esp32s31/tests/cell_negative.py build` |
+| 2 | 验证中 | 宿主机全量首轮 367 项，9 项失败；已修复部分并定向通过，最终普通全量原话：`99% tests passed, 2 tests failed out of 367`，463.57 s；3 项环境跳过；独立 S31 宿主机 28/28 通过；ASan 全量原话 `99% tests passed, 4 tests failed out of 367`，1428.80 s；其中新增只读用例已修正并在最终 ASan 定向 9/9 通过；语音单项超时待原限额重跑；S31 已编过 | `ctest --test-dir build --output-on-failure -j2` |
 | 3 | 【实现】已列出 | 见下文；没有把编译、假模组当成真机验证 | 原厂代码行号及 AT 清单 |
 
 ## 没做到的
 
-- 真机验证不在本任务范围。
+- 真机验证不在本任务范围；没有设备侧吞吐、低功耗、短信、通话音频的实测结论。未设置 CNMI/CLIP 等通知配置，入站通知依赖模组原有设置；原厂未提供短信、电话流程，不能据本次 AT 转接声称实机已可收发或双向通话。
+- 全量没有全绿：共享能力目录按规则留给主会话更新；ConfirmSecret 的基线截图失败未修；ASan 语音用例超时的独立复核结果见验收记录。
 
 ## 和设计不一致的
 
 - 帧头、序号、XON、SPIC 请求/应答、50 µs MRDY ACK、200 ms 唤醒等待、100 ms ACK 等待和 500 ms空闲来自原厂；原厂 ACK 超时假定已送达，不会重发短信或拨号，本实现相同。
-- 使用 IDF UART 环形缓冲和一个 OSAL I/O 任务替代 UHCI DMA、原厂三个任务；直接接 `esp_netif` 的以太网/DHCP 接口，未引入 `iot_eth` 依赖。2 Mbps 吞吐、功耗和唤醒仍待真机验证。
-- 不复制原厂 NAT/波特率/USB 配置、模组重启、睡眠参数设置、设备标识查询。NAT 只读检查不符合时停止数据初始化，不修改模组；不做原厂多波特率探测或初始化 AT 自动重试。普通命令超时后等迟到的终止码或复位通知才重新开放 AT，防止错配回复。唤醒等待后 SRDY 仍未就绪会拒发，原厂会强制进入 active 继续发送；这里采取保守行为。
+- 使用 IDF UART 环形缓冲和一个 OSAL I/O 任务替代 UHCI DMA、原厂三个任务；直接接 `esp_netif` 的以太网/DHCP 接口，未引入 `iot_eth` 依赖。没有复刻 UHCI 的停启，空闲时保留 UART 接收并定时轮询；2 Mbps 吞吐、功耗和唤醒仍待真机验证。
+- 不复制原厂 NAT/波特率/USB 配置、模组重启、睡眠参数设置、设备标识查询。NAT 只读检查不符合时停止数据初始化，不修改模组；不做原厂多波特率探测或初始化 AT 自动重试。已发出的命令超时后等迟到的终止码或复位通知才重新开放 AT；队列中超时而未实际发出的命令不会发送，也不会阻塞后续命令，防止错配回复。唤醒等待后 SRDY 仍未就绪会拒发，原厂会强制进入 active 继续发送；这里采取保守行为。
+- UART TX 队列为 8 个包（原厂 32），URC FIFO 为 8 条，满时拒绝新项；没有补拉或后台重试。本次不验证批量 URC/满收件箱场景。
+- `hal_modem_at` 会保留扩展 `+CME ERROR` / `+CMS ERROR` 诊断行供上层判断（例如无卡代码 10），纯 `OK` / `ERROR` 结束码不放进信息行。这是通用 HAL 注释“结束码前的信息行”的设备侧扩展，未修改通用注释迁就实现。
 - S31 不执行短信删除，`hal_cell_sms_take` 读后保留副本，与通用 HAL 注释的“读后删除”不一致，这是任务第 6 条明确要求。
 - 信号使用原厂 `CSQ`，换算的是 RSSI（`-113 + 2×CSQ`），不是已验证的 RSRP。
 
 ## 改过的已有测试
+
+新增 `cell_status` 用例最初误把“禁用动作”当作 `enabled:false` 序列化，并把 AI 私有入口拒绝码写成 REJECTED。核对 `ui_semantics.c:73`、`cap.c:109` 后，改为精确检查动作被省略、说明存在、本地编辑 REJECTED、AI 私有入口 INVALID；没有改这两个现有实现或放宽它们的约束。
 
 - `wifi.c`：LTE 选择由“退回 none”变为保留 LTE 类型，并增加 LTE 状态、默认网卡切换检查；蜂窝占位已被替换。
 - `power.c`：记录蜂窝停止/恢复顺序，断电前停止、恢复电源后恢复，忙时拒绝切电，保留模组电源时不停止；既有音频保护检查保留。
@@ -30,7 +35,7 @@
 - `ui_shell_scenes.c`：选网的“4G”只匹配内容区，避免点中新状态栏；期望仍为 `net.prefer == 2`。
 - `ui_cards.c`：开始渲染计数前等首次模组状态，替代固定等待；隐藏卡片零渲染、零提交断言不变。
 - `sms_multipart.c`：等两条分片入库再检查缺片时不显示；数量和“不显示”期望不变。
-- `audit7_fix/file_boundary.c`：计数清零前先取得并释放同一把文件锁，避免把测量开始前已持锁的操作算入；300 ms 上限不变，本次普通全量已通过该用例，锁预算不变。
+- `audit7_fix/file_boundary.c`：计数清零前先取得并释放同一把文件锁，避免把测量开始前已持锁的操作算入；300 ms 上限不变，本次普通全量已通过；实测持锁 274093 µs，重命名 274123 µs、4 次尺寸查询，锁预算不变。
 
 ## 要用户定的
 
@@ -39,18 +44,20 @@
 ## 顺手发现
 
 - 【实测】基线产品代码单独编译并替换对应对象后，`ui-scene-ConfirmSecret` 仍报 “snapshot must be a fully presented frame on ConfirmSecret”，与当前同为 6.291 s。未改断言或加 sleep。手动对照将 5 个相关产品源文件从基线提取、单独编译后替换对象；不是完整历史检出。证据在 `build/port-cell-baseline/`，没有注册依赖 Git 历史的测试。
+- 【实现】现有浅睡把 SRDY 设为高电平唤醒（`ports/esp32s31/hal_power_s31.c:98`），原厂 UART 模组用低电平唤醒（`uart_eth_modem.cc:573,1774`）。浅睡仍默认关闭；不能据本次握手测试声称已验证 4G 浅睡唤醒，启用前由主会话核对。
 - WebSocket/TLS 仍是既有 S31 占位；本任务接通的是 lwIP IP 网卡，不能据此声称家庭中枢连接已可用。
 
 ## 新增的机制
 
-- `nt26-uart` I/O 任务、TX 队列（8 个包指针）、URC 队列（8 条）、串行 AT 互斥和有界握手/等待：任务第 1、2 条要求；栈与大缓冲在 PSRAM。
+- `nt26-uart` I/O 任务、TX 队列（8 个包指针）、URC 队列（8 条）、串行 AT 互斥和有界握手/等待：任务第 1、2 条要求；栈与大缓冲在 PSRAM。模组状态由原有 comm 任务在 URC 或每 30 秒刷新，无新监视任务。
 - `esp_netif` 以太网/DHCP 接口：任务第 4 条要求；网络动作在已有 ESP 事件任务执行，系统选网规则不变。
 - AT 有限白名单：任务第 6 条要求；拒绝命令拼接和非短信十六进制 payload。没有新持久格式、配置项、后台重试任务。
 - `cell.signal`、`cell.sim_missing`、`cell.config_readonly` 状态：任务第 5、6 条的界面和 AI 可读状态；按钮与 AI 仍走原能力。
 
 ## 要改的文档
 
-- `docs/system/capabilities.md`：由主会话更新生成目录，新增上述三个状态，51 → 54 项；同时更新服务状态引用。按总规则第 7 节不在本分支修改。
+- `docs/system/capabilities.md`：由主会话更新生成目录，新增上述三个状态，51 → 54 项；同时更新服务状态引用。按总规则第 7 节不在本分支修改；预览可用 `python3 tools/capabilities.py --output build/port-cell-capabilities.md` 生成。
+- `ports/esp32s31/README.md`：合并后链接本报告，更新蜂窝已接入、WebSocket 仍未接入的证据边界。
 - `hal_cell_sms_take` 的 S31 保留副本例外、`CSQ` 的 RSSI 证据边界需要合并时同步平台说明。
 
 ## 原厂依据（查阅 2026-11-11）
@@ -130,4 +137,10 @@
 - 独立端口：`cmake -S ports/esp32s31/tests -B build-s31-host -DCMAKE_EXPORT_COMPILE_COMMANDS=ON`；`cmake --build build-s31-host -j2`；`ctest --test-dir build-s31-host --output-on-failure -j2`。原话 `100% tests passed out of 28`，12.31 s；`build/s31-host-ctest.log`。
 - S31：设置总规则中的依赖、原厂路径后执行 `bash ports/esp32s31/build.sh`，最终再执行同一脚本核对所有修改（增量构建仍需激活 IDF 环境）；日志 `build/s31-build.log`、`build/s31-final.log`，只编译。USB 唯一控制台配置已在生成配置中核对。
 - 截图：`INK_KEEP_EVIDENCE=1 ctest --test-dir build -R '^cell-status$' --output-on-failure`；`build/test-out/cell-status/` 的 `cell-wifi-4g-strong`、`cell-wifi-4g-weak`、`cell-no-sim`、`cell-no-service`、`cell-airplane` 各有 `snap-`（模拟面板）和 `clean-`（无残影布局）PNG。后者只作布局参考，不代表实屏效果。只读配置 UI 使用明确的 S31 元数据夹具，实际 S31 HAL 标志由假 UART 测试核对。
-- 手工基线对照不注册进 CTest：`INK_DEPS=... python3 build/port-cell-baseline/compare.py`；`ConfirmSecret` 同样失败，短信与目录计时基线通过。对照文件在构建目录，未提交。
+- 手工基线对照不注册进 CTest：`python3 build/port-cell-baseline/compare.py（需已设置 INK_DEPS；这是本机手工证据脚本，不注册进 CTest）`；`ConfirmSecret` 同样失败，短信与目录计时基线通过。对照文件在构建目录，未提交。
+
+- ASan 全量配置与普通构建相同，仅目录换成 `build-asan`、加 `-DINK_SANITIZE=ON`。原始全量 `build/asan-ctest.log`，未调整测试预算或超时。修正新增只读夹具和错误预期后重编，定向 9/9 通过（29.14 s）：`build/asan-final-regressions.log`。
+- 最终 ASan 反向：`python3 ports/esp32s31/tests/cell_negative.py build-asan --sanitize`；基准 `compile=0 test=0`，撤掉唤醒、改坏校验、放开写命令、把 SPIC 算成流量均 `compile=0 test=-6`；4/4 被拒，`build/asan-cell-negative.log`。
+- 最终普通只读 UI 用例：`INK_KEEP_EVIDENCE=1 ctest --test-dir build -R '^cell-status$' --output-on-failure -j1`，1/1 通过（2.66 s），`build/cell-ui-final.log`；按现有语义/权限契约检查，没有添加 sleep。
+
+- 最终独立 S31 宿主机重编：普通 28/28（2.38 s），ASan/UBSan 28/28（10.48 s），`build/s31-host-final-ctest.log`、`build/s31-host-asan-ctest.log`。覆盖串口状态、P14 通知顺序、音频忙保护、手动 Wi-Fi/LTE 路由及 SNTP 只在连上 IP 时启动（信号变化不会重启对时）。

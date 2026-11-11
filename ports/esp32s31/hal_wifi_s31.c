@@ -116,12 +116,9 @@ static void ink_event(void *arg, esp_event_base_t base, int32_t id, void *data) 
         if (ink_wifi.mode == INK_AUTO) ink_rejoin();
         ESP_LOGI("ink_wifi", "scan done count=%d", ink_wifi.count);
     }
-    bool cell_time = base == INK_WIFI_CHANGED && ink_wifi.link.type == HAL_LINK_LTE && ink_wifi.time_cb;
+    bool cell_time = base == IP_EVENT && id == IP_EVENT_ETH_GOT_IP && ink_wifi.link.type == HAL_LINK_LTE && ink_wifi.time_cb;
     INK_UNLOCK();
-    if (cell_time) {
-        hal_link_status_t st;
-        if (ink_s31_cell_link(&st) && st.up) ESP_ERROR_CHECK(esp_netif_sntp_start());
-    }
+    if (cell_time) ESP_ERROR_CHECK(esp_netif_sntp_start());
     ink_notify();
 }
 static void ink_init(void) {
@@ -181,8 +178,9 @@ void hal_net_set_link_callback(hal_link_cb cb, void *ctx) {
 void hal_net_set_time_callback(void (*cb)(void *, int64_t), void *ctx) {
     ink_init();
     INK_LOCK(); ink_wifi.time_cb = cb; ink_wifi.time_ctx = ctx;
-    if (cb && ink_wifi.link.up) ESP_ERROR_CHECK(esp_netif_sntp_start());
     INK_UNLOCK();
+    hal_link_status_t st; hal_net_link_status(&st);
+    if (cb && st.up) ESP_ERROR_CHECK(esp_netif_sntp_start());
 }
 void hal_wifi_set_known(const hal_wifi_known_t *list, int n) {
     ink_init();

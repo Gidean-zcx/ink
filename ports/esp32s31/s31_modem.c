@@ -29,7 +29,7 @@ static struct {
     osal_sem_t *done;
     osal_queue_t *tx, *urc;
     esp_netif_t *netif;
-    bool ready, suspended, waiting, prompt, desynced, handshake, ip, registered, selected, starting, net_connected;
+    bool ready, suspended, waiting, at_sent, prompt, desynced, handshake, ip, registered, selected, starting, net_connected;
     unsigned epoch, seq;
     int signal_dbm;
     uint64_t activity, rx_bytes, tx_bytes, deadline, ready_after;
@@ -222,6 +222,10 @@ static void ink_step(void) {
         CELL_LOCK();
         bool send = !ink_cell.suspended && f->epoch == ink_cell.epoch && !gpio_get_level(S31_GPIO_MODEM_SRDY) &&
             (!f->deadline || osal_now_us() < f->deadline);
+        if (f->deadline) {
+            send = send && ink_cell.waiting && f->deadline == ink_cell.deadline;
+            if (send) ink_cell.at_sent = true;
+        }
         CELL_UNLOCK();
         if (send) {
             unsigned ack = __atomic_load_n(&ink_ack, __ATOMIC_ACQUIRE);
@@ -230,7 +234,8 @@ static void ink_step(void) {
                 until = osal_now_us() + 100000;
                 while (__atomic_load_n(&ink_ack, __ATOMIC_ACQUIRE) == ack && osal_now_us() < until) { ink_receive(); osal_task_delay_us(1000); }
                 /* Upstream .cc:817 assumes delivery on ACK timeout; never repeat a paid action. */
-                if (!(f->data[2] & 12)) { CELL_LOCK(); ink_cell.tx_bytes += f->len - 4; CELL_UNLOCK(); }
+                /* SPIC link control is not Ethernet traffic. */
+                if (!(f->data[2] & 12) && f->len >= 18) { CELL_LOCK(); ink_cell.tx_bytes += f->len - 4; CELL_UNLOCK(); }
             }
         }
         osal_free(f);
@@ -287,7 +292,7 @@ static hal_at_result_t ink_at(const char *cmd, const char *payload, char *out, s
     CELL_LOCK();
     if (ink_cell.suspended || ink_cell.desynced) { CELL_UNLOCK(); osal_mutex_unlock(ink_cell.at); return HAL_AT_NO_MODEM; }
     while (osal_sem_take(ink_cell.done, 0) == OSAL_OK) { }
-    ink_cell.waiting = true; ink_cell.prompt = false; ink_cell.response_n = 0; ink_cell.response[0] = 0;
+    ink_cell.waiting = true; ink_cell.at_sent = false; ink_cell.prompt = false; ink_cell.response_n = 0; ink_cell.response[0] = 0;
     snprintf(ink_cell.command, sizeof ink_cell.command, "%s", cmd);
     ink_cell.result = HAL_AT_TIMEOUT;
     ink_cell.deadline = end;
@@ -313,8 +318,8 @@ static hal_at_result_t ink_at(const char *cmd, const char *payload, char *out, s
     CELL_LOCK();
     hal_at_result_t result = queued ? ink_cell.result : HAL_AT_ERROR;
     if (ink_cell.waiting) {
-        ink_cell.desynced = queued; ink_cell.waiting = false;
-        if (queued) ink_link_down();
+        ink_cell.desynced = ink_cell.at_sent; ink_cell.waiting = false;
+        if (ink_cell.desynced) ink_link_down();
     }
     if (out && cap) {
         if (ink_cell.response_n >= cap) result = HAL_AT_ERROR;

@@ -174,7 +174,7 @@ int main(void) {
     inject(0, ethernet, sizeof ethernet); drain(); assert(receives == 1);
     unsigned ack_before = acks;
     corrupt_rx = true; inject(0, ethernet, sizeof ethernet); corrupt_rx = false; drain(); assert(receives == 1 && acks == ack_before);
-    uint64_t in, out; assert(hal_net_lte_bytes(&in, &out) && in == sizeof ethernet && out >= sizeof ethernet);
+    uint64_t in, out; assert(hal_net_lte_bytes(&in, &out) && in == sizeof ethernet && out == sizeof ethernet);
     drop_rx = true; inject(0, ethernet, sizeof ethernet); drain(); drop_rx = false;
     assert(receives == 1 && hal_net_lte_bytes(&in, &out) && in == sizeof ethernet);
     reply("\r\nRING\r\n+CLIP: \"00000000000\",129\r\nNO CARRIER\r\n"); drain();
@@ -185,7 +185,9 @@ int main(void) {
     assert(hal_modem_at("AT", response, sizeof response, 1000) == HAL_AT_OK && writes == before + 1); no_ack = false;
     no_wake = true; srdy = 1; before = writes;
     assert(hal_modem_at("AT", response, sizeof response, 250) == HAL_AT_TIMEOUT && writes == before);
-    no_wake = false; srdy = 0; reply("\r\nECRDY\r\n"); drain();
+    no_wake = false; srdy = 0;
+    assert(hal_modem_at("AT", response, sizeof response, 1000) == HAL_AT_OK);
+    reply("\r\nECRDY\r\n"); drain();
     assert(!ink_cell.handshake && !ink_cell.ip && !ink_s31_cell_available()); net_started = false;
     assert(hal_cell_status(&st) && ink_cell.handshake && handshakes == 2);
     no_response = true; before = writes;
