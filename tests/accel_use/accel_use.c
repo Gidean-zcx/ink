@@ -38,6 +38,10 @@ static void on_event(void *ctx, const char *id, const ink_args_t *a) {
 static uint64_t T0;
 static void plan(void) { T0 = vtk_now(); }
 static void orient_ev(void *arg) { sim_accel_orient((const char *)arg); }
+static void orient_asleep(void *arg) {
+    if (sim_power_sleeping()) orient_ev(arg);
+    else if (vtk_now() < T0 + SIM_MS(134000)) vtk_event_after(SIM_MS(10), orient_asleep, arg);
+}
 static void shake_ev(void *arg) {
     (void)arg;
     sim_accel_shake();
@@ -312,7 +316,7 @@ static void gate_after_grace(void) {
     orient("face_up");
     lock_now();
     plan();
-    orient_at(122000, "reading");
+    vtk_event_at(T0 + SIM_MS(122000), orient_asleep, (void *)"reading");
     double lifts = metric("power.lift_wake");
     fallback_key(135000);
     CHECK(unlocked_by(160000), "woken");

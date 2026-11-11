@@ -131,6 +131,8 @@ bool ink_s31_uhci_transmit(const uint8_t *data, size_t n) {
     return true;
 }
 bool ink_s31_uhci_init(void) { return true; }
+bool ink_s31_uhci_receiving(void) { return receiving; }
+void ink_s31_uhci_flush(void) { assert(!receiving && !dma_held); rx_head = rx_tail = 0; }
 bool ink_s31_uhci_active(bool active) {
     if (receiving != active) {
         if (active) { assert(!dma_held); starts++; }
@@ -222,7 +224,10 @@ int main(void) {
     no_wake = true; srdy = 1; now += 500001; tick();
     assert(!receiving && stops == 1);
     no_wake = false; srdy = 0; tick();
-    assert(receiving && starts == 2);
+    assert(receiving && starts == 2 && mrdy == 0);
+    now += 500001; tick();
+    assert(receiving && mrdy == 1);
+    tick(); assert(receiving && mrdy == 1);
     split = 256;
     const char *forbidden[] = {"AT+ECSIMCFG=SimSlot,1", "AT+CGDCONT=1,\"IP\",\"example.com\"", "AT+CGAUTH=1,0", "AT+CMGD=7", "AT&W", "AT+ECRST", "AT+ECNETCFG=1", "AT+XJCFG=netPortBaudRate,1", "AT+IMS=1", "AT+CFUN=1;&W", "AT\r&W", "ATD1;&W", "AT+VTS=\"1\";&W"};
     unsigned before = writes;
@@ -266,7 +271,10 @@ int main(void) {
     reply("\r\nOK\r\n"); drain(); assert(hal_modem_at("AT", response, sizeof response, 1000) == HAL_AT_OK);
     assert(ink_s31_cell_suspend()); before = writes; tick(); assert(writes == before);
     assert(hal_modem_at("AT", response, sizeof response, 200) == HAL_AT_NO_MODEM);
-    ink_s31_cell_resume(); net_started = false; assert(hal_cell_status(&st) && handshakes == 3);
+    ink_s31_cell_resume();
+    assert(!receiving && ink_cell.ready_after == now + 1000000);
+    now = ink_cell.ready_after;
+    net_started = false; assert(hal_cell_status(&st) && handshakes == 3);
     unregistered = missing = true; csq = 99;
     assert(hal_cell_status(&st) && !st.registered && st.sim_missing && st.signal_dbm == 0 && !ink_s31_cell_available());
     assert(!ink_cell.ip && !ink_cell.handshake);

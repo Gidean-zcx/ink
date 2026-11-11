@@ -222,8 +222,9 @@ static bool ink_enqueue(const void *data, size_t n, unsigned type) {
 static void ink_step(void) {
     osal_mutex_lock(ink_cell.io, OSAL_WAIT_FOREVER);
     if (ink_cell.suspended || osal_now_us() < ink_cell.ready_after) { osal_mutex_unlock(ink_cell.io); return; }
-    if (!gpio_get_level(S31_GPIO_MODEM_SRDY)) {
+    if (!gpio_get_level(S31_GPIO_MODEM_SRDY) && !ink_s31_uhci_receiving()) {
         if (!ink_s31_uhci_active(true)) { osal_mutex_unlock(ink_cell.io); return; }
+        ink_cell.activity = osal_now_us();
         gpio_set_level(INK_MRDY, 0);
     }
     ink_receive();
@@ -446,8 +447,9 @@ bool ink_s31_cell_suspend(void) {
 void ink_s31_cell_resume(void) {
     if (!ink_cell.ready) return;
     osal_mutex_lock(ink_cell.io, OSAL_WAIT_FOREVER);
+    ink_s31_uhci_flush();
     CELL_LOCK(); ink_cell.suspended = false;
-    ink_cell.ready_after = metalio_board_shared_power_since_us() + 1000000;
+    ink_cell.ready_after = osal_now_us() + 1000000;
     CELL_UNLOCK();
     osal_mutex_unlock(ink_cell.io);
 }

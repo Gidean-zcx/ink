@@ -9,6 +9,8 @@ extern "C" {
 typedef struct { const uint8_t *data; size_t len; void *token; } ink_s31_uhci_buffer_t;
 bool ink_s31_uhci_init(void);
 bool ink_s31_uhci_active(bool active);
+bool ink_s31_uhci_receiving(void);
+void ink_s31_uhci_flush(void);
 bool ink_s31_uhci_take(ink_s31_uhci_buffer_t *buffer);
 void ink_s31_uhci_return(void *token);
 bool ink_s31_uhci_recovered(void);

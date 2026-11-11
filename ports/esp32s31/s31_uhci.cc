@@ -2,6 +2,7 @@
 #include "s31_uhci.h"
 #include "uart_uhci.h"
 #include "freertos/queue.h"
+#include "hal/uart_ll.h"
 
 static UartUhci ink_uhci;
 static QueueHandle_t ink_rx_queue;
@@ -34,6 +35,8 @@ bool ink_s31_uhci_active(bool active) {
     ink_overflow.store(false);
     return ink_uhci.StartReceive() == ESP_OK;
 }
+bool ink_s31_uhci_receiving(void) { return ink_uhci.IsReceiving(); }
+void ink_s31_uhci_flush(void) { uart_ll_rxfifo_rst(UART_LL_GET_HW(UART_NUM_2)); }
 bool ink_s31_uhci_take(ink_s31_uhci_buffer_t *out) {
     UartUhci::RxBuffer *buffer;
     if (xQueueReceive(ink_rx_queue, &buffer, 0) != pdTRUE) return false;

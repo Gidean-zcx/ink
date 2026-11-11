@@ -12,6 +12,8 @@ Source SHA-256 (local read-only reference):
 cc: 5e9157aa89136be4c4ff3d634fd7d4066b1ea200373b9a60266f603d72c11c26
 h:  00ffb790a900a072e6daeefd0192c361b93d7df13b08669ad4389d2cef47b78d
 
-Modified for ink: C/OSAL, ESP-IDF UART driver rather than UHCI, one I/O
-worker, esp_netif Ethernet driver directly rather than iot_eth glue.
+Modified for ink: C/OSAL, one I/O worker, esp_netif Ethernet driver
+directly rather than iot_eth glue. The transport now uses the unmodified
+78/uart-uhci 0.2.2 component from vendor firmware v2.0.77 @874538e;
+see the repository's vendor/uart-uhci/SOURCE.md and LICENSE.
 Persistent configuration writes and identifier queries are excluded.
