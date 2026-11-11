@@ -2,7 +2,7 @@ set(root ${CMAKE_CURRENT_LIST_DIR}/../../../..)
 file(GLOB_RECURSE sources ${root}/drivers/*.c ${root}/boards/metalio_plus/*.c)
 include(${CMAKE_CURRENT_LIST_DIR}/../../display_upstream.cmake)
 idf_component_register(SRCS ${sources} ../../s31_board.c ../../hal_input_s31.c ../../hal_power_s31.c ../../s31_sleep_bridge.cc
-    ../../hal_audio_s31.c ../../hal_opus_s31.c ../../s31_modem.c ../../s31_cell_rx.c ../../s31_uhci.cc ../../hal_cellular_s31.c ../../hal_camera_s31.c
+    ../../hal_audio_s31.c ../../hal_bt_s31.c ../../hal_opus_s31.c ../../s31_modem.c ../../s31_cell_rx.c ../../s31_uhci.cc ../../hal_cellular_s31.c ../../hal_camera_s31.c
     ${ink_display_sources}
     INCLUDE_DIRS ${root}/drivers/chips ${root}/drivers/display/pqbn ${root}/boards PRIV_INCLUDE_DIRS ../..
     ${ink_display_includes}

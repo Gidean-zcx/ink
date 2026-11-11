@@ -8,6 +8,7 @@
 #include <string.h>
 
 #include "ink/hal_cellular.h"
+#include "s31_bh1098.h"
 #include "ink/hal_device.h"
 #include "ink/hal_net.h"
 #include "nt26/nt26.h"
@@ -85,9 +86,14 @@ int hal_cell_sms_take(int index, hal_cell_sms_t *m) {
     return (int)strlen(m->text);
 }
 
-int hal_cell_dial(const char *number) { return nt26_dial(number) == NT26_OK ? 0 : -1; }
-int hal_cell_answer(void) { return nt26_answer() == NT26_OK ? 0 : -1; }
-int hal_cell_hangup(void) { return nt26_hangup() == NT26_OK ? 0 : -1; }
+static int ink_call_result(nt26_result_t rc, bool on) {
+    if (rc != NT26_OK) return -1;
+    ink_s31_bh_call(on);
+    return 0;
+}
+int hal_cell_dial(const char *number) { return ink_call_result(nt26_dial(number), true); }
+int hal_cell_answer(void) { return ink_call_result(nt26_answer(), true); }
+int hal_cell_hangup(void) { return ink_call_result(nt26_hangup(), false); }
 int hal_cell_mute(bool on, bool *muted) { return nt26_mute(on, muted) == NT26_OK ? 0 : -1; }
 int hal_cell_dtmf(char key) { return nt26_dtmf(key) == NT26_OK ? 0 : -1; }
 
@@ -118,6 +124,7 @@ int hal_cell_wait_event(hal_cell_event_t *ev, uint32_t timeout_ms) {
         return 1;
     }
     if (!strcmp(line, "NO CARRIER")) {
+        ink_s31_bh_call(false);
         ev->type = HAL_CELL_EV_CALL_ENDED;
         return 1;
     }

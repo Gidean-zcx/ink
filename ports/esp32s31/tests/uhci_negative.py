@@ -31,6 +31,7 @@ mutations = [
 notify = '''    if (!cfg->keep_modem) {
         if (!ink_s31_cell_suspend()) goto out;
         cell_stopped = true;
+        ink_s31_bh_suspend();
     }
 '''
 with tempfile.TemporaryDirectory(prefix='uhci-negative-', dir=a.build.resolve()) as tmp:

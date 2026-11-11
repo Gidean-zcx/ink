@@ -9,6 +9,7 @@
 #include "ink/hal_power.h"
 #include "ink/osal.h"
 #include "metalio_plus/metalio_board.h"
+#include "s31_bh1098.h"
 
 #define INK_AUDIO_CHUNK 240
 #define INK_AUDIO_DMA 4
@@ -18,7 +19,7 @@ static struct {
     osal_sem_t *done;
     i2s_chan_handle_t tx, rx;
     bool playing, capturing;
-    unsigned epoch, lost;
+    unsigned lost;
     int64_t tail;
     int32_t *out, *in;
     int16_t *mic, *ref;
@@ -29,10 +30,10 @@ static struct {
 void ink_s31_audio_init(void) {
     A.lock = osal_mutex_create();
     A.done = osal_sem_create(0, 1);
-    A.epoch = UINT_MAX;
+    ink_s31_bh_init();
     if (!A.lock || !A.done) osal_panic("audio HAL: synchronization setup failed");
 }
-static bool ink_amp(bool on) { return metalio_board_set(0, MB_P0_AMP, on ? MB_P0_AMP : 0) == HAL_I2C_OK; }
+static bool ink_amp(bool on) { return ink_s31_bh_amp(on); }
 static void ink_audio_idle(void) {
     if (A.playing || A.capturing) return;
     if (A.tx) i2s_del_channel(A.tx);
@@ -51,27 +52,7 @@ static bool ink_rx_lost(i2s_chan_handle_t chan, i2s_event_data_t *ev, void *ctx)
     return false;
 }
 static bool ink_audio_ready(void) { /* lifecycle lock held; never reset the shared modem rail */
-    if (!metalio_board_ready() || metalio_board_rails_cut() || !(metalio_board_output(1) & MB_P1_SHARED_PWR)) return false;
-    unsigned epoch = metalio_board_shared_power_epoch();
-    if (A.epoch != epoch) {
-        if (!ink_amp(false)) return false;
-        uint64_t ready = metalio_board_shared_power_since_us() + BH1098G_BOOT_US;
-        uint64_t now = osal_now_us();
-        if (now < ready) osal_task_delay_us(ready - now);
-        hal_uart_t *u = hal_uart_open(BH1098G_UART_PORT, BH1098G_BAUD);
-        if (!u || bh1098g_set_mode(u, 1)) return false;
-        char line[128];
-        uint64_t deadline = osal_now_us() + 1000000;
-        bool ack = false;
-        while (osal_now_us() < deadline) {
-            if (hal_uart_read_line(u, line, sizeof line, 10) < 0) continue;
-            if (strstr(line, "ERROR") || strstr(line, "FAIL")) return false;
-            const char *mode = strstr(line, "SET MODE 1");
-            if (mode && (mode[10] == 0 || mode[10] == ' ')) { ack = true; break; }
-        }
-        if (!ack) return false;
-        A.epoch = epoch;
-    }
+    if (!ink_s31_bh_ready()) return false;
     if (A.tx) return true;
     A.out = osal_malloc(INK_AUDIO_CHUNK * 8, OSAL_MEM_EXTERNAL);
     A.in = osal_malloc(INK_AUDIO_CHUNK * 8, OSAL_MEM_EXTERNAL);
@@ -96,7 +77,7 @@ fail:
     ink_audio_idle();
     return false;
 }
-int hal_audio_route_set(hal_audio_route_t route) { return route == HAL_ROUTE_SPEAKER ? 0 : -1; }
+int hal_audio_route_set(hal_audio_route_t route) { return ink_s31_bh_route(route); }
 static bool ink_play_enable(void) {
     memset(A.out, 0, INK_AUDIO_CHUNK * 8);
     for (int i = 0; i < INK_AUDIO_DMA; i++) {
@@ -106,7 +87,7 @@ static bool ink_play_enable(void) {
     return i2s_channel_enable(A.tx) == ESP_OK;
 }
 void hal_audio_get_info(hal_audio_info_t *out) {
-    *out = (hal_audio_info_t){.has_speaker = A.lock != NULL, .has_mic = A.lock != NULL, .mic_reference = true,
+    *out = (hal_audio_info_t){.has_speaker = A.lock != NULL, .has_mic = A.lock != NULL, .mic_reference = !ink_s31_bh_headset(),
                              .chunk_samples = INK_AUDIO_CHUNK, .runway_ms = INK_AUDIO_RUNWAY_US / 1000};
 }
 int hal_audio_play_start(void) {
@@ -178,7 +159,8 @@ static void ink_capture(void *arg) {
         if (!n || !__atomic_load_n(&A.capturing, __ATOMIC_ACQUIRE)) continue;
         for (int i = 0; i < n; i++) { A.mic[i] = ink_sample(A.in[i * 2]); A.ref[i] = ink_sample(A.in[i * 2 + 1]); }
         uint64_t now = osal_now_us(), span = (uint64_t)n * 1000000 / HAL_AUDIO_RATE;
-        A.cb(A.ctx, A.mic, A.ref, n, (int)__atomic_exchange_n(&A.lost, 0, __ATOMIC_RELAXED), now > span ? now - span : 0);
+        A.cb(A.ctx, A.mic, ink_s31_bh_headset() ? NULL : A.ref, n,
+             (int)__atomic_exchange_n(&A.lost, 0, __ATOMIC_RELAXED), now > span ? now - span : 0);
     }
     osal_sem_give(A.done);
 }
@@ -188,7 +170,7 @@ int hal_audio_capture_start(hal_audio_capture_cb cb, void *ctx) {
     int r = -1;
     if (!A.capturing) {
         hal_power_request(HAL_PWR_AUDIO_IN, true);
-        if (ink_audio_ready() && i2s_channel_enable(A.rx) == ESP_OK) {
+        if (ink_audio_ready() && !ink_s31_bh_capture(true) && i2s_channel_enable(A.rx) == ESP_OK) {
             A.cb = cb;
             A.ctx = ctx;
             __atomic_store_n(&A.lost, 0, __ATOMIC_RELAXED);
@@ -198,7 +180,7 @@ int hal_audio_capture_start(hal_audio_capture_cb cb, void *ctx) {
             if (osal_task_create(&task, NULL) == OSAL_OK) r = 0;
             else { __atomic_store_n(&A.capturing, false, __ATOMIC_RELEASE); i2s_channel_disable(A.rx); }
         }
-        if (r) { ink_audio_idle(); hal_power_request(HAL_PWR_AUDIO_IN, false); }
+        if (r) { ink_s31_bh_capture(false); ink_audio_idle(); hal_power_request(HAL_PWR_AUDIO_IN, false); }
     }
     osal_mutex_unlock(A.lock);
     return r;
@@ -209,6 +191,7 @@ void hal_audio_capture_stop(void) {
     if (__atomic_exchange_n(&A.capturing, false, __ATOMIC_ACQ_REL)) {
         osal_sem_take(A.done, OSAL_WAIT_FOREVER);
         i2s_channel_disable(A.rx);
+        ink_s31_bh_capture(false);
         ink_audio_idle();
         hal_power_request(HAL_PWR_AUDIO_IN, false);
     }

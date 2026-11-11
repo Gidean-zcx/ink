@@ -36,14 +36,7 @@ void hal_afe_feed(const int16_t *mic, const int16_t *ref, int samples, uint64_t 
 
 /* Audio and Opus: hal_audio_s31.c and hal_opus_s31.c. */
 
-/* TODO: Portable BH1098G driver + ESP-IDF UART. */
-bool hal_bt_available(void) { return false; }
-int hal_bt_scan(hal_bt_device_t *out, int max, int timeout_ms) { return -1; }
-int hal_bt_pair(const char *addr) { return -1; }
-int hal_bt_connect(const char *addr) { return -1; }
-void hal_bt_disconnect(void) {  }
-void hal_bt_forget(const char *addr) {  }
-void hal_bt_on_event(void (*fn)(void *ctx, hal_bt_event_t ev), void *ctx) {  }
+/* Bluetooth headsets and shared UART1 control: hal_bt_s31.c. */
 
 /* Camera: hal_camera_s31.c. */
 

@@ -1,4 +1,5 @@
 #include <assert.h>
+#include <errno.h>
 #include <pthread.h>
 #include <stdarg.h>
 #include <stdio.h>
@@ -10,13 +11,19 @@
 #include "ink/osal.h"
 #include "metalio_plus/metalio_board.h"
 #include "bh1098g/bh1098g.h"
+#include "ink/hal_bt.h"
+#include "s31_bh1098.h"
 
 void ink_s31_audio_init(void);
-struct osal_mutex { pthread_mutex_t mutex; };
+struct osal_mutex { pthread_mutex_t mutex; pthread_t owner; bool held; };
 struct osal_sem { pthread_mutex_t mutex; pthread_cond_t cond; bool signaled; };
 struct fake_i2s { bool tx, enabled; int preloads; };
 static struct fake_i2s tx, rx;
 static struct osal_mutex mutex;
+static struct osal_mutex bh_mutex;
+static int mutex_count;
+static _Thread_local bool bh_owned;
+static pthread_mutex_t trace_lock = PTHREAD_MUTEX_INITIALIZER;
 static struct osal_sem done;
 static pthread_mutex_t gate = PTHREAD_MUTEX_INITIALIZER;
 static pthread_cond_t changed = PTHREAD_COND_INITIALIZER;
@@ -29,9 +36,27 @@ static uint64_t now, powered_since, delayed;
 static size_t write_limit = SIZE_MAX;
 static char trace[1024];
 static size_t trace_n;
-static void event(char c) { assert(trace_n + 1 < sizeof trace); trace[trace_n++] = c; trace[trace_n] = 0; }
+static void event(char c) {
+    pthread_mutex_lock(&trace_lock);
+    assert(trace_n + 1 < sizeof trace);
+    trace[trace_n++] = c;
+    trace[trace_n] = 0;
+    pthread_mutex_unlock(&trace_lock);
+}
 static bool fail(void) { return ++step == fail_step; }
 static i2s_isr_callback_t lost_cb;
+static char uart_rx[2048];
+static size_t uart_at;
+static bool connect_ack = true, connect_timeout, scan_ack = true, sco_ack = true;
+static int chip_mode, link_events, lost_events, uart_discards, receiver_wakes;
+static uint64_t mode_sent_at, pp_sent_at, sco_sent_at;
+static void reply(const char *s) {
+    size_t n = strlen(uart_rx);
+    if (uart_at == n) { uart_at = n = 0; uart_rx[0] = 0; }
+    assert(n + strlen(s) < sizeof uart_rx);
+    strcat(uart_rx, s);
+}
+static void owned(void) { assert(bh_owned); }
 
 uint64_t osal_now_us(void) { return __atomic_load_n(&now, __ATOMIC_RELAXED); }
 void osal_task_delay_us(uint64_t us) { delayed += us; __atomic_add_fetch(&now, us, __ATOMIC_RELAXED); event('w'); }
@@ -44,13 +69,26 @@ void *osal_malloc(size_t n, uint32_t caps) {
     return p;
 }
 void osal_free(void *p) { if (p) { allocations--; free(p); } }
-osal_mutex_t *osal_mutex_create(void) { assert(!pthread_mutex_init(&mutex.mutex, NULL)); return &mutex; }
+osal_mutex_t *osal_mutex_create(void) {
+    assert(mutex_count < 2);
+    struct osal_mutex *m = mutex_count++ ? &bh_mutex : &mutex;
+    assert(!pthread_mutex_init(&m->mutex, NULL));
+    return m;
+}
 osal_err_t osal_mutex_lock(osal_mutex_t *m, int64_t timeout) {
-    (void)timeout;
-    assert(!pthread_mutex_lock(&m->mutex));
+    int rc = timeout == 0 ? pthread_mutex_trylock(&m->mutex) : pthread_mutex_lock(&m->mutex);
+    if (rc == EBUSY) return OSAL_TIMEOUT;
+    assert(!rc);
+    m->owner = pthread_self();
+    m->held = true;
+    if (m == &bh_mutex) bh_owned = true;
     return OSAL_OK;
 }
-void osal_mutex_unlock(osal_mutex_t *m) { assert(!pthread_mutex_unlock(&m->mutex)); }
+void osal_mutex_unlock(osal_mutex_t *m) {
+    if (m == &bh_mutex) bh_owned = false;
+    m->held = false;
+    assert(!pthread_mutex_unlock(&m->mutex));
+}
 osal_sem_t *osal_sem_create(uint32_t initial, uint32_t max) {
     assert(initial == 0 && max == 1);
     assert(!pthread_mutex_init(&done.mutex, NULL));
@@ -88,6 +126,7 @@ osal_err_t osal_task_create(const osal_task_cfg_t *cfg, osal_task_t **out) {
     return OSAL_OK;
 }
 void osal_panic(const char *fmt, ...) { (void)fmt; abort(); }
+void hal_log_write(const char *line) { (void)line; }
 bool metalio_board_ready(void) { return true; }
 bool metalio_board_rails_cut(void) { return cut; }
 uint8_t metalio_board_output(int port) { assert(port == 1); return powered ? MB_P1_SHARED_PWR : 0; }
@@ -101,21 +140,66 @@ hal_i2c_status_t metalio_board_set(int port, uint8_t mask, uint8_t value) {
 }
 void hal_power_request(hal_power_res_t r, bool on) { holds[r] += on ? 1 : -1; assert(holds[r] >= 0); }
 hal_uart_t *hal_uart_open(int port, int baud) {
+    owned();
     assert(port == 1 && baud == 115200);
     return (hal_uart_t *)&mutex;
 }
 int hal_uart_write(hal_uart_t *u, const void *data, size_t n) {
     assert(u);
-    if (n == 9 && !memcmp(data, "AT+RX=2\r\n", n)) { mode_calls++; event('b'); }
-    else { assert(n == 11 && !memcmp(data, "AT+MODE=1\r\n", n)); event('m'); }
-    return uart_fail ? -1 : (int)n;
+    owned();
+    if (uart_fail) { mode_calls++; return -1; }
+    if (n == 9 && (!memcmp(data, "AT+RX=2\r\n", n) || !memcmp(data, "AT+TX=1\r\n", n))) {
+        mode_calls++;
+        mode_sent_at = osal_now_us();
+        event(!memcmp(data, "AT+RX", 5) ? 'b' : 't');
+    } else if (n == 11 && !memcmp(data, "AT+MODE=", 8)) {
+        assert(osal_now_us() - mode_sent_at >= 700000);
+        chip_mode = ((const char *)data)[8] - '0';
+        assert(chip_mode == 1 || chip_mode == 2);
+        event(chip_mode == 1 ? 'm' : 'M');
+        if (ack) reply(chip_mode == 1 ? "SET MODE 1\r\n" : "SET MODE 2\r\n");
+    } else if (n == 14 && !memcmp(data, "AT+INQUIRING\r\n", n)) {
+        assert(chip_mode == 2);
+        if (scan_ack) reply("INQUIRING START\r\nAT+BT:bad\r\nAT+BT:001122334455测试耳机\r\n"
+                            "AT+BT:001122334455测试耳机\r\nINQ COMPLETE\r\n");
+    } else if (n == 25 && !memcmp(data, "AT+CONNECT=001122334455\r\n", n)) {
+        assert(chip_mode == 2);
+        if (connect_timeout) reply("CONNECTING\r\nCONNECT TIMEOUT\r\n");
+        else if (connect_ack) reply("CONNECTING\r\nCONNECT SUCCESS\r\n");
+    } else if (n == 9 && !memcmp(data, "AT+PP=1\r\n", n)) {
+        pp_sent_at = osal_now_us();
+        event('p');
+    } else if (n == 12 && !memcmp(data, "AT+BTSCO=1\r\n", n)) {
+        assert(osal_now_us() - pp_sent_at >= 200000 && chip_mode == 2);
+        event('s');
+        if (sco_ack) reply("SETUP SCO\r\n");
+    } else if (n == 12 && !memcmp(data, "AT+BTSCO=0\r\n", n)) {
+        sco_sent_at = osal_now_us();
+        event('S');
+        if (sco_ack) reply("DISC SCO\r\n");
+    } else { fprintf(stderr, "unexpected command: %.*s\n", (int)n, (const char *)data); abort(); }
+    return (int)n;
 }
+bool ink_s31_uart_discard(hal_uart_t *u) {
+    assert(u);
+    owned();
+    uart_rx[0] = 0;
+    uart_at = 0;
+    uart_discards++;
+    return true;
+}
+void ink_s31_bh_wake(void) { receiver_wakes++; }
 int hal_uart_read_line(hal_uart_t *u, char *out, size_t cap, uint32_t ms) {
-    (void)u;
-    __atomic_add_fetch(&now, (uint64_t)ms * 1000, __ATOMIC_RELAXED);
-    if (!ack) return -1;
-    snprintf(out, cap, "SET MODE 1");
-    return 10;
+    assert(u);
+    owned();
+    char *nl = strchr(uart_rx + uart_at, '\n');
+    if (!nl) { __atomic_add_fetch(&now, (uint64_t)ms * 1000, __ATOMIC_RELAXED); return -1; }
+    size_t n = (size_t)(nl - uart_rx - uart_at);
+    assert(n < cap);
+    memcpy(out, uart_rx + uart_at, n);
+    out[n] = 0;
+    uart_at += n + 1;
+    return (int)n;
 }
 esp_err_t i2s_new_channel(const i2s_chan_config_t *c, i2s_chan_handle_t *t, i2s_chan_handle_t *r) {
     assert(c->id == 0 && c->role == I2S_ROLE_SLAVE && c->dma_desc_num == 4 && c->dma_frame_num == 240 && c->auto_clear_after_cb);
@@ -165,7 +249,7 @@ esp_err_t i2s_channel_disable(i2s_chan_handle_t c) {
     return ESP_OK;
 }
 esp_err_t i2s_channel_write(i2s_chan_handle_t c, const void *data, size_t n, size_t *bytes, uint32_t timeout) {
-    assert(c == &tx && c->enabled && amp && n % 8 == 0);
+    assert(c == &tx && c->enabled && amp == !ink_s31_bh_headset() && n % 8 == 0);
     (void)timeout;
     const int32_t *p = data;
     for (size_t i = 0; i < n / 4; i += 2) assert(p[i] == p[i + 1] && p[i] == -32768 * 65536LL);
@@ -202,6 +286,104 @@ static void stop_capture(void) {
 static void idle(void) {
     assert(!amp && !allocations && !tx.enabled && !rx.enabled);
     assert(!holds[HAL_PWR_AUDIO_IN] && !holds[HAL_PWR_AUDIO_OUT]);
+}
+static void link_event(void *ctx, hal_bt_event_t ev) {
+    assert(ctx == &bh_mutex && !bh_owned);
+    if (ev == HAL_BT_EV_CONNECTED) link_events++;
+    else { assert(ev == HAL_BT_EV_LOST); lost_events++; }
+}
+static int race_ready, race_result[2];
+static bool race_go;
+static void *race_audio(void *ctx) {
+    int i = (int)(uintptr_t)ctx;
+    pthread_mutex_lock(&gate);
+    race_ready++;
+    pthread_cond_broadcast(&changed);
+    while (!race_go) pthread_cond_wait(&changed, &gate);
+    pthread_mutex_unlock(&gate);
+    race_result[i] = i ? hal_bt_connect("00:11:22:33:44:55") : hal_audio_play_start();
+    return NULL;
+}
+static void bluetooth(void) {
+    hal_bt_device_t devices[2];
+    hal_bt_on_event(link_event, &bh_mutex);
+    assert(hal_bt_available());
+    assert(hal_bt_scan(devices, 2, 4000) == 1 && chip_mode == 1);
+    assert(!strcmp(devices[0].addr, "00:11:22:33:44:55") && !strcmp(devices[0].name, "测试耳机"));
+    assert(hal_bt_connect("bad\r\n") == -1);
+    assert(hal_bt_pair(devices[0].addr) == 0 && chip_mode == 1 && !ink_s31_bh_headset());
+    assert(hal_bt_connect(devices[0].addr) == 0 && chip_mode == 2 && ink_s31_bh_headset());
+    assert(link_events == 1 && receiver_wakes == 1);
+    int old_modes = mode_calls;
+    assert(hal_audio_route_set(HAL_ROUTE_BT_HEADSET) == 0);
+    assert(hal_audio_play_start() == 0 && chip_mode == 2 && mode_calls == old_modes);
+    int16_t pcm = INT16_MIN;
+    assert(hal_audio_play_write(&pcm, 1, 0) == 1 && !amp);
+    assert(!ink_s31_bh_capture(true) && strstr(trace, "pws"));
+    assert(!ink_s31_bh_capture(false) && osal_now_us() - sco_sent_at >= 200000);
+    ink_s31_bh_call(true);
+    assert(!ink_s31_bh_capture(true));
+    int before_stop = (int)trace_n;
+    assert(!ink_s31_bh_capture(false) && (int)trace_n == before_stop); /* call still owns SCO */
+    ink_s31_bh_call(false);
+    assert(strchr(trace + before_stop, 'S'));
+    hal_audio_play_stop(false);
+    hal_bt_disconnect();
+    assert(chip_mode == 1 && !ink_s31_bh_headset());
+    connect_ack = false;
+    uint64_t start = osal_now_us();
+    assert(hal_bt_connect(devices[0].addr) == -1 && osal_now_us() - start >= 15000000 && chip_mode == 1);
+    connect_ack = true;
+    connect_timeout = true;
+    assert(hal_bt_connect(devices[0].addr) == -1 && chip_mode == 1);
+    connect_timeout = false;
+    scan_ack = false;
+    assert(hal_bt_scan(devices, 2, 100) == -1 && chip_mode == 1);
+    scan_ack = true;
+    ack = false;
+    assert(hal_bt_connect(devices[0].addr) == -1 && !ink_s31_bh_headset());
+    ack = true;
+    assert(!hal_bt_connect(devices[0].addr));
+    sco_ack = false;
+    assert(ink_s31_bh_capture(true) == -1);
+    sco_ack = true;
+    assert(!ink_s31_bh_capture(false) && osal_now_us() - sco_sent_at >= 200000);
+    /* Only a documented mode report is simulated: no invented headset-loss token. */
+    reply("SET MODE 1\r\n");
+    ink_s31_bh_poll();
+    assert(lost_events == 1 && !ink_s31_bh_headset());
+    chip_mode = 1;
+    assert(!hal_bt_connect(devices[0].addr));
+    int discards = uart_discards;
+    ink_s31_bh_suspend();
+    assert(lost_events == 2 && !ink_s31_bh_headset());
+    powered = false;
+    assert(!ink_s31_bh_ready());
+    powered = true;
+    epoch++;
+    powered_since = osal_now_us();
+    reply("SET MODE 2\r\n");
+    ink_s31_bh_resume();
+    start = osal_now_us();
+    assert(ink_s31_bh_ready() && chip_mode == 1 && uart_discards == discards + 1);
+    assert(osal_now_us() - start >= 1400000);
+    assert(!hal_bt_connect(devices[0].addr));
+    hal_bt_forget(devices[0].addr);
+    assert(chip_mode == 1 && !ink_s31_bh_headset());
+    old_modes = mode_calls;
+    pthread_t racers[2];
+    for (int i = 0; i < 2; i++) assert(!pthread_create(&racers[i], NULL, race_audio, (void *)(uintptr_t)i));
+    pthread_mutex_lock(&gate);
+    while (race_ready != 2) pthread_cond_wait(&changed, &gate);
+    race_go = true;
+    pthread_cond_broadcast(&changed);
+    pthread_mutex_unlock(&gate);
+    for (int i = 0; i < 2; i++) assert(!pthread_join(racers[i], NULL));
+    assert(!race_result[0] && !race_result[1] && chip_mode == 2 && mode_calls == old_modes + 1);
+    assert(hal_audio_play_write(&pcm, 1, 0) == 1 && !amp);
+    hal_audio_play_stop(false);
+    hal_bt_disconnect();
+    puts("bt: documented scan/connect/pair-via-connect, modes, SCO, timeouts, mode-loss/P14 and UART ownership passed");
 }
 int main(void) {
     ink_s31_audio_init();
@@ -275,5 +457,7 @@ int main(void) {
     stop_capture();
     idle();
     puts("audio: lifecycle, full duplex, DMA, PA order, mode ACK/epoch and failures passed");
+    trace_n = 0;
+    bluetooth();
     return 0;
 }

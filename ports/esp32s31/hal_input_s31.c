@@ -9,6 +9,7 @@
 #include "s31_board.h"
 #include "s31_input_logic.h"
 #include "s31_io.h"
+#include "s31_bh1098.h"
 
 enum { INPUT_EXP = 1, INPUT_TOUCH = 2, INPUT_AI = 4, INPUT_RESUME = 8, INPUT_MOTOR = 16 };
 static TaskHandle_t g_task;
@@ -50,6 +51,7 @@ static void emit(const hal_input_event_t *e, void *ctx) {
 }
 
 static void irq(void *ctx) { xTaskNotify(g_task, (uint32_t)(uintptr_t)ctx, eSetBits); }
+void ink_s31_bh_wake(void) { if (g_task) xTaskNotify(g_task, 0, eSetBits); }
 
 static void motor_poll(uint64_t now) { /* sampling lock held; I2C never runs in the caller */
     portENTER_CRITICAL(&g_mux);
@@ -88,6 +90,7 @@ static void input_task(void *arg) {
     for (;;) {
         uint32_t bits = 0;
         xTaskNotifyWait(0, UINT32_MAX, &bits, wait);
+        ink_s31_bh_poll(); /* try-lock, buffered UART only; never wait on a mode command */
         xSemaphoreTake(g_sample, portMAX_DELAY);
         uint64_t now = osal_now_us();
         if ((bits & INPUT_EXP) && g_keys_back) {
@@ -106,7 +109,7 @@ static void input_task(void *arg) {
             } else g_touch_poll = true;
         }
         if (metalio_board_ready()) motor_poll(osal_now_us());
-        wait = g_touch_poll || s31_haptic_busy() ? pdMS_TO_TICKS(S31_TOUCH_POLL_MS) :
+        wait = g_touch_poll || s31_haptic_busy() || ink_s31_bh_headset() ? pdMS_TO_TICKS(S31_TOUCH_POLL_MS) :
                g_keys.pending || (g_keys.stable & (1u << HAL_KEY_AI)) ? pdMS_TO_TICKS(S31_KEY_DEBOUNCE_US / 1000) : portMAX_DELAY;
         xSemaphoreGive(g_sample);
     }
