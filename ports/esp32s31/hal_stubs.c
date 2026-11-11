@@ -94,12 +94,6 @@ void hal_provision_stop(void) {  }
 void hal_provision_reply(uint32_t request, int status) {  }
 
 /* TODO: ESP-IDF lwIP local TCP listener. */
-int hal_transfer_listen(uint16_t *port) { return -1; }
-int hal_transfer_host(char *out, size_t cap) { return -1; }
-int hal_transfer_accept(void) { return -1; }
-int hal_transfer_read(void *data, size_t cap) { return -1; }
-int hal_transfer_write(const void *data, size_t len) { return -1; }
-void hal_transfer_close(int listener) {  }
 
 /* UART: hal_uart_s31.c. */
 
