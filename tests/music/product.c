@@ -1,0 +1,80 @@
+#include "ink/ui_shell.h"
+#include "ink/sys/media.h"
+#include "ink/sys/audio.h"
+#define ink_main product_main
+#include "../../system/boot/main.c"
+#undef ink_main
+#include "../integration/whole_product.h"
+static char snapshot[12000], target[48];
+static ink_media_status_t status(void) { ink_media_status_t s; ink_media_status(&s); return s; }
+static void sample(void) { CHECK(ink_ui_snapshot(snapshot, sizeof snapshot, NULL) > 0, "music snapshot"); }
+static bool has(const char *text) { on_ui(sample); return strstr(snapshot, text) != NULL; }
+static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
+static void quiet(void) { CHECK(WAIT_FOR(settled(), 10000), "display settles"); }
+static void ok(const char *cap, const char *args) { CHECK(AI(cap, args) && g_rc.status == INK_RC_DONE, "%s: %s %.120s", cap, ink_rc_name(g_rc.status), g_rc.detail); }
+static void pause_at(unsigned ms) {
+    ok("music.pause", NULL); CHECK(status().state == INK_MEDIA_PAUSED, "pause completes before receipt");
+    char args[48]; snprintf(args, sizeof args, "{\"ms\":%u}", ms); ok("music.seek", args); CHECK(status().position_ms == ms, "seek applies while paused");
+}
+static void capture(void *arg) { sim_display_snapshot(arg); }
+static void evidence(const char *name) { quiet(); vtk_event_at(vtk_now() + SIM_MS(1), capture, (void *)name); delay_ms(5); }
+static void bounds(lv_obj_t *o) {
+    const char *cap = ink_shell_bound_cap(o);
+    if (cap && !strncmp(cap, "music.", 6)) { lv_area_t a; lv_obj_get_coords(o, &a); CHECK(a.x1 >= 0 && a.y1 >= 0 && a.x2 < ink_ui_width() && a.y2 < ink_ui_height(), "music control fits %.40s", cap); }
+    for (uint32_t i = 0; i < lv_obj_get_child_count(o); i++) bounds(lv_obj_get_child(o, (int)i));
+}
+static int x, y;
+static void locate_at(lv_obj_t *o) {
+    const char *cap = ink_shell_bound_cap(o);
+    if (cap && !strcmp(cap, target)) { lv_area_t a; lv_obj_get_coords(o, &a); x = (a.x1 + a.x2) / 2; y = (a.y1 + a.y2) / 2; }
+    for (uint32_t i = 0; i < lv_obj_get_child_count(o); i++) locate_at(lv_obj_get_child(o, (int)i));
+}
+static void locate(void) { x = y = -1; lv_obj_update_layout(lv_screen_active()); locate_at(lv_screen_active()); bounds(lv_screen_active()); }
+static void press(const char *cap) {
+    quiet(); snprintf(target, sizeof target, "%s", cap); on_ui(locate); CHECK(x >= 0, "touch binding %.40s", cap);
+    double before = sim_metric_value("input.touch_delivery_ms"); tap(x, y);
+    CHECK(WAIT_FOR(sim_metric_value("input.touch_delivery_ms") > before, 1000), "touch delivered"); quiet();
+}
+static void switch_to(const char *id) {
+    char args[48]; snprintf(args, sizeof args, "{\"id\":\"%s\"}", id);
+    CHECK(BY_HAND("system.switch_member", args) && g_rc.status == INK_RC_DONE, "switch %.20s", id);
+    CHECK(WAIT_FOR(ink_member_space_open(), 5000), "member opens");
+}
+static void test(void *arg) {
+    (void)arg; CHECK(WAIT_FOR(ink_member_space_open(), 10000), "boot opens member"); test_start_home();
+    ok("app.open", "{\"id\":\"music\"}");
+    ok("music.list", "{\"path\":\"/family/audio\",\"view\":\"all\"}"); CHECK(strstr(g_result, "items") && strstr(g_result, "合成音调"), "AI lists tagged songs: %.150s", g_result);
+    CHECK(WAIT_FOR(has("合成音调"), 3000), "list reaches the page");
+    const char *const files[] = {"tone-16000-1.mp3", "tone-16000-1.flac", "tone-16000-1.wav", "tone-16000-1.ogg"};
+    for (unsigned i = 0; i < sizeof files / sizeof *files; i++) {
+        char args[180]; snprintf(args, sizeof args, "{\"path\":\"/family/audio/%s\"}", files[i]); ok("music.play", args);
+        CHECK(status().state == INK_MEDIA_PLAYING && strstr(status().path, files[i]), "format plays and switches %.40s", files[i]); pause_at(1000);
+        ok("music.now", NULL); CHECK(strstr(g_result, "\"position_ms\":1000"), "AI sees seek: %.150s", g_result);
+    }
+    CHECK(AI("music.play", "{\"path\":\"/family/audio/bad.mp3\"}") && g_rc.status != INK_RC_DONE, "bad file rejected");
+    ok("music.play", "{\"path\":\"/family/audio/tone-16000-1.flac\"}"); pause_at(1000);
+    char original[128]; snprintf(original, sizeof original, "%s", status().path); ok("music.next", NULL); CHECK(strcmp(status().path, original), "next changes track");
+    ok("music.prev", NULL); CHECK(!strcmp(status().path, original), "prev returns to previous track"); pause_at(1000);
+    ok("music.list", "{\"view\":\"player\"}"); CHECK(WAIT_FOR(has("0:01"), 3000), "page shares progress");
+    press("music.favorite"); ok("music.now", NULL); press("music.favorite");
+    for (int scale = 1; scale <= 3; scale += 2) {
+        char args[96]; snprintf(args, sizeof args, "{\"id\":\"display.font_size\",\"value\":%d}", scale); ok("settings.set", args);
+        ok("music.list", "{\"view\":\"player\"}"); CHECK(WAIT_FOR(has("0:01"), 3000), "player snapshot ready");
+        evidence(scale == 1 ? "player-100" : "player-120"); on_ui(locate);
+        ok("music.list", "{\"view\":\"list\",\"page\":0}"); CHECK(WAIT_FOR(has("track0"), 3000), "playlist snapshot ready"); evidence(scale == 1 ? "list-100" : "list-120"); on_ui(locate);
+        ok("music.list", "{\"view\":\"all\",\"page\":0}"); quiet(); evidence(scale == 1 ? "all-100" : "all-120"); on_ui(locate);
+    }
+    ok("music.list", "{\"page\":1}"); CHECK(WAIT_FOR(has("track0"), 3000), "next list page");
+    switch_to("kid"); ok("app.open", "{\"id\":\"music\"}"); ok("music.play", "{\"path\":\"/family/audio/tone-16000-1.flac\"}"); pause_at(2000);
+    CHECK(AI("music.play", "{\"path\":\"/members/owner/private.mp3\"}") && g_rc.status != INK_RC_DONE, "child cannot play adult files");
+    switch_to("owner"); ok("app.open", "{\"id\":\"music\"}"); ok("music.play", "{\"path\":\"/family/audio/tone-16000-1.flac\"}");
+    CHECK(status().position_ms >= 1000 && status().position_ms < 2000, "adult resumes own position (%u)", (unsigned)status().position_ms);
+    int focus = ink_audio_focus_acquire(INK_AUDIO_PRIO_CALL, NULL, NULL, INK_EXEC_DIRECT);
+    CHECK(focus > 0 && WAIT_FOR(status().state == INK_MEDIA_PAUSED, 2000), "call focus pauses new format"); ink_audio_focus_release(focus);
+    CHECK(WAIT_FOR(status().state == INK_MEDIA_PLAYING, 2000), "focus release resumes new format");
+    ink_media_stop(); CHECK(WAIT_FOR(status().state == INK_MEDIA_IDLE, 3000), "stop releases stream"); ink_probe_count("test.finished");
+}
+void ink_main(void) {
+    product_main(); osal_task_cfg_t c = {.name = "musictest", .fn = test, .stack_bytes = 24576, .priority = OSAL_PRIO_NORMAL, .core = -1, .flags = OSAL_TASK_STACK_EXTERNAL};
+    if (osal_task_create(&c, NULL) != OSAL_OK) osal_panic("music test task");
+}

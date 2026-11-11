@@ -12,3 +12,11 @@
 
 许可证选择：文件头 Apache-2.0；根 LICENSE 一并保留。
 
+
+## 接缝
+
+- `esp_heap_caps.h` / `codec_io.h`：将原文的 stdio 和 ESP 分配调用映射到文件服务、OSAL 外部内存；不打开宿主机路径，不使用 ESP 日志或 NVS。
+- `metadata.c`：包含原文 `music_tags.c`，重命名其两个入口，保持对歌词库的原 API；补充 ID3/FLAC 专辑及 stb 提供的 Vorbis 注释。固件构建不再单独编译被包含的原文件。
+- `music_lyrics.c` 的原始 68,736 字节歌词池保留，切成员时清空可见行；不带入播放任务。
+- 播放页参考 `main/apps/app_music.c`（同提交）：曲名、进度、切歌、单行歌词、收藏、分页和目录；使用本项目 LVGL 主题重现，没有复制其帧缓冲、播放器、NVS 或蓝牙逻辑。
+- Apache-2.0 全文另附 `Apache-2.0.txt`，取自同一固定副本的 `licenses/Apache-2.0.txt`。文件头许可优先于根目录的其他新增内容许可；未复制受个人学习许可约束的其他产品代码。
