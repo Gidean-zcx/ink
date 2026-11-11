@@ -230,7 +230,7 @@ static void thread_layout(size_t wanted) {
             int next = used + h + (!used || last_stamp ? stamp_h : 0);
             if (used && (next > S.body_h || n == SMS_VISIBLE)) { page++; n = 0; used = 0; next = h + stamp_h; }
             if (page == wanted) {
-                snprintf(S.texts[n], sizeof S.texts[n], "%s", S.scratch); snprintf(S.states[n], sizeof S.states[n], "%s", state);
+                memcpy(S.texts[n], S.scratch, end - start + 1); snprintf(S.states[n], sizeof S.states[n], "%s", state);
                 snprintf(S.times[n], sizeof S.times[n], "%s", timestamp);
                 snprintf(S.labels[n], sizeof S.labels[n], "%s · %s", timestamp, state);
                 snprintf(S.ids[n], sizeof S.ids[n], "sms:%u", (unsigned)S.rows[row]); snprintf(S.args[n], sizeof S.args[n], "{\"id\":%u}", (unsigned)S.rows[row]);

@@ -1,6 +1,6 @@
 # sms-thread-2 执行报告
 
-基线：`83ec2e4e4483d530866603c2e93474ed30ce96a3`。状态：实现和专项验收完成；普通全量有 1 项基线可复现失败，内存检查进行中。以下【实测】均为本机模拟器。
+基线：`83ec2e4e4483d530866603c2e93474ed30ce96a3`。状态：交付完成；普通及内存全量均有 1 项基线可复现失败，未全绿。以下【实测】均为本机模拟器。
 
 ## 验收表
 
@@ -8,8 +8,8 @@
 | --- | --- | --- | --- |
 | 1 | 【实测】通过 | 1／5／20 条、常规／120% 字号；混合方向、失败、未知及长正文；12 张 PNG 均小于 300 KB | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" docs/tasks/sms-thread-2/check.py --build build --screenshots` |
 | 2 | 【实现＋实测】通过 | 多气泡、底部最新、顶部翻页、早页往返、AI 重发、逐气泡语义和坐标、五分钟分组、长正文逐页拼回全文；单条分页反向退出 1，63 通过／2 失败／正常收尾；整页重画反向退出 1，34 通过／2 失败／正常收尾 | 上述脚本；追加 `--reverse`、`--reverse-refresh`；最终 `sms`、`comm-ux2`、`sms-multipart`、`integration-ai-surface`、`integration-races` 五项全过 |
-| 3 | 【实测】未全绿，失败可在基线复现 | 原话：`99% tests passed, 1 tests failed out of 393`，946.78 秒，退出 8；389 通过、1 失败、3 跳过。最终五项定向回归全过（10.94 秒） | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2` |
-| 补充 | 待最终记录：内存检查、GCC、隐私与行数 | 待补最终结果 | 见下文 |
+| 3 | 【实测】未全绿，失败可在基线复现 | 原话：`99% tests passed, 1 tests failed out of 393`，946.78 秒，退出 8；389 通过、1 失败、3 跳过。最终五项定向回归全过（25.74 秒） | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2` |
+| 补充 | 【实测】未见内存诊断；静态检查通过 | ASan＋UBSan 全量同一基线失败；最终内存定向五项全过；GCC 3 文件 0 发现、UI 尺寸 0 违规、隐私 0 命中；产品净增 104 行 | 见下文 |
 
 | 会话 | 常规字号 | 120% 字号 |
 | --- | --- | --- |
@@ -29,11 +29,17 @@
 
 页数不变时只重画旧、新气泡实际占据区域的并集及输入区；组装控件期间完成布局后再恢复失效通知，避免将控件的临时原点也刷出。普通发送未重建页面。页数变化时顶部页码也必须更新，见“和设计不一致的”。
 
+【实测】内存构建用同一套配置，另加 `-DINK_SANITIZE=ON`，保留 `-DINK_WERROR=ON`；构建和 ctest 均以 `taskpolicy -c utility`、`-j2` 执行。`ASAN_OPTIONS=halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1` 下全量原话同样是 `99% tests passed, 1 tests failed out of 393`，1465.97 秒、退出 8；389 通过、1 个相同通知断言失败、3 个相同 Hub 跳过，未见 AddressSanitizer 或 UBSan 诊断。
+
+末次仅将一次同结构体字段间的字符串复制改为等长 `memcpy`；之后重编两种构建，普通与内存五项定向复核分别为 `100% tests passed out of 5`（25.74／42.16 秒），六组会话场景也在两种构建中各全部通过。内存复核命令：`ASAN_OPTIONS=halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan -R '^(sms|comm-ux2|sms-multipart|integration-ai-surface|integration-races)$' --output-on-failure -j2`；会话场景用上述脚本追加 `--build build-asan`。
+
+【实测】`taskpolicy -c utility python3 "$INK_DEPS/../ink-codex/tools/gcccheck.py" build system/apps/sms/sms.c tests/sms/sms.c tests/comm_ux2/comm_ux2.c`：`gcccheck: 3 compiled, 0 with findings`；`python3 tools/ui_scale_check.py system/apps/sms/sms.c`：1 文件、0 违规。按任务书隐私正则检查基线到最终提交的差异，0 命中（grep 退出 1）；文件、图片大小和报告链接检查通过。上述 GCC 检查不等同于运行 Linux CI。
+
 ## 没做到的
 
 - 没有碰设备、运行真实运营商业务、推送或开 PR；没有 Linux CI 或 S31 固件编译证据。主工程中的 S31 宿主机检查按普通全量执行。
 - 短输入框直接粘贴超过参数表容量的正文、且没有可复用的长文草稿时，仍走原来的创建草稿输入会话；该路径未提供局部刷新实测。普通短回复直接传正文，既有长文草稿按原引用发送。
-- 内存检查尚未结束。
+- 普通全量“全部通过”的验收条件未满足；通知竞态测试在基线也会失败，按任务范围未修改其源码或断言。内存全量同样受此既有断言影响。
 
 ## 和设计不一致的
 
@@ -42,16 +48,16 @@
 ## 改过的已有测试
 
 - `tests/sms/sms.c`：长正文原先从第一片开始检查，现在先断言默认落在最新片，再用 `sms.prev` 回到第一片；随后逐片拼回完整原文的断言不变。可见片段从第 0 个气泡缓冲读取，替代旧的“页号对 4 取模”。长短信断言增加可复现的页号、可见数信息。
-- 既有 `SmsThread` 阶段额外执行 20 条会话验收；新增独立的 1／5／20 条、120% 字号和刷新测量阶段。等待发送后的可见记录数增加，避免旧回执提前满足等待条件。补上底部锚定和失败提示同能力断言。未删测试、抬预算、加等待时间或放宽既有断言。
+- 既有 `SmsThread` 阶段额外执行 20 条会话验收；新增独立的 1／5／20 条、120% 字号和刷新测量阶段。等待发送后的可见记录数增加，避免旧回执提前满足等待条件。补上底部锚定和失败提示同能力断言。未删测试、抬预算或放宽既有断言，未靠 sleep 掩盖时序。
 - `tests/comm_ux2/` 无改动，既有触摸重发继续回归。
 
 ## 要用户定的
 
-无。
+页数变化时，建议允许同步更新顶部页码（本次做法），保留准确页码；若仍要求顶部完全不动，需另定页码呈现方式。本次未改现有分页控件的设计。
 
 ## 顺手发现
 
-- 普通全量的 `integration-races` 在 `tests/integration/races.c:121` 失败：`there were moments to try (2)`，要求至少 3 个。仅把短信应用替换为基线源码、其余链接对象不动，也退出 1，106 通过／1 失败，同一时刻和断言失败；随后最终五项定向回归中的原测试通过。未改通知服务或竞态测试。对照产物在 `build/test-out/races-baseline/`，不是注册进 ctest 的历史依赖。
+- 普通全量的 `integration-races` 在 `tests/integration/races.c:121` 失败：`there were moments to try (2)`，要求至少 3 个。仅把短信应用替换为基线源码、其余链接对象不动，也退出 1，106 通过／1 失败，同一时刻和断言失败；随后最终五项定向回归中的原测试通过。未改通知服务或竞态测试。复现命令：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" docs/tasks/sms-thread-2/races-baseline.py --build build`。本次退出 1，产物在 `build/test-out/races-baseline/`；最终再跑该命令得到 132 通过／0 失败，记录为间歇失败，尚未定位根因；不是注册进 ctest 的历史依赖。首次失败的原始摘要保留在 `build/races-baseline.log`。
 - 三项跳过为 `hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e`，沿用现有 Hub 依赖检测，未改跳过条件。
 - 120% 字号截图中，底部既有短输入框的“内容”提示偏低；本任务未改受保护的 `textfield.c`，留给 `textfield-1`。
 
@@ -64,4 +70,4 @@
 
 ## 要改的文档
 
-主会话可在 `docs/system/ui-dependencies.md` 将短信会话状态更新为多气泡、顶部翻页、逐条快照；能力名称不变，无需重生成能力表。本任务未修改共享文档。
+主会话可在 `docs/tasks/backlog.md` 记录通知竞态覆盖数问题及输入框提示偏低；在 `docs/system/ui-dependencies.md` 将短信会话状态更新为多气泡、顶部翻页、逐条快照；能力名称不变，无需重生成能力表。本任务未修改共享文档。
