@@ -220,7 +220,7 @@ static void open_page(ink_call_t *c) {
 }
 static void auto_changed(void *ctx, int h, const char *id) {
     (void)ctx; (void)h; (void)id;
-    if (current()) { ink_ui_content_changed(); draw(); }
+    if (current() && B.page == BACKUP) { ink_ui_content_changed(); draw(); }
 }
 int ink_backup_pages_init(void) {
     static const ink_cap_t cap = {.id = "backup.open", .title = "打开备份", .effect = INK_FX_NAVIGATE, .run = open_page};
