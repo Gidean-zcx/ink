@@ -1,19 +1,19 @@
 # Default UI size, adult member. Backspace erases only this new draft's text.
-# Keyboard geometry follows system-ui-spec section 7.5 and INK_KEY=96.
+# Key centres of the LVGL keyboard (ime-reuse-1): rows at 70/78.5/87/95 % of the height.
 @6s cap app.open {"id":"memo"}
 +3s cap memo.edit {}
-+3s tap 26% 92%       # switch Chinese to English
-+2s tap 61% 77%       # h
-+1s tap 25% 68%       # e
-+1s tap 89% 77%       # l
-+1s tap 89% 77%       # l
-+1s tap 84% 68%       # o
++3s tap 22% 95%       # switch Chinese to English (中)
++4s tap 59% 78.5%     # h (the first key within ~2 s of a language switch is lost: backlog)
++1s tap 26% 70%       # e
++1s tap 87% 78.5%     # l
++1s tap 87% 78.5%     # l
++1s tap 83% 70%       # o
 +2s note memo_text_entered
-+0 tap 89% 85%        # backspace
-+1s tap 89% 85%
-+1s tap 89% 85%
-+1s tap 89% 85%
-+1s tap 89% 85%
++0 tap 90% 87%        # backspace
++1s tap 90% 87%
++1s tap 90% 87%
++1s tap 90% 87%
++1s tap 90% 87%
 +2s note memo_text_erased
 +0 key home           # fold keyboard
 +2s key home           # leave memo
