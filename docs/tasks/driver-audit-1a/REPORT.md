@@ -46,7 +46,16 @@
 
 ### Wi-Fi
 
-待补。
+额外原厂缩写：`W/` = `components/esp-wifi-connect/`。`wifi_board.cc` 主要是产品/电源调度，实际 STA 参数在 `W/wifi_station.cc`，不能只比 Board 包装类。
+
+| 模块/流程 | 原厂做法（文件:行） | 我们的做法（文件:行） | 差异 | 可能的坑（场景 → 后果） | 严重度 | 建议 |
+| --- | --- | --- | --- | --- | --- | --- |
+| W01 初始化、凭据 | `W/wifi_station.cc:225-262` STA、nvs_enable=false；`:51-72,124-148` 自有 NVS 设置 | `S/hal_wifi_s31.c:124-148` STA、nvs_enable=0、WIFI_STORAGE_RAM；`:185-200` 8 项已知网络只在内存 | 基础初始化我们重写但等价；持久层不一样（既有只读约束） | 不应复制原厂 NVS 设置代码覆盖我们的存储/成员边界；当前未发现 GPIO 或凭据落 NVS 的新增问题 | 低 | 直接拷 STA 底层片段，保留 HAL 及系统已知网络存储；不复制原厂 Settings/NVS/UI |
+| W02 省电、协议、发射功率 | `W/wifi_station.cc:35-38,413-415` 固定 WIFI_PS_NONE 和 11b/g/n；`include/wifi_station.h:16` Plus 功率请求 48（12 dBm），`.cc:427-430` 启动时设置 | `S/hal_wifi_s31.c:132-149` 没 set_ps/set_protocol/set_max_tx_power，依赖 IDF 默认值；日志写 MIN_MODEM | 我们不一样；没有对该参数差异的真机证据 | 默认 MIN_MODEM 可能增加音频/交互延迟；没有原厂 12 dBm 限幅可能改变并发用电/射频表现。不能用源码估算出实际电流或宣称必然复位 | 中 | 直接拷 ApplyWifiProfile 与 Plus 功率设置，先核对目标板与实测；省电由暂停射频与系统策略配合，不能自己重定射频参数 |
+| W03 重连、再次发现已知网络 | `W/wifi_station.cc:20-22,291-333,464-485` 每 AP 重连至多 5 次，空队列 10 秒后重新扫 | `S/hal_wifi_s31.c:44-46,81-89,91-117,185-200` 断线立即轮换凭据重连；除设已知列表/手动扫描，无周期重新扫描 | 我们缺原厂扫描/重连节奏 | 家中 AP 不在时先切 LTE；回到覆盖区后 available 仍假，LTE 下不 rejoin，不会自动发现 AP。始终选 Wi-Fi 时，错误凭据又可能不断重连耗电 | 高 | 拷原厂重连和扫描流程，接 HAL 可用性通知；不在多个服务补“定时扫一下” |
+| W04 关 Wi-Fi、飞行模式、睡眠 | `W/wifi_station.cc:124-178,180-210` 关/暂停会 stop scan 与 esp_wifi_stop，恢复重新应用 profile；`P/power_hw.cc:284-309` 调用暂停/恢复 | `S/hal_wifi_s31.c:124-148,162-171` 首次总会 start；选 NONE/LTE 只 disconnect，不 stop；`S/hal_power_s31.c:126-199` 无 Wi-Fi 停放调用 | 我们缺原厂射频停止/恢复 | UI 开关/飞行模式显示断开不等于射频关闭，空闲功耗仍在；浅睡打开后也缺暂停/恢复协调。默认浅睡 OFF 不消除“关闭 Wi-Fi 只断开”的差异 | 高 | 直接拷 PauseForLp/ResumeFromLp/用户禁用中的驱动收尾，接现有系统策略；保留 HAL 可调用性，不引原厂 UI |
+| W05 与 4G 切换 | `C/dual_network_board.cc:50-79` 只建一个网络板，切换保存选择后重启整机 | `S/hal_wifi_s31.c:162-171,225-242` 同时存在两 netif，切默认路由并选择蜂窝；`S/s31_modem.c:490-507` 控制蜂窝 L2；`system/services/net/net_service.c:95-109` 自动切换 | 我们不一样（产品明确要求）；未用本次真机验证 | 原厂没有可直接复用的在线双网交接；原文 modem 的 InitIotEth LINK_UP 不认识我们的 selected/roaming。照抄 Board 会失去在线切换，照抄 netif 又可能绕过选网策略 | 中 | 保留系统选网策略与 HAL 路由胶水；复制各自底层生命周期，接好 LINK_UP/DOWN、默认 netif 和旧网清理，不复制重启式切换 |
+| W06 SNTP、校时来源 | 原厂 `C/wifi_board.cc:111-168` 无 SNTP；`main/ota.cc:276-299` 使用服务响应时间并回写 RTC；全树 SNTP 搜索无命中 | `S/hal_wifi_s31.c:60-77,119-144,178-183` 公共 SNTP 在 Wi-Fi/ETH GOT_IP 后启动；`system/services/time/time_service.c:526-549,883` 接回调当自动校时 | 我们不一样（新增网络对时来源） | 公共 SNTP 的时间与“来自家庭服务器”状态混在一起；UDP 对时受网络可达性影响，不能把“启动 SNTP”当作已同步。反复 start 在本地 IDF 中是 stop/init，非必然崩溃 | 中 | 保留 HAL 时间回调（原厂无等价 SNTP 可拷），来源标识/产品含义列待复核；不能复制 OTA、NVS 或时区偏移处理来替代本项目时间服务 |
 
 ### BH1098 耳机
 
