@@ -55,12 +55,10 @@ with tempfile.TemporaryDirectory(prefix='uhci-negative-', dir=a.build.resolve())
             command += ['-isysroot', subprocess.check_output(['xcrun', '--show-sdk-path'], text=True).strip()]
         if a.sanitize:
             command += ['-fsanitize=address,undefined', '-fno-omit-frame-pointer']
-        stub = 'cell_stub' if kind == 'rx' else 'stub'
+        stub = 'stub'
         for folder in [port, tests / stub, ROOT / 'platform/include', ROOT / 'drivers/chips', ROOT / 'boards']:
             command += ['-I', str(folder)]
-        if kind == 'rx':
-            units = [tests / 'cell.c', copy, port / 'hal_cellular_s31.c', ROOT / 'drivers/chips/nt26/nt26.c']
-        elif kind == 'power':
+        if kind == 'power':
             command += ['-DINK_S31_LIGHT_SLEEP=1']
             units = [tests / 'power.c', copy]
         else:

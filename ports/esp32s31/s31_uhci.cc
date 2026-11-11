@@ -31,7 +31,9 @@ static hal_at_result_t ink_at(const char *cmd, const char *payload, char *out, s
         strspn(payload, "0123456789ABCDEFabcdef") != strlen(payload)))) return HAL_AT_ERROR;
     if (!ink_ready || !ink_cell.powered_) return HAL_AT_NO_MODEM;
     auto modem = ink_modem();
-    if (!modem) { ink_cell.StartOrRestartModem((int)ms); modem = ink_modem(); }
+    if (!modem || (modem->Stopped() && ink_cell.retry_needed_ && esp_timer_get_time() - ink_cell.last_start_us_ >= 5000000)) {
+        ink_cell.StartOrRestartModem((int)ms); modem = ink_modem();
+    }
     if (!modem || !modem->WaitAtReady(10000)) return HAL_AT_NO_MODEM;
     std::string response;
     esp_err_t rc = modem->SendAt(cmd, response, ms, payload);

@@ -4,6 +4,7 @@
 #include "uart_uhci.h"
 #include "ink/osal.h"
 #include "ink/hal_net.h"
+#include "ink/hal_cellular.h"
 #include "ink/hal_device.h"
 extern "C" {
 #include "metalio_plus/metalio_board.h"
@@ -195,7 +196,11 @@ esp_err_t UartUhci::Transmit(const uint8_t *p,size_t n) {
         } else counts[N_TX]++;
         return ESP_OK;
     }
-    if (prompt) { assert(p[n-1]==26); prompt=false; reply("\r\n+CMGS: 1\r\nOK\r\n"); return ESP_OK; }
+    if (prompt) {
+        assert(p[n-1]==26); prompt=false;
+        if (!flags[F_NO_PDU_FINAL]) reply("\r\n+CMGS: 1\r\nOK\r\n");
+        return ESP_OK;
+    }
     assert(p[n-1]=='\r'); std::string cmd((const char*)p+4,n-5);
     if (cmd.find("ECPCFG=")!=std::string::npos || cmd.find("ECNETCFG=")!=std::string::npos || cmd.find("XJCFG=")!=std::string::npos || cmd=="AT+ECRST" || cmd.find("ECSCLKEX=")!=std::string::npos || cmd=="AT+CEREG=2") counts[N_FORBIDDEN]++;
     if (cmd=="AT" && flags[F_DROP_PROBES]>0) { flags[F_DROP_PROBES]--; counts[N_DROPPED_PROBES]++; return ESP_OK; }
@@ -308,4 +313,11 @@ extern "C" bool ink_test_gap_during_at(void) {
     assert(controller->lost); controller->lost(controller->lost_context);
     caller.join(); flags[F_NO_RESPONSE]=0;
     return result==HAL_AT_ERROR;
+}
+
+extern "C" void ink_test_rebuild_status(void) {
+    unsigned tasks=counts[N_TASKS]; bool ok=false;
+    std::thread caller([&]{ hal_cell_status_t status; ok=hal_cell_status(&status); });
+    ink_test_wait_count(N_TASKS,tasks+3);
+    caller.join(); assert(ok);
 }

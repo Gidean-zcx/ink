@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 #include "ink/osal.h"
+#include "ink/hal_device.h"
 #include "s31_uhci.h"
 #include "s31_cell.h"
 static osal_queue_t *ink_urcs;
@@ -61,4 +62,13 @@ int hal_modem_urc(char *buf, size_t cap, uint32_t ms) {
     if (n >= cap) return -1;
     memcpy(buf, item, n + 1);
     return (int)n;
+}
+
+void ink_s31_at_log(const char *cmd, bool ok, size_t length) {
+    const char *event = !strcmp(cmd, "AT+CFUN=1") ? "radio_on" : !strcmp(cmd, "AT+CPIN?") ? "sim_query" :
+        !strcmp(cmd, "AT+ECNETCFG?") ? "network_config_query" : !strcmp(cmd, "AT+ECNETDEVCTL?") ? "data_channel_query" : NULL;
+    if (!event) return;
+    char line[96];
+    snprintf(line, sizeof line, "cell: %s result=%d bytes=%u", event, ok, (unsigned)length);
+    hal_log_write(line);
 }

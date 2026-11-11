@@ -62,9 +62,7 @@ UartEthModem::UartEthModem(const Config& config) : config_(config) {
         }
 
         // Non-blocking: enqueue frame for TX task to send
-        const esp_err_t ret = self->EnqueueTxFrame(buf, len);
-        if (ret == ESP_OK && len >= 14) self->tx_bytes_ += len;
-        return ret;
+        return self->EnqueueTxFrame(buf, len);
     };
     driver_.get_addr = [](iot_eth_driver_t* driver, uint8_t* mac) -> esp_err_t {
 #pragma GCC diagnostic push
@@ -368,6 +366,7 @@ esp_err_t UartEthModem::SendAt(const std::string& cmd, std::string& response, ui
     at_until_marker_.clear();
     response = at_command_response_;
 
+    ink_s31_at_log(cmd.c_str(), response.find("OK") != std::string::npos, response.size());
     // Check for OK/ERROR
     if (response.find("OK") != std::string::npos) {
         return ESP_OK;
@@ -847,6 +846,8 @@ void UartEthModem::TxTaskRun() {
                 goto done;
             }
 
+            if (frame.length >= 18 && reinterpret_cast<FrameHeader*>(frame.data)->GetType() == FrameType::kEthernet)
+                tx_bytes_ += frame.length - sizeof(FrameHeader);
             // Wait for ACK (SRDY high)
             {
                 EventBits_t bits = xEventGroupWaitBits(
@@ -1601,6 +1602,7 @@ esp_err_t UartEthModem::AtDetect() {
     ret = SendAtWithRetry("AT", resp, 500, 4);
     if (ret == ESP_OK) {
         detect_baud_rate_ = config_.baud_rate;
+        ESP_LOGI(kTag, detect_baud_rate_ == 2000000 ? "probe_2000000" : "probe_3000000");
         return ESP_OK;
     }
     for (size_t i = 0; i < sizeof(baud_rates) / sizeof(baud_rates[0]); i++){
@@ -1609,6 +1611,7 @@ esp_err_t UartEthModem::AtDetect() {
         ret = SendAtWithRetry("AT", resp, 500, 4);
         if (ret == ESP_OK) {
             detect_baud_rate_ = baud_rates[i];
+            ESP_LOGI(kTag, detect_baud_rate_ == 2000000 ? "probe_2000000" : "probe_3000000");
             ESP_LOGI(kTag, "Detected baud rate: %d", detect_baud_rate_);
             return ESP_OK;
         }

@@ -24,7 +24,13 @@ modem = vendor / 'uart_eth_modem.cc'
 bridge = port / 's31_uhci.cc'
 life = vendor / 'nt26_lifecycle.cc'
 log = vendor / 'ink_modem_log.h'
+header = vendor / 'uart_eth_modem.h'
 cases = [
+    ('detect-rebuild', bridge, 'modem->Stopped() && ink_cell.retry_needed_', 'false && modem->Stopped() && ink_cell.retry_needed_', 'detect'),
+    ('frame-checksum', header, '(sum >> 8) ^ sum ^ 0x03', '(sum >> 8) ^ sum ^ 0x04', 'protocol'),
+    ('force-wake', modem, '            EnterActiveState();\n        }\n    } else if (state == WorkingState::Active)',
+     '            return;\n        }\n    } else if (state == WorkingState::Active)', 'protocol'),
+    ('control-not-data', modem, 'frame.length >= 18 &&', 'frame.length >= 4 &&', 'protocol'),
     ('vendor-policy', modem, 'if (!ink_s31_at_allowed(cmd.c_str())) {', 'if (false && !ink_s31_at_allowed(cmd.c_str())) {', 'nat'),
     ('response-chunks', modem, 'else at_command_response_ += "\\r\\n" + line;', 'else at_command_response_ = "\\r\\n" + line;', 'protocol'),
     ('channel-urc', modem,
@@ -75,6 +81,8 @@ with tempfile.TemporaryDirectory(prefix='cell-negative-', dir=build) as temp:
         assert text.count(old) == 1, name
         target.write_text(text.replace(old, new))
         units = [source]
+        if source == header:
+            units = [modem]
         if source == log:
             units = [modem, ROOT / 'vendor/iot_eth/iot_eth.c', ROOT / 'vendor/iot_eth/iot_eth_netif_glue.c']
         replacements = {}

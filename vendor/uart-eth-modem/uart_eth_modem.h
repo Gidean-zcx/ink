@@ -198,6 +198,7 @@ public:
     }
     esp_netif_t* Netif() const { return eth_netif_; }
     bool HasIp() const { return ip_ready_.load(); }
+    bool Stopped() const { return stop_flag_.load(); }
     bool HasHandshake() const { return handshake_done_.load(); }
     void SelectData(bool on);
     uint64_t RxBytes() const { return rx_bytes_.load(); }

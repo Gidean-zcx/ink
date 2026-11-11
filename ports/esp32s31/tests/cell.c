@@ -27,6 +27,12 @@ int main(int argc,char **argv) {
     char s[1024];
     if (strcmp(mode,"protocol")) ink_s31_cell_use(true);
     if (!strcmp(mode,"protocol")) { ink_test_set(F_DROP_PROBES,2); ink_test_set(F_SPLIT,1); }
+    if (!strcmp(mode,"detect")) {
+        ink_test_set(F_NO_RESPONSE,1);
+        assert(hal_modem_at("ATI",s,sizeof s,1000)==HAL_AT_NO_MODEM);
+        ink_test_set(F_NO_RESPONSE,0); ink_test_advance(5001); at_ok("AT");
+        goto finish;
+    }
     hal_at_result_t first_at=hal_modem_at("ATI",s,sizeof s,1000);
     if (first_at!=HAL_AT_OK) fprintf(stderr,"first AT result=%d rate=%u probes=%u\n%s",first_at,ink_test_count(N_BAUD),ink_test_count(N_PROBES),ink_test_logs());
     assert(first_at==HAL_AT_OK && !strcmp(s,"FAKE-NT26"));
@@ -52,7 +58,7 @@ int main(int argc,char **argv) {
             ink_test_advance(5001); assert(hal_cell_status(&status));
             assert(ink_test_count(N_TASKS)>tasks);
         } else {
-            ink_test_advance(60001); assert(hal_cell_status(&status));
+            ink_test_advance(60001); ink_test_rebuild_status();
             assert(ink_test_count(N_TASKS)>tasks);
         }
         ink_test_ip(true); assert(ink_s31_cell_link(&link) && link.up);
@@ -74,9 +80,13 @@ int main(int argc,char **argv) {
     ink_test_drain(); assert(!ink_test_count(N_HELD)); ink_test_set(F_SPLIT,256);
     assert(ink_test_gap_during_at()); ink_test_drain();
     assert(hal_modem_at("AT",s,sizeof s,200)==HAL_AT_NO_MODEM);
-    ink_test_reply("\r\nOK\r\n"); ink_test_drain(); at_ok("AT");
+    ink_test_reply("OK\r\n"); ink_test_drain(); at_ok("AT");
     ink_test_reply("\r\n+CMTI: \"SM\",8\r\n"); ink_test_drain();
     assert(hal_modem_urc(s,sizeof s,0)>0 && !strcmp(s,"+CMTI: \"SM\",8"));
+    unsigned sms_writes=ink_test_count(N_WRITES); ink_test_set(F_NO_PDU_FINAL,1);
+    assert(hal_modem_at_payload("AT+CMGS=1","00",s,sizeof s,1000)==HAL_AT_TIMEOUT);
+    assert(ink_test_count(N_WRITES)==sms_writes+2);
+    ink_test_set(F_NO_PDU_FINAL,0); ink_test_reply("\r\nOK\r\n"); ink_test_drain(); at_ok("AT");
     const char *forbidden[]={"AT+ECSIMCFG=SimSlot,2","AT+ECSIMCFG=SimPowerSave,0","AT+ECSIMCFG=SimSlot,1;&W","AT+CFUN=0;&W",
         "AT+CGDCONT=1,\"IP\",\"example.com\"","AT+CGAUTH=1,0","AT+CMGD=7","AT&W","AT+ECRST","AT+ECNETCFG=1",
         "AT+XJCFG=netPortBaudRate,1","AT+IMS=1","AT+CFUN=1;&W","AT\r&W","ATD1;&W","AT+VTS=\"1\";&W",
