@@ -68,5 +68,40 @@
       "total": 64,
       "flash": 60
     }
+  },
+  {
+    "label": "lvgl-unused",
+    "firmware": 4642976,
+    "font_data": 4717866,
+    "embedded": 1410852,
+    "sha256": "7cf46c73f529f101dcca8b71812f985a2791c42cabb3744fb752febec7b8cc4b",
+    "libink_system.a": {
+      "total": 1551114,
+      "flash": 846651
+    },
+    "libink_platform.a": {
+      "total": 1521019,
+      "flash": 1499204
+    },
+    "libesp_stdio.a": {
+      "total": 342055,
+      "flash": 342015
+    },
+    "libink_lvgl.a": {
+      "total": 277004,
+      "flash": 276432
+    },
+    "libink_reader_vendor.a": {
+      "total": 145310,
+      "flash": 145074
+    },
+    "libink_apps.a": {
+      "total": 32170,
+      "flash": 27314
+    },
+    "libmesh.a": {
+      "total": 64,
+      "flash": 60
+    }
   }
 ]
