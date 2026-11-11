@@ -1,6 +1,6 @@
 # perf-latency-2 任务报告
 
-基线：`6fbe0c4051843810a3252769ab34d150ac4c6097`。分支：`claude/codex-perf-latency-2`。状态：测量及两处优化完成，普通与内存全量通过，S31/GCC 验证进行中。主检出与本分支开工时均为指定基线，已包含其它补缺任务。没有远端写入或接触设备。
+基线：`6fbe0c4051843810a3252769ab34d150ac4c6097`。分支：`claude/codex-perf-latency-2`。状态：完成。两处优化、普通与内存全量、S31 编译及 GCC 检查通过；仍有建议值缺口。主检出与本分支开工时均为指定基线，已包含其它补缺任务。没有远端写入或接触设备。
 
 ## 验收表
 
@@ -11,9 +11,9 @@
 | 1c 确定性 | 【实测】普通与 ASan 均通过 | 原有两项确定性测试未改 | C、D |
 | 2a 普通全量 | 【实测】通过 | 391/391，无跳过，665.27 s | C |
 | 2b 内存检查 | 【实测】通过 | ASan/UBSan 391/391，无跳过，945.92 s | D |
-| 2c S31 编译 | 待完整验证 | 只编译 ELF | E |
-| 2d gcccheck | 待完整验证 | 两个产品 C 文件 | F |
-| 2e 范围、隐私 | 待最终扫描 | 产品 C 新增 9、删除 12，净减 3 行；CMake 新增 3 行，合计净增 0 | G |
+| 2c S31 编译 | 【实测】通过 | 32 位 RISC-V ELF，两个产品文件均重新编译 | E |
+| 2d gcccheck | 【实测】通过 | `2 compiled, 0 with findings`，无跳过 | F |
+| 2e 范围、隐私 | 【实测】通过 | 差异与链接检查通过，隐私 0 命中；产品 C 净减 3 行，加 CMake 后净增 0 | G |
 
 ## 前后对比
 
@@ -113,7 +113,11 @@ git diff 6fbe0c4051843810a3252769ab34d150ac4c6097..HEAD | rg -n "${private_paths
 
 【实测】D ASan/UBSan 构建退出 0；全量 CTest 退出 0，原话 `100% tests passed out of 391`，945.92 s，无跳过。包含两项确定性、既有资源／内存预算、新回归；临时探针使用本构建的 `-fsanitize=address,undefined` 参数。`build-asan/Testing/Temporary/LastTest.log` 中 ASan、UBSan 和 `runtime error:` 诊断扫描为 0 命中。日志：`work/perf-latency-2/{build-asan,ctest-asan}.log`。
 
-E、F、G 结果待补。
+【实测】E 使用 ESP-IDF v6.1 `fff9895c`、GCC 15.2.0，配置及 ELF 编译链接退出 0；`file` 验为 32 位 RISC-V ELF，编译日志和编译表均含两个修改文件。浅睡关闭，使用原厂屏幕输出层 `690a023`。0 条编译器警告；有 5 条 SDK 私有头目录配置警告、1 条 Bash 补全警告及 SDK Kconfig 弃用提示。只编译 ELF，未打包镜像或连接设备。日志：`build-s31/verification/{export,configure,elf}.log`、`work/perf-latency-2/build-s31.log`。
+
+【实测】F 退出 0，原话 `gcccheck: 2 compiled, 0 with findings`，无跳过；采用普通构建编译数据库检查两个修改的产品 C 文件。日志：`work/perf-latency-2/gcccheck.log`。
+
+【实测】G `git diff --check` 退出 0；对照基线共 7 个相关文件，无夹带。产品 C 新增 9、删除 12、净减 3 行；测试注册 CMake 新增 3 行，合计 24 行变动、净增 0，未超 200 行净增预算。报告链接、Python 语法、3780 条样本的全部分位数和分段求和均已核对。提交差异的指定隐私扫描 0 命中（rg 退出 1）。
 
 ## 没做到的
 
