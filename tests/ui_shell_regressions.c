@@ -361,8 +361,8 @@ static void check_child_actions(void) {
 }
 static void add_test_networks(void *unused) {
     (void)unused;
-    sim_wifi_ap_add("FAKE_UI_TEST_AP_1", -45, "");
-    sim_wifi_ap_add("FAKE_UI_TEST_AP_2", -60, "");
+    sim_wifi_ap_add("FAKE_UI_TEST_AP_1", -45, "SYNTH_PASSWORD");
+    sim_wifi_ap_add("FAKE_UI_TEST_AP_2", -60, "SYNTH_PASSWORD");
 }
 static void context_tests(void) {
     vtk_event_at(vtk_now() + SIM_MS(1), add_test_networks, NULL); delay_ms(5);

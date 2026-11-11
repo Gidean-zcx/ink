@@ -1,5 +1,23 @@
 # English. One entry per line: Chinese (the key in the code) <TAB> English. See tools/i18n/i18n_gen.py.
 @name	English
+# ui-fix-d
+用电脑加入家庭	Join your family from a computer
+需要密码	Secured
+开放网络	Open
+网络密码 · 完成后连接	Network password - Done to connect
+加入码 %.8s\n确认码 %.12s\n填到电脑上，再回设备确认加入。	Join code %.8s\nCheck code %.12s\nEnter both on the computer, then confirm on this device.
+用手机扫码。码过期后会自动更换。	Scan with your phone. Expired codes are replaced automatically.
+用手机扫码	Scan with phone
+家庭服务器未连接，AI 和备份暂不可用。可先用；手机设置请返回选网，再返回首页扫码。	Server offline. AI and backups need it. Use now, or go back to Wi-Fi, then scan on the first page.
+这台设备已被移出家庭，AI 和备份不可用。可回主页查看本地书和备忘，资料是否保留以实际列表为准。	This device was removed from the family. AI and backups are unavailable. Go home to check which local books and memos remain.
+找不到这个网络，请靠近路由器或换个网络。	Network not found. Move closer to the router or choose another network.
+连接超时，请重试或换个网络。	Connection timed out. Retry or choose another network.
+Wi-Fi 已关闭，请到网络设置打开后重试。	Wi-Fi is off. Enable it in network settings and retry.
+暂时查不了备份，可以先当新设备用。	Backups cannot be checked now. You can use this as a new device.
+草稿已存，备忘没存上，请重试	Draft saved; memo failed. Retry.
+草稿没存上，字还在，请重试	Draft failed; text kept. Retry.
+正在存草稿，备忘没存上	Saving draft; memo was not saved
+正在保存备忘	Saving memo
 # notification management
 删除	Delete
 全部已读	Mark all read

@@ -47,7 +47,7 @@ static void locate(void) {
     x = y = -1; row_y = 0; best_y = ink_ui_height(); disabled = false;
     lv_obj_t *name = wanted_name ? label(lv_screen_active(), wanted_name) : NULL;
     if (wanted_name && !name) return;
-    if (name) { lv_area_t a; lv_obj_get_coords(name, &a); row_y = a.y1; }
+    if (name) { lv_area_t a; lv_obj_get_coords(lv_obj_get_parent(name), &a); row_y = a.y1; }
     buttons(lv_screen_active()); buttons(lv_layer_sys());
     if (wanted_label) CHECK(label(lv_layer_sys(), wanted_label) || label(lv_screen_active(), wanted_label), "translated action is visible: %s", wanted_label);
 }
