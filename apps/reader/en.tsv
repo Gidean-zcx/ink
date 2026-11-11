@@ -14,3 +14,22 @@
 这本书已加密或压缩方式不支持，请换一本未加密的 EPUB	This book is encrypted or uses unsupported compression. Choose an unencrypted EPUB.
 《%.60s》第 %d 章 · 第 %d 页	《%.60s》 Chapter %d · Page %d
 第 %d 页	Page %d
+正文字号	Reading font size
+行距	Line spacing
+段距	Paragraph spacing
+边距	Margins
+底栏显示项	Footer items
+正文字号 %d	Font size %d
+阅读设置	Reading settings
+阅读菜单	Reading menu
+返回书架	Bookshelf
+跳到第几章	Go to chapter
+章节名	Chapter
+章内页码，从 1 开始	Page in chapter, starting at 1
+章节序号，从 1 开始	Chapter number, starting at 1
+输入数字	Enter a number
+没有这个位置，请重新输入	No such position. Enter again
+第 %d 页 · %u%%	Page %d · %u%%
+很大	XL
+标准	Normal
+跳到第几页	Go to page

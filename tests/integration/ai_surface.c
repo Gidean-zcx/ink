@@ -68,6 +68,7 @@ static const struct {
     {"call.mute", "on"}, {"call.dtmf", "key"}, {"call.route", "headset"}, {"call.record", NULL}, {"phone.keypad", NULL},
     {"reader.open_sample", NULL}, {"shell.update_notes_page", "delta"},
     {"reader.open_book", "title"}, {"reader.next_page", NULL}, {"reader.prev_page", NULL}, {"reader.goto_page", "page"}, {"reader.read_page", NULL}, {"reader.continue", NULL},
+    {"reader.get_layout", NULL}, {"reader.set_layout", ""}, {"reader.menu", ""},
     {"reader.chapters", NULL}, {"reader.show_chapters", NULL}, {"reader.goto_chapter", ""}, {"reader.list_next", NULL}, {"reader.list_prev", NULL},
     {"activity.list", ""}, {"activity.clear", "member"}, {"update.status", NULL}, {"update.check", NULL}, {"update.download", NULL},
     {"text.voice_start", ""}, {"text.voice_finish", ""}, {"text.voice_cancel", ""},
