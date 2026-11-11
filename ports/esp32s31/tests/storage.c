@@ -48,8 +48,6 @@ static test_event_fn handler;
 static bool pending;
 static unsigned lock_depth;
 static bool fail_read;
-static bool display_paused;
-void hal_display_pause(bool pause) { assert(display_paused != pause); display_paused = pause; }
 struct osal_mutex { int unused; };
 static struct osal_mutex mutex;
 osal_mutex_t *osal_mutex_create(void) { return &mutex; }
@@ -63,20 +61,17 @@ const esp_partition_t *esp_partition_find_first(int t, int s, const char *name) 
     return !strcmp(name, "model") ? &user : NULL;
 }
 int esp_partition_read(const esp_partition_t *p, size_t off, void *buf, size_t n) {
-    assert(display_paused);
     assert(p == &user && off + n <= sizeof flash);
     if (fail_read) return -1;
     memcpy(buf, flash + off, n); return 0;
 }
 int esp_partition_write(const esp_partition_t *p, size_t off, const void *buf, size_t n) {
-    assert(display_paused);
     assert(p == &user && off + n <= sizeof flash);
     const uint8_t *b = buf;
     for (size_t i = 0; i < n; i++) { assert((flash[off + i] & b[i]) == b[i]); flash[off + i] &= b[i]; }
     return 0;
 }
 int esp_partition_erase_range(const esp_partition_t *p, size_t off, size_t n) {
-    assert(display_paused);
     assert(p == &user && off % 4096 == 0 && n == 4096 && off + n <= sizeof flash);
     memset(flash + off, 255, n); erases++; return 0;
 }

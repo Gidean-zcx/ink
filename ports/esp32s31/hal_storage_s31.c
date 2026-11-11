@@ -20,7 +20,6 @@
 #include "sd_protocol_defs.h"
 #include "lfs.h"
 #include "ink/hal_storage.h"
-#include "ink/hal_display.h"
 #include "ink/osal.h"
 #ifndef CONFIG_INK_SD_READONLY
 #define CONFIG_INK_SD_READONLY 0
@@ -38,22 +37,13 @@ static uint8_t g_read[512], g_prog[512], g_lookahead[128];
 #define LOCK() osal_mutex_lock(g_lock, OSAL_WAIT_FOREVER)
 #define DONE(value) do { __auto_type result_ = (value); osal_mutex_unlock(g_lock); return result_; } while (0)
 static int bd_read(const struct lfs_config *c, lfs_block_t b, lfs_off_t o, void *p, lfs_size_t n) {
-    hal_display_pause(true);
-    esp_err_t r = esp_partition_read(g_user, b * c->block_size + o, p, n);
-    hal_display_pause(false);
-    return r == ESP_OK ? 0 : LFS_ERR_IO;
+    return esp_partition_read(g_user, b * c->block_size + o, p, n) == ESP_OK ? 0 : LFS_ERR_IO;
 }
 static int bd_prog(const struct lfs_config *c, lfs_block_t b, lfs_off_t o, const void *p, lfs_size_t n) {
-    hal_display_pause(true);
-    esp_err_t r = esp_partition_write(g_user, b * c->block_size + o, p, n);
-    hal_display_pause(false);
-    return r == ESP_OK ? 0 : LFS_ERR_IO;
+    return esp_partition_write(g_user, b * c->block_size + o, p, n) == ESP_OK ? 0 : LFS_ERR_IO;
 }
 static int bd_erase(const struct lfs_config *c, lfs_block_t b) {
-    hal_display_pause(true);
-    esp_err_t r = esp_partition_erase_range(g_user, b * c->block_size, c->block_size);
-    hal_display_pause(false);
-    return r == ESP_OK ? 0 : LFS_ERR_IO;
+    return esp_partition_erase_range(g_user, b * c->block_size, c->block_size) == ESP_OK ? 0 : LFS_ERR_IO;
 }
 static int bd_sync(const struct lfs_config *c) { (void)c; return 0; }
 static const struct lfs_config g_cfg = {.read = bd_read, .prog = bd_prog, .erase = bd_erase, .sync = bd_sync,
