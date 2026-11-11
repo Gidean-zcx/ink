@@ -85,6 +85,7 @@ int ink_camera_init(void) {
 }
 
 uint8_t *ink_camera_read_rgb(int *w, int *h) {
+    if (!CAM.lock) { *w = *h = 0; return NULL; }
     osal_mutex_lock(CAM.lock, OSAL_WAIT_FOREVER);
     int n = capture_frame();
     size_t count = (size_t)CAM.info.width * CAM.info.height;

@@ -14,6 +14,9 @@ bool s31_accel_sleep(bool watch);
 void s31_accel_resume(void);
 void s31_power_init(void);
 void ink_s31_audio_init(void);
+bool ink_s31_camera_busy(void);
+bool ink_s31_display_acquire(uint32_t timeout_ms);
+void ink_s31_display_release(void);
 int ink_s31_sleep_init(void);
 int ink_s31_light_sleep(void);
 

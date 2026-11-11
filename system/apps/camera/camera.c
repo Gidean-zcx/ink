@@ -41,6 +41,7 @@ static void captured(void *arg) {
     ink_image_free(&p->im); osal_free(p); ink_power_release(INK_NEED_AWAKE); __atomic_store_n(&taking, 0, __ATOMIC_RELEASE);
 }
 static void take(ink_call_t *c) {
+    if (!ink_cap_find("camera.capture")) { c->rc.status = INK_RC_FAILED; snprintf(c->rc.say, sizeof c->rc.say, "%s", TR("没有找到摄像头")); return; }
     bool limited = ink_camera_restricted();
     capture_t *p = osal_calloc(1, sizeof *p, OSAL_MEM_EXTERNAL);
     if (!p) { c->rc.status = INK_RC_FAILED; return; }
@@ -106,6 +107,15 @@ static void preview(lv_timer_t *t) {
 }
 static void camera_create(lv_obj_t *root, void *arg) {
     (void)arg; ink_shell_statusbar(root, true);
+    if (!ink_cap_find("camera.capture")) {
+        snprintf(camera_status, sizeof camera_status, "%s", TR("没有找到摄像头"));
+        ink_ui_label(root, camera_status, INK_FONT_TITLE, INK_WEIGHT_MEDIUM,
+            INK_MARGIN, INK_CANVAS_H / 2 - INK_BLOCK, INK_CANVAS_W - 2 * INK_MARGIN);
+        lv_obj_t *back = ink_ui_circle(root, "close", INK_CANVAS_W - INK_MARGIN - INK_CIRCLE_APP,
+            INK_CANVAS_H - INK_MARGIN - INK_CIRCLE_APP, INK_CIRCLE_APP, INK_ICON_LIST, INK_SURFACE_STATIC, NULL, NULL);
+        ink_shell_bind(back, "shell.back", NULL);
+        return;
+    }
     int w = INK_CANVAS_W - 2 * INK_MARGIN, y = INK_STATUS_BAR;
     view = ink_ui_card(root, INK_MARGIN, y, w, INK_CANVAS_H - y - INK_CIRCLE_LARGE - 2 * INK_BLOCK, INK_SURFACE_WHITE);
     if (ink_camera_restricted()) ink_shell_bind(view, "camera.preview", NULL);
@@ -126,6 +136,13 @@ static void camera_create(lv_obj_t *root, void *arg) {
 }
 static void camera_destroy(void) { if (timer) { lv_timer_delete(timer); } timer = NULL; view = notice = NULL; }
 static int camera_snapshot(char *out, size_t cap) {
+    if (!ink_cap_find("camera.capture")) {
+        const ink_ui_field_spec_t field = {.id = "status", .role = "status", .label = TR("相机"), .value = camera_status};
+        const ink_ui_action_spec_t back = {.id = "close", .label = TR("关闭"), .capability = "shell.back", .enabled = true};
+        const ink_ui_page_spec_t page = {.id = "Camera", .title = TR("相机"), .object = {"camera:view", 1},
+            .fields = &field, .field_count = 1, .actions = &back, .action_count = 1};
+        return ink_ui_semantics_snapshot(&page, out, cap);
+    }
     const ink_ui_action_spec_t CAMERA_ACTIONS[] = {
         {.id = "shoot", .label = TR("拍照"), .capability = "camera.photo", .enabled = true},
         {.id = "preview", .label = TR("更新取景"), .capability = "camera.preview", .enabled = true},
@@ -181,7 +198,6 @@ static const ink_cap_t CAMERA_APP_CAPS[] = {
     {.id = "camera.review", .locked_owner_only = true, .app = "camera", .title = "查看本次锁屏拍的下一张照片", .activity = "Camera", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_MEDIA, .timeout_ms = 15000, .run = take}
 };
 int ink_camera_app_init(void) {
-    static const char *const needs[] = {"camera.capture", NULL};
-    static const ink_app_def_t app = {.id = "camera", .title = "相机", .icon = INK_UI_ICON(camera), .entry = &CAMERA, .system_app = true, .child_ok = true, .needs = needs};
+    static const ink_app_def_t app = {.id = "camera", .title = "相机", .icon = INK_UI_ICON(camera), .entry = &CAMERA, .system_app = true, .child_ok = true};
     return ink_camera_scan_init() || ink_cap_register(CAMERA_APP_CAPS, 3) || ink_app_register(&app) ? -1 : 0;
 }

@@ -77,7 +77,7 @@ void hal_power_request(hal_power_res_t res, bool on) {
 
 #if INK_S31_LIGHT_SLEEP
 static bool busy(void) { /* no locks: also used immediately before sleep with scheduling stopped */
-    return hal_display_pending() > 0 || s31_haptic_busy() ||
+    return hal_display_pending() > 0 || s31_haptic_busy() || ink_s31_camera_busy() ||
            __atomic_load_n(&g_refs[HAL_PWR_AUDIO_IN], __ATOMIC_ACQUIRE) > 0 ||
            __atomic_load_n(&g_refs[HAL_PWR_AUDIO_OUT], __ATOMIC_ACQUIRE) > 0;
 }

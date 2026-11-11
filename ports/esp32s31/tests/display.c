@@ -27,6 +27,9 @@ static void (*lcd_done)(void *);
 static void *lcd_ctx;
 static uint8_t queue_line[LINE_BYTES];
 static bool lcd_stopped;
+static pthread_mutex_t access_watch = PTHREAD_MUTEX_INITIALIZER;
+static pthread_cond_t access_wait = PTHREAD_COND_INITIALIZER;
+static bool watching_access, access_waiting;
 void lcd_ll_stop(void *hw) { assert(hw == NULL && ATOMIC(D.stop) && !lcd_done); lcd_stopped = true; }
 void ink_s31_panel_panic(int oe, int mode, uint8_t p0) {
     assert(oe == EPD_PIN_XOE && mode == EPD_PIN_MODE && p0 == 0);
@@ -104,7 +107,15 @@ static unsigned nibble(const uint8_t *fb, int x, int y);
 static bool watching; /* the levels one pixel goes through, frame by frame */
 static unsigned watched_levels;
 int xSemaphoreTake(SemaphoreHandle_t s, uint32_t timeout) {
-    if (s->mutex) { assert(pthread_mutex_lock(&s->lock) == 0); return pdTRUE; }
+    if (s->mutex) {
+        if (s == D.access && watching_access) {
+            assert(pthread_mutex_lock(&access_watch) == 0);
+            access_waiting = true;
+            assert(pthread_cond_signal(&access_wait) == 0);
+            assert(pthread_mutex_unlock(&access_watch) == 0);
+        }
+        assert(pthread_mutex_lock(&s->lock) == 0); return pdTRUE;
+    }
     if (s == D.frame_done) {
         assert(boost.held); /* every frame at the full clock, whatever the power state says meanwhile */
         if (watching) watched_levels |= 1u << nibble(D.c.fb4, 4, 3);
@@ -301,6 +312,23 @@ static void lines(void) {
     assert(!line_source(NULL, line));
     assert(D.owed[0] == 0 && atomic_load(&D.q[0].last) == 2 && line[0] == 0x55);
 }
+static void camera_access(void) {
+    atomic_store(&D.powered, true); atomic_store(&D.armed, true);
+    hal_display_pause(true);
+    assert(!ATOMIC(D.powered) && !ATOMIC(D.armed));
+    hal_rect_t area = {0, 0, 1, 1}; uint8_t pixel = 0;
+    assert(hal_display_update(&area, &pixel, 1, HAL_WF_GL16, 0, finished, &calls));
+    pthread_t thread;
+    watching_access = true;
+    assert(pthread_mutex_lock(&access_watch) == 0);
+    assert(pthread_create(&thread, NULL, run_display, NULL) == 0);
+    while (!access_waiting) assert(pthread_cond_wait(&access_wait, &access_watch) == 0);
+    assert(!scans && !calls); /* The pending waveform has reached the camera's gate. */
+    assert(pthread_mutex_unlock(&access_watch) == 0);
+    hal_display_pause(false);
+    assert(pthread_join(thread, NULL) == 0);
+    assert(calls == 1 && completed.ok && scans > 0);
+}
 int main(int argc, char **argv) {
     caller = pthread_self();
     const char *which = argc > 1 ? argv[1] : "regions";
@@ -320,6 +348,7 @@ int main(int argc, char **argv) {
     else if (!strcmp(which, "recover")) recover();
     else if (!strcmp(which, "guard")) guard_only();
     else if (!strcmp(which, "lines")) lines();
+    else if (!strcmp(which, "camera-access")) camera_access();
     else if (!strcmp(which, "wake-overlap")) wake_overlap();
     else if (!strcmp(which, "selftest")) selftest(true);
     else if (!strcmp(which, "selftest-dead")) selftest(false);
@@ -334,6 +363,7 @@ int main(int argc, char **argv) {
     }
     else abort();
     assert(pthread_mutex_destroy(&D.lock->lock) == 0);
+    assert(pthread_mutex_destroy(&D.access->lock) == 0);
     for (unsigned i = 0; i < allocation_count; i++) free(allocations[i]);
     printf("display %s: passed\n", which);
     return 0;
