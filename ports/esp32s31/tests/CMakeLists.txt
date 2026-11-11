@@ -1,6 +1,7 @@
 cmake_minimum_required(VERSION 3.16)
 project(s31_io_tests C)
 set(CMAKE_C_STANDARD 11)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 option(INK_SANITIZE "Address and undefined behavior sanitizers" OFF)
 set(port ${CMAKE_CURRENT_LIST_DIR}/..)
 set(root ${port}/../..)
@@ -86,6 +87,10 @@ foreach(case B02-write B02-ack B02-limit B04 B05 C19)
 endforeach()
 add_test(NAME unit-s31-bh-reverse COMMAND ${Python3_EXECUTABLE}
   ${CMAKE_CURRENT_LIST_DIR}/bh_vendor_test.py $<TARGET_FILE:test-s31-audio>)
+foreach(kind audio bt)
+  add_test(NAME unit-s31-${kind}-negative COMMAND ${Python3_EXECUTABLE}
+    ${CMAKE_CURRENT_LIST_DIR}/${kind}_negative.py ${CMAKE_BINARY_DIR})
+endforeach()
 include(${port}/opus.cmake)
 # Use the component's exact source list and fixed-point flags on the host too.
 function(idf_component_register)

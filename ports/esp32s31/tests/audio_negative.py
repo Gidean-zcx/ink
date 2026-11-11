@@ -26,9 +26,11 @@ def main():
         ("omit-dma-clear", "    for (int i = 0; i < INK_AUDIO_DMA; i++) {", "    for (int i = 0; i < 0; i++) {"),
         ("accept-no-mode-ack", " || ink_wait(ack, 1000)", ""),
         ("stale-mode-after-wake", "if (B.epoch != epoch || !B.uart || !B.mode)", "if (B.epoch == UINT_MAX || !B.uart || !B.mode)"),
-        ("drop-reference-channel", "A.ref[i] = ink_sample(A.in[i * 2 + 1]);", "A.ref[i] = 0;"),
+        ("drop-reference-channel", "int32_t value = bit32_buffer[(size_t)i] >> 12;",
+         "int32_t value = i % 2 ? 0 : bit32_buffer[(size_t)i] >> 12;"),
         ("ignore-capture-overflow", "__atomic_add_fetch(&A.lost, ev->size / 8, __ATOMIC_RELAXED);", "(void)ev;"),
-        ("master-clock-default", ".clk_cfg = {.sample_rate_hz = HAL_AUDIO_RATE, .clk_src = I2S_CLK_SRC_DEFAULT,\n                    .mclk_multiple = I2S_MCLK_MULTIPLE_256}", ".clk_cfg = I2S_STD_CLK_DEFAULT_CONFIG(HAL_AUDIO_RATE)"),
+        ("master-clock-default", "std_cfg.clk_cfg.sample_rate_hz = HAL_AUDIO_RATE;",
+         "std_cfg.clk_cfg.sample_rate_hz = HAL_AUDIO_RATE;\n    std_cfg.clk_cfg.bclk_div = 8;"),
         ("opus-baseline", "", ""),
         ("opus-no-dtx", "OPUS_SET_DTX(1)", "OPUS_SET_DTX(0)"),
         ("opus-wrong-application", "OPUS_APPLICATION_VOIP", "OPUS_APPLICATION_AUDIO"),
@@ -44,6 +46,9 @@ def main():
             entry = next(e for e in commands if Path(e["file"]).resolve() == source)
             compile_args = shlex.split(entry["command"])
             text = source.read_text()
+            if name in ("drop-reference-channel", "master-clock-default"):
+                included = port.parents[1] / "vendor/metalio_bh1098/codec.inc"
+                text = text.replace('#include "../../vendor/metalio_bh1098/codec.inc"', included.read_text())
             if name == "remove-implementation":
                 # Link the actual baseline-shaped audio stubs instead of the port.
                 text = '#include "ink/hal_audio.h"\n' + "\n".join([

@@ -10,8 +10,8 @@
 | B04 | 部分完成【实测＋实现】 | 已知 CONNECT SUCCESS、mode1 和 SCO 汇合到 HAL；未知离线协议、无地址回连无法完成服务同步，见下 | `build-port-tests/test-s31-audio B04` |
 | B05 | HAL 部分通过，整链未完成【实测＋实现】 | 有 ACK 才报 LOST；失败保留最后确认状态；void HAL 不能阻止范围外服务无条件改状态/删记录 | `build-port-tests/test-s31-audio B05` |
 | C19 | 模式重设通过【实测】 | 合成 BH 保持模式 2、UART 有旧应答且丢首个模式 ACK，首次播放仍确认模式 1；P14 复位留给 port-board-2 | `build-port-tests/test-s31-audio C19` |
-| T01 | 待验证 | S31 宿主机全量及声音/蓝牙负向测试 | 待运行 |
-| T02 | 待验证 | 主工程普通全量 | 待运行 |
+| T01 | 普通版通过【实测】 | 42/42；含已有 audio/bt 负向脚本、9 个新增变异，另手动基线 6/6 失败 | 下方验证命令 |
+| T02 | 全量命令通过，补跑中枢依赖项中【实测】 | `100% tests passed out of 391`，388 通过，3 个中枢测试因默认 Python 缺依赖跳过；正用共享现成环境补跑 | 下方验证命令 |
 | T03 | 待验证 | S31 固件编译、警告、gcccheck、隐私检查 | 待运行 |
 
 ## 没做到的
@@ -31,6 +31,7 @@
 1. SCO 缺应答从失败改为发送成功；原厂明确按 200 ms 发命令，不等待应答。保留并新增实际 UART 写失败断言。
 2. 初始化耗尽后必须进入新电源周期才能重试；原厂 s_completed_epoch 的语义，失败次数从 1 改为 4。
 3. 已确认的主动断开现在发 LOST，后续累计丢链事件从 1/2 改为 2/3。其余生命周期、负向故障断言保留，另补原厂全部 I2S 槽字段检查。
+4. 已有 `audio_negative.py` 的回采、BCLK 两个变异点移到实际编译的 codec.inc；保持 14 个故障和 2 个正向控制的结果要求不变。把已有 audio/bt 负向脚本注册到独立 S31 宿主机 ctest，自动导出它们需要的编译命令。
 
 ## 要用户定的
 
@@ -65,8 +66,25 @@
 ## 里程碑
 
 - 已导入原厂整文件原文、MIT 与 SHA-256，接好 C HAL 适配。
-- 初轮 S31 宿主机 33/33 通过；新增独立用例和 9 个反向对照手动通过。主工程 -Werror 构建通过，完整 ctest、最终端口/内存检查、S31 构建进行中。
+- S31 宿主机最终普通版 42/42 通过；新 9 个变异、已有音频 14 个/蓝牙 3 个反向控制均未放宽断言。手动把基线的三份产品 C 文件接到新测试，B02-write/ack/limit、B04、B05、C19 六项全以断言退出 -6；临时源码和二进制自动清理。主工程普通全量结束，内存检查、S31 构建进行中。
 
 ## 架构与 AI 原生审视
 
 【实现】硬件命令留在驱动/HAL，不依赖页面或大模型；既有 `bt.scan/pair/connect/disconnect/forget`、`audio.record` 和媒体能力保持人/AI 共路，成员/锁屏和配对库存储准入仍由服务负责。低层 UART/GPIO 不另开放为绕过策略的能力。B04/B05 的服务状态缺口会同时影响 UI 和 AI，未声称完整覆盖通过。
+
+## 验证命令与证据
+
+所有构建/ctest 都加 `taskpolicy -c utility`，构建与测试均至多 `-j2`，没有同时跑两轮构建/全量测试。字体、Python、LVGL 配置沿用 `codex-rules.md` §5 的 `$INK_DEPS` 路径；只读依赖和设计目录均未改。
+
+```sh
+cmake -S ports/esp32s31/tests -B build-port-tests -DPython3_EXECUTABLE="$INK_DEPS/build-deps/pyenv/bin/python"
+cmake --build build-port-tests -j2
+"$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-port-tests --output-on-failure -j2
+"$INK_DEPS/build-deps/pyenv/bin/python" ports/esp32s31/tests/bh_vendor_test.py build-port-tests/test-s31-audio 1e9a16ee08931d0f86a17c2f852db51e1790c42d
+cmake --build build -j2
+"$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
+```
+
+基线模式仅手动运行；ctest 的新反向测试不依赖 Git 历史。普通全量输出：`100% tests passed out of 391`，耗时 630.55 s；未运行 186 hub-contract、187 hub-json-crosscheck、188 hub-simulator-e2e，原因分别为缺 pytest/异步/YAML 等依赖、缺生成消息、缺锁定 Python 环境。已有共享虚拟环境可用，补跑结果待填。
+
+主工程编译没有本次产品代码警告；仍有 SDL2 的 macOS 弃用/扩展警告和重复静态库链接警告，未改第三方依赖或链接设置。
