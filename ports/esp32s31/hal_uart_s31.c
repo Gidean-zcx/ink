@@ -11,6 +11,7 @@
 #include "ink/probe.h"
 #include "s31_board.h"
 #include "s31_hal_map.h"
+#include "s31_bh1098.h"
 
 #define RX_BUF 2048
 
@@ -41,6 +42,12 @@ hal_uart_t *hal_uart_open(int port, int baud) {
 int hal_uart_write(hal_uart_t *u, const void *data, size_t len) {
     if (!u || !u->open) return -1;
     return uart_write_bytes(u->port, data, len);
+}
+
+bool ink_s31_uart_discard(hal_uart_t *u) {
+    if (!u || !u->open || uart_flush_input(u->port) != ESP_OK) return false;
+    u->line = (s31_line_t){0};
+    return true;
 }
 
 int hal_uart_read_line(hal_uart_t *u, char *buf, size_t cap, uint32_t timeout_ms) {

@@ -15,6 +15,7 @@
 #include "s31_cell.h"
 #include "s31_input_logic.h"
 #include "s31_io.h"
+#include "s31_bh1098.h"
 #include "s31_safety.h"
 #include "hal/usb_serial_jtag_ll.h"
 
@@ -156,6 +157,7 @@ uint32_t hal_power_sleep(const hal_sleep_cfg_t *cfg) {
     if (!cfg->keep_modem) {
         if (!ink_s31_cell_suspend()) goto out;
         cell_stopped = true;
+        ink_s31_bh_suspend();
     }
     cut = true;
     if (metalio_board_cut_rails(cfg->keep_modem) != HAL_I2C_OK) goto out;
@@ -186,7 +188,10 @@ out:
     }
     bool rails_back = !cut || restore(restore_rails);
     if (!rails_back) hal_log_write("power HAL: rail restore failed");
-    if (cell_stopped && rails_back) ink_s31_cell_resume();
+    if (cell_stopped && rails_back) {
+        ink_s31_cell_resume();
+        ink_s31_bh_resume();
+    }
     /* No SD/CNNT mux in this port yet: place USB after rails, before input resumes. */
     if (woke_at && cause != HAL_WAKE_TIMER) ink_usb_revive();
     s31_accel_resume();

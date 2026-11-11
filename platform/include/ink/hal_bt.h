@@ -1,11 +1,12 @@
 /*
  * ink HAL — a Bluetooth headset.
  *
- * What is known about the Plus: the BH1098G audio chip has a mode 2, officially "calls through a Bluetooth headset". Its
- * serial protocol for scanning, pairing and connecting has not been seen, nor how good the sound is, nor whether the
- * echo reference exists in that mode (system services design §10.4, §14). So this is an interface and no more: a port
- * that does not know how answers hal_bt_available() false, and the system simply uses the speaker. The simulator's headset
- * is a model of behaviour at this level: it invents no chip commands.
+ * Plus: BH1098 mode 2, UART1 115200 8N1. Vendor v2.0.77 documents INQUIRING, CONNECT,
+ * mode acknowledgements and SCO (docs/bh1098-audio-protocol.md:98-136). Pairing uses
+ * CONNECT; mode 1 restores local audio. Chip-side pairing removal and the complete
+ * unsolicited link-loss protocol remain unspecified. Host DB forgetting does not
+ * erase the chip's remembered devices. Headset microphone slots/reference need
+ * on-device verification. The simulator models behaviour without inventing commands.
  */
 #ifndef INK_HAL_BT_H
 #define INK_HAL_BT_H

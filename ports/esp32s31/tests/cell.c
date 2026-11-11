@@ -1,11 +1,14 @@
 /* Fake NT26 speaks only the vendor framed protocol; no device, IDs or paid traffic. */
 #include <assert.h>
+
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "cell_idf.h"
 #include "ink/hal_cellular.h"
+static bool ink_bh_call;
+void ink_s31_bh_call(bool on) { ink_bh_call = on; }
 #ifndef INK_TEST_CELL_SOURCE
 #define INK_TEST_CELL_SOURCE "../s31_modem.c"
 #endif
@@ -242,7 +245,15 @@ int main(void) {
     assert(hal_cell_apn(&apn) < 0 && hal_cell_select_sim(HAL_CELL_SLOT_INTERNAL, 0) < 0);
     assert(hal_modem_at_payload("AT+CMGS=1", "00\032AT&W", response, sizeof response, 1000) == HAL_AT_ERROR);
     assert(writes == before);
-    assert(hal_cell_dial("00000000000") == 0 && hal_cell_answer() == 0 && hal_cell_hangup() == 0 && hal_cell_dtmf('5') == 0);
+    assert(hal_cell_dial("00000000000") == 0 && ink_bh_call);
+    assert(hal_cell_answer() == 0 && ink_bh_call);
+    assert(hal_cell_hangup() == 0 && !ink_bh_call && hal_cell_dtmf('5') == 0);
+    hal_cell_event_t call_ev;
+    hal_cell_wait_event(&call_ev, 0); /* consume the scheduled registration refresh */
+    ink_bh_call = true;
+    reply("\r\nNO CARRIER\r\n");
+    drain();
+    assert(hal_cell_wait_event(&call_ev, 0) == 1 && call_ev.type == HAL_CELL_EV_CALL_ENDED && !ink_bh_call);
     inject(0, ethernet, sizeof ethernet); drain(); assert(!receives && !ink_cell.handshake);
     ink_s31_cell_use(true);
     hal_cell_status_t st;

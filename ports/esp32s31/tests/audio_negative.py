@@ -24,8 +24,8 @@ def main():
         ("omit-pa-off", "        ink_amp(false);", "        (void)0;"),
         ("omit-drain", "if (drain && left > 0)", "if (drain && left < 0)"),
         ("omit-dma-clear", "    for (int i = 0; i < INK_AUDIO_DMA; i++) {", "    for (int i = 0; i < 0; i++) {"),
-        ("accept-no-mode-ack", "if (!ack) return false;", "(void)ack;"),
-        ("stale-mode-after-wake", "if (A.epoch != epoch)", "if (A.epoch == UINT_MAX)"),
+        ("accept-no-mode-ack", " || ink_wait(ack, 1000)", ""),
+        ("stale-mode-after-wake", "if (B.epoch != epoch || !B.uart || !B.mode)", "if (B.epoch == UINT_MAX || !B.uart || !B.mode)"),
         ("drop-reference-channel", "A.ref[i] = ink_sample(A.in[i * 2 + 1]);", "A.ref[i] = 0;"),
         ("ignore-capture-overflow", "__atomic_add_fetch(&A.lost, ev->size / 8, __ATOMIC_RELAXED);", "(void)ev;"),
         ("master-clock-default", ".clk_cfg = {.sample_rate_hz = HAL_AUDIO_RATE, .clk_src = I2S_CLK_SRC_DEFAULT,\n                    .mclk_multiple = I2S_MCLK_MULTIPLE_256}", ".clk_cfg = I2S_STD_CLK_DEFAULT_CONFIG(HAL_AUDIO_RATE)"),
@@ -39,7 +39,8 @@ def main():
         work = Path(temp)
         for name, old, new in changes:
             codec = name.startswith("opus-")
-            source = port / ("hal_opus_s31.c" if codec else "hal_audio_s31.c")
+            source = port / ("hal_opus_s31.c" if codec else "hal_bt_s31.c" if name in
+                             ("accept-no-mode-ack", "stale-mode-after-wake") else "hal_audio_s31.c")
             entry = next(e for e in commands if Path(e["file"]).resolve() == source)
             compile_args = shlex.split(entry["command"])
             text = source.read_text()

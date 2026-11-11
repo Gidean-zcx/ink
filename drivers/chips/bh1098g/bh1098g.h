@@ -1,7 +1,7 @@
 /*
  * BH1098G Bluetooth audio chip on UART1 (115200), commands as the official firmware sends them
  * (metalio_audio.cc, bluetooth_uart.cc, README 12.1 @690a023; no datasheet in hand). Lines end in
- * CR LF; the chip does not acknowledge mode commands.
+ * CR LF; v2.0.77 documents SET MODE n acknowledgements (protocol.md:37-69).
  *   mode 1, AI conversation (default at boot): AT+RX=2, ~700 ms, AT+MODE=1
  *   mode 2, transmit to Bluetooth headphones:  AT+TX=1, AT+MODE=2
  *   mode 3, music receiver (device as speaker): AT+RX=1, AT+MODE=3

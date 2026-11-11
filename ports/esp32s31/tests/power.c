@@ -35,6 +35,8 @@ static void *allocs[ALLOC_CAP];
 static unsigned alloc_n;
 
 static void mark(char c) { assert(trace_n + 1 < sizeof trace); trace[trace_n++] = c; trace[trace_n] = 0; }
+void ink_s31_bh_suspend(void) { assert(paused && !rails_cut); mark('q'); }
+void ink_s31_bh_resume(void) { assert(paused && rails_fail < 0); mark('Q'); }
 static unsigned pos(char c) { const char *p = strchr(trace, c); assert(p); return (unsigned)(p - trace); }
 static void reset(void) {
     trace_n = 0;
@@ -241,6 +243,7 @@ int main(void) {
     assert(pos('m') < pos('g') && pos('g') < pos('U') && pos('U') < pos('N') && pos('N') < pos('w'));
     assert(pos('w') < pos('x') && pos('x') < pos('h') && pos('h') < pos('s'));
     assert(pos('C') < pos('x') && pos('r') < pos('R') && pos('R') < pos('i'));
+    assert(pos('C') < pos('q') && pos('q') < pos('x') && pos('r') < pos('Q') && pos('Q') < pos('i'));
     assert(pos('c') < pos('k') && pos('v') < pos('k') && pos('k') < pos('r') && pos('r') < pos('i'));
     assert(!paused && !suspended && resume_calls == 1 && !armed_low && !armed_high && !timer_us);
     assert(pos('r') < pos('b') && pos('b') < pos('-') && pos('-') < pos('D') && pos('D') < pos('+') && pos('+') < pos('i'));
@@ -330,6 +333,7 @@ int main(void) {
     rails_fail = 3;
     sources = 1u << ESP_SLEEP_WAKEUP_TIMER;
     assert(hal_power_sleep(&cfg) == HAL_WAKE_TIMER && strchr(trace, 'C') && !strchr(trace, 'R'));
+    assert(!strchr(trace, 'Q'));
     reset();
     cfg.keep_modem = true;
     cfg.wake_mask = HAL_WAKE_AI_KEY | HAL_WAKE_MODEM;
@@ -337,6 +341,7 @@ int main(void) {
     wake_pins = 1ull << S31_GPIO_MODEM_SRDY;
     assert(hal_power_sleep(&cfg) == HAL_WAKE_MODEM && keep);
     assert(!strchr(trace, 'C') && !strchr(trace, 'R'));
+    assert(!strchr(trace, 'q') && !strchr(trace, 'Q'));
     assert(saved_high == (1ull << S31_GPIO_MODEM_SRDY) && !saved_low);
     reset();
     cfg.wake_mask = HAL_WAKE_AI_KEY;
