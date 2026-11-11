@@ -81,4 +81,11 @@ void ink_ui_capture_touch(lv_obj_t *obj);
 bool ink_ui_touch_captured(int x, int y);
 void ink_ui_capture_forget(lv_obj_t *root);
 
+/* Keyboard: shared key units and dimensions, scaled with the text line height. */
+enum {
+    INK_KB_KEY = 96, INK_KB_DIGIT = 163, INK_KB_GAP = 5, INK_KB_PAD_Y = 10,
+    INK_KB_UNIT = 2, INK_KB_HALF = 1, INK_KB_FUNCTION = 3, INK_KB_SPACE = 5,
+    INK_KB_FUNCTION_WIDTH = 91
+};
+
 #endif

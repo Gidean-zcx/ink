@@ -20,6 +20,8 @@ typedef struct {
 void py_want_dict(void (*ready)(void));
 /** Under the service lock. How many (up to max). */
 int py_lookup(const char *composing, py_cand_t *out, int max);
+int py_lookup_nine(const char *composing, py_cand_t *out, int max);
+bool ink_text_nine(void);
 bool py_dict_loaded(void);
 void py_init(void);
 

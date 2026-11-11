@@ -20,6 +20,7 @@
 #undef ink_main
 
 #include "whole_product.h"
+#include "../keyboard_matrix.h"
 
 static volatile int g_entered, g_ended, g_changed;
 static char g_entered_text[256];
@@ -498,6 +499,12 @@ static int g_found_x, g_found_y;
 static const char *g_find;
 static bool g_found;
 static void find_in(lv_obj_t *o) {
+    lv_area_t key;
+    if (ink_test_matrix_key(o, g_find, &key)) {
+        g_found_x = (key.x1 + key.x2) / 2; g_found_y = (key.y1 + key.y2) / 2;
+        g_found = true;
+        return;
+    }
     for (uint32_t i = 0; i < lv_obj_get_child_count(o) && !g_found; i++) {
         lv_obj_t *c = lv_obj_get_child(o, (int32_t)i);
         if (lv_obj_check_type(c, &lv_label_class) && !strcmp(lv_label_get_text(c), g_find) && !lv_obj_has_flag(lv_obj_get_parent(c), LV_OBJ_FLAG_HIDDEN)) {

@@ -15,14 +15,20 @@ args = parser.parse_args()
 build = args.build.resolve()
 
 
-def exercise(binary, tag, expected=None):
+def exercise(binary, tag, expected=None, verify=False, state=None):
     out = build / 'test-out' / f'ime-keyboard1-{tag}'
     shutil.rmtree(out, ignore_errors=True)
+    state = state or build / 'test-out' / f'ime-keyboard1-state-{tag}'
+    if not verify:
+        shutil.rmtree(state, ignore_errors=True)
+    (state / 'sd').mkdir(parents=True, exist_ok=True)
     command = [str(binary), '--profile', str(ROOT / 'simulator/profiles/metalio-plus.json'),
-               '--script', str(ROOT / 'tests/semantics_shell/scenes.script'),
+               '--script', str(ROOT / 'tests/ime_keyboard1.script'),
                '--budget', str(ROOT / 'tests/ui_scene.budget.json'), '--assets', str(build / 'assets'),
-               '--content', str(build / 'test-content'), '--out', str(out), '--quiet', '--no-random-outages']
-    result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, timeout=150)
+               '--content', str(build / 'test-content'), '--flash-image', str(state / 'user.img'),
+               '--sd-dir', str(state / 'sd'), '--out', str(out), '--quiet', '--no-random-outages']
+    result = subprocess.run(command, cwd=ROOT, capture_output=True, text=True, timeout=150,
+                            env={**os.environ, **({'INK_IME_LAYOUT_VERIFY': '1'} if verify else {})})
     out.mkdir(parents=True, exist_ok=True)
     (out / 'test.log').write_text(result.stdout + result.stderr)
     data = json.loads((out / 'metrics.json').read_text()) if (out / 'metrics.json').exists() else {}
@@ -31,9 +37,10 @@ def exercise(binary, tag, expected=None):
     if expected:
         ok = result.returncode != 0 and metrics.get('test.fail', 0) > 0 and any(expected in w for w in data.get('warnings', []))
     else:
-        ok = result.returncode == 0 and metrics.get('test.finished') == 1 and not metrics.get('test.fail') and not data.get('warnings') and len(frames) == 6
+        ok = result.returncode == 0 and metrics.get('test.finished') == 1 and not metrics.get('test.fail') and not data.get('warnings') and len(frames) == (0 if verify else 18)
     summary = {'case': tag, 'exit': result.returncode, 'passes': metrics.get('test.pass', 0),
                'failures': metrics.get('test.fail', 0), 'frames': len(frames), 'expected_result': ok}
+    summary['query_us'] = [list(map(float, line.split()[1:])) for line in result.stdout.splitlines() if line.startswith('NINE_BENCH ')]
     (out / 'summary.json').write_text(json.dumps(summary, ensure_ascii=False, indent=2) + '\n')
     print(json.dumps(summary, ensure_ascii=False), flush=True)
     if not ok:
@@ -44,13 +51,20 @@ def exercise(binary, tag, expected=None):
 
 
 if not args.reverse:
-    raise SystemExit(0 if exercise(build / 'sim-ime-keyboard1', 'current') else 1)
+    state = build / 'test-out/ime-keyboard1-state-current'
+    passed = exercise(build / 'sim-ime-keyboard1', 'current', state=state)
+    passed = exercise(build / 'sim-ime-keyboard1', 'verify', verify=True, state=state) and passed
+    if passed and not os.environ.get('INK_KEEP_EVIDENCE'):
+        shutil.rmtree(state)
+    raise SystemExit(0 if passed else 1)
 
 source = ROOT / 'system/services/text/text_service.c'
 db = json.loads((build / 'compile_commands.json').read_text())
 entry = next(e for e in db if Path(e['file']) == source)
 mutations = [
-    ('english-pinyin', "} else if (!TS.english && c >= 'a' && c <= 'z') {", "} else if (c >= 'a' && c <= 'z') {",
+    ('no-nine-matching', 'ink_text_nine() ? py_lookup_nine(TS.composing, raw, MAX_CANDS) : py_lookup(TS.composing, raw, MAX_CANDS)',
+     'py_lookup(TS.composing, raw, MAX_CANDS)', '94664 offers the phrase 中国'),
+    ('english-pinyin', "} else if (!TS.english && (ink_text_nine() ? c >= '2' && c <= '9' : c >= 'a' && c <= 'z')) {", "} else if (c >= 'a' && c <= 'z') {",
      'English letters commit directly and space inserts a space'),
     ('lost-composing', 'if (c == INK_TEXT_KEY_LANGUAGE) {\n            flush_composing();',
      'if (c == INK_TEXT_KEY_LANGUAGE) {\n            TS.composing[0] = 0;', 'switch commits pending pinyin verbatim'),

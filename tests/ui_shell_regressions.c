@@ -10,6 +10,7 @@
 #include "../system/boot/main.c"
 #undef ink_main
 #include "integration/whole_product.h"
+#include "keyboard_matrix.h"
 
 static const char *mode, *detail, *wanted;
 static int effects, page, pages, accept_x, accept_y, next_x, next_y, label_x, label_y;
@@ -536,8 +537,8 @@ static ink_text_type_t keyboard_type;
 static char first_candidate[40], picked_text[128];
 static lv_area_t keyboard_bounds;
 static lv_obj_t *keyboard_panel(void) {
-    lv_obj_t *root = find_label(lv_layer_sys(), "空格");
-    for (int i = 0; i < 4 && root; i++) root = lv_obj_get_parent(root);
+    lv_obj_t *root = ink_test_matrix(lv_layer_sys());
+    for (int i = 0; i < 2 && root; i++) root = lv_obj_get_parent(root);
     CHECK(root && !strcmp(ink_ui_top_name(), "Keyboard"), "the real keyboard panel exists");
     return root;
 }

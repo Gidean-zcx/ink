@@ -315,6 +315,7 @@ bool ink_text_ai_hidden(void) { return TS.ai_hidden; }
 const char *ink_text_value(void) { return TS.value ? TS.value : ""; }
 const char *ink_text_composing(void) { return TS.composing; }
 bool ink_text_english(void) { return TS.english; }
+bool ink_text_nine(void) { return ink_setting_get("text.nine_key") != 0; }
 const char *ink_text_punctuation(char c) {
     if (TS.type != INK_TEXT_PLAIN || TS.english) return NULL;
     switch (c) {
@@ -385,7 +386,7 @@ static void compute_cands(void) {
         return;
     }
     ink_svc_lock();
-    int n = py_lookup(TS.composing, raw, MAX_CANDS);
+    int n = ink_text_nine() ? py_lookup_nine(TS.composing, raw, MAX_CANDS) : py_lookup(TS.composing, raw, MAX_CANDS);
     for (int i = 0; i < n; i++) {
         size_t len = raw[i].word_len < sizeof TS.cands[0].word - 1 ? raw[i].word_len : sizeof TS.cands[0].word - 1;
         memcpy(TS.cands[i].word, raw[i].word, len);
@@ -462,7 +463,11 @@ void ink_text_key(char c) {
         if (c == INK_TEXT_KEY_LANGUAGE) {
             flush_composing();
             TS.english = !TS.english;
-        } else if (!TS.english && c >= 'a' && c <= 'z') {
+        } else if (c == 4) {
+            flush_composing();
+            ink_receipt_t rc;
+            ink_setting_set("text.nine_key", !ink_text_nine(), INK_SRC_TOUCH, &rc);
+        } else if (!TS.english && (ink_text_nine() ? c >= '2' && c <= '9' : c >= 'a' && c <= 'z')) {
             size_t n = strlen(TS.composing);
             if (n < COMPOSING_MAX) {
                 TS.composing[n] = c;
@@ -710,6 +715,7 @@ static void on_member(void *ctx, int h, const char *id) { /* UI task */
 
 static const ink_state_def_t ST_FOCUSED = {.id = "text.focused", .type = INK_ST_BOOL, .title = "有文本框在输入"};
 static const ink_setting_def_t TEXT_SETTINGS[] = {
+    {.id = "text.nine_key", .title = "九宫格拼音", .type = INK_SET_BOOL, .per_member = true, .child_may_change = true},
     {.id = "text.assist", .title = TR_NOOP("打字时帮你接话"), .type = INK_SET_BOOL, .per_member = true, .child_may_change = true},
     {.id = "ai.read_clipboard", .title = TR_NOOP("AI 可以读剪贴板"), .type = INK_SET_BOOL, .def = 0, .ask_by_hand = true},
 };
