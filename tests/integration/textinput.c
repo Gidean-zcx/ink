@@ -733,7 +733,7 @@ static void bad_dictionaries(void) {
 /* On the page: a tap puts the cursor, a long press selects a word, the arrows adjust (placeholder look). */
 static char g_label_text[256];
 static void find_field_label(void) {
-    lv_obj_t *l = lv_obj_get_child(g_field, 0);
+    lv_obj_t *l = lv_textarea_get_label(lv_obj_get_child(g_field, 1));
     snprintf(g_label_text, sizeof g_label_text, "%s", lv_label_get_text(l));
 }
 static int g_left_x, g_left_y;
@@ -741,7 +741,7 @@ static int g_letter;
 static void letter_where(void) {
     lv_area_t a;
     lv_point_t p;
-    lv_obj_t *l = lv_obj_get_child(g_field, 0);
+    lv_obj_t *l = lv_textarea_get_label(lv_obj_get_child(g_field, 1));
     lv_obj_update_layout(g_field);
     lv_obj_get_coords(l, &a);
     lv_label_get_letter_pos(l, (uint32_t)g_letter, &p);
@@ -750,7 +750,7 @@ static void letter_where(void) {
 }
 static void field_left(void) {
     lv_area_t a;
-    lv_obj_t *l = lv_obj_get_child(g_field, 0);
+    lv_obj_t *l = lv_textarea_get_label(lv_obj_get_child(g_field, 1));
     lv_obj_update_layout(g_field);
     lv_obj_get_coords(l, &a);
     g_left_x = a.x1 + 6;
@@ -774,7 +774,7 @@ static void field_editing(void) {
     where();
     CHECK(g_cur == 0, "a tap at the start puts the cursor there (%d)", (int)g_cur);
     on_ui(find_field_label);
-    CHECK(!strcmp(g_label_text, "|hello world"), "where it is shows (%s)", g_label_text);
+    CHECK(!strcmp(g_label_text, "hello world") && lv_textarea_get_cursor_pos(lv_obj_get_child(g_field, 1)) == 0, "where it is shows (%s)", g_label_text);
     commit("a");
     where();
     CHECK(!strcmp(g_val, "ahello world"), "and what comes goes there (%s)", g_val);
@@ -787,7 +787,7 @@ static void field_editing(void) {
     where();
     CHECK(!strcmp(g_selected, "ahello"), "a long press selects the word (%s)", g_selected);
     on_ui(find_field_label);
-    CHECK(strstr(g_label_text, "[ahello]"), "and it shows (%s)", g_label_text);
+    CHECK(lv_label_get_text_selection_start(lv_textarea_get_label(lv_obj_get_child(g_field, 1))) == 0 && lv_label_get_text_selection_end(lv_textarea_get_label(lv_obj_get_child(g_field, 1))) == 6, "and it shows (%s)", g_label_text);
     CHECK(press("◀"), "the arrows are there");
     delay_ms(300);
     where();
@@ -816,7 +816,7 @@ static void field_editing(void) {
     /* the mark is not a letter of the text */
     cursor_to(2);
     delay_ms(300);
-    g_letter = 3; /* "ah|ello": the e */
+    g_letter = 2; /* Native cursors do not insert a character. */
     on_ui(letter_where);
     tap(g_left_x, g_left_y);
     delay_ms(300);
@@ -827,12 +827,13 @@ static void field_editing(void) {
     commit("一二三四五六七八九十一二三四五六七八九十一二三四五六七八九十");
     delay_ms(300);
     on_ui(find_field_label);
-    CHECK(!strncmp(g_label_text, "一二三", strlen("一二三")) && g_label_text[0] && !strstr(g_label_text, "hello"), "the end of it shows (%s)", g_label_text);
-    on_ui(field_left);
+    CHECK(strstr(g_label_text, "hello") && strstr(g_label_text, "一二三") && lv_obj_get_scroll_x(lv_obj_get_child(g_field, 1)) > 0, "the end of it shows (%s)", g_label_text);
+    where(); g_letter = (int)ink_text_char_offset(g_val, strlen(g_val)) - 2;
+    on_ui(letter_where);
     tap(g_left_x, g_left_y);
     delay_ms(300);
     where();
-    CHECK(g_cur == 12, "a tap on the first letter shown means that one (%d)", (int)g_cur);
+    CHECK(g_cur == (size_t)g_letter, "a tap on a scrolled native letter maps to its text position (%d)", (int)g_cur);
     on_ui(close_field_page);
     delay_ms(500);
 }

@@ -17,6 +17,13 @@ extern "C" {
 lv_obj_t *ink_textfield_create(lv_obj_t *parent, const ink_text_cfg_t *cfg, void (*entered)(void *ctx, const char *value), void *ctx, bool focus);
 const char *ink_textfield_text(lv_obj_t *field);
 
+typedef enum { INK_FIELD_SINGLE, INK_FIELD_BODY, INK_FIELD_SEARCH, INK_FIELD_PASSWORD } ink_textfield_kind_t;
+/* UI task. Geometry belongs to the component; legacy LVGL size overrides are ignored.
+ * Labels remain above the input. Passing NULL keeps the existing label. */
+void ink_textfield_style(lv_obj_t *field, ink_textfield_kind_t kind, const char *label);
+void ink_textfield_error(lv_obj_t *field, const char *message);
+int ink_textfield_height(ink_textfield_kind_t kind);
+
 /* F2, UI task: opt a plain/search or URL field into the short-input host. Use a
  * fixed-position parent; only the field moves above the fixed keyboard, then
  * returns to its original coordinates. No page navigation or scrolling occurs.

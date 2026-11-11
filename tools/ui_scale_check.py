@@ -286,7 +286,7 @@ def violations(source, category, symbols, allowed):
             if name in ('ink_ui_px', 'ink_dp') and len(n.args) == 1: return leaves(n.args[0])
             if category == 'dimension' and name in ('LV_PCT', 'lv_pct') and len(n.args) == 1: return []
             if category == 'dimension' and (name in symbols and getattr(symbols[name], 'ui_contract', False) or
-                name in ('lv_obj_get_width', 'lv_obj_get_height', 'ink_ui_width', 'ink_ui_height', 'ink_ui_line_height', 'ink_ui_row_double', 'ink_ui_text_width', 'ink_ui_text_height')): return []
+                name in ('lv_obj_get_width', 'lv_obj_get_height', 'ink_ui_width', 'ink_ui_height', 'ink_ui_line_height', 'ink_ui_row_double', 'ink_ui_text_width', 'ink_ui_text_height', 'ink_textfield_height')): return []
             return ['unresolved call ' + name]
         contract = any(getattr(item, 'ui_contract', False) for item in ast.walk(n))
         v = evaluate(n)

@@ -94,9 +94,9 @@ static void inspect_page(void) {
     size_t start_byte = ink_text_byte_offset(ink_text_value(), first), end_byte = ink_text_byte_offset(ink_text_value(), last);
     CHECK(boundary(start_byte) && boundary(end_byte), "rendered page avoids splitting UTF-8, accents, ZWJ and flags");
     CHECK(p > 0 && n > 1 && b > a, "long fixture actually spans multiple nonempty pages");
-    lv_obj_t *label = lv_obj_get_child(field, 0);
+    lv_obj_t *label = lv_textarea_get_label(lv_obj_get_child(field, 1));
     const char *visible = lv_label_get_text(label);
-    CHECK(strlen(visible) >= end_byte - start_byte && strstr(visible, "|") != NULL, "actual label renders the page and fixed caret");
+    CHECK(strlen(visible) >= end_byte - start_byte && lv_textarea_get_cursor_pos(lv_obj_get_child(field, 1)) == (uint32_t)(ink_text_cursor() - first), "native textarea renders the complete page with its cursor");
     lv_area_t area, keyboard; lv_obj_get_coords(field, &area); ink_shell_keyboard_area(&keyboard);
     CHECK(area.y2 < keyboard.y1 && !lv_obj_has_flag(field, LV_OBJ_FLAG_SCROLLABLE), "viewport stays above the F2 keyboard without scrolling");
     osal_free(j);
@@ -122,7 +122,7 @@ static void wrong_page(void) {
     CHECK(!ink_text_focused() && first > 0 && page_number == 2, "HOME closes the keyboard on the second page");
     CHECK(ink_textfield_long_snapshot(field, snapshot, sizeof snapshot) > 0 && strstr(snapshot, "\"actions\":[]"),
           "closed keyboard keeps the page readable without advertising unfocused editing actions");
-    lv_obj_t *label = lv_obj_get_child(field, 0);
+    lv_obj_t *label = lv_textarea_get_label(lv_obj_get_child(field, 1));
     ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL); int64_t a = -1, b = -1, p = 0;
     CHECK(j && ink_json_parse(j, snapshot, strlen(snapshot)) == 0 &&
           ink_json_int(j, ink_json_find(j, 0, "start"), &a) && ink_json_int(j, ink_json_find(j, 0, "end"), &b) &&
@@ -189,8 +189,8 @@ static void locate_button(void) {
     point = (lv_point_t){(a.x1 + a.x2) / 2, (a.y1 + a.y2) / 2};
 }
 static void locate_letter(void) {
-    lv_obj_t *label = lv_obj_get_child(field, 0); lv_area_t a;
-    lv_label_get_letter_pos(label, 2, &point); lv_obj_get_coords(label, &a);
+    lv_obj_t *label = lv_textarea_get_label(lv_obj_get_child(field, 1)); lv_area_t a;
+    lv_label_get_letter_pos(label, 1, &point); lv_obj_get_coords(label, &a);
     point.x += a.x1 + ink_ui_px(INK_GAP_XS); point.y += a.y1 + ink_ui_px(INK_GAP_S);
 }
 static void menu_action(const char *text) {

@@ -98,6 +98,7 @@ static void editor_open(void) {
     ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .initial = F.body, .max = sizeof F.body - 1, .draft_page = "FileEdit", .draft_id = F.draft};
     F.field = db ? ink_textfield_long_create(F.screen, &cfg) : NULL;
     if (F.field) {
+        ink_textfield_style(F.field, INK_FIELD_BODY, TR("编辑文本"));
         F.draft = ink_text_draft_id(); ink_jw_t w; ink_jw_init(&w, json, sizeof json); ink_jw_raw(&w, "{\"path\":"); ink_jw_str(&w, F.edit_path); ink_jw_raw(&w, ",\"draft\":"); ink_jw_int(&w, F.draft); ink_jw_raw(&w, "}");
         ink_db_write_t put = {.id = F.ref, .data = json, .len = w.len}; if (ink_db_put(db, &put, &F.ref)) status(TR("草稿引用未能保存")); ink_db_flush(db);
         pair_json(F.target, sizeof F.target, "path", F.edit_path, "page", "FileEdit"); size_t n = strlen(F.target);
@@ -243,9 +244,11 @@ static void selected(void *ctx, const ink_receipt_t *rc) {
     int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP_L, width = INK_CANVAS_W - 2 * INK_MARGIN;
     ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .initial = F.selected.name, .max = INK_FS_NAME_MAX - 1};
     if (writable(F.selected.path)) {
-        F.field = ink_textfield_create(F.screen, &cfg, NULL, NULL, false); lv_obj_set_pos(F.field, ink_ui_px(INK_MARGIN), ink_ui_px(y)); lv_obj_set_size(F.field, ink_ui_px(width), ink_ui_px(INK_CONTROL));
+        F.field = ink_textfield_create(F.screen, &cfg, NULL, NULL, false); lv_obj_set_y(F.field, ink_ui_px(y));
+        ink_textfield_style(F.field, INK_FIELD_SINGLE, TR("文件名"));
         F.actions[0] = (ink_ui_action_spec_t){.id = "name", .label = TR("编辑文件名"), .capability = "files.name", .enabled = true};
         ink_textfield_bind_short(F.field, &F.model, &F.fields[0], &F.actions[0]); lv_obj_add_event_cb(F.field, renamed, LV_EVENT_VALUE_CHANGED, NULL);
+        y += ink_textfield_height(INK_FIELD_SINGLE) - INK_CONTROL;
         button(1, F.screen, TR("改名"), "file.move", F.rename, INK_MARGIN, y + INK_CONTROL + INK_GAP_L, width, false); F.actions[1].id = "rename"; renamed(NULL);
     } else { F.fields[0].role = "text"; ink_ui_line(F.screen, F.selected.name, INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_MARGIN, y, width); }
     F.preview = ink_ui_label(F.screen, "", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y + 2 * (INK_CONTROL + INK_GAP_L), width);
@@ -327,7 +330,8 @@ static void create(lv_obj_t *screen, void *arg) {
     if (F.mode == NAME) {
         F.busy = false; int width = INK_CANVAS_W - 2 * INK_MARGIN;
         ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .initial = F.new_text ? TR("新建文本.txt") : "", .max = INK_FS_NAME_MAX - 1};
-        F.field = ink_textfield_create(screen, &cfg, NULL, NULL, false); lv_obj_set_pos(F.field, ink_ui_px(INK_MARGIN), ink_ui_px(INK_STATUS_BAR + 2 * INK_PRIMARY)); lv_obj_set_size(F.field, ink_ui_px(width), ink_ui_px(INK_CONTROL));
+        F.field = ink_textfield_create(screen, &cfg, NULL, NULL, false); lv_obj_set_y(F.field, ink_ui_px(INK_STATUS_BAR + 2 * INK_PRIMARY));
+        ink_textfield_style(F.field, INK_FIELD_SINGLE, TR("名称"));
         F.fields[0] = (ink_ui_field_spec_t){.id = "name", .label = TR("名称"), .role = "textbox"}; F.model.field_count = 1;
         F.actions[0] = (ink_ui_action_spec_t){.id = "name", .label = TR("名称"), .capability = "files.name", .enabled = true}; ink_textfield_bind_short(F.field, &F.model, &F.fields[0], &F.actions[0]);
         lv_obj_add_event_cb(F.field, renamed, LV_EVENT_VALUE_CHANGED, NULL); button(1, screen, F.new_text ? TR("新建文本") : TR("新建文件夹"), F.new_text ? "file.write" : "file.mkdir", F.rename, INK_MARGIN, INK_CANVAS_H - INK_PRIMARY - INK_MARGIN, width, true);

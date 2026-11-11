@@ -33,7 +33,7 @@ static void find(lv_obj_t *o) {
 }
 static void locate(void) {
     seen = 0; x = y = -1; lv_obj_update_layout(lv_screen_active()); find(lv_screen_active());
-    if (x >= 0 && !strcmp(target, "密码") && ordinal == 0) y += ink_ui_px((ink_ui_line_height(INK_FONT_NOTE) + INK_CONTROL) / 2);
+    if (x >= 0) y += ink_ui_px(ink_ui_line_height(INK_FONT_NOTE) / 2 + INK_FIELD_LABEL_GAP + INK_FIELD_HEIGHT / 2);
 }
 static void press(const char *label, int nth) {
     quiet(); target = label; ordinal = nth; on_ui(locate);
@@ -48,7 +48,7 @@ static void insert(void) {
     CHECK(!strstr(hidden, "SYNTH_APN_SECRET_42"), "typing snapshot hides the password");
     ink_text_enter();
 }
-static void fill(const char *label, const char *text) { press(label, !strcmp(label, "密码") ? 0 : 1); typing = text; on_ui(insert); quiet(); }
+static void fill(const char *label, const char *text) { press(label, 0); typing = text; on_ui(insert); quiet(); }
 static void capture(void *arg) { sim_display_snapshot(arg); }
 static void save_page(void *arg) {
     char path[600]; int n = snprintf(path, sizeof path, "%s/%s.json", g_sim.out_dir, (const char *)arg);

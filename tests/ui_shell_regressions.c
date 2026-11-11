@@ -29,6 +29,7 @@ static const ink_cap_t CAPS[] = {
 static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
 static void quiet(void) { CHECK(WAIT_FOR(settled(), 10000), "the panel settles"); }
 static int count_icons(lv_obj_t *root) {
+    if (!lv_obj_is_visible(root)) return 0;
     int count = lv_obj_check_type(root, &lv_image_class) ? 1 : 0;
     for (uint32_t i = 0; i < lv_obj_get_child_count(root); i++) count += count_icons(lv_obj_get_child(root, (int32_t)i));
     return count;
@@ -167,7 +168,8 @@ static void check_search_layout(void) {
     CHECK(label, "the real Apps search field is visible");
     if (!label) return;
     lv_obj_t *field = lv_obj_get_parent(label);
-    CHECK(count_icons(field) == 1, "search includes exactly one search icon");
+    CHECK(count_icons(field) == 1, "search includes exactly one visible search icon");
+    label = lv_textarea_get_label(lv_obj_get_child(field, 1));
     lv_area_t text, bounds; lv_obj_get_coords(label, &text); lv_obj_get_coords(field, &bounds);
     for (uint32_t i = 0; i < lv_obj_get_child_count(field); i++) {
         lv_obj_t *icon = lv_obj_get_child(field, (int32_t)i);

@@ -332,9 +332,10 @@ static void action(ink_call_t *c) {
         S.field = ink_textfield_create(S.body, &cfg, entered, NULL, false);
         lv_obj_set_pos(S.field, ink_ui_px(INK_MARGIN), ink_ui_px(INK_GAP_L));
         ink_textfield_bind_short(S.field, &S.model, &S.input[0], &S.form[0]);
+        ink_textfield_style(S.field, INK_FIELD_SINGLE, S.input[0].label);
         snprintf(S.args[0], sizeof S.args[0], "{\"id\":\"%s\"}", S.target); S.form[3].args_json = S.args[0];
         for (int i = 1; i < 5; i++) if (S.form[i].enabled) {
-            lv_obj_t *b = ink_ui_pill(S.body, i == 2 ? TR("孩子") : S.form[i].label, INK_MARGIN, i * (INK_CONTROL + INK_GAP) + INK_GAP_L, INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, false, NULL, NULL);
+            lv_obj_t *b = ink_ui_pill(S.body, i == 2 ? TR("孩子") : S.form[i].label, INK_MARGIN, (i - 1) * (INK_CONTROL + INK_GAP) + ink_textfield_height(INK_FIELD_SINGLE) + INK_GAP + INK_GAP_L, INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, false, NULL, NULL);
             ink_shell_bind(b, S.form[i].capability, S.form[i].args_json); if (i == 2) S.role = b;
         }
     } else if (S.list && !S.field) {
