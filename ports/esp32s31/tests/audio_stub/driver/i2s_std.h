@@ -13,11 +13,21 @@ typedef int esp_err_t;
 #define I2S_SLOT_MODE_STEREO 2
 #define I2S_CLK_SRC_DEFAULT 0
 #define I2S_MCLK_MULTIPLE_256 256
+#define I2S_SLOT_BIT_WIDTH_AUTO 0
+#define I2S_STD_SLOT_BOTH 3
+#define I2S_DESTINATION_DMA 0
+#define SOC_I2S_HW_VERSION_2 1
 typedef struct fake_i2s *i2s_chan_handle_t;
-typedef struct { int id, role, dma_desc_num, dma_frame_num; bool auto_clear_after_cb; } i2s_chan_config_t;
 typedef struct {
-    struct { int sample_rate_hz, clk_src, mclk_multiple, bclk_div; } clk_cfg;
-    struct { int data_bit_width, slot_mode; } slot_cfg;
+    int id, role, dma_desc_num, dma_frame_num, intr_priority, tx_destination, rx_destination;
+    bool auto_clear_after_cb, auto_clear_before_cb, allow_pd;
+} i2s_chan_config_t;
+typedef struct {
+    struct { int sample_rate_hz, clk_src, mclk_multiple, bclk_div, ext_clk_freq_hz; } clk_cfg;
+    struct {
+        int data_bit_width, slot_mode, slot_bit_width, slot_mask, ws_width;
+        bool ws_pol, bit_shift, left_align, big_endian, bit_order_lsb;
+    } slot_cfg;
     struct { int mclk, bclk, ws, dout, din; } gpio_cfg;
 } i2s_std_config_t;
 typedef struct { size_t size; } i2s_event_data_t;

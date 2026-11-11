@@ -14,7 +14,7 @@
 static struct {
     osal_mutex_t *lock;
     hal_uart_t *uart;
-    unsigned epoch;
+    unsigned epoch, completed;
     int mode;
     bool suspended, connected, capture, call, sco;
     char addr[18];
@@ -25,6 +25,7 @@ static struct {
 void ink_s31_bh_init(void) {
     B.lock = osal_mutex_create();
     B.epoch = UINT_MAX;
+    B.completed = UINT_MAX;
     if (!B.lock) osal_panic("BH1098: mutex setup failed");
 }
 static bool ink_lock(void) {
@@ -40,16 +41,10 @@ static int ink_send(const char *cmd) {
     return hal_uart_write(B.uart, cmd, n) == (int)n ? 0 : -1;
 }
 static void ink_link(bool on) {
-    __atomic_store_n(&B.connected, on, __ATOMIC_RELEASE);
     if (!on) { B.addr[0] = 0; B.sco = false; }
+    __atomic_store_n(&B.connected, on, __ATOMIC_RELEASE);
 }
-static void ink_response(const char *line) {
-    /* bluetooth_uart.cc:243-255: mode 1 ends the headset connection. */
-    if (!strcmp(line, "SET MODE 1")) {
-        B.mode = 1;
-        ink_link(false);
-    }
-}
+#include "../../vendor/metalio_bh1098/response.inc"
 static int ink_read(char *line, size_t cap, uint32_t ms) {
     int n = hal_uart_read_line(B.uart, line, cap, ms);
     if (n < 0) return n;
@@ -71,13 +66,13 @@ static int ink_wait(const char *reply, uint32_t ms) {
     }
     return -1;
 }
+#include "../../vendor/metalio_bh1098/mode.inc"
 static int ink_mode(int mode) {
     /* bluetooth_uart.cc:365-385; metalio_audio.cc:24-27,94-126. */
     if (B.mode == mode) return 0;
     if (metalio_board_set(0, MB_P0_AMP, 0) != HAL_I2C_OK) return -1;
     char ack[16];
     snprintf(ack, sizeof ack, "SET MODE %d", mode);
-    B.mode = 0;
     if (bh1098g_set_mode(B.uart, mode) || ink_wait(ack, 1000)) return -1;
     B.mode = mode;
     B.sco = false;
@@ -87,16 +82,15 @@ static bool ink_ready(void) {
     if (!ink_powered()) return false;
     unsigned epoch = metalio_board_shared_power_epoch();
     if (B.epoch != epoch || !B.uart || !B.mode) {
+        if (B.completed == epoch) return false;
         /* metalio_audio.cc:25-27,153-161,225-235: settle once per power epoch. */
         ink_link(false);
         B.mode = 0;
-        uint64_t ready = metalio_board_shared_power_since_us() + BH1098G_BOOT_US;
-        uint64_t now = osal_now_us();
-        if (now < ready) osal_task_delay_us(ready - now);
+        B.completed = epoch;
         B.uart = hal_uart_open(BH1098G_UART_PORT, BH1098G_BAUD);
         if (!B.uart) return false;
         if (!ink_s31_uart_discard(B.uart)) return false;
-        if (ink_mode(1)) return false;
+        if (metalio_board_set(0, MB_P0_AMP, 0) != HAL_I2C_OK || !ink_vendor_init_mode(epoch)) return false;
         B.epoch = epoch;
     }
     return B.mode != 0;
@@ -115,15 +109,13 @@ bool ink_s31_bh_amp(bool on) {
     return ok;
 }
 static int ink_sco(bool on) {
-    /* bluetooth_uart.cc:439-466: fixed 200 ms spacing; also check documented reports. */
+    /* bluetooth_uart.cc:439-466: fixed spacing; reports are not a success gate. */
     if (on == B.sco) return 0;
     if (on) {
-        B.sco = true; /* The normal stop path must close SCO even after an ACK timeout. */
-        if (bh1098g_headset_call(B.uart) || ink_wait("SETUP SCO", 1000)) return -1;
+        B.sco = true; /* The stop path closes SCO after a partial send, too. */
+        if (bh1098g_headset_call(B.uart)) return -1;
     } else {
-        if (ink_send("AT+BTSCO=0\r\n")) return -1;
-        osal_task_delay_us(200000);
-        if (ink_send("AT+PP=1\r\n") || ink_wait("DISC SCO", 1000)) return -1;
+        if (bh1098g_headset_music(B.uart)) return -1;
     }
     B.sco = on;
     return 0;
@@ -141,17 +133,23 @@ void ink_s31_bh_call(bool on) {
     if (B.connected && ink_sco(on || B.capture)) hal_log_write("BH1098: call audio change failed");
     ink_unlock();
 }
-int ink_s31_bh_route(hal_audio_route_t route) {
+static int ink_route(hal_audio_route_t route, const char *addr) {
     if (!ink_lock()) return -1;
     int rc = -1;
+    bool linked = B.connected;
     if (route == HAL_ROUTE_BT_HEADSET) rc = B.connected && B.mode == 2 ? 0 : -1;
-    else if (route == HAL_ROUTE_SPEAKER) {
+    else if (route == HAL_ROUTE_SPEAKER && (!addr || !strcmp(B.addr, addr))) {
         rc = !B.mode && !B.connected ? 0 : ink_ready() ? ink_mode(1) : -1;
         if (!rc) ink_link(false);
     }
+    bool lost = linked && !B.connected;
+    void (*event)(void *, hal_bt_event_t) = B.event;
+    void *ctx = B.ctx;
     ink_unlock();
+    if (lost && event) event(ctx, HAL_BT_EV_LOST);
     return rc;
 }
+int ink_s31_bh_route(hal_audio_route_t route) { return ink_route(route, NULL); }
 bool hal_bt_available(void) { return B.lock && metalio_board_ready(); }
 static bool ink_address(const char *addr, char hex[13]) {
     if (!addr || strlen(addr) != 17) return false;
@@ -235,10 +233,8 @@ int hal_bt_connect(const char *addr) {
 }
 void hal_bt_disconnect(void) { (void)ink_s31_bh_route(HAL_ROUTE_SPEAKER); }
 void hal_bt_forget(const char *addr) {
-    if (!ink_lock()) return;
     /* protocol.md:112-114: chip-side pairing removal is unspecified; host DB owns forgetting. */
-    if (addr && B.connected && !strcmp(B.addr, addr) && !ink_mode(1)) ink_link(false);
-    ink_unlock();
+    if (addr) (void)ink_route(HAL_ROUTE_SPEAKER, addr);
 }
 void hal_bt_on_event(void (*fn)(void *, hal_bt_event_t), void *ctx) {
     if (!ink_lock()) return;
@@ -258,8 +254,10 @@ void ink_s31_bh_poll(void) {
     void (*event)(void *, hal_bt_event_t) = B.event;
     void *ctx = B.ctx;
     bool lost = linked && !B.connected;
+    bool gained = !linked && B.connected;
     ink_unlock();
     if (lost && event) event(ctx, HAL_BT_EV_LOST);
+    if (gained && event) event(ctx, HAL_BT_EV_CONNECTED);
 }
 void ink_s31_bh_suspend(void) {
     if (!ink_lock()) return;
@@ -277,5 +275,6 @@ void ink_s31_bh_resume(void) {
     B.suspended = false;
     B.uart = NULL;
     B.epoch = UINT_MAX;
+    B.completed = UINT_MAX;
     ink_unlock();
 }
