@@ -1,14 +1,20 @@
 # lock-faces-2 执行报告
 
-基线：`42e3b1f051650827bacb7638101d14bbf6b4bdc4`。日期：2026-11-12。实现与针对性验证完成，全量检查进行中。**锁屏自动走时仍受文件范围限制，不能作为完整功能验收通过。**
+基线：`42e3b1f051650827bacb7638101d14bbf6b4bdc4`。日期：2026-11-12。实现、针对性验证及普通全量检查完成，ASan 全量检查进行中。**锁屏自动走时仍受文件范围限制，不能作为完整功能验收通过。**
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 部分完成【实测】 | 真实设置页 289 条、分钟事件及像素 35 条、原矩阵与扩展 487 条全部过；7 组反向均触发预期断言；自动调度缺口见下文 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/lock_faces.py --build build`；`tests/lock_faces_reverse.py --build build` |
-| 2 | 待验证 | 普通全量、ASan/UBSan、GCC 检查；S31 按任务书由合并主会话编译 | 待运行 |
-| 3 | 通过【实测】 | [20 张截图](SCREENSHOTS.md)，含选择页、六种表盘的 100%／120%、成员隔离及英文 | 同上；英文加 `INK_LOCK_FACES_CASE=english` |
+| 1a | 通过【实测】 | 选择页 289 条，六种表盘均由真实点按和 AI `settings.set` 选中，两个小组件开关可用 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/lock_faces.py --build build` |
+| 1b | 通过【实测】 | 分钟事件及像素 35 条：只改时钟矩形，同一分钟像素及版本不变 | 同上，`INK_LOCK_FACES_CASE=tick` |
+| 1c | 未完成【实测／实现】 | 自然分钟、自然跨日：时间服务在锁屏时取消调度；独立探针明确失败，非超时 | 同上，`INK_LOCK_FACES_CASE=auto`；见“没做到的” |
+| 1d | 通过【实测】 | 跨日、相同分钟换日及闰二月正向过；跨日反向到达预期断言 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/lock_faces_reverse.py --build build --case day` |
+| 1e | 通过【实测】 | 换成员重建，孩子及关闭的成人空间无成人待办／阅读内容；本人验证后继续第 5 页 | 正向命令；反向 `--case member`、`--case reading` |
+| 1f | 通过【实测】 | 原 343 条覆盖保留并扩展为矩阵 487 条；7 组反向均触发预期断言 | 正向与完整反向命令 |
+| 2 | 普通全量通过【实测】 | 414 项，0 失败、3 跳过；ASan 专项 811 条过、全量进行中；GCC 9 个文件无发现；S31 留给合并主会话 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2` |
+| 3 | 通过【实测】 | [20 张截图](SCREENSHOTS.md)，含选择页、六种表盘的 100%／120%、成员隔离及英文 | 正向命令；英文加 `INK_LOCK_FACES_CASE=english` |
+| 4 | 通过【实测／实现】 | 新增 1901～2100 年节气日期查询，完整 MIT 许可与来源哈希；2026 年 24 个日期独立对照过 | 正向命令中的 `solar_terms` 检查；反向 `--case solar` |
 
 ## 没做到的
 
@@ -64,6 +70,13 @@
 
 - 产品代码新增 149 行、删除 33 行、净增 116 行（含节气表，不含测试、翻译数据和文档），小于 300 行预算。超过 100 行的原因：独立选择页与快照、时间事件接线、31 处翻译接入，以及任务要求的 200 年节气表是独立验收内容。看过更小做法：保留三档循环不符合单选页合同；只依赖分钟数不能发现相同分钟跨日；节气近似公式不符合来源合同。
 - 【实现】选择页只有呈现和导航；按钮与 AI 均调用 `settings.set`，设置服务仍负责权限、成员值和保存；时间来自时间服务事件，农历与节气来自同一时间模块，未新增界面计时器。页面与锁屏均有 AI 快照，成员组件仍由原数据集合和阅读能力供给。
+
+## 检查结果
+
+- 【实测】普通工程按总规则第 5 节配置（Werror、给定字体／Python／LVGL），`taskpolicy -c utility cmake --build build -j2` 成功；最终普通全量原话：`100% tests passed out of 414`，`Total Test time (real) = 608.85 sec`。所要求的 `ui-scale`、各 i18n 检查、`capability-table-doc` 均过。
+- 【实测】三个中枢测试跳过：`hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e`；本检出缺锁定的中枢 Python 环境及其生成消息。未安装或升级依赖，未把跳过写成实际通过。
+- 【实测】`ink-codex/tools/gcccheck.py` 检查 6 个修改的产品 C 文件和 3 个相关测试 C 文件，原话：`gcccheck: 9 compiled, 0 with findings`。未运行 Linux CI；S31 固件按本任务要求由合并主会话编译。
+- 【实测】指定隐私正则扫描基线至当前提交：0 命中，grep 返回 1；`git diff --check` 无输出；任务文档链接、文件范围及单文件大小检查过。
 
 ## 上机核对清单
 
