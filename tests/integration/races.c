@@ -308,12 +308,22 @@ static void someone_else_while_the_background_is_busy(void) {
     CHECK(in_inbox("王老师"), "it went in the inbox of who was there");
 }
 
+static bool cell_registered(void) {
+    bool on = false;
+    ink_state_get_bool(ink_state_find("cell.registered"), &on);
+    return on;
+}
 static void test_task(void *arg) {
     (void)arg;
     g_test_task = osal_task_self();
     delay_ms(1500);
     ink_hub_demand();
     CHECK(WAIT_FOR(ink_hub_online(), 30000), "online");
+    /* The comm service's first look sets the radio and then looks at registering on exec.bg (b2e5a6c1); the moments
+     * below time exec.bg, so they start once that start-up work is over (as mobile-network does). */
+    CHECK(WAIT_FOR(sim_metric_value("comm.radio_set") >= 1, 15000), "the first look set the radio");
+    CHECK(WAIT_FOR(ink_state_find("cell.registered") >= 0 && cell_registered(), 15000), "the card registered");
+    delay_ms(500);
     notification_for_someone();
     events_stay_with_who_they_are_about();
     interruption_ended_at_once();
