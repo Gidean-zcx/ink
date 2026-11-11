@@ -47,11 +47,14 @@ static void locate_app(void) {
 static void capture(void *arg) { (void)arg; CHECK(settled(), "capture is settled"); sim_display_snapshot(shot); }
 static void scene(const char *name) { quiet(); inspect(); snprintf(shot, sizeof shot, "%s", name); vtk_host_call(export_page, NULL); vtk_event_at(vtk_now() + SIM_MS(1), capture, NULL); delay_ms(5); }
 static void replace_input(void) { ink_text_select(0, ink_text_char_offset(ink_text_value(), strlen(ink_text_value()))); }
+static void finish_draft(void) { ink_text_blur(0); }
 static void enter(const char *cap, const char *value) {
     CHECK(AI(cap, NULL) && g_rc.status == INK_RC_DONE, "focus %s", cap); quiet(); on_ui(replace_input);
     snprintf(arguments, sizeof arguments, "{\"text\":\"%s\"}", value);
     CHECK(AI("text.insert", arguments) && g_rc.status == INK_RC_DONE, "edit through shared input");
-    CHECK(AI("text.submit", NULL) && g_rc.status == INK_RC_DONE, "submit shared input"); quiet();
+    if (!strcmp(cap, "sms.text")) on_ui(finish_draft);
+    else CHECK(AI("text.submit", NULL) && g_rc.status == INK_RC_DONE, "submit shared input");
+    quiet();
 }
 static void normalization(void) {
     int before = sim_net_sms_sent();

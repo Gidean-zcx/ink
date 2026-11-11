@@ -37,7 +37,7 @@ def exercise(binary, tag, expected=None, verify=False, state=None):
     if expected:
         ok = result.returncode != 0 and metrics.get('test.fail', 0) > 0 and any(expected in w for w in data.get('warnings', []))
     else:
-        ok = result.returncode == 0 and metrics.get('test.finished') == 1 and not metrics.get('test.fail') and not data.get('warnings') and len(frames) == (0 if verify else 18)
+        ok = result.returncode == 0 and metrics.get('test.finished') == 1 and not metrics.get('test.fail') and not data.get('warnings') and len(frames) == (0 if verify else 20)
     summary = {'case': tag, 'exit': result.returncode, 'passes': metrics.get('test.pass', 0),
                'failures': metrics.get('test.fail', 0), 'frames': len(frames), 'expected_result': ok}
     summary['query_us'] = [list(map(float, line.split()[1:])) for line in result.stdout.splitlines() if line.startswith('NINE_BENCH ')]

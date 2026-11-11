@@ -18,6 +18,7 @@
 
 enum { SMS_ROWS = 4, SMS_VISIBLE = 8, SMS_LIMIT = 512 };
 extern int ink_contacts_match(const char *query, bool exact, char *name, char *number);
+extern ink_source_t ink_shell_keyboard_enter_source(void);
 static const ink_activity_t LIST, THREAD, COMPOSE, LONG;
 static struct {
     ink_db_t *db;
@@ -124,8 +125,8 @@ static void reply(void *ctx, const ink_receipt_t *rc) {
     else if (rc->status == INK_RC_DONE) ink_ui_redraw(); else if (S.notice) lv_label_set_text(S.notice, S.result);
     ink_shell_airplane_card(rc);
 }
-static void request(const char *cap, const ink_args_t *args) {
-    ink_call_opts_t o = {.src = INK_SRC_TOUCH, .member = S.member, .reply_exec = INK_EXEC_UI, .done = reply, .ctx = (void *)(uintptr_t)ink_ui_generation()};
+static void request(const char *cap, const ink_args_t *args, ink_source_t src) {
+    ink_call_opts_t o = {.src = src, .member = S.member, .reply_exec = INK_EXEC_UI, .done = reply, .ctx = (void *)(uintptr_t)ink_ui_generation()};
     if (ink_cap_call(cap, args, &o) != 0) { if (S.send) lv_obj_remove_state(S.send, LV_STATE_DISABLED); if (S.notice) lv_label_set_text(S.notice, TR("没有完成，请重试")); }
 }
 static void selected(void *ctx, const ink_receipt_t *rc) {
@@ -167,9 +168,10 @@ static void navigate(ink_call_t *c) {
         else { snprintf(S.draft, sizeof S.draft, "%s", ink_textfield_text(S.field)); ink_ui_push(&LONG, NULL); }
     } else if (!S.field || ink_textfield_short_focus(S.field) != 0) c->rc.status = INK_RC_STALE;
 }
-static void entered(void *ctx, const char *value) { (void)ctx; S.draft_ref.id = 0; snprintf(S.draft, sizeof S.draft, "%s", value); }
+static void send_clicked(lv_event_t *e);
+static void entered(void *ctx, const char *value) { (void)ctx; S.draft_ref.id = 0; snprintf(S.draft, sizeof S.draft, "%s", value); send_clicked(NULL); }
 static void send_clicked(lv_event_t *e) {
-    (void)e; ink_args_t *a = ink_app_alloc(sizeof *a, true); if (!a) return;
+    ink_args_t *a = ink_app_alloc(sizeof *a, true); if (!a) return;
     ink_args_init(a); ink_args_str(a, "to", S.to);
     if (ink_args_str(a, "text", ink_textfield_text(S.field)) != 0) {
         const char *page = S.draft_ref.id && !strcmp(S.to, S.draft_ref.to) && !strcmp(S.draft, ink_textfield_text(S.field)) ? LONG.name : COMPOSE.name;
@@ -184,7 +186,7 @@ static void send_clicked(lv_event_t *e) {
     }
     lv_obj_add_state(S.send, LV_STATE_DISABLED); ink_ui_busy_control(S.send, true); lv_label_set_text(S.notice, TR("发送中"));
     if (S.thread_slot) lv_label_set_text(S.parts, "");
-    request("message.send", a); ink_app_free(a);
+    request("message.send", a, e ? INK_SRC_TOUCH : ink_shell_keyboard_enter_source()); ink_app_free(a);
 }
 static size_t text_end(const char *text, size_t start) {
     size_t end = start, len = strlen(text); char *scratch = S.scratch;
@@ -211,6 +213,19 @@ static void bind_item(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, 
     *field = (ink_ui_field_spec_t){.id = S.ids[at], .role = "listitem", .label = S.labels[at], .value = S.texts[at], .object = {S.ids[at], ink_db_last_ver(S.db)}};
     *action = (ink_ui_action_spec_t){.id = S.ids[at], .label = TR("打开会话"), .capability = "sms.thread", .args_json = S.args[at], .object = field->object, .enabled = true};
 }
+static void time_label(int64_t seconds, char *out, size_t cap) {
+    ink_tm_t tm, today, yesterday;
+    ink_time_to_local(seconds, &tm); ink_time_to_local(ink_time_now_s(), &today);
+    today.hour = today.min = today.sec = 0;
+    ink_time_to_local(ink_time_from_local(&today) - 1, &yesterday);
+    if (tm.year == today.year && tm.month == today.month && tm.day == today.day)
+        snprintf(out, cap, "%02d:%02d", tm.hour, tm.min);
+    else if (tm.year == yesterday.year && tm.month == yesterday.month && tm.day == yesterday.day)
+        snprintf(out, cap, TR("昨天 %02d:%02d"), tm.hour, tm.min);
+    else if (tm.year == today.year)
+        snprintf(out, cap, TR("%d月%d日 %02d:%02d"), tm.month, tm.day, tm.hour, tm.min);
+    else snprintf(out, cap, TR("%d年%d月%d日 %02d:%02d"), tm.year, tm.month, tm.day, tm.hour, tm.min);
+}
 /* Pack from the newest fragment backwards; reserve a time above each page's first bubble. */
 static void thread_layout(size_t wanted) {
     size_t page = 0, n = 0; int used = 0, stamp_h = ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_S;
@@ -219,8 +234,8 @@ static void thread_layout(size_t wanted) {
         char peer[24], status[96], state[128]; read_message(S.db, S.rows[row], peer, S.row, status);
         bool own = strcmp(status, "收到") != 0;
         snprintf(state, sizeof state, "%s%s%s%s", TR(status), !strcmp(status, TR("发送失败，未发出")) ? "（" : "", !strcmp(status, TR("发送失败，未发出")) ? TR("点按重发") : "", !strcmp(status, TR("发送失败，未发出")) ? "）" : "");
-        ink_rec_t rec = {0}; ink_db_get(S.db, S.rows[row], &rec, NULL, 0); ink_tm_t tm; ink_time_to_local(rec.updated_s, &tm); char timestamp[32];
-        snprintf(timestamp, sizeof timestamp, "%04d-%02d-%02d %02d:%02d", tm.year, tm.month, tm.day, tm.hour, tm.min);
+        ink_rec_t rec = {0}; ink_db_get(S.db, S.rows[row], &rec, NULL, 0); char timestamp[32];
+        time_label(rec.updated_s, timestamp, sizeof timestamp);
         for (size_t part = S.pages[row + 1] - S.pages[row]; part-- > 0;) {
             size_t start = 0; for (size_t i = 0; i < part; i++) start = text_end(S.row, start);
             size_t end = text_end(S.row, start); memcpy(S.scratch, S.row + start, end - start); S.scratch[end - start] = 0;
@@ -289,12 +304,11 @@ static void build_rows(bool thread) {
         S.rows[S.count++] = r.id;
     }
     if (thread) {
-        int64_t anchor = 0; bool previous = false;
+        int64_t previous = 0;
         for (size_t i = S.count; i-- > 0;) {
-            read_message(S.db, S.rows[i], peer, text, status); ink_db_get(S.db, S.rows[i], &r, NULL, 0); bool own = strcmp(status, "收到") != 0;
-            S.groups[i] = !anchor || own != previous || r.updated_s - anchor > 300;
-            if (S.groups[i]) anchor = r.updated_s;
-            previous = own;
+            ink_db_get(S.db, S.rows[i], &r, NULL, 0);
+            S.groups[i] = i + 1 == S.count || r.updated_s - previous >= 300;
+            previous = r.updated_s;
         }
         thread_layout(SIZE_MAX);
     }
@@ -309,7 +323,7 @@ static void reply_field(lv_obj_t *screen) {
     /* Do not dirty the new field at its temporary origin. */
     lv_display_t *display = lv_obj_get_display(screen); lv_display_enable_invalidation(display, false);
     int bottom = INK_CANVAS_H - INK_MARGIN - INK_CONTROL;
-    ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .enter = INK_ENTER_DONE, .max = INK_SMS_TEXT_MAX - 1, .initial = S.draft, .hint = TR("内容")};
+    ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .enter = INK_ENTER_SEND, .max = INK_SMS_TEXT_MAX - 1, .initial = S.draft, .hint = TR("内容")};
     S.field = ink_textfield_create(screen, &cfg, entered, NULL, false); lv_obj_set_pos(S.field, ink_ui_px(INK_MARGIN + INK_PRIMARY + INK_GAP), ink_ui_px(bottom));
     lv_obj_set_width(S.field, ink_ui_px(INK_CANVAS_W - 2 * INK_MARGIN - 2 * INK_PRIMARY - 2 * INK_GAP));
     ink_textfield_bind_short(S.field, &S.form, &S.fields[0], &S.actions[0]); lv_obj_add_event_cb(S.field, parts_note, LV_EVENT_VALUE_CHANGED, NULL);
@@ -356,7 +370,7 @@ static void create(lv_obj_t *screen, void *arg) {
             S.suggestion = ink_ui_pill(screen, "", INK_MARGIN, top + INK_LINE_NOTE + INK_CONTROL + 2 * INK_GAP, INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, false, NULL, NULL); recipient_edited(NULL);
             if (ink_contacts_match("", false, S.match_name, S.match_number) < 0) {
                 ink_args_t *a = ink_app_alloc(sizeof *a, true);
-                if (a) { ink_args_init(a); ink_args_str(a, "collection", "phone.contacts"); ink_args_int(a, "limit", 1); request("data.list", a); ink_app_free(a); }
+                if (a) { ink_args_init(a); ink_args_str(a, "collection", "phone.contacts"); ink_args_int(a, "limit", 1); request("data.list", a, INK_SRC_TOUCH); ink_app_free(a); }
             }
             return;
         }
@@ -367,7 +381,7 @@ static void create(lv_obj_t *screen, void *arg) {
         ink_args_t *a = ink_app_alloc(sizeof *a, true);
         if (a) {
             ink_args_init(a); ink_args_str(a, "collection", !S.db ? "sms.messages" : "phone.contacts");
-            ink_args_int(a, "limit", 1); request("data.list", a); ink_app_free(a);
+            ink_args_int(a, "limit", 1); request("data.list", a, INK_SRC_TOUCH); ink_app_free(a);
             /* Coalesce a quick cold inbox read with the first screen refresh. */
             if (!compose && !thread) lv_timer_reset(lv_display_get_refr_timer(lv_obj_get_display(screen)));
         }

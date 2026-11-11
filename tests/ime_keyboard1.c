@@ -54,6 +54,7 @@ static void functional(void) {
     ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .max = 128};
     CHECK(!ink_text_english(), "a fresh process starts in Chinese");
     CHECK(ink_text_focus(&cfg, NULL, NULL) > 0, "focus plain input");
+    lv_area_t normal; ink_shell_keyboard_area(&normal);
     expect_mode(false);
     expect_icon(KEY_SHIFT, TR("大写")); expect_icon(KEY_BACKSPACE, TR("删除"));
     CHECK(strstr(snapshot, "大写=keyboard.key(2)") && strstr(snapshot, "删除=keyboard.key(8)"), "icon labels are in semantic snapshot");
@@ -95,11 +96,20 @@ static void functional(void) {
         ink_text_key(INK_TEXT_KEY_LANGUAGE);
         CHECK(ink_text_english() && !ink_text_value()[0], "specialized input ignores language code: %d", cfg.type);
         if (cfg.type == INK_TEXT_PASSWORD) {
+            lv_area_t compact, actual; ink_shell_keyboard_area(&compact); lv_obj_update_layout(K.root); lv_obj_get_coords(K.root, &actual);
+            int saved = ink_ui_px(ink_ui_line_height(INK_FONT_LIST) + candidates_height() + 2 * INK_KB_GAP);
+            CHECK(compact.y1 - normal.y1 == saved && actual.y1 == compact.y1, "password keyboard removes the entire candidate band from its reported and actual height");
+            CHECK(!lv_obj_is_visible(K.cands) && !lv_obj_is_visible(K.composing), "password hides candidates and composing");
+            touch(KEY_SWITCH); ink_shell_keyboard_area(&actual);
+            CHECK(actual.y1 == compact.y1 && !lv_obj_is_visible(K.cands), "password symbols retain the compact height");
+            touch(KEY_SWITCH);
             CHECK(ai_key(INK_TEXT_KEY_LANGUAGE) == INK_RC_REJECTED, "AI cannot operate a password field");
             touch('n'); touch('i');
             CHECK(!strcmp(ink_text_value(), "ni") && !ink_text_composing()[0], "password letters stay literal");
             CHECK(ink_ui_context_snapshot(snapshot, sizeof snapshot, NULL) > 0 && !strstr(snapshot, "\"ni\""), "password value stays masked");
         } else if (cfg.type == INK_TEXT_URL) {
+            lv_area_t restored; ink_shell_keyboard_area(&restored); lv_obj_update_layout(K.root);
+            CHECK(restored.y1 == normal.y1 && lv_obj_is_visible(K.composing) && lv_obj_is_visible(K.cands), "leaving password symbols restores ordinary input geometry");
             touch('n'); touch('i'); touch(KEY_SWITCH); touch('.');
             CHECK(!strcmp(ink_text_value(), "ni.") && !ink_text_composing()[0], "URL keeps literal letters and punctuation");
         } else {
@@ -109,6 +119,8 @@ static void functional(void) {
     }
     cfg.type = INK_TEXT_PLAIN;
     CHECK(ink_text_focus(&cfg, NULL, NULL) > 0, "return to plain input");
+    lv_area_t restored; ink_shell_keyboard_area(&restored);
+    CHECK(restored.y1 == normal.y1 && lv_obj_is_visible(K.cands), "returning to plain input restores its candidate band");
     expect_mode(true);
     ink_text_blur(0);
 }
@@ -255,6 +267,34 @@ static void chinese_scene(void) {
     ink_text_key('n'); ink_text_key('i');
 }
 static void end_scene(void) { ink_text_blur(0); }
+static void wifi_environment(void *arg) { (void)arg; sim_wifi_ap_add("SYNTH_POLISH_WIFI", -42, "SYNTHETIC_PASSWORD"); }
+static void read_wifi_page(void) { CHECK(ink_ui_snapshot(snapshot, sizeof snapshot, NULL) > 0, "read real Wi-Fi page"); }
+static bool wifi_scanned(void) { on_ui(read_wifi_page); return strstr(snapshot, "SYNTH_POLISH_WIFI") != NULL; }
+static lv_obj_t *scan_button;
+static void find_scan(lv_obj_t *obj) {
+    const char *cap = ink_shell_bound_cap(obj);
+    if (cap && !strcmp(cap, "wifi.scan")) scan_button = obj;
+    for (uint32_t i = 0; i < lv_obj_get_child_count(obj); i++) find_scan(lv_obj_get_child(obj, i));
+}
+static void scan_wifi(void) {
+    scan_button = NULL; find_scan(lv_screen_active());
+    if (scan_button) lv_obj_send_event(scan_button, LV_EVENT_CLICKED, NULL);
+}
+static int password_fields;
+static void inspect_password_field(lv_obj_t *obj) {
+    if (!lv_obj_is_visible(obj)) return;
+    if (lv_obj_check_type(obj, &lv_textarea_class) && lv_textarea_get_password_mode(obj)) {
+        lv_area_t field, keyboard; ink_shell_keyboard_area(&keyboard); lv_obj_update_layout(obj); lv_obj_get_coords(lv_obj_get_parent(obj), &field);
+        CHECK(field.y1 >= 0 && field.y2 < keyboard.y1 && field.x1 >= 0 && field.x2 <= keyboard.x2, "real Wi-Fi password label and input fit above the compact keyboard");
+        password_fields++;
+    }
+    for (uint32_t i = 0; i < lv_obj_get_child_count(obj); i++) inspect_password_field(lv_obj_get_child(obj, i));
+}
+static void wifi_layout(void) {
+    password_fields = 0; inspect_password_field(lv_screen_active());
+    CHECK(password_fields == 1 && ink_text_type() == INK_TEXT_PASSWORD, "real Wi-Fi page focuses exactly one password field");
+    CHECK(!lv_obj_is_visible(K.cands) && !lv_obj_is_visible(K.composing), "real password page has no candidate or composing band");
+}
 static bool verify_layout;
 static void host_mode(void *arg) { (void)arg; verify_layout = getenv("INK_IME_LAYOUT_VERIFY") != NULL; }
 static void remember_layout(void) {
@@ -288,6 +328,7 @@ static void run(void *arg) {
         return;
     }
     on_ui(functional);
+    vtk_event_at(vtk_now() + SIM_US(1), wifi_environment, NULL);
     py_want_dict(NULL);
     CHECK(WAIT_FOR(py_dict_loaded(), 5000), "shipping IKD1 loads before nine-key acceptance");
     on_ui(nine_owner);
@@ -316,6 +357,16 @@ static void run(void *arg) {
             on_ui(end_scene);
             CHECK(BY_HAND("system.home", NULL) && WAIT_FOR(!ink_text_focused(), 10000), "close screenshot host");
         }
+        CHECK(BY_HAND("shell.network", NULL), "open real network settings");
+        for (int i = 0; i < 4; i++) {
+            on_ui(scan_wifi);
+            if (scan_button) break;
+            CHECK(BY_HAND("shell.page_next", NULL), "find network scan control");
+        }
+        CHECK(WAIT_FOR(wifi_scanned(), 10000), "synthetic Wi-Fi appears in the real scan results");
+        CHECK(BY_HAND("shell.wifi_pick", "{\"index\":0}") && WAIT_FOR(ink_text_focused(), 10000), "open real Wi-Fi password field");
+        capture(large ? "WifiPassword-large" : "WifiPassword-normal"); on_ui(wifi_layout);
+        CHECK(BY_HAND("system.home", NULL) && WAIT_FOR(!ink_text_focused(), 10000), "leave real password page");
     }
     double saved = sim_metric_value("settings.saved");
     on_ui(remember_layout); ink_db_flush_all();
