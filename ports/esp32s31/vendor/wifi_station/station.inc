@@ -64,6 +64,7 @@ static void ink_station_resume(void) {
         ESP_LOGE("ink_wifi", "LP resume wifi start: %s", esp_err_to_name(err));
         return;
     }
+    ESP_ERROR_CHECK(esp_wifi_set_max_tx_power(kMetalioWifiMaxTxPower));
     ESP_LOGI("ink_wifi", "STA resumed");
 }
 
@@ -72,8 +73,9 @@ static void ink_scan_retry(void *arg) {
     (void)arg;
     INK_LOCK();
     ink_wifi.scan_due = true;
+    bool selected = ink_wifi.link.type == HAL_LINK_WIFI;
     INK_UNLOCK();
-    ink_s31_net_changed();
+    esp_event_post(INK_WIFI_CHANGED, selected ? 2 : 0, NULL, 0, 0);
 }
 
 static void ink_scan_later(void) {

@@ -67,11 +67,11 @@ static void ink_event(void *arg, esp_event_base_t base, int32_t id, void *data) 
         ESP_LOGI("ink_wifi", "sntp received");
         return;
     }
-    if (base == INK_WIFI_CHANGED && id == 1 && ink_wifi.n && ink_wifi.mode == INK_AUTO && !ink_wifi.link.up && !ink_wifi.joining) {
+    if (base == INK_WIFI_CHANGED && (id == 1 || (id == 2 && ink_wifi.link.type == HAL_LINK_WIFI)) &&
+            ink_wifi.n && ink_wifi.mode == INK_AUTO && !ink_wifi.link.up && !ink_wifi.joining) {
         if (!ink_wifi.running) ink_station_resume();
         else esp_wifi_scan_start(NULL, false);
     } else if (base == WIFI_EVENT && id == WIFI_EVENT_STA_START && ink_wifi.running) {
-        ESP_ERROR_CHECK(esp_wifi_set_max_tx_power(kMetalioWifiMaxTxPower));
         if (ink_wifi.mode == INK_AUTO && !ink_wifi.joining) {
             if (ink_wifi.link.type == HAL_LINK_WIFI && ink_wifi.queued) ink_rejoin();
             else esp_wifi_scan_start(NULL, false);
@@ -140,7 +140,7 @@ static void ink_event(void *arg, esp_event_base_t base, int32_t id, void *data) 
             if (ink_wifi.link.type == HAL_LINK_WIFI) ink_rejoin();
             else { ink_station_pause(); ink_scan_later(); }
         }
-        ESP_LOGI("ink_wifi", "scan done count=%d", ink_wifi.count);
+        ESP_LOGI("ink_wifi", "scan done count=%d known=%d", ink_wifi.count, ink_wifi.available);
     }
     bool cell_time = base == IP_EVENT && id == IP_EVENT_ETH_GOT_IP && ink_wifi.link.type == HAL_LINK_LTE && ink_wifi.time_cb;
     INK_UNLOCK();
@@ -177,7 +177,7 @@ static void ink_init(void) {
     ApplyWifiProfile();
     ink_wifi.ready = true;
     ink_s31_cell_netif_init();
-    ESP_LOGI("ink_wifi", "ready storage=RAM nvs=off ps=NONE tx=12dBm radio=off");
+    ESP_LOGI("ink_wifi", "ready storage=RAM nvs=off ps=NONE tx_request=48 radio=off");
 }
 void hal_net_link_status(hal_link_status_t *out) {
     if (!ink_wifi.ready) { *out = (hal_link_status_t){0}; return; }

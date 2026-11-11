@@ -27,10 +27,11 @@ mutations = [
     ("sntp-delivery", "if (cb && utc > 0) cb(ctx, utc);", "if (false && cb && utc > 0) cb(ctx, utc);"),
     ("scan-bound", "bool full = ink_wifi.count == ink_wifi.max;", "bool full = false;"),
     ("scan-result", "int result = done ? ink_wifi.count : HAL_WIFI_ERR_TIMEOUT;", "int result = done ? ink_wifi.result : HAL_WIFI_ERR_TIMEOUT;"),
-    ("W02-tx-power", "esp_wifi_set_max_tx_power(kMetalioWifiMaxTxPower)", "esp_wifi_set_max_tx_power(kMetalioWifiMaxTxPower - 1)"),
-    ("W03-discovery", "base == INK_WIFI_CHANGED && id == 1", "false && base == INK_WIFI_CHANGED && id == 1"),
+    ("W03-discovery", "id == 1 ||", "false ||"),
+    ("W04-stale-retry", "id == 2 && ink_wifi.link.type == HAL_LINK_WIFI", "id == 2"),
 ]
 station_mutations = [
+    ("W02-tx-power", "esp_wifi_set_max_tx_power(kMetalioWifiMaxTxPower)", "esp_wifi_set_max_tx_power(kMetalioWifiMaxTxPower - 1)"),
     ("W02-power-save", "esp_wifi_set_ps(WIFI_PS_NONE)", "esp_wifi_set_ps(WIFI_PS_MIN_MODEM)"),
     ("W02-protocol", "WIFI_PROTOCOL_11B | WIFI_PROTOCOL_11G | WIFI_PROTOCOL_11N", "WIFI_PROTOCOL_11B | WIFI_PROTOCOL_11G"),
     ("W03-retry-limit", "#define MAX_RECONNECT_COUNT 5", "#define MAX_RECONNECT_COUNT 0"),

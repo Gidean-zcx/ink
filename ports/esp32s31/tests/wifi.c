@@ -110,6 +110,7 @@ static void retry_due(void) {
 esp_err_t esp_netif_sntp_start(void) { sntp_starts++; return ESP_OK; }
 esp_err_t esp_wifi_set_config(int iface, const wifi_config_t *cfg) {
     assert(radio_on && iface == WIFI_IF_STA && cfg->sta.scan_method == WIFI_ALL_CHANNEL_SCAN && cfg->sta.sort_method == WIFI_CONNECT_AP_BY_SIGNAL);
+    assert(power_calls == radio_starts);
     assert(!cfg->sta.bssid_set && !cfg->sta.channel);
     for (size_t i = 0; i < sizeof cfg->sta.bssid; i++) assert(!cfg->sta.bssid[i]);
     config = *cfg; return ESP_OK;
@@ -251,8 +252,7 @@ int main(void) {
     assert(connect_calls == calls + 5 && retry_timer.active && !hal_net_available(HAL_LINK_WIFI));
     unsigned scans = scan_calls;
     retry_due();
-    assert(scan_calls == scans); /* timer only asks policy; it cannot turn Wi-Fi on */
-    assert(!hal_net_available(HAL_LINK_WIFI)); pump_all();
+    /* Selected Wi-Fi also retries when fixed Wi-Fi bypasses auto_choice. */
     assert(scan_calls == scans + 1 && retry_timer.active && !hal_net_available(HAL_LINK_WIFI));
     cell_available = cell_up = true;
     assert(hal_net_available(HAL_LINK_LTE));
@@ -298,7 +298,11 @@ int main(void) {
         esp_event_post(WIFI_EVENT, WIFI_EVENT_STA_DISCONNECTED, &down, sizeof down, 0); pump_all();
     }
     assert(connect_calls == calls + 11 && retry_timer.active);
-    hal_net_use(HAL_LINK_LTE); pump_all(); assert(!radio_on);
+    /* A retry queued just before switching off cannot restart the radio. */
+    retry_timer.active = false;
+    retry_timer.args.callback(retry_timer.args.arg);
+    unsigned starts = radio_starts;
+    hal_net_use(HAL_LINK_LTE); pump_all(); assert(!radio_on && radio_starts == starts);
     puts("wifi: W02/W03/W04, RAM, scan, DHCP, failures, callbacks, dual routes and SNTP passed");
     return 0;
 }
