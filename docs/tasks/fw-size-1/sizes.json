@@ -1,0 +1,37 @@
+[
+  {
+    "label": "baseline",
+    "firmware": 4868672,
+    "font_data": 4718277,
+    "embedded": 1590329,
+    "sha256": "15cd3433037c58c69a5f3b9bf68b1b329dea92902a1de305c5ccb68056e3f6e2",
+    "libink_platform.a": {
+      "total": 1700496,
+      "flash": 1678681
+    },
+    "libink_system.a": {
+      "total": 1552902,
+      "flash": 848439
+    },
+    "libesp_stdio.a": {
+      "total": 344123,
+      "flash": 344083
+    },
+    "libink_lvgl.a": {
+      "total": 319300,
+      "flash": 318724
+    },
+    "libink_reader_vendor.a": {
+      "total": 145310,
+      "flash": 145074
+    },
+    "libink_apps.a": {
+      "total": 32170,
+      "flash": 27314
+    },
+    "libmesh.a": {
+      "total": 64,
+      "flash": 60
+    }
+  }
+]
