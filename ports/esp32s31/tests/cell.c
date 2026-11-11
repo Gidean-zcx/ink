@@ -200,6 +200,10 @@ int main(void) {
     split = 1;
     assert(hal_modem_at("ATI", response, sizeof response, 1000) == HAL_AT_OK && !strcmp(response, "FAKE-NT26"));
     assert(hal_modem_urc(response, sizeof response, 0) > 0 && !strcmp(response, "+CMTI: \"SM\",7"));
+    unsigned two_buffer_loans = loans;
+    split = 5; /* The six-byte OK payload and its header span exactly two buffers. */
+    assert(hal_modem_at("AT", response, sizeof response, 1000) == HAL_AT_OK && loans == two_buffer_loans + 2);
+    split = 1;
     assert(hal_modem_at_payload("AT+CMGS=1", "00", response, sizeof response, 1000) == HAL_AT_OK && !strcmp(response, "+CMGS: 1"));
     assert(loans == returns && !dma_held && starts == 1);
     /* Overflow after four owned buffers, with both a partial header and AT line in flight. */
