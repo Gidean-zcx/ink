@@ -73,6 +73,8 @@ for case in ([a.case] if a.case else SOURCES):
         metrics = data.get('metrics', {})
         passed = result.returncode == 0 and metrics.get('test.finished') == 1 and metrics.get('test.fail', 0) == 0 and not data.get('warnings')
         expected = not passed if a.phase == 'reverse' else passed
+        if a.phase == 'before':
+            expected = result.returncode == 0 and metrics.get('test.finished') == 1 and all('CHECK FAILED' in item for item in data.get('warnings', []))
         if a.phase == 'reverse':
             expected = metrics.get('test.finished') == 1 and metrics.get('test.fail', 0) > 0 and any('CHECK FAILED' in item for item in data.get('warnings', []))
         row = {'case': case, 'size': size, 'exit': result.returncode, 'checks': metrics.get('test.pass', 0),

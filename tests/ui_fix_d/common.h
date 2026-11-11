@@ -10,7 +10,7 @@ static const bool u_before = true;
 #else
 static const bool u_before = false;
 #endif
-#define U_CHECK(cond, ...) CHECK((cond) || u_before, __VA_ARGS__)
+#define U_CHECK(cond, ...) CHECK((cond), __VA_ARGS__)
 static int u_size;
 static const char *u_picture;
 static bool u_captured;

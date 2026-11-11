@@ -43,6 +43,10 @@ static int u_index(const char *name) {
     for (int i = 0; i < N.wifi_count; i++) if (!strcmp(name, N.wifi_ssid[i])) return i;
     return -1;
 }
+static bool u_open_connected(void) {
+    char ssid[40], state[24]; state_text("wifi.ssid", ssid, sizeof ssid); state_text("wifi.state", state, sizeof state);
+    return !N.picked_ssid[0] && !strcmp(ssid, "SYNTH_OPEN") && !strcmp(state, "connected");
+}
 static void u_pick(const char *name) {
     char args[48]; snprintf(args, sizeof args, "{\"index\":%d}", u_index(name));
     u_command("shell.wifi_pick", args);
@@ -66,6 +70,13 @@ static void u_strip_check(void) {
 }
 static bool u_has_field;
 static void u_find_field(void) { u_has_field = u_textarea(N.page_body) != NULL; }
+static void u_wrong_password(void) { ink_text_commit_utf8("SYNTH_WRONG"); }
+static void u_password_retry_check(void) {
+    U_CHECK(N.picked_ssid[0] && ink_text_focused() && ink_text_type() == INK_TEXT_PASSWORD && !ink_text_value()[0],
+        "T09 failed join preserves the network and offers a fresh protected password field");
+    U_CHECK(u_label(lv_screen_active(), N.result), "T09 join error remains visible with the password retry");
+    CHECK(ink_ui_context_snapshot(g_snap, sizeof g_snap, NULL) > 0 && !strstr(g_snap, "SYNTH_WRONG"), "T09 failed password is absent from AI context");
+}
 static void u_scan_failed(void) {
     ink_receipt_t rc = {.status = INK_RC_FAILED};
     snprintf(rc.say, sizeof rc.say, "合成扫描失败，请重试");
@@ -75,6 +86,14 @@ static void u_scan_failed(void) {
 static void u_known_empty(void) {
     N.known_count = 0; draw_page_body();
     U_CHECK(u_cap(lv_screen_active(), "shell.network"), "T10 empty saved networks has an exit to nearby networks");
+}
+static void u_known_list_check(void) {
+    lv_obj_t *join = u_cap(lv_screen_active(), "wifi.connect"), *forget = u_cap(lv_screen_active(), "wifi.forget");
+    lv_area_t a = u_rect(join), b = u_rect(forget);
+    U_CHECK(join && forget && lv_obj_get_height(join) == ink_ui_px(ink_ui_row_double()) &&
+        abs(a.y1 + a.y2 - b.y1 - b.y2) <= 2, "T11 saved network connects from its row and keeps forget on the same row");
+    N.known_count = -2; draw_page_body();
+    U_CHECK(u_label(lv_screen_active(), "网络列表暂时读不出来") && u_cap(lv_screen_active(), "shell.known_networks"), "T11 saved-network read failure has an explicit retry");
 }
 static void u_home_check(void) {
     N.home_page = 1; draw_home_content(); lv_obj_update_layout(N.content);
@@ -97,6 +116,7 @@ static void u_run(void *ctx) {
     u_command("wifi.connect", "{\"ssid\":\"SYNTH_MAIN\"}");
     u_command("shell.network", NULL); on_ui(u_results); u_quiet(); on_ui(u_network_check); u_capture("Network");
     u_pick("SYNTH_OPEN");
+    U_CHECK(WAIT_FOR(u_open_connected(), 15000), "T08 open-network connection receipt is complete");
     U_CHECK(WAIT_FOR(!strcmp(ink_text_value(), "") && !ink_text_focused(), 3000), "T08 open network connects without password entry");
     u_pick("SYNTH_PRIVATE");
     if (u_before) for (int i = 0; i < N.body_pages; i++) {
@@ -105,8 +125,17 @@ static void u_run(void *ctx) {
         u_command("shell.page_next", NULL);
     }
     on_ui(u_strip_check); u_capture("WifiPassword");
+    if (ink_text_focused()) {
+        on_ui(u_wrong_password); u_command("keyboard.key", "{\"code\":10}");
+        U_CHECK(WAIT_FOR(ink_text_focused(), 5000), "T09 failed join returns to password entry");
+        on_ui(u_password_retry_check);
+    }
+    u_capture("WifiRetry");
     u_command("system.home", NULL); u_command("shell.network", NULL); on_ui(u_scan_failed); u_capture("NetworkFail");
-    u_command("shell.known_networks", NULL); on_ui(u_known_empty); u_capture("KnownEmpty");
+    u_command("shell.known_networks", NULL);
+    CHECK(WAIT_FOR(N.known_count >= 0, 15000), "saved networks load"); on_ui(u_known_list_check);
+    u_command("shell.known_networks", NULL); CHECK(WAIT_FOR(N.known_count >= 0, 15000), "explicit list retry completes");
+    on_ui(u_known_empty); u_capture("KnownEmpty");
     u_command("system.home", NULL); on_ui(u_home_check); u_quiet(); u_capture("Home");
     CHECK(ink_member_switch("kid") == 0, "switch to synthetic child"); u_quiet();
     u_command("system.home", NULL); on_ui(u_home_check); u_quiet(); u_capture("KidHome");

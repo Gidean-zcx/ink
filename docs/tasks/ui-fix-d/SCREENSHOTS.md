@@ -11,6 +11,7 @@
 | Network | [before-100](screenshots/before-100/Network.png) | [after-100](screenshots/after-100/Network.png) | [before-120](screenshots/before-120/Network.png) | [after-120](screenshots/after-120/Network.png) |
 | NetworkFail | [before-100](screenshots/before-100/NetworkFail.png) | [after-100](screenshots/after-100/NetworkFail.png) | [before-120](screenshots/before-120/NetworkFail.png) | [after-120](screenshots/after-120/NetworkFail.png) |
 | WifiPassword | [before-100](screenshots/before-100/WifiPassword.png) | [after-100](screenshots/after-100/WifiPassword.png) | [before-120](screenshots/before-120/WifiPassword.png) | [after-120](screenshots/after-120/WifiPassword.png) |
+| WifiRetry | [before-100](screenshots/before-100/WifiRetry.png) | [after-100](screenshots/after-100/WifiRetry.png) | [before-120](screenshots/before-120/WifiRetry.png) | [after-120](screenshots/after-120/WifiRetry.png) |
 | KnownEmpty | [before-100](screenshots/before-100/KnownEmpty.png) | [after-100](screenshots/after-100/KnownEmpty.png) | [before-120](screenshots/before-120/KnownEmpty.png) | [after-120](screenshots/after-120/KnownEmpty.png) |
 | Home | [before-100](screenshots/before-100/Home.png) | [after-100](screenshots/after-100/Home.png) | [before-120](screenshots/before-120/Home.png) | [after-120](screenshots/after-120/Home.png) |
 | KidHome | [before-100](screenshots/before-100/KidHome.png) | [after-100](screenshots/after-100/KidHome.png) | [before-120](screenshots/before-120/KidHome.png) | [after-120](screenshots/after-120/KidHome.png) |

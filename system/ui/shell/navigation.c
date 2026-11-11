@@ -1436,6 +1436,12 @@ static void body_blocks(void) {
                 ink_jw_raw(&w, "{\"ssid\":"); ink_jw_str(&w, N.known_ssid[i]); ink_jw_raw(&w, "}");
                 lv_obj_t *join = ink_ui_list_row(N.page_body, "wifi", N.known_ssid[i], status, INK_MARGIN, F.y,
                     width() - INK_PRIMARY - INK_GAP, true, NULL, NULL);
+                int text_y = (row - ink_ui_line_height(INK_FONT_LIST) - ink_ui_line_height(INK_FONT_NOTE)) / 2;
+                lv_obj_t *name = lv_obj_get_child(join, 1), *value = lv_obj_get_child(join, 2);
+                lv_obj_set_y(name, ink_ui_px(text_y));
+                lv_obj_set_width(name, ink_ui_px(width() - INK_PRIMARY - INK_ROW_DOUBLE - 2 * INK_GAP));
+                lv_obj_set_pos(value, ink_ui_px(INK_CIRCLE_SMALL + INK_GAP_XL), ink_ui_px(text_y + ink_ui_line_height(INK_FONT_LIST)));
+                lv_obj_set_width(value, lv_obj_get_width(name)); lv_obj_set_style_text_align(value, LV_TEXT_ALIGN_LEFT, 0);
                 ink_shell_bind(join, "wifi.connect", args);
                 if (!ink_setting_get("wifi.enabled") || (same && (!strcmp(state, "connected") || !strcmp(state, "joining")))) lv_obj_add_state(join, LV_STATE_DISABLED);
                 ink_shell_bind(ink_ui_pill(N.page_body, TR("忘掉"), INK_CANVAS_W - INK_MARGIN - INK_PRIMARY, F.y + (row - INK_CONTROL) / 2,
@@ -1517,6 +1523,17 @@ static void body_blocks(void) {
             if (block(notice_h(none))) ink_ui_notice(N.page_body, none, F.y);
             F.y += notice_h(none) + INK_GAP_L;
         }
+        const char *const about = TR("自动：有 Wi-Fi 用 Wi-Fi，没有就用 4G");
+        h = heading_h() + INK_SEGMENT + INK_GAP_M + notice_h(about);
+        if (block(h)) {
+            heading(TR("上网方式"));
+            const char *const labels[] = {TR("自动"), "Wi-Fi", "4G"};
+            lv_obj_t *seg = ink_ui_segments(N.page_body, labels, 3, (int) ink_setting_get("net.prefer"), INK_MARGIN,
+                                            F.y + heading_h(), width(), NULL, NULL);
+            bind_choices(seg, 3, "net.prefer");
+            ink_ui_notice(N.page_body, about, F.y + heading_h() + INK_SEGMENT + INK_GAP_M);
+        }
+        F.y += h + INK_GAP_L;
         if (ssid[0]) {
             if (block(INK_CONTROL)) {
                 char args[256]; ink_jw_t w; ink_jw_init(&w, args, sizeof args);
@@ -1531,17 +1548,6 @@ static void body_blocks(void) {
         F.y += INK_CONTROL + INK_GAP_M;
         if (block(INK_CONTROL)) ink_shell_bind(ink_ui_pill(N.page_body, TR("设置设备"), INK_MARGIN, F.y, width(), INK_CONTROL, false, NULL, NULL), "shell.launch", "{\"id\":\"boot\"}");
         F.y += INK_CONTROL + INK_GAP_L;
-        const char *const about = TR("自动：有 Wi-Fi 用 Wi-Fi，没有就用 4G");
-        h = heading_h() + INK_SEGMENT + INK_GAP_M + notice_h(about);
-        if (block(h)) {
-            heading(TR("上网方式"));
-            const char *const labels[] = {TR("自动"), "Wi-Fi", "4G"};
-            lv_obj_t *seg = ink_ui_segments(N.page_body, labels, 3, (int) ink_setting_get("net.prefer"), INK_MARGIN,
-                                            F.y + heading_h(), width(), NULL, NULL);
-            bind_choices(seg, 3, "net.prefer");
-            ink_ui_notice(N.page_body, about, F.y + heading_h() + INK_SEGMENT + INK_GAP_M);
-        }
-        F.y += h + INK_GAP_L;
         const char *const sim_state = integer("cell.config_readonly") ? TR("暂不能更改 SIM 卡") : integer("cell.registered") ? TR("4G 在线，切卡不用重启") : TR("4G 还没有连上");
         h = heading_h() + INK_SEGMENT + INK_GAP_L + notice_h(sim_state);
         if (block(h)) {

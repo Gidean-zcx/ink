@@ -1,0 +1,818 @@
+{
+  "baseline": "cfd1a3dd5550fda64d40c23e80a7d60a0a8ee7c9",
+  "source_sha256": {
+    "system/ui/shell/navigation.c": "9718657c52f0a61db7b87cd4e4e5aa8099372204684e45dcba865b7fe6031b81",
+    "system/ui/shell/boot_flow.c": "20ab8d0a25dce49a6ae64e917ab7ac143b7a9e42528e77fbcaad94e8873b1cd7",
+    "system/apps/memo/memo.c": "540b873a4be8393d3a30549202508a4bb80766fedcb2f75724ddd11f28b39b1e"
+  },
+  "before": [
+    {
+      "case": "network",
+      "size": "100",
+      "exit": 0,
+      "checks": 68,
+      "failures": 15,
+      "finished": 1,
+      "expected": true,
+      "failed_checks": [
+        "T07 scan keeps the full content width",
+        "T08 scan results are selectable on the scan page",
+        "T08 connected network is first",
+        "T08 weak secured network has a lock and one filled signal bar",
+        "T08 open-network connection receipt is complete",
+        "T08 open network connects without password entry",
+        "T09 password strip has a full white backing and top border above the keyboard",
+        "T09 failed join returns to password entry",
+        "T09 failed join preserves the network and offers a fresh protected password field",
+        "T09 join error remains visible with the password retry",
+        "T08 scan failure and retry share the current page",
+        "T11 saved network connects from its row and keeps forget on the same row",
+        "T11 saved-network read failure has an explicit retry",
+        "T10 empty saved networks has an exit to nearby networks",
+        "H01 child-visible icons have no empty grid slots"
+      ],
+      "screenshots": [
+        {
+          "name": "Home.png",
+          "bytes": 42808,
+          "sha256": "80cdc64ae8b5de32e0c93e924ee03fb8611a1eb0d20c7129b117bcaeee0329c9"
+        },
+        {
+          "name": "KidHome.png",
+          "bytes": 39281,
+          "sha256": "e16f011244884aea68be0075afbbc00a20d1e6ab26ff158c050412ef242c31f4"
+        },
+        {
+          "name": "KnownEmpty.png",
+          "bytes": 17375,
+          "sha256": "4bec5bf7130bdb7255161c2c75a597b6dc5e40bc308c4d00d60b0f347b29ed0e"
+        },
+        {
+          "name": "Network.png",
+          "bytes": 39760,
+          "sha256": "758a08e8aaac088499d8e873beda01bfc096096b6807b457d063870f354e5d1f"
+        },
+        {
+          "name": "NetworkFail.png",
+          "bytes": 41778,
+          "sha256": "ae569141a8d303312b889a708a90d6c28871153e48abaf31f29617e6049d19c8"
+        },
+        {
+          "name": "WifiPassword.png",
+          "bytes": 41167,
+          "sha256": "5ca1d5463e24d9f70426ffbad0ab0430cefdb77ecf3203b2ed227a2dc52a3e1c"
+        },
+        {
+          "name": "WifiRetry.png",
+          "bytes": 42074,
+          "sha256": "1d0802374bee6afe6c53b08d4ea0c6c8c34f19d20ef262a7205a64516c1cf02b"
+        }
+      ]
+    },
+    {
+      "case": "network",
+      "size": "120",
+      "exit": 0,
+      "checks": 70,
+      "failures": 15,
+      "finished": 1,
+      "expected": true,
+      "failed_checks": [
+        "T07 scan keeps the full content width",
+        "T08 scan results are selectable on the scan page",
+        "T08 connected network is first",
+        "T08 weak secured network has a lock and one filled signal bar",
+        "T08 open-network connection receipt is complete",
+        "T09 password strip has a full white backing and top border above the keyboard",
+        "T09 failed join returns to password entry",
+        "T09 failed join preserves the network and offers a fresh protected password field",
+        "T09 join error remains visible with the password retry",
+        "T08 scan failure and retry share the current page",
+        "T11 saved network connects from its row and keeps forget on the same row",
+        "T11 saved-network read failure has an explicit retry",
+        "T10 empty saved networks has an exit to nearby networks",
+        "S02 home leaves a visible gap below continue reading",
+        "H01 child-visible icons have no empty grid slots"
+      ],
+      "screenshots": [
+        {
+          "name": "Home.png",
+          "bytes": 47255,
+          "sha256": "feac6cce814f26a0c15a62c90bda83209c1806924f93bcd3eaac161892bdb82c"
+        },
+        {
+          "name": "KidHome.png",
+          "bytes": 39281,
+          "sha256": "e16f011244884aea68be0075afbbc00a20d1e6ab26ff158c050412ef242c31f4"
+        },
+        {
+          "name": "KnownEmpty.png",
+          "bytes": 18340,
+          "sha256": "ef3fe65afac23c18f7d2816bcec8fea7c5c55a484b87575d119362eb9cb4eac0"
+        },
+        {
+          "name": "Network.png",
+          "bytes": 41575,
+          "sha256": "09e394ae76536d38265f15433d8bae00d5b48f5a3fd17aa4163ae71fcd586c82"
+        },
+        {
+          "name": "NetworkFail.png",
+          "bytes": 44971,
+          "sha256": "b3a33456dcbb438a6ed8414354e683b3454746d3c35606bc0116d8a649689d2e"
+        },
+        {
+          "name": "WifiPassword.png",
+          "bytes": 37569,
+          "sha256": "38201f1076c1768fae4117c5309eb1ca6c4f2455b01baa5efada5224e4ab3fa1"
+        },
+        {
+          "name": "WifiRetry.png",
+          "bytes": 45967,
+          "sha256": "40ee3249dbb59b51b63bf206cd95e9c39de3cb8c613d5a88d3e9670cba8dc9e2"
+        }
+      ]
+    },
+    {
+      "case": "memo",
+      "size": "100",
+      "exit": 0,
+      "checks": 61,
+      "failures": 14,
+      "finished": 1,
+      "expected": true,
+      "failed_checks": [
+        "N09 save result, editor and keyboard do not overlap",
+        "N09 memo shows only its own save result",
+        "N09 save result, editor and keyboard do not overlap",
+        "N09 memo shows only its own save result",
+        "N09 failure distinguishes the saved draft from the unsaved memo",
+        "N09 save result, editor and keyboard do not overlap",
+        "N09 memo shows only its own save result",
+        "N03 detail footer separates its three actions",
+        "N03 edit is the primary detail action",
+        "N09 save result, editor and keyboard do not overlap",
+        "N09 memo shows only its own save result",
+        "N09 save result, editor and keyboard do not overlap",
+        "N09 save result, editor and keyboard do not overlap",
+        "N09 memo shows only its own save result"
+      ],
+      "screenshots": [
+        {
+          "name": "MemoDetail.png",
+          "bytes": 24612,
+          "sha256": "756c497e8e3d08671d221d58304dfa1f7235caa059ba363447ec723c7fcad1d0"
+        },
+        {
+          "name": "MemoFail.png",
+          "bytes": 48424,
+          "sha256": "1e98e103f3b1eaa6af2792e29b091b4d22b6466160962a9abd6880d44f05a693"
+        },
+        {
+          "name": "MemoFromNumber.png",
+          "bytes": 37807,
+          "sha256": "c71215b2d4574329f9db1e19d2593c926a3168863338aae7471fe5eda7080985"
+        },
+        {
+          "name": "MemoFull.png",
+          "bytes": 41988,
+          "sha256": "58b46658b2743bd250a7af6b31cd60224f13bd4b2f8fd2d0fa0c4ed85aa9d9ad"
+        },
+        {
+          "name": "MemoNine.png",
+          "bytes": 42158,
+          "sha256": "7d386c0f7e35fb755e27ca371e4acd0fc314ea9f2fd7a1b73cafb6279bad7c5c"
+        },
+        {
+          "name": "MemoRetried.png",
+          "bytes": 41846,
+          "sha256": "cb273fedc90399ebf6531fc2f88223076fa532a90b6ec0303e91c9b8f835030c"
+        },
+        {
+          "name": "MemoSaved.png",
+          "bytes": 37762,
+          "sha256": "c0bdae0dac57a72c9d799acab4adc7ea071e28316789e30c2272e19e77b11db9"
+        }
+      ]
+    },
+    {
+      "case": "memo",
+      "size": "120",
+      "exit": 0,
+      "checks": 61,
+      "failures": 14,
+      "finished": 1,
+      "expected": true,
+      "failed_checks": [
+        "N09 save result, editor and keyboard do not overlap",
+        "N09 memo shows only its own save result",
+        "N09 save result, editor and keyboard do not overlap",
+        "N09 memo shows only its own save result",
+        "N09 failure distinguishes the saved draft from the unsaved memo",
+        "N09 save result, editor and keyboard do not overlap",
+        "N09 memo shows only its own save result",
+        "N03 detail footer separates its three actions",
+        "N03 edit is the primary detail action",
+        "N09 save result, editor and keyboard do not overlap",
+        "N09 memo shows only its own save result",
+        "N09 save result, editor and keyboard do not overlap",
+        "N09 save result, editor and keyboard do not overlap",
+        "N09 memo shows only its own save result"
+      ],
+      "screenshots": [
+        {
+          "name": "MemoDetail.png",
+          "bytes": 28732,
+          "sha256": "61a77889cf4e138efd72e3cdb238f4f24877f4d4e8879be6252152744e97c9c6"
+        },
+        {
+          "name": "MemoFail.png",
+          "bytes": 45790,
+          "sha256": "37570e6a084bf489f97862ecfd0caf97187b2f00655448925f8b6a6f0f7e83fa"
+        },
+        {
+          "name": "MemoFromNumber.png",
+          "bytes": 40832,
+          "sha256": "ccab4dd947ca26b24e8656c440851ee5fdd60f7a30225211437e9f6efbcf2b24"
+        },
+        {
+          "name": "MemoFull.png",
+          "bytes": 40832,
+          "sha256": "ccab4dd947ca26b24e8656c440851ee5fdd60f7a30225211437e9f6efbcf2b24"
+        },
+        {
+          "name": "MemoNine.png",
+          "bytes": 41067,
+          "sha256": "19a4746f50282f50787aa3f7c6c6c92cbe2c3dfa9cbcc2ddf30d3b98b5f7e1b2"
+        },
+        {
+          "name": "MemoRetried.png",
+          "bytes": 40904,
+          "sha256": "3435372fad3904d0d5c0332d0fb744e0058be15ebc4f52dd8390297069ad55f8"
+        },
+        {
+          "name": "MemoSaved.png",
+          "bytes": 40374,
+          "sha256": "1f0cfd864b5ab7a8056b314695c51c43ca1b7208cf1d0f204d884cf62f56d05c"
+        }
+      ]
+    },
+    {
+      "case": "boot",
+      "size": "100",
+      "exit": 0,
+      "checks": 41,
+      "failures": 7,
+      "finished": 1,
+      "expected": true,
+      "failed_checks": [
+        "O01 setup has one primary button and an offline exit",
+        "O07 phone scan hides both joining codes",
+        "O06 connection failure preserves its actual cause: that network is not around",
+        "O06 connection failure preserves its actual cause: it took too long",
+        "O10 no backup makes direct use the primary action",
+        "O08 no-server page has usable setup and offline exits",
+        "O08 server instructions leave space above the secondary action"
+      ],
+      "screenshots": [
+        {
+          "name": "BootAuthFail.png",
+          "bytes": 27151,
+          "sha256": "79436283c52f38305545609e30458ca71555d9c3caec0f5a586371906e21f32e"
+        },
+        {
+          "name": "BootClaim.png",
+          "bytes": 21405,
+          "sha256": "b7d01bb6328ef17e3bf55f10ccc7ed71830450cdb7eb18e12a21e1430addd846"
+        },
+        {
+          "name": "BootComputer.png",
+          "bytes": 32588,
+          "sha256": "62b8de208b6cb9166e9c5693936e7223b629f2422cb5450d953f5230bee383c7"
+        },
+        {
+          "name": "BootNoHub.png",
+          "bytes": 33207,
+          "sha256": "2528cfd500402806a232374d325b4c4cb583a9d1cb54b0f1a4d0fd96d59b02c3"
+        },
+        {
+          "name": "BootRestore.png",
+          "bytes": 26123,
+          "sha256": "4f493848febe946e050b20ad38f52c6a1326917b49649894c4cf123ebbf3a760"
+        },
+        {
+          "name": "BootRevoked.png",
+          "bytes": 35462,
+          "sha256": "7228f08990cd9250a49a357fb5f20df0ccba0192700b53874052f79d75decfab"
+        },
+        {
+          "name": "BootTimeout.png",
+          "bytes": 27732,
+          "sha256": "78a10d184ecbe9cf426ce6718f10b1ecba782d3163d225e40878d0ba99286f81"
+        },
+        {
+          "name": "FirstBoot.png",
+          "bytes": 25046,
+          "sha256": "75c9da3d72297a829802f336c4bfa4eb75928df5c007e08091d1e2409bef04ea"
+        }
+      ]
+    },
+    {
+      "case": "boot",
+      "size": "120",
+      "exit": 0,
+      "checks": 41,
+      "failures": 7,
+      "finished": 1,
+      "expected": true,
+      "failed_checks": [
+        "O01 setup has one primary button and an offline exit",
+        "O07 phone scan hides both joining codes",
+        "O06 connection failure preserves its actual cause: that network is not around",
+        "O06 connection failure preserves its actual cause: it took too long",
+        "O10 no backup makes direct use the primary action",
+        "O08 no-server page has usable setup and offline exits",
+        "O08 server instructions leave space above the secondary action"
+      ],
+      "screenshots": [
+        {
+          "name": "BootAuthFail.png",
+          "bytes": 31527,
+          "sha256": "c886c4d401e8cee0250a949db0bf27197fb9a4d2e6c72ff2dc22dc98a3fefafb"
+        },
+        {
+          "name": "BootClaim.png",
+          "bytes": 24666,
+          "sha256": "2532321347eaa0e6909fb81794d2074285365a31a7259d91c4c2908f855395f4"
+        },
+        {
+          "name": "BootComputer.png",
+          "bytes": 38976,
+          "sha256": "b2999b7449a6e23673bdf106d6fa085387e51aa94b714e6ae657a0966459a0a0"
+        },
+        {
+          "name": "BootNoHub.png",
+          "bytes": 39807,
+          "sha256": "4f95c4fd77538075bcd43c3c9cb5abad39894fde3d8a15f9221168d342234c71"
+        },
+        {
+          "name": "BootRestore.png",
+          "bytes": 30072,
+          "sha256": "05d23d1991dfe7a8258bf38531f143bbe98f70e7c58ca15b7f4495be3a9c8152"
+        },
+        {
+          "name": "BootRevoked.png",
+          "bytes": 41539,
+          "sha256": "d10fd4135893ffae3b2e2d26e8fb970740595b20972f5c49d98e903e492c2f28"
+        },
+        {
+          "name": "BootTimeout.png",
+          "bytes": 32449,
+          "sha256": "936afca511443786e6ffc80f7936af99a9ef106c77c9c2aaff9d2db822a866ed"
+        },
+        {
+          "name": "FirstBoot.png",
+          "bytes": 29268,
+          "sha256": "2cbdd741bb3d5880433fde68611ace9293a784ee12b3684822a4d722cdbe9d23"
+        }
+      ]
+    }
+  ],
+  "reverse": [
+    {
+      "case": "network",
+      "size": "100",
+      "exit": 0,
+      "checks": 68,
+      "failures": 15,
+      "finished": 1,
+      "expected": true,
+      "failed_checks": [
+        "T07 scan keeps the full content width",
+        "T08 scan results are selectable on the scan page",
+        "T08 connected network is first",
+        "T08 weak secured network has a lock and one filled signal bar",
+        "T08 open-network connection receipt is complete",
+        "T08 open network connects without password entry",
+        "T09 password strip has a full white backing and top border above the keyboard",
+        "T09 failed join returns to password entry",
+        "T09 failed join preserves the network and offers a fresh protected password field",
+        "T09 join error remains visible with the password retry",
+        "T08 scan failure and retry share the current page",
+        "T11 saved network connects from its row and keeps forget on the same row",
+        "T11 saved-network read failure has an explicit retry",
+        "T10 empty saved networks has an exit to nearby networks",
+        "H01 child-visible icons have no empty grid slots"
+      ]
+    },
+    {
+      "case": "network",
+      "size": "120",
+      "exit": 0,
+      "checks": 62,
+      "failures": 12,
+      "finished": 1,
+      "expected": true,
+      "failed_checks": [
+        "T07 scan keeps the full content width",
+        "T08 scan results are selectable on the scan page",
+        "T08 connected network is first",
+        "T08 weak secured network has a lock and one filled signal bar",
+        "T08 open-network connection receipt is complete",
+        "T09 protected field exists",
+        "T08 scan failure and retry share the current page",
+        "T11 saved network connects from its row and keeps forget on the same row",
+        "T11 saved-network read failure has an explicit retry",
+        "T10 empty saved networks has an exit to nearby networks",
+        "S02 home leaves a visible gap below continue reading",
+        "H01 child-visible icons have no empty grid slots"
+      ]
+    },
+    {
+      "case": "memo",
+      "size": "100",
+      "exit": 0,
+      "checks": 61,
+      "failures": 14,
+      "finished": 1,
+      "expected": true,
+      "failed_checks": [
+        "N09 save result, editor and keyboard do not overlap",
+        "N09 memo shows only its own save result",
+        "N09 save result, editor and keyboard do not overlap",
+        "N09 memo shows only its own save result",
+        "N09 failure distinguishes the saved draft from the unsaved memo",
+        "N09 save result, editor and keyboard do not overlap",
+        "N09 memo shows only its own save result",
+        "N03 detail footer separates its three actions",
+        "N03 edit is the primary detail action",
+        "N09 save result, editor and keyboard do not overlap",
+        "N09 memo shows only its own save result",
+        "N09 save result, editor and keyboard do not overlap",
+        "N09 save result, editor and keyboard do not overlap",
+        "N09 memo shows only its own save result"
+      ]
+    },
+    {
+      "case": "memo",
+      "size": "120",
+      "exit": 0,
+      "checks": 61,
+      "failures": 14,
+      "finished": 1,
+      "expected": true,
+      "failed_checks": [
+        "N09 save result, editor and keyboard do not overlap",
+        "N09 memo shows only its own save result",
+        "N09 save result, editor and keyboard do not overlap",
+        "N09 memo shows only its own save result",
+        "N09 failure distinguishes the saved draft from the unsaved memo",
+        "N09 save result, editor and keyboard do not overlap",
+        "N09 memo shows only its own save result",
+        "N03 detail footer separates its three actions",
+        "N03 edit is the primary detail action",
+        "N09 save result, editor and keyboard do not overlap",
+        "N09 memo shows only its own save result",
+        "N09 save result, editor and keyboard do not overlap",
+        "N09 save result, editor and keyboard do not overlap",
+        "N09 memo shows only its own save result"
+      ]
+    },
+    {
+      "case": "boot",
+      "size": "100",
+      "exit": 0,
+      "checks": 43,
+      "failures": 8,
+      "finished": 1,
+      "expected": true,
+      "failed_checks": [
+        "O01 setup has one primary button and an offline exit",
+        "O07 phone scan hides both joining codes",
+        "O07 phone scan hides both joining codes",
+        "O06 connection failure preserves its actual cause: that network is not around",
+        "O06 connection failure preserves its actual cause: it took too long",
+        "O10 no backup makes direct use the primary action",
+        "O08 no-server page has usable setup and offline exits",
+        "O08 server instructions leave space above the secondary action"
+      ]
+    },
+    {
+      "case": "boot",
+      "size": "120",
+      "exit": 0,
+      "checks": 43,
+      "failures": 8,
+      "finished": 1,
+      "expected": true,
+      "failed_checks": [
+        "O01 setup has one primary button and an offline exit",
+        "O07 phone scan hides both joining codes",
+        "O07 phone scan hides both joining codes",
+        "O06 connection failure preserves its actual cause: that network is not around",
+        "O06 connection failure preserves its actual cause: it took too long",
+        "O10 no backup makes direct use the primary action",
+        "O08 no-server page has usable setup and offline exits",
+        "O08 server instructions leave space above the secondary action"
+      ]
+    }
+  ],
+  "after": [
+    {
+      "case": "network",
+      "size": "100",
+      "exit": 0,
+      "checks": 83,
+      "failures": 0,
+      "finished": 1,
+      "expected": true,
+      "failed_checks": [],
+      "screenshots": [
+        {
+          "name": "Home.png",
+          "bytes": 40959,
+          "sha256": "1cebb4131c7463da0afd93590340511a5eb179262034780d72b4a6325c90b904"
+        },
+        {
+          "name": "KidHome.png",
+          "bytes": 37782,
+          "sha256": "953f73e6ac5a9c56a51b9e821c1548633c6e68adbfa11991ccbbe10fe2f56cc1"
+        },
+        {
+          "name": "KnownEmpty.png",
+          "bytes": 21625,
+          "sha256": "bab675a4808fd3cfcaea5cda063f06df358735db57e95a575d72c05aaf91cb16"
+        },
+        {
+          "name": "Network.png",
+          "bytes": 32495,
+          "sha256": "09083c2e72a49bfa6483e947b622bfcdbb80194846c943486cc60125bd3dc284"
+        },
+        {
+          "name": "NetworkFail.png",
+          "bytes": 40508,
+          "sha256": "b059cecfbbec33a8d5aa14e721c1a8c4a4c6071173521012aa89c0c874bb9e47"
+        },
+        {
+          "name": "WifiPassword.png",
+          "bytes": 40518,
+          "sha256": "3367058cdd2e56194eaeeae4cc7f9241a0bfcca15e7e01cd43473bec747f9e43"
+        },
+        {
+          "name": "WifiRetry.png",
+          "bytes": 41868,
+          "sha256": "44f9bc5c13ec2c2419fdbfda83f91db876b582b4bdc8b142175a4fc2e40d5ca1"
+        }
+      ]
+    },
+    {
+      "case": "network",
+      "size": "120",
+      "exit": 0,
+      "checks": 83,
+      "failures": 0,
+      "finished": 1,
+      "expected": true,
+      "failed_checks": [],
+      "screenshots": [
+        {
+          "name": "Home.png",
+          "bytes": 41935,
+          "sha256": "9de6364d20cb99b9df63b297f4ab8b82415d5424329156cd5c33032abb159d5f"
+        },
+        {
+          "name": "KidHome.png",
+          "bytes": 37782,
+          "sha256": "953f73e6ac5a9c56a51b9e821c1548633c6e68adbfa11991ccbbe10fe2f56cc1"
+        },
+        {
+          "name": "KnownEmpty.png",
+          "bytes": 23135,
+          "sha256": "339850fbea332841f77909b43c16161bc1e4b956d45fd34dbf6f336e7f891a8a"
+        },
+        {
+          "name": "Network.png",
+          "bytes": 37312,
+          "sha256": "8e0b4b2e3ffbcb95104c31ab5c55529c10415950fb440f14620e42d86d1014a0"
+        },
+        {
+          "name": "NetworkFail.png",
+          "bytes": 47491,
+          "sha256": "c066032fcbbc66871eb57c0842a7eb3b4212be822e3200f2894cc03fd305e16f"
+        },
+        {
+          "name": "WifiPassword.png",
+          "bytes": 42068,
+          "sha256": "0897985a53377be3a9b3b9811d1e5c5426cd975b3b3227c4a58ad35d97736c2d"
+        },
+        {
+          "name": "WifiRetry.png",
+          "bytes": 42635,
+          "sha256": "7b485caaa09370ada7229d4def40d63886c2cae4ad56be20a6dedc59820d60e1"
+        }
+      ]
+    },
+    {
+      "case": "memo",
+      "size": "100",
+      "exit": 0,
+      "checks": 75,
+      "failures": 0,
+      "finished": 1,
+      "expected": true,
+      "failed_checks": [],
+      "screenshots": [
+        {
+          "name": "MemoDetail.png",
+          "bytes": 25008,
+          "sha256": "3fdcd69bdb5d6f46596b117ebecaf86da09a5a47e0ec10df0ed1ed0e805c076e"
+        },
+        {
+          "name": "MemoFail.png",
+          "bytes": 41963,
+          "sha256": "fb1a8abb2cc16e90c6eadbb537551a52f4f8d5e16ef27cd1d5b3a105eed8be7f"
+        },
+        {
+          "name": "MemoFromNumber.png",
+          "bytes": 36653,
+          "sha256": "a10cfab2f5f9442ee1c0f35941d85210bf320a98b5a9448dd6b432faf6b1d604"
+        },
+        {
+          "name": "MemoFull.png",
+          "bytes": 39662,
+          "sha256": "fa6f530f788169772d0821e0dab610c859f35513753edeecd344c4be6105f753"
+        },
+        {
+          "name": "MemoNine.png",
+          "bytes": 41086,
+          "sha256": "7d759a0da009255af0b1fd092d5e90b73a8deb4722fdb2157d4d20cf45bf9996"
+        },
+        {
+          "name": "MemoRetried.png",
+          "bytes": 37814,
+          "sha256": "d7e993895f6ab91f1cbf7a9992a72023e814c94995f1c280ca46ac7ea6d78ecd"
+        },
+        {
+          "name": "MemoSaved.png",
+          "bytes": 37685,
+          "sha256": "4aca490d2142f9024f297cac31eaa090696bae7cfc9236a042d4d9d584ab7d54"
+        }
+      ]
+    },
+    {
+      "case": "memo",
+      "size": "120",
+      "exit": 0,
+      "checks": 75,
+      "failures": 0,
+      "finished": 1,
+      "expected": true,
+      "failed_checks": [],
+      "screenshots": [
+        {
+          "name": "MemoDetail.png",
+          "bytes": 29563,
+          "sha256": "604e102153b200f31a82240d0f4b5ddee68ac869b339b2e0bd51dc042d86afc6"
+        },
+        {
+          "name": "MemoFail.png",
+          "bytes": 41330,
+          "sha256": "722c9f9dda6bf5fcf2ca6832d3664ae4a564a07837eae97189a578f06d0d1ef6"
+        },
+        {
+          "name": "MemoFromNumber.png",
+          "bytes": 39297,
+          "sha256": "d3de77365b4263d91f03f851b55018342fa55f067a111df5200c98cc4cb99049"
+        },
+        {
+          "name": "MemoFull.png",
+          "bytes": 37956,
+          "sha256": "6d9fb307950e87ce5fe0dc90bb80873efec40b272f7dbfb74a016311f9027a8b"
+        },
+        {
+          "name": "MemoNine.png",
+          "bytes": 39605,
+          "sha256": "8b91db2a90d1d8b9d1f714870adfd42f2ae626599538c13ff00004598b7f76bc"
+        },
+        {
+          "name": "MemoRetried.png",
+          "bytes": 36063,
+          "sha256": "fdeecf54eb5693d108a03cad461736b88fb585d5289c085be09b41881197abd0"
+        },
+        {
+          "name": "MemoSaved.png",
+          "bytes": 36196,
+          "sha256": "da805797e6cfb0bf586fd8d5f4cc1f8837de96bf76e4660b2f1fa3fd5aa32652"
+        }
+      ]
+    },
+    {
+      "case": "boot",
+      "size": "100",
+      "exit": 0,
+      "checks": 51,
+      "failures": 0,
+      "finished": 1,
+      "expected": true,
+      "failed_checks": [],
+      "screenshots": [
+        {
+          "name": "BootAuthFail.png",
+          "bytes": 27151,
+          "sha256": "79436283c52f38305545609e30458ca71555d9c3caec0f5a586371906e21f32e"
+        },
+        {
+          "name": "BootClaim.png",
+          "bytes": 24010,
+          "sha256": "26c2262f36486a24f04086ec6e0ef7e06f186da9f95ce793101f70d5faa59370"
+        },
+        {
+          "name": "BootComputer.png",
+          "bytes": 28625,
+          "sha256": "b5030ea871b7afb5dc58323205e8bbc6042750afda99764c850714592338711f"
+        },
+        {
+          "name": "BootNoHub.png",
+          "bytes": 36115,
+          "sha256": "5b904f7d598941301b1dec0c9fcbca421732a965042b6f9ff02c1e4cb83a1164"
+        },
+        {
+          "name": "BootRestore.png",
+          "bytes": 26115,
+          "sha256": "d90c63d9a2d95877d0a19e11e59a97f5064ebc47249a3a903a6f77057c8be65e"
+        },
+        {
+          "name": "BootRevoked.png",
+          "bytes": 36619,
+          "sha256": "81698130373a8cd1121c99793afc99356eb6aa2808e4d61472957f2427500fc2"
+        },
+        {
+          "name": "BootTimeout.png",
+          "bytes": 27577,
+          "sha256": "74d71260cdf5c546e3423754c3c4d700e3eda9bb9cafbb19d6517da9cfe78795"
+        },
+        {
+          "name": "FirstBoot.png",
+          "bytes": 24527,
+          "sha256": "a738f96cb91dd57c75aaab26110b9b1ccee74dcc17e66631e833d8554e0340ef"
+        }
+      ]
+    },
+    {
+      "case": "boot",
+      "size": "120",
+      "exit": 0,
+      "checks": 51,
+      "failures": 0,
+      "finished": 1,
+      "expected": true,
+      "failed_checks": [],
+      "screenshots": [
+        {
+          "name": "BootAuthFail.png",
+          "bytes": 31527,
+          "sha256": "c886c4d401e8cee0250a949db0bf27197fb9a4d2e6c72ff2dc22dc98a3fefafb"
+        },
+        {
+          "name": "BootClaim.png",
+          "bytes": 27821,
+          "sha256": "3c54cce933aa5287e99735bc082dc96c0dfbcddf057119af1337a6e36c3dcee8"
+        },
+        {
+          "name": "BootComputer.png",
+          "bytes": 34634,
+          "sha256": "8f7fb3f091e4900e53d5ff2e30ba881cf9d0ca785c30f78edde2d04c84da9f9f"
+        },
+        {
+          "name": "BootNoHub.png",
+          "bytes": 43262,
+          "sha256": "14d646053a16a6ca5b05c02152a13062df0db211a690fe6eeb3da04e6310bf9c"
+        },
+        {
+          "name": "BootRestore.png",
+          "bytes": 30089,
+          "sha256": "64913fc6de6303fb9907c1a822aadf33c4cece952d8754d1d84c2d0ebb952595"
+        },
+        {
+          "name": "BootRevoked.png",
+          "bytes": 43123,
+          "sha256": "33ba076e6063abc1dc1e5f3bb3ff9f116f020d470929a65776eb89a3c0ff5645"
+        },
+        {
+          "name": "BootTimeout.png",
+          "bytes": 32203,
+          "sha256": "4238d758117f2cde5cd82a5da9349c1b3fee64ff2838fc56b2a72883c2f27c0d"
+        },
+        {
+          "name": "FirstBoot.png",
+          "bytes": 28732,
+          "sha256": "cd27735057346523849fe32fe71384a88b59841cd6b451cc46578181f2847d05"
+        }
+      ]
+    }
+  ],
+  "images": {
+    "count": 88,
+    "max_bytes": 48424,
+    "total_bytes": 3139471
+  }
+}

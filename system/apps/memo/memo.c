@@ -1,5 +1,4 @@
 /* Member memos share the capability bus, F4 lists and the long-input draft. */
-/* ui-scale-runtime: dimension top Save notice uses the status bar, primary header and theme gap. */
 #include <stdio.h>
 #include <string.h>
 #include "ink/sys/app.h"
@@ -35,7 +34,7 @@ static struct {
     memo_t note;
     char member[16], sent[4096], ids[4][32], args[4][96], labels[4][128], object[32], target[64], save_args[160];
     uint32_t id, started;
-    int mode;
+    int mode, keyboard_top;
     lv_timer_t *timer;
     ink_exec_job_t recorded;
     bool saving, retry;
@@ -43,6 +42,7 @@ static struct {
     ink_ui_page_spec_t model;
     ink_exec_job_t refresh;
 } M INK_PSRAM_BSS;
+static void settle(void);
 
 static bool read_note(ink_db_t *db, uint32_t id, memo_t *note) {
     char *raw = ink_app_alloc(INK_DB_RECORD_MAX + 1, true);
@@ -233,7 +233,8 @@ static void reply(void *ctx, const ink_receipt_t *rc) {
     M.saving = false;
     if (rc->status != INK_RC_DONE && M.field && M.mode == EDIT) save_failed(true);
     else if (rc->status == INK_RC_DONE && M.field && M.mode == FAIL) save_failed(false);
-    if (M.notice) lv_label_set_text(M.notice, rc->say);
+    if (M.notice && !M.field) lv_label_set_text(M.notice, rc->say);
+    if (M.field) settle();
     if (rc->status == INK_RC_DONE && !M.field) ink_ui_redraw();
     ink_ui_content_changed();
 }
@@ -333,8 +334,13 @@ static void settle(void) {
     const char *status = M.mode == FAIL ? (saved > 0 ? TR("草稿已存，备忘没存上，请重试") :
         saved < 0 ? TR("草稿没存上，字还在，请重试") : TR("正在存草稿，备忘没存上")) :
         M.saving || strcmp(text, M.sent) ? TR("正在保存备忘") : TR("已记下");
-    if (strcmp(lv_label_get_text(M.notice), status)) lv_label_set_text(M.notice, status);
-    ink_textfield_style(M.field, INK_FIELD_BODY, status);
+    lv_area_t keyboard; ink_shell_keyboard_area(&keyboard);
+    bool changed = strcmp(lv_label_get_text(M.notice), status) != 0;
+    if (changed) lv_label_set_text(M.notice, status);
+    if (changed || M.keyboard_top != keyboard.y1) {
+        M.keyboard_top = keyboard.y1;
+        ink_textfield_style(M.field, INK_FIELD_BODY, status);
+    }
     if (M.saving) return;
     if (!M.retry && (!strcmp(text, M.sent) || M.mode == FAIL)) return;
     save_current();
@@ -381,7 +387,7 @@ static void create(lv_obj_t *screen, void *arg) {
         {.id = "new", .label = TR("写一条"), .capability = "memo.edit", .enabled = true}
     };
     int mode = 0; while (mode < 8 && strcmp(PAGES[mode].name, ink_ui_page_name())) mode++;
-    M.mode = mode; M.id = (uint32_t)(uintptr_t)arg; M.saving = M.retry = false;
+    M.mode = mode; M.id = (uint32_t)(uintptr_t)arg; M.saving = M.retry = false; M.keyboard_top = -1;
     M.model = (ink_ui_page_spec_t){.id = ink_ui_page_name(), .title = TR("备忘")};
     if (strcmp(M.member, ink_member_current()->id)) { memset(&M.position, 0, sizeof M.position); memset(&M.note, 0, sizeof M.note); snprintf(M.member, sizeof M.member, "%s", ink_member_current()->id); }
     ink_shell_statusbar(screen, true);
