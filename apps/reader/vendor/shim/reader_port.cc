@@ -15,7 +15,6 @@ extern "C" void ink_reader_host_call(void (*fn)(void *), void *arg) {
 #endif
 }
 struct ink_reader_file { hal_file_t *file; bool error; };
-namespace std {
 FILE *ink_reader_fopen(const char *path, const char *mode) {
     if (strcmp(mode, "rb") || strncmp(path, "/content/", 9) || strstr(path, "..")) return nullptr;
     auto *f = static_cast<ink_reader_file *>(ink_app_alloc(sizeof(ink_reader_file), false));
@@ -44,4 +43,3 @@ int ink_reader_fseek(FILE *fp, long off, int whence) {
 }
 long ink_reader_ftell(FILE *fp) { return static_cast<long>(hal_fs_tell(reinterpret_cast<ink_reader_file *>(fp)->file)); }
 int ink_reader_ferror(FILE *fp) { return reinterpret_cast<ink_reader_file *>(fp)->error; }
-}
