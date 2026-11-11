@@ -33,7 +33,7 @@ target_include_directories(test-s31-display PRIVATE display_stub ${root}/drivers
 target_link_libraries(test-s31-display PRIVATE Threads::Threads m)
 add_executable(test-s31-wifi wifi.c)
 target_include_directories(test-s31-wifi PRIVATE wifi_stub)
-add_executable(test-s31-cell cell.c ${port}/hal_cellular_s31.c ${root}/drivers/chips/nt26/nt26.c)
+add_executable(test-s31-cell cell.c ${port}/s31_cell_rx.c ${port}/hal_cellular_s31.c ${root}/drivers/chips/nt26/nt26.c)
 target_include_directories(test-s31-cell PRIVATE cell_stub)
 enable_testing()
 add_test(NAME unit-s31-cell COMMAND test-s31-cell)

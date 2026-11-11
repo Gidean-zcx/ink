@@ -184,8 +184,9 @@ out:
         if (keys_back) osal_task_delay_us(S31_KEY_DEBOUNCE_US);
         else hal_log_write("power HAL: key restore failed; sampling stays off");
     }
-    if (cut && !restore(restore_rails)) hal_log_write("power HAL: rail restore failed");
-    if (cell_stopped) ink_s31_cell_resume();
+    bool rails_back = !cut || restore(restore_rails);
+    if (!rails_back) hal_log_write("power HAL: rail restore failed");
+    if (cell_stopped && rails_back) ink_s31_cell_resume();
     /* No SD/CNNT mux in this port yet: place USB after rails, before input resumes. */
     if (woke_at && cause != HAL_WAKE_TIMER) ink_usb_revive();
     s31_accel_resume();

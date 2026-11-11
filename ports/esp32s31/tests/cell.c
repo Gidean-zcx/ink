@@ -21,6 +21,10 @@ static unsigned locks, nqueues;
 static uint64_t now = 2000000;
 static uint8_t rx[16384];
 static size_t rx_head, rx_tail, split = 256;
+enum { DMA_COUNT = 4, DMA_SIZE = 1600 };
+static struct { uint8_t data[DMA_SIZE]; size_t len; bool held, queued; } dma[DMA_COUNT];
+static unsigned dma_head, dma_tail, dma_queued, dma_held, loans, returns, starts, stops;
+static bool receiving, overflow, recovered;
 static int mrdy = 1, srdy = 1;
 static bool pumping, no_wake, no_ack, no_response, prompt, missing, unregistered, corrupt_rx;
 static unsigned writes, bad_headers, handshakes, receives, acks, changed, data_tx, radio_commands;
@@ -80,7 +84,10 @@ esp_err_t gpio_set_level(int pin, int level) { assert(pin == 60); mrdy = level; 
 int gpio_get_level(int pin) { assert(pin == 3); return srdy; }
 esp_err_t gpio_install_isr_service(int flags) { assert(!flags); return ESP_OK; }
 esp_err_t gpio_isr_handler_add(int pin, void (*fn)(void *), void *arg) { assert(pin == 3 && !arg); srdy_isr = fn; return ESP_OK; }
-esp_err_t uart_driver_install(int p, int rb, int tb, int q, void *queue, int flags) { assert(p == 2 && rb == 4096 && !tb && !q && !queue && !flags); return ESP_OK; }
+esp_err_t gpio_pullup_en(int pin) { assert(pin == S31_UART2_RX); return ESP_OK; }
+esp_err_t uart_driver_install(int p, int rb, int tb, int q, void *queue, int flags) {
+    (void)p; (void)rb; (void)tb; (void)q; (void)queue; (void)flags; assert(!"UART driver must not be installed"); return ESP_FAIL;
+}
 esp_err_t uart_param_config(int p, const uart_config_t *c) { assert(p == 2 && c->baud_rate == 2000000 && c->data_bits == 8); return ESP_OK; }
 esp_err_t uart_set_pin(int p, int tx, int r, int cts, int rts) { assert(p == 2 && tx == 58 && r == 59 && cts == -1 && rts == -1); return ESP_OK; }
 static void inject(unsigned type, const void *data, size_t n) {
@@ -93,22 +100,22 @@ static void inject(unsigned type, const void *data, size_t n) {
     memcpy(p + 4, data, n); rx_tail += n + 4;
 }
 static void reply(const char *s) { inject(1, s, strlen(s)); }
-int uart_write_bytes(int port, const void *data, size_t n) {
-    assert(port == 2 && mrdy == 0 && srdy == 0 && n >= 4); writes++;
+bool ink_s31_uhci_transmit(const uint8_t *data, size_t n) {
+    assert(receiving && mrdy == 0 && srdy == 0 && n >= 4); writes++;
     const uint8_t *p = data;
     unsigned sum = p[0] + p[1] + p[2];
-    if (p[3] != (uint8_t)((sum >> 8) ^ sum ^ 3) || 4 + p[0] + ((p[1] & 15u) << 8) != n) { bad_headers++; return (int)n; }
+    if (p[3] != (uint8_t)((sum >> 8) ^ sum ^ 3) || 4 + p[0] + ((p[1] & 15u) << 8) != n) { bad_headers++; return true; }
     if (!no_ack) { srdy = 1; srdy_isr(NULL); srdy = 0; }
-    if (no_response) return (int)n;
+    if (no_response) return true;
     if (((p[2] >> 2) & 3) == 0) {
         static const uint8_t handshake[] = {0x53, 0x50, 0x49, 0x43, 2, 4, 12, 0, 0, 0, 0, 0};
         if (n == 16 && !memcmp(p + 4, handshake, sizeof handshake)) {
             static const uint8_t ack[] = {0x53, 0x50, 0x49, 0x43, 1, 0x80};
             handshakes++; inject(0, ack, sizeof ack);
         } else { assert(n == sizeof ethernet + 4 && !memcmp(p + 4, ethernet, sizeof ethernet)); data_tx++; }
-        return (int)n;
+        return true;
     }
-    if (prompt) { assert(p[n - 1] == 26); prompt = false; reply("\r\n+CMGS: 1\r\nOK\r\n"); return (int)n; }
+    if (prompt) { assert(p[n - 1] == 26); prompt = false; reply("\r\n+CMGS: 1\r\nOK\r\n"); return true; }
     char cmd[130]; assert(n - 4 < sizeof cmd && p[n - 1] == '\r');
     memcpy(cmd, p + 4, n - 5); cmd[n - 5] = 0;
     if (!strcmp(cmd, "AT+CMGS=1")) { prompt = true; reply("\r\n> "); }
@@ -123,15 +130,56 @@ int uart_write_bytes(int port, const void *data, size_t n) {
     else if (!strcmp(cmd, "ATI")) { reply("\r\nATI\r\nFAKE-NT26\r\n+CMTI: \"SM\",7\r\nOK\r\n"); }
     else if (!strncmp(cmd, "AT+CFUN=", 8)) { radio_commands++; reply("\r\nOK\r\n"); }
     else reply("\r\nOK\r\n");
-    return (int)n;
+    return true;
 }
-int uart_read_bytes(int port, void *out, size_t n, unsigned wait) {
-    assert(port == 2 && !wait);
+bool ink_s31_uhci_init(void) { return true; }
+bool ink_s31_uhci_receiving(void) { return receiving; }
+void ink_s31_uhci_flush(void) { assert(!receiving && !dma_held); rx_head = rx_tail = 0; }
+bool ink_s31_uhci_active(bool active) {
+    if (receiving != active) {
+        if (active) { assert(!dma_held); starts++; }
+        else stops++;
+        receiving = active;
+    }
+    return true;
+}
+static void dma_fill(void) {
+    assert(receiving && !overflow && rx_tail > rx_head);
+    if (dma_held == DMA_COUNT) { overflow = true; return; }
+    assert(!dma[dma_tail].held);
+    size_t n = rx_tail - rx_head;
     if (n > split) n = split;
-    if (n > rx_tail - rx_head) n = rx_tail - rx_head;
-    memcpy(out, rx + rx_head, n); rx_head += n; return (int)n;
+    if (n > DMA_SIZE) n = DMA_SIZE;
+    memcpy(dma[dma_tail].data, rx + rx_head, n);
+    dma[dma_tail].len = n;
+    dma[dma_tail].held = dma[dma_tail].queued = true;
+    rx_head += n;
+    dma_tail = (dma_tail + 1) % DMA_COUNT;
+    dma_held++; dma_queued++; loans++;
 }
-esp_err_t uart_flush_input(int port) { assert(port == 2); rx_head = rx_tail = 0; return ESP_OK; }
+bool ink_s31_uhci_take(ink_s31_uhci_buffer_t *out) {
+    if (!dma_queued && receiving && !overflow && rx_tail > rx_head) dma_fill();
+    if (!dma_queued) return false;
+    assert(dma[dma_head].held && dma[dma_head].queued);
+    *out = (ink_s31_uhci_buffer_t){dma[dma_head].data, dma[dma_head].len, &dma[dma_head]};
+    dma[dma_head].queued = false;
+    dma_head = (dma_head + 1) % DMA_COUNT;
+    dma_queued--;
+    return true;
+}
+void ink_s31_uhci_return(void *token) {
+    unsigned i;
+    for (i = 0; i < DMA_COUNT && token != &dma[i]; i++) { }
+    assert(i < DMA_COUNT && dma[i].held && !dma[i].queued);
+    dma[i].held = false;
+    dma_held--; returns++;
+    if (overflow && !dma_held) { overflow = false; recovered = true; rx_head = rx_tail; }
+}
+bool ink_s31_uhci_recovered(void) {
+    bool result = recovered;
+    recovered = false;
+    return result;
+}
 esp_err_t esp_read_mac(uint8_t *out, int type) { assert(type == ESP_MAC_ETH); memset(out, 0, 6); out[0] = 2; return ESP_OK; }
 esp_netif_t *esp_netif_new(const esp_netif_config_t *cfg) {
     assert(!(cfg->base->flags & ESP_NETIF_FLAG_GARP) && cfg->base->route_prio == 10); net_driver = *cfg->driver; return &netif;
@@ -154,7 +202,38 @@ int main(void) {
     split = 1;
     assert(hal_modem_at("ATI", response, sizeof response, 1000) == HAL_AT_OK && !strcmp(response, "FAKE-NT26"));
     assert(hal_modem_urc(response, sizeof response, 0) > 0 && !strcmp(response, "+CMTI: \"SM\",7"));
+    unsigned two_buffer_loans = loans;
+    split = 5; /* The six-byte OK payload and its header span exactly two buffers. */
+    assert(hal_modem_at("AT", response, sizeof response, 1000) == HAL_AT_OK && loans == two_buffer_loans + 2);
+    split = 1;
     assert(hal_modem_at_payload("AT+CMGS=1", "00", response, sizeof response, 1000) == HAL_AT_OK && !strcmp(response, "+CMGS: 1"));
+    assert(loans == returns && !dma_held && starts == 1);
+    /* Overflow after four owned buffers, with both a partial header and AT line in flight. */
+    split = 1;
+    reply("\r\nRING\r\n");
+    for (unsigned i = 0; i <= DMA_COUNT; i++) dma_fill();
+    assert(overflow && dma_held == DMA_COUNT);
+    ink_cell.line_n = 2;
+    memcpy(ink_cell.line, "BA", 2);
+    ink_cell.waiting = ink_cell.at_sent = true;
+    ink_receive();
+    assert(!overflow && !ink_cell.frame_n && !ink_cell.line_n && !ink_cell.waiting && ink_cell.desynced);
+    assert(ink_cell.result == HAL_AT_ERROR && returns == loans && !dma_held);
+    /* The first post-gap buffer contains discarded tail bytes, then an intact short EOF frame. */
+    split = DMA_SIZE;
+    rx_head = rx_tail = 0;
+    memset(rx, 0xFF, 7); rx_tail = 7;
+    reply("\r\n+CMTI: \"SM\",8\r\nOK\r\n");
+    ink_receive();
+    assert(!ink_cell.desynced && hal_modem_urc(response, sizeof response, 0) > 0 && !strcmp(response, "+CMTI: \"SM\",8"));
+    assert(loans == returns && !dma_held);
+    no_wake = true; srdy = 1; now += 500001; tick();
+    assert(!receiving && stops == 1);
+    no_wake = false; srdy = 0; tick();
+    assert(receiving && starts == 2 && mrdy == 0);
+    now += 500001; tick();
+    assert(receiving && mrdy == 1);
+    tick(); assert(receiving && mrdy == 1);
     split = 256;
     const char *forbidden[] = {"AT+ECSIMCFG=SimSlot,1", "AT+CGDCONT=1,\"IP\",\"example.com\"", "AT+CGAUTH=1,0", "AT+CMGD=7", "AT&W", "AT+ECRST", "AT+ECNETCFG=1", "AT+XJCFG=netPortBaudRate,1", "AT+IMS=1", "AT+CFUN=1;&W", "AT\r&W", "ATD1;&W", "AT+VTS=\"1\";&W"};
     unsigned before = writes;
@@ -202,12 +281,16 @@ int main(void) {
     reply("\r\nOK\r\n"); drain(); assert(hal_modem_at("AT", response, sizeof response, 1000) == HAL_AT_OK);
     assert(ink_s31_cell_suspend()); before = writes; tick(); assert(writes == before);
     assert(hal_modem_at("AT", response, sizeof response, 200) == HAL_AT_NO_MODEM);
-    ink_s31_cell_resume(); net_started = false; assert(hal_cell_status(&st) && handshakes == 3);
+    ink_s31_cell_resume();
+    assert(!receiving && ink_cell.ready_after == now + 1000000);
+    now = ink_cell.ready_after;
+    net_started = false; assert(hal_cell_status(&st) && handshakes == 3);
     unregistered = missing = true; csq = 99;
     assert(hal_cell_status(&st) && !st.registered && st.sim_missing && st.signal_dbm == 0 && !ink_s31_cell_available());
     assert(!ink_cell.ip && !ink_cell.handshake);
     assert(!bad_headers && changed && radio_commands == 0);
-    drain(); for (unsigned i = 0; i < nqueues; i++) free(queues[i].items);
+    drain(); assert(loans == returns && !dma_held);
+    for (unsigned i = 0; i < nqueues; i++) free(queues[i].items);
     puts("cell: PASS handshake, AT/payload, URC, timeout, Ethernet, reset, storage guard");
     return 0;
 }
