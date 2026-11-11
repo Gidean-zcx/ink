@@ -1,0 +1,40 @@
+# uart-eth-modem 来源与改动
+
+- 来源：[CloudZao/Metalio-E-INK4-Plus@874538e](https://github.com/CloudZao/Metalio-E-INK4-Plus/tree/874538eb54f7f7eb593cd40cd1ba6dc8497226e7)（v2.0.77），查阅日期 2026-11-11。只读取对象，未移动上游 HEAD。
+- `uart_eth_modem.*`、iot_eth 和 UHCI 按文件头为 Apache-2.0；板级生命周期为原仓库 MIT。完整许可证随文件保留；不是 GPL。
+- 帧协议、主任务、独立 TX、AT 探测、网卡和 DMA 使用原厂主体。下表同时给原文与本地哈希，**不把适配后的文件声称为逐字节原文**。
+
+| 本地文件 | 原厂路径 | 原文 SHA-256 | 本地 SHA-256 |
+| --- | --- | --- | --- |
+| `uart_eth_modem.cc` | `main/boards/common/board/uart_eth_modem.cc` | `5e9157aa89136be4c4ff3d634fd7d4066b1ea200373b9a60266f603d72c11c26` | `b4690e32f93317edae805abfa5074c397a8310ade9b59fd33e6403458f84aec4` |
+| `uart_eth_modem.h` | `main/boards/common/board/uart_eth_modem.h` | `00ffb790a900a072e6daeefd0192c361b93d7df13b08669ad4389d2cef47b78d` | `8869598ada7a4aa668eaafd6dc00efff3f6b198a1273404d419dd72cc1dc9e1c` |
+| `LICENSE` | `main/boards/common/camera/GC2145-LICENSE` | `cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30` | `cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30` |
+| `LICENSE-MIT` | `LICENSE` | `0a5a839033bfe18fe75d32b50d9d028912cf876f69ef59c2791aeb2971335d05` | `0a5a839033bfe18fe75d32b50d9d028912cf876f69ef59c2791aeb2971335d05` |
+| `nt26_lifecycle.cc` | `main/boards/common/board/nt26_board.cc` | `44545151b3748c015835e384c66d7c670877f65c95014e92c21d890a92c98d06` | `7a543cf9eaeaccce8b2c4e3997fbc526ea4ae29d2edd3904b4ca45b1e8b0a673` |
+| `nt26_lifecycle.h` | `main/boards/common/board/nt26_board.h` | `6fa5271d2b35c779d9c043b4a67762ed07547763b896ef046b08b47c06bb6ad8` | `a0ba586f09641b91f9a17b19210d73c5fbe701381195a1fed4e8289b9a111627` |
+
+## 改动原因
+
+1. `SendAt` 与 `SendAtCollectUntil` 接同一允许列表；必需 NAT/波特率配置拒绝时返回 `ESP_ERR_NOT_SUPPORTED`，停止该网络初始化。设备标识查询撤下；原厂日志只输出固定格式串，绝不格式化私有参数。
+2. AT 回复按行累积，保留跨帧内容、`>`/PDU、迟到回复隔离和超时结果；帧解析仍是原厂 `HandleRxData`。RX 溢出通知送原厂主队列，清除半帧和半行；Stop 停 DMA、归还剩余借用后才 Deinit。
+3. 已开数据通道仍发原厂 SPIC；仅无 ACK 才关开射频，沿用本项目每次开机最多一次的限制。依据 `docs/hardware/2026-11-10-trial.md` 换装 13–15。
+4. `+ECNETDEVCTL` 0/1 清握手/IP、发断开和重建通知；注册不等于 DHCP。选网、流量和 IP 事件接现有 C HAL；不选 LTE 就不发 LINK_UP。
+5. `ECSCLKEX` 按未知持久性拒绝：初始化保留配置只读失败事件，不打印初始化成功；已有真实握手的通道接 iot_eth，睡眠配置没有成功。这个继续接网行为与任务书“被拒不能继续”的严格解释冲突，见 REPORT，待主会话复核。
+6. `nt26_lifecycle.*` 从 `nt26_board.*` 整函数提取 `OnNetworkEvent`、`SignalWaitBits`、`TearDownModem`、`PreparePowerOff`、`StartOrRestartModem`、`IsNetworkReady`、`EnsureNetworkReady`、`OnPowerRestored`；保留 epoch、共享所有权、操作互斥、P14 后 1 秒、5 秒节流。删除 Board/UI/Application/NVS/状态栏接口，不复制重启整机或额外恢复任务；零等待请求不在网络事件任务里阻塞冷启动。配置拒绝不触发无限配置重试。
+7. `CMakeLists.txt`、`ink_modem_log.h` 为本项目适配；`ports/esp32s31/s31_*` 是 C HAL/策略胶水。源组件的硬件实现仍来自 `vendor/uart-uhci`，不另建 UHCI 对象。
+
+## 改动行清单
+
+范围由原文与本地逐行比较生成；“删除”是原文该段没有进入本地。生命周期中整段省略的是未选择的原厂 Board 功能，只有所需整函数进入构建。
+
+- `uart_eth_modem.cc`：原 18 → 本地 18–21（insert）；原 56 → 本地 60（replace）；原 61 → 本地 65–67（replace）；原 166 → 本地 172–178（insert）；原 262 → 本地 275–284（replace）；原 264 → 本地 286–289（insert）；原 271 → 本地 297（replace）；原 276–279 → 本地 302–309（replace）；原 298 → 本地 328（insert）；原 305 → 本地 336–350（insert）；原 313 → 本地 359（insert）；原 339 → 本地 386（insert）；原 344 → 本地 392（replace）；原 642 → 本地 690（replace）；原 662 → 本地 710（replace）；原 666 → 本地 714（insert）；原 699 → 本地 748（replace）；原 948 → 本地 997–1008（insert）；原 1247 → 本地 1308–1312（insert）；原 1248 → 本地 1314（insert）；原 1417 → 本地 1484–1486（replace）；原 1424–1439 → 本地 1493–1497（replace）；原 1441 → 本地 1499（replace）；原 1443 → 本地 1501–1523（replace）；原 1445–1452 → 本地 1525（delete）；原 1464–1466 → 本地 1536（replace）；原 1511–1514 → 本地 1581–1583（replace）；原 1516–1519 → 本地 1585–1593（replace）；原 1567–1568 → 本地 1641–1644（replace）；原 1574 → 本地 1650–1651（replace）；原 1582 → 本地 1659–1660（replace）；原 1621 → 本地 1699（replace）；原 1636 → 本地 1714（insert）；原 1642–1645 → 本地 1721–1722（replace）；原 1672 → 本地 1749–1753（insert）；原 1681 → 本地 1763（replace）；原 1742–1743 → 本地 1824（delete）；原 1745–1747 → 本地 1825（replace）；原 1816 → 本地 1894（replace）；原 1833 → 本地 1911–1915（insert）；原 1834 → 本地 1917–1918（insert）；原 1848 → 本地 1933–1938（insert）；原 1882 → 本地 1973–1982（insert）。
+
+- `uart_eth_modem.h`：原 66 → 本地 66（insert）；原 152 → 本地 153（replace）；原 194 → 本地 195–204（insert）；原 195 → 本地 206–210（insert）。
+
+- `nt26_lifecycle.cc`：原 1–20 → 本地 1–4（replace）；原 22 → 本地 6（delete）；原 26–29 → 本地 9（replace）；原 31–37 → 本地 11（delete）；原 39–61 → 本地 12（delete）；原 80–82 → 本地 30（replace）；原 84 → 本地 32（insert）；原 89 → 本地 38（insert）；原 109 → 本地 59（insert）；原 111 → 本地 62（insert）；原 116–119 → 本地 68（replace）；原 121 → 本地 70（insert）；原 124 → 本地 74（replace）；原 132 → 本地 82（insert）；原 190 → 本地 141（insert）；原 193 → 本地 145（insert）；原 219 → 本地 172（replace）；原 253 → 本地 206（replace）；原 273 → 本地 226（insert）；原 277–279 → 本地 231（delete）；原 285 → 本地 236（insert）；原 292–319 → 本地 244（delete）；原 326–544 → 本地 250（delete）。
+
+- `nt26_lifecycle.h`：原 1–13 → 本地 1–12（replace）；原 21 → 本地 20（replace）；原 34–36 → 本地 33（delete）；原 40 → 本地 36（delete）；原 42–43 → 本地 37–40（replace）；原 45–46 → 本地 42（replace）；原 48–50 → 本地 44（replace）；原 52–77 → 本地 46–47（replace）；原 79–102 → 本地 49（delete）；原 104–105 → 本地 50（delete）。
+
+- 本项目新增 `CMakeLists.txt`：5 行；SHA-256 `1db0ad4e3d7ba6b78256effe77ff1ae21511a043d4aa168a516f5d7fdc6c3024`。
+
+- 本项目新增 `ink_modem_log.h`：17 行；SHA-256 `f5ba2908aaac16391d6f87c233e667b24a8beb2fb4667a37114dd6514fb816e0`。

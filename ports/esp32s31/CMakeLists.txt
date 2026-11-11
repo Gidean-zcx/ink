@@ -7,6 +7,11 @@ option(INK_S31_LIGHT_SLEEP "Enable unverified S31 light sleep" OFF)
 include(${CMAKE_CURRENT_LIST_DIR}/opus.cmake)
 list(APPEND EXTRA_COMPONENT_DIRS ${ink_opus_source})
 list(APPEND EXTRA_COMPONENT_DIRS ${CMAKE_CURRENT_LIST_DIR}/../../vendor/uart-uhci)
+list(APPEND EXTRA_COMPONENT_DIRS ${CMAKE_CURRENT_LIST_DIR}/../../vendor/iot_eth
+    ${CMAKE_CURRENT_LIST_DIR}/../../vendor/uart-eth-modem)
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
-idf_build_set_property(MINIMAL_BUILD ON)
+set(COMPONENTS main uart-eth-modem)
 project(ink-s31)
+
+idf_component_get_property(ink_cell_drivers ink_drivers COMPONENT_LIB)
+target_link_libraries(${ink_cell_drivers} PRIVATE __idf_uart-eth-modem)

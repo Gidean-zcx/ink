@@ -118,7 +118,7 @@ int hal_cell_wait_event(hal_cell_event_t *ev, uint32_t timeout_ms) {
     uint32_t left = (uint32_t)((next_status - now + 999) / 1000);
     if (hal_modem_urc(line, sizeof line, timeout_ms < left ? timeout_ms : left) < 0) return 0;
     memset(ev, 0, sizeof *ev);
-    if (!strncmp(line, "+CEREG:", 7)) { ev->type = HAL_CELL_EV_REG; return 1; }
+    if (!strncmp(line, "+CEREG:", 7) || !strncmp(line, "+ECNETDEVCTL:", 13)) { ev->type = HAL_CELL_EV_REG; return 1; }
     if (!strncmp(line, "+CMTI:", 6)) { /* +CMTI: "SM",<index> */
         const char *comma = strchr(line, ',');
         if (!comma) return 0;
