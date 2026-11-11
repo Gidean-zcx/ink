@@ -1,0 +1,16 @@
+内存不足，请返回书架再试	Not enough memory. Go back to the library and try again.
+已列出目录	Contents listed
+打开阅读	Open book
+文件损坏或没有正文，请重新传入这本书	The book is damaged or empty. Transfer it again.
+最近在读	Recently read
+没有目录，按章节阅读	No contents found. Read in chapter order.
+点按跳到这里	Tap to read here
+目录	Contents
+章内页	Page in chapter
+第 %d 章	Chapter %d
+读不到这本书，请检查存储卡后重试	Cannot read this book. Check the memory card and try again.
+还没有书，请先从文件传入 TXT 或 EPUB	No books yet. Transfer a TXT or EPUB file to begin.
+这不是 EPUB 或 TXT，请选择支持的书	This is not an EPUB or TXT book. Choose a supported book.
+这本书已加密或压缩方式不支持，请换一本未加密的 EPUB	This book is encrypted or uses unsupported compression. Choose an unencrypted EPUB.
+《%.60s》第 %d 章 · 第 %d 页	《%.60s》 Chapter %d · Page %d
+第 %d 页	Page %d

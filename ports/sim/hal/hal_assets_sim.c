@@ -10,7 +10,7 @@
 #include "ink/hal_assets.h"
 #include "sim.h"
 
-#define MAX_ASSETS 64
+#define MAX_ASSETS 256 /* the device looks each name up in the packs, with no table: 64 ran out on a tour of every page */
 
 static struct {
     char name[96];

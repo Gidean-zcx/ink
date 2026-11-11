@@ -133,12 +133,31 @@ class ScaleCheck(unittest.TestCase):
         ):
             source = f'int w=125; {body} lv_obj_set_width(o,w);'
             with self.subTest(source=source): self.assertFalse(self.check_source(source))
+
         for source in (
             'int w=123; if(flag) w=192; w=125; lv_obj_set_width(o,w);',
             'int w=123; if(flag) {w=125; lv_obj_set_width(o,w);}',
             '#if FLAG\n#define WIDTH 125\n#else\n#define WIDTH 192\n#endif\nlv_obj_set_width(o,WIDTH);',
         ):
             with self.subTest(source=source): self.assertFalse(self.check_source(source))
+
+    def test_pages_do_not_size_textfields(self):
+        import re
+        root = Path(__file__).resolve().parents[1]
+        pages = {
+            'system/ui/search.c': 'S.field', 'system/ui/app_packages.c': 'obj',
+            'system/ui/shell/ai_chat.c': 'field', 'system/ui/shell/boot_flow.c': 'B.field',
+            'system/ui/shell/mobile_network.c': 'f', 'system/ui/shell/settings_family.c': 'S.field',
+            'system/ui/shell/navigation.c': 'search|password_field',
+            'system/apps/calendar/calendar.c': 'E.name', 'system/apps/clock/clock.c': 'C.name',
+            'system/apps/files/files.c': 'F.field', 'system/apps/weather/weather.c': 'W.field',
+            'system/apps/remote/remote.c': 'RS.field', 'system/apps/memo/memo.c': 'M.field',
+        }
+        for page, names in pages.items():
+            source = (root / page).read_text()
+            for name in names.split('|'):
+                self.assertIsNone(re.search(r'lv_obj_set_(?:size|width|height)\s*\(\s*' + re.escape(name) + r'\s*,', source), page)
+            self.assertIn('ink_textfield_style(', source, page)
 
 
 if __name__ == '__main__': unittest.main()

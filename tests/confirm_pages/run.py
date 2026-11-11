@@ -30,7 +30,7 @@ if a.mutant or a.baseline:
     link = shlex.split((build / 'CMakeFiles/sim-confirm-pages.dir/link.txt').read_text())
     if a.mutant == 'queue-reject':
         source = (ROOT / 'tests/confirm_pages/pages.c').read_text()
-        guard = 'if (i == 1) { read_all(tokens[i]); press("确认"); }'
+        guard = 'if (i == 1) { read_all(tokens[i]); press("继续操作"); }'
         assert source.count(guard) == 1, 'mutation must change exactly the second queue answer'
         source_file = area / 'pages.c'
         source_file.write_text(source.replace(guard, 'if (i == 1) { read_all(tokens[i]); press("取消"); }'))

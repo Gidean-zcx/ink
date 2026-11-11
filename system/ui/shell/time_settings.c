@@ -8,14 +8,15 @@
 #include "ink/sys/members.h"
 #include "ink/sys/settings.h"
 #include "ink/sys/time.h"
+#include "ink/sys/textfield.h"
 #include "ink/sys/ui_list.h"
 #include "ink/ui_shell.h"
 
 enum { TIME, EDIT, ZONES, RETURN };
 #define TIME_FIELDS_MAX INK_UI_DATETIME_PARTS
-#define TIME_ACTIONS_MAX 12
+#define TIME_ACTIONS_MAX (3 * TIME_FIELDS_MAX + 1)
 static const char *const NAMES[] = {"SetTime", "SetDateTime", "SetTimeZone", "SetReturn"};
-static const char *const TITLES[] = {TR_NOOP("日期和时间"), TR_NOOP("手动设置"), TR_NOOP("时区"), TR_NOOP("离开多久要重新验证")};
+static const char *const TITLES[] = {TR_NOOP("日期和时间"), TR_NOOP("手动设置"), TR_NOOP("时区"), TR_NOOP("重新验证")};
 static const char *const PARTS[] = {TR_NOOP("年"), TR_NOOP("月"), TR_NOOP("日"), TR_NOOP("时"), TR_NOOP("分")};
 static const int GRACE[] = {60, 120, 300, 900};
 static const char *const GRACE_NAMES[] = {TR_NOOP("1 分钟"), TR_NOOP("2 分钟"), TR_NOOP("5 分钟"), TR_NOOP("15 分钟")};
@@ -24,7 +25,7 @@ _Static_assert(sizeof GRACE / sizeof *GRACE <= TIME_FIELDS_MAX, "return choices 
 _Static_assert(sizeof GRACE_NAMES / sizeof *GRACE_NAMES == sizeof GRACE / sizeof *GRACE, "return labels fit");
 static struct {
     int page, part[TIME_FIELDS_MAX], fields, actions;
-    lv_obj_t *screen, *local;
+    lv_obj_t *screen, *local, *input;
     ink_ui_list_t *list;
     ink_ui_list_position_t pos;
     ink_ui_field_spec_t field[TIME_FIELDS_MAX];
@@ -62,6 +63,12 @@ static void date_bind(lv_obj_t *b, int part, int delta) {
     P.action[i] = (ink_ui_action_spec_t){.id = P.ids[i], .label = delta > 0 ? "+" : "−", .capability = "shell.time_step", .args_json = P.args[i], .enabled = true};
     ink_shell_bind(b, "shell.time_step", P.args[i]);
 }
+static void date_entered(void *ctx, const char *value) {
+    int part = (int)(intptr_t)ctx, n = 0, used = 0;
+    if (!value[0] || sscanf(value, "%4d%n", &n, &used) != 1 || value[used]) return;
+    char args[64]; snprintf(args, sizeof args, "{\"field\":%d,\"delta\":0,\"value\":%d}", part, n);
+    ink_receipt_t rc; ink_cap_invoke_json("shell.time_step", args, INK_SRC_TOUCH, ink_ui_content_version(), &rc);
+}
 static void bind_zone(lv_obj_t *slot, size_t i, ink_ui_field_spec_t *f, ink_ui_action_spec_t *a, void *ctx) {
     (void)ctx; unsigned k = (unsigned)(i % 4);
     const char *name = ink_time_zone_name((int)i), *city = TR(ink_time_zone_city((int)i));
@@ -72,14 +79,17 @@ static void bind_zone(lv_obj_t *slot, size_t i, ink_ui_field_spec_t *f, ink_ui_a
     lv_obj_clean(slot);
     ink_ui_line(slot, city, INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_GAP, INK_GAP_M, INK_CANVAS_W - 2 * INK_MARGIN - 2 * INK_GAP);
     ink_ui_line(slot, P.values[k], INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_GAP, INK_GAP_M + ink_ui_line_height(INK_FONT_LIST), INK_CANVAS_W - 2 * INK_MARGIN - 2 * INK_GAP);
+    if (!strcmp(name, ink_time_zone())) ink_ui_icon(slot, "check", INK_ICON_SMALL, INK_ICON_LINE,
+        INK_CANVAS_W - 2 * INK_MARGIN - INK_CONTROL, INK_GAP_M, false);
 }
 static void create(lv_obj_t *screen, void *arg) {
-    P.page = (int)(intptr_t)arg; P.screen = screen; P.local = NULL; P.fields = P.actions = 0; P.list = NULL;
+    P.page = (int)(intptr_t)arg; P.screen = screen; P.local = P.input = NULL; P.fields = P.actions = 0; P.list = NULL;
     P.model = (ink_ui_page_spec_t){.id = NAMES[P.page], .title = TR(TITLES[P.page]), .fields = P.field, .actions = P.action};
     ink_shell_statusbar(screen, true); ink_shell_topbar(screen, TR(TITLES[P.page]));
     int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP, w = INK_CANVAS_W - 2 * INK_MARGIN;
     char text[128], args[96];
     if (P.page == ZONES) {
+        if (ink_setting_get("time.zone_auto")) { ink_ui_notice(screen, TR("先关闭自动设置时区"), y); y += ink_ui_line_height(INK_FONT_NOTE) + INK_GAP; }
         const ink_ui_action_spec_t paging[] = {
             {.id = "prev", .label = TR("上一页"), .capability = "shell.time_prev"}, {.id = "next", .label = TR("下一页"), .capability = "shell.time_next"}};
         ink_ui_page_spec_t page = {.id = "SetTimeZone", .title = TR("时区"), .actions = paging, .action_count = 2};
@@ -105,6 +115,10 @@ static void create(lv_obj_t *screen, void *arg) {
             button(labels[i], i % 2 ? (i == 1 ? "shell.time_edit" : "shell.time_zones") : "settings.set", i % 2 ? NULL : args,
                 !(i % 2) || !automatic, INK_MARGIN, y + ink_ui_line_height(INK_FONT_NOTE), w, false);
             y += INK_CONTROL + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP;
+            if (i % 2 && automatic) {
+                ink_ui_notice(screen, i == 1 ? TR("先关闭自动设置日期和时间") : TR("先关闭自动设置时区"), y);
+                y += ink_ui_line_height(INK_FONT_NOTE) + INK_GAP;
+            }
         }
         char zone[40];
         ink_ui_notice(screen, TR(ink_setting_get("time.zone_auto") && !ink_hub_server_zone(zone, sizeof zone) ? "等待网络提供时区" : "使用 24 小时制；夏令时自动调整"), y);
@@ -113,20 +127,34 @@ static void create(lv_obj_t *screen, void *arg) {
             snprintf(text, sizeof text, "%s %02d", TR(PARTS[i]), P.part[i]); field(i, PARTS[i], TR(PARTS[i]), text);
         }
         ink_ui_datetime_picker(screen, P.part, date_bind);
+        for (int i = 0; i < TIME_FIELDS_MAX; i++) {
+            int a = P.actions++;
+            snprintf(P.ids[a], sizeof P.ids[a], "input:%d", i);
+            snprintf(P.args[a], sizeof P.args[a], "{\"field\":%d,\"delta\":0}", i);
+            P.action[a] = (ink_ui_action_spec_t){.id = P.ids[a], .label = TR(PARTS[i]), .capability = "shell.time_step", .args_json = P.args[a], .enabled = true};
+            lv_obj_t *target = ink_ui_box(screen, INK_MARGIN + INK_PRIMARY + INK_GAP_M, y + i * (INK_CONTROL + INK_GAP_M),
+                w - 2 * (INK_PRIMARY + INK_GAP_M), INK_CONTROL, INK_RADIUS_KEY, INK_SURFACE_WHITE, true);
+            lv_obj_set_style_border_side(target, LV_BORDER_SIDE_BOTTOM, 0); lv_obj_set_style_radius(target, 0, 0);
+            lv_obj_set_style_bg_opa(target, LV_OPA_TRANSP, 0); ink_shell_bind(target, "shell.time_step", P.args[a]);
+        }
         ink_tm_t t = {.year = P.part[0], .month = P.part[1], .day = P.part[2], .hour = P.part[3], .min = P.part[4]};
         snprintf(args, sizeof args, "{\"utc_s\":%lld}", (long long)ink_time_from_local(&t));
         button(TR("保存日期和时间"), "time.set", args, !ink_setting_get("time.auto"), INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_CONTROL, w, true);
-    } else for (int i = 0; i < (int)(sizeof GRACE / sizeof *GRACE); i++) {
+    } else {
+        ink_ui_notice(screen, TR("离开后，再用大人的空间要输密码"), y); y += ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_L;
+        for (int i = 0; i < (int)(sizeof GRACE / sizeof *GRACE); i++) {
         const char *label = TR(GRACE_NAMES[i]);
         field(i, GRACE_NAMES[i], label, ink_setting_get("member.idle_return_s") == GRACE[i] ? TR("已选择") : "");
         snprintf(args, sizeof args, "{\"id\":\"member.idle_return_s\",\"value\":%d}", GRACE[i]);
         button(label, "settings.set", args, true, INK_MARGIN, y, w, false);
-        ink_ui_line(screen, P.values[i], INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y + INK_CONTROL, w);
-        y += INK_CONTROL + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP;
+        if (ink_setting_get("member.idle_return_s") == GRACE[i]) ink_ui_icon(screen, "check", INK_ICON_SMALL, INK_ICON_LINE,
+            INK_CANVAS_W - INK_MARGIN - INK_CONTROL, y + (INK_CONTROL - INK_ICON_SMALL) / 2, false);
+        y += INK_CONTROL + INK_GAP;
+        }
     }
     P.model.field_count = (size_t)P.fields; P.model.action_count = (size_t)P.actions;
 }
-static void destroy(void) { P.screen = P.local = NULL; P.list = NULL; }
+static void destroy(void) { P.screen = P.local = P.input = NULL; P.list = NULL; }
 static int snapshot(char *out, size_t cap) { return P.list ? ink_ui_list_snapshot(P.list, out, cap) : ink_ui_semantics_snapshot(&P.model, out, cap); }
 static bool key(ink_key_t k, bool lng) { return P.list && ink_ui_list_key(P.list, k, lng); }
 #define PAGE(n) {.name = n, .create = create, .destroy = destroy, .snapshot = snapshot, .on_key = key}
@@ -136,8 +164,24 @@ static void navigate(ink_call_t *c) {
     const char *id = c->cap->id;
     if (!strcmp(id, "shell.time_step")) {
         int64_t i = 0, d = 0; ink_args_get_int(&c->args, "field", &i); ink_args_get_int(&c->args, "delta", &d);
-        P.part[i] += (int)d;
+        int64_t v = 0; bool direct = ink_args_get_int(&c->args, "value", &v);
+        if (!d && !direct) {
+            if (P.input) lv_obj_delete(P.input);
+            char initial[16]; snprintf(initial, sizeof initial, "%d", P.part[i]);
+            lv_obj_t *box = ink_ui_box(P.screen, INK_MARGIN, INK_STATUS_BAR + INK_PRIMARY + INK_GAP,
+                INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP, 0, INK_SURFACE_WHITE, false);
+            P.input = box;
+            ink_ui_label(box, TR(PARTS[i]), INK_FONT_NOTE, INK_WEIGHT_MEDIUM, 0, 0, INK_CANVAS_W - 2 * INK_MARGIN);
+            ink_text_cfg_t cfg = {.type = INK_TEXT_NUMBER, .initial = initial, .hint = TR(PARTS[i]), .max = 4};
+            lv_obj_t *input = ink_textfield_create(box, &cfg, date_entered, (void *)(intptr_t)i, true);
+            lv_obj_set_pos(input, 0, ink_ui_px(ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_XS));
+            return;
+        }
         const int lo[] = {2002, 1, 1, 0, 0}, hi[] = {2100, 12, 31, 23, 59};
+        if (direct) {
+            if (v < lo[i] || v > hi[i]) { c->rc.status = INK_RC_REJECTED; ink_ui_redraw(); return; }
+            P.part[i] = (int)v;
+        } else P.part[i] += (int)d;
         if (P.part[i] < lo[i]) P.part[i] = hi[i];
         if (P.part[i] > hi[i]) P.part[i] = lo[i];
         int y = P.part[0], m = P.part[1], days = m == 2 ? 28 + (!(y % 4) && (y % 100 || !(y % 400))) : 30 + ((m + (m > 7)) % 2);
@@ -172,7 +216,7 @@ int ink_time_settings_init(void) {
         {.id = "shell.time_zones", .title = "选择城市或地区", .effect = INK_FX_NAVIGATE, .run = navigate},
         {.id = "shell.return", .title = "离开多久要重新验证", .effect = INK_FX_NAVIGATE, .run = navigate},
         {.id = "shell.time_step", .title = "调整日期时间草稿", .activity = "SetDateTime", .effect = INK_FX_NAVIGATE,
-         .input = "{\"type\":\"object\",\"properties\":{\"field\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":4},\"delta\":{\"type\":\"integer\",\"enum\":[-1,1]}},\"required\":[\"field\",\"delta\"]}", .run = navigate},
+         .input = "{\"type\":\"object\",\"properties\":{\"field\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":4},\"delta\":{\"type\":\"integer\",\"enum\":[-1,0,1]},\"value\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":2100}},\"required\":[\"field\",\"delta\"]}", .run = navigate},
         {.id = "shell.time_prev", .title = "时区上一页", .activity = "SetTimeZone", .effect = INK_FX_NAVIGATE, .run = navigate},
         {.id = "shell.time_next", .title = "时区下一页", .activity = "SetTimeZone", .effect = INK_FX_NAVIGATE, .run = navigate}};
     return ink_cap_register(caps, sizeof caps / sizeof *caps) || ink_settings_watch("time.", changed, NULL, INK_EXEC_UI) ||

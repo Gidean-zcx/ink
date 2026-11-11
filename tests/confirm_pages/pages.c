@@ -78,7 +78,7 @@ static bool waiting(uint32_t token) {
 static uint32_t ask(int n) {
     if (!strcmp(scene, "ConfirmWeb") || !strcmp(scene, "ConfirmExpired")) {
         ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL); char json[768];
-        snprintf(json, sizeof json, "{\"title\":\"这一步要花钱\",\"body\":\"shop.example.com · 合成订单\\n提交订单 · 38 元\",\"member\":\"owner\",\"parent\":false,\"expires_ms\":60000,\"digest\":\"%064d\",\"_meta\":{\"member\":\"owner\",\"epoch\":%u}}", n, ink_hub_member_epoch());
+        snprintf(json, sizeof json, "{\"title\":\"这一步要花钱\",\"body\":\"shop.example.com · 合成订单\\n提交订单 · 38 元\",\"member\":\"owner\",\"parent\":false,\"expires_ms\":60000,\"digest\":\"%064d\",\"_meta\":{\"member\":\"owner\",\"epoch\":%u}}", n, (unsigned)ink_hub_member_epoch());
         CHECK(j && ink_json_parse(j, json, strlen(json)) == 0, "synthetic web request parses");
         if (j) { test_confirm_request(j); osal_free(j); }
     } else if (!strcmp(scene, "ConfirmCall")) {
@@ -109,16 +109,16 @@ static void read_all(uint32_t token) {
 static const char *accept_label(void) {
     if (!strcmp(scene, "ConfirmParent")) return "输入密码";
     if (!strcmp(scene, "ConfirmCall")) return "打电话";
-    if (!strcmp(scene, "ConfirmSetting")) return "确认修改";
-    if (!strcmp(scene, "ConfirmWeb")) return "确认支付";
-    return "确认";
+    if (!strcmp(scene, "ConfirmSetting")) return "修改设置";
+    if (!strcmp(scene, "ConfirmWeb")) return "支付";
+    return "继续操作";
 }
 static void ai_cannot_answer(uint32_t token) {
     for (int src = INK_SRC_AI; src <= INK_SRC_CONFIRMED; src++) {
         CHECK(ink_confirm_decide(token, true, (ink_source_t)src) == -1, "source %d cannot accept", src);
         CHECK(ink_confirm_decide(token, false, (ink_source_t)src) == -1, "source %d cannot reject", src);
     }
-    char args[80]; snprintf(args, sizeof args, "{\"token\":%u,\"delta\":1}", token);
+    char args[80]; snprintf(args, sizeof args, "{\"token\":%u,\"delta\":1}", (unsigned)token);
     CHECK(AI("confirm.page", args) && g_rc.status == INK_RC_INVALID, "AI cannot mark pages as read");
     CHECK(waiting(token), "nonhuman attempts leave the transaction intact");
 }
@@ -136,7 +136,7 @@ static void queue_test(void) {
         ink_confirm_view_t cards[4]; CHECK(ink_confirm_list(cards, 4) == 4 - i && cards[0].token == tokens[i], "FIFO item %d", i);
         view(); char count[40]; snprintf(count, sizeof count, "排队=%d", 4 - i);
         CHECK(strstr(g_snap, count), "snapshot reports the actual queue length");
-        if (i == 1) { read_all(tokens[i]); press("确认"); }
+        if (i == 1) { read_all(tokens[i]); press("继续操作"); }
         else press("取消");
         CHECK(WAIT_FOR(result_token == tokens[i], 10000), "each queue item gets its own result");
         CHECK(!strcmp(decision, i == 1 ? "accepted" : "rejected") && (i == 1 ? !strcmp(status, "done") : !status[0]),
@@ -161,7 +161,7 @@ static void run(void *arg) {
         uint32_t token = ask(0);
         CHECK(WAIT_FOR(result_token == token, 62000) && !strcmp(decision, "expired"), "real deadline expires");
         check_snapshot(); screenshot();
-        char args[80]; snprintf(args, sizeof args, "{\"token\":%u,\"delta\":0}", token);
+        char args[80]; snprintf(args, sizeof args, "{\"token\":%u,\"delta\":0}", (unsigned)token);
         CHECK(AI("confirm.page", args) && g_rc.status == INK_RC_INVALID, "expired explanation remains a human page");
         press("关闭"); view(); CHECK(strcmp(g_top, "ConfirmExpired"), "close removes the expired page");
         token = ask(1);

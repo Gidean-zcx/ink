@@ -743,11 +743,13 @@ static void page_show(remote_page_t page) {
             RS.actions[3].enabled = page == ADDRESS || !RS.secret;
             RS.field = ink_textfield_create(RS.chrome, &cfg, entered, NULL, false);
             lv_obj_set_pos(RS.field, ink_ui_px(INK_MARGIN), ink_ui_px(y));
-            lv_obj_set_width(RS.field, ink_ui_px(w));
+            ink_textfield_kind_t kind = RS.secret && page == TYPE ? INK_FIELD_PASSWORD : page == TYPE ? INK_FIELD_BODY : INK_FIELD_SINGLE;
+            ink_textfield_style(RS.field, kind, cfg.hint);
             RS.semantics.field_count = 3;
             RS.fields[2] = (ink_ui_field_spec_t){.id="input", .role="textbox", .label=cfg.hint, .secret=cfg.ai_hidden};
             ink_textfield_bind_short(RS.field, &RS.semantics, &RS.fields[2], &RS.actions[2]);
             ink_exec_post(INK_EXEC_UI, &RS.focus_job, focus_input, NULL);
+            y += ink_textfield_height(kind) - INK_CONTROL;
             if (page == TYPE) ink_ui_label(RS.chrome, page_message(), INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y + INK_CONTROL + INK_GAP, w);
             if (page == ADDRESS) ink_ui_notice(RS.chrome, TR("输入网址后点“完成”打开"), y + INK_CONTROL + INK_GAP);
             /* The common text service masks credentials in every input snapshot. */

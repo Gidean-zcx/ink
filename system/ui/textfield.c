@@ -1,5 +1,5 @@
 /* A text field for pages (see ink/sys/textfield.h). The session is the text service's; this shows it. */
-/* ui-scale-runtime: dimension home.x,home.y,position.y,keyboard.y1,lv_obj_get_content_height Saved coordinates and measured viewport relative to the theme keyboard safe area. */
+/* ui-scale-runtime: dimension home.x,home.y,position.y,keyboard.y1,lv_obj_get_content_height,body_height,w,y,h Saved coordinates and complete theme text lines within the keyboard safe area. */
 #include "ink/sys/i18n.h"
 #include <stdio.h>
 #include <string.h>
@@ -15,7 +15,8 @@
 #include "ink/ui_shell.h"
 
 typedef struct {
-    lv_obj_t *obj, *label, *menu;
+    lv_obj_t *obj, *label, *menu, *area, *title, *error, *clear, *icon;
+    ink_textfield_kind_t kind;
     ink_text_cfg_t cfg;
     char hint[48];
     char *text; /* what it holds: the session's while it has one */
@@ -37,10 +38,8 @@ typedef struct {
     lv_timer_t *saved_timer;
 } field_t;
 
-#define WINDOW_CHARS 30
-
 static const lv_font_t *font(void) {
-    return ink_ui_font_px(INK_FONT_BODY, INK_WEIGHT_REGULAR);
+    return ink_ui_font_px(INK_FONT_FIELD, INK_WEIGHT_REGULAR);
 }
 
 static const char *char_at(const char *s, size_t chars) {
@@ -61,8 +60,8 @@ static void long_bounds(field_t *f, const char *v, char *scratch) {
             size_t next = ink_text_cluster_end(v, end);
             memcpy(scratch, v + start, next - start); scratch[next - start] = 0;
             lv_point_t size;
-            lv_text_get_size(&size, scratch, font(), 0, 0, lv_obj_get_width(f->label) - ink_ui_px(INK_GAP_M), LV_TEXT_FLAG_NONE);
-            if (end > start && (size.y > lv_obj_get_height(f->label) - ink_ui_px(ink_ui_line_height(INK_FONT_BODY)) ||
+            lv_text_get_size(&size, scratch, font(), 0, 0, lv_obj_get_content_width(f->area) - ink_ui_px(INK_GAP_M), LV_TEXT_FLAG_NONE);
+            if (end > start && (size.y > lv_obj_get_content_height(f->area) - ink_ui_px(ink_ui_line_height(INK_FONT_BODY)) ||
                 ink_text_char_offset(v + start, next - start) > 240)) break;
             end = next;
         }
@@ -77,46 +76,33 @@ static void long_bounds(field_t *f, const char *v, char *scratch) {
     lv_label_set_text(f->pages_label, pages);
 }
 
-/* The text with what is being composed where the cursor is; the cursor or the selection marked unless it is simply at the end
- * (placeholder look, D-64). A long text starts so that the cursor is in view. */
+/* Compose the visible text and retain service offsets; LVGL draws the cursor and selection. */
 static void line_piece(field_t *f, char *line, size_t cap, size_t *bytes, const char *s, size_t n, size_t at, size_t after) {
-    if (*bytes + n >= cap || f->displayed + 1 >= 256) return;
-    f->display_map[f->displayed++] = at;
+    if (*bytes + n >= cap) return;
+    if (f->displayed + 1 < 256) {
+        f->display_map[f->displayed++] = at;
+        f->display_map[f->displayed] = after;
+    }
     memcpy(line + *bytes, s, n);
     *bytes += n; line[*bytes] = 0;
-    f->display_map[f->displayed] = after;
 }
 
 static void compose_line(field_t *f, const char *v, const char *c, char *line, size_t cap) {
     size_t start, end;
     ink_text_selection(&start, &end);
-    if (!f->cfg.draft_page) f->window = start > WINDOW_CHARS ? start - WINDOW_CHARS : 0;
-    lv_obj_update_layout(f->obj);
-    const char *cursor = char_at(v, start);
-    while (f->semantic && !f->cfg.draft_page && f->window < start) {
-        const char *first = char_at(v, f->window);
-        snprintf(line, cap, "%.*s%s|", (int)(cursor - first), first, start == end ? c : "");
-        lv_point_t size;
-        lv_text_get_size(&size, line, lv_obj_get_style_text_font(f->label, 0),
-                         lv_obj_get_style_text_letter_space(f->label, 0), 0, LV_COORD_MAX, LV_TEXT_FLAG_NONE);
-        if (size.x <= lv_obj_get_content_width(f->label)) break;
-        f->window++;
-    }
+    if (!f->cfg.draft_page) f->window = 0;
     const char *p = char_at(v, f->window);
     size_t bytes = 0, at = f->window;
     f->displayed = 0; f->display_map[0] = at;
     line[0] = 0;
     for (;;) {
-        if (at == start && start != end) line_piece(f, line, cap, &bytes, "[", 1, at, at);
-        if (at == end && start != end) line_piece(f, line, cap, &bytes, "]", 1, at, at);
         if (start == end && at == end && (*p || *c || f->semantic || f->cfg.draft_page)) {
             for (const char *q = c; *q;) {
                 const char *next = char_at(q, 1);
                 line_piece(f, line, cap, &bytes, q, (size_t)(next - q), at, at); q = next;
             }
-            line_piece(f, line, cap, &bytes, "|", 1, at, at);
         }
-        if (!*p || at >= (f->cfg.draft_page ? f->page_end : f->window + WINDOW_CHARS * 2)) break;
+        if (!*p || (f->cfg.draft_page && at >= f->page_end)) break;
         const char *next = char_at(p, 1);
         line_piece(f, line, cap, &bytes, p, (size_t)(next - p), at, at + 1);
         p = next; at++;
@@ -126,29 +112,32 @@ static void compose_line(field_t *f, const char *v, const char *c, char *line, s
 static void show(field_t *f) {
     const char *v = f->session ? ink_text_value() : f->text;
     const char *c = f->session ? ink_text_composing() : "";
-    char short_line[256];
-    char *line = f->cfg.draft_page ? osal_malloc(f->cap + 64, OSAL_MEM_EXTERNAL) : short_line;
-    size_t line_cap = f->cfg.draft_page ? f->cap + 64 : sizeof short_line;
+    char *line = osal_malloc(f->cap + 64, OSAL_MEM_EXTERNAL);
+    size_t line_cap = f->cap + 64;
     if (!line) return;
     if (!f->cfg.draft_page) f->window = 0;
     f->displayed = 0;
-    if (f->cfg.type == INK_TEXT_PASSWORD) {
-        size_t n = strlen(v);
-        if (n >= line_cap) n = line_cap - 1;
-        memset(line, '*', n);
-        line[n] = 0;
-    } else if (f->cfg.draft_page && f->session) {
+    if (f->cfg.type == INK_TEXT_PASSWORD) snprintf(line, line_cap, "%s", v);
+    else if (f->cfg.draft_page && f->session) {
         lv_obj_update_layout(f->obj); long_bounds(f, v, line); compose_line(f, v, c, line, line_cap);
-    } else if (!v[0] && !c[0] && (!f->semantic || !f->session)) snprintf(line, line_cap, "%s", f->hint);
-    else if (f->session) compose_line(f, v, c, line, line_cap);
+    } else if (f->session) compose_line(f, v, c, line, line_cap);
     else if (f->cfg.draft_page) snprintf(line, line_cap, "%.*s", (int)(char_at(v, f->page_end) - char_at(v, f->window)), char_at(v, f->window));
     else snprintf(line, line_cap, "%s%s", v, c);
-    lv_label_set_text(f->label, line);
-    if (line != short_line) osal_free(line);
-    if (f->semantic) {
-        if (f->session) lv_obj_add_state(f->obj, LV_STATE_FOCUSED);
-        else lv_obj_remove_state(f->obj, LV_STATE_FOCUSED);
-    }
+    lv_textarea_set_text(f->area, line);
+    size_t start = 0, end = 0;
+    if (f->session) ink_text_selection(&start, &end);
+    if (f->session) lv_textarea_set_cursor_pos(f->area, (int32_t)(start - f->window + ink_text_char_offset(c, strlen(c))));
+    lv_point_t scroll; lv_obj_get_scroll_end(f->area, &scroll);
+    lv_obj_scroll_to(f->area, scroll.x, scroll.y, LV_ANIM_OFF);
+    lv_label_set_text_selection_start(f->label, start == end ? LV_LABEL_TEXT_SELECTION_OFF : (uint32_t)(start - f->window));
+    lv_label_set_text_selection_end(f->label, start == end ? LV_LABEL_TEXT_SELECTION_OFF : (uint32_t)(end - f->window));
+    lv_obj_set_style_opa(f->area, f->session ? LV_OPA_COVER : LV_OPA_TRANSP, LV_PART_CURSOR);
+    lv_obj_set_state(f->area, LV_STATE_FOCUSED, f->session != 0);
+    lv_obj_set_flag(f->clear, LV_OBJ_FLAG_HIDDEN, !v[0] || f->cfg.type == INK_TEXT_PASSWORD || f->cfg.draft_page);
+    if (f->cfg.type == INK_TEXT_PASSWORD) memset(line, 0, line_cap);
+    osal_free(line);
+    if (f->session) lv_obj_add_state(f->obj, LV_STATE_FOCUSED);
+    else lv_obj_remove_state(f->obj, LV_STATE_FOCUSED);
     ink_ui_hint_obj(f->obj, INK_REFRESH_FAST);
 }
 
@@ -178,12 +167,12 @@ static void cl_entered(void *ctx, const char *value) {
 static void cl_ended(void *ctx) {
     field_t *f = ctx;
     if (f->saved_timer) lv_timer_pause(f->saved_timer);
-    if (f->semantic) {
+    f->session = 0;
+    if (!f->cfg.draft_page) {
         lv_point_t home = f->home;
         lv_obj_set_pos(f->obj, home.x, home.y);
         ink_ui_content_changed();
     }
-    f->session = 0;
     show(f);
 }
 
@@ -200,10 +189,11 @@ static bool short_current(field_t *f) {
 }
 
 static bool focus(field_t *f) {
+    if (f->owner_epoch != ink_member_epoch()) return false;
     if (f->cfg.draft_page && (!ink_ui_page_current() || f->owner_epoch != ink_member_epoch() || strcmp(f->cfg.draft_page, ink_ui_page_name()))) return false;
     if (f->semantic && !short_current(f)) return false;
     if (f->session) return true;
-    if (f->semantic) {
+    if (!f->cfg.draft_page) {
         lv_area_t field, keyboard;
         lv_obj_update_layout(f->obj);
         lv_obj_get_coords(f->obj, &field);
@@ -235,7 +225,12 @@ static void close_menu(field_t *f) {
 }
 
 static size_t field_index(field_t *f, uint32_t letter) {
-    if (f->session && f->cfg.type != INK_TEXT_PASSWORD) return f->display_map[letter < f->displayed ? letter : f->displayed];
+    if (f->session && f->cfg.type != INK_TEXT_PASSWORD && letter <= f->displayed) return f->display_map[letter];
+    if (f->session && f->cfg.type != INK_TEXT_PASSWORD) {
+        size_t start, end; ink_text_selection(&start, &end);
+        size_t n = ink_text_char_offset(ink_text_composing(), strlen(ink_text_composing()));
+        if (start == end && letter > start) return letter < start + n ? start : letter - n;
+    }
     return f->window + letter;
 }
 
@@ -308,6 +303,11 @@ static void menu_button(field_t *f, const char *label, lv_event_cb_t cb) {
     lv_label_set_text(l, label);
 }
 
+static void field_icons(field_t *f, int w, int y, int h) {
+    lv_obj_set_pos(f->clear, w - ink_ui_px(INK_FIELD_CLEAR), y + (h - ink_ui_px(INK_FIELD_CLEAR)) / 2);
+    lv_obj_set_pos(f->icon, ink_ui_px(INK_GAP_L), y + (h - ink_ui_px(INK_FIELD_SEARCH_ICON)) / 2);
+}
+
 static void field_event(lv_event_t *e) {
     field_t *f = lv_event_get_user_data(e);
     lv_event_code_t code = lv_event_get_code(e);
@@ -320,7 +320,7 @@ static void field_event(lv_event_t *e) {
             ink_receipt_t rc;
             ink_ui_semantics_action(f->page, f->focus_action->id, &target, INK_SRC_TOUCH, &rc);
         } else focus(f);
-    } else if (code == LV_EVENT_LONG_PRESSED) {
+    } else if (code == LV_EVENT_LONG_PRESSED && f->cfg.type != INK_TEXT_PASSWORD) {
         close_menu(f);
         if (f->session && f->cfg.type != INK_TEXT_PASSWORD) ink_text_select_word(place_of(f, e));
         f->menu = lv_obj_create(lv_layer_sys());
@@ -350,8 +350,61 @@ static void field_event(lv_event_t *e) {
         osal_free(f->text);
         osal_free(f);
     } else if (code == LV_EVENT_SIZE_CHANGED) {
-        lv_label_set_long_mode(f->label, lv_obj_get_height(f->obj) > ink_ui_px(INK_PRIMARY) ? LV_LABEL_LONG_WRAP : LV_LABEL_LONG_CLIP);
+        /* The kind decides the height; a page may still narrow a field that shares a row with buttons (the SMS
+         * reply sits between 展开 and 发送): it starts at the container's width and keeps a width set later. */
+        lv_obj_set_height(f->obj, LV_SIZE_CONTENT);
+    } else if (code == LV_EVENT_LAYOUT_CHANGED) {
+        field_icons(f, lv_obj_get_width(f->area), lv_obj_get_y(f->area), lv_obj_get_height(f->area));
     }
+}
+
+int ink_textfield_height(ink_textfield_kind_t kind) {
+    int line = ink_ui_line_height(INK_FONT_FIELD);
+    return ink_ui_line_height(INK_FONT_FIELD_LABEL) + INK_FIELD_LABEL_GAP +
+        (kind == INK_FIELD_BODY ? INK_FIELD_LINES * line + 2 * (INK_FIELD_PAD + INK_FIELD_STROKE) : INK_FIELD_HEIGHT + line - INK_LINE_BODY);
+}
+
+void ink_textfield_error(lv_obj_t *obj, const char *message) {
+    field_t *f = lv_obj_get_user_data(obj);
+    lv_label_set_text(f->error, message ? message : "");
+    lv_obj_set_flag(f->error, LV_OBJ_FLAG_HIDDEN, !message || !message[0]);
+}
+
+static int body_height(lv_obj_t *obj) {
+    int line = ink_ui_line_height(INK_FONT_FIELD);
+    lv_area_t keyboard; ink_shell_keyboard_area(&keyboard);
+    int lines = (keyboard.y1 - lv_obj_get_y_aligned(obj) - ink_ui_px(ink_ui_line_height(INK_FONT_FIELD_LABEL) + INK_FIELD_LABEL_GAP + INK_CONTROL + INK_GAP_L + 2 * (INK_FIELD_PAD + INK_FIELD_STROKE) + INK_GAP_S)) / ink_ui_px(line);
+    return (lines > 0 ? lines : 1) * line + 2 * (INK_FIELD_PAD + INK_FIELD_STROKE);
+}
+
+void ink_textfield_style(lv_obj_t *obj, ink_textfield_kind_t kind, const char *label) {
+    field_t *f = lv_obj_get_user_data(obj);
+    kind = f->cfg.type == INK_TEXT_PASSWORD ? INK_FIELD_PASSWORD : kind;
+    f->kind = kind;
+    if (label) lv_label_set_text(f->title, label);
+    lv_obj_remove_flag(f->title, LV_OBJ_FLAG_HIDDEN);
+    lv_textarea_set_one_line(f->area, f->kind != INK_FIELD_BODY);
+    int line = ink_ui_line_height(INK_FONT_FIELD);
+    int height = ink_textfield_height(kind) - ink_ui_line_height(INK_FONT_FIELD_LABEL) - INK_FIELD_LABEL_GAP;
+    if (f->cfg.draft_page) height = body_height(obj);
+    lv_obj_set_height(f->area, ink_ui_px(height));
+    lv_obj_set_style_pad_ver(f->area, ink_ui_px(f->kind == INK_FIELD_BODY ? INK_FIELD_PAD : (height - line) / 2 - INK_FIELD_STROKE), 0);
+    lv_obj_set_style_pad_right(f->area, ink_ui_px(f->cfg.draft_page || f->kind == INK_FIELD_PASSWORD ? INK_FIELD_PAD : INK_FIELD_CLEAR + INK_FIELD_PAD), 0);
+    lv_obj_set_style_radius(f->area, f->kind == INK_FIELD_SEARCH ? LV_RADIUS_CIRCLE : ink_ui_px(INK_FIELD_RADIUS), 0);
+    lv_obj_set_style_pad_left(f->area, ink_ui_px(f->kind == INK_FIELD_SEARCH ? INK_GAP_L + INK_FIELD_SEARCH_ICON + INK_GAP_M : INK_FIELD_PAD), 0);
+    lv_obj_set_flag(f->icon, LV_OBJ_FLAG_HIDDEN, f->kind != INK_FIELD_SEARCH);
+}
+
+static void clear_field(lv_event_t *e) {
+    field_t *f = lv_event_get_user_data(e);
+    ink_receipt_t rc;
+    if (!f->session && f->semantic) {
+        ink_ui_action_target_t target = {ink_ui_content_version(), f->focus_action->object.id ? f->focus_action->object : f->page->object};
+        ink_ui_semantics_action(f->page, f->focus_action->id, &target, INK_SRC_TOUCH, &rc);
+    } else if (!f->session) focus(f);
+    if (!f->session) return;
+    ink_cap_invoke_json("text.select", "{\"start\":0,\"end\":2147483647}", INK_SRC_TOUCH, 0, &rc);
+    if (rc.status == INK_RC_DONE) ink_cap_invoke_json("text.insert", "{\"text\":\"\"}", INK_SRC_TOUCH, 0, &rc);
 }
 
 lv_obj_t *ink_textfield_create(lv_obj_t *parent, const ink_text_cfg_t *cfg, void (*entered)(void *ctx, const char *value), void *ctx, bool start) {
@@ -364,6 +417,7 @@ lv_obj_t *ink_textfield_create(lv_obj_t *parent, const ink_text_cfg_t *cfg, void
         return NULL;
     }
     f->cfg = *cfg;
+    f->owner_epoch = ink_member_epoch();
     f->cap = cap;
     f->text = text;
     snprintf(f->text, cap + 1, "%s", cfg->initial ? cfg->initial : "");
@@ -372,29 +426,56 @@ lv_obj_t *ink_textfield_create(lv_obj_t *parent, const ink_text_cfg_t *cfg, void
     f->ctx = ctx;
     f->obj = lv_obj_create(parent);
     lv_obj_remove_style_all(f->obj);
-    lv_obj_remove_flag(f->obj, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_set_size(f->obj, LV_PCT(90), ink_ui_px(INK_CONTROL));
     lv_obj_set_style_bg_color(f->obj, ink_ui_paper(), 0);
     lv_obj_set_style_bg_opa(f->obj, LV_OPA_COVER, 0);
-    lv_obj_set_style_pad_hor(f->obj, ink_ui_px(INK_MARGIN), 0);
-    lv_obj_set_style_pad_ver(f->obj, ink_ui_px(INK_GAP_L), 0);
-    lv_obj_set_style_border_color(f->obj, lv_color_black(), 0);
-    lv_obj_set_style_border_width(f->obj, ink_ui_px(INK_STROKE), 0);
-    lv_obj_set_style_radius(f->obj, ink_ui_px(INK_RADIUS_CARD), 0);
-    f->label = lv_label_create(f->obj);
-    lv_obj_set_style_text_font(f->label, font(), 0);
-    if (cfg->type == INK_TEXT_PLAIN && cfg->enter == INK_ENTER_SEARCH) {
-        ink_ui_surface_style(f->obj, INK_SURFACE_STATIC, false);
-        lv_obj_set_style_radius(f->obj, LV_RADIUS_CIRCLE, 0);
-        lv_obj_set_style_pad_left(f->obj, ink_ui_px(INK_MARGIN + INK_ICON_LIST + INK_GAP_M) - ink_ui_px(INK_STROKE), 0);
-        lv_obj_set_style_pad_ver(f->obj, ink_ui_px((INK_CONTROL - ink_ui_line_height(INK_FONT_LIST)) / 2) - ink_ui_px(INK_STROKE), 0);
-        lv_obj_set_style_text_font(f->label, ink_ui_font_px(INK_FONT_LIST, INK_WEIGHT_REGULAR), 0);
-        ink_ui_icon(f->obj, "search", INK_ICON_LIST, INK_ICON_LINE, 0 - INK_ICON_LIST - INK_GAP_M, 0, false);
-    }
-    lv_obj_set_width(f->label, LV_PCT(100));
-    lv_label_set_long_mode(f->label, LV_LABEL_LONG_CLIP);
+    if (!cfg->draft_page) lv_obj_set_style_pad_bottom(f->obj, ink_ui_px(INK_GAP), LV_STATE_FOCUSED);
+    lv_obj_remove_flag(f->obj, LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_set_size(f->obj, LV_PCT(100), LV_SIZE_CONTENT);
+    lv_obj_set_style_max_width(f->obj, ink_ui_px(INK_CANVAS_W - 2 * INK_MARGIN), 0);
+    lv_obj_set_x(f->obj, lv_obj_get_width(parent) == ink_ui_width() ? ink_ui_px(INK_MARGIN) : 0);
+    lv_obj_set_flex_flow(f->obj, LV_FLEX_FLOW_COLUMN);
+    lv_obj_set_style_pad_row(f->obj, ink_ui_px(INK_FIELD_LABEL_GAP), 0);
+    f->title = ink_ui_label(f->obj, f->hint[0] ? f->hint : TR("内容"), INK_FONT_FIELD_LABEL, INK_WEIGHT_MEDIUM, 0, 0, INK_CANVAS_W - 2 * INK_MARGIN);
+    lv_obj_set_width(f->title, LV_PCT(100));
+    f->area = lv_textarea_create(f->obj);
+    lv_obj_remove_style_all(f->area);
+    lv_obj_remove_flag(f->area, LV_OBJ_FLAG_CLICKABLE | LV_OBJ_FLAG_SCROLLABLE);
+    lv_obj_set_width(f->area, LV_PCT(100));
+    lv_obj_set_style_text_font(f->area, font(), 0);
+    lv_obj_set_style_text_color(f->area, ink_ui_ink(), 0);
+    lv_obj_set_style_text_color(f->area, ink_ui_secondary(), LV_PART_TEXTAREA_PLACEHOLDER);
+    lv_obj_set_style_bg_color(f->area, ink_ui_ink(), LV_PART_SELECTED);
+    lv_obj_set_style_text_color(f->area, ink_ui_paper(), LV_PART_SELECTED);
+    lv_obj_set_style_bg_color(f->area, ink_ui_paper(), 0);
+    lv_obj_set_style_bg_opa(f->area, LV_OPA_COVER, 0);
+    lv_obj_set_style_border_color(f->area, ink_ui_ink(), 0);
+    lv_obj_set_style_border_width(f->area, ink_ui_px(INK_FIELD_STROKE), 0);
+    lv_obj_set_style_pad_right(f->area, ink_ui_px(INK_FIELD_CLEAR + INK_FIELD_PAD), 0);
+    lv_obj_set_style_outline_width(f->area, ink_ui_px(INK_FIELD_STROKE), LV_STATE_FOCUSED);
+    lv_obj_set_style_outline_pad(f->area, 0 - ink_ui_px(INK_FIELD_FOCUS_GAP), LV_STATE_FOCUSED);
+    lv_obj_set_style_outline_color(f->area, ink_ui_ink(), LV_STATE_FOCUSED);
+    lv_obj_set_style_border_width(f->area, ink_ui_px(INK_FIELD_STROKE), LV_PART_CURSOR);
+    lv_obj_set_style_border_color(f->area, ink_ui_ink(), LV_PART_CURSOR);
+    lv_obj_set_style_border_side(f->area, LV_BORDER_SIDE_LEFT, LV_PART_CURSOR);
+    lv_obj_set_style_anim_duration(f->area, 0, LV_PART_CURSOR);
+    lv_textarea_set_cursor_click_pos(f->area, false);
+    lv_textarea_set_placeholder_text(f->area, f->hint);
+    lv_textarea_set_password_show_time(f->area, 0);
+    lv_textarea_set_password_bullet(f->area, "*");
+    lv_textarea_set_password_mode(f->area, cfg->type == INK_TEXT_PASSWORD);
+    f->label = lv_textarea_get_label(f->area);
+    f->error = ink_ui_label(f->obj, "", INK_FONT_FIELD_LABEL, INK_WEIGHT_REGULAR, 0, 0, INK_CANVAS_W - 2 * INK_MARGIN);
+    lv_obj_set_width(f->error, LV_PCT(100));
+    lv_obj_add_flag(f->error, LV_OBJ_FLAG_HIDDEN);
+    f->clear = ink_ui_circle(f->obj, "close", 0, 0, INK_FIELD_CLEAR, INK_FIELD_ICON, INK_SURFACE_WHITE, clear_field, f);
+    lv_obj_add_flag(f->clear, LV_OBJ_FLAG_IGNORE_LAYOUT | LV_OBJ_FLAG_FLOATING);
+    lv_obj_set_style_border_width(f->clear, 0, 0);
+    f->icon = ink_ui_icon(f->obj, "search", INK_FIELD_SEARCH_ICON, INK_ICON_LINE, 0, 0, false);
+    lv_obj_add_flag(f->icon, LV_OBJ_FLAG_IGNORE_LAYOUT | LV_OBJ_FLAG_FLOATING);
     lv_obj_add_event_cb(f->obj, field_event, LV_EVENT_ALL, f);
     lv_obj_set_user_data(f->obj, f);
+    ink_textfield_style(f->obj, cfg->draft_page ? INK_FIELD_BODY : cfg->enter == INK_ENTER_SEARCH ? INK_FIELD_SEARCH : INK_FIELD_SINGLE, NULL);
+    if (!cfg->draft_page) lv_obj_add_flag(f->title, LV_OBJ_FLAG_HIDDEN);
     ink_ui_capture_touch(f->obj);
     show(f);
     if (start) focus(f);
@@ -413,11 +494,11 @@ lv_obj_t *ink_textfield_long_create(lv_obj_t *parent, const ink_text_cfg_t *cfg)
     if (!obj) return NULL;
     field_t *f = lv_obj_get_user_data(obj); f->owner_epoch = ink_member_epoch();
     lv_area_t keyboard; ink_shell_keyboard_area(&keyboard);
-    int top = ink_ui_px(INK_STATUS_BAR + INK_PRIMARY + INK_GAP_XS), height = keyboard.y1 - top - ink_ui_px(INK_GAP_S);
+    int top = ink_ui_px(INK_STATUS_BAR + INK_PRIMARY + INK_GAP_XS);
     lv_obj_set_pos(obj, ink_ui_px(INK_MARGIN), top);
-    lv_obj_set_size(obj, ink_ui_px(INK_CANVAS_W - 2 * INK_MARGIN), height);
+    lv_obj_set_style_pad_bottom(obj, ink_ui_px(INK_CONTROL + INK_GAP_L), 0);
+    ink_textfield_style(obj, INK_FIELD_BODY, NULL);
     lv_obj_update_layout(obj);
-    lv_obj_set_height(f->label, lv_obj_get_content_height(obj) - ink_ui_px(INK_CONTROL + INK_GAP_L));
     f->save_label = ink_ui_label(obj, TR("正在保存"), INK_FONT_NOTE, INK_WEIGHT_REGULAR, 0, 0, INK_PRIMARY + INK_CONTROL);
     lv_obj_align(f->save_label, LV_ALIGN_BOTTOM_LEFT, 0, 0);
     f->pages_label = ink_ui_label(obj, "1 / 1", INK_FONT_NOTE, INK_WEIGHT_MEDIUM, 0, 0, INK_CIRCLE_SMALL);
@@ -427,6 +508,11 @@ lv_obj_t *ink_textfield_long_create(lv_obj_t *parent, const ink_text_cfg_t *cfg)
     ink_shell_bind(prev, "text.page", "{\"direction\":-1}");
     lv_obj_t *next = ink_ui_circle(obj, "next", 0, 0, INK_CONTROL, INK_ICON_LIST, INK_SURFACE_WHITE, NULL, NULL);
     lv_obj_align(next, LV_ALIGN_BOTTOM_RIGHT, 0, 0); ink_shell_bind(next, "text.page", "{\"direction\":1}");
+    lv_obj_t *footer[] = {f->save_label, f->pages_label, prev, next};
+    for (unsigned i = 0; i < sizeof footer / sizeof *footer; i++) {
+        lv_obj_add_flag(footer[i], LV_OBJ_FLAG_IGNORE_LAYOUT | LV_OBJ_FLAG_FLOATING);
+        lv_obj_set_style_translate_y(footer[i], ink_ui_px(INK_CONTROL + INK_GAP_L), 0);
+    }
     if (!focus(f)) { lv_obj_delete(obj); return NULL; }
     f->saved_timer = lv_timer_create(saved_tick, 250, f);
     return obj;
@@ -464,16 +550,14 @@ int ink_textfield_bind_short(lv_obj_t *field, const ink_ui_page_spec_t *page,
     f->page = page; f->semantic = spec; f->focus_action = focus_action;
     f->owner_epoch = ink_member_epoch();
     spec->value = f->text;
-    lv_obj_set_style_outline_width(field, ink_ui_px(INK_STROKE), LV_STATE_FOCUSED);
-    lv_obj_set_style_outline_pad(field, ink_ui_px(INK_GAP_XS), LV_STATE_FOCUSED);
-    lv_obj_set_style_outline_color(field, ink_ui_ink(), LV_STATE_FOCUSED);
+    lv_label_set_text(f->title, spec->label);
     show(f);
     return 0;
 }
 
 int ink_textfield_short_focus(lv_obj_t *field) {
     field_t *f = lv_obj_get_user_data(field);
-    return f && f->semantic && focus(f) ? 0 : -1;
+    return f && !f->cfg.draft_page && focus(f) ? 0 : -1;
 }
 
 static void rect_json(ink_jw_t *w, const lv_area_t *area) {

@@ -209,7 +209,7 @@ static void test_apps(void) {
     ink_fs_entry_t photo; uint32_t cursor = 0;
     CHECK(ink_fs_index("/me", INK_FS_IMAGE, &cursor, &photo) == 1, "synthetic photo saved");
     test_open("gallery"); test_capture("Gallery", "相册", "Photos"); char args[64]; snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)photo.id);
-    test_ok("photo.open", args); test_capture("Photo", "问这张图", "Ask about photo");
+    test_ok("photo.open", args); test_capture("Photo", "问 AI 这张图", "Ask AI about this photo");
     test_open("weather"); test_capture("Weather-empty", "还没有设天气城市", "No weather city set");
     test_ok("weather.city", NULL); test_capture("WeatherCity", "输入城市名", "Enter city name");
     test_ok("weather.find", "{\"name\":\"示例市\"}"); test_capture("WeatherCity-results", "选一个城市", "Choose a city");

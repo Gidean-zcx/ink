@@ -165,7 +165,7 @@ static void run(void *arg) {
     CHECK(AI("backup.manifest", "{\"summary\":true}") && g_rc.status == INK_RC_DONE &&
         j && !ink_json_parse(j, g_result, strlen(g_result)) && strstr(g_result, "item_count"), "summary fits that same reader");
     osal_free(j);
-    press("恢复到这台设备"); unsigned token = confirmation();
+    press("恢复备份"); unsigned token = confirmation();
     CHECK(ink_confirm_decide(token, false, INK_SRC_TOUCH) == 0, "person cancels overwrite");
     CHECK(ready("Restore"), "cancelling confirmation returns to preview"); check_file("LOCAL");
     char args[80]; snprintf(args, sizeof args, "{\"preview\":\"%s\"}", preview);
@@ -175,7 +175,8 @@ static void run(void *arg) {
     capture("RestoreRun");
     CHECK(WAIT_FOR(phase("\"phase\":\"done\""), 180000), "real service restores the backup");
     capture("RestoreDone"); check_file("SAVED");
-    press("开始用"); CHECK(ready("home"), "restored flow returns home");
+    CHECK(strstr(g_snap, "system.reboot"), "completed restore offers reboot rather than claiming the data is already active");
+    CHECK(AI("system.home", NULL) && ready("home"), "test leaves completion without executing its reboot action");
     CHECK(AI("backup.open", NULL) && ready("Backup"), "reopen after restore");
     press("恢复备份");
     CHECK(WAIT_FOR(phase("\"phase\":\"preview\""), 180000) && ready("Restore"), "reenter preview before the next AI backup");

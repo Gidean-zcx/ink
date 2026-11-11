@@ -1,0 +1,27 @@
+# Put reader.txt on the test TF card as 自动测试长文.txt before the trial.
+@6s cap app.open {"id":"reader"}
++3s cap reader.open_book {"title":"自动测试长文"}
++3s note reader_20_pages_start
++0 key next
++2s key next
++2s key next
++2s key next
++2s key next
++2s key next
++2s key next
++2s key next
++2s key next
++2s key next
++2s key next
++2s key next
++2s key next
++2s key next
++2s key next
++2s key next
++2s key next
++2s key next
++2s key next
++2s key next
++3s note reader_20_pages_end
++0 key home
++3s end

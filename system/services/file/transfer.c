@@ -1,4 +1,4 @@
-/* One authorization, one member, one file; driven by the shared BG executor. */
+/* BG owns grants; native server callbacks share the same member policy. */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -11,6 +11,8 @@
 #include "ink/sys/members.h"
 #include "ink/sys/power.h"
 #include "ink/sys/svc.h"
+#include "ink/sys/settings.h"
+#include "ink/sys/json.h"
 #include "file_internal.h"
 
 #define INBOX "/me/收件箱/"
@@ -18,7 +20,10 @@ static struct {
     file_context_t actor;
     uint32_t epoch, code;
     uint16_t port;
-    bool active, connected, used;
+    bool active, connected, used, native;
+    char token[33], received_name[INK_FS_NAME_MAX];
+    unsigned files;
+    osal_mutex_t *guard;
     uint8_t misses; /* wrong codes this authorization; the third closes it, so a code cannot be guessed */
     uint64_t expires, idle, left;
     size_t head_len;
@@ -28,6 +33,9 @@ static struct {
     ink_exec_job_t job;
     ink_svc_deadline_t tick;
 } T INK_PSRAM_BSS;
+
+static void lock(void) { if (T.guard) osal_mutex_lock(T.guard, OSAL_WAIT_FOREVER); }
+static void unlock(void) { if (T.guard) osal_mutex_unlock(T.guard); }
 
 static const char *reason(int r) {
     switch (r) {
@@ -41,16 +49,95 @@ static const char *reason(int r) {
 }
 
 static void finish(const char *result) {
+    lock();
+    bool held = T.active; T.active = false; T.code = 0; T.token[0] = 0;
+    unlock();
+    hal_transfer_server_stop();
+    if (T.guard) { osal_mutex_delete(T.guard); T.guard = NULL; }
     hal_transfer_close(1);
     if (T.file) { ink_fs_close(T.file); T.file = NULL; }
     if (T.part[0]) fs_remove_for(&T.actor, T.part, 0);
-    if (T.active) {
+    if (held) {
         ink_fs_card_release();
         ink_power_release(INK_NEED_AWAKE);
     }
     T.active = false; T.code = 0; T.result = result; T.response = NULL;
     ink_svc_cancel(&T.tick);
 }
+
+static bool live(void) {
+    return T.active && T.epoch == ink_member_epoch() && ink_member_space_open() &&
+        !ink_setting_get("net.airplane") && osal_now_us() < T.expires && T.misses < 3;
+}
+static bool authorize(const char *code, const char *token, char issued[33]) {
+    lock();
+    bool ok = live() && token && *token && !strcmp(token, T.token);
+    if (live() && !ok && code && *code) {
+        char expected[8]; snprintf(expected, sizeof expected, "%06u", (unsigned)T.code);
+        if (!T.used && !strcmp(code, expected)) {
+            uint8_t random[16]; hal_random_fill(random, sizeof random);
+            for (unsigned i = 0; i < sizeof random; i++) snprintf(T.token + 2 * i, 3, "%02x", random[i]);
+            T.used = true; T.code = 0; ok = true;
+            memcpy(issued, T.token, sizeof T.token);
+        } else T.misses++;
+    }
+    unlock();
+    return ok;
+}
+static int64_t native_file(hal_transfer_io_t *io) {
+    lock();
+    int64_t r = INK_FS_ERR_DENIED;
+    bool cleanup = io->op == HAL_TRANSFER_CLOSE || io->op == HAL_TRANSFER_DIR_CLOSE ||
+        (io->op == HAL_TRANSFER_REMOVE && io->path && strstr(io->path, "/.cz-"));
+    char path[INK_FS_PATH_MAX] = "", to[INK_FS_PATH_MAX] = "";
+    bool valid = true;
+    const char *names[] = {io->path, io->to}; char *mapped[] = {path, to};
+    for (unsigned i = 0; i < 2; i++) if (names[i]) {
+        int n = snprintf(mapped[i], INK_FS_PATH_MAX, "/me%s", names[i]);
+        char *temp = strstr(mapped[i], "/.cz-");
+        if (temp) {
+            memmove(temp + 1, temp + 5, strlen(temp + 5) + 1);
+            char *suffix = strrchr(temp, '.');
+            if (suffix && !strcmp(suffix, ".bak")) memcpy(suffix, ".tmp", 5);
+        }
+        if (n < 0 || n >= INK_FS_PATH_MAX || (*names[i] && names[i][0] != '/') || strstr(names[i], "//")) valid = false;
+    }
+    if ((cleanup || live()) && valid) {
+        ink_fs_stat_t st;
+        switch (io->op) {
+        case HAL_TRANSFER_OPEN: r = fs_open_for(&T.actor, path, io->value ? INK_FS_WRITE | INK_FS_CREATE | INK_FS_EXCL : INK_FS_READ, (ink_fs_file_t **)&io->handle); break;
+        case HAL_TRANSFER_READ: r = ink_fs_read(io->handle, io->data, io->len); break;
+        case HAL_TRANSFER_WRITE:
+            r = ink_fs_write(io->handle, io->data, io->len);
+            if (r > 0) T.left += (uint64_t)r;
+            break;
+        case HAL_TRANSFER_SYNC: r = ink_fs_sync(io->handle); break;
+        case HAL_TRANSFER_CLOSE: r = ink_fs_close(io->handle); break;
+        case HAL_TRANSFER_STAT:
+            r = fs_stat_for(&T.actor, path, &st);
+            if (!r) { io->value = st.size; io->directory = st.is_dir; }
+            break;
+        case HAL_TRANSFER_DIR_OPEN: r = fs_dir_open_for(&T.actor, path, (ink_fs_dir_t **)&io->handle); break;
+        case HAL_TRANSFER_DIR_NEXT:
+            r = ink_fs_dir_next(io->handle, &st);
+            if (r == 1) { memcpy(io->name, st.name, sizeof io->name); io->value = st.size; io->directory = st.is_dir; }
+            break;
+        case HAL_TRANSFER_DIR_CLOSE: ink_fs_dir_close(io->handle); r = 0; break;
+        case HAL_TRANSFER_MKDIR: r = fs_mkdir_for(&T.actor, path); break;
+        case HAL_TRANSFER_REMOVE: r = fs_remove_for(&T.actor, path, 0); break;
+        case HAL_TRANSFER_MOVE: r = fs_move_for(&T.actor, path, to, 0, NULL); break;
+        case HAL_TRANSFER_SPACE: r = ink_fs_free(&io->free_bytes, &io->total); break;
+        case HAL_TRANSFER_RECEIVED:
+            T.files++; T.result = "文件已收到";
+            snprintf(T.path, sizeof T.path, "%s", path);
+            snprintf(T.received_name, sizeof T.received_name, "%.63s", io->path ? strrchr(io->path, '/') + 1 : "");
+            r = 0; break;
+        }
+    }
+    unlock();
+    return r;
+}
+static const hal_transfer_policy_t POLICY = {authorize, native_file};
 
 static void reply(int status, const char *text, bool html) {
     const char *shown = TR(text);
@@ -123,6 +210,11 @@ static void poll_upload(void *arg) {
     (void)arg;
     if (!T.active) return;
     uint64_t wait_us = 20000;
+    if (T.native) {
+        lock(); bool valid = live(); unlock();
+        if (!valid) { finish(T.epoch != ink_member_epoch() ? "成员已变化" : T.misses >= 3 ? "授权码错误次数过多，已关闭" : "授权或接收已超时"); return; }
+        ink_svc_at(&T.tick, osal_now_us() + wait_us, tick, NULL); return;
+    }
     hal_link_status_t link; hal_net_link_status(&link);
     if ((!T.used && !T.response && osal_now_us() >= T.expires) || (T.connected && osal_now_us() >= T.idle)) { finish("授权或接收已超时"); return; }
     if (T.epoch != ink_member_epoch() || !ink_member_space_open()) { finish("成员已变化"); return; }
@@ -163,7 +255,12 @@ static void poll_upload(void *arg) {
             int r = ink_fs_sync(T.file); int closed = ink_fs_close(T.file); T.file = NULL;
             if (!r) r = closed;
             if (!r) r = fs_move_for(&T.actor, T.part, T.path, 0, NULL);
-            if (!r) T.part[0] = 0;
+            if (!r) {
+                T.part[0] = 0; T.files++;
+                char filename[INK_FS_NAME_MAX];
+                snprintf(filename, sizeof filename, "%.63s", strrchr(T.path, '/') + 1);
+                memcpy(T.received_name, filename, strlen(filename) + 1);
+            }
             reply(r ? 500 : 201, r ? "文件保存失败" : "文件已收到", false);
         }
         if (T.response && !T.left) {
@@ -177,16 +274,23 @@ static void poll_upload(void *arg) {
 
 static void status(ink_call_t *c) {
     if (T.active && T.epoch != ink_member_epoch()) finish("成员已变化");
+    lock();
     int64_t received = 0;
     if (T.epoch == ink_member_epoch()) {
         ink_fs_stat_t st;
-        if (T.file) received = ink_fs_tell(T.file);
+        if (T.native) received = (int64_t)T.left;
+        else if (T.file) received = ink_fs_tell(T.file);
         else if (T.result && !strcmp(T.result, "文件已收到") && !fs_stat_for(&T.actor, T.path, &st)) received = st.size;
     }
-    char out[384], host[64] = "";
+    char out[768], host[64] = "", escaped[2 * INK_FS_NAME_MAX + 1];
+    ink_jw_t w; ink_jw_init(&w, escaped, sizeof escaped);
+    ink_jw_str(&w, T.epoch == ink_member_epoch() ? T.received_name : "");
     if (hal_transfer_host(host, sizeof host)) host[0] = 0;
-    snprintf(out, sizeof out, "{\"active\":%s,\"host\":\"%.63s\",\"port\":%u,\"code\":\"%06u\",\"directory\":\"" INBOX "\",\"result\":\"%s\",\"received\":%lld}",
-             T.active ? "true" : "false", host, T.port, (unsigned)T.code, TR(T.result ? T.result : TR_NOOP("尚未开启")), (long long)received);
+    snprintf(out, sizeof out, "{\"active\":%s,\"host\":\"%.63s\",\"port\":%u,\"code\":\"%06u\",\"directory\":\"" INBOX "\",\"result\":\"%s\",\"received\":%lld,\"connection\":\"%s\",\"url\":\"http://%.63s:%u/\",\"files\":%u,\"last_file\":%s}",
+             T.active ? "true" : "false", host, T.port, c->src == INK_SRC_AI ? 0u : (unsigned)T.code,
+             TR(T.result ? T.result : TR_NOOP("尚未开启")), (long long)received,
+             hal_transfer_hotspot() ? "hotspot" : "wifi", host, T.port, T.epoch == ink_member_epoch() ? T.files : 0, escaped);
+    unlock();
     ink_cap_result(c, out);
 }
 static void start(ink_call_t *c) {
@@ -194,19 +298,27 @@ static void start(ink_call_t *c) {
     if (!fs_context_for_call(&actor, c)) return;
     int r = INK_FS_ERR_BUSY;
     hal_link_status_t link; hal_net_link_status(&link);
-    if (!T.active && ink_member_space_open() && link.up && link.type == HAL_LINK_WIFI) {
-        r = ink_fs_card_hold();
+    if (!T.active && ink_member_space_open() && !ink_setting_get("net.airplane")) {
+        if (!T.guard) T.guard = osal_mutex_create();
+        r = T.guard ? ink_fs_card_hold() : INK_FS_ERR_BUSY;
         if (!r) {
             T.actor = actor; T.epoch = ink_member_epoch(); T.port = 0;
-            if (hal_transfer_listen(&T.port)) { ink_fs_card_release(); r = INK_FS_ERR_IO; }
+            T.files = 0; T.left = 0; T.received_name[0] = T.path[0] = 0; T.result = NULL;
+            int native = hal_transfer_server_start(&POLICY, &T.port);
+            T.native = native == 1;
+            if (T.native && fs_mkdir_for(&T.actor, "/me/收件箱")) native = -1;
+            if (native < 0 || (!native && (!link.up || link.type != HAL_LINK_WIFI || hal_transfer_listen(&T.port)))) {
+                hal_transfer_server_stop(); ink_fs_card_release(); r = INK_FS_ERR_IO;
+            }
             else {
                 hal_random_fill(&T.code, sizeof T.code); T.code = 100000 + T.code % 900000;
-                T.active = true; T.connected = T.used = false; T.misses = 0; T.head_len = 0; T.part[0] = 0;
+                T.active = true; T.connected = T.used = false; T.misses = 0; T.head_len = 0; T.part[0] = 0; T.token[0] = 0;
                 T.expires = osal_now_us() + 120000000; T.result = "等待上传";
                 ink_power_hold(INK_NEED_AWAKE); tick(NULL);
             }
         }
     }
+    if (r && !T.active && T.guard) { osal_mutex_delete(T.guard); T.guard = NULL; }
     if (r) { c->rc.status = INK_RC_FAILED; snprintf(c->rc.detail, sizeof c->rc.detail, "%s", TR(r == INK_FS_ERR_BUSY ? TR_NOOP("传输已开启、空间未解锁或无线网络不可用") : reason(r))); }
     else status(c);
 }

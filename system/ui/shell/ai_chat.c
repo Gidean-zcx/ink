@@ -92,7 +92,7 @@ static void ask_create(lv_obj_t *screen, void *arg) {
     field = ink_textfield_create(screen, &cfg, entered, NULL, false);
     if (!field) return;
     lv_obj_set_pos(field, ink_ui_px(INK_MARGIN), ink_ui_px(INK_STATUS_BAR + INK_PRIMARY + INK_GAP));
-    lv_obj_set_size(field, ink_ui_px(INK_CANVAS_W - 2 * INK_MARGIN), ink_ui_px(4 * ink_ui_line_height(INK_FONT_BODY) + 2 * INK_GAP_L));
+    ink_textfield_style(field, INK_FIELD_BODY, input.label);
     ink_textfield_bind_short(field, &ASK_MODEL, &input, &actions[0]);
     ink_exec_post(INK_EXEC_UI, &focus_job, focus_input, NULL);
 }

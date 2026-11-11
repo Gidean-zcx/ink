@@ -135,7 +135,7 @@ static void inspect_focus(void) {
     lv_obj_get_coords(field, &actual); lv_obj_get_coords(heading, &other);
     CHECK(actual.y1 == y && lv_area_get_height(&actual) == height && same_area(&other, &heading_original),
           "snapshot geometry matches LVGL and surrounding content stays in place");
-    CHECK(lv_obj_has_state(field, LV_STATE_FOCUSED) && lv_obj_get_style_outline_width(field, 0) == ink_ui_px(INK_STROKE),
+    CHECK(lv_obj_has_state(field, LV_STATE_FOCUSED) && lv_obj_get_style_outline_width(lv_obj_get_child(field, 1), 0) == ink_ui_px(INK_STROKE),
           "the real focused field has a visible black outline using the standard stroke");
     lv_obj_t *space = ink_test_matrix(lv_layer_sys());
     CHECK(space != NULL, "the real system keyboard has a space key");
@@ -168,6 +168,14 @@ static void compare_events(void) {
     CHECK(edits == hand_edits && enters == hand_enters && !strcmp(events, hand_events) && !strcmp(submitted, "合成查询"),
           "human paste and AI fill produce identical field values and change/submit events");
 }
+static void check_clear(void) {
+    lv_obj_t *clear = lv_obj_get_child(field, 3);
+    CHECK(lv_obj_is_visible(clear), "a filled search exposes its clear control");
+    lv_obj_send_event(clear, LV_EVENT_CLICKED, NULL);
+    CHECK(ink_text_focused() && !ink_textfield_text(field)[0] && !spec.value[0] &&
+          lv_obj_has_flag(clear, LV_OBJ_FLAG_HIDDEN), "clear uses the current text session and updates semantic value");
+    ink_text_blur(0);
+}
 static void inspect_url(void) {
     CHECK(!strcmp(ink_textfield_text(field), URL) && !ink_text_composing()[0],
           "real URL key taps insert exact characters without pinyin composition");
@@ -176,19 +184,17 @@ static void inspect_long_url(void) {
     const char *value = "https://example.com/abcdefghijklmnop?x=1";
     ink_text_select(0, 128); ink_text_commit_utf8(value);
     lv_obj_update_layout(field);
-    lv_obj_t *label = lv_obj_get_child(field, 0);
-    const char *line = lv_label_get_text(label), *cursor = strchr(line, '|');
-    CHECK(!strcmp(ink_textfield_text(field), value) && ink_text_cursor() == strlen(value) && strstr(line, "?x=1|"),
-          "the full short URL is retained and its tail and caret are rendered");
-    CHECK(cursor != NULL, "the focused URL has a caret");
-    if (!cursor) return;
+    lv_obj_t *area = lv_obj_get_child(field, 1), *label = lv_textarea_get_label(area);
+    const char *line = lv_label_get_text(label);
+    CHECK(!strcmp(ink_textfield_text(field), value) && !strcmp(line, value) &&
+          lv_textarea_get_cursor_pos(area) == (uint32_t)strlen(value),
+          "native URL retains the full text and positions its cursor at the tail");
     lv_point_t point;
-    lv_label_get_letter_pos(label, (uint32_t)(cursor - line), &point);
-    lv_area_t content, area;
-    lv_obj_get_content_coords(field, &content); lv_obj_get_coords(label, &area);
-    int width = lv_font_get_glyph_width(lv_obj_get_style_text_font(label, 0), '|', 0);
-    CHECK(area.x1 + point.x >= content.x1 && area.x1 + point.x + width <= content.x2 + 1,
-          "the complete caret at x=%d fits the visible field %d..%d", (int)(area.x1 + point.x), (int)content.x1, (int)content.x2);
+    lv_label_get_letter_pos(label, (uint32_t)strlen(value), &point);
+    lv_area_t content, bounds;
+    lv_obj_get_content_coords(area, &content); lv_obj_get_coords(label, &bounds);
+    CHECK(bounds.x1 + point.x >= content.x1 && bounds.x1 + point.x <= content.x2 + 1,
+          "the native cursor fits the visible field");
 }
 static void handoff(void) {
     char before[128]; snprintf(before, sizeof before, "%s", ink_textfield_text(field));
@@ -211,9 +217,60 @@ static void capture(const char *name) {
     CHECK(WAIT_FOR(settled(), 10000), "screen settles before capture");
     vtk_event_at(vtk_now() + SIM_MS(1), take_snapshot, (void *)name); delay_ms(5);
 }
+static void check_specs(void) {
+    int old_size = (int)ink_setting_get("display.font_size"), normal_label = 0, normal_height = 0;
+    for (int level = 1; level <= 3; level += 2) {
+        ink_receipt_t rc; ink_setting_set("display.font_size", level, INK_SRC_TOUCH, &rc);
+        lv_obj_t *parent = lv_obj_create(lv_screen_active());
+        lv_obj_remove_style_all(parent); lv_obj_set_size(parent, ink_ui_px(INK_CANVAS_W), ink_ui_px(INK_CANVAS_H));
+        for (int style = INK_FIELD_SINGLE; style <= INK_FIELD_PASSWORD; style++) {
+            ink_text_cfg_t cfg = {.type = style == INK_FIELD_PASSWORD ? INK_TEXT_PASSWORD : INK_TEXT_PLAIN,
+                                   .hint = "合成占位", .initial = style == INK_FIELD_PASSWORD ? "秘密😀" : "合成输入", .max = 128};
+            lv_obj_t *a = ink_textfield_create(parent, &cfg, NULL, NULL, false);
+            lv_obj_t *b = ink_textfield_create(parent, &cfg, NULL, NULL, false);
+            ink_textfield_style(a, (ink_textfield_kind_t)style, "持续可见的字段标签");
+            ink_textfield_style(b, (ink_textfield_kind_t)style, "持续可见的字段标签");
+            lv_obj_set_height(b, 57); /* Legacy callers cannot change the kind's height. */
+            lv_obj_update_layout(parent);
+            lv_obj_t *area = lv_obj_get_child(a, 1), *label = lv_obj_get_child(a, 0);
+            CHECK(lv_obj_get_height(a) == ink_ui_px(ink_textfield_height((ink_textfield_kind_t)style)) &&
+                  lv_obj_get_height(a) == lv_obj_get_height(b), "same style ignores legacy dimensions at %d%%", level == 1 ? 100 : 120);
+            CHECK(lv_obj_get_width(a) == ink_ui_px(INK_CANVAS_W - 2 * INK_MARGIN) && lv_obj_get_width(a) == lv_obj_get_width(b),
+                  "all input widths follow the container and theme margins");
+            /* A field sharing a row with buttons (the SMS reply between 展开 and 发送) may be narrowed on purpose;
+             * its height still comes from the kind. */
+            lv_obj_t *row = ink_textfield_create(parent, &cfg, NULL, NULL, false);
+            ink_textfield_style(row, (ink_textfield_kind_t)style, NULL);
+            lv_obj_t *alone = ink_textfield_create(parent, &cfg, NULL, NULL, false);
+            ink_textfield_style(alone, (ink_textfield_kind_t)style, NULL);
+            lv_obj_set_width(row, ink_ui_px(INK_CANVAS_W / 2)); lv_obj_update_layout(parent);
+            CHECK(lv_obj_get_width(row) == ink_ui_px(INK_CANVAS_W / 2) && lv_obj_get_height(row) == lv_obj_get_height(alone),
+                  "a narrowed field in a row keeps its width and the kind's height");
+            lv_obj_delete(row); lv_obj_delete(alone);
+            CHECK(lv_obj_get_style_pad_left(area, 0) == ink_ui_px(style == INK_FIELD_SEARCH ? INK_GAP_L + INK_FIELD_SEARCH_ICON + INK_GAP_M : INK_FIELD_PAD) &&
+                  lv_obj_get_style_border_width(area, 0) == ink_ui_px(INK_FIELD_STROKE), "native inputs use theme padding and stroke");
+            CHECK(lv_obj_get_height(label) >= ink_ui_px(ink_ui_line_height(INK_FONT_FIELD_LABEL)) &&
+                  lv_obj_get_y(area) >= lv_obj_get_height(label) + ink_ui_px(INK_FIELD_LABEL_GAP), "label fits and stays above its input");
+            if (style == INK_FIELD_SINGLE) {
+                if (level == 1) { normal_label = lv_obj_get_height(label); normal_height = lv_obj_get_height(area); }
+                else CHECK(lv_obj_get_height(label) > normal_label && lv_obj_get_height(area) > normal_height, "120%% enlarges both label and input");
+            }
+            if (style == INK_FIELD_PASSWORD) CHECK(!strcmp(lv_label_get_text(lv_textarea_get_label(area)), "***"), "native password masks Unicode codepoints immediately");
+            int before = lv_obj_get_height(a);
+            ink_textfield_error(a, "合成错误：请修改这个字段后再试"); lv_obj_update_layout(a);
+            CHECK(lv_obj_get_height(a) > before, "inline error expands the field instead of overlaying it");
+            ink_textfield_error(a, NULL); lv_obj_update_layout(a);
+            CHECK(lv_obj_get_height(a) == before, "removing an error restores the standard height");
+            lv_obj_delete(a); lv_obj_delete(b);
+        }
+        lv_obj_delete(parent);
+    }
+    ink_receipt_t rc; ink_setting_set("display.font_size", old_size, INK_SRC_TOUCH, &rc);
+}
 static void run(void *arg) {
     (void)arg; delay_ms(1800);
     CHECK(WAIT_FOR(settled(), 10000), "home settles");
+    on_ui(check_specs);
     on_ui(open_page); capture("search-before");
     tap((original.x1 + original.x2) / 2, (original.y1 + original.y2) / 2);
     capture("search-focused"); on_ui(inspect_focus);
@@ -228,7 +285,7 @@ static void run(void *arg) {
     CHECK(focus_source == INK_SRC_AI, "AI uses the same focus capability");
     CHECK(AI("text.insert", "{\"text\":\"合成查询\"}") && g_rc.status == INK_RC_DONE &&
           AI("text.submit", "{}") && g_rc.status == INK_RC_DONE, "AI fills and completes through the shared text capabilities");
-    on_ui(inspect_done); on_ui(compare_events);
+    on_ui(inspect_done); on_ui(compare_events); on_ui(check_clear);
     kind = INK_TEXT_URL; on_ui(open_page); on_ui(ai_focus); on_ui(inspect_focus);
     bool symbols = false;
     for (const char *p = URL; *p; p++) {

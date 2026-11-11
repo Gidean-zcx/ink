@@ -288,3 +288,20 @@ int hal_wifi_connect(const char *ssid, const char *password, uint32_t timeout_ms
     ink_wifi.mode = INK_AUTO; ink_rejoin(); INK_UNLOCK();
     return result;
 }
+
+/* The transfer AP temporarily parks the vendor STA lifecycle. */
+static bool ink_transfer_was_running;
+static int ink_transfer_previous_mode;
+void ink_transfer_wifi_init(void) { ink_init(); }
+void ink_transfer_wifi_pause(void) {
+    INK_LOCK(); ink_transfer_was_running = ink_wifi.running; ink_transfer_previous_mode = ink_wifi.mode;
+    ink_wifi.mode = INK_PAUSE; esp_timer_stop(ink_wifi.timer); ink_station_pause(); INK_UNLOCK();
+}
+void ink_transfer_wifi_restore(bool resume) {
+    INK_LOCK(); ink_wifi.mode = ink_transfer_previous_mode;
+    if (resume && ink_transfer_was_running && ink_wifi.link.type != HAL_LINK_NONE) {
+        ink_station_resume(); ink_rejoin();
+    }
+    if (resume && ink_wifi.mode == INK_AUTO) ink_scan_later();
+    INK_UNLOCK();
+}

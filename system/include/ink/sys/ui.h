@@ -119,6 +119,9 @@ void ink_ui_hint_frame(ink_refresh_t intent);
 /** Attribute the next frame to an earlier action: when it is visible, `tag` (static string)
  *  records the latency from `t_us` (e.g. AI key release -> first answer text). */
 void ink_ui_cause(uint64_t t_us, const char *tag);
+/** Name what the input being handled now leads to ("ui.open_to_stable_ms" when a capability run from a tap pushes a
+ *  page), so the tap to stable screen time is measured as ink_ui_open does. Nothing without such an input. UI task. */
+void ink_ui_cause_tag(const char *tag);
 /** Foreground context, including focused input. An obsolete member incarnation returns -1 and clears all outputs. */
 int ink_ui_snapshot(char *buf, size_t cap, const char **activity_name);
 /** The foreground page belongs to the current open member incarnation. */
