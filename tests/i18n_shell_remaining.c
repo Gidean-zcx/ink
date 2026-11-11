@@ -3,6 +3,7 @@
 #include "../system/ui/shell/member_pages.h"
 #include "../system/ui/shell/ai_pages.h"
 #include "ink/sys/i18n.h"
+#include "ink/sys/file.h"
 #include "ink/sys/file_picker.h"
 #include "ink/sys/interrupt.h"
 #include "ink/sys/textfield.h"
@@ -22,7 +23,8 @@ static char issue[160];
 static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
 static bool at(const char *name) { on_ui(read_screen); return !strcmp(g_top, name); }
 static void walk(lv_obj_t *o) {
-    if (!lv_obj_is_visible(o) || lv_obj_has_flag(o, LV_OBJ_FLAG_HIDDEN)) return;
+    /* Sliders paint the same title twice, clipping the white copy to the filled bar. */
+    if (!lv_obj_is_visible(o) || lv_obj_has_flag(o, LV_OBJ_FLAG_HIDDEN) || lv_obj_has_flag(o, LV_OBJ_FLAG_USER_1)) return;
     if (lv_obj_check_type(o, &lv_label_class) && lv_label_get_text(o)[0]) {
         const char *t = lv_label_get_text(o);
         size_t n = strlen(labels); snprintf(labels + n, sizeof labels - n, "%s|", t);
@@ -131,18 +133,101 @@ static void update_preview(void) {
     ink_state_set_str(ink_state_find("update.state"), update_state);
 }
 static bool update_ok;
+static void extra_pages(void) {
+    open_page("calendar.open", "Calendar"); capture("Calendar-en", "Sun");
+    CHECK(strstr(labels, "Mon") && strstr(labels, "Sat"), "calendar weekday abbreviations are translated");
+    CHECK(BY_HAND("system.home", NULL) && BY_HAND("app.open", "{\"id\":\"upcoming\"}") && WAIT_FOR(at("Upcoming"), 10000), "open upcoming");
+    capture("Upcoming-en", "Upcoming");
+    CHECK(BY_HAND("file.mkdir", "{\"path\":\"/me/i18n-folder\"}") && g_rc.status == INK_RC_DONE, "synthetic folder");
+    CHECK(BY_HAND("file.write", "{\"path\":\"/me/i18n-test.txt\",\"text\":\"Synthetic test content.\"}") && g_rc.status == INK_RC_DONE, "synthetic text file");
+    CHECK(BY_HAND("system.home", NULL) && BY_HAND("app.open", "{\"id\":\"files\"}") && WAIT_FOR(at("Files"), 10000), "open files");
+    capture("Files-en", "My Files");
+    CHECK(BY_HAND("files.browse", "{\"path\":\"/me\"}") && WAIT_FOR(at("FileList") && strstr(g_snap, "i18n-test.txt"), 10000), "browse member files");
+    capture("FileList-en", "Folder");
+    uint32_t cursor = 0, file_id = 0; ink_fs_entry_t entry;
+    while (ink_fs_index("/me", INK_FS_TEXT, &cursor, &entry) == 1)
+        if (!strcmp(entry.path, "/me/i18n-test.txt")) file_id = entry.id;
+    char select[64]; snprintf(select, sizeof select, "{\"id\":%u}", (unsigned)file_id);
+    CHECK(file_id && BY_HAND("files.select", select) && WAIT_FOR(at("FileActions") && strstr(g_snap, "files.move"), 10000), "select file for actions");
+    capture("FileActions-en", "Rename");
+    CHECK(BY_HAND("files.move", "{\"copy\":true}") && WAIT_FOR(at("FileMove"), 10000), "choose copy destination");
+    capture("FileMove-en", "Copy Here");
+    CHECK(BY_HAND("system.home", NULL) && BY_HAND("home.next", NULL) && BY_HAND("home.next", NULL), "open all apps");
+    CHECK(BY_HAND("shell.icon_menu", "{\"id\":\"clock\"}") && WAIT_FOR(at("IconMenu"), 10000), "open clock icon menu");
+    capture("IconMenu-en", "Clock");
+    CHECK(!strstr(labels, "时钟"), "icon menu translates its registered app title");
+    CHECK(BY_HAND("shell.back", NULL), "close icon menu");
+    CHECK(BY_HAND("search.show", "{\"query\":\"Clock\"}") && WAIT_FOR(at("Search") && strstr(g_snap, "\"id\":\"clock\"") && strstr(g_snap, "\"pending\":false"), 10000), "search translated app name");
+    capture("SearchApp-en", "Clock");
+    CHECK(!strstr(labels, "时钟"), "app search does not display the source title");
+    CHECK(BY_HAND("search.show", "{\"query\":\"时钟\"}") && WAIT_FOR(at("Search") && strstr(g_snap, "\"id\":\"clock\"") && strstr(g_snap, "\"pending\":false"), 10000), "source-language app search still works in English");
+    capture("SearchSource-en", "Clock");
+    CHECK(BY_HAND("search.show", "{\"query\":\"Text Size\"}") && WAIT_FOR(at("Search") && strstr(g_snap, "setting:display.font_size"), 10000), "search translated setting name");
+    capture("SearchSetting-en", "Text Size");
+    CHECK(sim_metric_value("i18n.missing") == 0, "calendar and file pages have no missing translations");
+}
+static bool bookshelf_only, extra_only;
+static void test_mode(void *arg) { (void)arg; bookshelf_only = getenv("INK_I18N_BOOKSHELF") != NULL; extra_only = getenv("INK_I18N_EXTRAS") != NULL; }
+static void inspect_bookshelf(void) {
+    labels[0] = issue[0] = 0; nboxes = crowded = 0;
+    lv_obj_update_layout(lv_screen_active()); walk(lv_screen_active());
+    /* The existing bookshelf has no AI snapshot; retain only its measured widget text. */
+    ink_jw_t w; ink_jw_init(&w, context, sizeof context);
+    ink_jw_raw(&w, "{\"ui_labels\":"); ink_jw_str(&w, labels); ink_jw_raw(&w, "}");
+    CHECK(!w.overflow, "bookshelf label evidence fits");
+}
 static void update_result(void) {
     ink_args_t args; ink_args_init(&args); ink_args_bool(&args, "ok", update_ok);
     ink_cap_emit("update.result", &args);
 }
 static void run(void *arg) {
     (void)arg;
+    vtk_host_call(test_mode, NULL);
     CHECK(WAIT_FOR(ink_member_space_open() && settled(), 15000), "initial device settles");
     test_start_home();
     CHECK(BY_HAND("settings.set", "{\"id\":\"power.lock_after_s\",\"value\":600}") && g_rc.status == INK_RC_DONE, "keep previews awake");
     CHECK(BY_HAND("settings.set", "{\"id\":\"system.language\",\"value\":1}") && g_rc.status == INK_RC_DONE, "English previews");
+    if (extra_only) { extra_pages(); ink_probe_count("test.finished"); return; }
+    if (bookshelf_only) {
+        CHECK(BY_HAND("app.open", "{\"id\":\"reader\"}") && WAIT_FOR(at("reader") && settled(), 10000), "open English bookshelf");
+        picture = "Bookshelf-en"; on_ui(inspect_bookshelf);
+        CHECK(!crowded && strstr(labels, "Bookshelf"), "English bookshelf fits: %.100s", issue);
+        vtk_host_call(save, NULL);
+        captured = false; frame_tries = 0; vtk_event_at(vtk_now() + SIM_MS(1), frame, (void *)picture);
+        CHECK(WAIT_FOR(captured, 2000), "bookshelf screenshot captured");
+        CHECK(sim_metric_value("i18n.missing") == 0, "bookshelf has no missing translations");
+        ink_probe_count("test.frames"); ink_probe_count("test.finished"); return;
+    }
+    open_page("shell.family", "SetMembers"); capture("SetMembers-en", "My PIN");
+    CHECK(BY_HAND("family.edit", NULL) && g_rc.status == INK_RC_DONE, "new family member form");
+    capture("FamilyAdd-en", "Save Name");
+    CHECK(BY_HAND("family.role", NULL) && g_rc.status == INK_RC_DONE, "new member role toggle");
+    capture("FamilyAdult-en", "Adult");
+    open_page("shell.kid_settings", "SetKid"); capture("SetKid-en", "Daily Time Limit");
+    open_page("shell.wallpaper", "Wallpaper"); capture("Wallpaper-en", "Lock Screen Style");
+    CHECK(BY_HAND("family.next", NULL) && g_rc.status == INK_RC_DONE, "next wallpaper settings");
+    capture("Wallpaper-next-en", "Lift to Wake");
+    open_page("shell.records", "Records"); capture("Records-en", "Delete All");
+    open_page("shell.ai_memory", "AiMemory"); capture("AiMemory-en", "AI memories unavailable");
+    open_page("shell.runtime_records", "RuntimeRecords"); capture("RuntimeRecords-en", "Runtime Records");
+    CHECK(BY_HAND("system.home", NULL), "return home before control preview");
+    CHECK(BY_HAND("shell.control", NULL) && g_rc.status == INK_RC_DONE, "open control centre");
+    capture("Control-en", "Volume");
+    CHECK(BY_HAND("shell.more", NULL) && g_rc.status == INK_RC_DONE, "expand control centre");
+    capture("Control-more-en", "Airplane");
+    CHECK(BY_HAND("shell.close", NULL), "close control centre");
+    const char *const nav_caps[] = {"shell.display", "shell.sound", "shell.network"};
+    const char *const nav_pages[] = {"SetDisplay", "SetSound", "SetNetwork"};
+    for (unsigned i = 0; i < sizeof nav_caps / sizeof *nav_caps; i++) {
+        open_page(nav_caps[i], nav_pages[i]);
+        for (int page = 1; page <= 4; page++) {
+            char shot[64]; snprintf(shot, sizeof shot, "%s-en-%d", nav_pages[i], page);
+            capture(shot, NULL);
+            CHECK(BY_HAND("shell.page_next", NULL) && g_rc.status == INK_RC_DONE, "next navigation settings page");
+        }
+    }
     open_page("shell.tasks", "Tasks"); capture("Tasks-en", "Activity");
-    open_page("shell.ai_home", "AiHome"); capture("AiHome-en", "Conversations");
+    open_page("shell.ai_home", "AiHome"); capture("AiHome-en", "Chats");
     CHECK(BY_HAND("shell.ai_ask", NULL) && WAIT_FOR(at("Keyboard"), 5000), "typed question has native keyboard"); capture("AiAsk-en", "Send");
     CHECK(strstr(context, "Ask AI") && strstr(context, "Question"), "question snapshot uses English labels");
     CHECK(BY_HAND("system.home", NULL), "close question and keyboard");

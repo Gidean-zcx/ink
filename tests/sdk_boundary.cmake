@@ -1,7 +1,7 @@
 # Apps use the app framework only (architecture v1.0 §7.3, D-48): no HAL, no OSAL, no driver or board
 # header, no HAL or OSAL call. Run: cmake -DSRC=<source dir> -P tests/sdk_boundary.cmake
 set(ALLOWED app appreg ai cap clipboard crc data file font layout media members notify settings state storage text textfield textinput time ui ui_semantics ui_list)
-list(APPEND ALLOWED file_picker)
+list(APPEND ALLOWED file_picker i18n)
 file(GLOB_RECURSE SOURCES "${SRC}/apps/*.c" "${SRC}/apps/*.h")
 set(bad 0)
 foreach(f ${SOURCES})
@@ -11,7 +11,7 @@ foreach(f ${SOURCES})
     math(EXPR n "${n} + 1")
     if(l MATCHES "^[ \t]*#[ \t]*include[ \t]*\"([^\"]+)\"")
       set(h "${CMAKE_MATCH_1}")
-      if(h MATCHES "^ink/sys/([a-z_]+)\\.h$")
+      if(h MATCHES "^ink/sys/([a-z_][a-z0-9_]*)\\.h$")
         list(FIND ALLOWED "${CMAKE_MATCH_1}" i)
         if(i LESS 0)
           message(SEND_ERROR "${f}:${n}: ink/sys/${CMAKE_MATCH_1}.h is not part of the app framework")

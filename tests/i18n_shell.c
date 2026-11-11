@@ -96,6 +96,8 @@ static void open_page(const char *cap, const char *name) {
 }
 static void settings(const char *cap, const char *name, const char *title) {
     open_page(cap, name);
+    if (!strcmp(name, "SetStorage"))
+        CHECK(WAIT_FOR(at(name) && !strstr(g_snap, "Preparing") && !strstr(g_snap, "Loading backup history"), 10000), "storage rows loaded before screenshot");
     for (unsigned page = 1; page <= 16; page++) {
         char shot[64]; snprintf(shot, sizeof shot, "%s-en-%u", name, page);
         capture(shot, title);

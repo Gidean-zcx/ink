@@ -717,10 +717,10 @@ static void page_show(remote_page_t page) {
     RS.fields[1] = (ink_ui_field_spec_t){.id="status", .role="text", .label=TR("状态"), .value=page_message()};
     RS.semantics = (ink_ui_page_spec_t){.id="remote", .title=TR("网页"), .object={"remote", RS.gen},
         .fields=RS.fields, .field_count=2, .actions=RS.actions, .action_count=(page == REMOTE || page == ADDRESS || page == TYPE) ? 4 : page == LOADING ? 2 : 3};
-    action(0, "close", "关闭", "remote.close");
-    action(1, "address", "换一个地址", "remote.address");
+    action(0, "close", TR_NOOP("关闭"), "remote.close");
+    action(1, "address", TR_NOOP("换一个地址"), "remote.address");
     if (page == REMOTE) {
-        action(2, "prev", "上一页", "remote.prev"); action(3, "next", "下一页", "remote.next");
+        action(2, "prev", TR_NOOP("上一页"), "remote.prev"); action(3, "next", TR_NOOP("下一页"), "remote.next");
         ink_shell_bind(ink_ui_circle(RS.chrome, "back", INK_MARGIN, INK_GAP_S, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_WHITE, NULL, NULL), "remote.prev", "{}");
         ink_shell_bind(ink_ui_circle(RS.chrome, "next", INK_MARGIN + INK_CONTROL + INK_GAP_M, INK_GAP_S, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_WHITE, NULL, NULL), "remote.next", "{}");
         ink_shell_bind(ink_ui_pill(RS.chrome, TR("网址"), INK_CANVAS_W / 2, INK_GAP_S, w / 2, INK_CONTROL, false, NULL, NULL), "remote.address", "{}");
@@ -732,7 +732,7 @@ static void page_show(remote_page_t page) {
         if (page == ADDRESS || page == TYPE) {
             ink_text_cfg_t cfg = {.type=page == ADDRESS ? INK_TEXT_URL : RS.secret ? INK_TEXT_PASSWORD : INK_TEXT_PLAIN,
                 .initial=page == ADDRESS ? RS.url : "", .hint=page == ADDRESS ? TR("输入网址") : TR("输入文字"), .max=page == ADDRESS ? sizeof RS.url - 1 : 255, .ai_hidden=page == TYPE && RS.secret};
-            action(2, "focus", "输入", "remote.focus"); action(3, "submit", page == ADDRESS ? "打开" : "完成", "remote.submit");
+            action(2, "focus", TR_NOOP("输入"), "remote.focus"); action(3, "submit", page == ADDRESS ? TR_NOOP("打开") : TR_NOOP("完成"), "remote.submit");
             RS.actions[3].enabled = page == ADDRESS || !RS.secret;
             RS.field = ink_textfield_create(RS.chrome, &cfg, entered, NULL, false);
             lv_obj_set_pos(RS.field, ink_ui_px(INK_MARGIN), ink_ui_px(y));
@@ -753,7 +753,7 @@ static void page_show(remote_page_t page) {
                 const char *detail = page == BLOCKED ? TR("家庭服务器不允许打开这个网站。") : RS.ended ? TR("请重新打开，刚才的网页可能无法恢复。") : TR("5 分钟内连回来，还在刚才那一页。");
                 label = ink_ui_label(RS.chrome, detail, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, INK_CANVAS_H / 2 + INK_LINE_SUBTITLE + INK_GAP_L, w);
                 lv_obj_set_style_text_align(label, LV_TEXT_ALIGN_CENTER, 0);
-                action(2, "retry", page == BLOCKED ? "换一个地址" : "重新连接", page == BLOCKED ? "remote.address" : "remote.retry");
+                action(2, "retry", page == BLOCKED ? TR_NOOP("换一个地址") : TR_NOOP("重新连接"), page == BLOCKED ? "remote.address" : "remote.retry");
                 ink_shell_bind(ink_ui_pill(RS.chrome, RS.actions[2].label, INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_PRIMARY, w, INK_PRIMARY, true, NULL, NULL), RS.actions[2].capability, "{}");
             }
         }
@@ -818,6 +818,6 @@ int ink_remote_init(void) {
 }
 
 int ink_remote_app_init(void) {
-    static const ink_app_def_t app = {.id="remote", .title="网页", .icon=INK_UI_ICON(globe), .entry=&ink_app_remote, .system_app=true};
+    static const ink_app_def_t app = {.id="remote", .title=TR_NOOP("网页"), .icon=INK_UI_ICON(globe), .entry=&ink_app_remote, .system_app=true};
     return ink_app_register(&app);
 }

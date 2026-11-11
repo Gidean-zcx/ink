@@ -17,7 +17,7 @@ enum { MEMBERS, KID, WALLPAPER, RECORDS, MEMORY, RUNTIME, KID_APPS, KID_PERIODS 
 #define ROWS_MAX 48
 _Static_assert(40 <= ROWS_MAX && INK_MEMBERS_MAX + 3 <= ROWS_MAX, "family rows fit (members, add, pin, return)");
 static const char *const NAMES[] = {"SetMembers", "SetKid", "Wallpaper", "Records", "AiMemory", "RuntimeRecords", "SetKidApps", "SetKidPeriods"};
-static const char *const TITLES[] = {"家人", "孩子的设置", "锁屏和壁纸", "记录", "AI 记得的事", "运行记录", TR_NOOP("应用名单"), TR_NOOP("禁用时段")};
+static const char *const TITLES[] = {TR_NOOP("家人"), TR_NOOP("孩子的设置"), TR_NOOP("锁屏和壁纸"), TR_NOOP("记录"), TR_NOOP("AI 记得的事"), TR_NOOP("运行记录"), TR_NOOP("应用名单"), TR_NOOP("禁用时段")};
 static struct {
     int page, count, period; char kid[16];
     uint32_t generation;
@@ -41,10 +41,10 @@ static void setting(const char *id, const char *title, int64_t next) {
     char args[128], value[48]; snprintf(args, sizeof args, "{\"id\":\"%s\",\"value\":%lld}", id, (long long)next);
     int64_t v = ink_setting_get(id);
     snprintf(value, sizeof value, "%lld", (long long)v);
-    if (!strcmp(id, "display.lock_style")) snprintf(value, sizeof value, "%s", v == 2 ? "壁纸" : v == 1 ? "时钟和待办" : "这一页");
-    if (!strcmp(id, "power.lock_after_s")) snprintf(value, sizeof value, "%lld 分钟", (long long)v / 60);
-    if (!strcmp(id, "display.wallpaper_file")) snprintf(value, sizeof value, "%s", v ? "已选择" : "还没有选壁纸");
-    if (!strcmp(id, "power.lift_wake")) snprintf(value, sizeof value, "%s", v ? "开，平放不动 3 分钟先锁屏" : "关");
+    if (!strcmp(id, "display.lock_style")) snprintf(value, sizeof value, "%s", v == 2 ? TR("壁纸") : v == 1 ? TR("时钟和待办") : TR("这一页"));
+    if (!strcmp(id, "power.lock_after_s")) snprintf(value, sizeof value, TR("%lld 分钟"), (long long)v / 60);
+    if (!strcmp(id, "display.wallpaper_file")) snprintf(value, sizeof value, "%s", v ? TR("已选择") : TR("还没有选壁纸"));
+    if (!strcmp(id, "power.lift_wake")) snprintf(value, sizeof value, "%s", v ? TR("开，平放不动 3 分钟先锁屏") : TR("关"));
     row(id, title, value, "settings.set", args);
 }
 static void time_reply(void *ctx, const ink_receipt_t *rc) {
@@ -52,8 +52,8 @@ static void time_reply(void *ctx, const ink_receipt_t *rc) {
     ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL); int64_t minutes = 0; char id[16];
     if (j && rc->result && !ink_json_parse(j, rc->result, strlen(rc->result)) && ink_json_int(j, ink_json_find(j, 0, "minutes"), &minutes)) {
         ink_json_str(j, ink_json_find(j, 0, "id"), id, sizeof id);
-        if (!minutes) snprintf(S.values[2], sizeof S.values[2], "不限");
-        else snprintf(S.values[2], sizeof S.values[2], minutes % 60 ? "%lld 分钟" : "%lld 小时", (long long)(minutes % 60 ? minutes : minutes / 60));
+        if (!minutes) snprintf(S.values[2], sizeof S.values[2], TR("不限"));
+        else snprintf(S.values[2], sizeof S.values[2], minutes % 60 ? TR("%lld 分钟") : TR("%lld 小时"), (long long)(minutes % 60 ? minutes : minutes / 60));
         snprintf(S.args[2], sizeof S.args[2], "{\"id\":\"%s\",\"minutes\":%d}", id, minutes == 0 ? 30 : minutes <= 30 ? 60 : minutes <= 60 ? 120 : 0);
         snprintf(S.caps[2], sizeof S.caps[2], "member.time_set"); ink_ui_list_refresh(S.list, S.count);
     }
@@ -79,15 +79,15 @@ static struct {
     ink_ui_action_spec_t actions[7];
     ink_ui_page_spec_t model;
 } R INK_PSRAM_BSS;
-static const char RETENTION[] = "活动记录：大人 1 年，孩子 180 天。";
-static const char DELETE_NOTE[] = "其余记录暂不能删除。";
+static const char RETENTION[] = TR_NOOP("活动记录：大人 1 年，孩子 180 天。");
+static const char DELETE_NOTE[] = TR_NOOP("其余记录暂不能删除。");
 static void records_reply(void *ctx, const ink_receipt_t *rc) {
     if ((uint32_t)(uintptr_t)ctx != S.generation || !current() || S.page != RECORDS) return;
     ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL); int64_t total = 0;
     bool ok = j && rc->status == INK_RC_DONE && rc->result && !ink_json_parse(j, rc->result, strlen(rc->result)) &&
         ink_json_int(j, ink_json_find(j, 0, "total"), &total);
-    if (ok) snprintf(R.count, sizeof R.count, "%lld 件", (long long)total);
-    else snprintf(R.count, sizeof R.count, "记录暂时读不出来");
+    if (ok) snprintf(R.count, sizeof R.count, TR("%lld 件"), (long long)total);
+    else snprintf(R.count, sizeof R.count, TR("记录暂时读不出来"));
     osal_free(j); lv_label_set_text(R.count_label, R.count); ink_ui_content_changed(); ink_ui_hint_obj(S.body, INK_REFRESH_UI);
 }
 static void records_load(void) {
@@ -108,7 +108,7 @@ static void records_create(void) {
     if (!R.member[0]) snprintf(R.member, sizeof R.member, "%s", ink_member_current()->id);
     char member[16]; memcpy(member, R.member, sizeof member);
     snprintf(R.args, sizeof R.args, "{\"member\":\"%s\"}", member);
-    const char *const labels[] = {"我", "孩子"};
+    const char *const labels[] = {TR("我"), TR("孩子")};
     lv_obj_t *tabs = ink_ui_segments(S.body, labels, adult ? 2 : 1, strcmp(R.member, ink_member_current()->id) != 0, INK_MARGIN, y, w, NULL, NULL);
     ink_shell_bind(lv_obj_get_child(tabs, 0), "shell.records", NULL);
     if (adult && kid) {
@@ -118,36 +118,36 @@ static void records_create(void) {
     y += INK_SEGMENT + INK_GAP;
     lv_obj_t *group = ink_ui_box(S.body, INK_MARGIN, y, w, 4 * h, INK_RADIUS_CARD, INK_SURFACE_STATIC, false);
     static const char *const ids[] = {"activity", "conversations", "memory", "runtime"};
-    static const char *const titles[] = {"AI 替你做过的事", "和 AI 说过的话", "AI 记得的事", "运行记录"};
+    static const char *const titles[] = {TR_NOOP("AI 替你做过的事"), TR_NOOP("和 AI 说过的话"), TR_NOOP("AI 记得的事"), TR_NOOP("运行记录")};
     static const char *const icons[] = {"ai", "message", "list", "info"};
     static const char *const caps[] = {"shell.ai_log", "shell.ai_home", "shell.ai_memory", "shell.runtime_records"};
-    snprintf(R.count, sizeof R.count, "正在读取");
-    const char *values[] = {R.count, "暂时读不到次数", "暂时看不到", "不含内容，暂时读不到"};
+    snprintf(R.count, sizeof R.count, TR("正在读取"));
+    const char *values[] = {R.count, TR("暂时读不到次数"), TR("暂时看不到"), TR("不含内容，暂时读不到")};
     for (int i = 0; i < 4; i++) {
         lv_obj_t *r = ink_ui_box(group, 0, i * h, w, h, 0, INK_SURFACE_WHITE, false);
         lv_obj_set_style_bg_opa(r, LV_OPA_TRANSP, 0); ink_shell_bind(r, caps[i], i == 0 ? R.args : NULL);
         ink_ui_circle(r, icons[i], INK_GAP, (h - INK_CIRCLE_SMALL) / 2, INK_CIRCLE_SMALL, INK_ICON_MEDIUM, INK_SURFACE_WHITE, NULL, NULL);
         int left = INK_CIRCLE_SMALL + INK_GAP_XL, top = (h - ink_ui_line_height(INK_FONT_LIST) - ink_ui_line_height(INK_FONT_NOTE)) / 2;
-        ink_ui_line(r, titles[i], INK_FONT_LIST, INK_WEIGHT_MEDIUM, left, top, w - left - INK_READING_MARGIN);
+        ink_ui_line(r, TR(titles[i]), INK_FONT_LIST, INK_WEIGHT_MEDIUM, left, top, w - left - INK_READING_MARGIN);
         lv_obj_t *v = ink_ui_line(r, values[i], INK_FONT_NOTE, INK_WEIGHT_REGULAR, left, top + ink_ui_line_height(INK_FONT_LIST), w - left - INK_READING_MARGIN);
         if (!i) R.count_label = v;
         ink_ui_icon(r, "next", INK_ICON_SMALL, INK_ICON_LINE, w - INK_READING_MARGIN, (h - INK_ICON_SMALL) / 2, false);
         if (i) ink_ui_group_divider(r, 0, w);
-        R.fields[i] = (ink_ui_field_spec_t){.id = ids[i], .role = "text", .label = titles[i], .value = values[i]};
-        R.actions[i] = (ink_ui_action_spec_t){.id = ids[i], .label = titles[i], .capability = caps[i], .args_json = i == 0 ? R.args : NULL, .enabled = true};
+        R.fields[i] = (ink_ui_field_spec_t){.id = ids[i], .role = "text", .label = TR(titles[i]), .value = values[i]};
+        R.actions[i] = (ink_ui_action_spec_t){.id = ids[i], .label = TR(titles[i]), .capability = caps[i], .args_json = i == 0 ? R.args : NULL, .enabled = true};
     }
     y += 4 * h + INK_GAP;
-    ink_ui_label(S.body, RETENTION, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y, w);
-    ink_ui_label(S.body, DELETE_NOTE, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN,
-        y + ink_ui_text_height(RETENTION, INK_FONT_NOTE, INK_WEIGHT_REGULAR, w) + INK_GAP_XS, w);
-    lv_obj_t *del = ink_ui_pill(S.body, "全部删除", INK_MARGIN, INK_CANVAS_H - INK_STATUS_BAR - INK_PRIMARY - INK_GAP_XS - INK_MARGIN - INK_PRIMARY, w, INK_PRIMARY, false, NULL, NULL);
+    ink_ui_label(S.body, TR(RETENTION), INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y, w);
+    ink_ui_label(S.body, TR(DELETE_NOTE), INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN,
+        y + ink_ui_text_height(TR(RETENTION), INK_FONT_NOTE, INK_WEIGHT_REGULAR, w) + INK_GAP_XS, w);
+    lv_obj_t *del = ink_ui_pill(S.body, TR("全部删除"), INK_MARGIN, INK_CANVAS_H - INK_STATUS_BAR - INK_PRIMARY - INK_GAP_XS - INK_MARGIN - INK_PRIMARY, w, INK_PRIMARY, false, NULL, NULL);
     ink_shell_bind(del, "activity.clear", R.args);
-    R.fields[4] = (ink_ui_field_spec_t){.id = "retention", .role = "text", .label = RETENTION, .value = DELETE_NOTE};
-    R.fields[5] = (ink_ui_field_spec_t){.id = "member", .role = "status", .label = "家人", .value = R.member};
-    R.actions[4] = (ink_ui_action_spec_t){.id = "delete", .label = "全部删除", .capability = "activity.clear", .args_json = R.args, .enabled = true};
-    R.actions[5] = (ink_ui_action_spec_t){.id = "mine", .label = "我", .capability = "shell.records", .enabled = true};
-    R.actions[6] = (ink_ui_action_spec_t){.id = "children", .label = "孩子", .capability = "shell.records", .args_json = "{\"children\":true}", .enabled = adult && kid};
-    R.model = (ink_ui_page_spec_t){.id = "Records", .title = "记录", .fields = R.fields, .field_count = 6, .actions = R.actions, .action_count = 7};
+    R.fields[4] = (ink_ui_field_spec_t){.id = "retention", .role = "text", .label = TR(RETENTION), .value = TR(DELETE_NOTE)};
+    R.fields[5] = (ink_ui_field_spec_t){.id = "member", .role = "status", .label = TR("家人"), .value = R.member};
+    R.actions[4] = (ink_ui_action_spec_t){.id = "delete", .label = TR("全部删除"), .capability = "activity.clear", .args_json = R.args, .enabled = true};
+    R.actions[5] = (ink_ui_action_spec_t){.id = "mine", .label = TR("我"), .capability = "shell.records", .enabled = true};
+    R.actions[6] = (ink_ui_action_spec_t){.id = "children", .label = TR("孩子"), .capability = "shell.records", .args_json = "{\"children\":true}", .enabled = adult && kid};
+    R.model = (ink_ui_page_spec_t){.id = "Records", .title = TR("记录"), .fields = R.fields, .field_count = 6, .actions = R.actions, .action_count = 7};
     records_load();
 }
 static void entered(void *ctx, const char *value) {
@@ -217,50 +217,50 @@ static void kid_rows(void) {
 static void create(lv_obj_t *screen, void *arg) {
     S.page = (int)(intptr_t)arg; S.generation++; S.count = 0; S.field = NULL;
     memset(&S.pos, 0, sizeof S.pos);
-    ink_shell_statusbar(screen, true); ink_shell_topbar(screen, S.page >= KID_APPS ? TR(TITLES[S.page]) : TITLES[S.page]);
+    ink_shell_statusbar(screen, true); ink_shell_topbar(screen, TR(TITLES[S.page]));
     int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP_XS, h = INK_CANVAS_H - y, w = INK_CANVAS_W - 2 * INK_MARGIN;
     S.body = ink_ui_box(screen, 0, y, INK_CANVAS_W, h, 0, INK_SURFACE_WHITE, false);
     if (S.page == RECORDS) { S.list = NULL; records_create(); return; }
-    if (S.page == RUNTIME) { S.list = NULL; ink_ui_notice(S.body, "不含内容；暂时读不到运行记录，也不能删除。", INK_GAP_L); return; }
+    if (S.page == RUNTIME) { S.list = NULL; ink_ui_notice(S.body, TR("不含内容；暂时读不到运行记录，也不能删除。"), INK_GAP_L); return; }
     static const ink_ui_action_spec_t actions[] = {
-        {.id = "prev", .label = "上一页", .capability = "family.prev"}, {.id = "next", .label = "下一页", .capability = "family.next"},
-        {.id = "kid", .label = "孩子的设置", .capability = "shell.kid_settings", .enabled = true}};
-    S.model = (ink_ui_page_spec_t){.id = NAMES[S.page], .title = S.page >= KID_APPS ? TR(TITLES[S.page]) : TITLES[S.page], .object = {NAMES[S.page], 0}, .actions = actions, .action_count = S.page == MEMBERS ? 3 : 2};
-    S.list = ink_ui_list_create(S.body, &S.model, &S.pos, 4, 1, ink_ui_row_double(), "这里还没有内容", bind_row, NULL);
+        {.id = "prev", .label = TR_NOOP("上一页"), .capability = "family.prev"}, {.id = "next", .label = TR_NOOP("下一页"), .capability = "family.next"},
+        {.id = "kid", .label = TR_NOOP("孩子的设置"), .capability = "shell.kid_settings", .enabled = true}};
+    S.model = (ink_ui_page_spec_t){.id = NAMES[S.page], .title = TR(TITLES[S.page]), .object = {NAMES[S.page], 0}, .actions = actions, .action_count = S.page == MEMBERS ? 3 : 2};
+    S.list = ink_ui_list_create(S.body, &S.model, &S.pos, 4, 1, ink_ui_row_double(), TR("这里还没有内容"), bind_row, NULL);
     char args[128];
     if (S.page == KID_APPS || S.page == KID_PERIODS) kid_rows();
     else if (S.page == MEMBERS) {
         for (int i = 0; ink_member_at(i); i++) {
             const ink_member_t *m = ink_member_at(i); snprintf(args, sizeof args, "{\"id\":\"%s\"}", m->id);
-            row(m->id, m->name, !strcmp(m->id, ink_member_current()->id) ? "正在用" : m->role == INK_ROLE_CHILD ? "孩子" : "大人", "family.edit", args);
+            row(m->id, m->name, !strcmp(m->id, ink_member_current()->id) ? TR("正在用") : m->role == INK_ROLE_CHILD ? TR("孩子") : TR("大人"), "family.edit", args);
         }
-        row("add", "加一位家人", "", "family.edit", NULL);
-        row("pin", "我的密码", "设置或更改", "shell.pin_set", NULL);
+        row("add", TR("加一位家人"), "", "family.edit", NULL);
+        row("pin", TR("我的密码"), TR("设置或更改"), "shell.pin_set", NULL);
         row("return", TR("离开多久要重新验证"), TR("选择免密码时长"), "shell.return", NULL);
     } else if (S.page == KID) {
         const ink_member_t *kid = NULL;
         for (int i = 0; ink_member_at(i); i++) if (ink_member_at(i)->role == INK_ROLE_CHILD && (!S.kid[0] || !strcmp(S.kid, ink_member_at(i)->id))) { kid = ink_member_at(i); break; }
         if (kid) snprintf(S.kid, sizeof S.kid, "%s", kid->id);
-        row("child", "家人", kid ? kid->name : "还没有孩子家人", "family.kid_member", NULL);
-        row("apps", TR("应用名单"), kid ? TR("选择能用的应用") : "还没有孩子家人", kid ? "family.kid_apps" : NULL, NULL);
-        row("time", "每天能用多久", kid ? "正在读取" : "还没有孩子家人", NULL, NULL);
+        row("child", TR("家人"), kid ? kid->name : TR("还没有孩子家人"), "family.kid_member", NULL);
+        row("apps", TR("应用名单"), kid ? TR("选择能用的应用") : TR("还没有孩子家人"), kid ? "family.kid_apps" : NULL, NULL);
+        row("time", TR("每天能用多久"), kid ? TR("正在读取") : TR("还没有孩子家人"), NULL, NULL);
         if (kid) {
             snprintf(args, sizeof args, "{\"id\":\"%s\"}", kid->id);
             ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .args_json = args, .reply_exec = INK_EXEC_UI, .done = time_reply, .ctx = (void *)(uintptr_t)S.generation};
             ink_cap_call("member.time_get", NULL, &o);
         }
-        setting("audio.child_max", "孩子的音量上限", ink_setting_get("audio.child_max") >= 100 ? 10 : ink_setting_get("audio.child_max") + 10);
-        row("periods", TR("禁用时段"), kid ? TR("选择时间和星期") : "还没有孩子家人", kid ? "family.kid_periods" : NULL, NULL);
+        setting("audio.child_max", TR("孩子的音量上限"), ink_setting_get("audio.child_max") >= 100 ? 10 : ink_setting_get("audio.child_max") + 10);
+        row("periods", TR("禁用时段"), kid ? TR("选择时间和星期") : TR("还没有孩子家人"), kid ? "family.kid_periods" : NULL, NULL);
     } else if (S.page == WALLPAPER) {
-        setting("display.lock_style", "锁屏时显示", (ink_setting_get("display.lock_style") + 1) % 3);
-        setting("power.lock_after_s", "自动锁屏", ink_setting_get("power.lock_after_s") == 600 ? 300 : 600);
-        row("choose", "从相册选", ink_wallpaper_ready() ? "已选锁屏壁纸" : ink_setting_get("display.wallpaper_file") ? "壁纸暂时读不出来" : "还没有选壁纸", "wallpaper.choose", NULL);
-        setting("display.wallpaper_file", "移除壁纸", 0);
-        setting("power.lift_wake", "拿起亮屏", !ink_setting_get("power.lift_wake"));
-    } else row("unavailable", "暂时看不到 AI 记得的事", "暂时无法查看和删除记忆", NULL, NULL);
+        setting("display.lock_style", TR("锁屏时显示"), (ink_setting_get("display.lock_style") + 1) % 3);
+        setting("power.lock_after_s", TR("自动锁屏"), ink_setting_get("power.lock_after_s") == 600 ? 300 : 600);
+        row("choose", TR("从相册选"), ink_wallpaper_ready() ? TR("已选锁屏壁纸") : ink_setting_get("display.wallpaper_file") ? TR("壁纸暂时读不出来") : TR("还没有选壁纸"), "wallpaper.choose", NULL);
+        setting("display.wallpaper_file", TR("移除壁纸"), 0);
+        setting("power.lift_wake", TR("拿起亮屏"), !ink_setting_get("power.lift_wake"));
+    } else row("unavailable", TR("暂时看不到 AI 记得的事"), TR("暂时无法查看和删除记忆"), NULL, NULL);
     ink_ui_list_refresh(S.list, S.count);
     if (S.page == MEMBERS) {
-        ink_shell_bind(ink_ui_pill(screen, "孩子的设置", INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_CONTROL, w, INK_CONTROL, false, NULL, NULL), "shell.kid_settings", NULL);
+        ink_shell_bind(ink_ui_pill(screen, TR("孩子的设置"), INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_CONTROL, w, INK_CONTROL, false, NULL, NULL), "shell.kid_settings", NULL);
     }
 }
 static void destroy(void) { S.generation++; S.body = S.field = NULL; S.list = NULL; }
@@ -313,28 +313,28 @@ static void action(ink_call_t *c) {
         memset(&args, 0, sizeof args);
     } else if (!strcmp(id, "family.role")) {
         if (!S.field || S.target[0]) { c->rc.status = INK_RC_STALE; return; }
-        S.adult = !S.adult; S.input[1].value = S.adult ? "大人" : "孩子"; lv_label_set_text(lv_obj_get_child(S.role, 0), S.input[1].value); ink_ui_content_changed();
+        S.adult = !S.adult; S.input[1].value = S.adult ? TR("大人") : TR("孩子"); lv_label_set_text(lv_obj_get_child(S.role, 0), S.input[1].value); ink_ui_content_changed();
     }
     else if (!strcmp(id, "family.edit")) {
         if (S.field) { c->rc.status = INK_RC_STALE; return; }
         S.target[0] = 0; ink_args_get_str(&c->args, "id", S.target, sizeof S.target);
         lv_obj_clean(S.body); S.list = NULL;
-        S.form[0] = (ink_ui_action_spec_t){.id = "name", .label = "称呼", .capability = "family.focus", .enabled = true};
-        S.form[1] = (ink_ui_action_spec_t){.id = "save", .label = "保存称呼", .capability = "family.save", .enabled = true};
-        S.form[2] = (ink_ui_action_spec_t){.id = "role", .label = "大人或孩子", .capability = "family.role", .enabled = !S.target[0]};
-        S.form[3] = (ink_ui_action_spec_t){.id = "remove", .label = "移除这位家人", .capability = "member.remove", .enabled = S.target[0]};
-        S.form[4] = (ink_ui_action_spec_t){.id = "pin", .label = "改我的密码", .capability = "shell.pin_set", .enabled = true};
-        S.input[0] = (ink_ui_field_spec_t){.id = "name", .role = "textbox", .label = "称呼"};
-        S.input[1] = (ink_ui_field_spec_t){.id = "role", .role = "status", .label = "新家人的身份", .value = "孩子"};
+        S.form[0] = (ink_ui_action_spec_t){.id = "name", .label = TR("称呼"), .capability = "family.focus", .enabled = true};
+        S.form[1] = (ink_ui_action_spec_t){.id = "save", .label = TR("保存称呼"), .capability = "family.save", .enabled = true};
+        S.form[2] = (ink_ui_action_spec_t){.id = "role", .label = TR("大人或孩子"), .capability = "family.role", .enabled = !S.target[0]};
+        S.form[3] = (ink_ui_action_spec_t){.id = "remove", .label = TR("移除这位家人"), .capability = "member.remove", .enabled = S.target[0]};
+        S.form[4] = (ink_ui_action_spec_t){.id = "pin", .label = TR("改我的密码"), .capability = "shell.pin_set", .enabled = true};
+        S.input[0] = (ink_ui_field_spec_t){.id = "name", .role = "textbox", .label = TR("称呼")};
+        S.input[1] = (ink_ui_field_spec_t){.id = "role", .role = "status", .label = TR("新家人的身份"), .value = TR("孩子")};
         S.model.fields = S.input; S.model.field_count = 1; S.model.actions = S.form; S.model.action_count = 5; S.adult = false;
         if (!S.target[0]) S.model.field_count = 2;
-        ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .max = 31, .hint = "输入称呼，按完成保存"};
+        ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .max = 31, .hint = TR("输入称呼，按完成保存")};
         S.field = ink_textfield_create(S.body, &cfg, entered, NULL, false);
         lv_obj_set_pos(S.field, ink_ui_px(INK_MARGIN), ink_ui_px(INK_GAP_L));
         ink_textfield_bind_short(S.field, &S.model, &S.input[0], &S.form[0]);
         snprintf(S.args[0], sizeof S.args[0], "{\"id\":\"%s\"}", S.target); S.form[3].args_json = S.args[0];
         for (int i = 1; i < 5; i++) if (S.form[i].enabled) {
-            lv_obj_t *b = ink_ui_pill(S.body, i == 2 ? "孩子" : S.form[i].label, INK_MARGIN, i * (INK_CONTROL + INK_GAP) + INK_GAP_L, INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, false, NULL, NULL);
+            lv_obj_t *b = ink_ui_pill(S.body, i == 2 ? TR("孩子") : S.form[i].label, INK_MARGIN, i * (INK_CONTROL + INK_GAP) + INK_GAP_L, INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, false, NULL, NULL);
             ink_shell_bind(b, S.form[i].capability, S.form[i].args_json); if (i == 2) S.role = b;
         }
     } else if (S.list && !S.field) {

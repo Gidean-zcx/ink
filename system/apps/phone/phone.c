@@ -163,7 +163,7 @@ static void on_call(void *ctx, const char *id, const ink_args_t *a) {
         if (!db) return;
         char raw[256]; ink_jw_t w; ink_jw_init(&w, raw, sizeof raw);
         ink_jw_raw(&w, "{\"number\":"); ink_jw_str(&w, H.number);
-        ink_jw_raw(&w, ",\"kind\":"); ink_jw_str(&w, H.incoming ? H.answered ? "打来" : "未接" : "打出");
+        ink_jw_raw(&w, ",\"kind\":"); ink_jw_str(&w, H.incoming ? H.answered ? TR_NOOP("打来") : TR_NOOP("未接") : TR_NOOP("打出"));
         ink_jw_raw(&w, ",\"minutes\":"); ink_jw_int(&w, H.answered ? (int64_t)((ink_now_us() - H.started) / 60000000) : 0);
         ink_jw_raw(&w, ",\"at\":"); ink_jw_int(&w, H.at); ink_jw_raw(&w, "}");
         ink_db_write_t wr = {.sort = H.at, .data = raw, .len = w.len, .src = INK_SRC_SYSTEM};
@@ -192,9 +192,9 @@ static void changed(void *ctx, const char *id, const ink_args_t *a) {
         P.active = true;
         snprintf(P.call_member, sizeof P.call_member, "%s", member);
         ink_args_get_str(a, !strcmp(id, "call.incoming") ? "from" : "number", P.calling, sizeof P.calling);
-        snprintf(P.status, sizeof P.status, "%s", !strcmp(id, "call.incoming") ? "来电" : "正在拨号");
-    } else if (!strcmp(id, "call.answered") || !strcmp(id, "call.connected")) { P.started = ink_now_us(); snprintf(P.status, sizeof P.status, "通话中"); }
-    else if (!strcmp(id, "call.ended")) { P.active = false; P.tones[0] = 0; P.muted = false; snprintf(P.status, sizeof P.status, "通话已结束"); }
+        snprintf(P.status, sizeof P.status, "%s", !strcmp(id, "call.incoming") ? TR_NOOP("来电") : TR_NOOP("正在拨号"));
+    } else if (!strcmp(id, "call.answered") || !strcmp(id, "call.connected")) { P.started = ink_now_us(); snprintf(P.status, sizeof P.status, TR_NOOP("通话中")); }
+    else if (!strcmp(id, "call.ended")) { P.active = false; P.tones[0] = 0; P.muted = false; snprintf(P.status, sizeof P.status, TR_NOOP("通话已结束")); }
     else if (strcmp(id, "call.controls")) return;
     if (!strcmp(P.call_member, ink_member_current()->id) && ink_member_space_open()) {
         if (!strcmp(id, "call.dialed")) show(&CALL);

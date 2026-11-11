@@ -53,14 +53,14 @@ static bool parse(scan_t *p, const char *text) {
         memset(pass, 0, sizeof pass);
         if (!valid) return false;
         snprintf(p->content, sizeof p->content, "%s", name);
-        p->target = "wifi.connect"; p->label = "连接 Wi-Fi";
+        p->target = "wifi.connect"; p->label = TR_NOOP("连接 Wi-Fi");
     } else if (!strncmp(text, "MECARD:", 7) || !strncmp(text, "BEGIN:VCARD", 11)) {
         strcpy(p->type, "contact"); bool me = text[0] == 'M';
         if (!field(me ? text + 7 : text, me ? "N:" : "FN:", me ? ';' : '\n', name, sizeof name) || !name[0] ||
             !field(me ? text + 7 : text, "TEL:", me ? ';' : '\n', number, sizeof number) || !number[0]) return false;
         ink_args_str(&p->args, "name", name); ink_args_str(&p->args, "number", number);
         snprintf(p->content, sizeof p->content, "%s\n%s", name, number);
-        p->target = "contacts.put"; p->label = "保存联系人";
+        p->target = "contacts.put"; p->label = TR_NOOP("保存联系人");
     } else {
         size_t n = strlen(text);
         if (n >= sizeof p->content) return false;
@@ -69,7 +69,7 @@ static bool parse(scan_t *p, const char *text) {
             if (!text[4] || strlen(text + 4) > 20) return false;
             for (const char *s = text + 4; *s; s++) if (!strchr("+0123456789*#", *s)) return false;
             strcpy(p->type, "tel"); ink_args_str(&p->args, "number", text + 4);
-            p->target = "call.dial"; p->label = "拨打电话";
+            p->target = "call.dial"; p->label = TR_NOOP("拨打电话");
         } else {
             strcpy(p->type, !strncmp(text, "https://", 8) || !strncmp(text, "http://", 7) ? "url" : "text");
             ink_jw_t w; ink_jw_init(&w, p->copy_json, sizeof p->copy_json);

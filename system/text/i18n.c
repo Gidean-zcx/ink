@@ -37,7 +37,7 @@ const char *ink_lang_code(void) { return I18N_LANGS[lang()].code; }
 const char *ink_lang_name(int index) { return index >= 0 && (size_t)index < LANGS ? I18N_LANGS[index].name : NULL; }
 
 int ink_i18n_init(void) {
-    static const ink_setting_def_t LANGUAGE = {.id = "system.language", .title = "语言", .type = INK_SET_ENUM,
+    static const ink_setting_def_t LANGUAGE = {.id = "system.language", .title = TR_NOOP("语言"), .type = INK_SET_ENUM,
         .def = 0, .choices = I18N_NAMES, .system = true};
     return ink_settings_define(&LANGUAGE, 1);
 }

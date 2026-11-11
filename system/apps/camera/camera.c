@@ -198,6 +198,6 @@ static const ink_cap_t CAMERA_APP_CAPS[] = {
     {.id = "camera.review", .locked_owner_only = true, .app = "camera", .title = "查看本次锁屏拍的下一张照片", .activity = "Camera", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_MEDIA, .timeout_ms = 15000, .run = take}
 };
 int ink_camera_app_init(void) {
-    static const ink_app_def_t app = {.id = "camera", .title = "相机", .icon = INK_UI_ICON(camera), .entry = &CAMERA, .system_app = true, .child_ok = true};
+    static const ink_app_def_t app = {.id = "camera", .title = TR_NOOP("相机"), .icon = INK_UI_ICON(camera), .entry = &CAMERA, .system_app = true, .child_ok = true};
     return ink_camera_scan_init() || ink_cap_register(CAMERA_APP_CAPS, 3) || ink_app_register(&app) ? -1 : 0;
 }

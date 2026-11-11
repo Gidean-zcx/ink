@@ -30,8 +30,8 @@ static struct {
     bool calendar;
 } C INK_PSRAM_BSS;
 static const ink_ui_action_spec_t PAGING[] = {
-    {.id = "prev", .label = "上一页", .capability = "calendar.prev"},
-    {.id = "next", .label = "下一页", .capability = "calendar.next"}
+    {.id = "prev", .label = TR_NOOP("上一页"), .capability = "calendar.prev"},
+    {.id = "next", .label = TR_NOOP("下一页"), .capability = "calendar.next"}
 };
 static int month_days(int year, int month) {
     static const int DAYS[] = {31,28,31,30,31,30,31,31,30,31,30,31};
@@ -71,9 +71,9 @@ static void bind_row(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, i
     snprintf(C.ids[n], sizeof C.ids[n], "%s:%u", a->kind == INK_ALARM ? "alarm" : "reminder", (unsigned)a->id);
     char named[sizeof a->title]; /* a copy: gcc refuses snprintf from C into C */
     memcpy(named, a->title, sizeof named); named[sizeof named - 1] = 0;
-    snprintf(C.values[n], sizeof C.values[n], "%d月%d日 %02d:%02d %s · %s", t.month, t.day, t.hour, t.min,
-        a->kind == INK_ALARM ? "闹钟" : a->silent ? TR("日程") : "提醒", named);
-    *field = (ink_ui_field_spec_t){.id = C.ids[n], .role = "listitem", .label = a->kind == INK_ALARM ? "闹钟" : a->silent ? TR("日程") : "提醒", .value = C.values[n], .object = {C.ids[n], 1}};
+    snprintf(C.values[n], sizeof C.values[n], TR("%d月%d日 %02d:%02d %s · %s"), t.month, t.day, t.hour, t.min,
+        a->kind == INK_ALARM ? TR("闹钟") : a->silent ? TR("日程") : TR("提醒"), named);
+    *field = (ink_ui_field_spec_t){.id = C.ids[n], .role = "listitem", .label = a->kind == INK_ALARM ? TR("闹钟") : a->silent ? TR("日程") : TR("提醒"), .value = C.values[n], .object = {C.ids[n], 1}};
     snprintf(C.args[n], sizeof C.args[n], "{\"id\":%u}", (unsigned)a->id);
     *action = (ink_ui_action_spec_t){.id = C.ids[n], .label = TR("查看"), .capability = "reminder.open", .args_json = C.args[n], .object = field->object, .enabled = a->kind == INK_REMINDER};
     if (!lv_obj_get_child_count(slot)) {
@@ -87,7 +87,7 @@ static void bind_row(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, i
     if (a->all_day) snprintf(title, sizeof title, "%s %s", TR("全天"), a->title);
     else if (a->silent) snprintf(title, sizeof title, "%02d:%02d %s · %s", t.hour, t.min, a->title, TR("日程"));
     lv_label_set_text(lv_obj_get_child(slot, 0), title);
-    if (!C.calendar) { snprintf(title, sizeof title, "%d月%d日 · %s", t.month, t.day, a->kind == INK_ALARM ? "闹钟" : a->silent ? TR("日程") : "提醒"); lv_label_set_text(lv_obj_get_child(slot, 1), title); }
+    if (!C.calendar) { snprintf(title, sizeof title, TR("%d月%d日 · %s"), t.month, t.day, a->kind == INK_ALARM ? TR("闹钟") : a->silent ? TR("日程") : TR("提醒")); lv_label_set_text(lv_obj_get_child(slot, 1), title); }
 }
 static void control(size_t n, const char *id, const char *label, const char *cap, const char *args) {
     C.actions[n] = (ink_ui_action_spec_t){.id = id, .label = label, .capability = cap, .args_json = args, .enabled = true};
@@ -99,8 +99,8 @@ static void create(lv_obj_t *screen, void *arg) {
         snprintf(C.member, sizeof C.member, "%s", ink_member_current()->id);
     }
     ink_shell_statusbar(screen, true);
-    char title[64]; snprintf(title, sizeof title, "%d年%d月", C.date.year, C.date.month);
-    ink_shell_topbar(screen, C.calendar ? title : "接下来的事");
+    char title[64]; snprintf(title, sizeof title, TR("%d年%d月"), C.date.year, C.date.month);
+    ink_shell_topbar(screen, C.calendar ? title : TR("接下来的事"));
     int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP_XS, w = INK_CANVAS_W - 2 * INK_MARGIN, capacity = 4;
     memset(C.actions, 0, sizeof C.actions);
     if (C.calendar && ink_time_valid()) {
@@ -109,8 +109,11 @@ static void create(lv_obj_t *screen, void *arg) {
         ink_shell_bind(ink_ui_circle(screen, "next", x + INK_CONTROL + INK_GAP_XS, INK_STATUS_BAR + INK_GAP_S, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_WHITE, NULL, NULL), "calendar.month_next", "{}");
         ink_tm_t first = {.year = C.date.year, .month = C.date.month, .day = 1}; ink_time_to_local(ink_time_from_local(&first), &first);
         int days = month_days(C.date.year, C.date.month), rows = (first.wday + days + 6) / 7, cell = w / 7;
-        static const char *const WEEK[] = {"日", "一", "二", "三", "四", "五", "六"};
-        for (int i = 0; i < 7; i++) ink_ui_line(screen, WEEK[i], INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN + i * cell + INK_GAP_M, y, cell);
+        static const char *const WEEK[] = {TR_NOOP("周日"), TR_NOOP("周一"), TR_NOOP("周二"), TR_NOOP("周三"), TR_NOOP("周四"), TR_NOOP("周五"), TR_NOOP("周六")};
+        for (int i = 0; i < 7; i++) {
+            const char *day = TR(WEEK[i]) + (!strcmp(ink_lang_code(), "zh") ? strlen("周") : 0);
+            ink_ui_line(screen, day, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN + i * cell + INK_GAP_M, y, cell);
+        }
         y += INK_LINE_NOTE;
         for (int d = 1; d <= days; d++) {
             int pos = first.wday + d - 1; bool selected = d == C.date.day;
@@ -136,27 +139,27 @@ static void create(lv_obj_t *screen, void *arg) {
         }
         y += rows * INK_CONTROL; capacity = rows == 6 ? 1 : 2;
         char lunar[32]; lunar_text(C.date.day, false, lunar, sizeof lunar);
-        snprintf(C.date_text, sizeof C.date_text, "%d年%d月%d日 · %s", C.date.year, C.date.month, C.date.day, lunar);
+        snprintf(C.date_text, sizeof C.date_text, TR("%d年%d月%d日 · %s"), C.date.year, C.date.month, C.date.day, lunar);
         ink_ui_notice(screen, C.date_text, y); y += INK_LINE_NOTE + INK_GAP_S;
         snprintf(C.select_args, sizeof C.select_args, "{\"day\":%d}", C.date.day);
-        control(0, "month-prev", "上月", "calendar.month_prev", "{}"); control(1, "month-next", "下月", "calendar.month_next", "{}");
-        control(2, "select", "选一天", "calendar.select", C.select_args);
+        control(0, "month-prev", TR("上月"), "calendar.month_prev", "{}"); control(1, "month-next", TR("下月"), "calendar.month_next", "{}");
+        control(2, "select", TR("选一天"), "calendar.select", C.select_args);
     } else {
-        snprintf(C.date_text, sizeof C.date_text, "%s", ink_time_valid() ? "今天和之后" : "请先设置时间");
+        snprintf(C.date_text, sizeof C.date_text, "%s", ink_time_valid() ? TR("今天和之后") : TR("请先设置时间"));
         ink_ui_notice(screen, C.date_text, y); y += INK_LINE_NOTE + INK_GAP;
-        control(0, "month", "看月历", "calendar.open", "{}");
+        control(0, "month", TR("看月历"), "calendar.open", "{}");
         control(1, "add", TR("加一件"), "reminder.new", "{}");
-        ink_shell_bind(ink_ui_pill(screen, "看月历", INK_CANVAS_W - INK_MARGIN - INK_CIRCLE_LARGE, INK_STATUS_BAR + INK_GAP_S, INK_CIRCLE_LARGE, INK_CONTROL, false, NULL, NULL), "calendar.open", "{}");
+        ink_shell_bind(ink_ui_pill(screen, TR("看月历"), INK_CANVAS_W - INK_MARGIN - INK_CIRCLE_LARGE, INK_STATUS_BAR + INK_GAP_S, INK_CIRCLE_LARGE, INK_CONTROL, false, NULL, NULL), "calendar.open", "{}");
         ink_shell_bind(ink_ui_pill(screen, TR("加一件"), INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_PRIMARY, w, INK_PRIMARY, false, NULL, NULL), "reminder.new", "{}");
     }
-    C.date_field = (ink_ui_field_spec_t){.id = "date", .role = "text", .label = C.calendar ? "所选日期" : "范围", .value = C.date_text};
-    C.controls = (ink_ui_page_spec_t){.id = ink_ui_page_name(), .title = C.calendar ? "月历" : "接下来", .object = {"calendar", 1}, .fields = &C.date_field, .field_count = 1, .actions = C.actions, .action_count = 3};
-    control(3, "back", "返回", "shell.back", "{}"); C.controls.action_count = 4;
+    C.date_field = (ink_ui_field_spec_t){.id = "date", .role = "text", .label = C.calendar ? TR("所选日期") : TR("范围"), .value = C.date_text};
+    C.controls = (ink_ui_page_spec_t){.id = ink_ui_page_name(), .title = C.calendar ? TR("月历") : TR("接下来"), .object = {"calendar", 1}, .fields = &C.date_field, .field_count = 1, .actions = C.actions, .action_count = 3};
+    control(3, "back", TR("返回"), "shell.back", "{}"); C.controls.action_count = 4;
     load_rows();
     ink_ui_page_spec_t model = {.id = ink_ui_page_name(), .title = C.controls.title, .object = {"calendar", 1}, .actions = PAGING, .action_count = 2};
     int cell_h = C.calendar ? INK_CONTROL : INK_ROW_DOUBLE;
     lv_obj_t *body = ink_ui_box(screen, 0, y, INK_CANVAS_W, capacity * (cell_h + INK_GAP_M) + INK_GAP + INK_CONTROL, 0, INK_SURFACE_WHITE, false);
-    C.list = ink_ui_list_create(body, &model, &C.position, (unsigned)capacity, 1, C.calendar ? INK_CONTROL : INK_ROW_DOUBLE, ink_time_valid() ? (C.calendar ? "这一天没有提醒和闹钟" : "还没有接下来的事") : "请先设置时间", bind_row, NULL);
+    C.list = ink_ui_list_create(body, &model, &C.position, (unsigned)capacity, 1, C.calendar ? INK_CONTROL : INK_ROW_DOUBLE, ink_time_valid() ? (C.calendar ? TR("这一天没有提醒和闹钟") : TR("还没有接下来的事")) : TR("请先设置时间"), bind_row, NULL);
     if (C.list) ink_ui_list_refresh(C.list, C.count);
 }
 static void destroy(void) { C.list = NULL; }
@@ -349,7 +352,7 @@ static const ink_cap_t CAPS[] = {
     {.id = "calendar.month_next", .app = "upcoming", .title = "月历下个月", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "calendar.select", .app = "upcoming", .title = "选择当月一天查看闹钟和提醒", .input = "{\"type\":\"object\",\"properties\":{\"day\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":31}},\"required\":[\"day\"]}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate}
 };
-static const ink_app_def_t APP = {.id = "upcoming", .title = "接下来", .icon = INK_UI_ICON(calendar), .entry = &UPCOMING, .system_app = true, .child_ok = true};
+static const ink_app_def_t APP = {.id = "upcoming", .title = TR_NOOP("接下来"), .icon = INK_UI_ICON(calendar), .entry = &UPCOMING, .system_app = true, .child_ok = true};
 static void changed(void *ctx, int handle, const char *id) {
     (void)ctx; (void)handle; (void)id;
     if (ink_ui_page_current() && (!strcmp(ink_ui_page_name(), "Upcoming") || !strcmp(ink_ui_page_name(), "Calendar"))) ink_ui_redraw();
