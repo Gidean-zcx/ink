@@ -5,6 +5,7 @@
 #include <string.h>
 #include "ink/osal.h"
 #include "ink/hal_device.h"
+#include "ink/hal_afe.h"
 #include "ink/sys/i18n.h"
 #include "ink/sys/json.h"
 #include "ink/sys/members.h"
@@ -18,11 +19,11 @@ typedef struct { const char *id, *title, *value, *setting, *cap, *icon, *section
 #include "ink/licenses.h"
 static const row_t VOICE_ROWS[] = {
     {"voice.handsfree", TR_NOOP("什么时候能叫名字"), NULL, "voice.handsfree", NULL, NULL, NULL, TR_NOOP("没锁屏时才听，不影响待机。")},
-    {"voice.name", TR_NOOP("用什么名字叫它"), TR_NOOP("暂不能更改"), NULL, NULL, "wave", NULL, NULL},
+    {"voice.name", TR_NOOP("用什么名字叫它"), NULL, NULL, "settings.set", "wave", NULL, NULL},
     {"voice.interrupt", TR_NOOP("说话能打断回答"), NULL, "voice.interrupt", NULL, "mic", NULL, NULL},
     {"ai.records", TR_NOOP("AI 替你做过的事"), NULL, NULL, "shell.ai_log", "list", "AI", NULL},
     {"ai.memory", TR_NOOP("AI 记得的事"), TR_NOOP("查看"), NULL, "shell.ai_memory", "ai", NULL, TR_NOOP("你说的事 AI 会直接做。花钱、填密码、删了找不回来的，才会问你。")},
-    {"text.assist", TR_NOOP("打字时帮你接话"), TR_NOOP("暂不能设置"), NULL, NULL, "edit", TR_NOOP("打字"), NULL}};
+    {"text.assist", TR_NOOP("打字时帮你接话"), NULL, "text.assist", NULL, "edit", TR_NOOP("打字"), NULL}};
 static const row_t STORAGE_ROWS[] = {
     {"backup", TR_NOOP("备份"), NULL, NULL, "backup.open", "cloud", NULL, NULL},
     {"storage.free", TR_NOOP("空间"), NULL, NULL, NULL, NULL, TR_NOOP("空间"), NULL},
@@ -96,7 +97,13 @@ static void value(size_t i) {
     const row_t *r = &PAGES[S.page].rows[i];
     char *out = S.values[i]; size_t cap = sizeof S.values[i];
     int64_t v = 0;
-    if (r->setting) {
+    if (!strcmp(r->id, "voice.name")) {
+        const char *const *names = hal_afe_names(); int n = 0;
+        while (names[n]) n++;
+        v = ink_setting_get(r->id);
+        snprintf(out, cap, "%s", n ? names[v >= 0 && v < n ? v : 0] : TR("这台设备暂不支持叫名字"));
+        snprintf(S.args[i], sizeof S.args[i], "{\"id\":\"voice.name\",\"value\":%lld}", (long long)(n ? (v + 1) % n : 0));
+    } else if (r->setting) {
         v = ink_setting_get(r->setting);
         const char *text = v ? TR("开") : TR("关");
         if (!strcmp(r->setting, "voice.handsfree")) text = v == 2 ? TR("关") : v == 1 ? TR("一直") : TR("使用时");
@@ -174,7 +181,8 @@ static void bind_row(lv_obj_t *slot, size_t i, ink_ui_field_spec_t *field, ink_u
     *field = (ink_ui_field_spec_t){.id = r->id, .role = r->setting ? "setting" : "text", .label = caption,
         .value = S.values[i], .object = {r->id, 0}};
     *action = (ink_ui_action_spec_t){.id = r->id, .label = caption, .capability = r->setting ? "settings.set" : r->cap,
-        .args_json = r->setting || !strcmp(r->id, "system.language") ? S.args[i] : NULL, .object = field->object, .enabled = r->setting || r->cap};
+        .args_json = r->setting || !strcmp(r->id, "system.language") || !strcmp(r->id, "voice.name") ? S.args[i] : NULL, .object = field->object, .enabled = r->setting || r->cap};
+    if (!strcmp(r->id, "voice.name") && !hal_afe_available()) action->enabled = false;
     if (!strcmp(r->id, "privacy.child")) action->args_json = "{\"children\":true}";
     if (S.page == LICENSES) { snprintf(S.args[i], sizeof S.args[i], "{\"index\":%zu}", i); action->args_json = S.args[i]; }
     if (S.page == STORAGE) storage_action(i, action);

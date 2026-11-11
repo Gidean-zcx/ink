@@ -27,7 +27,7 @@ typedef struct {
 } item_t;
 
 typedef struct {
-    char id[40];
+    char id[56];
     int64_t v;
 } saved_t;
 
@@ -56,6 +56,18 @@ static int nchoices(const ink_setting_def_t *d) {
     return n;
 }
 
+/* Called under SE.lock. Member keys use the existing scalar settings file. */
+static int64_t *member_value(item_t *it, bool create) {
+    if (!it->def->per_member) return &it->v;
+    char key[56]; snprintf(key, sizeof key, "%s:%s", it->def->id, ink_member_current()->id);
+    for (int k = 0; k < SE.nsaved; k++)
+        if (!strcmp(SE.saved[k].id, key)) return &SE.saved[k].v;
+    if (!create || SE.nsaved == INK_SETTINGS_MAX) return NULL;
+    saved_t *s = &SE.saved[SE.nsaved++];
+    strcpy(s->id, key); s->v = it->def->def;
+    return &s->v;
+}
+
 static bool valid(const ink_setting_def_t *d, int64_t v) {
     switch (d->type) {
     case INK_SET_BOOL: return v == 0 || v == 1;
@@ -63,6 +75,11 @@ static bool valid(const ink_setting_def_t *d, int64_t v) {
     case INK_SET_ENUM: return v >= 0 && v < nchoices(d);
     default: return false;
     }
+}
+static int64_t value_of(int i) {
+    if (i < 0) return 0;
+    int64_t *v = member_value(&SE.it[i], false);
+    return v && valid(SE.it[i].def, *v) ? *v : SE.it[i].def->def;
 }
 
 /* ------------------------------------------------------------ the file */
@@ -104,14 +121,15 @@ static void save_cb(void *arg) { /* timer task */
     ink_jw_raw(&w, "{");
     osal_mutex_lock(SE.lock, OSAL_WAIT_FOREVER);
     for (int i = 0; i < SE.n; i++) {
-        if (i) ink_jw_raw(&w, ",");
+        if (SE.it[i].def->per_member) continue;
+        if (w.len > 1) ink_jw_raw(&w, ",");
         ink_jw_str(&w, SE.it[i].def->id);
         ink_jw_raw(&w, ":");
         ink_jw_int(&w, SE.it[i].v);
     }
     for (int k = 0; k < SE.nsaved; k++) /* values of settings this build does not define */
         if (find(SE.saved[k].id) < 0) {
-            if (SE.n || k) ink_jw_raw(&w, ",");
+            if (w.len > 1) ink_jw_raw(&w, ",");
             ink_jw_str(&w, SE.saved[k].id);
             ink_jw_raw(&w, ":");
             ink_jw_int(&w, SE.saved[k].v);
@@ -167,7 +185,7 @@ int64_t ink_setting_get(const char *id) {
     if (!SE.lock) return 0;
     osal_mutex_lock(SE.lock, OSAL_WAIT_FOREVER);
     int i = find(id);
-    int64_t v = i >= 0 ? SE.it[i].v : 0;
+    int64_t v = value_of(i);
     osal_mutex_unlock(SE.lock);
     return v;
 }
@@ -222,9 +240,11 @@ static ink_rc_t setting_set(const char *id, int64_t v, ink_source_t src, bool ch
         osal_mutex_unlock(SE.lock);
         return refuse(rc, INK_RC_STALE, "the setting changed since this operation");
     }
-    if (before) *before = SE.it[i].v;
-    bool changed = SE.it[i].v != v;
-    SE.it[i].v = v;
+    int64_t *target = member_value(&SE.it[i], true);
+    if (!target) { osal_mutex_unlock(SE.lock); return refuse(rc, INK_RC_FAILED, "settings full"); }
+    if (before) *before = *target;
+    bool changed = *target != v;
+    *target = v;
     rc->revision = ++SE.it[i].revision;
     osal_mutex_unlock(SE.lock);
     rc->status = INK_RC_DONE;
@@ -277,7 +297,7 @@ int ink_settings_json(char *out, size_t cap) {
         ink_jw_raw(&w, ",\"type\":");
         ink_jw_str(&w, TYPE_NAME[d->type]);
         ink_jw_raw(&w, ",\"value\":");
-        ink_jw_int(&w, SE.it[i].v);
+        ink_jw_int(&w, value_of(i));
         if (d->type == INK_SET_INT) {
             ink_jw_raw(&w, ",\"min\":");
             ink_jw_int(&w, d->min);
@@ -313,7 +333,7 @@ static void cap_get(ink_call_t *c) {
     osal_mutex_lock(SE.lock, OSAL_WAIT_FOREVER);
     int i = find(id);
     const ink_setting_def_t *d = i >= 0 ? SE.it[i].def : NULL;
-    int64_t v = i >= 0 ? SE.it[i].v : 0;
+    int64_t v = value_of(i);
     uint32_t revision = i >= 0 ? SE.it[i].revision : 0;
     osal_mutex_unlock(SE.lock);
     if (!d) {

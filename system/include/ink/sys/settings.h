@@ -36,6 +36,7 @@ typedef struct {
     int64_t min, max, def;         /* ENUM: the value is an index into choices */
     const char *const *choices;    /* ENUM: value names, NULL-terminated */
     bool child_may_change;
+    bool per_member;               /* same JSON file, a separate key per member */
     bool system;                   /* system-level: adults only */
     bool ask_by_hand;              /* permissions and child rules need a person's confirmation */
     const char *via;               /* BOOL only: changed through this capability ({"enabled":v}); settings.set passes it on */

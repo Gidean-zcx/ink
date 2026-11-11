@@ -24,6 +24,9 @@ typedef struct {
 
 /** This device can listen hands-free (front end and wake word model present). */
 bool hal_afe_available(void);
+/** NULL-terminated supported names; an empty list when unavailable. */
+const char *const *hal_afe_names(void);
+int hal_afe_select_name(int index);
 int hal_afe_start(void);
 /** The command words to recognise on the device (ESP-SR MultiNet; the strings must outlive the use). */
 int hal_afe_set_commands(const char *const *phrases, int n);

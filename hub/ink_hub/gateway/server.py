@@ -266,6 +266,10 @@ class Connection:
                 task = asyncio.create_task(self.call_tool(rid, params, self.scope, self.epoch))
                 self.calls[rid] = task
                 task.add_done_callback(lambda t, key=rid: self.calls.pop(key, None) if self.calls.get(key) is t else None)
+            elif method == "text/suggest":
+                if set(params) != {"type", "prefix"} or params["type"] != "plain" or not isinstance(params["prefix"], str) or not 1 <= len(params["prefix"]) <= 500:
+                    raise ProtocolError("接话参数无效")
+                await self.send(response(rid, {"available": False, "suggestions": []}))
             elif method in ("weather/find", "weather/get"):
                 if rid is None or rid in self.calls or len(self.calls) + len(self.turns) >= 4:
                     raise ProtocolError("正在处理的请求已满", -32022)

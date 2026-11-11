@@ -17,6 +17,7 @@
 static struct {
     const char *const *commands;
     int ncommands;
+    int name;
     uint64_t command_for_ns; /* the utterance already reported as a command (its start + 1) */
     bool on;
     void *ram;
@@ -27,6 +28,16 @@ static struct {
 } F;
 
 bool hal_afe_available(void) { return g_profile.afe.present; }
+
+const char *const *hal_afe_names(void) {
+    static const char *const names[] = {"小墨", "小书", "小白", NULL}, *const empty[] = {NULL};
+    return hal_afe_available() ? names : empty;
+}
+int hal_afe_select_name(int index) {
+    if (!hal_afe_available() || index < 0 || index >= 3) return -1;
+    F.name = index;
+    return 0;
+}
 
 int hal_afe_set_commands(const char *const *phrases, int n) {
     F.commands = phrases;
@@ -67,7 +78,9 @@ void hal_afe_feed(const int16_t *mic, const int16_t *ref, int samples, uint64_t 
     uint64_t now = vtk_now(), since;
     int st = sim_audio_mic_state(&since);
     out->wake = false;
-    if (st == 2 && now >= since + SIM_US(g_profile.afe.wake_delay_us) && F.wake_for_ns != since + 1) {
+    const char *phrase = sim_audio_mic_phrase();
+    bool matches = phrase ? !strcmp(phrase, hal_afe_names()[F.name]) : F.name == 0;
+    if ((st == 2 || (st == 1 && phrase)) && matches && now >= since + SIM_US(g_profile.afe.wake_delay_us) && F.wake_for_ns != since + 1) {
         out->wake = true;
         F.wake_for_ns = since + 1; /* +1: a start at 0 is a real one */
         sim_metric_add("afe.wakes", 1);
