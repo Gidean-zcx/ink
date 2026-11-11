@@ -400,7 +400,7 @@ set(INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/system/ui/shell/boot_flow.c ${CMAKE_SOU
 file(GLOB_RECURSE INK_I18N_SERVICES CONFIGURE_DEPENDS system/services/*.c system/policy/*.c)
 list(APPEND INK_I18N_SOURCES ${INK_I18N_SERVICES})
 list(APPEND INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/apps/home/home.c ${CMAKE_SOURCE_DIR}/apps/reader/reader.c
-  ${CMAKE_SOURCE_DIR}/system/include/ink/sys/ai.h ${CMAKE_SOURCE_DIR}/system/ui/shell/member_pages.h)
+  ${CMAKE_SOURCE_DIR}/system/include/ink/sys/ai.h ${CMAKE_SOURCE_DIR}/system/ui/shell/member_pages.h ${CMAKE_SOURCE_DIR}/system/text/i18n.c)
 list(APPEND INK_I18N_SOURCES
   ${CMAKE_SOURCE_DIR}/system/ui/shell/activity_card.c
   ${CMAKE_SOURCE_DIR}/system/ui/shell/ai_chat.c
@@ -767,6 +767,14 @@ target_link_libraries(sim-i18n-shell-remaining PRIVATE ink_apps ink_system)
 add_test(NAME i18n-shell-remaining COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/i18n_shell.py
   --build ${CMAKE_BINARY_DIR} --binary $<TARGET_FILE:sim-i18n-shell-remaining> --out ${CMAKE_BINARY_DIR}/test-out/i18n-shell-remaining)
 set_tests_properties(i18n-shell-remaining PROPERTIES TIMEOUT 240)
+add_test(NAME i18n-bookshelf COMMAND ${CMAKE_COMMAND} -E env INK_I18N_BOOKSHELF=1 $<TARGET_FILE:sim-i18n-shell-remaining>
+  --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json --script ${CMAKE_SOURCE_DIR}/tests/i18n_lang.script
+  --budget ${CMAKE_SOURCE_DIR}/tests/ui_scene.budget.json --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+  --out ${CMAKE_BINARY_DIR}/test-out/i18n-bookshelf --quiet --no-random-outages)
+add_test(NAME i18n-extras COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/i18n_shell.py
+  --build ${CMAKE_BINARY_DIR} --binary $<TARGET_FILE:sim-i18n-shell-remaining>
+  --out ${CMAKE_BINARY_DIR}/test-out/i18n-extras --min-frames 10)
+set_tests_properties(i18n-extras PROPERTIES ENVIRONMENT "INK_I18N_EXTRAS=1" TIMEOUT 240)
 add_test(NAME i18n-tables COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/i18n_tables.py)
 add_test(NAME i18n-literals COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/i18n_literals.py)
 add_test(NAME boot-flow-reboot COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/boot_flow_reboot.py --build ${CMAKE_BINARY_DIR})

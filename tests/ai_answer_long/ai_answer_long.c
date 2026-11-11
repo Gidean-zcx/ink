@@ -15,7 +15,7 @@
 static char snapshot[8192], visible[4096];
 static char expect_long[8192], expect_over[40960], all[40960];
 static int page, pages, speech_frames;
-static bool valid_panel, loaded;
+static bool valid_panel, loaded, english;
 static const char *scene;
 
 /* The answers as the hub script sends them (host side). */
@@ -30,6 +30,7 @@ static void join_chunks(const cJSON *rule, char *out, size_t cap) {
 }
 static void load_fixture(void *arg) {
     (void)arg;
+    english = getenv("INK_I18N_ANSWER_EN") != NULL;
     FILE *f = fopen(g_sim.hub_script, "rb");
     if (!f) return;
     static char txt[65536];
@@ -90,8 +91,19 @@ static void host_save(void *arg) {
     if (!f || fputs(snapshot, f) == EOF || fclose(f)) abort();
 }
 static void take_picture(void *arg) { sim_display_snapshot((const char *)arg); }
+static void check_panel_labels(lv_obj_t *obj) {
+    if (!lv_obj_is_visible(obj)) return;
+    if (lv_obj_check_type(obj, &lv_label_class)) {
+        const char *text = lv_label_get_text(obj); size_t n = strlen(text);
+        CHECK(lv_label_get_long_mode(obj) != LV_LABEL_LONG_MODE_DOTS || n < 3 || strcmp(text + n - 3, "..."),
+              "panel label is not truncated: %.80s", text);
+    }
+    for (uint32_t i = 0; i < lv_obj_get_child_count(obj); i++) check_panel_labels(lv_obj_get_child(obj, (int32_t)i));
+}
+static void check_panel(void) { lv_obj_update_layout(lv_layer_sys()); check_panel_labels(lv_layer_sys()); }
 static void capture(const char *name) {
     quiet(); scene = name; on_ui(read_snapshot);
+    on_ui(check_panel);
     vtk_host_call(host_save, NULL);
     vtk_event_at(vtk_now() + SIM_MS(1), take_picture, (void *)name); delay_ms(5);
 }
@@ -134,7 +146,7 @@ static void run(void *arg) {
     CHECK(strlen(expect_over) > INK_AI_ANSWER_MAX, "the other answer is over the limit");
     delay_ms(1800); quiet();
     test_start_home(); quiet();
-    if (getenv("INK_I18N_ANSWER_EN")) {
+    if (english) {
         CHECK(BY_HAND("settings.set", "{\"id\":\"system.language\",\"value\":1}") && g_rc.status == INK_RC_DONE, "English long answer");
         quiet();
     }
@@ -178,6 +190,7 @@ static void run(void *arg) {
     read = read_all_pages();
     const char *cut_text = TR(INK_AI_ANSWER_CUT);
     size_t got = strlen(all), cut = strlen(cut_text);
+    CHECK(cut + 1 <= sizeof INK_AI_ANSWER_CUT, "the translation fits the reserved note bytes");
     CHECK(read == pages && got > cut && !strcmp(all + got - cut, cut_text), "the last page ends with the note (%d pages)", pages);
     size_t kept = got > cut ? got - cut : 0;
     CHECK(kept < INK_AI_ANSWER_MAX && kept + cut + 4 >= INK_AI_ANSWER_MAX - 1, "kept up to the limit (%zu bytes)", kept);
@@ -204,7 +217,7 @@ static void run(void *arg) {
     CHECK(pages == long_pages, "the spoken answer shows on the same pages (%d)", pages);
     read = read_all_pages();
     CHECK(read == long_pages && !strcmp(all, expect_long), "spoken answer's pages equal its text");
-    CHECK(!getenv("INK_I18N_ANSWER_EN") || sim_metric_value("i18n.missing") == 0, "English long answers have no missing translations");
+    CHECK(!english || sim_metric_value("i18n.missing") == 0, "English long answers have no missing translations");
     ink_probe_count("test.finished");
 }
 void ink_main(void) {

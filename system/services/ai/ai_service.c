@@ -243,7 +243,7 @@ static void ui_apply(void *arg) { /* UI task */
     } else if (p->kind == 0 || p->kind == 5) {
         const char *cut = TR(INK_AI_ANSWER_CUT);
         size_t cut_size = strlen(cut) + 1;
-        size_t n = strlen(p->text), room = ANSWER_CAP - cut_size - AI.answer_len;
+        size_t n = strlen(p->text), room = ANSWER_CAP - sizeof INK_AI_ANSWER_CUT - AI.answer_len;
         if (!AI.answer_cut && n > room) { /* cut at a whole character and say so */
             while (room && ((unsigned char)p->text[room] & 0xC0) == 0x80) room--;
             memcpy(AI.answer_text + AI.answer_len, p->text, room);

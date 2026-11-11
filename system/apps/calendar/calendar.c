@@ -107,8 +107,11 @@ static void create(lv_obj_t *screen, void *arg) {
         ink_shell_bind(ink_ui_circle(screen, "next", x + INK_CONTROL + INK_GAP_XS, INK_STATUS_BAR + INK_GAP_S, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_WHITE, NULL, NULL), "calendar.month_next", "{}");
         ink_tm_t first = {.year = C.date.year, .month = C.date.month, .day = 1}; ink_time_to_local(ink_time_from_local(&first), &first);
         int days = month_days(C.date.year, C.date.month), rows = (first.wday + days + 6) / 7, cell = w / 7;
-        static const char *const WEEK[] = {TR_NOOP("日"), TR_NOOP("一"), TR_NOOP("二"), TR_NOOP("三"), TR_NOOP("四"), TR_NOOP("五"), TR_NOOP("六")};
-        for (int i = 0; i < 7; i++) ink_ui_line(screen, TR(WEEK[i]), INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN + i * cell + INK_GAP_M, y, cell);
+        static const char *const WEEK[] = {TR_NOOP("周日"), TR_NOOP("周一"), TR_NOOP("周二"), TR_NOOP("周三"), TR_NOOP("周四"), TR_NOOP("周五"), TR_NOOP("周六")};
+        for (int i = 0; i < 7; i++) {
+            const char *day = TR(WEEK[i]) + (!strcmp(ink_lang_code(), "zh") ? strlen("周") : 0);
+            ink_ui_line(screen, day, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN + i * cell + INK_GAP_M, y, cell);
+        }
         y += INK_LINE_NOTE;
         for (int d = 1; d <= days; d++) {
             int pos = first.wday + d - 1; bool selected = d == C.date.day;

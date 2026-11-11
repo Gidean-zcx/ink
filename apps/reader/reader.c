@@ -187,6 +187,7 @@ static void library_create(lv_obj_t *scr, void *arg) {
     if (!LIB.nbooks) {
         lv_obj_t *l = lv_label_create(scr);
         if (f) lv_obj_set_style_text_font(l, ink_font_lvgl(f), 0);
+        lv_obj_set_width(l, lv_pct(90));
         lv_label_set_text(l, TR("没有书：把 .txt 放进 /content/books"));
         lv_obj_align(l, LV_ALIGN_TOP_LEFT, ink_dp(16), ink_dp(64));
     }

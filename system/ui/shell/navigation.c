@@ -2138,22 +2138,23 @@ static bool icon_close(void) {
 }
 static void icon_show(const ink_app_def_t *app, const ink_card_t *card, const char *key) {
     icon_close();
+    const char *title = TR(app->title);
     T.items[0] = *card; card = &T.items[0];
     T.menu = ink_ui_box(lv_layer_sys(), 0, 0, INK_CANVAS_W, INK_CANVAS_H, 0, INK_SURFACE_WHITE, false);
     lv_obj_set_style_bg_opa(T.menu, LV_OPA_TRANSP, 0); lv_obj_add_flag(T.menu, LV_OBJ_FLAG_CLICKABLE);
     lv_obj_t *panel = ink_ui_panel(T.menu, 4 * INK_CONTROL + 2 * INK_MARGIN + 2 * INK_GAP_L, true);
     ink_ui_circle(panel, app->icon ? app->icon : "grid", INK_MARGIN, INK_MARGIN, INK_CIRCLE, INK_ICON_LIST, INK_SURFACE_STATIC, NULL, NULL);
-    ink_ui_line(panel, app->title, INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, INK_MARGIN + INK_CIRCLE + INK_GAP, INK_MARGIN, width() - INK_CIRCLE - INK_GAP);
+    ink_ui_line(panel, title, INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, INK_MARGIN + INK_CIRCLE + INK_GAP, INK_MARGIN, width() - INK_CIRCLE - INK_GAP);
     ink_ui_line(panel, card->text, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN + INK_CIRCLE + INK_GAP,
         INK_MARGIN + ink_ui_line_height(INK_FONT_SUBTITLE), width() - INK_CIRCLE - INK_GAP);
-    T.fields[0] = (ink_ui_field_spec_t){"app", "card", app->title, card->text, {app->id, card->rev}, false};
+    T.fields[0] = (ink_ui_field_spec_t){"app", "card", title, card->text, {app->id, card->rev}, false};
     T.fields[1] = (ink_ui_field_spec_t){"today", "toggle", TR("放到今日屏"), today_selected(key) >= 0 ? TR("开") : TR("关"), {key, 0}, false};
     char args[96]; snprintf(args, sizeof args, "{\"card\":\"%s\"}", key);
     memcpy(T.args[0], args, sizeof args);
     T.actions[0] = (ink_ui_action_spec_t){"resume", !strcmp(app->id, "listen") ? TR("接着听") : TR("接着做"), card->action, NULL, {app->id, card->rev}, card->action[0] != 0};
     T.actions[1] = (ink_ui_action_spec_t){"today", TR("放到今日屏"), "shell.today_card", T.args[0], {key, 0}, key[0] != 0};
     T.actions[2] = (ink_ui_action_spec_t){"close", TR("关闭"), "shell.back", NULL, {NULL, 0}, true};
-    T.model = (ink_ui_page_spec_t){"IconMenu", app->title, {app->id, 0}, T.fields, 2, T.actions, 3};
+    T.model = (ink_ui_page_spec_t){"IconMenu", title, {app->id, 0}, T.fields, 2, T.actions, 3};
     int y = INK_MARGIN + INK_CONTROL + INK_GAP_L;
     lv_obj_t *resume = ink_ui_list_row(panel, "play", !strcmp(app->id, "listen") ? TR("接着听") : TR("接着做"), NULL, INK_MARGIN, y, width(), false, NULL, NULL);
     if (card->action[0]) ink_shell_bind(resume, card->action, NULL);

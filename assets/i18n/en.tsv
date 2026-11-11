@@ -228,7 +228,7 @@ AI	AI
 文件	Files
 相机	Camera
 相册	Photos
-对话记录	Conversations
+对话记录	Chats
 开	On
 关	Off
 接下来	Upcoming
@@ -1312,7 +1312,7 @@ AI 面板	AI Panel
 锁屏画面	Lock screen
 
 # i18n-5: remaining visible shell and application text
-\n回答太长，只显示了前面部分。	\nAnswer too long; only the first part is shown.
+\n回答太长，只显示了前面部分。	\nAnswer too long; only the start is shown.
 %d年%d月	%d-%d
 %d年%d月%d日 · %s	%d-%d-%d · %s
 %d月%d日 %02d:%02d %s · %s	%d/%d %02d:%02d %s · %s
@@ -1326,8 +1326,6 @@ AI 面板	AI Panel
 4G 还没有连上	4G not connected
 Wi-Fi 已关闭	Wi-Fi is off
 《%.60s》第 %d 页 · %d%%	%.60s · Page %d · %d%%
-一	Mon
-三	Wed
 上一组	Previous
 上月	Previous month
 上移	Move up
@@ -1338,8 +1336,6 @@ Wi-Fi 已关闭	Wi-Fi is off
 主页	Home
 书架	Bookshelf
 书架上有：	On your bookshelf:
-二	Tue
-五	Fri
 仅预览文件开头	Preview of the start only
 今天不限时	No time limit today
 今天和之后	Today and later
@@ -1354,7 +1350,6 @@ Wi-Fi 已关闭	Wi-Fi is off
 保存称呼	Save Name
 全部	All
 全部删除	Delete All
-六	Sat
 其余记录暂不能删除。	Other records cannot be deleted yet.
 内置卡	Internal SIM
 刷新屏幕	Refresh Screen
@@ -1366,7 +1361,6 @@ Wi-Fi 已关闭	Wi-Fi is off
 听书、AI 和提示音用这个音量	Volume for audiobooks, AI and alerts
 和 AI 说过的话	Conversations
 喇叭	Speaker
-四	Thu
 在听	Mic On
 壁纸	Wallpaper
 壁纸暂时读不出来	Could not read wallpaper
@@ -1408,7 +1402,7 @@ Wi-Fi 已关闭	Wi-Fi is off
 改名	Rename
 改我的密码	Change My PIN
 放到今日屏	Show on Today
-放到哪里？	Choose Destination
+放到哪里？	Destination
 放到这里	Move Here
 文件名	Filename
 文件夹	Folder
