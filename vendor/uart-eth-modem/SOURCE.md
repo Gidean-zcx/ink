@@ -10,7 +10,7 @@
 | `uart_eth_modem.h` | `main/boards/common/board/uart_eth_modem.h` | `00ffb790a900a072e6daeefd0192c361b93d7df13b08669ad4389d2cef47b78d` | `8ff6aba40eda4ac5cb3f4057f6492a7ddfe5eed6226936d1c435034f1eb354c2` |
 | `LICENSE` | `main/boards/common/camera/GC2145-LICENSE` | `cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30` | `cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30` |
 | `LICENSE-MIT` | `LICENSE` | `0a5a839033bfe18fe75d32b50d9d028912cf876f69ef59c2791aeb2971335d05` | `0a5a839033bfe18fe75d32b50d9d028912cf876f69ef59c2791aeb2971335d05` |
-| `nt26_lifecycle.cc` | `main/boards/common/board/nt26_board.cc` | `44545151b3748c015835e384c66d7c670877f65c95014e92c21d890a92c98d06` | `7a543cf9eaeaccce8b2c4e3997fbc526ea4ae29d2edd3904b4ca45b1e8b0a673` |
+| `nt26_lifecycle.cc` | `main/boards/common/board/nt26_board.cc` | `44545151b3748c015835e384c66d7c670877f65c95014e92c21d890a92c98d06` | `d93f4f1d2ccd860ddbedccb25dc2aa32354cda205481bc39c9b3104c7b9e77c9` |
 | `nt26_lifecycle.h` | `main/boards/common/board/nt26_board.h` | `6fa5271d2b35c779d9c043b4a67762ed07547763b896ef046b08b47c06bb6ad8` | `a0ba586f09641b91f9a17b19210d73c5fbe701381195a1fed4e8289b9a111627` |
 
 ## 改动原因
@@ -31,7 +31,7 @@
 
 - `uart_eth_modem.h`：原 66 → 本地 66（insert）；原 152 → 本地 153（replace）；原 194 → 本地 195–205（insert）；原 195 → 本地 207–211（insert）。
 
-- `nt26_lifecycle.cc`：原 1–20 → 本地 1–4（replace）；原 22 → 本地 6（delete）；原 26–29 → 本地 9（replace）；原 31–37 → 本地 11（delete）；原 39–61 → 本地 12（delete）；原 80–82 → 本地 30（replace）；原 84 → 本地 32（insert）；原 89 → 本地 38（insert）；原 109 → 本地 59（insert）；原 111 → 本地 62（insert）；原 116–119 → 本地 68（replace）；原 121 → 本地 70（insert）；原 124 → 本地 74（replace）；原 132 → 本地 82（insert）；原 190 → 本地 141（insert）；原 193 → 本地 145（insert）；原 219 → 本地 172（replace）；原 253 → 本地 206（replace）；原 273 → 本地 226（insert）；原 277–279 → 本地 231（delete）；原 285 → 本地 236（insert）；原 292–319 → 本地 244（delete）；原 326–544 → 本地 250（delete）。
+- `nt26_lifecycle.cc`：原 1–20 → 本地 1–4（replace）；原 22 → 本地 6（delete）；原 26–29 → 本地 9（replace）；原 31–37 → 本地 11（delete）；原 39–61 → 本地 12（delete）；原 80–82 → 本地 30（replace）；原 84 → 本地 32（insert）；原 89 → 本地 38（insert）；原 109 → 本地 59（insert）；原 111 → 本地 62（insert）；原 116–119 → 本地 68（replace）；原 121 → 本地 70（insert）；原 124 → 本地 74（replace）；原 132 → 本地 82（insert）；原 190 → 本地 141（insert）；原 193 → 本地 145（insert）；原 219 → 本地 172（replace）；原 253 → 本地 206（replace）；原 273 → 本地 226（insert）；原 277–279 → 本地 231（delete）；原 285 → 本地 236（insert）；原 292–319 → 本地 244（delete）；原 325–544 → 本地 249（delete）。
 
 - `nt26_lifecycle.h`：原 1–13 → 本地 1–12（replace）；原 21 → 本地 20（replace）；原 34–36 → 本地 33（delete）；原 40 → 本地 36（delete）；原 42–43 → 本地 37–40（replace）；原 45–46 → 本地 42（replace）；原 48–50 → 本地 44（replace）；原 52–77 → 本地 46–47（replace）；原 79–102 → 本地 49（delete）；原 104–105 → 本地 50（delete）。
 

@@ -246,4 +246,3 @@ void Nt26Board::OnPowerRestored() {
     power_restored_us_.store(esp_timer_get_time());
     powered_.store(true, std::memory_order_release);
 }
-
