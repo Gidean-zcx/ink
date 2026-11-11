@@ -21,7 +21,7 @@
 #define KEY_ENTER '\n'
 #define KEY_SWITCH '\1'
 #define KEY_SHIFT '\2'
-enum { KEYBOARD_FIELDS_MAX = 8 + INK_TEXT_PAGE };
+enum { KEYBOARD_FIELDS_MAX = 9 + INK_TEXT_PAGE };
 
 static struct {
     lv_obj_t *root, *keys, *cands, *composing, *edit, *fold;
@@ -30,7 +30,7 @@ static struct {
     lv_obj_t *panel, *status, *heard; /* the voice panel: where the keys were, the same size */
     int first;
     int shown;
-    bool symbols, shift, expanded, secret_present;
+    bool symbols, shift, expanded, secret_present, plain, english;
     uint32_t version, generation, revision, edit_revision, layout_revision, pressed_layout, voice_revision, pressed_voice;
     int built_for; /* 1 letters, 2 symbols, 3 digits */
 } K;
@@ -151,10 +151,10 @@ static int semantic_snapshot(char *buf, size_t cap) {
     bool secret = ink_text_type() == INK_TEXT_PASSWORD || ink_text_ai_hidden();
     if (K.root) lv_obj_update_layout(K.root);
     size_t start, end; ink_text_selection(&start, &end);
-    char selection[96], mode[96], cursor[64], undo[64];
+    char selection[96], mode[128], cursor[64], undo[64];
     snprintf(selection, sizeof selection, "选区=%zu..%zu", start, end);
     snprintf(cursor, sizeof cursor, "光标=%zu", ink_text_cursor());
-    snprintf(mode, sizeof mode, "模式=%s；展开=%d；候选起点=%d；更多候选=%d", K.built_for == 3 ? "数字" : K.symbols ? "符号" : K.shift ? "大写" : "字母", K.expanded, K.first, K.more && lv_obj_is_visible(K.more));
+    snprintf(mode, sizeof mode, "模式=%s；输入=%s；展开=%d；候选起点=%d；更多候选=%d", K.built_for == 3 ? "数字" : K.symbols ? "符号" : K.shift ? "大写" : "字母", K.plain && !K.english ? "中文" : "英文", K.expanded, K.first, K.more && lv_obj_is_visible(K.more));
     snprintf(undo, sizeof undo, "撤销=%d；重做=%d", ink_text_can_undo(), ink_text_can_redo());
     ink_ui_field_spec_t base[] = {
         {.id = "value", .role = "textbox", .label = secret ? "密码输入；内容=******" : "内容", .value = ink_text_draft_id() ? "" : ink_text_value(), .secret = secret},
@@ -163,6 +163,7 @@ static int semantic_snapshot(char *buf, size_t cap) {
         {.id = "selection", .role = "status", .label = "选区", .value = selection},
         {.id = "mode", .role = "status", .label = "模式", .value = mode},
         {.id = "undo", .role = "status", .label = "撤销", .value = undo},
+        {.id = "keys", .role = "text", .label = "按键", .value = K.built_for == 3 ? "删除=keyboard.key(8)" : K.plain ? "大写=keyboard.key(2)；删除=keyboard.key(8)；中英切换=keyboard.key(3)" : "大写=keyboard.key(2)；删除=keyboard.key(8)"},
         {.id = "voice", .role = "status", .label = "听写", .value = K.status ? lv_label_get_text(K.status) : ""},
         {.id = "heard", .role = "text", .label = "听到", .value = K.heard ? lv_label_get_text(K.heard) : ""}
     };
@@ -170,7 +171,7 @@ static int semantic_snapshot(char *buf, size_t cap) {
     _Static_assert(sizeof base / sizeof *base + INK_TEXT_PAGE <= KEYBOARD_FIELDS_MAX, "keyboard field capacity");
     memcpy(fields, base, sizeof base);
     char candidates[INK_TEXT_PAGE][128], ids[INK_TEXT_PAGE][24];
-    size_t count = secret ? 1 : ink_text_voice_state() == INK_VOICE_IDLE ? 6 : 8;
+    size_t count = secret ? 1 : ink_text_voice_state() == INK_VOICE_IDLE ? 7 : 9;
     if (!secret && K.cands && lv_obj_is_visible(K.cands)) for (int i = 0; i < INK_TEXT_PAGE; i++) if (lv_obj_is_visible(K.cand_btn[i])) {
         snprintf(ids[i], sizeof ids[i], "candidate:%d", K.first + i);
         snprintf(candidates[i], sizeof candidates[i], "候选[%d]=%.90s", K.first + i, lv_label_get_text(K.cand_label[i]));
@@ -204,10 +205,19 @@ static lv_obj_t *key(lv_obj_t *row, const char *label, char code, int grow) {
     lv_obj_set_flex_grow(b, (uint8_t)grow);
     lv_obj_add_event_cb(b, on_key, LV_EVENT_CLICKED, (void *)(intptr_t)code);
     lv_obj_add_event_cb(b, pressed, LV_EVENT_PRESSED, NULL);
+    bool icon = code == KEY_SHIFT || code == KEY_BACKSPACE;
+    if (icon) {
+        lv_obj_center(ink_ui_icon(b, code == KEY_SHIFT ? "shift" : "del", INK_ICON_MEDIUM, INK_ICON_LINE, 0, 0, false));
+    }
+    const char *punctuation = ink_text_punctuation(code);
+    const char *text = punctuation ? punctuation : label;
+    int width = icon ? INK_ICON_MEDIUM : ink_ui_text_width(text, INK_FONT_LIST, INK_WEIGHT_REGULAR);
+    lv_obj_set_style_min_width(b, ink_ui_px(width + 2 * (INK_GAP_XS + INK_STROKE)), 0);
     lv_obj_t *l = lv_label_create(b);
     lv_obj_set_style_text_font(l, font(), 0);
-    lv_label_set_text(l, label);
+    lv_label_set_text(l, text);
     lv_obj_center(l);
+    if (icon) lv_obj_add_flag(l, LV_OBJ_FLAG_HIDDEN); /* Keep the control's text label for accessibility. */
     return b;
 }
 
@@ -365,7 +375,12 @@ static void build(int kind) {
         }
         lv_obj_t *bottom = new_row();
         key(bottom, K.symbols ? TR("字母") : TR("符号"), KEY_SWITCH, 2);
-        key(bottom, TR("空格"), ' ', 5);
+        if (K.plain) {
+            key(bottom, K.english ? "英" : "中", INK_TEXT_KEY_LANGUAGE, 1);
+            key(bottom, ",", ',', 1);
+        }
+        key(bottom, TR("空格"), ' ', K.plain ? 3 : 5);
+        if (K.plain) key(bottom, ".", '.', 1);
         key(bottom, enter_label(), KEY_ENTER, 2);
     }
     K.panel = lv_obj_create(K.root);
@@ -451,7 +466,10 @@ static void sync(void) { /* UI task */
     if (secret && present != K.secret_present) K.revision++;
     K.secret_present = present;
     int kind = type == INK_TEXT_NUMBER || type == INK_TEXT_PHONE ? 3 : K.symbols ? 2 : 1;
-    if (!K.root || K.built_for != kind) build(kind);
+    bool plain = type == INK_TEXT_PLAIN, english = ink_text_english();
+    bool rebuild = !K.root || K.built_for != kind || K.plain != plain || K.english != english;
+    K.plain = plain; K.english = english;
+    if (rebuild) build(kind);
     ink_voice_state_t vs = ink_text_voice_state();
     sync_voice(vs);
     if (vs != INK_VOICE_IDLE) return;
@@ -537,7 +555,7 @@ static void sync(void) { /* UI task */
 
 int ink_shell_keyboard_init(void) {
     static const ink_cap_t caps[] = {
-        {.id = "keyboard.key", .title = "按输入法的键（1 符号、2 大写、8 删除、10 回车，其余是 ASCII）", .input = "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":127}},\"required\":[\"code\"]}", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = press_key},
+        {.id = "keyboard.key", .title = "按输入法的键（1 符号、2 大写、8 删除、10 回车，其余是 ASCII）", .input = "{\"type\":\"object\",\"properties\":{\"code\":{\"type\":\"integer\",\"description\":\"1 符号；2 大写；3 中英切换（仅普通输入框，先提交拼音）；8 删除；10 回车；其余 ASCII，标点随中英模式\",\"minimum\":1,\"maximum\":127}},\"required\":[\"code\"]}", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = press_key},
         {.id = "keyboard.pick", .title = "选输入法候选（从 0 开始）", .input = "{\"type\":\"object\",\"properties\":{\"index\":{\"type\":\"integer\",\"minimum\":0}},\"required\":[\"index\"]}", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = pick},
         {.id = "keyboard.candidates", .title = "展开下一页候选，或 fold 收回键盘", .input = "{\"type\":\"object\",\"properties\":{\"fold\":{\"type\":\"boolean\"}}}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = candidates},
         {.id = "keyboard.edit", .title = "编辑选中内容：0 左、1 右、2 复制、3 剪切、4 粘贴、5 撤销", .input = "{\"type\":\"object\",\"properties\":{\"action\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":5}},\"required\":[\"action\"]}", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .run = edit}

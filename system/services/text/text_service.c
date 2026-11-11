@@ -45,7 +45,7 @@ static struct {
     uint32_t revision;
     ink_text_type_t type;
     ink_text_enter_t enter;
-    bool ai_hidden;
+    bool ai_hidden, english;
     char *value;
     size_t cap;
     size_t cursor, anchor; /* bytes, on whole characters. They differ when something is selected */
@@ -314,6 +314,21 @@ const char *ink_text_hint(void) { return TS.hint; }
 bool ink_text_ai_hidden(void) { return TS.ai_hidden; }
 const char *ink_text_value(void) { return TS.value ? TS.value : ""; }
 const char *ink_text_composing(void) { return TS.composing; }
+bool ink_text_english(void) { return TS.english; }
+const char *ink_text_punctuation(char c) {
+    if (TS.type != INK_TEXT_PLAIN || TS.english) return NULL;
+    switch (c) {
+    case ',': return "，";
+    case '.': return "。";
+    case '?': return "？";
+    case '!': return "！";
+    case ':': return "：";
+    case ';': return "；";
+    case '(': return "（";
+    case ')': return "）";
+    default: return NULL;
+    }
+}
 
 void ink_text_set_presenter(void (*fn)(void)) { TS.presenter = fn; }
 
@@ -444,7 +459,10 @@ void ink_text_key(char c) {
     char one[2] = {c, 0};
     switch (TS.type) {
     case INK_TEXT_PLAIN:
-        if (c >= 'a' && c <= 'z') {
+        if (c == INK_TEXT_KEY_LANGUAGE) {
+            flush_composing();
+            TS.english = !TS.english;
+        } else if (!TS.english && c >= 'a' && c <= 'z') {
             size_t n = strlen(TS.composing);
             if (n < COMPOSING_MAX) {
                 TS.composing[n] = c;
@@ -460,7 +478,8 @@ void ink_text_key(char c) {
         } else {
             flush_composing();
             before_edit(EDIT_KEYS);
-            put(one);
+            const char *punctuation = ink_text_punctuation(c);
+            put(punctuation ? punctuation : one);
         }
         break;
     case INK_TEXT_NUMBER:
