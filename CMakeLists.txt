@@ -121,6 +121,9 @@ target_compile_options(ink_stb PRIVATE -w)
 # The simulated device: the port (OSAL and HAL on the models), the chip models, the environment
 # (hub, signals), the runner's metrics, trace and scripts, the desktop bridge. One library while
 # models and HAL implementations still call each other (see the layout doc).
+add_library(ink_script STATIC system/autotest/script.c)
+target_include_directories(ink_script PUBLIC system/autotest system/include platform/include)
+target_compile_options(ink_script PRIVATE ${INK_WARN})
 add_library(ink_port_sim STATIC
   ports/sim/osal/osal_sim.c
   ports/sim/hal/hal_i2c_sim.c
@@ -157,7 +160,7 @@ add_library(ink_port_sim STATIC
   simulator/runtime/script.c
   simulator/desktop/sim_gui.c)
 target_include_directories(ink_port_sim PUBLIC simulator simulator/desktop)
-target_link_libraries(ink_port_sim PUBLIC ink_board_metalio_plus ink_drivers ink_sim_core ink_littlefs ink_stb ink_lz4 ink_sha256)
+target_link_libraries(ink_port_sim PUBLIC ink_board_metalio_plus ink_drivers ink_sim_core ink_littlefs ink_stb ink_lz4 ink_sha256 ink_script)
 target_compile_options(ink_port_sim PRIVATE ${INK_WARN})
 
 # An executable = the simulator runner + the code under test (which provides ink_main()).
@@ -1922,3 +1925,21 @@ add_test(NAME unit-s31-camera-negative COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOU
 ink_sim_executable(sim-camera-absent tests/port_camera/absent.c)
 target_link_libraries(sim-camera-absent PRIVATE ink_apps ink_system)
 add_test(NAME camera-absent COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/port_camera/run.py ${CMAKE_BINARY_DIR})
+
+add_executable(test-autotest-parser tests/device_autotest/parser.c)
+target_link_libraries(test-autotest-parser PRIVATE ink_script)
+target_compile_options(test-autotest-parser PRIVATE ${INK_WARN} -UNDEBUG)
+add_test(NAME autotest-parser COMMAND test-autotest-parser)
+file(READ ${CMAKE_SOURCE_DIR}/tests/device_autotest/device.script device_script HEX)
+string(REGEX REPLACE "(..)" "0x\\1," device_script "${device_script}")
+file(WRITE ${CMAKE_BINARY_DIR}/autotest-test/autotest_script.h "static const char ink_autotest_script[] = {${device_script}0};\n")
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/tests/device_autotest/device.script)
+add_executable(test-autotest-device tests/device_autotest/device.c)
+target_include_directories(test-autotest-device PRIVATE ${CMAKE_BINARY_DIR}/autotest-test)
+target_link_libraries(test-autotest-device PRIVATE ink_script ink_lvgl)
+target_compile_options(test-autotest-device PRIVATE ${INK_WARN} -UNDEBUG)
+add_test(NAME autotest-device COMMAND test-autotest-device)
+ink_sim_executable(sim-autotest tests/device_autotest/sim.c)
+target_link_libraries(sim-autotest PRIVATE ink_apps ink_system)
+add_test(NAME autotest-cap COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/device_autotest/run.py ${CMAKE_BINARY_DIR})
+add_test(NAME autotest-build-switch COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/device_autotest/build_switch.py ${CMAKE_BINARY_DIR})
