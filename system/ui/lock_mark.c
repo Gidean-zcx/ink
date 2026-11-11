@@ -103,6 +103,7 @@ static void show(void) {
         ink_lock_face_draw(g_mark, (int)ink_setting_get("display.lock_style"));
         ink_shell_statusbar(g_mark, false); camera_button(false); ink_shell_emergency_button(g_mark, false);
         g_label = ink_ui_notice(g_mark, mark_text(), INK_CANVAS_H - INK_MARGIN - ink_ui_line_height(INK_FONT_NOTE));
+        lv_obj_set_style_bg_color(g_label, ink_ui_paper(), 0); lv_obj_set_style_bg_opa(g_label, LV_OPA_COVER, 0);
         ink_ui_overlay_add(&OVERLAY, g_mark); changed(); ink_ui_hint_obj(g_mark, INK_REFRESH_UI); return;
     }
     if (image) {
@@ -115,6 +116,7 @@ static void show(void) {
     if (clock) {
         lv_obj_set_style_bg_color(g_mark, ink_ui_paper(), 0);
         lv_obj_set_style_bg_opa(g_mark, LV_OPA_COVER, 0);
+        if (ink_setting_get("display.lock_background")) ink_wallpaper_draw(g_mark);
         ink_shell_statusbar(g_mark, false);
         char time[24], date[96]; ink_shell_time_strings(time, sizeof time, date, sizeof date);
         int date_y = INK_STATUS_BAR + INK_GAP + INK_CONTROL + INK_GAP_M;
@@ -125,11 +127,14 @@ static void show(void) {
         g_clock = ink_ui_label(g_mark, "", INK_FONT_CLOCK, INK_WEIGHT_REGULAR, INK_MARGIN,
                                date_y + ink_ui_line_height(INK_FONT_LIST), INK_CANVAS_W - 2 * INK_MARGIN);
         lv_obj_set_style_text_align(g_clock, LV_TEXT_ALIGN_CENTER, 0);
+        lv_obj_set_style_bg_color(g_date, ink_ui_paper(), 0); lv_obj_set_style_bg_opa(g_date, LV_OPA_COVER, 0);
+        lv_obj_set_style_bg_color(g_clock, ink_ui_paper(), 0); lv_obj_set_style_bg_opa(g_clock, LV_OPA_COVER, 0);
         update_clock();
         int cursor = 0; ink_alarm_t alarm;
         if (ink_alarm_next(&cursor, INK_ALARM, &alarm) == 1) {
             char next[64]; snprintf(next, sizeof next, TR("闹钟 %d:%02d"), alarm.hour, alarm.min);
             g_alarm = ink_ui_notice(g_mark, next, date_y + ink_ui_line_height(INK_FONT_LIST) + ink_ui_line_height(INK_FONT_CLOCK) + INK_GAP_M);
+            lv_obj_set_style_bg_color(g_alarm, ink_ui_paper(), 0); lv_obj_set_style_bg_opa(g_alarm, LV_OPA_COVER, 0);
         }
         int h = ink_ui_row_double(), text_y = (h - ink_ui_line_height(INK_FONT_LIST) - ink_ui_line_height(INK_FONT_NOTE)) / 2;
         lv_obj_t *notice = ink_ui_card(g_mark, INK_MARGIN, INK_CANVAS_H - INK_CONTROL - INK_GAP_L - INK_MARGIN - h,

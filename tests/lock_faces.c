@@ -115,6 +115,7 @@ static void matrix(void) {
             setting("display.lock_background", background != 0);
             for (int face = 0; face < INK_LOCK_FACE_COUNT; face++) {
                 style = face; on_ui(render); quiet();
+                if (face == 1 && background) { on_ui(image_pixels); CHECK(pixels_ready, "legacy minute clock overlays the selected PNG"); }
                 if (face >= INK_LOCK_STANDBY) CHECK(WAIT_FOR(has("合成成人私密待办"), 15000), "current owner sees unchecked memo");
                 on_ui(unchanged);
                 char name[64]; snprintf(name, sizeof name, "face-%d-size-%d-bg-%d", face, size, background); frame(name);

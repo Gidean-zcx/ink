@@ -74,6 +74,7 @@ static void widgets(int y) {
     if (F.style == INK_LOCK_SIMPLE) return;
     int h = ink_ui_line_height(INK_FONT_NOTE);
     if (ink_setting_get("display.lock_todo")) {
+        ink_ui_box(F.body, INK_MARGIN, y, INK_CANVAS_W - 2 * INK_MARGIN, h, 0, INK_SURFACE_WHITE, false);
         ink_ui_line(F.body, "待办", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y, INK_BLOCK_L);
         F.todo = ink_ui_line(F.body, visible() ? "还没有未完成的待办" : "解锁后查看", INK_FONT_NOTE, INK_WEIGHT_REGULAR,
                              INK_MARGIN + INK_BLOCK_L, y, INK_CANVAS_W - 2 * INK_MARGIN - INK_BLOCK_L);
@@ -82,6 +83,7 @@ static void widgets(int y) {
         y += h + INK_GAP;
     }
     if (ink_setting_get("display.lock_reading")) {
+        ink_ui_box(F.body, INK_MARGIN, y, INK_CANVAS_W - 2 * INK_MARGIN, h, 0, INK_SURFACE_WHITE, false);
         ink_card_t card = {0};
         for (int i = 0; visible() && i < ink_app_count(); i++) {
             const ink_app_def_t *app = ink_app_at(i);
@@ -99,6 +101,7 @@ static void widgets(int y) {
 static void calendar(const ink_tm_t *t, int y) {
     const int w = (INK_CANVAS_W - 2 * INK_MARGIN) / 7, h = ink_ui_line_height(INK_FONT_STATUS), row = 2 * h + INK_GAP_XS;
     static const char *const weekdays[] = {"日", "一", "二", "三", "四", "五", "六"};
+    ink_ui_box(F.body, INK_MARGIN, y, INK_CANVAS_W - 2 * INK_MARGIN, h, 0, INK_SURFACE_WHITE, false);
     for (int i = 0; i < 7; i++) {
         lv_obj_t *l = ink_ui_line(F.body, weekdays[i], INK_FONT_STATUS, INK_WEIGHT_MEDIUM, INK_MARGIN + i * w, y, w);
         lv_obj_set_style_text_align(l, LV_TEXT_ALIGN_CENTER, 0);
@@ -135,6 +138,7 @@ void ink_lock_face_draw(lv_obj_t *parent, int style) {
     int y = INK_STATUS_BAR + INK_GAP + INK_CONTROL + INK_GAP_M;
     char time[24], date[96], name[64] = "农历暂不可用", text[128], ganzhi[24] = "";
     ink_shell_time_strings(time, sizeof time, date, sizeof date);
+    char *separator = strstr(date, " · "); if (separator) *separator = 0;
     ink_lunar_t lunar;
     if (ink_time_valid() && ink_lunar_from_solar(t.year, t.month, t.day, &lunar)) {
         ink_lunar_name(&lunar, name, sizeof name); ink_lunar_ganzhi(lunar.year, ganzhi, sizeof ganzhi);

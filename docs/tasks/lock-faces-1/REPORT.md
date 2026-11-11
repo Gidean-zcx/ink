@@ -1,14 +1,14 @@
 # lock-faces-1 执行报告
 
-基线：`69cc9868a5e6b95c8376293b385308431fef92a0`。2026-11-11～12；范围内实现、截图、普通全量和反向对照已完成检查，ASan/UBSan 进行中。**完整验收未通过。**
+基线：`69cc9868a5e6b95c8376293b385308431fef92a0`。2026-11-11～12；检查与本地提交已完成。**完整验收未通过，新表盘还不能从真实设置入口使用。**
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 部分完成【实测】 | [40 张截图](SCREENSHOTS.md)，最大 53,874 字节；新枚举为绘制替身，真实设置入口未接通 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/lock_faces.py --build build` |
-| 2 | 部分完成【实测】 | 339 条正向断言过；分钟不变、成员隔离、继续读的反向断言均触发；跨日反向未到预期断言；节气和锁屏自动调度未做 | 同上；反向命令见下文 |
-| 3 | 未通过【实测】 | 普通全量 5 失败、3 跳过；其中 S31 独立复跑过，4 项国际化／文档失败仍在；ui-scale、gcccheck 过；ASan 进行中；S31 固件未编 | 见“检查结果” |
+| 1 | 部分完成【实测】 | [40 张截图](SCREENSHOTS.md)，均小于 300 KB；新枚举为绘制替身，真实设置入口未接通 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/lock_faces.py --build build` |
+| 2 | 部分完成【实测】 | 最终普通／ASan 各 343 条正向断言过；分钟不变、成员隔离、继续读的反向断言均触发；跨日反向未到预期断言；节气和锁屏自动调度未做 | 同上；反向命令见下文 |
+| 3 | 未通过【实测】 | 普通全量 5 失败／3 跳过，ASan 全量 4 失败／3 跳过；最终锁屏相关回归均过；gcccheck 过；S31 固件按任务书留给合并主会话 | 见“检查结果” |
 | 4 | 已完成文档【实现】 | 布局出处、宜忌缺口和上机核对清单见下文 | `SOURCE.md`、本报告 |
 
 ## 没做到的
@@ -47,13 +47,14 @@
 
 - 【实现】`lunar.c` 和 `ink/sys/time.h` 没有节气接口。CrossMux 节气是世纪常数近似公式，源码自己注明有一天误差；未混入第二套未经核定的历法。
 - 【实测】普通全量 `unit-s31-cell` 报 ACK 超时并在 `cell.c:16` 断言 `r==HAL_AT_OK` 失败；单独复跑 `100% tests passed out of 1`。该目标未链接本次 UI 文件，未改模组代码；尚未证明整轮为什么失败。
-- 【实现】公用 `WAIT_FOR` 只累计轮次内的 20ms 延迟，未计条件中 `on_ui()` 的等待时间；跨日反向因此未在模拟上限内到达超时断言。本任务未改公用测试辅助。
+- 【实现】公用 `WAIT_FOR` 只累计轮次内的 20ms 延迟，未计条件中 `on_ui()` 的等待时间；条件耗时会拉长实际等待。【实测】跨日反向未在模拟上限内到达断言，未进一步定位；本任务未改公用测试辅助。
 
 ## 新增的机制
 
-- 常驻任务、定时循环、文件格式：均无新增。
+- 产品常驻任务、定时循环、文件格式：均无新增。
 - 配置项：`display.lock_todo`、`display.lock_reading`、`display.lock_background`，均为任务书要求的现有设置服务布尔项，按成员保存，默认关。
 - 继续阅读只保存一次待执行意图及所属成员，完成验证后调原有 `reader.continue`，换成员清除；不存 PIN、不加能力或后台重试。
+- 仅测试的 `lock-faces-test` 驱动与用例选择参数：任务书要求验证／反向对照，复用既有测试辅助，不进入产品固件。
 
 ## 要改的文档
 
@@ -67,19 +68,21 @@
 - 【实测】3 个跳过：`hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e`。缺本检出的锁定中枢 Python 环境及其生成消息；没有安装／升级依赖。
 - 【实测】国际化原文：`i18n-literals: 31 unmarked Chinese literals`；另两项分别报剩余壳文案缺 6 次翻译、日历／文件页的缺翻译计数非 0。能力文档检查报 `capability catalogue is stale`。
 - 【实测】`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/lock_faces_reverse.py --build build --case minute`：撤掉分钟相等保护后触发 `same minute does not refresh`；`--case member`：撤掉成员变化时重建锁屏后触发 `child pixels contain no adult memo label`；`--case reading`：撤掉 `reader.continue` 调用后触发 `unlock resumes the reader`。三项均在构建目录编译替身，不改产品文件、不依赖 Git 历史。
-- 【实测】恢复实现后重新运行正向：`lock-faces: exit=0, pass=339, fail=0, finished=1`。跨日反向的未完成情况见上文。
-- ASan/UBSan：进行中，收尾补结果。
-- 【实测】指定隐私正则扫描基线至当前提交：0 命中，grep 返回 1；`git diff --check` 无输出。最终提交后再核一次。
+- 【实测】恢复实现后的最终正向，普通／ASan 均为 `lock-faces: exit=0, pass=343, fail=0, finished=1`。跨日反向的未完成情况见上文。
+- 【实测】ASan/UBSan 按总规则同一配置加 `-DINK_SANITIZE=ON` 构建整个主工程，运行 `UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2`：`99% tests passed, 4 tests failed out of 402`；`Total Test time (real) = 1299.51 sec`。失败为上述 4 项国际化／文档检查，跳过同 3 项中枢测试；完整测试日志未检出 ASan/UBSan 诊断。
+- 【实测】全量检查后补齐旧分钟时钟的壁纸叠加和文字底色。普通／ASan 的 7 项锁屏相关回归各为 `100% tests passed out of 7`（25.58／44.55 秒）；最终壁纸对比度与日期行整理后，`lock-faces`、`ui-scale` 两项在普通／ASan 下又分别通过。没有把这些回归写成全量全过。
+- 【实测】最终 GCC 检查：`gcccheck: 4 compiled, 0 with findings`。指定隐私正则扫描基线至最终提交：0 命中，grep 返回 1；`git diff --check` 无输出。只提交任务允许的源码、测试、截图和本任务文档。
 
 ## 布局、边界与阶段证据
 
 - 简约：取 CrossMux `SloppyClockFace.cpp:58–67` 的上下两行时分；加公历、星期、农历和原有电量栏。待机：时间放上方，下面两行给待办和继续读。
 - 月历：取 `ChineseCalendarFace.cpp:177–244` 的公历、农历、干支、生肖层次和按日更新条件。上游实际为单日黄历；月格是任务书要求的扩展，每格公历＋农历，初一显示月名，今天黑底。
 - 来源、固定提交、SHA-256 与 MIT 许可见 `system/ui/lock_faces/SOURCE.md` 和 `LICENSE`；没有拷待机循环、随机字形引擎或历法表。
-- 【实测】最终针对性场景：`test.pass=339, test.fail=0, test.finished=1`，内部 RAM 最小空闲 50,088 字节，外部 RAM 分配失败 0；120% 月历组件已压为单行并复测通过。
+- 【实测】最终针对性场景：`test.pass=343, test.fail=0, test.finished=1`，内部 RAM 最小空闲 50,088 字节，外部 RAM 分配失败 0；120% 月历组件已压为单行，壁纸上的文字使用纸白底色，复测通过。
 - 【实测】`ui-scale: 54 files, 0 violations`；`gcccheck: 4 compiled, 0 with findings`。
 - 【实现】壁纸透明度处理沿用 `system/services/media/image.c:39–45`，透明像素合成到纸白后抖动，不新增解码器。测试只造合成 PNG。
-- 产品代码：新增 253 行、删除 8 行、净增 245 行（含头文件，排除测试、文档、CMake），小于 450 行预算。为什么不能更小：三个表盘、月格、两个异步／按成员组件、快照和设置预览是独立验收项；只扩旧分钟时钟或搬上游循环均不满足合同。复用了农历、备忘数据集合、阅读卡片、异步打开集合、图片服务和设置能力，未加通用框架。
+- 【实现】设置预览和开关均绑定原有 `settings.set`；快照复用统一语义模型；备忘只读当前成员集合，阅读复用原有卡片与能力；密码仍由现有成员门验证，AI 不能代输。
+- 产品代码：新增 262 行、删除 8 行、净增 254 行（含头文件，排除测试、文档、CMake），小于 450 行预算。为什么不能更小：三个表盘、月格、两个异步／按成员组件、快照和设置预览是独立验收项；只扩旧分钟时钟或搬上游循环均不满足合同。复用了农历、备忘数据集合、阅读卡片、异步打开集合、图片服务和设置能力，未加通用框架。
 
 ## 上机核对清单
 
