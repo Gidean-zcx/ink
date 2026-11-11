@@ -479,6 +479,10 @@ static void bus_checks(void) {
 /* ---- step 3: the services' state, settings, capabilities and events (detailed design §4.4) ---- */
 
 static volatile int g_sms_events;
+static void incoming_sms(void *arg) {
+    (void)arg;
+    CHECK(sim_net_deliver_sms("10086", "你好，这是一条测试短信"), "registered modem accepts the synthetic message");
+}
 static char g_sms_text[64];
 
 static void on_message(void *ctx, const char *id, const ink_args_t *payload) {
@@ -527,7 +531,7 @@ static void service_checks(void) {
     CHECK(ink_cap_call("camera.capture", NULL, &o) == 0 && wait_done(before + 2, 6000000) && !strcmp(g_bus_rc.object, "photo:2"),
           "a second one queues behind it (%s)", g_bus_rc.object);
 
-    /* text messages (subscribed at the start: the script's message may come before these checks) */
+    /* Text messages were injected after the audio checks restored the shared modem rail. */
     ink_args_t a;
     ink_args_init(&a);
     ink_args_str(&a, "to", "10086");
@@ -539,7 +543,7 @@ static void service_checks(void) {
     o.src = INK_SRC_TOUCH;
     CHECK(ink_cap_call("message.send", &a, &o) == 0 && wait_done(before + 2, 30000000) && g_bus_rc.status == INK_RC_DONE,
           "sent by touch (%s, %s)", ink_rc_name(g_bus_rc.status), g_bus_rc.detail);
-    for (int w = 0; w < 200 && !g_sms_events; w++) osal_task_delay_us(100000); /* the script sends one at 24 s */
+    for (int w = 0; w < 200 && !g_sms_events; w++) osal_task_delay_us(100000);
     CHECK(g_sms_events == 1 && strstr(g_sms_text, "测试短信"), "an incoming message is an event with its text (%d, %s)", g_sms_events, g_sms_text);
     before = g_bus_done; o.src = INK_SRC_AI;
     CHECK(ink_cap_call("message.list", NULL, &o) == 0 && wait_done(before + 1, 3000000) && g_bus_rc.status == INK_RC_DONE &&
@@ -811,6 +815,9 @@ static void systest_task(void *arg) {
     CHECK(ink_cap_subscribe("message.", on_message, NULL, INK_EXEC_DIRECT) == 0, "subscribe to message events");
     storage_checks();
     audio_checks();
+    for (int w = 0; w < 1000 && !sim_net_modem_registered(); w++) osal_task_delay_us(10000);
+    CHECK(sim_net_modem_registered(), "modem registers after audio checks restore its shared rail");
+    vtk_event_at(vtk_now() + SIM_MS(1), incoming_sms, NULL);
     cap_checks();
     state_checks();
     settings_checks();
