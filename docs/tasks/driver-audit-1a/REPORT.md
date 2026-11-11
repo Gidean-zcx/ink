@@ -16,6 +16,40 @@
 
 ## 逐模块对照
 
+路径缩写：`C/` = 原厂 `main/boards/common/board/`，`P/` = 原厂 `main/boards/common/power_policy/`，`S/` = 我们 `ports/esp32s31/`。表中行为均为【实现】，后果为【估算】，未另标注的差异没有本次真机证据。
+
+### 4G 模组
+
+| 模块/流程 | 原厂做法（文件:行） | 我们的做法（文件:行） | 差异 | 可能的坑（场景 → 后果） | 严重度 | 建议 |
+| --- | --- | --- | --- | --- | --- | --- |
+| C01 帧格式、分片重组 | `C/uart_eth_modem.h:201-246` 四字节头；`.cc:958-1085` 跨 DMA 重组、逐帧 ACK；头损坏丢本缓冲余部 | `S/s31_modem.c:130-188,209-226` 同一头、1600 字节上限、跨块拼接；头损坏滑窗重扫 | 我们重写但正常帧等价；损坏恢复不一样 | 丢字节后滑窗可能把负载认作合法头；两者均未实现协议头 continue/flow 位的完整语义，不据此声称本项目支持额外分片协议 | 中 | 直接拷 `uart_eth_modem.*`，保留 HAL；损坏帧行为随原厂，不再另写解析器 |
+| C02 MRDY/SRDY、ACK、空闲 | `C/uart_eth_modem.cc:741-832,1089-1231,1761-1808` 事件主任务与独立 TX；低电平活动、50 µs ACK；待激活超时强制活动 | `S/s31_modem.c:205-279` 1 ms 轮询单任务；发送时等待 200 ms 唤醒、100 ms ACK；空闲 500 ms | 我们不一样；背景已给强制发送修复的真机依据，不能视为整个流程等价 | 收满载以太帧时，同一个任务同步 TX，期间不归还 RX；4×1600 字节接收池可能耗尽；优先级从原厂主任务 10/TX 9 降到 5 | 高 | 直接拷原厂主任务/TX 和握手流程，替换轮询重写；不要把已修的“拒发”重报 |
+| C03 UHCI 本体、DMA、缓冲归还 | 原厂 `components/78__uart-uhci/src/uart_uhci.cc:168-255,319-397,437-562` 内部 DMA 缓冲、owner 检查、溢出归还后重挂 | `vendor/uart-uhci/` 已直接拷；`S/s31_uhci.cc:10-51` 4 指针队列，`S/s31_cell_rx.c:3-12` 消费后归还，溢出后通知解析器丢半帧 | 本体一样；桥接我们不一样 | 启停 DMA 会重新挂载全部缓冲；必须先排空旧指针。当前 suspend 已停 DMA 再排空，不能重报为未做；原厂 Transmit 也是同步 FIFO，并非 TX DMA | 低 | 保留原文组件；桥接随整驱动替换缩减，保留溢出到 HAL 的可观察错误 |
+| C04 中断与闪存访问 | `C/nt26_board.cc:41-46` GPIO ISR 服务 flags=0；`C/uart_eth_modem.cc:1782-1808` 注释禁止强开 IRAM 中断；UHCI 分配 flags 清零 | `S/s31_modem.c:205-208,295-304` GPIO flags=0，ACK 计数在内部静态区；`S/s31_uhci.cc:7-17` 对象/队列入口内部静态区；状态和重组在 PSRAM、普通任务栈外置 | 中断屏蔽策略一样；任务/状态布局不一样 | 不能仅凭 IRAM_ATTR 或原厂 sdkconfig 的 GDMA_ISR_HANDLER_IN_IRAM 推断 Cache off 时 ISR 会运行；也不能把背景核 1 Cache error 归因于此 | 中 | 保留原厂中断分配；以实际 ELF/map 和中断表核对。不要以“全加 IRAM”修复，见后文证据边界 |
+| C05 AT 收发、超时、负载 | `C/uart_eth_modem.cc:262-399,1312-1357,1423-1453` 串行 SendAt、发送完成引用计数、字符串回复；普通 SendAt 仅取含最终结果的帧 | `S/s31_modem.c:96-128,307-359,393-443` 行累积 4096 字节、caller cap 检查、超时隔离；另支持 CMGS prompt+PDU | 我们不一样（安全/短信扩展） | 原文 SendAt 不支持 `>` 后正文；盲换会让现有短信失效。跨帧的内容与 OK 分开发回时，原厂普通 SendAt 也可能丢前帧内容 | 高 | 拷底层帧与生命周期，HAL 保留允许列表、超时结果、prompt/PDU 适配；明确不能把原厂 SendAt 当现有 payload API 的等价实现 |
+| C06 URC、数据通道掉线 | `C/uart_eth_modem.cc:1474-1520` 处理 CEREG；ECNETDEVCTL 1/0 分支本身为空；`C/nt26_board.cc:199-221` 上层错误恢复 | `S/s31_modem.c:96-107` 仅名单内 URC；`S/hal_cellular_s31.c:104-140` 不处理 ECNETDEVCTL；`S/s31_modem.c:514-517` up 依赖旧 ip/handshake/registered | 我们缺数据通道通知；原厂也未在该 URC 内恢复 | 模组只重启数据通道、注册仍是 1 且尚无 LOST_IP → 旧握手和 IP 继续被当作 up，30 秒注册查询也不能发现真实数据中断 | 高 | 拷原厂基础流程仍需单列“数据通道状态与 DHCP 恢复”缺口；先上机验证，不宣称原文已解决 |
+| C07 开机初始化与探测 | `C/uart_eth_modem.cc:1523-1633` AtDetect、NAT/波特率检查、必要时重启模组、CFUN=1、查卡/注册、CEREG=2 | `S/s31_modem.c:281-305,393-439,555-577` 探测速率并保留现有配置，NAT 不为 1 直接退出；`S/hal_cellular_s31.c:51-68` 查卡/注册；`system/services/comm/comm_service.c:378-390` 安排运行时 CFUN | 我们不一样；保护模组配置是既有任务要求 | 从未被原厂配置过的模组不能自动建立 NAT；不开 CEREG=2 时依赖 30 秒轮询；没有 ECSCLKEX 配置时，500 ms MRDY 空闲不能证明模组省电 | 中 | 拷原厂初始化顺序，配置写入必须在内部策略闸口拦截，不能靠只包装公开 HAL；缺配置应结构化报告不可用，不暗中写模组 |
+| C08 数据启动、保活重启 | `C/uart_eth_modem.cc:1636-1675` 查询 state=1 直接置 handshake_done，不发 SPIC；否则启动+SPIC，再等 ACK | `S/s31_modem.c:555-588` state=1 同样直接置 handshake，否则启动+SPIC；无网等待恢复 | 一样（共享风险） | 主控重启而模组存活 → 旧通道被视为新握手；背景已观察等不到 DHCP。原因见专项分析，不能靠整份照抄修复 | 高 | 原文替换仍保留此阻塞项；先区分 SPIC 会话、以太帧和 DHCP 到哪一步，未经真机证据不改协议或定强复位策略 |
+| C09 网卡、DHCP、DNS | `C/uart_eth_modem.cc:588-669` iot_eth+glue、GET_MAC/LINK、关闭 GARP、清 DNS；原厂 `components/espressif__iot_eth/iot_eth_netif_glue.c:42-108` 生命周期事件 | `S/s31_modem.c:454-508` 自写 esp_netif 驱动，已有 handle/回收回调，按 selected+registered+handshake 连接；不清 DNS | 我们不一样，已有 handle 修复不重报 | 主控/网络切换后缓存 DNS 可能沿用旧网结果；已开但失效的通道没有获取 IP 的截止/恢复动作。不能从“没 iot_eth”直接推断 DHCP 必坏 | 中 | 原文 iot_eth 及 glue 一起拷，保留 HAL 选网、状态和流量口径；不要只拷 modem 类遗漏 mediator |
+| C10 睡眠、保网、唤醒 | `C/uart_eth_modem.cc:550-583,674-694` MRDY sleep-select、SRDY 低唤醒及停机引脚复位；`P/README.md:78-89,115-147` 最新待机保 P14、停蜂窝驱动 | `S/s31_modem.c:524-546` keep=false 停 DMA并清状态，resume 后等待 1 秒；`S/hal_power_s31.c:93-100,157-193` keep=true 不停驱动，SRDY 配 ANY_HIGH | 我们不一样；无该差异的真机证据 | 若启用浅睡并 keep_modem，SRDY 空闲为高会立刻唤醒，活动为低反而不触发；保电与停驱动语义也不同。当前浅睡默认 OFF，不能说交付版正在触发 | 高（启用后） | 直接复用最新原厂停放/恢复步骤；R-044 与锁屏保 4G 在线需求须保留，SRDY 极性先核对而非盲抄原厂停蜂窝策略 |
+| C11 P14/P12、断电通知 | `C/nt26_board.cc:90-136,321-341` 先 Stop/作废生命周期，再断电，恢复后等 1 秒重建；`P/power_hw.cc:242-265` BT 复位也通知蜂窝 | `S/hal_power_s31.c:157-193` 睡眠支路先 suspend/后切轨/再 resume；`boards/metalio_plus/metalio_board.c:37-44,93-105` P14 仅增 epoch；蜂窝不检查该 epoch（BH 会检查） | 睡眠支路顺序等价；通用电源通知我们缺 | 将来从 BT 复位或其它入口切 P14，若只调板级 set，蜂窝继续持有旧 UART/注册/握手；不能把这一潜在入口当作当前已存在的 BT reset 功能 | 中 | 拷原厂共享复位与蜂窝 Stop/恢复的调用关系，P12 共享复位不得拿来单独救 4G；不新增自行设计的全局机制 |
+| C12 出错后重建 | `C/nt26_board.cc:122-154,218-221,286-341` 错误标记、5 秒节流、Stop/Start 与按需 EnsureNetworkReady | `S/s31_modem.c:81-88,190-199,417-439` epoch 丢队列、30 秒探测；`S/s31_cell_use:507`/状态查询再次尝试启动 | 我们不一样 | 数据通道假握手或只有 DHCP 失败时 desynced=false，AT 重探不触发；不断查注册不会重建旧会话 | 高 | 拷原厂可停止/可重建生命周期；注意原厂也没有“state=1 但 DHCP 永久不通”的完整恢复，不能夸大效果 |
+| C13 SIM 切换、APN、短信电话 | 原厂 `main/display/screen/settings_screen/settings_network_tab.cc:493-544,470-471` CFUN0→500 ms→SimSlot→500 ms→CFUN1，随后倒计时重启；原厂 modem 类没有现有 PDU/电话业务 HAL | `drivers/chips/nt26/nt26.c:50-95,316-437` 在线切卡/注册与短信电话；`S/hal_cellular_s31.c:70-102` S31 切卡/APN 返回 -1；`S/s31_modem.c:49-75` 拦配置写命令 | 我们不一样（明确的只读约束与 R-044）；不是遗漏了原厂切卡时序 | 不能把模拟器在线切卡已实现说成 S31 可用；复制原厂页面会写模组且重启整机，违背本项目在线切卡要求 | 中 | 保留业务 HAL/能力和只读限制；可直接拷原厂命令片段接 HAL，禁止拷 UI/NVS/整机重启。放开配置写入须另有授权 |
+
+### 开机数据通道已开的专项结论
+
+【实现】原厂 `C/uart_eth_modem.cc:1637-1645` 查询第四字段为 1 后直接把本地握手位置真；`1664-1669` 等到的是自己刚设的位，不是模组新发的 ACK。随后 `1234-1260` 才创建 iot_eth，`657-663` 发 LINK_UP 并触发 DHCP。我们的 `S/s31_modem.c:569-574` 和 `490-498` 重复了这一假设。双方均未在该路径验证 SPIC 新会话，也没有 DHCP 失败后重建通道的流程。原厂 `1516-1519` 对通道启停 URC 也只是空分支。**这是双方共有的未解决点，不是今天五个已修问题之一的新版本。**
+
+【估算】模组状态 1 只证明模组认为通道开着；主控重启后的序号、SPIC 会话、帧接收与 DHCP 能否继续，源码没有证明。可能卡在旧会话，也可能卡在 L2/DHCP；本次没抓包，不能断言某个原因或给协议参数。背景里“等到模组自行重启才通”支持优先核对会话恢复，不足以证明必须断电。
+
+建议顺序：先保留 P14 观察“查询第四字段→是否收到以太帧→DHCP Discover/Offer/Request/Ack”；再在用户授权的真机验证里比较“通道已开时重新 SPIC”与“有依据的运行时数据通道停止/启动”。原厂只给出启动命令，没有验证停止命令及重新 SPIC 的幂等性，故本报告不自行给出停止参数。**整份拷贝仍须带着该项待验证，不能承诺解决。**P14 共享蓝牙/功放，禁止把它当作无副作用的 4G 重连。
+
+### Wi-Fi
+
+待补。
+
+### BH1098 耳机
+
 待补。
 
 ## 最可能出事的前 10 个坑
