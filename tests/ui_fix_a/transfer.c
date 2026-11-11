@@ -30,6 +30,7 @@ static void run(void *arg) {
     fx_wanted = "关闭"; on_ui(fx_find); fx_close = fx_area;
     fx_result = "{\"active\":true,\"host\":\"example.com\",\"port\":8080,\"code\":\"654321\",\"received\":0,\"result\":\"等待上传\"}";
     on_ui(fx_load); fx_capture("waiting"); on_ui(fx_close_position);
+    CHECK(!strcmp(P.progress, "等待传入"), "UX11 an idle authorization does not claim a file is being received");
     CHECK(!strstr(g_snap, "654321"), "UX11 one-time code is masked from AI");
     fx_result = "{\"active\":true,\"host\":\"example.com\",\"port\":8080,\"code\":\"654321\",\"received\":4096,\"result\":\"等待上传\"}";
     on_ui(fx_load); fx_capture("receiving"); on_ui(fx_close_position);

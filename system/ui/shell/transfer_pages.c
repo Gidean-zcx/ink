@@ -158,6 +158,7 @@ static void reply(void *ctx, const ink_receipt_t *rc) {
         snprintf(P.result, sizeof P.result, "%s", result); snprintf(P.code, sizeof P.code, "%s", code);
         snprintf(P.address, sizeof P.address, "%s", address);
         snprintf(P.progress, sizeof P.progress, active ? TR("接收中，%lld 字节；尚未保存") : !strcmp(result, TR("文件已收到")) ? TR("已收到 1 个，%lld 字节") : TR("已接收 %lld 字节；未确认保存"), (long long)received);
+        if (active && !received) snprintf(P.progress, sizeof P.progress, "%s", TR("等待传入"));
         snprintf(P.title, sizeof P.title, "%.90s", active ? received > 0 ? TR("正在接收文件") : TR("等待传入") : result);
         snprintf(P.detail, sizeof P.detail, "%s", active ? TR("接收完成后保存到‘传进来的’。现在还不能打开。") : !strcmp(result, TR("文件已收到")) ? TR("已保存到‘传进来的’，可在文件中打开。") : result);
         if (changed) show(active && received > 0 ? LIVE : WIRELESS);
