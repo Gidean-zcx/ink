@@ -2,7 +2,7 @@
 
 基线：`40d965f5b4b5d8d510064396dc59e3ae7e96855c`。执行日期：2026-11-11。仅本机编译与宿主机测试，不连接设备，不推送。
 
-首次执行结论：功能单元与四项反向对照通过，但普通及 ASan/UBSan 全量均存在本次引入的回归，**未达到合入验收**。下文保留当时证据；本次复查结果见文末。
+复查结论：普通和 ASan/UBSan 全量均为 387/387，零跳过；非阻塞充电、前光内存和首轮时机已修复。**复核要求的唤醒 ≤900 ms 尚未达到**：当前合并基线撤去本任务后也是 1002.765 ms，详见文末。以下验收表和各节保留首次执行记录，最新修复、测试与遗留事项以“复查后的修复”为准。
 
 ## 验收表
 
@@ -62,8 +62,8 @@
 
 ## 新增的机制
 
-- 任务 1 要求：现有电源任务新增 2/10 秒充电截止核对期限和欠压滞回标志；无新线程、队列、文件格式或设置项。
-- 任务 3 要求：共享定时器新增前光渐变回调及互斥保护；立即关闭会取消过渡。
+- 任务 1、复核高 1 要求：2/10 秒核对及 200/500 ms 再充续步复用既有 `ink_svc` 期限和后台执行器；1 字节记录原有再充步骤，欠压滞回仍按原厂。无新线程、队列、文件格式或设置项。
+- 任务 3、复核高 2 要求：前光渐变复用既有服务锁和定时器，期限节点在 PSRAM；复查删除独立互斥量和定时器。立即关闭会取消过渡。
 
 ## 要改的文档
 
@@ -94,11 +94,33 @@ SHA-256：`cx25601n.cc` = `8af78da4b8e806c406b783a0185f85559f771d5c8196a9cf548a1
 
 ## 复查后的修复
 
-- 复查基线：`b877e9d4`。本轮按 `REVIEW.md` 修复三项问题，执行中；最终验收和命令结果将在本节补齐。
-- 【实现】前光复用现有 `ink_svc` 锁和定时器；充电移到现有后台执行器，200/500 ms 分步排期；开机和浅睡后先等 2/10 秒。未新增线程、队列或配置项。
-- 【实测】定向测试 3/3 通过；`board-vendor-power` 34 项检查、`test.finished=1`，没有警告。反向对照 8/8 均退出 1 并命中对应断言：原四项，以及额外前光锁、同步再充等待、首轮立即核对、在电源任务执行充电。命令：`taskpolicy -c utility ctest --test-dir build -R '^board-vendor-' --output-on-failure -j2`；`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/board_vendor/reverse.py --build build`。证据：`work/recheck-unit.log`、`work/recheck-reverse.log`。
-- 【实测】普通构建退出 0；gcccheck 结果 `gcccheck: 7 compiled, 0 with findings`，无跳过。全量验收进行中。
-- 【实测】原三项中枢测试被跳过，原因是 `INK_HUB_PYTHON` 指向字体工具环境，缺 `pytest`、`pytest_asyncio`、`aiohttp`、`yaml`。现有 `$INK_DEPS/hub/.venv` 已装齐锁定依赖，改用它，并设置 `PYTHONPATH="$PWD/hub/src"`、`PYTHONDONTWRITEBYTECODE=1`，确保执行当前检出代码且不写依赖目录；不改跳过规则。
-- 【实测】首轮复查全量 `99% tests passed, 1 tests failed out of 387`，零跳过。7 项原回归及主分支修复的 4 项均通过；唯一失败 `systest-services` 的固定第 24 秒短信碰上音频测试关闭共用的 P14 电源（`modem.resets=5`），未到达模组。只改夹具：音频检查后等待明确的模组注册状态，再注入原来的合成短信；保留事件数、正文和列表断言，增加注册/注入成功断言，没有加延时掩盖问题或移动任何点按。
-- 【实测】两种源码对照（撤去任务全部四个 C 单元、只撤去充电排期）在当前合并代码上均得到唤醒最大值 1002.765 ms；本轮为 1012.765 ms。旧基线二进制同脚本为 822.765 ms。新增差异来自合入的板级恢复两路电源各等待 80 ms（模拟器各按 tick 量化），`boards/metalio_plus/metalio_board.c:132,134`；本任务保留硬件等待。**复核的 ≤900 ms 指标未达到**，不提高原 1200 ms 预算，不把当前基线也超出的指标写成已修好。对照命令：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" work/recheck_controls.py`；证据 `work/recheck-controls.log`、`work/recheck-old-frames/metrics.json`。
-- 【实测】修正夹具后 `systest-services` 153 项检查通过、`event.message.received=1`；原断言及预算不变。gcccheck 增加该既有测试后为 `gcccheck: 8 compiled, 0 with findings`，无跳过。命令：`taskpolicy -c utility ctest --test-dir build -R '^systest-services$' --output-on-failure -j2`；证据 `work/recheck-systest.log`、`work/recheck-gcccheck.log`。
+复查基线：`b877e9d4`。功能修复提交 `37389f79`；短信夹具修正提交 `808cfd78`。本轮没有严重或低级复核项。
+
+| 编号 | 结论 | 证据 | 命令 |
+| --- | --- | --- | --- |
+| 高 1 非阻塞充电 | 【实测】通过功能检查 | I²C 在既有后台执行器；200/500 ms 用既有共享期限续步，等待期间无任务阻塞。浅睡入口优先取消排期，在途 I²C 通过既有 AWAKE 引用与浅睡互斥。电源单测 34 项、`test.finished=1`；原五项时序回归全过 | `taskpolicy -c utility ctest --test-dir build -R '^board-vendor-' --output-on-failure -j2`；普通及插桩全量 |
+| 高 1 唤醒 ≤900 ms | 【实测】未达到；见下方对照 | 本轮两种构建均为 1012.765 ms；当前合并基线撤去本任务后为 1002.765 ms，恢复旧板级代码才回到 822.765 ms | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/board_vendor/baseline.py --build build` |
+| 高 2 内部 RAM | 【实测】通过 | 前光复用服务锁和定时器，期限节点在 PSRAM；普通与插桩的两项 ImeVoice 最低内部 RAM 均为 32776 B，恢复 208 B，无预算调整 | 普通及插桩全量中的 `ui-scene-ImeVoice`、`ui-scene-big-ImeVoice` |
+| 中 3 首轮时机 | 【实测】通过 | 复用既有电池读数确定首轮 2/10 秒；单测覆盖开机先等 2 秒、15 秒浅睡期间零访问、醒后先等 10 秒；立即核对反向对照失败 | 同上定向测试；下列反向对照 |
+| 普通全量 | 【实测】通过，退出 0 | 原话 `100% tests passed out of 387`，378.98 秒，零失败、零跳过；`work/recheck-ctest-final.log` | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2` |
+| ASan/UBSan 全量 | 【实测】通过，退出 0 | 原话 `100% tests passed out of 387`，609.49 秒，零失败、零跳过；`work/recheck-ctest-asan-final.log`。四个宿主产品 C 单元、共享服务及四个相关测试均核对插桩参数 | 同任务书配置加 `-DINK_SANITIZE=ON`，构建 `-j2`；`ASAN_OPTIONS=halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2` |
+| S31 编译 | 【实测】通过，退出 0 | `warning:`/`error:` 均 0；产品含 `-Werror`，电源 HAL 含 `INK_S31_LIGHT_SLEEP=1`，期限节点按 `INK_PSRAM_BSS` 编译；`work/recheck-s31-build.log` | `INK_S31_LIGHT_SLEEP=ON taskpolicy -c utility bash ports/esp32s31/build.sh` |
+| gcccheck | 【实测】通过，退出 0 | `gcccheck: 8 compiled, 0 with findings`，无跳过；`work/recheck-gcccheck.log` | 原七个 C 文件另加 `tests/integration/systest.c`，按原 gcccheck 命令执行 |
+| ui-scale、能力清单 | 【实测】通过，退出 0 | 全量均通过，另跑 8/8；`work/recheck-ui-capability.log`。界面和 AI 继续走既有 `settings.set`，未增加旁路 | `taskpolicy -c utility ctest --test-dir build -R '^(ui-scale\|capability-table)' --output-on-failure -j2` |
+| 反向对照 | 【实测】8/8 均按预期退出 1 | 原四项，以及额外前光锁、同步再充等待、首轮立即核对、在电源任务执行充电，各命中自己的断言；`work/recheck-reverse-final.log` | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/board_vendor/reverse.py --build build` |
+| 规模、隐私 | 【实测】通过 | 产品 C/H 总计 +246/−25，净增 221 行；计入原 14 行测试注册、22 行许可也为 257 行。相对复查基线共 16 个相关文件；两条基线的路径/MAC 扫描均 0 匹配，`git diff --check` 通过 | `git diff 40d965f5 --numstat -- <本任务产品文件>`；总规则第 6 节扫描，另查 `b877e9d4..HEAD` |
+
+原失败与跳过的处理：
+
+- 【实测】原 7 项回归及主分支已修的 4 项，在两轮最终全量中均通过。首轮复查另有 `systest-services` 失败（`work/recheck-ctest.log`）：固定第 24 秒短信落入音频检查切断共享 P14 的阶段，`modem.resets=5`，短信没有送到。修正夹具后，两种构建均为 153 项检查通过、`event.message.received=1`。旧夹具在同一产品实现下失败，是本项的反向对照。
+- 【实测】原三项中枢跳过源于字体工具环境缺 `pytest`、`pytest_asyncio`、`aiohttp`、`yaml`。现有 `$INK_DEPS/hub/.venv` 的 Python 3.11.15、pytest 8.4.2、pytest-asyncio 1.2.0、aiohttp 3.12.15、PyYAML 6.0.3 均与锁定版本一致；两种构建设 `-DINK_HUB_PYTHON=$INK_DEPS/hub/.venv/bin/python`，运行时设 `PYTHONPATH="$PWD/hub/src"`、`PYTHONDONTWRITEBYTECODE=1`。三项实际通过，没有修改跳过规则，没有新增依赖或写入依赖目录。
+- 【实测】原 `unit-s31-osal-ticks` 的 CMake 目标在 sanitizer 开关前定义，仍未插桩。本轮额外用 `taskpolicy -c utility cc -std=gnu11 -Wall -Wextra -Werror -UNDEBUG -O2 -g -fsanitize=address,undefined -fno-omit-frame-pointer tests/esp32s31/osal_ticks.c -o build-asan/test-s31-osal-ticks-sanitized` 编译，并在同样 ASAN/UBSAN 环境下执行，退出 0；`work/recheck-ticks-asan.log`。S31 固件本体未做宿主插桩，未连接设备，未运行 Linux。
+
+改过的已有测试：
+
+- `board-vendor-charger`：原同步等待两次改为断言 200/500 ms 续步与回到 2/10 秒，增加“任何任务内等待都失败”的检查，原寄存器边界断言保留。
+- `board-vendor-light`：复用真实共享服务，断言总共只创建其一个锁、一个定时器；每 5 ms 一级与立即熄灭断言保留。
+- `board-vendor-power`：将首轮/醒后立即核对的旧期望改为原厂的先等 2/10 秒，增加 I²C 在途仍及时锁屏的检查。新场景覆盖时间从 50 秒改为 75 秒，以容纳 15 秒浅睡及醒后 10 秒等待；没有修改产品预算。
+- `systest-services`：短信从脚本固定第 24 秒注入，移到音频检查恢复电源且模组已注册之后；通过模拟器原有事件入口注入原短信。保留事件数、正文和列表断言，增加注册和注入成功断言；未改点按时刻。
+
+没做到的／要用户定：**≤900 ms 的唤醒目标尚未完成，不能据全量通过认定完整复核验收通过。** 手动源码对照不注册到 CTest：撤去四个宿主产品 C 单元（`no-task`）、只撤去充电排期（`no-poll`）均为 1002.765 ms；前者再换回旧板级代码（`old-rails`）为 822.765 ms，三个进程均退出 0。差异来自合入的 `boards/metalio_plus/metalio_board.c:132,134` 两处 80 ms 电源恢复等待，在模拟器按 tick 量化；本轮与当前基线相差 10 ms。证据 `work/recheck-baseline.log` 和 `build/test-out/board-vendor-baseline/`。本任务保留板级时序，也不抬高原 1200 ms 预算；该更严目标需主会话结合待机任务另行处理。原厂差异、电池标签核对与上机顺序仍按前文，未作实机承诺。
