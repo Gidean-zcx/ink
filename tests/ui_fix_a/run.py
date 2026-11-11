@@ -14,6 +14,8 @@ parser.add_argument("--binary", type=Path)
 parser.add_argument("--evidence", type=Path)
 parser.add_argument("--expect-failure", action="store_true")
 a = parser.parse_args()
+if not a.evidence and os.environ.get("INK_UI_FIX_EVIDENCE"):
+    a.evidence = Path(os.environ["INK_UI_FIX_EVIDENCE"])
 build = a.build.resolve()
 binary = a.binary.resolve() if a.binary else build / ("sim-ui-fix-a-" + a.case)
 area = build / "test-out" / ("ui-fix-a-" + a.case + "-" + binary.parent.name)

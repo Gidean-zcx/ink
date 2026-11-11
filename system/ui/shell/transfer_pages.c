@@ -67,7 +67,7 @@ static void text(const char *value, int font, int y) {
 }
 static void draw(void) {
     lv_obj_clean(P.screen);
-    const char *title = P.page == WIRELESS ? TR("从手机或电脑传入") : P.page == USB_FAIL ? TR("文件") : TR("和电脑传文件");
+    const char *title = P.page == WIRELESS ? TR("从手机或电脑传入") : P.page == USB_FAIL ? TR("传文件失败") : TR("和电脑传文件");
     P.model = (ink_ui_page_spec_t){NAMES[P.page], title, {NAMES[P.page], P.epoch}, P.fields, 6, P.actions, 1};
     P.actions[0] = (ink_ui_action_spec_t){.id = "back", .label = TR("返回"), .capability = "shell.back", .enabled = true};
     P.fields[0] = (ink_ui_field_spec_t){.id = "member", .role = "text", .label = TR("家人"), .value = P.member};
@@ -95,25 +95,27 @@ static void draw(void) {
         } else if (P.active) text(TR("还没连上 Wi-Fi"), INK_FONT_LIST, middle);
         /* The note is one line in Chinese and two in English: it and the status above it move up a line when it
          * wraps, so the buttons never cover its end (i18n-shell-remaining, Transfer-en). */
-        const char *note = TR("只能放到‘传进来的’。关掉这页就断开。");
-        int lines = ink_ui_text_width(note, INK_FONT_NOTE, INK_WEIGHT_REGULAR) > w ? 2 : 1;
-        text(P.active ? P.progress : P.detail, INK_FONT_NOTE, bottom - (lines + 1) * INK_LINE_NOTE - INK_GAP_L);
-        text(note, INK_FONT_NOTE, bottom - lines * INK_LINE_NOTE - INK_GAP);
-        button(P.active ? TR("关闭") : TR("开始"), P.active ? "shell.back" : "transfer.start", INK_MARGIN, bottom, P.active ? w : (w - INK_GAP) / 2, !P.active);
-        if (!P.active) button(TR("关闭"), "shell.back", INK_MARGIN + (w + INK_GAP) / 2, bottom, (w - INK_GAP) / 2, false);
+        const char *note = !strcmp(P.result, TR("文件已收到")) ? TR("已保存到‘传进来的’，可在文件中打开。") : TR("只能放到‘传进来的’。关掉这页就断开。");
+        const char *status = P.active || P.received > 0 ? P.progress : P.detail;
+        int note_y = bottom - ink_ui_text_height(note, INK_FONT_NOTE, INK_WEIGHT_REGULAR, w) - INK_GAP_L;
+        text(status, INK_FONT_NOTE, note_y - ink_ui_text_height(status, INK_FONT_NOTE, INK_WEIGHT_REGULAR, w) - INK_GAP);
+        text(note, INK_FONT_NOTE, note_y);
+        button(P.active ? TR("断开") : TR("开始"), P.active ? "transfer.stop" : "transfer.start", INK_MARGIN, bottom, (w - INK_GAP) / 2, !P.active);
+        button(TR("关闭"), "shell.back", INK_MARGIN + (w + INK_GAP) / 2, bottom, (w - INK_GAP) / 2, false);
     } else {
-        ink_ui_circle(P.screen, P.page == LIVE ? "check" : P.page == USB_ON ? "usb" : "sd",
+        ink_ui_circle(P.screen, P.page == LIVE ? "download" : P.page == USB_ON ? "usb" : "sd",
             (INK_CANVAS_W - INK_CIRCLE_LARGE) / 2, icon_y, INK_CIRCLE_LARGE, INK_ICON_STATE,
             P.page == LIVE || P.page == USB_ON ? INK_SURFACE_BLACK : INK_SURFACE_STATIC, NULL, NULL);
         text(P.title, INK_FONT_SUBTITLE, middle + INK_GAP_XL);
         text(P.detail, INK_FONT_NOTE, middle + INK_GAP_XL + INK_LINE_SUBTITLE + INK_GAP);
         if (P.page == LIVE) {
             text(P.progress, INK_FONT_LIST, bottom - INK_PRIMARY - INK_GAP_L);
-            button(TR("断开"), "transfer.stop", INK_MARGIN, bottom, w, false);
+            button(TR("断开"), "transfer.stop", INK_MARGIN, bottom, (w - INK_GAP) / 2, false);
+            button(TR("关闭"), "shell.back", INK_MARGIN + (w + INK_GAP) / 2, bottom, (w - INK_GAP) / 2, false);
         } else if (P.page == USB_BUSY) {
-            button(TR("先不开"), "shell.back", INK_MARGIN, bottom, (w - INK_GAP) / 2, false);
-            button(TR("停下，开始"), "usb.mount", INK_MARGIN + (w + INK_GAP) / 2, bottom, (w - INK_GAP) / 2, true);
-        } else button(P.page == USB_ON ? TR("结束") : TR("知道了"), P.page == USB_ON ? "usb.unmount" : "shell.back", INK_MARGIN, bottom, w, true);
+            button(TR("返回先停下"), "shell.back", INK_MARGIN, bottom, (w - INK_GAP) / 2, false);
+            button(TR("开始连接"), "usb.mount", INK_MARGIN + (w + INK_GAP) / 2, bottom, (w - INK_GAP) / 2, true);
+        } else button(P.page == USB_ON ? TR("结束传输") : TR("知道了"), P.page == USB_ON ? "usb.unmount" : "shell.back", INK_MARGIN, bottom, w, true);
     }
 }
 static void reply(void *ctx, const ink_receipt_t *rc) {
@@ -122,8 +124,14 @@ static void reply(void *ctx, const ink_receipt_t *rc) {
     if (rc->status == INK_RC_PENDING_CONFIRMATION || rc->status == INK_RC_CANCELLED) return;
     if (rc->status != INK_RC_DONE) {
         snprintf(P.title, sizeof P.title, "%s", !strcmp(rc->detail, "busy") ? TR("有应用在用存储卡") : TR("还不能开始传文件"));
-        snprintf(P.detail, sizeof P.detail, "%s", !strcmp(rc->detail, "busy") ? TR("占用的应用暂不能查看。请先停下读书、播放或下载，再开始。") : TR("请检查无线网络、数据线和存储卡后再试。"));
-        if (P.usb && (!strcmp(rc->detail, "no card") || !strcmp(rc->detail, "read or write error"))) show(USB_FAIL);
+        snprintf(P.detail, sizeof P.detail, "%s", !strcmp(rc->detail, "busy") ? TR("不能自动停下应用。请返回停下读书、播放或下载，再来连接。") : TR("请检查无线网络、数据线和存储卡后再试。"));
+        if (P.usb && (!strcmp(rc->detail, "no card") || !strcmp(rc->detail, "read or write error"))) {
+            show(USB_FAIL);
+            if (!strcmp(rc->detail, "no card")) {
+                snprintf(P.title, sizeof P.title, "%s", TR("请先插入存储卡"));
+                snprintf(P.detail, sizeof P.detail, "%s", TR("没有检测到存储卡。插好后重新连接，不会自动格式化。")); draw();
+            }
+        }
         else show(P.usb ? USB_BUSY : WIRELESS);
         return;
     }
@@ -149,9 +157,9 @@ static void reply(void *ctx, const ink_receipt_t *rc) {
         P.active = active; P.received = received;
         snprintf(P.result, sizeof P.result, "%s", result); snprintf(P.code, sizeof P.code, "%s", code);
         snprintf(P.address, sizeof P.address, "%s", address);
-        snprintf(P.progress, sizeof P.progress, TR("已收到 %d 个，%lld 字节"), !strcmp(result, "文件已收到") ? 1 : 0, (long long)received);
+        snprintf(P.progress, sizeof P.progress, active ? TR("接收中，%lld 字节；尚未保存") : !strcmp(result, TR("文件已收到")) ? TR("已收到 1 个，%lld 字节") : TR("已接收 %lld 字节；未确认保存"), (long long)received);
         snprintf(P.title, sizeof P.title, "%.90s", active ? received > 0 ? TR("正在接收文件") : TR("等待传入") : result);
-        snprintf(P.detail, sizeof P.detail, "%s", active ? TR("只能放到‘传进来的’。关掉这页就断开。") : result);
+        snprintf(P.detail, sizeof P.detail, "%s", active ? TR("接收完成后保存到‘传进来的’。现在还不能打开。") : !strcmp(result, TR("文件已收到")) ? TR("已保存到‘传进来的’，可在文件中打开。") : result);
         if (changed) show(active && received > 0 ? LIVE : WIRELESS);
     }
     osal_free(j);

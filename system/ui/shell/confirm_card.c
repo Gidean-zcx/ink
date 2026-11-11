@@ -16,13 +16,15 @@
 #include "shell_card.h"
 #include "ink/ui_shell.h"
 
+enum { CONFIRM_TEXT_CAP = 512 };
 static struct {
     shell_card_t card;
     ink_confirm_view_t now;
     lv_obj_t *pad, *pager, *accept, *notice, *preview, *pin_dots;
     int head_h, preview_h, expired_h, expired_body_y;
     lv_timer_t *read_timer;
-    uint16_t starts[161]; /* At most one page per detail byte, plus the end. */
+    char text[CONFIRM_TEXT_CAP];
+    uint16_t starts[CONFIRM_TEXT_CAP + 1]; /* At most one page per byte, plus the end. */
     int page, pages;
     bool drawn, read, watching;
     bool expired;
@@ -60,16 +62,19 @@ static const char *answer_label(void) {
     const ink_cap_t *cap = ink_cap_find(C.now.cap);
     if (C.now.parent) return TR("输入密码");
     if (!strcmp(C.now.cap, "call.dial")) return TR("打电话");
-    if (!strcmp(C.now.cap, "settings.set")) return TR("确认修改");
-    if (!strcmp(C.now.cap, "sms.send") || !strcmp(C.now.cap, "sms.compose")) return TR("确认发送");
-    if (!strcmp(C.now.cap, "hub.confirm") && (strstr(C.now.title, "花钱") || strstr(C.now.title, "支付"))) return TR("确认支付");
-    return cap && cap->effect == INK_FX_LOCAL_DESTRUCTIVE ? TR("删除") : TR("确认");
+    if (!strcmp(C.now.cap, "settings.set")) return TR("修改设置");
+    if (!strcmp(C.now.cap, "sms.send") || !strcmp(C.now.cap, "sms.compose")) return TR("发送");
+    if (!strcmp(C.now.cap, "restore.apply")) return TR("恢复资料");
+    if (!strcmp(C.now.cap, "system.factory_reset")) return TR("清空设备");
+    if (!strcmp(C.now.cap, "usb.mount")) return TR("连接电脑");
+    if (!strcmp(C.now.cap, "hub.confirm") && (strstr(C.now.title, "花钱") || strstr(C.now.title, "支付"))) return TR("支付");
+    if (strstr(C.now.title, "填入")) return TR("允许填入");
+    return cap && cap->effect == INK_FX_LOCAL_DESTRUCTIVE ? TR("删除") : TR("继续操作");
 }
 
 static const char *title_text(void) {
-    if (!strcmp(C.now.cap, "call.dial")) return TR("这个电话不是你要打的");
     if (!strcmp(C.now.cap, "settings.set")) return TR("修改这项设置？");
-    return C.now.title;
+    return C.now.parent ? TR("需要大人确认") : answer_label();
 }
 
 static const char *notice_text(void) {
@@ -77,7 +82,7 @@ static const char *notice_text(void) {
     if (C.page + 1 != C.pages) return TR("请翻完说明，再决定是否继续。");
     if (C.now.parent) return TR("需要大人的密码确认。");
     if (!strcmp(C.now.cap, "call.dial")) return TR("不确认就不会打。");
-    if (!strcmp(C.now.cap, "settings.set")) return TR("1 分钟内有效。不确认就不会改。");
+    if (!strcmp(C.now.cap, "settings.set")) return TR("不确认就不会改。");
     if (!strcmp(C.now.cap, "hub.confirm")) return TR("不确认就不会继续。");
     return TR("只有你确认后才会继续。");
 }
@@ -164,7 +169,7 @@ static ink_ui_page_spec_t model(void) {
     snprintf(choices, sizeof choices, TR("%s、取消"), answer_label());
     fields[0] = (ink_ui_field_spec_t){.id = "transaction", .role = "status", .label = TR("确认编号"), .value = identity};
     fields[1] = (ink_ui_field_spec_t){.id = "title", .role = "text", .label = TR("标题"), .value = C.expired ? TR("这件事没有做") : title_text()};
-    fields[2] = (ink_ui_field_spec_t){.id = "detail", .role = "text", .label = TR("说明"), .value = C.expired ? lv_label_get_text(C.card.body) : C.now.detail};
+    fields[2] = (ink_ui_field_spec_t){.id = "detail", .role = "text", .label = TR("说明"), .value = C.expired ? lv_label_get_text(C.card.body) : C.text};
     fields[3] = (ink_ui_field_spec_t){.id = "notice", .role = "status", .label = TR("提示"), .value = C.pad ? TR("需要大人在设备上输入密码；密码内容不可见") : C.expired ? TR("已经过期，请重新发起") : notice_text()};
     fields[4] = (ink_ui_field_spec_t){.id = "reading", .role = "status", .label = TR("阅读"), .value = reading};
     fields[5] = (ink_ui_field_spec_t){.id = "buttons", .role = "button", .label = TR("本人操作"), .value = C.expired ? TR("关闭") : C.pad ? TR("取消") : choices};
@@ -251,7 +256,7 @@ static void fit_to_words(void) {
     int title_h = ink_ui_text_height(title_text(), INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, title_w);
     if (title_h > 2 * ink_ui_line_height(INK_FONT_SUBTITLE)) title_h = 2 * ink_ui_line_height(INK_FONT_SUBTITLE);
     int line = ink_ui_line_height(INK_FONT_BODY);
-    int words_h = ink_ui_text_height(C.now.detail, INK_FONT_BODY, INK_WEIGHT_REGULAR, INK_CANVAS_W - 4 * INK_MARGIN);
+    int words_h = ink_ui_text_height(C.text, INK_FONT_BODY, INK_WEIGHT_REGULAR, INK_CANVAS_W - 4 * INK_MARGIN);
     if (words_h > 3 * line) words_h = 3 * line;
     if (words_h < line) words_h = line;
     C.head_h = INK_MARGIN + (title_h > INK_CIRCLE_SMALL ? title_h : INK_CIRCLE_SMALL) + INK_GAP;
@@ -270,16 +275,16 @@ static void paginate(void) {
     const lv_font_t *font = lv_obj_get_style_text_font(C.card.body, LV_PART_MAIN);
     int letter = lv_obj_get_style_text_letter_space(C.card.body, LV_PART_MAIN);
     int line = lv_obj_get_style_text_line_space(C.card.body, LV_PART_MAIN);
-    size_t at = 0, len = strlen(C.now.detail);
+    size_t at = 0, len = strlen(C.text);
     C.page = C.pages = 0;
     C.starts[0] = 0;
     do {
         size_t end = at;
         while (end < len) {
             size_t next = end + 1;
-            while (next < len && (C.now.detail[next] & 0xc0) == 0x80) next++;
-            char text[sizeof C.now.detail];
-            snprintf(text, sizeof text, "%.*s", (int)(next - at), C.now.detail + at);
+            while (next < len && (C.text[next] & 0xc0) == 0x80) next++;
+            char text[sizeof C.text];
+            snprintf(text, sizeof text, "%.*s", (int)(next - at), C.text + at);
             lv_point_t size;
             lv_text_get_size(&size, text, font, letter, line, w, LV_TEXT_FLAG_NONE);
             if (size.y > h) break;
@@ -300,8 +305,8 @@ static void draw_page(void) {
     lv_obj_set_height(C.card.panel, ink_ui_px(height + INK_RADIUS_PANEL));
     lv_obj_set_y(C.card.row, ink_ui_px(height - INK_PRIMARY - INK_GAP_L));
     lv_obj_set_y(C.notice, ink_ui_px(notice_y()));
-    char text[sizeof C.now.detail];
-    if (C.pages) snprintf(text, sizeof text, "%.*s", C.starts[C.page + 1] - C.starts[C.page], C.now.detail + C.starts[C.page]);
+    char text[sizeof C.text];
+    if (C.pages) snprintf(text, sizeof text, "%.*s", C.starts[C.page + 1] - C.starts[C.page], C.text + C.starts[C.page]);
     else snprintf(text, sizeof text, TR("说明无法完整显示，请取消。"));
     C.drawn = C.read = false;
     lv_label_set_text(C.card.body, text);
@@ -330,6 +335,9 @@ static void show(const ink_confirm_view_t *top) { /* UI task */
         !strcmp(C.now.title, top->title) && !strcmp(C.now.detail, top->detail)) return;
     C.now = *top;
     ink_member_identity(&C.owner);
+    uint64_t now = osal_now_us(), seconds = top->expires_us > now ? (top->expires_us - now) / 1000000 : 0;
+    const char *source = top->src == INK_SRC_AI ? TR("AI") : top->src == INK_SRC_REMOTE ? TR("家庭服务器") : top->src == INK_SRC_APP ? TR("应用") : TR("本人操作");
+    snprintf(C.text, sizeof C.text, TR("以%s的身份\n来源：%s\n本次最多 %llu 秒有效，过期不执行。\n%s\n%s"), ink_member_current()->name, source, (unsigned long long)seconds, top->title, top->detail);
     if (C.pad) {
         lv_obj_delete(C.pad);
         C.pad = C.pin_dots = NULL;
@@ -354,14 +362,16 @@ static void show(const ink_confirm_view_t *top) { /* UI task */
         C.notice = ink_ui_notice(C.card.panel, "", 0);
     }
     fit_to_words();
-    shell_card_text(&C.card, title_text(), C.now.detail);
+    shell_card_text(&C.card, title_text(), C.text);
     shell_card_clear_buttons(&C.card);
-    shell_card_button(&C.card, answer_label(), on_answer, (void *)1);
-    C.accept = lv_obj_get_child(C.card.row, 0);
+    const ink_cap_t *cap = ink_cap_find(C.now.cap);
+    bool cancel_first = cap && (cap->effect == INK_FX_LOCAL_DESTRUCTIVE || !strcmp(C.now.cap, "system.factory_reset"));
+    shell_card_button(&C.card, cancel_first ? TR("取消") : answer_label(), on_answer, cancel_first ? NULL : (void *)1);
+    shell_card_button(&C.card, cancel_first ? answer_label() : TR("取消"), on_answer, cancel_first ? (void *)1 : NULL);
+    C.accept = lv_obj_get_child(C.card.row, cancel_first ? 1 : 0);
     lv_obj_add_event_cb(C.accept, read_pressed, LV_EVENT_PRESSED, NULL);
-    shell_card_button(&C.card, TR("取消"), on_answer, NULL);
-    lv_obj_add_event_cb(lv_obj_get_child(C.card.row, 1), pressed, LV_EVENT_PRESSED, NULL);
-    lv_obj_set_flex_flow(C.card.row, LV_FLEX_FLOW_ROW_REVERSE);
+    lv_obj_add_event_cb(lv_obj_get_child(C.card.row, cancel_first ? 0 : 1), pressed, LV_EVENT_PRESSED, NULL);
+    lv_obj_set_flex_flow(C.card.row, cancel_first ? LV_FLEX_FLOW_ROW : LV_FLEX_FLOW_ROW_REVERSE);
     paginate();
     draw_page();
 }

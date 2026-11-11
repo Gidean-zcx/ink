@@ -23,6 +23,7 @@ static void fx_usb_busy(void) {
     ink_receipt_t rc = {.status = INK_RC_FAILED};
     snprintf(rc.detail, sizeof rc.detail, "busy"); reply((void *)(uintptr_t)P.generation, &rc);
     if (P.timer) lv_timer_pause(P.timer);
+    P.pending = false;
 }
 static void run(void *arg) {
     (void)arg; fx_start(); on_ui(fx_open); fx_capture("idle");
