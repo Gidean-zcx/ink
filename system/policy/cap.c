@@ -27,7 +27,7 @@
 #include "ink/sys/sha256.h"
 #include "ink/sys/storage.h"
 
-#define MAX_CAPS 512 /* pointers in PSRAM; 256 filled up on 2026-11-09 as the system apps arrived */
+#define MAX_CAPS 1024 /* pointers in PSRAM (4 KB); 256 filled up on 2026-11-09, 512 on 2026-11-12 (489 registered plus a test's 25 temporary ones) */
 
 static const ink_cap_t *REG[MAX_CAPS] INK_PSRAM_BSS;
 static int nreg;

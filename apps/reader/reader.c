@@ -33,6 +33,7 @@
 #include "ink/sys/ui.h"
 
 #include <reader_source.h>
+#include <bookmarks.h>
 #include <ink/ui_theme.h>
 #include "ink/sys/ui_list.h"
 #include "ink/sys/json.h"
@@ -47,11 +48,13 @@ typedef struct {
     char name[96];
     char path[160];
     char key[96];
+    bool unread;
 } book_t;
 
 static struct {
     book_t *books;
     int nbooks;
+    char member[16];
     int open; /* index of the open book */
 } LIB INK_PSRAM_BSS;
 
@@ -77,7 +80,7 @@ static struct {
     int shown;         /* buffer on screen (-1 none) */
     bool show_pending; /* `page` is not on screen yet: rendered and shown in book_settle */
     lv_image_dsc_t dsc;
-    lv_obj_t *img, *footer[READER_CHOICES], *title, *menu, *font_value, *presets[READER_PRESET_ROWS][READER_CHOICES], *toggles[READER_CHOICES];
+    lv_obj_t *mark, *img, *footer[READER_CHOICES], *title, *menu, *font_value, *presets[READER_PRESET_ROWS][READER_CHOICES], *toggles[READER_CHOICES];
     int applied[READER_LAYOUT_COUNT], menu_view;
     uint64_t anchor;
     lv_timer_t *ahead_timer, *save_timer;
@@ -90,6 +93,12 @@ static void reader_footer(void);
 static void act_layout(ink_call_t *c);
 static void act_menu(ink_call_t *c);
 static void restore_anchor(void);
+static void act_bookmarks(ink_call_t *c);
+static void act_bookmark(ink_call_t *c);
+static uint32_t page_bookmark(void);
+static void menu_close(void);
+static const ink_activity_t BOOKMARKS;
+static ink_bookmark_t MARK INK_PSRAM_BSS;
 static const char *source_error(ink_reader_error_t error);
 static void book_object(ink_receipt_t *rc, const char *name, const char *suffix) {
     size_t tail=strlen(suffix), limit=sizeof rc->object-6;
@@ -172,7 +181,13 @@ static void last_save(const char *member, const char *book, int page) {
 
 static void scan_library(void) {
     LIB.nbooks = 0;
-    ink_dir_t *d = ink_dir_open("/content/books");
+    snprintf(LIB.member,sizeof LIB.member,"%s",ink_member_current()->id);
+    char root[128], personal[96];
+    for (int inbox=0;inbox<2;inbox++) {
+    if (inbox) { if (ink_layout_member_files(personal,sizeof personal,LIB.member)<0) continue;
+        snprintf(root,sizeof root,"%s/%s",personal,TR_NOOP("收件箱")); }
+    else snprintf(root,sizeof root,"/content/books");
+    ink_dir_t *d = ink_dir_open(root);
     char name[128]; bool is_dir;
     while (d && ink_dir_next(d, name, sizeof name, &is_dir) == 1) {
         char *dot = strrchr(name, '.');
@@ -185,7 +200,10 @@ static void scan_library(void) {
         book_t *book = &LIB.books[LIB.nbooks++];
         snprintf(book->name, sizeof book->name, "%.*s", (int)(dot-name), name);
         snprintf(book->key, sizeof book->key, "%.*s", epub ? (int)strlen(name) : (int)(dot-name), name);
-        snprintf(book->path, sizeof book->path, "/content/books/%s", name);
+        if (inbox) snprintf(book->key,sizeof book->key,"inbox/%.89s",name);
+        int path_length=snprintf(book->path,sizeof book->path,"%s/%s",root,name);
+        if (path_length<0 || (size_t)path_length>=sizeof book->path) { LIB.nbooks--; continue; }
+        book->unread=inbox;
         if (epub) {
             ink_reader_source_t *source = NULL; ink_reader_info_t info;
             if (ink_reader_source_open(book->path, &source, &info) == INK_READER_OK) snprintf(book->name,sizeof book->name,"%.95s",info.title);
@@ -193,6 +211,7 @@ static void scan_library(void) {
         }
     }
     ink_dir_close(d);
+    }
     for (int i = 0; i < LIB.nbooks; i++)
         for (int j = i + 1; j < LIB.nbooks; j++)
             if (strcmp(LIB.books[j].name, LIB.books[i].name) < 0) {
@@ -200,6 +219,7 @@ static void scan_library(void) {
             }
     for (int i = 0; i < LIB.nbooks; i++) {
         char pos[200]; pos_path(pos,sizeof pos,ink_member_current()->id,LIB.books[i].key); ink_storage_prefetch(pos);
+        char data[96]; LIB.books[i].unread=LIB.books[i].unread && ink_storage_read(pos,data,sizeof data)<=0;
     }
 }
 
@@ -211,13 +231,39 @@ static struct {
     ink_reader_source_t *source;
     ink_reader_info_t info;
     char ids[LIST_ROWS][96], args[LIST_ROWS][640], titles[LIST_ROWS][128], values[LIST_ROWS][64];
-    char member[16]; bool toc;
+    char member[16]; bool toc, bookmarks;
 } LIST;
 _Static_assert(LIST_ROWS <= 16,"list capacity exceeds the shared component");
 static void command(lv_event_t *e) {
     ink_receipt_t rc; ink_cap_invoke(lv_event_get_user_data(e),NULL,INK_SRC_TOUCH,0,&rc);
 }
+static void remove_bookmark_touch(lv_event_t *e) {
+    ink_receipt_t rc; ink_cap_invoke_json("reader.remove_bookmark",lv_event_get_user_data(e),INK_SRC_TOUCH,0,&rc);
+}
+static void bookmark_label(char *out,size_t cap,const ink_bookmark_t *entry) {
+    char title[128]={0}; ink_reader_entry_t chapter;
+    ink_reader_info_t *info=book_ready() ? &RD.info : &LIST.info; ink_reader_source_t *source=book_ready() ? RD.source : LIST.source;
+    for (int i=0;i<info->entries;i++) if (!ink_reader_source_toc(source,i,&chapter) && chapter.chapter==(int)entry->start.chapter && (info->epub || chapter.offset<=entry->start.offset)) { snprintf(title,sizeof title,"%s",chapter.title); if (info->epub) break; }
+    ink_tm_t tm; ink_time_to_local(entry->added_at,&tm);
+    snprintf(out,cap,"%04d-%02d-%02d %02d:%02d · %.90s",tm.year,tm.month,tm.day,tm.hour,tm.min,title[0] ? title : LIB.books[LIB.open].name);
+}
+static void bind_bookmark(lv_obj_t *slot,size_t index,ink_ui_field_spec_t *field,ink_ui_action_spec_t *action) {
+    unsigned row=(unsigned)(index%LIST_ROWS); ink_bookmarks_get((int)index,&MARK);
+    snprintf(LIST.ids[row],sizeof LIST.ids[row],"bookmark:%u",(unsigned)MARK.id);
+    snprintf(LIST.args[row],sizeof LIST.args[row],"{\"id\":%u}",(unsigned)MARK.id); bookmark_label(LIST.titles[row],sizeof LIST.titles[row],&MARK);
+    int delete_w=ink_ui_text_width(TR("删除"),INK_FONT_LIST,INK_WEIGHT_MEDIUM)+2*INK_GAP;
+    int width=INK_CANVAS_W-2*INK_MARGIN-2*INK_GAP-delete_w;
+    if (!lv_obj_get_child_count(slot)) {
+        for (int line=0;line<3;line++) ink_ui_line(slot,"",INK_FONT_NOTE,line==1 ? INK_WEIGHT_MEDIUM : INK_WEIGHT_REGULAR,INK_GAP,INK_GAP_S+line*ink_ui_line_height(INK_FONT_NOTE),width);
+        ink_ui_pill(slot,TR("删除"),INK_CANVAS_W-2*INK_MARGIN-delete_w-INK_GAP,INK_GAP_S,delete_w,INK_CONTROL,false,remove_bookmark_touch,LIST.args[row]);
+    }
+    memcpy(LIST.values[row],LIST.titles[row],16); LIST.values[row][16]=0; const char *chapter=strstr(LIST.titles[row]," · ");
+    lv_label_set_text(lv_obj_get_child(slot,0),LIST.values[row]); lv_label_set_text(lv_obj_get_child(slot,1),chapter ? chapter+strlen(" · ") : LIST.titles[row]); lv_label_set_text(lv_obj_get_child(slot,2),MARK.excerpt);
+    *field=(ink_ui_field_spec_t){.id=LIST.ids[row],.role="bookmark",.label=LIST.titles[row],.value=lv_label_get_text(lv_obj_get_child(slot,2)),.object={LIST.ids[row],ink_member_epoch()}};
+    *action=(ink_ui_action_spec_t){.id=LIST.ids[row],.label=TR("打开"),.capability="reader.goto_bookmark",.args_json=LIST.args[row],.object=field->object,.enabled=true};
+}
 static void bind_row(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, ink_ui_action_spec_t *action, void *ctx) {
+    if (LIST.bookmarks) { bind_bookmark(slot,index,field,action); return; }
     (void)ctx; unsigned row = (unsigned)(index % LIST_ROWS); ink_reader_entry_t entry = {0};
     if (LIST.toc) ink_reader_source_toc(LIST.source,(int)index,&entry);
     snprintf(LIST.titles[row],sizeof LIST.titles[row],"%s",LIST.toc ? entry.title : LIB.books[index].name);
@@ -234,7 +280,7 @@ static void bind_row(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, i
         ink_ui_line(slot,"",INK_FONT_NOTE,INK_WEIGHT_REGULAR,INK_CANVAS_W/2,INK_GAP_L,INK_CANVAS_W/2-2*INK_MARGIN-INK_GAP);
     }
     lv_label_set_text(lv_obj_get_child(slot,0),LIST.titles[row]);
-    const char *note = "";
+    const char *note = !LIST.toc && LIB.books[index].unread ? TR("新") : "";
     if (!LIST.toc && !strcmp(LAST.book,LIB.books[index].name) && !strcmp(LAST.member,ink_member_current()->id)) {
         snprintf(LIST.values[row],sizeof LIST.values[row],TR("第 %d 页"),LAST.page); note=LIST.values[row];
     }
@@ -248,13 +294,14 @@ static void bind_row(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, i
     *action = (ink_ui_action_spec_t){.id=LIST.ids[row],.label=TR("打开"),.capability=LIST.toc ? "reader.goto_chapter" : "reader.open_book",.args_json=LIST.args[row],.object=field->object,.enabled=true};
 }
 static void list_create(lv_obj_t *scr, void *arg) {
-    LIST.toc = arg != NULL; LIST.view = NULL;
+    LIST.bookmarks=arg==(void *)2; LIST.toc=arg==(void *)1; LIST.view = NULL;
     const char *member = ink_member_current()->id;
-    if (strcmp(LIST.member,member) || LIST.toc) memset(&LIST.position,0,sizeof LIST.position);
+    if (strcmp(LIST.member,member) || arg) memset(&LIST.position,0,sizeof LIST.position);
     snprintf(LIST.member,sizeof LIST.member,"%s",member);
-    if (LIST.toc) ink_reader_source_open(LIB.books[LIB.open].path,&LIST.source,&LIST.info);
+    if (LIST.bookmarks) ink_bookmarks_open(member,LIB.books[LIB.open].path);
+    if (arg) ink_reader_source_open(LIB.books[LIB.open].path,&LIST.source,&LIST.info);
     else scan_library();
-    const char *title = LIST.toc ? TR("目录") : TR("书架");
+    const char *title = LIST.bookmarks ? TR("书签") : LIST.toc ? TR("目录") : TR("书架");
     ink_ui_circle(scr,"back",INK_MARGIN,INK_STATUS_BAR,INK_CONTROL,INK_ICON_MEDIUM,INK_SURFACE_WHITE,command,"shell.back");
     ink_ui_line(scr,title,INK_FONT_TITLE,INK_WEIGHT_BOLD,INK_MARGIN+INK_CONTROL+INK_GAP,INK_STATUS_BAR+INK_GAP_S,INK_CANVAS_W-2*INK_MARGIN-INK_CONTROL-INK_GAP);
     int y = INK_STATUS_BAR + INK_CONTROL + INK_GAP_XS;
@@ -264,12 +311,12 @@ static void list_create(lv_obj_t *scr, void *arg) {
     ink_ui_action_spec_t actions[] = {{.id="prev",.label=TR("上一页"),.capability="reader.list_prev"},{.id="next",.label=TR("下一页"),.capability="reader.list_next"},
         {.id="files",.label=TR("文件"),.capability="app.open",.args_json="{\"id\":\"files\"}",.enabled=true}};
     _Static_assert(sizeof actions/sizeof actions[0] <= LIST_ROWS,"page actions exceed row storage");
-    ink_ui_page_spec_t page = {.id=LIST.toc ? "chapters" : "reader",.title=title,.object={"reader",ink_member_epoch()},.actions=actions,.action_count=LIST.toc ? 2 : 3};
-    LIST.view = ink_ui_list_create(body,&page,&LIST.position,LIST_ROWS,1,INK_CONTROL,LIST.toc ? TR("没有目录，按章节阅读") : TR("还没有书，请先从文件传入 TXT 或 EPUB"),bind_row,NULL);
-    ink_ui_list_refresh(LIST.view,LIST.toc ? (size_t)LIST.info.entries : (size_t)LIB.nbooks);
+    ink_ui_page_spec_t page = {.id=LIST.bookmarks ? "bookmarks" : LIST.toc ? "chapters" : "reader",.title=title,.object={"reader",ink_member_epoch()},.actions=actions,.action_count=arg ? 2 : 3};
+    LIST.view = ink_ui_list_create(body,&page,&LIST.position,LIST_ROWS,1,LIST.bookmarks ? 3*ink_ui_line_height(INK_FONT_NOTE)+INK_GAP_L : INK_CONTROL,LIST.bookmarks ? TR("还没有书签") : LIST.toc ? TR("没有目录，按章节阅读") : TR("还没有书，请先从文件传入 TXT 或 EPUB"),bind_row,NULL);
+    ink_ui_list_refresh(LIST.view,LIST.bookmarks ? (size_t)ink_bookmarks_count() : LIST.toc ? (size_t)LIST.info.entries : (size_t)LIB.nbooks);
     if (LIST.toc && LIST.info.fallback) ink_ui_notice(scr,TR("没有目录，按章节阅读"),INK_STATUS_BAR+INK_PRIMARY);
 }
-static void list_destroy(void) { ink_reader_source_close(LIST.source); LIST.source=NULL; LIST.view=NULL; }
+static void list_destroy(void) { if (LIST.bookmarks) ink_bookmarks_close(); LIST.bookmarks=false; ink_reader_source_close(LIST.source); LIST.source=NULL; LIST.view=NULL; }
 static int list_snapshot(char *out, size_t cap) {
     int n=LIST.view ? ink_ui_list_snapshot(LIST.view,out,cap) : 0;
     if (n <= 0 || !LIST.toc) return n;
@@ -283,6 +330,8 @@ static bool list_key(ink_key_t key, bool lng) { return LIST.view && ink_ui_list_
 static void library_create(lv_obj_t *scr, void *arg) { (void)arg; list_create(scr,NULL); }
 static void toc_create(lv_obj_t *scr, void *arg) { (void)arg; list_create(scr,(void *)1); }
 const ink_activity_t ink_app_reader = {.name="reader",.app="reader",.create=library_create,.destroy=list_destroy,.snapshot=list_snapshot,.on_key=list_key};
+static void bookmarks_create(lv_obj_t *scr,void *arg) { (void)arg; list_create(scr,(void *)2); }
+static const ink_activity_t BOOKMARKS={.name="bookmarks",.app="reader",.create=bookmarks_create,.destroy=list_destroy,.snapshot=list_snapshot,.on_key=list_key};
 static const ink_activity_t CHAPTERS = {.name="chapters",.app="reader",.create=toc_create,.destroy=list_destroy,.snapshot=list_snapshot,.on_key=list_key};
 static void act_list_turn(ink_call_t *c) {
     if (!LIST.view || !ink_ui_list_turn(LIST.view,strstr(c->cap->id,"next") ? 1 : -1)) c->rc.status=INK_RC_FAILED;
@@ -290,7 +339,7 @@ static void act_list_turn(ink_call_t *c) {
 
 static void act_list(ink_call_t *c) {
     ink_receipt_t *rc = &c->rc;
-    if (!LIB.nbooks) scan_library();
+    if (!LIB.nbooks || strcmp(LIB.member,ink_member_current()->id)) scan_library();
     size_t n = (size_t)snprintf(rc->say, sizeof rc->say, TR("书架上有："));
     for (int i = 0; i < LIB.nbooks && n < sizeof rc->say; i++)
         n += (size_t)snprintf(rc->say + n, sizeof rc->say - n, "%s%s", i ? "、" : "", LIB.books[i].name);
@@ -306,6 +355,7 @@ static void act_sample(ink_call_t *c) {
     snprintf(LIB.books[LIB.nbooks].name,sizeof LIB.books[LIB.nbooks].name,TR("夜邮（示例）"));
     snprintf(LIB.books[LIB.nbooks].key,sizeof LIB.books[LIB.nbooks].key,TR_NOOP("夜邮（示例）"));
     snprintf(LIB.books[LIB.nbooks].path,sizeof LIB.books[LIB.nbooks].path,"sample/welcome.txt");
+    LIB.books[LIB.nbooks].unread=false;
     ink_ui_push(&ink_app_book,(void *)(intptr_t)LIB.nbooks);
     snprintf(c->rc.object, sizeof c->rc.object, "book:sample");
 }
@@ -315,11 +365,12 @@ static void act_continue(ink_call_t *c) {
     ink_receipt_t *rc = &c->rc;
     char book[96];
     int page;
-    scan_library();
+    if (!book_ready()) scan_library();
     bool have = last_book(book, sizeof book, &page, NULL);
+    const char *key=book_ready() ? LIB.books[LIB.open].key : LAST.file;
     if (have && !strcmp(book, "夜邮（示例）")) { act_sample(c); return; }
     for (int i = 0; have && i < LIB.nbooks; i++)
-        if (!strcmp(LIB.books[i].name, book)) {
+        if (key[0] ? !strcmp(LIB.books[i].key,key) : !strcmp(LIB.books[i].name, book)) {
             ink_ui_push(&ink_app_book, (void *)(intptr_t)i);
             book_object(rc,LIB.books[i].name,"");
             snprintf(rc->say, sizeof rc->say, TR("接着读《%s》"), LIB.books[i].name);
@@ -333,7 +384,7 @@ static void act_open(ink_call_t *c) {
     ink_receipt_t *rc = &c->rc;
     char title[96] = {0};
     ink_args_get_str(&c->args, "title", title, sizeof title); /* required by the schema */
-    if (!LIB.nbooks) scan_library();
+    if (!LIB.nbooks || strcmp(LIB.member,ink_member_current()->id)) scan_library();
     int64_t index = -1; ink_args_get_int(&c->args,"index",&index);
     for (int i = 0; i < LIB.nbooks; i++)
         if (index >= 0 ? i == index : (title[0] && (strstr(LIB.books[i].name, title) || strstr(title, LIB.books[i].name)))) {
@@ -548,6 +599,10 @@ static void act_chapters(ink_call_t *c);
 static void act_chapter(ink_call_t *c);
 static void act_toc(ink_call_t *c) { (void)c; ink_ui_push(&CHAPTERS,NULL); }
 static const ink_cap_t BOOK_ACTIONS[] = {
+    {.id="reader.bookmarks",.app="reader",.title="列出书签",.effect=INK_FX_READ,.child_ok=true,.run=act_bookmarks,.input="{\"type\":\"object\",\"additionalProperties\":false,\"properties\":{\"open\":{\"type\":\"boolean\"}}}"},
+    {.id="reader.add_bookmark",.app="reader",.title="加书签",.effect=INK_FX_LOCAL_WRITE,.child_ok=true,.activity="book",.run=act_bookmark},
+    {.id="reader.remove_bookmark",.app="reader",.title="删书签",.effect=INK_FX_LOCAL_WRITE,.child_ok=true,.run=act_bookmark,.input="{\"type\":\"object\",\"additionalProperties\":false,\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1}}}"},
+    {.id="reader.goto_bookmark",.app="reader",.title="跳到书签",.effect=INK_FX_NAVIGATE,.child_ok=true,.run=act_bookmark,.input="{\"type\":\"object\",\"additionalProperties\":false,\"properties\":{\"id\":{\"type\":\"integer\",\"minimum\":1}},\"required\":[\"id\"]}"},
     {.id="reader.get_layout",.app="reader",.title="查看阅读排版",.effect=INK_FX_READ,.child_ok=true,.run=act_layout},
     {.id="reader.set_layout",.app="reader",.title="修改阅读排版",.effect=INK_FX_LOCAL_WRITE,.child_ok=true,.run=act_layout,
      .input="{\"type\":\"object\",\"additionalProperties\":false,\"properties\":{\"font_size\":{\"type\":\"integer\",\"enum\":[36,44,53,72]},\"line_spacing\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":3},\"paragraph_spacing\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":3},\"margins\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":3},\"footer_mask\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":15}}}"},
@@ -705,6 +760,66 @@ static void act_chapter(ink_call_t *c) {
     if (book_ready()) page_receipt(&c->rc);
 }
 
+static bool bookmark_range(ink_reader_position_t *first,ink_reader_position_t *end) {
+    if (!book_ready()) return false;
+    uint64_t a=RD.chunk+RD.starts[RD.page]; int next=find_page_start(RD.page+1);
+    uint64_t b=RD.chunk+(next>=0 ? (uint64_t)next : RD.len);
+    *first=(ink_reader_position_t){.chapter=(uint32_t)RD.chapter}; *end=*first;
+    return ink_reader_locate(RD.source,first,&a,true) && ink_reader_locate(RD.source,end,&b,true);
+}
+static uint32_t page_bookmark(void) {
+    ink_reader_position_t first,end;
+    return ink_bookmarks_count() && bookmark_range(&first,&end) ? ink_bookmarks_in_page(first,end) : 0;
+}
+static void act_bookmarks(ink_call_t *c) {
+    if (!LIST.bookmarks && not_open(&c->rc)) return;
+    bool open=false; ink_args_get_bool(&c->args,"open",&open);
+    if (open && !LIST.bookmarks) { ink_ui_push(&BOOKMARKS,NULL); return; }
+    size_t cap=64;
+    for (int i=0;ink_bookmarks_get(i,&MARK);i++) cap+=strlen(MARK.excerpt)*6+1024;
+    char *json=ink_app_alloc(cap,true); if (!json) { c->rc.status=INK_RC_FAILED; return; }
+    ink_jw_t w; ink_jw_init(&w,json,cap); ink_jw_raw(&w,"{\"bookmarks\":[");
+    for (int i=0;ink_bookmarks_get(i,&MARK);i++) {
+        if (i) ink_jw_raw(&w,",");
+        char numeric[256]; snprintf(numeric,sizeof numeric,"{\"id\":%u,\"chapter\":%u,\"block\":%u,\"offset\":%u,\"added_at\":%lld,\"excerpt\":",(unsigned)MARK.id,(unsigned)MARK.start.chapter+1,(unsigned)MARK.start.block,(unsigned)MARK.start.offset,(long long)MARK.added_at);
+        ink_jw_raw(&w,numeric); ink_jw_str(&w,MARK.excerpt);
+        char label[128]; bookmark_label(label,sizeof label,&MARK); ink_jw_raw(&w,",\"label\":"); ink_jw_str(&w,label); ink_jw_raw(&w,"}");
+    }
+    ink_jw_raw(&w,"]}"); if (w.overflow) c->rc.status=INK_RC_FAILED;
+    else ink_cap_result(c,json);
+    ink_app_free(json);
+}
+static void act_bookmark(ink_call_t *c) {
+    if (!LIST.bookmarks && not_open(&c->rc)) return;
+    bool add=!strcmp(c->cap->id,"reader.add_bookmark"), remove=!strcmp(c->cap->id,"reader.remove_bookmark");
+    int64_t id=0; ink_args_get_int(&c->args,"id",&id); if (!id && !LIST.bookmarks) id=page_bookmark();
+    bool found=false;
+    for (int i=0;ink_bookmarks_get(i,&MARK);i++) if (MARK.id==id) { found=true; break; }
+    bool ok=false;
+    if (add && id) ok=true;
+    else if (add) {
+        memset(&MARK,0,sizeof MARK); MARK.page=(uint32_t)(RD.page_base+RD.page); MARK.added_at=ink_time_now_s();
+        if (bookmark_range(&MARK.start,&MARK.end)) {
+            size_t start=RD.starts[RD.page], end=RD.page+1<RD.nstarts ? RD.starts[RD.page+1] : RD.len;
+            size_t n=end-start; if (n>INK_BOOKMARK_EXCERPT) n=INK_BOOKMARK_EXCERPT;
+            while (n && ((unsigned char)RD.text[start+n]&0xc0)==0x80) n--;
+            memcpy(MARK.excerpt,RD.text+start,n); MARK.excerpt[n]=0; char *line=strchr(MARK.excerpt,'\n'); if (line) *line=0;
+            ok=ink_bookmarks_add(&MARK);
+        }
+    } else if (found && remove) ok=ink_bookmarks_remove(MARK.id);
+    else if (found) {
+        uint64_t offset=0; ink_reader_source_t *source=LIST.bookmarks ? LIST.source : RD.source;
+        if (ink_reader_locate(source,&MARK.start,&offset,false)) {
+            if (LIST.bookmarks) { JUMP.chapter=(int)MARK.start.chapter; JUMP.offset=offset; JUMP.pending=true; ink_ui_pop(); ok=book_ready(); }
+            else if (!RD.info.epub || section_at((int)MARK.start.chapter,offset)) { RD.anchor=offset; restore_anchor(); ok=go_to(RD.page); }
+        }
+    }
+    if (!ok) { c->rc.status=INK_RC_FAILED; snprintf(c->rc.say,sizeof c->rc.say,"%s",TR("书签操作失败，请稍后再试")); return; }
+    if (remove || add) { if (LIST.bookmarks) ink_ui_list_refresh(LIST.view,(size_t)ink_bookmarks_count());
+        else { reader_footer(); menu_close(); } }
+    ink_ui_content_changed();
+}
+
 static bool load_text(const char *path) {
     if (strstr(path,".epub")) {
         if (!ensure_source()) return false;
@@ -761,6 +876,8 @@ static int layout_json(char *out, size_t cap) {
 }
 static void reader_footer(void) {
     if (!RD.footer[0]) return;
+    if (RD.mark) { if (page_bookmark()) lv_obj_remove_flag(RD.mark,LV_OBJ_FLAG_HIDDEN);
+        else lv_obj_add_flag(RD.mark,LV_OBJ_FLAG_HIDDEN); }
     int mask=layout_value(4); char text[READER_CHOICES][160]={{0}};
     _Static_assert(sizeof text/sizeof *text == READER_CHOICES,"footer rows fit");
     if (!RD.info.epub && RD.source) for (int i=0;i<RD.info.entries;i++) {
@@ -883,6 +1000,7 @@ static void menu_blank(lv_event_t *e) {
 }
 static void menu_choice(lv_event_t *e) {
     int choice=(int)(intptr_t)lv_event_get_user_data(e); ink_receipt_t rc;
+    if (choice>=5) { ink_cap_invoke_json(choice==5 ? (page_bookmark() ? "reader.remove_bookmark" : "reader.add_bookmark") : "reader.bookmarks",choice==5 ? NULL : "{\"open\":true}",INK_SRC_TOUCH,0,&rc); menu_close(); return; }
     static const char *const caps[]={"reader.show_chapters","reader.menu","reader.menu","reader.menu","reader.menu"};
     static const char *const args[]={NULL,"{\"view\":\"settings\"}","{\"view\":\"shelf\"}","{\"view\":\"page\"}","{\"view\":\"chapter\"}"};
     _Static_assert(sizeof caps/sizeof *caps == READER_LAYOUT_COUNT && sizeof args/sizeof *args == READER_LAYOUT_COUNT,"menu actions fit");
@@ -905,7 +1023,7 @@ static void act_menu(ink_call_t *c) {
     ink_args_get_bool(&c->args,"open",&open); menu_close();
     if (!open) { ink_ui_content_changed(); return; }
     RD.menu_view=!strcmp(view,"settings") ? 1 : !strcmp(view,"page") ? 2 : !strcmp(view,"chapter") ? 3 : 0;
-    RD.menu=ink_ui_panel(lv_obj_get_parent(RD.img),RD.menu_view==1 ? 1000 : RD.menu_view>=2 ? INK_CANVAS_H : 700,true);
+    RD.menu=ink_ui_panel(lv_obj_get_parent(RD.img),RD.menu_view==1 ? 1000 : RD.menu_view>=2 ? INK_CANVAS_H : 7*(INK_CONTROL+INK_GAP_S)+INK_CONTROL+INK_GAP_L,true);
     lv_obj_add_flag(RD.menu,LV_OBJ_FLAG_CLICKABLE); lv_obj_add_event_cb(RD.menu,menu_blank,LV_EVENT_CLICKED,NULL);
     ink_ui_line(RD.menu,RD.menu_view==1 ? TR("阅读设置") : RD.menu_view==2 ? TR("跳到第几页") : RD.menu_view==3 ? TR("跳到第几章") : TR("阅读菜单"),INK_FONT_SUBTITLE,INK_WEIGHT_BOLD,INK_MARGIN,INK_GAP_L,INK_CANVAS_W-2*INK_MARGIN-INK_CONTROL);
     ink_ui_circle(RD.menu,"close",INK_CANVAS_W-INK_MARGIN-INK_CONTROL,0,INK_CONTROL,INK_ICON_MEDIUM,INK_SURFACE_WHITE,menu_blank,NULL);
@@ -913,7 +1031,7 @@ static void act_menu(ink_call_t *c) {
     if (!RD.menu_view) {
         static const char *const labels[]={TR_NOOP("目录"),TR_NOOP("阅读设置"),TR_NOOP("返回书架"),TR_NOOP("跳到第几页"),TR_NOOP("跳到第几章")};
         _Static_assert(sizeof labels/sizeof *labels == READER_LAYOUT_COUNT,"menu labels fit");
-        for (int i=0;i<READER_LAYOUT_COUNT;i++) ink_ui_pill(RD.menu,TR(labels[i]),INK_MARGIN,y+i*(INK_CONTROL+INK_GAP_S),w,INK_CONTROL,false,menu_choice,(void *)(intptr_t)i);
+        for (int i=0;i<7;i++) ink_ui_pill(RD.menu,i==5 ? (page_bookmark() ? TR("删书签") : TR("加书签")) : i==6 ? TR("书签") : TR(labels[i]),INK_MARGIN,y+i*(INK_CONTROL+INK_GAP_S),w,INK_CONTROL,false,menu_choice,(void *)(intptr_t)i);
     } else if (RD.menu_view==1) {
         RD.font_value=ink_ui_line(RD.menu,"",INK_FONT_LIST,INK_WEIGHT_MEDIUM,INK_MARGIN+INK_CONTROL,y+INK_GAP_L,w-2*INK_CONTROL);
         for (int i=0;i<2;i++) ink_ui_circle(RD.menu,i ? "plus" : "minus",i ? INK_CANVAS_W-INK_MARGIN-INK_CONTROL : INK_MARGIN,y,INK_CONTROL,INK_ICON_MEDIUM,INK_SURFACE_WHITE,layout_pick,(void *)(intptr_t)(16+i));
@@ -950,6 +1068,9 @@ static int book_ui_snapshot(char *out, size_t cap) {
         (unsigned long long)(book_ready() ? RD.chunk+RD.starts[RD.page] : 0),(unsigned long long)(book_ready() ? RD.chunk+(RD.page+1<RD.nstarts ? RD.starts[RD.page+1] : RD.len) : 0));
     if (n<0 || (size_t)n>=cap) return -1;
     int f=snprintf(out+n,cap-(size_t)n,"footer_chapter=%s\nfooter_progress=%s\nfooter_battery=%s\nfooter_time=%s\n",RD.footer[0] ? lv_label_get_text(RD.footer[0]) : "",RD.footer[1] ? lv_label_get_text(RD.footer[1]) : "",RD.footer[2] ? lv_label_get_text(RD.footer[2]) : "",RD.footer[3] ? lv_label_get_text(RD.footer[3]) : "");
+    if (f<0 || (size_t)f>=cap-(size_t)n) return -1;
+    n+=f;
+    f=snprintf(out+n,cap-(size_t)n,"bookmark=%s\nreader.bookmarks reader.add_bookmark reader.remove_bookmark reader.goto_bookmark\n",page_bookmark() ? "true" : "false");
     if (f<0 || (size_t)f>=cap-(size_t)n) return -1;
     n+=f;
     return n+book_snapshot(out+n,cap-(size_t)n);
@@ -1005,6 +1126,9 @@ static void book_create(lv_obj_t *scr, void *arg) {
     lv_obj_align(RD.title, LV_ALIGN_TOP_MID, 0, ink_dp(6));
     lv_obj_add_flag(RD.title,LV_OBJ_FLAG_CLICKABLE); lv_obj_add_event_cb(RD.title,command,LV_EVENT_CLICKED,"reader.show_chapters");
 
+    ink_bookmarks_open(RD.member,LIB.books[LIB.open].path);
+    if (LIB.books[LIB.open].unread) { RD.dirty_pos=true; RD.dirty_since_us=ink_now_us(); LIB.books[LIB.open].unread=false; }
+    RD.mark=ink_ui_icon(scr,"bookmark",INK_ICON_SMALL,INK_ICON_LINE,INK_CANVAS_W-INK_MARGIN-INK_ICON_SMALL,INK_GAP_S,false);
     RD.img = lv_image_create(scr);
     const struct BookMarginPreset *m=&kMarginTable[layout_value(3)];
     lv_obj_set_pos(RD.img,m->left,lv_font_get_line_height(ink_ui_font(2))+2*ink_dp(6)+m->top);
@@ -1032,6 +1156,7 @@ static void book_create(lv_obj_t *scr, void *arg) {
 
 static void book_destroy(void) {
     menu_close();
+    ink_bookmarks_close();
     if (RD.save_timer) save_cb(NULL); /* queued; written when the panel is idle */
     if (RD.ahead_timer) lv_timer_delete(RD.ahead_timer);
     if (RD.save_timer) lv_timer_delete(RD.save_timer);
@@ -1080,7 +1205,11 @@ static bool last_book(char *book, size_t cap, int *page, int *percent) {
     last_load(member);
     char path[160];
     if (strcmp(LAST.member, member)) return false; /* still being read */
-    if (strstr(LAST.file,".epub")) snprintf(path,sizeof path,"/content/books/%.95s",LAST.file);
+    if (!strncmp(LAST.file,"inbox/",6)) { char root[96];
+        if (ink_layout_member_files(root,sizeof root,member)<0) return false;
+        int n=snprintf(path,sizeof path,"%s/%s/%.89s",root,TR_NOOP("收件箱"),LAST.file+6); if (n<0 || (size_t)n>=sizeof path) return false;
+    }
+    else if (strstr(LAST.file,".epub")) snprintf(path,sizeof path,"/content/books/%.95s",LAST.file);
     else snprintf(path,sizeof path,"/content/books/%.95s.txt",LAST.book);
     int64_t bytes = LAST.book[0] ? ink_file_size(path) : 0;
     if (!strcmp(LAST.book, "夜邮（示例）")) bytes = ink_app_asset_read("sample/welcome.txt", NULL, 0);
@@ -1115,7 +1244,7 @@ static void card_changed(void *ctx, int h, const char *id) {
     (void)ctx; (void)h; (void)id; ink_app_card_changed("reader");
 }
 int ink_reader_actions_init(void) {
-    if (ink_settings_define(READER_SETTINGS,READER_LAYOUT_COUNT) || ink_settings_watch("reader.",layout_changed,NULL,INK_EXEC_UI) ||
+    if (ink_bookmarks_init() || ink_settings_define(READER_SETTINGS,READER_LAYOUT_COUNT) || ink_settings_watch("reader.",layout_changed,NULL,INK_EXEC_UI) ||
         ink_state_watch("time.minute",footer_changed,NULL,INK_EXEC_UI) || ink_state_watch("battery.level",footer_changed,NULL,INK_EXEC_UI)) return -1;
     int r = ink_cap_register(SHELF_ACTIONS, (int)(sizeof SHELF_ACTIONS / sizeof SHELF_ACTIONS[0]));
     return r ? r : ink_cap_register(BOOK_ACTIONS, (int)(sizeof BOOK_ACTIONS / sizeof BOOK_ACTIONS[0])) ||
