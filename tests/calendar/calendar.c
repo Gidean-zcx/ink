@@ -220,7 +220,7 @@ static void run(void *arg) {
     uint32_t generation = ink_ui_generation(); capture("MinuteBefore"); ink_probe_mark("calendar.minute.before");
     CHECK(WAIT_FOR(minute_changed(), 15000), "the real minute timer reaches 06:02"); quiet();
     ink_probe_mark("calendar.minute.after");
-    CHECK(ink_ui_generation() == generation, "a minute-only update keeps the Calendar page (delta=%u)", ink_ui_generation() - generation);
+    CHECK(ink_ui_generation() == generation, "a minute-only update keeps the Calendar page (delta=%u)", (unsigned)(ink_ui_generation() - generation));
     on_ui(read_snapshot); CHECK(!strcmp(before, snapshot), "minute-only updates preserve the selected day and items");
     visible("06:02"); capture("MinuteAfter");
     form();
