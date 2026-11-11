@@ -2,6 +2,8 @@
 
 基线：`40d965f5b4b5d8d510064396dc59e3ae7e96855c`。执行日期：2026-11-11。仅本机编译与宿主机测试，不连接设备，不推送。
 
+当前结论：功能单元与四项反向对照通过，但普通全量存在本次引入的回归，**未达到合入验收**。
+
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
@@ -12,7 +14,7 @@
 | 1d 浅睡暂停、恢复与实际电源任务节奏 | 【实测】通过 | `board-vendor-power`：18 项检查，`test.finished=1`，无警告；覆盖清醒 2/10 秒、锁屏但保持清醒、让出 CPU 的 15 秒浅睡期间零调用及醒后恢复；`work/board-vendor-tests.log` | `taskpolicy -c utility ctest --test-dir build -R '^board-vendor-' --output-on-failure -j2` |
 | 2a 普通构建与全量 | 【实测】构建退出 0；全量未通过 | 原话 `97% tests passed, 11 tests failed out of 379`；退出 8，3 项跳过；1105.62 秒；`work/ctest.log` | `taskpolicy -c utility cmake --build build -j2`；`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2` |
 | 2b ASan/UBSan 全量 | 待执行 | 待补 | 待补 |
-| 2c S31 编译、gcccheck | 待执行 | 待补 | 待补 |
+| 2c S31 编译、gcccheck | 【实测】宿主 gcccheck 通过；S31 待编译 | `gcccheck: 7 compiled, 0 with findings`，无跳过；`work/gcccheck.log` | `taskpolicy -c utility python3 ../../tools/gcccheck.py build drivers/chips/cx25601n/cx25601n.c simulator/models/dev_power_chips.c system/services/display/light.c system/services/power/power_service.c tests/board_vendor/charger.c tests/board_vendor/light.c tests/board_vendor/power.c` |
 | 2d 隐私与差异范围 | 待执行 | 待补 | 待补 |
 | 3 原厂差异与上机核对 | 【实现】完成记录 | 见下方原厂行号、哈希、差异与主会话核对顺序；未做实机测试 | 核查原厂只读源码及 `git diff` |
 
@@ -20,7 +22,14 @@
 
 - 真机验证由主会话完成，本任务不执行。
 - 未移植原厂 SOC 电压估算、可选充电电流、前光输出曲线，均超出本任务。
-- 普通全量 11 项失败：`ui-scene-ImeVoice`、`ui-scene-big-ImeVoice`、`i18n-shell`、`device-events`、`integration-people`、`integration-member-wake`、`integration-text-nocard`、`integration-text-baddict`、`scenario-standby-metalio-plus`、`clock-extras`、`small-gaps-3-backup`。正在做基线对照，不将其统称为既有问题。未修改断言或预算。
+- 普通全量 365 通过、11 失败、3 跳过。手动把四个改动的 C 单元换回基线源码，用当前编译参数重编译并链接同一测试程序：结果见下表。临时命令 `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" work/baseline_control.py`；日志 `work/baseline-control.log`。未将依赖 Git 历史的对照注册到 CTest。
+
+| 失败项 | 本分支 | 基线对照 | 归因边界 |
+| --- | --- | --- | --- |
+| `ui-scene-ImeVoice`、`ui-scene-big-ImeVoice` | 最低内部 RAM 32568 B，小于 32768 B | 32776 B、退出 0 | 【实测】本次回归；新增前光互斥量与定时器合计占用 208 B |
+| `i18n-shell`、`integration-people`、`integration-member-wake`、`scenario-standby-metalio-plus`、`clock-extras` | 页面稳定、成员门禁、唤醒/计时等断言或预算失败 | 全部退出 0 | 【实测】本次回归；尚未修复，不能称为既有失败 |
+| `device-events`、`integration-text-nocard`、`integration-text-baddict`、`small-gaps-3-backup` | 失败 | 也失败 | 【实测】首条失败和失败数分别相同（1、2、4、16）；这不等于已证明没有其他差异 |
+
 - 现有配置跳过 `hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e`，不记作通过。
 
 ## 和设计不一致的
@@ -39,6 +48,8 @@
 
 - 是否开放可选充电电流不在本任务范围，保持 1 A。
 - 上机前核对实际电芯/标签的最高充电电压是否支持 4400 mV、1 A（量化 960 mA）、终止 60 mA、预充代码 12；3.1 V 断电和有效采样下限 2.5 V 也需结合电池保护规格确认。原厂电池测试曲线仅充至 4.3 V，不能据此证明 4.4 V 适用。
+- 后续修复范围需由主会话定：现有语音场景只有 8 B 内部 RAM 余量，前光新增同步对象需回收 208 B；不能提高预算。检查可用的更小方案时，延迟创建不能消除亮度过渡与语音重叠的峰值，借用刷屏锁会阻塞 5 ms 回调，新增 OSAL 外部内存创建接口超出任务范围，均未擅自实施。
+- 【实现】原厂 kick 的 200 ms + 500 ms 等待目前发生在现有电源任务，期间该任务不能处理下一次状态通知；【估算】可能影响上述时序场景。若改为分段非阻塞控制或额外执行器调度，需要新增状态/调度机制；总规则不允许本任务自行扩大，故记录待主会话确定，未逐个场景补丁、加 sleep 或放宽测试。
 
 ## 顺手发现
 
