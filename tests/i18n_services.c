@@ -101,8 +101,15 @@ static bool shows(const char *text) {
     char all[4100]; snprintf(all, sizeof all, "|%s", labels);
     return strstr(all, want) != NULL;
 }
+/* A minute tick or a new unread count can start one more frame just after the wait saw a quiet screen: retry every
+ * 10 ms while unsettled, up to 1.5 s, as ui_shell_scenes and boot-flow do; a screen that never settles still fails. */
+static int snapshot_tries;
 static void snapshot_event(void *arg) {
-    if (!settled()) { CHECK(false, "all scene snapshots must be fully presented"); return; }
+    if (!settled()) {
+        if (++snapshot_tries < 150) { vtk_event_at(vtk_now() + SIM_MS(10), snapshot_event, arg); return; }
+        CHECK(false, "all scene snapshots must be fully presented");
+        return;
+    }
     sim_display_snapshot((const char *)arg); captured = true;
 }
 /* A settled frame named `name`: its labels are whole and apart, and it is saved as snap-<name>.png. */
@@ -110,7 +117,7 @@ static void capture(const char *page, const char *name) {
     if (!ready(page)) return;
     on_ui(read_labels);
     CHECK(!crowded, "%s: every label is whole and apart (%d, last %s)", name, crowded, crowded_what);
-    captured = false;
+    captured = false; snapshot_tries = 0;
     vtk_event_at(vtk_now() + SIM_MS(1), snapshot_event, (void *)name);
     CHECK(WAIT_FOR(captured, 2000), "settled scene captured: %s", name);
     char metric[80]; snprintf(metric, sizeof metric, "test.snapshot.%s", name); ink_probe_count(metric);
@@ -142,7 +149,7 @@ static void ui_capture(const char *name) {
     CHECK(WAIT_FOR(settled(), 10000), "service frame settles: %s", name);
     on_ui(read_labels);
     CHECK(!crowded, "%s has no clipped, overlapping or off-screen labels: %d %.120s", name, crowded, crowded_what);
-    captured = false; vtk_event_at(vtk_now() + SIM_MS(1), snapshot_event, (void *)name);
+    captured = false; snapshot_tries = 0; vtk_event_at(vtk_now() + SIM_MS(1), snapshot_event, (void *)name);
     CHECK(WAIT_FOR(captured, 2000), "capture %s", name);
     char metric[96]; snprintf(metric, sizeof metric, "test.snapshot.%s", name); ink_probe_count(metric);
 }
