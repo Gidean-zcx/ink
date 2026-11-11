@@ -43,9 +43,7 @@ void hal_bt_disconnect(void) {  }
 void hal_bt_forget(const char *addr) {  }
 void hal_bt_on_event(void (*fn)(void *ctx, hal_bt_event_t ev), void *ctx) {  }
 
-/* TODO: Portable GC2145 driver + ESP-IDF camera DMA. */
-bool hal_camera_info(hal_camera_info_t *out) { *out = (hal_camera_info_t){0}; return false; }
-int hal_camera_capture(uint8_t *buf, size_t cap, uint32_t timeout_ms) { return -1; }
+/* Camera: hal_camera_s31.c. */
 
 
 /* Device info, log, random; RTC and accelerometer: s31_board.c. */
@@ -54,6 +52,8 @@ void hal_log_write(const char *line) { if (!ink_log_from_hal(line)) esp_log_writ
 void hal_random_fill(void *out, size_t n) { esp_fill_random(out, n); }
 
 #ifndef INK_S31_DISPLAY
+bool ink_s31_display_acquire(uint32_t timeout_ms) { (void)timeout_ms; return true; }
+void ink_s31_display_release(void) { }
 void ink_s31_display_shutdown(void) { }
 void ink_s31_display_panic(void) { }
 /* Offline fallback: no panel transport linked. */

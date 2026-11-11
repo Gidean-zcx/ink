@@ -19,6 +19,7 @@
 #include "metalio_plus/metalio_epd_power.h"
 #include "panel_e0470a14.h"
 #include "s31_board.h"
+#include "s31_io.h"
 #include "tps65185/tps65185.h"
 #include "s31_safety.h"
 
@@ -38,7 +39,7 @@ static struct {
     uint8_t *target;
     LineQueue_t q[2];
     TaskHandle_t scanners[2], task;
-    SemaphoreHandle_t scan_done[2], frame_done, lock;
+    SemaphoreHandle_t scan_done[2], frame_done, lock, access;
     atomic_bool stop, armed, powered, testing, tripped;
     atomic_uint beat, pending;
     atomic_int row, missed;
@@ -231,6 +232,7 @@ static void display_task(void *ctx) {
     (void)ctx;
     for (;;) {
         ulTaskNotifyTake(pdTRUE, pdMS_TO_TICKS(20));
+        xSemaphoreTake(D.access, portMAX_DELAY);
         xSemaphoreTake(D.lock, portMAX_DELAY);
         hal_display_result_t r = D.result;
         hal_display_done_fn done = D.done;
@@ -295,6 +297,7 @@ static void display_task(void *ctx) {
         if (r.id) D.result.id = 0;
         atomic_store(&D.pending, D.result.id || ATOMIC(D.powered) || (D.wake_until && (int32_t)(D.wake_until - xTaskGetTickCount()) > 0));
         xSemaphoreGive(D.lock);
+        xSemaphoreGive(D.access);
         if (r.id && done) done(arg, &r);
     }
 }
@@ -306,6 +309,7 @@ static void *alloc(size_t n, bool internal) {
 static void init(void) {
     if (D.ready || !metalio_board_ready()) return;
     D.lock = xSemaphoreCreateMutex();
+    D.access = xSemaphoreCreateMutex();
     D.frame_done = xSemaphoreCreateBinary();
     D.c = (pqbn_v4_ctx){.W = W, .H = H, .ntx = W / PQBN_TPX, .nty = H / PQBN_TPY};
     D.target = alloc(W * H / 2, false);
@@ -333,7 +337,7 @@ static void init(void) {
         .bus = {.clock = EPD_PIN_XCL, .ckv = EPD_PIN_CKV, .leh = EPD_PIN_XLE, .start_pulse = EPD_PIN_XSTL,
             .stv = EPD_PIN_SPV, .data = {EPD_PIN_D0, EPD_PIN_D1, EPD_PIN_D2, EPD_PIN_D3, EPD_PIN_D4, EPD_PIN_D5, EPD_PIN_D6, EPD_PIN_D7}}};
     epd_lcd_init(&cfg, W, H);
-    configASSERT(D.lock && D.frame_done && D.power.pmic);
+    configASSERT(D.lock && D.access && D.frame_done && D.power.pmic);
     for (int i = 0; i < 2; i++) {
         D.q[i] = lq_init(128, LINE_BYTES);
         D.scan_done[i] = xSemaphoreCreateBinary();
@@ -397,5 +401,17 @@ void hal_display_wake(uint32_t ms) {
     xSemaphoreGive(D.lock);
     xTaskNotifyGive(D.task);
 }
-void hal_display_pause(bool pause) { (void)pause; /* Serial port: async_updates is false. */ }
+/* v2.0.77 EpdFlashGuard: serialize camera/controller/PSRAM DMA and panel work. */
+bool ink_s31_display_acquire(uint32_t timeout_ms) {
+    if (!D.access) return true;
+    if (xSemaphoreTake(D.access, timeout_ms == UINT32_MAX ? portMAX_DELAY : pdMS_TO_TICKS(timeout_ms)) != pdTRUE) return false;
+    if (ATOMIC(D.powered)) power_off();
+    atomic_store(&D.armed, false);
+    return true;
+}
+void ink_s31_display_release(void) { if (D.access) xSemaphoreGive(D.access); }
+void hal_display_pause(bool pause) {
+    if (pause) (void)ink_s31_display_acquire(UINT32_MAX);
+    else ink_s31_display_release();
+}
 void hal_display_set_temperature(int celsius) { (void)celsius; /* PQ-BN uses the measured 25 C calibration. */ }

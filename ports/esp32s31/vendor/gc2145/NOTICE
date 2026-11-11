@@ -1,0 +1,20 @@
+GC2145 camera C adaptation, read 2026-11-11.
+Source: CloudZao/Metalio-E-INK4-Plus v2.0.77, archive revision 874538e.
+main/boards/common/camera/dvp_camera.cc (SHA-256):
+52bdd6c28d637b9278119ac4af6d5ed4c31650b3a0e1662f2ef9086dc8ae2979
+Copyright (c) 2025 Shenzhen Xinzhi Future Technology Co., Ltd.
+Copyright (c) 2025 Project Contributors. MIT; see LICENSE-MIT.
+
+Register table: main/boards/common/camera/gc2145_vga_settings.h (SHA-256):
+ee2e88daac0e64890ea051d1741450136cf107d006a828622f33e47e87b37afd
+Originally espressif/esp-video-components @ee31057dcf3c652284959283780f591e3d6320f2,
+esp_cam_sensor/sensors/gc2145/private_include/
+gc2145_dvp_8bit_20Minput_640x480_rgb565_be_15fps_windowing.h.
+Copyright 2025 Espressif Systems (Shanghai) CO LTD; Apache-2.0.
+Only cstdint and the array's C type qualifier are adapted; table text is unchanged.
+LICENSE-APACHE SHA-256:
+cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30
+
+Adaptation: C, ink board/I2C and timed display gate, RGB565 output without
+JPEG/upload. P05/P12 remain untouched, as in v2.0.77 camera_acquire.
+https://github.com/CloudZao/Metalio-E-INK4-Plus/tree/874538e

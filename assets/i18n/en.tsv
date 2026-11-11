@@ -644,6 +644,7 @@ Wi-Fi 已关闭，先打开 Wi-Fi	Turn on Wi-Fi first
 发短信给 {to}：{text}	Text {to}: {text}
 发送结果没能存下，请先核实	Couldn't save result. Check before resending
 取好了，没有存到相册	Captured. Not saved to Photos
+没有找到摄像头	No camera found
 叫名字（什么时候在等）	Wake word
 可以升级到 %s	%s is available
 可以把存储卡当 U 盘用	Use the SD card as USB storage
