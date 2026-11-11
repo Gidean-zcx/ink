@@ -72,6 +72,7 @@ static struct {
     int home_page, apps_page, apps_pages, wifi_page, body_page, body_pages, wifi_forget_page;
     page_t page_id;
     bool more, initialized, need_body;
+    int cell_bars_shown; /* the signal bars the status bar last drew (atomic): only a different count redraws it */
     char member[16];
     uint32_t session, epoch, icon_version, icon_generation;
     char result[160], search[80];
@@ -311,6 +312,9 @@ static void status_deleted(lv_event_t *e) {
         if (N.status[i] == obj) N.status[i] = NULL;
 }
 
+/* Signal bars from the modem's reading in dBm (0: none). */
+static int cell_bars(int64_t dbm) { return dbm == 0 ? 0 : dbm >= -75 ? 4 : dbm >= -85 ? 3 : dbm >= -95 ? 2 : 1; }
+
 /* The battery's bars, in quarters: the outline alone said nothing at a glance (trial report 2026-11-11). Placed in
  * pixels from the drawn icon, as the icon itself is, so they sit centred in its body: inside the stroke the body is
  * 5.4..38.6 x 15.4..32.6 of the icon's 48 units; two pixels clear all round and between the bars. */
@@ -355,8 +359,8 @@ lv_obj_t *ink_shell_statusbar(lv_obj_t *parent, bool show_time) {
         ink_ui_line(bar, cell, INK_FONT_STATUS, INK_WEIGHT_MEDIUM, x, text_y, cell_w);
         x += cell_w + INK_GAP_S;
         if (integer("cell.registered")) {
-            int64_t dbm = integer("cell.signal");
-            int bars = dbm == 0 ? 0 : dbm >= -75 ? 4 : dbm >= -85 ? 3 : dbm >= -95 ? 2 : 1;
+            int bars = cell_bars(integer("cell.signal"));
+            __atomic_store_n(&N.cell_bars_shown, bars, __ATOMIC_RELEASE);
             int s = ink_ui_px(INK_ICON_SMALL), step = s / 4;
             for (int i = 0; i < 4; i++) {
                 lv_obj_t *o = lv_obj_create(bar);
@@ -1948,8 +1952,11 @@ static void changed(void *ctx, int h, const char *id) {
         __atomic_add_fetch(&N.session, 1, __ATOMIC_ACQ_REL);
         return;
     }
+    /* A new signal reading redraws the status bar only when its bar count changes: every redraw is a refresh on the
+     * panel, and the user wants as few as possible (D-127); a reading that moved a few dBm changes nothing seen. */
     bool cell_status = !strcmp(id, "cell.registered") || !strcmp(id, "cell.sim_missing") ||
-        (!strcmp(id, "cell.signal") && integer("cell.registered"));
+        (!strcmp(id, "cell.signal") && integer("cell.registered") &&
+         cell_bars(integer("cell.signal")) != __atomic_load_n(&N.cell_bars_shown, __ATOMIC_ACQUIRE));
     bool cell_config = !strcmp(id, "cell.config_readonly") && integer("cell.config_readonly") &&
         N.page_body && N.page_id == PAGE_NETWORK;
     if (cell_config) __atomic_store_n(&N.need_body, true, __ATOMIC_RELEASE);

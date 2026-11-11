@@ -130,15 +130,28 @@ static bool quiet(void) {
     CHECK(ok, "%s did not settle within 10 virtual seconds", scene);
     return ok;
 }
+/* A refresh can start right after the scene settled: the status bar when the modem registers (it now says 4G), or at
+ * a minute boundary. Wait for it to end rather than call the scene unpresented; still a failure past 1.5 s. */
+static int snapshot_tries;
+static volatile bool snapshot_done;
 static void take_snapshot(void *arg) {
-    if (!settled()) { CHECK(false, "snapshot must be a fully presented frame on %s", scene); return; }
+    if (!settled()) {
+        if (++snapshot_tries < 150) { vtk_event_at(vtk_now() + SIM_MS(10), take_snapshot, arg); return; }
+        CHECK(false, "snapshot must be a fully presented frame on %s", scene);
+        snapshot_done = true;
+        return;
+    }
     ink_probe_count("test.snapshot.settled");
     char id[80]; snprintf(id, sizeof id, "test.snapshot.%s", scene); ink_probe_count(id);
     sim_display_snapshot((const char *)arg);
+    snapshot_done = true;
 }
 static void snapshot_now(void) {
     if (!quiet()) return;
-    vtk_event_at(vtk_now() + SIM_MS(1), take_snapshot, "scene"); delay_ms(5);
+    snapshot_tries = 0;
+    snapshot_done = false;
+    vtk_event_at(vtk_now() + SIM_MS(1), take_snapshot, "scene");
+    CHECK(WAIT_FOR(snapshot_done, 2000), "the snapshot of %s was taken", scene);
 }
 static bool listed(const char *id) {
     char *page = osal_malloc(4096, OSAL_MEM_EXTERNAL);
