@@ -6,7 +6,7 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 【实测】正向 100 项检查、0 失败；七项反向均检出错误，且各自执行到结束 | `build/app-runtime-2bg450nt/`；反向汇总 `build/app-runtime-reverse.json`，孩子反向更新证据 `build/app-runtime-atou2gxp/` | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/app_runtime/run.py --build build`；同命令加 `--mutant install/uninstall/bad/permission/snapshot/child/card` 分别执行 |
+| 1 | 【实测】正向 101 项检查、0 失败；七项反向均检出错误，且各自执行到结束 | `build/app-runtime-eag8e54h/`；反向汇总 `build/app-runtime-reverse.json`，孩子反向更新证据 `build/app-runtime-ll__u9y8/` | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/app_runtime/run.py --build build`；同命令加 `--mutant install/uninstall/bad/permission/snapshot/child/card` 分别执行 |
 | 2 | 待验证 | 全量、ASan、能力表、S31、gcccheck、ui-scale、隐私 | 待补 |
 | 3 | 待验证 | 格式文档、设计差异、截图 | 待补 |
 

@@ -41,6 +41,7 @@ static struct {
     int index, offset;
     lv_obj_t *body, *widgets[NODES], *notice;
     ink_ui_field_spec_t fields[NODES + 1];
+    char descriptions[NODES][256];
     ink_ui_action_spec_t actions[NODES + 4];
     char action_args[NODES][64], message[160], uninstall[96];
     ink_ui_page_spec_t spec;
@@ -276,6 +277,19 @@ static void draw(void) {
     for (int i = 0; i < RP.page.count; i++) {
         node_t *n = &RP.page.nodes[i];
         RP.fields[i] = (ink_ui_field_spec_t){.id = n->id, .role = n->kind, .label = n->label, .value = n->value};
+        if (!strcmp(n->kind, "segments")) {
+            ink_jw_t choices; ink_jw_init(&choices, RP.descriptions[i], sizeof RP.descriptions[i]);
+            ink_jw_raw(&choices, "{\"options\":[");
+            for (int k = 0; k < n->count; k++) {
+                if (k) ink_jw_raw(&choices, ",");
+                ink_jw_str(&choices, n->options[k]);
+            }
+            ink_jw_raw(&choices, "],\"selected\":"); ink_jw_str(&choices, n->value); ink_jw_raw(&choices, "}");
+            RP.fields[i].value = RP.descriptions[i];
+        } else if (!strcmp(n->kind, "slider")) {
+            snprintf(RP.descriptions[i], sizeof RP.descriptions[i], "%s [0..10]", n->value);
+            RP.fields[i].value = RP.descriptions[i];
+        }
         snprintf(RP.action_args[i], sizeof RP.action_args[i], "{\"id\":\"%s\"}", n->id);
         RP.actions[i] = (ink_ui_action_spec_t){.id = n->id, .label = n->label, .capability = "app.page_action", .args_json = RP.action_args[i],
             .enabled = !strcmp(n->kind, "input") || (n->capability[0] && declared(n->capability))};

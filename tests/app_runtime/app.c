@@ -83,6 +83,7 @@ static void run(void *arg) {
     ok("app.page_action", "{\"id\":\"slider\",\"value\":7}");
     ok("app.page_action", "{\"id\":\"segment\",\"value\":1}"); on_ui(inspect);
     CHECK(echo_runs == 3 && strstr(g_snap, "7") && strstr(g_snap, "true"), "switch, slider, segment use typed capability arguments and receipts");
+    CHECK(strstr(g_snap, "甲") && strstr(g_snap, "乙") && strstr(g_snap, "[0..10]"), "AI sees the segment choices and slider range, beyond the selected value");
     CHECK(AI("app.page_action", "{\"id\":\"slider\",\"value\":11}") && g_rc.status == INK_RC_INVALID, "slider rejects a value outside the declared control range");
     ok("app.page_turn", "{\"direction\":1}"); on_ui(inspect);
     CHECK(strstr(g_snap, "合成列表行"), "additional list nodes remain reachable by pagination");
