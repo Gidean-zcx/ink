@@ -50,7 +50,7 @@ def main():
     records.write_text(json.dumps(previous + [result], ensure_ascii=False, indent=2) + '\n')
     if args.label in ('baseline', 'final'):
         with (folder / f'assets-{args.label}.csv').open('w') as out:
-            writer = csv.writer(out)
+            writer = csv.writer(out, lineterminator='\n')
             writer.writerow(('pack', 'name', 'payload_bytes', 'sha256'))
             for pack in ('fonts', 'embedded'):
                 for name, size, digest in entries(args.build / f'ink-{pack}.bin'):

@@ -23,14 +23,15 @@ def optimization(row):
 
 
 checked = 0
-if args.before:
-    before = {str(Path(r['file']).resolve()): r for r in json.loads(args.before.read_text())}
-    for row in rows:
-        if (any(marker in row['command'] for marker in ('__idf_ink_drivers.dir/', '__idf_ink_platform.dir/', '__idf_main.dir/'))
-                or row['file'].endswith('/system/ui/app_packages.c')):
+before = {str(Path(r['file']).resolve()): r for r in json.loads(args.before.read_text())} if args.before else {}
+for row in rows:
+    if (any(marker in row['command'] for marker in ('__idf_ink_drivers.dir/', '__idf_ink_platform.dir/', '__idf_main.dir/'))
+            or row['file'].endswith('/system/ui/app_packages.c')):
+        assert optimization(row)[-1] == '-O2', f'protected optimization changed: {Path(row["file"]).name}'
+        if args.before:
             old = before.get(str(Path(row['file']).resolve()))
             assert old and optimization(row) == optimization(old), f'driver/platform/main flags changed: {Path(row["file"]).name}'
-            checked += 1
+        checked += 1
 if args.expect_os:
     counts = {'lvgl': 0, 'apps': 0, 'ui': 0}
     for row in rows:

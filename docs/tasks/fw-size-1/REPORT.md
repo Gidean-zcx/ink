@@ -99,4 +99,8 @@
 
 ## 验证与隐私检查
 
-待执行。
+【实测】产品构建、配置与打包改动合计新增 57 行、删除 10 行（共 67 行），其中 vendor 运行时代码只改分配器接线 1 行；不改测试断言、预算上限或警告开关。
+
+【实测】`ink-codex/tools/gcccheck.py build system/ui/icons.c system/ui/theme.c system/ui/shell/keyboard.c` 输出 `gcccheck: 3 compiled, 0 with findings`。S31 基线和最终构建均为 0 条编译器警告、6 条相同的既有 IDF CMake 组件私有头目录警告。
+
+主工程全量及内存检查还在执行；最终汇总待补。
