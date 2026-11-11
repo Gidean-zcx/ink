@@ -206,7 +206,7 @@ static void act_list(ink_call_t *c) {
 
 static bool last_book(char *book, size_t cap, int *page, int *percent);
 static void act_sample(ink_call_t *c) {
-    snprintf(LIB.books[MAX_BOOKS].name, sizeof LIB.books[MAX_BOOKS].name, "夜邮（示例）");
+    snprintf(LIB.books[MAX_BOOKS].name, sizeof LIB.books[MAX_BOOKS].name, TR("夜邮（示例）"));
     snprintf(LIB.books[MAX_BOOKS].path, sizeof LIB.books[MAX_BOOKS].path, "sample/welcome.txt");
     ink_ui_push(&ink_app_book, (void *)(intptr_t)MAX_BOOKS);
     snprintf(c->rc.object, sizeof c->rc.object, "book:sample");

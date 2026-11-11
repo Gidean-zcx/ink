@@ -1503,3 +1503,16 @@ Wi-Fi 已关闭	Wi-Fi is off
 选择	Choose
 选择卡片	Choose Card
 锁屏时显示	Lock Screen Style
+已请求确认	Confirmation requested
+没有这个控件或应用不可用	No such control, or the app is unavailable
+输入框不在当前页	That text field is not on this page
+应用没有声明这个能力或权限	The app did not declare this capability or permission
+普通输入请使用系统输入会话	Use the system text input for ordinary typing
+控件的值不在范围内	The value is out of range
+动作参数无效	Invalid action arguments
+动作参数过长或内存不足	Action arguments too long, or out of memory
+系统繁忙	The system is busy
+卸载	Uninstall
+执行结果	Result
+没有更多页面	No more pages
+夜邮（示例）	Night Mail (sample)

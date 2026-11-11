@@ -7,6 +7,7 @@
 #include "ink/probe.h"
 #include "ink/sys/appreg.h"
 #include "ink/sys/file.h"
+#include "ink/sys/i18n.h"
 #include "ink/sys/json.h"
 #include "ink/sys/layout.h"
 #include "ink/sys/log.h"
@@ -181,8 +182,8 @@ static void receipt(void *ctx, const ink_receipt_t *rc) {
                 }
             }
         osal_free(j);
-        snprintf(RP.message, sizeof RP.message, "%s", rc->status == INK_RC_PENDING_CONFIRMATION ? "已请求确认" :
-            rc->say[0] ? rc->say : rc->status == INK_RC_DONE ? "已完成" : rc->detail);
+        snprintf(RP.message, sizeof RP.message, "%s", rc->status == INK_RC_PENDING_CONFIRMATION ? TR("已请求确认") :
+            rc->say[0] ? rc->say : rc->status == INK_RC_DONE ? TR("已完成") : rc->detail);
         draw();
     }
     reply->call->rc = *rc; reply->call->rc.result = NULL;
@@ -196,10 +197,10 @@ static void invalid(ink_call_t *c, const char *why) {
 static void action(ink_call_t *c) {
     char id[24]; ink_args_get_str(&c->args, "id", id, sizeof id);
     int at = node_index(id);
-    if (!RP.body || at < 0 || !ink_app_visible(&RP.package->def)) { invalid(c, "没有这个控件或应用不可用"); return; }
+    if (!RP.body || at < 0 || !ink_app_visible(&RP.package->def)) { invalid(c, TR("没有这个控件或应用不可用")); return; }
     node_t *n = &RP.page.nodes[at]; capture_inputs();
     if (!strcmp(n->kind, "input") && !ink_args_find(&c->args, "value")) {
-        if (!RP.widgets[at] || ink_textfield_short_focus(RP.widgets[at])) invalid(c, "输入框不在当前页");
+        if (!RP.widgets[at] || ink_textfield_short_focus(RP.widgets[at])) invalid(c, TR("输入框不在当前页"));
         return;
     }
     const ink_cap_t *cap = ink_cap_find(n->capability);
@@ -208,18 +209,18 @@ static void action(ink_call_t *c) {
             (c->src == INK_SRC_AI && !(cap->expose & INK_EXPOSE_AI)) ||
             (c->src == INK_SRC_REMOTE && !(cap->expose & INK_EXPOSE_REMOTE))))) {
         c->rc.status = INK_RC_REJECTED;
-        snprintf(c->rc.detail, sizeof c->rc.detail, "应用没有声明这个能力或权限");
+        snprintf(c->rc.detail, sizeof c->rc.detail, TR("应用没有声明这个能力或权限"));
         return;
     }
     const ink_arg_t *value = ink_args_find(&c->args, "value");
     if (value) {
         if (strcmp(n->kind, "toggle") && strcmp(n->kind, "slider") && strcmp(n->kind, "segments")) {
-            invalid(c, "普通输入请使用系统输入会话"); return;
+            invalid(c, TR("普通输入请使用系统输入会话")); return;
         }
         if ((!strcmp(n->kind, "toggle") && value->type != INK_ARG_BOOL) ||
             ((!strcmp(n->kind, "slider") || !strcmp(n->kind, "segments")) &&
              (value->type != INK_ARG_INT || value->i < 0 || value->i > (!strcmp(n->kind, "slider") ? 10 : n->count - 1)))) {
-            invalid(c, "控件的值不在范围内"); return;
+            invalid(c, TR("控件的值不在范围内")); return;
         }
         snprintf(n->value, sizeof n->value, "%lld", (long long)value->i);
         if (value->type == INK_ARG_BOOL) snprintf(n->value, sizeof n->value, "%s", value->i ? "true" : "false");
@@ -227,7 +228,7 @@ static void action(ink_call_t *c) {
     ink_args_t *args = osal_malloc(sizeof *args * 2, OSAL_MEM_EXTERNAL);
     char why[96];
     if (!args || ink_args_from_json(args, n->args, strlen(n->args), NULL, why, sizeof why)) {
-        osal_free(args); invalid(c, "动作参数无效"); return;
+        osal_free(args); invalid(c, TR("动作参数无效")); return;
     }
     ink_args_t *bound = args + 1; ink_args_init(bound); int r = 0;
     for (int i = 0; i < args->n && !r; i++) {
@@ -243,12 +244,12 @@ static void action(ink_call_t *c) {
         else r = ink_args_json(bound, argument_key, argument_value, v->len);
     }
     reply_t *reply = !r ? osal_malloc(sizeof *reply, OSAL_MEM_EXTERNAL) : NULL;
-    if (!reply) { osal_free(args); invalid(c, "动作参数过长或内存不足"); return; }
+    if (!reply) { osal_free(args); invalid(c, TR("动作参数过长或内存不足")); return; }
     *reply = (reply_t){c, ink_ui_generation(), ink_member_epoch(), RP.index};
     ink_call_opts_t opts = {.src = INK_SRC_APP, .member = ink_cap_call_member(c), .done = receipt, .ctx = reply, .reply_exec = INK_EXEC_UI};
     ink_cap_defer(c);
     if (ink_cap_call(n->capability, bound, &opts)) {
-        invalid(c, "系统繁忙"); ink_cap_done(c); osal_free(reply);
+        invalid(c, TR("系统繁忙")); ink_cap_done(c); osal_free(reply);
     }
     osal_free(args);
 }
@@ -321,14 +322,14 @@ static void draw(void) {
         RP.widgets[i] = obj; y += h + INK_GAP;
     }
     int a = RP.page.count;
-    RP.actions[a++] = (ink_ui_action_spec_t){.id = "next", .label = "下一页", .capability = "app.page_turn", .args_json = "{\"direction\":1}",
+    RP.actions[a++] = (ink_ui_action_spec_t){.id = "next", .label = TR("下一页"), .capability = "app.page_turn", .args_json = "{\"direction\":1}",
         .enabled = RP.offset + 4 < RP.page.count || RP.index + 1 < RP.package->count};
-    RP.actions[a++] = (ink_ui_action_spec_t){.id = "prev", .label = "上一页", .capability = "app.page_turn", .args_json = "{\"direction\":-1}",
+    RP.actions[a++] = (ink_ui_action_spec_t){.id = "prev", .label = TR("上一页"), .capability = "app.page_turn", .args_json = "{\"direction\":-1}",
         .enabled = RP.offset || RP.index};
-    RP.actions[a++] = (ink_ui_action_spec_t){.id = "back", .label = "返回", .capability = "shell.back", .enabled = true};
-    RP.actions[a++] = (ink_ui_action_spec_t){.id = "uninstall", .label = "卸载", .capability = "file.delete", .args_json = RP.uninstall,
+    RP.actions[a++] = (ink_ui_action_spec_t){.id = "back", .label = TR("返回"), .capability = "shell.back", .enabled = true};
+    RP.actions[a++] = (ink_ui_action_spec_t){.id = "uninstall", .label = TR("卸载"), .capability = "file.delete", .args_json = RP.uninstall,
         .enabled = ink_member_current()->role == INK_ROLE_ADULT};
-    RP.fields[RP.page.count] = (ink_ui_field_spec_t){.id = "receipt", .label = "执行结果", .role = "status", .value = RP.message};
+    RP.fields[RP.page.count] = (ink_ui_field_spec_t){.id = "receipt", .label = TR("执行结果"), .role = "status", .value = RP.message};
     RP.spec = (ink_ui_page_spec_t){.id = "AppPage", .title = RP.page.title, .object = {RP.package->id, 1},
         .fields = RP.fields, .field_count = (size_t)RP.page.count + 1, .actions = RP.actions, .action_count = (size_t)a};
     _Static_assert(NODES + 4 <= sizeof RP.actions / sizeof *RP.actions, "page action capacity");
@@ -351,7 +352,7 @@ static void create(lv_obj_t *screen, void *arg) {
     RP.notice = ink_ui_line(screen, "", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, INK_CANVAS_H - 2 * INK_PRIMARY, w);
     if (ink_member_current()->role == INK_ROLE_ADULT) {
         snprintf(RP.uninstall, sizeof RP.uninstall, "{\"path\":\"/apps/%s\"}", RP.package->id);
-        ink_shell_bind(ink_ui_pill(screen, "卸载", INK_MARGIN, INK_CANVAS_H - INK_PRIMARY, w, INK_CONTROL, false, NULL, NULL), "file.delete", RP.uninstall);
+        ink_shell_bind(ink_ui_pill(screen, TR("卸载"), INK_MARGIN, INK_CANVAS_H - INK_PRIMARY, w, INK_CONTROL, false, NULL, NULL), "file.delete", RP.uninstall);
     }
     ink_shell_bind(ink_ui_circle(screen, "back", INK_MARGIN, INK_CANVAS_H - 3 * INK_PRIMARY, INK_CONTROL, INK_ICON_MEDIUM,
         INK_SURFACE_WHITE, NULL, NULL), "app.page_turn", "{\"direction\":-1}");
@@ -367,7 +368,7 @@ static void turn(ink_call_t *c) {
     else if (direction < 0 && RP.offset) RP.offset = 0;
     else {
         int next = RP.index + (direction > 0 ? 1 : -1);
-        if (next < 0 || next >= RP.package->count) { invalid(c, "没有更多页面"); return; }
+        if (next < 0 || next >= RP.package->count) { invalid(c, TR("没有更多页面")); return; }
         RP.index = next; RP.offset = 0; RP.page = RP.package->pages[next];
     }
     draw();

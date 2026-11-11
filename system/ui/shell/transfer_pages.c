@@ -93,8 +93,12 @@ static void draw(void) {
             text(TR("再输这个数字"), INK_FONT_LIST, middle + INK_GAP_XXL);
             text(P.code, INK_FONT_NUMBER, middle + INK_GAP_XXL + INK_LINE_LIST);
         } else if (P.active) text(TR("还没连上 Wi-Fi"), INK_FONT_LIST, middle);
-        text(P.active ? P.progress : P.detail, INK_FONT_NOTE, bottom - 2 * INK_LINE_NOTE - INK_GAP_L);
-        text(TR("只能放到‘传进来的’。关掉这页就断开。"), INK_FONT_NOTE, bottom - INK_LINE_NOTE - INK_GAP);
+        /* The note is one line in Chinese and two in English: it and the status above it move up a line when it
+         * wraps, so the buttons never cover its end (i18n-shell-remaining, Transfer-en). */
+        const char *note = TR("只能放到‘传进来的’。关掉这页就断开。");
+        int lines = ink_ui_text_width(note, INK_FONT_NOTE, INK_WEIGHT_REGULAR) > w ? 2 : 1;
+        text(P.active ? P.progress : P.detail, INK_FONT_NOTE, bottom - (lines + 1) * INK_LINE_NOTE - INK_GAP_L);
+        text(note, INK_FONT_NOTE, bottom - lines * INK_LINE_NOTE - INK_GAP);
         button(P.active ? TR("关闭") : TR("开始"), P.active ? "shell.back" : "transfer.start", INK_MARGIN, bottom, P.active ? w : (w - INK_GAP) / 2, !P.active);
         if (!P.active) button(TR("关闭"), "shell.back", INK_MARGIN + (w + INK_GAP) / 2, bottom, (w - INK_GAP) / 2, false);
     } else {
