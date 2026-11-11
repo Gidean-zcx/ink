@@ -10,13 +10,18 @@
 | 1b 前光 | 【实测】单元通过 | 每 5 ms 一级、升降/改目标、暖光、到位停表、关屏/锁屏立即到零且不复亮 | 同上 |
 | 1c 反向对照 | 【实测】4/4 预期失败 | `usb-cut`、`uv-3200`、`busy-kick`、`instant-light` 各退出 1，命中对应断言；`work/reverse.log` | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/board_vendor/reverse.py --build build` |
 | 1d 浅睡暂停、恢复与实际电源任务节奏 | 【实测】通过 | `board-vendor-power`：18 项检查，`test.finished=1`，无警告；覆盖清醒 2/10 秒、锁屏但保持清醒、让出 CPU 的 15 秒浅睡期间零调用及醒后恢复；`work/board-vendor-tests.log` | `taskpolicy -c utility ctest --test-dir build -R '^board-vendor-' --output-on-failure -j2` |
-| 2 全量、内存检查、S31、gcccheck、隐私 | 待执行 | 尚未构建 | 待补 |
-| 3 原厂差异与上机核对 | 待执行 | 待补原厂行号与寄存器边界 | 待补 |
+| 2a 普通构建与全量 | 【实测】构建退出 0；全量未通过 | 原话 `97% tests passed, 11 tests failed out of 379`；退出 8，3 项跳过；1105.62 秒；`work/ctest.log` | `taskpolicy -c utility cmake --build build -j2`；`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2` |
+| 2b ASan/UBSan 全量 | 待执行 | 待补 | 待补 |
+| 2c S31 编译、gcccheck | 待执行 | 待补 | 待补 |
+| 2d 隐私与差异范围 | 待执行 | 待补 | 待补 |
+| 3 原厂差异与上机核对 | 【实现】完成记录 | 见下方原厂行号、哈希、差异与主会话核对顺序；未做实机测试 | 核查原厂只读源码及 `git diff` |
 
 ## 没做到的
 
 - 真机验证由主会话完成，本任务不执行。
 - 未移植原厂 SOC 电压估算、可选充电电流、前光输出曲线，均超出本任务。
+- 普通全量 11 项失败：`ui-scene-ImeVoice`、`ui-scene-big-ImeVoice`、`i18n-shell`、`device-events`、`integration-people`、`integration-member-wake`、`integration-text-nocard`、`integration-text-baddict`、`scenario-standby-metalio-plus`、`clock-extras`、`small-gaps-3-backup`。正在做基线对照，不将其统称为既有问题。未修改断言或预算。
+- 现有配置跳过 `hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e`，不记作通过。
 
 ## 和设计不一致的
 
