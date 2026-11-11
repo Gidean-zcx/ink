@@ -15,6 +15,7 @@
 #include <cctype>
 #include <cstring>
 #include <new>
+#include "bookmarks.h"
 
 struct ink_reader_source {
     reader::EpubDocument epub;
@@ -196,4 +197,22 @@ extern "C" ink_reader_error_t ink_reader_source_read(ink_reader_source_t *s, int
 }
 extern "C" void ink_reader_source_close(ink_reader_source_t *s) {
     ink_reader_host_call([](void *p) { delete static_cast<ink_reader_source *>(p); }, s);
+}
+extern "C" bool ink_reader_locate(ink_reader_source_t *s,ink_reader_position_t *position,uint64_t *flat,bool to_source) {
+    if (!s || !s->info.epub) { if (to_source) { position->block=0; position->offset=static_cast<uint32_t>(*flat); }
+        else *flat=position->offset;
+        return true; }
+    struct Args { ink_reader_source_t *source; ink_reader_position_t *p; uint64_t *flat; bool to_source,found; } a{s,position,flat,to_source,false};
+    ink_reader_host_call([](void *p){ auto& q=*static_cast<Args *>(p); uint64_t pos=0; uint32_t block=0;
+        q.source->epub.StreamChapterBlocks(static_cast<int>(q.p->chapter),[&](reader::ContentBlock&& b){
+            size_t size=b.kind==reader::ContentKind::kImage ? strlen("［图片］\n") : b.text.size()+!b.continues;
+            if (q.to_source ? *q.flat<=pos+size : q.p->block==block) {
+                if (q.to_source) { q.p->block=block; q.p->offset=static_cast<uint32_t>(*q.flat-pos); }
+                else { if (q.p->offset>size) return false;
+                    *q.flat=pos+q.p->offset; }
+                q.found=true; return false;
+            }
+            pos+=size; block++; return true;
+        });
+    },&a); return a.found;
 }
