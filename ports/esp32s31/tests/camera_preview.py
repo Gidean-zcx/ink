@@ -43,7 +43,7 @@ mutations = [
      'display-paced preview advances'),
     ('slow-waveform', 'p->preview ? INK_REFRESH_FAST : INK_REFRESH_UI', 'INK_REFRESH_UI',
      'display-paced preview advances'),
-    ('no-display-gate', 'if (t && (ink_ui_busy() || ink_display_busy())) return;', '/* gate removed */',
+    ('no-display-gate', 'if (t && (ink_ui_busy() || ink_display_busy())) { preview_ready = false; return; }', '/* gate removed */',
      'next preview capture waits'),
     ('no-reprobe', '    ink_camera_init();', '    /* reprobe removed */',
      'page entry reprobes'),

@@ -18,6 +18,7 @@ void ink_camera_session(bool active);
 static lv_obj_t *view, *notice;
 static lv_timer_t *timer;
 static int taking;
+static bool preview_ready;
 static char camera_status[96];
 static lv_obj_t *locked_root;
 static int restricted;
@@ -43,7 +44,7 @@ static void captured(void *arg) {
     capture_t *p = arg;
     if (p->epoch == ink_member_epoch() && p->generation == ink_ui_generation() && view && (ink_ui_page_current() || ink_camera_restricted())) {
         if (p->im.pixels) { lv_obj_clean(view); ink_photo_image(view, &p->im); }
-        snprintf(camera_status, sizeof camera_status, "%s", p->ok ? (p->saved ? TR("已保存到存储卡") : TR("正在取景")) : TR("没能完成，请检查存储卡或重试"));
+        snprintf(camera_status, sizeof camera_status, "%s", p->ok ? (p->saved ? TR("已保存到存储卡") : TR("低频取景，点下方拍照")) : TR("没能完成，请检查存储卡或重试"));
         if (ink_camera_restricted() && p->ok) {
             if (p->saved && shots.count < INK_FS_INDEX_MAX) shots.ids[shots.count++] = p->id;
             shots.reviewing = p->saved || p->reviewed;
@@ -126,10 +127,11 @@ static void preview_done(void *ctx, const ink_receipt_t *rc) {
     if (rc->status != INK_RC_DONE) __atomic_store_n(&taking, 0, __ATOMIC_RELEASE);
 }
 static void preview(lv_timer_t *t) {
-    (void)t;
     if (ink_camera_restricted() ? shots.reviewing || strcmp(ink_ui_action_page(), "Camera") : !ink_ui_page_current() || strcmp(ink_ui_page_name(), "Camera") || ink_ui_overlay_up()) return;
     if (__atomic_load_n(&taking, __ATOMIC_ACQUIRE)) return;
-    if (t && (ink_ui_busy() || ink_display_busy())) return;
+    if (t && (ink_ui_busy() || ink_display_busy())) { preview_ready = false; return; }
+    if (t && !preview_ready) { preview_ready = true; return; }
+    preview_ready = false;
     __atomic_store_n(&taking, 1, __ATOMIC_RELEASE);
     ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .reply_exec = INK_EXEC_UI, .done = preview_done};
     if (ink_cap_call("camera.preview", NULL, &o)) __atomic_store_n(&taking, 0, __ATOMIC_RELEASE);
