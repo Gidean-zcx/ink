@@ -10,6 +10,7 @@
 #include "ft6336u/ft6336u.h"
 #include "ink/hal_device.h"
 #include "ink/hal_power.h"
+#include "ink/osal.h"
 #include "metalio_plus/metalio_board.h"
 #include "pcf8563/pcf8563.h"
 #include "s31_board.h"
@@ -17,8 +18,8 @@
 #include "s31_io.h"
 #include "sc7a20h/sc7a20h.h"
 
-#define LIGHT_BITS LEDC_TIMER_10_BIT
-#define LIGHT_MAX ((1u << 10) - 1)
+#include "vendor/board_874538e/light.inc"
+#include "vendor/board_874538e/reset_binding.inc"
 
 static hal_i2c_dev_t *g_gauge, *g_charger, *g_rtc, *g_accel, *g_touch;
 static uint32_t g_motions;
@@ -61,18 +62,6 @@ void s31_accel_resume(void) {
     if (g_accel && sc7a20h_init(g_accel) != HAL_I2C_OK) hal_log_write("board: accelerometer restore failed");
 }
 
-static bool light_init(void) {
-    ledc_timer_config_t t = {.speed_mode = LEDC_LOW_SPEED_MODE, .duty_resolution = LIGHT_BITS, .timer_num = LEDC_TIMER_0,
-                             .freq_hz = S31_LIGHT_HZ, .clk_cfg = LEDC_AUTO_CLK};
-    if (ledc_timer_config(&t) != ESP_OK) return false;
-    static const int pins[2] = {S31_LIGHT_COLD, S31_LIGHT_WARM};
-    for (int i = 0; i < 2; i++) {
-        ledc_channel_config_t c = {.gpio_num = pins[i], .speed_mode = LEDC_LOW_SPEED_MODE, .channel = (ledc_channel_t)i,
-                                   .timer_sel = LEDC_TIMER_0, .duty = 0};
-        if (ledc_channel_config(&c) != ESP_OK) return false;
-    }
-    return true;
-}
 
 void ink_s31_board_init(void) { /* boot, task context */
     if (metalio_board_init() != HAL_I2C_OK) hal_log_write("board: TCA9555 init failed");
@@ -83,21 +72,24 @@ void ink_s31_board_init(void) { /* boot, task context */
         hal_log_write("board: CX25601N setup failed");
     charger_log("after");
     g_rtc = hal_i2c_device(0, PCF8563_ADDR, "rtc");
-    g_accel = hal_i2c_device(0, SC7A20H_ADDR, "accel");
-    if (!g_accel || sc7a20h_init(g_accel) != HAL_I2C_OK) {
-        hal_log_write("board: SC7A20H did not answer as expected");
-        g_accel = NULL;
+    const uint8_t accel_addrs[] = {SC7A20H_ADDR, 0x18};
+    for (unsigned i = 0; i < sizeof accel_addrs && !g_accel; ++i) {
+        hal_i2c_dev_t *dev = hal_i2c_device(0, accel_addrs[i], "accel");
+        if (dev && sc7a20h_init(dev) == HAL_I2C_OK) g_accel = dev;
+        else if (dev && hal_i2c_write(dev, NULL, 0) == HAL_I2C_OK) sc7a20h_silence(dev);
     }
-    g_light = light_init();
+    g_light = ink_vendor_light_init();
     if (!g_light) hal_log_write("board: front light LEDC setup failed");
+    s31_power_init();
+    ink_s31_audio_init();
+    if (!ink_vendor_boot_reset()) osal_panic("board: shared power reset failed");
+    epd_board_metalio_eink4_plus_tp_reset();
     g_touch = hal_i2c_device(0, FT6336U_ADDR, "touch");
     uint8_t fw = 0;
     if (!g_touch || ft6336u_init(g_touch, &fw) != HAL_I2C_OK) {
         hal_log_write("board: FT6336U did not answer as expected");
         g_touch = NULL;
     }
-    s31_power_init();
-    ink_s31_audio_init();
     s31_input_init(g_touch);
     ink_s31_cell_init();
     hal_battery_t b;
@@ -166,16 +158,13 @@ void hal_rtc_clear_alarm(void) {
 bool hal_accel_read(int *x_mg, int *y_mg, int *z_mg) { return g_accel && sc7a20h_read_mg(g_accel, x_mg, y_mg, z_mg) == HAL_I2C_OK; }
 uint32_t hal_accel_motion_count(void) { return __atomic_load_n(&g_motions, __ATOMIC_ACQUIRE); }
 
-static uint32_t duty(int permille) {
-    if (permille < 0) permille = 0;
-    if (permille > 1000) permille = 1000;
-    return (uint32_t)permille * LIGHT_MAX / 1000u;
-}
-
 void hal_light_set(int cold_permille, int warm_permille) {
     if (!g_light) return;
-    const uint32_t d[2] = {duty(cold_permille), duty(warm_permille)};
-    for (int i = 0; i < 2; i++)
-        if (ledc_set_duty(LEDC_LOW_SPEED_MODE, (ledc_channel_t)i, d[i]) == ESP_OK)
-            ledc_update_duty(LEDC_LOW_SPEED_MODE, (ledc_channel_t)i);
+    if (cold_permille < 0) cold_permille = 0;
+    if (warm_permille < 0) warm_permille = 0;
+    if (cold_permille > 1000) cold_permille = 1000;
+    if (warm_permille > 1000) warm_permille = 1000;
+    int total = cold_permille + warm_permille;
+    unsigned warmth = total ? (unsigned)(warm_permille * 100 / total) : 50;
+    ink_vendor_light_output((uint8_t)(total > 1000 ? 100 : total / 10), warmth);
 }

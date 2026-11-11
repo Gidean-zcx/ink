@@ -6,8 +6,18 @@
 #include "esp_system.h"
 #include "ink/hal_device.h"
 #include "ink/hal_ota.h"
+#ifdef ESP_PLATFORM
+#include "vendor/board_874538e/boot_binding.inc"
+#endif
 
 const char *hal_device_reset_reason(void) {
+#ifdef ESP_PLATFORM
+    static bool clean;
+    if (!clean) {
+        epd_board_metalio_eink4_plus_boot_release_holds();
+        clean = true;
+    }
+#endif
     switch (esp_reset_reason()) {
     case ESP_RST_POWERON: return "poweron";
     case ESP_RST_EXT: return "external";

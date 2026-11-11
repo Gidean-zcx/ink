@@ -1,0 +1,94 @@
+[
+  {
+    "path": "LICENSE",
+    "sha256": "0a5a839033bfe18fe75d32b50d9d028912cf876f69ef59c2791aeb2971335d05"
+  },
+  {
+    "path": "main/boards/metalio-e-ink4-plus/bus/metalio_i2c1.c",
+    "sha256": "ad1259ef4b810b117b0f8bc5225990a95509c558eb5220df9a57f3a2b8cfaa44"
+  },
+  {
+    "path": "main/boards/metalio-e-ink4-plus/bus/metalio_i2c1.h",
+    "sha256": "de6ef29b3e946004e104f150933d7f295bf2f1499ed4b0c17c9d775a6491bb20"
+  },
+  {
+    "path": "main/boards/metalio-e-ink4-plus/bus/pca9555.c",
+    "sha256": "84c7d6dd5197f00e0fd3a064fadba6690160e55dafd7cac4c9ca9a70df65c159"
+  },
+  {
+    "path": "main/boards/metalio-e-ink4-plus/bus/pca9555.h",
+    "sha256": "a952ad0b4fca46a4a08a6582b78cde7d45f86ad832e07587c1c8716e293632fb"
+  },
+  {
+    "path": "main/boards/metalio-e-ink4-plus/display/epd_board_metalio_eink4_plus.c",
+    "sha256": "ca014b04cb9163bbe0c2fef0347a0484d51c51a04c78b0eb40b8232e405a7b22"
+  },
+  {
+    "path": "main/boards/metalio-e-ink4-plus/display/metalio_touch.c",
+    "sha256": "35b6255e20492c342196a0cd08f387296689f36bc7edf2b3a032dedeed8442ce"
+  },
+  {
+    "path": "main/boards/metalio-e-ink4-plus/display/metalio_touch.h",
+    "sha256": "f7a5bfbd7ddcfd8af4fedd2c858650eb7d3faf8660dd52a3f697e52aa98941bd"
+  },
+  {
+    "path": "main/boards/metalio-e-ink4-plus/input/metalio_keys.cc",
+    "sha256": "7286f213284d12474249eac056950b331ffba56b52b1a7992c54183599bedd8d"
+  },
+  {
+    "path": "main/boards/metalio-e-ink4-plus/input/metalio_keys.h",
+    "sha256": "8b7e93ec81e3c8e276a25b8fd3b5b95d4e6f7e4d5196a81ded6a72525a146d68"
+  },
+  {
+    "path": "main/boards/metalio-e-ink4-plus/input/metalio_vibe.cc",
+    "sha256": "704fe17db25302b3cdf83bc0c78bddb7370eced7c7abb33065c455988c2bef0f"
+  },
+  {
+    "path": "main/boards/metalio-e-ink4-plus/input/metalio_vibe.h",
+    "sha256": "f1ca5f6106c392f364d7ad3a68a767eb6053f71b1dbe14c19313ee65c3188de3"
+  },
+  {
+    "path": "main/boards/metalio-e-ink4-plus/periph/frontlight.cc",
+    "sha256": "9ecc59ea946efaf53e59566bda58e0c672d42636f66eedd540597be714f450c2"
+  },
+  {
+    "path": "main/boards/metalio-e-ink4-plus/periph/frontlight.h",
+    "sha256": "2b541bb20aec932f7563b8a148f240f8186f4cc79b746b645b2fd16995ef075c"
+  },
+  {
+    "path": "main/boards/metalio-e-ink4-plus/periph/metalio_accel.cc",
+    "sha256": "66cb7ce24ca8b4329d50379ab582d90561b12be0fee412e77f33bad5ba46d0aa"
+  },
+  {
+    "path": "main/boards/metalio-e-ink4-plus/config.h",
+    "sha256": "b2d39fb67a618488338102d2567fd2d1e3c05e5c18d79872d9b4a092f2a9c15c"
+  },
+  {
+    "path": "main/boards/common/power/power_i2c.c",
+    "sha256": "f174f1d9c635ec7799ec9696004fb11e81f17df405c1b2f73e0ec224547d2a29"
+  },
+  {
+    "path": "main/boards/common/power/power_i2c.h",
+    "sha256": "1712c125dc9c244848d3919d67bfe8980e103698d39ab8cb92eed8efcc8c5bc7"
+  },
+  {
+    "path": "main/boards/common/sensor/sc7a20h.cc",
+    "sha256": "4ff40773dbae5beacbb10264dd26fc1c9db7619829576b4d8c20b38092ad6e9d"
+  },
+  {
+    "path": "main/boards/common/sensor/sc7a20h.h",
+    "sha256": "d399cc0479abb91ed06e530ed3a76f001deae2fbf5894811509991db093653c8"
+  },
+  {
+    "path": "main/boards/common/power_policy/power_hw.cc",
+    "sha256": "16824b1c9f735aa332036d716092a84502b728dd864a4c8a684f8f5c2d2cee0f"
+  },
+  {
+    "path": "main/boards/metalio-e-ink4-plus/display/ft6336u_upgrade_protocol.h",
+    "sha256": "8887c567da42ea0ba0ab85dd7906e56b1db1bf5f167a0307b2e302f2413ae363"
+  },
+  {
+    "path": "main/boards/metalio-e-ink4-plus/periph/metalio_sd.cc",
+    "sha256": "077938e881658c9207efb069f8e3986e1f6a09a0c4558faa13854e27cbf7c40d"
+  }
+]

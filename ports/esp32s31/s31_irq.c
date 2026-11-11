@@ -64,7 +64,7 @@ int s31_irq_watch(int gpio, s31_irq_fn fn, void *ctx) {
     g_lines[i].fn = fn;
     g_lines[i].ctx = ctx;
     gpio_config_t c = {.pin_bit_mask = 1ull << gpio, .mode = GPIO_MODE_INPUT, .pull_up_en = GPIO_PULLUP_ENABLE,
-                       .intr_type = GPIO_INTR_NEGEDGE};
+                       .intr_type = gpio == S31_GPIO_AI_KEY ? GPIO_INTR_ANYEDGE : GPIO_INTR_NEGEDGE};
     g_n = i + 1; /* before the handler: its first edge must find the line */
     if (gpio_config(&c) != ESP_OK || gpio_isr_handler_add(gpio, isr, (void *)(uintptr_t)i) != ESP_OK) {
         g_n = i;
