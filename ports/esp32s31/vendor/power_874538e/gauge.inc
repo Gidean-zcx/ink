@@ -337,4 +337,3 @@ float ink_bq_FilterPush(float sample) {
     }
     return filter_sum_ / filter_count_;
 }
-

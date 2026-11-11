@@ -2,7 +2,7 @@
 
 日期：2026-11-11。基线：`da9f76765f2d461590a870657eb3a0ad1e34152e`。
 
-状态：驱动部分移植完成，正在验证；C02 和完整充电移植未完成。未修改板级文件、系统服务、能力表或共享文档；不操作设备，不推送。
+状态：部分交付，未通过整体验收；C03／RTC 单元与反向对照通过，C02 和完整充电移植未完成。未修改板级文件、系统服务、能力表或共享文档；不操作设备，不推送。
 
 ## 验收表
 
@@ -14,7 +14,7 @@
 | 1a S31 宿主机 | 未全过【实测】 | 原话 `98% tests passed, 1 tests failed out of 55`；54 通过、C02 唯一失败；退出 8，无跳过 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-s31-host --output-on-failure -j2` |
 | 1b 主工程 | 零失败、3 跳过【实测】 | 原话 `100% tests passed out of 391`；388 通过、3 跳过，退出 0，812.57 s；最终重编译后原有充电相关 3/3 再过 | 总规则的普通配置／`cmake --build build -j2`；`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2` |
 | 1c 内存检查 | C03／RTC 通过，C02 逻辑失败【实测】 | S31 宿主机 ASan+UBSan 全部 55 项，仍 54 通过、C02 唯一失败，退出 8，14.31 s；未发现 sanitizer 错误 | 同宿主机构建，目录换 `build-s31-host-asan`、加 `-DINK_SANITIZE=ON`；同上 ctest，加 `ASAN_OPTIONS=halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1` |
-| 1d S31 编译 | 进行中 | 默认浅睡 OFF；只编译，不连接设备 | `INK_S31_LIGHT_SLEEP=OFF taskpolicy -c utility bash ports/esp32s31/build.sh` |
+| 1d S31 编译 | 通过【实测】 | 退出 0，浅睡 OFF，编译警告／错误 0；镜像静态大小 4373186 B；仅编译，未连接设备 | `INK_S31_LIGHT_SLEEP=OFF taskpolicy -c utility bash ports/esp32s31/build.sh` |
 | 1e GCC、来源、预算 | 通过【实测】 | `gcccheck: 4 compiled, 0 with findings`；11 个原文哈希一致，246/250 行 | `taskpolicy -c utility python3 ../../tools/gcccheck.py build-s31-host drivers/chips/bq27220/bq27220.c drivers/chips/pcf8563/pcf8563.c ports/esp32s31/tests/vendor_power.c ports/esp32s31/tests/vendor_board.c`；`python3 ports/esp32s31/tests/power_sources.py --baseline da9f76765f2d461590a870657eb3a0ad1e34152e` |
 | 2 | 清单完成【实现】，未上机 | 见文末：截止／终止、再充、百分比、USB、RTC／VL | 本任务禁止操作设备 |
 
@@ -27,7 +27,7 @@
 - 完整 CX25601N 充电／OTG 驱动没有替换。初步 C 适配连同另外两项会超过胶水 250 行，已撤回该适配；现有充电代码没有改动，原厂完整文件仅作副本保存。
 - C02 未修：HAL 在禁止改动的板级文件中，需由板级任务把未完成的再充续步放到电量计读取之前。没有以返回假成功、跨芯片耦合、额外定时器、弱符号或宏覆盖绕过限制。
 - 未处理未知电量和系统低电策略的交接，条件见“顺手发现”；系统文件不在允许修改范围。
-- 尚无本次真机证据；上机核对由主会话执行。
+- 尚无本次真机证据；上机核对由主会话执行。仅在 macOS 执行，Linux 运行测试／远端 CI 未跑；GCC 核查及 S31 RISC-V 编译不冒充 Linux 测试。
 
 ## 和设计不一致的
 
@@ -41,7 +41,8 @@
 
 ## 要用户定的
 
-- 由主会话协调板级范围，集中修改 `hal_power_charger_poll` 的续步优先级；完整原厂充电的 C++ 构建入口／适配预算，以及未知电量的系统处理也需统一安排。当前不自行扩大范围。
+- 方案 A（推荐由主会话另行授权）：纳入板级 HAL 入口及构建文件，直接编译原厂 C++、只留 C 桥接，并处理系统未知电量；可减少语法适配，完成集中修复。
+- 方案 B（本次保守执行）：保持允许范围和 250 行预算，保留现有充电及板级入口，交付 BQ／RTC 与失败证据；C02／完整充电移植及未知电量交接继续未完成。
 
 ## 顺手发现
 
@@ -73,3 +74,9 @@
 ## 架构审视
 
 - 【实现】原厂芯片流程位于驱动层，只经 HAL／OSAL 向下；电量、充电状态和时钟继续进入现有系统状态／软总线，电源及设置能力保持原入口，人和 AI 的调用路径未改变。新增的滤波、初始化和寄存器清标志属于内部机制，不另造用户能力。
+
+## 最终差异与隐私
+
+- 【实测】`git diff da9f76765f2d461590a870657eb3a0ad1e34152e..HEAD --stat` 已核对：25 个文件均属指定驱动、电源测试、新 vendor 目录和本报告；无设备数据、设计稿或构建产物，单文件均小于 5 MiB。
+- 【实测】按总规则第 6 节的路径／MAC 正则扫描，0 匹配（搜索退出 1 表示无匹配）；`git diff --check` 通过。仅本地提交，未推送、未开 PR。
+- 复核证据保存在本地忽略目录 `work/`：普通全量、S31 普通／ASan、五组反向对照、GCC 与固件构建日志。所有可复现测试和来源校验脚本均已提交；无需 Git 历史的校验已注册到 CTest。
