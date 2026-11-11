@@ -232,6 +232,7 @@ add_library(ink_system STATIC
   system/ui/textfield.c
   system/ui/shell/keyboard.c
   system/ui/app_registry.c
+  system/ui/app_packages.c
   system/ui/shell/card.c
   system/ui/shell/interrupt_card.c
   system/ui/shell/confirm_card.c
@@ -1802,3 +1803,7 @@ ink_sim_executable(sim-qr-scan tests/qr_scan/device.c)
 target_include_directories(sim-qr-scan PRIVATE third_party/quirc)
 target_link_libraries(sim-qr-scan PRIVATE ink_apps ink_system)
 add_test(NAME qr-scan COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/qr_scan/run.py --build ${CMAKE_BINARY_DIR})
+
+ink_sim_executable(sim-app-runtime tests/app_runtime/app.c)
+target_link_libraries(sim-app-runtime PRIVATE ink_apps ink_system)
+add_test(NAME app-runtime COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/app_runtime/run.py --build ${CMAKE_BINARY_DIR})

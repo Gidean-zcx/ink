@@ -988,7 +988,11 @@ static void cap_kid(ink_call_t *c) {
         for (int i = 0; i < KID_APPS; i++) if (!strcmp(p->apps[i].id, app)) { at = i; break; }
         for (int i = 0; at < 0 && i < KID_APPS; i++) if (!p->apps[i].id[0]) { at = i; break; }
         bool exists = false;
-        for (int i = 0; i < ink_app_count(); i++) if (!strcmp(ink_app_at(i)->id, app) && ink_app_at(i)->child_ok) exists = true;
+        for (int i = 0;; i++) {
+            char candidate[32]; bool child_ok;
+            if (!ink_app_identity_at(i, candidate, sizeof candidate, &child_ok)) break;
+            if (!strcmp(candidate, app) && child_ok) exists = true;
+        }
         if (at < 0 || !exists || !strcmp(app, "phone") || !strcmp(app, "message") || !strcmp(app, "home") || !strcmp(app, "settings")) { fail(c, INK_RC_INVALID, "app is required or unavailable"); return; }
         ink_svc_lock(); snprintf(p->apps[at].id, sizeof p->apps[at].id, "%s", app); p->apps[at].mode = (uint8_t)mode; ink_svc_unlock();
     } else if (!read) {
@@ -1000,9 +1004,10 @@ static void cap_kid(ink_call_t *c) {
     char *out = osal_malloc(8192, OSAL_MEM_EXTERNAL);
     if (!out) { fail(c, INK_RC_FAILED, "out of memory"); return; }
     ink_jw_t w; ink_jw_init(&w, out, 8192); ink_jw_raw(&w, "{\"apps\":[");
-    for (int i = 0; i < ink_app_count(); i++) {
-        const ink_app_def_t *a = ink_app_at(i);
-        ink_jw_raw(&w, i ? ",{\"id\":" : "{\"id\":"); ink_jw_str(&w, a->id); ink_jw_raw(&w, ",\"mode\":"); ink_jw_int(&w, ink_member_app_mode(s->m.id, a->id)); ink_jw_raw(&w, "}");
+    for (int i = 0;; i++) {
+        char candidate[32];
+        if (!ink_app_identity_at(i, candidate, sizeof candidate, NULL)) break;
+        ink_jw_raw(&w, i ? ",{\"id\":" : "{\"id\":"); ink_jw_str(&w, candidate); ink_jw_raw(&w, ",\"mode\":"); ink_jw_int(&w, ink_member_app_mode(s->m.id, candidate)); ink_jw_raw(&w, "}");
     }
     ink_jw_raw(&w, "],\"periods\":[");
     for (int i = 0; i < INK_KID_PERIODS; i++) {
