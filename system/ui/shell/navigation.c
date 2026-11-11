@@ -95,6 +95,7 @@ static struct {
     char card_objects[5][48];
     ink_ui_page_spec_t today;
     lv_timer_t *cards_timer;
+    lv_timer_t *note_timer; /* clears a passing note on the home page */
     int64_t cards_rev;
     uint64_t cards_at;
     bool cards_ok;
@@ -509,6 +510,25 @@ static void cards_due(lv_timer_t *timer) {
     N.cards_timer = NULL;
     ink_shell_home_settle();
 }
+
+/* A refusal on the home page is a passing note, not a state: it goes after a few seconds, and with the page (trial
+ * report 2026-11-11: "这个应用还没有可打开的内容" stayed on the screen until the member changed). */
+#define NOTE_MS 4000
+static void note_due(lv_timer_t *timer) {
+    (void)timer;
+    N.note_timer = NULL;
+    N.result[0] = 0;
+    if (N.message) lv_label_set_text(N.message, "");
+}
+static void home_note(const char *text) {
+    snprintf(N.result, sizeof N.result, "%s", text);
+    if (N.message) lv_label_set_text(N.message, N.result);
+    if (N.note_timer) lv_timer_reset(N.note_timer);
+    else {
+        N.note_timer = lv_timer_create(note_due, NOTE_MS, NULL);
+        lv_timer_set_repeat_count(N.note_timer, 1);
+    }
+}
 void ink_shell_home_settle(void) {
     if (!N.home || N.home_page != 0 || strcmp(ink_ui_top_name(), "home") || !ink_ui_page_current() ||
         !current_session(N.epoch) || ink_power_state() == INK_PWR_LOCKED || N.cards_rev == integer("app.cards_rev")) return;
@@ -835,6 +855,7 @@ lv_obj_t *ink_shell_dock(lv_obj_t *parent) {
 void ink_shell_home_destroy(void) {
     icon_close();
     if (N.cards_timer) { lv_timer_delete(N.cards_timer); N.cards_timer = NULL; }
+    if (N.note_timer) { lv_timer_delete(N.note_timer); N.note_timer = NULL; N.result[0] = 0; }
     N.home = N.content = N.dots = N.clock = N.date = N.message = NULL;
     N.kid_time_label = NULL;
 }
@@ -1837,9 +1858,8 @@ static void cap_launch(ink_call_t *c) {
             return;
         }
     c->rc.status = INK_RC_REJECTED;
-    snprintf(N.result, sizeof N.result, "这个应用还没有可打开的内容");
+    home_note(TR("这个应用还没有可打开的内容"));
     snprintf(c->rc.say, sizeof c->rc.say, "%s", N.result);
-    if (N.message) lv_label_set_text(N.message, N.result);
 }
 static void cap_resume(ink_call_t *c) {
     ink_card_t card;

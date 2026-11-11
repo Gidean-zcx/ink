@@ -6,7 +6,9 @@ import struct
 
 FONT_LIMIT = 4608 * 1024
 APP_LIMIT = 5 * 1024 * 1024
-EMBEDDED_LIMIT = 1536 * 1024  # Preserve the existing 6 MiB total resource ceiling.
+# 2 MiB: the pinyin word list (about 0.95 MiB) went in 2026-11-11. ota_1's 5 MiB (APP_LIMIT, checked on the
+# linked image) is the hard limit; this one only catches a pack growing by mistake.
+EMBEDDED_LIMIT = 2048 * 1024
 HEADER = struct.Struct('<4sII')
 ENTRY = struct.Struct('<96sII')
 
@@ -25,7 +27,8 @@ def pack(items):
 
 
 def split(assets, font_limit=FONT_LIMIT, embedded_limit=EMBEDDED_LIMIT):
-    files = sorted([*assets.glob('fonts/*.inkf'), *assets.glob('icons/*.inki'), *assets.glob('sample/*.txt')])
+    files = sorted([*assets.glob('fonts/*.inkf'), *assets.glob('icons/*.inki'), *assets.glob('ime/*'),
+                    *assets.glob('sample/*.txt')])  # ime/: the pinyin word list and its licences
     if not files:
         raise ValueError('no generated fonts/icons; build host assets first')
     groups, used, second = [[], []], HEADER.size, False

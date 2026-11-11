@@ -11,6 +11,8 @@ void ink_test_shell2_member(void);
 void ink_test_shell2_kid(void);
 void ink_test_shell2_battery(void);
 void ink_test_shell2_home(void);
+extern bool ink_test_shell2_note_left;
+void ink_test_shell2_note_check(void);
 static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
 static void run(void *arg) {
     (void)arg;
@@ -23,7 +25,12 @@ static void run(void *arg) {
     else if (!strcmp(scene, "member")) on_ui(ink_test_shell2_member);
     else if (!strcmp(scene, "kid")) on_ui(ink_test_shell2_kid);
     else if (!strcmp(scene, "battery")) on_ui(ink_test_shell2_battery);
-    else if (!strcmp(scene, "home")) on_ui(ink_test_shell2_home);
+    else if (!strcmp(scene, "home")) {
+        on_ui(ink_test_shell2_home);
+        uint64_t set_at = osal_now_us();
+        CHECK(WAIT_FOR((on_ui(ink_test_shell2_note_check), !ink_test_shell2_note_left), 6000) &&
+              osal_now_us() - set_at >= 3500000, "the note clears itself after about 4 s");
+    }
     else CHECK(false, "known scene");
     ink_probe_count("test.finished");
 }

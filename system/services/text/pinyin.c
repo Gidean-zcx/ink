@@ -2,13 +2,16 @@
  * The pinyin engine: full pinyin, whole-key matches of the longest prefix first (system services design §9.2). No
  * syllable splitting: the data decides ("xian" is both 先 and 西安). The dictionary is a file on the card, read into
  * external RAM the first time it is needed, searched in place, given back when memory is short and nobody is typing.
- * Without it (no card, a bad file) a small table in the program does.
+ * Without a card copy the firmware's asset pack has one, searched in place in mapped flash (no RAM; trial report
+ * 2026-11-11: the device had no Chinese because nothing put the file on the card). Without either (no pack entry,
+ * a bad file) a small table in the program does.
  */
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include "ink/hal_assets.h"
 #include "ink/hal_storage.h"
 #include "ink/osal.h"
 #include "ink/probe.h"
@@ -43,7 +46,7 @@ static struct {
     const dict_entry_t *entries;
     const char *text;
     uint32_t nkeys;
-    bool loading, tried;
+    bool loading, tried, mapped; /* mapped: the asset pack's copy, nothing to give back */
     void (*ready)(void);
     ink_exec_job_t load_job, ready_job;
 } PY INK_PSRAM_BSS;
@@ -107,12 +110,26 @@ static void load_job(void *arg) { /* exec.bg */
         }
     }
     if (held) ink_fs_card_release();
+    bool mapped = false;
+    if (!b) {
+        size_t n = 0;
+        const uint8_t *m = hal_asset_map(PY_DICT_ASSET, &n);
+        if (m) hal_asset_access(m, n);
+        if (m && n <= DICT_MAX && dict_ok(m, n)) {
+            b = (uint8_t *)m; /* read only: searched, never written */
+            mapped = true;
+        } else if (m) {
+            ink_probe_count("text.dict_bad");
+            hal_asset_unmap(m);
+        }
+    }
     dict_head_t h = {0};
     if (b) memcpy(&h, b, sizeof h);
     ink_svc_lock();
     PY.loading = false;
     if (b) {
         PY.block = b;
+        PY.mapped = mapped;
         PY.nkeys = h.nkeys;
         PY.keys = (const dict_key_t *)(b + h.keys_off);
         PY.entries = (const dict_entry_t *)(b + h.entries_off);
@@ -121,6 +138,7 @@ static void load_job(void *arg) { /* exec.bg */
     ink_svc_unlock();
     if (b) {
         ink_probe_count("text.dict_loaded");
+        if (mapped) ink_probe_count("text.dict_mapped");
         ink_exec_post(INK_EXEC_UI, &PY.ready_job, ready_job, NULL);
     }
 }
@@ -186,6 +204,10 @@ static size_t reclaim(void *ctx, size_t want) { /* memory is short: it can be re
     (void)ctx;
     (void)want;
     ink_svc_lock();
+    if (PY.mapped) { /* flash, not RAM: nothing to give back */
+        ink_svc_unlock();
+        return 0;
+    }
     void *b = PY.block;
     PY.block = NULL;
     PY.keys = NULL;

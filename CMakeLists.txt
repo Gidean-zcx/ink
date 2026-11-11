@@ -462,7 +462,18 @@ add_custom_command(OUTPUT ${INK_TEST_CONTENT}/.system/ime/base.ikd
           tools/imedict/licenses/jieba-MIT.txt tools/imedict/licenses/pypinyin-MIT.txt
           tools/imedict/licenses/pinyin-data-MIT.txt tools/imedict/licenses/phrase-pinyin-data-MIT.txt
   COMMENT "imedict: hash-locked full pinyin and initials within 1 MiB")
-add_custom_target(ink_test_content ALL DEPENDS ${INK_TEST_CONTENT}/books/测试长书.txt ${INK_TEST_CONTENT}/.system/ime/base.ikd)
+# The same word list ships in the firmware's asset pack (ime/, with its licences), so the device has Chinese
+# without the card file (trial report 2026-11-11). The simulator maps the same assets as the device; a card copy
+# still wins, and tests/ime_lexicon checks the no-dictionary fallback with assets that leave ime/ out.
+set(INK_IME_LICENSES jieba-MIT.txt pypinyin-MIT.txt pinyin-data-MIT.txt phrase-pinyin-data-MIT.txt)
+list(TRANSFORM INK_IME_LICENSES PREPEND ${CMAKE_SOURCE_DIR}/tools/imedict/licenses/ OUTPUT_VARIABLE INK_IME_LICENSE_FILES)
+add_custom_command(OUTPUT ${INK_ASSETS_DIR}/ime/base.ikd
+  COMMAND ${CMAKE_COMMAND} -E make_directory ${INK_ASSETS_DIR}/ime
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different ${INK_TEST_CONTENT}/.system/ime/base.ikd ${INK_IME_LICENSE_FILES} ${INK_ASSETS_DIR}/ime/
+  DEPENDS ${INK_TEST_CONTENT}/.system/ime/base.ikd ${INK_IME_LICENSE_FILES}
+  COMMENT "imedict: the shipping word list in the asset pack")
+add_custom_target(ink_test_content ALL DEPENDS ${INK_TEST_CONTENT}/books/测试长书.txt ${INK_TEST_CONTENT}/.system/ime/base.ikd
+  ${INK_ASSETS_DIR}/ime/base.ikd)
 
 # Keep the engine's original ordering fixture separate from the shipping data.
 set(INK_MINI_CONTENT ${CMAKE_BINARY_DIR}/mini-content)

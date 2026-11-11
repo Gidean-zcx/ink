@@ -14,6 +14,7 @@ typedef struct {
 } py_cand_t;
 
 #define PY_DICT_PATH "/content/.system/ime/base.ikd"
+#define PY_DICT_ASSET "ime/base.ikd" /* the same file in the firmware's asset pack */
 
 /** Have the dictionary: loads in the background the first time; `ready` runs in the UI task when it is in. */
 void py_want_dict(void (*ready)(void));

@@ -1,5 +1,5 @@
 set(root ${CMAKE_CURRENT_LIST_DIR}/../../../..)
-file(GLOB assets ${root}/build/assets/fonts/*.inkf ${root}/build/assets/icons/*.inki)
+file(GLOB assets ${root}/build/assets/fonts/*.inkf ${root}/build/assets/icons/*.inki ${root}/build/assets/ime/*)
 execute_process(COMMAND ${PYTHON} ${root}/tools/asset_pack.py ${root}/build/assets --out ${CMAKE_BINARY_DIR}
     COMMAND_ERROR_IS_FATAL ANY)
 set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${assets} ${root}/tools/asset_pack.py)

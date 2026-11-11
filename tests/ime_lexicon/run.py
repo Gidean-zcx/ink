@@ -24,13 +24,23 @@ assert shipping.read_bytes() == (work / "repeat.ikd").read_bytes(), "same source
 assert shipping.stat().st_size <= 1024 * 1024
 empty = work / "empty-content"
 empty.mkdir()
+# The device's assets now carry the word list (ime/). The no-dictionary fallback gets assets whose word list is
+# empty: unusable, so the engine falls back exactly as with no file (and a missing asset would be a warning).
+bare = work / "assets-no-ime"
+bare.mkdir()
+for item in (build / "assets").iterdir():
+    if item.name != "ime":
+        (bare / item.name).symlink_to(item)
+(bare / "ime").mkdir()
+(bare / "ime/base.ikd").write_bytes(b"")
 summary = {"cases": len(corpus), "bytes": shipping.stat().st_size,
            "sha256": hashlib.sha256(shipping.read_bytes()).hexdigest(), "reproducible": True}
-for phase in ("dictionary", "fallback", "reverse"):
+# flash: no card copy, the asset pack's word list mapped in place: the same answers, and no RAM for it.
+for phase in ("dictionary", "flash", "fallback", "reverse"):
     output = work / phase
     result = subprocess.run([str(build / "sim-ime-lexicon"),
                              "--profile", str(ROOT / "simulator/profiles/metalio-plus.json"),
-                             "--assets", str(build / "assets"),
+                             "--assets", str(bare if phase in ("fallback", "reverse") else build / "assets"),
                              "--content", str(build / "test-content" if phase == "dictionary" else empty),
                              "--out", str(output), "--end", "60s", "--quiet", "--no-random-outages",
                              "--budget", str(ROOT / "tests/integration/textinput.budget.json")],
@@ -76,6 +86,8 @@ assert summary["dictionary"]["first"] > summary["fallback"]["first"]
 assert summary["dictionary"]["five"] > summary["fallback"]["five"]
 assert summary["dictionary"]["external_bytes"]["max"] == shipping.stat().st_size
 assert summary["fallback"]["external_bytes"]["max"] == 0
+assert (summary["flash"]["first"], summary["flash"]["five"]) == (summary["dictionary"]["first"], summary["dictionary"]["five"])
+assert summary["flash"]["external_bytes"]["max"] == 0, "the mapped word list must not be copied into RAM"
 (work / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2) + "\n")
 print(json.dumps(summary, ensure_ascii=False, indent=2))
 if os.environ.get("INK_KEEP_EVIDENCE"):
