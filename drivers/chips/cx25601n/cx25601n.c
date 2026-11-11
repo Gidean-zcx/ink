@@ -1,5 +1,4 @@
 #include "cx25601n/cx25601n.h"
-#include "ink/osal.h"
 
 enum { REG_ICHG_LO = 0x02, REG_ICHG_HI = 0x03, REG_CHG_CTRL0 = 0x14, REG_CHG_CTRL1 = 0x16,
        REG_CHG_CTRL3 = 0x18, REG_STATUS1 = 0x1E, REG_PART_INFO = 0x38, VREG_MV = 4400, UV_MV = 3100 };
@@ -113,11 +112,19 @@ hal_i2c_status_t cx25601n_init_defaults(hal_i2c_dev_t *dev) {
     return cx25601n_enable_charging(dev, true);
 }
 
-uint32_t cx25601n_poll(hal_i2c_dev_t *dev, int mv, int ma, bool *uv_done) {
+uint32_t cx25601n_poll(hal_i2c_dev_t *dev, int mv, int ma, bool *uv_done, uint8_t *kick_step) {
     bool below = mv >= 2500 && mv < VREG_MV;
     uint32_t interval = below ? 2000 : 10000; /* Vendor :162-175. */
     cx25601n_chg_t stat;
     int vbus;
+    /* Vendor :135-159: schedule the 200/500 ms waits outside the calling task. */
+    if (*kick_step) {
+        uint8_t step = (*kick_step)++;
+        if (step == 1 && cx25601n_enable_charging(dev, true) == HAL_I2C_OK) return 500;
+        if (step == 2) cx25601n_status(dev, &stat, &vbus);
+        *kick_step = 0;
+        return interval;
+    }
     if (set_vreg(dev) != HAL_I2C_OK || cx25601n_status(dev, &stat, &vbus) != HAL_I2C_OK) return interval;
     /* Vendor :185-197: the latch resets strictly above 3200 mV; it does not reconnect BATFET. */
     if (!*uv_done && mv >= 2500 && mv <= UV_MV && vbus == 0) {
@@ -126,10 +133,8 @@ uint32_t cx25601n_poll(hal_i2c_dev_t *dev, int mv, int ma, bool *uv_done) {
     if (update(dev, REG_CHG_CTRL0, 1, 2, !below) != HAL_I2C_OK) return interval;
     if (stat == CX25601N_NOT_CHARGING && ma < 5 && below) { /* Vendor :135-159,201-207; negative current clamps to zero. */
         if (cx25601n_enable_charging(dev, false) != HAL_I2C_OK || update(dev, REG_CHG_CTRL1, 1, 4, 0) != HAL_I2C_OK) return interval;
-        osal_task_delay_us(200000);
-        if (cx25601n_enable_charging(dev, true) != HAL_I2C_OK) return interval;
-        osal_task_delay_us(500000);
-        cx25601n_status(dev, &stat, &vbus);
+        *kick_step = 1;
+        return 200;
     }
     return interval;
 }

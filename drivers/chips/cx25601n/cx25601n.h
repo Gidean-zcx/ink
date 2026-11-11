@@ -29,7 +29,7 @@ hal_i2c_status_t cx25601n_ship_mode(hal_i2c_dev_t *dev);
 /* v2.0.77 common/power/cx25601n.cc:314-341, except ICHG stays at 1 A. */
 hal_i2c_status_t cx25601n_init_defaults(hal_i2c_dev_t *dev);
 hal_i2c_status_t cx25601n_charge_config(hal_i2c_dev_t *dev, int *vreg_mv, int *iterm_ma, bool *en_term);
-/* Power task only; pauses naturally while that task is in hal_power_sleep. Returns next interval (ms). */
-uint32_t cx25601n_poll(hal_i2c_dev_t *dev, int mv, int ma, bool *uv_done);
+/* Serial background calls; *kick_step starts at zero. Returns next step/interval (ms), never waits. */
+uint32_t cx25601n_poll(hal_i2c_dev_t *dev, int mv, int ma, bool *uv_done, uint8_t *kick_step);
 
 #endif

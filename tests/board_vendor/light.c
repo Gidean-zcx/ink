@@ -6,6 +6,7 @@
 #include "ink/hal_power.h"
 #include "ink/sys/display.h"
 #include "ink/sys/settings.h"
+#include "ink/sys/svc.h"
 
 #define CHECK(ok, why) do { if (!(ok)) { fprintf(stderr, "%s (line %d)\n", why, __LINE__); exit(1); } checks++; } while (0)
 struct osal_mutex { bool held; };
@@ -16,10 +17,10 @@ static const ink_setting_def_t *settings;
 static ink_state_fn power_changed;
 static const char *power_state = "active";
 static int64_t brightness = 10, warmth = 50;
-static int checks, cold, warm;
+static int checks, cold, warm, mutexes, timers;
 static uint64_t now;
 
-osal_mutex_t *osal_mutex_create(void) { return &lock; }
+osal_mutex_t *osal_mutex_create(void) { CHECK(++mutexes == 1, "frontlight must reuse the service lock"); return &lock; }
 osal_err_t osal_mutex_lock(osal_mutex_t *m, int64_t timeout) {
     (void)timeout;
     CHECK(m == &lock && !m->held, "light mutex serializes state");
@@ -28,16 +29,18 @@ osal_err_t osal_mutex_lock(osal_mutex_t *m, int64_t timeout) {
 }
 void osal_mutex_unlock(osal_mutex_t *m) { CHECK(m->held, "unlock held mutex"); m->held = false; }
 osal_timer_t *osal_timer_create(const char *name, osal_timer_fn fn, void *arg) {
-    CHECK(!strcmp(name, "frontlight"), "uses shared timer");
+    CHECK(++timers == 1 && !strcmp(name, "svc"), "frontlight must reuse the service timer");
     timer.fn = fn; timer.arg = arg;
     return &timer;
 }
 osal_err_t osal_timer_start(osal_timer_t *t, uint64_t delay, uint64_t period) {
-    CHECK(t == &timer && delay == 5000 && period == 5000, "frontlight period is 5 ms");
+    CHECK(t == &timer && delay > 0 && period == 0, "shared deadlines use one-shot timer");
     t->active = true; t->next = now + delay; t->period = period;
     return OSAL_OK;
 }
 osal_err_t osal_timer_stop(osal_timer_t *t) { t->active = false; return OSAL_OK; }
+uint64_t osal_now_us(void) { return now; }
+const char *osal_mem_tag(const char *tag) { (void)tag; return NULL; }
 void hal_light_set(int c, int w) { cold = c; warm = w; }
 int ink_settings_define(const ink_setting_def_t *defs, int n) { CHECK(n == 2, "existing settings unchanged"); settings = defs; return 0; }
 int64_t ink_setting_get(const char *id) { return !strcmp(id, "display.light") ? brightness : warmth; }
@@ -51,13 +54,14 @@ int ink_state_get_str(int h, char *out, size_t cap) { (void)h; return snprintf(o
 static void advance(uint64_t us) {
     uint64_t end = now + us;
     while (timer.active && timer.next <= end) {
-        now = timer.next; timer.next += timer.period; timer.fn(timer.arg);
+        now = timer.next; timer.active = false; timer.fn(timer.arg);
     }
     now = end;
 }
 static void set(int b) { brightness = b; settings[0].apply(NULL, b); }
 int main(void) {
-    CHECK(ink_light_init() == 0 && cold + warm == 100 && !timer.active, "saved brightness restores immediately");
+    CHECK(ink_svc_init() == 0 && ink_light_init() == 0 && cold + warm == 100 && !timer.active, "saved brightness restores immediately");
+    CHECK(mutexes == 1 && timers == 1, "frontlight allocates no additional internal RAM objects");
     set(13);
     CHECK(cold + warm == 100, "setting does not jump straight to target");
     advance(4999);

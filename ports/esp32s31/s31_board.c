@@ -24,6 +24,7 @@ static hal_i2c_dev_t *g_gauge, *g_charger, *g_rtc, *g_accel, *g_touch;
 static uint32_t g_motions;
 static bool g_light;
 static bool g_uv_done;
+static uint8_t g_kick_step;
 
 static void charger_log(const char *phase) {
     int mv = -1, iterm = -1, battery_mv = -1;
@@ -39,7 +40,7 @@ static void charger_log(const char *phase) {
 uint32_t hal_power_charger_poll(void) {
     bq27220_reading_t g;
     if (!g_charger || !g_gauge || bq27220_reading(g_gauge, &g) != HAL_I2C_OK) return 10000;
-    return cx25601n_poll(g_charger, g.mv, g.ma, &g_uv_done);
+    return cx25601n_poll(g_charger, g.mv, g.ma, &g_uv_done, &g_kick_step);
 }
 
 bool s31_accel_take_motion(void) {

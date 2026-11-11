@@ -10,8 +10,9 @@
 struct hal_i2c_dev { bool gauge; };
 static hal_i2c_dev_t charger, gauge = {.gauge = true};
 static uint8_t regs[256], key[4];
-static int checks, gauge_mv, gauge_ma, cuts, kicks, delays;
+static int checks, gauge_mv, gauge_ma, cuts, kicks;
 static bool uv_done;
+static uint8_t kick_step;
 
 hal_i2c_status_t hal_i2c_write(hal_i2c_dev_t *dev, const uint8_t *data, size_t len) {
     CHECK(dev == &charger && len == 2, "charger register write");
@@ -36,15 +37,13 @@ hal_i2c_status_t hal_i2c_write_read(hal_i2c_dev_t *dev, const uint8_t *w, size_t
     return HAL_I2C_OK;
 }
 void osal_task_delay_us(uint64_t us) {
-    CHECK(!(regs[0x14] & 4) && !(regs[0x16] & 0x10), "kick clears EN_TERM and HIZ");
-    CHECK((delays == 0 && us == 200000 && !(regs[0x16] & 0x20)) ||
-          (delays == 1 && us == 500000 && (regs[0x16] & 0x20)), "kick holds off 200 ms then on 500 ms");
-    delays++;
+    (void)us;
+    CHECK(false, "recharge must schedule waits, never block a task");
 }
 static void reset(void) {
     memset(regs, 0, sizeof regs);
     uv_done = false;
-    cuts = kicks = delays = 0;
+    cuts = kicks = kick_step = 0;
     regs[0x16] = 0x20;
 }
 static uint32_t sample(int mv, int ma, cx25601n_chg_t state, int vbus) {
@@ -53,8 +52,7 @@ static uint32_t sample(int mv, int ma, cx25601n_chg_t state, int vbus) {
     regs[0x1E] = (uint8_t)((state << 3) | vbus);
     bq27220_reading_t g;
     CHECK(bq27220_reading(&gauge, &g) == HAL_I2C_OK && g.mv == mv && g.ma == ma, "actual gauge driver decodes sample");
-    delays = 0;
-    return cx25601n_poll(&charger, g.mv, g.ma, &uv_done);
+    return cx25601n_poll(&charger, g.mv, g.ma, &uv_done, &kick_step);
 }
 static void defaults(void) {
     reset();
@@ -103,8 +101,14 @@ static void undervoltage(void) {
 }
 static void recharge(void) {
     reset();
-    CHECK(sample(4399, 4, CX25601N_NOT_CHARGING, 3) == 2000 && kicks == 1 && delays == 2, "below cutoff idle low current kicks at 2 s");
+    CHECK(sample(4399, 4, CX25601N_NOT_CHARGING, 3) == 200 && kicks == 1 && kick_step == 1,
+          "below cutoff idle low current schedules recharge after 200 ms");
     CHECK(!(regs[0x14] & 4), "below cutoff disables termination");
+    CHECK(!(regs[0x16] & 0x30), "kick clears EN_CHG and HIZ for 200 ms");
+    CHECK(sample(4399, 4, CX25601N_NOT_CHARGING, 3) == 500 && kick_step == 2 && (regs[0x16] & 0x20),
+          "200 ms continuation enables charging, schedules 500 ms observation");
+    CHECK(sample(4399, 4, CX25601N_NOT_CHARGING, 3) == 2000 && kick_step == 0 && kicks == 1,
+          "500 ms continuation observes status then resumes 2 s cadence");
     int before = kicks;
     for (int state = CX25601N_CC; state <= CX25601N_TOPOFF; state++) sample(4200, 0, (cx25601n_chg_t)state, 3);
     CHECK(kicks == before, "non-idle charger must not kick");

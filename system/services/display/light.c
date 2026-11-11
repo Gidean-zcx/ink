@@ -11,9 +11,9 @@
 #include "ink/sys/display.h"
 #include "ink/sys/settings.h"
 #include "ink/sys/state.h"
+#include "ink/sys/svc.h"
 
-static osal_mutex_t *g_lock;
-static osal_timer_t *g_timer;
+static INK_PSRAM_BSS ink_svc_deadline_t g_timer;
 static int g_level, g_target, g_warmth;
 static bool g_off;
 
@@ -25,33 +25,34 @@ static void output(void) {
 /* Vendor periph/frontlight.cc:24,233-245: one brightness percentage point every 5 ms. */
 static void step(void *arg) {
     (void)arg;
-    if (osal_mutex_lock(g_lock, 0) != OSAL_OK) return;
+    ink_svc_lock();
     if (g_level != g_target) g_level += g_target > g_level ? 1 : -1;
     output();
-    if (g_level == g_target) osal_timer_stop(g_timer);
-    osal_mutex_unlock(g_lock);
+    bool moving = g_level != g_target;
+    ink_svc_unlock();
+    if (moving) ink_svc_at(&g_timer, osal_now_us() + 5000, step, NULL);
 }
 
 static void apply(bool immediate) {
     int64_t level = ink_setting_get("display.light"), warmth = ink_setting_get("display.warmth");
-    osal_mutex_lock(g_lock, OSAL_WAIT_FOREVER);
+    ink_svc_lock();
     g_target = g_off ? 0 : (int)level;
     g_warmth = (int)warmth;
     if (immediate) g_level = g_target; /* Vendor :154-164: restore without transition. */
     output();
-    if (g_level != g_target) osal_timer_start(g_timer, 5000, 5000);
-    else osal_timer_stop(g_timer);
-    osal_mutex_unlock(g_lock);
+    bool moving = g_level != g_target;
+    ink_svc_unlock();
+    if (moving) ink_svc_at(&g_timer, osal_now_us() + 5000, step, NULL);
+    else ink_svc_cancel(&g_timer);
 }
 
 void ink_light_off(void) { /* Vendor :215-230: stop transition before forcing both channels low. */
-    if (!g_lock) { hal_light_set(0, 0); return; }
-    osal_mutex_lock(g_lock, OSAL_WAIT_FOREVER);
+    ink_svc_lock();
     g_off = true;
-    osal_timer_stop(g_timer);
     g_level = g_target = 0;
     output();
-    osal_mutex_unlock(g_lock);
+    ink_svc_unlock();
+    ink_svc_cancel(&g_timer);
 }
 
 static void on_setting(void *ctx, int64_t v) {
@@ -66,10 +67,10 @@ static void on_power(void *ctx, int h, const char *id) { /* after a wake the lig
     char s[16];
     if (ink_state_get_str(h, s, sizeof s) <= 0) return;
     if (!strcmp(s, "locked")) { ink_light_off(); return; }
-    osal_mutex_lock(g_lock, OSAL_WAIT_FOREVER);
+    ink_svc_lock();
     bool restore = g_off;
     g_off = false;
-    osal_mutex_unlock(g_lock);
+    ink_svc_unlock();
     if (restore) apply(true);
 }
 
@@ -81,9 +82,7 @@ static const ink_setting_def_t LIGHT_SETTINGS[] = {
 };
 
 int ink_light_init(void) {
-    g_lock = osal_mutex_create();
-    g_timer = osal_timer_create("frontlight", step, NULL);
-    if (!g_lock || !g_timer) return -1;
+    if (ink_svc_init() != 0) return -1;
     if (ink_settings_define(LIGHT_SETTINGS, 2) != 0) return -1;
     apply(true); /* the saved level */
     return ink_state_watch("power.state", on_power, NULL, INK_EXEC_DIRECT);

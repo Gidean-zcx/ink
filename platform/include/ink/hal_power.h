@@ -19,7 +19,7 @@ typedef struct {
 } hal_battery_t;
 
 void hal_power_battery(hal_battery_t *out);
-/* Power task only: vendor charger maintenance; next awake interval in milliseconds.
+/* Serial background calls: vendor charger step; next awake delay in milliseconds.
  * The caller suspends polling across hal_power_sleep and resumes on return. */
 uint32_t hal_power_charger_poll(void);
 

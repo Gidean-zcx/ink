@@ -2,7 +2,7 @@
 
 基线：`40d965f5b4b5d8d510064396dc59e3ae7e96855c`。执行日期：2026-11-11。仅本机编译与宿主机测试，不连接设备，不推送。
 
-当前结论：功能单元与四项反向对照通过，但普通及 ASan/UBSan 全量均存在本次引入的回归，**未达到合入验收**。
+首次执行结论：功能单元与四项反向对照通过，但普通及 ASan/UBSan 全量均存在本次引入的回归，**未达到合入验收**。下文保留当时证据；本次复查结果见文末。
 
 ## 验收表
 
@@ -91,3 +91,11 @@ SHA-256：`cx25601n.cc` = `8af78da4b8e806c406b783a0185f85559f771d5c8196a9cf548a1
 - 产品 C/H 净增 186 行（211 增、25 删，包含模拟器修正）；加上 14 行 CMake 测试注册和 22 行许可证也只有 222 行，低于 300 行。测试源码和报告另计。
 - 为什么不能更小：约百行是原厂寄存器序列、读数和保护条件，其余是板级日志/采样、现有电源循环期限与共享定时器过渡。只在 HAL 单次调用内等待整个渐变会阻塞调用方；另起原厂常驻任务违反任务约束；逐个 UI/AI 调用方补渐变会重复根因，因此未采用。
 - 【实现】充电策略只在驱动及 HAL 下层，系统电源服务仅调平台接口；前光仍由现有 `settings.set` 原子能力统一入口控制，按钮与 AI 同路。未加页面、设置项或 AI 私有旁路。
+
+## 复查后的修复
+
+- 复查基线：`b877e9d4`。本轮按 `REVIEW.md` 修复三项问题，执行中；最终验收和命令结果将在本节补齐。
+- 【实现】前光复用现有 `ink_svc` 锁和定时器；充电移到现有后台执行器，200/500 ms 分步排期；开机和浅睡后先等 2/10 秒。未新增线程、队列或配置项。
+- 【实测】定向测试 3/3 通过；`board-vendor-power` 34 项检查、`test.finished=1`，没有警告。反向对照 8/8 均退出 1 并命中对应断言：原四项，以及额外前光锁、同步再充等待、首轮立即核对、在电源任务执行充电。命令：`taskpolicy -c utility ctest --test-dir build -R '^board-vendor-' --output-on-failure -j2`；`INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/board_vendor/reverse.py --build build`。证据：`work/recheck-unit.log`、`work/recheck-reverse.log`。
+- 【实测】普通构建退出 0；gcccheck 结果 `gcccheck: 7 compiled, 0 with findings`，无跳过。全量验收进行中。
+- 【实测】原三项中枢测试被跳过，原因是 `INK_HUB_PYTHON` 指向字体工具环境，缺 `pytest`、`pytest_asyncio`、`aiohttp`、`yaml`。现有 `$INK_DEPS/hub/.venv` 已装齐锁定依赖，改用它，并设置 `PYTHONPATH="$PWD/hub/src"`、`PYTHONDONTWRITEBYTECODE=1`，确保执行当前检出代码且不写依赖目录；不改跳过规则。

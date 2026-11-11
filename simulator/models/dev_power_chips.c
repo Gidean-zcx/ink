@@ -147,11 +147,12 @@ static int charger_xfer(void *state, const uint8_t *w, size_t wlen, uint8_t *r, 
 
 static hal_i2c_dev_t *g_gauge, *g_charger;
 static bool g_uv_done;
+static uint8_t g_kick_step;
 
 uint32_t hal_power_charger_poll(void) {
     bq27220_reading_t g;
     if (!g_charger || !g_gauge || bq27220_reading(g_gauge, &g) != HAL_I2C_OK) return 10000;
-    return cx25601n_poll(g_charger, g.mv, g.ma, &g_uv_done);
+    return cx25601n_poll(g_charger, g.mv, g.ma, &g_uv_done, &g_kick_step);
 }
 
 void sim_power_chips_init(void) { /* task context (boot) */
