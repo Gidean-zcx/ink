@@ -22,6 +22,7 @@
 #include "s31_io.h"
 #include "tps65185/tps65185.h"
 #include "s31_safety.h"
+#include "vendor/metalio_display/power.h"
 
 enum { W = 1216, H = 684 };
 #define LINE_BYTES (W / 4)
@@ -62,15 +63,17 @@ static void gate(void *ctx, bool on) {
 }
 static void power_off(void) {
     epd_power_off(&D.power);
-    atomic_store(&D.powered, false);
+    atomic_store(&D.powered, !ink_panel_off_confirmed(&D.power));
+    if (ATOMIC(D.powered)) atomic_store(&D.stop, true);
 }
 static void trip(void) {
     atomic_store(&D.stop, true);
+    epd_lcd_abort_frame(); /* Task context: the old ISR must exit before callback/queue reuse. */
     epd_lcd_line_source_cb(NULL, NULL);
     epd_lcd_frame_done_cb(NULL, NULL);
-    epd_lcd_abort_frame();
+    while (xSemaphoreTake(D.frame_done, 0) == pdTRUE) { }
     power_off();
-    atomic_store(&D.armed, false);
+    atomic_store(&D.armed, ATOMIC(D.powered));
 }
 /* A refresh that could not finish (lines missed, the LCD frame lost): the rails go off at once, as for a trip. Unlike a
  * guard trip the driver is alive, so the next refresh redraws the whole panel over what was left half driven; only
@@ -78,8 +81,8 @@ static void trip(void) {
  * missed lines turned every later one away, and the screen stayed half drawn.) */
 static void fail(void) {
     trip();
-    if (++D.fails >= FAILS_MAX) {
-        hal_log_write("display: refreshes keep failing, the panel stays off");
+    if (ATOMIC(D.powered) || ++D.fails >= FAILS_MAX) {
+        hal_log_write(ATOMIC(D.powered) ? "display: refresh blocked, panel power-off unconfirmed" : "display: refreshes keep failing, the panel stays off");
         return;
     }
     for (int i = 0; i < 2; i++) /* a scanner that was still at work has seen stop by now: take its late reply */
@@ -92,9 +95,10 @@ static void fail(void) {
 static void guard_check(void) {
     if (!ATOMIC(D.armed) || (uint32_t)(xTaskGetTickCount() - ATOMIC(D.beat)) < pdMS_TO_TICKS(GUARD_MS)) return;
     if (!ATOMIC(D.testing)) { trip(); return; }
-    atomic_store(&D.armed, false); /* The self-test: nothing has started the LCD, so only the power goes. */
+    /* The self-test has not started the LCD; keep protecting unconfirmed rails. */
     power_off();
-    atomic_store(&D.tripped, true);
+    atomic_store(&D.armed, ATOMIC(D.powered));
+    atomic_store(&D.tripped, !ATOMIC(D.powered));
 }
 void ink_s31_display_shutdown(void) { if (D.ready) trip(); }
 void IRAM_ATTR ink_s31_display_panic(void) {
@@ -132,6 +136,7 @@ static bool guard_self_test(void) {
     atomic_store(&D.armed, false);
     atomic_store(&D.testing, false);
     if (!tripped) power_off();
+    atomic_store(&D.armed, ATOMIC(D.powered));
     bool asleep = false;
     for (int i = 0; i < 100 && !asleep; i++) {
         uint8_t pg;
@@ -198,9 +203,9 @@ static bool scan(bool empty) {
             ok = false;
             D.done_owed[i] = true; /* its reply comes once it sees stop */
         }
+    if (!ok || ATOMIC(D.missed) || ATOMIC(D.stop)) { trip(); return false; }
     epd_lcd_line_source_cb(NULL, NULL);
     epd_lcd_frame_done_cb(NULL, NULL);
-    if (!ok || ATOMIC(D.missed) || ATOMIC(D.stop)) { trip(); return false; }
     for (int i = 0; i < 2; i++) lq_reset(&D.q[i]);
     atomic_store(&D.beat, xTaskGetTickCount());
     while (osal_now_us() - start < PHASE_US) taskYIELD();
@@ -337,6 +342,7 @@ static void init(void) {
         .bus = {.clock = EPD_PIN_XCL, .ckv = EPD_PIN_CKV, .leh = EPD_PIN_XLE, .start_pulse = EPD_PIN_XSTL,
             .stv = EPD_PIN_SPV, .data = {EPD_PIN_D0, EPD_PIN_D1, EPD_PIN_D2, EPD_PIN_D3, EPD_PIN_D4, EPD_PIN_D5, EPD_PIN_D6, EPD_PIN_D7}}};
     epd_lcd_init(&cfg, W, H);
+    configASSERT(epd_lcd_get_display_lines() == H);
     configASSERT(D.lock && D.access && D.frame_done && D.power.pmic);
     for (int i = 0; i < 2; i++) {
         D.q[i] = lq_init(128, LINE_BYTES);
@@ -406,12 +412,14 @@ bool ink_s31_display_acquire(uint32_t timeout_ms) {
     if (!D.access) return true;
     if (xSemaphoreTake(D.access, timeout_ms == UINT32_MAX ? portMAX_DELAY : pdMS_TO_TICKS(timeout_ms)) != pdTRUE) return false;
     if (ATOMIC(D.powered)) power_off();
+    if (ATOMIC(D.powered)) { xSemaphoreGive(D.access); return false; }
     atomic_store(&D.armed, false);
     return true;
 }
 void ink_s31_display_release(void) { if (D.access) xSemaphoreGive(D.access); }
 void hal_display_pause(bool pause) {
-    if (pause) (void)ink_s31_display_acquire(UINT32_MAX);
-    else ink_s31_display_release();
+    if (pause) {
+        if (!ink_s31_display_acquire(UINT32_MAX)) osal_panic("display: power-off unconfirmed");
+    } else ink_s31_display_release();
 }
 void hal_display_set_temperature(int celsius) { (void)celsius; /* PQ-BN uses the measured 25 C calibration. */ }

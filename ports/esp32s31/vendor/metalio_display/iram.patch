@@ -1,0 +1,22 @@
+--- a/main/boards/metalio-e-ink4-plus/display/output_lcd/lcd_driver.c
++++ b/main/boards/metalio-e-ink4-plus/display/output_lcd/lcd_driver.c
+@@ -337,7 +337,7 @@
+     return task_awoken;
+ }
+
+-static void start_ckv_cycles(int cycles) {
++static IRAM_ATTR void start_ckv_cycles(int cycles) {
+ #if EPD_LCD_PROBE_PCLK_ON_PAD && defined(CONFIG_IDF_TARGET_ESP32S31)
+     (void)cycles;
+     return;
+--- a/main/boards/metalio-e-ink4-plus/display/output_common/line_queue.c
++++ b/main/boards/metalio-e-ink4-plus/display/output_common/line_queue.c
+@@ -23,7 +23,7 @@
+
+     int elem_buf_size = ceil_div(element_size, 16) * 16;
+
+-    queue.bufs = calloc(queue.size, sizeof(uint8_t*));
++    queue.bufs = heap_caps_calloc(queue.size, sizeof(uint8_t*), MALLOC_CAP_INTERNAL);
+     assert(queue.bufs != NULL);
+
+     // 短队列（流式预填）只放 INTERNAL，不够直接 assert
