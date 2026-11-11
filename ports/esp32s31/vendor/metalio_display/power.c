@@ -8,10 +8,8 @@
 #include "ink/hal_device.h"
 #include "ink/osal.h"
 #include "metalio_plus/metalio_board.h"
-#include "metalio_plus/metalio_epd_power.h"
 #include "tps65185/tps65185.h"
 #include "power.h"
-#include "s31_board.h"
 
 #define CFG_PORT_CTRL 0
 #define CFG_PIN_VCOM_CTRL EPD_PWR_VCOM_CTRL
@@ -38,6 +36,9 @@ static hal_i2c_status_t metalio_i2c1_probe_locked(hal_i2c_dev_t *p, int addr, in
     (void)addr; (void)ms;
     return hal_i2c_write(p, NULL, 0);
 }
+#define esp_err_t hal_i2c_status_t
+#define i2c_port_t hal_i2c_dev_t *
+#define esp_err_to_name hal_i2c_status_name
 #include "tps65185.c"
 hal_i2c_status_t tps65185_probe(hal_i2c_dev_t *p) { return tps_probe(p); }
 hal_i2c_status_t tps65185_read(hal_i2c_dev_t *p, uint8_t reg, uint8_t *v) { return tps_read_register_ex(p, reg, v); }
@@ -65,14 +66,22 @@ static hal_i2c_status_t set_ctrl_with_tps(epd_ctrl_state_t *state, const epd_ctr
     return r;
 }
 static void epd_board_set_ctrl(epd_ctrl_state_t *s, const epd_ctrl_state_t *m) { (void)set_ctrl_with_tps(s, m, 0, 0); }
-static uint8_t pca9555_read_input(epd_power_t *p, int port) {
+static uint8_t ink_panel_read_input(epd_power_t *p, int port) {
     uint8_t levels = 0;
     if (p->io_lock) p->io_lock();
     (void)tca9555_read(p->ioexp, port, &levels);
     if (p->io_unlock) p->io_unlock();
     return levels;
 }
+#define s_tps_ok state->ok
+#define s_ioexp_ok state->power->ioexp
+#define s_ioexp_port state->power->pmic
+#define vcom ((int)state->power->vcom_mv)
+#define epd_board_metalio_eink4_plus_bus_restore() ((void)0)
+#define pca9555_read_input(port, bank) ink_panel_read_input(state->power, bank)
 #include "epd_power.inc"
+#undef pca9555_read_input
+#undef vcom
 
 bool ink_panel_off_confirmed(epd_power_t *p) {
     if (p->io_lock) p->io_lock();
@@ -80,11 +89,17 @@ bool ink_panel_off_confirmed(epd_power_t *p) {
     if (p->io_unlock) p->io_unlock();
     return off;
 }
+static uint8_t ink_panel_shadow(epd_power_t *p) {
+    if (p->io_lock) p->io_lock();
+    uint8_t value = p->ioexp ? p->ioexp->out[0] : 0;
+    if (p->io_unlock) p->io_unlock();
+    return value;
+}
 epd_power_result_t epd_power_on(epd_power_t *p) {
     const uint64_t until = osal_now_us() + 300000;
-    while (p->ioexp && p->screen_coming && p->screen_coming() && !(p->ioexp->out[0] & EPD_PWR_SCREEN) && osal_now_us() < until)
+    while (p->ioexp && p->screen_coming && p->screen_coming() && !(ink_panel_shadow(p) & EPD_PWR_SCREEN) && osal_now_us() < until)
         osal_task_delay_us(10000);
-    if (!p->ioexp || !(p->ioexp->out[0] & EPD_PWR_SCREEN) || !(pca9555_read_input(p, 0) & EPD_PWR_SCREEN)) return EPD_POWER_NO_SCREEN;
+    if (!p->ioexp || !(ink_panel_shadow(p) & EPD_PWR_SCREEN) || !(ink_panel_read_input(p, 0) & EPD_PWR_SCREEN)) return EPD_POWER_NO_SCREEN;
     epd_ctrl_state_t state = {.power = p};
     epd_board_poweron(&state);
     if (!state.ok) return EPD_POWER_RAILS_FAILED;
@@ -93,12 +108,9 @@ epd_power_result_t epd_power_on(epd_power_t *p) {
     if (p->io_unlock) p->io_unlock();
     return EPD_POWER_OK;
 }
-void epd_power_off(epd_power_t *p) {
-    epd_ctrl_state_t state = {.power = p};
-    epd_board_poweroff(&state);
-}
+void epd_power_off(epd_power_t *p) { epd_board_poweroff(&(epd_ctrl_state_t){.power = p}); }
 bool epd_power_good(epd_power_t *p) {
-    uint8_t pg = 0, levels = pca9555_read_input(p, 0);
+    uint8_t pg = 0, levels = ink_panel_read_input(p, 0);
     return (levels & (EPD_PWR_GOOD | EPD_PWR_SCREEN)) == (EPD_PWR_GOOD | EPD_PWR_SCREEN) &&
         tps65185_read(p->pmic, TPS_REG_PG, &pg) == HAL_I2C_OK && (pg & TPS_PG_ALL_GOOD) == TPS_PG_ALL_GOOD;
 }
@@ -119,6 +131,4 @@ void epd_power_sleep(epd_power_t *p) {
     }
     vTaskDelay(pdMS_TO_TICKS(120));
 }
-const char *epd_power_result_name(epd_power_result_t r) {
-    return r == EPD_POWER_OK ? "ok" : r == EPD_POWER_NO_SCREEN ? "screen power P05 off" : "rails failed";
-}
+const char *epd_power_result_name(epd_power_result_t r) { return r == EPD_POWER_OK ? "ok" : r == EPD_POWER_NO_SCREEN ? "screen power P05 off" : "rails failed"; }

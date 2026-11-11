@@ -6,7 +6,7 @@ if(NOT ink_upstream_origin)
     set(ink_upstream_origin https://github.com/CloudZao/Metalio-E-INK4-Plus.git)
 endif()
 if(NOT EXISTS "${ink_upstream}/.git")
-    execute_process(COMMAND git clone --no-checkout ${ink_upstream_origin} "${ink_upstream}"
+    execute_process(COMMAND git clone --no-checkout --filter=blob:none ${ink_upstream_origin} "${ink_upstream}"
         TIMEOUT 90 RESULT_VARIABLE fetched OUTPUT_QUIET ERROR_QUIET)
     if(NOT fetched EQUAL 0)
         message(FATAL_ERROR "ink: cannot obtain factory screen output layer")

@@ -77,7 +77,7 @@ hal_i2c_status_t tps65185_read(hal_i2c_dev_t *dev, uint8_t reg, uint8_t *value) 
 }
 static bool logged_kept_failing;
 void hal_log_write(const char *line) {
-    snprintf(last_log, sizeof last_log, "%s", line);
+    snprintf(last_log, sizeof last_log, "%.159s", line);
     if (strstr(line, "keep failing")) logged_kept_failing = true;
 }
 void epd_power_off(epd_power_t *p) {
@@ -363,6 +363,7 @@ static void abort_contract(void) {
     recover();
     assert(abort_reads == 1 && reads > 0 && !lcd_active && !lcd_line && !lcd_done);
     unsigned before = reads, signals = isr_gives;
+    D.frame_done->count = 1; /* An old IRQ may have signalled just before abort synchronized. */
     trip();
     assert(reads == before && isr_gives == signals && D.frame_done->count == 0);
 }
@@ -370,6 +371,8 @@ static void unconfirmed_off(void) {
     atomic_store(&D.powered, true);
     atomic_store(&D.armed, true);
     off_failed = true;
+    power_off();
+    assert(ATOMIC(D.powered) && ATOMIC(D.armed) && ATOMIC(D.stop));
     trip();
     assert(ATOMIC(D.powered) && ATOMIC(D.armed) && ATOMIC(D.stop));
     assert(!ink_s31_display_acquire(0));
@@ -399,6 +402,11 @@ int main(int argc, char **argv) {
     else if (!strcmp(which, "camera-access")) camera_access();
     else if (!strcmp(which, "abort-contract")) abort_contract();
     else if (!strcmp(which, "unconfirmed-off")) unconfirmed_off();
+    else if (!strcmp(which, "pause-off-fails")) {
+        atomic_store(&D.powered, true);
+        off_failed = true;
+        hal_display_pause(true);
+    }
     else if (!strcmp(which, "wake-overlap")) wake_overlap();
     else if (!strcmp(which, "selftest")) selftest(true);
     else if (!strcmp(which, "selftest-dead")) selftest(false);

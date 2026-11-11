@@ -64,6 +64,7 @@ static void gate(void *ctx, bool on) {
 static void power_off(void) {
     epd_power_off(&D.power);
     atomic_store(&D.powered, !ink_panel_off_confirmed(&D.power));
+    if (ATOMIC(D.powered)) atomic_store(&D.stop, true);
 }
 static void trip(void) {
     atomic_store(&D.stop, true);
@@ -80,8 +81,8 @@ static void trip(void) {
  * missed lines turned every later one away, and the screen stayed half drawn.) */
 static void fail(void) {
     trip();
-    if (++D.fails >= FAILS_MAX) {
-        hal_log_write("display: refreshes keep failing, the panel stays off");
+    if (ATOMIC(D.powered) || ++D.fails >= FAILS_MAX) {
+        hal_log_write(ATOMIC(D.powered) ? "display: refresh blocked, panel power-off unconfirmed" : "display: refreshes keep failing, the panel stays off");
         return;
     }
     for (int i = 0; i < 2; i++) /* a scanner that was still at work has seen stop by now: take its late reply */
@@ -417,7 +418,8 @@ bool ink_s31_display_acquire(uint32_t timeout_ms) {
 }
 void ink_s31_display_release(void) { if (D.access) xSemaphoreGive(D.access); }
 void hal_display_pause(bool pause) {
-    if (pause) (void)ink_s31_display_acquire(UINT32_MAX);
-    else ink_s31_display_release();
+    if (pause) {
+        if (!ink_s31_display_acquire(UINT32_MAX)) osal_panic("display: power-off unconfirmed");
+    } else ink_s31_display_release();
 }
 void hal_display_set_temperature(int celsius) { (void)celsius; /* PQ-BN uses the measured 25 C calibration. */ }
