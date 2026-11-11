@@ -51,7 +51,7 @@ static int semantic_snapshot(char *buf, size_t cap) {
         {.id = "date", .role = "text", .label = TR("日期"), .value = g_date ? lv_label_get_text(g_date) : ""},
         {.id = "alarm", .role = "text", .label = TR("闹钟"), .value = g_alarm ? lv_label_get_text(g_alarm) : ""},
         {.id = "notifications", .role = "text", .label = TR("通知"), .value = g_notice ? lv_label_get_text(g_notice) : ""},
-        {.id = "face", .role = "text", .label = "表盘", .value = ink_lock_face_choices[ink_setting_get("display.lock_style")]}
+        {.id = "face", .role = "text", .label = TR("表盘"), .value = TR(ink_lock_face_choices[ink_setting_get("display.lock_style")])}
     };
     ink_ui_page_spec_t model = MODEL; model.title = TR(MODEL.title);
     ink_ui_action_spec_t actions[2]; memcpy(actions, ACTIONS, sizeof actions);
@@ -174,6 +174,7 @@ static void on_power(void *ctx, ink_power_state_t from, ink_power_state_t to, ui
     ink_exec_post(INK_EXEC_UI, &g_job, sync_mark, NULL);
 }
 static void on_minute(void *ctx, int h, const char *id) { (void)ctx; (void)h; (void)id; update_clock(); if (ink_lock_face_update()) changed(); }
+static void on_time(void *ctx, const char *id, const ink_args_t *args) { (void)args; on_minute(ctx, 0, id); }
 static void on_member(void *ctx, int h, const char *id) { (void)ctx; (void)h; (void)id; if (g_mark) { hide(); show(); } ink_lock_face_resume(); }
 static void on_style(void *ctx, int h, const char *id) { (void)ctx; (void)h; (void)id; if (g_mark) { hide(); show(); } }
 static void on_audio(void *ctx, int h, const char *id) {
@@ -188,5 +189,6 @@ int ink_ui_lock_mark_init(void) {
     if (ink_state_watch("member.", on_member, NULL, INK_EXEC_UI) || ink_settings_watch("display.lock_", on_style, NULL, INK_EXEC_UI)) return -1;
     if (ink_state_watch("media.state", on_audio, NULL, INK_EXEC_UI) || ink_state_watch("audio.now_playing", on_audio, NULL, INK_EXEC_UI)) return -1;
     if (ink_power_add_busy_check(ink_ui_busy) != 0 || ink_state_watch("time.minute", on_minute, NULL, INK_EXEC_UI) != 0) return -1;
+    if (ink_cap_subscribe("time.changed", on_time, NULL, INK_EXEC_UI)) return -1;
     return ink_power_subscribe(on_power, NULL);
 }

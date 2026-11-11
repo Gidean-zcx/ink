@@ -9,7 +9,7 @@ import subprocess
 ROOT = Path(__file__).resolve().parents[1]
 p = argparse.ArgumentParser(description=__doc__)
 p.add_argument('--build', type=Path, required=True)
-p.add_argument('--case', choices=['minute', 'day', 'member', 'reading'])
+p.add_argument('--case', choices=['minute', 'day', 'member', 'reading', 'solar', 'enum', 'events'])
 a = p.parse_args()
 build = a.build.resolve()
 area = build / 'lock-faces-reverse'
@@ -18,6 +18,13 @@ db = json.loads((build / 'compile_commands.json').read_text())
 faces = ROOT / 'system/ui/lock_faces/faces.c'
 lock = ROOT / 'system/ui/lock_mark.c'
 cases = [
+    ('enum', ROOT / 'system/ui/shell/navigation.c', 'TR_NOOP("壁纸"), TR_NOOP("简约时钟"), TR_NOOP("待机时钟"), TR_NOOP("月历"), NULL};',
+     'TR_NOOP("壁纸"), NULL};', 'live settings accept the new enum through AI'),
+    ('solar', ROOT / 'system/services/time/lunar.c', 'return TR(names[i]);', 'return NULL;',
+     'same minute on a new date updates through time.changed'),
+    ('events', lock, 'ink_cap_subscribe("time.changed", on_time, NULL, INK_EXEC_UI)',
+     'ink_cap_subscribe("time.changed.unused", on_time, NULL, INK_EXEC_UI)',
+     'same minute on a new date updates through time.changed'),
     ('minute', faces, 'if (!F.clock || !strcmp(lv_label_get_text(F.clock), time)) return false;',
      'if (!F.clock) return false;', 'same minute does not refresh'),
     ('day', faces, 'if (day != F.day) {', 'if (day == -1) {', 'cross-day rebuild'),
@@ -40,7 +47,7 @@ for name, source, before, after, expected in cases:
     cmd = shlex.split(entry['command'])
     obj = area / f'{name}.o'
     cmd[cmd.index('-o') + 1] = str(obj)
-    cmd += ['-I' + str(ROOT / 'system/ui'), '-I' + str(faces.parent)]
+    cmd += ['-I' + str(ROOT / 'system/ui'), '-I' + str(faces.parent), '-I' + str(source.parent)]
     if source == lock:
         cmd += ['-DINK_TEST_LOCK_SOURCE=' + json.dumps(str(replacement))]
     else:

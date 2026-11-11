@@ -17,7 +17,10 @@
 #include "ink/sys/time.h"
 #include "ink/sys/text.h"
 
-const char *const ink_lock_face_choices[] = {"这一页", "时钟和待办", "壁纸", "简约时钟", "待机时钟", "月历", NULL};
+const char *ink_lunar_solar_term(int year, int month, int day);
+
+const char *const ink_lock_face_choices[] = {TR_NOOP("这一页"), TR_NOOP("时钟和待办"), TR_NOOP("壁纸"), TR_NOOP("简约时钟"), TR_NOOP("待机时钟"), TR_NOOP("月历"), NULL};
+_Static_assert(sizeof ink_lock_face_choices / sizeof *ink_lock_face_choices == INK_LOCK_FACE_COUNT + 1, "face choices match");
 static struct {
     lv_obj_t *parent, *body, *clock, *date, *lunar, *todo, *reading;
     int style, day;
@@ -75,8 +78,8 @@ static void widgets(int y) {
     int h = ink_ui_line_height(INK_FONT_NOTE);
     if (ink_setting_get("display.lock_todo")) {
         ink_ui_box(F.body, INK_MARGIN, y, INK_CANVAS_W - 2 * INK_MARGIN, h, 0, INK_SURFACE_WHITE, false);
-        ink_ui_line(F.body, "待办", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y, INK_BLOCK_L);
-        F.todo = ink_ui_line(F.body, visible() ? "还没有未完成的待办" : "解锁后查看", INK_FONT_NOTE, INK_WEIGHT_REGULAR,
+        ink_ui_line(F.body, TR("待办"), INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y, INK_BLOCK_L);
+        F.todo = ink_ui_line(F.body, visible() ? TR("还没有未完成的待办") : TR("解锁后查看"), INK_FONT_NOTE, INK_WEIGHT_REGULAR,
                              INK_MARGIN + INK_BLOCK_L, y, INK_CANVAS_W - 2 * INK_MARGIN - INK_BLOCK_L);
         const ink_db_def_t *def = ink_db_find_def("memo.notes");
         if (visible() && def && ink_member_app_mode(NULL, "memo")) ink_app_db_open_async("memo", def, F.body, memos, NULL);
@@ -89,8 +92,8 @@ static void widgets(int y) {
             const ink_app_def_t *app = ink_app_at(i);
             if (!strcmp(app->id, "reader") && ink_app_visible(app) && app->card) app->card(0, &card);
         }
-        ink_ui_line(F.body, "继续读", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y, INK_BLOCK_L);
-        F.reading = ink_ui_line(F.body, visible() && ink_app_card_visible(&card) && card.text[0] ? card.text : "解锁后继续读",
+        ink_ui_line(F.body, TR("继续读"), INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y, INK_BLOCK_L);
+        F.reading = ink_ui_line(F.body, visible() && ink_app_card_visible(&card) && card.text[0] ? card.text : TR("解锁后继续读"),
                                 INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN + INK_BLOCK_L, y,
                                 INK_CANVAS_W - 2 * INK_MARGIN - INK_BLOCK_L);
         lv_obj_add_flag(F.reading, LV_OBJ_FLAG_CLICKABLE);
@@ -100,10 +103,11 @@ static void widgets(int y) {
 }
 static void calendar(const ink_tm_t *t, int y) {
     const int w = (INK_CANVAS_W - 2 * INK_MARGIN) / 7, h = ink_ui_line_height(INK_FONT_STATUS), row = 2 * h + INK_GAP_XS;
-    static const char *const weekdays[] = {"日", "一", "二", "三", "四", "五", "六"};
+    static const char *const weekdays[] = {TR_NOOP("周日"), TR_NOOP("周一"), TR_NOOP("周二"), TR_NOOP("周三"), TR_NOOP("周四"), TR_NOOP("周五"), TR_NOOP("周六")};
     ink_ui_box(F.body, INK_MARGIN, y, INK_CANVAS_W - 2 * INK_MARGIN, h, 0, INK_SURFACE_WHITE, false);
     for (int i = 0; i < 7; i++) {
-        lv_obj_t *l = ink_ui_line(F.body, weekdays[i], INK_FONT_STATUS, INK_WEIGHT_MEDIUM, INK_MARGIN + i * w, y, w);
+        const char *label = TR(weekdays[i]);
+        lv_obj_t *l = ink_ui_line(F.body, !strcmp(ink_lang_code(), "zh") ? label + strlen("周") : label, INK_FONT_STATUS, INK_WEIGHT_MEDIUM, INK_MARGIN + i * w, y, w);
         lv_obj_set_style_text_align(l, LV_TEXT_ALIGN_CENTER, 0);
     }
     y += h;
@@ -111,12 +115,17 @@ static void calendar(const ink_tm_t *t, int y) {
     int count = days[t->month - 1] + (t->month == 2 && t->year % 4 == 0 && (t->year % 100 != 0 || t->year % 400 == 0));
     int first = (t->wday - (t->day - 1) % 7 + 7) % 7; size_t used = 0; F.month[0] = 0;
     for (int d = 1; d <= count; d++) {
-        ink_lunar_t lunar; char name[64] = "暂不可用", text[96];
+        ink_lunar_t lunar; char name[64], text[96];
+        snprintf(name, sizeof name, "%s", TR("暂不可用"));
         if (ink_lunar_from_solar(t->year, t->month, d, &lunar)) {
             ink_lunar_name(&lunar, name, sizeof name);
             char *month = strstr(name, "月");
             if (month && lunar.day == 1) month[strlen("月")] = 0;
             else if (month) memmove(name, month + strlen("月"), strlen(month + strlen("月")) + 1);
+            if (strcmp(ink_lang_code(), "zh")) {
+                if (lunar.day == 1) snprintf(name, sizeof name, lunar.leap ? TR("闰%d月") : TR("%d月"), lunar.month);
+                else snprintf(name, sizeof name, "%d", lunar.day);
+            }
         }
         int slot = first + d - 1;
         lv_obj_t *cell = ink_ui_box(F.body, INK_MARGIN + slot % 7 * w, y + slot / 7 * row, w, row, 0,
@@ -124,7 +133,7 @@ static void calendar(const ink_tm_t *t, int y) {
         snprintf(text, sizeof text, "%d\n%s", d, name);
         lv_obj_t *l = ink_ui_label(cell, text, INK_FONT_STATUS, INK_WEIGHT_REGULAR, 0, 0, w);
         lv_obj_set_style_text_align(l, LV_TEXT_ALIGN_CENTER, 0);
-        int n = snprintf(F.month + used, sizeof F.month - used, "%d:%s%s;", d, name, d == t->day ? "（今天）" : "");
+        int n = snprintf(F.month + used, sizeof F.month - used, "%d:%s%s;", d, name, d == t->day ? TR("（今天）") : "");
         if (n > 0 && (size_t)n < sizeof F.month - used) used += (size_t)n;
     }
     widgets(y + 6 * row + INK_GAP);
@@ -136,7 +145,8 @@ void ink_lock_face_draw(lv_obj_t *parent, int style) {
     lv_obj_set_style_bg_opa(F.body, LV_OPA_TRANSP, 0);
     ink_tm_t t; ink_time_to_local(ink_time_now_s(), &t); F.day = t.year * 10000 + t.month * 100 + t.day;
     int y = INK_STATUS_BAR + INK_GAP + INK_CONTROL + INK_GAP_M;
-    char time[24], date[96], name[64] = "农历暂不可用", text[128], ganzhi[24] = "";
+    char time[24], date[96], name[64], text[128], ganzhi[24] = "";
+    snprintf(name, sizeof name, "%s", TR("农历暂不可用"));
     ink_shell_time_strings(time, sizeof time, date, sizeof date);
     char *separator = strstr(date, " · "); if (separator) *separator = 0;
     ink_lunar_t lunar;
@@ -149,9 +159,15 @@ void ink_lock_face_draw(lv_obj_t *parent, int style) {
         y += (style == INK_LOCK_SIMPLE ? 2 : 1) * ink_ui_line_height(INK_FONT_CLOCK) + INK_GAP;
     }
     F.date = center(F.body, date, INK_FONT_LIST, y); y += ink_ui_line_height(INK_FONT_LIST);
-    if (ganzhi[0]) snprintf(text, sizeof text, "%s  %s%s年", name, ganzhi, ink_lunar_zodiac(lunar.year));
+    if (ganzhi[0]) snprintf(text, sizeof text, TR("%s  %s%s年"), name, ganzhi, ink_lunar_zodiac(lunar.year));
     else snprintf(text, sizeof text, "%s", name);
-    F.lunar = center(F.body, text, INK_FONT_NOTE, y); y += ink_ui_line_height(INK_FONT_NOTE) + INK_GAP;
+    const char *term = style == INK_LOCK_CALENDAR && ink_time_valid() ? ink_lunar_solar_term(t.year, t.month, t.day) : NULL;
+    if (term) {
+        size_t used = strlen(text);
+        snprintf(text + used, sizeof text - used, "  %s", term);
+    }
+    F.lunar = center(F.body, text, INK_FONT_NOTE, y);
+    y += ink_ui_text_height(text, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_CANVAS_W - 2 * INK_MARGIN) + INK_GAP;
     if (style == INK_LOCK_CALENDAR && ink_time_valid()) calendar(&t, y);
     else widgets(y + INK_GAP_L);
 }

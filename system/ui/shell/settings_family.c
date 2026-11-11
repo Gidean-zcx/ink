@@ -12,6 +12,7 @@
 #include "ink/sys/textfield.h"
 #include "ink/sys/ui_list.h"
 #include "ink/ui_shell.h"
+#include "../lock_faces/faces.h"
 
 enum { MEMBERS, KID, WALLPAPER, RECORDS, MEMORY, RUNTIME, KID_APPS, KID_PERIODS };
 #define ROWS_MAX 48
@@ -41,7 +42,6 @@ static void setting(const char *id, const char *title, int64_t next) {
     char args[128], value[48]; snprintf(args, sizeof args, "{\"id\":\"%s\",\"value\":%lld}", id, (long long)next);
     int64_t v = ink_setting_get(id);
     snprintf(value, sizeof value, "%lld", (long long)v);
-    if (!strcmp(id, "display.lock_style")) snprintf(value, sizeof value, "%s", v == 2 ? TR("壁纸") : v == 1 ? TR("时钟和待办") : TR("这一页"));
     if (!strcmp(id, "power.lock_after_s")) snprintf(value, sizeof value, TR("%lld 分钟"), (long long)v / 60);
     if (!strcmp(id, "display.wallpaper_file")) snprintf(value, sizeof value, "%s", v ? TR("已选择") : TR("还没有选壁纸"));
     if (!strcmp(id, "power.lift_wake")) snprintf(value, sizeof value, "%s", v ? TR("开，平放不动 3 分钟先锁屏") : TR("关"));
@@ -252,7 +252,7 @@ static void create(lv_obj_t *screen, void *arg) {
         setting("audio.child_max", TR("孩子的音量上限"), ink_setting_get("audio.child_max") >= 100 ? 10 : ink_setting_get("audio.child_max") + 10);
         row("periods", TR("禁用时段"), kid ? TR("选择时间和星期") : TR("还没有孩子家人"), kid ? "family.kid_periods" : NULL, NULL);
     } else if (S.page == WALLPAPER) {
-        setting("display.lock_style", TR("锁屏时显示"), (ink_setting_get("display.lock_style") + 1) % 3);
+        row("display.lock_style", TR("锁屏时显示"), TR(ink_lock_face_choices[ink_setting_get("display.lock_style")]), "shell.lock_faces", NULL);
         setting("power.lock_after_s", TR("自动锁屏"), ink_setting_get("power.lock_after_s") == 600 ? 300 : 600);
         row("choose", TR("从相册选"), ink_wallpaper_ready() ? TR("已选锁屏壁纸") : ink_setting_get("display.wallpaper_file") ? TR("壁纸暂时读不出来") : TR("还没有选壁纸"), "wallpaper.choose", NULL);
         setting("display.wallpaper_file", TR("移除壁纸"), 0);

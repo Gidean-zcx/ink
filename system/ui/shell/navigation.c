@@ -1993,7 +1993,7 @@ static void changed(void *ctx, int h, const char *id) {
     ink_exec_post(INK_EXEC_UI, &N.refresh, refresh, NULL);
 }
 static const char *const FONT_CHOICES[] = {TR_NOOP("小"), TR_NOOP("中"), TR_NOOP("大"), TR_NOOP("特大"), NULL};
-static const char *const LOCK_CHOICES[] = {TR_NOOP("这一页"), TR_NOOP("时钟和待办"), TR_NOOP("壁纸"), NULL};
+static const char *const LOCK_CHOICES[] = {TR_NOOP("这一页"), TR_NOOP("时钟和待办"), TR_NOOP("壁纸"), TR_NOOP("简约时钟"), TR_NOOP("待机时钟"), TR_NOOP("月历"), NULL};
 static const ink_setting_def_t SETTINGS[] = {
     {.id = "display.font_size", .title = TR_NOOP("字号"), .type = INK_SET_ENUM, .def = 1, .choices = FONT_CHOICES},
     {.id = "display.lock_style",
