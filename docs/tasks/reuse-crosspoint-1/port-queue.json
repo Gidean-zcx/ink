@@ -1,0 +1,710 @@
+[
+  {
+    "order": 1,
+    "id": "R01",
+    "group": "阅读",
+    "hours": 2,
+    "depends_on": [],
+    "writes": [
+      "apps/reader/vendor/metalio_core/**",
+      "apps/reader/reuse_contract.h"
+    ],
+    "deliverable": "原厂 EPUB/ZIP/HTML/TXT 章节原文和版权入库；冻结小C调用口与 I/O/内存接缝，先只开元数据",
+    "acceptance": "假 EPUB 的标题/作者/spine；宿主机桩；不得引 IDF 头进 app 公共头；S01 SHA/差异清单"
+  },
+  {
+    "order": 2,
+    "id": "R02",
+    "group": "阅读",
+    "hours": 2,
+    "depends_on": [
+      "R01"
+    ],
+    "writes": [
+      "apps/reader/epub_source.cc"
+    ],
+    "deliverable": "正文块流式读取与旧 TXT 来源适配；一书一来源，不做全功能UI",
+    "acceptance": "分块正文顺序/稳定偏移、坏ZIP/取消；无整章大栈；不走主机时间"
+  },
+  {
+    "order": 3,
+    "id": "R03",
+    "group": "阅读",
+    "hours": 2,
+    "depends_on": [
+      "R01"
+    ],
+    "writes": [
+      "apps/reader/vendor/crosspoint_nav/**",
+      "apps/reader/reader_toc.c"
+    ],
+    "deliverable": "复用 NAV/NCX 与 TXT 中文章名，输出目录/锚点，不碰 reader.c",
+    "acceptance": "EPUB2/3 各一例、中文章号和实际跳转位置；缺目录明确回落"
+  },
+  {
+    "order": 4,
+    "id": "R04",
+    "group": "阅读",
+    "hours": 2,
+    "depends_on": [
+      "R02"
+    ],
+    "writes": [
+      "apps/reader/vendor/crosspoint_css/**",
+      "apps/reader/reader_layout.cc"
+    ],
+    "deliverable": "仅先接可解析的样式、忽略书内样式、阅读布局与抗锯齿开关；强度档位做源码差距清单",
+    "acceptance": "同段不同布局/样式开关的像素与锚点回归；不凭空定 2.0.78 强度曲线；完整排版仍可能要后续切片"
+  },
+  {
+    "order": 5,
+    "id": "R05",
+    "group": "阅读",
+    "hours": 2,
+    "depends_on": [
+      "R02"
+    ],
+    "writes": [
+      "apps/reader/vendor/metalio_images/**",
+      "apps/reader/reader_images.cc"
+    ],
+    "deliverable": "原厂图片流/L8和单图页；先一张 EPUB 插图/漫画页",
+    "acceptance": "大图资源准入、透明PNG合成、取消/释放；没有预算证据不宣称高清漫画完成"
+  },
+  {
+    "order": 6,
+    "id": "R06",
+    "group": "阅读",
+    "hours": 2,
+    "depends_on": [
+      "R04"
+    ],
+    "writes": [
+      "apps/reader/vendor/metalio_orient/**",
+      "apps/reader/reader_orientation.c"
+    ],
+    "deliverable": "横屏/竖排标点与定时翻页的一个最小贯通切片，复用现有时间/方向事件",
+    "acceptance": "触点/文字方向/锚点一致，锁屏来电停自动翻页；完整自动旋转另由实测决定是否加切片"
+  },
+  {
+    "order": 7,
+    "id": "R07",
+    "group": "阅读",
+    "hours": 2,
+    "depends_on": [
+      "R02"
+    ],
+    "writes": [
+      "apps/reader/reader_marks.cc"
+    ],
+    "deliverable": "原厂位置模型＋CrossPoint 选区/书摘模型，写成员DB，不带上游存档格式",
+    "acceptance": "两成员同书不串；改字号后锚点可找；保存摘录的原文一致"
+  },
+  {
+    "order": 8,
+    "id": "R08",
+    "group": "阅读",
+    "hours": 2,
+    "depends_on": [
+      "R01"
+    ],
+    "writes": [
+      "apps/reader/reader_library.c"
+    ],
+    "deliverable": "封面/分类/详情的数据模型，先目录分页和一张封面，替代16本上限的模型",
+    "acceptance": "多于16本、缺封面/损坏封面、成员可见范围；不添加新缓存格式"
+  },
+  {
+    "order": 9,
+    "id": "R09",
+    "group": "阅读",
+    "hours": 2,
+    "depends_on": [
+      "R02"
+    ],
+    "writes": [
+      "apps/reader/reader_stats.cc"
+    ],
+    "deliverable": "摘 CrossMux 日汇总/连续天算法，接现有时间/成员DB；不搬MAC身份",
+    "acceptance": "跨日/锁屏/两成员与重复事件不多计；目标阈值显式说明"
+  },
+  {
+    "order": 10,
+    "id": "R11",
+    "group": "阅读",
+    "hours": 2,
+    "depends_on": [
+      "R03",
+      "R04",
+      "R07",
+      "R08"
+    ],
+    "writes": [
+      "apps/reader/reader_preferences.c"
+    ],
+    "deliverable": "目录/详情/书签/阅读设置作为独立页面和动作；先能从能力到页面",
+    "acceptance": "每页快照、设置回执与页面一致；隐藏页脚能恢复；不改现有系统字号规则"
+  },
+  {
+    "order": 11,
+    "id": "R12",
+    "group": "阅读",
+    "hours": 2,
+    "depends_on": [
+      "R07",
+      "R09"
+    ],
+    "writes": [
+      "apps/reader/reader_stats_page.c"
+    ],
+    "deliverable": "复用统计汇总，画日/周/热力图与手账的首个只读页面",
+    "acceptance": "实际数据与快照相等、成员切换；像素手账不是上游现成源码，缺的样式另记"
+  },
+  {
+    "order": 12,
+    "id": "R10",
+    "group": "阅读",
+    "hours": 2,
+    "depends_on": [
+      "R02",
+      "R03",
+      "R04",
+      "R05",
+      "R06",
+      "R07",
+      "R08",
+      "R09",
+      "R11",
+      "R12"
+    ],
+    "writes": [
+      "apps/reader/reader.c"
+    ],
+    "deliverable": "唯一阅读器接入点，接已完成模块/页面；先保持 TXT 和已有能力，再开放已达标的 EPUB 动作",
+    "acceptance": "旧TXT续读/快速翻页/AI读页兼容；每个未贯通分项仍记没做，不把一次收口当全部阅读功能验收"
+  },
+  {
+    "order": 13,
+    "id": "I01",
+    "group": "输入",
+    "hours": 1,
+    "depends_on": [
+      "ui-input-2"
+    ],
+    "writes": [
+      "system/ui/shell/keyboard.c",
+      "system/ui/lv_conf.h"
+    ],
+    "deliverable": "把现有手工按键控件换 LVGL map/事件桥，暂保留全拼，不改各app",
+    "acceptance": "所有既有键盘状态、语音入口/密码、快照与新令牌一致；默认textarea回调移除"
+  },
+  {
+    "order": 14,
+    "id": "I02",
+    "group": "输入",
+    "hours": 2,
+    "depends_on": [
+      "R01"
+    ],
+    "writes": [
+      "system/services/text/pinyin.c",
+      "system/services/text/text_internal.h"
+    ],
+    "deliverable": "摘 S05 九键数字映射/匹配，接 IKD1；只做引擎与查询耗时",
+    "acceptance": "全拼结果不变；九键中文/词组和不命中；明确测量遍历成本，超预算停此处不造缓存"
+  },
+  {
+    "order": 15,
+    "id": "I03",
+    "group": "输入",
+    "hours": 2,
+    "depends_on": [
+      "I01",
+      "I02"
+    ],
+    "writes": [
+      "system/services/text/text_service.c"
+    ],
+    "deliverable": "输入会话选择九键查询，布局通过既有会话模式驱动 I01 预留map，保留成员学习",
+    "acceptance": "中英/九键切换、剩余拼音、词频、撤销、语音；AI不能写秘密输入；不得回头各app加补丁"
+  },
+  {
+    "order": 16,
+    "id": "T01",
+    "group": "传书",
+    "hours": 2,
+    "depends_on": [
+      "port-wifi-2"
+    ],
+    "writes": [
+      "ports/esp32s31/hal_transfer_s31.c"
+    ],
+    "deliverable": "给现有 transfer.c 接 S31 listener；不搬 CrossPoint WebServer",
+    "acceptance": "合成客户端上传/断开/超额/换成员；沿用授权和原子导入；设备测试留给用户"
+  },
+  {
+    "order": 17,
+    "id": "T02",
+    "group": "传书",
+    "hours": 2,
+    "depends_on": [
+      "port-board-2"
+    ],
+    "writes": [
+      "ports/esp32s31/hal_usb_s31.c"
+    ],
+    "deliverable": "先核原厂/IDF TinyUSB MSC，补 USB HAL，沿用系统借卡/归还",
+    "acceptance": "宿主机桩证明借卡后本地拒绝写、退出可恢复；S31编译；不在本任务做USB实机联调"
+  },
+  {
+    "order": 18,
+    "id": "T03",
+    "group": "传书",
+    "hours": 2,
+    "depends_on": [
+      "T01",
+      "port-wifi-2"
+    ],
+    "writes": [
+      "ports/esp32s31/hal_ap_s31.c",
+      "platform/include/ink/hal_ap.h"
+    ],
+    "deliverable": "先核原厂 AP 源码/许可；已有wifi生命周期之下最小接热点传书；没有明确接缝则只交spike并再拆",
+    "acceptance": "AP退出/飞行模式/恢复STA的桩证据；不并行改 hal_wifi_s31.c，不新建网络状态机"
+  },
+  {
+    "order": 19,
+    "id": "T04",
+    "group": "升级",
+    "hours": 2,
+    "depends_on": [
+      "port-board-2"
+    ],
+    "writes": [
+      "system/services/update/update_source.c"
+    ],
+    "deliverable": "保留现有验签/准入，统一联网/卡文件的输入适配；写设备之前的安装范围只做清单",
+    "acceptance": "伪签名/错误板型/卡缺失；同一校验入口；分区写入未获选择时不能启用或声称完成"
+  },
+  {
+    "order": 20,
+    "id": "O01",
+    "group": "在线书源",
+    "hours": 2,
+    "depends_on": [
+      "R02",
+      "T01"
+    ],
+    "writes": [
+      "system/services/content/opds.cc",
+      "system/services/content/vendor/opds/**"
+    ],
+    "deliverable": "锁 FreeInk OPDS 解析闭包；先本地假书库的目录/搜索/下载",
+    "acceptance": "Atom命名空间/相对链接/分页/下载到准入；无公网默认源，隐式认证wolfSSL不入库"
+  },
+  {
+    "order": 21,
+    "id": "O02",
+    "group": "在线书源",
+    "hours": 2,
+    "depends_on": [
+      "T01"
+    ],
+    "writes": [
+      "hub/ink_hub/content/webdav_source.py"
+    ],
+    "deliverable": "中枢 webdav4 适配，保留TLS验证，retry=False，按成员导入",
+    "acceptance": "假WebDAV目录/下载、换成员/路径范围、凭据不进结果；许可与依赖锁归 C00"
+  },
+  {
+    "order": 22,
+    "id": "O03",
+    "group": "第三方来源闸门",
+    "hours": 1,
+    "depends_on": [],
+    "writes": [
+      "docs/tasks/reuse-online-gates/REPORT.md"
+    ],
+    "deliverable": "只核微读各读/写接口、网易云和封面元数据的源码/许可/用户范围；不实现一大串客户端",
+    "acceptance": "每项能取/排除文件及差距；不调真实账号，不搬逆向解码；给后续小任务，不把“闸门通过”当功能完成"
+  },
+  {
+    "order": 23,
+    "id": "O04",
+    "group": "第三方来源闸门",
+    "hours": 1,
+    "depends_on": [],
+    "writes": [
+      "docs/tasks/reuse-cloud-gates/REPORT.md"
+    ],
+    "deliverable": "只核原厂App推送与数据胶囊当前公开源码/协议；列缺口和授权选项",
+    "acceptance": "不登录Gitee或原厂云；未公开的源码不搬；已有下载器仅作基础"
+  },
+  {
+    "order": 24,
+    "id": "O05",
+    "group": "格式来源闸门",
+    "hours": 1,
+    "depends_on": [],
+    "writes": [
+      "docs/tasks/reuse-mobi-gate/REPORT.md"
+    ],
+    "deliverable": "只找设备可用且非GPL/AGPL的MOBI来源；原厂电脑工具不冒充设备支持",
+    "acceptance": "有根/文件/依赖许可和内存接口；没有则明确没做，不接未审的Python mobi库"
+  },
+  {
+    "order": 25,
+    "id": "O06",
+    "group": "条件在线切片",
+    "hours": 2,
+    "depends_on": [
+      "O03"
+    ],
+    "writes": [
+      "hub/ink_hub/content/weread_browse.py"
+    ],
+    "deliverable": "仅在来源/用户服务范围明确后，摘热门划线/本人划线/书评的JSON解析；只跑合成fixture",
+    "acceptance": "不含Cookie样本、逆向编解码和默认全量同步；先只读快照"
+  },
+  {
+    "order": 26,
+    "id": "O07",
+    "group": "条件在线切片",
+    "hours": 2,
+    "depends_on": [
+      "O03",
+      "R09"
+    ],
+    "writes": [
+      "hub/ink_hub/content/weread_progress.py"
+    ],
+    "deliverable": "仅在闸门允许后，进度/时长请求编排接已有动作与结果；离线不伪报成功",
+    "acceptance": "合成应答/冲突/失败；无证书绕过；完整手机一致性要单独用户账号验收"
+  },
+  {
+    "order": 27,
+    "id": "L01",
+    "group": "锁屏",
+    "hours": 2,
+    "depends_on": [
+      "port-power-2"
+    ],
+    "writes": [
+      "system/ui/shell/wallpaper.c",
+      "system/ui/lock_clock_face.c"
+    ],
+    "deliverable": "当前分钟时钟保留，合并样式/透明壁纸图库，不搬待机任务",
+    "acceptance": "静止分钟不刷、透明PNG、锁屏相机入口保留；私人壁纸不暴露"
+  },
+  {
+    "order": 28,
+    "id": "L02",
+    "group": "锁屏",
+    "hours": 2,
+    "depends_on": [
+      "L01"
+    ],
+    "writes": [
+      "system/ui/lock_calendar_face.c"
+    ],
+    "deliverable": "用现有lunar加日历视图；宜忌只交权威来源差距，不照抄循环词池冒充真实黄历",
+    "acceptance": "真实日期与现有农历一致、超范围明确；没有来源则宜忌仍未完成"
+  },
+  {
+    "order": 29,
+    "id": "L03",
+    "group": "锁屏",
+    "hours": 2,
+    "depends_on": [
+      "L01",
+      "L02",
+      "R07",
+      "R09",
+      "R12"
+    ],
+    "writes": [
+      "system/ui/lock_mark.c",
+      "system/ui/lock_reading_widgets.c"
+    ],
+    "deliverable": "唯一锁屏接入点；接读书/待办/选句只读视图，阅读小票时机先由主会话核定",
+    "acceptance": "锁住大人空间/切孩子时快照不泄漏；实际内容变化才刷，不碰电源驱动"
+  },
+  {
+    "order": 30,
+    "id": "M01",
+    "group": "声音",
+    "hours": 2,
+    "depends_on": [
+      "port-bt-audio-2"
+    ],
+    "writes": [
+      "system/services/audio/codec_formats.c",
+      "third_party/audio_formats/**"
+    ],
+    "deliverable": "锁 dr_libs/stb 许可与回调；先MP3/WAV/FLAC/Vorbis宿主机解码切片",
+    "acceptance": "自制短音频PCM比对、释放/seek/预算；不带AAC许可证不明的实现"
+  },
+  {
+    "order": 31,
+    "id": "M02",
+    "group": "声音",
+    "hours": 2,
+    "depends_on": [
+      "M01"
+    ],
+    "writes": [
+      "system/services/audio/media_tags.c"
+    ],
+    "deliverable": "摘S11标签/歌词只读解析，保留现有播放器，不搬NVS/解码任务",
+    "acceptance": "短/坏ID3/FLAC/M4A标签；M4A标签不算M4A解码或M4B章节"
+  },
+  {
+    "order": 32,
+    "id": "M03",
+    "group": "声音",
+    "hours": 2,
+    "depends_on": [
+      "M01",
+      "M02"
+    ],
+    "writes": [
+      "system/services/audio/media_service.c",
+      "system/apps/music/music.c"
+    ],
+    "deliverable": "现有媒体服务唯一接入点；增加已验证解码格式和最小播放器",
+    "acceptance": "旧Ogg Opus/进度/录音打断不回退；每个未支持格式继续列缺口"
+  },
+  {
+    "order": 33,
+    "id": "M04",
+    "group": "声音来源闸门",
+    "hours": 1,
+    "depends_on": [
+      "M02"
+    ],
+    "writes": [
+      "docs/tasks/reuse-audiobook-gate/REPORT.md"
+    ],
+    "deliverable": "单独找M4A/AAC及M4B章节定位来源；不把标签解析变成章节",
+    "acceptance": "许可/格式/seek准确性方案；没有则记录没做并继续其它任务"
+  },
+  {
+    "order": 34,
+    "id": "M05",
+    "group": "蓝牙",
+    "hours": 2,
+    "depends_on": [
+      "port-bt-audio-2",
+      "M03"
+    ],
+    "writes": [
+      "system/services/bt/bt_service.c"
+    ],
+    "deliverable": "在现有连接机制里验证/补用户三次重连与同位置外放切换",
+    "acceptance": "合成断连/三次失败/成功、播放位置一致；不另建后台重试任务或状态机"
+  },
+  {
+    "order": 35,
+    "id": "M06",
+    "group": "蓝牙输入",
+    "hours": 2,
+    "depends_on": [
+      "port-bt-audio-2",
+      "I03"
+    ],
+    "writes": [
+      "ports/esp32s31/ble_hid_input_s31.c",
+      "system/services/input/ble_keyboard.c"
+    ],
+    "deliverable": "先移植MIT HID键码解码并验证IDF主机接缝，完整连接超时另拆",
+    "acceptance": "合成HID报告中英文输入/修饰键/断开；不能把stub分支当真机BLE主机完成"
+  },
+  {
+    "order": 36,
+    "id": "M07",
+    "group": "声音",
+    "hours": 2,
+    "depends_on": [
+      "M03"
+    ],
+    "writes": [
+      "system/apps/radio/radio.c"
+    ],
+    "deliverable": "摘原厂/AgentUI网络广播控制，接media；FM只核硬件公开实现，不冒充网络广播",
+    "acceptance": "本地假HTTP音频流、停止/换台/成员切换；节目源须用户选择"
+  },
+  {
+    "order": 37,
+    "id": "M08",
+    "group": "声音",
+    "hours": 2,
+    "depends_on": [
+      "M03"
+    ],
+    "writes": [
+      "system/apps/recorder/recorder.c"
+    ],
+    "deliverable": "独立录音页面复用已有Opus/语音备忘；锁屏AI键路由接现有所有权",
+    "acceptance": "录音/保存/回放/锁屏/通话打断；没有第二录音线程"
+  },
+  {
+    "order": 38,
+    "id": "A01",
+    "group": "AI",
+    "hours": 1,
+    "depends_on": [],
+    "writes": [
+      "docs/tasks/reuse-ai-provider-gates/REPORT.md"
+    ],
+    "deliverable": "先找各家官方SDK/固定许可和中枢接口；原厂公开树缺四家切换实现",
+    "acceptance": "逐家可用SDK与未公开协议，fake provider不冒充上线；真实付费调用不执行"
+  },
+  {
+    "order": 39,
+    "id": "A02",
+    "group": "AI",
+    "hours": 2,
+    "depends_on": [
+      "O04"
+    ],
+    "writes": [
+      "hub/ink_hub/assistants/workbuddy.py"
+    ],
+    "deliverable": "摘S01 WorkBuddy消息/音频协议，接现有hub gateway，仅合成请求",
+    "acceptance": "成员/设备/目标范围、取消、回执、外发策略；真实绑定前停在用户服务选择"
+  },
+  {
+    "order": 40,
+    "id": "A09",
+    "group": "AI",
+    "hours": 2,
+    "depends_on": [],
+    "writes": [
+      "hub/ink_hub/assistants/codex_remote.py"
+    ],
+    "deliverable": "摘S06设备协议，只对假桌面端；S14主程序无授权不复制",
+    "acceptance": "进度/问答/断开/工具结果；不注入真实桌面、不改本机证书信任"
+  },
+  {
+    "order": 41,
+    "id": "A03",
+    "group": "AI与网页",
+    "hours": 2,
+    "depends_on": [],
+    "writes": [
+      "docs/tasks/reuse-browser-gate/REPORT.md"
+    ],
+    "deliverable": "核现有remote与缺失browser node，找允许的浏览器端依赖，不造MCU浏览器",
+    "acceptance": "明确现有仅界面/协议；浏览器引擎、节点与账号边界清单；完整节点要再拆任务"
+  },
+  {
+    "order": 42,
+    "id": "A04",
+    "group": "应用",
+    "hours": 2,
+    "depends_on": [
+      "O01"
+    ],
+    "writes": [
+      "system/apps/app_market/app_market.c"
+    ],
+    "deliverable": "只把可审的在线目录接已有受管应用安装；不当浏览器JS执行器",
+    "acceptance": "合成目录＋现有包验签/卸载；不修改现有校验策略"
+  },
+  {
+    "order": 43,
+    "id": "A05",
+    "group": "AI资料来源闸门",
+    "hours": 1,
+    "depends_on": [
+      "M08"
+    ],
+    "writes": [
+      "docs/tasks/reuse-ima-gate/REPORT.md"
+    ],
+    "deliverable": "核ima官方可用接口/SDK授权；ThingOS未公开源码不复制",
+    "acceptance": "录音外发的目标/范围/用户选择与缺口；没有来源则明确未完成"
+  },
+  {
+    "order": 44,
+    "id": "A06",
+    "group": "其它",
+    "hours": 2,
+    "depends_on": [],
+    "writes": [
+      "system/apps/gameboy/gameboy.c",
+      "third_party/peanut_gb/**"
+    ],
+    "deliverable": "先原文导入MIT核心与无头ROM/帧/输入回调，不一次承诺全应用",
+    "acceptance": "自制ROM固定帧/CPU步骤确定性、内存预算；完整声音/存档/设备输入须后续切片"
+  },
+  {
+    "order": 45,
+    "id": "A07",
+    "group": "儿童内容",
+    "hours": 2,
+    "depends_on": [],
+    "writes": [
+      "system/apps/pet/pet.c"
+    ],
+    "deliverable": "只摘MIT pet_demo可用动作，受现有儿童应用名单；课程/图像另授权",
+    "acceptance": "状态/AI动作/成员隔离；演示与完整认知闯关分开验收"
+  },
+  {
+    "order": 46,
+    "id": "A08",
+    "group": "其它",
+    "hours": 2,
+    "depends_on": [],
+    "writes": [
+      "system/apps/gomoku/gomoku.c",
+      "system/apps/gomoku/vendor/**"
+    ],
+    "deliverable": "原文取Gomoku棋盘/AI，接同一move/state能力；缺蛇和记忆仍列差距",
+    "acceptance": "胜负/禁非法步/悔棋、AI合法步、两人/人机；未知游戏不替换"
+  },
+  {
+    "order": 47,
+    "id": "C00",
+    "group": "单一收口",
+    "hours": 2,
+    "depends_on": [
+      "R10",
+      "I03",
+      "T01",
+      "T02",
+      "T03",
+      "T04",
+      "O01",
+      "O02",
+      "L03",
+      "M03",
+      "M05",
+      "M06",
+      "M07",
+      "M08",
+      "A04",
+      "A06",
+      "A07",
+      "A08",
+      "port-cell-3",
+      "port-display-3",
+      "comm-ux-2",
+      "ui-audit-2"
+    ],
+    "writes": [
+      "CMakeLists.txt",
+      "ports/esp32s31/components/ink_apps/CMakeLists.txt",
+      "ports/esp32s31/components/ink_system/CMakeLists.txt",
+      "ports/esp32s31/components/ink_platform/CMakeLists.txt",
+      "ports/esp32s31/hal_stubs.c",
+      "system/boot/main.c",
+      "system/ui/app_registry.c",
+      "hub/pyproject.toml",
+      "hub/uv.lock",
+      "hub/requirements.lock"
+    ],
+    "deliverable": "主会话一次性登记已达标叶子/新app、移除对应HAL桩和锁依赖；未达标叶子不启用，后续集成另开批次",
+    "acceptance": "每个里程碑原有普通测试/必要ASan/S31/gcc检查由实施任务按范围跑；不得在本调研跑或提前标通过"
+  }
+]

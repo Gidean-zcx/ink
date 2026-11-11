@@ -1,0 +1,28 @@
+调研交付离线校验，2026-11-11
+
+命令：taskpolicy -c utility python3 docs/tasks/reuse-crosspoint-1/verify_report.py --baseline 6bf4b0014b963558d747c2a4cc2a7bc3e2ca167c
+退出码：0
+selection: 72 rows, 72 unique; mapping: 72; missing: 0; extra: 0
+queue: 47 tasks, 87 hours; ordered DAG; overlapping write sets: 0
+provenance: 26 pinned sources, 1036 retrieved file hashes; vendor HEAD unchanged
+document links: 4 local targets exist; 92 fixed source links have retrieved evidence; required sections present
+scope: additions only in task directory; product code: 0 lines; privacy scan: 0 matches; diff check: clean
+
+基线至HEAD文件清单（git diff --name-status）：
+A	docs/tasks/reuse-crosspoint-1/REPORT.md
+A	docs/tasks/reuse-crosspoint-1/picks-mapping.json
+A	docs/tasks/reuse-crosspoint-1/port-queue.json
+A	docs/tasks/reuse-crosspoint-1/source-evidence.json
+A	docs/tasks/reuse-crosspoint-1/verification.txt
+A	docs/tasks/reuse-crosspoint-1/verify_report.py
+
+git diff --check：退出0，无输出。
+基线至HEAD的本机路径/MAC形态扫描：0命中；常见令牌前缀扫描：0命中。
+产品代码/已有测试/构建文件：0行改动。
+全量ctest：未运行（任务明确禁止）。
+ASan/内存检查：未运行（任务明确禁止）。
+S31：未编译（仅调研）。
+gcccheck.py：未运行（产品代码0行）。
+未运行上游固件、未接设备、未调用真实账号/付费接口、未推送。
+
+本文件记录交付文档检查，不能用于声称移植后的功能、性能或真机验证通过。

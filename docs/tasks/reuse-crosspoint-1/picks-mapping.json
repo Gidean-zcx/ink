@@ -1,0 +1,909 @@
+[
+  {
+    "id": "ai_services",
+    "name": "多家 AI 服务切换",
+    "source": "无现成四家切换；S01 `main/protocols/websocket_protocol.cc` 仅传输参考；本地 `hub/ink_hub/models/`",
+    "license": "MIT",
+    "conclusion": "缺完整来源",
+    "effort": "更多",
+    "depends_on": [],
+    "limits": "原厂 E-Ink4 公开树未见新切换代码；中枢当前只有 fake provider，不能标成多厂商已完成；接各家官方 SDK 前逐一锁许可",
+    "queue": "A01"
+  },
+  {
+    "id": "antialias",
+    "name": "抗锯齿强度",
+    "source": "S01 `main/reader/page_text_raster.cc`、`book_reader_prefs.cc`",
+    "license": "MIT",
+    "conclusion": "部分复用",
+    "effort": "1～2 天",
+    "depends_on": [
+      "typeset"
+    ],
+    "limits": "MIT；874538e 是抗锯齿开关，不是 2.0.78 宣传的强度档位。复用光栅路径；强度曲线缺源码/标定，不改底层屏驱动",
+    "queue": "R04"
+  },
+  {
+    "id": "ap_transfer",
+    "name": "热点传书",
+    "source": "S16 `src/activities/network/CrossPointWebServerActivity.cpp`；原厂 AP 组件待接",
+    "license": "MIT（仅独立文件）",
+    "conclusion": "合并",
+    "effort": "更多",
+    "depends_on": [
+      "wifi_transfer"
+    ],
+    "limits": "MIT/原厂组件另核；只取 AP 与传书编排，不能引 Arduino；必须有关闭/飞行模式恢复和同一文件准入",
+    "queue": "T03"
+  },
+  {
+    "id": "app_push",
+    "name": "手机 App 推送",
+    "source": "S01 `main/display/screen/cloud_screen/download/cloud_download.cc`",
+    "license": "MIT",
+    "conclusion": "仅基础来源",
+    "effort": "更多",
+    "depends_on": [
+      "files"
+    ],
+    "limits": "MIT 下载基础可用；完整 App 账号/推送协议未核实；要用户定是否经原厂云，不能默传家庭文件",
+    "queue": "O04"
+  },
+  {
+    "id": "appstore",
+    "name": "应用市场",
+    "source": "S16 `src/activities/plugins/PluginCatalogActivity.cpp`；本地应用包校验/注册",
+    "license": "MIT（仅独立文件）",
+    "conclusion": "合并",
+    "effort": "更多",
+    "depends_on": [],
+    "limits": "MIT 的目录/HTTP 可借；浏览器插件不是我们的受管应用；包身份、签名、卸载、成员权限保留",
+    "queue": "A04"
+  },
+  {
+    "id": "audiobook",
+    "name": "有声书章节跳转",
+    "source": "S11 `main/music/music_tags.c` 仅标签；没有可用的 M4A/M4B 章节模块",
+    "license": "Apache-2.0",
+    "conclusion": "缺完整来源",
+    "effort": "更多",
+    "depends_on": [
+      "music"
+    ],
+    "limits": "Apache 基础不等于章节；需另找允许的 MP4/AAC/章节解析，不能拿逐曲播放替代",
+    "queue": "M04"
+  },
+  {
+    "id": "autorotate",
+    "name": "自动旋转",
+    "source": "S01 `main/display/screen/book_screen/reader/book_reader_orient.cc`；本地加速度方向事件",
+    "license": "MIT",
+    "conclusion": "部分复用",
+    "effort": "1～2 天",
+    "depends_on": [
+      "landscape"
+    ],
+    "limits": "MIT；阅读坐标变换可借，自动方向判定仍需接现有输入；先核界面/触点一致，不动传感器驱动",
+    "queue": "R06"
+  },
+  {
+    "id": "autoturn",
+    "name": "定时自动翻页",
+    "source": "S01 `main/display/screen/book_screen/reader/book_auto_turn.cc`",
+    "license": "MIT",
+    "conclusion": "复用",
+    "effort": "小于半天",
+    "depends_on": [
+      "epub"
+    ],
+    "limits": "MIT；复用定时/停止条件，进现有执行器；锁屏、来电、离页和成员变化停止",
+    "queue": "R06"
+  },
+  {
+    "id": "bookmark",
+    "name": "书签",
+    "source": "S01 `main/reader/book_bookmarks.cc`；S17 `src/BookmarkStore.cpp` 参考复杂锚点",
+    "license": "MIT",
+    "conclusion": "合并",
+    "effort": "1～2 天",
+    "depends_on": [
+      "epub"
+    ],
+    "limits": "MIT；优先原厂位置模型，按成员 DB 保存，不带 BKM1/多代 bin 迁移机制",
+    "queue": "R07"
+  },
+  {
+    "id": "bookstyle",
+    "name": "关闭书内样式",
+    "source": "S16 `lib/Epub/Epub/css/CssParser.cpp`",
+    "license": "MIT（仅独立文件）",
+    "conclusion": "部分复用",
+    "effort": "1～2 天",
+    "depends_on": [
+      "epub"
+    ],
+    "limits": "MIT；复用样式解析，增加“使用/忽略书内样式”策略，仍按统一正文排版",
+    "queue": "R04"
+  },
+  {
+    "id": "browser",
+    "name": "浏览器",
+    "source": "本地 `system/apps/remote/remote.c`、`hub/ink_hub/remote/input.py`；这些固件无可用浏览器引擎",
+    "license": "现有项目实现",
+    "conclusion": "保留并补全",
+    "effort": "更多",
+    "depends_on": [],
+    "limits": "已有远程页面/点按/输入通路；`hub/browser_node/README.md` 明说尚无浏览器镜像。不能写完整浏览器已有；账号/证件仍由人输",
+    "queue": "A03"
+  },
+  {
+    "id": "bt_keyboard",
+    "name": "蓝牙键盘",
+    "source": "S20 `libs/network/BleKeyboardHost/src/HidKeymap.cpp`、`BleKeyboardHost.cpp`",
+    "license": "MIT＋NimBLE Apache-2.0",
+    "conclusion": "部分复用",
+    "effort": "更多",
+    "depends_on": [
+      "keyboard"
+    ],
+    "limits": "MIT＋NimBLE Apache；键码能摘，Arduino 主机不能直接搬；不和音频蓝牙端口任务重改同文件",
+    "queue": "M06"
+  },
+  {
+    "id": "bt_reconnect",
+    "name": "耳机断开后自动重连",
+    "source": "S11 `main/music/music_player.c` 与原厂蓝牙通路；等待 port-bt-audio-2",
+    "license": "Apache-2.0",
+    "conclusion": "合并",
+    "effort": "1～2 天",
+    "depends_on": [
+      "music"
+    ],
+    "limits": "Apache/MIT；同位置续播已有基础，三次重连规则不在这段核心完整实现中；不得新造另一条蓝牙状态机",
+    "queue": "M05"
+  },
+  {
+    "id": "bt_speaker",
+    "name": "当蓝牙音箱",
+    "source": "原厂蓝牙模式，归 `port-bt-audio-2`；不从 CrossPoint 读屏驱动移植",
+    "license": "未取得可用授权",
+    "conclusion": "沿用已有任务",
+    "effort": "更多",
+    "depends_on": [],
+    "limits": "原厂 MIT；S31 本身的 BLE 与外置蓝牙音频模块要分清，验收是接收手机音频；勾选与早期暂定冲突由主会话确认",
+    "queue": "已有任务"
+  },
+  {
+    "id": "capsule",
+    "name": "数据胶囊网盘传书",
+    "source": "官网指向 Gitee crosslink，当前源码匿名取回受限；公开旧版未核到该客户端",
+    "license": "未取得可用授权",
+    "conclusion": "没有可用来源",
+    "effort": "更多",
+    "depends_on": [
+      "files"
+    ],
+    "limits": "未取得当前功能的许可/源码，不据发布页宣称能搬；账号与远端取书范围要用户定",
+    "queue": "O04"
+  },
+  {
+    "id": "codex_remote",
+    "name": "语音遥控电脑上的 AI",
+    "source": "S06 `components/codex_remote/codex_ws_client.cc`；S14 桥接主程序缺许可",
+    "license": "MIT；见许可表",
+    "conclusion": "部分复用",
+    "effort": "更多",
+    "depends_on": [],
+    "limits": "设备协议 MIT 可摘；桌面端不复制、不注入；凭据/电脑文件访问/危险操作仍过家庭中枢策略",
+    "queue": "A02"
+  },
+  {
+    "id": "comic",
+    "name": "高清插图和漫画模式",
+    "source": "S01 `main/reader/epub_document.cc` 的单图页检测、`image_stream.cc`",
+    "license": "MIT",
+    "conclusion": "部分复用",
+    "effort": "更多",
+    "depends_on": [
+      "epub"
+    ],
+    "limits": "MIT；原厂流式图片可起步；不等同当前 CrossLink2 高清漫画增量，需补缩放/翻页/预算验证",
+    "queue": "R05"
+  },
+  {
+    "id": "desk_pages",
+    "name": "多页桌面",
+    "source": "本地 `system/ui/shell/navigation.c`",
+    "license": "现有项目实现",
+    "conclusion": "保留",
+    "effort": "小于半天",
+    "depends_on": [],
+    "limits": "项目现有三屏桌面；移植主题会破坏导航/AI 语义，做兼容复查即可",
+    "queue": "保留"
+  },
+  {
+    "id": "detail",
+    "name": "书籍详情页",
+    "source": "S01 `main/display/screen/book_screen/shelf/book_detail.cc`、`epub_document.cc`",
+    "license": "MIT",
+    "conclusion": "合并",
+    "effort": "1～2 天",
+    "depends_on": [
+      "epub"
+    ],
+    "limits": "MIT；抽元数据/进度字段，详情 UI 用我们的列表与快照",
+    "queue": "R08"
+  },
+  {
+    "id": "epub",
+    "name": "EPUB 阅读",
+    "source": "S01 `main/reader/epub_document.cc`、`html_content.cc`、`zip_reader.cc`；S16 NAV/CSS 补足",
+    "license": "MIT；MIT（仅独立文件）",
+    "conclusion": "局部替换",
+    "effort": "更多",
+    "depends_on": [
+      "files"
+    ],
+    "limits": "MIT＋zlib/Expat；原厂正文与 ZIP 原文接入；目录、样式和图片分步交付，不能只解析标题就写完成",
+    "queue": "R01～R05、R10"
+  },
+  {
+    "id": "excerpt",
+    "name": "书摘",
+    "source": "S16 `src/ClippingStore.cpp`；S01 书签源位置",
+    "license": "MIT（仅独立文件）；MIT",
+    "conclusion": "合并",
+    "effort": "1～2 天",
+    "depends_on": [
+      "bookmark"
+    ],
+    "limits": "MIT；稳定选区与原文摘录进成员数据，不复制全局 clippings 路径或默认外部同步",
+    "queue": "R07"
+  },
+  {
+    "id": "files",
+    "name": "文件管理",
+    "source": "本地 `system/apps/files/files.c`、`system/services/file/file_service.c`",
+    "license": "现有项目实现",
+    "conclusion": "保留",
+    "effort": "小于半天",
+    "depends_on": [],
+    "limits": "现有改名/复制/移动/编辑与准入更完整；源固件直接 SD IO 不替换，增加来源时复用此入口",
+    "queue": "保留"
+  },
+  {
+    "id": "fm",
+    "name": "收音机",
+    "source": "S06 `external_apps/examples/radio/main/radio.cc` 和 S03 radio 都是网络广播",
+    "license": "MIT",
+    "conclusion": "没有 FM 来源",
+    "effort": "更多",
+    "depends_on": [],
+    "limits": "源代码没有 FM 调谐/射频功能；硬件是否有 FM 芯片本任务无证据，不用网络电台冒充收音机",
+    "queue": "M07（仅核查）"
+  },
+  {
+    "id": "gameboy",
+    "name": "Game Boy 模拟器",
+    "source": "S22 `peanut_gb.h`",
+    "license": "MIT",
+    "conclusion": "复用",
+    "effort": "更多",
+    "depends_on": [
+      "files"
+    ],
+    "limits": "MIT；GB 核心可取，输入/帧输出接平台；ROM 必须自制或授权，声音与存档另验",
+    "queue": "A06"
+  },
+  {
+    "id": "hidebar",
+    "name": "隐藏状态栏和进度条",
+    "source": "S17 `src/util/ReaderStatusBarConfig.h`；本地阅读页标题/页脚",
+    "license": "MIT",
+    "conclusion": "合并",
+    "effort": "小于半天",
+    "depends_on": [
+      "typeset"
+    ],
+    "limits": "MIT；布局开关可借，实际正文区域与页码重排走同一设置能力",
+    "queue": "R11"
+  },
+  {
+    "id": "ima",
+    "name": "录音上传 ima 知识库",
+    "source": "ThingOS 只有功能说明，未取得公开许可源码",
+    "license": "未取得可用授权",
+    "conclusion": "没有可用来源",
+    "effort": "更多",
+    "depends_on": [
+      "recorder"
+    ],
+    "limits": "不猜私有接口；录音外发是家庭资料出境到第三方服务范围，须本人选择和明确目标",
+    "queue": "A05"
+  },
+  {
+    "id": "jianguo",
+    "name": "坚果云网盘传书",
+    "source": "S25 `src/webdav4/client.py`（补充）；S16 WebDAVHandler 不能当客户端",
+    "license": "MIT；MIT（仅独立文件）",
+    "conclusion": "复用到中枢",
+    "effort": "1～2 天",
+    "depends_on": [
+      "files"
+    ],
+    "limits": "MIT；HTTPX/dateutil 依赖另锁定；只下载用户选的目录，TLS 校验、成员凭据、retry=False；设备端仅内容导入",
+    "queue": "O02"
+  },
+  {
+    "id": "journal",
+    "name": "阅读手账",
+    "source": "S15 `src/util/ReadingStatsAnalytics.cpp` 仅每日汇总",
+    "license": "MIT（仅独立文件）",
+    "conclusion": "部分复用",
+    "effort": "1～2 天",
+    "depends_on": [
+      "stats",
+      "excerpt"
+    ],
+    "limits": "MIT；可复用数据汇总，未找到 PageRest 像素手账源码；手账页面仍需我们按设计接",
+    "queue": "R12"
+  },
+  {
+    "id": "keyboard",
+    "name": "九宫格键盘",
+    "source": "LVGL `lv_keyboard.c`／`lv_ime_pinyin.c`；S05 `main/ui/ui_ime.c`",
+    "license": "LVGL MIT；S05 Apache-2.0",
+    "conclusion": "合并",
+    "effort": "1～2 天",
+    "depends_on": [],
+    "limits": "MIT/Apache；推荐控件＋现有词组引擎，九键不全盘重写；先等 ui-input-2",
+    "queue": "I01～I03"
+  },
+  {
+    "id": "kids",
+    "name": "儿童认知和电子宠物",
+    "source": "S06 `external_apps/examples/pet_demo/main/pet_demo.cc` 仅宠物演示；本地孩子模式",
+    "license": "MIT",
+    "conclusion": "部分复用",
+    "effort": "更多",
+    "depends_on": [],
+    "limits": "MIT；可做可逆宠物交互起点，没有现成认知课程/内容授权；不能把 DEMO 当儿童内容已齐",
+    "queue": "A07"
+  },
+  {
+    "id": "landscape",
+    "name": "横屏阅读",
+    "source": "S01 `main/display/screen/book_screen/reader/book_reader_orient.cc`",
+    "license": "MIT",
+    "conclusion": "复用",
+    "effort": "1～2 天",
+    "depends_on": [
+      "typeset"
+    ],
+    "limits": "MIT；横屏分页、触控及能力锚点一致；不切换整套显示驱动",
+    "queue": "R06"
+  },
+  {
+    "id": "lang",
+    "name": "多语言",
+    "source": "本地 `system/text/i18n.c`；S16 `lib/I18n/` 仅参考",
+    "license": "MIT（仅独立文件）",
+    "conclusion": "保留",
+    "effort": "小于半天",
+    "depends_on": [],
+    "limits": "已有中英文及提取流程；搬包不得把别的语言资源/字体默认全部常驻",
+    "queue": "保留"
+  },
+  {
+    "id": "light",
+    "name": "前光亮度和冷暖",
+    "source": "本地前光服务；`port-board-2`、`port-power-2`",
+    "license": "现有项目实现",
+    "conclusion": "沿用已有任务",
+    "effort": "小于半天",
+    "depends_on": [],
+    "limits": "MIT 原厂；已有亮度/暖光能力，不重复写背光驱动",
+    "queue": "已有任务"
+  },
+  {
+    "id": "lock_calendar",
+    "name": "锁屏：日历和老黄历",
+    "source": "S15 `src/activities/apps/standby/ChineseCalendarFace.cpp`；本地 `lunar.c`",
+    "license": "MIT（仅独立文件）",
+    "conclusion": "合并",
+    "effort": "1～2 天",
+    "depends_on": [
+      "lock_clock",
+      "lunar"
+    ],
+    "limits": "MIT 画面参考；用现有农历服务，不搬另一份日期表和刷新循环",
+    "queue": "L02"
+  },
+  {
+    "id": "lock_clock",
+    "name": "锁屏：时钟",
+    "source": "S15 `src/activities/apps/standby/SloppyClockFace.cpp`；本地 `system/ui/lock_mark.c`",
+    "license": "MIT（仅独立文件）",
+    "conclusion": "合并",
+    "effort": "1～2 天",
+    "depends_on": [],
+    "limits": "MIT；当前已有分钟时钟与快照，取样式而不是新增定时任务；分钟没变不刷",
+    "queue": "L01"
+  },
+  {
+    "id": "lock_pin",
+    "name": "锁屏密码",
+    "source": "本地 `system/policy/members.c`、`system/ui/shell/pinpad.c`",
+    "license": "现有项目实现",
+    "conclusion": "保留",
+    "effort": "小于半天",
+    "depends_on": [],
+    "limits": "现有成员验证/锁屏，保留密码排除 AI；源固件单机密码不能代替家庭隔离",
+    "queue": "保留"
+  },
+  {
+    "id": "lock_quote",
+    "name": "锁屏：句子",
+    "source": "S16 `src/ClippingStore.cpp`；本地锁屏插槽",
+    "license": "MIT（仅独立文件）",
+    "conclusion": "合并",
+    "effort": "1～2 天",
+    "depends_on": [
+      "excerpt",
+      "lock_clock"
+    ],
+    "limits": "MIT；取当前成员明确选的摘录，锁住大人空间时不向孩子/AI泄露私密书摘",
+    "queue": "L03"
+  },
+  {
+    "id": "lock_ticket",
+    "name": "锁屏：阅读小票",
+    "source": "S01 `main/reader/book_home_snapshot.cc`；S15 统计",
+    "license": "MIT；MIT（仅独立文件）",
+    "conclusion": "部分复用",
+    "effort": "1～2 天",
+    "depends_on": [
+      "stats",
+      "recent",
+      "excerpt"
+    ],
+    "limits": "MIT；只读组合成阅读小票；备注“锁屏先不做”需定时机，保留需求不擅自删",
+    "queue": "L03"
+  },
+  {
+    "id": "lock_todo",
+    "name": "锁屏：待办",
+    "source": "本地 `system/apps/memo/memo.c`、`system/ui/lock_mark.c`",
+    "license": "现有项目实现",
+    "conclusion": "保留并扩展",
+    "effort": "小于半天",
+    "depends_on": [
+      "todo",
+      "lock_clock"
+    ],
+    "limits": "已有待办与锁屏基础，不复制上游全局待办；内容按当前可见成员",
+    "queue": "L03"
+  },
+  {
+    "id": "lock_widgets",
+    "name": "锁屏组件",
+    "source": "S17 `src/components/themes/dashboard/DashboardTheme.cpp`；本地锁屏",
+    "license": "MIT",
+    "conclusion": "合并",
+    "effort": "1～2 天",
+    "depends_on": [
+      "shelf",
+      "recent",
+      "lock_clock"
+    ],
+    "limits": "MIT；借字段组合，画面由现有壳绘制；锁屏只显示许可内容",
+    "queue": "L03"
+  },
+  {
+    "id": "lunar",
+    "name": "老黄历",
+    "source": "本地 `system/services/time/lunar.c`；S15 `ChineseAlmanac.cpp` 对照",
+    "license": "MIT（仅独立文件）",
+    "conclusion": "保留；宜忌缺权威来源",
+    "effort": "更多",
+    "depends_on": [],
+    "limits": "已有 1901～2100 农历；S15 宜忌仅按日支选词池，不是准确黄历。核定来源前不能宣称完成“老黄历宜忌”",
+    "queue": "L02"
+  },
+  {
+    "id": "minigames",
+    "name": "小游戏",
+    "source": "S15 `src/activities/apps/gomoku/GomokuBoard.cpp`、`GomokuAI.cpp`",
+    "license": "MIT（仅独立文件）",
+    "conclusion": "部分复用",
+    "effort": "更多",
+    "depends_on": [],
+    "limits": "MIT；五子棋可直接取；贪吃蛇/记忆测试在所查树未找到独立模块，不用其它未勾的游戏替代",
+    "queue": "A08"
+  },
+  {
+    "id": "mobi",
+    "name": "MOBI 格式",
+    "source": "S01 `tools/ebook/epdbook/extractors/mobi.py` 仅电脑预处理",
+    "license": "MIT",
+    "conclusion": "没有设备端来源",
+    "effort": "更多",
+    "depends_on": [
+      "epub"
+    ],
+    "limits": "原厂文件 MIT 但其 mobi 解包依赖尚未核许可；本次不建议引入。转换文件不是直接打开 MOBI，保留缺口",
+    "queue": "O05（仅来源核查）"
+  },
+  {
+    "id": "music",
+    "name": "本地音乐播放器",
+    "source": "S11 `main/music/music_tags.c`、`music_player.c`；S23 dr_mp3/dr_flac/dr_wav；S24 Vorbis",
+    "license": "Apache-2.0；MIT-0；MIT",
+    "conclusion": "合并",
+    "effort": "更多",
+    "depends_on": [
+      "files"
+    ],
+    "limits": "Apache/MIT-0/MIT；保留现有媒体服务。MP3/FLAC/WAV/Vorbis 有候选，AAC/M4A 全链路未补齐",
+    "queue": "M01～M03"
+  },
+  {
+    "id": "netease",
+    "name": "网易云音乐",
+    "source": "布丁功能页未给可用源码，所查项目无成熟授权客户端",
+    "license": "未取得可用授权",
+    "conclusion": "没有可用来源",
+    "effort": "更多",
+    "depends_on": [
+      "music"
+    ],
+    "limits": "非官方接口/账号/曲目授权须用户定；未找到就写缺口，不尝试取付费歌曲",
+    "queue": "O03"
+  },
+  {
+    "id": "netradio",
+    "name": "网络电台",
+    "source": "S06 `external_apps/examples/radio/main/radio.cc`；S03 radio_screen",
+    "license": "MIT",
+    "conclusion": "复用",
+    "effort": "1～2 天",
+    "depends_on": [
+      "music"
+    ],
+    "limits": "MIT；复用 HTTP 节目/流编排，输出接现有音频，不启用原项目默认广播站或未经选定的第三方源",
+    "queue": "M07"
+  },
+  {
+    "id": "opds",
+    "name": "OPDS 书源",
+    "source": "S19 `libs/network/Opds/src/OpdsParser.cpp`、`OpdsClient.cpp`；S12 C 版备选",
+    "license": "MIT（排除隐式认证）；见许可表",
+    "conclusion": "复用",
+    "effort": "1～2 天",
+    "depends_on": [
+      "files",
+      "epub"
+    ],
+    "limits": "MIT/Apache；解析和受控下载，禁任意公网默认书源；基本认证本人填，排除隐式 wolfSSL 路径",
+    "queue": "O01"
+  },
+  {
+    "id": "ota",
+    "name": "联网升级",
+    "source": "本地 `system/services/update/update_service.c`；S16 `src/network/OtaUpdater.cpp` 参考",
+    "license": "MIT（仅独立文件）",
+    "conclusion": "保留并补端口",
+    "effort": "更多",
+    "depends_on": [],
+    "limits": "已有中枢升级校验；源固件整机 Update 不能替换镜像验签/分区保护；原厂恢复空间与写分区要用户定",
+    "queue": "T04"
+  },
+  {
+    "id": "phone_sms",
+    "name": "电话和短信",
+    "source": "本地 `system/apps/sms/`、`contacts/`、`phone/`；原厂模组原文",
+    "license": "现有项目实现",
+    "conclusion": "保留并沿用已有任务",
+    "effort": "更多",
+    "depends_on": [],
+    "limits": "comm-ux-2 / port-cell-3 正在处理；不移植 AgentUI 通话界面或另拆一轮",
+    "queue": "已有任务"
+  },
+  {
+    "id": "recent",
+    "name": "继续阅读、最近阅读",
+    "source": "本地 `apps/reader/reader.c:75`；S15 `src/RecentBooksStore.cpp` 参考",
+    "license": "MIT（仅独立文件）",
+    "conclusion": "保留",
+    "effort": "小于半天",
+    "depends_on": [],
+    "limits": "现有成员 reader.last 与继续读应保留；新 EPUB 用稳定锚点兼容已有 TXT 位置",
+    "queue": "R10"
+  },
+  {
+    "id": "recorder",
+    "name": "录音机",
+    "source": "本地 `system/services/audio/media_service.c` 与语音备忘；S06 voice_recorder 示例",
+    "license": "MIT",
+    "conclusion": "合并",
+    "effort": "1～2 天",
+    "depends_on": [
+      "files"
+    ],
+    "limits": "原厂 MIT 示例只作按钮编排参考；复用现有 Opus 录音/锁屏所有权，不再开录音线程",
+    "queue": "M08"
+  },
+  {
+    "id": "scrape",
+    "name": "联网补全书籍信息",
+    "source": "当前 CrossLink Pixel 功能说明；公开旧版未见授权的封面/评分抓取模块",
+    "license": "未取得可用授权",
+    "conclusion": "没有完整来源",
+    "effort": "更多",
+    "depends_on": [
+      "detail",
+      "shelf"
+    ],
+    "limits": "不能把 EPUB 元数据读取当联网补全；只可先接用户选定的公开合法元数据 API，家庭书目外发需选择",
+    "queue": "O03"
+  },
+  {
+    "id": "sd_update",
+    "name": "TF 卡升级固件",
+    "source": "本地升级服务/原厂 `main/ota.cc` 仅基础；未核到可直接用的 TF 卡引导模块",
+    "license": "现有项目实现",
+    "conclusion": "缺完整来源",
+    "effort": "更多",
+    "depends_on": [
+      "ota",
+      "files"
+    ],
+    "limits": "沿用同一镜像校验和安全分区写入，不能复制 lnkboot 私有整机切换器；不刷设备",
+    "queue": "T04"
+  },
+  {
+    "id": "shelf",
+    "name": "封面书架和分类",
+    "source": "S01 `main/display/screen/book_screen/shelf/book_bookshelf.cc`、`book_detail.cc`",
+    "license": "MIT",
+    "conclusion": "局部替换",
+    "effort": "更多",
+    "depends_on": [
+      "detail",
+      "epub"
+    ],
+    "limits": "MIT；换掉当前 16 本 TXT 列表的内容模型，合入封面/分类；主页、成员与能力接口保留",
+    "queue": "R08、R10"
+  },
+  {
+    "id": "stats",
+    "name": "阅读统计",
+    "source": "S15 `src/ReadingStatsStore.cpp`、`src/util/ReadingStatsAnalytics.cpp`",
+    "license": "MIT（仅独立文件）",
+    "conclusion": "复用算法",
+    "effort": "1～2 天",
+    "depends_on": [
+      "recent"
+    ],
+    "limits": "MIT；按当前成员统计，时间走现有服务，不复制设备唯一身份或默认外发",
+    "queue": "R09、R12"
+  },
+  {
+    "id": "streak",
+    "name": "连续阅读打卡",
+    "source": "S15 `src/ReadingStatsStore.cpp:611` 起",
+    "license": "MIT（仅独立文件）",
+    "conclusion": "复用算法",
+    "effort": "小于半天",
+    "depends_on": [
+      "stats"
+    ],
+    "limits": "MIT；阈值是上游阅读目标设置，不自动升级为本项目规则；先给数据和可见说明",
+    "queue": "R09"
+  },
+  {
+    "id": "themes",
+    "name": "阅读主题",
+    "source": "S16 `lib/Epub/Epub/css/CssParser.cpp`；S17 阅读状态栏配置",
+    "license": "MIT（仅独立文件）；MIT",
+    "conclusion": "合并",
+    "effort": "1～2 天",
+    "depends_on": [
+      "typeset",
+      "bookstyle"
+    ],
+    "limits": "MIT；一套排版值的预设，服从我们的字体/灰度/界面规范；不搬整机主题引擎",
+    "queue": "R11"
+  },
+  {
+    "id": "toc",
+    "name": "目录和章节跳转",
+    "source": "S01 `main/reader/txt_chapter.cc`；S16 `lib/Epub/Epub/parsers/TocNavParser.cpp`、`TocNcxParser.cpp`",
+    "license": "MIT；MIT（仅独立文件）",
+    "conclusion": "复用",
+    "effort": "1～2 天",
+    "depends_on": [
+      "epub"
+    ],
+    "limits": "MIT＋Expat；TXT 中文章名、EPUB NAV/NCX 与锚点跳转分清；目录不是仅跳页号",
+    "queue": "R03"
+  },
+  {
+    "id": "todo",
+    "name": "待办和今日事项",
+    "source": "本地 `system/apps/memo/memo.c`、时间提醒服务",
+    "license": "现有项目实现",
+    "conclusion": "保留",
+    "effort": "小于半天",
+    "depends_on": [],
+    "limits": "已有清单/提醒；保留原子能力、成员数据，锁屏只是视图",
+    "queue": "保留"
+  },
+  {
+    "id": "typeset",
+    "name": "阅读排版设置",
+    "source": "S01 `main/reader/text_spacing.h`、`page_text_raster.cc`；S16 CSS 解析",
+    "license": "MIT；MIT（仅独立文件）",
+    "conclusion": "合并",
+    "effort": "更多",
+    "depends_on": [
+      "epub"
+    ],
+    "limits": "MIT；字号/行距/边距/字距/缩进/下划线是阅读设置，不混成系统字号；一处接正文模型",
+    "queue": "R04、R11"
+  },
+  {
+    "id": "usb_disk",
+    "name": "USB 传书（当 U 盘）",
+    "source": "本地 `system/services/file/file_service.c` 与 `hal_usb_disk_*`；原厂 TinyUSB 路径待核",
+    "license": "现有项目实现",
+    "conclusion": "保留并补端口",
+    "effort": "1～2 天",
+    "depends_on": [
+      "files"
+    ],
+    "limits": "原厂/IDF Apache；S31 HAL 仍是 -1 桩。卡借出/归还、成员锁与文件准入保留；避免两个文件系统同时写卡",
+    "queue": "T02"
+  },
+  {
+    "id": "vertical",
+    "name": "竖排阅读",
+    "source": "S01 `main/reader/vertical_text.h`、`page_text_raster.cc`",
+    "license": "MIT",
+    "conclusion": "复用",
+    "effort": "1～2 天",
+    "depends_on": [
+      "typeset"
+    ],
+    "limits": "MIT；复用竖排标点旋转和列排列；不把整屏旋转当古籍竖排",
+    "queue": "R06"
+  },
+  {
+    "id": "vibe",
+    "name": "振动反馈和强度",
+    "source": "本地触感服务；`port-board-2`",
+    "license": "现有项目实现",
+    "conclusion": "保留",
+    "effort": "小于半天",
+    "depends_on": [],
+    "limits": "已有触感与强度，不重造驱动；只校验新输入动作经过现有反馈路径",
+    "queue": "已有任务"
+  },
+  {
+    "id": "wallpaper",
+    "name": "锁屏和待机壁纸",
+    "source": "本地 `system/ui/shell/wallpaper.c`；S01 `main/reader/image_stream.cc`",
+    "license": "MIT",
+    "conclusion": "合并",
+    "effort": "1～2 天",
+    "depends_on": [
+      "files"
+    ],
+    "limits": "MIT；已有壁纸选择/绘制；补库与透明 PNG 合成，按成员授权可见，不换锁屏安全模型",
+    "queue": "L01"
+  },
+  {
+    "id": "weread_notes",
+    "name": "微信读书：划线、想法、书评",
+    "source": "S15 `lib/WeReadWebApi/src/WeReadBrowse.h/.cpp` 的 PopularHighlights/MyHighlights/PopularReviews",
+    "license": "MIT（仅独立文件）",
+    "conclusion": "条件复用（只读部分）",
+    "effort": "更多",
+    "depends_on": [
+      "weread_online"
+    ],
+    "limits": "已有热门划线、本人划线、书评解析和分页；想法分类未单独核实；取只读DTO不带逆向解码，账号/接口/TLS仍须选择",
+    "queue": "O03"
+  },
+  {
+    "id": "weread_online",
+    "name": "微信读书：在线读和搜书",
+    "source": "S15 `lib/WeReadWebApi/src/WeReadClient.cpp`；在线内容完整链路含非官方/解码",
+    "license": "MIT（仅独立文件）",
+    "conclusion": "仅条件候选",
+    "effort": "更多",
+    "depends_on": [
+      "weread_shelf"
+    ],
+    "limits": "不复制逆向解码；不把离线 EPUB 下载当在线搜索加入书架；完整源码/服务协议尚缺，接口与 TLS 风险要用户定",
+    "queue": "O03"
+  },
+  {
+    "id": "weread_outline",
+    "name": "微信读书：读书大纲",
+    "source": "听趣的说明，未找到可直接复用且排除逆向后的大纲生成源码",
+    "license": "未取得可用授权",
+    "conclusion": "没有可用来源",
+    "effort": "更多",
+    "depends_on": [
+      "weread_online"
+    ],
+    "limits": "TingQu 微读逆向链路明确排除；本地 AI 总结当前书不等于微读账号读书大纲",
+    "queue": "O03"
+  },
+  {
+    "id": "weread_progress",
+    "name": "微信读书：进度和时长同步",
+    "source": "S15 `lib/WeReadWebApi/src/WeReadClient.cpp`、`src/activities/apps/weread/webapi/WeReadProgressSyncActivity.cpp`",
+    "license": "MIT（仅独立文件）",
+    "conclusion": "条件复用",
+    "effort": "更多",
+    "depends_on": [
+      "weread_shelf",
+      "stats"
+    ],
+    "limits": "MIT；有进度请求编排，时长与手机一致性未实调；只上传本人选的微读书籍，失败不猜成功",
+    "queue": "O03"
+  },
+  {
+    "id": "weread_shelf",
+    "name": "微信读书：书架同步和离线读",
+    "source": "S15 `lib/WeReadWebApi/src/WeReadClient.cpp`、`WeReadBrowse.cpp`",
+    "license": "MIT（仅独立文件）",
+    "conclusion": "条件复用",
+    "effort": "更多",
+    "depends_on": [
+      "epub"
+    ],
+    "limits": "MIT；二维码/书架/下载是候选；非官方 API、无证书校验和逆向内容解码阻止直接取全链路，不能擅自启用",
+    "queue": "O03"
+  },
+  {
+    "id": "weread_write",
+    "name": "微信读书：自己划线写想法",
+    "source": "S16 `src/ClippingStore.cpp` 仅本地书摘；未找到许可明确的微读云端写接口",
+    "license": "MIT（仅独立文件）",
+    "conclusion": "没有完整来源",
+    "effort": "更多",
+    "depends_on": [
+      "excerpt",
+      "weread_notes"
+    ],
+    "limits": "不把本地书摘冒充微读划线同步；发送私人想法需用户选服务与范围，不从 ThingOS 功能页推导实现",
+    "queue": "O03"
+  },
+  {
+    "id": "wifi_transfer",
+    "name": "Wi-Fi 网页传书",
+    "source": "本地 `system/services/file/transfer.c`；S16 `src/network/CrossPointWebServer.cpp`",
+    "license": "MIT（仅独立文件）",
+    "conclusion": "保留并补端口",
+    "effort": "1～2 天",
+    "depends_on": [
+      "files"
+    ],
+    "limits": "已有一次授权码/成员 epoch/空间校验；先补真机 HAL，再择取断线/分块上传协议，不整换服务器",
+    "queue": "T01"
+  },
+  {
+    "id": "workbuddy",
+    "name": "电脑助理 WorkBuddy",
+    "source": "S01 `main/workbuddy/workbuddy_client.cc`、`workbuddy_voice_stream.cc`、README",
+    "license": "MIT",
+    "conclusion": "条件复用",
+    "effort": "更多",
+    "depends_on": [],
+    "limits": "MIT；现有设备侧可复用，依赖 CloudZao 服务＋百度 ASR＋电脑在线；中枢默认不改接它；用户选择后经同一能力网关",
+    "queue": "A02"
+  }
+]
