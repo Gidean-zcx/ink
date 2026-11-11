@@ -18,6 +18,8 @@ link = shlex.split((build / "CMakeFiles/test-s31-transfer.dir/link.txt").read_te
 source = policy.read_text()
 open_line = next(s for s in source.splitlines() if "case HAL_TRANSFER_OPEN:" in s)
 cases = [
+    ("failed-start-data", policy, 'T.files = 0; T.left = 0; T.received_name[0] = T.path[0] = 0; T.result = NULL;', '', fixture),
+    ("failed-start-guard", policy, 'if (r && !T.active && T.guard) { osal_mutex_delete(T.guard); T.guard = NULL; }', '', fixture),
     ("wrong-code", policy, 'if (!T.used && !strcmp(code, expected))', 'if (!T.used && strlen(expected))', fixture),
     ("member", policy, 'T.epoch == ink_member_epoch() &&', '', fixture),
     ("expiry", policy, 'osal_now_us() < T.expires &&', '', fixture),

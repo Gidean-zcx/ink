@@ -8,17 +8,18 @@ extern "C" {
 int test_begin(void);
 const hal_transfer_policy_t *test_policy(void);
 void test_expire(void),test_switch(void),test_plane(bool),test_full(bool),test_code(char *),test_tick(void);
-int test_airplane_start(void);
+int test_airplane_start(void),test_guards(void),test_attempt(void);
 unsigned test_admissions(void),test_removals(void);
 const char *test_path(void),*test_status(bool);
 int ink_ap_start(const hal_transfer_policy_t *,bool);
 void ink_ap_stop(void);
 }
 std::vector<httpd_uri_t> ink_test_routes;
+static bool fail_start;
 extern "C" void ink_transfer_wifi_init(void) {}
 extern "C" void ink_transfer_wifi_pause(void) {}
 extern "C" void ink_transfer_wifi_restore(bool) {}
-extern "C" int hal_transfer_server_start(const hal_transfer_policy_t *p,uint16_t *port) { *port=80;return ink_ap_start(p,true); }
+extern "C" int hal_transfer_server_start(const hal_transfer_policy_t *p,uint16_t *port) { *port=80;return fail_start?-1:ink_ap_start(p,true); }
 extern "C" void hal_transfer_server_stop(void) { ink_ap_stop(); }
 extern "C" bool hal_transfer_hotspot(void) { return false; }
 extern "C" int hal_transfer_host(char *s,size_t n) { snprintf(s,n,"192.0.2.42");return 0; }
@@ -96,6 +97,11 @@ int main() {
     assert(request("/move",cookie,"path=%2Fexample.txt&to=%2Fmissing").response=="ok");
     socket_case(cookie,true,false);socket_case(cookie,false,false);
     assert(test_begin());cookie=login();socket_case(cookie,false,true);
+    test_switch();test_tick();fail_start=true;assert(!test_attempt());
+    const char *failed_status=test_status(true);
+    fprintf(stderr,"failed start guards=%d status=%.500s\n",test_guards(),failed_status);
+    assert(test_guards()==0&&strstr(failed_status,"\"files\":0")&&!strstr(failed_status,"missing.txt"));
+    fail_start=false;assert(test_begin());cookie=login();
     auto ws=route("/ws/upload");httpd_req_t expired;expired.fd=socket(AF_INET,SOCK_STREAM,0);expired.headers["Cookie"]=cookie;
     assert(ws.ws_pre_handshake_cb(&expired)==0);expired.method=0;expired.headers.clear();expired.body="{}";
     test_expire();assert(ws.handler(&expired)==0&&expired.dispatch_error!=0);expired.free_ctx(expired.sess_ctx);close(expired.fd);

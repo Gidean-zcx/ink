@@ -8,8 +8,9 @@ static unsigned admissions, removals;
 static char last_path[128], last_result[768];
 struct osal_mutex { int unused; };
 static struct osal_mutex mutex;
-osal_mutex_t *osal_mutex_create(void) { return &mutex; }
-void osal_mutex_delete(osal_mutex_t *m) { (void)m; }
+static int guards;
+osal_mutex_t *osal_mutex_create(void) { guards++;return &mutex; }
+void osal_mutex_delete(osal_mutex_t *m) { (void)m;assert(guards>0);guards--; }
 osal_err_t osal_mutex_lock(osal_mutex_t *m,int64_t t) { (void)m;(void)t; return OSAL_OK; }
 void osal_mutex_unlock(osal_mutex_t *m) { (void)m; }
 uint64_t osal_now_us(void) { return now; }
@@ -75,3 +76,6 @@ void osal_cost_units(const char *name,uint64_t n) { (void)name;(void)n; }
 
 void test_tick(void) { poll_upload(NULL); }
 int test_airplane_start(void) { finish("传输已关闭");plane=true;ink_call_t c={.src=INK_SRC_TOUCH};start(&c);return T.active; }
+
+int test_guards(void) { return guards; }
+int test_attempt(void) { ink_call_t c={.src=INK_SRC_TOUCH};start(&c);return T.active; }

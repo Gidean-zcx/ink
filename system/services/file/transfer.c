@@ -301,6 +301,7 @@ static void start(ink_call_t *c) {
         r = T.guard ? ink_fs_card_hold() : INK_FS_ERR_BUSY;
         if (!r) {
             T.actor = actor; T.epoch = ink_member_epoch(); T.port = 0;
+            T.files = 0; T.left = 0; T.received_name[0] = T.path[0] = 0; T.result = NULL;
             int native = hal_transfer_server_start(&POLICY, &T.port);
             T.native = native == 1;
             if (T.native && fs_mkdir_for(&T.actor, "/me/收件箱")) native = -1;
@@ -309,12 +310,13 @@ static void start(ink_call_t *c) {
             }
             else {
                 hal_random_fill(&T.code, sizeof T.code); T.code = 100000 + T.code % 900000;
-                T.active = true; T.connected = T.used = false; T.misses = 0; T.head_len = 0; T.part[0] = 0; T.left = 0; T.files = 0; T.received_name[0] = T.token[0] = 0;
+                T.active = true; T.connected = T.used = false; T.misses = 0; T.head_len = 0; T.part[0] = 0; T.token[0] = 0;
                 T.expires = osal_now_us() + 120000000; T.result = "等待上传";
                 ink_power_hold(INK_NEED_AWAKE); tick(NULL);
             }
         }
     }
+    if (r && !T.active && T.guard) { osal_mutex_delete(T.guard); T.guard = NULL; }
     if (r) { c->rc.status = INK_RC_FAILED; snprintf(c->rc.detail, sizeof c->rc.detail, "%s", TR(r == INK_FS_ERR_BUSY ? TR_NOOP("传输已开启、空间未解锁或无线网络不可用") : reason(r))); }
     else status(c);
 }
