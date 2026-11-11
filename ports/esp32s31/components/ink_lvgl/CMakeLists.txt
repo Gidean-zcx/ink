@@ -7,4 +7,4 @@ file(GLOB_RECURSE sources ${lvgl}/src/*.c)
 idf_component_register(SRCS ${sources} ${root}/system/ui/lv_mem_osal.c
     INCLUDE_DIRS ${lvgl} ${root}/system/ui REQUIRES ink_platform)
 target_compile_definitions(${COMPONENT_LIB} PUBLIC LV_CONF_INCLUDE_SIMPLE)
-target_compile_options(${COMPONENT_LIB} PRIVATE -fstack-usage -fcallgraph-info=su -w)
+target_compile_options(${COMPONENT_LIB} PRIVATE -Os -fstack-usage -fcallgraph-info=su -w)
