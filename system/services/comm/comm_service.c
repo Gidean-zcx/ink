@@ -334,7 +334,9 @@ static void sim_switch(void *arg) { /* exec.bg: the switch takes seconds; from r
     bool switched = r == 0 && st.slot != want && !ink_setting_get("net.airplane"); /* the switch turns the radio on */
     if (switched) r = hal_cell_select_sim(want, arg ? 0 : 60000);
     osal_mutex_unlock(CM.at);
-    if (switched) ink_probe_count(r == 0 ? "comm.sim_switched" : r == 1 ? "comm.sim_switched_unregistered" : "comm.sim_switch_failed");
+    /* From radio() nothing waits to register: being on the new card is the switch done (reg_look follows the rest) */
+    bool done = r == 0 || (arg && r == 1);
+    if (switched) ink_probe_count(done ? "comm.sim_switched" : r == 1 ? "comm.sim_switched_unregistered" : "comm.sim_switch_failed");
     refresh_status(&st);
     sim_retry(r != 0); /* 1: on the new card, not registered yet: cell.registered is looked at again too */
 }
