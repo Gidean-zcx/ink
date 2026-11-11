@@ -13,7 +13,7 @@
 
 static const ink_activity_t PAGE;
 static struct {
-    struct { char addr[18], name[32]; bool paired; } devices[24];
+    struct { char addr[18], name[32]; bool paired, connecting; } devices[24];
     unsigned epoch; size_t count; int y; bool busy;
     char status[sizeof ((ink_receipt_t *)0)->say], member[16], args[26][160], values[24][64]; /* status shows a receipt's say whole */
     ink_ui_action_spec_t actions[26];
@@ -28,7 +28,10 @@ static void request(const char *cap, const char *args, unsigned kind);
 static void reply(void *ctx, const ink_receipt_t *rc) {
     unsigned token = (unsigned)(uintptr_t)ctx, kind = token % 4;
     if (token / 4 != B.epoch || !current()) return;
-    if (kind) B.busy = false;
+    if (kind) {
+        B.busy = false;
+        for (size_t i = 0; i < B.count; i++) B.devices[i].connecting = false;
+    }
     if (rc->status != INK_RC_DONE) {
         snprintf(B.status, sizeof B.status, "%s", strstr(rc->detail, "timed out") ? TR("操作超时，请重试") :
             strstr(rc->detail, "pair") ? TR("配对失败，请确认耳机已开机") : TR("没有完成，请重试"));
@@ -45,7 +48,7 @@ static void reply(void *ctx, const ink_receipt_t *rc) {
                 if (i == B.count && B.count < 24) {
                     snprintf(B.devices[i].addr, sizeof B.devices[i].addr, "%s", addr);
                     snprintf(B.devices[i].name, sizeof B.devices[i].name, "%s", name);
-                    B.devices[i].paired = !kind; B.count++;
+                    B.devices[i].paired = !kind; B.devices[i].connecting = false; B.count++;
                 }
             }
             if (kind) snprintf(B.status, sizeof B.status, "%s", j->tok[0].size ? TR("搜索完成") : TR("没有搜到耳机，请确认已开机"));
@@ -80,11 +83,18 @@ static void touch(lv_event_t *e) {
         a.capability = "bt.forget";
     }
     if (!a.enabled) return;
+    if (i && i <= B.count) B.devices[i - 1].connecting = !strcmp(a.capability, "bt.pair") || !strcmp(a.capability, "bt.connect");
     request(a.capability, a.args_json, !strcmp(a.capability, "bt.scan") ? 1 : 2); draw();
+}
+static void forget(lv_event_t *e) { lv_obj_send_event(lv_obj_get_parent(lv_event_get_target_obj(e)), LV_EVENT_LONG_PRESSED, NULL); }
+static int group(size_t d) {
+    char connected[18] = ""; ink_state_get_str(ink_state_find("bt.device"), connected, sizeof connected);
+    return B.devices[d].connecting ? 0 : !strcmp(connected, B.devices[d].addr) ? 1 : B.devices[d].paired ? 2 : 3;
 }
 static void bind_row(lv_obj_t *slot, size_t i, ink_ui_field_spec_t *f, ink_ui_action_spec_t *a, void *ctx) {
     (void)ctx;
-    int w = INK_CANVAS_W - 2 * INK_MARGIN, head = i == 1 ? ink_ui_line_height(INK_FONT_SUBTITLE) + INK_GAP : 0;
+    int w = INK_CANVAS_W - 2 * INK_MARGIN;
+    int head = i && i <= B.count && (i % 3 == 0 || i == 1 || group(i - 1) != group(i - 2)) ? ink_ui_line_height(INK_FONT_SUBTITLE) + INK_GAP : 0;
     int h = i && i <= B.count ? ink_ui_row_double() : INK_CONTROL;
     if (!(i % 3)) B.y = 0;
     lv_obj_set_pos(slot, ink_ui_px(INK_MARGIN), ink_ui_px(B.y)); B.y += head + h + INK_GAP;
@@ -102,19 +112,25 @@ static void bind_row(lv_obj_t *slot, size_t i, ink_ui_field_spec_t *f, ink_ui_ac
         size_t d = i - 1; char connected[18] = "";
         ink_state_get_str(ink_state_find("bt.device"), connected, sizeof connected);
         bool on = !strcmp(connected, B.devices[d].addr);
-        snprintf(B.values[d], sizeof B.values[d], "%s", on ? TR("已连接") : B.devices[d].paired ? TR("没有连接") : TR("点按配对并连接"));
+        snprintf(B.values[d], sizeof B.values[d], "%s", B.devices[d].connecting ? TR("正在配对并连接") : on ? TR("已连接") : B.devices[d].paired ? TR("没有连接") : TR("点按配对并连接"));
         ink_jw_t j; ink_jw_init(&j, B.args[i], sizeof B.args[i]);
         ink_jw_raw(&j, "{\"addr\":"); ink_jw_str(&j, B.devices[d].addr);
         ink_jw_raw(&j, ",\"name\":"); ink_jw_str(&j, B.devices[d].name); ink_jw_raw(&j, ",\"connect\":true}");
         *f = (ink_ui_field_spec_t){.id = B.devices[d].addr, .role = "listitem", .label = B.devices[d].name, .value = B.values[d], .object = {B.devices[d].addr, 0}};
         *a = (ink_ui_action_spec_t){.id = B.devices[d].addr, .label = B.devices[d].name, .capability = on ? "bt.disconnect" : B.devices[d].paired ? "bt.connect" : "bt.pair", .args_json = B.args[i], .object = f->object, .enabled = ink_setting_get("bt.enabled") && !B.busy};
-        if (head) ink_ui_label(slot, TR("耳机"), INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, 0, 0, w);
+        static const char *const groups[] = {"连接中", TR_NOOP("已连接"), "已配对", "发现的设备"};
+        if (head) ink_ui_label(slot, TR(groups[group(d)]), INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, 0, 0, w);
         row = ink_ui_card(slot, 0, head, w, h, INK_SURFACE_STATIC);
         ink_ui_circle(row, "headphones", INK_GAP, (h - INK_CIRCLE_SMALL) / 2, INK_CIRCLE_SMALL, INK_ICON_MEDIUM, INK_SURFACE_WHITE, NULL, NULL);
         int left = INK_CIRCLE_SMALL + INK_GAP_XL;
-        ink_ui_line(row, B.devices[d].name[0] ? B.devices[d].name : TR("蓝牙耳机"), INK_FONT_LIST, INK_WEIGHT_REGULAR, left, INK_GAP, w - left - INK_CONTROL);
-        ink_ui_line(row, B.values[d], INK_FONT_NOTE, INK_WEIGHT_REGULAR, left, INK_GAP + ink_ui_line_height(INK_FONT_LIST), w - left - INK_GAP);
-        if (on) ink_ui_icon(row, "check", INK_ICON_SMALL, INK_ICON_LINE, w - INK_CONTROL, (h - INK_ICON_SMALL) / 2, false);
+        int tail = B.devices[d].paired ? INK_PRIMARY + INK_GAP : INK_GAP;
+        ink_ui_line(row, B.devices[d].name[0] ? B.devices[d].name : TR("蓝牙耳机"), INK_FONT_LIST, INK_WEIGHT_REGULAR, left, INK_GAP, w - left - tail);
+        ink_ui_line(row, B.values[d], INK_FONT_NOTE, INK_WEIGHT_REGULAR, left, INK_GAP + ink_ui_line_height(INK_FONT_LIST), w - left - tail);
+        if (B.devices[d].paired) {
+            lv_obj_t *b = ink_ui_pill(row, "忘记", w - INK_PRIMARY - INK_GAP, (h - INK_CONTROL) / 2, INK_PRIMARY, INK_CONTROL, false, B.busy ? NULL : forget, NULL);
+            ink_ui_pill_text(b, INK_FONT_NOTE, INK_WEIGHT_REGULAR);
+            if (B.busy) lv_obj_add_state(b, LV_STATE_DISABLED);
+        }
         lv_obj_add_event_cb(row, touch, LV_EVENT_LONG_PRESSED, (void *)(uintptr_t)i);
     } else {
         *f = (ink_ui_field_spec_t){.id = "search", .role = "status", .label = TR("搜索耳机"), .value = B.status};
@@ -126,6 +142,10 @@ static void bind_row(lv_obj_t *slot, size_t i, ink_ui_field_spec_t *f, ink_ui_ac
 }
 static void draw(void) {
     if (!current()) return;
+    for (size_t i = 0; i < B.count; i++) for (size_t j = i + 1; j < B.count; j++) if (group(j) < group(i)) {
+        unsigned char tmp[sizeof B.devices[0]];
+        memcpy(tmp, &B.devices[i], sizeof tmp); memcpy(&B.devices[i], &B.devices[j], sizeof tmp); memcpy(&B.devices[j], tmp, sizeof tmp);
+    }
     ink_ui_list_refresh(B.list, B.count + 2);
     if (B.count < 2) lv_obj_add_flag(lv_obj_get_child(B.body, -1), LV_OBJ_FLAG_HIDDEN);
     lv_label_set_text(B.notice, B.status); ink_ui_content_changed();
@@ -152,9 +172,10 @@ static void create(lv_obj_t *screen, void *arg) {
     const ink_ui_action_spec_t actions[] = {{.id = "prev", .label = TR("上一页"), .capability = "shell.bluetooth_prev"},
         {.id = "next", .label = TR("下一页"), .capability = "shell.bluetooth_next"}};
     ink_ui_page_spec_t page = {.id = "SetBluetooth", .title = TR("蓝牙"), .object = {"SetBluetooth", 0}, .actions = actions, .action_count = 2};
-    B.list = ink_ui_list_create(B.body, &page, &B.position, 3, 1, ink_ui_row_double() + INK_GAP_L, TR("还没有耳机"), bind_row, NULL);
+    B.list = ink_ui_list_create(B.body, &page, &B.position, 3, 1,
+        ink_ui_row_double() + ink_ui_line_height(INK_FONT_SUBTITLE) + 2 * INK_GAP - INK_GAP_M, TR("还没有耳机"), bind_row, NULL);
     B.notice = ink_ui_notice(B.body, "", INK_CANVAS_H - INK_STATUS_BAR - INK_PRIMARY - 2 * INK_CONTROL);
-    ink_ui_notice(B.body, TR("长按已配对的耳机可忘记"), INK_CANVAS_H - INK_STATUS_BAR - INK_PRIMARY - INK_CONTROL);
+    ink_ui_notice(B.body, "已配对的设备可点右侧“忘记”", INK_CANVAS_H - INK_STATUS_BAR - INK_PRIMARY - INK_CONTROL);
     draw(); request("bt.list", NULL, 0);
 }
 static void destroy(void) { B.epoch++; B.body = NULL; B.list = NULL; }

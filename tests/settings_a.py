@@ -22,7 +22,7 @@ for phase in ('write', 'restart'):
     env = {**os.environ, 'UBSAN_OPTIONS': 'halt_on_error=1'}
     if phase == 'restart':
         env['INK_SETTINGS_RESTART'] = '1'
-    result = subprocess.run([str(binary), '--profile', str(ROOT / 'simulator/profiles/metalio-plus.json'),
+    result = subprocess.run([str(binary), '--profile', str(ROOT / 'simulator/profiles/metalio-plus-handsfree.json'),
         '--script', str(ROOT / 'tests/settings_a.script'), '--budget', str(ROOT / 'tests/ui_scene.budget.json'),
         '--assets', str(build / 'assets'), '--content', str(build / 'test-content'), '--out', str(out),
         '--flash-image', str(area / 'user.img'), '--sd-dir', str(area / 'sd'), '--no-random-outages', '--quiet'],
