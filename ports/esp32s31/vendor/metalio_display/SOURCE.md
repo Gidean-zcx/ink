@@ -47,8 +47,8 @@
 | --- | --- |
 | `LICENSE` | `0a5a839033bfe18fe75d32b50d9d028912cf876f69ef59c2791aeb2971335d05` |
 | `epd_power.inc` | `1ae1192a24f9a20fd325415ed98f0c0cfb74cd04ca7b2b34c64750d8a788496a` |
-| `iram.patch` | `21ebc5a3365d0ece95dbe7adfcf9b0fe51dd99c2c271b93c145185e63e5e87ed` |
+| `iram.patch` | `d4344d92397f8d345bfa3e3ed3140240949ce1e37bbdc6b57077cbfabf91e1b1` |
 | `power.c` | `febefa12be3fd4a466f1e2831051cd83e94281513040c8e39cd2adeff3a91f96` |
 | `power.h` | `71efb5a537cc1d1ae21937c7493d49efd330ec1ef6b0e760421f9610641898ba` |
-| `tps65185.c` | `ddc46f4633c8e533efabcf9e34adf56e5a9c4f6dd9562676358481dbdf93a824` |
+| `tps65185.c` | `ba83620dd0b0f743ab1aa361be67acfcd8c5ac6f12162fd847d1bb5a914d79a7` |
 | `tps65185.h` | `a42f21fb1aaeff5df91a8803f0db7cf4687ff8624d3acf4b96433b9aa9842880` |

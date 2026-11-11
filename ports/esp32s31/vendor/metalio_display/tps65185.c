@@ -62,4 +62,3 @@ void tps_set_vcom(i2c_port_t i2c_num, unsigned vcom_mV) {
         ESP_LOGW(TAG_TPS, "VCOM1 write: %s", esp_err_to_name(err));
     }
 }
-
