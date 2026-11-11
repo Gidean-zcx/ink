@@ -1,0 +1,146 @@
+[
+  {
+    "case": "settings",
+    "mode": "after",
+    "font": "100",
+    "exit": 0,
+    "pass": 35,
+    "fail": 0,
+    "accepted": true
+  },
+  {
+    "case": "settings",
+    "mode": "after",
+    "font": "120",
+    "exit": 0,
+    "pass": 35,
+    "fail": 0,
+    "accepted": true
+  },
+  {
+    "case": "time",
+    "mode": "after",
+    "font": "100",
+    "exit": 0,
+    "pass": 63,
+    "fail": 0,
+    "accepted": true
+  },
+  {
+    "case": "time",
+    "mode": "after",
+    "font": "120",
+    "exit": 0,
+    "pass": 63,
+    "fail": 0,
+    "accepted": true
+  },
+  {
+    "case": "members",
+    "mode": "after",
+    "font": "100",
+    "exit": 0,
+    "pass": 36,
+    "fail": 0,
+    "accepted": true
+  },
+  {
+    "case": "members",
+    "mode": "after",
+    "font": "120",
+    "exit": 0,
+    "pass": 36,
+    "fail": 0,
+    "accepted": true
+  },
+  {
+    "case": "bluetooth",
+    "mode": "after",
+    "font": "100",
+    "exit": 0,
+    "pass": 20,
+    "fail": 0,
+    "accepted": true
+  },
+  {
+    "case": "bluetooth",
+    "mode": "after",
+    "font": "120",
+    "exit": 0,
+    "pass": 20,
+    "fail": 0,
+    "accepted": true
+  },
+  {
+    "case": "settings",
+    "mode": "before",
+    "font": "100",
+    "exit": 1,
+    "pass": 30,
+    "fail": 5,
+    "accepted": true
+  },
+  {
+    "case": "settings",
+    "mode": "before",
+    "font": "120",
+    "exit": 1,
+    "pass": 30,
+    "fail": 5,
+    "accepted": true
+  },
+  {
+    "case": "time",
+    "mode": "before",
+    "font": "100",
+    "exit": 1,
+    "pass": 30,
+    "fail": 4,
+    "accepted": true
+  },
+  {
+    "case": "time",
+    "mode": "before",
+    "font": "120",
+    "exit": 1,
+    "pass": 30,
+    "fail": 4,
+    "accepted": true
+  },
+  {
+    "case": "members",
+    "mode": "before",
+    "font": "100",
+    "exit": 1,
+    "pass": 29,
+    "fail": 6,
+    "accepted": true
+  },
+  {
+    "case": "members",
+    "mode": "before",
+    "font": "120",
+    "exit": 1,
+    "pass": 29,
+    "fail": 6,
+    "accepted": true
+  },
+  {
+    "case": "bluetooth",
+    "mode": "before",
+    "font": "100",
+    "exit": 1,
+    "pass": 16,
+    "fail": 4,
+    "accepted": true
+  },
+  {
+    "case": "bluetooth",
+    "mode": "before",
+    "font": "120",
+    "exit": 1,
+    "pass": 16,
+    "fail": 4,
+    "accepted": true
+  }
+]

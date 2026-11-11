@@ -14,10 +14,11 @@ static struct {
 } P;
 
 static void show_dots(void) {
-    char s[32] = "";
+    char s[64] = "";
     for (size_t i = 0; i < P.n; i++) strcat(s, "●");
+    if (!P.n) snprintf(s, sizeof s, "%s · %s", TR("输入密码"), TR("四到八位数字"));
     if (P.dots) {
-        lv_label_set_text(P.dots, P.n ? s : TR("输入密码"));
+        lv_label_set_text(P.dots, s);
         ink_ui_hint_obj(P.dots, INK_REFRESH_FAST);
     }
 }
@@ -48,7 +49,7 @@ lv_obj_t *shell_pinpad(lv_obj_t *parent, void (*done)(const char *pin)) {
     static const char *const LABEL[4][3] = {{"1", "2", "3"}, {"4", "5", "6"}, {"7", "8", "9"}, {TR_NOOP("删除"), "0", TR_NOOP("确定")}};
     static const int CODE[4][3] = {{1, 2, 3}, {4, 5, 6}, {7, 8, 9}, {10, 0, 11}};
     int gap = INK_GAP_XL, w = 3 * INK_DIGIT + 2 * gap, x0 = (INK_CANVAS_W - w) / 2;
-    int y0 = INK_CANVAS_H - INK_READING_MARGIN - 4 * INK_DIGIT - 3 * INK_GAP;
+    int y0 = INK_CANVAS_H - INK_MARGIN - 4 * INK_DIGIT - 3 * INK_GAP;
     for (int y = 0; y < 4; y++) for (int x = 0; x < 3; x++) {
         lv_obj_t *b = ink_ui_pill(box, y == 3 && x != 1 ? TR(LABEL[y][x]) : LABEL[y][x], x0 + x * (INK_DIGIT + gap), y0 + y * (INK_DIGIT + INK_GAP),
                                   INK_DIGIT, INK_DIGIT, false, on_digit, (void *)(intptr_t)CODE[y][x]);
