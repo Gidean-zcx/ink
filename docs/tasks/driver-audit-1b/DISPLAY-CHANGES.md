@@ -47,7 +47,7 @@
 - `652–739`：地址探测后的两口输出由统一状态管理并强制首次写；启动取掉重复配置分支，P14 稳定等待用命名 80 ms；扫描／清 INT 使用统一 port。
 - `741–781`：deinit 时在锁内关闭马达、切输入并使输出确认无效，再按统一 port 检查 PG、清输入。
 - `785–1001`：板控与 TPS 位同一锁下更新并返回错误；上电每一步传递错误，失败重试不再盲走；poweroff 先令 tps_ok=false，再按 12 µs／一 tick 顺序关电。电压、UPSEQ、VCOM 主参数未在这次差分中改变。
-- 对应 `.h:13–72`：去掉“legacy I2C driver”措辞，功放、蓝牙复位、TPS 入睡、mask／恢复及电源轨 API 改为有返回值，补充睡前／恢复方向说明。
+- 对应 `.h:13–151`：去掉“legacy I2C driver”措辞，功放、蓝牙复位、TPS 入睡、mask／恢复及电源轨 API 改为有返回值，补充睡前／恢复方向说明。
 
 `highlevel.c` 的四个差分：`125–129` 全屏更新不带 dirty 掩码；`206–215` 均黑模式扩大到全屏；`230` 均黑即使 diff 空也不提前返回；`246–250` 均黑不受 dirty 行／列遮罩。解决黑色均衡被“像素没变化”和区域掩码跳过的问题。`epdiy.h:117–120` 增加对应 `MODE_EQUALIZE_BLACK`。
 
@@ -98,7 +98,7 @@
 | 路径 | 证据与边界 |
 | --- | --- |
 | LCD ISR→LL／finish→gdma_stop | ISR、finish 显式 IRAM；LCD LL 内联、延时是 ROM；`gdma_stop` 及其 HAL 需 `GDMA_CTRL_FUNC_IN_IRAM`。原厂 sdkconfig 开启，本项目 defaults 漏掉，这是实际配置差异 |
-| LCD ISR→start_ckv_cycles | `U:lcd_driver.c:340` 普通 static，未显式 IRAM；可能被优化内联，不能只读源断定最终位置。当前 684 行不会走 >1000 行续批分支，最终 map 仍应检查 |
+| LCD ISR→start_ckv_cycles | `U:display/output_lcd/lcd_driver.c:340` 普通 static，未显式 IRAM；可能被优化内联，不能只读源断定最终位置。当前 684 行不会走 >1000 行续批分支，最终 map 仍应检查 |
 | finish→esp_timer_get_time | `IDF:components/esp_timer/src/esp_timer_impl_systimer.c:68–75` 指向带 ESP_TIMER_IRAM_ATTR 的实现；不是任意主机计时函数 |
 | GDMA EOF→fill_bounce_buffer→white_border／esp_cache_msync | EOF／fill 显式 IRAM；白边 always_inline；`IDF:components/esp_mm/linker.lf:5–7` 将整个 esp_cache_msync 对象放 noflash。不能因 C 定义没写 IRAM_ATTR 就误报它必在 Flash |
 | fill→本项目 line_source→lq_read | 回调／队列读代码显式 IRAM；行缓冲、bounce、DMA 描述符显式 INTERNAL（DMA 缓冲再带 DMA）；但 `queue.bufs=calloc(...)` 会优先 PSRAM，需单独核查。原厂两版都有这个盲点 |
