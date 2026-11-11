@@ -25,6 +25,7 @@
 | `rt.*`（其他） | 中枢 → 设备 | 通知 | `{"sid",…}` | 交给会话的 `on_control` |
 | `ai.listen` | 设备 → 中枢 | 请求，**首帧最多等 45 秒，从创建请求算；朗读时每帧续期 10 秒，整轮最多 10 分钟** | `{"stream","format":"opus","rate":16000,"frame_ms":60,"page_gen","lang","page":{"app","text","actions":[…]}}`；`actions` 放不下 768 字节时是 `[]` | 一轮结束时回答，如 `{"done":true,"source":"page"}`；内容不读 |
 | `ai.ask` | 设备 → 中枢 | 请求，45 秒超时 | `{"question","page_gen","lang","page":{…}}` | **回答里的文字被忽略**，文字只能走 `ai.delta` |
+| `ai.replay` | 设备 → 中枢 | 请求，首帧 45 秒，续期同语音问答 | `{"stream":7,"text":"要再读一遍的完整回答"}`；先打开 `voice.chat` 会话 | 只发该会话的声音、`ai.tts.end`，最后 `{"done":true}`；不发 `ai.delta`；无语音返回 `error.code=-32021,message="unavailable"` |
 | `ai.listen.end` | 设备 → 中枢 | 通知 | `{"stream","frames"}` | — |
 | `ai.stt` | 中枢 → 设备 | 通知 | `{"id","text"}`，`id` 是 `ai.listen` 的请求号；**替换显示**，多条只留最后一条 | — |
 | `ai.delta` | 中枢 → 设备 | 通知 | `{"id","text","seq"?}`；追加，设备一轮最多留 32 KB（`INK_AI_ANSWER_MAX`），超出的在整字处截断，末尾显示“回答太长，只显示了前面部分。” | — |

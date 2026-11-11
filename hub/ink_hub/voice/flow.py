@@ -12,6 +12,19 @@ def sentences(text):
         yield from chunks(match.group())
 
 
+def validate_photos(attachments):
+    if not isinstance(attachments, list) or len(attachments) > 1:
+        raise ProtocolError("照片附件无效")
+    for photo in attachments:
+        if not isinstance(photo, dict):
+            raise ProtocolError("照片附件无效")
+        width, height, gray = photo.get("width"), photo.get("height"), photo.get("gray4")
+        if (type(width) is not int or type(height) is not int or not 0 < width <= 512 or not 0 < height <= 512
+                or not isinstance(gray, str) or len(gray) > 65536 or len(gray) != width * height
+                or re.fullmatch("[0-9a-f]+", gray) is None):
+            raise ProtocolError("照片附件无效")
+
+
 async def run_turn(self, rid, method, params):
     epoch, scope = self.epoch, self.scope
     sid = params.get("stream", 0)

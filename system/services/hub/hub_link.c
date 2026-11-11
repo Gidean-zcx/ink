@@ -150,7 +150,11 @@ static struct {
     int nreqs;
 } H INK_PSRAM_BSS;
 
-static void set_state(hub_state_t s) { __atomic_store_n(&H.state, s, __ATOMIC_RELEASE); }
+static int g_online_state = -1;
+static void set_state(hub_state_t s) {
+    __atomic_store_n(&H.state, s, __ATOMIC_RELEASE);
+    ink_state_set_bool(g_online_state, s == HS_ONLINE);
+}
 static hub_state_t get_state(void) { return __atomic_load_n(&H.state, __ATOMIC_ACQUIRE); }
 static bool low_power(void) { return __atomic_load_n(&H.low_power, __ATOMIC_ACQUIRE); }
 
@@ -703,6 +707,8 @@ static void on_member(void *ctx, int h, const char *id) { /* state callback: no 
 }
 
 int ink_hub_init(const char *url) {
+    static const ink_state_def_t online = {.id = "hub.online", .title = "家庭服务器已连接", .type = INK_ST_BOOL};
+    g_online_state = ink_state_define(&online);
     snprintf(H.url, sizeof H.url, "%s", url);
     const char *prev = osal_mem_tag("hub");
     H.q = osal_queue_create(sizeof(hub_msg_t), HUB_QUEUE);

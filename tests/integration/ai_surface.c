@@ -80,6 +80,8 @@ static const struct {
     {"shell.time_step", "field,delta"}, {"shell.time_prev", NULL}, {"shell.time_next", NULL},
     {"shell.launch", "id"}, {"shell.resume", NULL}, {"ai.panel.hide", NULL}, {"ai.panel.listen", NULL},
     {"ai.panel.next", NULL}, {"ai.panel.prev", NULL},
+    {"ai.panel.replay", NULL}, {"ai.history.list", ""}, {"ai.history.open", "id"}, {"ai.history.delete", "id"},
+    {"ai.history.clear", NULL}, {"ai.history.prev", NULL}, {"ai.history.next", NULL}, {"photo.ask", NULL},
     {"keyboard.key", "code"}, {"keyboard.pick", "index"}, {"keyboard.candidates", ""}, {"keyboard.edit", "action"},
     {"shell.search", "query"}, {"shell.page_next", NULL}, {"shell.page_prev", NULL}, {"shell.notify_next", NULL}, {"shell.notify_prev", NULL},
     {"search.query", "query"}, {"search.show", "query"}, {"search.open", "id,version"},
@@ -159,6 +161,7 @@ static const struct {
 };
 
 static const char *const STATES[] = {
+    "hub.online",
     "cell.roaming", "net.mobile_rev",
     "power.saving",
     "pairing.state",

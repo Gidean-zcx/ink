@@ -8,6 +8,7 @@
 #include "ink/sys/ai.h"
 #include "ink/sys/cap.h"
 #include "ink/sys/exec.h"
+#include "ink/sys/hub.h"
 #include "ink/sys/state.h"
 #include "ai_chat.h"
 #include "ai_pages.h"
@@ -16,7 +17,7 @@
 #define PAGES_MAX 4096 /* a 32 KB answer of text is a few hundred pages; more (nearly all line breaks) is "cannot be shown in full" */
 #define PANEL_HEIGHT (INK_GAP_L + INK_CONTROL + INK_GAP_S + 3 * ink_ui_line_height(INK_FONT_BODY) + INK_GAP_S + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_S + INK_CONTROL + INK_GAP_L)
 static struct {
-    lv_obj_t *root, *status, *question, *answer, *source, *actions, *prev, *next, *counter, *stop, *rec;
+    lv_obj_t *root, *status, *question, *answer, *source, *replay, *actions, *prev, *next, *counter, *stop, *rec;
     char words[INK_AI_ANSWER_MAX], text[4096];
     char caption[128];
     uint16_t starts[PAGES_MAX + 1];
@@ -137,7 +138,7 @@ void ink_shell_ai_closed(void) {
     if (!A.root) return;
     ink_ui_hint_obj(A.root, INK_REFRESH_FLASH_UI);
     ink_ui_overlay_remove(A.overlay);
-    A.root = A.status = A.question = A.answer = A.source = A.actions = A.prev = A.next = A.counter = A.stop = A.rec = NULL;
+    A.root = A.status = A.question = A.answer = A.source = A.replay = A.actions = A.prev = A.next = A.counter = A.stop = A.rec = NULL;
     memset(A.words, 0, sizeof A.words); memset(A.text, 0, sizeof A.text);
     A.page = A.pages = 0; A.hidden = A.expanded = false;
 }
@@ -145,10 +146,13 @@ void ink_shell_ai_closed(void) {
 static void audio_changed(void *ctx, int handle, const char *id) {
     (void)ctx; (void)handle; (void)id;
     if (!A.root) return;
+    if (ink_ai_can_replay()) lv_obj_remove_state(A.replay, LV_STATE_DISABLED); else lv_obj_add_state(A.replay, LV_STATE_DISABLED);
+    lv_label_set_text(lv_obj_get_child(A.replay, 0), ink_hub_online() ? TR("再读一遍") : TR("离线不可用"));
     char playing[16] = "";
     ink_state_get_str(ink_state_find("audio.now_playing"), playing, sizeof playing);
     bool was_speaking = A.speaking;
     A.speaking = A.words[0] && !strstr(A.caption, "声音没能播放") && !strcmp(playing, "voice");
+    if (A.words[0] && !A.speaking && !A.caption[0]) lv_obj_remove_flag(A.replay, LV_OBJ_FLAG_HIDDEN); else lv_obj_add_flag(A.replay, LV_OBJ_FLAG_HIDDEN);
     if (was_speaking != A.speaking) A.revision++;
     lv_label_set_text(A.status, A.speaking ? TR("正在读给你听") : A.caption[0] ? TR(A.caption) : "");
     if (A.speaking) lv_obj_remove_flag(A.stop, LV_OBJ_FLAG_HIDDEN); else lv_obj_add_flag(A.stop, LV_OBJ_FLAG_HIDDEN);
@@ -187,12 +191,14 @@ static void action(ink_call_t *c) {
     if (!strcmp(c->cap->id, "ai.panel.listen")) { ink_cap_invoke("shell.ai_key", NULL, c->src, 0, &c->rc); return; }
     if (!A.root || A.hidden) { c->rc.status = INK_RC_STALE; return; }
     const char *id = c->cap->id;
+    if (!strcmp(id, "ai.panel.replay")) { if (ink_ai_replay()) c->rc.status = INK_RC_REJECTED; audio_changed(NULL, 0, NULL); }
     if (!strcmp(id, "ai.panel.hide")) ink_shell_ai_hide();
     else if (!strcmp(id, "ai.panel.next")) { if (A.page + 1 < A.pages) A.page++; draw_words(); }
     else if (!strcmp(id, "ai.panel.prev")) { if (A.page) A.page--; if (A.answer) draw_words(); }
     if (!strcmp(id, "ai.panel.next") || !strcmp(id, "ai.panel.prev")) ink_ui_content_changed();
 }
 static const ink_cap_t CAPS[] = {
+    {.id = "ai.panel.replay", .app = "ai", .title = "在线重读当前回答", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action},
     {.id = "ai.panel.hide", .app = "ai", .title = "收起 AI 面板（继续处理）", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action},
     {.id = "ai.panel.listen", .app = "ai", .title = "用话筒问这一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action},
     {.id = "ai.panel.next", .app = "ai", .title = "答案下一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action},
@@ -224,7 +230,10 @@ void ink_shell_ai_open(lv_obj_t **root, lv_obj_t **status, lv_obj_t **question, 
     lv_obj_set_height(A.answer, ink_ui_px(3 * ink_ui_line_height(INK_FONT_BODY)));
     A.question = ink_ui_label(A.root, "", INK_FONT_BODY, INK_WEIGHT_REGULAR, INK_MARGIN, INK_GAP_L + INK_CONTROL + INK_GAP_S, INK_CANVAS_W - 2 * INK_MARGIN);
     A.source = ink_ui_label(A.root, TR("出自这一页"), INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN,
-                            PANEL_HEIGHT - INK_GAP_L - INK_CONTROL - INK_GAP_S - ink_ui_line_height(INK_FONT_NOTE), INK_CANVAS_W - 2 * INK_MARGIN);
+        PANEL_HEIGHT - INK_GAP_L - INK_CONTROL - INK_GAP_S - ink_ui_line_height(INK_FONT_NOTE), INK_CANVAS_W - 2 * INK_MARGIN);
+    A.replay = ink_ui_pill(A.root, TR("再读一遍"), INK_MARGIN + INK_CIRCLE_SMALL + INK_GAP_M,
+        INK_GAP_L, 3 * INK_CONTROL, INK_CONTROL, false, NULL, NULL);
+    panel_bind(A.replay, "ai.panel.replay");
     A.actions = ink_ui_box(A.root, INK_MARGIN, PANEL_HEIGHT - INK_GAP_L - INK_CONTROL,
                             INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, 0, INK_SURFACE_WHITE, false);
     int chat_w = ink_ui_text_width(TR("对话记录"), INK_FONT_LIST, INK_WEIGHT_MEDIUM) + 2 * (INK_GAP_XS + INK_STROKE);
@@ -248,6 +257,7 @@ void ink_shell_ai_open(lv_obj_t **root, lv_obj_t **status, lv_obj_t **question, 
     panel_bind(A.rec, "audio.record_stop");
     lv_obj_add_flag(A.rec, LV_OBJ_FLAG_HIDDEN);
     lv_obj_add_flag(A.source, LV_OBJ_FLAG_HIDDEN);
+    lv_obj_add_flag(A.replay, LV_OBJ_FLAG_HIDDEN);
     lv_obj_add_flag(A.actions, LV_OBJ_FLAG_HIDDEN);
     A.hidden = A.expanded = false; A.page = 0; A.pages = 1; A.words[0] = 0; A.starts[0] = A.starts[1] = 0;
     A.caption[0] = 0; A.speaking = false; A.pressed = false;
@@ -260,5 +270,6 @@ void ink_shell_ai_open(lv_obj_t **root, lv_obj_t **status, lv_obj_t **question, 
 
 int ink_shell_ai_init(void) {
     return ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_ai_chat_init() ||
-        ink_state_watch("audio.now_playing", audio_changed, NULL, INK_EXEC_UI);
+        ink_state_watch("audio.now_playing", audio_changed, NULL, INK_EXEC_UI) ||
+        ink_state_watch("hub.online", audio_changed, NULL, INK_EXEC_UI);
 }

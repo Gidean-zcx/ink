@@ -195,6 +195,7 @@ add_library(ink_system STATIC
   system/services/hub/pairing.c
   system/services/hub/rt.c
   system/services/ai/ai_service.c
+  system/services/ai/ai_history.c
   system/services/audio/audio_service.c
   system/services/res/exec.c
   system/services/res/res.c
@@ -1688,6 +1689,10 @@ ink_sim_executable(sim-camera-gallery tests/camera_gallery/camera_gallery.c ${IN
 target_include_directories(sim-camera-gallery PRIVATE ${CMAKE_BINARY_DIR}/generated)
 target_link_libraries(sim-camera-gallery PRIVATE ink_apps ink_system)
 add_test(NAME camera-gallery COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/camera_gallery/run.py --build ${CMAKE_BINARY_DIR})
+ink_sim_executable(sim-ai-history-photo tests/ai_history_photo/test.c ${INK_IMAGE_FIXTURES})
+target_include_directories(sim-ai-history-photo PRIVATE ${CMAKE_BINARY_DIR}/generated)
+target_link_libraries(sim-ai-history-photo PRIVATE ink_apps ink_system)
+add_test(NAME ai-history-photo COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/ai_history_photo/run.py --build ${CMAKE_BINARY_DIR})
 
 target_sources(ink_system PRIVATE system/ui/shell/backup_pages.c)
 ink_sim_executable(sim-backup-pages tests/backup_pages.c)

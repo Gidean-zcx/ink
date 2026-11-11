@@ -9,7 +9,7 @@ metrics = json.loads((source / "metrics.json").read_text())["metrics"]
 assert metrics.get("test.finished") == 1 and metrics.get("test.fail", 0) == 0
 scenes = ("AiHome", "AiAsk", "AiListenTap", "AiLong", "AiSpeak")
 caps = {"shell.ai_ask", "shell.ai_send", "shell.ai_stop", "shell.ai_home", "shell.back",
-        "ai.panel.listen", "ai.panel.hide", "ai.panel.next", "ai.panel.prev"}
+        "ai.panel.listen", "ai.panel.hide", "ai.panel.next", "ai.panel.prev", "ai.panel.replay"}
 for scene in scenes:
     snapshot = json.loads((source / scene / "snapshot.json").read_text())
     if "keyboard" in snapshot:

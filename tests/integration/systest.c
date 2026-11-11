@@ -112,7 +112,7 @@ static void audio_checks(void) {
     CHECK(played >= 590 && g_failed_id == 0, "once the speaker can start all of them play (%.0f ms of 600)", played);
     metalio_board_set(1, MB_P1_SHARED_PWR, 0);
     id = ink_audio_stream_open(INK_AUDIO_PRIO_VOICE, 0, NULL);
-    push_frames(id, 5);
+    push_frames(id, 6);
     osal_task_delay_us(10000000);
     CHECK(g_failed_id == id && push_frames(id, 1) == 0, "a stream whose speaker stays off fails after a while, its owner is told (%d, %d)",
           g_failed_id, id);
