@@ -18,14 +18,14 @@
 static struct {
     shell_card_t card;
     ink_interrupt_t now;
-    lv_obj_t *icon, *date, *notice;
+    lv_obj_t *icon, *date, *notice, *context;
     char clock[16], date_text[96];
     uint32_t version, revision;
     bool touching;
 } C;
 
 static ink_ui_page_spec_t model(void) {
-    enum { FIELD_COUNT = 3, ACTION_COUNT = sizeof C.now.actions / sizeof *C.now.actions };
+    enum { FIELD_COUNT = 4, ACTION_COUNT = sizeof C.now.actions / sizeof *C.now.actions };
     static ink_ui_field_spec_t fields[FIELD_COUNT + ACTION_COUNT];
     static ink_ui_action_spec_t actions[ACTION_COUNT];
     static const char *const ids[] = {"0", "1", "2"};
@@ -34,7 +34,8 @@ static ink_ui_page_spec_t model(void) {
     snprintf(time, sizeof time, TR("时间=%s；日期=%s；"), C.clock, C.date_text);
     fields[0] = (ink_ui_field_spec_t){.id = "title", .role = "text", .label = TR("标题"), .value = C.now.title};
     fields[1] = (ink_ui_field_spec_t){.id = "body", .role = "text", .label = TR("内容"), .value = C.now.body};
-    fields[2] = (ink_ui_field_spec_t){.id = "time", .role = "text", .label = TR("时间和日期"), .value = time};
+    fields[2] = (ink_ui_field_spec_t){.id = "return", .role = "status", .label = TR("返回"), .value = TR("结束后回到刚才的页面")};
+    fields[3] = (ink_ui_field_spec_t){.id = "time", .role = "text", .label = TR("时间和日期"), .value = time};
     size_t count = C.now.kind == INK_INT_ALARM ? FIELD_COUNT : FIELD_COUNT - 1;
     for (int i = 0; i < C.now.nactions; i++) {
         fields[count++] = (ink_ui_field_spec_t){.id = ids[i], .role = "button", .label = TR("按钮"), .value = C.now.actions[i].label};
@@ -71,7 +72,7 @@ static void show(const ink_interrupt_t *top) { /* UI task */
     if (!top) {
         if (!C.card.root) return;
         shell_card_close(&C.card);
-        C.icon = C.date = C.notice = NULL;
+        C.icon = C.date = C.notice = C.context = NULL;
         ink_ui_overlay_remove(&OVERLAY);
         return;
     }
@@ -92,6 +93,7 @@ static void show(const ink_interrupt_t *top) { /* UI task */
                          !strcmp(C.now.actions[0].cap, "alarm.dismiss") && !strcmp(C.now.actions[1].cap, "alarm.snooze");
     if (C.date) { lv_obj_delete(C.date); C.date = NULL; }
     if (C.notice) { lv_obj_delete(C.notice); C.notice = NULL; }
+    if (C.context) { lv_obj_delete(C.context); C.context = NULL; }
     if (alarm) ink_shell_time_strings(C.clock, sizeof C.clock, C.date_text, sizeof C.date_text);
     shell_card_text(&C.card, alarm ? C.now.body : C.now.title, alarm ? C.clock : C.now.body);
     lv_obj_set_style_text_font(C.card.title, ink_ui_font_px(call ? INK_FONT_LIST : alarm ? INK_FONT_TITLE : INK_FONT_HEADING, INK_WEIGHT_BOLD), 0);
@@ -108,7 +110,9 @@ static void show(const ink_interrupt_t *top) { /* UI task */
     if (C.icon) lv_obj_delete(C.icon);
     C.icon = ink_ui_circle(C.card.panel, call ? "person" : alarm ? "clock" : "battery",
                   (INK_CANVAS_W - INK_CIRCLE_LARGE) / 2, call ? INK_STATUS_BAR + INK_BLOCK + ink_ui_line_height(INK_FONT_HEADING) + INK_MARGIN : INK_STATUS_BAR + INK_BLOCK_L,
-                  INK_CIRCLE_LARGE, INK_ICON_STATE, call ? INK_SURFACE_STATIC : INK_SURFACE_BLACK, NULL, NULL);
+                  INK_CIRCLE_LARGE, INK_ICON_STATE, INK_SURFACE_WHITE, NULL, NULL);
+    C.context = ink_ui_notice(C.card.panel, TR("结束后回到刚才的页面"),
+        INK_STATUS_BAR + INK_GAP_M);
     shell_card_clear_buttons(&C.card);
     for (int i = 0; i < C.now.nactions; i++) {
         int action = alarm_actions ? 1 - i : i;

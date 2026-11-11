@@ -78,7 +78,7 @@ static void render(int mode) {
     int y = INK_CANVAS_H / 2 - INK_CIRCLE_LARGE;
     if (mode == 1) {
         ink_ui_circle(B.card.panel, "battery", (INK_CANVAS_W - INK_CIRCLE_LARGE) / 2, y,
-                      INK_CIRCLE_LARGE, INK_ICON_STATE, INK_SURFACE_STATIC, NULL, NULL);
+                      INK_CIRCLE_LARGE, INK_ICON_STATE, INK_SURFACE_WHITE, NULL, NULL);
         char title[64]; snprintf(title, sizeof title, TR("电量只剩 %d%%"), B.percent);
         center(title, INK_FONT_SUBTITLE, y + INK_CIRCLE_LARGE + INK_MARGIN, INK_WEIGHT_BOLD);
         center(TR("插上电吧。到 2% 时会先存好东西再关机。"), INK_FONT_NOTE,
@@ -139,7 +139,7 @@ static void present(const ink_interrupt_t *top) {
 static void draw_off(void *arg) {
     (void)arg; close_page(); B.off = true;
     snprintf(B.title, sizeof B.title, TR("已关机"));
-    snprintf(B.body, sizeof B.body, "%s", !strcmp(B.why, "battery_unsaved") ? TR("没电了，有些内容没保存。充上电再开机") : TR("没电了，东西都存好了。充上电就回到这里"));
+    snprintf(B.body, sizeof B.body, "%s", !strcmp(B.why, "battery_unsaved") ? TR("没电了，有些内容没保存。充上电再开机") : TR("没电了，东西都存好了。充上电再开机"));
     for (int i = 0; ink_member_space_open() && i < ink_app_count(); i++) {
         const ink_app_def_t *d = ink_app_at(i); ink_card_t card = {0};
         if (!ink_app_visible(d)) continue;

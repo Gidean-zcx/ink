@@ -1,4 +1,4 @@
-/* The power menu (placeholder look, D-64): the power key held down. What its buttons do are the capabilities the AI has too. */
+/* The power key menu uses the same capabilities as AI. */
 /* ui-scale-runtime: dimension text_h,h Tile labels determine the panel height at the current font size. */
 #include "ink/sys/i18n.h"
 #include <stdio.h>
@@ -114,29 +114,28 @@ static void open_job(void *arg) { /* UI task */
     ink_ui_overlay_add(&OVERLAY, M.card.root);
     int cell = (INK_CANVAS_W - 2 * INK_MARGIN) / 3;
     int text_h = ink_ui_text_height(TR("锁屏"), INK_FONT_LIST, INK_WEIGHT_MEDIUM, cell);
-    int h = 2 * INK_MARGIN + INK_CIRCLE_APP + INK_GAP_M + text_h + INK_MARGIN + 4 * INK_PRIMARY;
+    int diagnostics = INK_MARGIN + INK_CIRCLE_APP + INK_GAP_M + text_h + INK_GAP_L;
+    int buttons = diagnostics + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP;
+    int result_y = buttons + 2 * INK_CONTROL + INK_GAP + INK_GAP_L;
+    int cancel_y = result_y + 3 * ink_ui_line_height(INK_FONT_NOTE) + INK_GAP;
+    int h = cancel_y + INK_PRIMARY + INK_MARGIN + INK_STROKE;
     lv_obj_clean(M.card.panel);
     lv_obj_set_y(M.card.panel, ink_ui_px(INK_CANVAS_H - h));
     lv_obj_set_height(M.card.panel, ink_ui_px(h + INK_RADIUS_PANEL));
     power_tile(TR("关机"), "power", 0, "system.shutdown", true);
     power_tile(TR("重启"), "update", 1, "system.reboot", false);
-    lv_obj_t *lock = ink_ui_circle(M.card.panel, "lock", INK_MARGIN + 2 * cell + (cell - INK_CIRCLE_APP) / 2, INK_MARGIN,
-                                   INK_CIRCLE_APP, INK_ICON_APP, INK_SURFACE_WHITE, on_button, "shell.lock");
-    lv_obj_add_event_cb(lock, pressed, LV_EVENT_PRESSED, NULL);
-    ink_shell_bind(lock, "shell.lock", NULL);
-    lv_obj_t *word = ink_ui_label(M.card.panel, TR("锁屏"), INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_MARGIN + 2 * cell,
-                                  INK_MARGIN + INK_CIRCLE_APP + INK_GAP_M, cell);
-    lv_obj_set_style_text_align(word, LV_TEXT_ALIGN_CENTER, 0);
+    power_tile(TR("锁屏"), "lock", 2, "shell.lock", false);
+    ink_ui_label(M.card.panel, TR("帮助排查"), INK_FONT_NOTE, INK_WEIGHT_MEDIUM, INK_MARGIN, diagnostics, INK_CANVAS_W - 2 * INK_MARGIN);
     const char *labels[] = {TR("记录问题"), TR("导出日志")};
     const char *caps[] = {"system.report_problem", "system.export_logs"};
     for (int i = 0; i < 2; i++) {
-        lv_obj_t *b = ink_ui_pill(M.card.panel, labels[i], INK_MARGIN, h - (4 - i) * INK_PRIMARY - INK_MARGIN,
-                                INK_CANVAS_W - 2 * INK_MARGIN, INK_PRIMARY, false, on_button, (void *)caps[i]);
+        lv_obj_t *b = ink_ui_pill(M.card.panel, labels[i], INK_MARGIN, buttons + i * (INK_CONTROL + INK_GAP),
+                                INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, false, on_button, (void *)caps[i]);
         lv_obj_add_event_cb(b, pressed, LV_EVENT_PRESSED, NULL);
     }
     M.say[0] = 0;
-    M.result = ink_ui_label(M.card.panel, "", INK_FONT_BODY, INK_WEIGHT_REGULAR, INK_MARGIN, h - 2 * INK_PRIMARY - INK_MARGIN, INK_CANVAS_W - 2 * INK_MARGIN);
-    lv_obj_t *cancel = ink_ui_pill(M.card.panel, TR("取消"), INK_MARGIN, h - INK_PRIMARY - INK_MARGIN,
+    M.result = ink_ui_label(M.card.panel, "", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, result_y, INK_CANVAS_W - 2 * INK_MARGIN);
+    lv_obj_t *cancel = ink_ui_pill(M.card.panel, TR("取消"), INK_MARGIN, cancel_y,
                  INK_CANVAS_W - 2 * INK_MARGIN, INK_PRIMARY, false, on_button, NULL);
     lv_obj_add_event_cb(cancel, pressed, LV_EVENT_PRESSED, NULL);
     M.version = ink_ui_content_version();

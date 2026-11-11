@@ -1,5 +1,12 @@
 # English. One entry per line: Chinese (the key in the code) <TAB> English. See tools/i18n/i18n_gen.py.
 @name	English
+# ui-fix-g
+帮助排查	Diagnostics
+网络名称如上，密码不会显示	Network shown above; the password stays hidden
+操作对象如上，点按后执行	Review the details above, then choose the action
+通过家庭服务器打开网页	Open the page through the family server
+当前无法打开此网址，可以复制后在其他设备打开	This address cannot open here. Copy it to another device.
+结束后回到刚才的页面	Return to the previous page when finished
 # notification management
 删除	Delete
 全部已读	Mark all read
