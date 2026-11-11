@@ -6,6 +6,94 @@
 
 所有文件名相对 `$INK_DESIGN/shots-20261111/`；SHA只用于来源核对，未复制图像、QR内容、设备标识、密钥或本机绝对路径。
 
+## 可复现的文档检查
+
+在仓库根目录、已设置 `INK_DESIGN` 的shell中复制执行下段。只读检查文档、图片来源及Git范围，不编译、不运行产品测试，不改任何文件。源码检查是静态核对，不属于设备实测。
+
+```bash
+python3 - <<'PY'
+from pathlib import Path
+from collections import Counter
+import hashlib, os, re, subprocess
+root = Path.cwd()
+doc = root / 'docs/tasks/ui-audit-2'
+shots = Path(os.environ['INK_DESIGN']) / 'shots-20261111'
+base = 'a6598395aaceed6f74464d81a6df596eefb4c9d6'
+files = sorted(doc.glob('*.md'))
+ids, severity, source_count, local_links = [], Counter(), 0, 0
+source_files = [p for top in ('system', 'apps') for p in (root/top).rglob('*.c')]
+source_files += list((root/'system').rglob('*.h'))
+for f in files:
+    text = f.read_text()
+    columns = None
+    for line in text.splitlines():
+        if not line.startswith('|'):
+            columns = None
+            continue
+        n = len(re.split(r'(?<!\\)\|', line)) - 2
+        if columns is None:
+            columns = n
+        assert columns == n, (f.name, 'table columns')
+        m = re.match(r'^\| ([A-Z]\d\d) ', line)
+        if f.name.startswith('PAGES') and m:
+            ids.append(m[1])
+            assert any(x in line for x in ('【实现·图】', '【实现·码】')), m[1]
+            level = re.search(r'\| (高|中|低) \|', line)
+            assert level, m[1]
+            severity[level[1]] += 1
+    for link in re.findall(r'\]\(([^)]+)\)', text):
+        if '://' in link or link.startswith('#'):
+            continue
+        assert (f.parent / link.split('#')[0]).resolve().exists(), (f.name, link)
+        local_links += 1
+    for name, first, tail in re.findall(r'`([^`\n]+\.(?:c|h)):(\d+)([^`]*)`', text):
+        candidates = [root/name] if '/' in name else [p for p in source_files if p.name == name]
+        assert len(candidates) == 1 and candidates[0].exists(), (f.name, name)
+        lines = len(candidates[0].read_text().splitlines())
+        assert all(1 <= int(v) <= lines for v in [first] + re.findall(r'\d+', tail)), (name, tail)
+        source_count += 1
+assert len(ids) == len(set(ids)) == 254
+manifest = re.findall(r'^\| `([^`]+\.png)` \| `([0-9a-f]{64})`', (doc/'EVIDENCE.md').read_text(), re.M)
+assert len(manifest) == 261
+for name, digest in manifest:
+    assert hashlib.sha256((shots/name).read_bytes()).hexdigest() == digest, name
+names = {name for name, _ in manifest}
+for f in files:
+    for name in re.findall(r'`([^`\n]+\.png)`', f.read_text()):
+        assert name in names and (shots/name).is_file(), name
+owners = {}
+for line in (doc/'TASKS.md').read_text().splitlines():
+    if line.startswith('| UX'):
+        task = line.split('|')[1].strip().split()[0]
+        for name in re.findall(r'`((?:system|apps)/[^`]+)`', line):
+            assert name not in owners, (name, owners.get(name), task)
+            assert (root/name).is_file(), name
+            owners[name] = task
+changed = subprocess.check_output(['git', 'diff', '--name-only', base, 'HEAD'], text=True).splitlines()
+assert changed and all(n.startswith('docs/tasks/ui-audit-2/') for n in changed)
+assert all(p.stat().st_size <= 5*1024*1024 for p in doc.rglob('*') if p.is_file())
+print('pages:', len(ids), 'severity:', dict(severity))
+print('screenshots:', len(manifest), 'source references:', source_count, 'local links:', local_links)
+print('task product files:', len(owners), 'overlap: 0')
+print('committed files:', len(changed), 'product/test changes: 0')
+PY
+```
+
+另执行 `git diff --check`、`git diff a6598395..HEAD --stat`，以及总规则§6规定的隐私扫描（不把其路径表达式复制进提交）。最终结果记入REPORT，不能拿这段检查代替产品测试。
+
+本次最终文档检查输出（退出0）：
+
+```text
+pages: 254 severity: {'低': 58, '高': 54, '中': 142}
+screenshots: 261 source references: 191 local links: 28
+task product files: 33 overlap: 0
+committed files: 11 product/test changes: 0
+```
+
+`git diff --check` 退出0；总规则§6隐私表达式扫描0匹配，grep退出1。全量ctest、ASan、S31编译、gcccheck均未运行，原因见REPORT。本节输出只证明审计材料及范围检查，不证明产品行为通过。
+
+## 实际阅图文件
+
 | 实际阅图文件名 | SHA-256 |
 | --- | --- |
 | `activity-card_clean-ControlPlaying.png` | `a45cab017e3f64e1925d5ad0d9736746812e27b7ec3b23ee7285125bb964285c` |
