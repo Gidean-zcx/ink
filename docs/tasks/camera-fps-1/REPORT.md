@@ -6,14 +6,15 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1a S31 宿主测试和反向对照 | 待验证 | 正在核对会话、DMA 与共享屏幕互斥 | 待补 |
+| 1a S31 宿主测试和反向对照 | 【实测】阶段通过，待最终重跑 | `100% tests passed out of 30`；七项变异均编译成功、断言退出 -6，包括撤掉缓冲复用、重探、取消及每帧重复预热 | C1、C2 |
 | 1b 主工程普通全量 | 待验证 | 未运行 | 待补 |
 | 1c S31 固件编译 | 待验证 | 未运行 | 待补 |
-| 2 取景节奏、模拟帧率、上机清单 | 待验证 | 待实现与测量 | 待补 |
+| 2 取景节奏、模拟帧率、上机清单 | 【实测】尚未达到 2 fps | S31 HAL + 15 fps 假 DVP + PQ-BN 屏幕模型：6 秒内 9 帧，1.4975 fps；默认旧相机模型更慢。未把模型数据当真机数据 | C3 |
 
 ## 没做到的
 
 - 真机帧率、刷新时长由主会话验证，本任务禁止操作设备。
+- 【实测】当前模拟组合未达到 2 fps。保留基准中的 `fps >= 2` 断言，未放宽。按任务“三次修不通则停止”规则停止追加性能机制，继续做全部规定验证。
 
 ## 和设计不一致的
 
@@ -21,7 +22,7 @@
 
 ## 改过的已有测试
 
-- 暂无。
+- 原有 S31 相机断言均保留。`camera_negative.py` 的原三个变异改为分别定位 HAL 或 vendor 会话；新增四个会话变异。新测试均放在任务允许的 `ports/esp32s31/tests/`。
 
 ## 要用户定的
 
@@ -34,6 +35,8 @@
 ## 新增的机制
 
 - 任务明确要求的连续相机会话；不新增常驻任务、线程、队列或配置项。
+- 可选 `hal_camera_session` 钩子和既有媒体执行器上的清理作业，用于任务要求的释放和取消；默认模拟 HAL 为空操作，不改变既有 HAL 头和函数。
+- 既有应用生命周期的前后台回调，用于 Camera/Scan 共用会话、锁屏或离开应用时归还资源。
 
 ## 要改的文档
 
@@ -42,3 +45,12 @@
 ## 上机核对清单
 
 - 用真机量连续取景帧率及每次局部刷新时长；确认离页和锁屏后停止取景并释放缓冲。
+
+## 复核命令和阶段证据
+
+日志放在被忽略的 `work/camera-fps-1/`，不提交构建产物。全部构建使用 `taskpolicy -c utility`、`-j2`，ctest 使用 `-j2`。环境变量由任务给定。
+
+- C1：`cmake -S ports/esp32s31/tests -B build-s31-host -DCMAKE_EXPORT_COMPILE_COMMANDS=ON`，`cmake --build build-s31-host -j2`，`ctest --test-dir build-s31-host --output-on-failure -j2`。日志 `host-configure.log`、`host-build.log`、`host-tests.log`。
+- C2：`python ports/esp32s31/tests/camera_negative.py build-s31-host`。日志 `host-negative.log`。
+- C3：`INK_KEEP_EVIDENCE=1 python ports/esp32s31/tests/camera_preview.py build`。这是另外编译实际 UI、服务、S31 HAL 与确定性 DVP 桩的验收基准；目标未达时非零退出，不注册成伪通过的 ctest。日志 `preview-dvp.log`；完整模型证据在对应 `build/camera-preview-*/`。
+- 【实测】主工程相机、无相机、锁屏相机三个既有页面测试最后一轮均通过，原话 `100% tests passed out of 3`，日志 `camera-tests-final.log`。异步重探初版曾漏建锁屏入口需要的状态栏，已修复并重跑，未改已有断言。

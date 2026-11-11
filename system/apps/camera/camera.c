@@ -1,4 +1,4 @@
-/* Still-frame viewfinder; capture and encoding stay on the media executor. */
+/* Display-paced viewfinder; capture and encoding stay on the media executor. */
 #include "ink/osal.h"
 #include "ink/sys/appreg.h"
 #include "ink/sys/camera.h"
@@ -14,21 +14,36 @@
 
 uint8_t *ink_camera_png(const uint8_t *rgb, int w, int h, int *bytes);
 int ink_camera_scan_init(void);
+void ink_camera_session(bool active);
 static lv_obj_t *view, *notice;
 static lv_timer_t *timer;
 static int taking;
 static char camera_status[96];
 static lv_obj_t *locked_root;
 static int restricted;
+static lv_obj_t *camera_root;
+static uint32_t camera_generation;
+static ink_exec_job_t open_job;
+static void camera_create(lv_obj_t *root, void *arg);
+static void camera_ready(void *arg) {
+    (void)arg;
+    if (camera_root && camera_generation == ink_ui_generation()) camera_create(camera_root, (void *)1);
+}
+static void camera_probe(void *arg) {
+    (void)arg;
+    ink_camera_init();
+    if (!ink_cap_find("camera.scan")) ink_camera_scan_init();
+    ink_exec_post(INK_EXEC_UI, &open_job, camera_ready, NULL);
+}
 static struct { uint32_t ids[INK_FS_INDEX_MAX]; unsigned count, at; bool reviewing; } shots INK_PSRAM_BSS;
 bool ink_camera_restricted(void) { return __atomic_load_n(&restricted, __ATOMIC_ACQUIRE); }
 static const char LOCK_PHOTOS[] = "/family/锁屏拍的照片";
-typedef struct { ink_exec_job_t job; ink_image_t im; uint32_t epoch, generation, id; unsigned at; bool ok, saved, reviewed; } capture_t;
+typedef struct { ink_exec_job_t job; ink_image_t im; uint32_t epoch, generation, id; unsigned at; bool ok, saved, reviewed, preview; } capture_t;
 static void captured(void *arg) {
     capture_t *p = arg;
     if (p->epoch == ink_member_epoch() && p->generation == ink_ui_generation() && view && (ink_ui_page_current() || ink_camera_restricted())) {
         if (p->im.pixels) { lv_obj_clean(view); ink_photo_image(view, &p->im); }
-        snprintf(camera_status, sizeof camera_status, "%s", p->ok ? (p->saved ? TR("已保存到存储卡") : TR("低频取景，点下方拍照")) : TR("没能完成，请检查存储卡或重试"));
+        snprintf(camera_status, sizeof camera_status, "%s", p->ok ? (p->saved ? TR("已保存到存储卡") : TR("正在取景")) : TR("没能完成，请检查存储卡或重试"));
         if (ink_camera_restricted() && p->ok) {
             if (p->saved && shots.count < INK_FS_INDEX_MAX) shots.ids[shots.count++] = p->id;
             shots.reviewing = p->saved || p->reviewed;
@@ -36,18 +51,21 @@ static void captured(void *arg) {
             if (shots.reviewing) snprintf(camera_status, sizeof camera_status, TR("本次 %u 张，正在看第 %u 张"), shots.count, shots.at + 1);
             else snprintf(camera_status, sizeof camera_status, TR("本次已拍 %u 张"), shots.count);
         }
-        lv_label_set_text(notice, camera_status); ink_ui_content_changed(); ink_ui_hint_obj(view, INK_REFRESH_UI);
+        if (strcmp(lv_label_get_text(notice), camera_status)) lv_label_set_text(notice, camera_status);
+        ink_ui_content_changed(); ink_ui_hint_obj(view, p->preview ? INK_REFRESH_FAST : INK_REFRESH_UI);
     }
     ink_image_free(&p->im); osal_free(p); ink_power_release(INK_NEED_AWAKE); __atomic_store_n(&taking, 0, __ATOMIC_RELEASE);
 }
 static void take(ink_call_t *c) {
     if (!ink_cap_find("camera.capture")) { c->rc.status = INK_RC_FAILED; snprintf(c->rc.say, sizeof c->rc.say, "%s", TR("没有找到摄像头")); return; }
+    if (!strcmp(c->cap->id, "camera.preview") && strcmp(ink_ui_action_page(), "Camera")) { c->rc.status = INK_RC_CANCELLED; return; }
     bool limited = ink_camera_restricted();
     capture_t *p = osal_calloc(1, sizeof *p, OSAL_MEM_EXTERNAL);
     if (!p) { c->rc.status = INK_RC_FAILED; return; }
     ink_power_hold(INK_NEED_AWAKE);
     __atomic_store_n(&taking, 1, __ATOMIC_RELEASE);
     p->epoch = ink_member_epoch(); p->generation = ink_ui_generation(); p->saved = !strcmp(c->cap->id, "camera.photo");
+    p->preview = !strcmp(c->cap->id, "camera.preview");
     p->reviewed = !strcmp(c->cap->id, "camera.review");
     int w = 0, h = 0; uint8_t *rgb = NULL;
     if (p->reviewed) {
@@ -93,20 +111,37 @@ static void take(ink_call_t *c) {
     }
     p->ok = c->rc.status == INK_RC_DONE;
     if (rgb) {
-        for (size_t i = 0; i < (size_t)w * h; i++) rgb[i] = (77u * rgb[3*i] + 150u * rgb[3*i+1] + 29u * rgb[3*i+2] + 128u) >> 8;
-        p->im = (ink_image_t){(unsigned)w, (unsigned)h, rgb}; ink_image_dither(&p->im);
+        for (size_t i = 0; i < (size_t)w * h; i++) {
+            unsigned gray = (77u * rgb[3*i] + 150u * rgb[3*i+1] + 29u * rgb[3*i+2] + 128u) >> 8;
+            rgb[i] = p->preview ? (gray >= 128 ? 255 : 0) : gray;
+        }
+        p->im = (ink_image_t){(unsigned)w, (unsigned)h, rgb};
+        if (!p->preview) ink_image_dither(&p->im);
     }
     snprintf(c->rc.say, sizeof c->rc.say, "%s", p->ok ? (p->saved ? TR("已保存到存储卡") : TR("取景已更新")) : TR("没能完成，请重试"));
     if (ink_exec_post(INK_EXEC_UI, &p->job, captured, p)) { ink_image_free(&p->im); osal_free(p); ink_power_release(INK_NEED_AWAKE); __atomic_store_n(&taking, 0, __ATOMIC_RELEASE); }
+}
+static void preview_done(void *ctx, const ink_receipt_t *rc) {
+    (void)ctx;
+    if (rc->status != INK_RC_DONE) __atomic_store_n(&taking, 0, __ATOMIC_RELEASE);
 }
 static void preview(lv_timer_t *t) {
     (void)t;
     if (ink_camera_restricted() ? shots.reviewing || strcmp(ink_ui_action_page(), "Camera") : !ink_ui_page_current() || strcmp(ink_ui_page_name(), "Camera") || ink_ui_overlay_up()) return;
     if (__atomic_load_n(&taking, __ATOMIC_ACQUIRE)) return;
-    ink_call_opts_t o = {.src = INK_SRC_SYSTEM}; ink_cap_call("camera.preview", NULL, &o);
+    if (t && (ink_ui_busy() || ink_display_busy())) return;
+    __atomic_store_n(&taking, 1, __ATOMIC_RELEASE);
+    ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .reply_exec = INK_EXEC_UI, .done = preview_done};
+    if (ink_cap_call("camera.preview", NULL, &o)) __atomic_store_n(&taking, 0, __ATOMIC_RELEASE);
 }
 static void camera_create(lv_obj_t *root, void *arg) {
-    (void)arg; ink_shell_statusbar(root, true);
+    if (!arg) {
+        ink_shell_statusbar(root, true);
+        camera_root = root; camera_generation = ink_ui_generation();
+        ink_camera_session(true);
+        ink_exec_post(INK_EXEC_MEDIA, &open_job, camera_probe, NULL);
+        return;
+    }
     if (!ink_cap_find("camera.capture")) {
         snprintf(camera_status, sizeof camera_status, "%s", TR("没有找到摄像头"));
         ink_ui_label(root, camera_status, INK_FONT_TITLE, INK_WEIGHT_MEDIUM,
@@ -132,9 +167,12 @@ static void camera_create(lv_obj_t *root, void *arg) {
     ink_shell_bind(b, "camera.photo", NULL);
     b = ink_ui_circle(root, "close", INK_CANVAS_W - INK_MARGIN - INK_CIRCLE_APP, INK_CANVAS_H - INK_MARGIN - INK_CIRCLE_APP, INK_CIRCLE_APP, INK_ICON_LIST, INK_SURFACE_STATIC, NULL, NULL);
     ink_shell_bind(b, "shell.back", NULL);
-    timer = lv_timer_create(preview, 3000, NULL); preview(NULL);
+    timer = lv_timer_create(preview, LV_DEF_REFR_PERIOD, NULL); preview(NULL);
 }
-static void camera_destroy(void) { if (timer) { lv_timer_delete(timer); } timer = NULL; view = notice = NULL; }
+static void camera_destroy(void) {
+    if (timer) { lv_timer_delete(timer); }
+    timer = NULL; view = notice = camera_root = NULL;
+}
 static int camera_snapshot(char *out, size_t cap) {
     if (!ink_cap_find("camera.capture")) {
         const ink_ui_field_spec_t field = {.id = "status", .role = "status", .label = TR("相机"), .value = camera_status};
@@ -179,7 +217,7 @@ int ink_camera_open_locked(void) {
 }
 bool ink_camera_close_locked(void) {
     if (!locked_root) return false;
-    camera_destroy(); ink_ui_overlay_remove(&LOCK_CAMERA); lv_obj_delete(locked_root); locked_root = NULL;
+    camera_destroy(); ink_camera_session(false); ink_ui_overlay_remove(&LOCK_CAMERA); lv_obj_delete(locked_root); locked_root = NULL;
     __atomic_store_n(&restricted, 0, __ATOMIC_RELEASE); memset(&shots, 0, sizeof shots);
     ink_power_release(INK_NEED_AWAKE);
     ink_power_lock(); ink_ui_hint_frame(INK_REFRESH_FLASH_UI);
@@ -197,7 +235,10 @@ static const ink_cap_t CAMERA_APP_CAPS[] = {
     {.id = "camera.photo", .locked_owner_only = true, .app = "camera", .title = "拍照并保存到存储卡和相册", .activity = "Camera", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_MEDIA, .timeout_ms = 15000, .run = take},
     {.id = "camera.review", .locked_owner_only = true, .app = "camera", .title = "查看本次锁屏拍的下一张照片", .activity = "Camera", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_MEDIA, .timeout_ms = 15000, .run = take}
 };
+static void camera_foreground(void) { ink_camera_session(true); }
+static void camera_background(void) { ink_camera_session(false); }
+static const ink_app_ops_t camera_ops = {.on_foreground = camera_foreground, .on_background = camera_background};
 int ink_camera_app_init(void) {
-    static const ink_app_def_t app = {.id = "camera", .title = TR_NOOP("相机"), .icon = INK_UI_ICON(camera), .entry = &CAMERA, .system_app = true, .child_ok = true};
+    static const ink_app_def_t app = {.id = "camera", .title = TR_NOOP("相机"), .icon = INK_UI_ICON(camera), .entry = &CAMERA, .system_app = true, .child_ok = true, .ops = &camera_ops};
     return ink_camera_scan_init() || ink_cap_register(CAMERA_APP_CAPS, 3) || ink_app_register(&app) ? -1 : 0;
 }

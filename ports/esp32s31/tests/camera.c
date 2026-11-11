@@ -18,6 +18,8 @@ static bool absent, wrong_id, no_frames, fail_write, repeated_nack, display_held
 static bool bad_size, no_memory, start_error;
 static unsigned cut_frame, reset_frame, frames, saved_frame, output_requests, sensor_resets, writes, table_at;
 static bool check_table;
+static unsigned allocations, releases, controllers;
+static int continuous, *cancel_active;
 struct test_camera {
     bool enabled, running;
     esp_cam_ctlr_evt_cbs_t cb;
@@ -93,7 +95,7 @@ bool ink_s31_display_acquire(uint32_t timeout_ms) {
 }
 void ink_s31_display_release(void) { assert(display_held && !ctl.running); display_held = false; }
 void gpio_reset_pin(int pin) { assert(pin == 55 && !ctl.running); }
-void heap_caps_free(void *p) { assert(!ctl.running); free(p); }
+void heap_caps_free(void *p) { assert(!ctl.running); if (p) releases++; free(p); }
 SemaphoreHandle_t xSemaphoreCreateMutexStatic(StaticSemaphore_t *s) { *s = (StaticSemaphore_t){.mutex = true}; return s; }
 SemaphoreHandle_t xSemaphoreCreateBinary(void) { return calloc(1, sizeof(StaticSemaphore_t)); }
 void xSemaphoreGive(SemaphoreHandle_t s) { assert(s->mutex && s->held); s->held = false; }
@@ -110,6 +112,7 @@ int xSemaphoreTake(SemaphoreHandle_t s, uint32_t ticks) {
         s->held = true; return pdTRUE;
     }
     if (s->signalled) { s->signalled = false; return pdTRUE; }
+    if (cancel_active && ticks) { *cancel_active = 0; cancel_active = NULL; }
     now += ticks * 1000u;
     if (ctl.running && !no_frames) {
         frames++;
@@ -130,11 +133,12 @@ esp_err_t esp_cam_new_dvp_ctlr(const esp_cam_ctlr_dvp_config_t *c, esp_cam_ctlr_
     assert(!c->external_xtal && c->xclk_freq == 20000000);
     assert(c->pin->pclk_io == 54 && c->pin->xclk_io == 55 && c->pin->vsync_io == 56 && c->pin->de_io == 57);
     for (int i = 0; i < 16; i++) assert(c->pin->data_io[i] == (i < 8 ? 46 + i : GPIO_NUM_NC));
-    memset(&ctl, 0, sizeof ctl); *out = &ctl; return ESP_OK;
+    controllers++; memset(&ctl, 0, sizeof ctl); *out = &ctl; return ESP_OK;
 }
 void *esp_cam_ctlr_alloc_buffer(esp_cam_ctlr_handle_t c, size_t n, uint32_t caps) {
     assert(c == &ctl && n == INK_CAM_BYTES && caps == (MALLOC_CAP_SPIRAM | MALLOC_CAP_DMA));
-    return no_memory ? NULL : malloc(n);
+    if (no_memory) return NULL;
+    allocations++; return malloc(n);
 }
 esp_err_t esp_cam_ctlr_register_event_callbacks(esp_cam_ctlr_handle_t c, const esp_cam_ctlr_evt_cbs_t *cb, void *arg) { c->cb = *cb; c->arg = arg; return 0; }
 esp_err_t esp_cam_ctlr_enable(esp_cam_ctlr_handle_t c) { assert(!c->enabled); c->enabled = true; return 0; }
@@ -147,6 +151,7 @@ static void reset(void) {
     absent = wrong_id = no_frames = fail_write = repeated_nack = bad_size = no_memory = start_error = false;
     cut_frame = reset_frame = frames = saved_frame = output_requests = sensor_resets = writes = 0;
     check_table = false; table_at = 0;
+    allocations = releases = controllers = 0; continuous = 0; cancel_active = NULL;
     now = 0; ink_cam_checked = ink_cam_present = false;
     assert(metalio_board_init() == HAL_I2C_OK);
     refreshing = true; /* Detect must wait for the running waveform before touching LCD_CAM. */
@@ -185,6 +190,40 @@ int main(void) {
     reset(); present(); no_memory = true; assert(hal_camera_capture(output, sizeof output, 3000) == -3);
     reset(); present(); start_error = true; assert(hal_camera_capture(output, sizeof output, 3000) == -3);
     reset(); present(); assert(hal_camera_capture(output, sizeof output, 3000) == sizeof output);
+    reset(); absent = true; assert(!hal_camera_info(&info));
+    absent = false; continuous = 1; hal_camera_session(&continuous);
+    assert(hal_camera_info(&info)); /* Page entry explicitly retries cached negative detection. */
+    unsigned detected_controllers = controllers;
+    assert(hal_camera_capture(output, sizeof output, 3000) == sizeof output);
+    assert(allocations == 1 && releases == 0 && S.frame && S.controller && S.done);
+    assert(!display_held && !ctl.running && ink_s31_camera_busy());
+    uint8_t *frame = S.frame;
+    uint64_t first_at = now;
+    refreshing = true; /* Panel may refresh between grabs while the session is retained. */
+    assert(hal_camera_capture(output, sizeof output, 3000) == sizeof output);
+    assert(hal_camera_capture(output, sizeof output, 3000) == sizeof output);
+    assert(allocations == 1 && releases == 0 && controllers == detected_controllers + 1);
+    assert(S.frame == frame && sensor_resets == 1 && frames == 11 && output_requests == 3);
+    assert(now - first_at == 340000); /* 300 ms panel wait plus two 20 ms frame waits. */
+    for (size_t i = 0; i < sizeof output; i++) assert(output[i] == 11);
+    continuous = 0; hal_camera_session(&continuous);
+    assert(releases == 1 && !S.controller && !S.frame && !S.done && !ctl.enabled);
+    assert(!ink_s31_camera_busy() && !display_held && regs[0][0xf2] == 0);
+    continuous = 1; hal_camera_session(&continuous);
+    assert(hal_camera_capture(output, sizeof output, 3000) == sizeof output);
+    assert(allocations == 2 && sensor_resets == 2);
+    no_frames = true; cancel_active = &continuous;
+    uint64_t cancel_at = now;
+    assert(hal_camera_capture(output, sizeof output, 3000) == -5);
+    assert(now - cancel_at == 20000 && !S.controller && releases == 2);
+    hal_camera_session(&continuous);
+    continuous = 1; no_frames = false; hal_camera_session(&continuous);
+    assert(hal_camera_capture(output, sizeof output, 3000) == sizeof output);
+    no_frames = true;
+    assert(hal_camera_capture(output, sizeof output, 80) == -4);
+    assert(!S.controller && releases == 3 && !ink_s31_camera_busy());
+    continuous = 0; hal_camera_session(&continuous);
     puts("s31 camera: detection, ID, SCCB fallback, warmup, timeout, power/reset loss, cleanup and shared lines passed");
+    puts("continuous camera: 3 frames / 1 allocation, one warmup, panel handoff, close, reopen, cancel and timeout passed");
     return 0;
 }
