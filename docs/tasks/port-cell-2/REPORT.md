@@ -7,8 +7,8 @@
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
 | 1 | 【实测】定向通过 | 一字节分块重组、短 EOF、4 缓冲耗尽、归还后重对齐、Transmit；真实板级写入记录验证 500/80 ms；4/4 反向对照均编译成功、断言失败 | `build/test-s31-cell`；`python3 ports/esp32s31/tests/uhci_negative.py build` |
-| 2 | 部分完成，最终全量/ASan 待验证 | 【实测】S31（浅睡 ON）编过，镜像 3,314,896 字节，编译诊断 0；gcccheck 宿主机 6/6、S31 5/5，无发现 | `taskpolicy -c utility env INK_S31_LIGHT_SLEEP=ON bash ports/esp32s31/build.sh`；`gcccheck.py build …`、`gcccheck.py build-s31 …` |
-| 3 | 待整理 | 真机验收步骤交主会话执行 | 不操作设备 |
+| 2 | 普通全量/S31/gcccheck/隐私通过，ASan 待验证 | 【实测】普通全量 369 项：366 通过、3 项环境跳过；S31（浅睡 ON）编过，镜像 3,314,896 字节，编译诊断 0；gcccheck 宿主机 6/6、S31 5/5，无发现；隐私扫描 0 匹配 | 下方“复现命令”及最终记录 |
+| 3 | 【实现】已列出 | 下方真机验收步骤交主会话执行，没有冒称真机通过 | 不操作设备 |
 
 ## 没做到的
 
@@ -48,6 +48,20 @@
 - 为什么不能更小：任务明确要求完整 C++ 组件、C 封装、独立可测缓冲胶水及两个电源路径，产品代码净增超过 100 行。看过保留 UART 环形缓冲的方案，不满足 DMA 验收；照搬原厂三任务会显著扩大改动。当前沿用任务与帧解析，只加必要接口和时序。
 - 【实测】S31 浅睡 ON 构建退出 0，原厂输出层仍校验 `690a023`；应用镜像 3,314,896 字节。IDF 静态分类：Flash 3,185,302 字节、DIRAM 159,854 字节、外部 BSS 668,728 字节，不包含运行时堆。完整日志在忽略的 `work/s31-build.log`。gcccheck 两轮分别为 `6 compiled, 0 with findings`、`5 compiled, 0 with findings`。
 - 【实测】6 个原厂文件的 Git blob 也与 V 逐字节相同。产品 C/CC/H 净增 123 行，设备 CMake 净增 1 行，合计净增 124 行；不含原样组件、测试和文档，低于 300 行预算。
+- 【实测】最终普通全量原话：`100% tests passed out of 369`，870.63 秒，退出 0；366 项执行通过，`hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e` 三项按原有环境门槛跳过。完整记录 `work/ctest-final.log`。按总规则 §6 对基线至 HEAD 扫描，绝对路径/MAC 0 匹配；额外蜂窝标识名称与独立长数字形状扫描均 0 匹配。
+
+## 复现命令
+
+配置按总规则 §5，普通版 `INK_WERROR=ON`；内存版仅换 `build-asan` 并加 `INK_SANITIZE=ON`。两版都复用 `$INK_DEPS/build/_deps/` 中的 LVGL、SDL2、ImGui，只读依赖没有改动。构建使用 `taskpolicy -c utility cmake --build <目录> -j2`。
+
+```bash
+taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2
+taskpolicy -c utility env UBSAN_OPTIONS=halt_on_error=1 "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2
+taskpolicy -c utility env INK_UPSTREAM="$INK_DEPS/../ink-hw/upstream/Metalio-E-INK4-Plus" INK_S31_LIGHT_SLEEP=ON bash ports/esp32s31/build.sh
+taskpolicy -c utility python3 "$INK_DEPS/../ink-codex/tools/gcccheck.py" build boards/metalio_plus/metalio_board.c ports/esp32s31/s31_cell_rx.c ports/esp32s31/tests/cell.c tests/simulator/selftest.c tests/integration/member_wake.c tests/accel_use/accel_use.c
+taskpolicy -c utility python3 "$INK_DEPS/../ink-codex/tools/gcccheck.py" build-s31 ports/esp32s31/s31_modem.c ports/esp32s31/s31_cell_rx.c ports/esp32s31/s31_uhci.cc ports/esp32s31/hal_power_s31.c boards/metalio_plus/metalio_board.c
+taskpolicy -c utility python3 ports/esp32s31/tests/uhci_negative.py build
+```
 
 ## 要改的文档
 
