@@ -9,11 +9,12 @@ target_compile_options(${COMPONENT_LIB} PRIVATE -fstack-usage)
 
 # Vendor file manager: protocol and workers are unchanged; storage is policy-backed.
 set(ap ${CMAKE_CURRENT_LIST_DIR}/../vendor/ap_transfer)
+set(cjson ${root}/third_party/cjson)
 idf_component_get_property(transfer_platform ink_platform COMPONENT_LIB)
 target_sources(${transfer_platform} PRIVATE ../hal_transfer_s31.c ${ap}/ap_transfer.cc ${ap}/ap_request_worker.cc
-    ${ap}/qrcodegen.c ${ap}/cjson/cJSON.c ${ap}/zlib/adler32.c ${ap}/zlib/crc32.c ${ap}/zlib/inffast.c
+    ${ap}/qrcodegen.c ${cjson}/cJSON.c ${ap}/zlib/adler32.c ${ap}/zlib/crc32.c ${ap}/zlib/inffast.c
     ${ap}/zlib/inflate.c ${ap}/zlib/inftrees.c ${ap}/zlib/zutil.c)
-target_include_directories(${transfer_platform} PRIVATE ${ap} ${ap}/cjson ${ap}/zlib)
+target_include_directories(${transfer_platform} PRIVATE ${ap} ${cjson} ${ap}/zlib)
 target_link_libraries(${transfer_platform} PRIVATE idf::esp_http_server)
 idf_component_get_property(transfer_http esp_http_server COMPONENT_LIB)
 target_compile_definitions(${transfer_http} PUBLIC CONFIG_HTTPD_WS_SUPPORT=1 CONFIG_HTTPD_WS_PRE_HANDSHAKE_CB_SUPPORT=1)
@@ -25,6 +26,8 @@ foreach(lang zh en)
     endif()
     execute_process(COMMAND ${PYTHON} ${ap}/pack_ap_fileman.py ${ap}/fileman.html ${page} ${translation}
         COMMAND_ERROR_IS_FATAL ANY)
-    target_add_binary_data(${transfer_platform} ${page} BINARY)
+    target_add_binary_data(${COMPONENT_LIB} ${page} BINARY)
 endforeach()
-target_add_binary_data(${transfer_platform} ${ap}/cloudzao-logo.png BINARY)
+target_add_binary_data(${COMPONENT_LIB} ${ap}/cloudzao-logo.png BINARY)
+target_link_libraries(${COMPONENT_LIB} INTERFACE "-Wl,-u,_binary_ap_fileman_zh_html_gz_start"
+    "-Wl,-u,_binary_ap_fileman_en_html_gz_start" "-Wl,-u,_binary_cloudzao_logo_png_start")

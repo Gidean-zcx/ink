@@ -25,45 +25,49 @@
 - 原厂 `.cz-名称.part` 映射成文件服务允许的 `名称.part`；备份名映射为 `.tmp` 后缀。文件服务会隐藏这些未完成文件。
 - 每个 HTTP 请求、WebSocket 握手及后续帧校验同一授权；首次输入数字后换取 128 bit 会话 cookie。授权码不进网址查询参数，扫码通过 fragment 提交。
 - 流式覆盖暂时拒绝：文件服务没有原子的流式替换接口；不搬原厂绕过成员策略的备份文件写法。
-- 网络生命周期接现有 STA 暂停/恢复；原厂热点 IP、信道、连接数、开放认证和 Plus 发射功率不变；系统服务统一持有电源需求。
+- 网络生命周期接现有 STA 暂停/恢复，并恢复原有的自动发现定时器；原厂热点 IP、信道、连接数、开放认证和 Plus 发射功率不变；系统服务统一持有电源需求。
+- 原厂资源符号移到匿名命名空间之外，兼容 clang；删除原文中未使用的 `s_standby_parked` 变量。路径格式化检查完整返回长度后才使用，截断直接拒绝。
+- HTTPD 不复制响应头值，会话 cookie 头使用静态存储；文件响应设为 `no-store`。
+- Plus 功率上限 48 直接取自原厂 `components/esp-wifi-connect/include/wifi_station.h:16`，单位 0.25 dBm。
+- `PowerPolicy` 兼容壳由系统授权期间的 `INK_NEED_AWAKE` 统一承担；原厂书库缓存壳由现有文件服务成员事件替代，不新增缓存。基线没有收件箱自动入架接口，报告中明确未实现。
 - 原厂语言表属于未随仓库提供的资源，`ink_lang.h` 使用项目中文错误提示；这不是原厂译文。
-- `fileman.html` 的自动分类默认关，默认收件箱；现有导入规则决定书架目录。没有合入 `ui-fix-a`，保留 `ap_qr.*` 原文但不编入页面；`hal_transfer_qr` 使用原文 `qrcodegen`。
+- `fileman.html` 的自动分类默认关，默认收件箱；现有导入规则决定书架目录。隐藏未接入的自动分类控件。没有合入 `ui-fix-a`，保留 `ap_qr.*` 原文但不编入页面；`hal_transfer_qr` 使用原文 `qrcodegen`。
 
 以下是相对原文的每个修改范围（原文行号 → 当前行号）。通用文件调用替换均为上述文件服务适配，新增代码为授权和 HAL 接线。
 
 | 文件 | 原文行 | 当前行 |
 | --- | --- | --- |
-
 | `ap_transfer.cc` | 1–2 | 1–1 |
 | `ap_transfer.cc` | 6–14 | 4–4 |
 | `ap_transfer.cc` | 27–27 | 17–17 |
-| `ap_transfer.cc` | 46–46 | 35–37 |
-| `ap_transfer.cc` | 50–50 | 42–42 |
-| `ap_transfer.cc` | 168–169 | 160–161 |
-| `ap_transfer.cc` | 250–250 | 242–242 |
-| `ap_transfer.cc` | 354–354 | 347–347 |
-| `ap_transfer.cc` | 361–361 | 354–354 |
-| `ap_transfer.cc` | 383–384 | 376–377 |
-| `ap_transfer.cc` | 386–386 | 379–379 |
-| `ap_transfer.cc` | 390–390 | 383–383 |
-| `ap_transfer.cc` | 394–394 | 387–387 |
-| `ap_transfer.cc` | 404–404 | 397–397 |
-| `ap_transfer.cc` | 434–434 | 427–427 |
-| `ap_transfer.cc` | 440–440 | 433–433 |
-| `ap_transfer.cc` | 449–449 | 442–442 |
-| `ap_transfer.cc` | 464–464 | 457–457 |
-| `ap_transfer.cc` | 472–472 | 465–465 |
-| `ap_transfer.cc` | 522–522 | 515–515 |
-| `ap_transfer.cc` | 525–525 | 518–518 |
-| `ap_transfer.cc` | 542–542 | 535–535 |
-| `ap_transfer.cc` | 544–544 | 538–538 |
-| `ap_transfer.cc` | 553–554 | 547–548 |
-| `ap_transfer.cc` | 586–586 | 580–580 |
-| `ap_transfer.cc` | 596–596 | 590–590 |
-| `ap_transfer.cc` | 611–611 | 606–606 |
-| `ap_transfer.cc` | 663–664 | 658–659 |
-| `ap_transfer.cc` | 768–768 | 763–763 |
-| `ap_transfer.cc` | 771–771 | 766–766 |
+| `ap_transfer.cc` | 46–46 | 35–44 |
+| `ap_transfer.cc` | 50–50 | 49–49 |
+| `ap_transfer.cc` | 96–96 | 95–95 |
+| `ap_transfer.cc` | 165–171 | 163–163 |
+| `ap_transfer.cc` | 250–250 | 241–241 |
+| `ap_transfer.cc` | 354–354 | 346–346 |
+| `ap_transfer.cc` | 361–361 | 353–353 |
+| `ap_transfer.cc` | 383–384 | 375–376 |
+| `ap_transfer.cc` | 386–386 | 378–378 |
+| `ap_transfer.cc` | 390–390 | 382–382 |
+| `ap_transfer.cc` | 394–394 | 386–386 |
+| `ap_transfer.cc` | 404–404 | 396–396 |
+| `ap_transfer.cc` | 434–434 | 426–426 |
+| `ap_transfer.cc` | 440–440 | 432–432 |
+| `ap_transfer.cc` | 449–449 | 441–441 |
+| `ap_transfer.cc` | 464–464 | 456–456 |
+| `ap_transfer.cc` | 472–472 | 464–464 |
+| `ap_transfer.cc` | 522–522 | 514–514 |
+| `ap_transfer.cc` | 525–525 | 517–517 |
+| `ap_transfer.cc` | 542–542 | 534–534 |
+| `ap_transfer.cc` | 544–544 | 537–537 |
+| `ap_transfer.cc` | 553–554 | 546–547 |
+| `ap_transfer.cc` | 586–586 | 579–579 |
+| `ap_transfer.cc` | 596–596 | 589–589 |
+| `ap_transfer.cc` | 611–611 | 605–605 |
+| `ap_transfer.cc` | 663–664 | 657–658 |
+| `ap_transfer.cc` | 768–768 | 762–762 |
+| `ap_transfer.cc` | 771–774 | 765–769 |
 | `ap_transfer.cc` | 776–776 | 771–771 |
 | `ap_transfer.cc` | 782–782 | 777–777 |
 | `ap_transfer.cc` | 810–810 | 805–805 |
@@ -88,13 +92,14 @@
 | `ap_transfer.cc` | 1078–1078 | 1077–1077 |
 | `ap_transfer.cc` | 1080–1080 | 1079–1079 |
 | `ap_transfer.cc` | 1094–1094 | 1093–1094 |
-| `ap_transfer.cc` | 1103–1103 | 1104–1112 |
-| `ap_transfer.cc` | 1104–1104 | 1114–1114 |
-| `ap_transfer.cc` | 1161–1161 | 1172–1172 |
-| `ap_transfer.cc` | 1221–1221 | 1233–1233 |
-| `ap_transfer.cc` | 1235–1241 | 1247–1247 |
-| `ap_transfer.cc` | 1340–1355 | 1346–1348 |
-| `ap_transfer.cc` | 1372–1372 | 1365–1370 |
+| `ap_transfer.cc` | 1103–1103 | 1104–1113 |
+| `ap_transfer.cc` | 1104–1104 | 1115–1115 |
+| `ap_transfer.cc` | 1161–1161 | 1173–1173 |
+| `ap_transfer.cc` | 1221–1221 | 1234–1234 |
+| `ap_transfer.cc` | 1235–1241 | 1248–1248 |
+| `ap_transfer.cc` | 1340–1355 | 1347–1349 |
+| `ap_transfer.cc` | 1372–1372 | 1366–1371 |
+| `fileman.html` | 216–217 | 216–217 |
 | `fileman.html` | 236–236 | 236–236 |
 | `fileman.html` | 1066–1072 | 1066–1067 |
 | `fileman.html` | 1076–1076 | 1071–1071 |
@@ -102,7 +107,7 @@
 
 ## 额外原文依赖
 
-`pack_ap_fileman.py` 来自同一原厂提交的 `scripts/pack_ap_fileman.py`；`cloudzao-logo.png` 来自同一 ap 目录。原厂声明依赖 `espressif/zlib: "*"` 和 `espressif/cjson: "*"`，本端口将源码固定为 [zlib 1.3.1](https://github.com/madler/zlib/tree/v1.3.1)（zlib 许可证）与 [cJSON 1.7.19](https://github.com/DaveGamble/cJSON/tree/v1.7.19)（MIT），均整文件复制，保留许可证。只编入解压所需的 zlib 源文件。没有升级仓库既有依赖。
+`pack_ap_fileman.py` 来自同一原厂提交的 `scripts/pack_ap_fileman.py`；`cloudzao-logo.png` 来自同一 ap 目录。原厂声明依赖 `espressif/zlib: "*"` 和 `espressif/cjson: "*"`，本端口将源码固定为 [zlib 1.3.1](https://github.com/madler/zlib/tree/v1.3.1)（zlib 许可证），整文件复制并保留许可证；[cJSON 1.7.19](https://github.com/DaveGamble/cJSON/tree/v1.7.19)（MIT）直接复用仓库已有 `third_party/cjson/`，哈希与该版本原文相同，不再复制第二份。只编入解压所需的 zlib 源文件。没有升级仓库既有依赖。
 
 | 文件 | 本次入库 SHA-256 |
 | --- | --- |
@@ -111,14 +116,11 @@
 | `ap_qr.h` | `4b3c609aa1c229e655d27d5c8b2e574a38b0e17802253b359bd1b1600961e52c` |
 | `ap_request_worker.cc` | `68564c2bbb428bc0a1534d790e68c091a97ba4767d7a9899bd24031c15f3ef69` |
 | `ap_request_worker.h` | `4e825478a4efdf91b2ff3e44e86c228621fb3c1af6e93c296eb4358a947e057e` |
-| `ap_transfer.cc` | `1d924f57cedbfb1facac9cc781645dbaee46894270ccdf9bc9322ad0fec18666` |
+| `ap_transfer.cc` | `c9a6e6a47af652f61a41db0c00affd8f55b673c1a9b5d796de5850fb039009f4` |
 | `ap_transfer.h` | `a7d1268bc353aaeb06b9d7397f82d1c583ff9b3f3d255e93fa318a77e6d26f15` |
-| `cjson/LICENSE` | `a36dda207c36db5818729c54e7ad4e8b0c6fba847491ba64f372c1a2037b6d5c` |
-| `cjson/cJSON.c` | `298581a04a36c0165da4b0aade235c23088cb2faa58651d720ea2f3706ed0b0d` |
-| `cjson/cJSON.h` | `25b0145150d500498e4d209cec69c18c42cf818bffcc54690be3b895a2a16dee` |
 | `cloudzao-logo.png` | `d5d56e1927256523dd7f29468c980dcec90b8288ea94c26e40f7a139f1eb1d12` |
 | `fileman.en.json` | `3cfcc4b1dd6e95f19bb4db2948bbeee039a825127cb08d74d8f3e9ba072182b9` |
-| `fileman.html` | `e3c658bf2f5cb4546569dcf0b7e465d80a39ae665f5261add384910523b921c4` |
+| `fileman.html` | `b4d2bbfce317d6a2645b0a0740ea696146bf83b114398d97e63b7d110a70a4e5` |
 | `ink_adapter.h` | `ac862ec9d5b807df6b62f25f620fa03a6abf075890725db14de4969b5541ec7a` |
 | `ink_lang.h` | `cc8420e89158ee29701d001bc6de59243a3a4a90966634596100cc7ee91384b6` |
 | `pack_ap_fileman.py` | `d8b1479d1b9e87c46adff183d5af55c3f6854f6135bf7fdbe9572bc74c77eb2e` |
@@ -140,3 +142,12 @@
 | `zlib/zlib.h` | `8a5579af72ea4f427ff00a4150f0ccb3fc5c1e4379f726e101133b1ab9fc600c` |
 | `zlib/zutil.c` | `8ced40d8c88588811edd2bdb35b7439983d5e1f8e9e32b8a3b244731f3c317b7` |
 | `zlib/zutil.h` | `dddb2dc7a1dc339ecf2c8e089b366f08bb731c0839c7110240d17ce731bb4fea` |
+
+复用的既有依赖（不计新增代码）：
+
+| 文件 | SHA-256 |
+| --- | --- |
+| `third_party/cjson/cJSON.c` | `298581a04a36c0165da4b0aade235c23088cb2faa58651d720ea2f3706ed0b0d` |
+| `third_party/cjson/cJSON.h` | `25b0145150d500498e4d209cec69c18c42cf818bffcc54690be3b895a2a16dee` |
+| `third_party/cjson/LICENSE` | `a36dda207c36db5818729c54e7ad4e8b0c6fba847491ba64f372c1a2037b6d5c` |
+| `third_party/cjson/UPSTREAM_TAG` | `4a858f64d3acabc18e23202bee96da2a60fde2388a6d93f04f21aecb4ef0276c` |

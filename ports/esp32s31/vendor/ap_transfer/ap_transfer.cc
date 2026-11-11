@@ -35,6 +35,13 @@
 #include "ink_adapter.h"
 #include "ink_lang.h"
 
+extern const uint8_t kLogoStart[] asm("_binary_cloudzao_logo_png_start");
+extern const uint8_t kLogoEnd[] asm("_binary_cloudzao_logo_png_end");
+extern const uint8_t kPageStart[] asm("_binary_ap_fileman_zh_html_gz_start");
+extern const uint8_t kPageEnd[] asm("_binary_ap_fileman_zh_html_gz_end");
+extern const uint8_t kPageEnStart[] asm("_binary_ap_fileman_en_html_gz_start");
+extern const uint8_t kPageEnEnd[] asm("_binary_ap_fileman_en_html_gz_end");
+
 namespace {
 
 constexpr const char* TAG = "ApTransfer";
@@ -85,7 +92,6 @@ std::atomic<bool> s_upload_busy{false};
 std::atomic<bool> s_storage_failed{false}; // I/O 故障持续到重启，防止继续上传到异常卡
 const char* s_upload_target = nullptr; // 受上传状态锁保护，借用活动上传会话的目标路径
 std::atomic<bool> s_standby_hold{false}; // 待机期间拒绝把热点再拉起来
-std::atomic<bool> s_standby_parked{false};
 
 enum class UploadPhase { Idle, Receiving, Saving, Done, Failed, Cancelled };
 
@@ -154,13 +160,6 @@ UploadState UploadSnapshot() {
     xSemaphoreGive(s_upload_lock);
     return result;
 }
-
-extern const uint8_t kLogoStart[] asm("_binary_cloudzao_logo_png_start");
-extern const uint8_t kLogoEnd[] asm("_binary_cloudzao_logo_png_end");
-extern const uint8_t kPageStart[] asm("_binary_ap_fileman_zh_html_gz_start");
-extern const uint8_t kPageEnd[] asm("_binary_ap_fileman_zh_html_gz_end");
-extern const uint8_t kPageEnStart[] asm("_binary_ap_fileman_en_html_gz_start");
-extern const uint8_t kPageEnEnd[] asm("_binary_ap_fileman_en_html_gz_end");
 
 void HoldPower() {
     if (!s_net_held) {
@@ -764,9 +763,10 @@ esp_err_t StartUpload(httpd_req_t* req, UploadSession* session, cJSON* json) {
     if (expected > free_bytes) return RejectUpload(req, Lang::Strings::TRANSFER_SD_FULL);
     if (!RecoverUploads(dir)) return RejectUpload(req, Lang::Strings::TRANSFER_RECOVERY_FAILED);
     session->replace = false; // The file service does not expose streamed atomic replacement.
-    std::snprintf(session->path, sizeof(session->path), "%s/%s", dir, name);
-    std::snprintf(session->temp, sizeof(session->temp), "%s/.cz-%s.part", dir, name);
-    std::snprintf(session->backup, sizeof(session->backup), "%s/.cz-%s.bak", dir, name);
+    if (static_cast<size_t>(std::snprintf(session->path, sizeof(session->path), "%s/%s", dir, name)) >= sizeof(session->path) ||
+        static_cast<size_t>(std::snprintf(session->temp, sizeof(session->temp), "%s/.cz-%s.part", dir, name)) >= sizeof(session->temp) ||
+        static_cast<size_t>(std::snprintf(session->backup, sizeof(session->backup), "%s/.cz-%s.bak", dir, name)) >= sizeof(session->backup))
+        return RejectUpload(req, Lang::Strings::TRANSFER_INVALID_FILE);
     struct stat st;
     const int rc = InkStat(session->path, &st);
     if (rc == 0 && (S_ISDIR(st.st_mode) || !session->replace)) return RejectUpload(req, Lang::Strings::TRANSFER_EXISTS_CHOOSE);
@@ -1101,6 +1101,7 @@ esp_err_t ProcessFileRequest(httpd_req_t* req) {
 }
 
 esp_err_t HandleRequest(httpd_req_t* req) {
+    httpd_resp_set_hdr(req, "Cache-Control", "no-store");
     char token[33] = "";
     if (!InkAuthorize(req, token)) {
         const auto *route = static_cast<const RequestRoute *>(req->user_ctx);

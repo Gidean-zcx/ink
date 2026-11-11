@@ -302,5 +302,6 @@ void ink_transfer_wifi_restore(bool resume) {
     if (resume && ink_transfer_was_running && ink_wifi.link.type != HAL_LINK_NONE) {
         ink_station_resume(); ink_rejoin();
     }
+    if (resume && ink_wifi.mode == INK_AUTO) ink_scan_later();
     INK_UNLOCK();
 }

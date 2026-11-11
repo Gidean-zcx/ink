@@ -722,7 +722,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 ### s27 — `system/services/file`
 
-设置：—。
+设置：`net.airplane`。
 
 状态：`file.index_state`、`member.current`、`storage.card`、`storage.free`、`storage.mode`、`usb.connected`。
 
