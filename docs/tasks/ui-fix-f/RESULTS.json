@@ -1,0 +1,242 @@
+[
+  {
+    "case": "remote",
+    "mode": "after",
+    "font": "100",
+    "exit": 0,
+    "pass": 127,
+    "fail": 0,
+    "accepted": true,
+    "build": "normal"
+  },
+  {
+    "case": "remote",
+    "mode": "after",
+    "font": "120",
+    "exit": 0,
+    "pass": 127,
+    "fail": 0,
+    "accepted": true,
+    "build": "normal"
+  },
+  {
+    "case": "weather",
+    "mode": "after",
+    "font": "100",
+    "exit": 0,
+    "pass": 154,
+    "fail": 0,
+    "accepted": true,
+    "build": "normal"
+  },
+  {
+    "case": "weather",
+    "mode": "after",
+    "font": "120",
+    "exit": 0,
+    "pass": 154,
+    "fail": 0,
+    "accepted": true,
+    "build": "normal"
+  },
+  {
+    "case": "calendar",
+    "mode": "after",
+    "font": "100",
+    "exit": 0,
+    "pass": 98,
+    "fail": 0,
+    "accepted": true,
+    "build": "normal"
+  },
+  {
+    "case": "calendar",
+    "mode": "after",
+    "font": "120",
+    "exit": 0,
+    "pass": 98,
+    "fail": 0,
+    "accepted": true,
+    "build": "normal"
+  },
+  {
+    "case": "calculator",
+    "mode": "after",
+    "font": "100",
+    "exit": 0,
+    "pass": 52,
+    "fail": 0,
+    "accepted": true,
+    "build": "normal"
+  },
+  {
+    "case": "calculator",
+    "mode": "after",
+    "font": "120",
+    "exit": 0,
+    "pass": 52,
+    "fail": 0,
+    "accepted": true,
+    "build": "normal"
+  },
+  {
+    "case": "remote",
+    "mode": "before",
+    "font": "100",
+    "exit": 1,
+    "pass": 113,
+    "fail": 8,
+    "accepted": true,
+    "build": "normal"
+  },
+  {
+    "case": "remote",
+    "mode": "before",
+    "font": "120",
+    "exit": 1,
+    "pass": 113,
+    "fail": 8,
+    "accepted": true,
+    "build": "normal"
+  },
+  {
+    "case": "weather",
+    "mode": "before",
+    "font": "100",
+    "exit": 1,
+    "pass": 150,
+    "fail": 4,
+    "accepted": true,
+    "build": "normal"
+  },
+  {
+    "case": "weather",
+    "mode": "before",
+    "font": "120",
+    "exit": 1,
+    "pass": 150,
+    "fail": 4,
+    "accepted": true,
+    "build": "normal"
+  },
+  {
+    "case": "calendar",
+    "mode": "before",
+    "font": "100",
+    "exit": 1,
+    "pass": 88,
+    "fail": 10,
+    "accepted": true,
+    "build": "normal"
+  },
+  {
+    "case": "calendar",
+    "mode": "before",
+    "font": "120",
+    "exit": 1,
+    "pass": 88,
+    "fail": 10,
+    "accepted": true,
+    "build": "normal"
+  },
+  {
+    "case": "calculator",
+    "mode": "before",
+    "font": "100",
+    "exit": 1,
+    "pass": 39,
+    "fail": 10,
+    "accepted": true,
+    "build": "normal"
+  },
+  {
+    "case": "calculator",
+    "mode": "before",
+    "font": "120",
+    "exit": 1,
+    "pass": 39,
+    "fail": 10,
+    "accepted": true,
+    "build": "normal"
+  },
+  {
+    "case": "remote",
+    "mode": "after",
+    "font": "100",
+    "exit": 0,
+    "pass": 127,
+    "fail": 0,
+    "accepted": true,
+    "build": "asan-ubsan"
+  },
+  {
+    "case": "remote",
+    "mode": "after",
+    "font": "120",
+    "exit": 0,
+    "pass": 127,
+    "fail": 0,
+    "accepted": true,
+    "build": "asan-ubsan"
+  },
+  {
+    "case": "weather",
+    "mode": "after",
+    "font": "100",
+    "exit": 0,
+    "pass": 154,
+    "fail": 0,
+    "accepted": true,
+    "build": "asan-ubsan"
+  },
+  {
+    "case": "weather",
+    "mode": "after",
+    "font": "120",
+    "exit": 0,
+    "pass": 154,
+    "fail": 0,
+    "accepted": true,
+    "build": "asan-ubsan"
+  },
+  {
+    "case": "calendar",
+    "mode": "after",
+    "font": "100",
+    "exit": 0,
+    "pass": 98,
+    "fail": 0,
+    "accepted": true,
+    "build": "asan-ubsan"
+  },
+  {
+    "case": "calendar",
+    "mode": "after",
+    "font": "120",
+    "exit": 0,
+    "pass": 98,
+    "fail": 0,
+    "accepted": true,
+    "build": "asan-ubsan"
+  },
+  {
+    "case": "calculator",
+    "mode": "after",
+    "font": "100",
+    "exit": 0,
+    "pass": 52,
+    "fail": 0,
+    "accepted": true,
+    "build": "asan-ubsan"
+  },
+  {
+    "case": "calculator",
+    "mode": "after",
+    "font": "120",
+    "exit": 0,
+    "pass": 52,
+    "fail": 0,
+    "accepted": true,
+    "build": "asan-ubsan"
+  }
+]

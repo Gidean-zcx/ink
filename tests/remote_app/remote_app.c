@@ -37,6 +37,7 @@ static void hash_picture(void) {
     for (int i = 0; i < RS.w * RS.h; i++) picture_hash = (picture_hash ^ RS.px[i]) * 16777619u;
 }
 static const char *scene;
+static bool big_font;
 static volatile bool captured;
 static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
 static void quiet(void) { CHECK(WAIT_FOR(settled(), 12000), "panel settles"); }
@@ -57,7 +58,7 @@ static void save_snapshot(void *arg) {
 }
 static void capture(const char *board) {
     scene = board; quiet(); on_ui(read_snapshot);
-    CHECK(strstr(snapshot, board), "snapshot identifies %s", board);
+    CHECK(strstr(snapshot, !strcmp(board, "RemotePassword") ? "RemoteType" : !strcmp(board, "RemoteEnded") ? "RemoteOffline" : board), "snapshot identifies %s", board);
     vtk_host_call(save_snapshot, NULL);
     captured = false;
     vtk_event_at(vtk_now() + SIM_MS(1), take, NULL);
@@ -76,6 +77,26 @@ static void password_typed(void) { ink_text_commit_utf8("SYNTHETIC_SECRET"); }
 static void finish_password(void) { ink_text_enter(); }
 static void outage(void *arg) { sim_net_outage(SIM_MS((uintptr_t)arg)); }
 static void disconnect_ms(int ms) { vtk_event_at(vtk_now() + SIM_MS(1), outage, (void *)(uintptr_t)ms); delay_ms(5); }
+static lv_obj_t *find_label(lv_obj_t *root, const char *text) {
+    if (!lv_obj_is_visible(root)) return NULL;
+    if (lv_obj_check_type(root, &lv_label_class) && strstr(lv_label_get_text(root), text)) return root;
+    for (uint32_t i = 0; i < lv_obj_get_child_count(root); i++) {
+        lv_obj_t *label = find_label(lv_obj_get_child(root, (int32_t)i), text);
+        if (label) return label;
+    }
+    return NULL;
+}
+static void target_visible(void) {
+    const char *text = RS.page == TYPE ? (RS.secret ? "向 example.com 输入密码" : "向 example.com 输入文字") : "example.com";
+    lv_obj_update_layout(lv_screen_active()); lv_obj_t *label = find_label(lv_screen_active(), text);
+    CHECK(label, "UX12 E01 E03 website is visible: %s", text);
+    if (label) {
+        lv_area_t a, keyboard; lv_obj_get_coords(label, &a); ink_shell_keyboard_area(&keyboard);
+        lv_point_t need; lv_text_get_size(&need, lv_label_get_text(label), lv_obj_get_style_text_font(label, 0), 0, 0, lv_obj_get_width(label), LV_TEXT_FLAG_NONE);
+        CHECK(need.y <= lv_obj_get_height(label) && a.y1 >= 0 && a.x2 < ink_ui_width(), "UX12 target label fits whole");
+        CHECK(!ink_text_focused() || a.y2 < keyboard.y1, "UX12 target remains visible above the keyboard");
+    }
+}
 static void locked_open(void) {
     ink_power_hold(INK_NEED_AWAKE); /* Keep the test driver runnable while the screen is locked. */
     ink_power_lock();
@@ -103,6 +124,7 @@ static void locked_open(void) {
 }
 static void run(void *arg) {
     (void)arg; delay_ms(1800); quiet();
+    CHECK(AI("settings.set", big_font ? "{\"id\":\"display.font_size\",\"value\":3}" : "{\"id\":\"display.font_size\",\"value\":1}") && g_rc.status == INK_RC_DONE, "choose remote font size"); quiet();
     CHECK(AI("remote.open", NULL) && g_rc.status == INK_RC_DONE, "open address editor through bus");
     CHECK(WAIT_FOR(ink_text_focused() && ink_text_type() == INK_TEXT_URL, 5000), "system URL keyboard");
     unsigned before = input_count;
@@ -119,6 +141,7 @@ static void run(void *arg) {
     on_ui(release_credit);
     CHECK(WAIT_FOR(RS.first_shown && RS.page == REMOTE, 12000), "frame replaces Loading");
     capture("Remote");
+    on_ui(target_visible); CHECK(strstr(snapshot, "example.com"), "UX12 E01 website reaches the AI snapshot");
     double checks = sim_metric_value("remote.link_checks");
     delay_ms(10000);
     checks = sim_metric_value("remote.link_checks") - checks;
@@ -136,11 +159,15 @@ static void run(void *arg) {
     CHECK(AI("text.insert", "{\"text\":\"文字\"}") && g_rc.status == INK_RC_DONE, "second local edit");
     CHECK(input_count == before && sim_metric_value("hub.remote.submits") == 0, "no text leaves device while typing");
     capture("RemoteType");
+    on_ui(target_visible); CHECK(strstr(snapshot, "向 example.com 输入文字"), "UX12 E03 ordinary field names its website");
     CHECK(AI("text.submit", NULL) && g_rc.status == INK_RC_DONE, "finish uses system enter");
     CHECK(WAIT_FOR(sim_metric_value("hub.remote.submits") == 1, 5000), "hub receives one final submission");
     CHECK(submit_count == 1 && submitted_len == strlen("合成文字") && !memcmp(submitted, "合成文字", submitted_len), "one complete UTF-8 value");
     on_ui(password_control); quiet(); on_ui(password_typed); on_ui(read_snapshot);
     CHECK(!strstr(snapshot, "SYNTHETIC_SECRET"), "password never appears in AI snapshot");
+    on_ui(target_visible); capture("RemotePassword");
+    CHECK(strstr(snapshot, "向 example.com 输入密码") && !strstr(snapshot, "SYNTHETIC_SECRET"), "UX12 E03 secret field exposes its target only");
+    CHECK(AI("text.state", NULL) && !strstr(g_result, "SYNTHETIC_SECRET"), "UX12 secret stays out of the text state");
     CHECK(AI("text.insert", "{\"text\":\"forbidden\"}") && g_rc.status == INK_RC_REJECTED, "AI cannot enter password");
     CHECK(AI("remote.submit", NULL) && g_rc.status == INK_RC_REJECTED, "AI cannot submit password through remote action");
     CHECK(AI("text.submit", NULL) && g_rc.status == INK_RC_REJECTED, "AI cannot submit password through keyboard");
@@ -153,6 +180,9 @@ static void run(void *arg) {
     disconnect_ms(6000);
     CHECK(WAIT_FOR(RS.page == OFFLINE, 5000), "disconnect shows Offline");
     capture("RemoteOffline");
+    CHECK(strstr(snapshot, "重新连接") && !strstr(snapshot, "重新打开"), "UX12 E05 recoverable page offers reconnect");
+    int same_sid = RS.sid;
+    CHECK(AI("remote.retry", NULL) && g_rc.status == INK_RC_DONE && RS.sid == same_sid, "UX12 E05 manual reconnect retains the existing session");
     CHECK(WAIT_FOR(RS.page == REMOTE && ink_rt_ready(RS.sid), 20000), "within five minutes reconnect automatically");
     quiet(); on_ui(hash_picture);
     CHECK(picture_hash == before_outage, "reconnect restores the same browsed page");
@@ -167,6 +197,8 @@ static void run(void *arg) {
     CHECK(RS.ended && RS.sid == 0 && RS.page == OFFLINE, "five minute limit closes old session honestly");
     delay_ms(20000);
     CHECK(RS.ended && RS.sid == 0, "late return does not silently reopen timed-out page");
+    capture("RemoteEnded");
+    CHECK(strstr(snapshot, "重新打开") && !strstr(snapshot, "重新连接"), "UX12 E06 ended page offers reopen");
     CHECK(AI("remote.close", NULL) && g_rc.status == INK_RC_DONE, "close through same bus");
     locked_open();
     CHECK(ink_member_switch("kid") == 0, "switch to child"); quiet();
@@ -175,7 +207,9 @@ static void run(void *arg) {
     for (int i = 0; i < ink_app_count(); i++) if (!strcmp(ink_app_at(i)->id, "remote")) CHECK(!ink_app_visible(ink_app_at(i)), "child cannot see entry");
     ink_probe_count("test.finished");
 }
+static void read_font(void *arg) { (void)arg; const char *font = getenv("INK_UI_FIX_FONT"); big_font = font && !strcmp(font, "120"); }
 void ink_main(void) {
+    vtk_host_call(read_font, NULL);
     product_main();
     osal_task_cfg_t cfg = {.name="remote-test", .fn=run, .stack_bytes=16384, .priority=OSAL_PRIO_NORMAL, .core=-1, .flags=OSAL_TASK_STACK_EXTERNAL};
     CHECK(osal_task_create(&cfg, NULL) == OSAL_OK, "start test driver");

@@ -11,6 +11,7 @@ static const char *wanted_cap, *wanted_label;
 static lv_point_t point;
 static bool found;
 static int pick;
+static bool big_font;
 static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
 static void quiet(void) { CHECK(WAIT_FOR(settled(), 10000), "the real page settles"); }
 static void call_ok(const char *cap, const char *args) {
@@ -58,7 +59,7 @@ static void capture_event(void *arg) {
     sim_display_snapshot(!strcmp(scene, name) ? "scene" : name);
 }
 static void capture(const char *name) {
-    if (strcmp(scene, name) && (strcmp(scene, "Calendar") || !strcmp(name, "Upcoming"))) return;
+    if (scene[0] && strcmp(scene, "Form") && strcmp(scene, name) && (strcmp(scene, "Calendar") || !strcmp(name, "Upcoming"))) return;
     quiet(); vtk_event_at(vtk_now() + SIM_MS(1), capture_event, (void *)name); delay_ms(5);
 }
 static void expect(const char *text) { on_ui(read_snapshot); CHECK(strstr(snapshot, text), "snapshot contains %s", text); }
@@ -96,9 +97,75 @@ static void check_month_controls(void) {
     }
 }
 static bool minute_changed(void) { int64_t v = 0; return ink_state_get_int(ink_state_find("time.minute"), &v) && v == 362; }
+static lv_obj_t *form_label(lv_obj_t *root, const char *text) {
+    if (!lv_obj_is_visible(root)) return NULL;
+    if (lv_obj_check_type(root, &lv_label_class) && strstr(lv_label_get_text(root), text)) return root;
+    for (uint32_t i = 0; i < lv_obj_get_child_count(root); i++) {
+        lv_obj_t *label = form_label(lv_obj_get_child(root, (int32_t)i), text);
+        if (label) return label;
+    }
+    return NULL;
+}
+static bool form_fits(lv_obj_t *obj) {
+    if (!obj) return false;
+    lv_area_t a; lv_obj_get_coords(obj, &a);
+    for (lv_obj_t *p = lv_obj_get_parent(obj); p; p = lv_obj_get_parent(p)) {
+        lv_area_t clip; lv_obj_get_coords(p, &clip);
+        if (a.x1 < clip.x1 || a.x2 > clip.x2 || a.y1 < clip.y1 || a.y2 > clip.y2) return false;
+        lv_obj_t *parent = lv_obj_get_parent(p);
+        if (parent) {
+            lv_area_t outer; lv_obj_get_coords(parent, &outer);
+            if (clip.x1 < outer.x1 || clip.x2 > outer.x2 || clip.y1 < outer.y1 || clip.y2 > outer.y2) return false;
+        }
+    }
+    lv_point_t size; lv_text_get_size(&size, lv_label_get_text(obj), lv_obj_get_style_text_font(obj, 0), 0, 0, lv_obj_get_width(obj), LV_TEXT_FLAG_NONE);
+    return size.y <= lv_obj_get_height(obj) && a.y1 >= 0 && a.y2 < ink_ui_height();
+}
+static void form_layout(void) {
+    lv_obj_update_layout(lv_screen_active());
+    const char *const labels[] = {"开始时间", "结束时间", "响铃", "全天", "清除结束", "工作日"};
+    for (unsigned i = 0; i < sizeof labels / sizeof *labels; i++)
+        CHECK(form_fits(form_label(lv_screen_active(), labels[i])), "UX22 D04 form label fits: %s", labels[i]);
+}
+static void form_error_layout(void) {
+    lv_obj_update_layout(lv_screen_active());
+    lv_obj_t *error = form_label(lv_screen_active(), "请填写内容"), *save = form_label(lv_screen_active(), "保存提醒");
+    CHECK(form_fits(error) && form_fits(save), "UX22 D06 error and footer are fully visible");
+    if (error && save) {
+        lv_area_t e, s, keyboard; lv_obj_get_coords(error, &e); lv_obj_get_coords(lv_obj_get_parent(save), &s); ink_shell_keyboard_area(&keyboard);
+        CHECK(e.y2 + ink_ui_px(INK_GAP_L) <= s.y1, "UX22 D06 error and save keep the required gap");
+        CHECK(!ink_text_focused() || s.y2 < keyboard.y1, "UX22 D06 save stays above the expanded keyboard");
+        if (ink_text_focused()) {
+            lv_obj_t *field = form_label(lv_screen_active(), "内容"); lv_area_t f;
+            CHECK(form_fits(field), "UX22 D06 focused field label stays visible");
+            if (field) {
+                lv_obj_t *input = lv_obj_get_child(lv_obj_get_parent(field), 1);
+                CHECK(input && lv_obj_check_type(input, &lv_textarea_class), "UX22 D06 locate the actual input, excluding its host's bottom padding");
+                if (input) { lv_obj_get_coords(input, &f); CHECK(f.y2 < e.y1, "UX22 D06 focused input does not overlap the error"); }
+            }
+        }
+    }
+}
+static void form(void) {
+    call_ok("settings.set", big_font ? "{\"id\":\"display.font_size\",\"value\":3}" : "{\"id\":\"display.font_size\",\"value\":1}");
+    call_ok("reminder.new", NULL); on_ui(form_layout); capture("ReminderEdit");
+    call_ok("reminder.time", NULL); expect("\"title\":\"开始时间\""); capture("ReminderStart"); call_ok("shell.back", NULL);
+    call_ok("reminder.time", "{\"end\":true}"); expect("\"title\":\"结束时间\"");
+    call_ok("reminder.draft", "{\"hour\":9}"); capture("ReminderEnd"); call_ok("shell.back", NULL);
+    expect("09:00"); press("reminder.draft", 0); expect("\"id\":\"end\",\"role\":\"text\",\"label\":\"结束时间\",\"value\":\"\"");
+    CHECK(AI("reminder.save", NULL) && g_rc.status != INK_RC_DONE, "UX22 empty content is rejected"); quiet();
+    expect("请填写内容"); on_ui(form_layout); on_ui(form_error_layout); capture("ReminderError");
+    call_ok("reminder.focus", NULL); CHECK(ink_text_focused(), "UX22 existing short field opens the keyboard");
+    on_ui(form_error_layout); capture("ReminderKeyboard");
+    call_ok("text.insert", "{\"text\":\"合成提醒\"}"); call_ok("text.submit", NULL);
+    expect("合成提醒"); on_ui(form_error_layout); capture("ReminderTyped");
+    call_ok("reminder.draft", "{\"all_day\":true,\"ring\":false}"); expect("\"label\":\"全天\",\"value\":\"true\""); expect("\"label\":\"响铃提醒\",\"value\":\"false\"");
+    call_ok("reminder.save", NULL); CHECK(strcmp(ink_ui_page_name(), "ReminderEdit"), "UX22 saving uses the existing reminder service");
+}
 static void run(void *arg) {
     (void)arg; CHECK(WAIT_FOR(ink_member_space_open(), 10000), "member space opens"); quiet(); test_start_home(); quiet();
     ink_time_set(local_time(2026, 11, 4, 6, 0), false);
+    if (!strcmp(scene, "Form")) { form(); ink_probe_count("test.finished"); return; }
     snprintf(owner, sizeof owner, "%s", ink_member_current()->id);
     call_ok("shell.launch", "{\"id\":\"upcoming\"}"); CHECK(!strcmp(ink_ui_page_name(), "Upcoming"), "the home entry opens Upcoming");
     expect("\"total\":0"); visible("还没有接下来的事");
@@ -153,13 +220,17 @@ static void run(void *arg) {
     uint32_t generation = ink_ui_generation(); capture("MinuteBefore"); ink_probe_mark("calendar.minute.before");
     CHECK(WAIT_FOR(minute_changed(), 15000), "the real minute timer reaches 06:02"); quiet();
     ink_probe_mark("calendar.minute.after");
-    CHECK(ink_ui_generation() == generation, "a minute-only update keeps the Calendar page (delta=%u)", ink_ui_generation() - generation);
+    CHECK(ink_ui_generation() == generation, "a minute-only update keeps the Calendar page (delta=%u)", (unsigned)(ink_ui_generation() - generation));
     on_ui(read_snapshot); CHECK(!strcmp(before, snapshot), "minute-only updates preserve the selected day and items");
     visible("06:02"); capture("MinuteAfter");
+    form();
     ink_db_flush_all(); CHECK(WAIT_FOR(ink_db_idle() && !ink_storage_pending(), 10000), "fixture writes complete");
     ink_probe_count("test.finished");
 }
-static void host_scene(void *arg) { (void)arg; const char *name = getenv("INK_CALENDAR_SCENE"); snprintf(scene, sizeof scene, "%s", name ? name : ""); }
+static void host_scene(void *arg) {
+    (void)arg; const char *name = getenv("INK_CALENDAR_SCENE"), *font = getenv("INK_UI_FIX_FONT");
+    snprintf(scene, sizeof scene, "%s", name ? name : ""); big_font = font && !strcmp(font, "120");
+}
 void ink_main(void) {
     vtk_host_call(host_scene, NULL); product_main();
     osal_task_cfg_t cfg = {.name = "calendar-test", .fn = run, .stack_bytes = 16384, .priority = OSAL_PRIO_NORMAL, .core = -1, .flags = OSAL_TASK_STACK_EXTERNAL};
