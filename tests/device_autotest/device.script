@@ -1,0 +1,23 @@
+# Synthetic values, deliberately not logged.
+@0 note FAKE_PRIVATE_NOTE
++0 mark camera-start
++0 tap 50% 25%
++200ms longpress 50% 25%
++1s press 10% 20%
++10ms move 20% 30%
++10ms release
++100ms swipe 80% 50% 20% 50% 80ms
++200ms key home
++100ms cap app.open {"id": "camera", "label": "FAKE # PRIVATE"}
++0 cap phone.emergency_call {"to": "FAKE_NUMBER"}
++0 cap file.delete {"path": "FAKE_PRIVATE_PATH"}
++0 cap member.set_pin {"pin": "FAKE_PIN"}
++0 cap test.high {}
++0 cap hub/paid {}
++0 key ai
++0 battery 20
++0 net wifi
++0 sms-in 00000 FAKE_PRIVATE_SMS
++0 nonsense
++0 end
++1s cap app.open {"id": "must-not-run"}

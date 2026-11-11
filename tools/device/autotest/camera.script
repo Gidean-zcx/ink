@@ -1,0 +1,6 @@
+# Requires an already configured, unlocked adult home page.
+@6s note camera_preview_start
++0 cap app.open {"id":"camera"}
++20s note camera_preview_end
++0 key home
++3s end
