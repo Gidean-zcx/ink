@@ -129,6 +129,10 @@ typedef int portMUX_TYPE;
 #define pdFALSE 0
 #define pdPASS 1
 #define eSetBits 0
+#define portYIELD_FROM_ISR(...) ((void)0)
+void xTaskNotifyFromISR(TaskHandle_t t, uint32_t bits, int mode, BaseType_t *woken);
+esp_err_t gpio_install_isr_service(int flags);
+esp_err_t gpio_isr_handler_add(int pin, void (*handler)(void *), void *arg);
 SemaphoreHandle_t xSemaphoreCreateMutexStatic(StaticSemaphore_t *s);
 BaseType_t xSemaphoreTake(SemaphoreHandle_t s, TickType_t ticks);
 BaseType_t xSemaphoreGive(SemaphoreHandle_t s);

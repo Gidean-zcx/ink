@@ -16,6 +16,7 @@ CHIPS = [f'drivers/chips/{n}/{n}.c' for n in ('tca9555', 'ft6336u', 'sc7a20h', '
 BOARD_SOURCES = [str(PORT / 'tests/vendor_board.c'), 'boards/metalio_plus/metalio_board.c',
                  'boards/metalio_plus/metalio_touch.c', *CHIPS]
 I2C_SOURCES = [str(PORT / 'tests/vendor_i2c.c'), CHIPS[0]]
+IRQ_SOURCES = [str(PORT / 'tests/vendor_irq.c')]
 # Each mutation removes one repaired behavior; assertions are unchanged.
 CASES = [
     ('recovery', 'i2c', BUS, 'i < 9 &&', 'i < 0 &&'),
@@ -33,6 +34,7 @@ CASES = [
     ('keys', 'board', VENDOR / 'keys.inc', 'kDebounceUs = 30000;', 'kDebounceUs = 20000;'),
     ('accel-alt', 'board', PORT / 's31_board.c', '{SC7A20H_ADDR, 0x18}', '{SC7A20H_ADDR, 0x19}'),
     ('accel-fail', 'board', PORT / 's31_board.c', 'sc7a20h_silence(dev);', '(void)dev;'),
+    ('irq', 'irq', PORT / 's31_irq.c', 'gpio == S31_GPIO_AI_KEY ? GPIO_INTR_ANYEDGE : GPIO_INTR_NEGEDGE', 'GPIO_INTR_NEGEDGE'),
     ('vibe', 'board', VENDOR / 'vibe.inc', '{0, 14000, 18000, 20000}', '{0, 20000, 18000, 20000}'),
 ]
 
@@ -51,7 +53,7 @@ def main():
             temp = Path(name)
             shutil.copytree(ROOT / VENDOR, temp / VENDOR)
             for rel in [PORT / 's31_board.c', PORT / 'hal_input_s31.c', PORT / 'hal_i2c_s31.c',
-                        PORT / 'tests/vendor_board.c', PORT / 'tests/vendor_i2c.c', *map(Path, CHIPS)]:
+                        PORT / 'tests/vendor_board.c', PORT / 'tests/vendor_i2c.c', PORT / 'tests/vendor_irq.c', PORT / 's31_irq.c', *map(Path, CHIPS)]:
                 target = temp / rel
                 target.parent.mkdir(parents=True, exist_ok=True)
                 shutil.copyfile(ROOT / rel, target)
@@ -63,7 +65,7 @@ def main():
             if text.count(old) != 1:
                 raise RuntimeError(f'{case}: mutation is not unique')
             target.write_text(text.replace(old, new))
-            sources = I2C_SOURCES if suite == 'i2c' else BOARD_SOURCES
+            sources = I2C_SOURCES if suite == 'i2c' else IRQ_SOURCES if suite == 'irq' else BOARD_SOURCES
             sources = [str(temp / p) if (temp / p).exists() else str(ROOT / p) for p in sources]
             binary = temp / 'negative'
             build = subprocess.run([args.cc, *flags, *sources, '-o', str(binary)], text=True, capture_output=True)

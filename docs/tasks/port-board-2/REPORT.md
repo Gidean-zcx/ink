@@ -7,8 +7,8 @@
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
 | 1 原厂原文及来源 | 部分完成【实现／实测】 | 22 份原文 SHA-256 一致，六类驱动已接入；Flash drain 未接存储入口 | `python3 ports/esp32s31/tests/vendor_sources.py --baseline 281dbe71`；[SOURCE.md](../../../ports/esp32s31/vendor/board_874538e/SOURCE.md) |
-| 2 宿主机回归及反向对照 | 专项通过【实测】，全量待补 | 15 项板级用例通过，16 条反向对照编译均为 0、运行均为断言退出 -6 | `ctest --test-dir build-s31-host -R unit-s31-vendor- --output-on-failure -j2`；`python3 ports/esp32s31/tests/vendor_negative.py --out build-s31-host/reverse` |
-| 2 主工程全量 | 待完成 | 尚未运行 | 待补 |
+| 2 宿主机回归及反向对照 | 宿主机全量通过【实测】 | 47 项宿主机全量通过（其中 16 项板级行为＋1 项来源校验）；17 条反向对照编译均为 0、运行均为断言退出 -6 | `ctest --test-dir build-s31-host -R unit-s31-vendor- --output-on-failure -j2`；`python3 ports/esp32s31/tests/vendor_negative.py --out build-s31-host/reverse` |
+| 2 主工程全量 | 未通过【实测】 | `99% tests passed, 1 tests failed out of 391`；3 项 Hub 环境缺失自动 skip；唯一失败已在基线驱动对照复现 | `ctest --test-dir build --output-on-failure -j2`；见[证据](EVIDENCE.md) |
 | 2 S31 编译 | 待完成 | 尚未运行 | 待补 |
 | 3 上机核对清单 | 待完成 | 不操作设备，交主会话验证 | 见末节 |
 
@@ -30,7 +30,7 @@ Flash drain 未接现有存储入口：原厂 `metalio_i2c1_lock_for_flash` 已�
 
 ## 顺手发现
 
-主工程普通构建已退出 0；链接器提示重复 `libink_port_sim.a`，尚未据此认定本次新增警告。
+【实测】主工程 `integration-races` 失败；本次驱动与基线驱动在全新输出目录均于 6.757 s 触发 `tests/integration/races.c:120` 的同一通知归属断言。属于范围外通知服务／测试问题，未修改。普通构建退出 0，链接器有重复 `libink_port_sim.a` 提示。
 
 ## 要改的文档
 
@@ -38,7 +38,7 @@ Flash drain 未接现有存储入口：原厂 `metalio_i2c1_lock_for_flash` 已�
 
 ## 新增的机制
 
-【实现】原厂马达引擎的两个一次性 esp_timer（pulse、20 ms 软件 PWM），任务第 6 项明确要求；复用 SDK 定时器任务。无新增任务、队列、配置项、持久格式。新增产品／驱动物理行 126，vendor 适配新增非原文行 210，胶水合计 336/350；统计命令见验收表。
+【实现】原厂马达引擎的两个一次性 esp_timer（pulse、20 ms 软件 PWM），任务第 6 项明确要求；复用 SDK 定时器任务。无新增任务、队列、配置项、持久格式。新增产品／驱动物理行 126，vendor 适配新增非原文行 215，胶水合计 341/350；统计命令见验收表。
 
 ## 上机核对清单
 

@@ -1,6 +1,6 @@
 # 板级原厂代码来源
 
-来源：[CloudZao/Metalio-E-INK4-Plus](https://github.com/CloudZao/Metalio-E-INK4-Plus/tree/874538e)，固定提交 `874538e`（v2.0.77），查阅／拷贝日期 2026-11-11。许可证：[MIT](LICENSE)。没有改动原厂克隆的 HEAD。
+来源：[CloudZao/Metalio-E-INK4-Plus](https://github.com/CloudZao/Metalio-E-INK4-Plus/tree/874538e)，固定提交 `874538eb54f7f7eb593cd40cd1ba6dc8497226e7`（v2.0.77），查阅／拷贝日期 2026-11-11。许可证：[MIT](LICENSE)。没有改动原厂克隆的 HEAD。
 
 ## 原文副本
 
@@ -39,7 +39,7 @@ C++ 类改为 C 的单实例私有状态、普通函数及回调；方法内硬�
 
 | 编入的文件 | 新增／改变行 | SHA-256 |
 | --- | --- | --- |
-| [accel.inc](accel.inc) | 2, 28, 29, 30, 59, 63, 64, 69, 71, 74, 75, 76, 83, 84, 86 | `68ecd87883ce26a308305eaeff2b941dd0dd58f9911b9c9a0a133b7676054d39` |
+| [accel.inc](accel.inc) | 2, 28, 29, 30, 59, 60, 61, 62, 63, 64, 65, 66, 69, 71, 74, 75, 76, 83, 84, 86 | `631f490eea44d71d9a6a129f4f42ba6b1eda291d946e9005d205c539821b19e1` |
 | [boot.inc](boot.inc) | 无（仅整函数拷贝） | `9a43211ee47b9074795bedf2d23cf820de7a95ff16510ce2710d936f4eed57b4` |
 | [boot_binding.inc](boot_binding.inc) | 2, 3, 4, 5, 6, 12, 13, 15, 16, 17, 19, 20 | `3dd16b8d747fae5f431d7f05805940d3192ef890d38116620ef249aa06c5abab` |
 | [bus.inc](bus.inc) | 2, 3 | `bf9f23c356f9ee5c763e08b185667a7e71a74feddc1eaf58da10a456b231f670` |
@@ -60,7 +60,7 @@ C++ 类改为 C 的单实例私有状态、普通函数及回调；方法内硬�
 | `light.inc` | `frontlight.cc:17–23`、整 `SetupHardware`／`ApplyOutput` | 类签名改为 C 函数；CCT 为现有 HAL 双通道模式，选 PWM；`std::min` 用局部宏。HAL 冷暖千分数还原总亮度／暖度后调用原厂 10% 与 2×混色公式。没有 NVS、原厂前光渐变定时器。 |
 | `touch_map.inc` | `metalio_touch.c:85–106` 整 `map_to_logical` | 函数体不改；映射每个触点，盖板键先保留原始坐标，最终走现有旋转与 HAL 双点事件。空闲 20 ms／按住 10 ms 补采接现有 input task。 |
 | `touch_ready.inc` | `ft6336u_upgrade_protocol.h:44–64` 的 `Attempt` 应用就绪阶段 | 保留 5 次／200 ms 读 ID、版本等待；改为 HAL 读与 OSAL 延时；不引入 ID2（现有芯片合同没有它），不执行校验固件、bootloader、擦除或写固件的其余步骤。初始化仍保留本项目严格芯片 ID 检查。 |
-| `accel.inc` | `common/sensor/sc7a20h.cc:8–35,53–81,93–100,170–180` | 配置／静默／读数整方法拷贝；`constexpr` 仅在本 include 内映射为 `static const`，C 指针／强制转换替换 C++ 引用／cast，读写接现有 HAL。保留本项目未知 ID／配置错误不 ready；板级先 0x19 后 0x18，失败时 probe 并调用原厂静默序列，含 AOI1_SRC 读清。 |
+| `accel.inc` | `common/sensor/sc7a20h.cc:8–35,53–81,93–100,170–180` | 配置／静默／读数整方法拷贝；`constexpr` 仅在本 include 内映射为 `static const`，C 指针／强制转换替换 C++ 引用／cast，读写接现有 HAL。静默原文忽略的布尔结果显式转 void，避免 GCC 的 unused-value 警告，执行顺序不变。保留本项目未知 ID／配置错误不 ready；板级先 0x19 后 0x18，失败时 probe 并调用原厂静默序列，含 AOI1_SRC 读清。 |
 | `keys.inc` | `metalio_keys.cc:24,37–51,62–90,100–135,187–200,226–245` | KeySlot 与采样／消抖方法转 C 指针，保持每键 30 ms。删除原厂 3 s 关机、短按策略、队列和任务；稳定状态汇入原有 HAL 事件，保留系统 1.5 s 菜单、锁屏、音量。恢复沿用 20 ms 等待与重新采样，BOOT 使用上电空闲极性。 |
 | `vibe.inc` | `metalio_vibe.cc` 整 VibeEngine（除单例访问器、对外 C 包装） | 字段转本文件静态单实例，方法转 C 函数，两个 lambda 转普通回调。原厂 20 ms PWM、14/18/20 ms 三档与 pulse timer 保留；HAL 35/50/70 ms 映射三档。没有新任务，复用 SDK esp_timer task；开机 P14 放电发生在普通马达引擎创建之前，直接置马达 500 ms。 |
 

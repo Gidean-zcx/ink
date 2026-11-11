@@ -57,13 +57,13 @@ static bool ink_vendor_accel_configure(hal_i2c_dev_t *dev) {
 }
 
 static void ink_vendor_accel_silence(hal_i2c_dev_t *dev) {
-    WriteReg(kRegAoi1Cfg, 0x00);
-    WriteReg(kRegCtrlReg3, 0x00);
-    WriteReg(kRegCtrlReg5, 0x00);
+    (void)WriteReg(kRegAoi1Cfg, 0x00);
+    (void)WriteReg(kRegCtrlReg3, 0x00);
+    (void)WriteReg(kRegCtrlReg5, 0x00);
     uint8_t src;
-    ReadRegs(kRegAoi1Src, &src, 1);
-    WriteReg(kRegCtrlReg1, 0x10); // ODR=1Hz、XYZ 关（勿 PD，易钳死共享 INT）
-    WriteReg(kRegCtrlReg6, 0x00); // 推挽高有效：空闲驱高
+    (void)ReadRegs(kRegAoi1Src, &src, 1);
+    (void)WriteReg(kRegCtrlReg1, 0x10); // ODR=1Hz、XYZ 关（勿 PD，易钳死共享 INT）
+    (void)WriteReg(kRegCtrlReg6, 0x00); // 推挽高有效：空闲驱高
 }
 
 static bool ink_vendor_accel_read(hal_i2c_dev_t *dev, int *ax, int *ay, int *az) {
