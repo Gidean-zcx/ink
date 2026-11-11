@@ -197,7 +197,7 @@ static bool focus(field_t *f) {
         lv_area_t field, keyboard;
         lv_obj_update_layout(f->obj);
         lv_obj_get_coords(f->obj, &field);
-        ink_shell_keyboard_area(&keyboard);
+        ink_shell_keyboard_area_for(f->cfg.type, &keyboard);
         int top = keyboard.y1 - ink_ui_px(INK_GAP) - lv_area_get_height(&field);
         lv_area_t parent; lv_obj_get_content_coords(lv_obj_get_parent(f->obj), &parent);
         if (top < parent.y1 || field.x1 < 0 || field.x2 > keyboard.x2) return false;
@@ -370,9 +370,9 @@ void ink_textfield_error(lv_obj_t *obj, const char *message) {
     lv_obj_set_flag(f->error, LV_OBJ_FLAG_HIDDEN, !message || !message[0]);
 }
 
-static int body_height(lv_obj_t *obj) {
+static int body_height(lv_obj_t *obj, ink_text_type_t type) {
     int line = ink_ui_line_height(INK_FONT_FIELD);
-    lv_area_t keyboard; ink_shell_keyboard_area(&keyboard);
+    lv_area_t keyboard; ink_shell_keyboard_area_for(type, &keyboard);
     int lines = (keyboard.y1 - lv_obj_get_y_aligned(obj) - ink_ui_px(ink_ui_line_height(INK_FONT_FIELD_LABEL) + INK_FIELD_LABEL_GAP + INK_CONTROL + INK_GAP_L + 2 * (INK_FIELD_PAD + INK_FIELD_STROKE) + INK_GAP_S)) / ink_ui_px(line);
     return (lines > 0 ? lines : 1) * line + 2 * (INK_FIELD_PAD + INK_FIELD_STROKE);
 }
@@ -386,7 +386,7 @@ void ink_textfield_style(lv_obj_t *obj, ink_textfield_kind_t kind, const char *l
     lv_textarea_set_one_line(f->area, f->kind != INK_FIELD_BODY);
     int line = ink_ui_line_height(INK_FONT_FIELD);
     int height = ink_textfield_height(kind) - ink_ui_line_height(INK_FONT_FIELD_LABEL) - INK_FIELD_LABEL_GAP;
-    if (f->cfg.draft_page) height = body_height(obj);
+    if (f->cfg.draft_page) height = body_height(obj, f->cfg.type);
     lv_obj_set_height(f->area, ink_ui_px(height));
     lv_obj_set_style_pad_ver(f->area, ink_ui_px(f->kind == INK_FIELD_BODY ? INK_FIELD_PAD : (height - line) / 2 - INK_FIELD_STROKE), 0);
     lv_obj_set_style_pad_right(f->area, ink_ui_px(f->cfg.draft_page || f->kind == INK_FIELD_PASSWORD ? INK_FIELD_PAD : INK_FIELD_CLEAR + INK_FIELD_PAD), 0);
@@ -493,7 +493,7 @@ lv_obj_t *ink_textfield_long_create(lv_obj_t *parent, const ink_text_cfg_t *cfg)
     lv_obj_t *obj = ink_textfield_create(parent, cfg, NULL, NULL, false);
     if (!obj) return NULL;
     field_t *f = lv_obj_get_user_data(obj); f->owner_epoch = ink_member_epoch();
-    lv_area_t keyboard; ink_shell_keyboard_area(&keyboard);
+    lv_area_t keyboard; ink_shell_keyboard_area_for(cfg->type, &keyboard);
     int top = ink_ui_px(INK_STATUS_BAR + INK_PRIMARY + INK_GAP_XS);
     lv_obj_set_pos(obj, ink_ui_px(INK_MARGIN), top);
     lv_obj_set_style_pad_bottom(obj, ink_ui_px(INK_CONTROL + INK_GAP_L), 0);
@@ -578,7 +578,7 @@ int ink_textfield_short_snapshot(lv_obj_t *field, char *out, size_t cap) {
     w.len = (size_t)n - 1;
     lv_area_t area, keyboard;
     lv_obj_update_layout(field); lv_obj_get_coords(field, &area);
-    ink_shell_keyboard_area(&keyboard);
+    ink_shell_keyboard_area_for(f->cfg.type, &keyboard);
     ink_jw_raw(&w, ",\"input\":{\"field\":"); ink_jw_str(&w, f->semantic->id);
     ink_jw_raw(&w, f->session ? ",\"focused\":true,\"rect\":" : ",\"focused\":false,\"rect\":"); rect_json(&w, &area);
     ink_jw_raw(&w, ",\"keyboard_rect\":"); rect_json(&w, &keyboard); ink_jw_raw(&w, "}}");

@@ -3,6 +3,7 @@
 #define INK_UI_SHELL_H
 #include "ink/ui_theme.h"
 #include "ink/sys/ai.h"
+#include "ink/sys/textinput.h"
 #include "ink/sys/cap.h"
 #include "ink/sys/ui_semantics.h"
 
@@ -27,6 +28,7 @@ bool ink_ui_action_current(void);
 /* Legacy home and compound keyboard text, from the same F1 declarations. */
 int ink_ui_semantics_summary(const ink_ui_page_spec_t *page, char *out, size_t cap);
 void ink_shell_keyboard_area(lv_area_t *area);
+void ink_shell_keyboard_area_for(ink_text_type_t type, lv_area_t *area);
 int ink_ui_context_snapshot(char *buf, size_t cap, const char **name);
 void ink_shell_home_create(lv_obj_t *screen);
 void ink_shell_home_destroy(void);

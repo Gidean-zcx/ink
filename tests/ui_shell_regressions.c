@@ -558,9 +558,14 @@ static void check_keyboard_bounds(void) {
     lv_obj_t *root = keyboard_panel();
     if (!root) return;
     lv_area_t current; lv_obj_get_coords(root, &current);
-    CHECK(current.x1 == keyboard_bounds.x1 && current.x2 == keyboard_bounds.x2 &&
-          current.y1 == keyboard_bounds.y1 && current.y2 == keyboard_bounds.y2,
-          "candidate, edit and password states preserve the same keyboard area");
+    if (keyboard_type == INK_TEXT_PASSWORD)
+        CHECK(current.x1 == keyboard_bounds.x1 && current.x2 == keyboard_bounds.x2 &&
+              current.y1 > keyboard_bounds.y1 && current.y2 == keyboard_bounds.y2,
+              "the password keyboard drops the candidate band: same width and bottom, shorter");
+    else
+        CHECK(current.x1 == keyboard_bounds.x1 && current.x2 == keyboard_bounds.x2 &&
+              current.y1 == keyboard_bounds.y1 && current.y2 == keyboard_bounds.y2,
+              "candidate and edit states preserve the same keyboard area");
 }
 static void focus_keyboard(void) {
     ink_text_cfg_t cfg = {.type = keyboard_type, .initial = keyboard_type == INK_TEXT_PASSWORD ? "FAKE_UI_SECRET" : "测试文字", .max = 128};

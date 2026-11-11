@@ -49,8 +49,7 @@ static int key_height(bool digits) {
     return ink_ui_line_height(INK_FONT_LIST) * (digits ? INK_KB_DIGIT : INK_KB_KEY) / INK_LINE_LIST;
 }
 static int candidates_height(void) { return ink_ui_line_height(INK_FONT_LIST) * INK_KB_CAND / INK_LINE_LIST; }
-static int keyboard_height(void) {
-    ink_text_type_t type = ink_text_type();
+static int keyboard_height_for(ink_text_type_t type) {
     bool number = type == INK_TEXT_NUMBER || type == INK_TEXT_PHONE;
     bool nine = type == INK_TEXT_PLAIN && !ink_text_english() && !K.symbols && ink_setting_get("text.nine_key");
     int top = type == INK_TEXT_PASSWORD ? 0 : ink_ui_line_height(INK_FONT_LIST) + candidates_height() + 2 * INK_KB_GAP;
@@ -60,11 +59,14 @@ static int keyboard_height(void) {
                   nine ? 3 * key_height(false) + key_height(false) + 3 * INK_KB_GAP :
                   4 * key_height(false) + 3 * INK_KB_GAP);
 }
-void ink_shell_keyboard_area(lv_area_t *area) {
-    int height = ink_ui_px(keyboard_height() + 2 * INK_KB_PAD_Y + 2 * INK_STROKE);
+static int keyboard_height(void) { return keyboard_height_for(ink_text_type()); }
+/* A field measures the keyboard its own input type will get, not the one still showing for the last field. */
+void ink_shell_keyboard_area_for(ink_text_type_t type, lv_area_t *area) {
+    int height = ink_ui_px(keyboard_height_for(type) + 2 * INK_KB_PAD_Y + 2 * INK_STROKE);
     *area = (lv_area_t){0, lv_display_get_vertical_resolution(NULL) - height,
                        lv_display_get_horizontal_resolution(NULL) - 1, lv_display_get_vertical_resolution(NULL) - 1};
 }
+void ink_shell_keyboard_area(lv_area_t *area) { ink_shell_keyboard_area_for(ink_text_type(), area); }
 
 static bool may_edit(ink_call_t *c) {
     if (c->page_gen && c->page_gen != ink_ui_content_version()) { c->rc.status = INK_RC_STALE; return false; }

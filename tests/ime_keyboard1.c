@@ -1,6 +1,7 @@
 /* Real input service, keyboard controls, capabilities and rendered frames. */
 #include <stdlib.h>
 #include <time.h>
+#include "ink/sys/textfield.h"
 #include "ink/sys/storage.h"
 #include "src/widgets/buttonmatrix/lv_buttonmatrix_private.h"
 #include "../system/services/text/text_internal.h"
@@ -123,6 +124,17 @@ static void functional(void) {
     CHECK(restored.y1 == normal.y1 && lv_obj_is_visible(K.cands), "returning to plain input restores its candidate band");
     expect_mode(true);
     ink_text_blur(0);
+    /* A short field focused right after password input measures the plain keyboard it will get (polish-1 probe). */
+    ink_text_cfg_t secret = {.type = INK_TEXT_PASSWORD, .max = 32};
+    ink_text_focus(&secret, NULL, NULL); ink_text_blur(0);
+    ink_text_cfg_t ordinary = {.type = INK_TEXT_PLAIN, .max = 32};
+    lv_obj_t *field = ink_textfield_create(lv_screen_active(), &ordinary, NULL, NULL, false);
+    ink_textfield_style(field, INK_FIELD_SINGLE, "合成短输入");
+    lv_obj_set_pos(field, ink_ui_px(INK_MARGIN), ink_ui_height() - ink_ui_px(INK_MARGIN + ink_textfield_height(INK_FIELD_SINGLE)));
+    CHECK(ink_textfield_short_focus(field) == 0, "focus ordinary short field after password");
+    lv_area_t bounds, keyboard; lv_obj_update_layout(field); lv_obj_get_coords(field, &bounds); ink_shell_keyboard_area(&keyboard);
+    CHECK(bounds.y2 < keyboard.y1, "ordinary short field must fit after password: bottom=%d keyboard=%d", (int)bounds.y2, (int)keyboard.y1);
+    lv_obj_delete(field);
 }
 
 static bool contains(const lv_area_t *outer, const lv_area_t *inner) {
