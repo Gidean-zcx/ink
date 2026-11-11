@@ -39,6 +39,7 @@ typedef struct {
 typedef struct {
     char word[40];
     uint8_t consumed; /* letters of the composing string it takes */
+    bool ai;         /* continuation from the hub */
 } ink_text_cand_t;
 
 #define INK_TEXT_PAGE 6 /* candidates at a time */

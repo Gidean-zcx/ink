@@ -26,6 +26,7 @@ enum { KEYBOARD_FIELDS_MAX = 8 + INK_TEXT_PAGE };
 static struct {
     lv_obj_t *root, *keys, *cands, *composing, *edit, *fold;
     lv_obj_t *cand_btn[INK_TEXT_PAGE], *cand_label[INK_TEXT_PAGE], *more, *mic;
+    lv_obj_t *cand_icon[INK_TEXT_PAGE];
     lv_obj_t *panel, *status, *heard; /* the voice panel: where the keys were, the same size */
     int first;
     int shown;
@@ -173,7 +174,7 @@ static int semantic_snapshot(char *buf, size_t cap) {
     if (!secret && K.cands && lv_obj_is_visible(K.cands)) for (int i = 0; i < INK_TEXT_PAGE; i++) if (lv_obj_is_visible(K.cand_btn[i])) {
         snprintf(ids[i], sizeof ids[i], "candidate:%d", K.first + i);
         snprintf(candidates[i], sizeof candidates[i], "候选[%d]=%.90s", K.first + i, lv_label_get_text(K.cand_label[i]));
-        fields[count++] = (ink_ui_field_spec_t){.id = ids[i], .role = "button", .label = "候选", .value = candidates[i]};
+        fields[count++] = (ink_ui_field_spec_t){.id = ids[i], .role = "button", .label = K.cand_icon[i] && lv_obj_is_visible(K.cand_icon[i]) ? "AI 接话" : "候选", .value = candidates[i]};
     }
     static const char *const CAPS[] = {"text.insert", "text.select", "text.submit", "keyboard.key", "keyboard.pick", "keyboard.candidates", "keyboard.edit", "text.voice_start", "text.voice_finish", "text.voice_cancel", "text.undo", "text.redo"};
     ink_ui_action_spec_t actions[sizeof CAPS / sizeof *CAPS];
@@ -293,6 +294,7 @@ static void build(int kind) {
         lv_obj_set_flex_grow(K.cand_btn[i], 1);
         lv_obj_add_event_cb(K.cand_btn[i], on_cand, LV_EVENT_CLICKED, (void *)(intptr_t)i);
         lv_obj_add_event_cb(K.cand_btn[i], pressed, LV_EVENT_PRESSED, NULL);
+        K.cand_icon[i] = NULL;
         K.cand_label[i] = lv_label_create(K.cand_btn[i]);
         lv_obj_set_style_text_font(K.cand_label[i], font(), 0);
         lv_label_set_text(K.cand_label[i], "");
@@ -463,6 +465,17 @@ static void sync(void) { /* UI task */
     for (int i = 0; i < INK_TEXT_PAGE; i++) {
         if (i < n) {
             lv_label_set_text(K.cand_label[i], c[i].word);
+            if (c[i].ai && !K.cand_icon[i]) {
+                K.cand_icon[i] = ink_ui_icon(K.cand_btn[i], "ai", INK_ICON_LIST, INK_ICON_SOLID, 0, 0, i == 0);
+                lv_obj_move_to_index(K.cand_icon[i], 0);
+                lv_obj_set_flex_flow(K.cand_btn[i], LV_FLEX_FLOW_ROW);
+                lv_obj_set_flex_align(K.cand_btn[i], LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER, LV_FLEX_ALIGN_CENTER);
+                lv_obj_set_style_pad_column(K.cand_btn[i], ink_ui_px(INK_GAP_XS), 0);
+            }
+            if (K.cand_icon[i]) {
+                if (c[i].ai) lv_obj_remove_flag(K.cand_icon[i], LV_OBJ_FLAG_HIDDEN);
+                else lv_obj_add_flag(K.cand_icon[i], LV_OBJ_FLAG_HIDDEN);
+            }
             lv_obj_set_style_bg_color(K.cand_btn[i], i == 0 ? ink_ui_ink() : ink_ui_paper(), 0);
             lv_obj_set_style_text_color(K.cand_label[i], i == 0 ? ink_ui_paper() : ink_ui_ink(), 0);
             lv_obj_set_style_border_width(K.cand_btn[i], 0, 0);
@@ -503,7 +516,7 @@ static void sync(void) { /* UI task */
     for (int i = 0; i < INK_TEXT_PAGE; i++) {
         lv_obj_set_flex_grow(K.cand_btn[i], !K.expanded && i == 0 ? 1 : 0);
         if (i >= n) continue;
-        int width = ink_ui_px(ink_ui_text_width(c[i].word, INK_FONT_LIST, INK_WEIGHT_REGULAR) + 2 * INK_GAP_XS);
+        int width = ink_ui_px(ink_ui_text_width(c[i].word, INK_FONT_LIST, INK_WEIGHT_REGULAR) + 2 * INK_GAP_XS + (c[i].ai ? INK_ICON_LIST + INK_GAP_XS : 0));
         lv_obj_set_style_min_width(K.cand_btn[i], width, 0);
         lv_obj_set_width(K.cand_btn[i], width);
         if (!K.expanded && width + gap > remaining) {

@@ -27,6 +27,8 @@
 
 /* TODO: ESP-SR AFE/WakeNet (S31 support unverified). */
 bool hal_afe_available(void) { return false; }
+const char *const *hal_afe_names(void) { static const char *const empty[] = {NULL}; return empty; }
+int hal_afe_select_name(int index) { return -1; }
 int hal_afe_start(void) { return -1; }
 int hal_afe_set_commands(const char *const *phrases, int n) { return -1; }
 void hal_afe_stop(void) {  }

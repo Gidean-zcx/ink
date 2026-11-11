@@ -10,6 +10,7 @@
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/crc.h"
+#include "ink/sys/hub.h"
 #include "ink/sys/data.h"
 #include "ink/sys/members.h"
 #include "ink/sys/settings.h"
@@ -68,6 +69,72 @@ static struct {
     int h_focused;
 } TS INK_PSRAM_BSS;
 
+typedef struct {
+    ink_exec_job_t job;
+    uint32_t generation, revision, epoch, connection;
+    int session, n;
+    char member[16];
+    ink_text_cand_t words[3];
+} assist_reply_t;
+static struct {
+    osal_timer_t *timer;
+    ink_exec_job_t job;
+    uint32_t generation;
+    uint64_t due;
+    int n;
+    ink_text_cand_t words[3];
+} AS INK_PSRAM_BSS;
+static bool assist_allowed(void) {
+    return TS.session && ink_text_session_current() && ink_member_space_open() && TS.type == INK_TEXT_PLAIN && !TS.ai_hidden &&
+        !TS.composing[0] && TS.cursor && TS.cursor == TS.anchor && ink_text_voice_state() == INK_VOICE_IDLE &&
+        ink_setting_get("text.assist") && ink_hub_online() && ink_member_allows("shell.ai_ask", true) && ink_member_time_allows("shell.ai_ask");
+}
+static void assist_changed(void) {
+    AS.generation++; AS.n = 0;
+    if (!AS.timer) return;
+    osal_timer_stop(AS.timer);
+    AS.due = osal_now_us() + 800000;
+    if (assist_allowed()) osal_timer_start(AS.timer, 800000, 0);
+}
+static void assist_show(void *arg) {
+    assist_reply_t *r = arg;
+    if (r->generation == AS.generation && r->session == TS.session && r->revision == TS.revision && assist_allowed() &&
+        ink_hub_member_matches(r->member, r->epoch, r->connection)) {
+        AS.n = r->n; memcpy(AS.words, r->words, sizeof AS.words);
+        text_presenter_kick();
+    }
+    osal_free(r);
+}
+static void assist_reply(void *arg, int status, const ink_json_t *j, int result) {
+    assist_reply_t *r = arg;
+    int t = status == INK_HUB_OK ? ink_json_find(j, result, "suggestions") : -1;
+    if (t >= 0 && j->tok[t].type == 2 && j->tok[t].size <= 3)
+        for (int k = 0; k < j->tok[t].size; k++) {
+            ink_text_cand_t *c = &r->words[r->n];
+            if (ink_json_str(j, t + 1 + k, c->word, sizeof c->word) > 0) { c->ai = true; r->n++; }
+        }
+    ink_exec_post(INK_EXEC_UI, &r->job, assist_show, r);
+}
+static void assist_request(void *arg) {
+    (void)arg;
+    if (osal_now_us() < AS.due || !assist_allowed()) return;
+    assist_reply_t *r = osal_calloc(1, sizeof *r, OSAL_MEM_EXTERNAL);
+    char *params = osal_malloc(4096, OSAL_MEM_EXTERNAL);
+    if (!r || !params) { osal_free(r); osal_free(params); return; }
+    size_t chars = ink_text_cursor(), start = chars > 500 ? ink_text_byte_offset(TS.value, chars - 500) : 0;
+    ink_jw_t w; ink_jw_init(&w, params, 4096);
+    ink_jw_raw(&w, "{\"type\":\"plain\",\"prefix\":"); ink_jw_strn(&w, TS.value + start, TS.cursor - start); ink_jw_raw(&w, "}");
+    r->generation = AS.generation; r->revision = TS.revision; r->session = TS.session;
+    r->epoch = ink_hub_member_epoch(); r->connection = ink_hub_connection(); strcpy(r->member, TS.owner.member);
+    if (w.overflow || ink_hub_call_for("text/suggest", params, 3000000, assist_reply, r, r->member, r->epoch) < 0) osal_free(r);
+    else ink_probe_count("text.assist_requests");
+    osal_free(params);
+}
+static void assist_timer(void *arg) { (void)arg; ink_exec_post(INK_EXEC_UI, &AS.job, assist_request, NULL); }
+static void assist_setting(void *ctx, int h, const char *id) {
+    (void)ctx; (void)h; (void)id; assist_changed(); text_presenter_kick();
+}
+
 static void save_draft(void) {
     if (!TS.drafts) return;
     draft_t *d = osal_calloc(1, sizeof *d, OSAL_MEM_EXTERNAL);
@@ -91,6 +158,7 @@ int ink_text_turn_page(int direction) {
     TS.client->page(TS.ctx, direction); return 0;
 }
 static void changed(void) {
+    assist_changed();
     if (++TS.revision == 0) TS.revision++;
     TS.cands_valid = false;
     save_draft();
@@ -221,6 +289,7 @@ void ink_text_blur(int session) {
     const ink_text_client_t *c = TS.client;
     void *ctx = TS.ctx;
     TS.session = 0;
+    assist_changed();
     TS.client = NULL;
     ink_db_close(TS.freq);
     ink_db_close(TS.drafts); TS.drafts = NULL; TS.draft_id = 0;
@@ -304,6 +373,7 @@ static void compute_cands(void) {
         memcpy(TS.cands[i].word, raw[i].word, len);
         TS.cands[i].word[len] = 0;
         TS.cands[i].consumed = raw[i].consumed;
+        TS.cands[i].ai = false;
         score[i] = raw[i].freq;
     }
     ink_svc_unlock();
@@ -328,6 +398,11 @@ static void compute_cands(void) {
 
 int ink_text_candidates(int first, ink_text_cand_t *out, int max) {
     if (!TS.session) return 0;
+    if (!TS.composing[0] && assist_allowed()) {
+        int n = 0;
+        for (int i = first; i >= 0 && i < AS.n && n < max; i++) out[n++] = AS.words[i];
+        return n;
+    }
     compute_cands();
     int n = 0;
     for (int i = first; i < TS.ncands && n < max; i++) out[n++] = TS.cands[i];
@@ -345,6 +420,10 @@ static void flush_composing(void) {
 void ink_text_pick(int index) {
     text_voice_clear_notice();
     if (!TS.session) return;
+    if (!TS.composing[0] && assist_allowed() && index >= 0 && index < AS.n) {
+        char word[sizeof AS.words[0].word]; strcpy(word, AS.words[index].word);
+        ink_text_commit_utf8(word); return;
+    }
     compute_cands();
     if (index < 0 || index >= TS.ncands) return;
     ink_text_cand_t c = TS.cands[index];
@@ -609,6 +688,7 @@ static void on_member(void *ctx, int h, const char *id) { /* UI task */
 
 static const ink_state_def_t ST_FOCUSED = {.id = "text.focused", .type = INK_ST_BOOL, .title = "有文本框在输入"};
 static const ink_setting_def_t TEXT_SETTINGS[] = {
+    {.id = "text.assist", .title = TR_NOOP("打字时帮你接话"), .type = INK_SET_BOOL, .per_member = true, .child_may_change = true},
     {.id = "ai.read_clipboard", .title = TR_NOOP("AI 可以读剪贴板"), .type = INK_SET_BOOL, .def = 0, .ask_by_hand = true},
 };
 
@@ -618,7 +698,9 @@ int ink_text_service_init(void) {
     py_init();
     clip_init();
     if (text_voice_init() != 0) return -1;
-    if (ink_db_register(&DRAFTS) != 0 || ink_db_register(&USER_FREQ) != 0 || ink_settings_define(TEXT_SETTINGS, 1) != 0 || ink_state_watch("member.current", on_member, NULL, INK_EXEC_UI) != 0) return -1;
+    AS.timer = osal_timer_create("text.assist", assist_timer, NULL);
+    if (!AS.timer || ink_settings_watch("text.assist", assist_setting, NULL, INK_EXEC_UI)) return -1;
+    if (ink_db_register(&DRAFTS) != 0 || ink_db_register(&USER_FREQ) != 0 || ink_settings_define(TEXT_SETTINGS, sizeof TEXT_SETTINGS / sizeof *TEXT_SETTINGS) != 0 || ink_state_watch("member.current", on_member, NULL, INK_EXEC_UI) != 0) return -1;
     return text_caps_init();
 }
 

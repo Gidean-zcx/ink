@@ -50,6 +50,7 @@ static const char *DEFAULT_SCRIPT =
     "{\"rules\":["
     "{\"method\":\"hello\",\"think_ms\":40,\"result\":{\"session\":\"sim\",\"proto\":1}},"
     "{\"method\":\"ping\",\"think_ms\":5,\"result\":{}},"
+    "{\"method\":\"text/suggest\",\"think_ms\":80,\"result\":{\"suggestions\":[\"一起看书\",\"明天再聊\",\"谢谢你\"]}},"
     "{\"method\":\"ai.ask\",\"think_ms\":1400,\"stream\":{\"notify\":\"ai.delta\",\"interval_ms\":450,\"chunks\":["
     "\"这一页讲的是小满第一次替别人送信。\",\"陈阿姨二十年前和好朋友吵了架，一直没机会说对不起，\","
     "\"小满就在晚上八点对着天狼星，替她把这句话说了出来。\",\"第二天，陈阿姨收到了老朋友的回信：“我也是。”\"],"

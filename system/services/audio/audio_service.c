@@ -653,6 +653,7 @@ static int h_playing = -1, h_listening = -1, h_route = -1, h_mic = -1;
 
 /* The front end starts and stops in this task (hal_afe.h); a start that fails ends the listening. */
 static void afe_transition(void) {
+    if (hal_afe_available()) hal_afe_select_name((int)ink_setting_get("voice.name"));
     lock();
     bool want = AU.listen_on;
     unlock();
@@ -798,6 +799,7 @@ static const char *const VIBRATION_LEVELS[] = {TR_NOOP("弱"), TR_NOOP("中"), T
 static void preview_ring(void *ctx, int64_t v) { (void)ctx; ink_audio_tone((ink_tone_t)v, osal_now_us(), "audio.preview"); }
 
 static const ink_setting_def_t AUDIO_SETTINGS[] = {
+    {.id = "voice.name", .title = TR_NOOP("用什么名字叫它"), .type = INK_SET_ENUM},
     {.id = "audio.key_tone", .title = TR_NOOP("按键提示音"), .type = INK_SET_BOOL, .child_may_change = true},
     {.id = "audio.vibration", .title = TR_NOOP("振动"), .type = INK_SET_BOOL, .def = 1, .child_may_change = true},
     {.id = "audio.vibration_level", .title = TR_NOOP("振动强度"), .type = INK_SET_ENUM, .choices = VIBRATION_LEVELS, .child_may_change = true},
@@ -815,7 +817,10 @@ int ink_audio_init(void) {
     /* the saved volume; 70 where the settings table is not running (some test programs) */
     AU.volume = 70;
     AU.child_max = 60;
-    if (ink_settings_define(AUDIO_SETTINGS, sizeof AUDIO_SETTINGS / sizeof *AUDIO_SETTINGS) == 0) {
+    static ink_setting_def_t name_setting;
+    name_setting = AUDIO_SETTINGS[0]; name_setting.choices = hal_afe_names();
+    ink_settings_define(&name_setting, 1);
+    if (ink_settings_define(AUDIO_SETTINGS + 1, sizeof AUDIO_SETTINGS / sizeof *AUDIO_SETTINGS - 1) == 0) {
         AU.volume = (int)ink_setting_get("audio.volume");
         AU.child_max = (int)ink_setting_get("audio.child_max");
     }
