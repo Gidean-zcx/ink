@@ -238,11 +238,11 @@ static const ink_app_def_t APP = {.id = "music", .title = "音乐", .icon = "hea
 #define CAP(id_, title_, input_, effect_) {.id = id_, .title = title_, .app = "music", .input = input_, .effect = effect_, .child_ok = true, .exec = INK_EXEC_BG, .run = run}
 static const ink_cap_t CAPS[] = {
     {.id = "music.open", .title = "打开音乐", .app = "music", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = open_cap},
-    CAP("music.play", "播放某首、文件夹或继续播放", "{\"properties\":{\"path\":{\"type\":\"string\",\"maxLength\":127}}}", INK_FX_NAVIGATE),
-    CAP("music.pause", "暂停音乐", "{}", INK_FX_NAVIGATE), CAP("music.next", "下一首", "{}", INK_FX_NAVIGATE), CAP("music.prev", "上一首", "{}", INK_FX_NAVIGATE),
-    CAP("music.seek", "跳到音乐的毫秒位置", "{\"properties\":{\"ms\":{\"type\":\"integer\",\"minimum\":0}},\"required\":[\"ms\"]}", INK_FX_NAVIGATE),
-    CAP("music.list", "音乐列表和文件夹", "{\"properties\":{\"path\":{\"type\":\"string\",\"maxLength\":127},\"page\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":10000},\"view\":{\"type\":\"string\",\"enum\":[\"player\",\"list\",\"all\"]}}}", INK_FX_READ),
-    CAP("music.now", "正在播放的曲目和进度", "{}", INK_FX_READ), CAP("music.favorite", "收藏或取消收藏当前歌曲", "{}", INK_FX_LOCAL_WRITE)};
+    CAP("music.play", "播放某首、文件夹或继续播放", "{\"type\":\"object\",\"properties\":{\"path\":{\"type\":\"string\",\"maxLength\":127}}}", INK_FX_NAVIGATE),
+    CAP("music.pause", "暂停音乐", "{\"type\":\"object\"}", INK_FX_NAVIGATE), CAP("music.next", "下一首", "{\"type\":\"object\"}", INK_FX_NAVIGATE), CAP("music.prev", "上一首", "{\"type\":\"object\"}", INK_FX_NAVIGATE),
+    CAP("music.seek", "跳到音乐的毫秒位置", "{\"type\":\"object\",\"properties\":{\"ms\":{\"type\":\"integer\",\"minimum\":0}},\"required\":[\"ms\"]}", INK_FX_NAVIGATE),
+    CAP("music.list", "音乐列表和文件夹", "{\"type\":\"object\",\"properties\":{\"path\":{\"type\":\"string\",\"maxLength\":127},\"page\":{\"type\":\"integer\",\"minimum\":0,\"maximum\":10000},\"view\":{\"type\":\"string\",\"enum\":[\"player\",\"list\",\"all\"]}}}", INK_FX_READ),
+    CAP("music.now", "正在播放的曲目和进度", "{\"type\":\"object\"}", INK_FX_READ), CAP("music.favorite", "收藏或取消收藏当前歌曲", "{\"type\":\"object\"}", INK_FX_LOCAL_WRITE)};
 static void finished(void *ctx, const char *id, const ink_args_t *a) {
     (void)ctx; (void)id; char why[24], path[128]; member();
     ink_args_get_str(a, "why", why, sizeof why); ink_args_get_str(a, "path", path, sizeof path);
