@@ -10,6 +10,10 @@ target_link_libraries(${COMPONENT_LIB} INTERFACE "-Wl,--wrap=pxPortGetCoprocArea
 target_compile_options(${COMPONENT_LIB} PRIVATE -fstack-usage)
 # ink_system globs system/*.c; keep test-only sources out of every normal image.
 idf_component_get_property(ink_system_lib ink_system COMPONENT_LIB)
+target_sources(${ink_system_lib} PRIVATE ${root}/system/apps/gomoku/engine.cpp
+    ${root}/system/apps/gomoku/vendor/crossmux/GomokuBoard.cpp ${root}/system/apps/gomoku/vendor/crossmux/GomokuAI.cpp)
+target_include_directories(${ink_system_lib} PRIVATE ${root}/system/apps/gomoku/compat)
+target_compile_features(${ink_system_lib} PRIVATE cxx_std_20)
 get_target_property(ink_system_sources ${ink_system_lib} SOURCES)
 list(FILTER ink_system_sources EXCLUDE REGEX "/autotest/")
 set_property(TARGET ${ink_system_lib} PROPERTY SOURCES ${ink_system_sources})

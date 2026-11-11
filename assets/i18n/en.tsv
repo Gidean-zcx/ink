@@ -1608,3 +1608,34 @@ Wi-Fi 已关闭	Wi-Fi is off
 只保留前一部分	Only the beginning is kept
 只保留前一部分 · 请翻页	Beginning only · Next page
 听解释	Listen
+# gomoku (games-1, 2026-11-12)
+五子棋	Gomoku
+人机 · 困难	Computer · Hard
+人机 · 普通	Computer · Medium
+人机 · 简单	Computer · Easy
+使用者已改变	The user has changed
+使用者或可用时段已改变	The user or allowed hours have changed
+双人 · 15 路	Two players · 15 × 15
+双人 · 9 路	Two players · 9 × 9
+平局	Draw
+开始或继续	Start or continue
+当前回合	Current turn
+思考中	Thinking
+悔棋	Undo
+无法读取棋局	Cannot read the game
+棋局	Game
+棋局未保存，请重试	Game not saved. Please try again
+棋盘，按行，0 空 1 黑 2 白	Board in row order: 0 empty, 1 black, 2 white
+没有上一局	No previous game
+没有可以悔的棋	No move to undo
+点交叉点落子，方框标出最后一手	Tap an intersection to play. The square marks the last move
+电脑暂时不可用	Computer temporarily unavailable
+电脑未能落子	Computer could not play
+白棋获胜	White wins
+继续上一局	Continue game
+落子	Play a stone
+轮到白棋	White to move
+轮到黑棋	Black to move
+这里不能落子	Cannot play here
+重开	New game
+黑棋获胜	Black wins

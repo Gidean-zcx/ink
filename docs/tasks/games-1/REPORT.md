@@ -1,0 +1,89 @@
+# games-1 执行报告
+
+基线：`4a8b0af038ff6991ed130f3ee746a199fb302952`。工作分支：`claude/codex-games-1`。本报告随里程碑更新；没有推送或接触设备。
+
+## 验收表
+
+| 编号 | 结论 | 证据 | 命令 |
+| --- | --- | --- | --- |
+| 1 棋局、能力、存档及反向对照 | 专项通过 | 【实测】main 296、reboot 18、big 83 条检查，0 失败；五组反向对照均 exit=1，含只读零刷新及成员切换首帧隔离 | `taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/python tests/gomoku/run.py --build build`；同解释器运行 `tests/gomoku/reverse.py --build build` |
+| 2 全量测试、内存检查、S31 | 全量未全过；最终专项内存检查、S31 通过 | 【实测】普通全量 12/406 失败，随后五项 C++ 接入回归和 UHCI 复测通过；ASan/UBSan 全量剩六项共享同步失败；最终五子棋内存专项通过。S31 bin +13,440 字节，新增警告 0 | `taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/ctest --test-dir build --output-on-failure -j2`；内存目录换 `build-asan`；`taskpolicy -c utility bash ports/esp32s31/build.sh` |
+| 3 截图与上机清单 | 模拟器截图通过，真机未测 | 【实测】菜单/对局/胜负各 100% 和 120% 六张，22,800～35,169 字节，已逐张查看；普通/120% 落子最大区域分别 54,696 / 66,768 px | 专项测试自动截图；见下方链接 |
+
+## 没做到的
+
+- 英文词条未并入共享 `assets/i18n/en.tsv`：任务的“只改”范围不包含它；新增文字已用 `TR` 标记，中文可用，英文目前回退中文。`i18n-literals` 因缺词条失败，不掩盖此结果。
+- 普通全量尚有六项需主会话同步共享项：`i18n-shell-remaining`、`i18n-extras`、`i18n-literals`（英文词条）；`capability-table-doc`（能力文档）；`integration-ai-surface`（静态能力名单）；`integration-apps`（应用总数断言）。没有把失败写成通过。
+- 未运行 Linux 全量；本机完成 macOS clang 构建和 GCC 交叉编译检查，不能代替 Linux CI。
+- 贪吃蛇、记忆测试：在固定副本 crosspoint-reader、CrossInk、crosslink、crossmux 中按文件名搜索 `snake`、`memorygame`、`memory-game`、`memorytest`、`memory-test`、`matchinggame`，只命中字体缓存的 `SdCardFontMemoryTest.cpp`，不是游戏；并核对 CrossMux 应用 README 和 gomoku 邻近目录，未找到独立可移植模块。没有自行实现。
+- 候选（2026-11-12 查许可证，未下载或集成）：[JavaScript-Snake](https://github.com/patorjk/JavaScript-Snake/blob/main/LICENSE) 为 MIT、依赖浏览器 DOM；[memory](https://github.com/taniarascia/memory/blob/master/LICENSE) 的逻辑为 MIT、依赖 JavaScript/DOM。它们不是现成 C/LVGL 引擎，移植前还需固定提交、拆出逻辑并核对素材许可。
+
+## 和设计不一致的
+
+- 上游先触摸瞄准再按落子；本任务明确要求直接点交叉点落子，已按任务重现。沿用上游黑棋先手、人机悔棋退两手、9/15 路规则和三档搜索；不移植统计及计时页面（验收未要求）。
+
+## 改过的已有测试
+
+- 无。
+
+## 要用户定的
+
+- 暂无；按本任务书执行，不修改共享需求和决策文件。
+
+## 顺手发现
+
+- 普通模拟器首次运行因为只构建专项目标而缺界面字体、图标，补齐全部资源后继续。随后 ASan 定位到本次新增快照漏填 `role` 的空指针，已补齐字段；没有改公用快照接口。
+- 新写测试最初漏设父密码，导致策略变更在后台被拒绝；已照现有家长确认流程用合成密码完成设置并等待确切状态，没有放宽策略。新测试还改为拒绝落子后重读状态、终局只暴露可用动作；基线的已有测试未改。
+- 本次装载流程曾先发布新成员代际、后读取棋局，首帧快照能短暂带出旧盘面。现分别保留装载代际和已就绪代际，读完棋局才发布后者；新测试在实际打开菜单的同一 UI 回调读取快照，未人为阻塞线程。恢复提前发布的写法，反向对照确实失败。
+- 普通全量的 `unit-s31-uhci-negative` 出现假 GPIO 对端的 2 秒等待断言；随后 `ctest -j1 -R '^unit-s31-uhci-negative$'` 所在专项串行轮通过（28.85 秒）。未改 4G 源码、测试、等待时间或预算，不能据此声称其并行稳定性已解决。
+
+## 新增的机制
+
+- `gomoku.game` 成员数据库记录（任务第 3 条要求）：现有数据库内一个 455 字节、全字节字段的记录，保存模式、难度、盘面大小、棋子、历史及胜者；回合由历史步数恢复，不另建文件或路径。
+- `games.changed` 成员事件（任务 AI/软总线接入要求）：与保存成功同步发出。没有新线程、任务、重试、缓存或配置项；搜索使用既有 `exec.bg`，LVGL 仅在 UI 执行器操作。
+
+## 要改的文档
+
+- 总规则第 7 节要求共享能力表留给主会话；任务书允许改该生成文件，存在冲突。本次按公共协作限制保留共享文件，将生成增量放在 [CAPABILITIES.patch](CAPABILITIES.patch)，合并时应用或运行 `python3 tools/capabilities.py`。当前 `capability-table-doc` 预期失败。
+- 将 [I18N-ADD.tsv](I18N-ADD.tsv) 的 30 条英文词条并入 `assets/i18n/en.tsv`，再把页面加入主工程和 S31 的 i18n 源清单；不得以删 `TR`、放宽检查代替。
+- [TEST-INVENTORY.patch](TEST-INVENTORY.patch) 给出共享测试所需的两处更新：`tests/integration/ai_surface.c` 增列五个能力（start 参数全可选，move 必填 row/col）；`tests/integration/apps.c:146` 总数 19→20 并加五子棋说明。只交补丁，未改或放宽已有测试。
+
+## 实现规模和来源
+
+- 【实测】原文四文件均来自 CrossMux `a6fd569f7552db4ea1a6550ced7bc06568ae0e61`，无修改，SHA-256 及 MIT 许可见 [SOURCE.md](../../../system/apps/gomoku/vendor/crossmux/SOURCE.md)。
+- 主工程原本已为 4G 开启 C++；只给五子棋所在目标加源码、兼容头路径和 C++20 要求，没有改顶层语言或阅读器配置。S31 的追加也仅在 `main/CMakeLists.txt`，未修改共享组件 CMake。
+- 为接入这次新增的 C++ 静态对象，关闭主工程的 `CMAKE_CXX_LINKER_PREFERENCE_PROPAGATES`，保持纯 C 测试模板由 C 驱动链接，CMake 自动补 C++ 运行库；含 C++ 源码的目标仍走 C++。单独固定新式模拟器 helper 未涵盖旧式 `sim-media` 模板，最终改在语言传播这一处处理，未逐个改测试。
+- 【实测】GCC 对原文 `GomokuAI.cpp:70` 的构造参数 `aiSide` 报 `-Wshadow`，Apple clang 不报。为保持原文，仅这个第三方文件关闭 `-Wshadow`；产品胶水仍保持完整 `INK_WERROR`。修改后重跑 GCC 检查。
+- 超过 100 行的原因：本任务是新应用移植，需要成员存档、异步搜索接缝、五个能力、菜单、棋盘和快照。更小方案“界面直接调用引擎”“在 UI 里搜索”“沿用全局存档”分别违反人/AI 共路、交互响应和成员隔离要求。
+- 【实测】最终检查页面、引擎胶水、两个原文 C++ 文件及测试驱动：`gcccheck: 5 compiled, 0 with findings`。
+- 产品新增按最保守口径计 **282 行**（把所有新增 CMake 行连同测试注册也算入；原文、测试和文档不计），低于 400 行。只读查询的局刷修正集中在 `show` 一处，成员隔离修正在装载发布点，原文未改。
+- 能力归 `games.start/state/move/undo/reset`；状态为棋盘/回合/胜负；模式和难度也由 `games.start` 选择；变化走 `games.changed` 成员事件；底层规则/搜索归原文引擎，存储归既有成员数据库，绘制归 UI 执行器。人和 AI 走同一组能力，菜单、对局都提供快照，没有可绕过策略的 UI 私有落子入口。
+
+## 验证记录
+
+- 普通全量原始日志：`work/ctest.log`（12 失败、3 跳过；跳过为三项中枢 Python 环境测试，未改跳过条件）。
+- 普通全量原话：`97% tests passed, 12 tests failed out of 406`，`Total Test time (real) = 941.56 sec`。这是修正 C++ 链接驱动前的完整一轮；后续复测结果单列，不把它改写成全绿。
+- C++ 链接驱动修正后，`ctest --test-dir build --output-on-failure -j1 -R '^(services-mid-regressions|file-index-regressions|confirm-durable|thumb-wiring|index-durable)$'` 原话：`100% tests passed out of 5`，51.16 秒；日志 `work/ctest-link-2.log`。
+- 最终专项：`work/gomoku-final2.log`；反向对照：`work/gomoku-final2-reverse.log`、`build/gomoku-reverse/summary.json`，分别提前发布新成员、恢复只读刷新、移除判胜、禁用能力落子、取消换成员重载，测试都确实失败，工作源码哈希未变。
+- ASan/UBSan 全量原话：`99% tests passed, 6 tests failed out of 406`，`Total Test time (real) = 1441.66 sec`；同上述六项共享同步失败，另有同样三项中枢环境跳过；日志 `work/asan-ctest.log`。
+- 成员装载修正后补跑最终内存专项（完整全量轮之后）：`tests/gomoku/run.py --build build-asan`，普通/重启/120% 三场景分别 296/18/83，0 失败，没有 sanitizer 诊断；日志 `work/asan-final2.log`。原有全部内存构建目标已构建，最后修改只补编五子棋目标并重跑其全部专项。
+- S31 基线和最终代码均编译通过（exit=0），bin 为 **4,441,760→4,455,200 字节（+13,440，约 13.13 KiB）**。两版编译器警告均为 0，均有相同六条 SDK 组件依赖 CMake 警告，新增 0；日志 `work/s31-baseline.log`、`work/s31-complete.log`，比较结果 `work/s31-final-summary.json`。基线比较在同一构建目录，临时恢复基线注册源码并排除五子棋源文件，随后恢复并校验源码，再编译最终版本；未移动依赖副本 HEAD、未连接设备。
+- S31 `.su` 静态帧：引擎胶水各 496 字节、`chooseMove` 832 字节、递归 `alphaBeta` 每层 336 字节；这不是实机高水位。没有增加既有 8192 字节 PSRAM 后台执行器栈。
+- `ui-scale: 52 files, 0 violations`；四个原文文件逐字比较一致。日志和构建目录均在忽略范围，未提交产物。
+- 最后文件/链接检查通过，六张截图均小于 300 KB；`git diff --check` 无问题。按总规则第 6 节对基线至提交末尾执行隐私扫描：0 命中（grep exit=1，表示无匹配），未发现本机绝对路径或 MAC；所有修改均在任务允许范围内。
+
+## 上机核对清单
+
+- 由主会话烧录，观察启动日志没有 `gomoku failed to start`；成人/孩子允许名单中都能看到“五子棋”，禁用名单和禁用时段确实拦截。
+- 在屏幕四角和中心交叉点落子，核对触摸坐标、黑白棋子、光标及悔棋；落子仅刷新变化格和回合文字，不整盘闪动；累计清残影仍由 D-127 公用策略决定。
+- 三档人机均出现“思考中”，搜索期间返回键、来电和锁屏仍响应；测 S31 实际思考时长、`exec.bg` 栈高水位与峰值内存。模拟器 CPU 成本是估算，不能当真机性能。
+- 横、竖、两种斜线判胜，悔掉胜手后可继续；重开不改模式/难度。切两位家人、退出应用、断电重启，分别继续各自棋局。
+- AI 依次调用 `games.start/state/move/undo/reset`，每步盘面、回合和胜负与页面一致。
+
+## 截图
+
+| 场景 | 常规 | 120% |
+| --- | --- | --- |
+| 菜单 | [menu-100.png](menu-100.png) | [menu-120.png](menu-120.png) |
+| 对局 | [game-100.png](game-100.png) | [game-120.png](game-120.png) |
+| 胜负 | [win-100.png](win-100.png) | [win-120.png](win-120.png) |

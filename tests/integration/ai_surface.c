@@ -27,6 +27,7 @@
 static const struct {
     const char *id, *args;
 } FOR_AI[] = {
+    {"games.start", ""}, {"games.state", NULL}, {"games.move", "row,col"}, {"games.undo", NULL}, {"games.reset", NULL},
     {"system.report_problem", ""},
     {"kid.policy_get", ""}, {"kid.app_set", "id,app,mode"}, {"kid.period_set", "id,index,start,end,days"},
     {"family.kid_apps", NULL}, {"family.kid_periods", ""}, {"family.kid_member", NULL},

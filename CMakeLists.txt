@@ -303,6 +303,13 @@ target_link_libraries(ink_system PUBLIC ink_platform ink_lvgl ink_lz4 ink_sha256
 target_link_libraries(ink_system INTERFACE $<LINK_ONLY:ink_port_sim>)
 target_sources(ink_system PRIVATE system/apps/clock/clock.c)
 target_compile_options(ink_system PRIVATE ${INK_WARN})
+target_sources(ink_system PRIVATE system/apps/gomoku/gomoku.c system/apps/gomoku/engine.cpp
+  system/apps/gomoku/vendor/crossmux/GomokuBoard.cpp system/apps/gomoku/vendor/crossmux/GomokuAI.cpp)
+target_include_directories(ink_system PRIVATE system/apps/gomoku/compat)
+target_compile_features(ink_system PRIVATE cxx_std_20)
+# Keep C-only host test drivers on the C compiler when they consume the gomoku engine.
+set(CMAKE_CXX_LINKER_PREFERENCE_PROPAGATES FALSE)
+set_source_files_properties(system/apps/gomoku/vendor/crossmux/GomokuAI.cpp PROPERTIES COMPILE_OPTIONS -Wno-shadow)
 
 add_library(ink_apps STATIC apps/home/home.c apps/reader/reader.c)
 target_link_libraries(ink_apps PUBLIC ink_system)
@@ -1995,3 +2002,8 @@ ink_sim_executable(sim-autotest tests/device_autotest/sim.c)
 target_link_libraries(sim-autotest PRIVATE ink_apps ink_system)
 add_test(NAME autotest-cap COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/device_autotest/run.py ${CMAKE_BINARY_DIR})
 add_test(NAME autotest-build-switch COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/device_autotest/build_switch.py ${CMAKE_BINARY_DIR})
+
+ink_sim_executable(sim-gomoku tests/gomoku/device.c)
+target_link_libraries(sim-gomoku PRIVATE ink_apps ink_system)
+add_dependencies(sim-gomoku ink_fonts ink_test_content)
+add_test(NAME gomoku COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/gomoku/run.py --build ${CMAKE_BINARY_DIR})
