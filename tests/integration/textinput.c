@@ -103,15 +103,15 @@ static void engine(void) {
     /* other characters: what is composed goes in as typed */
     type("abc,");
     look();
-    CHECK(!strcmp(g_val, "西安中国abc,") && !g_comp[0], "a comma ends it, as typed (%s)", g_val);
+    CHECK(!strcmp(g_val, "西安中国abc，") && !g_comp[0], "a Chinese comma commits composing (%s)", g_val);
     /* enter with something composed: it goes in, nothing is sent */
     int entered = g_entered;
     type("xyz");
     on_ui(do_enter);
     look();
-    CHECK(!strcmp(g_val, "西安中国abc,xyz") && g_entered == entered, "enter takes the letters first (%s)", g_val);
+    CHECK(!strcmp(g_val, "西安中国abc，xyz") && g_entered == entered, "enter takes the letters first (%s)", g_val);
     on_ui(do_enter);
-    CHECK(g_entered == entered + 1 && !strcmp(g_entered_text, "西安中国abc,xyz"), "then it means enter (%s)", g_entered_text);
+    CHECK(g_entered == entered + 1 && !strcmp(g_entered_text, "西安中国abc，xyz"), "then it means enter (%s)", g_entered_text);
     /* backspace: letters, then characters, whole */
     type("ni");
     on_ui(do_backspace);
@@ -340,34 +340,34 @@ static void editing(void) {
     type("a");
     type("b");
     type(",");
-    VALUE_IS("开头ab,", "keys");
+    VALUE_IS("开头ab，", "keys");
     CHECK(undo(), "undone");
     VALUE_IS("开头", "keys in a row are one step");
     CHECK(!undo(), "and that was all");
     CHECK(redo(), "redone");
-    VALUE_IS("开头ab,", "back");
+    VALUE_IS("开头ab，", "back");
     where();
     CHECK(g_cur == 5, "and the cursor (%d)", (int)g_cur);
     delay_ms(3200);
     type(".");
     CHECK(undo(), "after a while it is a step of its own");
-    VALUE_IS("开头ab,", "only that");
+    VALUE_IS("开头ab，", "only that");
     CHECK(redo(), "redone");
     cursor_to(2);
     type(".");
     CHECK(undo(), "moved in between: a step of its own");
-    VALUE_IS("开头ab,.", "only that");
+    VALUE_IS("开头ab，。", "only that");
     where();
     CHECK(g_cur == 2, "the cursor comes back too (%d)", (int)g_cur);
     commit("新的");
     CHECK(!redo(), "something new: there is no going forward any more");
     CHECK(undo(), "undone");
-    VALUE_IS("开头ab,.", "what text.commit put in goes as one");
+    VALUE_IS("开头ab，。", "what text.commit put in goes as one");
     select_range(0, 2);
     on_ui(do_backspace);
-    VALUE_IS("ab,.", "selected, deleted");
+    VALUE_IS("ab，。", "selected, deleted");
     CHECK(undo(), "undone");
-    VALUE_IS("开头ab,.", "it comes back");
+    VALUE_IS("开头ab，。", "it comes back");
     where();
     CHECK(g_sel_a == 0 && g_sel_b == 2, "selected as it was (%d, %d)", (int)g_sel_a, (int)g_sel_b);
     /* a pause, or moving in between, ends a step */

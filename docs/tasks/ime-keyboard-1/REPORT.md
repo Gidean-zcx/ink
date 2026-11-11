@@ -7,12 +7,12 @@
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
 | 1 | 【实测】通过 | `ime-keyboard1` 531 次检查，0 失败；现有 `semantics-shell2-keyboard` 通过；三处单点反向变异均检出预期失败 | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2 -R '^(ime-keyboard1\|semantics-shell2-keyboard)$'`；`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" -B tests/ime_keyboard1.py --build build --reverse` |
-| 2 | 待验证 | 全量、ASan、S31、gcccheck、ui-scale、能力清单 | 待补 |
+| 2 | 【实测】部分完成，继续验证 | 普通版首轮原话 `99% tests passed, 3 tests failed out of 375`，1013.41 秒；3 项中枢依赖测试跳过。中文标点旧期望已更新，文字输入三项重跑全部通过；清单过期及备份失败另列下文。gcccheck 为 `3 compiled, 0 with findings`，ui-scale 通过 | `taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`；`-R '^integration-text-(main\|nocard\|baddict)$'` |
 | 3 | 【实测】通过 | 六张 684×1216 模拟屏截图已逐张目视核对；键盘文字、图标无裁切、遮挡，布局边界断言通过 | 同 `ime-keyboard1`，证据在 `build/test-out/ime-keyboard1-current/` |
 
 ## 没做到的
 
-全量、ASan、S31、gcccheck 尚在执行。能力清单文档检查已发现基线过期（452 项定义、34 项设置，文档还是 448、31）；本次生成清单与基线逐字相同，不修改规则禁止改的共享文档。
+ASan、S31 尚在执行。能力清单文档检查已发现基线过期（452 项能力/事件、34 项设置，文档还是 448、31）；本次生成清单与基线逐字相同，不修改规则禁止改的共享文档。`small-gaps-3-backup` 在自动备份设置点按后失败，正在用基线源码独立核查。
 
 ## 和设计不一致的
 
@@ -20,7 +20,20 @@
 
 ## 改过的已有测试
 
-无。
+仅更新 `tests/integration/textinput.c` 的 10 处中文模式字符串期望，原因都是任务书要求逗号、句号用全角。未改条件、预算、撤销步数、光标位置或提交次数。
+
+| 行 | 原期望 → 新期望 |
+| --- | --- |
+| 106 | `西安中国abc,` → `西安中国abc，`；同时把提示改为中文逗号提交拼音 |
+| 112 | `西安中国abc,xyz` → `西安中国abc，xyz` |
+| 114 | `西安中国abc,xyz` → `西安中国abc，xyz` |
+| 343 | `开头ab,` → `开头ab，` |
+| 348 | `开头ab,` → `开头ab，` |
+| 354 | `开头ab,` → `开头ab，` |
+| 359 | `开头ab,.` → `开头ab，。` |
+| 365 | `开头ab,.` → `开头ab，。` |
+| 368 | `ab,.` → `ab，。` |
+| 370 | `开头ab,.` → `开头ab，。` |
 
 ## 要用户定的
 
