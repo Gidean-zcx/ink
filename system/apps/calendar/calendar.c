@@ -255,7 +255,8 @@ static void editor_create(lv_obj_t *screen, void *arg) {
     E.fields[6] = (ink_ui_field_spec_t){.id = "end", .role = "text", .label = TR("结束时间"), .value = E.has_end ? E.end : ""};
     E.page = (ink_ui_page_spec_t){.id = ink_ui_page_name(), .title = picker ? (E.editing_end ? TR("结束时间") : TR("开始时间")) : E.draft.id ? TR("提醒") : TR("加一件"),
         .object = {E.object, 1}, .fields = E.fields, .field_count = EDIT_FIELDS, .actions = E.actions};
-    ink_shell_statusbar(screen, true); ink_shell_topbar(screen, E.page.title);
+    char title[96]; snprintf(title, sizeof title, "%s · %s", TR("提醒"), TR(REPEAT_LABELS[E.repeat]));
+    ink_shell_statusbar(screen, true); ink_shell_topbar(screen, picker || E.repeat < REPEAT_PRESETS ? E.page.title : title);
     int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP, w = INK_CANVAS_W - 2 * INK_MARGIN;
     if (picker) {
         ink_tm_t *date = E.editing_end ? &E.end_date : &E.date;
@@ -271,7 +272,7 @@ static void editor_create(lv_obj_t *screen, void *arg) {
         lv_obj_set_y(E.name, ink_ui_px(y));
         ink_textfield_style(E.name, INK_FIELD_SINGLE, TR("提醒内容"));
         ink_textfield_bind_short(E.name, &E.page, &E.fields[0], &E.actions[0]); lv_obj_add_event_cb(E.name, editor_name, LV_EVENT_VALUE_CHANGED, NULL);
-        y = ink_textfield_height(INK_FIELD_SINGLE) + INK_GAP;
+        y = ink_textfield_height(INK_FIELD_SINGLE) + INK_GAP_M;
         int time_h = 2 * ink_ui_line_height(INK_FONT_NOTE) + 2 * INK_GAP_S;
         if (time_h < INK_CONTROL) time_h = INK_CONTROL;
         char start[80]; snprintf(start, sizeof start, "%s\n%s", TR("开始时间"), E.at);

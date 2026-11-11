@@ -112,6 +112,11 @@ static bool form_fits(lv_obj_t *obj) {
     for (lv_obj_t *p = lv_obj_get_parent(obj); p; p = lv_obj_get_parent(p)) {
         lv_area_t clip; lv_obj_get_coords(p, &clip);
         if (a.x1 < clip.x1 || a.x2 > clip.x2 || a.y1 < clip.y1 || a.y2 > clip.y2) return false;
+        lv_obj_t *parent = lv_obj_get_parent(p);
+        if (parent) {
+            lv_area_t outer; lv_obj_get_coords(parent, &outer);
+            if (clip.x1 < outer.x1 || clip.x2 > outer.x2 || clip.y1 < outer.y1 || clip.y2 > outer.y2) return false;
+        }
     }
     lv_point_t size; lv_text_get_size(&size, lv_label_get_text(obj), lv_obj_get_style_text_font(obj, 0), 0, 0, lv_obj_get_width(obj), LV_TEXT_FLAG_NONE);
     return size.y <= lv_obj_get_height(obj) && a.y1 >= 0 && a.y2 < ink_ui_height();

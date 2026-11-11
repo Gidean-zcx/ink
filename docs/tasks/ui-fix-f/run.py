@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 import re
 import shlex
+import shutil
 import subprocess
 from PIL import Image
 
@@ -94,3 +95,5 @@ for mode in (("after", "before") if a.reverse else ("after",)):
                     Image.open(frame).convert("L").save(dest, optimize=True)
                     assert dest.stat().st_size <= 300 * 1024, dest.name
 (area / "summary.json").write_text(json.dumps(results, ensure_ascii=False, indent=2) + "\n")
+if not os.environ.get("INK_KEEP_EVIDENCE"):
+    shutil.rmtree(area)
