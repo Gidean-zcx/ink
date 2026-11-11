@@ -103,5 +103,17 @@
       "returned_ids_equal_global_snapshot": true,
       "result": "Parameter did not narrow the public result."
     }
+  ],
+  "project_context_checks": [
+    {
+      "url": "https://api.github.com/repos/Gidean-zcx/ink/issues?state=open&per_page=100",
+      "http": 200,
+      "count": 0
+    },
+    {
+      "url": "https://api.github.com/repos/Gidean-zcx/ink/pulls?state=open&per_page=100",
+      "http": 200,
+      "count": 0
+    }
   ]
 }

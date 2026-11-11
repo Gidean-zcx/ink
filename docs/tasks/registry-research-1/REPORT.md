@@ -10,10 +10,10 @@
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 固件全清单与三类建议 | 清单完成，建议核查中 | 52条、156版本、20组筛选一致 | `python3 docs/tasks/registry-research-1/collect_registry.py --output work/registry-research-1/recheck.json` |
-| 2 可复用条目许可证 | 进行中 | 待逐项核对许可证原文 | 待补 |
-| 3 隐私扫描 | 待检查 | 不保留登录态、令牌或签名参数 | 待补 |
-| 4 修改范围 | 进行中 | 仅新增本任务目录文件；产品代码 0 行 | `git diff --name-only` |
+| 1 固件全清单与三类建议 | 通过；范围限匿名公开记录 | 52条、156版本、20组筛选；U1～U5、N1～N4、六方面设计、四项优先建议 | C1、C2 |
+| 2 可复用条目许可证 | 通过；未授权项不作直接复用结论 | U1～U5均链接已读许可原文；没有摘录许可正文；限制及依赖分列 | C2、`source-audit.json` |
+| 3 隐私扫描 | 通过 | 基线至提交差异扫描0命中；无用户账户ID、凭据值、签名参数；数字昵称脱敏 | C4 |
+| 4 修改范围 | 通过 | 仅新增本任务目录5文件；产品代码、测试、构建、共享文档均0行改动 | C4、`git diff --name-status 0c9b1790..HEAD` |
 
 ## 接口、筛选和完整性边界
 
@@ -45,7 +45,7 @@
 | F02 CrossLink Pixel 4.7／风眼 | 社区；是 | v4.3.0T／9 | 2026-11-08 22:06 | 像素阅读主题；书籍元数据联网补全、排版预设、灰阶封面 | 接口未给源码；许可未核实 | [接口](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all) |
 | F04 Mogo E4p／常暗 | 社区；是 | v1.0.10／16 | 2026-11-11 07:56 | 作者称源自kiikoread Pico；最近阅读、迷你书库、锁屏小组件 | [官网](https://mogo.mantake.shop)；S04上游；Mogo改动未公开 | [接口](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all) |
 | F06 RickyOS／Ricky AI Studio | 社区；是 | v1.2.14／4 | 2026-11-02 23:35 | 仅写安装官网；当前版本无功能更新说明 | [官网](https://rickyaistudio.com/)；未取得源码许可 | [接口](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all) |
-| F07 kiikoread · Metalio EINK 4 Plus／Kiiko厂长 | 社区；是 | rc110／3 | 2026-11-05 22:15 | Plus移植；EPUB/TXT、排版、统计、锁屏、字体与传书 | S05（混合许可） | [接口](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all) |
+| F07 kiikoread · Metalio EINK 4 Plus／Kiiko厂长 | 社区；是 | rc110／3 | 2026-11-05 22:15 | Plus移植；EPUB/TXT、排版、统计、锁屏、字体与传书 | 同名上游S05（混合许可；二进制未对应核验） | [接口](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all) |
 | F08 Crosslink2 无名4.7／whimco | 社区；是 | 4.2.9／8 | 2026-11-09 09:25 | 经典阅读主题；TTF、USB、热点、坚果云与数据胶囊 | [官网](https://www.crosslink-reader.top)；未取得源码许可 | [接口](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all) |
 | F11 ThingOS／flowflic | 社区；是 | v0.1.7／6 | 2026-11-11 12:31 | 本地/微信读书、进度与批注、录音音乐、ima投递、闹钟 | 接口未给源码；许可未核实 | [接口](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all) |
 | F12 lnkboot／wenbos058 | 社区；是 | v1.0.6／7 | 2026-11-03 15:36 | 多固件切换启动器；未给具体实现 | 接口未给源码；许可未核实 | [接口](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all) |
@@ -97,7 +97,7 @@
 
 | 编号／固件／公开作者 | 归属；精选 | 当前版本／历史数 | 更新（+08:00） | 说明与功能【文档】 | 源码／许可核查 | 逐行接口出处【实测】 |
 | --- | --- | --- | --- | --- | --- | --- |
-| F13 Metalio Claw4／zzz | 官方；是 | 2.0.5.2／2 | 2026-11-05 09:52 | Claw4官方固件；列表仅称稳定版 | S03（MIT） | [接口](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all) |
+| F13 Metalio Claw4／zzz | 官方；是 | 2.0.5.2／2 | 2026-11-05 09:52 | Claw4官方固件；列表仅称稳定版，上游README另列语音/相机/通信（非此镜像验证） | S03（MIT） | [接口](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all) |
 | F16 AgentUI／AlayaElla | 社区；是 | v0.2.0／2 | 2026-09-18 01:46 | P4触屏；电脑AI遥控、相机/文件/电话；SD卡外部应用 | S06（MIT；依赖分列） | [接口](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all) |
 | F26 Metalio_Claw4_2.0.51_gba_full／zuochen.luo | 社区；否 | v0.1.0（测）／1 | 2026-09-03 16:56 | Claw4官方基底加GBA；BLE手柄、触屏补键；已知菜单残留 | 接口未给源码；许可未核实 | [接口](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all) |
 | F33 retro-go-gba／黄埔大道西 | 社区；是 | 0.4.13／3 | 2026-10-16 03:30 | retro-go移植；GBA与虚拟键；帧率只是作者说明 | S09（GPL-2.0及混合） | [接口](https://admin.metalio.world/xiaozhi/api/firmwares?page=1&limit=100&sourceType=all) |
@@ -213,7 +213,7 @@ R-061结论：**协议连接器、阅读文档算法、字体工具可各自收�
 - 无源码、访问失败、只有源码ZIP、上游与列表版本不一致的部分，见逐行表及源码关系；未完成二进制与源码一致性、真实功能、速度、功耗或续航验证。没有把占位、作者说明或测试中功能写成已完成。
 - OTA需登录后个人密钥，板卡目录业务401；未继续。所有阅读服务均未认证、未调用、未读真实书架或个人资料。
 - 未实现任何候选功能；未读取设计稿、硬件备份或非`upstream`硬件目录；未接触设备。
-- 普通/ASan全量最终结果待收尾；S31本次尚未编译，gcccheck待核适用范围。
+- S31没有编译，也未做真实Linux/GCC编译验收；gcccheck输入0个C文件。ASan已有一个主机目标未插桩，详见C3；本次未越界修改构建定义。
 
 ## 和设计不一致的
 
@@ -259,11 +259,11 @@ R-061结论：**协议连接器、阅读文档算法、字体工具可各自收�
 taskpolicy -c utility python3 docs/tasks/registry-research-1/collect_registry.py --output work/registry-research-1/recheck.json
 ```
 
-【实测】退出0，原话：`Registry: 52 firmwares, 5 board IDs, 20 filters verified, 156 versions`。采集器只请求固定固件列表GET接口，移除用户ID、头像、资源/固件下载地址，纯数字作者昵称隐去；作者列保留的是公开展示署名。逐行出处是总列表接口，精确记录以快照的固件ID、板号和版本对应；不依赖未生效的`firmwareId`服务端过滤。快照不是之后永远不变的数量承诺，线上有增删时应重新核对。
+【实测】退出0，原话：`Registry: 52 firmwares, 5 board IDs, 20 filters verified, 156 versions`。采集器只请求固定固件列表GET接口，移除用户ID、头像、资源/固件下载地址，纯数字作者昵称隐去；作者列保留的是公开展示署名。快照的`source_repositories`只是从说明和历史版本提取的候选链接，含旧占位链接；真正核查过的源码以S01～S16为准。逐行出处是总列表接口，精确记录以快照的固件ID、板号和版本对应；不依赖未生效的`firmwareId`服务端过滤。快照不是之后永远不变的数量承诺，线上有增删时应重新核对。
 
 ### C2：源码及文件检查
 
-【实测】75个取回的文本与Git树blob一致；16个固定提交与15处显式源码文件/行锚点核对通过。报告52个F编号无重复，快照156个版本数与每项`version_total`一致，20组筛选满足官方/社区不相交、并集等于全部、精选为子集。6个本地链接存在，JSON可解析。原始HTML、源文件和命令日志只留在被忽略的`work/registry-research-1/`，提交的是脱敏元数据与哈希，不是第三方正文。
+【实测】75个取回的文本与Git树blob一致；16个固定提交与15处显式源码文件/行锚点核对通过。本项目公开Issue/PR接口均返回0条，去重仍以指定基线backlog为准。报告52个F编号无重复，快照156个版本数与每项`version_total`一致，20组筛选满足官方/社区不相交、并集等于全部、精选为子集。6个本地链接存在，JSON可解析。原始HTML、源文件和命令日志只留在被忽略的`work/registry-research-1/`，提交的是脱敏元数据与哈希，不是第三方正文。
 
 独立复现源码哈希可用以下只读命令；文件名来自受控清单，不请求任何固件附件：
 
@@ -302,17 +302,17 @@ done
 ```
 
 - 【实测】普通配置、构建、CTest均退出0。全量原话：`100% tests passed out of 390`；`Total Test time (real) = 885.38 sec`。完整日志：`work/registry-research-1/ctest.log`。
-- ASan/UBSan正在运行；最终原话、插桩范围及退出状态在收尾时补齐。
+- 【实测】ASan/UBSan配置、构建和完整CTest均退出0。全量原话：`100% tests passed out of 390`；`Total Test time (real) = 804.75 sec`。日志`work/registry-research-1/ctest-asan.log`及`build-asan/Testing/Temporary/LastTest.log`均无AddressSanitizer、UBSan运行期错误诊断。编译数据库1212条命令中1211条含`-fsanitize=address,undefined`；原有`test-s31-osal-ticks`在根CMake启用sanitizer之前定义，未插桩，不把它算作已做内存插桩检查。
 - 【实测】`taskpolicy -c utility python3 ../../tools/gcccheck.py build`退出0，原话`gcccheck: 0 compiled, 0 with findings`。没有改C文件，故未送入任何编译单元；这不是Linux/GCC编译通过证明。
 - S31没有编译：本次仅调研文档与独立采集脚本，没有改产品代码、测试或构建文件；不能由主机390项通过推断真实S31兼容性。
 - 没有产品修复，因此没有应做撤回修复的反向对照；原测试、预算和断言均未改，未跳过失败。
 
 ### C4：提交范围与隐私
 
-最后对`git diff 0c9b1790d6e79e1beff8337479d72e780389e5c6..HEAD`执行总规则第6节原隐私表达式，另按JSON字段检查账户ID、凭据值、签名参数与作者脱敏。最终结果待提交后记录。只允许新增本任务目录，产品C/H、测试、构建及共享文档改动应为0。
+【实测】对`git diff 0c9b1790d6e79e1beff8337479d72e780389e5c6..HEAD`执行总规则第6节原隐私表达式，**0命中**（grep退出1表示无命中）；另按JSON字段检查账户ID、凭据值、签名参数与作者脱敏，通过。`git diff --check`、文件/链接及JSON检查通过。相对基线仅5个新增文件，均在本任务目录；产品C/H、测试、构建及共享文档改动均为**0行**，每个文件小于5MB。三次里程碑均只做本地提交，未push、未开PR。
 
 ## 里程碑
 
 - 已读取任务书及总规则；工作树初始干净，独立分支 HEAD 与指定基线一致。
 - 【实测】公开API与所有板号的四种筛选已核对，52个固件ID无重复；分页到第二页为空，已保存脱敏快照。
-- 【实测】源码/许可边界、移植关系、导航工具及三类建议已完成；普通390项通过。内存检查及最终提交扫描收尾中。
+- 【实测】源码/许可边界、移植关系、导航工具及三类建议完成；普通390项、ASan/UBSan目录390项均通过，保留未插桩和S31证据边界；最终提交范围与隐私检查完成。
