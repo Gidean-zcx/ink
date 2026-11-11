@@ -196,7 +196,7 @@ static struct {
     ink_tm_t date, end_date;
     bool editing_end, has_end;
     int repeat;
-    lv_obj_t *name;
+    lv_obj_t *name, *body, *footer;
     char owner[16], at[32], end[32], end_label[64], object[24], error[192], ids[EDIT_ACTIONS][12], args[EDIT_ACTIONS][64];
     ink_ui_field_spec_t fields[EDIT_FIELDS];
     ink_ui_action_spec_t actions[EDIT_ACTIONS];
@@ -210,6 +210,7 @@ _Static_assert(sizeof PARTS / sizeof *PARTS == PICKER_PARTS, "picker rows");
 _Static_assert(REPEAT_PRESETS + 9 <= EDIT_ACTIONS, "editor action slots");
 _Static_assert(7 <= EDIT_FIELDS, "editor field slots");
 _Static_assert(sizeof REPEATS / sizeof *REPEATS == sizeof REPEAT_LABELS / sizeof *REPEAT_LABELS, "repeat labels");
+_Static_assert(REPEAT_PRESETS <= sizeof REPEAT_LABELS / sizeof *REPEAT_LABELS, "repeat presets");
 static bool find_reminder(uint32_t id, ink_alarm_t *a) {
     int cursor = 0;
     while (ink_alarm_next(&cursor, INK_REMINDER, a) == 1) if (a->id == id) return true;
@@ -227,7 +228,8 @@ static void editor_name(lv_event_t *event) {
 static void editor_at(void) {
     snprintf(E.at, sizeof E.at, "%04d-%02d-%02d %02d:%02d", E.date.year, E.date.month, E.date.day, E.date.hour, E.date.min);
     snprintf(E.end, sizeof E.end, "%04d-%02d-%02d %02d:%02d", E.end_date.year, E.end_date.month, E.end_date.day, E.end_date.hour, E.end_date.min);
-    snprintf(E.end_label, sizeof E.end_label, "%s %.16s", TR("结束时间"), E.has_end ? E.end : "");
+    char end[17]; memcpy(end, E.end, 16); end[16] = 0;
+    snprintf(E.end_label, sizeof E.end_label, "%s\n%s", TR("结束时间"), E.has_end ? end : TR("未设置"));
 }
 static void editor_date_bind(lv_obj_t *b, int part, int delta) {
     ink_tm_t *date = E.editing_end ? &E.end_date : &E.date;
@@ -245,13 +247,13 @@ static void editor_create(lv_obj_t *screen, void *arg) {
     editor_at();
     snprintf(E.object, sizeof E.object, "reminder:%u", (unsigned)E.draft.id);
     E.fields[0] = (ink_ui_field_spec_t){.id = "title", .role = "textbox", .label = TR("内容"), .value = E.draft.title};
-    E.fields[1] = (ink_ui_field_spec_t){.id = "at", .role = "text", .label = TR("日期和时间"), .value = E.at};
+    E.fields[1] = (ink_ui_field_spec_t){.id = "at", .role = "text", .label = TR("开始时间"), .value = E.at};
     E.fields[2] = (ink_ui_field_spec_t){.id = "repeat", .role = "text", .label = TR("重复"), .value = TR(REPEAT_LABELS[E.repeat])};
     E.fields[3] = (ink_ui_field_spec_t){.id = "error", .role = "status", .label = TR("提示"), .value = E.error};
     E.fields[4] = (ink_ui_field_spec_t){.id = "ring", .role = "switch", .label = TR("响铃提醒"), .value = E.draft.silent ? "false" : "true"};
     E.fields[5] = (ink_ui_field_spec_t){.id = "all_day", .role = "switch", .label = TR("全天"), .value = E.draft.all_day ? "true" : "false"};
     E.fields[6] = (ink_ui_field_spec_t){.id = "end", .role = "text", .label = TR("结束时间"), .value = E.has_end ? E.end : ""};
-    E.page = (ink_ui_page_spec_t){.id = ink_ui_page_name(), .title = picker ? TR("日期和时间") : E.draft.id ? TR("提醒") : TR("加一件"),
+    E.page = (ink_ui_page_spec_t){.id = ink_ui_page_name(), .title = picker ? (E.editing_end ? TR("结束时间") : TR("开始时间")) : E.draft.id ? TR("提醒") : TR("加一件"),
         .object = {E.object, 1}, .fields = E.fields, .field_count = EDIT_FIELDS, .actions = E.actions};
     ink_shell_statusbar(screen, true); ink_shell_topbar(screen, E.page.title);
     int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP, w = INK_CANVAS_W - 2 * INK_MARGIN;
@@ -261,35 +263,61 @@ static void editor_create(lv_obj_t *screen, void *arg) {
         ink_ui_datetime_picker(screen, values, editor_date_bind);
         editor_bind(ink_ui_pill(screen, TR("选好了"), INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_CONTROL, w, INK_CONTROL, true, NULL, NULL), TR("选好了"), "shell.back", "{}");
     } else {
+        int error_h = E.error[0] ? ink_ui_text_height(E.error, INK_FONT_NOTE, INK_WEIGHT_REGULAR, w) + INK_GAP_L : 0;
+        E.body = ink_ui_box(screen, 0, y, INK_CANVAS_W, INK_CANVAS_H - y - INK_MARGIN - INK_PRIMARY - error_h - INK_GAP_L, 0, INK_SURFACE_WHITE, false);
         editor_bind(NULL, TR("输入内容"), "reminder.focus", "{}");
         ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .enter = INK_ENTER_DONE, .initial = E.draft.title, .hint = TR("提醒内容"), .max = sizeof E.draft.title - 1};
         E.name = ink_textfield_create(screen, &cfg, NULL, NULL, false);
         lv_obj_set_y(E.name, ink_ui_px(y));
         ink_textfield_style(E.name, INK_FIELD_SINGLE, TR("提醒内容"));
         ink_textfield_bind_short(E.name, &E.page, &E.fields[0], &E.actions[0]); lv_obj_add_event_cb(E.name, editor_name, LV_EVENT_VALUE_CHANGED, NULL);
-        y += ink_textfield_height(INK_FIELD_SINGLE) + INK_GAP;
-        editor_bind(ink_ui_pill(screen, E.at, INK_MARGIN, y, w, INK_CONTROL, false, NULL, NULL), TR("日期和时间"), "reminder.time", "{}");
+        y = ink_textfield_height(INK_FIELD_SINGLE) + INK_GAP;
+        int time_h = 2 * ink_ui_line_height(INK_FONT_NOTE) + 2 * INK_GAP_S;
+        if (time_h < INK_CONTROL) time_h = INK_CONTROL;
+        char start[80]; snprintf(start, sizeof start, "%s\n%s", TR("开始时间"), E.at);
+        lv_obj_t *at = ink_ui_pill(E.body, start, INK_MARGIN, y, w, time_h, false, NULL, NULL);
+        lv_obj_t *end = ink_ui_pill(E.body, E.end_label, INK_MARGIN, y + time_h + INK_GAP_S, w - INK_CIRCLE_LARGE - INK_GAP_M, time_h, false, NULL, NULL);
+        lv_obj_t *times[] = {at, end};
+        for (unsigned i = 0; i < sizeof times / sizeof *times; i++) {
+            ink_ui_pill_text(times[i], INK_FONT_NOTE, INK_WEIGHT_MEDIUM);
+            lv_obj_t *label = lv_obj_get_child(times[i], 0); lv_label_set_long_mode(label, LV_LABEL_LONG_WRAP);
+            lv_obj_set_height(label, ink_ui_px(2 * ink_ui_line_height(INK_FONT_NOTE))); lv_obj_center(label);
+        }
+        editor_bind(at, TR("开始时间"), "reminder.time", "{}");
+        editor_bind(end, TR("结束时间"), "reminder.time", "{\"end\":true}");
+        editor_bind(ink_ui_pill(E.body, TR("清除结束"), INK_CANVAS_W - INK_MARGIN - INK_CIRCLE_LARGE, y + time_h + INK_GAP_S, INK_CIRCLE_LARGE, time_h, false, NULL, NULL), TR("清除结束时间"), "reminder.draft", "{\"clear_end\":true}");
+        y += 2 * time_h + 2 * INK_GAP_S;
+        editor_bind(ink_ui_toggle(E.body, TR("响铃"), !E.draft.silent, INK_MARGIN, y, (w - INK_GAP_M) / 2, NULL, NULL), TR("响铃提醒"), "reminder.draft", E.draft.silent ? "{\"ring\":true}" : "{\"ring\":false}");
+        editor_bind(ink_ui_toggle(E.body, TR("全天"), E.draft.all_day, INK_MARGIN + (w + INK_GAP_M) / 2, y, (w - INK_GAP_M) / 2, NULL, NULL), TR("全天"), "reminder.draft", E.draft.all_day ? "{\"all_day\":false}" : "{\"all_day\":true}");
         y += INK_CONTROL + INK_GAP_S;
-        editor_bind(ink_ui_pill(screen, E.end_label, INK_MARGIN, y, w - INK_CONTROL - INK_GAP_M, INK_CONTROL, false, NULL, NULL), TR("结束时间"), "reminder.time", "{\"end\":true}");
-        editor_bind(ink_ui_pill(screen, TR("清除"), INK_CANVAS_W - INK_MARGIN - INK_CONTROL, y, INK_CONTROL, INK_CONTROL, false, NULL, NULL), TR("清除"), "reminder.draft", "{\"clear_end\":true}");
-        y += INK_CONTROL + INK_GAP_S;
-        editor_bind(ink_ui_toggle(screen, TR("响铃提醒"), !E.draft.silent, INK_MARGIN, y, (w - INK_GAP_M) / 2, NULL, NULL), TR("响铃提醒"), "reminder.draft", E.draft.silent ? "{\"ring\":true}" : "{\"ring\":false}");
-        editor_bind(ink_ui_toggle(screen, TR("全天"), E.draft.all_day, INK_MARGIN + (w + INK_GAP_M) / 2, y, (w - INK_GAP_M) / 2, NULL, NULL), TR("全天"), "reminder.draft", E.draft.all_day ? "{\"all_day\":false}" : "{\"all_day\":true}");
-        y += INK_CONTROL + INK_GAP_S; ink_ui_notice(screen, TR(REPEAT_LABELS[E.repeat]), y); y += INK_LINE_NOTE + INK_GAP_S;
+        const char *labels[REPEAT_PRESETS];
+        for (int i = 0; i < REPEAT_PRESETS; i++) labels[i] = TR(REPEAT_LABELS[i]);
+        lv_obj_t *repeat = ink_ui_segments(E.body, labels, REPEAT_PRESETS, E.repeat, INK_MARGIN, y, w, NULL, NULL);
         for (int i = 0; i < REPEAT_PRESETS; i++) {
             char args[32]; snprintf(args, sizeof args, "{\"repeat\":%d}", i);
-            editor_bind(ink_ui_pill(screen, TR(REPEAT_LABELS[i]), INK_MARGIN + i % 2 * (w + INK_GAP_M) / 2, y + i / 2 * (INK_CONTROL + INK_GAP_M), (w - INK_GAP_M) / 2, INK_CONTROL, E.repeat == i, NULL, NULL), TR(REPEAT_LABELS[i]), "reminder.draft", args);
+            editor_bind(lv_obj_get_child(repeat, i), labels[i], "reminder.draft", args);
         }
-        ink_ui_notice(screen, E.error, y + 2 * (INK_CONTROL + INK_GAP_M) + INK_GAP);
+        E.footer = ink_ui_box(screen, 0, INK_CANVAS_H - INK_MARGIN - INK_PRIMARY - error_h, INK_CANVAS_W, INK_PRIMARY + error_h, 0, INK_SURFACE_WHITE, false);
+        ink_ui_notice(E.footer, E.error, 0);
         if (E.draft.id) {
             char args[48]; snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)E.draft.id);
-            editor_bind(ink_ui_pill(screen, TR("删除提醒"), INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_CONTROL, (w - INK_GAP) / 2, INK_CONTROL, false, NULL, NULL), TR("删除提醒"), "reminder.cancel", args);
+            editor_bind(ink_ui_pill(E.footer, TR("删除提醒"), INK_MARGIN, error_h, (w - INK_GAP) / 2, INK_PRIMARY, false, NULL, NULL), TR("删除提醒"), "reminder.cancel", args);
         }
-        editor_bind(ink_ui_pill(screen, TR("保存提醒"), INK_MARGIN + (E.draft.id ? (w + INK_GAP) / 2 : 0), INK_CANVAS_H - INK_MARGIN - INK_CONTROL, E.draft.id ? (w - INK_GAP) / 2 : w, INK_CONTROL, true, NULL, NULL), TR("保存提醒"), "reminder.save", "{}");
+        editor_bind(ink_ui_pill(E.footer, TR("保存提醒"), INK_MARGIN + (E.draft.id ? (w + INK_GAP) / 2 : 0), error_h, E.draft.id ? (w - INK_GAP) / 2 : w, INK_PRIMARY, true, NULL, NULL), TR("保存提醒"), "reminder.save", "{}");
         editor_bind(NULL, TR("返回"), "shell.back", "{}");
     }
 }
-static void editor_destroy(void) { E.name = NULL; }
+static void editor_destroy(void) { E.name = E.body = E.footer = NULL; }
+static void editor_focus_changed(void *ctx, int handle, const char *id) {
+    (void)ctx; (void)handle; (void)id;
+    if (!E.name || !E.footer || strcmp(ink_ui_page_name(), "ReminderEdit")) return;
+    bool focused = ink_text_focused();
+    lv_obj_set_flag(E.body, LV_OBJ_FLAG_HIDDEN, focused);
+    lv_obj_update_layout(E.footer);
+    lv_area_t keyboard; ink_shell_keyboard_area(&keyboard);
+    lv_obj_set_y(E.footer, (focused ? keyboard.y1 - ink_ui_px(INK_GAP) : ink_ui_height() - ink_ui_px(INK_MARGIN)) - lv_obj_get_height(E.footer));
+    lv_obj_set_y(E.name, ink_ui_px(focused ? INK_STATUS_BAR : INK_STATUS_BAR + INK_PRIMARY + INK_GAP));
+}
 static int editor_snapshot(char *out, size_t cap) {
     size_t actions = E.page.action_count; if (ink_text_focused()) E.page.action_count = 0;
     int n = E.name ? ink_textfield_short_snapshot(E.name, out, cap) : ink_ui_semantics_snapshot(&E.page, out, cap);
@@ -360,5 +388,6 @@ static void changed(void *ctx, int handle, const char *id) {
     else if (!strcmp(ink_ui_page_name(), "ReminderEdit") && E.draft.id) { ink_alarm_t a; if (!find_reminder(E.draft.id, &a)) ink_ui_pop(); }
 }
 int ink_calendar_init(void) {
-    return ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_app_register(&APP) || ink_state_watch("alarm.revision", changed, NULL, INK_EXEC_UI) ? -1 : 0;
+    return ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_app_register(&APP) || ink_state_watch("alarm.revision", changed, NULL, INK_EXEC_UI) ||
+        ink_state_watch("text.focused", editor_focus_changed, NULL, INK_EXEC_UI) ? -1 : 0;
 }

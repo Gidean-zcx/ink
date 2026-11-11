@@ -11,6 +11,7 @@
 const char *ink_weather_city(void);
 
 static char snapshot[3072];
+static bool big_font;
 static const char *wanted_text;
 static lv_obj_t *found;
 static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
@@ -30,6 +31,18 @@ static void find_job(void) { found = NULL; lv_obj_update_layout(lv_screen_active
 static lv_obj_t *find(const char *text) { wanted_text = text; on_ui(find_job); return found; }
 static void find_job_text(const char *text) { wanted_text = text; find_job(); }
 static void shows(const char *text) { CHECK(find(text), "the screen shows %s", text); }
+static void weather_layout(void) {
+    find_job_text("刷新");
+    CHECK(found && ink_ui_surface_kind(lv_obj_get_parent(found)) == INK_SURFACE_WHITE, "UX20 W01 refresh is a secondary action");
+    find_job_text("12°"); lv_obj_t *temperature = found;
+    find_job_text("数据来自 Open-Meteo.com");
+    CHECK(temperature && found && lv_obj_get_style_text_font(temperature, 0)->line_height > lv_obj_get_style_text_font(found, 0)->line_height,
+          "UX20 W01 the current temperature is larger than the update note");
+    if (found) {
+        lv_area_t a; lv_obj_get_coords(found, &a);
+        CHECK(a.y2 + ink_ui_px(INK_GAP_L) < ink_ui_px(INK_CANVAS_H - INK_MARGIN - INK_PRIMARY), "UX20 W02 update note stays above the footer");
+    }
+}
 static void tap_obj(lv_obj_t *o) {
     lv_area_t a; lv_obj_get_coords(o, &a);
     tap((a.x1 + a.x2) / 2, (a.y1 + a.y2) / 2); quiet();
@@ -99,6 +112,7 @@ static void restart(void) {
 }
 static void run(void *arg) {
     (void)arg; CHECK(WAIT_FOR(ink_member_space_open(), 10000), "member space opens"); quiet(); test_start_home(); quiet();
+    CHECK(AI("settings.set", big_font ? "{\"id\":\"display.font_size\",\"value\":3}" : "{\"id\":\"display.font_size\",\"value\":1}") && g_rc.status == INK_RC_DONE, "choose weather font size"); quiet();
     if (!strcmp(phase, "restart")) { restart(); ink_probe_count("test.finished"); return; }
     /* Never set: the AI and the page say so; there is no Today card yet. */
     CHECK(AI("weather.get", NULL) && g_rc.status == INK_RC_INVALID && strstr(g_rc.say, "还没有设天气城市"), "AI is told no city: %.100s", g_rc.say);
@@ -137,6 +151,7 @@ static void run(void *arg) {
     CHECK(WAIT_FOR(find("小雨 · 最高 15° 最低 3°") != NULL, 5000), "the page fills in");
     quiet(); shows("12°"); shows("明天 · 多云"); shows("16° / 5°"); shows("今天降水概率"); shows("80%");
     shows("数据来自 Open-Meteo.com"); expect("后天 · 晴"); expect_day3(); expect("更新"); capture("WeatherPage");
+    on_ui(weather_layout);
     CHECK(!find("没联网"), "online: no offline note");
     shows("换城市");
     today();
@@ -155,6 +170,7 @@ static void run(void *arg) {
     if (refresh) tap_obj(refresh);
     CHECK(WAIT_FOR(find("没联网，") != NULL, 10000), "the page says it is offline");
     shows("12°"); shows("明天 · 多云"); expect("没联网，"); expect("更新\\n数据来自"); capture("WeatherOffline");
+    shows("显示上次天气"); expect("显示上次天气"); on_ui(weather_layout);
     ai_weather(false);
     today(); expect("\"value\":\"12° 小雨 15°/3°\"");
     CHECK(BY_HAND("net.set_airplane", "{\"enabled\":false}") && g_rc.status == INK_RC_DONE, "back online");
@@ -171,7 +187,10 @@ static void run(void *arg) {
     delay_ms(70000); /* past the store's batching, so the second boot reads it from flash */
     ink_probe_count("test.finished");
 }
-static void host_phase(void *arg) { (void)arg; const char *p = getenv("INK_WEATHER_PHASE"); snprintf(phase, sizeof phase, "%s", p ? p : ""); }
+static void host_phase(void *arg) {
+    (void)arg; const char *p = getenv("INK_WEATHER_PHASE"), *font = getenv("INK_UI_FIX_FONT");
+    snprintf(phase, sizeof phase, "%s", p ? p : ""); big_font = font && !strcmp(font, "120");
+}
 void ink_main(void) {
     vtk_host_call(host_phase, NULL); product_main();
     osal_task_cfg_t cfg = {.name = "weather-test", .fn = run, .stack_bytes = 16384, .priority = OSAL_PRIO_NORMAL, .core = -1, .flags = OSAL_TASK_STACK_EXTERNAL};

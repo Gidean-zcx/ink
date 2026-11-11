@@ -227,12 +227,13 @@ static void weather_create(lv_obj_t *screen, void *arg) {
             field(n++, IDS[i], W.texts[2 + i], i ? TR(d->w) : range);
         }
         y += (W.ndays + 1) * row_h + INK_GAP_S;
-        snprintf(W.texts[6], sizeof W.texts[6], W.offline ? TR("没联网，%s\n数据来自 Open-Meteo.com") : TR("%s\n数据来自 Open-Meteo.com"), W.updated); /* 2..5: the rows */
+        char updated[sizeof W.updated]; memcpy(updated, W.updated, sizeof updated);
+        snprintf(W.texts[6], sizeof W.texts[6], W.offline ? TR("没联网，显示上次天气\n%s\n数据来自 Open-Meteo.com") : TR("%s\n数据来自 Open-Meteo.com"), updated); /* 2..5: the rows */
         ink_ui_notice(screen, W.texts[6], y); field(n++, "updated", TR("更新"), W.texts[6]);
     }
     int half = (w - INK_GAP) / 2, bottom = INK_CANVAS_H - INK_MARGIN - INK_PRIMARY;
     ink_shell_bind(ink_ui_pill(screen, W.id ? TR("换城市") : TR("选城市"), INK_MARGIN, bottom, W.id ? half : w, INK_PRIMARY, !W.id, NULL, NULL), "weather.city", "{}");
-    if (W.id) ink_shell_bind(ink_ui_pill(screen, TR("刷新"), INK_MARGIN + half + INK_GAP, bottom, half, INK_PRIMARY, true, NULL, NULL), "weather.get", "{}");
+    if (W.id) ink_shell_bind(ink_ui_pill(screen, TR("刷新"), INK_MARGIN + half + INK_GAP, bottom, half, INK_PRIMARY, false, NULL, NULL), "weather.get", "{}");
     W.page = (ink_ui_page_spec_t){.id = "Weather", .title = TR("天气"), .object = {"weather.city", (uint32_t)W.at}, .fields = W.fields,
         .field_count = (size_t)n, .actions = W.actions, .action_count = 3};
     if (stale()) fetch(NULL);

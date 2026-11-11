@@ -111,12 +111,12 @@ static calc_err_t evaluate(const char *ascii, char *out, size_t cap) {
 static struct {
     char expr[EXPR_MAX + 1], result[RESULT_MAX], plain[2 * EXPR_MAX + 8], shown[2 * EXPR_MAX + 16], member[16];
     bool done, error; /* done: what = gave is showing (a result, or why not) */
-    lv_obj_t *expr_label, *result_label;
-    ink_ui_field_spec_t fields[2];
+    lv_obj_t *expr_label, *result_label, *hint_label;
+    ink_ui_field_spec_t fields[3];
 } K INK_PSRAM_BSS;
 static const int TOP = INK_STATUS_BAR + INK_PRIMARY + INK_GAP, KEY_H = INK_PRIMARY, KEY_GAP = INK_GAP_M;
 static int keys_top(void) { return INK_CANVAS_H - INK_MARGIN - 5 * KEY_H - 4 * KEY_GAP; }
-static int result_top(void) { return keys_top() - INK_GAP_L - INK_LINE_NUMBER; }
+static int result_top(void) { return keys_top() - INK_GAP_L - INK_LINE_NUMBER - (K.error ? ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_S : 0); }
 
 static bool is_op(char c) { return c == '+' || c == '-' || c == '*' || c == '/'; }
 /* Where the number being typed starts, its own minus sign included. */
@@ -138,6 +138,7 @@ static calc_err_t worth(char *out, size_t cap) {
     return evaluate(ascii, out, cap);
 }
 static void press(const char *k) {
+    if (K.done && K.error && !strcmp(k, "back")) K.done = K.error = false;
     if (!strcmp(k, "clear") || (K.done && !strcmp(k, "back"))) { K.expr[0] = 0; K.done = K.error = false; snprintf(K.result, sizeof K.result, "0"); return; }
     if (K.done) { /* After =, digits start again and operators go on from the result. */
         if (!strcmp(k, "=")) return;
@@ -229,8 +230,11 @@ static void show(void) {
     lv_obj_set_y(K.result_label, ink_ui_px(result_top() + INK_LINE_NUMBER - ink_ui_line_height(px)));
     lv_obj_set_height(K.result_label, ink_ui_px(ink_ui_line_height(px)));
     lv_label_set_text(K.result_label, K.error ? TR(K.result) : K.result);
+    lv_obj_set_y(K.hint_label, ink_ui_px(keys_top() - INK_GAP_S - ink_ui_line_height(INK_FONT_NOTE)));
+    lv_obj_set_flag(K.hint_label, LV_OBJ_FLAG_HIDDEN, !K.error);
     K.fields[0] = (ink_ui_field_spec_t){.id = "expression", .role = "status", .label = TR("算式"), .value = K.plain};
     K.fields[1] = (ink_ui_field_spec_t){.id = "result", .role = "status", .label = K.error ? TR("算不出") : TR("结果"), .value = K.error ? TR(K.result) : K.result};
+    K.fields[2] = (ink_ui_field_spec_t){.id = "correction", .role = "status", .label = TR("修改"), .value = TR("按删除修改算式，再计算")};
     ink_ui_content_changed();
 }
 static void key_cap(ink_call_t *c) {
@@ -283,6 +287,7 @@ static void create(lv_obj_t *screen, void *arg) {
     int w = INK_CANVAS_W - 2 * INK_MARGIN, cell = (w + KEY_GAP) / 4;
     K.expr_label = ink_ui_label(screen, "", INK_FONT_SUBTITLE, INK_WEIGHT_REGULAR, INK_MARGIN, TOP, w);
     K.result_label = ink_ui_line(screen, "", INK_FONT_NUMBER, INK_WEIGHT_REGULAR, INK_MARGIN, result_top(), w);
+    K.hint_label = ink_ui_line(screen, TR("按删除修改算式，再计算"), INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, 0, w);
     lv_obj_set_style_text_align(K.expr_label, LV_TEXT_ALIGN_RIGHT, 0);
     lv_obj_set_style_text_align(K.result_label, LV_TEXT_ALIGN_RIGHT, 0);
     for (int i = 0; i < 20; i++) {
@@ -296,7 +301,7 @@ static void create(lv_obj_t *screen, void *arg) {
     }
     show();
 }
-static void destroy(void) { K.expr_label = K.result_label = NULL; }
+static void destroy(void) { K.expr_label = K.result_label = K.hint_label = NULL; }
 static int snapshot(char *out, size_t cap) {
     const ink_ui_action_spec_t ACTIONS[] = {
         {.id = "eval", .label = TR("给一个算式求值"), .capability = "calc.eval", .enabled = true},
@@ -304,7 +309,7 @@ static int snapshot(char *out, size_t cap) {
         {.id = "back", .label = TR("删除一位"), .capability = "calc.key", .args_json = "{\"key\":\"back\"}", .enabled = true},
         {.id = "clear", .label = TR("清除"), .capability = "calc.key", .args_json = "{\"key\":\"clear\"}", .enabled = true}};
     const ink_ui_page_spec_t page = {.id = "Calculator", .title = TR("计算器"), .object = {"calculator", 1}, .fields = K.fields,
-        .field_count = 2, .actions = ACTIONS, .action_count = sizeof ACTIONS / sizeof *ACTIONS};
+        .field_count = K.error ? 3 : 2, .actions = ACTIONS, .action_count = sizeof ACTIONS / sizeof *ACTIONS};
     return ink_ui_semantics_snapshot(&page, out, cap);
 }
 static const ink_activity_t PAGE = {.name = "Calculator", .app = "calculator", .create = create, .destroy = destroy, .snapshot = snapshot};
