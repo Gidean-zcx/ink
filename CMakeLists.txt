@@ -1970,6 +1970,8 @@ target_include_directories(sim-cell-status PRIVATE drivers/chips)
 target_link_libraries(sim-cell-status PRIVATE ink_apps ink_system)
 add_test(NAME cell-status COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/esp32s31/cell_status.py ${CMAKE_BINARY_DIR})
 add_test(NAME unit-s31-cell-negative COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/ports/esp32s31/tests/cell_negative.py ${CMAKE_BINARY_DIR} --cc ${CMAKE_C_COMPILER})
+# Runs the same fake modem as unit-s31-cell: its 100 ms ACK is missed under a loaded parallel run (seen on CI macOS).
+set_tests_properties(unit-s31-cell-negative PROPERTIES RUN_SERIAL TRUE)
 # Focused small-gaps scenarios use the real product and a synthetic peer.
 ink_sim_executable(sim-small-gaps-3 tests/small_gaps_3/main.c)
 target_link_libraries(sim-small-gaps-3 PRIVATE ink_apps ink_system)
@@ -1987,6 +1989,7 @@ if(INK_SANITIZE)
 endif()
 add_test(NAME unit-s31-uhci-negative COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/ports/esp32s31/tests/uhci_negative.py
   ${CMAKE_BINARY_DIR} --cc ${CMAKE_C_COMPILER} ${ink_uhci_test_args})
+set_tests_properties(unit-s31-uhci-negative PROPERTIES RUN_SERIAL TRUE) # same fake modem and 100 ms ACK as above
 add_test(NAME unit-s31-camera COMMAND test-s31-camera)
 add_test(NAME unit-s31-camera-negative COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/ports/esp32s31/tests/camera_negative.py ${CMAKE_BINARY_DIR})
 ink_sim_executable(sim-camera-absent tests/port_camera/absent.c)
