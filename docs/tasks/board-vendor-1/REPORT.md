@@ -9,13 +9,14 @@
 | 1a 开机默认寄存器、欠压与再充 | 【实测】单元通过 | 假 CX 寄存器 + 假 BQ 电量计，覆盖 2500/3100/3101/3200/3201/4399/4400 mV、5 mA 和充电状态边界 | `taskpolicy -c utility ctest --test-dir build -R '^board-vendor-' --output-on-failure -j2` |
 | 1b 前光 | 【实测】单元通过 | 每 5 ms 一级、升降/改目标、暖光、到位停表、关屏/锁屏立即到零且不复亮 | 同上 |
 | 1c 反向对照 | 【实测】4/4 预期失败 | `usb-cut`、`uv-3200`、`busy-kick`、`instant-light` 各退出 1，命中对应断言；`work/reverse.log` | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/board_vendor/reverse.py --build build` |
-| 1d 浅睡暂停、恢复与实际电源任务节奏 | 待执行 | 已加真实电源任务 + 可让出 CPU 的假浅睡测试，等待完整链接 | 待补 |
+| 1d 浅睡暂停、恢复与实际电源任务节奏 | 【实测】通过 | `board-vendor-power`：18 项检查，`test.finished=1`，无警告；覆盖清醒 2/10 秒、锁屏但保持清醒、让出 CPU 的 15 秒浅睡期间零调用及醒后恢复；`work/board-vendor-tests.log` | `taskpolicy -c utility ctest --test-dir build -R '^board-vendor-' --output-on-failure -j2` |
 | 2 全量、内存检查、S31、gcccheck、隐私 | 待执行 | 尚未构建 | 待补 |
 | 3 原厂差异与上机核对 | 待执行 | 待补原厂行号与寄存器边界 | 待补 |
 
 ## 没做到的
 
 - 真机验证由主会话完成，本任务不执行。
+- 未移植原厂 SOC 电压估算、可选充电电流、前光输出曲线，均超出本任务。
 
 ## 和设计不一致的
 
@@ -32,10 +33,12 @@
 ## 要用户定的
 
 - 是否开放可选充电电流不在本任务范围，保持 1 A。
+- 上机前核对实际电芯/标签的最高充电电压是否支持 4400 mV、1 A（量化 960 mA）、终止 60 mA、预充代码 12；3.1 V 断电和有效采样下限 2.5 V 也需结合电池保护规格确认。原厂电池测试曲线仅充至 4.3 V，不能据此证明 4.4 V 适用。
 
 ## 顺手发现
 
-- 暂无。
+- 原厂关闭 DPDM，`VBUS_STAT` 可能在插电时仍读 0（原厂 `docs/battery-soc-and-charge.md` §4.1、§5）。本次按任务保留原厂欠压判定，不据电量页的 `external_power` 推导替换；寄存器模型的“插电不切”只覆盖 VBUS 非零。实机须核对输入状态，不能将这项宿主机结论推广到误报 0 的硬件读数。
+- 模拟器先前把 0x14 bit2 同样当作 EN_CHG，并把 0x86 私有寄存器折回 0x06；为接入真实默认值，已同步修正这两个直接阻塞本任务的寄存器模型问题。电池充电曲线仍是估算模型。
 
 ## 新增的机制
 
@@ -44,4 +47,27 @@
 
 ## 要改的文档
 
-- 待完成后列出，由主会话合并时处理共享文档。
+- 主会话合并时更新 `docs/tasks/vendor-feature-audit/REPORT.md` 的前光渐变、再充、VREG、BATFET 行及相应接续索引；本任务未修改受保护的共享文档和历史审计/研究资料。
+
+## 原厂依据与上机顺序
+
+查阅日期：2026-11-11。原厂公开仓库 `CloudZao/Metalio-E-INK4-Plus`，v2.0.77、提交前缀 `874538e`；以下路径均相对此快照。
+
+| 依据 | 原厂位置 |
+| --- | --- |
+| 默认寄存器、私有解锁和开充 | `main/boards/common/power/cx25601n.cc:211-228,314-341` |
+| VREG、周期、欠压、终止和 kick | 同文件 `:89-209`；充电使能 `:428-447`；IINDPM 联动 `:548-581` |
+| 浅睡暂停/恢复、BATFET | 同文件 `:385-413` |
+| 板级最终默认 1 A | `main/boards/metalio-e-ink4-plus/periph/metalio_power.cc:60-63` |
+| 5 ms 一级、恢复和立即熄灭 | `main/boards/metalio-e-ink4-plus/periph/frontlight.cc:24,154-185,215-245` |
+| 电池边界与 VBUS 限制 | `docs/battery-soc-and-charge.md` §2、§3、§4、§5；任务提到的根目录 `README_zn.md` 在此快照不存在 |
+
+SHA-256：`cx25601n.cc` = `8af78da4b8e806c406b783a0185f85559f771d5c8196a9cf548a1b89474dee3b`；`frontlight.cc` = `9ecc59ea946efaf53e59566bda58e0c672d42636f66eedd540597be714f450c2`；随驱动附带的 `LICENSE.vendor` = `0a5a839033bfe18fe75d32b50d9d028912cf876f69ef59c2791aeb2971335d05`，保留原厂 MIT 版权声明。
+
+主会话上机第一步仅核对 `charger before:` / `charger after:` 日志中的 VREG、ITERM、EN_TERM、VBAT 与两项 I²C 状态；未读到的字段记为 -1，不伪装成有效读数。写后预期 VREG=4400 mV、ITERM=60 mA，EN_TERM 与原厂初始化一样保留原位，随后按电压调整。主会话确认寄存器与电池规格后，再观察一次完整充电与放电，并核对插拔电状态、低压边界、浅睡恢复和前光。宿主机结果不代表已经上机验证。
+
+## 改动规模与分层
+
+- 产品 C/H 净增 186 行（211 增、25 删，包含模拟器修正）；加上 14 行 CMake 测试注册和 22 行许可证也只有 222 行，低于 300 行。测试源码和报告另计。
+- 为什么不能更小：约百行是原厂寄存器序列、读数和保护条件，其余是板级日志/采样、现有电源循环期限与共享定时器过渡。只在 HAL 单次调用内等待整个渐变会阻塞调用方；另起原厂常驻任务违反任务约束；逐个 UI/AI 调用方补渐变会重复根因，因此未采用。
+- 【实现】充电策略只在驱动及 HAL 下层，系统电源服务仅调平台接口；前光仍由现有 `settings.set` 原子能力统一入口控制，按钮与 AI 同路。未加页面、设置项或 AI 私有旁路。
