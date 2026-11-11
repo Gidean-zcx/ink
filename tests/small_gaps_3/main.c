@@ -30,6 +30,7 @@ static void press(const char *label) {
     CHECK(x >= 0 && y >= 0, "visible touch control: %s", label);
     if (x >= 0) tap(x, y);
 }
+static bool visible(const char *label) { snprintf(wanted, sizeof wanted, "%s", label); on_ui(find); return x >= 0; }
 static void frame(void *name) { sim_display_snapshot(name); captured = true; }
 static void capture(const char *name) {
     CHECK(WAIT_FOR(settled(), 15000), "screenshot is a settled frame");
@@ -109,6 +110,7 @@ static void notes(void) {
     bool empty = !strcmp(mode, "empty-notes");
     if (empty) {
         CHECK(!strstr(g_snap, "更新说明") && !strstr(g_snap, "notes_next"), "absent notes have no block or pager");
+        CHECK(!visible("更新说明") && !visible("更新说明暂不能查看"), "absent notes render neither a heading nor the old placeholder");
         capture("no-notes"); return;
     }
     CHECK(strstr(g_snap, "更新说明") && strstr(g_snap, "合成开头") && strstr(g_snap, "notes_next"), "long notes show the beginning and pagination");

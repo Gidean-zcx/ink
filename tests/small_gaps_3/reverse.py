@@ -21,6 +21,7 @@ for case, files in {
     'member': ['system/ui/shell/member_gate.c'],
     'backup': ['system/services/backup/backup_service.c', 'system/ui/shell/backup_pages.c'],
     'notes': ['system/services/update/update_service.c', 'system/ui/shell/update_pages.c'],
+    'empty-notes': ['system/services/update/update_service.c', 'system/ui/shell/update_pages.c'],
     'sample': ['apps/reader/reader.c', 'system/ui/shell/boot_flow.c'],
 }.items():
     folder = area / case

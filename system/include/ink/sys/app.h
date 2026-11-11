@@ -40,6 +40,9 @@ void ink_app_fail(const char *why) __attribute__((noreturn));
 /** The panel's pixel density (dots per inch). */
 int ink_panel_dpi(void);
 
+/** Read an immutable bundled asset, or query its size with out=NULL. -1 if absent or too small. */
+int64_t ink_app_asset_read(const char *name, void *out, size_t cap);
+
 /* Read-only content files (/content/... on the card). */
 typedef struct ink_file ink_file_t;
 typedef struct ink_dir ink_dir_t;

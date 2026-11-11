@@ -15,7 +15,6 @@
 #include <string.h>
 
 #include "ink/probe.h"
-#include "ink/hal_assets.h"
 #include "ink/sys/app.h"
 #include "ink/sys/appreg.h"
 #include "ink/sys/cap.h"
@@ -479,21 +478,18 @@ static void page_clicked(lv_event_t *e) {
 }
 
 static bool load_text(const char *path) {
-    if (!strcmp(path, "sample/welcome.txt")) {
-        size_t len = 0;
-        const char *sample = hal_asset_map(path, &len);
-        if (!sample) return false;
-        RD.text = ink_app_alloc(len + 1, true);
-        if (RD.text) { hal_asset_access(sample, len); memcpy(RD.text, sample, len); RD.text[len] = 0; RD.len = len; }
-        hal_asset_unmap(sample);
-        return RD.text != NULL;
-    }
-    int64_t size = ink_file_size(path);
+    bool sample = !strcmp(path, "sample/welcome.txt");
+    int64_t size = sample ? ink_app_asset_read(path, NULL, 0) : ink_file_size(path);
     if (size <= 0 || size > MAX_BOOK_BYTES) return false;
     const char *prev = ink_app_tag("reader-text");
     RD.text = ink_app_alloc((size_t)size + 1, true);
     ink_app_tag(prev);
     if (!RD.text) return false;
+    if (sample) {
+        if (ink_app_asset_read(path, RD.text, (size_t)size) != size) return false;
+        RD.len = (size_t)size; RD.text[size] = 0;
+        return true;
+    }
     ink_file_t *f = ink_file_open(path);
     if (!f) return false;
     size_t got = 0;
@@ -632,10 +628,7 @@ static bool last_book(char *book, size_t cap, int *page, int *percent) {
     if (strcmp(LAST.member, member)) return false; /* still being read */
     snprintf(path, sizeof path, "/content/books/%.95s.txt", LAST.book);
     int64_t bytes = LAST.book[0] ? ink_file_size(path) : 0;
-    if (!strcmp(LAST.book, "夜邮（示例）")) {
-        size_t len = 0; const void *sample = hal_asset_map("sample/welcome.txt", &len);
-        bytes = (int64_t)len; hal_asset_unmap(sample);
-    }
+    if (!strcmp(LAST.book, "夜邮（示例）")) bytes = ink_app_asset_read("sample/welcome.txt", NULL, 0);
     if (bytes <= 0) return false; /* deleted, or the card is out */
     snprintf(book, cap, "%s", LAST.book);
     *page = LAST.page;

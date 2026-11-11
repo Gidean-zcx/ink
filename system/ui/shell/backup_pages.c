@@ -90,6 +90,7 @@ static void draw(void) {
     B.fields[2] = (ink_ui_field_spec_t){"summary", "text", TR("备份摘要"), B.info, {NULL, 0}, false};
     B.fields[3] = (ink_ui_field_spec_t){"details", "text", TR("说明"), B.detail, {NULL, 0}, false};
     B.fields[4] = (ink_ui_field_spec_t){"omitted", "text", B.restore ? TR("不恢复的内容") : TR("自动备份"), B.restore ? TR(OMITTED) : B.automatic, {NULL, 0}, false};
+    if (B.page == BACKUP) { B.fields[3] = B.fields[4]; B.model.field_count = 4; }
     ink_shell_statusbar(B.screen, true);
     int w = INK_CANVAS_W - 2 * INK_MARGIN, bottom = INK_CANVAS_H - INK_MARGIN - INK_PRIMARY;
     int middle = INK_CANVAS_H / 2, icon_y = middle - INK_CIRCLE_LARGE;

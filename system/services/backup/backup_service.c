@@ -1253,7 +1253,10 @@ static void auto_backup(void) {
     int slot = 0;
     while (slot < INK_MEMBERS_MAX && strcmp(B.known[slot].member, member)) slot++;
     if (slot == INK_MEMBERS_MAX) return;
-    if (!B.auto_after[slot]) B.auto_after[slot] = now;
+    if (!B.auto_after[slot]) {
+        if (!load_journal(member)) return;
+        B.auto_after[slot] = B.j.saved_s > 0 ? B.j.saved_s : now;
+    }
     char type[8] = "";
     ink_state_get_str(ink_state_find("net.type"), type, sizeof type);
     ink_state_get_int(ink_state_find("battery.charging"), &charging);
