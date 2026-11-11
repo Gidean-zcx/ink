@@ -1122,7 +1122,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 ### s64 — `system/ui/shell/wallpaper`
 
-设置：`display.wallpaper_file`。
+设置：`display.lock_background`、`display.lock_reading`、`display.lock_style`、`display.lock_todo`、`display.wallpaper_file`。
 
 状态：—。
 
@@ -1147,7 +1147,10 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `cell.sim_slot` | SIM 卡 | `INK_SET_ENUM` | `settings.get` / `settings.set` | 仅成人 | 中 / 无需 | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
 | `display.font_size` | 字号 | `INK_SET_ENUM` | `settings.get` / `settings.set` | 仅成人 | 中 / 无需 | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
 | `display.light` | 亮度 | `INK_SET_INT` | `settings.get` / `settings.set` | 成人、儿童（无需白名单） | 中 / 无需 | [system/services/display/light.c](../../system/services/display/light.c) |
+| `display.lock_background` | 表盘叠在壁纸上 | `INK_SET_BOOL` | `settings.get` / `settings.set` | 成人、儿童（无需白名单） | 中 / 无需 | [system/ui/shell/wallpaper.c](../../system/ui/shell/wallpaper.c) |
+| `display.lock_reading` | 锁屏继续读 | `INK_SET_BOOL` | `settings.get` / `settings.set` | 成人、儿童（无需白名单） | 中 / 无需 | [system/ui/shell/wallpaper.c](../../system/ui/shell/wallpaper.c) |
 | `display.lock_style` | 锁屏画面 | `INK_SET_ENUM` | `settings.get` / `settings.set` | 成人、儿童（无需白名单） | 中 / 无需 | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
+| `display.lock_todo` | 锁屏显示待办 | `INK_SET_BOOL` | `settings.get` / `settings.set` | 成人、儿童（无需白名单） | 中 / 无需 | [system/ui/shell/wallpaper.c](../../system/ui/shell/wallpaper.c) |
 | `display.wallpaper_file` | 壁纸图片编号 | `INK_SET_INT` | `settings.get` / `settings.set` | 仅成人 | 中 / 无需 | [system/ui/shell/wallpaper.c](../../system/ui/shell/wallpaper.c) |
 | `display.warmth` | 暖光（越大越暖） | `INK_SET_INT` | `settings.get` / `settings.set` | 成人、儿童（无需白名单） | 中 / 无需 | [system/services/display/light.c](../../system/services/display/light.c) |
 | `member.idle_return_s` | 大人锁屏多久后要重新输密码（秒） | `INK_SET_INT` | `settings.get` / `settings.set` | 仅成人 | 高 / 人、AI 均需确认 | [system/policy/members.c](../../system/policy/members.c) |

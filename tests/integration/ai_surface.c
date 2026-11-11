@@ -117,7 +117,7 @@ static const struct {
     {"memo.save", "id,draft,page"}, {"memo.delete", "id"}, {"memo.undo", "id"}, {"memo.convert", "id"}, {"memo.check", "id,index"},
     {"memo.open", "id"}, {"memo.edit", ""}, {"memo.next", NULL}, {"memo.prev", NULL}, {"memo.retry", NULL},
     {"memo.record", NULL}, {"memo.play", "id"}, {"audio.record_cancel", NULL}, {"audio.transcribe", "path"},
-    {"shell.family", NULL}, {"shell.kid_settings", NULL}, {"shell.wallpaper", NULL}, {"shell.records", ""}, {"shell.ai_memory", NULL},
+    {"shell.family", NULL}, {"shell.kid_settings", NULL}, {"shell.wallpaper", NULL}, {"shell.lock_faces", NULL}, {"shell.records", ""}, {"shell.ai_memory", NULL},
     {"family.edit", ""}, {"family.focus", NULL}, {"family.save", NULL}, {"family.role", NULL},
     {"family.prev", NULL}, {"family.next", NULL}, {"wallpaper.choose", NULL}, {"member.rename", "id,name"},
     {"calendar.open", NULL}, {"calendar.prev", NULL}, {"calendar.next", NULL}, {"calendar.month_prev", NULL},
