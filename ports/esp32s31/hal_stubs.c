@@ -47,21 +47,6 @@ void hal_bt_on_event(void (*fn)(void *ctx, hal_bt_event_t ev), void *ctx) {  }
 bool hal_camera_info(hal_camera_info_t *out) { *out = (hal_camera_info_t){0}; return false; }
 int hal_camera_capture(uint8_t *buf, size_t cap, uint32_t timeout_ms) { return -1; }
 
-/* TODO: Portable NT26 driver + upstream modem transport. */
-bool hal_cell_status(hal_cell_status_t *out) { *out = (hal_cell_status_t){0}; return false; }
-int hal_cell_select_sim(hal_cell_slot_t slot, uint32_t reg_timeout_ms) { return -1; }
-int hal_cell_radio(bool on, uint32_t reg_timeout_ms) { return -1; }
-int hal_cell_apn(const hal_cell_apn_t *apn) { return -1; }
-int hal_cell_sms_parts(const char *utf8) { return -1; }
-int hal_cell_sms_send(const char *number, const char *utf8, uint32_t timeout_ms, int *sent) { *sent = 0; return -1; }
-int hal_cell_sms_take(int index, hal_cell_sms_t *out) { return -1; }
-int hal_cell_dial(const char *number) { return -1; }
-int hal_cell_answer(void) { return -1; }
-int hal_cell_hangup(void) { return -1; }
-int hal_cell_mute(bool on, bool *muted) { return -1; }
-int hal_cell_dtmf(char key) { return -1; }
-int hal_cell_wait_event(hal_cell_event_t *ev, uint32_t timeout_ms) { osal_task_delay_us((uint64_t)timeout_ms * 1000); return 0; }
-
 
 /* Device info, log, random; RTC and accelerometer: s31_board.c. */
 __attribute__((weak)) bool ink_log_from_hal(const char *line) { (void)line; return false; }
@@ -89,13 +74,9 @@ void hal_display_set_temperature(int celsius) {  }
 /* TODO: ESP-IDF S31 JPEG decoder. */
 int hal_jpeg_decode_gray(const uint8_t *src, size_t n, uint8_t *dst, int w, int h) { return -1; }
 
-/* Wi-Fi/link/SNTP: hal_wifi_s31.c; TODO: TLS/WebSocket + NT26 modem. */
+/* Wi-Fi/link/SNTP: hal_wifi_s31.c; TODO: TLS/WebSocket. */
 hal_ws_t *hal_ws_open_pinned(const char *url, const uint8_t *sha256, hal_ws_cb cb, void *ctx) { return NULL; }
 hal_ws_t *hal_ws_open(const char *url, hal_ws_cb cb, void *ctx) { return NULL; }
-bool hal_net_lte_bytes(uint64_t *rx, uint64_t *tx) { return false; }
-hal_at_result_t hal_modem_at(const char *cmd, char *resp, size_t resp_cap, uint32_t timeout_ms) { return HAL_AT_NO_MODEM; }
-hal_at_result_t hal_modem_at_payload(const char *cmd, const char *payload, char *resp, size_t resp_cap, uint32_t timeout_ms) { return HAL_AT_NO_MODEM; }
-int hal_modem_urc(char *buf, size_t cap, uint32_t timeout_ms) { return -1; }
 bool hal_ws_peer_key(hal_ws_t *ws, uint8_t out[32]) { return false; }
 int hal_ws_send(hal_ws_t *ws, bool binary, const void *data, size_t len, int64_t timeout_us) { return -1; }
 int hal_ws_flush(hal_ws_t *ws, int64_t timeout_us) { return -1; }

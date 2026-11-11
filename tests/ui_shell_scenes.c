@@ -33,6 +33,7 @@ static void label_at(lv_obj_t *root) {
         if (lv_obj_has_flag(c, LV_OBJ_FLAG_HIDDEN)) continue;
         if (lv_obj_check_type(c, &lv_label_class) && !strcmp(lv_label_get_text(c), wanted)) {
             lv_area_t a; lv_obj_update_layout(c); lv_obj_get_coords(c, &a);
+            if (!strcmp(scene, "SetNetwork") && !strcmp(wanted, "4G") && a.y1 < ink_ui_px(INK_STATUS_BAR)) continue;
             label_x = (a.x1 + a.x2) / 2; label_y = (a.y1 + a.y2) / 2;
             found_label = c;
         }

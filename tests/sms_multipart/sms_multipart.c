@@ -59,7 +59,7 @@ static void receive(void) {
     CHECK(WAIT_FOR(messages(A, NULL) == 1, 5000) && !strcmp(got, "甲段内容，乙段内容，丙段结束。") && kept_parts() == 0,
           "3 parts in order are one message (%.150s)", got);
     part(B, "丙段结束。", 8, 3, 3, false); part(B, "甲段内容，", 8, 3, 1, false);
-    CHECK(messages(B, NULL) == 0 && kept_parts() == 2, "nothing is shown while a part is missing");
+    CHECK(WAIT_FOR(kept_parts() == 2, 5000) && messages(B, NULL) == 0, "nothing is shown while a part is missing");
     part(B, "乙段内容，", 8, 3, 2, false);
     CHECK(WAIT_FOR(messages(B, NULL) == 1, 5000) && !strcmp(got, "甲段内容，乙段内容，丙段结束。"), "out of order: put in order (%.150s)", got);
     part(C, "甲段内容，", 9, 3, 1, false); part(C, "乙段内容，", 9, 3, 2, false); part(C, "乙段内容，", 9, 3, 2, false);

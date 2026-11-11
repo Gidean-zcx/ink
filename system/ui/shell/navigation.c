@@ -346,22 +346,40 @@ lv_obj_t *ink_shell_statusbar(lv_obj_t *parent, bool show_time) {
     state_text("net.type", net, sizeof net);
     state_text("audio.mic", mic, sizeof mic);
     bool plane = ink_setting_get("net.airplane"), wifi = !strcmp(net, "wifi");
-    if (plane) ink_ui_icon(bar, "plane", INK_ICON_SMALL, INK_ICON_LINE, x, icon_y, false); /* Wi-Fi turned on again follows it */
-    if (plane && wifi) x += INK_ICON_LIST;
-    if (!plane || wifi)
-        ink_ui_icon(bar,
-                    wifi                     ? "wifi"
-                    : !strcmp(net, "lte")    ? "signal"
-                                             : "wifioff",
-                    INK_ICON_SMALL, INK_ICON_LINE, x, icon_y, false);
+    const char *cell = integer("cell.registered") ? "4G" : integer("cell.sim_missing") ? TR("无卡") : TR("无服务");
+    int cell_w = ink_ui_text_width(cell, INK_FONT_STATUS, INK_WEIGHT_MEDIUM);
+    if (plane) { ink_ui_icon(bar, "plane", INK_ICON_SMALL, INK_ICON_LINE, x, icon_y, false); x += INK_ICON_LIST; }
+    ink_ui_icon(bar, wifi ? "wifi" : "wifioff", INK_ICON_SMALL, INK_ICON_LINE, x, icon_y, false);
+    x += INK_ICON_LIST;
+    if (!plane) {
+        ink_ui_line(bar, cell, INK_FONT_STATUS, INK_WEIGHT_MEDIUM, x, text_y, cell_w);
+        x += cell_w + INK_GAP_S;
+        if (integer("cell.registered")) {
+            int64_t dbm = integer("cell.signal");
+            int bars = dbm == 0 ? 0 : dbm >= -75 ? 4 : dbm >= -85 ? 3 : dbm >= -95 ? 2 : 1;
+            int s = ink_ui_px(INK_ICON_SMALL), step = s / 4;
+            for (int i = 0; i < 4; i++) {
+                lv_obj_t *o = lv_obj_create(bar);
+                lv_obj_remove_style_all(o);
+                lv_obj_set_style_border_color(o, ink_ui_ink(), 0);
+                lv_obj_set_style_border_width(o, ink_ui_px(INK_STROKE) / 2, 0);
+                lv_obj_set_style_bg_color(o, ink_ui_ink(), 0);
+                lv_obj_set_style_bg_opa(o, i < bars ? LV_OPA_COVER : LV_OPA_TRANSP, 0);
+                int h = step * (i + 1);
+                lv_obj_set_pos(o, ink_ui_px(x) + i * step, ink_ui_px(icon_y) + s - h);
+                lv_obj_set_size(o, step - ink_ui_px(INK_STROKE), h);
+            }
+            x += INK_ICON_LIST;
+        }
+    }
     if (integer("notify.unread"))
-        ink_ui_icon(bar, "bell", INK_ICON_SMALL, INK_ICON_LINE, x + INK_ICON_LIST, icon_y, false);
+        ink_ui_icon(bar, "bell", INK_ICON_SMALL, INK_ICON_LINE, x, icon_y, false);
     if (!strcmp(mic, "local"))
-        ink_ui_icon(bar, "mic", INK_ICON_SMALL, INK_ICON_LINE, x + 2 * INK_ICON_LIST, icon_y, false);
+        ink_ui_icon(bar, "mic", INK_ICON_SMALL, INK_ICON_LINE, x + INK_ICON_LIST, icon_y, false);
     else if (!strcmp(mic, "sending") || !strcmp(mic, "recording")) {
         int pill_h = ink_ui_line_height(INK_FONT_STATUS) + INK_GAP_S;
         if (pill_h > bar_h) pill_h = bar_h;
-        lv_obj_t *s = ink_ui_box(bar, x + 2 * INK_ICON_LIST, (bar_h - pill_h) / 2, INK_CONTROL, pill_h, INK_RADIUS_KEY,
+        lv_obj_t *s = ink_ui_box(bar, x + INK_ICON_LIST, (bar_h - pill_h) / 2, INK_CONTROL, pill_h, INK_RADIUS_KEY,
                                  INK_SURFACE_BLACK, false);
         lv_obj_t *on_air =
             ink_ui_line(s, !strcmp(mic, "recording") ? "录音" : "在听", INK_FONT_STATUS, INK_WEIGHT_MEDIUM, 0,
@@ -1461,14 +1479,15 @@ static void body_blocks(void) {
             if (block(notice_h(none))) ink_ui_notice(N.page_body, none, F.y);
             F.y += notice_h(none) + INK_GAP_L;
         }
-        const char *const sim_state = integer("cell.registered") ? "4G 在线，切卡不用重启" : "4G 还没有连上";
+        const char *const sim_state = integer("cell.config_readonly") ? TR("暂不能更改 SIM 卡") : integer("cell.registered") ? "4G 在线，切卡不用重启" : "4G 还没有连上";
         h = heading_h() + INK_SEGMENT + INK_GAP_L + notice_h(sim_state);
         if (block(h)) {
             heading("SIM 卡");
             const char *const slots[] = {"外置卡", "内置卡"};
             lv_obj_t *sim = ink_ui_segments(N.page_body, slots, 2, (int) ink_setting_get("cell.sim_slot"), INK_MARGIN,
                                             F.y + heading_h(), width(), NULL, NULL);
-            bind_choices(sim, 2, "cell.sim_slot");
+            if (integer("cell.config_readonly")) lv_obj_add_state(sim, LV_STATE_DISABLED);
+            else bind_choices(sim, 2, "cell.sim_slot");
             ink_ui_notice(N.page_body, sim_state, F.y + heading_h() + INK_SEGMENT + INK_GAP_L);
         }
         F.y += h;
@@ -1673,6 +1692,8 @@ static int page_snapshot(char *buf, size_t cap) {
                       (long long) ink_setting_get("net.airplane"), (long long) ink_setting_get("wifi.enabled"), ssid,
                       N.picked_ssid, N.wifi_page + 1, (long long) ink_setting_get("cell.sim_slot"),
                       (long long) integer("cell.registered"));
+        if (integer("cell.config_readonly") && n >= 0 && (size_t)n < cap)
+            n += snprintf(buf + n, cap - (size_t)n, "SIM 卡暂不能更改；");
         for (int i = N.wifi_page * 2; i < N.wifi_count && i < (N.wifi_page + 1) * 2 && n >= 0 && (size_t) n < cap; i++)
             n += snprintf(buf + n, cap - (size_t) n, "网络[%d]=%s；", i, N.wifi_ssid[i]);
         if (ssid[0] && N.body_page == N.wifi_forget_page && n >= 0 && (size_t)n < cap) {
@@ -1927,7 +1948,12 @@ static void changed(void *ctx, int h, const char *id) {
         __atomic_add_fetch(&N.session, 1, __ATOMIC_ACQ_REL);
         return;
     }
-    if (ctx && strncmp(id, "time.", 5) && strcmp(id, "notify.unread") &&
+    bool cell_status = !strcmp(id, "cell.registered") || !strcmp(id, "cell.sim_missing") ||
+        (!strcmp(id, "cell.signal") && integer("cell.registered"));
+    bool cell_config = !strcmp(id, "cell.config_readonly") && integer("cell.config_readonly") &&
+        N.page_body && N.page_id == PAGE_NETWORK;
+    if (cell_config) __atomic_store_n(&N.need_body, true, __ATOMIC_RELEASE);
+    if (ctx && strncmp(id, "time.", 5) && strcmp(id, "notify.unread") && !cell_status && !cell_config &&
         strcmp(id, "audio.mic") && strcmp(id, "net.type") && strncmp(id, "wifi.", 5) && strcmp(id, "bt.connected"))
         return;
     if (!ctx || !strcmp(id, "notify.unread") || !strncmp(id, "wifi.", 5) || !strcmp(id, "bt.connected"))

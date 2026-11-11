@@ -75,7 +75,7 @@ static struct {
     char call_member[16], call_peer[24]; /* protected by at; member and tones also by lock */
     uint32_t call_generation;
     char tones[65]; /* local display only, protected by lock */
-    int h_registered, h_sim, h_roaming, h_mobile, mobile_rev;
+    int h_registered, h_sim, h_roaming, h_mobile, mobile_rev, h_signal, h_missing, h_readonly;
     hal_cell_apn_t apn;
     struct { uint64_t current, previous; int month, day; } usage;
     uint64_t sampled_bytes;
@@ -162,6 +162,9 @@ static bool refresh_status(hal_cell_status_t *st) {
     osal_mutex_lock(CM.at, OSAL_WAIT_FOREVER);
     bool up = hal_cell_status(st);
     osal_mutex_unlock(CM.at);
+    ink_state_set_int(CM.h_signal, up ? st->signal_dbm : 0);
+    ink_state_set_bool(CM.h_missing, up && st->sim_missing);
+    ink_state_set_bool(CM.h_readonly, st->config_readonly);
     if (!up) {
         ink_state_set_bool(CM.h_registered, false);
         ink_state_set_str(CM.h_sim, "none");
@@ -798,6 +801,10 @@ int ink_comm_init(void) {
     CM.at = osal_mutex_create();
     if (!CM.lock || !CM.at) return -1;
     if (saved) ink_exec_post(INK_EXEC_BG, &CM.apn_job, mobile_apply, NULL);
+    static const ink_state_def_t signal = {.id = "cell.signal", .type = INK_ST_INT, .title = "移动网络信号"};
+    static const ink_state_def_t missing = {.id = "cell.sim_missing", .type = INK_ST_BOOL, .title = "未插 SIM 卡"};
+    static const ink_state_def_t readonly = {.id = "cell.config_readonly", .type = INK_ST_BOOL, .title = "移动网络配置只读"};
+    CM.h_signal = ink_state_define(&signal); CM.h_missing = ink_state_define(&missing); CM.h_readonly = ink_state_define(&readonly);
     CM.h_registered = ink_state_define(&ST_REGISTERED);
     static const ink_state_def_t roaming = {.id = "cell.roaming", .type = INK_ST_BOOL, .title = "漫游注册"};
     CM.h_roaming = ink_state_define(&roaming);

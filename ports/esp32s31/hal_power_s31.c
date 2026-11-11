@@ -12,6 +12,7 @@
 #include "ink/osal.h"
 #include "metalio_plus/metalio_epd_power.h"
 #include "s31_board.h"
+#include "s31_cell.h"
 #include "s31_input_logic.h"
 #include "s31_io.h"
 #include "s31_safety.h"
@@ -132,7 +133,7 @@ uint32_t hal_power_sleep(const hal_sleep_cfg_t *cfg) {
         return 0;
     }
     if (!armed && !cfg->max_us) return 0;
-    bool masked = false, cut = false, keys_back = true;
+    bool masked = false, cut = false, keys_back = true, cell_stopped = false;
     uint32_t cause = 0;
     uint64_t wake_pins = 0;
     uint64_t woke_at = 0;
@@ -152,6 +153,10 @@ uint32_t hal_power_sleep(const hal_sleep_cfg_t *cfg) {
     if (metalio_board_arm_wake((armed & HAL_WAKE_POWER_KEY) != 0, (armed & HAL_WAKE_RTC) != 0) != HAL_I2C_OK ||
         !gpio_get_level(S31_GPIO_EXP_INT) || !wake_enable(armed, cfg->max_us)) goto out;
     hal_light_set(0, 0);
+    if (!cfg->keep_modem) {
+        if (!ink_s31_cell_suspend()) goto out;
+        cell_stopped = true;
+    }
     cut = true;
     if (metalio_board_cut_rails(cfg->keep_modem) != HAL_I2C_OK) goto out;
     esp_err_t sleep_rc = ESP_OK;
@@ -180,6 +185,7 @@ out:
         else hal_log_write("power HAL: key restore failed; sampling stays off");
     }
     if (cut && !restore(restore_rails)) hal_log_write("power HAL: rail restore failed");
+    if (cell_stopped) ink_s31_cell_resume();
     /* No SD/CNNT mux in this port yet: place USB after rails, before input resumes. */
     if (woke_at && cause != HAL_WAKE_TIMER) ink_usb_revive();
     s31_accel_resume();
