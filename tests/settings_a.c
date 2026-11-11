@@ -67,7 +67,7 @@ static bool row_has_icon(lv_obj_t *slot) {
                 lv_obj_t *part = lv_obj_get_child(bg, (int32_t)k);
                 if (lv_obj_get_y(part)) continue;
                 if (lv_obj_get_width(part) == lv_obj_get_width(bg)) joined = true;
-                if (lv_color_eq(lv_obj_get_style_bg_color(part, 0), ink_ui_paper()) &&
+                if (lv_color_eq(lv_obj_get_style_bg_color(part, 0), ink_ui_ink()) &&
                     lv_obj_get_height(part) == ink_ui_px(INK_STROKE)) divided = true;
             }
             CHECK(joined == divided, "every joined settings row uses the shared divider, including later pages");
@@ -109,7 +109,9 @@ static void inspect_visible_page(void) {
                 "storage.books", "storage.audio", "storage.photos", "storage.clean", "update.check", "privacy", "device.details", "licenses"};
             for (size_t k = 0; k < sizeof GROUPED / sizeof *GROUPED; k++)
                 if (ink_json_eq(j, ink_json_find(j, 0, "id"), GROUPED[k]))
-                    CHECK(slot && row_has_icon(slot) && lv_color_eq(lv_obj_get_style_bg_color(lv_obj_get_child(slot, 0), 0), ink_ui_gray()),
+                    CHECK(slot && row_has_icon(slot) && ink_ui_surface_kind(lv_obj_get_child(slot, 0)) == INK_SURFACE_STATIC &&
+                        lv_color_eq(lv_obj_get_style_bg_color(lv_obj_get_child(slot, 0), 0), ink_ui_paper()) &&
+                        lv_obj_get_style_border_width(lv_obj_get_child(slot, 0), 0) == ink_ui_px(INK_STROKE),
                         "grouped row retains the design's icon and theme background: %s", GROUPED[k]);
         }
         if (!ink_json_eq(j, ink_json_find(j, 0, "role"), "setting")) {

@@ -89,9 +89,8 @@ static void member_tile(const ink_member_t *m, int x, int y, int diameter, bool 
     G.fields[at] = (ink_ui_field_spec_t){.id = m->id, .role = "button", .label = m->name, .value = ink_member_has_pin(m->id) ? TR("有密码") : TR("无密码")};
     lv_obj_t *b = ink_ui_pill(G.card.panel, "", x, y, diameter, diameter, primary, on_member, (void *)m);
     lv_obj_add_event_cb(b, pressed, LV_EVENT_PRESSED, NULL);
-    lv_obj_set_style_border_width(b, 0, 0);
+    ink_ui_surface_style(b, primary ? INK_SURFACE_BLACK : INK_SURFACE_STATIC, false);
     lv_obj_set_style_clip_corner(b, false, 0); /* The lock badge crosses the avatar's round edge. */
-    if (!primary) lv_obj_set_style_bg_color(b, ink_ui_gray(), 0);
     char first[8] = {0};
     size_t len = 1;
     while (len < sizeof first - 1 && (m->name[len] & 0xc0) == 0x80) len++;

@@ -23,6 +23,9 @@ for line in (build / 'CMakeFiles/ink_system.dir/flags.make').read_text().splitli
         key, value = line.split(' = ', 1)
         flags[key] = shlex.split(value)
 mutations = [
+    ('static-gray-fill', 'theme.c',
+     '    lv_obj_set_style_bg_color(obj, surface == INK_SURFACE_BLACK ? ink_ui_ink() : ink_ui_paper(), 0);',
+     '    lv_obj_set_style_bg_color(obj, surface == INK_SURFACE_BLACK ? ink_ui_ink() : surface == INK_SURFACE_STATIC ? lv_color_hex(0x888888) : ink_ui_paper(), 0);'),
     ('decorative-outline', 'theme.c', 'surface == INK_SURFACE_WHITE && cb', 'surface == INK_SURFACE_WHITE'),
     ('toggle-tile', 'theme.c', '    lv_obj_set_style_bg_opa(row, LV_OPA_TRANSP, 0);\n', ''),
     ('list-icon-circle', 'theme.c',
@@ -30,11 +33,11 @@ mutations = [
      '                  INK_SURFACE_WHITE, NULL, NULL);',
      '    ink_ui_icon(r, icon, INK_ICON_MEDIUM, INK_ICON_LINE, INK_GAP + (INK_CIRCLE_SMALL - INK_ICON_MEDIUM) / 2, (h - INK_ICON_MEDIUM) / 2, false);'),
     ('list-divider', 'theme.c',
-     '    if (y && lv_color_eq(lv_obj_get_style_bg_color(parent, 0), ink_ui_gray())) ink_ui_group_divider(r, 0, w);\n', ''),
+     '    if (y && ink_ui_surface_kind(parent) == INK_SURFACE_STATIC) ink_ui_group_divider(r, 0, w);\n', ''),
     ('late-button-outline', 'shell/navigation.c',
      '    if (lv_obj_get_style_radius(obj, 0) == LV_RADIUS_CIRCLE &&\n'
      '        lv_obj_get_style_width(obj, 0) == lv_obj_get_style_height(obj, 0) &&\n'
-     '        lv_color_eq(lv_obj_get_style_bg_color(obj, 0), ink_ui_paper()))\n'
+     '        ink_ui_surface_kind(obj) == INK_SURFACE_WHITE)\n'
      '        lv_obj_set_style_border_width(obj, ink_ui_px(INK_STROKE), 0);\n', ''),
     ('settings-divider', 'shell/settings_pages.c', '            ink_ui_group_divider(bg, 0, w);\n', ''),
     ('settings-row-gap', 'shell/settings_pages.c', 'S.y += h + (join_next ? 0 : INK_STROKE);', 'S.y += h + INK_STROKE;'),

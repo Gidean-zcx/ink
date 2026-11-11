@@ -37,8 +37,10 @@ int ink_ui_width(void);
 int ink_ui_height(void);
 lv_color_t ink_ui_paper(void);
 lv_color_t ink_ui_ink(void);
-lv_color_t ink_ui_gray(void);
 lv_color_t ink_ui_secondary(void);
+/* Surface kinds survive the static surface's white fill. USER_2/3 are reserved for them. */
+ink_ui_surface_t ink_ui_surface_kind(const lv_obj_t *obj);
+void ink_ui_surface_style(lv_obj_t *obj, ink_ui_surface_t surface, bool border);
 const lv_font_t *ink_ui_font_px(int px, ink_ui_weight_t weight);
 int ink_ui_line_height(int px);
 /** Height of a row with a title and a line under it, at the current text size. */

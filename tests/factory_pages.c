@@ -43,15 +43,16 @@ static void save(void *arg) {
 static void inspect_style(lv_obj_t *root) {
     for (uint32_t i = 0; i < lv_obj_get_child_count(root); i++) {
         lv_obj_t *o = lv_obj_get_child(root, (int32_t)i);
-        if (lv_color_eq(lv_obj_get_style_bg_color(root, 0), ink_ui_gray())) {
+        if (ink_ui_surface_kind(root) == INK_SURFACE_STATIC) {
             int w = lv_obj_get_width(o), h = lv_obj_get_height(o);
             if (lv_obj_get_style_bg_opa(o, 0) == LV_OPA_COVER && lv_color_eq(lv_obj_get_style_bg_color(o, 0), ink_ui_paper())) {
                 if (w == h && lv_obj_get_style_radius(o, 0) >= w / 2) {
                     CHECK(!lv_obj_get_style_border_width(o, 0) && !lv_obj_has_flag(o, LV_OBJ_FLAG_CLICKABLE), "decorative factory icon has no button outline");
                     style_icons++;
                 }
-                if (w > lv_obj_get_width(root) / 2 && h <= ink_ui_px(INK_STROKE)) style_dividers++;
             }
+            if (w > lv_obj_get_width(root) / 2 && h <= ink_ui_px(INK_STROKE) &&
+                lv_color_eq(lv_obj_get_style_bg_color(o, 0), ink_ui_ink())) style_dividers++;
             lv_obj_t *label_obj = lv_obj_get_child(o, 0);
             if (label_obj && lv_obj_check_type(label_obj, &lv_label_class) && !lv_label_get_text(label_obj)[0]) {
                 CHECK(lv_obj_get_style_bg_opa(o, 0) == LV_OPA_TRANSP, "factory switch has no white rectangular tile over its gray card");

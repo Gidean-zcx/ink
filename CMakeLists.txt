@@ -608,6 +608,10 @@ add_test(NAME unit-flash-plan COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/
 add_executable(sim-ui-scenes simulator/runtime/sim_main.c tests/ui_shell_scenes.c)
 target_link_libraries(sim-ui-scenes PRIVATE ink_apps ink_system ink_port_sim)
 target_compile_options(sim-ui-scenes PRIVATE ${INK_WARN} -Wno-format-truncation)
+ink_sim_executable(sim-ui-borders tests/ui_borders.c)
+target_link_libraries(sim-ui-borders PRIVATE ink_apps ink_system)
+add_test(NAME ui-borders COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/ui_borders.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(ui-borders PROPERTIES TIMEOUT 180)
 set(INK_SHELL_SCENES Main Today Apps Lock LockPage Control Notifications Members MembersBack Pin PinWrong
   ImePinyin ImeCandidates ImeEdit ImePassword ImeVoice Confirm ConfirmDelete ConfirmSecret AiListen AiThink Ai
   Settings SetDisplay SetSound SetNetwork SetVoice SetAbout SetPrivacy ImeSymbols
