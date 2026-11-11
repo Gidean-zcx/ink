@@ -7,7 +7,7 @@
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
 | 1 | 通过（宿主机） | 【实测】4/4 专项；395 项普通全量覆盖原脚本；真实总线打开相机、危险调用拒绝；输入边沿/坐标/长按/脱敏/确认拦截；默认/OFF 不编入执行器 | `ctest --test-dir build --output-on-failure -j2 -R '^autotest-'` |
-| 2 | 通过（macOS 全量/内存检查及 S31 构建） | 【实测】普通和 ASan/UBSan 全量均 395/395、ctest 无跳过；S31 正常版/测试版均编过；大小、关闭后字节比对见下 | `ctest --test-dir build{,-asan} --output-on-failure -j2`（两目录分别跑）；`INK_AUTOTEST=OFF/ON bash ports/esp32s31/build.sh` |
+| 2 | 通过（macOS 全量/内存检查及 S31 构建） | 【实测】普通和 ASan/UBSan 全量均 395/395、ctest 无跳过；S31 正常版/测试版均编过；大小、关闭后字节比对见下 | `ctest --test-dir build --output-on-failure -j2`；`ctest --test-dir build-asan --output-on-failure -j2`；[两版构建命令](USAGE.md#编译) |
 | 3 | 已完成文档 | 【实现】[使用说明](USAGE.md)，包括三个脚本前提、trial_run 的恢复行为与正常版重装、日志解释 | 本任务未运行设备命令 |
 
 ## 没做到的
