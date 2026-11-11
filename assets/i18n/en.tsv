@@ -1345,6 +1345,9 @@ AI 面板	AI Panel
 \n回答太长，只显示了前面部分。	\nAnswer too long; only the start is shown.
 %d年%d月	%d-%d
 %d年%d月%d日 · %s	%d-%d-%d · %s
+昨天 %02d:%02d	Yesterday %02d:%02d
+%d月%d日 %02d:%02d	%d/%d %02d:%02d
+%d年%d月%d日 %02d:%02d	%d/%d/%d %02d:%02d
 %d月%d日 %02d:%02d %s · %s	%d/%d %02d:%02d %s · %s
 %d月%d日 %s · %s	%d/%d %s · %s
 %d月%d日 · %s	%d/%d · %s

@@ -29,7 +29,7 @@ static struct {
     lv_obj_t *panel, *status, *heard; /* the voice panel: where the keys were, the same size */
     int first;
     int shown;
-    bool symbols, shift, expanded, secret_present, plain, english, drawn_shift;
+    bool symbols, shift, expanded, secret_present, plain, english, drawn_shift, password;
     const char *map[KEYBOARD_MAP_MAX];
     lv_buttonmatrix_ctrl_t control[KEYBOARD_BUTTON_MAX];
     char codes[KEYBOARD_BUTTON_MAX], legends[KEYBOARD_BUTTON_MAX][24];
@@ -50,7 +50,7 @@ static int keyboard_height(void) {
     ink_text_type_t type = ink_text_type();
     bool number = type == INK_TEXT_NUMBER || type == INK_TEXT_PHONE;
     bool nine = type == INK_TEXT_PLAIN && !ink_text_english() && !K.symbols && ink_setting_get("text.nine_key");
-    int top = ink_ui_line_height(INK_FONT_LIST) + candidates_height() + 2 * INK_KB_GAP;
+    int top = type == INK_TEXT_PASSWORD ? 0 : ink_ui_line_height(INK_FONT_LIST) + candidates_height() + 2 * INK_KB_GAP;
     /* Nine-key pinyin is as tall as the full keyboard (phone keyboards keep one height when switching layouts):
      * three letter-height rows of digit keys and the function row. The number pad keeps its tall digits. */
     return top + (number ? 3 * key_height(true) + 2 * key_height(false) + 4 * INK_KB_GAP :
@@ -378,6 +378,7 @@ static void build(int kind) {
     lv_obj_set_height(K.composing, ink_ui_px(ink_ui_line_height(INK_FONT_LIST)));
     lv_obj_set_style_text_font(K.composing, font(), 0);
     lv_label_set_text(K.composing, "");
+    if (K.password) lv_obj_add_flag(K.composing, LV_OBJ_FLAG_HIDDEN);
     K.edit = new_row();
     static const char *const EDIT[] = {"◀", "▶", TR_NOOP("复制"), TR_NOOP("剪切"), TR_NOOP("粘贴"), TR_NOOP("撤销"), TR_NOOP("重做")};
     for (unsigned i = 0; i < sizeof EDIT / sizeof *EDIT; i++) {
@@ -538,8 +539,10 @@ static void sync(void) { /* UI task */
     int kind = type == INK_TEXT_NUMBER || type == INK_TEXT_PHONE ? 3 : K.symbols ? 2 :
                type == INK_TEXT_PLAIN && !ink_text_english() && ink_setting_get("text.nine_key") ? 4 : type == INK_TEXT_PASSWORD ? 5 : 1;
     bool plain = type == INK_TEXT_PLAIN, english = ink_text_english();
-    bool rebuild = !K.root || K.built_for != kind || K.plain != plain || K.english != english;
-    K.plain = plain; K.english = english;
+    bool password = type == INK_TEXT_PASSWORD;
+    bool rebuild = !K.root || K.built_for != kind || K.plain != plain || K.english != english || K.password != password;
+    K.plain = plain; K.english = english; K.password = password;
+    if (password) K.expanded = false;
     if (rebuild) build(kind);
     /* Keys over the AI panel while a field is focused: its controls sit where the candidate row is (the
      * microphone at the right end met its hide button). Only this pair is reordered; cards, the lock mark and
@@ -598,7 +601,8 @@ static void sync(void) { /* UI task */
     if (editing) { lv_obj_remove_flag(K.edit, LV_OBJ_FLAG_HIDDEN); lv_obj_add_flag(K.cands, LV_OBJ_FLAG_HIDDEN); }
     else {
         lv_obj_add_flag(K.edit, LV_OBJ_FLAG_HIDDEN);
-        lv_obj_remove_flag(K.cands, LV_OBJ_FLAG_HIDDEN);
+        if (password) lv_obj_add_flag(K.cands, LV_OBJ_FLAG_HIDDEN);
+        else lv_obj_remove_flag(K.cands, LV_OBJ_FLAG_HIDDEN);
     }
     for (uint32_t i = 0; i < lv_obj_get_child_count(K.keys); i++) {
         lv_obj_t *row = lv_obj_get_child(K.keys, (int32_t)i);

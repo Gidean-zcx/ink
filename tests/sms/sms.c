@@ -54,7 +54,7 @@ static void scene(const char *name) {
 }
 static void type_short(void) {
     CHECK(S.field && ink_text_focused(), "F2 input is focused");
-    ink_text_commit_utf8("合成短短信"); ink_text_enter();
+    ink_text_commit_utf8("合成短短信"); ink_text_blur(0);
 }
 static void type_long(void) {
     CHECK(S.field && ink_text_focused(), "F3 long input is focused");
@@ -199,7 +199,10 @@ static void inspect_bubbles(void) {
     for (size_t i = 0; i < S.visible; i++) if (S.stamps[i] || i + 1 == S.visible) expected_stamps++;
     for (uint32_t i = 0; i < lv_obj_get_child_count(S.thread_slot); i++) {
         lv_obj_t *o = lv_obj_get_child(S.thread_slot, i);
-        if (lv_obj_check_type(o, &lv_label_class)) { const char *v = lv_label_get_text(o); if (strlen(v) == 16 && v[4] == '-' && v[7] == '-') actual_stamps++; }
+        if (lv_obj_check_type(o, &lv_label_class)) {
+            const char *v = lv_label_get_text(o);
+            for (size_t j = 0; j < S.visible; j++) if ((S.stamps[j] || j + 1 == S.visible) && !strcmp(v, S.times[j])) { actual_stamps++; break; }
+        }
     }
     CHECK(actual_stamps == expected_stamps, "only the first bubble in each visible time group has a timestamp");
     lv_area_t bar, frame; lv_obj_get_coords(lv_obj_get_child(lv_obj_get_parent(S.thread_slot), -1), &bar); lv_obj_get_coords(S.thread_slot, &frame);
@@ -260,8 +263,93 @@ static void thread_acceptance(int total, bool large) {
     CHECK(WAIT_FOR(sim_net_sms_sent() == before + 1 && S.count == before_count + 1 && S.result[0] && settled(), 10000), "inline send finishes once"); quiet(); on_ui(end_measure);
     snprintf(shot_name, sizeof shot_name, "refresh"); on_ui(snapshot_page); vtk_host_call(export_thread, NULL);
 }
+static void polish_scene(const char *name) {
+    quiet(); on_ui(snapshot_page); snprintf(shot_name, sizeof shot_name, "%s", name);
+    vtk_host_call(export_thread, NULL); vtk_event_at(vtk_now() + SIM_MS(1), thread_capture, NULL); delay_ms(5);
+}
+static void fixture(const char *peer, const char *text, const char *status, int sort, int64_t at) {
+    ink_time_set(at, false);
+    ink_db_t *db = ink_db_open_member(ink_db_find_def("sms.messages"), "owner"); char raw[384];
+    int n = snprintf(raw, sizeof raw, "{\"peer\":\"%s\",\"text\":\"%s\",\"status\":\"%s\"}", peer, text, status);
+    ink_db_write_t wr = {.sort = sort, .data = raw, .len = n > 0 ? (size_t)n : 0, .src = INK_SRC_SYSTEM};
+    CHECK(db && n > 0 && (size_t)n < sizeof raw && ink_db_put(db, &wr, NULL) == INK_DB_OK, "store synthetic date fixture"); ink_db_close(db);
+}
+static const char *const DATE_LABELS[] = {"2025年11月2日 08:00", "11月2日 08:00", "昨天 08:00", "08:00"};
+static unsigned dates_seen;
+static void inspect_dates(void) {
+    snapshot_page();
+    for (size_t i = 0; i < S.visible; i++) {
+        int which = -1;
+        CHECK(sscanf(S.texts[i], "合成日期%d", &which) == 1 && which >= 0 && which < 4, "visible synthetic date fixture");
+        if (which < 0 || which >= 4) continue;
+        CHECK(!strcmp(S.times[i], DATE_LABELS[which]), "local date label %d is %s, got %.31s", which, DATE_LABELS[which], S.times[i]);
+        wanted = DATE_LABELS[which]; located = NULL; find_label(S.thread_slot);
+        CHECK(located && strstr(snap, DATE_LABELS[which]), "rendered date and AI metadata agree for %d", which);
+        dates_seen |= 1u << which;
+    }
+}
+static lv_obj_t *enter_board;
+static uint32_t enter_index;
+static void find_enter(lv_obj_t *obj) {
+    if (!lv_obj_is_visible(obj)) return;
+    if (lv_obj_check_type(obj, &lv_keyboard_class)) {
+        const char *const *map = lv_buttonmatrix_get_map(obj); uint32_t id = 0;
+        for (size_t i = 0; map[i][0]; i++) {
+            if (!strcmp(map[i], "\n")) continue;
+            if (!strcmp(map[i], TR("发送")) || !strcmp(map[i], TR("完成"))) { enter_board = obj; enter_index = id; }
+            id++;
+        }
+    }
+    for (uint32_t i = 0; i < lv_obj_get_child_count(obj); i++) find_enter(lv_obj_get_child(obj, i));
+}
+static void press_enter(void) {
+    enter_board = NULL; find_enter(lv_layer_sys());
+    CHECK(ink_text_enter_kind() == INK_ENTER_SEND && enter_board && !strcmp(lv_buttonmatrix_get_button_text(enter_board, enter_index), TR("发送")), "SMS keyboard enter key visibly says Send");
+    if (!enter_board) return;
+    lv_buttonmatrix_set_selected_button(enter_board, enter_index);
+    lv_obj_send_event(enter_board, LV_EVENT_PRESSED, NULL); lv_obj_send_event(enter_board, LV_EVENT_VALUE_CHANGED, NULL);
+}
+static void polish_acceptance(void) {
+    static const ink_tm_t dates[] = {
+        {.year = 2025, .month = 11, .day = 2, .hour = 8}, {.year = 2026, .month = 11, .day = 2, .hour = 8},
+        {.year = 2026, .month = 11, .day = 11, .hour = 8}, {.year = 2026, .month = 11, .day = 12, .hour = 8}
+    };
+    _Static_assert(sizeof dates / sizeof *dates == sizeof DATE_LABELS / sizeof *DATE_LABELS, "date fixture labels");
+    ink_tm_t now = {.year = 2026, .month = 11, .day = 12, .hour = 12}; int64_t noon = ink_time_from_local(&now);
+    for (size_t i = 0; i < sizeof dates / sizeof *dates; i++) {
+        char text[32]; snprintf(text, sizeof text, "合成日期%u", (unsigned)i);
+        fixture("00000000990", text, i % 2 ? "已发出" : "收到", (int)i, ink_time_from_local(&dates[i]));
+    }
+    ink_time_set(noon, false);
+    for (int large = 0; large < 2; large++) {
+        CHECK(BY_HAND("settings.set", large ? "{\"id\":\"display.font_size\",\"value\":3}" : "{\"id\":\"display.font_size\",\"value\":1}") && g_rc.status == INK_RC_DONE, "set date screenshot text size");
+        CHECK(AI("sms.thread", "{\"peer\":\"00000000990\"}") && g_rc.status == INK_RC_DONE, "open actual dated conversation"); quiet();
+        polish_scene(large ? "SmsThread-large" : "SmsThread-normal");
+        dates_seen = 0;
+        do { on_ui(inspect_dates); if (!S.position.page) break; CHECK(AI("sms.prev", NULL) && g_rc.status == INK_RC_DONE, "inspect older dated messages"); quiet(); } while (S.position.page < S.thread_pages);
+        CHECK(dates_seen == 15, "today, yesterday, older and cross-year labels are all rendered");
+    }
+    static const int gaps[] = {0, 240, 480, 779, 1079, 1380};
+    for (size_t i = 0; i < sizeof gaps / sizeof *gaps; i++) {
+        char text[32]; snprintf(text, sizeof text, "合成间隔%u", (unsigned)i);
+        fixture("00000000991", text, i % 2 ? "已发出" : "收到", (int)i, noon + gaps[i]);
+    }
+    CHECK(AI("sms.thread", "{\"peer\":\"00000000991\"}") && g_rc.status == INK_RC_DONE, "open adjacent-gap conversation"); quiet();
+    CHECK(S.count == sizeof gaps / sizeof *gaps, "all adjacent-gap fixtures loaded");
+    for (size_t i = 0; i < S.count; i++) CHECK(S.groups[S.count - 1 - i] == (i == 0 || i >= 4), "adjacent gap %zu ignores direction and the first group's age; 299 merges, 300 and 301 split", i);
+    CHECK(BY_HAND("sms.compose", "{\"number\":\"00000000992\"}") && g_rc.status == INK_RC_DONE, "new composer for enter-send"); quiet();
+    for (int inline_reply = 0; inline_reply < 2; inline_reply++) {
+        CHECK(AI("sms.text", NULL) && g_rc.status == INK_RC_DONE, "focus the real SMS body"); quiet();
+        CHECK(AI("text.insert", inline_reply ? "{\"text\":\"合成回车回复\"}" : "{\"text\":\"合成回车新建\"}") && g_rc.status == INK_RC_DONE, "fill synthetic enter-send text");
+        int before = sim_net_sms_sent(), logical = sim_net_sent_sms(-1, NULL, 0, NULL, 0); on_ui(press_enter);
+        CHECK(WAIT_FOR(sim_net_sms_sent() == before + 1 && !strcmp(ink_ui_page_name(), "SmsThread") && S.result[0] && settled(), 10000), "keyboard enter sends exactly once and shows its result"); quiet();
+        CHECK(sim_net_sent_sms(logical, sent_number, sizeof sent_number, sent_text, sizeof sent_text) == logical + 1 && !strcmp(sent_number, "00000000992") && !strcmp(sent_text, inline_reply ? "合成回车回复" : "合成回车新建"), "keyboard enter preserves exact recipient and body");
+        CHECK(!strcmp(S.result, "已发出") && !ink_text_focused(), "enter-send uses the existing receipt and ends input");
+    }
+}
 static bool review_phase(void) {
-    if (!strcmp(phase, "legacy-send")) {
+    if (!strcmp(phase, "polish")) { polish_acceptance(); }
+    else if (!strcmp(phase, "legacy-send")) {
         CHECK(ink_cap_find("message.send")->run == ink_cap_find("sms.send")->run, "both public send names share one implementation");
         CHECK(BY_HAND("message.send", "{\"to\":\"00000000001\",\"text\":\"合成短信\"}") && g_rc.status == INK_RC_DONE,
             "legacy send succeeds through AT");
@@ -329,7 +417,7 @@ static void run(void *arg) {
     else if (!strcmp(phase, "SmsThread")) {
         open_list(); snprintf(arguments, sizeof arguments, "{\"to\":\"%s\",\"text\":\"%s\"}", PEER, body);
         CHECK(BY_HAND("sms.send", arguments) && g_rc.status == INK_RC_DONE, "send long fixture through the AT model");
-        CHECK(AI("sms.thread", "{\"peer\":\"00000000001\"}") && g_rc.status == INK_RC_DONE, "open the long conversation"); quiet(); on_ui(inspect_thread); scene("SmsThread"); thread_acceptance(20, false);
+        CHECK(AI("sms.thread", "{\"peer\":\"00000000001\"}") && g_rc.status == INK_RC_DONE, "open the long conversation"); quiet(); on_ui(inspect_thread); scene("SmsThread"); polish_acceptance(); thread_acceptance(20, false);
     } else {
         open_list(); CHECK(stored("owner") == 0, "fresh SMS page has no invented data");
         for (int i = 0; i < 17; i++) deliver();
