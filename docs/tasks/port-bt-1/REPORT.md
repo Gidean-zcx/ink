@@ -59,6 +59,10 @@
 - 【实测】定向音频/电源 3/3、音频/蜂窝 2/2 通过。三项反向对照均编译退出 0、测试退出 -6（断言）：`connect-without-mode2`、`disconnect-without-mode1`、`second-uart-owner`。没有改断言让突变通过。
 - 【实测】首轮普通全量原话：`99% tests passed, 1 tests failed out of 386`，520.33 秒，退出 8；失败为 `unit-s31-uhci-negative` 的旧通知块文本定位（新增 BH 通知后找不到原块）。更新该定位后相关测试 `100% tests passed out of 5`，9.58 秒，退出 0。首轮另有 3 项中枢环境跳过。
 - 【实测】gcccheck 宿主机编译数据库：`5 compiled, 0 with findings`（BH 管理点、音频、蜂窝、音频假芯片测试、蜂窝假模组测试）；能力清单：`PASS: 552 definitions, docs/system/capabilities.md`。
+- 【实测】最终 S31（浅睡 ON）完整编译退出 0，产品编译警告/错误 0，镜像 4,365,600 字节；输出层仍核验原锁定 `690a023`，没有升级依赖或操作设备。S31 编译数据库补跑 gcccheck：`6 compiled, 0 with findings`（BH、音频、蜂窝、输入、电源、UART）。最终宿主机 gcccheck 仍为 `5 compiled, 0 with findings`。
+- 【实测】端口独立套件普通版 `100% tests passed out of 30`，11.65 秒；ASan+UBSan 版 `100% tests passed out of 30`，10.00 秒。原音频/Opus 反向测试的两个基准通过、14 个突变全部编过且断言退出 -6。日志在忽略的 `work/port-bt-1/`。
+- 【实测】产品 C/H：增加 348、删除 50，净增 298 行；全部 CMake 改动也计入为 306 行，低于 600 行预算。测试、文档不计。
+- 【实测】基线至 HEAD 按总规则正则扫描：绝对路径 0，MAC 形状 2 处，均为总规则允许的同一合成地址；去掉这两处后 0 匹配。没有真实蓝牙地址。最终结束前再核对。
 - 【实现】架构审视：服务/界面仍通过原来的 `bt.*`、`call.*`、`audio.route` 原子能力，按钮与 AI 共用同一路径；端口只处理 UART/I2S/电源，未让界面直接改驱动状态。事件沿既有 LOST → 后台处理 → `bt.changed` 路径；没有新页面或缺少 AI 快照的新操作。
 - 【实现】为什么不能更小：任务要求同一串口的扫描/连接、音频/SCO、异步通知与 P14 恢复，超过 100 行不可避免。看过分别在音频和蓝牙加命令的方案，会形成两个串口所有者；照搬原厂页面与多个任务则超范围。当前只移走原有模式初始化，复用现有驱动、输入任务和电源流程。
 
@@ -97,4 +101,6 @@ INK_KEEP_EVIDENCE=1 UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DE
 INK_S31_LIGHT_SLEEP=ON taskpolicy -c utility bash ports/esp32s31/build.sh
 taskpolicy -c utility python3 ports/esp32s31/tests/bt_negative.py build
 taskpolicy -c utility python3 tools/capabilities.py --check
+taskpolicy -c utility python3 ../../tools/gcccheck.py build ports/esp32s31/hal_bt_s31.c ports/esp32s31/hal_audio_s31.c ports/esp32s31/hal_cellular_s31.c ports/esp32s31/tests/audio.c ports/esp32s31/tests/cell.c
+taskpolicy -c utility python3 ../../tools/gcccheck.py build-s31 ports/esp32s31/hal_bt_s31.c ports/esp32s31/hal_audio_s31.c ports/esp32s31/hal_cellular_s31.c ports/esp32s31/hal_input_s31.c ports/esp32s31/hal_power_s31.c ports/esp32s31/hal_uart_s31.c
 ```
