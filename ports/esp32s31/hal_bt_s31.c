@@ -118,11 +118,12 @@ static int ink_sco(bool on) {
     /* bluetooth_uart.cc:439-466: fixed 200 ms spacing; also check documented reports. */
     if (on == B.sco) return 0;
     if (on) {
+        B.sco = true; /* The normal stop path must close SCO even after an ACK timeout. */
         if (bh1098g_headset_call(B.uart) || ink_wait("SETUP SCO", 1000)) return -1;
     } else {
-        if (ink_send("AT+BTSCO=0\r\n") || ink_wait("DISC SCO", 1000)) return -1;
+        if (ink_send("AT+BTSCO=0\r\n")) return -1;
         osal_task_delay_us(200000);
-        if (ink_send("AT+PP=1\r\n")) return -1;
+        if (ink_send("AT+PP=1\r\n") || ink_wait("DISC SCO", 1000)) return -1;
     }
     B.sco = on;
     return 0;

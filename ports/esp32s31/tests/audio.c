@@ -347,6 +347,7 @@ static void bluetooth(void) {
     sco_ack = false;
     assert(ink_s31_bh_capture(true) == -1);
     sco_ack = true;
+    assert(!ink_s31_bh_capture(false) && osal_now_us() - sco_sent_at >= 200000);
     /* Only a documented mode report is simulated: no invented headset-loss token. */
     reply("SET MODE 1\r\n");
     ink_s31_bh_poll();
