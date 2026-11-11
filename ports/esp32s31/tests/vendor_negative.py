@@ -23,6 +23,7 @@ CASES = [
     ('stretch', 'i2c', BUS, '.scl_wait_us = 10000,', '.scl_wait_us = 2500,'),
     ('stop', 'i2c', Path(CHIPS[0]), 'return ink_s31_i2c_read_stop(t->dev, reg, value, 1);', 'return hal_i2c_write_read(t->dev, &reg, 1, value, 1);'),
     ('fallback', 'i2c', POWER, 'if (ret != ESP_OK) {', 'if (false) {'),
+    ('budgets', 'i2c', PORT / 'hal_i2c_s31.c', 'dev->addr == 0x55 ? 200 : 100', 'dev->addr == 0x55 ? 1000 : 100'),
     ('flash', 'i2c', BUS, '    quiet_idle_interrupts();\n    return true;', '    return true;'),
     ('boot', 'board', VENDOR / 'boot.inc', 'uhci_ll_reset_register(i);', '(void)i;'),
     ('reset', 'board', VENDOR / 'reset.inc', 'vTaskDelay(pdMS_TO_TICKS(POWER_DISCHARGE_MOTOR_PULSE_MS));', 'vTaskDelay(pdMS_TO_TICKS(POWER_DISCHARGE_MOTOR_PULSE_MS / 2));'),

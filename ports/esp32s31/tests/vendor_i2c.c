@@ -16,7 +16,7 @@ static unsigned ndev, pulses, writes, reads, combined, quiet, clears;
 static uint32_t ticks, delayed_us;
 static bool scl_high = true, recover = true, repeated_ok = true;
 static uint8_t pointer;
-static int stretch;
+static int stretch, transfer_ms;
 static char trace[32];
 static unsigned trace_n;
 static void mark(char c) { assert(trace_n < sizeof trace); trace[trace_n++] = c; }
@@ -64,7 +64,7 @@ esp_err_t i2c_master_receive(i2c_master_dev_handle_t d, uint8_t *p, size_t n, in
     assert(d && s_mu->held && n && ms > 0 && pointer == 0); reads++; memset(p, 0x55, n); mark('R'); return ESP_OK;
 }
 esp_err_t i2c_master_transmit_receive(i2c_master_dev_handle_t d, const uint8_t *w, size_t wn, uint8_t *r, size_t rn, int ms) {
-    assert(d && s_mu->held && w && wn && r && rn && ms > 0); combined++; mark('C'); memset(r, 0x55, rn);
+    assert(d && s_mu->held && w && wn && r && rn && ms > 0); transfer_ms = ms; combined++; mark('C'); memset(r, 0x55, rn);
     return repeated_ok ? ESP_OK : ESP_ERR_TIMEOUT;
 }
 esp_err_t i2c_master_multi_buffer_transmit(i2c_master_dev_handle_t d, const i2c_master_transmit_multi_buffer_info_t *b, size_t n, int ms) {
@@ -95,6 +95,14 @@ int main(int argc, char **argv) {
         ticks += 5; metalio_i2c1_unlock();
         assert(!s_mu->held && !s_flash_active && s_flash_ticks == 5);
         assert(hal_i2c_write(d, NULL, 0) == HAL_I2C_OK);
+    } else if (!strcmp(argv[1], "budgets")) {
+        const uint8_t addresses[] = {0x55, 0x6b, 0x51, 0x19, 0x18};
+        const int expected_ms[] = {200, 100, 100, 100, 100};
+        _Static_assert(sizeof addresses / sizeof addresses[0] == sizeof expected_ms / sizeof expected_ms[0], "timeout cases fit");
+        for (unsigned i = 0; i < sizeof addresses / sizeof addresses[0]; ++i) {
+            d = hal_i2c_device(0, addresses[i], "fixture"); uint8_t reg = 0, value;
+            assert(hal_i2c_write_read(d, &reg, 1, &value, 1) == HAL_I2C_OK && transfer_ms == expected_ms[i]);
+        }
     } else if (!strcmp(argv[1], "limits")) {
         assert(!hal_i2c_device(1, 0x20, "fixture") && !hal_i2c_device(0, 0x80, "fixture"));
         assert(hal_i2c_device(0, 0x20, "again") == d);

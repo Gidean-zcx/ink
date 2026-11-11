@@ -65,6 +65,16 @@ C++ 类改为 C 的单实例私有状态、普通函数及回调；方法内硬�
 | `keys.inc` | `metalio_keys.cc:24,37–51,62–90,100–135,187–200,226–245` | KeySlot 与采样／消抖方法转 C 指针，保持每键 30 ms。删除原厂 3 s 关机、短按策略、队列和任务；稳定状态汇入原有 HAL 事件，保留系统 1.5 s 菜单、锁屏、音量。恢复沿用 20 ms 等待与重新采样，读口失败时保持不可采样，BOOT 使用上电空闲极性。 |
 | `vibe.inc` | `metalio_vibe.cc` 整 VibeEngine（除单例访问器、对外 C 包装） | 字段转本文件静态单实例，方法转 C 函数，两个 lambda 转普通回调。原厂 20 ms PWM、14/18/20 ms 三档与 pulse timer 保留；HAL 35/50/70 ms 映射三档。没有新任务，复用 SDK esp_timer task；开机 P14 放电发生在普通马达引擎创建之前，直接置马达 500 ms。 |
 
+## 读取预算的参数依据
+
+这些文件仅核对常量，不复制、不编入它们的充电／电量／RTC 产品策略。`hal_i2c_write_read` 的电量计寄存器读取总预算为 200 ms，充电／RTC／加速度计读取为 100 ms；这是调用预算，与原厂总线层 10 ms SCL 拉伸上限分开。加速度计 100 ms 见原文 `common/sensor/sc7a20h.cc:34`。
+
+| 原厂文件／行 | 总传输预算 | 原文件 SHA-256 |
+| --- | --- | --- |
+| [common/power/bq27220_gauge.cc:13](https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/874538eb54f7f7eb593cd40cd1ba6dc8497226e7/main/boards/common/power/bq27220_gauge.cc#L13) | 200 ms | `1c36f177d417a3028eeb16a3f501c6689062001b588a1e211d54cf0e1e2cce8a` |
+| [common/power/cx25601n.cc:41](https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/874538eb54f7f7eb593cd40cd1ba6dc8497226e7/main/boards/common/power/cx25601n.cc#L41) | 100 ms | `8af78da4b8e806c406b783a0185f85559f771d5c8196a9cf548a1b89474dee3b` |
+| [common/sensor/pcf8563.cc:16](https://github.com/CloudZao/Metalio-E-INK4-Plus/blob/874538eb54f7f7eb593cd40cd1ba6dc8497226e7/main/boards/common/sensor/pcf8563.cc#L16) | 100 ms | `90dc8b9c33a58de27ff258841e0a7d83da54908e3bf2744dd1f426102ff71e71` |
+
 ## 未接入的范围
 
 - `metalio_i2c1_lock_for_flash` 已原文编入并测试，但**没有接到现有存储入口**。入口位于任务禁止改动的 `hal_storage_s31.c`／`hal_display_s31.c`／系统 display service，不能以一个未调用的 helper 冒充完成。合并主会话需在现有 Flash guard 的范围持有原厂 drain 锁；不要增加新的 Flash hook 或包装 IDF API。

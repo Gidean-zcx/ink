@@ -53,7 +53,7 @@ hal_i2c_status_t hal_i2c_write_read(hal_i2c_dev_t *dev, const uint8_t *wdata, si
     if (wlen == 1 && (dev->addr == 0x55 || dev->addr == 0x6b || dev->addr == 0x51 ||
                      dev->addr == 0x19 || dev->addr == 0x18))
         return s31_i2c_status(power_i2c_write_read(&g_power_bus, dev->addr, *wdata, rdata, rlen,
-                              dev->addr == 0x55 ? 1000 : 100));
+                              dev->addr == 0x55 ? 200 : 100));
     if (!metalio_i2c1_lock(S31_I2C_TIMEOUT_MS)) return HAL_I2C_TIMEOUT;
     esp_err_t e = wlen ? metalio_i2c1_transmit_receive_locked(I2C_NUM_1, dev->addr, wdata, wlen, rdata, rlen, S31_I2C_TIMEOUT_MS) :
                         metalio_i2c1_receive_locked(I2C_NUM_1, dev->addr, rdata, rlen, S31_I2C_TIMEOUT_MS);
