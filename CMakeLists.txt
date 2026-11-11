@@ -286,6 +286,9 @@ target_compile_options(ink_boot PRIVATE ${INK_WARN})
 set(INK_CJK_FONT "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc" CACHE FILEPATH "CJK font for the bitmap fonts")
 set(INK_CJK_FACE 2 CACHE STRING "Face index in the collection (Noto Sans CJK .ttc: 2 = Simplified Chinese)")
 set(INK_ASSETS_DIR ${CMAKE_BINARY_DIR}/assets)
+add_custom_target(ink_sample ALL
+  COMMAND ${CMAKE_COMMAND} -E make_directory ${INK_ASSETS_DIR}/sample
+  COMMAND ${CMAKE_COMMAND} -E copy_if_different ${CMAKE_SOURCE_DIR}/assets/sample/welcome.txt ${INK_ASSETS_DIR}/sample/welcome.txt)
 find_package(Python3 COMPONENTS Interpreter)
 file(GLOB INK_I18N_TABLES CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/assets/i18n/*.tsv) # interface languages
 set(INK_HAVE_FONTS OFF)
@@ -1802,3 +1805,12 @@ ink_sim_executable(sim-qr-scan tests/qr_scan/device.c)
 target_include_directories(sim-qr-scan PRIVATE third_party/quirc)
 target_link_libraries(sim-qr-scan PRIVATE ink_apps ink_system)
 add_test(NAME qr-scan COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/qr_scan/run.py --build ${CMAKE_BINARY_DIR})
+
+# Focused small-gaps scenarios use the real product and a synthetic peer.
+ink_sim_executable(sim-small-gaps-3 tests/small_gaps_3/main.c)
+target_link_libraries(sim-small-gaps-3 PRIVATE ink_apps ink_system)
+foreach(scene backup sample notes empty-notes)
+  add_test(NAME small-gaps-3-${scene} COMMAND ${Python3_EXECUTABLE} -B
+    ${CMAKE_SOURCE_DIR}/tests/small_gaps_3/run.py --build ${CMAKE_BINARY_DIR} --case ${scene})
+  set_tests_properties(small-gaps-3-${scene} PROPERTIES TIMEOUT 200)
+endforeach()

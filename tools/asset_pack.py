@@ -25,7 +25,7 @@ def pack(items):
 
 
 def split(assets, font_limit=FONT_LIMIT, embedded_limit=EMBEDDED_LIMIT):
-    files = sorted([*assets.glob('fonts/*.inkf'), *assets.glob('icons/*.inki')])
+    files = sorted([*assets.glob('fonts/*.inkf'), *assets.glob('icons/*.inki'), *assets.glob('sample/*.txt')])
     if not files:
         raise ValueError('no generated fonts/icons; build host assets first')
     groups, used, second = [[], []], HEADER.size, False

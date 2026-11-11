@@ -21,9 +21,9 @@
 #include "shell_card.h"
 #include "ink/ui_shell.h"
 
-enum { GATE_FIELDS = 5, GATE_ACTIONS = 5 };
+enum { GATE_FIELDS = 5, GATE_ACTIONS = 10 };
 _Static_assert(1 + 4 <= GATE_FIELDS, "member page capacity");
-_Static_assert(2 + 1 + 2 <= GATE_ACTIONS, "member action capacity");
+_Static_assert(2 + 1 + 2 + 4 <= GATE_ACTIONS, "member action capacity");
 static struct {
     shell_card_t card;
     char picked[16];
@@ -34,6 +34,7 @@ static struct {
     ink_ui_page_spec_t model;
     ink_ui_field_spec_t fields[GATE_FIELDS];
     ink_ui_action_spec_t actions[GATE_ACTIONS];
+    char member_args[GATE_FIELDS][48];
     uint32_t version;
 } G;
 
@@ -66,16 +67,20 @@ static int semantic_snapshot(char *buf, size_t cap) { return ink_ui_semantics_sn
 
 static const ink_ui_overlay_t OVERLAY = {.name = "member_gate", .level = 2, .snapshot = semantic_snapshot, .on_key = on_key};
 
-static void on_member(lv_event_t *e) {
-    if (G.version != ink_ui_content_version()) return;
-    const ink_member_t *m = lv_event_get_user_data(e);
+static void select_member(ink_call_t *c) {
+    char id[16];
+    ink_args_get_str(&c->args, "id", id, sizeof id);
+    const ink_member_t *m = NULL;
+    for (int i = 0; (m = ink_member_at(i)) != NULL; i++) if (!strcmp(m->id, id)) break;
+    if ((c->src != INK_SRC_TOUCH && c->src != INK_SRC_KEY) || !G.card.root || !m ||
+        c->page_gen != ink_ui_content_version()) { c->rc.status = INK_RC_STALE; return; }
     snprintf(G.picked, sizeof G.picked, "%s", m->id);
     if (ink_member_has_pin(m->id)) {
         ink_shell_member_pin_open(m->id);
     } else if (ink_member_switch(m->id) == 0) {
         G.requested = false;
         ink_exec_post(INK_EXEC_UI, &G.sync_job, sync_gate, NULL);
-    }
+    } else c->rc.status = INK_RC_REJECTED;
 }
 static void clicked(lv_event_t *e) {
     lv_event_stop_processing(e);
@@ -87,7 +92,10 @@ static void clicked(lv_event_t *e) {
 static void member_tile(const ink_member_t *m, int x, int y, int diameter, bool primary) {
     size_t at = G.model.field_count++;
     G.fields[at] = (ink_ui_field_spec_t){.id = m->id, .role = "button", .label = m->name, .value = ink_member_has_pin(m->id) ? TR("有密码") : TR("无密码")};
-    lv_obj_t *b = ink_ui_pill(G.card.panel, "", x, y, diameter, diameter, primary, on_member, (void *)m);
+    snprintf(G.member_args[at], sizeof G.member_args[at], "{\"id\":\"%s\"}", m->id);
+    G.actions[G.model.action_count++] = (ink_ui_action_spec_t){.id = m->id, .label = m->name,
+        .capability = "shell.member_select", .args_json = G.member_args[at], .enabled = true};
+    lv_obj_t *b = ink_ui_pill(G.card.panel, "", x, y, diameter, diameter, primary, clicked, (void *)m->id);
     lv_obj_add_event_cb(b, pressed, LV_EVENT_PRESSED, NULL);
     lv_obj_set_style_border_width(b, 0, 0);
     lv_obj_set_style_clip_corner(b, false, 0); /* The lock badge crosses the avatar's round edge. */
@@ -199,10 +207,13 @@ static void on_change(void *ctx, int h, const char *id) {
 }
 
 int ink_shell_member_gate_init(void) {
+    static const ink_cap_t select = {.id = "shell.member_select", .title = "选择这位家人（仅本人操作，密码仍需验证）", .expose = INK_EXPOSE_OWNER,
+        .input = "{\"type\":\"object\",\"properties\":{\"id\":{\"type\":\"string\",\"maxLength\":15}},\"required\":[\"id\"]}",
+        .effect = INK_FX_NAVIGATE, .child_ok = true, .while_locked = true, .run = select_member};
     static const ink_cap_t page = {.id = "shell.members_page", .title = "翻选人页面（只由人在设备上操作）", .expose = INK_EXPOSE_OWNER,
         .input = "{\"type\":\"object\",\"properties\":{\"delta\":{\"type\":\"integer\",\"minimum\":-1,\"maximum\":1}},\"required\":[\"delta\"]}",
         .effect = INK_FX_NAVIGATE, .child_ok = true, .while_locked = true, .run = page_action};
-    if (ink_cap_register(&page, 1) != 0) return -1;
+    if (ink_cap_register(&page, 1) != 0 || ink_cap_register(&select, 1) != 0) return -1;
     if (ink_state_watch("member.authed", on_change, NULL, INK_EXEC_DIRECT) != 0 || ink_state_watch("power.state", on_change, NULL, INK_EXEC_DIRECT) != 0) return -1;
     ink_exec_post(INK_EXEC_UI, &G.sync_job, sync_gate, NULL);
     return 0;

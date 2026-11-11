@@ -13,15 +13,20 @@
 #include "shell_card.h"
 
 void ink_update_page_info(char *version, size_t cap, uint32_t *bytes, int *task);
+size_t ink_update_page_notes(char *out, size_t cap);
+enum { UPDATE_FIELDS = 5, UPDATE_ACTIONS = 5 };
+_Static_assert(5 <= UPDATE_FIELDS && 5 <= UPDATE_ACTIONS, "update page capacity");
 enum { UPDATE, READY, BLOCKED, FAIL, INSTALL, DONE, RECOVERY };
 static const char *const NAMES[] = {"Update", "UpdateReady", "UpdateBlocked", "UpdateFail", "UpdateInstall", "UpdateDone", "BootRecovery"};
 static struct {
     shell_card_t card;
     int page, result, task, progress;
+    int note_page, note_pages;
     uint32_t epoch;
     char state[16], version[24], current[24], title[128], body[256], percent[24], cancel[48], error[128];
-    ink_ui_field_spec_t fields[4];
-    ink_ui_action_spec_t actions[3];
+    char note_text[768], note_work[768];
+    ink_ui_field_spec_t fields[UPDATE_FIELDS];
+    ink_ui_action_spec_t actions[UPDATE_ACTIONS];
     ink_ui_page_spec_t model;
 } P INK_PSRAM_BSS;
 static void render(void);
@@ -81,6 +86,46 @@ static void button(const char *label, const char *cap, const char *args, int x, 
     *a = (ink_ui_action_spec_t){cap, label, cap, args, {NULL, 0}, true};
     ink_ui_pill(P.card.panel, label, x, INK_CANVAS_H - INK_MARGIN - INK_PRIMARY, w, INK_PRIMARY, primary, clicked, a);
 }
+static void notes_clicked(lv_event_t *e) {
+    ink_call_opts_t opts = {.src = INK_SRC_TOUCH, .args_json = (intptr_t)lv_event_get_user_data(e) < 0 ? "{\"delta\":-1}" : "{\"delta\":1}"};
+    ink_cap_call("shell.update_notes_page", NULL, &opts);
+}
+static void notes(int y, int w) {
+    size_t len = ink_update_page_notes(NULL, 0);
+    P.note_pages = 0;
+    if (!len) { P.note_page = 0; return; }
+    char *all = osal_malloc(len + 1, OSAL_MEM_EXTERNAL);
+    if (!all) return;
+    if (ink_update_page_notes(all, len + 1) != len) { osal_free(all); return; }
+    int pager_y = INK_CANVAS_H - INK_MARGIN - INK_PRIMARY - INK_CONTROL - INK_GAP;
+    int body_y = y + INK_LINE_LIST + INK_GAP, height = pager_y - INK_GAP - body_y;
+    size_t at = 0;
+    do {
+        size_t end = at;
+        while (end < len) {
+            size_t next = end + 1;
+            while (next < len && (all[next] & 0xc0) == 0x80) next++;
+            if (next - at >= sizeof P.note_work) break;
+            memcpy(P.note_work, all + at, next - at); P.note_work[next - at] = 0;
+            if (ink_ui_text_height(P.note_work, INK_FONT_NOTE, INK_WEIGHT_REGULAR, w) > height) break;
+            end = next;
+        }
+        if (end == at) break;
+        P.note_work[end - at] = 0;
+        if (P.note_pages == P.note_page) memcpy(P.note_text, P.note_work, end - at + 1);
+        P.note_pages++; at = end;
+    } while (at < len);
+    osal_free(all);
+    if (!P.note_pages) return;
+    if (P.note_page >= P.note_pages) { P.note_page = P.note_pages - 1; memcpy(P.note_text, P.note_work, strlen(P.note_work) + 1); }
+    ink_ui_label(P.card.panel, TR("更新说明"), INK_FONT_LIST, INK_WEIGHT_BOLD, INK_MARGIN, y, w);
+    ink_ui_label(P.card.panel, P.note_text, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, body_y, w);
+    P.fields[P.model.field_count++] = (ink_ui_field_spec_t){.id = "notes", .role = "text", .label = TR("更新说明"), .value = P.note_text};
+    if (P.note_pages < 2) return;
+    ink_ui_pagebar(P.card.panel, P.note_page + 1, P.note_pages, pager_y, notes_clicked);
+    P.actions[P.model.action_count++] = (ink_ui_action_spec_t){.id = "notes_prev", .label = TR("上一页"), .capability = "shell.update_notes_page", .args_json = "{\"delta\":-1}", .enabled = P.note_page > 0};
+    P.actions[P.model.action_count++] = (ink_ui_action_spec_t){.id = "notes_next", .label = TR("下一页"), .capability = "shell.update_notes_page", .args_json = "{\"delta\":1}", .enabled = P.note_page + 1 < P.note_pages};
+}
 static void render(void) {
     read_state();
     bool installing = is_state("installing") || is_state("rebooting") || is_state("verifying");
@@ -104,7 +149,7 @@ static void render(void) {
     snprintf(P.title, sizeof P.title, "%s", page == BLOCKED ? TR("现在装不了") : page == FAIL ? TR("这次更新没完成") : page == INSTALL ? TR("正在安装，不要关机") : TR("系统更新"));
     snprintf(P.body, sizeof P.body, "%s", page == BLOCKED ? why : page == FAIL ? (download ? TR("可以重新下载。原来的系统仍然保留。") : TR("可以重新检查。原来的系统仍然保留。")) :
         page == READY ? TR("安装要几分钟，这期间不能用。") : page == INSTALL ? TR("如果新系统不能正常启动，会自动退回原来的系统。") :
-        page == DONE ? TR("更新已完成。更新说明暂不能查看。") : page == RECOVERY ? TR("你的东西都在。之后可以再试一次。") :
+        page == DONE ? TR("更新已完成。") : page == RECOVERY ? TR("你的东西都在。之后可以再试一次。") :
         is_state("downloading") ? TR("下载完再问你要不要安装。") : is_state("available") ? TR("发现新版本，可以下载。") : TR("可以向家庭服务器检查新版本。"));
     if (page == READY) snprintf(P.title, sizeof P.title, TR("%s 下载好了"), P.version);
     if (page == DONE) snprintf(P.title, sizeof P.title, TR("已经是 %s 了"), P.current);
@@ -122,8 +167,7 @@ static void render(void) {
             ink_ui_label(P.card.panel, P.percent, INK_FONT_NOTE, INK_WEIGHT_MEDIUM, INK_CANVAS_W - INK_MARGIN - INK_CIRCLE, y - INK_GAP_M, INK_CIRCLE);
         }
         ink_ui_label(P.card.panel, P.body, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y + INK_GAP_XL, w);
-        ink_ui_card(P.card.panel, INK_MARGIN, y + INK_BLOCK_L, w, INK_ROW_DOUBLE, INK_SURFACE_STATIC);
-        ink_ui_label(P.card.panel, TR("更新说明暂不能查看"), INK_FONT_LIST, INK_WEIGHT_REGULAR, 2 * INK_MARGIN, y + INK_BLOCK_L + INK_MARGIN, w - 2 * INK_MARGIN);
+        notes(y + INK_BLOCK_L, w);
     } else if (page == INSTALL) {
         text(P.title, INK_FONT_SUBTITLE, INK_STATUS_BAR + INK_BLOCK_L, true);
         const char *steps[] = {TR("检查更新包"), TR("安装"), TR("重启"), TR("检查是否正常")};
@@ -168,7 +212,12 @@ static void render(void) {
 static void navigate(ink_call_t *c) {
     if (P.card.root && P.page == INSTALL) { c->rc.status = INK_RC_REJECTED; return; }
     if (!strcmp(c->cap->id, "shell.update_close")) close_page();
-    else { P.error[0] = 0; P.result = 0; ink_shell_close(); render(); }
+    else { P.error[0] = 0; P.result = 0; P.note_page = 0; ink_shell_close(); render(); }
+}
+static void notes_page(ink_call_t *c) {
+    int64_t delta = 0; ink_args_get_int(&c->args, "delta", &delta);
+    if (!P.card.root || P.page != UPDATE || P.note_page + delta < 0 || P.note_page + delta >= P.note_pages) { c->rc.status = INK_RC_STALE; return; }
+    P.note_page += (int)delta; render();
 }
 static void changed(void *ctx, int h, const char *id) {
     (void)ctx; (void)h;
@@ -195,8 +244,10 @@ static void event(void *ctx, const char *id, const ink_args_t *a) {
 int ink_update_pages_init(void) {
     static const ink_cap_t caps[] = {
         {.id = "shell.update", .title = "打开系统更新", .effect = INK_FX_NAVIGATE, .run = navigate},
+        {.id = "shell.update_notes_page", .title = "翻阅完整更新说明", .effect = INK_FX_NAVIGATE, .run = notes_page,
+         .input = "{\"type\":\"object\",\"properties\":{\"delta\":{\"type\":\"integer\",\"minimum\":-1,\"maximum\":1}},\"required\":[\"delta\"]}"},
         {.id = "shell.update_close", .title = "返回更新前的页面", .effect = INK_FX_NAVIGATE, .run = navigate}};
-    return ink_cap_register(caps, 2) || ink_state_watch("update.", changed, NULL, INK_EXEC_UI) ||
+    return ink_cap_register(caps, 3) || ink_state_watch("update.", changed, NULL, INK_EXEC_UI) ||
         ink_state_watch("battery.", changed, NULL, INK_EXEC_UI) || ink_state_watch("storage.", changed, NULL, INK_EXEC_UI) ||
         ink_state_watch("member.", changed, NULL, INK_EXEC_UI) || ink_cap_subscribe("update.", event, NULL, INK_EXEC_UI) ||
         ink_cap_subscribe("confirm.result", event, NULL, INK_EXEC_UI) ? -1 : 0;
