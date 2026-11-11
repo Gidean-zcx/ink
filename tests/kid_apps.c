@@ -189,7 +189,7 @@ static void ownership(void) {
     CHECK(ink_member_set_pin("owner", "", "24681357", pin_reply, NULL) == 0 && WAIT_FOR(pin_done, 6000) && pin_result == INK_PIN_OK, "set the synthetic parent verifier");
     for (int i = 0; i < ink_app_count(); i++) {
         const ink_app_def_t *a = ink_app_at(i);
-        if (!a->child_ok || !strcmp(a->id, "home") || !strcmp(a->id, "phone") || !strcmp(a->id, "message")) continue;
+        if (!a->child_ok || !strcmp(a->id, "home") || !strcmp(a->id, "phone") || !strcmp(a->id, "contacts") || !strcmp(a->id, "message")) continue;
         char args[96]; snprintf(args, sizeof args, "{\"id\":\"kid\",\"app\":\"%s\",\"mode\":0}", a->id);
         change("kid.app_set", args);
         CHECK(ink_member_app_mode("kid", a->id) == 0, "parent removes %s from the child's list", a->id);

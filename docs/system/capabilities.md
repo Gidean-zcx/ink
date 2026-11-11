@@ -7,7 +7,7 @@ python3 tools/capabilities.py
 python3 tools/capabilities.py --check
 ```
 
-当前共 463 项：可调用能力 425、事件 38；设置 34 项、状态 55 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
+当前共 470 项：可调用能力 432、事件 38；设置 34 项、状态 55 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
 
 风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。
 
@@ -126,11 +126,15 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `contacts.edit` | 打开联系人或添加联系人 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s06](#s06) | [system/apps/contacts/contacts.c](../../system/apps/contacts/contacts.c) |
 | `contacts.name` | 输入联系人姓名 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 ContactEdit | [s06](#s06) | [system/apps/contacts/contacts.c](../../system/apps/contacts/contacts.c) |
 | `contacts.next` | 联系人下一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 PhoneContacts | [s06](#s06) | [system/apps/contacts/contacts.c](../../system/apps/contacts/contacts.c) |
+| `contacts.note` | 输入联系人备注 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 ContactEdit | [s06](#s06) | [system/apps/contacts/contacts.c](../../system/apps/contacts/contacts.c) |
 | `contacts.number` | 输入联系人号码 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 ContactEdit | [s06](#s06) | [system/apps/contacts/contacts.c](../../system/apps/contacts/contacts.c) |
-| `contacts.open` | 打开联系人 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s10](#s10) | [system/apps/phone/phone.c](../../system/apps/phone/phone.c) |
+| `contacts.open` | 打开联系人 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s06](#s06) | [system/apps/contacts/contacts.c](../../system/apps/contacts/contacts.c) |
+| `contacts.pick` | 挑选联系人号码 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s06](#s06) | [system/apps/contacts/contacts.c](../../system/apps/contacts/contacts.c) |
 | `contacts.prev` | 联系人上一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 PhoneContacts | [s06](#s06) | [system/apps/contacts/contacts.c](../../system/apps/contacts/contacts.c) |
 | `contacts.put` | 添加或修改联系人（每人一个号码） | 人、AI | 中 / local_write | 无需 | 成人、儿童（无需白名单） | [s06](#s06) | [system/apps/contacts/contacts.c](../../system/apps/contacts/contacts.c) |
+| `contacts.search` | 搜索联系人 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 PhoneContacts | [s06](#s06) | [system/apps/contacts/contacts.c](../../system/apps/contacts/contacts.c) |
 | `contacts.select` | 选联系人和号码，返回编号和号码 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s06](#s06) | [system/apps/contacts/contacts.c](../../system/apps/contacts/contacts.c) |
+| `contacts.view` | 查看联系人详情 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s06](#s06) | [system/apps/contacts/contacts.c](../../system/apps/contacts/contacts.c) |
 | `data.collections` | 有哪些数据集合 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s25](#s25) | [system/services/data/data_caps.c](../../system/services/data/data_caps.c) |
 | `data.delete` | 删除一条数据 | 人、AI | 高 / local_destructive | 人、AI 均在设备确认 | 成人、儿童（无需白名单） | [s25](#s25) | [system/services/data/data_caps.c](../../system/services/data/data_caps.c) |
 | `data.get` | 读一条数据 | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s25](#s25) | [system/services/data/data_caps.c](../../system/services/data/data_caps.c) |
@@ -387,13 +391,16 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `shell.wifi_pick` | 选附近网络（密码由人在设备上填写） | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s55](#s55) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
 | `shell.wifi_prev` | 附近网络上一组 | 人、AI | 低 / navigate | 无需 | 成人；儿童须白名单 | [s55](#s55) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
 | `sms.compose` | 写短信或回复当前会话 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s12](#s12) | [system/apps/sms/sms.c](../../system/apps/sms/sms.c) |
-| `sms.long` | 打开短信长文编辑页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 SmsCompose | [s12](#s12) | [system/apps/sms/sms.c](../../system/apps/sms/sms.c) |
+| `sms.long` | 打开短信长文编辑页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s12](#s12) | [system/apps/sms/sms.c](../../system/apps/sms/sms.c) |
 | `sms.next` | 短信下一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s12](#s12) | [system/apps/sms/sms.c](../../system/apps/sms/sms.c) |
+| `sms.pick` | 打开短信联系人选择 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 SmsCompose | [s12](#s12) | [system/apps/sms/sms.c](../../system/apps/sms/sms.c) |
 | `sms.prev` | 短信上一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s12](#s12) | [system/apps/sms/sms.c](../../system/apps/sms/sms.c) |
 | `sms.recipient` | 从联系人选择收件人 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 SmsCompose | [s12](#s12) | [system/apps/sms/sms.c](../../system/apps/sms/sms.c) |
+| `sms.retry` | 重新编辑明确未发出的短信 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 SmsThread | [s12](#s12) | [system/apps/sms/sms.c](../../system/apps/sms/sms.c) |
 | `sms.send` | 保存并发送短信 | 人、AI | 高 / external | 人无需；AI 仅 asked=true 时无需 | 成人、儿童（无需白名单） | [s24](#s24) | [system/services/comm/comm_service.c](../../system/services/comm/comm_service.c) |
-| `sms.text` | 输入短信 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 SmsCompose | [s12](#s12) | [system/apps/sms/sms.c](../../system/apps/sms/sms.c) |
+| `sms.text` | 输入短信 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s12](#s12) | [system/apps/sms/sms.c](../../system/apps/sms/sms.c) |
 | `sms.thread` | 打开短信会话 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s12](#s12) | [system/apps/sms/sms.c](../../system/apps/sms/sms.c) |
+| `sms.to` | 输入短信收件人号码 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 SmsCompose | [s12](#s12) | [system/apps/sms/sms.c](../../system/apps/sms/sms.c) |
 | `state.list` | 系统现在的状态（电量、网络、前台应用……） | 人、AI | 低 / read | 无需 | 成人、儿童（无需白名单） | [s18](#s18) | [system/policy/system_actions.c](../../system/policy/system_actions.c) |
 | `system.export_logs` | 导出日志 | 仅人（设备） | 中 / local_write | 无需 | 成人；儿童须白名单 | [s29](#s29) | [system/services/log/log.c](../../system/services/log/log.c) |
 | `system.factory_reset` | 清空这台设备（清掉所有家人的数据，不能撤销） | 人、AI | 高 / system | 人、AI 均确认；已设成人 PIN 时还需 PIN | 仅成人 | [s18](#s18) | [system/policy/system_actions.c](../../system/policy/system_actions.c) |
@@ -569,7 +576,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 状态：—。
 
-事件：`message.received`。
+事件：`contacts.selected`、`message.received`。
 
 <a id="s13"></a>
 

@@ -915,7 +915,7 @@ bool ink_member_time_allows(const char *id) {
     if (!ink_member_time_up()) return true;
     if (!strncmp(id, "text.", 5) || !strncmp(id, "keyboard.", 9)) {
         char app[32] = ""; ink_state_get_str(ink_state_find("app.foreground"), app, sizeof app);
-        return !strcmp(app, "phone") || !strcmp(app, "message");
+        return !strcmp(app, "phone") || !strcmp(app, "message") || !strcmp(app, "contacts");
     }
     static const char *const allowed[] = {"phone.", "sms.", "call.", "message.", "contacts.", "data.list", "data.get", "confirm.",
         "member.time_", "kid.policy_get", "shell.pin_", "shell.kid_", "app.open", "shell.launch", "shell.back", "shell.close", "shell.lock", "system.home", "system.set_volume", "interrupt.",
@@ -993,7 +993,7 @@ static void cap_kid(ink_call_t *c) {
             if (!ink_app_identity_at(i, candidate, sizeof candidate, &child_ok)) break;
             if (!strcmp(candidate, app) && child_ok) exists = true;
         }
-        if (at < 0 || !exists || !strcmp(app, "phone") || !strcmp(app, "message") || !strcmp(app, "home") || !strcmp(app, "settings")) { fail(c, INK_RC_INVALID, "app is required or unavailable"); return; }
+        if (at < 0 || !exists || !strcmp(app, "phone") || !strcmp(app, "message") || !strcmp(app, "contacts") || !strcmp(app, "home") || !strcmp(app, "settings")) { fail(c, INK_RC_INVALID, "app is required or unavailable"); return; }
         ink_svc_lock(); snprintf(p->apps[at].id, sizeof p->apps[at].id, "%s", app); p->apps[at].mode = (uint8_t)mode; ink_svc_unlock();
     } else if (!read) {
         ink_args_get_int(&c->args, "index", &index); ink_args_get_int(&c->args, "start", &start); ink_args_get_int(&c->args, "end", &end); ink_args_get_int(&c->args, "days", &days);

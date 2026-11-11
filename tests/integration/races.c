@@ -116,8 +116,7 @@ static void notification_for_someone(void) {
         CHECK(!in_inbox(title), "it is not in the inbox of who came (%d)", k);
         CHECK(!told_to_ai(from, title), "and not told to their AI (%d)", k);
         ink_member_test_reset();
-        delay_ms(500);
-        CHECK(in_inbox(title), "it is in the inbox of who it is for (%d)", k);
+        CHECK(WAIT_FOR(in_inbox(title), 10000), "it is in the inbox of who it is for (%d)", k);
     }
     CHECK(moments >= 3, "there were moments to try (%d)", moments);
 }

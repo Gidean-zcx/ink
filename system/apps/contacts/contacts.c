@@ -12,23 +12,33 @@
 
 static const ink_db_def_t CONTACTS = {.name = "phone.contacts", .title = "联系人", .scope = INK_DB_MEMBER,
     .schema = 1, .json = true, .ai_read = true, .max_records = 200};
-static const ink_activity_t LIST, EDIT;
+enum { CONTACT_ROWS = 4, CONTACT_LIMIT = 200, CONTACT_FIELDS = 3 };
+static const ink_activity_t LIST, EDIT, DETAIL;
+extern void ink_phone_tabs(lv_obj_t *screen, int selected);
 static struct {
     ink_db_t *db;
     ink_ui_list_t *list;
     ink_ui_list_position_t position;
-    char member[16], name[97], number[25], ids[4][32], args[4][48], names[4][97], numbers[4][25];
+    char member[16], name[97], number[25], note[193], query[97], ids[CONTACT_ROWS][32], args[CONTACT_ROWS][48], names[CONTACT_ROWS][97], numbers[CONTACT_ROWS][25];
+    uint32_t rows[CONTACT_LIMIT]; size_t count;
+    bool picking, phone;
     uint32_t id, ver;
-    lv_obj_t *fields[2], *notice;
-    ink_ui_field_spec_t specs[2];
+    lv_obj_t *fields[CONTACT_FIELDS], *notice, *search;
+    ink_ui_field_spec_t specs[CONTACT_FIELDS];
     ink_ui_page_spec_t form;
-    ink_ui_action_spec_t actions[5];
-    char save_args[768], record_args[48], delete_args[384];
+    ink_ui_action_spec_t actions[6];
+    char save_args[2048], record_args[48], delete_args[384], dial_args[64];
     ink_exec_job_t refresh;
 } P INK_PSRAM_BSS;
 
+static void read_note(ink_db_t *db, uint32_t id, char *note) {
+    char raw[1024] = {0}; ink_json_t *j = ink_app_alloc(sizeof *j, true); note[0] = 0;
+    if (j && ink_db_get(db, id, NULL, raw, sizeof raw - 1) == INK_DB_OK && !ink_json_parse(j, raw, strlen(raw))) ink_json_str(j, ink_json_find(j, 0, "note"), note, 193);
+    ink_app_free(j);
+}
+
 static uint32_t read_contact(ink_db_t *db, uint32_t id, char *name, char *number) {
-    char raw[768] = {0};
+    char raw[1024] = {0};
     ink_rec_t rec = {0};
     ink_json_t *j = ink_app_alloc(sizeof *j, true);
     bool ok = j && ink_db_get(db, id, &rec, raw, sizeof raw - 1) == INK_DB_OK &&
@@ -37,6 +47,30 @@ static uint32_t read_contact(ink_db_t *db, uint32_t id, char *name, char *number
         ink_json_str(j, ink_json_find(j, 0, "number"), number, 25) > 0;
     ink_app_free(j);
     return ok ? rec.ver : 0;
+}
+/* Cached member data only: safe in the UI task, shared by the two number fields. */
+int ink_contacts_match(const char *query, bool exact, char *name, char *number) {
+    ink_db_t *db = ink_db_open_cached_member(&CONTACTS, ink_member_current()->id);
+    if (!db) return -1;
+    ink_db_cursor_t cur = {0}; ink_rec_t r; int found = 0;
+    while (query[0] && ink_db_next(db, &cur, &r, NULL, 0) == 1) {
+        if (!read_contact(db, r.id, name, number)) continue;
+        if (exact ? !strcmp(number, query) : strstr(name, query) || strstr(number, query)) { found = (int)r.id; break; }
+    }
+    ink_db_close(db); return found;
+}
+static void build_rows(void) {
+    ink_db_cursor_t cur = {0}; ink_rec_t r; char name[97], number[25], before[97], unused[25]; P.count = 0;
+    while (ink_db_next(P.db, &cur, &r, NULL, 0) == 1 && P.count < CONTACT_LIMIT) {
+        if (!read_contact(P.db, r.id, name, number) || (P.query[0] && !strstr(name, P.query) && !strstr(number, P.query))) continue;
+        size_t at = P.count++;
+        while (at && read_contact(P.db, P.rows[at - 1], before, unused) && strcmp(before, name) > 0) { P.rows[at] = P.rows[at - 1]; at--; }
+        P.rows[at] = r.id;
+    }
+}
+static void searched(lv_event_t *e) {
+    snprintf(P.query, sizeof P.query, "%s", ink_textfield_text(lv_event_get_target_obj(e)));
+    P.position.page = 0; build_rows(); if (P.list) ink_ui_list_refresh(P.list, P.count);
 }
 static void refresh(void *arg) {
     (void)arg;
@@ -50,20 +84,24 @@ static void record(ink_call_t *c) { /* BG: first load and durable writes may wai
     ink_args_get_int(&c->args, "if_revision", &expected);
     ink_db_t *db = ink_db_open_member(&CONTACTS, ink_cap_call_member(c));
     if (!db) { c->rc.status = INK_RC_FAILED; return; }
-    char name[97] = "", number[25] = "", raw[768];
+    char name[97] = "", number[25] = "", note[193] = "", raw[1024];
     bool put = !strcmp(c->cap->id, "contacts.put"), del = !strcmp(c->cap->id, "contacts.delete");
     uint32_t ver = id ? read_contact(db, (uint32_t)id, name, number) : 0;
     if ((!put && !id) || (id && !ver)) c->rc.status = INK_RC_INVALID;
     if (expected && expected != ver) c->rc.status = INK_RC_STALE;
     if (put && c->rc.status == INK_RC_DONE) {
+        if (id) read_note(db, (uint32_t)id, note);
+        if (ink_args_find(&c->args, "note")) ink_args_get_str(&c->args, "note", note, sizeof note);
         int n = ink_args_get_str(&c->args, "name", name, sizeof name);
         int length = ink_args_get_str(&c->args, "number", number, sizeof number);
         bool valid = n > 0 && n < (int)sizeof name && length > 0 && length < (int)sizeof number;
-        for (int k = 0; k < length && valid; k++) valid = (number[k] >= '0' && number[k] <= '9') || (k == 0 && number[k] == '+' && length > 1);
+        bool digit = false;
+        for (int k = 0; k < length && valid; k++) { if (number[k] >= '0' && number[k] <= '9') digit = true; else valid = strchr(" -()", number[k]) || (k == 0 && number[k] == '+'); }
+        valid = valid && digit;
         if (!valid) c->rc.status = INK_RC_INVALID;
         else {
             ink_jw_t w; ink_jw_init(&w, raw, sizeof raw);
-            ink_jw_raw(&w, "{\"name\":"); ink_jw_str(&w, name); ink_jw_raw(&w, ",\"number\":"); ink_jw_str(&w, number); ink_jw_raw(&w, "}");
+            ink_jw_raw(&w, "{\"name\":"); ink_jw_str(&w, name); ink_jw_raw(&w, ",\"number\":"); ink_jw_str(&w, number); ink_jw_raw(&w, ",\"note\":"); ink_jw_str(&w, note); ink_jw_raw(&w, "}");
             uint32_t got = 0;
             ink_db_write_t wr = {.id = (uint32_t)id, .data = raw, .len = w.len, .src = c->src, .written_ver = &c->rc.revision};
             if (w.overflow || ink_db_put(db, &wr, &got) != INK_DB_OK) c->rc.status = INK_RC_FAILED;
@@ -110,34 +148,33 @@ static void clicked(lv_event_t *e) {
     if (P.id && strcmp(cap, "contacts.select")) ink_args_int(a, "if_revision", P.ver);
     if (!strcmp(cap, "contacts.put")) {
         ink_args_str(a, "name", ink_textfield_text(P.fields[0])); ink_args_str(a, "number", ink_textfield_text(P.fields[1]));
+        ink_args_str(a, "note", ink_textfield_text(P.fields[2]));
     } else if (!strcmp(cap, "contacts.delete")) { ink_args_str(a, "name", P.name); ink_args_str(a, "number", P.number); }
     request(cap, a); ink_app_free(a);
 }
 static void navigate(ink_call_t *c) {
     const char *id = c->cap->id;
-    if (!strcmp(id, "contacts.edit")) {
+    if (!strcmp(id, "contacts.open") || !strcmp(id, "contacts.pick")) {
+        P.query[0] = 0; P.position.page = 0; ink_ui_drop_app("contacts"); ink_ui_push(&LIST, !strcmp(id, "contacts.pick") ? (void *)1 : NULL);
+    } else if (!strcmp(id, "contacts.edit") || !strcmp(id, "contacts.view")) {
         int64_t selected = 0; ink_args_get_int(&c->args, "id", &selected);
-        ink_ui_push(&EDIT, (void *)(uintptr_t)selected);
+        if (!strcmp(ink_ui_page_name(), DETAIL.name)) ink_ui_pop();
+        ink_ui_push(!strcmp(id, "contacts.view") ? &DETAIL : &EDIT, (void *)(uintptr_t)selected);
     } else if (!strcmp(id, "contacts.next")) { if (P.list) ink_ui_list_turn(P.list, 1); }
     else if (!strcmp(id, "contacts.prev")) { if (P.list) ink_ui_list_turn(P.list, -1); }
-    else if (!P.fields[0] || ink_textfield_short_focus(P.fields[!strcmp(id, "contacts.number")]) != 0) c->rc.status = INK_RC_STALE;
+    else if (!strcmp(id, "contacts.search")) { if (!P.search || ink_textfield_short_focus(P.search)) c->rc.status = INK_RC_STALE; }
+    else if (!P.fields[0] || ink_textfield_short_focus(P.fields[!strcmp(id, "contacts.note") ? 2 : !strcmp(id, "contacts.number")]) != 0) c->rc.status = INK_RC_STALE;
 }
 static void bind_item(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, ink_ui_action_spec_t *action, void *ctx) {
     (void)ctx;
-    unsigned at = index % 4;
-    ink_db_cursor_t cur = {0}; ink_rec_t r = {0};
-    for (size_t k = 0; k <= index; k++) if (ink_db_next(P.db, &cur, &r, NULL, 0) != 1) return;
-    read_contact(P.db, r.id, P.names[at], P.numbers[at]);
-    snprintf(P.ids[at], sizeof P.ids[at], "contact:%u", (unsigned)r.id);
-    snprintf(P.args[at], sizeof P.args[at], "{\"id\":%u}", (unsigned)r.id);
+    unsigned at = index % CONTACT_ROWS;
+    uint32_t id = P.rows[index], ver = read_contact(P.db, id, P.names[at], P.numbers[at]);
+    snprintf(P.ids[at], sizeof P.ids[at], "contact:%u", (unsigned)id);
+    snprintf(P.args[at], sizeof P.args[at], "{\"id\":%u}", (unsigned)id);
     lv_obj_set_y(slot, ink_ui_px(at * INK_ROW_DOUBLE));
     lv_obj_set_style_bg_opa(slot, LV_OPA_TRANSP, 0);
     lv_obj_set_style_border_width(slot, 0, 0);
     lv_obj_set_style_radius(slot, 0, 0);
-    if (!at) {
-        size_t remaining = (size_t)ink_db_count(P.db) - P.position.page * 4;
-        lv_obj_set_height(lv_obj_get_child(lv_obj_get_parent(slot), 0), ink_ui_px((int)(remaining < 4 ? remaining : 4) * INK_ROW_DOUBLE));
-    }
     if (!lv_obj_get_child_count(slot)) {
         int x = INK_GAP + INK_CIRCLE + INK_GAP, width = INK_CANVAS_W - 2 * INK_MARGIN - x - INK_GAP;
         ink_ui_line(slot, "", INK_FONT_LIST, INK_WEIGHT_MEDIUM, x, INK_GAP_S, width);
@@ -150,22 +187,26 @@ static void bind_item(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, 
     char initial[5]; snprintf(initial, sizeof initial, "%.*s", (int)first, P.names[at]);
     lv_label_set_text(lv_obj_get_child(lv_obj_get_child(slot, 2), 0), initial);
     lv_label_set_text(lv_obj_get_child(slot, 0), P.names[at]); lv_label_set_text(lv_obj_get_child(slot, 1), P.numbers[at]);
-    *field = (ink_ui_field_spec_t){.id = P.ids[at], .role = "listitem", .label = P.names[at], .value = P.numbers[at], .object = {P.ids[at], r.ver}};
-    *action = (ink_ui_action_spec_t){.id = P.ids[at], .label = TR("查看联系人"), .capability = "contacts.edit", .args_json = P.args[at], .object = field->object, .enabled = true};
+    *field = (ink_ui_field_spec_t){.id = P.ids[at], .role = "listitem", .label = P.names[at], .value = P.numbers[at], .object = {P.ids[at], ver}};
+    *action = (ink_ui_action_spec_t){.id = P.ids[at], .label = TR("查看联系人"), .capability = P.picking ? "contacts.select" : "contacts.view", .args_json = P.args[at], .object = field->object, .enabled = true};
 }
 static void create(lv_obj_t *screen, void *arg) {
     const ink_ui_action_spec_t ACTIONS[] = {
         {.id = "prev", .label = TR("上一页"), .capability = "contacts.prev"},
         {.id = "next", .label = TR("下一页"), .capability = "contacts.next"},
-        {.id = "add", .label = TR("添加联系人"), .capability = "contacts.edit", .enabled = true}
+        {.id = "search", .label = TR("搜索联系人"), .capability = "contacts.search", .enabled = true}
     };
     const ink_ui_page_spec_t MODEL = {.id = "PhoneContacts", .title = TR("联系人"), .object = {"phone.contacts", 1}, .actions = ACTIONS, .action_count = 3};
     P.actions[0] = (ink_ui_action_spec_t){.id = "name", .label = TR("输入姓名"), .capability = "contacts.name", .enabled = true};
     P.actions[1] = (ink_ui_action_spec_t){.id = "number", .label = TR("输入号码"), .capability = "contacts.number", .enabled = true};
+    P.actions[2] = (ink_ui_action_spec_t){.id = "note", .label = TR("输入备注"), .capability = "contacts.note", .enabled = true};
     bool edit = !strcmp(ink_ui_page_name(), EDIT.name);
-    if (strcmp(P.member, ink_member_current()->id)) { memset(&P.position, 0, sizeof P.position); snprintf(P.member, sizeof P.member, "%s", ink_member_current()->id); }
-    P.id = edit ? (uint32_t)(uintptr_t)arg : 0;
-    ink_shell_statusbar(screen, true); ink_shell_topbar(screen, edit ? TR("编辑联系人") : TR("联系人"));
+    bool detail = !strcmp(ink_ui_page_name(), DETAIL.name);
+    if (strcmp(P.member, ink_member_current()->id)) { P.query[0] = 0; memset(&P.position, 0, sizeof P.position); snprintf(P.member, sizeof P.member, "%s", ink_member_current()->id); }
+    if (!edit && !detail) { P.picking = arg == (void *)1; P.phone = arg == (void *)2; }
+    P.id = edit || detail ? (uint32_t)(uintptr_t)arg : 0;
+    ink_shell_statusbar(screen, true); ink_shell_topbar(screen, edit ? P.id ? TR("编辑联系人") : TR("新建联系人") : detail ? TR("联系人详情") : P.phone ? "" : TR("联系人"));
+    if (!edit && !detail && P.phone) ink_phone_tabs(screen, 2);
     P.notice = ink_ui_notice(screen, "", INK_CANVAS_H - INK_PRIMARY - INK_CONTROL - INK_GAP_L);
     P.db = ink_db_open_cached_member(&CONTACTS, P.member);
     if (!P.db) {
@@ -175,27 +216,41 @@ static void create(lv_obj_t *screen, void *arg) {
         return;
     }
     int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP_L;
-    if (!edit) {
-        lv_obj_t *body = ink_ui_box(screen, 0, y, INK_CANVAS_W, 4 * (INK_ROW_DOUBLE + INK_GAP_M) + INK_CONTROL + INK_GAP_L, 0, INK_SURFACE_WHITE, false);
-        int count = ink_db_count(P.db);
-        if (count) {
-            lv_obj_t *group = ink_ui_card(body, INK_MARGIN, 0, INK_CANVAS_W - 2 * INK_MARGIN, (count < 4 ? count : 4) * INK_ROW_DOUBLE, INK_SURFACE_STATIC);
-            lv_obj_set_style_border_width(group, 0, 0);
-        }
-        P.list = ink_ui_list_create(body, &MODEL, &P.position, 4, 1, INK_ROW_DOUBLE, TR("还没有联系人"), bind_item, NULL);
-        if (P.list) ink_ui_list_refresh(P.list, (size_t)ink_db_count(P.db));
+    if (!edit && !detail) {
+        P.form = MODEL; P.form.fields = P.specs; P.form.field_count = 1; P.actions[0] = ACTIONS[2]; P.form.actions = P.actions; P.form.action_count = 2; P.actions[1] = (ink_ui_action_spec_t){.id = "add", .label = TR("添加联系人"), .capability = "contacts.edit", .enabled = true};
+        P.specs[0] = (ink_ui_field_spec_t){.id = "query", .role = "searchbox", .label = TR("搜索联系人")};
+        ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .enter = INK_ENTER_DONE, .initial = P.query, .hint = TR("搜索姓名或号码"), .max = 96};
+        P.search = ink_textfield_create(screen, &cfg, NULL, NULL, false);
+        lv_obj_set_pos(P.search, ink_ui_px(INK_MARGIN), ink_ui_px(y)); lv_obj_set_width(P.search, ink_ui_px(INK_CANVAS_W - 2 * INK_MARGIN));
+        ink_textfield_bind_short(P.search, &P.form, &P.specs[0], &P.actions[0]); lv_obj_add_event_cb(P.search, searched, LV_EVENT_VALUE_CHANGED, NULL);
+        lv_obj_t *body = ink_ui_box(screen, 0, y + INK_CONTROL + INK_GAP_XS, INK_CANVAS_W, CONTACT_ROWS * (INK_ROW_DOUBLE + INK_GAP_M) + INK_CONTROL + INK_GAP_L, 0, INK_SURFACE_WHITE, false);
+        build_rows(); P.list = ink_ui_list_create(body, &MODEL, &P.position, CONTACT_ROWS, 1, INK_ROW_DOUBLE, TR("没有匹配的联系人"), bind_item, NULL);
+        if (P.list) ink_ui_list_refresh(P.list, P.count);
         lv_obj_t *button = ink_ui_pill(screen, TR("添加联系人"), INK_MARGIN, INK_CANVAS_H - INK_PRIMARY - INK_MARGIN, INK_CANVAS_W - 2 * INK_MARGIN, INK_PRIMARY, false, NULL, NULL);
         ink_shell_bind(button, "contacts.edit", "{}");
     } else {
-        P.name[0] = P.number[0] = 0;
+        P.name[0] = P.number[0] = P.note[0] = 0;
         P.ver = P.id ? read_contact(P.db, P.id, P.name, P.number) : 0;
         if (P.id && !P.ver) { lv_label_set_text(P.notice, TR("找不到这个联系人")); return; }
         snprintf(P.ids[0], sizeof P.ids[0], "contact:%u", (unsigned)P.id);
-        P.form = (ink_ui_page_spec_t){.id = "ContactEdit", .title = TR("编辑联系人"), .object = {P.ids[0], P.ver}, .fields = P.specs, .field_count = 2, .actions = P.actions, .action_count = 2};
-        const char *values[] = {P.name, P.number}, *labels[] = {TR("姓名"), TR("号码")};
-        for (int i = 0; i < 2; i++) {
-            ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .enter = INK_ENTER_DONE, .initial = values[i], .hint = labels[i], .max = i ? 24 : 96};
-            P.specs[i] = (ink_ui_field_spec_t){.id = i ? "number" : "name", .role = "textbox", .label = labels[i]};
+        if (P.id) read_note(P.db, P.id, P.note);
+        P.form = (ink_ui_page_spec_t){.id = ink_ui_page_name(), .title = detail ? TR("联系人详情") : P.id ? TR("编辑联系人") : TR("新建联系人"), .object = {P.ids[0], P.ver}, .fields = P.specs, .field_count = CONTACT_FIELDS, .actions = P.actions, .action_count = CONTACT_FIELDS};
+        const char *values[] = {P.name, P.number, P.note}, *labels[] = {TR("姓名"), TR("号码"), TR("备注")}, *ids[] = {"name", "number", "note"};
+        _Static_assert(sizeof values / sizeof *values <= CONTACT_FIELDS, "contact fields");
+        _Static_assert(sizeof labels / sizeof *labels <= CONTACT_FIELDS, "contact labels");
+        _Static_assert(sizeof ids / sizeof *ids <= CONTACT_FIELDS, "contact ids");
+        if (detail) {
+            for (int i = 0; i < CONTACT_FIELDS; i++) { ink_ui_line(screen, values[i], i ? INK_FONT_LIST : INK_FONT_TITLE, INK_WEIGHT_MEDIUM, INK_MARGIN, y + i * (INK_CONTROL + INK_GAP_L), INK_CANVAS_W - 2 * INK_MARGIN); P.specs[i] = (ink_ui_field_spec_t){.id = ids[i], .role = "text", .label = labels[i], .value = values[i]}; }
+            snprintf(P.record_args, sizeof P.record_args, "{\"id\":%u}", (unsigned)P.id); char number[sizeof P.number]; snprintf(number, sizeof number, "%s", P.number); snprintf(P.dial_args, sizeof P.dial_args, "{\"number\":\"%.24s\"}", number);
+            const char *caps[] = {"call.dial", "sms.compose", "contacts.edit"}, *titles[] = {TR("打电话"), TR("发短信"), TR("编辑")};
+            _Static_assert(sizeof caps / sizeof *caps <= sizeof P.actions / sizeof *P.actions, "detail actions");
+            _Static_assert(sizeof titles / sizeof *titles <= sizeof P.actions / sizeof *P.actions, "detail labels");
+            for (int i = 0; i < 3; i++) { const char *args = i == 2 ? P.record_args : P.dial_args; P.actions[i] = (ink_ui_action_spec_t){.id = caps[i], .label = titles[i], .capability = caps[i], .args_json = args, .enabled = true}; ink_shell_bind(ink_ui_pill(screen, titles[i], INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_PRIMARY - (2 - i) * (INK_CONTROL + INK_GAP_L), INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, i == 0, NULL, NULL), caps[i], args); }
+            return;
+        }
+        for (int i = 0; i < CONTACT_FIELDS; i++) {
+            ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .enter = INK_ENTER_DONE, .initial = values[i], .hint = labels[i], .max = i == 1 ? 24 : i == 2 ? 192 : 96};
+            P.specs[i] = (ink_ui_field_spec_t){.id = ids[i], .role = "textbox", .label = labels[i]};
             P.fields[i] = ink_textfield_create(screen, &cfg, NULL, NULL, false);
             lv_obj_set_pos(P.fields[i], ink_ui_px(INK_MARGIN), ink_ui_px(y + i * (INK_CONTROL + INK_GAP_L)));
             lv_obj_set_width(P.fields[i], ink_ui_px(INK_CANVAS_W - 2 * INK_MARGIN));
@@ -209,37 +264,49 @@ static void create(lv_obj_t *screen, void *arg) {
         }
     }
 }
-static void destroy(void) { ink_db_close(P.db); P.db = NULL; P.list = NULL; P.notice = NULL; P.fields[0] = P.fields[1] = NULL; }
+static void destroy(void) { ink_db_close(P.db); P.db = NULL; P.list = NULL; P.notice = P.search = NULL; memset(P.fields, 0, sizeof P.fields); }
 static int snapshot(char *out, size_t cap) {
-    if (P.list) return ink_ui_list_snapshot(P.list, out, cap);
+    if (P.list) {
+        int n = ink_ui_list_snapshot(P.list, out, cap), m = P.search ? ink_textfield_short_snapshot(P.search, P.save_args, sizeof P.save_args) : -1;
+        if (n < 0 || m < 0) return -1;
+        ink_jw_t w = {.buf = out, .cap = cap, .len = (size_t)n - 1}; ink_jw_raw(&w, ",\"search\":"); ink_jw_raw(&w, P.save_args); ink_jw_raw(&w, "}"); return w.overflow ? -1 : (int)w.len;
+    }
+    if (!strcmp(ink_ui_page_name(), DETAIL.name)) return ink_ui_semantics_snapshot(&P.form, out, cap);
     if (P.fields[0]) {
         ink_jw_t w; ink_jw_init(&w, P.save_args, sizeof P.save_args);
         ink_jw_raw(&w, "{");
         if (P.id) { ink_jw_raw(&w, "\"id\":"); ink_jw_int(&w, P.id); ink_jw_raw(&w, ",\"if_revision\":"); ink_jw_int(&w, P.ver); ink_jw_raw(&w, ","); }
-        ink_jw_raw(&w, "\"name\":"); ink_jw_str(&w, P.specs[0].value); ink_jw_raw(&w, ",\"number\":"); ink_jw_str(&w, P.specs[1].value); ink_jw_raw(&w, "}");
+        ink_jw_raw(&w, "\"name\":"); ink_jw_str(&w, P.specs[0].value); ink_jw_raw(&w, ",\"number\":"); ink_jw_str(&w, P.specs[1].value); ink_jw_raw(&w, ",\"note\":"); ink_jw_str(&w, P.specs[2].value); ink_jw_raw(&w, "}");
         snprintf(P.record_args, sizeof P.record_args, "{\"id\":%u}", (unsigned)P.id);
-        P.actions[2] = (ink_ui_action_spec_t){.id = "save", .label = TR("保存联系人"), .capability = "contacts.put", .args_json = P.save_args, .enabled = !w.overflow};
-        P.actions[3] = (ink_ui_action_spec_t){.id = "select", .label = TR("选择这个号码"), .capability = "contacts.select", .args_json = P.record_args, .enabled = P.id != 0};
+        P.actions[3] = (ink_ui_action_spec_t){.id = "save", .label = TR("保存联系人"), .capability = "contacts.put", .args_json = P.save_args, .enabled = !w.overflow};
+        P.actions[4] = (ink_ui_action_spec_t){.id = "select", .label = TR("选择这个号码"), .capability = "contacts.select", .args_json = P.record_args, .enabled = P.id != 0};
         ink_jw_init(&w, P.delete_args, sizeof P.delete_args);
         ink_jw_raw(&w, "{\"id\":"); ink_jw_int(&w, P.id); ink_jw_raw(&w, ",\"if_revision\":"); ink_jw_int(&w, P.ver);
         ink_jw_raw(&w, ",\"name\":"); ink_jw_str(&w, P.name); ink_jw_raw(&w, ",\"number\":"); ink_jw_str(&w, P.number); ink_jw_raw(&w, "}");
-        P.actions[4] = (ink_ui_action_spec_t){.id = "delete", .label = TR("删除联系人"), .capability = "contacts.delete", .args_json = P.delete_args, .enabled = P.id != 0 && !w.overflow};
-        P.form.actions = P.actions; P.form.action_count = 5;
-        unsigned focused = lv_obj_has_state(P.fields[1], LV_STATE_FOCUSED) ? 1 : 0;
+        P.actions[5] = (ink_ui_action_spec_t){.id = "delete", .label = TR("删除联系人"), .capability = "contacts.delete", .args_json = P.delete_args, .enabled = P.id != 0 && !w.overflow};
+        P.form.actions = P.actions; P.form.action_count = 6;
+        unsigned focused = lv_obj_has_state(P.fields[2], LV_STATE_FOCUSED) ? 2 : lv_obj_has_state(P.fields[1], LV_STATE_FOCUSED) ? 1 : 0;
         return ink_textfield_short_snapshot(P.fields[focused], out, cap);
     }
     return snprintf(out, cap, TR("联系人：%s"), P.notice ? lv_label_get_text(P.notice) : TR("暂时打不开"));
 }
 static bool page_key(ink_key_t k, bool lng) { return P.list && ink_ui_list_key(P.list, k, lng); }
-static const ink_activity_t LIST = {.name = "PhoneContacts", .app = "phone", .create = create, .destroy = destroy, .snapshot = snapshot, .on_key = page_key};
-static const ink_activity_t EDIT = {.name = "ContactEdit", .app = "phone", .create = create, .destroy = destroy, .snapshot = snapshot};
+static const ink_activity_t LIST = {.name = "PhoneContacts", .app = "contacts", .create = create, .destroy = destroy, .snapshot = snapshot, .on_key = page_key};
+static const ink_activity_t EDIT = {.name = "ContactEdit", .app = "contacts", .create = create, .destroy = destroy, .snapshot = snapshot};
+static const ink_activity_t DETAIL = {.name = "ContactDetail", .app = "contacts", .create = create, .destroy = destroy, .snapshot = snapshot};
 extern const ink_activity_t ink_phone_page;
 static const ink_app_def_t APP = {.id = "phone", .title = TR_NOOP("电话"), .icon = INK_UI_ICON(phone), .entry = &ink_phone_page, .system_app = true, .child_ok = true};
+static const ink_app_def_t CONTACT_APP = {.id = "contacts", .title = TR_NOOP("联系人"), .icon = INK_UI_ICON(person), .entry = &LIST, .system_app = true, .child_ok = true};
 #define ID "\"id\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}"
 #define RECORD "{\"type\":\"object\",\"properties\":{" ID "},\"required\":[\"id\"]}"
 #define VERSION "\"if_revision\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}"
-#define DETAILS "\"name\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":32},\"number\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":24}"
+#define DETAILS "\"name\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":32},\"number\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":24},\"note\":{\"type\":\"string\",\"maxLength\":64}"
 static const ink_cap_t CAPS[] = {
+    {.id = "contacts.open", .app = "phone", .locked_owner_only = true, .title = "打开联系人", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "contacts.pick", .app = "phone", .title = "挑选联系人号码", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "contacts.search", .app = "phone", .title = "搜索联系人", .activity = "PhoneContacts", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "contacts.view", .app = "phone", .title = "查看联系人详情", .input = RECORD, .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
+    {.id = "contacts.note", .app = "phone", .title = "输入联系人备注", .activity = "ContactEdit", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "contacts.put", .app = "phone", .title = "添加或修改联系人（每人一个号码）", .input = "{\"type\":\"object\",\"properties\":{" ID "," VERSION "," DETAILS "},\"required\":[\"name\",\"number\"]}", .effect = INK_FX_LOCAL_WRITE, .child_ok = true, .exec = INK_EXEC_BG, .run = record},
     {.id = "contacts.delete", .app = "phone", .title = "删除联系人", .ask = TR_NOOP("删除联系人 {name}（{number}），不能撤销"), .input = "{\"type\":\"object\",\"properties\":{" ID "," VERSION "," DETAILS "},\"required\":[\"id\",\"if_revision\",\"name\",\"number\"]}", .effect = INK_FX_LOCAL_DESTRUCTIVE, .ask_by_hand = true, .child_ok = true, .exec = INK_EXEC_BG, .run = record},
     {.id = "contacts.select", .app = "phone", .title = "选联系人和号码，返回编号和号码", .input = RECORD, .output = "{\"type\":\"object\",\"properties\":{" ID ",\"number\":{\"type\":\"string\"}},\"required\":[\"id\",\"number\"]}", .effect = INK_FX_READ, .child_ok = true, .exec = INK_EXEC_BG, .run = record},
@@ -250,6 +317,6 @@ static const ink_cap_t CAPS[] = {
     {.id = "contacts.number", .app = "phone", .title = "输入联系人号码", .activity = "ContactEdit", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate}
 };
 int ink_contacts_init(void) {
-    return ink_db_register(&CONTACTS) || ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_app_register(&APP) ? -1 : 0;
+    return ink_db_register(&CONTACTS) || ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_app_register(&APP) || ink_app_register(&CONTACT_APP) ? -1 : 0;
 }
-void ink_contacts_open(void) { ink_ui_push(&LIST, NULL); }
+void ink_contacts_open(void) { ink_ui_drop_app("contacts"); ink_ui_push(&LIST, (void *)2); }

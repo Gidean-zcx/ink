@@ -1922,3 +1922,8 @@ add_test(NAME unit-s31-camera-negative COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOU
 ink_sim_executable(sim-camera-absent tests/port_camera/absent.c)
 target_link_libraries(sim-camera-absent PRIVATE ink_apps ink_system)
 add_test(NAME camera-absent COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/port_camera/run.py ${CMAKE_BINARY_DIR})
+
+ink_sim_executable(sim-comm-ux2 tests/comm_ux2/comm_ux2.c)
+target_link_libraries(sim-comm-ux2 PRIVATE ink_apps ink_system)
+add_test(NAME comm-ux2 COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/comm_ux2/run.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(comm-ux2 PROPERTIES TIMEOUT 120)

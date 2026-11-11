@@ -29,8 +29,8 @@ for phase in ("write", "verify", "stale", "delete"):
     for item in snapshots:
         snapshot = item["snapshot"]
         if item["case"] == "form":
-            assert [f["value"] for f in snapshot["fields"]] == ["触摸测试", "00000000002"]
-            assert {a["capability"] for a in snapshot["actions"]} == {"contacts.name", "contacts.number", "contacts.put"}
+            assert [f["value"] for f in snapshot["fields"]] == ["触摸测试", "00000000002", ""]
+            assert {a["capability"] for a in snapshot["actions"]} == {"contacts.name", "contacts.number", "contacts.note", "contacts.put"}
             continue
         p = snapshot["pagination"]
         assert tuple(p[k] for k in ("page", "pages", "total", "offset", "visible")) == expected[item["case"]], item

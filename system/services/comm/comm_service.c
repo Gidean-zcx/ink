@@ -456,6 +456,17 @@ static void send_status(char *s, size_t cap, int r, int parts, int sent) {
 }
 
 /* Both callers use the same validation; the AI can supply text, never a local draft reference. */
+static bool normalize_number(char *number) {
+    size_t n = 0; bool digit = false;
+    for (size_t i = 0; number[i]; i++) {
+        char c = number[i];
+        if (strchr(" -()", c)) continue;
+        if (c >= '0' && c <= '9') digit = true;
+        else if (c != '+' || n) return false;
+        number[n++] = c;
+    }
+    number[n] = 0; return digit;
+}
 static int send_text(const ink_args_t *args, const char *member, ink_source_t src, ink_receipt_t *rc, char *to) {
     char page[48]; int64_t draft = 0;
     int to_len = ink_args_get_str(args, "to", to, 24), bytes;
@@ -467,8 +478,7 @@ static int send_text(const ink_args_t *args, const char *member, ink_source_t sr
             ink_args_get_str(args, "page", page, sizeof page) > 0 ? ink_text_draft_read(member, page, (uint32_t)draft, CM.text, sizeof CM.text) : -1;
         if (bytes < 0) { snprintf(rc->say, sizeof rc->say, TR("短信草稿不可用，未发送，请重新打开后再试")); return -1; }
     } else bytes = ink_args_get_str(args, "text", CM.text, sizeof CM.text);
-    bool valid = to_len > 0 && to_len < 24 && bytes > 0 && bytes < (int)sizeof CM.text;
-    for (size_t i = 0; to[i]; i++) if ((to[i] < '0' || to[i] > '9') && !(i == 0 && to[i] == '+' && to[1])) valid = false;
+    bool valid = to_len > 0 && to_len < 24 && normalize_number(to) && bytes > 0 && bytes < (int)sizeof CM.text;
     int parts = valid ? hal_cell_sms_parts(CM.text) : -1;
     if (parts > INK_SMS_PARTS_MAX) snprintf(rc->say, sizeof rc->say, TR("短信太长，最多分 %d 条发送，请删短一些"), INK_SMS_PARTS_MAX);
     return parts > 0 && parts <= INK_SMS_PARTS_MAX ? bytes : -1;
@@ -570,6 +580,8 @@ static void call_result(ink_call_t *c, int r, const char *ok, const char *fail) 
 static void cap_dial(ink_call_t *c) {
     char number[24];
     ink_args_get_str(&c->args, "number", number, sizeof number);
+    if (!normalize_number(number)) { c->rc.status = INK_RC_INVALID; return; }
+    ink_args_str(&c->args, "number", number);
     bool emergency = !strcmp(number, "110") || !strcmp(number, "120") || !strcmp(number, "119") || !strcmp(number, "112");
     if (!strcmp(c->cap->id, "phone.emergency") && !emergency) {
         c->rc.status = INK_RC_REJECTED;

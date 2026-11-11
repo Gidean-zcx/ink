@@ -201,7 +201,7 @@ static void test_apps(void) {
     test_capture("SmsThread", "收到", "Received"); CHECK(strstr(page_json, "用户原文 晴"), "message body unchanged");
     test_ok("sms.compose", NULL); test_capture("SmsCompose", "写短信", "New message");
     test_ok("sms.long", NULL); test_capture("ImeLong", "写短信", "New message");
-    test_open("message"); test_ok("sms.compose", NULL); test_capture("SmsRecipients", "用户原文 晴", "用户原文 晴");
+    test_open("message"); test_ok("sms.compose", NULL); test_capture("SmsNewRecipient", "收件人", "To"); test_ok("sms.pick", NULL); test_capture("SmsRecipients", "用户原文 晴", "用户原文 晴");
     test_open("gallery"); test_capture("Gallery-empty", "相册", "Photos");
     test_open("camera"); test_ok("camera.preview", NULL); test_capture("Camera", "低频取景", "Still preview");
     CHECK(BY_HAND("camera.scan", NULL) && g_rc.status == INK_RC_FAILED, "synthetic image has no QR code"); test_quiet(); test_capture("Scan", "扫码", "Scan");
