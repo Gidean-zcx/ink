@@ -24,7 +24,7 @@ static nt26_result_t at(const char *cmd, char *resp, size_t cap, uint32_t timeou
 }
 
 nt26_result_t nt26_sim_slot(nt26_slot_t *slot) {
-    char resp[64];
+    char resp[512]; /* the NT26 lists every SIM setting (about 330 bytes on the device, 2026-11-11); 64 overflowed into ERROR */
     nt26_result_t r = at("AT+ECSIMCFG?", resp, sizeof resp, NT26_QUERY_TIMEOUT_MS);
     if (r != NT26_OK) return r;
     const char *p = strstr(resp, "\"SimSlot\"");

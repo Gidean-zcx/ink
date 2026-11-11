@@ -31,14 +31,14 @@ static void log_modem_once(void) {
     static bool done;
     if (done) return;
     done = true;
-    static const char *const QUERIES[] = {"AT+CGMM", "AT+CGMR", "AT+CPIN?", "AT+CEREG?", "AT+CSQ",
+    static const char *const QUERIES[] = {"AT+CGMM", "AT+CGMR", "AT+CPIN?", "AT+CEREG?", "AT+CSQ", "AT+ECSIMCFG?",
                                           "AT+CSMS=?", "AT+CMGF=?", "AT+CNMI?", "AT+CIREG?", "AT+CIREG=?"};
     for (size_t i = 0; i < sizeof QUERIES / sizeof *QUERIES; i++) {
-        char response[96] = "", line[160];
+        char response[512] = "", line[200];
         hal_at_result_t r = hal_modem_at(QUERIES[i], response, sizeof response, 1000);
         for (char *p = response; *p; p++) if (*p == '\r' || *p == '\n') *p = ' ';
         mask_ids(response);
-        snprintf(line, sizeof line, "cell: %s -> %s %s", QUERIES[i],
+        snprintf(line, sizeof line, "cell: %s -> %s %.150s", QUERIES[i],
                  r == HAL_AT_OK ? "OK" : r == HAL_AT_ERROR ? "ERROR" : "no answer", response);
         hal_log_write(line);
     }
