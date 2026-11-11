@@ -100,6 +100,23 @@ static int ink_cam_grab(void) {
         if (err != ESP_OK) return -3;
         S.enabled = true;
     } else {
+        /* Measured on the device: a stopped controller asks for one more buffer and never fills it (0 bytes, every
+         * other preview timed out and the next one re-ran the 586-write table). Rebuild only the controller; the
+         * sensor keeps its table and exposure, the frame buffer stays. Output off before the start, as above. */
+        err = ink_cam_write(0xfe, 0);
+        if (err == 0) err = ink_cam_write(0xf2, 0);
+        if (err != 0) return err;
+        if (S.enabled) esp_cam_ctlr_disable(S.controller);
+        S.enabled = false;
+        esp_cam_ctlr_del(S.controller);
+        S.controller = NULL;
+        if ((err = ink_cam_init_controller()) != 0) return err;
+        esp_cam_ctlr_evt_cbs_t callbacks = {0};
+        callbacks.on_get_new_trans = ink_cam_next;
+        callbacks.on_trans_finished = ink_cam_done;
+        if (esp_cam_ctlr_register_event_callbacks(S.controller, &callbacks, NULL) != ESP_OK ||
+            esp_cam_ctlr_enable(S.controller) != ESP_OK) return -3;
+        S.enabled = true;
         S.requests = INK_CAM_WARMUP;
         S.received = 0;
         xSemaphoreTake(S.done, 0);

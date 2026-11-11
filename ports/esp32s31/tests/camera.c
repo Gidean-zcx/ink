@@ -202,7 +202,7 @@ int main(void) {
     refreshing = true; /* Panel may refresh between grabs while the session is retained. */
     assert(hal_camera_capture(output, sizeof output, 3000) == sizeof output);
     assert(hal_camera_capture(output, sizeof output, 3000) == sizeof output);
-    assert(allocations == 1 && releases == 0 && controllers == detected_controllers + 1);
+    assert(allocations == 1 && releases == 0 && controllers == detected_controllers + 3); /* the controller is rebuilt per grab */
     assert(S.frame == frame && sensor_resets == 1 && frames == 11 && output_requests == 3);
     assert(now - first_at == 340000); /* 300 ms panel wait plus two 20 ms frame waits. */
     for (size_t i = 0; i < sizeof output; i++) assert(output[i] == 11);
