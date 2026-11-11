@@ -142,8 +142,10 @@ static void verify_phase(void) {
 }
 static void visible_failure(void) {
     lv_area_t notice, field, keyboard;
-    lv_obj_update_layout(M.notice); lv_obj_get_coords(M.notice, &notice); lv_obj_get_coords(M.field, &field); ink_shell_keyboard_area(&keyboard);
-    CHECK(notice.y2 < field.y1 && notice.y1 > ink_ui_px(INK_STATUS_BAR + INK_PRIMARY) && notice.y2 < keyboard.y1,
+    lv_obj_t *caption = lv_obj_get_child(M.field, 0), *area = lv_obj_get_child(M.field, 1);
+    lv_obj_update_layout(M.field); lv_obj_get_coords(caption, &notice); lv_obj_get_coords(area, &field); ink_shell_keyboard_area(&keyboard);
+    CHECK(lv_obj_is_visible(caption) && strstr(lv_label_get_text(caption), "没存上") && notice.y2 < field.y1 &&
+          notice.y1 > ink_ui_px(INK_STATUS_BAR + INK_PRIMARY) && notice.y2 < keyboard.y1,
           "failure notice is fully above both editor and keyboard");
 }
 static void fail_phase(void) {

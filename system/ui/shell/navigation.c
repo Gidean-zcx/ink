@@ -6,6 +6,7 @@
 /* ui-scale-runtime: dimension top Child volume marker uses the configured percentage. */
 /* ui-scale-runtime: dimension bb_x,bb_y The battery icon's position, passed from the theme-sized status bar. */
 /* ui-scale-runtime: dimension F.y,heading_h,notice_h,home_room,below_heading Page flow: theme sizes added up, plus text measured at the current size. */
+/* ui-scale-runtime: dimension lv_obj_get_y Password backing follows the native field's theme-derived position. */
 #include <stdio.h>
 #include <string.h>
 
@@ -63,6 +64,7 @@ static const ink_activity_t PAGES[] = {
     {.name = "KnownNetworks", .create = create_page, .destroy = destroy_page, .snapshot = page_snapshot, .on_key = page_key}};
 
 #define KNOWN_NETWORKS_MAX 8
+#define WIFI_SCAN_MAX 6
 
 static struct {
     lv_obj_t *home, *content, *dots, *clock, *date, *message;
@@ -76,7 +78,8 @@ static struct {
     char member[16];
     uint32_t session, epoch, icon_version, icon_generation;
     char result[160], search[80];
-    char wifi_ssid[6][40], picked_ssid[40];
+    char wifi_ssid[WIFI_SCAN_MAX][40], picked_ssid[40];
+    struct { int rssi; bool secured; } wifi_info[WIFI_SCAN_MAX];
     int wifi_count;
     char known_ssid[KNOWN_NETWORKS_MAX][33];
     int known_count;
@@ -118,7 +121,7 @@ static void kid_volume_mark(lv_obj_t *slider, int top);
 static bool current_session(uint32_t epoch);
 
 static void known_reply(void *ctx, const ink_receipt_t *rc) {
-    if ((uint32_t)(uintptr_t)ctx != N.known_epoch || !current_session(N.epoch) || !N.page_body || N.page_id != PAGE_KNOWN) return;
+    if ((uint32_t)(uintptr_t)ctx != N.known_epoch || !current_session(N.epoch) || !N.page_body || (N.page_id != PAGE_KNOWN && N.page_id != PAGE_NETWORK)) return;
     N.known_count = -2;
     ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
     if (j && rc->status == INK_RC_DONE && rc->result && !ink_json_parse(j, rc->result, strlen(rc->result))) {
@@ -128,11 +131,11 @@ static void known_reply(void *ctx, const ink_receipt_t *rc) {
     }
     osal_free(j);
     ink_ui_content_changed();
-    draw_page_body();
+    if (N.page_id == PAGE_KNOWN) draw_page_body();
 }
 static void known_load(void *ctx, const char *id, const ink_args_t *args) {
     (void)ctx; (void)id; (void)args;
-    if (!N.page_body || N.page_id != PAGE_KNOWN) return;
+    if (!N.page_body || (N.page_id != PAGE_KNOWN && N.page_id != PAGE_NETWORK)) return;
     ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .reply_exec = INK_EXEC_UI, .done = known_reply,
         .ctx = (void *)(uintptr_t)N.known_epoch};
     if (ink_cap_call("wifi.list", NULL, &o)) { N.known_count = -2; draw_page_body(); }
@@ -148,23 +151,38 @@ static void wifi_receipt(void *ctx, const ink_receipt_t *rc) {
     if (!current_session((uint32_t) (request >> 1))) return;
     bool scan = (request & 1) != 0;
     N.scan_busy = false;
+    if (!scan && rc->status == INK_RC_DONE) N.picked_ssid[0] = 0;
     snprintf(N.result, sizeof N.result, "%s",
              rc->say[0]                  ? rc->say
              : rc->status == INK_RC_DONE ? TR("已经找过附近的网络")
                                          : TR("没能完成，可以再试一次"));
+    if (scan) { N.wifi_count = N.wifi_page = N.body_page = 0; }
     if (scan && rc->status == INK_RC_DONE && rc->result) {
         ink_json_t j;
         N.wifi_count = 0;
         N.wifi_page = 0;
         if (ink_json_parse(&j, rc->result, strlen(rc->result)) == 0)
-            for (int i = 1; i < j.ntok && N.wifi_count < 6; i++) {
+            for (int i = 1; i < j.ntok && N.wifi_count < WIFI_SCAN_MAX; i++) {
                 if (j.tok[i].type != 1) continue;
                 int token = ink_json_find(&j, i, "ssid");
-                if (ink_json_str(&j, token, N.wifi_ssid[N.wifi_count], sizeof N.wifi_ssid[0]) >= 0) N.wifi_count++;
+                if (ink_json_str(&j, token, N.wifi_ssid[N.wifi_count], sizeof N.wifi_ssid[0]) >= 0) {
+                    int64_t rssi = 0; ink_json_int(&j, ink_json_find(&j, i, "rssi"), &rssi);
+                    N.wifi_info[N.wifi_count].rssi = (int)rssi;
+                    N.wifi_info[N.wifi_count++].secured = ink_json_eq(&j, ink_json_find(&j, i, "secured"), "true");
+                }
                 int end = j.tok[i].end;
                 while (i + 1 < j.ntok && j.tok[i + 1].start < end) i++;
             }
         ink_ui_content_changed();
+    }
+    char connected[40]; ink_state_get_str(ink_state_find("wifi.ssid"), connected, sizeof connected);
+    for (int i = 1; i < N.wifi_count; i++) if (!strcmp(connected, N.wifi_ssid[i])) {
+        char ssid[40]; memcpy(ssid, N.wifi_ssid[i], sizeof ssid);
+        int rssi = N.wifi_info[i].rssi; bool secured = N.wifi_info[i].secured;
+        memmove(N.wifi_ssid[1], N.wifi_ssid[0], (size_t)i * sizeof N.wifi_ssid[0]);
+        memmove(N.wifi_info + 1, N.wifi_info, (size_t)i * sizeof N.wifi_info[0]);
+        memcpy(N.wifi_ssid[0], ssid, sizeof ssid); N.wifi_info[0].rssi = rssi; N.wifi_info[0].secured = secured;
+        break;
     }
     if (N.page_body && N.page_id == PAGE_NETWORK) draw_page_body();
 }
@@ -732,10 +750,15 @@ static void draw_home_content(void) {
         int bottom =
             INK_CANVAS_H - INK_STATUS_BAR - INK_DOCK - INK_MARGIN - ink_ui_line_height(INK_FONT_LIST) - INK_GAP_S;
         int grid = bottom - 2 * (INK_CIRCLE_APP + INK_GAP_S + ink_ui_line_height(INK_FONT_NOTE)) - INK_GAP_L;
+        bool compact = grid < y + INK_CONTROL + INK_GAP_M + (kid_idle ? ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_M : 0);
+        if (compact) grid += 2 * (INK_CIRCLE_APP - INK_CIRCLE);
         static const int kid_order[] = {0, 1, 2, 5, 6, 3, 4};
+        int shown = 0;
         for (int i = 0; i < (child() ? 7 : 8); i++) {
             int at = child() ? kid_order[i] : i;
-            tile(N.content, APP_IDS[at], APP_TITLES[at], APP_ICONS[at], i % 4, i / 4, grid, false, 4);
+            if (child() && !kid_app_visible(APP_IDS[at])) continue;
+            tile(N.content, APP_IDS[at], APP_TITLES[at], APP_ICONS[at], shown % 4, shown / 4, grid, compact, 4);
+            shown++;
         }
     } else if (N.home_page == 0) {
         read_cards();
@@ -1145,7 +1168,7 @@ static void wifi_password(void *ctx, const char *password) {
     if (!args) return;
     ink_args_init(args);
     ink_args_str(args, "ssid", N.picked_ssid);
-    ink_args_str(args, "password", password);
+    if (password) ink_args_str(args, "password", password);
     ink_call_opts_t o = {.src = INK_SRC_TOUCH,
                          .reply_exec = INK_EXEC_UI,
                          .done = wifi_receipt,
@@ -1154,9 +1177,7 @@ static void wifi_password(void *ctx, const char *password) {
     ink_cap_call("wifi.connect", args, &o);
     memset(args, 0, sizeof *args);
     osal_free(args);
-    N.picked_ssid[0] = 0;
     ink_text_blur(0);
-    draw_page_body();
 }
 static void wifi_picked(lv_event_t *e) {
     int index = (int) (intptr_t) lv_event_get_user_data(e);
@@ -1402,20 +1423,23 @@ static void body_blocks(void) {
         if (N.known_count <= 0) {
             const char *text = TR(N.known_count == -1 ? TR_NOOP("正在读取网络") : N.known_count == -2 ? TR_NOOP("网络列表暂时读不出来") : TR_NOOP("还没有已存的网络"));
             if (block(notice_h(text))) ink_ui_notice(N.page_body, text, F.y);
+            F.y += notice_h(text) + INK_GAP_M;
+            if (block(INK_CONTROL)) group_row(group(1), "wifi", N.known_count == -2 ? TR("重试") : TR("找附近的 Wi-Fi"), "", 0,
+                N.known_count == -2 ? "shell.known_networks" : "shell.network");
         }
         for (int i = 0; i < N.known_count; i++) {
-            int row = ink_ui_row_double(), h = row + INK_CONTROL;
+            int row = ink_ui_row_double(), h = row;
             if (block(h)) {
                 bool same = !strcmp(connected, N.known_ssid[i]);
                 const char *status = same && !strcmp(state, "connected") ? TR("已连接") : same && !strcmp(state, "joining") ? TR("正在连接网络") : TR("已存");
-                ink_ui_list_row(N.page_body, "wifi", N.known_ssid[i], status, INK_MARGIN, F.y, width(), false, NULL, NULL);
                 char args[224]; ink_jw_t w; ink_jw_init(&w, args, sizeof args);
                 ink_jw_raw(&w, "{\"ssid\":"); ink_jw_str(&w, N.known_ssid[i]); ink_jw_raw(&w, "}");
-                lv_obj_t *join = ink_ui_pill(N.page_body, TR("连接"), INK_MARGIN, F.y + row, (width() - INK_GAP) / 2, INK_CONTROL, false, NULL, NULL);
+                lv_obj_t *join = ink_ui_list_row(N.page_body, "wifi", N.known_ssid[i], status, INK_MARGIN, F.y,
+                    width() - INK_PRIMARY - INK_GAP, true, NULL, NULL);
                 ink_shell_bind(join, "wifi.connect", args);
                 if (!ink_setting_get("wifi.enabled") || (same && (!strcmp(state, "connected") || !strcmp(state, "joining")))) lv_obj_add_state(join, LV_STATE_DISABLED);
-                ink_shell_bind(ink_ui_pill(N.page_body, TR("忘掉"), INK_MARGIN + (width() + INK_GAP) / 2, F.y + row,
-                    (width() - INK_GAP) / 2, INK_CONTROL, false, NULL, NULL), "wifi.forget", args);
+                ink_shell_bind(ink_ui_pill(N.page_body, TR("忘掉"), INK_CANVAS_W - INK_MARGIN - INK_PRIMARY, F.y + (row - INK_CONTROL) / 2,
+                    INK_PRIMARY, INK_CONTROL, false, NULL, NULL), "wifi.forget", args);
             }
             F.y += h + INK_GAP_L;
         }
@@ -1433,35 +1457,9 @@ static void body_blocks(void) {
             }
         }
         F.y += 2 * INK_CONTROL + INK_GAP_L;
-        const char *const about = TR("自动：有 Wi-Fi 用 Wi-Fi，没有就用 4G");
-        int h = heading_h() + INK_SEGMENT + INK_GAP_M + notice_h(about);
-        if (block(h)) {
-            heading(TR("上网方式"));
-            const char *const labels[] = {TR("自动"), "Wi-Fi", "4G"};
-            lv_obj_t *seg = ink_ui_segments(N.page_body, labels, 3, (int) ink_setting_get("net.prefer"), INK_MARGIN,
-                                            F.y + heading_h(), width(), NULL, NULL);
-            bind_choices(seg, 3, "net.prefer");
-            ink_ui_notice(N.page_body, about, F.y + heading_h() + INK_SEGMENT + INK_GAP_M);
-        }
-        F.y += h + INK_GAP_L;
         char ssid[64];
-        const char *const connected = wifi_line(ssid, sizeof ssid);
-        h = heading_h() + notice_h(connected);
-        if (block(h)) {
-            heading("Wi-Fi");
-            ink_ui_notice(N.page_body, connected, F.y + heading_h());
-        }
-        F.y += h + INK_GAP_L;
-        if (ssid[0]) {
-            if (block(INK_CONTROL)) {
-                char args[256]; ink_jw_t w; ink_jw_init(&w, args, sizeof args);
-                ink_jw_raw(&w, "{\"ssid\":"); ink_jw_str(&w, ssid); ink_jw_raw(&w, "}");
-                ink_shell_bind(ink_ui_pill(N.page_body, TR("忘掉这个网络"), INK_MARGIN, F.y, width(), INK_CONTROL,
-                    false, NULL, NULL), "wifi.forget", args);
-            }
-            N.wifi_forget_page = F.page;
-            F.y += INK_CONTROL + INK_GAP_M;
-        }
+        wifi_line(ssid, sizeof ssid);
+        int h;
         if (N.picked_ssid[0]) {
             if (block(ink_textfield_height(INK_FIELD_PASSWORD))) {
                 ink_text_cfg_t cfg = {.type = INK_TEXT_PASSWORD,
@@ -1469,28 +1467,38 @@ static void body_blocks(void) {
                                       .max = 64,
                                       .hint = TR("输入网络密码"),
                                       .ai_hidden = true};
+                lv_obj_t *strip = ink_ui_box(N.page_body, 0, F.y, INK_CANVAS_W, INK_CANVAS_H, 0, INK_SURFACE_WHITE, false);
                 lv_obj_t *password_field =
                     ink_textfield_create(N.page_body, &cfg, wifi_password, (void *) (uintptr_t) N.epoch, false);
                 lv_obj_set_pos(password_field, ink_ui_px(INK_MARGIN), ink_ui_px(F.y));
                 ink_textfield_style(password_field, INK_FIELD_PASSWORD, N.picked_ssid);
+                ink_textfield_error(password_field, N.result);
                 ink_textfield_short_focus(password_field);
+                lv_obj_update_layout(password_field);
+                lv_obj_set_y(strip, lv_obj_get_y(password_field) - ink_ui_px(INK_GAP_M));
+                lv_obj_set_style_border_width(strip, ink_ui_px(INK_STROKE), 0);
+                lv_obj_set_style_border_side(strip, LV_BORDER_SIDE_TOP, 0);
             }
             return;
         }
         if (block(INK_CONTROL)) {
             lv_obj_t *scan = ink_ui_pill(N.page_body, N.scan_busy ? TR("正在找附近的 Wi-Fi") : TR("找附近的 Wi-Fi"), INK_MARGIN,
-                                         F.y, (width() - INK_GAP) / 2, INK_CONTROL, N.scan_busy, NULL, NULL);
+                                         F.y, width(), INK_CONTROL, false, NULL, NULL);
             ink_shell_bind(scan, "wifi.scan", NULL);
-            ink_shell_bind(ink_ui_pill(N.page_body, TR("设置设备"), INK_MARGIN + (width() + INK_GAP) / 2, F.y,
-                (width() - INK_GAP) / 2, INK_CONTROL, false, NULL, NULL), "shell.launch", "{\"id\":\"boot\"}");
         }
         F.y += INK_CONTROL + INK_GAP_M;
-        if (block(INK_CONTROL)) group_row(group(1), "wifi", TR("已存的网络"), "", 0, "shell.known_networks");
-        F.y += INK_CONTROL + INK_GAP_M;
         for (int i = N.wifi_page * 2; i < N.wifi_count && i < (N.wifi_page + 1) * 2; i++) {
-            if (block(INK_CONTROL))
-                ink_ui_pill(N.page_body, N.wifi_ssid[i], INK_MARGIN, F.y, width(), INK_CONTROL, false, wifi_picked,
-                            (void *) (intptr_t) i);
+            if (block(INK_CONTROL)) {
+                lv_obj_t *row = ink_ui_list_row(N.page_body, !strcmp(ssid, N.wifi_ssid[i]) ? "check" : "wifi", N.wifi_ssid[i], "",
+                    INK_MARGIN, F.y, width(), false, NULL, NULL);
+                lv_obj_set_width(lv_obj_get_child(row, 1), ink_ui_px(width() - INK_ROW_DOUBLE - INK_BLOCK_L));
+                lv_obj_add_flag(row, LV_OBJ_FLAG_CLICKABLE); lv_obj_add_event_cb(row, wifi_picked, LV_EVENT_CLICKED, (void *)(intptr_t)i);
+                if (N.wifi_info[i].secured) ink_ui_icon(row, "lock", INK_ICON_SMALL, INK_ICON_LINE, width() - INK_BLOCK_L + INK_GAP_M, (INK_CONTROL - INK_ICON_SMALL) / 2, false);
+                int bars = N.wifi_info[i].rssi >= -60 ? 3 : N.wifi_info[i].rssi >= -75 ? 2 : 1;
+                for (int b = 0; b < bars; b++) ink_ui_box(row, width() - INK_ICON_SMALL - INK_GAP_M + b * INK_GAP_S,
+                    (INK_CONTROL + INK_ICON_SMALL) / 2 - (b + 1) * INK_GAP_S, INK_GAP_XS, (b + 1) * INK_GAP_S, 0,
+                    INK_SURFACE_BLACK, false);
+            }
             F.y += INK_CONTROL + INK_GAP_S;
         }
         if (N.wifi_count > 2) {
@@ -1505,10 +1513,35 @@ static void body_blocks(void) {
             F.y += INK_CONTROL + INK_GAP_M;
         }
         if (!N.wifi_count) {
-            const char *const none = TR("还没有附近的网络列表");
+            const char *const none = N.result[0] ? N.result : TR("还没有附近的网络列表");
             if (block(notice_h(none))) ink_ui_notice(N.page_body, none, F.y);
             F.y += notice_h(none) + INK_GAP_L;
         }
+        if (ssid[0]) {
+            if (block(INK_CONTROL)) {
+                char args[256]; ink_jw_t w; ink_jw_init(&w, args, sizeof args);
+                ink_jw_raw(&w, "{\"ssid\":"); ink_jw_str(&w, ssid); ink_jw_raw(&w, "}");
+                ink_shell_bind(ink_ui_pill(N.page_body, TR("忘掉这个网络"), INK_MARGIN, F.y, width(), INK_CONTROL,
+                    false, NULL, NULL), "wifi.forget", args);
+            }
+            N.wifi_forget_page = F.page;
+            F.y += INK_CONTROL + INK_GAP_M;
+        }
+        if (block(INK_CONTROL)) group_row(group(1), "wifi", TR("已存的网络"), "", 0, "shell.known_networks");
+        F.y += INK_CONTROL + INK_GAP_M;
+        if (block(INK_CONTROL)) ink_shell_bind(ink_ui_pill(N.page_body, TR("设置设备"), INK_MARGIN, F.y, width(), INK_CONTROL, false, NULL, NULL), "shell.launch", "{\"id\":\"boot\"}");
+        F.y += INK_CONTROL + INK_GAP_L;
+        const char *const about = TR("自动：有 Wi-Fi 用 Wi-Fi，没有就用 4G");
+        h = heading_h() + INK_SEGMENT + INK_GAP_M + notice_h(about);
+        if (block(h)) {
+            heading(TR("上网方式"));
+            const char *const labels[] = {TR("自动"), "Wi-Fi", "4G"};
+            lv_obj_t *seg = ink_ui_segments(N.page_body, labels, 3, (int) ink_setting_get("net.prefer"), INK_MARGIN,
+                                            F.y + heading_h(), width(), NULL, NULL);
+            bind_choices(seg, 3, "net.prefer");
+            ink_ui_notice(N.page_body, about, F.y + heading_h() + INK_SEGMENT + INK_GAP_M);
+        }
+        F.y += h + INK_GAP_L;
         const char *const sim_state = integer("cell.config_readonly") ? TR("暂不能更改 SIM 卡") : integer("cell.registered") ? TR("4G 在线，切卡不用重启") : TR("4G 还没有连上");
         h = heading_h() + INK_SEGMENT + INK_GAP_L + notice_h(sim_state);
         if (block(h)) {
@@ -1627,14 +1660,15 @@ static void create_page(lv_obj_t *screen, void *arg) {
     ink_shell_topbar(screen, TR(titles[N.page_id]));
     N.page_body = ink_ui_box(screen, 0, INK_STATUS_BAR + INK_PRIMARY + INK_GAP_XS, INK_CANVAS_W,
                              INK_CANVAS_H - INK_STATUS_BAR - INK_PRIMARY - INK_GAP_XS, 0, INK_SURFACE_WHITE, false);
-    if (N.page_id == PAGE_KNOWN) { N.known_count = -1; N.known_epoch++; }
+    if (N.page_id == PAGE_KNOWN || N.page_id == PAGE_NETWORK) { N.known_count = -1; N.known_epoch++; }
     draw_page_body();
-    if (N.page_id == PAGE_KNOWN) known_load(NULL, NULL, NULL);
+    if (N.page_id == PAGE_KNOWN || N.page_id == PAGE_NETWORK) known_load(NULL, NULL, NULL);
 }
 static void destroy_page(void) {
-    if (N.page_id == PAGE_KNOWN) N.known_epoch++;
+    if (N.page_id == PAGE_KNOWN || N.page_id == PAGE_NETWORK) N.known_epoch++;
     if (N.page_id == PAGE_NETWORK) {
         N.picked_ssid[0] = 0;
+        N.result[0] = 0;
         ink_text_blur(0);
     }
     N.page = N.page_body = NULL;
@@ -1725,7 +1759,8 @@ static int page_snapshot(char *buf, size_t cap) {
         if (integer("cell.config_readonly") && n >= 0 && (size_t)n < cap)
             n += snprintf(buf + n, cap - (size_t)n, "SIM 卡暂不能更改；");
         for (int i = N.wifi_page * 2; i < N.wifi_count && i < (N.wifi_page + 1) * 2 && n >= 0 && (size_t) n < cap; i++)
-            n += snprintf(buf + n, cap - (size_t) n, "网络[%d]=%s；", i, N.wifi_ssid[i]);
+            n += snprintf(buf + n, cap - (size_t) n, "网络[%d]=%s；信号=%d dBm；需要密码=%d；", i, N.wifi_ssid[i], N.wifi_info[i].rssi, N.wifi_info[i].secured);
+        if (n >= 0 && (size_t)n < cap) n += snprintf(buf + n, cap - (size_t)n, "结果=%s；", N.result);
         if (ssid[0] && N.body_page == N.wifi_forget_page && n >= 0 && (size_t)n < cap) {
             char args[256]; ink_jw_t w; ink_jw_init(&w, args, sizeof args);
             ink_jw_raw(&w, "{\"ssid\":"); ink_jw_str(&w, ssid); ink_jw_raw(&w, "}");
@@ -1829,8 +1864,12 @@ static void cap_nav(ink_call_t *c) {
         if (!N.page_body || N.page_id != PAGE_NETWORK || index < 0 || index >= N.wifi_count)
             c->rc.status = INK_RC_REJECTED;
         else {
+            N.result[0] = 0;
             snprintf(N.picked_ssid, sizeof N.picked_ssid, "%s", N.wifi_ssid[index]);
-            draw_page_body();
+            bool saved = false;
+            for (int i = 0; i < N.known_count; i++) saved |= !strcmp(N.known_ssid[i], N.picked_ssid);
+            if (!N.wifi_info[index].secured || saved) wifi_password((void *)(uintptr_t)N.epoch, NULL);
+            else { N.body_page = 0; draw_page_body(); }
         }
     }
     snprintf(c->rc.object, sizeof c->rc.object, "screen:%s", ink_shell_board());

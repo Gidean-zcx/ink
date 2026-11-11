@@ -1,6 +1,7 @@
 /* Enrollment presenters; services own network, identity and restore state. */
 /* ui-scale-runtime: dimension x,y,w,h Theme-derived shared layout coordinates. */
 /* ui-scale-runtime: font font Callers use the subtitle, heading and note theme sizes. */
+/* ui-scale-runtime: dimension B.wifi_page Page count times the theme-sized Wi-Fi row height. */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -19,15 +20,18 @@
 
 enum { FIRST, WIFI, PASSWORD, JOINING, JOIN_FAIL, CLAIM, NO_HUB, CONFIRM, RESTORE, HELLO, REVOKED };
 enum { PAIR_REPLY, SCAN_REPLY, JOIN_REPLY, HOTSPOT_REPLY, RESTORE_REPLY };
+enum { BOOT_WIFI_MAX = 12 };
 static const char *const TITLES[] = {TR_NOOP("你好"), TR_NOOP("选一个 Wi-Fi"), TR_NOOP("网络密码"), TR_NOOP("正在连接网络"), TR_NOOP("没能连接网络"),
     TR_NOOP("用手机扫一下，加入家庭"), TR_NOOP("找不到家庭服务器"), TR_NOOP("加入这个家庭？"), TR_NOOP("备份和恢复"), TR_NOOP("不懂就问"), TR_NOOP("这台设备不在家庭里了")};
 static struct {
     int page, count, wifi_page;
     int resume;
+    bool computer;
+    bool secured[BOOT_WIFI_MAX];
     ink_db_t *progress;
     uint32_t epoch;
     lv_obj_t *screen, *field, *qr;
-    char ssid[12][33], picked[33], claim[256], txid[40], family[64], by[64], check[24], preview[33], message[192];
+    char ssid[BOOT_WIFI_MAX][33], picked[33], claim[256], txid[40], family[64], by[64], check[24], preview[33], message[192];
     ink_ui_field_spec_t fields[5];
     ink_ui_action_spec_t actions[8];
     char ids[8][32], args[8][192];
@@ -56,9 +60,12 @@ static bool key(ink_key_t code, bool long_press);
 static const ink_activity_t PAGES[] = {PAGE("FirstBoot"), PAGE("BootWifi"), PAGE("BootWifiPass"), PAGE("BootJoining"),
     PAGE("BootJoinFail"), PAGE("BootClaim"), PAGE("BootNoHub"), PAGE("BootConfirm"), PAGE("BootRestore"),
     PAGE("BootHello"), PAGE("BootRevoked")};
+_Static_assert(sizeof TITLES / sizeof *TITLES == sizeof PAGES / sizeof *PAGES, "boot page titles");
+_Static_assert(2 + 3 <= sizeof B.fields / sizeof *B.fields, "boot Wi-Fi field capacity");
 static bool current(void) { return B.screen && B.epoch == ink_member_epoch() && ink_ui_page_current() &&
     !strcmp(ink_ui_page_name(), PAGES[B.page].name); }
 static void show(int page) {
+    if (page != CLAIM) B.computer = false;
     ink_ui_drop_app("boot");
     ink_ui_push(&PAGES[page], NULL);
 }
@@ -151,7 +158,7 @@ static void create(lv_obj_t *screen, void *arg) {
         button(TR("返回"), "shell.launch", "boot.back", INK_MARGIN, INK_STATUS_BAR, INK_CONTROL, false);
         ink_ui_line(screen, B.page == WIFI ? TR(TITLES[WIFI]) : B.picked[0] ? B.picked : TR("其他网络"), INK_FONT_SUBTITLE, INK_WEIGHT_BOLD,
             2 * INK_MARGIN + INK_CONTROL, INK_STATUS_BAR + INK_GAP, w - INK_CONTROL - INK_MARGIN);
-    } else text(TR(TITLES[B.page]), B.page == FIRST ? INK_FONT_HEADING : INK_FONT_SUBTITLE,
+    } else text(B.page == CLAIM && B.computer ? TR("用电脑加入家庭") : TR(TITLES[B.page]), B.page == FIRST ? INK_FONT_HEADING : INK_FONT_SUBTITLE,
         B.page == FIRST || B.page == CLAIM ? INK_PRIMARY : INK_CANVAS_H / 2);
     if (B.page == FIRST) {
         text(TR("用手机设置这台设备"), INK_FONT_LIST, INK_PRIMARY + INK_LINE_HEADING);
@@ -161,37 +168,48 @@ static void create(lv_obj_t *screen, void *arg) {
         button(TR("先用起来"), "shell.launch", "boot.hello", INK_MARGIN,
             INK_CANVAS_H - INK_BLOCK - 2 * INK_CONTROL - INK_GAP, w, false);
         button(TR("在设备上设置"), "shell.launch", "boot.wifi", INK_MARGIN,
-            INK_CANVAS_H - INK_BLOCK - INK_CONTROL, w, false);
+            INK_CANVAS_H - INK_BLOCK - INK_CONTROL, w, true);
     } else if (B.page == WIFI) {
         if (!B.count) text(TR("还没找到网络，可以再找一次"), INK_FONT_NOTE, 2 * INK_PRIMARY);
         for (int i = B.wifi_page * 3; i < B.count && i < (B.wifi_page + 1) * 3; i++) {
             char id[32]; snprintf(id, sizeof id, "boot.pick%d", i);
             int y = INK_STATUS_BAR + INK_CONTROL + INK_GAP + (i % 3) * (INK_CONTROL + INK_GAP);
-            button(B.ssid[i], "shell.launch", id, INK_MARGIN, y, w, false);
+            const ink_ui_action_spec_t *a = action(B.ssid[i], "shell.launch", id);
+            ink_ui_list_row(screen, "wifi", B.ssid[i], B.secured[i] ? TR("需要密码") : TR("开放网络"),
+                INK_MARGIN, y, w, false, clicked, (void *)a);
             B.fields[B.model.field_count++] = (ink_ui_field_spec_t){B.ssid[i], "text", TR("附近网络"), B.ssid[i], {NULL, 0}, false};
         }
         button(TR("其他网络"), "shell.launch", "boot.other", INK_MARGIN,
             INK_STATUS_BAR + INK_CONTROL + INK_GAP + 3 * (INK_CONTROL + INK_GAP), w, false);
-        bottom(TR("再找一次"), "shell.launch", "boot.wifi", false);
+        bottom(TR("再找一次"), "shell.launch", "boot.wifi", B.count <= 3);
         if (B.count > 3) bottom(TR("下一组"), "shell.launch", "boot.next", true);
     } else if (B.page == PASSWORD) {
         bool secret = B.picked[0] != 0;
-        ink_text_cfg_t cfg = {.type = secret ? INK_TEXT_PASSWORD : INK_TEXT_PLAIN, .enter = INK_ENTER_DONE,
+        ink_text_cfg_t cfg = {.type = secret ? INK_TEXT_PASSWORD : INK_TEXT_PLAIN, .enter = secret ? INK_ENTER_DONE : INK_ENTER_NEXT,
             .max = secret ? 64 : 32, .ai_hidden = secret, .hint = secret ? TR("输入网络密码") : TR("输入网络名称")};
         B.field = ink_textfield_create(screen, &cfg, password_entered, NULL, false);
         lv_obj_set_pos(B.field, ink_ui_px(INK_MARGIN), ink_ui_px(INK_STATUS_BAR + INK_CONTROL + INK_GAP));
-        ink_textfield_style(B.field, secret ? INK_FIELD_PASSWORD : INK_FIELD_SINGLE, secret ? TR("网络密码") : TR("网络名称"));
+        ink_textfield_style(B.field, secret ? INK_FIELD_PASSWORD : INK_FIELD_SINGLE, secret ? TR("网络密码 · 完成后连接") : TR("网络名称"));
         B.fields[2] = (ink_ui_field_spec_t){secret ? "password" : "ssid", "textbox", secret ? TR("网络密码") : TR("网络名称"), "", {NULL, 0}, secret};
         B.model.field_count = 3;
         const ink_ui_action_spec_t *focus = action(TR("输入密码"), "shell.launch", "boot.focus");
         if (!ink_textfield_bind_short(B.field, &B.model, &B.fields[2], focus))
             ink_exec_post(INK_EXEC_UI, &B.focus, focus_password, NULL);
     } else if (B.page == CLAIM) {
-        if (B.claim[0]) qr(B.claim);
-        text(B.check, INK_FONT_NOTE, INK_CANVAS_H / 2 + INK_PRIMARY);
-        text(B.message, INK_FONT_NOTE, INK_CANVAS_H / 2 + INK_PRIMARY + INK_LINE_NOTE + INK_GAP);
+        if (B.computer) {
+            const char *code = strstr(B.claim, "/claim/");
+            if (code) {
+                char address[256]; snprintf(address, sizeof address, "%.*s", (int)(code - B.claim), B.claim);
+                text(address, INK_FONT_NOTE, 3 * INK_PRIMARY);
+                snprintf(B.message, sizeof B.message, TR("加入码 %.8s\n确认码 %.12s\n填到电脑上，再回设备确认加入。"), code + 7, B.check);
+            }
+        } else {
+            if (B.claim[0]) qr(B.claim);
+            snprintf(B.message, sizeof B.message, TR("用手机扫码。码过期后会自动更换。"));
+        }
+        text(B.message, INK_FONT_NOTE, INK_CANVAS_H / 2 + INK_PRIMARY + INK_GAP);
         bottom(TR("返回选网"), "shell.launch", "boot.wifi", false);
-        bottom(TR("用电脑加入"), "shell.launch", "boot.computer", true);
+        bottom(B.computer ? TR("用手机扫码") : TR("用电脑加入"), "shell.launch", "boot.computer", true);
         B.fields[2] = (ink_ui_field_spec_t){"claim", "text", TR("加入链接"), B.claim, {NULL, 0}, true};
         B.fields[3] = (ink_ui_field_spec_t){"check", "text", TR("确认码"), B.check, {NULL, 0}, true}; B.model.field_count = 4;
     } else if (B.page == CONFIRM) {
@@ -200,9 +218,9 @@ static void create(lv_obj_t *screen, void *arg) {
         snprintf(B.message, sizeof B.message, TR("%s邀请你加入“%s”。请在设备上核对。"), B.by, B.family);
         bottom(TR("不是我们家"), "pairing.reject", B.txid, false); bottom(TR("加入"), "pairing.accept", B.txid, true);
     } else if (B.page == RESTORE) {
-        bottom(TR("当新设备用"), "shell.launch", "boot.hello", false);
+        bottom(TR("当新设备用"), "shell.launch", "boot.hello", !B.preview[0]);
         if (B.preview[0]) bottom(TR("放回来"), "restore.apply", B.preview, true);
-        else bottom(TR("再查一次"), "shell.launch", "boot.restore", true);
+        else bottom(TR("再查一次"), "shell.launch", "boot.restore", false);
     } else if (B.page == HELLO) {
         snprintf(B.message, sizeof B.message, "%s", ink_hub_online() ?
             TR("打开示例，按住 AI 键问“夜邮是什么意思”。") : TR("示例离线也能读。AI 还要等家庭服务器设置好。"));
@@ -210,10 +228,11 @@ static void create(lv_obj_t *screen, void *arg) {
     } else if (B.page == JOIN_FAIL) {
         bottom(TR("换个网络"), "shell.launch", "boot.wifi", false); bottom(TR("重新输入"), "shell.launch", "boot.password", true);
     } else if (B.page == NO_HUB) {
-        snprintf(B.message, sizeof B.message, TR("连不上家庭服务器。先用起来也行，连上后才有 AI 和备份。可用手机或存储卡设置服务器。"));
+        snprintf(B.message, sizeof B.message, TR("家庭服务器未连接，AI 和备份暂不可用。可先用；手机设置请返回选网，再返回首页扫码。"));
+        button(TR("返回选网"), "shell.launch", "boot.wifi", INK_MARGIN, INK_CANVAS_H - INK_BLOCK - INK_PRIMARY - INK_CONTROL - INK_GAP, w, false);
         bottom(TR("先用起来"), "shell.launch", "boot.hello", false); bottom(TR("再试一次"), "shell.launch", "boot.retry", true);
     } else if (B.page == REVOKED) {
-        snprintf(B.message, sizeof B.message, TR("可能是家人在手机上移除了这台设备。本地资料是否保留，以服务器的处理结果为准。"));
+        snprintf(B.message, sizeof B.message, TR("这台设备已被移出家庭，AI 和备份不可用。可回主页查看本地书和备忘，资料是否保留以实际列表为准。"));
         bottom(TR("知道了"), "system.home", "", false); bottom(TR("重新加入"), "shell.launch", "boot.restart", true);
     } else bottom(TR("取消"), "shell.launch", "boot.wifi", false);
     if (B.page != PASSWORD && B.page != FIRST && B.page != WIFI && B.page != CLAIM)
@@ -232,13 +251,19 @@ static void reply(void *ctx, const ink_receipt_t *rc) {
     bool ok = j && rc->result && ink_json_parse(j, rc->result, strlen(rc->result)) == 0;
     if (kind == SCAN_REPLY && B.page == WIFI) {
         B.count = B.wifi_page = 0;
-        if (ok) for (int i = 1; i < j->ntok && B.count < 12; i++)
-            if (j->tok[i].type == 4 && ink_json_eq(j, i, "ssid"))
-                if (ink_json_str(j, i + 1, B.ssid[B.count], sizeof B.ssid[0]) > 0) B.count++;
+        if (ok) for (int i = 1; i < j->ntok && B.count < BOOT_WIFI_MAX; i++) if (j->tok[i].type == 1) {
+            if (ink_json_str(j, ink_json_find(j, i, "ssid"), B.ssid[B.count], sizeof B.ssid[0]) > 0)
+                B.secured[B.count++] = ink_json_eq(j, ink_json_find(j, i, "secured"), "true");
+            int end = j->tok[i].end;
+            while (i + 1 < j->ntok && j->tok[i + 1].start < end) i++;
+        }
         show(WIFI);
     } else if (kind == JOIN_REPLY && B.page == JOINING) {
         snprintf(B.message, sizeof B.message, "%s", rc->status == INK_RC_DONE ? TR("正在寻找家庭服务器") :
-            !strcmp(rc->detail, "wrong password") ? TR("密码不对，再输一次，注意大小写。") : TR("没能连上网络，可以重试或换个网络。"));
+            !strcmp(rc->detail, "wrong password") ? TR("密码不对，再输一次，注意大小写。") :
+            !strcmp(rc->detail, "that network is not around") ? TR("找不到这个网络，请靠近路由器或换个网络。") :
+            !strcmp(rc->detail, "it took too long") ? TR("连接超时，请重试或换个网络。") :
+            !strcmp(rc->detail, "Wi-Fi is off") ? TR("Wi-Fi 已关闭，请到网络设置打开后重试。") : TR("没能连上网络，可以重试或换个网络。"));
         show(rc->status == INK_RC_DONE ? CLAIM : JOIN_FAIL);
         if (rc->status == INK_RC_DONE) request("pairing.status", NULL, PAIR_REPLY, INK_SRC_SYSTEM);
     } else if (kind == HOTSPOT_REPLY && B.page == FIRST) {
@@ -247,7 +272,7 @@ static void reply(void *ctx, const ink_receipt_t *rc) {
         memset(value, 0, sizeof value);
     } else if (kind == RESTORE_REPLY && B.page == RESTORE) {
         if (ok) ink_json_str(j, ink_json_find(j, 0, "preview"), B.preview, sizeof B.preview);
-        snprintf(B.message, sizeof B.message, "%s", !ok || ink_json_eq(j, ink_json_find(j, 0, "phase"), "failed") ?
+        snprintf(B.message, sizeof B.message, "%s", !ok ? TR("暂时查不了备份，可以先当新设备用。") : ink_json_eq(j, ink_json_find(j, 0, "phase"), "failed") ?
             TR("还没有可恢复的备份，可以当新设备用。") : B.preview[0] ? TR("找到了这位家人的备份。恢复前会请你确认覆盖。设备设置和密码需要重新设置。") : TR("正在查找或恢复这位家人的备份。"));
         int64_t created = 0;
         if (ok && B.preview[0] && ink_json_int(j, ink_json_find(j, 0, "created_s"), &created) && created > 0) {
@@ -289,7 +314,10 @@ bool ink_boot_flow_launch(ink_call_t *c) {
     } else if (!strncmp(id, "boot.pick", 9)) {
         int i = atoi(id + 9);
         if (B.page != WIFI || i < 0 || i >= B.count) c->rc.status = INK_RC_STALE;
-        else { snprintf(B.picked, sizeof B.picked, "%s", B.ssid[i]); show(PASSWORD); }
+        else {
+            snprintf(B.picked, sizeof B.picked, "%s", B.ssid[i]);
+            if (B.secured[i]) show(PASSWORD); else password_entered(NULL, "");
+        }
     } else if (!strcmp(id, "boot.other") && B.page == WIFI) { B.picked[0] = 0; show(PASSWORD); }
     else if (!strcmp(id, "boot.focus") && B.page == PASSWORD) ink_textfield_short_focus(B.field);
     else if (!strcmp(id, "boot.password") && B.picked[0]) show(PASSWORD);
@@ -298,12 +326,7 @@ bool ink_boot_flow_launch(ink_call_t *c) {
     else if (!strcmp(id, "boot.restore")) request("restore.preview", summary(), RESTORE_REPLY, c->src);
     else if (!strcmp(id, "boot.restart")) { request("pairing.restart", NULL, PAIR_REPLY, c->src); show(FIRST); }
     else if (!strcmp(id, "boot.retry")) { request("pairing.restart", NULL, PAIR_REPLY, c->src); request("pairing.status", NULL, PAIR_REPLY, c->src); }
-    else if (!strcmp(id, "boot.computer")) {
-        const char *code = strstr(B.claim, "/claim/");
-        if (code) snprintf(B.message, sizeof B.message, TR("电脑打开 %.*s，输入加入码 %.8s，核对确认码 %s，再回到设备点加入。"),
-            (int)(code - B.claim), B.claim, code + 7, B.check);
-        show(CLAIM);
-    }
+    else if (!strcmp(id, "boot.computer")) { B.computer = !B.computer; show(CLAIM); }
     else c->rc.status = INK_RC_REJECTED;
     return true;
 }

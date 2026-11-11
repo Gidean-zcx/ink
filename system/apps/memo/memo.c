@@ -1,4 +1,5 @@
 /* Member memos share the capability bus, F4 lists and the long-input draft. */
+/* ui-scale-runtime: dimension top Save notice uses the status bar, primary header and theme gap. */
 #include <stdio.h>
 #include <string.h>
 #include "ink/sys/app.h"
@@ -223,11 +224,7 @@ static void mutate(ink_call_t *c) {
     ink_app_free(raw); ink_app_free(n); ink_db_close(db);
 }
 static void save_failed(bool failed) {
-    int delta = (failed - (M.mode == FAIL)) * ink_ui_px(INK_PRIMARY);
-    lv_obj_set_y(M.field, lv_obj_get_y(M.field) + delta);
-    ink_textfield_style(M.field, INK_FIELD_BODY, NULL);
     M.mode = failed ? FAIL : EDIT;
-    lv_obj_set_y(M.notice, ink_ui_px(failed ? INK_STATUS_BAR + INK_PRIMARY + INK_GAP_S : INK_CANVAS_H - INK_PRIMARY - INK_CONTROL - INK_GAP_L));
     if (failed) lv_obj_remove_flag(M.retry_button, LV_OBJ_FLAG_HIDDEN); else lv_obj_add_flag(M.retry_button, LV_OBJ_FLAG_HIDDEN);
     if (failed) lv_obj_add_flag(M.delete_button, LV_OBJ_FLAG_HIDDEN); else lv_obj_remove_flag(M.delete_button, LV_OBJ_FLAG_HIDDEN);
 }
@@ -329,9 +326,16 @@ static void save_current(void) {
     snprintf(M.sent, sizeof M.sent, "%s", ink_textfield_text(M.field)); M.retry = false; M.saving = true; request("memo.save", &a);
 }
 static void settle(void) {
-    if (!M.field || M.saving || !ink_ui_page_current()) return;
+    if (!M.field || !ink_ui_page_current()) return;
     ink_textfield_long_refresh(M.field);
     const char *text = ink_textfield_text(M.field);
+    int saved = ink_text_draft_saved();
+    const char *status = M.mode == FAIL ? (saved > 0 ? TR("草稿已存，备忘没存上，请重试") :
+        saved < 0 ? TR("草稿没存上，字还在，请重试") : TR("正在存草稿，备忘没存上")) :
+        M.saving || strcmp(text, M.sent) ? TR("正在保存备忘") : TR("已记下");
+    if (strcmp(lv_label_get_text(M.notice), status)) lv_label_set_text(M.notice, status);
+    ink_textfield_style(M.field, INK_FIELD_BODY, status);
+    if (M.saving) return;
     if (!M.retry && (!strcmp(text, M.sent) || M.mode == FAIL)) return;
     save_current();
 }
@@ -406,6 +410,13 @@ static void create(lv_obj_t *screen, void *arg) {
         ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .max = 4095, .initial = M.note.body, .draft_page = ink_ui_page_name(), .draft_id = !strcmp(M.note.page, ink_ui_page_name()) ? M.note.draft : 0};
         M.field = ink_textfield_long_create(screen, &cfg);
         if (M.field) ink_textfield_style(M.field, INK_FIELD_BODY, TR("备忘"));
+        lv_obj_add_flag(M.notice, LV_OBJ_FLAG_HIDDEN);
+        /* The memo owns the save result; the shared footer only reports the draft. */
+        for (uint32_t i = 0; M.field && i < lv_obj_get_child_count(M.field); i++) {
+            lv_obj_t *label = lv_obj_get_child(M.field, (int32_t)i);
+            if (lv_obj_check_type(label, &lv_label_class) && lv_obj_get_style_align(label, 0) == LV_ALIGN_BOTTOM_LEFT)
+                lv_obj_add_flag(label, LV_OBJ_FLAG_HIDDEN);
+        }
         snprintf(M.sent, sizeof M.sent, "%s", mode == FAIL ? M.note.body : "\1");
         M.note.draft = ink_text_draft_id(); snprintf(M.note.page, sizeof M.note.page, "%s", ink_ui_page_name());
         M.delete_button = ink_ui_circle(screen, "trash", INK_CANVAS_W - INK_MARGIN - INK_CONTROL, INK_STATUS_BAR + INK_GAP_S, INK_CONTROL, INK_ICON_LIST, INK_SURFACE_WHITE, NULL, NULL); ink_shell_bind(M.delete_button, "memo.delete", M.target);
@@ -439,7 +450,9 @@ static void create(lv_obj_t *screen, void *arg) {
             M.actions[0] = (ink_ui_action_spec_t){.id = "undo", .label = TR("撤销删除"), .capability = "memo.undo", .args_json = M.target, .enabled = true}; M.model.action_count = 1;
             ink_shell_bind(ink_ui_pill(screen, TR("已删除一条备忘 · 撤销"), INK_MARGIN, INK_CANVAS_H - INK_PRIMARY - INK_MARGIN - INK_CONTROL - INK_GAP_M, INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, false, NULL, NULL), "memo.undo", M.target);
         }
-    } else for (int i = 0; i < 3; i++) if (M.actions[i].enabled) ink_shell_bind(ink_ui_pill(screen, M.actions[i].label, INK_MARGIN + i * (INK_CANVAS_W - 2 * INK_MARGIN) / 3, INK_CANVAS_H - INK_PRIMARY - INK_MARGIN, (INK_CANVAS_W - 2 * INK_MARGIN) / 3, INK_CONTROL, false, NULL, NULL), M.actions[i].capability, M.target);
+    } else for (int i = 0; i < 3; i++) if (M.actions[i].enabled) ink_shell_bind(ink_ui_pill(screen, M.actions[i].label,
+        INK_MARGIN + i * (INK_CANVAS_W - 2 * INK_MARGIN + INK_GAP) / 3, INK_CANVAS_H - INK_PRIMARY - INK_MARGIN,
+        (INK_CANVAS_W - 2 * INK_MARGIN - 2 * INK_GAP) / 3, INK_CONTROL, i == 0, NULL, NULL), M.actions[i].capability, M.target);
 }
 static void destroy(void) {
     if (M.field && M.mode != FAIL && ink_ui_page_current() && !strcmp(M.member, ink_member_current()->id) && strcmp(ink_textfield_text(M.field), M.sent)) save_current();
