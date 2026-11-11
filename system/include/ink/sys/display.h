@@ -71,6 +71,8 @@ void ink_display_flash_guard(bool hold);
 
 /** Front light settings (display.light, display.warmth); after the settings table started. */
 int ink_light_init(void);
+/** Lock, screen off or shutdown: cancel the transition and immediately force both channels low. */
+void ink_light_off(void);
 
 #ifdef __cplusplus
 }

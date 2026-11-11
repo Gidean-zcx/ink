@@ -2,8 +2,7 @@
  * Power service (see ink/sys/power.h).
  *
  * The task sleeps until an event (activity, a hold released, lock/unlock) or
- * the next policy deadline; it never polls while the device is active or
- * idle. Any task may change the state under the lock (input, for example,
+ * the next policy or charger deadline. Any task may change the state under the lock (input, for example,
  * switches IDLE -> ACTIVE and raises the clock at once, before the UI starts
  * rendering); listeners are told from the power task afterwards.
  *
@@ -91,6 +90,7 @@ static struct {
     bool saving;           /* runtime cap on the same auto-lock deadline */
     uint64_t wake_at;       /* ink_power_wake_at */
     uint64_t next_battery_us;
+    uint64_t next_charger_us;
     bool battery_policy;    /* ink_power_battery_policy_start */
     void (*off_picture)(const char *why);
     bool off_picture_ok;
@@ -182,12 +182,14 @@ static void publish_battery(void) {
             ink_probe_count("power.low_battery_off");
             if (PS.off_picture) PS.off_picture(saved ? "battery" : "battery_unsaved");
             ink_log_flush();
+            ink_light_off();
             hal_power_shutdown();
         }
     }
 }
 
 static void notify(ink_power_state_t from, ink_power_state_t to, uint64_t cause) {
+    if (to == INK_PWR_LOCKED) ink_light_off();
     hal_power_set_state(hal_state(to));
     ink_state_set_str(PS.h_state, STATE_NAME[to]);
     if (to == INK_PWR_LOCKED) ink_state_set_bool(PS.h_lifted, false);
@@ -259,7 +261,8 @@ static void locked_step(void) {
             publish_battery();
             PS.next_battery_us = now + BATTERY_POLL_US;
         }
-        osal_sem_take(PS.kick, (int64_t)(PS.next_battery_us - now));
+        uint64_t next = PS.next_charger_us < PS.next_battery_us ? PS.next_charger_us : PS.next_battery_us;
+        osal_sem_take(PS.kick, next > now ? (int64_t)(next - now) : 0);
         return;
     }
     if (!quiet()) { /* the lock mark is still being drawn, a write is queued ... */
@@ -296,6 +299,8 @@ static void locked_step(void) {
         osal_sem_take(PS.kick, QUIET_POLL_US);
         return;
     }
+    /* Vendor cx25601n.cc:385-400: no charger work during sleep, resume on return. Same task, no suspend race. */
+    PS.next_charger_us = 0;
     ink_probe_count(why & HAL_WAKE_TIMER ? "power.wake.timer" : why & (HAL_WAKE_POWER_KEY | HAL_WAKE_AI_KEY) ? "power.wake.key" : "power.wake.other");
     if (why & HAL_WAKE_RTC) hal_rtc_clear_alarm(); /* its interrupt stays low until cleared, and it shares a line with the keys */
     if (why & HAL_WAKE_TIMER) PS.lift_misses = 0;
@@ -308,6 +313,11 @@ static void power_task(void *arg) {
     (void)arg;
     for (;;) {
         uint64_t now = osal_now_us();
+        if (now >= PS.next_charger_us) {
+            uint32_t ms = hal_power_charger_poll();
+            PS.next_charger_us = osal_now_us() + (uint64_t)ms * 1000;
+            now = osal_now_us();
+        }
         lock();
         ink_power_state_t s = PS.state;
         /* a transfer the user waits for (an AI turn, a sync) keeps the device active: its
@@ -360,6 +370,7 @@ static void power_task(void *arg) {
         }
         uint64_t next = PS.powering_off ? now + 100000 : PS.next_battery_us;
         if (!deadline || next < deadline) deadline = next;
+        if (PS.next_charger_us < deadline) deadline = PS.next_charger_us;
         if (deadline > now) osal_sem_take(PS.kick, (int64_t)(deadline - now));
     }
 }
@@ -420,6 +431,7 @@ static void cap_shutdown(ink_call_t *c) { /* exec.bg */
     if (PS.off_picture) PS.off_picture("shutdown");
     if (!PS.off_picture_ok) { c->rc.status = INK_RC_FAILED; snprintf(c->rc.say, sizeof c->rc.say, TR("关机画面没显示成功，请重试")); return; }
     if (!ink_log_flush()) { c->rc.status = INK_RC_FAILED; return; }
+    ink_light_off();
     hal_power_shutdown();
 }
 

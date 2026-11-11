@@ -9,7 +9,7 @@
  *
  * CX25601N: the registers the official driver uses (cx25601n.cc @690a023, no datasheet in hand):
  * ICHG 80 mA steps (0x02[7:6], 0x03[3:0]), VREG 10 mV (0x04[7:3], 0x05[3:0]), IINDPM 20 mA
- * (0x06[7:4], 0x07[3:0]), CHG_CTRL0 0x14 bit 2 charge enable, CHG_TMR 0x15, CHG_CTRL3 0x18 = 0x01
+ * (0x06[7:4], 0x07[3:0]), EN_TERM 0x14 bit 2, EN_CHG 0x16 bit 5, CHG_TMR 0x15, CHG_CTRL3 0x18 = 0x01
  * battery FET off, STATUS1 0x1E ([4:3] charge state, [2:0] input type), PART_INFO 0x38, and the
  * 0x70 unlock sequence (0x00 0x50 0x57 0x44, then it reads 0x03).
  * Reset values are ASSUMPTIONS (charging enabled at 2 A, 4.35 V, input limit 3 A); the board sets
@@ -68,7 +68,7 @@ static int gauge_xfer(void *state, const uint8_t *w, size_t wlen, uint8_t *r, si
 /* ------------------------------------------------------------------ CX25601N */
 
 static struct {
-    uint8_t reg[0x80];
+    uint8_t reg[0x100]; /* Vendor private register 0x86 must not alias IINDPM 0x06. */
     uint8_t ptr;
     uint8_t unlock[4];
     vtk_event_id_t ev;
@@ -77,7 +77,7 @@ static struct {
 
 static int ichg_ma(void) { return (((C.reg[0x02] >> 6) & 0x03) | ((C.reg[0x03] & 0x0F) << 2)) * CX25601N_ICHG_STEP_MA; }
 static int iindpm_ma(void) { return (((C.reg[0x06] >> 4) & 0x0F) | ((C.reg[0x07] & 0x0F) << 4)) * 20; }
-static bool chg_enabled(void) { return C.reg[0x14] & 0x04; }
+static bool chg_enabled(void) { return C.reg[0x16] & 0x20; }
 
 static void set_code(uint8_t lo, uint8_t lo_mask, int lo_shift, int lo_bits, uint8_t hi, int code) {
     C.reg[lo] = (uint8_t)((C.reg[lo] & ~(lo_mask << lo_shift)) | ((code & lo_mask) << lo_shift));
@@ -117,9 +117,9 @@ void sim_charger_update(void) { /* ISR or locked */
 
 static int charger_xfer(void *state, const uint8_t *w, size_t wlen, uint8_t *r, size_t rlen) {
     (void)state;
-    if (wlen) C.ptr = w[0] & 0x7F;
+    if (wlen) C.ptr = w[0];
     bool changed = false;
-    for (size_t i = 1; i < wlen; i++, C.ptr = (uint8_t)((C.ptr + 1) & 0x7F)) {
+    for (size_t i = 1; i < wlen; i++, C.ptr++) {
         if (C.ptr == 0x70) {
             memmove(C.unlock, C.unlock + 1, 3);
             C.unlock[3] = w[i];
@@ -130,7 +130,7 @@ static int charger_xfer(void *state, const uint8_t *w, size_t wlen, uint8_t *r, 
         if (C.ptr == 0x18 && (w[i] & 0x01)) C.fet_off = true;
         changed = true;
     }
-    for (size_t i = 0; i < rlen; i++, C.ptr = (uint8_t)((C.ptr + 1) & 0x7F)) {
+    for (size_t i = 0; i < rlen; i++, C.ptr++) {
         if (C.ptr == 0x70) r[i] = (C.unlock[0] == 0x00 && C.unlock[1] == 0x50 && C.unlock[2] == 0x57 && C.unlock[3] == 0x44) ? 0x03 : 0x00;
         else if (C.ptr == 0x38) r[i] = CX_PART_INFO;
         else r[i] = C.reg[C.ptr];
@@ -146,6 +146,13 @@ static int charger_xfer(void *state, const uint8_t *w, size_t wlen, uint8_t *r, 
 /* ------------------------------------------------------------------ setup and reads */
 
 static hal_i2c_dev_t *g_gauge, *g_charger;
+static bool g_uv_done;
+
+uint32_t hal_power_charger_poll(void) {
+    bq27220_reading_t g;
+    if (!g_charger || !g_gauge || bq27220_reading(g_gauge, &g) != HAL_I2C_OK) return 10000;
+    return cx25601n_poll(g_charger, g.mv, g.ma, &g_uv_done);
+}
 
 void sim_power_chips_init(void) { /* task context (boot) */
     static const sim_i2c_model_t gauge = {gauge_xfer}, charger = {charger_xfer};
@@ -153,15 +160,15 @@ void sim_power_chips_init(void) { /* task context (boot) */
     set_code(0x04, 0x1F, 3, 5, 0x05, 4350 / 10);
     set_code(0x06, 0x0F, 4, 4, 0x07, 3000 / 20);
     C.reg[0x14] = 0x04;
+    C.reg[0x16] = 0x20;
     C.reg[0x15] = 0x40;
     sim_i2c_attach(0, BQ27220_ADDR, &gauge, NULL);
     sim_i2c_attach(0, CX25601N_ADDR, &charger, NULL);
     g_gauge = hal_i2c_device(0, BQ27220_ADDR, "fuel-gauge");
     g_charger = hal_i2c_device(0, CX25601N_ADDR, "charger");
-    int applied = 0; /* upstream metalio_power.cc: 1 A, charging on */
-    if (cx25601n_set_charge_current(g_charger, 1000, &applied) != HAL_I2C_OK || cx25601n_enable_charging(g_charger, true) != HAL_I2C_OK)
+    if (cx25601n_init_defaults(g_charger) != HAL_I2C_OK)
         sim_warn("board: CX25601N setup failed");
-    sim_metric_set("power.charge_current_set_ma", applied);
+    sim_metric_set("power.charge_current_set_ma", ichg_ma());
 }
 
 bool sim_board_battery(hal_battery_t *out) { /* task context */

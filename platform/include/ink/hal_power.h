@@ -19,6 +19,9 @@ typedef struct {
 } hal_battery_t;
 
 void hal_power_battery(hal_battery_t *out);
+/* Power task only: vendor charger maintenance; next awake interval in milliseconds.
+ * The caller suspends polling across hal_power_sleep and resumes on return. */
+uint32_t hal_power_charger_poll(void);
 
 /* Power resources that share rails on some boards (Plus: modem, BT audio
  * chip and amplifier share one rail). The power service reference-counts
