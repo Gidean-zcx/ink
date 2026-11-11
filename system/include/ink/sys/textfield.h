@@ -1,7 +1,4 @@
-/*
- * A text field for pages (app framework, placeholder look until the system UI, D-64): shows what is typed, opens the
- * keyboard when tapped; pressed long: copy, paste, ask the AI.
- */
+/* Shared text inputs: the text service owns editing; LVGL draws the controls. */
 #ifndef INK_SYS_TEXTFIELD_H
 #define INK_SYS_TEXTFIELD_H
 
@@ -34,6 +31,7 @@ int ink_textfield_height(ink_textfield_kind_t kind);
  * the input service allows only the person to edit or submit them. */
 int ink_textfield_bind_short(lv_obj_t *field, const ink_ui_page_spec_t *page,
                              ink_ui_field_spec_t *spec, const ink_ui_action_spec_t *focus_action);
+/* Also supports legacy unbound fields; position and style them before focusing. */
 int ink_textfield_short_focus(lv_obj_t *field);
 /* F1 page snapshot plus field identity, visible focus and fixed rectangles. */
 int ink_textfield_short_snapshot(lv_obj_t *field, char *out, size_t cap);

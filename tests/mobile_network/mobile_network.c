@@ -13,6 +13,7 @@
 static char page[8192], phase[16];
 static const char *target, *typing;
 static int x, y, ordinal, seen;
+static lv_obj_t *target_label;
 static bool roaming;
 static size_t rx_frame, tx_frame;
 static uint64_t current_bytes, previous_bytes;
@@ -26,14 +27,20 @@ static bool page_has(const char *text) { on_ui(read_page); return strstr(page, t
 static void find(lv_obj_t *o) {
     if (lv_obj_has_flag(o, LV_OBJ_FLAG_HIDDEN)) return;
     if (lv_obj_check_type(o, &lv_label_class) && !strcmp(lv_label_get_text(o), target) && seen++ == ordinal) {
+        target_label = o;
         lv_area_t a; lv_obj_get_coords(o, &a); x = (a.x1 + a.x2) / 2; y = (a.y1 + a.y2) / 2;
         CHECK(a.x1 >= 0 && a.x2 < ink_ui_px(INK_CANVAS_W) && a.y1 >= 0 && a.y2 < ink_ui_px(INK_CANVAS_H), "target fits screen");
     }
     for (uint32_t i = 0; i < lv_obj_get_child_count(o); i++) find(lv_obj_get_child(o, (int32_t)i));
 }
 static void locate(void) {
-    seen = 0; x = y = -1; lv_obj_update_layout(lv_screen_active()); find(lv_screen_active());
-    if (x >= 0) y += ink_ui_px(ink_ui_line_height(INK_FONT_NOTE) / 2 + INK_FIELD_LABEL_GAP + INK_FIELD_HEIGHT / 2);
+    seen = 0; x = y = -1; target_label = NULL; lv_obj_update_layout(lv_screen_active()); find(lv_screen_active());
+    if (target_label) {
+        lv_obj_t *area = lv_obj_get_child(lv_obj_get_parent(target_label), 1);
+        if (area && lv_obj_check_type(area, &lv_textarea_class)) {
+            lv_area_t a; lv_obj_get_coords(area, &a); x = (a.x1 + a.x2) / 2; y = (a.y1 + a.y2) / 2;
+        }
+    }
 }
 static void press(const char *label, int nth) {
     quiet(); target = label; ordinal = nth; on_ui(locate);

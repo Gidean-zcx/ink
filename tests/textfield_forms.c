@@ -24,9 +24,46 @@ static void command(const char *cap, const char *args) {
     quiet();
 }
 static void home(void) { command("system.home", NULL); }
+#ifndef INK_TEST_BASELINE
+enum { FIELD_KINDS = INK_FIELD_PASSWORD + 1 };
+static int seen_heights[FIELD_KINDS];
+static unsigned seen_fields;
+static void inspect_fields(lv_obj_t *obj) {
+    for (uint32_t i = 0; i < lv_obj_get_event_count(obj); i++) {
+        lv_event_dsc_t *event = lv_obj_get_event_dsc(obj, i);
+        if (lv_event_dsc_get_cb(event) != field_event) continue;
+        seen_fields++;
+        field_t *f = lv_event_dsc_get_user_data(event);
+        lv_area_t title, area; lv_obj_get_coords(f->title, &title); lv_obj_get_coords(f->area, &area);
+        CHECK(lv_obj_is_visible(f->title) && title.y2 < area.y1, "%s keeps its label above the input", picture);
+        CHECK(title.x1 >= 0 && title.x2 < ink_ui_width() && area.x1 >= 0 && area.x2 < ink_ui_width(), "%s input and label fit horizontally", picture);
+        if (ink_text_focused()) {
+            lv_area_t keyboard; ink_shell_keyboard_area(&keyboard);
+            CHECK(area.y2 < keyboard.y1 && title.y1 >= 0, "%s input and label stay above the keyboard", picture);
+        }
+        lv_point_t measured;
+        lv_text_get_size(&measured, lv_label_get_text(f->title), lv_obj_get_style_text_font(f->title, 0), 0, 0, lv_obj_get_width(f->title), LV_TEXT_FLAG_NONE);
+        CHECK(measured.y <= lv_area_get_height(&title), "%s label has no vertical clipping", picture);
+        if (!f->cfg.draft_page) {
+            int h = lv_area_get_height(&area);
+            CHECK(!seen_heights[f->kind] || seen_heights[f->kind] == h, "%s has equal heights for the same input kind", picture);
+            seen_heights[f->kind] = h;
+        }
+    }
+    for (uint32_t i = 0; i < lv_obj_get_child_count(obj); i++) inspect_fields(lv_obj_get_child(obj, (int32_t)i));
+}
+static void inspect_page(void) {
+    memset(seen_heights, 0, sizeof seen_heights); seen_fields = 0;
+    lv_obj_update_layout(lv_screen_active()); inspect_fields(lv_screen_active());
+    CHECK(seen_fields > 0, "%s contains a real input control", picture);
+}
+#endif
 static void frame(void *ctx) { sim_display_snapshot(ctx); captured = true; }
 static void capture(const char *name) {
     quiet(); picture = name; captured = false;
+#ifndef INK_TEST_BASELINE
+    on_ui(inspect_page);
+#endif
     vtk_event_at(vtk_now() + SIM_MS(1), frame, (void *)picture);
     CHECK(WAIT_FOR(captured, 2000), "form captured: %s", name);
 }

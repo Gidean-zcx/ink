@@ -241,7 +241,7 @@ static void selected(void *ctx, const ink_receipt_t *rc) {
     F.fields[0] = (ink_ui_field_spec_t){.id = "name", .role = "textbox", .label = TR("文件名"), .value = F.selected.name, .object = {F.object, F.epoch}};
     F.fields[1] = (ink_ui_field_spec_t){.id = "path", .role = "text", .label = TR("位置"), .value = F.selected.path};
     F.fields[2] = (ink_ui_field_spec_t){.id = "preview", .role = "text", .label = TR("文件开头"), .value = F.preview_text}; F.model.field_count = 3;
-    int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP_L, width = INK_CANVAS_W - 2 * INK_MARGIN;
+    int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP_L, action_y = y, width = INK_CANVAS_W - 2 * INK_MARGIN;
     ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .initial = F.selected.name, .max = INK_FS_NAME_MAX - 1};
     if (writable(F.selected.path)) {
         F.field = ink_textfield_create(F.screen, &cfg, NULL, NULL, false); lv_obj_set_y(F.field, ink_ui_px(y));
@@ -266,7 +266,7 @@ static void selected(void *ctx, const ink_receipt_t *rc) {
     }
     F.model.object = (ink_ui_object_ref_t){F.object, F.epoch}; F.model.action_count = 6;
     const char *ext = strrchr(F.selected.name, '.');
-    if (ext && !strcmp(ext, ".txt") && writable(F.selected.path)) { button(6, F.screen, TR("编辑文本"), "files.edit", NULL, INK_MARGIN, y + 3 * (INK_CONTROL + INK_GAP_L), width, false); F.model.action_count = 7; }
+    if (ext && !strcmp(ext, ".txt") && writable(F.selected.path)) { button(6, F.screen, TR("编辑文本"), "files.edit", NULL, INK_MARGIN, action_y + 3 * (INK_CONTROL + INK_GAP_L), width, false); F.model.action_count = 7; }
 }
 static void navigate(ink_call_t *c) {
     if (!ink_ui_page_current() || F.epoch != ink_member_epoch() || strcmp(ink_ui_action_page(), PAGES[F.mode].name)) { c->rc.status = INK_RC_STALE; return; }

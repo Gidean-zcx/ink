@@ -1468,9 +1468,10 @@ static void body_blocks(void) {
                                       .hint = TR("输入网络密码"),
                                       .ai_hidden = true};
                 lv_obj_t *password_field =
-                    ink_textfield_create(N.page_body, &cfg, wifi_password, (void *) (uintptr_t) N.epoch, true);
+                    ink_textfield_create(N.page_body, &cfg, wifi_password, (void *) (uintptr_t) N.epoch, false);
                 lv_obj_set_pos(password_field, ink_ui_px(INK_MARGIN), ink_ui_px(F.y));
                 ink_textfield_style(password_field, INK_FIELD_PASSWORD, N.picked_ssid);
+                ink_textfield_short_focus(password_field);
             }
             return;
         }

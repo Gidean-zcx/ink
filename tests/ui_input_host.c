@@ -144,8 +144,8 @@ static void inspect_focus(void) {
         for (int i = 0; i < 4; i++) root = lv_obj_get_parent(root);
         lv_obj_get_coords(root, &actual); ink_shell_keyboard_area(&other);
         CHECK(same_area(&actual, &other) && actual.y1 == keyboard_y,
-              "keyboard actual=%d,%d,%d,%d declared=%d,%d,%d,%d snapshot-y=%lld", actual.x1, actual.y1, actual.x2, actual.y2,
-              other.x1, other.y1, other.x2, other.y2, (long long)keyboard_y);
+              "keyboard actual=%d,%d,%d,%d declared=%d,%d,%d,%d snapshot-y=%lld", (int)actual.x1, (int)actual.y1, (int)actual.x2, (int)actual.y2,
+              (int)other.x1, (int)other.y1, (int)other.x2, (int)other.y2, (long long)keyboard_y);
         if (!fixed_keyboard.y2) fixed_keyboard = actual;
         CHECK(same_area(&actual, &fixed_keyboard), "keyboard position stays fixed across input and mode changes");
     }
@@ -167,6 +167,14 @@ static void inspect_done(void) {
 static void compare_events(void) {
     CHECK(edits == hand_edits && enters == hand_enters && !strcmp(events, hand_events) && !strcmp(submitted, "合成查询"),
           "human paste and AI fill produce identical field values and change/submit events");
+}
+static void check_clear(void) {
+    lv_obj_t *clear = lv_obj_get_child(field, 3);
+    CHECK(lv_obj_is_visible(clear), "a filled search exposes its clear control");
+    lv_obj_send_event(clear, LV_EVENT_CLICKED, NULL);
+    CHECK(ink_text_focused() && !ink_textfield_text(field)[0] && !spec.value[0] &&
+          lv_obj_has_flag(clear, LV_OBJ_FLAG_HIDDEN), "clear uses the current text session and updates semantic value");
+    ink_text_blur(0);
 }
 static void inspect_url(void) {
     CHECK(!strcmp(ink_textfield_text(field), URL) && !ink_text_composing()[0],
@@ -267,7 +275,7 @@ static void run(void *arg) {
     CHECK(focus_source == INK_SRC_AI, "AI uses the same focus capability");
     CHECK(AI("text.insert", "{\"text\":\"合成查询\"}") && g_rc.status == INK_RC_DONE &&
           AI("text.submit", "{}") && g_rc.status == INK_RC_DONE, "AI fills and completes through the shared text capabilities");
-    on_ui(inspect_done); on_ui(compare_events);
+    on_ui(inspect_done); on_ui(compare_events); on_ui(check_clear);
     kind = INK_TEXT_URL; on_ui(open_page); on_ui(ai_focus); on_ui(inspect_focus);
     bool symbols = false;
     for (const char *p = URL; *p; p++) {
