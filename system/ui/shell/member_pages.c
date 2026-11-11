@@ -235,7 +235,7 @@ static void action(ink_call_t *c) {
     else if (!strcmp(id, "shell.member_choose") && P.mode == SWITCH) { close_page(); ink_shell_members_open(true); }
     else if (!strcmp(id, "shell.pin_forgot") && P.mode == UNLOCK) {
         erase(P.pin, sizeof P.pin); P.mode = FORGOT; P.retry_us = 0;
-        snprintf(P.status, sizeof P.status, "%s", "本机不能重置密码。请联系家庭服务器管理者；家长验证只核对身份。"); draw();
+        snprintf(P.status, sizeof P.status, "%s", TR("本机不能重置密码。请联系家庭服务器管理者；家长验证只核对身份。")); draw();
     } else if (!strcmp(id, "shell.pin_parent") && P.mode == FORGOT) {
         if (!ink_member_any_pin()) { snprintf(P.status, sizeof P.status, TR(INK_PARENT_PIN_MISSING)); draw(); return; }
         P.mode = PARENT; snprintf(P.status, sizeof P.status, TR("请家长本人输入")); draw();

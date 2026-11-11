@@ -16,7 +16,7 @@ enum { TIME, EDIT, ZONES, RETURN };
 #define TIME_FIELDS_MAX INK_UI_DATETIME_PARTS
 #define TIME_ACTIONS_MAX (3 * TIME_FIELDS_MAX + 1)
 static const char *const NAMES[] = {"SetTime", "SetDateTime", "SetTimeZone", "SetReturn"};
-static const char *const TITLES[] = {TR_NOOP("日期和时间"), TR_NOOP("手动设置"), TR_NOOP("时区"), "重新验证"};
+static const char *const TITLES[] = {TR_NOOP("日期和时间"), TR_NOOP("手动设置"), TR_NOOP("时区"), TR_NOOP("重新验证")};
 static const char *const PARTS[] = {TR_NOOP("年"), TR_NOOP("月"), TR_NOOP("日"), TR_NOOP("时"), TR_NOOP("分")};
 static const int GRACE[] = {60, 120, 300, 900};
 static const char *const GRACE_NAMES[] = {TR_NOOP("1 分钟"), TR_NOOP("2 分钟"), TR_NOOP("5 分钟"), TR_NOOP("15 分钟")};
@@ -89,7 +89,7 @@ static void create(lv_obj_t *screen, void *arg) {
     int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP, w = INK_CANVAS_W - 2 * INK_MARGIN;
     char text[128], args[96];
     if (P.page == ZONES) {
-        if (ink_setting_get("time.zone_auto")) { ink_ui_notice(screen, "先关闭自动设置时区", y); y += ink_ui_line_height(INK_FONT_NOTE) + INK_GAP; }
+        if (ink_setting_get("time.zone_auto")) { ink_ui_notice(screen, TR("先关闭自动设置时区"), y); y += ink_ui_line_height(INK_FONT_NOTE) + INK_GAP; }
         const ink_ui_action_spec_t paging[] = {
             {.id = "prev", .label = TR("上一页"), .capability = "shell.time_prev"}, {.id = "next", .label = TR("下一页"), .capability = "shell.time_next"}};
         ink_ui_page_spec_t page = {.id = "SetTimeZone", .title = TR("时区"), .actions = paging, .action_count = 2};
@@ -116,7 +116,7 @@ static void create(lv_obj_t *screen, void *arg) {
                 !(i % 2) || !automatic, INK_MARGIN, y + ink_ui_line_height(INK_FONT_NOTE), w, false);
             y += INK_CONTROL + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP;
             if (i % 2 && automatic) {
-                ink_ui_notice(screen, i == 1 ? "先关闭自动设置日期和时间" : "先关闭自动设置时区", y);
+                ink_ui_notice(screen, i == 1 ? TR("先关闭自动设置日期和时间") : TR("先关闭自动设置时区"), y);
                 y += ink_ui_line_height(INK_FONT_NOTE) + INK_GAP;
             }
         }
@@ -141,7 +141,7 @@ static void create(lv_obj_t *screen, void *arg) {
         snprintf(args, sizeof args, "{\"utc_s\":%lld}", (long long)ink_time_from_local(&t));
         button(TR("保存日期和时间"), "time.set", args, !ink_setting_get("time.auto"), INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_CONTROL, w, true);
     } else {
-        ink_ui_notice(screen, "离开后，再用大人的空间要输密码", y); y += ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_L;
+        ink_ui_notice(screen, TR("离开后，再用大人的空间要输密码"), y); y += ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_L;
         for (int i = 0; i < (int)(sizeof GRACE / sizeof *GRACE); i++) {
         const char *label = TR(GRACE_NAMES[i]);
         field(i, GRACE_NAMES[i], label, ink_setting_get("member.idle_return_s") == GRACE[i] ? TR("已选择") : "");

@@ -7,7 +7,7 @@ python3 tools/capabilities.py
 python3 tools/capabilities.py --check
 ```
 
-当前共 475 项：可调用能力 437、事件 38；设置 35 项、状态 55 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
+当前共 476 项：可调用能力 438、事件 38；设置 35 项、状态 55 项。本表列设备固件的静态定义，不含中枢运行时的远端目录。静态目录包含按硬件条件注册的能力；实际可用性仍取决于硬件、当前页面及服务状态。CTest 另外与 Plus 模拟器启动后的完整注册表核对，不使用按成员或页面过滤的 AI 清单代替完整目录，并核对实际 C 确认策略的来源、PIN 和 asked 组合。
 
 风险按代码的 effect 归类：read / navigate 为低，local_write 为中，local_destructive / external / system 为高；这是副作用等级，不等于所有高等级操作都弹确认。描述和 effect 必须显式填写，遗漏、未知值、重复 id 或文档过期均使检查失败。
 
@@ -190,6 +190,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 | `files.up` | 返回文件上一级 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单） | [s07](#s07) | [system/apps/files/files.c](../../system/apps/files/files.c) |
 | `gallery.next` | 相册下一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Gallery | [s08](#s08) | [system/apps/gallery/gallery.c](../../system/apps/gallery/gallery.c) |
 | `gallery.prev` | 相册上一页 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Gallery | [s08](#s08) | [system/apps/gallery/gallery.c](../../system/apps/gallery/gallery.c) |
+| `gallery.reload` | 手动重读当前家人的照片 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 Gallery | [s08](#s08) | [system/apps/gallery/gallery.c](../../system/apps/gallery/gallery.c) |
 | `home.next` | 主页下一屏 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 home | [s55](#s55) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
 | `home.prev` | 主页上一屏 | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；页面 home | [s55](#s55) | [system/ui/shell/navigation.c](../../system/ui/shell/navigation.c) |
 | `interrupt.ack` | 知道了（关掉低电量提示） | 人、AI | 低 / navigate | 无需 | 成人、儿童（无需白名单）；锁定时仅人工入口 | [s31](#s31) | [system/services/notify/interrupt.c](../../system/services/notify/interrupt.c) |
@@ -1027,7 +1028,7 @@ system.undo 的外层 confirm_for 无需确认，不代表整个撤销无需确�
 
 ### s57 — `system/ui/shell/settings_pages`
 
-设置：`ai.read_clipboard`、`system.language`、`text.assist`、`update.auto_download`、`voice.handsfree`、`voice.interrupt`、`voice.name`。
+设置：`ai.read_clipboard`、`backup.auto`、`system.language`、`text.assist`、`update.auto_download`、`voice.handsfree`、`voice.interrupt`、`voice.name`。
 
 状态：`battery.level`、`storage.card`、`storage.free`、`storage.mode`、`update.state`、`update.version`。
 

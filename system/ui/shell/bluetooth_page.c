@@ -118,7 +118,7 @@ static void bind_row(lv_obj_t *slot, size_t i, ink_ui_field_spec_t *f, ink_ui_ac
         ink_jw_raw(&j, ",\"name\":"); ink_jw_str(&j, B.devices[d].name); ink_jw_raw(&j, ",\"connect\":true}");
         *f = (ink_ui_field_spec_t){.id = B.devices[d].addr, .role = "listitem", .label = B.devices[d].name, .value = B.values[d], .object = {B.devices[d].addr, 0}};
         *a = (ink_ui_action_spec_t){.id = B.devices[d].addr, .label = B.devices[d].name, .capability = on ? "bt.disconnect" : B.devices[d].paired ? "bt.connect" : "bt.pair", .args_json = B.args[i], .object = f->object, .enabled = ink_setting_get("bt.enabled") && !B.busy};
-        static const char *const groups[] = {"连接中", TR_NOOP("已连接"), "已配对", "发现的设备"};
+        static const char *const groups[] = {TR_NOOP("连接中"), TR_NOOP("已连接"), TR_NOOP("已配对"), TR_NOOP("发现的设备")};
         if (head) ink_ui_label(slot, TR(groups[group(d)]), INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, 0, 0, w);
         row = ink_ui_card(slot, 0, head, w, h, INK_SURFACE_STATIC);
         ink_ui_circle(row, "headphones", INK_GAP, (h - INK_CIRCLE_SMALL) / 2, INK_CIRCLE_SMALL, INK_ICON_MEDIUM, INK_SURFACE_WHITE, NULL, NULL);
@@ -127,7 +127,7 @@ static void bind_row(lv_obj_t *slot, size_t i, ink_ui_field_spec_t *f, ink_ui_ac
         ink_ui_line(row, B.devices[d].name[0] ? B.devices[d].name : TR("蓝牙耳机"), INK_FONT_LIST, INK_WEIGHT_REGULAR, left, INK_GAP, w - left - tail);
         ink_ui_line(row, B.values[d], INK_FONT_NOTE, INK_WEIGHT_REGULAR, left, INK_GAP + ink_ui_line_height(INK_FONT_LIST), w - left - tail);
         if (B.devices[d].paired) {
-            lv_obj_t *b = ink_ui_pill(row, "忘记", w - INK_PRIMARY - INK_GAP, (h - INK_CONTROL) / 2, INK_PRIMARY, INK_CONTROL, false, B.busy ? NULL : forget, NULL);
+            lv_obj_t *b = ink_ui_pill(row, TR("忘记"), w - INK_PRIMARY - INK_GAP, (h - INK_CONTROL) / 2, INK_PRIMARY, INK_CONTROL, false, B.busy ? NULL : forget, NULL);
             ink_ui_pill_text(b, INK_FONT_NOTE, INK_WEIGHT_REGULAR);
             if (B.busy) lv_obj_add_state(b, LV_STATE_DISABLED);
         }
@@ -175,7 +175,7 @@ static void create(lv_obj_t *screen, void *arg) {
     B.list = ink_ui_list_create(B.body, &page, &B.position, 3, 1,
         ink_ui_row_double() + ink_ui_line_height(INK_FONT_SUBTITLE) + 2 * INK_GAP - INK_GAP_M, TR("还没有耳机"), bind_row, NULL);
     B.notice = ink_ui_notice(B.body, "", INK_CANVAS_H - INK_STATUS_BAR - INK_PRIMARY - 2 * INK_CONTROL);
-    ink_ui_notice(B.body, "已配对的设备可点右侧“忘记”", INK_CANVAS_H - INK_STATUS_BAR - INK_PRIMARY - INK_CONTROL);
+    ink_ui_notice(B.body, TR("已配对的设备可点右侧“忘记”"), INK_CANVAS_H - INK_STATUS_BAR - INK_PRIMARY - INK_CONTROL);
     draw(); request("bt.list", NULL, 0);
 }
 static void destroy(void) { B.epoch++; B.body = NULL; B.list = NULL; }
