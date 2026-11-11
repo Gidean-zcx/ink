@@ -30,12 +30,13 @@ void ink_photo_image(lv_obj_t *parent, ink_image_t *im) {
     lv_obj_remove_flag(obj, LV_OBJ_FLAG_CLICKABLE); lv_obj_add_event_cb(obj, picture_deleted, LV_EVENT_DELETE, p);
 }
 static const ink_activity_t GALLERY, PHOTO;
+enum { PHOTO_SLOTS = 9, PHOTO_COLUMNS = 3 };
 typedef struct { uint32_t epoch, generation, photo, revision; } photo_question_t;
 static struct {
     ink_ui_list_t *list; ink_ui_list_position_t position;
     uint32_t ids[INK_FS_INDEX_MAX], epoch, photo, revision;
-    size_t count; lv_obj_t *slots[9], *box, *status, *trash;
-    char objects[9][32], args[9][48], path[INK_FS_PATH_MAX], delete_args[2 * INK_FS_PATH_MAX + 32], message[96];
+    size_t count; lv_obj_t *slots[PHOTO_SLOTS], *box, *status, *trash, *name;
+    char objects[PHOTO_SLOTS][32], args[PHOTO_SLOTS][48], path[INK_FS_PATH_MAX], delete_args[2 * INK_FS_PATH_MAX + 32], message[96], caption[INK_FS_PATH_MAX + 64];
     ink_ui_action_spec_t photo_actions[3];
 } G INK_PSRAM_BSS;
 typedef struct { ink_exec_job_t job; uint32_t epoch, generation, id, revision, ids[INK_FS_INDEX_MAX]; size_t count; int err; ink_image_t im; char path[INK_FS_PATH_MAX]; } load_t;
@@ -43,7 +44,7 @@ typedef struct { uint32_t epoch, generation, id; unsigned slot; } thumb_t;
 static void thumb_ready(void *ctx, const ink_receipt_t *rc) {
     thumb_t *t = ctx;
     if (t->epoch == ink_member_epoch() && t->generation == ink_ui_generation() && G.list && G.slots[t->slot] &&
-        G.ids[G.position.page * 9 + t->slot] == t->id && rc->status == INK_RC_DONE && rc->result) {
+        G.ids[G.position.page * PHOTO_SLOTS + t->slot] == t->id && rc->status == INK_RC_DONE && rc->result) {
         ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL); int64_t w = 0, h = 0;
         if (j && !ink_json_parse(j, rc->result, strlen(rc->result))) {
             ink_json_int(j, ink_json_find(j, 0, "width"), &w); ink_json_int(j, ink_json_find(j, 0, "height"), &h);
@@ -63,7 +64,9 @@ static void thumb_ready(void *ctx, const ink_receipt_t *rc) {
     osal_free(t);
 }
 static void bind_photo(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, ink_ui_action_spec_t *action, void *ctx) {
-    (void)ctx; unsigned at = index % 9; G.slots[at] = slot; lv_obj_clean(slot);
+    (void)ctx; unsigned at = index % PHOTO_SLOTS; G.slots[at] = slot; lv_obj_clean(slot);
+    lv_obj_set_style_outline_width(slot, ink_ui_px(INK_STROKE), LV_STATE_PRESSED);
+    lv_obj_set_style_outline_color(slot, ink_ui_ink(), LV_STATE_PRESSED);
     snprintf(G.objects[at], sizeof G.objects[at], "file:%u", (unsigned)G.ids[index]);
     snprintf(G.args[at], sizeof G.args[at], "{\"id\":%u}", (unsigned)G.ids[index]);
     *field = (ink_ui_field_spec_t){.id = G.objects[at], .role = "image", .label = TR("照片"), .value = G.objects[at], .object = {G.objects[at], 1}};
@@ -78,12 +81,24 @@ static void bind_photo(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field,
 static void loaded(void *arg) {
     load_t *p = arg;
     if (p->epoch == ink_member_epoch() && p->generation == ink_ui_generation() && ink_ui_page_current()) {
-        snprintf(G.message, sizeof G.message, "%s", p->err ? TR("暂时读不了照片，请返回后重试") : "");
+        snprintf(G.message, sizeof G.message, "%s", p->err ? TR("暂时读不了照片，请点重读照片") : "");
         if (!p->id && G.list) {
             G.count = p->count; memcpy(G.ids, p->ids, p->count * sizeof *p->ids); ink_ui_list_refresh(G.list, p->err ? 0 : p->count);
+            if (p->err) lv_obj_add_flag(lv_obj_get_child(G.box, 0), LV_OBJ_FLAG_HIDDEN);
+            if (p->count <= PHOTO_SLOTS || p->err) {
+                lv_obj_t *bar = lv_obj_get_child(G.box, -1);
+                lv_obj_add_flag(lv_obj_get_child(bar, 0), LV_OBJ_FLAG_HIDDEN);
+                lv_obj_add_flag(lv_obj_get_child(bar, 2), LV_OBJ_FLAG_HIDDEN);
+            }
         } else if (p->id == G.photo && G.box && !p->err) {
             G.revision = p->revision;
             snprintf(G.path, sizeof G.path, "%s", p->path); ink_photo_image(G.box, &p->im);
+            size_t at = 0; while (at < G.count && G.ids[at] != p->id) at++;
+            const char *name = strrchr(p->path, '/'); name = name ? name + 1 : p->path;
+            if (at < G.count) snprintf(G.caption, sizeof G.caption, TR("%s · 第%zu/%zu张"), name, at + 1, G.count);
+            else snprintf(G.caption, sizeof G.caption, "%s", name);
+            lv_label_set_text(G.name, G.caption);
+            G.photo_actions[1].enabled = true;
             ink_jw_t w; ink_jw_init(&w, G.delete_args, sizeof G.delete_args); ink_jw_raw(&w, "{\"path\":"); ink_jw_str(&w, p->path); ink_jw_raw(&w, "}");
             G.photo_actions[0].enabled = true; G.photo_actions[0].args_json = G.delete_args;
             ink_shell_bind(G.trash, "file.delete", G.delete_args); lv_obj_remove_flag(G.trash, LV_OBJ_FLAG_HIDDEN);
@@ -119,6 +134,7 @@ static void read_photos(void *arg) {
 }
 static void load(uint32_t id) {
     snprintf(G.message, sizeof G.message, TR("正在读取照片"));
+    if (!id && G.box) lv_obj_add_flag(lv_obj_get_child(G.box, 0), LV_OBJ_FLAG_HIDDEN);
     load_t *p = osal_calloc(1, sizeof *p, OSAL_MEM_EXTERNAL);
     if (!p) { snprintf(G.message, sizeof G.message, TR("内存不足，请返回后重试")); return; }
     p->id = id; p->epoch = ink_member_epoch(); p->generation = ink_ui_generation();
@@ -137,29 +153,39 @@ static void gallery_create(lv_obj_t *root, void *arg) {
     lv_obj_t *b = ink_ui_circle(root, "camera", INK_CANVAS_W - INK_MARGIN - INK_CIRCLE, INK_STATUS_BAR, INK_CIRCLE, INK_ICON_MEDIUM, INK_SURFACE_STATIC, NULL, NULL);
     ink_shell_bind(b, "app.open", "{\"id\":\"camera\"}");
     int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP;
-    lv_obj_t *body = ink_ui_box(root, 0, y, INK_CANVAS_W, INK_CANVAS_H - y, 0, INK_SURFACE_WHITE, false);
-    int cell = (INK_CANVAS_W - 2 * INK_MARGIN - 2 * INK_GAP_M) / 3;
-    G.list = ink_ui_list_create(body, &GALLERY_PAGE, &G.position, 9, 3, cell, TR("还没有照片，点右上角拍一张"), bind_photo, NULL);
-    load(0); G.status = ink_ui_notice(root, G.message, INK_CANVAS_H - INK_MARGIN - INK_CONTROL);
+    G.box = ink_ui_box(root, 0, y, INK_CANVAS_W, INK_CANVAS_H - y, 0, INK_SURFACE_WHITE, false);
+    int cell = (INK_CANVAS_W - 2 * INK_MARGIN - (PHOTO_COLUMNS - 1) * INK_GAP_M) / PHOTO_COLUMNS;
+    G.list = ink_ui_list_create(G.box, &GALLERY_PAGE, &G.position, PHOTO_SLOTS, PHOTO_COLUMNS, cell, TR("还没有照片，点右上角拍一张"), bind_photo, NULL);
+    b = ink_ui_pill(root, TR("重读照片"), INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_CONTROL, INK_CANVAS_W - 2 * INK_MARGIN, INK_CONTROL, false, NULL, NULL);
+    ink_shell_bind(b, "gallery.reload", NULL);
+    load(0); G.status = ink_ui_notice(root, G.message, INK_CANVAS_H - INK_MARGIN - INK_CONTROL - INK_GAP_L - 2 * ink_ui_line_height(INK_FONT_NOTE));
 }
 static void photo_create(lv_obj_t *root, void *arg) {
-    G.photo = (uint32_t)(uintptr_t)arg; G.path[0] = 0;
+    G.photo = (uint32_t)(uintptr_t)arg; G.path[0] = G.caption[0] = 0;
     ink_shell_statusbar(root, true); ink_shell_topbar(root, TR("照片"));
-    G.photo_actions[0] = (ink_ui_action_spec_t){.id = "delete", .label = TR("删除照片"), .capability = "file.delete"};
-    G.photo_actions[1] = (ink_ui_action_spec_t){.id = "ask", .label = TR("问这张图"), .capability = "photo.ask", .enabled = true};
+    G.photo_actions[0] = (ink_ui_action_spec_t){.id = "delete", .label = TR("删除当前照片"), .capability = "file.delete"};
+    G.photo_actions[1] = (ink_ui_action_spec_t){.id = "ask", .label = TR("问 AI 这张图"), .capability = "photo.ask"};
     G.photo_actions[2] = (ink_ui_action_spec_t){.id = "back", .label = TR("返回"), .capability = "shell.back", .enabled = true};
     lv_obj_t *b = ink_ui_circle(root, "trash", INK_CANVAS_W - INK_MARGIN - INK_CIRCLE, INK_STATUS_BAR, INK_CIRCLE, INK_ICON_MEDIUM, INK_SURFACE_STATIC, NULL, NULL);
     G.trash = b; lv_obj_add_flag(b, LV_OBJ_FLAG_HIDDEN);
-    int y = INK_STATUS_BAR + INK_PRIMARY, w = INK_CANVAS_W - 2 * INK_MARGIN;
-    G.box = ink_ui_card(root, INK_MARGIN, y, w, INK_CANVAS_H - y - INK_MARGIN - INK_PRIMARY - INK_GAP, INK_SURFACE_WHITE);
-    b = ink_ui_pill(root, TR("问这张图"), INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_PRIMARY, w, INK_PRIMARY, true, NULL, NULL); ink_shell_bind(b, "photo.ask", NULL);
-    load(G.photo); G.status = ink_ui_notice(root, G.message, INK_CANVAS_H - INK_MARGIN - INK_PRIMARY - INK_LINE_NOTE);
+    G.name = ink_ui_notice(root, TR("正在读取照片"), INK_STATUS_BAR + INK_PRIMARY);
+    int y = INK_STATUS_BAR + INK_PRIMARY + 2 * ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_M, w = INK_CANVAS_W - 2 * INK_MARGIN;
+    int footer = INK_CANVAS_H - INK_MARGIN - INK_CONTROL;
+    G.box = ink_ui_card(root, INK_MARGIN, y, w, footer - y - 2 * ink_ui_line_height(INK_FONT_NOTE) - 2 * INK_GAP_L, INK_SURFACE_WHITE);
+    b = ink_ui_pill(root, TR("问 AI 这张图"), INK_MARGIN, footer, w, INK_CONTROL, false, NULL, NULL); ink_shell_bind(b, "photo.ask", NULL);
+    load(G.photo); G.status = ink_ui_notice(root, G.message, footer - 2 * ink_ui_line_height(INK_FONT_NOTE) - INK_GAP_L);
 }
-static void gallery_destroy(void) { G.list = NULL; G.status = NULL; memset(G.slots, 0, sizeof G.slots); }
-static void photo_destroy(void) { G.box = G.status = G.trash = NULL; }
+static void gallery_destroy(void) { G.list = NULL; G.box = G.status = NULL; memset(G.slots, 0, sizeof G.slots); }
+static void photo_destroy(void) { G.box = G.status = G.trash = G.name = NULL; }
 static int gallery_snapshot(char *out, size_t cap) {
     int n = G.list ? ink_ui_list_snapshot(G.list, out, cap) : -1;
     if (n < 0) return -1;
+    char *end = strstr(out, "],\"pagination\":");
+    char extra[256]; ink_jw_t a; ink_jw_init(&a, extra, sizeof extra);
+    ink_jw_raw(&a, ",{\"id\":\"reload\",\"label\":"); ink_jw_str(&a, TR("重读照片"));
+    ink_jw_raw(&a, ",\"capability\":\"gallery.reload\",\"args_json\":\"{}\",\"object\":{\"id\":\"gallery:photos\",\"revision\":1}}");
+    if (!end || a.overflow || (size_t)n + a.len >= cap) { out[0] = 0; return -1; }
+    memmove(end + a.len, end, strlen(end) + 1); memcpy(end, extra, a.len); n += (int)a.len;
     ink_jw_t w = {.buf = out, .cap = cap, .len = (size_t)n - 1};
     ink_jw_raw(&w, ",\"status\":"); ink_jw_str(&w, G.message); ink_jw_raw(&w, "}");
     if (w.overflow) { out[0] = 0; return -1; }
@@ -168,9 +194,10 @@ static int gallery_snapshot(char *out, size_t cap) {
 static int photo_snapshot(char *out, size_t cap) {
     const ink_ui_field_spec_t PHOTO_FIELDS[] = {
         {.id = "file", .role = "image", .label = TR("照片文件"), .value = G.path},
-        {.id = "status", .role = "status", .label = TR("提示"), .value = G.message}
+        {.id = "status", .role = "status", .label = TR("提示"), .value = G.message},
+        {.id = "name", .role = "text", .label = TR("当前照片"), .value = G.caption}
     };
-    const ink_ui_page_spec_t PHOTO_PAGE = {.id = "Photo", .title = TR("照片"), .object = {G.path, 1}, .fields = PHOTO_FIELDS, .field_count = 2, .actions = G.photo_actions, .action_count = 3};
+    const ink_ui_page_spec_t PHOTO_PAGE = {.id = "Photo", .title = TR("照片"), .object = {G.path, G.revision}, .fields = PHOTO_FIELDS, .field_count = 3, .actions = G.photo_actions, .action_count = 3};
     return ink_ui_semantics_snapshot(&PHOTO_PAGE, out, cap);
 }
 static bool gallery_key(ink_key_t k, bool lng) { return G.list && ink_ui_list_key(G.list, k, lng); }
@@ -196,6 +223,7 @@ static void photo_question_ready(void *ctx, const ink_receipt_t *rc) {
     osal_free(p);
 }
 static void gallery_action(ink_call_t *c) {
+    if (!strcmp(c->cap->id, "gallery.reload")) { ink_ui_redraw(); return; }
     if (!strcmp(c->cap->id, "photo.ask")) {
         photo_question_t *p = osal_malloc(sizeof *p, OSAL_MEM_EXTERNAL);
         if (!p || !G.path[0] || !G.revision || G.revision != ink_fs_revision()) { osal_free(p); c->rc.status = INK_RC_STALE; return; }
@@ -215,6 +243,7 @@ static void gallery_action(ink_call_t *c) {
     if (G.list) ink_ui_list_turn(G.list, !strcmp(c->cap->id, "gallery.next") ? 1 : -1);
 }
 static const ink_cap_t GALLERY_CAPS[] = {
+    {.id = "gallery.reload", .app = "gallery", .title = "手动重读当前家人的照片", .activity = "Gallery", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = gallery_action},
     {.id = "photo.ask", .app = "gallery", .title = "把当前有权查看的照片缩略图交给 AI", .activity = "Photo", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = gallery_action},
     {.id = "gallery.prev", .app = "gallery", .title = "相册上一页", .activity = "Gallery", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = gallery_action},
     {.id = "gallery.next", .app = "gallery", .title = "相册下一页", .activity = "Gallery", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = gallery_action},

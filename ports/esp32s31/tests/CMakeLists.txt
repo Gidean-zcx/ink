@@ -163,3 +163,23 @@ foreach(case gauge rtc c02-hal)
   add_test(NAME unit-s31-vendor-power-${case} COMMAND test-s31-vendor-power ${case})
 endforeach()
 add_test(NAME unit-s31-vendor-power-source COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/power_sources.py)
+
+# Transfer contract: actual vendor routes and system policy, fake HTTPD/files.
+enable_language(CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(ap ${port}/vendor/ap_transfer)
+set(cjson ${root}/third_party/cjson)
+add_executable(test-s31-transfer transfer.cxx transfer_policy.c ${ap}/ap_transfer.cc ${cjson}/cJSON.c
+    ${root}/system/util/ink_json.c ${ap}/zlib/adler32.c ${ap}/zlib/crc32.c ${ap}/zlib/inffast.c
+    ${ap}/zlib/inflate.c ${ap}/zlib/inftrees.c ${ap}/zlib/zutil.c)
+target_include_directories(test-s31-transfer PRIVATE transfer_stub ${ap} ${cjson} ${ap}/zlib ${root}/system/include ${root}/third_party/jsmn)
+target_link_libraries(test-s31-transfer PRIVATE m)
+add_test(NAME unit-s31-transfer COMMAND test-s31-transfer)
+add_test(NAME unit-s31-transfer-reverse COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/transfer_reverse.py ${CMAKE_BINARY_DIR})
+add_executable(test-s31-transfer-wifi transfer_wifi.c)
+target_include_directories(test-s31-transfer-wifi PRIVATE wifi_stub)
+add_test(NAME unit-s31-transfer-wifi COMMAND test-s31-transfer-wifi)
+if(APPLE)
+  # Keep upstream cJSON unchanged; newer SDKs deprecate its bounded sprintf calls.
+  set_source_files_properties(${cjson}/cJSON.c PROPERTIES COMPILE_OPTIONS -Wno-error=deprecated-declarations)
+endif()

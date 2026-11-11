@@ -27,6 +27,7 @@
 static const struct {
     const char *id, *args;
 } FOR_AI[] = {
+    {"games.start", ""}, {"games.state", NULL}, {"games.move", "row,col"}, {"games.undo", NULL}, {"games.reset", NULL},
     {"system.report_problem", ""},
     {"kid.policy_get", ""}, {"kid.app_set", "id,app,mode"}, {"kid.period_set", "id,index,start,end,days"},
     {"family.kid_apps", NULL}, {"family.kid_periods", ""}, {"family.kid_member", NULL},
@@ -121,7 +122,7 @@ static const struct {
     {"shell.update", NULL}, {"shell.update_close", NULL},
     {"files.browse", "path"}, {"files.select", "id"}, {"files.move", ""}, {"files.name", NULL},
     {"files.preview", "id"}, {"files.next", NULL}, {"files.prev", NULL}, {"files.up", NULL},
-    {"camera.preview", NULL}, {"camera.photo", NULL}, {"camera.review", NULL}, {"gallery.prev", NULL}, {"gallery.next", NULL}, {"photo.open", "id"},
+    {"camera.preview", NULL}, {"camera.photo", NULL}, {"camera.review", NULL}, {"gallery.prev", NULL}, {"gallery.next", NULL}, {"gallery.reload", NULL}, {"photo.open", "id"},
     {"camera.scan", NULL}, {"camera.scan_apply", NULL},
     {"shell.ai_log", ""}, {"shell.ai_receipts", ""}, {"ai.pages.close", NULL}, {"ai.pages.retry", NULL},
     {"ai.pages.next", NULL}, {"ai.pages.prev", NULL},

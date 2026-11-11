@@ -24,6 +24,9 @@ endfunction()
 function(idf_component_get_property out component property)
   set(${out} fake_system PARENT_SCOPE)
 endfunction()
+# The reader's firmware block needs ESP-IDF's own targets; it is skipped in IDF's early expansion pass, and so here:
+# this check is only about the autotest switch.
+set(CMAKE_BUILD_EARLY_EXPANSION ON)
 include("${REPO}/ports/esp32s31/main/CMakeLists.txt")
 get_target_property(system_sources fake_system SOURCES)
 get_target_property(main_sources fake_main SOURCES)

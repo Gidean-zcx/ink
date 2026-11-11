@@ -59,6 +59,7 @@ static void run(void *arg) {
     start_transfer(); exchange("success");
     CHECK(inactive("文件已收到"), "successful upload consumes authorization");
     uint32_t owner_file = verify_file("合成.txt", 4096);
+    CHECK(AI("transfer.status", NULL) && strstr(g_result, "\"files\":1") && strstr(g_result, "合成.txt") && strstr(g_result, "\"code\":\"000000\""), "AI receives the uploaded file and count without authorization digits");
     const char *bad[] = {"dotdot", "absolute", "nested", "control", "nul", "backslash", "utf8", "invalid_large"};
     for (size_t i = 0; i < sizeof bad / sizeof bad[0]; i++) {
         start_transfer(); exchange(bad[i]);

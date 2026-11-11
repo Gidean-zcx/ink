@@ -1537,3 +1537,105 @@ Wi-Fi 已关闭	Wi-Fi is off
 点按重发	Tap to retry
 展开	More
 新建联系人	New contact
+连接中	Connecting
+已配对	Paired
+发现的设备	Discovered devices
+已配对的设备可点右侧“忘记”	Tap Forget to remove a device
+本机不能重置密码。请联系家庭服务器管理者；家长验证只核对身份。	This device cannot reset passwords. Contact the family server administrator; parent verification only checks identity.
+先关闭自动设置时区	Turn off Automatic Time Zone first
+先关闭自动设置日期和时间	Turn off Automatic Date & Time first
+离开后，再用大人的空间要输密码	Enter a password after leaving
+忘记	Forget
+重新验证	Verify Again
+# page fixes ui-fix-a, ui-fix-c (2026-11-12)
+不确认就不会改。	Nothing changes unless you approve.
+不能自动停下应用。请返回停下读书、播放或下载，再来连接。	Apps cannot be stopped automatically. Go back, stop reading, playback or downloads, then connect.
+以%s的身份 · 来源：%s\n首次显示后最多 %llu 秒有效，过期不执行。\n%s	Acting as %s · Requested by: %s\nValid for at most %llu seconds after first shown. Expired requests do not run.\n%s
+会清除（所有家人）	Erases for everyone
+传文件失败	Transfer failed
+修改设置	Change setting
+允许填入	Allow filling
+删除，找不回来	Erase permanently
+只替换所选家人备份清单内的资料；清单外文件保留。其他家人不变。	Replaces only this person’s listed backup data. Unlisted files and other people’s data stay.
+备份保留，卡上另选	Backups kept; SD option
+备忘、录音、照片（含卡上个人资料）	Personal data, including on SD
+存储卡的书和音频	SD books and audio
+家庭服务器	Family server
+家庭服务器上的备份；卡上其他共享文件	Server backups; other shared SD files
+家庭服务器上的备份；卡上的书和音频及其他共享文件	Server backups; shared SD books, audio and other files
+已保存到‘传进来的’，可在文件中打开。	Saved in Received. Open it in Files.
+已接收 %lld 字节；未确认保存	%lld bytes received; saving not confirmed
+已收到 1 个，%lld 字节	1 file received, %lld bytes
+开始连接	Connect
+所有家人的资料、设置和 Wi-Fi；含卡上个人资料及缓存	Everyone’s data, settings and Wi-Fi, including personal SD data and caches
+接收中，%lld 字节；尚未保存	Receiving, %lld bytes; not saved yet
+接收完成后保存到‘传进来的’。现在还不能打开。	Will save in Received when complete. Cannot open yet.
+支付	Pay
+正在下载备份	Downloading backup
+正在放回资料	Restoring data
+正在整理恢复预览	Preparing restore preview
+正在检查资料	Checking data
+没有检测到存储卡。插好后重新连接，不会自动格式化。	No SD card detected. Insert one and reconnect. It will not be formatted automatically.
+清空设备	Erase device
+结束传输	End transfer
+继续操作	Continue action
+请先插入存储卡	Insert an SD card first
+资料已放回。	Data restored.
+返回先停下	Back to stop
+连接电脑	Connect to PC
+部分资料可能已替换，具体范围暂不能核实。请重新预览后再试。	Some data may have been replaced. The exact scope is unknown. Preview again before retrying.
+重新设置设备	Set up device again
+需要大人确认	Adult approval needed
+验证并清空	Verify and erase
+默认保留	Kept by default
+%s · 第%zu/%zu张	%s · Photo %zu/%zu
+删除当前照片	Delete this photo
+当前照片	Current photo
+暂时读不了照片，请点重读照片	Can't load photos. Tap Reload photos.
+重读照片	Reload photos
+问 AI 这张图	Ask AI about this photo
+\n只能由操作的家人撤销	\nOnly the actor can undo
+\n已过撤销期限	\nUndo period expired
+\n时间不明，无法判断撤销期限	\nUndo time unknown
+\n此操作不支持撤销	\nUndo unsupported
+对象名未记录	Name not recorded
+恢复时间还不确定。书还能继续读。	Reset time is unknown. You can keep reading.
+未记录的操作	Action unknown
+记录太长，请查看原始回执	Record too long. Check the original receipt.
+额度用完了	AI limit reached
+停止朗读	Stop reading
+再听一遍	Listen again
+只保留前一部分	Only the beginning is kept
+只保留前一部分 · 请翻页	Beginning only · Next page
+听解释	Listen
+# gomoku (games-1, 2026-11-12)
+五子棋	Gomoku
+人机 · 困难	Computer · Hard
+人机 · 普通	Computer · Medium
+人机 · 简单	Computer · Easy
+使用者已改变	The user has changed
+使用者或可用时段已改变	The user or allowed hours have changed
+双人 · 15 路	Two players · 15 × 15
+双人 · 9 路	Two players · 9 × 9
+平局	Draw
+开始或继续	Start or continue
+当前回合	Current turn
+思考中	Thinking
+悔棋	Undo
+无法读取棋局	Cannot read the game
+棋局	Game
+棋局未保存，请重试	Game not saved. Please try again
+棋盘，按行，0 空 1 黑 2 白	Board in row order: 0 empty, 1 black, 2 white
+没有上一局	No previous game
+没有可以悔的棋	No move to undo
+点交叉点落子，方框标出最后一手	Tap an intersection to play. The square marks the last move
+电脑暂时不可用	Computer temporarily unavailable
+电脑未能落子	Computer could not play
+白棋获胜	White wins
+继续上一局	Continue game
+落子	Play a stone
+轮到白棋	White to move
+轮到黑棋	Black to move
+这里不能落子	Cannot play here
+重开	New game
+黑棋获胜	Black wins

@@ -208,7 +208,7 @@ static void cold_records(void) {
 static void real_receipts(void) {
     int64_t before = ink_setting_get("display.light");
     CHECK(AI("settings.set", "{\"id\":\"display.light\",\"value\":3}") && g_rc.status == INK_RC_DONE && g_rc.undo_ms == 10000, "real brightness change returns undo window");
-    char undo[160]; snprintf(undo, sizeof undo, "{\"object\":\"%s\",\"revision\":%u}", g_rc.object, g_rc.revision);
+    char undo[160]; snprintf(undo, sizeof undo, "{\"object\":\"%s\",\"revision\":%u}", g_rc.object, (unsigned)g_rc.revision);
     CHECK(WAIT_FOR(log_count() == 1, 12000), "real operation is in activity log");
     CHECK(AI("shell.ai_receipts", "{\"id\":1}"), "open real receipt"); capture("RealReceipt"); on_ui(check_real_receipt);
     press("system.undo");
@@ -290,7 +290,7 @@ static void run(void *ctx) {
         CHECK(strstr(snapshot, "AiReceipts") && strstr(snapshot, "synthetic:10") && strstr(snapshot, "已撤销"), "row touch opens the selected operation's receipt");
         all_statuses(); press("shell.back"); quiet(); CHECK(!strcmp(ink_ui_page_name(), "AiLog"), "receipts return to activity list");
         CHECK(AI("shell.ai_receipts", "{\"id\":1}") && g_rc.status == INK_RC_DONE, "open oldest receipt by stable record id");
-        quiet(); on_ui(read_snapshot); CHECK(strstr(snapshot, "\"id\":\"activity:1\"") && strstr(snapshot, "synthetic:1\""), "selected receipt is on its page");
+        quiet(); on_ui(read_snapshot); CHECK(strstr(snapshot, "\"id\":\"activity:1\"") && strstr(snapshot, "（synthetic:1）"), "selected receipt is on its page"); /* ui-fix-c: the object in brackets after its name */
         CHECK(ink_member_switch("kid") == 0, "switch away from adult receipts"); quiet(); on_ui(check_child_screen);
         CHECK(AI("shell.ai_log", NULL) && g_rc.status == INK_RC_DONE, "child opens their own log");
         quiet(); on_ui(check_child_screen); CHECK(strstr(snapshot, "\"total\":0"), "child activity list is empty");

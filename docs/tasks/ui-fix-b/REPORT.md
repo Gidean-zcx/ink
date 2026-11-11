@@ -1,0 +1,80 @@
+# ui-fix-b 执行报告
+
+基线：`7bb9386a0330eb6be71301a06579e7f26aad73a2`。本报告仅记录本任务的本地修改和证据。
+
+## 验收表
+
+| 编号 | 结论 | 证据 | 命令 |
+| --- | --- | --- | --- |
+| UX08（T16～T25） | 中文专项通过 | 【实测】每档 39 项；不支持叫名字时无可点档位并显示原因；备份行含自动备份当前值；读数失败可重读；放大后清空动作和后果可见；翻页恢复可用状态 | C1 |
+| UX10（T26～T29） | 中文专项通过 | 【实测】每档 63 项；禁用原因、短标题、单选勾；年、月、日、时、分均直接输入，保留加减和最后保存 | C1 |
+| UX16（S19～S26） | 中文专项通过 | 【实测】每档 36 项；验证对象、4～8 位规则、3×4 键盘右下确认；真正三次错误触发既有冷却并禁用数字及确认，秘密仍掩码 | C1 |
+| UX24（T14～T15） | 中文专项通过 | 【实测】每档 20 项呈现检查；发现、已配对、连接中分组；原有蓝牙测试新增实际点按“忘记”并核对删除配对记录，原长按检查保留 | C1、C3 |
+| 普通与 120% 前后截图、反向对照 | 通过 | 【实测】[74 张图](SCREENSHOTS.md)，最大 35,880 B；基线四组分别触发 6、4、6、4 项失败，两档字号均如此；[结构化结果](EVIDENCE.json) | C1 |
+| 普通全量 ctest（含 ui-scale） | 未全过；最终剩 3 项共享收尾 | 【实测】首轮原话 `98% tests passed, 8 tests failed out of 401`，1140.88 秒，3 项中枢跳过；14 项修复复测 12 过、2 项共享检查失败；另复现公共选择器测试的旧数量断言；`ui-scale` 已过 | C2、C3、C8 |
+| ASan/UBSan 专项 | 通过 | 【实测】四组两档共 8 场景，均无失败或 sanitizer 报告 | C4 |
+| ASan/UBSan 全量 | 已跑，3 项共享检查未过 | 【实测】原话 `99% tests passed, 3 tests failed out of 401`，1042.41 秒，3 项中枢跳过；失败均为下述共享检查，未出现非预期 sanitizer 诊断 | C4 |
+| S31 固件 | 未编 | 仅跑主工程包含的 S31 宿主机单测，未交付目标固件 | C2 |
+| gcccheck | 通过 | 【实测】`gcccheck: 7 compiled, 0 with findings`，无跳过；这是编译检查，未在 Linux 运行测试 | C5 |
+| 范围、行数与隐私检查 | 通过 | 【实测】产品新增 135、删除 53，共 188 行，预算 280；隐私匹配两处合成地址，无本机绝对路径；全部文件在允许范围 | C6 |
+| 共享收尾补丁隔离验证 | 通过，未应用工作区 | 【实测】词条检查 0 错误；能力文档检查通过；替换公共测试对象后，普通与 ASan 的原选择器测试各 `92 checks, 0 failures` | C7 |
+
+## 没做到的
+
+- 新文案的共享英文词条、生成的能力文档未合并，导致两项检查仍失败；补丁已在隔离副本通过词条和能力文档检查，正式工作区未应用。
+- `small-gaps-2-picker` 把五个新增宽输入入口也算成了加减键。原有十个加减键保留；公共测试不可写，未应用补丁保留十键、图标、几何断言并按宽度区分入口；已在普通与 ASan 临时对象中验证。
+- 本批未处理：T17 候选名选择、T20 语言选择页、T21 危险组、T22～T25 信息和隐私页整理；S19 家人管理入口、S20 恢复目的地、S24 再次核对新密码、S26 真实任务摘要；T28 地区分组和 UTC 偏移。
+- 未实现密码找回；未触碰驱动、设备或原厂代码；不把模拟器结果当真机验收。
+
+## 和设计不一致的
+
+【实现】为给固定数字键盘和错误提示留出空间，密码页去掉装饰头像，用家人姓名和阶段文字标明对象。键位统一为删除／0／确定，取消或忘记密码在数字区上方。
+
+新增中文文案尚未接入共享翻译表，英文界面会出现这些中文；任务范围不允许写该共享文件，已给主会话提供具体收尾补丁。
+
+## 改过的已有测试
+
+`tests/settings_a.py` 改用已有的支持叫名字的档案，保留原有点击档位和 AI 调用断言；默认不支持档案由本任务专项测试覆盖。`tests/settings_a.c` 的“正在备份”可见值增加“自动备份：当前值”，精确核对新的完整文案；未删或放宽断言。
+
+`tests/bluetooth.c` 增加一次重新配对后点按可见“忘记”的路径，核对配对记录消失；原有长按和失败断言均保留。
+
+## 要用户定的
+
+暂无产品选择。共享文件收尾由主会话按本报告合并。
+
+## 顺手发现
+
+部分截图状态栏存在既有残留，未定位原因；本任务未修改状态栏或屏幕输出。
+
+## 新增的机制
+
+无。
+
+扩展已有草稿能力 `shell.time_step`：`delta=0` 打开数字输入，可选整数 `value` 更新草稿，原必填 `field,delta` 保留；是 UX10 要求的直接输入入口，仍走现有文本服务和能力总线。蓝牙仅增加显示用的连接中标记。未新增能力、任务、线程、状态机、持久格式、队列或配置项。
+
+【实现】模块边界未变，输入和分组留在呈现层；保存、连接、忘记、重读仍走既有能力。数字输入和 AI 共用草稿能力；密码继续用秘密字段，提交仅允许本人。
+
+## 要改的文档
+
+合并时由主会话同步生成的能力表（仅新增 `backup.auto` 依赖），给新中文提示补统一英文词条和 `TR` 标记，并更新公共布局测试对加减键的识别。具体内容见 [共享收尾](SHARED-FOLLOWUP.md)及未应用的 [补丁草案](SHARED-FOLLOWUP.patch)。本任务未修改这三处共享文件，相关检查尚不能通过。
+
+## 复现命令与证据边界
+
+- C1：`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/ui_fix_b/run.py --build build --reverse --screenshots docs/tasks/ui-fix-b/screenshots`。
+- C2：按任务书配置与 `cmake --build build -j2` 后，`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2`。
+- C3：C2 加 `-R '^(ui-scale|i18n-shell|i18n-literals|capability-table-doc|integration-ai-surface|settings-b|storage-usage|file-index-3|time-settings|bluetooth-settings|settings-a|ui-scene-Pin|ui-scene-big-Pin|semantics-shell2-member)$'`。
+- C4：按相同配置换 `build-asan`、只加 `-DINK_SANITIZE=ON`，构建 `-j2`；C1 去掉 `--reverse` 和截图参数并换构建目录，然后按 C2 跑该目录的全量 ctest。
+- C5：`taskpolicy -c utility python3 ../../tools/gcccheck.py build system/ui/shell/settings_pages.c system/ui/shell/time_settings.c system/ui/shell/member_pages.c system/ui/shell/pinpad.c system/ui/shell/bluetooth_page.c tests/settings_a.c tests/bluetooth.c`。
+- C6：`git diff 7bb9386a0330eb6be71301a06579e7f26aad73a2..HEAD --stat`、`--numstat`；隐私扫描匹配绝对路径与六段十六进制地址，结果仅本任务蓝牙夹具的两处合成地址。
+- C7：临时副本的 `tests/i18n_literals.py` 检查函数与 `tools/capabilities.py --check`；公共选择器用修补后的临时 `ui.c.o` 替换链接，再运行原 `tests/small_gaps_2/run.py --build <构建目录> --case picker --binary <临时二进制>`。两种构建都通过。主会话可在独立检出应用 [补丁](SHARED-FOLLOWUP.patch)后重建并重跑这三项；这不是正式工作区全量通过的声明。
+- C8：C2 加 `-R '^small-gaps-2-picker$'`，原版测试失败，6 个 CHECK 均为旧的数量断言。
+- 专项测试直接编译相应呈现文件，基线对照用临时对象替换，不改工作区、不切历史提交；仅 `--reverse` 需要 Git 历史。没有改共享 CMake 或公共测试。
+- 截图和错误状态用合成输入；蓝牙分组／连接中是呈现夹具，密码等待由三次真实错误密码触发。完整业务由原有时间、蓝牙、成员测试补充。
+- 完整命令输出留在忽略的 `work/ui-fix-b/` 和 `build/ui-fix-b/`，不提交构建产物。
+- 日志：`ctest-full.log`、`ctest-final-recheck.log`、`ctest-picker-original.log`、`ctest-asan.log`、`targeted-final-2.log`、`targeted-asan.log`、`gcccheck.log`、`shared-followup-check.log`、`shared-picker.log`（均在 `work/ui-fix-b/`）。
+
+## 为什么不能更小
+
+188 行按新增与删除相加的口径统计（不含测试、文档）。四组各有独立根因；最大的是时间页，必须补数字输入绑定、草稿范围校验和单选反馈。看过只改提示、保留旧确认位置及只保留长按的方案，都无法满足指定验收。保留已有能力、公共组件、分页和服务算法；没有修改共享主题或增加公共接口。
+
+截图的存储失败在请求处注入确定的错误，避免被晚到成功回执覆盖；存储页每页最多三行，给失败文案及 120% 字号留足空间。初版错误截图已替换，最终图与实际错误状态对应。
