@@ -76,6 +76,8 @@ static void txt(void) {
 }
 static void run(void *arg) {
     (void)arg; ink_power_hold(INK_NEED_AWAKE); ink_power_hold(INK_NEED_NO_LOCK); quiet();
+    const ink_db_def_t *definition=ink_db_find_def("reader.bookmarks");
+    CHECK(definition && definition->scope==INK_DB_MEMBER && definition->ai_read && !definition->ai_write,"bookmarks registered for AI before a book opens");
     const char *phase=getenv("INK_READER_MORE_PHASE");
     if (phase && !strcmp(phase,"restart")) {
         open_book(); uint32_t id=first_mark(); CHECK(id && strstr(marks,"\"chapter\":2"),"adult bookmarks survive restart");

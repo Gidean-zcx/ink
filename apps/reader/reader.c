@@ -1244,7 +1244,7 @@ static void card_changed(void *ctx, int h, const char *id) {
     (void)ctx; (void)h; (void)id; ink_app_card_changed("reader");
 }
 int ink_reader_actions_init(void) {
-    if (ink_settings_define(READER_SETTINGS,READER_LAYOUT_COUNT) || ink_settings_watch("reader.",layout_changed,NULL,INK_EXEC_UI) ||
+    if (ink_bookmarks_init() || ink_settings_define(READER_SETTINGS,READER_LAYOUT_COUNT) || ink_settings_watch("reader.",layout_changed,NULL,INK_EXEC_UI) ||
         ink_state_watch("time.minute",footer_changed,NULL,INK_EXEC_UI) || ink_state_watch("battery.level",footer_changed,NULL,INK_EXEC_UI)) return -1;
     int r = ink_cap_register(SHELF_ACTIONS, (int)(sizeof SHELF_ACTIONS / sizeof SHELF_ACTIONS[0]));
     return r ? r : ink_cap_register(BOOK_ACTIONS, (int)(sizeof BOOK_ACTIONS / sizeof BOOK_ACTIONS[0])) ||

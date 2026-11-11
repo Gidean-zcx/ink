@@ -13,6 +13,7 @@ typedef struct {
     char excerpt[INK_BOOKMARK_EXCERPT+1];
 } ink_bookmark_t;
 bool ink_reader_locate(ink_reader_source_t *s, ink_reader_position_t *position, uint64_t *flat, bool to_source);
+int ink_bookmarks_init(void);
 bool ink_bookmarks_open(const char *member, const char *book);
 void ink_bookmarks_close(void);
 int ink_bookmarks_count(void);

@@ -48,8 +48,8 @@ bool ink_save_bookmarks(const std::string& path,const std::vector<BookBookmark>&
     return true;
 }
 }
+extern "C" int ink_bookmarks_init(void) { return ink_db_register(&ink_bookmark_def); }
 extern "C" bool ink_bookmarks_open(const char *member,const char *book) {
-    if (!ink_db_find_def(ink_bookmark_def.name) && ink_db_register(&ink_bookmark_def)) return false;
     ink_bookmark_db=ink_db_open_member(&ink_bookmark_def,member);
     if (!ink_bookmark_db) return false;
     ink_reader_host_call([](void *p){ ink_bookmark_store.Load(static_cast<const char *>(p),0,0,0); },const_cast<char *>(book));
