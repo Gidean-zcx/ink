@@ -81,6 +81,9 @@ try:
         metrics = json.loads((out / 'metrics.json').read_text())
         counts = metrics.get('metrics', {})
         warnings = json.dumps(metrics.get('warnings', []), ensure_ascii=False)
+        print(name, 'fps=', counts.get('camera.preview.fps', {}).get('mean'),
+              'frames=', counts.get('camera.preview.frames', {}).get('mean'),
+              'failed_checks=', counts.get('test.fail', 0), flush=True)
         if name in ('model', 'dvp'):
             assert not result.returncode and counts.get('test.finished') == 1 and not counts.get('test.fail'), warnings + result.stderr[-2000:]
             print(name, 'PASS', 'fps=', counts.get('camera.preview.fps'), 'frames=', counts.get('camera.preview.frames'), flush=True)
