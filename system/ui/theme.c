@@ -29,7 +29,7 @@ static lv_obj_t *captures[24];
 
 void ink_ui_datetime_picker(lv_obj_t *parent, const int parts[INK_UI_DATETIME_PARTS],
                             void (*bind)(lv_obj_t *button, int part, int delta)) {
-    static const char *const labels[] = {"年", "月", "日", "时", "分"};
+    static const char *const labels[] = {TR_NOOP("年"), TR_NOOP("月"), TR_NOOP("日"), TR_NOOP("时"), TR_NOOP("分")};
     _Static_assert(sizeof labels / sizeof *labels <= INK_UI_DATETIME_PARTS, "date rows fit");
     int y = INK_STATUS_BAR + INK_PRIMARY + INK_GAP, w = INK_CANVAS_W - 2 * INK_MARGIN;
     for (int i = 0; i < INK_UI_DATETIME_PARTS; i++, y += INK_CONTROL + INK_GAP_M) {
@@ -302,7 +302,7 @@ lv_obj_t *ink_ui_slider(lv_obj_t *parent, const char *title, int value, int x, i
     lv_obj_t *b = ink_ui_box(parent, x, y, w, INK_SLIDER, -1, INK_SURFACE_WHITE, true);
     lv_obj_t *fill = ink_ui_box(b, 0, 0, w * value / 10, INK_SLIDER, 0, INK_SURFACE_BLACK, false);
     (void)fill;
-    const char *icon = !strcmp(title, "亮度") ? INK_UI_ICON(sun) : !strcmp(title, "音量") ? INK_UI_ICON(volume) : !strcmp(title, "暖光") ? INK_UI_ICON(warm) : NULL;
+    const char *icon = !strcmp(title, TR("亮度")) ? INK_UI_ICON(sun) : !strcmp(title, TR("音量")) ? INK_UI_ICON(volume) : !strcmp(title, TR("暖光")) ? INK_UI_ICON(warm) : NULL;
     int title_x = INK_GAP_XL + (icon ? INK_ICON_MEDIUM + INK_GAP_M : 0);
     if (icon) ink_ui_icon(b, icon, INK_ICON_MEDIUM, INK_ICON_LINE, INK_GAP_XL, (INK_SLIDER - INK_ICON_MEDIUM) / 2, false);
     int text_y = (INK_SLIDER - ink_ui_line_height(INK_FONT_LIST)) / 2;

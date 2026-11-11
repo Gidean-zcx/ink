@@ -298,7 +298,7 @@ static void voice_pages(lv_obj_t *screen, int mode) { /* MemoRecord, and the pla
         int ring = INK_CIRCLE_LARGE + 2 * INK_GAP;
         ink_ui_box(screen, (INK_CANVAS_W - ring) / 2, mid - ring / 2, ring, ring, ring / 2, INK_SURFACE_WHITE, true);
         ink_ui_circle(screen, "wave", (INK_CANVAS_W - INK_CIRCLE_LARGE) / 2, mid - INK_CIRCLE_LARGE / 2, INK_CIRCLE_LARGE, INK_ICON_STATE, INK_SURFACE_BLACK, NULL, NULL);
-        centered(screen, "正在记", INK_FONT_TITLE, INK_WEIGHT_BOLD, mid + ring / 2 + INK_GAP_XL);
+        centered(screen, TR_NOOP("正在记"), INK_FONT_TITLE, INK_WEIGHT_BOLD, mid + ring / 2 + INK_GAP_XL);
         lv_obj_set_y(M.notice, ink_ui_px(mid + ring / 2 + INK_GAP_XL + INK_LINE_TITLE + INK_GAP_XS)); lv_obj_set_style_text_align(M.notice, LV_TEXT_ALIGN_CENTER, 0);
         M.started = lv_tick_get(); minutes(NULL); M.timer = lv_timer_create(minutes, 5000, NULL);
         int w = (INK_CANVAS_W - 2 * INK_MARGIN - INK_GAP) * 3 / 7, top = INK_CANVAS_H - INK_PRIMARY - INK_MARGIN;
@@ -318,7 +318,7 @@ static void voice_pages(lv_obj_t *screen, int mode) { /* MemoRecord, and the pla
     if (mode != PENDING) return;
     ink_shell_bind(ink_ui_circle(screen, "trash", INK_CANVAS_W - INK_MARGIN - INK_CONTROL, INK_STATUS_BAR + INK_GAP_S, INK_CONTROL, INK_ICON_LIST, INK_SURFACE_STATIC, NULL, NULL), "memo.delete", M.target);
     ink_ui_circle(screen, "mic", (INK_CANVAS_W - INK_CIRCLE_LARGE) / 2, mid - INK_CIRCLE_LARGE / 2, INK_CIRCLE_LARGE, INK_ICON_STATE, INK_SURFACE_STATIC, NULL, NULL);
-    centered(screen, "录音已保存", INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, mid + INK_CIRCLE_LARGE / 2 + INK_GAP_XL);
+    centered(screen, TR_NOOP("录音已保存"), INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, mid + INK_CIRCLE_LARGE / 2 + INK_GAP_XL);
     lv_obj_set_y(M.notice, ink_ui_px(mid + INK_CIRCLE_LARGE / 2 + INK_GAP_XL + INK_LINE_SUBTITLE + INK_GAP_S)); lv_obj_set_style_text_align(M.notice, LV_TEXT_ALIGN_CENTER, 0);
     lv_label_set_text(M.notice, TR("连上网后整理成文字。\n不用等，先去做别的。"));
     M.actions[1].enabled = true; M.actions[0].enabled = M.actions[2].enabled = false;
@@ -473,7 +473,7 @@ static int snapshot(char *out, size_t cap) {
 static bool page_key(ink_key_t key, bool lng) { return M.list && ink_ui_list_key(M.list, key, lng); }
 #define PAGE(name_) {.name = name_, .app = "memo", .create = create, .destroy = destroy, .snapshot = snapshot, .settle = settle, .on_key = page_key}
 static const ink_activity_t PAGES[] = {PAGE("Memo"), PAGE("MemoDetail"), PAGE("MemoEdit"), PAGE("MemoChecklist"), PAGE("MemoUndo"), PAGE("MemoSaveFail"), PAGE("MemoRecord"), PAGE("MemoPending")};
-static const ink_app_def_t APP = {.id = "memo", .title = "备忘", .icon = INK_UI_ICON(memo), .entry = &PAGES[LIST], .system_app = true, .child_ok = true};
+static const ink_app_def_t APP = {.id = "memo", .title = TR_NOOP("备忘"), .icon = INK_UI_ICON(memo), .entry = &PAGES[LIST], .system_app = true, .child_ok = true};
 #define ID "\"id\":{\"type\":\"integer\",\"minimum\":1,\"maximum\":4294967295}"
 #define ID_ARGS "{\"type\":\"object\",\"properties\":{" ID "},\"required\":[\"id\"]}"
 static const ink_cap_t CAPS[] = {

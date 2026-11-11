@@ -10,6 +10,7 @@
  * which waits for an idle panel (flash writes freeze PSRAM and would break a
  * waveform).
  */
+#include "ink/sys/i18n.h"
 #include <limits.h>
 #include <stdio.h>
 #include <string.h>
@@ -168,7 +169,7 @@ static void library_create(lv_obj_t *scr, void *arg) {
     ink_font_t *title_font = ink_font_for_pt(14, dpi);
     lv_obj_t *t = lv_label_create(scr);
     if (title_font) lv_obj_set_style_text_font(t, ink_font_lvgl(title_font), 0);
-    lv_label_set_text(t, "书架");
+    lv_label_set_text(t, TR("书架"));
     lv_obj_align(t, LV_ALIGN_TOP_LEFT, ink_dp(16), ink_dp(12));
     scan_library();
     ink_font_t *f = ink_font_for_pt(10.5, dpi);
@@ -186,7 +187,7 @@ static void library_create(lv_obj_t *scr, void *arg) {
     if (!LIB.nbooks) {
         lv_obj_t *l = lv_label_create(scr);
         if (f) lv_obj_set_style_text_font(l, ink_font_lvgl(f), 0);
-        lv_label_set_text(l, "没有书：把 .txt 放进 /content/books");
+        lv_label_set_text(l, TR("没有书：把 .txt 放进 /content/books"));
         lv_obj_align(l, LV_ALIGN_TOP_LEFT, ink_dp(16), ink_dp(64));
     }
 }
@@ -196,7 +197,7 @@ const ink_activity_t ink_app_reader = {.name = "reader", .app = "reader", .creat
 static void act_list(ink_call_t *c) {
     ink_receipt_t *rc = &c->rc;
     if (!LIB.nbooks) scan_library();
-    size_t n = (size_t)snprintf(rc->say, sizeof rc->say, "书架上有：");
+    size_t n = (size_t)snprintf(rc->say, sizeof rc->say, TR("书架上有："));
     for (int i = 0; i < LIB.nbooks && n < sizeof rc->say; i++)
         n += (size_t)snprintf(rc->say + n, sizeof rc->say - n, "%s%s", i ? "、" : "", LIB.books[i].name);
     snprintf(rc->object, sizeof rc->object, "shelf:books");
@@ -215,7 +216,7 @@ static void act_continue(ink_call_t *c) {
         if (!strcmp(LIB.books[i].name, book)) {
             ink_ui_push(&ink_app_book, (void *)(intptr_t)i);
             snprintf(rc->object, sizeof rc->object, "book:%s", LIB.books[i].name);
-            snprintf(rc->say, sizeof rc->say, "接着读《%s》", LIB.books[i].name);
+            snprintf(rc->say, sizeof rc->say, TR("接着读《%s》"), LIB.books[i].name);
             return;
         }
     rc->status = INK_RC_FAILED;
@@ -231,7 +232,7 @@ static void act_open(ink_call_t *c) {
         if (strstr(LIB.books[i].name, title) || strstr(title, LIB.books[i].name)) {
             ink_ui_push(&ink_app_book, (void *)(intptr_t)i);
             snprintf(rc->object, sizeof rc->object, "book:%s", LIB.books[i].name);
-            snprintf(rc->say, sizeof rc->say, "打开《%s》", LIB.books[i].name);
+            snprintf(rc->say, sizeof rc->say, TR("打开《%s》"), LIB.books[i].name);
             return;
         }
     rc->status = INK_RC_FAILED;
@@ -377,7 +378,7 @@ static bool not_open(ink_receipt_t *rc) {
 static void page_receipt(ink_receipt_t *rc) {
     snprintf(rc->object, sizeof rc->object, "book:%s#page=%d", LIB.books[LIB.open].name, RD.page + 1);
     rc->revision = (uint32_t)RD.page + 1;
-    snprintf(rc->say, sizeof rc->say, "现在是第 %d 页", RD.page + 1);
+    snprintf(rc->say, sizeof rc->say, TR("现在是第 %d 页"), RD.page + 1);
 }
 
 static void act_next(ink_call_t *c) {
@@ -627,8 +628,8 @@ static int reader_card(int index, ink_card_t *out) {
     int page, percent;
     if (index != 0 || !last_book(book, sizeof book, &page, &percent)) return 0;
     snprintf(out->id, sizeof out->id, "reading");
-    snprintf(out->title, sizeof out->title, "继续读");
-    snprintf(out->text, sizeof out->text, "《%.60s》第 %d 页 · %d%%", book, page, percent);
+    snprintf(out->title, sizeof out->title, TR("继续读"));
+    snprintf(out->text, sizeof out->text, TR("《%.60s》第 %d 页 · %d%%"), book, page, percent);
     snprintf(out->action, sizeof out->action, "reader.continue");
     snprintf(out->member, sizeof out->member, "%s", ink_member_current()->id);
     out->value = page;
@@ -637,7 +638,7 @@ static int reader_card(int index, ink_card_t *out) {
     return 1;
 }
 
-const ink_app_def_t ink_appdef_reader = {.id = "reader", .title = "阅读", .entry = &ink_app_reader, .system_app = true, .child_ok = true, .card = reader_card};
+const ink_app_def_t ink_appdef_reader = {.id = "reader", .title = TR_NOOP("阅读"), .entry = &ink_app_reader, .system_app = true, .child_ok = true, .card = reader_card};
 
 static void card_changed(void *ctx, int h, const char *id) {
     (void)ctx; (void)h; (void)id; ink_app_card_changed("reader");

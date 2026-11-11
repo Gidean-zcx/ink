@@ -29,7 +29,7 @@ static struct {
     ink_ui_action_spec_t actions[18];
 } C INK_PSRAM_BSS;
 static const char *const DAYS[] = {TR_NOOP("周日"), TR_NOOP("周一"), TR_NOOP("周二"), TR_NOOP("周三"), TR_NOOP("周四"), TR_NOOP("周五"), TR_NOOP("周六")};
-static ink_ui_page_spec_t EDIT = {.id = "ClockAlarm", .title = "闹钟", .object = {"clock:draft", 1},
+static ink_ui_page_spec_t EDIT = {.id = "ClockAlarm", .title = TR_NOOP("闹钟"), .object = {"clock:draft", 1},
     .fields = C.fields, .field_count = 5, .actions = C.actions, .action_count = 18};
 
 static void repeat_text(const ink_alarm_t *a, char *out, size_t cap) {
@@ -145,8 +145,8 @@ static void create_detail(lv_obj_t *screen, void *arg) {
     ink_ui_line(screen, C.time, INK_FONT_HEADING, INK_WEIGHT_REGULAR, INK_MARGIN + INK_CONTROL, y, w - 2 * INK_CONTROL);
     if (C.draft.id) {
         char args[48]; snprintf(args, sizeof args, "{\"id\":%u}", (unsigned)C.draft.id);
-        action(16, "删除闹钟", "alarm.cancel", args, true);
-        action(17, C.draft.enabled ? "关闭" : "开启", "clock.draft", C.draft.enabled ? "{\"enabled\":false}" : "{\"enabled\":true}", true);
+        action(16, TR_NOOP("删除闹钟"), "alarm.cancel", args, true);
+        action(17, C.draft.enabled ? TR_NOOP("关闭") : TR_NOOP("开启"), "clock.draft", C.draft.enabled ? "{\"enabled\":false}" : "{\"enabled\":true}", true);
     }
     const char *labels[] = {TR_NOOP("时-"), TR_NOOP("时＋"), TR_NOOP("分-"), TR_NOOP("分＋")};
     for (int i = 0; i < 4; i++) {
@@ -156,7 +156,7 @@ static void create_detail(lv_obj_t *screen, void *arg) {
         button(screen, i, INK_MARGIN + i * (w + INK_GAP_M) / 4, y + INK_CONTROL, (w - 3 * INK_GAP_M) / 4, false);
     }
     y += 2 * INK_CONTROL + INK_GAP;
-    action(4, "输入名称", "clock.focus", NULL, true);
+    action(4, TR_NOOP("输入名称"), "clock.focus", NULL, true);
     ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .enter = INK_ENTER_DONE, .initial = C.draft.title, .hint = TR("闹钟名称"), .max = sizeof C.draft.title - 1};
     C.name = ink_textfield_create(screen, &cfg, NULL, NULL, false);
     lv_obj_set_pos(C.name, ink_ui_px(INK_MARGIN), ink_ui_px(y)); lv_obj_set_width(C.name, ink_ui_px(w));
@@ -177,7 +177,7 @@ static void create_detail(lv_obj_t *screen, void *arg) {
         button(screen, 16, INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_CONTROL, (w - INK_GAP) / 2, false);
     }
     ink_ui_notice(screen, C.error, y + 2 * (INK_CONTROL + INK_GAP_M));
-    action(15, "保存闹钟", "clock.save", NULL, true);
+    action(15, TR_NOOP("保存闹钟"), "clock.save", NULL, true);
     button(screen, 15, INK_MARGIN + (C.draft.id ? (w + INK_GAP) / 2 : 0), INK_CANVAS_H - INK_MARGIN - INK_CONTROL, C.draft.id ? (w - INK_GAP) / 2 : w, true);
 }
 static void destroy_list(void) { C.list = NULL; }
@@ -212,7 +212,7 @@ static ink_exec_job_t timer_redraw;
 static char timer_text[48] INK_PSRAM_BSS, timer_status[32] INK_PSRAM_BSS;
 static ink_ui_field_spec_t timer_fields[3] INK_PSRAM_BSS;
 static ink_ui_action_spec_t timer_actions[8] INK_PSRAM_BSS;
-static ink_ui_page_spec_t timer_page = {.id = "ClockTimer", .title = "计时", .object = {"clock:timer", 1}, .fields = timer_fields, .field_count = 3, .actions = timer_actions, .action_count = 8};
+static ink_ui_page_spec_t timer_page = {.id = "ClockTimer", .title = TR_NOOP("计时"), .object = {"clock:timer", 1}, .fields = timer_fields, .field_count = 3, .actions = timer_actions, .action_count = 8};
 static countdown_t *my_timer(void) { /* UI task */
     for (int i = 0; i < INK_MEMBERS_MAX; i++) if (!strcmp(timers[i].owner, ink_member_current()->id)) return &timers[i];
     for (int i = 0; i < INK_MEMBERS_MAX; i++) if (!timers[i].owner[0]) {
@@ -520,4 +520,4 @@ static void changed(void *ctx, int h, const char *id) {
 int ink_clock_init(void) {
     return ink_db_register(&WORLD) || ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_cap_subscribe("time.changed", extra_time_changed, NULL, INK_EXEC_UI) || ink_state_watch("time.", extra_changed, NULL, INK_EXEC_UI) || ink_state_watch("alarm.revision", changed, NULL, INK_EXEC_UI) ? -1 : 0;
 }
-const ink_app_def_t ink_appdef_clock = {.id = "clock", .title = "时钟", .icon = INK_UI_ICON(clock), .entry = &CLOCK, .system_app = true, .child_ok = true};
+const ink_app_def_t ink_appdef_clock = {.id = "clock", .title = TR_NOOP("时钟"), .icon = INK_UI_ICON(clock), .entry = &CLOCK, .system_app = true, .child_ok = true};

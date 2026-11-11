@@ -22,7 +22,8 @@ static char issue[160];
 static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
 static bool at(const char *name) { on_ui(read_screen); return !strcmp(g_top, name); }
 static void walk(lv_obj_t *o) {
-    if (!lv_obj_is_visible(o) || lv_obj_has_flag(o, LV_OBJ_FLAG_HIDDEN)) return;
+    /* Sliders paint the same title twice, clipping the white copy to the filled bar. */
+    if (!lv_obj_is_visible(o) || lv_obj_has_flag(o, LV_OBJ_FLAG_HIDDEN) || lv_obj_has_flag(o, LV_OBJ_FLAG_USER_1)) return;
     if (lv_obj_check_type(o, &lv_label_class) && lv_label_get_text(o)[0]) {
         const char *t = lv_label_get_text(o);
         size_t n = strlen(labels); snprintf(labels + n, sizeof labels - n, "%s|", t);
@@ -141,6 +142,34 @@ static void run(void *arg) {
     test_start_home();
     CHECK(BY_HAND("settings.set", "{\"id\":\"power.lock_after_s\",\"value\":600}") && g_rc.status == INK_RC_DONE, "keep previews awake");
     CHECK(BY_HAND("settings.set", "{\"id\":\"system.language\",\"value\":1}") && g_rc.status == INK_RC_DONE, "English previews");
+    open_page("shell.family", "SetMembers"); capture("SetMembers-en", "My PIN");
+    CHECK(BY_HAND("family.edit", NULL) && g_rc.status == INK_RC_DONE, "new family member form");
+    capture("FamilyAdd-en", "Save Name");
+    CHECK(BY_HAND("family.role", NULL) && g_rc.status == INK_RC_DONE, "new member role toggle");
+    capture("FamilyAdult-en", "Adult");
+    open_page("shell.kid_settings", "SetKid"); capture("SetKid-en", "Daily Time Limit");
+    open_page("shell.wallpaper", "Wallpaper"); capture("Wallpaper-en", "Lock Screen Style");
+    CHECK(BY_HAND("family.next", NULL) && g_rc.status == INK_RC_DONE, "next wallpaper settings");
+    capture("Wallpaper-next-en", "Lift to Wake");
+    open_page("shell.records", "Records"); capture("Records-en", "Delete All");
+    open_page("shell.ai_memory", "AiMemory"); capture("AiMemory-en", "AI memories unavailable");
+    open_page("shell.runtime_records", "RuntimeRecords"); capture("RuntimeRecords-en", "Runtime Records");
+    CHECK(BY_HAND("system.home", NULL), "return home before control preview");
+    CHECK(BY_HAND("shell.control", NULL) && g_rc.status == INK_RC_DONE, "open control centre");
+    capture("Control-en", "Volume");
+    CHECK(BY_HAND("shell.more", NULL) && g_rc.status == INK_RC_DONE, "expand control centre");
+    capture("Control-more-en", "Airplane");
+    CHECK(BY_HAND("shell.close", NULL), "close control centre");
+    const char *const nav_caps[] = {"shell.display", "shell.sound", "shell.network"};
+    const char *const nav_pages[] = {"SetDisplay", "SetSound", "SetNetwork"};
+    for (unsigned i = 0; i < sizeof nav_caps / sizeof *nav_caps; i++) {
+        open_page(nav_caps[i], nav_pages[i]);
+        for (int page = 1; page <= 4; page++) {
+            char shot[64]; snprintf(shot, sizeof shot, "%s-en-%d", nav_pages[i], page);
+            capture(shot, NULL);
+            CHECK(BY_HAND("shell.page_next", NULL) && g_rc.status == INK_RC_DONE, "next navigation settings page");
+        }
+    }
     open_page("shell.tasks", "Tasks"); capture("Tasks-en", "Activity");
     open_page("shell.ai_home", "AiHome"); capture("AiHome-en", "Conversations");
     CHECK(BY_HAND("shell.ai_ask", NULL) && WAIT_FOR(at("Keyboard"), 5000), "typed question has native keyboard"); capture("AiAsk-en", "Send");

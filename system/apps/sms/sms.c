@@ -231,7 +231,7 @@ static const ink_activity_t LONG = {.name = "ImeLong", .app = "message", .create
 static int save_state(void *buf, size_t cap) { if (cap < sizeof S.draft_ref) return 0; memcpy(buf, &S.draft_ref, sizeof S.draft_ref); return sizeof S.draft_ref; }
 static void restore_state(const void *buf, size_t len) { if (len == sizeof S.draft_ref) memcpy(&S.draft_ref, buf, len); }
 static const ink_app_ops_t OPS = {.on_start = member_ready, .save_state = save_state, .restore_state = restore_state};
-static const ink_app_def_t APP = {.id = "message", .title = "短信", .icon = INK_UI_ICON(message), .entry = &LIST, .system_app = true, .child_ok = true, .ops = &OPS};
+static const ink_app_def_t APP = {.id = "message", .title = TR_NOOP("短信"), .icon = INK_UI_ICON(message), .entry = &LIST, .system_app = true, .child_ok = true, .ops = &OPS};
 static const ink_cap_t CAPS[] = {
     {.id = "sms.thread", .app = "message", .title = "打开短信会话", .input = "{\"type\":\"object\",\"properties\":{\"peer\":{\"type\":\"string\",\"maxLength\":20}},\"required\":[\"peer\"]}", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},
     {.id = "sms.compose", .app = "message", .title = "写短信或回复当前会话", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = navigate},

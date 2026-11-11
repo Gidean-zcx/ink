@@ -73,7 +73,7 @@ static void parse_answer(void *arg) {
         const char *value = cJSON_GetStringValue(cJSON_GetObjectItem(f, "value"));
         if (!id || !value) continue;
         if (!strcmp(id, "answer")) snprintf(visible, sizeof visible, "%s", value);
-        if (!strcmp(id, "page")) valid_panel = valid_panel && sscanf(value, "页码=%d/%d", &page, &pages) == 2;
+        if (!strcmp(id, "page")) valid_panel = valid_panel && strchr(value, '=') && sscanf(strchr(value, '=') + 1, "%d/%d", &page, &pages) == 2;
     }
     cJSON_Delete(root);
 }
@@ -134,6 +134,10 @@ static void run(void *arg) {
     CHECK(strlen(expect_over) > INK_AI_ANSWER_MAX, "the other answer is over the limit");
     delay_ms(1800); quiet();
     test_start_home(); quiet();
+    if (getenv("INK_I18N_ANSWER_EN")) {
+        CHECK(BY_HAND("settings.set", "{\"id\":\"system.language\",\"value\":1}") && g_rc.status == INK_RC_DONE, "English long answer");
+        quiet();
+    }
 
     /* 1. ~6 KB streamed in 13 parts: while it arrives the first page only grows into its final text and stays shown */
     QUESTION = "合成长回答问题"; on_ui(ask);
@@ -160,7 +164,7 @@ static void run(void *arg) {
     int read = read_all_pages();
     CHECK(read == long_pages && page == pages, "reached the last page (%d of %d)", read, long_pages);
     CHECK(!strcmp(all, expect_long), "pages joined equal the answer word for word (%zu of %zu bytes)", strlen(all), strlen(expect_long));
-    CHECK(!strstr(all, "回答太长"), "a 6 KB answer is not cut");
+    CHECK(!strstr(all, TR(INK_AI_ANSWER_CUT) + 1), "a 6 KB answer is not cut");
     capture("AiLong6kLast");
     on_ui(lay_out_again); on_ui(read_answer);
     CHECK(pages == long_pages, "streamed pages break where pages laid out at once do (%d, %d)", pages, long_pages);
@@ -172,16 +176,17 @@ static void run(void *arg) {
     CHECK(WAIT_FOR(sim_metric_value("ai.answers") >= 2, 30000), "over-long answer finished");
     quiet(); on_ui(read_answer);
     read = read_all_pages();
-    size_t got = strlen(all), cut = strlen(INK_AI_ANSWER_CUT);
-    CHECK(read == pages && got > cut && !strcmp(all + got - cut, INK_AI_ANSWER_CUT), "the last page ends with the note (%d pages)", pages);
+    const char *cut_text = TR(INK_AI_ANSWER_CUT);
+    size_t got = strlen(all), cut = strlen(cut_text);
+    CHECK(read == pages && got > cut && !strcmp(all + got - cut, cut_text), "the last page ends with the note (%d pages)", pages);
     size_t kept = got > cut ? got - cut : 0;
     CHECK(kept < INK_AI_ANSWER_MAX && kept + cut + 4 >= INK_AI_ANSWER_MAX - 1, "kept up to the limit (%zu bytes)", kept);
     CHECK(!memcmp(all, expect_over, kept) && ((unsigned char)expect_over[kept] & 0xC0) != 0x80, "kept part is the answer's beginning, cut at a whole character");
     CHECK(sim_metric_value("ai.answer_cut") == 1, "the cut is counted once");
     capture("AiLongCut");
-    CHECK(strstr(snapshot, "回答太长，只显示了前面部分"), "the AI snapshot shows the note");
+    CHECK(strstr(snapshot, cut_text + 1), "the AI snapshot shows the note");
     on_ui(only_lines); on_ui(read_answer);
-    CHECK(strstr(visible, "回答无法完整显示"), "32 KB of line breaks: the panel says it cannot show it in full (%.60s, %d pages)", visible, pages);
+    CHECK(strstr(visible, TR("回答无法完整显示，请重新打开面板。")), "32 KB of line breaks: the panel says it cannot show it in full (%.60s, %d pages)", visible, pages);
 
     /* 3. voice: the speech of the 6 KB answer (more frames than the jitter buffer holds, sent in real time as the
      * hub does) plays to the end at normal speed, well beyond the initial 45 s wait. */
@@ -199,6 +204,7 @@ static void run(void *arg) {
     CHECK(pages == long_pages, "the spoken answer shows on the same pages (%d)", pages);
     read = read_all_pages();
     CHECK(read == long_pages && !strcmp(all, expect_long), "spoken answer's pages equal its text");
+    CHECK(!getenv("INK_I18N_ANSWER_EN") || sim_metric_value("i18n.missing") == 0, "English long answers have no missing translations");
     ink_probe_count("test.finished");
 }
 void ink_main(void) {

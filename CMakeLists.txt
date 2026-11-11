@@ -399,6 +399,8 @@ set(INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/system/ui/shell/boot_flow.c ${CMAKE_SOU
   ${CMAKE_SOURCE_DIR}/system/apps/weather/weather.c)
 file(GLOB_RECURSE INK_I18N_SERVICES CONFIGURE_DEPENDS system/services/*.c system/policy/*.c)
 list(APPEND INK_I18N_SOURCES ${INK_I18N_SERVICES})
+list(APPEND INK_I18N_SOURCES ${CMAKE_SOURCE_DIR}/apps/home/home.c ${CMAKE_SOURCE_DIR}/apps/reader/reader.c
+  ${CMAKE_SOURCE_DIR}/system/include/ink/sys/ai.h ${CMAKE_SOURCE_DIR}/system/ui/shell/member_pages.h)
 list(APPEND INK_I18N_SOURCES
   ${CMAKE_SOURCE_DIR}/system/ui/shell/activity_card.c
   ${CMAKE_SOURCE_DIR}/system/ui/shell/ai_chat.c
@@ -766,6 +768,7 @@ add_test(NAME i18n-shell-remaining COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOUR
   --build ${CMAKE_BINARY_DIR} --binary $<TARGET_FILE:sim-i18n-shell-remaining> --out ${CMAKE_BINARY_DIR}/test-out/i18n-shell-remaining)
 set_tests_properties(i18n-shell-remaining PROPERTIES TIMEOUT 240)
 add_test(NAME i18n-tables COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/i18n_tables.py)
+add_test(NAME i18n-literals COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/i18n_literals.py)
 add_test(NAME boot-flow-reboot COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/boot_flow_reboot.py --build ${CMAKE_BINARY_DIR})
 set_tests_properties(boot-flow-reboot PROPERTIES TIMEOUT 200)
 target_link_libraries(sim-ui-cards PRIVATE ink_apps ink_system)
@@ -1496,6 +1499,11 @@ add_test(NAME ai-answer-long COMMAND sim-ai-answer-long --profile ${CMAKE_SOURCE
   --script ${CMAKE_SOURCE_DIR}/tests/ai_answer_long/ai_answer_long.script --hub ${CMAKE_SOURCE_DIR}/tests/ai_answer_long/hub.json
   --budget ${CMAKE_SOURCE_DIR}/tests/ai_answer_long/budget.json
   --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT} --out ${CMAKE_BINARY_DIR}/test-out/ai-answer-long --quiet --no-random-outages)
+add_test(NAME ai-answer-long-en COMMAND ${CMAKE_COMMAND} -E env INK_I18N_ANSWER_EN=1 $<TARGET_FILE:sim-ai-answer-long>
+  --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+  --script ${CMAKE_SOURCE_DIR}/tests/ai_answer_long/ai_answer_long.script --hub ${CMAKE_SOURCE_DIR}/tests/ai_answer_long/hub.json
+  --budget ${CMAKE_SOURCE_DIR}/tests/ai_answer_long/budget.json
+  --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT} --out ${CMAKE_BINARY_DIR}/test-out/ai-answer-long-en --quiet --no-random-outages)
 ink_sim_executable(sim-ai-speech-long tests/ai_speech_long/ai_speech_long.c)
 target_link_libraries(sim-ai-speech-long PRIVATE ink_apps ink_system)
 add_test(NAME ai-speech-long COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/ai_speech_long/run.py --build ${CMAKE_BINARY_DIR})

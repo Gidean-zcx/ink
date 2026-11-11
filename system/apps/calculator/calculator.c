@@ -308,7 +308,7 @@ static int snapshot(char *out, size_t cap) {
     return ink_ui_semantics_snapshot(&page, out, cap);
 }
 static const ink_activity_t PAGE = {.name = "Calculator", .app = "calculator", .create = create, .destroy = destroy, .snapshot = snapshot};
-static const ink_app_def_t APP = {.id = "calculator", .title = "计算器", .icon = INK_UI_ICON(calc), .entry = &PAGE, .system_app = true, .child_ok = true};
+static const ink_app_def_t APP = {.id = "calculator", .title = TR_NOOP("计算器"), .icon = INK_UI_ICON(calc), .entry = &PAGE, .system_app = true, .child_ok = true};
 static const ink_cap_t CAPS[] = {
     {.id = "calc.eval", .app = "calculator", .title = "给一个算式求值（加减乘除、百分号，十进制 8 位小数）",
      .input = "{\"type\":\"object\",\"properties\":{\"expr\":{\"type\":\"string\",\"minLength\":1,\"maxLength\":64}},\"required\":[\"expr\"]}",
