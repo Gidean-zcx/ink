@@ -1,0 +1,107 @@
+{
+  "retrieved_on": "2026-11-11",
+  "requests": [
+    {
+      "url": "https://burner.cloudzao.com/zh/registry",
+      "bytes": 47262,
+      "sha256": "920ccc616518c16333dba2477dbcef04c17639ffb7e50082b35e028d0f82faef"
+    },
+    {
+      "url": "https://burner.cloudzao.com/_next/static/chunks/17s3nznutp6_6.js",
+      "bytes": 46882,
+      "sha256": "3f0150e405597bb92b5ce3e185acef37a4e066ebc95182ec62aaa9328f5333f9"
+    },
+    {
+      "url": "https://burner.cloudzao.com/_next/static/chunks/4128lpwl_vb6d.js",
+      "bytes": 56007,
+      "sha256": "0121d1ad4be7cac0f87cbe6a47c67a9ac58e6586f310b80e02ff984ba5de5714"
+    },
+    {
+      "url": "https://burner.cloudzao.com/zh/ota-docs",
+      "bytes": 72053,
+      "sha256": "3f990064e580c666ffbf85f526d6f71ce1ce1f4c69ea6036f3b05a00fbd2f8b2"
+    },
+    {
+      "url": "https://burner.cloudzao.com/zh/book-tools",
+      "bytes": 38005,
+      "sha256": "132eec06533087a8b830b4901567d0a7b14fd2079356ca5371e062df38847397"
+    },
+    {
+      "url": "https://epub2ebook.metalio.world/",
+      "bytes": 22526,
+      "sha256": "59075b640b8869258436dc63bdfc89cd87d8a7f768d4416720deb8879596c28c"
+    },
+    {
+      "url": "https://burner.cloudzao.com/zh/serial-log",
+      "bytes": 28344,
+      "sha256": "6d6a25843ecae8783f6b06295eebbfb654ccf426e94612371de1f9c3cc9d6d78"
+    },
+    {
+      "url": "https://burner.cloudzao.com/api/serial-log",
+      "bytes": 44156,
+      "sha256": "a7805f57ea3d45a643f5ee2b9f12024300ed4053e4012d16071873b2f8325853"
+    },
+    {
+      "url": "https://yun.cloudzao.com/",
+      "bytes": 709,
+      "sha256": "d89ee9d7ac0719344d068d70bdac556e4818ee715b050b7ea3595984b8e005b4"
+    },
+    {
+      "url": "https://yun.cloudzao.com/assets/index-DKoaPIy-.js",
+      "bytes": 240634,
+      "sha256": "7b92483fd33eb5ac07bad909a3d9c93d0476c82bf787a4d24a778774b659607f"
+    }
+  ],
+  "blocked": [
+    {
+      "url": "https://admin.metalio.world/xiaozhi/api/firmware-boards",
+      "http": 200,
+      "code": 401,
+      "result": "Authentication required; stopped without login."
+    },
+    {
+      "url": "https://mogo.mantake.shop",
+      "http": 403
+    },
+    {
+      "url": "https://pagerest.gofree.kdns.fr",
+      "http": 403
+    },
+    {
+      "url": "https://www.crosslink-reader.top",
+      "result": "DNS resolution failed."
+    }
+  ],
+  "additional_checks": [
+    {
+      "firmware": "F02",
+      "firmware_id": "92c82de9caa4249c4270e76bb10290c8",
+      "parameter": "firmwareId",
+      "http": 200,
+      "code": 0,
+      "returned_total": 52,
+      "returned_ids_equal_global_snapshot": true,
+      "result": "Parameter did not narrow the public result."
+    },
+    {
+      "firmware": "F44",
+      "firmware_id": "05e5348f7de0541d608b2304a4aef839",
+      "parameter": "firmwareId",
+      "http": 200,
+      "code": 0,
+      "returned_total": 52,
+      "returned_ids_equal_global_snapshot": true,
+      "result": "Parameter did not narrow the public result."
+    },
+    {
+      "firmware": "F52",
+      "firmware_id": "25dc29688ee3b504bbab9df18e77eea1",
+      "parameter": "firmwareId",
+      "http": 200,
+      "code": 0,
+      "returned_total": 52,
+      "returned_ids_equal_global_snapshot": true,
+      "result": "Parameter did not narrow the public result."
+    }
+  ]
+}

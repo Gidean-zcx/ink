@@ -1,0 +1,584 @@
+{
+  "retrieved_on": "2026-11-11",
+  "method": "Public GitHub trees and raw text; downloaded text matched each Git blob; no firmware artifacts requested.",
+  "sources": [
+    {
+      "id": "S01",
+      "repo": "CloudZao/Metalio-E-INK4-Plus",
+      "commit": "874538eb54f7f7eb593cd40cd1ba6dc8497226e7",
+      "tree_truncated": false,
+      "checked_files": [
+        {
+          "path": "LICENSE",
+          "git_blob_sha1": "e90b55454056bdf5b7c7a48565ef7bf2893bd1e1",
+          "sha256": "0a5a839033bfe18fe75d32b50d9d028912cf876f69ef59c2791aeb2971335d05",
+          "bytes": 1140
+        },
+        {
+          "path": "README.md",
+          "git_blob_sha1": "892ab9a4bdfcc8193a15d18602f1d356dae65d39",
+          "sha256": "297616d88c486d1bfb34487dd08af1084924454c5d407d389348266be83e0d60",
+          "bytes": 52181
+        },
+        {
+          "path": "README_zn.md",
+          "git_blob_sha1": "4e85e68bf70bcbf4d052e04c758c9c9ff4da1333",
+          "sha256": "055adb375720642b1217df225a5d8b14d5aed0e08b301fb9e440ec3e233bae99",
+          "bytes": 51402
+        },
+        {
+          "path": "main/reader/epub_document.cc",
+          "git_blob_sha1": "38a0f7a6696e0b406de5d56ff794af96f6e64371",
+          "sha256": "1acb5a463f002cead84b7921af5a63e9623e5136ebc3320c0bceae8240353ef9",
+          "bytes": 13843
+        },
+        {
+          "path": "main/reader/txt_chapter.cc",
+          "git_blob_sha1": "b1cb686b928299b9a79549f43b43f8113600a699",
+          "sha256": "23d698072f75d38a43bc6148d1a2b8cec64a06ccbb8e75a6c0c78805dd721a23",
+          "bytes": 13597
+        },
+        {
+          "path": "main/reader/txt_chapter.h",
+          "git_blob_sha1": "b74da8a953764a6baba2b75ce4698f95480ff98d",
+          "sha256": "fa38244c6a835c783528bed53052c0ac7bb3a49a34ecfe2890b47c9aee36920a",
+          "bytes": 1673
+        },
+        {
+          "path": "tools/ebook/README.md",
+          "git_blob_sha1": "83c48d9004dde7ee9c6fa1ce6dcd2ff4bb9f100e",
+          "sha256": "fea969506ffeb5111e637e6c6d7ed00e80e197160bb617d50a56a94fc408fa27",
+          "bytes": 7532
+        },
+        {
+          "path": "tools/ebook/SPEC.md",
+          "git_blob_sha1": "09bf3f5114a06e5f1da55898546e9c05013944c8",
+          "sha256": "e053add51b954c3a976492f19e2c9df96cfeeff32787c50440181c1d2015b2bb",
+          "bytes": 12990
+        },
+        {
+          "path": "tools/ebook/epdbook/chapter_detect.py",
+          "git_blob_sha1": "9cd46a38173fb3143e99bd7ebea7d7ba208ec672",
+          "sha256": "dabd64a9caab2b8225bfa615502e0bf474868a4b52dddfd6540d14a9c378bf9e",
+          "bytes": 9602
+        }
+      ]
+    },
+    {
+      "id": "S02",
+      "repo": "CloudZao/Metalio-E-INK4",
+      "commit": "d12f481f4a42420634bb56a928f3959a977367d4",
+      "tree_truncated": false,
+      "checked_files": [
+        {
+          "path": "LICENSE",
+          "git_blob_sha1": "f6b3ad5d6761e533ef16d0018b503438467b2cb4",
+          "sha256": "5e3ce24278baba736538433ddbfd2e430e9148b39ab918cbaf487aa33f1ddc11",
+          "bytes": 1065
+        },
+        {
+          "path": "README.md",
+          "git_blob_sha1": "80bcc952bd3a7b56d0d701c2fe64c304f695b10c",
+          "sha256": "830ca0c899a68608374d40afdddc30f3264ed2dda9060ad08c2bb672735266eb",
+          "bytes": 27279
+        },
+        {
+          "path": "README_zn.md",
+          "git_blob_sha1": "46654ba4e00b959a13472ea1d0c03cf437181afc",
+          "sha256": "5e0afb8ea99e5d1e98b3247e5ed0c85ad13e62a29372f3f5ba52986388c8ec6d",
+          "bytes": 30252
+        }
+      ]
+    },
+    {
+      "id": "S03",
+      "repo": "CloudZao/MetalioClaw4",
+      "commit": "ca3aa3fa027ff7dad2adf0c2d03c4f24aa838950",
+      "tree_truncated": false,
+      "checked_files": [
+        {
+          "path": "LICENSE",
+          "git_blob_sha1": "e90b55454056bdf5b7c7a48565ef7bf2893bd1e1",
+          "sha256": "0a5a839033bfe18fe75d32b50d9d028912cf876f69ef59c2791aeb2971335d05",
+          "bytes": 1140
+        },
+        {
+          "path": "README.md",
+          "git_blob_sha1": "eddacf5ac2c9217e8f5370bdba2afc128e0e5a3c",
+          "sha256": "28749a972565ac89eda9dadc23397d8d6b993ae2c99630980ad8010bef5aa45d",
+          "bytes": 58517
+        },
+        {
+          "path": "README_zn.md",
+          "git_blob_sha1": "cba94b4712adbef2b486c71b08df645ef4a1b1f7",
+          "sha256": "12a2631e2d92039ffd6c76b3c43aa3ae82fbf6be602bd60b6409ef9294279139",
+          "bytes": 53175
+        }
+      ]
+    },
+    {
+      "id": "S04",
+      "repo": "wegooo-cell/read-pico-reader",
+      "commit": "ea371a7d5998880265aea09f9d44b26b619a8289",
+      "tree_truncated": false,
+      "checked_files": [
+        {
+          "path": "LICENSE",
+          "git_blob_sha1": "d4fdf695057173ef15a3c93c892522eaa95e9c70",
+          "sha256": "b1a477173eada381b15f2cd522bba1a9ab546759f6534e8c9943f0cb933aeb30",
+          "bytes": 3388
+        },
+        {
+          "path": "README.ja-JP.md",
+          "git_blob_sha1": "786021b41f4d01323b9bd5387fdbc515971489b3",
+          "sha256": "a18296b2dc8953cde790fa4325e6e90f2b292686d812d919fe350933a4532d74",
+          "bytes": 26326
+        },
+        {
+          "path": "README.md",
+          "git_blob_sha1": "3488e4c336a7f6fa393a86952d47e1972f8191af",
+          "sha256": "82374640fc9bce110304a265c5f460f1487d623b654149e08561ec06839cbeb9",
+          "bytes": 29661
+        },
+        {
+          "path": "README.zh-CN.md",
+          "git_blob_sha1": "7cfe3293715789d7eb513ab18b8511de7854bc7e",
+          "sha256": "fa56139408b95afd36a4912433c0ddacf3f0e39379f23d02ef1133bf9fa5a987",
+          "bytes": 32938
+        }
+      ]
+    },
+    {
+      "id": "S05",
+      "repo": "wegooo-cell/Metalio-S31-kiikoread",
+      "commit": "83942eb45d13064a47aca7ff04c2faf8fd51f98a",
+      "tree_truncated": false,
+      "checked_files": [
+        {
+          "path": "LICENSE",
+          "git_blob_sha1": "d4fdf695057173ef15a3c93c892522eaa95e9c70",
+          "sha256": "b1a477173eada381b15f2cd522bba1a9ab546759f6534e8c9943f0cb933aeb30",
+          "bytes": 3388
+        },
+        {
+          "path": "README.ja-JP.md",
+          "git_blob_sha1": "8579568427994703bed6fc85342cbdd822fa267a",
+          "sha256": "8f4a3381fde8ddee903707242356801fc5b99f4cce8922c02955557da1c4fd57",
+          "bytes": 3011
+        },
+        {
+          "path": "README.md",
+          "git_blob_sha1": "5c29958e5d005086be49ccdbd45b5be0375526f6",
+          "sha256": "6d53fedaf469486c39d8ea22e831d1dfab57bbf5667f45abf9de96dc37d2528e",
+          "bytes": 6208
+        },
+        {
+          "path": "README.zh-CN.md",
+          "git_blob_sha1": "3c35ac6359a3d3a304432a67b15e563fe90cb245",
+          "sha256": "4dba0ccc256e14eb47d13accbfcc8c502611a6843e885f3b0cb22cc2c21c9e0c",
+          "bytes": 5480
+        },
+        {
+          "path": "THIRD_PARTY_NOTICES.md",
+          "git_blob_sha1": "4e4f2bb0ccccf121b8906632fdbe2a679086c643",
+          "sha256": "39f55800ac80ece4092cf59f908466eaf201253ada0534c41be6630c5f1ec589",
+          "bytes": 7026
+        },
+        {
+          "path": "licenses/Apache-2.0.txt",
+          "git_blob_sha1": "2ea28006502a74ffb0b08f051e95f73a9fb87c2e",
+          "sha256": "c2ede378097fb1fcdcd128c47880c918663f475eba53e1e2dc59d95b537c8809",
+          "bytes": 11340
+        },
+        {
+          "path": "licenses/kiikoread-Personal-Study-1.0.txt",
+          "git_blob_sha1": "e6c5f99cf6e5a3364d5c63843dbd1fcd0739c45b",
+          "sha256": "fd3c1789d4c0d4d4fd21d485666a2a7058bad0c74fd3ea875b346dcc444f8e52",
+          "bytes": 7413
+        },
+        {
+          "path": "main/book/book_txt.c",
+          "git_blob_sha1": "651f45b37b91584bd5ae3728b1ffb97d282b6fd8",
+          "sha256": "c64a7d1126f5764e9b1035ec93aa8b985fa1dde8ec7af216abc616cf1a51ccb2",
+          "bytes": 39151
+        }
+      ]
+    },
+    {
+      "id": "S06",
+      "repo": "AlayaElla/MetalioClaw4-AgentUI",
+      "commit": "172ec530ff65e11521585fe3b8611daa20a78aa4",
+      "tree_truncated": false,
+      "checked_files": [
+        {
+          "path": "LICENSE",
+          "git_blob_sha1": "e90b55454056bdf5b7c7a48565ef7bf2893bd1e1",
+          "sha256": "0a5a839033bfe18fe75d32b50d9d028912cf876f69ef59c2791aeb2971335d05",
+          "bytes": 1140
+        },
+        {
+          "path": "README.md",
+          "git_blob_sha1": "4b3142ec48ded45261ec70b7dc3e0345aafac149",
+          "sha256": "2f27af14536376e3dd948b5c51df294f6708970f719124aa050f22fc49dfa89d",
+          "bytes": 2914
+        },
+        {
+          "path": "external_apps/README.md",
+          "git_blob_sha1": "4cbe5146f02fbfc23dc2f11f93f0b0df2c023933",
+          "sha256": "669b9db5dabb7c795d6453709ffdc70c04fc370cb94ec438184393f8b1470e61",
+          "bytes": 12344
+        },
+        {
+          "path": "external_apps/sdk/metalio_app_api.h",
+          "git_blob_sha1": "4c8c6a56030da6dc9fe25183eda6daf5cd2a09a5",
+          "sha256": "a0c1f6ea8877450d8af2123072117cd46c70947c96eafc14bc80826cebf7ec1a",
+          "bytes": 28958
+        },
+        {
+          "path": "main/display/agent_ui/apps/codex/codex_bridge_connection_state.h",
+          "git_blob_sha1": "ac7b0a49f75d5d581688f543a6f90b033a085a64",
+          "sha256": "a14f87e5f72a00167d5bf4df441aa7e59440262776fe40103282e517f602fa3d",
+          "bytes": 3385
+        },
+        {
+          "path": "main/display/agent_ui/apps/external_apps/external_app_runtime.cc",
+          "git_blob_sha1": "11e277fe082f4492083b296d95d6fd1e2a6b72c0",
+          "sha256": "6b719f76e549094fe770187483f331dab92442a14c62c8f108b4cb95d82498f2",
+          "bytes": 139763
+        }
+      ]
+    },
+    {
+      "id": "S07",
+      "repo": "Changkai9888/CloudZao-Projects",
+      "commit": "90150a24d1ed4ebde7389ddfd30e9e5e7b1235b8",
+      "tree_truncated": false,
+      "checked_files": [
+        {
+          "path": "README.md",
+          "git_blob_sha1": "dca33fdb61ed0b108003d3ba8edfd3707b257cb4",
+          "sha256": "99621f6a2757e78c6e7600f1edde09ee7e051a94f287f6ccc6cabcaf9a410656",
+          "bytes": 3879
+        },
+        {
+          "path": "plus-noto-font/LICENSE",
+          "git_blob_sha1": "96288a2094d9903c200efc8b6b15b480e1bc51e1",
+          "sha256": "736a56d72f5ac00f3c94e98426e65fff944ea4fa7b760d83234b7d38f0317e09",
+          "bytes": 1538
+        },
+        {
+          "path": "plus-noto-font/README.md",
+          "git_blob_sha1": "772dedd4f7d2db7f1ba666c3310fb26fb644e1ab",
+          "sha256": "abcf6c34b83825c6ce877971c59a148884b6a3f43a38d41f2dccb8641d48a157",
+          "bytes": 15051
+        },
+        {
+          "path": "plus-noto-font/components/plus_font/include/plus_font.h",
+          "git_blob_sha1": "1531a7cb7babb1af41ef9fd00c17a7b53d82e38b",
+          "sha256": "78c60ff0e3e2250cf85e42332ef9be78b461fc1e5df2777c1e5923f01b2d218a",
+          "bytes": 2795
+        },
+        {
+          "path": "plus-noto-font/components/plus_font/plus_font.cc",
+          "git_blob_sha1": "3ab7aea01ceca9e33c0cae3c37b37c58e1c713c3",
+          "sha256": "960566f6a5776e2a43562f53e13617fb1f3307a0d8df8cba4575b8e509bd9e80",
+          "bytes": 9326
+        },
+        {
+          "path": "plus-noto-font/licenses/FONT-NOTICE.txt",
+          "git_blob_sha1": "574082d52130cf95a994cc9c76891d034b809fb7",
+          "sha256": "e279d2234b2bdccce8f2a063728dd8d68d518aadb0d74935440db89e05dcb319",
+          "bytes": 1039
+        },
+        {
+          "path": "plus-noto-font/licenses/OFL.txt",
+          "git_blob_sha1": "1c9f43281b8f216c5461fe9ac729afbade7724e4",
+          "sha256": "1c05c68c34f9708415aada51f17e1b0092d2cea709bf4a94cd38114f9e73d7d9",
+          "bytes": 4388
+        },
+        {
+          "path": "protocols/固件口袋接入规范与开发指南.md",
+          "git_blob_sha1": "9fb506d0934aa1f286f7bcccd81b0aa9955e24e5",
+          "sha256": "c016a290fdd6b2a81f4fa128add00d41d61cab3e9a8aa08ac1720fcfcf6a4c0d",
+          "bytes": 45499
+        }
+      ]
+    },
+    {
+      "id": "S08",
+      "repo": "446599/Metalio-WhiteAI",
+      "commit": "153d0967e97e1cf308403252cfc2839d6d65fb08",
+      "tree_truncated": false,
+      "checked_files": [
+        {
+          "path": "README.md",
+          "git_blob_sha1": "77a2dcc2ad8560915f7598239e4e160dc0db2392",
+          "sha256": "340d967187c1296e7dd1e75e3577436a6028dafed05a74b3df36905d3ccac9f8",
+          "bytes": 7997
+        },
+        {
+          "path": "README_zh.md",
+          "git_blob_sha1": "0d690edae90546d812cdf0b08c54e6c37ce73725",
+          "sha256": "f6093146b25c0054042a7c45b26b66bd0c422318b968dda0b9953280633c11ee",
+          "bytes": 14695
+        },
+        {
+          "path": "docs/AI_SYSTEM_MCP.md",
+          "git_blob_sha1": "9a485f705a81549ef760e639fab943976812a64c",
+          "sha256": "f83c2957019ac48b24e76dfe70737064c41624c98b7faaa08802289f71e3869c",
+          "bytes": 6094
+        }
+      ]
+    },
+    {
+      "id": "S09",
+      "repo": "andjiang0083/retro-go-tab5",
+      "commit": "4e8f0f2f4e75b2102016c433b34ee1f23e17e471",
+      "tree_truncated": false,
+      "checked_files": [
+        {
+          "path": "LICENSE",
+          "git_blob_sha1": "ecbc0593737be657aef92e3adcf3bcbd6fdb812e",
+          "sha256": "f9c375a1be4a41f7b70301dd83c91cb89e41567478859b77eef375a52d782505",
+          "bytes": 18091
+        },
+        {
+          "path": "README.md",
+          "git_blob_sha1": "8015d8866d5ddfd8e4a3103153d8a076ac3e8111",
+          "sha256": "2b2e1ae6ae47ce4ac01008d21e27570a2574d92728ae251e889e467753c0531d",
+          "bytes": 19684
+        },
+        {
+          "path": "README_CN.md",
+          "git_blob_sha1": "c9eb36cfc082ea370be6f4f54543126331050daa",
+          "sha256": "c47f3457bac93b19d942bbecb671fd3099f72c3fa2a862d3e8bea02c1f8199ea",
+          "bytes": 18945
+        }
+      ]
+    },
+    {
+      "id": "S10",
+      "repo": "WMnologo/xingzhi-ai",
+      "commit": "55dd6dbb01b2bb50cf09ce4a7faed3a0f2481260",
+      "tree_truncated": false,
+      "checked_files": [
+        {
+          "path": "README.md",
+          "git_blob_sha1": "e5fb6b0b412735d83b5312bb18900735c4d2651a",
+          "sha256": "cc58d4563d7288be74abb946f1bcb97c544bf117ecd31e420a5557a8aa8d8335",
+          "bytes": 311
+        },
+        {
+          "path": "README_en.md",
+          "git_blob_sha1": "8b137891791fe96927ad78e64b0aad7bded08bdc",
+          "sha256": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
+          "bytes": 1
+        }
+      ]
+    },
+    {
+      "id": "S11",
+      "repo": "oouu00/Metalio-S31-kiikoread-xiugai",
+      "commit": "746ce316faf61ce5228eceee618eacb50a02a395",
+      "tree_truncated": false,
+      "checked_files": [
+        {
+          "path": "LICENSE",
+          "git_blob_sha1": "d4fdf695057173ef15a3c93c892522eaa95e9c70",
+          "sha256": "b1a477173eada381b15f2cd522bba1a9ab546759f6534e8c9943f0cb933aeb30",
+          "bytes": 3388
+        },
+        {
+          "path": "MODIFICATIONS.md",
+          "git_blob_sha1": "cf3430cfd2fbd094ec2d193ba941319e61d8d993",
+          "sha256": "0dd19a4a5a76742012eeb35cb55f0446c67c3243e1f2fd8a2b24c60f7a4b16c9",
+          "bytes": 4266
+        },
+        {
+          "path": "README.ja-JP.md",
+          "git_blob_sha1": "1c1da15891996f7bd0f25c7588c8460eb38cef84",
+          "sha256": "ad06200ba0c4dfb2f33d2ccee3da9e8a8b2ade5b44e207aeafe435651987571c",
+          "bytes": 25682
+        },
+        {
+          "path": "README.md",
+          "git_blob_sha1": "64a10564b26ce8949812b899f704f305c4162817",
+          "sha256": "f11a4383b03d5a1c9e7e4d5eb5288c7cab3a23c9c178585f44644bdc8abc2753",
+          "bytes": 29902
+        },
+        {
+          "path": "README.zh-CN.md",
+          "git_blob_sha1": "bdc6e58ea115e620b8bbd9899afdce6f6a95a855",
+          "sha256": "f94e933826f3bd795ab3e2c44f50beb2b5e455da86afdd9120220a2a8b7620f6",
+          "bytes": 33159
+        }
+      ]
+    },
+    {
+      "id": "S12",
+      "repo": "dephia31/dpreader31",
+      "commit": "9ae58085c4805a321dc741055effb53183d0b335",
+      "tree_truncated": false,
+      "checked_files": [
+        {
+          "path": "LICENSE",
+          "git_blob_sha1": "3575798277b7a22f03255f7c65e225bed1775513",
+          "sha256": "12b1d27a5c64ee1367f6c09113e52ef4266c1e3e0a405e7755294831d8fba343",
+          "bytes": 5991
+        },
+        {
+          "path": "README.md",
+          "git_blob_sha1": "9ee1a04f98066f6ce565d5a1c6cda7684d908e2c",
+          "sha256": "a0321af77709df5ed0398a63f4896014896a36980e2b0353edf40fafa5a60a98",
+          "bytes": 26938
+        },
+        {
+          "path": "docs/LICENSING.md",
+          "git_blob_sha1": "0cb339949ad0a46365ba3cbd3188f1f5f061e9fe",
+          "sha256": "74ad8bb45ecfa4be5f7d304c194ba61a26e837d624db81c4526192f2497249f6",
+          "bytes": 4348
+        },
+        {
+          "path": "firmware/shared/main/book/book_sync_position.c",
+          "git_blob_sha1": "410e2f80a04fc03baf070781def8b0a9145c8c81",
+          "sha256": "b69961d46defaffaa57de4f7c3913892d665101236eafb62760e8f13896d6177",
+          "bytes": 5227
+        },
+        {
+          "path": "main/book/book_sync_position.c",
+          "git_blob_sha1": "92653df22eb84f7970958ede47af90573d5c2e50",
+          "sha256": "c8290ee284986761ece81409dc71ff61f6118191c523cbb3e6a43b2cf6c648d9",
+          "bytes": 52
+        }
+      ]
+    },
+    {
+      "id": "S13",
+      "repo": "TaoRone/Metalio-E-Ink4-Plus-TingQuS1",
+      "commit": "89db82442e655340e6194db89d4d6c9e64031d93",
+      "tree_truncated": false,
+      "checked_files": [
+        {
+          "path": "LICENSE",
+          "git_blob_sha1": "e90b55454056bdf5b7c7a48565ef7bf2893bd1e1",
+          "sha256": "0a5a839033bfe18fe75d32b50d9d028912cf876f69ef59c2791aeb2971335d05",
+          "bytes": 1140
+        },
+        {
+          "path": "README.md",
+          "git_blob_sha1": "5ef11469454ddc71201e18007ba24710857cfc3f",
+          "sha256": "4ac570ea0f467c52373856d87f067137bd6fa685d7e1b9b4968e26077c52b88a",
+          "bytes": 47667
+        },
+        {
+          "path": "README_zn.md",
+          "git_blob_sha1": "b05c8c2855313c3d0016b170e4b65e029593f348",
+          "sha256": "80dc79b5f6d9c337906b6809a43186e59b22fd9959335de0c05398920970d79a",
+          "bytes": 48813
+        },
+        {
+          "path": "main/display/screen/lansync_screen/lansync_screen.cc",
+          "git_blob_sha1": "6d418808d66a2de4b16334a671ecd576ab6217ec",
+          "sha256": "020c4ec71b666eafa6f7929ebfdb4ad713a02c7458e7a4b3b3a9b35dc3833cb1",
+          "bytes": 15388
+        },
+        {
+          "path": "main/reader/book_progress_sync.cc",
+          "git_blob_sha1": "627f1196ec68f7f2f7ec21c2f947419b096aad66",
+          "sha256": "6fe8280ca3e4ae7f3b723e76bd297b480b18690db04ab2a83c9d85a7d02cbff1",
+          "bytes": 11856
+        },
+        {
+          "path": "main/reader/kosync.cc",
+          "git_blob_sha1": "1782561fe43a3b8ec4ce2cd64c65814bf677e50d",
+          "sha256": "27865bbe954cf22caa3441b97e020dbadf65524be95ff44aedea588fedad4849",
+          "bytes": 20002
+        },
+        {
+          "path": "main/weread/weread_ink.cc",
+          "git_blob_sha1": "d5004bbaf17b2ba6b00c6983b60d0ba0b0752156",
+          "sha256": "4ea7db4f56f9af35173b49e3e8946008882dc8873ce8a330a97948e4a8e8c761",
+          "bytes": 25919
+        },
+        {
+          "path": "main/weread/weread_ink.h",
+          "git_blob_sha1": "3e23669ae634b4feef021a4c27dcb922217816fb",
+          "sha256": "77658e7e9ee397ed2b902bd34317efefcd504357f5f4205333f8256501b87a30",
+          "bytes": 2819
+        },
+        {
+          "path": "main/weread/weread_service.cc",
+          "git_blob_sha1": "f9549883c255687a4411f4cb452099cc03e77f48",
+          "sha256": "2165d264f98a31a79f769a877a71e3ed4814dae1cf544ca2b0bc007cb009bf38",
+          "bytes": 21820
+        }
+      ]
+    },
+    {
+      "id": "S14",
+      "repo": "AlayaElla/CodexRemote",
+      "commit": "5f9bcad783ea3274d01982e0f1826e6549d379ae",
+      "tree_truncated": false,
+      "checked_files": [
+        {
+          "path": "README.md",
+          "git_blob_sha1": "22ca0c64d036f3de5d011699ff3d5a8366b34dd0",
+          "sha256": "be8a2b2ff0ff9980d2d1e4c4fbd229fb9b62e2cdf1142906b7c0b2c414641dc8",
+          "bytes": 3186
+        }
+      ]
+    },
+    {
+      "id": "S15",
+      "repo": "0x1abin/crossmux",
+      "commit": "a6fd569f7552db4ea1a6550ced7bc06568ae0e61",
+      "tree_truncated": false,
+      "checked_files": [
+        {
+          "path": "LICENSE",
+          "git_blob_sha1": "e0c9bc14b2ca41fd1d2791f804aed8f7c407493d",
+          "sha256": "5775c604a5be25d23cf6ccfac9d55789f97c91dce0f458ae853e4e0b23f7808e",
+          "bytes": 1508
+        },
+        {
+          "path": "README.md",
+          "git_blob_sha1": "8c69ef27a9ca1740c43dcf72a1b3a38c98d0e4fe",
+          "sha256": "cfacb82e4f6d5628d021dc3e61beb2d9909d6444dc5fd8af8f9289f41ace865c",
+          "bytes": 13361
+        },
+        {
+          "path": "licenses/README.md",
+          "git_blob_sha1": "b0ca662e25d9cc5b0e3c2ca52a320aee0a3cd4b0",
+          "sha256": "5ab0f424b0aa788fece46b0f36e28440cc151a3d0e268bc43711098307766ff1",
+          "bytes": 4349
+        }
+      ]
+    },
+    {
+      "id": "S16",
+      "repo": "crosspoint-reader/crosspoint-reader",
+      "commit": "0333cbbe4649f80afafe83061bf1afe9fd372fcf",
+      "tree_truncated": false,
+      "checked_files": [
+        {
+          "path": "LICENSE",
+          "git_blob_sha1": "65ca37f89bb405104401ef3e7797fe4862d0ee98",
+          "sha256": "b489ce1358e321a2ba270c4764cd2afbb5347eae44fbe26ea994e4684ab65bf0",
+          "bytes": 1393
+        },
+        {
+          "path": "README.md",
+          "git_blob_sha1": "5479b689b38bcb9c7e34d6a384ac75402c1e4318",
+          "sha256": "4407f20bd179e34487b0f42c8416f014b268d15f1fac73bda974680542abf671",
+          "bytes": 13452
+        },
+        {
+          "path": "licenses/README.md",
+          "git_blob_sha1": "b0ca662e25d9cc5b0e3c2ca52a320aee0a3cd4b0",
+          "sha256": "5ab0f424b0aa788fece46b0f36e28440cc151a3d0e268bc43711098307766ff1",
+          "bytes": 4349
+        }
+      ]
+    }
+  ]
+}
