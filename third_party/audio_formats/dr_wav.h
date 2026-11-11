@@ -878,6 +878,9 @@ typedef struct
     drwav_allocation_callbacks allocationCallbacks;
 
 
+    /* ink: read workspace follows the PSRAM-allocated decoder lifetime. */
+    drwav_uint8 inkReadScratch[4096];
+
     /* Whether or not the WAV file is formatted as a standard RIFF file or W64. */
     drwav_container container;
 
@@ -3921,11 +3924,11 @@ DRWAV_PRIVATE drwav_bool32 drwav_init__internal(drwav* pWav, drwav_chunk_proc on
         dataChunkSize = 0;
 
         for (;;) {
-            drwav_uint8 temp[4096];
-            size_t bytesRead = pWav->onRead(pWav->pUserData, temp, sizeof(temp));
+            drwav_uint8* temp = pWav->inkReadScratch;
+            size_t bytesRead = pWav->onRead(pWav->pUserData, temp, sizeof(pWav->inkReadScratch));
             dataChunkSize += bytesRead;
 
-            if (bytesRead < sizeof(temp)) {
+            if (bytesRead < sizeof(pWav->inkReadScratch)) {
                 break;
             }
         }
@@ -5997,11 +6000,11 @@ DRWAV_API size_t drwav_read_raw(drwav* pWav, size_t bytesToRead, void* pBufferOu
 
         /* When we get here we may need to read-and-discard some data. */
         while (bytesRead < bytesToRead) {
-            drwav_uint8 buffer[4096];
+            drwav_uint8* buffer = pWav->inkReadScratch;
             size_t bytesSeeked;
             size_t bytesToSeek = (bytesToRead - bytesRead);
-            if (bytesToSeek > sizeof(buffer)) {
-                bytesToSeek = sizeof(buffer);
+            if (bytesToSeek > sizeof(pWav->inkReadScratch)) {
+                bytesToSeek = sizeof(pWav->inkReadScratch);
             }
 
             bytesSeeked = pWav->onRead(pWav->pUserData, buffer, bytesToSeek);
@@ -6199,12 +6202,12 @@ DRWAV_API drwav_bool32 drwav_seek_to_pcm_frame(drwav* pWav, drwav_uint64 targetF
         if (targetFrameIndex > pWav->readCursorInPCMFrames) {
             drwav_uint64 offsetInFrames = targetFrameIndex - pWav->readCursorInPCMFrames;
 
-            drwav_int16 devnull[2048];
+            drwav_int16* devnull = (drwav_int16*)pWav->inkReadScratch;
             while (offsetInFrames > 0) {
                 drwav_uint64 framesRead = 0;
                 drwav_uint64 framesToRead = offsetInFrames;
-                if (framesToRead > drwav_countof(devnull)/pWav->channels) {
-                    framesToRead = drwav_countof(devnull)/pWav->channels;
+                if (framesToRead > (sizeof(pWav->inkReadScratch)/sizeof(*devnull))/pWav->channels) {
+                    framesToRead = (sizeof(pWav->inkReadScratch)/sizeof(*devnull))/pWav->channels;
                 }
 
                 if (pWav->translatedFormatTag == DR_WAVE_FORMAT_ADPCM) {
@@ -6918,7 +6921,8 @@ DRWAV_PRIVATE void drwav__ieee_to_s16(drwav_int16* pOut, const drwav_uint8* pIn,
 DRWAV_PRIVATE drwav_uint64 drwav_read_pcm_frames_s16__pcm(drwav* pWav, drwav_uint64 framesToRead, drwav_int16* pBufferOut)
 {
     drwav_uint64 totalFramesRead;
-    drwav_uint8 sampleData[4096] = {0};
+    drwav_uint8* sampleData = pWav->inkReadScratch;
+    DRWAV_ZERO_MEMORY(sampleData, sizeof(pWav->inkReadScratch));
     drwav_uint32 bytesPerFrame;
     drwav_uint32 bytesPerSample;
     drwav_uint64 samplesRead;
@@ -6941,7 +6945,7 @@ DRWAV_PRIVATE drwav_uint64 drwav_read_pcm_frames_s16__pcm(drwav* pWav, drwav_uin
     totalFramesRead = 0;
 
     while (framesToRead > 0) {
-        drwav_uint64 framesToReadThisIteration = drwav_min(framesToRead, sizeof(sampleData)/bytesPerFrame);
+        drwav_uint64 framesToReadThisIteration = drwav_min(framesToRead, sizeof(pWav->inkReadScratch)/bytesPerFrame);
         drwav_uint64 framesRead = drwav_read_pcm_frames(pWav, framesToReadThisIteration, sampleData);
         if (framesRead == 0) {
             break;
@@ -6951,7 +6955,7 @@ DRWAV_PRIVATE drwav_uint64 drwav_read_pcm_frames_s16__pcm(drwav* pWav, drwav_uin
 
         /* Validation to ensure we don't read too much from out intermediary buffer. This is to protect from invalid files. */
         samplesRead = framesRead * pWav->channels;
-        if ((samplesRead * bytesPerSample) > sizeof(sampleData)) {
+        if ((samplesRead * bytesPerSample) > sizeof(pWav->inkReadScratch)) {
             DRWAV_ASSERT(DRWAV_FALSE);  /* This should never happen with a valid file. */
             break;
         }
@@ -6969,7 +6973,8 @@ DRWAV_PRIVATE drwav_uint64 drwav_read_pcm_frames_s16__pcm(drwav* pWav, drwav_uin
 DRWAV_PRIVATE drwav_uint64 drwav_read_pcm_frames_s16__ieee(drwav* pWav, drwav_uint64 framesToRead, drwav_int16* pBufferOut)
 {
     drwav_uint64 totalFramesRead;
-    drwav_uint8 sampleData[4096] = {0};
+    drwav_uint8* sampleData = pWav->inkReadScratch;
+    DRWAV_ZERO_MEMORY(sampleData, sizeof(pWav->inkReadScratch));
     drwav_uint32 bytesPerFrame;
     drwav_uint32 bytesPerSample;
     drwav_uint64 samplesRead;
@@ -6991,7 +6996,7 @@ DRWAV_PRIVATE drwav_uint64 drwav_read_pcm_frames_s16__ieee(drwav* pWav, drwav_ui
     totalFramesRead = 0;
 
     while (framesToRead > 0) {
-        drwav_uint64 framesToReadThisIteration = drwav_min(framesToRead, sizeof(sampleData)/bytesPerFrame);
+        drwav_uint64 framesToReadThisIteration = drwav_min(framesToRead, sizeof(pWav->inkReadScratch)/bytesPerFrame);
         drwav_uint64 framesRead = drwav_read_pcm_frames(pWav, framesToReadThisIteration, sampleData);
         if (framesRead == 0) {
             break;
@@ -7001,7 +7006,7 @@ DRWAV_PRIVATE drwav_uint64 drwav_read_pcm_frames_s16__ieee(drwav* pWav, drwav_ui
 
         /* Validation to ensure we don't read too much from out intermediary buffer. This is to protect from invalid files. */
         samplesRead = framesRead * pWav->channels;
-        if ((samplesRead * bytesPerSample) > sizeof(sampleData)) {
+        if ((samplesRead * bytesPerSample) > sizeof(pWav->inkReadScratch)) {
             DRWAV_ASSERT(DRWAV_FALSE);  /* This should never happen with a valid file. */
             break;
         }
@@ -7019,7 +7024,8 @@ DRWAV_PRIVATE drwav_uint64 drwav_read_pcm_frames_s16__ieee(drwav* pWav, drwav_ui
 DRWAV_PRIVATE drwav_uint64 drwav_read_pcm_frames_s16__alaw(drwav* pWav, drwav_uint64 framesToRead, drwav_int16* pBufferOut)
 {
     drwav_uint64 totalFramesRead;
-    drwav_uint8 sampleData[4096] = {0};
+    drwav_uint8* sampleData = pWav->inkReadScratch;
+    DRWAV_ZERO_MEMORY(sampleData, sizeof(pWav->inkReadScratch));
     drwav_uint32 bytesPerFrame;
     drwav_uint32 bytesPerSample;
     drwav_uint64 samplesRead;
@@ -7041,7 +7047,7 @@ DRWAV_PRIVATE drwav_uint64 drwav_read_pcm_frames_s16__alaw(drwav* pWav, drwav_ui
     totalFramesRead = 0;
 
     while (framesToRead > 0) {
-        drwav_uint64 framesToReadThisIteration = drwav_min(framesToRead, sizeof(sampleData)/bytesPerFrame);
+        drwav_uint64 framesToReadThisIteration = drwav_min(framesToRead, sizeof(pWav->inkReadScratch)/bytesPerFrame);
         drwav_uint64 framesRead = drwav_read_pcm_frames(pWav, framesToReadThisIteration, sampleData);
         if (framesRead == 0) {
             break;
@@ -7051,7 +7057,7 @@ DRWAV_PRIVATE drwav_uint64 drwav_read_pcm_frames_s16__alaw(drwav* pWav, drwav_ui
 
         /* Validation to ensure we don't read too much from out intermediary buffer. This is to protect from invalid files. */
         samplesRead = framesRead * pWav->channels;
-        if ((samplesRead * bytesPerSample) > sizeof(sampleData)) {
+        if ((samplesRead * bytesPerSample) > sizeof(pWav->inkReadScratch)) {
             DRWAV_ASSERT(DRWAV_FALSE);  /* This should never happen with a valid file. */
             break;
         }
@@ -7069,7 +7075,8 @@ DRWAV_PRIVATE drwav_uint64 drwav_read_pcm_frames_s16__alaw(drwav* pWav, drwav_ui
 DRWAV_PRIVATE drwav_uint64 drwav_read_pcm_frames_s16__mulaw(drwav* pWav, drwav_uint64 framesToRead, drwav_int16* pBufferOut)
 {
     drwav_uint64 totalFramesRead;
-    drwav_uint8 sampleData[4096] = {0};
+    drwav_uint8* sampleData = pWav->inkReadScratch;
+    DRWAV_ZERO_MEMORY(sampleData, sizeof(pWav->inkReadScratch));
     drwav_uint32 bytesPerFrame;
     drwav_uint32 bytesPerSample;
     drwav_uint64 samplesRead;
@@ -7091,7 +7098,7 @@ DRWAV_PRIVATE drwav_uint64 drwav_read_pcm_frames_s16__mulaw(drwav* pWav, drwav_u
     totalFramesRead = 0;
 
     while (framesToRead > 0) {
-        drwav_uint64 framesToReadThisIteration = drwav_min(framesToRead, sizeof(sampleData)/bytesPerFrame);
+        drwav_uint64 framesToReadThisIteration = drwav_min(framesToRead, sizeof(pWav->inkReadScratch)/bytesPerFrame);
         drwav_uint64 framesRead = drwav_read_pcm_frames(pWav, framesToReadThisIteration, sampleData);
         if (framesRead == 0) {
             break;
@@ -7101,7 +7108,7 @@ DRWAV_PRIVATE drwav_uint64 drwav_read_pcm_frames_s16__mulaw(drwav* pWav, drwav_u
 
         /* Validation to ensure we don't read too much from out intermediary buffer. This is to protect from invalid files. */
         samplesRead = framesRead * pWav->channels;
-        if ((samplesRead * bytesPerSample) > sizeof(sampleData)) {
+        if ((samplesRead * bytesPerSample) > sizeof(pWav->inkReadScratch)) {
             DRWAV_ASSERT(DRWAV_FALSE);  /* This should never happen with a valid file. */
             break;
         }

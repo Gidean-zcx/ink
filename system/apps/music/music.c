@@ -11,6 +11,7 @@
 #include "ink/sys/file.h"
 #include "ink/sys/layout.h"
 #include "ink/sys/json.h"
+#include "ink/sys/i18n.h"
 #include "ink/sys/media.h"
 #include "ink/sys/members.h"
 #include "ink/sys/settings.h"
@@ -24,7 +25,7 @@ typedef struct {
     int page, count, mode, volume; bool more, playlist; ink_media_status_t st;
 } music_view_t;
 static char result_json[2048] INK_PSRAM_BSS;
-static music_view_t B INK_PSRAM_BSS, V INK_PSRAM_BSS; /* BG and UI ownership, respectively. */
+static music_view_t B INK_PSRAM_BSS, V INK_PSRAM_BSS; /* Media and UI ownership, respectively. */
 static const ink_db_def_t FAV = {.name = "music.favorites", .title = "收藏的歌曲", .scope = INK_DB_MEMBER, .schema = 1, .ai_read = true, .max_records = 100};
 static const ink_db_def_t LAST = {.name = "music.last", .title = "上次听的歌曲", .scope = INK_DB_MEMBER, .schema = 1, .max_records = 1};
 static lv_obj_t *title_label, *time_label, *lyric_label, *play_button, *progress_fill;
@@ -38,7 +39,7 @@ static bool supported(const char *p) {
 }
 static void member(void) {
     const char *id = ink_member_current()->id;
-    if (strcmp(B.owner, id)) { memset(&B, 0, sizeof B); snprintf(B.owner, sizeof B.owner, "%s", id); snprintf(B.dir, sizeof B.dir, "/me/音乐"); music_lyrics_clear(); }
+    if (strcmp(B.owner, id)) { memset(&B, 0, sizeof B); snprintf(B.owner, sizeof B.owner, "%s", id); snprintf(B.dir, sizeof B.dir, "%s", TR_NOOP("/me/音乐")); music_lyrics_clear(); }
 }
 static void last_path(bool save, char path[128]) {
     ink_db_t *db = ink_db_open(&LAST, NULL); ink_rec_t rec;
@@ -57,19 +58,19 @@ static void refresh_now(void) {
     if (n >= sizeof B.lyric) { n = sizeof B.lyric - 1; while (n && ((unsigned char)s[n] & 0xc0) == 0x80) n--; }
     memcpy(B.lyric, s, n); B.lyric[n] = 0;
     snprintf(B.time, sizeof B.time, "%u:%02u / %u:%02u", (unsigned)(B.st.position_ms / 60000), (unsigned)(B.st.position_ms / 1000 % 60), (unsigned)(B.st.duration_ms / 60000), (unsigned)(B.st.duration_ms / 1000 % 60));
-    ink_db_t *db = ink_db_open(&FAV, NULL); ink_rec_t rec; char path[128];
+    ink_db_t *db = B.track[0] ? ink_db_open(&FAV, NULL) : NULL; ink_rec_t rec; char path[128];
     B.favorite = db && B.track[0] && ink_db_get(db, favorite_id(B.track), &rec, path, sizeof path) == INK_DB_OK && !strcmp(path, B.track);
     ink_db_close(db);
 }
 typedef struct { ink_exec_job_t job; music_view_t data; } delivery_t;
 static void show_values(void) {
-    if (title_label) lv_label_set_text(title_label, V.title[0] ? V.title : "还没有播放歌曲");
+    if (title_label) lv_label_set_text(title_label, V.title[0] ? V.title : TR("还没有播放歌曲"));
     if (time_label) lv_label_set_text(time_label, V.time);
-    if (lyric_label) lv_label_set_text(lyric_label, V.lyric[0] ? V.lyric : "暂无歌词");
+    if (lyric_label) lv_label_set_text(lyric_label, V.lyric[0] ? V.lyric : TR("暂无歌词"));
     unsigned progress_percent = V.st.duration_ms ? (unsigned)((uint64_t)V.st.position_ms * 100 / V.st.duration_ms) : 0;
     if (progress_fill) lv_obj_set_width(progress_fill, ink_ui_px((int)((INK_CANVAS_W - 2 * INK_MARGIN) * progress_percent / 100)));
     if (play_button) {
-        lv_label_set_text(lv_obj_get_child(play_button, 0), V.st.state == INK_MEDIA_PLAYING ? "暂停" : "播放");
+        lv_label_set_text(lv_obj_get_child(play_button, 0), V.st.state == INK_MEDIA_PLAYING ? TR("暂停") : TR("播放"));
         ink_shell_bind(play_button, V.st.state == INK_MEDIA_PLAYING ? "music.pause" : "music.play", "{}");
     }
 }
@@ -92,7 +93,7 @@ static void list(ink_call_t *c) {
     if (path[0]) { snprintf(B.dir, sizeof B.dir, "%s", path); page = 0; }
     if (mode[0]) B.mode = !strcmp(mode, "all") ? 2 : !strcmp(mode, "list") ? 1 : 0;
     ink_fs_dir_t *dir = NULL; int e = ink_fs_dir_open(B.dir, &dir);
-    if (e) { c->rc.status = INK_RC_FAILED; snprintf(c->rc.say, sizeof c->rc.say, "请把音乐放到文件中的“音乐”文件夹"); return; }
+    if (e) { c->rc.status = INK_RC_FAILED; snprintf(c->rc.say, sizeof c->rc.say, TR("请把音乐放到文件中的“音乐”文件夹")); return; }
     B.page = page < 0 ? 0 : (int)page; B.count = 0; B.more = false; memset(B.paths, 0, sizeof B.paths);
     char directory[128]; snprintf(directory, sizeof directory, "%s", B.dir);
     ink_fs_stat_t entry; int skip = B.page * ROWS, n;
@@ -164,7 +165,7 @@ static void run(ink_call_t *c) {
             ink_args_str(&a, "path", path);
         }
     }
-    ink_call_opts_t o = {.src = c->src, .done = forwarded, .ctx = c, .member = ink_cap_call_member(c), .reply_exec = INK_EXEC_BG};
+    ink_call_opts_t o = {.src = c->src, .done = forwarded, .ctx = c, .member = ink_cap_call_member(c), .reply_exec = INK_EXEC_MEDIA};
     ink_cap_defer(c);
     if (ink_cap_call(target, &a, &o) < 0) { c->rc.status = INK_RC_FAILED; ink_cap_done(c); }
 }
@@ -174,6 +175,11 @@ static void button(lv_obj_t *s, const char *label, const char *cap, const char *
     lv_obj_t *b = ink_ui_pill(s, label, x, y, w, INK_CONTROL, false, NULL, NULL); ink_shell_bind(b, cap, args);
 }
 static void volume_done(void *ctx, const ink_receipt_t *rc) { (void)ctx; (void)rc; poll(NULL); }
+static void skip_forward(lv_event_t *e) {
+    (void)e; ink_args_t a; ink_args_init(&a); ink_args_int(&a, "ms", (int64_t)V.st.position_ms + 10000);
+    ink_call_opts_t o = {.src = INK_SRC_TOUCH, .done = volume_done, .reply_exec = INK_EXEC_UI};
+    ink_cap_call("music.seek", &a, &o);
+}
 static void slider(lv_event_t *e) {
     lv_indev_t *in = lv_event_get_indev(e); if (!in) return;
     lv_point_t p; lv_indev_get_point(in, &p); lv_area_t box; lv_obj_get_coords(lv_event_get_target_obj(e), &box);
@@ -186,35 +192,35 @@ static void slider(lv_event_t *e) {
 }
 static void create(lv_obj_t *s, void *arg) {
     (void)arg; if (strcmp(V.owner, ink_member_current()->id)) memset(&V, 0, sizeof V);
-    ink_shell_statusbar(s, true); ink_shell_topbar(s, "音乐"); int w = INK_CANVAS_W - 2 * INK_MARGIN, y = INK_STATUS_BAR + INK_CONTROL + INK_GAP;
-    button(s, "播放页", "music.list", "{\"view\":\"player\",\"page\":0}", INK_MARGIN, y, w / 3 - INK_GAP_S);
-    button(s, "播放列表", "music.list", "{\"view\":\"list\",\"page\":0}", INK_MARGIN + w / 3, y, w / 3 - INK_GAP_S);
-    button(s, "全部歌曲", "music.list", "{\"view\":\"all\",\"page\":0}", INK_MARGIN + 2 * w / 3, y, w / 3); y += INK_CONTROL + INK_GAP;
+    ink_shell_statusbar(s, true); ink_shell_topbar(s, TR("音乐")); int w = INK_CANVAS_W - 2 * INK_MARGIN, y = INK_STATUS_BAR + INK_CONTROL + INK_GAP;
+    button(s, TR("播放页"), "music.list", "{\"view\":\"player\",\"page\":0}", INK_MARGIN, y, w / 3 - INK_GAP_S);
+    button(s, TR("播放列表"), "music.list", "{\"view\":\"list\",\"page\":0}", INK_MARGIN + w / 3, y, w / 3 - INK_GAP_S);
+    button(s, TR("全部歌曲"), "music.list", "{\"view\":\"all\",\"page\":0}", INK_MARGIN + 2 * w / 3, y, w / 3); y += INK_CONTROL + INK_GAP;
     if (!V.mode) {
         title_label = ink_ui_line(s, "", INK_FONT_SUBTITLE, INK_WEIGHT_MEDIUM, INK_MARGIN, y, w); y += ink_ui_line_height(INK_FONT_SUBTITLE) + INK_GAP;
         time_label = ink_ui_line(s, "", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y, w); y += ink_ui_line_height(INK_FONT_NOTE) + INK_GAP;
         lv_obj_t *bar = ink_ui_box(s, INK_MARGIN, y, w, INK_GAP_L, 0, INK_SURFACE_STATIC, false);
         progress_fill = ink_ui_box(bar, 0, 0, 1, INK_GAP_L, 0, INK_SURFACE_BLACK, false); lv_obj_add_flag(bar, LV_OBJ_FLAG_CLICKABLE); lv_obj_add_event_cb(bar, slider, LV_EVENT_RELEASED, (void *)1); ink_ui_capture_touch(bar); y += INK_GAP_L + INK_GAP;
         lyric_label = ink_ui_line(s, "", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y, w); y += ink_ui_line_height(INK_FONT_NOTE) + INK_GAP;
-        button(s, "上一首", "music.prev", "{}", INK_MARGIN, y, w / 3 - INK_GAP_S);
-        play_button = ink_ui_pill(s, "播放", INK_MARGIN + w / 3, y, w / 3 - INK_GAP_S, INK_CONTROL, true, NULL, NULL);
-        button(s, "下一首", "music.next", "{}", INK_MARGIN + 2 * w / 3, y, w / 3); y += INK_CONTROL + INK_GAP;
-        button(s, V.favorite ? "取消收藏" : "收藏", "music.favorite", "{}", INK_MARGIN, y, w / 2 - INK_GAP_S);
-        char json[48]; snprintf(json, sizeof json, "{\"ms\":%u}", (unsigned)(V.st.position_ms + 10000)); button(s, "快进10秒", "music.seek", json, INK_MARGIN + w / 2, y, w / 2); y += INK_CONTROL + INK_GAP;
-        ink_ui_slider(s, "音量", V.volume / 10, INK_MARGIN, y, w, slider, NULL); y += INK_SLIDER + INK_GAP;
+        button(s, TR("上一首"), "music.prev", "{}", INK_MARGIN, y, w / 3 - INK_GAP_S);
+        play_button = ink_ui_pill(s, TR("播放"), INK_MARGIN + w / 3, y, w / 3 - INK_GAP_S, INK_CONTROL, true, NULL, NULL);
+        button(s, TR("下一首"), "music.next", "{}", INK_MARGIN + 2 * w / 3, y, w / 3); y += INK_CONTROL + INK_GAP;
+        button(s, V.favorite ? TR("取消收藏") : TR("收藏"), "music.favorite", "{}", INK_MARGIN, y, w / 2 - INK_GAP_S);
+        ink_ui_pill(s, TR("快进10秒"), INK_MARGIN + w / 2, y, w / 2, INK_CONTROL, false, skip_forward, NULL); y += INK_CONTROL + INK_GAP;
+        ink_ui_slider(s, TR("音量"), V.volume / 10, INK_MARGIN, y, w, slider, NULL); y += INK_SLIDER + INK_GAP;
 
     } else {
-        ink_ui_line(s, V.dir[0] ? V.dir : "/me/音乐", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y, w); y += INK_CONTROL;
+        ink_ui_line(s, V.dir[0] ? V.dir : TR_NOOP("/me/音乐"), INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y, w); y += INK_CONTROL;
         for (int i = 0; i < V.count; i++) {
             char json[180]; ink_jw_t jw; ink_jw_init(&jw, json, sizeof json); ink_jw_raw(&jw, "{\"path\":"); ink_jw_str(&jw, V.paths[i]); ink_jw_raw(&jw, "}");
-            lv_obj_t *row = ink_ui_list_row(s, V.dirs[i] ? "folder" : "headphones", V.names[i], V.dirs[i] ? "文件夹" : "播放", INK_MARGIN, y, w, true, NULL, NULL);
+            lv_obj_t *row = ink_ui_list_row(s, V.dirs[i] ? "folder" : "headphones", V.names[i], V.dirs[i] ? TR("文件夹") : TR("播放"), INK_MARGIN, y, w, true, NULL, NULL);
             ink_shell_bind(row, V.dirs[i] ? "music.list" : "music.play", json); y += ink_ui_row_double() + INK_GAP_S;
         }
         char json[180], parent[128]; snprintf(parent, sizeof parent, "%s", V.dir); char *slash = strrchr(parent, '/'); if (slash && slash > parent + 3) *slash = 0;
         ink_jw_t jw; ink_jw_init(&jw, json, sizeof json); ink_jw_raw(&jw, "{\"path\":"); ink_jw_str(&jw, parent); ink_jw_raw(&jw, "}");
-        button(s, "上级目录", "music.list", json, INK_MARGIN, y, w); y += INK_CONTROL + INK_GAP;
-        snprintf(json, sizeof json, "{\"page\":%d}", V.page > 0 ? V.page - 1 : 0); button(s, "上一页", "music.list", json, INK_MARGIN, y, w / 2 - INK_GAP_S);
-        snprintf(json, sizeof json, "{\"page\":%d}", V.page + (V.more ? 1 : 0)); button(s, "下一页", "music.list", json, INK_MARGIN + w / 2, y, w / 2);
+        button(s, TR("上级目录"), "music.list", json, INK_MARGIN, y, w); y += INK_CONTROL + INK_GAP;
+        snprintf(json, sizeof json, "{\"page\":%d}", V.page > 0 ? V.page - 1 : 0); button(s, TR("上一页"), "music.list", json, INK_MARGIN, y, w / 2 - INK_GAP_S);
+        snprintf(json, sizeof json, "{\"page\":%d}", V.page + (V.more ? 1 : 0)); button(s, TR("下一页"), "music.list", json, INK_MARGIN + w / 2, y, w / 2);
     }
     show_values(); timer = lv_timer_create(poll, 5000, NULL); poll(NULL);
 }
@@ -222,20 +228,20 @@ static void destroy(void) { if (timer) lv_timer_delete(timer); timer = NULL; tit
 static int snapshot(char *out, size_t cap) {
     if (strcmp(V.owner, ink_member_current()->id)) { if (cap) out[0] = 0;
         return -1; }
-    ink_ui_field_spec_t f[FIELDS] = {{.id = "title", .label = "曲名", .value = V.title}, {.id = "progress", .label = "进度", .value = V.time}, {.id = "lyrics", .label = "歌词", .value = V.lyric}, {.id = "artist", .label = "歌手", .value = V.artist}, {.id = "album", .label = "专辑", .value = V.album}};
+    ink_ui_field_spec_t f[FIELDS] = {{.id = "title", .label = TR("曲名"), .value = V.title}, {.id = "progress", .label = TR("进度"), .value = V.time}, {.id = "lyrics", .label = TR("歌词"), .value = V.lyric}, {.id = "artist", .label = TR("歌手"), .value = V.artist}, {.id = "album", .label = TR("专辑"), .value = V.album}};
     for (int i = 0; i < 5; i++) f[i].role = "text";
     char ids[ROWS][16]; for (int i = 0; i < V.count; i++) { snprintf(ids[i], sizeof ids[i], "track%d", i); f[5 + i] = (ink_ui_field_spec_t){.id = ids[i], .role = V.dirs[i] ? "directory" : "song", .label = V.names[i], .value = V.paths[i]}; }
-    static const ink_ui_action_spec_t actions[] = {
-        {.id = "play", .label = "播放", .capability = "music.play", .enabled = true}, {.id = "pause", .label = "暂停", .capability = "music.pause", .enabled = true},
-        {.id = "next", .label = "下一首", .capability = "music.next", .enabled = true}, {.id = "prev", .label = "上一首", .capability = "music.prev", .enabled = true},
-        {.id = "seek", .label = "跳到指定位置", .capability = "music.seek", .enabled = true}, {.id = "list", .label = "歌曲和文件夹", .capability = "music.list", .enabled = true},
-        {.id = "favorite", .label = "收藏或取消收藏", .capability = "music.favorite", .enabled = true}, {.id = "volume", .label = "音量", .capability = "settings.set", .enabled = true}};
+    const ink_ui_action_spec_t actions[] = {
+        {.id = "play", .label = TR("播放"), .capability = "music.play", .enabled = true}, {.id = "pause", .label = TR("暂停"), .capability = "music.pause", .enabled = true},
+        {.id = "next", .label = TR("下一首"), .capability = "music.next", .enabled = true}, {.id = "prev", .label = TR("上一首"), .capability = "music.prev", .enabled = true},
+        {.id = "seek", .label = TR("跳到指定位置"), .capability = "music.seek", .enabled = true}, {.id = "list", .label = TR("歌曲和文件夹"), .capability = "music.list", .enabled = true},
+        {.id = "favorite", .label = TR("收藏或取消收藏"), .capability = "music.favorite", .enabled = true}, {.id = "volume", .label = TR("音量"), .capability = "settings.set", .enabled = true}};
     _Static_assert(5 + ROWS <= FIELDS, "music field capacity");
-    ink_ui_page_spec_t p = {.id = "Music", .title = "音乐", .fields = f, .field_count = 5 + (size_t)V.count, .actions = actions, .action_count = sizeof actions / sizeof *actions, .object = {"music", 1}}; return ink_ui_semantics_snapshot(&p, out, cap);
+    ink_ui_page_spec_t p = {.id = "Music", .title = TR("音乐"), .fields = f, .field_count = 5 + (size_t)V.count, .actions = actions, .action_count = sizeof actions / sizeof *actions, .object = {"music", 1}}; return ink_ui_semantics_snapshot(&p, out, cap);
 }
 static const ink_activity_t PAGE = {.name = "Music", .app = "music", .create = create, .destroy = destroy, .snapshot = snapshot};
-static const ink_app_def_t APP = {.id = "music", .title = "音乐", .icon = "headphones", .entry = &PAGE, .system_app = true, .child_ok = true};
-#define CAP(id_, title_, input_, effect_) {.id = id_, .title = title_, .app = "music", .input = input_, .effect = effect_, .child_ok = true, .exec = INK_EXEC_BG, .run = run}
+static const ink_app_def_t APP = {.id = "music", .title = TR_NOOP("音乐"), .icon = "headphones", .entry = &PAGE, .system_app = true, .child_ok = true};
+#define CAP(id_, title_, input_, effect_) {.id = id_, .title = title_, .app = "music", .input = input_, .effect = effect_, .child_ok = true, .exec = INK_EXEC_MEDIA, .run = run}
 static const ink_cap_t CAPS[] = {
     {.id = "music.open", .title = "打开音乐", .app = "music", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = open_cap},
     CAP("music.play", "播放某首、文件夹或继续播放", "{\"type\":\"object\",\"properties\":{\"path\":{\"type\":\"string\",\"maxLength\":127}}}", INK_FX_NAVIGATE),
@@ -248,4 +254,4 @@ static void finished(void *ctx, const char *id, const ink_args_t *a) {
     ink_args_get_str(a, "why", why, sizeof why); ink_args_get_str(a, "path", path, sizeof path);
     if (B.playlist && !strcmp(why, "finished") && !strcmp(path, B.track)) { ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .member = B.owner}; ink_cap_call("music.next", NULL, &o); }
 }
-int ink_music_init(void) { return ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_app_register(&APP) || ink_cap_subscribe("media.finished", finished, NULL, INK_EXEC_BG) ? -1 : 0; }
+int ink_music_init(void) { return ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_app_register(&APP) || ink_cap_subscribe("media.finished", finished, NULL, INK_EXEC_MEDIA) ? -1 : 0; }

@@ -143,7 +143,7 @@ static void go_home(void) { ink_ui_home(); }
 static void pop_top(void) { ink_ui_pop(); }
 
 static void directory(void) {
-    CHECK(ink_app_count() == 19, "home, reader, phone, contacts, clock, AI, SMS, memo, calendar, calculator, weather, files, camera, gallery, remote and the test's (%d)", ink_app_count());
+    CHECK(ink_app_count() == 20, "home, reader, phone, contacts, clock, AI, SMS, memo, calendar, calculator, weather, music, files, camera, gallery, remote and the test's (%d)", ink_app_count());
     CHECK(!strcmp(fg_state(), "home") && ink_app_state_of("home") == INK_APP_FOREGROUND, "home is in the foreground (%s)", fg_state());
     CHECK(ink_app_state_of("reader") == INK_APP_STOPPED && ink_app_state_of("clock") == INK_APP_STOPPED && ink_app_state_of("alpha") == INK_APP_STOPPED, "the others have not started");
     CHECK(AI("app.list", NULL) && strstr(g_result, "\"id\":\"alpha\"") && strstr(g_result, "\"title\":\"甲\"") && strstr(g_result, "\"state\":\"stopped\"") && strstr(g_result, "\"id\":\"reader\"") && strstr(g_result, "\"system\":true"),

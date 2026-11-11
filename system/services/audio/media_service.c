@@ -372,7 +372,7 @@ static int do_play(const char *path, uint32_t start_ms, const char *member) { /*
     M.focus = ink_audio_focus_acquire(INK_AUDIO_PRIO_STORY, on_focus, NULL, INK_EXEC_MEDIA);
     set_state(INK_MEDIA_PLAYING, INK_MEDIA_BY_USER);
     ink_probe_count("media.started");
-    pump(NULL);
+    ink_exec_post(INK_EXEC_MEDIA, &M.pump_job, pump, NULL);
     return 0;
 }
 

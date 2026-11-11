@@ -8462,9 +8462,8 @@ static void drflac__init_from_info(drflac* pFlac, const drflac_init_info* pInit)
 }
 
 
-static drflac* drflac_open_with_metadata_private(drflac_read_proc onRead, drflac_seek_proc onSeek, drflac_tell_proc onTell, drflac_meta_proc onMeta, drflac_container container, void* pUserData, void* pUserDataMD, const drflac_allocation_callbacks* pAllocationCallbacks)
+static drflac* drflac_open_with_metadata_private__init(drflac_read_proc onRead, drflac_seek_proc onSeek, drflac_tell_proc onTell, drflac_meta_proc onMeta, drflac_container container, void* pUserData, void* pUserDataMD, const drflac_allocation_callbacks* pAllocationCallbacks, drflac_init_info* init)
 {
-    drflac_init_info init;
     drflac_uint32 allocationSize;
     drflac_uint32 decodedSampleSize;
     drflac_uint32 wholeSIMDVectorCountPerChannel;
@@ -8483,7 +8482,7 @@ static drflac* drflac_open_with_metadata_private(drflac_read_proc onRead, drflac
     /* CPU support first. */
     drflac__init_cpu_caps();
 
-    if (!drflac__init_private(&init, onRead, onSeek, onTell, onMeta, container, pUserData, pUserDataMD)) {
+    if (!drflac__init_private(init, onRead, onSeek, onTell, onMeta, container, pUserData, pUserDataMD)) {
         return NULL;
     }
 
@@ -8517,24 +8516,24 @@ static drflac* drflac_open_with_metadata_private(drflac_read_proc onRead, drflac
     33 bit.
     */
     decodedSampleSize = sizeof(drflac_int32);
-    if (init.bitsPerSample == 32) {
+    if (init->bitsPerSample == 32) {
         decodedSampleSize = sizeof(drflac_int64);
     }
 
-    if ((init.maxBlockSizeInPCMFrames % (DRFLAC_MAX_SIMD_VECTOR_SIZE / decodedSampleSize)) == 0) {
-        wholeSIMDVectorCountPerChannel = (init.maxBlockSizeInPCMFrames / (DRFLAC_MAX_SIMD_VECTOR_SIZE / decodedSampleSize));
+    if ((init->maxBlockSizeInPCMFrames % (DRFLAC_MAX_SIMD_VECTOR_SIZE / decodedSampleSize)) == 0) {
+        wholeSIMDVectorCountPerChannel = (init->maxBlockSizeInPCMFrames / (DRFLAC_MAX_SIMD_VECTOR_SIZE / decodedSampleSize));
     } else {
-        wholeSIMDVectorCountPerChannel = (init.maxBlockSizeInPCMFrames / (DRFLAC_MAX_SIMD_VECTOR_SIZE / decodedSampleSize)) + 1;
+        wholeSIMDVectorCountPerChannel = (init->maxBlockSizeInPCMFrames / (DRFLAC_MAX_SIMD_VECTOR_SIZE / decodedSampleSize)) + 1;
     }
 
-    decodedSamplesAllocationSize = wholeSIMDVectorCountPerChannel * DRFLAC_MAX_SIMD_VECTOR_SIZE * init.channels;
+    decodedSamplesAllocationSize = wholeSIMDVectorCountPerChannel * DRFLAC_MAX_SIMD_VECTOR_SIZE * init->channels;
 
     allocationSize += decodedSamplesAllocationSize;
     allocationSize += DRFLAC_MAX_SIMD_VECTOR_SIZE;  /* Allocate extra bytes to ensure we have enough for alignment. */
 
 #ifndef DR_FLAC_NO_OGG
     /* There's additional data required for Ogg streams. */
-    if (init.container == drflac_container_ogg) {
+    if (init->container == drflac_container_ogg) {
         allocationSize += sizeof(drflac_oggbs);
 
         pOggbs = (drflac_oggbs*)drflac__malloc_from_callbacks(sizeof(*pOggbs), &allocationCallbacks);
@@ -8547,10 +8546,10 @@ static drflac* drflac_open_with_metadata_private(drflac_read_proc onRead, drflac
         pOggbs->onSeek = onSeek;
         pOggbs->onTell = onTell;
         pOggbs->pUserData = pUserData;
-        pOggbs->currentBytePos = init.oggFirstBytePos;
-        pOggbs->firstBytePos = init.oggFirstBytePos;
-        pOggbs->serialNumber = init.oggSerial;
-        pOggbs->bosPageHeader = init.oggBosHeader;
+        pOggbs->currentBytePos = init->oggFirstBytePos;
+        pOggbs->firstBytePos = init->oggFirstBytePos;
+        pOggbs->serialNumber = init->oggSerial;
+        pOggbs->bosPageHeader = init->oggBosHeader;
         pOggbs->bytesRemainingInPage = 0;
     }
 #endif
@@ -8561,13 +8560,13 @@ static drflac* drflac_open_with_metadata_private(drflac_read_proc onRead, drflac
     and decoding the metadata.
     */
     firstFramePos  = 42;   /* <-- We know we are at byte 42 at this point. */
-    if (!init.hasStreamInfoBlock) {
-        firstFramePos = init.firstFrameSearchPos;
+    if (!init->hasStreamInfoBlock) {
+        firstFramePos = init->firstFrameSearchPos;
     }
 
     seektablePos   = 0;
     seekpointCount = 0;
-    if (init.hasMetadataBlocks) {
+    if (init->hasMetadataBlocks) {
         drflac_result metadataResult;
         drflac_read_proc onReadOverride = onRead;
         drflac_seek_proc onSeekOverride = onSeek;
@@ -8575,7 +8574,7 @@ static drflac* drflac_open_with_metadata_private(drflac_read_proc onRead, drflac
         void* pUserDataOverride = pUserData;
 
 #ifndef DR_FLAC_NO_OGG
-        if (init.container == drflac_container_ogg) {
+        if (init->container == drflac_container_ogg) {
             onReadOverride = drflac__on_read_ogg;
             onSeekOverride = drflac__on_seek_ogg;
             onTellOverride = drflac__on_tell_ogg;
@@ -8585,7 +8584,7 @@ static drflac* drflac_open_with_metadata_private(drflac_read_proc onRead, drflac
 
         metadataResult = drflac__read_and_decode_metadata(onReadOverride, onSeekOverride, onTellOverride, onMeta, pUserDataOverride, pUserDataMD, &firstFramePos, &seektablePos, &seekpointCount, &allocationCallbacks);
         if (metadataResult != DRFLAC_SUCCESS) {
-            if (metadataResult == DRFLAC_INVALID_DATA && init.container == drflac_container_native && onSeek != NULL) {
+            if (metadataResult == DRFLAC_INVALID_DATA && init->container == drflac_container_native && onSeek != NULL) {
                 /* An incorrect block length can consume audio. Search again from the end of STREAMINFO. */
                 firstFramePos   = 42;
                 seektablePos    = 0;
@@ -8617,18 +8616,18 @@ static drflac* drflac_open_with_metadata_private(drflac_read_proc onRead, drflac
         return NULL;
     }
 
-    drflac__init_from_info(pFlac, &init);
+    drflac__init_from_info(pFlac, init);
     pFlac->allocationCallbacks = allocationCallbacks;
 
     pDecodedSamples = (drflac_uint8*)drflac_align((size_t)pFlac->pExtraData, DRFLAC_MAX_SIMD_VECTOR_SIZE);
-    if (init.bitsPerSample != 32) {
+    if (init->bitsPerSample != 32) {
         pFlac->decodedSamples.pS32 = (drflac_int32*)pDecodedSamples;
     } else {
         pFlac->decodedSamples.pS64 = (drflac_int64*)pDecodedSamples;
     }
 
 #ifndef DR_FLAC_NO_OGG
-    if (init.container == drflac_container_ogg) {
+    if (init->container == drflac_container_ogg) {
         drflac_oggbs* pInternalOggbs = (drflac_oggbs*)(pDecodedSamples + decodedSamplesAllocationSize + (seekpointCount * sizeof(drflac_seekpoint)));
         DRFLAC_COPY_MEMORY(pInternalOggbs, pOggbs, sizeof(*pOggbs));
 
@@ -8649,7 +8648,7 @@ static drflac* drflac_open_with_metadata_private(drflac_read_proc onRead, drflac
 
     /* NOTE: Seektables are not currently compatible with Ogg encapsulation (Ogg has its own accelerated seeking system). I may change this later, so I'm leaving this here for now. */
 #ifndef DR_FLAC_NO_OGG
-    if (init.container == drflac_container_ogg)
+    if (init->container == drflac_container_ogg)
     {
         pFlac->pSeekpoints = NULL;
         pFlac->seekpointCount = 0;
@@ -8708,8 +8707,8 @@ static drflac* drflac_open_with_metadata_private(drflac_read_proc onRead, drflac
             drflac__free_from_callbacks(pFlac, &allocationCallbacks);
             return NULL;
         }
-    } else if (!init.hasStreamInfoBlock) {
-        pFlac->currentFLACFrame.header = init.firstFrameHeader;
+    } else if (!init->hasStreamInfoBlock) {
+        pFlac->currentFLACFrame.header = init->firstFrameHeader;
         for (;;) {
             drflac_result result = drflac__decode_flac_frame(pFlac);
             if (result == DRFLAC_SUCCESS) {
@@ -8733,6 +8732,22 @@ static drflac* drflac_open_with_metadata_private(drflac_read_proc onRead, drflac
 
     return pFlac;
 }
+
+static drflac* drflac_open_with_metadata_private(drflac_read_proc onRead, drflac_seek_proc onSeek, drflac_tell_proc onTell, drflac_meta_proc onMeta, drflac_container container, void* pUserData, void* pUserDataMD, const drflac_allocation_callbacks* pAllocationCallbacks)
+{
+    /* ink: keep the initialization bitstream off the media executor's stack. */
+    drflac_allocation_callbacks callbacks = {NULL, drflac__malloc_default, drflac__realloc_default, drflac__free_default};
+    drflac_init_info* init;
+    drflac* result;
+    if (pAllocationCallbacks != NULL) callbacks = *pAllocationCallbacks;
+    if (callbacks.onFree == NULL || (callbacks.onMalloc == NULL && callbacks.onRealloc == NULL)) return NULL;
+    init = (drflac_init_info*)drflac__malloc_from_callbacks(sizeof(*init), &callbacks);
+    if (init == NULL) return NULL;
+    result = drflac_open_with_metadata_private__init(onRead, onSeek, onTell, onMeta, container, pUserData, pUserDataMD, &callbacks, init);
+    drflac__free_from_callbacks(init, &callbacks);
+    return result;
+}
+
 
 
 

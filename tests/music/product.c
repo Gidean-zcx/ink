@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "ink/ui_shell.h"
 #include "ink/sys/media.h"
 #include "ink/sys/audio.h"
@@ -6,12 +7,16 @@
 #undef ink_main
 #include "../integration/whole_product.h"
 static char snapshot[12000], target[48];
+static const char *stack_format;
+static void read_format(void *arg) { (void)arg; stack_format = getenv("INK_MUSIC_STACK_FORMAT"); }
 static ink_media_status_t status(void) { ink_media_status_t s; ink_media_status(&s); return s; }
 static void sample(void) { CHECK(ink_ui_snapshot(snapshot, sizeof snapshot, NULL) > 0, "music snapshot"); }
 static bool has(const char *text) { on_ui(sample); return strstr(snapshot, text) != NULL; }
 static bool settled(void) { return !ink_ui_busy() && !ink_display_busy(); }
 static void quiet(void) { CHECK(WAIT_FOR(settled(), 10000), "display settles"); }
-static void ok(const char *cap, const char *args) { CHECK(AI(cap, args) && g_rc.status == INK_RC_DONE, "%s: %s %.120s", cap, ink_rc_name(g_rc.status), g_rc.detail); }
+static void ok(const char *cap, const char *args) {
+    CHECK(AI(cap, args) && g_rc.status == INK_RC_DONE, "%s: %s %.120s", cap, ink_rc_name(g_rc.status), g_rc.detail);
+}
 static void pause_at(unsigned ms) {
     ok("music.pause", NULL); CHECK(status().state == INK_MEDIA_PAUSED, "pause completes before receipt");
     char args[48]; snprintf(args, sizeof args, "{\"ms\":%u}", ms); ok("music.seek", args); CHECK(status().position_ms == ms, "seek applies while paused");
@@ -27,6 +32,9 @@ static int x, y;
 static void locate_at(lv_obj_t *o) {
     const char *cap = ink_shell_bound_cap(o);
     if (cap && !strcmp(cap, target)) { lv_area_t a; lv_obj_get_coords(o, &a); x = (a.x1 + a.x2) / 2; y = (a.y1 + a.y2) / 2; }
+    if (!strcmp(target, "music.seek") && lv_obj_check_type(o, &lv_label_class) && !strcmp(lv_label_get_text(o), "快进10秒")) {
+        lv_area_t a; lv_obj_get_coords(lv_obj_get_parent(o), &a); x = (a.x1 + a.x2) / 2; y = (a.y1 + a.y2) / 2;
+    }
     for (uint32_t i = 0; i < lv_obj_get_child_count(o); i++) locate_at(lv_obj_get_child(o, (int)i));
 }
 static void locate(void) { x = y = -1; lv_obj_update_layout(lv_screen_active()); locate_at(lv_screen_active()); bounds(lv_screen_active()); }
@@ -43,8 +51,24 @@ static void switch_to(const char *id) {
 static void test(void *arg) {
     (void)arg; CHECK(WAIT_FOR(ink_member_space_open(), 10000), "boot opens member"); test_start_home();
     ok("app.open", "{\"id\":\"music\"}");
+    if (stack_format) {
+        char args[180]; snprintf(args, sizeof args, "{\"path\":\"/family/audio/tone-44100-2.%s\"}", stack_format);
+        ok("music.play", args); pause_at(1000); ok("music.play", NULL); ink_media_stop();
+        CHECK(WAIT_FOR(status().state == INK_MEDIA_IDLE, 3000), "format stream closes");
+        sim_osal_report();
+        double used = sim_metric_value("task.exec.media.stack_used_est_bytes");
+        CHECK(used < 8192, "media stack estimate %.0f < 8192", used);
+        sim_note("music stack %s: %.0f bytes, %.0f bytes spare", stack_format, used, 8192 - used);
+        ink_probe_count("test.finished"); return;
+    }
     ok("music.list", "{\"path\":\"/family/audio\",\"view\":\"all\"}"); CHECK(strstr(g_result, "items") && strstr(g_result, "合成音调"), "AI lists tagged songs: %.150s", g_result);
     CHECK(WAIT_FOR(has("合成音调"), 3000), "list reaches the page");
+    ok("music.play", "{\"path\":\"/family/audio/文件夹/快进测试.wav\"}"); pause_at(1000);
+    ok("music.list", "{\"view\":\"player\"}"); CHECK(WAIT_FOR(has("0:01"), 3000), "skip player starts at one second");
+    pause_at(2000); CHECK(WAIT_FOR(has("0:02"), 3000), "partial update reaches two seconds");
+    press("music.seek"); CHECK(WAIT_FOR(status().position_ms == 12000, 2000), "skip uses updated progress");
+    pause_at(3000); CHECK(WAIT_FOR(has("0:03"), 3000), "partial update reaches three seconds");
+    press("music.seek"); CHECK(WAIT_FOR(status().position_ms == 13000, 2000), "skip updates again without rebuilding");
     const char *const files[] = {"tone-16000-1.mp3", "tone-16000-1.flac", "tone-16000-1.wav", "tone-16000-1.ogg"};
     for (unsigned i = 0; i < sizeof files / sizeof *files; i++) {
         char args[180]; snprintf(args, sizeof args, "{\"path\":\"/family/audio/%s\"}", files[i]); ok("music.play", args);
@@ -75,6 +99,7 @@ static void test(void *arg) {
     ink_media_stop(); CHECK(WAIT_FOR(status().state == INK_MEDIA_IDLE, 3000), "stop releases stream"); ink_probe_count("test.finished");
 }
 void ink_main(void) {
+    vtk_host_call(read_format, NULL);
     product_main(); osal_task_cfg_t c = {.name = "musictest", .fn = test, .stack_bytes = 24576, .priority = OSAL_PRIO_NORMAL, .core = -1, .flags = OSAL_TASK_STACK_EXTERNAL};
     if (osal_task_create(&c, NULL) != OSAL_OK) osal_panic("music test task");
 }
