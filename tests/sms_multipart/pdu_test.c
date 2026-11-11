@@ -13,6 +13,8 @@ static char cmds[16][32], payloads[16][400], reply[600];
 static int ncmd, fail_cmgs, cmgs;
 static uint64_t now_us;
 static int failures;
+static char logged[2048];
+void hal_log_write(const char *line) { size_t n = strlen(logged); snprintf(logged + n, sizeof logged - n, "%s\n", line); }
 
 #define EXPECT(c, ...) do { if (!(c)) { failures++; printf("FAIL %d: ", __LINE__); printf(__VA_ARGS__); printf("\n"); } } while (0)
 
@@ -22,7 +24,7 @@ hal_at_result_t hal_modem_at_payload(const char *cmd, const char *payload, char 
     ncmd++;
     now_us += 2000000; /* each command takes the network two seconds */
     if (!strncmp(cmd, "AT+CMGS=", 8) && ++cmgs == fail_cmgs) return HAL_AT_ERROR;
-    snprintf(resp, cap, "%s", !strncmp(cmd, "AT+CMGR=", 8) ? reply : "");
+    snprintf(resp, cap, "%s", !strncmp(cmd, "AT+CMGR=", 8) ? reply : !strncmp(cmd, "AT+CMGS=", 8) ? "\r\n+CMGS: 7\r\n\r\nOK\r\n" : "");
     return HAL_AT_OK;
 }
 hal_at_result_t hal_modem_at(const char *cmd, char *resp, size_t cap, uint32_t timeout_ms) { return hal_modem_at_payload(cmd, NULL, resp, cap, timeout_ms); }
@@ -58,6 +60,8 @@ int main(void) {
     EXPECT(nt26_sms_send_parts("+46708251358", "hellohello", 30000, &sent) == NT26_OK && sent == 1, "a short message goes");
     EXPECT(ncmd == 2 && !strcmp(cmds[0], "AT+CMGF=0") && !strcmp(cmds[1], "AT+CMGS=22") &&
            !strcmp(payloads[1], "0001000B916407281553F800000AE8329BFD4697D9EC37"), "the classic SUBMIT (%s %s)", cmds[1], payloads[1]);
+    EXPECT(strstr(logged, "sms: part 1/1 -> OK +CMGS: 7") && !strstr(logged, "46708251358") && !strstr(logged, "hello"),
+           "each part's network answer is logged, never the number or the text (%s)", logged);
     memset(text, 0, sizeof text); han(text, 150);
     reset(0);
     EXPECT(nt26_sms_send_parts("10086", text, 30000, &sent) == NT26_OK && sent == 3 && ncmd == 4, "150 Chinese characters go in 3 parts");

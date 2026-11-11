@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "ink/hal_device.h"
 #include "ink/hal_net.h"
 #include "ink/osal.h"
 
@@ -332,6 +333,18 @@ nt26_result_t nt26_sms_send_parts(const char *number, const char *utf8, uint32_t
         uint64_t left_ms = (deadline - now) / 1000u;
         snprintf(cmd, sizeof cmd, "AT+CMGS=%d", len); /* TPDU octets, the SMSC address not counted */
         hal_at_result_t a = hal_modem_at_payload(cmd, hex, resp, sizeof resp, left_ms < NT26_SMS_PART_MS ? (uint32_t)left_ms : NT26_SMS_PART_MS);
+        { /* the network's answer for each part (+CMGS: <mr> or +CMS ERROR: <n>), never the number or the text:
+           * trial 2026-11-11, a message reported sent did not arrive */
+            char said[48] = "", line[96];
+            const char *ans = strstr(resp, "+CMGS:");
+            if (!ans) ans = strstr(resp, "+CMS ERROR:");
+            if (!ans) ans = strstr(resp, "ERROR");
+            if (ans) snprintf(said, sizeof said, "%.40s", ans);
+            for (char *q = said; *q; q++) if (*q == '\r' || *q == '\n') *q = ' ';
+            snprintf(line, sizeof line, "sms: part %d/%d -> %s %s", done + 1, parts,
+                     a == HAL_AT_OK ? "OK" : a == HAL_AT_TIMEOUT ? "timeout" : a == HAL_AT_NO_MODEM ? "no modem" : "ERROR", said);
+            hal_log_write(line);
+        }
         if (a != HAL_AT_OK) return a == HAL_AT_NO_MODEM ? NT26_NO_MODEM : NT26_AT_FAILED;
         if (sent) *sent = done + 1;
     }
