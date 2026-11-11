@@ -25,6 +25,7 @@ hal_i2c_status_t metalio_board_init(void) {
     g_ready = s == HAL_I2C_OK;
     if (g_ready) g_p14_since_us = osal_now_us(); /* P14 on from here (epoch 0) */
     osal_mutex_unlock(g_lock);
+    if (s == HAL_I2C_OK) osal_task_delay_us(POWER_RAIL_SETTLE_MS * 1000u);
     return s;
 }
 
@@ -93,8 +94,15 @@ hal_i2c_status_t metalio_board_cut_rails(bool keep_shared_power) {
     metalio_board_lock();
     g_rails_cut = true; /* a write that fails half way may have landed: restored the same way */
     hal_i2c_status_t s = tca9555_set(&g_tca, 0, MB_P0_CAM_SCR, 0);
+    if (s == HAL_I2C_OK && !keep_shared_power) s = tca9555_set(&g_tca, 0, MB_P0_MOTOR | MB_P0_AMP, 0);
     if (s == HAL_I2C_OK && !keep_shared_power) s = tca9555_set(&g_tca, 1, MB_P1_SHARED_PWR, 0);
     metalio_board_unlock();
+    if (s == HAL_I2C_OK && !keep_shared_power) {
+        s = metalio_board_set(0, MB_P0_MOTOR, MB_P0_MOTOR);
+        if (s == HAL_I2C_OK) osal_task_delay_us(POWER_DISCHARGE_MOTOR_PULSE_MS * 1000u);
+        hal_i2c_status_t off = metalio_board_set(0, MB_P0_MOTOR, 0);
+        if (s == HAL_I2C_OK) s = off;
+    }
     return s;
 }
 
@@ -121,7 +129,9 @@ hal_i2c_status_t metalio_board_restore_keys(uint8_t *p0, uint8_t *p1) {
 
 hal_i2c_status_t metalio_board_restore_rails(void) {
     hal_i2c_status_t s = metalio_board_set(1, MB_P1_SHARED_PWR, MB_P1_SHARED_PWR);
+    if (s == HAL_I2C_OK) osal_task_delay_us(POWER_RAIL_SETTLE_MS * 1000u);
     if (s == HAL_I2C_OK) s = metalio_board_set(0, MB_P0_CAM_SCR, MB_P0_CAM_SCR);
+    if (s == HAL_I2C_OK) osal_task_delay_us(POWER_RAIL_SETTLE_MS * 1000u);
     if (s == HAL_I2C_OK) {
         metalio_board_lock();
         g_rails_cut = false;

@@ -18,6 +18,7 @@
 #include "metalio_plus/metalio_board.h"
 #include "s31_board.h"
 #include "s31_cell.h"
+#include "s31_uhci.h"
 
 #define INK_FRAME_MAX 1600
 #define INK_URC_MAX 160
@@ -36,7 +37,7 @@ static struct {
     hal_at_result_t result;
     size_t frame_n, expected, line_n, response_n;
     char command[128], response[4096], line[1024];
-    uint8_t frame[INK_FRAME_MAX], chunk[256];
+    uint8_t frame[INK_FRAME_MAX];
 } ink_cell EXT_RAM_BSS_ATTR;
 static unsigned ink_ack;
 static void ink_urc(const char *line);
@@ -169,8 +170,10 @@ static void ink_feed(const uint8_t *data, size_t n) {
             unsigned sum = ink_cell.frame[0] + ink_cell.frame[1] + ink_cell.frame[2];
             ink_cell.expected = 4 + ink_cell.frame[0] + ((ink_cell.frame[1] & 15u) << 8);
             if (ink_cell.frame[3] != (uint8_t)((sum >> 8) ^ sum ^ 3) || ink_cell.expected > INK_FRAME_MAX) {
-                ink_cell.frame_n = ink_cell.expected = 0;
-                return; /* same discard policy as upstream .cc:994-999 */
+                memmove(ink_cell.frame, ink_cell.frame + 1, 3);
+                ink_cell.frame_n = 3;
+                ink_cell.expected = 0;
+                continue; /* Rescan the header after a DMA gap. */
             }
         }
         if (ink_cell.expected && ink_cell.frame_n == ink_cell.expected) {
@@ -179,12 +182,19 @@ static void ink_feed(const uint8_t *data, size_t n) {
         }
     }
 }
+static void ink_rx_lost(void) {
+    CELL_LOCK();
+    ink_cell.frame_n = ink_cell.expected = ink_cell.line_n = 0;
+    if (ink_cell.waiting) {
+        ink_cell.desynced = ink_cell.at_sent;
+        ink_cell.result = HAL_AT_ERROR;
+        ink_cell.waiting = false;
+        osal_sem_give(ink_cell.done);
+    }
+    CELL_UNLOCK();
+}
 static void ink_receive(void) {
-    int n;
-    do {
-        n = uart_read_bytes(INK_UART, ink_cell.chunk, sizeof ink_cell.chunk, 0);
-        if (n > 0) { ink_cell.activity = osal_now_us(); ink_feed(ink_cell.chunk, (size_t)n); }
-    } while (n == (int)sizeof ink_cell.chunk);
+    if (ink_s31_cell_rx(ink_feed, ink_rx_lost)) ink_cell.activity = osal_now_us();
 }
 static void ink_srdy(void *arg) {
     (void)arg;
@@ -212,7 +222,10 @@ static bool ink_enqueue(const void *data, size_t n, unsigned type) {
 static void ink_step(void) {
     osal_mutex_lock(ink_cell.io, OSAL_WAIT_FOREVER);
     if (ink_cell.suspended || osal_now_us() < ink_cell.ready_after) { osal_mutex_unlock(ink_cell.io); return; }
-    if (!gpio_get_level(S31_GPIO_MODEM_SRDY)) gpio_set_level(INK_MRDY, 0);
+    if (!gpio_get_level(S31_GPIO_MODEM_SRDY)) {
+        if (!ink_s31_uhci_active(true)) { osal_mutex_unlock(ink_cell.io); return; }
+        gpio_set_level(INK_MRDY, 0);
+    }
     ink_receive();
     ink_frame_t *f;
     if (osal_queue_recv(ink_cell.tx, &f, 0) == OSAL_OK) {
@@ -227,10 +240,9 @@ static void ink_step(void) {
             if (send) ink_cell.at_sent = true;
         }
         CELL_UNLOCK();
-        if (send) {
+        if (send && ink_s31_uhci_active(true)) {
             unsigned ack = __atomic_load_n(&ink_ack, __ATOMIC_ACQUIRE);
-            int wrote = uart_write_bytes(INK_UART, f->data, f->len);
-            if (wrote == (int)f->len) {
+            if (ink_s31_uhci_transmit(f->data, f->len)) {
                 until = osal_now_us() + 100000;
                 while (__atomic_load_n(&ink_ack, __ATOMIC_ACQUIRE) == ack && osal_now_us() < until) { ink_receive(); osal_task_delay_us(1000); }
                 /* Upstream .cc:817 assumes delivery on ACK timeout; never repeat a paid action. */
@@ -241,7 +253,13 @@ static void ink_step(void) {
         osal_free(f);
         ink_cell.activity = osal_now_us();
     }
-    if (osal_now_us() - ink_cell.activity >= 500000) gpio_set_level(INK_MRDY, 1);
+    if (osal_now_us() - ink_cell.activity >= 500000) {
+        gpio_set_level(INK_MRDY, 1);
+        if (gpio_get_level(S31_GPIO_MODEM_SRDY)) {
+            ink_s31_uhci_active(false);
+            ink_s31_cell_rx(NULL, NULL);
+        }
+    }
     else if (!gpio_get_level(S31_GPIO_MODEM_SRDY)) gpio_set_level(INK_MRDY, 0);
     osal_mutex_unlock(ink_cell.io);
 }
@@ -265,8 +283,9 @@ void ink_s31_cell_init(void) { /* board boot, once; nt26_board.cc:130 settles P1
     esp_err_t r = gpio_install_isr_service(0);
     if (r != ESP_OK && r != ESP_ERR_INVALID_STATE) return;
     if (gpio_isr_handler_add(S31_GPIO_MODEM_SRDY, ink_srdy, NULL) != ESP_OK ||
-        uart_driver_install(INK_UART, 4096, 0, 0, NULL, 0) != ESP_OK || uart_param_config(INK_UART, &u) != ESP_OK ||
-        uart_set_pin(INK_UART, S31_UART2_TX, S31_UART2_RX, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE) != ESP_OK) return;
+        uart_param_config(INK_UART, &u) != ESP_OK ||
+        uart_set_pin(INK_UART, S31_UART2_TX, S31_UART2_RX, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE) != ESP_OK ||
+        gpio_pullup_en(S31_UART2_RX) != ESP_OK || !ink_s31_uhci_init()) return;
     ink_cell.ready = true;
     ink_cell.ready_after = metalio_board_shared_power_since_us() + 1000000;
     osal_task_cfg_t cfg = {.name = "nt26-uart", .fn = ink_io, .stack_bytes = 4096, .priority = 5, .core = -1, .flags = OSAL_TASK_STACK_EXTERNAL};
@@ -414,6 +433,10 @@ bool ink_s31_cell_suspend(void) {
     if (!ink_cell.ready) return true;
     if (osal_mutex_lock(ink_cell.at, 0) != OSAL_OK) return false;
     if (osal_mutex_lock(ink_cell.io, 0) != OSAL_OK) { osal_mutex_unlock(ink_cell.at); return false; }
+    if (!ink_s31_uhci_active(false)) {
+        osal_mutex_unlock(ink_cell.io); osal_mutex_unlock(ink_cell.at); return false;
+    }
+    ink_s31_cell_rx(NULL, NULL);
     CELL_LOCK(); ink_cell.suspended = true; ink_reset(); CELL_UNLOCK();
     gpio_set_level(INK_MRDY, 1);
     osal_mutex_unlock(ink_cell.io);
@@ -423,7 +446,6 @@ bool ink_s31_cell_suspend(void) {
 void ink_s31_cell_resume(void) {
     if (!ink_cell.ready) return;
     osal_mutex_lock(ink_cell.io, OSAL_WAIT_FOREVER);
-    uart_flush_input(INK_UART);
     CELL_LOCK(); ink_cell.suspended = false;
     ink_cell.ready_after = metalio_board_shared_power_since_us() + 1000000;
     CELL_UNLOCK();

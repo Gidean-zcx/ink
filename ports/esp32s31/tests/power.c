@@ -322,6 +322,10 @@ int main(void) {
     cell_busy = true;
     assert(hal_power_sleep(&cfg) == 0 && !slept && !strchr(trace, 'x') && !strchr(trace, 'R'));
     reset();
+    rails_fail = 3;
+    sources = 1u << ESP_SLEEP_WAKEUP_TIMER;
+    assert(hal_power_sleep(&cfg) == HAL_WAKE_TIMER && strchr(trace, 'C') && !strchr(trace, 'R'));
+    reset();
     cfg.keep_modem = true;
     cfg.wake_mask = HAL_WAKE_AI_KEY | HAL_WAKE_MODEM;
     sources = 1u << ESP_SLEEP_WAKEUP_GPIO;

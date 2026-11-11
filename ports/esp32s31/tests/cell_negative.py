@@ -35,7 +35,8 @@ with tempfile.TemporaryDirectory(prefix='cell-negative-', dir=a.build.resolve())
         for d in ['ports/esp32s31/tests/cell_stub', 'ports/esp32s31', 'platform/include', 'drivers/chips', 'boards']:
             command += ['-I', str(ROOT / d)]
         command += [f'-DINK_TEST_CELL_SOURCE="{copy}"', str(ROOT / 'ports/esp32s31/tests/cell.c'),
-                    str(ROOT / 'ports/esp32s31/hal_cellular_s31.c'), str(ROOT / 'drivers/chips/nt26/nt26.c'), '-o', str(binary)]
+                    str(ROOT / 'ports/esp32s31/s31_cell_rx.c'), str(ROOT / 'ports/esp32s31/hal_cellular_s31.c'),
+                    str(ROOT / 'drivers/chips/nt26/nt26.c'), '-o', str(binary)]
         compiled = subprocess.run(command, capture_output=True, text=True)
         if compiled.returncode:
             raise SystemExit(f'{name}: compile failed\n{compiled.stderr}')
