@@ -19,10 +19,15 @@ static void inspect_static(lv_obj_t *obj) {
 static void inspect_page(void) {
     for (uint32_t i = 0; i < lv_obj_get_child_count(B.card.panel); i++) inspect_static(lv_obj_get_child(B.card.panel, (int32_t)i));
 }
+static void inspect_low_icon(void) {
+    lv_obj_t *icon = lv_obj_get_child(B.card.panel, 1);
+    CHECK(ink_ui_surface_kind(icon) == INK_SURFACE_WHITE && !lv_obj_get_style_border_width(icon, 0), "S30 static battery icon has no button circle");
+}
 static void run(void *ctx) {
     (void)ctx; fx_start();
     if (!strcmp(fx_variant, "low")) {
         mode = 1; on_ui(render_fixture); fx_capture("battery-low");
+        if (!fx_before) on_ui(inspect_low_icon);
         CHECK(strstr(fx_snapshot, "5%") && strstr(fx_snapshot, "interrupt.ack"), "S30 percentage and continue action remain");
     } else if (!strcmp(fx_variant, "saving")) {
         mode = 2; on_ui(render_fixture); fx_capture("battery-saving"); on_ui(inspect_page);

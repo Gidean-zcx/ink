@@ -4,6 +4,9 @@
 #include UI_FIX_PRODUCT
 #include "common.h"
 static void open_fixture(void) { open_job(NULL); }
+static bool export_ready;
+static void read_export(void) { export_ready = strstr(M.say, ".ink-logs") != NULL; }
+static bool exported(void) { on_ui(read_export); return export_ready; }
 static void inspect_menu(void) {
     lv_obj_t *report = fx_label(M.card.panel, "记录问题"), *export = fx_label(M.card.panel, "导出日志");
     CHECK(report && export, "S27 diagnostics remain available");
@@ -29,7 +32,7 @@ static void run(void *ctx) {
     if (!fx_before) on_ui(inspect_menu);
     fx_press("记录问题"); CHECK(WAIT_FOR(M.say[0], 5000), "problem recording reply arrives"); fx_capture("power-recorded");
     if (!fx_before) on_ui(inspect_result);
-    fx_press("导出日志"); fx_quiet(); fx_capture("power-exported");
+    fx_press("导出日志"); CHECK(WAIT_FOR(exported(), 10000), "S27 export reports its actual storage-card destination"); fx_capture("power-exported");
     if (!fx_before) on_ui(inspect_result);
     fx_press("取消"); CHECK(!M.card.root, "S27 cancel returns to original page");
     ink_probe_count("test.finished");

@@ -31,7 +31,7 @@
     {
       "case": "battery-low-100",
       "exit": 0,
-      "checks": 11,
+      "checks": 12,
       "failed": 0,
       "finished": 1
     },
@@ -66,7 +66,7 @@
     {
       "case": "battery-low-120",
       "exit": 0,
-      "checks": 11,
+      "checks": 12,
       "failed": 0,
       "finished": 1
     },
@@ -308,15 +308,15 @@
     {
       "case": "menu-120",
       "exit": 1,
-      "checks": 50,
-      "failed": 3,
+      "checks": 49,
+      "failed": 4,
       "finished": 1
     },
     {
       "case": "battery-low-100",
-      "exit": 0,
+      "exit": 1,
       "checks": 11,
-      "failed": 0,
+      "failed": 1,
       "finished": 1
     },
     {
@@ -349,9 +349,9 @@
     },
     {
       "case": "battery-low-120",
-      "exit": 0,
+      "exit": 1,
       "checks": 11,
-      "failed": 0,
+      "failed": 1,
       "finished": 1
     },
     {
@@ -399,15 +399,15 @@
     {
       "case": "interrupt-100",
       "exit": 1,
-      "checks": 16,
-      "failed": 3,
+      "checks": 15,
+      "failed": 4,
       "finished": 1
     },
     {
       "case": "interrupt-120",
       "exit": 1,
-      "checks": 16,
-      "failed": 3,
+      "checks": 15,
+      "failed": 4,
       "finished": 1
     },
     {
@@ -422,6 +422,148 @@
       "exit": 1,
       "checks": 31,
       "failed": 1,
+      "finished": 1
+    }
+  ],
+  "asan_after": [
+    {
+      "case": "scan-100",
+      "exit": 0,
+      "checks": 101,
+      "failed": 0,
+      "finished": 1
+    },
+    {
+      "case": "scan-120",
+      "exit": 0,
+      "checks": 113,
+      "failed": 0,
+      "finished": 1
+    },
+    {
+      "case": "menu-100",
+      "exit": 0,
+      "checks": 53,
+      "failed": 0,
+      "finished": 1
+    },
+    {
+      "case": "menu-120",
+      "exit": 0,
+      "checks": 53,
+      "failed": 0,
+      "finished": 1
+    },
+    {
+      "case": "battery-low-100",
+      "exit": 0,
+      "checks": 12,
+      "failed": 0,
+      "finished": 1
+    },
+    {
+      "case": "battery-saving-100",
+      "exit": 0,
+      "checks": 12,
+      "failed": 0,
+      "finished": 1
+    },
+    {
+      "case": "battery-charging-100",
+      "exit": 0,
+      "checks": 13,
+      "failed": 0,
+      "finished": 1
+    },
+    {
+      "case": "battery-empty-100",
+      "exit": 0,
+      "checks": 12,
+      "failed": 0,
+      "finished": 1
+    },
+    {
+      "case": "battery-unsaved-100",
+      "exit": 0,
+      "checks": 11,
+      "failed": 0,
+      "finished": 1
+    },
+    {
+      "case": "battery-low-120",
+      "exit": 0,
+      "checks": 12,
+      "failed": 0,
+      "finished": 1
+    },
+    {
+      "case": "battery-saving-120",
+      "exit": 0,
+      "checks": 12,
+      "failed": 0,
+      "finished": 1
+    },
+    {
+      "case": "battery-charging-120",
+      "exit": 0,
+      "checks": 13,
+      "failed": 0,
+      "finished": 1
+    },
+    {
+      "case": "battery-empty-120",
+      "exit": 0,
+      "checks": 12,
+      "failed": 0,
+      "finished": 1
+    },
+    {
+      "case": "battery-unsaved-120",
+      "exit": 0,
+      "checks": 11,
+      "failed": 0,
+      "finished": 1
+    },
+    {
+      "case": "off-100",
+      "exit": 0,
+      "checks": 17,
+      "failed": 0,
+      "finished": 1
+    },
+    {
+      "case": "off-120",
+      "exit": 0,
+      "checks": 17,
+      "failed": 0,
+      "finished": 1
+    },
+    {
+      "case": "interrupt-100",
+      "exit": 0,
+      "checks": 25,
+      "failed": 0,
+      "finished": 1
+    },
+    {
+      "case": "interrupt-120",
+      "exit": 0,
+      "checks": 25,
+      "failed": 0,
+      "finished": 1
+    },
+    {
+      "case": "airplane-100",
+      "exit": 0,
+      "checks": 32,
+      "failed": 0,
+      "finished": 1
+    },
+    {
+      "case": "airplane-120",
+      "exit": 0,
+      "checks": 32,
+      "failed": 0,
       "finished": 1
     }
   ]

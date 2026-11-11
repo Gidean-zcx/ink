@@ -10,7 +10,8 @@ static void inspect_context(void) {
     lv_obj_t *label = fx_label(C.card.panel, "结束后回到刚才的页面");
     CHECK(label, "Z07 interrupt states the return destination");
     if (label) fx_fits(label, C.card.panel);
-    CHECK(!lv_obj_has_flag(C.icon, LV_OBJ_FLAG_CLICKABLE) && !lv_obj_get_style_border_width(C.icon, 0), "Z07 static interrupt icon has no button outline or action");
+    CHECK(!lv_obj_has_flag(C.icon, LV_OBJ_FLAG_CLICKABLE) && !lv_obj_get_style_border_width(C.icon, 0) &&
+          ink_ui_surface_kind(C.icon) == INK_SURFACE_WHITE, "Z07 static interrupt icon has no button circle or action");
 }
 static void run(void *ctx) {
     (void)ctx; fx_start(); char original[64]; snprintf(original, sizeof original, "%s", ink_ui_page_name());
