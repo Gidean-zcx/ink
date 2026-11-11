@@ -1,7 +1,4 @@
-/*
- * A text field for pages (app framework, placeholder look until the system UI, D-64): shows what is typed, opens the
- * keyboard when tapped; pressed long: copy, paste, ask the AI.
- */
+/* Shared text inputs: the text service owns editing; LVGL draws the controls. */
 #ifndef INK_SYS_TEXTFIELD_H
 #define INK_SYS_TEXTFIELD_H
 
@@ -17,6 +14,13 @@ extern "C" {
 lv_obj_t *ink_textfield_create(lv_obj_t *parent, const ink_text_cfg_t *cfg, void (*entered)(void *ctx, const char *value), void *ctx, bool focus);
 const char *ink_textfield_text(lv_obj_t *field);
 
+typedef enum { INK_FIELD_SINGLE, INK_FIELD_BODY, INK_FIELD_SEARCH, INK_FIELD_PASSWORD } ink_textfield_kind_t;
+/* UI task. Geometry belongs to the component; legacy LVGL size overrides are ignored.
+ * Labels remain above the input. Passing NULL keeps the existing label. */
+void ink_textfield_style(lv_obj_t *field, ink_textfield_kind_t kind, const char *label);
+void ink_textfield_error(lv_obj_t *field, const char *message);
+int ink_textfield_height(ink_textfield_kind_t kind);
+
 /* F2, UI task: opt a plain/search or URL field into the short-input host. Use a
  * fixed-position parent; only the field moves above the fixed keyboard, then
  * returns to its original coordinates. No page navigation or scrolling occurs.
@@ -27,6 +31,7 @@ const char *ink_textfield_text(lv_obj_t *field);
  * the input service allows only the person to edit or submit them. */
 int ink_textfield_bind_short(lv_obj_t *field, const ink_ui_page_spec_t *page,
                              ink_ui_field_spec_t *spec, const ink_ui_action_spec_t *focus_action);
+/* Also supports legacy unbound fields; position and style them before focusing. */
 int ink_textfield_short_focus(lv_obj_t *field);
 /* F1 page snapshot plus field identity, visible focus and fixed rectangles. */
 int ink_textfield_short_snapshot(lv_obj_t *field, char *out, size_t cap);

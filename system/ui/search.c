@@ -202,11 +202,13 @@ static void create(lv_obj_t *screen, void *arg) {
     ACTIONS[0].label = TR("上一页"); ACTIONS[1].label = TR("下一页"); ACTIONS[2].label = TR("输入关键词");
     ink_shell_statusbar(screen, true);
     ink_shell_bind(ink_ui_circle(screen, "back", INK_MARGIN, INK_STATUS_BAR, INK_CONTROL, INK_ICON_LIST, INK_SURFACE_STATIC, NULL, NULL), "shell.back", NULL);
-    int x = INK_MARGIN + INK_CONTROL + INK_GAP_M, y = INK_STATUS_BAR + INK_CONTROL + INK_GAP_M;
+    int y = INK_STATUS_BAR + INK_CONTROL + INK_GAP_M;
     S.model = (ink_ui_page_spec_t){.id = ink_ui_page_name(), .title = TR("搜索"), .object = {"search", S.version}, .fields = &S.spec, .field_count = 1, .actions = ACTIONS + 2, .action_count = 1};
     ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .enter = INK_ENTER_SEARCH, .max = 192, .initial = S.query, .hint = TR("搜索")};
     S.field = ink_textfield_create(screen, &cfg, entered, NULL, false);
-    lv_obj_set_pos(S.field, ink_ui_px(x), ink_ui_px(INK_STATUS_BAR)); lv_obj_set_width(S.field, ink_ui_px(INK_CANVAS_W - INK_MARGIN - x));
+    lv_obj_set_y(S.field, ink_ui_px(y));
+    ink_textfield_style(S.field, INK_FIELD_SEARCH, TR("关键词"));
+    y += ink_textfield_height(INK_FIELD_SEARCH) + INK_GAP_L;
     S.spec = (ink_ui_field_spec_t){.id = "query", .label = TR("关键词"), .role = "searchbox"};
     ink_textfield_bind_short(S.field, &S.model, &S.spec, ACTIONS + 2);
     if (!S.total) {

@@ -58,12 +58,12 @@ static void create(lv_obj_t *screen, void *arg) {
     const char *labels[] = {TR("接入点名称"), TR("用户名"), TR("密码")}, *values[] = {P.name, P.user, P.password};
     _Static_assert(sizeof labels / sizeof *labels <= sizeof P.fields / sizeof *P.fields, "APN rows fit");
     if (P.edit) for (int i = 0; i < 3; i++) {
-        ink_ui_line(screen, labels[i], INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, y, w);
         ink_text_cfg_t cfg = {.type = i == 2 ? INK_TEXT_PASSWORD : INK_TEXT_PLAIN, .initial = values[i], .hint = labels[i], .max = i ? 64 : 100, .ai_hidden = i == 2};
         lv_obj_t *f = ink_textfield_create(screen, &cfg, entered, (void *)(intptr_t)i, false);
-        lv_obj_set_pos(f, ink_ui_px(INK_MARGIN), ink_ui_px(y + ink_ui_line_height(INK_FONT_NOTE)));
+        lv_obj_set_y(f, ink_ui_px(y));
+        ink_textfield_style(f, i == 2 ? INK_FIELD_PASSWORD : INK_FIELD_SINGLE, labels[i]);
         P.fields[i] = (ink_ui_field_spec_t){.id = i == 0 ? "name" : i == 1 ? "user" : "password", .role = "textbox", .label = labels[i], .value = i == 2 && P.has_password && !P.password[0] ? TR("有") : values[i], .secret = i == 2};
-        y += INK_CONTROL + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP;
+        y += ink_textfield_height(INK_FIELD_SINGLE) + INK_GAP;
     }
     else {
         if (P.unavailable) { snprintf(P.current, sizeof P.current, "%s", TR("未接入移动网络模组")); memcpy(P.previous, P.current, sizeof P.previous); }

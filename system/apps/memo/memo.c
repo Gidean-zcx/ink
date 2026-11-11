@@ -224,8 +224,8 @@ static void mutate(ink_call_t *c) {
 }
 static void save_failed(bool failed) {
     int delta = (failed - (M.mode == FAIL)) * ink_ui_px(INK_PRIMARY);
-    lv_obj_set_y(M.field, lv_obj_get_y(M.field) + delta); lv_obj_set_height(M.field, lv_obj_get_height(M.field) - delta);
-    lv_obj_t *label = lv_obj_get_child(M.field, 0); lv_obj_set_height(label, lv_obj_get_height(label) - delta);
+    lv_obj_set_y(M.field, lv_obj_get_y(M.field) + delta);
+    ink_textfield_style(M.field, INK_FIELD_BODY, NULL);
     M.mode = failed ? FAIL : EDIT;
     lv_obj_set_y(M.notice, ink_ui_px(failed ? INK_STATUS_BAR + INK_PRIMARY + INK_GAP_S : INK_CANVAS_H - INK_PRIMARY - INK_CONTROL - INK_GAP_L));
     if (failed) lv_obj_remove_flag(M.retry_button, LV_OBJ_FLAG_HIDDEN); else lv_obj_add_flag(M.retry_button, LV_OBJ_FLAG_HIDDEN);
@@ -404,7 +404,9 @@ static void create(lv_obj_t *screen, void *arg) {
     if (mode == PENDING) return;
     if (mode == EDIT || mode == FAIL) {
         ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .max = 4095, .initial = M.note.body, .draft_page = ink_ui_page_name(), .draft_id = !strcmp(M.note.page, ink_ui_page_name()) ? M.note.draft : 0};
-        M.field = ink_textfield_long_create(screen, &cfg); snprintf(M.sent, sizeof M.sent, "%s", mode == FAIL ? M.note.body : "\1");
+        M.field = ink_textfield_long_create(screen, &cfg);
+        if (M.field) ink_textfield_style(M.field, INK_FIELD_BODY, TR("备忘"));
+        snprintf(M.sent, sizeof M.sent, "%s", mode == FAIL ? M.note.body : "\1");
         M.note.draft = ink_text_draft_id(); snprintf(M.note.page, sizeof M.note.page, "%s", ink_ui_page_name());
         M.delete_button = ink_ui_circle(screen, "trash", INK_CANVAS_W - INK_MARGIN - INK_CONTROL, INK_STATUS_BAR + INK_GAP_S, INK_CONTROL, INK_ICON_LIST, INK_SURFACE_WHITE, NULL, NULL); ink_shell_bind(M.delete_button, "memo.delete", M.target);
         M.retry_button = ink_ui_pill(screen, TR("重试"), INK_CANVAS_W - INK_MARGIN - INK_PRIMARY, INK_STATUS_BAR, INK_PRIMARY, INK_CONTROL, false, retry, NULL);

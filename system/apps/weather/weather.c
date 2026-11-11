@@ -249,14 +249,15 @@ static void city_create(lv_obj_t *screen, void *arg) {
     ink_shell_topbar(screen, TR("天气城市"));
     ink_text_cfg_t cfg = {.type = INK_TEXT_PLAIN, .enter = INK_ENTER_SEARCH, .max = 60, .hint = TR("输入城市名"), .initial = W.query};
     W.field = ink_textfield_create(screen, &cfg, entered, NULL, false);
-    lv_obj_set_pos(W.field, ink_ui_px(INK_MARGIN), ink_ui_px(y)); lv_obj_set_size(W.field, ink_ui_px(w), ink_ui_px(INK_CONTROL));
-    y += INK_CONTROL + INK_GAP;
+    lv_obj_set_y(W.field, ink_ui_px(y));
+    y += ink_textfield_height(INK_FIELD_SEARCH) + INK_GAP;
     snprintf(W.texts[0], sizeof W.texts[0], TR("现在：%s"), ink_weather_city());
     ink_ui_notice(screen, W.status[0] ? TR(W.status) : W.texts[0], y);
     field(0, "city", TR("天气城市"), W.texts[0]); field(1, "status", TR("查找"), W.status[0] ? TR(W.status) : "");
     W.fields[2] = (ink_ui_field_spec_t){.id = "name", .role = "searchbox", .label = TR("城市名，按搜索找（weather.find）")};
     W.actions[W.nfound] = (ink_ui_action_spec_t){.id = "name", .label = TR("输入城市名"), .capability = "weather.focus", .enabled = true};
     ink_textfield_bind_short(W.field, &W.page, &W.fields[2], &W.actions[W.nfound]);
+    ink_textfield_style(W.field, INK_FIELD_SEARCH, TR("输入城市名"));
     y += INK_LINE_NOTE + INK_GAP;
     if (W.nfound) {
         lv_obj_t *group = ink_ui_card(screen, INK_MARGIN, y, w, W.nfound * ink_ui_row_double(), INK_SURFACE_STATIC);

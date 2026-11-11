@@ -180,7 +180,7 @@ static void create(lv_obj_t *screen, void *arg) {
             .max = secret ? 64 : 32, .ai_hidden = secret, .hint = secret ? TR("输入网络密码") : TR("输入网络名称")};
         B.field = ink_textfield_create(screen, &cfg, password_entered, NULL, false);
         lv_obj_set_pos(B.field, ink_ui_px(INK_MARGIN), ink_ui_px(INK_STATUS_BAR + INK_CONTROL + INK_GAP));
-        lv_obj_set_width(B.field, ink_ui_px(w));
+        ink_textfield_style(B.field, secret ? INK_FIELD_PASSWORD : INK_FIELD_SINGLE, secret ? TR("网络密码") : TR("网络名称"));
         B.fields[2] = (ink_ui_field_spec_t){secret ? "password" : "ssid", "textbox", secret ? TR("网络密码") : TR("网络名称"), "", {NULL, 0}, secret};
         B.model.field_count = 3;
         const ink_ui_action_spec_t *focus = action(TR("输入密码"), "shell.launch", "boot.focus");

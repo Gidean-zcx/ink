@@ -640,7 +640,7 @@ typedef struct {
 static int apps_walk(bool draw, tile_list_t *list) {
     static const char *const groups[] = {TR_NOOP("读和听"), TR_NOOP("记和联系"), TR_NOOP("工具")};
     static tool_t items[TOOLS_MAX], shown[TOOLS_MAX]; /* UI task only, never re-entered: off its small stack */
-    int count = tools(items), top = below_heading() + INK_CONTROL + INK_GAP_L, y = top, page = 0;
+    int count = tools(items), top = below_heading() + ink_textfield_height(INK_FIELD_SEARCH) + INK_GAP_L, y = top, page = 0;
     int name_h = ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_S;
     int row_h = INK_CIRCLE + INK_GAP_S + ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_L;
     for (int g = 0; g < 3; g++) {
@@ -784,7 +784,7 @@ static void draw_home_content(void) {
             .type = INK_TEXT_PLAIN, .enter = INK_ENTER_SEARCH, .max = 64, .hint = TR("查找应用"), .initial = N.search};
         lv_obj_t *search = ink_textfield_create(N.content, &cfg, search_entered, (void *) (uintptr_t) N.epoch, false);
         lv_obj_set_pos(search, ink_ui_px(INK_MARGIN), ink_ui_px(below_heading()));
-        lv_obj_set_size(search, ink_ui_px(width()), ink_ui_px(INK_CONTROL));
+        ink_textfield_style(search, INK_FIELD_SEARCH, TR("查找应用"));
         N.apps_pages = apps_walk(false, NULL);
         if (N.apps_page >= N.apps_pages) N.apps_page = N.apps_pages - 1;
         apps_walk(true, NULL);
@@ -1463,15 +1463,17 @@ static void body_blocks(void) {
             F.y += INK_CONTROL + INK_GAP_M;
         }
         if (N.picked_ssid[0]) {
-            if (block(INK_CONTROL)) {
+            if (block(ink_textfield_height(INK_FIELD_PASSWORD))) {
                 ink_text_cfg_t cfg = {.type = INK_TEXT_PASSWORD,
                                       .enter = INK_ENTER_DONE,
                                       .max = 64,
                                       .hint = TR("输入网络密码"),
                                       .ai_hidden = true};
                 lv_obj_t *password_field =
-                    ink_textfield_create(N.page_body, &cfg, wifi_password, (void *) (uintptr_t) N.epoch, true);
+                    ink_textfield_create(N.page_body, &cfg, wifi_password, (void *) (uintptr_t) N.epoch, false);
                 lv_obj_set_pos(password_field, ink_ui_px(INK_MARGIN), ink_ui_px(F.y));
+                ink_textfield_style(password_field, INK_FIELD_PASSWORD, N.picked_ssid);
+                ink_textfield_short_focus(password_field);
             }
             return;
         }
