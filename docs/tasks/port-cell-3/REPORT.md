@@ -1,19 +1,21 @@
 # port-cell-3 执行报告
 
-日期：2026-11-11。基线：`281dbe7130514a602c68e4c6de2b7e53c81a5db1`。仅本地提交，不推送、不接设备。状态：收尾验证中；以下未通过项没有冒充完成。
+日期：2026-11-11。基线：`281dbe7130514a602c68e4c6de2b7e53c81a5db1`。仅本地提交，不推送、不接设备。状态：执行完成，未全部通过验收；未通过项没有冒充完成。
 
 ## 验收表
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
 | 1 原厂唯一实现、来源、安全 | 部分完成【实现】 | modem、iot_eth、UHCI 已合一；原文哈希和改动行见两个 SOURCE。C10 跨文件限制、ECSCLKEX 的失败后接网行为未完全满足任务书，见下文 | `git diff`、逐行对照、SHA-256 |
-| 2 构建、正反测试、固件 | 收尾中【实测】 | 普通宿主已有 36/36，ASan/UBSan 已有 37/37；最终普通/内存、反向对照、主工程全量和最新固件结果待补。旧断言迁移差异单列，不声称原样全保留 | 下文 E1–E6 |
+| 2 构建、正反测试、固件 | 部分完成【实测】 | S31 宿主普通/ASan/UBSan 均 38/38；13 项反向及 UART/供电 4 项通过；固件编过。主工程构建失败，全量 ctest 4 项失败、3 项跳过，见结果 | 下文 E1–E6 |
 | 3 上机核对清单 | 清单完成【实现】 | 列出启动顺序、保电重启、切卡、PDU 和通话；没有真机通过结论 | 文末清单 |
 
 来源：[modem / 生命周期](../../../vendor/uart-eth-modem/SOURCE.md)、[iot_eth](../../../vendor/iot_eth/SOURCE.md)、既有 [UHCI](../../../vendor/uart-uhci/SOURCE.md)。上游均取 `874538eb54f7f7eb593cd40cd1ba6dc8497226e7`，没有移动上游 HEAD。
 
 ## 没做到的
 
+- **主工程构建/全量未通过**：根 `CMakeLists.txt:39–41` 仍用旧 C cell 源列表，缺少 C++/vendor/替身，链接时报 HAL 和 fixture 符号未定义。该根文件不在白名单，没有越界修改；根 ctest 的 cell 和两项负向测试因找不到二进制失败。需主会话按独立 S31 宿主目标同步根目标的 CXX20、源文件、头路径、版本宏和 Threads。
+- 主工程 `integration-races` 在 `tests/integration/races.c:120` 失败：`it is in the inbox of who it is for (0)`。未修改模拟器/系统/此测试，也未做基线复现，不判定根因、不越界修复。
 - **C10 的端到端浅睡唤醒未修完**：原厂 `InitGpio` 是 SRDY 低电平，宿主断言核对了这一点；`hal_power_s31.c:98` 仍配置 EXT1 ANY_HIGH，会覆盖它。该文件不在任务允许范围，没有越界修改。默认浅睡仍关闭。
 - 没有运行设备、实际 DMA/中断/电流、运营商网络、短信或电话测试；没有 Linux 原生 CI。交叉 GCC 和 S31 编译不能代替 Linux 原生测试。
 - 不宣称保留了旧 C 解析器“坏尾字节后在同一个 DMA 缓冲内滑窗找下一帧”的行为；原厂会丢掉该缓冲余部。新测试核对清理半帧/半行、独立完整帧和迟到结果恢复。
@@ -48,10 +50,11 @@
 
 - 原厂主任务 4096 字节 / 优先级 10，TX 3072 / 9，初始化 4096 / 4：任务书第 1、6 项要求，替换旧的 4096 字节 PSRAM 轮询任务。没有第四个恢复任务。
 - 原厂主队列增加 RX 缺口事件：保留既有溢出与缓冲归还合同；没有另建队列、线程或状态机。
-- 没有新增产品配置项、持久格式、缓存或通用框架；CMake 的两个替身路径仅供反向测试。
+- 没有新增配置项、持久格式、缓存或通用框架；反向对照复用编译数据库。
 
 ## 要改的文档
 
+- 主会话同步根 CMake 的 cell 测试构建接线（共享源文件，不是本分支允许修改的文档）。
 - 电源任务同步 SRDY 的 EXT1 极性、保网浅睡和 P14 停放调用；另核对正常关机前是否调用蜂窝 PreparePowerOff。本任务未修改 `hal_power_s31.c` 或板级共享文件。
 - 主会话统一更新底层驱动接线说明；原生能力和业务 HAL 未变，无需生成能力表。按钮和 AI 仍经过同一业务 HAL，没有给 AI 开原始 AT 口。
 
@@ -80,7 +83,15 @@
 
 产品新增 **397 行 / 450 行**：旧文件对任务基线，复制文件对原厂逐行数新增，删除不抵扣；测试、文档和原文不计。之所以超过 100 行：需替换 C/C++ 边界、生命周期、回复累积/PDU、统一安全闸口和网络状态；检查过“只包 HAL”方案，挡不住原厂内部配置写，也接不上 PDU，所以不用。
 
-`size.txt` 最终数值待补。静态尺寸与动态栈分开：原厂稳态任务栈 7168 字节，初始化时 11264 字节，走内部 RAM（IDF `components/freertos/heap_idf.c:14–20,43–55`）。另有 1600 字节内部重组、两条 32 项队列、TCB/事件/字符串及待发 DMA 帧；旧 4096 字节 PSRAM 栈撤下。4×1600 DMA 缓冲两版都有。没有实机堆峰值，不把静态差值当总增量。
+【实测】`build-s31-baseline/size.txt` 对 `build-s31/size.txt`（基线源码归档在 `work/port-cell-3/baseline`，共用相同字库和构建依赖）：
+
+| 静态尺寸（字节） | 基线 | 本次 | 差值 |
+| --- | ---: | ---: | ---: |
+| Flash | 4233416 | 4265064 | +31648 |
+| DIRAM | 150712 | 150886 | +174 |
+| 外部 RAM BSS | 683688 | 676688 | -7000 |
+
+【实现＋估算】静态尺寸与动态栈分开：原厂稳态任务栈 7168 字节，初始化时 11264 字节，走内部 RAM（IDF `components/freertos/heap_idf.c:14–20,43–55`）。另有 1600 字节内部重组、两条 32 项队列、TCB/事件/字符串及待发 DMA 帧；旧 4096 字节 PSRAM 栈撤下。4×1600 DMA 缓冲两版都有。没有实机堆峰值，不把静态差值当总增量。
 
 ## 验证命令与证据
 
@@ -104,7 +115,26 @@
  taskpolicy -c utility python3 $INK_DEPS/../ink-codex/tools/gcccheck.py build-s31-host ports/esp32s31/s31_modem.c ports/esp32s31/s31_cell_rx.c ports/esp32s31/hal_cellular_s31.c ports/esp32s31/tests/cell.c vendor/iot_eth/iot_eth.c vendor/iot_eth/iot_eth_netif_glue.c
 ```
 
-最终结果、隐私检查和提交待收尾补齐。`work/` 和 `build*` 证据不提交。
+最终证据在本地 `work/port-cell-3/evidence/`，`work/` 和 `build*` 不提交：
+
+| 检查 | 原话/退出码 | 证据日志 |
+| --- | --- | --- |
+| 普通宿主全量 | `100% tests passed out of 38`，exit 0 | `host-final-tests.log`；`Total Test time (real) = 52.00 sec` |
+| ASan + UBSan 全量 | `100% tests passed out of 38`，exit 0；设置 `ASAN_OPTIONS=halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1`，LastTest.log 没有 sanitizer 报告 | `asan-final-tests.log`；`Total Test time (real) = 53.47 sec` |
+| 反向 | 13/13 均编译/链接 0、运行 -6；按下述四轮取证，不伪称有一次 13 项全跑成功 | `negative-first.log`、`uhci-negative.log`、`negative-independent.log`、`privacy-negative.log` |
+| UART/供电反向 | `UHCI/rails reverse controls: 4/4 rejected; vendor/HAL and rail baselines passed`，exit 0 | `uhci-negative.log` |
+| S31 固件 | exit 0；warning/error 均无命中，镜像通过分区尺寸检查 | `s31-build.log`、`build-s31/size.txt` |
+| 主工程构建 | exit 2，旧 cell 目标未解析符号；其它已构建的主程序仍按要求运行全量 | `main-build.log` |
+| 主工程全量 | `99% tests passed, 4 tests failed out of 391`，`Total Test time (real) = 860.63 sec`，exit 8 | `main-tests.log` |
+| GCC | 6 个 C 文件、4 个 C++ 文件均零发现；不是 Linux 原生 CI | `gcccheck-final.log`、`gcccheck-cxx.log` |
+
+主工程失败项：`unit-s31-cell`（Not Run）、`unit-s31-cell-negative`、`unit-s31-uhci-negative`（同一根目标接线阻塞），以及 `integration-races`。跳过：`hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e`。
+
+反向取证：首轮确认 detect-rebuild、frame-checksum、force-wake、control-not-data、vendor-policy、response-chunks、channel-urc、dhcp-rebuild、dma-return 九项；UART 脚本再确认 rx-gap；`--case rebuild-throttle --case radio-once` 确认两项；`--case vendor-log` 的独立 privacy 场景确认日志回归。日志测试核对 MAC/标识/位置以及 ATD 超时参数，不依赖唤醒场景来判断隐私。
+
+曾出现正向 protocol 在宿主替身的 200 ms 唤醒等待处偶发失败，导致一次反向脚本提前退出。按任务规则第 7 节停止继续改时序机制；分开验证其它项，不抬产品超时。最终完整普通/内存两轮均通过，**不把这个偶发失败说成已消除**。早期反向 rx-gap 暴露测试中前导换行会清掉残留半行，已增加无前导换行的迟到结果；撤掉半行清理后现在确实失败。
+
+`git diff --check` 通过；范围检查仅有任务白名单、两个 vendor 目录和本报告；没有夹带需求/决策/共享根构建修改。按任务规定的隐私 grep 只有两处任务允许的假 MAC 否定断言，没有本机绝对路径或真实标识；提交后按同一命令复查。所有新增文件小于 5 MB。
 
 ## 上机核对清单
 

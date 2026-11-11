@@ -36,8 +36,8 @@ target_include_directories(test-s31-display PRIVATE display_stub ${root}/drivers
 target_link_libraries(test-s31-display PRIVATE Threads::Threads m)
 add_executable(test-s31-wifi wifi.c)
 target_include_directories(test-s31-wifi PRIVATE wifi_stub)
-set(ink_cell_vendor ${root}/vendor/uart-eth-modem CACHE PATH "Cell vendor fixture")
-set(ink_cell_port ${port} CACHE PATH "Cell HAL fixture")
+set(ink_cell_vendor ${root}/vendor/uart-eth-modem)
+set(ink_cell_port ${port})
 add_executable(test-s31-cell cell.c cell_host.cc ${ink_cell_port}/s31_modem.c ${ink_cell_port}/s31_uhci.cc
   ${ink_cell_port}/s31_cell_rx.c ${ink_cell_port}/hal_cellular_s31.c ${root}/drivers/chips/nt26/nt26.c
   ${ink_cell_vendor}/uart_eth_modem.cc ${ink_cell_vendor}/nt26_lifecycle.cc
@@ -52,11 +52,11 @@ target_include_directories(test-s31-cell PRIVATE cell_stub)
 enable_testing()
 add_test(NAME unit-s31-camera COMMAND test-s31-camera)
 add_test(NAME unit-s31-cell COMMAND test-s31-cell)
-foreach(case nat baud started silent dhcp throttle detect)
+foreach(case nat baud started silent dhcp throttle detect privacy)
   add_test(NAME unit-s31-cell-${case} COMMAND test-s31-cell ${case})
 endforeach()
 set_tests_properties(unit-s31-cell unit-s31-cell-nat unit-s31-cell-baud unit-s31-cell-started
-    unit-s31-cell-silent unit-s31-cell-dhcp unit-s31-cell-throttle unit-s31-cell-detect PROPERTIES TIMEOUT 120)
+    unit-s31-cell-silent unit-s31-cell-dhcp unit-s31-cell-throttle unit-s31-cell-detect unit-s31-cell-privacy PROPERTIES TIMEOUT 120)
 add_test(NAME unit-s31-wifi COMMAND test-s31-wifi)
 add_executable(test-s31-log ${root}/tests/log/s31.c ${port}/hal_log_s31.c)
 target_include_directories(test-s31-log PRIVATE ${root}/tests/log/s31_stub)

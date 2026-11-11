@@ -44,7 +44,7 @@ cases = [
     ('rebuild-throttle', life, 'esp_timer_get_time() - last_start_us_.load() < 5000000', 'esp_timer_get_time() - last_start_us_.load() < 0', 'throttle'),
     ('radio-once', modem, 'state == 1 && !ink_radio_restarted.exchange(true)', 'state == 1', 'silent'),
     ('vendor-log', log, '#define ESP_LOGI(tag, event, ...) ink_s31_vendor_event(tag, event, ##__VA_ARGS__)',
-     '#define ESP_LOGI(tag, event, ...) ink_test_log(event, ##__VA_ARGS__)', 'protocol'),
+     '#define ESP_LOGI(tag, event, ...) ink_test_log(event, ##__VA_ARGS__)', 'privacy'),
 ]
 if a.case:
     cases = [c for c in cases if c[0] in a.case]

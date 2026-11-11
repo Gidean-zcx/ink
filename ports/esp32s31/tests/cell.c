@@ -42,6 +42,16 @@ int main(int argc,char **argv) {
         if (!strcmp(mode,"baud")) assert(ink_test_count(N_BAUD)==3000000);
         goto finish;
     }
+    if (!strcmp(mode,"privacy")) {
+        hal_cell_status_t status; assert(hal_cell_status(&status));
+        ink_test_set(F_NO_RESPONSE,1);
+        assert(hal_modem_at("ATD00000000000;",s,sizeof s,200)==HAL_AT_TIMEOUT);
+        ink_test_set(F_NO_RESPONSE,0);
+        const char *logs=ink_test_logs();
+        assert(!strstr(logs,"00:11:22:33:44:55") && !strstr(logs,"123456789012345") && !strstr(logs,"00000000000"));
+        assert(!strstr(logs,"1A2B") && !strstr(logs,"0C3D4E5F"));
+        goto finish;
+    }
     if (!strcmp(mode,"silent") || !strcmp(mode,"throttle") || !strcmp(mode,"dhcp")) {
         hal_cell_status_t status;
         hal_link_status_t link;
