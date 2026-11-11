@@ -109,9 +109,9 @@ static void read_all(uint32_t token) {
 static const char *accept_label(void) {
     if (!strcmp(scene, "ConfirmParent")) return "输入密码";
     if (!strcmp(scene, "ConfirmCall")) return "打电话";
-    if (!strcmp(scene, "ConfirmSetting")) return "确认修改";
-    if (!strcmp(scene, "ConfirmWeb")) return "确认支付";
-    return "确认";
+    if (!strcmp(scene, "ConfirmSetting")) return "修改设置";
+    if (!strcmp(scene, "ConfirmWeb")) return "支付";
+    return "继续操作";
 }
 static void ai_cannot_answer(uint32_t token) {
     for (int src = INK_SRC_AI; src <= INK_SRC_CONFIRMED; src++) {
@@ -136,7 +136,7 @@ static void queue_test(void) {
         ink_confirm_view_t cards[4]; CHECK(ink_confirm_list(cards, 4) == 4 - i && cards[0].token == tokens[i], "FIFO item %d", i);
         view(); char count[40]; snprintf(count, sizeof count, "排队=%d", 4 - i);
         CHECK(strstr(g_snap, count), "snapshot reports the actual queue length");
-        if (i == 1) { read_all(tokens[i]); press("确认"); }
+        if (i == 1) { read_all(tokens[i]); press("继续操作"); }
         else press("取消");
         CHECK(WAIT_FOR(result_token == tokens[i], 10000), "each queue item gets its own result");
         CHECK(!strcmp(decision, i == 1 ? "accepted" : "rejected") && (i == 1 ? !strcmp(status, "done") : !status[0]),

@@ -16,6 +16,13 @@ static void fx_check_page(void) {
     lv_area_t body, notice, buttons;
     lv_obj_get_coords(C.card.body, &body); lv_obj_get_coords(C.notice, &notice); lv_obj_get_coords(C.card.row, &buttons);
     CHECK(body.y2 < notice.y1 && notice.y2 < buttons.y1, "UX05 Chinese text, notice and buttons never overlap");
+    bool context_fits = false;
+    for (uint32_t i = 0; i < lv_obj_get_child_count(C.card.panel); i++) {
+        lv_obj_t *o = lv_obj_get_child(C.card.panel, (int)i);
+        if (!lv_obj_check_type(o, &lv_label_class) || !strstr(lv_label_get_text(o), "的身份")) continue;
+        lv_area_t a; lv_obj_get_coords(o, &a); context_fits = a.y1 >= 0 && a.y2 < body.y1;
+    }
+    CHECK(context_fits, "UX05 identity and actual validity remain fully visible above the original transaction pages");
     CHECK(C.starts[0] == 0 && C.starts[C.pages] >= strlen(C.now.detail), "UX05 pagination retains the entire supplied object and detail");
 }
 static void fx_secret(void) {

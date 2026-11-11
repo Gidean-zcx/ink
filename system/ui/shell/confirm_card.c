@@ -16,15 +16,15 @@
 #include "shell_card.h"
 #include "ink/ui_shell.h"
 
-enum { CONFIRM_TEXT_CAP = 512 };
+enum { CONFIRM_CONTEXT_CAP = 384 };
 static struct {
     shell_card_t card;
     ink_confirm_view_t now;
-    lv_obj_t *pad, *pager, *accept, *notice, *preview, *pin_dots;
+    lv_obj_t *pad, *pager, *accept, *notice, *preview, *pin_dots, *context;
     int head_h, preview_h, expired_h, expired_body_y;
     lv_timer_t *read_timer;
-    char text[CONFIRM_TEXT_CAP];
-    uint16_t starts[CONFIRM_TEXT_CAP + 1]; /* At most one page per byte, plus the end. */
+    char context_text[CONFIRM_CONTEXT_CAP];
+    uint16_t starts[161]; /* At most one page per detail byte, plus the end. */
     int page, pages;
     bool drawn, read, watching;
     bool expired;
@@ -157,7 +157,7 @@ static void on_answer(lv_event_t *e) {
 }
 
 static ink_ui_page_spec_t model(void) {
-    enum { FIELD_COUNT = 7, ACTION_COUNT = 6, DELTA_COUNT = 3 };
+    enum { FIELD_COUNT = 8, ACTION_COUNT = 6, DELTA_COUNT = 3 };
     static char identity[128], reading[96], args[DELTA_COUNT][80], choices[96];
     static ink_ui_field_spec_t fields[FIELD_COUNT] INK_PSRAM_BSS;
     static ink_ui_action_spec_t actions[ACTION_COUNT] INK_PSRAM_BSS;
@@ -169,11 +169,12 @@ static ink_ui_page_spec_t model(void) {
     snprintf(choices, sizeof choices, TR("%s、取消"), answer_label());
     fields[0] = (ink_ui_field_spec_t){.id = "transaction", .role = "status", .label = TR("确认编号"), .value = identity};
     fields[1] = (ink_ui_field_spec_t){.id = "title", .role = "text", .label = TR("标题"), .value = C.expired ? TR("这件事没有做") : title_text()};
-    fields[2] = (ink_ui_field_spec_t){.id = "detail", .role = "text", .label = TR("说明"), .value = C.expired ? lv_label_get_text(C.card.body) : C.text};
+    fields[2] = (ink_ui_field_spec_t){.id = "detail", .role = "text", .label = TR("说明"), .value = C.expired ? lv_label_get_text(C.card.body) : C.now.detail};
     fields[3] = (ink_ui_field_spec_t){.id = "notice", .role = "status", .label = TR("提示"), .value = C.pad ? TR("需要大人在设备上输入密码；密码内容不可见") : C.expired ? TR("已经过期，请重新发起") : notice_text()};
     fields[4] = (ink_ui_field_spec_t){.id = "reading", .role = "status", .label = TR("阅读"), .value = reading};
     fields[5] = (ink_ui_field_spec_t){.id = "buttons", .role = "button", .label = TR("本人操作"), .value = C.expired ? TR("关闭") : C.pad ? TR("取消") : choices};
-    fields[6] = (ink_ui_field_spec_t){.id = "pin", .role = "textbox", .label = TR("密码"), .value = C.pin_present ? "1" : "", .secret = true};
+    fields[6] = (ink_ui_field_spec_t){.id = "context", .role = "text", .label = TR("说明"), .value = C.expired ? TR("已经过期，请重新发起") : C.context_text};
+    fields[7] = (ink_ui_field_spec_t){.id = "pin", .role = "textbox", .label = TR("密码"), .value = C.pin_present ? "1" : "", .secret = true};
     for (int i = 0; i < DELTA_COUNT; i++) snprintf(args[i], sizeof args[i], "{\"token\":%u,\"delta\":%d}", (unsigned)C.now.token, i - 1);
     actions[0] = (ink_ui_action_spec_t){.id = "accept", .label = answer_label(), .capability = "confirm.accept", .args_json = args[1], .enabled = ready && !C.now.parent};
     actions[1] = (ink_ui_action_spec_t){.id = "reject", .label = TR("取消"), .capability = "confirm.reject", .args_json = args[1], .enabled = !C.expired};
@@ -201,7 +202,7 @@ static void close_card(void) {
     if (C.read_timer) lv_timer_delete(C.read_timer);
     C.read_timer = NULL;
     shell_card_close(&C.card);
-    C.pad = C.pager = C.accept = C.notice = C.preview = C.pin_dots = NULL;
+    C.pad = C.pager = C.accept = C.notice = C.preview = C.pin_dots = C.context = NULL;
     ink_ui_overlay_remove(&OVERLAY);
     ink_ui_overlay_remove(&EXPIRED);
     C.expired = false;
@@ -256,10 +257,12 @@ static void fit_to_words(void) {
     int title_h = ink_ui_text_height(title_text(), INK_FONT_SUBTITLE, INK_WEIGHT_BOLD, title_w);
     if (title_h > 2 * ink_ui_line_height(INK_FONT_SUBTITLE)) title_h = 2 * ink_ui_line_height(INK_FONT_SUBTITLE);
     int line = ink_ui_line_height(INK_FONT_BODY);
-    int words_h = ink_ui_text_height(C.text, INK_FONT_BODY, INK_WEIGHT_REGULAR, INK_CANVAS_W - 4 * INK_MARGIN);
+    int words_h = ink_ui_text_height(C.now.detail, INK_FONT_BODY, INK_WEIGHT_REGULAR, INK_CANVAS_W - 4 * INK_MARGIN);
     if (words_h > 3 * line) words_h = 3 * line;
     if (words_h < line) words_h = line;
     C.head_h = INK_MARGIN + (title_h > INK_CIRCLE_SMALL ? title_h : INK_CIRCLE_SMALL) + INK_GAP;
+    lv_obj_set_y(C.context, ink_ui_px(C.head_h));
+    C.head_h += ink_ui_text_height(C.context_text, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_CANVAS_W - 2 * INK_MARGIN) + INK_GAP;
     C.preview_h = words_h + 2 * INK_GAP;
     lv_obj_set_height(C.card.title, ink_ui_px(title_h));
     lv_obj_set_y(C.preview, ink_ui_px(C.head_h));
@@ -275,16 +278,16 @@ static void paginate(void) {
     const lv_font_t *font = lv_obj_get_style_text_font(C.card.body, LV_PART_MAIN);
     int letter = lv_obj_get_style_text_letter_space(C.card.body, LV_PART_MAIN);
     int line = lv_obj_get_style_text_line_space(C.card.body, LV_PART_MAIN);
-    size_t at = 0, len = strlen(C.text);
+    size_t at = 0, len = strlen(C.now.detail);
     C.page = C.pages = 0;
     C.starts[0] = 0;
     do {
         size_t end = at;
         while (end < len) {
             size_t next = end + 1;
-            while (next < len && (C.text[next] & 0xc0) == 0x80) next++;
-            char text[sizeof C.text];
-            snprintf(text, sizeof text, "%.*s", (int)(next - at), C.text + at);
+            while (next < len && (C.now.detail[next] & 0xc0) == 0x80) next++;
+            char text[sizeof C.now.detail];
+            snprintf(text, sizeof text, "%.*s", (int)(next - at), C.now.detail + at);
             lv_point_t size;
             lv_text_get_size(&size, text, font, letter, line, w, LV_TEXT_FLAG_NONE);
             if (size.y > h) break;
@@ -305,8 +308,8 @@ static void draw_page(void) {
     lv_obj_set_height(C.card.panel, ink_ui_px(height + INK_RADIUS_PANEL));
     lv_obj_set_y(C.card.row, ink_ui_px(height - INK_PRIMARY - INK_GAP_L));
     lv_obj_set_y(C.notice, ink_ui_px(notice_y()));
-    char text[sizeof C.text];
-    if (C.pages) snprintf(text, sizeof text, "%.*s", C.starts[C.page + 1] - C.starts[C.page], C.text + C.starts[C.page]);
+    char text[sizeof C.now.detail];
+    if (C.pages) snprintf(text, sizeof text, "%.*s", C.starts[C.page + 1] - C.starts[C.page], C.now.detail + C.starts[C.page]);
     else snprintf(text, sizeof text, TR("说明无法完整显示，请取消。"));
     C.drawn = C.read = false;
     lv_label_set_text(C.card.body, text);
@@ -330,14 +333,17 @@ static void show(const ink_confirm_view_t *top) { /* UI task */
         return;
     }
     if (C.expired) close_card();
-    if (C.card.root && C.now.token == top->token && C.now.parent == top->parent && C.now.src == top->src &&
+    bool unchanged = C.now.token == top->token && C.now.parent == top->parent && C.now.src == top->src &&
         C.now.expires_us == top->expires_us && !strcmp(C.now.cap, top->cap) &&
-        !strcmp(C.now.title, top->title) && !strcmp(C.now.detail, top->detail)) return;
+        !strcmp(C.now.title, top->title) && !strcmp(C.now.detail, top->detail);
+    if (C.card.root && unchanged) return;
     C.now = *top;
     ink_member_identity(&C.owner);
-    uint64_t now = osal_now_us(), seconds = top->expires_us > now ? (top->expires_us - now) / 1000000 : 0;
-    const char *source = top->src == INK_SRC_AI ? TR("AI") : top->src == INK_SRC_REMOTE ? TR("家庭服务器") : top->src == INK_SRC_APP ? TR("应用") : TR("本人操作");
-    snprintf(C.text, sizeof C.text, TR("以%s的身份\n来源：%s\n本次最多 %llu 秒有效，过期不执行。\n%s\n%s"), ink_member_current()->name, source, (unsigned long long)seconds, top->title, top->detail);
+    if (!unchanged) {
+        uint64_t now = osal_now_us(), seconds = top->expires_us > now ? (top->expires_us - now + 999999) / 1000000 : 0;
+        const char *source = top->src == INK_SRC_AI ? TR("AI") : top->src == INK_SRC_REMOTE ? TR("家庭服务器") : top->src == INK_SRC_APP ? TR("应用") : TR("本人操作");
+        snprintf(C.context_text, sizeof C.context_text, TR("以%s的身份 · 来源：%s\n首次显示后最多 %llu 秒有效，过期不执行。\n%s"), ink_member_current()->name, source, (unsigned long long)seconds, top->title);
+    }
     if (C.pad) {
         lv_obj_delete(C.pad);
         C.pad = C.pin_dots = NULL;
@@ -360,18 +366,21 @@ static void show(const ink_confirm_view_t *top) { /* UI task */
         lv_obj_set_pos(C.card.body, ink_ui_px(INK_MARGIN), ink_ui_px(INK_GAP));
         lv_obj_set_width(C.card.body, ink_ui_px(INK_CANVAS_W - 4 * INK_MARGIN));
         C.notice = ink_ui_notice(C.card.panel, "", 0);
+        C.context = ink_ui_label(C.card.panel, "", INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_MARGIN, 0, INK_CANVAS_W - 2 * INK_MARGIN);
     }
+    lv_label_set_text(C.context, C.context_text);
     fit_to_words();
-    shell_card_text(&C.card, title_text(), C.text);
+    shell_card_text(&C.card, title_text(), C.now.detail);
     shell_card_clear_buttons(&C.card);
     const ink_cap_t *cap = ink_cap_find(C.now.cap);
-    bool cancel_first = cap && (cap->effect == INK_FX_LOCAL_DESTRUCTIVE || !strcmp(C.now.cap, "system.factory_reset"));
-    shell_card_button(&C.card, cancel_first ? TR("取消") : answer_label(), on_answer, cancel_first ? NULL : (void *)1);
-    shell_card_button(&C.card, cancel_first ? answer_label() : TR("取消"), on_answer, cancel_first ? (void *)1 : NULL);
-    C.accept = lv_obj_get_child(C.card.row, cancel_first ? 1 : 0);
+    bool destructive = cap && (cap->effect == INK_FX_LOCAL_DESTRUCTIVE || !strcmp(C.now.cap, "system.factory_reset"));
+    C.accept = ink_ui_pill(C.card.row, answer_label(), 0, 0, INK_PRIMARY, INK_PRIMARY, !destructive, on_answer, (void *)1);
+    lv_obj_set_flex_grow(C.accept, 1);
+    lv_obj_t *cancel = ink_ui_pill(C.card.row, TR("取消"), 0, 0, INK_PRIMARY, INK_PRIMARY, destructive, on_answer, NULL);
+    lv_obj_set_flex_grow(cancel, 1);
     lv_obj_add_event_cb(C.accept, read_pressed, LV_EVENT_PRESSED, NULL);
-    lv_obj_add_event_cb(lv_obj_get_child(C.card.row, cancel_first ? 0 : 1), pressed, LV_EVENT_PRESSED, NULL);
-    lv_obj_set_flex_flow(C.card.row, cancel_first ? LV_FLEX_FLOW_ROW : LV_FLEX_FLOW_ROW_REVERSE);
+    lv_obj_add_event_cb(cancel, pressed, LV_EVENT_PRESSED, NULL);
+    lv_obj_set_flex_flow(C.card.row, LV_FLEX_FLOW_ROW_REVERSE);
     paginate();
     draw_page();
 }
