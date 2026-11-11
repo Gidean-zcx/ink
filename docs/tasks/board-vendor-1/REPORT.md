@@ -2,7 +2,7 @@
 
 基线：`40d965f5b4b5d8d510064396dc59e3ae7e96855c`。执行日期：2026-11-11。仅本机编译与宿主机测试，不连接设备，不推送。
 
-当前结论：功能单元与四项反向对照通过，但普通全量存在本次引入的回归，**未达到合入验收**。
+当前结论：功能单元与四项反向对照通过，但普通及 ASan/UBSan 全量均存在本次引入的回归，**未达到合入验收**。
 
 ## 验收表
 
@@ -13,7 +13,7 @@
 | 1c 反向对照 | 【实测】4/4 预期失败 | `usb-cut`、`uv-3200`、`busy-kick`、`instant-light` 各退出 1，命中对应断言；`work/reverse.log` | `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/python" tests/board_vendor/reverse.py --build build` |
 | 1d 浅睡暂停、恢复与实际电源任务节奏 | 【实测】通过 | `board-vendor-power`：18 项检查，`test.finished=1`，无警告；覆盖清醒 2/10 秒、锁屏但保持清醒、让出 CPU 的 15 秒浅睡期间零调用及醒后恢复；`work/board-vendor-tests.log` | `taskpolicy -c utility ctest --test-dir build -R '^board-vendor-' --output-on-failure -j2` |
 | 2a 普通构建与全量 | 【实测】构建退出 0；全量未通过 | 原话 `97% tests passed, 11 tests failed out of 379`；退出 8，3 项跳过；1105.62 秒；`work/ctest.log` | `taskpolicy -c utility cmake --build build -j2`；`taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build --output-on-failure -j2` |
-| 2b ASan/UBSan 全量 | 【实测】插桩构建退出 0；全量运行中 | 四个改动产品 C 单元及三个新测试的编译命令全部含 `-fsanitize=address,undefined`；最终结果待补 | 同普通构建，仅换 `build-asan` 并加 `-DINK_SANITIZE=ON`；`ASAN_OPTIONS=halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2` |
+| 2b ASan/UBSan 全量 | 【实测】构建退出 0；全量未通过 | 原话 `97% tests passed, 11 tests failed out of 379`；退出 8，823.30 秒；同普通版的 11 项失败、3 项跳过；`work/ctest-asan.log` | 同普通构建，仅换 `build-asan` 并加 `-DINK_SANITIZE=ON`；`ASAN_OPTIONS=halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build-asan --output-on-failure -j2` |
 | 2c S31 编译、gcccheck | 【实测】宿主 gcccheck 通过；S31 待编译 | `gcccheck: 7 compiled, 0 with findings`，无跳过；`work/gcccheck.log` | `taskpolicy -c utility python3 ../../tools/gcccheck.py build drivers/chips/cx25601n/cx25601n.c simulator/models/dev_power_chips.c system/services/display/light.c system/services/power/power_service.c tests/board_vendor/charger.c tests/board_vendor/light.c tests/board_vendor/power.c` |
 | 2d 隐私与差异范围 | 待执行 | 待补 | 待补 |
 | 3 原厂差异与上机核对 | 【实现】完成记录 | 见下方原厂行号、哈希、差异与主会话核对顺序；未做实机测试 | 核查原厂只读源码及 `git diff` |
@@ -31,6 +31,7 @@
 | `device-events`、`integration-text-nocard`、`integration-text-baddict`、`small-gaps-3-backup` | 失败 | 也失败 | 【实测】首条失败和失败数分别相同（1、2、4、16）；这不等于已证明没有其他差异 |
 
 - 现有配置跳过 `hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e`，不记作通过。
+- 内存检查跑了整套 379 项（含新增三项），仍有上述功能/预算失败；四个改动的宿主产品 C 单元及三个新测试均确认含 ASan+UBSan 编译参数，输出未发现 sanitizer 错误。原有 `unit-s31-osal-ticks` 在 CMake 启用 sanitizer 前定义，未插桩，不把它记为已做内存插桩检查；S31 实机代码不在宿主 ASan 范围内。
 
 ## 和设计不一致的
 
