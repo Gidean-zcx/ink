@@ -1,6 +1,7 @@
 #include <reader_source.h>
 #include <reader_runtime.h>
 #include <ink/sys/app.h>
+#include <ink/sys/i18n.h>
 #include <epub_document.h>
 #include <html_content.h>
 #include <text_encoding.h>
@@ -70,7 +71,10 @@ static uint64_t ink_anchor(reader::ZipReader& zip, const std::string& href, cons
         if (!n || !prefix.Feed(buf, n)) break;
         m.byte -= static_cast<int64_t>(n);
     }
-    prefix.Finish(); zip.CloseEntryStream(); return length;
+    uint64_t before_finish=length;
+    prefix.Finish();
+    if (length>before_finish) --length; /* The unfinished paragraph has no newline at this anchor. */
+    zip.CloseEntryStream(); return length;
 }
 static bool ink_txt(ink_reader_source *s, const reader::ContentBlockSink& sink) {
     FILE *f = std::fopen(s->path.c_str(), "rb");
@@ -148,7 +152,12 @@ extern "C" ink_reader_error_t ink_reader_source_open(const char *path, ink_reade
             }
         }
         s->info.fallback = s->toc.empty();
-        if (q.error == INK_READER_OK && s->info.fallback) for (int c = 0; c < s->info.chapters; ++c) { ink_reader_entry_t e{}; e.chapter=c; ink_copy(e.title,sizeof e.title,s->info.epub ? s->epub.SpineItem(c)->href : s->info.title); s->toc.push_back(e); }
+        if (q.error == INK_READER_OK && s->info.fallback) for (int c = 0; c < s->info.chapters; ++c) {
+            ink_reader_entry_t e{}; e.chapter=c;
+            if (s->info.epub) std::snprintf(e.title,sizeof e.title,TR("第 %d 章"),c+1);
+            else ink_copy(e.title,sizeof e.title,s->info.title);
+            s->toc.push_back(e);
+        }
         s->info.entries = static_cast<int>(s->toc.size());
         if (q.error != INK_READER_OK) { delete s; return; }
         *q.info = s->info; *q.out = s;

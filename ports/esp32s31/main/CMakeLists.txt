@@ -8,10 +8,6 @@ target_link_libraries(${COMPONENT_LIB} INTERFACE "-Wl,--wrap=pxPortGetCoprocArea
 target_compile_options(${COMPONENT_LIB} PRIVATE -fstack-usage)
 if(NOT CMAKE_BUILD_EARLY_EXPANSION)
 include(${root}/apps/reader/reader_build.cmake)
-# The legacy app glob also sees imported C implementation fragments.
-get_target_property(reader_app_sources __idf_ink_apps SOURCES)
-list(FILTER reader_app_sources EXCLUDE REGEX "/reader/vendor/")
-set_property(TARGET __idf_ink_apps PROPERTY SOURCES ${reader_app_sources})
 ink_reader_build(__idf_ink_apps __idf_ink_system __idf_ink_lvgl)
 file(GLOB reader_tables ${root}/assets/i18n/*.tsv)
 ink_reader_translations(reader_tables)

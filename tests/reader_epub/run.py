@@ -23,7 +23,7 @@ def run(build, binary=None, reverse=False, name=None, expected='reader.open_book
             '--sd-dir',str(area/'sd'),'--no-random-outages','--quiet'],cwd=ROOT,capture_output=True,text=True,timeout=300,
             env={**os.environ,'INK_READER_EPUB_PHASE':phase,'UBSAN_OPTIONS':'halt_on_error=1'})
         (area/f'{phase}.log').write_text(result.stdout+result.stderr)
-        data=json.loads((out/'metrics.json').read_text()) if (out/'metrics.json').exists() else {}
+        data=json.loads((out/'metrics.json').read_text(errors='replace')) if (out/'metrics.json').exists() else {}
         counts=data.get('metrics',{}); failures=counts.get('test.fail',0)
         if reverse:
             assert result.returncode and failures and any(expected in str(w) for w in data.get('warnings',[])), result.stderr[-5000:]

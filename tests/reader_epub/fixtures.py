@@ -17,7 +17,7 @@ def book(name, version=2, toc=True, long=False):
     if long:
         paragraphs = '<p>长章开头。</p>' + '<p>我们在长长的山路上留下脚印，也把星光记进日记。</p>' * 45000
     ch1 = '<h1 id="start">第一章 山路</h1>' + paragraphs
-    ch2 = '<h1>第二章 海边</h1><p>海边的晨风吹过纸页，远处传来船笛。</p><h2 id="dock">中途码头</h2><p>码头灯亮了，我们在这里写下新的约定。</p>'
+    ch2 = '<h1>第二章 海边</h1><p>海边的晨风吹过纸页，远处传来船笛。</p><h2>第二段标题：<span id="dock">中途码头</span></h2><p>码头灯亮了，我们在这里写下新的约定。</p>'
     target = io.BytesIO()
     with zipfile.ZipFile(target, 'w', compression=zipfile.ZIP_DEFLATED) as z:
         def put(path, text, stored=False):

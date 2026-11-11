@@ -28,6 +28,12 @@ static void inspect(void) { CHECK(ink_ui_snapshot(view,sizeof view,NULL)>0,"page
 static void home(void) { ink_ui_home(); }
 static void back(void) { ink_ui_pop(); }
 static void close_book(void) { on_ui(home); quiet(); CHECK(WAIT_FOR(!ink_storage_pending(),15000),"position durable"); }
+static volatile bool captured;
+static void capture(void *name) { sim_display_snapshot(name); captured=true; }
+static void frame(const char *name) {
+    quiet(); captured=false; vtk_event_at(vtk_now()+SIM_MS(1),capture,(void *)name);
+    CHECK(WAIT_FOR(captured,2000),"headless frame captured");
+}
 static void touch(const char *text) {
     wanted=text; on_ui(find_label); CHECK(found,"touch target %s exists",text);
     if (!found) return;
@@ -90,6 +96,7 @@ static void reader_checks(void) {
     CHECK(pages>=6,"more than 16 books reachable by pagination (%d)",pages); close_book();
     ok("reader.open_book","{\"title\":\"山间来信\"}");
     ok("reader.chapters",NULL); CHECK(strstr(g_result,"第一章 山路") && strstr(g_result,"中途码头"),"AI sees real TOC: %.150s",g_result);
+    CHECK(strstr(g_result,"测试作者甲") && strstr(g_result,"\"chapter_count\":2"),"AI reads the same author and chapter count as the C source");
     ok("reader.read_page",NULL); CHECK(strstr(g_rc.say,"山间来信") && strstr(g_rc.say,"第一章 山路"),"AI page includes book and chapter");
     unsigned previous=g_rc.revision; bool crossed=false;
     for (int i=0;i<40;i++) {
@@ -106,6 +113,8 @@ static void reader_checks(void) {
     CHECK(strstr(g_rc.say,"第二章 海边") && g_rc.revision==1,"forward across chapter returns to first page");
     ok("reader.goto_chapter","{\"chapter\":1}"); ok("reader.show_chapters",NULL); on_ui(inspect);
     CHECK(!strcmp(ink_ui_top_name(),"chapters") && strstr(view,"中途码头"),"contents page and AI snapshot agree");
+    frame("epub-contents");
+    ok("reader.chapters",NULL); CHECK(strstr(g_result,"中途码头"),"AI can list chapters while the contents page is open");
     touch("中途码头"); ok("reader.read_page",NULL);
     CHECK(strstr(g_rc.say,"第二章 海边"),"TOC tap route returns to reading page");
     close_book(); ok("reader.continue",NULL);
@@ -120,6 +129,24 @@ static void reader_checks(void) {
     CHECK(!ink_member_switch("owner"),"adult member"); quiet(); ok("reader.open_book","{\"title\":\"山间来信\"}"); on_ui(inspect);
     CHECK(!strcmp(before,view),"member positions isolated"); close_book();
     ok("reader.open_book","{\"title\":\"星图日记\"}"); ok("reader.chapters",NULL); CHECK(strstr(g_result,"中途码头"),"EPUB3 NAV is exposed"); close_book();
+    ok("reader.open_book","{\"title\":\"无目录散记\"}"); ok("reader.show_chapters",NULL); on_ui(inspect);
+    CHECK(strstr(view,"没有目录，按章节阅读") && strstr(view,"第 1 章"),"fallback notice and chapter names are exposed to AI");
+    ok("reader.chapters",NULL); CHECK(strstr(g_result,"第 1 章"),"fallback chapter labels agree with the contents page");
+    wanted="没有目录，按章节阅读"; on_ui(find_label); CHECK(found,"fallback notice visible");
+    lv_area_t notice={0}, row={0}; if (found) lv_obj_get_coords(found,&notice);
+    wanted="第 1 章"; on_ui(find_label); CHECK(found,"fallback chapter visible");
+    if (found) lv_obj_get_coords(found,&row);
+    CHECK(notice.y2 < row.y1,"fallback notice does not overlap the first chapter");
+    frame("epub-fallback-zh");
+    ok("settings.set","{\"id\":\"system.language\",\"value\":1}"); on_ui(inspect);
+    CHECK(strstr(view,"No contents found") && strstr(view,"Chapter 1"),"English fallback is translated in the same snapshot");
+    wanted="No contents found"; on_ui(find_label); CHECK(found,"English fallback notice visible");
+    if (found) lv_obj_get_coords(found,&notice);
+    wanted="Chapter 1"; on_ui(find_label); CHECK(found,"English fallback chapter visible");
+    if (found) lv_obj_get_coords(found,&row);
+    CHECK(notice.y2 < row.y1,"wrapped English fallback notice has its own space");
+    frame("epub-fallback-en");
+    ok("settings.set","{\"id\":\"system.language\",\"value\":0}"); close_book();
     CHECK(AI("reader.open_book","{\"title\":\"corrupt\"}") && g_rc.status==INK_RC_FAILED && strstr(g_rc.say,"损坏"),"actionable Chinese corrupt-book receipt");
     on_ui(inspect); CHECK(strstr(view,"损坏"),"same Chinese error on page"); close_book();
 }

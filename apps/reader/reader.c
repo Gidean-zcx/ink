@@ -223,10 +223,15 @@ static void bind_row(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field, i
         ink_ui_line(slot,"",INK_FONT_NOTE,INK_WEIGHT_REGULAR,INK_CANVAS_W/2,INK_GAP_L,INK_CANVAS_W/2-2*INK_MARGIN-INK_GAP);
     }
     lv_label_set_text(lv_obj_get_child(slot,0),LIST.titles[row]);
-    const char *note = LIST.toc ? TR("点按跳到这里") : !strcmp(LAST.book,LIB.books[index].name) && !strcmp(LAST.member,ink_member_current()->id) ? TR("最近在读") : TR("打开阅读");
+    const char *note = "";
     if (!LIST.toc && !strcmp(LAST.book,LIB.books[index].name) && !strcmp(LAST.member,ink_member_current()->id)) {
         snprintf(LIST.values[row],sizeof LIST.values[row],TR("第 %d 页"),LAST.page); note=LIST.values[row];
     }
+    int value_w=note[0] ? ink_ui_text_width(note,INK_FONT_NOTE,INK_WEIGHT_REGULAR) : 0;
+    int room=INK_CANVAS_W-2*INK_MARGIN-2*INK_GAP;
+    lv_obj_set_width(lv_obj_get_child(slot,0),ink_ui_px(room-(value_w ? value_w+INK_GAP : 0)));
+    lv_obj_set_x(lv_obj_get_child(slot,1),ink_ui_px(INK_GAP+room-value_w));
+    lv_obj_set_width(lv_obj_get_child(slot,1),ink_ui_px(value_w));
     lv_label_set_text(lv_obj_get_child(slot,1),note);
     *field = (ink_ui_field_spec_t){.id=LIST.ids[row],.role=LIST.toc ? "chapter" : "book",.label=LIST.titles[row],.value=note,.object={LIST.ids[row],ink_member_epoch()}};
     *action = (ink_ui_action_spec_t){.id=LIST.ids[row],.label=TR("打开"),.capability=LIST.toc ? "reader.goto_chapter" : "reader.open_book",.args_json=LIST.args[row],.object=field->object,.enabled=true};
@@ -242,6 +247,8 @@ static void list_create(lv_obj_t *scr, void *arg) {
     ink_ui_circle(scr,"back",INK_MARGIN,INK_STATUS_BAR,INK_CONTROL,INK_ICON_MEDIUM,INK_SURFACE_WHITE,command,"shell.back");
     ink_ui_line(scr,title,INK_FONT_TITLE,INK_WEIGHT_BOLD,INK_MARGIN+INK_CONTROL+INK_GAP,INK_STATUS_BAR+INK_GAP_S,INK_CANVAS_W-2*INK_MARGIN-INK_CONTROL-INK_GAP);
     int y = INK_STATUS_BAR + INK_CONTROL + INK_GAP_XS;
+    if (LIST.toc && LIST.info.fallback)
+        y=INK_STATUS_BAR+INK_PRIMARY+ink_ui_text_height(TR("没有目录，按章节阅读"),INK_FONT_NOTE,INK_WEIGHT_REGULAR,INK_CANVAS_W-2*INK_MARGIN)+INK_GAP_L;
     lv_obj_t *body = ink_ui_box(scr,0,y,INK_CANVAS_W,INK_CANVAS_H-y,0,INK_SURFACE_WHITE,false);
     ink_ui_action_spec_t actions[] = {{.id="prev",.label=TR("上一页"),.capability="reader.list_prev"},{.id="next",.label=TR("下一页"),.capability="reader.list_next"},
         {.id="files",.label=TR("文件"),.capability="app.open",.args_json="{\"id\":\"files\"}",.enabled=true}};
@@ -252,7 +259,15 @@ static void list_create(lv_obj_t *scr, void *arg) {
     if (LIST.toc && LIST.info.fallback) ink_ui_notice(scr,TR("没有目录，按章节阅读"),INK_STATUS_BAR+INK_PRIMARY);
 }
 static void list_destroy(void) { ink_reader_source_close(LIST.source); LIST.source=NULL; LIST.view=NULL; }
-static int list_snapshot(char *out, size_t cap) { return LIST.view ? ink_ui_list_snapshot(LIST.view,out,cap) : 0; }
+static int list_snapshot(char *out, size_t cap) {
+    int n=LIST.view ? ink_ui_list_snapshot(LIST.view,out,cap) : 0;
+    if (n <= 0 || !LIST.toc) return n;
+    ink_jw_t w={.buf=out,.cap=cap,.len=(size_t)n-1};
+    ink_jw_raw(&w,",\"book\":"); ink_jw_str(&w,LIB.books[LIB.open].name);
+    if (LIST.info.fallback) { ink_jw_raw(&w,",\"notice\":"); ink_jw_str(&w,TR("没有目录，按章节阅读")); }
+    ink_jw_raw(&w,"}");
+    return w.overflow ? -1 : (int)w.len;
+}
 static bool list_key(ink_key_t key, bool lng) { return LIST.view && ink_ui_list_key(LIST.view,key,lng); }
 static void library_create(lv_obj_t *scr, void *arg) { (void)arg; list_create(scr,NULL); }
 static void toc_create(lv_obj_t *scr, void *arg) { (void)arg; list_create(scr,(void *)1); }
@@ -521,7 +536,7 @@ static void act_chapters(ink_call_t *c);
 static void act_chapter(ink_call_t *c);
 static void act_toc(ink_call_t *c) { (void)c; ink_ui_push(&CHAPTERS,NULL); }
 static const ink_cap_t BOOK_ACTIONS[] = {
-    {.id="reader.chapters",.app="reader",.title="列出目录",.effect=INK_FX_READ,.child_ok=true,.activity="book",.run=act_chapters},
+    {.id="reader.chapters",.app="reader",.title="列出目录",.effect=INK_FX_READ,.child_ok=true,.run=act_chapters},
     {.id="reader.show_chapters",.app="reader",.title="打开目录",.effect=INK_FX_NAVIGATE,.child_ok=true,.activity="book",.run=act_toc},
     {.id="reader.goto_chapter",.app="reader",.title="跳到章节",.input="{\"type\":\"object\",\"properties\":{\"chapter\":{\"type\":\"integer\",\"minimum\":1},\"entry\":{\"type\":\"integer\",\"minimum\":1}}}",.effect=INK_FX_NAVIGATE,.child_ok=true,.run=act_chapter},
     {.id = "reader.next_page", .app = "reader", .title = "下一页", .effect = INK_FX_NAVIGATE, .child_ok = true, .activity = "book", .run = act_next},
@@ -636,16 +651,21 @@ static bool ensure_source(void) {
     return RD.error == INK_READER_OK;
 }
 static void act_chapters(ink_call_t *c) {
-    if (not_open(&c->rc) || !ensure_source()) { c->rc.status=INK_RC_FAILED; return; }
-    size_t cap=(size_t)RD.info.entries*320+128; char *json=ink_app_alloc(cap,true);
+    bool toc=!strcmp(ink_ui_top_name(),"chapters");
+    if (toc ? !LIST.source : (not_open(&c->rc) || !ensure_source())) { c->rc.status=INK_RC_FAILED; return; }
+    ink_reader_info_t *info=toc ? &LIST.info : &RD.info;
+    ink_reader_source_t *source=toc ? LIST.source : RD.source;
+    size_t cap=(size_t)info->entries*320+640; char *json=ink_app_alloc(cap,true);
     if (!json) { c->rc.status=INK_RC_FAILED; return; }
-    ink_jw_t w; ink_jw_init(&w,json,cap); ink_jw_raw(&w,"{\"fallback\":"); ink_jw_raw(&w,RD.info.fallback ? "true" : "false"); ink_jw_raw(&w,",\"entries\":[");
-    for (int i=0;i<RD.info.entries;i++) { ink_reader_entry_t e; ink_reader_source_toc(RD.source,i,&e);
+    ink_jw_t w; ink_jw_init(&w,json,cap); ink_jw_raw(&w,"{\"title\":"); ink_jw_str(&w,info->title);
+    ink_jw_raw(&w,",\"author\":"); ink_jw_str(&w,info->author); ink_jw_raw(&w,",\"chapter_count\":"); ink_jw_int(&w,info->chapters);
+    ink_jw_raw(&w,",\"fallback\":"); ink_jw_raw(&w,info->fallback ? "true" : "false"); ink_jw_raw(&w,",\"entries\":[");
+    for (int i=0;i<info->entries;i++) { ink_reader_entry_t e; ink_reader_source_toc(source,i,&e);
         if (i) ink_jw_raw(&w,",");
         ink_jw_raw(&w,"{\"title\":"); ink_jw_str(&w,e.title); ink_jw_raw(&w,",\"chapter\":"); ink_jw_int(&w,e.chapter+1); ink_jw_raw(&w,",\"offset\":"); ink_jw_int(&w,(int64_t)e.offset); ink_jw_raw(&w,"}");
     }
     ink_jw_raw(&w,"]}"); if (!w.overflow) ink_cap_result(c,json); else c->rc.status=INK_RC_FAILED;
-    snprintf(c->rc.say,sizeof c->rc.say,"%s",RD.info.fallback ? TR("没有目录，按章节阅读") : TR("已列出目录")); ink_app_free(json);
+    snprintf(c->rc.say,sizeof c->rc.say,"%s",info->fallback ? TR("没有目录，按章节阅读") : TR("已列出目录")); ink_app_free(json);
 }
 static void act_chapter(ink_call_t *c) {
     bool toc=!strcmp(ink_ui_top_name(),"chapters"); int64_t chapter=0, entry=0;
