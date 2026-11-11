@@ -214,10 +214,13 @@ static void run(void *arg) {
         CHECK(AI("file_picker.select", args) && g_rc.status == INK_RC_DONE, "AI selects the same image as touch");
         CHECK(WAIT_FOR(ink_wallpaper_ready(), 20000), "image decode and dithering reach the UI"); quiet(); capture("WallpaperSelected");
         CHECK(ink_setting_get("display.lock_style") == 0, "selecting an image does not force the clock style");
-        for (int style = 1; style <= 3; style++) {
-            press("锁屏时显示");
-            CHECK(ink_setting_get("display.lock_style") == style % 3, "wallpaper control cycles through all three styles");
-            on_ui(read_snapshot); CHECK(strstr(snapshot, style % 3 == 2 ? "壁纸" : style % 3 == 1 ? "时钟和待办" : "这一页"), "style value matches its label");
+        press("锁屏时显示");
+        CHECK(!strcmp(ink_ui_page_name(), "LockFaces") && ink_setting_get("display.lock_style") == 0, "lock settings open the picker without changing style");
+        static const char *const styles[] = {"这一页", "时钟和待办", "壁纸", "简约时钟", "待机时钟", "月历"};
+        for (int style = 0; style < 6; style++) {
+            press(styles[style]);
+            CHECK(ink_setting_get("display.lock_style") == style, "picker selects the requested style");
+            on_ui(read_snapshot); CHECK(strstr(snapshot, styles[style]) && strstr(snapshot, "已选择"), "style value matches its label");
         }
         CHECK(BY_HAND("system.home", NULL), "show unchanged home after selecting wallpaper"); quiet(); capture("HomeAfter");
         static const char *const locks[] = {"LockPage", "LockClock", "LockImage"};
