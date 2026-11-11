@@ -13,6 +13,10 @@ target_compile_definitions(${COMPONENT_LIB} PRIVATE INK_PSRAM_BSS=EXT_RAM_BSS_AT
 set_source_files_properties(${root}/system/services/media/image_codec.c ${root}/system/apps/camera/png.c
     PROPERTIES COMPILE_OPTIONS -w)
 set_source_files_properties(${quirc_sources} PROPERTIES COMPILE_OPTIONS "-include;${root}/system/apps/camera/quirc_alloc.h;-w")
+file(GLOB_RECURSE ui_sources ${root}/system/ui/*.c ${root}/system/apps/*.c ${root}/system/apps/*.cpp)
+# Keep the installer at -O2: -Os exposes existing path truncation diagnostics.
+list(REMOVE_ITEM ui_sources ${root}/system/ui/app_packages.c)
+set_property(SOURCE ${ui_sources} APPEND PROPERTY COMPILE_OPTIONS -Os)
 execute_process(COMMAND ${PYTHON} ${root}/tools/icongen/check.py --header ${CMAKE_BINARY_DIR}/generated/ink/ui_icon_names.h
     WORKING_DIRECTORY ${root} COMMAND_ERROR_IS_FATAL ANY)
 file(GLOB_RECURSE i18n_services ${root}/system/services/*.c ${root}/system/policy/*.c)
