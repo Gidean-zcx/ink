@@ -89,12 +89,15 @@ static bool assist_allowed(void) {
         !TS.composing[0] && TS.cursor && TS.cursor == TS.anchor && ink_text_voice_state() == INK_VOICE_IDLE &&
         ink_setting_get("text.assist") && ink_hub_online() && ink_member_allows("shell.ai_ask", true) && ink_member_time_allows("shell.ai_ask");
 }
+static void assist_timer(void *arg);
 static void assist_changed(void) {
     AS.generation++; AS.n = 0;
+    bool allowed = assist_allowed();
+    if (allowed && !AS.timer) AS.timer = osal_timer_create("text.assist", assist_timer, NULL);
     if (!AS.timer) return;
     osal_timer_stop(AS.timer);
     AS.due = osal_now_us() + 800000;
-    if (assist_allowed()) osal_timer_start(AS.timer, 800000, 0);
+    if (allowed) osal_timer_start(AS.timer, 800000, 0);
 }
 static void assist_show(void *arg) {
     assist_reply_t *r = arg;
@@ -698,8 +701,7 @@ int ink_text_service_init(void) {
     py_init();
     clip_init();
     if (text_voice_init() != 0) return -1;
-    AS.timer = osal_timer_create("text.assist", assist_timer, NULL);
-    if (!AS.timer || ink_settings_watch("text.assist", assist_setting, NULL, INK_EXEC_UI)) return -1;
+    if (ink_settings_watch("text.assist", assist_setting, NULL, INK_EXEC_UI)) return -1;
     if (ink_db_register(&DRAFTS) != 0 || ink_db_register(&USER_FREQ) != 0 || ink_settings_define(TEXT_SETTINGS, sizeof TEXT_SETTINGS / sizeof *TEXT_SETTINGS) != 0 || ink_state_watch("member.current", on_member, NULL, INK_EXEC_UI) != 0) return -1;
     return text_caps_init();
 }
