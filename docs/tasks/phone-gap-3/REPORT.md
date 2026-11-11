@@ -1,16 +1,16 @@
 # phone-gap-3：R-068 收尾检查
 
-基线：`b796b9fd6268e4dda1c1a38fd441de2478b68dc8`，2026-11-11。按 [R-068](../../requirements.md#L121)、[phone-gap-2](../phone-gap-2/REPORT.md) 和 [阶段完成界限](../backlog.md#L249) 检查。**目前不能认定系统层达到这一阶段的完成线**：主要补项在模拟器里已有实现，但仍有可以用模拟器验证的缺项。是否结束本次审计和是否通过产品阶段门是两件事。
+基线：`b796b9fd6268e4dda1c1a38fd441de2478b68dc8`，2026-11-11。按 [R-068](../../requirements.md#L121)、[phone-gap-2](../phone-gap-2/REPORT.md) 和 [阶段完成界限](../backlog.md#L249) 检查。**目前不能认定系统层达到这一阶段的完成线**：普通和内存测试全绿，但仍有模拟器可验的缺项。首要的是 G1：获准使用文件应用的孩子，其 AI 能读共享诊断路径上的文件。
 
 | 编号 | 结论 | 证据 | 命令 |
 | --- | --- | --- | --- |
-| 1 | 14 个领域已查 | 【实现／实测】逐领域表、AI 原生对照和实际截图，另核性能和端口 | `git log --first-parent --oneline 4099f390..HEAD`；`ctest --test-dir build -N` |
+| 1 | 14 个领域已查 | 【实现／实测】逐领域表、AI 原生对照和实际截图，另核性能和端口 | `git log --first-parent --oneline 4099f390..b796b9fd`；普通全量日志 |
 | 2 | 已分类 | 【实现】下文单列能用模拟器验证的缺项，逐项有严重度和补法；真机、中枢、真实通话短信分开 | `rg -n -e 暂不能 -e 暂时读不到 system/ui/shell`，其余见对应代码与用例 |
-| 3 | 普通全量通过；内存检查运行中 | 【实测】开工工作树干净，普通全量 `100% tests passed out of 363`，0 跳过；未改代码或测试 | 见“验证与复现”；`git diff --stat b796b9fd..HEAD` |
+| 3 | 普通与内存全量通过 | 【实测】两轮均 `100% tests passed out of 363`，0 跳过；未改代码或测试 | 见“验证与复现”；`git diff --stat b796b9fd..HEAD` |
 
 ## 逐领域复评
 
-沿用上轮尺度：**A** 本领域的当前模拟器验收功能可用，**B** 主体可用但有具体缺项，**C** 只有一部分。每行的“有／没有”指模拟器范围，真实条件另列；上轮未单独打分时引用其条目编号和原状态。源码为【实现】，CTest 名用于复现，不从用例名称推断未覆盖的行为。
+沿用上轮尺度：**A** 本领域的当前模拟器验收功能可用，**B** 主体可用但有具体缺项，**C** 只有一部分。本轮模拟器为 **6 A、8 B**。每行的“有／没有”指模拟器范围，真实条件另列；上轮未单独打分时引用其条目编号和原状态。源码为【实现】，CTest 名用于复现，不从用例名称推断未覆盖的行为。
 
 | 领域 | phone-gap-2 → 本轮 | 模拟器：有／没有 | 代码位置；对应 CTest |
 | --- | --- | --- | --- |
@@ -44,7 +44,7 @@
 | 领域 | 截图路径 |
 | --- | --- |
 | 通话／短信／联系人 | `build/test-out/small-gaps-product/phone-zh/snap-call-3-minutes.png`；`build/emergency-call-0t0zkgnc/airplane/snap-active.png`；`build/test-out/sms-multipart/compose/snap-compose-parts.png`；`build/test-out/contacts/write/snap-scene.png` |
-| 相机相册／锁屏 | `build/qr-scan-screens/snap-url-en.png`；`build/lock-camera-9vust28l/lock/snap-restricted.png`；`build/camera-gallery-compare/Camera/snap-scene.png` |
+| 相机相册／锁屏 | `build/qr-scan-screens/snap-url-en.png`；`build/lock-camera-9vust28l/lock/snap-restricted.png`；`build/camera-gallery-compare/Camera/snap-scene.png`；`build/camera-gallery-f_exr85c/many/final.png` |
 | 时钟日历提醒／设置 | `build/clock-extras-evidence/sim-clock-extras/create/snap-world-zh.png`；`build/test-out/reminder-edit-90muigki/create/snap-detail.png`；`build/time-settings-evidence/sim-time-settings/snap-time-en.png`；`build/test-out/small-gaps-product/pages-zh/snap-device.png` |
 | 文件／AI | `build/files-ops-g698dqnw/recover/snap-MultiSelect.png`；`build/test-out/ai-chat/snap-AiLong.png`；`build/test-out/ai-chat/snap-AiHome.png`（空历史） |
 | 多成员和孩子／网络／通知 | `build/kid-apps-y8uks0r8/policy/snap-SetKidPeriods.png`；`build/test-out/mobile-network/main/snap-mobile-zh.png`；`build/notify-manage-evidence/sim-notify-manage/main/snap-channels-zh.png` |
@@ -79,7 +79,7 @@
 
 | 编号 | 严重度 | 模拟器里没有什么；证据 | 建议怎么补 |
 | --- | --- | --- | --- |
-| G1 | **高** | **导出后仍隔离诊断文件。**【实现】`system.export_logs` 禁 AI 发起，但[导出代码](../../../system/services/log/log.c#L208)把日志和原始转储写进 `/content/ink-logs`；[文件解析](../../../system/services/file/file_service.c#L230)把它当 `/family/ink-logs`，孩子只禁写、可读；`file.read` 支持 AI 读取有效 UTF-8 片段。`unit-log` 测导出，[`integration-files`](../../../tests/integration/files.c#L169)测共享文件权限，两者都没验导出后隔离。未读取真实转储，不推断某条凭据已经泄露。 | 原始诊断不进可由普通文件能力读取的共享空间；导出只走成人本人入口。用合成诊断标记验成人导出后，孩子的文件列表、文件读能力和 AI 均取不到；另外验正常共享资料仍可读。 |
+| G1 | **高** | **导出后仍隔离诊断文件。**【实现】`system.export_logs` 禁 AI 发起，但[导出代码](../../../system/services/log/log.c#L208)把日志和原始转储写进 `/content/ink-logs`；[文件解析](../../../system/services/file/file_service.c#L230)把它当 `/family/ink-logs`。【实测】家长已允许文件应用的合成孩子，其 AI 用 `file.read` 读共享诊断路径返回 `done`，读成人私有路径返回 `rejected`；对照见下。未读取真实转储，不推断某条凭据已泄露。 | 原始诊断不进可由普通文件能力读取的共享空间；导出只走成人本人入口。用合成诊断标记验成人导出后，孩子的文件列表、文件读能力和 AI 均取不到；另外验正常共享资料仍可读。 |
 | G2 | **中** | **回看历史和重播。**【实现】[AiHome](../../../system/ui/shell/ai_chat.c#L24)总是空记录；[面板动作](../../../system/ui/shell/ai_panel.c#L195)有收起、翻页和再问，没有当前回答重播。`ai-chat` 覆盖空页和单轮，`ai-speech-long` 覆盖首播及停止。 | 用合成历史先接读列表和按成员打开；给当前回答一个共用重播动作并核对换人；真实历史存储和合成服务另验。 |
 | G3a | **中** | **更改叫法。**【实现】[语音设置](../../../system/ui/shell/settings_pages.c#L19)这一行没有设置或能力，仅“暂不能更改”。叫名字和语音打断的用例不能替代更改叫法验收。 | 先定可改的规则，用模拟唤醒走设置、读取和权限；真机唤醒词识别另验。 |
 | G3b | **中** | **打字接话。**【实现】[同页](../../../system/ui/shell/settings_pages.c#L25)没有可切换设置或接受候选动作；`ime-learning` 是输入法词频，不是 AI 续写。 | 先用合成候选接普通文本框，测试开关、接受／拒绝、密码框禁用和换人；真实模型生成另验。 |
@@ -121,7 +121,7 @@
 ## 顺手发现
 
 - [phone-gap-2](../phone-gap-2/REPORT.md)的“整个端口是桩”已过时；最新试用文档与端口代码可区分已接和仍为桩。不能把历史试用当作指定提交已上机。
-- `open-app-latency` 的普通及内存轮曾在 `integration-dictation` 失败；本轮普通全量该项和免按键用例均通过。保留历史差异，不能凭一次通过判断时序问题已根除。
+- `open-app-latency` 的普通及内存轮曾在 `integration-dictation` 失败；本轮两轮全量该项和免按键用例均通过。保留历史差异，不能据此判断时序问题已根除。
 - [阶段门](../backlog.md#L249)列的开发项在基线合并历史中可找到；`i18n-2` 以 `i18n-2b` 和合并补修收口。已有 batch12–14 审查及修复记录，未在基线内找到所有后续合并完成后的独立整批审查报告。远端 main 和基线 CI 的具体提交分开核对，见验证节。
 - 决策板链接返回网页外壳，未拿到 `decisions` 集合；D-112～D-126 以本地[已定记录](../../decisions/README.md#L135)为准，没有改写。GitHub 连接器按仓库查未结 Issue 和 PR，均返回空。
 
@@ -136,3 +136,63 @@
 ## 验证与复现
 
 普通全量：配置、构建及 CTest 均退出 0。原话 `100% tests passed out of 363`、`Total Test time (real) = 366.39 sec`，363 通过、0 失败、0 跳过。`gui-smoke` 使用 SDL dummy 驱动，没有启动有窗口的模拟器。日志 `build/verification/{configure,build,ctest}.log`、`build/Testing/Temporary/LastTest.log`。
+
+ASan/UBSan 全量：独立配置、完整构建、同 363 项均退出 0，原话 `100% tests passed out of 363`、`Total Test time (real) = 577.84 sec`，0 跳过。实际编译参数含 `-Werror -fsanitize=address,undefined`；检查了全量输出、`LastTest.log` 和构建日志，未见 ASan、LeakSanitizer 或 UBSan 错误诊断。日志 `build-asan/verification/{configure,build,ctest}.log`、`build-asan/Testing/Temporary/LastTest.log`。宿主链接有既有 `libink_port_sim.a` 重复库提示。
+
+在仓库根目录设置任务指定的 `INK_DEPS`；设计稿不参与构建。宿主构建和两轮全量依次运行，按总规则限制在 utility 优先级、`-j2`。中枢 Python 依赖从只读检出复用，三个中枢测试实际运行。
+
+```sh
+py="$INK_DEPS/build-deps/pyenv/bin/python"
+export PYTHONDONTWRITEBYTECODE=1 SDL_VIDEODRIVER=dummy
+export PYTHONPATH="$PWD/hub:$INK_DEPS/hub/.venv/lib/python3.11/site-packages"
+taskpolicy -c utility cmake -S . -B build -DINK_WERROR=ON \
+  -DINK_CJK_FONT="$INK_DEPS/build-deps/fonts/NotoSansCJK-Regular.ttc" -DINK_CJK_FACE=2 \
+  -DINK_CJK_MEDIUM_FONT="$INK_DEPS/build-deps/fonts/NotoSansCJKsc-Medium.otf" \
+  -DINK_CJK_BOLD_FONT="$INK_DEPS/build-deps/fonts/NotoSansCJKsc-Bold.otf" \
+  -DPython3_EXECUTABLE="$py" -DFETCHCONTENT_SOURCE_DIR_LVGL="$INK_DEPS/build/_deps/lvgl-src"
+taskpolicy -c utility cmake --build build -j2
+INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" \
+  --test-dir build --output-on-failure -j2
+```
+
+内存检查复用上面配置，目录换 `build-asan`，增加 `-DINK_SANITIZE=ON`；运行时设置 `ASAN_OPTIONS=halt_on_error=1 UBSAN_OPTIONS=halt_on_error=1`，不设置截图保留变量。领域表中的截图均来自普通轮。
+
+G1 的合成对照：【实测】默认关闭孩子文件应用时两路径都拒绝。用普通轮 `files-ops` 输出的 `build/files-ops-g698dqnw/flash.img`，该测试[以家长确认开启了文件应用](../../../tests/files_ops/files_ops.c#L19)。每次用它的新副本，先通过模拟触摸选择孩子，再让模拟中枢发一次 `file.read`。两个文件均为同一段合成文本，分别放在夹具 `content/ink-logs/synthetic/logs.bin` 和 `content/.m/owner/synthetic.txt`。两进程各退出 0，`members.switches=1`、`action.ai.file.read=1`；共享路径 `tools.calls.done=1`，成员私有路径 `tools.calls.rejected=1`。这轮只核实访问路径，没有导出或读取真实日志／转储。
+
+复跑本机留存夹具：
+
+```sh
+scope=build/verification/log-isolation
+for variant in shared private; do
+  cp build/files-ops-g698dqnw/flash.img "$scope/$variant-repeat.img"
+  taskpolicy -c utility build/sim-configured --profile simulator/profiles/metalio-plus.json \
+    --script "$scope/permitted.script" --hub "$scope/$variant-permitted.hub.json" \
+    --assets build/assets --content "$scope/content" --flash-image "$scope/$variant-repeat.img" \
+    --out "$scope/$variant-repeat" --quiet --trace --no-random-outages
+done
+```
+
+夹具若被清理，可用 `INK_KEEP_EVIDENCE=1 taskpolicy -c utility "$INK_DEPS/build-deps/pyenv/bin/ctest" --test-dir build -R '^files-ops$' --output-on-failure -j1` 重新生成合成闪存。脚本在 5 s 点 `(190, 930)` 选择孩子，12 s 开始合成麦克风并按住 AI 键 1200 ms，22 s 结束。中枢 JSON 沿用 `tests/scenarios/ai_tools.hub.json` 的 `hello` 和一轮 `ai.listen` 形状，仅将工具换为 `file.read`，`path` 分别填 `/family/ink-logs/synthetic/logs.bin` 和 `/members/owner/synthetic.txt`。本次证据：`build/verification/log-isolation/shared-permitted/metrics.json`、`build/verification/log-isolation/private-permitted/metrics.json`。
+
+S31：【实测】ESP-IDF v6.1 `fff9895c` 配置及 `ink-s31.elf` 编译链接退出 0；`file` 验为 32 位 RISC-V ELF，编译数据库含显示、音频、Wi-Fi 和浅睡桥各一份。浅睡关闭；0 条编译器警告，SDK 有 5 条配置警告和 1 条 Bash 补全警告。只构建 ELF，不打包固件，不调用设备工具。日志 `build-s31/verification/{configure,elf,export}.log`。复现使用 [S31 构建脚本](../../../ports/esp32s31/build.sh)相同环境，在构建目录复制默认 `sdkconfig` 及只读依赖里的 `build-s31/esp-opus-1.0.5.zip`；加载 SDK 环境，设置 `INK_LVGL_SOURCE_DIR`、`INK_UPSTREAM` 和 `IDF_COMPONENT_MANAGER=0`，然后从端口目录执行：
+
+```sh
+b="$(cd ../.. && pwd)/build-s31"
+taskpolicy -c utility idf.py --preview -B "$b" -DIDF_TARGET=esp32s31 \
+  -DSDKCONFIG="$b/sdkconfig" -DINK_S31_LIGHT_SLEEP=OFF reconfigure
+taskpolicy -c utility cmake --build "$b" --target ink-s31.elf -j2
+```
+
+GCC：【实测】`gcccheck: 22 compiled, 0 with findings`，退出 0，无跳过。检查使用普通构建的编译数据库和 RISC-V GCC 15.2.0，覆盖下列代表性源文件，不能代替 Ubuntu 的原生编译测试。日志 `build/verification/gcccheck.log`。
+
+```sh
+taskpolicy -c utility "$py" -B "$INK_DEPS/../ink-codex/tools/gcccheck.py" build \
+  system/apps/{phone/phone,sms/sms,contacts/contacts,camera/camera,camera/scan,clock/clock,calendar/calendar,files/files,calculator/calculator,weather/weather}.c \
+  system/services/{ai/ai_service,comm/comm_service,log/log,notify/notify_caps,file/file_service}.c \
+  system/policy/{cap,members}.c system/text/i18n.c \
+  system/ui/{ui_task,app_registry,shell/navigation,shell/settings_pages}.c
+```
+
+远端只读核对：【实测】查阅时 GitHub `claude/system-layer` 为指定基线；`main` 为 `bc13de46`，[该提交的 sim 工作流](https://github.com/Gidean-zcx/ink/actions/runs/42917748054)绿。[基线 sim 工作流](https://github.com/Gidean-zcx/ink/actions/runs/42926007435)的 macOS 与 hub 已过，Ubuntu `build-test` 仍在跑。不能用较早的 main CI 或本机测试替代基线的 Linux 结果。
+
+收尾检查：【实测】表格、用例名、相对链接及截图可读性通过。`git diff --stat b796b9fd..HEAD` 只有本报告，`git diff --check b796b9fd..HEAD` 无问题。对基线到 HEAD 的差异执行总规则第 6 节原式隐私扫描，grep 退出 1、0 匹配。产物、夹具和截图只留在忽略的构建目录；未推送或开 PR。
