@@ -77,7 +77,10 @@ static void run(void *ctx) {
                     double presses = sim_metric_value("ai.presses");
                     hw(HW_KEY_DOWN, HAL_KEY_AI, 0);
                     CHECK(WAIT_FOR(sim_metric_value("ai.presses") > presses && ink_audio_capture_busy(), 1000), "AI key reaches driver and opens new capture");
-                    CHECK(!speaking(), "AI key immediately interrupts long speech");
+                    /* the stream stops in the key handler; audio.now_playing is published by the audio task when it
+                     * next runs (one frame), so a capture that opens first can still see "voice" for that moment
+                     * (Linux CI, after a board settle moved the timeline) */
+                    CHECK(WAIT_FOR(!speaking(), 100), "AI key interrupts long speech at once (within 100 ms)");
                     hw(HW_KEY_UP, HAL_KEY_AI, 0);
                     CHECK(WAIT_FOR(sim_metric_value("ai.answers") == 1 && !speaking(), 15000), "replacement question finishes");
                     on_ui(read_snapshot);
