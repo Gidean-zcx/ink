@@ -58,7 +58,7 @@ static bool save(ink_call_t *c) {
     G.saved = true;
     ink_args_t a; ink_args_init(&a); ink_args_int(&a, "moves", G.s.count); ink_args_int(&a, "winner", G.s.winner);
     ink_cap_emit_for("games.changed", &a, G.member);
-    ink_ui_content_changed();
+    if (G.label) ink_ui_content_changed();
     return true;
 }
 static void ai_done(void *arg) {
@@ -171,7 +171,7 @@ static void game(lv_obj_t *s, void *arg) {
 static int snapshot(char *out, size_t cap) {
     if (G.epoch != ink_member_epoch()) return snprintf(out, cap, "{}");
     describe();
-    const ink_ui_field_spec_t fields[] = {{.id = "board", .label = TR("棋盘，按行，0 空 1 黑 2 白"), .value = G.board}, {.id = "turn", .label = TR("当前回合"), .value = G.status}};
+    const ink_ui_field_spec_t fields[] = {{.id = "board", .role = "text", .label = TR("棋盘，按行，0 空 1 黑 2 白"), .value = G.board}, {.id = "turn", .role = "status", .label = TR("当前回合"), .value = G.status}};
     const ink_ui_action_spec_t actions[] = {{.id = "start", .label = TR("开始或继续"), .capability = "games.start", .enabled = true},
         {.id = "state", .label = TR("棋局"), .capability = "games.state", .enabled = true}, {.id = "move", .label = TR("落子"), .capability = "games.move", .enabled = !G.call && !over()},
         {.id = "undo", .label = TR("悔棋"), .capability = "games.undo", .enabled = !G.call && G.s.count}, {.id = "reset", .label = TR("重开"), .capability = "games.reset", .enabled = !G.call}};
