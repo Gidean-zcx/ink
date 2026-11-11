@@ -48,6 +48,11 @@ static test_event_fn handler;
 static bool pending;
 static unsigned lock_depth;
 static bool fail_read;
+/* The vendor's flash drain: every flash operation runs with the I2C1 lock held (s31_flash_begin). */
+static bool draining;
+static unsigned drains;
+bool s31_flash_begin(void) { assert(!draining); draining = true; drains++; return true; }
+void s31_flash_end(bool taken) { assert(taken && draining); draining = false; }
 struct osal_mutex { int unused; };
 static struct osal_mutex mutex;
 osal_mutex_t *osal_mutex_create(void) { return &mutex; }
@@ -61,18 +66,18 @@ const esp_partition_t *esp_partition_find_first(int t, int s, const char *name) 
     return !strcmp(name, "model") ? &user : NULL;
 }
 int esp_partition_read(const esp_partition_t *p, size_t off, void *buf, size_t n) {
-    assert(p == &user && off + n <= sizeof flash);
+    assert(p == &user && off + n <= sizeof flash && draining);
     if (fail_read) return -1;
     memcpy(buf, flash + off, n); return 0;
 }
 int esp_partition_write(const esp_partition_t *p, size_t off, const void *buf, size_t n) {
-    assert(p == &user && off + n <= sizeof flash);
+    assert(p == &user && off + n <= sizeof flash && draining);
     const uint8_t *b = buf;
     for (size_t i = 0; i < n; i++) { assert((flash[off + i] & b[i]) == b[i]); flash[off + i] &= b[i]; }
     return 0;
 }
 int esp_partition_erase_range(const esp_partition_t *p, size_t off, size_t n) {
-    assert(p == &user && off % 4096 == 0 && n == 4096 && off + n <= sizeof flash);
+    assert(p == &user && off % 4096 == 0 && n == 4096 && off + n <= sizeof flash && draining);
     memset(flash + off, 255, n); erases++; return 0;
 }
 int esp_cache_get_alignment(unsigned caps, size_t *n) { (void)caps; *n = 128; return 0; }

@@ -12,6 +12,7 @@
 #include "esp_heap_caps.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
+#include "s31_board.h"
 static RTC_NOINIT_ATTR hal_log_tail_t tail;
 hal_log_tail_t *hal_log_tail(void) { return &tail; }
 static const esp_partition_t *region(bool core) {
@@ -21,15 +22,27 @@ static const esp_partition_t *region(bool core) {
 bool hal_log_read(bool core, uint32_t off, void *out, size_t n) {
     const esp_partition_t *p = region(core);
     uint32_t size = core ? 65536u : INK_LOG_BYTES;
-    return p && off <= size && n <= size - off && esp_partition_read(p, (core ? 0 : 0x480000u) + off, out, n) == ESP_OK;
+    if (!p || off > size || n > size - off) return false;
+    bool k = s31_flash_begin();
+    int e = esp_partition_read(p, (core ? 0 : 0x480000u) + off, out, n);
+    s31_flash_end(k);
+    return e == ESP_OK;
 }
 bool hal_log_erase(uint32_t off) {
     const esp_partition_t *p = region(false);
-    return p && off % INK_LOG_SECTOR == 0 && off < INK_LOG_BYTES && esp_partition_erase_range(p, 0x480000u + off, INK_LOG_SECTOR) == ESP_OK;
+    if (!p || off % INK_LOG_SECTOR || off >= INK_LOG_BYTES) return false;
+    bool k = s31_flash_begin();
+    int e = esp_partition_erase_range(p, 0x480000u + off, INK_LOG_SECTOR);
+    s31_flash_end(k);
+    return e == ESP_OK;
 }
 bool hal_log_program(uint32_t off, const void *data, size_t n) {
     const esp_partition_t *p = region(false);
-    return p && off <= INK_LOG_BYTES && n <= INK_LOG_BYTES - off && esp_partition_write(p, 0x480000u + off, data, n) == ESP_OK;
+    if (!p || off > INK_LOG_BYTES || n > INK_LOG_BYTES - off) return false;
+    bool k = s31_flash_begin();
+    int e = esp_partition_write(p, 0x480000u + off, data, n);
+    s31_flash_end(k);
+    return e == ESP_OK;
 }
 int hal_log_format(char *out, size_t n, const char *fmt, va_list a) { return vsnprintf(out, n, fmt, a); }
 /* hal_device_reset_reason lives in hal_device_s31.c: "panic", "task-watchdog", ... (the log's crash check looks for those words). */

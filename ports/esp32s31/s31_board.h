@@ -43,4 +43,12 @@ typedef void (*s31_irq_fn)(void *ctx);
  *  stays low after a service. Boot, task context, before the line can fire. 0 ok. */
 int s31_irq_watch(int gpio, s31_irq_fn fn, void *ctx);
 
+/** v2.0.77 flash drain (main/display/epd_nvs_guard.cc, main/boards/common/storage/sd_log_writer.cc): around each
+ *  flash read, write or erase, wait for the I2C1 transfer in flight and quiet the bus interrupts
+ *  (metalio_i2c1_lock_for_flash), so no transfer straddles the window where the flash operation turns the cache
+ *  off. Lock order as the vendor's: display flash guard -> I2C -> flash. Returns whether the bus lock was taken:
+ *  false when this task already holds the bus (synchronous transfers, so none is in flight); pass it to the end. */
+bool s31_flash_begin(void);
+void s31_flash_end(bool taken);
+
 #endif

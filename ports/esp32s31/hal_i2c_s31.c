@@ -70,3 +70,8 @@ const char *hal_i2c_status_name(hal_i2c_status_t s) {
     }
     return "?";
 }
+
+bool s31_flash_begin(void) { return metalio_i2c1_lock_for_flash(-1); }
+void s31_flash_end(bool taken) {
+    if (taken) metalio_i2c1_unlock();
+}
