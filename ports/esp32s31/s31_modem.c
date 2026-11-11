@@ -34,6 +34,7 @@ static struct {
     unsigned epoch, seq;
     int signal_dbm;
     uint64_t activity, rx_bytes, tx_bytes, deadline, ready_after;
+    unsigned rx_raw, frames, bad_headers, forced, at_logged; /* first device runs: what the link did */
     hal_at_result_t result;
     size_t frame_n, expected, line_n, response_n;
     char command[128], response[4096], line[1024];
@@ -164,12 +165,14 @@ static void ink_dispatch(void) {
     gpio_set_level(INK_MRDY, 0);
 }
 static void ink_feed(const uint8_t *data, size_t n) {
+    ink_cell.rx_raw += (unsigned)n;
     for (size_t i = 0; i < n; i++) {
         ink_cell.frame[ink_cell.frame_n++] = data[i];
         if (ink_cell.frame_n == 4) {
             unsigned sum = ink_cell.frame[0] + ink_cell.frame[1] + ink_cell.frame[2];
             ink_cell.expected = 4 + ink_cell.frame[0] + ((ink_cell.frame[1] & 15u) << 8);
             if (ink_cell.frame[3] != (uint8_t)((sum >> 8) ^ sum ^ 3) || ink_cell.expected > INK_FRAME_MAX) {
+                ink_cell.bad_headers++;
                 memmove(ink_cell.frame, ink_cell.frame + 1, 3);
                 ink_cell.frame_n = 3;
                 ink_cell.expected = 0;
@@ -177,6 +180,7 @@ static void ink_feed(const uint8_t *data, size_t n) {
             }
         }
         if (ink_cell.expected && ink_cell.frame_n == ink_cell.expected) {
+            ink_cell.frames++;
             ink_dispatch();
             ink_cell.frame_n = ink_cell.expected = 0;
         }
@@ -233,9 +237,13 @@ static void ink_step(void) {
         gpio_set_level(INK_MRDY, 0);
         uint64_t until = osal_now_us() + 200000;
         while (gpio_get_level(S31_GPIO_MODEM_SRDY) && osal_now_us() < until) { ink_receive(); osal_task_delay_us(1000); }
+        /* Upstream HandleIdleTimeout (.cc:1118-1129): a modem that has not answered the wake within the window is
+         * forced active and the frame goes anyway. Refusing (port-cell-1) left every AT unsent on the first device
+         * run, 2026-11-11. */
+        if (gpio_get_level(S31_GPIO_MODEM_SRDY) && ink_cell.forced++ == 0)
+            hal_log_write("cell: no wake answer (SRDY high) within 200 ms; sending anyway, as the vendor does");
         CELL_LOCK();
-        bool send = !ink_cell.suspended && f->epoch == ink_cell.epoch && !gpio_get_level(S31_GPIO_MODEM_SRDY) &&
-            (!f->deadline || osal_now_us() < f->deadline);
+        bool send = !ink_cell.suspended && f->epoch == ink_cell.epoch && (!f->deadline || osal_now_us() < f->deadline);
         if (f->deadline) {
             send = send && ink_cell.waiting && f->deadline == ink_cell.deadline;
             if (send) ink_cell.at_sent = true;
@@ -274,20 +282,22 @@ void ink_s31_cell_init(void) { /* board boot, once; nt26_board.cc:130 settles P1
     ink_cell.tx = osal_queue_create(sizeof(ink_frame_t *), 8);
     ink_cell.urc = osal_queue_create(INK_URC_MAX, 8);
     if (!ink_cell.at || !ink_cell.lock || !ink_cell.io || !ink_cell.done || !ink_cell.tx || !ink_cell.urc) osal_panic("cell: no memory");
-    if (metalio_board_set(1, MB_P1_SHARED_RST | MB_P1_SHARED_PWR, MB_P1_SHARED_RST | MB_P1_SHARED_PWR) != HAL_I2C_OK) return;
+    if (metalio_board_set(1, MB_P1_SHARED_RST | MB_P1_SHARED_PWR, MB_P1_SHARED_RST | MB_P1_SHARED_PWR) != HAL_I2C_OK) {
+        hal_log_write("cell: init stopped: shared power/reset not set"); return; }
     uart_config_t u = {.baud_rate = 2000000, .data_bits = UART_DATA_8_BITS, .parity = UART_PARITY_DISABLE,
         .stop_bits = UART_STOP_BITS_1, .flow_ctrl = UART_HW_FLOWCTRL_DISABLE, .source_clk = UART_SCLK_DEFAULT};
     gpio_config_t pins = {.pin_bit_mask = 1ull << INK_MRDY, .mode = GPIO_MODE_OUTPUT};
-    if (gpio_config(&pins) != ESP_OK || gpio_set_level(INK_MRDY, 1) != ESP_OK) return;
+    if (gpio_config(&pins) != ESP_OK || gpio_set_level(INK_MRDY, 1) != ESP_OK) { hal_log_write("cell: init stopped: MRDY"); return; }
     pins = (gpio_config_t){.pin_bit_mask = 1ull << S31_GPIO_MODEM_SRDY, .mode = GPIO_MODE_INPUT, .intr_type = GPIO_INTR_ANYEDGE};
-    if (gpio_config(&pins) != ESP_OK) return;
+    if (gpio_config(&pins) != ESP_OK) { hal_log_write("cell: init stopped: SRDY"); return; }
     esp_err_t r = gpio_install_isr_service(0);
-    if (r != ESP_OK && r != ESP_ERR_INVALID_STATE) return;
+    if (r != ESP_OK && r != ESP_ERR_INVALID_STATE) { hal_log_write("cell: init stopped: GPIO interrupts"); return; }
     if (gpio_isr_handler_add(S31_GPIO_MODEM_SRDY, ink_srdy, NULL) != ESP_OK ||
         uart_param_config(INK_UART, &u) != ESP_OK ||
         uart_set_pin(INK_UART, S31_UART2_TX, S31_UART2_RX, UART_PIN_NO_CHANGE, UART_PIN_NO_CHANGE) != ESP_OK ||
-        gpio_pullup_en(S31_UART2_RX) != ESP_OK || !ink_s31_uhci_init()) return;
+        gpio_pullup_en(S31_UART2_RX) != ESP_OK || !ink_s31_uhci_init()) { hal_log_write("cell: init stopped: UART2 or DMA"); return; }
     ink_cell.ready = true;
+    hal_log_write(gpio_get_level(S31_GPIO_MODEM_SRDY) ? "cell: UART2 and DMA ready, SRDY high" : "cell: UART2 and DMA ready, SRDY low");
     ink_cell.ready_after = metalio_board_shared_power_since_us() + 1000000;
     osal_task_cfg_t cfg = {.name = "nt26-uart", .fn = ink_io, .stack_bytes = 4096, .priority = 5, .core = -1, .flags = OSAL_TASK_STACK_EXTERNAL};
     if (osal_task_create(&cfg, NULL) != OSAL_OK) { ink_cell.ready = false; hal_log_write("cell: UART task failed"); }
@@ -345,8 +355,19 @@ static hal_at_result_t ink_at(const char *cmd, const char *payload, char *out, s
         if (ink_cell.response_n >= cap) result = HAL_AT_ERROR;
         else memcpy(out, ink_cell.response, ink_cell.response_n + 1);
     }
+    bool sent = ink_cell.at_sent, desynced = ink_cell.desynced;
     CELL_UNLOCK();
     osal_mutex_unlock(ink_cell.at);
+    if (ink_cell.at_logged < 6 || (result == HAL_AT_TIMEOUT && ink_cell.at_logged < 12)) { /* first device runs */
+        ink_cell.at_logged++;
+        bool private = !strncmp(cmd, "ATD", 3) || !strncmp(cmd, "AT+CMG", 6);
+        char line[160];
+        snprintf(line, sizeof line, "cell link: %.32s -> %s (sent=%d desync=%d) rx=%u B frames=%u bad=%u forced=%u SRDY=%d",
+                 private ? "(private)" : cmd, result == HAL_AT_OK ? "OK" : result == HAL_AT_ERROR ? "ERROR" :
+                 result == HAL_AT_TIMEOUT ? "timeout" : "no modem", sent, desynced, ink_cell.rx_raw, ink_cell.frames,
+                 ink_cell.bad_headers, ink_cell.forced, gpio_get_level(S31_GPIO_MODEM_SRDY));
+        hal_log_write(line);
+    }
     return result;
 }
 hal_at_result_t hal_modem_at(const char *cmd, char *resp, size_t cap, uint32_t ms) { return ink_at(cmd, NULL, resp, cap, ms); }

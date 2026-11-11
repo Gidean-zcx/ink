@@ -104,7 +104,7 @@ static void inject(unsigned type, const void *data, size_t n) {
 }
 static void reply(const char *s) { inject(1, s, strlen(s)); }
 bool ink_s31_uhci_transmit(const uint8_t *data, size_t n) {
-    assert(receiving && mrdy == 0 && srdy == 0 && n >= 4); writes++;
+    assert(receiving && mrdy == 0 && (srdy == 0 || no_wake) && n >= 4) /* a modem that misses the wake gets the frame anyway (vendor) */; writes++;
     const uint8_t *p = data;
     unsigned sum = p[0] + p[1] + p[2];
     if (p[3] != (uint8_t)((sum >> 8) ^ sum ^ 3) || 4 + p[0] + ((p[1] & 15u) << 8) != n) { bad_headers++; return true; }
@@ -282,7 +282,8 @@ int main(void) {
     before = writes; no_ack = true;
     assert(hal_modem_at("AT", response, sizeof response, 1000) == HAL_AT_OK && writes == before + 1); no_ack = false;
     no_wake = true; srdy = 1; before = writes;
-    assert(hal_modem_at("AT", response, sizeof response, 250) == HAL_AT_TIMEOUT && writes == before);
+    /* as the vendor (HandleIdleTimeout): after the 200 ms wake window the frame goes anyway */
+    assert(hal_modem_at("AT", response, sizeof response, 1000) == HAL_AT_OK && writes == before + 1 && ink_cell.forced >= 1);
     no_wake = false; srdy = 0;
     assert(hal_modem_at("AT", response, sizeof response, 1000) == HAL_AT_OK);
     reply("\r\nECRDY\r\n"); drain();
