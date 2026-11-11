@@ -133,7 +133,7 @@ void ink_main(void) {
     if (ink_ai_pages_init() != 0) osal_panic("AI pages failed to start");
     extern int ink_remote_app_init(void);
     if (ink_remote_app_init() != 0) osal_panic("remote app failed to start");
+    MUST(ink_app_packages_init(), "installed apps failed to start");
     if (ink_log_start()) osal_panic("logging capabilities failed to start");
     ink_backup_start(); /* Replay only after all collection definitions are registered. */
-    MUST(ink_app_packages_init(), "installed apps failed to start");
 }

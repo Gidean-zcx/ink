@@ -11,7 +11,7 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[2]
 p = argparse.ArgumentParser(description=__doc__)
 p.add_argument('--build', required=True, type=Path)
-p.add_argument('--mutant', choices=('install', 'uninstall', 'bad', 'permission', 'snapshot', 'child', 'card'))
+p.add_argument('--mutant', choices=('install', 'uninstall', 'bad', 'permission', 'snapshot', 'child', 'card', 'source'))
 a = p.parse_args()
 build = a.build.resolve()
 work = Path(tempfile.mkdtemp(prefix='app-runtime-', dir=build))
@@ -27,6 +27,7 @@ if a.mutant:
         'child': [],
         'card': [('static void storage(void *ctx, int h, const char *id) { (void)ctx; (void)h; (void)id; request_scan(); }',
                   'static void storage(void *ctx, int h, const char *id) { (void)ctx; (void)h; (void)id; if (hal_fs_card_present()) request_scan(); }')],
+        'source': [('.src = INK_SRC_APP, .member = ink_cap_call_member(c)', '.src = c->src, .member = ink_cap_call_member(c)')],
     }[a.mutant]
     for old, new in changes:
         assert source.count(old) == 1, old
@@ -63,14 +64,15 @@ package = sd / 'apps/units'
 shutil.copytree(ROOT / 'examples/units', package)
 manifest = json.loads((package / 'manifest.json').read_text())
 manifest['pages'].append('controls')
-manifest['permissions'] += ['test.runtime_echo', 'synthetic']
+manifest['permissions'] += ['test.runtime_echo', 'synthetic', 'test.runtime_external']
 (package / 'manifest.json').write_text(json.dumps(manifest, ensure_ascii=False))
 controls = {'title': '合成控件', 'nodes': [
     {'id': 'denied', 'type': 'button', 'label': '未声明动作', 'capability': 'app.cards'},
     {'id': 'switch', 'type': 'toggle', 'label': '合成开关', 'value': False, 'capability': 'test.runtime_echo', 'args': {'on': '$switch'}, 'from': 'on'},
     {'id': 'slider', 'type': 'slider', 'label': '合成滑杆', 'value': 2, 'capability': 'test.runtime_echo', 'args': {'level': '$slider'}, 'from': 'level'},
     {'id': 'segment', 'type': 'segments', 'label': '合成分段', 'options': ['甲', '乙'], 'value': 0, 'capability': 'test.runtime_echo', 'args': {'choice': '$segment'}},
-    {'id': 'row', 'type': 'list', 'label': '合成列表行', 'value': '合成内容'}]}
+    {'id': 'row', 'type': 'list', 'label': '合成列表行', 'value': '合成内容'},
+    {'id': 'external', 'type': 'button', 'label': '合成对外动作', 'capability': 'test.runtime_external'}]}
 (package / 'controls.json').write_text(json.dumps(controls, ensure_ascii=False))
 shutil.copytree(package, sd / '.m/owner/SYNTH_package')
 # A complete otherwise valid manifest with an id that disagrees with its directory.

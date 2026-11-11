@@ -181,7 +181,8 @@ static void receipt(void *ctx, const ink_receipt_t *rc) {
                 }
             }
         osal_free(j);
-        snprintf(RP.message, sizeof RP.message, "%s", rc->say[0] ? rc->say : rc->status == INK_RC_DONE ? "已完成" : rc->detail);
+        snprintf(RP.message, sizeof RP.message, "%s", rc->status == INK_RC_PENDING_CONFIRMATION ? "已请求确认" :
+            rc->say[0] ? rc->say : rc->status == INK_RC_DONE ? "已完成" : rc->detail);
         draw();
     }
     reply->call->rc = *rc; reply->call->rc.result = NULL;
@@ -203,7 +204,9 @@ static void action(ink_call_t *c) {
     }
     const ink_cap_t *cap = ink_cap_find(n->capability);
     if (!cap || !declared(n->capability) || (cap->permission && !declared(cap->permission)) ||
-        (cap->expose && !(cap->expose & INK_EXPOSE_APP))) {
+        (cap->expose && (!(cap->expose & INK_EXPOSE_APP) ||
+            (c->src == INK_SRC_AI && !(cap->expose & INK_EXPOSE_AI)) ||
+            (c->src == INK_SRC_REMOTE && !(cap->expose & INK_EXPOSE_REMOTE))))) {
         c->rc.status = INK_RC_REJECTED;
         snprintf(c->rc.detail, sizeof c->rc.detail, "应用没有声明这个能力或权限");
         return;
@@ -242,7 +245,7 @@ static void action(ink_call_t *c) {
     reply_t *reply = !r ? osal_malloc(sizeof *reply, OSAL_MEM_EXTERNAL) : NULL;
     if (!reply) { osal_free(args); invalid(c, "动作参数过长或内存不足"); return; }
     *reply = (reply_t){c, ink_ui_generation(), ink_member_epoch(), RP.index};
-    ink_call_opts_t opts = {.src = c->src, .member = ink_cap_call_member(c), .done = receipt, .ctx = reply, .reply_exec = INK_EXEC_UI};
+    ink_call_opts_t opts = {.src = INK_SRC_APP, .member = ink_cap_call_member(c), .done = receipt, .ctx = reply, .reply_exec = INK_EXEC_UI};
     ink_cap_defer(c);
     if (ink_cap_call(n->capability, bound, &opts)) {
         invalid(c, "系统繁忙"); ink_cap_done(c); osal_free(reply);
@@ -291,8 +294,11 @@ static void draw(void) {
             RP.fields[i].value = RP.descriptions[i];
         }
         snprintf(RP.action_args[i], sizeof RP.action_args[i], "{\"id\":\"%s\"}", n->id);
+        const ink_cap_t *binding = ink_cap_find(n->capability);
+        bool permitted = binding && declared(n->capability) && (!binding->permission || declared(binding->permission)) &&
+            (!binding->expose || (binding->expose & INK_EXPOSE_APP));
         RP.actions[i] = (ink_ui_action_spec_t){.id = n->id, .label = n->label, .capability = "app.page_action", .args_json = RP.action_args[i],
-            .enabled = !strcmp(n->kind, "input") || (n->capability[0] && declared(n->capability))};
+            .enabled = !strcmp(n->kind, "input") || (permitted && ink_cap_ai_callable(binding))};
         if (i < RP.offset || i >= RP.offset + 4) continue;
         int h = !strcmp(n->kind, "segments") ? INK_SEGMENT : !strcmp(n->kind, "slider") ? INK_SLIDER : INK_CONTROL;
         if (y + h > INK_CANVAS_H - INK_STATUS_BAR - 3 * INK_PRIMARY - 3 * INK_GAP) continue;
@@ -311,7 +317,7 @@ static void draw(void) {
         else {
             obj = ink_ui_list_row(RP.body, "grid", n->label, n->value, 0, y, w, false, n->capability[0] ? control : NULL, (void *)(intptr_t)i);
         }
-        if (n->capability[0] && !declared(n->capability)) lv_obj_add_state(obj, LV_STATE_DISABLED);
+        if (n->capability[0] && !permitted) lv_obj_add_state(obj, LV_STATE_DISABLED);
         RP.widgets[i] = obj; y += h + INK_GAP;
     }
     int a = RP.page.count;

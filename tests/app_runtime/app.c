@@ -43,6 +43,10 @@ static void echo(ink_call_t *c) {
 }
 static const ink_cap_t ECHO = {.id = "test.runtime_echo", .permission = "synthetic", .title = "合成控件回执",
     .child_ok = true, .effect = INK_FX_READ, .run = echo};
+static volatile int external_runs;
+static void external(ink_call_t *c) { (void)c; external_runs++; }
+static const ink_cap_t EXTERNAL = {.id = "test.runtime_external", .title = "合成对外动作", .child_ok = true,
+    .effect = INK_FX_EXTERNAL, .expose = INK_EXPOSE_APP, .run = external};
 static volatile bool pin_done;
 static int pin_result;
 static void pin_reply(void *ctx, int result, uint32_t wait) { (void)ctx; (void)wait; pin_result = result; pin_done = true; }
@@ -87,6 +91,18 @@ static void run(void *arg) {
     CHECK(AI("app.page_action", "{\"id\":\"slider\",\"value\":11}") && g_rc.status == INK_RC_INVALID, "slider rejects a value outside the declared control range");
     ok("app.page_turn", "{\"direction\":1}"); on_ui(inspect);
     CHECK(strstr(g_snap, "合成列表行"), "additional list nodes remain reachable by pagination");
+    CHECK(AI("app.page_action", "{\"id\":\"external\"}") && g_rc.status == INK_RC_REJECTED && !external_runs,
+        "a page cannot launder an app-only capability into the AI directory");
+    touch("合成对外动作");
+    ink_confirm_view_t confirmation = {0};
+    int pending = ink_confirm_list(&confirmation, 1);
+    CHECK(pending == 1 && !external_runs && !strcmp(confirmation.cap, "test.runtime_external"),
+        "SOURCE: tapping an untrusted page requests system confirmation before an external effect");
+    if (pending == 1) {
+        CHECK(ink_confirm_decide(confirmation.token, true, INK_SRC_AI) != 0 && !external_runs, "AI cannot accept the page's confirmation");
+        CHECK(!ink_confirm_decide(confirmation.token, true, INK_SRC_TOUCH) && WAIT_FOR(external_runs == 1, 5000), "only the real system confirmation executes the synthetic effect");
+    }
+    quiet();
     ok("shell.back", NULL); CHECK(strcmp(ink_ui_page_name(), "AppPage"), "back closes the package page");
     pin_done = false;
     CHECK(!ink_member_set_pin("owner", "", "24681357", pin_reply, NULL) && WAIT_FOR(pin_done, 6000) && pin_result == INK_PIN_OK, "set a synthetic parent PIN");
@@ -118,7 +134,7 @@ static void run(void *arg) {
     ink_probe_count("test.finished");
 }
 void ink_main(void) {
-    CHECK(!ink_cap_register(&ECHO, 1), "register the bounded synthetic control provider");
+    CHECK(!ink_cap_register(&ECHO, 1) && !ink_cap_register(&EXTERNAL, 1), "register the bounded synthetic control providers");
     product_main();
     osal_task_cfg_t cfg = {.name = "app-runtime-test", .fn = run, .stack_bytes = 16384, .priority = OSAL_PRIO_NORMAL, .core = -1,
         .flags = OSAL_TASK_STACK_EXTERNAL};
