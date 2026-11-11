@@ -5,6 +5,7 @@
 #include "esp_log.h"
 #include "esp_netif.h"
 #include "esp_netif_sntp.h"
+#include "esp_timer.h"
 #include "esp_wifi.h"
 #include "freertos/event_groups.h"
 #include "ink/hal_net.h"
@@ -23,8 +24,10 @@ static struct {
     EventGroupHandle_t events;
     esp_netif_t *netif;
     hal_link_status_t link;
-    int n, next, mode, result, count, max, listeners;
-    bool ready, available, joining;
+    int n, mode, result, count, max, listeners, queued, reconnect_count;
+    int queue[INK_KNOWN_MAX];
+    bool ready, available, joining, running, scan_due;
+    esp_timer_handle_t timer;
     hal_wifi_ap_t *out;
     hal_link_cb cb[4];
     void *ctx[4], *time_ctx;
@@ -33,17 +36,15 @@ static struct {
 #define INK_LOCK() osal_mutex_lock(ink_wifi.lock, OSAL_WAIT_FOREVER)
 #define INK_UNLOCK() osal_mutex_unlock(ink_wifi.lock)
 
+static void ink_join(const hal_wifi_known_t *k);
+#include "vendor/wifi_station/station.inc"
+
 static void ink_join(const hal_wifi_known_t *k) {
     wifi_config_t cfg = {0};
     memcpy(cfg.sta.ssid, k->ssid, strnlen(k->ssid, sizeof cfg.sta.ssid));
     memcpy(cfg.sta.password, k->password, strnlen(k->password, sizeof cfg.sta.password));
-    cfg.sta.scan_method = WIFI_ALL_CHANNEL_SCAN;
-    cfg.sta.sort_method = WIFI_CONNECT_AP_BY_SIGNAL;
+    ApplyApSelection(&cfg);
     ink_wifi.joining = esp_wifi_set_config(WIFI_IF_STA, &cfg) == ESP_OK && esp_wifi_connect() == ESP_OK;
-}
-static void ink_rejoin(void) {
-    if (ink_wifi.link.type == HAL_LINK_WIFI && ink_wifi.n && !ink_wifi.link.up && !ink_wifi.joining)
-        ink_join(&ink_known[ink_wifi.next++ % ink_wifi.n]);
 }
 static void ink_notify(void) {
     hal_link_status_t st;
@@ -66,16 +67,26 @@ static void ink_event(void *arg, esp_event_base_t base, int32_t id, void *data) 
         ESP_LOGI("ink_wifi", "sntp received");
         return;
     }
-    if (base == IP_EVENT && id == IP_EVENT_STA_GOT_IP && ink_wifi.link.type == HAL_LINK_WIFI) {
+    if (base == INK_WIFI_CHANGED && (id == 1 || (id == 2 && ink_wifi.link.type == HAL_LINK_WIFI)) &&
+            ink_wifi.n && ink_wifi.mode == INK_AUTO && !ink_wifi.link.up && !ink_wifi.joining) {
+        if (!ink_wifi.running) ink_station_resume();
+        else esp_wifi_scan_start(NULL, false);
+    } else if (base == WIFI_EVENT && id == WIFI_EVENT_STA_START && ink_wifi.running) {
+        if (ink_wifi.mode == INK_AUTO && !ink_wifi.joining) {
+            if (ink_wifi.link.type == HAL_LINK_WIFI && ink_wifi.queued) ink_rejoin();
+            else esp_wifi_scan_start(NULL, false);
+        }
+    } else if (base == IP_EVENT && id == IP_EVENT_STA_GOT_IP && ink_wifi.running && ink_wifi.link.type == HAL_LINK_WIFI) {
         ink_wifi.link.up = ink_wifi.available = true;
         ink_wifi.joining = false;
+        ink_wifi.queued = ink_wifi.reconnect_count = 0;
         wifi_ap_record_t ap;
         if (esp_wifi_sta_get_ap_info(&ap) == ESP_OK) ink_wifi.link.signal_dbm = ap.rssi;
         ink_wifi.result = HAL_WIFI_OK;
         xEventGroupSetBits(ink_wifi.events, INK_JOIN_BIT);
         if (ink_wifi.time_cb) ESP_ERROR_CHECK(esp_netif_sntp_start());
         ESP_LOGI("ink_wifi", "link up (DHCP)");
-    } else if (base == IP_EVENT && id == IP_EVENT_STA_LOST_IP) {
+    } else if (base == IP_EVENT && id == IP_EVENT_STA_LOST_IP && ink_wifi.running && ink_wifi.link.type == HAL_LINK_WIFI) {
         ink_wifi.link.up = false;
         esp_wifi_disconnect();
     } else if (base == WIFI_EVENT && id == WIFI_EVENT_STA_DISCONNECTED) {
@@ -86,16 +97,19 @@ static void ink_event(void *arg, esp_event_base_t base, int32_t id, void *data) 
             ? HAL_WIFI_ERR_AUTH : why == WIFI_REASON_NO_AP_FOUND ? HAL_WIFI_ERR_NOT_FOUND : HAL_WIFI_ERR_TIMEOUT;
         if (why == WIFI_REASON_NO_AP_FOUND) ink_wifi.available = false;
         xEventGroupSetBits(ink_wifi.events, INK_DOWN_BIT | INK_JOIN_BIT);
-        if (ink_wifi.mode == INK_AUTO) ink_rejoin();
+        if (ink_wifi.mode == INK_AUTO) ink_station_disconnected();
         ESP_LOGI("ink_wifi", "link down reason=%d", why);
-    } else if (base == WIFI_EVENT && id == WIFI_EVENT_SCAN_DONE) {
+    } else if (base == WIFI_EVENT && id == WIFI_EVENT_SCAN_DONE && ink_wifi.running) {
+        ink_wifi.scan_due = false;
         ink_wifi.count = 0;
         ink_wifi.available = ink_wifi.link.up;
         wifi_ap_record_t ap;
-        int best = -128;
+        int rssi[INK_KNOWN_MAX];
+        for (int i = 0; i < INK_KNOWN_MAX; i++) rssi[i] = -128;
+        ink_wifi.queued = 0;
         while (esp_wifi_scan_get_ap_record(&ap) == ESP_OK) {
             for (int i = 0; i < ink_wifi.n; i++) if (!strncmp((const char *)ap.ssid, ink_known[i].ssid, 33)) {
-                if (ap.rssi > best) { best = ap.rssi; ink_wifi.next = i; }
+                if (ap.rssi > rssi[i]) rssi[i] = ap.rssi;
                 ink_wifi.available = true;
             }
             if (ink_wifi.out) {
@@ -111,10 +125,22 @@ static void ink_event(void *arg, esp_event_base_t base, int32_t id, void *data) 
             }
         }
         esp_wifi_clear_ap_list();
-        if (((wifi_event_sta_scan_done_t *)data)->status) ink_wifi.count = HAL_WIFI_ERR_TIMEOUT;
+        for (int i = 0; i < ink_wifi.n; i++) if (rssi[i] > -128) {
+            int at = ink_wifi.queued++;
+            for (; at > 0 && rssi[ink_wifi.queue[at - 1]] < rssi[i]; at--) ink_wifi.queue[at] = ink_wifi.queue[at - 1];
+            ink_wifi.queue[at] = i;
+        }
+        if (((wifi_event_sta_scan_done_t *)data)->status) {
+            ink_wifi.count = HAL_WIFI_ERR_TIMEOUT;
+            ink_wifi.queued = 0;
+            ink_wifi.available = ink_wifi.link.up;
+        }
         xEventGroupSetBits(ink_wifi.events, INK_SCAN_BIT);
-        if (ink_wifi.mode == INK_AUTO) ink_rejoin();
-        ESP_LOGI("ink_wifi", "scan done count=%d", ink_wifi.count);
+        if (ink_wifi.mode == INK_AUTO) {
+            if (ink_wifi.link.type == HAL_LINK_WIFI) ink_rejoin();
+            else { ink_station_pause(); ink_scan_later(); }
+        }
+        ESP_LOGI("ink_wifi", "scan done count=%d known=%d", ink_wifi.count, ink_wifi.available);
     }
     bool cell_time = base == IP_EVENT && id == IP_EVENT_ETH_GOT_IP && ink_wifi.link.type == HAL_LINK_LTE && ink_wifi.time_cb;
     INK_UNLOCK();
@@ -126,27 +152,32 @@ static void ink_init(void) {
     ink_wifi.lock = osal_mutex_create();
     ink_wifi.events = xEventGroupCreate();
     if (!ink_wifi.lock || !ink_wifi.events) osal_panic("wifi: no memory");
-    ESP_ERROR_CHECK(esp_netif_init());
+    ESP_ERROR_CHECK(NetifInitOnce());
     esp_err_t r = esp_event_loop_create_default();
     if (r != ESP_ERR_INVALID_STATE) ESP_ERROR_CHECK(r);
+    ink_wifi.netif = esp_netif_create_default_wifi_sta();
+    if (!ink_wifi.netif) osal_panic("wifi: no interface");
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
     cfg.nvs_enable = 0;
     ESP_ERROR_CHECK(esp_wifi_init(&cfg));
     ESP_ERROR_CHECK(esp_wifi_set_storage(WIFI_STORAGE_RAM));
-    ink_wifi.netif = esp_netif_create_default_wifi_sta();
-    if (!ink_wifi.netif) osal_panic("wifi: no interface");
     ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT, ESP_EVENT_ANY_ID, ink_event, NULL));
     ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT, ESP_EVENT_ANY_ID, ink_event, NULL));
-    ESP_ERROR_CHECK(esp_event_handler_register(INK_WIFI_CHANGED, 0, ink_event, NULL));
+    ESP_ERROR_CHECK(esp_event_handler_register(INK_WIFI_CHANGED, ESP_EVENT_ANY_ID, ink_event, NULL));
     ESP_ERROR_CHECK(esp_event_handler_register(NETIF_SNTP_EVENT, NETIF_SNTP_TIME_SYNC, ink_event, NULL));
     esp_sntp_config_t sntp = ESP_NETIF_SNTP_DEFAULT_CONFIG("pool.ntp.org");
     sntp.start = sntp.wait_for_sync = false;
     ESP_ERROR_CHECK(esp_netif_sntp_init(&sntp));
+    esp_timer_create_args_t timer_args = {
+        .callback = ink_scan_retry, .dispatch_method = ESP_TIMER_TASK,
+        .name = "WiFiScanTimer", .skip_unhandled_events = true
+    };
+    ESP_ERROR_CHECK(esp_timer_create(&timer_args, &ink_wifi.timer));
     ESP_ERROR_CHECK(esp_wifi_set_mode(WIFI_MODE_STA));
-    ESP_ERROR_CHECK(esp_wifi_start());
+    ApplyWifiProfile();
     ink_wifi.ready = true;
     ink_s31_cell_netif_init();
-    ESP_LOGI("ink_wifi", "ready storage=RAM nvs=off ps=MIN_MODEM");
+    ESP_LOGI("ink_wifi", "ready storage=RAM nvs=off ps=NONE tx_request=48 radio=off");
 }
 void hal_net_link_status(hal_link_status_t *out) {
     if (!ink_wifi.ready) { *out = (hal_link_status_t){0}; return; }
@@ -156,16 +187,22 @@ void hal_net_link_status(hal_link_status_t *out) {
 bool hal_net_available(hal_link_type_t type) {
     if (type == HAL_LINK_LTE) return ink_s31_cell_available();
     if (!ink_wifi.ready || type != HAL_LINK_WIFI) return false;
-    INK_LOCK(); bool yes = ink_wifi.available; INK_UNLOCK();
+    INK_LOCK(); bool yes = ink_wifi.available;
+    if (ink_wifi.scan_due && ink_wifi.n && ink_wifi.mode == INK_AUTO && !ink_wifi.link.up && !ink_wifi.joining) {
+        ink_wifi.scan_due = false;
+        ESP_ERROR_CHECK(esp_event_post(INK_WIFI_CHANGED, 1, NULL, 0, 0));
+    }
+    INK_UNLOCK();
     return yes;
 }
 void hal_net_use(hal_link_type_t type) {
     ink_init();
     INK_LOCK();
     if (type == ink_wifi.link.type) { INK_UNLOCK(); return; }
+    if (type != HAL_LINK_WIFI) ink_station_pause();
     ink_wifi.link = (hal_link_status_t){.type = type};
-    if (type != HAL_LINK_WIFI) esp_wifi_disconnect();
-    else { esp_netif_set_default_netif(ink_wifi.netif); ink_rejoin(); }
+    if (type == HAL_LINK_WIFI) { esp_netif_set_default_netif(ink_wifi.netif); ink_station_resume(); ink_rejoin(); }
+    else ink_scan_later();
     INK_UNLOCK();
     ink_s31_cell_use(type == HAL_LINK_LTE);
     ESP_ERROR_CHECK(esp_event_post(INK_WIFI_CHANGED, 0, NULL, 0, 0));
@@ -188,7 +225,9 @@ void hal_wifi_set_known(const hal_wifi_known_t *list, int n) {
     ink_wifi.n = list && n > 0 ? (n < INK_KNOWN_MAX ? n : INK_KNOWN_MAX) : 0;
     memset(ink_known, 0, sizeof ink_known);
     if (ink_wifi.n) memcpy(ink_known, list, (size_t)ink_wifi.n * sizeof *list);
-    ink_wifi.next = 0;
+    ink_wifi.queued = 0;
+    ink_wifi.reconnect_count = MAX_RECONNECT_COUNT;
+    ink_wifi.scan_due = true;
     ink_wifi.available = false;
     if (ink_wifi.joining) esp_wifi_disconnect();
     wifi_ap_record_t ap;
@@ -196,8 +235,9 @@ void hal_wifi_set_known(const hal_wifi_known_t *list, int n) {
         for (int i = 0; i < ink_wifi.n; i++) if (!strncmp((const char *)ap.ssid, ink_known[i].ssid, 33)) ink_wifi.available = true;
         if (!ink_wifi.available) esp_wifi_disconnect();
     }
-    if (!ink_wifi.link.up && !ink_wifi.joining && ink_wifi.n) ESP_ERROR_CHECK(esp_wifi_scan_start(NULL, false));
+    if (!ink_wifi.link.up && !ink_wifi.joining && ink_wifi.n && ink_wifi.running) ESP_ERROR_CHECK(esp_wifi_scan_start(NULL, false));
     INK_UNLOCK();
+    ink_s31_net_changed();
 }
 /* Quiesce an earlier join before changing credentials or starting a scan. */
 static bool ink_pause(uint32_t ms, bool disconnect_up) {
@@ -212,6 +252,8 @@ int hal_wifi_scan(hal_wifi_ap_t *out, int max, uint32_t timeout_ms) {
     ink_init();
     if (!out || max <= 0 || !ink_pause(timeout_ms, false)) return HAL_WIFI_ERR_TIMEOUT;
     INK_LOCK(); ink_wifi.mode = INK_SCAN; ink_wifi.out = out; ink_wifi.max = max;
+    esp_timer_stop(ink_wifi.timer);
+    ink_station_resume();
     xEventGroupClearBits(ink_wifi.events, INK_SCAN_BIT);
     esp_err_t r = esp_wifi_scan_start(NULL, false);
     INK_UNLOCK();
@@ -219,7 +261,10 @@ int hal_wifi_scan(hal_wifi_ap_t *out, int max, uint32_t timeout_ms) {
     INK_LOCK(); ink_wifi.out = NULL;
     if (!done) { esp_wifi_scan_stop(); esp_wifi_clear_ap_list(); }
     int result = done ? ink_wifi.count : HAL_WIFI_ERR_TIMEOUT;
-    ink_wifi.mode = INK_AUTO; ink_rejoin(); INK_UNLOCK();
+    ink_wifi.mode = INK_AUTO;
+    if (ink_wifi.link.type == HAL_LINK_WIFI) ink_rejoin();
+    else { ink_station_pause(); ink_scan_later(); }
+    INK_UNLOCK();
     return result;
 }
 int hal_wifi_connect(const char *ssid, const char *password, uint32_t timeout_ms) {
@@ -230,6 +275,8 @@ int hal_wifi_connect(const char *ssid, const char *password, uint32_t timeout_ms
     ink_s31_cell_use(false);
     ESP_ERROR_CHECK(esp_netif_set_default_netif(ink_wifi.netif));
     INK_LOCK(); ink_wifi.mode = INK_JOIN; ink_wifi.link.type = HAL_LINK_WIFI;
+    esp_timer_stop(ink_wifi.timer);
+    ink_station_resume();
     xEventGroupClearBits(ink_wifi.events, INK_JOIN_BIT);
     ink_join(&k); memset(&k, 0, sizeof k);
     bool started = ink_wifi.joining;
