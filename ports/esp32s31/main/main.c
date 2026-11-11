@@ -1,3 +1,7 @@
+#include <stdio.h>
+#include "esp_intr_alloc.h"
+#include "freertos/FreeRTOS.h"
+#include "freertos/task.h"
 #include "ink/osal.h"
 #include "ink/hal_device.h"
 #include "ink/hal_display.h"
@@ -19,4 +23,8 @@ void app_main(void) {
         osal_panic("boot: panel unavailable");
     }
     ink_main();
+    /* Which interrupts keep running while the flash is busy (IRAM) and on which core, once start-up is over: a cache
+     * access error came from core 1 during a flash read at boot (trial install 12, 2026-11-11). Console only. */
+    vTaskDelay(pdMS_TO_TICKS(15000));
+    esp_intr_dump(stdout);
 }
