@@ -19,12 +19,13 @@ enum { BACKUP_FIELDS = 5, BACKUP_ACTIONS = 4 };
 _Static_assert(5 <= BACKUP_FIELDS && 4 <= BACKUP_ACTIONS, "backup page capacity");
 static const char *const NAMES[] = {"Backup", "BackupFail", "Restore", "RestoreRun", "RestoreDone", "RestoreFail"};
 static const char OMITTED[] = TR_NOOP("设置、家人身份和密码需重新设置；网络和家庭需重新加入。共享内容按需下载。已发短信、已执行的操作和过期提醒不重放。本机 AI 操作记录和清单外文件保留。");
+static const char UNCERTAIN[] = TR_NOOP("部分资料可能已替换，具体范围暂不能核实。请重新预览后再试。");
 static struct {
     lv_obj_t *screen;
     lv_timer_t *timer;
     uint32_t epoch, generation;
     int page;
-    bool pending, restore;
+    bool pending, restore, restart;
     char member[32], phase[24], preview[33], args[80], title[96], info[160], detail[256];
     char automatic[96], auto_args[64];
     ink_ui_page_spec_t model;
@@ -90,6 +91,7 @@ static void draw(void) {
     B.fields[2] = (ink_ui_field_spec_t){"summary", "text", TR("备份摘要"), B.info, {NULL, 0}, false};
     B.fields[3] = (ink_ui_field_spec_t){"details", "text", TR("说明"), B.detail, {NULL, 0}, false};
     B.fields[4] = (ink_ui_field_spec_t){"omitted", "text", B.restore ? TR("不恢复的内容") : TR("自动备份"), B.restore ? TR(OMITTED) : B.automatic, {NULL, 0}, false};
+    if (B.page == RESTORE_FAIL) B.fields[4].value = TR(UNCERTAIN);
     if (B.page == BACKUP) { B.fields[3] = B.fields[4]; B.model.field_count = 4; }
     ink_shell_statusbar(B.screen, true);
     int w = INK_CANVAS_W - 2 * INK_MARGIN, bottom = INK_CANVAS_H - INK_MARGIN - INK_PRIMARY;
@@ -101,6 +103,7 @@ static void draw(void) {
             B.page == BACKUP && !strcmp(B.phase, "saved") ? INK_SURFACE_BLACK : INK_SURFACE_STATIC, NULL, NULL);
         text(B.title, INK_FONT_SUBTITLE, middle + INK_GAP_XL, true);
         text(B.page == BACKUP ? B.info : B.detail, INK_FONT_NOTE, middle + INK_GAP_XL + INK_LINE_SUBTITLE + INK_GAP, true);
+        if (B.page == RESTORE_FAIL) text(TR(UNCERTAIN), INK_FONT_NOTE, middle + INK_GAP_XL + INK_LINE_SUBTITLE + INK_GAP_L + ink_ui_text_height(B.detail, INK_FONT_NOTE, INK_WEIGHT_REGULAR, w), false);
     }
     if (B.page == BACKUP) {
         text(TR("只备份这位家人；自动备份须连 Wi-Fi、充电且无人使用。"), INK_FONT_NOTE, INK_STATUS_BAR + INK_PRIMARY + INK_MARGIN, true);
@@ -115,26 +118,17 @@ static void draw(void) {
         ink_ui_label(card, B.member, INK_FONT_LIST, INK_WEIGHT_BOLD, INK_GAP_XL, INK_GAP, w - 2 * INK_GAP_XL);
         ink_ui_label(card, B.title, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_GAP_XL, INK_GAP + INK_LINE_LIST, w - 2 * INK_GAP_XL);
         text(TR(OMITTED), INK_FONT_NOTE, 2 * INK_PRIMARY + INK_GAP + INK_ROW_DOUBLE + INK_GAP_L, false);
-        text(TR("这位家人现在的资料会被替换。"), INK_FONT_NOTE, bottom - INK_LINE_NOTE - INK_GAP, true);
+        const char *scope = TR("只替换所选家人备份清单内的资料；清单外文件保留。其他家人不变。");
+        B.fields[3].value = scope;
+        text(scope, INK_FONT_NOTE, bottom - ink_ui_text_height(scope, INK_FONT_NOTE, INK_WEIGHT_REGULAR, w) - INK_GAP_L, false);
         button(TR("取消"), "shell.back", NULL, INK_MARGIN, bottom, (w - INK_GAP) / 2, false);
         char preview[sizeof B.preview]; memcpy(preview, B.preview, sizeof preview);
         snprintf(B.args, sizeof B.args, "{\"preview\":\"%s\"}", preview);
-        button(B.preview[0] ? TR("恢复到这台设备") : TR("再查一次"), B.preview[0] ? "restore.apply" : "restore.preview",
+        button(B.preview[0] ? TR("恢复备份") : TR("再查一次"), B.preview[0] ? "restore.apply" : "restore.preview",
             B.preview[0] ? B.args : "{\"summary\":true}", INK_MARGIN + (w + INK_GAP) / 2, bottom, (w - INK_GAP) / 2, true);
     } else if (B.page == RESTORE_RUN) {
         text(TR("正在放回来"), INK_FONT_TITLE, INK_STATUS_BAR + INK_PRIMARY, false);
-        const char *steps[] = {TR("下载备份"), TR("检查是否完整"), TR("放到这台设备上"), TR("完成后请重启")};
-        int active = !strcmp(B.phase, "checking") ? 1 : 2;
-        for (int i = 0; i < 4; i++) {
-            int y = 2 * INK_PRIMARY + INK_GAP_XL + i * INK_SEGMENT;
-            if (i < active) ink_ui_circle(B.screen, "check", INK_MARGIN, y, INK_CIRCLE_SMALL,
-                INK_ICON_SMALL, INK_SURFACE_BLACK, NULL, NULL);
-            else ink_ui_box(B.screen, INK_MARGIN, y, INK_CIRCLE_SMALL, INK_CIRCLE_SMALL, -1, INK_SURFACE_WHITE, true);
-            if (i == active) ink_ui_box(B.screen, INK_MARGIN + (INK_CIRCLE_SMALL - INK_ICON_SMALL) / 2,
-                y + (INK_CIRCLE_SMALL - INK_ICON_SMALL) / 2, INK_ICON_SMALL, INK_ICON_SMALL, -1, INK_SURFACE_BLACK, false);
-            ink_ui_label(B.screen, steps[i], INK_FONT_LIST, i == active ? INK_WEIGHT_BOLD : INK_WEIGHT_REGULAR,
-                INK_MARGIN + INK_CIRCLE_SMALL + INK_GAP_L, y + INK_GAP, w - INK_CIRCLE_SMALL - INK_GAP_L);
-        }
+        text(B.title, INK_FONT_LIST, 2 * INK_PRIMARY + INK_GAP_XL, false);
         text(TR("不要关机。中途失败时，有些资料可能已经放回。"), INK_FONT_NOTE, bottom, true);
     } else if (B.page == RESTORE_DONE) {
         text(TR("放回来了"), INK_FONT_TITLE, INK_STATUS_BAR + INK_GAP_XXL, false);
@@ -143,8 +137,8 @@ static void draw(void) {
         ink_ui_label(card, B.info, INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_GAP_XL, INK_GAP + INK_LINE_SUBTITLE, w - 2 * INK_GAP_XL);
         text(TR("以下内容没有放回"), INK_FONT_SUBTITLE, 2 * INK_PRIMARY + INK_ROW_DOUBLE + INK_GAP_XL, false);
         text(TR(OMITTED), INK_FONT_NOTE, 2 * INK_PRIMARY + INK_ROW_DOUBLE + INK_GAP_XL + INK_LINE_SUBTITLE + INK_GAP, false);
-        text(TR("请重启设备，让放回的资料生效。"), INK_FONT_NOTE, bottom - INK_LINE_NOTE - INK_GAP, false);
-        button(TR("开始用"), "system.home", NULL, INK_MARGIN, bottom, w, true);
+        text(B.restart ? TR("请重启设备，让放回的资料生效。") : TR("资料已放回。"), INK_FONT_NOTE, bottom - INK_LINE_NOTE - INK_GAP_L, false);
+        button(B.restart ? TR("重启") : TR("开始用"), B.restart ? "system.reboot" : "system.home", NULL, INK_MARGIN, bottom, w, true);
     } else {
         button(TR("先不恢复"), "shell.back", NULL, INK_MARGIN, bottom, (w - INK_GAP) / 2, false);
         button(TR("再试一次"), "restore.preview", "{\"summary\":true}", INK_MARGIN + (w + INK_GAP) / 2, bottom, (w - INK_GAP) / 2, true);
@@ -172,6 +166,7 @@ static void reply(void *ctx, const ink_receipt_t *rc) {
     if (!changed && (B.page == BACKUP_FAIL || B.page == RESTORE_FAIL) &&
         (!strcmp(phase, "none") || !strcmp(phase, "saved") || !strcmp(phase, "preview") || !strcmp(phase, "done"))) { osal_free(j); return; }
     snprintf(B.phase, sizeof B.phase, "%s", phase);
+    B.restart = ink_json_eq(j, ink_json_find(j, 0, "restart_required"), "true");
     if (!strcmp(phase, "collecting") || !strcmp(phase, "uploading") || !strcmp(phase, "saved")) B.restore = false;
     if (!strcmp(phase, "fetching") || !strcmp(phase, "preparing") || !strcmp(phase, "preview") ||
         !strcmp(phase, "checking") || !strcmp(phase, "restoring")) B.restore = true;
@@ -195,8 +190,9 @@ static void reply(void *ctx, const ink_receipt_t *rc) {
         snprintf(B.title, sizeof B.title, "%s", B.restore ? TR("没有恢复成功") : TR("还没备份好"));
         snprintf(B.detail, sizeof B.detail, "%s", offline ? TR("连不上家庭服务器。资料先留在这台设备上，联网后可以继续。") : reason);
     } else if (B.restore) {
-        page = !strcmp(phase, "done") ? RESTORE_DONE : !strcmp(phase, "checking") || !strcmp(phase, "restoring") ? RESTORE_RUN : RESTORE;
-        char title[96]; snprintf(title, sizeof title, "%.90s", page == RESTORE_DONE ? TR("已恢复") : page == RESTORE_RUN ? TR("正在检查并放回资料") : B.preview[0] ? B.detail : TR("正在查找这位家人的备份"));
+        page = !strcmp(phase, "done") ? RESTORE_DONE : !strcmp(phase, "preview") ? RESTORE : RESTORE_RUN;
+        const char *stage = !strcmp(phase, "fetching") ? TR("正在下载备份") : !strcmp(phase, "preparing") ? TR("正在整理恢复预览") : !strcmp(phase, "checking") ? TR("正在检查资料") : !strcmp(phase, "restoring") ? TR("正在放回资料") : TR("正在处理");
+        char title[96]; snprintf(title, sizeof title, "%.90s", page == RESTORE_DONE ? TR("已恢复") : page == RESTORE_RUN ? stage : B.preview[0] ? B.detail : TR("正在查找这位家人的备份"));
         memcpy(B.title, title, strlen(title) + 1);
     } else snprintf(B.title, sizeof B.title, "%s", !strcmp(phase, "saved") ? TR("已备份到家庭服务器") : !strcmp(phase, "none") ? TR("还没有备份") : !strcmp(phase, "done") ? TR("上次恢复已完成") : TR("正在备份"));
     osal_free(j);
