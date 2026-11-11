@@ -32,10 +32,11 @@ static unsigned seconds(void) { return (unsigned)((M.elapsed + (M.since ? osal_n
 static void describe(void) {
     for (int i = 0; i < INK_MEMORY_CARDS; i++) M.board[i] = M.started && M.s.open[i] ? (char)('A' + M.s.cards[i]) : '?';
     M.board[INK_MEMORY_CARDS] = 0;
+    char board[sizeof M.board]; memcpy(board, M.board, sizeof board);
     snprintf(M.status, sizeof M.status, TR("%d 步 · %d/8 对 · %u 秒"), M.s.moves, M.s.pairs, seconds());
     snprintf(M.record, sizeof M.record, TR("最好：%u 步 · %u 秒"), (unsigned)M.best.moves, (unsigned)M.best.seconds);
     snprintf(M.json, sizeof M.json, "{\"board\":\"%s\",\"moves\":%d,\"pairs\":%d,\"seconds\":%u,\"best_moves\":%u,\"best_seconds\":%u,\"started\":%s,\"over\":%s}",
-        M.board, M.s.moves, M.s.pairs, seconds(), (unsigned)M.best.moves, (unsigned)M.best.seconds, M.started ? "true" : "false", M.s.pairs == 8 ? "true" : "false");
+        board, M.s.moves, M.s.pairs, seconds(), (unsigned)M.best.moves, (unsigned)M.best.seconds, M.started ? "true" : "false", M.s.pairs == 8 ? "true" : "false");
 }
 static void show(void) {
     describe();

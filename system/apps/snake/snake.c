@@ -28,10 +28,11 @@ static void describe(void) {
     memset(S.board, '.', INK_SNAKE_CELLS); S.board[INK_SNAKE_CELLS] = 0;
     if (S.s.length && S.s.food >= 0) S.board[S.s.food] = '*';
     for (int i = 0; i < S.s.length; i++) S.board[S.s.body[i]] = i ? 'o' : '@';
+    char board[sizeof S.board]; memcpy(board, S.board, sizeof board);
     snprintf(S.status, sizeof S.status, "%s", S.unsaved ? TR("成绩未保存，请重试") : !S.s.length ? TR("按开始玩一局") : S.s.over ? TR("本局结束") : S.s.paused ? TR("已暂停") : TR("每半秒前进一步"));
     snprintf(S.score, sizeof S.score, TR("得分 %d · 最高 %u"), S.s.score, (unsigned)S.best);
     snprintf(S.json, sizeof S.json, "{\"side\":12,\"board\":\"%s\",\"length\":%d,\"score\":%d,\"best\":%u,\"direction\":%d,\"next\":%d,\"paused\":%s,\"over\":%s}",
-        S.board, S.s.length, S.s.score, (unsigned)S.best, S.s.dir, S.s.next, S.s.paused ? "true" : "false", S.s.over ? "true" : "false");
+        board, S.s.length, S.s.score, (unsigned)S.best, S.s.dir, S.s.next, S.s.paused ? "true" : "false", S.s.over ? "true" : "false");
 }
 static void show(void) {
     describe();
