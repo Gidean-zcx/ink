@@ -44,6 +44,7 @@ typedef struct {
     int dummy_clocks_after_data, white_border_pixels;
 } LcdEpdConfig_t;
 void epd_lcd_init(const LcdEpdConfig_t *cfg, int w, int h);
+int epd_lcd_get_display_lines(void);
 void epd_lcd_line_source_cb(bool (*fn)(void *, uint8_t *), void *ctx);
 void epd_lcd_frame_done_cb(void (*fn)(void *), void *ctx);
 void epd_lcd_start_frame(void);

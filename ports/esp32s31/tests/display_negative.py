@@ -17,12 +17,14 @@ def main():
     port, root = tests.parent, tests.parents[2]
     source = (port / "hal_display_s31.c").read_text()
     mutations = [
+        ("abort-before-callback-clear", "abort-contract", "    epd_lcd_abort_frame(); /* Task context: the old ISR must exit before callback/queue reuse. */\n    epd_lcd_line_source_cb(NULL, NULL);", "    epd_lcd_line_source_cb(NULL, NULL);\n    epd_lcd_abort_frame();"),
+        ("off-must-be-confirmed", "unconfirmed-off", "    atomic_store(&D.powered, !ink_panel_off_confirmed(&D.power));", "    atomic_store(&D.powered, false);"),
         ("area-offset", "regions", "(a->x + x) / 2", "x / 2"),
         ("gray-conversion", "regions", "(pixels[(size_t)y * stride + x] * 15 + 127) / 255", "0"),
         ("inline-callback", "regions", "    xTaskNotifyGive(D.task);\n    return id;", "    if (done) done(ctx, &D.result);\n    xTaskNotifyGive(D.task);\n    return id;"),
         ("scan-timeout", "timeout", "    epd_power_off(&D.power);", "    (void)D.power;"),
         ("independent-guard", "guard", "if (!ATOMIC(D.testing)) { trip(); return; }", "if (!ATOMIC(D.testing)) return;"),
-        ("guard-proves-power-off", "selftest", "    power_off();\n    atomic_store(&D.tripped, true);", "    atomic_store(&D.tripped, true);"),
+        ("guard-proves-power-off", "selftest", "    power_off();\n    atomic_store(&D.armed, ATOMIC(D.powered));\n    atomic_store(&D.tripped, !ATOMIC(D.powered));", "    atomic_store(&D.tripped, true);"),
         ("unproven-guard-blocks", "selftest-dead", "        atomic_store(&D.stop, true);\n        hal_log_write(\"display: the guard", "        hal_log_write(\"display: the guard"),
         ("selftest-in-init", "selftest", "    if (!guard_self_test()) {", "    if (0 && !guard_self_test()) {"),
         ("late-line-discard", "lines", "while (D.owed[id] && lq_read(&D.q[id], line) == 0) --D.owed[id];", "(void)id;"),
