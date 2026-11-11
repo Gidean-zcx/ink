@@ -8,9 +8,9 @@
 | --- | --- | --- | --- |
 | 1 | 【实测】相机定向测试通过 | 实际 C HAL、实际板级/TCA 驱动，假的 SCCB/DVP；成功、缺席、错误 PID、STOP 分读回退、丢 8 帧保留第 9 帧且不覆盖、超时 -4、掉电/复位 -5、短帧 -6、失败清理及共享线 | `ctest --test-dir build -R '^unit-s31-camera$' --output-on-failure` |
 | 1 反向 | 【实测】三种错误全部被抓住 | 不丢预热帧、复位后 P12 未恢复、刷屏中改 P05：各修改一处，都编译成功并因断言失败退出（-6） | `python3 ports/esp32s31/tests/camera_negative.py build` |
-| 2 普通版 | 进行中；已有基线失败 | `capability-table-doc` 缺 `calendar.list`；纯基线副本同样失败，其余结果待全轮结束 | 下方构建命令 |
-| 2 内存检查 | 未运行 | 待记录 ASan/UBSan 和 S31 宿主机检查 | 待记录 |
-| 2 S31 | 未运行 | 待记录镜像大小和警告 | 待记录 |
+| 2 普通版 | 【实测】未全绿：只有基线文档失败 | 原话：`99% tests passed, 1 tests failed out of 372`，896.11 秒；368 通过、3 跳过、1 失败。用依赖目录中锁文件相同的中枢环境补跑 3 项及其 fixture，4/4 通过（59.56 秒） | 下方构建命令与中枢补跑命令 |
+| 2 内存检查 | ASan/UBSan 进行中；普通 S31 宿主机已通过 | `100% tests passed out of 30`，8.86 秒，包含真实显示门、闪存持门、相机 busy | 下方独立端口命令 |
+| 2 S31 | 【实测】编译成功 | ESP-IDF `fff9895c82d7`；编译器 warning/error 均 0；IDF image 3308768 字节，实际 `.bin` 3309168 字节，小于 5 MiB 槽。静态 DIRAM 147062 字节；动态 DMA/任务另计 | `INK_S31_LIGHT_SLEEP=OFF taskpolicy -c utility bash ports/esp32s31/build.sh` |
 | 2 gcccheck / UI / 隐私 | 【实测】前两项通过；最终隐私扫描待提交后运行 | `gcccheck: 4 compiled, 0 with findings`；`ui-scale` 通过 | 下方命令 |
 | 3 | 【实测】中英文说明页通过 | 启动时模拟无相机，仍可打开 Camera；说明、关闭按钮和 AI 快照一致；实体点按关闭可返回；截图已目视检查无裁切、无遮挡 | `INK_KEEP_EVIDENCE=1 python3 tests/port_camera/run.py build` |
 | 4 | 【实现】已列真机首轮步骤 | 见“上机先核对清单”；未把宿主机结果写成真机验证 | 主会话操作 |
@@ -62,7 +62,7 @@ GPIO5 是触摸中断，GPIO2 是 TCA/加速度计共享中断，相机不重新
 ## 没做到的
 
 - 真机 SCCB、光学成像、触摸与刷屏恢复未测试，本任务禁止接设备。
-- 全量结果尚待收齐；共享能力目录的基线失败不能在本任务里修改。
+- 普通版全量未全绿：共享能力目录的基线失败不能在本任务里修改；内存检查结果仍在收集中。
 
 ## 改过的已有测试
 
@@ -87,7 +87,7 @@ GPIO5 是触摸中断，GPIO2 是 TCA/加速度计共享中断，相机不重新
 
 ## 为什么不能更小
 
-本次产品代码超过 100 行、低于 700 行预算，准确净增待最终统计。看过的更小方案：继续返回占位无法接硬件；直接用旧版 gc2145 表不符合 v2.0.77；直接 DMA 写资源管理器缓冲无法保证对齐；只调用原来的显示暂停空函数无法阻止刷屏。必要部分是 IDF 控制器/ISR 生命周期、原厂寄存器流程和共享资源互斥；没有拆通用框架或逐个调用方加补丁。
+产品 C/H 净增 235 行；加英文翻译及设备构建清单后净增 236 行，低于 700 行预算（不含原表、测试、文档和许可证）。看过的更小方案：继续返回占位无法接硬件；直接用旧版 gc2145 表不符合 v2.0.77；直接 DMA 写资源管理器缓冲无法保证对齐；只调用原来的显示暂停空函数无法阻止刷屏。必要部分是 IDF 控制器/ISR 生命周期、原厂寄存器流程和共享资源互斥；没有拆通用框架或逐个调用方加补丁。
 
 ## 要改的文档
 
@@ -103,10 +103,11 @@ GPIO5 是触摸中断，GPIO2 是 TCA/加速度计共享中断，相机不重新
 
 ## 复现命令
 
-依赖环境沿用任务给定的 `INK_DEPS`、`INK_DESIGN`；不把本机绝对路径写入仓库。macOS 前缀 `taskpolicy -c utility`，Linux 去掉此前缀。
+依赖环境沿用任务给定的 `INK_DEPS`、`INK_DESIGN`；不把本机绝对路径写入仓库。macOS 前缀 `taskpolicy -c utility`，Linux 去掉此前缀。补跑中枢使用已有只读环境，`hub/uv.lock` 与该环境所在检出的锁文件 `cmp` 一致；`PYTHONPATH` 固定指向本分支代码。
 
 ```sh
-taskpolicy -c utility cmake -S . -B build -DINK_WERROR=ON -DINK_CJK_FONT=$INK_DEPS/build-deps/fonts/NotoSansCJK-Regular.ttc -DINK_CJK_FACE=2 -DINK_CJK_MEDIUM_FONT=$INK_DEPS/build-deps/fonts/NotoSansCJKsc-Medium.otf -DINK_CJK_BOLD_FONT=$INK_DEPS/build-deps/fonts/NotoSansCJKsc-Bold.otf -DPython3_EXECUTABLE=$INK_DEPS/build-deps/pyenv/bin/python -DFETCHCONTENT_SOURCE_DIR_LVGL=$INK_DEPS/build/_deps/lvgl-src
+export PYTHONPATH="$PWD/hub/src" PYTHONDONTWRITEBYTECODE=1
+taskpolicy -c utility cmake -S . -B build -DINK_WERROR=ON -DINK_CJK_FONT=$INK_DEPS/build-deps/fonts/NotoSansCJK-Regular.ttc -DINK_CJK_FACE=2 -DINK_CJK_MEDIUM_FONT=$INK_DEPS/build-deps/fonts/NotoSansCJKsc-Medium.otf -DINK_CJK_BOLD_FONT=$INK_DEPS/build-deps/fonts/NotoSansCJKsc-Bold.otf -DPython3_EXECUTABLE=$INK_DEPS/build-deps/pyenv/bin/python -DFETCHCONTENT_SOURCE_DIR_LVGL=$INK_DEPS/build/_deps/lvgl-src -DINK_HUB_PYTHON=$INK_DEPS/hub/.venv/bin/python
 taskpolicy -c utility cmake --build build -j2
 taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/ctest --test-dir build --output-on-failure -j2
 INK_KEEP_EVIDENCE=1 taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/python tests/port_camera/run.py build
@@ -116,3 +117,17 @@ taskpolicy -c utility python3 ../../tools/gcccheck.py build system/apps/camera/c
 ```
 
 截图留在忽略的 `build/port-camera-absent-*`，不提交构建产物；中英文各为 `snap-camera-absent-zh.png`、`snap-camera-absent-en.png`。
+
+普通版初轮未指定中枢环境，3 项明确跳过；补跑使用：
+
+```sh
+taskpolicy -c utility cmake -S . -B build -DINK_HUB_PYTHON=$INK_DEPS/hub/.venv/bin/python
+taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/ctest --test-dir build --output-on-failure -j2 -R '^(hub-contract|hub-json-crosscheck|hub-simulator-e2e)$'
+taskpolicy -c utility cmake -S ports/esp32s31/tests -B build-s31-host -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+taskpolicy -c utility cmake --build build-s31-host -j2
+taskpolicy -c utility $INK_DEPS/build-deps/pyenv/bin/ctest --test-dir build-s31-host --output-on-failure -j2
+export INK_UPSTREAM="$INK_DEPS/../ink-hw/upstream/Metalio-E-INK4-Plus"
+INK_S31_LIGHT_SLEEP=OFF taskpolicy -c utility bash ports/esp32s31/build.sh
+```
+
+原厂寄存器表逆回两处 C 类型改写后，逐字节等于 V；SHA-256 为 NOTICE 中的 `ee2e88…37afd`。说明页反向恢复旧 `needs={camera.capture}` 后，编译成功、测试出现 10 个失败，确认会抓住“无相机时进不了说明页”。

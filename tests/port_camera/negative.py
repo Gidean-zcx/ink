@@ -41,6 +41,8 @@ with tempfile.TemporaryDirectory(prefix='camera-absent-negative-', dir=build) as
         '--script', str(root / 'tests/port_camera/absent.script'), '--assets', str(build / 'assets'),
         '--content', str(build / 'test-content'), '--out', str(out), '--quiet', '--no-random-outages'],
         capture_output=True, text=True, timeout=150)
-    metrics = json.loads((out / 'metrics.json').read_text()).get('metrics', {})
-    assert metrics.get('test.fail', 0) > 0 and 'camera opens even when hardware is absent' in run.stderr, run.stderr[-4000:]
+    report = json.loads((out / 'metrics.json').read_text())
+    metrics = report.get('metrics', {})
+    evidence = run.stdout + run.stderr + json.dumps(report.get('warnings', []))
+    assert metrics.get('test.fail', 0) > 0 and 'camera opens even when hardware is absent' in evidence, evidence[-4000:]
     print('restore-hardware-dependency: compile=0, failures=', metrics['test.fail'], '; missing-camera app can no longer open')
