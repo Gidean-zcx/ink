@@ -28,6 +28,12 @@ int ink_ai_init(void);
 void ink_ai_key(bool pressed, uint64_t t_us);
 /** UI task: a question in words, about what is on screen; the answer comes on the sheet, as for a spoken one. */
 void ink_ai_ask_text(const char *text);
+void ink_ai_ask_photo(const char *thumbnail_json);
+void ink_ai_show_answer(const char *answer);
+bool ink_ai_can_replay(void);
+int ink_ai_replay(void);
+int ink_ai_history_init(void);
+void ink_ai_history_save(const char *member, const char *question, const char *answer, const char *page);
 /** UI task: stop this turn's speech, including later frames; keep its text. */
 void ink_ai_stop_speech(void);
 /** Any task: the device's own words end the current turn on the sheet, e.g. a receipt when the link is about to go;

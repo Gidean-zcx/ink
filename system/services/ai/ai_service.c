@@ -25,6 +25,7 @@
 #include "ink/osal.h"
 #include "ink/probe.h"
 #include "ink/sys/cap.h"
+#include "ink/sys/appreg.h"
 #include "ink/sys/exec.h"
 #include "ink/sys/i18n.h"
 #include "ink/sys/rt.h"
@@ -68,6 +69,7 @@ static struct {
     int req_id; /* hub request id of the current turn (matches params.id of notifications) */
     int seq;    /* local turn counter (matches the reply callback's ctx) */
     bool first_text_seen;
+    bool replaying;
     char *answer_text; /* PSRAM */
     size_t answer_len;
     bool answer_cut; /* the answer reached ANSWER_CAP: it ends with INK_AI_ANSWER_CUT, the rest is dropped */
@@ -93,6 +95,7 @@ static struct {
     int tts_done_for; /* turn whose speech has ended (-1 none): frames after the end are dropped */
     int tts_opened;   /* the last audio stream opened for the current turn (0 none): a failure told later */
 } AI;
+static char g_history_question[512] INK_PSRAM_BSS, g_history_page[128] INK_PSRAM_BSS;
 static bool g_turn_revoked INK_PSRAM_BSS; /* under AI.lock */
 static uint64_t g_turn_deadline INK_PSRAM_BSS; /* under AI.lock */
 static char g_turn_member[INK_MEMBER_ID_MAX] INK_PSRAM_BSS;
@@ -235,6 +238,7 @@ static void ui_apply(void *arg) { /* UI task */
         return;
     }
     if (p->kind == 3) {
+        snprintf(g_history_question, sizeof g_history_question, "%s", p->text);
         char q[600];
         snprintf(q, sizeof q, TR("你问：%s"), p->text);
         lv_label_set_text(AI.question, q);
@@ -269,13 +273,14 @@ static void ui_apply(void *arg) { /* UI task */
         set_status(AI.asking ? TR_NOOP("声音没能播放，文字回答在上面") : TR_NOOP("回答完成 · 声音没能播放 · 按 AI 键继续问"));
         ink_probe_count("ai.speech_failed");
     } else if (p->kind == 1) {
+        if (!AI.replaying) ink_ai_history_save(g_turn_member, g_history_question, AI.answer_text, g_history_page);
         turn_over();
         set_status(AI.speech_failed ? TR_NOOP("回答完成 · 声音没能播放 · 按 AI 键继续问") : TR_NOOP("回答完成 · 按 AI 键继续问，按 HOME 关闭"));
         ink_ui_cause(AI.t_release, "ai.release_to_done_visible_ms");
         ink_probe_count("ai.answers");
     } else {
         turn_over();
-        const char *msg = p->status == INK_HUB_ERR_OFFLINE ? TR_NOOP("现在没有网络，稍后再问我")
+        const char *msg = AI.replaying ? TR_NOOP("朗读暂不可用，文字还在这里") : p->status == INK_HUB_ERR_OFFLINE ? TR_NOOP("现在没有网络，稍后再问我")
                           : p->status == INK_HUB_ERR_TIMEOUT ? TR_NOOP("家庭服务器没有回应，请再试一次")
                           : p->status == INK_HUB_ERR_LOST    ? TR_NOOP("网络断了，回答没收全，请再试一次")
                                                              : TR_NOOP("出了点问题，请再试一次");
@@ -510,9 +515,12 @@ static void flush_timer_cb(lv_timer_t *t) { /* UI task: the link may come up aft
 /* ------------------------------------------------------------- requests */
 
 static char g_typed[384] INK_PSRAM_BSS; /* a question in words (ink_ai_ask_text) */
+static const char *g_photo; /* borrowed only during the synchronous request construction */
 
 /* Build the request params: page snapshot plus either the stream description or the question. */
 static int request(const char *method, bool voice) {
+    AI.replaying = false;
+    snprintf(g_history_question, sizeof g_history_question, "%s", voice ? "" : g_typed[0] ? g_typed : TR(SIM_TRANSCRIPT));
     AI.answer_len = 0;
     AI.answer_text[0] = 0;
     AI.answer_cut = false;
@@ -534,7 +542,7 @@ static int request(const char *method, bool voice) {
     const char *prev = osal_mem_tag("ai");
     size_t ids_cap = 3;
     for (int i = 0; ink_cap_at(i); i++) ids_cap += strlen(ink_cap_at(i)->id) * 6 + 3;
-    size_t params_cap = SNAPSHOT_CAP * 6 + STATE_CAP + ids_cap + 1024;
+    size_t params_cap = SNAPSHOT_CAP * 6 + STATE_CAP + ids_cap + 1024 + (g_photo ? strlen(g_photo) + 32 : 0);
     char *snap = osal_malloc(SNAPSHOT_CAP, OSAL_MEM_EXTERNAL);
     char *ids = osal_malloc(ids_cap, OSAL_MEM_EXTERNAL);
     char *params = osal_malloc(params_cap, OSAL_MEM_EXTERNAL);
@@ -548,6 +556,13 @@ static int request(const char *method, bool voice) {
     }
     const char *app = "";
     int n = ink_ui_context_snapshot(snap, SNAPSHOT_CAP, &app);
+    snprintf(g_history_page, sizeof g_history_page, "%s", ink_ui_page_name());
+    for (int i = 0; ink_app_at(i); i++) if (!strcmp(ink_app_at(i)->id, app)) snprintf(g_history_page, sizeof g_history_page, "%s", TR(ink_app_at(i)->title));
+    ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
+    char title[128];
+    if (j && n > 0 && !ink_json_parse(j, snap, (size_t)n) && ink_json_str(j, ink_json_find(j, 0, "title"), title, sizeof title) > 0)
+        snprintf(g_history_page, sizeof g_history_page, "%s", title);
+    osal_free(j);
     ink_jw_t w;
     ink_jw_init(&w, params, params_cap);
     if (voice) {
@@ -578,6 +593,7 @@ static int request(const char *method, bool voice) {
         int k = n < 0 ? -1 : ink_state_json(snap, STATE_CAP, INK_EXPOSE_AI); /* page text is already in params */
         ink_jw_raw(&w, k > 0 ? snap : "{}");
     }
+    if (g_photo) { ink_jw_raw(&w, ",\"attachments\":["); ink_jw_raw(&w, g_photo); ink_jw_raw(&w, "]"); }
     ink_jw_raw(&w, "}");
     ink_power_hold(INK_NEED_NET); /* no sleep while the answer is on its way */
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
@@ -824,6 +840,42 @@ void ink_ai_ask_text(const char *text) {
     g_typed[0] = 0;
 }
 
+void ink_ai_ask_photo(const char *thumbnail_json) {
+    g_photo = thumbnail_json;
+    ink_ai_ask_text("请解释这张图");
+    g_photo = NULL;
+}
+void ink_ai_show_answer(const char *answer) {
+    ink_ai_dismiss();
+    ink_member_identity_t identity; ink_member_identity(&identity);
+    osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
+    snprintf(g_turn_member, sizeof g_turn_member, "%s", identity.member); g_turn_epoch = identity.epoch; g_turn_revoked = false;
+    osal_mutex_unlock(AI.lock);
+    sheet_open(); snprintf(AI.answer_text, ANSWER_CAP, "%s", answer); AI.answer_len = strlen(AI.answer_text);
+    AI.turn_over = true; ink_shell_ai_words(AI.answer_text); set_status(TR_NOOP("回答完成"));
+}
+bool ink_ai_can_replay(void) { return AI.open && AI.answer_len && !AI.asking && ink_hub_online(); }
+int ink_ai_replay(void) {
+    if (!ink_ai_can_replay()) return -1;
+    ink_ai_stop_speech(); close_session();
+    int sid = ink_rt_open("voice.chat", NULL, &AI_RT);
+    if (sid <= 0) return -1;
+    osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
+    AI.stream = (uint8_t)sid; AI.session = sid; AI.session_seq = ++AI.seq;
+    AI.tts_for = AI.tts_done_for = -1; AI.tts_stream = AI.tts_opened = 0;
+    g_turn_deadline = osal_now_us() + TURN_LIMIT_US;
+    osal_mutex_unlock(AI.lock);
+    size_t cap = AI.answer_len * 6 + 128; char *params = osal_malloc(cap, OSAL_MEM_EXTERNAL);
+    if (!params) { close_session(); return -1; }
+    ink_jw_t w; ink_jw_init(&w, params, cap); ink_jw_raw(&w, "{\"stream\":"); ink_jw_int(&w, sid); ink_jw_raw(&w, ",\"text\":"); ink_jw_str(&w, AI.answer_text); ink_jw_raw(&w, "}");
+    AI.replaying = AI.asking = true; AI.turn_over = AI.speech_failed = false;
+    ink_power_hold(INK_NEED_NET);
+    AI.req_id = ink_hub_call_for("ai.replay", params, ASK_TIMEOUT_US, on_reply, (void *)(intptr_t)AI.seq, g_turn_member, g_turn_epoch);
+    osal_free(params);
+    if (AI.req_id < 0) { ink_power_release(INK_NEED_NET); close_session(); AI.asking = false; return -1; }
+    return 0;
+}
+
 /* ------------------------------------------------------------- hands-free (R-047) */
 
 typedef struct {
@@ -930,6 +982,7 @@ static void revoke_turn(void *ctx, int h, const char *id) { /* direct: stop tran
 }
 
 int ink_ai_init(void) {
+    if (ink_ai_history_init()) return -1;
     const char *prev = osal_mem_tag("ai");
     AI.answer_text = osal_malloc(ANSWER_CAP, OSAL_MEM_EXTERNAL);
     AI.lock = osal_mutex_create();

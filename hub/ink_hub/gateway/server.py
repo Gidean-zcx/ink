@@ -18,7 +18,7 @@ from ink_hub.models.fake import FakeModel
 from ink_hub.remote.input import handle_input
 from ink_hub.ops.metrics import Metrics
 from ink_hub.speech.fake import FakeASR, FakeTTS
-from ink_hub.voice.flow import run_turn, run_dictation
+from ink_hub.voice.flow import run_turn, run_dictation, validate_photos
 from .wire import (ProtocolError, chunks, dumps, encode, frame,
                    notification, page, parse_frame, response)
 
@@ -290,7 +290,10 @@ class Connection:
                 await self.send(response(rid, {"sid": sid}))
             elif method == "rt.close":
                 await self.end_session(params.get("sid"))
+            elif method == "ai.replay":
+                raise ProtocolError("unavailable", -32021)
             elif method in ("ai.listen", "ai.ask"):
+                validate_photos(params.get("attachments", []))
                 if rid is None or rid in self.turns or rid in self.calls:
                     raise ProtocolError("这一轮编号无效")
                 sid = params.get("stream", 0)

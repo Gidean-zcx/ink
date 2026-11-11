@@ -5,6 +5,7 @@
 #include "ink/sys/file.h"
 #include "ink/sys/json.h"
 #include "ink/sys/members.h"
+#include "ink/sys/ai.h"
 #include "ink/sys/ui_list.h"
 #include "ink/ui_shell.h"
 #include "photo.h"
@@ -29,6 +30,7 @@ void ink_photo_image(lv_obj_t *parent, ink_image_t *im) {
     lv_obj_remove_flag(obj, LV_OBJ_FLAG_CLICKABLE); lv_obj_add_event_cb(obj, picture_deleted, LV_EVENT_DELETE, p);
 }
 static const ink_activity_t GALLERY, PHOTO;
+typedef struct { uint32_t epoch, generation, photo, revision; } photo_question_t;
 static struct {
     ink_ui_list_t *list; ink_ui_list_position_t position;
     uint32_t ids[INK_FS_INDEX_MAX], epoch, photo;
@@ -142,13 +144,13 @@ static void photo_create(lv_obj_t *root, void *arg) {
     G.photo = (uint32_t)(uintptr_t)arg; G.path[0] = 0;
     ink_shell_statusbar(root, true); ink_shell_topbar(root, TR("照片"));
     G.photo_actions[0] = (ink_ui_action_spec_t){.id = "delete", .label = TR("删除照片"), .capability = "file.delete"};
-    G.photo_actions[1] = (ink_ui_action_spec_t){.id = "ask", .label = TR("问这张图"), .capability = "shell.ai_key", .enabled = true};
+    G.photo_actions[1] = (ink_ui_action_spec_t){.id = "ask", .label = TR("问这张图"), .capability = "photo.ask", .enabled = true};
     G.photo_actions[2] = (ink_ui_action_spec_t){.id = "back", .label = TR("返回"), .capability = "shell.back", .enabled = true};
     lv_obj_t *b = ink_ui_circle(root, "trash", INK_CANVAS_W - INK_MARGIN - INK_CIRCLE, INK_STATUS_BAR, INK_CIRCLE, INK_ICON_MEDIUM, INK_SURFACE_STATIC, NULL, NULL);
     G.trash = b; lv_obj_add_flag(b, LV_OBJ_FLAG_HIDDEN);
     int y = INK_STATUS_BAR + INK_PRIMARY, w = INK_CANVAS_W - 2 * INK_MARGIN;
     G.box = ink_ui_card(root, INK_MARGIN, y, w, INK_CANVAS_H - y - INK_MARGIN - INK_PRIMARY - INK_GAP, INK_SURFACE_WHITE);
-    b = ink_ui_pill(root, TR("问这张图"), INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_PRIMARY, w, INK_PRIMARY, true, NULL, NULL); ink_shell_bind(b, "shell.ai_key", NULL);
+    b = ink_ui_pill(root, TR("问这张图"), INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_PRIMARY, w, INK_PRIMARY, true, NULL, NULL); ink_shell_bind(b, "photo.ask", NULL);
     load(G.photo); G.status = ink_ui_notice(root, G.message, INK_CANVAS_H - INK_MARGIN - INK_PRIMARY - INK_LINE_NOTE);
 }
 static void gallery_destroy(void) { G.list = NULL; G.status = NULL; memset(G.slots, 0, sizeof G.slots); }
@@ -184,7 +186,23 @@ static void photo_found(void *ctx, const ink_receipt_t *rc) {
     else ink_ui_push(&PHOTO, (void *)(uintptr_t)id);
     ink_cap_done(c);
 }
+static void photo_question_ready(void *ctx, const ink_receipt_t *rc) {
+    photo_question_t *p = ctx;
+    if (p->epoch == ink_member_epoch() && p->generation == ink_ui_generation() && p->photo == G.photo &&
+        p->revision && p->revision == ink_fs_revision() && ink_ui_page_current() && !strcmp(ink_ui_page_name(), "Photo") && rc->status == INK_RC_DONE && rc->result)
+        ink_ai_ask_photo(rc->result);
+    osal_free(p);
+}
 static void gallery_action(ink_call_t *c) {
+    if (!strcmp(c->cap->id, "photo.ask")) {
+        photo_question_t *p = osal_malloc(sizeof *p, OSAL_MEM_EXTERNAL);
+        if (!p || !G.path[0]) { osal_free(p); c->rc.status = INK_RC_STALE; return; }
+        *p = (photo_question_t){ink_member_epoch(), ink_ui_generation(), G.photo, ink_fs_revision()};
+        ink_args_t a; ink_args_init(&a); ink_args_int(&a, "id", G.photo);
+        ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .member = ink_cap_call_member(c), .reply_exec = INK_EXEC_UI, .done = photo_question_ready, .ctx = p};
+        if (ink_cap_call("file.thumb", &a, &o)) { osal_free(p); c->rc.status = INK_RC_FAILED; }
+        return;
+    }
     if (!strcmp(c->cap->id, "photo.open")) {
         /* photo.open already passed the app policy; the service still checks file ownership. */
         ink_call_opts_t o = {.src = INK_SRC_SYSTEM, .member = ink_cap_call_member(c), .reply_exec = INK_EXEC_UI, .done = photo_found, .ctx = c};
@@ -195,6 +213,7 @@ static void gallery_action(ink_call_t *c) {
     if (G.list) ink_ui_list_turn(G.list, !strcmp(c->cap->id, "gallery.next") ? 1 : -1);
 }
 static const ink_cap_t GALLERY_CAPS[] = {
+    {.id = "photo.ask", .app = "gallery", .title = "把当前有权查看的照片缩略图交给 AI", .activity = "Photo", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = gallery_action},
     {.id = "gallery.prev", .app = "gallery", .title = "相册上一页", .activity = "Gallery", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = gallery_action},
     {.id = "gallery.next", .app = "gallery", .title = "相册下一页", .activity = "Gallery", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = gallery_action},
     {.id = "photo.open", .locked_owner_only = true, .app = "gallery", .title = "查看有权访问的图片文件", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = gallery_action,
@@ -211,5 +230,5 @@ static void photos_changed(void *ctx, const char *id, const ink_args_t *args) {
 }
 int ink_gallery_init(void) {
     static const ink_app_def_t app = {.id = "gallery", .title = "相册", .icon = INK_UI_ICON(gallery), .entry = &GALLERY, .system_app = true, .child_ok = true};
-    return ink_cap_register(GALLERY_CAPS, 3) || ink_app_register(&app) || ink_cap_subscribe("file.changed", photos_changed, NULL, INK_EXEC_UI) ? -1 : 0;
+    return ink_cap_register(GALLERY_CAPS, sizeof GALLERY_CAPS / sizeof *GALLERY_CAPS) || ink_app_register(&app) || ink_cap_subscribe("file.changed", photos_changed, NULL, INK_EXEC_UI) ? -1 : 0;
 }

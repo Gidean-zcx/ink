@@ -238,7 +238,7 @@ static void finish_listen(int i, uint64_t at) {
     cJSON *sentences = speech_sentences(chunks);
     cJSON_ArrayForEach(c, sentences) {
         const char *txt = cJSON_GetStringValue(c) ? cJSON_GetStringValue(c) : "";
-        notify(ws, text_at, nm ? nm : "ai.delta", id, txt);
+        if (!cJSON_IsTrue(cJSON_GetObjectItemCaseSensitive(rule, "replay"))) notify(ws, text_at, nm ? nm : "ai.delta", id, txt);
         text_at += SIM_MS(iv);
         size_t chars = 0;
         for (const char *s = txt; *s; s++) chars += ((unsigned char)*s & 0xC0) != 0x80;
@@ -370,6 +370,11 @@ static void pair_reply(struct hal_ws *ws, uint64_t at, const cJSON *id, const ch
         if (wipe) cJSON_AddBoolToObject(cJSON_AddObjectToObject(err, "data"), "wipe", true);
     }
     send_json(ws, at, r); cJSON_Delete(r);
+}
+static void ai_error(struct hal_ws *ws, uint64_t at, const cJSON *id, const char *message) {
+    cJSON *r = cJSON_CreateObject(); cJSON_AddStringToObject(r, "jsonrpc", "2.0"); cJSON_AddItemToObject(r, "id", cJSON_Duplicate(id, 1));
+    cJSON *e = cJSON_AddObjectToObject(r, "error"); cJSON_AddNumberToObject(e, "code", -32021); cJSON_AddStringToObject(e, "message", message);
+    send_json(ws, at + SIM_MS(1), r); cJSON_Delete(r);
 }
 static void pair_complete(struct hal_ws *ws, uint64_t at) {
     if (PAIR.faults & SIM_PAIR_DROP_COMPLETE) return;
@@ -820,6 +825,30 @@ void sim_hub_receive(struct hal_ws *ws, uint64_t t, const uint8_t *data, size_t 
         return;
     }
     if (!strncmp(method, "ai.ask", 6) || !strcmp(method, "ai.listen")) keep_text(&g_last_ask, req);
+    if (!strcmp(method, "ai.ask") || !strcmp(method, "ai.listen")) {
+        const cJSON *attachments = cJSON_GetObjectItemCaseSensitive(cJSON_GetObjectItemCaseSensitive(req, "params"), "attachments");
+        if (attachments) {
+            const cJSON *photo = cJSON_GetArrayItem(attachments, 0);
+            int width = (int)num_or(photo, "width", 0), height = (int)num_or(photo, "height", 0);
+            const char *gray = cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(photo, "gray4"));
+            bool ok = cJSON_IsArray(attachments) && cJSON_GetArraySize(attachments) == 1 && width > 0 && height > 0 && width <= 512 && height <= 512 &&
+                gray && strlen(gray) <= 65536 && strlen(gray) == (size_t)width * height && strspn(gray, "0123456789abcdef") == strlen(gray);
+            sim_metric_add(ok ? "hub.photo.valid" : "hub.photo.invalid", 1);
+            if (!ok) { ai_error(ws, t, id, "invalid_photo"); cJSON_Delete(req); return; }
+        }
+    }
+    if (id && !strcmp(method, "ai.replay")) {
+        const cJSON *pr = cJSON_GetObjectItemCaseSensitive(req, "params");
+        const char *text = cJSON_GetStringValue(cJSON_GetObjectItemCaseSensitive(pr, "text"));
+        if (!text || !text[0] || strlen(text) >= 32768) ai_error(ws, t, id, "unavailable");
+        else for (int i = 0; i < MAX_LISTEN; i++) if (!LS[i].used) {
+            cJSON *rule = cJSON_CreateObject(); cJSON_AddBoolToObject(rule, "replay", true); cJSON_AddObjectToObject(rule, "listen");
+            cJSON *stream = cJSON_AddObjectToObject(rule, "stream"); cJSON *chunks = cJSON_AddArrayToObject(stream, "chunks"); cJSON_AddItemToArray(chunks, cJSON_CreateString(text));
+            LS[i] = (typeof(LS[i])){.ws = ws, .id = cJSON_Duplicate(id, 1), .stream = (int)num_or(pr, "stream", 0), .rule = rule, .used = true};
+            finish_listen(i, t + SIM_MS(20)); cJSON_Delete(rule); break;
+        }
+        cJSON_Delete(req); return;
+    }
     if (method && !strcmp(method, "ai.listen.end")) { /* the device finished uploading an utterance */
         const cJSON *pr = cJSON_GetObjectItemCaseSensitive(req, "params");
         int stream = (int)num_or(pr, "stream", -1);

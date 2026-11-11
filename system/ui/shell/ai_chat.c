@@ -6,6 +6,11 @@
 #include "ink/sys/ai.h"
 #include "ink/sys/appreg.h"
 #include "ink/sys/textfield.h"
+#include "ink/sys/ui_list.h"
+#include "ink/sys/hub.h"
+#include "ink/sys/members.h"
+#include "ink/sys/json.h"
+#include "ink/sys/time.h"
 #include "ai_chat.h"
 
 static lv_obj_t *field;
@@ -23,7 +28,45 @@ static ink_ui_page_spec_t ASK_MODEL = {.id = "AiAsk", .title = TR_NOOP("问 AI")
 static ink_ui_field_spec_t empty = {.id = "history", .role = "status", .label = TR_NOOP("对话记录"), .value = TR_NOOP("还没有对话记录")};
 static ink_ui_page_spec_t HOME_MODEL = {.id = "AiHome", .title = TR_NOOP("对话记录"), .object = {"ai:home", 1},
     .fields = &empty, .field_count = 1, .actions = actions, .action_count = 3};
-static int home_snapshot(char *out, size_t cap) { return ink_ui_semantics_snapshot(&HOME_MODEL, out, cap); }
+#define HISTORY_ROWS 4
+static struct {
+    ink_db_t *db; ink_ui_list_t *list; ink_ui_list_position_t position; uint32_t epoch;
+    char ids[HISTORY_ROWS][32], args[HISTORY_ROWS][48], labels[HISTORY_ROWS][128], info[HISTORY_ROWS][192];
+} H INK_PSRAM_BSS;
+static int home_snapshot(char *out, size_t cap) { return H.list ? ink_ui_list_snapshot(H.list, out, cap) : ink_ui_semantics_snapshot(&HOME_MODEL, out, cap); }
+static void history_ready(void *ctx, const ink_receipt_t *rc) {
+    if ((uint32_t)(uintptr_t)ctx == ink_member_epoch() && !strcmp(ink_ui_page_name(), "AiHome") && rc->status == INK_RC_DONE) ink_ui_redraw();
+}
+static void history_changed(void *ctx, const char *id, const ink_args_t *args) {
+    (void)ctx; (void)id; (void)args;
+    if (!strcmp(ink_ui_page_name(), "AiHome") && ink_ui_page_current()) ink_ui_redraw();
+}
+static void history_bind(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *item_field, ink_ui_action_spec_t *action, void *ctx) {
+    (void)ctx; unsigned at = index % HISTORY_ROWS; ink_db_cursor_t cur = {.desc = true}; ink_rec_t rec = {0};
+    char *raw = osal_malloc(INK_DB_RECORD_MAX + 1, OSAL_MEM_EXTERNAL); ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
+    if (!raw || !j) { osal_free(raw); osal_free(j); return; }
+    int got; do { got = ink_db_next(H.db, &cur, &rec, raw, INK_DB_RECORD_MAX); } while (got == 1 && index-- > 0);
+    if (got != 1) { osal_free(raw); osal_free(j); return; }
+    raw[rec.len] = 0;
+    char question[512] = "", page[128] = ""; int64_t time = 0;
+    if (!ink_json_parse(j, raw, rec.len)) {
+        ink_json_str(j, ink_json_find(j, 0, "question"), question, sizeof question);
+        ink_json_str(j, ink_json_find(j, 0, "page"), page, sizeof page); ink_json_int(j, ink_json_find(j, 0, "at"), &time);
+    }
+    snprintf(H.labels[at], sizeof H.labels[at], "%.*s", (int)ink_text_byte_offset(question, 18), question);
+    ink_tm_t tm; ink_time_to_local(time, &tm);
+    if (time) snprintf(H.info[at], sizeof H.info[at], "%02d/%02d %02d:%02d · %s", tm.month, tm.day, tm.hour, tm.min, page);
+    else snprintf(H.info[at], sizeof H.info[at], "%s · %s", TR("时间未知"), page);
+    snprintf(H.ids[at], sizeof H.ids[at], "history:%u", (unsigned)rec.id); snprintf(H.args[at], sizeof H.args[at], "{\"id\":%u}", (unsigned)rec.id);
+    lv_obj_clean(slot); ink_ui_line(slot, H.labels[at], INK_FONT_LIST, INK_WEIGHT_MEDIUM, INK_GAP, INK_GAP_S, INK_CANVAS_W - 2 * INK_MARGIN - INK_CONTROL - 2 * INK_GAP);
+    ink_ui_line(slot, H.info[at], INK_FONT_NOTE, INK_WEIGHT_REGULAR, INK_GAP, INK_GAP_S + INK_LINE_LIST, INK_CANVAS_W - 2 * INK_MARGIN - INK_CONTROL - 2 * INK_GAP);
+    lv_obj_t *trash = ink_ui_circle(slot, "trash", INK_CANVAS_W - 2 * INK_MARGIN - INK_CONTROL - INK_GAP, INK_GAP_S, INK_CONTROL, INK_ICON_SMALL, INK_SURFACE_WHITE, NULL, NULL);
+    ink_shell_bind(trash, "ai.history.delete", H.args[at]);
+    *item_field = (ink_ui_field_spec_t){.id = H.ids[at], .label = H.labels[at], .value = H.info[at], .role = "listitem", .object = {H.ids[at], rec.ver}};
+    *action = (ink_ui_action_spec_t){.id = H.ids[at], .label = TR("打开对话"), .capability = "ai.history.open", .args_json = H.args[at], .object = item_field->object, .enabled = true};
+    osal_free(j); osal_free(raw);
+}
+static void home_destroy(void) { H.list = NULL; if (H.db) ink_db_close(H.db); H.db = NULL; }
 static int ask_snapshot(char *out, size_t cap) {
     actions[3].enabled = input.value && input.value[0];
     return field ? ink_textfield_short_snapshot(field, out, cap) : -1;
@@ -58,7 +101,24 @@ static void home_create(lv_obj_t *screen, void *arg) {
     (void)arg; translate();
     ink_shell_statusbar(screen, true);
     ink_shell_topbar(screen, HOME_MODEL.title);
-    ink_ui_notice(screen, empty.value, INK_STATUS_BAR + INK_PRIMARY + INK_BLOCK);
+    if (H.epoch != ink_member_epoch()) { memset(&H.position, 0, sizeof H.position); H.epoch = ink_member_epoch(); }
+    H.db = ink_db_open_cached_member(ink_db_find_def("ai.history"), ink_member_current()->id);
+    if (!H.db) {
+        ink_ui_notice(screen, TR("正在读取对话记录"), INK_STATUS_BAR + INK_PRIMARY + INK_BLOCK);
+        ink_call_opts_t o = {.src = INK_SRC_TOUCH, .reply_exec = INK_EXEC_UI, .done = history_ready, .ctx = (void *)(uintptr_t)H.epoch};
+        ink_cap_call("ai.history.list", NULL, &o);
+    } else {
+        const ink_ui_action_spec_t paging[] = {
+            {.id = "prev", .label = TR("上一页"), .capability = "ai.history.prev"},
+            {.id = "next", .label = TR("下一页"), .capability = "ai.history.next"},
+            {.id = "clear", .label = TR("清空记录"), .capability = "ai.history.clear", .enabled = true}};
+        ink_ui_page_spec_t model = {.id = "AiHome", .title = TR("对话记录"), .object = {"ai.history", ink_db_last_ver(H.db)}, .actions = paging, .action_count = sizeof paging / sizeof *paging};
+        lv_obj_t *body = ink_ui_box(screen, 0, INK_STATUS_BAR + INK_PRIMARY + INK_GAP, INK_CANVAS_W, HISTORY_ROWS * (INK_ROW_DOUBLE + INK_GAP_M) + INK_PRIMARY, 0, INK_SURFACE_WHITE, false);
+        H.list = ink_ui_list_create(body, &model, &H.position, HISTORY_ROWS, 1, INK_ROW_DOUBLE, empty.value, history_bind, NULL);
+        if (H.list) ink_ui_list_refresh(H.list, (size_t)ink_db_count(H.db));
+    }
+    lv_obj_t *clear = ink_ui_circle(screen, "trash", INK_CANVAS_W - INK_MARGIN - INK_CONTROL, INK_STATUS_BAR, INK_CONTROL, INK_ICON_MEDIUM, INK_SURFACE_WHITE, NULL, NULL);
+    ink_shell_bind(clear, "ai.history.clear", NULL);
     lv_obj_t *ask = ink_ui_pill(screen, actions[0].label, INK_MARGIN, INK_CANVAS_H - INK_MARGIN - INK_PRIMARY,
         INK_CANVAS_W - 2 * INK_MARGIN, INK_PRIMARY, false, NULL, NULL);
     ink_shell_bind(ask, actions[0].capability, NULL);
@@ -67,10 +127,11 @@ static void home_create(lv_obj_t *screen, void *arg) {
     ink_shell_bind(mic, actions[1].capability, NULL);
 }
 static const ink_activity_t ASK = {.name = "AiAsk", .app = "ai", .create = ask_create, .destroy = ask_destroy, .snapshot = ask_snapshot};
-static const ink_activity_t HOME = {.name = "AiHome", .app = "ai", .create = home_create, .snapshot = home_snapshot};
+static const ink_activity_t HOME = {.name = "AiHome", .app = "ai", .create = home_create, .destroy = home_destroy, .snapshot = home_snapshot};
 static const ink_app_def_t APP = {.id = "ai", .title = TR_NOOP("对话记录"), .icon = "ai", .entry = &HOME, .system_app = true, .child_ok = true};
 static void action(ink_call_t *c) {
     const char *id = c->cap->id;
+    if (!strcmp(id, "ai.history.next") || !strcmp(id, "ai.history.prev")) { if (H.list) ink_ui_list_turn(H.list, strstr(id, "next") ? 1 : -1); return; }
     if (!strcmp(id, "shell.ai_home")) { ink_shell_ai_hide(); ink_ui_drop_app("ai"); if (ink_app_open("ai", NULL, NULL)) c->rc.status = INK_RC_FAILED; }
     else if (!strcmp(id, "shell.ai_ask")) {
         if (!strcmp(ink_ui_page_name(), ASK.name)) { if (!field || ink_textfield_short_focus(field)) c->rc.status = INK_RC_FAILED; }
@@ -89,6 +150,8 @@ static void action(ink_call_t *c) {
 }
 #define CHAT_CAP(id_, title_) {.id = id_, .app = "ai", .title = title_, .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action}
 static const ink_cap_t CAPS[] = {
+    {.id = "ai.history.prev", .app = "ai", .title = "对话记录上一页", .activity = "AiHome", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action},
+    {.id = "ai.history.next", .app = "ai", .title = "对话记录下一页", .activity = "AiHome", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action},
     CHAT_CAP("shell.ai_home", "打开对话记录"), CHAT_CAP("shell.ai_ask", "输入问题"),
     {.id = "shell.ai_send", .app = "ai", .title = "发送输入框里的问题", .activity = "AiAsk", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action},
     {.id = "shell.ai_stop", .title = "停下 AI 的朗读，保留文字", .effect = INK_FX_NAVIGATE, .child_ok = true, .run = action},
@@ -101,7 +164,7 @@ void ink_ai_chat_key(bool pressed, uint64_t t_us) {
     ink_receipt_t rc; ink_cap_invoke("shell.ai_key", &args, INK_SRC_KEY, 0, &rc);
 }
 bool ink_ai_chat_tapped(void) { return tapped; }
-int ink_ai_chat_init(void) { return ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_app_register(&APP); }
+int ink_ai_chat_init(void) { return ink_cap_register(CAPS, sizeof CAPS / sizeof *CAPS) || ink_app_register(&APP) || ink_cap_subscribe("ai.history.changed", history_changed, NULL, INK_EXEC_UI); }
 
 int ink_ai_chat_panel_snapshot(const char *status, const char *key, const char *question, const char *answer,
                                int page, int pages, bool speaking, uint32_t revision, char *out, size_t cap) {
@@ -109,12 +172,13 @@ int ink_ai_chat_panel_snapshot(const char *status, const char *key, const char *
     const char *board = speaking ? "AiSpeak" : strstr(key, "正在听") ? "AiListenTap" : pages > 1 ? "AiLong" : "AiAsk";
     ink_ui_field_spec_t fields[] = {
         {.id = "board", .role = "status", .label = TR("页面"), .value = board},
-        {.id = "status", .role = "status", .label = TR("状态"), .value = status},
+        {.id = "status", .role = "status", .label = TR("状态"), .value = !ink_hub_online() && answer[0] && !status[0] ? TR("离线，暂时不能朗读") : status},
         {.id = "question", .role = "text", .label = TR("问题"), .value = question},
         {.id = "answer", .role = "text", .label = TR("回答"), .value = answer},
         {.id = "page", .role = "status", .label = TR("页码"), .value = count}
     };
     ink_ui_action_spec_t available[] = {
+        {.id = "replay", .label = ink_hub_online() ? TR("再读一遍") : TR("再读一遍（离线不可用）"), .capability = "ai.panel.replay", .enabled = ink_ai_can_replay()},
         {.id = "hide", .label = TR("收起"), .capability = "ai.panel.hide", .enabled = true},
         {.id = "listen", .label = TR("继续问"), .capability = "ai.panel.listen", .enabled = true},
         {.id = "next", .label = TR("下一页"), .capability = "ai.panel.next", .enabled = !speaking && page + 1 < pages},
