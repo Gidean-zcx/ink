@@ -186,12 +186,13 @@ static void inspect_bubbles(void) {
         lv_area_t label, bubble, frame; lv_obj_update_layout(S.thread_slot); lv_obj_get_coords(located, &label); lv_obj_get_coords(lv_obj_get_parent(located), &bubble); lv_obj_get_coords(S.thread_slot, &frame);
         CHECK(bubble.y2 < previous_y && bubble.y1 >= frame.y1 && bubble.y2 <= frame.y2, "bubbles fit bottom-up without overlap"); previous_y = bubble.y1;
         CHECK(label.x1 >= bubble.x1 && label.x2 <= bubble.x2 && label.y1 >= bubble.y1 && label.y2 <= bubble.y2, "every complete body fits inside its bubble");
+        if (!i && !S.outgoing[i]) CHECK(bubble.y2 == frame.y2 - ink_ui_px(INK_GAP_M), "newest incoming bubble stays at the bottom");
         CHECK(S.outgoing[i] ? bubble.x2 == ink_ui_px(INK_CANVAS_W - INK_MARGIN) - 1 : bubble.x1 == ink_ui_px(INK_MARGIN), "incoming and outgoing keep their own alignment");
         CHECK(!strcmp(S.message_fields[S.visible - 1 - i].value, S.texts[i]) && !strcmp(S.message_fields[S.visible - 1 - i].label, S.labels[i]), "snapshot order and metadata match the visible bubble");
         if (S.outgoing[i]) {
             lv_obj_t *state_label = lv_obj_get_child(S.thread_slot, lv_obj_get_index(lv_obj_get_parent(located)) + 1);
             CHECK(state_label && lv_obj_check_type(state_label, &lv_label_class) && !strcmp(lv_label_get_text(state_label), S.states[i]), "outgoing state is rendered separately");
-            if (state_label) { lv_area_t state; lv_obj_get_coords(state_label, &state); CHECK(state.y1 > bubble.y2, "outgoing state is below its own bubble"); }
+            if (state_label) { lv_area_t state; lv_obj_get_coords(state_label, &state); CHECK(state.y1 > bubble.y2, "outgoing state is below its own bubble"); if (!i) CHECK(state.y2 == frame.y2 - ink_ui_px(INK_GAP_M), "newest outgoing receipt stays at the bottom"); if (strstr(S.states[i], "发送失败，未发出")) CHECK(ink_shell_bound_cap(state_label) && !strcmp(ink_shell_bound_cap(state_label), "sms.retry"), "the retry hint shares its bubble capability"); }
         }
     }
     size_t expected_stamps = 0, actual_stamps = 0;
@@ -238,6 +239,7 @@ static void thread_acceptance(int total, bool large) {
     CHECK(S.count == (size_t)total && S.position.page + 1 == S.thread_pages, "thread opens on its latest page");
     if (total == 20) CHECK(S.groups[1] && !S.groups[0], "a gap beyond five minutes starts a new outgoing time group");
     if (total > 1) CHECK(S.visible > 1, "one page holds multiple actual bubbles");
+    char expected[40]; snprintf(expected, sizeof expected, "合成%d：", total); CHECK(strstr(S.texts[0], expected), "the latest fixture is the bottom-most bubble");
     snprintf(latest_text, sizeof latest_text, "%s", S.texts[0]); thread_scene(large ? "-large" : "");
     if (S.thread_pages > 1) {
         size_t latest = S.position.page;

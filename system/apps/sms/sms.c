@@ -245,7 +245,7 @@ static void bind_thread(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field
     (void)ctx; thread_layout(S.thread_pages - 1 - index);
     if (S.thread_slot != slot) { S.thread_slot = slot; lv_obj_set_style_radius(slot, 0, 0); ink_ui_surface_style(slot, INK_SURFACE_WHITE, false); lv_obj_set_pos(slot, 0, ink_ui_px(INK_CONTROL + INK_GAP)); lv_obj_set_size(slot, ink_ui_px(INK_CANVAS_W), ink_ui_px(S.body_h)); lv_obj_remove_flag(slot, LV_OBJ_FLAG_CLICKABLE); }
     lv_obj_update_layout(slot); lv_area_t dirty; lv_obj_get_coords(slot, &dirty); int old_top = dirty.y2 + 1;
-    for (uint32_t i = 0; i < lv_obj_get_child_count(slot); i++) { lv_area_t a; lv_obj_get_coords(lv_obj_get_child(slot, i), &a); if (a.y1 < old_top) old_top = a.y1; }
+    for (uint32_t child = 0; child < lv_obj_get_child_count(slot); child++) { lv_area_t a; lv_obj_get_coords(lv_obj_get_child(slot, child), &a); if (a.y1 < old_top) old_top = a.y1; }
     lv_display_t *display = lv_obj_get_display(slot); lv_display_enable_invalidation(display, false);
     while (lv_obj_get_child_count(slot)) lv_obj_delete(lv_obj_get_child(slot, 0));
     int y = S.body_h, stamp_h = ink_ui_line_height(INK_FONT_NOTE) + INK_GAP_S;
@@ -267,7 +267,7 @@ static void bind_thread(lv_obj_t *slot, size_t index, ink_ui_field_spec_t *field
         size_t at = S.visible - 1 - i;
         S.message_fields[at] = (ink_ui_field_spec_t){.id = S.ids[i], .role = S.outgoing[i] ? "outgoing" : "incoming", .label = S.labels[i], .value = S.texts[i], .object = {S.ids[i], ink_db_last_ver(S.db)}};
         S.message_actions[at + 2] = (ink_ui_action_spec_t){.id = S.ids[i], .label = TR("重发"), .capability = "sms.retry", .args_json = S.args[i], .object = S.message_fields[at].object, .enabled = strstr(S.states[i], TR("发送失败，未发出")) != NULL};
-        if (S.message_actions[at + 2].enabled) ink_shell_bind(bubble, "sms.retry", S.args[i]);
+        if (S.message_actions[at + 2].enabled) { ink_shell_bind(bubble, "sms.retry", S.args[i]); ink_shell_bind(label, "sms.retry", S.args[i]); }
     }
     if (!S.visible) { ink_ui_notice(slot, TR("还没有短信"), INK_GAP_L); y = INK_GAP_L; }
     lv_obj_update_layout(slot); lv_display_enable_invalidation(display, true); dirty.y1 += ink_ui_px(y); if (old_top < dirty.y1) dirty.y1 = old_top;
