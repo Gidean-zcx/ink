@@ -3,6 +3,7 @@
 #include <string.h>
 #include "ink/sys/app.h"
 #include "ink/sys/appreg.h"
+#include "ink/sys/crc.h"
 #include "ink/sys/i18n.h"
 #include "ink/sys/file.h"
 #include "ink/sys/hub.h"
@@ -35,6 +36,7 @@ static struct {
     char member[16], sent[4096], ids[4][32], args[4][96], labels[4][128], object[32], target[64], save_args[160];
     uint32_t id, started;
     int mode, keyboard_top;
+    uint32_t opened_crc; /* the text the editor opened with: no save status until the person changes it */
     lv_timer_t *timer;
     ink_exec_job_t recorded;
     bool saving, retry;
@@ -333,6 +335,7 @@ static void settle(void) {
     int saved = ink_text_draft_saved();
     const char *status = M.mode == FAIL ? (saved > 0 ? TR("草稿已存，备忘没存上，请重试") :
         saved < 0 ? TR("草稿没存上，字还在，请重试") : TR("正在存草稿，备忘没存上")) :
+        ink_crc32(0, text, strlen(text)) == M.opened_crc && !M.retry ? TR("备忘") :
         M.saving || strcmp(text, M.sent) ? TR("正在保存备忘") : TR("已记下");
     lv_area_t keyboard; ink_shell_keyboard_area(&keyboard);
     bool changed = strcmp(lv_label_get_text(M.notice), status) != 0;
@@ -424,6 +427,8 @@ static void create(lv_obj_t *screen, void *arg) {
                 lv_obj_add_flag(label, LV_OBJ_FLAG_HIDDEN);
         }
         snprintf(M.sent, sizeof M.sent, "%s", mode == FAIL ? M.note.body : "\1");
+        /* Opening saves at once (a new memo gets its record); that save is not the person's and changes no label. */
+        M.opened_crc = mode == FAIL ? 0xffffffffu : ink_crc32(0, ink_textfield_text(M.field), strlen(ink_textfield_text(M.field)));
         M.note.draft = ink_text_draft_id(); snprintf(M.note.page, sizeof M.note.page, "%s", ink_ui_page_name());
         M.delete_button = ink_ui_circle(screen, "trash", INK_CANVAS_W - INK_MARGIN - INK_CONTROL, INK_STATUS_BAR + INK_GAP_S, INK_CONTROL, INK_ICON_LIST, INK_SURFACE_WHITE, NULL, NULL); ink_shell_bind(M.delete_button, "memo.delete", M.target);
         M.retry_button = ink_ui_pill(screen, TR("重试"), INK_CANVAS_W - INK_MARGIN - INK_PRIMARY, INK_STATUS_BAR, INK_PRIMARY, INK_CONTROL, false, retry, NULL);

@@ -138,7 +138,7 @@ static void test_memos(void) {
     test_ok("memo.edit", NULL); reject_note = true;
     test_ok("text.insert", "{\"text\":\"Synthetic unsaved note\"}");
     CHECK(WAIT_FOR(M.mode == FAIL, 15000), "memo enters save-failure view");
-    test_capture("MemoSaveFail", "没存上", "Not saved"); reject_note = false;
+    test_capture("MemoSaveFail", "没存上", "not saved"); reject_note = false;
     test_ok("memo.retry", NULL); CHECK(WAIT_FOR(!M.saving && ink_db_idle(), 15000), "retry saves");
     test_ok("text.submit", NULL); test_open("memo");
     test_ok("net.set_airplane", "{\"enabled\":true}"); CHECK(WAIT_FOR(!ink_hub_online(), 5000), "offline recording fixture");
