@@ -203,14 +203,22 @@ static void regions(void) {
     assert(!pthread_equal(caller, callback_thread) && isr_gives == scans);
     a = (hal_rect_t){3, 3, 2, 1};
     uint8_t next[] = {68, 85};
-    assert(hal_display_update(&a, next, 2, HAL_WF_GC16, 0, finished, &calls));
+    /* a new page is a GL16 on this panel: one pass of the algorithm, the pixel goes straight to its level (D-110) */
+    assert(hal_display_update(&a, next, 2, HAL_WF_GL16, 0, finished, &calls));
     watching = true;
     run(run_display);
     watching = false;
-    assert(calls == 2 && completed.ok && completed.waveform == HAL_WF_GC16);
-    /* after the first refresh a GC16 is one pass of the algorithm: the pixel goes to its level, never black and white first (D-110) */
-    assert(watched_levels == 1u << 5);
-    assert(nibble(D.c.fb4, 1, 3) == 0 && nibble(D.c.fb4, 3, 3) == 4 && nibble(D.c.fb4, 4, 3) == 5);
+    assert(calls == 2 && completed.ok && watched_levels == 1u << 5);
+    /* the counted clean is a GC16: black, white, then the picture */
+    uint8_t clean[] = {68, 102};
+    assert(hal_display_update(&a, clean, 2, HAL_WF_GC16, 0, finished, &calls));
+    watched_levels = 0;
+    watching = true;
+    run(run_display);
+    watching = false;
+    assert(calls == 3 && completed.ok && completed.waveform == HAL_WF_GC16);
+    assert(watched_levels == ((1u << 0) | (1u << 15) | (1u << 6)));
+    assert(nibble(D.c.fb4, 1, 3) == 0 && nibble(D.c.fb4, 3, 3) == 4 && nibble(D.c.fb4, 4, 3) == 6);
 }
 /* A refresh that loses its frame: rails off at once; the driver takes the next one (the whole panel again), and only
  * FAILS_MAX in a row keep the panel off until the next boot. */
@@ -303,6 +311,7 @@ int main(int argc, char **argv) {
     selftest_mode = false;
     assert(info.width == W && info.height == H && info.rotation_deg == S31_PANEL_ROTATION && !info.async_updates);
     assert(info.waveforms == ((1u << HAL_WF_GC16) | (1u << HAL_WF_GL16)));
+    assert(info.cleans_pages); /* the system then sends GC16 only for its counted clean */
     assert(hal_display_level_luminance(0) == PANEL_LEVEL[0] && hal_display_level_luminance(16) == 1.0f);
     assert(!hal_display_update(NULL, NULL, 0, HAL_WF_GL16, 0, NULL, NULL));
     if (strcmp(which, "selftest") && strcmp(which, "selftest-dead")) off_count = 0; /* the other cases start after it */

@@ -55,6 +55,7 @@ void rp_init(rp_state_t *s, int panel_w, int panel_h, uint32_t waveforms, bool l
     s->waveforms = waveforms;
     s->lcd = lcd;
     s->text_cleanup_every = 4; /* D-108: seen on the panel, one non-flashing turn already leaves a visible ghost */
+    s->clean_after = RP_CLEAN_AFTER;
 }
 
 static void remove_at(rp_state_t *s, int i) {
@@ -92,6 +93,8 @@ void rp_add(rp_state_t *s, hal_rect_t r, ink_refresh_t intent, uint64_t cause_us
 
 hal_waveform_t rp_waveform_for(const rp_state_t *s, ink_refresh_t intent) {
     if (s->lcd) return HAL_WF_GC16;
+    if (s->cleans_pages) /* one pass of the driver's algorithm, a new page too; GC16 is only ever a clean */
+        return intent == INK_REFRESH_FULL ? HAL_WF_GC16 : intent <= INK_REFRESH_FAST ? HAL_WF_DU : HAL_WF_GL16;
     if (s->async) /* the driver converges every pixel by itself; only FULL asks for a flashing clean */
         return intent == INK_REFRESH_FULL ? HAL_WF_GC16 : intent <= INK_REFRESH_FAST ? HAL_WF_DU : HAL_WF_GL16;
     switch (intent) {
@@ -118,6 +121,7 @@ bool rp_next(rp_state_t *s, rp_dispatch_t *out) {
         out->wf = rp_waveform_for(s, out->intent);
         out->cleanup = true;
         s->text_since_clean = 0;
+        s->changed_permille = 0;
         return true;
     }
     bool have_fast = false;
@@ -137,6 +141,22 @@ bool rp_next(rp_state_t *s, rp_dispatch_t *out) {
         remove_at(s, i);
     }
     out->wf = rp_waveform_for(s, out->intent);
+    if (s->cleans_pages) {
+        /* Count how much of the screen changed; once RP_CLEAN_AFTER screens have, the next page change also cleans:
+         * the whole panel, flashing, once. Everything else is one quiet pass. */
+        int64_t panel = (int64_t)s->panel_w * s->panel_h;
+        int area = panel > 0 ? (int)((int64_t)out->rect.w * out->rect.h * 1000 / panel) : 1000;
+        bool page = out->intent >= INK_REFRESH_FLASH_UI || area >= 500;
+        out->cleanup = out->intent >= INK_REFRESH_FULL;
+        if (!out->cleanup && page && s->clean_after > 0 && s->changed_permille >= s->clean_after * 1000) {
+            out->rect = (hal_rect_t){0, 0, s->panel_w, s->panel_h};
+            out->wf = HAL_WF_GC16;
+            out->cleanup = true;
+        }
+        if (out->cleanup) s->changed_permille = 0;
+        else if (s->changed_permille < s->clean_after * 1000) s->changed_permille += area;
+        return true;
+    }
     if (out->intent == INK_REFRESH_TEXT && !s->lcd && !s->async) {
         if (++s->text_since_clean >= s->text_cleanup_every && s->text_cleanup_every > 0) {
             out->wf = HAL_WF_GC16;

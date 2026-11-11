@@ -225,9 +225,12 @@ int ink_display_init(void) {
     memset(DS.fb, 0xff, (size_t)DS.stride * DS.h);
     rp_init(&DS.rp, DS.w, DS.h, DS.info.waveforms, DS.info.tech == HAL_PANEL_LCD);
     DS.rp.async = DS.info.async_updates;
+    DS.rp.cleans_pages = DS.info.cleans_pages;
     rp_init(&DS.refinement, DS.w, DS.h, DS.info.waveforms, DS.info.tech == HAL_PANEL_LCD);
     DS.refinement.async = DS.info.async_updates;
+    DS.refinement.cleans_pages = DS.info.cleans_pages;
     DS.refinement.text_cleanup_every = 0; /* the first pass owns periodic cleanup */
+    DS.refinement.clean_after = 0;
     if (DS.rp.async) DS.rp.text_cleanup_every = 0;
     osal_task_cfg_t cfg = {.name = "display", .fn = service_task, .stack_bytes = DS_STACK, .priority = DS_PRIO, .core = -1,
                            .flags = OSAL_TASK_STACK_EXTERNAL}; /* touches the PSRAM framebuffer anyway */

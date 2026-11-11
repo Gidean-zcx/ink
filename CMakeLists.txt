@@ -1057,6 +1057,11 @@ add_executable(lunar-test tests/unit/lunar_test.c system/services/time/lunar.c)
 target_include_directories(lunar-test PRIVATE system/include)
 target_compile_options(lunar-test PRIVATE ${INK_WARN})
 add_test(NAME unit-lunar COMMAND lunar-test ${CMAKE_SOURCE_DIR}/tests/fixtures/lunar/chinese_years_apple.txt)
+# The refresh policy on its own: EPDiy-class as before; a panel that cleans pages itself, a clean by count.
+add_executable(refresh-policy-test tests/unit/refresh_policy_test.c system/services/display/refresh_policy.c)
+target_include_directories(refresh-policy-test PRIVATE system/include platform/include)
+target_compile_options(refresh-policy-test PRIVATE ${INK_WARN})
+add_test(NAME unit-refresh-policy COMMAND refresh-policy-test)
 # Power cut at every flash write of a run that adds, replaces, deletes and folds: nothing durable is lost.
 add_test(NAME integration-data-powercut
   COMMAND ${CMAKE_COMMAND} -DSIM=$<TARGET_FILE:sim-data> -DPROFILE=${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json

@@ -10,6 +10,10 @@
 #include "ink/sys/display.h"
 
 #define RP_MAX_PENDING 16
+/* On a panel whose driver cleans pages itself (hal_panel_info_t.cleans_pages): screens' worth of change between two
+ * flashing cleans. The clean rides on the next page change after that. User 2026-11-11: no flash on a page change,
+ * a GC16 now and then by a counted period, as few refreshes as possible. To be tuned on the real panel. */
+#define RP_CLEAN_AFTER 10
 
 typedef struct {
     hal_rect_t rect;
@@ -27,6 +31,9 @@ typedef struct {
     uint32_t waveforms;   /* panel capabilities (hal_panel_info_t.waveforms) */
     bool lcd;
     bool async;           /* per-pixel direct drive: no periodic flashing cleanups, screens change without a flash */
+    bool cleans_pages;    /* the driver moves every pixel of a new page: no flash on page changes, a clean by count */
+    int changed_permille; /* screens of change since the last clean, in thousandths (cleans_pages panels) */
+    int clean_after;      /* screens of change between cleans there; 0 = never (the first pass owns cleanup) */
     int panel_w, panel_h;
 } rp_state_t;
 

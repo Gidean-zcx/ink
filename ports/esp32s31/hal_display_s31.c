@@ -256,11 +256,12 @@ static void display_task(void *ctx) {
             r.started_us = osal_now_us();
             hal_rect_t a = D.first ? (hal_rect_t){0, 0, W, H} : D.area;
             bool ok = true;
-            /* Only the first refresh after boot or after a failure clears to black and white first: what the panel
-             * shows is not known then. Every other one, a new page too, goes through the algorithm in one pass: its
-             * new-page rule moves every pixel (D-110: no dark flash first, about 0.52 s a page on the real panel), so
-             * a GC16 asks nothing more of it. Clearing on every GC16 made each page take ~2 s and go dark first. */
-            if (D.first) {
+            /* A clean (black, white, then the picture) only for GC16 and the first refresh after boot or a failure (what
+             * the panel shows is not known then). The system sends GC16 only for its counted, rare clean: this panel
+             * declares cleans_pages, so a new page is a GL16, one pass of the algorithm whose new-page rule moves every
+             * pixel (D-110: no dark flash, about 0.52 s a page on the real panel). Trial report 2026-11-11: every page
+             * change was a GC16 here and took ~2 s, going dark first. */
+            if (D.first || r.waveform == HAL_WF_GC16) {
                 target(&a, 0);
                 ok = drive();
                 if (ok) { target(&a, 15); ok = drive(); }
@@ -353,7 +354,8 @@ static void init(void) {
 void hal_display_get_info(hal_panel_info_t *out) {
     init();
     *out = (hal_panel_info_t){.width = D.ready ? W : 0, .height = D.ready ? H : 0, .dpi = 300, .gray_levels = 16,
-        .tech = HAL_PANEL_EPD, .waveforms = (1u << HAL_WF_GC16) | (1u << HAL_WF_GL16), .rotation_deg = S31_PANEL_ROTATION, .full_frame_scan = true};
+        .tech = HAL_PANEL_EPD, .waveforms = (1u << HAL_WF_GC16) | (1u << HAL_WF_GL16), .rotation_deg = S31_PANEL_ROTATION, .full_frame_scan = true,
+        .cleans_pages = true}; /* PQ-BN's new-page rule (D-110): the system sends GC16 only for the periodic clean */
 }
 float hal_display_level_luminance(unsigned level) { return PANEL_LEVEL[level < 16 ? level : 15]; }
 uint32_t hal_display_update(const hal_rect_t *a, const uint8_t *pixels, int stride, hal_waveform_t wf,

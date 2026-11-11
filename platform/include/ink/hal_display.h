@@ -53,6 +53,10 @@ typedef struct {
      * except HAL_WF_GC16, which still means a flashing clean of its area. Its done callback fires
      * when the area has settled. */
     bool async_updates;
+    /* The driver's own algorithm moves every pixel of a new page (PQ-BN, D-110): a page change needs no flashing clean
+     * and the system never asks for one there. HAL_WF_GC16 still means a flashing clean; the system sends it only now
+     * and then, once enough of the screen has changed (refresh policy, RP_CLEAN_AFTER). */
+    bool cleans_pages;
 } hal_panel_info_t;
 
 /* Timing of one update, all on the osal_now_us() clock. */
