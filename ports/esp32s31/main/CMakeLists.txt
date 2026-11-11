@@ -77,3 +77,9 @@ target_add_binary_data(${COMPONENT_LIB} ${ap}/cloudzao-logo.png BINARY)
 target_link_libraries(${COMPONENT_LIB} INTERFACE "-Wl,-u,_binary_ap_fileman_zh_html_gz_start"
     "-Wl,-u,_binary_ap_fileman_en_html_gz_start" "-Wl,-u,_binary_cloudzao_logo_png_start")
 endif()
+
+# The music parser line names an IDF target: not in the early expansion pass.
+if(NOT CMAKE_BUILD_EARLY_EXPANSION)
+# metadata.c includes the unchanged upstream tag parser.
+set_source_files_properties(${root}/system/services/audio/vendor/kiikoread/music_tags.c TARGET_DIRECTORY __idf_ink_system PROPERTIES HEADER_FILE_ONLY ON)
+endif()

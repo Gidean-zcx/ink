@@ -58,6 +58,8 @@ static const struct {
     {"app.page_action", "id"}, {"app.page_turn", "direction"},
     {"text.insert", "text"}, {"text.select", "start"}, {"text.undo", ""}, {"text.redo", ""}, {"text.submit", ""}, {"clipboard.read", NULL}, {"clipboard.write", "text"}, {"media.play", "path"},
     {"text.page", "direction"}, {"text.ask_ai", ""}, {"text.add_word", ""},
+    {"music.open", NULL}, {"music.play", ""}, {"music.pause", NULL}, {"music.next", NULL}, {"music.prev", NULL},
+    {"music.seek", "ms"}, {"music.list", ""}, {"music.now", NULL}, {"music.favorite", NULL},
     {"media.pause", NULL}, {"media.resume", NULL}, {"media.seek", "ms"}, {"media.stop", NULL}, {"media.status", NULL}, {"audio.record", ""},
     {"audio.record_stop", NULL}, {"bt.scan", NULL}, {"bt.list", NULL}, {"bt.pair", "addr"}, {"bt.connect", "addr"}, {"bt.disconnect", NULL},
     {"bt.forget", "addr"}, {"shell.bluetooth", NULL}, {"shell.bluetooth_prev", NULL}, {"shell.bluetooth_next", NULL},

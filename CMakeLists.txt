@@ -254,6 +254,10 @@ add_library(ink_system STATIC
   system/ui/shell/member_gate.c
   system/services/audio/ogg.c
   system/services/audio/media_service.c
+  system/services/audio/codec_formats.c
+  system/services/audio/vendor/kiikoread/metadata.c
+  system/services/audio/vendor/kiikoread/music_lyrics.c
+  system/apps/music/music.c
   system/services/bt/bt_service.c
   system/services/text/text_service.c
   system/services/text/pinyin.c
@@ -2007,3 +2011,18 @@ ink_sim_executable(sim-gomoku tests/gomoku/device.c)
 target_link_libraries(sim-gomoku PRIVATE ink_apps ink_system)
 add_dependencies(sim-gomoku ink_fonts ink_test_content)
 add_test(NAME gomoku COMMAND ${Python3_EXECUTABLE} ${CMAKE_SOURCE_DIR}/tests/gomoku/run.py --build ${CMAKE_BINARY_DIR})
+
+# music-1: reference PCM checks are ordinary host programs.
+add_executable(test-music-formats tests/music/formats.c system/services/audio/codec_formats.c
+  system/services/audio/vendor/kiikoread/metadata.c system/services/audio/vendor/kiikoread/music_lyrics.c)
+target_include_directories(test-music-formats PRIVATE platform/include system/include)
+target_compile_options(test-music-formats PRIVATE ${INK_WARN} -UNDEBUG)
+target_link_libraries(test-music-formats PRIVATE m)
+add_test(NAME music-formats COMMAND test-music-formats ${CMAKE_SOURCE_DIR}/tests/music/fixtures)
+
+ink_sim_executable(sim-music tests/music/product.c)
+target_link_libraries(sim-music PRIVATE ink_apps ink_system)
+add_test(NAME music-product COMMAND ${Python3_EXECUTABLE} -B ${CMAKE_SOURCE_DIR}/tests/music/run.py --build ${CMAKE_BINARY_DIR})
+set_tests_properties(music-product PROPERTIES TIMEOUT 180)
+
+add_dependencies(sim-music ink_fonts ink_ui_fonts ink_icons ink_test_content)

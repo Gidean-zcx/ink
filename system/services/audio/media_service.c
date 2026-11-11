@@ -26,6 +26,7 @@
 #include "ink/sys/svc.h"
 #include "ink/sys/time.h"
 #include "ogg.h"
+#include "vendor/kiikoread/codec_formats.h"
 
 #define AHEAD_FRAMES 34          /* about 2 s */
 #define PUMP_US 500000ull
@@ -43,7 +44,7 @@ static struct {
     /* the status others read, under the service lock */
     ink_media_status_t st;
     /* the executor's */
-    ogg_reader_t *r;
+    ink_format_t *r;
     int stream;
     uint32_t base_ms;      /* the stream's first frame is here in the file */
     char who[INK_MEMBER_ID_MAX]; /* who is listening */
@@ -191,7 +192,7 @@ static void end_session(const char *why) { /* executor */
     close_stream();
     if (M.focus) ink_audio_focus_release(M.focus);
     M.focus = 0;
-    ogg_close(M.r);
+    ink_format_close(M.r);
     M.r = NULL;
     char path[INK_FS_PATH_MAX];
     ink_svc_lock();
@@ -223,7 +224,7 @@ static bool open_stream(void) {
         M.stream = 0;
         return false;
     }
-    M.base_ms = ogg_position_ms(M.r);
+    M.base_ms = ink_format_position_ms(M.r);
     M.at_end = false;
     return true;
 }
@@ -251,7 +252,7 @@ static void pump(void *arg) { /* executor: keep the queue filled, see how it goe
     if (ink_audio_stream_progress(M.stream, &played, &queued) < 0) { /* the stream has gone */
         M.stream = 0;
         if (M.at_end) {
-            set_position(ogg_duration_ms(M.r));
+            set_position(ink_format_duration_ms(M.r));
             ink_probe_count("media.finished");
             char path[INK_FS_PATH_MAX];
             snprintf(path, sizeof path, "%s", M.st.path);
@@ -268,7 +269,7 @@ static void pump(void *arg) { /* executor: keep the queue filled, see how it goe
     while (queued < AHEAD_FRAMES && !M.at_end) {
         const uint8_t *data;
         size_t len;
-        int n = ogg_next_packet(M.r, &data, &len);
+        int n = ink_format_next_packet(M.r, &data, &len);
         if (n < 0) { /* the card went away, or it cannot be read */
             ink_probe_count("media.read_failed");
             char path[INK_FS_PATH_MAX];
@@ -317,7 +318,7 @@ static void do_pause(ink_media_pause_t by) { /* executor */
 static void do_resume(uint32_t back_ms) { /* executor */
     if (M.st.state != INK_MEDIA_PAUSED || !M.r) return;
     uint32_t at = M.st.position_ms > back_ms ? M.st.position_ms - back_ms : 0;
-    uint32_t got = ogg_seek(M.r, at);
+    uint32_t got = ink_format_seek(M.r, at);
     set_position(got);
     set_state(INK_MEDIA_PLAYING, INK_MEDIA_BY_USER);
     ink_probe_count("media.resumed");
@@ -346,12 +347,12 @@ static int do_play(const char *path, uint32_t start_ms, const char *member) { /*
         end_session(NULL);
     }
     int fs_err = 0;
-    ogg_reader_t *r = NULL;
-    int e = ogg_open_for(member, path, &r, &fs_err);
+    ink_format_t *r = NULL;
+    int e = ink_format_open_for(member, path, &r, &fs_err);
     if (e == OGG_ERR_FILE) return fs_err;
     if (e != OGG_OK) return -100;
     if (!ink_member_exists(member) || strcmp(member, ink_member_current()->id)) {
-        ogg_close(r);
+        ink_format_close(r);
         return INK_FS_ERR_DENIED;
     }
     M.r = r;
@@ -360,18 +361,18 @@ static int do_play(const char *path, uint32_t start_ms, const char *member) { /*
     
     ink_svc_lock();
     snprintf(M.st.path, sizeof M.st.path, "%s", path);
-    M.st.duration_ms = ogg_duration_ms(r);
+    M.st.duration_ms = ink_format_duration_ms(r);
     ink_svc_unlock();
     if (start_ms == INK_MEDIA_RESUME) start_ms = remembered(path);
     if (start_ms >= M.st.duration_ms) start_ms = 0; /* heard to the end */
-    uint32_t got = start_ms ? ogg_seek(r, start_ms) : 0;
+    uint32_t got = start_ms ? ink_format_seek(r, start_ms) : 0;
     set_position(got);
     M.last_card_us = osal_now_us();
     M.stream = 0;
     M.focus = ink_audio_focus_acquire(INK_AUDIO_PRIO_STORY, on_focus, NULL, INK_EXEC_MEDIA);
     set_state(INK_MEDIA_PLAYING, INK_MEDIA_BY_USER);
     ink_probe_count("media.started");
-    pump(NULL);
+    ink_exec_post(INK_EXEC_MEDIA, &M.pump_job, pump, NULL);
     return 0;
 }
 
@@ -381,7 +382,7 @@ static void do_seek(uint32_t ms) { /* executor */
     if (ms > M.st.duration_ms) ms = M.st.duration_ms;
     ink_svc_cancel(&M.pump_at);
     close_stream();
-    uint32_t got = ogg_seek(M.r, ms);
+    uint32_t got = ink_format_seek(M.r, ms);
     set_position(got);
     char path[INK_FS_PATH_MAX];
     snprintf(path, sizeof path, "%s", M.st.path);
