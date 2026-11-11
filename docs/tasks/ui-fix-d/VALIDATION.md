@@ -36,9 +36,10 @@ taskpolicy -c utility cmake -S . -B build-asan -DINK_WERROR=ON -DINK_SANITIZE=ON
   -DFETCHCONTENT_SOURCE_DIR_LVGL="$INK_DEPS/build/_deps/lvgl-src"
 taskpolicy -c utility cmake --build build-asan -j2
 ASAN_OPTIONS=detect_leaks=0 UBSAN_OPTIONS=halt_on_error=1 INK_KEEP_EVIDENCE=1 \
-  taskpolicy -c utility "$CTEST" --test-dir build-asan --output-on-failure -j2
+  taskpolicy -c utility "$CTEST" --test-dir build-asan --output-on-failure -j2 \
+  -R '^(boot-flow|boot-flow-reboot|memo|i18n-memo|i18n-lang|settings-small|ui-scene-(big-)?SetNetwork|ui-context-regressions-metalio-plus|ui-privacy-regressions-metalio-plus)$'
 ASAN_OPTIONS=detect_leaks=0 UBSAN_OPTIONS=halt_on_error=1 \
-  taskpolicy -c utility "$PY" tests/ui_fix_d/run.py --build build-asan
+  taskpolicy -c utility "$PY" tests/ui_fix_d/run.py --build build-asan --no-copy
 ```
 
 `before`／`reverse` 是人工模式，明确要求基线历史；没有注册进 ctest，不影响浅克隆 CI。`after` 不读 Git 历史。三个模式都保留同样的断言；`before` 只要求场景完成以采集旧页面，失败断言仍如实记入结果，不称基线功能通过。反向模式必须完成场景并出现失败断言才成功，不能把崩溃或未完成当作有效对照。每次结果在对应构建目录的 `ui-fix-d/<模式>/results.json`；截图按模式复制到本任务目录。

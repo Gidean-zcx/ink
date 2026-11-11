@@ -20,6 +20,7 @@ p.add_argument('--phase', choices=('before', 'after', 'reverse'), default='after
 p.add_argument('--baseline', help='Required only for manual before/reverse runs')
 p.add_argument('--case', choices=tuple(SOURCES))
 p.add_argument('--size', choices=('100', '120'))
+p.add_argument('--no-copy', action='store_true', help='Keep screenshots only in the build directory')
 a = p.parse_args()
 if a.phase != 'after' and not a.baseline:
     p.error('--baseline is required for a manual before/reverse run')
@@ -85,7 +86,7 @@ for case in ([a.case] if a.case else SOURCES):
         all_ok &= expected
         if not expected:
             print(result.stderr[-6000:], data.get('warnings', []), flush=True)
-        if a.phase != 'reverse':
+        if a.phase != 'reverse' and not a.no_copy:
             target = ROOT / 'docs/tasks/ui-fix-d/screenshots' / f'{a.phase}-{size}'
             target.mkdir(parents=True, exist_ok=True)
             for source in sorted(out.glob('snap-*.png')):

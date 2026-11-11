@@ -1,6 +1,6 @@
 # ui-fix-d 执行报告
 
-基线 `cfd1a3dd5550fda64d40c23e80a7d60a0a8ee7c9`；分支 `claude/codex-ui-fix-d`。**实现已提交，验收 2 尚未通过。** `$PY` 为 `$INK_DEPS/build-deps/pyenv/bin/python`，完整命令见 [VALIDATION.md](VALIDATION.md)。最终全量与内存结果待补。
+基线 `cfd1a3dd5550fda64d40c23e80a7d60a0a8ee7c9`；分支 `claude/codex-ui-fix-d`。**实现已提交，验收 2 尚未通过。** `$PY` 为 `$INK_DEPS/build-deps/pyenv/bin/python`，完整命令见 [VALIDATION.md](VALIDATION.md)。普通全量和页面内存检查均已运行，仍有下列失败；没有将验收报成全通过。
 
 ## 验收表
 
@@ -25,20 +25,24 @@
 | UX21／O12 | 【实现】说明和出口已改，未列数据数量 | 说明 AI／备份不可用，可回主页查看实际本地列表 | 同上 |
 | 验收 1／截图 | 【实测】通过 | [88 张前后图](SCREENSHOTS.md)，单图最大 48,424 字节，总 3,139,471 字节 | 页面专项的 `before`／`after` 模式 |
 | 验收 1／反向对照 | 【实测】通过 | 撤修后网络 100%／120% 各失败 15／12 条，备忘各 14 条，首次设置各 8 条；没有改源码树或放宽断言 | 页面专项 `--phase reverse --baseline <基线>` |
-| 验收 2／普通全量 | 待完整结果；已知未全通过 | `i18n-memo` 初帧采图失败，见下 | `taskpolicy -c utility $CTEST --test-dir build --output-on-failure -j2` |
+| 验收 2／普通全量 | 【实测】未通过 | 404 通过、2 失败、3 跳过；退出 8，原话 `99% tests passed, 2 tests failed out of 409`，`Total Test time (real) = 1167.24 sec` | `taskpolicy -c utility $CTEST --test-dir build --output-on-failure -j2` |
 | ui-scale | 【实测】通过 | 52 个文件，0 违规 | `taskpolicy -c utility $PY tools/ui_scale_check.py` |
 | GCC | 【实测】通过 | `gcccheck: 9 compiled, 0 with findings` | [复核命令](VALIDATION.md)的 GCC 段 |
-| 内存检查 | 待完成 | ASan／UBSan 的实际范围及结果待补 | 见复核命令 |
-| S31 | 未编译 | 本次没有 S31 编译或设备验证 | 未运行 |
-| 范围、隐私 | 待最终提交后核查 | 当前工作差异的指定隐私正则 0 匹配 | 最终再次扫描基线至 HEAD |
+| 内存检查 | 【实测】未见内存错误，功能检查未全过 | ASan＋UBSan 构建通过；相关现有测试 9/10 通过，仍为 `i18n-memo` 失败，退出 8；新页面六次运行／418 条检查通过，退出 0；Sanitizer 错误报告 0 | [十项范围及命令](VALIDATION.md) |
+| S31 | 未编固件 | 主工程内 S31 宿主机测试已跑；构建开关检查仅桩化 CMake 注册，不是固件编译；没有操作设备 | 未运行固件构建 |
+| 范围、隐私 | 【实测】通过 | 仅任务页面、相关现有／新增测试、英文新文案及本任务材料；提交差异隐私正则 0 匹配，文件和链接核查通过 | 基线至 HEAD 的指定扫描；`git diff --check` |
 
 【实测】页面专项 100%／120% 分别为网络 83、备忘 75、首次设置 51 条检查，合计 418 条通过。证据及源码哈希见 [validation.json](validation.json)。三种人工模式保留相同断言；前图模式保留旧页面失败，不把它说成功能通过。
+
+【实测】内存检查使用 `INK_SANITIZE=ON`、`INK_WERROR=ON`、`ASAN_OPTIONS=detect_leaks=0`、`UBSAN_OPTIONS=halt_on_error=1`；现有十项原话 `90% tests passed, 1 tests failed out of 10`，耗时 63.13 秒。范围是首次设置／重启、备忘、语言、网络大小字号、已存网络、上下文和密码隔离，另有六次新驱动；没有把它写成全仓 ASan 或泄漏检查通过。
 
 【实测】产品 C 新增 180／删除 93 行，英文新文案新增 18 行；保守按增删合计 291 行，低于 300。超过 100 行是三页独立验收及两个输入宿主的合计：需要调整网络块顺序和行元数据、成员可见网格、备忘保存标签与重排、首次设置的码和出口。已核查更小方案：仅加宽扫描按钮仍把结果放到下一页；仅隐藏全部保存反馈不能区分草稿和入库；始终隐藏两码不能完成电脑加入。没有重构共享组件。
 
 ## 没做到的
 
-- **普通全量尚未全绿。** `i18n-memo` 在 `tests/i18n_apps.c:104` 的 `MemoEdit is presented` 失败，表示采样时显示尚未静止。初版、条件重排、回执内同步更新三轮后仍有这条；按总规则第 7 节停止，不改公共采集器，不加 sleep，不删除或放宽断言。不能把它报成通过。
+- **普通全量未全绿，2 项失败。** `i18n-memo` 在 `tests/i18n_apps.c:104` 的 `MemoEdit is presented` 失败，表示采样时显示尚未静止。初版、条件重排、回执内同步更新三轮后仍有这条；按总规则第 7 节停止，不改公共采集器，不加 sleep，不删除或放宽断言。不能把它报成通过。
+- `autotest-build-switch` 也失败：既有桩仅建 `fake_main`／`fake_system`，阅读器构建却引用 `__idf_ink_apps`；另报 `ps` 权限错误。三个相关构建／测试文件与基线无差异，没有为这项范围外失败修改共享构建文件。
+- 三个跳过项为 `hub-contract`、`hub-json-crosscheck`、`hub-simulator-e2e`，缺现成 Hub 测试依赖；没有新增跳过条件。
 - 没有实测备忘内部切成独立数字输入类型：当前备忘是普通文本，公开键盘入口只有全键／九键及符号。验证了数字输入会话进入备忘和全／九键切换；高度计算仍读取真实键盘区域，没有伪造数字切换能力。
 - 低优先项：T11 独立网络详情尚未做，忘掉保留在行右侧；N03 录音／转写关系和提取建议未扩展；O02 首次选网的信号细分、O07 剩余有效期、O12 剩余本地数据数量未补。不称这些功能不需要或首版不要。
 - S31、真机及 Linux 完整运行未做；GCC 检查不能替代它们。

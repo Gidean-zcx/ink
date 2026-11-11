@@ -814,5 +814,116 @@
     "count": 88,
     "max_bytes": 48424,
     "total_bytes": 3139471
+  },
+  "ordinary_full": {
+    "tests": 409,
+    "passed": 404,
+    "failed": 2,
+    "skipped": 3,
+    "exit": 8,
+    "seconds": 1167.24,
+    "summary": "99% tests passed, 2 tests failed out of 409",
+    "failed_names": [
+      "i18n-memo",
+      "autotest-build-switch"
+    ],
+    "skipped_names": [
+      "hub-contract",
+      "hub-json-crosscheck",
+      "hub-simulator-e2e"
+    ]
+  },
+  "gcc": {
+    "compiled": 9,
+    "findings": 0
+  },
+  "sanitizer": {
+    "configure_exit": 0,
+    "build_exit": 0,
+    "ctest_exit": 8,
+    "ctest_tests": 10,
+    "ctest_passed": 9,
+    "ctest_failed": 1,
+    "ctest_failed_names": [
+      "i18n-memo"
+    ],
+    "ctest_seconds": 63.13,
+    "sanitizer_error_matches": 0,
+    "focused_exit": 0,
+    "focused": [
+      {
+        "case": "network",
+        "size": "100",
+        "exit": 0,
+        "checks": 83,
+        "failures": 0,
+        "finished": 1,
+        "expected": true,
+        "failed_checks": []
+      },
+      {
+        "case": "network",
+        "size": "120",
+        "exit": 0,
+        "checks": 83,
+        "failures": 0,
+        "finished": 1,
+        "expected": true,
+        "failed_checks": []
+      },
+      {
+        "case": "memo",
+        "size": "100",
+        "exit": 0,
+        "checks": 75,
+        "failures": 0,
+        "finished": 1,
+        "expected": true,
+        "failed_checks": []
+      },
+      {
+        "case": "memo",
+        "size": "120",
+        "exit": 0,
+        "checks": 75,
+        "failures": 0,
+        "finished": 1,
+        "expected": true,
+        "failed_checks": []
+      },
+      {
+        "case": "boot",
+        "size": "100",
+        "exit": 0,
+        "checks": 51,
+        "failures": 0,
+        "finished": 1,
+        "expected": true,
+        "failed_checks": []
+      },
+      {
+        "case": "boot",
+        "size": "120",
+        "exit": 0,
+        "checks": 51,
+        "failures": 0,
+        "finished": 1,
+        "expected": true,
+        "failed_checks": []
+      }
+    ],
+    "asan_options": "detect_leaks=0",
+    "ubsan_options": "halt_on_error=1",
+    "scope": "page-related tests; not the full repository"
+  },
+  "final_checks": {
+    "changed_files": 104,
+    "product_added": 198,
+    "product_deleted": 93,
+    "product_line_changes": 291,
+    "privacy_matches": 0,
+    "png_hashes_verified": 88,
+    "local_links_valid": true,
+    "s31_firmware_built": false
   }
 }
