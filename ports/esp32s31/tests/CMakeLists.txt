@@ -135,3 +135,13 @@ add_test(NAME unit-s31-vendor-source COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRE
 add_executable(test-s31-vendor-irq vendor_irq.c)
 target_include_directories(test-s31-vendor-irq PRIVATE vendor_stub ${CMAKE_CURRENT_LIST_DIR})
 add_test(NAME unit-s31-vendor-irq COMMAND test-s31-vendor-irq)
+
+get_target_property(power_sources test-s31-vendor-board SOURCES)
+list(REMOVE_ITEM power_sources vendor_board.c)
+add_executable(test-s31-vendor-power vendor_power.c ${power_sources})
+target_include_directories(test-s31-vendor-power PRIVATE vendor_stub ${CMAKE_CURRENT_LIST_DIR})
+target_compile_definitions(test-s31-vendor-power PRIVATE ESP_PLATFORM=1)
+foreach(case gauge rtc c02-hal)
+  add_test(NAME unit-s31-vendor-power-${case} COMMAND test-s31-vendor-power ${case})
+endforeach()
+add_test(NAME unit-s31-vendor-power-source COMMAND ${Python3_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/power_sources.py)

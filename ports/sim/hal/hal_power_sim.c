@@ -589,7 +589,11 @@ static void battery_model(hal_battery_t *out) {
 }
 
 void hal_power_battery(hal_battery_t *out) {
-    if (sim_board_present() && !vtk_in_isr() && sim_board_battery(out)) return; /* gauge + charger drivers */
+    if (sim_board_present() && !vtk_in_isr()) { /* gauge + charger drivers */
+        if (sim_board_battery(out)) return;
+        *out = (hal_battery_t){.percent = -1}; /* as the device's HAL (s31_board.c): a chip that does not answer reads unknown */
+        return;
+    }
     battery_model(out);
 }
 

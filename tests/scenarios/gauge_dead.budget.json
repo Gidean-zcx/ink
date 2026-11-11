@@ -1,0 +1,6 @@
+{
+  "_doc": "Home screen with the fuel gauge never answering (--i2c-faults 1.0:fuel-gauge): the battery level is unknown, and an unknown level is not an empty battery.",
+  "power.battery_low_told": {"max": 0, "optional": true, "why": "no low-battery warning from an unknown level"},
+  "power.low_battery_off": {"max": 0, "optional": true, "why": "an unknown level must never power the device off"},
+  "panic.count": {"max": 0, "optional": true, "why": "the system must survive a dead gauge"}
+}

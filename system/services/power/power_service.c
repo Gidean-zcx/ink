@@ -188,6 +188,9 @@ static void publish_battery(void) {
     ink_state_set_int(PS.h_level, b.percent);
     ink_state_set_bool(PS.h_charging, b.charging);
     if (!__atomic_load_n(&PS.battery_policy, __ATOMIC_ACQUIRE)) return;
+    /* An unknown level (-1: the gauge did not answer, or the vendor's sampler has no reading yet) decides nothing,
+     * neither low nor recovered: read as 0 % it would power the device off on one failed bus read. */
+    if (b.percent < 0 && !b.external_power && !b.charging) return;
     int level = b.external_power || b.charging ? 0 : b.percent <= BATTERY_OFF ? 3 : b.percent <= BATTERY_VERY_LOW ? 2 : b.percent <= BATTERY_LOW ? 1 : 0;
     ink_state_set_bool(PS.h_low, level > 0);
     if (level > PS.battery_level) {

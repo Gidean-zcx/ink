@@ -40,7 +40,12 @@ static void charger_log(const char *phase) {
 
 uint32_t hal_power_charger_poll(void) {
     bq27220_reading_t g;
-    if (!g_charger || !g_gauge || bq27220_reading(g_gauge, &g) != HAL_I2C_OK) return 10000;
+    if (!g_charger) return 10000;
+    bool read = g_gauge && bq27220_reading(g_gauge, &g) == HAL_I2C_OK;
+    /* C02 (vendor cx25601n.cc:135-159): a recharge kick in progress turns charging back on 200 ms after it went
+     * off whether or not the gauge answers this time; only deciding to start a kick needs its readings. */
+    if (!read && g_kick_step) return cx25601n_poll(g_charger, 0, 0, &g_uv_done, &g_kick_step);
+    if (!read) return 10000;
     return cx25601n_poll(g_charger, g.mv, g.ma, &g_uv_done, &g_kick_step);
 }
 

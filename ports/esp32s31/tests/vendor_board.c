@@ -25,6 +25,7 @@ static unsigned nmutex;
 static uint8_t regs[128][256];
 static uint64_t clock_us;
 static bool present[128], accel_fail;
+static bool gauge_soc_unreadable;
 static unsigned touch_fails, touch_ids, key_read_fails;
 enum { TRACE_CAP = 256, TIMER_CAP = 2, EVENT_CAP = 32 };
 static struct { uint8_t addr, reg, value; uint64_t at; } trace[TRACE_CAP];
@@ -116,6 +117,7 @@ hal_i2c_status_t hal_i2c_write(hal_i2c_dev_t *d, const uint8_t *p, size_t n) {
 hal_i2c_status_t hal_i2c_write_read(hal_i2c_dev_t *d, const uint8_t *w, size_t wn, uint8_t *r, size_t rn) {
     if (!d || !present[d->addr]) return HAL_I2C_NACK;
     assert(wn == 1 && w && r && rn);
+    if (d->addr == 0x55 && *w == 0x2c && gauge_soc_unreadable) return HAL_I2C_NACK;
     if (d->addr == 0x38 && *w == 0xa3) { touch_ids++; if (touch_fails) { touch_fails--; return HAL_I2C_TIMEOUT; } }
     uint8_t reg = *w;
     if (d->addr == 0x18 || d->addr == 0x19) reg &= 0x7f;

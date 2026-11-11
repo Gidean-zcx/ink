@@ -1487,6 +1487,14 @@ add_test(NAME scenario-home-panel-power-dead
           --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/panel_power_dead.budget.json
           --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
           --out ${CMAKE_BINARY_DIR}/test-out/home-panel-power-dead --quiet --no-random-outages --i2c-faults 1.0:pmic --end 8s)
+# The fuel gauge never answers (--i2c-faults 1.0:fuel-gauge): the battery reads unknown, which must not count as
+# empty; on battery the low-battery policy must neither warn nor power off.
+add_test(NAME scenario-home-gauge-dead
+  COMMAND sim-configured --profile ${CMAKE_SOURCE_DIR}/simulator/profiles/metalio-plus.json
+          --script ${CMAKE_SOURCE_DIR}/tests/scenarios/home_basic.script
+          --budget ${CMAKE_SOURCE_DIR}/tests/scenarios/gauge_dead.budget.json
+          --assets ${INK_ASSETS_DIR} --content ${INK_TEST_CONTENT}
+          --out ${CMAKE_BINARY_DIR}/test-out/home-gauge-dead --quiet --no-random-outages --i2c-faults 1.0:fuel-gauge --end 20s)
 # Portability smoke runs: same system, other panels/classes (budget: no panic, input works)
 foreach(p pinenote-rk3566 desktop-lcd metalio-plus-pqbn)
   add_test(NAME portability-home-${p}
