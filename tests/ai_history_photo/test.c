@@ -40,10 +40,12 @@ static void quiet(void) { CHECK(WAIT_FOR(!ink_ui_busy() && !ink_display_busy(), 
 static void read_snapshot(void) { CHECK(ink_ui_snapshot(snapshot, sizeof snapshot, NULL) > 0, "complete page snapshot"); }
 static void take_snapshot(void *arg) { sim_display_snapshot((const char *)arg); }
 static void offline_event(void *arg) { (void)arg; sim_net_set_link("none"); }
+static bool net_offline(void) { int64_t online = 1; ink_state_get_int(ink_state_find("net.online"), &online); return !online && !ink_hub_online(); }
 static void capture(const char *name) {
     quiet(); on_ui(read_snapshot); vtk_event_at(vtk_now() + SIM_MS(1), take_snapshot, (void *)name); delay_ms(5);
 }
 static void ask(void) { ink_ai_ask_text("合成私有问题"); }
+static void ask_local(void) { ink_ai_ask_text("合成本地问题"); ink_ai_note("合成本地回执"); }
 static void newest(void) {
     ink_db_t *db = history_db("owner"); ink_rec_t rec; ink_db_cursor_t cur = {.desc = true};
     CHECK(db && ink_db_next(db, &cur, &rec, raw, INK_DB_RECORD_MAX) == 1, "completed turn writes a record");
@@ -95,12 +97,18 @@ static void records(void) {
     newest(); CHECK(strstr(raw, "记录太长，只保存了前面部分"), "oversized saved answer explicitly says it was cut");
     CHECK(WAIT_FOR(ink_db_idle(), 20000), "history becomes durable");
 }
+static ink_media_state_t media_state(void) { ink_media_status_t s; ink_media_status(&s); return s.state; }
 static void replay(void) {
     on_ui(ask); CHECK(WAIT_FOR(!AI.asking && AI.answer_len, 20000), "online typed answer arrives");
     CHECK(WAIT_FOR(count("owner") == 1, 12000), "original round is stored before replay");
+    CHECK(BY_HAND("audio.record", "{\"path\":\"/me/synthetic-book.opus\",\"max_seconds\":10}") && g_rc.status == INK_RC_DONE, "record a synthetic book fixture");
+    CHECK(WAIT_FOR(!ink_audio_recording(), 15000), "synthetic book recording finishes");
+    CHECK(BY_HAND("media.play", "{\"path\":\"/me/synthetic-book.opus\"}") && g_rc.status == INK_RC_DONE && WAIT_FOR(media_state() == INK_MEDIA_PLAYING, 5000), "synthetic book is playing before replay");
     int n = count("owner"); CHECK(AI("ai.panel.replay", NULL) && g_rc.status == INK_RC_DONE, "AI and person share replay capability");
+    CHECK(WAIT_FOR(media_state() == INK_MEDIA_PAUSED, 3000), "replay borrows voice focus and pauses the book");
     CHECK(WAIT_FOR(sim_metric_value("ai.release_to_first_audio_heard_ms") > 0, 20000), "online replay produces actual synthetic audio");
     CHECK(WAIT_FOR(!AI.asking, 20000), "replay finishes"); CHECK(count("owner") == n, "replay does not create a duplicate round");
+    CHECK(WAIT_FOR(media_state() == INK_MEDIA_PLAYING, 5000), "book resumes after replay is heard");
     CHECK(strstr(AI.answer_text, "合成回答") && strlen(AI.answer_text) == strlen("合成回答。"), "replay leaves answer text unchanged");
     quiet(); on_ui(locate_replay); tap(replay_x, replay_y);
     CHECK(WAIT_FOR(sim_metric_value("action.user.ai.panel.replay") == 1 && !AI.asking, 20000), "physical tap reaches the same replay capability and finishes");
@@ -159,6 +167,17 @@ static void photo(void) {
 static void run(void *arg) {
     (void)arg; delay_ms(1800); test_start_home(); quiet(); vtk_host_call(get_mode, NULL);
     if (!strcmp(mode, "history")) records();
+    else if (!strcmp(mode, "local")) {
+        on_ui(ask_local); CHECK(WAIT_FOR(count("owner") == 1, 12000), "local answer receipt is stored");
+        CHECK(WAIT_FOR(sim_metric_value("ai.answers") == 1, 20000) && count("owner") == 1, "later hub completion does not duplicate a local receipt");
+        newest(); CHECK(strstr(raw, "合成本地问题") && strstr(raw, "合成本地回执"), "local receipt keeps the real question and answer");
+    }
+    else if (!strcmp(mode, "failure")) {
+        CHECK(BY_HAND("net.set_airplane", "{\"enabled\":true}") && g_rc.status == INK_RC_DONE, "go offline for a synthetic failed round");
+        CHECK(WAIT_FOR(net_offline(), 5000), "offline state is published before asking");
+        on_ui(ask); CHECK(WAIT_FOR(count("owner") == 1, 12000), "a failed round is also stored");
+        newest(); CHECK(strstr(raw, "合成私有问题") && strstr(raw, "现在没有网络"), "failure history preserves question and honest error text");
+    }
     else if (!strcmp(mode, "restart")) {
         CHECK(AI("ai.history.list", NULL) && g_rc.status == INK_RC_DONE && strstr(g_result, "大记录"), "conversation survives process restart from flash");
         CHECK(count("owner") > 0 && count("owner") <= 50, "persisted collection retains its count bound");

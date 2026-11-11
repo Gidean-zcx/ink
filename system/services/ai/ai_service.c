@@ -219,7 +219,8 @@ static void dismiss_revoked_turn(void) {
 /* -------------------------------------------------------------- results */
 
 /* Nothing more happens in this turn, even if the key is still held: the microphone goes off. */
-static void turn_over(void) {
+static void turn_over(bool record_history) {
+    if (record_history && !AI.turn_over && !AI.replaying) ink_ai_history_save(g_turn_member, g_history_question, AI.answer_text, g_history_page);
     AI.asking = false;
     AI.turn_over = true;
     end_capture(true);
@@ -265,7 +266,7 @@ static void ui_apply(void *arg) { /* UI task */
             ink_ui_cause(AI.t_release, "ai.release_to_first_text_visible_ms");
         }
         if (p->kind == 5) {
-            turn_over();
+            turn_over(true);
             set_status(TR_NOOP("回答完成 · 按 AI 键继续问，按 HOME 关闭"));
         }
     } else if (p->kind == 4) { /* this turn's speech failed; the text remains available */
@@ -273,13 +274,12 @@ static void ui_apply(void *arg) { /* UI task */
         set_status(AI.asking ? TR_NOOP("声音没能播放，文字回答在上面") : TR_NOOP("回答完成 · 声音没能播放 · 按 AI 键继续问"));
         ink_probe_count("ai.speech_failed");
     } else if (p->kind == 1) {
-        if (!AI.replaying) ink_ai_history_save(g_turn_member, g_history_question, AI.answer_text, g_history_page);
-        turn_over();
+        turn_over(true);
         set_status(AI.speech_failed ? TR_NOOP("回答完成 · 声音没能播放 · 按 AI 键继续问") : TR_NOOP("回答完成 · 按 AI 键继续问，按 HOME 关闭"));
         ink_ui_cause(AI.t_release, "ai.release_to_done_visible_ms");
         ink_probe_count("ai.answers");
     } else {
-        turn_over();
+        turn_over(false);
         const char *msg = AI.replaying ? TR_NOOP("朗读暂不可用，文字还在这里") : p->status == INK_HUB_ERR_OFFLINE ? TR_NOOP("现在没有网络，稍后再问我")
                           : p->status == INK_HUB_ERR_TIMEOUT ? TR_NOOP("家庭服务器没有回应，请再试一次")
                           : p->status == INK_HUB_ERR_LOST    ? TR_NOOP("网络断了，回答没收全，请再试一次")
@@ -287,7 +287,17 @@ static void ui_apply(void *arg) { /* UI task */
         ink_ai_error_t error = !strcmp(p->text, "budget") ? INK_AI_ERROR_BUDGET :
             p->status == INK_HUB_ERR_OFFLINE ? INK_AI_ERROR_OFFLINE : p->status == INK_HUB_ERR_LOST ? INK_AI_ERROR_LOST :
             p->status == INK_HUB_ERR_TIMEOUT ? INK_AI_ERROR_TIMEOUT : INK_AI_ERROR_NONE;
-        ink_shell_ai_status(error == INK_AI_ERROR_BUDGET ? TR_NOOP("今天的额度用完了") : msg, error);
+        const char *shown = error == INK_AI_ERROR_BUDGET ? TR_NOOP("今天的额度用完了") : msg;
+        if (!AI.replaying) {
+            size_t cap = AI.answer_len + strlen(TR(shown)) + 2;
+            char *kept = osal_malloc(cap, OSAL_MEM_EXTERNAL);
+            if (kept) {
+                int n = snprintf(kept, cap, "%s\n%s", TR(shown), AI.answer_text);
+                if (n >= 0 && (size_t)n < cap) ink_ai_history_save(g_turn_member, g_history_question, kept, g_history_page);
+                osal_free(kept);
+            }
+        }
+        ink_shell_ai_status(shown, error);
         ink_ui_cause(AI.t_release, "ai.release_to_error_visible_ms");
         ink_probe_count("ai.failures");
         ink_audio_tone(INK_TONE_ERROR, 0, NULL);
@@ -521,6 +531,10 @@ static const char *g_photo; /* borrowed only during the synchronous request cons
 static int request(const char *method, bool voice) {
     AI.replaying = false;
     snprintf(g_history_question, sizeof g_history_question, "%s", voice ? "" : g_typed[0] ? g_typed : TR(SIM_TRANSCRIPT));
+    char foreground[32] = "";
+    ink_state_get_str(ink_state_find("app.foreground"), foreground, sizeof foreground);
+    snprintf(g_history_page, sizeof g_history_page, "%s", ink_ui_page_name());
+    for (int i = 0; ink_app_at(i); i++) if (!strcmp(ink_app_at(i)->id, foreground)) snprintf(g_history_page, sizeof g_history_page, "%s", TR(ink_app_at(i)->title));
     AI.answer_len = 0;
     AI.answer_text[0] = 0;
     AI.answer_cut = false;
@@ -556,8 +570,6 @@ static int request(const char *method, bool voice) {
     }
     const char *app = "";
     int n = ink_ui_context_snapshot(snap, SNAPSHOT_CAP, &app);
-    snprintf(g_history_page, sizeof g_history_page, "%s", ink_ui_page_name());
-    for (int i = 0; ink_app_at(i); i++) if (!strcmp(ink_app_at(i)->id, app)) snprintf(g_history_page, sizeof g_history_page, "%s", TR(ink_app_at(i)->title));
     ink_json_t *j = osal_malloc(sizeof *j, OSAL_MEM_EXTERNAL);
     char title[128];
     if (j && n > 0 && !ink_json_parse(j, snap, (size_t)n) && ink_json_str(j, ink_json_find(j, 0, "title"), title, sizeof title) > 0)
@@ -860,19 +872,20 @@ int ink_ai_replay(void) {
     ink_ai_stop_speech(); close_session();
     int sid = ink_rt_open("voice.chat", NULL, &AI_RT);
     if (sid <= 0) return -1;
+    turn_focus_begin();
     osal_mutex_lock(AI.lock, OSAL_WAIT_FOREVER);
     AI.stream = (uint8_t)sid; AI.session = sid; AI.session_seq = ++AI.seq;
     AI.tts_for = AI.tts_done_for = -1; AI.tts_stream = AI.tts_opened = 0;
     g_turn_deadline = osal_now_us() + TURN_LIMIT_US;
     osal_mutex_unlock(AI.lock);
     size_t cap = AI.answer_len * 6 + 128; char *params = osal_malloc(cap, OSAL_MEM_EXTERNAL);
-    if (!params) { close_session(); return -1; }
+    if (!params) { close_session(); turn_focus_end(); return -1; }
     ink_jw_t w; ink_jw_init(&w, params, cap); ink_jw_raw(&w, "{\"stream\":"); ink_jw_int(&w, sid); ink_jw_raw(&w, ",\"text\":"); ink_jw_str(&w, AI.answer_text); ink_jw_raw(&w, "}");
     AI.replaying = AI.asking = true; AI.turn_over = AI.speech_failed = false;
     ink_power_hold(INK_NEED_NET);
     AI.req_id = ink_hub_call_for("ai.replay", params, ASK_TIMEOUT_US, on_reply, (void *)(intptr_t)AI.seq, g_turn_member, g_turn_epoch);
     osal_free(params);
-    if (AI.req_id < 0) { ink_power_release(INK_NEED_NET); close_session(); AI.asking = false; return -1; }
+    if (AI.req_id < 0) { ink_power_release(INK_NEED_NET); close_session(); turn_focus_end(); AI.asking = false; return -1; }
     return 0;
 }
 

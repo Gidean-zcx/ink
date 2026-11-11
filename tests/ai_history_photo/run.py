@@ -11,7 +11,7 @@ import tempfile
 ROOT = Path(__file__).resolve().parents[2]
 p = argparse.ArgumentParser()
 p.add_argument("--build", type=Path, required=True)
-p.add_argument("--case")
+p.add_argument("--case", choices=("history", "local", "failure", "restart", "replay", "photo", "photo-member", "photo-changed", "photo-id", "photo-switch"))
 p.add_argument("--mutant")
 a = p.parse_args()
 build = a.build.resolve()
@@ -19,6 +19,8 @@ work = Path(tempfile.mkdtemp(prefix="ai-history-photo-", dir=build))
 binary = build / "sim-ai-history-photo"
 mutations = {
     "write": ("ai_history", "if (ink_db_put(db, &w, NULL))", "if (0)"),
+    "local": ("ai_service", 'if (p->kind == 5) {\n            turn_over(true);', 'if (p->kind == 5) {\n            turn_over(false);'),
+    "failure": ("ai_service", "if (n >= 0 && (size_t)n < cap) ink_ai_history_save", "if (false && n >= 0 && (size_t)n < cap) ink_ai_history_save"),
     "limit": ("ai_history", ".max_records = 50", ".max_records = 51"),
     "bytes": ("ai_history", ".max_bytes = 128 * 1024", ".max_bytes = 512 * 1024"),
     "order": ("ai_history", "ink_db_cursor_t cur = {.desc = true};", "ink_db_cursor_t cur = {.desc = false};"),
@@ -28,6 +30,7 @@ mutations = {
     "delete": ("ai_history", "else if (ink_db_del(db, (uint32_t)id, c->src))", "else if (1)"),
     "replay": ("ai_service", 'ink_hub_call_for("ai.replay", params,', 'ink_hub_call_for("ai.missing", params,'),
     "offline": ("ai_service", "&& ink_hub_online();", ";"),
+    "replay-focus": ("ai_service", "    turn_focus_begin();\n    osal_mutex_lock(AI.lock", "    osal_mutex_lock(AI.lock"),
     "photo": ("ai_service", "if (g_photo) {", "if (false && g_photo) {"),
     "photo-member": ("gallery", "p->epoch == ink_member_epoch() && p->generation", "true && p->generation"),
     "photo-changed": ("gallery", "p->revision && p->revision == ink_fs_revision()", "true"),
@@ -70,7 +73,7 @@ hub.write_text(json.dumps({"rules": [
 ]}, ensure_ascii=False))
 script = work / "run.script"
 script.write_text("@0 net wifi\n@300s end\n")
-cases = [a.case] if a.case else ["history", "restart", "replay", "photo", "photo-member", "photo-changed", "photo-id", "photo-switch"]
+cases = [a.case] if a.case else ["history", "local", "failure", "restart", "replay", "photo", "photo-member", "photo-changed", "photo-id", "photo-switch"]
 ok = True
 for case in cases:
     folder = work / case
